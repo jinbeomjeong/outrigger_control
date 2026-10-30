@@ -1,0 +1,18 @@
+{
+ "definition": "spec 412: max over legs and moving samples (|u_applied| > 1e-6 m/s) of F_cyl / A_p, 10 Hz Record; judge limit 180 bar; ratio to 210 bar = F / extension force limit",
+ "script": "04_scripts/03_control/s9/evidence/final_rep_pmax.py (uses 04_scripts/03_control/s8/paper_max_pressure_table.record_moving_peak)",
+ "cases": {
+  "P3b_J2_B_top_Fs4_sgRRd150": {
+   "folder": "C:/workspace/outrigger_control/07_results/S9/batch_FINAL6_20261031_000833/P3b_J2_B_top_Fs4_sgRRd150",
+   "max_moving_pressure_bar": 91.33420027442585,
+   "peak_leg": "FL",
+   "t_s": 58.10000000080519,
+   "measured_head_max_bar": 101.35,
+   "max_any_state_bar": 91.33420027442585,
+   "ratio_to_relief_210": 0.43492476321155166,
+   "ratio_to_judge_180": 0.5074122237468103,
+   "peak_force_kN": 121.21353150705944,
+   "ratio_to_leg_extension_force_limit": 0.43492476321155166
+  }
+ }
+}

@@ -1,0 +1,2390 @@
+{
+ "meta": {
+  "batch": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K24_top_flat_Fs4_20261030_223426",
+  "module": "outrigger_sim.verify.s8_control",
+  "rows": 55,
+  "failed": 0,
+  "hold": 0,
+  "liftoff_window_s": 8.0,
+  "sensor_share_N": {
+   "ideal": 100.0,
+   "wika": 600.0
+  },
+  "summary": {
+   "rows": 55,
+   "failed": [],
+   "ml0_rod_fallback_gate": null,
+   "ml1_rod_fallback_runs": null,
+   "deferred_leg_below_F_min": {
+    "flagged_runs": 0,
+    "runs": []
+   },
+   "flag_rows": []
+  },
+  "judge_revision": "U-S8-75 = (b) (spec rev. 68 357.3: fast event on a front leg, top level, case F_s < 2 kN: U57 outside-window lift and U-S8-74 F_min (b) lift after the window end pass at <= 0.1 s and gap <= 0.5 mm with the FLAG 'U-S8-75 (b) exception'; outside the scope unchanged) on U-S8-74 (a) (spec rev. 68 354: C-S8-72 fast-event F_min = 0.5 s moving mean minimum >= F_min and no pad lift after the window end, the 1 ms instantaneous minimum a record row (FLAG when < F_min), slow event unchanged; G4-4 (b) = no pad lift-off (airborne 0), the instantaneous minimum > 0 a record) on C-S8-71 (spec rev. 66 338, U-S8-72 (a): G4-4 = 0.5 s mean min >= F_min and instantaneous min > 0, the instantaneous min vs F_min a record; general run / attitude / re-READY rows of head-fault runs not applicable, G4-E end attitude record) on C-S8-70 (spec rev. 65 333: G4-3 zero output from FAULT + d T_s, G4-4 0.5 s mean / last 2 s records, G4-7 on no-target runs only, F2 head-fault leg out from the arm time, G4-8 abort / step-suspend events, delivered head reading record) on C-S8-68 (spec rev. 64 323.7: FAULT entry = FAULT_REGROUND or FAULT, G4-1..8 rows of head-fault runs) on spec rev. 55 267 / 269.3 for rev. 56 (C-S8-42: deferred-leg window end = min(next start, deferral + T_o) + 0.3 s cut at the run end, T_o from the controller meta (0.8 s default), overlapping windows of a leg merged, window_rule 'spec rev. 55 267'; per deferred leg the event + 0..4 s judged minimum / time below F_min / airborne time vs the reference batch (768 / original MLJ), FLAG text > 0.5 kN or > 0.1 s; record rows PROBE -> LEVEL returns and re-READY vs the reference (269.2 #2 / #3, criterion_met, control judges)) on spec rev. 54 260.5 / 261 / 264 for rev. 55 (C-S8-41, U-S8-56 (a) / U-S8-57 (a): ML-0 gate row 'no rod-pressure fallback without a sensor-fault injection' = 0; RT record row 'true minimum of the deferred leg, deferral .. next start + 0.3 s, < F_min = FLAG'; the summary carries the ML-1 rod fallback run count) on spec rev. 54 248.3 / 249 / 251 (C-S8-40: twist-work row = recurrence ban, forced window [start, done_s + 0.1 s] masked, clusters of 0.5 s bins > +20 J after event + 1.5 s <= 1, judged for RT-variant runs, records: rev. 52 bin max / masked bin max / largest cluster, reference-batch FLAG > +20 J; item 9 default reading + delta_i = min(0.5 kN, 2 F_s,i) on L2b-NSC legs with F_s,i > 0 where pad N < 1.5 kN, all-apply +0.5 kN = sensitivity rows) on spec rev. 52 232 / 230 (C-S8-37, U-S8-51: item 9 default = corrected reading + 0.5 kN where pad N < 1.5 kN, raw reading record rows, F_s - m g ceiling sensitivity rows; RT record rows (runs / re-triggers / deferred) and the twist-work row <= +20 J per 0.5 s bin after event + 1.5 s, judged for RT-variant runs) on spec rev. 50 220.6 (C-S8-33, U-S8-41..43: ① s6 floor event also = result.event settle faster than v_max (event legs settled + diagonal, U-S8-32 window), ② item 4 moving = |u_applied| > 1e-6 m/s, ③ injected-leg rod fallback within [fault, +2 T] expected, ④ C-S8-29 guard_cap_s from cmp_guard_u (push_cap_s = former issued_u count), h* / h_a / R_ub per lock window, F1 calibrated record without the faulty leg after the fault, ⑤ C-S8-24 round-start lower bounds vs 24.41 kN) on rev. 49 (C-S8-27 / 29 / 32) and rev. 46 (C-S8-22: ① pressure-only F_min rows = M5 comparison, ② level trend grouped + reference levels, ③ forced window out of F2 / I1 (U-S8-24), ④ rod-pressure fallback = unexpected warning, ⑤ C11 twins from the reference batches, ⑥ R46-1 friction flag 0.1 / 0.75 kN (U-S8-25), WIKA std pooled per side; 216.8 CB rerun rows with the controller lock_valve premise (U-S8-23)) on rev. 45 (C-S8-21: F1 reading law, R45-2..4), rev. 44 (C-S8-19) and rev. 43 (C-S8-16)",
+  "lookup_batches": [],
+  "f1_law": {
+   "sigma_mult": 6.0,
+   "abs_N": 100.0,
+   "mean_N": 100.0,
+   "std_ratio": [
+    0.85,
+    1.15
+   ],
+   "fallback_b_const_N": 1300.0,
+   "span_share": 0.025
+  },
+  "r45_flags_N": {
+   "static": 650.0,
+   "friction": "100 (F_s,leg = 0) / 750 (F_s,leg > 0), R46-1",
+   "total": 1600.0,
+   "air": 1700.0,
+   "low_probe_margin": 15000.0,
+   "low_probe_window_s": 2.0
+  },
+  "f1_share": {
+   "ideal_N": 100.0,
+   "wika": "850 N + 0.025 |F| (rev. 44 record row)",
+   "near_fmin_N": {
+    "ideal": 100.0,
+    "wika": 850.0
+   },
+   "air_residual_flag_N": 1700.0
+  },
+  "ref_batch": null,
+  "deferred_reference": null,
+  "replay_status": {
+   "K24_top_flat_Fs4": "P-S8-1 replay (continuous watch)"
+  },
+  "reading_delta": {
+   "K24_top_flat_Fs4": {
+    "engine": "L2b_NSC",
+    "delta_N": {
+     "FL": 500.0,
+     "FR": 500.0,
+     "RL": 500.0,
+     "RR": 500.0
+    }
+   }
+  },
+  "reading_rule": "C-S8-40 / spec rev. 54 249 (C-S8-37 / rev. 52 232 corrected): default = corrected reading lower_reading + delta_i (and net_force + delta_i) on the 10 Hz samples whose pad normal force (pads N_raw, 1 ms record, linear interpolation at the sample time) is < 1.5 kN, delta_i = min(0.5 kN, 2 F_s,i), F_s,i = median of pads F_seal_limit[:, i], only for engine L2b_NSC (settings.s8.engine), else 0; 'raw' = the reading as recorded (record rows); 'upper_sensitivity' = lifted samples (N <= 0) read at least F_seal_limit,i - m_i g (sensitivity rows); 'all_apply' = + 0.5 kN where N < 1.5 kN regardless of engine / F_s (rev. 52 rule, sensitivity rows)",
+  "twist_work_rule": "C-S8-40 (spec rev. 54 248.3): W = sum over the 1 ms pad record of D/2 (n . u_applied) dt per 0.5 s bin from the event, 8 s, D = (F_FL + F_RR) - (F_FR + F_RL) - D0 (true rod forces pads F_cyl, D0 = median over event - 0.5 .. 0 s), n = (+,-,-,+)/2, u_applied from record.npz held between samples; power 0 in the forced window [forced start, done_s + 0.1 s] (to the run end when done_s is None); judged bins = bins starting >= event + 1.5 s with an unmasked sample; cluster = consecutive judged bins > +20 J; judged: clusters <= 1 (recurrence ban; ASSUMPTION 254). Records: the rev. 52 unmasked bin max (raw_max_bin_after_J), the masked bin max and the largest cluster work"
+ },
+ "rows": [
+  {
+   "item": "run",
+   "case": "K24_top_flat_Fs4",
+   "value": "ready",
+   "limit": "ready",
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 10.000000000023306,
+   "end_cause": "ready"
+  },
+  {
+   "item": "2 attitude +-0.2 (+mount)",
+   "case": "K24_top_flat_Fs4",
+   "value": 0.02057206474889485,
+   "limit": 0.2,
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 10.000000000023306
+  },
+  {
+   "item": "3 F_min (1 ms)",
+   "case": "K24_top_flat_Fs4",
+   "value": 54.776200272358736,
+   "limit": 9.414589110000001,
+   "passed": true,
+   "note": "RR at 38.67 s; D8 margin ok",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 10.000000000023306
+  },
+  {
+   "item": "4 saturation steps",
+   "case": "K24_top_flat_Fs4",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 10.000000000023306
+  },
+  {
+   "item": "4 max moving pressure",
+   "case": "K24_top_flat_Fs4",
+   "value": 98.20635077078491,
+   "limit": 180.0,
+   "passed": true,
+   "note": "moving = |u_applied| > 1e-06 m/s (spec rev. 50 220.6 ②)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 10.000000000023306
+  },
+  {
+   "item": "5a rocking amplitude",
+   "case": "K24_top_flat_Fs4",
+   "value": 0.0072237725815141735,
+   "limit": 0.06,
+   "passed": true,
+   "note": "1 s moving mean = 10 samples (Record 10 Hz, C-R4)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 10.000000000023306
+  },
+  {
+   "item": "7a probe attitude change",
+   "case": "K24_top_flat_Fs4",
+   "value": 0.023919802889211562,
+   "limit": 0.1,
+   "passed": true,
+   "note": "per round and leg (U53)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 10.000000000023306
+  },
+  {
+   "item": "7b verdict = truth",
+   "case": "K24_top_flat_Fs4",
+   "value": true,
+   "limit": true,
+   "passed": true,
+   "note": "per round and leg (U53)",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 10.000000000023306
+  },
+  {
+   "item": "7c load estimate error",
+   "case": "K24_top_flat_Fs4",
+   "value": -4.121779137338966,
+   "limit": "<= 0 (max(5 kN,10 %))",
+   "passed": null,
+   "note": "R43-2: 7c of an F_s > 0 case is a record (C7), see the F5 7c pair row; per round and leg (U53); truth = probe start load (0.5 s mean before the first move, spec rev. 27 102.1); zero-calibration deduction legs one-sided (estimate - truth)",
+   "kind": "record",
+   "source": "s6",
+   "record_rate_hz": 10.000000000023306,
+   "passed_raw": true
+  },
+  {
+   "item": "72.1 (6) no false pressure diagnosis",
+   "case": "K24_top_flat_Fs4",
+   "value": {
+    "WARN_LOAD_SUM_MISMATCH": 0,
+    "WARN_PRESSURE_DRIFT": 0
+   },
+   "limit": "0 warnings",
+   "passed": true,
+   "note": "spec rev. 28 110.1, rev. 29 122",
+   "kind": "function",
+   "source": "s6",
+   "record_rate_hz": 10.000000000023306
+  },
+  {
+   "item": "5.24.2 unexpected warnings",
+   "case": "K24_top_flat_Fs4",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "0 expected (not counted)",
+   "kind": "anomaly",
+   "source": "bundle_c"
+  },
+  {
+   "item": "5.24.2 law-C saturation steps",
+   "case": "K24_top_flat_Fs4",
+   "value": 0,
+   "limit": null,
+   "passed": null,
+   "note": "steps {'FL': 0, 'FR': 0, 'RL': 0, 'RR': 0}",
+   "kind": "report",
+   "source": "bundle_c"
+  },
+  {
+   "item": "146 consistency vs reduced (142 C)",
+   "case": "K24_top_flat_Fs4",
+   "value": null,
+   "limit": null,
+   "passed": null,
+   "note": "no reference file given",
+   "kind": "consistency",
+   "source": "bundle_c"
+  },
+  {
+   "item": "C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN",
+   "case": "K24_top_flat_Fs4",
+   "value": 54.776200272358736,
+   "limit": 14.414589110000001,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s8_control",
+   "raw_leg": "RR",
+   "raw_t_s": 38.66600000025773,
+   "raw_after_liftoff_s": 14.266000000310157,
+   "slow_min_kN": 55.11626455066635,
+   "slow_leg": "RR",
+   "slow_t_s": 38.332000000246644,
+   "slow_min_first8_kN": 58.673362836993896
+  },
+  {
+   "item": "F1 reading law max |F_hat - (F - f + E_s)| <= 6 sigma_F + 0.1 kN (R45-1, U-S8-18)",
+   "case": "K24_top_flat_Fs4",
+   "value": 0,
+   "limit": [
+    0.1,
+    0.1,
+    0.1,
+    0.1
+   ],
+   "passed": true,
+   "note": "max |r| / limit per leg: FL 0.000/0.100 kN @ 24.4 s level; FR 0.000/0.100 kN @ 37.2 s probe; RL 0.000/0.100 kN @ 35.2 s probe; RR 0.000/0.100 kN @ 32.0 s probe; samples [481, 481, 481, 481]; grade None, terms False; areas params.raw legs.<leg>.cylinder.{head,annulus}_area_m2; F - f vs F_pressure 0.00e+00 N",
+   "kind": "judged",
+   "source": "s8_control",
+   "max_abs_kN": [
+    1.4551915228366852e-14,
+    2.9103830456733704e-14,
+    1.4551915228366852e-14,
+    1.4551915228366852e-14
+   ],
+   "sigma_F_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "item": "F1 rev. 44 rule: reading error <= F_s,leg + sensor share (R43-1 / U-S8-15; record, replaced by R45-1)",
+   "case": "K24_top_flat_Fs4",
+   "value": 0,
+   "limit": 0,
+   "passed": null,
+   "note": "max excess -0.100 kN over 1924 leg samples; |F_hat - F| <= F_s,leg + 0.1 kN (ideal sensor), phases other than CHECK; reading F_hat_N (ideal sensor)",
+   "kind": "record",
+   "source": "s8_control",
+   "passed_rev44": true
+  },
+  {
+   "item": "F1 raw reading |F_hat - F| <= F_s,leg + constant share (record)",
+   "case": "K24_top_flat_Fs4",
+   "value": 0,
+   "limit": 0,
+   "passed": null,
+   "note": "max excess -0.100 kN (share 0.1 kN); raw reading before the zero calibration (record, R43-1); by phase {'check': {'max_kN': 4.000000000000001, 'min_kN': -4.000000000000001}, 'done': {'max_kN': 4.0, 'min_kN': 3.331814093077628}, 'level': {'max_kN': 4.000000000000014, 'min_kN': -3.279113520632796}, 'probe': {'max_kN': 4.000000000000014, 'min_kN': -4.000000000000029}, 'ready': {'max_kN': 4.000000000000014, 'min_kN': -3.9897984129854884}, 'touch': {'max_kN': 4.000000000000007, 'min_kN': -3.971902130103408}}",
+   "kind": "record",
+   "source": "s8_control"
+  },
+  {
+   "item": "F1 calibrated reading |F_hat_cal - F| <= F_s,leg + R43-1 share (record; zero-calibration offset c_i per leg [kN])",
+   "case": "K24_top_flat_Fs4",
+   "value": 0,
+   "limit": 0,
+   "passed": null,
+   "note": "max excess -0.08465428087538748 kN; c_i = F_hat - F_hat_cal [0.014238575838739052, 0.01534571912458341, 0.01292675594612956, 0.01277271223886055]",
+   "kind": "record",
+   "source": "s8_control",
+   "offset_kN": [
+    0.014238575838739052,
+    0.01534571912458341,
+    0.01292675594612956,
+    0.01277271223886055
+   ],
+   "fault_leg_samples_excluded": 0
+  },
+  {
+   "item": "F1 near F_min (-5 .. +10 kN): |F_hat_cal - F + f| (sensor share, record)",
+   "case": "K24_top_flat_Fs4",
+   "value": 0.012926755946130925,
+   "limit": [
+    0.75,
+    0.75,
+    0.75,
+    0.75
+   ],
+   "passed": null,
+   "note": "4 leg samples; per leg [None, None, 0.012926755946130925, 0.012772712238871008] vs [0.75, 0.75, 0.75, 0.75] kN (R46-1: 0.1 kN at F_s,leg = 0, 0.75 kN at F_s,leg > 0 (U-S8-25)); above the limit -> D-S8-6",
+   "kind": "record",
+   "source": "s8_control",
+   "flag": false
+  },
+  {
+   "item": "7c split E - T2: estimator bias [kN] (U-S8-16, record)",
+   "case": "K24_top_flat_Fs4",
+   "value": 3.2695640524572696,
+   "limit": null,
+   "passed": null,
+   "note": "largest |E - T2| at FR round 0; max signed +3.27 kN; worst 7c row RL r0: E - T0 +3.02 = +2.62 + +0.40 kN",
+   "kind": "record",
+   "source": "s8_control",
+   "split_rows": [
+    {
+     "round": 0,
+     "leg": "FL",
+     "E_kN": 119.19694874334954,
+     "T0_kN": 118.25760509812133,
+     "T2_kN": 116.6022672676393,
+     "err_kN": 0.939343645228206,
+     "est_bias_kN": 2.5946814757102317,
+     "hyst_kN": -1.6553378304820257,
+     "margin_kN": -10.886416864583929
+    },
+    {
+     "round": 0,
+     "leg": "FR",
+     "E_kN": 118.71596924472209,
+     "T0_kN": 117.48879405634072,
+     "T2_kN": 115.44640519226482,
+     "err_kN": 1.2271751883813664,
+     "est_bias_kN": 3.2695640524572696,
+     "hyst_kN": -2.042388864075903,
+     "margin_kN": -10.521704217252706
+    },
+    {
+     "round": 0,
+     "leg": "RL",
+     "E_kN": 74.42675469241054,
+     "T0_kN": 71.407758027045,
+     "T2_kN": 71.80685002089707,
+     "err_kN": 3.0189966653655347,
+     "est_bias_kN": 2.619904671513467,
+     "hyst_kN": 0.3990919938520676,
+     "margin_kN": -4.121779137338966
+    },
+    {
+     "round": 0,
+     "leg": "RR",
+     "E_kN": 72.6722438472608,
+     "T0_kN": 70.22693775323167,
+     "T2_kN": 69.60252982039636,
+     "err_kN": 2.445306094029135,
+     "est_bias_kN": 3.069714026864446,
+     "hyst_kN": -0.6244079328353109,
+     "margin_kN": -4.577387681294032
+    }
+   ],
+   "worst_7c": {
+    "round": 0,
+    "leg": "RL",
+    "margin_kN": -4.121779137338966,
+    "err_kN": 3.0189966653655347,
+    "est_bias_kN": 2.619904671513467,
+    "hyst_kN": 0.3990919938520676
+   }
+  },
+  {
+   "item": "7c split T2 - T0: probe round-trip hysteresis [kN] (U-S8-16, record)",
+   "case": "K24_top_flat_Fs4",
+   "value": -2.042388864075903,
+   "limit": null,
+   "passed": null,
+   "note": "largest |T2 - T0| at FR round 0 (load the probe moved and did not give back; not an estimator error, spec rev. 44 214.4 ②)",
+   "kind": "record",
+   "source": "s8_control"
+  },
+  {
+   "item": "F1 airborne residual |F_hat_cal - F + f| (F < 0.5 kN, no contact; record, flag 1.7 kN, R45-3 / U-S8-19)",
+   "case": "K24_top_flat_Fs4",
+   "value": 0.015345719124580227,
+   "limit": 1.7,
+   "passed": null,
+   "note": "738 leg samples outside CHECK; worst FR in touch; per leg [0.014238575838735869, 0.015345719124580227, 0.01292675594613138, 0.01277271223886737]; parts: static max +0.000 kN, calibration friction c_fric ['+0.014', '+0.015', '+0.013', '+0.013'] kN, noise max - sigma",
+   "kind": "record",
+   "source": "s8_control",
+   "flag": false,
+   "split": {
+    "n": 738,
+    "legs": [
+     {
+      "leg": "FL",
+      "n": 186,
+      "c_fric_kN": 0.014238575838735482,
+      "fric_limit_kN": 0.75,
+      "static_max_kN": 0.0,
+      "noise_std_ratio": null,
+      "noise_max_sigma": null,
+      "total_max_kN": 0.014238575838735869,
+      "fric_flag": false
+     },
+     {
+      "leg": "FR",
+      "n": 186,
+      "c_fric_kN": 0.015345719124579478,
+      "fric_limit_kN": 0.75,
+      "static_max_kN": 0.0,
+      "noise_std_ratio": null,
+      "noise_max_sigma": null,
+      "total_max_kN": 0.015345719124580227,
+      "fric_flag": false
+     },
+     {
+      "leg": "RL",
+      "n": 183,
+      "c_fric_kN": 0.012926755946130698,
+      "fric_limit_kN": 0.75,
+      "static_max_kN": 0.0,
+      "noise_std_ratio": null,
+      "noise_max_sigma": null,
+      "total_max_kN": 0.01292675594613138,
+      "fric_flag": false
+     },
+     {
+      "leg": "RR",
+      "n": 183,
+      "c_fric_kN": 0.012772712238866779,
+      "fric_limit_kN": 0.75,
+      "static_max_kN": 0.0,
+      "noise_std_ratio": null,
+      "noise_max_sigma": null,
+      "total_max_kN": 0.01277271223886737,
+      "fric_flag": false
+     }
+    ],
+    "static_max_kN": 0.0,
+    "total_max_kN": 0.015345719124580227,
+    "c_fric_max_abs_kN": 0.015345719124579478,
+    "noise_max_sigma": null,
+    "static_flag": false,
+    "fric_flag": false,
+    "total_flag": false,
+    "limits_kN": {
+     "static": 0.65,
+     "friction": [
+      0.75,
+      0.75,
+      0.75,
+      0.75
+     ],
+     "total": 1.6
+    }
+   }
+  },
+  {
+   "item": "R45-4 low-load probe: F2 margin / true margin / T2 - T0 / E - T2 over 2 s after the second hold (lower bound < F_min + 15 kN at the round start; record, U-S8-19)",
+   "case": "K24_top_flat_Fs4",
+   "value": 0,
+   "limit": null,
+   "passed": null,
+   "note": "no probe below F_min + 15 kN at the round start",
+   "kind": "record",
+   "source": "s8_control",
+   "probes": []
+  },
+  {
+   "item": "F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off)",
+   "case": "K24_top_flat_Fs4",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "max -3.754305951411312 kN; source F_lower_est_N (controller _load_estimate_N(forces.lower)); cross-check F_hat - F_band - F max -3.740067375572573 kN; rev. 42 reading lower (no band) max 3.9857614241612755 kN",
+   "kind": "judged",
+   "source": "s8_control",
+   "max_kN": -3.754305951411312,
+   "max_raw_minus_band_kN": -3.740067375572573
+  },
+  {
+   "item": "F3 F_band >= F_s after the first probe",
+   "case": "K24_top_flat_Fs4",
+   "value": 7.740067375572595,
+   "limit": 4.0,
+   "passed": true,
+   "note": "F_band - F_s +3.74 kN (record)",
+   "kind": "judged",
+   "source": "s8_control"
+  },
+  {
+   "item": "F4 CHECK air seal friction F_s,air (record)",
+   "case": "K24_top_flat_Fs4",
+   "value": 3971.8646882918447,
+   "limit": [
+    4000.0,
+    4000.0,
+    3333.2000000000003,
+    3333.2000000000003
+   ],
+   "passed": null,
+   "note": "per leg [N] vs F_s,leg [N]",
+   "kind": "record",
+   "source": "s8_control"
+  },
+  {
+   "item": "S8-A2 airborne F + m g: 1 ms min / 20 ms mean range per leg [kN] (record; not judged on the 1 ms minimum)",
+   "case": "K24_top_flat_Fs4",
+   "value": {
+    "min_1ms": [
+     -0.8060470875783603,
+     -0.7644783822950166,
+     -0.4199564245778216,
+     -0.39963350378977963
+    ],
+    "mean20_min": [
+     -0.014876357686294568,
+     -0.01685595135293761,
+     -0.009404220932301656,
+     -0.009368747754777928
+    ],
+    "mean20_max": [
+     0.024091688163198115,
+     0.024137979250160584,
+     0.01629037713239802,
+     0.01632769229944222
+    ]
+   },
+   "limit": null,
+   "passed": null,
+   "note": "airborne samples [23299, 23299, 22935, 22935] (20 ms pad normal <= 0); 20 ms mean expected within +-0.3 kN",
+   "kind": "record",
+   "source": "s8_control"
+  },
+  {
+   "item": "S8-A3 seal band-edge chatter (stick <-> slip round trip < 1 ms) per leg / S8-A1 head-floor hits (record)",
+   "case": "K24_top_flat_Fs4",
+   "value": [
+    30259,
+    29683,
+    31670,
+    34546
+   ],
+   "limit": null,
+   "passed": null,
+   "note": "slip starts [15386, 15078, 16087, 17547]; head floor hook steps [706, 706, 722, 722], measurements [0, 0, 0, 0]",
+   "kind": "record",
+   "source": "s8_control"
+  },
+  {
+   "item": "F8 no false re-level in event-free READY",
+   "case": "K24_top_flat_Fs4",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "events [], READY exits 0",
+   "kind": "judged",
+   "source": "s8_control"
+  },
+  {
+   "item": "F9 twist at READY entry n^T F / n^T F_hat / n^T eps [kN] (record)",
+   "case": "K24_top_flat_Fs4",
+   "value": [
+    -2.0324127530336336,
+    1.5401979809370823,
+    3.5726107339707123
+   ],
+   "limit": null,
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s8_control"
+  },
+  {
+   "item": "F10 retract commands on low-load legs (periods, record)",
+   "case": "K24_top_flat_Fs4",
+   "value": 0,
+   "limit": null,
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s8_control"
+  },
+  {
+   "item": "item 9 J_P M1 missed / M1' late / M3 median / M2 / M4 max (record)",
+   "case": "K24_top_flat_Fs4",
+   "value": [
+    0,
+    0,
+    null,
+    0,
+    null
+   ],
+   "limit": null,
+   "passed": null,
+   "note": "episodes 0 (crawler_transient 0), upper95 1.0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay",
+   "kind": "record",
+   "source": "s8_control",
+   "judge": "J_P"
+  },
+  {
+   "item": "item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record)",
+   "case": "K24_top_flat_Fs4",
+   "value": [
+    0,
+    0,
+    null,
+    0,
+    null
+   ],
+   "limit": null,
+   "passed": null,
+   "note": "episodes 0 (crawler_transient 0), upper95 1.0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay",
+   "kind": "record",
+   "source": "s8_control",
+   "judge": "J_C"
+  },
+  {
+   "item": "item 9 J_P raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max",
+   "case": "K24_top_flat_Fs4",
+   "value": [
+    0,
+    0,
+    null,
+    0,
+    null
+   ],
+   "limit": null,
+   "passed": null,
+   "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}",
+   "kind": "record",
+   "source": "s8_control",
+   "judge": "J_P",
+   "reading": "raw"
+  },
+  {
+   "item": "item 9 J_C raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max",
+   "case": "K24_top_flat_Fs4",
+   "value": [
+    0,
+    0,
+    null,
+    0,
+    null
+   ],
+   "limit": null,
+   "passed": null,
+   "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}",
+   "kind": "record",
+   "source": "s8_control",
+   "judge": "J_C",
+   "reading": "raw"
+  },
+  {
+   "item": "item 9 J_P F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max",
+   "case": "K24_top_flat_Fs4",
+   "value": [
+    0,
+    0,
+    null,
+    0,
+    null
+   ],
+   "limit": null,
+   "passed": null,
+   "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}",
+   "kind": "sensitivity",
+   "source": "s8_control",
+   "judge": "J_P",
+   "reading": "upper_sensitivity"
+  },
+  {
+   "item": "item 9 J_C F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max",
+   "case": "K24_top_flat_Fs4",
+   "value": [
+    0,
+    0,
+    null,
+    0,
+    null
+   ],
+   "limit": null,
+   "passed": null,
+   "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}",
+   "kind": "sensitivity",
+   "source": "s8_control",
+   "judge": "J_C",
+   "reading": "upper_sensitivity"
+  },
+  {
+   "item": "item 9 J_P all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max",
+   "case": "K24_top_flat_Fs4",
+   "value": [
+    0,
+    0,
+    null,
+    0,
+    null
+   ],
+   "limit": null,
+   "passed": null,
+   "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}",
+   "kind": "sensitivity",
+   "source": "s8_control",
+   "judge": "J_P",
+   "reading": "all_apply"
+  },
+  {
+   "item": "item 9 J_C all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max",
+   "case": "K24_top_flat_Fs4",
+   "value": [
+    0,
+    0,
+    null,
+    0,
+    null
+   ],
+   "limit": null,
+   "passed": null,
+   "note": "episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}",
+   "kind": "sensitivity",
+   "source": "s8_control",
+   "judge": "J_C",
+   "reading": "all_apply"
+  },
+  {
+   "item": "item 9 M5 closed loop: min true / under F_min [s] / lifted [s]",
+   "case": "K24_top_flat_Fs4",
+   "value": [
+    54.776200272358736,
+    0.0,
+    0.0
+   ],
+   "limit": null,
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s8_control"
+  },
+  {
+   "item": "C10 READY - TOUCH end vs F_s 0 [s]",
+   "case": "K24_top_flat_Fs4",
+   "value": null,
+   "limit": "+10 s report",
+   "passed": null,
+   "note": "(batch K0V_top_flat_Fs0)",
+   "kind": "pair",
+   "source": "s8_control"
+  },
+  {
+   "item": "F6 REANCHOR min vs F_s 0 [kN]",
+   "case": "K24_top_flat_Fs4",
+   "value": null,
+   "limit": null,
+   "passed": null,
+   "note": "this None, twin None (batch K0V_top_flat_Fs0)",
+   "kind": "pair",
+   "source": "s8_control"
+  },
+  {
+   "item": "F9 |n^T F| at READY vs F_s 0 [kN]",
+   "case": "K24_top_flat_Fs4",
+   "value": null,
+   "limit": "+5 kN report",
+   "passed": null,
+   "note": "(batch K0V_top_flat_Fs0)",
+   "kind": "pair",
+   "source": "s8_control"
+  },
+  {
+   "item": "D8 min lift-off + 8 s .. READY vs F_s 0 [kN] (R40-4)",
+   "case": "K24_top_flat_Fs4",
+   "value": null,
+   "limit": null,
+   "passed": null,
+   "note": "this 54.776200272358736, twin None (batch K0V_top_flat_Fs0)",
+   "kind": "pair",
+   "source": "s8_control"
+  },
+  {
+   "item": "F5 7c margin vs F_s 0 twin [kN] (R43-2, record)",
+   "case": "K24_top_flat_Fs4",
+   "value": null,
+   "limit": "+2 kN report",
+   "passed": null,
+   "note": "this -4.121779137338966, twin None (K0V_top_flat_Fs0); margin = error - max(5 kN, 10 %); split E - T2 / T2 - T0: this +2.62 / +0.40 kN (RL)",
+   "kind": "pair",
+   "source": "s8_control",
+   "report_cause": null,
+   "split_this": {
+    "round": 0,
+    "leg": "RL",
+    "margin_kN": -4.121779137338966,
+    "err_kN": 3.0189966653655347,
+    "est_bias_kN": 2.619904671513467,
+    "hyst_kN": 0.3990919938520676
+   },
+   "split_twin": null
+  },
+  {
+   "item": "item 9 I1-I5",
+   "case": "*",
+   "value": null,
+   "limit": null,
+   "passed": null,
+   "note": "no item-9 case in the batch",
+   "kind": "record",
+   "source": "s8_control"
+  },
+  {
+   "item": "I4 summary (gate: every compared case matches)",
+   "case": "*",
+   "value": {
+    "match": 0,
+    "mismatch": 0,
+    "not_compared": 0
+   },
+   "limit": 0,
+   "passed": null,
+   "note": "0 of 33 table cases in the batch",
+   "kind": "record",
+   "source": "s8_control"
+  },
+  {
+   "item": "C-S8-14 E-group G4 RR summary (record, control rev. 42 212.4 check)",
+   "case": "*",
+   "value": 0,
+   "limit": 8,
+   "passed": null,
+   "note": "per case: relevel_predicted / reapproach start [s], mean RR command [mm/s] between them, min true RR force [kN] and time, F_band [kN], twist stiffness scale (run end) + C-S8-19 ⑤: scale_in_use / raw_ratio at the event, per-round scale history, RR F_hat_cal - F_band at the re-approach start vs 1.4 F_min",
+   "kind": "record",
+   "source": "s8_control",
+   "g4_rr": {},
+   "scale_at_event": {}
+  },
+  {
+   "item": "R44-213.6 TOUCH regression F_s 0 vs reference batch (TOUCH end 0.3 s, D8 1 kN, READY 1 s)",
+   "case": "*",
+   "value": null,
+   "limit": null,
+   "passed": null,
+   "note": "no reference batch (--ref-batch)",
+   "kind": "record",
+   "source": "s8_control"
+  },
+  {
+   "item": "R44-213.6 TOUCH fix: TOUCH length <= F_s 0 twin + 1 s",
+   "case": "K24_top_flat_Fs4",
+   "value": null,
+   "limit": 1.0,
+   "passed": null,
+   "note": "this 19.199999999955253 s, twin None None s",
+   "kind": "record",
+   "source": "s8_control"
+  },
+  {
+   "item": "R44-213.6 free-air touch_seen = 0 (TOUCH slow / zero command without pad contact)",
+   "case": "K24_top_flat_Fs4",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "per leg instants [[], [], [], []]",
+   "kind": "judged",
+   "source": "s8_control"
+  },
+  {
+   "item": "R44-213.6 1.4 side effect: no leg_reapproach_start in PROBE / event-free READY",
+   "case": "K24_top_flat_Fs4",
+   "value": 0,
+   "limit": 0,
+   "passed": true,
+   "note": "PROBE [], READY []",
+   "kind": "judged",
+   "source": "s8_control"
+  },
+  {
+   "item": "C-S8-37 re-approach record after the event: runs / re-triggers / deferred starts (P-S8-16 RT; record)",
+   "case": "*",
+   "value": {
+    "runs_with_reapproach": 0,
+    "runs_after_event": 0,
+    "retriggers": 0,
+    "deferred": 0,
+    "starts_after_1.5_s": 0,
+    "runs_with_deferred": []
+   },
+   "limit": null,
+   "passed": null,
+   "note": "none",
+   "kind": "record",
+   "source": "s8_control",
+   "per_run": {}
+  },
+  {
+   "item": "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferral + T_o) + 0.3 s, spec rev. 55 267), < F_min = FLAG (record, U-S8-57 (a); C-S8-42 reference columns event + 0..4 s)",
+   "case": "*",
+   "value": {
+    "rt_runs": 1,
+    "runs_with_deferral": 0,
+    "windows": 0,
+    "flagged_runs": 0,
+    "worst": null
+   },
+   "limit": null,
+   "passed": null,
+   "note": "no deferred leg below F_min",
+   "kind": "record",
+   "source": "s8_control",
+   "flag": false,
+   "flagged": [],
+   "ref_flagged": [],
+   "ref_compared_windows": 0,
+   "runs_without_reference": [],
+   "ref_thresholds": {
+    "min_kN": 0.5,
+    "time_s": 0.1
+   },
+   "window_rule": "spec rev. 55 267",
+   "per_run": {},
+   "rule": "C-S8-41 / C-S8-42 (spec rev. 54 261, rev. 55 267, U-S8-57 (a)): per leg_reapproach_deferred:<leg> after the event, window = deferral t_def .. min(t_next, t_def + T_o) + 0.3 s, cut at the run end (t_next = the same leg's next leg_reapproach_start, T_o = controller meta r8.lifted_reapproach.opposite_window_s, 0.8 s when missing); overlapping windows of the same leg are merged (first deferral .. last end); value = minimum of the S8-A2 judged true rod force (pads F_cyl_min_interval, 20 ms mean F_cyl_mean_20ms on airborne samples) of that leg over the window; the raw 1 ms minimum and the lift are records too; FLAG (record, not a gate) when the judged minimum < F_min",
+   "ref_rule": "C-S8-42 (spec rev. 55 269.3 #2): per deferred leg, over event + 0 .. 4 s (both ends included): minimum of the S8-A2 judged force, time with the judged force < F_min and airborne time (1 ms samples x the median pad period), in this run and in the same episode of the reference batch (768 / original MLJ); FLAG text (record, not a judgement) when the run is deeper by > 0.5 kN or longer by > 0.1 s (ASSUMPTION thresholds)"
+  },
+  {
+   "item": "S8-L5 crawler label of the batch (R41-5: one crawler contact per batch)",
+   "case": "*",
+   "value": [
+    "nsc_rigid: rigid crawler upper bound (S8-L5)"
+   ],
+   "limit": null,
+   "passed": null,
+   "note": "K24_top_flat_Fs4: nsc_rigid: rigid crawler upper bound (S8-L5)",
+   "kind": "record",
+   "source": "s8_control",
+   "labels": {
+    "K24_top_flat_Fs4": "nsc_rigid: rigid crawler upper bound (S8-L5)"
+   }
+  }
+ ],
+ "s8_metrics": {
+  "K24_top_flat_Fs4": {
+   "case": "K24_top_flat_Fs4",
+   "s8": {
+    "case_id": "K24_top_flat_Fs4",
+    "group": "K24",
+    "priority": 2,
+    "engine": "L2b_NSC",
+    "fs_kN": 4.0,
+    "event": null,
+    "event_spec": null,
+    "phase_offset_s": 0.0,
+    "lock_valve": "pilot_check",
+    "condition": "judged",
+    "pair_fs0": "K0V_top_flat_Fs0",
+    "pair_fs0_external": null,
+    "ref_s7": null,
+    "pair_l1": null,
+    "pair_judge": null,
+    "contact": "combined",
+    "floor": "flat",
+    "level": "top",
+    "duration_s": 74.0,
+    "notes": [],
+    "base": {
+     "case_id": "K24_top_flat_Fs4",
+     "config": "S8",
+     "beta_GPa": 1.0,
+     "tau_v_s": 0.1,
+     "amp_ramp": "none",
+     "L0r_m": null,
+     "command_offset_s": 0.0,
+     "increment": "sym0.25",
+     "twist_reference": "measured_Sii",
+     "fast_relevel": false,
+     "sensor_model": false,
+     "settle_offset_s": 0.0,
+     "fast_relevel_horizon_periods": null,
+     "conditional": false,
+     "notes": [],
+     "front_frame_stiffness_N_m": null,
+     "c11_role": null,
+     "crawler_kt_factor": 1.0,
+     "scenario": {
+      "case_id": "K24_top_flat_Fs4",
+      "group": "D8",
+      "level": "top",
+      "floor": "flat",
+      "contact": "combined",
+      "grade": "ideal",
+      "h4": true,
+      "check_time_s": 2.0,
+      "acceptance": "reject",
+      "target_deg": [
+       0.0,
+       0.0
+      ],
+      "event": null,
+      "pad_record": true,
+      "combined_verdict": null,
+      "duration_s": 66.0,
+      "items": [
+       "R",
+       "3",
+       "8"
+      ],
+      "notes": [],
+      "seed": 12345,
+      "pressure_grade": "normal",
+      "zero_calibration": true,
+      "head_offset_bar": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "head_drift_bar": [
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "pre_extend_leg": null,
+      "snapshot_override": null,
+      "pre_extend_offset_mm": 0.0
+     },
+     "duration_s": 74.0
+    },
+    "crawler_contact": "nsc_rigid",
+    "crawler_check_passed": false,
+    "crawler_contact_model": {
+     "model": "rigid",
+     "check_passed": false,
+     "check_note": "S8-L4 failed 2026-10-24: NSC compliance creeps (no restoring spring) in pychrono 10.0.0; crawler contact stays rigid NSC, S8-L5 tag applies",
+     "source": "YAML contact.crawler.L2b_NSC.model"
+    },
+    "source": "L2bModel.crawler_contact['model'] (rigid / compliant, U-S8-L3) and crawler_check_passed (S8-L4) or CRAWLER_CHECK_PASSED; absent = nsc_rigid",
+    "plant": {
+     "seal_friction_level_N": 4000.0,
+     "lock_valve": "pilot_check",
+     "friction_element": "SealFriction",
+     "friction_meta": {
+      "model": "Coulomb, massless piston, parallel to the oil spring, series k_out (S8 spec 2.1); explicit return mapping per hook (2.5)",
+      "limits_N": [
+       4000.0,
+       4000.0,
+       3333.2000000000003,
+       3333.2000000000003
+      ],
+      "static_ratio": 1.0,
+      "stick_stiffness_N_m": "rigid",
+      "pressure_model": "constant",
+      "k_out_N_m": [
+       216648305.16451868,
+       216648305.16451868,
+       205103210.7976279,
+       205103210.7976279
+      ],
+      "initial_state": "f = 0, stuck at arming (ASSUMPTION, spec 2.6)"
+     },
+     "cb_element": null,
+     "cb_meta": null,
+     "adapter": "outrigger_sim.chrono.s8_plant_adapter"
+    },
+    "ground_patches": null,
+    "controller_settle_map_meta": {
+     "kind": "identity",
+     "engine": "L2b_NSC",
+     "coefficients": {
+      "theta0_deg": 0.0,
+      "k_dn": 0.0,
+      "k_up": 0.0,
+      "k_phi": 0.0
+     },
+     "rule": "C-R17 / U-S7-1 (s6_control_spec rev. 37 191.4 (a))"
+    },
+    "lifted_reapproach": {
+     "enable": true,
+     "mode": "twist",
+     "load_fraction_of_F_min": 1.4,
+     "samples": 1,
+     "single_leg": true,
+     "exit_margin_N": 5000.0,
+     "exit_samples": 3,
+     "twist_speed_fraction": 0.25,
+     "protect_margin_N": 5000.0,
+     "speed_fraction": 0.25,
+     "max_travel_m": 0.04,
+     "retrigger_window_s": 2.0,
+     "retrigger_speed_factor": 0.6,
+     "opposite_window_s": 0.8,
+     "opposite_strong_level_N": 0.0,
+     "opposite_strong_samples": 2,
+     "max_duration_s": 10.0
+    }
+   },
+   "rigid": true,
+   "crawler_contact": "nsc_rigid",
+   "crawler_check_passed": false,
+   "liftoff_s": 24.399999999947575,
+   "ready_s": 42.70000000039165,
+   "F_min_N": 9414.58911,
+   "h4_mechanism": null,
+   "end": {
+    "anchor": "ready",
+    "after_s": 10.0,
+    "upper_s": 134.0,
+    "rule": "C-S8-17 (spec rev. 43 213.8): D8 READY + 10 s, event + 45 s, HOLD READY + 120 s; upper bound duration + 60 s, else timeout",
+    "applied": true,
+    "upper_used_s": 134.0,
+    "anchor_t_s": 42.70000000039165,
+    "target_t_s": 52.70000000039165,
+    "end_t_s": 52.70000000072361,
+    "stopped_at_target": true,
+    "timeout": false,
+    "final_phase": "ready",
+    "phase_lengths": {
+     "total_s": {
+      "check": 4.599999999993276,
+      "touch": 19.199999999955253,
+      "level": 6.800000000044545,
+      "done": 0.10000000000331966,
+      "probe": 11.900000000395043,
+      "ready": 10.000000000331966
+     },
+     "first_touch_s": 19.199999999955253,
+     "first_level_s": 6.800000000044545
+    }
+   },
+   "lock_valve": {
+    "plant": "pilot_check",
+    "controller": null,
+    "cb_aware": null,
+    "moving_stroke_check": true,
+    "source": "settings.s8.lock_valve / controller_meta.two_pressure.settings.lock_valve"
+   },
+   "c1": {
+    "raw_min_kN": 54.776200272358736,
+    "raw_leg": "RR",
+    "raw_t_s": 38.66600000025773,
+    "raw_after_liftoff_s": 14.266000000310157,
+    "slow_min_kN": 55.11626455066635,
+    "slow_leg": "RR",
+    "slow_t_s": 38.332000000246644,
+    "slow_window_s": 1.0,
+    "slow_min_first8_kN": 58.673362836993896,
+    "raw_min_first8_kN": 58.069908962428855
+   },
+   "air": {
+    "samples": [
+     23299,
+     23299,
+     22935,
+     22935
+    ],
+    "min_1ms_kN": [
+     -0.8060470875783603,
+     -0.7644783822950166,
+     -0.4199564245778216,
+     -0.39963350378977963
+    ],
+    "mean20_min_kN": [
+     -0.014876357686294568,
+     -0.01685595135293761,
+     -0.009404220932301656,
+     -0.009368747754777928
+    ],
+    "mean20_max_kN": [
+     0.024091688163198115,
+     0.024137979250160584,
+     0.01629037713239802,
+     0.01632769229944222
+    ]
+   },
+   "fs_leg_N": [
+    4000.0,
+    4000.0,
+    3333.2000000000003,
+    3333.2000000000003
+   ],
+   "chatter": {
+    "band_edge_chatter": [
+     30259,
+     29683,
+     31670,
+     34546
+    ],
+    "window_s": 0.001,
+    "slip_starts": [
+     15386,
+     15078,
+     16087,
+     17547
+    ],
+    "pressure_floor": {
+     "enabled": true,
+     "hook_hit_steps": [
+      706,
+      706,
+      722,
+      722
+     ],
+     "rule": "S8-A1: p_h = max(floor, (F_p + p_r A_ann) / A_p), p_r re-solved where it binds; floor = return 2 bar g moving, rod-side cavitation floor locked"
+    },
+    "pressure_floor_measurements": [
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "pair_window": {
+    "t_ready_minus_touch_s": 18.800000000442907,
+    "min_cyl_reanchor_kN": null,
+    "min_raw_after_liftoff_kN": 54.776200272358736,
+    "min_slow_after_liftoff_kN": 55.11626455066635,
+    "osc_half_amp_0_3_kN": [
+     7.402341004513844,
+     6.126567784145722,
+     3.685733077482575,
+     2.7488678877261625
+    ],
+    "osc_half_amp_3_8_kN": [
+     1.3348554363605871,
+     1.5903819842166778,
+     2.343887621015325,
+     2.4521891477767492
+    ],
+    "min_late8_to_ready_kN": 54.776200272358736,
+    "nF_true_ready_kN": -2.0324127530336336
+   },
+   "F1_law": {
+    "available": true,
+    "missing": [],
+    "grade": null,
+    "has_terms": false,
+    "sigma_F_N": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "limit_N": [
+     100.0,
+     100.0,
+     100.0,
+     100.0
+    ],
+    "areas_m2": {
+     "head": [
+      0.013273229,
+      0.013273229,
+      0.00950331778,
+      0.00950331778
+     ],
+     "annulus": [
+      0.00376991118,
+      0.00376991118,
+      0.00314159265,
+      0.00314159265
+     ],
+     "source": "params.raw legs.<leg>.cylinder.{head,annulus}_area_m2"
+    },
+    "check_F_minus_f_vs_F_pressure_N": 0.0,
+    "check_area_law_N": 2.9103830456733704e-11,
+    "rule": "|F_hat - (F - f + E_s)| <= 6 sigma_F + 0.1 kN (R45-1, U-S8-18), raw reading F_hat_N, phases other than CHECK",
+    "metrics": {
+     "limit_N": [
+      100.0,
+      100.0,
+      100.0,
+      100.0
+     ],
+     "sigma_F_N": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "n": [
+      481,
+      481,
+      481,
+      481
+     ],
+     "max_abs_N": [
+      1.4551915228366852e-11,
+      2.9103830456733704e-11,
+      1.4551915228366852e-11,
+      1.4551915228366852e-11
+     ],
+     "t_index": [
+      243,
+      371,
+      351,
+      319
+     ],
+     "violations_per_leg": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "mean_N": [
+      -3.337335028335173e-13,
+      -1.8908413758272937e-14,
+      -5.767066196273246e-14,
+      6.523402746604163e-14
+     ],
+     "std_N": [
+      7.516409313422182e-12,
+      6.808287251796828e-12,
+      2.171514233536844e-12,
+      2.4733182189538e-12
+     ],
+     "std_ratio": [
+      null,
+      null,
+      null,
+      null
+     ],
+     "stats_ok": [
+      null,
+      null,
+      null,
+      null
+     ],
+     "violations": 0,
+     "max_excess_N": -99.9999999999709,
+     "stats_passed": null,
+     "t_s": [
+      24.399999999947575,
+      37.200000000209066,
+      35.20000000014267,
+      32.000000000036444
+     ],
+     "phase": [
+      "level",
+      "probe",
+      "probe",
+      "probe"
+     ]
+    }
+   },
+   "F1": {
+    "violations": 0,
+    "max_excess_kN": -0.09999999999997089,
+    "n_samples": 1924,
+    "reading": "F_hat_N (ideal sensor)",
+    "rule": "|F_hat - F| <= F_s,leg + 0.1 kN (ideal sensor), phases other than CHECK",
+    "calibrated": {
+     "violations": 0,
+     "max_excess_kN": -0.08465428087538748,
+     "offset_kN_per_leg": [
+      0.014238575838739052,
+      0.01534571912458341,
+      0.01292675594612956,
+      0.01277271223886055
+     ],
+     "fault_leg_samples_excluded": 0,
+     "fault_exclusion": null
+    },
+    "raw": {
+     "by_phase": {
+      "check": {
+       "max_kN": 4.000000000000001,
+       "min_kN": -4.000000000000001
+      },
+      "done": {
+       "max_kN": 4.0,
+       "min_kN": 3.331814093077628
+      },
+      "level": {
+       "max_kN": 4.000000000000014,
+       "min_kN": -3.279113520632796
+      },
+      "probe": {
+       "max_kN": 4.000000000000014,
+       "min_kN": -4.000000000000029
+      },
+      "ready": {
+       "max_kN": 4.000000000000014,
+       "min_kN": -3.9897984129854884
+      },
+      "touch": {
+       "max_kN": 4.000000000000007,
+       "min_kN": -3.971902130103408
+      }
+     },
+     "violations": 0,
+     "max_excess_kN": -0.09999999999997089,
+     "share_kN": 0.1,
+     "note": "raw reading before the zero calibration (record, R43-1)"
+    }
+   },
+   "F1_near_fmin": {
+    "n": 4,
+    "max_abs_kN": 0.012926755946130925,
+    "limit_kN": 0.75,
+    "per_leg_limit_kN": [
+     0.75,
+     0.75,
+     0.75,
+     0.75
+    ],
+    "limit_rule": "R46-1: 0.1 kN at F_s,leg = 0, 0.75 kN at F_s,leg > 0 (U-S8-25)",
+    "per_leg_max_abs_kN": [
+     null,
+     null,
+     0.012926755946130925,
+     0.012772712238871008
+    ],
+    "flag": false
+   },
+   "calibration_split": [
+    {
+     "c_i_N": 14.238575838735414,
+     "c_sens_N": 0.0,
+     "c_noise_N": -6.821210263296963e-14,
+     "c_fric_N": 14.238575838735482,
+     "c_rebuilt_N": 14.238575838735414,
+     "c_rebuild_error_N": 0.0,
+     "c_fric_law_N": 14.23857583873587,
+     "hold_rows": [
+      10,
+      10
+     ]
+    },
+    {
+     "c_i_N": 15.345719124579546,
+     "c_sens_N": 0.0,
+     "c_noise_N": 6.821210263296963e-14,
+     "c_fric_N": 15.345719124579478,
+     "c_rebuilt_N": 15.345719124579546,
+     "c_rebuild_error_N": 0.0,
+     "c_fric_law_N": 15.345719124579091,
+     "hold_rows": [
+      10,
+      10
+     ]
+    },
+    {
+     "c_i_N": 12.926755946130811,
+     "c_sens_N": 0.0,
+     "c_noise_N": 1.1368683772161603e-13,
+     "c_fric_N": 12.926755946130697,
+     "c_rebuilt_N": 12.926755946130811,
+     "c_rebuild_error_N": 0.0,
+     "c_fric_law_N": 12.926755946130584,
+     "hold_rows": [
+      10,
+      10
+     ]
+    },
+    {
+     "c_i_N": 12.772712238866802,
+     "c_sens_N": 0.0,
+     "c_noise_N": 2.2737367544323207e-14,
+     "c_fric_N": 12.772712238866779,
+     "c_rebuilt_N": 12.772712238866802,
+     "c_rebuild_error_N": 0.0,
+     "c_fric_law_N": 12.772712238866802,
+     "hold_rows": [
+      10,
+      10
+     ]
+    }
+   ],
+   "R45_2": {
+    "n": 4,
+    "legs": [
+     {
+      "leg": "FL",
+      "n": 0,
+      "c_fric_kN": 0.014238575838735482,
+      "fric_limit_kN": 0.75,
+      "static_max_kN": null,
+      "noise_std_ratio": null,
+      "noise_max_sigma": null,
+      "total_max_kN": null,
+      "fric_flag": false
+     },
+     {
+      "leg": "FR",
+      "n": 0,
+      "c_fric_kN": 0.015345719124579478,
+      "fric_limit_kN": 0.75,
+      "static_max_kN": null,
+      "noise_std_ratio": null,
+      "noise_max_sigma": null,
+      "total_max_kN": null,
+      "fric_flag": false
+     },
+     {
+      "leg": "RL",
+      "n": 2,
+      "c_fric_kN": 0.012926755946130698,
+      "fric_limit_kN": 0.75,
+      "static_max_kN": 0.0,
+      "noise_std_ratio": null,
+      "noise_max_sigma": null,
+      "total_max_kN": 0.012926755946130925,
+      "fric_flag": false
+     },
+     {
+      "leg": "RR",
+      "n": 2,
+      "c_fric_kN": 0.012772712238866779,
+      "fric_limit_kN": 0.75,
+      "static_max_kN": 0.0,
+      "noise_std_ratio": null,
+      "noise_max_sigma": null,
+      "total_max_kN": 0.012772712238871008,
+      "fric_flag": false
+     }
+    ],
+    "static_max_kN": 0.0,
+    "total_max_kN": 0.012926755946130925,
+    "c_fric_max_abs_kN": 0.015345719124579478,
+    "noise_max_sigma": null,
+    "static_flag": false,
+    "fric_flag": false,
+    "total_flag": false,
+    "limits_kN": {
+     "static": 0.65,
+     "friction": [
+      0.75,
+      0.75,
+      0.75,
+      0.75
+     ],
+     "total": 1.6
+    }
+   },
+   "F1_air": {
+    "n": 738,
+    "limit_kN": 1.7,
+    "max_abs_kN": 0.015345719124580227,
+    "leg": "FR",
+    "phase": "touch",
+    "per_leg_max_abs_kN": [
+     0.014238575838735869,
+     0.015345719124580227,
+     0.01292675594613138,
+     0.01277271223886737
+    ],
+    "flag": false,
+    "split": {
+     "n": 738,
+     "legs": [
+      {
+       "leg": "FL",
+       "n": 186,
+       "c_fric_kN": 0.014238575838735482,
+       "fric_limit_kN": 0.75,
+       "static_max_kN": 0.0,
+       "noise_std_ratio": null,
+       "noise_max_sigma": null,
+       "total_max_kN": 0.014238575838735869,
+       "fric_flag": false
+      },
+      {
+       "leg": "FR",
+       "n": 186,
+       "c_fric_kN": 0.015345719124579478,
+       "fric_limit_kN": 0.75,
+       "static_max_kN": 0.0,
+       "noise_std_ratio": null,
+       "noise_max_sigma": null,
+       "total_max_kN": 0.015345719124580227,
+       "fric_flag": false
+      },
+      {
+       "leg": "RL",
+       "n": 183,
+       "c_fric_kN": 0.012926755946130698,
+       "fric_limit_kN": 0.75,
+       "static_max_kN": 0.0,
+       "noise_std_ratio": null,
+       "noise_max_sigma": null,
+       "total_max_kN": 0.01292675594613138,
+       "fric_flag": false
+      },
+      {
+       "leg": "RR",
+       "n": 183,
+       "c_fric_kN": 0.012772712238866779,
+       "fric_limit_kN": 0.75,
+       "static_max_kN": 0.0,
+       "noise_std_ratio": null,
+       "noise_max_sigma": null,
+       "total_max_kN": 0.01277271223886737,
+       "fric_flag": false
+      }
+     ],
+     "static_max_kN": 0.0,
+     "total_max_kN": 0.015345719124580227,
+     "c_fric_max_abs_kN": 0.015345719124579478,
+     "noise_max_sigma": null,
+     "static_flag": false,
+     "fric_flag": false,
+     "total_flag": false,
+     "limits_kN": {
+      "static": 0.65,
+      "friction": [
+       0.75,
+       0.75,
+       0.75,
+       0.75
+      ],
+      "total": 1.6
+     }
+    }
+   },
+   "R45_4": [],
+   "forced_window": null,
+   "rod_fallback": {
+    "events": [],
+    "injected": false,
+    "fault_leg": null,
+    "fault_t_s": null,
+    "expected_window_s": null
+   },
+   "F2": {
+    "violations": 0,
+    "forced_window_excluded": false,
+    "max_kN": -3.754305951411312,
+    "lower_source": "F_lower_est_N (controller _load_estimate_N(forces.lower))",
+    "max_raw_minus_band_kN": -3.740067375572573,
+    "max_reading_lower_kN": 3.9857614241612755,
+    "band_min_after_kN": 7.740067375572595,
+    "note": "max_raw_minus_band = F_hat - F_band - F (control rev. 43 recheck basis); max_reading_lower = F_lower_N - F (rev. 42 judge, no band)"
+   },
+   "F3": {
+    "F_band_kN": 7.740067375572595,
+    "F_s_max_kN": 4.0,
+    "excess_kN": 3.7400673755725946
+   },
+   "F4": 3971.8646882918447,
+   "F9": {
+    "nF_true_kN": -2.0324127530336336,
+    "nF_hat_kN": 1.5401979809370823,
+    "n_eps_kN": 3.5726107339707123
+   },
+   "F10": 0,
+   "item9": {
+    "J_P": {
+     "episodes": [],
+     "n": 0,
+     "M1_missed": 0,
+     "M1_upper95": null,
+     "M1p_late": 0,
+     "M3_delays_s": [],
+     "M3_median_s": null,
+     "transient_episodes": 0,
+     "M2_false_actions": 0,
+     "M4": {
+      "n": 0,
+      "max_kN": null,
+      "p5_kN": null,
+      "p50_kN": null,
+      "p95_kN": null
+     }
+    },
+    "J_C": {
+     "episodes": [],
+     "n": 0,
+     "M1_missed": 0,
+     "M1_upper95": null,
+     "M1p_late": 0,
+     "M3_delays_s": [],
+     "M3_median_s": null,
+     "transient_episodes": 0,
+     "M2_false_actions": 0,
+     "M4": {
+      "n": 0,
+      "max_kN": null,
+      "p5_kN": null,
+      "p50_kN": null,
+      "p95_kN": null
+     }
+    },
+    "M5": {
+     "min_true_kN": 54.776200272358736,
+     "under_fmin_s": 0.0,
+     "lifted_s": 0.0
+    },
+    "fallback_note": "level judgements on F_hat / F_lower only (no R-5, GE2, probe); the P-S8-1 replay rows below supersede them when present",
+    "replay": {
+     "status": "P-S8-1 replay (continuous watch)",
+     "transient_window_rows": 80,
+     "reading": "corrected",
+     "reading_rule": "C-S8-40 / spec rev. 54 249 (C-S8-37 / rev. 52 232 corrected): default = corrected reading lower_reading + delta_i (and net_force + delta_i) on the 10 Hz samples whose pad normal force (pads N_raw, 1 ms record, linear interpolation at the sample time) is < 1.5 kN, delta_i = min(0.5 kN, 2 F_s,i), F_s,i = median of pads F_seal_limit[:, i], only for engine L2b_NSC (settings.s8.engine), else 0; 'raw' = the reading as recorded (record rows); 'upper_sensitivity' = lifted samples (N <= 0) read at least F_seal_limit,i - m_i g (sensitivity rows); 'all_apply' = + 0.5 kN where N < 1.5 kN regardless of engine / F_s (rev. 52 rule, sensitivity rows)",
+     "reading_stats": {
+      "source": "N_raw",
+      "samples": 527,
+      "engine": "L2b_NSC",
+      "delta_N": {
+       "FL": 500.0,
+       "FR": 500.0,
+       "RL": 500.0,
+       "RR": 500.0
+      },
+      "corrected_per_leg": {
+       "FL": 233,
+       "FR": 233,
+       "RL": 229,
+       "RR": 229
+      },
+      "below_1p5kN_per_leg": {
+       "FL": 233,
+       "FR": 233,
+       "RL": 229,
+       "RR": 229
+      },
+      "lifted_per_leg": {
+       "FL": 233,
+       "FR": 233,
+       "RL": 229,
+       "RR": 229
+      }
+     },
+     "engine": "L2b_NSC",
+     "reading_delta_N": {
+      "FL": 500.0,
+      "FR": 500.0,
+      "RL": 500.0,
+      "RR": 500.0
+     },
+     "J_P": {
+      "score": {
+       "episodes": 0,
+       "M1_missed": 0,
+       "M1_missed_upper_95": 1.0,
+       "M1p_late": 0,
+       "M2_false_action_flags": 0,
+       "M2_per_watched_hour": 0.0,
+       "M3_median_delay_s": null,
+       "M3_delays_s": [],
+       "M4_max_N": null,
+       "M4_p5_p50_p95_N": null
+      },
+      "score_ex_transient": {
+       "episodes": 0,
+       "M1_missed": 0,
+       "M1_missed_upper_95": 1.0,
+       "M1p_late": 0,
+       "M2_false_action_flags": 0,
+       "M2_per_watched_hour": 0.0,
+       "M3_median_delay_s": null,
+       "M3_delays_s": [],
+       "M4_max_N": null,
+       "M4_p5_p50_p95_N": null,
+       "rule": "R42-3: episodes on all watched samples, crawler_transient (t_on in the lift-off window) left out; M2 / M4 on the samples outside the window"
+      },
+      "episodes": [],
+      "events": []
+     },
+     "J_C": {
+      "score": {
+       "episodes": 0,
+       "M1_missed": 0,
+       "M1_missed_upper_95": 1.0,
+       "M1p_late": 0,
+       "M2_false_action_flags": 0,
+       "M2_per_watched_hour": 0.0,
+       "M3_median_delay_s": null,
+       "M3_delays_s": [],
+       "M4_max_N": null,
+       "M4_p5_p50_p95_N": null
+      },
+      "score_ex_transient": {
+       "episodes": 0,
+       "M1_missed": 0,
+       "M1_missed_upper_95": 1.0,
+       "M1p_late": 0,
+       "M2_false_action_flags": 0,
+       "M2_per_watched_hour": 0.0,
+       "M3_median_delay_s": null,
+       "M3_delays_s": [],
+       "M4_max_N": null,
+       "M4_p5_p50_p95_N": null,
+       "rule": "R42-3: episodes on all watched samples, crawler_transient (t_on in the lift-off window) left out; M2 / M4 on the samples outside the window"
+      },
+      "episodes": [],
+      "events": []
+     },
+     "raw": {
+      "J_P": {
+       "score": {
+        "episodes": 0,
+        "M1_missed": 0,
+        "M1_missed_upper_95": 1.0,
+        "M1p_late": 0,
+        "M2_false_action_flags": 0,
+        "M2_per_watched_hour": 0.0,
+        "M3_median_delay_s": null,
+        "M3_delays_s": [],
+        "M4_max_N": null,
+        "M4_p5_p50_p95_N": null
+       },
+       "score_ex_transient": {
+        "episodes": 0,
+        "M1_missed": 0,
+        "M1_missed_upper_95": 1.0,
+        "M1p_late": 0,
+        "M2_false_action_flags": 0,
+        "M2_per_watched_hour": 0.0,
+        "M3_median_delay_s": null,
+        "M3_delays_s": [],
+        "M4_max_N": null,
+        "M4_p5_p50_p95_N": null,
+        "rule": "R42-3: episodes on all watched samples, crawler_transient (t_on in the lift-off window) left out; M2 / M4 on the samples outside the window"
+       },
+       "episodes": [],
+       "events": []
+      },
+      "J_C": {
+       "score": {
+        "episodes": 0,
+        "M1_missed": 0,
+        "M1_missed_upper_95": 1.0,
+        "M1p_late": 0,
+        "M2_false_action_flags": 0,
+        "M2_per_watched_hour": 0.0,
+        "M3_median_delay_s": null,
+        "M3_delays_s": [],
+        "M4_max_N": null,
+        "M4_p5_p50_p95_N": null
+       },
+       "score_ex_transient": {
+        "episodes": 0,
+        "M1_missed": 0,
+        "M1_missed_upper_95": 1.0,
+        "M1p_late": 0,
+        "M2_false_action_flags": 0,
+        "M2_per_watched_hour": 0.0,
+        "M3_median_delay_s": null,
+        "M3_delays_s": [],
+        "M4_max_N": null,
+        "M4_p5_p50_p95_N": null,
+        "rule": "R42-3: episodes on all watched samples, crawler_transient (t_on in the lift-off window) left out; M2 / M4 on the samples outside the window"
+       },
+       "episodes": [],
+       "events": []
+      }
+     },
+     "upper_sensitivity": {
+      "J_P": {
+       "score": {
+        "episodes": 0,
+        "M1_missed": 0,
+        "M1_missed_upper_95": 1.0,
+        "M1p_late": 0,
+        "M2_false_action_flags": 0,
+        "M2_per_watched_hour": 0.0,
+        "M3_median_delay_s": null,
+        "M3_delays_s": [],
+        "M4_max_N": null,
+        "M4_p5_p50_p95_N": null
+       },
+       "score_ex_transient": {
+        "episodes": 0,
+        "M1_missed": 0,
+        "M1_missed_upper_95": 1.0,
+        "M1p_late": 0,
+        "M2_false_action_flags": 0,
+        "M2_per_watched_hour": 0.0,
+        "M3_median_delay_s": null,
+        "M3_delays_s": [],
+        "M4_max_N": null,
+        "M4_p5_p50_p95_N": null,
+        "rule": "R42-3: episodes on all watched samples, crawler_transient (t_on in the lift-off window) left out; M2 / M4 on the samples outside the window"
+       },
+       "episodes": [],
+       "events": []
+      },
+      "J_C": {
+       "score": {
+        "episodes": 0,
+        "M1_missed": 0,
+        "M1_missed_upper_95": 1.0,
+        "M1p_late": 0,
+        "M2_false_action_flags": 0,
+        "M2_per_watched_hour": 0.0,
+        "M3_median_delay_s": null,
+        "M3_delays_s": [],
+        "M4_max_N": null,
+        "M4_p5_p50_p95_N": null
+       },
+       "score_ex_transient": {
+        "episodes": 0,
+        "M1_missed": 0,
+        "M1_missed_upper_95": 1.0,
+        "M1p_late": 0,
+        "M2_false_action_flags": 0,
+        "M2_per_watched_hour": 0.0,
+        "M3_median_delay_s": null,
+        "M3_delays_s": [],
+        "M4_max_N": null,
+        "M4_p5_p50_p95_N": null,
+        "rule": "R42-3: episodes on all watched samples, crawler_transient (t_on in the lift-off window) left out; M2 / M4 on the samples outside the window"
+       },
+       "episodes": [],
+       "events": []
+      }
+     },
+     "all_apply": {
+      "J_P": {
+       "score": {
+        "episodes": 0,
+        "M1_missed": 0,
+        "M1_missed_upper_95": 1.0,
+        "M1p_late": 0,
+        "M2_false_action_flags": 0,
+        "M2_per_watched_hour": 0.0,
+        "M3_median_delay_s": null,
+        "M3_delays_s": [],
+        "M4_max_N": null,
+        "M4_p5_p50_p95_N": null
+       },
+       "score_ex_transient": {
+        "episodes": 0,
+        "M1_missed": 0,
+        "M1_missed_upper_95": 1.0,
+        "M1p_late": 0,
+        "M2_false_action_flags": 0,
+        "M2_per_watched_hour": 0.0,
+        "M3_median_delay_s": null,
+        "M3_delays_s": [],
+        "M4_max_N": null,
+        "M4_p5_p50_p95_N": null,
+        "rule": "R42-3: episodes on all watched samples, crawler_transient (t_on in the lift-off window) left out; M2 / M4 on the samples outside the window"
+       },
+       "episodes": [],
+       "events": []
+      },
+      "J_C": {
+       "score": {
+        "episodes": 0,
+        "M1_missed": 0,
+        "M1_missed_upper_95": 1.0,
+        "M1p_late": 0,
+        "M2_false_action_flags": 0,
+        "M2_per_watched_hour": 0.0,
+        "M3_median_delay_s": null,
+        "M3_delays_s": [],
+        "M4_max_N": null,
+        "M4_p5_p50_p95_N": null
+       },
+       "score_ex_transient": {
+        "episodes": 0,
+        "M1_missed": 0,
+        "M1_missed_upper_95": 1.0,
+        "M1p_late": 0,
+        "M2_false_action_flags": 0,
+        "M2_per_watched_hour": 0.0,
+        "M3_median_delay_s": null,
+        "M3_delays_s": [],
+        "M4_max_N": null,
+        "M4_p5_p50_p95_N": null,
+        "rule": "R42-3: episodes on all watched samples, crawler_transient (t_on in the lift-off window) left out; M2 / M4 on the samples outside the window"
+       },
+       "episodes": [],
+       "events": []
+      }
+     }
+    }
+   },
+   "F8": {
+    "events": [],
+    "ready_exits": 0,
+    "window_s": [
+     42.70000000039165,
+     52.70000000072361
+    ]
+   },
+   "i4": {
+    "t_ev_s": 32.399999999947575,
+    "p_miss": "none",
+    "item6": "pass",
+    "reapproach": "no",
+    "episodes_after_t_ev": 0,
+    "episodes_flagged": 0,
+    "transient_episodes_after_t_ev": 0,
+    "p_miss_ex_transient": "none",
+    "min_judged_force_kN": 54.776200272358736,
+    "first_reapproach_s": null,
+    "lift_long_s": 0.0
+   },
+   "r44": {
+    "touch_len_s": 19.199999999955253,
+    "touch_end_s": 23.89999999994874,
+    "ready_s": 42.70000000039165,
+    "d8_kN": 54.776200272358736,
+    "reapproach": {
+     "probe": [],
+     "ready": []
+    },
+    "touch_air": [
+     [],
+     [],
+     [],
+     []
+    ]
+   },
+   "probe_7c_split": {
+    "rows": [
+     {
+      "round": 0,
+      "leg": "FL",
+      "E_kN": 119.19694874334954,
+      "T0_kN": 118.25760509812133,
+      "T2_kN": 116.6022672676393,
+      "err_kN": 0.939343645228206,
+      "est_bias_kN": 2.5946814757102317,
+      "hyst_kN": -1.6553378304820257,
+      "margin_kN": -10.886416864583929
+     },
+     {
+      "round": 0,
+      "leg": "FR",
+      "E_kN": 118.71596924472209,
+      "T0_kN": 117.48879405634072,
+      "T2_kN": 115.44640519226482,
+      "err_kN": 1.2271751883813664,
+      "est_bias_kN": 3.2695640524572696,
+      "hyst_kN": -2.042388864075903,
+      "margin_kN": -10.521704217252706
+     },
+     {
+      "round": 0,
+      "leg": "RL",
+      "E_kN": 74.42675469241054,
+      "T0_kN": 71.407758027045,
+      "T2_kN": 71.80685002089707,
+      "err_kN": 3.0189966653655347,
+      "est_bias_kN": 2.619904671513467,
+      "hyst_kN": 0.3990919938520676,
+      "margin_kN": -4.121779137338966
+     },
+     {
+      "round": 0,
+      "leg": "RR",
+      "E_kN": 72.6722438472608,
+      "T0_kN": 70.22693775323167,
+      "T2_kN": 69.60252982039636,
+      "err_kN": 2.445306094029135,
+      "est_bias_kN": 3.069714026864446,
+      "hyst_kN": -0.6244079328353109,
+      "margin_kN": -4.577387681294032
+     }
+    ],
+    "est_bias": {
+     "value_kN": 3.2695640524572696,
+     "leg": "FR",
+     "round": 0
+    },
+    "hyst": {
+     "value_kN": -2.042388864075903,
+     "leg": "FR",
+     "round": 0
+    },
+    "est_bias_max_kN": 3.2695640524572696,
+    "worst_7c": {
+     "round": 0,
+     "leg": "RL",
+     "margin_kN": -4.121779137338966,
+     "err_kN": 3.0189966653655347,
+     "est_bias_kN": 2.619904671513467,
+     "hyst_kN": 0.3990919938520676
+    }
+   },
+   "reapproach_variant": "rt",
+   "rt": null
+  }
+ },
+ "metrics": [
+  {
+   "case": "K24_top_flat_Fs4",
+   "group": "D8",
+   "level": "top",
+   "floor": "flat",
+   "grade": "ideal",
+   "event": null,
+   "times_s": {
+    "t0": 3.0000000000019065,
+    "touch": 23.89999999994874,
+    "ready": 42.70000000039165,
+    "liftoff": 24.399999999947575,
+    "end": 52.70000000072361
+   },
+   "phases": [
+    [
+     0.10000000000021103,
+     "check"
+    ],
+    [
+     4.699999999993487,
+     "touch"
+    ],
+    [
+     23.89999999994874,
+     "level"
+    ],
+    [
+     30.699999999993285,
+     "done"
+    ],
+    [
+     30.799999999996604,
+     "probe"
+    ],
+    [
+     42.70000000039165,
+     "ready"
+    ]
+   ],
+   "final_phase": "ready",
+   "F_min_N": 9414.58911,
+   "ready_window_ok": true,
+   "att_err_last5_maxabs_deg": 0.0005720647488948482,
+   "att_err_last5_mean_deg": [
+    -0.0004561779010122188,
+    0.000570384472315145
+   ],
+   "t_within_0p2_after_level_s": 0.0,
+   "min_cyl_after_liftoff_kN": 54.776200272358736,
+   "min_cyl_leg": "RR",
+   "min_cyl_t_s": 38.66600000025773,
+   "pad_N_min_after_liftoff_kN": 55.51781327267885,
+   "min_cyl_excl_reanchor_kN": 54.776200272358736,
+   "max_moving_pressure_bar": 98.20635077078491,
+   "moving_eps_m_s": 1e-06,
+   "max_pressure_any_step_bar": 99.98333707428927,
+   "saturation_steps": 0,
+   "record_rate_hz": 10.000000000023306,
+   "rocking_window_samples": 10,
+   "rocking_amp_deg": 0.0072237725815141735,
+   "final_cyl_kN": [
+    118.29488002528208,
+    115.91763117261151,
+    71.88705026835733,
+    70.48997239822803
+   ],
+   "final_corrective_kN": [
+    118.10383145873406,
+    116.10867973915953,
+    72.09686451457958,
+    70.28015815200578
+   ],
+   "final_twist_kN": 0.4013018133471487,
+   "t_ready_minus_touch_s": 18.800000000442907,
+   "stroke": {
+    "max_m": [
+     0.40145250525354215,
+     0.40146144101652614,
+     0.391273823559536,
+     0.39129400559311717
+    ],
+    "min_m": [
+     8.877888701486521e-06,
+     8.869175517253264e-06,
+     7.405474490116496e-06,
+     7.400715265044456e-06
+    ],
+    "margin_to_end_m": [
+     0.2985474947464578,
+     0.2985385589834738,
+     0.30872617644046396,
+     0.3087059944068828
+    ]
+   },
+   "h4": {
+    "enabled": true,
+    "outcome": "skipped:theta_below_min",
+    "expected": {
+     "relative_pitch_deg": 0.0,
+     "triggers": false,
+     "nose_up": false,
+     "direction": "nose_down_only",
+     "expected": null,
+     "reanchor_applicable": false
+    },
+    "direction": "nose_down_only"
+   },
+   "target_code": "ACCEPTED",
+   "last_check": null,
+   "floor_true_deg": [
+    0.0,
+    0.0
+   ],
+   "contact": "combined",
+   "condition": "base",
+   "condition_reasons": [],
+   "diagnostic_check": {
+    "counts": {
+     "WARN_LOAD_SUM_MISMATCH": 0,
+     "WARN_PRESSURE_DRIFT": 0
+    },
+    "injection": [],
+    "constant_offset": [],
+    "pre_load_reference_code": false,
+    "replay": null
+   },
+   "events": [
+    "C2Event(t_s=26.899999999950648, name='floor_estimate_touch')",
+    "C2Event(t_s=45.70000000039355, name='reanchor_skipped:theta_below_min')"
+   ],
+   "bundle_c": {
+    "config": "S8",
+    "beta_GPa": 1.0,
+    "tau_v_s": 0.1,
+    "amp_ramp": "none",
+    "L0r_m": null,
+    "command_offset_s": 0.0,
+    "increment": "sym0.25",
+    "twist_reference": "measured_Sii",
+    "c2_implementation": {
+     "P-R8-9_check_quiet_after_motion_s": 0.5,
+     "P-R8-10_fast_relevel_on": true,
+     "P-R8-10_horizon_periods": 4,
+     "P-R8-11_probe_abort_event_in_source": true,
+     "rerun32_ready": true,
+     "P-R8-12_settings_type": "LiftedReapproachSettings",
+     "P-R8-12_enable": true,
+     "P-R8-12_event_in_source": true,
+     "rerun33_keys_are_placeholders": true,
+     "rerun33_ready": true,
+     "P-R8-13_mode": "twist",
+     "P-R8-13_settings": {
+      "samples": 1,
+      "single_leg": true,
+      "exit_margin_N": 5000.0,
+      "exit_samples": 3,
+      "twist_speed_fraction": 0.25,
+      "protect_margin_N": 5000.0
+     },
+     "P-R8-13_missing_keys": [],
+     "P-R8-13_deviations_from_spec_defaults": {},
+     "P-R8-14_command_components_attr": true,
+     "rerun34_keys_are_spec_names": true,
+     "rerun34_ready": true,
+     "c2_revision_meta": "R8-D1 (C2)",
+     "P-R8-1_pre_probe_stiffness_scale": 1.2,
+     "P-R8-1_expected": 1.2,
+     "P-R8-3_measured_stiffness_scale_max": 1.5,
+     "P-R8-6_computed_output_attr": true,
+     "module_file": "C:\\workspace\\outrigger_control\\03_src\\outrigger_sim\\control\\c2.py"
+    },
+    "saturation_steps": {
+     "steps": {
+      "FL": 0,
+      "FR": 0,
+      "RL": 0,
+      "RR": 0
+     },
+     "starts": {
+      "FL": 0,
+      "FR": 0,
+      "RL": 0,
+      "RR": 0
+     },
+     "first_t_s": {
+      "FL": null,
+      "FR": null,
+      "RL": null,
+      "RR": null
+     },
+     "episodes": [],
+     "static_window_s": [
+      0.1,
+      0.5
+     ],
+     "mechanism_share_limit_N": 250.0,
+     "rule": "static end - limit <= 0.25 kN = law-C mechanism share (dyn 5.24.2); static window ASSUMPTION; t relative to the start state"
+    },
+    "snapshot_retag_check": null,
+    "beta_leak_fixed": false,
+    "crawler_kt_factor": 1.0,
+    "warnings": [],
+    "c11": null
+   },
+   "guard_oscillation": [],
+   "guard_periods": 0,
+   "c5a_command_reversals": {
+    "threshold_m_s": 0.000418486032,
+    "window_s": 4.0,
+    "first_guard_s": null,
+    "max_reversals": null,
+    "status": "no guard activation"
+   },
+   "c5b_guard_restarts": {
+    "starts_s": [],
+    "starts": 0,
+    "max_in_window": 0,
+    "window_s": 10.0
+   },
+   "c5c_ready_settling": {
+    "windows": [
+     [
+      47.70000000055763,
+      52.70000000072361
+     ]
+    ],
+    "per_window": [
+     {
+      "window_s": [
+       47.70000000055763,
+       52.70000000072361
+      ],
+      "channel": "roll",
+      "half_range_deg": 8.555679205725667e-06,
+      "zero_cross_hz": 3.499999999883812
+     },
+     {
+      "window_s": [
+       47.70000000055763,
+       52.70000000072361
+      ],
+      "channel": "pitch",
+      "half_range_deg": 2.0217274804934884e-06,
+      "zero_cross_hz": 3.6999999998771727
+     }
+    ],
+    "worst": {
+     "window_s": [
+      47.70000000055763,
+      52.70000000072361
+     ],
+     "channel": "roll",
+     "half_range_deg": 8.555679205725667e-06,
+     "zero_cross_hz": 3.499999999883812
+    },
+    "source": "pads 1 ms",
+    "floor_events_s": []
+   },
+   "check_attitude": null,
+   "relevel_predicted": {
+    "probe_abort": [],
+    "other": [],
+    "probe_aborted_low_load": [],
+    "counts": {
+     "probe_abort": 0,
+     "other": 0
+    }
+   },
+   "reapproach": {
+    "starts": [],
+    "count": 0
+   },
+   "floor_event_t_s": null,
+   "diagnostic_replay": {
+    "baselines": [
+     {
+      "t_s": 45.20000000047464,
+      "sum_kN": 389.8851704373672
+     }
+    ],
+    "longest_run_over_4kN_s": 0.0,
+    "max_abs_dev_kN": 0.053329609657928816,
+    "replay_passed": true,
+    "rule": "settle 0.5 s, mean 1.5 s, limit 4000.0 N, D5 hold 0.5 s, E-5 hold 30.0 s, 10 Hz record"
+   },
+   "ready_s": 42.70000000039165,
+   "rerun_group": null,
+   "slow_window_s": 1.0,
+   "slow_window_samples": 1001,
+   "slow_sample_s": 0.0009999999999976694,
+   "min_cyl_slow_after_liftoff_kN": 55.11626455066635,
+   "min_cyl_slow_leg": "RR",
+   "min_cyl_slow_t_s": 38.332000000246644,
+   "osc_half_amp_kN": [
+    7.402341004513881,
+    6.126567784145671,
+    3.6857330774825825,
+    2.748867887726192
+   ],
+   "min_cyl_late_kN": 54.776200272358736
+  }
+ ]
+}

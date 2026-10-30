@@ -42,7 +42,9 @@ for IND; fields ``official_verdict``, ``official_verdict_strict`` (NA = failed),
 ``official_failed_rows``, ``official_flags``, ``official_na_rows``.
 Harness paths:
   slope  s9_soil_slope cases (settle table hook_harness attached), as the slope suite
-  g6     r72 per-pad soil (one weak pad), as the g6 suite
+  g6     r72 per-pad soil (one weak pad), as the g6 suite; the record keeps ``soil_model`` and
+         ``r72_path``, and a weak-pad case built without the per-pad soil is an error
+         (spec 429.11.1, as r79)
   Extra keys: ``fs_kN`` override, ``event`` = (leg, depth m, duration s, delay after READY s)
   floor drop injected through ``plant.goff`` (rigid floor of the slope harness only; a soil
   case with an event is rejected), ``hold_s`` READY hold.
@@ -178,6 +180,9 @@ SEAL_FRICTION_MATH = "$F_s$"
 WIDE_PREFIX = {"S|": "slope", "G|": "g6"}
 """Wide set (``--cases wide``): every slope-suite id as ``S|<id>`` (177) and every g6-suite key
 as ``G|<key>`` (116), harness defaults (no override, no event)."""
+WEAK_PAD_SOIL_SEPARATOR = "+"
+"""g6 soil string ``<base>+<weak>@<leg>``: one weak pad."""
+R72_PATH_ENV = "R72_PATH"
 OOS_FIELDS_BEFORE_PITCH = 4
 """``|`` count of an ``X|`` id cut at the comma of its angles
 (``X|<soil>|<pad>|<level>|<roll>``)."""
@@ -658,6 +663,51 @@ def _run_g6_job_official(sl, controller: str, src: str) -> tuple[dict, dict]:
     return rec, _RUN.get("out")
 
 
+class WeakPatchMissingError(RuntimeError):
+    """A one-weak-pad g6 run built without its per-pad soil (spec 429.11.1)."""
+
+
+def soil_model_name(plant) -> str | None:
+    """Class name of the plant's soil model (None without a plant or soil)."""
+    soil = getattr(plant, "soil", None)
+    return None if soil is None else type(soil).__name__
+
+
+def is_weak_patch_missing(src: str, plant) -> bool:
+    """A one-weak-pad g6 source (``<tag>|<base>+<weak>@<leg>|...``) whose plant has no per-pad
+    soil (``SoilPadsPerLeg`` / ``MixedRigidPads`` carry ``n_arr``)."""
+    soil = src.split("|")[1]
+    if WEAK_PAD_SOIL_SEPARATOR not in soil:
+        return False
+    return not hasattr(getattr(plant, "soil", None), "n_arr")
+
+
+def _run_g6(sl, spec: dict, run_input: dict, controller: str, is_official: bool,
+            record: dict) -> tuple[dict, dict]:
+    """Run a g6 job; return the ``run_case`` output and the official fields.
+
+    Adds ``soil_model`` and ``r72_path`` to ``record`` right after the run, so they are kept
+    when the soil check fails.
+
+    Raises:
+        WeakPatchMissingError: A one-weak-pad case ran on the uniform base soil (spec 429.11.1:
+            such a run is never judged).
+    """
+    if is_official:
+        rec, out = _run_g6_job_official(sl, controller, spec["src"])
+    else:
+        rec, out = None, sl.run_case(run_input)
+    g6 = _import_g6()
+    plant = g6._CAP.get("plant")
+    record.update(soil_model=soil_model_name(plant), r72_path=g6.soil_path())
+    if plant is not None and is_weak_patch_missing(spec["src"], plant):
+        raise WeakPatchMissingError(
+            f"weak soil patch missing (soil model {record['soil_model']}, "
+            f"R72_PATH {os.environ.get(R72_PATH_ENV)!r})")
+    official = _judge_g6_official(rec, controller) if is_official else {}
+    return out, official
+
+
 def _new_run_state(spec: dict) -> None:
     _RUN.clear()
     _RUN.update(pmax_move_N=np.full(4, -np.inf), pmax_lock_N=np.full(4, -np.inf),
@@ -690,9 +740,8 @@ def run_job(job: dict) -> dict:
         if "hold_s" in spec:
             sl.HOLD_AFTER_READY_S = float(spec["hold_s"])
         official = {}
-        if is_official and spec["harness"] == "g6":
-            rec, out = _run_g6_job_official(sl, controller, spec["src"])
-            official = _judge_g6_official(rec, controller)
+        if spec["harness"] == "g6":
+            out, official = _run_g6(sl, spec, run_input, controller, is_official, record)
         elif is_official:
             out = sl.run_case(run_input)
             official = _judge_slope_official(slope_case, out, sl, cl, controller)
@@ -941,6 +990,7 @@ def run_batch(case_ids: list[str], controllers: list[str], workers: int,
             "allow_no_settle_row": options.allow_no_settle_row,
             "settle_table_sha256": hashlib.sha256(SETTLE_TABLE_PATH.read_bytes()).hexdigest(),
             "controller_settings": settings_meta(records),
+            "r72_path_env": os.environ.get(R72_PATH_ENV),  # raw value; records hold the used one
             "wall_s": round(time.perf_counter() - t0, 1), **placement}
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps({"meta": meta, "records": records}, indent=1, default=float),

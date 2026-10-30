@@ -1,0 +1,3722 @@
+{
+ "script": "04_scripts/03_control/s9/evidence/final_x_rb2_judge.py",
+ "notes": [
+  "Times *_loop_s are loop-relative (absolute - t_loop_start_s = 8.0 s).",
+  "Stroke comparison uses the controller reading (Chrono meas.stroke) vs harness max(plant.sref).",
+  "P3-7 is a record row (400.2 practice); P3-2 FLAG under 419.8 / 424.10.2 counts as within rules.",
+  "IMU selection rule 0.118 deg (U-S9P-16, user decision 2026-10-31); H-6 stroke +23.0 mm (432.4.5)."
+ ],
+ "FINAL-REP-X": {
+  "case": "P3b_J2_B_top_Fs4_m1p1_t180",
+  "folder": "07_results/S9/batch_FINAL-REP-X_20261031_020716/P3b_J2_B_top_Fs4_m1p1_t180",
+  "harness_id": "H6|J2|B|top|flat|m1.1",
+  "controller": "final_SGS_R4",
+  "code_state": "impl_final_rules",
+  "mass_scale": {
+   "mass_scale": 1.1,
+   "note": "spec 422 / decision Q-D (2026-10-29): Chrono plant superstructure body (rigid, crawler included) mass and inertia about its COG x mass_scale, COG kept (= s9_soil_closed_loop.scale_plant_mass); leg rods / pads unchanged; controller unchanged (YAML nominal mass, W_ref, D1'' mass); the 8 s settle runs on the scaled body in Chrono (no A1-m settle approximation); judgement weight p3b.weight_N = plant weight (scaled), P3-7 loaded window 0.01 W_plant = 0.01 mass_scale W_ref (spec 422.6)",
+   "yaml_superstructure_mass_kg": 38400.8366,
+   "plant_superstructure_mass_kg": 42240.920260000006,
+   "plant_superstructure_inertia_cog_body_kg_m2": [
+    [
+     586855.8971000001,
+     -1035.6077336,
+     -213271.50900000002
+    ],
+    [
+     -1035.6077336,
+     757561.6719000001,
+     -219.47004310000003
+    ],
+    [
+     -213271.50900000002,
+     -219.47004310000003,
+     211497.9922
+    ]
+   ],
+   "plant_weight_N": 417771.268488423,
+   "plant_superstructure_weight_N": 414241.92066772905,
+   "yaml_weight_N": 380112.91206408397,
+   "controller_weight_ref_N": 376583.56424339,
+   "plant_over_W_ref": 1.1,
+   "weight_mismatch_events": [],
+   "judgement_weights": {
+    "mass_scale": 1.1,
+    "weight_N": 417771.268488423,
+    "W_ref_N": 376583.56424339,
+    "W_plant_N": 414241.92066772905,
+    "P3-7_loaded_threshold_N": 4142.41920667729,
+    "F_min_N": 9414.58911,
+    "F_min_x_mass_scale_record_N": 10356.048021000002,
+    "basis": {
+     "weight_N": "p3b.weight_N = plant weight (superstructure x mass_scale + leg moving parts) x g: departure / re-contact 0.01 W rules, settle normal checks",
+     "W_plant_N": "mass_scale x W_ref (plant superstructure): P3-7 loaded-window threshold (422.6)",
+     "W_ref_N": "C2 meta soil.W_ref_N (YAML nominal, controller): W ratio, WARN_WEIGHT_MISMATCH, S-1 plausibility / reconstruction, P3-7 0.05 W record bucket",
+     "F_min_N": "P3-3 uses the YAML F_min; F_min x mass_scale is a record only"
+    }
+   }
+  },
+  "rejudge": {
+   "unchanged_blocks_equal": true,
+   "params_file_match": true
+  },
+  "time_check": {
+   "duration_arg_s": 180.0,
+   "n_steps": 1880000,
+   "n_steps_expected": 1880000,
+   "steps_ok": true,
+   "t_loop_start_s": 7.999999999994694,
+   "record_t_last_s": 188.0,
+   "record_n": 1800,
+   "step_series_t_last_s": 188.0,
+   "step_series_n": 180000,
+   "wall_s": 11949.986647400015,
+   "us_per_step": 6356.375876276605
+  },
+  "classification": "pass",
+  "verdict": "pass",
+  "flags": [
+   "P3-2"
+  ],
+  "rows": {
+   "P3-1": {
+    "pass": true,
+    "recontact_count": 0,
+    "crawler_normal_max_after_confirm_N": 3966.5715259702206
+   },
+   "P3-2": {
+    "verdict": "flag",
+    "loc_minus_departure_s": 4.050000000134446,
+    "limit_s": 2.91165281234524,
+    "loc_revokes": 1,
+    "late_loc_revoked": true,
+    "soil_mode_used": true,
+    "crawler_normal_at_loc_N": 0.0
+   },
+   "P3-3": {
+    "pass": true,
+    "min_kN": 73.90072237091555,
+    "F_min_kN": 9.415
+   },
+   "P3-4": {
+    "pass": true,
+    "absmax_deg": 0.032009810630389934,
+    "window_short": false,
+    "creep_vibration_suspect": false,
+    "imu_allowance_left_deg": 0.1479901893696101
+   },
+   "P3-5": {
+    "pass": true,
+    "gap_mm": 72.29951553810832,
+    "s_true_max_mm": 622.9941705080169,
+    "gate_mm": 684.8
+   },
+   "P3-6": {
+    "pass": true,
+    "ready_s_loop": 98.90000000243047,
+    "limit_s": 100.0
+   },
+   "P3-7": {
+    "pass": false,
+    "rise_min_loaded_N": 3811.857266039724,
+    "record_row": true
+   },
+   "P3-8": {
+    "pass": true
+   }
+  },
+  "chrono": {
+   "ready_first_s_loop": 98.90000000243047,
+   "ready_limit_s": 100.0,
+   "ready_phases_s_loop": [
+    98.9,
+    118.9
+   ],
+   "min_force_after_departure_kN": 73.90072237091555,
+   "min_force_leg": "RR",
+   "gap_after_first_ready_mm": 72.29951553810832,
+   "end_attitude_absmax_deg": 0.032009810630389934,
+   "end_1s_roll_pitch_deg": [
+    0.03167329937754159,
+    -0.023668229105365746
+   ],
+   "p34_window_s": 54.68100000181522,
+   "p34_window_abs_s": [
+    133.3190000033022,
+    188.0000000051174
+   ],
+   "imu_allowance_left_deg": 0.1479901893696101,
+   "imu_allowance_vs_0p118": true,
+   "stroke_reading_max_mm": {
+    "FL": 602.58,
+    "FR": 567.81,
+    "RL": 628.98,
+    "RR": 602.93
+   },
+   "stroke_reading_max_t_loop_s": {
+    "FL": 76.8,
+    "FR": 91.7,
+    "RL": 63.1,
+    "RR": 117.4
+   },
+   "stroke_true_max_mm": {
+    "FL": 595.95,
+    "FR": 561.49,
+    "RL": 622.99,
+    "RR": 597.09
+   },
+   "s_ref_max_mm": {
+    "FL": 602.43,
+    "FR": 567.65,
+    "RL": 628.85,
+    "RR": 602.74
+   },
+   "reading_minus_sref_at_lead_max_mm": 0.14840394893587927,
+   "lead_leg": "RL",
+   "margin_reading_to_guard_mm": 53.8238124956755,
+   "margin_true_to_gate_mm": 61.805829491983104,
+   "margin_reading_to_fault_mm": 64.8238124956755,
+   "margin_reading_to_sensor_end_mm": 65.8238124956755,
+   "max_moving_pressure_bar": 102.00961829401042,
+   "max_any_state_bar": 102.00961829401042,
+   "measured_head_max_bar": 112.75,
+   "pressure_peak_leg": "FL",
+   "pressure_ratio_180": 0.5667201016333913
+  },
+  "warn_fault_events": [],
+  "feature_events": [
+   {
+    "t_s": 55.3,
+    "t_loop_s": 47.3,
+    "name": "crawler_liftoff_confirmed"
+   },
+   {
+    "t_s": 55.3,
+    "t_loop_s": 47.3,
+    "name": "INFO_LOC_FLAT_SOIL_MARGIN:80"
+   },
+   {
+    "t_s": 56.3,
+    "t_loop_s": 48.3,
+    "name": "INFO_DIFF_SINK_HOLD:FL,RL:7.9"
+   },
+   {
+    "t_s": 56.6,
+    "t_loop_s": 48.6,
+    "name": "INFO_LOC_REVOKED:2.0"
+   },
+   {
+    "t_s": 57.4,
+    "t_loop_s": 49.4,
+    "name": "crawler_liftoff_confirmed"
+   },
+   {
+    "t_s": 59.9,
+    "t_loop_s": 51.9,
+    "name": "INFO_DIFF_SINK_RELEASE:settled"
+   },
+   {
+    "t_s": 106.9,
+    "t_loop_s": 98.9,
+    "name": "ready_heave_tail"
+   },
+   {
+    "t_s": 107.2,
+    "t_loop_s": 99.2,
+    "name": "INFO_D1_IMU_MASS_SOURCE:ready"
+   },
+   {
+    "t_s": 126.9,
+    "t_loop_s": 118.9,
+    "name": "ready_heave_tail"
+   }
+  ],
+  "R9_events": [
+   {
+    "t_s": 55.3,
+    "t_loop_s": 47.3,
+    "name": "INFO_LOC_FLAT_SOIL_MARGIN:80"
+   }
+  ],
+  "E3c10_events": [],
+  "SGS_events": [],
+  "stroke_profile": {
+   "loc_first": {
+    "t_s": 55.3,
+    "reading_mm": {
+     "FL": 503.37,
+     "FR": 502.66,
+     "RL": 508.31,
+     "RR": 508.16
+    },
+    "true_mm": {
+     "FL": 497.61,
+     "FR": 497.27,
+     "RL": 503.66,
+     "RR": 503.28
+    },
+    "pad_sinkage_mm": {
+     "FL": 132.94,
+     "FR": 126.14,
+     "RL": 175.2,
+     "RR": 168.94
+    },
+    "pad_normal_kN": {
+     "FL": 130.46,
+     "FR": 127.01,
+     "RL": 80.06,
+     "RR": 78.97
+    }
+   },
+   "loc_final": {
+    "t_s": 57.4,
+    "reading_mm": {
+     "FL": 537.66,
+     "FR": 525.43,
+     "RL": 548.03,
+     "RR": 540.77
+    },
+    "true_mm": {
+     "FL": 531.39,
+     "FR": 520.12,
+     "RL": 542.71,
+     "RR": 535.74
+    },
+    "pad_sinkage_mm": {
+     "FL": 158.59,
+     "FR": 126.12,
+     "RL": 196.39,
+     "RR": 170.11
+    },
+    "pad_normal_kN": {
+     "FL": 136.12,
+     "FR": 123.34,
+     "RL": 81.9,
+     "RR": 77.55
+    }
+   },
+   "first_ready": {
+    "t_s": 106.9,
+    "reading_mm": {
+     "FL": 596.05,
+     "FR": 565.64,
+     "RL": 622.47,
+     "RR": 600.47
+    },
+    "true_mm": {
+     "FL": 589.73,
+     "FR": 559.85,
+     "RL": 617.24,
+     "RR": 595.5
+    },
+    "pad_sinkage_mm": {
+     "FL": 162.79,
+     "FR": 136.52,
+     "RL": 201.48,
+     "RR": 183.02
+    },
+    "pad_normal_kN": {
+     "FL": 129.61,
+     "FR": 130.41,
+     "RL": 80.21,
+     "RR": 77.56
+    }
+   },
+   "last_ready": {
+    "t_s": 126.9,
+    "reading_mm": {
+     "FL": 590.44,
+     "FR": 564.7,
+     "RL": 618.88,
+     "RR": 600.8
+    },
+    "true_mm": {
+     "FL": 584.48,
+     "FR": 558.95,
+     "RL": 613.56,
+     "RR": 595.77
+    },
+    "pad_sinkage_mm": {
+     "FL": 162.77,
+     "FR": 138.58,
+     "RL": 203.99,
+     "RR": 187.43
+    },
+    "pad_normal_kN": {
+     "FL": 129.13,
+     "FR": 130.15,
+     "RL": 81.77,
+     "RR": 76.7
+    }
+   },
+   "end": {
+    "t_s": 188.0,
+    "reading_mm": {
+     "FL": 592.09,
+     "FR": 566.21,
+     "RL": 620.32,
+     "RR": 602.15
+    },
+    "true_mm": {
+     "FL": 585.74,
+     "FR": 560.1,
+     "RL": 614.49,
+     "RR": 596.73
+    },
+    "pad_sinkage_mm": {
+     "FL": 162.81,
+     "FR": 138.64,
+     "RL": 203.91,
+     "RR": 187.49
+    },
+    "pad_normal_kN": {
+     "FL": 130.01,
+     "FR": 129.6,
+     "RL": 80.74,
+     "RR": 77.43
+    }
+   },
+   "pad_sinkage_max_mm": {
+    "FL": 163.04,
+    "FR": 138.7,
+    "RL": 204.01,
+    "RR": 187.74
+   }
+  },
+  "harness": {
+   "id": "H6|J2|B|top|flat|m1.1",
+   "verdict": "pass",
+   "failed_rows": [],
+   "t_ready_s": 85.10000000022431,
+   "min_force_kN": 74.8492996829476,
+   "att_end_deg": [
+    -0.03787294340114309,
+    -0.045452148611324156
+   ],
+   "max_stroke_mm": 617.3988712125151,
+   "final_phase": "ready",
+   "rut_ready_mm": 85.03106867741413,
+   "crawler_N_max_after_ready": 0.0,
+   "warnings": [],
+   "flags": [],
+   "soil_stop": null,
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 4.181242032704926,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "revoked_loc_crawler_kN": [
+     1.27
+    ],
+    "t_loc_first_s": 40.80000000001279,
+    "t_loc_final_s": 42.80000000002234,
+    "ready_load_ratio_min": 0.9441,
+    "window_checks": [
+     {
+      "t_s": 40.8,
+      "e1_spread_mm": 10.63,
+      "e4_rise_ratio": -1.444,
+      "vetoed": null
+     },
+     {
+      "t_s": 42.8,
+      "e1_spread_mm": 3.5,
+      "e4_rise_ratio": 0.289,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      41.8,
+      "INFO_DIFF_SINK_HOLD:FL,RL:7.1"
+     ],
+     [
+      42.1,
+      "INFO_LOC_REVOKED:2.1"
+     ],
+     [
+      43.8,
+      "INFO_DIFF_SINK_RELEASE:reversed"
+     ],
+     [
+      85.1,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "p36": {
+     "armed_t_s": null,
+     "minima": {},
+     "relifts": 0,
+     "actions": []
+    },
+    "p36s": {
+     "soil_sign": "soil_mode",
+     "sign_history": [
+      {
+       "t_s": 40.8,
+       "sign": "soil_mode"
+      },
+      {
+       "t_s": 42.1,
+       "sign": null,
+       "cleared": true
+      },
+      {
+       "t_s": 42.8,
+       "sign": "soil_mode"
+      }
+     ],
+     "guard_t_s": null,
+     "stop": null,
+     "preempted": null
+    },
+    "p37": null,
+    "p38": null,
+    "t_first_done_s": 73.10000000016701,
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 1,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      20.8,
+      357.6,
+      77.68,
+      233.76,
+      null
+     ],
+     [
+      20.9,
+      359.64,
+      64.335,
+      246.91,
+      null
+     ],
+     [
+      21.0,
+      361.69,
+      48.338,
+      265.0,
+      null
+     ],
+     [
+      21.1,
+      363.73,
+      42.11,
+      274.37,
+      null
+     ],
+     [
+      21.2,
+      365.77,
+      37.478,
+      282.58,
+      null
+     ],
+     [
+      21.3,
+      367.76,
+      33.59,
+      289.85,
+      null
+     ],
+     [
+      21.4,
+      369.68,
+      30.106,
+      296.28,
+      null
+     ],
+     [
+      21.5,
+      371.5,
+      28.629,
+      298.8,
+      null
+     ],
+     [
+      21.6,
+      373.23,
+      25.671,
+      304.14,
+      0.0
+     ],
+     [
+      21.7,
+      374.86,
+      23.033,
+      308.81,
+      1.7
+     ],
+     [
+      21.8,
+      376.4,
+      20.814,
+      312.88,
+      3.4
+     ],
+     [
+      21.9,
+      377.86,
+      19.091,
+      316.39,
+      4.9
+     ],
+     [
+      22.0,
+      379.22,
+      18.564,
+      317.73,
+      6.4
+     ],
+     [
+      22.1,
+      380.51,
+      17.305,
+      320.64,
+      7.7
+     ],
+     [
+      22.2,
+      381.71,
+      16.279,
+      323.21,
+      9.0
+     ],
+     [
+      22.3,
+      382.85,
+      15.956,
+      324.2,
+      10.2
+     ],
+     [
+      22.4,
+      383.92,
+      15.175,
+      326.38,
+      11.3
+     ],
+     [
+      22.5,
+      384.92,
+      14.513,
+      328.33,
+      12.4
+     ],
+     [
+      22.6,
+      385.86,
+      14.301,
+      329.09,
+      13.4
+     ],
+     [
+      22.7,
+      386.75,
+      13.748,
+      330.78,
+      14.4
+     ],
+     [
+      22.8,
+      387.58,
+      13.575,
+      331.44,
+      15.2
+     ],
+     [
+      22.9,
+      388.37,
+      13.121,
+      332.9,
+      16.1
+     ],
+     [
+      23.0,
+      389.1,
+      12.976,
+      333.47,
+      16.9
+     ],
+     [
+      23.1,
+      389.79,
+      12.589,
+      334.76,
+      17.6
+     ],
+     [
+      23.2,
+      390.45,
+      12.465,
+      335.25,
+      18.3
+     ],
+     [
+      23.3,
+      391.06,
+      12.129,
+      336.38,
+      18.9
+     ],
+     [
+      23.4,
+      391.64,
+      12.026,
+      336.81,
+      19.6
+     ],
+     [
+      23.5,
+      392.2,
+      11.78,
+      337.83,
+      20.1
+     ],
+     [
+      23.6,
+      392.75,
+      11.776,
+      338.23,
+      20.7
+     ],
+     [
+      23.7,
+      393.3,
+      11.672,
+      339.17,
+      21.2
+     ],
+     [
+      23.8,
+      393.85,
+      11.745,
+      339.56,
+      21.8
+     ],
+     [
+      23.9,
+      394.41,
+      11.77,
+      340.44,
+      22.3
+     ],
+     [
+      24.0,
+      394.96,
+      11.873,
+      341.28,
+      22.9
+     ],
+     [
+      24.1,
+      395.52,
+      11.998,
+      341.67,
+      23.5
+     ],
+     [
+      24.2,
+      396.08,
+      12.175,
+      342.47,
+      24.0
+     ],
+     [
+      24.3,
+      396.64,
+      12.289,
+      342.85,
+      24.6
+     ],
+     [
+      24.4,
+      397.2,
+      12.499,
+      343.63,
+      25.1
+     ],
+     [
+      24.5,
+      397.77,
+      12.722,
+      344.4,
+      25.7
+     ],
+     [
+      24.6,
+      398.33,
+      12.788,
+      344.77,
+      26.3
+     ],
+     [
+      24.7,
+      398.9,
+      12.982,
+      345.52,
+      26.8
+     ],
+     [
+      24.8,
+      399.47,
+      13.153,
+      346.27,
+      27.4
+     ],
+     [
+      24.9,
+      400.04,
+      13.287,
+      347.0,
+      28.0
+     ],
+     [
+      25.0,
+      400.61,
+      13.373,
+      347.74,
+      28.5
+     ],
+     [
+      25.1,
+      401.18,
+      13.405,
+      348.48,
+      29.1
+     ],
+     [
+      25.2,
+      401.75,
+      13.376,
+      349.22,
+      29.7
+     ],
+     [
+      25.3,
+      402.32,
+      13.289,
+      349.96,
+      30.2
+     ],
+     [
+      25.4,
+      402.9,
+      13.177,
+      350.7,
+      30.8
+     ],
+     [
+      25.5,
+      403.47,
+      13.058,
+      351.45,
+      31.4
+     ],
+     [
+      25.6,
+      404.05,
+      12.939,
+      352.18,
+      32.0
+     ],
+     [
+      25.7,
+      404.63,
+      12.821,
+      352.91,
+      32.5
+     ],
+     [
+      25.8,
+      405.21,
+      12.705,
+      353.64,
+      33.1
+     ],
+     [
+      25.9,
+      405.79,
+      12.59,
+      354.36,
+      33.7
+     ],
+     [
+      26.0,
+      406.37,
+      12.478,
+      355.08,
+      34.3
+     ],
+     [
+      26.1,
+      406.95,
+      12.369,
+      355.79,
+      34.9
+     ],
+     [
+      26.2,
+      407.53,
+      12.261,
+      356.49,
+      35.4
+     ],
+     [
+      26.3,
+      408.11,
+      12.156,
+      357.2,
+      36.0
+     ],
+     [
+      26.4,
+      408.7,
+      12.052,
+      357.89,
+      36.6
+     ],
+     [
+      26.5,
+      409.28,
+      11.951,
+      358.59,
+      37.2
+     ],
+     [
+      26.6,
+      409.87,
+      11.852,
+      359.27,
+      37.8
+     ],
+     [
+      26.7,
+      410.45,
+      11.755,
+      359.96,
+      38.4
+     ],
+     [
+      26.8,
+      411.04,
+      11.66,
+      360.64,
+      39.0
+     ],
+     [
+      26.9,
+      411.63,
+      11.566,
+      361.31,
+      39.5
+     ],
+     [
+      27.0,
+      412.22,
+      11.474,
+      361.98,
+      40.1
+     ],
+     [
+      27.1,
+      412.81,
+      11.384,
+      362.65,
+      40.7
+     ],
+     [
+      27.2,
+      413.4,
+      11.295,
+      363.31,
+      41.3
+     ],
+     [
+      27.3,
+      413.99,
+      11.208,
+      363.96,
+      41.9
+     ],
+     [
+      27.4,
+      414.58,
+      11.122,
+      364.62,
+      42.5
+     ],
+     [
+      27.5,
+      415.17,
+      11.038,
+      365.27,
+      43.1
+     ],
+     [
+      27.6,
+      415.76,
+      10.955,
+      365.91,
+      43.7
+     ],
+     [
+      27.7,
+      416.36,
+      10.874,
+      366.55,
+      44.3
+     ],
+     [
+      27.8,
+      416.95,
+      10.753,
+      367.51,
+      44.9
+     ],
+     [
+      27.9,
+      417.55,
+      10.675,
+      368.14,
+      45.4
+     ],
+     [
+      28.0,
+      418.14,
+      10.597,
+      368.77,
+      46.0
+     ],
+     [
+      28.1,
+      418.74,
+      10.522,
+      369.39,
+      46.6
+     ],
+     [
+      28.2,
+      419.33,
+      10.447,
+      370.01,
+      47.2
+     ],
+     [
+      28.3,
+      419.93,
+      10.373,
+      370.63,
+      47.8
+     ],
+     [
+      28.4,
+      420.53,
+      10.301,
+      371.24,
+      48.4
+     ],
+     [
+      28.5,
+      421.13,
+      10.229,
+      371.85,
+      49.0
+     ],
+     [
+      28.6,
+      421.73,
+      10.159,
+      372.46,
+      49.6
+     ],
+     [
+      28.7,
+      422.33,
+      10.089,
+      373.06,
+      50.2
+     ],
+     [
+      28.8,
+      422.93,
+      10.021,
+      373.66,
+      50.8
+     ],
+     [
+      28.9,
+      423.53,
+      9.953,
+      374.25,
+      51.4
+     ],
+     [
+      29.0,
+      424.13,
+      9.887,
+      374.84,
+      52.0
+     ],
+     [
+      29.1,
+      424.73,
+      9.821,
+      375.43,
+      52.6
+     ],
+     [
+      29.2,
+      425.34,
+      9.756,
+      376.02,
+      53.2
+     ],
+     [
+      29.3,
+      425.94,
+      9.692,
+      376.6,
+      53.8
+     ],
+     [
+      29.4,
+      426.55,
+      9.629,
+      377.18,
+      54.4
+     ],
+     [
+      29.5,
+      427.15,
+      9.567,
+      377.76,
+      55.0
+     ],
+     [
+      29.6,
+      427.76,
+      9.505,
+      378.33,
+      55.6
+     ],
+     [
+      29.7,
+      428.36,
+      9.445,
+      378.9,
+      56.3
+     ],
+     [
+      29.8,
+      428.97,
+      9.385,
+      379.46,
+      56.9
+     ],
+     [
+      29.9,
+      429.58,
+      9.326,
+      380.03,
+      57.5
+     ],
+     [
+      30.0,
+      430.19,
+      9.268,
+      380.59,
+      58.1
+     ],
+     [
+      30.1,
+      430.8,
+      9.211,
+      381.15,
+      58.7
+     ],
+     [
+      30.2,
+      431.41,
+      9.154,
+      381.7,
+      59.3
+     ],
+     [
+      30.3,
+      432.02,
+      9.098,
+      382.25,
+      59.9
+     ],
+     [
+      30.4,
+      432.63,
+      9.043,
+      382.8,
+      60.5
+     ],
+     [
+      30.5,
+      433.24,
+      8.988,
+      383.35,
+      61.1
+     ],
+     [
+      30.6,
+      433.85,
+      8.934,
+      383.9,
+      61.7
+     ],
+     [
+      30.7,
+      434.47,
+      8.881,
+      384.44,
+      62.4
+     ],
+     [
+      30.8,
+      435.08,
+      8.828,
+      384.98,
+      63.0
+     ],
+     [
+      30.9,
+      435.69,
+      8.776,
+      385.51,
+      63.6
+     ],
+     [
+      31.0,
+      436.31,
+      8.725,
+      386.04,
+      64.2
+     ],
+     [
+      31.1,
+      436.92,
+      8.674,
+      386.58,
+      64.8
+     ],
+     [
+      31.2,
+      437.54,
+      8.624,
+      387.1,
+      65.4
+     ],
+     [
+      31.3,
+      438.16,
+      8.574,
+      387.63,
+      66.0
+     ],
+     [
+      31.4,
+      438.77,
+      8.525,
+      388.15,
+      66.7
+     ],
+     [
+      31.5,
+      439.39,
+      8.476,
+      388.67,
+      67.3
+     ],
+     [
+      31.6,
+      440.01,
+      8.428,
+      389.19,
+      67.9
+     ],
+     [
+      31.7,
+      440.63,
+      8.38,
+      389.71,
+      68.5
+     ],
+     [
+      31.8,
+      441.25,
+      8.333,
+      390.22,
+      69.1
+     ],
+     [
+      31.9,
+      441.87,
+      8.287,
+      390.73,
+      69.7
+     ],
+     [
+      32.0,
+      442.49,
+      8.241,
+      391.24,
+      70.4
+     ],
+     [
+      32.1,
+      443.11,
+      8.196,
+      391.75,
+      71.0
+     ],
+     [
+      32.2,
+      443.73,
+      8.151,
+      392.25,
+      71.6
+     ],
+     [
+      32.3,
+      444.36,
+      8.106,
+      392.76,
+      72.2
+     ],
+     [
+      32.4,
+      444.98,
+      8.062,
+      393.26,
+      72.9
+     ],
+     [
+      32.5,
+      445.6,
+      8.019,
+      393.75,
+      73.5
+     ],
+     [
+      32.6,
+      446.23,
+      7.976,
+      394.25,
+      74.1
+     ],
+     [
+      32.7,
+      446.85,
+      7.934,
+      394.74,
+      74.7
+     ],
+     [
+      32.8,
+      447.48,
+      7.892,
+      395.23,
+      75.3
+     ],
+     [
+      32.9,
+      448.1,
+      7.85,
+      395.72,
+      76.0
+     ],
+     [
+      33.0,
+      448.73,
+      7.808,
+      396.21,
+      76.6
+     ],
+     [
+      33.1,
+      449.36,
+      7.765,
+      396.69,
+      77.2
+     ],
+     [
+      33.2,
+      449.98,
+      7.721,
+      397.17,
+      77.9
+     ],
+     [
+      33.3,
+      450.61,
+      7.676,
+      397.65,
+      78.5
+     ],
+     [
+      33.4,
+      451.23,
+      7.631,
+      398.13,
+      79.1
+     ],
+     [
+      33.5,
+      451.86,
+      7.588,
+      398.61,
+      79.7
+     ],
+     [
+      33.6,
+      452.48,
+      7.545,
+      399.08,
+      80.4
+     ],
+     [
+      33.7,
+      453.11,
+      7.504,
+      399.55,
+      81.0
+     ],
+     [
+      33.8,
+      453.73,
+      7.444,
+      400.25,
+      81.6
+     ],
+     [
+      33.9,
+      454.36,
+      7.406,
+      400.72,
+      82.2
+     ],
+     [
+      34.0,
+      454.99,
+      7.37,
+      401.18,
+      82.9
+     ],
+     [
+      34.1,
+      455.62,
+      7.336,
+      401.64,
+      83.5
+     ],
+     [
+      34.2,
+      456.25,
+      7.303,
+      402.1,
+      84.1
+     ],
+     [
+      34.3,
+      456.87,
+      7.271,
+      402.56,
+      84.7
+     ],
+     [
+      34.4,
+      457.5,
+      7.241,
+      403.01,
+      85.4
+     ],
+     [
+      34.5,
+      458.13,
+      7.212,
+      403.47,
+      86.0
+     ],
+     [
+      34.6,
+      458.77,
+      7.184,
+      403.92,
+      86.6
+     ],
+     [
+      34.7,
+      459.4,
+      7.156,
+      404.37,
+      87.3
+     ],
+     [
+      34.8,
+      460.03,
+      7.126,
+      404.81,
+      87.9
+     ],
+     [
+      34.9,
+      460.66,
+      7.096,
+      405.26,
+      88.5
+     ],
+     [
+      35.0,
+      461.29,
+      7.064,
+      405.71,
+      89.2
+     ],
+     [
+      35.1,
+      461.93,
+      7.031,
+      406.15,
+      89.8
+     ],
+     [
+      35.2,
+      462.56,
+      6.999,
+      406.59,
+      90.4
+     ],
+     [
+      35.3,
+      463.2,
+      6.967,
+      407.03,
+      91.1
+     ],
+     [
+      35.4,
+      463.83,
+      6.935,
+      407.47,
+      91.7
+     ],
+     [
+      35.5,
+      464.47,
+      6.903,
+      407.91,
+      92.3
+     ],
+     [
+      35.6,
+      465.1,
+      6.871,
+      408.34,
+      93.0
+     ],
+     [
+      35.7,
+      465.74,
+      6.84,
+      408.78,
+      93.6
+     ],
+     [
+      35.8,
+      466.38,
+      6.809,
+      409.21,
+      94.2
+     ],
+     [
+      35.9,
+      467.01,
+      6.779,
+      409.64,
+      94.9
+     ],
+     [
+      36.0,
+      467.65,
+      6.749,
+      410.07,
+      95.5
+     ],
+     [
+      36.1,
+      468.29,
+      6.72,
+      410.49,
+      96.1
+     ],
+     [
+      36.2,
+      468.93,
+      6.691,
+      410.92,
+      96.8
+     ],
+     [
+      36.3,
+      469.57,
+      6.66,
+      411.34,
+      97.4
+     ],
+     [
+      36.4,
+      470.21,
+      6.63,
+      411.77,
+      98.1
+     ],
+     [
+      36.5,
+      470.85,
+      6.599,
+      412.19,
+      98.7
+     ],
+     [
+      36.6,
+      471.49,
+      6.569,
+      412.61,
+      99.3
+     ],
+     [
+      36.7,
+      472.13,
+      6.54,
+      413.02,
+      100.0
+     ],
+     [
+      36.8,
+      472.78,
+      6.511,
+      413.44,
+      100.6
+     ],
+     [
+      36.9,
+      473.42,
+      6.482,
+      413.86,
+      101.3
+     ],
+     [
+      37.0,
+      474.06,
+      6.455,
+      414.27,
+      101.9
+     ],
+     [
+      37.1,
+      474.71,
+      6.428,
+      414.68,
+      102.6
+     ],
+     [
+      37.2,
+      475.35,
+      6.4,
+      415.09,
+      103.2
+     ],
+     [
+      37.3,
+      475.99,
+      6.368,
+      415.5,
+      103.8
+     ],
+     [
+      37.4,
+      476.64,
+      6.337,
+      415.91,
+      104.5
+     ],
+     [
+      37.5,
+      477.29,
+      6.305,
+      416.31,
+      105.1
+     ],
+     [
+      37.6,
+      477.93,
+      6.275,
+      416.72,
+      105.8
+     ],
+     [
+      37.7,
+      478.58,
+      6.245,
+      417.12,
+      106.4
+     ],
+     [
+      37.8,
+      479.22,
+      6.217,
+      417.52,
+      107.1
+     ],
+     [
+      37.9,
+      479.87,
+      6.184,
+      417.92,
+      107.7
+     ],
+     [
+      38.0,
+      480.52,
+      6.15,
+      418.32,
+      108.4
+     ],
+     [
+      38.1,
+      481.17,
+      6.115,
+      418.71,
+      109.0
+     ],
+     [
+      38.2,
+      481.82,
+      6.073,
+      419.1,
+      109.7
+     ],
+     [
+      38.3,
+      482.47,
+      6.031,
+      419.49,
+      110.3
+     ],
+     [
+      38.4,
+      483.12,
+      5.97,
+      419.88,
+      111.0
+     ],
+     [
+      38.5,
+      483.76,
+      5.906,
+      420.26,
+      111.6
+     ],
+     [
+      38.6,
+      484.41,
+      5.835,
+      420.63,
+      112.3
+     ],
+     [
+      38.7,
+      485.07,
+      5.751,
+      421.0,
+      112.9
+     ],
+     [
+      38.8,
+      485.72,
+      5.652,
+      421.37,
+      113.6
+     ],
+     [
+      38.9,
+      486.37,
+      5.528,
+      421.72,
+      114.2
+     ],
+     [
+      39.0,
+      487.02,
+      5.385,
+      422.07,
+      114.9
+     ],
+     [
+      39.1,
+      487.67,
+      5.232,
+      422.41,
+      115.5
+     ],
+     [
+      39.2,
+      488.31,
+      5.068,
+      422.74,
+      116.2
+     ],
+     [
+      39.3,
+      488.96,
+      4.894,
+      423.06,
+      116.8
+     ],
+     [
+      39.4,
+      489.61,
+      4.714,
+      423.37,
+      117.5
+     ],
+     [
+      39.5,
+      490.26,
+      4.531,
+      423.67,
+      118.1
+     ],
+     [
+      39.6,
+      490.91,
+      4.343,
+      423.96,
+      118.8
+     ],
+     [
+      39.7,
+      491.56,
+      4.158,
+      424.24,
+      119.4
+     ],
+     [
+      39.8,
+      492.21,
+      3.965,
+      424.5,
+      120.1
+     ],
+     [
+      39.9,
+      492.86,
+      3.769,
+      424.75,
+      120.7
+     ],
+     [
+      40.0,
+      493.51,
+      3.586,
+      424.99,
+      121.4
+     ],
+     [
+      40.1,
+      494.16,
+      3.402,
+      425.22,
+      122.0
+     ],
+     [
+      40.2,
+      494.81,
+      3.233,
+      425.44,
+      122.7
+     ],
+     [
+      40.3,
+      495.46,
+      3.073,
+      425.65,
+      123.3
+     ],
+     [
+      40.4,
+      496.11,
+      2.88,
+      425.83,
+      124.0
+     ],
+     [
+      40.5,
+      496.76,
+      2.651,
+      426.0,
+      124.6
+     ],
+     [
+      40.6,
+      497.42,
+      2.371,
+      426.15,
+      125.3
+     ],
+     [
+      40.7,
+      498.07,
+      2.068,
+      426.28,
+      125.9
+     ]
+    ],
+    "soil_push_mm": 9.4,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (4181 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 38.42800000000146,
+      "t_confirmed_s": 38.52800000000194,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 3854.2646525268865
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 4181.242032704926,
+      "weight_N": 418124.20327049255,
+      "t_loc_s": 42.80000000002234,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 5017.490439245911,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000047748
+    },
+    "roll_abs_max_after_loc_deg": 0.3028,
+    "side_sink_after_loc_mm": [
+     0.86,
+     10.59
+    ],
+    "ds_events": [
+     {
+      "t_s": 41.8,
+      "axis": 0,
+      "legs": "FL,RL",
+      "r_mm_s": 7.08
+     },
+     {
+      "t_s": 43.8,
+      "release": "reversed"
+     }
+    ],
+    "ds_active_s": 2.0,
+    "recontact_after_final_loc_N_max": 0.0,
+    "rut_clear_min_after_final_loc_mm": 23.19
+   }
+  },
+  "harness_vs_chrono": {
+   "stroke_controller_quantity_mm": {
+    "harness": 617.3988712125151,
+    "chrono": 628.9761875043245,
+    "chrono_minus_harness": 11.577316291809325,
+    "within_H6_plus23": true
+   },
+   "guard_margin_mm": {
+    "harness": 65.40112878748482,
+    "chrono": 53.8238124956755
+   },
+   "ready_s": {
+    "harness": 85.10000000022431,
+    "chrono": 98.90000000243047,
+    "chrono_minus_harness": 13.800000002206161
+   },
+   "gap_mm": {
+    "harness": 85.03106867741413,
+    "chrono": 72.29951553810832,
+    "chrono_minus_harness": -12.731553139305802
+   },
+   "min_force_kN": {
+    "harness": 74.8492996829476,
+    "chrono": 73.90072237091555,
+    "ratio_harness_over_chrono": 1.0128358327442464
+   },
+   "end_attitude_deg": {
+    "harness_end": [
+     -0.03787294340114309,
+     -0.045452148611324156
+    ],
+    "chrono_absmax": 0.032009810630389934
+   },
+   "verdict": {
+    "harness": "pass",
+    "chrono": "pass"
+   }
+  },
+  "reference_run": {
+   "folder": "07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J2_B_top_Fs4_m1p1",
+   "stroke_reading_max_mm": {
+    "FL": 602.58,
+    "FR": 567.81,
+    "RL": 628.98,
+    "RR": 602.93
+   },
+   "stroke_profile": {
+    "loc_first": {
+     "t_s": 55.3,
+     "reading_mm": {
+      "FL": 503.37,
+      "FR": 502.66,
+      "RL": 508.31,
+      "RR": 508.16
+     },
+     "true_mm": {
+      "FL": 497.61,
+      "FR": 497.27,
+      "RL": 503.66,
+      "RR": 503.28
+     },
+     "pad_sinkage_mm": {
+      "FL": 132.94,
+      "FR": 126.14,
+      "RL": 175.2,
+      "RR": 168.94
+     },
+     "pad_normal_kN": {
+      "FL": 130.46,
+      "FR": 127.01,
+      "RL": 80.06,
+      "RR": 78.97
+     }
+    },
+    "loc_final": {
+     "t_s": 57.4,
+     "reading_mm": {
+      "FL": 537.66,
+      "FR": 525.43,
+      "RL": 548.03,
+      "RR": 540.77
+     },
+     "true_mm": {
+      "FL": 531.39,
+      "FR": 520.12,
+      "RL": 542.71,
+      "RR": 535.74
+     },
+     "pad_sinkage_mm": {
+      "FL": 158.59,
+      "FR": 126.12,
+      "RL": 196.39,
+      "RR": 170.11
+     },
+     "pad_normal_kN": {
+      "FL": 136.12,
+      "FR": 123.34,
+      "RL": 81.9,
+      "RR": 77.55
+     }
+    },
+    "first_ready": {
+     "t_s": 106.9,
+     "reading_mm": {
+      "FL": 596.05,
+      "FR": 565.64,
+      "RL": 622.47,
+      "RR": 600.47
+     },
+     "true_mm": {
+      "FL": 589.73,
+      "FR": 559.85,
+      "RL": 617.24,
+      "RR": 595.5
+     },
+     "pad_sinkage_mm": {
+      "FL": 162.79,
+      "FR": 136.52,
+      "RL": 201.48,
+      "RR": 183.02
+     },
+     "pad_normal_kN": {
+      "FL": 129.61,
+      "FR": 130.41,
+      "RL": 80.21,
+      "RR": 77.56
+     }
+    },
+    "last_ready": {
+     "t_s": 126.9,
+     "reading_mm": {
+      "FL": 590.44,
+      "FR": 564.7,
+      "RL": 618.88,
+      "RR": 600.8
+     },
+     "true_mm": {
+      "FL": 584.48,
+      "FR": 558.95,
+      "RL": 613.56,
+      "RR": 595.77
+     },
+     "pad_sinkage_mm": {
+      "FL": 162.77,
+      "FR": 138.58,
+      "RL": 203.99,
+      "RR": 187.43
+     },
+     "pad_normal_kN": {
+      "FL": 129.13,
+      "FR": 130.15,
+      "RL": 81.77,
+      "RR": 76.7
+     }
+    },
+    "end": {
+     "t_s": 128.0,
+     "reading_mm": {
+      "FL": 591.98,
+      "FR": 566.15,
+      "RL": 620.39,
+      "RR": 602.29
+     },
+     "true_mm": {
+      "FL": 585.74,
+      "FR": 560.1,
+      "RL": 614.49,
+      "RR": 596.73
+     },
+     "pad_sinkage_mm": {
+      "FL": 162.82,
+      "FR": 138.61,
+      "RL": 203.95,
+      "RR": 187.49
+     },
+     "pad_normal_kN": {
+      "FL": 130.18,
+      "FR": 129.05,
+      "RL": 81.2,
+      "RR": 77.45
+     }
+    },
+    "pad_sinkage_max_mm": {
+     "FL": 163.04,
+     "FR": 138.7,
+     "RL": 204.01,
+     "RR": 187.74
+    }
+   },
+   "events": [
+    {
+     "t_loop_s": 47.3,
+     "name": "crawler_liftoff_confirmed"
+    },
+    {
+     "t_loop_s": 47.3,
+     "name": "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    },
+    {
+     "t_loop_s": 48.3,
+     "name": "INFO_DIFF_SINK_HOLD:FL,RL:7.9"
+    },
+    {
+     "t_loop_s": 48.6,
+     "name": "INFO_LOC_REVOKED:2.0"
+    },
+    {
+     "t_loop_s": 49.4,
+     "name": "crawler_liftoff_confirmed"
+    },
+    {
+     "t_loop_s": 51.9,
+     "name": "INFO_DIFF_SINK_RELEASE:settled"
+    },
+    {
+     "t_loop_s": 98.9,
+     "name": "ready_heave_tail"
+    },
+    {
+     "t_loop_s": 99.2,
+     "name": "INFO_D1_IMU_MASS_SOURCE:ready"
+    },
+    {
+     "t_loop_s": 118.9,
+     "name": "ready_heave_tail"
+    }
+   ],
+   "cmd_identity_before_ref_end": {
+    "keys": [
+     "t_s",
+     "issued_u_m_s"
+    ],
+    "rows_case": 1199,
+    "rows_ref": 1199,
+    "arrays": {
+     "t_s": "equal",
+     "issued_u_m_s": "equal"
+    },
+    "all_equal": true
+   }
+  }
+ },
+ "X6-rb2": {
+  "case": "S9SL_X6rb_J1_B_top_Fs4_rm2p64_p0",
+  "folder": "07_results/S9/batch_RV6_20261031_025137/S9SL_X6rb_J1_B_top_Fs4_rm2p64_p0",
+  "harness_id": "H9|J1|B|top|roll_neg@k0.6",
+  "controller": "final_SGS_R4",
+  "code_state": "impl_final_rules",
+  "mass_scale": {
+   "mass_scale": 1.0,
+   "note": "spec 422 / decision Q-D (2026-10-29): Chrono plant superstructure body (rigid, crawler included) mass and inertia about its COG x mass_scale, COG kept (= s9_soil_closed_loop.scale_plant_mass); leg rods / pads unchanged; controller unchanged (YAML nominal mass, W_ref, D1'' mass); the 8 s settle runs on the scaled body in Chrono (no A1-m settle approximation); judgement weight p3b.weight_N = plant weight (scaled), P3-7 loaded window 0.01 W_plant = 0.01 mass_scale W_ref (spec 422.6)",
+   "yaml_superstructure_mass_kg": 38400.8366,
+   "plant_superstructure_mass_kg": 38400.8366,
+   "plant_superstructure_inertia_cog_body_kg_m2": [
+    [
+     533505.361,
+     -941.461576,
+     -193883.19
+    ],
+    [
+     -941.461576,
+     688692.429,
+     -199.518221
+    ],
+    [
+     -193883.19,
+     -199.518221,
+     192270.902
+    ]
+   ],
+   "plant_weight_N": 380112.91206408397,
+   "plant_superstructure_weight_N": 376583.56424339,
+   "yaml_weight_N": 380112.91206408397,
+   "controller_weight_ref_N": 376583.56424339,
+   "plant_over_W_ref": 1.0,
+   "weight_mismatch_events": [],
+   "judgement_weights": {
+    "mass_scale": 1.0,
+    "weight_N": 380112.91206408397,
+    "W_ref_N": 376583.56424339,
+    "W_plant_N": 376583.56424339,
+    "P3-7_loaded_threshold_N": 3765.8356424339,
+    "F_min_N": 9414.58911,
+    "F_min_x_mass_scale_record_N": 9414.58911,
+    "basis": {
+     "weight_N": "p3b.weight_N = plant weight (superstructure x mass_scale + leg moving parts) x g: departure / re-contact 0.01 W rules, settle normal checks",
+     "W_plant_N": "mass_scale x W_ref (plant superstructure): P3-7 loaded-window threshold (422.6)",
+     "W_ref_N": "C2 meta soil.W_ref_N (YAML nominal, controller): W ratio, WARN_WEIGHT_MISMATCH, S-1 plausibility / reconstruction, P3-7 0.05 W record bucket",
+     "F_min_N": "P3-3 uses the YAML F_min; F_min x mass_scale is a record only"
+    }
+   }
+  },
+  "rejudge": {
+   "unchanged_blocks_equal": true,
+   "params_file_match": true
+  },
+  "time_check": {
+   "duration_arg_s": 160.0,
+   "n_steps": 1680000,
+   "n_steps_expected": 1680000,
+   "steps_ok": true,
+   "t_loop_start_s": 7.999999999994694,
+   "record_t_last_s": 168.0,
+   "record_n": 1600,
+   "step_series_t_last_s": 168.0,
+   "step_series_n": 160000,
+   "wall_s": 9177.847689199989,
+   "us_per_step": 5463.004576904756
+  },
+  "classification": "pass",
+  "verdict": "pass",
+  "flags": [],
+  "rows": {
+   "P3-1": {
+    "pass": true,
+    "recontact_count": 0,
+    "crawler_normal_max_after_confirm_N": 2518.1897252591593
+   },
+   "P3-2": {
+    "verdict": "pass",
+    "loc_minus_departure_s": 2.3030000000764517,
+    "limit_s": 2.91165281234524,
+    "loc_revokes": 1,
+    "late_loc_revoked": false,
+    "soil_mode_used": true,
+    "crawler_normal_at_loc_N": 0.0
+   },
+   "P3-3": {
+    "pass": true,
+    "min_kN": 63.04524782162756,
+    "F_min_kN": 9.415
+   },
+   "P3-4": {
+    "pass": true,
+    "absmax_deg": 0.0233035579031442,
+    "window_short": false,
+    "creep_vibration_suspect": false,
+    "imu_allowance_left_deg": 0.15669644209685582
+   },
+   "P3-5": {
+    "pass": true,
+    "gap_mm": 47.594770792134035,
+    "s_true_max_mm": 673.0480914225851,
+    "gate_mm": 684.8
+   },
+   "P3-6": {
+    "pass": true,
+    "ready_s_loop": 82.60000000188937,
+    "limit_s": 120.0
+   },
+   "P3-7": {
+    "pass": false,
+    "rise_min_loaded_N": 3050.1496465630703,
+    "record_row": true
+   },
+   "P3-8": {
+    "pass": true
+   }
+  },
+  "chrono": {
+   "ready_first_s_loop": 82.60000000188937,
+   "ready_limit_s": 120.0,
+   "ready_phases_s_loop": [
+    82.6
+   ],
+   "min_force_after_departure_kN": 63.04524782162756,
+   "min_force_leg": "RR",
+   "gap_after_first_ready_mm": 47.594770792134035,
+   "end_attitude_absmax_deg": 0.0233035579031442,
+   "end_1s_roll_pitch_deg": [
+    0.02285631565370235,
+    -0.0028575182977974827
+   ],
+   "p34_window_s": 71.86400000238564,
+   "p34_window_abs_s": [
+    96.13600000206785,
+    168.00000000445348
+   ],
+   "imu_allowance_left_deg": 0.15669644209685582,
+   "imu_allowance_vs_0p118": true,
+   "stroke_reading_max_mm": {
+    "FL": 679.87,
+    "FR": 456.03,
+    "RL": 670.94,
+    "RR": 464.71
+   },
+   "stroke_reading_max_t_loop_s": {
+    "FL": 44.0,
+    "FR": 56.2,
+    "RL": 43.6,
+    "RR": 61.9
+   },
+   "stroke_true_max_mm": {
+    "FL": 673.05,
+    "FR": 451.33,
+    "RL": 665.04,
+    "RR": 460.59
+   },
+   "s_ref_max_mm": {
+    "FL": 679.77,
+    "FR": 455.96,
+    "RL": 670.82,
+    "RR": 464.54
+   },
+   "reading_minus_sref_at_lead_max_mm": 0.11420297427616788,
+   "lead_leg": "FL",
+   "margin_reading_to_guard_mm": 2.9313699198247605,
+   "margin_true_to_gate_mm": 11.751908577414838,
+   "margin_reading_to_fault_mm": 13.93136991982476,
+   "margin_reading_to_sensor_end_mm": 14.93136991982476,
+   "max_moving_pressure_bar": 102.08765911607834,
+   "max_any_state_bar": 102.08765911607834,
+   "measured_head_max_bar": 107.15,
+   "pressure_peak_leg": "FL",
+   "pressure_ratio_180": 0.5671536617559908
+  },
+  "warn_fault_events": [],
+  "feature_events": [
+   {
+    "t_s": 38.6,
+    "t_loop_s": 30.6,
+    "name": "crawler_liftoff_confirmed"
+   },
+   {
+    "t_s": 38.6,
+    "t_loop_s": 30.6,
+    "name": "INFO_LOC_CLEARANCE_MARGIN:80"
+   },
+   {
+    "t_s": 39.3,
+    "t_loop_s": 31.3,
+    "name": "INFO_LOC_REVOKED:2.2"
+   },
+   {
+    "t_s": 40.2,
+    "t_loop_s": 32.2,
+    "name": "crawler_liftoff_confirmed"
+   },
+   {
+    "t_s": 90.6,
+    "t_loop_s": 82.6,
+    "name": "ready_heave_tail"
+   },
+   {
+    "t_s": 90.9,
+    "t_loop_s": 82.9,
+    "name": "INFO_D1_IMU_MASS_SOURCE:ready"
+   }
+  ],
+  "R9_events": [],
+  "E3c10_events": [
+   {
+    "t_s": 38.6,
+    "t_loop_s": 30.6,
+    "name": "INFO_LOC_CLEARANCE_MARGIN:80"
+   }
+  ],
+  "SGS_events": [],
+  "stroke_profile": {
+   "loc_first": {
+    "t_s": 38.6,
+    "reading_mm": {
+     "FL": 486.37,
+     "FR": 379.18,
+     "RL": 475.52,
+     "RR": 376.74
+    },
+    "true_mm": {
+     "FL": 480.65,
+     "FR": 376.0,
+     "RL": 471.12,
+     "RR": 373.6
+    },
+    "pad_sinkage_mm": {
+     "FL": 126.66,
+     "FR": 17.68,
+     "RL": 134.71,
+     "RR": 33.22
+    },
+    "pad_normal_kN": {
+     "FL": 135.09,
+     "FR": 100.41,
+     "RL": 78.71,
+     "RR": 64.9
+    }
+   },
+   "loc_final": {
+    "t_s": 40.2,
+    "reading_mm": {
+     "FL": 519.65,
+     "FR": 387.47,
+     "RL": 508.67,
+     "RR": 386.44
+    },
+    "true_mm": {
+     "FL": 513.72,
+     "FR": 384.15,
+     "RL": 503.92,
+     "RR": 383.33
+    },
+    "pad_sinkage_mm": {
+     "FL": 146.57,
+     "FR": 17.62,
+     "RL": 155.96,
+     "RR": 35.92
+    },
+    "pad_normal_kN": {
+     "FL": 136.38,
+     "FR": 99.22,
+     "RL": 79.27,
+     "RR": 65.07
+    }
+   },
+   "first_ready": {
+    "t_s": 90.6,
+    "reading_mm": {
+     "FL": 666.06,
+     "FR": 453.04,
+     "RL": 657.64,
+     "RR": 462.47
+    },
+    "true_mm": {
+     "FL": 659.94,
+     "FR": 448.7,
+     "RL": 652.37,
+     "RR": 459.02
+    },
+    "pad_sinkage_mm": {
+     "FL": 146.58,
+     "FR": 58.6,
+     "RL": 156.69,
+     "RR": 75.6
+    },
+    "pad_normal_kN": {
+     "FL": 116.47,
+     "FR": 119.61,
+     "RL": 76.97,
+     "RR": 66.76
+    }
+   },
+   "last_ready": {
+    "t_s": 90.6,
+    "reading_mm": {
+     "FL": 666.06,
+     "FR": 453.04,
+     "RL": 657.64,
+     "RR": 462.47
+    },
+    "true_mm": {
+     "FL": 659.94,
+     "FR": 448.7,
+     "RL": 652.37,
+     "RR": 459.02
+    },
+    "pad_sinkage_mm": {
+     "FL": 146.58,
+     "FR": 58.6,
+     "RL": 156.69,
+     "RR": 75.6
+    },
+    "pad_normal_kN": {
+     "FL": 116.47,
+     "FR": 119.61,
+     "RL": 76.97,
+     "RR": 66.76
+    }
+   },
+   "end": {
+    "t_s": 168.0,
+    "reading_mm": {
+     "FL": 667.59,
+     "FR": 454.3,
+     "RL": 658.96,
+     "RR": 463.81
+    },
+    "true_mm": {
+     "FL": 661.07,
+     "FR": 449.93,
+     "RL": 653.19,
+     "RR": 460.11
+    },
+    "pad_sinkage_mm": {
+     "FL": 146.62,
+     "FR": 58.71,
+     "RL": 156.57,
+     "RR": 75.72
+    },
+    "pad_normal_kN": {
+     "FL": 117.14,
+     "FR": 118.88,
+     "RL": 75.52,
+     "RR": 68.16
+    }
+   },
+   "pad_sinkage_max_mm": {
+    "FL": 147.48,
+    "FR": 58.8,
+    "RL": 156.84,
+    "RR": 76.03
+   }
+  },
+  "harness": {
+   "id": "H9|J1|B|top|roll_neg@k0.6",
+   "verdict": "pass",
+   "failed_rows": [],
+   "t_ready_s": 76.40000000018277,
+   "min_force_kN": 64.0945363432903,
+   "att_end_deg": [
+    0.027758124957634633,
+    -0.01729891039718463
+   ],
+   "max_stroke_mm": 661.0234656097454,
+   "final_phase": "ready",
+   "rut_ready_mm": 62.10566161265026,
+   "crawler_N_max_after_ready": 0.0,
+   "warnings": [],
+   "flags": [],
+   "soil_stop": null,
+   "metrics": {
+    "n_loc": 1,
+    "loc_crawler_kN": [
+     0.0
+    ],
+    "false_loc": 0,
+    "false_loc_limit_kN": 3.8011291206408413,
+    "ready_recontacts": 0,
+    "ready_crawler_max_kN": 0.0,
+    "revoked_loc_crawler_kN": [
+     0.0
+    ],
+    "t_loc_first_s": 25.999999999984755,
+    "t_loc_final_s": 28.299999999979395,
+    "ready_load_ratio_min": 0.9449,
+    "window_checks": [
+     {
+      "t_s": 26.0,
+      "e1_spread_mm": 18.86,
+      "e4_rise_ratio": -0.501,
+      "vetoed": null
+     },
+     {
+      "t_s": 28.3,
+      "e1_spread_mm": 2.07,
+      "e4_rise_ratio": 0.423,
+      "vetoed": null
+     }
+    ],
+    "fix_events": [
+     [
+      27.4,
+      "INFO_LOC_REVOKED:2.1"
+     ],
+     [
+      76.4,
+      "reanchor_skipped:disabled"
+     ]
+    ],
+    "p36": {
+     "armed_t_s": null,
+     "minima": {},
+     "relifts": 0,
+     "actions": []
+    },
+    "p36s": {
+     "soil_sign": "soil_mode",
+     "sign_history": [
+      {
+       "t_s": 26.0,
+       "sign": "clearance_tilt"
+      },
+      {
+       "t_s": 27.4,
+       "sign": null,
+       "cleared": true
+      },
+      {
+       "t_s": 28.3,
+       "sign": "soil_mode"
+      }
+     ],
+     "guard_t_s": null,
+     "stop": null,
+     "preempted": null
+    },
+    "p37": null,
+    "p38": null,
+    "t_first_done_s": 48.000000000047166,
+    "e3_applied": false,
+    "lw_clears": 0,
+    "l1_revokes": 1,
+    "l2_confirms": 0,
+    "l2_rejects": 0,
+    "l1_skips": 0,
+    "l4_reused": [],
+    "diag_events": 0,
+    "fall_events": 0,
+    "repeat_reapproach_events": 0,
+    "restrain_periods": 0,
+    "yielded_periods": 0,
+    "pre_loc_reapproach_counts": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "p30fz_overrides": 0,
+    "p30fz_override_periods": 0,
+    "pred_hold_events": 0,
+    "quick_hold_events": 0,
+    "quick_hold_total_s": 0.0,
+    "quick_gate_checks": [],
+    "push_extensions": [],
+    "s6_confirms": 0,
+    "s1_rise_trace": [
+     [
+      21.1,
+      357.78,
+      91.645,
+      262.97,
+      null
+     ],
+     [
+      21.2,
+      359.08,
+      66.27,
+      280.36,
+      null
+     ],
+     [
+      21.3,
+      360.38,
+      56.557,
+      288.75,
+      null
+     ],
+     [
+      21.4,
+      361.67,
+      49.611,
+      295.89,
+      null
+     ],
+     [
+      21.5,
+      362.97,
+      44.185,
+      302.11,
+      null
+     ],
+     [
+      21.6,
+      364.27,
+      39.675,
+      307.64,
+      null
+     ],
+     [
+      21.7,
+      365.57,
+      35.796,
+      312.61,
+      null
+     ],
+     [
+      21.8,
+      366.87,
+      32.397,
+      317.12,
+      null
+     ],
+     [
+      21.9,
+      368.17,
+      29.495,
+      321.23,
+      null
+     ],
+     [
+      22.0,
+      369.47,
+      27.101,
+      324.99,
+      null
+     ],
+     [
+      22.1,
+      370.77,
+      25.174,
+      328.47,
+      null
+     ],
+     [
+      22.2,
+      372.08,
+      23.631,
+      331.7,
+      null
+     ],
+     [
+      22.3,
+      373.38,
+      22.37,
+      334.72,
+      null
+     ],
+     [
+      22.4,
+      374.69,
+      21.235,
+      337.57,
+      null
+     ],
+     [
+      22.5,
+      376.0,
+      20.207,
+      340.28,
+      null
+     ],
+     [
+      22.6,
+      377.31,
+      19.269,
+      342.86,
+      null
+     ],
+     [
+      22.7,
+      378.62,
+      18.37,
+      345.32,
+      null
+     ],
+     [
+      22.8,
+      379.93,
+      17.535,
+      347.69,
+      null
+     ],
+     [
+      22.9,
+      381.24,
+      16.793,
+      349.95,
+      null
+     ],
+     [
+      23.0,
+      382.55,
+      16.137,
+      352.12,
+      null
+     ],
+     [
+      23.1,
+      383.86,
+      15.543,
+      354.2,
+      null
+     ],
+     [
+      23.2,
+      385.17,
+      14.981,
+      356.2,
+      null
+     ],
+     [
+      23.3,
+      386.47,
+      14.427,
+      358.12,
+      null
+     ],
+     [
+      23.4,
+      387.77,
+      13.871,
+      359.97,
+      null
+     ],
+     [
+      23.5,
+      389.06,
+      13.32,
+      361.75,
+      null
+     ],
+     [
+      23.6,
+      390.35,
+      12.783,
+      363.46,
+      null
+     ],
+     [
+      23.7,
+      391.63,
+      12.279,
+      365.1,
+      null
+     ],
+     [
+      23.8,
+      392.91,
+      11.812,
+      366.67,
+      null
+     ],
+     [
+      23.9,
+      394.18,
+      11.382,
+      368.17,
+      null
+     ],
+     [
+      24.0,
+      395.45,
+      10.971,
+      369.61,
+      null
+     ],
+     [
+      24.1,
+      396.72,
+      10.589,
+      371.0,
+      null
+     ],
+     [
+      24.2,
+      397.98,
+      10.223,
+      372.33,
+      null
+     ],
+     [
+      24.3,
+      399.24,
+      9.87,
+      373.61,
+      null
+     ],
+     [
+      24.4,
+      400.49,
+      9.537,
+      374.85,
+      null
+     ],
+     [
+      24.5,
+      401.74,
+      9.224,
+      376.04,
+      null
+     ],
+     [
+      24.6,
+      402.99,
+      8.939,
+      377.19,
+      null
+     ],
+     [
+      24.7,
+      404.23,
+      8.679,
+      378.3,
+      null
+     ],
+     [
+      24.8,
+      405.46,
+      8.425,
+      379.37,
+      null
+     ],
+     [
+      24.9,
+      406.7,
+      8.271,
+      379.86,
+      null
+     ],
+     [
+      25.0,
+      407.93,
+      7.924,
+      380.86,
+      null
+     ],
+     [
+      25.1,
+      409.15,
+      7.548,
+      381.81,
+      null
+     ],
+     [
+      25.2,
+      410.37,
+      7.171,
+      382.72,
+      null
+     ],
+     [
+      25.3,
+      411.59,
+      6.792,
+      383.58,
+      null
+     ],
+     [
+      25.4,
+      412.8,
+      6.302,
+      384.37,
+      null
+     ],
+     [
+      25.5,
+      414.0,
+      5.664,
+      385.08,
+      null
+     ],
+     [
+      25.6,
+      415.2,
+      4.832,
+      385.68,
+      null
+     ],
+     [
+      25.7,
+      416.4,
+      3.974,
+      386.19,
+      null
+     ],
+     [
+      25.8,
+      417.59,
+      3.201,
+      386.63,
+      null
+     ],
+     [
+      25.9,
+      418.77,
+      2.518,
+      387.01,
+      null
+     ]
+    ],
+    "soil_push_mm": 9.4,
+    "crawler_recontact": {
+     "departure": {
+      "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+      "departed": true,
+      "t_departure_s": 24.726999999987722,
+      "t_confirmed_s": 24.82699999998749,
+      "recontact_t_s": null,
+      "recontact_count": 0,
+      "crawler_normal_max_after_confirm_N": 3056.055576519259
+     },
+     "recontact_events": {
+      "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+      "limit_N": 3801.1291206408414,
+      "weight_N": 380112.91206408414,
+      "t_loc_s": 28.299999999979395,
+      "t_ready_s": null,
+      "chatter": {
+       "after_loc_s": 1.0,
+       "max_duration_s": 0.1,
+       "max_over_limit": 1.2,
+       "max_normal_N": 4561.354944769009,
+       "time_tolerance_s": 1e-09,
+       "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+      },
+      "events": [],
+      "pass": true,
+      "flags": [],
+      "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+     },
+     "series_step_s": 0.0010000000000047748
+    },
+    "roll_abs_max_after_loc_deg": 2.1731,
+    "side_sink_after_loc_mm": [
+     -0.4,
+     33.02
+    ],
+    "ds_events": [],
+    "ds_active_s": 0.0,
+    "recontact_after_final_loc_N_max": 0.0,
+    "rut_clear_min_after_final_loc_mm": 15.22
+   }
+  },
+  "harness_vs_chrono": {
+   "stroke_controller_quantity_mm": {
+    "harness": 661.0234656097454,
+    "chrono": 679.8686300801752,
+    "chrono_minus_harness": 18.845164470429836,
+    "within_H6_plus23": true
+   },
+   "guard_margin_mm": {
+    "harness": 21.776534390254596,
+    "chrono": 2.9313699198247605
+   },
+   "ready_s": {
+    "harness": 76.40000000018277,
+    "chrono": 82.60000000188937,
+    "chrono_minus_harness": 6.200000001706599
+   },
+   "gap_mm": {
+    "harness": 62.10566161265026,
+    "chrono": 47.594770792134035,
+    "chrono_minus_harness": -14.510890820516224
+   },
+   "min_force_kN": {
+    "harness": 64.0945363432903,
+    "chrono": 63.04524782162756,
+    "ratio_harness_over_chrono": 1.0166434197329426
+   },
+   "end_attitude_deg": {
+    "harness_end": [
+     0.027758124957634633,
+     -0.01729891039718463
+    ],
+    "chrono_absmax": 0.0233035579031442
+   },
+   "verdict": {
+    "harness": "pass",
+    "chrono": "pass"
+   }
+  },
+  "reference_run": {
+   "folder": "07_results/S9/batch_FINAL-REP_20261030_223359/S9SL_X6rb_J1_B_top_Fs4_rm2p86_p0",
+   "stroke_reading_max_mm": {
+    "FL": 683.02,
+    "FR": 433.94,
+    "RL": 672.52,
+    "RR": 443.08
+   },
+   "stroke_profile": {
+    "loc_first": {
+     "t_s": 39.7,
+     "reading_mm": {
+      "FL": 509.13,
+      "FR": 376.07,
+      "RL": 499.56,
+      "RR": 375.95
+     },
+     "true_mm": {
+      "FL": 503.32,
+      "FR": 372.64,
+      "RL": 494.61,
+      "RR": 372.97
+     },
+     "pad_sinkage_mm": {
+      "FL": 149.45,
+      "FR": 14.52,
+      "RL": 157.82,
+      "RR": 32.29
+     },
+     "pad_normal_kN": {
+      "FL": 137.72,
+      "FR": 97.88,
+      "RL": 80.03,
+      "RR": 64.3
+     }
+    },
+    "loc_final": {
+     "t_s": 39.7,
+     "reading_mm": {
+      "FL": 509.13,
+      "FR": 376.07,
+      "RL": 499.56,
+      "RR": 375.95
+     },
+     "true_mm": {
+      "FL": 503.32,
+      "FR": 372.64,
+      "RL": 494.61,
+      "RR": 372.97
+     },
+     "pad_sinkage_mm": {
+      "FL": 149.45,
+      "FR": 14.52,
+      "RL": 157.82,
+      "RR": 32.29
+     },
+     "pad_normal_kN": {
+      "FL": 137.72,
+      "FR": 97.88,
+      "RL": 80.03,
+      "RR": 64.3
+     }
+    },
+    "end": {
+     "t_s": 168.0,
+     "reading_mm": {
+      "FL": 682.78,
+      "FR": 433.35,
+      "RL": 672.12,
+      "RR": 442.69
+     },
+     "true_mm": {
+      "FL": 675.99,
+      "FR": 429.23,
+      "RL": 666.4,
+      "RR": 439.05
+     },
+     "pad_sinkage_mm": {
+      "FL": 157.5,
+      "FR": 50.35,
+      "RL": 166.14,
+      "RR": 65.92
+     },
+     "pad_normal_kN": {
+      "FL": 118.57,
+      "FR": 117.44,
+      "RL": 73.31,
+      "RR": 70.32
+     }
+    },
+    "pad_sinkage_max_mm": {
+     "FL": 158.35,
+     "FR": 50.37,
+     "RL": 166.64,
+     "RR": 65.94
+    }
+   },
+   "events": [
+    {
+     "t_loop_s": 31.7,
+     "name": "crawler_liftoff_confirmed"
+    },
+    {
+     "t_loop_s": 31.7,
+     "name": "INFO_LOC_CLEARANCE_MARGIN:80"
+    },
+    {
+     "t_loop_s": 42.4,
+     "name": "WARN_LIFT_STROKE_LIMITED:FL"
+    },
+    {
+     "t_loop_s": 42.4,
+     "name": "FAULT_LIFT_STROKE_LIMIT:soil:FL"
+    }
+   ],
+   "harness": {
+    "id": "H9|J1|B|top|roll_neg@k0.65",
+    "verdict": "pass",
+    "failed_rows": [],
+    "t_ready_s": 76.40000000018277,
+    "min_force_kN": 63.392414129537634,
+    "att_end_deg": [
+     0.029869310795391776,
+     -0.015445557662042374
+    ],
+    "max_stroke_mm": 660.2834365240664,
+    "final_phase": "ready",
+    "rut_ready_mm": 42.90482612355329,
+    "crawler_N_max_after_ready": 0.0,
+    "warnings": [],
+    "flags": [],
+    "soil_stop": null,
+    "metrics": {
+     "n_loc": 1,
+     "loc_crawler_kN": [
+      0.0
+     ],
+     "false_loc": 0,
+     "false_loc_limit_kN": 3.8011291206408413,
+     "ready_recontacts": 0,
+     "ready_crawler_max_kN": 0.0,
+     "ready_load_ratio_min": 0.9517,
+     "window_checks": [
+      {
+       "t_s": 26.4,
+       "e1_spread_mm": 18.85,
+       "e4_rise_ratio": -0.534,
+       "vetoed": null
+      }
+     ],
+     "fix_events": [
+      [
+       76.4,
+       "reanchor_skipped:disabled"
+      ]
+     ],
+     "p36": {
+      "armed_t_s": null,
+      "minima": {},
+      "relifts": 0,
+      "actions": []
+     },
+     "p36s": {
+      "soil_sign": "clearance_tilt",
+      "sign_history": [
+       {
+        "t_s": 26.4,
+        "sign": "clearance_tilt"
+       }
+      ],
+      "guard_t_s": null,
+      "stop": null,
+      "preempted": null
+     },
+     "p37": null,
+     "p38": null,
+     "t_first_done_s": 48.20000000004812,
+     "e3_applied": false,
+     "lw_clears": 0,
+     "l1_revokes": 0,
+     "l2_confirms": 0,
+     "l2_rejects": 0,
+     "l1_skips": 0,
+     "l4_reused": [],
+     "diag_events": 0,
+     "fall_events": 0,
+     "repeat_reapproach_events": 0,
+     "restrain_periods": 0,
+     "yielded_periods": 0,
+     "pre_loc_reapproach_counts": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "p30fz_overrides": 0,
+     "p30fz_override_periods": 0,
+     "pred_hold_events": 0,
+     "quick_hold_events": 0,
+     "quick_hold_total_s": 0.0,
+     "quick_gate_checks": [],
+     "push_extensions": [],
+     "s6_confirms": 0,
+     "s1_rise_trace": [
+      [
+       21.1,
+       357.42,
+       92.128,
+       260.06,
+       null
+      ],
+      [
+       21.2,
+       358.68,
+       75.978,
+       270.94,
+       null
+      ],
+      [
+       21.3,
+       359.93,
+       57.397,
+       285.24,
+       null
+      ],
+      [
+       21.4,
+       361.19,
+       50.587,
+       292.24,
+       null
+      ],
+      [
+       21.5,
+       362.45,
+       45.27,
+       298.38,
+       null
+      ],
+      [
+       21.6,
+       363.71,
+       40.711,
+       303.87,
+       null
+      ],
+      [
+       21.7,
+       364.97,
+       36.739,
+       308.83,
+       null
+      ],
+      [
+       21.8,
+       366.23,
+       33.317,
+       313.34,
+       null
+      ],
+      [
+       21.9,
+       367.49,
+       30.413,
+       317.44,
+       null
+      ],
+      [
+       22.0,
+       368.75,
+       27.99,
+       321.2,
+       null
+      ],
+      [
+       22.1,
+       370.02,
+       25.996,
+       324.65,
+       null
+      ],
+      [
+       22.2,
+       371.28,
+       24.347,
+       327.87,
+       null
+      ],
+      [
+       22.3,
+       372.55,
+       22.957,
+       330.89,
+       null
+      ],
+      [
+       22.4,
+       373.81,
+       21.765,
+       333.74,
+       null
+      ],
+      [
+       22.5,
+       375.08,
+       20.671,
+       336.44,
+       null
+      ],
+      [
+       22.6,
+       376.35,
+       19.697,
+       339.01,
+       null
+      ],
+      [
+       22.7,
+       377.62,
+       18.835,
+       341.45,
+       null
+      ],
+      [
+       22.8,
+       378.89,
+       18.041,
+       343.79,
+       null
+      ],
+      [
+       22.9,
+       380.16,
+       17.287,
+       346.04,
+       null
+      ],
+      [
+       23.0,
+       381.43,
+       16.593,
+       348.2,
+       null
+      ],
+      [
+       23.1,
+       382.71,
+       15.964,
+       350.28,
+       null
+      ],
+      [
+       23.2,
+       383.98,
+       15.399,
+       352.28,
+       null
+      ],
+      [
+       23.3,
+       385.26,
+       14.884,
+       354.22,
+       null
+      ],
+      [
+       23.4,
+       386.54,
+       14.398,
+       356.08,
+       null
+      ],
+      [
+       23.5,
+       387.82,
+       13.924,
+       357.89,
+       null
+      ],
+      [
+       23.6,
+       389.09,
+       13.455,
+       359.63,
+       null
+      ],
+      [
+       23.7,
+       390.36,
+       12.988,
+       361.32,
+       null
+      ],
+      [
+       23.8,
+       391.62,
+       12.517,
+       362.94,
+       null
+      ],
+      [
+       23.9,
+       392.88,
+       12.062,
+       364.51,
+       null
+      ],
+      [
+       24.0,
+       394.14,
+       11.628,
+       366.02,
+       null
+      ],
+      [
+       24.1,
+       395.39,
+       11.223,
+       367.47,
+       null
+      ],
+      [
+       24.2,
+       396.64,
+       10.832,
+       368.87,
+       null
+      ],
+      [
+       24.3,
+       397.89,
+       10.467,
+       370.22,
+       null
+      ],
+      [
+       24.4,
+       399.13,
+       10.121,
+       371.51,
+       null
+      ],
+      [
+       24.5,
+       400.37,
+       9.789,
+       372.76,
+       null
+      ],
+      [
+       24.6,
+       401.61,
+       9.629,
+       373.34,
+       null
+      ],
+      [
+       24.7,
+       402.84,
+       9.313,
+       374.52,
+       null
+      ],
+      [
+       24.8,
+       404.06,
+       9.004,
+       375.66,
+       null
+      ],
+      [
+       24.9,
+       405.29,
+       8.718,
+       376.77,
+       null
+      ],
+      [
+       25.0,
+       406.51,
+       8.458,
+       377.83,
+       null
+      ],
+      [
+       25.1,
+       407.73,
+       8.23,
+       378.87,
+       null
+      ],
+      [
+       25.2,
+       408.94,
+       7.961,
+       379.86,
+       null
+      ],
+      [
+       25.3,
+       410.16,
+       7.636,
+       380.8,
+       null
+      ],
+      [
+       25.4,
+       411.37,
+       7.307,
+       381.71,
+       null
+      ],
+      [
+       25.5,
+       412.57,
+       6.98,
+       382.58,
+       null
+      ],
+      [
+       25.6,
+       413.78,
+       6.653,
+       383.41,
+       null
+      ],
+      [
+       25.7,
+       414.97,
+       6.256,
+       384.19,
+       null
+      ],
+      [
+       25.8,
+       416.17,
+       5.716,
+       384.89,
+       null
+      ],
+      [
+       25.9,
+       417.36,
+       4.973,
+       385.5,
+       null
+      ],
+      [
+       26.0,
+       418.55,
+       4.146,
+       386.01,
+       null
+      ],
+      [
+       26.1,
+       419.73,
+       3.39,
+       386.45,
+       null
+      ],
+      [
+       26.2,
+       420.91,
+       2.691,
+       386.83,
+       null
+      ],
+      [
+       26.3,
+       422.09,
+       2.02,
+       387.16,
+       null
+      ]
+     ],
+     "soil_push_mm": null,
+     "crawler_recontact": {
+      "departure": {
+       "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+       "departed": true,
+       "t_departure_s": 25.04499999998698,
+       "t_confirmed_s": 25.144999999986748,
+       "recontact_t_s": null,
+       "recontact_count": 0,
+       "crawler_normal_max_after_confirm_N": 3061.7745012070527
+      },
+      "recontact_events": {
+       "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+       "limit_N": 3801.1291206408414,
+       "weight_N": 380112.91206408414,
+       "t_loc_s": 26.399999999983823,
+       "t_ready_s": null,
+       "chatter": {
+        "after_loc_s": 1.0,
+        "max_duration_s": 0.1,
+        "max_over_limit": 1.2,
+        "max_normal_N": 4561.354944769009,
+        "time_tolerance_s": 1e-09,
+        "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+       },
+       "events": [],
+       "pass": true,
+       "flags": [],
+       "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+      },
+      "series_step_s": 0.0010000000000047748
+     },
+     "roll_abs_max_after_loc_deg": 2.8455,
+     "side_sink_after_loc_mm": [
+      15.53,
+      35.69
+     ],
+     "ds_events": [],
+     "ds_active_s": 0.0,
+     "recontact_after_final_loc_N_max": 0.0,
+     "rut_clear_min_after_final_loc_mm": 1.82
+    }
+   }
+  }
+ }
+}

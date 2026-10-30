@@ -225,12 +225,16 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     # --row-filter (e.g. --row-filter optional=None keeps the 16 required rows). FINAL1 .. FINAL6 / FINAL-R stay.
     out["FINAL-REP"] = level_rows("final_rep_cases")
     out["FINAL-R-REP"] = final_r_rep_rows(out["FINAL-R"])
+    # FINAL-REP-X (user approval 2026-10-31, spec 432.5.1): FINAL-REP P3b_J2_B_top_Fs4_m1p1 with a 180 s closed loop
+    # (row ..._t180, argv = the FINAL-REP row with --duration 180); check-sources accepts only that difference
+    out["FINAL-REP-X"] = level_rows("final_rep_x_cases")
     return out
 
 
 FINAL_ROW_KEYS = ("controller", "source_run", "priority", "pair_case", "pair_run", "optional", "requires",
                   "harness_case", "cid", "group", "k", "direction", "h9_result",
-                  "rep_bundle", "rep_source", "rep_variable", "r4_x11_check", "expected_note", "rep_role")
+                  "rep_bundle", "rep_source", "rep_variable", "r4_x11_check", "expected_note", "rep_role",
+                  "source_expected_diffs")
 """Row keys of the RV6 / FINAL rows (rows with ``controller``) copied into the batch row and batch.json."""
 
 
@@ -549,7 +553,8 @@ CODE_HASH_FILES = ("03_src/outrigger_sim/control/c2.py", "03_src/outrigger_sim/c
 """Controller files hashed at every case launch (``code_at_launch``; FINAL 2026-10-30)."""
 ENTRY_META_KEYS = ("note", "priority", "controller", "source_run", "pair_case", "pair_run", "optional", "requires",
                    "harness_case", "family", "s8_group", "also_in", "planned_pool", "est_pool_s", "depends_on", "k",
-                   "direction", "h9_result", "rep_bundle", "rep_source", "rep_variable", "r4_x11_check", "expected_note", "rep_role")
+                   "direction", "h9_result", "rep_bundle", "rep_source", "rep_variable", "r4_x11_check",
+                   "expected_note", "rep_role", "source_expected_diffs")
 """Row keys copied into the batch.json case entries (when present)."""
 
 
@@ -812,8 +817,20 @@ def check_sources(name: str, rows: list[dict]) -> dict:
                         "source": c.get("source_run")})
             continue
         chk = r9.source_args_check(c["argv"][len(RUN):], ROOT / "07_results" / "S9" / c["source_run"])
+        chk = expected_diff_check(chk, c.get("source_expected_diffs"))
         res.append({"case": c["case"], **chk})
     return {"batch": name, "rows": res, "ok": not any(r["status"] == "differs" for r in res)}
+
+
+def expected_diff_check(chk: dict, expected: dict | None) -> dict:
+    """A row with ``source_expected_diffs`` {arg: row value} (FINAL-REP-X, 2026-10-31): ``ok_expected_diff`` when the
+    argument differences against the former run are exactly those keys with those row values, else ``differs`` (an
+    expected difference that is absent also differs). Rows without it are returned unchanged."""
+    if not expected or chk["status"] == "no_source":
+        return chk
+    got = {d["key"]: d["row"] for d in chk["diffs"]}
+    ok = set(got) == set(expected) and all(got[k] == v for k, v in expected.items())
+    return {**chk, "status": "ok_expected_diff" if ok else "differs", "expected_diffs": dict(expected)}
 
 
 def main(argv) -> None:

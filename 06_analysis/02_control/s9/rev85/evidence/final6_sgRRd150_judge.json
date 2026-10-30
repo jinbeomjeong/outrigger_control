@@ -1,0 +1,228 @@
+{
+ "case": "P3b_J2_B_top_Fs4_sgRRd150",
+ "folder": "07_results/S9/batch_FINAL6_20261031_000833/P3b_J2_B_top_Fs4_sgRRd150",
+ "harness_id": "H8|J2|B|top|flat|RR:d150",
+ "controller": "final_SGS_R4",
+ "code_state": "impl_final_rules",
+ "rejudge": {
+  "unchanged_blocks_equal": true,
+  "params_file_match": true,
+  "inputs_sha256": {
+   "result.json": "0f03dc6baf2ef5584d52ff4b13015f27015983dd7f0359cc78900adc688462e5",
+   "step_series.npz": "fba30838026d2e7d7dd5c5a14614efc80f541265562df5d9784ea3685746b05e",
+   "record/record.npz": "a102db8cd0b6e3045007fbdab2c9a67e1a2725296662a8f36fb22f0a8b8d9ce9"
+  }
+ },
+ "wall_s": 11503.460072899994,
+ "t_loop_start_s": 7.999999999994694,
+ "phases": [
+  [
+   0.1,
+   "check"
+  ],
+  [
+   4.8,
+   "touch"
+  ],
+  [
+   37.9,
+   "level"
+  ],
+  [
+   59.1,
+   "done"
+  ],
+  [
+   59.2,
+   "probe"
+  ],
+  [
+   63.2,
+   "level"
+  ],
+  [
+   72.4,
+   "done"
+  ],
+  [
+   72.5,
+   "probe"
+  ],
+  [
+   84.4,
+   "ready"
+  ]
+ ],
+ "verdict": "pass",
+ "classification": "pass",
+ "rows": {
+  "P3-1": {
+   "pass": true,
+   "recontact_count": 0,
+   "crawler_normal_max_after_confirm_N": 3523.1986819269923
+  },
+  "P3-2": {
+   "verdict": "pass",
+   "loc_minus_departure_s": 2.5710000000853483,
+   "limit_s": 2.91165281234524,
+   "loc_revokes": 0,
+   "soil_mode_used": true,
+   "crawler_normal_at_loc_N": 0.0
+  },
+  "P3-3": {
+   "pass": true,
+   "min_kN": 67.84543660688085,
+   "F_min_kN": 9.415
+  },
+  "P3-4": {
+   "pass": true,
+   "absmax_deg": 0.061216270975166506,
+   "window_short": false,
+   "creep_vibration_suspect": false,
+   "imu_allowance_left_deg": 0.11878372902483351,
+   "imu_allowance_vs_U_S9P_16_0p119": false
+  },
+  "P3-5": {
+   "pass": true,
+   "gap_mm": 67.79610118205825,
+   "s_true_max_mm": 669.2508937288513,
+   "gate_mm": 684.8
+  },
+  "P3-6": {
+   "pass": true,
+   "ready_s_loop": 84.40000000194912,
+   "limit_s": 100.0
+  },
+  "P3-7": {
+   "pass": true,
+   "rise_min_loaded_N": 7308.684466868405
+  },
+  "P3-8": {
+   "pass": true
+  }
+ },
+ "chrono": {
+  "ready_s_loop": 84.40000000194912,
+  "ready_limit_s": 100.0,
+  "min_force_after_departure_kN": 67.84543660688085,
+  "min_force_leg": "RR",
+  "gap_after_first_ready_mm": 67.79610118205825,
+  "end_attitude_absmax_deg": 0.061216270975166506,
+  "end_1s_roll_pitch_deg": [
+   0.06083635079030649,
+   -0.013340040148431778
+  ],
+  "p34_window_s": 30.734000001020263,
+  "imu_allowance_left_deg": 0.11878372902483351,
+  "stroke_reading_max_mm": {
+   "FL": 526.55,
+   "FR": 508.52,
+   "RL": 537.84,
+   "RR": 675.13
+  },
+  "stroke_reading_max_t_loop_s": {
+   "FL": 60.7,
+   "FR": 77.0,
+   "RL": 63.1,
+   "RR": 83.0
+  },
+  "stroke_true_max_mm": {
+   "FL": 521.15,
+   "FR": 503.47,
+   "RL": 533.12,
+   "RR": 669.25
+  },
+  "p35_s_motor_max_mm": [
+   520.97,
+   503.29,
+   533.0,
+   669.12
+  ],
+  "margin_reading_to_guard_mm": 7.666626289543387,
+  "margin_true_to_gate_mm": 15.549106271148617,
+  "margin_reading_to_fault_mm": 18.666626289543387,
+  "margin_reading_to_sensor_end_mm": 19.666626289543387,
+  "margin_true_to_sensor_end_mm": 25.549106271148617,
+  "max_moving_pressure_bar": 91.33420027442585,
+  "max_any_state_bar": 91.33420027442585,
+  "measured_head_max_bar": 101.35,
+  "pressure_peak_leg": "FL"
+ },
+ "warn_fault_events": [],
+ "feature_events": [
+  {
+   "t_s": 55.9,
+   "t_loop_s": 47.9,
+   "name": "INFO_LOC_FLAT_SOIL_MARGIN:80"
+  },
+  {
+   "t_s": 56.9,
+   "t_loop_s": 48.9,
+   "name": "INFO_DIFF_SINK_HOLD:FL,RL:5.2"
+  },
+  {
+   "t_s": 58.1,
+   "t_loop_s": 50.1,
+   "name": "INFO_DIFF_SINK_RELEASE:stroke"
+  }
+ ],
+ "R7_stroke_release": {
+  "t_s": 58.1,
+  "reading_mm": {
+   "FL": 492.7,
+   "FR": 485.9,
+   "RL": 496.2,
+   "RR": 643.2
+  },
+  "true_mm": {
+   "FL": 487.7,
+   "FR": 481.3,
+   "RL": 491.8,
+   "RR": 637.8
+  },
+  "release_limit_mm": 642.8
+ },
+ "harness_vs_chrono": {
+  "stroke_controller_quantity_mm": {
+   "harness": 680.5136615707694,
+   "chrono": 675.1333737104566,
+   "chrono_minus_harness": -5.380287860312819
+  },
+  "stroke_harness_vs_chrono_true_mm (mixed quantity, former 432.4 practice)": {
+   "harness": 680.5136615707694,
+   "chrono": 669.2508937288513,
+   "chrono_minus_harness": -11.262767841918048
+  },
+  "guard_margin_mm": {
+   "harness": 2.286338429230568,
+   "chrono": 7.666626289543387
+  },
+  "ready_s": {
+   "harness": 76.7000000001842,
+   "chrono": 84.40000000194912,
+   "chrono_minus_harness": 7.70000000176492
+  },
+  "gap_mm": {
+   "harness": 67.99403006148574,
+   "chrono": 67.79610118205825,
+   "chrono_minus_harness": -0.1979288794274936
+  },
+  "min_force_kN": {
+   "harness": 68.80166179986682,
+   "chrono": 67.84543660688085,
+   "ratio_harness_over_chrono": 1.0140941711161306
+  },
+  "R9_applied": {
+   "harness": true,
+   "chrono": true
+  },
+  "guard_events": {
+   "harness": [],
+   "chrono": []
+  }
+ },
+ "notes": [
+  "Times *_loop_s are loop-relative (absolute - t_loop_start_s).",
+  "Same-quantity stroke comparison is controller reading (Chrono meas.stroke) vs harness max(plant.sref); the P3-5 / 432.4 Chrono stroke (s_motor_max_m) is the true rod stroke, about 5-6 mm below the reading (oil / contact compliance F/k at about 68 kN on RR)."
+ ]
+}

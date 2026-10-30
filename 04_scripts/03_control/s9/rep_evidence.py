@@ -11,9 +11,33 @@ are read from each run's ``07_results/S9/<batch>/<case>/result_rejudge_rev60.jso
 block; RV3 C-C1 from the G6 judge ``rev85/rv3c_g6_judge.json``); a missing file drops the pair
 and is listed in meta ``missing_chrono_inputs``.
 
+Stroke quantities (CLAUDE.md ``stroke_true = s_motor - F_cyl/k_oil``): the controller reading
+is larger than the true rod stroke by the oil / contact compliance F_cyl/k_oil (about 5-6 mm at
+68 kN), so the pairs compare like with like:
+  max_stroke_reading_mm  controller reading. Chrono = per-leg max of ``meas.stroke`` in the run's
+                         ``record/record.npz``; harness = ``max_motor_stroke_mm`` = max(plant.sref)
+  max_stroke_true_mm     true rod stroke. Chrono = P3-5 ``s_motor_max_m`` (or the spec value of a
+                         curated case); the harness results do not store it (``None``)
+Schema 2 (2026-10-31) replaced the mixed ``max_stroke_mm`` / ``d_max_stroke_mm`` (Chrono true vs
+harness reading) with these two columns and ``d_max_stroke_reading_mm`` (see meta
+``schema_change``).
+
+Schema 3 (2026-10-31, spec 432.4.5) adds:
+  final_pairs     the final-controller Chrono runs (FINAL-REP 7 + FINAL6 1 + RV6 X6-rb2 1 +
+                  FINAL-REP-X 1, ``FINAL_RUNS``) with their final-harness twins
+                  (``FINAL_HARNESS_FILES_REL``), summarized apart in ``final_summary``; a run
+                  marked ``superseded_by`` is listed but not counted (runs still going are
+                  listed in ``FINAL_PENDING_RUNS``)
+  P3-2 FLAG       the automatic P3b verdict counts a P3-2 judged ``flag`` (late LOC, spec
+                  419.8 / 424.8.1) as pass and lists it in the Chrono ``flags``
+  censored_at_guard  per pair: True when either run fired the lift-stroke guard
+                  (``WARN_LIFT_STROKE_LIMITED`` / ``FAULT_LIFT_STROKE_LIMIT``; Chrono from the
+                  run's ``result.json`` events, harness from the record ``warnings``). The max
+                  stroke reading is then bounded by the guard, so its delta is a bound.
+
 E5 groups harness records that differ in one independent variable only and reports the direction
 of each metric and whether it is monotone across the levels (verdict rank, READY, min cylinder
-force, max stroke, ready gap).
+force, max stroke reading, ready gap).
 
 Outputs (``<out dir>``, default ``06_analysis/02_control/s9/rev85``):
   harness_chrono_pairs.json   E1
@@ -30,6 +54,8 @@ import json
 import sys
 from collections import defaultdict
 from pathlib import Path
+
+import numpy as np
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
@@ -56,10 +82,15 @@ UNLOADED_HARNESS_KEYS = ("H9",)  # listed in meta only (no record table)
 RANK = {"pass": 0, "stroke_limited_pass": 1, "stroke_limited_stop": 2, "fail": 3,
         "stroke_limited_fail": 4}
 UNKNOWN_VERDICT_RANK = 3
-COMPARED_FIELDS = ("ready_s", "min_force_kN", "max_stroke_mm", "gap_ready_mm",
-                   "att_end_absmax_deg")
+COMPARED_FIELDS = ("ready_s", "min_force_kN", "max_stroke_reading_mm", "max_stroke_true_mm",
+                   "gap_ready_mm", "att_end_absmax_deg")
+PAIRS_SCHEMA_VERSION = 3
 P3B_PASS_CHECKS = ("P3-1_crawler_zero_after_ready", "P3-2_within", "P3-3_within",
                    "P3-4_within_0p2", "P3-5_within", "P3-6_within", "P3-8_within")
+# P3-2 late LOC judged as a FLAG (spec 419.8 / 424.8.1) passes; the reason checks name it
+P3_2_WITHIN_CHECK = "P3-2_within"
+P3_2_VERDICT_KEY = "P3-2_verdict"
+P3_2_FLAG_REASON_CHECKS = ("P3-2_late_loc_revoked", "P3-2_late_loc_reapproach")
 
 # E1 side thresholds (ASSUMPTION, see meta "classification")
 OPTIMISTIC_READY_DELAY_S = 5.0
@@ -69,9 +100,9 @@ CONSERVATIVE_MIN_FORCE_RATIO = 0.90
 OPTIMISTIC_GAP_SHORTFALL_MM = -10.0
 
 # E5: a level-to-level change within the tolerance counts as flat
-METRICS = ("rank", "ready_s", "min_force_kN", "max_stroke_mm", "gap_ready_mm")
-METRIC_TOLERANCE = {"rank": 0, "ready_s": 0.5, "min_force_kN": 0.2, "max_stroke_mm": 0.5,
-                    "gap_ready_mm": 0.5}
+METRICS = ("rank", "ready_s", "min_force_kN", "max_stroke_reading_mm", "gap_ready_mm")
+METRIC_TOLERANCE = {"rank": 0, "ready_s": 0.5, "min_force_kN": 0.2,
+                    "max_stroke_reading_mm": 0.5, "gap_ready_mm": 0.5}
 NON_MONOTONE_LIST_LIMIT = 40
 
 CURATED = (  # (variable, chrono case, harness id, chrono values, version, src)
@@ -88,18 +119,18 @@ CURATED = (  # (variable, chrono case, harness id, chrono values, version, src)
      "spec 400.3"),
     ("A2 nose_down J1 B 2.8 deg (R_c 0.875, REANCHOR)", "S9SL_X4nd_J1_B_top_Fs4_r0_p2p8",
      "H4|J1|B|top|nose_down_2p8",
-     {"verdict": "pass", "ready_s": 97.1, "min_force_kN": 66.6, "max_stroke_mm": 645.4,
+     {"verdict": "pass", "ready_s": 97.1, "min_force_kN": 66.6, "max_stroke_true_mm": 645.4,
       "gap_ready_mm": 122.5, "att_end_absmax_deg": 0.0386},
      "3434912 (= 05708b2 commands)", "spec 426.9.G.2"),
     ("A2 edge J1 B (R_c 0.875)", "S9SL_X4ed_J1_B_top_Fs4_r1p925_p1p4",
      "H3|J1|B|top|edge_nd@k0.875",
-     {"verdict": "pass", "ready_s": 62.4, "min_force_kN": 63.7, "max_stroke_mm": 653.1,
+     {"verdict": "pass", "ready_s": 62.4, "min_force_kN": 63.7, "max_stroke_true_mm": 653.1,
       "gap_ready_mm": 69.2, "att_end_absmax_deg": 0.048}, "3434912", "spec 426.9.G.4"),
     ("A2 roll J1 B 3.85 deg (R_c 0.875)", "S9SL_X4rp_J1_B_top_Fs4_r3p85_p0",
      "H3|J1|B|top|roll_pos@k0.875",
      {"verdict": "stroke_limited_fail", "min_force_kN": 1.2}, "3434912", "spec 426.9.G.3"),
     ("B4 weight x1.1 J2 B", "P3b_J2_B_top_Fs4_m1p1 (RV1 X5)", "H6|J2|B|top|flat|m1.1",
-     {"verdict": "fail", "ready_s": 104.1, "min_force_kN": 74.3, "max_stroke_mm": 586.9,
+     {"verdict": "fail", "ready_s": 104.1, "min_force_kN": 74.3, "max_stroke_true_mm": 586.9,
       "gap_ready_mm": 41.5, "att_end_absmax_deg": 0.0295, "note": "P3-6 only"}, "3434912",
      "spec 426.9.G.1"),
     ("B4 weight x1.1 J1 B", "P3b_J1_B_top_Fs4_m1p1 (D424R 1)", "H6|J1|B|top|flat|m1.1",
@@ -108,7 +139,7 @@ CURATED = (  # (variable, chrono case, harness id, chrono values, version, src)
      "paper 4.8.2, spec D424R verdict"),
     ("B4 weight x1.2 J1 B", "P3b_J1_B_top_Fs4_m1p2 (D424 2)", "H6|J1|B|top|flat|m1.2",
      {"verdict": "fail", "note": "LOC unconfirmed safe stop (both engines)",
-      "max_stroke_mm": 528.0, "min_force_kN": 64.3}, "R7 before (LOC 0: equivalent)",
+      "max_stroke_true_mm": 528.0, "min_force_kN": 64.3}, "R7 before (LOC 0: equivalent)",
      "paper 4.8.2"),
     ("B1 auger middle J2 B", "P3b_J2_B_middle_Fs4 (D424R 3)", "base|J2|B|middle|Fs4",
      {"verdict": "pass", "ready_s": 79.0, "min_force_kN": 68.41, "gap_ready_mm": 37.12,
@@ -150,6 +181,30 @@ CURATED = (  # (variable, chrono case, harness id, chrono values, version, src)
       "note": "G6-7 out-of-scope FLAG"}, "final code (409.1)", "paper table 15"),
 )
 
+# Chrono run folders (under 07_results/S9) of the curated cases, keyed by harness id.
+# Identity check (the run's judged values equal the spec values of that section):
+#   X4-nd / X4-ed / RV1 X5: s_motor max 645.4 / 653.1 / 586.9 mm; x1.2 J1 B: 528.3 mm on RL
+#     vs spec 528.0 mm
+#   S9SL final code (batch_S9SL_20261029_144406; the 2026-10-28 batches are the old code):
+#     C-1 READY 85.0 s, min 31.9 kN, gap 89.2 mm (400.1); C-2 READY 81.1 s, 60.7 kN, gap
+#     59.0 mm (400.2); C-3 gap 21.9 mm, FR 677.8 mm (400.4); C-4 min 54.9 kN, no READY (400.3)
+#   X4-rp: min after departure 1.16 kN, spec 1.2 kN (426.9.G.3)
+CURATED_RECORD_DIRS = {
+    "H4|J1|B|top|nose_down_2p8": ("batch_RV1_20261030_111615",
+                                  "S9SL_X4nd_J1_B_top_Fs4_r0_p2p8"),
+    "H3|J1|B|top|edge_nd@k0.875": ("batch_RV1_20261030_111615",
+                                   "S9SL_X4ed_J1_B_top_Fs4_r1p925_p1p4"),
+    "H6|J2|B|top|flat|m1.1": ("batch_RV1_20261030_111615", "P3b_J2_B_top_Fs4_m1p1"),
+    "H6|J1|B|top|flat|m1.2": ("batch_D424_20261030_014908", "P3b_J1_B_top_Fs4_m1p2"),
+    "H1|G1|B|top|nose_down": ("batch_S9SL_20261029_144406", "S9SL_C1_G1_B_top_Fs4_r0_p3p2"),
+    "H1|J1|A|top|roll_pos": ("batch_S9SL_20261029_144406", "S9SL_C2_J1_A_top_Fs4_r4p4_p0"),
+    "H3|J1|B|top|roll_pos@k0.75": ("batch_S9SL_20261029_144406",
+                                   "S9SL_C3_J1_B_top_Fs4_r3p3_p0"),
+    "H1|J1|A|top|nose_down": ("batch_S9SL_20261029_144406", "S9SL_C4_J1_A_top_Fs4_r0_p3p2"),
+    "H3|J1|B|top|roll_pos@k0.875": ("batch_RV1_20261030_111615",
+                                    "S9SL_X4rp_J1_B_top_Fs4_r3p85_p0"),
+}
+
 STATIC_RIGID = [  # pairs without per-case values here (paper table 3)
     {"variable": "A4 rigid LEVEL events", "n": 27,
      "metric": "event-leg lift time harness/Chrono 1.02-1.08", "side": "conservative",
@@ -165,6 +220,10 @@ STATIC_RIGID = [  # pairs without per-case values here (paper table 3)
 # Chrono values come from each run folder's ``result_rejudge_rev60.json`` (``p3b`` block).
 CHRONO_RESULTS_REL = Path("07_results") / "S9"
 REJUDGE_FILE_NAME = "result_rejudge_rev60.json"
+RECORD_NPZ_REL = Path("record") / "record.npz"
+RUN_RESULT_FILE_NAME = "result.json"  # holds the run's ``events`` list
+STROKE_READING_KEY = "meas.stroke"  # controller stroke reading in m, shape (samples, 4 legs)
+STROKE_GUARD_EVENT_PREFIXES = ("WARN_LIFT_STROKE_LIMITED", "FAULT_LIFT_STROKE_LIMIT")
 SAME_VERSION = "05708b2 (same as harness)"
 RV2_RUNS = (  # (batch folder, P3b case)
     ("batch_RV2_20261030_154549", "P3b_J1_B_top_Fs0"),
@@ -188,9 +247,84 @@ RV3_G6_RUN = {  # C-C1: judged by r76_g6_chrono_judge.py (gates), not by the p3b
             "G6-7 false, G6-7 fails in the harness too",
     "src_spec": "spec 426.9.F.1"}
 
+# Final-controller pairs (spec 432.4.5 table; Chrono = R8 preset with SGS any_loc + R4c30 +
+# L1gs + DSb75 = the final harness finB2 / fin_x426_D). Chrono values come from each run's
+# ``result_rejudge_rev60.json`` (``p3b`` block). ``verdict`` (optional) replaces the automatic
+# P3b verdict with the control verdict of section ``spec``.
+FINAL_VERSION = "final controller (SGS any_loc + R4c30 + L1gs + DSb75), same as final harness"
+FINAL_HARNESS_FILES_REL = {  # key: path under 06_analysis/02_control/s9
+    "finB2_p0": "rev85/finB2_p0.json",
+    "finB2_slope": "rev85/finB2_harness_rejudged.json",
+    "finB2_h9": "rev85/finB2_h9.json",
+    "fin_x426_D": "rev85/fin_x426_D.json",
+}
+FINAL_REP_BATCH = "batch_FINAL-REP_20261030_223359"
+P3_2_FLAG_NOTE = ("432.5.2: pass with the P3-2 FLAG late_loc_revoked (FLAG rule 419.8 / "
+                  "424.10.2); the automatic P3b verdict also counts the P3-2 FLAG as pass "
+                  "(chrono flags)")
+FINAL_REP_X_BATCH = "batch_FINAL-REP-X_20261031_020716"
+FINAL_REP_X_CASE = "P3b_J2_B_top_Fs4_m1p1_t180"
+# ``superseded_by``: a later run of the same pair replaces this one; it stays in final_pairs
+# (marked) but final_summary counts only the replacing run.
+FINAL_RUNS = (
+    {"variable": "A1 soil / B3 pad: J1 B top [FINAL-REP B0]", "batch": FINAL_REP_BATCH,
+     "case": "P3b_J1_B_top_Fs4", "harness_key": "finB2_p0",
+     "harness_id": "base|J1|B|top|Fs4", "spec": "spec 432.5.2"},
+    {"variable": "A1 soil / B3 pad: J2 B top [FINAL-REP]", "batch": FINAL_REP_BATCH,
+     "case": "P3b_J2_B_top_Fs4", "harness_key": "finB2_p0",
+     "harness_id": "base|J2|B|top|Fs4", "spec": "spec 432.5.2", "verdict": "pass",
+     "note": P3_2_FLAG_NOTE},
+    {"variable": "B1 auger middle J2 B [FINAL-REP]", "batch": FINAL_REP_BATCH,
+     "case": "P3b_J2_B_middle_Fs4", "harness_key": "finB2_p0",
+     "harness_id": "base|J2|B|middle|Fs4", "spec": "spec 432.5.2", "verdict": "pass",
+     "note": P3_2_FLAG_NOTE},
+    {"variable": "B4 weight x1.1 J1 B [FINAL-REP]", "batch": FINAL_REP_BATCH,
+     "case": "P3b_J1_B_top_Fs4_m1p1", "harness_key": "finB2_slope",
+     "harness_id": "H6|J1|B|top|flat|m1.1", "spec": "spec 432.5.1"},
+    {"variable": "B4 weight x1.1 J2 B [FINAL-REP]", "batch": FINAL_REP_BATCH,
+     "case": "P3b_J2_B_top_Fs4_m1p1", "harness_key": "finB2_slope",
+     "harness_id": "H6|J2|B|top|flat|m1.1", "spec": "spec 432.5.1",
+     "note": "superseded by FINAL-REP-X (432.5.4) for P3-4",
+     "superseded_by": f"{FINAL_REP_X_CASE} @ {FINAL_REP_X_BATCH}"},
+    {"variable": "B4 weight x1.1 J2 B 180 s [FINAL-REP-X]", "batch": FINAL_REP_X_BATCH,
+     "case": FINAL_REP_X_CASE, "harness_key": "finB2_slope",
+     "harness_id": "H6|J2|B|top|flat|m1.1", "spec": "spec 432.5.4", "verdict": "pass",
+     "note": "432.5.4: pass with the P3-2 FLAG late_loc_revoked; P3-4 0.032 deg (window "
+             "54.7 s); first READY 98.9 s, one relevel, last READY 118.9 s; commands "
+             "bit-identical to the 120 s run up to 128 s"},
+    {"variable": "A2 roll J1 B 2.86 deg (k 0.65) [X6-rb]", "batch": FINAL_REP_BATCH,
+     "case": "S9SL_X6rb_J1_B_top_Fs4_rm2p86_p0", "harness_key": "finB2_h9",
+     "harness_id": "H9|J1|B|top|roll_neg@k0.65", "spec": "spec 430.3.2",
+     "verdict": "stroke_limited_stop",
+     "note": "430.3.2: SGS safe stop FAULT_LIFT_STROKE_LIMIT:soil:FL at the first guard cycle "
+             "(out of the boundary); the Chrono reading is cut at the guard"},
+    {"variable": "A2 roll J1 B 2.64 deg (k 0.6) [X6-rb2]", "batch": "batch_RV6_20261031_025137",
+     "case": "S9SL_X6rb_J1_B_top_Fs4_rm2p64_p0", "harness_key": "finB2_h9",
+     "harness_id": "H9|J1|B|top|roll_neg@k0.6", "spec": "spec 430.3.3", "verdict": "pass",
+     "note": "430.3.3: pass, no guard / SGS; reading max FL 679.87 mm (guard margin 2.93 mm), "
+             "harness 661.02 (+18.85 uncensored); gap -14.5 mm vs harness"},
+    {"variable": "A2 roll J1 B 3.85 deg (k 0.875) [X6-rp-sa]", "batch": FINAL_REP_BATCH,
+     "case": "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0", "harness_key": "finB2_slope",
+     "harness_id": "H3|J1|B|top|roll_pos@k0.875", "spec": "spec 430.4.1",
+     "note": "430.4.1: SGS safe stop accepted (a, b, c); crawler 7.79 kN > 0.01 W at the stop "
+             "-> fail + stop_with_crawler_loaded; both runs stop at the guard"},
+    {"variable": "A3 dip J2 B RR 150 mm [FINAL6 d150]",
+     "batch": "batch_FINAL6_20261031_000833", "case": "P3b_J2_B_top_Fs4_sgRRd150",
+     "harness_key": "fin_x426_D", "harness_id": "H8|J2|B|top|flat|RR:d150",
+     "spec": "spec 426.9.D.2"},
+)
+# Final-controller runs still going. Not paired yet: move an entry into FINAL_RUNS (with its
+# control verdict) once the run is re-judged. X6-rb2 and FINAL-REP-X moved on 2026-10-31.
+FINAL_PENDING_RUNS: tuple[dict, ...] = ()
+
 H6_MARGIN_NOTE = (
-    "H-6 optimistic margin (ASSUMPTION, spec 432.4): flat READY +17 s, gap -13 mm (RV2 J2 "
-    "-12.7 mm, 432.4.4), stroke +16 mm; slope / x1.1 READY +31 s")
+    "H-6 optimistic margin (ASSUMPTION, spec 432.4 / 432.4.5 / 432.4.7, 2026-10-31): flat "
+    "READY +17 s, gap -13 mm (RV2 J2 -12.7 mm, 432.4.4); soft slope rows gap -15 mm (X6-rb2 "
+    "-14.5 mm, 432.4.7); stroke reading one-sided +23 mm (Chrono "
+    "meas.stroke max - harness max(plant.sref); observed X6-rb vs H9 roll_neg@k0.65 >= "
+    "+22.7 mm censored at the guard, RV3 C-C1 +21.5 mm uncensored; stroke sensor share "
+    "<= 0.4 mm) for soft J1/J2/S1 incl. one-pad patches, not G1 or rigid; slope / x1.1 "
+    "READY +31 s")
 
 PAIRS_CLASSIFICATION = (
     "optimistic if harness verdict better, or Chrono READY - harness > 5 s, or harness min F / "
@@ -198,7 +332,55 @@ PAIRS_CLASSIFICATION = (
     "ratio < 0.90, verdict worse); mixed = both (ASSUMPTION thresholds)")
 PAIRS_VERSION_CAVEAT = (
     "Harness = R2DS (05708b2 line). Chrono = the stored run version (column). Pairs whose "
-    "versions differ are trend evidence, not identity; re-run on the final acceptance files.")
+    "versions differ are trend evidence, not identity; re-run on the final acceptance files. "
+    "final_pairs: Chrono final controller = final harness (finB2 / fin_x426_D).")
+STROKE_QUANTITY_NOTE = (
+    "max_stroke_reading_mm = controller stroke reading (Chrono: max of record meas.stroke per "
+    "leg FL, FR, RL, RR; harness: max(plant.sref)); max_stroke_true_mm = true rod stroke "
+    "(Chrono: P3-5 s_motor_max_m per leg or the spec value; harness: not stored). The reading "
+    "exceeds the true stroke by F_cyl/k_oil (about 5-6 mm at 68 kN). Deltas pair the same "
+    "quantity only; a per-leg list counts by its max.")
+PAIRS_SCHEMA_CHANGE = (
+    "schema 2 (2026-10-31): max_stroke_mm (Chrono true rod stroke vs harness reading, mixed) "
+    "split into max_stroke_reading_mm and max_stroke_true_mm; d_max_stroke_mm replaced by "
+    "d_max_stroke_reading_mm (d_max_stroke_true_mm when both sides have it); summary adds "
+    "d_max_stroke_reading_mm_chrono_minus_harness; meta adds missing_stroke_records. Readers "
+    "of d_max_stroke_mm should use d_max_stroke_reading_mm. "
+    "schema 3 (2026-10-31, spec 432.4.5): final_pairs / final_summary (final controller "
+    "Chrono vs final harness, see final_pairs_note); per pair censored_at_guard, "
+    "censored_side and Chrono stroke_guard_events (harness records carry "
+    "stroke_guard_events); summaries add the uncensored reading-delta stats and the censored "
+    "list; curated S9SL C-1..C-4 and X4-rp now carry the Chrono stroke reading. h6_margin "
+    "quotes spec 432.4.5 (stroke +23 mm, reading vs reading) and is not re-derived here. "
+    "schema 3 addition (2026-10-31, final 10 runs): the automatic P3b verdict counts a P3-2 "
+    "judged flag (late_loc_revoked / late_loc_reapproach, spec 419.8 / 424.8.1) as pass and "
+    "lists it in chrono flags (key present only with a FLAG); final pairs may carry "
+    "superseded_by (left out of final_summary, listed in final_summary.superseded).")
+FINAL_PAIRS_NOTE = (
+    "final_pairs = the final-controller Chrono runs (FINAL_RUNS: FINAL-REP 7 + FINAL6 1 + RV6 "
+    "X6-rb2 1 + FINAL-REP-X 1; the 120 s x1.1 J2 run is superseded by FINAL-REP-X) with "
+    "their final-harness twins (final_harness_files), same version on both sides. They are "
+    "summarized apart in final_summary and are NOT counted in summary: summary keeps the 54 "
+    "stored-version pairs (several are the same cases at older versions; counting both would "
+    "count a case twice). combined_counts adds the two verdict-match counts for reference "
+    "only. Chrono verdict = the automatic P3b block (all P3B_PASS_CHECKS) unless the run "
+    "carries the control verdict of its spec section (then verdict_auto keeps the automatic "
+    "one). Pairs with censored_at_guard true give a bound, not a value: they are left out of "
+    "the *_uncensored stroke stats and listed in censored_stroke_reading. Pairs with "
+    "superseded_by are replaced by that run: kept in final_pairs, left out of final_summary "
+    "counts and listed in final_summary.superseded. Pending runs (final_pending_runs) are not "
+    "paired yet.")
+CENSORING_NOTE = (
+    "censored_at_guard = true when either run fired the lift-stroke guard "
+    "(WARN_LIFT_STROKE_LIMITED / FAULT_LIFT_STROKE_LIMIT; Chrono: result.json events, harness: "
+    "record warnings); false when both sides are known and none fired; null when a side is "
+    "unknown and the other did not fire. The max stroke reading of a guarded run is bounded "
+    "by the guard (682.8 mm budget), so d_max_stroke_reading_mm is a bound there: Chrono side "
+    "only -> lower bound of Chrono - harness, harness side only -> upper bound, both -> no "
+    "information.")
+MONOTONICITY_SCHEMA_CHANGE = (
+    "2026-10-31: metric max_stroke_mm renamed max_stroke_reading_mm (harness max(plant.sref), "
+    "values unchanged)")
 MONOTONICITY_TOLERANCE_NOTE = ("flat if |delta| <= 0.5 s / 0.5 mm / 0.2 kN; monotone = "
                                "non-strict with that tolerance")
 
@@ -219,6 +401,18 @@ def harness_files(repo: Path) -> dict[str, Path]:
     return {key: s9_dir / rel for key, rel in HARNESS_FILES_REL.items()}
 
 
+def final_harness_files(repo: Path) -> dict[str, Path]:
+    """Final-harness result files of the final pairs, keyed as ``FINAL_RUNS`` harness_key."""
+    s9_dir = repo / "06_analysis" / "02_control" / "s9"
+    return {key: s9_dir / rel for key, rel in FINAL_HARNESS_FILES_REL.items()}
+
+
+def stroke_guard_events(event_names: list[str]) -> list[str]:
+    """Lift-stroke guard events among ``event_names``, sorted and without repeats."""
+    return sorted({name for name in event_names
+                   if name.startswith(STROKE_GUARD_EVENT_PREFIXES)})
+
+
 def normalize_record(record: dict) -> dict:
     """Common fields of one harness record (R2DS records, x426 B/D results, x426 C results)."""
     run = record.get("run") or {}
@@ -229,16 +423,21 @@ def normalize_record(record: dict) -> dict:
     min_force_kN = record.get(
         "min_force_kN",
         record.get("min_true_Fcyl_after_off_kN", run.get("min_true_Fcyl_after_off_kN")))
-    max_stroke_mm = record.get(
+    # the harness result files store max(plant.sref) as "max_stroke_mm" (R2DS) or
+    # "max_motor_stroke_mm" (x426): both are the controller reading, not the rod stroke
+    max_stroke_reading_mm = record.get(
         "max_stroke_mm", record.get("max_motor_stroke_mm", run.get("max_motor_stroke_mm")))
+    warnings = record.get("warnings")
     return {
         "id": record.get("id") or record.get("key"),
         "verdict": verdict,
         "ready_s": record.get("t_ready_s", run.get("t_ready_s")),
         "min_force_kN": min_force_kN,
-        "max_stroke_mm": max_stroke_mm,
+        "max_stroke_reading_mm": max_stroke_reading_mm,
+        "max_stroke_true_mm": None,  # max(plant.x) is not stored by the harness runs
         "gap_ready_mm": record.get("rut_ready_mm", record.get("rut_clear_ready_mm")),
         "att_end_absmax_deg": max(abs(a) for a in att_end_deg) if att_end_deg else None,
+        "stroke_guard_events": None if warnings is None else stroke_guard_events(warnings),
     }
 
 
@@ -270,29 +469,100 @@ def _scaled(value: float | None, factor: float) -> float | None:
     return None if value is None else value * factor
 
 
+def read_stroke_reading_max_mm(record_path: Path) -> list[float] | None:
+    """Per-leg (FL, FR, RL, RR) maximum of the controller stroke reading of one Chrono run.
+
+    Args:
+        record_path: The run's ``record/record.npz``.
+
+    Returns:
+        The maxima in mm, or ``None`` when the run has no record file.
+    """
+    if not record_path.exists():
+        return None
+    with np.load(record_path, allow_pickle=False) as record:
+        reading_m = np.asarray(record[STROKE_READING_KEY])
+    return [float(value) * 1e3 for value in reading_m.max(axis=0)]
+
+
+def read_chrono_guard_events(result_path: Path) -> list[str] | None:
+    """Lift-stroke guard events of one Chrono run (``None`` when it has no ``result.json``)."""
+    if not result_path.exists():
+        return None
+    events = _load_json(result_path).get("events") or []
+    return stroke_guard_events([str(event.get("name", "")) for event in events])
+
+
+def stroke_reading_fields(case_dir: Path, repo: Path) -> dict:
+    """Chrono stroke-reading columns of the run in ``case_dir``, the record file they use and
+    the run's lift-stroke guard events."""
+    record_path = case_dir / RECORD_NPZ_REL
+    return {"max_stroke_reading_mm": read_stroke_reading_max_mm(record_path),
+            "stroke_record": _repo_rel(record_path, repo),
+            "stroke_guard_events": read_chrono_guard_events(case_dir / RUN_RESULT_FILE_NAME)}
+
+
+def p3_2_flag_names(checks: dict) -> list[str]:
+    """FLAG names of a P3-2 check judged ``flag`` (late LOC, spec 419.8 / 424.8.1), else [].
+
+    The reason comes from the ``P3-2_late_loc_*`` booleans; a ``flag`` verdict without one of
+    them is kept as the bare ``P3-2_flag``.
+    """
+    if checks.get(P3_2_VERDICT_KEY) != "flag":
+        return []
+    reasons = [check for check in P3_2_FLAG_REASON_CHECKS if checks.get(check)]
+    return reasons or ["P3-2_flag"]
+
+
+def _p3b_check_passes(checks: dict, check: str) -> bool:
+    """One P3b pass check; P3-2 also passes as a FLAG (FLAG rule 419.8, not a failure)."""
+    if check == P3_2_WITHIN_CHECK:
+        return bool(checks.get(check)) or checks.get(P3_2_VERDICT_KEY) == "flag"
+    return bool(checks.get(check))
+
+
 def chrono_values_from_p3b_block(row: dict) -> dict:
     """Judged values of one rev-60 P3b block (summary row or ``result_rejudge`` ``p3b``).
 
-    A run without READY has no READY time and no clearance after READY (``None``).
+    A run without READY has no READY time and no clearance after READY (``None``). The stroke
+    of the block is the true rod stroke (per leg); the reading comes from the record file.
+    A P3-2 judged ``flag`` counts as pass and its FLAG names are listed in ``flags`` (the key
+    is present only when there is a FLAG).
     """
     checks = row["checks"]
-    is_pass = all(checks.get(check) for check in P3B_PASS_CHECKS)
+    is_pass = all(_p3b_check_passes(checks, check) for check in P3B_PASS_CHECKS)
     clearance = row["P3-5_clearance_stroke"]
-    return {
+    values = {
         "verdict": "pass" if is_pass else "fail",
         "ready_s": row["P3-6_ready"]["t_ready_after_loop_start_s"],
         "min_force_kN": min(row["P3-3_leg_force"]["F_min_after_N"]) / 1e3,
-        "max_stroke_mm": max(clearance["s_motor_max_m"]) * 1e3,
+        "max_stroke_true_mm": [value * 1e3 for value in clearance["s_motor_max_m"]],
         "gap_ready_mm": _scaled(clearance["rut_clearance_min_after_first_ready_m"], 1e3),
         "att_end_absmax_deg": row["P3-4_attitude"]["p34_absmax_deg"]}
+    flags = p3_2_flag_names(checks)
+    if flags:
+        values["flags"] = flags
+    return values
 
 
-def chrono_p3b_values(summary: dict) -> dict[str, dict]:
-    """Chrono P3b values per case from ``s9_P3b_summary.json`` (rev-60 re-judge)."""
+def chrono_p3b_values(summary: dict, repo: Path) -> dict[str, dict]:
+    """Chrono P3b values per case from ``s9_P3b_summary.json`` (rev-60 re-judge).
+
+    The stroke reading of each case is read from its run folder under the summary's
+    ``source_batch``.
+    """
+    batch_dir = repo / summary["source_batch"]
     return {name: dict(chrono_values_from_p3b_block(row),
+                       **stroke_reading_fields(batch_dir / name, repo),
                        version="P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
                        src="06_analysis/01_chrono/19_S9/s9_P3b_summary.json")
             for name, row in summary["rows"].items()}
+
+
+def curated_stroke_readings(repo: Path) -> dict[str, dict]:
+    """Stroke-reading columns of the curated cases in ``CURATED_RECORD_DIRS`` by harness id."""
+    return {harness_id: stroke_reading_fields(repo / CHRONO_RESULTS_REL / batch / case, repo)
+            for harness_id, (batch, case) in CURATED_RECORD_DIRS.items()}
 
 
 def chrono_values_from_g6_judge(case_row: dict) -> dict:
@@ -301,7 +571,7 @@ def chrono_values_from_g6_judge(case_row: dict) -> dict:
         "verdict": "pass" if case_row["pass"] else "fail",
         "ready_s": case_row["t_ready_rel_s"],
         "min_force_kN": min(case_row["F_min_after_departure_kN"]),
-        "max_stroke_mm": max(case_row["s_motor_max_mm"]),
+        "max_stroke_true_mm": list(case_row["s_motor_max_mm"]),
         "gap_ready_mm": case_row["rut_min_after_ready_mm"],
         "att_end_absmax_deg": case_row["attitude_p34_absmax_deg"]}
 
@@ -322,6 +592,38 @@ def _pair_deltas(harness: dict, chrono: dict) -> dict:
     return deltas
 
 
+def _largest_magnitude(value):
+    """A non-empty per-leg number list counts by its largest magnitude; others pass through."""
+    is_number_list = (isinstance(value, list) and value
+                      and all(isinstance(item, (int, float)) for item in value))
+    return max(abs(item) for item in value) if is_number_list else value
+
+
+def stroke_censoring(harness: dict | None, chrono: dict) -> dict:
+    """Whether the stroke-reading delta of a pair is cut by the lift-stroke guard.
+
+    Returns:
+        ``censored_at_guard`` (True / False / None, see ``CENSORING_NOTE``) and
+        ``censored_side`` (``"chrono"``, ``"harness"``, ``"both"`` or None).
+    """
+    chrono_events = chrono.get("stroke_guard_events")
+    harness_events = (harness or {}).get("stroke_guard_events")
+    guarded_sides = [side for side, events in (("chrono", chrono_events),
+                                                ("harness", harness_events)) if events]
+    if len(guarded_sides) == 2:
+        return {"censored_at_guard": True, "censored_side": "both"}
+    if guarded_sides:
+        return {"censored_at_guard": True, "censored_side": guarded_sides[0]}
+    both_known = chrono_events is not None and harness_events is not None
+    return {"censored_at_guard": False if both_known else None, "censored_side": None}
+
+
+def add_stroke_censoring(pairs: list[dict]) -> None:
+    """Set ``censored_at_guard`` / ``censored_side`` on every pair (in place)."""
+    for pair in pairs:
+        pair.update(stroke_censoring(pair["harness"], pair["chrono"]))
+
+
 def _side_name(is_optimistic: bool, is_conservative: bool) -> str:
     if is_optimistic and is_conservative:
         return "mixed"
@@ -340,8 +642,7 @@ def classify_pair(harness: dict | None, chrono: dict) -> tuple[str | None, dict]
     """
     if harness is None or chrono.get("verdict") is None or harness.get("verdict") is None:
         return None, {}
-    chrono = {key: (max(abs(x) for x in value) if isinstance(value, list) else value)
-              for key, value in chrono.items()}
+    chrono = {key: _largest_magnitude(value) for key, value in chrono.items()}
     deltas = _pair_deltas(harness, chrono)
     harness_rank = _verdict_rank(harness["verdict"])
     chrono_rank = _verdict_rank(chrono["verdict"])
@@ -376,15 +677,21 @@ def _p3b_pair(name: str, chrono: dict, all_records: dict[str, dict]) -> dict:
 
 
 def build_pairs(chrono_p3b: dict[str, dict], all_records: dict[str, dict],
-                curated: tuple[tuple, ...] = CURATED) -> list[dict]:
-    """E1 pairs: the Chrono P3b cases (sorted by name), then the curated spec / paper cases."""
+                curated: tuple[tuple, ...] = CURATED,
+                curated_readings: dict[str, dict] | None = None) -> list[dict]:
+    """E1 pairs: the Chrono P3b cases (sorted by name), then the curated spec / paper cases.
+
+    ``curated_readings`` (harness id -> stroke-reading columns, see
+    ``curated_stroke_readings``) adds the Chrono stroke reading to those curated cases.
+    """
+    readings = curated_readings or {}
     pairs = [_p3b_pair(name, chrono, all_records) for name, chrono in sorted(chrono_p3b.items())]
-    for variable, case, harness_id, chrono, version, src in curated:
+    for variable, case, harness_id, values, version, src in curated:
+        chrono = dict(values, **readings.get(harness_id, {}), version=version, src=src)
         harness = all_records.get(harness_id)
         side, deltas = classify_pair(harness, chrono)
         pairs.append({"variable": variable, "chrono_case": case, "harness_id": harness_id,
-                      "chrono": dict(chrono, version=version, src=src), "harness": harness,
-                      "side": side, "delta": deltas})
+                      "chrono": chrono, "harness": harness, "side": side, "delta": deltas})
     return pairs
 
 
@@ -399,6 +706,7 @@ def _rejudge_path(repo: Path, batch: str, case: str) -> Path:
 def _rv2_pair(path: Path, batch: str, case: str, repo: Path,
               all_records: dict[str, dict]) -> dict:
     chrono = dict(chrono_values_from_p3b_block(_load_json(path)["p3b"]),
+                  **stroke_reading_fields(path.parent, repo),
                   version=SAME_VERSION, src=_repo_rel(path, repo))
     pair = _p3b_pair(case, chrono, all_records)
     # the 10-26 P3b pair has the same case name: the batch folder tells them apart
@@ -442,7 +750,8 @@ def build_same_version_pairs(repo: Path,
             missing.append(_repo_rel(path, repo))
     slope_path = _rejudge_path(repo, RV3_SLOPE_RUN["batch"], RV3_SLOPE_RUN["case"])
     if slope_path.exists():
-        chrono = chrono_values_from_p3b_block(_load_json(slope_path)["p3b"])
+        chrono = dict(chrono_values_from_p3b_block(_load_json(slope_path)["p3b"]),
+                      **stroke_reading_fields(slope_path.parent, repo))
         pairs.append(_rv3_pair(RV3_SLOPE_RUN, chrono, _repo_rel(slope_path, repo),
                                all_records))
     else:
@@ -450,41 +759,150 @@ def build_same_version_pairs(repo: Path,
     judge_path = repo / RV3_G6_RUN["judge_rel"]
     case_row = _find_g6_case(judge_path, RV3_G6_RUN["case"]) if judge_path.exists() else None
     if case_row is not None:
-        pairs.append(_rv3_pair(RV3_G6_RUN, chrono_values_from_g6_judge(case_row),
-                               RV3_G6_RUN["judge_rel"], all_records))
+        g6_dir = repo / CHRONO_RESULTS_REL / RV3_G6_RUN["batch"] / RV3_G6_RUN["case"]
+        chrono = dict(chrono_values_from_g6_judge(case_row),
+                      **stroke_reading_fields(g6_dir, repo))
+        pairs.append(_rv3_pair(RV3_G6_RUN, chrono, RV3_G6_RUN["judge_rel"], all_records))
     else:
         missing.append(f"{RV3_G6_RUN['judge_rel']} (case {RV3_G6_RUN['case']})")
     return pairs, missing
 
 
+def _final_chrono_values(path: Path, run: dict, repo: Path) -> dict:
+    """Judged Chrono values of one final run; a spec verdict replaces the automatic one."""
+    chrono = chrono_values_from_p3b_block(_load_json(path)["p3b"])
+    chrono.update(stroke_reading_fields(path.parent, repo))
+    if "verdict" in run:
+        chrono["verdict_auto"] = chrono["verdict"]
+        chrono["verdict"] = run["verdict"]
+    if "note" in run:
+        chrono["note"] = run["note"]
+    chrono.update(version=FINAL_VERSION, src=_repo_rel(path, repo), spec=run["spec"])
+    return chrono
+
+
+def _final_pair(run: dict, chrono: dict, final_harness: dict[str, dict[str, dict]]) -> dict:
+    harness = final_harness.get(run["harness_key"], {}).get(run["harness_id"])
+    if harness is not None:
+        harness = dict(harness, source=run["harness_key"])
+    side, deltas = classify_pair(harness, chrono)
+    pair = {"variable": run["variable"], "chrono_case": f"{run['case']} @ {run['batch']}",
+            "harness_id": run["harness_id"], "chrono": chrono, "harness": harness,
+            "side": side, "delta": deltas,
+            "chrono_version_note": "same version as the harness (final controller, spec "
+                                   "432.4.5)"}
+    if "superseded_by" in run:
+        pair["superseded_by"] = run["superseded_by"]
+    return pair
+
+
+def build_final_pairs(repo: Path, final_harness: dict[str, dict[str, dict]],
+                      runs: tuple[dict, ...] = FINAL_RUNS) -> tuple[list[dict], list[str]]:
+    """Final-controller pairs (``FINAL_RUNS``) and the missing Chrono / harness inputs.
+
+    A missing ``result_rejudge_rev60.json`` drops the pair; a missing harness twin keeps the
+    pair without a side. Both are returned as ``missing`` entries.
+    """
+    pairs: list[dict] = []
+    missing: list[str] = []
+    for run in runs:
+        path = _rejudge_path(repo, run["batch"], run["case"])
+        if not path.exists():
+            missing.append(_repo_rel(path, repo))
+            continue
+        pair = _final_pair(run, _final_chrono_values(path, run, repo), final_harness)
+        if pair["harness"] is None:
+            missing.append(f"harness {run['harness_key']}: {run['harness_id']}")
+        pairs.append(pair)
+    return pairs, missing
+
+
+def _delta_stats(pairs: list[dict], delta_key: str) -> dict:
+    """n / min / max / mean of one delta over the pairs that have it (empty when none do)."""
+    deltas = [pair["delta"][delta_key] for pair in pairs if delta_key in pair["delta"]]
+    if not deltas:
+        return {}
+    return {"n": len(deltas), "min": min(deltas), "max": max(deltas),
+            "mean": round(sum(deltas) / len(deltas), 2)}
+
+
 def summarize_pairs(pairs: list[dict]) -> dict:
-    """Pair counts, side counts per variable (first two words) and the READY difference."""
+    """Pair counts, side counts per variable (first two words), READY and stroke differences."""
     side_count: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     for pair in pairs:
         words = pair["variable"].split(" ")
         side_count[f"{words[0]} {words[1]}"][pair["side"] or "no_twin"] += 1
-    ready_deltas = [pair["delta"]["d_ready_s"] for pair in pairs if "d_ready_s" in pair["delta"]]
-    ready_summary = {}
-    if ready_deltas:
-        ready_summary = {"n": len(ready_deltas), "min": min(ready_deltas),
-                         "max": max(ready_deltas),
-                         "mean": round(sum(ready_deltas) / len(ready_deltas), 2)}
+    uncensored = [pair for pair in pairs if pair.get("censored_at_guard") is not True]
     return {"n_pairs": len(pairs),
             "n_with_harness": sum(pair["harness"] is not None for pair in pairs),
             "verdict_same": sum(bool(pair["delta"].get("verdict_same")) for pair in pairs),
             "by_variable_side": {key: dict(value) for key, value in side_count.items()},
-            "d_ready_s_chrono_minus_harness": ready_summary}
+            "d_ready_s_chrono_minus_harness": _delta_stats(pairs, "d_ready_s"),
+            "d_max_stroke_reading_mm_chrono_minus_harness": _delta_stats(
+                pairs, "d_max_stroke_reading_mm"),
+            "d_max_stroke_reading_mm_uncensored": _delta_stats(
+                uncensored, "d_max_stroke_reading_mm"),
+            "censored_stroke_reading": censored_stroke_readings(pairs)}
+
+
+def censored_stroke_readings(pairs: list[dict]) -> list[dict]:
+    """Pairs whose reading delta is cut by the guard: case, guarded side and the delta."""
+    return [{"chrono_case": pair["chrono_case"], "censored_side": pair.get("censored_side"),
+             "d_max_stroke_reading_mm": pair["delta"].get("d_max_stroke_reading_mm")}
+            for pair in pairs if pair.get("censored_at_guard") is True]
+
+
+def missing_stroke_records(pairs: list[dict]) -> list[str]:
+    """Record files named by a pair whose Chrono stroke reading could not be read."""
+    return [pair["chrono"]["stroke_record"] for pair in pairs
+            if "stroke_record" in pair["chrono"]
+            and pair["chrono"].get("max_stroke_reading_mm") is None]
+
+
+def summarize_final_pairs(final_pairs: list[dict]) -> dict:
+    """``summarize_pairs`` over the final pairs that are not superseded by a later run.
+
+    A superseded pair is the same harness twin judged on an earlier run; counting it as well
+    would count the pair twice. It is listed in ``superseded`` instead.
+    """
+    counted = [pair for pair in final_pairs if "superseded_by" not in pair]
+    summary = summarize_pairs(counted)
+    summary["superseded"] = [
+        {"chrono_case": pair["chrono_case"], "superseded_by": pair["superseded_by"]}
+        for pair in final_pairs if "superseded_by" in pair]
+    return summary
+
+
+def _combined_counts(summary: dict, final_summary: dict) -> dict:
+    return {key: summary[key] + final_summary[key]
+            for key in ("n_pairs", "n_with_harness", "verdict_same")}
 
 
 def build_pairs_payload(pairs: list[dict], files: dict[str, Path], repo: Path,
-                        missing_chrono: list[str]) -> dict:
-    """E1 output (``harness_chrono_pairs.json``)."""
-    meta = {"spec": "432.4 E1 (control 2026-10-30)", "script": SCRIPT_REL,
-            "script_sha256": _script_sha256(),
+                        missing_chrono: list[str], final_pairs: list[dict] | None = None,
+                        missing_final: list[str] | None = None) -> dict:
+    """E1 output (``harness_chrono_pairs.json``); sets the censoring fields of all pairs."""
+    final_pairs = final_pairs or []
+    add_stroke_censoring(pairs)
+    add_stroke_censoring(final_pairs)
+    meta = {"spec": "432.4 E1 (control 2026-10-30; final pairs 432.4.5, 2026-10-31)",
+            "script": SCRIPT_REL,
+            "script_sha256": _script_sha256(), "schema_version": PAIRS_SCHEMA_VERSION,
+            "schema_change": PAIRS_SCHEMA_CHANGE, "stroke_quantities": STROKE_QUANTITY_NOTE,
+            "censoring": CENSORING_NOTE,
             "harness_files": {key: str(path.relative_to(repo)) for key, path in files.items()},
+            "final_harness_files": {key: str(path.relative_to(repo))
+                                    for key, path in final_harness_files(repo).items()},
             "classification": PAIRS_CLASSIFICATION, "version_caveat": PAIRS_VERSION_CAVEAT,
-            "h6_margin": H6_MARGIN_NOTE, "missing_chrono_inputs": missing_chrono}
-    return {"meta": meta, "summary": summarize_pairs(pairs), "pairs": pairs,
+            "final_pairs_note": FINAL_PAIRS_NOTE, "final_pending_runs": list(FINAL_PENDING_RUNS),
+            "h6_margin": H6_MARGIN_NOTE, "missing_chrono_inputs": missing_chrono,
+            "missing_final_inputs": missing_final or [],
+            "missing_stroke_records": missing_stroke_records(pairs + final_pairs)}
+    summary = summarize_pairs(pairs)
+    final_summary = summarize_final_pairs(final_pairs)
+    return {"meta": meta, "summary": summary, "pairs": pairs,
+            "final_summary": final_summary, "final_pairs": final_pairs,
+            "combined_counts": _combined_counts(summary, final_summary),
             "static_pairs": STATIC_RIGID}
 
 
@@ -738,7 +1156,8 @@ def build_studies(harness: dict[str, dict[str, dict]]) -> list[dict]:
 def build_monotonicity_payload(studies: list[dict]) -> dict:
     """E5 output (``harness_monotonicity.json``)."""
     meta = {"spec": "432.4 E5 (control 2026-10-30)", "script": SCRIPT_REL,
-            "script_sha256": _script_sha256(), "rank": RANK,
+            "script_sha256": _script_sha256(), "schema_change": MONOTONICITY_SCHEMA_CHANGE,
+            "rank": RANK,
             "tolerance": MONOTONICITY_TOLERANCE_NOTE, "harness": "R2DS / x426 (05708b2 line)"}
     return {"meta": meta, "studies": studies}
 
@@ -754,11 +1173,16 @@ def _print_digest(pairs_payload: dict, studies: list[dict]) -> None:
     print("E1 pairs", summary["n_pairs"], "with harness", summary["n_with_harness"],
           "verdict same", summary["verdict_same"], "dREADY",
           summary["d_ready_s_chrono_minus_harness"])
-    for pair in pairs_payload["pairs"]:
+    final_summary = pairs_payload["final_summary"]
+    print("E1 final pairs", final_summary["n_pairs"], "verdict same",
+          final_summary["verdict_same"], "dREADING",
+          final_summary["d_max_stroke_reading_mm_chrono_minus_harness"])
+    for pair in pairs_payload["pairs"] + pairs_payload["final_pairs"]:
         harness = pair["harness"] or {}
         print(f"  {pair['variable'][:34]:34s} {pair['chrono_case'][:34]:34s} "
               f"side={pair['side']} C={pair['chrono'].get('verdict')}"
-              f" H={harness.get('verdict')} d={json.dumps(pair['delta'])[:150]}")
+              f" H={harness.get('verdict')} cens={pair['censored_at_guard']}"
+              f" d={json.dumps(pair['delta'])[:150]}")
     for study in studies:
         metric_text = " ".join(
             f"{name}:u{s['up']}/d{s['down']}/f{s['flat']}/mono{s['monotone']}of{s['n']}"
@@ -772,14 +1196,22 @@ def main(argv: list[str]) -> None:
     out_dir = Path(argv[2]) if len(argv) > 2 else DEFAULT_OUT_DIR
     files = harness_files(repo)
     harness = load_harness(files)
-    chrono_p3b = chrono_p3b_values(_load_json(repo / P3B_SUMMARY_REL))
+    chrono_p3b = chrono_p3b_values(_load_json(repo / P3B_SUMMARY_REL), repo)
     all_records = merge_by_id(harness)
-    pairs = build_pairs(chrono_p3b, all_records)
+    pairs = build_pairs(chrono_p3b, all_records,
+                        curated_readings=curated_stroke_readings(repo))
     same_version_pairs, missing_chrono = build_same_version_pairs(repo, all_records)
     pairs += same_version_pairs
     for path in missing_chrono:
         print("missing Chrono input (pair skipped):", path)
-    pairs_payload = build_pairs_payload(pairs, files, repo, missing_chrono)
+    final_harness = load_harness(final_harness_files(repo))
+    final_pairs, missing_final = build_final_pairs(repo, final_harness)
+    for path in missing_final:
+        print("missing final input:", path)
+    pairs_payload = build_pairs_payload(pairs, files, repo, missing_chrono,
+                                        final_pairs, missing_final)
+    for path in pairs_payload["meta"]["missing_stroke_records"]:
+        print("missing Chrono stroke record (no reading comparison):", path)
     out_dir.mkdir(parents=True, exist_ok=True)
     # E1 is written before E5 is built, as in the scratchpad original
     _write_json(out_dir / PAIRS_FILE_NAME, pairs_payload)

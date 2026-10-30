@@ -1814,6 +1814,46 @@ def final_rep_cases() -> list[dict[str, Any]]:
     return out
 
 
+# --- FINAL-REP-X: longer re-run of a FINAL-REP row (user approval 2026-10-31; spec 432.5.1) ---------------------------
+
+FINAL_REP_X_SOURCE_CASE = "P3b_J2_B_top_Fs4_m1p1"
+FINAL_REP_X_SOURCE_RUN = "batch_FINAL-REP_20261030_223359/" + FINAL_REP_X_SOURCE_CASE
+"""The FINAL-REP run whose sinkage had not stopped at the end of the 120 s closed loop (128 s sim), so P3-4 (end
+attitude) could not be judged (spec 432.5.1)."""
+FINAL_REP_X_DURATION_S = 180.0
+"""Closed-loop time of the re-run [s] (``level --duration``; the P3b rows use 120 s); sim = 8 s settle + 180 s."""
+FINAL_REP_X_SOURCE_WALL_S = 11937.0
+"""Measured wall of the source run (P pool, 2 S9SL + 2 P3b concurrent, ``batch.json`` / progress.log END)."""
+FINAL_REP_X_EST_POOL_S = {
+    "pcore": round(FINAL_REP_X_SOURCE_WALL_S * FINAL_REP_X_DURATION_S / P3B_SIM_S, -2),
+    "ecore": round(FINAL_REP_X_SOURCE_WALL_S * FINAL_REP_X_DURATION_S / P3B_SIM_S
+                   * FINAL_EST_BASIS_S["P3b"][1]["ecore"] / FINAL_EST_BASIS_S["P3b"][1]["pcore"], -2),
+}
+"""ASSUMPTION (coordinator rule 2026-10-31): source wall x 180 / 128 (P 16,800 s); E = P x the P3b-form E / P ratio
+13,700 / 11,000 (20,900 s). Scaling by the sim time instead, (8 + 180) / 128, gives P 17,500 s."""
+
+
+def final_rep_x_cases() -> list[dict[str, Any]]:
+    """FINAL-REP-X (1 row): the FINAL-REP row :data:`FINAL_REP_X_SOURCE_CASE` with ``--duration``
+    :data:`FINAL_REP_X_DURATION_S` (argv otherwise identical, incl. ``--note`` and ``--expect-controller``), case
+    ``<source>_t180``, ``pair_case`` / ``pair_run`` = the source row / run, ``source_run`` = that run with the expected
+    argument difference ``source_expected_diffs`` {"duration": 180} (``s9_batch check-sources`` accepts exactly it)."""
+    base = next(c for c in final_rep_cases() if c["case"] == FINAL_REP_X_SOURCE_CASE)
+    r = dict(base)
+    for k in ("rep_bundle", "rep_source", "rep_variable", "rep_role", "r4_x11_check", "expected_note"):
+        r.pop(k, None)
+    est = dict(FINAL_REP_X_EST_POOL_S)
+    r.update(case=f"{FINAL_REP_X_SOURCE_CASE}_t{FINAL_REP_X_DURATION_S:g}", duration_s=FINAL_REP_X_DURATION_S,
+             sim_s=CRAWLER_SETTLE_S + FINAL_REP_X_DURATION_S, group="FINAL-REP-X", priority=FINAL_REP_PRIORITY,
+             pair_case=FINAL_REP_X_SOURCE_CASE, pair_run=FINAL_REP_X_SOURCE_RUN, source_run=FINAL_REP_X_SOURCE_RUN,
+             source_expected_diffs={"duration": FINAL_REP_X_DURATION_S}, est_pool_s=est, planned_pool="pcore",
+             est_s=est["pcore"], rep_bundle="FINAL-REP-X", rep_source="FINAL-REP", rep_variable=base["rep_variable"],
+             rep_role="x1.1 J2 B top, closed loop 180 s (P3-4 end attitude, spec 432.5.1)",
+             batch_note=f"FINAL-REP-X (spec 432.5.1): {FINAL_REP_X_SOURCE_CASE} with --duration "
+                        f"{FINAL_REP_X_DURATION_S:g} (sinkage not settled at 120 s); pair {FINAL_REP_X_SOURCE_RUN}")
+    return [r]
+
+
 SOURCE_ARGS_IGNORE = ("case", "out_root", "note", "expect_controller")
 """``level`` args not compared by :func:`source_args_check` (run location, free note, the new controller check)."""
 

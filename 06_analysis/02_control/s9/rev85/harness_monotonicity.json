@@ -2,7 +2,8 @@
  "meta": {
   "spec": "432.4 E5 (control 2026-10-30)",
   "script": "04_scripts/03_control/s9/rep_evidence.py",
-  "script_sha256": "ae7da75acf026aeb746fc5cd9879558bce32651b46b8bf68e676494fe64a78f1",
+  "script_sha256": "ca675eeb8e27366a5a8a5b42ef52dd216461e8a5b59f7599367212f979562d85",
+  "schema_change": "2026-10-31: metric max_stroke_mm renamed max_stroke_reading_mm (harness max(plant.sref), values unchanged)",
   "rank": {
    "pass": 0,
    "stroke_limited_pass": 1,
@@ -44,7 +45,7 @@
      "monotone": 23,
      "n": 24
     },
-    "max_stroke_mm": {
+    "max_stroke_reading_mm": {
      "up": 4,
      "down": 2,
      "flat": 18,
@@ -90,7 +91,7 @@
     },
     {
      "group": "J1|B|top",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       488.35,
       486.55,
@@ -129,7 +130,7 @@
      "monotone": 24,
      "n": 24
     },
-    "max_stroke_mm": {
+    "max_stroke_reading_mm": {
      "up": 0,
      "down": 12,
      "flat": 12,
@@ -166,7 +167,7 @@
     },
     {
      "group": "J2|A|Fs0",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       483.04,
       481.98,
@@ -175,7 +176,7 @@
     },
     {
      "group": "J2|A|Fs4",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       483.13,
       482.07,
@@ -222,7 +223,7 @@
      "monotone": 36,
      "n": 36
     },
-    "max_stroke_mm": {
+    "max_stroke_reading_mm": {
      "up": 18,
      "down": 18,
      "flat": 0,
@@ -271,7 +272,7 @@
      "monotone": 9,
      "n": 18
     },
-    "max_stroke_mm": {
+    "max_stroke_reading_mm": {
      "up": 18,
      "down": 0,
      "flat": 0,
@@ -682,7 +683,7 @@
      "monotone": 12,
      "n": 18
     },
-    "max_stroke_mm": {
+    "max_stroke_reading_mm": {
      "up": 18,
      "down": 0,
      "flat": 0,
@@ -862,7 +863,7 @@
    "non_monotone": [
     {
      "group": "J1|A|top|edge_nd",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       451.51,
       592.26,
@@ -884,7 +885,7 @@
     },
     {
      "group": "J1|A|top|nose_down",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       451.51,
       600.93,
@@ -972,7 +973,7 @@
     },
     {
      "group": "J1|B|top|roll_pos",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       473.53,
       595.92,
@@ -1005,7 +1006,7 @@
     },
     {
      "group": "J2|A|top|nose_down",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       484.51,
       644.58,
@@ -1027,7 +1028,7 @@
     },
     {
      "group": "J2|A|top|roll_pos",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       484.51,
       614.14,
@@ -1071,7 +1072,7 @@
     },
     {
      "group": "J2|B|top|edge_nd",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       504.01,
       603.57,
@@ -1126,7 +1127,7 @@
     },
     {
      "group": "J2|B|top|roll_pos",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       504.01,
       628.19,
@@ -1137,7 +1138,7 @@
     },
     {
      "group": "S1|A|top|edge_nd",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       535.76,
       661.73,
@@ -1148,7 +1149,7 @@
     },
     {
      "group": "S1|A|top|nose_down",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       535.76,
       666.35,
@@ -1170,7 +1171,7 @@
     },
     {
      "group": "S1|A|top|roll_pos",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       535.76,
       651.13,
@@ -1192,7 +1193,7 @@
     },
     {
      "group": "S1|B|top|edge_nd",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       518.41,
       653.61,
@@ -1203,7 +1204,7 @@
     },
     {
      "group": "S1|B|top|nose_down",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       518.41,
       645.89,
@@ -1214,7 +1215,7 @@
     },
     {
      "group": "S1|B|top|roll_pos",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       518.41,
       658.34,
@@ -1256,7 +1257,7 @@
      "monotone": 14,
      "n": 18
     },
-    "max_stroke_mm": {
+    "max_stroke_reading_mm": {
      "up": 18,
      "down": 0,
      "flat": 0,
@@ -1510,7 +1511,7 @@
     },
     {
      "group": "J2|A|top|nose_down",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       484.51,
       644.58,
@@ -1580,7 +1581,7 @@
     },
     {
      "group": "J2|B|top|roll_pos",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       504.01,
       628.19,
@@ -1590,7 +1591,7 @@
     },
     {
      "group": "S1|A|top|edge_nd",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       535.76,
       661.73,
@@ -1600,7 +1601,7 @@
     },
     {
      "group": "S1|A|top|nose_down",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       535.76,
       666.35,
@@ -1620,7 +1621,7 @@
     },
     {
      "group": "S1|B|top|edge_nd",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       518.41,
       653.61,
@@ -1630,7 +1631,7 @@
     },
     {
      "group": "S1|B|top|nose_down",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       518.41,
       645.89,
@@ -1640,7 +1641,7 @@
     },
     {
      "group": "S1|B|top|roll_pos",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       518.41,
       658.34,
@@ -1679,7 +1680,7 @@
      "monotone": 67,
      "n": 67
     },
-    "max_stroke_mm": {
+    "max_stroke_reading_mm": {
      "up": 27,
      "down": 34,
      "flat": 6,
@@ -1923,7 +1924,7 @@
      "monotone": 21,
      "n": 21
     },
-    "max_stroke_mm": {
+    "max_stroke_reading_mm": {
      "up": 4,
      "down": 3,
      "flat": 14,
@@ -1978,7 +1979,7 @@
      "monotone": 21,
      "n": 21
     },
-    "max_stroke_mm": {
+    "max_stroke_reading_mm": {
      "up": 2,
      "down": 3,
      "flat": 16,
@@ -2025,7 +2026,7 @@
      "monotone": 21,
      "n": 21
     },
-    "max_stroke_mm": {
+    "max_stroke_reading_mm": {
      "up": 5,
      "down": 6,
      "flat": 10,
@@ -2072,7 +2073,7 @@
      "monotone": 17,
      "n": 17
     },
-    "max_stroke_mm": {
+    "max_stroke_reading_mm": {
      "up": 15,
      "down": 4,
      "flat": 2,
@@ -2212,7 +2213,7 @@
      "monotone": 2,
      "n": 8
     },
-    "max_stroke_mm": {
+    "max_stroke_reading_mm": {
      "up": 8,
      "down": 0,
      "flat": 0,
@@ -2314,7 +2315,7 @@
     },
     {
      "group": "J1|B|bottom|flat",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       472.05,
       567.32,
@@ -2332,7 +2333,7 @@
     },
     {
      "group": "J1|B|bottom|flat|Fs0",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       471.93,
       567.1,
@@ -2350,7 +2351,7 @@
     },
     {
      "group": "J1|B|middle|flat",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       472.4,
       561.97,
@@ -2368,7 +2369,7 @@
     },
     {
      "group": "J1|B|middle|flat|Fs0",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       472.74,
       563.24,
@@ -2386,7 +2387,7 @@
     },
     {
      "group": "J1|B|top|flat",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       473.53,
       567.16,
@@ -2404,7 +2405,7 @@
     },
     {
      "group": "J1|B|top|flat|Fs0",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       473.35,
       566.79,
@@ -2444,7 +2445,7 @@
      "monotone": 4,
      "n": 6
     },
-    "max_stroke_mm": {
+    "max_stroke_reading_mm": {
      "up": 4,
      "down": 2,
      "flat": 0,
@@ -2483,7 +2484,7 @@
     },
     {
      "group": "G1|RR|g",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       407.2,
       426.99,
@@ -2523,7 +2524,7 @@
     },
     {
      "group": "rigid|FL|g",
-     "metric": "max_stroke_mm",
+     "metric": "max_stroke_reading_mm",
      "seq": [
       407.56,
       416.54,
@@ -2573,7 +2574,7 @@
      "monotone": 5,
      "n": 6
     },
-    "max_stroke_mm": {
+    "max_stroke_reading_mm": {
      "up": 6,
      "down": 0,
      "flat": 0,
@@ -2648,7 +2649,7 @@
      "monotone": 17,
      "n": 17
     },
-    "max_stroke_mm": {
+    "max_stroke_reading_mm": {
      "up": 3,
      "down": 10,
      "flat": 4,

@@ -1,0 +1,30 @@
+{
+ "definition": "spec 412: max over legs and moving samples (|u_applied| > 1e-6 m/s) of F_cyl / A_p, 10 Hz Record; judge limit 180 bar; ratio to 210 bar = F / extension force limit",
+ "script": "04_scripts/03_control/s9/evidence/final_rep_pmax.py (uses 04_scripts/03_control/s8/paper_max_pressure_table.record_moving_peak)",
+ "cases": {
+  "S9SL_X6rb_J1_B_top_Fs4_rm2p86_p0": {
+   "folder": "C:/workspace/outrigger_control/07_results/S9/batch_FINAL-REP_20261030_223359/S9SL_X6rb_J1_B_top_Fs4_rm2p86_p0",
+   "max_moving_pressure_bar": 103.0157382969161,
+   "peak_leg": "FL",
+   "t_s": 39.80000000019769,
+   "measured_head_max_bar": 108.0,
+   "max_any_state_bar": 103.0157382969161,
+   "ratio_to_relief_210": 0.4905511347472195,
+   "ratio_to_judge_180": 0.5723096572050894,
+   "peak_force_kN": 136.71660125405006,
+   "ratio_to_leg_extension_force_limit": 0.4905511347472195
+  },
+  "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0": {
+   "folder": "C:/workspace/outrigger_control/07_results/S9/batch_FINAL-REP_20261030_223359/S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0",
+   "max_moving_pressure_bar": 104.8343958172852,
+   "peak_leg": "FR",
+   "t_s": 40.80000000023089,
+   "measured_head_max_bar": 109.2,
+   "max_any_state_bar": 104.8343958172852,
+   "ratio_to_relief_210": 0.49921140865373903,
+   "ratio_to_judge_180": 0.5824133100960289,
+   "peak_force_kN": 139.13021959179707,
+   "ratio_to_leg_extension_force_limit": 0.49921140865373903
+  }
+ }
+}

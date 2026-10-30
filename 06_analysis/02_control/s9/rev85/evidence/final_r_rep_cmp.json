@@ -1,0 +1,1324 @@
+[
+ {
+  "case": "K24_top_flat_Fs4",
+  "variable": "A1",
+  "new": "07_results\\S8\\final_K24_top_flat_Fs4_20261030_223426\\K24_top_flat_Fs4",
+  "old": "07_results/S8/rest_20261024_233615/K24_top_flat_Fs4",
+  "settings_new": {
+   "soil_stop": [
+    true,
+    null
+   ],
+   "soil_stop_scope": [
+    "any_loc",
+    "any_loc"
+   ],
+   "flat_soil_margin_m": [
+    0.03,
+    0.03
+   ]
+  },
+  "final_feature_events_new": [],
+  "final_feature_events_old": [],
+  "events_same_names": false,
+  "events_same_full": false,
+  "events_only_new": [
+   "crawler_liftoff_confirmed",
+   "INFO_D1_IMU_MASS_SOURCE:yaml",
+   "INFO_D1_IMU_MASS_SOURCE:ready"
+  ],
+  "events_only_old": [],
+  "r8_series": {
+   "status": "differs",
+   "n_common": 25,
+   "only_new": [
+    "imu_gyro_samples",
+    "probed_leg",
+    "touched"
+   ],
+   "only_old": [],
+   "diff": {
+    "F_hat_N": 2.9103830456733704e-11,
+    "F_lower_N": 2.9103830456733704e-11,
+    "F_lower_est_N": 2.9103830456733704e-11,
+    "F_nominal_N": 2.9103830456733704e-11,
+    "scale_raw": 1.1102230246251565e-15,
+    "scale_used": 1.1102230246251565e-15
+   }
+  },
+  "result_keys": [
+   "case",
+   "settings",
+   "phases",
+   "events_count",
+   "acceptance",
+   "h4",
+   "c2",
+   "stroke",
+   "controller_meta",
+   "twist_stiffness_history",
+   "floor_plane",
+   "ready_t_s",
+   "probe_intervals",
+   "first_probe_t_s",
+   "event_t_s",
+   "event",
+   "event_state",
+   "probe_request",
+   "rod_fault",
+   "rod_fault_t_s",
+   "head_fault",
+   "head_fault_t_s",
+   "head_fault_first_applied_t_s",
+   "head_fault_delivered",
+   "fine_dt",
+   "s8_end",
+   "seed",
+   "r8_series",
+   "pad_record",
+   "piston_monitor",
+   "s8_plant_record",
+   "monitor",
+   "runner"
+  ]
+ },
+ {
+  "case": "K24_top_fdown3.5_Fs4",
+  "variable": "A2",
+  "new": "07_results\\S8\\final_K24_top_fdown3.5_Fs4_20261030_224211\\K24_top_fdown3.5_Fs4",
+  "old": "07_results/S8/rest_20261024_233615/K24_top_fdown3.5_Fs4",
+  "settings_new": {
+   "soil_stop": [
+    true,
+    null
+   ],
+   "soil_stop_scope": [
+    "any_loc",
+    "any_loc"
+   ],
+   "flat_soil_margin_m": [
+    0.03,
+    0.03
+   ]
+  },
+  "final_feature_events_new": [],
+  "final_feature_events_old": [],
+  "events_same_names": false,
+  "events_same_full": false,
+  "events_only_new": [
+   "crawler_liftoff_confirmed",
+   "INFO_D1_IMU_MASS_SOURCE:yaml",
+   "INFO_D1_IMU_MASS_SOURCE:ready"
+  ],
+  "events_only_old": [],
+  "r8_series": {
+   "status": "differs",
+   "n_common": 25,
+   "only_new": [
+    "imu_gyro_samples",
+    "probed_leg",
+    "touched"
+   ],
+   "only_old": [],
+   "diff": {
+    "F_hat_N": 2.9103830456733704e-11,
+    "F_lower_N": 2.9103830456733704e-11,
+    "F_lower_est_N": 2.9103830456733704e-11,
+    "F_nominal_N": 2.9103830456733704e-11
+   }
+  },
+  "result_keys": [
+   "case",
+   "settings",
+   "phases",
+   "events_count",
+   "acceptance",
+   "h4",
+   "c2",
+   "stroke",
+   "controller_meta",
+   "twist_stiffness_history",
+   "floor_plane",
+   "ready_t_s",
+   "probe_intervals",
+   "first_probe_t_s",
+   "event_t_s",
+   "event",
+   "event_state",
+   "probe_request",
+   "rod_fault",
+   "rod_fault_t_s",
+   "head_fault",
+   "head_fault_t_s",
+   "head_fault_first_applied_t_s",
+   "head_fault_delivered",
+   "fine_dt",
+   "s8_end",
+   "seed",
+   "r8_series",
+   "pad_record",
+   "piston_monitor",
+   "s8_plant_record",
+   "monitor",
+   "runner"
+  ]
+ },
+ {
+  "case": "K24_top_fup3.5_Fs4",
+  "variable": "A2",
+  "new": "07_results\\S8\\final_K24_top_fup3.5_Fs4_20261030_225345\\K24_top_fup3.5_Fs4",
+  "old": "07_results/S8/rest_20261024_233615/K24_top_fup3.5_Fs4",
+  "settings_new": {
+   "soil_stop": [
+    true,
+    null
+   ],
+   "soil_stop_scope": [
+    "any_loc",
+    "any_loc"
+   ],
+   "flat_soil_margin_m": [
+    0.03,
+    0.03
+   ]
+  },
+  "final_feature_events_new": [],
+  "final_feature_events_old": [],
+  "events_same_names": false,
+  "events_same_full": false,
+  "events_only_new": [
+   "crawler_liftoff_confirmed",
+   "INFO_D1_IMU_MASS_SOURCE:yaml",
+   "INFO_D1_IMU_MASS_SOURCE:ready"
+  ],
+  "events_only_old": [],
+  "r8_series": {
+   "status": "differs",
+   "n_common": 25,
+   "only_new": [
+    "imu_gyro_samples",
+    "probed_leg",
+    "touched"
+   ],
+   "only_old": [],
+   "diff": {
+    "F_hat_N": 2.9103830456733704e-11,
+    "F_lower_N": 2.9103830456733704e-11,
+    "F_lower_est_N": 2.9103830456733704e-11,
+    "F_nominal_N": 2.9103830456733704e-11,
+    "scale_raw": 1.3322676295501878e-15,
+    "scale_used": 1.3322676295501878e-15
+   }
+  },
+  "result_keys": [
+   "case",
+   "settings",
+   "phases",
+   "events_count",
+   "acceptance",
+   "h4",
+   "c2",
+   "stroke",
+   "controller_meta",
+   "twist_stiffness_history",
+   "floor_plane",
+   "ready_t_s",
+   "probe_intervals",
+   "first_probe_t_s",
+   "event_t_s",
+   "event",
+   "event_state",
+   "probe_request",
+   "rod_fault",
+   "rod_fault_t_s",
+   "head_fault",
+   "head_fault_t_s",
+   "head_fault_first_applied_t_s",
+   "head_fault_delivered",
+   "fine_dt",
+   "s8_end",
+   "seed",
+   "r8_series",
+   "pad_record",
+   "piston_monitor",
+   "s8_plant_record",
+   "monitor",
+   "runner"
+  ]
+ },
+ {
+  "case": "K24_top_roll5.5_Fs4",
+  "variable": "A2",
+  "new": "07_results\\S8\\final_K24_top_roll5.5_Fs4_20261030_230357\\K24_top_roll5.5_Fs4",
+  "old": "07_results/S8/rest_20261024_233615/K24_top_roll5.5_Fs4",
+  "settings_new": {
+   "soil_stop": [
+    true,
+    null
+   ],
+   "soil_stop_scope": [
+    "any_loc",
+    "any_loc"
+   ],
+   "flat_soil_margin_m": [
+    0.03,
+    0.03
+   ]
+  },
+  "final_feature_events_new": [
+   "27.49999999994925 INFO_LIFT_PAUSED:RL"
+  ],
+  "final_feature_events_old": [],
+  "events_same_names": false,
+  "events_same_full": false,
+  "events_only_new": [
+   "INFO_LIFT_PAUSED:RL",
+   "crawler_liftoff_confirmed",
+   "INFO_D1_IMU_MASS_SOURCE:yaml",
+   "INFO_D1_IMU_MASS_SOURCE:ready"
+  ],
+  "events_only_old": [],
+  "r8_series": {
+   "status": "differs",
+   "n_common": 25,
+   "only_new": [
+    "imu_gyro_samples",
+    "probed_leg",
+    "touched"
+   ],
+   "only_old": [],
+   "diff": {
+    "F_hat_N": 2.9103830456733704e-11,
+    "F_lower_N": 2.9103830456733704e-11,
+    "F_lower_est_N": 2.9103830456733704e-11,
+    "F_nominal_N": 2.9103830456733704e-11,
+    "scale_raw": 1.5543122344752192e-15
+   }
+  },
+  "result_keys": [
+   "case",
+   "settings",
+   "phases",
+   "events_count",
+   "acceptance",
+   "h4",
+   "c2",
+   "stroke",
+   "controller_meta",
+   "twist_stiffness_history",
+   "floor_plane",
+   "ready_t_s",
+   "probe_intervals",
+   "first_probe_t_s",
+   "event_t_s",
+   "event",
+   "event_state",
+   "probe_request",
+   "rod_fault",
+   "rod_fault_t_s",
+   "head_fault",
+   "head_fault_t_s",
+   "head_fault_first_applied_t_s",
+   "head_fault_delivered",
+   "fine_dt",
+   "s8_end",
+   "seed",
+   "r8_series",
+   "pad_record",
+   "piston_monitor",
+   "s8_plant_record",
+   "monitor",
+   "runner"
+  ]
+ },
+ {
+  "case": "K24_top_rpB_Fs4",
+  "variable": "A2",
+  "new": "07_results\\S8\\final_K24_top_rpB_Fs4_20261030_231426\\K24_top_rpB_Fs4",
+  "old": "07_results/S8/rest_20261024_233615/K24_top_rpB_Fs4",
+  "settings_new": {
+   "soil_stop": [
+    true,
+    null
+   ],
+   "soil_stop_scope": [
+    "any_loc",
+    "any_loc"
+   ],
+   "flat_soil_margin_m": [
+    0.03,
+    0.03
+   ]
+  },
+  "final_feature_events_new": [],
+  "final_feature_events_old": [],
+  "events_same_names": false,
+  "events_same_full": false,
+  "events_only_new": [
+   "crawler_liftoff_confirmed",
+   "INFO_D1_IMU_MASS_SOURCE:yaml",
+   "INFO_D1_IMU_MASS_SOURCE:ready"
+  ],
+  "events_only_old": [],
+  "r8_series": {
+   "status": "differs",
+   "n_common": 25,
+   "only_new": [
+    "imu_gyro_samples",
+    "probed_leg",
+    "touched"
+   ],
+   "only_old": [],
+   "diff": {
+    "F_hat_N": 2.9103830456733704e-11,
+    "F_lower_N": 2.9103830456733704e-11,
+    "F_lower_est_N": 2.9103830456733704e-11,
+    "F_nominal_N": 2.9103830456733704e-11,
+    "amp_u": 5.421010862427522e-20,
+    "cmp_twist_u": 4.0657581468206416e-20,
+    "computed_u": 5.421010862427522e-20,
+    "issued_u": 5.421010862427522e-20,
+    "raw_u": 1.0842021724855044e-19
+   }
+  },
+  "result_keys": [
+   "case",
+   "settings",
+   "phases",
+   "events_count",
+   "acceptance",
+   "h4",
+   "c2",
+   "stroke",
+   "controller_meta",
+   "twist_stiffness_history",
+   "floor_plane",
+   "ready_t_s",
+   "probe_intervals",
+   "first_probe_t_s",
+   "event_t_s",
+   "event",
+   "event_state",
+   "probe_request",
+   "rod_fault",
+   "rod_fault_t_s",
+   "head_fault",
+   "head_fault_t_s",
+   "head_fault_first_applied_t_s",
+   "head_fault_delivered",
+   "fine_dt",
+   "s8_end",
+   "seed",
+   "r8_series",
+   "pad_record",
+   "piston_monitor",
+   "s8_plant_record",
+   "monitor",
+   "runner"
+  ]
+ },
+ {
+  "case": "G8C1_top_edge_FL_g170",
+  "variable": "A3",
+  "new": "07_results\\S6\\bundleC_g8c76_p28acc_final_G8C1_top_edge_FL_g170_L1R_20261030_232436\\G8C1_top_edge_FL_g170",
+  "old": "07_results/S6/bundleC_g8c76_p28acc_p28_L1R_20261027_222426/G8C1_top_edge_FL_g170",
+  "settings_new": {
+   "soil_stop": [
+    true,
+    null
+   ],
+   "soil_stop_scope": [
+    "any_loc",
+    "any_loc"
+   ],
+   "flat_soil_margin_m": [
+    0.03,
+    0.03
+   ]
+  },
+  "final_feature_events_new": [
+   "92.4000000008203 INFO_LIFT_PAUSED:RR"
+  ],
+  "final_feature_events_old": [],
+  "events_same_names": false,
+  "events_same_full": false,
+  "events_only_new": [
+   "INFO_LIFT_PAUSED:RR"
+  ],
+  "events_only_old": [],
+  "r8_series": {
+   "status": "identical",
+   "n_common": 22,
+   "only_new": [],
+   "only_old": [],
+   "diff": {}
+  },
+  "result_keys": [
+   "case",
+   "settings",
+   "phases",
+   "events_count",
+   "acceptance",
+   "h4",
+   "c2",
+   "stroke",
+   "controller_meta",
+   "probe_start_stroke_margin",
+   "probe_events",
+   "probe_skipped",
+   "floor_plane",
+   "zero_calibration_report",
+   "end_rule",
+   "g8",
+   "ready_t_s",
+   "probe_intervals",
+   "first_probe_t_s",
+   "event_t_s",
+   "fine_dt",
+   "seed",
+   "target_request",
+   "r8_series",
+   "monitor",
+   "runner"
+  ]
+ },
+ {
+  "case": "G8C3_top_edge_RL_g230",
+  "variable": "A3",
+  "new": "07_results\\S6\\bundleC_g8c76_p28acc_final_G8C3_top_edge_RL_g230_L1R_20261030_233212\\G8C3_top_edge_RL_g230",
+  "old": "07_results/S6/bundleC_g8c76_p28acc_p28_L1R_20261027_222426/G8C3_top_edge_RL_g230",
+  "settings_new": {
+   "soil_stop": [
+    true,
+    null
+   ],
+   "soil_stop_scope": [
+    "any_loc",
+    "any_loc"
+   ],
+   "flat_soil_margin_m": [
+    0.03,
+    0.03
+   ]
+  },
+  "final_feature_events_new": [
+   "93.4000000008535 INFO_LIFT_PAUSED:RR",
+   "94.00000000087341 INFO_LIFT_PAUSED:RL"
+  ],
+  "final_feature_events_old": [],
+  "events_same_names": false,
+  "events_same_full": false,
+  "events_only_new": [
+   "INFO_LIFT_PAUSED:RR",
+   "INFO_LIFT_PAUSED:RL"
+  ],
+  "events_only_old": [],
+  "r8_series": {
+   "status": "identical",
+   "n_common": 22,
+   "only_new": [],
+   "only_old": [],
+   "diff": {}
+  },
+  "result_keys": [
+   "case",
+   "settings",
+   "phases",
+   "events_count",
+   "acceptance",
+   "h4",
+   "c2",
+   "stroke",
+   "controller_meta",
+   "probe_start_stroke_margin",
+   "probe_events",
+   "probe_skipped",
+   "floor_plane",
+   "zero_calibration_report",
+   "end_rule",
+   "g8",
+   "ready_t_s",
+   "probe_intervals",
+   "first_probe_t_s",
+   "event_t_s",
+   "fine_dt",
+   "seed",
+   "target_request",
+   "r8_series",
+   "monitor",
+   "runner"
+  ]
+ },
+ {
+  "case": "E_G4_Fs4",
+  "variable": "A4",
+  "new": "07_results\\S8\\final_E_G4_Fs4_20261030_233941\\E_G4_Fs4",
+  "old": "07_results/S8/p1r_20261024_222013/E_G4_Fs4",
+  "settings_new": {
+   "soil_stop": [
+    true,
+    null
+   ],
+   "soil_stop_scope": [
+    "any_loc",
+    "any_loc"
+   ],
+   "flat_soil_margin_m": [
+    0.03,
+    0.03
+   ]
+  },
+  "final_feature_events_new": [],
+  "final_feature_events_old": [],
+  "events_same_names": false,
+  "events_same_full": false,
+  "events_only_new": [
+   "crawler_liftoff_confirmed",
+   "INFO_D1_IMU_MASS_SOURCE:yaml",
+   "INFO_D1_IMU_MASS_SOURCE:ready"
+  ],
+  "events_only_old": [],
+  "r8_series": {
+   "status": "differs",
+   "n_common": 25,
+   "only_new": [
+    "imu_gyro_samples",
+    "probed_leg",
+    "touched"
+   ],
+   "only_old": [],
+   "diff": {
+    "F_band_N": 31.705510468824286,
+    "F_hat_N": 211.3447881351749,
+    "F_lower_N": 211.3447881351749,
+    "F_lower_est_N": 211.3447881351749,
+    "F_nominal_N": 211.3447881351749,
+    "amp_u": 5.398659112764142e-07,
+    "cmp_attitude_u": 4.0603841556380305e-09,
+    "cmp_heave_u": 2.589302828398532e-08,
+    "cmp_twist_u": 5.255258998724638e-07,
+    "computed_u": 5.398659112764142e-07,
+    "imu_samples": 0.00012814186701781694,
+    "issued_u": 5.398659112764142e-07
+   }
+  },
+  "result_keys": [
+   "case",
+   "settings",
+   "phases",
+   "events_count",
+   "acceptance",
+   "h4",
+   "c2",
+   "stroke",
+   "controller_meta",
+   "twist_stiffness_history",
+   "floor_plane",
+   "ready_t_s",
+   "probe_intervals",
+   "first_probe_t_s",
+   "event_t_s",
+   "event",
+   "event_state",
+   "probe_request",
+   "rod_fault",
+   "rod_fault_t_s",
+   "head_fault",
+   "head_fault_t_s",
+   "head_fault_first_applied_t_s",
+   "head_fault_delivered",
+   "fine_dt",
+   "s8_end",
+   "seed",
+   "r8_series",
+   "pad_record",
+   "piston_monitor",
+   "s8_plant_record",
+   "monitor",
+   "runner"
+  ]
+ },
+ {
+  "case": "E_SS_Fs4",
+  "variable": "A4",
+  "new": "07_results\\S8\\final_E_SS_Fs4_20261030_235425\\E_SS_Fs4",
+  "old": "07_results/S8/p1r_20261024_222013/E_SS_Fs4",
+  "settings_new": {
+   "soil_stop": [
+    true,
+    null
+   ],
+   "soil_stop_scope": [
+    "any_loc",
+    "any_loc"
+   ],
+   "flat_soil_margin_m": [
+    0.03,
+    0.03
+   ]
+  },
+  "final_feature_events_new": [],
+  "final_feature_events_old": [],
+  "events_same_names": false,
+  "events_same_full": false,
+  "events_only_new": [
+   "crawler_liftoff_confirmed",
+   "INFO_D1_IMU_MASS_SOURCE:yaml",
+   "INFO_D1_IMU_MASS_SOURCE:ready"
+  ],
+  "events_only_old": [],
+  "r8_series": {
+   "status": "differs",
+   "n_common": 25,
+   "only_new": [
+    "imu_gyro_samples",
+    "probed_leg",
+    "touched"
+   ],
+   "only_old": [],
+   "diff": {
+    "F_hat_N": 5333.861321129836,
+    "F_lower_N": 5333.861321129836,
+    "F_lower_est_N": 5333.861321129836,
+    "F_nominal_N": 5333.861321129836,
+    "amp_u": 0.0052310754,
+    "cmp_attitude_u": 2.4593774313718097e-05,
+    "cmp_heave_u": 8.339098653590074e-05,
+    "cmp_twist_u": 5.847948865826202e-06,
+    "computed_u": 0.0052310754,
+    "imu_samples": 0.13670969029543834,
+    "issued_u": 0.0052310754,
+    "phase": "differs"
+   }
+  },
+  "result_keys": [
+   "case",
+   "settings",
+   "phases",
+   "events_count",
+   "acceptance",
+   "h4",
+   "c2",
+   "stroke",
+   "controller_meta",
+   "twist_stiffness_history",
+   "floor_plane",
+   "ready_t_s",
+   "probe_intervals",
+   "first_probe_t_s",
+   "event_t_s",
+   "event",
+   "event_state",
+   "probe_request",
+   "rod_fault",
+   "rod_fault_t_s",
+   "head_fault",
+   "head_fault_t_s",
+   "head_fault_first_applied_t_s",
+   "head_fault_delivered",
+   "fine_dt",
+   "s8_end",
+   "seed",
+   "r8_series",
+   "pad_record",
+   "piston_monitor",
+   "s8_plant_record",
+   "monitor",
+   "runner"
+  ]
+ },
+ {
+  "case": "E_RE1bF_Fs8",
+  "variable": "A4",
+  "new": "07_results\\S8\\final_E_RE1bF_Fs8_20261031_000914\\E_RE1bF_Fs8",
+  "old": "07_results/S8/p1r_20261024_222013/E_RE1bF_Fs8",
+  "settings_new": {
+   "soil_stop": [
+    true,
+    null
+   ],
+   "soil_stop_scope": [
+    "any_loc",
+    "any_loc"
+   ],
+   "flat_soil_margin_m": [
+    0.03,
+    0.03
+   ]
+  },
+  "final_feature_events_new": [],
+  "final_feature_events_old": [],
+  "events_same_names": false,
+  "events_same_full": false,
+  "events_only_new": [
+   "INFO_TOUCH_DIP_HELD:RL",
+   "INFO_TOUCH_DIP_HELD:RR",
+   "crawler_liftoff_confirmed",
+   "INFO_D1_IMU_MASS_SOURCE:yaml",
+   "INFO_D1_IMU_MASS_SOURCE:ready"
+  ],
+  "events_only_old": [],
+  "r8_series": {
+   "status": "differs",
+   "n_common": 25,
+   "only_new": [
+    "imu_gyro_samples",
+    "probed_leg",
+    "touched"
+   ],
+   "only_old": [],
+   "diff": {
+    "F_band_N": "shape (927,) vs (926,)",
+    "F_hat_N": "shape (927, 4) vs (926, 4)",
+    "F_lower_N": "shape (927, 4) vs (926, 4)",
+    "F_lower_est_N": "shape (927, 4) vs (926, 4)",
+    "F_nominal_N": "shape (927, 4) vs (926, 4)",
+    "amp_u": "shape (927, 4) vs (926, 4)",
+    "cmp_attitude_u": "shape (927, 4) vs (926, 4)",
+    "cmp_guard_u": "shape (927, 4) vs (926, 4)",
+    "cmp_heave_u": "shape (927, 4) vs (926, 4)",
+    "cmp_reapproach_u": "shape (927, 4) vs (926, 4)",
+    "cmp_twist_u": "shape (927, 4) vs (926, 4)",
+    "computed_u": "shape (927, 4) vs (926, 4)"
+   }
+  },
+  "result_keys": [
+   "case",
+   "settings",
+   "phases",
+   "events_count",
+   "acceptance",
+   "h4",
+   "c2",
+   "stroke",
+   "controller_meta",
+   "twist_stiffness_history",
+   "floor_plane",
+   "ready_t_s",
+   "probe_intervals",
+   "first_probe_t_s",
+   "event_t_s",
+   "event",
+   "event_state",
+   "probe_request",
+   "rod_fault",
+   "rod_fault_t_s",
+   "head_fault",
+   "head_fault_t_s",
+   "head_fault_first_applied_t_s",
+   "head_fault_delivered",
+   "fine_dt",
+   "s8_end",
+   "seed",
+   "r8_series",
+   "pad_record",
+   "piston_monitor",
+   "s8_plant_record",
+   "monitor",
+   "runner"
+  ]
+ },
+ {
+  "case": "G1L_RE1bF_FL_top_Fs0",
+  "variable": "A4",
+  "new": "07_results\\S8\\final_G1L_RE1bF_FL_top_Fs0_20261031_003000\\G1L_RE1bF_FL_top_Fs0",
+  "old": "07_results/S8/c72_20261027_155426/G1L_RE1bF_FL_top_Fs0",
+  "settings_new": {
+   "soil_stop": [
+    true,
+    null
+   ],
+   "soil_stop_scope": [
+    "any_loc",
+    "any_loc"
+   ],
+   "flat_soil_margin_m": [
+    0.03,
+    0.03
+   ]
+  },
+  "final_feature_events_new": [],
+  "final_feature_events_old": [],
+  "events_same_names": true,
+  "events_same_full": true,
+  "events_only_new": [],
+  "events_only_old": [],
+  "r8_series": {
+   "status": "identical",
+   "n_common": 28,
+   "only_new": [],
+   "only_old": [],
+   "diff": {}
+  },
+  "result_keys": [
+   "case",
+   "settings",
+   "phases",
+   "events_count",
+   "acceptance",
+   "h4",
+   "c2",
+   "stroke",
+   "controller_meta",
+   "twist_stiffness_history",
+   "floor_plane",
+   "ready_t_s",
+   "probe_intervals",
+   "first_probe_t_s",
+   "event_t_s",
+   "event",
+   "event_state",
+   "probe_request",
+   "rod_fault",
+   "rod_fault_t_s",
+   "head_fault",
+   "head_fault_t_s",
+   "head_fault_first_applied_t_s",
+   "head_fault_delivered",
+   "fine_dt",
+   "s8_end",
+   "seed",
+   "r8_series",
+   "pad_record",
+   "piston_monitor",
+   "s8_plant_record",
+   "monitor",
+   "runner"
+  ]
+ },
+ {
+  "case": "G1L_RE1bF_FL_top_o050_Fs4",
+  "variable": "A4",
+  "new": "07_results\\S8\\final_G1L_RE1bF_FL_top_o050_Fs4_20261031_004637\\G1L_RE1bF_FL_top_o050_Fs4",
+  "old": "07_results/S8/c74_20261027_164128/G1L_RE1bF_FL_top_o050_Fs4",
+  "settings_new": {
+   "soil_stop": [
+    true,
+    null
+   ],
+   "soil_stop_scope": [
+    "any_loc",
+    "any_loc"
+   ],
+   "flat_soil_margin_m": [
+    0.03,
+    0.03
+   ]
+  },
+  "final_feature_events_new": [],
+  "final_feature_events_old": [],
+  "events_same_names": true,
+  "events_same_full": true,
+  "events_only_new": [],
+  "events_only_old": [],
+  "r8_series": {
+   "status": "identical",
+   "n_common": 28,
+   "only_new": [],
+   "only_old": [],
+   "diff": {}
+  },
+  "result_keys": [
+   "case",
+   "settings",
+   "phases",
+   "events_count",
+   "acceptance",
+   "h4",
+   "c2",
+   "stroke",
+   "controller_meta",
+   "twist_stiffness_history",
+   "floor_plane",
+   "ready_t_s",
+   "probe_intervals",
+   "first_probe_t_s",
+   "event_t_s",
+   "event",
+   "event_state",
+   "probe_request",
+   "rod_fault",
+   "rod_fault_t_s",
+   "head_fault",
+   "head_fault_t_s",
+   "head_fault_first_applied_t_s",
+   "head_fault_delivered",
+   "fine_dt",
+   "s8_end",
+   "seed",
+   "r8_series",
+   "pad_record",
+   "piston_monitor",
+   "s8_plant_record",
+   "monitor",
+   "runner"
+  ]
+ },
+ {
+  "case": "K0V_top_rpB_Fs0",
+  "variable": "B1",
+  "new": "07_results\\S8\\final_K0V_top_rpB_Fs0_20261031_010357\\K0V_top_rpB_Fs0",
+  "old": "07_results/S8/p1r_20261024_222013/K0V_top_rpB_Fs0",
+  "settings_new": {
+   "soil_stop": [
+    true,
+    null
+   ],
+   "soil_stop_scope": [
+    "any_loc",
+    "any_loc"
+   ],
+   "flat_soil_margin_m": [
+    0.03,
+    0.03
+   ]
+  },
+  "final_feature_events_new": [
+   "27.49999999994925 INFO_LIFT_PAUSED:RL",
+   "28.09999999994785 INFO_LIFT_PAUSED:RL"
+  ],
+  "final_feature_events_old": [],
+  "events_same_names": false,
+  "events_same_full": false,
+  "events_only_new": [
+   "INFO_TOUCH_DIP_HELD:RL",
+   "INFO_TOUCH_DIP_HELD:RR",
+   "INFO_LIFT_PAUSED:RL",
+   "INFO_LIFT_PAUSED:RL",
+   "crawler_liftoff_confirmed",
+   "INFO_D1_IMU_MASS_SOURCE:yaml",
+   "INFO_D1_IMU_MASS_SOURCE:ready"
+  ],
+  "events_only_old": [],
+  "r8_series": {
+   "status": "differs",
+   "n_common": 25,
+   "only_new": [
+    "imu_gyro_samples",
+    "probed_leg",
+    "touched"
+   ],
+   "only_old": [],
+   "diff": {
+    "F_band_N": 44.04909962957845,
+    "F_hat_N": 6097.092053563596,
+    "F_lower_N": 6097.092053563596,
+    "F_lower_est_N": 6097.092053563596,
+    "F_nominal_N": 6097.092053563596,
+    "amp_u": 0.0052310754,
+    "cmp_attitude_u": 5.3384810951833533e-05,
+    "cmp_heave_u": 0.00021127593347906523,
+    "cmp_twist_u": 4.439459728588141e-06,
+    "computed_u": 0.0052310754,
+    "imu_samples": 1.7310520015921913,
+    "issued_u": 0.0052310754
+   }
+  },
+  "result_keys": [
+   "case",
+   "settings",
+   "phases",
+   "events_count",
+   "acceptance",
+   "h4",
+   "c2",
+   "stroke",
+   "controller_meta",
+   "twist_stiffness_history",
+   "floor_plane",
+   "ready_t_s",
+   "probe_intervals",
+   "first_probe_t_s",
+   "event_t_s",
+   "event",
+   "event_state",
+   "probe_request",
+   "rod_fault",
+   "rod_fault_t_s",
+   "head_fault",
+   "head_fault_t_s",
+   "head_fault_first_applied_t_s",
+   "head_fault_delivered",
+   "fine_dt",
+   "s8_end",
+   "seed",
+   "r8_series",
+   "pad_record",
+   "piston_monitor",
+   "s8_plant_record",
+   "monitor",
+   "runner"
+  ]
+ },
+ {
+  "case": "A_middle_rpB_Fs0",
+  "variable": "B1",
+  "new": "07_results\\S8\\final_A_middle_rpB_Fs0_20261031_011149\\A_middle_rpB_Fs0",
+  "old": "07_results/S8/rest_20261024_233615/A_middle_rpB_Fs0",
+  "settings_new": {
+   "soil_stop": [
+    true,
+    null
+   ],
+   "soil_stop_scope": [
+    "any_loc",
+    "any_loc"
+   ],
+   "flat_soil_margin_m": [
+    0.03,
+    0.03
+   ]
+  },
+  "final_feature_events_new": [],
+  "final_feature_events_old": [],
+  "events_same_names": false,
+  "events_same_full": false,
+  "events_only_new": [
+   "INFO_TOUCH_DIP_HELD:RL",
+   "INFO_TOUCH_DIP_HELD:RR",
+   "crawler_liftoff_confirmed",
+   "INFO_D1_IMU_MASS_SOURCE:yaml",
+   "INFO_D1_IMU_MASS_SOURCE:ready"
+  ],
+  "events_only_old": [],
+  "r8_series": {
+   "status": "differs",
+   "n_common": 25,
+   "only_new": [
+    "imu_gyro_samples",
+    "probed_leg",
+    "touched"
+   ],
+   "only_old": [],
+   "diff": {
+    "F_band_N": 153.0881902872443,
+    "F_hat_N": 5235.038143113692,
+    "F_lower_N": 5235.038143113692,
+    "F_lower_est_N": 5235.038143113692,
+    "F_nominal_N": 5235.038143113692,
+    "amp_u": 0.0052310754,
+    "cmp_attitude_u": 5.608396673905357e-05,
+    "cmp_heave_u": 0.00021206453504209188,
+    "cmp_twist_u": 2.2425206542306935e-06,
+    "computed_u": 0.0052310754,
+    "imu_samples": 0.9442859769307432,
+    "issued_u": 0.0052310754
+   }
+  },
+  "result_keys": [
+   "case",
+   "settings",
+   "phases",
+   "events_count",
+   "acceptance",
+   "h4",
+   "c2",
+   "stroke",
+   "controller_meta",
+   "twist_stiffness_history",
+   "floor_plane",
+   "ready_t_s",
+   "probe_intervals",
+   "first_probe_t_s",
+   "event_t_s",
+   "event",
+   "event_state",
+   "probe_request",
+   "rod_fault",
+   "rod_fault_t_s",
+   "head_fault",
+   "head_fault_t_s",
+   "head_fault_first_applied_t_s",
+   "head_fault_delivered",
+   "fine_dt",
+   "s8_end",
+   "seed",
+   "r8_series",
+   "pad_record",
+   "piston_monitor",
+   "s8_plant_record",
+   "monitor",
+   "runner"
+  ]
+ },
+ {
+  "case": "A_bottom_rpB_Fs0",
+  "variable": "B1",
+  "new": "07_results\\S8\\final_A_bottom_rpB_Fs0_20261031_011936\\A_bottom_rpB_Fs0",
+  "old": "07_results/S8/rest_20261024_233615/A_bottom_rpB_Fs0",
+  "settings_new": {
+   "soil_stop": [
+    true,
+    null
+   ],
+   "soil_stop_scope": [
+    "any_loc",
+    "any_loc"
+   ],
+   "flat_soil_margin_m": [
+    0.03,
+    0.03
+   ]
+  },
+  "final_feature_events_new": [],
+  "final_feature_events_old": [],
+  "events_same_names": false,
+  "events_same_full": false,
+  "events_only_new": [
+   "crawler_liftoff_confirmed",
+   "INFO_D1_IMU_MASS_SOURCE:yaml",
+   "INFO_D1_IMU_MASS_SOURCE:ready"
+  ],
+  "events_only_old": [],
+  "r8_series": {
+   "status": "differs",
+   "n_common": 25,
+   "only_new": [
+    "imu_gyro_samples",
+    "probed_leg",
+    "touched"
+   ],
+   "only_old": [],
+   "diff": {
+    "F_band_N": 1.4551915228366852e-11,
+    "F_hat_N": 2.9103830456733704e-11,
+    "F_lower_N": 2.9103830456733704e-11,
+    "F_lower_est_N": 2.9103830456733704e-11,
+    "F_nominal_N": 2.9103830456733704e-11,
+    "amp_u": 1.734723475976807e-18,
+    "cmp_twist_u": 8.131516293641283e-20,
+    "computed_u": 1.734723475976807e-18,
+    "issued_u": 1.734723475976807e-18,
+    "leg_band_N": 1.4551915228366852e-11,
+    "raw_u": 3.469446951953614e-18
+   }
+  },
+  "result_keys": [
+   "case",
+   "settings",
+   "phases",
+   "events_count",
+   "acceptance",
+   "h4",
+   "c2",
+   "stroke",
+   "controller_meta",
+   "twist_stiffness_history",
+   "floor_plane",
+   "ready_t_s",
+   "probe_intervals",
+   "first_probe_t_s",
+   "event_t_s",
+   "event",
+   "event_state",
+   "probe_request",
+   "rod_fault",
+   "rod_fault_t_s",
+   "head_fault",
+   "head_fault_t_s",
+   "head_fault_first_applied_t_s",
+   "head_fault_delivered",
+   "fine_dt",
+   "s8_end",
+   "seed",
+   "r8_series",
+   "pad_record",
+   "piston_monitor",
+   "s8_plant_record",
+   "monitor",
+   "runner"
+  ]
+ },
+ {
+  "case": "K8_top_rpB_Fs8",
+  "variable": "B2",
+  "new": "07_results\\S8\\final_K8_top_rpB_Fs8_20261031_012756\\K8_top_rpB_Fs8",
+  "old": "07_results/S8/p1r_20261024_222013/K8_top_rpB_Fs8",
+  "settings_new": {
+   "soil_stop": [
+    true,
+    null
+   ],
+   "soil_stop_scope": [
+    "any_loc",
+    "any_loc"
+   ],
+   "flat_soil_margin_m": [
+    0.03,
+    0.03
+   ]
+  },
+  "final_feature_events_new": [],
+  "final_feature_events_old": [],
+  "events_same_names": false,
+  "events_same_full": false,
+  "events_only_new": [
+   "INFO_TOUCH_DIP_HELD:RL",
+   "INFO_TOUCH_DIP_HELD:RR",
+   "crawler_liftoff_confirmed",
+   "INFO_D1_IMU_MASS_SOURCE:yaml",
+   "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.309",
+   "INFO_D1_IMU_MASS_SOURCE:ready"
+  ],
+  "events_only_old": [],
+  "r8_series": {
+   "status": "differs",
+   "n_common": 25,
+   "only_new": [
+    "imu_gyro_samples",
+    "probed_leg",
+    "touched"
+   ],
+   "only_old": [],
+   "diff": {
+    "F_band_N": 131.258773930369,
+    "F_hat_N": 5950.81508097834,
+    "F_lower_N": 5950.81508097834,
+    "F_lower_est_N": 5950.81508097834,
+    "F_nominal_N": 5950.81508097834,
+    "amp_u": 0.0052310754,
+    "cmp_attitude_u": 5.9773666893707736e-05,
+    "cmp_heave_u": 0.00021447679916514542,
+    "cmp_twist_u": 4.7555008851131485e-06,
+    "computed_u": 0.0052310754,
+    "imu_samples": 1.0422040305642106,
+    "issued_u": 0.0052310754
+   }
+  },
+  "result_keys": [
+   "case",
+   "settings",
+   "phases",
+   "events_count",
+   "acceptance",
+   "h4",
+   "c2",
+   "stroke",
+   "controller_meta",
+   "twist_stiffness_history",
+   "floor_plane",
+   "ready_t_s",
+   "probe_intervals",
+   "first_probe_t_s",
+   "event_t_s",
+   "event",
+   "event_state",
+   "probe_request",
+   "rod_fault",
+   "rod_fault_t_s",
+   "head_fault",
+   "head_fault_t_s",
+   "head_fault_first_applied_t_s",
+   "head_fault_delivered",
+   "fine_dt",
+   "s8_end",
+   "seed",
+   "r8_series",
+   "pad_record",
+   "piston_monitor",
+   "s8_plant_record",
+   "monitor",
+   "runner"
+  ]
+ }
+]

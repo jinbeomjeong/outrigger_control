@@ -20,6 +20,7 @@ Two input formats:
                settle v2 result of each case comes from a re-judged ``results`` file (--baseline;
                the settle precedes the controller, so it is the same for every candidate):
                  baseline settle v2 fails      -> settle_check_fail                  (direct)
+                   (only at mass_scale 1.0; a scaled baseline case records the check only)
                  record not settle_check_fail  -> stored verdict                     (direct)
                  command hash == baseline hash -> baseline ``verdict_rows``          (baseline_rows)
                  otherwise rebuilt from ``soil_stop`` / ``failed_rows`` / ``warnings`` (rebuilt),
@@ -73,7 +74,8 @@ PASSED_VERDICTS = (ss.VERDICT_PASS, ss.VERDICT_STROKE_LIMITED_PASS)
 FAULT_WARNING_PREFIX = "FAULT"  # s9_soil_slope._has_fault: any event named FAULT*
 RECORDS_RULE = (
     "settle v2 from the baseline (re-judged results file) per case id. Baseline settle v2 fail -> "
-    "settle_check_fail (direct); record not settle_check_fail -> stored verdict (direct); hash == "
+    "settle_check_fail (direct; mass_scale 1.0 only, a scaled baseline case records it); "
+    "record not settle_check_fail -> stored verdict (direct); hash == "
     "baseline hash -> baseline verdict_rows (baseline_rows); else rebuilt from soil_stop + "
     "failed_rows + warnings in s9_soil_slope.classify order (soil stop -> stroke_limited_stop / "
     "fail, stroke FAULT -> fail, guard warning -> stroke_limited_pass when no FAULT and "
@@ -188,8 +190,14 @@ def rebuild_row_verdict(record: dict) -> str:
 
 
 def _is_baseline_settle_ok(baseline_result: dict) -> bool:
+    """Whether the baseline's settle v2 lets the case be judged.
+
+    Same rule as ``results`` inputs (``s9_soil_slope._final_verdict``, spec 422.2): a
+    scaled-mass case only records the check, so a failed check does not stop it."""
     check = (baseline_result.get("settle") or {}).get("check")
-    return check is None or bool(check["ok"])
+    mass_scale = (baseline_result.get("case") or {}).get("mass_scale", 1.0)
+    gated_verdict = ss._final_verdict(ss.VERDICT_PASS, check, mass_scale)  # noqa: SLF001
+    return gated_verdict != ss.VERDICT_SETTLE_CHECK_FAIL
 
 
 def record_settle_v2_verdict(record: dict, baseline_by_id: dict[str, dict]) -> tuple[str, str]:

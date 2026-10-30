@@ -25,10 +25,14 @@ GUARD_WARNING = "WARN_LIFT_STROKE_LIMITED:FL"
 
 
 def _baseline_result(case_id: str, *, is_settle_ok: bool = True,
-                     verdict_rows: str = "pass") -> dict:
-    return {"id": case_id, "settle": {"check": {"ok": is_settle_ok}},
-            "run": {"commands_sha256": BASELINE_HASH}, "verdict_rows": verdict_rows,
-            "verdict": verdict_rows if is_settle_ok else "settle_check_fail"}
+                     verdict_rows: str = "pass", mass_scale: float | None = None) -> dict:
+    is_judged = is_settle_ok or mass_scale not in (None, 1.0)
+    result = {"id": case_id, "settle": {"check": {"ok": is_settle_ok}},
+              "run": {"commands_sha256": BASELINE_HASH}, "verdict_rows": verdict_rows,
+              "verdict": verdict_rows if is_judged else "settle_check_fail"}
+    if mass_scale is not None:  # s9_soil_slope writes the key only for scaled cases
+        result["case"] = {"mass_scale": mass_scale}
+    return result
 
 
 def _record(case_id: str = "H1|G1|B|top|flat", *, verdict: str = "settle_check_fail",
@@ -75,6 +79,39 @@ def test_other_records_are_direct(verdict, is_settle_ok, in_baseline, expected) 
     baseline = {"c": _baseline_result("c", is_settle_ok=is_settle_ok)} if in_baseline else {}
     record = _record("c", verdict=verdict, record_hash=BASELINE_HASH)
     assert rj.record_settle_v2_verdict(record, baseline) == (expected, rj.SOURCE_DIRECT)
+
+
+@pytest.mark.parametrize("verdict", ["pass", "fail", "stroke_limited_stop"])
+def test_scaled_mass_baseline_settle_fail_keeps_the_record_verdict(verdict) -> None:
+    """Regression (finB2_x426b, 2026-10-31): a x1.1 baseline case whose settle v2 check failed
+    only records the check (spec 422.2), so the record keeps its own verdict."""
+    case_id = "H1|G1|B|top|nose_down|m1.1"
+    baseline = {case_id: _baseline_result(case_id, is_settle_ok=False, mass_scale=1.1)}
+    record = _record(case_id, verdict=verdict, record_hash=BASELINE_HASH)
+    assert rj.record_settle_v2_verdict(record, baseline) == (verdict, rj.SOURCE_DIRECT)
+
+
+def test_nominal_mass_baseline_settle_fail_still_gates() -> None:
+    baseline = {"c": _baseline_result("c", is_settle_ok=False, mass_scale=1.0)}
+    record = _record("c", verdict="pass", record_hash=BASELINE_HASH)
+    assert rj.record_settle_v2_verdict(record, baseline) == ("settle_check_fail",
+                                                             rj.SOURCE_DIRECT)
+
+
+def test_scaled_records_survive_a_merged_baseline_file(tmp_path: Path) -> None:
+    """Records path end to end with a merged baseline (meta holds only ``settle_rejudge``)."""
+    scaled_id, nominal_id = "H1|G1|B|top|roll_pos|m1.1", "H1|G1|B|top|roll_pos"
+    baseline_path = _write_json(tmp_path / "merged.json", {
+        "meta": {"settle_rejudge": {"merged_from": [], "script": "merge_settle_baselines.py"}},
+        "results": [_baseline_result(scaled_id, is_settle_ok=False, mass_scale=1.1),
+                    _baseline_result(nominal_id, is_settle_ok=False)]})
+    records_path = _write_json(tmp_path / "run.json", {
+        "meta": {"script": "s9_slope_fix_candidates.py"},
+        "records": [_record(scaled_id, verdict="fail"), _record(nominal_id, verdict="pass")]})
+    report = rj.rejudge_file(records_path, tmp_path / "unused_table.json", "_rejudged",
+                             baseline_path=baseline_path)
+    verdict_by_id = {record["id"]: record["verdict"] for record in report["records"]}
+    assert verdict_by_id == {scaled_id: "fail", nominal_id: "settle_check_fail"}
 
 
 PAD_XY_M = [(2.0, 1.5), (2.0, -1.5), (-2.0, 1.5), (-2.0, -1.5)]

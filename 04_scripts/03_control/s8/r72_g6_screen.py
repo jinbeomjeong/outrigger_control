@@ -47,6 +47,8 @@ Env: R72_FILTER (substrings), R72_AFFINITY (hex mask on the parent),
   keys without it pad B (all former keys),
   R72_PATH = per_leg (default) | s9 (original s9 path, uniform only) | per_leg_force (mixed kernel also for uniform
   rigid: identity check).
+  An empty R72_PATH or R72_SET counts as unset (spec 429.11.1: a runner that restored an
+  unset variable as "" made the G1-based weak-pad runs use the uniform base soil).
   S9_SETTLE_HOOK = p0 (default, results up to rev. 79) | harness (dynamics hook_harness row of the BASE soil:
   floor tilt and pad heights; S9_SETTLE_TABLE overrides the table path). Rigid-base (MixedRigidPads) cases are
   unchanged by the hook (rigid floor, h = 0). The hook and the settle snapshot are recorded per result.
@@ -96,8 +98,17 @@ X426_POINT_BASES = (("G1", "g6"), ("rigid", "g6r"))
 """(base soil, key tag) of the weak-patch points."""
 X426_LEGS = ("FL", "RR")
 X426_REF_SOILS = ("G1", "J1", "J2", "S1", "rigid")
+PATH_ENV = "R72_PATH"
+DEFAULT_PATH = "per_leg"
+SET_ENV = "R72_SET"
+DEFAULT_SET = "all"
 _X426_CACHE: dict = {}
 _CAP = {}
+
+
+def soil_path() -> str:
+    """``$R72_PATH``, or ``per_leg`` when it is unset or empty (spec 429.11.1)."""
+    return os.environ.get(PATH_ENV) or DEFAULT_PATH
 
 
 # --------------------------------------------------------------------------------------------- per-pad soil
@@ -224,7 +235,7 @@ def make_plant_per_leg(cl, level, soil, pad_type, fs_kN, beta=1.0e9, soil_kscale
     import dyn_model as dm
     base, keys = parse_soil(soil)
     plant = _ORIG_MAKE_PLANT(cl, level, base, pad_type, fs_kN, beta, soil_kscale, slope, **settle_options)
-    path = os.environ.get("R72_PATH", "per_leg")
+    path = soil_path()
     if base == "rigid" and (any(k != "rigid" for k in keys) or path == "per_leg_force"):
         # mixed kernel; "per_leg_force" builds it for uniform rigid too (identity check against the s9 rigid path)
         pad_xy = dm.geometry_from_params(dm.load_params()).pad_xy
@@ -572,7 +583,7 @@ def set_parent_placement():
 
 
 def main():
-    jobs = all_jobs(os.environ.get("R72_SET", "all"))
+    jobs = all_jobs(os.environ.get(SET_ENV) or DEFAULT_SET)
     filt = os.environ.get("R72_FILTER")
     if filt:
         jobs = [j for j in jobs if any(f in j for f in filt.split(","))]
@@ -589,7 +600,7 @@ def main():
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"meta": {"script": "04_scripts/03_control/s8/r72_g6_screen.py",
                                         "spec": "rev. 72 draft (G6 weak patch under one pad)",
-                                        "path": os.environ.get("R72_PATH", "per_leg"), "filter": filt,
+                                        "path": soil_path(), "filter": filt,
                                         "settle_hook": sl.resolve_settle_hook(),
                                         "workers": workers, "affinity": os.environ.get("R72_AFFINITY"),
                                         "wall_s": round(time.perf_counter() - t0, 1), "n_jobs": len(jobs)},

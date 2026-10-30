@@ -4,6 +4,9 @@ judge (r79_sensor_judge.py); no harness run (the harness modules are imported la
 from __future__ import annotations
 
 import importlib.util
+import json
+import os
+import subprocess
 import sys
 import types
 from dataclasses import replace
@@ -514,3 +517,83 @@ def test_identity_rows_compare_command_hashes():
     assert rows[0]["identical"] and rows[0]["pass_same"]
     rows = judge.identity_rows([run], {"g8|k": ("fff", True)})
     assert not rows[0]["identical"]
+
+
+def test_write_merged_runs_replaces_the_rerun_keys_in_order(tmp_path):
+    def run(key: str, sha: str) -> dict:
+        return {"key": key, "base": {"commands_sha256": sha}}
+
+    stored = tmp_path / "stored.json"
+    stored.write_text(json.dumps({"meta": {"set": "all", "n_jobs": 3},
+                                  "results": [run("a", "1"), run("b", "2"), run("c", "3")]}),
+                      encoding="utf-8")
+    rerun = tmp_path / "rerun.json"
+    rerun.write_text(json.dumps({"meta": {}, "results": [run("b", "9")]}), encoding="utf-8")
+    out = tmp_path / "merged.json"
+    merge = judge.write_merged_runs(out, str(rerun), [str(stored)])
+    merged = json.loads(out.read_text(encoding="utf-8"))
+    assert [r["base"]["commands_sha256"] for r in merged["results"]] == ["1", "9", "3"]
+    assert merge["replaced"] == 1 and merge["hash_differs"] == ["b"]
+    assert merged["meta"]["set"] == "all" and merged["meta"]["merge"]["rerun_files"] == [str(rerun)]
+
+
+# --------------------------------------------------------------------------------------- G6 patch
+WEAK_PATCH_JOB = "cand=current#L1|s0|g6|13|g6|G1+J1@RR|top|Fs4"
+WEAK_PAD_INDEX = 3  # RR
+WEAK_PAD_MIN_SINK_MM = 20.0
+"""J1 under RR sinks about 30 mm; the uniform G1 floor (patch missing) about 8 mm."""
+
+
+@pytest.mark.parametrize("value, expected", [(None, "per_leg"), ("", "per_leg"),
+                                             ("per_leg_force", "per_leg_force"), ("s9", "s9")])
+def test_normalise_r72_path_treats_empty_as_unset(monkeypatch, value, expected):
+    if value is None:
+        monkeypatch.delenv("R72_PATH", raising=False)
+    else:
+        monkeypatch.setenv("R72_PATH", value)
+    assert screen.normalise_r72_path() == expected
+    assert screen.os.environ["R72_PATH"] == expected
+
+
+def test_weak_patch_check_needs_per_pad_soil_on_weak_g6_cases_only():
+    uniform_soil = types.SimpleNamespace(soil=types.SimpleNamespace(coef=np.ones(4)))
+    per_pad_soil = types.SimpleNamespace(soil=types.SimpleNamespace(n_arr=np.ones(4)))
+    weak = screen.CaseSpec("g6", "g6|G1+J1@RR|top|Fs4", 13)
+    assert screen.is_weak_patch_missing(weak, uniform_soil)
+    assert not screen.is_weak_patch_missing(weak, per_pad_soil)
+    assert not screen.is_weak_patch_missing(screen.CaseSpec("g6", "ref|G1|top|Fs4", 48),
+                                            uniform_soil)
+    assert not screen.is_weak_patch_missing(screen.CaseSpec("g8", "main|flat|top|4.0|FL|raised|200",
+                                                            0), uniform_soil)
+    assert screen.soil_model_name(types.SimpleNamespace(soil=None)) is None
+
+
+_WEAK_PATCH_RUN = """
+import json, sys
+sys.argv = [sys.argv[0], sys.argv[1]]
+sys.path.insert(0, sys.argv[1] + "/04_scripts/03_control/s8")
+import r79_sensor_screen as screen
+out = screen.run_job({job!r})
+print(json.dumps({{"error": out.get("error"), "r72_path": out.get("r72_path"),
+                  "soil_model": out.get("soil_model"),
+                  "sink_mm": (out.get("base") or {{}}).get("sink_final_mm")}}))
+"""
+
+
+def test_r79_g6_job_applies_the_weak_patch_with_an_empty_r72_path():
+    """Spec 429.11.1: the r79 G1+J1@RR run builds the per-pad soil and the weak pad sinks even
+    when the runner left ``R72_PATH`` empty (subprocess: the harness patches module globals;
+    about 30-60 s in dynamics-dev)."""
+    pytest.importorskip("numba", reason="r72_g6_screen imports numba (dynamics-dev)")
+    root = Path(__file__).resolve().parents[2]
+    env = {**os.environ, "R72_PATH": "", "R79_CANDIDATE": "current",
+           "MKL_THREADING_LAYER": "TBB", "OMP_NUM_THREADS": "1", "PYTHONDONTWRITEBYTECODE": "1"}
+    code = _WEAK_PATCH_RUN.format(job=WEAK_PATCH_JOB)
+    done = subprocess.run([sys.executable, "-I", "-c", code, str(root)], cwd=root, env=env,
+                          capture_output=True, text=True, timeout=900, check=False)
+    assert done.returncode == 0, done.stderr[-2000:]
+    result = json.loads(done.stdout.strip().splitlines()[-1])
+    assert result["error"] is None
+    assert result["r72_path"] == "per_leg"
+    assert result["soil_model"] == "SoilPadsPerLeg"
+    assert result["sink_mm"][WEAK_PAD_INDEX] > WEAK_PAD_MIN_SINK_MM

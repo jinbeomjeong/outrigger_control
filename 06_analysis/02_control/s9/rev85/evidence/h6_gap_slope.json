@@ -1,0 +1,335 @@
+{
+ "definition": "soft J1/J2/S1 slope rows (id has a slope direction, not 'flat'), final harness, verdict pass; gap = rut_ready_mm; boundary if gap - 25 mm < margin",
+ "n_slope_rows": 238,
+ "n_slope_pass": 111,
+ "verdicts": {
+  "stroke_limited_stop": 99,
+  "fail": 28,
+  "pass": 111
+ },
+ "gap_min_pass_mm": 30.936851200584787,
+ "boundary_m13": {
+  "n": 6,
+  "rows": [
+   {
+    "file": "finB2_h9.json",
+    "id": "H9|J1|B|top|roll_pos@k0.6",
+    "candidate": "current",
+    "verdict": "pass",
+    "gap_mm": 30.936851200584787,
+    "stroke_mm": 613.98603480183,
+    "t_ready_s": 59.10000000010017
+   },
+   {
+    "file": "finB2_h9.json",
+    "id": "H9|J1|B|top|roll_pos@k0.7",
+    "candidate": "current",
+    "verdict": "pass",
+    "gap_mm": 31.28346558654809,
+    "stroke_mm": 649.7119937005784,
+    "t_ready_s": 79.4000000001971
+   },
+   {
+    "file": "finB2_harness_rejudged.json",
+    "id": "H3|J1|B|top|roll_pos@k0.75",
+    "candidate": "current",
+    "verdict": "pass",
+    "gap_mm": 33.212444514333804,
+    "stroke_mm": 669.0430626807488,
+    "t_ready_s": 80.00000000019996
+   },
+   {
+    "file": "finB2_h9.json",
+    "id": "H9|J1|B|top|roll_pos@k0.75",
+    "candidate": "current",
+    "verdict": "pass",
+    "gap_mm": 33.212444514333804,
+    "stroke_mm": 669.0430626807488,
+    "t_ready_s": 80.00000000019996
+   },
+   {
+    "file": "finB2_x426b_rejudged.json",
+    "id": "H3|J1|B|top|roll_pos@k0.75|Fs0",
+    "candidate": "current",
+    "verdict": "pass",
+    "gap_mm": 33.30620362577114,
+    "stroke_mm": 668.5441081429068,
+    "t_ready_s": 79.800000000199
+   },
+   {
+    "file": "finB2_x426b_rejudged.json",
+    "id": "H3|J1|B|top|roll_pos@k0.75|Fs8",
+    "candidate": "current",
+    "verdict": "pass",
+    "gap_mm": 37.784326959020596,
+    "stroke_mm": 669.5988795792651,
+    "t_ready_s": 61.500000000111626
+   }
+  ]
+ },
+ "boundary_m15": {
+  "n": 9,
+  "rows": [
+   {
+    "file": "finB2_h9.json",
+    "id": "H9|J1|B|top|roll_pos@k0.6",
+    "candidate": "current",
+    "verdict": "pass",
+    "gap_mm": 30.936851200584787,
+    "stroke_mm": 613.98603480183,
+    "t_ready_s": 59.10000000010017
+   },
+   {
+    "file": "finB2_h9.json",
+    "id": "H9|J1|B|top|roll_pos@k0.7",
+    "candidate": "current",
+    "verdict": "pass",
+    "gap_mm": 31.28346558654809,
+    "stroke_mm": 649.7119937005784,
+    "t_ready_s": 79.4000000001971
+   },
+   {
+    "file": "finB2_harness_rejudged.json",
+    "id": "H3|J1|B|top|roll_pos@k0.75",
+    "candidate": "current",
+    "verdict": "pass",
+    "gap_mm": 33.212444514333804,
+    "stroke_mm": 669.0430626807488,
+    "t_ready_s": 80.00000000019996
+   },
+   {
+    "file": "finB2_h9.json",
+    "id": "H9|J1|B|top|roll_pos@k0.75",
+    "candidate": "current",
+    "verdict": "pass",
+    "gap_mm": 33.212444514333804,
+    "stroke_mm": 669.0430626807488,
+    "t_ready_s": 80.00000000019996
+   },
+   {
+    "file": "finB2_x426b_rejudged.json",
+    "id": "H3|J1|B|top|roll_pos@k0.75|Fs0",
+    "candidate": "current",
+    "verdict": "pass",
+    "gap_mm": 33.30620362577114,
+    "stroke_mm": 668.5441081429068,
+    "t_ready_s": 79.800000000199
+   },
+   {
+    "file": "finB2_x426b_rejudged.json",
+    "id": "H3|J1|B|top|roll_pos@k0.75|Fs8",
+    "candidate": "current",
+    "verdict": "pass",
+    "gap_mm": 37.784326959020596,
+    "stroke_mm": 669.5988795792651,
+    "t_ready_s": 61.500000000111626
+   },
+   {
+    "file": "finB2_x426b_rejudged.json",
+    "id": "H3|J1|B|middle|roll_pos@k0.75",
+    "candidate": "current",
+    "verdict": "pass",
+    "gap_mm": 38.77510113744044,
+    "stroke_mm": 636.3424233284667,
+    "t_ready_s": 59.00000000009969
+   },
+   {
+    "file": "finB2_harness_rejudged.json",
+    "id": "H2|J1|B|bottom|rpB",
+    "candidate": "current",
+    "verdict": "pass",
+    "gap_mm": 38.98695531479243,
+    "stroke_mm": 677.6443539658701,
+    "t_ready_s": 73.6000000001694
+   },
+   {
+    "file": "finB2_h9.json",
+    "id": "H9|J2|B|top|roll_pos@k0.7",
+    "candidate": "current",
+    "verdict": "pass",
+    "gap_mm": 39.04554652737766,
+    "stroke_mm": 681.2100931303277,
+    "t_ready_s": 61.500000000111626
+   }
+  ]
+ },
+ "new_between_13_15": [
+  {
+   "file": "finB2_x426b_rejudged.json",
+   "id": "H3|J1|B|middle|roll_pos@k0.75",
+   "candidate": "current",
+   "verdict": "pass",
+   "gap_mm": 38.77510113744044,
+   "stroke_mm": 636.3424233284667,
+   "t_ready_s": 59.00000000009969
+  },
+  {
+   "file": "finB2_harness_rejudged.json",
+   "id": "H2|J1|B|bottom|rpB",
+   "candidate": "current",
+   "verdict": "pass",
+   "gap_mm": 38.98695531479243,
+   "stroke_mm": 677.6443539658701,
+   "t_ready_s": 73.6000000001694
+  },
+  {
+   "file": "finB2_h9.json",
+   "id": "H9|J2|B|top|roll_pos@k0.7",
+   "candidate": "current",
+   "verdict": "pass",
+   "gap_mm": 39.04554652737766,
+   "stroke_mm": 681.2100931303277,
+   "t_ready_s": 61.500000000111626
+  }
+ ],
+ "boundary_m15_also_stroke_boundary": [
+  "H3|J1|B|top|roll_pos@k0.75",
+  "H9|J1|B|top|roll_pos@k0.75",
+  "H3|J1|B|top|roll_pos@k0.75|Fs0",
+  "H3|J1|B|top|roll_pos@k0.75|Fs8",
+  "H2|J1|B|bottom|rpB",
+  "H9|J2|B|top|roll_pos@k0.7"
+ ],
+ "suite_counts": [
+  [
+   "finB2_h9.json",
+   "h9",
+   true,
+   "J1",
+   24
+  ],
+  [
+   "finB2_h9.json",
+   "h9",
+   true,
+   "J2",
+   12
+  ],
+  [
+   "finB2_harness_rejudged.json",
+   "h6",
+   false,
+   "G1",
+   2
+  ],
+  [
+   "finB2_harness_rejudged.json",
+   "h6",
+   false,
+   "J1",
+   24
+  ],
+  [
+   "finB2_harness_rejudged.json",
+   "h6",
+   false,
+   "J2",
+   4
+  ],
+  [
+   "finB2_harness_rejudged.json",
+   "h6",
+   false,
+   "rigid",
+   2
+  ],
+  [
+   "finB2_harness_rejudged.json",
+   "slope",
+   false,
+   "G1",
+   3
+  ],
+  [
+   "finB2_harness_rejudged.json",
+   "slope",
+   false,
+   "J1",
+   3
+  ],
+  [
+   "finB2_harness_rejudged.json",
+   "slope",
+   false,
+   "J2",
+   3
+  ],
+  [
+   "finB2_harness_rejudged.json",
+   "slope",
+   false,
+   "S1",
+   3
+  ],
+  [
+   "finB2_harness_rejudged.json",
+   "slope",
+   false,
+   "rigid",
+   1
+  ],
+  [
+   "finB2_harness_rejudged.json",
+   "slope",
+   true,
+   "G1",
+   25
+  ],
+  [
+   "finB2_harness_rejudged.json",
+   "slope",
+   true,
+   "J1",
+   44
+  ],
+  [
+   "finB2_harness_rejudged.json",
+   "slope",
+   true,
+   "J2",
+   43
+  ],
+  [
+   "finB2_harness_rejudged.json",
+   "slope",
+   true,
+   "S1",
+   43
+  ],
+  [
+   "finB2_harness_rejudged.json",
+   "slope",
+   true,
+   "rigid",
+   9
+  ],
+  [
+   "finB2_x426b_rejudged.json",
+   "x426b",
+   true,
+   "G1",
+   12
+  ],
+  [
+   "finB2_x426b_rejudged.json",
+   "x426b",
+   true,
+   "J1",
+   24
+  ],
+  [
+   "finB2_x426b_rejudged.json",
+   "x426b",
+   true,
+   "J2",
+   24
+  ],
+  [
+   "finB2_x426b_rejudged.json",
+   "x426b",
+   true,
+   "S1",
+   24
+  ]
+ ]
+}

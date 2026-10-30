@@ -40,6 +40,11 @@ Usage (any env with numpy + scipy):
     spec 407.2 (5): the runs of the re-run files (comma list, no key twice) replace the same
     keys of the stored runs (their command hashes must be the stored ones: reported in
     ``merge``), then judge as above.
+  python -I r79_sensor_judge.py merge <out_run_json> <rerun_json>[,<rerun_json>...]
+                                      <run_json> [<run_json> ...]
+    spec 429.11.1: write the merged runs (same replacement as ``judge-merged``) as a run file
+    ``{"meta", "results"}`` (meta = the first stored file's meta plus ``merge``), so the run
+    readers (``judge``, ``r79_final_compare.py``) see one file.
   python -I r79_sensor_judge.py candidates <out_json> <run_json> [<run_json> ...]
     spec 424.6 A-4 / 424.9 decision 5 (``R79_CANDIDATE`` runs): every candidate run against the
     ``current`` run of the same key, level, seed and rod model: F_min violations (G6-3, true
@@ -702,8 +707,37 @@ def candidates_lines(report: dict) -> list[str]:
     return lines
 
 
+def _load_reruns(rerun_list: str) -> tuple[list[str], list[dict]]:
+    """Re-run files of a comma list and their runs.
+
+    Raises:
+        SystemExit: A key is in more than one re-run file.
+    """
+    rerun_files = [path for path in rerun_list.split(",") if path]
+    reruns = _load_results(rerun_files)
+    keys = [r["key"] for r in reruns]
+    duplicated = sorted({key for key in keys if keys.count(key) > 1})
+    if duplicated:
+        raise SystemExit(f"re-run key in more than one re-run file: {duplicated[:5]}")
+    return rerun_files, reruns
+
+
+def write_merged_runs(out_path: Path, rerun_list: str, stored_files: list[str]) -> dict:
+    """Spec 429.11.1: the stored runs with the re-runs in place, written as one run file."""
+    rerun_files, reruns = _load_reruns(rerun_list)
+    results, merge = merge_reruns(_load_results(stored_files), reruns)
+    stored_meta = json.loads(Path(stored_files[0]).read_text(encoding="utf-8")).get("meta", {})
+    merge_record = {key: value for key, value in merge.items() if key != "replaced_keys"}
+    meta = {**stored_meta, "n_jobs": len(results),
+            "merge": {**merge_record, "rerun_files": rerun_files, "stored_files": stored_files}}
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps({"meta": meta, "results": results}, indent=1, default=float),
+                        encoding="utf-8")
+    return merge
+
+
 def main() -> None:
-    commands = ("identity", "judge", "judge-merged", "candidates")
+    commands = ("identity", "judge", "judge-merged", "merge", "candidates")
     if len(sys.argv) < 3 or sys.argv[1] not in commands:
         raise SystemExit(__doc__)
     if sys.argv[1] == "candidates":
@@ -726,15 +760,18 @@ def main() -> None:
         print(sum(r["identical"] for r in rows), "/", len(rows), "identical")
         return
     out_path = Path(sys.argv[2])
+    if sys.argv[1] == "merge":
+        if len(sys.argv) < 5:
+            raise SystemExit(__doc__)
+        merge = write_merged_runs(out_path, sys.argv[3], sys.argv[4:])
+        print("merge: replaced", merge["replaced"], "of", merge["rerun_runs"],
+              "re-runs, hash differs", len(merge["hash_differs"]), "without stored run",
+              len(merge["rerun_without_stored"]), "->", out_path)
+        return
     if sys.argv[1] == "judge-merged":
         if len(sys.argv) < 5:
             raise SystemExit(__doc__)
-        rerun_files = [path for path in sys.argv[3].split(",") if path]
-        reruns = _load_results(rerun_files)
-        keys = [r["key"] for r in reruns]
-        duplicated = sorted({key for key in keys if keys.count(key) > 1})
-        if duplicated:
-            raise SystemExit(f"re-run key in more than one re-run file: {duplicated[:5]}")
+        rerun_files, reruns = _load_reruns(sys.argv[3])
         results, merge = merge_reruns(_load_results(sys.argv[4:]), reruns)
         report = {"merge": {**merge, "rerun_files": rerun_files, "stored_files": sys.argv[4:]},
                   **judge_results(results)}

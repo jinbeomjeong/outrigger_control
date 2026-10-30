@@ -1,0 +1,66 @@
+{
+ "definition": "spec 412: max over legs and moving samples (|u_applied| > 1e-6 m/s) of F_cyl / A_p, 10 Hz Record; judge limit 180 bar; ratio to 210 bar = F / extension force limit",
+ "script": "04_scripts/03_control/s9/evidence/final_rep_pmax.py (uses 04_scripts/03_control/s8/paper_max_pressure_table.record_moving_peak)",
+ "cases": {
+  "P3b_J1_B_top_Fs4": {
+   "folder": "C:/workspace/outrigger_control/07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J1_B_top_Fs4",
+   "max_moving_pressure_bar": 91.38541074479198,
+   "peak_leg": "FL",
+   "t_s": 42.30000000028068,
+   "measured_head_max_bar": 100.925,
+   "max_any_state_bar": 91.38541074479198,
+   "ratio_to_relief_210": 0.43516862259424754,
+   "ratio_to_judge_180": 0.5076967263599554,
+   "peak_force_kN": 121.28149511701679,
+   "ratio_to_leg_extension_force_limit": 0.43516862259424754
+  },
+  "P3b_J2_B_top_Fs4": {
+   "folder": "C:/workspace/outrigger_control/07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J2_B_top_Fs4",
+   "max_moving_pressure_bar": 91.43095621236901,
+   "peak_leg": "FL",
+   "t_s": 46.50000000042011,
+   "measured_head_max_bar": 100.8,
+   "max_any_state_bar": 91.43095621236901,
+   "ratio_to_relief_210": 0.43538550577318574,
+   "ratio_to_judge_180": 0.5079497567353835,
+   "peak_force_kN": 121.34194045898685,
+   "ratio_to_leg_extension_force_limit": 0.43538550577318574
+  },
+  "P3b_J2_B_middle_Fs4": {
+   "folder": "C:/workspace/outrigger_control/07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J2_B_middle_Fs4",
+   "max_moving_pressure_bar": 90.62319985066597,
+   "peak_leg": "FL",
+   "t_s": 46.40000000041679,
+   "measured_head_max_bar": 100.6,
+   "max_any_state_bar": 90.62450932948298,
+   "ratio_to_relief_210": 0.4315390469079332,
+   "ratio_to_judge_180": 0.5034622213925887,
+   "peak_force_kN": 120.26993237324098,
+   "ratio_to_leg_extension_force_limit": 0.4315390469079332
+  },
+  "P3b_J1_B_top_Fs4_m1p1": {
+   "folder": "C:/workspace/outrigger_control/07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J1_B_top_Fs4_m1p1",
+   "max_moving_pressure_bar": 101.6462191274129,
+   "peak_leg": "FL",
+   "t_s": 54.40000000068236,
+   "measured_head_max_bar": 111.8,
+   "max_any_state_bar": 101.6462191274129,
+   "ratio_to_relief_210": 0.4840296148924424,
+   "ratio_to_judge_180": 0.5647012173745162,
+   "peak_force_kN": 134.8990536705237,
+   "ratio_to_leg_extension_force_limit": 0.4840296148924424
+  },
+  "P3b_J2_B_top_Fs4_m1p1": {
+   "folder": "C:/workspace/outrigger_control/07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J2_B_top_Fs4_m1p1",
+   "max_moving_pressure_bar": 102.00961829401042,
+   "peak_leg": "FL",
+   "t_s": 57.60000000078859,
+   "measured_head_max_bar": 112.75,
+   "max_any_state_bar": 102.00961829401042,
+   "ratio_to_relief_210": 0.4857600871143353,
+   "ratio_to_judge_180": 0.5667201016333913,
+   "peak_force_kN": 135.38133627876525,
+   "ratio_to_leg_extension_force_limit": 0.4857600871143353
+  }
+ }
+}

@@ -17,6 +17,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -51,13 +52,15 @@ R2DS_C2_HASHES = {
 
 
 # ------------------------------------------------------------------------------ C2 hashes
-def _run_b5(case_id: str, out_path: Path) -> dict:
-    environment = dict(os.environ, MKL_THREADING_LAYER="TBB", PYTHONDONTWRITEBYTECODE="1")
+def _run_b5(case_id: str, out_path: Path, *, extra_args: tuple[str, ...] = (),
+            env_overrides: dict[str, str] | None = None) -> dict:
+    environment = dict(os.environ, MKL_THREADING_LAYER="TBB", PYTHONDONTWRITEBYTECODE="1",
+                       **(env_overrides or {}))
     completed = subprocess.run(
         # R2DS hashes predate the spec 429.11 preset switch: run with SGS and R4 off.
         [str(HARNESS_PYTHON), "-I", str(PRE_SWITCH_RUNNER), str(SCRIPT), "run",
          "--cases", case_id, "--controllers", "C2",
-         "--workers", "1", "--out", str(out_path)],
+         "--workers", "1", *extra_args, "--out", str(out_path)],
         cwd=ROOT, env=environment, capture_output=True, text=True, encoding="utf-8",
         errors="replace", timeout=SCRIPT_TIMEOUT_S, check=False)
     assert completed.returncode == 0, completed.stderr[-3000:]
@@ -76,6 +79,81 @@ def test_c2_command_hash_matches_r2ds(case_id: str, tmp_path: Path) -> None:
     record = _run_b5(case_id, tmp_path / "b5.json")
     assert "error" not in record, record.get("tb")
     assert record["commands_sha256"] == R2DS_C2_HASHES[case_id]
+
+
+# ------------------------------------------------------- g6 weak patch (spec 429.11.1)
+G6_WEAK_PAD_WIDE_ID = "G|g6|G1+J1@RR|top|Fs4"
+"""The wide-set id of ``A3-G1+J1@RR`` (same r72 key, same R2DS hash)."""
+
+
+@pytest.mark.slow
+@pytest.mark.parametrize(("case_id", "extra_args"), [
+    ("A3-G1+J1@RR", ()),
+    (G6_WEAK_PAD_WIDE_ID, ("--official",)),
+])
+def test_empty_r72_path_keeps_the_weak_patch(case_id: str, extra_args: tuple[str, ...],
+                                             tmp_path: Path) -> None:
+    """A runner that leaves ``R72_PATH`` empty must still run the per-pad soil (the B5 wide
+    batch lost the patch of every G1-based weak-pad case that way)."""
+    if not HARNESS_PYTHON.exists():
+        pytest.skip(f"dynamics-dev missing ({HARNESS_PYTHON})")
+    record = _run_b5(case_id, tmp_path / "b5.json", extra_args=extra_args,
+                     env_overrides={"R72_PATH": ""})
+    assert "error" not in record, record.get("tb")
+    assert record["soil_model"] == "SoilPadsPerLeg"
+    assert record["r72_path"] == "per_leg"
+    assert record["commands_sha256"] == R2DS_C2_HASHES["A3-G1+J1@RR"]
+
+
+@pytest.mark.slow
+def test_weak_pad_case_on_the_uniform_soil_is_an_error(tmp_path: Path) -> None:
+    """``R72_PATH=s9`` builds the uniform base soil: the run is recorded as an error, not judged."""
+    if not HARNESS_PYTHON.exists():
+        pytest.skip(f"dynamics-dev missing ({HARNESS_PYTHON})")
+    record = _run_b5(G6_WEAK_PAD_WIDE_ID, tmp_path / "b5.json", extra_args=("--official",),
+                     env_overrides={"R72_PATH": "s9"})
+    assert "WeakPatchMissingError" in record["error"]
+    assert record["soil_model"] == "SoilPads"
+    assert record["r72_path"] == "s9"
+    assert "official_verdict" not in record
+
+
+@pytest.mark.parametrize(("value", "expected"), [(None, "per_leg"), ("", "per_leg"),
+                                                 ("s9", "s9")])
+def test_r72_soil_path_treats_an_empty_value_as_unset(value: str | None, expected: str,
+                                                      monkeypatch) -> None:
+    pytest.importorskip("numba", reason="r72_g6_screen imports numba (dynamics-dev)")
+    if value is None:
+        monkeypatch.delenv("R72_PATH", raising=False)
+    else:
+        monkeypatch.setenv("R72_PATH", value)
+    assert b5._import_g6().soil_path() == expected
+
+
+class _Soil:
+    pass
+
+
+class _PerPadSoil:
+    n_arr = np.ones(4)
+
+
+@pytest.mark.parametrize(("src", "soil", "is_missing"), [
+    ("g6|G1+J1@RR|top|Fs4", _Soil(), True),
+    ("g6|G1+J1@RR|top|Fs4", _PerPadSoil(), False),
+    ("g6x|G1+J1@RR|middle|Fs4", None, True),
+    ("g6|G1|top|Fs4", _Soil(), False),
+    ("g6r|rigid+J1@FL|top|Fs0", _PerPadSoil(), False),
+])
+def test_weak_patch_check(src: str, soil, is_missing: bool) -> None:
+    plant = SimpleNamespace(soil=soil)
+    assert b5.is_weak_patch_missing(src, plant) is is_missing
+
+
+def test_soil_model_name() -> None:
+    assert b5.soil_model_name(SimpleNamespace(soil=_PerPadSoil())) == "_PerPadSoil"
+    assert b5.soil_model_name(SimpleNamespace(soil=None)) is None
+    assert b5.soil_model_name(None) is None
 
 
 # ---------------------------------------------------------------- ABL final-controller switches

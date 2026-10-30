@@ -1,0 +1,7281 @@
+{
+ "validity": {
+  "records": 879,
+  "meta_jobs": 879,
+  "cases": 293,
+  "slope_cases": 177,
+  "g6_cases": 116,
+  "per_controller": {
+   "C2": 293,
+   "ABL": 293,
+   "IND": 293
+  },
+  "duplicate_pairs": 0,
+  "missing_pairs": [],
+  "error_records": 0,
+  "text_WeakPatchMissing": 0,
+  "g6_rows": 348,
+  "g1_weak_rows": 144,
+  "g1_weak_soil_model": {
+   "SoilPadsPerLeg": 144
+  },
+  "g1_weak_r72_path": {
+   "per_leg": 144
+  },
+  "g6_soil_model_all": {
+   "SoilPadsPerLeg": 192,
+   "MixedRigidPads": 144,
+   "None": 12
+  },
+  "g6_soil_model_none_srcs": [
+   "ref|rigid|bottom|Fs0",
+   "ref|rigid|bottom|Fs4",
+   "ref|rigid|top|Fs0",
+   "ref|rigid|top|Fs4"
+  ],
+  "meta_r72_path_env": null,
+  "meta_controller_settings": {
+   "C2": {
+    "soil_stop": true,
+    "soil_stop_scope": "any_loc",
+    "flat_soil_margin_m": 0.03
+   },
+   "ABL": {
+    "soil_stop": false,
+    "soil_stop_scope": "soil_sign",
+    "flat_soil_margin_m": 0.0
+   },
+   "IND": {
+    "soil_stop": null,
+    "soil_stop_scope": null,
+    "flat_soil_margin_m": null
+   }
+  },
+  "meta_settings_ok": {
+   "C2": true,
+   "ABL": true,
+   "IND": true
+  },
+  "record_settings_ok": true,
+  "settle_table_sha256": "bf810338784e7fc2ff3c6b7accca2f9e13e1214dbc54d009f18819600fe2529a",
+  "wall_s": 1994.5,
+  "workers": 28
+ },
+ "hash": {
+  "c2_new_vs_finB2_wrapper": {
+   "same": 293
+  },
+  "c2_new_vs_finB2_diff": [],
+  "old_vs_new": {
+   "C2": {
+    "same": 131,
+    "diff": 162
+   },
+   "ABL": {
+    "same": 293
+   },
+   "IND": {
+    "same": 293
+   }
+  },
+  "old_official_vs_old_lite_same_pairs": 879,
+  "c2_hash_changed_n": 162,
+  "c2_hash_change_cause": {
+   "R4c30 (flat-soil LOC clearance target +30 mm)": 83,
+   "SGS stop (stroke_limited_stop)": 72,
+   "stroke guard FAULT judged fail (F_min / attitude lost before the stop)": 7
+  }
+ },
+ "patch_check": {
+  "new_C2": {
+   "G1+J1": {
+    "n": 16,
+    "ready_med_s": 61.6,
+    "stroke_med_mm": 461.59
+   },
+   "G1+J2": {
+    "n": 16,
+    "ready_med_s": 85.9,
+    "stroke_med_mm": 496.66
+   },
+   "G1+S1": {
+    "n": 16,
+    "ready_med_s": 82.15,
+    "stroke_med_mm": 559.65
+   },
+   "rigid+J1": {
+    "n": 16,
+    "ready_med_s": 66.45,
+    "stroke_med_mm": 440.73
+   },
+   "rigid+J2": {
+    "n": 16,
+    "ready_med_s": 88.2,
+    "stroke_med_mm": 476.06
+   },
+   "rigid+S1": {
+    "n": 16,
+    "ready_med_s": 80.75,
+    "stroke_med_mm": 551.62
+   }
+  },
+  "new_ABL": {
+   "G1+J1": {
+    "n": 16,
+    "ready_med_s": 157.15,
+    "stroke_med_mm": 455.68
+   },
+   "G1+J2": {
+    "n": 16,
+    "ready_med_s": 187.65,
+    "stroke_med_mm": 492.31
+   },
+   "G1+S1": {
+    "n": 16,
+    "ready_med_s": 156.35,
+    "stroke_med_mm": 538.22
+   },
+   "rigid+J1": {
+    "n": 16,
+    "ready_med_s": 154.6,
+    "stroke_med_mm": 464.99
+   },
+   "rigid+J2": {
+    "n": 16,
+    "ready_med_s": 183.15,
+    "stroke_med_mm": 501.71
+   },
+   "rigid+S1": {
+    "n": 16,
+    "ready_med_s": 148.1,
+    "stroke_med_mm": 548.42
+   }
+  },
+  "new_IND": {
+   "G1+J1": {
+    "n": 16,
+    "ready_med_s": 26.35,
+    "stroke_med_mm": 432.25
+   },
+   "G1+J2": {
+    "n": 16,
+    "ready_med_s": 27.3,
+    "stroke_med_mm": 436.13
+   },
+   "G1+S1": {
+    "n": 16,
+    "ready_med_s": 26.7,
+    "stroke_med_mm": 570.9
+   },
+   "rigid+J1": {
+    "n": 16,
+    "ready_med_s": 28.35,
+    "stroke_med_mm": 418.52
+   },
+   "rigid+J2": {
+    "n": 16,
+    "ready_med_s": 28.25,
+    "stroke_med_mm": 421.1
+   },
+   "rigid+S1": {
+    "n": 16,
+    "ready_med_s": 36.8,
+    "stroke_med_mm": 469.36
+   }
+  },
+  "old_C2": {
+   "G1+J1": {
+    "n": 16,
+    "ready_med_s": 61.5,
+    "stroke_med_mm": 431.59
+   },
+   "G1+J2": {
+    "n": 16,
+    "ready_med_s": 85.8,
+    "stroke_med_mm": 466.66
+   },
+   "G1+S1": {
+    "n": 16,
+    "ready_med_s": 81.9,
+    "stroke_med_mm": 529.64
+   },
+   "rigid+J1": {
+    "n": 16,
+    "ready_med_s": 66.45,
+    "stroke_med_mm": 440.73
+   },
+   "rigid+J2": {
+    "n": 16,
+    "ready_med_s": 88.2,
+    "stroke_med_mm": 476.06
+   },
+   "rigid+S1": {
+    "n": 16,
+    "ready_med_s": 80.45,
+    "stroke_med_mm": 536.62
+   }
+  },
+  "old_IND": {
+   "G1+J1": {
+    "n": 16,
+    "ready_med_s": 26.35,
+    "stroke_med_mm": 432.25
+   },
+   "G1+J2": {
+    "n": 16,
+    "ready_med_s": 27.3,
+    "stroke_med_mm": 436.13
+   },
+   "G1+S1": {
+    "n": 16,
+    "ready_med_s": 26.7,
+    "stroke_med_mm": 570.9
+   },
+   "rigid+J1": {
+    "n": 16,
+    "ready_med_s": 28.35,
+    "stroke_med_mm": 418.52
+   },
+   "rigid+J2": {
+    "n": 16,
+    "ready_med_s": 28.25,
+    "stroke_med_mm": 421.1
+   },
+   "rigid+S1": {
+    "n": 16,
+    "ready_med_s": 36.8,
+    "stroke_med_mm": 469.36
+   }
+  },
+  "R2DS_g6": {
+   "G1+J1": {
+    "n": 16,
+    "ready_med_s": 61.5,
+    "stroke_med_mm": 431.59
+   },
+   "G1+J2": {
+    "n": 16,
+    "ready_med_s": 85.8,
+    "stroke_med_mm": 466.66
+   },
+   "G1+S1": {
+    "n": 16,
+    "ready_med_s": 81.9,
+    "stroke_med_mm": 529.65
+   },
+   "rigid+J1": {
+    "n": 16,
+    "ready_med_s": 66.45,
+    "stroke_med_mm": 440.73
+   },
+   "rigid+J2": {
+    "n": 16,
+    "ready_med_s": 88.2,
+    "stroke_med_mm": 476.06
+   },
+   "rigid+S1": {
+    "n": 16,
+    "ready_med_s": 80.45,
+    "stroke_med_mm": 536.62
+   }
+  }
+ },
+ "summary": {
+  "wide_293": {
+   "C2": {
+    "runs": 293,
+    "lite_pass": 206,
+    "safe_stop": 72,
+    "fail_other": 15,
+    "gate_failures": {
+     "crawler": 86,
+     "ready_no_fault": 81,
+     "att": 58,
+     "rut": 82,
+     "Fmin": 9,
+     "stroke": 5
+    },
+    "gate_failures_excl_stop": {
+     "crawler": 14,
+     "rut": 10,
+     "ready_no_fault": 9,
+     "Fmin": 9,
+     "att": 7,
+     "stroke": 2
+    },
+    "crawler_liftoff_fail": 0,
+    "crawler_recontact_runs": 6,
+    "false_loc_runs": 21,
+    "fault": 81,
+    "ready_median_lite_pass_s": 63.95,
+    "official_verdict": {
+     "pass": 210,
+     "stroke_limited_stop": 72,
+     "fail": 11
+    }
+   },
+   "ABL": {
+    "runs": 293,
+    "lite_pass": 130,
+    "safe_stop": null,
+    "fail_other": 163,
+    "gate_failures": {
+     "ready_no_fault": 64,
+     "crawler": 124,
+     "rut": 149,
+     "Fmin": 71,
+     "stroke": 40,
+     "att": 12
+    },
+    "gate_failures_excl_stop": {
+     "ready_no_fault": 64,
+     "crawler": 124,
+     "rut": 149,
+     "Fmin": 71,
+     "stroke": 40,
+     "att": 12
+    },
+    "crawler_liftoff_fail": 60,
+    "crawler_recontact_runs": 14,
+    "false_loc_runs": 0,
+    "fault": 22,
+    "ready_median_lite_pass_s": 73.2,
+    "official_verdict": {
+     "fail": 293
+    }
+   },
+   "IND": {
+    "runs": 293,
+    "lite_pass": 183,
+    "safe_stop": null,
+    "fail_other": 110,
+    "gate_failures": {
+     "Fmin": 38,
+     "ready_no_fault": 47,
+     "crawler": 75,
+     "att": 36,
+     "rut": 69,
+     "stroke": 73
+    },
+    "gate_failures_excl_stop": {
+     "Fmin": 38,
+     "ready_no_fault": 47,
+     "crawler": 75,
+     "att": 36,
+     "rut": 69,
+     "stroke": 73
+    },
+    "crawler_liftoff_fail": 13,
+    "crawler_recontact_runs": 22,
+    "false_loc_runs": 0,
+    "fault": 0,
+    "ready_median_lite_pass_s": 36.7,
+    "official_verdict": {
+     "pass": 181,
+     "fail": 112
+    }
+   }
+  },
+  "slope_177": {
+   "C2": {
+    "runs": 177,
+    "lite_pass": 94,
+    "safe_stop": 72,
+    "fail_other": 11,
+    "gate_failures": {
+     "ready_no_fault": 81,
+     "crawler": 82,
+     "att": 58,
+     "rut": 82,
+     "Fmin": 9,
+     "stroke": 5
+    },
+    "gate_failures_excl_stop": {
+     "rut": 10,
+     "ready_no_fault": 9,
+     "crawler": 10,
+     "Fmin": 9,
+     "att": 7,
+     "stroke": 2
+    },
+    "crawler_liftoff_fail": 0,
+    "crawler_recontact_runs": 2,
+    "false_loc_runs": 21,
+    "fault": 81,
+    "ready_median_lite_pass_s": 56.7,
+    "official_verdict": {
+     "pass": 94,
+     "stroke_limited_stop": 72,
+     "fail": 11
+    }
+   },
+   "ABL": {
+    "runs": 177,
+    "lite_pass": 66,
+    "safe_stop": null,
+    "fail_other": 111,
+    "gate_failures": {
+     "stroke": 40,
+     "ready_no_fault": 28,
+     "crawler": 80,
+     "rut": 105,
+     "Fmin": 51,
+     "att": 12
+    },
+    "gate_failures_excl_stop": {
+     "stroke": 40,
+     "ready_no_fault": 28,
+     "crawler": 80,
+     "rut": 105,
+     "Fmin": 51,
+     "att": 12
+    },
+    "crawler_liftoff_fail": 52,
+    "crawler_recontact_runs": 14,
+    "false_loc_runs": 0,
+    "fault": 22,
+    "ready_median_lite_pass_s": 53.75,
+    "official_verdict": {
+     "fail": 177
+    }
+   },
+   "IND": {
+    "runs": 177,
+    "lite_pass": 97,
+    "safe_stop": null,
+    "fail_other": 80,
+    "gate_failures": {
+     "stroke": 65,
+     "ready_no_fault": 39,
+     "crawler": 55,
+     "rut": 49,
+     "att": 28,
+     "Fmin": 12
+    },
+    "gate_failures_excl_stop": {
+     "stroke": 65,
+     "ready_no_fault": 39,
+     "crawler": 55,
+     "rut": 49,
+     "att": 28,
+     "Fmin": 12
+    },
+    "crawler_liftoff_fail": 5,
+    "crawler_recontact_runs": 18,
+    "false_loc_runs": 0,
+    "fault": 0,
+    "ready_median_lite_pass_s": 40.9,
+    "official_verdict": {
+     "pass": 95,
+     "fail": 82
+    }
+   }
+  },
+  "g6_116": {
+   "C2": {
+    "runs": 116,
+    "lite_pass": 112,
+    "safe_stop": 0,
+    "fail_other": 4,
+    "gate_failures": {
+     "crawler": 4
+    },
+    "gate_failures_excl_stop": {
+     "crawler": 4
+    },
+    "crawler_liftoff_fail": 0,
+    "crawler_recontact_runs": 4,
+    "false_loc_runs": 0,
+    "fault": 0,
+    "ready_median_lite_pass_s": 72.15,
+    "official_verdict": {
+     "pass": 116
+    }
+   },
+   "ABL": {
+    "runs": 116,
+    "lite_pass": 64,
+    "safe_stop": null,
+    "fail_other": 52,
+    "gate_failures": {
+     "ready_no_fault": 36,
+     "crawler": 44,
+     "rut": 44,
+     "Fmin": 20
+    },
+    "gate_failures_excl_stop": {
+     "ready_no_fault": 36,
+     "crawler": 44,
+     "rut": 44,
+     "Fmin": 20
+    },
+    "crawler_liftoff_fail": 8,
+    "crawler_recontact_runs": 0,
+    "false_loc_runs": 0,
+    "fault": 0,
+    "ready_median_lite_pass_s": 171.05,
+    "official_verdict": {
+     "fail": 116
+    }
+   },
+   "IND": {
+    "runs": 116,
+    "lite_pass": 86,
+    "safe_stop": null,
+    "fail_other": 30,
+    "gate_failures": {
+     "Fmin": 26,
+     "ready_no_fault": 8,
+     "crawler": 20,
+     "att": 8,
+     "rut": 20,
+     "stroke": 8
+    },
+    "gate_failures_excl_stop": {
+     "Fmin": 26,
+     "ready_no_fault": 8,
+     "crawler": 20,
+     "att": 8,
+     "rut": 20,
+     "stroke": 8
+    },
+    "crawler_liftoff_fail": 8,
+    "crawler_recontact_runs": 4,
+    "false_loc_runs": 0,
+    "fault": 0,
+    "ready_median_lite_pass_s": 28.1,
+    "official_verdict": {
+     "pass": 86,
+     "fail": 30
+    }
+   }
+  },
+  "old_official_293": {
+   "C2": {
+    "runs": 293,
+    "lite_pass": 231,
+    "safe_stop": 0,
+    "fail_other": 62,
+    "gate_failures": {
+     "crawler": 43,
+     "rut": 46,
+     "ready_no_fault": 36,
+     "att": 26,
+     "stroke": 16,
+     "Fmin": 8
+    },
+    "gate_failures_excl_stop": {
+     "crawler": 43,
+     "rut": 46,
+     "ready_no_fault": 36,
+     "att": 26,
+     "stroke": 16,
+     "Fmin": 8
+    },
+    "crawler_liftoff_fail": 2,
+    "crawler_recontact_runs": 10,
+    "false_loc_runs": 21,
+    "fault": 36,
+    "ready_median_lite_pass_s": 63.9,
+    "official_verdict": {
+     "pass": 210,
+     "stroke_limited_pass": 43,
+     "fail": 38,
+     "stroke_limited_fail": 2
+    }
+   },
+   "ABL": {
+    "runs": 293,
+    "lite_pass": 130,
+    "safe_stop": null,
+    "fail_other": 163,
+    "gate_failures": {
+     "ready_no_fault": 64,
+     "crawler": 124,
+     "rut": 149,
+     "Fmin": 71,
+     "stroke": 40,
+     "att": 12
+    },
+    "gate_failures_excl_stop": {
+     "ready_no_fault": 64,
+     "crawler": 124,
+     "rut": 149,
+     "Fmin": 71,
+     "stroke": 40,
+     "att": 12
+    },
+    "crawler_liftoff_fail": 60,
+    "crawler_recontact_runs": 14,
+    "false_loc_runs": 0,
+    "fault": 22,
+    "ready_median_lite_pass_s": 73.2,
+    "official_verdict": {
+     "fail": 293
+    }
+   },
+   "IND": {
+    "runs": 293,
+    "lite_pass": 183,
+    "safe_stop": null,
+    "fail_other": 110,
+    "gate_failures": {
+     "Fmin": 38,
+     "ready_no_fault": 47,
+     "crawler": 75,
+     "att": 36,
+     "rut": 69,
+     "stroke": 73
+    },
+    "gate_failures_excl_stop": {
+     "Fmin": 38,
+     "ready_no_fault": 47,
+     "crawler": 75,
+     "att": 36,
+     "rut": 69,
+     "stroke": 73
+    },
+    "crawler_liftoff_fail": 13,
+    "crawler_recontact_runs": 22,
+    "false_loc_runs": 0,
+    "fault": 0,
+    "ready_median_lite_pass_s": 36.7,
+    "official_verdict": {
+     "pass": 181,
+     "fail": 112
+    }
+   }
+  },
+  "old_lite_293": {
+   "C2": {
+    "runs": 293,
+    "lite_pass": 231,
+    "safe_stop": 0,
+    "fail_other": 62,
+    "gate_failures": {
+     "crawler": 43,
+     "rut": 46,
+     "ready_no_fault": 36,
+     "att": 26,
+     "stroke": 16,
+     "Fmin": 8
+    },
+    "gate_failures_excl_stop": {
+     "crawler": 43,
+     "rut": 46,
+     "ready_no_fault": 36,
+     "att": 26,
+     "stroke": 16,
+     "Fmin": 8
+    },
+    "crawler_liftoff_fail": 2,
+    "crawler_recontact_runs": 10,
+    "false_loc_runs": 21,
+    "fault": 36,
+    "ready_median_lite_pass_s": 63.9,
+    "official_verdict": {
+     "null": 293
+    }
+   },
+   "ABL": {
+    "runs": 293,
+    "lite_pass": 130,
+    "safe_stop": null,
+    "fail_other": 163,
+    "gate_failures": {
+     "ready_no_fault": 64,
+     "crawler": 124,
+     "rut": 149,
+     "Fmin": 71,
+     "stroke": 40,
+     "att": 12
+    },
+    "gate_failures_excl_stop": {
+     "ready_no_fault": 64,
+     "crawler": 124,
+     "rut": 149,
+     "Fmin": 71,
+     "stroke": 40,
+     "att": 12
+    },
+    "crawler_liftoff_fail": 60,
+    "crawler_recontact_runs": 14,
+    "false_loc_runs": 0,
+    "fault": 22,
+    "ready_median_lite_pass_s": 73.2,
+    "official_verdict": {
+     "null": 293
+    }
+   },
+   "IND": {
+    "runs": 293,
+    "lite_pass": 183,
+    "safe_stop": null,
+    "fail_other": 110,
+    "gate_failures": {
+     "Fmin": 38,
+     "ready_no_fault": 47,
+     "crawler": 75,
+     "att": 36,
+     "rut": 69,
+     "stroke": 73
+    },
+    "gate_failures_excl_stop": {
+     "Fmin": 38,
+     "ready_no_fault": 47,
+     "crawler": 75,
+     "att": 36,
+     "rut": 69,
+     "stroke": 73
+    },
+    "crawler_liftoff_fail": 13,
+    "crawler_recontact_runs": 22,
+    "false_loc_runs": 0,
+    "fault": 0,
+    "ready_median_lite_pass_s": 36.7,
+    "official_verdict": {
+     "null": 293
+    }
+   }
+  }
+ },
+ "c2_transitions_old_lite_to_new": {
+  "pass->pass": 206,
+  "fail->fail": 15,
+  "pass->stop": 25,
+  "fail->stop": 47
+ },
+ "c2_transition_cases": {
+  "pass->pass": [
+   {
+    "case": "G|g6r|rigid+J2@FL|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 64.00000000012356,
+     "crawler_fail": false,
+     "rut_mm": 81.33,
+     "stroke_mm": 502.56
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 64.40000000012547,
+     "crawler_fail": false,
+     "rut_mm": 111.32,
+     "stroke_mm": 532.53,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6r|rigid+J2@FR|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 60.400000000106374,
+     "crawler_fail": false,
+     "rut_mm": 81.42,
+     "stroke_mm": 500.84
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 60.800000000108284,
+     "crawler_fail": false,
+     "rut_mm": 111.45,
+     "stroke_mm": 530.85,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6r|rigid+S1@FL|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 66.00000000013311,
+     "crawler_fail": false,
+     "rut_mm": 72.16,
+     "stroke_mm": 543.37
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 66.5000000001355,
+     "crawler_fail": false,
+     "rut_mm": 102.19,
+     "stroke_mm": 573.41,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6r|rigid+S1@FL|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 67.50000000014028,
+     "crawler_fail": false,
+     "rut_mm": 72.48,
+     "stroke_mm": 543.61
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 68.10000000014314,
+     "crawler_fail": false,
+     "rut_mm": 102.5,
+     "stroke_mm": 573.64,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6r|rigid+S1@FR|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 66.70000000013646,
+     "crawler_fail": false,
+     "rut_mm": 73.21,
+     "stroke_mm": 541.82
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 67.10000000013837,
+     "crawler_fail": false,
+     "rut_mm": 103.22,
+     "stroke_mm": 571.82,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6r|rigid+S1@FR|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 66.5000000001355,
+     "crawler_fail": false,
+     "rut_mm": 73.41,
+     "stroke_mm": 541.88
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 67.20000000013884,
+     "crawler_fail": false,
+     "rut_mm": 103.45,
+     "stroke_mm": 571.97,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J1@FL|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 60.700000000107806,
+     "crawler_fail": false,
+     "rut_mm": 42.8,
+     "stroke_mm": 438.83
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 60.800000000108284,
+     "crawler_fail": false,
+     "rut_mm": 72.79,
+     "stroke_mm": 468.82,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J1@FL|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 60.700000000107806,
+     "crawler_fail": false,
+     "rut_mm": 42.91,
+     "stroke_mm": 438.96
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 60.800000000108284,
+     "crawler_fail": false,
+     "rut_mm": 72.91,
+     "stroke_mm": 468.95,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J1@FL|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 60.20000000010542,
+     "crawler_fail": false,
+     "rut_mm": 42.64,
+     "stroke_mm": 438.66
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 60.300000000105896,
+     "crawler_fail": false,
+     "rut_mm": 72.63,
+     "stroke_mm": 468.65,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J1@FL|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 58.90000000009921,
+     "crawler_fail": false,
+     "rut_mm": 42.84,
+     "stroke_mm": 438.82
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 59.200000000100644,
+     "crawler_fail": false,
+     "rut_mm": 72.81,
+     "stroke_mm": 468.79,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J1@FR|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 57.00000000009014,
+     "crawler_fail": false,
+     "rut_mm": 42.14,
+     "stroke_mm": 433.82
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 57.10000000009062,
+     "crawler_fail": false,
+     "rut_mm": 72.13,
+     "stroke_mm": 463.8,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J1@FR|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 57.00000000009014,
+     "crawler_fail": false,
+     "rut_mm": 42.29,
+     "stroke_mm": 433.95
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 57.10000000009062,
+     "crawler_fail": false,
+     "rut_mm": 72.29,
+     "stroke_mm": 463.94,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J1@FR|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 56.60000000008823,
+     "crawler_fail": false,
+     "rut_mm": 42.17,
+     "stroke_mm": 433.78
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 56.70000000008871,
+     "crawler_fail": false,
+     "rut_mm": 72.16,
+     "stroke_mm": 463.77,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J1@FR|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 55.600000000083455,
+     "crawler_fail": false,
+     "rut_mm": 42.31,
+     "stroke_mm": 434.1
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 55.70000000008393,
+     "crawler_fail": false,
+     "rut_mm": 72.28,
+     "stroke_mm": 464.0,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J1@RL|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 72.50000000016415,
+     "crawler_fail": false,
+     "rut_mm": 43.15,
+     "stroke_mm": 429.31
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 72.50000000016415,
+     "crawler_fail": false,
+     "rut_mm": 73.14,
+     "stroke_mm": 459.27,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J1@RL|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 73.30000000016797,
+     "crawler_fail": false,
+     "rut_mm": 43.2,
+     "stroke_mm": 429.4
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 73.40000000016845,
+     "crawler_fail": false,
+     "rut_mm": 73.2,
+     "stroke_mm": 459.41,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J1@RL|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 72.90000000016606,
+     "crawler_fail": false,
+     "rut_mm": 42.96,
+     "stroke_mm": 429.19
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 72.90000000016606,
+     "crawler_fail": false,
+     "rut_mm": 72.95,
+     "stroke_mm": 459.15,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J1@RL|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 71.00000000015699,
+     "crawler_fail": false,
+     "rut_mm": 43.26,
+     "stroke_mm": 429.37
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 71.10000000015746,
+     "crawler_fail": false,
+     "rut_mm": 73.25,
+     "stroke_mm": 459.38,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J1@RR|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 64.60000000012643,
+     "crawler_fail": false,
+     "rut_mm": 41.23,
+     "stroke_mm": 420.5
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 64.7000000001269,
+     "crawler_fail": false,
+     "rut_mm": 71.23,
+     "stroke_mm": 450.5,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J1@RR|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 64.7000000001269,
+     "crawler_fail": false,
+     "rut_mm": 41.48,
+     "stroke_mm": 420.7
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 64.7000000001269,
+     "crawler_fail": false,
+     "rut_mm": 71.47,
+     "stroke_mm": 450.66,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J1@RR|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 64.20000000012452,
+     "crawler_fail": false,
+     "rut_mm": 41.15,
+     "stroke_mm": 420.46
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 64.300000000125,
+     "crawler_fail": false,
+     "rut_mm": 71.15,
+     "stroke_mm": 450.47,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J1@RR|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 62.300000000115446,
+     "crawler_fail": false,
+     "rut_mm": 41.51,
+     "stroke_mm": 420.69
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 62.400000000115924,
+     "crawler_fail": false,
+     "rut_mm": 71.5,
+     "stroke_mm": 450.69,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J2@FL|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 80.7000000002033,
+     "crawler_fail": false,
+     "rut_mm": 48.24,
+     "stroke_mm": 473.75
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 80.80000000020378,
+     "crawler_fail": false,
+     "rut_mm": 78.23,
+     "stroke_mm": 503.73,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J2@FL|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 80.60000000020283,
+     "crawler_fail": false,
+     "rut_mm": 48.37,
+     "stroke_mm": 473.86
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 80.7000000002033,
+     "crawler_fail": false,
+     "rut_mm": 78.37,
+     "stroke_mm": 503.85,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J2@FL|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 80.90000000020426,
+     "crawler_fail": false,
+     "rut_mm": 56.97,
+     "stroke_mm": 482.47
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 81.10000000020521,
+     "crawler_fail": false,
+     "rut_mm": 86.97,
+     "stroke_mm": 512.45,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J2@FL|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 79.50000000019757,
+     "crawler_fail": false,
+     "rut_mm": 57.78,
+     "stroke_mm": 483.23
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 80.00000000019996,
+     "crawler_fail": false,
+     "rut_mm": 87.78,
+     "stroke_mm": 513.21,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J2@FR|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 77.00000000018564,
+     "crawler_fail": false,
+     "rut_mm": 47.91,
+     "stroke_mm": 467.93
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 77.10000000018611,
+     "crawler_fail": false,
+     "rut_mm": 77.93,
+     "stroke_mm": 497.94,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J2@FR|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 77.00000000018564,
+     "crawler_fail": false,
+     "rut_mm": 48.08,
+     "stroke_mm": 468.06
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 77.20000000018659,
+     "crawler_fail": false,
+     "rut_mm": 78.1,
+     "stroke_mm": 498.12,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J2@FR|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 77.10000000018611,
+     "crawler_fail": false,
+     "rut_mm": 50.23,
+     "stroke_mm": 470.13
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 77.30000000018707,
+     "crawler_fail": false,
+     "rut_mm": 80.23,
+     "stroke_mm": 500.12,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J2@FR|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 76.00000000018086,
+     "crawler_fail": false,
+     "rut_mm": 47.91,
+     "stroke_mm": 467.84
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 76.20000000018182,
+     "crawler_fail": false,
+     "rut_mm": 77.91,
+     "stroke_mm": 497.88,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J2@RL|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 100.50000000029785,
+     "crawler_fail": false,
+     "rut_mm": 49.37,
+     "stroke_mm": 465.36
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 100.50000000029785,
+     "crawler_fail": false,
+     "rut_mm": 79.36,
+     "stroke_mm": 495.33,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J2@RL|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 101.20000000030119,
+     "crawler_fail": false,
+     "rut_mm": 49.5,
+     "stroke_mm": 465.48
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 101.20000000030119,
+     "crawler_fail": false,
+     "rut_mm": 79.49,
+     "stroke_mm": 495.45,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J2@RL|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 101.80000000030405,
+     "crawler_fail": false,
+     "rut_mm": 49.21,
+     "stroke_mm": 465.17
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 101.80000000030405,
+     "crawler_fail": false,
+     "rut_mm": 79.21,
+     "stroke_mm": 495.13,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J2@RL|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 99.4000000002926,
+     "crawler_fail": false,
+     "rut_mm": 49.41,
+     "stroke_mm": 465.27
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 99.4000000002926,
+     "crawler_fail": false,
+     "rut_mm": 79.41,
+     "stroke_mm": 495.25,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J2@RR|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 91.70000000025583,
+     "crawler_fail": false,
+     "rut_mm": 47.47,
+     "stroke_mm": 454.81
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 91.70000000025583,
+     "crawler_fail": false,
+     "rut_mm": 77.46,
+     "stroke_mm": 484.77,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J2@RR|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 91.70000000025583,
+     "crawler_fail": false,
+     "rut_mm": 47.72,
+     "stroke_mm": 454.96
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 91.70000000025583,
+     "crawler_fail": false,
+     "rut_mm": 77.71,
+     "stroke_mm": 484.92,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J2@RR|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 93.10000000026251,
+     "crawler_fail": false,
+     "rut_mm": 47.42,
+     "stroke_mm": 454.67
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 93.10000000026251,
+     "crawler_fail": false,
+     "rut_mm": 77.41,
+     "stroke_mm": 484.63,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+J2@RR|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 90.70000000025105,
+     "crawler_fail": false,
+     "rut_mm": 47.62,
+     "stroke_mm": 454.78
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 90.70000000025105,
+     "crawler_fail": false,
+     "rut_mm": 77.61,
+     "stroke_mm": 484.75,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+S1@FL|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 71.50000000015937,
+     "crawler_fail": false,
+     "rut_mm": 58.48,
+     "stroke_mm": 533.61
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 71.80000000016081,
+     "crawler_fail": false,
+     "rut_mm": 88.48,
+     "stroke_mm": 563.58,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+S1@FL|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 72.3000000001632,
+     "crawler_fail": false,
+     "rut_mm": 58.53,
+     "stroke_mm": 533.66
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 72.50000000016415,
+     "crawler_fail": false,
+     "rut_mm": 88.53,
+     "stroke_mm": 563.67,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+S1@FL|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 63.00000000011879,
+     "crawler_fail": false,
+     "rut_mm": 70.28,
+     "stroke_mm": 547.2
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 63.60000000012165,
+     "crawler_fail": false,
+     "rut_mm": 100.31,
+     "stroke_mm": 577.25,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+S1@FL|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 63.20000000011974,
+     "crawler_fail": false,
+     "rut_mm": 75.14,
+     "stroke_mm": 551.32
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 63.900000000123086,
+     "crawler_fail": false,
+     "rut_mm": 105.2,
+     "stroke_mm": 581.33,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+S1@FR|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 72.7000000001651,
+     "crawler_fail": false,
+     "rut_mm": 59.34,
+     "stroke_mm": 531.83
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 73.00000000016654,
+     "crawler_fail": false,
+     "rut_mm": 89.34,
+     "stroke_mm": 561.82,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+S1@FR|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 72.3000000001632,
+     "crawler_fail": false,
+     "rut_mm": 63.06,
+     "stroke_mm": 535.49
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 72.80000000016558,
+     "crawler_fail": false,
+     "rut_mm": 93.09,
+     "stroke_mm": 565.54,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+S1@FR|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 63.00000000011879,
+     "crawler_fail": false,
+     "rut_mm": 75.48,
+     "stroke_mm": 549.41
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 63.500000000121176,
+     "crawler_fail": false,
+     "rut_mm": 105.52,
+     "stroke_mm": 579.46,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+S1@FR|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 65.90000000013264,
+     "crawler_fail": false,
+     "rut_mm": 62.97,
+     "stroke_mm": 535.36
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 66.20000000013407,
+     "crawler_fail": false,
+     "rut_mm": 92.98,
+     "stroke_mm": 565.38,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+S1@RL|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 98.9000000002902,
+     "crawler_fail": false,
+     "rut_mm": 58.87,
+     "stroke_mm": 521.63
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 99.00000000029068,
+     "crawler_fail": false,
+     "rut_mm": 88.88,
+     "stroke_mm": 551.64,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+S1@RL|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 98.60000000028877,
+     "crawler_fail": false,
+     "rut_mm": 59.13,
+     "stroke_mm": 521.79
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 98.70000000028925,
+     "crawler_fail": false,
+     "rut_mm": 89.14,
+     "stroke_mm": 551.8,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+S1@RL|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 92.90000000026156,
+     "crawler_fail": false,
+     "rut_mm": 62.76,
+     "stroke_mm": 525.43
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 93.10000000026251,
+     "crawler_fail": false,
+     "rut_mm": 92.76,
+     "stroke_mm": 555.42,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+S1@RL|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 95.4000000002735,
+     "crawler_fail": false,
+     "rut_mm": 64.85,
+     "stroke_mm": 527.46
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 95.20000000027254,
+     "crawler_fail": false,
+     "rut_mm": 94.86,
+     "stroke_mm": 557.48,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+S1@RR|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 97.30000000028257,
+     "crawler_fail": false,
+     "rut_mm": 58.09,
+     "stroke_mm": 516.85
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 97.40000000028304,
+     "crawler_fail": false,
+     "rut_mm": 88.09,
+     "stroke_mm": 546.86,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+S1@RR|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 97.00000000028113,
+     "crawler_fail": false,
+     "rut_mm": 58.27,
+     "stroke_mm": 517.01
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 97.10000000028161,
+     "crawler_fail": false,
+     "rut_mm": 88.27,
+     "stroke_mm": 547.02,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+S1@RR|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 91.10000000025296,
+     "crawler_fail": false,
+     "rut_mm": 63.61,
+     "stroke_mm": 522.38
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 91.30000000025392,
+     "crawler_fail": false,
+     "rut_mm": 93.61,
+     "stroke_mm": 552.37,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6|G1+S1@RR|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 93.6000000002649,
+     "crawler_fail": false,
+     "rut_mm": 67.69,
+     "stroke_mm": 526.4
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 93.6000000002649,
+     "crawler_fail": false,
+     "rut_mm": 97.68,
+     "stroke_mm": 556.36,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|ref|G1|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 38.900000000003715,
+     "crawler_fail": false,
+     "rut_mm": 37.32,
+     "stroke_mm": 406.59
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 40.500000000011354,
+     "crawler_fail": false,
+     "rut_mm": 67.2,
+     "stroke_mm": 436.6,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|ref|G1|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 39.4000000000061,
+     "crawler_fail": false,
+     "rut_mm": 37.76,
+     "stroke_mm": 407.07
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 40.40000000001088,
+     "crawler_fail": false,
+     "rut_mm": 67.36,
+     "stroke_mm": 436.77,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|ref|G1|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 40.20000000000992,
+     "crawler_fail": false,
+     "rut_mm": 37.4,
+     "stroke_mm": 406.85
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 41.50000000001613,
+     "crawler_fail": false,
+     "rut_mm": 67.1,
+     "stroke_mm": 436.68,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|ref|G1|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 40.100000000009445,
+     "crawler_fail": false,
+     "rut_mm": 37.94,
+     "stroke_mm": 407.37
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 40.40000000001088,
+     "crawler_fail": false,
+     "rut_mm": 67.36,
+     "stroke_mm": 436.82,
+     "warnings": [
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE"
+     ],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|ref|J1|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 63.30000000012022,
+     "crawler_fail": false,
+     "rut_mm": 44.98,
+     "stroke_mm": 485.71
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 63.4000000001207,
+     "crawler_fail": false,
+     "rut_mm": 74.69,
+     "stroke_mm": 515.12,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|ref|J1|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 63.100000000119266,
+     "crawler_fail": false,
+     "rut_mm": 45.27,
+     "stroke_mm": 485.98
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 63.00000000011879,
+     "crawler_fail": false,
+     "rut_mm": 74.94,
+     "stroke_mm": 515.5,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|ref|J1|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 62.700000000117356,
+     "crawler_fail": false,
+     "rut_mm": 41.46,
+     "stroke_mm": 488.35
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 63.100000000119266,
+     "crawler_fail": false,
+     "rut_mm": 71.64,
+     "stroke_mm": 517.85,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|ref|J1|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 63.900000000123086,
+     "crawler_fail": false,
+     "rut_mm": 41.62,
+     "stroke_mm": 486.55
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 64.10000000012404,
+     "crawler_fail": false,
+     "rut_mm": 71.66,
+     "stroke_mm": 516.09,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|ref|J2|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 68.10000000014314,
+     "crawler_fail": false,
+     "rut_mm": 43.8,
+     "stroke_mm": 514.17
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 67.90000000014219,
+     "crawler_fail": false,
+     "rut_mm": 73.9,
+     "stroke_mm": 543.79,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|ref|J2|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 67.60000000014075,
+     "crawler_fail": false,
+     "rut_mm": 44.07,
+     "stroke_mm": 514.33
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 67.4000000001398,
+     "crawler_fail": false,
+     "rut_mm": 74.1,
+     "stroke_mm": 543.94,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|ref|J2|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 64.80000000012738,
+     "crawler_fail": false,
+     "rut_mm": 41.71,
+     "stroke_mm": 516.15
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 65.80000000013216,
+     "crawler_fail": false,
+     "rut_mm": 71.85,
+     "stroke_mm": 545.36,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|ref|J2|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 64.90000000012786,
+     "crawler_fail": false,
+     "rut_mm": 42.19,
+     "stroke_mm": 516.28
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 65.70000000013168,
+     "crawler_fail": false,
+     "rut_mm": 72.22,
+     "stroke_mm": 545.49,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|ref|S1|bottom|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 57.30000000009157,
+     "crawler_fail": false,
+     "rut_mm": 42.43,
+     "stroke_mm": 521.22
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 57.50000000009253,
+     "crawler_fail": false,
+     "rut_mm": 72.12,
+     "stroke_mm": 550.83,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|ref|S1|bottom|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 57.40000000009205,
+     "crawler_fail": false,
+     "rut_mm": 42.74,
+     "stroke_mm": 521.14
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 58.60000000009778,
+     "crawler_fail": false,
+     "rut_mm": 72.45,
+     "stroke_mm": 550.63,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|ref|S1|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 57.30000000009157,
+     "crawler_fail": false,
+     "rut_mm": 41.77,
+     "stroke_mm": 520.8
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 57.50000000009253,
+     "crawler_fail": false,
+     "rut_mm": 71.44,
+     "stroke_mm": 550.39,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|ref|S1|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 57.40000000009205,
+     "crawler_fail": false,
+     "rut_mm": 42.1,
+     "stroke_mm": 520.72
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 58.60000000009778,
+     "crawler_fail": false,
+     "rut_mm": 71.76,
+     "stroke_mm": 550.18,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "S|H1|J1|A|top|flat",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 47.10000000004287,
+     "crawler_fail": false,
+     "rut_mm": 35.62,
+     "stroke_mm": 451.51
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 47.4000000000443,
+     "crawler_fail": false,
+     "rut_mm": 65.56,
+     "stroke_mm": 481.42,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "S|H1|J1|B|top|flat",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 63.900000000123086,
+     "crawler_fail": false,
+     "rut_mm": 32.65,
+     "stroke_mm": 473.53
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 65.00000000012834,
+     "crawler_fail": false,
+     "rut_mm": 62.58,
+     "stroke_mm": 503.29,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "S|H1|J2|A|top|flat",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 49.00000000005194,
+     "crawler_fail": false,
+     "rut_mm": 37.77,
+     "stroke_mm": 484.51
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 49.40000000005385,
+     "crawler_fail": false,
+     "rut_mm": 67.66,
+     "stroke_mm": 514.04,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "S|H1|J2|B|top|flat",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 67.20000000013884,
+     "crawler_fail": false,
+     "rut_mm": 32.93,
+     "stroke_mm": 504.01
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 64.80000000012738,
+     "crawler_fail": false,
+     "rut_mm": 66.11,
+     "stroke_mm": 533.22,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "S|H1|S1|A|top|flat",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 52.3000000000677,
+     "crawler_fail": false,
+     "rut_mm": 56.42,
+     "stroke_mm": 535.76
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 52.800000000070085,
+     "crawler_fail": false,
+     "rut_mm": 86.34,
+     "stroke_mm": 565.75,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "S|H1|S1|B|top|flat",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 56.90000000008966,
+     "crawler_fail": false,
+     "rut_mm": 42.42,
+     "stroke_mm": 518.41
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 58.10000000009539,
+     "crawler_fail": false,
+     "rut_mm": 72.07,
+     "stroke_mm": 547.86,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "S|H2|J1|B|bottom|flat",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 66.90000000013741,
+     "crawler_fail": false,
+     "rut_mm": 35.7,
+     "stroke_mm": 472.05
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 67.60000000014075,
+     "crawler_fail": false,
+     "rut_mm": 65.28,
+     "stroke_mm": 501.18,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "S|H2|J2|B|bottom|flat",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 69.40000000014935,
+     "crawler_fail": false,
+     "rut_mm": 35.32,
+     "stroke_mm": 501.07
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 70.00000000015221,
+     "crawler_fail": false,
+     "rut_mm": 64.86,
+     "stroke_mm": 530.57,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "S|H2|S1|B|bottom|flat",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 56.90000000008966,
+     "crawler_fail": false,
+     "rut_mm": 43.17,
+     "stroke_mm": 519.16
+    },
+    "new": {
+     "lite": true,
+     "verdict": "pass",
+     "failed_gates": [],
+     "t_ready_s": 58.30000000009635,
+     "crawler_fail": false,
+     "rut_mm": 72.87,
+     "stroke_mm": 548.6,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   }
+  ],
+  "fail->fail": [
+   {
+    "case": "G|g6r|rigid+S1@FL|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": false,
+     "verdict": "pass",
+     "failed_gates": [
+      "crawler"
+     ],
+     "t_ready_s": 52.3000000000677,
+     "crawler_fail": false,
+     "rut_mm": 75.19,
+     "stroke_mm": 554.36
+    },
+    "new": {
+     "lite": false,
+     "verdict": "pass",
+     "failed_gates": [
+      "crawler"
+     ],
+     "t_ready_s": 53.00000000007104,
+     "crawler_fail": false,
+     "rut_mm": 105.11,
+     "stroke_mm": 584.27,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6r|rigid+S1@FL|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": false,
+     "verdict": "pass",
+     "failed_gates": [
+      "crawler"
+     ],
+     "t_ready_s": 62.000000000114014,
+     "crawler_fail": false,
+     "rut_mm": 90.48,
+     "stroke_mm": 567.87
+    },
+    "new": {
+     "lite": false,
+     "verdict": "pass",
+     "failed_gates": [
+      "crawler"
+     ],
+     "t_ready_s": 62.800000000117834,
+     "crawler_fail": false,
+     "rut_mm": 120.5,
+     "stroke_mm": 597.89,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6r|rigid+S1@FR|top|Fs0",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": false,
+     "verdict": "pass",
+     "failed_gates": [
+      "crawler"
+     ],
+     "t_ready_s": 52.3000000000677,
+     "crawler_fail": false,
+     "rut_mm": 74.99,
+     "stroke_mm": 553.28
+    },
+    "new": {
+     "lite": false,
+     "verdict": "pass",
+     "failed_gates": [
+      "crawler"
+     ],
+     "t_ready_s": 52.90000000007056,
+     "crawler_fail": false,
+     "rut_mm": 104.93,
+     "stroke_mm": 583.17,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "G|g6r|rigid+S1@FR|top|Fs4",
+    "cause": "R4c30 (flat-soil LOC clearance target +30 mm)",
+    "old": {
+     "lite": false,
+     "verdict": "pass",
+     "failed_gates": [
+      "crawler"
+     ],
+     "t_ready_s": 61.80000000011306,
+     "crawler_fail": false,
+     "rut_mm": 92.43,
+     "stroke_mm": 566.88
+    },
+    "new": {
+     "lite": false,
+     "verdict": "pass",
+     "failed_gates": [
+      "crawler"
+     ],
+     "t_ready_s": 62.60000000011688,
+     "crawler_fail": false,
+     "rut_mm": 122.43,
+     "stroke_mm": 596.87,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "S|H1|J1|B|top|edge_nd",
+    "cause": "same commands",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "rut"
+     ],
+     "t_ready_s": 61.100000000109716,
+     "crawler_fail": false,
+     "rut_mm": 18.31,
+     "stroke_mm": 664.73
+    },
+    "new": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "rut"
+     ],
+     "t_ready_s": 61.100000000109716,
+     "crawler_fail": false,
+     "rut_mm": 18.31,
+     "stroke_mm": 664.73,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "S|H1|J2|B|top|edge_nu",
+    "cause": "stroke guard FAULT judged fail (F_min / attitude lost before the stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_fail",
+     "failed_gates": [
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": 63.60000000012165,
+     "crawler_fail": true,
+     "rut_mm": -2.37,
+     "stroke_mm": 683.15
+    },
+    "new": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "Fmin",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 682.22,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J2|B|top|roll_neg",
+    "cause": "stroke guard FAULT judged fail (F_min / attitude lost before the stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "Fmin",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.04
+    },
+    "new": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "Fmin",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.89,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J2|B|top|roll_pos",
+    "cause": "stroke guard FAULT judged fail (F_min / attitude lost before the stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "Fmin",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.04
+    },
+    "new": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "Fmin",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.89,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|S1|B|top|roll_neg",
+    "cause": "stroke guard FAULT judged fail (F_min / attitude lost before the stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "Fmin",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.1
+    },
+    "new": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "Fmin",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.05,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED",
+      "WARN_WEIGHT_MISMATCH"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|S1|B|top|roll_pos",
+    "cause": "stroke guard FAULT judged fail (F_min / attitude lost before the stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "Fmin",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.74
+    },
+    "new": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "Fmin",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.69,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED",
+      "WARN_WEIGHT_MISMATCH"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|J2|B|bottom|roll_neg",
+    "cause": "stroke guard FAULT judged fail (F_min / attitude lost before the stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "Fmin",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.47
+    },
+    "new": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "Fmin",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.42,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|S1|B|bottom|roll_neg",
+    "cause": "same commands",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "Fmin",
+      "att",
+      "rut",
+      "stroke"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 696.26
+    },
+    "new": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "Fmin",
+      "att",
+      "rut",
+      "stroke"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 696.26,
+     "warnings": [
+      "FAULT_STROKE_END"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|S1|B|bottom|roll_pos",
+    "cause": "same commands",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "Fmin",
+      "att",
+      "rut",
+      "stroke"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 696.03
+    },
+    "new": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "Fmin",
+      "att",
+      "rut",
+      "stroke"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 696.03,
+     "warnings": [
+      "FAULT_STROKE_END"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|J2|B|top|roll_pos@k0.5",
+    "cause": "same commands",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "crawler"
+     ],
+     "t_ready_s": 58.5000000000973,
+     "crawler_fail": false,
+     "rut_mm": 44.21,
+     "stroke_mm": 628.19
+    },
+    "new": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "crawler"
+     ],
+     "t_ready_s": 58.5000000000973,
+     "crawler_fail": false,
+     "rut_mm": 44.21,
+     "stroke_mm": 628.19,
+     "warnings": [],
+     "final_phase": "ready"
+    }
+   },
+   {
+    "case": "S|H3|J2|B|top|roll_pos@k0.875",
+    "cause": "stroke guard FAULT judged fail (F_min / attitude lost before the stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_fail",
+     "failed_gates": [
+      "crawler",
+      "Fmin",
+      "rut"
+     ],
+     "t_ready_s": 64.10000000012404,
+     "crawler_fail": true,
+     "rut_mm": -2.37,
+     "stroke_mm": 683.0
+    },
+    "new": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "Fmin",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 681.97,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   }
+  ],
+  "pass->stop": [
+   {
+    "case": "S|H1|J1|A|top|nose_down",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 59.600000000102554,
+     "crawler_fail": false,
+     "rut_mm": 78.54,
+     "stroke_mm": 683.47
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.42,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J1|A|top|rpB",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 57.90000000009444,
+     "crawler_fail": false,
+     "rut_mm": 53.19,
+     "stroke_mm": 683.93
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.89,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J1|B|top|nose_down",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 78.30000000019184,
+     "crawler_fail": false,
+     "rut_mm": 71.54,
+     "stroke_mm": 684.17
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 682.47,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J2|A|top|edge_nd",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 76.90000000018516,
+     "crawler_fail": false,
+     "rut_mm": 49.05,
+     "stroke_mm": 684.71
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 681.66,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J2|A|top|roll_neg",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 96.50000000027875,
+     "crawler_fail": false,
+     "rut_mm": 32.06,
+     "stroke_mm": 682.35
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.3,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J2|A|top|roll_pos",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 100.40000000029737,
+     "crawler_fail": false,
+     "rut_mm": 35.16,
+     "stroke_mm": 682.75
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.69,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|S1|B|top|nose_up",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 60.20000000010542,
+     "crawler_fail": false,
+     "rut_mm": 25.19,
+     "stroke_mm": 682.1
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.05,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|J1|B|bottom|edge_nd",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 59.50000000010208,
+     "crawler_fail": false,
+     "rut_mm": 72.31,
+     "stroke_mm": 682.85
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 682.64,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|J1|B|bottom|nose_up",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 57.70000000009348,
+     "crawler_fail": false,
+     "rut_mm": 40.76,
+     "stroke_mm": 684.14
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 681.1,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|J2|B|bottom|edge_nd",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 61.30000000011067,
+     "crawler_fail": false,
+     "rut_mm": 41.65,
+     "stroke_mm": 684.4
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.25,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|J2|B|bottom|edge_nu",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 63.900000000123086,
+     "crawler_fail": false,
+     "rut_mm": 37.37,
+     "stroke_mm": 682.94
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.9,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|S1|B|bottom|edge_nu",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 66.30000000013455,
+     "crawler_fail": false,
+     "rut_mm": 38.79,
+     "stroke_mm": 683.04
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.0,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|S1|B|bottom|nose_up",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 59.80000000010351,
+     "crawler_fail": false,
+     "rut_mm": 27.4,
+     "stroke_mm": 682.3
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.24,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|J2|A|top|nose_down@k0.875",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 59.10000000010017,
+     "crawler_fail": false,
+     "rut_mm": 69.67,
+     "stroke_mm": 683.82
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.77,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|J2|B|top|edge_nd@k0.875",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 61.80000000011306,
+     "crawler_fail": false,
+     "rut_mm": 40.1,
+     "stroke_mm": 682.84
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 681.54,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|J2|B|top|roll_pos@k0.75",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 62.400000000115924,
+     "crawler_fail": false,
+     "rut_mm": 36.51,
+     "stroke_mm": 682.91
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.24,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|S1|A|top|edge_nd@k0.75",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 62.90000000011831,
+     "crawler_fail": false,
+     "rut_mm": 52.02,
+     "stroke_mm": 683.44
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.39,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|S1|A|top|nose_down@k0.75",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 63.900000000123086,
+     "crawler_fail": false,
+     "rut_mm": 62.41,
+     "stroke_mm": 683.34
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.29,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|S1|A|top|roll_pos@k0.75",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 64.7000000001269,
+     "crawler_fail": false,
+     "rut_mm": 60.56,
+     "stroke_mm": 684.32
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.22,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|S1|B|top|edge_nd@k0.75",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 63.900000000123086,
+     "crawler_fail": false,
+     "rut_mm": 47.49,
+     "stroke_mm": 682.67
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.62,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|S1|B|top|nose_down@k0.75",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 67.50000000014028,
+     "crawler_fail": false,
+     "rut_mm": 65.3,
+     "stroke_mm": 684.75
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 681.71,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|S1|B|top|nose_down@k0.875",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 91.00000000025248,
+     "crawler_fail": false,
+     "rut_mm": 38.81,
+     "stroke_mm": 682.22
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.14,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|S1|B|top|roll_pos@k0.75",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 81.20000000020569,
+     "crawler_fail": false,
+     "rut_mm": 44.56,
+     "stroke_mm": 682.93
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.88,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H4|J1|B|top|nose_down",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 106.5000000003265,
+     "crawler_fail": false,
+     "rut_mm": 54.88,
+     "stroke_mm": 684.17
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 682.47,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H4|J2|B|top|nose_down",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": true,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [],
+     "t_ready_s": 93.30000000026347,
+     "crawler_fail": false,
+     "rut_mm": 50.32,
+     "stroke_mm": 684.11
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 681.07,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   }
+  ],
+  "fail->stop": [
+   {
+    "case": "S|H1|J1|B|top|edge_nu",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "rut"
+     ],
+     "t_ready_s": 79.20000000019614,
+     "crawler_fail": false,
+     "rut_mm": 19.46,
+     "stroke_mm": 682.87
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 682.69,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J1|B|top|nose_up",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "rut"
+     ],
+     "t_ready_s": 57.80000000009396,
+     "crawler_fail": false,
+     "rut_mm": 21.62,
+     "stroke_mm": 682.92
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.87,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J1|B|top|roll_neg",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.04
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.89,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J1|B|top|roll_pos",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.04
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.89,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J1|B|top|rpB",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.04
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.98,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J2|A|top|nose_down",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.04
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.98,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J2|A|top|rpB",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.52
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.47,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J2|B|top|edge_nd",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "rut"
+     ],
+     "t_ready_s": 63.100000000119266,
+     "crawler_fail": false,
+     "rut_mm": 16.3,
+     "stroke_mm": 682.04
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.95,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J2|B|top|nose_down",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "stroke"
+     ],
+     "t_ready_s": 71.90000000016128,
+     "crawler_fail": false,
+     "rut_mm": 49.1,
+     "stroke_mm": 685.49
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 681.07,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J2|B|top|nose_up",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.21
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.12,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|J2|B|top|rpB",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.04
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.98,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|S1|A|top|edge_nd",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.04
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.98,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|S1|A|top|nose_down",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.02
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.96,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|S1|A|top|roll_neg",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.08
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.03,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED",
+      "WARN_WEIGHT_MISMATCH"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|S1|A|top|roll_pos",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut",
+      "stroke"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 696.25
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut",
+      "stroke"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 696.25,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|S1|A|top|rpB",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.04
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.98,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|S1|B|top|edge_nd",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.99
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.93,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|S1|B|top|edge_nu",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut",
+      "stroke"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 688.21
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut",
+      "stroke"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 687.17,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|S1|B|top|nose_down",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.79
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.64,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H1|S1|B|top|rpB",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.04
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.98,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|J1|B|bottom|roll_neg",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "stroke"
+     ],
+     "t_ready_s": 63.100000000119266,
+     "crawler_fail": false,
+     "rut_mm": 45.03,
+     "stroke_mm": 686.43
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 681.39,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|J2|B|bottom|nose_down",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "stroke"
+     ],
+     "t_ready_s": 66.20000000013407,
+     "crawler_fail": false,
+     "rut_mm": 58.15,
+     "stroke_mm": 684.87
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 681.83,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|J2|B|bottom|nose_up",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "rut"
+     ],
+     "t_ready_s": 71.00000000015699,
+     "crawler_fail": false,
+     "rut_mm": 13.07,
+     "stroke_mm": 681.89
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.81,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|J2|B|bottom|roll_pos",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 684.42
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 683.4,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|J2|B|bottom|rpB",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.96
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.88,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|S1|B|bottom|edge_nd",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.8
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.71,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|S1|B|bottom|nose_down",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.28
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.19,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H2|S1|B|bottom|rpB",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.77
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.71,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|J1|A|top|nose_down@k0.875",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "stroke"
+     ],
+     "t_ready_s": 56.70000000008871,
+     "crawler_fail": false,
+     "rut_mm": 106.37,
+     "stroke_mm": 684.98
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 682.14,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|J1|B|top|roll_pos@k0.875",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "rut"
+     ],
+     "t_ready_s": 80.3000000002014,
+     "crawler_fail": false,
+     "rut_mm": 4.55,
+     "stroke_mm": 683.06
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 682.07,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|J2|A|top|edge_nd@k0.875",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "stroke"
+     ],
+     "t_ready_s": 80.20000000020092,
+     "crawler_fail": false,
+     "rut_mm": 75.77,
+     "stroke_mm": 684.92
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 681.87,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|J2|A|top|nose_down@k0.75",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "stroke"
+     ],
+     "t_ready_s": 55.50000000008298,
+     "crawler_fail": false,
+     "rut_mm": 97.61,
+     "stroke_mm": 684.84
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 682.6,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|J2|A|top|roll_pos@k0.875",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "stroke"
+     ],
+     "t_ready_s": 72.40000000016367,
+     "crawler_fail": false,
+     "rut_mm": 62.8,
+     "stroke_mm": 684.94
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 681.89,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|S1|A|top|edge_nd@k0.875",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.04
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.98,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|S1|A|top|nose_down@k0.875",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.23
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.15,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|S1|A|top|roll_pos@k0.875",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.71
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.66,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|S1|B|top|edge_nd@k0.875",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "rut"
+     ],
+     "t_ready_s": 82.90000000021381,
+     "crawler_fail": false,
+     "rut_mm": 22.59,
+     "stroke_mm": 682.28
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.19,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H3|S1|B|top|roll_pos@k0.875",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "stroke"
+     ],
+     "t_ready_s": 79.20000000019614,
+     "crawler_fail": false,
+     "rut_mm": 33.75,
+     "stroke_mm": 695.93
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut",
+      "stroke"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 695.93,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H4|J1|A|top|nose_down",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut",
+      "stroke"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 687.96
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.42,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H4|J1|A|top|nose_down_2p8",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "stroke"
+     ],
+     "t_ready_s": 104.30000000031599,
+     "crawler_fail": false,
+     "rut_mm": 77.99,
+     "stroke_mm": 689.48
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 682.14,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H4|J1|B|top|nose_up",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "rut"
+     ],
+     "t_ready_s": 57.80000000009396,
+     "crawler_fail": false,
+     "rut_mm": 21.62,
+     "stroke_mm": 682.92
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.87,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H4|J2|A|top|nose_down",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.04
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.98,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H4|J2|A|top|nose_down_2p8",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "stroke"
+     ],
+     "t_ready_s": 109.20000000033939,
+     "crawler_fail": false,
+     "rut_mm": 45.03,
+     "stroke_mm": 687.49
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.77,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H4|S1|A|top|nose_down",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.02
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.96,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H4|S1|A|top|nose_down_2p8",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 680.23
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.15,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H4|S1|B|top|nose_down",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "fail",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.79
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 678.64,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   },
+   {
+    "case": "S|H4|S1|B|top|nose_down_2p8",
+    "cause": "SGS stop (stroke_limited_stop)",
+    "old": {
+     "lite": false,
+     "verdict": "stroke_limited_pass",
+     "failed_gates": [
+      "stroke"
+     ],
+     "t_ready_s": 134.80000000026834,
+     "crawler_fail": false,
+     "rut_mm": 34.13,
+     "stroke_mm": 685.55
+    },
+    "new": {
+     "lite": false,
+     "verdict": "stroke_limited_stop",
+     "failed_gates": [
+      "ready_no_fault",
+      "crawler",
+      "att",
+      "rut"
+     ],
+     "t_ready_s": null,
+     "crawler_fail": false,
+     "rut_mm": null,
+     "stroke_mm": 679.14,
+     "warnings": [
+      "FAULT_LIFT_STROKE_LIMIT",
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "final_phase": "fault"
+    }
+   }
+  ]
+ },
+ "r4_like_hash_changes": [
+  {
+   "case": "G|g6r|rigid+J2@FL|top|Fs0",
+   "old_rut": 81.33,
+   "new_rut": 111.32,
+   "old_ready": 64.00000000012356,
+   "new_ready": 64.40000000012547,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6r|rigid+J2@FR|top|Fs0",
+   "old_rut": 81.42,
+   "new_rut": 111.45,
+   "old_ready": 60.400000000106374,
+   "new_ready": 60.800000000108284,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6r|rigid+S1@FL|bottom|Fs0",
+   "old_rut": 72.16,
+   "new_rut": 102.19,
+   "old_ready": 66.00000000013311,
+   "new_ready": 66.5000000001355,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6r|rigid+S1@FL|bottom|Fs4",
+   "old_rut": 72.48,
+   "new_rut": 102.5,
+   "old_ready": 67.50000000014028,
+   "new_ready": 68.10000000014314,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6r|rigid+S1@FL|top|Fs0",
+   "old_rut": 75.19,
+   "new_rut": 105.11,
+   "old_ready": 52.3000000000677,
+   "new_ready": 53.00000000007104,
+   "old_lite": false,
+   "new_lite": false
+  },
+  {
+   "case": "G|g6r|rigid+S1@FL|top|Fs4",
+   "old_rut": 90.48,
+   "new_rut": 120.5,
+   "old_ready": 62.000000000114014,
+   "new_ready": 62.800000000117834,
+   "old_lite": false,
+   "new_lite": false
+  },
+  {
+   "case": "G|g6r|rigid+S1@FR|bottom|Fs0",
+   "old_rut": 73.21,
+   "new_rut": 103.22,
+   "old_ready": 66.70000000013646,
+   "new_ready": 67.10000000013837,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6r|rigid+S1@FR|bottom|Fs4",
+   "old_rut": 73.41,
+   "new_rut": 103.45,
+   "old_ready": 66.5000000001355,
+   "new_ready": 67.20000000013884,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6r|rigid+S1@FR|top|Fs0",
+   "old_rut": 74.99,
+   "new_rut": 104.93,
+   "old_ready": 52.3000000000677,
+   "new_ready": 52.90000000007056,
+   "old_lite": false,
+   "new_lite": false
+  },
+  {
+   "case": "G|g6r|rigid+S1@FR|top|Fs4",
+   "old_rut": 92.43,
+   "new_rut": 122.43,
+   "old_ready": 61.80000000011306,
+   "new_ready": 62.60000000011688,
+   "old_lite": false,
+   "new_lite": false
+  },
+  {
+   "case": "G|g6|G1+J1@FL|bottom|Fs0",
+   "old_rut": 42.8,
+   "new_rut": 72.79,
+   "old_ready": 60.700000000107806,
+   "new_ready": 60.800000000108284,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J1@FL|bottom|Fs4",
+   "old_rut": 42.91,
+   "new_rut": 72.91,
+   "old_ready": 60.700000000107806,
+   "new_ready": 60.800000000108284,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J1@FL|top|Fs0",
+   "old_rut": 42.64,
+   "new_rut": 72.63,
+   "old_ready": 60.20000000010542,
+   "new_ready": 60.300000000105896,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J1@FL|top|Fs4",
+   "old_rut": 42.84,
+   "new_rut": 72.81,
+   "old_ready": 58.90000000009921,
+   "new_ready": 59.200000000100644,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J1@FR|bottom|Fs0",
+   "old_rut": 42.14,
+   "new_rut": 72.13,
+   "old_ready": 57.00000000009014,
+   "new_ready": 57.10000000009062,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J1@FR|bottom|Fs4",
+   "old_rut": 42.29,
+   "new_rut": 72.29,
+   "old_ready": 57.00000000009014,
+   "new_ready": 57.10000000009062,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J1@FR|top|Fs0",
+   "old_rut": 42.17,
+   "new_rut": 72.16,
+   "old_ready": 56.60000000008823,
+   "new_ready": 56.70000000008871,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J1@FR|top|Fs4",
+   "old_rut": 42.31,
+   "new_rut": 72.28,
+   "old_ready": 55.600000000083455,
+   "new_ready": 55.70000000008393,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J1@RL|bottom|Fs0",
+   "old_rut": 43.15,
+   "new_rut": 73.14,
+   "old_ready": 72.50000000016415,
+   "new_ready": 72.50000000016415,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J1@RL|bottom|Fs4",
+   "old_rut": 43.2,
+   "new_rut": 73.2,
+   "old_ready": 73.30000000016797,
+   "new_ready": 73.40000000016845,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J1@RL|top|Fs0",
+   "old_rut": 42.96,
+   "new_rut": 72.95,
+   "old_ready": 72.90000000016606,
+   "new_ready": 72.90000000016606,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J1@RL|top|Fs4",
+   "old_rut": 43.26,
+   "new_rut": 73.25,
+   "old_ready": 71.00000000015699,
+   "new_ready": 71.10000000015746,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J1@RR|bottom|Fs0",
+   "old_rut": 41.23,
+   "new_rut": 71.23,
+   "old_ready": 64.60000000012643,
+   "new_ready": 64.7000000001269,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J1@RR|bottom|Fs4",
+   "old_rut": 41.48,
+   "new_rut": 71.47,
+   "old_ready": 64.7000000001269,
+   "new_ready": 64.7000000001269,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J1@RR|top|Fs0",
+   "old_rut": 41.15,
+   "new_rut": 71.15,
+   "old_ready": 64.20000000012452,
+   "new_ready": 64.300000000125,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J1@RR|top|Fs4",
+   "old_rut": 41.51,
+   "new_rut": 71.5,
+   "old_ready": 62.300000000115446,
+   "new_ready": 62.400000000115924,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J2@FL|bottom|Fs0",
+   "old_rut": 48.24,
+   "new_rut": 78.23,
+   "old_ready": 80.7000000002033,
+   "new_ready": 80.80000000020378,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J2@FL|bottom|Fs4",
+   "old_rut": 48.37,
+   "new_rut": 78.37,
+   "old_ready": 80.60000000020283,
+   "new_ready": 80.7000000002033,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J2@FL|top|Fs0",
+   "old_rut": 56.97,
+   "new_rut": 86.97,
+   "old_ready": 80.90000000020426,
+   "new_ready": 81.10000000020521,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J2@FL|top|Fs4",
+   "old_rut": 57.78,
+   "new_rut": 87.78,
+   "old_ready": 79.50000000019757,
+   "new_ready": 80.00000000019996,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J2@FR|bottom|Fs0",
+   "old_rut": 47.91,
+   "new_rut": 77.93,
+   "old_ready": 77.00000000018564,
+   "new_ready": 77.10000000018611,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J2@FR|bottom|Fs4",
+   "old_rut": 48.08,
+   "new_rut": 78.1,
+   "old_ready": 77.00000000018564,
+   "new_ready": 77.20000000018659,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J2@FR|top|Fs0",
+   "old_rut": 50.23,
+   "new_rut": 80.23,
+   "old_ready": 77.10000000018611,
+   "new_ready": 77.30000000018707,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J2@FR|top|Fs4",
+   "old_rut": 47.91,
+   "new_rut": 77.91,
+   "old_ready": 76.00000000018086,
+   "new_ready": 76.20000000018182,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J2@RL|bottom|Fs0",
+   "old_rut": 49.37,
+   "new_rut": 79.36,
+   "old_ready": 100.50000000029785,
+   "new_ready": 100.50000000029785,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J2@RL|bottom|Fs4",
+   "old_rut": 49.5,
+   "new_rut": 79.49,
+   "old_ready": 101.20000000030119,
+   "new_ready": 101.20000000030119,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J2@RL|top|Fs0",
+   "old_rut": 49.21,
+   "new_rut": 79.21,
+   "old_ready": 101.80000000030405,
+   "new_ready": 101.80000000030405,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J2@RL|top|Fs4",
+   "old_rut": 49.41,
+   "new_rut": 79.41,
+   "old_ready": 99.4000000002926,
+   "new_ready": 99.4000000002926,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J2@RR|bottom|Fs0",
+   "old_rut": 47.47,
+   "new_rut": 77.46,
+   "old_ready": 91.70000000025583,
+   "new_ready": 91.70000000025583,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J2@RR|bottom|Fs4",
+   "old_rut": 47.72,
+   "new_rut": 77.71,
+   "old_ready": 91.70000000025583,
+   "new_ready": 91.70000000025583,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J2@RR|top|Fs0",
+   "old_rut": 47.42,
+   "new_rut": 77.41,
+   "old_ready": 93.10000000026251,
+   "new_ready": 93.10000000026251,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+J2@RR|top|Fs4",
+   "old_rut": 47.62,
+   "new_rut": 77.61,
+   "old_ready": 90.70000000025105,
+   "new_ready": 90.70000000025105,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+S1@FL|bottom|Fs0",
+   "old_rut": 58.48,
+   "new_rut": 88.48,
+   "old_ready": 71.50000000015937,
+   "new_ready": 71.80000000016081,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+S1@FL|bottom|Fs4",
+   "old_rut": 58.53,
+   "new_rut": 88.53,
+   "old_ready": 72.3000000001632,
+   "new_ready": 72.50000000016415,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+S1@FL|top|Fs0",
+   "old_rut": 70.28,
+   "new_rut": 100.31,
+   "old_ready": 63.00000000011879,
+   "new_ready": 63.60000000012165,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+S1@FL|top|Fs4",
+   "old_rut": 75.14,
+   "new_rut": 105.2,
+   "old_ready": 63.20000000011974,
+   "new_ready": 63.900000000123086,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+S1@FR|bottom|Fs0",
+   "old_rut": 59.34,
+   "new_rut": 89.34,
+   "old_ready": 72.7000000001651,
+   "new_ready": 73.00000000016654,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+S1@FR|bottom|Fs4",
+   "old_rut": 63.06,
+   "new_rut": 93.09,
+   "old_ready": 72.3000000001632,
+   "new_ready": 72.80000000016558,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+S1@FR|top|Fs0",
+   "old_rut": 75.48,
+   "new_rut": 105.52,
+   "old_ready": 63.00000000011879,
+   "new_ready": 63.500000000121176,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+S1@FR|top|Fs4",
+   "old_rut": 62.97,
+   "new_rut": 92.98,
+   "old_ready": 65.90000000013264,
+   "new_ready": 66.20000000013407,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+S1@RL|bottom|Fs0",
+   "old_rut": 58.87,
+   "new_rut": 88.88,
+   "old_ready": 98.9000000002902,
+   "new_ready": 99.00000000029068,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+S1@RL|bottom|Fs4",
+   "old_rut": 59.13,
+   "new_rut": 89.14,
+   "old_ready": 98.60000000028877,
+   "new_ready": 98.70000000028925,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+S1@RL|top|Fs0",
+   "old_rut": 62.76,
+   "new_rut": 92.76,
+   "old_ready": 92.90000000026156,
+   "new_ready": 93.10000000026251,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+S1@RL|top|Fs4",
+   "old_rut": 64.85,
+   "new_rut": 94.86,
+   "old_ready": 95.4000000002735,
+   "new_ready": 95.20000000027254,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+S1@RR|bottom|Fs0",
+   "old_rut": 58.09,
+   "new_rut": 88.09,
+   "old_ready": 97.30000000028257,
+   "new_ready": 97.40000000028304,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+S1@RR|bottom|Fs4",
+   "old_rut": 58.27,
+   "new_rut": 88.27,
+   "old_ready": 97.00000000028113,
+   "new_ready": 97.10000000028161,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+S1@RR|top|Fs0",
+   "old_rut": 63.61,
+   "new_rut": 93.61,
+   "old_ready": 91.10000000025296,
+   "new_ready": 91.30000000025392,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|g6|G1+S1@RR|top|Fs4",
+   "old_rut": 67.69,
+   "new_rut": 97.68,
+   "old_ready": 93.6000000002649,
+   "new_ready": 93.6000000002649,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|ref|G1|bottom|Fs0",
+   "old_rut": 37.32,
+   "new_rut": 67.2,
+   "old_ready": 38.900000000003715,
+   "new_ready": 40.500000000011354,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|ref|G1|bottom|Fs4",
+   "old_rut": 37.76,
+   "new_rut": 67.36,
+   "old_ready": 39.4000000000061,
+   "new_ready": 40.40000000001088,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|ref|G1|top|Fs0",
+   "old_rut": 37.4,
+   "new_rut": 67.1,
+   "old_ready": 40.20000000000992,
+   "new_ready": 41.50000000001613,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|ref|G1|top|Fs4",
+   "old_rut": 37.94,
+   "new_rut": 67.36,
+   "old_ready": 40.100000000009445,
+   "new_ready": 40.40000000001088,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|ref|J1|bottom|Fs0",
+   "old_rut": 44.98,
+   "new_rut": 74.69,
+   "old_ready": 63.30000000012022,
+   "new_ready": 63.4000000001207,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|ref|J1|bottom|Fs4",
+   "old_rut": 45.27,
+   "new_rut": 74.94,
+   "old_ready": 63.100000000119266,
+   "new_ready": 63.00000000011879,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|ref|J1|top|Fs0",
+   "old_rut": 41.46,
+   "new_rut": 71.64,
+   "old_ready": 62.700000000117356,
+   "new_ready": 63.100000000119266,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|ref|J1|top|Fs4",
+   "old_rut": 41.62,
+   "new_rut": 71.66,
+   "old_ready": 63.900000000123086,
+   "new_ready": 64.10000000012404,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|ref|J2|bottom|Fs0",
+   "old_rut": 43.8,
+   "new_rut": 73.9,
+   "old_ready": 68.10000000014314,
+   "new_ready": 67.90000000014219,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|ref|J2|bottom|Fs4",
+   "old_rut": 44.07,
+   "new_rut": 74.1,
+   "old_ready": 67.60000000014075,
+   "new_ready": 67.4000000001398,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|ref|J2|top|Fs0",
+   "old_rut": 41.71,
+   "new_rut": 71.85,
+   "old_ready": 64.80000000012738,
+   "new_ready": 65.80000000013216,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|ref|J2|top|Fs4",
+   "old_rut": 42.19,
+   "new_rut": 72.22,
+   "old_ready": 64.90000000012786,
+   "new_ready": 65.70000000013168,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|ref|S1|bottom|Fs0",
+   "old_rut": 42.43,
+   "new_rut": 72.12,
+   "old_ready": 57.30000000009157,
+   "new_ready": 57.50000000009253,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|ref|S1|bottom|Fs4",
+   "old_rut": 42.74,
+   "new_rut": 72.45,
+   "old_ready": 57.40000000009205,
+   "new_ready": 58.60000000009778,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|ref|S1|top|Fs0",
+   "old_rut": 41.77,
+   "new_rut": 71.44,
+   "old_ready": 57.30000000009157,
+   "new_ready": 57.50000000009253,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "G|ref|S1|top|Fs4",
+   "old_rut": 42.1,
+   "new_rut": 71.76,
+   "old_ready": 57.40000000009205,
+   "new_ready": 58.60000000009778,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "S|H1|J1|A|top|flat",
+   "old_rut": 35.62,
+   "new_rut": 65.56,
+   "old_ready": 47.10000000004287,
+   "new_ready": 47.4000000000443,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "S|H1|J1|B|top|flat",
+   "old_rut": 32.65,
+   "new_rut": 62.58,
+   "old_ready": 63.900000000123086,
+   "new_ready": 65.00000000012834,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "S|H1|J2|A|top|flat",
+   "old_rut": 37.77,
+   "new_rut": 67.66,
+   "old_ready": 49.00000000005194,
+   "new_ready": 49.40000000005385,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "S|H1|J2|B|top|flat",
+   "old_rut": 32.93,
+   "new_rut": 66.11,
+   "old_ready": 67.20000000013884,
+   "new_ready": 64.80000000012738,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "S|H1|S1|A|top|flat",
+   "old_rut": 56.42,
+   "new_rut": 86.34,
+   "old_ready": 52.3000000000677,
+   "new_ready": 52.800000000070085,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "S|H1|S1|B|top|flat",
+   "old_rut": 42.42,
+   "new_rut": 72.07,
+   "old_ready": 56.90000000008966,
+   "new_ready": 58.10000000009539,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "S|H2|J1|B|bottom|flat",
+   "old_rut": 35.7,
+   "new_rut": 65.28,
+   "old_ready": 66.90000000013741,
+   "new_ready": 67.60000000014075,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "S|H2|J2|B|bottom|flat",
+   "old_rut": 35.32,
+   "new_rut": 64.86,
+   "old_ready": 69.40000000014935,
+   "new_ready": 70.00000000015221,
+   "old_lite": true,
+   "new_lite": true
+  },
+  {
+   "case": "S|H2|S1|B|bottom|flat",
+   "old_rut": 43.17,
+   "new_rut": 72.87,
+   "old_ready": 56.90000000008966,
+   "new_ready": 58.30000000009635,
+   "old_lite": true,
+   "new_lite": true
+  }
+ ],
+ "r4_rut_delta_mm": {
+  "n": 83,
+  "min": 29.42,
+  "median": 30.0,
+  "max": 33.18
+ },
+ "r4_ready_delta_s": {
+  "median": 0.2,
+  "min": -2.4000000000114596,
+  "max": 1.6000000000076398
+ },
+ "r4_lite_change": {
+  "True->True": 79,
+  "False->False": 4
+ },
+ "c2_lite_vs_official_new": {
+  "lite pass / official pass": 206,
+  "lite fail / official pass": 4,
+  "lite stop / official stroke_limited_stop": 72,
+  "lite fail / official fail": 11
+ },
+ "cross_C2_IND_new": {
+  "C2 pass / IND pass": 165,
+  "C2 pass / IND fail": 41,
+  "C2 fail / IND fail": 14,
+  "C2 stop / IND fail": 55,
+  "C2 stop / IND pass": 17,
+  "C2 fail / IND pass": 1
+ },
+ "cross_C2_IND_old": {
+  "C2 pass / IND pass": 175,
+  "C2 pass / IND fail": 56,
+  "C2 fail / IND fail": 54,
+  "C2 fail / IND pass": 8
+ },
+ "c2_fail_new": [
+  {
+   "case": "G|g6r|rigid+S1@FL|top|Fs0",
+   "gates": [
+    "crawler"
+   ],
+   "verdict": "pass",
+   "IND": "fail",
+   "warnings": [],
+   "final_phase": "ready"
+  },
+  {
+   "case": "G|g6r|rigid+S1@FL|top|Fs4",
+   "gates": [
+    "crawler"
+   ],
+   "verdict": "pass",
+   "IND": "fail",
+   "warnings": [],
+   "final_phase": "ready"
+  },
+  {
+   "case": "G|g6r|rigid+S1@FR|top|Fs0",
+   "gates": [
+    "crawler"
+   ],
+   "verdict": "pass",
+   "IND": "fail",
+   "warnings": [],
+   "final_phase": "ready"
+  },
+  {
+   "case": "G|g6r|rigid+S1@FR|top|Fs4",
+   "gates": [
+    "crawler"
+   ],
+   "verdict": "pass",
+   "IND": "fail",
+   "warnings": [],
+   "final_phase": "ready"
+  },
+  {
+   "case": "S|H1|J1|B|top|edge_nd",
+   "gates": [
+    "rut"
+   ],
+   "verdict": "fail",
+   "IND": "fail",
+   "warnings": [],
+   "final_phase": "ready"
+  },
+  {
+   "case": "S|H1|J2|B|top|edge_nu",
+   "gates": [
+    "ready_no_fault",
+    "crawler",
+    "Fmin",
+    "att",
+    "rut"
+   ],
+   "verdict": "fail",
+   "IND": "fail",
+   "warnings": [
+    "FAULT_LIFT_STROKE_LIMIT",
+    "WARN_LIFT_STROKE_LIMITED"
+   ],
+   "final_phase": "fault"
+  },
+  {
+   "case": "S|H1|J2|B|top|roll_neg",
+   "gates": [
+    "ready_no_fault",
+    "crawler",
+    "Fmin",
+    "att",
+    "rut"
+   ],
+   "verdict": "fail",
+   "IND": "fail",
+   "warnings": [
+    "FAULT_LIFT_STROKE_LIMIT",
+    "WARN_LIFT_STROKE_LIMITED"
+   ],
+   "final_phase": "fault"
+  },
+  {
+   "case": "S|H1|J2|B|top|roll_pos",
+   "gates": [
+    "ready_no_fault",
+    "crawler",
+    "Fmin",
+    "att",
+    "rut"
+   ],
+   "verdict": "fail",
+   "IND": "fail",
+   "warnings": [
+    "FAULT_LIFT_STROKE_LIMIT",
+    "WARN_LIFT_STROKE_LIMITED"
+   ],
+   "final_phase": "fault"
+  },
+  {
+   "case": "S|H1|S1|B|top|roll_neg",
+   "gates": [
+    "ready_no_fault",
+    "crawler",
+    "Fmin",
+    "rut"
+   ],
+   "verdict": "fail",
+   "IND": "fail",
+   "warnings": [
+    "FAULT_LIFT_STROKE_LIMIT",
+    "WARN_LIFT_STROKE_LIMITED",
+    "WARN_WEIGHT_MISMATCH"
+   ],
+   "final_phase": "fault"
+  },
+  {
+   "case": "S|H1|S1|B|top|roll_pos",
+   "gates": [
+    "ready_no_fault",
+    "crawler",
+    "Fmin",
+    "rut"
+   ],
+   "verdict": "fail",
+   "IND": "fail",
+   "warnings": [
+    "FAULT_LIFT_STROKE_LIMIT",
+    "WARN_LIFT_STROKE_LIMITED",
+    "WARN_WEIGHT_MISMATCH"
+   ],
+   "final_phase": "fault"
+  },
+  {
+   "case": "S|H2|J2|B|bottom|roll_neg",
+   "gates": [
+    "ready_no_fault",
+    "crawler",
+    "Fmin",
+    "att",
+    "rut"
+   ],
+   "verdict": "fail",
+   "IND": "fail",
+   "warnings": [
+    "FAULT_LIFT_STROKE_LIMIT",
+    "WARN_LIFT_STROKE_LIMITED"
+   ],
+   "final_phase": "fault"
+  },
+  {
+   "case": "S|H2|S1|B|bottom|roll_neg",
+   "gates": [
+    "ready_no_fault",
+    "crawler",
+    "Fmin",
+    "att",
+    "rut",
+    "stroke"
+   ],
+   "verdict": "fail",
+   "IND": "fail",
+   "warnings": [
+    "FAULT_STROKE_END"
+   ],
+   "final_phase": "fault"
+  },
+  {
+   "case": "S|H2|S1|B|bottom|roll_pos",
+   "gates": [
+    "ready_no_fault",
+    "crawler",
+    "Fmin",
+    "att",
+    "rut",
+    "stroke"
+   ],
+   "verdict": "fail",
+   "IND": "fail",
+   "warnings": [
+    "FAULT_STROKE_END"
+   ],
+   "final_phase": "fault"
+  },
+  {
+   "case": "S|H3|J2|B|top|roll_pos@k0.5",
+   "gates": [
+    "crawler"
+   ],
+   "verdict": "fail",
+   "IND": "pass",
+   "warnings": [],
+   "final_phase": "ready"
+  },
+  {
+   "case": "S|H3|J2|B|top|roll_pos@k0.875",
+   "gates": [
+    "ready_no_fault",
+    "crawler",
+    "Fmin",
+    "att",
+    "rut"
+   ],
+   "verdict": "fail",
+   "IND": "fail",
+   "warnings": [
+    "FAULT_LIFT_STROKE_LIMIT",
+    "WARN_LIFT_STROKE_LIMITED"
+   ],
+   "final_phase": "fault"
+  }
+ ],
+ "table16": {
+  "A1-rigid": {
+   "display": "강체 평지",
+   "src": "H5|rigid|B|top|flat",
+   "wide_id": "S|H5|rigid|B|top|flat",
+   "old_main_equals_old_wide": {
+    "C2": true,
+    "ABL": true,
+    "IND": true
+   },
+   "c2_hash_changed": false,
+   "cells_new": {
+    "att": "0.012 / 0.012 / 0.018",
+    "ready": "39.4 / 39.4 / 28.6",
+    "fmin": "54.7 / 54.7 / 66.2",
+    "crawler": "49.3 / 49.3 / 62.2",
+    "p": "101.2 / 101.2 / 95.1"
+   },
+   "c2_new": {
+    "att_end_absmax_deg": 0.0119,
+    "t_ready_s": 39.4000000000061,
+    "min_Fcyl_after_off_kN": 54.6903272019059,
+    "below_Fmin_after_off_s": 0,
+    "rut_all_ready_mm": 49.32,
+    "crawler_liftoff_fail": false,
+    "crawler_N_at_ready": 0.0,
+    "p_max_move_bar": 101.22,
+    "min_Fcyl_after_event_kN": null,
+    "lite_pass": true,
+    "verdict": "pass"
+   },
+   "source": "fin2 wide (same src, harness defaults)",
+   "cells_old_main_all": {
+    "att": "0.012 / 0.012 / 0.018",
+    "ready": "39.4 / 39.4 / 28.6",
+    "fmin": "54.7 / 54.7 / 66.2",
+    "crawler": "49.3 / 49.3 / 62.2",
+    "p": "101.2 / 101.2 / 95.1"
+   }
+  },
+  "A1-G1": {
+   "display": "G1 평지",
+   "src": "H1|G1|B|top|flat",
+   "wide_id": "S|H1|G1|B|top|flat",
+   "old_main_equals_old_wide": {
+    "C2": true,
+    "ABL": true,
+    "IND": true
+   },
+   "c2_hash_changed": false,
+   "cells_new": {
+    "att": "0.012 / 0.012 / 0.015",
+    "ready": "39.3 / 39.3 / 28.2",
+    "fmin": "62.8 / 62.8 / 69.8",
+    "crawler": "43.4 / 43.4 / 55.1",
+    "p": "95.9 / 95.9 / 93.3"
+   },
+   "c2_new": {
+    "att_end_absmax_deg": 0.0123,
+    "t_ready_s": 39.300000000005625,
+    "min_Fcyl_after_off_kN": 62.78811404858183,
+    "below_Fmin_after_off_s": 0,
+    "rut_all_ready_mm": 43.41,
+    "crawler_liftoff_fail": false,
+    "crawler_N_at_ready": 0.0,
+    "p_max_move_bar": 95.9,
+    "min_Fcyl_after_event_kN": null,
+    "lite_pass": true,
+    "verdict": "pass"
+   },
+   "source": "fin2 wide (same src, harness defaults)",
+   "cells_old_main_all": {
+    "att": "0.012 / 0.012 / 0.015",
+    "ready": "39.3 / 39.3 / 28.2",
+    "fmin": "62.8 / 62.8 / 69.8",
+    "crawler": "43.4 / 43.4 / 55.1",
+    "p": "95.9 / 95.9 / 93.3"
+   }
+  },
+  "A1-J1": {
+   "display": "J1 평지",
+   "src": "H1|J1|B|top|flat",
+   "wide_id": "S|H1|J1|B|top|flat",
+   "old_main_equals_old_wide": {
+    "C2": true,
+    "ABL": true,
+    "IND": true
+   },
+   "c2_hash_changed": true,
+   "cells_new": {
+    "att": "0.039 / 0.033 / 0.041",
+    "ready": "65.0 / 46.2 / 34.4",
+    "fmin": "68.6 / — / 69.7",
+    "crawler": "62.6 / 실패 26.4 kN / 20.4*",
+    "p": "94.1 / 91.2 / 93.8"
+   },
+   "c2_new": {
+    "att_end_absmax_deg": 0.0391,
+    "t_ready_s": 65.00000000012834,
+    "min_Fcyl_after_off_kN": 68.61596338139023,
+    "below_Fmin_after_off_s": 0,
+    "rut_all_ready_mm": 62.58,
+    "crawler_liftoff_fail": false,
+    "crawler_N_at_ready": 0.0,
+    "p_max_move_bar": 94.12,
+    "min_Fcyl_after_event_kN": null,
+    "lite_pass": true,
+    "verdict": "pass"
+   },
+   "source": "fin2 wide (same src, harness defaults)",
+   "cells_old_main_all": {
+    "att": "0.029 / 0.033 / 0.041",
+    "ready": "63.9 / 46.2 / 34.4",
+    "fmin": "68.5 / — / 69.7",
+    "crawler": "32.6 / 실패 26.4 kN / 20.4*",
+    "p": "94.0 / 91.2 / 93.8"
+   }
+  },
+  "A1-J2": {
+   "display": "J2 평지",
+   "src": "H1|J2|B|top|flat",
+   "wide_id": "S|H1|J2|B|top|flat",
+   "old_main_equals_old_wide": {
+    "C2": true,
+    "ABL": true,
+    "IND": true
+   },
+   "c2_hash_changed": true,
+   "cells_new": {
+    "att": "0.021 / 0.004 / 0.006",
+    "ready": "64.8 / 49.9 / 32.0",
+    "fmin": "68.6 / — / —",
+    "crawler": "66.1 / 실패 69.9 kN / 실패 22.9 kN",
+    "p": "94.2 / 83.0 / 86.2"
+   },
+   "c2_new": {
+    "att_end_absmax_deg": 0.0214,
+    "t_ready_s": 64.80000000012738,
+    "min_Fcyl_after_off_kN": 68.6096516142817,
+    "below_Fmin_after_off_s": 0,
+    "rut_all_ready_mm": 66.11,
+    "crawler_liftoff_fail": false,
+    "crawler_N_at_ready": 0.0,
+    "p_max_move_bar": 94.17,
+    "min_Fcyl_after_event_kN": null,
+    "lite_pass": true,
+    "verdict": "pass"
+   },
+   "source": "fin2 wide (same src, harness defaults)",
+   "cells_old_main_all": {
+    "att": "0.030 / 0.004 / 0.006",
+    "ready": "67.2 / 49.9 / 32.0",
+    "fmin": "68.4 / — / —",
+    "crawler": "32.9 / 실패 69.9 kN / 실패 22.9 kN",
+    "p": "94.2 / 83.0 / 86.2"
+   }
+  },
+  "A2-rigid-roll4.4": {
+   "display": "강체 좌우 4.4°",
+   "src": "H5|rigid|B|top|roll_pos",
+   "wide_id": "S|H5|rigid|B|top|roll_pos",
+   "old_main_equals_old_wide": {
+    "C2": true,
+    "ABL": true,
+    "IND": true
+   },
+   "c2_hash_changed": false,
+   "cells_new": {
+    "att": "0.016 / 0.016 / 0.068",
+    "ready": "53.2 / 53.2 / 39.6",
+    "fmin": "54.2 / 54.2 / 50.2",
+    "crawler": "73.9 / 73.9 / 100.9",
+    "p": "105.8 / 105.8 / 111.5"
+   },
+   "c2_new": {
+    "att_end_absmax_deg": 0.0162,
+    "t_ready_s": 53.200000000071995,
+    "min_Fcyl_after_off_kN": 54.249443824383164,
+    "below_Fmin_after_off_s": 0,
+    "rut_all_ready_mm": 73.89,
+    "crawler_liftoff_fail": false,
+    "crawler_N_at_ready": 0.0,
+    "p_max_move_bar": 105.75,
+    "min_Fcyl_after_event_kN": null,
+    "lite_pass": true,
+    "verdict": "pass"
+   },
+   "source": "fin2 wide (same src, harness defaults)",
+   "cells_old_main_all": {
+    "att": "0.016 / 0.016 / 0.068",
+    "ready": "53.2 / 53.2 / 39.6",
+    "fmin": "54.2 / 54.2 / 50.2",
+    "crawler": "73.9 / 73.9 / 100.9",
+    "p": "105.8 / 105.8 / 111.5"
+   }
+  },
+  "A2-J1B-roll0.75": {
+   "display": "J1 좌우 3.3°",
+   "src": "H3|J1|B|top|roll_pos@k0.75",
+   "wide_id": "S|H3|J1|B|top|roll_pos@k0.75",
+   "old_main_equals_old_wide": {
+    "C2": true,
+    "ABL": true,
+    "IND": true
+   },
+   "c2_hash_changed": false,
+   "cells_new": {
+    "att": "0.026 / 0.022 / 0.028",
+    "ready": "80.0 / 79.1 / 65.4",
+    "fmin": "63.4 / 63.4 / 66.4",
+    "crawler": "28.3 / 실패 3.7 kN / 84.1",
+    "p": "104.2 / 104.2 / 102.6"
+   },
+   "c2_new": {
+    "att_end_absmax_deg": 0.0265,
+    "t_ready_s": 80.00000000019996,
+    "min_Fcyl_after_off_kN": 63.44584252197676,
+    "below_Fmin_after_off_s": 0,
+    "rut_all_ready_mm": 28.28,
+    "crawler_liftoff_fail": false,
+    "crawler_N_at_ready": 0.0,
+    "p_max_move_bar": 104.15,
+    "min_Fcyl_after_event_kN": null,
+    "lite_pass": true,
+    "verdict": "pass"
+   },
+   "source": "fin2 wide (same src, harness defaults)",
+   "cells_old_main_all": {
+    "att": "0.026 / 0.022 / 0.028",
+    "ready": "80.0 / 79.1 / 65.4",
+    "fmin": "63.4 / 63.4 / 66.4",
+    "crawler": "28.3 / 실패 3.7 kN / 84.1",
+    "p": "104.2 / 104.2 / 102.6"
+   }
+  },
+  "A2-J1B-nd0.75": {
+   "display": "J1 앞내림 2.4°",
+   "src": "H3|J1|B|top|nose_down@k0.75",
+   "wide_id": "S|H3|J1|B|top|nose_down@k0.75",
+   "old_main_equals_old_wide": {
+    "C2": true,
+    "ABL": true,
+    "IND": true
+   },
+   "c2_hash_changed": false,
+   "cells_new": {
+    "att": "0.061 / 0.044 / 0.049",
+    "ready": "56.9 / 54.7 / 39.3",
+    "fmin": "69.1 / 69.1 / 69.0",
+    "crawler": "66.9 / 16.6* / 51.2",
+    "p": "93.9 / 93.8 / 93.8"
+   },
+   "c2_new": {
+    "att_end_absmax_deg": 0.0606,
+    "t_ready_s": 56.90000000008966,
+    "min_Fcyl_after_off_kN": 69.14723531393386,
+    "below_Fmin_after_off_s": 0,
+    "rut_all_ready_mm": 66.89,
+    "crawler_liftoff_fail": false,
+    "crawler_N_at_ready": 0.0,
+    "p_max_move_bar": 93.9,
+    "min_Fcyl_after_event_kN": null,
+    "lite_pass": true,
+    "verdict": "pass"
+   },
+   "source": "fin2 wide (same src, harness defaults)",
+   "cells_old_main_all": {
+    "att": "0.061 / 0.044 / 0.049",
+    "ready": "56.9 / 54.7 / 39.3",
+    "fmin": "69.1 / 69.1 / 69.0",
+    "crawler": "66.9 / 16.6* / 51.2",
+    "p": "93.9 / 93.8 / 93.8"
+   }
+  },
+  "A2-J1B-edge0.75": {
+   "display": "J1 모서리 1.65°·1.2°",
+   "src": "H3|J1|B|top|edge_nd@k0.75",
+   "wide_id": "S|H3|J1|B|top|edge_nd@k0.75",
+   "old_main_equals_old_wide": {
+    "C2": true,
+    "ABL": true,
+    "IND": true
+   },
+   "c2_hash_changed": false,
+   "cells_new": {
+    "att": "0.065 / 0.065 / 0.029",
+    "ready": "58.7 / 57.7 / 53.0",
+    "fmin": "65.8 / 65.8 / 69.0",
+    "crawler": "34.3 / 3.3* / 70.8",
+    "p": "98.2 / 98.2 / 98.5"
+   },
+   "c2_new": {
+    "att_end_absmax_deg": 0.0651,
+    "t_ready_s": 58.70000000009826,
+    "min_Fcyl_after_off_kN": 65.82067988460851,
+    "below_Fmin_after_off_s": 0,
+    "rut_all_ready_mm": 34.26,
+    "crawler_liftoff_fail": false,
+    "crawler_N_at_ready": 0.0,
+    "p_max_move_bar": 98.15,
+    "min_Fcyl_after_event_kN": null,
+    "lite_pass": true,
+    "verdict": "pass"
+   },
+   "source": "fin2 wide (same src, harness defaults)",
+   "cells_old_main_all": {
+    "att": "0.065 / 0.065 / 0.029",
+    "ready": "58.7 / 57.7 / 53.0",
+    "fmin": "65.8 / 65.8 / 69.0",
+    "crawler": "34.3 / 3.3* / 70.8",
+    "p": "98.2 / 98.2 / 98.5"
+   }
+  },
+  "A3-G1+J1@RR": {
+   "display": "G1+J1 연약부 RR",
+   "src": "g6|G1+J1@RR|top|Fs4",
+   "wide_id": "G|g6|G1+J1@RR|top|Fs4",
+   "old_main_equals_old_wide": {
+    "C2": true,
+    "ABL": true,
+    "IND": true
+   },
+   "c2_hash_changed": true,
+   "cells_new": {
+    "att": "0.018 / 0.009 / 0.031",
+    "ready": "62.4 / 없음 / 25.8",
+    "fmin": "50.3 / 54.4 / 46.2",
+    "crawler": "71.5 / — / 60.1",
+    "p": "104.2 / 104.2 / 110.6"
+   },
+   "c2_new": {
+    "att_end_absmax_deg": 0.0178,
+    "t_ready_s": 62.400000000115924,
+    "min_Fcyl_after_off_kN": 50.28683223178573,
+    "below_Fmin_after_off_s": 0,
+    "rut_all_ready_mm": 71.5,
+    "crawler_liftoff_fail": false,
+    "crawler_N_at_ready": 0.0,
+    "p_max_move_bar": 104.19,
+    "min_Fcyl_after_event_kN": null,
+    "lite_pass": true,
+    "verdict": "pass"
+   },
+   "source": "fin2 wide (same src, harness defaults)",
+   "cells_old_main_all": {
+    "att": "0.018 / 0.009 / 0.031",
+    "ready": "62.3 / 없음 / 25.8",
+    "fmin": "50.3 / 54.4 / 46.2",
+    "crawler": "41.5 / — / 60.1",
+    "p": "104.2 / 104.2 / 110.6"
+   }
+  },
+  "A3-G1+J1@FL": {
+   "display": "G1+J1 연약부 FL",
+   "src": "g6|G1+J1@FL|top|Fs4",
+   "wide_id": "G|g6|G1+J1@FL|top|Fs4",
+   "old_main_equals_old_wide": {
+    "C2": true,
+    "ABL": true,
+    "IND": true
+   },
+   "c2_hash_changed": true,
+   "cells_new": {
+    "att": "0.011 / 0.021 / 0.039",
+    "ready": "59.2 / 163.4 / 27.0",
+    "fmin": "41.5 / 41.5 / 36.1",
+    "crawler": "72.8 / 45.2 / 56.9",
+    "p": "108.3 / 107.9 / 115.4"
+   },
+   "c2_new": {
+    "att_end_absmax_deg": 0.011,
+    "t_ready_s": 59.200000000100644,
+    "min_Fcyl_after_off_kN": 41.47476302559066,
+    "below_Fmin_after_off_s": 0,
+    "rut_all_ready_mm": 72.81,
+    "crawler_liftoff_fail": false,
+    "crawler_N_at_ready": 0.0,
+    "p_max_move_bar": 108.27,
+    "min_Fcyl_after_event_kN": null,
+    "lite_pass": true,
+    "verdict": "pass"
+   },
+   "source": "fin2 wide (same src, harness defaults)",
+   "cells_old_main_all": {
+    "att": "0.011 / 0.021 / 0.039",
+    "ready": "58.9 / 163.4 / 27.0",
+    "fmin": "41.5 / 41.5 / 36.1",
+    "crawler": "42.8 / 45.2 / 56.9",
+    "p": "107.9 / 107.9 / 115.4"
+   }
+  },
+  "A4-G4RR-Fs0": {
+   "display": "RR 침하 사건 F_s 0",
+   "src": "H5|rigid|B|top|flat",
+   "wide_id": null,
+   "cells_old_main": {
+    "att": "0.016 / 0.015 / 0.043",
+    "ready": "39.2 / 39.4 / 28.5",
+    "fmin": "15.4 / 13.4 / -0.7* (5.3 s)",
+    "crawler": "48.8 / 49.1 / 62.1",
+    "p": "134.8 / 136.3 / 151.7"
+   },
+   "source": "not in wide set (F_s override / event): old b5_main only, needs final rerun",
+   "cells_old_main_all": {
+    "att": "0.016 / 0.015 / 0.043",
+    "ready": "39.2 / 39.4 / 28.5",
+    "fmin": "15.4 / 13.4 / -0.7* (5.3 s)",
+    "crawler": "48.8 / 49.1 / 62.1",
+    "p": "134.8 / 136.3 / 151.7"
+   }
+  },
+  "A4-G4RR-Fs8": {
+   "display": "RR 침하 사건 F_s 8",
+   "src": "H5|rigid|B|top|flat",
+   "wide_id": null,
+   "cells_old_main": {
+    "att": "0.024 / 0.024 / 0.030",
+    "ready": "39.4 / 39.4 / 28.6",
+    "fmin": "15.6 / 15.6 / -0.7* (7.6 s)",
+    "crawler": "49.5 / 49.5 / 62.0",
+    "p": "126.7 / 126.7 / 155.9"
+   },
+   "source": "not in wide set (F_s override / event): old b5_main only, needs final rerun",
+   "cells_old_main_all": {
+    "att": "0.024 / 0.024 / 0.030",
+    "ready": "39.4 / 39.4 / 28.6",
+    "fmin": "15.6 / 15.6 / -0.7* (7.6 s)",
+    "crawler": "49.5 / 49.5 / 62.0",
+    "p": "126.7 / 126.7 / 155.9"
+   }
+  },
+  "B1-J2B-bottom": {
+   "display": "J2 오거 하단",
+   "src": "H2|J2|B|bottom|flat",
+   "wide_id": "S|H2|J2|B|bottom|flat",
+   "old_main_equals_old_wide": {
+    "C2": true,
+    "ABL": true,
+    "IND": true
+   },
+   "c2_hash_changed": true,
+   "cells_new": {
+    "att": "0.040 / 0.004 / 0.006",
+    "ready": "70.0 / 50.0 / 32.2",
+    "fmin": "69.5 / — / —",
+    "crawler": "64.9 / 실패 69.3 kN / 실패 22.5 kN",
+    "p": "93.2 / 83.0 / 86.3"
+   },
+   "c2_new": {
+    "att_end_absmax_deg": 0.0402,
+    "t_ready_s": 70.00000000015221,
+    "min_Fcyl_after_off_kN": 69.50602531096852,
+    "below_Fmin_after_off_s": 0,
+    "rut_all_ready_mm": 64.86,
+    "crawler_liftoff_fail": false,
+    "crawler_N_at_ready": 0.0,
+    "p_max_move_bar": 93.15,
+    "min_Fcyl_after_event_kN": null,
+    "lite_pass": true,
+    "verdict": "pass"
+   },
+   "source": "fin2 wide (same src, harness defaults)",
+   "cells_old_main_all": {
+    "att": "0.018 / 0.004 / 0.006",
+    "ready": "69.4 / 50.0 / 32.2",
+    "fmin": "69.5 / — / —",
+    "crawler": "35.3 / 실패 69.3 kN / 실패 22.5 kN",
+    "p": "93.1 / 83.0 / 86.3"
+   }
+  },
+  "B2-rigid-Fs0": {
+   "display": "강체 F_s 0",
+   "src": "H5|rigid|B|top|flat",
+   "wide_id": null,
+   "cells_old_main": {
+    "att": "0.011 / 0.012 / 0.017",
+    "ready": "39.2 / 39.4 / 28.5",
+    "fmin": "55.2 / 55.4 / 61.1",
+    "crawler": "48.8 / 49.1 / 62.1",
+    "p": "97.3 / 97.5 / 96.2"
+   },
+   "source": "not in wide set (F_s override / event): old b5_main only, needs final rerun",
+   "cells_old_main_all": {
+    "att": "0.011 / 0.012 / 0.017",
+    "ready": "39.2 / 39.4 / 28.5",
+    "fmin": "55.2 / 55.4 / 61.1",
+    "crawler": "48.8 / 49.1 / 62.1",
+    "p": "97.3 / 97.5 / 96.2"
+   }
+  },
+  "B2-rigid-Fs8": {
+   "display": "강체 F_s 8",
+   "src": "H5|rigid|B|top|flat",
+   "wide_id": null,
+   "cells_old_main": {
+    "att": "0.011 / 0.011 / 0.018",
+    "ready": "39.4 / 39.4 / 28.6",
+    "fmin": "53.3 / 53.3 / 68.4",
+    "crawler": "49.5 / 49.5 / 62.0",
+    "p": "105.5 / 105.5 / 97.1"
+   },
+   "source": "not in wide set (F_s override / event): old b5_main only, needs final rerun",
+   "cells_old_main_all": {
+    "att": "0.011 / 0.011 / 0.018",
+    "ready": "39.4 / 39.4 / 28.6",
+    "fmin": "53.3 / 53.3 / 68.4",
+    "crawler": "49.5 / 49.5 / 62.0",
+    "p": "105.5 / 105.5 / 97.1"
+   }
+  },
+  "B3-J1A": {
+   "display": "J1 패드 A",
+   "src": "H1|J1|A|top|flat",
+   "wide_id": "S|H1|J1|A|top|flat",
+   "old_main_equals_old_wide": {
+    "C2": true,
+    "ABL": true,
+    "IND": true
+   },
+   "c2_hash_changed": true,
+   "cells_new": {
+    "att": "0.047 / 0.045 / 0.051",
+    "ready": "47.4 / 47.1 / 34.5",
+    "fmin": "65.2 / 65.1 / 67.2",
+    "crawler": "65.6 / 35.6 / 62.1",
+    "p": "92.5 / 92.6 / 92.2"
+   },
+   "c2_new": {
+    "att_end_absmax_deg": 0.047,
+    "t_ready_s": 47.4000000000443,
+    "min_Fcyl_after_off_kN": 65.23487546567969,
+    "below_Fmin_after_off_s": 0,
+    "rut_all_ready_mm": 65.56,
+    "crawler_liftoff_fail": false,
+    "crawler_N_at_ready": 0.0,
+    "p_max_move_bar": 92.5,
+    "min_Fcyl_after_event_kN": null,
+    "lite_pass": true,
+    "verdict": "pass"
+   },
+   "source": "fin2 wide (same src, harness defaults)",
+   "cells_old_main_all": {
+    "att": "0.046 / 0.045 / 0.051",
+    "ready": "47.1 / 47.1 / 34.5",
+    "fmin": "65.2 / 65.1 / 67.2",
+    "crawler": "35.6 / 35.6 / 62.1",
+    "p": "92.5 / 92.6 / 92.2"
+   }
+  }
+ },
+ "table_note": {
+  "rigid_flat_c2_hash_same_old_new": true
+ }
+}

@@ -40,7 +40,9 @@ Env: R79_LEVELS (comma, default L1), R79_SET (default identity), R79_SEEDS (comm
   kept without it), R79_ROD_MODEL = dyn_map (default) | harness | extend_vent
   (``ROD_MODELS``; the last two for comparison), R79_CANDIDATE (spec 424.5: comma list of
   ``s9_slope_fix_candidates.py`` candidates, e.g. ``current,D1,D2+D3``; every job runs once per
-  candidate, key ``cand=<name>#<key>``, record ``candidate`` / ``candidate_record``).
+  candidate, key ``cand=<name>#<key>``, record ``candidate`` / ``candidate_record``),
+  R72_PATH (G6 soil path of ``r72_g6_screen``; unset or empty = ``per_leg``, spec 429.11.1:
+  recorded as ``r72_path``; a weak-pad G6 run without the per-pad soil is an error record).
 """
 
 from __future__ import annotations
@@ -796,6 +798,36 @@ def _run_g8(case: CaseSpec, run: ActiveRun, patches: _Patches) -> tuple[dict, ob
     return rec, run.plant
 
 
+R72_PATH_ENV = "R72_PATH"
+DEFAULT_R72_PATH = "per_leg"
+"""Soil path of the G6 jobs (``r72_g6_screen.make_plant_per_leg``). Spec 429.11.1: a runner that
+restores an unset variable as "" made r72 build the uniform base soil, so the weak patch of every
+G1-based G6 run was missing; an empty value therefore counts as unset here."""
+
+
+def normalise_r72_path() -> str:
+    """Set ``$R72_PATH`` to its value, or to ``per_leg`` when it is unset or empty; return it."""
+    path = os.environ.get(R72_PATH_ENV) or DEFAULT_R72_PATH
+    os.environ[R72_PATH_ENV] = path
+    return path
+
+
+def soil_model_name(plant) -> str | None:
+    """Class name of the plant's soil model (None on a rigid floor without soil)."""
+    soil = getattr(plant, "soil", None)
+    return None if soil is None else type(soil).__name__
+
+
+def is_weak_patch_missing(case: CaseSpec, plant) -> bool:
+    """A one-weak-pad G6 case (``<base>+<weak>@<leg>``) whose plant has no per-pad soil."""
+    if case.harness != "g6":
+        return False
+    soil = case.inner.split("|")[1]
+    if "+" not in soil:
+        return False
+    return not hasattr(getattr(plant, "soil", None), "n_arr")
+
+
 def _place_worker() -> None:
     import r51_reapp_closed_loop as r51
 
@@ -811,7 +843,8 @@ def run_job(key: str) -> dict:
     rod_model = os.environ.get("R79_ROD_MODEL", DEFAULT_ROD_MODEL)
     out = {"key": key, "level": level.name, "seed_index": seed_index, "seed": seed,
            "harness": case.harness, "inner": case.inner, "case_index": case.index,
-           "rod_model": rod_model, "candidate": candidate or "current"}
+           "rod_model": rod_model, "candidate": candidate or "current",
+           "r72_path": normalise_r72_path()}
     t_wall = time.perf_counter()
     _place_worker()
     adapter = SensorAdapter(level, seed, rod_split_function(rod_model),
@@ -835,6 +868,10 @@ def run_job(key: str) -> dict:
     out["base"] = base
     if "error" in base or run.ctrl is None or plant is None:
         out["error"] = base.get("error", "no controller / plant captured")
+        return out
+    out["soil_model"] = soil_model_name(plant)
+    if is_weak_patch_missing(case, plant):  # spec 429.11.1: never judge a run without its patch
+        out["error"] = f"weak soil patch missing (soil model {out['soil_model']})"
         return out
     out.update(_run_summary(run, plant))
     out["r79"]["recontact_events"] = recontact_summary(base)
@@ -947,6 +984,7 @@ def main() -> None:
         print(len(jobs), "jobs")
         return
     set_parent_placement()
+    r72_path = normalise_r72_path()
     out_path = Path(sys.argv[2])
     workers = int(sys.argv[3]) if len(sys.argv) > 3 else 8
     t0 = time.perf_counter()
@@ -961,6 +999,7 @@ def main() -> None:
             "candidates": candidate_names() or None,
             "affinity": os.environ.get("R79_AFFINITY"), "workers": workers,
             "rod_model": os.environ.get("R79_ROD_MODEL", DEFAULT_ROD_MODEL),
+            "r72_path": r72_path,
             "wall_s": round(time.perf_counter() - t0, 1), "n_jobs": len(jobs)}
     out_path.write_text(json.dumps({"meta": meta, "results": results}, indent=1, default=float),
                         encoding="utf-8")

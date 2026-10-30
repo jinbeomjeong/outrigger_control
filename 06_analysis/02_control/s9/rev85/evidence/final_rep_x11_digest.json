@@ -1,0 +1,1277 @@
+{
+ "P3b_J1_B_top_Fs4_m1p1": {
+  "unchanged_blocks_equal": true,
+  "params_file_match": true,
+  "checks": {
+   "P3-1_crawler_zero_after_ready": true,
+   "P3-1_recontact": 50.472000000551965,
+   "P3-1_recontact_pass": true,
+   "P3-1_flags": [
+    "P3-1_transient_recontact"
+   ],
+   "P3-1_recontact_classes": [
+    "transient_flag"
+   ],
+   "P3-2_within": true,
+   "P3-2_within_2s_record": false,
+   "P3-2_loc_minus_departure_s": 2.4560000000815307,
+   "P3-2_limit_s": 2.91165281234524,
+   "P3-2_late_loc_reapproach": false,
+   "P3-2_late_loc_revoked": false,
+   "P3-2_verdict": "pass",
+   "t_loc_first_s": 49.20000000050974,
+   "t_loc_final_s": 50.90000000056617,
+   "loc_revokes": 1,
+   "P3-3_within": true,
+   "P3-4_within_0p2": true,
+   "P3-4_absmax_deg": 0.030386738293886044,
+   "P3-4_window_s": [
+    107.28100000243782,
+    128.00000000312562
+   ],
+   "P3-4_flags": [],
+   "P3-4_window_short": false,
+   "P3-4_creep_vibration_suspect": false,
+   "P3-4_sensor_allowance_left_deg": 0.14961326170611397,
+   "P3-4_budget_residual_le_0p04_record": true,
+   "reapproach_limit_fired_FLAG": 0,
+   "reapproach_limit_by_cause": {
+    "time": 0,
+    "travel": 0,
+    "unknown": 0
+   },
+   "P3-5_within": true,
+   "P3-5_within_after_departure_record": false,
+   "P3-5_rut_clearance_min_after_first_ready_m": 0.06092853066584647,
+   "P3-6_within": true,
+   "P3-7_within": false,
+   "P3-7_rise_min_loaded_N": 2024.3027183997658,
+   "P3-7_reconstruct_ok": true,
+   "P3-8_within": true,
+   "P3-8_within_first": true,
+   "P3-9_flags": 0,
+   "pre_liftoff_flag": false,
+   "W61_warnings": 0,
+   "criteria_rev": "spec rev. 60 (U-S9P-13/14/15 (가)): P3-2 T_lim, P3-5 after the first READY, P3-7 > 0.01 W",
+   "note": "values vs criteria; decisions are control's (284) / dynamics' (physics)"
+  },
+  "t_loop_start_s": 7.999999999994694,
+  "mass_scale": {
+   "mass_scale": 1.1,
+   "note": "spec 422 / decision Q-D (2026-10-29): Chrono plant superstructure body (rigid, crawler included) mass and inertia about its COG x mass_scale, COG kept (= s9_soil_closed_loop.scale_plant_mass); leg rods / pads unchanged; controller unchanged (YAML nominal mass, W_ref, D1'' mass); the 8 s settle runs on the scaled body in Chrono (no A1-m settle approximation); judgement weight p3b.weight_N = plant weight (scaled), P3-7 loaded window 0.01 W_plant = 0.01 mass_scale W_ref (spec 422.6)",
+   "yaml_superstructure_mass_kg": 38400.8366,
+   "plant_superstructure_mass_kg": 42240.920260000006,
+   "plant_superstructure_inertia_cog_body_kg_m2": [
+    [
+     586855.8971000001,
+     -1035.6077336,
+     -213271.50900000002
+    ],
+    [
+     -1035.6077336,
+     757561.6719000001,
+     -219.47004310000003
+    ],
+    [
+     -213271.50900000002,
+     -219.47004310000003,
+     211497.9922
+    ]
+   ],
+   "plant_weight_N": 417771.268488423,
+   "plant_superstructure_weight_N": 414241.92066772905,
+   "yaml_weight_N": 380112.91206408397,
+   "controller_weight_ref_N": 376583.56424339,
+   "plant_over_W_ref": 1.1,
+   "weight_mismatch_events": [],
+   "judgement_weights": {
+    "mass_scale": 1.1,
+    "weight_N": 417771.268488423,
+    "W_ref_N": 376583.56424339,
+    "W_plant_N": 414241.92066772905,
+    "P3-7_loaded_threshold_N": 4142.41920667729,
+    "F_min_N": 9414.58911,
+    "F_min_x_mass_scale_record_N": 10356.048021000002,
+    "basis": {
+     "weight_N": "p3b.weight_N = plant weight (superstructure x mass_scale + leg moving parts) x g: departure / re-contact 0.01 W rules, settle normal checks",
+     "W_plant_N": "mass_scale x W_ref (plant superstructure): P3-7 loaded-window threshold (422.6)",
+     "W_ref_N": "C2 meta soil.W_ref_N (YAML nominal, controller): W ratio, WARN_WEIGHT_MISMATCH, S-1 plausibility / reconstruction, P3-7 0.05 W record bucket",
+     "F_min_N": "P3-3 uses the YAML F_min; F_min x mass_scale is a record only"
+    }
+   }
+  },
+  "P3-2_loc": {
+   "criterion": "spec rev. 60, U-S9P-13 (가): crawler_liftoff_confirmed before the first DONE; no LOC while the crawler is loaded (normal >= 0.01 W at the LOC); LOC - departure <= T_lim = plateau_window_m / (push_speed_fraction v_max) + 1 s (ASSUMPTION tail share); the former <= 2 s clause is within_2s_record",
+   "t_loc_s": 50.90000000056617,
+   "t_departure_s": 48.44400000048464,
+   "t_first_done_s": 64.90000000103092,
+   "soil_mode_start_t_s": 33.299999999981914,
+   "soil_mode_used": true,
+   "limit_s": 2.91165281234524,
+   "limit_basis": {
+    "plateau_window_m": 0.01,
+    "push_speed_fraction": 0.25,
+    "v_max_m_s": 0.0209243016,
+    "tail_allowance_s": 1.0
+   },
+   "tP_minus_departure_s": 1.3560000000450145,
+   "window_s": 1.1000000000365162,
+   "loc_before_first_done": true,
+   "loc_minus_departure_s": 2.4560000000815307,
+   "crawler_normal_at_loc_N": 374.05689098642335,
+   "crawler_loaded_at_loc": false,
+   "within_2s_record": false,
+   "within": true,
+   "t_loc_first_s": 49.20000000050974,
+   "t_loc_final_s": 50.90000000056617,
+   "loc_revokes": [
+    {
+     "t_s": 49.70000000052634,
+     "event": "INFO_LOC_REVOKED:2.8",
+     "revoked_loc_s": 49.20000000050974
+    }
+   ],
+   "loc_timeline": {
+    "rule": "spec 424.8.1: judged LOC = the first LOC after the last revocation (last confirmed LOC); a revocation cancels the latest LOC at / before it; revoked LOCs are records only",
+    "t_loc_first_s": 49.20000000050974,
+    "t_loc_final_s": 50.90000000056617,
+    "loc_events_s": [
+     49.20000000050974,
+     50.90000000056617
+    ],
+    "loc_revokes": [
+     {
+      "t_s": 49.70000000052634,
+      "event": "INFO_LOC_REVOKED:2.8",
+      "revoked_loc_s": 49.20000000050974
+     }
+    ],
+    "revoke_source": "events",
+    "revoked_loc_s": [
+     49.20000000050974
+    ],
+    "t_revoke_last_s": 49.70000000052634
+   },
+   "late_loc_reapproach": {
+    "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_reapproach when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC before the first DONE; else a failure",
+    "t_off_s": 48.44400000048464,
+    "t_loc_s": 50.90000000056617,
+    "limit_s": 2.91165281234524,
+    "control_period_s": 0.1,
+    "late_loc_reapproach_s": 2.4560000000815307,
+    "t_reapproach_end_s": null,
+    "loc_minus_reapproach_end_s": null,
+    "restart_events_before_loc": 0,
+    "restart_events_off_to_loc": 0,
+    "reapproach_intervals": [],
+    "overlapping_reapproach_legs": [],
+    "open_overlapping_interval": false,
+    "lwa_on": true,
+    "lwa_on_source": "controller meta",
+    "judgement_error": null,
+    "crawler_normal_loc_period_max_N": 752.2889913113053,
+    "crawler_normal_at_loc_N": 374.05689098642335,
+    "crawler_normal_next_period_max_N": 374.05689098642335,
+    "crawler_threshold_N": 4177.71268488423,
+    "fault_events": [],
+    "fault_phase": false,
+    "conditions": {
+     "1_restart": false,
+     "2_delay_by_reapproach": false,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true
+    },
+    "time_clause_violated": false,
+    "flag": false,
+    "verdict": "pass"
+   },
+   "late_loc_revoked": {
+    "rule": "spec 424.8.1 (user decision 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_revoked when 1 a LOC revocation lies in [t_off, t_LOC^fin], 2 t_LOC^fin - max(t_off, t_revoke_last [, t_re_end when the 419.8 condition 1 holds]) <= T_lim, 3 crawler true normal < 0.01 W over the t_LOC^fin period, 4 P3-3 within and no FAULT, 5 t_LOC^fin before the first DONE, 6 (424.9) t_LOC^fin - t_off <= (1 + n_revoke) T_lim; else a failure",
+    "t_off_s": 48.44400000048464,
+    "t_loc_final_s": 50.90000000056617,
+    "t_loc_first_s": 49.20000000050974,
+    "limit_s": 2.91165281234524,
+    "revokes_off_to_loc_s": [
+     49.70000000052634
+    ],
+    "t_revoke_last_s": 49.70000000052634,
+    "late_loc_revoked_s": 2.4560000000815307,
+    "loc_minus_later_event_s": 1.2000000000398359,
+    "condition_2_basis": "max(t_off, t_revoke_last)",
+    "n_revokes": 1,
+    "total_delay_cap_s": 5.82330562469048,
+    "conditions": {
+     "1_revoke": true,
+     "2_delay_by_revoke": true,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true,
+     "6_total_delay": true
+    },
+    "time_clause_violated": false,
+    "flag": false,
+    "verdict": "pass",
+    "condition_6_source": "late_loc_rule.late_loc_revoked (n_revokes)",
+    "decision_source": "late_loc_rule.late_loc_revoked (shared, t_lim_s = P3-2 limit_s)",
+    "t_lim_s": 2.91165281234524,
+    "shared": {
+     "is_flag": false,
+     "time_clause_violated": false,
+     "conditions": {
+      "1_revoke": true,
+      "2_delay_by_revoke": true,
+      "3_not_false_loc": true,
+      "4_load_strict": true,
+      "5_loc_before_first_done": true,
+      "6_total_delay": true
+     },
+     "t_loc_final_s": 50.90000000056617,
+     "t_off_s": 48.44400000048464,
+     "limit_s": 2.91165281234524,
+     "t_revoke_last_s": 49.70000000052634,
+     "revokes_off_to_loc_s": [
+      49.70000000052634
+     ],
+     "loc_minus_departure_s": 2.4560000000815307,
+     "loc_minus_later_event_s": 1.2000000000398359,
+     "n_revokes": 1,
+     "total_delay_limit_s": 5.82330562469048,
+     "crawler_loc_period_max_N": 752.2889913113053,
+     "condition_2_basis": "max(t_off, t_revoke_last)"
+    },
+    "local": {
+     "conditions": {
+      "1_revoke": true,
+      "2_delay_by_revoke": true,
+      "3_not_false_loc": true,
+      "4_load_strict": true,
+      "5_loc_before_first_done": true,
+      "6_total_delay": true
+     },
+     "flag": false,
+     "verdict": "pass",
+     "limit_s": 2.91165281234524,
+     "n_revokes": 1,
+     "total_delay_cap_s": 5.82330562469048
+    },
+    "shared_local_agree": true
+   }
+  },
+  "P3-3_leg_force": {
+   "criterion": "true F_cyl min after the departure >= F_min (9415 N); guard + 5 kN recorded; split at departure + 8 s (rev. 40 lift-off transient)",
+   "F_min_after_N": [
+    126418.24265656281,
+    121585.11124802365,
+    74791.21003258403,
+    74602.7114613435
+   ],
+   "t_min_after_s": [
+    55.168000000707856,
+    53.350000000647505,
+    95.64000000205138,
+    92.66000000195245
+   ],
+   "F_min_transient_N": [
+    126418.24265656281,
+    121585.11124802365,
+    77009.43790109956,
+    76962.8435782753
+   ],
+   "F_min_late_N": [
+    126993.55654531994,
+    123460.99548020127,
+    74791.21003258403,
+    74602.7114613435
+   ],
+   "margin_over_F_min_N": [
+    117003.65354656281,
+    112170.52213802365,
+    65376.62092258403,
+    65188.122351343496
+   ],
+   "below_F_min_plus_guard": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "within": true
+  },
+  "P3-4_attitude": {
+   "criterion": "main judgement (control D-3, 2026-10-26): window [max(two-sided creep stop, last READY entry), t_end]; true attitude (quaternion roll / pitch, absolute, target 0) max |roll|, |pitch| <= 0.2 deg; window < 5 s -> window_short FLAG; no two-sided creep stop -> signed creep stop + creep_vibration_suspect FLAG; end 1 s values, dead band 0.03 deg, post-lift-off max <= 1 deg recorded",
+   "end_window_s": [
+    127.00000000309242,
+    128.00000000312562
+   ],
+   "end_mean_roll_pitch_deg": [
+    0.01999709306296026,
+    -0.030281551147280785
+   ],
+   "end_absmax_roll_pitch_deg": [
+    0.0200061808859868,
+    0.030283252295492523
+   ],
+   "end_mean_minus_settle_deg": [
+    0.019958035945204382,
+    -0.10333709340087112
+   ],
+   "t_creep_stop_final_s": 107.28100000243782,
+   "t_creep_stop_final_two_sided_s": 107.28100000243782,
+   "window_after_creep_stop": true,
+   "end_1s_within_0p2_record": true,
+   "within_deadband_0p03_record": false,
+   "t_ready_last_entry_s": 102.20000000226915,
+   "ready_at_end": true,
+   "creep_stop_used_s": 107.28100000243782,
+   "creep_stop_basis": "two_sided",
+   "creep_vibration_suspect": false,
+   "p34_window_s": [
+    107.28100000243782,
+    128.00000000312562
+   ],
+   "p34_window_length_s": 20.7190000006878,
+   "p34_absmax_deg": [
+    0.020313189241146147,
+    0.030386738293886044
+   ],
+   "p34_absmax_overall_deg": 0.030386738293886044,
+   "window_short": false,
+   "sensor_allowance_left_deg": 0.14961326170611397,
+   "budget_residual_le_0p04": true,
+   "within_0p2": true,
+   "flags": [],
+   "post_liftoff_absmax_deg": [
+    0.47599742587493016,
+    0.39848197402834806
+   ],
+   "done": {
+    "t_first_done_s": 64.90000000103092,
+    "before_creep_stop": true,
+    "shift_5s_end_minus_done_deg": [
+     0.052109572274635765,
+     0.0026185783908514865
+    ],
+    "shift_5s_range_deg": [
+     0.05862916087167157,
+     0.025874875737864882
+    ]
+   }
+  },
+  "P3-5_clearance_stroke": {
+   "criterion": "spec rev. 60, U-S9P-14 (가): min rut clearance (10 Hz) from the first READY entry to the run end >= 25 mm (ASSUMPTION U-S9-C3); s_motor <= 0.6848 m; the minimum after the departure is within_after_departure_record",
+   "t_first_ready_s": 102.20000000226915,
+   "rut_clearance_min_after_first_ready_m": 0.06092853066584647,
+   "t_at_min_s": 102.40000000227579,
+   "rut_clearance_min_after_departure_m": 0.006446260811501681,
+   "rut_clearance_end_m": 0.06198820403300198,
+   "s_motor_max_m": [
+    0.5668169884867476,
+    0.5196420330824995,
+    0.5995873599999373,
+    0.5787616024067299
+   ],
+   "s_motor_limit_m": 0.6848,
+   "stroke_within": true,
+   "within_after_departure_record": false,
+   "probe_sinkage": [
+    {
+     "t_start_s": 65.00000000103424,
+     "t_end_s": 71.50000000125002,
+     "d_sinkage_m": [
+      -4.9206608826013465e-05,
+      0.005079170733923499,
+      0.0001746334592998,
+      0.004254952138263102
+     ]
+    },
+    {
+     "t_start_s": 90.30000000187411,
+     "t_end_s": 102.20000000226915,
+     "d_sinkage_m": [
+      -4.644366454642501e-05,
+      0.00178753708592172,
+      0.0037866962240258317,
+      0.005724899639306891
+     ]
+    }
+   ],
+   "rut_clearance_at_loc_m": 0.009649346183584484,
+   "rut_clearance_at_first_loc_m": 0.007577657961810758,
+   "within": true
+  },
+  "P3-6_ready": {
+   "t_ready_after_loop_start_s": 94.20000000227445,
+   "limit_s": 100.0,
+   "limit_rule": {
+    "limit_s": 100.0,
+    "row": "flat, pad B, both rear pads on J1 / J2 / S1",
+    "rear_pad_soils": [
+     "J1",
+     "J1"
+    ],
+    "floor_deg": [
+     0.0,
+     0.0
+    ],
+    "pad_variant": "dwg_rear250",
+    "rule": "spec 421.1 (Q-A): slope 120 s / flat pad B both rear pads J1-J2-S1 100 s / other flat 90 s"
+   },
+   "within": true
+  },
+  "P3-7_plateau": {
+   "criterion": "spec rev. 60, U-S9P-15 (가): S-1 window rise per plateau_window_m >= 4 kN on the windows whose end crawler true normal > 0.01 W_plant (422.6: mass_scale x W_ref); none = pass; > 1 kN (former definition) and > 0.05 W_ref are records; gate: reconstructed t_P / t_loc = C2 meta within 1e-06 s",
+   "loaded_threshold_N": 4142.41920667729,
+   "W_ref_N": 376583.56424339,
+   "reconstruct_ok": true,
+   "within": false,
+   "mass_scale": 1.1,
+   "W_plant_N": 414241.92066772905,
+   "loaded_threshold_basis": "spec 422.6: 0.01 W_plant, W_plant = mass_scale x W_ref (plant superstructure weight; = W_ref at mass_scale 1); W_ref (C2) for the S-1 reconstruction and the 0.05 W record bucket",
+   "loc_timeline_rule": "spec 424.8.1: judged windows up to t_LOC^fin; windows that made a revoked LOC are records",
+   "loc_revokes_s": [
+    49.70000000052634
+   ],
+   "revoked_loc_rec_s": [
+    49.20000000050974
+   ],
+   "revoked_loc_event_s": [
+    49.20000000050974
+   ],
+   "revoked_loc_gate_ok": true,
+   "revoked_loc_windows": [
+    {
+     "t_start_s": 47.600000000456625,
+     "t_end_s": 49.20000000050974,
+     "rise_N": 1976.7327159856682,
+     "mean_load_N": 426107.9569086897,
+     "n": 17,
+     "segment": 0,
+     "crawler_at_end_N": 3262.99078480296
+    }
+   ],
+   "t_P_rec_s": 49.80000000052966,
+   "t_loc_rec_s": 50.90000000056617,
+   "t_P_meta_s": 49.80000000052966,
+   "t_loc_meta_s": 50.90000000056617,
+   "n_windows": 168,
+   "n_loaded_windows": 160,
+   "rise_min_loaded_N": 2024.3027183997658,
+   "t_end_at_min_s": 46.90000000043339,
+   "crawler_at_end_N": 6911.335526510635,
+   "no_loaded_window": false,
+   "rise_min_gt1kN_N": 2024.3027183997658,
+   "rise_min_gt0p05W_N": 5955.919957322671,
+   "buckets_read": {
+    "gt1kN": {
+     "n": 167,
+     "threshold_N": 1000.0,
+     "rise_min_N": 2024.3027183997658,
+     "t_end_s": 46.90000000043339,
+     "t_start_s": 45.20000000037695,
+     "crawler_at_end_N": 6911.335526510635,
+     "crawler_at_start_N": 10437.685836757835
+    },
+    "gt0p01W": {
+     "n": 160,
+     "threshold_N": 4142.41920667729,
+     "rise_min_N": 2024.3027183997658,
+     "t_end_s": 46.90000000043339,
+     "t_start_s": 45.20000000037695,
+     "crawler_at_end_N": 6911.335526510635,
+     "crawler_at_start_N": 10437.685836757835
+    },
+    "gt0p05W": {
+     "n": 101,
+     "threshold_N": 18829.1782121695,
+     "rise_min_N": 5955.919957322671,
+     "t_end_s": 42.30000000028068,
+     "t_start_s": 40.50000000022093,
+     "crawler_at_end_N": 19541.880161626217,
+     "crawler_at_start_N": 26123.26440619471
+    }
+   },
+   "truth": {
+    "t_P_s": 49.80000000052966,
+    "t_loc_s": 50.90000000056617,
+    "n_windows": 173,
+    "basis": "record.npz F_cyl sum, mean s_motor, same u_applied gate, own LOC"
+   },
+   "rise_min_loaded_true_N": 2908.14473766755
+  },
+  "departure": {
+   "rule": "crawler SCM normal < 0.01 W (4178 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+   "departed": true,
+   "t_departure_s": 48.44400000048464,
+   "t_confirmed_s": 48.54400000048796,
+   "recontact_t_s": 50.472000000551965,
+   "recontact_count": 1,
+   "crawler_normal_max_after_confirm_N": 4749.473764858087
+  },
+  "pre_liftoff_min_F_cyl": {
+   "rule": "min F_cyl from first > 1.4 F_min to the crawler departure; FLAG < F_min (9415 N), record only",
+   "window_end_s": 48.44400000048464,
+   "legs": [
+    {
+     "leg": "FL",
+     "t_first_above_s": 30.90699999994131,
+     "F_min_N": 13331.070852894347,
+     "t_min_s": 30.90699999994131,
+     "flag": false
+    },
+    {
+     "leg": "FR",
+     "t_first_above_s": 30.908999999941305,
+     "F_min_N": 13177.481881557205,
+     "t_min_s": 30.929999999941256,
+     "flag": false
+    },
+    {
+     "leg": "RL",
+     "t_first_above_s": 31.020999999941044,
+     "F_min_N": 13197.096514265742,
+     "t_min_s": 31.020999999941044,
+     "flag": false
+    },
+    {
+     "leg": "RR",
+     "t_first_above_s": 31.019999999941046,
+     "F_min_N": 13196.892047519357,
+     "t_min_s": 31.019999999941046,
+     "flag": false
+    }
+   ],
+   "any_flag": false
+  },
+  "P3-1_crawler": {
+   "criterion": "SCM crawler normal sum = 0 in READY .. READY + 10 s; no recontact after the first departure",
+   "t_ready_s": 102.20000000226915,
+   "window_complete": true,
+   "crawler_normal_max_N": 0.0,
+   "crawler_patches_max": 2.0,
+   "crawler_zero": true,
+   "recontact_t_s": 50.472000000551965,
+   "recontact_count": 1,
+   "recontact_events": {
+    "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+    "limit_N": 4177.71268488423,
+    "weight_N": 417771.268488423,
+    "t_loc_s": 50.90000000056617,
+    "t_ready_s": 102.20000000226915,
+    "chatter": {
+     "after_loc_s": 1.0,
+     "max_duration_s": 0.1,
+     "max_over_limit": 1.2,
+     "max_normal_N": 5013.255221861075,
+     "time_tolerance_s": 1e-09,
+     "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+    },
+    "events": [
+     {
+      "t_start_s": 50.472000000551965,
+      "t_end_s": 50.57700000055545,
+      "duration_s": 0.10500000000348564,
+      "max_normal_N": 4749.473764858087,
+      "max_over_W": 0.01136859837691232,
+      "max_over_limit": 1.136859837691232,
+      "ended_before_loc": true,
+      "start_after_loc_s": -0.4280000000142081,
+      "class": "transient_flag"
+     }
+    ],
+    "pass": true,
+    "flags": [
+     "P3-1_transient_recontact"
+    ]
+   }
+  },
+  "events_sel": [
+   "{\"t_s\": 49.20000000050974, \"name\": \"crawler_liftoff_confirmed\"}",
+   "{\"t_s\": 49.20000000050974, \"name\": \"INFO_LOC_FLAT_SOIL_MARGIN:80\"}",
+   "{\"t_s\": 49.70000000052634, \"name\": \"INFO_LOC_REVOKED:2.8\"}",
+   "{\"t_s\": 50.800000000562854, \"name\": \"INFO_DIFF_SINK_HOLD:FL,RL:7.2\"}",
+   "{\"t_s\": 50.90000000056617, \"name\": \"crawler_liftoff_confirmed\"}",
+   "{\"t_s\": 55.30000000071224, \"name\": \"INFO_DIFF_SINK_RELEASE:reversed\"}",
+   "{\"t_s\": 102.20000000226915, \"name\": \"ready_heave_tail\"}",
+   "{\"t_s\": 102.50000000227911, \"name\": \"INFO_D1_IMU_MASS_SOURCE:ready\"}"
+  ],
+  "phases": [
+   {
+    "t_s": 8.099999999994461,
+    "phase": "check"
+   },
+   {
+    "t_s": 12.799999999983507,
+    "phase": "touch"
+   },
+   {
+    "t_s": 31.599999999939694,
+    "phase": "level"
+   },
+   {
+    "t_s": 64.90000000103092,
+    "phase": "done"
+   },
+   {
+    "t_s": 65.00000000103424,
+    "phase": "probe"
+   },
+   {
+    "t_s": 71.50000000125002,
+    "phase": "level"
+   },
+   {
+    "t_s": 90.20000000187079,
+    "phase": "done"
+   },
+   {
+    "t_s": 90.30000000187411,
+    "phase": "probe"
+   },
+   {
+    "t_s": 102.20000000226915,
+    "phase": "ready"
+   }
+  ]
+ },
+ "P3b_J2_B_top_Fs4_m1p1": {
+  "unchanged_blocks_equal": true,
+  "params_file_match": true,
+  "checks": {
+   "P3-1_crawler_zero_after_ready": true,
+   "P3-1_recontact": null,
+   "P3-1_recontact_pass": true,
+   "P3-1_flags": [],
+   "P3-1_recontact_classes": [],
+   "P3-2_within": false,
+   "P3-2_within_2s_record": false,
+   "P3-2_loc_minus_departure_s": 4.050000000134446,
+   "P3-2_limit_s": 2.91165281234524,
+   "P3-2_late_loc_reapproach": false,
+   "P3-2_late_loc_revoked": true,
+   "P3-2_verdict": "flag",
+   "t_loc_first_s": 55.30000000071224,
+   "t_loc_final_s": 57.40000000078195,
+   "loc_revokes": 1,
+   "P3-3_within": true,
+   "P3-4_within_0p2": false,
+   "P3-4_absmax_deg": null,
+   "P3-4_window_s": null,
+   "P3-4_flags": [
+    "no_creep_stop",
+    "window_short"
+   ],
+   "P3-4_window_short": true,
+   "P3-4_creep_vibration_suspect": false,
+   "P3-4_sensor_allowance_left_deg": null,
+   "P3-4_budget_residual_le_0p04_record": null,
+   "reapproach_limit_fired_FLAG": 0,
+   "reapproach_limit_by_cause": {
+    "time": 0,
+    "travel": 0,
+    "unknown": 0
+   },
+   "P3-5_within": true,
+   "P3-5_within_after_departure_record": false,
+   "P3-5_rut_clearance_min_after_first_ready_m": 0.07229951553810832,
+   "P3-6_within": true,
+   "P3-7_within": false,
+   "P3-7_rise_min_loaded_N": 3811.857266039724,
+   "P3-7_reconstruct_ok": true,
+   "P3-8_within": true,
+   "P3-8_within_first": true,
+   "P3-9_flags": 0,
+   "pre_liftoff_flag": true,
+   "W61_warnings": 0,
+   "criteria_rev": "spec rev. 60 (U-S9P-13/14/15 (가)): P3-2 T_lim, P3-5 after the first READY, P3-7 > 0.01 W",
+   "note": "values vs criteria; decisions are control's (284) / dynamics' (physics)"
+  },
+  "t_loop_start_s": 7.999999999994694,
+  "mass_scale": {
+   "mass_scale": 1.1,
+   "note": "spec 422 / decision Q-D (2026-10-29): Chrono plant superstructure body (rigid, crawler included) mass and inertia about its COG x mass_scale, COG kept (= s9_soil_closed_loop.scale_plant_mass); leg rods / pads unchanged; controller unchanged (YAML nominal mass, W_ref, D1'' mass); the 8 s settle runs on the scaled body in Chrono (no A1-m settle approximation); judgement weight p3b.weight_N = plant weight (scaled), P3-7 loaded window 0.01 W_plant = 0.01 mass_scale W_ref (spec 422.6)",
+   "yaml_superstructure_mass_kg": 38400.8366,
+   "plant_superstructure_mass_kg": 42240.920260000006,
+   "plant_superstructure_inertia_cog_body_kg_m2": [
+    [
+     586855.8971000001,
+     -1035.6077336,
+     -213271.50900000002
+    ],
+    [
+     -1035.6077336,
+     757561.6719000001,
+     -219.47004310000003
+    ],
+    [
+     -213271.50900000002,
+     -219.47004310000003,
+     211497.9922
+    ]
+   ],
+   "plant_weight_N": 417771.268488423,
+   "plant_superstructure_weight_N": 414241.92066772905,
+   "yaml_weight_N": 380112.91206408397,
+   "controller_weight_ref_N": 376583.56424339,
+   "plant_over_W_ref": 1.1,
+   "weight_mismatch_events": [],
+   "judgement_weights": {
+    "mass_scale": 1.1,
+    "weight_N": 417771.268488423,
+    "W_ref_N": 376583.56424339,
+    "W_plant_N": 414241.92066772905,
+    "P3-7_loaded_threshold_N": 4142.41920667729,
+    "F_min_N": 9414.58911,
+    "F_min_x_mass_scale_record_N": 10356.048021000002,
+    "basis": {
+     "weight_N": "p3b.weight_N = plant weight (superstructure x mass_scale + leg moving parts) x g: departure / re-contact 0.01 W rules, settle normal checks",
+     "W_plant_N": "mass_scale x W_ref (plant superstructure): P3-7 loaded-window threshold (422.6)",
+     "W_ref_N": "C2 meta soil.W_ref_N (YAML nominal, controller): W ratio, WARN_WEIGHT_MISMATCH, S-1 plausibility / reconstruction, P3-7 0.05 W record bucket",
+     "F_min_N": "P3-3 uses the YAML F_min; F_min x mass_scale is a record only"
+    }
+   }
+  },
+  "P3-2_loc": {
+   "criterion": "spec rev. 60, U-S9P-13 (가): crawler_liftoff_confirmed before the first DONE; no LOC while the crawler is loaded (normal >= 0.01 W at the LOC); LOC - departure <= T_lim = plateau_window_m / (push_speed_fraction v_max) + 1 s (ASSUMPTION tail share); the former <= 2 s clause is within_2s_record",
+   "t_loc_s": 57.40000000078195,
+   "t_departure_s": 53.350000000647505,
+   "t_first_done_s": 83.1000000016351,
+   "soil_mode_start_t_s": 33.299999999981914,
+   "soil_mode_used": true,
+   "limit_s": 2.91165281234524,
+   "limit_basis": {
+    "plateau_window_m": 0.01,
+    "push_speed_fraction": 0.25,
+    "v_max_m_s": 0.0209243016,
+    "tail_allowance_s": 1.0
+   },
+   "tP_minus_departure_s": 3.3500000001112085,
+   "window_s": 0.7000000000232376,
+   "loc_before_first_done": true,
+   "loc_minus_departure_s": 4.050000000134446,
+   "crawler_normal_at_loc_N": 0.0,
+   "crawler_loaded_at_loc": false,
+   "within_2s_record": false,
+   "within": false,
+   "t_loc_first_s": 55.30000000071224,
+   "t_loc_final_s": 57.40000000078195,
+   "loc_revokes": [
+    {
+     "t_s": 56.600000000755394,
+     "event": "INFO_LOC_REVOKED:2.0",
+     "revoked_loc_s": 55.30000000071224
+    }
+   ],
+   "loc_timeline": {
+    "rule": "spec 424.8.1: judged LOC = the first LOC after the last revocation (last confirmed LOC); a revocation cancels the latest LOC at / before it; revoked LOCs are records only",
+    "t_loc_first_s": 55.30000000071224,
+    "t_loc_final_s": 57.40000000078195,
+    "loc_events_s": [
+     55.30000000071224,
+     57.40000000078195
+    ],
+    "loc_revokes": [
+     {
+      "t_s": 56.600000000755394,
+      "event": "INFO_LOC_REVOKED:2.0",
+      "revoked_loc_s": 55.30000000071224
+     }
+    ],
+    "revoke_source": "events",
+    "revoked_loc_s": [
+     55.30000000071224
+    ],
+    "t_revoke_last_s": 56.600000000755394
+   },
+   "late_loc_reapproach": {
+    "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_reapproach when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC before the first DONE; else a failure",
+    "t_off_s": 53.350000000647505,
+    "t_loc_s": 57.40000000078195,
+    "limit_s": 2.91165281234524,
+    "control_period_s": 0.1,
+    "late_loc_reapproach_s": 4.050000000134446,
+    "t_reapproach_end_s": null,
+    "loc_minus_reapproach_end_s": null,
+    "restart_events_before_loc": 0,
+    "restart_events_off_to_loc": 0,
+    "reapproach_intervals": [],
+    "overlapping_reapproach_legs": [],
+    "open_overlapping_interval": false,
+    "lwa_on": true,
+    "lwa_on_source": "controller meta",
+    "judgement_error": null,
+    "crawler_normal_loc_period_max_N": 0.0,
+    "crawler_normal_at_loc_N": 0.0,
+    "crawler_normal_next_period_max_N": 0.0,
+    "crawler_threshold_N": 4177.71268488423,
+    "fault_events": [],
+    "fault_phase": false,
+    "conditions": {
+     "1_restart": false,
+     "2_delay_by_reapproach": false,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true
+    },
+    "time_clause_violated": true,
+    "flag": false,
+    "verdict": "fail"
+   },
+   "late_loc_revoked": {
+    "rule": "spec 424.8.1 (user decision 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_revoked when 1 a LOC revocation lies in [t_off, t_LOC^fin], 2 t_LOC^fin - max(t_off, t_revoke_last [, t_re_end when the 419.8 condition 1 holds]) <= T_lim, 3 crawler true normal < 0.01 W over the t_LOC^fin period, 4 P3-3 within and no FAULT, 5 t_LOC^fin before the first DONE, 6 (424.9) t_LOC^fin - t_off <= (1 + n_revoke) T_lim; else a failure",
+    "t_off_s": 53.350000000647505,
+    "t_loc_final_s": 57.40000000078195,
+    "t_loc_first_s": 55.30000000071224,
+    "limit_s": 2.91165281234524,
+    "revokes_off_to_loc_s": [
+     56.600000000755394
+    ],
+    "t_revoke_last_s": 56.600000000755394,
+    "late_loc_revoked_s": 4.050000000134446,
+    "loc_minus_later_event_s": 0.8000000000265572,
+    "condition_2_basis": "max(t_off, t_revoke_last)",
+    "n_revokes": 1,
+    "total_delay_cap_s": 5.82330562469048,
+    "conditions": {
+     "1_revoke": true,
+     "2_delay_by_revoke": true,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true,
+     "6_total_delay": true
+    },
+    "time_clause_violated": true,
+    "flag": true,
+    "verdict": "flag",
+    "condition_6_source": "late_loc_rule.late_loc_revoked (n_revokes)",
+    "decision_source": "late_loc_rule.late_loc_revoked (shared, t_lim_s = P3-2 limit_s)",
+    "t_lim_s": 2.91165281234524,
+    "shared": {
+     "is_flag": true,
+     "time_clause_violated": true,
+     "conditions": {
+      "1_revoke": true,
+      "2_delay_by_revoke": true,
+      "3_not_false_loc": true,
+      "4_load_strict": true,
+      "5_loc_before_first_done": true,
+      "6_total_delay": true
+     },
+     "t_loc_final_s": 57.40000000078195,
+     "t_off_s": 53.350000000647505,
+     "limit_s": 2.91165281234524,
+     "t_revoke_last_s": 56.600000000755394,
+     "revokes_off_to_loc_s": [
+      56.600000000755394
+     ],
+     "loc_minus_departure_s": 4.050000000134446,
+     "loc_minus_later_event_s": 0.8000000000265572,
+     "n_revokes": 1,
+     "total_delay_limit_s": 5.82330562469048,
+     "crawler_loc_period_max_N": 0.0,
+     "condition_2_basis": "max(t_off, t_revoke_last)"
+    },
+    "local": {
+     "conditions": {
+      "1_revoke": true,
+      "2_delay_by_revoke": true,
+      "3_not_false_loc": true,
+      "4_load_strict": true,
+      "5_loc_before_first_done": true,
+      "6_total_delay": true
+     },
+     "flag": true,
+     "verdict": "flag",
+     "limit_s": 2.91165281234524,
+     "n_revokes": 1,
+     "total_delay_cap_s": 5.82330562469048
+    },
+    "shared_local_agree": true
+   }
+  },
+  "P3-3_leg_force": {
+   "criterion": "true F_cyl min after the departure >= F_min (9415 N); guard + 5 kN recorded; split at departure + 8 s (rev. 40 lift-off transient)",
+   "F_min_after_N": [
+    126583.58820509448,
+    118898.7022796561,
+    74948.78117850298,
+    73900.72237091555
+   ],
+   "t_min_after_s": [
+    97.09100000209955,
+    57.573000000787694,
+    120.37400000287246,
+    97.35600000210835
+   ],
+   "F_min_transient_N": [
+    127643.2215187226,
+    118898.7022796561,
+    77654.12577769904,
+    75317.89529000796
+   ],
+   "F_min_late_N": [
+    126583.58820509448,
+    123553.80743229286,
+    74948.78117850298,
+    73900.72237091555
+   ],
+   "margin_over_F_min_N": [
+    117168.99909509448,
+    109484.1131696561,
+    65534.192068502976,
+    64486.13326091555
+   ],
+   "below_F_min_plus_guard": [
+    false,
+    false,
+    false,
+    false
+   ],
+   "within": true
+  },
+  "P3-4_attitude": {
+   "criterion": "main judgement (control D-3, 2026-10-26): window [max(two-sided creep stop, last READY entry), t_end]; true attitude (quaternion roll / pitch, absolute, target 0) max |roll|, |pitch| <= 0.2 deg; window < 5 s -> window_short FLAG; no two-sided creep stop -> signed creep stop + creep_vibration_suspect FLAG; end 1 s values, dead band 0.03 deg, post-lift-off max <= 1 deg recorded",
+   "end_window_s": [
+    127.00000000309242,
+    128.00000000312562
+   ],
+   "end_mean_roll_pitch_deg": [
+    0.030943931393753635,
+    -0.02312944997436133
+   ],
+   "end_absmax_roll_pitch_deg": [
+    0.03312321382379453,
+    0.02499059248642701
+   ],
+   "end_mean_minus_settle_deg": [
+    0.030789286401478322,
+    -0.14278915978854184
+   ],
+   "t_creep_stop_final_s": null,
+   "t_creep_stop_final_two_sided_s": null,
+   "window_after_creep_stop": false,
+   "end_1s_within_0p2_record": true,
+   "within_deadband_0p03_record": false,
+   "t_ready_last_entry_s": 126.9000000030891,
+   "ready_at_end": true,
+   "creep_stop_used_s": null,
+   "creep_stop_basis": null,
+   "creep_vibration_suspect": false,
+   "p34_window_s": null,
+   "p34_absmax_deg": null,
+   "p34_absmax_overall_deg": null,
+   "window_short": true,
+   "sensor_allowance_left_deg": null,
+   "budget_residual_le_0p04": null,
+   "within_0p2": false,
+   "flags": [
+    "no_creep_stop",
+    "window_short"
+   ],
+   "post_liftoff_absmax_deg": [
+    0.4596396985580496,
+    0.3129926876711673
+   ],
+   "done": {
+    "t_first_done_s": 83.1000000016351,
+    "before_creep_stop": true,
+    "shift_5s_end_minus_done_deg": [
+     0.07025416855933636,
+     -0.005225723533288845
+    ],
+    "shift_5s_range_deg": [
+     0.08722783381731133,
+     0.02712223069376473
+    ]
+   }
+  },
+  "P3-5_clearance_stroke": {
+   "criterion": "spec rev. 60, U-S9P-14 (가): min rut clearance (10 Hz) from the first READY entry to the run end >= 25 mm (ASSUMPTION U-S9-C3); s_motor <= 0.6848 m; the minimum after the departure is within_after_departure_record",
+   "t_first_ready_s": 106.90000000242517,
+   "rut_clearance_min_after_first_ready_m": 0.07229951553810832,
+   "t_at_min_s": 126.80000000308578,
+   "rut_clearance_min_after_departure_m": 0.0037361469785230916,
+   "rut_clearance_end_m": 0.07331853636371877,
+   "s_motor_max_m": [
+    0.5957573839312834,
+    0.5612897489269361,
+    0.6228547782603159,
+    0.5969502505373037
+   ],
+   "s_motor_limit_m": 0.6848,
+   "stroke_within": true,
+   "within_after_departure_record": false,
+   "probe_sinkage": [
+    {
+     "t_start_s": 83.20000000163841,
+     "t_end_s": 87.10000000176788,
+     "d_sinkage_m": [
+      -5.615289230487264e-05,
+      0.004905755499875708,
+      0.00017871878345476766,
+      0.0034686948015913988
+     ]
+    },
+    {
+     "t_start_s": 95.00000000203013,
+     "t_end_s": 106.90000000242517,
+     "d_sinkage_m": [
+      -7.031111051758465e-05,
+      0.003945140251627732,
+      0.0017674425794713677,
+      0.005495215587156377
+     ]
+    },
+    {
+     "t_start_s": 115.00000000269407,
+     "t_end_s": 126.9000000030891,
+     "d_sinkage_m": [
+      -9.88872151834741e-05,
+      0.0019268493562014655,
+      0.002503481796803486,
+      0.004387298508222948
+     ]
+    }
+   ],
+   "rut_clearance_at_loc_m": 0.01796853302027923,
+   "rut_clearance_at_first_loc_m": 0.005014369232346105,
+   "within": true
+  },
+  "P3-6_ready": {
+   "t_ready_after_loop_start_s": 98.90000000243047,
+   "limit_s": 100.0,
+   "limit_rule": {
+    "limit_s": 100.0,
+    "row": "flat, pad B, both rear pads on J1 / J2 / S1",
+    "rear_pad_soils": [
+     "J2",
+     "J2"
+    ],
+    "floor_deg": [
+     0.0,
+     0.0
+    ],
+    "pad_variant": "dwg_rear250",
+    "rule": "spec 421.1 (Q-A): slope 120 s / flat pad B both rear pads J1-J2-S1 100 s / other flat 90 s"
+   },
+   "within": true
+  },
+  "P3-7_plateau": {
+   "criterion": "spec rev. 60, U-S9P-15 (가): S-1 window rise per plateau_window_m >= 4 kN on the windows whose end crawler true normal > 0.01 W_plant (422.6: mass_scale x W_ref); none = pass; > 1 kN (former definition) and > 0.05 W_ref are records; gate: reconstructed t_P / t_loc = C2 meta within 1e-06 s",
+   "loaded_threshold_N": 4142.41920667729,
+   "W_ref_N": 376583.56424339,
+   "reconstruct_ok": true,
+   "within": false,
+   "mass_scale": 1.1,
+   "W_plant_N": 414241.92066772905,
+   "loaded_threshold_basis": "spec 422.6: 0.01 W_plant, W_plant = mass_scale x W_ref (plant superstructure weight; = W_ref at mass_scale 1); W_ref (C2) for the S-1 reconstruction and the 0.05 W record bucket",
+   "loc_timeline_rule": "spec 424.8.1: judged windows up to t_LOC^fin; windows that made a revoked LOC are records",
+   "loc_revokes_s": [
+    56.600000000755394
+   ],
+   "revoked_loc_rec_s": [
+    55.30000000071224
+   ],
+   "revoked_loc_event_s": [
+    55.30000000071224
+   ],
+   "revoked_loc_gate_ok": true,
+   "revoked_loc_windows": [
+    {
+     "t_start_s": 53.90000000066576,
+     "t_end_s": 55.30000000071224,
+     "rise_N": 1973.4463352163762,
+     "mean_load_N": 428189.55002195656,
+     "n": 15,
+     "segment": 0,
+     "crawler_at_end_N": 1293.4046656857367
+    }
+   ],
+   "t_P_rec_s": 56.70000000075871,
+   "t_loc_rec_s": 57.40000000078195,
+   "t_P_meta_s": 56.70000000075871,
+   "t_loc_meta_s": 57.40000000078195,
+   "n_windows": 229,
+   "n_loaded_windows": 209,
+   "rise_min_loaded_N": 3811.857266039724,
+   "t_end_at_min_s": 52.10000000060601,
+   "crawler_at_end_N": 7058.219218920175,
+   "no_loaded_window": false,
+   "rise_min_gt1kN_N": 2169.551910006448,
+   "rise_min_gt0p05W_N": 5949.216687500784,
+   "buckets_read": {
+    "gt1kN": {
+     "n": 228,
+     "threshold_N": 1000.0,
+     "rise_min_N": 2169.551910006448,
+     "t_end_s": 55.20000000070892,
+     "t_start_s": 53.80000000066244,
+     "crawler_at_end_N": 1410.4818281762095,
+     "crawler_at_start_N": 3261.0282866060056
+    },
+    "gt0p01W": {
+     "n": 209,
+     "threshold_N": 4142.41920667729,
+     "rise_min_N": 3811.857266039724,
+     "t_end_s": 52.10000000060601,
+     "t_start_s": 50.400000000549575,
+     "crawler_at_end_N": 7058.219218920175,
+     "crawler_at_start_N": 11585.182347799331
+    },
+    "gt0p05W": {
+     "n": 159,
+     "threshold_N": 18829.1782121695,
+     "rise_min_N": 5949.216687500784,
+     "t_end_s": 47.00000000043671,
+     "t_start_s": 45.20000000037695,
+     "crawler_at_end_N": 24179.5544236818,
+     "crawler_at_start_N": 31441.09693099852
+    }
+   },
+   "truth": {
+    "t_P_s": 56.70000000075871,
+    "t_loc_s": 57.40000000078195,
+    "n_windows": 227,
+    "basis": "record.npz F_cyl sum, mean s_motor, same u_applied gate, own LOC"
+   },
+   "rise_min_loaded_true_N": 3840.8997165879296
+  },
+  "departure": {
+   "rule": "crawler SCM normal < 0.01 W (4178 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+   "departed": true,
+   "t_departure_s": 53.350000000647505,
+   "t_confirmed_s": 53.450000000650824,
+   "recontact_t_s": null,
+   "recontact_count": 0,
+   "crawler_normal_max_after_confirm_N": 3966.5715259702206
+  },
+  "pre_liftoff_min_F_cyl": {
+   "rule": "min F_cyl from first > 1.4 F_min to the crawler departure; FLAG < F_min (9415 N), record only",
+   "window_end_s": 53.350000000647505,
+   "legs": [
+    {
+     "leg": "FL",
+     "t_first_above_s": 30.74799999994168,
+     "F_min_N": 5896.684037300445,
+     "t_min_s": 30.94899999994121,
+     "flag": true
+    },
+    {
+     "leg": "FR",
+     "t_first_above_s": 30.745999999941684,
+     "F_min_N": 5937.230167885712,
+     "t_min_s": 30.94999999994121,
+     "flag": true
+    },
+    {
+     "leg": "RL",
+     "t_first_above_s": 30.920999999941277,
+     "F_min_N": 12006.457994995204,
+     "t_min_s": 31.17699999994068,
+     "flag": false
+    },
+    {
+     "leg": "RR",
+     "t_first_above_s": 30.920999999941277,
+     "F_min_N": 11936.487853110104,
+     "t_min_s": 31.17699999994068,
+     "flag": false
+    }
+   ],
+   "any_flag": true
+  },
+  "P3-1_crawler": {
+   "criterion": "SCM crawler normal sum = 0 in READY .. READY + 10 s; no recontact after the first departure",
+   "t_ready_s": 106.90000000242517,
+   "window_complete": true,
+   "crawler_normal_max_N": 0.0,
+   "crawler_patches_max": 2.0,
+   "crawler_zero": true,
+   "recontact_t_s": null,
+   "recontact_count": 0,
+   "recontact_events": {
+    "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+    "limit_N": 4177.71268488423,
+    "weight_N": 417771.268488423,
+    "t_loc_s": 57.40000000078195,
+    "t_ready_s": 106.90000000242517,
+    "chatter": {
+     "after_loc_s": 1.0,
+     "max_duration_s": 0.1,
+     "max_over_limit": 1.2,
+     "max_normal_N": 5013.255221861075,
+     "time_tolerance_s": 1e-09,
+     "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+    },
+    "events": [],
+    "pass": true,
+    "flags": []
+   }
+  },
+  "events_sel": [
+   "{\"t_s\": 55.30000000071224, \"name\": \"crawler_liftoff_confirmed\"}",
+   "{\"t_s\": 55.30000000071224, \"name\": \"INFO_LOC_FLAT_SOIL_MARGIN:80\"}",
+   "{\"t_s\": 56.300000000745435, \"name\": \"INFO_DIFF_SINK_HOLD:FL,RL:7.9\"}",
+   "{\"t_s\": 56.600000000755394, \"name\": \"INFO_LOC_REVOKED:2.0\"}",
+   "{\"t_s\": 57.40000000078195, \"name\": \"crawler_liftoff_confirmed\"}",
+   "{\"t_s\": 59.90000000086494, \"name\": \"INFO_DIFF_SINK_RELEASE:settled\"}",
+   "{\"t_s\": 106.90000000242517, \"name\": \"ready_heave_tail\"}",
+   "{\"t_s\": 107.20000000243513, \"name\": \"INFO_D1_IMU_MASS_SOURCE:ready\"}",
+   "{\"t_s\": 126.9000000030891, \"name\": \"ready_heave_tail\"}"
+  ],
+  "phases": [
+   {
+    "t_s": 8.099999999994461,
+    "phase": "check"
+   },
+   {
+    "t_s": 12.799999999983507,
+    "phase": "touch"
+   },
+   {
+    "t_s": 31.599999999939694,
+    "phase": "level"
+   },
+   {
+    "t_s": 83.1000000016351,
+    "phase": "done"
+   },
+   {
+    "t_s": 83.20000000163841,
+    "phase": "probe"
+   },
+   {
+    "t_s": 87.10000000176788,
+    "phase": "level"
+   },
+   {
+    "t_s": 94.90000000202681,
+    "phase": "done"
+   },
+   {
+    "t_s": 95.00000000203013,
+    "phase": "probe"
+   },
+   {
+    "t_s": 106.90000000242517,
+    "phase": "ready"
+   },
+   {
+    "t_s": 108.50000000247829,
+    "phase": "level"
+   },
+   {
+    "t_s": 114.90000000269075,
+    "phase": "done"
+   },
+   {
+    "t_s": 115.00000000269407,
+    "phase": "probe"
+   },
+   {
+    "t_s": 126.9000000030891,
+    "phase": "ready"
+   }
+  ]
+ }
+}

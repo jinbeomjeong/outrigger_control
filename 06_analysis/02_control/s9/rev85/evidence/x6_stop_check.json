@@ -1,0 +1,110 @@
+{
+ "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0": {
+  "t_stop_abs_s": 48.60000000048982,
+  "t_loop_start_s": 7.999999999994694,
+  "stop_events": [
+   "WARN_LIFT_STROKE_LIMITED:FR",
+   "FAULT_LIFT_STROKE_LIMIT:soil:FR"
+  ],
+  "fault_stroke_end": 0,
+  "ready_events": 0,
+  "after_stop": {
+   "keys": [
+    "t_s",
+    "scm_crawler_normal_N",
+    "scm_crawler_patches",
+    "scm_track_normal_raw_N",
+    "track_utilisation",
+    "scm_pad_normal_N",
+    "F_cyl_N",
+    "s_motor_m",
+    "pad_sinkage_geometric_m",
+    "roll_pitch_deg",
+    "z_origin_m",
+    "sinkage_rate_0p2s_m_s"
+   ],
+   "F_cyl_min_after_stop_kN": {
+    "FL": 105.42,
+    "FR": 115.84,
+    "RL": 64.04,
+    "RR": 71.14
+   },
+   "F_cyl_min_after_stop_ge_Fmin": true,
+   "crawler_N_at_stop": 7788.696243353332,
+   "crawler_N_max_after_stop": 9557.073253951325,
+   "crawler_N_end": 6311.498191904798,
+   "crawler_over_0p01W_at_stop": true,
+   "crawler_after_stop_le_stop_plus_0p01W": true,
+   "pad_min_after_stop_N": {
+    "FL": 107925.2,
+    "FR": 114823.5,
+    "RL": 65435.7,
+    "RR": 70777.3
+   }
+  },
+  "identity_vs_pair": {
+   "keys": [
+    "t_s",
+    "issued_u_m_s"
+   ],
+   "time_key": "t_s",
+   "rows_before_stop": [
+    405,
+    405
+   ],
+   "all_equal_before_stop": true,
+   "per_key": {
+    "t_s": true,
+    "issued_u_m_s": true
+   },
+   "first_divergence": [
+    "issued_u_m_s",
+    48.70000000049314
+   ]
+  }
+ },
+ "S9SL_X6rb_J1_B_top_Fs4_rm2p86_p0": {
+  "t_stop_abs_s": 50.400000000549575,
+  "t_loop_start_s": 7.999999999994694,
+  "stop_events": [
+   "WARN_LIFT_STROKE_LIMITED:FL",
+   "FAULT_LIFT_STROKE_LIMIT:soil:FL"
+  ],
+  "fault_stroke_end": 0,
+  "ready_events": 0,
+  "after_stop": {
+   "keys": [
+    "t_s",
+    "scm_crawler_normal_N",
+    "scm_crawler_patches",
+    "scm_track_normal_raw_N",
+    "track_utilisation",
+    "scm_pad_normal_N",
+    "F_cyl_N",
+    "s_motor_m",
+    "pad_sinkage_geometric_m",
+    "roll_pitch_deg",
+    "z_origin_m",
+    "sinkage_rate_0p2s_m_s"
+   ],
+   "F_cyl_min_after_stop_kN": {
+    "FL": 117.77,
+    "FR": 114.07,
+    "RL": 72.71,
+    "RR": 68.33
+   },
+   "F_cyl_min_after_stop_ge_Fmin": true,
+   "crawler_N_at_stop": 0.0,
+   "crawler_N_max_after_stop": 0.0,
+   "crawler_N_end": 0.0,
+   "crawler_over_0p01W_at_stop": false,
+   "crawler_after_stop_le_stop_plus_0p01W": true,
+   "pad_min_after_stop_N": {
+    "FL": 117418.1,
+    "FR": 116222.2,
+    "RL": 72711.2,
+    "RR": 69550.7
+   }
+  }
+ }
+}

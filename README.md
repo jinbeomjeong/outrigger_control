@@ -65,6 +65,7 @@ outrigger_control/
 │   └── 03_hydraulic/   유압 해석 결과
 ├── 07_results/     시뮬레이션 원자료 (git 제외; 단계 판정 요약은 06_analysis/01_chrono/1N_SN/에 복사)
 ├── 08_test_data/   단품 시험 자료·데이터시트 요약(실린더 도면, 압력 센서)
+├── 10_rpi_migration/  라즈베리파이 제어기 이식 검토·준비(Python 기반, 범위 밖 사전 작업)
 └── environment*.yml  conda 환경 정의(Chrono-dev, ML, dynamics-dev)
 ```
 

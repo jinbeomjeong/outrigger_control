@@ -429,6 +429,51 @@ def test_rep_list_and_check_sources(b, capsys) -> None:
     assert not any(r["status"] == "differs" for r in doc["rows"])
 
 
+def test_final_rep_x_row_is_the_source_row_with_180_s(b) -> None:
+    rows = b["FINAL-REP-X"]
+    assert [r["case"] for r in rows] == ["P3b_J2_B_top_Fs4_m1p1_t180"]
+    r, src = rows[0], _by_case(b["FINAL-REP"])["P3b_J2_B_top_Fs4_m1p1"]
+    # argv = the FINAL-REP row with only the --duration value changed (120 -> 180), controller check kept
+    i = src["argv"].index("--duration")
+    assert src["argv"][i + 1] == "120" and r["argv"][i + 1] == "180"
+    assert r["argv"][:i + 1] == src["argv"][:i + 1] and r["argv"][i + 2:] == src["argv"][i + 2:]
+    assert r["argv"][r["argv"].index("--expect-controller") + 1] == run_S9.FINAL_CONTROLLER == "final_SGS_R4"
+    a = run_S9.build_parser().parse_args(r["argv"][len(s9_batch.RUN):] + ["--case", r["case"], "--out-root", "x"])
+    assert a.duration == 180.0 and a.mass_scale == 1.1 and a.soil == "J2"
+    # meta
+    assert r["pair_case"] == "P3b_J2_B_top_Fs4_m1p1"
+    assert r["pair_run"] == r["source_run"] == "batch_FINAL-REP_20261030_223359/P3b_J2_B_top_Fs4_m1p1"
+    assert r["source_expected_diffs"] == {"duration": 180.0}
+    assert r["est_pool_s"] == {"pcore": round(11937 * 180 / 128, -2), "ecore": round(11937 * 180 / 128 * 13700 / 11000,
+                                                                                       -2)}
+    assert r["est_pool_s"] == {"pcore": 16800.0, "ecore": 20900.0} and r["est_s"] == 16800.0
+    assert r["controller"] == run_S9.FINAL_CONTROLLER and r["priority"] == 1
+    assert "r4_x11_check" not in r and r["note"].startswith("FINAL-REP-X")
+    for k in ("pair_case", "pair_run", "source_expected_diffs"):
+        assert k in s9_batch.ENTRY_META_KEYS
+    # the other bundles are unchanged by it
+    assert len(b["FINAL-REP"]) == 7 and "P3b_J2_B_top_Fs4_m1p1_t180" not in {c["case"] for c in b["FINAL-REP"]}
+
+
+def test_expected_diff_check() -> None:
+    f = s9_batch.expected_diff_check
+    d = {"status": "differs", "diffs": [{"key": "duration", "former": 120.0, "row": 180.0}]}
+    assert f(d, {"duration": 180.0})["status"] == "ok_expected_diff"
+    assert f(d, {"duration": 200.0})["status"] == "differs"
+    more = {"status": "differs", "diffs": d["diffs"] + [{"key": "seed", "former": 1, "row": 2}]}
+    assert f(more, {"duration": 180.0})["status"] == "differs"
+    assert f({"status": "ok", "diffs": []}, {"duration": 180.0})["status"] == "differs"  # expected diff absent
+    assert f(d, None) is d and f({"status": "no_source", "diffs": []}, {"duration": 180.0})["status"] == "no_source"
+
+
+def test_final_rep_x_check_sources(b) -> None:
+    doc = s9_batch.check_sources("FINAL-REP-X", b["FINAL-REP-X"])
+    st = doc["rows"][0]["status"]
+    if st == "no_source":
+        pytest.skip("source run folder absent (07_results is not in git)")
+    assert doc["ok"] and st == "ok_expected_diff"
+
+
 def test_launch_code_state_and_git_state() -> None:
     st = s9_batch.launch_code_state()
     assert set(st["files"]) == set(s9_batch.CODE_HASH_FILES)

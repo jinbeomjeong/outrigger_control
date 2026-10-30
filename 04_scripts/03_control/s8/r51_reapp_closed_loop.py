@@ -319,8 +319,10 @@ C_MOVE = np.array([100206.065477022, 100206.065477022, 86949.0144383396, 86949.0
 """Leg damping [N s/m] of the L2b Chrono runs (record meta ``run.engine.actuator.damping_locked / moving``, same in
 every ML base): locked zeta 0.03 / moving zeta 0.10 (dynamics 5.20.3). As the 5.28 replica, the moving value
 applies while the valve output |u| > lock_eps (1e-6 m/s), switched per 1 ms chunk. R51_DAMP=lock keeps the harness
-L1 value (locked) always."""
-DAMP_SWITCH = os.environ.get("R51_DAMP", "switch") == "switch"
+L1 value (locked) always.
+An empty R51_DAMP counts as unset (switch): a runner that restores an unset variable as ""
+must not turn the damping switch off (spec 429.11.1)."""
+DAMP_SWITCH = (os.environ.get("R51_DAMP") or "switch") == "switch"
 
 
 def control_period(cl, Measurements, plant, cmd, valve, ha, period_s, floor_fn=None, rec=None):
