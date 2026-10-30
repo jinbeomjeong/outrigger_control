@@ -1,0 +1,47 @@
+{
+ "C2": {
+  "runs": 293,
+  "lite_pass": 231,
+  "gate_failures": {
+   "ready_no_fault": 36,
+   "crawler": 43,
+   "Fmin": 8,
+   "att": 26,
+   "rut": 46,
+   "stroke": 16
+  },
+  "crawler_liftoff_fail": 2,
+  "false_loc_runs": 21,
+  "fault": 36
+ },
+ "ABL": {
+  "runs": 293,
+  "lite_pass": 130,
+  "gate_failures": {
+   "ready_no_fault": 64,
+   "crawler": 124,
+   "Fmin": 71,
+   "att": 12,
+   "rut": 149,
+   "stroke": 40
+  },
+  "crawler_liftoff_fail": 60,
+  "false_loc_runs": 0,
+  "fault": 22
+ },
+ "IND": {
+  "runs": 293,
+  "lite_pass": 183,
+  "gate_failures": {
+   "ready_no_fault": 47,
+   "crawler": 75,
+   "Fmin": 38,
+   "att": 36,
+   "rut": 69,
+   "stroke": 73
+  },
+  "crawler_liftoff_fail": 13,
+  "false_loc_runs": 0,
+  "fault": 0
+ }
+}

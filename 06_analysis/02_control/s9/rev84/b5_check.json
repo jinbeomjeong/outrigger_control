@@ -1,0 +1,299 @@
+{
+ "meta": {
+  "script": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\88c41358-354a-4920-a8e2-5dba519bb75b\\scratchpad\\ctrl-b5\\b5_run.py",
+  "jobs": 4,
+  "workers": 4,
+  "wall_s": 17.0,
+  "affinity": "0x5555"
+ },
+ "records": [
+  {
+   "case": "A3-G1+J1@RR",
+   "src": "g6|G1+J1@RR|top|Fs4",
+   "controller": "C2",
+   "lite_pass": true,
+   "lite_gates": {
+    "ready_no_fault": true,
+    "crawler": true,
+    "Fmin": true,
+    "att": true,
+    "rut": true,
+    "stroke": true
+   },
+   "t_ready_s": 62.300000000115446,
+   "final_phase": "ready",
+   "fault": false,
+   "att_end_deg": [
+    0.0109,
+    -0.0178
+   ],
+   "att_end_absmax_deg": 0.0178,
+   "att_ok": true,
+   "F_min_kN": 9.415,
+   "min_Fcyl_after_off_kN": 50.29527707265595,
+   "below_Fmin_after_off_s": 0,
+   "min_Fcyl_after_ready_kN": 55.54801899453416,
+   "below_Fmin_after_ready_s": 0,
+   "t_event_s": null,
+   "min_Fcyl_after_event_kN": null,
+   "crawler_N_at_ready": 0.0,
+   "crawler_N_max_after_ready": 0.0,
+   "n_crawler_recontact": 0,
+   "crawler_liftoff_fail": false,
+   "n_loc": 1,
+   "false_loc": [],
+   "rut_all_ready_mm": 41.51,
+   "rut_settle_ready_mm": 46.05263442226007,
+   "clear_est_ready_mm": 49.67006857243761,
+   "p_max_move_bar": 104.19,
+   "p_max_lock_bar": 99.25,
+   "p_max_move_leg": "FR",
+   "max_motor_stroke_mm": 420.69,
+   "commands_sha256": "69288ee341a21bb170add6bdcd63e6106f2014316d3fa976b1a7362eb2cfd551",
+   "warnings": [],
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     20.2,
+     "level"
+    ],
+    [
+     50.3,
+     "done"
+    ],
+    [
+     50.4,
+     "probe"
+    ],
+    [
+     62.3,
+     "ready"
+    ]
+   ],
+   "sim_end_s": 72.3000000001632,
+   "wall_s": 16.6
+  },
+  {
+   "case": "A3-G1+J1@RR",
+   "src": "g6|G1+J1@RR|top|Fs4",
+   "controller": "IND",
+   "lite_pass": true,
+   "lite_gates": {
+    "ready_no_fault": true,
+    "crawler": true,
+    "Fmin": true,
+    "att": true,
+    "rut": true,
+    "stroke": true
+   },
+   "t_ready_s": 25.79999999998522,
+   "final_phase": "ready",
+   "fault": false,
+   "att_end_deg": [
+    -0.0244,
+    -0.0307
+   ],
+   "att_end_absmax_deg": 0.0307,
+   "att_ok": true,
+   "F_min_kN": 9.415,
+   "min_Fcyl_after_off_kN": 46.211197792284025,
+   "below_Fmin_after_off_s": 0,
+   "min_Fcyl_after_ready_kN": 49.23950128946985,
+   "below_Fmin_after_ready_s": 0,
+   "t_event_s": null,
+   "min_Fcyl_after_event_kN": null,
+   "crawler_N_at_ready": 0.0,
+   "crawler_N_max_after_ready": 0.0,
+   "n_crawler_recontact": 0,
+   "crawler_liftoff_fail": false,
+   "n_loc": 0,
+   "false_loc": [],
+   "rut_all_ready_mm": 60.15,
+   "rut_settle_ready_mm": 64.20347351317261,
+   "clear_est_ready_mm": 71.44248580552227,
+   "p_max_move_bar": 110.56,
+   "p_max_lock_bar": 104.41,
+   "p_max_move_leg": "FR",
+   "max_motor_stroke_mm": 430.88,
+   "commands_sha256": "5ae7a5f17fb3759d5b92581e20991d58904f724ec687b8a9283223a8a8274b00",
+   "warnings": [],
+   "phase_path": [
+    [
+     17.2,
+     "level"
+    ],
+    [
+     25.7,
+     "done"
+    ],
+    [
+     25.8,
+     "ready"
+    ]
+   ],
+   "sim_end_s": 35.79999999998891,
+   "wall_s": 11.5
+  },
+  {
+   "case": "A4-G4RR-Fs8",
+   "src": "H5|rigid|B|top|flat",
+   "controller": "C2",
+   "lite_pass": true,
+   "lite_gates": {
+    "ready_no_fault": true,
+    "crawler": true,
+    "Fmin": true,
+    "att": true,
+    "rut": true,
+    "stroke": true
+   },
+   "t_ready_s": 39.4000000000061,
+   "final_phase": "ready",
+   "fault": false,
+   "att_end_deg": [
+    -0.0235,
+    -0.0036
+   ],
+   "att_end_absmax_deg": 0.0235,
+   "att_ok": true,
+   "F_min_kN": 9.415,
+   "min_Fcyl_after_off_kN": 15.56796966051246,
+   "below_Fmin_after_off_s": 0,
+   "min_Fcyl_after_ready_kN": 15.56796966051246,
+   "below_Fmin_after_ready_s": 0,
+   "t_event_s": 41.50000000000658,
+   "min_Fcyl_after_event_kN": 15.57,
+   "crawler_N_at_ready": 0.0,
+   "crawler_N_max_after_ready": 0.0,
+   "n_crawler_recontact": 0,
+   "crawler_liftoff_fail": false,
+   "n_loc": 1,
+   "false_loc": [],
+   "rut_all_ready_mm": 49.54,
+   "rut_settle_ready_mm": 49.924373833206914,
+   "clear_est_ready_mm": 49.74931643983482,
+   "p_max_move_bar": 126.68,
+   "p_max_lock_bar": 103.44,
+   "p_max_move_leg": "RL",
+   "max_motor_stroke_mm": 410.02,
+   "commands_sha256": "44bf97d2cd665b7c0c6da0a6245d2d903cc917bcfbdcc0ac0cbff0aaf1fe5ca5",
+   "warnings": [],
+   "phase_path": [
+    [
+     1.0,
+     "touch"
+    ],
+    [
+     19.9,
+     "level"
+    ],
+    [
+     27.4,
+     "done"
+    ],
+    [
+     27.5,
+     "probe"
+    ],
+    [
+     39.4,
+     "ready"
+    ],
+    [
+     42.0,
+     "level"
+    ],
+    [
+     52.8,
+     "done"
+    ],
+    [
+     52.9,
+     "probe"
+    ],
+    [
+     64.8,
+     "ready"
+    ]
+   ],
+   "sim_end_s": 69.40000000014935,
+   "wall_s": 13.2
+  },
+  {
+   "case": "A4-G4RR-Fs8",
+   "src": "H5|rigid|B|top|flat",
+   "controller": "IND",
+   "lite_pass": false,
+   "lite_gates": {
+    "ready_no_fault": true,
+    "crawler": true,
+    "Fmin": false,
+    "att": true,
+    "rut": true,
+    "stroke": true
+   },
+   "t_ready_s": 28.599999999978696,
+   "final_phase": "ready",
+   "fault": false,
+   "att_end_deg": [
+    -0.03,
+    0.0142
+   ],
+   "att_end_absmax_deg": 0.03,
+   "att_ok": true,
+   "F_min_kN": 9.415,
+   "min_Fcyl_after_off_kN": -0.7174838721681049,
+   "below_Fmin_after_off_s": 7.6,
+   "min_Fcyl_after_ready_kN": -0.7174838721681049,
+   "below_Fmin_after_ready_s": 7.6,
+   "t_event_s": 30.699999999978463,
+   "min_Fcyl_after_event_kN": -0.72,
+   "crawler_N_at_ready": 0.0,
+   "crawler_N_max_after_ready": 0.0,
+   "n_crawler_recontact": 0,
+   "crawler_liftoff_fail": false,
+   "n_loc": 0,
+   "false_loc": [],
+   "rut_all_ready_mm": 62.02,
+   "rut_settle_ready_mm": 62.96775250663256,
+   "clear_est_ready_mm": 62.25114761156681,
+   "p_max_move_bar": 155.91,
+   "p_max_lock_bar": 146.18,
+   "p_max_move_leg": "RL",
+   "max_motor_stroke_mm": 423.09,
+   "commands_sha256": "0fade1cdc07d9d29acd9facdd35bfad9b0d0aeb4b0863199d2feeaa13fa389db",
+   "warnings": [],
+   "phase_path": [
+    [
+     17.0,
+     "level"
+    ],
+    [
+     28.5,
+     "done"
+    ],
+    [
+     28.6,
+     "ready"
+    ],
+    [
+     35.0,
+     "level"
+    ],
+    [
+     40.0,
+     "done"
+    ],
+    [
+     40.1,
+     "ready"
+    ]
+   ],
+   "sim_end_s": 58.60000000009778,
+   "wall_s": 11.8
+  }
+ ]
+}
