@@ -106,13 +106,13 @@ def test_class_default_off_and_preset_on() -> None:
     default = LiftStrokeGuardSettings()
     assert not default.soil_stop and default.soil_stop_scope == "soil_sign"
     preset = C2Config().with_10hz_d1().lift_stroke_guard
-    assert not preset.soil_stop  # off in the preset until the acceptance
+    assert preset.soil_stop  # on in the preset since the spec 429.11 switch
     assert preset.soil_stop_scope == SOIL_STOP_SCOPE_ANY_LOC  # 427.12.5
-    switched_on = C2Config().with_10hz_d1(soil_stop=True)
-    assert switched_on.lift_stroke_guard.soil_stop
-    assert switched_on == replace(
+    switched_off = C2Config().with_10hz_d1(soil_stop=False)
+    assert not switched_off.lift_stroke_guard.soil_stop
+    assert switched_off == replace(
         C2Config().with_10hz_d1(),
-        lift_stroke_guard=replace(preset, soil_stop=True),
+        lift_stroke_guard=replace(preset, soil_stop=False),
     )
     assert not C2Config().lift_stroke_guard.soil_stop
     assert _RunState.guard_soil_sign is None and _RunState.soil_stop is None  # old pickles

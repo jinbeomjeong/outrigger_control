@@ -2,22 +2,32 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
 
-- 갱신: 2026-10-30 21시경, 이정표 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
-- 마지막 커밋: **05708b2**(명세 개정 85·86: 426 하네스 공백 연구, P-S8-36 후보, RV1·RV2 묶음). 이번 이정표 커밋(최종 제어기 확정, SGS·R4c30 03_src)은 곧 한다. 그 전: 9917955(개정 76~84 요약 행, B5 표시 이름), 38fb395(Chrono D424R 판정, B5 기준선 비교, 에이전트 설계 반영), 3434912(P-S8-35 DSb75, D424 판정, R2DS 인수), 7e4a0db(Q-D P-S8-33 L1gs 채택·L2 폐기, Q-C 후보 없음, R2 인수), 1cd4618(최종 Chrono S9SL·G6P·연구 ③, r79 확정, Q-A~Q-G). 더 앞은 `git log`와 이 파일의 git 이력.
+- 갱신: 2026-10-30 21시 40분경, 프리셋 전환 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
+- 마지막 커밋: **72d1722**(최종 제어기 확정: SGS any_loc + R4c30 채택, P37t·ZIC 기각, FINAL-REP 계획; 푸시 완료). 그 전: 05708b2(명세 개정 85·86: 426 하네스 공백 연구, P-S8-36 후보, RV1·RV2 묶음), 9917955(개정 76~84 요약 행, B5 표시 이름), 38fb395(Chrono D424R 판정, B5 기준선 비교, 에이전트 설계 반영), 3434912(P-S8-35 DSb75, D424 판정, R2DS 인수), 7e4a0db(Q-D P-S8-33 L1gs 채택·L2 폐기, Q-C 후보 없음, R2 인수), 1cd4618(최종 Chrono S9SL·G6P·연구 ③, r79 확정, Q-A~Q-G). 더 앞은 `git log`와 이 파일의 git 이력.
 - 세션 기록: 일반 Windows 터미널에서 `claude`를 직접 실행한다(2026-10-26 결정).
 
 ## 현재 위치
 
 - S9 완료(6/6, 합계 65/67, 2026-10-27). 지금은 **S9 뒤 제어 개선 단계**다(로드맵 1절, 명세 `00_docs/04_control/s6_control_spec.md` 427~432절).
 - **최종 제어기 확정(명세 429.11)**: R8 C2 + L1gs(P-S8-33) + DSb75(P-S8-35) + SGS any_loc(P-S8-36 P36sa) + R4c30(P-S8-31 평지 토양 틈 여유 30 mm). P37t·ZIC는 기각했다(429.9·429.10).
-- 인수 회귀 B(래퍼 B1 → 프리셋 전환 → 구현 B2) 중 B1이 돌고 있다. 그 뒤 재집계 C와 Chrono FINAL-REP·FINAL-R-REP다.
+- 인수 회귀 B(래퍼 B1 → 프리셋 전환 → 구현 B2): **B1 통과, 프리셋 전환 완료, B2 예정**이다. 그 뒤 Chrono FINAL-REP·FINAL-R-REP와 재집계 C를 동시에 시작한다.
 
-## 이번 커밋에서 바뀐 것 (05708b2 이후, 2026-10-30 오후~저녁)
+## 이번 커밋에서 바뀐 것 (72d1722 이후, 2026-10-30 21시대)
+
+1. **B1 통과**(21:13, 래퍼 최종 조합 `P36sa+R4c30`, 모든 단계 rc 0).
+2. **R8 프리셋 기본값 전환**(명세 429.11): `with_10hz_d1()` 기본값이 `soil_stop=True`, `soil_stop_scope="any_loc"`, `flat_soil_margin_m=0.03`(`R8_FLAT_SOIL_MARGIN_M`)이다. 클래스 기본값은 꺼짐 그대로다. 단위 시험 5,235 통과. 전환 전 해시 재현용 `05_tests/unit/pre_switch_preset_runner.py`를 더했다.
+3. **RV2·RV3 판정**(이전 판 = 05708b2 제어기, 명세 426.9.F.1·432.4.4): RV2 4건(J1 B $F_s$ 0·4·8, J2 B $F_s$ 4)과 RV3 2건(B-C1, C-C1) 모두 합격이다. RV2는 P3-1~P3-8 통과(FLAG 0). C-C1은 G6-2 늦은 LOC FLAG를 기록으로 남겼다. 부록 이력·대조 통계에 쓴다.
+4. **E1 짝 표 갱신**(`06_analysis/02_control/s9/rev85/harness_chrono_pairs.json`): 54짝, 판정 일치 49/54.
+5. `final_ctrl_offline.py`(432.4 E3)는 **완료**다(E3 27/27 재사용, `rev85/e3_reuse_check.json`).
+6. RV2 E 1건은 P코어로 옮긴 뒤 20:57에 끝났다.
+7. `07_results/`는 git 대상이 아니다(`.gitignore`). RV2·RV3 원결과는 로컬에만 있고, 판정 값은 `rev85/harness_chrono_pairs.json`과 `rev85/rv3c_g6_judge.json`에 들어 있다.
+
+## 72d1722에서 바뀐 것 (05708b2 이후, 2026-10-30 오후~저녁)
 
 1. **SGS(any_loc) 03_src 구현, 인수 통과**(명세 427.12.3·427.12.5.1): 구현 = 래퍼 P36sa 해시 1,220/1,220 + H9 36/36, scope `soil_sign` = P36s 1,220/1,220, 끈 상태 = R2DS 4/4. `c2.py` `LiftStrokeGuardSettings.soil_stop`·`soil_stop_scope`, 사건 `FAULT_LIFT_STROKE_LIMIT:soil:<legs>`, 분류 `stroke_limited_stop`(안전 종료).
 2. **R4c30 03_src 구현**(명세 429.9): `SlopeClearanceMarginSettings.flat_soil_margin_m`(클래스 기본 0.0), 사건 `INFO_LOC_FLAT_SOIL_MARGIN:<mm>`. 단건 해시 일치, 단위 시험 5,203 통과.
 3. **P37t·ZIC 기각**(명세 429.9·429.10): 03_src에 넣지 않고 래퍼 토큰(`P37t`, `P38z`)만 기록용으로 남겼다.
-4. **프리셋 기본값은 아직 꺼짐**이다. 전환 순서는 명세 429.11(B1 → 프리셋 전환 → B2)이다. 전환 값: `lift_stroke_guard.soil_stop=True`, `soil_stop_scope="any_loc"`, `slope_clearance_margin.flat_soil_margin_m=0.03`.
+4. 프리셋 기본값 전환은 B1 통과 뒤 **완료**했다(위 "72d1722 이후" 2번, 명세 429.11). 전환 값: `lift_stroke_guard.soil_stop=True`, `soil_stop_scope="any_loc"`, `slope_clearance_margin.flat_soil_margin_m=0.03`.
 5. **새 도구**
    - `04_scripts/03_control/s9/stable_ready_compare.py`: 안정 READY 기준 비교(429.8 판정 규칙 정정).
    - `04_scripts/03_control/s9/rep_evidence.py`: 대표 시나리오 근거 자료(432.4).
@@ -25,7 +35,7 @@
    - `04_scripts/03_control/s9/s9_settle_rejudge.py`: `rebuild_row_verdict` 판정 순서 수정. R2DS 연구 ① 177의 통과 / 행정 제한 통과가 98/39에서 94/43으로 바뀌었다(427.12.1, 원본 `rev83/history/R2DS_slope_rejudged_pre_classify_order_20261030.json`).
    - H9 suite(`s9_slope_fix_candidates.py run --suite h9`, 명세 430.2).
    - `b5_baseline_compare.py` ABL 스위치에 SGS·R4 끔 추가(429.11).
-   - `04_scripts/03_control/s9/final_ctrl_offline.py`: (a) 재사용 동치 재생(432.4 E3), **진행 중**.
+   - `04_scripts/03_control/s9/final_ctrl_offline.py`: (a) 재사용 동치 재생(432.4 E3), 완료(E3 27/27 재사용, `rev85/e3_reuse_check.json`).
 6. **Chrono 묶음 정의**(`run_S9.py`·`s9_batch.py`, cad): RV3~RV6, FINAL1~6, FINAL-R, FINAL-REP(7건, 432.6.1), FINAL-R-REP(16행, 432.6.2). 프리셋 점검 기대 이름은 `final_SGS_R4`다(`run_S9.CONTROLLER_EXPECTATIONS`, 429.11).
 7. **결과**: `06_analysis/02_control/s9/rev83/`~`rev85/`.
    - H9 판정(`rev85/h9_roll_fine{,_cmp}.json`, 명세 430.3.1): 패드 B 좌우 경계는 \|φ_c\| ≤ 2.86°($R_c$ 0.65)이고 roll_neg가 지배 방향이다. Chrono X6-rb로 확인할 예정이다.
@@ -34,19 +44,18 @@
 
 ## 진행 중 (scratchpad 러너, 예약 등록)
 
-- **B1**: 20:35 시작, 21:15~21:35 끝날 예정. 래퍼 최종 조합 `P36sa+R4c30`(명세 429.11, 래퍼 1,220 + 연구 A 80 + r67 384 + H9 36).
-- **RV2** E 1건이 돌고 있다.
+- 완료: **B1**(20:35 시작, 21:13 통과, 모든 단계 rc 0; 래퍼 1,220 + 연구 A 80 + r67 384 + H9 36), **RV2** E 1건(P코어로 옮긴 뒤 20:57 끝).
 - 대기 러너
-  - B2: 플래그 `final_src_ready`가 서면 시작한다.
-  - FINAL-REP 러너 2개와 재집계 C: 플래그 `final_adopted`가 서면 시작한다.
+  - **B2**(구현 쪽 1,720 해시 대조): 프리셋 전환 뒤 시작 예정(플래그 `final_src_ready`).
+  - **FINAL-REP** 러너 2개(FINAL-REP 7건, FINAL-R-REP 16행)와 **재집계 C**: B2 통과 뒤 플래그 `final_adopted`가 서면 동시에 시작한다.
 - 플래그는 `scratchpad\sched\day2\setflag.ps1`(세션 임시 파일, 저장소 밖)로 세운다.
 
 ## 다음 할 일 (로드맵 6절과 같은 순서)
 
-1. 인수 B1 결과 확인
-2. R8 프리셋 기본값 전환(python, 한 커밋) → `final_src_ready` 플래그
+(1 인수 B1, 2 프리셋 전환은 ✅ 완료.)
+
 3. 인수 B2: finB1 = finB2 명령 해시 id별 1,720 일치, 단건 끔 = R2DS 4/4, unit 전체 통과 → `final_adopted` 플래그
-4. Chrono FINAL-REP 7건 + FINAL-R-REP 16행 + 재집계 C(r79 전체, B5 wide, x426 C·D, 정착 v2; 명세 429.11 C 범위)
+4. Chrono FINAL-REP 7건 + FINAL-R-REP 16행 + 재집계 C(r79 전체, B5 wide, x426 C·D, 정착 v2; 명세 429.11 C 범위)를 동시에 시작
 5. 논문 4절 갱신(명세 432.7, paper-writing-expert `[모드]`·원본 수정 허락)
 6. 리뷰·빌드(paper-reviewer → 반영 → integrity-checker 원고↔결과 수치 → 빌드)
 7. 포스터

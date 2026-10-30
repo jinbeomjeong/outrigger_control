@@ -22,15 +22,22 @@ def _record(verdict: str, ready_s: float, min_force_kN: float, max_stroke_mm: fl
             "max_stroke_mm": max_stroke_mm, "gap_ready_mm": gap_mm}
 
 
-def _p3b_summary_row(is_pass: bool, ready_s: float, min_force_N: list[float]) -> dict:
+def _p3b_summary_row(is_pass: bool, ready_s: float | None, min_force_N: list[float],
+                     gap_m: float | None = 0.04) -> dict:
     checks = {check: True for check in rep.P3B_PASS_CHECKS}
     checks["P3-6_within"] = is_pass
     return {"checks": checks,
             "P3-6_ready": {"t_ready_after_loop_start_s": ready_s},
             "P3-3_leg_force": {"F_min_after_N": min_force_N},
             "P3-5_clearance_stroke": {"s_motor_max_m": [0.5, 0.6],
-                                      "rut_clearance_min_after_first_ready_m": 0.04},
+                                      "rut_clearance_min_after_first_ready_m": gap_m},
             "P3-4_attitude": {"p34_absmax_deg": 0.02}}
+
+
+def _write_rejudge(repo: Path, batch: str, case: str, p3b_block: dict) -> None:
+    path = rep._rejudge_path(repo, batch, case)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({"p3b": p3b_block}), encoding="utf-8")
 
 
 # ---------------------------------------------------------------------------- records
@@ -224,8 +231,81 @@ def test_main_runs_without_optional_x426_b_files(minimal_repo: Path, tmp_path: P
     assert p3b_pair["harness"]["source"] == "p3b"
     assert p3b_pair["delta"]["verdict_same"] is True
     assert pairs["summary"]["n_with_harness"] == 1  # curated ids have no twin here
+    assert "pending" not in pairs
+    assert "-13 mm" in pairs["meta"]["h6_margin"]
+    # no RV2 / RV3 run folders: 4 + 1 + 1 pairs dropped and listed
+    assert len(pairs["meta"]["missing_chrono_inputs"]) == 6
     by_name = {study["variable"]: study for study in studies["studies"]}
     assert by_name["B2 F_s 4 -> 0 on slope (x426 B2)"]["n_groups"] == 0
+
+
+# ---------------------------------------------------------------------------- RV2 / RV3 pairs
+def test_rv2_pair_is_tagged_with_its_batch_and_same_version(tmp_path: Path):
+    batch, case = rep.RV2_RUNS[0]
+    _write_rejudge(tmp_path, batch, case, _p3b_summary_row(True, 70.7, [67.81e3, 70e3]))
+    harness = {"base|J1|B|top|Fs0": _record("pass", 62.7, 69.06, gap_mm=47.2)}
+    pairs, missing = rep.build_same_version_pairs(tmp_path, harness)
+    rv2 = [pair for pair in pairs if pair["chrono_case"].startswith(case)]
+    assert len(rv2) == 1
+    (pair,) = rv2
+    assert pair["chrono_case"] == f"{case} @ {batch}"
+    assert pair["harness_id"] == "base|J1|B|top|Fs0"
+    assert pair["variable"] == "B2 F_s"
+    assert pair["chrono"]["version"] == rep.SAME_VERSION
+    assert pair["chrono"]["src"].endswith(f"{batch}/{case}/result_rejudge_rev60.json")
+    assert pair["delta"]["verdict_same"] is True
+    assert pair["delta"]["d_ready_s"] == pytest.approx(8.0)
+    assert pair["delta"]["d_gap_ready_mm"] == pytest.approx(-7.2)
+    assert len(missing) == 5  # the other three RV2 runs and both RV3 runs
+
+
+def test_rv3_slope_pair_without_ready_compares_stroke_and_force(tmp_path: Path):
+    run = rep.RV3_SLOPE_RUN
+    block = _p3b_summary_row(True, None, [68.09e3, 107e3], gap_m=None)
+    block["checks"]["P3-1_crawler_zero_after_ready"] = None  # no READY window
+    block["P3-5_clearance_stroke"]["s_motor_max_m"] = [0.4749, 0.6763]
+    _write_rejudge(tmp_path, run["batch"], run["case"], block)
+    harness = {run["harness_id"]: _record("fail", None, 69.66, max_stroke_mm=683.7,
+                                          gap_mm=None)}
+    pairs, _ = rep.build_same_version_pairs(tmp_path, harness)
+    (pair,) = [pair for pair in pairs if pair["harness_id"] == run["harness_id"]]
+    assert pair["chrono"]["verdict"] == "fail"
+    assert pair["chrono"]["gap_ready_mm"] is None
+    assert pair["delta"] == {"verdict_same": True, "d_min_force_kN": pytest.approx(-1.57),
+                             "d_max_stroke_mm": pytest.approx(-7.4),
+                             "minF_ratio_h_over_c": pytest.approx(1.023)}
+    assert pair["side"] == "representative"
+
+
+def test_rv3_g6_pair_reads_the_judge_case(tmp_path: Path):
+    run = rep.RV3_G6_RUN
+    judge = {"cases": [{"case": "other"},
+                       {"case": run["case"], "pass": False, "t_ready_rel_s": 67.6,
+                        "F_min_after_departure_kN": [76.67, 116.89, 65.7, 11.8],
+                        "s_motor_max_mm": [557.13, 447.88], "rut_min_after_ready_mm": 87.95,
+                        "attitude_p34_absmax_deg": 0.0152}]}
+    judge_path = tmp_path / run["judge_rel"]
+    judge_path.parent.mkdir(parents=True)
+    judge_path.write_text(json.dumps(judge), encoding="utf-8")
+    harness = {run["harness_id"]: _record("fail", 64.1, 18.33, max_stroke_mm=541.47,
+                                          gap_mm=69.63)}
+    pairs, missing = rep.build_same_version_pairs(tmp_path, harness)
+    (pair,) = pairs
+    assert pair["chrono"]["min_force_kN"] == 11.8
+    assert pair["chrono"]["src"] == run["judge_rel"]
+    assert pair["delta"]["verdict_same"] is True
+    assert pair["delta"]["d_ready_s"] == pytest.approx(3.5)
+    assert pair["side"] == "optimistic"  # harness min force 18.3 vs Chrono 11.8 kN
+    assert not any(run["judge_rel"] in path for path in missing)
+
+
+def test_g6_judge_without_the_case_is_listed_missing(tmp_path: Path):
+    judge_path = tmp_path / rep.RV3_G6_RUN["judge_rel"]
+    judge_path.parent.mkdir(parents=True)
+    judge_path.write_text(json.dumps({"cases": []}), encoding="utf-8")
+    pairs, missing = rep.build_same_version_pairs(tmp_path, {})
+    assert pairs == []
+    assert any(rep.RV3_G6_RUN["case"] in path for path in missing)
 
 
 def test_missing_p3b_summary_raises(minimal_repo: Path, tmp_path: Path):

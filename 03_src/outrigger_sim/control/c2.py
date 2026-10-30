@@ -206,13 +206,13 @@ stroke-end FAULT re-grounds the lifted legs first (``FaultRegroundSettings.strok
 P-S8-36 SGS (spec 427.9 / 427.12, adopted 2026-10-30): after a LOC (preset scope ``"any_loc"``,
 user decision 2026-10-30; ``"soil_sign"`` arms only with a soil sign) the first guard period
 stops the run (``LiftStrokeGuardSettings.soil_stop``, event
-``FAULT_LIFT_STROKE_LIMIT:soil:<legs>``); off by default and in the preset until its
-acceptance, on with ``C2Config().with_10hz_d1(soil_stop=True)``.
+``FAULT_LIFT_STROKE_LIMIT:soil:<legs>``); off by default, on in the preset since the spec
+429.11 switch (``C2Config().with_10hz_d1(soil_stop=False)`` turns it off).
 P-S8-37 R4 (R4c30, spec 429.9, adopted 2026-10-30): a LOC after the soil mode on a level settle
 (tilt at most 1 deg) where P-S8-31 did not raise the target raises the run's clearance target
 by ``SlopeClearanceMarginSettings.flat_soil_margin_m`` (event ``INFO_LOC_FLAT_SOIL_MARGIN``);
-off by default and in the preset until the final switch, on with
-``C2Config().with_10hz_d1(flat_soil_margin_m=0.03)``.
+off by default, 0.03 m in the preset since the spec 429.11 switch
+(``C2Config().with_10hz_d1(flat_soil_margin_m=0.0)`` turns it off).
 P-S8-29 (user decision 2026-10-28, variant V2b): on a creeping pad DONE may accept a twist load
 up to 15 kN that has stopped rising once attitude and clearance have held for 10 s
 (:class:`TwistCompletionRelaxSettings`, event ``INFO_TWIST_UNSETTLED``); preset on, default off.
@@ -1533,6 +1533,8 @@ SLOPE_MARGIN_M = 0.030
 R8_SLOPE_MARGIN_MIN_CLEARANCE_AT_P_M = 0.010
 """Soil sign c_min(t_P) of E3c10: above the rigid / G1 study-1 maximum 6.5 mm and the 7.5 mm a
 rigid slope reads with sensor noise (r79 L2 ref), spec 417.3."""
+R8_FLAT_SOIL_MARGIN_M = 0.03
+"""P-S8-37 R4c30 flat-soil clearance margin of the R8 preset (spec 429.9 / 429.11)."""
 R8_D1_SETTINGS = R8Settings(
     output_delay_periods=1,
     imu_sample_period_s=R8_IMU_SAMPLE_PERIOD_S,
@@ -1930,7 +1932,7 @@ class SlopeClearanceMarginSettings:
     mode used in the lifting cycle, a known settle with ``max(|roll|, |pitch|) <=
     tilt_min_rad`` and no raised run target yet, the run's clearance target becomes
     ``thresholds.clearance_target_m + flat_soil_margin_m`` (event
-    ``INFO_LOC_FLAT_SOIL_MARGIN``). ``0`` = off (class default and R8 preset default); a
+    ``INFO_LOC_FLAT_SOIL_MARGIN``). ``0`` = off (class default; the R8 preset uses 0.03 m); a
     positive value acts whether or not ``enable`` is set."""
 
     def __post_init__(self) -> None:
@@ -2261,7 +2263,9 @@ class C2Config:
         )
         return replace(self, r8=replace(self.r8, fast_relevel=fast_relevel))
 
-    def with_10hz_d1(self, *, soil_stop: bool = False, flat_soil_margin_m: float = 0.0) -> C2Config:
+    def with_10hz_d1(
+        self, *, soil_stop: bool = True, flat_soil_margin_m: float = R8_FLAT_SOIL_MARGIN_M
+    ) -> C2Config:
         """Copy with the R8-D1 design C2 (spec rev. 30 136 / 139, user decisions 2026-10-24).
 
         10 Hz pressures, strokes and valve output, output one period late (``d = 1``), the IMU
@@ -2325,12 +2329,12 @@ class C2Config:
         Args:
             soil_stop: P-S8-36 SGS (spec 427.12 / 427.12.5): after a LOC the first
                 stroke-budget guard period stops the run (scope ``"any_loc"``, user decision
-                2026-10-30). Off by default until its acceptance and the user's decision to
-                carry it in the preset; the preset scope is ``"any_loc"`` either way.
+                2026-10-30). On by default since the spec 429.11 switch; ``False`` gives the
+                preset before it. The preset scope is ``"any_loc"`` either way.
             flat_soil_margin_m: P-S8-37 R4 (R4c30, spec 429.9): clearance margin of a LOC on a
                 level settle after the soil mode
-                (``SlopeClearanceMarginSettings.flat_soil_margin_m``; the adopted value is
-                0.03 m). ``0`` (off) by default until the final switch is decided.
+                (``SlopeClearanceMarginSettings.flat_soil_margin_m``). 0.03 m by default since
+                the spec 429.11 switch; ``0`` turns it off.
         """
         config = self.with_r8_diagnostics()
         two_pressure = replace(

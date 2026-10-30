@@ -15,6 +15,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 HARNESS_PYTHON = Path(r"C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe")
 IDENTITY_SCRIPT = ROOT / "04_scripts" / "03_control" / "s9" / "x426_identity.py"
+PRE_SWITCH_RUNNER = Path(__file__).with_name("pre_switch_preset_runner.py")
 
 
 @pytest.mark.slow
@@ -24,7 +25,9 @@ def test_t2_t3_t4_and_reference_hashes_unchanged(tmp_path) -> None:
     out_path = tmp_path / "x426_identity.json"
     environment = {**os.environ, "MKL_THREADING_LAYER": "TBB", "OMP_NUM_THREADS": "1",
                    "PYTHONDONTWRITEBYTECODE": "1"}
-    subprocess.run([str(HARNESS_PYTHON), "-I", "-B", str(IDENTITY_SCRIPT), str(out_path), "2"],
+    # The stored hashes predate the spec 429.11 preset switch (SGS, R4 off).
+    subprocess.run([str(HARNESS_PYTHON), "-I", "-B", str(PRE_SWITCH_RUNNER), str(IDENTITY_SCRIPT),
+                    str(out_path), "2"],
                    cwd=ROOT, env=environment, check=True, capture_output=True, timeout=3600)
     payload = json.loads(out_path.read_text(encoding="utf-8"))
     failed = [(r["part"], r["id"], r.get("error")) for r in payload["rows"] if not r.get("equal")]

@@ -1,0 +1,210 @@
+suite,id,candidate,verdict_before,verdict_after,verdict_changed,hash_same,d_ready_s,d_min_force_kN,d_att_end_deg,false_loc_before,false_loc_after,ready_recontacts_before,ready_recontacts_after,ready_crawler_max_kN_after,final_phase_after,fix_events_after,acted,acted_parts,safe_stop_after,a3_pass,a3_reasons
+slope,H1|G1|B|top|flat,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|G1|B|top|nose_down,P36sa+R4c30,settle_check_fail,settle_check_fail,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|G1|B|top|nose_up,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|G1|B|top|roll_pos,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|G1|B|top|roll_neg,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|G1|B|top|edge_nd,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|G1|B|top|edge_nu,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|G1|B|top|rpB,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|G1|A|top|flat,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|G1|A|top|nose_down,P36sa+R4c30,settle_check_fail,settle_check_fail,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|G1|A|top|nose_up,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|G1|A|top|roll_pos,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|G1|A|top|roll_neg,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|G1|A|top|edge_nd,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|G1|A|top|edge_nu,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|G1|A|top|rpB,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|J1|B|top|flat,P36sa+R4c30,pass,pass,False,False,1.1,0.077,0.01,0,0,0,0,0.0,ready,"INFO_DIFF_SINK_HOLD:FL,RL:3.5;INFO_DIFF_SINK_RELEASE:settled;reanchor_skipped:disabled",True,R4c,False,True,
+slope,H1|J1|B|top|nose_down,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.0,-0.005,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H1|J1|B|top|nose_up,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,2.722,0.314,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:RL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H1|J1|B|top|roll_pos,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,0.296,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+slope,H1|J1|B|top|roll_neg,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,0.088,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,True,
+slope,H1|J1|B|top|edge_nd,P36sa+R4c30,fail,fail,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|J1|B|top|edge_nu,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,3.026,0.228,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:RR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H1|J1|B|top|rpB,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,0.357,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+slope,H1|J1|A|top|flat,P36sa+R4c30,pass,pass,False,False,0.3,0.0,0.001,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+slope,H1|J1|A|top|nose_down,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.0,0.371,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H1|J1|A|top|nose_up,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|J1|A|top|roll_pos,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|J1|A|top|roll_neg,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,1,1,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|J1|A|top|edge_nd,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|J1|A|top|edge_nu,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,level,reanchor_skipped:disabled,False,,False,True,
+slope,H1|J1|A|top|rpB,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.0,0.127,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H1|J2|B|top|flat,P36sa+R4c30,pass,pass,False,False,-2.4,0.191,-0.008,0,0,0,0,0.0,ready,"INFO_DIFF_SINK_HOLD:FL,RL:3.5;INFO_DIFF_SINK_RELEASE:settled;reanchor_skipped:disabled",True,R4c,False,True,
+slope,H1|J2|B|top|nose_down,P36sa+R4c30,settle_check_fail,settle_check_fail,False,False,,0.0,0.016,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,False,no READY
+slope,H1|J2|B|top|nose_up,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,0.166,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:RL,True,P36s,True,True,
+slope,H1|J2|B|top|roll_pos,P36sa+R4c30,fail,fail,False,False,,11.886,0.088,1,1,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,False,True,
+slope,H1|J2|B|top|roll_neg,P36sa+R4c30,fail,fail,False,False,,0.0,0.003,1,1,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,True,
+slope,H1|J2|B|top|edge_nd,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.727,0.168,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.4;INFO_LOC_REVOKED:2.2;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H1|J2|B|top|edge_nu,P36sa+R4c30,stroke_limited_fail,fail,True,False,,-38.612,0.432,1,1,1,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:RR,True,P36s,False,False,new P3-2 violation;no READY
+slope,H1|J2|B|top|rpB,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,-0.444,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.2;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+slope,H1|J2|A|top|flat,P36sa+R4c30,pass,pass,False,False,0.4,0.08,0.003,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+slope,H1|J2|A|top|nose_down,P36sa+R4c30,settle_check_fail,settle_check_fail,False,False,,0.0,0.513,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,True,
+slope,H1|J2|A|top|nose_up,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|J2|A|top|roll_pos,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,4.18,0.25,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H1|J2|A|top|roll_neg,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.141,0.306,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H1|J2|A|top|edge_nd,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.0,0.107,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H1|J2|A|top|edge_nu,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|J2|A|top|rpB,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,0.154,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+slope,H1|S1|B|top|flat,P36sa+R4c30,pass,pass,False,False,1.2,-0.039,0.007,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+slope,H1|S1|B|top|nose_down,P36sa+R4c30,settle_check_fail,settle_check_fail,False,False,,0.0,0.425,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,True,
+slope,H1|S1|B|top|nose_up,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,1.17,0.055,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:RL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H1|S1|B|top|roll_pos,P36sa+R4c30,fail,fail,False,False,,0.0,-0.009,1,1,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,False,True,
+slope,H1|S1|B|top|roll_neg,P36sa+R4c30,fail,fail,False,False,,0.0,0.038,1,1,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,True,
+slope,H1|S1|B|top|edge_nd,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.618,0.103,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+slope,H1|S1|B|top|edge_nu,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.04,0.035,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:RR,True,P36s,True,True,
+slope,H1|S1|B|top|rpB,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,0.004,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+slope,H1|S1|A|top|flat,P36sa+R4c30,pass,pass,False,False,0.5,0.005,0.001,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+slope,H1|S1|A|top|nose_down,P36sa+R4c30,settle_check_fail,settle_check_fail,False,False,,0.0,0.428,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,True,
+slope,H1|S1|A|top|nose_up,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|S1|A|top|roll_pos,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,0.022,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+slope,H1|S1|A|top|roll_neg,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,0.003,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:3.1;FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,True,
+slope,H1|S1|A|top|edge_nd,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,0.245,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+slope,H1|S1|A|top|edge_nu,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H1|S1|A|top|rpB,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,0.111,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+slope,H2|G1|B|bottom|flat,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H2|G1|B|bottom|nose_down,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H2|G1|B|bottom|nose_up,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H2|G1|B|bottom|roll_pos,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H2|G1|B|bottom|roll_neg,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H2|G1|B|bottom|edge_nd,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H2|G1|B|bottom|edge_nu,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H2|G1|B|bottom|rpB,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H2|J1|B|bottom|flat,P36sa+R4c30,pass,pass,False,False,0.7,0.099,0.016,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+slope,H2|J1|B|bottom|nose_down,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H2|J1|B|bottom|nose_up,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,1.337,0.179,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:RL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H2|J1|B|bottom|roll_pos,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H2|J1|B|bottom|roll_neg,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.515,-0.054,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H2|J1|B|bottom|edge_nd,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.0,0.056,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.2;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H2|J1|B|bottom|edge_nu,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H2|J1|B|bottom|rpB,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,1,1,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H2|J2|B|bottom|flat,P36sa+R4c30,pass,pass,False,False,0.6,0.045,0.022,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+slope,H2|J2|B|bottom|nose_down,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.199,0.036,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H2|J2|B|bottom|nose_up,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.653,0.149,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:RL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H2|J2|B|bottom|roll_pos,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.391,-0.119,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+slope,H2|J2|B|bottom|roll_neg,P36sa+R4c30,fail,fail,False,False,,0.0,-0.035,1,1,0,0,0.0,fault,INFO_LOC_REVOKE_SKIPPED:stroke;FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,True,
+slope,H2|J2|B|bottom|edge_nd,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,1.084,0.394,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.6;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H2|J2|B|bottom|edge_nu,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.239,0.598,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:RR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H2|J2|B|bottom|rpB,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,-0.046,0,0,0,0,0.0,fault,INFO_LOC_REVOKE_SKIPPED:stroke;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+slope,H2|S1|B|bottom|flat,P36sa+R4c30,pass,pass,False,False,1.4,0.008,0.007,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+slope,H2|S1|B|bottom|nose_down,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,0.424,0,0,0,0,0.0,fault,"FAULT_LIFT_STROKE_LIMIT:soil:FL,FR",True,P36s,True,True,
+slope,H2|S1|B|bottom|nose_up,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,1.138,0.054,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:RL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H2|S1|B|bottom|roll_pos,P36sa+R4c30,fail,fail,False,True,,0.0,0.0,0,0,0,0,0.0,fault,,False,,False,True,
+slope,H2|S1|B|bottom|roll_neg,P36sa+R4c30,fail,fail,False,True,,0.0,0.0,0,0,0,0,0.0,fault,,False,,False,True,
+slope,H2|S1|B|bottom|edge_nd,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,0.005,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+slope,H2|S1|B|bottom|edge_nu,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.0,0.541,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:RR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H2|S1|B|bottom|rpB,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.142,0.005,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+slope,H3|J1|B|top|nose_down@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J1|B|top|nose_down@k0.75,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J1|B|top|nose_down@k0.875,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,probe,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J1|B|top|roll_pos@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,level,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J1|B|top|roll_pos@k0.75,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J1|B|top|roll_pos@k0.875,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.0,0.196,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H3|J1|B|top|edge_nd@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J1|B|top|edge_nd@k0.75,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J1|B|top|edge_nd@k0.875,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J1|A|top|nose_down@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J1|A|top|nose_down@k0.75,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J1|A|top|nose_down@k0.875,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.0,0.05,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H3|J1|A|top|roll_pos@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J1|A|top|roll_pos@k0.75,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,1,1,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J1|A|top|roll_pos@k0.875,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,1,1,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J1|A|top|edge_nd@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J1|A|top|edge_nd@k0.75,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J1|A|top|edge_nd@k0.875,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J2|B|top|nose_down@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J2|B|top|nose_down@k0.75,P36sa+R4c30,settle_check_fail,settle_check_fail,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J2|B|top|nose_down@k0.875,P36sa+R4c30,settle_check_fail,settle_check_fail,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J2|B|top|roll_pos@k0.5,P36sa+R4c30,fail,fail,False,True,0.0,0.0,0.0,1,1,0,0,0.0,ready,INFO_LOC_REVOKED:2.5;INFO_LOC_REVOKED:2.4;reanchor_skipped:disabled,False,,False,True,
+slope,H3|J2|B|top|roll_pos@k0.75,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,4.246,0.701,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.6;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H3|J2|B|top|roll_pos@k0.875,P36sa+R4c30,stroke_limited_fail,fail,True,False,,0.0,0.253,1,1,1,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,False,False,no READY
+slope,H3|J2|B|top|edge_nd@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,probe,INFO_LOC_REVOKED:2.5;reanchor_skipped:disabled,False,,False,True,
+slope,H3|J2|B|top|edge_nd@k0.75,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,probe,INFO_LOC_REVOKED:2.3;reanchor_skipped:disabled,False,,False,True,
+slope,H3|J2|B|top|edge_nd@k0.875,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.73,0.452,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.2;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H3|J2|A|top|nose_down@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J2|A|top|nose_down@k0.75,P36sa+R4c30,settle_check_fail,settle_check_fail,False,False,,0.0,-0.013,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:3.3;FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,False,no READY
+slope,H3|J2|A|top|nose_down@k0.875,P36sa+R4c30,settle_check_fail,settle_check_fail,False,False,,0.0,0.267,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,False,no READY
+slope,H3|J2|A|top|roll_pos@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J2|A|top|roll_pos@k0.75,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,level,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J2|A|top|roll_pos@k0.875,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,3.436,0.073,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H3|J2|A|top|edge_nd@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J2|A|top|edge_nd@k0.75,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|J2|A|top|edge_nd@k0.875,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.0,0.117,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H3|S1|B|top|nose_down@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|S1|B|top|nose_down@k0.75,P36sa+R4c30,settle_check_fail,settle_check_fail,False,False,,0.298,0.082,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,False,no READY
+slope,H3|S1|B|top|nose_down@k0.875,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.0,0.368,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H3|S1|B|top|roll_pos@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:3.9;reanchor_skipped:disabled,False,,False,True,
+slope,H3|S1|B|top|roll_pos@k0.75,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,2.591,0.623,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H3|S1|B|top|roll_pos@k0.875,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,1.956,0.61,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H3|S1|B|top|edge_nd@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|S1|B|top|edge_nd@k0.75,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,2.296,0.179,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H3|S1|B|top|edge_nd@k0.875,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,2.993,0.103,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H3|S1|A|top|nose_down@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|S1|A|top|nose_down@k0.75,P36sa+R4c30,settle_check_fail,settle_check_fail,False,False,,0.0,0.3,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,False,no READY
+slope,H3|S1|A|top|nose_down@k0.875,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,0.52,0,0,0,0,0.0,fault,"FAULT_LIFT_STROKE_LIMIT:soil:FL,FR",True,P36s,True,True,
+slope,H3|S1|A|top|roll_pos@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|S1|A|top|roll_pos@k0.75,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.852,0.261,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H3|S1|A|top|roll_pos@k0.875,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,0.01,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+slope,H3|S1|A|top|edge_nd@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H3|S1|A|top|edge_nd@k0.75,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,1.581,0.221,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H3|S1|A|top|edge_nd@k0.875,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,0.38,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+slope,H4|G1|B|top|nose_down,P36sa+R4c30,settle_check_fail,settle_check_fail,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_started;reanchor_completed,False,,False,True,
+slope,H4|G1|B|top|nose_down_2p8,P36sa+R4c30,settle_check_fail,settle_check_fail,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_started;reanchor_completed,False,,False,True,
+slope,H4|G1|A|top|nose_down,P36sa+R4c30,settle_check_fail,settle_check_fail,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_started;reanchor_completed,False,,False,True,
+slope,H4|G1|A|top|nose_down_2p8,P36sa+R4c30,settle_check_fail,settle_check_fail,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_started;reanchor_completed,False,,False,True,
+slope,H4|J1|B|top|nose_down,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.0,0.028,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H4|J1|B|top|nose_down_2p8,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_started;reanchor_aborted:attitude_wait,False,,False,True,
+slope,H4|J1|A|top|nose_down,P36sa+R4c30,fail,stroke_limited_stop,True,False,,3.383,0.375,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,True,
+slope,H4|J1|A|top|nose_down_2p8,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,3.714,0.054,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H4|J2|B|top|nose_down,P36sa+R4c30,settle_check_fail,settle_check_fail,False,False,,0.0,0.017,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,False,no READY
+slope,H4|J2|B|top|nose_down_2p8,P36sa+R4c30,settle_check_fail,settle_check_fail,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_started;reanchor_aborted:attitude;reanchor_band_exceeded,False,,False,True,
+slope,H4|J2|A|top|nose_down,P36sa+R4c30,settle_check_fail,settle_check_fail,False,False,,0.0,0.513,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,True,
+slope,H4|J2|A|top|nose_down_2p8,P36sa+R4c30,settle_check_fail,settle_check_fail,False,False,,3.948,0.28,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,False,no READY
+slope,H4|S1|B|top|nose_down,P36sa+R4c30,settle_check_fail,settle_check_fail,False,False,,0.0,0.425,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,True,
+slope,H4|S1|B|top|nose_down_2p8,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,7.903,0.367,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H4|S1|A|top|nose_down,P36sa+R4c30,settle_check_fail,settle_check_fail,False,False,,0.0,0.428,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,True,
+slope,H4|S1|A|top|nose_down_2p8,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.0,0.52,0,0,0,0,0.0,fault,"FAULT_LIFT_STROKE_LIMIT:soil:FL,FR",True,P36s,True,True,
+slope,H4|rigid|B|top|nose_down,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_started;reanchor_completed,False,,False,True,
+slope,H4|rigid|B|top|nose_down_2p8,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_started;reanchor_completed,False,,False,True,
+slope,H4|J1|B|top|nose_up,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,2.722,0.314,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:RL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+slope,H5|rigid|B|top|flat,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H5|rigid|B|top|nose_down,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H5|rigid|B|top|nose_up,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H5|rigid|B|top|roll_pos,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H5|rigid|B|top|roll_neg,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H5|rigid|B|top|edge_nd,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H5|rigid|B|top|edge_nu,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+slope,H5|rigid|B|top|rpB,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+h6,H6|J1|B|top|flat|Fs0,P36sa+R4c30,pass,pass,False,False,1.3,0.092,0.008,0,0,0,0,0.0,ready,"INFO_DIFF_SINK_HOLD:FL,RL:3.5;INFO_DIFF_SINK_RELEASE:settled;reanchor_skipped:disabled",True,R4c,False,True,
+h6,H6|J1|B|top|flat|Fs0|m1.1,P36sa+R4c30,pass,pass,False,False,0.4,-0.253,-0.0,0,0,0,0,0.0,ready,"INFO_LOC_REVOKED:2.1;INFO_DIFF_SINK_HOLD:FL,RL:8.4;INFO_DIFF_SINK_RELEASE:reversed;INFO_DIFF_SINK_HOLD:FR,RR:3.2;INFO_DIFF_SINK_RELEASE:settled;reanchor_skipped:disabled",True,R4c,False,True,
+h6,H6|J1|B|top|flat|Fs0|m1.2,P36sa+R4c30,fail,fail,False,True,,0.0,0.0,0,0,0,0,0.0,fault,,False,,False,True,
+h6,H6|J1|B|top|flat,P36sa+R4c30,pass,pass,False,False,1.1,0.077,0.01,0,0,0,0,0.0,ready,"INFO_DIFF_SINK_HOLD:FL,RL:3.5;INFO_DIFF_SINK_RELEASE:settled;reanchor_skipped:disabled",True,R4c,False,True,
+h6,H6|J1|B|top|flat|m1.1,P36sa+R4c30,pass,pass,False,False,0.4,-0.241,0.003,0,0,0,0,0.0,ready,"INFO_LOC_REVOKED:2.1;INFO_DIFF_SINK_HOLD:FL,RL:8.4;INFO_DIFF_SINK_RELEASE:reversed;INFO_DIFF_SINK_HOLD:FR,RR:3.2;INFO_DIFF_SINK_RELEASE:settled;reanchor_skipped:disabled",True,R4c,False,True,
+h6,H6|J1|B|top|flat|m1.2,P36sa+R4c30,fail,fail,False,True,,0.0,0.0,0,0,0,0,0.0,fault,,False,,False,True,
+h6,H6|J1|B|middle|flat|Fs0,P36sa+R4c30,pass,pass,False,False,0.1,0.101,0.006,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+h6,H6|J1|B|middle|flat|Fs0|m1.1,P36sa+R4c30,pass,pass,False,False,-4.9,-0.179,0.005,0,0,0,0,0.0,ready,"INFO_LOC_REVOKED:2.3;INFO_DIFF_SINK_HOLD:FL,RL:7.9;INFO_DIFF_SINK_RELEASE:reversed;reanchor_skipped:disabled",True,R4c,False,True,
+h6,H6|J1|B|middle|flat|Fs0|m1.2,P36sa+R4c30,fail,fail,False,True,,0.0,0.0,0,0,0,0,0.0,fault,,False,,False,True,
+h6,H6|J1|B|middle|flat,P36sa+R4c30,pass,pass,False,False,0.9,-0.007,0.022,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+h6,H6|J1|B|middle|flat|m1.1,P36sa+R4c30,pass,pass,False,False,1.9,-0.162,-0.026,0,0,0,0,0.0,ready,"INFO_LOC_REVOKED:2.2;INFO_DIFF_SINK_HOLD:FL,RL:7.9;INFO_DIFF_SINK_RELEASE:reversed;reanchor_skipped:disabled",True,R4c,False,True,
+h6,H6|J1|B|middle|flat|m1.2,P36sa+R4c30,fail,fail,False,True,,0.0,0.0,0,0,0,0,0.0,fault,,False,,False,True,
+h6,H6|J1|B|bottom|flat|Fs0,P36sa+R4c30,pass,pass,False,False,0.3,0.12,0.028,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+h6,H6|J1|B|bottom|flat|Fs0|m1.1,P36sa+R4c30,pass,pass,False,False,2.0,0.14,-0.023,0,0,0,0,0.0,probe,"INFO_LOC_REVOKED:2.1;INFO_DIFF_SINK_HOLD:FL,RL:6.6;INFO_DIFF_SINK_RELEASE:settled;reanchor_skipped:disabled",True,R4c,False,True,
+h6,H6|J1|B|bottom|flat|Fs0|m1.2,P36sa+R4c30,fail,fail,False,True,,0.0,0.0,0,0,0,0,0.0,fault,,False,,False,True,
+h6,H6|J1|B|bottom|flat,P36sa+R4c30,pass,pass,False,False,0.7,0.099,0.016,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+h6,H6|J1|B|bottom|flat|m1.1,P36sa+R4c30,pass,pass,False,False,2.4,0.139,0.012,0,0,0,0,0.0,ready,"INFO_LOC_REVOKED:2.1;INFO_DIFF_SINK_HOLD:FL,RL:6.6;INFO_DIFF_SINK_RELEASE:settled;reanchor_skipped:disabled",True,R4c,False,True,
+h6,H6|J1|B|bottom|flat|m1.2,P36sa+R4c30,fail,fail,False,True,,0.0,0.0,0,0,0,0,0.0,fault,,False,,False,True,
+h6,H6|J1|A|top|flat,P36sa+R4c30,pass,pass,False,False,0.3,0.0,0.001,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+h6,H6|J1|A|top|flat|m1.1,P36sa+R4c30,pass,pass,False,False,0.2,-0.179,0.005,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+h6,H6|J1|A|top|flat|m1.2,P36sa+R4c30,fail,pass,True,False,-3.7,0.251,0.005,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+h6,H6|J1|A|bottom|flat,P36sa+R4c30,pass,pass,False,False,0.3,-0.009,0.001,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+h6,H6|J1|A|bottom|flat|m1.1,P36sa+R4c30,pass,pass,False,False,0.4,0.078,0.002,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+h6,H6|J1|A|bottom|flat|m1.2,P36sa+R4c30,fail,pass,True,False,0.3,0.077,0.002,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+h6,H6|J2|B|top|flat,P36sa+R4c30,pass,pass,False,False,-2.4,0.191,-0.008,0,0,0,0,0.0,ready,"INFO_DIFF_SINK_HOLD:FL,RL:3.5;INFO_DIFF_SINK_RELEASE:settled;reanchor_skipped:disabled",True,R4c,False,True,
+h6,H6|J2|B|top|flat|m1.1,P36sa+R4c30,fail,pass,True,False,7.7,-0.333,0.011,0,0,0,0,0.0,ready,"INFO_DIFF_SINK_HOLD:FL,RL:7.1;INFO_LOC_REVOKED:2.1;INFO_DIFF_SINK_RELEASE:reversed;reanchor_skipped:disabled",True,R4c,False,False,READY +7.7 s
+h6,H6|J2|B|bottom|flat,P36sa+R4c30,pass,pass,False,False,0.6,0.045,0.022,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,R4c,False,True,
+h6,H6|J2|B|bottom|flat|m1.1,P36sa+R4c30,pass,pass,False,False,-0.3,0.127,0.022,0,0,0,0,0.0,ready,"INFO_DIFF_SINK_HOLD:FL,RL:4.2;INFO_DIFF_SINK_RELEASE:settled;reanchor_skipped:disabled",True,R4c,False,True,
+h6,H6|G1|B|top|flat|m1.2,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+h6,H6|G1|B|bottom|flat|m1.2,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+h6,H6|rigid|B|top|flat|Fs0|m1.2,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+h6,H6|rigid|B|top|flat|m1.2,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,

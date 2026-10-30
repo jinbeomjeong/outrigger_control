@@ -413,6 +413,9 @@ def test_1_5_harness(tmp_path) -> None:
     out_path = tmp_path / "ds.json"
     environment = {**os.environ, "MKL_THREADING_LAYER": "TBB", "OMP_NUM_THREADS": "1",
                    "PYTHONDONTWRITEBYTECODE": "1"}
+    # No pre-switch runner needed: only the HARD_CASE hashes meet stored values, and there
+    # neither SGS nor R4 acts (pre- and post-switch "current" hashes equal, 2026-10-30). The
+    # spec 429.11 preset does change SOFT_CASE (R4 fires), which is asserted on behaviour only.
     subprocess.run(
         [str(HARNESS_PYTHON), "-I", "-B", str(WRAPPER_SCRIPT), "run", "--suite", "h6",
          "--candidates", "current,DS", "--filter", f"{SOFT_CASE},{HARD_CASE}",

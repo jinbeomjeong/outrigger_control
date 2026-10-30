@@ -202,7 +202,8 @@ def test_t13_preset_values() -> None:
         hold_limit_s=3.0,
         shift_clearance_margin_m=0.005,
         name_stroke_end_fault=True,
-        soil_stop_scope="any_loc",  # P-S8-36 SGS stays off in the preset (test_c2_p36.py)
+        soil_stop=True,  # P-S8-36 SGS, on in the preset since spec 429.11 (test_c2_p36.py)
+        soil_stop_scope="any_loc",
     )
     assert preset.fault_reground.stroke_end_entry
     assert preset.fault_reground.stroke_end_travel_m == 0.030
@@ -391,12 +392,14 @@ def test_t9_no_guard_before_the_liftoff_confirmation(geometry) -> None:
     assert controller.events == ()
 
 
-def hold_bench(geometry: C2Geometry) -> tuple[Bench, GuardRecorder]:
+def hold_bench(
+    geometry: C2Geometry, config: C2Config | None = None
+) -> tuple[Bench, GuardRecorder]:
     """LEVEL in the crawler zone with the LOC forced, FL 0.5 mm below ``s_g`` and a small roll:
     the heave lifts every leg, the guard holds them all."""
     strokes = geometry.operating_extension_m(0.0)
     strokes[FL] = guard_stroke_m(geometry) - 0.0005
-    controller = GuardRecorder(geometry, p28_config())
+    controller = GuardRecorder(geometry, p28_config() if config is None else config)
     bench = Bench(controller, geometry, operating_strokes(geometry))
     for _ in range(TOUCH_HOLD_SAMPLES):
         bench.step()
@@ -432,7 +435,11 @@ def test_t6_hold_keeps_the_attitude_integrators_and_warns_once(geometry) -> None
 
 
 def test_t7_hold_limit_faults_after_3_s(geometry) -> None:
-    bench, controller = hold_bench(geometry)
+    """The 3 s hold limit itself: P-S8-36 SGS (preset since spec 429.11) would stop the run in
+    the first guard period after the LOC, so it is off here (test_c2_p36.py covers it)."""
+    config = p28_config()
+    config = replace(config, lift_stroke_guard=replace(config.lift_stroke_guard, soil_stop=False))
+    bench, controller = hold_bench(geometry, config)
     bench.step()
     hold_start_s = controller._state.lift_guard_hold_since_s
     assert hold_start_s == bench.t_s

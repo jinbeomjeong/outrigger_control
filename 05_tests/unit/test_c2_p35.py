@@ -37,6 +37,7 @@ from outrigger_sim.params import load_params
 ROOT = Path(__file__).resolve().parents[2]
 WRAPPER_DIR = ROOT / "04_scripts" / "03_control" / "s9"
 WRAPPER_SCRIPT = WRAPPER_DIR / "s9_slope_fix_candidates.py"
+PRE_SWITCH_RUNNER = Path(__file__).with_name("pre_switch_preset_runner.py")
 REV83 = ROOT / "06_analysis" / "02_control" / "s9" / "rev83"
 HARNESS_PYTHON = Path(r"C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe")
 """The harnesses need dynamics-dev (numba, sympy), not the Chrono-dev test env."""
@@ -364,8 +365,9 @@ def test_9_project_preset_matches_the_wrapper_dsb75_hash(tmp_path) -> None:
     out_path = tmp_path / "p35.json"
     environment = {**os.environ, "MKL_THREADING_LAYER": "TBB", "OMP_NUM_THREADS": "1",
                    "PYTHONDONTWRITEBYTECODE": "1"}
-    subprocess.run(
-        [str(HARNESS_PYTHON), "-I", "-B", str(WRAPPER_SCRIPT), "run", "--suite", "h6,slope",
+    subprocess.run(  # the DSb75 rows predate the spec 429.11 preset switch (SGS, R4 off)
+        [str(HARNESS_PYTHON), "-I", "-B", str(PRE_SWITCH_RUNNER), str(WRAPPER_SCRIPT), "run",
+         "--suite", "h6,slope",
          "--candidates", "current,DSb75", "--ids", ";".join(c[1] for c in WRAPPER_CASES),
          "--workers", "4", "--out", str(out_path)],
         cwd=ROOT, env=environment, check=True, capture_output=True, timeout=1800,

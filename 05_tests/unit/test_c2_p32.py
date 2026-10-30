@@ -42,6 +42,7 @@ WRAPPER_CASE = "g6|G1+S1@FL|top|Fs4"
 """A G6 case LWa changed (LOC crawler load 71.5 kN -> 0, spec 419.6)."""
 WRAPPER_RECORDS = ROOT / "06_analysis" / "02_control" / "s9" / "rev81" / "fix_g6_LW.json"
 WRAPPER_SCRIPT = ROOT / "04_scripts" / "03_control" / "s9" / "s9_slope_fix_candidates.py"
+PRE_SWITCH_RUNNER = Path(__file__).with_name("pre_switch_preset_runner.py")
 HARNESS_PYTHON = Path(r"C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe")
 """The G6 harness needs dynamics-dev (numba, sympy), not the Chrono-dev test env."""
 RE_APPROACH = object()
@@ -161,8 +162,9 @@ def test_g6_case_matches_the_lwa_wrapper_hash(tmp_path) -> None:
     assert by_candidate["LWa"] != by_candidate["current"]
     out_path = tmp_path / "p32_wrapper_case.json"
     environment = {**os.environ, "MKL_THREADING_LAYER": "TBB", "OMP_NUM_THREADS": "1"}
-    subprocess.run(
-        [str(HARNESS_PYTHON), "-I", str(WRAPPER_SCRIPT), "run", "--suite", "g6",
+    subprocess.run(  # the LWa records predate the spec 429.11 preset switch (SGS, R4 off)
+        [str(HARNESS_PYTHON), "-I", str(PRE_SWITCH_RUNNER), str(WRAPPER_SCRIPT), "run",
+         "--suite", "g6",
          "--candidates", "current", "--settle-hook", "p0", "--filter", WRAPPER_CASE,
          "--workers", "1", "--out", str(out_path)],
         cwd=ROOT, env=environment, check=True, capture_output=True, timeout=1800,

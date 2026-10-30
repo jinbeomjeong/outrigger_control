@@ -1,0 +1,376 @@
+{
+ "script": "04_scripts/03_control/s8/r76_g6_chrono_judge.py",
+ "cases": [
+  {
+   "case": "G6_G1_A_top_Fs4_spS1FL",
+   "gates": {
+    "G6-1_crawler": true,
+    "G6-2_loc": false,
+    "G6-3_Fmin": true,
+    "G6-4_att": true,
+    "G6-5_rut_stroke": true,
+    "G6-6_fault_ready": true,
+    "G6-7_preloc": false,
+    "READY_le_120s": true
+   },
+   "pass": false,
+   "flags": [
+    "P3-8_needs_leg_minimum"
+   ],
+   "not_judgeable_gates": [],
+   "crawler_zero_rule": "P3-1_crawler.crawler_zero (READY .. READY + 10 s)",
+   "recontact_events": {
+    "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+    "limit_N": 3801.1291206408396,
+    "weight_N": 380112.91206408397,
+    "t_loc_s": 40.30000000021429,
+    "t_ready_s": 75.60000000138612,
+    "chatter": {
+     "after_loc_s": 1.0,
+     "max_duration_s": 0.1,
+     "max_over_limit": 1.2,
+     "max_normal_N": 4561.3549447690075,
+     "time_tolerance_s": 1e-09,
+     "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+    },
+    "events": [],
+    "pass": true,
+    "flags": []
+   },
+   "t_ready_rel_s": 67.60000000139142,
+   "loc_minus_departure_s": 3.201000000106262,
+   "loc_limit_s": 2.91165281234524,
+   "F_min_after_departure_kN": [
+    76.67,
+    116.89,
+    65.7,
+    11.8
+   ],
+   "attitude_p34_absmax_deg": 0.015249052302276333,
+   "end_mean_roll_pitch_deg": [
+    -0.01489710663936268,
+    -0.0007391007923614268
+   ],
+   "rut_min_after_ready_mm": 87.95,
+   "s_motor_max_mm": [
+    557.13,
+    447.88,
+    434.19,
+    432.13
+   ],
+   "P3-6": true,
+   "P3-7": null,
+   "P3-9_flag": false,
+   "pre_liftoff_flag": true,
+   "p38_counts": {
+    "leg_reapproach_start": 5,
+    "relevel_predicted": 0,
+    "probe_aborted_low_load": 0
+   },
+   "event_counts": {
+    "INFO_LOC_CLEARANCE_ANCHOR": 0,
+    "INFO_TWIST_UNSETTLED": 1,
+    "WARN_LIFT_STROKE_LIMITED": 0,
+    "FAULT_STROKE_END": 0,
+    "FAULT_LIFT_STROKE_LIMIT": 0,
+    "fault_reground_start": 0,
+    "fault_reground_end": 0,
+    "INFO_LIFT_PAUSED": 1,
+    "INFO_LOC_CLEARANCE_MARGIN": 0,
+    "INFO_LOC_WINDOW_RESTART": 5,
+    "INFO_PRESSURE_ZERO_RETURN_TOL": 0,
+    "WARN_PRESSURE_ZERO_SKIPPED": 0,
+    "leg_reapproach_start": 5
+   },
+   "pause_times_rel_s": [
+    [
+     25.59999999999718,
+     "INFO_LIFT_PAUSED:RR"
+    ]
+   ],
+   "c_min_at_P_mm": 43.69,
+   "loc_anchor_applied": false,
+   "completion": {
+    "level_samples": 310,
+    "done_twist_N": 3000.0,
+    "blocked_share": {
+     "attitude": 0.6451612903225806,
+     "clearance": 0.5806451612903226,
+     "twist": 0.967741935483871,
+     "loc": 0.24838709677419354
+    },
+    "unknown_share": {
+     "attitude": 0.0,
+     "clearance": 0.0032258064516129032,
+     "twist": 0.0,
+     "loc": 0.0
+    },
+    "last_level_t_s": 63.50000000098445,
+    "last_level_blocking": [],
+    "D_level_N": {
+     "min": -106597.63202264371,
+     "max": -6806.965092700288,
+     "abs_last": 6806.965092700288
+    }
+   },
+   "pad_sinkage": {
+    "end_mm": {
+     "FL": 119.49312798437094,
+     "FR": 9.39917216589059,
+     "RL": 6.770460374851073,
+     "RR": 4.11306155774005
+    },
+    "max_mm": {
+     "FL": 119.89871580339528,
+     "FR": 10.523061502614839,
+     "RL": 7.956634458381684,
+     "RR": 4.4526716589983195
+    },
+    "soft_leg": "FL",
+    "soft_minus_others_mean_end_mm": 112.73222995154372
+   },
+   "virgin_branch_any": false,
+   "settle_reference": {
+    "roll_pitch_deg": [
+     0.00013414311262379536,
+     0.15121611322280729
+    ],
+    "z_origin_m": -0.0012648208861556858
+   },
+   "phases_rel_s": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     4.8,
+     "touch"
+    ],
+    [
+     24.6,
+     "level"
+    ],
+    [
+     55.6,
+     "done"
+    ],
+    [
+     55.7,
+     "probe"
+    ],
+    [
+     67.6,
+     "ready"
+    ]
+   ],
+   "events": [
+    [
+     23.8,
+     "INFO_TOUCH_DIP_HELD:FL"
+    ],
+    [
+     24.6,
+     "floor_estimate_touch"
+    ],
+    [
+     25.6,
+     "INFO_LIFT_PAUSED:RR"
+    ],
+    [
+     26.0,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     26.0,
+     "INFO_LOC_WINDOW_RESTART:RR"
+    ],
+    [
+     26.4,
+     "leg_reapproach_contact:RR"
+    ],
+    [
+     27.6,
+     "soil_mode_start"
+    ],
+    [
+     28.1,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     28.1,
+     "INFO_LOC_WINDOW_RESTART:RR"
+    ],
+    [
+     28.6,
+     "leg_reapproach_contact:RR"
+    ],
+    [
+     29.2,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     29.2,
+     "INFO_LOC_WINDOW_RESTART:RR"
+    ],
+    [
+     29.8,
+     "leg_reapproach_contact:RR"
+    ],
+    [
+     30.1,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     30.1,
+     "INFO_LOC_WINDOW_RESTART:RR"
+    ],
+    [
+     30.6,
+     "leg_reapproach_contact:RR"
+    ],
+    [
+     31.0,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     31.0,
+     "INFO_LOC_WINDOW_RESTART:RR"
+    ],
+    [
+     31.4,
+     "leg_reapproach_contact:RR"
+    ],
+    [
+     32.3,
+     "crawler_liftoff_confirmed"
+    ],
+    [
+     32.3,
+     "INFO_CLEARANCE_BIAS:FL=73.8,FR=39.3,RL=53.4,RR=18.9"
+    ],
+    [
+     32.4,
+     "INFO_D1_IMU_MASS_SOURCE:yaml"
+    ],
+    [
+     55.6,
+     "INFO_TWIST_UNSETTLED:-7.2"
+    ],
+    [
+     67.6,
+     "reanchor_skipped:theta_below_min"
+    ],
+    [
+     67.6,
+     "ready_heave_tail"
+    ],
+    [
+     67.9,
+     "INFO_D1_IMU_MASS_SOURCE:ready"
+    ],
+    [
+     69.6,
+     "INFO_FLOOR_NONPLANAR"
+    ]
+   ],
+   "relax_settings": {
+    "source": "c2_setup.twist_relax",
+    "mode": "preset",
+    "overrides": {},
+    "settings": {
+     "enable": true,
+     "settle_s": 10.0,
+     "window_s": 5.0,
+     "drop_N": 0.0,
+     "rise_tol_N": 600.0,
+     "max_twist_N": 15000.0,
+     "require_loads_ge_F_min": true
+    },
+    "n_relaxed_done": 1,
+    "n_info_twist_unsettled_events": 1,
+    "last_D_N": -7184.891482958876
+   },
+   "after_ready": {
+    "t_ready_abs_s": 75.60000000138612,
+    "t_done_rel_s": 55.6,
+    "D_at_done_kN": -7.185,
+    "D_at_ready_kN": -20.173,
+    "D_absmax_after_ready_kN": 21.251,
+    "D_end_kN": -20.67,
+    "n_D_samples_after_ready": 925,
+    "window_after_ready_s": 92.4,
+    "F_cyl_min_after_ready": {
+     "FL": {
+      "min_kN": 106.288,
+      "t_rel_s": 68.158,
+      "ratio_to_F_min": 11.29
+     },
+     "FR": {
+      "min_kN": 123.235,
+      "t_rel_s": 68.151,
+      "ratio_to_F_min": 13.09
+     },
+     "RL": {
+      "min_kN": 80.472,
+      "t_rel_s": 68.26,
+      "ratio_to_F_min": 8.548
+     },
+     "RR": {
+      "min_kN": 57.701,
+      "t_rel_s": 68.148,
+      "ratio_to_F_min": 6.129
+     }
+    },
+    "F_min_kN": 9.415
+   },
+   "end_of_run": {
+    "last_phase": "ready",
+    "last_phase_t_rel_s": 67.6,
+    "t_end_rel_s": 160.0,
+    "D_end_kN": -20.67,
+    "D_level_decay": {
+     "lambda_per_s": 0.0348090586175508,
+     "n_samples": 133,
+     "t_rel_range_s": [
+      42.3,
+      55.5
+     ],
+     "rule": "LEVEL, t >= t_LOC + 10 s, |D_raw| >= 1 kN, ln|D| least squares"
+    },
+    "soft_pad": {
+     "leg": "FL",
+     "sinkage_end_mm": 119.493,
+     "sinkage_rate_last_0p2s_mm_s": -0.00055
+    },
+    "F_cyl_min_last_10s": {
+     "FL": {
+      "min_kN": 108.227,
+      "t_rel_s": 150.969,
+      "ratio_to_F_min": 11.496
+     },
+     "FR": {
+      "min_kN": 125.953,
+      "t_rel_s": 151.113,
+      "ratio_to_F_min": 13.378
+     },
+     "RL": {
+      "min_kN": 83.054,
+      "t_rel_s": 150.977,
+      "ratio_to_F_min": 8.822
+     },
+     "RR": {
+      "min_kN": 59.321,
+      "t_rel_s": 155.187,
+      "ratio_to_F_min": 6.301
+     }
+    }
+   }
+  }
+ ],
+ "summary": {
+  "n_regular": 1,
+  "n_regular_pass": 0,
+  "regular_all_pass": false,
+  "expected_fail_cases": {}
+ }
+}

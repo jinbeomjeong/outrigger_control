@@ -1,0 +1,169 @@
+suite,id,candidate,verdict_before,verdict_after,verdict_changed,hash_same,d_ready_s,d_min_force_kN,d_att_end_deg,false_loc_before,false_loc_after,ready_recontacts_before,ready_recontacts_after,ready_crawler_max_kN_after,final_phase_after,fix_events_after,acted,acted_parts,safe_stop_after,a3_pass,a3_reasons
+x426b,H1|G1|B|top|nose_down|Fs0,P36sa+R4c30,settle_check_fail,settle_check_fail,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H1|G1|B|top|roll_pos|Fs0,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H1|G1|B|top|edge_nd|Fs0,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|nose_down@k0.5|Fs0,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|nose_down@k0.75|Fs0,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,probe,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|roll_pos@k0.5|Fs0,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|roll_pos@k0.75|Fs0,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|edge_nd@k0.5|Fs0,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,probe,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|edge_nd@k0.75|Fs0,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,level,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|top|nose_down@k0.5|Fs0,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|top|nose_down@k0.75|Fs0,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|top|roll_pos@k0.5|Fs0,P36sa+R4c30,fail,fail,False,True,0.0,0.0,0.0,1,1,0,0,0.0,ready,INFO_LOC_REVOKED:2.5;INFO_LOC_REVOKED:2.4;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|top|roll_pos@k0.75|Fs0,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,4.101,0.713,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.6;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H3|J2|B|top|edge_nd@k0.5|Fs0,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,probe,INFO_LOC_REVOKED:2.4;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|top|edge_nd@k0.75|Fs0,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,probe,INFO_LOC_REVOKED:2.2;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|S1|B|top|nose_down@k0.5|Fs0,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|S1|B|top|nose_down@k0.75|Fs0,P36sa+R4c30,settle_check_fail,settle_check_fail,False,False,,0.0,0.103,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,False,no READY
+x426b,H3|S1|B|top|roll_pos@k0.5|Fs0,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|S1|B|top|roll_pos@k0.75|Fs0,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.713,0.039,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+x426b,H3|S1|B|top|edge_nd@k0.5|Fs0,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,level,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|S1|B|top|edge_nd@k0.75|Fs0,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,2.554,0.164,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H1|G1|B|top|nose_down|Fs8,P36sa+R4c30,settle_check_fail,settle_check_fail,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H1|G1|B|top|roll_pos|Fs8,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H1|G1|B|top|edge_nd|Fs8,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|nose_down@k0.5|Fs8,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|nose_down@k0.75|Fs8,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|roll_pos@k0.5|Fs8,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|roll_pos@k0.75|Fs8,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,probe,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|edge_nd@k0.5|Fs8,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|edge_nd@k0.75|Fs8,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|top|nose_down@k0.5|Fs8,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|top|nose_down@k0.75|Fs8,P36sa+R4c30,settle_check_fail,settle_check_fail,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|top|roll_pos@k0.5|Fs8,P36sa+R4c30,fail,fail,False,True,0.0,0.0,0.0,1,1,0,0,0.0,ready,INFO_LOC_REVOKED:2.5;INFO_LOC_REVOKED:2.2;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|top|roll_pos@k0.75|Fs8,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,4.072,0.713,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.6;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H3|J2|B|top|edge_nd@k0.5|Fs8,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:2.5;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|top|edge_nd@k0.75|Fs8,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:2.2;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|S1|B|top|nose_down@k0.5|Fs8,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|S1|B|top|nose_down@k0.75|Fs8,P36sa+R4c30,settle_check_fail,settle_check_fail,False,False,,0.169,0.09,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,False,no READY
+x426b,H3|S1|B|top|roll_pos@k0.5|Fs8,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:3.6;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|S1|B|top|roll_pos@k0.75|Fs8,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,2.329,0.624,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H3|S1|B|top|edge_nd@k0.5|Fs8,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|S1|B|top|edge_nd@k0.75|Fs8,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,2.546,0.142,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H1|G1|B|middle|nose_down,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H1|G1|B|middle|roll_pos,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H1|G1|B|middle|edge_nd,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|middle|nose_down@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|middle|nose_down@k0.75,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|middle|roll_pos@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:2.2;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|middle|roll_pos@k0.75,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,probe,INFO_LOC_REVOKED:2.2;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|middle|edge_nd@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,level,INFO_LOC_REVOKED:2.4;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|middle|edge_nd@k0.75,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,level,INFO_LOC_REVOKED:2.3;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|middle|nose_down@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|middle|nose_down@k0.75,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|middle|roll_pos@k0.5,P36sa+R4c30,fail,fail,False,True,0.0,0.0,0.0,1,1,0,0,0.0,ready,INFO_LOC_REVOKED:2.7;INFO_LOC_REVOKED:2.8;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|middle|roll_pos@k0.75,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,2.816,0.571,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.6;INFO_LOC_REVOKED:2.2;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H3|J2|B|middle|edge_nd@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,level,INFO_LOC_REVOKED:2.5;INFO_LOC_REVOKED:2.3;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|middle|edge_nd@k0.75,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,probe,INFO_LOC_REVOKED:2.5;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|S1|B|middle|nose_down@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|S1|B|middle|nose_down@k0.75,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.335,0.029,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H3|S1|B|middle|roll_pos@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|S1|B|middle|roll_pos@k0.75,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,2.289,0.496,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H3|S1|B|middle|edge_nd@k0.5,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|S1|B|middle|edge_nd@k0.75,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,2.417,0.145,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H1|G1|B|top|nose_down|m1.1,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H1|G1|B|top|roll_pos|m1.1,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H1|G1|B|top|edge_nd|m1.1,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|nose_down@k0.5|m1.1,P36sa+R4c30,fail,fail,False,True,0.0,0.0,0.0,1,1,0,0,0.0,ready,INFO_LOC_REVOKED:3.2;INFO_LOC_REVOKED:3.0;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|nose_down@k0.75|m1.1,P36sa+R4c30,fail,fail,False,True,0.0,0.0,0.0,1,1,0,0,0.0,probe,INFO_LOC_REVOKED:4.4;INFO_LOC_REVOKED:2.7;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|roll_pos@k0.5|m1.1,P36sa+R4c30,stroke_limited_fail,stroke_limited_stop,True,False,,0.0,0.81,0,0,1,0,0.0,fault,INFO_LOC_REVOKED:2.1;FAULT_LIFT_STROKE_LIMIT:soil:RR,True,P36s,True,False,no READY
+x426b,H3|J1|B|top|roll_pos@k0.75|m1.1,P36sa+R4c30,fail,fail,False,False,,0.0,-0.003,0,0,0,0,0.0,fault,"INFO_LOC_REVOKED:2.2;FAULT_LIFT_STROKE_LIMIT:soil:FR,RR",True,P36s,False,True,
+x426b,H3|J1|B|top|edge_nd@k0.5|m1.1,P36sa+R4c30,fail,fail,False,True,0.0,0.0,0.0,0,0,1,1,0.96,probe,INFO_LOC_REVOKED:2.7;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|edge_nd@k0.75|m1.1,P36sa+R4c30,stroke_limited_fail,stroke_limited_stop,True,False,,0.0,0.468,0,0,1,0,0.0,fault,INFO_LOC_REVOKED:2.5;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,no READY
+x426b,H3|J2|B|top|nose_down@k0.5|m1.1,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|top|nose_down@k0.75|m1.1,P36sa+R4c30,fail,fail,False,True,0.0,0.0,0.0,1,1,0,0,0.0,probe,INFO_LOC_REVOKED:3.0;INFO_LOC_REVOKED:3.2;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|top|roll_pos@k0.5|m1.1,P36sa+R4c30,fail,fail,False,True,,0.0,0.0,1,1,0,0,0.0,level,,False,,False,True,
+x426b,H3|J2|B|top|roll_pos@k0.75|m1.1,P36sa+R4c30,fail,fail,False,False,,0.0,0.003,1,1,0,0,0.0,fault,INFO_LOC_REVOKED:2.5;INFO_LOC_REVOKE_SKIPPED:stroke;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,False,True,
+x426b,H3|J2|B|top|edge_nd@k0.5|m1.1,P36sa+R4c30,fail,fail,False,True,0.0,0.0,0.0,1,1,0,0,0.0,probe,INFO_LOC_REVOKED:2.8;INFO_LOC_REVOKED:2.5;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J2|B|top|edge_nd@k0.75|m1.1,P36sa+R4c30,stroke_limited_fail,fail,True,False,,-49.858,0.165,1,1,1,0,0.0,fault,INFO_LOC_REVOKED:2.3;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,False,False,new P3-2 violation;no READY
+x426b,H3|S1|B|top|nose_down@k0.5|m1.1,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|S1|B|top|nose_down@k0.75|m1.1,P36sa+R4c30,stroke_limited_pass,stroke_limited_stop,True,False,,0.968,0.097,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H3|S1|B|top|roll_pos@k0.5|m1.1,P36sa+R4c30,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:3.1;reanchor_skipped:disabled,False,,False,True,
+x426b,H3|S1|B|top|roll_pos@k0.75|m1.1,P36sa+R4c30,fail,stroke_limited_stop,True,False,,0.143,0.072,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:3.2;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+x426b,H3|S1|B|top|edge_nd@k0.5|m1.1,P36sa+R4c30,fail,fail,False,True,,0.0,0.0,0,0,0,0,0.0,fault,,False,,False,True,
+x426b,H3|S1|B|top|edge_nd@k0.75|m1.1,P36sa+R4c30,fail,fail,False,True,,0.0,0.0,0,0,0,0,0.0,fault,,False,,False,True,
+x426b,H1|G1|B|top|nose_down|Fs0,P36sa+P37t+R4c30+P38z,settle_check_fail,settle_check_fail,False,False,0.0,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,False,hash differs
+x426b,H1|G1|B|top|roll_pos|Fs0,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,False,hash differs
+x426b,H1|G1|B|top|edge_nd|Fs0,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,False,hash differs
+x426b,H3|J1|B|top|nose_down@k0.5|Fs0,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,-0.019,-0.001,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J1|B|top|nose_down@k0.75|Fs0,P36sa+P37t+R4c30+P38z,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,probe,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|roll_pos@k0.5|Fs0,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.053,0,0,0,0,0.0,level,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J1|B|top|roll_pos@k0.75|Fs0,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.4,0.0,0.013,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J1|B|top|edge_nd@k0.5|Fs0,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.014,0,0,0,0,0.0,probe,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J1|B|top|edge_nd@k0.75|Fs0,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.01,0,0,0,0,0.0,level,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|top|nose_down@k0.5|Fs0,P36sa+P37t+R4c30+P38z,pass,pass,False,False,-1.0,-0.003,0.013,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|top|nose_down@k0.75|Fs0,P36sa+P37t+R4c30+P38z,pass,pass,False,False,-0.8,0.021,0.012,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|top|roll_pos@k0.5|Fs0,P36sa+P37t+R4c30+P38z,fail,fail,False,False,0.0,0.004,-0.0,1,1,0,0,0.0,ready,INFO_LOC_REVOKED:2.5;INFO_LOC_REVOKED:2.4;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|top|roll_pos@k0.75|Fs0,P36sa+P37t+R4c30+P38z,stroke_limited_pass,stroke_limited_stop,True,False,,4.101,0.713,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.6;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H3|J2|B|top|edge_nd@k0.5|Fs0,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,-0.002,-0.007,0,0,0,0,0.0,probe,INFO_LOC_REVOKED:2.4;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|top|edge_nd@k0.75|Fs0,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.007,0,0,0,0,0.0,probe,INFO_LOC_REVOKED:2.2;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|S1|B|top|nose_down@k0.5|Fs0,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,-0.004,-0.001,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|S1|B|top|nose_down@k0.75|Fs0,P36sa+P37t+R4c30+P38z,settle_check_fail,settle_check_fail,False,False,,0.0,0.103,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,False,no READY
+x426b,H3|S1|B|top|roll_pos@k0.5|Fs0,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.002,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|S1|B|top|roll_pos@k0.75|Fs0,P36sa+P37t+R4c30+P38z,fail,stroke_limited_stop,True,False,,0.713,0.039,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+x426b,H3|S1|B|top|edge_nd@k0.5|Fs0,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.002,-0.007,0,0,0,0,0.0,level,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|S1|B|top|edge_nd@k0.75|Fs0,P36sa+P37t+R4c30+P38z,stroke_limited_pass,stroke_limited_stop,True,False,,2.554,0.164,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H1|G1|B|top|nose_down|Fs8,P36sa+P37t+R4c30+P38z,settle_check_fail,settle_check_fail,False,False,0.0,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,False,hash differs
+x426b,H1|G1|B|top|roll_pos|Fs8,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,False,hash differs
+x426b,H1|G1|B|top|edge_nd|Fs8,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,False,hash differs
+x426b,H3|J1|B|top|nose_down@k0.5|Fs8,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,-0.015,-0.001,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J1|B|top|nose_down@k0.75|Fs8,P36sa+P37t+R4c30+P38z,pass,pass,False,True,0.0,0.0,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,False,,False,True,
+x426b,H3|J1|B|top|roll_pos@k0.5|Fs8,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,0.001,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J1|B|top|roll_pos@k0.75|Fs8,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.009,0,0,0,0,0.0,probe,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J1|B|top|edge_nd@k0.5|Fs8,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J1|B|top|edge_nd@k0.75|Fs8,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|top|nose_down@k0.5|Fs8,P36sa+P37t+R4c30+P38z,pass,pass,False,False,-2.2,0.048,0.001,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|top|nose_down@k0.75|Fs8,P36sa+P37t+R4c30+P38z,settle_check_fail,settle_check_fail,False,False,-0.2,0.093,0.034,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|top|roll_pos@k0.5|Fs8,P36sa+P37t+R4c30+P38z,fail,fail,False,False,0.0,0.0,-0.0,1,1,0,0,0.0,ready,INFO_LOC_REVOKED:2.5;INFO_LOC_REVOKED:2.2;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|top|roll_pos@k0.75|Fs8,P36sa+P37t+R4c30+P38z,stroke_limited_pass,stroke_limited_stop,True,False,,4.072,0.713,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.6;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H3|J2|B|top|edge_nd@k0.5|Fs8,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.001,-0.0,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:2.5;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|top|edge_nd@k0.75|Fs8,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.002,-0.0,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:2.2;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|S1|B|top|nose_down@k0.5|Fs8,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,-0.002,-0.001,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|S1|B|top|nose_down@k0.75|Fs8,P36sa+P37t+R4c30+P38z,settle_check_fail,settle_check_fail,False,False,,0.169,0.09,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,False,False,no READY
+x426b,H3|S1|B|top|roll_pos@k0.5|Fs8,P36sa+P37t+R4c30+P38z,pass,pass,False,False,4.6,-0.064,-0.0,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:3.6;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|S1|B|top|roll_pos@k0.75|Fs8,P36sa+P37t+R4c30+P38z,stroke_limited_pass,stroke_limited_stop,True,False,,2.329,0.624,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H3|S1|B|top|edge_nd@k0.5|Fs8,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.008,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|S1|B|top|edge_nd@k0.75|Fs8,P36sa+P37t+R4c30+P38z,stroke_limited_pass,stroke_limited_stop,True,False,,2.546,0.142,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H1|G1|B|middle|nose_down,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,False,hash differs
+x426b,H1|G1|B|middle|roll_pos,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,False,hash differs
+x426b,H1|G1|B|middle|edge_nd,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,False,hash differs
+x426b,H3|J1|B|middle|nose_down@k0.5,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,-0.021,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J1|B|middle|nose_down@k0.75,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J1|B|middle|roll_pos@k0.5,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.018,0.007,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:2.2;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J1|B|middle|roll_pos@k0.75,P36sa+P37t+R4c30+P38z,pass,pass,False,False,19.0,-0.402,-0.014,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:2.2;reanchor_skipped:disabled,True,P38z,False,False,READY +19.0 s
+x426b,H3|J1|B|middle|edge_nd@k0.5,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.001,-0.024,0,0,0,0,0.0,level,INFO_LOC_REVOKED:2.4;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J1|B|middle|edge_nd@k0.75,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.023,0,0,0,0,0.0,probe,INFO_LOC_REVOKED:2.3;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|middle|nose_down@k0.5,P36sa+P37t+R4c30+P38z,pass,pass,False,False,-0.7,-0.015,0.02,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|middle|nose_down@k0.75,P36sa+P37t+R4c30+P38z,pass,pass,False,False,-2.6,0.015,0.013,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|middle|roll_pos@k0.5,P36sa+P37t+R4c30+P38z,fail,fail,False,False,0.0,0.0,0.0,1,1,0,0,0.0,ready,INFO_LOC_REVOKED:2.7;INFO_LOC_REVOKED:2.8;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|middle|roll_pos@k0.75,P36sa+P37t+R4c30+P38z,stroke_limited_pass,stroke_limited_stop,True,False,,2.816,0.571,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:2.6;INFO_LOC_REVOKED:2.2;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H3|J2|B|middle|edge_nd@k0.5,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.006,0,0,0,0,0.0,level,INFO_LOC_REVOKED:2.5;INFO_LOC_REVOKED:2.3;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|middle|edge_nd@k0.75,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,-0.004,-0.007,0,0,0,0,0.0,probe,INFO_LOC_REVOKED:2.5;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|S1|B|middle|nose_down@k0.5,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,-0.002,-0.001,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|S1|B|middle|nose_down@k0.75,P36sa+P37t+R4c30+P38z,stroke_limited_pass,stroke_limited_stop,True,False,,0.335,0.029,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H3|S1|B|middle|roll_pos@k0.5,P36sa+P37t+R4c30+P38z,pass,pass,False,False,4.1,0.01,-0.001,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|S1|B|middle|roll_pos@k0.75,P36sa+P37t+R4c30+P38z,stroke_limited_pass,stroke_limited_stop,True,False,,2.289,0.496,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H3|S1|B|middle|edge_nd@k0.5,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,-0.001,0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|S1|B|middle|edge_nd@k0.75,P36sa+P37t+R4c30+P38z,stroke_limited_pass,stroke_limited_stop,True,False,,2.417,0.145,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H1|G1|B|top|nose_down|m1.1,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,False,hash differs
+x426b,H1|G1|B|top|roll_pos|m1.1,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,False,hash differs
+x426b,H1|G1|B|top|edge_nd|m1.1,P36sa+P37t+R4c30+P38z,pass,pass,False,False,0.0,0.0,-0.001,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,False,hash differs
+x426b,H3|J1|B|top|nose_down@k0.5|m1.1,P36sa+P37t+R4c30+P38z,fail,fail,False,False,1.4,0.007,-0.0,1,1,0,0,0.0,ready,INFO_LOC_REVOKED:3.2;INFO_LOC_REVOKED:3.0;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J1|B|top|nose_down@k0.75|m1.1,P36sa+P37t+R4c30+P38z,fail,fail,False,False,-0.6,0.003,-0.023,1,1,0,0,0.0,probe,INFO_LOC_REVOKED:4.4;INFO_LOC_REVOKED:2.7;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J1|B|top|roll_pos@k0.5|m1.1,P36sa+P37t+R4c30+P38z,stroke_limited_fail,stroke_limited_stop,True,False,,0.0,0.81,0,0,1,0,0.0,fault,INFO_LOC_REVOKED:2.1;FAULT_LIFT_STROKE_LIMIT:soil:RR,True,P36s,True,False,no READY
+x426b,H3|J1|B|top|roll_pos@k0.75|m1.1,P36sa+P37t+R4c30+P38z,fail,fail,False,False,,0.0,-0.003,0,0,0,0,0.0,fault,"INFO_LOC_REVOKED:2.2;FAULT_LIFT_STROKE_LIMIT:soil:FR,RR",True,P36s,False,True,
+x426b,H3|J1|B|top|edge_nd@k0.5|m1.1,P36sa+P37t+R4c30+P38z,fail,fail,False,False,0.0,-0.003,-0.005,0,0,1,1,0.98,probe,INFO_LOC_REVOKED:2.7;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J1|B|top|edge_nd@k0.75|m1.1,P36sa+P37t+R4c30+P38z,stroke_limited_fail,stroke_limited_stop,True,False,,0.0,0.468,0,0,1,0,0.0,fault,INFO_LOC_REVOKED:2.5;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,False,no READY
+x426b,H3|J2|B|top|nose_down@k0.5|m1.1,P36sa+P37t+R4c30+P38z,pass,pass,False,False,-0.2,-0.01,-0.0,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|top|nose_down@k0.75|m1.1,P36sa+P37t+R4c30+P38z,fail,fail,False,False,-0.2,-0.016,-0.005,1,1,0,0,0.0,level,INFO_LOC_REVOKED:3.0;INFO_LOC_REVOKED:3.2;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|top|roll_pos@k0.5|m1.1,P36sa+P37t+R4c30+P38z,fail,fail,False,False,,0.0,0.004,1,1,0,0,0.0,level,,True,P38z,False,True,
+x426b,H3|J2|B|top|roll_pos@k0.75|m1.1,P36sa+P37t+R4c30+P38z,fail,fail,False,False,,0.0,0.003,1,1,0,0,0.0,fault,INFO_LOC_REVOKED:2.5;INFO_LOC_REVOKE_SKIPPED:stroke;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,False,True,
+x426b,H3|J2|B|top|edge_nd@k0.5|m1.1,P36sa+P37t+R4c30+P38z,fail,fail,False,False,0.0,0.0,-0.002,1,1,0,0,0.0,probe,INFO_LOC_REVOKED:2.8;INFO_LOC_REVOKED:2.5;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|J2|B|top|edge_nd@k0.75|m1.1,P36sa+P37t+R4c30+P38z,stroke_limited_fail,fail,True,False,,-49.858,0.165,1,1,1,0,0.0,fault,INFO_LOC_REVOKED:2.3;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,False,False,new P3-2 violation;no READY
+x426b,H3|S1|B|top|nose_down@k0.5|m1.1,P36sa+P37t+R4c30+P38z,pass,pass,False,False,1.8,-0.084,-0.002,0,0,0,0,0.0,ready,reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|S1|B|top|nose_down@k0.75|m1.1,P36sa+P37t+R4c30+P38z,stroke_limited_pass,stroke_limited_stop,True,False,,0.968,0.097,0,0,0,0,0.0,fault,FAULT_LIFT_STROKE_LIMIT:soil:FL,True,P36s,True,False,pass -> stroke_limited_stop;no READY
+x426b,H3|S1|B|top|roll_pos@k0.5|m1.1,P36sa+P37t+R4c30+P38z,pass,pass,False,False,-0.5,0.001,0.0,0,0,0,0,0.0,ready,INFO_LOC_REVOKED:3.1;reanchor_skipped:disabled,True,P38z,False,True,
+x426b,H3|S1|B|top|roll_pos@k0.75|m1.1,P36sa+P37t+R4c30+P38z,fail,stroke_limited_stop,True,False,,0.143,0.072,0,0,0,0,0.0,fault,INFO_LOC_REVOKED:3.2;FAULT_LIFT_STROKE_LIMIT:soil:FR,True,P36s,True,True,
+x426b,H3|S1|B|top|edge_nd@k0.5|m1.1,P36sa+P37t+R4c30+P38z,fail,fail,False,True,,0.0,0.0,0,0,0,0,0.0,fault,,False,,False,True,
+x426b,H3|S1|B|top|edge_nd@k0.75|m1.1,P36sa+P37t+R4c30+P38z,fail,fail,False,True,,0.0,0.0,0,0,0,0,0.0,fault,,False,,False,True,

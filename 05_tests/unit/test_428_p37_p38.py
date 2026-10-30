@@ -43,7 +43,10 @@ def params():
 
 def candidate_controller(params, name: str, *, phase=c2.C2Phase.LEVEL):
     cls = fx.make_candidate_class(c2, c2.C2Controller, fx.parse_candidate(name))
-    controller = cls.from_params(params, c2.C2Config().with_10hz_d1())
+    # The tokens were built on the preset before the spec 429.11 switch (SGS and R4 off);
+    # with R4 in the preset the token R4c would find the target already raised.
+    pre_switch = c2.C2Config().with_10hz_d1(soil_stop=False, flat_soil_margin_m=0.0)
+    controller = cls.from_params(params, pre_switch)
     controller.reset()
     controller._state.phase = phase
     return controller

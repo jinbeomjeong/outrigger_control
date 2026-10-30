@@ -123,6 +123,7 @@ def test_2_r8_preset_values() -> None:
         margin_m=0.030,
         require_soil_use=False,
         min_clearance_at_P_m=0.010,
+        flat_soil_margin_m=0.030,  # P-S8-37 R4c30, preset since spec 429.11
     )
     assert C2Config().with_soil_response().slope_clearance_margin == settings
 
@@ -277,8 +278,10 @@ def test_10_raised_target_above_the_z1_limit_is_refused(geometry) -> None:
     high_target = replace(margin_config(), thresholds=C2Thresholds(clearance_target_m=0.07))
     with pytest.raises(ValueError, match="clearance_target_m"):
         C2Controller(geometry, high_target)
+    # Both raises off (P-S8-31 and the R4 flat-soil margin of the preset): only the target
+    # is checked.
     C2Controller(geometry, replace(high_target, slope_clearance_margin=replace(
-        high_target.slope_clearance_margin, enable=False)))  # off: only the target is checked
+        high_target.slope_clearance_margin, enable=False, flat_soil_margin_m=0.0)))
 
 
 @pytest.mark.parametrize(("clearance_mm", "fires"), [(9.9, False), (10.0, False), (10.1, True)])
@@ -309,6 +312,9 @@ def test_11_study_1_case_matches_the_e3c10_wrapper_hash(tmp_path) -> None:
                     if r["id"] == WRAPPER_CASE and r["candidate"] == "E3c10")
     out_path = tmp_path / "p31_wrapper_case.json"
     environment = {**os.environ, "MKL_THREADING_LAYER": "TBB", "OMP_NUM_THREADS": "1"}
+    # No pre-switch runner needed: on this case neither SGS (no guard period) nor R4 (P-S8-31
+    # fires first on the tilted settle) acts, so the spec 429.11 preset commands as before
+    # (pre- and post-switch "current" hashes checked equal, 2026-10-30).
     subprocess.run(
         [str(HARNESS_PYTHON), "-I", str(WRAPPER_SCRIPT), "run", "--suite", "slope",
          "--candidates", "current", "--filter", WRAPPER_CASE, "--workers", "1",

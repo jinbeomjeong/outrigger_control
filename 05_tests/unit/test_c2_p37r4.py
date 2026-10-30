@@ -84,24 +84,25 @@ def margin_meta(controller: C2Controller) -> dict:
 # --- settings and preset -----------------------------------------------------------------------
 
 
-def test_class_default_and_preset_default_are_off() -> None:
+def test_class_default_is_off_and_preset_default_is_on() -> None:
+    """Spec 429.11: the R8 preset carries R4c30; the settings class keeps the old behaviour."""
     assert SlopeClearanceMarginSettings().flat_soil_margin_m == 0.0
     assert C2Config().slope_clearance_margin.flat_soil_margin_m == 0.0
-    assert C2Config().with_10hz_d1().slope_clearance_margin.flat_soil_margin_m == 0.0
+    assert C2Config().with_10hz_d1().slope_clearance_margin.flat_soil_margin_m == FLAT_MARGIN_M
     assert _RunState.flat_soil_margin_applied_s == ()  # class attribute (old pickles)
 
 
-def test_preset_keyword_turns_it_on_and_keeps_the_rest() -> None:
+def test_preset_keywords_turn_r4_and_sgs_off_and_keep_the_rest() -> None:
     preset = C2Config().with_10hz_d1()
-    switched = C2Config().with_10hz_d1(soil_stop=True, flat_soil_margin_m=FLAT_MARGIN_M)
-    assert switched.slope_clearance_margin == replace(
-        preset.slope_clearance_margin, flat_soil_margin_m=FLAT_MARGIN_M
+    switched_off = C2Config().with_10hz_d1(soil_stop=False, flat_soil_margin_m=0.0)
+    assert switched_off.slope_clearance_margin == replace(
+        preset.slope_clearance_margin, flat_soil_margin_m=0.0
     )
-    assert switched.lift_stroke_guard.soil_stop
-    assert switched == replace(
+    assert not switched_off.lift_stroke_guard.soil_stop
+    assert switched_off == replace(
         preset,
-        slope_clearance_margin=switched.slope_clearance_margin,
-        lift_stroke_guard=switched.lift_stroke_guard,
+        slope_clearance_margin=switched_off.slope_clearance_margin,
+        lift_stroke_guard=switched_off.lift_stroke_guard,
     )
 
 

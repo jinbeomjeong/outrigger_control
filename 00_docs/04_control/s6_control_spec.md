@@ -17359,6 +17359,15 @@ Chrono-dev, 프로젝트 루트에서 `python -I -X utf8 -u 04_scripts/02_chrono
   - 합격: G6-1~G6-6 통과. G6-7은 S1 전방 판정 밖 FLAG로 허용한다. 단 이탈 전 RR 실제 최소가 < 0(패드 부상)이거나 G6-3 < $F_{min}$이면 실패로 판정한다.
   - 기록: 이탈 전 RR 최소, 하네스 대비 READY 차.
 
+#### 426.9.F.1 RV3 판정(05708b2판 제어기 = 이전 판; control 2026-10-30, 432 부록 이력·대조 통계용)
+- 재판정: `run_S9.py rejudge`(Chrono-dev, E코어 0x0C000000) → 각 폴더 `result_rejudge_rev60.json`. `unchanged_blocks_equal`·`params_file_match`는 모두 참이다. C는 `r76_g6_chrono_judge.py` → `06_analysis/02_control/s9/rev85/rv3c_g6_judge.json`.
+
+| 행 | Chrono(`07_results/S9/...`) | 하네스 짝(같은 판) | 판정 |
+|---|---|---|---|
+| **B-C1** `batch_RV3_20261030_134001/S9SL_RV3B_S1_B_top_Fs0_r3p3_p0`(S1 B, (3.3, 0)°, $F_s$ 0) | 이탈 → LOC 1.54 s(P3-2 통과) → `INFO_LOC_CLEARANCE_MARGIN:80` → 가드 첫 주기 `WARN_LIFT_STROKE_LIMITED:FR`(LOC + 0.1 s) → 3.0 s 뒤 `FAULT_LIFT_STROKE_LIMIT:FR`. `FAULT_STROKE_END` 0. 이탈 뒤 실제 최소 120.2 / 107.2 / 68.1 / 70.9 kN(실행 끝까지, 부상 0). 이탈 전 최소 ≥ 13.18 kN. 크롤러 이탈 확인 뒤 최대 3.15 kN(< 0.01 W). READY 0. 최대 행정 FR 676.3 mm | `H3\|S1\|B\|top\|roll_pos@k0.75\|Fs0`: 같은 경로(WARN → 3.0 s 뒤 FAULT, FR), 최대 행정 683.7 mm, 이탈 뒤 최소 69.7 kN | **합격 (b) 안전 종료.** 하네스와 종료 형태·다리가 같다. Chrono 행정이 7.4 mm 작다. 최종 제어기(SGS any_loc)라면 가드 첫 주기에 바로 정지한다. 이미 3 s 안에 같은 FAULT로 끝났으므로 결과 형태는 같다(추론) |
+| **C-C1** `batch_RV3_20261030_134021/G6_G1_A_top_Fs4_spS1FL`(G1 + S1@FL, 패드 A) | G6-1·3·4·5·6 통과, READY 67.6 s(≤ 120 s). G6-2: LOC − 이탈 3.20 s > 2.91 s이고 LOC 전 재접근 5회·LWa 재시작 5회라, 419.8 규칙으로 `P3-2_late_loc_reapproach` **FLAG**(rejudge `P3-2_verdict` flag). G6-7: S1 전방 판정 밖 FLAG. 이탈 전 RR 실제 최소 8.20 kN(> 0, < $F_{min}$ 기록 FLAG). G6-3 이탈 뒤 RR 11.80 kN ≥ 9.41 kN. 끝 자세 0.015°, 틈 88.0 mm, FL 침하 119.5 mm, 비틀림 완화 1회 | `g6\|G1+S1@FL\|top\|Fs4\|PA`: G6-7만 실패, 이탈 전 RR 7.81 kN, G6-3 18.3 kN, READY 64.1 s, LOC 지연 2.2 s | **합격**(G6-2·G6-7 FLAG). 이탈 전 RR > 0, G6-3 ≥ $F_{min}$이다. 하네스 대비 READY +3.5 s, LOC 지연 +1.0 s. 이탈 뒤 RR 최소는 하네스가 낙관이다(18.3 대 11.8 kN, 여유 2.4 kN). 이탈 전 최소는 하네스가 약간 보수다 |
+- 최종 기능 관점(432.1): B-C1은 SGS가 작동할 사례라 (b)이고, 최종판은 확장 후보다. C-C1은 패드 A G6로 FINAL 대상이 아니며 이력·대조로만 쓴다.
+
 ### 426.9.G Chrono RV1 판정(논문 리뷰 S2·S3, `run_S9.py` `rv1_cases`; X5 먼저, X4 3건은 끝나는 대로 이 절에 더함)
 
 #### 426.9.G.1 X5 `P3b_J2_B_top_Fs4_m1p1`(J2 패드 B 오거 상단 $F_s$ 4 평지, 운용 중량 × 1.1; control 판정 2026-10-30)
@@ -17559,7 +17568,7 @@ Chrono-dev, 프로젝트 루트에서 `python -I -X utf8 -u 04_scripts/02_chrono
   - 토양 징후가 없으면(강체·G1 평지 등) 지금 동작(행정 제한 완료 허용, SL-1 분류)을 그대로 둔다.
 - **사건**: `WARN_LIFT_STROKE_LIMITED:<legs>`(기존, 같은 주기) 다음 `FAULT_LIFT_STROKE_LIMIT:soil:<legs>`.
 - **정지 처리**: 기존 `FAULT_LIFT_STROKE_LIMIT` 경로를 재사용한다. 네 다리 정지와 자세 적분기 유지, 그리고 U-S8-79 뜬 다리 재접지(R30, 30 mm)다. 크롤러 영역 래치는 유지한다.
-- **설정**: `LiftStrokeGuardSettings.soil_stop: bool = False`(클래스 기본 = 옛 동작). R8 프리셋 `with_10hz_d1()`에서만 True(현재 프리셋 기본값은 꺼짐, 전환은 429.11, B1 뒤).
+- **설정**: `LiftStrokeGuardSettings.soil_stop: bool = False`(클래스 기본 = 옛 동작). R8 프리셋 `with_10hz_d1()`에서만 True(2026-10-30 프리셋 전환 완료, 429.11).
 - **판정 분류**: 새 분류 `stroke_limited_stop`(행정 제한 안전 정지). 집계는 통과도 실패도 아닌 **안전 종료(목표 미달)**로 따로 센다.
   - 안전 종료 조건(모두): 정지 사유가 `FAULT_LIFT_STROKE_LIMIT:soil`, `FAULT_STROKE_END` 0, 다리 부상 0, 크롤러 이탈 뒤 실행 끝까지 네 다리 실제 최소 ≥ $F_{min}$, 이동 중 압력 ≤ 180 bar(포화 0).
   - 하나라도 어기면 `fail`이다.
@@ -17641,7 +17650,7 @@ Chrono-dev, 프로젝트 루트에서 `python -I -X utf8 -u 04_scripts/02_chrono
 > control 권고: **(나)**. 안전 쪽이고, 잃는 것은 행정 제한 통과 4건(P3-5만 완화된 통과)뿐입니다.
 
 ### 427.12.3 03_src 구현 명세(python-expert) — `03_src/outrigger_sim/control/c2.py`
-- 설정: `LiftStrokeGuardSettings.soil_stop: bool = False`(frozen 필드 추가, 클래스 기본 = 옛 동작). R8 프리셋 `with_10hz_d1()`에서만 True(현재 프리셋 기본값은 꺼짐, 전환은 429.11, B1 뒤).
+- 설정: `LiftStrokeGuardSettings.soil_stop: bool = False`(frozen 필드 추가, 클래스 기본 = 옛 동작). R8 프리셋 `with_10hz_d1()`에서만 True(2026-10-30 프리셋 전환 완료, 429.11).
 - 상태: `_C2State.guard_soil_sign: str | None`(`"soil_mode"` / `"clearance_tilt"` / None), `guard_soil_sign_history: list`.
 - 토양 징후 판정: `_has_loc_soil_sign`(L1gs 관문, 424.10.2)과 같은 식·같은 상수(`loc_revoke.gate_min_clearance_at_P_m`, `gate_tilt_min_rad`)를 쓰는 `_loc_soil_sign_reason()`을 둔다.
   - `_confirm_liftoff`에서 매번 래치한다.
@@ -17984,7 +17993,7 @@ Chrono-dev, 프로젝트 루트에서 `python -I -X utf8 -u 04_scripts/02_chrono
   - 강체 r67에서 READY 지연 > +5 s가 main 22·top 9건(최대 +17.5 s)이다.
   - 이득 없이 비용만 있다. 428.5.3에서 본 대로 평면 성분을 보지 못하는 한계와 맞다. 03_src에 넣지 않고 래퍼 토큰만 남긴다.
 - R4c30 03_src 구현 명세(python-expert)
-  - `SlopeClearanceMarginSettings`(P-S8-31)에 `flat_soil_margin_m: float = 0.0`(클래스 기본 = 옛 동작)을 더한다. R8 프리셋은 0.03이다(현재 프리셋 기본값은 꺼짐, 전환은 429.11, B1 뒤).
+  - `SlopeClearanceMarginSettings`(P-S8-31)에 `flat_soil_margin_m: float = 0.0`(클래스 기본 = 옛 동작)을 더한다. R8 프리셋은 0.03이다(2026-10-30 프리셋 전환 완료, 429.11).
   - `_apply_slope_clearance_margin`(LOC 확정마다)에서 다음을 모두 만족하면 run 틈 목표를 `clearance_target_m + flat_soil_margin_m`(80 mm)으로 둔다. 래퍼 `p37_floor_twist.is_flat_soil_margin_due`와 같은 식이다.
     - 그 들어 올림 회차에서 토양 모드를 썼다.
     - 정착 기울기 ≤ `tilt_min_rad`(1°).
@@ -18019,7 +18028,7 @@ Chrono-dev, 프로젝트 루트에서 `python -I -X utf8 -u 04_scripts/02_chrono
   - `controller_meta.slope_clearance_margin.settings.flat_soil_margin_m` == 0.03.
   - 기대 이름 토큰 `final_P36sa` → `final_SGS_R4`: 반영됨(`run_S9.FINAL_CONTROLLER`).
 - **인수 회귀 B**(래퍼 기준 B1 → 프리셋 전환 → 구현 B2, id별 해시 비교; P 0x0FFFFFFF, 28워커)
-  - B1(지금 프리셋 = 끔 상태에서 래퍼 최종 조합):
+  - B1(B1 실행 당시 프리셋 = 끔 상태에서 래퍼 최종 조합):
     `& .\04_scripts\03_control\s9\runners\run_p37_stage1.ps1 -Candidate 'P36sa+R4c30' -Tag finB1 -Mask 0x0FFFFFFF -Workers 28 -SkipCurrent`(로그는 `-LogDir <폴더>`, 기본 `%TEMP%\outrigger_runners`)
     러너가 래퍼 slope·h6 / x426b / g6·g8·p3b·v3s + 연구 A + r67을 돈다. 인자 수정판을 쓴다.
     여기에 H9를 더한다: `& C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe -I 04_scripts/03_control/s9/s9_slope_fix_candidates.py run --suite h9 --candidates P36sa+R4c30 --settle-hook harness --workers 28 --affinity 0x0FFFFFFF --out 06_analysis/02_control/s9/rev85/finB1_h9.json`
@@ -18051,6 +18060,8 @@ Chrono-dev, 프로젝트 루트에서 `python -I -X utf8 -u 04_scripts/02_chrono
     - h9는 정착 판정이 표 적용이고 `settle_check_fail` 0이면 생략하고 기록만 남긴다. 0이 아니면 같은 방식으로 한다.
   - D의 정착표 SHA가 저장 실행(cf9a1bb2…)과 다르면(H9 행 추가 등) H8 행이 같은지 확인하고 기록한다.
   - 예상 C 합 약 110,000 워커-초(r79 L1·L2 전체 약 57,000 포함, 20워커 약 1.5시간).
+
+- **프리셋 전환 완료(2026-10-30 21시 반, B1 통과 뒤)**: `with_10hz_d1` 기본값을 `soil_stop=True`·`flat_soil_margin_m=0.03`(`R8_FLAT_SOIL_MARGIN_M`)으로 바꿨다. 클래스 기본값은 꺼진 채 둔다. 단위 시험 5,235 통과, 실패 0. `controller_expectation(final_SGS_R4)` 통과. ABL = (False, 0.0)이다. 단건 해시는 B1과 같다(`H3|J2|B|top|roll_pos@k0.75`, `base|J2|B|top|Fs4` p0). 전환 전 저장 해시 시험은 `05_tests/unit/pre_switch_preset_runner.py`로 전환 전 구성을 재현한다.
 
 # 430. 좌우(roll) 운용 경계 세분 연구(사용자 결정 2026-10-30 "경계 세분 연구까지"; control 설계)
 
@@ -18294,20 +18305,22 @@ Chrono-dev, 프로젝트 루트에서 `python -I -X utf8 -u 04_scripts/02_chrono
 - H-3 쪽 분류(E1 규칙, **가정** 문턱): 하네스 판정이 더 좋거나 Chrono − 하네스 READY > 5 s, 하네스/Chrono 최소 힘 > 1.10, 틈 차 < −10 mm이면 낙관이다. 반대 방향이면 보수, 둘 다 아니면 대표다.
 - H-4 쓰는 규칙: 대표·보수 수준은 하네스 집계를 결론값으로 쓴다. 낙관 수준은 Chrono 대표가 통과한 범위 안에서만 하네스 통과를 주장하고, 경계·한계 주장은 Chrono 값으로 한다.
 - H-5 조합: 하네스만으로 본다. 변수별 영향 방향의 단조성(E5)이 깨진 조합은 FLAG로 표시한다.
-- H-6 낙관 여유(**가정**, 새 규칙): 낙관 영역(연약 J1·J2 패드 B)의 하네스 통과는 하네스 여유가 관측된 Chrono − 하네스 차보다 클 때만 "여유 있는 통과"로 쓴다. 평지는 READY +17 s·틈 −12 mm·행정 +16 mm, 경사·×1.1은 READY +31 s를 쓴다(E1 최대값). 그 밖은 "하네스 통과(Chrono 미확인)"로 쓴다.
+- H-6 낙관 여유(**가정**, 새 규칙): 낙관 영역(연약 J1·J2 패드 B)의 하네스 통과는 하네스 여유가 관측된 Chrono − 하네스 차보다 클 때만 "여유 있는 통과"로 쓴다. 평지는 READY +17 s·틈 −13 mm(RV2 J2 −12.7 mm 반영, 432.4.4)·행정 +16 mm, 경사·×1.1은 READY +31 s를 쓴다(E1 최대값). 그 밖은 "하네스 통과(Chrono 미확인)"로 쓴다.
 
 ### 432.4.1 근거 자료
 | 번호 | 자료 | 상태 |
 |---|---|---|
-| E1 | `06_analysis/02_control/s9/rev85/harness_chrono_pairs.json`: 저장 Chrono 48짝(P3b 24, S9SL 7, 오거 연구 ③·D424R 8, 운용 중량 3, G6 6) + 정적 3행(강체 사건·TOUCH·L1-R) + 진행 중 RV2·RV3 자리 | 만듦(2026-10-30). 하네스는 R2DS(05708b2 계열)이고, 최종 인수 결과로 다시 만든다 |
+| E1 | `06_analysis/02_control/s9/rev85/harness_chrono_pairs.json`: 저장 Chrono 54짝(P3b 24, S9SL 7, 오거 연구 ③·D424R 8, 운용 중량 3, G6 6 + RV2 4·RV3 2, 같은 판) + 정적 3행(강체 사건·TOUCH·L1-R). 생성 스크립트 `04_scripts/03_control/s9/rep_evidence.py` | 만듦(2026-10-30, RV2·RV3 반영 재생성). 하네스는 R2DS(05708b2 계열)이고, 최종 인수 결과로 다시 만든다 |
 | E2 | 대표 7건의 최종 제어기 하네스 짝 | 6단계 인수 해시 실행에 포함 |
 | E3 | (a) 재사용 동치: scan + `final_ctrl_offline.py` 재생(SGS any_loc + R4c30 + L1gs + DSb75). ZIC 기각으로 대상이 늘었다: 기존 (a) + C-1·X4-nd·X4-ed·G6 J1@RR(0.6 kN)·J1@FL·J2@RR. 확인 항목은 가드 주기 0(SGS), "토양 모드 LOC + 정착 기울기 ≤ 1°" 0(R4), DSb75·L1gs 작동 0이다 | 최종 구성 확정(429.11) → 지금 할 수 있음(python) |
-| E4 | 같은 사례의 판 간 Chrono 비교(RV2 ↔ B0·J2·Fs0·Fs8, X4-rp ↔ X6-rp-sa, D424R ↔ ×1.1·J2 중단) | RV2 진행 중 |
+| E4 | 같은 사례의 판 간 Chrono 비교(10-26 P3b ↔ RV2 ↔ FINAL-REP, X4-rp ↔ X6-rp-sa, D424R ↔ ×1.1·J2 중단) | RV2 끝(432.4.4). FINAL-REP 대기 |
 | E5 | `06_analysis/02_control/s9/rev85/harness_monotonicity.json`: 변수 하나만 다른 하네스 기록의 방향·단조성 | 만듦(R2DS·x426 기준) |
 
 ### 432.4.2 E1 요약(Chrono − 하네스; 하네스 R2DS, Chrono는 저장 판)
-- 짝 48, 판정 일치 43/48이다. 불일치 5건은 다음과 같다. 하네스 낙관 4: C-3(하네스 pass, Chrono slp), C-4(slp ↔ FAULT), X4-rp(slp ↔ 실패), D424R ①(pass ↔ P3-6 실패). 하네스 보수 1: G6 S1@FL(하네스 G6-7 실패, Chrono 통과 + FLAG).
-- READY 차는 −9.8~+31.0 s, 평균 +6.6 s(43짝)다. 평지 G1·J1 A·J2 A·S1은 +2.5~+4.2 s, 연약 패드 B(J1·J2)는 +5.4~+16.6 s, 경사·×1.1은 +18~+31 s다.
+- 짝 54, 판정 일치 49/54다(RV2·RV3 새 6짝은 모두 일치. RV3 두 짝은 하네스 표기에 맞춰 fail/fail로 적었고, 명세 판정은 426.9.F.1의 합격이다). 불일치 5건은 다음과 같다. 하네스 낙관 4: C-3(하네스 pass, Chrono slp), C-4(slp ↔ FAULT), X4-rp(slp ↔ 실패), D424R ①(pass ↔ P3-6 실패). 하네스 보수 1: G6 S1@FL(하네스 G6-7 실패, Chrono 통과 + FLAG).
+- READY 차는 −9.8~+31.0 s, 평균 +6.86 s(48짝)다. 평지 G1·J1 A·J2 A·S1은 +2.5~+4.2 s, 연약 패드 B(J1·J2)는 +5.4~+16.6 s, 경사·×1.1은 +18~+31 s다. 같은 판 RV2(패드 B)는 +8.0~+13.0 s다.
+- 틈 차는 −12.65~+19.27 mm, 평균 −1.56 mm(36짝)다. 최소는 RV2 J2 B $F_s$ 4(−12.65 mm)이고 H-6 틈 여유 −13 mm 안에 든다.
+- 쪽 분류 변화(RV2·RV3 반영): B2 $F_s$ 낙관 2 → 4, A1 토양 낙관 2 → 4, A2 roll 대표 1 → 2, A3 연약 낙관 4 → 5.
 - 연약 J1·J2 패드 B 평지에서는 Chrono 틈이 9.8~11.6 mm 작고 최대 행정이 13.6~15.8 mm 작다. Chrono 관입이 더 깊다는 뜻이며, 하네스 관입 낙관(표 3)과 같은 방향이다.
 
 ### 432.4.3 최소안에서 하네스·이력으로만 보이는 항목의 분류
@@ -18320,6 +18333,34 @@ Chrono-dev, 프로젝트 루트에서 `python -I -X utf8 -u 04_scripts/02_chrono
 | 연약 비평면(A3, 연구 D) | **미확인**(연약 Chrono 짝 없음, RV4 중지). 기준 J2 B는 낙관 | 강체 L1-R 4: 차 ≤ 0.2 mm(대표). 하네스 D 33/33 통과. E5: 패임 깊이에 대해 행정 단조 6/6, 둔덕 READY 5/6. d150 하네스 최대 행정 639.6 mm + J2 B 편향(+15.8 mm) ≈ 655 mm < 가드 682.8 mm | 하네스 결과를 "Chrono 미확인"으로 표시하고, H-6 여유 검사를 통과한 행만 통과로 쓴다 |
 | 연약 사건(A4, 연구 A) | **미확인.** 실패 기구(틈)에서는 낙관 쪽으로 추정 | 강체 사건 부상 시간은 보수(1.02~1.08). 연약 J2 B는 Chrono 틈이 −11.6 mm 작다. 그러므로 하네스 E-6 실패는 Chrono에서도 남을 가능성이 크다 | 하네스 실패·FLAG를 그대로 한계로 쓰고, 통과 행은 "Chrono 미확인"으로 표시한다 |
 | 오거 하단(B1) | **효과는 대표.** J1 B 하단은 낙관, J2 B 하단은 혼합 | G1·J1 A·J2 A·S1 하단: READY +2.5~+4.2 s. J1 B 하단 +16.6 s(탐침 회차). J2 B 하단: 첫 READY −9.8 s(재레벨 뒤 마지막 READY 91.2 s), 틈 −11 mm. E5: 판정 변화 0/24, 최소 힘이 하단에서 오름 21/24(단조 24/24) | J2 B 하단은 이력 Chrono(D424R ③, R4 전) + 하네스로 쓴다. 4.5절 P-Δ 문단은 이력 판임을 명시한다 |
+
+### 432.4.4 RV2 판정과 E1·E4 반영(control 2026-10-30; Chrono 05708b2판 = 하네스 R2DS와 같은 판)
+- 재판정: `run_S9.py rejudge`(Chrono-dev, E코어 0x0C000000). 블록 동일·YAML 지문 일치. 폴더는 `07_results/S9/batch_RV2_20261030_154549/P3b_J1_B_top_Fs{0,4,8}`와 `batch_RV2_20261030_155059/P3b_J2_B_top_Fs4`다.
+- **판정: 4건 모두 P3-1~P3-8 통과**다(FLAG 0, LOC 뒤 재접촉 0, READY 한계 100 s 안). DSb75는 4건 모두 LOC 1 s 뒤 작동했다(FL·RL 4.8~5.5 mm/s, 1.6~1.8 s 뒤 반전 해제). L1gs 취소는 0이다.
+
+| 사례 | 10-26 P3b(L1gs·DSb75 전) READY / 최소 / 틈 / 끝 자세 | **RV2(05708b2)** | 하네스 R2DS(같은 판) | Chrono − 하네스 |
+|---|---|---|---|---|
+| J1 B $F_s$ 0 | 69.4 s / 68.06 kN / 37.2 mm / — | 70.7 s / 67.81 kN / 36.7 mm / 0.044° | 62.7 s / 69.06 kN / 47.2 mm | READY +8.0 s, 틈 −10.5 mm |
+| J1 B $F_s$ 4 | 69.3 / 68.17 / 37.4 / 0.042° | 73.7 / 67.69 / 36.2 / 0.035° | 63.9 / 68.81 / 47.4 | +9.8 s, −11.2 mm |
+| J1 B $F_s$ 8 | 71.4 / 68.23 / 38.1 / — | 75.6 / 68.11 / 36.8 / 0.026° | 62.6 / 68.81 / 47.8 | +13.0 s, −11.0 mm |
+| J2 B $F_s$ 4 | 74.7 / 68.2 / 36.5 / 0.048° | 76.4 / 67.70 / 35.4 / 0.046° | 64.9 / 68.73 / 48.1 | +11.5 s, −12.7 mm |
+- 해석
+  - 10-26 → RV2의 차는 DSb75 몫이다. 평지라 E3c10·LWa·L1gs 취소는 작동하지 않았다. READY는 +1.3~+4.4 s, 최소 힘은 −0.1~−0.5 kN, 틈은 −0.5~−1.3 mm다. 판정 여유는 그대로다.
+  - RV2는 하네스와 **같은 판**의 첫 연약 짝이다. 판 차 없이도 하네스 낙관이 그대로 나온다: READY +8~+13 s, 틈 −11~−13 mm, 최소 힘 비 1.01~1.02. 432.4.2의 패드 B 낙관 분류와 H-6 평지 여유(READY +17 s, 틈 −12 mm)를 뒷받침한다. 다만 J2 틈 차 −12.7 mm는 H-6 틈 여유 −12 mm를 0.7 mm 넘는다. 그래서 E1을 다시 만들 때 H-6 틈 여유를 −13 mm로 고친다(**가정** 갱신).
+- **E4 짝(판 간 비교)**: 각 단계의 차는 그 사이에 더해진 기능 몫이다.
+
+| 사례 | 10-26 P3b | RV2(05708b2, +DSb75) | FINAL-REP(+R4c30, SGS) | 귀속 |
+|---|---|---|---|---|
+| J1 B 상단 $F_s$ 4 | `batch_P3b_20261026_122444/P3b_J1_B_top_Fs4` | `batch_RV2_20261030_154549/P3b_J1_B_top_Fs4` | FINAL-REP B0 | DSb75 → R4 |
+| J2 B 상단 $F_s$ 4 | `batch_P3b_20261026_122444/P3b_J2_B_top_Fs4` | `batch_RV2_20261030_155059/P3b_J2_B_top_Fs4` | FINAL-REP J2 B 상단 | DSb75 → R4 |
+| J1 B 상단 $F_s$ 0·8 | 10-26 P3b | RV2 | 없음(확장 후보는 $F_s$ 8만) | DSb75만. R4 효과는 $F_s$ 4 짝으로 추정 |
+- E1 반영(python-expert, `04_scripts/03_control/s9/rep_evidence.py`) — **완료(2026-10-30, 54짝, 요약은 432.4.2)**
+  - RV2 4건을 같은 판 짝으로 넣는다. 값은 `result_rejudge_rev60.json`(`p3b` 블록)에서 읽는다. 하네스 짝은 `base|<soil>|B|top|Fs<F_s>`, 판 표기는 `05708b2 (same as harness)`다.
+  - 10-26 P3b 짝과 같은 사례 이름이므로, `chrono_case`에 배치 폴더를 붙여 구별한다.
+  - RV3 B-C1을 넣는다. 하네스 `H3|S1|B|top|roll_pos@k0.75|Fs0`(`x426_B_Fs0_rejudged.json`)이고, 둘 다 `FAULT_LIFT_STROKE_LIMIT` 안전 종료라 판정이 같다. 비교 열은 최대 행정·이탈 뒤 최소다.
+  - RV3 C-C1을 넣는다. 하네스 `g6|G1+S1@FL|top|Fs4|PA`(`x426_C.json`)이고, G6-7 실패는 둘 다 같다. 이탈 뒤 RR 최소는 하네스 18.3 대 Chrono 11.8 kN으로 낙관이다. 판정 소스는 `rv3c_g6_judge.json`이다.
+  - `PENDING`을 지우고, H-6 틈 여유 문구를 −13 mm로 고친다.
+  - 다시 생성한 뒤 control이 432.4.2 요약 수치를 갱신한다.
 
 ## 432.5 개별 확인 사례(모두 FINAL-REP에 포함)
 | 사례 | 필요한 이유 | 합격 기준 |

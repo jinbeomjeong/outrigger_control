@@ -2,7 +2,7 @@
  "meta": {
   "spec": "432.4 E1 (control 2026-10-30)",
   "script": "04_scripts/03_control/s9/rep_evidence.py",
-  "script_sha256": "e106a40f0707a0aa363e15a9257b361d0fee5962877026e0107c3178da6c7b0c",
+  "script_sha256": "ae7da75acf026aeb746fc5cd9879558bce32651b46b8bf68e676494fe64a78f1",
   "harness_files": {
    "p3b": "06_analysis\\02_control\\s9\\rev83\\R2DS_p3b.json",
    "slope": "06_analysis\\02_control\\s9\\rev83\\R2DS_slope_rejudged.json",
@@ -17,12 +17,14 @@
    "H9": "06_analysis\\02_control\\s9\\rev85\\h9_roll_fine_cmp.json"
   },
   "classification": "optimistic if harness verdict better, or Chrono READY - harness > 5 s, or harness min F / Chrono > 1.10, or Chrono gap - harness < -10 mm; conservative = the opposite (READY < -5 s, ratio < 0.90, verdict worse); mixed = both (ASSUMPTION thresholds)",
-  "version_caveat": "Harness = R2DS (05708b2 line). Chrono = the stored run version (column). Pairs whose versions differ are trend evidence, not identity; re-run on the final acceptance files."
+  "version_caveat": "Harness = R2DS (05708b2 line). Chrono = the stored run version (column). Pairs whose versions differ are trend evidence, not identity; re-run on the final acceptance files.",
+  "h6_margin": "H-6 optimistic margin (ASSUMPTION, spec 432.4): flat READY +17 s, gap -13 mm (RV2 J2 -12.7 mm, 432.4.4), stroke +16 mm; slope / x1.1 READY +31 s",
+  "missing_chrono_inputs": []
  },
  "summary": {
-  "n_pairs": 48,
-  "n_with_harness": 48,
-  "verdict_same": 43,
+  "n_pairs": 54,
+  "n_with_harness": 54,
+  "verdict_same": 49,
   "by_variable_side": {
    "B1 auger": {
     "representative": 12,
@@ -31,17 +33,17 @@
    },
    "B2 F_s": {
     "representative": 6,
-    "optimistic": 2
+    "optimistic": 4
    },
    "A1 soil": {
     "representative": 6,
-    "optimistic": 2
+    "optimistic": 4
    },
    "A2 nose_down": {
     "optimistic": 3
    },
    "A2 roll": {
-    "representative": 1,
+    "representative": 2,
     "optimistic": 2
    },
    "A2 edge": {
@@ -53,15 +55,15 @@
    },
    "A3 soft": {
     "representative": 1,
-    "optimistic": 4,
+    "optimistic": 5,
     "mixed": 1
    }
   },
   "d_ready_s_chrono_minus_harness": {
-   "n": 43,
+   "n": 48,
    "min": -9.8,
    "max": 31.0,
-   "mean": 6.6
+   "mean": 6.86
   }
  },
  "pairs": [
@@ -1727,6 +1729,235 @@
     "d_att_end_absmax_deg": 0.001,
     "minF_ratio_h_over_c": 1.197
    }
+  },
+  {
+   "variable": "B2 F_s",
+   "chrono_case": "P3b_J1_B_top_Fs0 @ batch_RV2_20261030_154549",
+   "harness_id": "base|J1|B|top|Fs0",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 70.70000000149433,
+    "min_force_kN": 67.81057073624133,
+    "max_stroke_mm": 475.5921850299874,
+    "gap_ready_mm": 36.739502401601065,
+    "att_end_absmax_deg": [
+     0.04417844539265107,
+     0.026133020357109297
+    ],
+    "version": "05708b2 (same as harness)",
+    "src": "07_results/S9/batch_RV2_20261030_154549/P3b_J1_B_top_Fs0/result_rejudge_rev60.json"
+   },
+   "harness": {
+    "id": "base|J1|B|top|Fs0",
+    "verdict": "pass",
+    "ready_s": 62.700000000117356,
+    "min_force_kN": 69.0641616234236,
+    "max_stroke_mm": 488.34687073773915,
+    "gap_ready_mm": 47.247754172311666,
+    "att_end_absmax_deg": 0.06944612222849736,
+    "source": "p3b"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 8.0,
+    "d_min_force_kN": -1.254,
+    "d_max_stroke_mm": -12.755,
+    "d_gap_ready_mm": -10.508,
+    "d_att_end_absmax_deg": -0.025,
+    "minF_ratio_h_over_c": 1.018
+   },
+   "chrono_version_note": "same version as the harness (RV2, spec 432.4.4)"
+  },
+  {
+   "variable": "A1 soil / B3 pad",
+   "chrono_case": "P3b_J1_B_top_Fs4 @ batch_RV2_20261030_154549",
+   "harness_id": "base|J1|B|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 73.70000000159392,
+    "min_force_kN": 67.69115836512238,
+    "max_stroke_mm": 474.85480822653926,
+    "gap_ready_mm": 36.24273593187155,
+    "att_end_absmax_deg": [
+     0.03544941440400512,
+     0.02341146095129106
+    ],
+    "version": "05708b2 (same as harness)",
+    "src": "07_results/S9/batch_RV2_20261030_154549/P3b_J1_B_top_Fs4/result_rejudge_rev60.json"
+   },
+   "harness": {
+    "id": "base|J1|B|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 63.900000000123086,
+    "min_force_kN": 68.8079199858465,
+    "max_stroke_mm": 486.5506353750639,
+    "gap_ready_mm": 47.43144580618503,
+    "att_end_absmax_deg": 0.019487011277054937,
+    "source": "p3b"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 9.8,
+    "d_min_force_kN": -1.117,
+    "d_max_stroke_mm": -11.696,
+    "d_gap_ready_mm": -11.189,
+    "d_att_end_absmax_deg": 0.016,
+    "minF_ratio_h_over_c": 1.016
+   },
+   "chrono_version_note": "same version as the harness (RV2, spec 432.4.4)"
+  },
+  {
+   "variable": "B2 F_s",
+   "chrono_case": "P3b_J1_B_top_Fs8 @ batch_RV2_20261030_154549",
+   "harness_id": "base|J1|B|top|Fs8",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 75.600000001657,
+    "min_force_kN": 68.11256245831696,
+    "max_stroke_mm": 474.5263686060692,
+    "gap_ready_mm": 36.80917074603451,
+    "att_end_absmax_deg": [
+     0.025650896027365935,
+     0.005237177860003366
+    ],
+    "version": "05708b2 (same as harness)",
+    "src": "07_results/S9/batch_RV2_20261030_154549/P3b_J1_B_top_Fs8/result_rejudge_rev60.json"
+   },
+   "harness": {
+    "id": "base|J1|B|top|Fs8",
+    "verdict": "pass",
+    "ready_s": 62.60000000011688,
+    "min_force_kN": 68.81176766527776,
+    "max_stroke_mm": 487.55593913098653,
+    "gap_ready_mm": 47.84619189292531,
+    "att_end_absmax_deg": 0.015933281525106757,
+    "source": "p3b"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 13.0,
+    "d_min_force_kN": -0.699,
+    "d_max_stroke_mm": -13.03,
+    "d_gap_ready_mm": -11.037,
+    "d_att_end_absmax_deg": 0.01,
+    "minF_ratio_h_over_c": 1.01
+   },
+   "chrono_version_note": "same version as the harness (RV2, spec 432.4.4)"
+  },
+  {
+   "variable": "A1 soil / B3 pad",
+   "chrono_case": "P3b_J2_B_top_Fs4 @ batch_RV2_20261030_155059",
+   "harness_id": "base|J2|B|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 76.40000000168355,
+    "min_force_kN": 67.70151370536672,
+    "max_stroke_mm": 500.70312074247016,
+    "gap_ready_mm": 35.429950760098805,
+    "att_end_absmax_deg": [
+     0.04647923784368656,
+     0.014809242418944765
+    ],
+    "version": "05708b2 (same as harness)",
+    "src": "07_results/S9/batch_RV2_20261030_155059/P3b_J2_B_top_Fs4/result_rejudge_rev60.json"
+   },
+   "harness": {
+    "id": "base|J2|B|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 64.90000000012786,
+    "min_force_kN": 68.7336445321671,
+    "max_stroke_mm": 516.2779276212083,
+    "gap_ready_mm": 48.080417559452755,
+    "att_end_absmax_deg": 0.03204922032559668,
+    "source": "p3b"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 11.5,
+    "d_min_force_kN": -1.032,
+    "d_max_stroke_mm": -15.575,
+    "d_gap_ready_mm": -12.65,
+    "d_att_end_absmax_deg": 0.014,
+    "minF_ratio_h_over_c": 1.015
+   },
+   "chrono_version_note": "same version as the harness (RV2, spec 432.4.4)"
+  },
+  {
+   "variable": "A2 roll S1 B 3.3 deg (k 0.75) F_s 0 [RV3 B-C1]",
+   "chrono_case": "S9SL_RV3B_S1_B_top_Fs0_r3p3_p0 @ batch_RV3_20261030_134001",
+   "harness_id": "H3|S1|B|top|roll_pos@k0.75|Fs0",
+   "chrono": {
+    "verdict": "fail",
+    "ready_s": null,
+    "min_force_kN": 68.08535679465611,
+    "max_stroke_mm": 676.3152567678205,
+    "gap_ready_mm": null,
+    "att_end_absmax_deg": null,
+    "note": "426.9.F.1: pass (b) safe stop FAULT_LIFT_STROKE_LIMIT:FR, no READY; the P3 rows fail in both engines (same end path)",
+    "version": "05708b2 (same as harness)",
+    "src": "07_results/S9/batch_RV3_20261030_134001/S9SL_RV3B_S1_B_top_Fs0_r3p3_p0/result_rejudge_rev60.json",
+    "spec": "spec 426.9.F.1"
+   },
+   "harness": {
+    "id": "H3|S1|B|top|roll_pos@k0.75|Fs0",
+    "verdict": "fail",
+    "ready_s": null,
+    "min_force_kN": 69.65604359843387,
+    "max_stroke_mm": 683.6627461083297,
+    "gap_ready_mm": null,
+    "att_end_absmax_deg": 0.7049866048889387,
+    "source": "B_Fs0"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_min_force_kN": -1.571,
+    "d_max_stroke_mm": -7.347,
+    "minF_ratio_h_over_c": 1.023
+   },
+   "chrono_version_note": "same version as the harness (RV3, spec 426.9.F.1)"
+  },
+  {
+   "variable": "A3 soft patch S1@FL pad A [RV3 C-C1]",
+   "chrono_case": "G6_G1_A_top_Fs4_spS1FL @ batch_RV3_20261030_134021",
+   "harness_id": "g6|G1+S1@FL|top|Fs4|PA",
+   "chrono": {
+    "verdict": "fail",
+    "ready_s": 67.60000000139142,
+    "min_force_kN": 11.8,
+    "max_stroke_mm": 557.13,
+    "gap_ready_mm": 87.95,
+    "att_end_absmax_deg": 0.015249052302276333,
+    "note": "426.9.F.1: pass with FLAGs (G6-2 late LOC, G6-7 out of scope); gates G6-2 and G6-7 false, G6-7 fails in the harness too",
+    "version": "05708b2 (same as harness)",
+    "src": "06_analysis/02_control/s9/rev85/rv3c_g6_judge.json",
+    "spec": "spec 426.9.F.1"
+   },
+   "harness": {
+    "id": "g6|G1+S1@FL|top|Fs4|PA",
+    "verdict": "fail",
+    "ready_s": 64.10000000012404,
+    "min_force_kN": 18.33083893065558,
+    "max_stroke_mm": 541.4697717283823,
+    "gap_ready_mm": 69.62593990989043,
+    "att_end_absmax_deg": 0.009558891213309856,
+    "source": "C"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 3.5,
+    "d_min_force_kN": -6.531,
+    "d_max_stroke_mm": 15.66,
+    "d_gap_ready_mm": 18.324,
+    "d_att_end_absmax_deg": 0.006,
+    "minF_ratio_h_over_c": 1.553
+   },
+   "chrono_version_note": "same version as the harness (RV3, spec 426.9.F.1)"
   }
  ],
  "static_pairs": [
@@ -1749,28 +1980,6 @@
    "metric": "stroke / gap diff <= 0.2 mm (F_s 0)",
    "side": "representative",
    "src": "decision_log C-S8-76"
-  }
- ],
- "pending": [
-  {
-   "batch": "RV2",
-   "cases": [
-    "P3b_J1_B_top_Fs0",
-    "P3b_J1_B_top_Fs4",
-    "P3b_J1_B_top_Fs8",
-    "P3b_J2_B_top_Fs4"
-   ],
-   "version": "05708b2",
-   "status": "running (add when done)"
-  },
-  {
-   "batch": "RV3",
-   "cases": [
-    "H3|S1|B|top|roll_pos@k0.75|Fs0",
-    "g6|G1+S1@FL|top|Fs4|PA"
-   ],
-   "version": "05708b2",
-   "status": "running (add when done)"
   }
  ]
 }

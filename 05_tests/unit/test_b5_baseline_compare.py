@@ -28,6 +28,7 @@ from outrigger_sim.signals import Measurements
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "04_scripts" / "03_control" / "s9" / "b5_baseline_compare.py"
 sys.path.insert(0, str(SCRIPT.parent))
+PRE_SWITCH_RUNNER = Path(__file__).with_name("pre_switch_preset_runner.py")
 
 import b5_baseline_compare as b5  # noqa: E402
 import b5_official as official  # noqa: E402
@@ -53,7 +54,9 @@ R2DS_C2_HASHES = {
 def _run_b5(case_id: str, out_path: Path) -> dict:
     environment = dict(os.environ, MKL_THREADING_LAYER="TBB", PYTHONDONTWRITEBYTECODE="1")
     completed = subprocess.run(
-        [str(HARNESS_PYTHON), "-I", str(SCRIPT), "run", "--cases", case_id, "--controllers", "C2",
+        # R2DS hashes predate the spec 429.11 preset switch: run with SGS and R4 off.
+        [str(HARNESS_PYTHON), "-I", str(PRE_SWITCH_RUNNER), str(SCRIPT), "run",
+         "--cases", case_id, "--controllers", "C2",
          "--workers", "1", "--out", str(out_path)],
         cwd=ROOT, env=environment, capture_output=True, text=True, encoding="utf-8",
         errors="replace", timeout=SCRIPT_TIMEOUT_S, check=False)

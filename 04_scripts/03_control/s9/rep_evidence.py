@@ -5,7 +5,11 @@ E1 pairs every stored Chrono soil result that has a harness twin. Chrono P3b val
 ``06_analysis/01_chrono/19_S9/s9_P3b_summary.json`` (rev-60 re-judge); the other Chrono values are
 copied from the control verdicts in the spec (section numbers in ``src``). Harness values are read
 from the R2DS / x426 result files in ``harness_files`` (the R2DS files = implementation 05708b2
-line; re-run this script on the final-controller acceptance files later).
+line; re-run this script on the final-controller acceptance files later). The RV2 (432.4.4) and
+RV3 (426.9.F.1) runs are same-version pairs: Chrono 05708b2 = the harness version. Their values
+are read from each run's ``07_results/S9/<batch>/<case>/result_rejudge_rev60.json`` (``p3b``
+block; RV3 C-C1 from the G6 judge ``rev85/rv3c_g6_judge.json``); a missing file drops the pair
+and is listed in meta ``missing_chrono_inputs``.
 
 E5 groups harness records that differ in one independent variable only and reports the direction
 of each metric and whether it is monotone across the levels (verdict rank, READY, min cylinder
@@ -156,13 +160,37 @@ STATIC_RIGID = [  # pairs without per-case values here (paper table 3)
      "metric": "stroke / gap diff <= 0.2 mm (F_s 0)", "side": "representative",
      "src": "decision_log C-S8-76"},
 ]
-PENDING = [
-    {"batch": "RV2",
-     "cases": ["P3b_J1_B_top_Fs0", "P3b_J1_B_top_Fs4", "P3b_J1_B_top_Fs8", "P3b_J2_B_top_Fs4"],
-     "version": "05708b2", "status": "running (add when done)"},
-    {"batch": "RV3", "cases": ["H3|S1|B|top|roll_pos@k0.75|Fs0", "g6|G1+S1@FL|top|Fs4|PA"],
-     "version": "05708b2", "status": "running (add when done)"},
-]
+
+# Same-version pairs (Chrono 05708b2 = harness R2DS / x426), spec 432.4.4 and 426.9.F.1.
+# Chrono values come from each run folder's ``result_rejudge_rev60.json`` (``p3b`` block).
+CHRONO_RESULTS_REL = Path("07_results") / "S9"
+REJUDGE_FILE_NAME = "result_rejudge_rev60.json"
+SAME_VERSION = "05708b2 (same as harness)"
+RV2_RUNS = (  # (batch folder, P3b case)
+    ("batch_RV2_20261030_154549", "P3b_J1_B_top_Fs0"),
+    ("batch_RV2_20261030_154549", "P3b_J1_B_top_Fs4"),
+    ("batch_RV2_20261030_154549", "P3b_J1_B_top_Fs8"),
+    ("batch_RV2_20261030_155059", "P3b_J2_B_top_Fs4"),
+)
+RV3_SLOPE_RUN = {  # B-C1: both runs end in the FAULT_LIFT_STROKE_LIMIT:FR safe stop
+    "variable": "A2 roll S1 B 3.3 deg (k 0.75) F_s 0 [RV3 B-C1]",
+    "batch": "batch_RV3_20261030_134001", "case": "S9SL_RV3B_S1_B_top_Fs0_r3p3_p0",
+    "harness_id": "H3|S1|B|top|roll_pos@k0.75|Fs0",
+    "note": "426.9.F.1: pass (b) safe stop FAULT_LIFT_STROKE_LIMIT:FR, no READY; the P3 rows "
+            "fail in both engines (same end path)",
+    "src_spec": "spec 426.9.F.1"}
+RV3_G6_RUN = {  # C-C1: judged by r76_g6_chrono_judge.py (gates), not by the p3b block
+    "variable": "A3 soft patch S1@FL pad A [RV3 C-C1]",
+    "batch": "batch_RV3_20261030_134021", "case": "G6_G1_A_top_Fs4_spS1FL",
+    "harness_id": "g6|G1+S1@FL|top|Fs4|PA",
+    "judge_rel": "06_analysis/02_control/s9/rev85/rv3c_g6_judge.json",
+    "note": "426.9.F.1: pass with FLAGs (G6-2 late LOC, G6-7 out of scope); gates G6-2 and "
+            "G6-7 false, G6-7 fails in the harness too",
+    "src_spec": "spec 426.9.F.1"}
+
+H6_MARGIN_NOTE = (
+    "H-6 optimistic margin (ASSUMPTION, spec 432.4): flat READY +17 s, gap -13 mm (RV2 J2 "
+    "-12.7 mm, 432.4.4), stroke +16 mm; slope / x1.1 READY +31 s")
 
 PAIRS_CLASSIFICATION = (
     "optimistic if harness verdict better, or Chrono READY - harness > 5 s, or harness min F / "
@@ -238,23 +266,44 @@ def merge_by_id(harness: dict[str, dict[str, dict]]) -> dict[str, dict]:
 
 
 # ---------------------------------------------------------------------------- E1: pairs
+def _scaled(value: float | None, factor: float) -> float | None:
+    return None if value is None else value * factor
+
+
+def chrono_values_from_p3b_block(row: dict) -> dict:
+    """Judged values of one rev-60 P3b block (summary row or ``result_rejudge`` ``p3b``).
+
+    A run without READY has no READY time and no clearance after READY (``None``).
+    """
+    checks = row["checks"]
+    is_pass = all(checks.get(check) for check in P3B_PASS_CHECKS)
+    clearance = row["P3-5_clearance_stroke"]
+    return {
+        "verdict": "pass" if is_pass else "fail",
+        "ready_s": row["P3-6_ready"]["t_ready_after_loop_start_s"],
+        "min_force_kN": min(row["P3-3_leg_force"]["F_min_after_N"]) / 1e3,
+        "max_stroke_mm": max(clearance["s_motor_max_m"]) * 1e3,
+        "gap_ready_mm": _scaled(clearance["rut_clearance_min_after_first_ready_m"], 1e3),
+        "att_end_absmax_deg": row["P3-4_attitude"]["p34_absmax_deg"]}
+
+
 def chrono_p3b_values(summary: dict) -> dict[str, dict]:
     """Chrono P3b values per case from ``s9_P3b_summary.json`` (rev-60 re-judge)."""
-    values = {}
-    for name, row in summary["rows"].items():
-        checks = row["checks"]
-        is_pass = all(checks.get(check) for check in P3B_PASS_CHECKS)
-        clearance = row["P3-5_clearance_stroke"]
-        values[name] = {
-            "verdict": "pass" if is_pass else "fail",
-            "ready_s": row["P3-6_ready"]["t_ready_after_loop_start_s"],
-            "min_force_kN": min(row["P3-3_leg_force"]["F_min_after_N"]) / 1e3,
-            "max_stroke_mm": max(clearance["s_motor_max_m"]) * 1e3,
-            "gap_ready_mm": clearance["rut_clearance_min_after_first_ready_m"] * 1e3,
-            "att_end_absmax_deg": row["P3-4_attitude"]["p34_absmax_deg"],
-            "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
-            "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"}
-    return values
+    return {name: dict(chrono_values_from_p3b_block(row),
+                       version="P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+                       src="06_analysis/01_chrono/19_S9/s9_P3b_summary.json")
+            for name, row in summary["rows"].items()}
+
+
+def chrono_values_from_g6_judge(case_row: dict) -> dict:
+    """Judged values of one ``r76_g6_chrono_judge.py`` case (verdict = all gates pass)."""
+    return {
+        "verdict": "pass" if case_row["pass"] else "fail",
+        "ready_s": case_row["t_ready_rel_s"],
+        "min_force_kN": min(case_row["F_min_after_departure_kN"]),
+        "max_stroke_mm": max(case_row["s_motor_max_mm"]),
+        "gap_ready_mm": case_row["rut_min_after_ready_mm"],
+        "att_end_absmax_deg": case_row["attitude_p34_absmax_deg"]}
 
 
 def _verdict_rank(verdict: str | None) -> int:
@@ -339,6 +388,75 @@ def build_pairs(chrono_p3b: dict[str, dict], all_records: dict[str, dict],
     return pairs
 
 
+def _repo_rel(path: Path, repo: Path) -> str:
+    return path.relative_to(repo).as_posix()
+
+
+def _rejudge_path(repo: Path, batch: str, case: str) -> Path:
+    return repo / CHRONO_RESULTS_REL / batch / case / REJUDGE_FILE_NAME
+
+
+def _rv2_pair(path: Path, batch: str, case: str, repo: Path,
+              all_records: dict[str, dict]) -> dict:
+    chrono = dict(chrono_values_from_p3b_block(_load_json(path)["p3b"]),
+                  version=SAME_VERSION, src=_repo_rel(path, repo))
+    pair = _p3b_pair(case, chrono, all_records)
+    # the 10-26 P3b pair has the same case name: the batch folder tells them apart
+    pair["chrono_case"] = f"{case} @ {batch}"
+    pair["chrono_version_note"] = "same version as the harness (RV2, spec 432.4.4)"
+    return pair
+
+
+def _rv3_pair(run: dict, chrono: dict, src: str, all_records: dict[str, dict]) -> dict:
+    chrono = dict(chrono, note=run["note"], version=SAME_VERSION, src=src,
+                  spec=run["src_spec"])
+    harness = all_records.get(run["harness_id"])
+    side, deltas = classify_pair(harness, chrono)
+    return {"variable": run["variable"], "chrono_case": f"{run['case']} @ {run['batch']}",
+            "harness_id": run["harness_id"], "chrono": chrono, "harness": harness,
+            "side": side, "delta": deltas,
+            "chrono_version_note": "same version as the harness (RV3, spec 426.9.F.1)"}
+
+
+def _find_g6_case(judge_path: Path, case: str) -> dict | None:
+    for case_row in _load_json(judge_path)["cases"]:
+        if case_row["case"] == case:
+            return case_row
+    return None
+
+
+def build_same_version_pairs(repo: Path,
+                             all_records: dict[str, dict]) -> tuple[list[dict], list[str]]:
+    """RV2 and RV3 pairs (Chrono 05708b2 = harness version) and the missing Chrono inputs.
+
+    A missing result file (or a G6 judge file without the case) drops that pair; its path is
+    returned so the output can list it.
+    """
+    pairs: list[dict] = []
+    missing: list[str] = []
+    for batch, case in RV2_RUNS:
+        path = _rejudge_path(repo, batch, case)
+        if path.exists():
+            pairs.append(_rv2_pair(path, batch, case, repo, all_records))
+        else:
+            missing.append(_repo_rel(path, repo))
+    slope_path = _rejudge_path(repo, RV3_SLOPE_RUN["batch"], RV3_SLOPE_RUN["case"])
+    if slope_path.exists():
+        chrono = chrono_values_from_p3b_block(_load_json(slope_path)["p3b"])
+        pairs.append(_rv3_pair(RV3_SLOPE_RUN, chrono, _repo_rel(slope_path, repo),
+                               all_records))
+    else:
+        missing.append(_repo_rel(slope_path, repo))
+    judge_path = repo / RV3_G6_RUN["judge_rel"]
+    case_row = _find_g6_case(judge_path, RV3_G6_RUN["case"]) if judge_path.exists() else None
+    if case_row is not None:
+        pairs.append(_rv3_pair(RV3_G6_RUN, chrono_values_from_g6_judge(case_row),
+                               RV3_G6_RUN["judge_rel"], all_records))
+    else:
+        missing.append(f"{RV3_G6_RUN['judge_rel']} (case {RV3_G6_RUN['case']})")
+    return pairs, missing
+
+
 def summarize_pairs(pairs: list[dict]) -> dict:
     """Pair counts, side counts per variable (first two words) and the READY difference."""
     side_count: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
@@ -358,14 +476,16 @@ def summarize_pairs(pairs: list[dict]) -> dict:
             "d_ready_s_chrono_minus_harness": ready_summary}
 
 
-def build_pairs_payload(pairs: list[dict], files: dict[str, Path], repo: Path) -> dict:
+def build_pairs_payload(pairs: list[dict], files: dict[str, Path], repo: Path,
+                        missing_chrono: list[str]) -> dict:
     """E1 output (``harness_chrono_pairs.json``)."""
     meta = {"spec": "432.4 E1 (control 2026-10-30)", "script": SCRIPT_REL,
             "script_sha256": _script_sha256(),
             "harness_files": {key: str(path.relative_to(repo)) for key, path in files.items()},
-            "classification": PAIRS_CLASSIFICATION, "version_caveat": PAIRS_VERSION_CAVEAT}
+            "classification": PAIRS_CLASSIFICATION, "version_caveat": PAIRS_VERSION_CAVEAT,
+            "h6_margin": H6_MARGIN_NOTE, "missing_chrono_inputs": missing_chrono}
     return {"meta": meta, "summary": summarize_pairs(pairs), "pairs": pairs,
-            "static_pairs": STATIC_RIGID, "pending": PENDING}
+            "static_pairs": STATIC_RIGID}
 
 
 # ---------------------------------------------------------------------------- E5: monotonicity
@@ -653,8 +773,13 @@ def main(argv: list[str]) -> None:
     files = harness_files(repo)
     harness = load_harness(files)
     chrono_p3b = chrono_p3b_values(_load_json(repo / P3B_SUMMARY_REL))
-    pairs = build_pairs(chrono_p3b, merge_by_id(harness))
-    pairs_payload = build_pairs_payload(pairs, files, repo)
+    all_records = merge_by_id(harness)
+    pairs = build_pairs(chrono_p3b, all_records)
+    same_version_pairs, missing_chrono = build_same_version_pairs(repo, all_records)
+    pairs += same_version_pairs
+    for path in missing_chrono:
+        print("missing Chrono input (pair skipped):", path)
+    pairs_payload = build_pairs_payload(pairs, files, repo, missing_chrono)
     out_dir.mkdir(parents=True, exist_ok=True)
     # E1 is written before E5 is built, as in the scratchpad original
     _write_json(out_dir / PAIRS_FILE_NAME, pairs_payload)
