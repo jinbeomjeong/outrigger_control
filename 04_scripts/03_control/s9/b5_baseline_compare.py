@@ -127,6 +127,31 @@ CASES: dict[str, dict] = {
     # B3 pad (pair with A1-J1)
     "B3-J1A": {"harness": "slope", "src": "H1|J1|A|top|flat"},
 }
+CASE_DISPLAY_NAMES: dict[str, str] = {
+    "A1-rigid": "강체 평지",
+    "A1-G1": "G1 평지",
+    "A1-J1": "J1 평지",
+    "A1-J2": "J2 평지",
+    "A2-rigid-roll4.4": "강체 좌우 4.4°",
+    # floor angles of the src, k x direction limit of s9_soil_slope.SLOPES_DEG (k = 0.75)
+    "A2-J1B-roll0.75": "J1 좌우 3.3°",
+    "A2-J1B-nd0.75": "J1 앞내림 2.4°",
+    "A2-J1B-edge0.75": "J1 모서리 1.65°·1.2°",
+    "A3-G1+J1@RR": "G1+J1 연약부 RR",
+    "A3-G1+J1@FL": "G1+J1 연약부 FL",
+    "A4-G4RR-Fs0": "RR 침하 사건 F_s 0",
+    "A4-G4RR-Fs8": "RR 침하 사건 F_s 8",
+    "B1-J2B-bottom": "J2 오거 하단",
+    "B2-rigid-Fs0": "강체 F_s 0",
+    "B2-rigid-Fs8": "강체 F_s 8",
+    "B3-J1A": "J1 패드 A",
+}
+"""Short display names of the table cases for the paper table and figure (user decision
+2026-10-30). Slopes are floor angles (edge: roll·pitch); F_s is the seal friction in kN.
+Plain text: :func:`case_display_name` writes F_s as math for LaTeX and matplotlib. The table
+and the figure list the cases in ``CASES`` order."""
+SEAL_FRICTION_TEXT = "F_s"
+SEAL_FRICTION_MATH = "$F_s$"
 WIDE_PREFIX = {"S|": "slope", "G|": "g6"}
 """Wide set (``--cases wide``): every slope-suite id as ``S|<id>`` (177) and every g6-suite key
 as ``G|<key>`` (116), harness defaults (no override, no event)."""
@@ -136,6 +161,23 @@ _RUN: dict = {}
 
 
 # ------------------------------------------------------------------------------------- cases
+def case_display_name(case_id: str, *, as_math: bool = False) -> str:
+    """Display name of a table case, F_s as ``$F_s$`` when ``as_math`` (LaTeX, matplotlib).
+
+    Raises:
+        KeyError: ``case_id`` is not a table case.
+    """
+    name = CASE_DISPLAY_NAMES[case_id]
+    if as_math:
+        return name.replace(SEAL_FRICTION_TEXT, SEAL_FRICTION_MATH)
+    return name
+
+
+def case_group(case_id: str) -> str:
+    """Independent-variable symbol of a table case (``"A2-J1B-nd0.75"`` -> ``"A2"``)."""
+    return case_id.split("-")[0]
+
+
 def check_event_allowed(case_id: str, spec: dict) -> None:
     """Reject a floor-drop event outside the rigid floor of the slope harness.
 

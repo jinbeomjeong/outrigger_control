@@ -4,7 +4,10 @@ and a summary of the wide set.
 Several result files are merged (the wide set comes as ``b5_wide_A.json``, ``b5_wide_B1.json``,
 ``b5_wide_B2.json``); a (case, controller) pair in a later file replaces the earlier one.
 Cell format "C2 / ABL / IND" (controllers in that order, "—" when missing). A failed lite gate
-is marked with "*" after the value. Usage (any env with Python 3.10+):
+is marked with "*" after the value. The case column shows the display name of
+``b5_baseline_compare.CASE_DISPLAY_NAMES`` (F_s as ``$F_s$``), the variable column the symbol
+(A1..B3) and the variable name. Usage (an env with numpy, e.g. dynamics-dev or python-dev; the
+case table is imported from ``b5_baseline_compare.py``):
   python -I b5_baseline_table.py OUT_PREFIX RESULT.json [RESULT.json ...]
 writes OUT_PREFIX.md, OUT_PREFIX_rows.tex, OUT_PREFIX_summary.json.
 """
@@ -15,6 +18,13 @@ import json
 import sys
 from collections import defaultdict
 from pathlib import Path
+
+# ``python -I`` leaves the script folder off sys.path; the case table lives next to this file
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from b5_baseline_compare import CASES, case_display_name, case_group  # noqa: E402
 
 ORDER = ("C2", "ABL", "IND")
 GROUP_LABEL = {"A1": "지반 종류", "A2": "바닥 경사", "A3": "한 패드 연약부", "A4": "지반 사건",
@@ -119,14 +129,16 @@ def table_rows(by_case: dict) -> tuple[list[str], list[str]]:
                 "| READY 때 크롤러 틈 [mm] / 이탈 실패 | 최대 이동 압력 [bar] |",
                 "|---|---|---|---|---|---|---|"]
     latex = []
-    for case in sorted(c for c in by_case if not is_wide_case(c)):
+    for case in (c for c in CASES if c in by_case):
         cell = cells(by_case[case])
-        group = GROUP_LABEL.get(case.split("-")[0], "")
+        group_symbol = case_group(case)
+        group = f"{group_symbol} {GROUP_LABEL.get(group_symbol, '')}".rstrip()
+        name = case_display_name(case, as_math=True)
         first_record = by_case[case][next(iter(by_case[case]))]
         src = first_record["src"].replace("|", "·")
-        markdown.append(f"| {group} | {case} ({src}) | {cell['att']} | {cell['ready']} "
+        markdown.append(f"| {group} | {name} ({src}) | {cell['att']} | {cell['ready']} "
                         f"| {cell['fmin']} | {cell['crawler']} | {cell['p']} |")
-        latex.append(f"  {group} & {case} & {cell['att']} & {cell['ready']} & {cell['fmin']} & "
+        latex.append(f"  {group} & {name} & {cell['att']} & {cell['ready']} & {cell['fmin']} & "
                      f"{cell['crawler']} & {cell['p']} \\\\")
     return markdown, latex
 

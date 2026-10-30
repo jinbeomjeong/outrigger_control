@@ -124,6 +124,13 @@ def test_every_table_case_is_valid() -> None:
         b5.case_spec(case_id)
 
 
+def test_every_table_case_has_a_display_name() -> None:
+    assert set(b5.CASE_DISPLAY_NAMES) == set(b5.CASES)
+    names = list(b5.CASE_DISPLAY_NAMES.values())
+    assert all(name.strip() for name in names)
+    assert len(set(names)) == len(names), "two cases share a display name"
+
+
 def test_floor_drop_event_is_accepted_on_the_rigid_floor() -> None:
     spec = b5.case_spec("A4-G4RR-Fs8")
     assert spec["event"][0] == "RR"
