@@ -24,8 +24,9 @@ harness reading) with these two columns and ``d_max_stroke_reading_mm`` (see met
 
 Schema 3 (2026-10-31, spec 432.4.5) adds:
   final_pairs     the final-controller Chrono runs (FINAL-REP 7 + FINAL6 1 + RV6 X6-rb2 1 +
-                  FINAL-REP-X 1, ``FINAL_RUNS``) with their final-harness twins
-                  (``FINAL_HARNESS_FILES_REL``), summarized apart in ``final_summary``; a run
+                  X6-rp2 1 + X6-rp3 1 + FINAL-REP-X 1, ``FINAL_RUNS``) with their
+                  final-harness twins (``FINAL_HARNESS_FILES_REL``), summarized apart in
+                  ``final_summary``; a run
                   marked ``superseded_by`` is listed but not counted (runs still going are
                   listed in ``FINAL_PENDING_RUNS``)
   P3-2 FLAG       the automatic P3b verdict counts a P3-2 judged ``flag`` (late LOC, spec
@@ -37,7 +38,12 @@ Schema 3 (2026-10-31, spec 432.4.5) adds:
 
 E5 groups harness records that differ in one independent variable only and reports the direction
 of each metric and whether it is monotone across the levels (verdict rank, READY, min cylinder
-force, max stroke reading, ready gap).
+force, max stroke reading, ready gap). Since 2026-10-31 E5 reads the final-controller harness
+(``E5_HARNESS_FILES_REL``: finB2 p0 / slope+H6 / x426b / H9 and fin_x426 C / D; the same tables
+as before, split out of the merged final files by id family, see ``final_e5_tables``); E1 keeps
+the R2DS / x426 files above. The verdict rank includes the final ``stroke_limited_stop`` (SGS
+safe stop) between ``stroke_limited_pass`` and ``fail``; each study also counts its verdict
+changes as worse / better (rank of the last level against the first) and the verdicts per level.
 
 Outputs (``<out dir>``, default ``06_analysis/02_control/s9/rev85``):
   harness_chrono_pairs.json   E1
@@ -78,6 +84,27 @@ HARNESS_FILES_REL = {  # key: path under 06_analysis/02_control/s9
     "H9": "rev85/h9_roll_fine_cmp.json",
 }
 UNLOADED_HARNESS_KEYS = ("H9",)  # listed in meta only (no record table)
+
+# E5 inputs: the final-controller harness (spec 429.9-429.11 preset = finB2 / fin_x426).
+# key: path under 06_analysis/02_control/s9
+E5_HARNESS_FILES_REL = {
+    "finB2_p0": "rev85/finB2_p0.json",  # base (p3b flat) and g6 / g6r / ref families
+    "finB2_slope": "rev85/finB2_harness_rejudged.json",  # H1..H5 (slope 177) and H6
+    "finB2_x426b": "rev85/finB2_x426b_rejudged.json",  # x426 B: |Fs0 / |Fs8 / |m1.1 / middle
+    "finB2_h9": "rev85/finB2_h9.json",  # H9 fine roll ratio k
+    "fin_x426_C": "rev85/fin_x426_C.json",
+    "fin_x426_D": "rev85/fin_x426_D.json",
+}
+E5_OPTIONAL_FILE_KEYS = ("finB2_x426b", "finB2_h9")  # a missing file gives empty tables
+P3B_FAMILIES = ("base",)
+G6_FAMILIES = ("g6", "g6r", "ref")
+SLOPE_FAMILIES = ("H1", "H2", "H3", "H4", "H5")
+H6_FAMILIES = ("H6",)
+X426B_SUFFIX_TABLES = {"Fs0": "B_Fs0", "Fs8": "B_Fs8", "m1.1": "B_m1p1"}
+X426B_MIDDLE_TABLE = "B_mid"  # rows without a suffix: the auger-middle variant of a slope row
+E5_HARNESS_NOTE = ("final controller harness (R8 preset with SGS any_loc + R4c30 + L1gs + DSb75; "
+                   "finB2 / fin_x426, spec 429.9-429.11), tables split by id family from "
+                   "E5_HARNESS_FILES_REL")
 
 RANK = {"pass": 0, "stroke_limited_pass": 1, "stroke_limited_stop": 2, "fail": 3,
         "stroke_limited_fail": 4}
@@ -298,11 +325,28 @@ FINAL_RUNS = (
      "verdict": "stroke_limited_stop",
      "note": "430.3.2: SGS safe stop FAULT_LIFT_STROKE_LIMIT:soil:FL at the first guard cycle "
              "(out of the boundary); the Chrono reading is cut at the guard"},
-    {"variable": "A2 roll J1 B 2.64 deg (k 0.6) [X6-rb2]", "batch": "batch_RV6_20261031_025137",
+    {"variable": "A2 roll J1 B -2.64 deg roll_neg (k 0.6) [X6-rb2]",
+     "batch": "batch_RV6_20261031_025137",
      "case": "S9SL_X6rb_J1_B_top_Fs4_rm2p64_p0", "harness_key": "finB2_h9",
      "harness_id": "H9|J1|B|top|roll_neg@k0.6", "spec": "spec 430.3.3", "verdict": "pass",
      "note": "430.3.3: pass, no guard / SGS; reading max FL 679.87 mm (guard margin 2.93 mm), "
              "harness 661.02 (+18.85 uncensored); gap -14.5 mm vs harness"},
+    {"variable": "A2 roll J1 B +2.64 deg roll_pos (k 0.6) [X6-rp2]",
+     "batch": "batch_RV6_20261031_070613",
+     "case": "S9SL_X6rb_J1_B_top_Fs4_r2p64_p0", "harness_key": "finB2_h9",
+     "harness_id": "H9|J1|B|top|roll_pos@k0.6", "spec": "spec 430.3.5", "verdict": "fail",
+     "note": "430.3.5: fail on P3-5 only (gap 24.84 mm < 25 mm at the READY entry sample, "
+             "26.1 mm 5 s later); no guard / SGS, reading max RR 631.01 mm (guard margin "
+             "51.79 mm), harness 613.99 (+17.03 uncensored); gap -6.09 mm vs harness (within "
+             "slope -15); harness pass -> verdict mismatch, harness optimistic"},
+    {"variable": "A2 roll J1 B +2.2 deg roll_pos (k 0.5) [X6-rp3]",
+     "batch": "batch_RV6_20261031_091226",
+     "case": "S9SL_X6rb_J1_B_top_Fs4_r2p2_p0", "harness_key": "finB2_slope",
+     "harness_id": "H3|J1|B|top|roll_pos@k0.5", "spec": "spec 430.3.7", "verdict": "pass",
+     "note": "430.3.7: pass, no guard / SGS; gap 32.63 mm (P3-5 margin 7.63 mm), reading max "
+             "RR 612.40 mm (guard margin 70.40 mm), harness 595.92 (+16.48 uncensored); gap "
+             "-10.48 mm, READY +22.4 s vs harness (within slope -15 / +31); H9 has no k 0.5 "
+             "row, twin = H3 row (430.3.6)"},
     {"variable": "A2 roll J1 B 3.85 deg (k 0.875) [X6-rp-sa]", "batch": FINAL_REP_BATCH,
      "case": "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0", "harness_key": "finB2_slope",
      "harness_id": "H3|J1|B|top|roll_pos@k0.875", "spec": "spec 430.4.1",
@@ -314,7 +358,9 @@ FINAL_RUNS = (
      "spec": "spec 426.9.D.2"},
 )
 # Final-controller runs still going. Not paired yet: move an entry into FINAL_RUNS (with its
-# control verdict) once the run is re-judged. X6-rb2 and FINAL-REP-X moved on 2026-10-31.
+# control verdict) once the run is re-judged. X6-rb2, X6-rp2, X6-rp3 and FINAL-REP-X moved on
+# 2026-10-31. An entry may be listed before its run starts: the fields named in
+# ``to_fill_after_run`` are placeholders (``None`` or an expected value) until then.
 FINAL_PENDING_RUNS: tuple[dict, ...] = ()
 
 H6_MARGIN_NOTE = (
@@ -358,8 +404,9 @@ PAIRS_SCHEMA_CHANGE = (
     "superseded_by (left out of final_summary, listed in final_summary.superseded).")
 FINAL_PAIRS_NOTE = (
     "final_pairs = the final-controller Chrono runs (FINAL_RUNS: FINAL-REP 7 + FINAL6 1 + RV6 "
-    "X6-rb2 1 + FINAL-REP-X 1; the 120 s x1.1 J2 run is superseded by FINAL-REP-X) with "
-    "their final-harness twins (final_harness_files), same version on both sides. They are "
+    "X6-rb2 1 + X6-rp2 1 + X6-rp3 1 + FINAL-REP-X 1; the 120 s x1.1 J2 run is superseded by "
+    "FINAL-REP-X) with their final-harness twins (final_harness_files), same version on both "
+    "sides. They are "
     "summarized apart in final_summary and are NOT counted in summary: summary keeps the 54 "
     "stored-version pairs (several are the same cases at older versions; counting both would "
     "count a case twice). combined_counts adds the two verdict-match counts for reference "
@@ -380,7 +427,12 @@ CENSORING_NOTE = (
     "information.")
 MONOTONICITY_SCHEMA_CHANGE = (
     "2026-10-31: metric max_stroke_mm renamed max_stroke_reading_mm (harness max(plant.sref), "
-    "values unchanged)")
+    "values unchanged). 2026-10-31 (final inputs): E5 reads the final-controller harness "
+    "(meta harness_files) instead of R2DS / x426 (05708b2); per study verdict_change_counts "
+    "(worse / better / same_ends: rank of the last level vs the first) and verdict_counts "
+    "(per level); new study A2 roll ratio k fine (h9); meta unassigned_x426b lists x426b ids "
+    "of no variant table (previous output: history/harness_monotonicity_pre_finalE5_20261031"
+    ".json)")
 MONOTONICITY_TOLERANCE_NOTE = ("flat if |delta| <= 0.5 s / 0.5 mm / 0.2 kN; monotone = "
                                "non-strict with that tolerance")
 
@@ -453,6 +505,73 @@ def load_harness(files: dict[str, Path]) -> dict[str, dict[str, dict]]:
     """Records of every harness file that exists; missing files are skipped."""
     return {key: load_records(path) for key, path in files.items()
             if key not in UNLOADED_HARNESS_KEYS and path.exists()}
+
+
+def e5_harness_files(repo: Path) -> dict[str, Path]:
+    """Final-controller harness files of E5, keyed as ``E5_HARNESS_FILES_REL``."""
+    s9_dir = repo / "06_analysis" / "02_control" / "s9"
+    return {key: s9_dir / rel for key, rel in E5_HARNESS_FILES_REL.items()}
+
+
+def records_of_families(records: dict[str, dict], families: tuple[str, ...]) -> dict[str, dict]:
+    """The records whose id starts with one of ``families`` (the part before the first ``|``)."""
+    return {record_id: record for record_id, record in records.items()
+            if record_id.split("|", 1)[0] in families}
+
+
+def split_x426b(records: dict[str, dict]) -> tuple[dict[str, dict[str, dict]], list[str]]:
+    """The merged x426 B file split into the variant tables of ``_x426_b_studies``.
+
+    An id ending in ``|Fs0`` / ``|Fs8`` / ``|m1.1`` goes to its suffix table; an id without a
+    suffix that names the middle auger level goes to ``B_mid``.
+
+    Returns:
+        The tables (all four keys, possibly empty) and the ids that fit none of them.
+    """
+    tables: dict[str, dict[str, dict]] = {name: {} for name in X426B_SUFFIX_TABLES.values()}
+    tables[X426B_MIDDLE_TABLE] = {}
+    unassigned: list[str] = []
+    for record_id, record in records.items():
+        suffix = record_id.rsplit("|", 1)[-1]
+        if suffix in X426B_SUFFIX_TABLES:
+            tables[X426B_SUFFIX_TABLES[suffix]][record_id] = record
+        elif "|middle|" in record_id:
+            tables[X426B_MIDDLE_TABLE][record_id] = record
+        else:
+            unassigned.append(record_id)
+    return tables, unassigned
+
+
+def _load_e5_file(files: dict[str, Path], key: str) -> dict[str, dict]:
+    if key in E5_OPTIONAL_FILE_KEYS and not files[key].exists():
+        return {}
+    return load_records(files[key])
+
+
+def final_e5_tables(files: dict[str, Path]) -> tuple[dict[str, dict[str, dict]], list[str]]:
+    """E5 tables (keys as ``build_studies`` expects) from the final-controller harness files.
+
+    Args:
+        files: ``e5_harness_files`` (or the same keys elsewhere).
+
+    Returns:
+        The tables and the x426 B ids of no variant table.
+
+    Raises:
+        FileNotFoundError: a required file (all but ``E5_OPTIONAL_FILE_KEYS``) is missing.
+    """
+    p0 = load_records(files["finB2_p0"])
+    slope_and_h6 = load_records(files["finB2_slope"])
+    x426b_tables, unassigned = split_x426b(_load_e5_file(files, "finB2_x426b"))
+    tables = {"p3b": records_of_families(p0, P3B_FAMILIES),
+              "g6": records_of_families(p0, G6_FAMILIES),
+              "slope": records_of_families(slope_and_h6, SLOPE_FAMILIES),
+              "h6": records_of_families(slope_and_h6, H6_FAMILIES),
+              "H9": _load_e5_file(files, "finB2_h9"),
+              "C": load_records(files["fin_x426_C"]),
+              "D": load_records(files["fin_x426_D"]),
+              **x426b_tables}
+    return tables, unassigned
 
 
 def merge_by_id(harness: dict[str, dict[str, dict]]) -> dict[str, dict]:
@@ -937,13 +1056,17 @@ def monotonicity_study(name: str, groups: dict[str, dict], levels: list[str]) ->
         levels: Levels of the independent variable in order.
     """
     result = {"variable": name, "levels": levels, "n_groups": 0, "metrics": {},
-              "verdict_changes": [], "non_monotone": []}
+              "verdict_changes": [], "verdict_change_counts": {}, "verdict_counts": {},
+              "non_monotone": []}
     stats = {m: {"up": 0, "down": 0, "flat": 0, "monotone": 0, "n": 0} for m in METRICS}
+    verdict_counts: dict[str, dict[str, int]] = {level: defaultdict(int) for level in levels}
     for group, by_level in sorted(groups.items()):
         if not all(level in by_level for level in levels):
             continue
         result["n_groups"] += 1
         verdicts = [by_level[level]["verdict"] for level in levels]
+        for level, verdict in zip(levels, verdicts, strict=True):
+            verdict_counts[level][str(verdict)] += 1
         if len(set(verdicts)) > 1:
             result["verdict_changes"].append({"group": group, "verdicts": verdicts})
         for metric in METRICS:
@@ -960,7 +1083,28 @@ def monotonicity_study(name: str, groups: dict[str, dict], levels: list[str]) ->
                 result["non_monotone"].append(
                     {"group": group, "metric": metric, "seq": [round(v, 2) for v in sequence]})
     result["metrics"] = stats
+    result["verdict_change_counts"] = count_verdict_change_directions(result["verdict_changes"])
+    result["verdict_counts"] = {level: dict(counts) for level, counts in verdict_counts.items()}
     return result
+
+
+def count_verdict_change_directions(verdict_changes: list[dict]) -> dict[str, int]:
+    """Verdict changes counted by the rank of the last level against the first.
+
+    ``worse`` = higher rank at the last level, ``better`` = lower, ``same_ends`` = the ends
+    agree (the verdict changed in between only).
+    """
+    counts = {"worse": 0, "better": 0, "same_ends": 0}
+    for change in verdict_changes:
+        first_rank = _verdict_rank(change["verdicts"][0])
+        last_rank = _verdict_rank(change["verdicts"][-1])
+        if last_rank > first_rank:
+            counts["worse"] += 1
+        elif last_rank < first_rank:
+            counts["better"] += 1
+        else:
+            counts["same_ends"] += 1
+    return counts
 
 
 def group_p3b_by_part(p3b: dict[str, dict], part_index: int) -> dict[str, dict]:
@@ -1014,6 +1158,23 @@ def group_slope_by_ratio(slope: dict[str, dict]) -> dict[str, dict]:
         if (soil, pad, level) in flat:
             by_level["k0"] = flat[(soil, pad, level)]
     return {"|".join(key): value for key, value in groups.items()}
+
+
+def group_h9_by_ratio(h9: dict[str, dict]) -> tuple[dict[str, dict], list[str]]:
+    """H9 rows ``H9|soil|pad|level|<direction>@k<k>`` per (soil, pad, level, direction).
+
+    Returns:
+        The groups (level ``k<k>``) and the levels of all groups in ascending k.
+    """
+    groups: dict[str, dict] = defaultdict(dict)
+    ratio_texts: set[str] = set()
+    for record_id, record in h9.items():
+        _, soil, pad, level, direction = record_id.split("|")
+        base_direction, ratio_text = direction.split("@k")
+        groups["|".join((soil, pad, level, base_direction))][f"k{ratio_text}"] = record
+        ratio_texts.add(ratio_text)
+    levels = [f"k{text}" for text in sorted(ratio_texts, key=float)]
+    return dict(groups), levels
 
 
 def group_slope_by_pad(slope: dict[str, dict]) -> dict[str, dict]:
@@ -1138,11 +1299,15 @@ def build_studies(harness: dict[str, dict[str, dict]]) -> list[dict]:
 
     Raises:
         KeyError: A required harness table (p3b, slope, h6, D, C, g6) was not loaded. The
-            x426 B tables are optional (their studies then have no groups).
+            x426 B tables are optional (their studies then have no groups); the H9 study is
+            added only when an ``H9`` table has rows.
     """
     slope = harness["slope"]
     studies = _p3b_studies(harness["p3b"])
     studies += _slope_studies(slope)
+    if harness.get("H9"):
+        h9_groups, h9_levels = group_h9_by_ratio(harness["H9"])
+        studies.append(monotonicity_study("A2 roll ratio k fine (h9)", h9_groups, h9_levels))
     studies += _x426_b_studies(harness, slope)
     studies.append(monotonicity_study("B4 weight m1.0 -> m1.1 -> m1.2 (h6 flat)",
                                       group_h6_by_weight(harness["h6"]),
@@ -1153,12 +1318,26 @@ def build_studies(harness: dict[str, dict[str, dict]]) -> list[dict]:
     return studies
 
 
-def build_monotonicity_payload(studies: list[dict]) -> dict:
-    """E5 output (``harness_monotonicity.json``)."""
-    meta = {"spec": "432.4 E5 (control 2026-10-30)", "script": SCRIPT_REL,
-            "script_sha256": _script_sha256(), "schema_change": MONOTONICITY_SCHEMA_CHANGE,
-            "rank": RANK,
-            "tolerance": MONOTONICITY_TOLERANCE_NOTE, "harness": "R2DS / x426 (05708b2 line)"}
+def build_monotonicity_payload(studies: list[dict], files: dict[str, Path] | None = None,
+                               repo: Path | None = None,
+                               unassigned_x426b: list[str] | None = None) -> dict:
+    """E5 output (``harness_monotonicity.json``).
+
+    Args:
+        studies: ``build_studies`` output.
+        files: E5 harness files (``e5_harness_files``), listed relative to ``repo``.
+        repo: Repository root of ``files``.
+        unassigned_x426b: x426 B ids of no variant table (``final_e5_tables``).
+    """
+    harness_files_rel = {}
+    if files is not None and repo is not None:
+        harness_files_rel = {key: _repo_rel(path, repo) for key, path in files.items()}
+    meta = {"spec": "432.4 E5 (control 2026-10-30; final inputs 2026-10-31)",
+            "script": SCRIPT_REL, "script_sha256": _script_sha256(),
+            "schema_change": MONOTONICITY_SCHEMA_CHANGE, "rank": RANK,
+            "tolerance": MONOTONICITY_TOLERANCE_NOTE, "harness": E5_HARNESS_NOTE,
+            "harness_files": harness_files_rel,
+            "unassigned_x426b": list(unassigned_x426b or [])}
     return {"meta": meta, "studies": studies}
 
 
@@ -1187,8 +1366,10 @@ def _print_digest(pairs_payload: dict, studies: list[dict]) -> None:
         metric_text = " ".join(
             f"{name}:u{s['up']}/d{s['down']}/f{s['flat']}/mono{s['monotone']}of{s['n']}"
             for name, s in study["metrics"].items())
+        change_counts = study["verdict_change_counts"]
         print(f"E5 {study['variable'][:48]:48s} groups={study['n_groups']:3d} "
-              f"vchg={len(study['verdict_changes']):2d} " + metric_text)
+              f"vchg={len(study['verdict_changes']):2d} (worse {change_counts['worse']} "
+              f"better {change_counts['better']}) " + metric_text)
 
 
 def main(argv: list[str]) -> None:
@@ -1215,8 +1396,11 @@ def main(argv: list[str]) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     # E1 is written before E5 is built, as in the scratchpad original
     _write_json(out_dir / PAIRS_FILE_NAME, pairs_payload)
-    studies = build_studies(harness)
-    _write_json(out_dir / MONOTONICITY_FILE_NAME, build_monotonicity_payload(studies))
+    e5_files = e5_harness_files(repo)
+    e5_tables, unassigned_x426b = final_e5_tables(e5_files)
+    studies = build_studies(e5_tables)
+    _write_json(out_dir / MONOTONICITY_FILE_NAME,
+                build_monotonicity_payload(studies, e5_files, repo, unassigned_x426b))
     _print_digest(pairs_payload, studies)
 
 

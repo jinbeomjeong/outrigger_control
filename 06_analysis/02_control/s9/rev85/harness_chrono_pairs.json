@@ -2,7 +2,7 @@
  "meta": {
   "spec": "432.4 E1 (control 2026-10-30; final pairs 432.4.5, 2026-10-31)",
   "script": "04_scripts/03_control/s9/rep_evidence.py",
-  "script_sha256": "ca675eeb8e27366a5a8a5b42ef52dd216461e8a5b59f7599367212f979562d85",
+  "script_sha256": "f3507100c7716e4bee2f607ae287c034d4df43b2be7254cebbb236442992f8dc",
   "schema_version": 3,
   "schema_change": "schema 2 (2026-10-31): max_stroke_mm (Chrono true rod stroke vs harness reading, mixed) split into max_stroke_reading_mm and max_stroke_true_mm; d_max_stroke_mm replaced by d_max_stroke_reading_mm (d_max_stroke_true_mm when both sides have it); summary adds d_max_stroke_reading_mm_chrono_minus_harness; meta adds missing_stroke_records. Readers of d_max_stroke_mm should use d_max_stroke_reading_mm. schema 3 (2026-10-31, spec 432.4.5): final_pairs / final_summary (final controller Chrono vs final harness, see final_pairs_note); per pair censored_at_guard, censored_side and Chrono stroke_guard_events (harness records carry stroke_guard_events); summaries add the uncensored reading-delta stats and the censored list; curated S9SL C-1..C-4 and X4-rp now carry the Chrono stroke reading. h6_margin quotes spec 432.4.5 (stroke +23 mm, reading vs reading) and is not re-derived here. schema 3 addition (2026-10-31, final 10 runs): the automatic P3b verdict counts a P3-2 judged flag (late_loc_revoked / late_loc_reapproach, spec 419.8 / 424.8.1) as pass and lists it in chrono flags (key present only with a FLAG); final pairs may carry superseded_by (left out of final_summary, listed in final_summary.superseded).",
   "stroke_quantities": "max_stroke_reading_mm = controller stroke reading (Chrono: max of record meas.stroke per leg FL, FR, RL, RR; harness: max(plant.sref)); max_stroke_true_mm = true rod stroke (Chrono: P3-5 s_motor_max_m per leg or the spec value; harness: not stored). The reading exceeds the true stroke by F_cyl/k_oil (about 5-6 mm at 68 kN). Deltas pair the same quantity only; a per-leg list counts by its max.",
@@ -28,7 +28,7 @@
   },
   "classification": "optimistic if harness verdict better, or Chrono READY - harness > 5 s, or harness min F / Chrono > 1.10, or Chrono gap - harness < -10 mm; conservative = the opposite (READY < -5 s, ratio < 0.90, verdict worse); mixed = both (ASSUMPTION thresholds)",
   "version_caveat": "Harness = R2DS (05708b2 line). Chrono = the stored run version (column). Pairs whose versions differ are trend evidence, not identity; re-run on the final acceptance files. final_pairs: Chrono final controller = final harness (finB2 / fin_x426_D).",
-  "final_pairs_note": "final_pairs = the final-controller Chrono runs (FINAL_RUNS: FINAL-REP 7 + FINAL6 1 + RV6 X6-rb2 1 + FINAL-REP-X 1; the 120 s x1.1 J2 run is superseded by FINAL-REP-X) with their final-harness twins (final_harness_files), same version on both sides. They are summarized apart in final_summary and are NOT counted in summary: summary keeps the 54 stored-version pairs (several are the same cases at older versions; counting both would count a case twice). combined_counts adds the two verdict-match counts for reference only. Chrono verdict = the automatic P3b block (all P3B_PASS_CHECKS) unless the run carries the control verdict of its spec section (then verdict_auto keeps the automatic one). Pairs with censored_at_guard true give a bound, not a value: they are left out of the *_uncensored stroke stats and listed in censored_stroke_reading. Pairs with superseded_by are replaced by that run: kept in final_pairs, left out of final_summary counts and listed in final_summary.superseded. Pending runs (final_pending_runs) are not paired yet.",
+  "final_pairs_note": "final_pairs = the final-controller Chrono runs (FINAL_RUNS: FINAL-REP 7 + FINAL6 1 + RV6 X6-rb2 1 + X6-rp2 1 + X6-rp3 1 + FINAL-REP-X 1; the 120 s x1.1 J2 run is superseded by FINAL-REP-X) with their final-harness twins (final_harness_files), same version on both sides. They are summarized apart in final_summary and are NOT counted in summary: summary keeps the 54 stored-version pairs (several are the same cases at older versions; counting both would count a case twice). combined_counts adds the two verdict-match counts for reference only. Chrono verdict = the automatic P3b block (all P3B_PASS_CHECKS) unless the run carries the control verdict of its spec section (then verdict_auto keeps the automatic one). Pairs with censored_at_guard true give a bound, not a value: they are left out of the *_uncensored stroke stats and listed in censored_stroke_reading. Pairs with superseded_by are replaced by that run: kept in final_pairs, left out of final_summary counts and listed in final_summary.superseded. Pending runs (final_pending_runs) are not paired yet.",
   "final_pending_runs": [],
   "h6_margin": "H-6 optimistic margin (ASSUMPTION, spec 432.4 / 432.4.5 / 432.4.7, 2026-10-31): flat READY +17 s, gap -13 mm (RV2 J2 -12.7 mm, 432.4.4); soft slope rows gap -15 mm (X6-rb2 -14.5 mm, 432.4.7); stroke reading one-sided +23 mm (Chrono meas.stroke max - harness max(plant.sref); observed X6-rb vs H9 roll_neg@k0.65 >= +22.7 mm censored at the guard, RV3 C-C1 +21.5 mm uncensored; stroke sensor share <= 0.4 mm) for soft J1/J2/S1 incl. one-pad patches, not G1 or rigid; slope / x1.1 READY +31 s",
   "missing_chrono_inputs": [],
@@ -2717,9 +2717,9 @@
   }
  ],
  "final_summary": {
-  "n_pairs": 9,
-  "n_with_harness": 9,
-  "verdict_same": 7,
+  "n_pairs": 11,
+  "n_with_harness": 11,
+  "verdict_same": 8,
   "by_variable_side": {
    "A1 soil": {
     "optimistic": 2
@@ -2731,29 +2731,29 @@
     "optimistic": 2
    },
    "A2 roll": {
-    "optimistic": 3
+    "optimistic": 5
    },
    "A3 dip": {
     "optimistic": 1
    }
   },
   "d_ready_s_chrono_minus_harness": {
-   "n": 7,
+   "n": 9,
    "min": 6.2,
-   "max": 21.3,
-   "mean": 12.91
+   "max": 22.4,
+   "mean": 14.81
   },
   "d_max_stroke_reading_mm_chrono_minus_harness": {
-   "n": 9,
+   "n": 11,
    "min": -8.796,
    "max": 22.735,
-   "mean": 5.03
+   "mean": 7.16
   },
   "d_max_stroke_reading_mm_uncensored": {
-   "n": 7,
+   "n": 9,
    "min": -8.796,
    "max": 18.845,
-   "mean": 3.43
+   "mean": 6.39
   },
   "censored_stroke_reading": [
    {
@@ -3190,7 +3190,7 @@
    "censored_side": "chrono"
   },
   {
-   "variable": "A2 roll J1 B 2.64 deg (k 0.6) [X6-rb2]",
+   "variable": "A2 roll J1 B -2.64 deg roll_neg (k 0.6) [X6-rb2]",
    "chrono_case": "S9SL_X6rb_J1_B_top_Fs4_rm2p64_p0 @ batch_RV6_20261031_025137",
    "harness_id": "H9|J1|B|top|roll_neg@k0.6",
    "chrono": {
@@ -3243,6 +3243,124 @@
     "d_gap_ready_mm": -14.511,
     "d_att_end_absmax_deg": -0.004,
     "minF_ratio_h_over_c": 1.017
+   },
+   "chrono_version_note": "same version as the harness (final controller, spec 432.4.5)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A2 roll J1 B +2.64 deg roll_pos (k 0.6) [X6-rp2]",
+   "chrono_case": "S9SL_X6rb_J1_B_top_Fs4_r2p64_p0 @ batch_RV6_20261031_070613",
+   "harness_id": "H9|J1|B|top|roll_pos@k0.6",
+   "chrono": {
+    "verdict": "fail",
+    "ready_s": 79.60000000178978,
+    "min_force_kN": 64.07079636963876,
+    "max_stroke_true_mm": [
+     434.82988638748463,
+     623.6178343224374,
+     452.61558901236134,
+     625.4190414246148
+    ],
+    "gap_ready_mm": 24.84267538384244,
+    "att_end_absmax_deg": [
+     0.02838583623649719,
+     0.00701034097515664
+    ],
+    "max_stroke_reading_mm": [
+     439.67663466319686,
+     630.0424665170588,
+     456.72324735102376,
+     631.0121189251739
+    ],
+    "stroke_record": "07_results/S9/batch_RV6_20261031_070613/S9SL_X6rb_J1_B_top_Fs4_r2p64_p0/record/record.npz",
+    "stroke_guard_events": [],
+    "verdict_auto": "fail",
+    "note": "430.3.5: fail on P3-5 only (gap 24.84 mm < 25 mm at the READY entry sample, 26.1 mm 5 s later); no guard / SGS, reading max RR 631.01 mm (guard margin 51.79 mm), harness 613.99 (+17.03 uncensored); gap -6.09 mm vs harness (within slope -15); harness pass -> verdict mismatch, harness optimistic",
+    "version": "final controller (SGS any_loc + R4c30 + L1gs + DSb75), same as final harness",
+    "src": "07_results/S9/batch_RV6_20261031_070613/S9SL_X6rb_J1_B_top_Fs4_r2p64_p0/result_rejudge_rev60.json",
+    "spec": "spec 430.3.5"
+   },
+   "harness": {
+    "id": "H9|J1|B|top|roll_pos@k0.6",
+    "verdict": "pass",
+    "ready_s": 59.10000000010017,
+    "min_force_kN": 65.2213524606043,
+    "max_stroke_reading_mm": 613.98603480183,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 30.936851200584787,
+    "att_end_absmax_deg": 0.025313457474438306,
+    "stroke_guard_events": [],
+    "source": "finB2_h9"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": false,
+    "d_ready_s": 20.5,
+    "d_min_force_kN": -1.151,
+    "d_max_stroke_reading_mm": 17.026,
+    "d_gap_ready_mm": -6.094,
+    "d_att_end_absmax_deg": 0.003,
+    "minF_ratio_h_over_c": 1.018
+   },
+   "chrono_version_note": "same version as the harness (final controller, spec 432.4.5)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A2 roll J1 B +2.2 deg roll_pos (k 0.5) [X6-rp3]",
+   "chrono_case": "S9SL_X6rb_J1_B_top_Fs4_r2p2_p0 @ batch_RV6_20261031_091226",
+   "harness_id": "H3|J1|B|top|roll_pos@k0.5",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 80.30000000181302,
+    "min_force_kN": 64.98164904126504,
+    "max_stroke_true_mm": [
+     449.65134579884455,
+     601.6454243149634,
+     467.19037175863724,
+     607.0419178793643
+    ],
+    "gap_ready_mm": 32.627498607944005,
+    "att_end_absmax_deg": [
+     0.016510228903137938,
+     0.008883200727492612
+    ],
+    "max_stroke_reading_mm": [
+     454.66397917893937,
+     607.6922653058828,
+     471.5040177162054,
+     612.4022510042203
+    ],
+    "stroke_record": "07_results/S9/batch_RV6_20261031_091226/S9SL_X6rb_J1_B_top_Fs4_r2p2_p0/record/record.npz",
+    "stroke_guard_events": [],
+    "verdict_auto": "pass",
+    "note": "430.3.7: pass, no guard / SGS; gap 32.63 mm (P3-5 margin 7.63 mm), reading max RR 612.40 mm (guard margin 70.40 mm), harness 595.92 (+16.48 uncensored); gap -10.48 mm, READY +22.4 s vs harness (within slope -15 / +31); H9 has no k 0.5 row, twin = H3 row (430.3.6)",
+    "version": "final controller (SGS any_loc + R4c30 + L1gs + DSb75), same as final harness",
+    "src": "07_results/S9/batch_RV6_20261031_091226/S9SL_X6rb_J1_B_top_Fs4_r2p2_p0/result_rejudge_rev60.json",
+    "spec": "spec 430.3.7"
+   },
+   "harness": {
+    "id": "H3|J1|B|top|roll_pos@k0.5",
+    "verdict": "pass",
+    "ready_s": 57.90000000009444,
+    "min_force_kN": 66.4068939421132,
+    "max_stroke_reading_mm": 595.9247247046353,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 43.1051563089208,
+    "att_end_absmax_deg": 0.013535630321677384,
+    "stroke_guard_events": [],
+    "source": "finB2_slope"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 22.4,
+    "d_min_force_kN": -1.425,
+    "d_max_stroke_reading_mm": 16.478,
+    "d_gap_ready_mm": -10.478,
+    "d_att_end_absmax_deg": 0.003,
+    "minF_ratio_h_over_c": 1.022
    },
    "chrono_version_note": "same version as the harness (final controller, spec 432.4.5)",
    "censored_at_guard": false,
@@ -3365,9 +3483,9 @@
   }
  ],
  "combined_counts": {
-  "n_pairs": 63,
-  "n_with_harness": 63,
-  "verdict_same": 56
+  "n_pairs": 65,
+  "n_with_harness": 65,
+  "verdict_same": 57
  },
  "static_pairs": [
   {

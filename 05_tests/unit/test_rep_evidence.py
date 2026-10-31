@@ -244,6 +244,68 @@ def test_group_slope_by_ratio_joins_flat_h3_and_h1_rows():
         "J1|B|top|roll_pos": {"k0.5": "k05", "k1.0": "k1", "k0": "flat"}}
 
 
+def test_study_counts_verdict_change_directions_and_verdicts_per_level():
+    groups = {"worse": {"A": _record("pass", 50.0, 60.0),
+                        "B": _record("stroke_limited_stop", 50.0, 60.0)},
+              "better": {"A": _record("fail", 50.0, 60.0), "B": _record("pass", 50.0, 60.0)},
+              "same": {"A": _record("pass", 50.0, 60.0), "B": _record("pass", 50.0, 60.0)}}
+    study = rep.monotonicity_study("t", groups, ["A", "B"])
+    assert study["verdict_change_counts"] == {"worse": 1, "better": 1, "same_ends": 0}
+    assert study["verdict_counts"] == {"A": {"pass": 2, "fail": 1},
+                                       "B": {"pass": 2, "stroke_limited_stop": 1}}
+
+
+def test_verdict_change_with_equal_ends_counts_as_same_ends():
+    changes = [{"group": "g", "verdicts": ["pass", "fail", "pass"]}]
+    assert rep.count_verdict_change_directions(changes) == {"worse": 0, "better": 0,
+                                                           "same_ends": 1}
+
+
+def test_split_x426b_by_suffix_and_middle_level():
+    records = {"H3|J1|B|top|roll_pos@k0.5|Fs0": "fs0", "H3|J1|B|top|roll_pos@k0.5|Fs8": "fs8",
+               "H3|J1|B|top|roll_pos@k0.5|m1.1": "m11", "H1|G1|B|middle|nose_down": "mid",
+               "H1|G1|B|top|nose_down": "odd"}
+    tables, unassigned = rep.split_x426b(records)
+    assert tables == {"B_Fs0": {"H3|J1|B|top|roll_pos@k0.5|Fs0": "fs0"},
+                      "B_Fs8": {"H3|J1|B|top|roll_pos@k0.5|Fs8": "fs8"},
+                      "B_m1p1": {"H3|J1|B|top|roll_pos@k0.5|m1.1": "m11"},
+                      "B_mid": {"H1|G1|B|middle|nose_down": "mid"}}
+    assert unassigned == ["H1|G1|B|top|nose_down"]
+
+
+def test_final_e5_tables_split_the_merged_files_by_family(tmp_path: Path):
+    files = rep.e5_harness_files(tmp_path)
+    _write_records(files["finB2_p0"], [_harness_row("base|J1|B|top|Fs4"),
+                                       _harness_row("g6|G1+J1@FL|top|Fs4"),
+                                       _harness_row("ref|G1|top|Fs4"),
+                                       _harness_row("main|flat|top|0.0|ref|none|0|proj")])
+    _write_records(files["finB2_slope"], [_harness_row("H1|J1|B|top|flat"),
+                                          _harness_row("H6|J1|B|top|flat|m1.1", "fail")])
+    _write_records(files["finB2_h9"], [_harness_row("H9|J1|B|top|roll_neg@k0.6")])
+    for key in ("fin_x426_C", "fin_x426_D"):
+        _write_records(files[key], [])
+    tables, unassigned = rep.final_e5_tables(files)
+    assert set(tables["p3b"]) == {"base|J1|B|top|Fs4"}
+    assert set(tables["g6"]) == {"g6|G1+J1@FL|top|Fs4", "ref|G1|top|Fs4"}
+    assert set(tables["slope"]) == {"H1|J1|B|top|flat"}  # H6 is not a slope row
+    assert set(tables["h6"]) == {"H6|J1|B|top|flat|m1.1"}
+    assert set(tables["H9"]) == {"H9|J1|B|top|roll_neg@k0.6"}
+    assert tables["B_Fs0"] == {}  # no x426b file: empty variant tables
+    assert unassigned == []
+    by_name = {study["variable"]: study for study in rep.build_studies(tables)}
+    h9_study = by_name["A2 roll ratio k fine (h9)"]
+    assert (h9_study["levels"], h9_study["n_groups"]) == (["k0.6"], 1)
+
+
+def test_group_h9_by_ratio_orders_levels_by_k_and_keeps_the_id_text():
+    h9 = {"H9|J1|B|top|roll_neg@k0.875": "c", "H9|J1|B|top|roll_neg@k0.6": "a",
+          "H9|J1|B|top|roll_neg@k0.65": "b", "H9|J2|B|top|roll_pos@k0.6": "d"}
+    groups, levels = rep.group_h9_by_ratio(h9)
+    assert levels == ["k0.6", "k0.65", "k0.875"]
+    assert groups == {"J1|B|top|roll_neg": {"k0.875": "c", "k0.6": "a", "k0.65": "b"},
+                      "J2|B|top|roll_pos": {"k0.6": "d"}}
+
+
 # ---------------------------------------------------------------------------- missing inputs
 def _write_records(path: Path, records: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -268,6 +330,11 @@ def minimal_repo(tmp_path: Path) -> Path:
     _write_records(files["slope"], [_harness_row("H1|J1|B|top|flat")])
     for key in ("g6", "h6", "C", "D"):
         _write_records(files[key], [])
+    e5_files = rep.e5_harness_files(tmp_path)
+    _write_records(e5_files["finB2_p0"], [_harness_row("base|J1|B|top|Fs4")])
+    _write_records(e5_files["finB2_slope"], [_harness_row("H1|J1|B|top|flat")])
+    for key in ("fin_x426_C", "fin_x426_D"):
+        _write_records(e5_files[key], [])
     return tmp_path
 
 
@@ -304,6 +371,17 @@ def test_main_runs_without_optional_x426_b_files(minimal_repo: Path, tmp_path: P
     assert "d_max_stroke_reading_mm" not in p3b_pair["delta"]
     by_name = {study["variable"]: study for study in studies["studies"]}
     assert by_name["B2 F_s 4 -> 0 on slope (x426 B2)"]["n_groups"] == 0
+    # E5 reads the final harness files; the optional x426b / H9 files are absent here
+    assert studies["meta"]["harness_files"]["finB2_p0"] == (
+        "06_analysis/02_control/s9/rev85/finB2_p0.json")
+    assert studies["meta"]["unassigned_x426b"] == []
+    assert "A2 roll ratio k fine (h9)" not in by_name
+
+
+def test_main_without_a_required_final_e5_file_raises(minimal_repo: Path, tmp_path: Path):
+    rep.e5_harness_files(minimal_repo)["fin_x426_D"].unlink()
+    with pytest.raises(FileNotFoundError):
+        rep.main(["rep_evidence.py", str(minimal_repo), str(tmp_path / "out")])
 
 
 # ---------------------------------------------------------------------------- RV2 / RV3 pairs
@@ -532,7 +610,10 @@ def test_final_runs_name_loaded_harness_keys_and_pending_runs_are_apart():
     assert all(run["harness_key"] in keys for run in rep.FINAL_RUNS + rep.FINAL_PENDING_RUNS)
     final_cases = {(run["batch"], run["case"]) for run in rep.FINAL_RUNS}
     assert not final_cases & {(run["batch"], run["case"]) for run in rep.FINAL_PENDING_RUNS}
-    assert len(rep.FINAL_RUNS) == 10
+    assert len(rep.FINAL_RUNS) == 12
+    for run in rep.FINAL_PENDING_RUNS:  # an unrun entry names its placeholders
+        if run["batch"] is None:
+            assert "batch" in run["to_fill_after_run"]
     superseding_cases = {run["superseded_by"] for run in rep.FINAL_RUNS
                          if "superseded_by" in run}
     assert superseding_cases <= {f"{run['case']} @ {run['batch']}" for run in rep.FINAL_RUNS}

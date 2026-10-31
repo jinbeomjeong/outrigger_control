@@ -1,0 +1,240 @@
+{
+ "meta": {
+  "script": "04_scripts/03_control/s9/evidence/figD_harness_pads.py",
+  "script_sha256": "9227fa17be83a33c07c64236d92c2eac0792e882e2f7ccfafab0858b2795d446",
+  "harness_sha256": {
+   "04_scripts/03_control/s9/s9_slope_fix_candidates.py": "4d5797b086f2d6b53444e55fda9fe37fa29b713c68b7eb56d72eb84944333c0d",
+   "04_scripts/03_control/s9/s9_soil_slope.py": "e7bc60b7cc763a4b05cd315054c747c58220b2726b29d5340243bd2368019119",
+   "04_scripts/03_control/s8/r72_g6_screen.py": "224db3f9e3c71c6e55391555a96fabfa180c30949545ad3e52ab2497488b31e6",
+   "04_scripts/03_control/s9/s9_soil_closed_loop.py": "14a30be06bb0e0955ebe89d76f45947a4251444f547b8e105f4fab5748c69035",
+   "04_scripts/03_control/s9/soil_guard_stop_rule.py": "c89aea9bebc1fa267deac24b9fe4bc1ad02bee03d9f10d4669d4b2514de47afb"
+  },
+  "suite": "p3b",
+  "candidate": "current",
+  "settle_hook": "p0",
+  "stored_record": "06_analysis/02_control/s9/rev85/finB2_p0.json",
+  "interpreter": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+  "workers": 8,
+  "wall_s": 27.0,
+  "units": {
+   "end_sinkage_mm": "mm (soil z)",
+   "max_pad_normal_N": "N"
+  },
+  "leg_order": [
+   "FL",
+   "FR",
+   "RL",
+   "RR"
+  ]
+ },
+ "records": [
+  {
+   "id": "base|G1|A|top|Fs4",
+   "error": null,
+   "verdict": "pass",
+   "commands_sha256": "6e716d528a44193155be6918b58e31be41c5862d780d03301c5eefb177c1f84c",
+   "t_ready_s": 41.40000000001565,
+   "min_force_kN": 61.25831822783554,
+   "final_phase": "ready",
+   "done_count": 1,
+   "end_sinkage_mm": [
+    7.75501318173938,
+    7.595557960043902,
+    4.870082995431832,
+    4.756831531042406
+   ],
+   "max_pad_normal_N": [
+    128720.70146673771,
+    125670.68591925639,
+    82256.53524286493,
+    80496.56877114088
+   ],
+   "run_end_note": "plant state at READY + S9_HOLD_S (default 10 s) or FAULT",
+   "wall_s": 18.9,
+   "stored_commands_sha256": "6e716d528a44193155be6918b58e31be41c5862d780d03301c5eefb177c1f84c",
+   "hash_matches_finB2_p0": true
+  },
+  {
+   "id": "base|G1|B|top|Fs4",
+   "error": null,
+   "verdict": "pass",
+   "commands_sha256": "4c79aea2ab3a460180ca9a7f4a909b91736b142b2390c70070c5a6b19a75e081",
+   "t_ready_s": 40.40000000001088,
+   "min_force_kN": 62.81732839361405,
+   "final_phase": "ready",
+   "done_count": 1,
+   "end_sinkage_mm": [
+    7.725148029291102,
+    7.534990343631505,
+    8.48093352406121,
+    8.312991795903342
+   ],
+   "max_pad_normal_N": [
+    127742.0657758184,
+    124089.68532564909,
+    80589.52843588934,
+    79117.43719220017
+   ],
+   "run_end_note": "plant state at READY + S9_HOLD_S (default 10 s) or FAULT",
+   "wall_s": 18.8,
+   "stored_commands_sha256": "4c79aea2ab3a460180ca9a7f4a909b91736b142b2390c70070c5a6b19a75e081",
+   "hash_matches_finB2_p0": true
+  },
+  {
+   "id": "base|J1|A|top|Fs4",
+   "error": null,
+   "verdict": "pass",
+   "commands_sha256": "e73e3e7d11f36ccbae9293372b059f576bdc9d6c85eb4c0b030274f92c885399",
+   "t_ready_s": 48.20000000004812,
+   "min_force_kN": 65.36030683666193,
+   "final_phase": "ready",
+   "done_count": 1,
+   "end_sinkage_mm": [
+    57.70380945171874,
+    56.641271860369535,
+    1.834560294428686,
+    1.194572520499738
+   ],
+   "max_pad_normal_N": [
+    120846.39606249228,
+    120419.46853959892,
+    77730.69166772692,
+    74721.59380374129
+   ],
+   "run_end_note": "plant state at READY + S9_HOLD_S (default 10 s) or FAULT",
+   "wall_s": 20.8,
+   "stored_commands_sha256": "e73e3e7d11f36ccbae9293372b059f576bdc9d6c85eb4c0b030274f92c885399",
+   "hash_matches_finB2_p0": true
+  },
+  {
+   "id": "base|J1|B|top|Fs4",
+   "error": null,
+   "verdict": "pass",
+   "commands_sha256": "6198f676af09c56ee58a0718c2b9f2d5d1b1d1b016044839f995db5cb57628b1",
+   "t_ready_s": 64.10000000012404,
+   "min_force_kN": 68.82729010274217,
+   "final_phase": "ready",
+   "done_count": 1,
+   "end_sinkage_mm": [
+    58.55842659227466,
+    49.04565914918074,
+    87.3096653419773,
+    80.0130866391035
+   ],
+   "max_pad_normal_N": [
+    120793.3736903768,
+    118134.20220862975,
+    73213.7465346762,
+    72370.55483082718
+   ],
+   "run_end_note": "plant state at READY + S9_HOLD_S (default 10 s) or FAULT",
+   "wall_s": 24.8,
+   "stored_commands_sha256": "6198f676af09c56ee58a0718c2b9f2d5d1b1d1b016044839f995db5cb57628b1",
+   "hash_matches_finB2_p0": true
+  },
+  {
+   "id": "base|J2|A|top|Fs4",
+   "error": null,
+   "verdict": "pass",
+   "commands_sha256": "6dc796c7d87366c29b7b737143e32967ab185c73880b16833b0dcccde9eb253e",
+   "t_ready_s": 50.30000000005815,
+   "min_force_kN": 66.68324714387107,
+   "final_phase": "ready",
+   "done_count": 1,
+   "end_sinkage_mm": [
+    88.833112301443,
+    86.61403353788383,
+    9.180265277536979,
+    7.424657977203599
+   ],
+   "max_pad_normal_N": [
+    120485.294092706,
+    119747.91621002658,
+    76503.98876701298,
+    73551.22232908932
+   ],
+   "run_end_note": "plant state at READY + S9_HOLD_S (default 10 s) or FAULT",
+   "wall_s": 21.6,
+   "stored_commands_sha256": "6dc796c7d87366c29b7b737143e32967ab185c73880b16833b0dcccde9eb253e",
+   "hash_matches_finB2_p0": true
+  },
+  {
+   "id": "base|J2|B|top|Fs4",
+   "error": null,
+   "verdict": "pass",
+   "commands_sha256": "3f4543d67f695f4dee63506a55b7612a6cae6ffd8fd6b6a2a77abf00db3817b5",
+   "t_ready_s": 65.70000000013168,
+   "min_force_kN": 68.78798488756613,
+   "final_phase": "ready",
+   "done_count": 1,
+   "end_sinkage_mm": [
+    90.92380697586857,
+    81.74918360691738,
+    118.05749629990785,
+    109.80067661891607
+   ],
+   "max_pad_normal_N": [
+    120839.00120784937,
+    118327.39189802858,
+    73401.32117788498,
+    72316.46453574805
+   ],
+   "run_end_note": "plant state at READY + S9_HOLD_S (default 10 s) or FAULT",
+   "wall_s": 25.8,
+   "stored_commands_sha256": "3f4543d67f695f4dee63506a55b7612a6cae6ffd8fd6b6a2a77abf00db3817b5",
+   "hash_matches_finB2_p0": true
+  },
+  {
+   "id": "base|S1|A|top|Fs4",
+   "error": null,
+   "verdict": "pass",
+   "commands_sha256": "c4196aaf11f896eee0f3ec12a7b3507a2fab04baf3d069d474d9e3fd52dcd196",
+   "t_ready_s": 53.00000000007104,
+   "min_force_kN": 67.33779888785126,
+   "final_phase": "ready",
+   "done_count": 1,
+   "end_sinkage_mm": [
+    124.43535701439043,
+    122.17326388882526,
+    67.98096700039693,
+    66.25687880575626
+   ],
+   "max_pad_normal_N": [
+    121923.81877127859,
+    120024.01776795233,
+    75554.41228783208,
+    74222.50102632851
+   ],
+   "run_end_note": "plant state at READY + S9_HOLD_S (default 10 s) or FAULT",
+   "wall_s": 22.3,
+   "stored_commands_sha256": "c4196aaf11f896eee0f3ec12a7b3507a2fab04baf3d069d474d9e3fd52dcd196",
+   "hash_matches_finB2_p0": true
+  },
+  {
+   "id": "base|S1|B|top|Fs4",
+   "error": null,
+   "verdict": "pass",
+   "commands_sha256": "2d2bd063eb8f7f80300b38fe5a7f5017312d6bb7e4967e58773260209575cabb",
+   "t_ready_s": 58.60000000009778,
+   "min_force_kN": 68.14971096112072,
+   "final_phase": "ready",
+   "done_count": 1,
+   "end_sinkage_mm": [
+    123.92206375379169,
+    121.36534437682114,
+    131.16323064062286,
+    129.01819374928309
+   ],
+   "max_pad_normal_N": [
+    121460.25590321714,
+    119407.88112823918,
+    74207.46321376413,
+    73377.41813873444
+   ],
+   "run_end_note": "plant state at READY + S9_HOLD_S (default 10 s) or FAULT",
+   "wall_s": 23.6,
+   "stored_commands_sha256": "2d2bd063eb8f7f80300b38fe5a7f5017312d6bb7e4967e58773260209575cabb",
+   "hash_matches_finB2_p0": true
+  }
+ ]
+}

@@ -1,0 +1,3394 @@
+{
+ "meta": {
+  "spec": "432.4 E1 (control 2026-10-30; final pairs 432.4.5, 2026-10-31)",
+  "script": "04_scripts/03_control/s9/rep_evidence.py",
+  "script_sha256": "5f368edcfc581fac6549b33489491e53cb7cf4bb5b283fdaab0717bfe14153d8",
+  "schema_version": 3,
+  "schema_change": "schema 2 (2026-10-31): max_stroke_mm (Chrono true rod stroke vs harness reading, mixed) split into max_stroke_reading_mm and max_stroke_true_mm; d_max_stroke_mm replaced by d_max_stroke_reading_mm (d_max_stroke_true_mm when both sides have it); summary adds d_max_stroke_reading_mm_chrono_minus_harness; meta adds missing_stroke_records. Readers of d_max_stroke_mm should use d_max_stroke_reading_mm. schema 3 (2026-10-31, spec 432.4.5): final_pairs / final_summary (final controller Chrono vs final harness, see final_pairs_note); per pair censored_at_guard, censored_side and Chrono stroke_guard_events (harness records carry stroke_guard_events); summaries add the uncensored reading-delta stats and the censored list; curated S9SL C-1..C-4 and X4-rp now carry the Chrono stroke reading. h6_margin quotes spec 432.4.5 (stroke +23 mm, reading vs reading) and is not re-derived here. schema 3 addition (2026-10-31, final 10 runs): the automatic P3b verdict counts a P3-2 judged flag (late_loc_revoked / late_loc_reapproach, spec 419.8 / 424.8.1) as pass and lists it in chrono flags (key present only with a FLAG); final pairs may carry superseded_by (left out of final_summary, listed in final_summary.superseded).",
+  "stroke_quantities": "max_stroke_reading_mm = controller stroke reading (Chrono: max of record meas.stroke per leg FL, FR, RL, RR; harness: max(plant.sref)); max_stroke_true_mm = true rod stroke (Chrono: P3-5 s_motor_max_m per leg or the spec value; harness: not stored). The reading exceeds the true stroke by F_cyl/k_oil (about 5-6 mm at 68 kN). Deltas pair the same quantity only; a per-leg list counts by its max.",
+  "censoring": "censored_at_guard = true when either run fired the lift-stroke guard (WARN_LIFT_STROKE_LIMITED / FAULT_LIFT_STROKE_LIMIT; Chrono: result.json events, harness: record warnings); false when both sides are known and none fired; null when a side is unknown and the other did not fire. The max stroke reading of a guarded run is bounded by the guard (682.8 mm budget), so d_max_stroke_reading_mm is a bound there: Chrono side only -> lower bound of Chrono - harness, harness side only -> upper bound, both -> no information.",
+  "harness_files": {
+   "p3b": "06_analysis\\02_control\\s9\\rev83\\R2DS_p3b.json",
+   "slope": "06_analysis\\02_control\\s9\\rev83\\R2DS_slope_rejudged.json",
+   "g6": "06_analysis\\02_control\\s9\\rev83\\R2DS_g6.json",
+   "h6": "06_analysis\\02_control\\s9\\rev83\\R2DS_h6_rejudge_finloc.json",
+   "B_Fs0": "06_analysis\\02_control\\s9\\rev85\\x426_B_Fs0_rejudged.json",
+   "B_Fs8": "06_analysis\\02_control\\s9\\rev85\\x426_B_Fs8_rejudged.json",
+   "B_mid": "06_analysis\\02_control\\s9\\rev85\\x426_B_mid_rejudged.json",
+   "B_m1p1": "06_analysis\\02_control\\s9\\rev85\\x426_B_m1p1_rejudged.json",
+   "C": "06_analysis\\02_control\\s9\\rev85\\x426_C.json",
+   "D": "06_analysis\\02_control\\s9\\rev85\\x426_D.json",
+   "H9": "06_analysis\\02_control\\s9\\rev85\\h9_roll_fine_cmp.json"
+  },
+  "final_harness_files": {
+   "finB2_p0": "06_analysis\\02_control\\s9\\rev85\\finB2_p0.json",
+   "finB2_slope": "06_analysis\\02_control\\s9\\rev85\\finB2_harness_rejudged.json",
+   "finB2_h9": "06_analysis\\02_control\\s9\\rev85\\finB2_h9.json",
+   "fin_x426_D": "06_analysis\\02_control\\s9\\rev85\\fin_x426_D.json"
+  },
+  "classification": "optimistic if harness verdict better, or Chrono READY - harness > 5 s, or harness min F / Chrono > 1.10, or Chrono gap - harness < -10 mm; conservative = the opposite (READY < -5 s, ratio < 0.90, verdict worse); mixed = both (ASSUMPTION thresholds)",
+  "version_caveat": "Harness = R2DS (05708b2 line). Chrono = the stored run version (column). Pairs whose versions differ are trend evidence, not identity; re-run on the final acceptance files. final_pairs: Chrono final controller = final harness (finB2 / fin_x426_D).",
+  "final_pairs_note": "final_pairs = the final-controller Chrono runs (FINAL_RUNS: FINAL-REP 7 + FINAL6 1 + RV6 X6-rb2 1 + FINAL-REP-X 1; the 120 s x1.1 J2 run is superseded by FINAL-REP-X) with their final-harness twins (final_harness_files), same version on both sides. They are summarized apart in final_summary and are NOT counted in summary: summary keeps the 54 stored-version pairs (several are the same cases at older versions; counting both would count a case twice). combined_counts adds the two verdict-match counts for reference only. Chrono verdict = the automatic P3b block (all P3B_PASS_CHECKS) unless the run carries the control verdict of its spec section (then verdict_auto keeps the automatic one). Pairs with censored_at_guard true give a bound, not a value: they are left out of the *_uncensored stroke stats and listed in censored_stroke_reading. Pairs with superseded_by are replaced by that run: kept in final_pairs, left out of final_summary counts and listed in final_summary.superseded. Pending runs (final_pending_runs) are not paired yet.",
+  "final_pending_runs": [],
+  "h6_margin": "H-6 optimistic margin (ASSUMPTION, spec 432.4 / 432.4.5 / 432.4.7, 2026-10-31): flat READY +17 s, gap -13 mm (RV2 J2 -12.7 mm, 432.4.4); soft slope rows gap -15 mm (X6-rb2 -14.5 mm, 432.4.7); stroke reading one-sided +23 mm (Chrono meas.stroke max - harness max(plant.sref); observed X6-rb vs H9 roll_neg@k0.65 >= +22.7 mm censored at the guard, RV3 C-C1 +21.5 mm uncensored; stroke sensor share <= 0.4 mm) for soft J1/J2/S1 incl. one-pad patches, not G1 or rigid; slope / x1.1 READY +31 s",
+  "missing_chrono_inputs": [],
+  "missing_final_inputs": [],
+  "missing_stroke_records": []
+ },
+ "summary": {
+  "n_pairs": 54,
+  "n_with_harness": 54,
+  "verdict_same": 49,
+  "by_variable_side": {
+   "B1 auger": {
+    "representative": 12,
+    "optimistic": 3,
+    "mixed": 1
+   },
+   "B2 F_s": {
+    "representative": 6,
+    "optimistic": 4
+   },
+   "A1 soil": {
+    "representative": 6,
+    "optimistic": 4
+   },
+   "A2 nose_down": {
+    "optimistic": 3
+   },
+   "A2 roll": {
+    "representative": 2,
+    "optimistic": 2
+   },
+   "A2 edge": {
+    "representative": 1
+   },
+   "B4 weight": {
+    "optimistic": 2,
+    "conservative": 1
+   },
+   "A3 soft": {
+    "representative": 1,
+    "optimistic": 5,
+    "mixed": 1
+   }
+  },
+  "d_ready_s_chrono_minus_harness": {
+   "n": 48,
+   "min": -9.8,
+   "max": 31.0,
+   "mean": 6.86
+  },
+  "d_max_stroke_reading_mm_chrono_minus_harness": {
+   "n": 39,
+   "min": -13.309,
+   "max": 21.497,
+   "mean": -0.16
+  },
+  "d_max_stroke_reading_mm_uncensored": {
+   "n": 34,
+   "min": -13.309,
+   "max": 21.497,
+   "mean": -1.06
+  },
+  "censored_stroke_reading": [
+   {
+    "chrono_case": "S9SL_C2_J1_A_top_Fs4_r4p4_p0",
+    "censored_side": "chrono",
+    "d_max_stroke_reading_mm": 13.166
+   },
+   {
+    "chrono_case": "S9SL_C3_J1_B_top_Fs4_r3p3_p0",
+    "censored_side": "chrono",
+    "d_max_stroke_reading_mm": 15.558
+   },
+   {
+    "chrono_case": "S9SL_C4_J1_A_top_Fs4_r0_p3p2",
+    "censored_side": "both",
+    "d_max_stroke_reading_mm": 4.553
+   },
+   {
+    "chrono_case": "S9SL_X4rp_J1_B_top_Fs4_r3p85_p0",
+    "censored_side": "both",
+    "d_max_stroke_reading_mm": -2.49
+   },
+   {
+    "chrono_case": "S9SL_RV3B_S1_B_top_Fs0_r3p3_p0 @ batch_RV3_20261030_134001",
+    "censored_side": "both",
+    "d_max_stroke_reading_mm": -0.742
+   }
+  ]
+ },
+ "pairs": [
+  {
+   "variable": "B1 auger",
+   "chrono_case": "P3b_G1_A_bottom_Fs4",
+   "harness_id": "base|G1|A|bottom|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 44.700000000631235,
+    "min_force_kN": 61.129982086011765,
+    "max_stroke_true_mm": [
+     405.9092640742772,
+     405.76260321879516,
+     390.83504110256257,
+     390.70936631549137
+    ],
+    "gap_ready_mm": 47.18127827906093,
+    "att_end_absmax_deg": [
+     0.001003678981625592,
+     0.02067601653759656
+    ],
+    "max_stroke_reading_mm": [
+     410.71911169887983,
+     410.6440977495073,
+     395.06399713266194,
+     394.8587499804255
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_G1_A_bottom_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|G1|A|bottom|Fs4",
+    "verdict": "pass",
+    "ready_s": 40.80000000001279,
+    "min_force_kN": 61.23570079196549,
+    "max_stroke_reading_mm": 409.6814132506504,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 45.061593867059315,
+    "att_end_absmax_deg": 0.007874005038725445,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 3.9,
+    "d_min_force_kN": -0.106,
+    "d_max_stroke_reading_mm": 1.038,
+    "d_gap_ready_mm": 2.12,
+    "d_att_end_absmax_deg": 0.013,
+    "minF_ratio_h_over_c": 1.002
+   },
+   "chrono_version_note": "equivalent to final (no final feature acts)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B1 auger",
+   "chrono_case": "P3b_G1_A_middle_Fs4",
+   "harness_id": "base|G1|A|middle|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 44.400000000621276,
+    "min_force_kN": 61.14259730622207,
+    "max_stroke_true_mm": [
+     405.7336093451338,
+     405.5740260541036,
+     390.83393354428637,
+     390.69104363497064
+    ],
+    "gap_ready_mm": 47.08472282677345,
+    "att_end_absmax_deg": [
+     0.0003829958987951433,
+     0.01879588383893133
+    ],
+    "max_stroke_reading_mm": [
+     410.545635017615,
+     410.4219561897832,
+     395.0287764139011,
+     394.86067440634423
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_G1_A_middle_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|G1|A|middle|Fs4",
+    "verdict": "pass",
+    "ready_s": 40.80000000001279,
+    "min_force_kN": 61.28331761526754,
+    "max_stroke_reading_mm": 409.68610327588055,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 45.06311644463918,
+    "att_end_absmax_deg": 0.007865899788037135,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 3.6,
+    "d_min_force_kN": -0.141,
+    "d_max_stroke_reading_mm": 0.86,
+    "d_gap_ready_mm": 2.022,
+    "d_att_end_absmax_deg": 0.011,
+    "minF_ratio_h_over_c": 1.002
+   },
+   "chrono_version_note": "equivalent to final (no final feature acts)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B2 F_s",
+   "chrono_case": "P3b_G1_A_top_Fs0",
+   "harness_id": "base|G1|A|top|Fs0",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 44.20000000061464,
+    "min_force_kN": 60.73017152021292,
+    "max_stroke_true_mm": [
+     405.80765410151383,
+     405.32428858989505,
+     390.88763603062387,
+     390.85961976907447
+    ],
+    "gap_ready_mm": 46.81599076625442,
+    "att_end_absmax_deg": [
+     0.0015357677202691758,
+     0.0161094726261755
+    ],
+    "max_stroke_reading_mm": [
+     410.4324198300478,
+     409.91081858193724,
+     394.79389931281827,
+     394.9411956802654
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_G1_A_top_Fs0/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|G1|A|top|Fs0",
+    "verdict": "pass",
+    "ready_s": 41.40000000001565,
+    "min_force_kN": 61.51394317740434,
+    "max_stroke_reading_mm": 410.0382485361201,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 45.00759686565843,
+    "att_end_absmax_deg": 0.013849890482199116,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 2.8,
+    "d_min_force_kN": -0.784,
+    "d_max_stroke_reading_mm": 0.394,
+    "d_gap_ready_mm": 1.808,
+    "d_att_end_absmax_deg": 0.002,
+    "minF_ratio_h_over_c": 1.013
+   },
+   "chrono_version_note": "equivalent to final (no final feature acts)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A1 soil / B3 pad",
+   "chrono_case": "P3b_G1_A_top_Fs4",
+   "harness_id": "base|G1|A|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 44.10000000061132,
+    "min_force_kN": 60.97852393108495,
+    "max_stroke_true_mm": [
+     405.49117634888466,
+     405.34744222808547,
+     390.80132520199504,
+     390.69817087789914
+    ],
+    "gap_ready_mm": 46.933145805693414,
+    "att_end_absmax_deg": [
+     0.000962341531274561,
+     0.01618092411177797
+    ],
+    "max_stroke_reading_mm": [
+     410.2390517587684,
+     410.1651975974233,
+     394.9992104701055,
+     394.8382975010077
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_G1_A_top_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|G1|A|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 41.40000000001565,
+    "min_force_kN": 61.25831822783554,
+    "max_stroke_reading_mm": 410.1615600419472,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 45.19873804842107,
+    "att_end_absmax_deg": 0.013645346752452084,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 2.7,
+    "d_min_force_kN": -0.28,
+    "d_max_stroke_reading_mm": 0.077,
+    "d_gap_ready_mm": 1.734,
+    "d_att_end_absmax_deg": 0.003,
+    "minF_ratio_h_over_c": 1.005
+   },
+   "chrono_version_note": "equivalent to final (no final feature acts)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B2 F_s",
+   "chrono_case": "P3b_G1_A_top_Fs8",
+   "harness_id": "base|G1|A|top|Fs8",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 44.10000000061132,
+    "min_force_kN": 60.59001570583202,
+    "max_stroke_true_mm": [
+     405.4752120607945,
+     405.34469525464795,
+     390.7758530324923,
+     390.6860427313086
+    ],
+    "gap_ready_mm": 47.18781702379937,
+    "att_end_absmax_deg": [
+     0.0009320769444096828,
+     0.016316549134917865
+    ],
+    "max_stroke_reading_mm": [
+     410.370256424238,
+     410.29707004131075,
+     395.15392026456044,
+     394.9936137945628
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_G1_A_top_Fs8/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|G1|A|top|Fs8",
+    "verdict": "pass",
+    "ready_s": 41.40000000001565,
+    "min_force_kN": 60.892360854816346,
+    "max_stroke_reading_mm": 410.29102019704163,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 45.469156545999894,
+    "att_end_absmax_deg": 0.01352547289197664,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 2.7,
+    "d_min_force_kN": -0.302,
+    "d_max_stroke_reading_mm": 0.079,
+    "d_gap_ready_mm": 1.719,
+    "d_att_end_absmax_deg": 0.003,
+    "minF_ratio_h_over_c": 1.005
+   },
+   "chrono_version_note": "equivalent to final (no final feature acts)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B1 auger",
+   "chrono_case": "P3b_G1_B_bottom_Fs4",
+   "harness_id": "base|G1|B|bottom|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 43.60000000059472,
+    "min_force_kN": 63.08981443340081,
+    "max_stroke_true_mm": [
+     402.7743845162739,
+     402.6310936330049,
+     391.9829251873574,
+     391.7881876442083
+    ],
+    "gap_ready_mm": 44.38467321088346,
+    "att_end_absmax_deg": [
+     0.002301954278857168,
+     0.014432922475034903
+    ],
+    "max_stroke_reading_mm": [
+     407.4864641056241,
+     407.203350730966,
+     396.1113800344638,
+     395.86406473371835
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_G1_B_bottom_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|G1|B|bottom|Fs4",
+    "verdict": "pass",
+    "ready_s": 39.4000000000061,
+    "min_force_kN": 62.931248629641274,
+    "max_stroke_reading_mm": 407.0684447533562,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 42.71693163585526,
+    "att_end_absmax_deg": 0.0036746143604726887,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 4.2,
+    "d_min_force_kN": 0.159,
+    "d_max_stroke_reading_mm": 0.418,
+    "d_gap_ready_mm": 1.668,
+    "d_att_end_absmax_deg": 0.011,
+    "minF_ratio_h_over_c": 0.997
+   },
+   "chrono_version_note": "equivalent to final (no final feature acts)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B1 auger",
+   "chrono_case": "P3b_G1_B_middle_Fs4",
+   "harness_id": "base|G1|B|middle|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 43.60000000059472,
+    "min_force_kN": 62.90409204496433,
+    "max_stroke_true_mm": [
+     402.78758664954165,
+     402.61670262070743,
+     391.99627004134254,
+     391.78125111825733
+    ],
+    "gap_ready_mm": 44.35610119422195,
+    "att_end_absmax_deg": [
+     0.001767468893457692,
+     0.014367478532695684
+    ],
+    "max_stroke_reading_mm": [
+     407.4902156325159,
+     407.20176359324427,
+     396.11684057103093,
+     395.86466332074957
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_G1_B_middle_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|G1|B|middle|Fs4",
+    "verdict": "pass",
+    "ready_s": 39.4000000000061,
+    "min_force_kN": 62.924904237430276,
+    "max_stroke_reading_mm": 407.06880578810194,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 42.713597542060526,
+    "att_end_absmax_deg": 0.0036543709619594085,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 4.2,
+    "d_min_force_kN": -0.021,
+    "d_max_stroke_reading_mm": 0.421,
+    "d_gap_ready_mm": 1.643,
+    "d_att_end_absmax_deg": 0.011,
+    "minF_ratio_h_over_c": 1.0
+   },
+   "chrono_version_note": "equivalent to final (no final feature acts)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B2 F_s",
+   "chrono_case": "P3b_G1_B_top_Fs0",
+   "harness_id": "base|G1|B|top|Fs0",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 43.40000000058808,
+    "min_force_kN": 62.12809641351478,
+    "max_stroke_true_mm": [
+     402.9436097211143,
+     402.50307007898556,
+     392.11815832341966,
+     392.01763862040906
+    ],
+    "gap_ready_mm": 44.112710663454905,
+    "att_end_absmax_deg": [
+     0.001564004917330575,
+     0.012253164202782225
+    ],
+    "max_stroke_reading_mm": [
+     407.4274601624095,
+     407.0398669834606,
+     395.8847005959896,
+     395.9546886580195
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_G1_B_top_Fs0/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|G1|B|top|Fs0",
+    "verdict": "pass",
+    "ready_s": 40.20000000000992,
+    "min_force_kN": 63.275961044413975,
+    "max_stroke_reading_mm": 406.8501288094833,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 42.22124599514897,
+    "att_end_absmax_deg": 0.006127858690537476,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 3.2,
+    "d_min_force_kN": -1.148,
+    "d_max_stroke_reading_mm": 0.577,
+    "d_gap_ready_mm": 1.891,
+    "d_att_end_absmax_deg": 0.006,
+    "minF_ratio_h_over_c": 1.018
+   },
+   "chrono_version_note": "equivalent to final (no final feature acts)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A1 soil / B3 pad",
+   "chrono_case": "P3b_G1_B_top_Fs4",
+   "harness_id": "base|G1|B|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 43.30000000058476,
+    "min_force_kN": 62.794321442396225,
+    "max_stroke_true_mm": [
+     402.58920863100303,
+     402.45351469820923,
+     391.87206804744204,
+     391.73205033619035
+    ],
+    "gap_ready_mm": 44.15284809372855,
+    "att_end_absmax_deg": [
+     0.0022143522516688244,
+     0.013553435385996038
+    ],
+    "max_stroke_reading_mm": [
+     407.2063227598488,
+     407.2265046437411,
+     395.94472175736576,
+     395.77842847757955
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_G1_B_top_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|G1|B|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 40.100000000009445,
+    "min_force_kN": 62.88570959713286,
+    "max_stroke_reading_mm": 407.36880062249986,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 42.78307714644917,
+    "att_end_absmax_deg": 0.007373370349587224,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 3.2,
+    "d_min_force_kN": -0.091,
+    "d_max_stroke_reading_mm": -0.142,
+    "d_gap_ready_mm": 1.37,
+    "d_att_end_absmax_deg": 0.006,
+    "minF_ratio_h_over_c": 1.001
+   },
+   "chrono_version_note": "equivalent to final (no final feature acts)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B2 F_s",
+   "chrono_case": "P3b_G1_B_top_Fs8",
+   "harness_id": "base|G1|B|top|Fs8",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 43.30000000058476,
+    "min_force_kN": 62.479552402034045,
+    "max_stroke_true_mm": [
+     402.58267093946205,
+     402.4349273471121,
+     391.8643765791345,
+     391.70392009708763
+    ],
+    "gap_ready_mm": 44.43903842648833,
+    "att_end_absmax_deg": [
+     0.0028870203499863512,
+     0.013683724500939267
+    ],
+    "max_stroke_reading_mm": [
+     407.34237351346536,
+     407.36029650754045,
+     396.09364172141045,
+     395.92528163963203
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_G1_B_top_Fs8/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|G1|B|top|Fs8",
+    "verdict": "pass",
+    "ready_s": 40.100000000009445,
+    "min_force_kN": 62.70190745342168,
+    "max_stroke_reading_mm": 407.5012988749319,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 43.07868520526906,
+    "att_end_absmax_deg": 0.0072617146631976685,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 3.2,
+    "d_min_force_kN": -0.222,
+    "d_max_stroke_reading_mm": -0.141,
+    "d_gap_ready_mm": 1.36,
+    "d_att_end_absmax_deg": 0.006,
+    "minF_ratio_h_over_c": 1.004
+   },
+   "chrono_version_note": "equivalent to final (no final feature acts)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B1 auger",
+   "chrono_case": "P3b_J1_A_bottom_Fs4",
+   "harness_id": "base|J1|A|bottom|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 51.20000000084701,
+    "min_force_kN": 66.15100199094886,
+    "max_stroke_true_mm": [
+     450.2185706667697,
+     449.41851996303154,
+     394.3567918525099,
+     394.31963076909534
+    ],
+    "gap_ready_mm": 42.014468340980656,
+    "att_end_absmax_deg": [
+     0.009951645597680725,
+     0.03540185611253289
+    ],
+    "max_stroke_reading_mm": [
+     455.2292240139997,
+     454.46347082682803,
+     398.1846979389669,
+     397.89844955507397
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_J1_A_bottom_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|J1|A|bottom|Fs4",
+    "verdict": "pass",
+    "ready_s": 47.90000000004669,
+    "min_force_kN": 66.7030288695777,
+    "max_stroke_reading_mm": 450.664170491807,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 36.68307305562893,
+    "att_end_absmax_deg": 0.04287519307066773,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 3.3,
+    "d_min_force_kN": -0.552,
+    "d_max_stroke_reading_mm": 4.565,
+    "d_gap_ready_mm": 5.331,
+    "d_att_end_absmax_deg": -0.007,
+    "minF_ratio_h_over_c": 1.008
+   },
+   "chrono_version_note": "not equivalent (R4 / ZIC / DSb act under the final controller)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B1 auger",
+   "chrono_case": "P3b_J1_A_middle_Fs4",
+   "harness_id": "base|J1|A|middle|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 51.20000000084701,
+    "min_force_kN": 65.69338547823092,
+    "max_stroke_true_mm": [
+     451.04033830676195,
+     450.21077770109355,
+     394.11406099483935,
+     394.08249126856134
+    ],
+    "gap_ready_mm": 41.772762470893234,
+    "att_end_absmax_deg": [
+     0.009861391943704924,
+     0.036722816967678075
+    ],
+    "max_stroke_reading_mm": [
+     456.0594966807694,
+     455.26363991794875,
+     397.87732078353247,
+     397.6467310845306
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_J1_A_middle_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|J1|A|middle|Fs4",
+    "verdict": "pass",
+    "ready_s": 47.70000000004573,
+    "min_force_kN": 66.23085491803033,
+    "max_stroke_reading_mm": 451.13204325222137,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 36.67433451861532,
+    "att_end_absmax_deg": 0.046495557861288735,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 3.5,
+    "d_min_force_kN": -0.537,
+    "d_max_stroke_reading_mm": 4.927,
+    "d_gap_ready_mm": 5.098,
+    "d_att_end_absmax_deg": -0.01,
+    "minF_ratio_h_over_c": 1.008
+   },
+   "chrono_version_note": "not equivalent (R4 / ZIC / DSb act under the final controller)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B2 F_s",
+   "chrono_case": "P3b_J1_A_top_Fs0",
+   "harness_id": "base|J1|A|top|Fs0",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 51.10000000084369,
+    "min_force_kN": 65.40324638990204,
+    "max_stroke_true_mm": [
+     450.7884434159853,
+     451.0685699919417,
+     393.97213453481277,
+     393.9193019940956
+    ],
+    "gap_ready_mm": 41.0725873647495,
+    "att_end_absmax_deg": [
+     0.015411112864267896,
+     0.03691435197293043
+    ],
+    "max_stroke_reading_mm": [
+     455.65918037270484,
+     455.9755359190589,
+     397.563565233107,
+     397.3267930394402
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_J1_A_top_Fs0/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|J1|A|top|Fs0",
+    "verdict": "pass",
+    "ready_s": 48.20000000004812,
+    "min_force_kN": 65.83925056318807,
+    "max_stroke_reading_mm": 453.2528122115984,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 37.39831395546838,
+    "att_end_absmax_deg": 0.06008898137026754,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 2.9,
+    "d_min_force_kN": -0.436,
+    "d_max_stroke_reading_mm": 2.723,
+    "d_gap_ready_mm": 3.674,
+    "d_att_end_absmax_deg": -0.023,
+    "minF_ratio_h_over_c": 1.007
+   },
+   "chrono_version_note": "not equivalent (R4 / ZIC / DSb act under the final controller)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A1 soil / B3 pad",
+   "chrono_case": "P3b_J1_A_top_Fs4",
+   "harness_id": "base|J1|A|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 51.20000000084701,
+    "min_force_kN": 64.69623037141879,
+    "max_stroke_true_mm": [
+     452.2723665723512,
+     450.6696095987022,
+     393.9229647803228,
+     393.890488579794
+    ],
+    "gap_ready_mm": 41.959971787206115,
+    "att_end_absmax_deg": [
+     0.00850378043173003,
+     0.030117088980309188
+    ],
+    "max_stroke_reading_mm": [
+     457.3061948707594,
+     455.7293065693655,
+     397.65866205965875,
+     397.46751445514667
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_J1_A_top_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|J1|A|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 47.80000000004621,
+    "min_force_kN": 65.33180575547013,
+    "max_stroke_reading_mm": 452.06526480943506,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 36.50648698848727,
+    "att_end_absmax_deg": 0.048405706369150925,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 3.4,
+    "d_min_force_kN": -0.636,
+    "d_max_stroke_reading_mm": 5.241,
+    "d_gap_ready_mm": 5.453,
+    "d_att_end_absmax_deg": -0.018,
+    "minF_ratio_h_over_c": 1.01
+   },
+   "chrono_version_note": "not equivalent (R4 / ZIC / DSb act under the final controller)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B2 F_s",
+   "chrono_case": "P3b_J1_A_top_Fs8",
+   "harness_id": "base|J1|A|top|Fs8",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 51.30000000085033,
+    "min_force_kN": 65.15286766712032,
+    "max_stroke_true_mm": [
+     452.3279669205458,
+     450.7401652392779,
+     393.8819411404844,
+     393.84894115812637
+    ],
+    "gap_ready_mm": 42.443612467141904,
+    "att_end_absmax_deg": [
+     0.009930412243295838,
+     0.020214842486668102
+    ],
+    "max_stroke_reading_mm": [
+     457.51945637598664,
+     455.94759581880464,
+     397.77432491548024,
+     397.5843944755923
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_J1_A_top_Fs8/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|J1|A|top|Fs8",
+    "verdict": "pass",
+    "ready_s": 47.90000000004669,
+    "min_force_kN": 65.678745536778,
+    "max_stroke_reading_mm": 451.6814973236137,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 37.1742480683551,
+    "att_end_absmax_deg": 0.033485386336039646,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 3.4,
+    "d_min_force_kN": -0.526,
+    "d_max_stroke_reading_mm": 5.838,
+    "d_gap_ready_mm": 5.269,
+    "d_att_end_absmax_deg": -0.013,
+    "minF_ratio_h_over_c": 1.008
+   },
+   "chrono_version_note": "not equivalent (R4 / ZIC / DSb act under the final controller)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B1 auger",
+   "chrono_case": "P3b_J1_B_bottom_Fs4",
+   "harness_id": "base|J1|B|bottom|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 79.7000000017931,
+    "min_force_kN": 69.02625780157248,
+    "max_stroke_true_mm": [
+     455.07157708695854,
+     442.3407141257309,
+     470.9587257700154,
+     461.00946183222015
+    ],
+    "gap_ready_mm": 41.288331201214,
+    "att_end_absmax_deg": [
+     0.012357522783566279,
+     0.02005283706826305
+    ],
+    "max_stroke_reading_mm": [
+     460.0963658434676,
+     447.20355073537814,
+     475.4120114591336,
+     465.31365793249415
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_J1_B_bottom_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|J1|B|bottom|Fs4",
+    "verdict": "pass",
+    "ready_s": 63.100000000119266,
+    "min_force_kN": 69.62252137547355,
+    "max_stroke_reading_mm": 485.9835014028164,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 51.07914565602593,
+    "att_end_absmax_deg": 0.015714809894068312,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 16.6,
+    "d_min_force_kN": -0.596,
+    "d_max_stroke_reading_mm": -10.571,
+    "d_gap_ready_mm": -9.791,
+    "d_att_end_absmax_deg": 0.004,
+    "minF_ratio_h_over_c": 1.009
+   },
+   "chrono_version_note": "not equivalent (R4 / ZIC / DSb act under the final controller)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B1 auger",
+   "chrono_case": "P3b_J1_B_middle_Fs4",
+   "harness_id": "base|J1|B|middle|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 69.60000000145781,
+    "min_force_kN": 68.62777180196593,
+    "max_stroke_true_mm": [
+     456.3308149234016,
+     442.0210187730827,
+     470.41098489586057,
+     457.4651632193695
+    ],
+    "gap_ready_mm": 39.61958864571314,
+    "att_end_absmax_deg": [
+     0.03806817466455347,
+     0.02285387336483681
+    ],
+    "max_stroke_reading_mm": [
+     461.2866418356717,
+     446.94488700805465,
+     474.8390611192251,
+     461.68709403238284
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_J1_B_middle_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|J1|B|middle|Fs4",
+    "verdict": "pass",
+    "ready_s": 62.20000000011497,
+    "min_force_kN": 69.37012949709452,
+    "max_stroke_reading_mm": 486.2411606200574,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 49.639706835945475,
+    "att_end_absmax_deg": 0.02245782789608496,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 7.4,
+    "d_min_force_kN": -0.742,
+    "d_max_stroke_reading_mm": -11.402,
+    "d_gap_ready_mm": -10.02,
+    "d_att_end_absmax_deg": 0.016,
+    "minF_ratio_h_over_c": 1.011
+   },
+   "chrono_version_note": "not equivalent (R4 / ZIC / DSb act under the final controller)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B2 F_s",
+   "chrono_case": "P3b_J1_B_top_Fs0",
+   "harness_id": "base|J1|B|top|Fs0",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 69.40000000145118,
+    "min_force_kN": 68.06069561165044,
+    "max_stroke_true_mm": [
+     455.9420397022254,
+     441.4700950206955,
+     473.34012319522884,
+     458.7287584346949
+    ],
+    "gap_ready_mm": 37.15803401434803,
+    "att_end_absmax_deg": [
+     0.05576780920228304,
+     0.032350904412443315
+    ],
+    "max_stroke_reading_mm": [
+     460.6917971149068,
+     446.14761007787166,
+     477.56911717111007,
+     462.89627510071887
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_J1_B_top_Fs0/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|J1|B|top|Fs0",
+    "verdict": "pass",
+    "ready_s": 62.700000000117356,
+    "min_force_kN": 69.0641616234236,
+    "max_stroke_reading_mm": 488.34687073773915,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 47.247754172311666,
+    "att_end_absmax_deg": 0.06944612222849736,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 6.7,
+    "d_min_force_kN": -1.003,
+    "d_max_stroke_reading_mm": -10.778,
+    "d_gap_ready_mm": -10.09,
+    "d_att_end_absmax_deg": -0.014,
+    "minF_ratio_h_over_c": 1.015
+   },
+   "chrono_version_note": "not equivalent (R4 / ZIC / DSb act under the final controller)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A1 soil / B3 pad",
+   "chrono_case": "P3b_J1_B_top_Fs4",
+   "harness_id": "base|J1|B|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 69.30000000144786,
+    "min_force_kN": 68.17442350308738,
+    "max_stroke_true_mm": [
+     454.74207042833217,
+     440.2777264146122,
+     472.9624714822525,
+     458.7439921162414
+    ],
+    "gap_ready_mm": 37.36483057238704,
+    "att_end_absmax_deg": [
+     0.042258172645339966,
+     0.018660857973421686
+    ],
+    "max_stroke_reading_mm": [
+     459.6758487667433,
+     445.1208304075741,
+     477.369077429157,
+     463.07851355190894
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_J1_B_top_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|J1|B|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 63.900000000123086,
+    "min_force_kN": 68.8079199858465,
+    "max_stroke_reading_mm": 486.5506353750639,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 47.43144580618503,
+    "att_end_absmax_deg": 0.019487011277054937,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 5.4,
+    "d_min_force_kN": -0.633,
+    "d_max_stroke_reading_mm": -9.182,
+    "d_gap_ready_mm": -10.067,
+    "d_att_end_absmax_deg": 0.023,
+    "minF_ratio_h_over_c": 1.009
+   },
+   "chrono_version_note": "not equivalent (R4 / ZIC / DSb act under the final controller)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B2 F_s",
+   "chrono_case": "P3b_J1_B_top_Fs8",
+   "harness_id": "base|J1|B|top|Fs8",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 71.40000000151757,
+    "min_force_kN": 68.23318575087784,
+    "max_stroke_true_mm": [
+     453.80372710994715,
+     439.39037142899866,
+     472.8080870006309,
+     459.8516896200075
+    ],
+    "gap_ready_mm": 38.08199633653287,
+    "att_end_absmax_deg": [
+     0.03213520898777387,
+     0.005335627594984416
+    ],
+    "max_stroke_reading_mm": [
+     458.8839883284346,
+     444.29138993838313,
+     477.38973197170657,
+     464.2470980101136
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_J1_B_top_Fs8/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|J1|B|top|Fs8",
+    "verdict": "pass",
+    "ready_s": 62.60000000011688,
+    "min_force_kN": 68.81176766527776,
+    "max_stroke_reading_mm": 487.55593913098653,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 47.84619189292531,
+    "att_end_absmax_deg": 0.015933281525106757,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 8.8,
+    "d_min_force_kN": -0.579,
+    "d_max_stroke_reading_mm": -10.166,
+    "d_gap_ready_mm": -9.764,
+    "d_att_end_absmax_deg": 0.016,
+    "minF_ratio_h_over_c": 1.008
+   },
+   "chrono_version_note": "not equivalent (R4 / ZIC / DSb act under the final controller)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A1 soil / B3 pad",
+   "chrono_case": "P3b_J2_A_top_Fs4",
+   "harness_id": "base|J2|A|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 53.200000000913406,
+    "min_force_kN": 65.983199814573,
+    "max_stroke_true_mm": [
+     482.65806324937745,
+     480.5610304535516,
+     400.4075702638856,
+     400.0889435485946
+    ],
+    "gap_ready_mm": 39.09680620866496,
+    "att_end_absmax_deg": [
+     0.00274851080737075,
+     0.0042677716737553086
+    ],
+    "max_stroke_reading_mm": [
+     487.9288757122618,
+     485.8914099083618,
+     404.28629525171937,
+     403.7620765506847
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_J2_A_top_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|J2|A|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 49.90000000005624,
+    "min_force_kN": 66.59069762182781,
+    "max_stroke_reading_mm": 483.12617166860684,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 36.64756371098629,
+    "att_end_absmax_deg": 0.02590162917821819,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 3.3,
+    "d_min_force_kN": -0.607,
+    "d_max_stroke_reading_mm": 4.803,
+    "d_gap_ready_mm": 2.449,
+    "d_att_end_absmax_deg": -0.022,
+    "minF_ratio_h_over_c": 1.009
+   },
+   "chrono_version_note": "not equivalent (R4 / ZIC / DSb act under the final controller)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A1 soil / B3 pad",
+   "chrono_case": "P3b_J2_B_top_Fs4",
+   "harness_id": "base|J2|B|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 74.70000000162712,
+    "min_force_kN": 68.20479482840672,
+    "max_stroke_true_mm": [
+     486.39136695327863,
+     472.42949719480384,
+     500.43659910490413,
+     486.96514916570874
+    ],
+    "gap_ready_mm": 36.49497232305343,
+    "att_end_absmax_deg": [
+     0.047702467378350856,
+     0.019061742880771372
+    ],
+    "max_stroke_reading_mm": [
+     491.66155533487483,
+     477.4242068675888,
+     505.09221987210685,
+     491.3949830825657
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_J2_B_top_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|J2|B|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 64.90000000012786,
+    "min_force_kN": 68.7336445321671,
+    "max_stroke_reading_mm": 516.2779276212083,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 48.080417559452755,
+    "att_end_absmax_deg": 0.03204922032559668,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 9.8,
+    "d_min_force_kN": -0.529,
+    "d_max_stroke_reading_mm": -11.186,
+    "d_gap_ready_mm": -11.585,
+    "d_att_end_absmax_deg": 0.016,
+    "minF_ratio_h_over_c": 1.008
+   },
+   "chrono_version_note": "not equivalent (R4 / ZIC / DSb act under the final controller)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A1 soil / B3 pad",
+   "chrono_case": "P3b_S1_A_top_Fs4",
+   "harness_id": "base|S1|A|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 56.50000000102295,
+    "min_force_kN": 66.88207370855714,
+    "max_stroke_true_mm": [
+     529.8017949096759,
+     527.5402333485958,
+     458.1362976378639,
+     455.13796743350593
+    ],
+    "gap_ready_mm": 51.74568129761204,
+    "att_end_absmax_deg": [
+     0.0053403651588516685,
+     0.04757073358626085
+    ],
+    "max_stroke_reading_mm": [
+     535.2999766178575,
+     533.0100694951182,
+     462.6293499479969,
+     459.4729438379129
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_S1_A_top_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|S1|A|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 52.50000000006865,
+    "min_force_kN": 67.32528842314929,
+    "max_stroke_reading_mm": 538.8372753525942,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 57.163514875974975,
+    "att_end_absmax_deg": 0.026753090384475382,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 4.0,
+    "d_min_force_kN": -0.443,
+    "d_max_stroke_reading_mm": -3.537,
+    "d_gap_ready_mm": -5.418,
+    "d_att_end_absmax_deg": 0.021,
+    "minF_ratio_h_over_c": 1.007
+   },
+   "chrono_version_note": "not equivalent (R4 / ZIC / DSb act under the final controller)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A1 soil / B3 pad",
+   "chrono_case": "P3b_S1_B_top_Fs4",
+   "harness_id": "base|S1|B|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 60.000000001139135,
+    "min_force_kN": 68.28479707650298,
+    "max_stroke_true_mm": [
+     510.81087443947524,
+     504.15591945583094,
+     509.13446930860937,
+     502.80252111985124
+    ],
+    "gap_ready_mm": 35.348812945003246,
+    "att_end_absmax_deg": [
+     0.06074668220581321,
+     0.029378057921376606
+    ],
+    "max_stroke_reading_mm": [
+     516.3254388150739,
+     509.46852127050767,
+     513.9184792445952,
+     507.68123791163214
+    ],
+    "stroke_record": "07_results/S9/batch_P3b_20261026_122444/P3b_S1_B_top_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "P3b 10-26 (batch_P3b_20261026_122444), rev-60 re-judge",
+    "src": "06_analysis/01_chrono/19_S9/s9_P3b_summary.json"
+   },
+   "harness": {
+    "id": "base|S1|B|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 57.40000000009205,
+    "min_force_kN": 68.19125631435001,
+    "max_stroke_reading_mm": 520.7184444822642,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 42.31578492949987,
+    "att_end_absmax_deg": 0.032900471563014386,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 2.6,
+    "d_min_force_kN": 0.094,
+    "d_max_stroke_reading_mm": -4.393,
+    "d_gap_ready_mm": -6.967,
+    "d_att_end_absmax_deg": 0.028,
+    "minF_ratio_h_over_c": 0.999
+   },
+   "chrono_version_note": "not equivalent (R4 / ZIC / DSb act under the final controller)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A2 nose_down G1 B 3.2 deg",
+   "chrono_case": "S9SL_C1_G1_B_top_Fs4_r0_p3p2",
+   "harness_id": "H1|G1|B|top|nose_down",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 85.0,
+    "max_stroke_reading_mm": [
+     642.4808870788222,
+     642.1358488892452,
+     357.22724341720965,
+     356.9029521542326
+    ],
+    "stroke_record": "07_results/S9/batch_S9SL_20261029_144406/S9SL_C1_G1_B_top_Fs4_r0_p3p2/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "05708b2-, P-S8-33 before",
+    "src": "spec 400.1-400.5"
+   },
+   "harness": {
+    "id": "H1|G1|B|top|nose_down",
+    "verdict": "pass",
+    "ready_s": 54.000000000075815,
+    "min_force_kN": 60.44985340602293,
+    "max_stroke_reading_mm": 638.8067037745047,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 137.66860194502485,
+    "att_end_absmax_deg": 0.021348986054334225,
+    "stroke_guard_events": [],
+    "source": "slope"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 31.0,
+    "d_max_stroke_reading_mm": 3.674
+   },
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A2 roll J1 A 4.4 deg (R_c 1)",
+   "chrono_case": "S9SL_C2_J1_A_top_Fs4_r4p4_p0",
+   "harness_id": "H1|J1|A|top|roll_pos",
+   "chrono": {
+    "verdict": "pass",
+    "note": "P3-7 record row only",
+    "max_stroke_reading_mm": [
+     456.3854627047729,
+     684.0303706278472,
+     424.56368505035084,
+     628.2942245426203
+    ],
+    "stroke_record": "07_results/S9/batch_S9SL_20261029_144406/S9SL_C2_J1_A_top_Fs4_r4p4_p0/record/record.npz",
+    "stroke_guard_events": [
+     "WARN_LIFT_STROKE_LIMITED:FR"
+    ],
+    "version": "P-S8-33 before",
+    "src": "spec 400.2"
+   },
+   "harness": {
+    "id": "H1|J1|A|top|roll_pos",
+    "verdict": "pass",
+    "ready_s": 64.00000000012356,
+    "min_force_kN": 60.7718560195528,
+    "max_stroke_reading_mm": 670.8647026023224,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 67.57648648062906,
+    "att_end_absmax_deg": 0.05678521057528958,
+    "stroke_guard_events": [],
+    "source": "slope"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_max_stroke_reading_mm": 13.166
+   },
+   "censored_at_guard": true,
+   "censored_side": "chrono"
+  },
+  {
+   "variable": "A2 roll J1 B 3.3 deg (k 0.75)",
+   "chrono_case": "S9SL_C3_J1_B_top_Fs4_r3p3_p0",
+   "harness_id": "H3|J1|B|top|roll_pos@k0.75",
+   "chrono": {
+    "verdict": "stroke_limited_pass",
+    "gap_ready_mm": 21.9,
+    "max_stroke_reading_mm": [
+     441.46842385154,
+     684.6014789553369,
+     456.0523951532673,
+     680.0937532240772
+    ],
+    "stroke_record": "07_results/S9/batch_S9SL_20261029_144406/S9SL_C3_J1_B_top_Fs4_r3p3_p0/record/record.npz",
+    "stroke_guard_events": [
+     "WARN_LIFT_STROKE_LIMITED:FR"
+    ],
+    "version": "P-S8-33 before",
+    "src": "spec 400.4"
+   },
+   "harness": {
+    "id": "H3|J1|B|top|roll_pos@k0.75",
+    "verdict": "pass",
+    "ready_s": 80.00000000019996,
+    "min_force_kN": 63.44584252197676,
+    "max_stroke_reading_mm": 669.0430626807488,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 33.212444514333804,
+    "att_end_absmax_deg": 0.02651264554219587,
+    "stroke_guard_events": [],
+    "source": "slope"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": false,
+    "d_max_stroke_reading_mm": 15.558,
+    "d_gap_ready_mm": -11.312
+   },
+   "censored_at_guard": true,
+   "censored_side": "chrono"
+  },
+  {
+   "variable": "A2 nose_down J1 A 3.2 deg (R_c 1)",
+   "chrono_case": "S9SL_C4_J1_A_top_Fs4_r0_p3p2",
+   "harness_id": "H1|J1|A|top|nose_down",
+   "chrono": {
+    "verdict": "stroke_limited_fail",
+    "note": "FAULT_LIFT_STROKE_LIMIT",
+    "max_stroke_reading_mm": [
+     680.8016026378876,
+     688.021631449944,
+     360.40633893306205,
+     360.0100970675733
+    ],
+    "stroke_record": "07_results/S9/batch_S9SL_20261029_144406/S9SL_C4_J1_A_top_Fs4_r0_p3p2/record/record.npz",
+    "stroke_guard_events": [
+     "FAULT_LIFT_STROKE_LIMIT:FR",
+     "WARN_LIFT_STROKE_LIMITED:FR"
+    ],
+    "version": "P-S8-33 before",
+    "src": "spec 400.3"
+   },
+   "harness": {
+    "id": "H1|J1|A|top|nose_down",
+    "verdict": "stroke_limited_pass",
+    "ready_s": 59.600000000102554,
+    "min_force_kN": 61.346460341106216,
+    "max_stroke_reading_mm": 683.4687330092089,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 120.38258716848588,
+    "att_end_absmax_deg": 0.01991043313097537,
+    "stroke_guard_events": [
+     "WARN_LIFT_STROKE_LIMITED:FL"
+    ],
+    "source": "slope"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": false,
+    "d_max_stroke_reading_mm": 4.553
+   },
+   "censored_at_guard": true,
+   "censored_side": "both"
+  },
+  {
+   "variable": "A2 nose_down J1 B 2.8 deg (R_c 0.875, REANCHOR)",
+   "chrono_case": "S9SL_X4nd_J1_B_top_Fs4_r0_p2p8",
+   "harness_id": "H4|J1|B|top|nose_down_2p8",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 97.1,
+    "min_force_kN": 66.6,
+    "max_stroke_true_mm": 645.4,
+    "gap_ready_mm": 122.5,
+    "att_end_absmax_deg": 0.0386,
+    "max_stroke_reading_mm": [
+     651.952464137966,
+     649.3165424275476,
+     425.9540033780481,
+     420.6251231276765
+    ],
+    "stroke_record": "07_results/S9/batch_RV1_20261030_111615/S9SL_X4nd_J1_B_top_Fs4_r0_p2p8/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "3434912 (= 05708b2 commands)",
+    "src": "spec 426.9.G.2"
+   },
+   "harness": {
+    "id": "H4|J1|B|top|nose_down_2p8",
+    "verdict": "pass",
+    "ready_s": 79.10000000019566,
+    "min_force_kN": 67.9577128553203,
+    "max_stroke_reading_mm": 652.1899845089066,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 103.55626660463379,
+    "att_end_absmax_deg": 0.04505539976886149,
+    "stroke_guard_events": [],
+    "source": "slope"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 18.0,
+    "d_min_force_kN": -1.358,
+    "d_max_stroke_reading_mm": -0.238,
+    "d_gap_ready_mm": 18.944,
+    "d_att_end_absmax_deg": -0.006,
+    "minF_ratio_h_over_c": 1.02
+   },
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A2 edge J1 B (R_c 0.875)",
+   "chrono_case": "S9SL_X4ed_J1_B_top_Fs4_r1p925_p1p4",
+   "harness_id": "H3|J1|B|top|edge_nd@k0.875",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 62.4,
+    "min_force_kN": 63.7,
+    "max_stroke_true_mm": 653.1,
+    "gap_ready_mm": 69.2,
+    "att_end_absmax_deg": 0.048,
+    "max_stroke_reading_mm": [
+     532.8652450317097,
+     659.6741660189155,
+     419.7240041969024,
+     538.6576991604222
+    ],
+    "stroke_record": "07_results/S9/batch_RV1_20261030_111615/S9SL_X4ed_J1_B_top_Fs4_r1p925_p1p4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "3434912",
+    "src": "spec 426.9.G.4"
+   },
+   "harness": {
+    "id": "H3|J1|B|top|edge_nd@k0.875",
+    "verdict": "pass",
+    "ready_s": 60.400000000106374,
+    "min_force_kN": 64.8210030311058,
+    "max_stroke_reading_mm": 653.8724705616519,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 49.927852717890836,
+    "att_end_absmax_deg": 0.060861872363417696,
+    "stroke_guard_events": [],
+    "source": "slope"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 2.0,
+    "d_min_force_kN": -1.121,
+    "d_max_stroke_reading_mm": 5.802,
+    "d_gap_ready_mm": 19.272,
+    "d_att_end_absmax_deg": -0.013,
+    "minF_ratio_h_over_c": 1.018
+   },
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A2 roll J1 B 3.85 deg (R_c 0.875)",
+   "chrono_case": "S9SL_X4rp_J1_B_top_Fs4_r3p85_p0",
+   "harness_id": "H3|J1|B|top|roll_pos@k0.875",
+   "chrono": {
+    "verdict": "stroke_limited_fail",
+    "min_force_kN": 1.2,
+    "max_stroke_reading_mm": [
+     387.2163811246595,
+     680.567525666488,
+     400.44446108156194,
+     670.9229027176456
+    ],
+    "stroke_record": "07_results/S9/batch_RV1_20261030_111615/S9SL_X4rp_J1_B_top_Fs4_r3p85_p0/record/record.npz",
+    "stroke_guard_events": [
+     "FAULT_LIFT_STROKE_LIMIT:FR",
+     "WARN_LIFT_STROKE_LIMITED:FR"
+    ],
+    "version": "3434912",
+    "src": "spec 426.9.G.3"
+   },
+   "harness": {
+    "id": "H3|J1|B|top|roll_pos@k0.875",
+    "verdict": "stroke_limited_pass",
+    "ready_s": 80.3000000002014,
+    "min_force_kN": 63.202026170989086,
+    "max_stroke_reading_mm": 683.0574569107232,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 9.513648318331958,
+    "att_end_absmax_deg": 0.04748464777944189,
+    "stroke_guard_events": [
+     "WARN_LIFT_STROKE_LIMITED:FR"
+    ],
+    "source": "slope"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": false,
+    "d_min_force_kN": -62.002,
+    "d_max_stroke_reading_mm": -2.49,
+    "minF_ratio_h_over_c": 52.668
+   },
+   "censored_at_guard": true,
+   "censored_side": "both"
+  },
+  {
+   "variable": "B4 weight x1.1 J2 B",
+   "chrono_case": "P3b_J2_B_top_Fs4_m1p1 (RV1 X5)",
+   "harness_id": "H6|J2|B|top|flat|m1.1",
+   "chrono": {
+    "verdict": "fail",
+    "ready_s": 104.1,
+    "min_force_kN": 74.3,
+    "max_stroke_true_mm": 586.9,
+    "gap_ready_mm": 41.5,
+    "att_end_absmax_deg": 0.0295,
+    "note": "P3-6 only",
+    "max_stroke_reading_mm": [
+     569.0548539111834,
+     534.5102938399003,
+     592.7044518753369,
+     568.3090095293048
+    ],
+    "stroke_record": "07_results/S9/batch_RV1_20261030_111615/P3b_J2_B_top_Fs4_m1p1/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "3434912",
+    "src": "spec 426.9.G.1"
+   },
+   "harness": {
+    "id": "H6|J2|B|top|flat|m1.1",
+    "verdict": "fail",
+    "ready_s": 77.40000000018755,
+    "min_force_kN": 75.18186358813225,
+    "max_stroke_reading_mm": 571.5753351022677,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 33.19716607851353,
+    "att_end_absmax_deg": 0.034431358077429274,
+    "stroke_guard_events": [],
+    "source": "h6"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 26.7,
+    "d_min_force_kN": -0.882,
+    "d_max_stroke_reading_mm": 21.129,
+    "d_gap_ready_mm": 8.303,
+    "d_att_end_absmax_deg": -0.005,
+    "minF_ratio_h_over_c": 1.012
+   },
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B4 weight x1.1 J1 B",
+   "chrono_case": "P3b_J1_B_top_Fs4_m1p1 (D424R 1)",
+   "harness_id": "H6|J1|B|top|flat|m1.1",
+   "chrono": {
+    "verdict": "fail",
+    "ready_s": 103.3,
+    "min_force_kN": 74.8,
+    "gap_ready_mm": 31.3,
+    "att_end_absmax_deg": 0.026,
+    "note": "P3-6 only",
+    "version": "3434912 (final - ZIC/R4/SGS)",
+    "src": "paper 4.8.2, spec D424R verdict"
+   },
+   "harness": {
+    "id": "H6|J1|B|top|flat|m1.1",
+    "verdict": "pass",
+    "ready_s": 72.50000000016415,
+    "min_force_kN": 75.37278842640542,
+    "max_stroke_reading_mm": 567.1559791970416,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 43.3368859482129,
+    "att_end_absmax_deg": 0.04177312230979918,
+    "stroke_guard_events": [],
+    "source": "h6"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": false,
+    "d_ready_s": 30.8,
+    "d_min_force_kN": -0.573,
+    "d_gap_ready_mm": -12.037,
+    "d_att_end_absmax_deg": -0.016,
+    "minF_ratio_h_over_c": 1.008
+   },
+   "censored_at_guard": null,
+   "censored_side": null
+  },
+  {
+   "variable": "B4 weight x1.2 J1 B",
+   "chrono_case": "P3b_J1_B_top_Fs4_m1p2 (D424 2)",
+   "harness_id": "H6|J1|B|top|flat|m1.2",
+   "chrono": {
+    "verdict": "fail",
+    "note": "LOC unconfirmed safe stop (both engines)",
+    "max_stroke_true_mm": 528.0,
+    "min_force_kN": 64.3,
+    "max_stroke_reading_mm": [
+     515.7989538919162,
+     516.5976088571645,
+     533.9305357830892,
+     533.562720461295
+    ],
+    "stroke_record": "07_results/S9/batch_D424_20261030_014908/P3b_J1_B_top_Fs4_m1p2/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "R7 before (LOC 0: equivalent)",
+    "src": "paper 4.8.2"
+   },
+   "harness": {
+    "id": "H6|J1|B|top|flat|m1.2",
+    "verdict": "fail",
+    "ready_s": null,
+    "min_force_kN": 39.91795914292081,
+    "max_stroke_reading_mm": 547.2394088673378,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": null,
+    "att_end_absmax_deg": 0.1538839182131261,
+    "stroke_guard_events": [],
+    "source": "h6"
+   },
+   "side": "conservative",
+   "delta": {
+    "verdict_same": true,
+    "d_min_force_kN": 24.382,
+    "d_max_stroke_reading_mm": -13.309,
+    "minF_ratio_h_over_c": 0.621
+   },
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B1 auger middle J2 B",
+   "chrono_case": "P3b_J2_B_middle_Fs4 (D424R 3)",
+   "harness_id": "base|J2|B|middle|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 79.0,
+    "min_force_kN": 68.41,
+    "gap_ready_mm": 37.12,
+    "att_end_absmax_deg": 0.01729,
+    "version": "3434912",
+    "src": "paper table 17"
+   },
+   "harness": {
+    "id": "base|J2|B|middle|Fs4",
+    "verdict": "pass",
+    "ready_s": 66.30000000013455,
+    "min_force_kN": 69.33308838472233,
+    "max_stroke_reading_mm": 514.6607480132667,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 49.17573553775065,
+    "att_end_absmax_deg": 0.027068567936730365,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 12.7,
+    "d_min_force_kN": -0.923,
+    "d_gap_ready_mm": -12.056,
+    "d_att_end_absmax_deg": -0.01,
+    "minF_ratio_h_over_c": 1.013
+   },
+   "censored_at_guard": null,
+   "censored_side": null
+  },
+  {
+   "variable": "B1 auger bottom J2 B",
+   "chrono_case": "P3b_J2_B_bottom_Fs4 (D424R 3)",
+   "harness_id": "base|J2|B|bottom|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 57.8,
+    "min_force_kN": 68.67,
+    "gap_ready_mm": 38.97,
+    "att_end_absmax_deg": 0.01344,
+    "note": "first READY, relevel, last READY 91.2 s",
+    "version": "3434912",
+    "src": "paper table 17"
+   },
+   "harness": {
+    "id": "base|J2|B|bottom|Fs4",
+    "verdict": "pass",
+    "ready_s": 67.60000000014075,
+    "min_force_kN": 69.54602648195467,
+    "max_stroke_reading_mm": 514.3265289825106,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 49.93999628038473,
+    "att_end_absmax_deg": 0.021407190735043758,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "mixed",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": -9.8,
+    "d_min_force_kN": -0.876,
+    "d_gap_ready_mm": -10.97,
+    "d_att_end_absmax_deg": -0.008,
+    "minF_ratio_h_over_c": 1.013
+   },
+   "censored_at_guard": null,
+   "censored_side": null
+  },
+  {
+   "variable": "B1 auger middle J2 A",
+   "chrono_case": "P3b_J2_A_middle_Fs4",
+   "harness_id": "base|J2|A|middle|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 53.1,
+    "min_force_kN": 66.8,
+    "version": "p3b_aug (equiv. final-R7)",
+    "src": "paper table 17"
+   },
+   "harness": {
+    "id": "base|J2|A|middle|Fs4",
+    "verdict": "pass",
+    "ready_s": 50.000000000056716,
+    "min_force_kN": 67.00442928948807,
+    "max_stroke_reading_mm": 482.06617916139055,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 36.07834630292972,
+    "att_end_absmax_deg": 0.02773978511311577,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 3.1,
+    "d_min_force_kN": -0.204,
+    "minF_ratio_h_over_c": 1.003
+   },
+   "censored_at_guard": null,
+   "censored_side": null
+  },
+  {
+   "variable": "B1 auger bottom J2 A",
+   "chrono_case": "P3b_J2_A_bottom_Fs4",
+   "harness_id": "base|J2|A|bottom|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 53.1,
+    "min_force_kN": 66.7,
+    "version": "p3b_aug",
+    "src": "paper table 17"
+   },
+   "harness": {
+    "id": "base|J2|A|bottom|Fs4",
+    "verdict": "pass",
+    "ready_s": 50.30000000005815,
+    "min_force_kN": 67.25298477461224,
+    "max_stroke_reading_mm": 482.7820743170062,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 37.132152933659405,
+    "att_end_absmax_deg": 0.025347539768828403,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 2.8,
+    "d_min_force_kN": -0.553,
+    "minF_ratio_h_over_c": 1.008
+   },
+   "censored_at_guard": null,
+   "censored_side": null
+  },
+  {
+   "variable": "B1 auger middle S1 B",
+   "chrono_case": "P3b_S1_B_middle_Fs4",
+   "harness_id": "base|S1|B|middle|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 60.0,
+    "min_force_kN": 68.7,
+    "version": "p3b_aug",
+    "src": "paper table 17"
+   },
+   "harness": {
+    "id": "base|S1|B|middle|Fs4",
+    "verdict": "pass",
+    "ready_s": 57.30000000009157,
+    "min_force_kN": 68.71702213764166,
+    "max_stroke_reading_mm": 520.9398547858218,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 42.664311553789474,
+    "att_end_absmax_deg": 0.026781777204797044,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 2.7,
+    "d_min_force_kN": -0.017,
+    "minF_ratio_h_over_c": 1.0
+   },
+   "censored_at_guard": null,
+   "censored_side": null
+  },
+  {
+   "variable": "B1 auger bottom S1 B",
+   "chrono_case": "P3b_S1_B_bottom_Fs4",
+   "harness_id": "base|S1|B|bottom|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 59.9,
+    "min_force_kN": 68.8,
+    "version": "p3b_aug",
+    "src": "paper table 17"
+   },
+   "harness": {
+    "id": "base|S1|B|bottom|Fs4",
+    "verdict": "pass",
+    "ready_s": 57.40000000009205,
+    "min_force_kN": 68.66889350343024,
+    "max_stroke_reading_mm": 521.142542220862,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 43.083144317217176,
+    "att_end_absmax_deg": 0.02158747498094788,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 2.5,
+    "d_min_force_kN": 0.131,
+    "minF_ratio_h_over_c": 0.998
+   },
+   "censored_at_guard": null,
+   "censored_side": null
+  },
+  {
+   "variable": "B1 auger middle S1 A",
+   "chrono_case": "P3b_S1_A_middle_Fs4",
+   "harness_id": "base|S1|A|middle|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 56.6,
+    "min_force_kN": 67.3,
+    "version": "p3b_aug",
+    "src": "paper table 17"
+   },
+   "harness": {
+    "id": "base|S1|A|middle|Fs4",
+    "verdict": "pass",
+    "ready_s": 52.400000000068175,
+    "min_force_kN": 67.73881933597424,
+    "max_stroke_reading_mm": 538.1546233286896,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 57.39564793711099,
+    "att_end_absmax_deg": 0.017867023848037736,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 4.2,
+    "d_min_force_kN": -0.439,
+    "minF_ratio_h_over_c": 1.007
+   },
+   "censored_at_guard": null,
+   "censored_side": null
+  },
+  {
+   "variable": "B1 auger bottom S1 A",
+   "chrono_case": "P3b_S1_A_bottom_Fs4",
+   "harness_id": "base|S1|A|bottom|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 56.5,
+    "min_force_kN": 67.3,
+    "version": "p3b_aug",
+    "src": "paper table 17"
+   },
+   "harness": {
+    "id": "base|S1|A|bottom|Fs4",
+    "verdict": "pass",
+    "ready_s": 52.50000000006865,
+    "min_force_kN": 67.72312280150717,
+    "max_stroke_reading_mm": 537.7441654872041,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 57.73705612197752,
+    "att_end_absmax_deg": 0.014645887932643103,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 4.0,
+    "d_min_force_kN": -0.423,
+    "minF_ratio_h_over_c": 1.006
+   },
+   "censored_at_guard": null,
+   "censored_side": null
+  },
+  {
+   "variable": "A3 soft patch G1@RR (control)",
+   "chrono_case": "G6_G1_B_top_Fs4_spG1RR",
+   "harness_id": "ref|G1|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 43.3,
+    "min_force_kN": 62.8,
+    "att_end_absmax_deg": 0.014,
+    "version": "0.3 kN",
+    "src": "paper table 15"
+   },
+   "harness": {
+    "id": "ref|G1|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 40.100000000009445,
+    "min_force_kN": 62.88570959713286,
+    "max_stroke_reading_mm": 407.36880062249986,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 42.78307714644917,
+    "att_end_absmax_deg": 0.007373370349587224,
+    "stroke_guard_events": [],
+    "source": "g6"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 3.2,
+    "d_min_force_kN": -0.086,
+    "d_att_end_absmax_deg": 0.007,
+    "minF_ratio_h_over_c": 1.001
+   },
+   "censored_at_guard": null,
+   "censored_side": null
+  },
+  {
+   "variable": "A3 soft patch J1@RR",
+   "chrono_case": "G6_G1_B_top_Fs4_spJ1RR",
+   "harness_id": "g6|G1+J1@RR|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 74.5,
+    "min_force_kN": 49.86,
+    "att_end_absmax_deg": 0.015,
+    "version": "0.6 kN",
+    "src": "paper table 15"
+   },
+   "harness": {
+    "id": "g6|G1+J1@RR|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 62.300000000115446,
+    "min_force_kN": 50.29527707265595,
+    "max_stroke_reading_mm": 420.6852803624707,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 46.05263442226007,
+    "att_end_absmax_deg": 0.017785179245578115,
+    "stroke_guard_events": [],
+    "source": "g6"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 12.2,
+    "d_min_force_kN": -0.435,
+    "d_att_end_absmax_deg": -0.003,
+    "minF_ratio_h_over_c": 1.009
+   },
+   "censored_at_guard": null,
+   "censored_side": null
+  },
+  {
+   "variable": "A3 soft patch J1@FL",
+   "chrono_case": "G6_G1_B_top_Fs4_spJ1FL",
+   "harness_id": "g6|G1+J1@FL|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 66.8,
+    "min_force_kN": 27.8,
+    "att_end_absmax_deg": 0.014,
+    "version": "0.6 kN",
+    "src": "paper table 15"
+   },
+   "harness": {
+    "id": "g6|G1+J1@FL|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 58.90000000009921,
+    "min_force_kN": 41.47476302559066,
+    "max_stroke_reading_mm": 438.8232668606436,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 47.79084598812854,
+    "att_end_absmax_deg": 0.010747413582685307,
+    "stroke_guard_events": [],
+    "source": "g6"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 7.9,
+    "d_min_force_kN": -13.675,
+    "d_att_end_absmax_deg": 0.003,
+    "minF_ratio_h_over_c": 1.492
+   },
+   "censored_at_guard": null,
+   "censored_side": null
+  },
+  {
+   "variable": "A3 soft patch J2@RR",
+   "chrono_case": "G6_G1_B_top_Fs4_spJ2RR",
+   "harness_id": "g6|G1+J2@RR|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 96.1,
+    "min_force_kN": 40.4,
+    "att_end_absmax_deg": 0.008,
+    "version": "0.6 kN",
+    "src": "paper table 15"
+   },
+   "harness": {
+    "id": "g6|G1+J2@RR|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 90.70000000025105,
+    "min_force_kN": 45.54518471426265,
+    "max_stroke_reading_mm": 454.7763973995982,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 52.54105989072798,
+    "att_end_absmax_deg": 0.005752639970827035,
+    "stroke_guard_events": [],
+    "source": "g6"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 5.4,
+    "d_min_force_kN": -5.145,
+    "d_att_end_absmax_deg": 0.002,
+    "minF_ratio_h_over_c": 1.127
+   },
+   "censored_at_guard": null,
+   "censored_side": null
+  },
+  {
+   "variable": "A3 soft patch J2@FL",
+   "chrono_case": "G6_G1_B_top_Fs4_spJ2FL",
+   "harness_id": "g6|G1+J2@FL|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 85.6,
+    "min_force_kN": 30.0,
+    "att_end_absmax_deg": 0.015,
+    "version": "0.6 kN",
+    "src": "paper table 15"
+   },
+   "harness": {
+    "id": "g6|G1+J2@FL|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 79.50000000019757,
+    "min_force_kN": 29.355600428038166,
+    "max_stroke_reading_mm": 483.22853285896355,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 62.896138046169796,
+    "att_end_absmax_deg": 0.013290345586120718,
+    "stroke_guard_events": [],
+    "source": "g6"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 6.1,
+    "d_min_force_kN": 0.644,
+    "d_att_end_absmax_deg": 0.002,
+    "minF_ratio_h_over_c": 0.979
+   },
+   "censored_at_guard": null,
+   "censored_side": null
+  },
+  {
+   "variable": "A3 soft patch S1@FL",
+   "chrono_case": "G6_G1_B_top_Fs4_spS1FL",
+   "harness_id": "g6|G1+S1@FL|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 66.6,
+    "min_force_kN": 17.9,
+    "att_end_absmax_deg": 0.013,
+    "note": "G6-7 out-of-scope FLAG",
+    "version": "final code (409.1)",
+    "src": "paper table 15"
+   },
+   "harness": {
+    "id": "g6|G1+S1@FL|top|Fs4",
+    "verdict": "fail",
+    "ready_s": 63.20000000011974,
+    "min_force_kN": 21.431095481916238,
+    "max_stroke_reading_mm": 551.3171373019234,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 80.1502459379648,
+    "att_end_absmax_deg": 0.012291654942650544,
+    "stroke_guard_events": [],
+    "source": "g6"
+   },
+   "side": "mixed",
+   "delta": {
+    "verdict_same": false,
+    "d_ready_s": 3.4,
+    "d_min_force_kN": -3.531,
+    "d_att_end_absmax_deg": 0.001,
+    "minF_ratio_h_over_c": 1.197
+   },
+   "censored_at_guard": null,
+   "censored_side": null
+  },
+  {
+   "variable": "B2 F_s",
+   "chrono_case": "P3b_J1_B_top_Fs0 @ batch_RV2_20261030_154549",
+   "harness_id": "base|J1|B|top|Fs0",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 70.70000000149433,
+    "min_force_kN": 67.81057073624133,
+    "max_stroke_true_mm": [
+     458.6546542434717,
+     440.8881017478479,
+     475.5921850299874,
+     459.74681045771854
+    ],
+    "gap_ready_mm": 36.739502401601065,
+    "att_end_absmax_deg": [
+     0.04417844539265107,
+     0.026133020357109297
+    ],
+    "max_stroke_reading_mm": [
+     463.38464838422385,
+     445.4702229896028,
+     479.83865088528034,
+     463.9774734139999
+    ],
+    "stroke_record": "07_results/S9/batch_RV2_20261030_154549/P3b_J1_B_top_Fs0/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "05708b2 (same as harness)",
+    "src": "07_results/S9/batch_RV2_20261030_154549/P3b_J1_B_top_Fs0/result_rejudge_rev60.json"
+   },
+   "harness": {
+    "id": "base|J1|B|top|Fs0",
+    "verdict": "pass",
+    "ready_s": 62.700000000117356,
+    "min_force_kN": 69.0641616234236,
+    "max_stroke_reading_mm": 488.34687073773915,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 47.247754172311666,
+    "att_end_absmax_deg": 0.06944612222849736,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 8.0,
+    "d_min_force_kN": -1.254,
+    "d_max_stroke_reading_mm": -8.508,
+    "d_gap_ready_mm": -10.508,
+    "d_att_end_absmax_deg": -0.025,
+    "minF_ratio_h_over_c": 1.018
+   },
+   "chrono_version_note": "same version as the harness (RV2, spec 432.4.4)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A1 soil / B3 pad",
+   "chrono_case": "P3b_J1_B_top_Fs4 @ batch_RV2_20261030_154549",
+   "harness_id": "base|J1|B|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 73.70000000159392,
+    "min_force_kN": 67.69115836512238,
+    "max_stroke_true_mm": [
+     457.06946557849767,
+     440.223328864749,
+     474.85480822653926,
+     458.82588326862776
+    ],
+    "gap_ready_mm": 36.24273593187155,
+    "att_end_absmax_deg": [
+     0.03544941440400512,
+     0.02341146095129106
+    ],
+    "max_stroke_reading_mm": [
+     461.94669590949246,
+     444.956284500602,
+     479.2746846467503,
+     463.01918600229305
+    ],
+    "stroke_record": "07_results/S9/batch_RV2_20261030_154549/P3b_J1_B_top_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "05708b2 (same as harness)",
+    "src": "07_results/S9/batch_RV2_20261030_154549/P3b_J1_B_top_Fs4/result_rejudge_rev60.json"
+   },
+   "harness": {
+    "id": "base|J1|B|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 63.900000000123086,
+    "min_force_kN": 68.8079199858465,
+    "max_stroke_reading_mm": 486.5506353750639,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 47.43144580618503,
+    "att_end_absmax_deg": 0.019487011277054937,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 9.8,
+    "d_min_force_kN": -1.117,
+    "d_max_stroke_reading_mm": -7.276,
+    "d_gap_ready_mm": -11.189,
+    "d_att_end_absmax_deg": 0.016,
+    "minF_ratio_h_over_c": 1.016
+   },
+   "chrono_version_note": "same version as the harness (RV2, spec 432.4.4)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B2 F_s",
+   "chrono_case": "P3b_J1_B_top_Fs8 @ batch_RV2_20261030_154549",
+   "harness_id": "base|J1|B|top|Fs8",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 75.600000001657,
+    "min_force_kN": 68.11256245831696,
+    "max_stroke_true_mm": [
+     455.72931379477086,
+     439.06230137047305,
+     474.5263686060692,
+     461.01780742595366
+    ],
+    "gap_ready_mm": 36.80917074603451,
+    "att_end_absmax_deg": [
+     0.025650896027365935,
+     0.005237177860003366
+    ],
+    "max_stroke_reading_mm": [
+     460.7714689384552,
+     443.93799382684205,
+     479.06721508178015,
+     465.45068604982924
+    ],
+    "stroke_record": "07_results/S9/batch_RV2_20261030_154549/P3b_J1_B_top_Fs8/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "05708b2 (same as harness)",
+    "src": "07_results/S9/batch_RV2_20261030_154549/P3b_J1_B_top_Fs8/result_rejudge_rev60.json"
+   },
+   "harness": {
+    "id": "base|J1|B|top|Fs8",
+    "verdict": "pass",
+    "ready_s": 62.60000000011688,
+    "min_force_kN": 68.81176766527776,
+    "max_stroke_reading_mm": 487.55593913098653,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 47.84619189292531,
+    "att_end_absmax_deg": 0.015933281525106757,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 13.0,
+    "d_min_force_kN": -0.699,
+    "d_max_stroke_reading_mm": -8.489,
+    "d_gap_ready_mm": -11.037,
+    "d_att_end_absmax_deg": 0.01,
+    "minF_ratio_h_over_c": 1.01
+   },
+   "chrono_version_note": "same version as the harness (RV2, spec 432.4.4)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A1 soil / B3 pad",
+   "chrono_case": "P3b_J2_B_top_Fs4 @ batch_RV2_20261030_155059",
+   "harness_id": "base|J2|B|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 76.40000000168355,
+    "min_force_kN": 67.70151370536672,
+    "max_stroke_true_mm": [
+     490.3457575881642,
+     471.1310996658325,
+     500.70312074247016,
+     489.57487741367305
+    ],
+    "gap_ready_mm": 35.429950760098805,
+    "att_end_absmax_deg": [
+     0.04647923784368656,
+     0.014809242418944765
+    ],
+    "max_stroke_reading_mm": [
+     495.51278274762916,
+     476.29003209305654,
+     505.3592969183256,
+     494.01158502514437
+    ],
+    "stroke_record": "07_results/S9/batch_RV2_20261030_155059/P3b_J2_B_top_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "05708b2 (same as harness)",
+    "src": "07_results/S9/batch_RV2_20261030_155059/P3b_J2_B_top_Fs4/result_rejudge_rev60.json"
+   },
+   "harness": {
+    "id": "base|J2|B|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 64.90000000012786,
+    "min_force_kN": 68.7336445321671,
+    "max_stroke_reading_mm": 516.2779276212083,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 48.080417559452755,
+    "att_end_absmax_deg": 0.03204922032559668,
+    "stroke_guard_events": [],
+    "source": "p3b"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 11.5,
+    "d_min_force_kN": -1.032,
+    "d_max_stroke_reading_mm": -10.919,
+    "d_gap_ready_mm": -12.65,
+    "d_att_end_absmax_deg": 0.014,
+    "minF_ratio_h_over_c": 1.015
+   },
+   "chrono_version_note": "same version as the harness (RV2, spec 432.4.4)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A2 roll S1 B 3.3 deg (k 0.75) F_s 0 [RV3 B-C1]",
+   "chrono_case": "S9SL_RV3B_S1_B_top_Fs0_r3p3_p0 @ batch_RV3_20261030_134001",
+   "harness_id": "H3|S1|B|top|roll_pos@k0.75|Fs0",
+   "chrono": {
+    "verdict": "fail",
+    "ready_s": null,
+    "min_force_kN": 68.08535679465611,
+    "max_stroke_true_mm": [
+     474.87684924909115,
+     676.3152567678205,
+     466.5536019371042,
+     636.2119160972755
+    ],
+    "gap_ready_mm": null,
+    "att_end_absmax_deg": null,
+    "max_stroke_reading_mm": [
+     480.15531893086023,
+     682.921162054897,
+     470.76387609880686,
+     641.7700792067376
+    ],
+    "stroke_record": "07_results/S9/batch_RV3_20261030_134001/S9SL_RV3B_S1_B_top_Fs0_r3p3_p0/record/record.npz",
+    "stroke_guard_events": [
+     "FAULT_LIFT_STROKE_LIMIT:FR",
+     "WARN_LIFT_STROKE_LIMITED:FR"
+    ],
+    "note": "426.9.F.1: pass (b) safe stop FAULT_LIFT_STROKE_LIMIT:FR, no READY; the P3 rows fail in both engines (same end path)",
+    "version": "05708b2 (same as harness)",
+    "src": "07_results/S9/batch_RV3_20261030_134001/S9SL_RV3B_S1_B_top_Fs0_r3p3_p0/result_rejudge_rev60.json",
+    "spec": "spec 426.9.F.1"
+   },
+   "harness": {
+    "id": "H3|S1|B|top|roll_pos@k0.75|Fs0",
+    "verdict": "fail",
+    "ready_s": null,
+    "min_force_kN": 69.65604359843387,
+    "max_stroke_reading_mm": 683.6627461083297,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": null,
+    "att_end_absmax_deg": 0.7049866048889387,
+    "stroke_guard_events": [
+     "FAULT_LIFT_STROKE_LIMIT:FR",
+     "WARN_LIFT_STROKE_LIMITED:FR"
+    ],
+    "source": "B_Fs0"
+   },
+   "side": "representative",
+   "delta": {
+    "verdict_same": true,
+    "d_min_force_kN": -1.571,
+    "d_max_stroke_reading_mm": -0.742,
+    "minF_ratio_h_over_c": 1.023
+   },
+   "chrono_version_note": "same version as the harness (RV3, spec 426.9.F.1)",
+   "censored_at_guard": true,
+   "censored_side": "both"
+  },
+  {
+   "variable": "A3 soft patch S1@FL pad A [RV3 C-C1]",
+   "chrono_case": "G6_G1_A_top_Fs4_spS1FL @ batch_RV3_20261030_134021",
+   "harness_id": "g6|G1+S1@FL|top|Fs4|PA",
+   "chrono": {
+    "verdict": "fail",
+    "ready_s": 67.60000000139142,
+    "min_force_kN": 11.8,
+    "max_stroke_true_mm": [
+     557.13,
+     447.88,
+     434.19,
+     432.13
+    ],
+    "gap_ready_mm": 87.95,
+    "att_end_absmax_deg": 0.015249052302276333,
+    "max_stroke_reading_mm": [
+     562.9669554181717,
+     453.2519287150152,
+     439.24916413118075,
+     436.02269873835695
+    ],
+    "stroke_record": "07_results/S9/batch_RV3_20261030_134021/G6_G1_A_top_Fs4_spS1FL/record/record.npz",
+    "stroke_guard_events": [],
+    "note": "426.9.F.1: pass with FLAGs (G6-2 late LOC, G6-7 out of scope); gates G6-2 and G6-7 false, G6-7 fails in the harness too",
+    "version": "05708b2 (same as harness)",
+    "src": "06_analysis/02_control/s9/rev85/rv3c_g6_judge.json",
+    "spec": "spec 426.9.F.1"
+   },
+   "harness": {
+    "id": "g6|G1+S1@FL|top|Fs4|PA",
+    "verdict": "fail",
+    "ready_s": 64.10000000012404,
+    "min_force_kN": 18.33083893065558,
+    "max_stroke_reading_mm": 541.4697717283823,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 69.62593990989043,
+    "att_end_absmax_deg": 0.009558891213309856,
+    "stroke_guard_events": [],
+    "source": "C"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 3.5,
+    "d_min_force_kN": -6.531,
+    "d_max_stroke_reading_mm": 21.497,
+    "d_gap_ready_mm": 18.324,
+    "d_att_end_absmax_deg": 0.006,
+    "minF_ratio_h_over_c": 1.553
+   },
+   "chrono_version_note": "same version as the harness (RV3, spec 426.9.F.1)",
+   "censored_at_guard": false,
+   "censored_side": null
+  }
+ ],
+ "final_summary": {
+  "n_pairs": 9,
+  "n_with_harness": 9,
+  "verdict_same": 7,
+  "by_variable_side": {
+   "A1 soil": {
+    "optimistic": 2
+   },
+   "B1 auger": {
+    "optimistic": 1
+   },
+   "B4 weight": {
+    "optimistic": 2
+   },
+   "A2 roll": {
+    "optimistic": 3
+   },
+   "A3 dip": {
+    "optimistic": 1
+   }
+  },
+  "d_ready_s_chrono_minus_harness": {
+   "n": 7,
+   "min": 6.2,
+   "max": 21.3,
+   "mean": 12.91
+  },
+  "d_max_stroke_reading_mm_chrono_minus_harness": {
+   "n": 9,
+   "min": -8.796,
+   "max": 22.735,
+   "mean": 5.03
+  },
+  "d_max_stroke_reading_mm_uncensored": {
+   "n": 7,
+   "min": -8.796,
+   "max": 18.845,
+   "mean": 3.43
+  },
+  "censored_stroke_reading": [
+   {
+    "chrono_case": "S9SL_X6rb_J1_B_top_Fs4_rm2p86_p0 @ batch_FINAL-REP_20261030_223359",
+    "censored_side": "chrono",
+    "d_max_stroke_reading_mm": 22.735
+   },
+   {
+    "chrono_case": "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0 @ batch_FINAL-REP_20261030_223359",
+    "censored_side": "both",
+    "d_max_stroke_reading_mm": -1.499
+   }
+  ],
+  "superseded": [
+   {
+    "chrono_case": "P3b_J2_B_top_Fs4_m1p1 @ batch_FINAL-REP_20261030_223359",
+    "superseded_by": "P3b_J2_B_top_Fs4_m1p1_t180 @ batch_FINAL-REP-X_20261031_020716"
+   }
+  ]
+ },
+ "final_pairs": [
+  {
+   "variable": "A1 soil / B3 pad: J1 B top [FINAL-REP B0]",
+   "chrono_case": "P3b_J1_B_top_Fs4 @ batch_FINAL-REP_20261030_223359",
+   "harness_id": "base|J1|B|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 74.20000000161052,
+    "min_force_kN": 68.09668622555529,
+    "max_stroke_true_mm": [
+     486.52264068321847,
+     468.4769836171784,
+     502.6816627070132,
+     491.46318801148516
+    ],
+    "gap_ready_mm": 66.2805289784556,
+    "att_end_absmax_deg": [
+     0.04659945985444369,
+     0.015524372096729697
+    ],
+    "max_stroke_reading_mm": [
+     491.68655125502397,
+     473.4123979041332,
+     507.2964882192923,
+     495.9278494404726
+    ],
+    "stroke_record": "07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J1_B_top_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "final controller (SGS any_loc + R4c30 + L1gs + DSb75), same as final harness",
+    "src": "07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J1_B_top_Fs4/result_rejudge_rev60.json",
+    "spec": "spec 432.5.2"
+   },
+   "harness": {
+    "id": "base|J1|B|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 64.10000000012404,
+    "min_force_kN": 68.82729010274217,
+    "max_stroke_reading_mm": 516.092942247227,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 77.46943020253084,
+    "att_end_absmax_deg": 0.01748388916265577,
+    "stroke_guard_events": [],
+    "source": "finB2_p0"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 10.1,
+    "d_min_force_kN": -0.731,
+    "d_max_stroke_reading_mm": -8.796,
+    "d_gap_ready_mm": -11.189,
+    "d_att_end_absmax_deg": 0.029,
+    "minF_ratio_h_over_c": 1.011
+   },
+   "chrono_version_note": "same version as the harness (final controller, spec 432.4.5)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A1 soil / B3 pad: J2 B top [FINAL-REP]",
+   "chrono_case": "P3b_J2_B_top_Fs4 @ batch_FINAL-REP_20261030_223359",
+   "harness_id": "base|J2|B|top|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 81.50000000185285,
+    "min_force_kN": 67.76945805227074,
+    "max_stroke_true_mm": [
+     523.9161103719506,
+     508.5947911386466,
+     538.5099243478645,
+     525.358536039603
+    ],
+    "gap_ready_mm": 72.27874899873888,
+    "att_end_absmax_deg": [
+     0.05612053716302312,
+     0.018427199311250263
+    ],
+    "flags": [
+     "P3-2_late_loc_revoked"
+    ],
+    "max_stroke_reading_mm": [
+     529.360614593096,
+     513.9827068497154,
+     543.4628361952049,
+     530.2776079289736
+    ],
+    "stroke_record": "07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J2_B_top_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "verdict_auto": "pass",
+    "note": "432.5.2: pass with the P3-2 FLAG late_loc_revoked (FLAG rule 419.8 / 424.10.2); the automatic P3b verdict also counts the P3-2 FLAG as pass (chrono flags)",
+    "version": "final controller (SGS any_loc + R4c30 + L1gs + DSb75), same as final harness",
+    "src": "07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J2_B_top_Fs4/result_rejudge_rev60.json",
+    "spec": "spec 432.5.2"
+   },
+   "harness": {
+    "id": "base|J2|B|top|Fs4",
+    "verdict": "pass",
+    "ready_s": 65.70000000013168,
+    "min_force_kN": 68.78798488756613,
+    "max_stroke_reading_mm": 545.4914341740757,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 78.11161626204895,
+    "att_end_absmax_deg": 0.033436686498533756,
+    "stroke_guard_events": [],
+    "source": "finB2_p0"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 15.8,
+    "d_min_force_kN": -1.019,
+    "d_max_stroke_reading_mm": -2.029,
+    "d_gap_ready_mm": -5.833,
+    "d_att_end_absmax_deg": 0.023,
+    "minF_ratio_h_over_c": 1.015
+   },
+   "chrono_version_note": "same version as the harness (final controller, spec 432.4.5)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B1 auger middle J2 B [FINAL-REP]",
+   "chrono_case": "P3b_J2_B_middle_Fs4 @ batch_FINAL-REP_20261030_223359",
+   "harness_id": "base|J2|B|middle|Fs4",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 81.7000000018595,
+    "min_force_kN": 68.36650836342619,
+    "max_stroke_true_mm": [
+     520.9507859600258,
+     508.11691956736706,
+     536.2009228276739,
+     523.9244952147894
+    ],
+    "gap_ready_mm": 72.46216915279268,
+    "att_end_absmax_deg": [
+     0.016982868943577836,
+     0.019489639781244614
+    ],
+    "flags": [
+     "P3-2_late_loc_revoked"
+    ],
+    "max_stroke_reading_mm": [
+     526.5262095849802,
+     513.476589181387,
+     541.1572430415438,
+     528.8391515016194
+    ],
+    "stroke_record": "07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J2_B_middle_Fs4/record/record.npz",
+    "stroke_guard_events": [],
+    "verdict_auto": "pass",
+    "note": "432.5.2: pass with the P3-2 FLAG late_loc_revoked (FLAG rule 419.8 / 424.10.2); the automatic P3b verdict also counts the P3-2 FLAG as pass (chrono flags)",
+    "version": "final controller (SGS any_loc + R4c30 + L1gs + DSb75), same as final harness",
+    "src": "07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J2_B_middle_Fs4/result_rejudge_rev60.json",
+    "spec": "spec 432.5.2"
+   },
+   "harness": {
+    "id": "base|J2|B|middle|Fs4",
+    "verdict": "pass",
+    "ready_s": 66.20000000013407,
+    "min_force_kN": 69.33821463395543,
+    "max_stroke_reading_mm": 544.1472968391543,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 79.21144163176953,
+    "att_end_absmax_deg": 0.026945712302745593,
+    "stroke_guard_events": [],
+    "source": "finB2_p0"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 15.5,
+    "d_min_force_kN": -0.972,
+    "d_max_stroke_reading_mm": -2.99,
+    "d_gap_ready_mm": -6.749,
+    "d_att_end_absmax_deg": -0.007,
+    "minF_ratio_h_over_c": 1.014
+   },
+   "chrono_version_note": "same version as the harness (final controller, spec 432.4.5)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B4 weight x1.1 J1 B [FINAL-REP]",
+   "chrono_case": "P3b_J1_B_top_Fs4_m1p1 @ batch_FINAL-REP_20261030_223359",
+   "harness_id": "H6|J1|B|top|flat|m1.1",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 94.20000000227445,
+    "min_force_kN": 74.6027114613435,
+    "max_stroke_true_mm": [
+     566.8169884867475,
+     519.6420330824994,
+     599.5873599999372,
+     578.7616024067299
+    ],
+    "gap_ready_mm": 60.928530665846466,
+    "att_end_absmax_deg": [
+     0.020313189241146147,
+     0.030386738293886044
+    ],
+    "max_stroke_reading_mm": [
+     573.4221166950764,
+     525.5832318069265,
+     605.3648299870003,
+     584.5677180036341
+    ],
+    "stroke_record": "07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J1_B_top_Fs4_m1p1/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "final controller (SGS any_loc + R4c30 + L1gs + DSb75), same as final harness",
+    "src": "07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J1_B_top_Fs4_m1p1/result_rejudge_rev60.json",
+    "spec": "spec 432.5.1"
+   },
+   "harness": {
+    "id": "H6|J1|B|top|flat|m1.1",
+    "verdict": "pass",
+    "ready_s": 72.90000000016606,
+    "min_force_kN": 75.13221977948115,
+    "max_stroke_reading_mm": 592.5621939082995,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 67.21319508576896,
+    "att_end_absmax_deg": 0.04513476168579243,
+    "stroke_guard_events": [],
+    "source": "finB2_slope"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 21.3,
+    "d_min_force_kN": -0.53,
+    "d_max_stroke_reading_mm": 12.803,
+    "d_gap_ready_mm": -6.285,
+    "d_att_end_absmax_deg": -0.015,
+    "minF_ratio_h_over_c": 1.007
+   },
+   "chrono_version_note": "same version as the harness (final controller, spec 432.4.5)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B4 weight x1.1 J2 B [FINAL-REP]",
+   "chrono_case": "P3b_J2_B_top_Fs4_m1p1 @ batch_FINAL-REP_20261030_223359",
+   "harness_id": "H6|J2|B|top|flat|m1.1",
+   "chrono": {
+    "verdict": "fail",
+    "ready_s": 98.90000000243047,
+    "min_force_kN": 73.90072237091555,
+    "max_stroke_true_mm": [
+     595.7573839312834,
+     561.2897489269361,
+     622.8547782603159,
+     596.9502505373036
+    ],
+    "gap_ready_mm": 72.29951553810832,
+    "att_end_absmax_deg": null,
+    "flags": [
+     "P3-2_late_loc_revoked"
+    ],
+    "max_stroke_reading_mm": [
+     602.5802734013035,
+     567.8062350258183,
+     628.9761875043245,
+     602.9255303760098
+    ],
+    "stroke_record": "07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J2_B_top_Fs4_m1p1/record/record.npz",
+    "stroke_guard_events": [],
+    "note": "superseded by FINAL-REP-X (432.5.4) for P3-4",
+    "version": "final controller (SGS any_loc + R4c30 + L1gs + DSb75), same as final harness",
+    "src": "07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J2_B_top_Fs4_m1p1/result_rejudge_rev60.json",
+    "spec": "spec 432.5.1"
+   },
+   "harness": {
+    "id": "H6|J2|B|top|flat|m1.1",
+    "verdict": "pass",
+    "ready_s": 85.10000000022431,
+    "min_force_kN": 74.8492996829476,
+    "max_stroke_reading_mm": 617.3988712125151,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 85.03106867741413,
+    "att_end_absmax_deg": 0.045452148611324156,
+    "stroke_guard_events": [],
+    "source": "finB2_slope"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": false,
+    "d_ready_s": 13.8,
+    "d_min_force_kN": -0.949,
+    "d_max_stroke_reading_mm": 11.577,
+    "d_gap_ready_mm": -12.732,
+    "minF_ratio_h_over_c": 1.013
+   },
+   "chrono_version_note": "same version as the harness (final controller, spec 432.4.5)",
+   "superseded_by": "P3b_J2_B_top_Fs4_m1p1_t180 @ batch_FINAL-REP-X_20261031_020716",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "B4 weight x1.1 J2 B 180 s [FINAL-REP-X]",
+   "chrono_case": "P3b_J2_B_top_Fs4_m1p1_t180 @ batch_FINAL-REP-X_20261031_020716",
+   "harness_id": "H6|J2|B|top|flat|m1.1",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 98.90000000243047,
+    "min_force_kN": 73.90072237091555,
+    "max_stroke_true_mm": [
+     595.7573839312834,
+     561.2897489269361,
+     622.8547782603159,
+     596.9502505373036
+    ],
+    "gap_ready_mm": 72.29951553810832,
+    "att_end_absmax_deg": [
+     0.032009810630389934,
+     0.023743293062397614
+    ],
+    "flags": [
+     "P3-2_late_loc_revoked"
+    ],
+    "max_stroke_reading_mm": [
+     602.5802734013035,
+     567.8062350258183,
+     628.9761875043245,
+     602.9255303760098
+    ],
+    "stroke_record": "07_results/S9/batch_FINAL-REP-X_20261031_020716/P3b_J2_B_top_Fs4_m1p1_t180/record/record.npz",
+    "stroke_guard_events": [],
+    "verdict_auto": "pass",
+    "note": "432.5.4: pass with the P3-2 FLAG late_loc_revoked; P3-4 0.032 deg (window 54.7 s); first READY 98.9 s, one relevel, last READY 118.9 s; commands bit-identical to the 120 s run up to 128 s",
+    "version": "final controller (SGS any_loc + R4c30 + L1gs + DSb75), same as final harness",
+    "src": "07_results/S9/batch_FINAL-REP-X_20261031_020716/P3b_J2_B_top_Fs4_m1p1_t180/result_rejudge_rev60.json",
+    "spec": "spec 432.5.4"
+   },
+   "harness": {
+    "id": "H6|J2|B|top|flat|m1.1",
+    "verdict": "pass",
+    "ready_s": 85.10000000022431,
+    "min_force_kN": 74.8492996829476,
+    "max_stroke_reading_mm": 617.3988712125151,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 85.03106867741413,
+    "att_end_absmax_deg": 0.045452148611324156,
+    "stroke_guard_events": [],
+    "source": "finB2_slope"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 13.8,
+    "d_min_force_kN": -0.949,
+    "d_max_stroke_reading_mm": 11.577,
+    "d_gap_ready_mm": -12.732,
+    "d_att_end_absmax_deg": -0.013,
+    "minF_ratio_h_over_c": 1.013
+   },
+   "chrono_version_note": "same version as the harness (final controller, spec 432.4.5)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A2 roll J1 B 2.86 deg (k 0.65) [X6-rb]",
+   "chrono_case": "S9SL_X6rb_J1_B_top_Fs4_rm2p86_p0 @ batch_FINAL-REP_20261030_223359",
+   "harness_id": "H9|J1|B|top|roll_neg@k0.65",
+   "chrono": {
+    "verdict": "stroke_limited_stop",
+    "ready_s": null,
+    "min_force_kN": 62.92136352515174,
+    "max_stroke_true_mm": [
+     675.8116674894769,
+     429.0550068871872,
+     666.266261993443,
+     438.92871596259477
+    ],
+    "gap_ready_mm": null,
+    "att_end_absmax_deg": null,
+    "max_stroke_reading_mm": [
+     683.0184976773952,
+     433.9409189065749,
+     672.5183859859776,
+     443.07993981994093
+    ],
+    "stroke_record": "07_results/S9/batch_FINAL-REP_20261030_223359/S9SL_X6rb_J1_B_top_Fs4_rm2p86_p0/record/record.npz",
+    "stroke_guard_events": [
+     "FAULT_LIFT_STROKE_LIMIT:soil:FL",
+     "WARN_LIFT_STROKE_LIMITED:FL"
+    ],
+    "verdict_auto": "fail",
+    "note": "430.3.2: SGS safe stop FAULT_LIFT_STROKE_LIMIT:soil:FL at the first guard cycle (out of the boundary); the Chrono reading is cut at the guard",
+    "version": "final controller (SGS any_loc + R4c30 + L1gs + DSb75), same as final harness",
+    "src": "07_results/S9/batch_FINAL-REP_20261030_223359/S9SL_X6rb_J1_B_top_Fs4_rm2p86_p0/result_rejudge_rev60.json",
+    "spec": "spec 430.3.2"
+   },
+   "harness": {
+    "id": "H9|J1|B|top|roll_neg@k0.65",
+    "verdict": "pass",
+    "ready_s": 76.40000000018277,
+    "min_force_kN": 63.392414129537634,
+    "max_stroke_reading_mm": 660.2834365240664,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 42.90482612355329,
+    "att_end_absmax_deg": 0.029869310795391776,
+    "stroke_guard_events": [],
+    "source": "finB2_h9"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": false,
+    "d_min_force_kN": -0.471,
+    "d_max_stroke_reading_mm": 22.735,
+    "minF_ratio_h_over_c": 1.007
+   },
+   "chrono_version_note": "same version as the harness (final controller, spec 432.4.5)",
+   "censored_at_guard": true,
+   "censored_side": "chrono"
+  },
+  {
+   "variable": "A2 roll J1 B 2.64 deg (k 0.6) [X6-rb2]",
+   "chrono_case": "S9SL_X6rb_J1_B_top_Fs4_rm2p64_p0 @ batch_RV6_20261031_025137",
+   "harness_id": "H9|J1|B|top|roll_neg@k0.6",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 82.60000000188937,
+    "min_force_kN": 63.04524782162756,
+    "max_stroke_true_mm": [
+     672.867659919662,
+     451.15319257054546,
+     664.9072833808921,
+     460.4710294800756
+    ],
+    "gap_ready_mm": 47.594770792134035,
+    "att_end_absmax_deg": [
+     0.0233035579031442,
+     0.002911938868404011
+    ],
+    "max_stroke_reading_mm": [
+     679.8686300801752,
+     456.02684620975344,
+     670.9355754275838,
+     464.7083016809483
+    ],
+    "stroke_record": "07_results/S9/batch_RV6_20261031_025137/S9SL_X6rb_J1_B_top_Fs4_rm2p64_p0/record/record.npz",
+    "stroke_guard_events": [],
+    "verdict_auto": "pass",
+    "note": "430.3.3: pass, no guard / SGS; reading max FL 679.87 mm (guard margin 2.93 mm), harness 661.02 (+18.85 uncensored); gap -14.5 mm vs harness",
+    "version": "final controller (SGS any_loc + R4c30 + L1gs + DSb75), same as final harness",
+    "src": "07_results/S9/batch_RV6_20261031_025137/S9SL_X6rb_J1_B_top_Fs4_rm2p64_p0/result_rejudge_rev60.json",
+    "spec": "spec 430.3.3"
+   },
+   "harness": {
+    "id": "H9|J1|B|top|roll_neg@k0.6",
+    "verdict": "pass",
+    "ready_s": 76.40000000018277,
+    "min_force_kN": 64.0945363432903,
+    "max_stroke_reading_mm": 661.0234656097454,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 62.10566161265026,
+    "att_end_absmax_deg": 0.027758124957634633,
+    "stroke_guard_events": [],
+    "source": "finB2_h9"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 6.2,
+    "d_min_force_kN": -1.049,
+    "d_max_stroke_reading_mm": 18.845,
+    "d_gap_ready_mm": -14.511,
+    "d_att_end_absmax_deg": -0.004,
+    "minF_ratio_h_over_c": 1.017
+   },
+   "chrono_version_note": "same version as the harness (final controller, spec 432.4.5)",
+   "censored_at_guard": false,
+   "censored_side": null
+  },
+  {
+   "variable": "A2 roll J1 B 3.85 deg (k 0.875) [X6-rp-sa]",
+   "chrono_case": "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0 @ batch_FINAL-REP_20261030_223359",
+   "harness_id": "H3|J1|B|top|roll_pos@k0.875",
+   "chrono": {
+    "verdict": "fail",
+    "ready_s": null,
+    "min_force_kN": 61.433628236292506,
+    "max_stroke_true_mm": [
+     383.4561817051466,
+     673.3522766938091,
+     397.03524116821086,
+     664.8954908277653
+    ],
+    "gap_ready_mm": null,
+    "att_end_absmax_deg": null,
+    "max_stroke_reading_mm": [
+     387.5383800173274,
+     680.567525666488,
+     400.70493747843096,
+     670.9999375046209
+    ],
+    "stroke_record": "07_results/S9/batch_FINAL-REP_20261030_223359/S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0/record/record.npz",
+    "stroke_guard_events": [
+     "FAULT_LIFT_STROKE_LIMIT:soil:FR",
+     "WARN_LIFT_STROKE_LIMITED:FR"
+    ],
+    "note": "430.4.1: SGS safe stop accepted (a, b, c); crawler 7.79 kN > 0.01 W at the stop -> fail + stop_with_crawler_loaded; both runs stop at the guard",
+    "version": "final controller (SGS any_loc + R4c30 + L1gs + DSb75), same as final harness",
+    "src": "07_results/S9/batch_FINAL-REP_20261030_223359/S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0/result_rejudge_rev60.json",
+    "spec": "spec 430.4.1"
+   },
+   "harness": {
+    "id": "H3|J1|B|top|roll_pos@k0.875",
+    "verdict": "stroke_limited_stop",
+    "ready_s": null,
+    "min_force_kN": 63.202026170989086,
+    "max_stroke_reading_mm": 682.0663503830292,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": null,
+    "att_end_absmax_deg": 0.2437838391517623,
+    "stroke_guard_events": [
+     "FAULT_LIFT_STROKE_LIMIT:soil:FR",
+     "WARN_LIFT_STROKE_LIMITED:FR"
+    ],
+    "source": "finB2_slope"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": false,
+    "d_min_force_kN": -1.768,
+    "d_max_stroke_reading_mm": -1.499,
+    "minF_ratio_h_over_c": 1.029
+   },
+   "chrono_version_note": "same version as the harness (final controller, spec 432.4.5)",
+   "censored_at_guard": true,
+   "censored_side": "both"
+  },
+  {
+   "variable": "A3 dip J2 B RR 150 mm [FINAL6 d150]",
+   "chrono_case": "P3b_J2_B_top_Fs4_sgRRd150 @ batch_FINAL6_20261031_000833",
+   "harness_id": "H8|J2|B|top|flat|RR:d150",
+   "chrono": {
+    "verdict": "pass",
+    "ready_s": 84.40000000194912,
+    "min_force_kN": 67.84543660688085,
+    "max_stroke_true_mm": [
+     520.9725265827915,
+     503.29007101866097,
+     533.0007913598836,
+     669.1227464119324
+    ],
+    "gap_ready_mm": 67.79610118205825,
+    "att_end_absmax_deg": [
+     0.061216270975166506,
+     0.01341509780662202
+    ],
+    "max_stroke_reading_mm": [
+     526.5520261599927,
+     508.5208334704189,
+     537.8429923061807,
+     675.1333737104566
+    ],
+    "stroke_record": "07_results/S9/batch_FINAL6_20261031_000833/P3b_J2_B_top_Fs4_sgRRd150/record/record.npz",
+    "stroke_guard_events": [],
+    "version": "final controller (SGS any_loc + R4c30 + L1gs + DSb75), same as final harness",
+    "src": "07_results/S9/batch_FINAL6_20261031_000833/P3b_J2_B_top_Fs4_sgRRd150/result_rejudge_rev60.json",
+    "spec": "spec 426.9.D.2"
+   },
+   "harness": {
+    "id": "H8|J2|B|top|flat|RR:d150",
+    "verdict": "pass",
+    "ready_s": 76.7000000001842,
+    "min_force_kN": 68.80166179986682,
+    "max_stroke_reading_mm": 680.5136615707694,
+    "max_stroke_true_mm": null,
+    "gap_ready_mm": 67.99403006148574,
+    "att_end_absmax_deg": 0.03943282310399758,
+    "stroke_guard_events": [],
+    "source": "fin_x426_D"
+   },
+   "side": "optimistic",
+   "delta": {
+    "verdict_same": true,
+    "d_ready_s": 7.7,
+    "d_min_force_kN": -0.956,
+    "d_max_stroke_reading_mm": -5.38,
+    "d_gap_ready_mm": -0.198,
+    "d_att_end_absmax_deg": 0.022,
+    "minF_ratio_h_over_c": 1.014
+   },
+   "chrono_version_note": "same version as the harness (final controller, spec 432.4.5)",
+   "censored_at_guard": false,
+   "censored_side": null
+  }
+ ],
+ "combined_counts": {
+  "n_pairs": 63,
+  "n_with_harness": 63,
+  "verdict_same": 56
+ },
+ "static_pairs": [
+  {
+   "variable": "A4 rigid LEVEL events",
+   "n": 27,
+   "metric": "event-leg lift time harness/Chrono 1.02-1.08",
+   "side": "conservative",
+   "src": "spec 350.3"
+  },
+  {
+   "variable": "TOUCH rule change (rigid)",
+   "metric": "harness predicts larger command change",
+   "side": "conservative",
+   "src": "spec 358.7-358.8"
+  },
+  {
+   "variable": "A3 non-planar rigid L1-R",
+   "n": 4,
+   "metric": "stroke / gap diff <= 0.2 mm (F_s 0)",
+   "side": "representative",
+   "src": "decision_log C-S8-76"
+  }
+ ]
+}
