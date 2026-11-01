@@ -1,0 +1,1018 @@
+[
+ {
+  "case": "JA_middle_flat_Fs4",
+  "variable": "B1",
+  "run_dir": "C:/workspace/outrigger_control/07_results/S8/final_JA_middle_flat_Fs4_20261031_165544",
+  "verify_new": "06_analysis\\02_control\\s9\\rev85\\evidence\\journal_auger\\verify_final_JA_middle_flat_Fs4_20261031_165544.json",
+  "n_rows": 43,
+  "failed_judged": [],
+  "failed_function": [],
+  "flags": [],
+  "final_rules": {
+   "soil.enable": true,
+   "loc_revoke.enable": true,
+   "diff_sink.enable": true,
+   "soil_stop": true,
+   "soil_stop_scope": "any_loc",
+   "flat_soil_margin_m": 0.03,
+   "floor_twist_ledger": "absent",
+   "attitude_integral_clamp": "absent",
+   "final_SGS_R4": true
+  },
+  "items": [
+   {
+    "item": "run",
+    "kind": "function",
+    "passed": true,
+    "value": "ready",
+    "limit": "ready",
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "2 attitude +-0.2 (+mount)",
+    "kind": "function",
+    "passed": true,
+    "value": 0.0206,
+    "limit": 0.2,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "3 F_min (1 ms)",
+    "kind": "function",
+    "passed": true,
+    "value": 54.764,
+    "limit": 9.4146,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "4 saturation steps",
+    "kind": "function",
+    "passed": true,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "4 max moving pressure",
+    "kind": "function",
+    "passed": true,
+    "value": 98.3329,
+    "limit": 180.0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "5a rocking amplitude",
+    "kind": "function",
+    "passed": true,
+    "value": 0.0051,
+    "limit": 0.06,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "7a probe attitude change",
+    "kind": "function",
+    "passed": true,
+    "value": 0.0234,
+    "limit": 0.1,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "7b verdict = truth",
+    "kind": "function",
+    "passed": true,
+    "value": true,
+    "limit": true,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "7c load estimate error",
+    "kind": "record",
+    "passed": null,
+    "value": -4.224,
+    "limit": "<= 0 (max(5 kN,10 %))",
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "72.1 (6) no false pressure diagnosis",
+    "kind": "function",
+    "passed": true,
+    "value": {
+     "WARN_LOAD_SUM_MISMATCH": 0,
+     "WARN_PRESSURE_DRIFT": 0
+    },
+    "limit": "0 warnings",
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "5.24.2 unexpected warnings",
+    "kind": "anomaly",
+    "passed": true,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "5.24.2 law-C saturation steps",
+    "kind": "report",
+    "passed": null,
+    "value": 0,
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "146 consistency vs reduced (142 C)",
+    "kind": "consistency",
+    "passed": null,
+    "value": null,
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN",
+    "kind": "judged",
+    "passed": true,
+    "value": 54.764,
+    "limit": 14.4146,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F1 reading law max |F_hat - (F - f + E_s)| <= 6 sigma_F + 0.1 kN (R45-1, U-S8-18)",
+    "kind": "judged",
+    "passed": true,
+    "value": 0,
+    "limit": [
+     0.1,
+     0.1,
+     0.1,
+     0.1
+    ],
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F1 rev. 44 rule: reading error <= F_s,leg + sensor share (R43-1 / U-S8-15; record, replaced by R45-1)",
+    "kind": "record",
+    "passed": null,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F1 raw reading |F_hat - F| <= F_s,leg + constant share (record)",
+    "kind": "record",
+    "passed": null,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F1 calibrated reading |F_hat_cal - F| <= F_s,leg + R43-1 share (record; zero-calibration offset c_i per leg [k",
+    "kind": "record",
+    "passed": null,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F1 near F_min (-5 .. +10 kN): |F_hat_cal - F + f| (sensor share, record)",
+    "kind": "record",
+    "passed": null,
+    "value": 0.1268,
+    "limit": [
+     0.75,
+     0.75,
+     0.75,
+     0.75
+    ],
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "7c split E - T2: estimator bias [kN] (U-S8-16, record)",
+    "kind": "record",
+    "passed": null,
+    "value": 3.2044,
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "7c split T2 - T0: probe round-trip hysteresis [kN] (U-S8-16, record)",
+    "kind": "record",
+    "passed": null,
+    "value": -2.8587,
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F1 airborne residual |F_hat_cal - F + f| (F < 0.5 kN, no contact; record, flag 1.7 kN, R45-3 / U-S8-19)",
+    "kind": "record",
+    "passed": null,
+    "value": 0.1347,
+    "limit": 1.7,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "R45-4 low-load probe: F2 margin / true margin / T2 - T0 / E - T2 over 2 s after the second hold (lower bound <",
+    "kind": "record",
+    "passed": null,
+    "value": 0,
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off)",
+    "kind": "judged",
+    "passed": true,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F3 F_band >= F_s after the first probe",
+    "kind": "judged",
+    "passed": true,
+    "value": 8.0698,
+    "limit": 4.0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F4 CHECK air seal friction F_s,air (record)",
+    "kind": "record",
+    "passed": null,
+    "value": 3786.4024,
+    "limit": [
+     4000.0,
+     4000.0,
+     3333.2,
+     3333.2
+    ],
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "S8-A2 airborne F + m g: 1 ms min / 20 ms mean range per leg [kN] (record; not judged on the 1 ms minimum)",
+    "kind": "record",
+    "passed": null,
+    "value": {
+     "min_1ms": [
+      -0.8249,
+      -0.7002,
+      -0.6091,
+      -0.6286
+     ],
+     "mean20_min": [
+      -0.0198,
+      -0.0195,
+      -0.0239,
+      -0.0184
+     ],
+     "mean20_max": [
+      0.0237,
+      0.0232,
+      0.0175,
+      0.0171
+     ]
+    },
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "S8-A3 seal band-edge chatter (stick <-> slip round trip < 1 ms) per leg / S8-A1 head-floor hits (record)",
+    "kind": "record",
+    "passed": null,
+    "value": [
+     27607,
+     30052,
+     34961,
+     38376
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F8 no false re-level in event-free READY",
+    "kind": "judged",
+    "passed": true,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F9 twist at READY entry n^T F / n^T F_hat / n^T eps [kN] (record)",
+    "kind": "record",
+    "passed": null,
+    "value": [
+     -1.9397,
+     1.4982,
+     3.4379
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F10 retract commands on low-load legs (periods, record)",
+    "kind": "record",
+    "passed": null,
+    "value": 0,
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 J_P M1 missed / M1' late / M3 median / M2 / M4 max (record)",
+    "kind": "record",
+    "passed": null,
+    "value": [
+     0,
+     0,
+     null,
+     0,
+     null
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record)",
+    "kind": "record",
+    "passed": null,
+    "value": [
+     0,
+     0,
+     null,
+     0,
+     null
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 J_P raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max",
+    "kind": "record",
+    "passed": null,
+    "value": [
+     0,
+     0,
+     null,
+     0,
+     null
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 J_C raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max",
+    "kind": "record",
+    "passed": null,
+    "value": [
+     0,
+     0,
+     null,
+     0,
+     null
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 J_P F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max",
+    "kind": "sensitivity",
+    "passed": null,
+    "value": [
+     0,
+     0,
+     null,
+     0,
+     null
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 J_C F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max",
+    "kind": "sensitivity",
+    "passed": null,
+    "value": [
+     0,
+     0,
+     null,
+     0,
+     null
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 J_P all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",
+    "kind": "sensitivity",
+    "passed": null,
+    "value": [
+     0,
+     0,
+     null,
+     0,
+     null
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 J_C all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",
+    "kind": "sensitivity",
+    "passed": null,
+    "value": [
+     0,
+     0,
+     null,
+     0,
+     null
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 M5 closed loop: min true / under F_min [s] / lifted [s]",
+    "kind": "record",
+    "passed": null,
+    "value": [
+     54.764,
+     0.0,
+     0.0
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "R44-213.6 TOUCH fix: TOUCH length <= F_s 0 twin + 1 s",
+    "kind": "record",
+    "passed": null,
+    "value": null,
+    "limit": 1.0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "R44-213.6 free-air touch_seen = 0 (TOUCH slow / zero command without pad contact)",
+    "kind": "judged",
+    "passed": true,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "R44-213.6 1.4 side effect: no leg_reapproach_start in PROBE / event-free READY",
+    "kind": "judged",
+    "passed": true,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   }
+  ]
+ },
+ {
+  "case": "JA_bottom_flat_Fs4",
+  "variable": "B1",
+  "run_dir": "C:/workspace/outrigger_control/07_results/S8/final_JA_bottom_flat_Fs4_20261031_170315",
+  "verify_new": "06_analysis\\02_control\\s9\\rev85\\evidence\\journal_auger\\verify_final_JA_bottom_flat_Fs4_20261031_170315.json",
+  "n_rows": 43,
+  "failed_judged": [],
+  "failed_function": [],
+  "flags": [],
+  "final_rules": {
+   "soil.enable": true,
+   "loc_revoke.enable": true,
+   "diff_sink.enable": true,
+   "soil_stop": true,
+   "soil_stop_scope": "any_loc",
+   "flat_soil_margin_m": 0.03,
+   "floor_twist_ledger": "absent",
+   "attitude_integral_clamp": "absent",
+   "final_SGS_R4": true
+  },
+  "items": [
+   {
+    "item": "run",
+    "kind": "function",
+    "passed": true,
+    "value": "ready",
+    "limit": "ready",
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "2 attitude +-0.2 (+mount)",
+    "kind": "function",
+    "passed": true,
+    "value": 0.0206,
+    "limit": 0.2,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "3 F_min (1 ms)",
+    "kind": "function",
+    "passed": true,
+    "value": 54.7857,
+    "limit": 9.4146,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "4 saturation steps",
+    "kind": "function",
+    "passed": true,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "4 max moving pressure",
+    "kind": "function",
+    "passed": true,
+    "value": 98.3318,
+    "limit": 180.0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "5a rocking amplitude",
+    "kind": "function",
+    "passed": true,
+    "value": 0.0055,
+    "limit": 0.06,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "7a probe attitude change",
+    "kind": "function",
+    "passed": true,
+    "value": 0.0232,
+    "limit": 0.1,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "7b verdict = truth",
+    "kind": "function",
+    "passed": true,
+    "value": true,
+    "limit": true,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "7c load estimate error",
+    "kind": "record",
+    "passed": null,
+    "value": -4.339,
+    "limit": "<= 0 (max(5 kN,10 %))",
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "72.1 (6) no false pressure diagnosis",
+    "kind": "function",
+    "passed": true,
+    "value": {
+     "WARN_LOAD_SUM_MISMATCH": 0,
+     "WARN_PRESSURE_DRIFT": 0
+    },
+    "limit": "0 warnings",
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "5.24.2 unexpected warnings",
+    "kind": "anomaly",
+    "passed": true,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "5.24.2 law-C saturation steps",
+    "kind": "report",
+    "passed": null,
+    "value": 0,
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "146 consistency vs reduced (142 C)",
+    "kind": "consistency",
+    "passed": null,
+    "value": null,
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN",
+    "kind": "judged",
+    "passed": true,
+    "value": 54.7857,
+    "limit": 14.4146,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F1 reading law max |F_hat - (F - f + E_s)| <= 6 sigma_F + 0.1 kN (R45-1, U-S8-18)",
+    "kind": "judged",
+    "passed": true,
+    "value": 0,
+    "limit": [
+     0.1,
+     0.1,
+     0.1,
+     0.1
+    ],
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F1 rev. 44 rule: reading error <= F_s,leg + sensor share (R43-1 / U-S8-15; record, replaced by R45-1)",
+    "kind": "record",
+    "passed": null,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F1 raw reading |F_hat - F| <= F_s,leg + constant share (record)",
+    "kind": "record",
+    "passed": null,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F1 calibrated reading |F_hat_cal - F| <= F_s,leg + R43-1 share (record; zero-calibration offset c_i per leg [k",
+    "kind": "record",
+    "passed": null,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F1 near F_min (-5 .. +10 kN): |F_hat_cal - F + f| (sensor share, record)",
+    "kind": "record",
+    "passed": null,
+    "value": 0.0028,
+    "limit": [
+     0.75,
+     0.75,
+     0.75,
+     0.75
+    ],
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "7c split E - T2: estimator bias [kN] (U-S8-16, record)",
+    "kind": "record",
+    "passed": null,
+    "value": 2.8787,
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "7c split T2 - T0: probe round-trip hysteresis [kN] (U-S8-16, record)",
+    "kind": "record",
+    "passed": null,
+    "value": -2.7464,
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F1 airborne residual |F_hat_cal - F + f| (F < 0.5 kN, no contact; record, flag 1.7 kN, R45-3 / U-S8-19)",
+    "kind": "record",
+    "passed": null,
+    "value": 0.0046,
+    "limit": 1.7,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "R45-4 low-load probe: F2 margin / true margin / T2 - T0 / E - T2 over 2 s after the second hold (lower bound <",
+    "kind": "record",
+    "passed": null,
+    "value": 0,
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off)",
+    "kind": "judged",
+    "passed": true,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F3 F_band >= F_s after the first probe",
+    "kind": "judged",
+    "passed": true,
+    "value": 7.8803,
+    "limit": 4.0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F4 CHECK air seal friction F_s,air (record)",
+    "kind": "record",
+    "passed": null,
+    "value": 3951.5237,
+    "limit": [
+     4000.0,
+     4000.0,
+     3333.2,
+     3333.2
+    ],
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "S8-A2 airborne F + m g: 1 ms min / 20 ms mean range per leg [kN] (record; not judged on the 1 ms minimum)",
+    "kind": "record",
+    "passed": null,
+    "value": {
+     "min_1ms": [
+      -0.524,
+      -0.5043,
+      -0.2667,
+      -0.2682
+     ],
+     "mean20_min": [
+      -0.0139,
+      -0.0145,
+      -0.0099,
+      -0.0099
+     ],
+     "mean20_max": [
+      0.0229,
+      0.0227,
+      0.0158,
+      0.0156
+     ]
+    },
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "S8-A3 seal band-edge chatter (stick <-> slip round trip < 1 ms) per leg / S8-A1 head-floor hits (record)",
+    "kind": "record",
+    "passed": null,
+    "value": [
+     30948,
+     35955,
+     36679,
+     38859
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F8 no false re-level in event-free READY",
+    "kind": "judged",
+    "passed": true,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F9 twist at READY entry n^T F / n^T F_hat / n^T eps [kN] (record)",
+    "kind": "record",
+    "passed": null,
+    "value": [
+     -1.7938,
+     1.6224,
+     3.4162
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "F10 retract commands on low-load legs (periods, record)",
+    "kind": "record",
+    "passed": null,
+    "value": 0,
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 J_P M1 missed / M1' late / M3 median / M2 / M4 max (record)",
+    "kind": "record",
+    "passed": null,
+    "value": [
+     0,
+     0,
+     null,
+     0,
+     null
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record)",
+    "kind": "record",
+    "passed": null,
+    "value": [
+     0,
+     0,
+     null,
+     0,
+     null
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 J_P raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max",
+    "kind": "record",
+    "passed": null,
+    "value": [
+     0,
+     0,
+     null,
+     0,
+     null
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 J_C raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max",
+    "kind": "record",
+    "passed": null,
+    "value": [
+     0,
+     0,
+     null,
+     0,
+     null
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 J_P F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max",
+    "kind": "sensitivity",
+    "passed": null,
+    "value": [
+     0,
+     0,
+     null,
+     0,
+     null
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 J_C F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max",
+    "kind": "sensitivity",
+    "passed": null,
+    "value": [
+     0,
+     0,
+     null,
+     0,
+     null
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 J_P all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",
+    "kind": "sensitivity",
+    "passed": null,
+    "value": [
+     0,
+     0,
+     null,
+     0,
+     null
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 J_C all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",
+    "kind": "sensitivity",
+    "passed": null,
+    "value": [
+     0,
+     0,
+     null,
+     0,
+     null
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "item 9 M5 closed loop: min true / under F_min [s] / lifted [s]",
+    "kind": "record",
+    "passed": null,
+    "value": [
+     54.7857,
+     0.0,
+     0.0
+    ],
+    "limit": null,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "R44-213.6 TOUCH fix: TOUCH length <= F_s 0 twin + 1 s",
+    "kind": "record",
+    "passed": null,
+    "value": null,
+    "limit": 1.0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "R44-213.6 free-air touch_seen = 0 (TOUCH slow / zero command without pad contact)",
+    "kind": "judged",
+    "passed": true,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   },
+   {
+    "item": "R44-213.6 1.4 side effect: no leg_reapproach_start in PROBE / event-free READY",
+    "kind": "judged",
+    "passed": true,
+    "value": 0,
+    "limit": 0,
+    "old_passed": null,
+    "old_value": null
+   }
+  ]
+ }
+]

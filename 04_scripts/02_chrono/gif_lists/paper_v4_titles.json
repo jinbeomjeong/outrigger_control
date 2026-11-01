@@ -1,0 +1,41 @@
+{
+ "about": "Case GIF titles for the paper v4 Chrono set (27 representative + 7 final-equivalent earlier records). Times are loop-relative (spec convention); render_case_gifs.py shows the screen offset. Values: s6_control_spec.md 432.5.1, 432.5.2, 432.5.3, 432.5.4, 430.3.2, 430.4.1, 426.9.D.2, 432.6.2.1; paper v4 04_results.md table 16 and 4.8 (cad-expert 2026-10-31).",
+ "cases": {
+  "batch_FINAL-REP_20261030_223359/P3b_J1_B_top_Fs4": {"title": "J1 중점토·패드 B·오거 상단·평지 — 통과(READY 74.2 s, 끝 자세 0.047°)", "time_basis": "loop", "source": "432.5.2"},
+  "batch_FINAL-REP_20261030_223359/P3b_J1_B_top_Fs4_m1p1": {"title": "J1 중점토·패드 B·운용 중량 ×1.1 — 통과(READY 94.2 s, 끝 자세 0.030°)", "time_basis": "loop", "source": "432.5.1"},
+  "batch_FINAL-REP_20261030_223359/P3b_J2_B_middle_Fs4": {"title": "J2 저소성 점토·패드 B·오거 중단·평지 — 통과(READY 81.7 s, 끝 자세 0.019°)", "time_basis": "loop", "source": "432.5.2"},
+  "batch_FINAL-REP_20261030_223359/P3b_J2_B_top_Fs4": {"title": "J2 저소성 점토·패드 B·오거 상단·평지 — 통과(READY 81.5 s, 끝 자세 0.056°)", "time_basis": "loop", "source": "432.5.2"},
+  "batch_FINAL-REP_20261030_223359/S9SL_X6rb_J1_B_top_Fs4_rm2p86_p0": {"title": "J1 패드 B·바닥 roll −2.86°(왼쪽) — 경계 밖, 행정 가드 안전 정지(42.4 s, FL)", "time_basis": "loop", "source": "430.3.2"},
+  "batch_FINAL-REP_20261030_223359/S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0": {"title": "J1 패드 B·바닥 roll +3.85°(오른쪽) — 행정 가드 안전 정지(40.6 s, FR, 크롤러 하중 유지)", "time_basis": "loop", "source": "430.4.1"},
+  "batch_FINAL-REP-X_20261031_020716/P3b_J2_B_top_Fs4_m1p1_t180": {"title": "J2 저소성 점토·패드 B·운용 중량 ×1.1 — 통과(첫 READY 98.9 s, 재레벨 1회, 끝 자세 0.032°)", "time_basis": "loop", "source": "432.5.4"},
+  "batch_FINAL6_20261031_000833/P3b_J2_B_top_Fs4_sgRRd150": {"title": "J2 저소성 점토·패드 B·RR 패임 150 mm — 통과(READY 84.4 s, 끝 자세 0.061°)", "time_basis": "loop", "source": "426.9.D.2"},
+  "batch_RV6_20261031_025137/S9SL_X6rb_J1_B_top_Fs4_rm2p64_p0": {"title": "J1 패드 B·바닥 roll −2.64°(왼쪽) — 통과(READY 82.6 s, 끝 자세 0.023°, 가드 여유 2.9 mm)", "time_basis": "loop", "source": "430.3.3, 432.5.3"},
+  "batch_RV6_20261031_070613/S9SL_X6rb_J1_B_top_Fs4_r2p64_p0": {"title": "J1 패드 B·바닥 roll +2.64°(오른쪽) — 크롤러 틈 실패(24.84 mm < 25 mm, READY 79.6 s)", "time_basis": "loop", "source": "430.3.5, 432.5.3"},
+  "batch_RV6_20261031_091226/S9SL_X6rb_J1_B_top_Fs4_r2p2_p0": {"title": "J1 패드 B·바닥 roll +2.2°(오른쪽) — 통과(READY 80.3 s, 끝 자세 0.0165°)", "time_basis": "loop", "source": "430.3.7, 432.5.3"},
+
+  "final_K24_top_flat_Fs4_20261030_223426/K24_top_flat_Fs4": {"title": "강체 평지(L2b) — 통과(READY 42.7 s, 끝 자세 0.021°)", "time_basis": "loop", "source": "432.6.2.1 A1"},
+  "final_K24_top_fdown3.5_Fs4_20261030_224211/K24_top_fdown3.5_Fs4": {"title": "강체 앞내림 3.5° — 통과(READY 77.5 s, 끝 자세 0.035°, 고착점 재설정)", "time_basis": "loop", "source": "432.6.2.1 A2"},
+  "final_K24_top_fup3.5_Fs4_20261030_225345/K24_top_fup3.5_Fs4": {"title": "강체 앞들림 3.5° — 통과(READY 59.0 s, 끝 자세 0.036°)", "time_basis": "loop", "source": "432.6.2.1 A2"},
+  "final_K24_top_roll5.5_Fs4_20261030_230357/K24_top_roll5.5_Fs4": {"title": "강체 좌우 경사 5.5° — 통과(READY 59.2 s, 끝 자세 0.036°)", "time_basis": "loop", "source": "432.6.2.1 A2"},
+  "final_K24_top_rpB_Fs4_20261030_231426/K24_top_rpB_Fs4": {"title": "강체 대각 검증점·F_s 4 kN — 통과(READY 57.8 s, 이탈 뒤 최소 41.13 kN)", "time_basis": "loop", "source": "432.6.2.1 A2, B2"},
+  "final_K0V_top_rpB_Fs0_20261031_010357/K0V_top_rpB_Fs0": {"title": "강체 대각 검증점·F_s 0·오거 상단 — 통과(READY 57.8 s, 이탈 뒤 최소 35.29 kN)", "time_basis": "loop", "source": "432.6.2.1 B1, B2"},
+  "final_A_middle_rpB_Fs0_20261031_011149/A_middle_rpB_Fs0": {"title": "강체 대각 검증점·F_s 0·오거 중단 — 통과(READY 57.8 s, 이탈 뒤 최소 40.90 kN)", "time_basis": "loop", "source": "432.6.2.1 B1"},
+  "final_A_bottom_rpB_Fs0_20261031_011936/A_bottom_rpB_Fs0": {"title": "강체 대각 검증점·F_s 0·오거 하단 — 통과(READY 57.8 s, 이탈 뒤 최소 44.55 kN)", "time_basis": "loop", "source": "432.6.2.1 B1"},
+  "final_K8_top_rpB_Fs8_20261031_012756/K8_top_rpB_Fs8": {"title": "강체 대각 검증점·F_s 8 kN — 통과(READY 57.8 s, 이탈 뒤 최소 37.84 kN)", "time_basis": "loop", "source": "432.6.2.1 B2"},
+  "final_E_G4_Fs4_20261030_233941/E_G4_Fs4": {"title": "강체 READY 뒤 RR 급침하(G4) — 통과(재READY 22.8 s, 사건 다리 최소 11.14 kN)", "time_basis": "loop", "source": "432.6.2.1 A4"},
+  "final_E_SS_Fs4_20261030_235425/E_SS_Fs4": {"title": "강체 READY 뒤 RR 느린 침하(SS) — 통과(사건 다리 최소 25.58 kN)", "time_basis": "loop", "source": "432.6.2.1 A4"},
+  "final_E_RE1bF_Fs8_20261031_000914/E_RE1bF_Fs8": {"title": "강체 READY 뒤 RR 30 mm 급격 침하(RE1bF)·F_s 8 kN — 통과(재READY 24.4 s)", "time_basis": "loop", "source": "432.6.2.1 A4"},
+  "final_G1L_RE1bF_FL_top_Fs0_20261031_003000/G1L_RE1bF_FL_top_Fs0": {"title": "강체 LEVEL 중 FL 30 mm 급격 침하·F_s 0 — 통과(끝 자세 0.053°)", "time_basis": "loop", "source": "432.6.2.1 A4"},
+  "final_G1L_RE1bF_FL_top_o050_Fs4_20261031_004637/G1L_RE1bF_FL_top_o050_Fs4": {"title": "강체 LEVEL 중 FL 30 mm 급격 침하(위상 +0.05)·F_s 4 kN — 통과(끝 자세 0.042°)", "time_basis": "loop", "source": "432.6.2.1 A4, 355.1 #1"},
+  "bundleC_g8c76_p28acc_final_G8C1_top_edge_FL_g170_L1R_20261030_232436/G8C1_top_edge_FL_g170": {"title": "강체 비평면 시작·FL 블록 169.5 mm(L1-R) — 통과(READY 56.3 s, 끝 자세 0.015°)", "time_basis": "loop", "source": "432.6.2.1 A3; block height result.json g8.h_m"},
+  "bundleC_g8c76_p28acc_final_G8C3_top_edge_RL_g230_L1R_20261030_233212/G8C3_top_edge_RL_g230": {"title": "강체 비평면 시작·RL 블록 118.8 mm(L1-R) — 통과(READY 57.9 s, 끝 자세 0.015°)", "time_basis": "loop", "source": "432.6.2.1 A3; block height result.json g8.h_m"},
+
+  "batch_P3b_20261026_122444/P3b_G1_A_top_Fs4": {"title": "G1 다짐 자갈·패드 A·평지(10-26 판, 최종 동치) — 통과(READY 44.1 s, 끝 자세 0.016°)", "time_basis": "loop", "source": "paper v4 4.4 (s9_P3b_summary.json)"},
+  "batch_P3b_20261026_122444/P3b_G1_B_top_Fs4": {"title": "G1 다짐 자갈·패드 B·평지(10-26 판, 최종 동치) — 통과(READY 43.3 s, 끝 자세 0.014°)", "time_basis": "loop", "source": "paper v4 4.4 (s9_P3b_summary.json)"},
+  "batch_G6_20261028_075108/G6_G1_B_top_Fs4_spG1RR": {"title": "G1 기반·RR G1 패치(대조, 초기 판, 최종 동치) — 통과(READY 43.3 s, 끝 자세 0.014°)", "time_basis": "loop", "source": "paper v4 table 16"},
+  "batch_G6P_20261029_103815/G6_G1_B_top_Fs4_spJ1RR": {"title": "G1 기반·RR J1 연약 패치(최종 동치) — 통과(READY 74.5 s, 비틀림 완화로 DONE)", "time_basis": "loop", "source": "paper v4 table 16"},
+  "batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ1FL": {"title": "G1 기반·FL J1 연약 패치(최종 동치) — 통과 + 과도 재접촉 FLAG(READY 66.8 s)", "time_basis": "loop", "source": "paper v4 table 16"},
+  "batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ2RR": {"title": "G1 기반·RR J2 연약 패치(최종 동치) — 통과(READY 96.1 s, 끝 자세 0.008°)", "time_basis": "loop", "source": "paper v4 table 16"},
+  "batch_D424_20261030_014908/P3b_J1_B_top_Fs4_m1p2": {"title": "J1 중점토·패드 B·운용 중량 ×1.2(최종 동치) — 범위 밖, 크롤러 이탈 미확정 정지", "time_basis": "loop", "source": "paper v4 4.8"}
+ }
+}

@@ -7,6 +7,8 @@ virtual sensors, 350 bar indicator / V17 path). The engine supplies the true hea
 * Pressure: head and rod sensors at the chamber-side A / B ports between the cylinder and the
   pilot-operated check block keep reading the trapped pressures while locked (YAML
   ``sensors.cylinder_pressure.location``, R6-P). Readings are not clipped at 0.
+  A / B here are leg-based head/rod names, not MCV port letters (FR/RR: MCV A = rod,
+  ``00_docs/02_hydraulic/hydraulic_circuit.md`` section 8).
 * Stroke: one sensor per cylinder. When the engine also gives the oil-compression corrected
   stroke (L1), both readouts get the **same** noise sample because they stand for one sensor.
 * Noise defaults are zero (ideal). :func:`reduced_model_leg_sensor_config` gives the values of

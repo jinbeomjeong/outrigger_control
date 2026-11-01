@@ -12,6 +12,8 @@ Lumped quasi-static model per leg (gauge pressures, SI):
                                   (steady extension at v_cmd gives p_r = p_bB)
   support                       : p_h A_p - p_r A_ann = F_lock + k_ext (x - x0)   (no friction, no inertia)
 Valve closes at the end of the tail command (both neutral variants stop the B venting).
+A/B (line, POC, p_bB) are leg-based head/rod names, not MCV port letters (FR/RR: MCV A = rod,
+00_docs/02_hydraulic/hydraulic_circuit.md section 8).
 Run: conda run -n hydraulics-dev python -I extend_tail_check.py [--out DIR]
 """
 from __future__ import annotations

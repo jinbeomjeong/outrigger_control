@@ -2,12 +2,12 @@
 
 작성: hydraulics-expert. **검토 문서**다. 코드·YAML·다른 문서는 고치지 않았다. 제안한 변경은 9절 위임 목록으로 넘긴다.
 
-> **갱신 이력**: 초판 0~11절 2026-10-22 → 12~18절 2026-10-22 → 19절 2026-10-24(L2b $s_{lock}$ 고정, 행정 끝 $L_{0r}$ 감도) → 2026-10-25 문서 정리(S8 마감 뒤): 세션 scratchpad에만 있던 `rod_side_calc.py`·`ctrl10hz_check.py`를 `04_scripts/04_hydraulic/`로 옮기고 9·18절 경로를 고쳤다(수치 변경 없음, 다시 돌려 결과 JSON이 바이트 단위로 같음). 이 문서의 결론 가운데 L1-R(14절)·두 센서 순 힘·10 Hz 전제는 S7·S8 구현의 근거로 쓰였다. S8 이후의 로드측 압력 판단(CB 범위, 잠긴 다리 비, 해제 뒤 배수)은 [s8_seal_friction_counterbalance.md](s8_seal_friction_counterbalance.md) 9~13절에 있다.
+> **갱신 이력**: 초판 0~11절 2026-10-22 → 12~18절 2026-10-22 → 19절 2026-10-24(L2b $s_{lock}$ 고정, 행정 끝 $L_{0r}$ 감도) → 2026-10-25 문서 정리(S8 마감 뒤): 세션 scratchpad에만 있던 `rod_side_calc.py`·`ctrl10hz_check.py`를 `04_scripts/04_hydraulic/`로 옮기고 9·18절 경로를 고쳤다(수치 변경 없음, 다시 돌려 결과 JSON이 바이트 단위로 같음). 이 문서의 결론 가운데 L1-R(14절)·두 센서 순 힘·10 Hz 전제는 S7·S8 구현의 근거로 쓰였다. S8 이후의 로드측 압력 판단(CB 범위, 잠긴 다리 비, 해제 뒤 배수)은 [s8_seal_friction_counterbalance.md](s8_seal_friction_counterbalance.md) 9~13절에 있다. → 2026-11-01 문서 정리(감사 rev61 지적): 1절 기호 표와 7.4절의 옛 공통 치수 값에 "이전 공통 치수(개정 29 이전)" 단서와 현재 YAML 행 번호를 붙이고, 출처 "YAML(보어 115 mm)"을 "옛 YAML"로 고쳤다(수치 변경 없음).
 
 > **보완 12절(2026-10-22)**: 실린더 치수가 REXOME35 도면(전방 ø130/ø110, 후방 ø110/ø90, 행정 700)으로 바뀌었다. 0~11절의 수치는 **이전 공통 치수(ø115/ø110, $\varphi$ 11.76, 행정 680) 기준**이라 대부분 무효다. 새 치수의 로드측 모델 파라미터, H-1(수축 중 하중 급증), H-2(최대 하중에서 잠김 → 부상)는 12절에 있다. 로드측을 L1 강성에 넣을지에 대한 판정(Q16)은 13절에 있다. 사용자가 (b)를 택해 그 유압 명세(L1-R 상태 기계)를 14절에 적었다. R-H4′ 신장 꼬리 길이 확인은 15절에 있다. 침하·낙하 다리와 L1-R(부상 순간 인장 산물, LIFT 압력, 침하 가정)은 17절에 있다. 10 Hz 제어 전제의 유압 쪽 검토(밸브 계단 과도, 피크 감시 수단, 에일리어싱 최악 오차)는 18절에 있다. 판정 논리와 구조(두 센서 순 힘, 잠김 상태방정식, 7.4 인터페이스)는 그대로다.
 
 - 계기: 압력 센서가 다리마다 헤드측·로드측 두 개라는 사용자 확인(2026-10-22, `CLAUDE.md` 51행). 지금 S6 모델·C2 R5는 헤드측만 쓴다($p=F/A_p$, 로드측 0 가정).
-- 입력(읽기만 함): `CLAUDE.md`, [hydraulic_circuit.md](hydraulic_circuit.md), [l2_hydraulic_model_spec.md](l2_hydraulic_model_spec.md)(L2 명세, 이하 "L2 명세"), [hydraulic_fluid_survey.md](hydraulic_fluid_survey.md), [dynamics_model.md](../01_dynamics/dynamics_model.md) 2.3절(370·379·381~385행), 5.2절(2390행), 3498행, [actuator_L2_feasibility.md](../01_dynamics/actuator_L2_feasibility.md), [c2_design.md](../04_control/c2_design.md)(탐침), `03_src/outrigger_sim/chrono/actuators.py`, `03_src/outrigger_sim/sensors/hydraulic.py`, `02_params/rexome33.yaml`.
+- 입력(읽기만 함): `CLAUDE.md`, [hydraulic_circuit.md](hydraulic_circuit.md), [l2_hydraulic_model_spec.md](l2_hydraulic_model_spec.md)(L2 명세, 이하 "L2 명세"), [hydraulic_fluid_survey.md](hydraulic_fluid_survey.md), [dynamics_model.md](../01_dynamics/dynamics_model.md) 2.3절(기호 표의 $k_{oil}$·$k_{ann}$ 행과 '로드측 챔버' 설명), 5.2절, 그리고 작성 당시 3498행(2026-10-22 판 줄 번호; 지금 위치는 확인하지 못함, 5.11절 부근으로 추정. 줄 번호 참조는 2026-11-01 절 번호로 바꿈), [actuator_L2_feasibility.md](../01_dynamics/actuator_L2_feasibility.md), [c2_design.md](../04_control/c2_design.md)(탐침), `03_src/outrigger_sim/chrono/actuators.py`, `03_src/outrigger_sim/sensors/hydraulic.py`, `02_params/rexome33.yaml`.
 - 계산: conda `hydraulics-dev`, `conda run -n hydraulics-dev python -I 04_scripts/04_hydraulic/rod_side_calc.py 06_analysis/03_hydraulic/rod_side_calc.json`(1 s 미만). 스크립트는 2026-10-22 세션 scratchpad(`hyd-run\rod_side\`)에서 2026-10-25에 옮겼다. 바꾼 것은 출력 경로를 인자로 받게 한 것뿐이고, 다시 돌린 JSON은 원래 결과와 바이트 단위로 같다. 이 스크립트의 수치는 **이전 공통 치수** 기준이다(REXOME35 값은 `rod_side_rexome35.py`, 12절). Hopsan·OpenModelica는 이번에 돌리지 않았다. 대신 L2 명세의 Hopsan·Python 기준 응답과 대조했다(8절).
 
 ## 0. 요약
@@ -32,15 +32,15 @@
 | 헤드만 쓴 추정 | $F_{ho}=p_hA_p$(현 S6·C2). 오차 $F_{ho}-F_{cyl}=p_rA_{ann}$ |
 | 두 센서 추정 | $F_{2s}=p_hA_p-p_rA_{ann}$ |
 
-| 기호 | 뜻 | 값 | 출처 |
+| 기호 | 뜻 | 값(**이전 공통 치수, 개정 29 이전**. 현재 다리별 값은 `rexome33.yaml` 312·315·316·428·431·432행, $k_{oil}$ 735–739행, $k_{rod\_side}$ 192–196행) | 출처 |
 |---|---|---|---|
-| $A_p$ | 헤드(피스톤) 면적 | 1.0387×10⁻² m² | YAML(보어 115 mm) |
-| $A_{ann}$ | 로드측 환형 면적 | 8.8357×10⁻⁴ m² | YAML(로드 110 mm) |
+| $A_p$ | 헤드(피스톤) 면적 | 1.0387×10⁻² m²(이전 공통 치수) | 옛 YAML(보어 115 mm) |
+| $A_{ann}$ | 로드측 환형 면적 | 8.8357×10⁻⁴ m²(이전 공통 치수) | 옛 YAML(로드 110 mm) |
 | $\varphi=A_p/A_{ann}$ | 면적비 | 11.76 | 계산 |
 | $m_{rod}g$ | 로드·피스톤·패드 무게 | 1.047 kN | YAML |
-| $e_{op}$ | 운용 신장 | 전방 0.4015 / 후방 0.3915 m | `dynamics_model.md` 379행 $k_{ann}$에서 역산(L2 명세 0.4011/0.3909, 차 0.1 %) |
+| $e_{op}$ | 운용 신장 | 전방 0.4015 / 후방 0.3915 m(이전 공통 치수) | `dynamics_model.md` 2.3절 $k_{ann}$ 행(작성 당시 379행; 지금 그 행은 REXOME35 값으로 바뀌어 이 역산과 다르다)에서 역산(L2 명세 0.4011/0.3909, 차 0.1 %) |
 | $L_h=L_0+e$, $L_r=s_{max}-e+L_{0r}$ | 헤드·로드측 기름 기둥 길이 | 전방 0.4515 / 0.3285 m | $L_0=L_{0r}$ = 0.05 m(**가정**) |
-| $k_h=\beta A_p/L_h$, $k_r=\beta A_{ann}/L_r$ | 챔버 강성 | 전방 2.30×10⁷ / 2.69×10⁶ N/m | 계산 |
+| $k_h=\beta A_p/L_h$, $k_r=\beta A_{ann}/L_r$ | 챔버 강성 | 전방 2.30×10⁷ / 2.69×10⁶ N/m(이전 공통 치수. 현재 $k_{oil}$은 YAML 735–739행, $k_{rod\_side}$는 192–196행) | 계산 |
 | $r=k_r/(k_h+k_r)$ | 잠김 감하중에서 로드측이 받는 몫 | 전방 0.1047 / 후방 0.0999 | 계산 |
 | $\psi$ | POC 파일럿 비(파일럿 피스톤 면적 / 시트 면적) | 3.5(감도 3~6) | **가정**(L2 명세 Q-H3) |
 | $p_{cr}$ | POC 크래킹 압력 | 2~3 bar | **가정** |
@@ -63,7 +63,7 @@
 
 ## 2. 로드측 압력을 정하는 회로 동작
 
-회로(`hydraulic_circuit.md`): 압력 보상 비례 방향 밸브 섹션의 A·B 포트 → 3/8" 호스 → 실린더 직결 이중 파일럿 체크(POC-A: 헤드 포트, POC-B: 로드 포트) → 실린더. POC-A의 파일럿은 라인 B, POC-B의 파일럿은 라인 A에서 받는다.
+회로(`hydraulic_circuit.md`): 압력 보상 비례 방향 밸브 섹션의 A·B 포트 → 3/8" 호스 → 실린더 직결 이중 파일럿 체크(POC-A: 헤드 포트, POC-B: 로드 포트) → 실린더. 여기서 A·B는 다리 기준(헤드·로드) 이름이다. MCV 섹션 포트 문자는 FL·RL에서 A=헤드이지만 FR·RR에서는 A=로드로 반대다(`hydraulic_circuit.md` 8절, 2026-11-01). POC-A의 파일럿은 라인 B, POC-B의 파일럿은 라인 A에서 받는다.
 
 1. **신장(P→A, B→T)**: 압력 보상기가 미터인 유량 $A_pv$를 부하와 무관하게 맞춘다. 라인 A 압력이 POC-B를 연다. 이때 필요한 파일럿은 $(p_r-p_{bB}+p_{cr})/\psi$ = 수 bar라 쉽게 열린다. 로드측 유출 1.2 L/min은 B→T 노치·호스·POC-B를 지나 탱크로 간다. 그래서 $p_r=p_{bB}$이고 하중과 무관하다.
 2. **수축(P→B, A→T)**: 로드측 유입은 1.2 L/min이고, 헤드 유출은 그 11.76배인 14.1 L/min이다. 헤드는 POC-A가 열려야 나갈 수 있다. 내부 드레인 POC의 열림 조건은 다음과 같다.
@@ -254,7 +254,7 @@ $$p_h=\frac{F_{cyl}+p_rA_{ann}}{A_p}\quad\Rightarrow\quad F_{2s}\equiv F_{cyl}\ 
 - `chrono/truth.py:136` `head_pressure_Pa(F, A) = F_cyl / A_head`. `L1SensorTruth.measurements()`(239~248행)가 제어 순간(20 ms)마다 이 값을 `Measurements.head_pressure_Pa`에 넣는다.
 - 그 값은 `sensors/suite.py:58` → `sensors/hydraulic.py` `LegSensorModel.measure`(잡음·분해능, 0에서 자르지 않음)를 거쳐 C2(`control/c2.py:1743`)·C8(`control/c8.py:131`)에서 `× head_area`로 힘이 된다.
 - 로드측 가상 센서는 없다. YAML `sensors.cylinder_pressure.location`은 "rod-side pressure 0 assumed", `actuator.rod_side_chamber_model`은 "neglected"다.
-- 그래서 지금의 `head_pressure_Pa`는 **헤드 챔버 압력이 아니라 순 실린더 힘의 등가 압력** $F_{cyl}/A_p$다. 다리가 뜨면 $F_{cyl}=-m_{rod}g$ → **−1.008 bar**(= −1047 N / 1.0387×10⁻² m²)가 된다. 실제로는 $p_h$ ≈ 0~수 bar, $p_r$ ≥ 11.85 bar다(3.1절 부상 A·B·C).
+- 그래서 지금의 `head_pressure_Pa`는 **헤드 챔버 압력이 아니라 순 실린더 힘의 등가 압력** $F_{cyl}/A_p$다. 다리가 뜨면 $F_{cyl}=-m_{rod}g$ → **−1.008 bar**(= −1047 N / 1.0387×10⁻² m², 이전 공통 치수(개정 29 이전). 현재 다리별 면적은 `rexome33.yaml` 315·431행)가 된다. 실제로는 $p_h$ ≈ 0~수 bar, $p_r$ ≥ 11.85 bar다(3.1절 부상 A·B·C).
 
 **합성 규칙**(L1, 다리마다, 제어 순간 $t_k$마다 갱신. 입력은 진값 $F_{cyl}$, `u_applied`, `stroke_true` $x$):
 

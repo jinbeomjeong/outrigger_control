@@ -66,7 +66,8 @@ def test_existing_101_case_hashes_and_sets_unchanged(run_s8c) -> None:
         assert [c.case_id for c in run_s8c.case_set(name)] == ids, name
     # the new cases come after the existing ones (old order kept), before the smoke pair
     # C-S8-72 (spec rev. 67 345) appends group G1 after these (test_c_s8_72.py checks it)
-    order = [c.case_id for c in run_s8c.s8_cases() if c.group != "G1"]
+    # journal auger table (cad 2026-10-31) appends group JA last (test_c_s8_72.py excludes it too)
+    order = [c.case_id for c in run_s8c.s8_cases() if c.group not in ("G1", run_s8c.JAUG_GROUP)]
     assert [c for c in order if c not in C68] == \
         [c for c in order if c in doc["cases"]]
     assert set(order) == set(doc["cases"]) | set(C68)

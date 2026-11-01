@@ -46,6 +46,9 @@ Sensor truth from the same state and the same call:
 are gauge [Pa]; only the floor is given absolute. Not implemented: gas separation after FLOOR
 (14.3 optional, H6). Damping is not part of this module: the engine keeps one ``c_n`` (LOCK
 based, 5.12.8 Q-D3) in all states.
+
+A/B (``p_bA``, ``p_bB``, POC-A/B, line A/B) are leg-based head/rod names, not MCV port letters
+(FR/RR: MCV A = rod, ``00_docs/02_hydraulic/hydraulic_circuit.md`` section 8).
 """
 
 from __future__ import annotations

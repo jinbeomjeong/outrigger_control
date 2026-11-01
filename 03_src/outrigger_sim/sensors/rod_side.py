@@ -27,6 +27,8 @@ Synthesis rules (7.4 table, per leg, every control instant):
 Free air (``air_fraction_at_1bar`` > 0) and the thermal option are not implemented
 (``ValueError``); they belong to the L2 state equation (L2 spec 3.1). Pressures are gauge (Pa).
 Per-leg arrays follow ``LEG_ORDER``.
+A/B (``p_bA``, ``p_bB``, POC-A/B) are leg-based head/rod names, not MCV port letters (FR/RR:
+MCV A = rod, ``00_docs/02_hydraulic/hydraulic_circuit.md`` section 8).
 
 L1-R (user decision 2026-10-22, rod_side_pressure.md 14): the rod chamber becomes a one-sided
 nonlinear spring of the L1 plant with the states EXT / RET / LOCK / FLOOR / LIFT. The virtual

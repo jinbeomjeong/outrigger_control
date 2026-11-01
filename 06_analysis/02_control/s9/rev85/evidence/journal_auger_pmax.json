@@ -1,0 +1,102 @@
+{
+ "definition": "spec 412: max over legs and moving samples (|u_applied| > 1e-6 m/s) of F_cyl / A_p, 10 Hz Record; judge limit 180 bar; ratio to 210 bar = F / extension force limit",
+ "script": "04_scripts/03_control/s9/evidence/final_rep_pmax.py (uses 04_scripts/03_control/s8/paper_max_pressure_table.record_moving_peak)",
+ "cases": {
+  "P3b_G1_B_top_Fs4": {
+   "folder": "07_results/S9/batch_JOURNAL-AUGER_20261031_165543/P3b_G1_B_top_Fs4",
+   "max_moving_pressure_bar": 93.93136306656582,
+   "peak_leg": "FL",
+   "t_s": 41.20000000024417,
+   "measured_head_max_bar": 106.075,
+   "max_any_state_bar": 95.56143412500452,
+   "ratio_to_relief_210": 0.44729220507888484,
+   "ratio_to_judge_180": 0.5218409059253657,
+   "peak_force_kN": 124.6603375554852,
+   "ratio_to_leg_extension_force_limit": 0.44729220507888484
+  },
+  "P3b_G1_B_middle_Fs4": {
+   "folder": "07_results/S9/batch_JOURNAL-AUGER_20261031_165543/P3b_G1_B_middle_Fs4",
+   "max_moving_pressure_bar": 93.92110261376055,
+   "peak_leg": "FL",
+   "t_s": 41.400000000250806,
+   "measured_head_max_bar": 106.2,
+   "max_any_state_bar": 94.8453545572796,
+   "ratio_to_relief_210": 0.4472433457798122,
+   "ratio_to_judge_180": 0.5217839034097809,
+   "peak_force_kN": 124.64672046883365,
+   "ratio_to_leg_extension_force_limit": 0.4472433457798122
+  },
+  "P3b_G1_B_bottom_Fs4": {
+   "folder": "07_results/S9/batch_JOURNAL-AUGER_20261031_165543/P3b_G1_B_bottom_Fs4",
+   "max_moving_pressure_bar": 93.90508065872226,
+   "peak_leg": "FL",
+   "t_s": 40.80000000023089,
+   "measured_head_max_bar": 106.4,
+   "max_any_state_bar": 94.90789553681569,
+   "ratio_to_relief_210": 0.44716705075582025,
+   "ratio_to_judge_180": 0.521694892548457,
+   "peak_force_kN": 124.6254570456471,
+   "ratio_to_leg_extension_force_limit": 0.44716705075582025
+  },
+  "P3b_J1_B_middle_Fs4": {
+   "folder": "07_results/S9/batch_JOURNAL-AUGER_20261031_165543/P3b_J1_B_middle_Fs4",
+   "max_moving_pressure_bar": 90.667729715538,
+   "peak_leg": "FL",
+   "t_s": 70.00000000120022,
+   "measured_head_max_bar": 101.05,
+   "max_any_state_bar": 90.7539308609423,
+   "ratio_to_relief_210": 0.4317510938835143,
+   "ratio_to_judge_180": 0.5037096095307667,
+   "peak_force_kN": 120.32902986533543,
+   "ratio_to_leg_extension_force_limit": 0.4317510938835143
+  },
+  "P3b_J1_B_bottom_Fs4": {
+   "folder": "07_results/S9/batch_JOURNAL-AUGER_20261031_165543/P3b_J1_B_bottom_Fs4",
+   "max_moving_pressure_bar": 90.32401218212328,
+   "peak_leg": "FL",
+   "t_s": 76.500000001416,
+   "measured_head_max_bar": 101.45,
+   "max_any_state_bar": 90.39623723723604,
+   "ratio_to_relief_210": 0.4301143437243966,
+   "ratio_to_judge_180": 0.5018000676784626,
+   "peak_force_kN": 119.87286759598933,
+   "ratio_to_leg_extension_force_limit": 0.4301143437243966
+  },
+  "P3b_J2_B_bottom_Fs4": {
+   "folder": "07_results/S9/batch_JOURNAL-AUGER_20261031_165543/P3b_J2_B_bottom_Fs4",
+   "max_moving_pressure_bar": 90.1569244914769,
+   "peak_leg": "FL",
+   "t_s": 46.30000000041347,
+   "measured_head_max_bar": 101.275,
+   "max_any_state_bar": 90.32661058734499,
+   "ratio_to_relief_210": 0.4293186880546519,
+   "ratio_to_judge_180": 0.5008718027304272,
+   "peak_force_kN": 119.65111836083148,
+   "ratio_to_leg_extension_force_limit": 0.4293186880546519
+  },
+  "JA_middle_flat_Fs4": {
+   "folder": "07_results/S8/final_JA_middle_flat_Fs4_20261031_165544/JA_middle_flat_Fs4",
+   "max_moving_pressure_bar": 98.33288622524732,
+   "peak_leg": "FL",
+   "t_s": 35.600000000058266,
+   "measured_head_max_bar": 111.28002831758693,
+   "max_any_state_bar": 99.92126870793213,
+   "ratio_to_relief_210": 0.4682518391678444,
+   "ratio_to_judge_180": 0.5462938123624851,
+   "peak_force_kN": 130.50178757607824,
+   "ratio_to_leg_extension_force_limit": 0.4682518391678444
+  },
+  "JA_bottom_flat_Fs4": {
+   "folder": "07_results/S8/final_JA_bottom_flat_Fs4_20261031_170315/JA_bottom_flat_Fs4",
+   "max_moving_pressure_bar": 98.33182237598764,
+   "peak_leg": "FL",
+   "t_s": 35.40000000005163,
+   "measured_head_max_bar": 111.29146927209368,
+   "max_any_state_bar": 99.53346918813605,
+   "ratio_to_relief_210": 0.4682467732189888,
+   "ratio_to_judge_180": 0.5462879020888203,
+   "peak_force_kN": 130.50037569613215,
+   "ratio_to_leg_extension_force_limit": 0.4682467732189888
+  }
+ }
+}

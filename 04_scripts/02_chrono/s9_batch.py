@@ -39,6 +39,8 @@ Usage (project root)::
     # minimum representative set (user decision 2026-10-30 ~18 h, spec 432): soil 7 rows first, then rigid 16 + 2
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py list FINAL-REP         # rep_variable / r4_x11 per row
     python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run FINAL-R-REP --parallel 5 --row-filter optional=None
+    # journal table soil 4 x auger 3 (cad 2026-10-31): 6 soil + 2 rigid rows (rigid s8c rows on the P pool)
+    python -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run JOURNAL-AUGER --schedule <plan.json>
 
 Pools (2026-10-26): ``--parallel`` (= ``--parallel-p``) P-pool slots, ``--parallel-e`` E-pool slots;
 each case process gets ``OUTRIGGER_PLACEMENT`` = ``pcore`` / ``ecore`` (``run_S9.place``). Cases go to
@@ -228,6 +230,9 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     # FINAL-REP-X (user approval 2026-10-31, spec 432.5.1): FINAL-REP P3b_J2_B_top_Fs4_m1p1 with a 180 s closed loop
     # (row ..._t180, argv = the FINAL-REP row with --duration 180); check-sources accepts only that difference
     out["FINAL-REP-X"] = level_rows("final_rep_x_cases")
+    # JOURNAL-AUGER (cad 2026-10-31, journal table soil 4 x auger 3 on the final controller): the 6 missing soil cells
+    # (FINAL1 / FINAL2 / FINAL5 rows unchanged) + 2 rigid flat F_s 4 cells (run_S8C set jaug, K24_top_flat_Fs4 form)
+    out["JOURNAL-AUGER"] = journal_auger_rows()
     return out
 
 
@@ -384,6 +389,62 @@ def final_r_rep_rows(final_r: list[dict] | None = None) -> list[dict]:
         if optional:
             r["optional"] = True
         out.append(r)
+    return out
+
+
+JOURNAL_AUGER_SOIL_ROWS: tuple[tuple[str, str, str], ...] = (
+    ("FINAL2", "P3b_J1_B_middle_Fs4", "B1"),
+    ("FINAL2", "P3b_J1_B_bottom_Fs4", "B1"),
+    ("FINAL2", "P3b_J2_B_bottom_Fs4", "B1"),
+    ("FINAL1", "P3b_G1_B_top_Fs4", "기준"),
+    ("FINAL5", "P3b_G1_B_middle_Fs4", "B1"),
+    ("FINAL5", "P3b_G1_B_bottom_Fs4", "B1"),
+)
+"""(source bundle, case, ``rep_variable``) of the JOURNAL-AUGER soil rows: pad B, F_s 4 kN, flat, mass x1.0, P3b
+settings, final controller (``--expect-controller final_SGS_R4``); rows copied from :func:`level_rows` of the bundle
+(argv / ``source_run`` / ``est_pool_s`` unchanged). The cells J1 top, J2 top, J2 middle are FINAL-REP rows."""
+JOURNAL_AUGER_RIGID_CASES = ("JA_middle_flat_Fs4", "JA_bottom_flat_Fs4")
+JOURNAL_AUGER_RIGID_EST_S = 600.0
+"""ASSUMPTION: wall per rigid row [s] (FINAL-R-REP K24_top_flat_Fs4 464 s, A_middle / A_bottom rpB 466 / 500 s on the
+P pool with 7 SCM runs concurrent, rounded up)."""
+JOURNAL_AUGER_PRIORITY = 1
+
+
+def journal_auger_rows() -> list[dict]:
+    """JOURNAL-AUGER (8 rows): :data:`JOURNAL_AUGER_SOIL_ROWS` (``run_S9.py level``) + the run_S8C ``jaug`` set (one
+    ``s8c`` row per case, the FINAL-R form: ``run --set jaug --only <id> --tag final_<id> --approved --workers p7``,
+    group FINAL-R so that ``code_at_launch`` is recorded, P pool). Tags ``rep_bundle`` JOURNAL-AUGER, ``rep_source``,
+    ``rep_variable``, ``priority``. A missing source row raises KeyError."""
+    out: list[dict] = []
+    by_bundle: dict[str, dict[str, dict]] = {}
+    for bundle, case, var in JOURNAL_AUGER_SOIL_ROWS:
+        if bundle not in by_bundle:
+            by_bundle[bundle] = {c["case"]: c for c in level_rows("final_cases", bundle)}
+        if case not in by_bundle[bundle]:
+            raise KeyError(f"JOURNAL-AUGER: {case} is not a {bundle} row")
+        r = dict(by_bundle[bundle][case])
+        r["argv"] = list(r["argv"])
+        r.update(rep_bundle="JOURNAL-AUGER", rep_source=bundle, rep_variable=var, priority=JOURNAL_AUGER_PRIORITY,
+                 rep_role="journal auger table (soil x auger level)",
+                 note=f"JOURNAL-AUGER {var} (row of {bundle}): " + str(r.get("note") or case))
+        out.append(r)
+    sys.path.insert(0, str(HERE))
+    try:
+        import run_S8C as s8  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    ids = [c.case_id for c in s8.case_set("jaug")]
+    if tuple(ids) != JOURNAL_AUGER_RIGID_CASES:
+        raise KeyError(f"JOURNAL-AUGER: run_S8C set jaug is {ids}, expected {list(JOURNAL_AUGER_RIGID_CASES)}")
+    for cid in ids:
+        out.append({"case": cid, "est_s": JOURNAL_AUGER_RIGID_EST_S, "s8c": True,
+                    "argv": S8C + ["run", "--set", "jaug", "--only", cid, "--tag", f"final_{cid}", "--approved",
+                                   "--workers", "p7"],
+                    "family": "jaug", "s8_group": s8.JAUG_GROUP, "engine": "L2b_NSC", "group": "FINAL-R",
+                    "priority": JOURNAL_AUGER_PRIORITY, "rep_bundle": "JOURNAL-AUGER", "rep_source": "FINAL-R-REP A1",
+                    "rep_variable": "B1", "rep_role": "journal auger table (rigid flat, K24_top_flat_Fs4 form)",
+                    "note": f"JOURNAL-AUGER B1 rigid: {cid} = K24_top_flat_Fs4 with the auger level changed "
+                            "(run_S8C set jaug, run-time preset)"})
     return out
 
 

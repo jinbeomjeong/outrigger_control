@@ -68,8 +68,9 @@ def test_earlier_definitions_unchanged(s8c) -> None:
             doc["s6"][c.case_id] = _h(c.to_meta())
             doc["s6_repr"][c.case_id] = _h(repr(c))
     doc["stage2"] = {c.case_id: _h(asdict(c)) for c in st.all_cases()}
-    doc["s8"] = {c.case_id: _h(c.to_meta()) for c in s8c.s8_cases()}
-    doc["s8_sets"] = {n: [c.case_id for c in s8c.case_set(n)] for n in s8c.SET_NAMES}
+    # journal auger table (cad 2026-10-31): group JA / set ``jaug`` came later; excluded
+    doc["s8"] = {c.case_id: _h(c.to_meta()) for c in s8c.s8_cases() if c.group != s8c.JAUG_GROUP}
+    doc["s8_sets"] = {n: [c.case_id for c in s8c.case_set(n)] for n in s8c.SET_NAMES if n != "jaug"}
     for key, want in BEFORE.items():
         assert _agg(doc[key]) == want, key
     for name, rp in FLOORS_BEFORE.items():

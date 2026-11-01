@@ -4,6 +4,10 @@ Project: REXOME35 Heavy-Duty Pile Driver Outrigger Hydraulic Control System
 Location: C:/workspace/outrigger_control
 
 Standard: ANSI/ISA-5.1 Instrumentation Symbols and Identification
+Port mapping follows 00_docs/02_hydraulic/hydraulic_circuit.md section 8: MCV bank
+order is FL, RL, FR, RR; FL/RL use MCV port A for the head side, FR/RR (mirrored
+piping) use port A for the rod side. Pressure tags PT-xxxH/R name the cylinder
+chamber (head/rod), not the MCV port letter.
 Outputs:
   - C:/workspace/outrigger_control/00_docs/02_hydraulic/outrigger_pid_diagram.png (High-Res 300 DPI)
   - C:/workspace/논문작성/figures/outrigger_pid_diagram.png (300 DPI)
@@ -16,9 +20,18 @@ from matplotlib.patches import FancyBboxPatch, Rectangle, Circle, Polygon, Wedge
 import matplotlib.path as mpath
 import numpy as np
 
+# Legs whose MCV port A feeds the rod chamber (hydraulic_circuit.md section 8)
+MIRRORED_PORT_LEGS = ("FR", "RR")
+
 # Font settings
 plt.rcParams['font.family'] = 'Malgun Gothic'
 plt.rcParams['axes.unicode_minus'] = False
+
+def mcv_ports_for_head_and_rod(section_tag):
+    """Return the MCV port letters (head side, rod side) for a section tag like "FR-202"."""
+    if section_tag[:2] in MIRRORED_PORT_LEGS:
+        return "B", "A"
+    return "A", "B"
 
 def draw_pid():
     fig = plt.figure(figsize=(26, 16), dpi=300)
@@ -66,9 +79,9 @@ def draw_pid():
     ax.text(194, 20.5, "PROJECT: REXOME35 Pile Driver", ha='left', va='center', fontsize=7.2, fontweight='bold', color='#37474F', zorder=7)
     ax.text(194, 18.5, "SYSTEM: 4-Point Outrigger Levelling", ha='left', va='center', fontsize=6.8, color='#546E7A', zorder=7)
     ax.text(225, 20.5, "DWG NO: PID-HYD-OUT-001", ha='left', va='center', fontsize=7.2, fontweight='bold', color='#1A237E', zorder=7)
-    ax.text(225, 18.5, "REVISION: Rev. 2.0 (REXOME35)", ha='left', va='center', fontsize=6.8, color='#37474F', zorder=7)
+    ax.text(225, 18.5, "REVISION: Rev. 2.1 (REXOME35)", ha='left', va='center', fontsize=6.8, color='#37474F', zorder=7)
 
-    ax.text(194, 14, "DATE: 2026-10-23", ha='left', va='center', fontsize=6.8, color='#37474F', zorder=7)
+    ax.text(194, 14, "DATE: 2026-11-01", ha='left', va='center', fontsize=6.8, color='#37474F', zorder=7)
     ax.text(225, 14, "FLUID: ISO VG 46 Mineral Oil", ha='left', va='center', fontsize=6.8, color='#37474F', zorder=7)
     ax.text(194, 8, "DESIGN PRES: 210 / 350 bar", ha='left', va='center', fontsize=6.8, fontweight='bold', color='#C62828', zorder=7)
     ax.text(225, 8, "STANDARDS: ANSI/ISA-5.1 / ISO 1219", ha='left', va='center', fontsize=6.5, color='#37474F', zorder=7)
@@ -229,19 +242,25 @@ def draw_pid():
     ax.plot([68, 55], [92, 92], color='#1565C0', lw=2.2, zorder=4)
     ax.plot([55, 55], [92, 96], color='#1565C0', lw=2.2, zorder=4)
 
-    # 4 Valve Sections (FL, FR, RL, RR)
+    # 4 Valve Sections in bank order (FL, RL, FR, RR; hydraulic_circuit.md section 8).
+    # Tag numbers stay tied to the leg (FL 201, FR 202, RL 203, RR 204).
     sections_info = [
         ("FL-201", "전방 좌 (FL)", 86, "#E8F5E9", "#2E7D32", "132.7 cm²", "17.54 L/min"),
-        ("FR-202", "전방 우 (FR)", 64, "#E8F5E9", "#2E7D32", "132.7 cm²", "17.54 L/min"),
-        ("RL-203", "후방 좌 (RL)", 42, "#FFF3E0", "#E65100", "95.0 cm²", "12.56 L/min"),
+        ("RL-203", "후방 좌 (RL)", 64, "#FFF3E0", "#E65100", "95.0 cm²", "12.56 L/min"),
+        ("FR-202", "전방 우 (FR)", 42, "#E8F5E9", "#2E7D32", "132.7 cm²", "17.54 L/min"),
         ("RR-204", "후방 우 (RR)", 20, "#FFF3E0", "#E65100", "95.0 cm²", "12.56 L/min")
     ]
 
-    for tag, desc, y_s, bg_c, bd_c, area, flow in sections_info:
+    for bank_position, section in enumerate(sections_info, start=1):
+        tag, desc, y_s, bg_c, bd_c, area, flow = section
+        # Upper work line always runs to the head port, lower to the rod port.
+        head_port, rod_port = mcv_ports_for_head_and_rod(tag)
         # Section Box
         s_box = FancyBboxPatch((72, y_s - 8), 52, 17, boxstyle="round,pad=0.2,rounding_size=0.6",
                                facecolor=bg_c, edgecolor=bd_c, lw=1.2, zorder=2)
         ax.add_patch(s_box)
+        ax.text(72.8, y_s + 7.6, f"섹션 {bank_position}", ha='left', va='center',
+                fontsize=5.8, fontweight='bold', color=bd_c, zorder=3)
 
         # 4/3 Valve Spool Symbol (3 envelopes)
         spool_x = 74
@@ -278,10 +297,13 @@ def draw_pid():
         ax.plot([68, spool_x], [y_s - 4, y_s - 4], color='#1565C0', lw=1.2, zorder=3) # T tap
 
         # Outflow Ports A and B lines (Exiting MCV to the right)
-        ax.plot([spool_x + spool_w + 1.8, 126], [y_s + 2, y_s + 2], color='#2E7D32', lw=2.0, zorder=4) # A
-        ax.plot([spool_x + spool_w + 1.8, 126], [y_s - 2, y_s - 2], color='#1565C0', lw=1.8, zorder=4) # B
-        ax.text(125, y_s + 3.5, "Port A (3/8\" Hose)", ha='right', va='center', fontsize=5.5, fontweight='bold', color='#2E7D32')
-        ax.text(125, y_s - 3.5, "Port B (3/8\" Hose)", ha='right', va='center', fontsize=5.5, color='#1565C0')
+        port_line_x = [spool_x + spool_w + 1.8, 126]
+        ax.plot(port_line_x, [y_s + 2, y_s + 2], color='#2E7D32', lw=2.0, zorder=4)  # to head
+        ax.plot(port_line_x, [y_s - 2, y_s - 2], color='#1565C0', lw=1.8, zorder=4)  # to rod
+        ax.text(125, y_s + 3.5, f"Port {head_port} (3/8\" Hose)", ha='right', va='center',
+                fontsize=5.5, fontweight='bold', color='#2E7D32')
+        ax.text(125, y_s - 3.5, f"Port {rod_port} (3/8\" Hose)", ha='right', va='center',
+                fontsize=5.5, color='#1565C0')
 
         # Instrument loop bubble for Proportional Valve Actuator FY
         draw_instrument(spool_x + 9, y_s + 7.5, "FY", tag[-3:], line_type='plc', color='#6A1B9A', bg='#F3E5F5')
@@ -299,6 +321,7 @@ def draw_pid():
 
     # Draw 4 Lock Valve Blocks corresponding to the 4 sections
     for tag, desc, y_s, bg_c, bd_c, area, flow in sections_info:
+        head_port, rod_port = mcv_ports_for_head_and_rod(tag)
         blk_x = 132
         blk_w = 40
         blk_h = 17
@@ -308,15 +331,19 @@ def draw_pid():
                                 facecolor='#FFFFFF', edgecolor='#FF8F00', lw=1.2, zorder=2)
         ax.add_patch(b_card)
 
-        # Lines A and B coming in from MCV
+        # Work lines coming in from MCV (upper: head side, lower: rod side)
         ax.plot([126, blk_x + 4], [y_s + 2, y_s + 2], color='#2E7D32', lw=2.0, zorder=3)
         ax.plot([126, blk_x + 4], [y_s - 2, y_s - 2], color='#1565C0', lw=1.8, zorder=3)
+        ax.text(blk_x + 1, y_s + 7.6, f"MCV {head_port}→헤드 / {rod_port}→로드",
+                ha='left', va='center', fontsize=4.8, fontweight='bold', color='#5D4037')
 
-        # Dual Pilot-Operated Check Valves (POC-A, POC-B)
+        # Dual Pilot-Operated Check Valves, named after the MCV port they sit on
         draw_check_valve(blk_x + 8, y_s + 2, direction='right', size=1.6, color='#2E7D32')
         draw_check_valve(blk_x + 8, y_s - 2, direction='right', size=1.6, color='#1565C0')
-        ax.text(blk_x + 8, y_s + 5.2, "POC-A", ha='center', va='bottom', fontsize=5.2, fontweight='bold', color='#2E7D32')
-        ax.text(blk_x + 8, y_s - 5.2, "POC-B", ha='center', va='top', fontsize=5.2, fontweight='bold', color='#1565C0')
+        ax.text(blk_x + 8, y_s + 5.2, f"POC-{head_port}", ha='center', va='bottom',
+                fontsize=5.2, fontweight='bold', color='#2E7D32')
+        ax.text(blk_x + 8, y_s - 5.2, f"POC-{rod_port}", ha='center', va='top',
+                fontsize=5.2, fontweight='bold', color='#1565C0')
 
         # Pilot cross lines (Pilot ratio 3.5:1, Cracking 3 bar)
         ax.plot([blk_x + 6, blk_x + 8], [y_s + 2, y_s - 2], color='#E65100', linestyle='--', lw=1.0, zorder=4)
@@ -327,16 +354,21 @@ def draw_pid():
         ax.add_patch(cbv_box)
         ax.text(blk_x + 15.7, y_s + 2, "CBV\n350b", ha='center', va='center', fontsize=4.8, fontweight='bold', color='#B71C1C')
 
-        # WIKA A-10 Pressure Transmitters (PT-A on Head, PT-B on Rod)
-        pt_a_x = blk_x + 25
-        pt_a_y = y_s + 4.5
-        draw_instrument(pt_a_x, pt_a_y, "PT", f"{tag[-3:]}A", line_type='field', color='#0D47A1')
-        ax.plot([blk_x + 16, pt_a_x], [y_s + 2, pt_a_y - 3.2], color='#0D47A1', lw=1.0, zorder=3)
+        # WIKA A-10 Pressure Transmitters (PT-xxxH on Head, PT-xxxR on Rod;
+        # the suffix names the chamber, not the MCV port letter)
+        pt_head_x = blk_x + 25
+        pt_head_y = y_s + 4.5
+        draw_instrument(pt_head_x, pt_head_y, "PT", f"{tag[-3:]}H", line_type='field',
+                        color='#0D47A1')
+        ax.plot([blk_x + 16, pt_head_x], [y_s + 2, pt_head_y - 3.2], color='#0D47A1', lw=1.0,
+                zorder=3)
 
-        pt_b_x = blk_x + 34
-        pt_b_y = y_s - 4.5
-        draw_instrument(pt_b_x, pt_b_y, "PT", f"{tag[-3:]}B", line_type='field', color='#0277BD')
-        ax.plot([blk_x + 16, pt_b_x], [y_s - 2, pt_b_y + 3.2], color='#0277BD', lw=1.0, zorder=3)
+        pt_rod_x = blk_x + 34
+        pt_rod_y = y_s - 4.5
+        draw_instrument(pt_rod_x, pt_rod_y, "PT", f"{tag[-3:]}R", line_type='field',
+                        color='#0277BD')
+        ax.plot([blk_x + 16, pt_rod_x], [y_s - 2, pt_rod_y + 3.2], color='#0277BD', lw=1.0,
+                zorder=3)
 
         # Text specs
         ax.text(blk_x + 20, y_s - 6.2, "WIKA A-10 (0~400 bar, 4~20mA)", ha='left', va='center', fontsize=5.0, color='#37474F')
@@ -355,10 +387,11 @@ def draw_pid():
     ax.text(214, 106.5, "【 UNIT 400 】 아우트리거 복동 실린더 및 접지 메커니즘 (CYLINDERS & PADS)",
             ha='center', va='center', fontsize=8.8, fontweight='bold', color='#004D40')
 
+    # Rows follow the MCV bank order (FL, RL, FR, RR) so each cylinder lines up with its section
     cylinders_spec = [
         ("CYL-401", "전방 좌 (FL)", 86, "ø130 / ø110 mm", "s=700 mm", "278.7 kN (신장) / 464.6 kN (350b)"),
-        ("CYL-402", "전방 우 (FR)", 64, "ø130 / ø110 mm", "s=700 mm", "278.7 kN (신장) / 464.6 kN (350b)"),
-        ("CYL-403", "후방 좌 (RL)", 42, "ø110 / ø90 mm", "s=700 mm", "199.6 kN (신장) / 332.6 kN (350b)"),
+        ("CYL-403", "후방 좌 (RL)", 64, "ø110 / ø90 mm", "s=700 mm", "199.6 kN (신장) / 332.6 kN (350b)"),
+        ("CYL-402", "전방 우 (FR)", 42, "ø130 / ø110 mm", "s=700 mm", "278.7 kN (신장) / 464.6 kN (350b)"),
         ("CYL-404", "후방 우 (RR)", 20, "ø110 / ø90 mm", "s=700 mm", "199.6 kN (신장) / 332.6 kN (350b)")
     ]
 
@@ -375,8 +408,8 @@ def draw_pid():
         # Connection from lock block to cylinder ports
         ax.plot([172, c_barrel_x + 4], [y_s + 2, y_s + 2], color='#C62828', lw=2.2, zorder=4)
         ax.plot([172, c_barrel_x + 24], [y_s - 2, y_s - 2], color='#1565C0', lw=1.8, zorder=4)
-        ax.plot([c_barrel_x + 4, c_barrel_x + 4], [y_s + 2, c_barrel_y + c_barrel_h], color='#C62828', lw=2.2, zorder=4) # Port A
-        ax.plot([c_barrel_x + 24, c_barrel_x + 24], [y_s - 2, c_barrel_y + c_barrel_h], color='#1565C0', lw=1.8, zorder=4) # Port B
+        ax.plot([c_barrel_x + 4, c_barrel_x + 4], [y_s + 2, c_barrel_y + c_barrel_h], color='#C62828', lw=2.2, zorder=4) # Head port
+        ax.plot([c_barrel_x + 24, c_barrel_x + 24], [y_s - 2, c_barrel_y + c_barrel_h], color='#1565C0', lw=1.8, zorder=4) # Rod port
 
         # Piston & Rod (at extension s ~ 40%)
         p_pos = c_barrel_x + 12
@@ -389,14 +422,14 @@ def draw_pid():
         rod = Rectangle((p_pos + 3.0, y_s - 2.5), rod_w, rod_h, facecolor='#B0BEC5', edgecolor='#37474F', lw=1.2, zorder=4)
         ax.add_patch(rod)
 
-        # Chamber A fill (Red)
+        # Head chamber fill (Red)
         head_vol = Rectangle((c_barrel_x + 0.5, c_barrel_y + 0.6), (p_pos - c_barrel_x - 0.5), c_barrel_h - 1.2,
                              facecolor='#FFCDD2', edgecolor='none', alpha=0.6, zorder=3)
         ax.add_patch(head_vol)
-        ax.text((c_barrel_x + p_pos)/2, y_s, "VA", ha='center', va='center', fontsize=5.5, fontweight='bold', color='#B71C1C', zorder=6)
+        ax.text((c_barrel_x + p_pos)/2, y_s, "VH", ha='center', va='center', fontsize=5.5, fontweight='bold', color='#B71C1C', zorder=6)
 
-        # Chamber B fill (Blue)
-        ax.text(c_barrel_x + 21, y_s + 2.8, "VB", ha='center', va='center', fontsize=5.2, fontweight='bold', color='#0D47A1', zorder=6)
+        # Rod chamber label (Blue)
+        ax.text(c_barrel_x + 21, y_s + 2.8, "VR", ha='center', va='center', fontsize=5.2, fontweight='bold', color='#0D47A1', zorder=6)
 
         # Swivel Ball Joint & Contact Pad
         pad_x = p_pos + 3.0 + rod_w
@@ -465,11 +498,11 @@ def draw_pid():
     ax.annotate('', xy=(plc_x, 126), xytext=(91.5, 126),
                 arrowprops=dict(arrowstyle='->', lw=1.2, color='#512DA8', linestyle=':'))
 
-    # Signal Routing from Sensors (PT-401..404, ZT-401..404) to JC-500
+    # Signal Routing from Sensors (PT-201..204 H/R, ZT-401..404) to JC-500
     # Pressure signal bus (Purple dashed)
     ax.plot([156, 156], [98, 130], color='#6A1B9A', linestyle=':', lw=1.5, zorder=3)
     ax.plot([156, plc_x + plc_w], [130, 130], color='#6A1B9A', linestyle=':', lw=1.5, zorder=3)
-    ax.text(160, 131.5, "8ch 유압 센서 신호 (PT-401~404 A/B: 4~20mA)", ha='left', va='bottom', fontsize=6.0, fontweight='bold', color='#6A1B9A')
+    ax.text(160, 131.5, "8ch 유압 센서 신호 (PT-201~204 H/R: 4~20mA)", ha='left', va='bottom', fontsize=6.0, fontweight='bold', color='#6A1B9A')
 
     # Stroke signal bus
     ax.plot([170, 170], [98, 124], color='#4527A0', linestyle=':', lw=1.5, zorder=3)

@@ -30,7 +30,12 @@ case). Frames are streamed to disk (<out>/_frames/<case>/) and deleted after enc
 Usage (PowerShell, Chrono-dev):
   python -I 04_scripts/02_chrono/render_case_gifs.py <case dir> [<case dir> ...] [--list cases.txt]
          [--fps-sim 2] [--speed 10] [--gif-every 2] [--gif-scale 0.75] [--tail-s 5] [--jobs 4]
-         [--max-frames N] [--out-dir DIR] [--mesh-cache DIR] [--scm-nodes FILE] [--keep-frames] [--dry]
+         [--max-frames N] [--out-dir DIR] [--mesh-cache DIR] [--scm-nodes FILE] [--titles FILE] [--keep-frames]
+         [--dry]
+
+--titles (2026-10-31): Korean scenario title per case (bold top line, shrunk to fit the left column); the sub line
+then starts with the case folder name and, for "time_basis": "loop", notes the loop offset of the quoted times.
+Lists and the paper-set title file live in 04_scripts/02_chrono/gif_lists/.
 """
 from __future__ import annotations
 
@@ -149,6 +154,10 @@ class Case:
     t_event: float | None = None
     """Floor / soil event time (S8 result event_t_s, S9 soil_event driver t_ev_s): the window then runs to the first
     READY after the event."""
+    title: str | None = None
+    """Display title from ``--titles`` (Korean scenario name + verdict); None = code label as before."""
+    title_time_note: str | None = None
+    """Shown in the sub line when the title quotes loop-relative times (screen t - loop offset)."""
 
 
 def _json(path: Path) -> Any:
@@ -639,10 +648,15 @@ def build_plots(c: Case, t0: float, t1: float, speed: float):
     sax.set_ylim(0, 1)
     sax.set_axis_off()
     fig.text((X0 + 18) / W, 1 - 18 / H, "제어 단계(검은 눈금 = 제어기 사건)", fontsize=7, color="#52514e")
-    fig.text(14 / W, 1 - 22 / H, c.label, fontsize=9.5, color="#0b0b0b", weight="bold")
     sub = f"패드 {c.pad_variant} · 오거 {c.level}" + (f" · 질량 x{c.mass_scale:g}" if c.mass_scale != 1.0 else "")
     sub += f" · 재생 x{speed:g}"
-    fig.text(14 / W, 1 - 36 / H, sub, fontsize=7.5, color="#52514e")
+    if c.title:  # Korean title on top, case folder name + run facts below
+        _fit_text(fig, 14, 22, c.title, 9.5, 6.5, X0 - 14, color="#0b0b0b", weight="bold")
+        sub = f"{c.path.name} · {sub}" + (f" · {c.title_time_note}" if c.title_time_note else "")
+        _fit_text(fig, 14, 36, sub, 7.5, 5.5, X0 - 14, color="#52514e")
+    else:
+        fig.text(14 / W, 1 - 22 / H, c.label, fontsize=9.5, color="#0b0b0b", weight="bold")
+        fig.text(14 / W, 1 - 36 / H, sub, fontsize=7.5, color="#52514e")
     fig.canvas.draw()
     bg = Image.fromarray(np.asarray(fig.canvas.buffer_rgba())[:, :, :3].copy())
     spans = []
@@ -651,6 +665,44 @@ def build_plots(c: Case, t0: float, t1: float, speed: float):
         spans.append((bb.x0, bb.x1, H - bb.y1, H - bb.y0))
     plt.close(fig)
     return bg, spans
+
+
+def _fit_text(fig, x_px: float, y_px: float, text: str, size: float, min_size: float, max_w_px: float, **kw):
+    """Figure text at (x_px, y_px from the top), font shrunk in 0.5 pt steps until it is at most max_w_px wide."""
+    renderer = fig.canvas.get_renderer()
+    s = size
+    while True:
+        t = fig.text(x_px / W, 1 - y_px / H, text, fontsize=s, **kw)
+        if s <= min_size or t.get_window_extent(renderer).width <= max_w_px:
+            return t
+        t.remove()
+        s -= 0.5
+
+
+def load_titles(path: Path | None) -> dict[str, dict]:
+    """``--titles`` JSON: {"cases": {"<batch folder>/<case folder>": {"title": str, "time_basis": "loop"|"abs"}}}.
+    Keys may also be the case folder name alone when it is unique in the file."""
+    if path is None:
+        return {}
+    return dict(_json(path).get("cases", {}))
+
+
+def apply_title(c: Case, titles: dict[str, dict]) -> None:
+    key = f"{c.path.parent.name}/{c.path.name}"
+    entry = titles.get(key)
+    if entry is None:
+        hits = [v for k, v in titles.items() if k.split("/")[-1] == c.path.name]
+        entry = hits[0] if len(hits) == 1 else None
+    if entry is None:
+        if titles:
+            c.notes.append(f"no title for {key} in --titles: code label used")
+        return
+    c.title = str(entry["title"])
+    if entry.get("time_basis", "loop") == "loop" and len(c.t_rec) > 1:
+        # loop start = one record period before the first 10 Hz record sample (S9 8.0 s, S8 3.0 s, S6 L1-R 68.5 s;
+        # checked against the spec READY values of all 34 cases on 2026-10-31)
+        off = round(float(c.t_rec[0]) - float(c.t_rec[1] - c.t_rec[0]), 1)
+        c.title_time_note = f"제목 시각 = 루프 기준(화면 t − {off:.1f} s)"
 
 
 def _font(size):
@@ -801,6 +853,7 @@ def render_case(case_dir: Path, a: argparse.Namespace, parts, parts_pickle: Path
 
     t_case = time.perf_counter()
     c = load_case(case_dir)
+    apply_title(c, getattr(a, "titles_map", {}))
     if a.scm_nodes is not None:
         c.scm_nodes = a.scm_nodes
     params = load_params(level=c.level)
@@ -847,7 +900,8 @@ def render_case(case_dir: Path, a: argparse.Namespace, parts, parts_pickle: Path
             "pad_plan_scale": scales, "auger_level": c.level, "mass_scale": c.mass_scale,
             "ground": ("SCM node surface (scm_nodes.npz)" if c.scm_nodes else "SCM schematic (pits by pad sinkage)")
             if stage == "S9" else "rigid plane + per-pad floor tiles", "crawler_gap": c.gap_label,
-            "crawler_gap_approx": c.gap_is_approx, "notes": c.notes}
+            "crawler_gap_approx": c.gap_is_approx, "title": c.title, "title_time_note": c.title_time_note,
+            "notes": c.notes}
     if a.dry:
         return info
     surf = ScmSurface(c.scm_nodes) if (stage == "S9" and c.scm_nodes) else None
@@ -975,8 +1029,12 @@ def main() -> None:
     ap.add_argument("--keep-frames", action="store_true")
     ap.add_argument("--no-gif", action="store_true")
     ap.add_argument("--no-mp4", action="store_true")
+    ap.add_argument("--titles", type=Path, default=None,
+                    help='JSON {"cases": {"<batch>/<case>": {"title": ..., "time_basis": "loop"}}}; '
+                         "missing = code label")
     ap.add_argument("--dry", action="store_true", help="load and plan only (no render)")
     a = ap.parse_args()
+    a.titles_map = load_titles(a.titles)
     cases = list(a.cases)
     if a.list:
         cases += [Path(s.strip()) for s in a.list.read_text(encoding="utf-8").splitlines()

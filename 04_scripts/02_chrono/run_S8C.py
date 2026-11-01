@@ -691,6 +691,12 @@ def _bc(cid: str, sc, **kw):
     return s6c.BundleCCase(cid, "S8", replace(sc, case_id=cid), **kw)
 
 
+JAUG_GROUP = "JA"
+JAUG_LEVELS = ("middle", "bottom")
+"""Journal auger table (cad 2026-10-31): rigid flat F_s 4 kN cases at these auger levels, the A1 row
+K24_top_flat_Fs4 otherwise unchanged (set ``jaug``)."""
+
+
 def s8_cases() -> list[S8Case]:
     """The 80 cases of spec rev. 39 202 + 6 CB placeholders + 2 smoke cases."""
     out: list[S8Case] = []
@@ -841,6 +847,13 @@ def s8_cases() -> list[S8Case]:
             notes=(f"C-S8-74 / spec rev. 68 355.1: {base} on {leg}, "
                    f"{'LOC + 3.0 s' if at == G1_LOC_ANCHOR else 'READY + 5 s'} + {off:g} s, "
                    f"F_s {fs:g} kN, {level}; C-S8-72 source case {src}",))
+    # Journal auger table (cad 2026-10-31): K24_top_flat_Fs4 (FINAL-R-REP A1, rigid flat, F_s 4 kN, L2b-NSC,
+    # pilot check, final controller = run-time preset) with only the auger level changed; appended last (earlier
+    # order and definitions unchanged); group JA (not in MAIN_GROUPS), set jaug. No F_s 0 twin at these levels
+    # (pair_fs0 None: the C10 / C11 / F5 / F6 / F9 pair rows have no twin).
+    for lv in JAUG_LEVELS:
+        add(f"JA_{lv}_flat_Fs4", JAUG_GROUP, 7, _d8_scenario(lv, "flat"), fs_kN=4.0,
+            notes=(f"journal auger table: K24_top_flat_Fs4 with auger {lv} (cad 2026-10-31)",))
     ids = [c.case_id for c in out]
     if len(ids) != len(set(ids)):
         dup = sorted({i for i in ids if ids.count(i) > 1})
@@ -883,6 +896,8 @@ def case_set(name: str) -> list[S8Case]:
         # C-S8-75 (spec rev. 68 358.6, U-S8-77 (나)): bundle B, six slope TOUCH cases of p1 / p2
         # (existing definitions), run once per controller (P-S8-26 cb292e8 / P-S8-27 4790e2b)
         "c75": [c for c in main if c.case_id in C75_CASE_IDS],
+        # journal auger table (cad 2026-10-31): K24_top_flat_Fs4 at auger middle / bottom (2)
+        "jaug": [c for c in cases if c.group == JAUG_GROUP],
     }
     if name not in sets:
         raise KeyError(f"unknown set {name!r}; sets {tuple(sets)}")
@@ -890,7 +905,7 @@ def case_set(name: str) -> list[S8Case]:
 
 
 SET_NAMES = ("p1", "p1r", "p2", "p3", "rest", "all", "cb", "smoke", "mlj", "mlj_c29",
-             "mlj_c67", "mlj_c68", "g1", "c74", "c75")
+             "mlj_c67", "mlj_c68", "g1", "c74", "c75", "jaug")
 G1_CASE_IDS = frozenset(c[0] for c in G1_CASES)
 C74_CASE_IDS = frozenset(c[0] for c in C74_CASES)
 C75_CASE_IDS = frozenset(("K0V_top_rpB_Fs0", "K0_top_fdown3.2_Fs0", "K0V_top_roll5.5_Fs0",

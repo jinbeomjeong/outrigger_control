@@ -2,8 +2,18 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
 
-- 갱신: 2026-10-31 11시 30분경, 좌우 경계 Chrono(X6-rp2·X6-rp3)·리뷰 답 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
-- 마지막 커밋: **840bc31**(최종 제어기 Chrono·재집계 판정, IMU 0.118°, H-6 재설정; 푸시 완료). 그 전: 1e1372c(R8 프리셋 최종 제어기 전환, B1 통과), 72d1722(최종 제어기 확정), 05708b2, 9917955, 38fb395. 더 앞은 `git log`.
+- 갱신: 2026-11-01, Q-F 재결정·MCV A/B 대응·개정 61 문서 정리·journal auger Chrono 커밋 직전 (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
+- 마지막 커밋: **5bfb970**(좌우 경계 Chrono X6-rp2 실패·X6-rp3 통과, 방향별 권고; 푸시 완료). 그 전: 840bc31, 1e1372c, 72d1722. 더 앞은 `git log`.
+
+## 5bfb970 이후 바뀐 것 (2026-10-31 낮 ~ 11-01)
+
+1. **Q-F 재결정(사용자 결정 2026-10-31, 명세 429.11.3)**: 센서 오차 L3·L4를 최종 제어기로 재실행(`04_scripts/03_control/s8/r79_L3L4_final.py`, `s8/rev79/fin_r79_L3L4_final{,_judgement}.json`, 1,002실행). conservative 13/501(CP 4.09 %), old_worst 81/501(CP 19.12 %) 모두 3 % 초과 → 압력 센서 요구는 **normal 등급 수준**(온도 보상 또는 사용 온도 영점 교정). CLAUDE.md 센서 행 갱신.
+2. **MCV A/B ↔ 헤드/로드 대응(11-01, `hydraulic_circuit.md` 8절)**: 회로도 판독상 FL·RL은 MCV A = 헤드, **FR·RR은 MCV A = 로드**. 시뮬레이션 영향 없음(다리별 속도 명령). 실기 통합 때 밸브 명령 부호·압력 센서 태그를 다리별로 정해야 함(실물 배관 미확인). 코드 4개(`rod_chamber.py`, `sensors/hydraulic.py`, `sensors/rod_side.py`, `04_scripts/04_hydraulic/extend_tail_check.py`)는 docstring만, 회로도 PNG 갱신(옛 판 `00_docs/02_hydraulic/history/`).
+3. **개정 61 문서 정리(11-01)**: `dynamics_model.md`·index 기준값 표를 현재 YAML에 맞춤(옛 값 병기, 계산·실행 없음), `rod_side_pressure.md`·`control_candidates_comparison.md` 옛 값 표시. CLAUDE.md 크롤러 접촉 행(L2b 강체 NSC 명확화).
+4. **논문용 journal auger Chrono(cad 10-31)**: `run_S8C.py` 그룹 JA / 세트 jaug(K24_top_flat_Fs4의 오거 중·하단 2건), `s9_batch.py` JOURNAL-AUGER, 결과 `s9/rev85/evidence/journal_auger*`, 판정 `journal_auger_rigid_judge.py`, 시험 `test_s9_journal_auger.py`. 기존 시험 4개는 새 그룹 제외만.
+5. **U-PAD-7(사용자 결정 10-31)**: 논문에서 패드 사양 변수 삭제, 결과는 패드 B 그대로(재실행 없음). 논문은 v4.2(캡션 형식)→v4.3(유압–다물체 결합 그림 4, 2.2·2.4절 기호 $F_a$/$F_{cyl}$)→v4.4(패드 변수 삭제, 패드 B만 재집계, 리뷰 반영) `09_paper/v4.4/`(커밋 안 함).
+6. GIF 렌더(`render_case_gifs.py`, `gif_lists/`). 산출 GIF·MP4(`06_analysis/01_chrono/1[89]_S*/gifs/`, 약 72 MB)와 r79 L3L4 중간 산출물(`.partial.jsonl`, `.log`, `.log.err`)은 **커밋하지 않음**(사용자 결정 11-01).
+7. 전역(저장소 밖): 새 전역 에이전트 **graph-expert**(데이터 차트, `~/.claude/agents/graph-expert.md`, 도구 `~/.claude/tools/graph`, python-dev에 plotly·kaleido·colorspacious·cmcrameri·colorcet·adjustText 설치). 데이터 차트는 graph-expert, 논문 반영은 paper-writing-expert.
 
 ## 840bc31 이후 바뀐 것 (2026-10-31 07~11시)
 
@@ -40,8 +50,9 @@
 
 ## 다음 할 일
 
-1. 논문 마무리: 원고 주석 정리(04_results.md:3·35·303의 낡은 주석, :7 "보수 쪽" 표기를 E1 `mixed`와 맞춤) → 빌드·docx·latexdiff(v3.2 대비)·변경 요약·`09_paper/v4/` 스냅숏. 원고↔결과 전수 감사는 2026-10-31 11시 통과(틀린 값 0).
+1. 논문: v4.4 완료(리뷰 "경미한 수정 뒤 게재 가능" 지적 반영, 최종 정합 감사 통과). 남은 것: 포스터 초록 docx의 패드 비교 문장 점검, `dynamics_model.md` 4.3·`l2b_actuator.py` docstring의 옛 로드 모드 값(71 Hz → 78~450 Hz 계산값) 갱신, 하네스 `rigid+J2@FL` 2건 실 마찰 방향 확인(선택, 몇 분).
 2. 미완(사용자 입력 필요): 저자·소속·사사 자리표시, 미확인 서지 항목(`09_paper/refs/references.md`).
+2b. graph-expert 도구 개선(선택): fig_lint가 범주형 축에도 단위를 요구해 "지반 [-]" 같은 라벨이 생김.
 3. 포스터(초록 docx + pptx v3).
 5. GIF(논문 완료 뒤, 시나리오별, 기존 `render_case_gifs.py` 화면 구성).
 6. 나중: compute-scheduler-expert 기록 모드(끝난 작업 실측), dynamics-dev hypothesis 설치(dry-run 먼저).
