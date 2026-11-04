@@ -1,0 +1,24 @@
+[
+ {
+  "id": "noise_L1L2",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\c4g2k1\\acc_launch.py C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt\\04_scripts\\03_control\\s8\\r79_L3L4_final.py C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt run C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\noise\\r79_L1L2.json --workers 4 --levels L1,L2",
+  "cwd": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+  "env": {
+   "ACC_WT": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+   "ACC_COMBO": "both",
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "CONDA_DEFAULT_ENV": "dynamics-dev",
+   "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "PYTHONDONTWRITEBYTECODE": "1",
+   "OUTRIGGER_ACC": "c4g2k1",
+   "ACC_PROVENANCE": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\provenance\\noise_L1L2.json",
+   "R72_PATH": "per_leg",
+   "ACC_R79_INCLUDE_PAD_A": "1"
+  }
+ }
+]

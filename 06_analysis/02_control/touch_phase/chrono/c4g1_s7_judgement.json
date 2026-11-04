@@ -1,0 +1,29 @@
+{
+ "case": "S9SL_X6rb_J1_B_top_Fs4_rm2p86_p0",
+ "code_on": "15176d1 (C4G1, flow off)",
+ "off_pair": "07_results/S9/batch_FINAL-REP_20261030_223359",
+ "verdict": {
+  "rows_changed": false,
+  "classification_both": "stroke_limited_stop, FAULT_LIFT_STROKE_LIMIT:soil:FL",
+  "new_worse": false,
+  "force_gain": false,
+  "rerun_with_G2": "not recommended; K1 soil Chrono rows cover G2 on soil"
+ },
+ "rows": {
+  "stop_t_s": [50.5, 50.4], "P3_1": [true, true], "P3_2": ["pass", "pass"], "P3_2_loc_minus_departure_s": [1.544, 1.563], "P3_3": [true, true],
+  "P3_4": [false, false], "P3_6": [false, false], "P3_7": [false, false], "P3_7_rise_min_N": [2780.6, 2822.4], "P3_8": [true, true],
+  "note": "values are on, off; P3-4, P3-6, P3-7 are false on both runs"
+ },
+ "stroke_mm": {"FL_motor_max": [675.896, 675.812], "FL_reading_at_stop": [682.424, 682.376], "FL_reading_max": [683.116, 683.018], "guard_mm": 682.8, "motor_max_all_on": [675.896, 429.296, 666.094, 439.331], "motor_max_all_off": [675.812, 429.055, 666.266, 438.929]},
+ "crawler": {"zero_t_s": [39.383, 39.370], "max_after_zero_kN": [0.0, 0.0], "rut_clearance_min_after_departure_mm": [2, 2], "rut_clearance_end_mm": [37, 37]},
+ "min_force_after_departure_kN": {"on": [117.52, 96.69, 72.18, 62.91], "off": [117.51, 96.69, 72.18, 62.92]},
+ "pressure_bar": {"head_max": [107.98, 108.00], "rod_max": [34.92, 34.92]},
+ "hold": {"event": "INFO_TOUCH_TWIST_HOLD:0.275 at 31.6 s", "D_hat_kN": -6.235, "true_mean_same_samples_kN": -3.687, "target_mm": 0.2746, "end_error_mm": 0.079, "paused_periods": 0, "first_command_diff_after_te_s": 0.2},
+ "twist": {"lift_after_te_s": [6.807, 6.810], "D_lift_kN": [9.356, 9.316], "tau_lift_mm": [-0.974, -1.207], "n_sink_diff_at_lift_mm": 0.233, "tau_diff_at_lift_mm": 0.233, "read": "the soil took the twist change as plastic sinkage"},
+ "R16_d0175_C4G2K1": {"code": "74032be", "off_code": "02efc57", "failed": [0, 0], "RL_kN": [27.56, 17.08], "FR_kN": [17.47, 15.55], "D_lift_kN": [14.05, 24.93], "D_hat_kN": 26.965, "D_te_kN": 26.87, "J_C_missed": [0, 1], "J_P_missed": [1, 1], "FL_lift_s": [0.868, 0.797], "RR_lift_s": [1.273, 1.196], "M5_lift_s": [3.2, 2.7], "under_F_min_s": [0.1, 0.2], "window_end_min_kN": [31.65, 19.76], "re_ready_s": [24.15, 24.25], "ready_s": [52.3, 52.4], "pressure_outside_bar": [135.97, 141.27], "pressure_in_window_bar": [206.34, 205.40]},
+ "provisional": {
+  "C4G2": "keep as adoption candidate; S7 gate passed with no force gain and no harm; open gate: acceptance harness, noise L2 first",
+  "K1": "conditional; J_C misses settled by ce21ffa; S7 does not exercise it; open: user call on the C-S8-41 and 2.5 s display, acceptance harness, K1 soil Chrono"
+ },
+ "limits": "one pair, one phase; off pair is the 10-30 code; no cross path, no agreement label"
+}

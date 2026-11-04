@@ -1,0 +1,250 @@
+{
+ "off_rows": {
+  "r16_d000": {
+   "failed": 0,
+   "hold": 0,
+   "rows": {
+    "2 attitude +-0.2 (+mount)": 0.04230589819922134,
+    "3 F_min (1 ms)": -11.252673224630223,
+    "3 F_min before the event": 59.78844309292493,
+    "3 F_min in the event transient per leg (report)": [
+     -11.252673224630223,
+     15.44775007249716,
+     12.39968075680234,
+     -1.4134902860339635
+    ],
+    "3 F_min window end .. re-READY (record, F_min + 5 kN reference)": 27.162806700528765,
+    "3 F_min after the re-READY": 69.62721956787286,
+    "RE1b re-READY <= 60 s": 24.150000001609936,
+    "4 max moving pressure outside the event transient": 138.02890735281412,
+    "4 max pressure in the event transient": 206.40218221200104,
+    "item 9 J_P M1 missed / M1' late / M3 median / M2 / M4 max (record)": [
+     1,
+     0,
+     -0.7000000000800775,
+     11,
+     3.8204272877611327
+    ],
+    "item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record)": [
+     1,
+     0,
+     -0.7000000000800775,
+     12,
+     -9.179572712238867
+    ],
+    "item 9 M5 closed loop: min true / under F_min [s] / lifted [s]": [
+     -11.252673224630223,
+     0.20000000000042206,
+     2.700000000005698
+    ]
+   }
+  },
+  "r16_d070": {
+   "failed": 0,
+   "hold": 0,
+   "rows": {
+    "2 attitude +-0.2 (+mount)": 0.0422508988738161,
+    "3 F_min (1 ms)": -11.328629983353192,
+    "3 F_min before the event": 59.64941562333723,
+    "3 F_min in the event transient per leg (report)": [
+     -11.328629983353192,
+     15.441614627997518,
+     21.16176181113583,
+     -1.4314982708758661
+    ],
+    "3 F_min window end .. re-READY (record, F_min + 5 kN reference)": 25.676227045094475,
+    "3 F_min after the re-READY": 69.70219607158296,
+    "RE1b re-READY <= 60 s": 24.150000001645463,
+    "4 max moving pressure outside the event transient": 138.380667229421,
+    "4 max pressure in the event transient": 205.5599431577533,
+    "item 9 J_P M1 missed / M1' late / M3 median / M2 / M4 max (record)": [
+     1,
+     0,
+     -0.7000000001156046,
+     12,
+     3.8198090078072635
+    ],
+    "item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record)": [
+     1,
+     0,
+     -0.7000000001156046,
+     13,
+     -9.180190992192736
+    ],
+    "item 9 M5 closed loop: min true / under F_min [s] / lifted [s]": [
+     -11.328629983353192,
+     0.20000000000042206,
+     2.700000000005698
+    ]
+   }
+  },
+  "R12": {
+   "failed": 0,
+   "hold": 0,
+   "rows": {
+    "2 attitude +-0.2 (+mount)": 0.03715984563957691,
+    "3 F_min (1 ms)": 11.143760085285908,
+    "4 max moving pressure": 137.88020203868305,
+    "6 re-READY <= 40 s": 22.800000000922857,
+    "item 9 J_P M1 missed / M1' late / M3 median / M2 / M4 max (record)": [
+     0,
+     0,
+     null,
+     0,
+     3.320427287761135
+    ],
+    "item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record)": [
+     0,
+     0,
+     null,
+     0,
+     -4.48442756310589
+    ],
+    "item 9 M5 closed loop: min true / under F_min [s] / lifted [s]": [
+     11.143760085285908,
+     0.0,
+     0.0
+    ]
+   }
+  },
+  "R15": {
+   "failed": 0,
+   "hold": 0,
+   "rows": {
+    "2 attitude +-0.2 (+mount)": 0.052795174210948564,
+    "3 F_min (1 ms)": -11.302443422497978,
+    "3 F_min before the event": 67.24510501106404,
+    "3 F_min in the event transient per leg (report)": [
+     -11.302443422497978,
+     13.856313214963006,
+     2.559557183878781,
+     -1.5702331474342845
+    ],
+    "3 F_min window end .. re-READY (record, F_min + 5 kN reference)": -0.8331039047771679,
+    "3 F_min after the re-READY": 68.66034965723537,
+    "RE1b re-READY <= 60 s": 26.950000002171844,
+    "4 max moving pressure outside the event transient": 163.7897628331234,
+    "4 max pressure in the event transient": 207.25193594973135,
+    "item 9 J_P M1 missed / M1' late / M3 median / M2 / M4 max (record)": [
+     1,
+     0,
+     -1.9000000003188653,
+     18,
+     0.0022413278725034614
+    ],
+    "item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record)": [
+     0,
+     0,
+     -1.9000000003188653,
+     26,
+     -12.997758672127496
+    ],
+    "item 9 M5 closed loop: min true / under F_min [s] / lifted [s]": [
+     -11.302443422497978,
+     0.8000000000265572,
+     3.1000000001029093
+    ]
+   }
+  }
+ },
+ "pads_bit_detail": {
+  "R9_mirror2_d000_off": {
+   "samples_stored": 40000,
+   "t_last_stored": 43.00000000030392,
+   "R_world": {
+    "bad_samples": 9,
+    "first_t": 42.992000000303655,
+    "max_abs": 25.309290444856742
+   },
+   "N": {
+    "bad_samples": 9,
+    "first_t": 42.992000000303655,
+    "max_abs": 25.31484123856353
+   },
+   "T": {
+    "bad_samples": 9,
+    "first_t": 42.992000000303655,
+    "max_abs": 4.37121942477097
+   },
+   "L": {
+    "bad_samples": 9,
+    "first_t": 42.992000000303655,
+    "max_abs": 4.54557115051648
+   },
+   "utilisation": {
+    "bad_samples": 9,
+    "first_t": 42.992000000303655,
+    "max_abs": 9.81644988314323e-05
+   },
+   "F_cyl_mean_20ms": {
+    "bad_samples": 9,
+    "first_t": 42.992000000303655,
+    "max_abs": 3.4056994980055606
+   },
+   "F_cyl": {
+    "bad_samples": 0,
+    "first_t": null,
+    "max_abs": 0.0
+   },
+   "F_cyl_min_interval": {
+    "bad_samples": 0,
+    "first_t": null,
+    "max_abs": 0.0
+   },
+   "s_motor": {
+    "bad_samples": 0,
+    "first_t": null,
+    "max_abs": 0.0
+   }
+  },
+  "R9_mirror2_d035_off": {
+   "samples_stored": 40000,
+   "t_last_stored": 43.00000000030392,
+   "R_world": {
+    "bad_samples": 9,
+    "first_t": 42.992000000303655,
+    "max_abs": 6.927660004308564
+   },
+   "N": {
+    "bad_samples": 9,
+    "first_t": 42.992000000303655,
+    "max_abs": 6.691407868434908
+   },
+   "T": {
+    "bad_samples": 9,
+    "first_t": 42.992000000303655,
+    "max_abs": 4.911737048445502
+   },
+   "L": {
+    "bad_samples": 9,
+    "first_t": 42.992000000303655,
+    "max_abs": 5.218570467011887
+   },
+   "utilisation": {
+    "bad_samples": 9,
+    "first_t": 42.992000000303655,
+    "max_abs": 0.0001183340249343301
+   },
+   "F_cyl_mean_20ms": {
+    "bad_samples": 9,
+    "first_t": 42.992000000303655,
+    "max_abs": 2.853987711670925
+   },
+   "F_cyl": {
+    "bad_samples": 0,
+    "first_t": null,
+    "max_abs": 0.0
+   },
+   "F_cyl_min_interval": {
+    "bad_samples": 0,
+    "first_t": null,
+    "max_abs": 0.0
+   },
+   "s_motor": {
+    "bad_samples": 0,
+    "first_t": null,
+    "max_abs": 0.0
+   }
+  }
+ }
+}

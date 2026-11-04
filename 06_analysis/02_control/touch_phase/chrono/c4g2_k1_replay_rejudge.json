@@ -1,0 +1,1420 @@
+{
+ "scope": "C4G2+K1 rigid Chrono rows of commit 74032be, stored records only (no Chrono run). Values only; the meaning of the judgement is control-expert's.",
+ "method": "verify.s8_control.judge_batch(batch, out, root=main tree) on the worktree code. after = contact_replay._Replayer._defers_reapproach with the K1 rule; before = the same call with that method replaced by its 74032be body.",
+ "rows": {
+  "R16_mirror2_d000_C4G2K1": {
+   "before": {
+    "replay_path": "/G1L_RE1bF_FL_top_o050_Fs4/item9/replay",
+    "J_C": {
+     "score": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 0.3123439780663678,
+      "M1p_late": 0,
+      "M2_false_action_flags": 13,
+      "M2_per_watched_hour": 1453.416149065256,
+      "M4_max_N": -9179.572712238865,
+      "M4_p5_p50_p95_N": [
+       -15179.332712238867,
+       -9179.572712238867,
+       -9179.572712238865
+      ]
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "missed_episodes": [],
+     "event_counts": {
+      "leg_reapproach_start": 5,
+      "leg_reapproach_deferred": 0,
+      "leg_reapproach_contact": 5
+     },
+     "reapproach_starts": [
+      [
+       28.3,
+       "FL"
+      ],
+      [
+       28.8,
+       "RR"
+      ],
+      [
+       30.0,
+       "FL"
+      ],
+      [
+       30.3,
+       "RR"
+      ],
+      [
+       30.7,
+       "RR"
+      ]
+     ]
+    },
+    "J_P": {
+     "score": {
+      "M1_missed": 1,
+      "M1_missed_upper_95": 0.4706794086011316,
+      "M1p_late": 0,
+      "M2_false_action_flags": 11,
+      "M2_per_watched_hour": 1229.8136645936781,
+      "M4_max_N": 3820.4272877611347,
+      "M4_p5_p50_p95_N": [
+       -2179.3327122388664,
+       3820.427287761134,
+       3820.4272877611347
+      ]
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "missed_episodes": [
+      {
+       "leg": "RR",
+       "t_on_s": 30.800000000412272,
+       "t_off_s": 30.800000000412272,
+       "is_lift": false,
+       "sampling_only": true,
+       "crawler_transient": true
+      }
+     ],
+     "event_counts": {
+      "leg_reapproach_start": 6,
+      "leg_reapproach_deferred": 0,
+      "leg_reapproach_contact": 6
+     },
+     "reapproach_starts": [
+      [
+       28.3,
+       "FL"
+      ],
+      [
+       28.8,
+       "RR"
+      ],
+      [
+       29.2,
+       "FL"
+      ],
+      [
+       29.6,
+       "RR"
+      ],
+      [
+       30.0,
+       "FL"
+      ],
+      [
+       30.3,
+       "RR"
+      ]
+     ]
+    },
+    "C_S8_41": [
+     {
+      "item": "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferra",
+      "value": {
+       "rt_runs": 1,
+       "runs_with_deferral": 1,
+       "windows": 4,
+       "flagged_runs": 1,
+       "worst": [
+        "G1L_RE1bF_FL_top_o050_Fs4",
+        "FL",
+        -1.149
+       ]
+      },
+      "limit": 9.414589110000001,
+      "passed": null,
+      "kind": "record",
+      "flag": true,
+      "flagged": [
+       "G1L_RE1bF_FL_top_o050_Fs4"
+      ]
+     }
+    ],
+    "failed_rows": 0,
+    "hold_rows": 0,
+    "summary_deferred": {
+     "flagged_runs": 1,
+     "runs": [
+      "G1L_RE1bF_FL_top_o050_Fs4"
+     ]
+    },
+    "flag_rows": [
+     "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferral + T_o) + 0.3 s, sp"
+    ]
+   },
+   "after": {
+    "replay_path": "/G1L_RE1bF_FL_top_o050_Fs4/item9/replay",
+    "J_C": {
+     "score": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 0.3123439780663678,
+      "M1p_late": 0,
+      "M2_false_action_flags": 13,
+      "M2_per_watched_hour": 1453.416149065256,
+      "M4_max_N": -9179.572712238865,
+      "M4_p5_p50_p95_N": [
+       -15179.332712238867,
+       -9179.572712238867,
+       -9179.572712238865
+      ]
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "missed_episodes": [],
+     "event_counts": {
+      "leg_reapproach_start": 4,
+      "leg_reapproach_deferred": 4,
+      "leg_reapproach_contact": 4
+     },
+     "reapproach_starts": [
+      [
+       28.3,
+       "FL"
+      ],
+      [
+       28.9,
+       "RR"
+      ],
+      [
+       30.2,
+       "RR"
+      ],
+      [
+       30.8,
+       "RR"
+      ]
+     ]
+    },
+    "J_P": {
+     "score": {
+      "M1_missed": 1,
+      "M1_missed_upper_95": 0.4706794086011316,
+      "M1p_late": 0,
+      "M2_false_action_flags": 11,
+      "M2_per_watched_hour": 1229.8136645936781,
+      "M4_max_N": 3820.4272877611347,
+      "M4_p5_p50_p95_N": [
+       -2179.3327122388664,
+       3820.427287761134,
+       3820.4272877611347
+      ]
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "missed_episodes": [
+      {
+       "leg": "RR",
+       "t_on_s": 30.800000000412272,
+       "t_off_s": 30.800000000412272,
+       "is_lift": false,
+       "sampling_only": true,
+       "crawler_transient": true
+      }
+     ],
+     "event_counts": {
+      "leg_reapproach_start": 5,
+      "leg_reapproach_deferred": 5,
+      "leg_reapproach_contact": 5
+     },
+     "reapproach_starts": [
+      [
+       28.3,
+       "FL"
+      ],
+      [
+       28.9,
+       "RR"
+      ],
+      [
+       29.3,
+       "FL"
+      ],
+      [
+       29.7,
+       "RR"
+      ],
+      [
+       30.2,
+       "RR"
+      ]
+     ]
+    },
+    "C_S8_41": [
+     {
+      "item": "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferra",
+      "value": {
+       "rt_runs": 1,
+       "runs_with_deferral": 1,
+       "windows": 4,
+       "flagged_runs": 1,
+       "worst": [
+        "G1L_RE1bF_FL_top_o050_Fs4",
+        "FL",
+        -1.149
+       ]
+      },
+      "limit": 9.414589110000001,
+      "passed": null,
+      "kind": "record",
+      "flag": true,
+      "flagged": [
+       "G1L_RE1bF_FL_top_o050_Fs4"
+      ]
+     }
+    ],
+    "failed_rows": 0,
+    "hold_rows": 0,
+    "summary_deferred": {
+     "flagged_runs": 1,
+     "runs": [
+      "G1L_RE1bF_FL_top_o050_Fs4"
+     ]
+    },
+    "flag_rows": [
+     "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferral + T_o) + 0.3 s, sp"
+    ]
+   },
+   "before_rows_equal_stored_verify": true,
+   "row_count": 72,
+   "rows_changed_by_the_replay": []
+  },
+  "R16_mirror2_d070_C4G2K1": {
+   "before": {
+    "replay_path": "/G1L_RE1bF_FL_top_o050_Fs4/item9/replay",
+    "J_C": {
+     "score": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 0.3123439780663678,
+      "M1p_late": 0,
+      "M2_false_action_flags": 13,
+      "M2_per_watched_hour": 1444.4444444413962,
+      "M4_max_N": -9179.572712238867,
+      "M4_p5_p50_p95_N": [
+       -15229.332712238867,
+       -9679.572712238867,
+       -9229.572712238867
+      ]
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "missed_episodes": [],
+     "event_counts": {
+      "leg_reapproach_start": 5,
+      "leg_reapproach_deferred": 0,
+      "leg_reapproach_contact": 5
+     },
+     "reapproach_starts": [
+      [
+       28.5,
+       "FL"
+      ],
+      [
+       29.0,
+       "RR"
+      ],
+      [
+       30.2,
+       "FL"
+      ],
+      [
+       30.5,
+       "RR"
+      ],
+      [
+       30.9,
+       "RR"
+      ]
+     ]
+    },
+    "J_P": {
+     "score": {
+      "M1_missed": 1,
+      "M1_missed_upper_95": 0.4706794086011316,
+      "M1p_late": 0,
+      "M2_false_action_flags": 11,
+      "M2_per_watched_hour": 1222.2222222196428,
+      "M4_max_N": 3820.427287761133,
+      "M4_p5_p50_p95_N": [
+       -2229.3327122388664,
+       3320.427287761134,
+       3770.427287761133
+      ]
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "missed_episodes": [
+      {
+       "leg": "RR",
+       "t_on_s": 31.00000000048286,
+       "t_off_s": 31.00000000048286,
+       "is_lift": false,
+       "sampling_only": true,
+       "crawler_transient": true
+      }
+     ],
+     "event_counts": {
+      "leg_reapproach_start": 6,
+      "leg_reapproach_deferred": 0,
+      "leg_reapproach_contact": 6
+     },
+     "reapproach_starts": [
+      [
+       28.5,
+       "FL"
+      ],
+      [
+       29.0,
+       "RR"
+      ],
+      [
+       29.4,
+       "FL"
+      ],
+      [
+       29.8,
+       "RR"
+      ],
+      [
+       30.2,
+       "FL"
+      ],
+      [
+       30.5,
+       "RR"
+      ]
+     ]
+    },
+    "C_S8_41": [
+     {
+      "item": "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferra",
+      "value": {
+       "rt_runs": 1,
+       "runs_with_deferral": 1,
+       "windows": 4,
+       "flagged_runs": 1,
+       "worst": [
+        "G1L_RE1bF_FL_top_o050_Fs4",
+        "FL",
+        -1.146
+       ]
+      },
+      "limit": 9.414589110000001,
+      "passed": null,
+      "kind": "record",
+      "flag": true,
+      "flagged": [
+       "G1L_RE1bF_FL_top_o050_Fs4"
+      ]
+     }
+    ],
+    "failed_rows": 0,
+    "hold_rows": 0,
+    "summary_deferred": {
+     "flagged_runs": 1,
+     "runs": [
+      "G1L_RE1bF_FL_top_o050_Fs4"
+     ]
+    },
+    "flag_rows": [
+     "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferral + T_o) + 0.3 s, sp"
+    ]
+   },
+   "after": {
+    "replay_path": "/G1L_RE1bF_FL_top_o050_Fs4/item9/replay",
+    "J_C": {
+     "score": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 0.3123439780663678,
+      "M1p_late": 0,
+      "M2_false_action_flags": 13,
+      "M2_per_watched_hour": 1444.4444444413962,
+      "M4_max_N": -9179.572712238867,
+      "M4_p5_p50_p95_N": [
+       -15229.332712238867,
+       -9679.572712238867,
+       -9229.572712238867
+      ]
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "missed_episodes": [],
+     "event_counts": {
+      "leg_reapproach_start": 4,
+      "leg_reapproach_deferred": 4,
+      "leg_reapproach_contact": 4
+     },
+     "reapproach_starts": [
+      [
+       28.5,
+       "FL"
+      ],
+      [
+       29.1,
+       "RR"
+      ],
+      [
+       30.4,
+       "RR"
+      ],
+      [
+       31.0,
+       "RR"
+      ]
+     ]
+    },
+    "J_P": {
+     "score": {
+      "M1_missed": 1,
+      "M1_missed_upper_95": 0.4706794086011316,
+      "M1p_late": 0,
+      "M2_false_action_flags": 11,
+      "M2_per_watched_hour": 1222.2222222196428,
+      "M4_max_N": 3820.427287761133,
+      "M4_p5_p50_p95_N": [
+       -2229.3327122388664,
+       3320.427287761134,
+       3770.427287761133
+      ]
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "missed_episodes": [
+      {
+       "leg": "RR",
+       "t_on_s": 31.00000000048286,
+       "t_off_s": 31.00000000048286,
+       "is_lift": false,
+       "sampling_only": true,
+       "crawler_transient": true
+      }
+     ],
+     "event_counts": {
+      "leg_reapproach_start": 5,
+      "leg_reapproach_deferred": 5,
+      "leg_reapproach_contact": 5
+     },
+     "reapproach_starts": [
+      [
+       28.5,
+       "FL"
+      ],
+      [
+       29.1,
+       "RR"
+      ],
+      [
+       29.5,
+       "FL"
+      ],
+      [
+       29.9,
+       "RR"
+      ],
+      [
+       30.4,
+       "RR"
+      ]
+     ]
+    },
+    "C_S8_41": [
+     {
+      "item": "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferra",
+      "value": {
+       "rt_runs": 1,
+       "runs_with_deferral": 1,
+       "windows": 4,
+       "flagged_runs": 1,
+       "worst": [
+        "G1L_RE1bF_FL_top_o050_Fs4",
+        "FL",
+        -1.146
+       ]
+      },
+      "limit": 9.414589110000001,
+      "passed": null,
+      "kind": "record",
+      "flag": true,
+      "flagged": [
+       "G1L_RE1bF_FL_top_o050_Fs4"
+      ]
+     }
+    ],
+    "failed_rows": 0,
+    "hold_rows": 0,
+    "summary_deferred": {
+     "flagged_runs": 1,
+     "runs": [
+      "G1L_RE1bF_FL_top_o050_Fs4"
+     ]
+    },
+    "flag_rows": [
+     "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferral + T_o) + 0.3 s, sp"
+    ]
+   },
+   "before_rows_equal_stored_verify": true,
+   "row_count": 72,
+   "rows_changed_by_the_replay": []
+  },
+  "R15_C4G2K1": {
+   "before": {
+    "replay_path": "/G1L_RE1bF_FL_top_Fs0/item9/replay",
+    "J_C": {
+     "score": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 0.2831288355631135,
+      "M1p_late": 0,
+      "M2_false_action_flags": 34,
+      "M2_per_watched_hour": 3497.1428570267644,
+      "M4_max_N": -12998.517280875145,
+      "M4_p5_p50_p95_N": [
+       -12998.607744003879,
+       -12998.517280875149,
+       -12998.517280875145
+      ]
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 23,
+      "M2_per_watched_hour": 3010.909090809139,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "missed_episodes": [],
+     "event_counts": {
+      "leg_reapproach_start": 7,
+      "leg_reapproach_deferred": 2,
+      "leg_reapproach_contact": 7
+     },
+     "reapproach_starts": [
+      [
+       28.1,
+       "FL"
+      ],
+      [
+       28.6,
+       "RR"
+      ],
+      [
+       29.0,
+       "FL"
+      ],
+      [
+       29.4,
+       "RR"
+      ],
+      [
+       29.8,
+       "FL"
+      ],
+      [
+       30.1,
+       "RR"
+      ],
+      [
+       31.2,
+       "RR"
+      ]
+     ]
+    },
+    "J_P": {
+     "score": {
+      "M1_missed": 1,
+      "M1_missed_upper_95": 0.4291355470314345,
+      "M1p_late": 0,
+      "M2_false_action_flags": 29,
+      "M2_per_watched_hour": 2982.8571427581223,
+      "M4_max_N": 1.4827191248550662,
+      "M4_p5_p50_p95_N": [
+       1.3922559961210936,
+       1.4827191248523377,
+       1.4827191248550662
+      ]
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 18,
+      "M2_per_watched_hour": 2356.363636285413,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "missed_episodes": [
+      {
+       "leg": "RL",
+       "t_on_s": 31.500000000627356,
+       "t_off_s": 31.500000000627356,
+       "is_lift": false,
+       "sampling_only": true,
+       "crawler_transient": true
+      }
+     ],
+     "event_counts": {
+      "leg_reapproach_start": 8,
+      "leg_reapproach_deferred": 1,
+      "leg_reapproach_contact": 8
+     },
+     "reapproach_starts": [
+      [
+       28.1,
+       "FL"
+      ],
+      [
+       28.6,
+       "RR"
+      ],
+      [
+       29.0,
+       "FL"
+      ],
+      [
+       29.4,
+       "RR"
+      ],
+      [
+       29.8,
+       "FL"
+      ],
+      [
+       30.1,
+       "RR"
+      ],
+      [
+       30.4,
+       "FL"
+      ],
+      [
+       30.7,
+       "RR"
+      ]
+     ]
+    },
+    "C_S8_41": [
+     {
+      "item": "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferra",
+      "value": {
+       "rt_runs": 1,
+       "runs_with_deferral": 1,
+       "windows": 7,
+       "flagged_runs": 1,
+       "worst": [
+        "G1L_RE1bF_FL_top_Fs0",
+        "FL",
+        -1.876
+       ]
+      },
+      "limit": 9.414589110000001,
+      "passed": null,
+      "kind": "record",
+      "flag": true,
+      "flagged": [
+       "G1L_RE1bF_FL_top_Fs0"
+      ]
+     }
+    ],
+    "failed_rows": 0,
+    "hold_rows": 0,
+    "summary_deferred": {
+     "flagged_runs": 1,
+     "runs": [
+      "G1L_RE1bF_FL_top_Fs0"
+     ]
+    },
+    "flag_rows": [
+     "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferral + T_o) + 0.3 s, sp"
+    ]
+   },
+   "after": {
+    "replay_path": "/G1L_RE1bF_FL_top_Fs0/item9/replay",
+    "J_C": {
+     "score": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 0.2831288355631135,
+      "M1p_late": 0,
+      "M2_false_action_flags": 34,
+      "M2_per_watched_hour": 3497.1428570267644,
+      "M4_max_N": -12998.517280875145,
+      "M4_p5_p50_p95_N": [
+       -12998.607744003879,
+       -12998.517280875149,
+       -12998.517280875145
+      ]
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 23,
+      "M2_per_watched_hour": 3010.909090809139,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "missed_episodes": [],
+     "event_counts": {
+      "leg_reapproach_start": 5,
+      "leg_reapproach_deferred": 8,
+      "leg_reapproach_contact": 5
+     },
+     "reapproach_starts": [
+      [
+       28.1,
+       "FL"
+      ],
+      [
+       28.7,
+       "RR"
+      ],
+      [
+       29.1,
+       "FL"
+      ],
+      [
+       29.5,
+       "RR"
+      ],
+      [
+       30.0,
+       "RR"
+      ]
+     ]
+    },
+    "J_P": {
+     "score": {
+      "M1_missed": 1,
+      "M1_missed_upper_95": 0.4291355470314345,
+      "M1p_late": 0,
+      "M2_false_action_flags": 29,
+      "M2_per_watched_hour": 2982.8571427581223,
+      "M4_max_N": 1.4827191248550662,
+      "M4_p5_p50_p95_N": [
+       1.3922559961210936,
+       1.4827191248523377,
+       1.4827191248550662
+      ]
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 18,
+      "M2_per_watched_hour": 2356.363636285413,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "missed_episodes": [
+      {
+       "leg": "RL",
+       "t_on_s": 31.500000000627356,
+       "t_off_s": 31.500000000627356,
+       "is_lift": false,
+       "sampling_only": true,
+       "crawler_transient": true
+      }
+     ],
+     "event_counts": {
+      "leg_reapproach_start": 6,
+      "leg_reapproach_deferred": 8,
+      "leg_reapproach_contact": 6
+     },
+     "reapproach_starts": [
+      [
+       28.1,
+       "FL"
+      ],
+      [
+       28.7,
+       "RR"
+      ],
+      [
+       29.1,
+       "FL"
+      ],
+      [
+       29.5,
+       "RR"
+      ],
+      [
+       30.0,
+       "RR"
+      ],
+      [
+       30.6,
+       "RR"
+      ]
+     ]
+    },
+    "C_S8_41": [
+     {
+      "item": "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferra",
+      "value": {
+       "rt_runs": 1,
+       "runs_with_deferral": 1,
+       "windows": 7,
+       "flagged_runs": 1,
+       "worst": [
+        "G1L_RE1bF_FL_top_Fs0",
+        "FL",
+        -1.876
+       ]
+      },
+      "limit": 9.414589110000001,
+      "passed": null,
+      "kind": "record",
+      "flag": true,
+      "flagged": [
+       "G1L_RE1bF_FL_top_Fs0"
+      ]
+     }
+    ],
+    "failed_rows": 0,
+    "hold_rows": 0,
+    "summary_deferred": {
+     "flagged_runs": 1,
+     "runs": [
+      "G1L_RE1bF_FL_top_Fs0"
+     ]
+    },
+    "flag_rows": [
+     "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferral + T_o) + 0.3 s, sp"
+    ]
+   },
+   "before_rows_equal_stored_verify": true,
+   "row_count": 72,
+   "rows_changed_by_the_replay": []
+  },
+  "R12_C4G2K1": {
+   "before": {
+    "replay_path": "/E_G4_Fs4/item9/replay",
+    "J_C": {
+     "score": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": -4484.42756310589,
+      "M4_p5_p50_p95_N": [
+       -4484.4275631058945,
+       -4484.427563105892,
+       -4484.42756310589
+      ]
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": -4484.42756310589,
+      "M4_p5_p50_p95_N": [
+       -4484.4275631058945,
+       -4484.427563105892,
+       -4484.42756310589
+      ]
+     },
+     "missed_episodes": [],
+     "event_counts": {
+      "leg_reapproach_start": 1,
+      "leg_reapproach_deferred": 0,
+      "leg_reapproach_contact": 1
+     },
+     "reapproach_starts": [
+      [
+       49.1,
+       "RR"
+      ]
+     ]
+    },
+    "J_P": {
+     "score": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": 3320.4272877611347,
+      "M4_p5_p50_p95_N": [
+       3320.4272877611297,
+       3320.427287761133,
+       3320.4272877611343
+      ]
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": 3320.4272877611347,
+      "M4_p5_p50_p95_N": [
+       3320.4272877611297,
+       3320.427287761133,
+       3320.4272877611343
+      ]
+     },
+     "missed_episodes": [],
+     "event_counts": {
+      "leg_reapproach_start": 0,
+      "leg_reapproach_deferred": 0,
+      "leg_reapproach_contact": 0
+     },
+     "reapproach_starts": []
+    },
+    "C_S8_41": [
+     {
+      "item": "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferra",
+      "value": {
+       "rt_runs": 1,
+       "runs_with_deferral": 0,
+       "windows": 0,
+       "flagged_runs": 0,
+       "worst": null
+      },
+      "limit": null,
+      "passed": null,
+      "kind": "record",
+      "flag": false,
+      "flagged": []
+     }
+    ],
+    "failed_rows": 0,
+    "hold_rows": 0,
+    "summary_deferred": {
+     "flagged_runs": 0,
+     "runs": []
+    },
+    "flag_rows": []
+   },
+   "after": {
+    "replay_path": "/E_G4_Fs4/item9/replay",
+    "J_C": {
+     "score": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": -4484.42756310589,
+      "M4_p5_p50_p95_N": [
+       -4484.4275631058945,
+       -4484.427563105892,
+       -4484.42756310589
+      ]
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": -4484.42756310589,
+      "M4_p5_p50_p95_N": [
+       -4484.4275631058945,
+       -4484.427563105892,
+       -4484.42756310589
+      ]
+     },
+     "missed_episodes": [],
+     "event_counts": {
+      "leg_reapproach_start": 1,
+      "leg_reapproach_deferred": 0,
+      "leg_reapproach_contact": 1
+     },
+     "reapproach_starts": [
+      [
+       49.1,
+       "RR"
+      ]
+     ]
+    },
+    "J_P": {
+     "score": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": 3320.4272877611347,
+      "M4_p5_p50_p95_N": [
+       3320.4272877611297,
+       3320.427287761133,
+       3320.4272877611343
+      ]
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": 3320.4272877611347,
+      "M4_p5_p50_p95_N": [
+       3320.4272877611297,
+       3320.427287761133,
+       3320.4272877611343
+      ]
+     },
+     "missed_episodes": [],
+     "event_counts": {
+      "leg_reapproach_start": 0,
+      "leg_reapproach_deferred": 0,
+      "leg_reapproach_contact": 0
+     },
+     "reapproach_starts": []
+    },
+    "C_S8_41": [
+     {
+      "item": "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferra",
+      "value": {
+       "rt_runs": 1,
+       "runs_with_deferral": 0,
+       "windows": 0,
+       "flagged_runs": 0,
+       "worst": null
+      },
+      "limit": null,
+      "passed": null,
+      "kind": "record",
+      "flag": false,
+      "flagged": []
+     }
+    ],
+    "failed_rows": 0,
+    "hold_rows": 0,
+    "summary_deferred": {
+     "flagged_runs": 0,
+     "runs": []
+    },
+    "flag_rows": []
+   },
+   "before_rows_equal_stored_verify": true,
+   "row_count": 75,
+   "rows_changed_by_the_replay": []
+  },
+  "R9_mirror2_d035_Fs4_C4G2K1": {
+   "before": {
+    "replay_path": "/A_bottom_rpB_Fs4/item9/replay",
+    "J_C": {
+     "score": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "missed_episodes": [],
+     "event_counts": {
+      "leg_reapproach_start": 0,
+      "leg_reapproach_deferred": 0,
+      "leg_reapproach_contact": 0
+     },
+     "reapproach_starts": []
+    },
+    "J_P": {
+     "score": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "missed_episodes": [],
+     "event_counts": {
+      "leg_reapproach_start": 0,
+      "leg_reapproach_deferred": 0,
+      "leg_reapproach_contact": 0
+     },
+     "reapproach_starts": []
+    },
+    "C_S8_41": [
+     {
+      "item": "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferra",
+      "value": {
+       "rt_runs": 1,
+       "runs_with_deferral": 0,
+       "windows": 0,
+       "flagged_runs": 0,
+       "worst": null
+      },
+      "limit": null,
+      "passed": null,
+      "kind": "record",
+      "flag": false,
+      "flagged": []
+     }
+    ],
+    "failed_rows": 0,
+    "hold_rows": 0,
+    "summary_deferred": {
+     "flagged_runs": 0,
+     "runs": []
+    },
+    "flag_rows": []
+   },
+   "after": {
+    "replay_path": "/A_bottom_rpB_Fs4/item9/replay",
+    "J_C": {
+     "score": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "missed_episodes": [],
+     "event_counts": {
+      "leg_reapproach_start": 0,
+      "leg_reapproach_deferred": 0,
+      "leg_reapproach_contact": 0
+     },
+     "reapproach_starts": []
+    },
+    "J_P": {
+     "score": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "score_ex_transient": {
+      "M1_missed": 0,
+      "M1_missed_upper_95": 1.0,
+      "M1p_late": 0,
+      "M2_false_action_flags": 0,
+      "M2_per_watched_hour": 0.0,
+      "M4_max_N": null,
+      "M4_p5_p50_p95_N": null
+     },
+     "missed_episodes": [],
+     "event_counts": {
+      "leg_reapproach_start": 0,
+      "leg_reapproach_deferred": 0,
+      "leg_reapproach_contact": 0
+     },
+     "reapproach_starts": []
+    },
+    "C_S8_41": [
+     {
+      "item": "C-S8-41 RT deferral: true minimum of the deferred leg (deferral .. min(next start, deferra",
+      "value": {
+       "rt_runs": 1,
+       "runs_with_deferral": 0,
+       "windows": 0,
+       "flagged_runs": 0,
+       "worst": null
+      },
+      "limit": null,
+      "passed": null,
+      "kind": "record",
+      "flag": false,
+      "flagged": []
+     }
+    ],
+    "failed_rows": 0,
+    "hold_rows": 0,
+    "summary_deferred": {
+     "flagged_runs": 0,
+     "runs": []
+    },
+    "flag_rows": []
+   },
+   "before_rows_equal_stored_verify": true,
+   "row_count": 57,
+   "rows_changed_by_the_replay": []
+  }
+ },
+ "code": "worktree branch worktree-agent-a7f0f4f0aceadde2c, replay rule on top of 74032be",
+ "replay_reach_continuous_watch": {
+  "R16_mirror2_d000_C4G2K1": {
+   "J_P": {
+    "decision_flags_equal": true,
+    "estimate_equal": true,
+    "action_flag_samples_before": 29,
+    "action_flag_samples_after": 31,
+    "action_flag_samples_different": 6,
+    "continuous_starts_equal_recorded": false
+   },
+   "J_C": {
+    "decision_flags_equal": true,
+    "estimate_equal": true,
+    "action_flag_samples_before": 30,
+    "action_flag_samples_after": 32,
+    "action_flag_samples_different": 4,
+    "continuous_starts_equal_recorded": true
+   },
+   "recorded_starts": 4
+  },
+  "R16_mirror2_d070_C4G2K1": {
+   "J_P": {
+    "decision_flags_equal": true,
+    "estimate_equal": true,
+    "action_flag_samples_before": 29,
+    "action_flag_samples_after": 31,
+    "action_flag_samples_different": 6,
+    "continuous_starts_equal_recorded": false
+   },
+   "J_C": {
+    "decision_flags_equal": true,
+    "estimate_equal": true,
+    "action_flag_samples_before": 30,
+    "action_flag_samples_after": 32,
+    "action_flag_samples_different": 4,
+    "continuous_starts_equal_recorded": true
+   },
+   "recorded_starts": 4
+  },
+  "R15_C4G2K1": {
+   "J_P": {
+    "decision_flags_equal": true,
+    "estimate_equal": true,
+    "action_flag_samples_before": 54,
+    "action_flag_samples_after": 53,
+    "action_flag_samples_different": 11,
+    "continuous_starts_equal_recorded": false
+   },
+   "J_C": {
+    "decision_flags_equal": true,
+    "estimate_equal": true,
+    "action_flag_samples_before": 61,
+    "action_flag_samples_after": 60,
+    "action_flag_samples_different": 9,
+    "continuous_starts_equal_recorded": true
+   },
+   "recorded_starts": 5
+  },
+  "R12_C4G2K1": {
+   "J_P": {
+    "decision_flags_equal": true,
+    "estimate_equal": true,
+    "action_flag_samples_before": 7,
+    "action_flag_samples_after": 7,
+    "action_flag_samples_different": 0,
+    "continuous_starts_equal_recorded": false
+   },
+   "J_C": {
+    "decision_flags_equal": true,
+    "estimate_equal": true,
+    "action_flag_samples_before": 9,
+    "action_flag_samples_after": 9,
+    "action_flag_samples_different": 0,
+    "continuous_starts_equal_recorded": true
+   },
+   "recorded_starts": 1
+  },
+  "R9_mirror2_d035_Fs4_C4G2K1": {
+   "J_P": {
+    "decision_flags_equal": true,
+    "estimate_equal": true,
+    "action_flag_samples_before": 0,
+    "action_flag_samples_after": 0,
+    "action_flag_samples_different": 0,
+    "continuous_starts_equal_recorded": true
+   },
+   "J_C": {
+    "decision_flags_equal": true,
+    "estimate_equal": true,
+    "action_flag_samples_before": 0,
+    "action_flag_samples_after": 0,
+    "action_flag_samples_different": 0,
+    "continuous_starts_equal_recorded": true
+   },
+   "recorded_starts": 0
+  }
+ },
+ "replay_reach_note": "M1 and M4 read decision flags and estimates, which the K1 rule does not touch. C-S8-41 reads the recorded controller events. Only action flags move; M2 counts stay the same on these rows."
+}

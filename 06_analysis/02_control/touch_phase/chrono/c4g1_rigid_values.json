@@ -1,0 +1,832 @@
+{
+ "R9_mirror2_d000": {
+  "on": {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\c4g1_R9_mirror2_d000_20261104_211444\\A_bottom_rpB_Fs0",
+   "t_te_s": 24.099999999948277,
+   "t_lift_s": 24.580999999947156,
+   "lift_after_te_s": 0.480999999998879,
+   "t_crawler_zero_s": 24.599999999947112,
+   "W_kN": 376.2721530557312,
+   "tau_te_mm": 0.7568350163310527,
+   "tau_lift_mm": 0.6335937513980809,
+   "D_te_kN": 12.731622611513611,
+   "D_lift_kN": 4.200438638141769,
+   "F_win_kN": [
+    115.37917547986544,
+    124.11544077724672,
+    60.544420484417195,
+    76.53329952761855
+   ],
+   "F_min_lift8_kN": {
+    "FL": 110.80698523249738,
+    "FR": 120.00628213626852,
+    "RL": 56.01640328338388,
+    "RR": 71.50317512823
+   },
+   "F_min_zero_to_cut_kN": {
+    "FL": 110.80698523249738,
+    "FR": 117.1120336779954,
+    "RL": 56.01640328338388,
+    "RR": 71.50317512823
+   },
+   "F_min_after_zero_all_kN": {
+    "FL": 103.38554597336207,
+    "FR": 104.03062786036534,
+    "RL": 55.11934429510385,
+    "RR": 55.83590051300214
+   },
+   "ready_t_s": 58.100000000902874,
+   "end_t_s": 68.10000000123483,
+   "final_phase": "ready",
+   "stroke_max_mm": [
+    537.0278839532567,
+    669.0027927725715,
+    382.7205312603416,
+    503.2209393512363
+   ],
+   "stroke_end_mm": [
+    536.5281750896097,
+    668.5030838931423,
+    382.2208223809077,
+    502.7212304717605
+   ],
+   "end_attitude_deg": [
+    -0.015219484278300405,
+    -0.009431698169378512
+   ],
+   "head_pressure_max_bar": 106.78619760948723,
+   "wall_s": 318.84056909999344
+  },
+  "off": {
+   "dir": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_asym\\runs\\batch_164123\\mirror2_d000",
+   "t_te_s": 24.099999999948277,
+   "t_lift_s": 24.508999999947324,
+   "lift_after_te_s": 0.4089999999990468,
+   "t_crawler_zero_s": 24.599999999947112,
+   "W_kN": 376.2721530557312,
+   "tau_te_mm": 0.7568350163310527,
+   "tau_lift_mm": 1.1554422954594088,
+   "D_te_kN": 12.731622611513611,
+   "D_lift_kN": 31.21469861237349,
+   "F_win_kN": [
+    128.09828782468585,
+    111.30420713426629,
+    46.36502096664926,
+    90.77587619506154
+   ],
+   "F_min_lift8_kN": {
+    "FL": 118.12444302678378,
+    "FR": 105.52442671419935,
+    "RL": 41.87746766336324,
+    "RR": 76.92393734922454
+   },
+   "F_min_zero_to_cut_kN": {
+    "FL": 118.0019706266369,
+    "FR": 105.52442671419935,
+    "RL": 41.87746766336324,
+    "RR": 72.20929440444391
+   },
+   "F_min_after_zero_all_kN": {
+    "FL": 118.0019706266369,
+    "FR": 105.52442671419935,
+    "RL": 41.87746766336324,
+    "RR": 72.20929440444391
+   },
+   "ready_t_s": null,
+   "end_t_s": 40.000000000302016,
+   "final_phase": "level",
+   "stroke_max_mm": [
+    521.3632613346301,
+    647.8478373076803,
+    373.54372845570987,
+    489.1645384420359
+   ],
+   "stroke_end_mm": [
+    521.3632613346301,
+    647.8478373076803,
+    373.54372845570987,
+    489.1645384420359
+   ],
+   "end_attitude_deg": [
+    0.10278773853870998,
+    0.07097565453734524
+   ],
+   "head_pressure_max_bar": 100.3055221763402,
+   "wall_s": 177.5987441999896
+  },
+  "on_minus_off": {
+   "t_te_s": 0.0,
+   "t_lift_s": 0.0719999999998322,
+   "tau_te_mm": 0.0,
+   "tau_lift_mm": -0.5218485440613279,
+   "D_te_kN": 0.0,
+   "D_lift_kN": -27.01425997423172,
+   "ready_t_s": null,
+   "F_min_zero_to_cut_kN": {
+    "FL": -7.194985394139522,
+    "FR": 11.587606963796048,
+    "RL": 14.13893562002064,
+    "RR": -0.7061192762139115
+   },
+   "F_min_lift8_kN": {
+    "FL": -7.317457794286398,
+    "FR": 14.481855422069174,
+    "RL": 14.13893562002064,
+    "RR": -5.420762220994547
+   }
+  },
+  "rows": {
+   "run": "ready",
+   "2 attitude +-0.2 (+mount)": 0.03523320842465032,
+   "3 F_min (1 ms)": 55.11934429510385,
+   "4 max moving pressure": 96.66515661721046,
+   "C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN": 55.11934429510385
+  },
+  "meta_failed": 0,
+  "meta_hold": 0,
+  "failed_rows": [],
+  "touch_twist_hold": {
+   "settings": {
+    "enable": true,
+    "vector_ramp": true,
+    "gain_1_s": 2.5,
+    "hold_s": 1.5,
+    "cap_m": 0.003,
+    "deadband_N": 1000.0,
+    "estimate_samples": 3
+   },
+   "twist_load_estimate_N": 12887.792504074232,
+   "target_m": -0.0005676146482653221,
+   "start_t_s": 27.09999999995018,
+   "end_t_s": 28.699999999946453,
+   "end_error_m": 3.67559626065604e-05,
+   "paused_periods": 0
+  },
+  "events_hold": [
+   "C2Event(t_s=27.09999999995018, name='INFO_TOUCH_TWIST_HOLD:-0.568')"
+  ],
+  "events_warn": [],
+  "side": {
+   "outrigger_sim": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g1\\wt\\03_src\\outrigger_sim\\__init__.py",
+   "run_S8C": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g1\\wt\\04_scripts\\02_chrono\\run_S8C.py",
+   "c2": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g1\\wt\\03_src\\outrigger_sim\\control\\c2.py",
+   "c2_sha256": "02ca442c3be01ab3c91822b3101c0c1054f1b59c878555ced14c7393af58afd4",
+   "commit": "15176d153465b45c6bbd58aec5bed2732b9696e8",
+   "row": "R9_mirror2_d000",
+   "pad_gap_offsets_m": [
+    -0.002,
+    0.002,
+    -0.002,
+    0.002
+   ],
+   "models_built_offsets": [
+    [
+     -0.002,
+     0.002,
+     -0.002,
+     0.002
+    ]
+   ],
+   "main_tree_modules_at_end": [],
+   "config_has_hold": true,
+   "config_has_clip": true,
+   "flow_limit": null,
+   "hold_meta": {
+    "settings": {
+     "enable": true,
+     "vector_ramp": true,
+     "gain_1_s": 2.5,
+     "hold_s": 1.5,
+     "cap_m": 0.003,
+     "deadband_N": 1000.0,
+     "estimate_samples": 3
+    },
+    "twist_load_estimate_N": 12887.792504074232,
+    "target_m": -0.0005676146482653221,
+    "start_t_s": 27.09999999995018,
+    "end_t_s": 28.699999999946453,
+    "end_error_m": 3.67559626065604e-05,
+    "paused_periods": 0
+   },
+   "env": {
+    "OUTRIGGER_ROD_SIDE_MECHANICS": "one_sided_parallel"
+   }
+  }
+ },
+ "R9_mirror2_d035": {
+  "on": {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\c4g1_R9_mirror2_d035_20261104_211444\\A_bottom_rpB_Fs0",
+   "t_te_s": 24.099999999948277,
+   "t_lift_s": 24.525999999947285,
+   "lift_after_te_s": 0.4259999999990072,
+   "t_crawler_zero_s": 24.599999999947112,
+   "W_kN": 376.2721530557312,
+   "tau_te_mm": 1.7970404768965977,
+   "tau_lift_mm": 1.591155000556455,
+   "D_te_kN": 38.106902368612836,
+   "D_lift_kN": 18.59372590644325,
+   "F_win_kN": [
+    122.03026882251072,
+    117.3447962544289,
+    52.961091052604814,
+    84.25802738384145
+   ],
+   "F_min_lift8_kN": {
+    "FL": 107.60063592801633,
+    "FR": 111.52265748529926,
+    "RL": 44.47211549459632,
+    "RR": 68.57896755092311
+   },
+   "F_min_zero_to_cut_kN": {
+    "FL": 107.60063592801633,
+    "FR": 113.37158633939241,
+    "RL": 45.42725024177618,
+    "RR": 68.57896755092311
+   },
+   "F_min_after_zero_all_kN": {
+    "FL": 102.71219435639163,
+    "FR": 104.6629572070813,
+    "RL": 45.42725024177618,
+    "RR": 55.07012944312828
+   },
+   "ready_t_s": 58.100000000902874,
+   "end_t_s": 68.10000000123483,
+   "final_phase": "ready",
+   "stroke_max_mm": [
+    536.9982444509053,
+    669.0501511131009,
+    382.7562393284905,
+    503.17482949801285
+   ],
+   "stroke_end_mm": [
+    536.4985355872889,
+    668.5504422336717,
+    382.2565304490566,
+    502.67512061853705
+   ],
+   "end_attitude_deg": [
+    -0.01532184169529813,
+    -0.009503792094428854
+   ],
+   "head_pressure_max_bar": 107.29646518081331,
+   "wall_s": 316.83828249998624
+  },
+  "off": {
+   "dir": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_asym\\runs\\batch_164123\\mirror2_d035",
+   "t_te_s": 24.099999999948277,
+   "t_lift_s": 24.472999999947408,
+   "lift_after_te_s": 0.3729999999991307,
+   "t_crawler_zero_s": 24.499999999947345,
+   "W_kN": 376.2721530557312,
+   "tau_te_mm": 1.7970404768965977,
+   "tau_lift_mm": 2.074579974517121,
+   "D_te_kN": 38.106902368612836,
+   "D_lift_kN": 54.6113563652478,
+   "F_win_kN": [
+    139.27834872521788,
+    100.3220630700932,
+    34.17646857766762,
+    103.15697903807352
+   ],
+   "F_min_lift8_kN": {
+    "FL": 121.71097654313888,
+    "FR": 94.30891017235933,
+    "RL": 29.495946362979723,
+    "RR": 78.99147141031712
+   },
+   "F_min_zero_to_cut_kN": {
+    "FL": 118.16871897229296,
+    "FR": 94.30891017235933,
+    "RL": 29.495946362979723,
+    "RR": 72.3654662964561
+   },
+   "F_min_after_zero_all_kN": {
+    "FL": 118.16871897229296,
+    "FR": 94.30891017235933,
+    "RL": 29.495946362979723,
+    "RR": 72.3654662964561
+   },
+   "ready_t_s": null,
+   "end_t_s": 40.000000000302016,
+   "final_phase": "level",
+   "stroke_max_mm": [
+    521.3739191448849,
+    647.8490220777035,
+    373.538079006454,
+    489.18379531832085
+   ],
+   "stroke_end_mm": [
+    521.3739191448849,
+    647.8490220777035,
+    373.538079006454,
+    489.18379531832085
+   ],
+   "end_attitude_deg": [
+    0.1026239276791773,
+    0.07104058516964652
+   ],
+   "head_pressure_max_bar": 113.90776161165437,
+   "wall_s": 177.3981414999871
+  },
+  "on_minus_off": {
+   "t_te_s": 0.0,
+   "t_lift_s": 0.05299999999987648,
+   "tau_te_mm": 0.0,
+   "tau_lift_mm": -0.4834249739606662,
+   "D_te_kN": 0.0,
+   "D_lift_kN": -36.01763045880455,
+   "ready_t_s": null,
+   "F_min_zero_to_cut_kN": {
+    "FL": -10.568083044276634,
+    "FR": 19.062676167033075,
+    "RL": 15.931303878796456,
+    "RR": -3.7864987455329953
+   },
+   "F_min_lift8_kN": {
+    "FL": -14.110340615122553,
+    "FR": 17.21374731293993,
+    "RL": 14.9761691316166,
+    "RR": -10.412503859394008
+   }
+  },
+  "rows": {
+   "run": "ready",
+   "2 attitude +-0.2 (+mount)": 0.03538514690840848,
+   "3 F_min (1 ms)": 45.42725024177618,
+   "4 max moving pressure": 98.04813227823742,
+   "C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN": 45.42725024177618
+  },
+  "meta_failed": 0,
+  "meta_hold": 0,
+  "failed_rows": [],
+  "touch_twist_hold": {
+   "settings": {
+    "enable": true,
+    "vector_ramp": true,
+    "gain_1_s": 2.5,
+    "hold_s": 1.5,
+    "cap_m": 0.003,
+    "deadband_N": 1000.0,
+    "estimate_samples": 3
+   },
+   "twist_load_estimate_N": 38270.78730020408,
+   "target_m": -0.0016855531671056126,
+   "start_t_s": 27.09999999995018,
+   "end_t_s": 28.699999999946453,
+   "end_error_m": 0.0001097520741266643,
+   "paused_periods": 0
+  },
+  "events_hold": [
+   "C2Event(t_s=27.09999999995018, name='INFO_TOUCH_TWIST_HOLD:-1.686')"
+  ],
+  "events_warn": [],
+  "side": {
+   "outrigger_sim": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g1\\wt\\03_src\\outrigger_sim\\__init__.py",
+   "run_S8C": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g1\\wt\\04_scripts\\02_chrono\\run_S8C.py",
+   "c2": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g1\\wt\\03_src\\outrigger_sim\\control\\c2.py",
+   "c2_sha256": "02ca442c3be01ab3c91822b3101c0c1054f1b59c878555ced14c7393af58afd4",
+   "commit": "15176d153465b45c6bbd58aec5bed2732b9696e8",
+   "row": "R9_mirror2_d035",
+   "pad_gap_offsets_m": [
+    -0.00165,
+    0.00235,
+    -0.00165,
+    0.00235
+   ],
+   "models_built_offsets": [
+    [
+     -0.00165,
+     0.00235,
+     -0.00165,
+     0.00235
+    ]
+   ],
+   "main_tree_modules_at_end": [],
+   "config_has_hold": true,
+   "config_has_clip": true,
+   "flow_limit": null,
+   "hold_meta": {
+    "settings": {
+     "enable": true,
+     "vector_ramp": true,
+     "gain_1_s": 2.5,
+     "hold_s": 1.5,
+     "cap_m": 0.003,
+     "deadband_N": 1000.0,
+     "estimate_samples": 3
+    },
+    "twist_load_estimate_N": 38270.78730020408,
+    "target_m": -0.0016855531671056126,
+    "start_t_s": 27.09999999995018,
+    "end_t_s": 28.699999999946453,
+    "end_error_m": 0.0001097520741266643,
+    "paused_periods": 0
+   },
+   "env": {
+    "OUTRIGGER_ROD_SIDE_MECHANICS": "one_sided_parallel"
+   }
+  }
+ },
+ "R9_sym": {
+  "on": {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\c4g1_R9_sym_20261104_211444\\A_bottom_rpB_Fs0",
+   "t_te_s": 23.899999999948744,
+   "t_lift_s": 24.401999999947574,
+   "lift_after_te_s": 0.50199999999883,
+   "t_crawler_zero_s": 24.499999999947345,
+   "W_kN": 376.5229127012058,
+   "tau_te_mm": 0.0,
+   "tau_lift_mm": 1.1368683772161603e-13,
+   "D_te_kN": 0.0020661350095068087,
+   "D_lift_kN": -2.082489520706204,
+   "F_win_kN": [
+    112.22296819251753,
+    127.08191866750951,
+    63.88942752392546,
+    73.43632152080812
+   ],
+   "F_min_lift8_kN": {
+    "FL": 106.3975092281849,
+    "FR": 119.27528111607892,
+    "RL": 57.5138041746544,
+    "RR": 69.99684818213461
+   },
+   "F_min_zero_to_cut_kN": {
+    "FL": 107.89686727947952,
+    "FR": 116.9076666641971,
+    "RL": 57.5138041746544,
+    "RR": 69.99684818213461
+   },
+   "F_min_after_zero_all_kN": {
+    "FL": 103.627730663416,
+    "FR": 103.69247815509216,
+    "RL": 54.96150319627179,
+    "RR": 56.08476203022611
+   },
+   "ready_t_s": 57.900000000896235,
+   "end_t_s": 67.9000000012282,
+   "final_phase": "ready",
+   "stroke_max_mm": [
+    536.8828350110094,
+    664.8358323872707,
+    382.54790715540565,
+    499.057849176748
+   ],
+   "stroke_end_mm": [
+    536.3831261466287,
+    664.3361235078413,
+    382.04819827597174,
+    498.5581402972922
+   ],
+   "end_attitude_deg": [
+    -0.015741013560526537,
+    -0.009670798843841467
+   ],
+   "head_pressure_max_bar": 106.53515714011067,
+   "wall_s": 314.1316611999937
+  },
+  "off": {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_A_bottom_rpB_Fs0_20261031_011936\\A_bottom_rpB_Fs0",
+   "t_te_s": 23.899999999948744,
+   "t_lift_s": 24.358999999947674,
+   "lift_after_te_s": 0.45899999999893026,
+   "t_crawler_zero_s": 24.39999999994758,
+   "W_kN": 376.5229127012058,
+   "tau_te_mm": 0.0,
+   "tau_lift_mm": 0.5791726516306426,
+   "D_te_kN": 0.0020661350095068087,
+   "D_lift_kN": 19.70628767903545,
+   "F_win_kN": [
+    122.8610063628258,
+    116.7297426876887,
+    52.62389465773741,
+    84.73229513565
+   ],
+   "F_min_lift8_kN": {
+    "FL": 117.21586047545021,
+    "FR": 109.33944905038217,
+    "RL": 44.545949219559006,
+    "RR": 75.5598934654479
+   },
+   "F_min_zero_to_cut_kN": {
+    "FL": 117.26739245028003,
+    "FR": 109.33944905038217,
+    "RL": 44.545949219559006,
+    "RR": 72.1051022965506
+   },
+   "F_min_after_zero_all_kN": {
+    "FL": 103.73992845706648,
+    "FR": 103.67007999762393,
+    "RL": 44.545949219559006,
+    "RR": 56.13944547645713
+   },
+   "ready_t_s": 57.800000000892915,
+   "end_t_s": 67.80000000122487,
+   "final_phase": "ready",
+   "stroke_max_mm": [
+    536.8361720717224,
+    664.7590933349969,
+    382.50691823110174,
+    499.01409795754165
+   ],
+   "stroke_end_mm": [
+    536.3364632079309,
+    664.2593844555677,
+    382.0072093516678,
+    498.5143890780858
+   ],
+   "end_attitude_deg": [
+    -0.015258625397640937,
+    -0.009372460651894237
+   ],
+   "head_pressure_max_bar": 106.62507895256182,
+   "wall_s": 466.49378009999054
+  },
+  "on_minus_off": {
+   "t_te_s": 0.0,
+   "t_lift_s": 0.042999999999899785,
+   "tau_te_mm": 0.0,
+   "tau_lift_mm": -0.5791726516305289,
+   "D_te_kN": 0.0,
+   "D_lift_kN": -21.788777199741656,
+   "ready_t_s": 0.10000000000331966,
+   "F_min_zero_to_cut_kN": {
+    "FL": -9.370525170800505,
+    "FR": 7.568217613814923,
+    "RL": 12.967854955095397,
+    "RR": -2.1082541144159848
+   },
+   "F_min_lift8_kN": {
+    "FL": -10.818351247265312,
+    "FR": 9.935832065696744,
+    "RL": 12.967854955095397,
+    "RR": -5.563045283313286
+   }
+  },
+  "rows": {
+   "run": "ready",
+   "2 attitude +-0.2 (+mount)": 0.035772598842325545,
+   "3 F_min (1 ms)": 54.96150319627179,
+   "4 max moving pressure": 99.34388655727824,
+   "C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN": 54.96150319627179
+  },
+  "meta_failed": 0,
+  "meta_hold": 0,
+  "failed_rows": [],
+  "touch_twist_hold": {
+   "settings": {
+    "enable": true,
+    "vector_ramp": true,
+    "gain_1_s": 2.5,
+    "hold_s": 1.5,
+    "cap_m": 0.003,
+    "deadband_N": 1000.0,
+    "estimate_samples": 3
+   },
+   "twist_load_estimate_N": -7.990728246969714,
+   "target_m": null,
+   "start_t_s": null,
+   "end_t_s": null,
+   "end_error_m": null,
+   "paused_periods": 0
+  },
+  "events_hold": [],
+  "events_warn": [],
+  "side": {
+   "outrigger_sim": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g1\\wt\\03_src\\outrigger_sim\\__init__.py",
+   "run_S8C": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g1\\wt\\04_scripts\\02_chrono\\run_S8C.py",
+   "c2": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g1\\wt\\03_src\\outrigger_sim\\control\\c2.py",
+   "c2_sha256": "02ca442c3be01ab3c91822b3101c0c1054f1b59c878555ced14c7393af58afd4",
+   "commit": "15176d153465b45c6bbd58aec5bed2732b9696e8",
+   "row": "R9_sym",
+   "pad_gap_offsets_m": null,
+   "models_built_offsets": [],
+   "main_tree_modules_at_end": [],
+   "config_has_hold": true,
+   "config_has_clip": true,
+   "flow_limit": null,
+   "hold_meta": {
+    "settings": {
+     "enable": true,
+     "vector_ramp": true,
+     "gain_1_s": 2.5,
+     "hold_s": 1.5,
+     "cap_m": 0.003,
+     "deadband_N": 1000.0,
+     "estimate_samples": 3
+    },
+    "twist_load_estimate_N": -7.990728246969714,
+    "target_m": null,
+    "start_t_s": null,
+    "end_t_s": null,
+    "end_error_m": null,
+    "paused_periods": 0
+   },
+   "env": {
+    "OUTRIGGER_ROD_SIDE_MECHANICS": "one_sided_parallel"
+   }
+  }
+ },
+ "R4": {
+  "on": {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\c4g1_R4_20261104_211444\\K24_top_roll5.5_Fs4",
+   "t_te_s": 23.899999999948744,
+   "t_lift_s": 24.38599999994761,
+   "lift_after_te_s": 0.48599999999886734,
+   "t_crawler_zero_s": 24.39999999994758,
+   "W_kN": 376.84388553736756,
+   "tau_te_mm": 0.0,
+   "tau_lift_mm": -8.526512829121202e-14,
+   "D_te_kN": 1.1288459748168869,
+   "D_lift_kN": -7.266844372834676,
+   "F_win_kN": [
+    86.03548322296776,
+    148.19158668774006,
+    49.419300329131694,
+    92.1172429442228
+   ],
+   "F_min_lift8_kN": {
+    "FL": 72.82292331612572,
+    "FR": 125.7375297939508,
+    "RL": 37.31601328353148,
+    "RR": 77.95276385054107
+   },
+   "F_min_zero_to_cut_kN": {
+    "FL": 72.82292331612572,
+    "FR": 118.60672319858473,
+    "RL": 37.31601328353148,
+    "RR": 75.10428351000574
+   },
+   "F_min_after_zero_all_kN": {
+    "FL": 72.82292331612572,
+    "FR": 106.69873502294692,
+    "RL": 37.31601328353148,
+    "RR": 56.43933247184212
+   },
+   "ready_t_s": 59.20000000093939,
+   "end_t_s": 69.20000000127135,
+   "final_phase": "ready",
+   "stroke_max_mm": [
+    411.4668889412178,
+    668.4412559195752,
+    414.7780353911057,
+    648.7852669745589
+   ],
+   "stroke_end_mm": [
+    410.9671800682809,
+    667.9415470401459,
+    414.27832651167176,
+    648.2855580950832
+   ],
+   "end_attitude_deg": [
+    -0.016054103799432777,
+    0.000866829315239969
+   ],
+   "head_pressure_max_bar": 128.6283058905296,
+   "wall_s": 362.2407377999916
+  },
+  "off": {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K24_top_roll5.5_Fs4_20261030_230357\\K24_top_roll5.5_Fs4",
+   "t_te_s": 23.899999999948744,
+   "t_lift_s": 24.380999999947623,
+   "lift_after_te_s": 0.480999999998879,
+   "t_crawler_zero_s": 24.39999999994758,
+   "W_kN": 376.84388553736756,
+   "tau_te_mm": 0.0,
+   "tau_lift_mm": -0.030345703411995828,
+   "D_te_kN": 1.1288459748168869,
+   "D_lift_kN": -7.930446505963488,
+   "F_win_kN": [
+    85.48661464023466,
+    148.60312192040863,
+    49.64838570324841,
+    91.9515936012404
+   ],
+   "F_min_lift8_kN": {
+    "FL": 72.69617689331513,
+    "FR": 125.90445058772076,
+    "RL": 37.2542373491118,
+    "RR": 77.82476241677658
+   },
+   "F_min_zero_to_cut_kN": {
+    "FL": 72.69617689331513,
+    "FR": 118.62972333161474,
+    "RL": 37.2542373491118,
+    "RR": 74.9799237987394
+   },
+   "F_min_after_zero_all_kN": {
+    "FL": 72.69617689331513,
+    "FR": 106.79259803347674,
+    "RL": 37.2542373491118,
+    "RR": 56.440575310359534
+   },
+   "ready_t_s": 59.20000000093939,
+   "end_t_s": 69.20000000127135,
+   "final_phase": "ready",
+   "stroke_max_mm": [
+    411.4665404303026,
+    668.441691328877,
+    414.7780965010735,
+    648.7843815107032
+   ],
+   "stroke_end_mm": [
+    410.96683155735695,
+    667.9419824494477,
+    414.2783876216396,
+    648.2846726312274
+   ],
+   "end_attitude_deg": [
+    -0.01604933144243631,
+    0.0008652037770969126
+   ],
+   "head_pressure_max_bar": 129.16782054288194,
+   "wall_s": 591.979563299974
+  },
+  "on_minus_off": {
+   "t_te_s": 0.0,
+   "t_lift_s": 0.004999999999988347,
+   "tau_te_mm": 0.0,
+   "tau_lift_mm": 0.030345703411910563,
+   "D_te_kN": 0.0,
+   "D_lift_kN": 0.663602133128812,
+   "ready_t_s": 0.0,
+   "F_min_zero_to_cut_kN": {
+    "FL": 0.1267464228105979,
+    "FR": -0.023000133030009806,
+    "RL": 0.06177593441968554,
+    "RR": 0.1243597112663366
+   },
+   "F_min_lift8_kN": {
+    "FL": 0.1267464228105979,
+    "FR": -0.16692079376996105,
+    "RL": 0.06177593441968554,
+    "RR": 0.1280014337644957
+   }
+  },
+  "rows": {
+   "run": "ready",
+   "2 attitude +-0.2 (+mount)": 0.036066574261209405,
+   "3 F_min (1 ms)": 37.31601328353148,
+   "4 max moving pressure": 122.27058953515355,
+   "C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN": 37.31601328353148
+  },
+  "meta_failed": 0,
+  "meta_hold": 0,
+  "failed_rows": [],
+  "touch_twist_hold": {
+   "settings": {
+    "enable": true,
+    "vector_ramp": true,
+    "gain_1_s": 2.5,
+    "hold_s": 1.5,
+    "cap_m": 0.003,
+    "deadband_N": 1000.0,
+    "estimate_samples": 3
+   },
+   "twist_load_estimate_N": -788.5567761261542,
+   "target_m": null,
+   "start_t_s": null,
+   "end_t_s": null,
+   "end_error_m": null,
+   "paused_periods": 0
+  },
+  "events_hold": [],
+  "events_warn": [
+   "C2Event(t_s=27.49999999994925, name='INFO_LIFT_PAUSED:RL')"
+  ],
+  "side": {
+   "outrigger_sim": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g1\\wt\\03_src\\outrigger_sim\\__init__.py",
+   "run_S8C": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g1\\wt\\04_scripts\\02_chrono\\run_S8C.py",
+   "c2": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g1\\wt\\03_src\\outrigger_sim\\control\\c2.py",
+   "c2_sha256": "02ca442c3be01ab3c91822b3101c0c1054f1b59c878555ced14c7393af58afd4",
+   "commit": "15176d153465b45c6bbd58aec5bed2732b9696e8",
+   "row": "R4",
+   "pad_gap_offsets_m": null,
+   "models_built_offsets": [],
+   "main_tree_modules_at_end": [],
+   "config_has_hold": true,
+   "config_has_clip": true,
+   "flow_limit": null,
+   "hold_meta": {
+    "settings": {
+     "enable": true,
+     "vector_ramp": true,
+     "gain_1_s": 2.5,
+     "hold_s": 1.5,
+     "cap_m": 0.003,
+     "deadband_N": 1000.0,
+     "estimate_samples": 3
+    },
+    "twist_load_estimate_N": -788.5567761261542,
+    "target_m": null,
+    "start_t_s": null,
+    "end_t_s": null,
+    "end_error_m": null,
+    "paused_periods": 0
+   },
+   "env": {
+    "OUTRIGGER_ROD_SIDE_MECHANICS": "one_sided_parallel"
+   }
+  }
+ }
+}

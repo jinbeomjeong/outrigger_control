@@ -1,0 +1,1209 @@
+{
+ "note": "g2_table.json 원본은 그대로 두고 필드만 더한 사본. C6 래퍼는 무제한 주기에도 비틀림 판정을 먼저 해 래치가 끝나지 않는다. 구현 182f8d9와 결정된 동작은 첫 무제한 주기 종료다.",
+ "rows": [
+  {
+   "case": "R1",
+   "gap": "none",
+   "cand": "C6",
+   "bias_N": 0.0,
+   "n": 1,
+   "errors": 0,
+   "tau_te": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "D_te": {
+    "min": 0.065,
+    "max": 0.065,
+    "width": 0.0
+   },
+   "tau_lift": {
+    "min": -0.0,
+    "max": -0.0,
+    "width": 0.0
+   },
+   "D_lift": {
+    "min": 0.282,
+    "max": 0.282,
+    "width": 0.0
+   },
+   "F_RL_win": {
+    "min": 71.771,
+    "max": 71.771,
+    "width": 0.0
+   },
+   "F_min8": {
+    "min": 57.916,
+    "max": 57.916,
+    "width": 0.0
+   },
+   "mean1s_min8": {
+    "min": 65.738,
+    "max": 65.738,
+    "width": 0.0
+   },
+   "te": {
+    "min": 19.9,
+    "max": 19.9,
+    "width": 0.0
+   },
+   "t_lift": {
+    "min": 20.592,
+    "max": 20.592,
+    "width": 0.0
+   },
+   "t_ready": {
+    "min": 39.4,
+    "max": 39.4,
+    "width": 0.0
+   },
+   "pressure_max_bar": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "stroke_max_mm": {
+    "min": 407.558,
+    "max": 407.558,
+    "width": 0.0
+   },
+   "phases": [
+    "ready"
+   ],
+   "failed_rows": [],
+   "warnings": [],
+   "info": [],
+   "adj_min_W": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "trim_time": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "delta_tau": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "latch_order_differs": false,
+   "latch_order_note": "래치 순서 영향 없음: 재접근 시작 없음",
+   "leg_reapproach_starts_max": 0,
+   "same_as_stored": true
+  },
+  {
+   "case": "R10",
+   "gap": "none",
+   "cand": "C6",
+   "bias_N": 0.0,
+   "n": 1,
+   "errors": 0,
+   "tau_te": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "D_te": {
+    "min": 0.104,
+    "max": 0.104,
+    "width": 0.0
+   },
+   "tau_lift": {
+    "min": -0.0,
+    "max": -0.0,
+    "width": 0.0
+   },
+   "D_lift": {
+    "min": 0.267,
+    "max": 0.267,
+    "width": 0.0
+   },
+   "F_RL_win": {
+    "min": 71.862,
+    "max": 71.862,
+    "width": 0.0
+   },
+   "F_min8": {
+    "min": 69.397,
+    "max": 69.397,
+    "width": 0.0
+   },
+   "mean1s_min8": {
+    "min": 70.194,
+    "max": 70.194,
+    "width": 0.0
+   },
+   "te": {
+    "min": 20.0,
+    "max": 20.0,
+    "width": 0.0
+   },
+   "t_lift": {
+    "min": 20.713,
+    "max": 20.713,
+    "width": 0.0
+   },
+   "t_ready": {
+    "min": 40.2,
+    "max": 40.2,
+    "width": 0.0
+   },
+   "pressure_max_bar": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "stroke_max_mm": {
+    "min": 407.999,
+    "max": 407.999,
+    "width": 0.0
+   },
+   "phases": [
+    "ready"
+   ],
+   "failed_rows": [],
+   "warnings": [],
+   "info": [],
+   "adj_min_W": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "trim_time": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "delta_tau": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "latch_order_differs": false,
+   "latch_order_note": "래치 순서 영향 없음: 재접근 시작 없음",
+   "leg_reapproach_starts_max": 0,
+   "same_as_stored": true
+  },
+  {
+   "case": "R11",
+   "gap": "none",
+   "cand": "C6",
+   "bias_N": 0.0,
+   "n": 1,
+   "errors": 0,
+   "tau_te": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "D_te": {
+    "min": 0.043,
+    "max": 0.043,
+    "width": 0.0
+   },
+   "tau_lift": {
+    "min": -0.0,
+    "max": -0.0,
+    "width": 0.0
+   },
+   "D_lift": {
+    "min": 0.267,
+    "max": 0.267,
+    "width": 0.0
+   },
+   "F_RL_win": {
+    "min": 71.777,
+    "max": 71.777,
+    "width": 0.0
+   },
+   "F_min8": {
+    "min": 62.69,
+    "max": 62.69,
+    "width": 0.0
+   },
+   "mean1s_min8": {
+    "min": 70.036,
+    "max": 70.036,
+    "width": 0.0
+   },
+   "te": {
+    "min": 19.9,
+    "max": 19.9,
+    "width": 0.0
+   },
+   "t_lift": {
+    "min": 20.63,
+    "max": 20.63,
+    "width": 0.0
+   },
+   "t_ready": {
+    "min": 39.8,
+    "max": 39.8,
+    "width": 0.0
+   },
+   "pressure_max_bar": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "stroke_max_mm": {
+    "min": 407.817,
+    "max": 407.817,
+    "width": 0.0
+   },
+   "phases": [
+    "ready"
+   ],
+   "failed_rows": [],
+   "warnings": [],
+   "info": [],
+   "adj_min_W": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "trim_time": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "delta_tau": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "latch_order_differs": false,
+   "latch_order_note": "래치 순서 영향 없음: 재접근 시작 없음",
+   "leg_reapproach_starts_max": 0,
+   "same_as_stored": true
+  },
+  {
+   "case": "R12",
+   "gap": "none",
+   "cand": "C6",
+   "bias_N": 0.0,
+   "n": 1,
+   "errors": 0,
+   "tau_te": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "D_te": {
+    "min": 0.065,
+    "max": 0.065,
+    "width": 0.0
+   },
+   "tau_lift": {
+    "min": -0.0,
+    "max": -0.0,
+    "width": 0.0
+   },
+   "D_lift": {
+    "min": 0.282,
+    "max": 0.282,
+    "width": 0.0
+   },
+   "F_RL_win": {
+    "min": 71.771,
+    "max": 71.771,
+    "width": 0.0
+   },
+   "F_min8": {
+    "min": 57.916,
+    "max": 57.916,
+    "width": 0.0
+   },
+   "mean1s_min8": {
+    "min": 65.738,
+    "max": 65.738,
+    "width": 0.0
+   },
+   "te": {
+    "min": 19.9,
+    "max": 19.9,
+    "width": 0.0
+   },
+   "t_lift": {
+    "min": 20.592,
+    "max": 20.592,
+    "width": 0.0
+   },
+   "t_ready": {
+    "min": 39.4,
+    "max": 39.4,
+    "width": 0.0
+   },
+   "pressure_max_bar": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "stroke_max_mm": {
+    "min": 409.818,
+    "max": 409.818,
+    "width": 0.0
+   },
+   "phases": [
+    "ready"
+   ],
+   "failed_rows": [],
+   "warnings": [
+    "WARN_ROD_PRESSURE_FALLBACK"
+   ],
+   "info": [],
+   "adj_min_W": {
+    "min": 71.92,
+    "max": 71.92,
+    "width": 0.0
+   },
+   "trim_time": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "delta_tau": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "latch_order_differs": false,
+   "latch_order_note": "래치 순서 영향 없음: 재접근 시작 1회, 표 해시가 저장 값과 같거나 늦은 공통 비율 없음",
+   "leg_reapproach_starts_max": 1,
+   "same_as_stored": true
+  },
+  {
+   "case": "R14",
+   "gap": "none",
+   "cand": "C6",
+   "bias_N": 0.0,
+   "n": 1,
+   "errors": 0,
+   "tau_te": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "D_te": {
+    "min": 0.431,
+    "max": 0.431,
+    "width": 0.0
+   },
+   "tau_lift": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "D_lift": {
+    "min": 0.281,
+    "max": 0.281,
+    "width": 0.0
+   },
+   "F_RL_win": {
+    "min": 71.71,
+    "max": 71.71,
+    "width": 0.0
+   },
+   "F_min8": {
+    "min": 56.147,
+    "max": 56.147,
+    "width": 0.0
+   },
+   "mean1s_min8": {
+    "min": 64.993,
+    "max": 64.993,
+    "width": 0.0
+   },
+   "te": {
+    "min": 19.9,
+    "max": 19.9,
+    "width": 0.0
+   },
+   "t_lift": {
+    "min": 20.599,
+    "max": 20.599,
+    "width": 0.0
+   },
+   "t_ready": {
+    "min": 39.4,
+    "max": 39.4,
+    "width": 0.0
+   },
+   "pressure_max_bar": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "stroke_max_mm": {
+    "min": 432.741,
+    "max": 432.741,
+    "width": 0.0
+   },
+   "phases": [
+    "ready"
+   ],
+   "failed_rows": [],
+   "warnings": [
+    "WARN_ROD_PRESSURE_FALLBACK"
+   ],
+   "info": [],
+   "adj_min_W": {
+    "min": 66.4,
+    "max": 66.4,
+    "width": 0.0
+   },
+   "trim_time": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "delta_tau": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "latch_order_differs": true,
+   "latch_order_note": "래치 순서 다름: C6은 첫 재접근 시작 주기에 공통 비율 적용(R14 44.5 s, rho 0.948). 구현(첫 무제한 주기 종료)은 F_min -0.718 kN, 이 행은 -0.813 kN",
+   "leg_reapproach_starts_max": 1,
+   "same_as_stored": false
+  },
+  {
+   "case": "R16",
+   "gap": "none",
+   "cand": "C6",
+   "bias_N": 0.0,
+   "n": 1,
+   "errors": 0,
+   "tau_te": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "D_te": {
+    "min": 0.065,
+    "max": 0.065,
+    "width": 0.0
+   },
+   "tau_lift": {
+    "min": -0.0,
+    "max": -0.0,
+    "width": 0.0
+   },
+   "D_lift": {
+    "min": 0.282,
+    "max": 0.282,
+    "width": 0.0
+   },
+   "F_RL_win": {
+    "min": 71.771,
+    "max": 71.771,
+    "width": 0.0
+   },
+   "F_min8": {
+    "min": -1.047,
+    "max": -1.047,
+    "width": 0.0
+   },
+   "mean1s_min8": {
+    "min": 18.86,
+    "max": 18.86,
+    "width": 0.0
+   },
+   "te": {
+    "min": 19.9,
+    "max": 19.9,
+    "width": 0.0
+   },
+   "t_lift": {
+    "min": 20.592,
+    "max": 20.592,
+    "width": 0.0
+   },
+   "t_ready": {
+    "min": 48.5,
+    "max": 48.5,
+    "width": 0.0
+   },
+   "pressure_max_bar": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "stroke_max_mm": {
+    "min": 445.664,
+    "max": 445.664,
+    "width": 0.0
+   },
+   "phases": [
+    "ready"
+   ],
+   "failed_rows": [],
+   "warnings": [
+    "WARN_D1_IMU_GYRO_MISSING"
+   ],
+   "info": [],
+   "adj_min_W": {
+    "min": 15.77,
+    "max": 15.77,
+    "width": 0.0
+   },
+   "trim_time": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "delta_tau": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "latch_order_differs": false,
+   "latch_order_note": "래치 순서 영향 없음: 재접근 시작 4회, 표 해시가 저장 값과 같거나 늦은 공통 비율 없음",
+   "leg_reapproach_starts_max": 4,
+   "same_as_stored": true
+  },
+  {
+   "case": "R3",
+   "gap": "none",
+   "cand": "C6",
+   "bias_N": 0.0,
+   "n": 1,
+   "errors": 0,
+   "tau_te": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "D_te": {
+    "min": 0.443,
+    "max": 0.443,
+    "width": 0.0
+   },
+   "tau_lift": {
+    "min": -0.0,
+    "max": -0.0,
+    "width": 0.0
+   },
+   "D_lift": {
+    "min": 0.318,
+    "max": 0.318,
+    "width": 0.0
+   },
+   "F_RL_win": {
+    "min": 78.934,
+    "max": 78.934,
+    "width": 0.0
+   },
+   "F_min8": {
+    "min": 73.291,
+    "max": 73.291,
+    "width": 0.0
+   },
+   "mean1s_min8": {
+    "min": 73.61,
+    "max": 73.61,
+    "width": 0.0
+   },
+   "te": {
+    "min": 19.9,
+    "max": 19.9,
+    "width": 0.0
+   },
+   "t_lift": {
+    "min": 20.951,
+    "max": 20.951,
+    "width": 0.0
+   },
+   "t_ready": {
+    "min": 54.9,
+    "max": 54.9,
+    "width": 0.0
+   },
+   "pressure_max_bar": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "stroke_max_mm": {
+    "min": 665.847,
+    "max": 665.847,
+    "width": 0.0
+   },
+   "phases": [
+    "ready"
+   ],
+   "failed_rows": [],
+   "warnings": [],
+   "info": [],
+   "adj_min_W": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "trim_time": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "delta_tau": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "latch_order_differs": false,
+   "latch_order_note": "래치 순서 영향 없음: 재접근 시작 없음",
+   "leg_reapproach_starts_max": 0,
+   "same_as_stored": true
+  },
+  {
+   "case": "R4",
+   "gap": "none",
+   "cand": "C6",
+   "bias_N": 0.0,
+   "n": 7,
+   "errors": 0,
+   "tau_te": {
+    "min": -0.425,
+    "max": -0.226,
+    "width": 0.199
+   },
+   "D_te": {
+    "min": -8.156,
+    "max": -3.967,
+    "width": 4.189
+   },
+   "tau_lift": {
+    "min": -0.13,
+    "max": -0.005,
+    "width": 0.125
+   },
+   "D_lift": {
+    "min": -7.53,
+    "max": -2.908,
+    "width": 4.622
+   },
+   "F_RL_win": {
+    "min": 53.846,
+    "max": 56.018,
+    "width": 2.172
+   },
+   "F_min8": {
+    "min": 53.02,
+    "max": 54.579,
+    "width": 1.559
+   },
+   "mean1s_min8": {
+    "min": 53.928,
+    "max": 55.866,
+    "width": 1.938
+   },
+   "te": {
+    "min": 20.2,
+    "max": 20.5,
+    "width": 0.3
+   },
+   "t_lift": {
+    "min": 22.189,
+    "max": 22.515,
+    "width": 0.326
+   },
+   "t_ready": {
+    "min": 55.9,
+    "max": 56.3,
+    "width": 0.4
+   },
+   "pressure_max_bar": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "stroke_max_mm": {
+    "min": 666.57,
+    "max": 667.605,
+    "width": 1.035
+   },
+   "phases": [
+    "ready"
+   ],
+   "failed_rows": [],
+   "warnings": [],
+   "info": [],
+   "adj_min_W": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "trim_time": {
+    "min": 1.6,
+    "max": 1.6,
+    "width": 0.0
+   },
+   "delta_tau": {
+    "min": 0.049,
+    "max": 0.331,
+    "width": 0.282
+   },
+   "latch_order_differs": false,
+   "latch_order_note": "래치 순서 영향 없음: 재접근 시작 없음",
+   "leg_reapproach_starts_max": 0,
+   "same_as_stored": false
+  },
+  {
+   "case": "R9",
+   "gap": "mirror2",
+   "cand": "C6",
+   "bias_N": 0.0,
+   "n": 8,
+   "errors": 0,
+   "tau_te": {
+    "min": -0.272,
+    "max": 0.226,
+    "width": 0.498
+   },
+   "D_te": {
+    "min": -13.889,
+    "max": -2.038,
+    "width": 11.851
+   },
+   "tau_lift": {
+    "min": 0.306,
+    "max": 0.321,
+    "width": 0.015
+   },
+   "D_lift": {
+    "min": 1.107,
+    "max": 1.671,
+    "width": 0.564
+   },
+   "F_RL_win": {
+    "min": 62.873,
+    "max": 63.17,
+    "width": 0.297
+   },
+   "F_min8": {
+    "min": 61.3,
+    "max": 61.595,
+    "width": 0.295
+   },
+   "mean1s_min8": {
+    "min": 62.952,
+    "max": 63.303,
+    "width": 0.351
+   },
+   "te": {
+    "min": 20.4,
+    "max": 20.5,
+    "width": 0.1
+   },
+   "t_lift": {
+    "min": 21.466,
+    "max": 21.606,
+    "width": 0.14
+   },
+   "t_ready": {
+    "min": 54.6,
+    "max": 54.7,
+    "width": 0.1
+   },
+   "pressure_max_bar": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "stroke_max_mm": {
+    "min": 667.394,
+    "max": 668.752,
+    "width": 1.358
+   },
+   "phases": [
+    "ready"
+   ],
+   "failed_rows": [],
+   "warnings": [],
+   "info": [],
+   "adj_min_W": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "trim_time": {
+    "min": 1.6,
+    "max": 1.6,
+    "width": 0.0
+   },
+   "delta_tau": {
+    "min": 0.103,
+    "max": 0.618,
+    "width": 0.516
+   },
+   "latch_order_differs": false,
+   "latch_order_note": "래치 순서 영향 없음: 재접근 시작 없음",
+   "leg_reapproach_starts_max": 0,
+   "same_as_stored": false
+  },
+  {
+   "case": "R9",
+   "gap": "none",
+   "cand": "C6",
+   "bias_N": 0.0,
+   "n": 8,
+   "errors": 0,
+   "tau_te": {
+    "min": -0.378,
+    "max": 0.415,
+    "width": 0.794
+   },
+   "D_te": {
+    "min": -4.969,
+    "max": 12.542,
+    "width": 17.511
+   },
+   "tau_lift": {
+    "min": -0.217,
+    "max": -0.104,
+    "width": 0.112
+   },
+   "D_lift": {
+    "min": -6.007,
+    "max": -4.866,
+    "width": 1.14
+   },
+   "F_RL_win": {
+    "min": 65.852,
+    "max": 66.363,
+    "width": 0.511
+   },
+   "F_min8": {
+    "min": 62.339,
+    "max": 64.198,
+    "width": 1.859
+   },
+   "mean1s_min8": {
+    "min": 66.172,
+    "max": 66.533,
+    "width": 0.361
+   },
+   "te": {
+    "min": 20.1,
+    "max": 20.3,
+    "width": 0.2
+   },
+   "t_lift": {
+    "min": 20.994,
+    "max": 21.227,
+    "width": 0.233
+   },
+   "t_ready": {
+    "min": 54.3,
+    "max": 54.5,
+    "width": 0.2
+   },
+   "pressure_max_bar": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "stroke_max_mm": {
+    "min": 663.251,
+    "max": 664.612,
+    "width": 1.36
+   },
+   "phases": [
+    "ready"
+   ],
+   "failed_rows": [],
+   "warnings": [],
+   "info": [],
+   "adj_min_W": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "trim_time": {
+    "min": 1.6,
+    "max": 1.6,
+    "width": 0.0
+   },
+   "delta_tau": {
+    "min": -0.561,
+    "max": 0.207,
+    "width": 0.768
+   },
+   "latch_order_differs": false,
+   "latch_order_note": "래치 순서 영향 없음: 재접근 시작 없음",
+   "leg_reapproach_starts_max": 0,
+   "same_as_stored": false
+  },
+  {
+   "case": "S2",
+   "gap": "none",
+   "cand": "C6",
+   "bias_N": 0.0,
+   "n": 1,
+   "errors": 0,
+   "tau_te": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "D_te": {
+    "min": 0.189,
+    "max": 0.189,
+    "width": 0.0
+   },
+   "tau_lift": {
+    "min": -0.0,
+    "max": -0.0,
+    "width": 0.0
+   },
+   "D_lift": {
+    "min": 0.638,
+    "max": 0.638,
+    "width": 0.0
+   },
+   "F_RL_win": {
+    "min": 72.008,
+    "max": 72.008,
+    "width": 0.0
+   },
+   "F_min8": {
+    "min": 69.103,
+    "max": 69.103,
+    "width": 0.0
+   },
+   "mean1s_min8": {
+    "min": 69.42,
+    "max": 69.42,
+    "width": 0.0
+   },
+   "te": {
+    "min": 20.2,
+    "max": 20.2,
+    "width": 0.0
+   },
+   "t_lift": {
+    "min": 32.339,
+    "max": 32.339,
+    "width": 0.0
+   },
+   "t_ready": {
+    "min": 65.7,
+    "max": 65.7,
+    "width": 0.0
+   },
+   "pressure_max_bar": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "stroke_max_mm": {
+    "min": 545.491,
+    "max": 545.491,
+    "width": 0.0
+   },
+   "phases": [
+    "ready"
+   ],
+   "failed_rows": [],
+   "warnings": [],
+   "info": [],
+   "adj_min_W": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "trim_time": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "delta_tau": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "latch_order_differs": false,
+   "latch_order_note": "래치 순서 영향 없음: 재접근 시작 없음",
+   "leg_reapproach_starts_max": 0,
+   "same_as_stored": true
+  },
+  {
+   "case": "S3",
+   "gap": "none",
+   "cand": "C6",
+   "bias_N": 0.0,
+   "n": 1,
+   "errors": 0,
+   "tau_te": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "D_te": {
+    "min": 0.109,
+    "max": 0.109,
+    "width": 0.0
+   },
+   "tau_lift": {
+    "min": -0.0,
+    "max": -0.0,
+    "width": 0.0
+   },
+   "D_lift": {
+    "min": 0.77,
+    "max": 0.77,
+    "width": 0.0
+   },
+   "F_RL_win": {
+    "min": 72.119,
+    "max": 72.119,
+    "width": 0.0
+   },
+   "F_min8": {
+    "min": 69.752,
+    "max": 69.752,
+    "width": 0.0
+   },
+   "mean1s_min8": {
+    "min": 69.977,
+    "max": 69.977,
+    "width": 0.0
+   },
+   "te": {
+    "min": 20.2,
+    "max": 20.2,
+    "width": 0.0
+   },
+   "t_lift": {
+    "min": 32.456,
+    "max": 32.456,
+    "width": 0.0
+   },
+   "t_ready": {
+    "min": 66.2,
+    "max": 66.2,
+    "width": 0.0
+   },
+   "pressure_max_bar": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "stroke_max_mm": {
+    "min": 544.148,
+    "max": 544.148,
+    "width": 0.0
+   },
+   "phases": [
+    "ready"
+   ],
+   "failed_rows": [],
+   "warnings": [],
+   "info": [],
+   "adj_min_W": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "trim_time": {
+    "min": null,
+    "max": null,
+    "width": null
+   },
+   "delta_tau": {
+    "min": 0.0,
+    "max": 0.0,
+    "width": 0.0
+   },
+   "latch_order_differs": false,
+   "latch_order_note": "래치 순서 영향 없음: 재접근 시작 없음",
+   "leg_reapproach_starts_max": 0,
+   "same_as_stored": true
+  }
+ ],
+ "rows_outside_this_table": [
+  {
+   "case": "R15",
+   "gap": "none",
+   "eps": 0.0,
+   "latch_order_differs": true,
+   "c6": {
+    "ready_s": 50.0,
+    "after_8s_kN": 27.9
+   },
+   "first_uncut": {
+    "ready_s": 49.4,
+    "after_8s_kN": 28.38
+   },
+   "F_min_kN": -1.047,
+   "ratio_at": [
+    [
+     24.5,
+     0.99
+    ],
+    [
+     24.9,
+     0.849
+    ]
+   ]
+  },
+  {
+   "case": "R16",
+   "gap": "mirror2",
+   "eps": 0.001,
+   "latch_order_differs": true,
+   "c6": {
+    "RL_after_8s_kN": 40.25
+   },
+   "first_uncut": {
+    "RL_after_8s_kN": 39.84
+   },
+   "F_min_kN": -1.047,
+   "ratio_at": [
+    [
+     25.8,
+     0.906
+    ]
+   ]
+  }
+ ],
+ "source": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\ctrl_c4g1\\g2_rules.jsonl",
+ "checked_late_ratio_rows": {
+  "('R14', 'none', 0.0)": [
+   [
+    44.5,
+    "ratio",
+    0.9482,
+    9.8558
+   ]
+  ],
+  "('R15', 'none', 0.0)": [
+   [
+    24.5,
+    "ratio",
+    0.99,
+    9.9775
+   ],
+   [
+    24.9,
+    "ratio",
+    0.8491,
+    -9.5191
+   ]
+  ],
+  "('R16', 'mirror2', 0.001)": [
+   [
+    25.8,
+    "ratio",
+    0.9059,
+    9.3869
+   ]
+  ],
+  "('R4', 'none', 0.003)": [],
+  "('R9', 'none', 0.0)": [],
+  "('R1', 'none', 0.0)": []
+ }
+}

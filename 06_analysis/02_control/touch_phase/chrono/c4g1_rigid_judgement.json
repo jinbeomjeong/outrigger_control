@@ -1,0 +1,73 @@
+{
+ "scope": "C4G1 rigid Chrono 4 rows, commit 15176d1, with_10hz_d1(touch_twist_hold=True), negative feedback, u = leg speed mm/s, controller T_s = 0.1 s, d = 1. S7, K1, G2 and hold end rule are not included; adoption remark is provisional.",
+ "verdict": {
+  "judge_rows": "no failed row on the 4 on runs (51, 51, 51, 59 rows; meta_failed 0, hold 0)",
+  "spec_shortfall": false,
+  "harness_prediction": "not met in level: harness F_min8 RL 62.3..64.2 kN (no gap) against Chrono 44.47..57.51 kN; gain per pair close at comparable D_te",
+  "py_jl_twist_model": {"label": "일치", "max_rel_diff": 2.86e-15, "note": "same reduced model on both paths, not a check of the Chrono run"},
+  "model_vs_chrono_te_to_te2s": {"R9_mirror2_d000": {"rms_mm": 0.0144, "max_mm": 0.0236}, "R9_mirror2_d035": {"rms_mm": 0.0419, "max_mm": 0.0770}},
+  "provisional_adoption": "C4G1 keeps its candidate status: no regression on rigid rows, gain on R9, neutral on R4. Final call after S7, K1, G2, end rule and the R16 rows."
+ },
+ "rows": {
+  "R9_mirror2_d000": {"D_te_kN": 12.73, "D_hat_kN": 12.888, "tau_te_mm": 0.757, "n_gap_mm": 0.187, "target_mm": -0.568, "lift_after_te_s": {"on": 0.481, "off": 0.409}, "frac_done_at_lift": 0.217, "frac_mean_D_lift_window": 0.574, "peak_move_mm": -0.633, "D_lift_kN": {"on": 4.20, "off": 31.21}, "RL_lift8_kN": {"on": 56.02, "off": 41.88}, "RL_min_at_te_plus_s": {"on": 0.577, "off": 0.531}, "D_last_above_10kN_s_after_te": {"on": 0.348, "off": 7.77}, "RL_below_50kN_s": {"on": 0.0, "off": 1.73}, "row3_F_min_kN": 55.12, "row3_where": "static READY value, te + 32.6 s"},
+  "R9_mirror2_d035": {"D_te_kN": 38.11, "D_hat_kN": 38.271, "tau_te_mm": 1.797, "n_gap_mm": 0.187, "target_mm": -1.686, "lift_after_te_s": {"on": 0.426, "off": 0.373}, "frac_done_at_lift": 0.122, "frac_mean_D_lift_window": 0.448, "peak_move_mm": -1.874, "D_lift_kN": {"on": 18.59, "off": 54.61}, "RL_lift8_kN": {"on": 44.47, "off": 29.50}, "RL_zero_to_cut_kN": {"on": 45.43, "off": 29.50}, "RL_min_at_te_plus_s": {"on": 0.426, "off": 0.485}, "D_at_RL_min_kN": {"on": 30.8, "off": 52.9}, "D_last_above_10kN_s_after_te": {"on": 0.745, "off": 9.54}, "RL_below_50kN_s": {"on": 0.161, "off": 4.03}, "RL_below_40kN_s": {"on": 0.0, "off": 1.68}, "row3_F_min_kN": 45.43, "row3_where": "first lift-off transient, RL still rising"},
+  "R9_sym": {"D_te_kN": 0.002, "D_hat_kN": -0.008, "tau_te_mm": 0.0, "target_mm": null, "lift_after_te_s": {"on": 0.502, "off": 0.459}, "peak_ramp_tau_mm": {"on": 0.001, "off": 0.969}, "D_lift_kN": {"on": -2.08, "off": 19.71}, "RL_lift8_kN": {"on": 57.51, "off": 44.55}, "row3_F_min_kN": {"on": 54.96, "off": 44.55}, "ready_s": {"on": 57.9, "off": 57.8}},
+  "R4": {"D_te_kN": 1.13, "D_hat_kN": -0.789, "n_f_seal_last3_kN": [0.410, 1.956, 1.715], "tau_te_mm": 0.0, "target_mm": null, "lift_after_te_s": {"on": 0.486, "off": 0.481}, "tau_lift_mm": {"on": 0.0, "off": -0.030}, "D_lift_kN": {"on": -7.27, "off": -7.93}, "RL_lift8_kN": {"on": 37.32, "off": 37.25}, "row3_F_min_kN": {"on": 37.32, "off": 37.25}, "ready_s": {"on": 59.2, "off": 59.2}, "D_oscillation_kN": "-10.9, -0.0, -7.2 at te + 0.7, 0.9, 1.1 s on both runs"}
+ },
+ "q2_R9_sym_split": {
+  "G1_share": "all of it, from the record: no separate run needed",
+  "evidence": [
+   "no hold: |D_hat| 0.008 kN inside the 1 kN dead band",
+   "C2 clip inactive: max |computed_u| and max |u_cmd| = v_max = 20.9243016 mm/s exactly on all 8 runs (mirror off pairs up to their 40 s end)",
+   "first command difference is the ramp: off (5.23, 5.23, 0, 5.23) mm/s, on (2.77, 5.23, 0, 2.25) mm/s; n^T u off 2.73, 4.70, 2.49 mm/s, on 0",
+   "harness G1 alone, R9 no gap, 8 phases: D_lift change -20.4 .. -20.7 kN against Chrono -21.79 kN"
+  ],
+  "dF_win_twist_purity_residual_kN": {"R9_mirror2_d000": 0.20, "R9_mirror2_d035": 0.18, "R9_sym": 0.31}
+ },
+ "harness_compare": {
+  "metric": "RL min, lift-off to lift-off + 8 s, 1 ms",
+  "harness_off_kN": {"none": [45.30, 54.71], "mirror2": [51.82, 57.10], "asym2": [52.00, 57.56]},
+  "harness_on_kN": {"none": [62.34, 64.20], "mirror2": [61.30, 61.59], "asym2": [63.14, 64.55]},
+  "harness_D_te_range_kN": [-21.75, 13.79],
+  "harness_lift_after_te_s": {"R9": [0.89, 1.11], "R4": [1.86, 2.72]},
+  "chrono_lift_after_te_s": [0.426, 0.502],
+  "chrono_crawler_load_at_te_kN": [53.1, 118.8],
+  "chrono_mean_stroke_to_lift_mm": [0.46, 0.97],
+  "gain_at_comparable_D_te_kN": {"D_te_about_0": {"harness": 11.56, "chrono": 12.97}, "D_te_about_12.6": {"harness": 17.04, "chrono": 14.14}}
+ },
+ "regress": {
+  "attitude_row2_deg": {"R9_mirror2_d000": 0.0352, "R9_mirror2_d035": 0.0354, "R9_sym": {"on": 0.0358, "off": 0.0353}, "R4": {"on": 0.0361, "off": 0.0361}},
+  "moving_pressure_row4_bar": {"R9_mirror2_d000": 96.67, "R9_mirror2_d035": 98.05, "R9_sym": {"on": 99.34, "off": 96.55}, "R4": {"on": 122.27, "off": 123.15}},
+  "head_pressure_max_bar_to_40s": {"R9_mirror2_d000": {"on": 98.09, "off": 100.31}, "R9_mirror2_d035": {"on": 100.18, "off": 113.91}, "R9_sym": {"on": 103.00, "off": 98.14}, "R4": {"on": 128.63, "off": 129.17}},
+  "stroke_diff_at_40s_on_minus_off_mm": {"R9_mirror2_d000": [-0.041, -0.004, 0.013, -0.072], "R9_mirror2_d035": [-0.107, 0.005, 0.041, -0.161]},
+  "ready_s": {"R9_mirror2_d000": 58.1, "R9_mirror2_d035": 58.1, "R9_sym": {"on": 57.9, "off": 57.8}, "R4": {"on": 59.2, "off": 59.2}},
+  "F_min_zero_to_cut_change_kN": {"R9_mirror2_d000": {"FL": -7.19, "FR": 11.59, "RL": 14.14, "RR": -0.71}, "R9_mirror2_d035": {"FL": -10.57, "FR": 19.06, "RL": 15.93, "RR": -3.79}, "R9_sym": {"FL": -9.37, "FR": 7.57, "RL": 12.97, "RR": -2.11}},
+  "lift_paused": {"R9_mirror2_d035": "off yes, on no (one pair)", "R4": "both yes"},
+  "limits_of_pairs": "R9 mirror2 off pairs end at 40 s (no READY, no judge rows, code 02efc57); those on/off claims hold only up to 40 s. One pair per condition."
+ },
+ "recommend_extra_runs": [
+  {"row": "R9 mirror2 d035, F_s 4, on", "why": "C4 has not fired with stuck seals on Chrono; D_hat error is only seen on R4, which did not fire", "cost": "about 320 s wall on the last batch"},
+  {"row": "harness R9 with the crawler stiffened (no Chrono), injected D_te up to 38 kN", "why": "checks the crawler stiffness cause of the lift time difference (estimate so far) and reaches the D_te the harness never had"},
+  {"row": "optional: R9 mirror2 off pairs to READY on 15176d1 with hold off", "why": "closes the 40 s and code limit of the off pairs", "cost": "2 runs, about 320 s each"}
+ ],
+ "g2_rule_182f8d9": {
+  "run": "harness, 19 runs, flow off, K1 on, master tree plus wrapper (not 182f8d9 itself); given values reproduced to the shown digits",
+  "definition": {
+   "recommend": "|n^T (limited - rho requested)| (instruction text), not |n^T limited|",
+   "why": "the two differ by rho n^T requested, so only during the C4 correction; the current one reads 0 when equal per-leg limits erase the correction, which then waits for the end of the ramp",
+   "R16_mirror2_eps0": {"limited": {"D_lift": 2.063, "D_1s": 3.47, "D_3s": 2.27, "D_15s": 2.68, "hold_end_error_mm": 0.042, "tau_lift_mm": 0.028, "RL_after_8s_kN": 39.91}, "diff": {"D_lift": 4.168, "D_1s": 3.11, "D_3s": 2.14, "D_15s": 2.60, "hold_end_error_mm": 0.012, "tau_lift_mm": 0.216, "RL_after_8s_kN": 39.78}, "tau_target_abs_mm": 0.327},
+   "note": "the larger D_lift is a partial correction seen by the window against a late one; both settle near +2.6 kN, the D_hat stop tail (D_hat -13.61, D_te -10.06 kN)"
+  },
+  "latch": {
+   "recommend": "first uncut period (182f8d9), no change",
+   "why": "the wrapper order applies the common ratio to event re-approach starts, which slows the sink response and has nothing to do with the start ramp",
+   "rows": {"R14": {"impl_Fmin_kN": -0.718, "wrapper_Fmin_kN": -0.813, "ratio_at": [44.5, 0.948]}, "R15": {"impl_ready_s": 49.4, "wrapper_ready_s": 50.0, "impl_after8s_kN": 28.38, "wrapper_after8s_kN": 27.90, "ratio_at": [[24.5, 0.990], [24.9, 0.849]]}, "R16_mirror2_eps1ms": {"impl_RL_after8s_kN": 39.84, "wrapper_RL_after8s_kN": 40.25, "ratio_at": [25.8, 0.906]}},
+   "screening_scope": "only C6 rows (g2.jsonl, g2_table.json) with events; C4G1 tables already end at the first uncut period",
+   "open": "R15 ends the rule at 20.1 s before its real ramp at 20.5 s; no twist there"
+  },
+  "tolerance_R4_eps3ms": {"0_and_0.15": {"F_min8": 54.634, "D_lift": -7.535}, "0.20": {"F_min8": 54.579, "D_lift": -7.530}, "0.25": {"F_min8": 54.543, "D_lift": -7.612}, "recommend": "keep 0.2 mm/s (assumed value); sensitivity <= 0.09 kN"},
+  "hold_end": "unit tests only; no harness or Chrono case; one synthetic harness row with a re-approach within 1.5 s of TOUCH end is needed"
+ },
+ "assumptions": {"tau_v_s": 0.1, "K_trim_1_s": 2.5, "base_u_mm_s": [11.16, 20.92, 0.0, 8.90]},
+ "sources": {"scripts": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\ctrl_c4g1"}
+}

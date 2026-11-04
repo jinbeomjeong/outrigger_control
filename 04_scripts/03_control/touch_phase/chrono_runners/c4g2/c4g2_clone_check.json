@@ -1,0 +1,96 @@
+{
+ "clone_vs_Fs0": {
+  "fs_kN": [
+   0.0,
+   4.0
+  ],
+  "base.case_id": [
+   "A_bottom_rpB_Fs0",
+   "A_bottom_rpB_Fs4"
+  ],
+  "case_id": [
+   "A_bottom_rpB_Fs0",
+   "A_bottom_rpB_Fs4"
+  ],
+  "pair_fs0": [
+   null,
+   "A_bottom_rpB_Fs0"
+  ],
+  "base.scenario.case_id": [
+   "A_bottom_rpB_Fs0",
+   "A_bottom_rpB_Fs4"
+  ]
+ },
+ "Fs8_vs_Fs0_table": {
+  "fs_kN": [
+   0.0,
+   8.0
+  ],
+  "base.case_id": [
+   "A_bottom_rpB_Fs0",
+   "A_bottom_rpB_Fs8"
+  ],
+  "case_id": [
+   "A_bottom_rpB_Fs0",
+   "A_bottom_rpB_Fs8"
+  ],
+  "pair_fs0": [
+   null,
+   "A_bottom_rpB_Fs0"
+  ],
+  "base.scenario.case_id": [
+   "A_bottom_rpB_Fs0",
+   "A_bottom_rpB_Fs8"
+  ]
+ },
+ "clone_vs_Fs8_except_fs": {
+  "fs_kN": [
+   8.0,
+   4.0
+  ],
+  "base.case_id": [
+   "A_bottom_rpB_Fs8",
+   "A_bottom_rpB_Fs4"
+  ],
+  "case_id": [
+   "A_bottom_rpB_Fs8",
+   "A_bottom_rpB_Fs4"
+  ],
+  "base.scenario.case_id": [
+   "A_bottom_rpB_Fs8",
+   "A_bottom_rpB_Fs4"
+  ]
+ },
+ "scenario_seed": [
+  12345,
+  12345
+ ],
+ "wall_estimate_s": 428.09999999999997,
+ "plant_overrides": {
+  "Fs0": {
+   "actuator.seal_friction.level_N": 0.0,
+   "actuator.lock_valve": "pilot_check"
+  },
+  "clone": {
+   "actuator.seal_friction.level_N": 4000.0,
+   "actuator.lock_valve": "pilot_check"
+  },
+  "Fs8": {
+   "actuator.seal_friction.level_N": 8000.0,
+   "actuator.lock_valve": "pilot_check"
+  }
+ },
+ "config_text_same_clone_vs_Fs0": true,
+ "config_text_same_clone_vs_Fs8": true,
+ "off_preset": {
+  "hold": "TouchTwistHoldSettings(enable=False, vector_ramp=False, ramp_twist_tol_m_s=0.0002, gain_1_s=2.5, hold_s=1.5, cap_m=0.003, deadband_N=1000.0, estimate_samples=3)",
+  "clip": true,
+  "retrigger_samples": 1
+ },
+ "k1_preset": {
+  "hold": "TouchTwistHoldSettings(enable=True, vector_ramp=True, ramp_twist_tol_m_s=0.0002, gain_1_s=2.5, hold_s=1.5, cap_m=0.003, deadband_N=1000.0, estimate_samples=3)",
+  "clip": true,
+  "retrigger_samples": 2
+ },
+ "main_tree_modules": []
+}

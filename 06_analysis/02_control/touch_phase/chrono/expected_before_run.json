@@ -1,0 +1,393 @@
+{
+ "written_before_run": true,
+ "note": "Off values and expectations only; no acceptance rule here, control-expert judges.",
+ "code": {
+  "commit": "15176d153465b45c6bbd58aec5bed2732b9696e8",
+  "c2_sha256": "02ca442c3be01ab3c91822b3101c0c1054f1b59c878555ced14c7393af58afd4",
+  "worktree": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g1\\wt"
+ },
+ "pairs": {
+  "R9_mirror2_d000": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_asym\\runs\\batch_164123\\mirror2_d000",
+  "R9_mirror2_d035": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_asym\\runs\\batch_164123\\mirror2_d035",
+  "R9_sym": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_A_bottom_rpB_Fs0_20261031_011936\\A_bottom_rpB_Fs0",
+  "R4": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K24_top_roll5.5_Fs4_20261030_230357\\K24_top_roll5.5_Fs4",
+  "S7": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-REP_20261030_223359\\S9SL_X6rb_J1_B_top_Fs4_rm2p86_p0"
+ },
+ "pair_notes": {
+  "R9 gap pairs": "cad_asym code (agent-ae9039e69988d5282), flow off, stopped at 40 s after the settle: no READY, no end attitude, no judge rows on the off side.",
+  "C2 clip": "The off pairs have the returned clip off (they are older than it); new rows have it on, so a difference from the off value holds both changes."
+ },
+ "expected": {
+  "target_tau_star_mm_from_off_D_te": {
+   "R9_mirror2_d000": -0.560736486733205,
+   "R9_mirror2_d035": -1.6783352135443845,
+   "R9_sym": -9.099839994468615e-05,
+   "R4": -0.04971755331557759,
+   "S7": 0.16557168441317602
+  },
+  "k_nom_kN_mm_used": 22.705179549999997,
+  "rule": "c2.py TouchTwistHoldSettings: tau* = clip(-D_hat / k_nom, +-3 mm), D_hat from the last 3 TOUCH readings, gain 2.5 1/s, 1.5 s, dead band 1 kN. D_te stays the off value since it is before the hold, unless TOUCH differs (no TOUCH rule was changed, so expect bit-equal up to TOUCH end, apart from the C2 clip).",
+  "D_lift": "Moves toward 0 for rows with an INFO_TOUCH_TWIST_HOLD; R9_mirror2_d035 (off D_te 38 kN, the largest) moves most. R9_sym off D_te 0.002 kN is inside the 1 kN dead band: no hold expected, so D_lift 19.7 kN stays apart from the G1 vector ramp and the clip. R4 off D_te 1.13 kN is at the band edge: a hold with target near -0.05 mm or none. Size on Chrono unknown in advance: harness R2 D_te 11.9 to D_lift 2.2.",
+  "F_min": "Min force after lift-off up for rows with a large twist before; R9 mirror2 d035 RL 29.5 kN off value. Harness R4: F_min 54.63 to 54.12 kN (small down).",
+  "paused_periods": "Expect 0 unless a re-approach falls in the 1.5 s hold; INFO_LIFT_PAUSED was seen on R9 mirror2 d035 off.",
+  "S7": "Stored off stops with FAULT_LIFT_STROKE_LIMIT:soil:FL at 50.4 s absolute (42.4 s loop). A stroke-guard stop is expected to stay; D_te from soil differs, hold starts if |D_hat| >= 1 kN.",
+  "cost": "Rigid 380 to 860 s per row at 4 at once with the two S8 SCM runs."
+ },
+ "off_values": {
+  "R9_mirror2_d000": {
+   "dir": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_asym\\runs\\batch_164123\\mirror2_d000",
+   "t_te_s": 24.099999999948277,
+   "t_lift_s": 24.508999999947324,
+   "lift_after_te_s": 0.4089999999990468,
+   "t_crawler_zero_s": 24.599999999947112,
+   "W_kN": 376.2721530557312,
+   "tau_te_mm": 0.7568350163310527,
+   "tau_lift_mm": 1.1554422954594088,
+   "D_te_kN": 12.731622611513611,
+   "D_lift_kN": 31.21469861237349,
+   "F_win_kN": [
+    128.09828782468585,
+    111.30420713426629,
+    46.36502096664926,
+    90.77587619506154
+   ],
+   "F_min_lift8_kN": {
+    "FL": 118.12444302678378,
+    "FR": 105.52442671419935,
+    "RL": 41.87746766336324,
+    "RR": 76.92393734922454
+   },
+   "F_min_zero_to_cut_kN": {
+    "FL": 118.0019706266369,
+    "FR": 105.52442671419935,
+    "RL": 41.87746766336324,
+    "RR": 72.20929440444391
+   },
+   "F_min_after_zero_all_kN": {
+    "FL": 118.0019706266369,
+    "FR": 105.52442671419935,
+    "RL": 41.87746766336324,
+    "RR": 72.20929440444391
+   },
+   "ready_t_s": null,
+   "end_t_s": 40.000000000302016,
+   "final_phase": "level",
+   "stroke_max_mm": [
+    521.3632613346301,
+    647.8478373076803,
+    373.54372845570987,
+    489.1645384420359
+   ],
+   "stroke_end_mm": [
+    521.3632613346301,
+    647.8478373076803,
+    373.54372845570987,
+    489.1645384420359
+   ],
+   "end_attitude_deg": [
+    0.10278773853870998,
+    0.07097565453734524
+   ],
+   "head_pressure_max_bar": 100.3055221763402,
+   "wall_s": 177.5987441999896
+  },
+  "R9_mirror2_d035": {
+   "dir": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_asym\\runs\\batch_164123\\mirror2_d035",
+   "t_te_s": 24.099999999948277,
+   "t_lift_s": 24.472999999947408,
+   "lift_after_te_s": 0.3729999999991307,
+   "t_crawler_zero_s": 24.499999999947345,
+   "W_kN": 376.2721530557312,
+   "tau_te_mm": 1.7970404768965977,
+   "tau_lift_mm": 2.074579974517121,
+   "D_te_kN": 38.106902368612836,
+   "D_lift_kN": 54.6113563652478,
+   "F_win_kN": [
+    139.27834872521788,
+    100.3220630700932,
+    34.17646857766762,
+    103.15697903807352
+   ],
+   "F_min_lift8_kN": {
+    "FL": 121.71097654313888,
+    "FR": 94.30891017235933,
+    "RL": 29.495946362979723,
+    "RR": 78.99147141031712
+   },
+   "F_min_zero_to_cut_kN": {
+    "FL": 118.16871897229296,
+    "FR": 94.30891017235933,
+    "RL": 29.495946362979723,
+    "RR": 72.3654662964561
+   },
+   "F_min_after_zero_all_kN": {
+    "FL": 118.16871897229296,
+    "FR": 94.30891017235933,
+    "RL": 29.495946362979723,
+    "RR": 72.3654662964561
+   },
+   "ready_t_s": null,
+   "end_t_s": 40.000000000302016,
+   "final_phase": "level",
+   "stroke_max_mm": [
+    521.3739191448849,
+    647.8490220777035,
+    373.538079006454,
+    489.18379531832085
+   ],
+   "stroke_end_mm": [
+    521.3739191448849,
+    647.8490220777035,
+    373.538079006454,
+    489.18379531832085
+   ],
+   "end_attitude_deg": [
+    0.1026239276791773,
+    0.07104058516964652
+   ],
+   "head_pressure_max_bar": 113.90776161165437,
+   "wall_s": 177.3981414999871
+  },
+  "R9_sym": {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_A_bottom_rpB_Fs0_20261031_011936\\A_bottom_rpB_Fs0",
+   "t_te_s": 23.899999999948744,
+   "t_lift_s": 24.358999999947674,
+   "lift_after_te_s": 0.45899999999893026,
+   "t_crawler_zero_s": 24.39999999994758,
+   "W_kN": 376.5229127012058,
+   "tau_te_mm": 0.0,
+   "tau_lift_mm": 0.5791726516306426,
+   "D_te_kN": 0.0020661350095068087,
+   "D_lift_kN": 19.70628767903545,
+   "F_win_kN": [
+    122.8610063628258,
+    116.7297426876887,
+    52.62389465773741,
+    84.73229513565
+   ],
+   "F_min_lift8_kN": {
+    "FL": 117.21586047545021,
+    "FR": 109.33944905038217,
+    "RL": 44.545949219559006,
+    "RR": 75.5598934654479
+   },
+   "F_min_zero_to_cut_kN": {
+    "FL": 117.26739245028003,
+    "FR": 109.33944905038217,
+    "RL": 44.545949219559006,
+    "RR": 72.1051022965506
+   },
+   "F_min_after_zero_all_kN": {
+    "FL": 103.73992845706648,
+    "FR": 103.67007999762393,
+    "RL": 44.545949219559006,
+    "RR": 56.13944547645713
+   },
+   "ready_t_s": 57.800000000892915,
+   "end_t_s": 67.80000000122487,
+   "final_phase": "ready",
+   "stroke_max_mm": [
+    536.8361720717224,
+    664.7590933349969,
+    382.50691823110174,
+    499.01409795754165
+   ],
+   "stroke_end_mm": [
+    536.3364632079309,
+    664.2593844555677,
+    382.0072093516678,
+    498.5143890780858
+   ],
+   "end_attitude_deg": [
+    -0.015258625397640937,
+    -0.009372460651894237
+   ],
+   "head_pressure_max_bar": 106.62507895256182,
+   "wall_s": 466.49378009999054
+  },
+  "R4": {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K24_top_roll5.5_Fs4_20261030_230357\\K24_top_roll5.5_Fs4",
+   "t_te_s": 23.899999999948744,
+   "t_lift_s": 24.380999999947623,
+   "lift_after_te_s": 0.480999999998879,
+   "t_crawler_zero_s": 24.39999999994758,
+   "W_kN": 376.84388553736756,
+   "tau_te_mm": 0.0,
+   "tau_lift_mm": -0.030345703411995828,
+   "D_te_kN": 1.1288459748168869,
+   "D_lift_kN": -7.930446505963488,
+   "F_win_kN": [
+    85.48661464023466,
+    148.60312192040863,
+    49.64838570324841,
+    91.9515936012404
+   ],
+   "F_min_lift8_kN": {
+    "FL": 72.69617689331513,
+    "FR": 125.90445058772076,
+    "RL": 37.2542373491118,
+    "RR": 77.82476241677658
+   },
+   "F_min_zero_to_cut_kN": {
+    "FL": 72.69617689331513,
+    "FR": 118.62972333161474,
+    "RL": 37.2542373491118,
+    "RR": 74.9799237987394
+   },
+   "F_min_after_zero_all_kN": {
+    "FL": 72.69617689331513,
+    "FR": 106.79259803347674,
+    "RL": 37.2542373491118,
+    "RR": 56.440575310359534
+   },
+   "ready_t_s": 59.20000000093939,
+   "end_t_s": 69.20000000127135,
+   "final_phase": "ready",
+   "stroke_max_mm": [
+    411.4665404303026,
+    668.441691328877,
+    414.7780965010735,
+    648.7843815107032
+   ],
+   "stroke_end_mm": [
+    410.96683155735695,
+    667.9419824494477,
+    414.2783876216396,
+    648.2846726312274
+   ],
+   "end_attitude_deg": [
+    -0.01604933144243631,
+    0.0008652037770969126
+   ],
+   "head_pressure_max_bar": 129.16782054288194,
+   "wall_s": 591.979563299974
+  },
+  "S7": {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-REP_20261030_223359\\S9SL_X6rb_J1_B_top_Fs4_rm2p86_p0",
+   "t_loop_start_s": 7.999999999994694,
+   "phases": [
+    {
+     "t_s": 8.099999999994461,
+     "phase": "check"
+    },
+    {
+     "t_s": 12.799999999983507,
+     "phase": "touch"
+    },
+    {
+     "t_s": 31.599999999939694,
+     "phase": "level"
+    },
+    {
+     "t_s": 50.400000000549575,
+     "phase": "fault"
+    }
+   ],
+   "t_te_s": 31.599999999939694,
+   "t_lift_s": 38.41000000015155,
+   "t_crawler_zero_s": 39.37000000018342,
+   "W_kN": 376.11311868992817,
+   "tau_te_mm": -0.2847237283282311,
+   "tau_lift_mm": -1.2068465945156959,
+   "D_te_kN": -3.759334822997097,
+   "D_lift_kN": 9.316439972896475,
+   "F_min_after_lift_sample_kN": {
+    "FL": 117.51089536505596,
+    "FR": 96.69024516082897,
+    "RL": 72.1820745438791,
+    "RR": 62.95997108119401
+   },
+   "stroke_max_mm": [
+    675.8116674894769,
+    429.0550068871872,
+    666.266261993443,
+    438.92871596259477
+   ],
+   "stroke_at_last_phase_mm": [
+    675.4813351093072,
+    428.656682451648,
+    665.9370140802082,
+    438.54236083322127
+   ],
+   "roll_pitch_at_last_phase_deg": [
+    0.15610337109070999,
+    0.003717212744316879
+   ],
+   "roll_pitch_end_deg": [
+    0.15504464081174893,
+    0.0037684978397044297
+   ],
+   "events_info": [
+    {
+     "t_s": 39.70000000019437,
+     "name": "crawler_liftoff_confirmed"
+    },
+    {
+     "t_s": 39.70000000019437,
+     "name": "INFO_LOC_CLEARANCE_MARGIN:80"
+    },
+    {
+     "t_s": 50.400000000549575,
+     "name": "WARN_LIFT_STROKE_LIMITED:FL"
+    },
+    {
+     "t_s": 50.400000000549575,
+     "name": "FAULT_LIFT_STROKE_LIMIT:soil:FL"
+    }
+   ],
+   "touch_twist_hold": null,
+   "names_hold": [],
+   "checks": {
+    "P3-1_crawler_zero_after_ready": null,
+    "P3-1_recontact": null,
+    "P3-1_recontact_pass": true,
+    "P3-1_flags": [],
+    "P3-1_recontact_classes": [],
+    "P3-2_within": true,
+    "P3-2_within_2s_record": true,
+    "P3-2_loc_minus_departure_s": 1.5630000000518862,
+    "P3-2_limit_s": 2.91165281234524,
+    "P3-2_late_loc_reapproach": false,
+    "P3-2_late_loc_revoked": false,
+    "P3-2_verdict": "pass",
+    "t_loc_first_s": 39.70000000019437,
+    "t_loc_final_s": 39.70000000019437,
+    "loc_revokes": 0,
+    "P3-3_within": true,
+    "P3-4_within_0p2": false,
+    "P3-4_absmax_deg": null,
+    "P3-4_window_s": null,
+    "P3-4_flags": [
+     "no_ready",
+     "window_short"
+    ],
+    "P3-4_window_short": true,
+    "P3-4_creep_vibration_suspect": false,
+    "P3-4_sensor_allowance_left_deg": null,
+    "P3-4_budget_residual_le_0p04_record": null,
+    "reapproach_limit_fired_FLAG": 0,
+    "reapproach_limit_by_cause": {
+     "time": 0,
+     "travel": 0,
+     "unknown": 0
+    },
+    "P3-5_within": null,
+    "P3-5_within_after_departure_record": false,
+    "P3-5_rut_clearance_min_after_first_ready_m": null,
+    "P3-6_within": false,
+    "P3-7_within": false,
+    "P3-7_rise_min_loaded_N": 2822.4163565383624,
+    "P3-7_reconstruct_ok": true,
+    "P3-8_within": true,
+    "P3-8_within_first": true,
+    "P3-9_flags": 0,
+    "pre_liftoff_flag": false,
+    "W61_warnings": 0,
+    "criteria_rev": "spec rev. 60 (U-S9P-13/14/15 (가)): P3-2 T_lim, P3-5 after the first READY, P3-7 > 0.01 W",
+    "note": "values vs criteria; decisions are control's (284) / dynamics' (physics)"
+   },
+   "wall_s": 14433.463983299996,
+   "code_state": "impl_final_rules"
+  }
+ }
+}

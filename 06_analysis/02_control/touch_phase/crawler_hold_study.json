@@ -1,0 +1,3947 @@
+{
+ "code": "snapshot of 182f8d9 (03_src, 02_params) + override: G2 measure |n^T (l - rho r)|; flow off; K1 on in every mode; off = touch_twist_hold False",
+ "assumptions": {
+  "S": "crawler kn_total scale, damping x sqrt(S)",
+  "drop": "20 mm in 0.1 s on one leg, floor",
+  "inject": "floor twist -(dD / k_nom) n over te - 0.6 .. te - 0.25 s"
+ },
+ "excluded": "R9 S 30 target 38: the injection moved TOUCH end (te 20.2, tau_te -1.293, D_te 10.17 kN), not used",
+ "crawler_R9": [
+  {
+   "case": "R9",
+   "stage": "natural",
+   "S": 1.0,
+   "mode": "off",
+   "target_kN": null,
+   "drop": null,
+   "te_s": 20.199999999998273,
+   "tau_te_mm": -0.37838411235762237,
+   "D_te_kN": -4.968969444847236,
+   "lift_after_te_s": 0.8759999999979584,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 10.397232157870349,
+   "F_RL_min8_kN": 54.70260640283537,
+   "F_min8_kN": 54.70260640283537,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 10.397232157870349,
+    "1": 9.41185605808931,
+    "3": 7.497012607369719,
+    "8": 4.352759732110144,
+    "15": 2.2793967158756914
+   },
+   "ready_s": 54.4,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.1925058287887,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 54.7026,
+     "leg": "RL",
+     "t_s": 21.137
+    },
+    "first_8s": {
+     "min_kN": 54.7026,
+     "leg": "RL",
+     "t_s": 21.137
+    },
+    "after_8s": {
+     "min_kN": 56.2607,
+     "leg": "RR",
+     "t_s": 49.822
+    }
+   },
+   "hold_meta": {},
+   "events": [],
+   "commands_sha256": "3bf5fb08b7efe3d8b673782b2ceb76fcb7efddcd5a45374583d22380231148bf"
+  },
+  {
+   "case": "R9",
+   "stage": "natural",
+   "S": 1.0,
+   "mode": "on",
+   "target_kN": null,
+   "drop": null,
+   "te_s": 20.199999999998273,
+   "tau_te_mm": -0.37838411235762237,
+   "D_te_kN": -4.968969444847236,
+   "lift_after_te_s": 0.9299999999978326,
+   "frac_done_at_lift": 0.7860255323280139,
+   "D_lift_kN": -5.99526341292659,
+   "F_RL_min8_kN": 64.19805378111515,
+   "F_min8_kN": 64.19805378111515,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": -5.99526341292659,
+    "1": -4.718317343607659,
+    "3": -3.7987807705898433,
+    "8": -2.061717102743728,
+    "15": -1.389138256023621
+   },
+   "ready_s": 54.4,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.251438119031,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 54.5132,
+     "leg": "RR",
+     "t_s": 49.822
+    },
+    "first_8s": {
+     "min_kN": 64.1981,
+     "leg": "RL",
+     "t_s": 21.171
+    },
+    "after_8s": {
+     "min_kN": 54.5132,
+     "leg": "RR",
+     "t_s": 49.822
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": -4697.554937730376,
+    "target_m": 0.0002068935384274632,
+    "start_t_s": 20.199999999998273,
+    "end_t_s": 21.799999999994544,
+    "end_reason": "time",
+    "end_error_m": -1.9944636269557587e-05
+   },
+   "events": [
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:0.207"
+    ]
+   ],
+   "commands_sha256": "6a4329cf8e4137f7dbdeecadb74a5a59c1cd2fc5bb20bbff778bae0bf471a975"
+  },
+  {
+   "case": "R9",
+   "stage": "natural",
+   "S": 3.0,
+   "mode": "on",
+   "target_kN": null,
+   "drop": null,
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": -0.7715221257752702,
+   "lift_after_te_s": 0.6479999999984898,
+   "frac_done_at_lift": null,
+   "D_lift_kN": -1.8762992531925207,
+   "F_RL_min8_kN": 61.43535675285929,
+   "F_min8_kN": 61.43535675285929,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": -1.8762992531925207,
+    "1": -1.873336805326126,
+    "3": -1.585287878352304,
+    "8": -0.4584417300082464,
+    "15": 0.19829273954860582
+   },
+   "ready_s": 54.0,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.2169062240781,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 55.3429,
+     "leg": "RR",
+     "t_s": 49.422
+    },
+    "first_8s": {
+     "min_kN": 61.4354,
+     "leg": "RL",
+     "t_s": 20.761
+    },
+    "after_8s": {
+     "min_kN": 55.3429,
+     "leg": "RR",
+     "t_s": 49.422
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": -759.0933202409118,
+    "target_m": null,
+    "start_t_s": null,
+    "end_t_s": null,
+    "end_reason": "None",
+    "end_error_m": null
+   },
+   "events": [],
+   "commands_sha256": "9606ef94afae335bf36608645d12f46b7127dd69de96401caa4d7d6a3775cad9"
+  },
+  {
+   "case": "R9",
+   "stage": "natural",
+   "S": 3.0,
+   "mode": "off",
+   "target_kN": null,
+   "drop": null,
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": -0.7715221257752702,
+   "lift_after_te_s": 0.5889999999986273,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 19.11155394836698,
+   "F_RL_min8_kN": 49.26533852885324,
+   "F_min8_kN": 49.26533852885324,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 19.11155394836698,
+    "1": 17.25849811267363,
+    "3": 12.932755417579308,
+    "8": 6.039119121930945,
+    "15": 2.3607032861120842
+   },
+   "ready_s": 54.0,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.1877402474249,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 49.2653,
+     "leg": "RL",
+     "t_s": 20.759
+    },
+    "first_8s": {
+     "min_kN": 49.2653,
+     "leg": "RL",
+     "t_s": 20.759
+    },
+    "after_8s": {
+     "min_kN": 56.2626,
+     "leg": "RR",
+     "t_s": 49.422
+    }
+   },
+   "hold_meta": {},
+   "events": [],
+   "commands_sha256": "c41d168a32487680f2926381f5e1a59a49e69c68710e35b755c38bcd8991b2c2"
+  },
+  {
+   "case": "R9",
+   "stage": "natural",
+   "S": 10.0,
+   "mode": "on",
+   "target_kN": null,
+   "drop": null,
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": -0.488485255629616,
+   "lift_after_te_s": 0.5519999999987135,
+   "frac_done_at_lift": null,
+   "D_lift_kN": -1.6666965423208353,
+   "F_RL_min8_kN": 57.640670202894384,
+   "F_min8_kN": 57.640670202894384,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": -1.6666965423208353,
+    "1": -1.726418182414939,
+    "3": -1.5787145742241862,
+    "8": -0.4681822554904542,
+    "15": 0.19508114590510672
+   },
+   "ready_s": 54.0,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.2158268298126,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 55.3472,
+     "leg": "RR",
+     "t_s": 49.422
+    },
+    "first_8s": {
+     "min_kN": 57.6407,
+     "leg": "RL",
+     "t_s": 20.749
+    },
+    "after_8s": {
+     "min_kN": 55.3472,
+     "leg": "RR",
+     "t_s": 49.422
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": -506.71534602813216,
+    "target_m": null,
+    "start_t_s": null,
+    "end_t_s": null,
+    "end_reason": "None",
+    "end_error_m": null
+   },
+   "events": [],
+   "commands_sha256": "eaa567052fbde76c85bfca19c7acac2a31037335d1d559874487f3772cf5d237"
+  },
+  {
+   "case": "R9",
+   "stage": "natural",
+   "S": 10.0,
+   "mode": "off",
+   "target_kN": null,
+   "drop": null,
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": -0.488485255629616,
+   "lift_after_te_s": 0.5029999999988277,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 18.249312208495358,
+   "F_RL_min8_kN": 47.04612560090335,
+   "F_min8_kN": 47.04612560090335,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 18.249312208495358,
+    "1": 17.52285685897158,
+    "3": 13.165964133251993,
+    "8": 6.135716158689874,
+    "15": 2.3687779509851694
+   },
+   "ready_s": 54.0,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.1865890469389,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 47.0461,
+     "leg": "RL",
+     "t_s": 20.707
+    },
+    "first_8s": {
+     "min_kN": 47.0461,
+     "leg": "RL",
+     "t_s": 20.707
+    },
+    "after_8s": {
+     "min_kN": 56.2657,
+     "leg": "RR",
+     "t_s": 49.422
+    }
+   },
+   "hold_meta": {},
+   "events": [],
+   "commands_sha256": "33907c0f76c1ae16e60ce8d02085cfe4eb398118d2034ff14233d4cbb44dd98f"
+  },
+  {
+   "case": "R9",
+   "stage": "natural",
+   "S": 30.0,
+   "mode": "on",
+   "target_kN": null,
+   "drop": null,
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": -0.3544664466298393,
+   "lift_after_te_s": 0.5979999999986063,
+   "frac_done_at_lift": null,
+   "D_lift_kN": -2.0342527638992607,
+   "F_RL_min8_kN": 57.48739963851619,
+   "F_min8_kN": 57.48739963851619,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": -2.0342527638992607,
+    "1": -1.8620317469685688,
+    "3": -1.5626442324355807,
+    "8": -0.44038500741684317,
+    "15": 0.21801365535165473
+   },
+   "ready_s": 54.0,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.2120606470321,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 55.3566,
+     "leg": "RR",
+     "t_s": 49.422
+    },
+    "first_8s": {
+     "min_kN": 57.4874,
+     "leg": "RL",
+     "t_s": 20.79
+    },
+    "after_8s": {
+     "min_kN": 55.3566,
+     "leg": "RR",
+     "t_s": 49.422
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": -333.9650801302305,
+    "target_m": null,
+    "start_t_s": null,
+    "end_t_s": null,
+    "end_reason": "None",
+    "end_error_m": null
+   },
+   "events": [],
+   "commands_sha256": "a0522b7c6a16a57756926157157b8336520a319a1cb7a3afbaa695c2428f87bc"
+  },
+  {
+   "case": "R9",
+   "stage": "natural",
+   "S": 30.0,
+   "mode": "off",
+   "target_kN": null,
+   "drop": null,
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": -0.3544664466298393,
+   "lift_after_te_s": 0.5299999999987648,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 18.93834545905106,
+   "F_RL_min8_kN": 44.86174177016065,
+   "F_min8_kN": 44.86174177016065,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 18.93834545905106,
+    "1": 17.6102229135799,
+    "3": 13.073199469376515,
+    "8": 6.09249546922149,
+    "15": 2.3651798368766137
+   },
+   "ready_s": 54.0,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.1833906034449,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 44.8617,
+     "leg": "RL",
+     "t_s": 20.734
+    },
+    "first_8s": {
+     "min_kN": 44.8617,
+     "leg": "RL",
+     "t_s": 20.734
+    },
+    "after_8s": {
+     "min_kN": 56.2656,
+     "leg": "RR",
+     "t_s": 49.422
+    }
+   },
+   "hold_meta": {},
+   "events": [],
+   "commands_sha256": "e43462bf67eb67bb709d30d81f61c11ad13ef38ac37a604b76a9e15090059c1b"
+  },
+  {
+   "case": "R9",
+   "stage": "natural",
+   "S": 100.0,
+   "mode": "on",
+   "target_kN": null,
+   "drop": null,
+   "te_s": 20.199999999998273,
+   "tau_te_mm": 0.0,
+   "D_te_kN": -0.12154776896666775,
+   "lift_after_te_s": 0.5289999999987671,
+   "frac_done_at_lift": null,
+   "D_lift_kN": -2.0422763852107266,
+   "F_RL_min8_kN": 56.10657071752142,
+   "F_min8_kN": 56.10657071752142,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": -2.0422763852107266,
+    "1": -1.827416942087254,
+    "3": -1.579370114985906,
+    "8": -0.4450793919654572,
+    "15": 0.21812268967902781
+   },
+   "ready_s": 54.1,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.2078648886622,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 55.3605,
+     "leg": "RR",
+     "t_s": 49.522
+    },
+    "first_8s": {
+     "min_kN": 56.1066,
+     "leg": "RL",
+     "t_s": 20.831
+    },
+    "after_8s": {
+     "min_kN": 55.3605,
+     "leg": "RR",
+     "t_s": 49.522
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": -124.04322142751455,
+    "target_m": null,
+    "start_t_s": null,
+    "end_t_s": null,
+    "end_reason": "None",
+    "end_error_m": null
+   },
+   "events": [],
+   "commands_sha256": "c18b5da2d92dc40b0939ae7e5b6dff58de98b46ebea3f0b0f91bb877d5836a3b"
+  },
+  {
+   "case": "R9",
+   "stage": "natural",
+   "S": 100.0,
+   "mode": "off",
+   "target_kN": null,
+   "drop": null,
+   "te_s": 20.199999999998273,
+   "tau_te_mm": 0.0,
+   "D_te_kN": -0.12154776896666775,
+   "lift_after_te_s": 0.474999999998893,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 18.339147783532777,
+   "F_RL_min8_kN": 43.64049693787746,
+   "F_min8_kN": 43.64049693787746,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 18.339147783532777,
+    "1": 17.963597065047338,
+    "3": 13.107145893158702,
+    "8": 6.107635387251484,
+    "15": 2.3677957323318566
+   },
+   "ready_s": 54.1,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.1793145749979,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 43.6405,
+     "leg": "RL",
+     "t_s": 20.779
+    },
+    "first_8s": {
+     "min_kN": 43.6405,
+     "leg": "RL",
+     "t_s": 20.779
+    },
+    "after_8s": {
+     "min_kN": 56.2686,
+     "leg": "RR",
+     "t_s": 49.522
+    }
+   },
+   "hold_meta": {},
+   "events": [],
+   "commands_sha256": "e43a7137846dade2dff5bbc8a7aca5923115d0a925f968e10c9422a626fc2ffb"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 1.0,
+   "mode": "on",
+   "target_kN": 12.7,
+   "drop": null,
+   "te_s": 20.199999999998273,
+   "tau_te_mm": -0.37838411235762237,
+   "D_te_kN": 12.278588582932361,
+   "lift_after_te_s": 0.9509999999977836,
+   "frac_done_at_lift": 0.9901817249769527,
+   "D_lift_kN": -5.9076476669780575,
+   "F_RL_min8_kN": 63.668474738500116,
+   "F_min8_kN": 63.668474738500116,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": -5.9076476669780575,
+    "1": -4.649112474961768,
+    "3": -3.72087466122246,
+    "8": -2.0926388307026755,
+    "15": -1.3987871526642977
+   },
+   "ready_s": 54.5,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.6209059833869,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 54.5166,
+     "leg": "RR",
+     "t_s": 49.922
+    },
+    "first_8s": {
+     "min_kN": 63.6685,
+     "leg": "RL",
+     "t_s": 21.176
+    },
+    "after_8s": {
+     "min_kN": 54.5166,
+     "leg": "RR",
+     "t_s": 49.922
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 12541.21273020759,
+    "target_m": -0.0005523502997450461,
+    "start_t_s": 20.199999999998273,
+    "end_t_s": 21.799999999994544,
+    "end_reason": "time",
+    "end_error_m": 2.7207994024211913e-05
+   },
+   "events": [
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:-0.552"
+    ]
+   ],
+   "commands_sha256": "35bc002342d4c91c337da3362994014201f3d65264df8d1d7f93776577953578"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 1.0,
+   "mode": "off",
+   "target_kN": 12.7,
+   "drop": null,
+   "te_s": 20.199999999998273,
+   "tau_te_mm": -0.37838411235762237,
+   "D_te_kN": 12.278588582932361,
+   "lift_after_te_s": 0.8739999999979631,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 25.98946789382852,
+   "F_RL_min8_kN": 46.38583341206356,
+   "F_min8_kN": 46.38583341206356,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 25.98946789382852,
+    "1": 22.70164577722401,
+    "3": 16.926543496870575,
+    "8": 7.312782650029966,
+    "15": 2.4294761561138714
+   },
+   "ready_s": 54.4,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.5639517606579,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 46.3858,
+     "leg": "RL",
+     "t_s": 21.14
+    },
+    "first_8s": {
+     "min_kN": 46.3858,
+     "leg": "RL",
+     "t_s": 21.14
+    },
+    "after_8s": {
+     "min_kN": 56.2631,
+     "leg": "RR",
+     "t_s": 49.822
+    }
+   },
+   "hold_meta": {},
+   "events": [],
+   "commands_sha256": "73bcfaf88b75ca969d7170547c515851dfdb7a97e7f3aa14dc655bcb9d209527"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 1.0,
+   "mode": "on",
+   "target_kN": 38.0,
+   "drop": null,
+   "te_s": 20.199999999998273,
+   "tau_te_mm": -0.37838411235762237,
+   "D_te_kN": 36.9753877811571,
+   "lift_after_te_s": 0.9779999999977207,
+   "frac_done_at_lift": 0.994877411754023,
+   "D_lift_kN": -7.378099043813677,
+   "F_RL_min8_kN": 63.535113991183366,
+   "F_min8_kN": 63.535113991183366,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": -7.378099043813677,
+    "1": -4.9047006824125035,
+    "3": -3.88473586639018,
+    "8": -2.087668695649846,
+    "15": -1.3736764749866381
+   },
+   "ready_s": 54.5,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 664.1523440256194,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 54.5301,
+     "leg": "RR",
+     "t_s": 49.922
+    },
+    "first_8s": {
+     "min_kN": 63.5351,
+     "leg": "RL",
+     "t_s": 21.19
+    },
+    "after_8s": {
+     "min_kN": 54.5301,
+     "leg": "RR",
+     "t_s": 49.922
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 37226.326815387314,
+    "target_m": -0.0016395521882313112,
+    "start_t_s": 20.199999999998273,
+    "end_t_s": 21.799999999994544,
+    "end_reason": "time",
+    "end_error_m": 0.00010333164475246422
+   },
+   "events": [
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:-1.640"
+    ]
+   ],
+   "commands_sha256": "6e452508eeece4871b9c5dc4c682798934befecacf6335ed4e65080769d890ba"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 1.0,
+   "mode": "off",
+   "target_kN": 38.0,
+   "drop": null,
+   "te_s": 20.199999999998273,
+   "tau_te_mm": -0.37838411235762237,
+   "D_te_kN": 36.9753877811571,
+   "lift_after_te_s": 0.8709999999979701,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 48.14262796409133,
+   "F_RL_min8_kN": 34.59566707843421,
+   "F_min8_kN": 34.59566707843421,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 48.14262796409133,
+    "1": 41.5791844313157,
+    "3": 30.32284254949773,
+    "8": 11.55640232786714,
+    "15": 2.6470395600381096
+   },
+   "ready_s": 54.5,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 664.0942017619446,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 34.5957,
+     "leg": "RL",
+     "t_s": 21.145
+    },
+    "first_8s": {
+     "min_kN": 34.5957,
+     "leg": "RL",
+     "t_s": 21.145
+    },
+    "after_8s": {
+     "min_kN": 56.2752,
+     "leg": "RR",
+     "t_s": 49.922
+    }
+   },
+   "hold_meta": {},
+   "events": [
+    [
+     21.4,
+     "INFO_LIFT_PAUSED:RL"
+    ]
+   ],
+   "commands_sha256": "f4324fd947f0b9e9a0e4f37106fe69865ba8d7c724ecff2a83c5e5f9375da65a"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 3.0,
+   "mode": "off",
+   "target_kN": 12.7,
+   "drop": null,
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 12.399384870888898,
+   "lift_after_te_s": 0.586999999998632,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 31.484199827221936,
+   "F_RL_min8_kN": 42.30554768197579,
+   "F_min8_kN": 42.30554768197579,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 31.484199827221936,
+    "1": 27.724879318984197,
+    "3": 20.400434842317768,
+    "8": 8.39341514379381,
+    "15": 2.4800678311300572
+   },
+   "ready_s": 54.0,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.470895550225,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 42.3055,
+     "leg": "RL",
+     "t_s": 20.759
+    },
+    "first_8s": {
+     "min_kN": 42.3055,
+     "leg": "RL",
+     "t_s": 20.759
+    },
+    "after_8s": {
+     "min_kN": 56.264,
+     "leg": "RR",
+     "t_s": 49.422
+    }
+   },
+   "hold_meta": {},
+   "events": [],
+   "commands_sha256": "c12f54cc98e129e86479b1950b9227f8b3d40db68e3517dd87fa9f1c883719b2"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 3.0,
+   "mode": "on",
+   "target_kN": 12.7,
+   "drop": null,
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 12.399384870888898,
+   "lift_after_te_s": 0.6539999999984758,
+   "frac_done_at_lift": 0.5196099119945731,
+   "D_lift_kN": 1.1881272493127426,
+   "F_RL_min8_kN": 58.15448234928277,
+   "F_min8_kN": 58.15448234928277,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 1.1881272493127426,
+    "1": -0.7178050265896232,
+    "3": -0.5240449966877421,
+    "8": 0.18350630676103208,
+    "15": 0.8515722409085456
+   },
+   "ready_s": 54.1,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.4864016472592,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 55.6927,
+     "leg": "RR",
+     "t_s": 49.522
+    },
+    "first_8s": {
+     "min_kN": 58.1545,
+     "leg": "RL",
+     "t_s": 20.757
+    },
+    "after_8s": {
+     "min_kN": 55.6927,
+     "leg": "RR",
+     "t_s": 49.522
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 12407.35177715323,
+    "target_m": -0.000546454686686379,
+    "start_t_s": 20.099999999998506,
+    "end_t_s": 21.699999999994777,
+    "end_reason": "time",
+    "end_error_m": 3.704182874641744e-05
+   },
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:-0.546"
+    ]
+   ],
+   "commands_sha256": "e2b2e08aaf9e82ba541de799912f8f0c61fa83499bc49c7212596dfdf39c5926"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 3.0,
+   "mode": "off",
+   "target_kN": 38.0,
+   "drop": null,
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 37.13020494503976,
+   "lift_after_te_s": 0.5819999999986436,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 54.665243370555174,
+   "F_RL_min8_kN": 29.335871840369986,
+   "F_min8_kN": 29.335871840369986,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 54.665243370555174,
+    "1": 47.4184259823774,
+    "3": 34.37096715384631,
+    "8": 12.830822094238727,
+    "15": 2.707563965816533
+   },
+   "ready_s": 54.1,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 664.0010841612922,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 29.3359,
+     "leg": "RL",
+     "t_s": 20.76
+    },
+    "first_8s": {
+     "min_kN": 29.3359,
+     "leg": "RL",
+     "t_s": 20.76
+    },
+    "after_8s": {
+     "min_kN": 56.2762,
+     "leg": "RR",
+     "t_s": 49.522
+    }
+   },
+   "hold_meta": {},
+   "events": [
+    [
+     21.0,
+     "INFO_LIFT_PAUSED:RL"
+    ]
+   ],
+   "commands_sha256": "2eb91b147f45ad843c3f18779b266dd4f96b88d969f38e0553e3b9b5a135ce3e"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 3.0,
+   "mode": "on",
+   "target_kN": 38.0,
+   "drop": null,
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 37.13020494503976,
+   "lift_after_te_s": 0.6649999999984502,
+   "frac_done_at_lift": 0.5175182589534152,
+   "D_lift_kN": 5.599299608061742,
+   "F_RL_min8_kN": 51.76366539961029,
+   "F_min8_kN": 51.76366539961029,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 5.599299608061742,
+    "1": -1.1943125072849696,
+    "3": -0.8491880539594021,
+    "8": -0.07235406898781349,
+    "15": 0.6188338225398269
+   },
+   "ready_s": 54.1,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 664.0225189315388,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 51.7637,
+     "leg": "RL",
+     "t_s": 20.765
+    },
+    "first_8s": {
+     "min_kN": 51.7637,
+     "leg": "RL",
+     "t_s": 20.765
+    },
+    "after_8s": {
+     "min_kN": 55.5716,
+     "leg": "RR",
+     "t_s": 49.522
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 37127.11476746767,
+    "target_m": -0.0016351826104571666,
+    "start_t_s": 20.099999999998506,
+    "end_t_s": 21.699999999994777,
+    "end_reason": "time",
+    "end_error_m": 0.00011540292166978337
+   },
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:-1.635"
+    ]
+   ],
+   "commands_sha256": "7077f652081f91dbe282f0691d4913c52f319c01657598008281fab981ddab15"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 10.0,
+   "mode": "on",
+   "target_kN": 12.7,
+   "drop": null,
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 12.441472285146908,
+   "lift_after_te_s": 0.5549999999987065,
+   "frac_done_at_lift": 0.3225664782125292,
+   "D_lift_kN": 2.7272161733861466,
+   "F_RL_min8_kN": 55.02683738151969,
+   "F_min8_kN": 55.02683738151969,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 2.7272161733861466,
+    "1": -0.9524695215823371,
+    "3": -0.6698177093838567,
+    "8": -0.10637592329872803,
+    "15": 0.5679810571091011
+   },
+   "ready_s": 54.0,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.4862839266642,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 55.0268,
+     "leg": "RL",
+     "t_s": 20.75
+    },
+    "first_8s": {
+     "min_kN": 55.0268,
+     "leg": "RL",
+     "t_s": 20.75
+    },
+    "after_8s": {
+     "min_kN": 55.5417,
+     "leg": "RR",
+     "t_s": 49.422
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 12419.15577744191,
+    "target_m": -0.0005469745680756756,
+    "start_t_s": 20.099999999998506,
+    "end_t_s": 21.699999999994777,
+    "end_reason": "time",
+    "end_error_m": 3.687774070427238e-05
+   },
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:-0.547"
+    ]
+   ],
+   "commands_sha256": "0125efed92cb4e6f35304359306294ee2d9fe2b435f0d9d96aa9251a85ae3ff3"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 10.0,
+   "mode": "off",
+   "target_kN": 12.7,
+   "drop": null,
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 12.441472285146908,
+   "lift_after_te_s": 0.50199999999883,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 30.494794946005744,
+   "F_RL_min8_kN": 40.44914606592409,
+   "F_min8_kN": 40.44914606592409,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 30.494794946005744,
+    "1": 27.95965297902721,
+    "3": 20.540651576556648,
+    "8": 8.467971379837223,
+    "15": 2.487633913633516
+   },
+   "ready_s": 54.0,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.4639175880591,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 40.4491,
+     "leg": "RL",
+     "t_s": 20.704
+    },
+    "first_8s": {
+     "min_kN": 40.4491,
+     "leg": "RL",
+     "t_s": 20.704
+    },
+    "after_8s": {
+     "min_kN": 56.2687,
+     "leg": "RR",
+     "t_s": 49.422
+    }
+   },
+   "hold_meta": {},
+   "events": [
+    [
+     20.7,
+     "INFO_LIFT_PAUSED:RL"
+    ]
+   ],
+   "commands_sha256": "76bbca371eec66a1dde2ada6e1657bf02adff08d1d674b2acdc03e705fef5c96"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 10.0,
+   "mode": "on",
+   "target_kN": 38.0,
+   "drop": null,
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 37.22863574912577,
+   "lift_after_te_s": 0.5629999999986879,
+   "frac_done_at_lift": 0.32125975444822163,
+   "D_lift_kN": 10.779971071996606,
+   "F_RL_min8_kN": 48.45426334304388,
+   "F_min8_kN": 48.45426334304388,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 10.779971071996606,
+    "1": -1.9458935883604056,
+    "3": -1.3878905726454533,
+    "8": -0.3966307889674425,
+    "15": 0.30119027625130457
+   },
+   "ready_s": 54.0,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 664.0234234379138,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 48.4543,
+     "leg": "RL",
+     "t_s": 20.746
+    },
+    "first_8s": {
+     "min_kN": 48.4543,
+     "leg": "RL",
+     "t_s": 20.746
+    },
+    "after_8s": {
+     "min_kN": 55.4029,
+     "leg": "RR",
+     "t_s": 49.422
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 37210.276403013944,
+    "target_m": -0.001638845282904356,
+    "start_t_s": 20.099999999998506,
+    "end_t_s": 21.699999999994777,
+    "end_reason": "time",
+    "end_error_m": 0.00011471503664149153
+   },
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:-1.639"
+    ]
+   ],
+   "commands_sha256": "9c5dc361d97d95dad151bee19fedb63787c0d7cc4b26c160d1dd149630577006"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 10.0,
+   "mode": "off",
+   "target_kN": 38.0,
+   "drop": null,
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 37.22863574912577,
+   "lift_after_te_s": 0.4999999999988347,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 53.927807119783054,
+   "F_RL_min8_kN": 27.635230480201045,
+   "F_min8_kN": 27.635230480201045,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 53.927807119783054,
+    "1": 47.91205363342342,
+    "3": 34.64140402459116,
+    "8": 12.9525197027587,
+    "15": 2.7185664362759567
+   },
+   "ready_s": 54.0,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.9963261061251,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 27.6352,
+     "leg": "RL",
+     "t_s": 20.698
+    },
+    "first_8s": {
+     "min_kN": 27.6352,
+     "leg": "RL",
+     "t_s": 20.698
+    },
+    "after_8s": {
+     "min_kN": 56.273,
+     "leg": "RR",
+     "t_s": 49.422
+    }
+   },
+   "hold_meta": {},
+   "events": [
+    [
+     20.7,
+     "INFO_LIFT_PAUSED:RL"
+    ]
+   ],
+   "commands_sha256": "da5dd8b56e3ebfa93e384face304f788da4ab48482e61bb883aae6f328d18de4"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 30.0,
+   "mode": "on",
+   "target_kN": 12.7,
+   "drop": null,
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 12.47474043968213,
+   "lift_after_te_s": 0.6029999999985947,
+   "frac_done_at_lift": 0.41685658735255865,
+   "D_lift_kN": 1.6466536926793793,
+   "F_RL_min8_kN": 55.044196353869246,
+   "F_min8_kN": 55.044196353869246,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 1.6466536926793793,
+    "1": -1.2011267387895401,
+    "3": -0.9481506295804607,
+    "8": -0.30524671079644605,
+    "15": 0.3633882406551905
+   },
+   "ready_s": 54.0,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.4838507860104,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 55.0442,
+     "leg": "RL",
+     "t_s": 20.79
+    },
+    "first_8s": {
+     "min_kN": 55.0442,
+     "leg": "RL",
+     "t_s": 20.79
+    },
+    "after_8s": {
+     "min_kN": 55.434,
+     "leg": "RR",
+     "t_s": 49.422
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 12500.125099926872,
+    "target_m": -0.0005505406848864524,
+    "start_t_s": 20.099999999998506,
+    "end_t_s": 21.699999999994777,
+    "end_reason": "time",
+    "end_error_m": 3.677452473508096e-05
+   },
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:-0.551"
+    ]
+   ],
+   "commands_sha256": "a428e78ef157d1017bdb66bb83f6a854bc1541217cbfb2b80fe47ebf817c72a9"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 30.0,
+   "mode": "off",
+   "target_kN": 12.7,
+   "drop": null,
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 12.47474043968213,
+   "lift_after_te_s": 0.5289999999987671,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 31.056819226157096,
+   "F_RL_min8_kN": 38.398979114100854,
+   "F_min8_kN": 38.398979114100854,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 31.056819226157096,
+    "1": 27.826927531335762,
+    "3": 20.31699475587627,
+    "8": 8.381423365421234,
+    "15": 2.4815575252265702
+   },
+   "ready_s": 54.0,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.4578092107178,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 38.399,
+     "leg": "RL",
+     "t_s": 20.732
+    },
+    "first_8s": {
+     "min_kN": 38.399,
+     "leg": "RL",
+     "t_s": 20.732
+    },
+    "after_8s": {
+     "min_kN": 56.2671,
+     "leg": "RR",
+     "t_s": 49.422
+    }
+   },
+   "hold_meta": {},
+   "events": [],
+   "commands_sha256": "b8a7508a35da7320bd033dba6dea1ef66c4081ab40a531ad742e9459d9fcb95b"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 30.0,
+   "mode": "on",
+   "target_kN": 38.0,
+   "drop": null,
+   "te_s": 20.199999999998273,
+   "tau_te_mm": -1.2931631751805241,
+   "D_te_kN": 10.170005987930754,
+   "lift_after_te_s": 0.5029999999988277,
+   "frac_done_at_lift": 0.27531758181463756,
+   "D_lift_kN": 0.6799848469261747,
+   "F_RL_min8_kN": 54.19826929329473,
+   "F_min8_kN": 54.19826929329473,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 0.6799848469261747,
+    "1": -2.9047404727151545,
+    "3": -2.397402359651174,
+    "8": -1.7529439789040353,
+    "15": -1.0517922991637718
+   },
+   "ready_s": 54.1,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 664.0434561912692,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 54.1983,
+     "leg": "RL",
+     "t_s": 20.803
+    },
+    "first_8s": {
+     "min_kN": 54.1983,
+     "leg": "RL",
+     "t_s": 20.803
+    },
+    "after_8s": {
+     "min_kN": 54.6991,
+     "leg": "RR",
+     "t_s": 49.522
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 10525.061786386761,
+    "target_m": -0.00046355333870886576,
+    "start_t_s": 20.199999999998273,
+    "end_t_s": 21.799999999994544,
+    "end_reason": "time",
+    "end_error_m": 2.4929456095104424e-05
+   },
+   "events": [
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:-0.464"
+    ]
+   ],
+   "commands_sha256": "f22499bec8c2e0239be1a654abc2bd5b68b25ad9680a727b98f9b93fdfff5168"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 30.0,
+   "mode": "off",
+   "target_kN": 38.0,
+   "drop": null,
+   "te_s": 20.199999999998273,
+   "tau_te_mm": -1.2931631751805241,
+   "D_te_kN": 10.170005987930754,
+   "lift_after_te_s": 0.4579999999989326,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 25.395187105221712,
+   "F_RL_min8_kN": 41.343760679521644,
+   "F_min8_kN": 41.343760679521644,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 25.395187105221712,
+    "1": 24.39384358221384,
+    "3": 17.975592543484584,
+    "8": 7.681319241191808,
+    "15": 2.457454505641252
+   },
+   "ready_s": 54.1,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.9914969194024,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 41.3438,
+     "leg": "RL",
+     "t_s": 20.761
+    },
+    "first_8s": {
+     "min_kN": 41.3438,
+     "leg": "RL",
+     "t_s": 20.761
+    },
+    "after_8s": {
+     "min_kN": 56.2703,
+     "leg": "RR",
+     "t_s": 49.522
+    }
+   },
+   "hold_meta": {},
+   "events": [],
+   "commands_sha256": "c4400ddb1cd28ac24d4ec241f84f5aea382eeb369e8ec6694c364d547534468d"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 100.0,
+   "mode": "on",
+   "target_kN": 12.7,
+   "drop": null,
+   "te_s": 20.199999999998273,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 12.512554559714484,
+   "lift_after_te_s": 0.5339999999987555,
+   "frac_done_at_lift": 0.2842513635539878,
+   "D_lift_kN": 2.7715681838773207,
+   "F_RL_min8_kN": 53.105326206242935,
+   "F_min8_kN": 53.105326206242935,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 2.7715681838773207,
+    "1": -1.4594778869450806,
+    "3": -1.1512717142613695,
+    "8": -0.5357043183031962,
+    "15": 0.13711776983636526
+   },
+   "ready_s": 54.1,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.478898140606,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 53.1053,
+     "leg": "RL",
+     "t_s": 20.832
+    },
+    "first_8s": {
+     "min_kN": 53.1053,
+     "leg": "RL",
+     "t_s": 20.832
+    },
+    "after_8s": {
+     "min_kN": 55.3194,
+     "leg": "RR",
+     "t_s": 49.522
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 12510.259462599943,
+    "target_m": -0.0005509870307367794,
+    "start_t_s": 20.199999999998273,
+    "end_t_s": 21.799999999994544,
+    "end_reason": "time",
+    "end_error_m": 3.649225941076994e-05
+   },
+   "events": [
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:-0.551"
+    ]
+   ],
+   "commands_sha256": "c4cd8e0bf70850dbb5103f1aa3a9bac92392569c161e867e3f8b4d435385eb0d"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 100.0,
+   "mode": "off",
+   "target_kN": 12.7,
+   "drop": null,
+   "te_s": 20.199999999998273,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 12.512554559714484,
+   "lift_after_te_s": 0.47299999999889764,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 30.328238567801574,
+   "F_RL_min8_kN": 37.17140138648719,
+   "F_min8_kN": 37.17140138648719,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 30.328238567801574,
+    "1": 28.0700546439883,
+    "3": 20.275009069358614,
+    "8": 8.377055071534087,
+    "15": 2.4837322657549876
+   },
+   "ready_s": 54.1,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.4487711409386,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 37.1714,
+     "leg": "RL",
+     "t_s": 20.777
+    },
+    "first_8s": {
+     "min_kN": 37.1714,
+     "leg": "RL",
+     "t_s": 20.777
+    },
+    "after_8s": {
+     "min_kN": 56.27,
+     "leg": "RR",
+     "t_s": 49.522
+    }
+   },
+   "hold_meta": {},
+   "events": [
+    [
+     20.8,
+     "INFO_LIFT_PAUSED:RL"
+    ]
+   ],
+   "commands_sha256": "40ba287e117dd28939ac4be748006868f532183400586d7b37596bc2bd88c16b"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 100.0,
+   "mode": "on",
+   "target_kN": 38.0,
+   "drop": null,
+   "te_s": 20.199999999998273,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 37.442679591390615,
+   "lift_after_te_s": 0.5419999999987368,
+   "frac_done_at_lift": 0.28383014096322157,
+   "D_lift_kN": 11.56873128784721,
+   "F_RL_min8_kN": 45.78841507353043,
+   "F_min8_kN": 45.78841507353043,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 11.56873128784721,
+    "1": -2.5921211417125605,
+    "3": -1.9411564921027278,
+    "8": -0.8908693538540717,
+    "15": -0.19375844054358993
+   },
+   "ready_s": 54.1,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 664.0167340746217,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 45.7884,
+     "leg": "RL",
+     "t_s": 20.834
+    },
+    "first_8s": {
+     "min_kN": 45.7884,
+     "leg": "RL",
+     "t_s": 20.834
+    },
+    "after_8s": {
+     "min_kN": 55.1453,
+     "leg": "RR",
+     "t_s": 49.522
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 37440.77984371098,
+    "target_m": -0.0016489973030718,
+    "start_t_s": 20.199999999998273,
+    "end_t_s": 21.799999999994544,
+    "end_reason": "time",
+    "end_error_m": 0.00011408325478034316
+   },
+   "events": [
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:-1.649"
+    ]
+   ],
+   "commands_sha256": "078b6e47b004a32c95100d570ee1818e7b074231c818c9a296667f7bbc99fbab"
+  },
+  {
+   "case": "R9",
+   "stage": "inject",
+   "S": 100.0,
+   "mode": "off",
+   "target_kN": 38.0,
+   "drop": null,
+   "te_s": 20.199999999998273,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 37.442679591390615,
+   "lift_after_te_s": 0.47299999999889764,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 54.001661602883615,
+   "F_RL_min8_kN": 24.33514564808673,
+   "F_min8_kN": 24.33514564808673,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 54.001661602883615,
+    "1": 47.95662843359701,
+    "3": 34.34980284511003,
+    "8": 12.849565052445271,
+    "15": 2.714126876657808
+   },
+   "ready_s": 54.1,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 663.9804543209457,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 24.3351,
+     "leg": "RL",
+     "t_s": 20.774
+    },
+    "first_8s": {
+     "min_kN": 24.3351,
+     "leg": "RL",
+     "t_s": 20.774
+    },
+    "after_8s": {
+     "min_kN": 56.2742,
+     "leg": "RR",
+     "t_s": 49.522
+    }
+   },
+   "hold_meta": {},
+   "events": [
+    [
+     20.8,
+     "INFO_LIFT_PAUSED:RL"
+    ]
+   ],
+   "commands_sha256": "57bb0910a691e439c84eb12f35571a161783282f1ede6c59e5c94aa2d08bebc9"
+  },
+  {
+   "case": "R9",
+   "stage": "drop",
+   "S": 1.0,
+   "mode": "on",
+   "target_kN": 38.0,
+   "drop": {
+    "leg": "RL",
+    "depth_m": 0.02,
+    "t0": 21.277999999995995
+   },
+   "te_s": 20.199999999998273,
+   "tau_te_mm": -0.37838411235762237,
+   "D_te_kN": 36.9753877811571,
+   "lift_after_te_s": 0.9779999999977207,
+   "frac_done_at_lift": 0.994877411754023,
+   "D_lift_kN": 69.32157238254678,
+   "F_RL_min8_kN": -0.7174838721681049,
+   "F_min8_kN": -0.7174838721681049,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 69.32157238254678,
+    "1": 124.23914749167953,
+    "3": 127.03673800609991,
+    "8": 18.566289088307826,
+    "15": 2.905420781619945
+   },
+   "ready_s": 53.8,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-1",
+    "P3-3"
+   ],
+   "max_stroke_mm": 650.287893780651,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -0.7175,
+     "leg": "RL",
+     "t_s": 21.297
+    },
+    "first_8s": {
+     "min_kN": -0.7175,
+     "leg": "RL",
+     "t_s": 21.297
+    },
+    "after_8s": {
+     "min_kN": 56.272,
+     "leg": "RR",
+     "t_s": 49.22
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 37226.326815387314,
+    "target_m": -0.0016395521882313112,
+    "start_t_s": 20.199999999998273,
+    "end_t_s": 21.799999999994544,
+    "end_reason": "time",
+    "end_error_m": 0.00024082993547118307
+   },
+   "events": [
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:-1.640"
+    ],
+    [
+     21.3,
+     "INFO_LIFT_PAUSED:RL"
+    ],
+    [
+     27.4,
+     "leg_reapproach_start:RL"
+    ],
+    [
+     27.9,
+     "leg_reapproach_contact:RL"
+    ]
+   ],
+   "commands_sha256": "c3631fdd93f7be66ff0f3b3573716cb407deb58076d2b8df8c2166d9ff2bdf61"
+  },
+  {
+   "case": "R9",
+   "stage": "drop",
+   "S": 1.0,
+   "mode": "continue",
+   "target_kN": 38.0,
+   "drop": {
+    "leg": "RL",
+    "depth_m": 0.02,
+    "t0": 21.277999999995995
+   },
+   "te_s": 20.199999999998273,
+   "tau_te_mm": -0.37838411235762237,
+   "D_te_kN": 36.9753877811571,
+   "lift_after_te_s": 0.9779999999977207,
+   "frac_done_at_lift": 0.994877411754023,
+   "D_lift_kN": 69.32157238254678,
+   "F_RL_min8_kN": -0.7174838721681049,
+   "F_min8_kN": -0.7174838721681049,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 69.32157238254678,
+    "1": 124.23914749167953,
+    "3": 127.03673800609991,
+    "8": 18.566289088307826,
+    "15": 2.905420781619945
+   },
+   "ready_s": 53.8,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-1",
+    "P3-3"
+   ],
+   "max_stroke_mm": 650.287893780651,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -0.7175,
+     "leg": "RL",
+     "t_s": 21.297
+    },
+    "first_8s": {
+     "min_kN": -0.7175,
+     "leg": "RL",
+     "t_s": 21.297
+    },
+    "after_8s": {
+     "min_kN": 56.272,
+     "leg": "RR",
+     "t_s": 49.22
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 37226.326815387314,
+    "target_m": -0.0016395521882313112,
+    "start_t_s": 20.199999999998273,
+    "end_t_s": 21.799999999994544,
+    "end_reason": "time",
+    "end_error_m": 0.00024082993547118307
+   },
+   "events": [
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:-1.640"
+    ],
+    [
+     21.3,
+     "INFO_LIFT_PAUSED:RL"
+    ],
+    [
+     27.4,
+     "leg_reapproach_start:RL"
+    ],
+    [
+     27.9,
+     "leg_reapproach_contact:RL"
+    ]
+   ],
+   "commands_sha256": "c3631fdd93f7be66ff0f3b3573716cb407deb58076d2b8df8c2166d9ff2bdf61"
+  },
+  {
+   "case": "R9",
+   "stage": "drop",
+   "S": 1.0,
+   "mode": "off",
+   "target_kN": 38.0,
+   "drop": {
+    "leg": "RL",
+    "depth_m": 0.02,
+    "t0": 21.277999999995995
+   },
+   "te_s": 20.199999999998273,
+   "tau_te_mm": -0.37838411235762237,
+   "D_te_kN": 36.9753877811571,
+   "lift_after_te_s": 0.8709999999979701,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 81.82697229538064,
+   "F_RL_min8_kN": -0.7174838721681049,
+   "F_min8_kN": -0.7174838721681049,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 81.82697229538064,
+    "1": 123.40233061814267,
+    "3": 128.42196844580258,
+    "8": 17.868326089488612,
+    "15": 2.8917803507839537
+   },
+   "ready_s": 53.7,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-3"
+   ],
+   "max_stroke_mm": 650.291176755202,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -0.7175,
+     "leg": "RL",
+     "t_s": 21.287
+    },
+    "first_8s": {
+     "min_kN": -0.7175,
+     "leg": "RL",
+     "t_s": 21.287
+    },
+    "after_8s": {
+     "min_kN": 56.2685,
+     "leg": "RR",
+     "t_s": 49.121
+    }
+   },
+   "hold_meta": {},
+   "events": [
+    [
+     21.3,
+     "INFO_LIFT_PAUSED:RL"
+    ],
+    [
+     27.4,
+     "leg_reapproach_start:RL"
+    ],
+    [
+     28.3,
+     "leg_reapproach_contact:RL"
+    ]
+   ],
+   "commands_sha256": "f34529b71ae592e8743535e5b43e6c6192ea2b238953ccf33ac09d35c187316d"
+  },
+  {
+   "case": "R9",
+   "stage": "drop",
+   "S": 1.0,
+   "mode": "on",
+   "target_kN": 38.0,
+   "drop": {
+    "leg": "FL",
+    "depth_m": 0.02,
+    "t0": 21.277999999995995
+   },
+   "te_s": 20.199999999998273,
+   "tau_te_mm": -0.37838411235762237,
+   "D_te_kN": 36.9753877811571,
+   "lift_after_te_s": 0.9779999999977207,
+   "frac_done_at_lift": 0.994877411754023,
+   "D_lift_kN": -81.9637455084706,
+   "F_RL_min8_kN": 59.921537562199916,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FL",
+   "D_after_lift_kN": {
+    "0": -81.9637455084706,
+    "1": -142.84470305010228,
+    "3": -137.7431108490573,
+    "8": -15.80598162846411,
+    "15": -2.5155882663322444
+   },
+   "ready_s": 54.0,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-1",
+    "P3-3"
+   ],
+   "max_stroke_mm": 657.0140320517978,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 21.302
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 21.302
+    },
+    "after_8s": {
+     "min_kN": 54.0937,
+     "leg": "RR",
+     "t_s": 49.422
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 37226.326815387314,
+    "target_m": -0.0016395521882313112,
+    "start_t_s": 20.199999999998273,
+    "end_t_s": 21.799999999994544,
+    "end_reason": "time",
+    "end_error_m": -4.2817988965455e-05
+   },
+   "events": [
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:-1.640"
+    ],
+    [
+     21.3,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     22.2,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     22.7,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     23.1,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     25.4,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     26.2,
+     "leg_reapproach_contact:RR"
+    ]
+   ],
+   "commands_sha256": "c9f8dcf5ba2e50d7867b54897e6fb33e1e0722f3789c69e319216c2b002fac29"
+  },
+  {
+   "case": "R9",
+   "stage": "drop",
+   "S": 1.0,
+   "mode": "continue",
+   "target_kN": 38.0,
+   "drop": {
+    "leg": "FL",
+    "depth_m": 0.02,
+    "t0": 21.277999999995995
+   },
+   "te_s": 20.199999999998273,
+   "tau_te_mm": -0.37838411235762237,
+   "D_te_kN": 36.9753877811571,
+   "lift_after_te_s": 0.9779999999977207,
+   "frac_done_at_lift": 0.994877411754023,
+   "D_lift_kN": -81.9637455084706,
+   "F_RL_min8_kN": 59.921537562199916,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FL",
+   "D_after_lift_kN": {
+    "0": -81.9637455084706,
+    "1": -142.84470305010228,
+    "3": -137.7431108490573,
+    "8": -15.80598162846411,
+    "15": -2.5155882663322444
+   },
+   "ready_s": 54.0,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-1",
+    "P3-3"
+   ],
+   "max_stroke_mm": 657.0140320517978,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 21.302
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 21.302
+    },
+    "after_8s": {
+     "min_kN": 54.0937,
+     "leg": "RR",
+     "t_s": 49.422
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 37226.326815387314,
+    "target_m": -0.0016395521882313112,
+    "start_t_s": 20.199999999998273,
+    "end_t_s": 21.799999999994544,
+    "end_reason": "time",
+    "end_error_m": -4.2817988965455e-05
+   },
+   "events": [
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:-1.640"
+    ],
+    [
+     21.3,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     22.2,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     22.7,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     23.1,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     25.4,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     26.2,
+     "leg_reapproach_contact:RR"
+    ]
+   ],
+   "commands_sha256": "c9f8dcf5ba2e50d7867b54897e6fb33e1e0722f3789c69e319216c2b002fac29"
+  },
+  {
+   "case": "R9",
+   "stage": "drop",
+   "S": 1.0,
+   "mode": "off",
+   "target_kN": 38.0,
+   "drop": {
+    "leg": "FL",
+    "depth_m": 0.02,
+    "t0": 21.277999999995995
+   },
+   "te_s": 20.199999999998273,
+   "tau_te_mm": -0.37838411235762237,
+   "D_te_kN": 36.9753877811571,
+   "lift_after_te_s": 0.8709999999979701,
+   "frac_done_at_lift": null,
+   "D_lift_kN": -13.963183205528576,
+   "F_RL_min8_kN": 29.661257367612148,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FL",
+   "D_after_lift_kN": {
+    "0": -13.963183205528576,
+    "1": -136.53554058170704,
+    "3": -108.50620570980882,
+    "8": -33.0421116124976,
+    "15": -3.3111477349572738
+   },
+   "ready_s": 54.0,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-1",
+    "P3-3"
+   ],
+   "max_stroke_mm": 656.9972717415731,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 21.312
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 21.312
+    },
+    "after_8s": {
+     "min_kN": 53.5205,
+     "leg": "RR",
+     "t_s": 29.072
+    }
+   },
+   "hold_meta": {},
+   "events": [
+    [
+     21.3,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     22.5,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     23.0,
+     "INFO_LIFT_PAUSED:FL"
+    ]
+   ],
+   "commands_sha256": "4b2dbbc1bcf65a0efd1f3c9590d9b6b54fd6688f439e90ea64f8ef6285c8d719"
+  },
+  {
+   "case": "R9",
+   "stage": "drop",
+   "S": 10.0,
+   "mode": "on",
+   "target_kN": 38.0,
+   "drop": {
+    "leg": "RL",
+    "depth_m": 0.02,
+    "t0": 20.762999999997195
+   },
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 37.22863574912577,
+   "lift_after_te_s": 0.5629999999986879,
+   "frac_done_at_lift": 0.32125975444822163,
+   "D_lift_kN": 66.62473868915751,
+   "F_RL_min8_kN": -0.7174838721681049,
+   "F_min8_kN": -0.7174838721681049,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 66.62473868915751,
+    "1": 125.10079358946302,
+    "3": 127.43012798995805,
+    "8": 18.911116608246974,
+    "15": 2.9324627521457103
+   },
+   "ready_s": 53.3,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-1",
+    "P3-3"
+   ],
+   "max_stroke_mm": 650.1897846205968,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -0.7175,
+     "leg": "RL",
+     "t_s": 20.777
+    },
+    "first_8s": {
+     "min_kN": -0.7175,
+     "leg": "RL",
+     "t_s": 20.777
+    },
+    "after_8s": {
+     "min_kN": 56.2684,
+     "leg": "RR",
+     "t_s": 48.721
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 37210.276403013944,
+    "target_m": -0.001638845282904356,
+    "start_t_s": 20.099999999998506,
+    "end_t_s": 21.699999999994777,
+    "end_reason": "time",
+    "end_error_m": 0.00044050149205574624
+   },
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:-1.639"
+    ],
+    [
+     20.8,
+     "INFO_LIFT_PAUSED:RL"
+    ],
+    [
+     27.2,
+     "leg_reapproach_start:RL"
+    ],
+    [
+     27.7,
+     "leg_reapproach_contact:RL"
+    ]
+   ],
+   "commands_sha256": "55c6cfcd56dc13c8370db61da7e882f9f319ddc864a6e13cdd26cfc1913bc0a7"
+  },
+  {
+   "case": "R9",
+   "stage": "drop",
+   "S": 10.0,
+   "mode": "continue",
+   "target_kN": 38.0,
+   "drop": {
+    "leg": "RL",
+    "depth_m": 0.02,
+    "t0": 20.762999999997195
+   },
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 37.22863574912577,
+   "lift_after_te_s": 0.5629999999986879,
+   "frac_done_at_lift": 0.32125975444822163,
+   "D_lift_kN": 66.62473868915751,
+   "F_RL_min8_kN": -0.7174838721681049,
+   "F_min8_kN": -0.7174838721681049,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 66.62473868915751,
+    "1": 125.10079358946302,
+    "3": 127.43012798995805,
+    "8": 18.911116608246974,
+    "15": 2.9324627521457103
+   },
+   "ready_s": 53.3,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-1",
+    "P3-3"
+   ],
+   "max_stroke_mm": 650.1897846205968,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -0.7175,
+     "leg": "RL",
+     "t_s": 20.777
+    },
+    "first_8s": {
+     "min_kN": -0.7175,
+     "leg": "RL",
+     "t_s": 20.777
+    },
+    "after_8s": {
+     "min_kN": 56.2684,
+     "leg": "RR",
+     "t_s": 48.721
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 37210.276403013944,
+    "target_m": -0.001638845282904356,
+    "start_t_s": 20.099999999998506,
+    "end_t_s": 21.699999999994777,
+    "end_reason": "time",
+    "end_error_m": 0.00044050149205574624
+   },
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:-1.639"
+    ],
+    [
+     20.8,
+     "INFO_LIFT_PAUSED:RL"
+    ],
+    [
+     27.2,
+     "leg_reapproach_start:RL"
+    ],
+    [
+     27.7,
+     "leg_reapproach_contact:RL"
+    ]
+   ],
+   "commands_sha256": "55c6cfcd56dc13c8370db61da7e882f9f319ddc864a6e13cdd26cfc1913bc0a7"
+  },
+  {
+   "case": "R9",
+   "stage": "drop",
+   "S": 10.0,
+   "mode": "on",
+   "target_kN": 38.0,
+   "drop": {
+    "leg": "FL",
+    "depth_m": 0.02,
+    "t0": 20.762999999997195
+   },
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 37.22863574912577,
+   "lift_after_te_s": 0.5629999999986879,
+   "frac_done_at_lift": 0.32125975444822163,
+   "D_lift_kN": -59.4159628681288,
+   "F_RL_min8_kN": 33.22584437908639,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FL",
+   "D_after_lift_kN": {
+    "0": -59.4159628681288,
+    "1": -142.5797347965144,
+    "3": -140.0666817999072,
+    "8": -17.191655500684078,
+    "15": -2.584338082071312
+   },
+   "ready_s": 53.5,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-1",
+    "P3-3"
+   ],
+   "max_stroke_mm": 656.8141376644419,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 20.789
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 20.789
+    },
+    "after_8s": {
+     "min_kN": 54.1239,
+     "leg": "RR",
+     "t_s": 48.922
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 37210.276403013944,
+    "target_m": -0.001638845282904356,
+    "start_t_s": 20.099999999998506,
+    "end_t_s": 21.699999999994777,
+    "end_reason": "time",
+    "end_error_m": -0.00027464263447273245
+   },
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:-1.639"
+    ],
+    [
+     20.8,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     25.6,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     26.2,
+     "leg_reapproach_contact:RR"
+    ]
+   ],
+   "commands_sha256": "0dd4ad7ad14e5522b0e81628243056b55a28b66bbfee126a6ad1b298dd9038e0"
+  },
+  {
+   "case": "R9",
+   "stage": "drop",
+   "S": 10.0,
+   "mode": "off",
+   "target_kN": 38.0,
+   "drop": {
+    "leg": "RL",
+    "depth_m": 0.02,
+    "t0": 20.762999999997195
+   },
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 37.22863574912577,
+   "lift_after_te_s": 0.4999999999988347,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 91.05849555627705,
+   "F_RL_min8_kN": -0.7174838721681049,
+   "F_min8_kN": -0.7174838721681049,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 91.05849555627705,
+    "1": 125.57056207695763,
+    "3": 127.39289840202657,
+    "8": 15.938876488931317,
+    "15": 2.7969646125802967
+   },
+   "ready_s": 53.3,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-1",
+    "P3-3"
+   ],
+   "max_stroke_mm": 650.1886712429223,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -0.7175,
+     "leg": "RL",
+     "t_s": 20.77
+    },
+    "first_8s": {
+     "min_kN": -0.7175,
+     "leg": "RL",
+     "t_s": 20.77
+    },
+    "after_8s": {
+     "min_kN": 56.2668,
+     "leg": "RR",
+     "t_s": 48.721
+    }
+   },
+   "hold_meta": {},
+   "events": [
+    [
+     20.7,
+     "INFO_LIFT_PAUSED:RL"
+    ],
+    [
+     27.2,
+     "leg_reapproach_start:RL"
+    ],
+    [
+     28.1,
+     "leg_reapproach_contact:RL"
+    ]
+   ],
+   "commands_sha256": "891d2d4194ea034235f9855658dcabbbe36c75b1af73fcdc78907d29cabfd028"
+  },
+  {
+   "case": "R9",
+   "stage": "drop",
+   "S": 10.0,
+   "mode": "continue",
+   "target_kN": 38.0,
+   "drop": {
+    "leg": "FL",
+    "depth_m": 0.02,
+    "t0": 20.762999999997195
+   },
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 37.22863574912577,
+   "lift_after_te_s": 0.5629999999986879,
+   "frac_done_at_lift": 0.32125975444822163,
+   "D_lift_kN": -59.4159628681288,
+   "F_RL_min8_kN": 33.22584437908639,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FL",
+   "D_after_lift_kN": {
+    "0": -59.4159628681288,
+    "1": -142.5797347965144,
+    "3": -140.0666817999072,
+    "8": -17.191655500684078,
+    "15": -2.584338082071312
+   },
+   "ready_s": 53.5,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-1",
+    "P3-3"
+   ],
+   "max_stroke_mm": 656.8141376644419,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 20.789
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 20.789
+    },
+    "after_8s": {
+     "min_kN": 54.1239,
+     "leg": "RR",
+     "t_s": 48.922
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 37210.276403013944,
+    "target_m": -0.001638845282904356,
+    "start_t_s": 20.099999999998506,
+    "end_t_s": 21.699999999994777,
+    "end_reason": "time",
+    "end_error_m": -0.00027464263447273245
+   },
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:-1.639"
+    ],
+    [
+     20.8,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     25.6,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     26.2,
+     "leg_reapproach_contact:RR"
+    ]
+   ],
+   "commands_sha256": "0dd4ad7ad14e5522b0e81628243056b55a28b66bbfee126a6ad1b298dd9038e0"
+  },
+  {
+   "case": "R9",
+   "stage": "drop",
+   "S": 10.0,
+   "mode": "off",
+   "target_kN": 38.0,
+   "drop": {
+    "leg": "FL",
+    "depth_m": 0.02,
+    "t0": 20.762999999997195
+   },
+   "te_s": 20.099999999998506,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 37.22863574912577,
+   "lift_after_te_s": 0.4999999999988347,
+   "frac_done_at_lift": null,
+   "D_lift_kN": -11.312998919123046,
+   "F_RL_min8_kN": 1.6399441987867522,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FL",
+   "D_after_lift_kN": {
+    "0": -11.312998919123046,
+    "1": -138.300942672316,
+    "3": -101.44624935461435,
+    "8": -31.123968536539028,
+    "15": -3.2327023011416998
+   },
+   "ready_s": 53.6,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-1",
+    "P3-3"
+   ],
+   "max_stroke_mm": 656.8858957721599,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 20.796
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 20.796
+    },
+    "after_8s": {
+     "min_kN": 54.1067,
+     "leg": "RR",
+     "t_s": 49.022
+    }
+   },
+   "hold_meta": {},
+   "events": [
+    [
+     20.7,
+     "INFO_LIFT_PAUSED:RL"
+    ],
+    [
+     20.9,
+     "INFO_LIFT_PAUSED:RR"
+    ],
+    [
+     21.1,
+     "INFO_LIFT_PAUSED:RR"
+    ]
+   ],
+   "commands_sha256": "39170527c44f6ce1c9f915b94fb8e50ec02abe19bdf02c2189849285e7cbed01"
+  }
+ ],
+ "hold_end_R1": [
+  {
+   "case": "R1",
+   "stage": "natural",
+   "S": 100.0,
+   "mode": "off",
+   "target_kN": null,
+   "drop": null,
+   "te_s": 20.199999999998273,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 0.06023283800136525,
+   "lift_after_te_s": 0.4569999999989349,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 0.3072196847150721,
+   "F_RL_min8_kN": 57.9338761361195,
+   "F_min8_kN": 57.9338761361195,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 0.3072196847150721,
+    "1": 0.25250397243759437,
+    "3": 0.24404156490632545,
+    "8": 25.935575711974867,
+    "15": 0.40261682706225344
+   },
+   "ready_s": 39.0,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 406.64221244748626,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 54.6117,
+     "leg": "RR",
+     "t_s": 34.963
+    },
+    "first_8s": {
+     "min_kN": 57.9339,
+     "leg": "RL",
+     "t_s": 28.483
+    },
+    "after_8s": {
+     "min_kN": 54.6117,
+     "leg": "RR",
+     "t_s": 34.963
+    }
+   },
+   "hold_meta": {},
+   "events": [],
+   "commands_sha256": "b80224355051be2f8b4c8219ebe2ddf25840a102aec2e27d5f3321685dda00fe"
+  },
+  {
+   "case": "R1",
+   "stage": "natural",
+   "S": 1.0,
+   "mode": "off",
+   "target_kN": null,
+   "drop": null,
+   "te_s": 19.899999999998972,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 0.06485938817908732,
+   "lift_after_te_s": 0.6919999999983872,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 0.28155504348189453,
+   "F_RL_min8_kN": 57.91583504712948,
+   "F_min8_kN": 57.91583504712948,
+   "F_min8_leg": "RL",
+   "D_after_lift_kN": {
+    "0": 0.28155504348189453,
+    "1": 0.27635858414986103,
+    "3": 0.2577650084643963,
+    "8": 25.801604963274638,
+    "15": -10.168293893122915
+   },
+   "ready_s": 39.4,
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "max_stroke_mm": 407.55783328949286,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": 54.6903,
+     "leg": "RR",
+     "t_s": 35.363
+    },
+    "first_8s": {
+     "min_kN": 57.9158,
+     "leg": "RL",
+     "t_s": 28.557
+    },
+    "after_8s": {
+     "min_kN": 54.6903,
+     "leg": "RR",
+     "t_s": 35.363
+    }
+   },
+   "hold_meta": {},
+   "events": [],
+   "commands_sha256": "a91e95796d41e1a06dd5513b1a191bbd0b5bb12e5cfa50e9df8feafebb27820f"
+  },
+  {
+   "case": "R1",
+   "stage": "drop",
+   "S": 100.0,
+   "mode": "on",
+   "target_kN": 13.0,
+   "drop": {
+    "leg": "FL",
+    "depth_m": 0.02,
+    "t0": 21.199999999998273
+   },
+   "te_s": 20.199999999998273,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 13.119112603733313,
+   "lift_after_te_s": 0.45999999999892793,
+   "frac_done_at_lift": 0.18215256222303933,
+   "D_lift_kN": 5.659772640734424,
+   "F_RL_min8_kN": -0.7174838721681049,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FL",
+   "D_after_lift_kN": {
+    "0": 5.659772640734424,
+    "1": -78.23597652134963,
+    "3": -4.400165960428712,
+    "8": 6.839066689877832,
+    "15": 28.098377961102898
+   },
+   "ready_s": 46.3,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-2",
+    "P3-3",
+    "P3-8"
+   ],
+   "max_stroke_mm": 504.3392232484019,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 21.226
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 21.226
+    },
+    "after_8s": {
+     "min_kN": 55.444,
+     "leg": "RL",
+     "t_s": 45.105
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 12748.313942626182,
+    "target_m": -0.0005614716199249869,
+    "start_t_s": 20.199999999998273,
+    "end_t_s": 21.399999999995476,
+    "end_reason": "reapproach",
+    "end_error_m": 8.926485680599316e-05
+   },
+   "events": [
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:-0.561"
+    ],
+    [
+     21.3,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     21.4,
+     "leg_reapproach_start:FL"
+    ],
+    [
+     21.4,
+     "INFO_LOC_WINDOW_RESTART:FL"
+    ],
+    [
+     21.7,
+     "leg_reapproach_contact:FL"
+    ],
+    [
+     21.7,
+     "leg_reapproach_deferred:RR:retrigger"
+    ],
+    [
+     21.8,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     21.8,
+     "INFO_LOC_WINDOW_RESTART:RR"
+    ],
+    [
+     22.1,
+     "leg_reapproach_contact:RR"
+    ],
+    [
+     22.2,
+     "leg_reapproach_deferred:RR:retrigger"
+    ],
+    [
+     22.5,
+     "leg_reapproach_deferred:RL:retrigger"
+    ],
+    [
+     22.6,
+     "leg_reapproach_start:RL"
+    ]
+   ],
+   "commands_sha256": "26dd0bd09d33794af257c8ad084f59f3abba7670f473af3cb6f29e903d08faf2"
+  },
+  {
+   "case": "R1",
+   "stage": "drop",
+   "S": 100.0,
+   "mode": "continue",
+   "target_kN": 13.0,
+   "drop": {
+    "leg": "FL",
+    "depth_m": 0.02,
+    "t0": 21.199999999998273
+   },
+   "te_s": 20.199999999998273,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 13.119112603733313,
+   "lift_after_te_s": 0.45999999999892793,
+   "frac_done_at_lift": 0.18215256222303933,
+   "D_lift_kN": 5.659772640734424,
+   "F_RL_min8_kN": -0.7174838721681049,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FL",
+   "D_after_lift_kN": {
+    "0": 5.659772640734424,
+    "1": -79.42096520376656,
+    "3": -48.33730523327221,
+    "8": -8.527288635229162,
+    "15": -2.2510354678306967
+   },
+   "ready_s": 61.4,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-2",
+    "P3-3",
+    "P3-8"
+   ],
+   "max_stroke_mm": 506.44515000343193,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 21.226
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 21.226
+    },
+    "after_8s": {
+     "min_kN": 54.2375,
+     "leg": "RR",
+     "t_s": 53.776
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 12748.313942626182,
+    "target_m": -0.0005614716199249869,
+    "start_t_s": 20.199999999998273,
+    "end_t_s": 21.799999999994544,
+    "end_reason": "time",
+    "end_error_m": -0.002735224562197576
+   },
+   "events": [
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:-0.561"
+    ],
+    [
+     21.3,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     21.4,
+     "leg_reapproach_start:FL"
+    ],
+    [
+     21.4,
+     "INFO_LOC_WINDOW_RESTART:FL"
+    ],
+    [
+     21.7,
+     "leg_reapproach_contact:FL"
+    ],
+    [
+     21.7,
+     "leg_reapproach_deferred:RR:retrigger"
+    ],
+    [
+     21.8,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     21.8,
+     "INFO_LOC_WINDOW_RESTART:RR"
+    ],
+    [
+     22.1,
+     "leg_reapproach_contact:RR"
+    ],
+    [
+     22.2,
+     "leg_reapproach_deferred:RR:retrigger"
+    ],
+    [
+     22.3,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     22.3,
+     "INFO_LOC_WINDOW_RESTART:RR"
+    ]
+   ],
+   "commands_sha256": "0a1df942e34407bf5af8afb8561d933e681099d7890dc1c7668fef2e975f5f02"
+  },
+  {
+   "case": "R1",
+   "stage": "drop",
+   "S": 100.0,
+   "mode": "off",
+   "target_kN": 13.0,
+   "drop": {
+    "leg": "FL",
+    "depth_m": 0.02,
+    "t0": 21.199999999998273
+   },
+   "te_s": 20.199999999998273,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 13.119112603733313,
+   "lift_after_te_s": 0.45599999999893726,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 12.3613183616555,
+   "F_RL_min8_kN": -0.7174838721681049,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FL",
+   "D_after_lift_kN": {
+    "0": 12.3613183616555,
+    "1": -72.22827590608345,
+    "3": -49.70944416667638,
+    "8": -6.645099469046372,
+    "15": 23.662839397548666
+   },
+   "ready_s": 45.9,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-2",
+    "P3-3",
+    "P3-8"
+   ],
+   "max_stroke_mm": 498.5179158845196,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 21.227
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 21.227
+    },
+    "after_8s": {
+     "min_kN": 53.4326,
+     "leg": "RR",
+     "t_s": 41.869
+    }
+   },
+   "hold_meta": {},
+   "events": [
+    [
+     21.3,
+     "leg_reapproach_start:FL"
+    ],
+    [
+     21.3,
+     "INFO_LOC_WINDOW_RESTART:FL"
+    ],
+    [
+     21.3,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     21.6,
+     "INFO_LIFT_PAUSED:FR"
+    ],
+    [
+     21.7,
+     "leg_reapproach_contact:FL"
+    ],
+    [
+     21.7,
+     "leg_reapproach_deferred:RR:retrigger"
+    ],
+    [
+     21.8,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     21.8,
+     "INFO_LOC_WINDOW_RESTART:RR"
+    ],
+    [
+     22.1,
+     "leg_reapproach_contact:RR"
+    ],
+    [
+     22.2,
+     "leg_reapproach_deferred:RR:retrigger"
+    ],
+    [
+     22.3,
+     "leg_reapproach_deferred:FR:retrigger"
+    ],
+    [
+     22.4,
+     "leg_reapproach_deferred:RL:retrigger"
+    ]
+   ],
+   "commands_sha256": "d5d767d280ab62692a380461f5350022ee6b90624eadfb2232b188cc850d612e"
+  },
+  {
+   "case": "R1",
+   "stage": "drop",
+   "S": 100.0,
+   "mode": "on",
+   "target_kN": 13.0,
+   "drop": {
+    "leg": "RL",
+    "depth_m": 0.02,
+    "t0": 21.199999999998273
+   },
+   "te_s": 20.199999999998273,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 13.119112603733313,
+   "lift_after_te_s": 0.45999999999892793,
+   "frac_done_at_lift": 0.18215256222303933,
+   "D_lift_kN": 5.659772640734424,
+   "F_RL_min8_kN": -0.7174838721681049,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FR",
+   "D_after_lift_kN": {
+    "0": 5.659772640734424,
+    "1": 103.54133327382587,
+    "3": 51.86879137640149,
+    "8": 7.025332694011425,
+    "15": 16.66744615442761
+   },
+   "ready_s": 45.6,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-2",
+    "P3-3",
+    "P3-8"
+   ],
+   "max_stroke_mm": 488.2239987830455,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FR",
+     "t_s": 21.462
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FR",
+     "t_s": 21.462
+    },
+    "after_8s": {
+     "min_kN": 55.3611,
+     "leg": "RL",
+     "t_s": 44.349
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 12748.313942626182,
+    "target_m": -0.0005614716199249869,
+    "start_t_s": 20.199999999998273,
+    "end_t_s": 21.399999999995476,
+    "end_reason": "reapproach",
+    "end_error_m": 8.926485680599316e-05
+   },
+   "events": [
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:-0.561"
+    ],
+    [
+     21.3,
+     "INFO_LIFT_PAUSED:RL"
+    ],
+    [
+     21.4,
+     "leg_reapproach_start:RL"
+    ],
+    [
+     21.4,
+     "INFO_LOC_WINDOW_RESTART:RL"
+    ],
+    [
+     22.3,
+     "leg_reapproach_contact:RL"
+    ],
+    [
+     22.6,
+     "leg_reapproach_deferred:RR:retrigger"
+    ],
+    [
+     22.7,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     22.7,
+     "INFO_LOC_WINDOW_RESTART:RR"
+    ],
+    [
+     23.1,
+     "leg_reapproach_contact:RR"
+    ],
+    [
+     24.4,
+     "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    ],
+    [
+     24.8,
+     "INFO_LOC_REVOKED:2.4"
+    ]
+   ],
+   "commands_sha256": "a38b9a4eb3c158d04ccf55e2af0495deadd0a1b88820b9feea7fabdfb95ec412"
+  },
+  {
+   "case": "R1",
+   "stage": "drop",
+   "S": 100.0,
+   "mode": "continue",
+   "target_kN": 13.0,
+   "drop": {
+    "leg": "RL",
+    "depth_m": 0.02,
+    "t0": 21.199999999998273
+   },
+   "te_s": 20.199999999998273,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 13.119112603733313,
+   "lift_after_te_s": 0.45999999999892793,
+   "frac_done_at_lift": 0.18215256222303933,
+   "D_lift_kN": 5.659772640734424,
+   "F_RL_min8_kN": -0.7174838721681049,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FR",
+   "D_after_lift_kN": {
+    "0": 5.659772640734424,
+    "1": 105.95050682467675,
+    "3": 31.534646812054568,
+    "8": 4.971644514059022,
+    "15": -0.9805468236453123
+   },
+   "ready_s": 44.6,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-2",
+    "P3-3",
+    "P3-8"
+   ],
+   "max_stroke_mm": 487.9478520483986,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FR",
+     "t_s": 21.462
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FR",
+     "t_s": 21.462
+    },
+    "after_8s": {
+     "min_kN": 55.3278,
+     "leg": "RL",
+     "t_s": 43.101
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 12748.313942626182,
+    "target_m": -0.0005614716199249869,
+    "start_t_s": 20.199999999998273,
+    "end_t_s": 21.799999999994544,
+    "end_reason": "time",
+    "end_error_m": 0.0028844193114702624
+   },
+   "events": [
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:-0.561"
+    ],
+    [
+     21.3,
+     "INFO_LIFT_PAUSED:RL"
+    ],
+    [
+     21.4,
+     "leg_reapproach_start:RL"
+    ],
+    [
+     21.4,
+     "INFO_LOC_WINDOW_RESTART:RL"
+    ],
+    [
+     22.3,
+     "leg_reapproach_contact:RL"
+    ],
+    [
+     22.6,
+     "leg_reapproach_deferred:RR:retrigger"
+    ],
+    [
+     22.8,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     22.8,
+     "INFO_LOC_WINDOW_RESTART:RR"
+    ],
+    [
+     23.1,
+     "leg_reapproach_contact:RR"
+    ],
+    [
+     24.4,
+     "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    ],
+    [
+     24.8,
+     "INFO_LOC_REVOKED:2.7"
+    ]
+   ],
+   "commands_sha256": "52fb2db07e13a9e9c49da0d484ffb6537837c907cf7f8ffe4a35006c29b810b0"
+  },
+  {
+   "case": "R1",
+   "stage": "drop",
+   "S": 100.0,
+   "mode": "off",
+   "target_kN": 13.0,
+   "drop": {
+    "leg": "RL",
+    "depth_m": 0.02,
+    "t0": 21.199999999998273
+   },
+   "te_s": 20.199999999998273,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 13.119112603733313,
+   "lift_after_te_s": 0.45599999999893726,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 12.3613183616555,
+   "F_RL_min8_kN": -0.7174838721681049,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FR",
+   "D_after_lift_kN": {
+    "0": 12.3613183616555,
+    "1": 103.50265515125643,
+    "3": 51.19455447154414,
+    "8": 6.938254050397163,
+    "15": 20.66810145881472
+   },
+   "ready_s": 45.7,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-2",
+    "P3-3",
+    "P3-8"
+   ],
+   "max_stroke_mm": 487.46184248112814,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FR",
+     "t_s": 21.476
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FR",
+     "t_s": 21.476
+    },
+    "after_8s": {
+     "min_kN": 55.1863,
+     "leg": "RL",
+     "t_s": 44.498
+    }
+   },
+   "hold_meta": {},
+   "events": [
+    [
+     21.3,
+     "leg_reapproach_start:RL"
+    ],
+    [
+     21.3,
+     "INFO_LOC_WINDOW_RESTART:RL"
+    ],
+    [
+     21.3,
+     "INFO_LIFT_PAUSED:RL"
+    ],
+    [
+     22.3,
+     "leg_reapproach_contact:RL"
+    ],
+    [
+     22.6,
+     "leg_reapproach_deferred:RR:retrigger"
+    ],
+    [
+     22.7,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     22.7,
+     "INFO_LOC_WINDOW_RESTART:RR"
+    ],
+    [
+     23.1,
+     "leg_reapproach_contact:RR"
+    ],
+    [
+     24.4,
+     "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    ]
+   ],
+   "commands_sha256": "17efa96863df77a5c9af61d85cac017d55f7377649787c70dbe4b1ecc6ad1493"
+  },
+  {
+   "case": "R1",
+   "stage": "drop",
+   "S": 1.0,
+   "mode": "on",
+   "target_kN": 13.0,
+   "drop": {
+    "leg": "FL",
+    "depth_m": 0.02,
+    "t0": 20.899999999998972
+   },
+   "te_s": 19.899999999998972,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 13.017859278386823,
+   "lift_after_te_s": 0.7039999999983593,
+   "frac_done_at_lift": 0.6653617924513028,
+   "D_lift_kN": -23.5108039212492,
+   "F_RL_min8_kN": 22.53170244956619,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FL",
+   "D_after_lift_kN": {
+    "0": -23.5108039212492,
+    "1": -129.57768992458807,
+    "3": 4.863361872637483,
+    "8": 1.6029396157087348,
+    "15": -24.522181593118333
+   },
+   "ready_s": 43.6,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-1",
+    "P3-3"
+   ],
+   "max_stroke_mm": 433.9975799771384,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 20.926
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 20.926
+    },
+    "after_8s": {
+     "min_kN": 55.4478,
+     "leg": "RR",
+     "t_s": 39.565
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 12556.277572961097,
+    "target_m": -0.0005530137978125391,
+    "start_t_s": 19.899999999998972,
+    "end_t_s": 21.499999999995243,
+    "end_reason": "time",
+    "end_error_m": 2.9889528499833047e-05
+   },
+   "events": [
+    [
+     19.9,
+     "INFO_TOUCH_TWIST_HOLD:-0.553"
+    ],
+    [
+     21.0,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     21.5,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     22.5,
+     "leg_reapproach_contact:RR"
+    ],
+    [
+     22.6,
+     "leg_reapproach_deferred:RR:retrigger"
+    ],
+    [
+     22.9,
+     "leg_reapproach_deferred:RL:retrigger"
+    ]
+   ],
+   "commands_sha256": "f4b954b9a520e018f76eb4599a6b4be443f3420bf2160e9de4b60ba8af681d1f"
+  },
+  {
+   "case": "R1",
+   "stage": "drop",
+   "S": 1.0,
+   "mode": "continue",
+   "target_kN": 13.0,
+   "drop": {
+    "leg": "FL",
+    "depth_m": 0.02,
+    "t0": 20.899999999998972
+   },
+   "te_s": 19.899999999998972,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 13.017859278386823,
+   "lift_after_te_s": 0.7039999999983593,
+   "frac_done_at_lift": 0.6653617924513028,
+   "D_lift_kN": -23.5108039212492,
+   "F_RL_min8_kN": 22.53170244956619,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FL",
+   "D_after_lift_kN": {
+    "0": -23.5108039212492,
+    "1": -129.57768992458807,
+    "3": 4.863361872637483,
+    "8": 1.6029396157087348,
+    "15": -24.522181593118333
+   },
+   "ready_s": 43.6,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-1",
+    "P3-3"
+   ],
+   "max_stroke_mm": 433.9975799771384,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 20.926
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 20.926
+    },
+    "after_8s": {
+     "min_kN": 55.4478,
+     "leg": "RR",
+     "t_s": 39.565
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 12556.277572961097,
+    "target_m": -0.0005530137978125391,
+    "start_t_s": 19.899999999998972,
+    "end_t_s": 21.499999999995243,
+    "end_reason": "time",
+    "end_error_m": 2.9889528499833047e-05
+   },
+   "events": [
+    [
+     19.9,
+     "INFO_TOUCH_TWIST_HOLD:-0.553"
+    ],
+    [
+     21.0,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     21.5,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     22.5,
+     "leg_reapproach_contact:RR"
+    ],
+    [
+     22.6,
+     "leg_reapproach_deferred:RR:retrigger"
+    ],
+    [
+     22.9,
+     "leg_reapproach_deferred:RL:retrigger"
+    ]
+   ],
+   "commands_sha256": "f4b954b9a520e018f76eb4599a6b4be443f3420bf2160e9de4b60ba8af681d1f"
+  },
+  {
+   "case": "R1",
+   "stage": "drop",
+   "S": 1.0,
+   "mode": "off",
+   "target_kN": 13.0,
+   "drop": {
+    "leg": "FL",
+    "depth_m": 0.02,
+    "t0": 20.899999999998972
+   },
+   "te_s": 19.899999999998972,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 13.017859278386823,
+   "lift_after_te_s": 0.6909999999983896,
+   "frac_done_at_lift": null,
+   "D_lift_kN": -8.628577659899307,
+   "F_RL_min8_kN": 40.36697811613125,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FL",
+   "D_after_lift_kN": {
+    "0": -8.628577659899307,
+    "1": -123.98239302383028,
+    "3": 3.411497336724125,
+    "8": 0.5426920932974113,
+    "15": -25.50254623397376
+   },
+   "ready_s": 43.6,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-1",
+    "P3-3"
+   ],
+   "max_stroke_mm": 434.12082045695183,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 20.927
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FL",
+     "t_s": 20.927
+    },
+    "after_8s": {
+     "min_kN": 54.9246,
+     "leg": "RR",
+     "t_s": 39.565
+    }
+   },
+   "hold_meta": {},
+   "events": [
+    [
+     21.0,
+     "INFO_LIFT_PAUSED:FL"
+    ],
+    [
+     21.5,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     21.8,
+     "leg_reapproach_contact:RR"
+    ],
+    [
+     21.8,
+     "leg_reapproach_deferred:FL:retrigger"
+    ],
+    [
+     21.9,
+     "leg_reapproach_deferred:RR:retrigger"
+    ],
+    [
+     22.0,
+     "leg_reapproach_start:RR"
+    ],
+    [
+     23.0,
+     "leg_reapproach_contact:RR"
+    ]
+   ],
+   "commands_sha256": "6c368386bce89a399a05c59a33102b07a54a6697bfc1f7bcef9cafbab4639678"
+  },
+  {
+   "case": "R1",
+   "stage": "drop",
+   "S": 1.0,
+   "mode": "on",
+   "target_kN": 13.0,
+   "drop": {
+    "leg": "RL",
+    "depth_m": 0.02,
+    "t0": 20.899999999998972
+   },
+   "te_s": 19.899999999998972,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 13.017859278386823,
+   "lift_after_te_s": 0.7039999999983593,
+   "frac_done_at_lift": 0.6653617924513028,
+   "D_lift_kN": 18.07901433709557,
+   "F_RL_min8_kN": -0.7174838721681049,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FR",
+   "D_after_lift_kN": {
+    "0": 18.07901433709557,
+    "1": 89.37498057560623,
+    "3": -44.810481690167684,
+    "8": -6.721665167481682,
+    "15": -2.720759539534292
+   },
+   "ready_s": 45.2,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-2",
+    "P3-3",
+    "P3-8"
+   ],
+   "max_stroke_mm": 485.5538834374117,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FR",
+     "t_s": 21.165
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FR",
+     "t_s": 21.165
+    },
+    "after_8s": {
+     "min_kN": 53.3372,
+     "leg": "RR",
+     "t_s": 41.169
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 12556.277572961097,
+    "target_m": -0.0005530137978125391,
+    "start_t_s": 19.899999999998972,
+    "end_t_s": 21.29999999999571,
+    "end_reason": "reapproach",
+    "end_error_m": 6.982530997589188e-05
+   },
+   "events": [
+    [
+     19.9,
+     "INFO_TOUCH_TWIST_HOLD:-0.553"
+    ],
+    [
+     21.0,
+     "INFO_LIFT_PAUSED:RL"
+    ],
+    [
+     21.3,
+     "leg_reapproach_start:FR"
+    ],
+    [
+     21.3,
+     "INFO_LOC_WINDOW_RESTART:FR"
+    ],
+    [
+     21.7,
+     "leg_reapproach_contact:FR"
+    ],
+    [
+     21.7,
+     "leg_reapproach_deferred:RL:retrigger"
+    ],
+    [
+     21.8,
+     "leg_reapproach_start:RL"
+    ],
+    [
+     21.8,
+     "INFO_LOC_WINDOW_RESTART:RL"
+    ],
+    [
+     22.1,
+     "leg_reapproach_contact:RL"
+    ],
+    [
+     22.5,
+     "leg_reapproach_deferred:RR:retrigger"
+    ],
+    [
+     22.9,
+     "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    ],
+    [
+     23.1,
+     "leg_reapproach_deferred:RR:retrigger"
+    ]
+   ],
+   "commands_sha256": "cc3339b72004b0d139c614a25b8831e7502921f372e68a2934725ef84c31190d"
+  },
+  {
+   "case": "R1",
+   "stage": "drop",
+   "S": 1.0,
+   "mode": "continue",
+   "target_kN": 13.0,
+   "drop": {
+    "leg": "RL",
+    "depth_m": 0.02,
+    "t0": 20.899999999998972
+   },
+   "te_s": 19.899999999998972,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 13.017859278386823,
+   "lift_after_te_s": 0.7039999999983593,
+   "frac_done_at_lift": 0.6653617924513028,
+   "D_lift_kN": 18.07901433709557,
+   "F_RL_min8_kN": -0.7174838721681049,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FR",
+   "D_after_lift_kN": {
+    "0": 18.07901433709557,
+    "1": 89.54594423368493,
+    "3": -44.614432983138045,
+    "8": -6.701697239942618,
+    "15": -2.7184480917330234
+   },
+   "ready_s": 45.2,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-2",
+    "P3-3",
+    "P3-8"
+   ],
+   "max_stroke_mm": 485.55481410908897,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FR",
+     "t_s": 21.165
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FR",
+     "t_s": 21.165
+    },
+    "after_8s": {
+     "min_kN": 53.3385,
+     "leg": "RR",
+     "t_s": 41.169
+    }
+   },
+   "hold_meta": {
+    "twist_load_estimate_N": 12556.277572961097,
+    "target_m": -0.0005530137978125391,
+    "start_t_s": 19.899999999998972,
+    "end_t_s": 21.499999999995243,
+    "end_reason": "time",
+    "end_error_m": 0.00040010901883845494
+   },
+   "events": [
+    [
+     19.9,
+     "INFO_TOUCH_TWIST_HOLD:-0.553"
+    ],
+    [
+     21.0,
+     "INFO_LIFT_PAUSED:RL"
+    ],
+    [
+     21.3,
+     "leg_reapproach_start:FR"
+    ],
+    [
+     21.3,
+     "INFO_LOC_WINDOW_RESTART:FR"
+    ],
+    [
+     21.7,
+     "leg_reapproach_contact:FR"
+    ],
+    [
+     21.7,
+     "leg_reapproach_deferred:RL:retrigger"
+    ],
+    [
+     21.8,
+     "leg_reapproach_start:RL"
+    ],
+    [
+     21.8,
+     "INFO_LOC_WINDOW_RESTART:RL"
+    ],
+    [
+     22.1,
+     "leg_reapproach_contact:RL"
+    ],
+    [
+     22.5,
+     "leg_reapproach_deferred:RR:retrigger"
+    ],
+    [
+     22.9,
+     "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    ],
+    [
+     23.1,
+     "leg_reapproach_deferred:RR:retrigger"
+    ]
+   ],
+   "commands_sha256": "0bc4af8db88f3dd01fb37344f1960dccaaedb51a52ec8aeb9c2db4e551ca5b57"
+  },
+  {
+   "case": "R1",
+   "stage": "drop",
+   "S": 1.0,
+   "mode": "off",
+   "target_kN": 13.0,
+   "drop": {
+    "leg": "RL",
+    "depth_m": 0.02,
+    "t0": 20.899999999998972
+   },
+   "te_s": 19.899999999998972,
+   "tau_te_mm": 0.0,
+   "D_te_kN": 13.017859278386823,
+   "lift_after_te_s": 0.6909999999983896,
+   "frac_done_at_lift": null,
+   "D_lift_kN": 24.381431731179163,
+   "F_RL_min8_kN": -0.7174838721681049,
+   "F_min8_kN": -1.0471900381788999,
+   "F_min8_leg": "FR",
+   "D_after_lift_kN": {
+    "0": 24.381431731179163,
+    "1": 98.11629028957478,
+    "3": -40.549439412227606,
+    "8": -6.2478228088666015,
+    "15": -2.4291260269046333
+   },
+   "ready_s": 45.2,
+   "final_phase": "ready",
+   "harness_class": "fail",
+   "failed_rows": [
+    "P3-2",
+    "P3-3",
+    "P3-8"
+   ],
+   "max_stroke_mm": 484.98472817072064,
+   "forces": {
+    "after_liftoff": {
+     "min_kN": -1.0472,
+     "leg": "FR",
+     "t_s": 21.173
+    },
+    "first_8s": {
+     "min_kN": -1.0472,
+     "leg": "FR",
+     "t_s": 21.173
+    },
+    "after_8s": {
+     "min_kN": 53.3673,
+     "leg": "RR",
+     "t_s": 41.169
+    }
+   },
+   "hold_meta": {},
+   "events": [
+    [
+     21.0,
+     "INFO_LIFT_PAUSED:RL"
+    ],
+    [
+     21.3,
+     "leg_reapproach_start:FR"
+    ],
+    [
+     21.3,
+     "INFO_LOC_WINDOW_RESTART:FR"
+    ],
+    [
+     21.7,
+     "leg_reapproach_contact:FR"
+    ],
+    [
+     21.7,
+     "leg_reapproach_deferred:RL:retrigger"
+    ],
+    [
+     21.8,
+     "leg_reapproach_start:RL"
+    ],
+    [
+     21.8,
+     "INFO_LOC_WINDOW_RESTART:RL"
+    ],
+    [
+     22.1,
+     "leg_reapproach_contact:RL"
+    ],
+    [
+     22.5,
+     "leg_reapproach_deferred:RR:retrigger"
+    ],
+    [
+     23.0,
+     "INFO_LOC_FLAT_SOIL_MARGIN:80"
+    ],
+    [
+     23.1,
+     "leg_reapproach_deferred:RR:retrigger"
+    ],
+    [
+     23.3,
+     "INFO_LOC_REVOKED:2.8"
+    ]
+   ],
+   "commands_sha256": "f271210f6d8fe96ad496ff4ae568c72e7c8f878c4b30b13d31744e959b58848c"
+  }
+ ]
+}

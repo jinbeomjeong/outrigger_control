@@ -1,0 +1,62 @@
+{
+ "R9_mirror2_d000": {
+  "first_diff_rel_s": {
+   "F_cyl": 24.4,
+   "s_motor": 24.4,
+   "u_cmd": 24.4,
+   "u_applied": 24.4
+  },
+  "rows_compared": 400,
+  "off_end_s": 40.000000000302016,
+  "off_events_warn": []
+ },
+ "R9_mirror2_d035": {
+  "first_diff_rel_s": {
+   "F_cyl": 24.4,
+   "s_motor": 24.4,
+   "u_cmd": 24.4,
+   "u_applied": 24.4
+  },
+  "rows_compared": 400,
+  "off_end_s": 40.000000000302016,
+  "off_events_warn": [
+   "C2Event(t_s=27.599999999949016, name='INFO_LIFT_PAUSED:RL')"
+  ]
+ },
+ "R9_sym": {
+  "first_diff_rel_s": {
+   "F_cyl": 24.2,
+   "s_motor": 24.2,
+   "u_cmd": 24.2,
+   "u_applied": 24.2
+  },
+  "rows_compared": 678,
+  "off_end_s": 67.80000000122487,
+  "off_events_warn": [],
+  "off_rows": {
+   "2 attitude +-0.2 (+mount)": 0.03528496522221046,
+   "3 F_min (1 ms)": 44.545949219559006,
+   "4 max moving pressure": 96.5520262574695
+  },
+  "off_failed": 0
+ },
+ "R4": {
+  "first_diff_rel_s": {
+   "F_cyl": 24.2,
+   "s_motor": 24.2,
+   "u_cmd": 24.2,
+   "u_applied": 24.2
+  },
+  "rows_compared": 692,
+  "off_end_s": 69.20000000127135,
+  "off_events_warn": [
+   "C2Event(t_s=27.49999999994925, name='INFO_LIFT_PAUSED:RL')"
+  ],
+  "off_rows": {
+   "2 attitude +-0.2 (+mount)": 0.036061830281484575,
+   "3 F_min (1 ms)": 37.2542373491118,
+   "4 max moving pressure": 123.1523507198578
+  },
+  "off_failed": 0
+ }
+}

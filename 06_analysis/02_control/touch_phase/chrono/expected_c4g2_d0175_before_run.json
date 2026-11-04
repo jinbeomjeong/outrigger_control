@@ -1,0 +1,229 @@
+{
+ "written_before_run": true,
+ "note": "Off values and expectations; control-expert judges.",
+ "code": {
+  "commit": "74032beae72c7e44858e41384bc54c263e724fd3",
+  "c2_sha256": "28482b8d5678c3e1079c9dd89046013bd60cac718e0e8efa195101a36236df67"
+ },
+ "offsets_mm": [
+  -1.825,
+  2.175,
+  -1.825,
+  2.175
+ ],
+ "off_dir": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_asym\\runs_r16\\r16_mirror2_d0175\\G1L_RE1bF_FL_top_o050_Fs4",
+ "expected": {
+  "target_mm_from_off_D_te": -1.1834822925801924,
+  "hold": "starts, end_reason time unless a re-approach falls inside the 1.5 s hold",
+  "D_te": "equal to off (TOUCH unchanged)",
+  "D_lift": "toward 0 from the off value",
+  "RL": "above the off 17.08 kN; the d000 and d070 rows reached 27.53 and 27.19 kN",
+  "FL_RR": "lift near -11.3 and -1.4 kN as the other R16 rows (event driven)",
+  "cost": "about 730 to 830 s"
+ },
+ "off_values": {
+  "dir": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_asym\\runs_r16\\r16_mirror2_d0175\\G1L_RE1bF_FL_top_o050_Fs4",
+  "t_te_s": 24.099999999948277,
+  "t_lift_s": 24.468999999947417,
+  "lift_after_te_s": 0.36899999999914,
+  "t_crawler_zero_s": 24.499999999947345,
+  "W_kN": 376.77546048914127,
+  "tau_te_mm": 1.254374988987479,
+  "tau_lift_mm": 1.241102982155354,
+  "D_te_kN": 26.8711779472789,
+  "D_lift_kN": 24.9271320024829,
+  "F_win_kN": [
+   130.57048850473637,
+   104.7458722477525,
+   59.41183844009133,
+   83.57391250259884
+  ],
+  "F_min_lift8_kN": {
+   "FL": -11.574412762654784,
+   "FR": 15.549458936638674,
+   "RL": 17.075888044675246,
+   "RR": -1.461081237710613
+  },
+  "F_min_zero_kN": {
+   "FL": 119.3818863495988,
+   "FR": 103.24774031061833,
+   "RL": 56.75938036456087,
+   "RR": 72.80861398235243
+  },
+  "F_min_zero_to40_kN": {
+   "FL": -11.574412762654784,
+   "FR": 15.549458936638674,
+   "RL": 17.075888044675246,
+   "RR": -1.461081237710613
+  },
+  "ready_t_s": 52.40000000152367,
+  "end_t_s": 57.400000001689655,
+  "final_phase": "ready",
+  "stroke_max_mm": [
+   441.0489961193958,
+   413.6702990743382,
+   398.1754089251382,
+   401.7461324266738
+  ],
+  "stroke_end_mm": [
+   440.5492872582374,
+   413.17059019490426,
+   397.6757000457043,
+   400.87189951613897
+  ],
+  "end_attitude_deg": [
+   0.020660495531391886,
+   -0.01596731469194262
+  ],
+  "head_pressure_max_bar": 204.1861556993838,
+  "u_cmd_max_over_vmax": 1.0000144140699674,
+  "u_applied_max_over_vmax": 1.0000144140698846,
+  "wall_s": 503.51923229999375,
+  "phase_at_event": "level",
+  "event_t_s": 28.149999999945944,
+  "phases": [
+   [
+    0.10000000000021103,
+    "check"
+   ],
+   [
+    4.699999999993487,
+    "touch"
+   ],
+   [
+    24.099999999948274,
+    "level"
+   ],
+   [
+    40.40000000112531,
+    "done"
+   ],
+   [
+    40.50000000112863,
+    "probe"
+   ],
+   [
+    52.40000000152367,
+    "ready"
+   ]
+  ],
+  "hold_events": [],
+  "retrigger_deferred": [],
+  "reapproach_starts": [
+   [
+    28.199999999867668,
+    "leg_reapproach_start:FL"
+   ],
+   [
+    28.69999999984874,
+    "leg_reapproach_start:RR"
+   ],
+   [
+    29.09999999986912,
+    "leg_reapproach_start:FL"
+   ],
+   [
+    29.499999999996085,
+    "leg_reapproach_start:RR"
+   ],
+   [
+    30.60000000034524,
+    "leg_reapproach_start:RR"
+   ]
+  ],
+  "lift_paused": [],
+  "warn_fault": [],
+  "hold_meta": {},
+  "after_event": {
+   "FL": {
+    "min_interval_kN": -11.574412762654784,
+    "t_rel_s": 0.013999999923086648,
+    "under_F_min_s": 0.07800000001125795,
+    "airborne_s": 0.7970000001144193
+   },
+   "FR": {
+    "min_interval_kN": 15.549458936638674,
+    "t_rel_s": 0.4189999999077543,
+    "under_F_min_s": 0.0,
+    "airborne_s": 0.0
+   },
+   "RL": {
+    "min_interval_kN": 17.075888044675246,
+    "t_rel_s": 2.738000000490711,
+    "under_F_min_s": 0.0,
+    "airborne_s": 0.0
+   },
+   "RR": {
+    "min_interval_kN": -1.461081237710613,
+    "t_rel_s": 1.7730000001844068,
+    "under_F_min_s": 0.09200000001854391,
+    "airborne_s": 1.1960000001742799
+   }
+  },
+  "re_ready_after_event_s": 24.250000001577728,
+  "touch_last3": [
+   {
+    "t_s": 23.899999999948278,
+    "nT_F_cyl_kN": 28.360107676051236,
+    "nT_F_pressure_kN": 28.35969332824613,
+    "nT_F_pressure_minus_F_cyl_kN": -0.00041434780510485325,
+    "nT_f_seal_kN": 0.00041434780510758175,
+    "seal_stuck": [
+     1,
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "t_s": 23.999999999948276,
+    "nT_F_cyl_kN": 26.79767036628361,
+    "nT_F_pressure_kN": 26.645889782036434,
+    "nT_F_pressure_minus_F_cyl_kN": -0.15178058424717733,
+    "nT_f_seal_kN": 0.15178058424718757,
+    "seal_stuck": [
+     1,
+     1,
+     1,
+     1
+    ]
+   },
+   {
+    "t_s": 24.099999999948277,
+    "nT_F_cyl_kN": 26.077317198265238,
+    "nT_F_pressure_kN": 25.888698700511316,
+    "nT_F_pressure_minus_F_cyl_kN": -0.1886184977539216,
+    "nT_f_seal_kN": 0.1886184977539251,
+    "seal_stuck": [
+     1,
+     1,
+     0,
+     1
+    ]
+   }
+  ],
+  "seal_keys": [
+   "f_seal",
+   "seal_stuck",
+   "F_seal_limit"
+  ],
+  "at_te.f_seal": [
+   -1301.6399287669628,
+   -1756.0441435027315,
+   3333.2000000000003,
+   3280.199172461318
+  ],
+  "at_te.seal_stuck": [
+   1.0,
+   1.0,
+   0.0,
+   1.0
+  ],
+  "at_te.F_seal_limit": [
+   4000.0,
+   4000.0,
+   3333.2000000000003,
+   3333.2000000000003
+  ]
+ }
+}

@@ -1,0 +1,1686 @@
+{
+ "criteria_sha256": "1d743eab34d5091757b5e021bc1722f56fbedea9b0bc7ff2b4ca5ea0774fd0de",
+ "rule_user_before_result": "any of the 2 on variants passes the clause: saturation attribution broken, not a flip, record as a clause limit; both fail: F-5 confirmed, v4 submitted unchanged because the flow limit is out of its scope, no D-5 switch, recorded as a limit in v5",
+ "on_variants_clause_pass": {
+  "on_eps1e-3": false,
+  "on_eps2e-3": false
+ },
+ "rule_outcome": "F5_confirmed",
+ "runs": {
+  "off_stored": {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-REP_20261030_223359\\S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0",
+   "t_stop_s": 40.60000000049513,
+   "events_fault_warn": [
+    [
+     40.6,
+     "WARN_LIFT_STROKE_LIMITED:FR"
+    ],
+    [
+     40.6,
+     "FAULT_LIFT_STROKE_LIMIT:soil:FR"
+    ]
+   ],
+   "FAULT_STROKE_END": 0,
+   "ready_count": 0,
+   "final_phase": "fault",
+   "phases": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     4.8,
+     "touch"
+    ],
+    [
+     23.6,
+     "level"
+    ],
+    [
+     40.6,
+     "fault"
+    ]
+   ],
+   "touch_end_s": 23.599999999945,
+   "crawler": {
+    "at_stop_kN": 7.788696243353332,
+    "max_after_kN": 9.557073253951325,
+    "max_after_t_after_stop_s": 0.22100000000733644,
+    "limit_kN": 11.589825363994171,
+    "margin_kN": 2.0327521100428463,
+    "clause_pass": true,
+    "rise_kN": 1.7683770105979928,
+    "end_kN": 6.311498191904798,
+    "t_since_last_below_0p01W_s": 0.06300000000209138,
+    "min_1s_before_kN": 1.7939361847402178,
+    "max_1s_before_kN": 14.745727515587273,
+    "last_zero_before_stop_s": 5.1920000001723565,
+    "patches_min_1s_before": 1,
+    "slope_at_stop_kN_s": 39.13281294632809,
+    "peak_freq_6s_before_Hz": 0.6667777962993832,
+    "peak_freq_6s_after_Hz": 1.6666666666666665,
+    "crawler_peaks": {
+     "before_stop_4s": {
+      "peak_t_rel_stop_s": [
+       -3.561,
+       -0.729
+      ],
+      "freq_from_mean_interval_Hz": 0.3531073446210464
+     },
+     "after_stop_4s": {
+      "peak_t_rel_stop_s": [
+       0.223,
+       0.819,
+       1.388,
+       1.97,
+       2.554,
+       3.14,
+       3.721
+      ],
+      "freq_from_mean_interval_Hz": 1.7152658661523215
+     }
+    },
+    "analysis_reference_at_fixed_delay_after_0p01W_crossing": {
+     "15": {
+      "ref_kN": 4.729161696826328,
+      "same_max_after_passes": false
+     },
+     "46": {
+      "ref_kN": 6.948143433116646,
+      "same_max_after_passes": true
+     },
+     "63": {
+      "ref_kN": 7.788696243353332,
+      "same_max_after_passes": true
+     }
+    },
+    "other_references": {
+     "mean_0p2s_before": {
+      "ref_kN": 3.5380033730931872,
+      "passes": false
+     },
+     "mean_1s_before": {
+      "ref_kN": 6.260820918990672,
+      "passes": true
+     },
+     "median_1s_before": {
+      "ref_kN": 4.503883185278493,
+      "passes": false
+     }
+    },
+    "trace_rel_stop_kN": {
+     "-0.1": 2.612218360845096,
+     "-0.05": 4.656789894450015,
+     "0.0": 7.788696243353332,
+     "0.05": 8.384813432341462,
+     "0.1": 7.619185801432125,
+     "0.2": 9.253500942597505,
+     "0.5": 4.155346550789229,
+     "1.0": 5.456039825685614,
+     "2.0": 7.364738771009766,
+     "5.0": 6.533729505017769,
+     "20.0": 6.31126013482741
+    },
+    "win_ptp_1s_before_kN": 12.951791330847055
+   },
+   "F_at_stop_kN": [
+    111.5,
+    119.948,
+    67.68,
+    72.05
+   ],
+   "F_min_after_stop_kN": [
+    105.424,
+    115.841,
+    64.042,
+    71.144
+   ],
+   "F_min_after_stop_all_kN": 64.04151766064996,
+   "F_end_kN": [
+    108.101,
+    122.43,
+    65.738,
+    74.106
+   ],
+   "F_min_clause_pass": true,
+   "pad_min_after_stop_kN": 65.43573338491915,
+   "moving_bar": 104.8343958172852,
+   "moving_leg": "FR",
+   "saturation": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "end_roll_pitch_deg": [
+    0.5651,
+    -0.0138
+   ],
+   "stroke_reading_max_mm": [
+    387.538,
+    680.568,
+    400.705,
+    671.0
+   ],
+   "guard_margin_mm": 2.2324743335119592,
+   "P3_2_s": 1.2550000000416617,
+   "P3_1_recontact_pass": false,
+   "rejudge_blocks_equal": true,
+   "params_match": true,
+   "has_flow_limit": false,
+   "flow_args": {},
+   "code_git": "1e1372c69280d618b631bfaad75f7fcbffde6400",
+   "files_at_start": {
+    "outrigger_sim.control.c2": {
+     "path": "03_src/outrigger_sim/control/c2.py",
+     "sha256": "fb5fb9f2091405845f9b05a26993e3b2d81fde218d5d7d8eb50b41285d809195",
+     "size": 446725,
+     "mtime_utc": "2026-10-30T12:20:02+00:00"
+    },
+    "outrigger_sim.control.zero_calibration": {
+     "path": "03_src/outrigger_sim/control/zero_calibration.py",
+     "sha256": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+     "size": 19300,
+     "mtime_utc": "2026-10-29T01:40:26+00:00"
+    },
+    "taken_utc": "2026-10-30T13:34:01+00:00"
+   }
+  },
+  "off_eps1e-3": {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_s8off_eps1e-3_20261104\\S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0",
+   "t_stop_s": 40.60000000049513,
+   "events_fault_warn": [
+    [
+     40.6,
+     "WARN_LIFT_STROKE_LIMITED:FR"
+    ],
+    [
+     40.6,
+     "FAULT_LIFT_STROKE_LIMIT:soil:FR"
+    ]
+   ],
+   "FAULT_STROKE_END": 0,
+   "ready_count": 0,
+   "final_phase": "fault",
+   "phases": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     4.8,
+     "touch"
+    ],
+    [
+     23.6,
+     "level"
+    ],
+    [
+     40.6,
+     "fault"
+    ]
+   ],
+   "touch_end_s": 23.599999999945,
+   "crawler": {
+    "at_stop_kN": 6.859853083307656,
+    "max_after_kN": 9.488849793870196,
+    "max_after_t_after_stop_s": 0.2320000000077016,
+    "limit_kN": 10.660982203948496,
+    "margin_kN": 1.1721324100782997,
+    "clause_pass": true,
+    "rise_kN": 2.6289967105625403,
+    "end_kN": 6.130330976386543,
+    "t_since_last_below_0p01W_s": 0.04600000000152704,
+    "min_1s_before_kN": 1.8411092125588462,
+    "max_1s_before_kN": 13.547280791612069,
+    "last_zero_before_stop_s": 5.730000000190216,
+    "patches_min_1s_before": 1,
+    "slope_at_stop_kN_s": 42.3331122322824,
+    "peak_freq_6s_before_Hz": 0.8334722453742289,
+    "peak_freq_6s_after_Hz": 1.6666666666666665,
+    "crawler_peaks": {
+     "before_stop_4s": {
+      "peak_t_rel_stop_s": [
+       -0.734
+      ],
+      "freq_from_mean_interval_Hz": null
+     },
+     "after_stop_4s": {
+      "peak_t_rel_stop_s": [
+       0.232,
+       0.829,
+       1.385,
+       1.98,
+       2.556,
+       3.15,
+       3.725
+      ],
+      "freq_from_mean_interval_Hz": 1.7177211565418897
+     }
+    },
+    "analysis_reference_at_fixed_delay_after_0p01W_crossing": {
+     "15": {
+      "ref_kN": 4.933678119489562,
+      "same_max_after_passes": false
+     },
+     "46": {
+      "ref_kN": 6.859853083307656,
+      "same_max_after_passes": true
+     },
+     "63": {
+      "ref_kN": 7.38265709762195,
+      "same_max_after_passes": true
+     }
+    },
+    "other_references": {
+     "mean_0p2s_before": {
+      "ref_kN": 3.1348555747224705,
+      "passes": false
+     },
+     "mean_1s_before": {
+      "ref_kN": 5.841199127438991,
+      "passes": true
+     },
+     "median_1s_before": {
+      "ref_kN": 3.8805363053104878,
+      "passes": false
+     }
+    },
+    "trace_rel_stop_kN": {
+     "-0.1": 2.5478251381524877,
+     "-0.05": 3.575331798947389,
+     "0.0": 6.859853083307656,
+     "0.05": 7.418309787874518,
+     "0.1": 6.46722918944277,
+     "0.2": 8.82877184938786,
+     "0.5": 4.299627452019992,
+     "1.0": 5.591089628953855,
+     "2.0": 7.149960358938956,
+     "5.0": 6.332720108985549,
+     "20.0": 6.128212623402095
+    },
+    "win_ptp_1s_before_kN": 11.706171579053223
+   },
+   "F_at_stop_kN": [
+    111.939,
+    120.136,
+    67.68,
+    72.867
+   ],
+   "F_min_after_stop_kN": [
+    106.208,
+    115.476,
+    64.255,
+    71.494
+   ],
+   "F_min_after_stop_all_kN": 64.25458267690134,
+   "F_end_kN": [
+    108.852,
+    121.727,
+    65.682,
+    74.302
+   ],
+   "F_min_clause_pass": true,
+   "pad_min_after_stop_kN": 65.67026212861012,
+   "moving_bar": 105.76063253692358,
+   "moving_leg": "FR",
+   "saturation": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "end_roll_pitch_deg": [
+    0.4975,
+    -0.0086
+   ],
+   "stroke_reading_max_mm": [
+    388.278,
+    680.98,
+    401.108,
+    670.148
+   ],
+   "guard_margin_mm": 1.819599619363089,
+   "P3_2_s": 1.2220000000405662,
+   "P3_1_recontact_pass": false,
+   "rejudge_blocks_equal": true,
+   "params_match": true,
+   "has_flow_limit": false,
+   "flow_args": {},
+   "code_git": "7e83bbb7383928d3f212ed02175ec7dd70c67a51",
+   "files_at_start": {
+    "outrigger_sim.control.c2": {
+     "path": "03_src/outrigger_sim/control/c2.py",
+     "sha256": "fb5fb9f2091405845f9b05a26993e3b2d81fde218d5d7d8eb50b41285d809195",
+     "size": 446725,
+     "mtime_utc": "2026-10-30T12:20:02+00:00"
+    },
+    "outrigger_sim.control.zero_calibration": {
+     "path": "03_src/outrigger_sim/control/zero_calibration.py",
+     "sha256": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+     "size": 19300,
+     "mtime_utc": "2026-10-29T01:40:26+00:00"
+    },
+    "taken_utc": "2026-11-04T09:51:02+00:00"
+   }
+  },
+  "off_eps2e-3": {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_s8off_eps2e-3_20261104\\S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0",
+   "t_stop_s": 40.80000000050177,
+   "events_fault_warn": [
+    [
+     40.8,
+     "WARN_LIFT_STROKE_LIMITED:FR"
+    ],
+    [
+     40.8,
+     "FAULT_LIFT_STROKE_LIMIT:soil:FR"
+    ]
+   ],
+   "FAULT_STROKE_END": 0,
+   "ready_count": 0,
+   "final_phase": "fault",
+   "phases": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     4.8,
+     "touch"
+    ],
+    [
+     23.7,
+     "level"
+    ],
+    [
+     40.8,
+     "fault"
+    ]
+   ],
+   "touch_end_s": 23.699999999944765,
+   "crawler": {
+    "at_stop_kN": 7.441028505695049,
+    "max_after_kN": 7.441028505695049,
+    "max_after_t_after_stop_s": 0.0,
+    "limit_kN": 11.242157626335889,
+    "margin_kN": 3.80112912064084,
+    "clause_pass": true,
+    "rise_kN": 0.0,
+    "end_kN": 4.477830954730821,
+    "t_since_last_below_0p01W_s": 0.15800000000524506,
+    "min_1s_before_kN": 2.0904701225356024,
+    "max_1s_before_kN": 14.537693635313536,
+    "last_zero_before_stop_s": 5.473000000181685,
+    "patches_min_1s_before": 1,
+    "slope_at_stop_kN_s": -17.56328019116294,
+    "peak_freq_6s_before_Hz": 0.6667777962993832,
+    "peak_freq_6s_after_Hz": 1.6666666666666665,
+    "crawler_peaks": {
+     "before_stop_4s": {
+      "peak_t_rel_stop_s": [
+       -3.592,
+       -0.827,
+       -0.067
+      ],
+      "freq_from_mean_interval_Hz": 0.5673758865059878
+     },
+     "after_stop_4s": {
+      "peak_t_rel_stop_s": [
+       0.754,
+       1.317,
+       1.913,
+       2.502
+      ],
+      "freq_from_mean_interval_Hz": 1.7162471395311272
+     }
+    },
+    "analysis_reference_at_fixed_delay_after_0p01W_crossing": {
+     "15": {
+      "ref_kN": 5.094085818862523,
+      "same_max_after_passes": true
+     },
+     "46": {
+      "ref_kN": 7.342676296452245,
+      "same_max_after_passes": true
+     },
+     "63": {
+      "ref_kN": 8.103230726928086,
+      "same_max_after_passes": true
+     }
+    },
+    "other_references": {
+     "mean_0p2s_before": {
+      "ref_kN": 6.501614175252444,
+      "passes": true
+     },
+     "mean_1s_before": {
+      "ref_kN": 6.666030654206714,
+      "passes": true
+     },
+     "median_1s_before": {
+      "ref_kN": 5.9078563351481295,
+      "passes": true
+     }
+    },
+    "trace_rel_stop_kN": {
+     "-0.1": 7.959050078077542,
+     "-0.05": 8.383360183380912,
+     "0.0": 7.441028505695049,
+     "0.05": 6.895928797469315,
+     "0.1": 6.466283422662886,
+     "0.2": 5.769597021555298,
+     "0.5": 3.651098275539578,
+     "1.0": 3.769133748625678,
+     "2.0": 4.895975606894522,
+     "5.0": 4.477929278319637,
+     "20.0": 4.482907475272033
+    },
+    "win_ptp_1s_before_kN": 12.447223512777933
+   },
+   "F_at_stop_kN": [
+    111.247,
+    117.21,
+    67.434,
+    71.962
+   ],
+   "F_min_after_stop_kN": [
+    107.957,
+    117.078,
+    65.613,
+    71.962
+   ],
+   "F_min_after_stop_all_kN": 65.6132689926705,
+   "F_end_kN": [
+    109.819,
+    121.6,
+    66.345,
+    74.468
+   ],
+   "F_min_clause_pass": true,
+   "pad_min_after_stop_kN": 67.0236636828863,
+   "moving_bar": 104.84918357365788,
+   "moving_leg": "FR",
+   "saturation": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "end_roll_pitch_deg": [
+    0.5012,
+    -0.0054
+   ],
+   "stroke_reading_max_mm": [
+    388.252,
+    681.226,
+    401.296,
+    669.604
+   ],
+   "guard_margin_mm": 1.573567934173866,
+   "P3_2_s": 1.2350000000409977,
+   "P3_1_recontact_pass": false,
+   "rejudge_blocks_equal": true,
+   "params_match": true,
+   "has_flow_limit": false,
+   "flow_args": {},
+   "code_git": "7e83bbb7383928d3f212ed02175ec7dd70c67a51",
+   "files_at_start": {
+    "outrigger_sim.control.c2": {
+     "path": "03_src/outrigger_sim/control/c2.py",
+     "sha256": "fb5fb9f2091405845f9b05a26993e3b2d81fde218d5d7d8eb50b41285d809195",
+     "size": 446725,
+     "mtime_utc": "2026-10-30T12:20:02+00:00"
+    },
+    "outrigger_sim.control.zero_calibration": {
+     "path": "03_src/outrigger_sim/control/zero_calibration.py",
+     "sha256": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+     "size": 19300,
+     "mtime_utc": "2026-10-29T01:40:26+00:00"
+    },
+    "taken_utc": "2026-11-04T09:51:04+00:00"
+   }
+  },
+  "on_stored": {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_COUPLED_eta085_20261104_142213\\S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0",
+   "t_stop_s": 42.30000000055156,
+   "events_fault_warn": [
+    [
+     42.3,
+     "WARN_LIFT_STROKE_LIMITED:FR"
+    ],
+    [
+     42.3,
+     "FAULT_LIFT_STROKE_LIMIT:soil:FR"
+    ]
+   ],
+   "FAULT_STROKE_END": 0,
+   "ready_count": 0,
+   "final_phase": "fault",
+   "phases": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     4.8,
+     "touch"
+    ],
+    [
+     25.3,
+     "level"
+    ],
+    [
+     42.3,
+     "fault"
+    ]
+   ],
+   "touch_end_s": 25.29999999998722,
+   "crawler": {
+    "at_stop_kN": 5.152517291204593,
+    "max_after_kN": 10.427382422183241,
+    "max_after_t_after_stop_s": 0.23900000000793398,
+    "limit_kN": 8.953646411845433,
+    "margin_kN": -1.4737360103378077,
+    "clause_pass": false,
+    "rise_kN": 5.274865130978648,
+    "end_kN": 6.49956490116127,
+    "t_since_last_below_0p01W_s": 0.015000000000497948,
+    "min_1s_before_kN": 1.860035203380321,
+    "max_1s_before_kN": 13.665494913196003,
+    "last_zero_before_stop_s": 4.79900000015931,
+    "patches_min_1s_before": 1,
+    "slope_at_stop_kN_s": 80.52845098848988,
+    "peak_freq_6s_before_Hz": 0.5000833472245374,
+    "peak_freq_6s_after_Hz": 1.6666666666666665,
+    "crawler_peaks": {
+     "before_stop_4s": {
+      "peak_t_rel_stop_s": [
+       -0.703
+      ],
+      "freq_from_mean_interval_Hz": null
+     },
+     "after_stop_4s": {
+      "peak_t_rel_stop_s": [
+       0.239,
+       0.831,
+       1.398,
+       1.984,
+       2.563,
+       3.132,
+       3.716
+      ],
+      "freq_from_mean_interval_Hz": 1.7256255392006963
+     }
+    },
+    "analysis_reference_at_fixed_delay_after_0p01W_crossing": {
+     "15": {
+      "ref_kN": 5.152517291204593,
+      "same_max_after_passes": false
+     },
+     "46": {
+      "ref_kN": 7.180897836838514,
+      "same_max_after_passes": true
+     },
+     "63": {
+      "ref_kN": 7.7428900362108966,
+      "same_max_after_passes": true
+     }
+    },
+    "other_references": {
+     "mean_0p2s_before": {
+      "ref_kN": 2.7308341671161385,
+      "passes": false
+     },
+     "mean_1s_before": {
+      "ref_kN": 5.791713166856761,
+      "passes": false
+     },
+     "median_1s_before": {
+      "ref_kN": 3.2811322678735437,
+      "passes": false
+     }
+    },
+    "trace_rel_stop_kN": {
+     "-0.1": 2.539513789539583,
+     "-0.05": 3.011463492282509,
+     "0.0": 5.152517291204593,
+     "0.05": 7.785030491627822,
+     "0.1": 7.425921437223678,
+     "0.2": 9.339061568764535,
+     "0.5": 4.290334742873855,
+     "1.0": 5.938578825975592,
+     "2.0": 7.67731217959346,
+     "5.0": 6.68194115284467,
+     "20.0": 6.515835815289957
+    },
+    "win_ptp_1s_before_kN": 11.791420544916726
+   },
+   "F_at_stop_kN": [
+    111.721,
+    120.202,
+    67.631,
+    72.549
+   ],
+   "F_min_after_stop_kN": [
+    105.038,
+    115.169,
+    63.666,
+    70.999
+   ],
+   "F_min_after_stop_all_kN": 63.66617626662864,
+   "F_end_kN": [
+    108.052,
+    122.268,
+    65.342,
+    74.522
+   ],
+   "F_min_clause_pass": true,
+   "pad_min_after_stop_kN": 65.05102192131427,
+   "moving_bar": 104.99107711838167,
+   "moving_leg": "FR",
+   "saturation": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "end_roll_pitch_deg": [
+    0.5933,
+    -0.003
+   ],
+   "stroke_reading_max_mm": [
+    387.354,
+    680.9,
+    399.917,
+    670.59
+   ],
+   "guard_margin_mm": 1.9002526422244728,
+   "P3_2_s": 1.1810000000392051,
+   "P3_1_recontact_pass": false,
+   "rejudge_blocks_equal": true,
+   "params_match": true,
+   "has_flow_limit": true,
+   "flow_args": {
+    "flow_eta_v": 0.85,
+    "flow_dp_comp_bar": 10.0,
+    "flow_dp_unload_bar": 20.0,
+    "flow_width_bar": 1.0,
+    "flow_law": "priority"
+   },
+   "code_git": "7e83bbb7383928d3f212ed02175ec7dd70c67a51",
+   "files_at_start": {
+    "outrigger_sim.control.c2": {
+     "path": "03_src/outrigger_sim/control/c2.py",
+     "sha256": "fb5fb9f2091405845f9b05a26993e3b2d81fde218d5d7d8eb50b41285d809195",
+     "size": 446725,
+     "mtime_utc": "2026-10-30T12:20:02+00:00"
+    },
+    "outrigger_sim.control.zero_calibration": {
+     "path": "03_src/outrigger_sim/control/zero_calibration.py",
+     "sha256": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+     "size": 19300,
+     "mtime_utc": "2026-10-29T01:40:26+00:00"
+    },
+    "taken_utc": "2026-11-04T05:22:16+00:00"
+   }
+  },
+  "on_eps1e-3": {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_s8on_eps1e-3_20261104\\S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0",
+   "t_stop_s": 42.20000000054824,
+   "events_fault_warn": [
+    [
+     42.2,
+     "WARN_LIFT_STROKE_LIMITED:FR"
+    ],
+    [
+     42.2,
+     "FAULT_LIFT_STROKE_LIMIT:soil:FR"
+    ]
+   ],
+   "FAULT_STROKE_END": 0,
+   "ready_count": 0,
+   "final_phase": "fault",
+   "phases": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     4.8,
+     "touch"
+    ],
+    [
+     25.3,
+     "level"
+    ],
+    [
+     42.2,
+     "fault"
+    ]
+   ],
+   "touch_end_s": 25.29999999998722,
+   "crawler": {
+    "at_stop_kN": 2.4804072876494283,
+    "max_after_kN": 13.1416683529172,
+    "max_after_t_after_stop_s": 0.27100000000899627,
+    "limit_kN": 6.281536408290268,
+    "margin_kN": -6.860131944626932,
+    "clause_pass": false,
+    "rise_kN": 10.661261065267773,
+    "end_kN": 8.141108192792066,
+    "t_since_last_below_0p01W_s": 0.0010000000000331966,
+    "min_1s_before_kN": 0.8378682554929213,
+    "max_1s_before_kN": 14.210915276176635,
+    "last_zero_before_stop_s": 4.930000000163659,
+    "patches_min_1s_before": 1,
+    "slope_at_stop_kN_s": 5.407686838893062,
+    "peak_freq_6s_before_Hz": 0.8334722453742289,
+    "peak_freq_6s_after_Hz": 1.6666666666666665,
+    "crawler_peaks": {
+     "before_stop_4s": {
+      "peak_t_rel_stop_s": [
+       -3.126,
+       -0.596
+      ],
+      "freq_from_mean_interval_Hz": 0.39525691698292625
+     },
+     "after_stop_4s": {
+      "peak_t_rel_stop_s": [
+       0.271,
+       0.894,
+       1.464,
+       2.052,
+       2.638,
+       3.226,
+       3.812
+      ],
+      "freq_from_mean_interval_Hz": 1.694436599774307
+     }
+    },
+    "analysis_reference_at_fixed_delay_after_0p01W_crossing": {
+     "15": {
+      "ref_kN": 2.5639389872348874,
+      "same_max_after_passes": false
+     },
+     "46": {
+      "ref_kN": 2.834059798491012,
+      "same_max_after_passes": false
+     },
+     "63": {
+      "ref_kN": 3.045738599391639,
+      "same_max_after_passes": false
+     }
+    },
+    "other_references": {
+     "mean_0p2s_before": {
+      "ref_kN": 2.127812280841516,
+      "passes": false
+     },
+     "mean_1s_before": {
+      "ref_kN": 5.740645269334605,
+      "passes": false
+     },
+     "median_1s_before": {
+      "ref_kN": 2.9947945469123844,
+      "passes": false
+     }
+    },
+    "trace_rel_stop_kN": {
+     "-0.1": 2.0920374600096046,
+     "-0.05": 2.2539194564949576,
+     "0.0": 2.4804072876494283,
+     "0.05": 2.8920152754881157,
+     "0.1": 4.941951097458807,
+     "0.2": 11.070156464617867,
+     "0.5": 5.488941634626863,
+     "1.0": 8.724946687426892,
+     "2.0": 9.561845420671752,
+     "5.0": 8.901372357033353,
+     "20.0": 8.13249962829535
+    },
+    "win_ptp_1s_before_kN": 13.373047020683714
+   },
+   "F_at_stop_kN": [
+    111.065,
+    122.176,
+    67.269,
+    72.868
+   ],
+   "F_min_after_stop_kN": [
+    102.835,
+    115.056,
+    62.594,
+    70.855
+   ],
+   "F_min_after_stop_all_kN": 62.59396407531195,
+   "F_end_kN": [
+    106.981,
+    122.498,
+    64.783,
+    74.276
+   ],
+   "F_min_clause_pass": true,
+   "pad_min_after_stop_kN": 63.975084606576715,
+   "moving_bar": 104.88635305504914,
+   "moving_leg": "FR",
+   "saturation": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "end_roll_pitch_deg": [
+    0.5919,
+    -0.0048
+   ],
+   "stroke_reading_max_mm": [
+    387.033,
+    681.02,
+    399.954,
+    670.218
+   ],
+   "guard_margin_mm": 1.7803353403388655,
+   "P3_2_s": 1.3590000000451141,
+   "P3_1_recontact_pass": false,
+   "rejudge_blocks_equal": true,
+   "params_match": true,
+   "has_flow_limit": true,
+   "flow_args": {
+    "flow_eta_v": 0.85,
+    "flow_dp_comp_bar": 10.0,
+    "flow_dp_unload_bar": 20.0,
+    "flow_width_bar": 1.0,
+    "flow_law": "priority"
+   },
+   "code_git": "4d0f378a81a1dd1131d50d280021f6b76673ab75",
+   "files_at_start": {
+    "outrigger_sim.control.c2": {
+     "path": "03_src/outrigger_sim/control/c2.py",
+     "sha256": "fb5fb9f2091405845f9b05a26993e3b2d81fde218d5d7d8eb50b41285d809195",
+     "size": 446725,
+     "mtime_utc": "2026-10-30T12:20:02+00:00"
+    },
+    "outrigger_sim.control.zero_calibration": {
+     "path": "03_src/outrigger_sim/control/zero_calibration.py",
+     "sha256": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+     "size": 19300,
+     "mtime_utc": "2026-10-29T01:40:26+00:00"
+    },
+    "taken_utc": "2026-11-04T13:03:24+00:00"
+   }
+  },
+  "on_eps2e-3": {
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_s8on_eps2e-3_20261104\\S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0",
+   "t_stop_s": 42.30000000055156,
+   "events_fault_warn": [
+    [
+     42.3,
+     "WARN_LIFT_STROKE_LIMITED:FR"
+    ],
+    [
+     42.3,
+     "FAULT_LIFT_STROKE_LIMIT:soil:FR"
+    ]
+   ],
+   "FAULT_STROKE_END": 0,
+   "ready_count": 0,
+   "final_phase": "fault",
+   "phases": [
+    [
+     0.1,
+     "check"
+    ],
+    [
+     4.8,
+     "touch"
+    ],
+    [
+     25.4,
+     "level"
+    ],
+    [
+     42.3,
+     "fault"
+    ]
+   ],
+   "touch_end_s": 25.39999999999054,
+   "crawler": {
+    "at_stop_kN": 2.495077462216998,
+    "max_after_kN": 13.218483597714432,
+    "max_after_t_after_stop_s": 0.27300000000906266,
+    "limit_kN": 6.296206582857838,
+    "margin_kN": -6.9222770148565935,
+    "clause_pass": false,
+    "rise_kN": 10.723406135497434,
+    "end_kN": 8.357802901143982,
+    "t_since_last_below_0p01W_s": 0.0010000000000331966,
+    "min_1s_before_kN": 0.64829419518119,
+    "max_1s_before_kN": 14.052366734747121,
+    "last_zero_before_stop_s": 5.032000000167045,
+    "patches_min_1s_before": 1,
+    "slope_at_stop_kN_s": 4.667184225492424,
+    "peak_freq_6s_before_Hz": 0.8334722453742289,
+    "peak_freq_6s_after_Hz": 1.6666666666666665,
+    "crawler_peaks": {
+     "before_stop_4s": {
+      "peak_t_rel_stop_s": [
+       -3.079,
+       -0.589
+      ],
+      "freq_from_mean_interval_Hz": 0.4016064256894793
+     },
+     "after_stop_4s": {
+      "peak_t_rel_stop_s": [
+       0.272,
+       0.901,
+       1.471,
+       2.06,
+       2.647,
+       3.235,
+       3.823
+      ],
+      "freq_from_mean_interval_Hz": 1.6896648830754213
+     }
+    },
+    "analysis_reference_at_fixed_delay_after_0p01W_crossing": {
+     "15": {
+      "ref_kN": 2.563415516216985,
+      "same_max_after_passes": false
+     },
+     "46": {
+      "ref_kN": 2.794300906945113,
+      "same_max_after_passes": false
+     },
+     "63": {
+      "ref_kN": 2.983509170242948,
+      "same_max_after_passes": false
+     }
+    },
+    "other_references": {
+     "mean_0p2s_before": {
+      "ref_kN": 2.170105067777431,
+      "passes": false
+     },
+     "mean_1s_before": {
+      "ref_kN": 5.707419925373694,
+      "passes": false
+     },
+     "median_1s_before": {
+      "ref_kN": 3.0294251834005577,
+      "passes": false
+     }
+    },
+    "trace_rel_stop_kN": {
+     "-0.1": 2.1382303043152406,
+     "-0.05": 2.2911804455393474,
+     "0.0": 2.495077462216998,
+     "0.05": 2.845590657397353,
+     "0.1": 4.124695054881885,
+     "0.2": 11.183293452492142,
+     "0.5": 5.701980126307163,
+     "1.0": 9.033197580404536,
+     "2.0": 9.694889394948843,
+     "5.0": 9.120242704690858,
+     "20.0": 8.343559745987037
+    },
+    "win_ptp_1s_before_kN": 13.40407253956593
+   },
+   "F_at_stop_kN": [
+    110.943,
+    122.598,
+    67.121,
+    73.088
+   ],
+   "F_min_after_stop_kN": [
+    102.757,
+    114.804,
+    62.505,
+    70.953
+   ],
+   "F_min_after_stop_all_kN": 62.50522286525493,
+   "F_end_kN": [
+    106.846,
+    122.502,
+    64.697,
+    74.277
+   ],
+   "F_min_clause_pass": true,
+   "pad_min_after_stop_kN": 63.87951752494122,
+   "moving_bar": 104.84673344878816,
+   "moving_leg": "FR",
+   "saturation": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "end_roll_pitch_deg": [
+    0.5952,
+    -0.0029
+   ],
+   "stroke_reading_max_mm": [
+    386.845,
+    680.697,
+    399.863,
+    669.015
+   ],
+   "guard_margin_mm": 2.102515945587129,
+   "P3_2_s": 1.3060000000433547,
+   "P3_1_recontact_pass": false,
+   "rejudge_blocks_equal": true,
+   "params_match": true,
+   "has_flow_limit": true,
+   "flow_args": {
+    "flow_eta_v": 0.85,
+    "flow_dp_comp_bar": 10.0,
+    "flow_dp_unload_bar": 20.0,
+    "flow_width_bar": 1.0,
+    "flow_law": "priority"
+   },
+   "code_git": "4d0f378a81a1dd1131d50d280021f6b76673ab75",
+   "files_at_start": {
+    "outrigger_sim.control.c2": {
+     "path": "03_src/outrigger_sim/control/c2.py",
+     "sha256": "fb5fb9f2091405845f9b05a26993e3b2d81fde218d5d7d8eb50b41285d809195",
+     "size": 446725,
+     "mtime_utc": "2026-10-30T12:20:02+00:00"
+    },
+    "outrigger_sim.control.zero_calibration": {
+     "path": "03_src/outrigger_sim/control/zero_calibration.py",
+     "sha256": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+     "size": 19300,
+     "mtime_utc": "2026-10-29T01:40:26+00:00"
+    },
+    "taken_utc": "2026-11-04T13:03:26+00:00"
+   }
+  }
+ },
+ "phase": {
+  "off_stored": {
+   "first_pad_contact_s": 22.943999999946527,
+   "first_contact_per_leg_s": [
+    22.948,
+    22.944,
+    22.997,
+    22.974
+   ],
+   "touch_end_s": 23.599999999945,
+   "latch_rel_s": [
+    23.6,
+    23.5,
+    23.6,
+    23.6
+   ],
+   "s_motor_at_touch_end_mm": [
+    346.576,
+    345.695,
+    341.575,
+    341.343
+   ],
+   "touch_speed_mm_s": [
+    20.91964,
+    20.91964,
+    20.66561,
+    20.66561
+   ],
+   "phase_rel_touch_end_of_stop_s": 17.00000000055013
+  },
+  "off_eps1e-3": {
+   "first_pad_contact_s": 22.973999999946457,
+   "first_contact_per_leg_s": [
+    22.996,
+    22.974,
+    23.024,
+    22.992
+   ],
+   "touch_end_s": 23.599999999945,
+   "latch_rel_s": [
+    23.6,
+    23.6,
+    23.6,
+    23.6
+   ],
+   "s_motor_at_touch_end_mm": [
+    346.425,
+    346.131,
+    341.179,
+    341.047
+   ],
+   "touch_speed_mm_s": [
+    20.89872,
+    20.89872,
+    20.64494,
+    20.64494
+   ],
+   "phase_rel_touch_end_of_stop_s": 17.00000000055013
+  },
+  "off_eps2e-3": {
+   "first_pad_contact_s": 23.00699999994638,
+   "first_contact_per_leg_s": [
+    23.019,
+    23.007,
+    23.062,
+    23.032
+   ],
+   "touch_end_s": 23.699999999944765,
+   "latch_rel_s": [
+    23.6,
+    23.6,
+    23.7,
+    23.6
+   ],
+   "s_motor_at_touch_end_mm": [
+    346.171,
+    345.828,
+    341.761,
+    340.863
+   ],
+   "touch_speed_mm_s": [
+    20.8778,
+    20.8778,
+    20.62426,
+    20.62426
+   ],
+   "phase_rel_touch_end_of_stop_s": 17.100000000557003
+  },
+  "on_stored": {
+   "first_pad_contact_s": 24.611999999964382,
+   "first_contact_per_leg_s": [
+    24.631,
+    24.612,
+    24.685,
+    24.646
+   ],
+   "touch_end_s": 25.29999999998722,
+   "latch_rel_s": [
+    25.3,
+    25.2,
+    25.3,
+    25.3
+   ],
+   "s_motor_at_touch_end_mm": [
+    346.631,
+    345.732,
+    341.688,
+    341.499
+   ],
+   "touch_speed_mm_s": [
+    18.71537,
+    18.71537,
+    18.71967,
+    18.71967
+   ],
+   "phase_rel_touch_end_of_stop_s": 17.00000000056434
+  },
+  "on_eps1e-3": {
+   "first_pad_contact_s": 24.636999999965212,
+   "first_contact_per_leg_s": [
+    24.691,
+    24.637,
+    24.721,
+    24.68
+   ],
+   "touch_end_s": 25.29999999998722,
+   "latch_rel_s": [
+    25.3,
+    25.3,
+    25.3,
+    25.3
+   ],
+   "s_motor_at_touch_end_mm": [
+    346.472,
+    346.177,
+    341.309,
+    341.193
+   ],
+   "touch_speed_mm_s": [
+    18.69665,
+    18.69665,
+    18.70095,
+    18.70095
+   ],
+   "phase_rel_touch_end_of_stop_s": 16.900000000561022
+  },
+  "on_eps2e-3": {
+   "first_pad_contact_s": 24.662999999966075,
+   "first_contact_per_leg_s": [
+    24.724,
+    24.663,
+    24.753,
+    24.715
+   ],
+   "touch_end_s": 25.39999999999054,
+   "latch_rel_s": [
+    25.3,
+    25.3,
+    25.4,
+    25.3
+   ],
+   "s_motor_at_touch_end_mm": [
+    346.234,
+    345.884,
+    341.909,
+    341.001
+   ],
+   "touch_speed_mm_s": [
+    18.67794,
+    18.67794,
+    18.68223,
+    18.68223
+   ],
+   "phase_rel_touch_end_of_stop_s": 16.900000000561022
+  }
+ },
+ "spread": {
+  "at_stop_kN": {
+   "off": {
+    "min": 6.859853083307656,
+    "max": 7.788696243353332,
+    "range": 0.9288431600456759,
+    "values": [
+     7.788696243353332,
+     6.859853083307656,
+     7.441028505695049
+    ]
+   },
+   "on": {
+    "min": 2.4804072876494283,
+    "max": 5.152517291204593,
+    "range": 2.672110003555165,
+    "values": [
+     5.152517291204593,
+     2.4804072876494283,
+     2.495077462216998
+    ]
+   }
+  },
+  "max_after_kN": {
+   "off": {
+    "min": 7.441028505695049,
+    "max": 9.557073253951325,
+    "range": 2.116044748256276,
+    "values": [
+     9.557073253951325,
+     9.488849793870196,
+     7.441028505695049
+    ]
+   },
+   "on": {
+    "min": 10.427382422183241,
+    "max": 13.218483597714432,
+    "range": 2.7911011755311907,
+    "values": [
+     10.427382422183241,
+     13.1416683529172,
+     13.218483597714432
+    ]
+   }
+  },
+  "rise_kN": {
+   "off": {
+    "min": 0.0,
+    "max": 2.6289967105625403,
+    "range": 2.6289967105625403,
+    "values": [
+     1.7683770105979928,
+     2.6289967105625403,
+     0.0
+    ]
+   },
+   "on": {
+    "min": 5.274865130978648,
+    "max": 10.723406135497434,
+    "range": 5.448541004518787,
+    "values": [
+     5.274865130978648,
+     10.661261065267773,
+     10.723406135497434
+    ]
+   }
+  },
+  "limit_kN": {
+   "off": {
+    "min": 10.660982203948496,
+    "max": 11.589825363994171,
+    "range": 0.928843160045675,
+    "values": [
+     11.589825363994171,
+     10.660982203948496,
+     11.242157626335889
+    ]
+   },
+   "on": {
+    "min": 6.281536408290268,
+    "max": 8.953646411845433,
+    "range": 2.672110003555165,
+    "values": [
+     8.953646411845433,
+     6.281536408290268,
+     6.296206582857838
+    ]
+   }
+  },
+  "margin_kN": {
+   "off": {
+    "min": 1.1721324100782997,
+    "max": 3.80112912064084,
+    "range": 2.6289967105625403,
+    "values": [
+     2.0327521100428463,
+     1.1721324100782997,
+     3.80112912064084
+    ]
+   },
+   "on": {
+    "min": -6.9222770148565935,
+    "max": -1.4737360103378077,
+    "range": 5.448541004518786,
+    "values": [
+     -1.4737360103378077,
+     -6.860131944626932,
+     -6.9222770148565935
+    ]
+   }
+  },
+  "end_kN": {
+   "off": {
+    "min": 4.477830954730821,
+    "max": 6.311498191904798,
+    "range": 1.8336672371739775,
+    "values": [
+     6.311498191904798,
+     6.130330976386543,
+     4.477830954730821
+    ]
+   },
+   "on": {
+    "min": 6.49956490116127,
+    "max": 8.357802901143982,
+    "range": 1.8582379999827117,
+    "values": [
+     6.49956490116127,
+     8.141108192792066,
+     8.357802901143982
+    ]
+   }
+  },
+  "t_since_crossing_s": {
+   "off": {
+    "min": 0.04600000000152704,
+    "max": 0.15800000000524506,
+    "range": 0.11200000000371801,
+    "values": [
+     0.06300000000209138,
+     0.04600000000152704,
+     0.15800000000524506
+    ]
+   },
+   "on": {
+    "min": 0.0010000000000331966,
+    "max": 0.015000000000497948,
+    "range": 0.014000000000464752,
+    "values": [
+     0.015000000000497948,
+     0.0010000000000331966,
+     0.0010000000000331966
+    ]
+   }
+  },
+  "F_min_after_stop_kN": {
+   "off": {
+    "min": 64.04151766064996,
+    "max": 65.6132689926705,
+    "range": 1.5717513320205398,
+    "values": [
+     64.04151766064996,
+     64.25458267690134,
+     65.6132689926705
+    ]
+   },
+   "on": {
+    "min": 62.50522286525493,
+    "max": 63.66617626662864,
+    "range": 1.1609534013737104,
+    "values": [
+     63.66617626662864,
+     62.59396407531195,
+     62.50522286525493
+    ]
+   }
+  },
+  "moving_bar": {
+   "off": {
+    "min": 104.8343958172852,
+    "max": 105.76063253692358,
+    "range": 0.9262367196383821,
+    "values": [
+     104.8343958172852,
+     105.76063253692358,
+     104.84918357365788
+    ]
+   },
+   "on": {
+    "min": 104.84673344878816,
+    "max": 104.99107711838167,
+    "range": 0.14434366959351053,
+    "values": [
+     104.99107711838167,
+     104.88635305504914,
+     104.84673344878816
+    ]
+   }
+  },
+  "guard_margin_mm": {
+   "off": {
+    "min": 1.573567934173866,
+    "max": 2.2324743335119592,
+    "range": 0.6589063993380933,
+    "values": [
+     2.2324743335119592,
+     1.819599619363089,
+     1.573567934173866
+    ]
+   },
+   "on": {
+    "min": 1.7803353403388655,
+    "max": 2.102515945587129,
+    "range": 0.3221806052482634,
+    "values": [
+     1.9002526422244728,
+     1.7803353403388655,
+     2.102515945587129
+    ]
+   }
+  },
+  "end_roll_deg": {
+   "off": {
+    "min": 0.4975,
+    "max": 0.5651,
+    "range": 0.06760000000000005,
+    "values": [
+     0.5651,
+     0.4975,
+     0.5012
+    ]
+   },
+   "on": {
+    "min": 0.5919,
+    "max": 0.5952,
+    "range": 0.0032999999999999696,
+    "values": [
+     0.5933,
+     0.5919,
+     0.5952
+    ]
+   }
+  }
+ },
+ "wrappers": {
+  "off_stored": null,
+  "off_eps1e-3": {
+   "eps": 0.001,
+   "gate_s": 12.85,
+   "perturbation": null,
+   "state": {
+    "first_contact_t_s": 30.999999999941092,
+    "first_contact_F_N": [
+     1848.626845207058,
+     13567.431433517904,
+     1184.8399864763203,
+     3579.520065131787
+    ],
+    "scaled_commands": 181,
+    "commands": 1601,
+    "flow_limit_checked": true,
+    "flow_limit_is_none": true
+   },
+   "main_head": null,
+   "env": {
+    "OMP_NUM_THREADS": "4",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "OUTRIGGER_PLACEMENT": "pcore"
+   },
+   "c2_sha256": "fb5fb9f2091405845f9b05a26993e3b2d81fde218d5d7d8eb50b41285d809195"
+  },
+  "off_eps2e-3": {
+   "eps": 0.002,
+   "gate_s": 12.85,
+   "perturbation": null,
+   "state": {
+    "first_contact_t_s": 31.09999999994086,
+    "first_contact_F_N": [
+     17911.521423609338,
+     20329.026055994465,
+     14231.669904932915,
+     17352.226992886608
+    ],
+    "scaled_commands": 182,
+    "commands": 1601,
+    "flow_limit_checked": true,
+    "flow_limit_is_none": true
+   },
+   "main_head": null,
+   "env": {
+    "OMP_NUM_THREADS": "4",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "OUTRIGGER_PLACEMENT": "pcore"
+   },
+   "c2_sha256": "fb5fb9f2091405845f9b05a26993e3b2d81fde218d5d7d8eb50b41285d809195"
+  },
+  "on_stored": null,
+  "on_eps1e-3": {
+   "eps": 0.001,
+   "gate_s": 12.85,
+   "perturbation": "delivered leg speed after RecordedFlowLimiter.limit x (1 - eps) until the first contact; the flow-off variant run_s8_eps.py scales the controller command instead; flow_series v_* and Q_sum are before this scaling",
+   "state": {
+    "first_contact_t_s": 32.699999999961996,
+    "first_contact_F_N": [
+     3764.9927837200194,
+     8827.01966082354,
+     1875.1332349960887,
+     9301.319253062042
+    ],
+    "commands": 1601,
+    "limit_steps": 1600000,
+    "scaled_steps": 198499,
+    "scaled_steps_limited": 161858,
+    "first_scaled_t_s": 12.85009999998339,
+    "last_scaled_t_s": 32.69989999996199,
+    "max_scaled_demand_over_supply": 0.9990000000000006
+   },
+   "main_head": "4d0f378a81a1dd1131d50d280021f6b76673ab75",
+   "env": {
+    "OMP_NUM_THREADS": "4",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "OUTRIGGER_PLACEMENT": "pcore"
+   },
+   "c2_sha256": "fb5fb9f2091405845f9b05a26993e3b2d81fde218d5d7d8eb50b41285d809195"
+  },
+  "on_eps2e-3": {
+   "eps": 0.002,
+   "gate_s": 12.85,
+   "perturbation": "delivered leg speed after RecordedFlowLimiter.limit x (1 - eps) until the first contact; the flow-off variant run_s8_eps.py scales the controller command instead; flow_series v_* and Q_sum are before this scaling",
+   "state": {
+    "first_contact_t_s": 32.699999999961996,
+    "first_contact_F_N": [
+     347.6822300053674,
+     3720.927415020944,
+     1091.9976269127123,
+     1557.3231537691966
+    ],
+    "commands": 1601,
+    "limit_steps": 1600000,
+    "scaled_steps": 198499,
+    "scaled_steps_limited": 161858,
+    "first_scaled_t_s": 12.85009999998339,
+    "last_scaled_t_s": 32.69989999996199,
+    "max_scaled_demand_over_supply": 0.9980000000000007
+   },
+   "main_head": "4d0f378a81a1dd1131d50d280021f6b76673ab75",
+   "env": {
+    "OMP_NUM_THREADS": "4",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "OUTRIGGER_PLACEMENT": "pcore"
+   },
+   "c2_sha256": "fb5fb9f2091405845f9b05a26993e3b2d81fde218d5d7d8eb50b41285d809195"
+  }
+ },
+ "first_diff_vs_stored_on": {
+  "on_eps1e-3": {
+   "F_cyl_N": 4.900999999988578,
+   "s_motor_m": 4.900999999988578,
+   "scm_crawler_normal_N": 4.900999999988578,
+   "issued_u": 24.799999999970623
+  },
+  "on_eps2e-3": {
+   "F_cyl_N": 4.900999999988578,
+   "s_motor_m": 4.900999999988578,
+   "scm_crawler_normal_N": 4.900999999988578,
+   "issued_u": 24.799999999970623
+  }
+ },
+ "xcheck_python_julia": {
+  "worst_relative_diff": 0.0,
+  "clause_same": {
+   "off_stored": [
+    true,
+    true
+   ],
+   "off_eps1e-3": [
+    true,
+    true
+   ],
+   "off_eps2e-3": [
+    true,
+    true
+   ],
+   "on_stored": [
+    false,
+    false
+   ],
+   "on_eps1e-3": [
+    false,
+    false
+   ],
+   "on_eps2e-3": [
+    false,
+    false
+   ]
+  },
+  "grade": "match"
+ },
+ "conclusion": {
+  "status": "F5_CONFIRMED_BY_USER_RULE",
+  "literal_verdict": "off 3/3 pass, on 3/3 fail on the clause 'crawler after the stop <= crawler at the stop + 0.01 W' (criteria 9.1)",
+  "T2": "confirmed 1 row (S8), safe stop -> SA-4 clause violated",
+  "F5": "confirmed at eta_v 0.85, nominal compensator, plant without valve lag",
+  "condition_10_1_5": "met by the user rule: the only difference is the flow limit; eps moved first contact by at most 63 ms",
+  "D5": "no switch by the user rule; the comparison after the C4G2 / K1 merge is a separate step",
+  "v4": "submitted unchanged, flow limit out of scope; v5 records the limit"
+ }
+}

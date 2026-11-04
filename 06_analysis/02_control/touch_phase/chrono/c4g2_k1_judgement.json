@@ -1,0 +1,26 @@
+{
+ "scope": "C4G2 and K1, rigid Chrono 9 rows, commit 74032be. Provisional: S7 C4G1 pending. Adoption is the user's decision.",
+ "failed_rows_all": 0,
+ "recommend": {
+  "C4G2": "criteria met on the rigid rows; keep as adoption candidate, open gates S7 and the sensor error runs",
+  "K1": "conditional: force gain above phase scatter, but two new record or display flags and misses not settled until contact_replay.py knows K1; rejudge first"
+ },
+ "C4G2": {
+  "R9_Fs4_same_code": {"RL_kN": [54.43, 43.80], "FL_kN": [109.70, 117.74], "RR_kN": [70.69, 76.86], "D_lift_kN": [3.54, 28.02], "row3_kN": [54.59, 43.80], "ready_s": [58.2, 58.2]},
+  "R9_Fs0_on_15176d1": {"d000_RL_kN": [56.02, 41.88], "d035_RL_kN": [44.47, 29.50], "ready_s": [58.1, 58.1]},
+  "R16_d000_alone": {"RL_kN": [15.98, 12.40], "RL_read": "inside off phase range 12.40..21.29: cannot tell", "FR_kN": [16.27, 15.45], "J_C_missed": [0, 1], "FL_lift_s": [0.809, 0.801], "RR_lift_s": [1.219, 1.204], "RL_window_end_kN": [21.76, 27.16], "recurrence_clusters": [1, 0]},
+  "hold_end_reason": "time on every row"
+ },
+ "K1": {
+  "R16_d000": {"RL_kN": {"K1": 27.53, "alone": 15.98, "off": 12.40}, "FL_lift_s": {"K1": 0.859, "alone": 0.809, "off": 0.801}, "RR_lift_s": {"K1": 1.258, "alone": 1.219, "off": 1.204}, "M5_lift_s": {"K1": 3.1, "alone": 2.7}, "C_S8_41_flagged": {"K1": 1, "alone": 0, "off": 0}, "M2_J_C": {"K1": 13, "alone": 12}},
+  "R16_d070": {"RL_kN": [27.19, 21.16], "event_t_s": [28.45, 28.35]},
+  "R15": {"RL_kN": [8.27, -0.83], "FR_kN": [14.90, 12.18], "RL_under_F_min_s": [0.020, 0.324], "RL_lift_s": [0.0, 0.054], "FL_lift_s": [1.009, 0.879], "RR_lift_s": [1.450, 1.205], "last_contact_s": [2.643, 2.263], "re_ready_s": [26.75, 26.95], "ready_s": [54.8, 55.0], "moving_pressure_bar": [148.27, 163.79], "twist_work": [22.17, 78.99], "starts": [5, 8], "C_S8_41_worst_kN": [-1.88, -0.83], "C_S8_41_windows": [7, 2], "M2_J_C": [34, 26], "M2_J_P": [29, 18]},
+  "R12": "10 Hz bit-equal to off, RR 11.14 kN",
+  "open": ["contact_replay._defers_reapproach lacks the K1 rule: item 9 values on K1 rows are provisional"]
+ },
+ "off_R16_phase_range": {"RL_kN": [12.40, 21.29], "FR_kN": [14.96, 15.55], "RR_lift_s": [1.196, 1.204], "FL_lift_s": [0.797, 0.804]},
+ "harness_R15_K1_4_phases": {"RL_kN": [8.30, 21.77], "off_RL_kN": [-0.72, -0.39]},
+ "R9_Fs4_D_hat": {"D_te_kN": 12.79, "D_hat_kN": 12.951, "true_mean_kN": 13.084, "tau_te_mm": 0.758, "tau_te_mm_Fs0_same_delta": 1.797},
+ "recommended_row": {"name": "R16 mirror2 d0175 C4G2+K1", "gap_mm": [-1.825, 2.175, -1.825, 2.175], "off": "scratchpad cad_asym runs_r16 r16_mirror2_d0175", "off_values": {"D_te_kN": 26.87, "tau_te_mm": 1.254, "RL_kN": 17.08}},
+ "no_cross_path": "stored records and judge rows only; no Julia calculation, no agreement label"
+}
