@@ -1,0 +1,82 @@
+{
+ "pressure_ref": "gauge",
+ "values": {
+  "v_FL": {
+   "value": 0.016357167862561507,
+   "unit": "m/s"
+  },
+  "Q_in_FL": {
+   "value": 0.0002171124348312194,
+   "unit": "m**3/s"
+  },
+  "p_h_FL": {
+   "value": 8968347.869667595,
+   "unit": "Pa"
+  },
+  "p_r_FL": {
+   "value": 249297.32387369676,
+   "unit": "Pa"
+  },
+  "v_FR": {
+   "value": 0.017932360001477868,
+   "unit": "m/s"
+  },
+  "Q_in_FR": {
+   "value": 0.00023802032081005604,
+   "unit": "m**3/s"
+  },
+  "p_h_FR": {
+   "value": 8821012.15956368,
+   "unit": "Pa"
+  },
+  "p_r_FR": {
+   "value": 259249.1357438665,
+   "unit": "Pa"
+  },
+  "v_RL": {
+   "value": 0.0209243016,
+   "unit": "m/s"
+  },
+  "Q_in_RL": {
+   "value": 0.00019885028742936244,
+   "unit": "m**3/s"
+  },
+  "p_h_RL": {
+   "value": 7688716.880938177,
+   "unit": "Pa"
+  },
+  "p_r_RL": {
+   "value": 309282.15254217864,
+   "unit": "Pa"
+  },
+  "v_RR": {
+   "value": 0.0209243016,
+   "unit": "m/s"
+  },
+  "Q_in_RR": {
+   "value": 0.00019885028742936244,
+   "unit": "m**3/s"
+  },
+  "p_h_RR": {
+   "value": 7497744.333034158,
+   "unit": "Pa"
+  },
+  "p_r_RR": {
+   "value": 309282.15254217864,
+   "unit": "Pa"
+  },
+  "p_P": {
+   "value": 9698190.45564653,
+   "unit": "Pa"
+  },
+  "Q_byp": {
+   "value": 0.0,
+   "unit": "m**3/s"
+  },
+  "T_self_stress": {
+   "value": 0.0,
+   "unit": "N"
+  }
+ },
+ "note": "hand_calc.py, eta 0.85, flat, four legs at v_max, prescribed loads, pressures gauge"
+}

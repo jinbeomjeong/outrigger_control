@@ -1,0 +1,82 @@
+{
+ "pressure_ref": "gauge",
+ "values": {
+  "v_FL": {
+   "value": 0.019287552376083598,
+   "unit": "m/s"
+  },
+  "Q_in_FL": {
+   "value": 0.0002560080995372517,
+   "unit": "m**3/s"
+  },
+  "p_h_FL": {
+   "value": 9140837.902650204,
+   "unit": "Pa"
+  },
+  "p_r_FL": {
+   "value": 268542.7237581834,
+   "unit": "Pa"
+  },
+  "v_FR": {
+   "value": 0.018981142305838146,
+   "unit": "m/s"
+  },
+  "Q_in_FR": {
+   "value": 0.0002519410485069777,
+   "unit": "m**3/s"
+  },
+  "p_h_FR": {
+   "value": 9172823.882763777,
+   "unit": "Pa"
+  },
+  "p_r_FR": {
+   "value": 266382.22612171224,
+   "unit": "Pa"
+  },
+  "v_RL": {
+   "value": 0.0209243016,
+   "unit": "m/s"
+  },
+  "Q_in_RL": {
+   "value": 0.00019885028742936244,
+   "unit": "m**3/s"
+  },
+  "p_h_RL": {
+   "value": 5359838.091963757,
+   "unit": "Pa"
+  },
+  "p_r_RL": {
+   "value": 309282.15254217864,
+   "unit": "Pa"
+  },
+  "v_RR": {
+   "value": 0.02064548045939464,
+   "unit": "m/s"
+  },
+  "Q_in_RR": {
+   "value": 0.00019620056152640765,
+   "unit": "m**3/s"
+  },
+  "p_h_RR": {
+   "value": 9059195.244181586,
+   "unit": "Pa"
+  },
+  "p_r_RR": {
+   "value": 306389.13729604863,
+   "unit": "Pa"
+  },
+  "p_P": {
+   "value": 10155606.960525066,
+   "unit": "Pa"
+  },
+  "Q_byp": {
+   "value": 0.0,
+   "unit": "m**3/s"
+  },
+  "T_self_stress": {
+   "value": 8654.796551754393,
+   "unit": "N"
+  }
+ },
+ "note": "hand_calc.py, eta 0.90, roll +2.2 deg, pitch +1.6 deg (diagonal), rigid body, pressures gauge"
+}

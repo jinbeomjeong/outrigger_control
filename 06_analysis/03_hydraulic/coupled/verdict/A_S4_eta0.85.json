@@ -1,0 +1,793 @@
+{
+ "run_id": "A_S4_eta0.85",
+ "bundle": "A",
+ "case_id": "S4",
+ "chrono_name": "P3b_J1_B_top_Fs4_m1p1",
+ "setting": {
+  "is_enabled": true,
+  "eta_v": 0.85,
+  "dp_comp_Pa": null,
+  "dp_unload_Pa": null,
+  "width_Pa": null,
+  "law": null,
+  "always_solve": false
+ },
+ "decision": null,
+ "definition_sha256": "367952558121a2b91e84bc42be094568a507e0e66efec36d8e3235d3b6fb6de9",
+ "wall_s": 116.6,
+ "harness_class": "pass",
+ "failed_rows": [],
+ "rows": {
+  "P3-1": {
+   "pass": true,
+   "flag": false,
+   "flag_name": null,
+   "flag_names": [],
+   "crawler_N_max_after_ready": 0.0,
+   "n_recontact": 0,
+   "recontact_events": {
+    "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+    "limit_N": 4181.242032704926,
+    "weight_N": 418124.20327049255,
+    "t_loc_s": 38.60000000000228,
+    "t_ready_s": null,
+    "chatter": {
+     "after_loc_s": 1.0,
+     "max_duration_s": 0.1,
+     "max_over_limit": 1.2,
+     "max_normal_N": 5017.490439245911,
+     "time_tolerance_s": 1e-09,
+     "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+    },
+    "events": [],
+    "pass": true,
+    "flags": [],
+    "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+   },
+   "departure": {
+    "rule": "crawler SCM normal < 0.01 W (4181 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+    "departed": true,
+    "t_departure_s": 34.926999999984744,
+    "t_confirmed_s": 35.02699999998522,
+    "recontact_t_s": null,
+    "recontact_count": 0,
+    "crawler_normal_max_after_confirm_N": 3984.2384738216692
+   }
+  },
+  "P3-2": {
+   "pass": true,
+   "flag": false,
+   "flag_name": null,
+   "t_loc_s": 38.60000000000228,
+   "t_off_s": 37.49999999999703,
+   "loc_delay_s": 1.1000000000052523,
+   "late_loc_reapproach": {
+    "rule": "spec 419.8 (decision 13, 2026-10-29): LOC - departure > T_lim is the FLAG P3-2_late_loc_reapproach when 1 a re-approach interval overlapping [t_off, t_LOC] had an LWa window restart (419.8.1), 2 t_LOC - max(t_off, t_re_end) <= T_lim (t_re_end = latest end of the overlapping intervals), 3 crawler true normal < 0.01 W over the LOC period, 4 P3-3 within and no FAULT, 5 LOC before the first DONE; else a failure",
+    "t_off_s": 37.49999999999703,
+    "t_loc_s": 38.60000000000228,
+    "limit_s": 2.9,
+    "control_period_s": 0.1,
+    "late_loc_reapproach_s": 1.1000000000052523,
+    "t_reapproach_end_s": null,
+    "loc_minus_reapproach_end_s": null,
+    "restart_events_before_loc": 0,
+    "restart_events_off_to_loc": 0,
+    "reapproach_intervals": [],
+    "overlapping_reapproach_legs": [],
+    "open_overlapping_interval": false,
+    "lwa_on": false,
+    "lwa_on_source": "restart events present",
+    "judgement_error": null,
+    "crawler_normal_loc_period_max_N": 0.0,
+    "crawler_normal_at_loc_N": 0.0,
+    "crawler_normal_next_period_max_N": 0.0,
+    "crawler_threshold_N": 4181.242032704926,
+    "fault_events": [],
+    "fault_phase": false,
+    "conditions": {
+     "1_restart": false,
+     "2_delay_by_reapproach": false,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true
+    },
+    "time_clause_violated": false,
+    "flag": false,
+    "verdict": "pass",
+    "is_flag": false
+   },
+   "flag_names": [],
+   "late_loc_revoked": {
+    "is_flag": false,
+    "time_clause_violated": false,
+    "conditions": {
+     "1_revoke": true,
+     "2_delay_by_revoke": true,
+     "3_not_false_loc": true,
+     "4_load_strict": true,
+     "5_loc_before_first_done": true,
+     "6_total_delay": true
+    },
+    "t_loc_final_s": 38.60000000000228,
+    "t_off_s": 37.49999999999703,
+    "limit_s": 2.9,
+    "t_revoke_last_s": 37.699999999997985,
+    "revokes_off_to_loc_s": [
+     37.699999999997985
+    ],
+    "loc_minus_departure_s": 1.1000000000052523,
+    "loc_minus_later_event_s": 0.9000000000042974,
+    "n_revokes": 1,
+    "total_delay_limit_s": 5.8,
+    "crawler_loc_period_max_N": 0.0,
+    "condition_2_basis": "max(t_off, t_revoke_last)"
+   },
+   "t_loc_first_s": 37.09999999999512,
+   "t_loc_final_s": 38.60000000000228,
+   "loc_revokes": [
+    37.699999999997985
+   ]
+  },
+  "P3-3": {
+   "pass": true,
+   "min_true_Fcyl_after_off_kN": 73.08118388333578,
+   "D8_margin_kN": 58.66659477333578
+  },
+  "P3-4": {
+   "pass": true,
+   "att_end_deg": [
+    -0.06406158956074193,
+    -0.03109793482545218
+   ]
+  },
+  "P3-5": {
+   "pass": true,
+   "rut_ready_mm": 60.45415743504374,
+   "rut_end_mm": 61.762496954821316,
+   "max_motor_stroke_mm": 609.6779059984859
+  },
+  "P3-6": {
+   "kind": "record",
+   "t_ready_s": 71.50000000015937,
+   "limit_s": 100.0,
+   "flag": false
+  },
+  "P3-7": {
+   "kind": "record",
+   "value": null,
+   "note": "not computed by the reduced harness"
+  },
+  "P3-8": {
+   "pass": true,
+   "flag": false,
+   "events": [],
+   "starts": []
+  },
+  "fault_ready": {
+   "pass": true,
+   "has_fault": false,
+   "final_phase": "ready"
+  },
+  "SL-1": {
+   "pass": true,
+   "stroke_faults": [],
+   "max_motor_stroke_mm": 609.6779059984859,
+   "guard_warning": false,
+   "lifted_legs": [],
+   "min_true_Fcyl_kN": 73.08118388333578,
+   "att_end_deg": [
+    -0.06406158956074193,
+    -0.03109793482545218
+   ],
+   "rut_end_mm": 61.762496954821316
+  },
+  "SL-2": {
+   "kind": "record",
+   "R_c": 0.006375104751710089,
+   "att_deg": [
+    3.2065207628423215e-05,
+    0.020377015054469795
+   ],
+   "source": "controller",
+   "flag": false,
+   "note": ""
+  },
+  "SL-3": {
+   "kind": "record",
+   "t_P_s": 37.79999999999846,
+   "c_min_tP_mm": 113.7851740104372,
+   "corner_bias_mm": [
+    133.35565469854993,
+    148.57167227088343,
+    90.8935769808973,
+    106.10959455323079
+   ],
+   "anchor_applied": false,
+   "true_at_loc_mm": -0.22162153402671822,
+   "estimate_after_loc_mm": 12.837464983277647,
+   "true_minus_estimate_mm": -13.059086517304365,
+   "flag": false
+  },
+  "SL-4": {
+   "kind": "record",
+   "sink_final_mm": [
+    119.96207677668238,
+    104.89087236468406,
+    189.1360305883239,
+    157.89477294715127
+   ],
+   "downhill_minus_uphill_mm": null,
+   "settle_att_true_deg": [
+    3.230409978758048e-05,
+    0.01985705721295031
+   ],
+   "settle_correction": null,
+   "A1": "settle table hook_harness applied (slope settle, flat P0 bias corrected)"
+  }
+ },
+ "run": {
+  "t_level_s": 0.10000000000000007,
+  "t_done_s": 59.50000000010208,
+  "t_ready_s": 71.50000000015937,
+  "final_phase": "ready",
+  "t_crawler_off_first_s": 37.49999999999703,
+  "n_crawler_recontact": 0,
+  "crawler_N_max_after_ready": 0.0,
+  "clear_true_ready_mm": 65.3084658999381,
+  "clear_est_ready_mm": 171.54384604429197,
+  "min_true_Fcyl_after_off_kN": 73.08118388333578,
+  "min_true_Fcyl_after_ready_kN": 76.6776125140186,
+  "att_end_deg": [
+   -0.06406158956074193,
+   -0.03109793482545218
+  ],
+  "att_max_after_off_deg": 0.4222137749695033,
+  "max_motor_stroke_mm": 609.6779059984859,
+  "sink_final_mm": [
+   119.96207677668238,
+   104.89087236468406,
+   189.1360305883239,
+   157.89477294715127
+  ],
+  "sink_rate_max_mm_s": [
+   16.992417873146202,
+   15.829880030404642,
+   25.082569125079583,
+   24.975316137217096
+  ],
+  "n_reapproach": 0,
+  "n_relevel": 0,
+  "n_probe_rounds": 1,
+  "n_warn": 0,
+  "phase_path": [
+   [
+    1.0,
+    "touch"
+   ],
+   [
+    21.6,
+    "level"
+   ],
+   [
+    59.5,
+    "done"
+   ],
+   [
+    59.6,
+    "probe"
+   ],
+   [
+    71.5,
+    "ready"
+   ]
+  ],
+  "commands_sha256": "f43e84451384d0697475a1ad25fdfdcd6b806a5798940214b3e8b7a9bd88e2b3",
+  "wall_s": 112.9
+ },
+ "warnings": [],
+ "rut_ready_mm": 60.45415743504374,
+ "rut_end_mm": 61.762496954821316,
+ "moving_pressure": {
+  "max_moving_bar": 102.33,
+  "max_moving_leg": "FL",
+  "t_max_moving_s": 38.849,
+  "max_extending_bar": 102.33,
+  "saturation_ms": 0,
+  "chunks": 81500,
+  "definition": "1 ms chunks, |valve| > 1e-6 m/s, F_cyl / A_p, whole run"
+ },
+ "probe_rounds": {
+  "n_probe_rounds": 1,
+  "n_probe_rounds_ge_3": false,
+  "rounds": [
+   {
+    "probe_start_s": 59.7,
+    "probe_s": 11.9,
+    "relevel_s": null
+   }
+  ]
+ },
+ "commands_sha256": "f43e84451384d0697475a1ad25fdfdcd6b806a5798940214b3e8b7a9bd88e2b3",
+ "final_phase": "ready",
+ "max_motor_stroke_reading_mm": 609.6785321194823,
+ "values": {
+  "times": {
+   "t_touch_end_s": 21.6,
+   "t_first_done_s": 59.5,
+   "t_first_ready_s": 71.5
+  },
+  "forces": {
+   "t_lift_s": 37.355,
+   "after_liftoff": {
+    "min_kN": 73.0812,
+    "leg": "RR",
+    "t_s": 39.48
+   },
+   "first_8s": {
+    "min_kN": 73.0812,
+    "leg": "RR",
+    "t_s": 39.48
+   },
+   "after_8s": {
+    "min_kN": 75.3567,
+    "leg": "RR",
+    "t_s": 62.013
+   }
+  },
+  "attitude": {
+   "end_abs_deg": {
+    "roll": 0.06406,
+    "pitch": 0.0311
+   },
+   "max_abs_last_5s_deg": 0.06429,
+   "max_abs_after_liftoff_deg": 0.42234,
+   "rocking_amplitude_deg": 0.02017,
+   "filter_residual_last_5s_deg": 7e-05
+  },
+  "probe_attitude_change_deg": 0.05196,
+  "pressure": {
+   "max_moving_bar": 102.334,
+   "saturation_leg_chunks": 0
+  },
+  "twist": {
+   "peak_abs_after_liftoff_kN": 4.322,
+   "abs_at_first_done_kN": 0.376
+  },
+  "events": {
+   "fault_events": [],
+   "warn_events": [],
+   "info_rule_events": [
+    "INFO_DIFF_SINK_HOLD",
+    "INFO_DIFF_SINK_RELEASE",
+    "INFO_LOC_FLAT_SOIL_MARGIN",
+    "INFO_LOC_REVOKED"
+   ],
+   "soil_mode_started": true,
+   "t_loc_first_s": 37.1,
+   "t_loc_last_s": 38.6,
+   "reapproach_starts_after_liftoff": 0,
+   "p5_relevels_after_liftoff": 0,
+   "probe_aborts": 0
+  },
+  "guard_active_s": 0.0,
+  "oil_force_max_kN": {
+   "FL": 138.422,
+   "FR": 133.591,
+   "RL": 85.269,
+   "RR": 81.88
+  },
+  "supply_L_min": 51.17,
+  "V2_a": {
+   "max_sum_Q_over_supply_minus_1": 0.0,
+   "chunks": 81500,
+   "demand_met_chunks": 62786,
+   "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+   "fast_path_chunks": 62786,
+   "solved_chunks": 18714,
+   "audit_chunks": 62,
+   "audit_mismatches": 0
+  },
+  "E1": {
+   "check": {
+    "duration_s": 1.001,
+    "short_s": 0.0,
+    "max_deficit_L_min": 0.0
+   },
+   "done": {
+    "duration_s": 0.1,
+    "short_s": 0.0,
+    "max_deficit_L_min": 0.0
+   },
+   "level": {
+    "duration_s": 37.9,
+    "short_s": 2.613,
+    "max_deficit_L_min": 20.4756
+   },
+   "probe": {
+    "duration_s": 11.9,
+    "short_s": 0.0,
+    "max_deficit_L_min": 0.0
+   },
+   "ready": {
+    "duration_s": 9.999,
+    "short_s": 0.0,
+    "max_deficit_L_min": 0.0
+   },
+   "touch": {
+    "duration_s": 20.6,
+    "short_s": 16.101,
+    "max_deficit_L_min": 6.02
+   }
+  },
+  "E2": {
+   "FL": {
+    "min_r_by_phase": {
+     "level": 0.4808,
+     "touch": 0.89463
+    },
+    "longest_below_0p93_s": 15.738
+   },
+   "FR": {
+    "min_r_by_phase": {
+     "level": 0.70227,
+     "touch": 0.89463
+    },
+    "longest_below_0p93_s": 15.738
+   },
+   "RL": {
+    "min_r_by_phase": {
+     "level": 0.99993,
+     "touch": 0.89488
+    },
+    "longest_below_0p93_s": 15.837
+   },
+   "RR": {
+    "min_r_by_phase": {
+     "level": 1.0,
+     "touch": 0.89488
+    },
+    "longest_below_0p93_s": 15.837
+   }
+  },
+  "E3": {
+   "max_abs_integral_mm": {
+    "FL": 54.704,
+    "FR": 42.814,
+    "RL": 35.035,
+    "RR": 35.033
+   },
+   "max_between_legs_mm": 19.671
+  },
+  "E4": {
+   "sample_period_s": 0.001,
+   "tie_width_bar": 0.5,
+   "group_time_s": {
+    "FL": 1.515,
+    "FL+FR": 1.101,
+    "FL+FR+RL+RR": 16.098
+   },
+   "disjoint_swaps": 0,
+   "max_disjoint_swaps_in_1s": 0,
+   "saturated_s": 18.714,
+   "gallery_bar_while_saturated": [
+    12.581,
+    118.852
+   ]
+  },
+  "E5": {
+   "integral_limit_rad_s": 0.02,
+   "max_abs_integral_rad_s": 0.02,
+   "abs_integral_at_saturation_end_rad_s": 0.02,
+   "back_in_band_after_saturation_s": 17.23
+  },
+  "T4_inputs": {
+   "persist_s": 1.0,
+   "legs": {
+    "FL": {
+     "longest_s": 16.101,
+     "runs_ge_1s": 3,
+     "set_at_operating_point": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "operating_point": {
+      "t_s": 9.581,
+      "u_m_s": {
+       "FL": 0.020924302,
+       "FR": 0.020924302,
+       "RL": 0.020924302,
+       "RR": 0.020924302
+      },
+      "v_m_s": {
+       "FL": 0.018719568,
+       "FR": 0.018719568,
+       "RL": 0.018724782,
+       "RR": 0.018724782
+      },
+      "p_P_Pa": 1258063.1,
+      "p_load_Pa": {
+       "FL": 302180.3,
+       "FR": 302180.3,
+       "RL": 377484.4,
+       "RR": 377484.4
+      },
+      "spool_drop_Pa": {
+       "FL": 800368.0,
+       "FR": 800368.0,
+       "RL": 800813.9,
+       "RR": 800813.9
+      },
+      "Q_byp_m3_s": 0.0
+     }
+    },
+    "FR": {
+     "longest_s": 16.101,
+     "runs_ge_1s": 3,
+     "set_at_operating_point": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "operating_point": {
+      "t_s": 9.581,
+      "u_m_s": {
+       "FL": 0.020924302,
+       "FR": 0.020924302,
+       "RL": 0.020924302,
+       "RR": 0.020924302
+      },
+      "v_m_s": {
+       "FL": 0.018719568,
+       "FR": 0.018719568,
+       "RL": 0.018724782,
+       "RR": 0.018724782
+      },
+      "p_P_Pa": 1258063.1,
+      "p_load_Pa": {
+       "FL": 302180.3,
+       "FR": 302180.3,
+       "RL": 377484.4,
+       "RR": 377484.4
+      },
+      "spool_drop_Pa": {
+       "FL": 800368.0,
+       "FR": 800368.0,
+       "RL": 800813.9,
+       "RR": 800813.9
+      },
+      "Q_byp_m3_s": 0.0
+     }
+    },
+    "RL": {
+     "longest_s": 16.098,
+     "runs_ge_1s": 1,
+     "set_at_operating_point": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "operating_point": {
+      "t_s": 9.579,
+      "u_m_s": {
+       "FL": 0.020924302,
+       "FR": 0.020924302,
+       "RL": 0.020924302,
+       "RR": 0.020924302
+      },
+      "v_m_s": {
+       "FL": 0.018719568,
+       "FR": 0.018719568,
+       "RL": 0.018724782,
+       "RR": 0.018724782
+      },
+      "p_P_Pa": 1258063.1,
+      "p_load_Pa": {
+       "FL": 302180.3,
+       "FR": 302180.3,
+       "RL": 377484.4,
+       "RR": 377484.4
+      },
+      "spool_drop_Pa": {
+       "FL": 800368.0,
+       "FR": 800368.0,
+       "RL": 800813.9,
+       "RR": 800813.9
+      },
+      "Q_byp_m3_s": 0.0
+     }
+    },
+    "RR": {
+     "longest_s": 16.098,
+     "runs_ge_1s": 1,
+     "set_at_operating_point": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ],
+     "operating_point": {
+      "t_s": 9.579,
+      "u_m_s": {
+       "FL": 0.020924302,
+       "FR": 0.020924302,
+       "RL": 0.020924302,
+       "RR": 0.020924302
+      },
+      "v_m_s": {
+       "FL": 0.018719568,
+       "FR": 0.018719568,
+       "RL": 0.018724782,
+       "RR": 0.018724782
+      },
+      "p_P_Pa": 1258063.1,
+      "p_load_Pa": {
+       "FL": 302180.3,
+       "FR": 302180.3,
+       "RL": 377484.4,
+       "RR": 377484.4
+      },
+      "spool_drop_Pa": {
+       "FL": 800368.0,
+       "FR": 800368.0,
+       "RL": 800813.9,
+       "RR": 800813.9
+      },
+      "Q_byp_m3_s": 0.0
+     }
+    }
+   },
+   "sets": {
+    "FL+FR": {
+     "longest_s": 1.098,
+     "runs_ge_1s": 1,
+     "operating_point": {
+      "t_s": 22.789,
+      "u_m_s": {
+       "FL": 0.020916074,
+       "FR": 0.020911272,
+       "RL": 0.020078859,
+       "RR": 0.020074487
+      },
+      "v_m_s": {
+       "FL": 0.017729901,
+       "FR": 0.01777339,
+       "RL": 0.020078859,
+       "RR": 0.020074487
+      },
+      "p_P_Pa": 8476774.8,
+      "p_load_Pa": {
+       "FL": 7618726.7,
+       "FR": 7614180.5,
+       "RL": 6922453.0,
+       "RR": 6916966.8
+      },
+      "spool_drop_Pa": {
+       "FL": 718542.2,
+       "FR": 722403.2,
+       "RL": 1000000.0,
+       "RR": 1000000.0
+      },
+      "Q_byp_m3_s": 0.0
+     }
+    },
+    "FL+FR+RL+RR": {
+     "longest_s": 16.098,
+     "runs_ge_1s": 1,
+     "operating_point": {
+      "t_s": 9.579,
+      "u_m_s": {
+       "FL": 0.020924302,
+       "FR": 0.020924302,
+       "RL": 0.020924302,
+       "RR": 0.020924302
+      },
+      "v_m_s": {
+       "FL": 0.018719568,
+       "FR": 0.018719568,
+       "RL": 0.018724782,
+       "RR": 0.018724782
+      },
+      "p_P_Pa": 1258063.1,
+      "p_load_Pa": {
+       "FL": 302180.3,
+       "FR": 302180.3,
+       "RL": 377484.4,
+       "RR": 377484.4
+      },
+      "spool_drop_Pa": {
+       "FL": 800368.0,
+       "FR": 800368.0,
+       "RL": 800813.9,
+       "RR": 800813.9
+      },
+      "Q_byp_m3_s": 0.0
+     }
+    }
+   },
+   "valve_constants": {
+    "X_comp": 6.300667765063818e-07,
+    "dp_comp_Pa": 1000000.0,
+    "dp_unload_Pa": 2000000.0,
+    "width_Pa": 100000.0,
+    "law": "priority",
+    "A_h_m2": [
+     0.013273229,
+     0.013273229,
+     0.00950331778,
+     0.00950331778
+    ],
+    "A_r_m2": [
+     0.00376991118,
+     0.00376991118,
+     0.00314159265,
+     0.00314159265
+    ],
+    "v_max_m_s": 0.0209243016,
+    "Q_sup_m3_s": 0.0008528333304999999
+   }
+  }
+ },
+ "events": [
+  [
+   21.6,
+   "floor_estimate_touch"
+  ],
+  [
+   23.4,
+   "soil_mode_start"
+  ],
+  [
+   37.1,
+   "crawler_liftoff_confirmed"
+  ],
+  [
+   37.1,
+   "INFO_CLEARANCE_BIAS:FL=86.7,FR=85.5,RL=125.8,RR=124.5"
+  ],
+  [
+   37.1,
+   "INFO_LOC_FLAT_SOIL_MARGIN:80"
+  ],
+  [
+   37.7,
+   "INFO_LOC_REVOKED:2.0"
+  ],
+  [
+   37.8,
+   "soil_mode_start"
+  ],
+  [
+   38.1,
+   "INFO_DIFF_SINK_HOLD:FL,RL:8.5"
+  ],
+  [
+   38.6,
+   "crawler_liftoff_confirmed"
+  ],
+  [
+   38.6,
+   "INFO_CLEARANCE_BIAS:FL=106.1,FR=90.9,RL=148.6,RR=133.4"
+  ],
+  [
+   39.8,
+   "INFO_DIFF_SINK_RELEASE:reversed"
+  ],
+  [
+   71.5,
+   "reanchor_skipped:disabled"
+  ],
+  [
+   71.5,
+   "ready_heave_tail"
+  ],
+  [
+   73.5,
+   "INFO_FLOOR_NONPLANAR"
+  ]
+ ],
+ "harness_commands_sha256": "f43e84451384d0697475a1ad25fdfdcd6b806a5798940214b3e8b7a9bd88e2b3"
+}

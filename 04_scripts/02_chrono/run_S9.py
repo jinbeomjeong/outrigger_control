@@ -5562,6 +5562,14 @@ def run_level(args) -> Path:
         elif trig["kind"] == "t":
             soil_event_driver.set_event_time(float(model.system.GetChTime()) + trig["t_loop_s"])
         soil_event_rows = SoilEventSeries(model, soil_event_driver, i_ev, every)
+    # shared-pump flow limit (--flow-eta-v, criteria 9): on from the end of the settle; option absent = None, the run,
+    # its args and its result are unchanged
+    from outrigger_sim.hydraulics.flow_limit_run import FLOW_SERIES_NAME, RecordedFlowLimiter, flow_setting_from_args
+
+    flow_setting = flow_setting_from_args(args)
+    flow = None if flow_setting is None else RecordedFlowLimiter.from_params(params, flow_setting)
+    if flow is not None:
+        model.actuator.set_flow_limit(flow)
     engine = S9Engine(model, imu_method="chrono_point")
     c2 = C2Controller.from_params(params_ctrl, config)
     # control D-1: IMU --imu-grade (10 ms samples), pressure / stroke --pressure-grade (WIKA A-10 normal default)
@@ -5721,6 +5729,11 @@ def run_level(args) -> Path:
                                            "keys": sorted(series), "rows": int(len(series["t_s"]))}}
     if scm_nodes_info is not None:  # case GIFs: key only with --record-scm-nodes
         summary["scm_nodes"] = scm_nodes_info
+    if flow is not None:  # flow_series.npz and the block only with --flow-eta-v
+        summary["flow_limit"] = {
+            **flow.meta(), "series": flow.save(d / FLOW_SERIES_NAME),
+            "summary": flow.summary([t for t, _ in phases],
+                                    tuple(str(name).rsplit(".", 1)[-1].lower() for _, name in phases))}
     if soil_event_rows is not None:  # A1 (study A): event block; judged after result.json exists (adapter reads it)
         import hashlib  # noqa: PLC0415
 
@@ -5927,6 +5940,9 @@ def build_parser() -> argparse.ArgumentParser:
                     help="case GIFs: every PERIOD_S (at the 10 Hz control instants) append the SCM node levels that "
                          "are new or moved > 0.01 mm (GetModifiedNodes(True), all terrains) to scm_nodes.npz and add "
                          "result.json scm_nodes; read-only. Absent = no attribute, the run is unchanged")
+    from outrigger_sim.hydraulics.flow_limit_run import add_flow_limit_arguments
+
+    add_flow_limit_arguments(lp)  # shared-pump flow limit (criteria 9); absent = no attribute, the run is unchanged
     lp.add_argument("--expect-controller", choices=tuple(CONTROLLER_EXPECTATIONS), default=argparse.SUPPRESS,
                     help="RV6 / FINAL rows (spec 430.5 / 431.3): before the model is built, check that the run-time C2 "
                          "preset has the settings of this controller (CONTROLLER_EXPECTATIONS) and exit otherwise; "

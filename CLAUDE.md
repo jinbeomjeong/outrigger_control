@@ -78,9 +78,10 @@
 ## 모델 규약
 
 - 4점 지지는 부정정이다. 남은 다리는 하중 분배를 정하므로, 제어 목표에 "모든 다리 접지 유지"(반력 > 0, 실린더 힘 ≥ F_min)를 포함한다.
-- **구동기 운용안 B**: 제어기 개발·대량 실행은 **L1**, 큰 경사·실 마찰·연약 지면 재판정은 **L2b**(L2 + 횡 부싱)로 병행한다.
+- **구동기 운용안 B**: 제어기 개발·대량 실행은 **L1**, 큰 경사·실 마찰·연약 지면 재판정은 **L2b**(힘 법칙 다리 + 횡 부싱)로 병행한다.
   - L1(L1-R) = 강체 위치 모터(훅에서 s_ref 적분, 속도 모터 쓰지 않음) + 유압유·접촉 직렬 유연성을 합친 집중 접촉(상태 기계·예측자) + 로드측 챔버 한쪽 방향 비선형 병렬 스프링(잠긴 상태만, 바닥 0.1 bar abs). 감쇠는 LOCK 기준 단일 값.
-  - L2b = `ChSystemNSC` 접촉 + `ChLinkMotorLinearForce` Python 힘 법칙(PyChrono 10은 C++ 유압 클래스를 노출하지 않음).
+  - L2b = `ChSystemNSC` 접촉 + `ChLinkMotorLinearForce` Python 힘 법칙(헤드 기름 강성 직렬 법칙 + 로드측 L1-R 상태 기계, `chrono/l2b_actuator.py`. PyChrono 10은 C++ 유압 클래스를 노출하지 않음).
+  - L2 = 두 챔버 기름량 단일 다리 기준 모델(Python `l2_cylinder.py`·Hopsan, 옛 치수 이력 고정). L2b에 그대로 들어가지 않는다(`l2_hydraulic_model_spec.md` 첫머리).
 - Chrono 10 SMC 접촉에는 **정지 마찰이 없다**. 그래서 L1 패드는 지면 고정 `ChLoadBodyBodyBushingSpherical` + 매 스텝 원형 Coulomb 항복 처리(`SetApplicationFrameB`로 고정점 이동)를 쓴다. `ChLoadBodyBodyBushingPlastic`은 쓰지 않는다.
 - Chrono 함정: Hooke `gn`·`gt`는 유효 질량당 값이라 고정 바닥 바디 질량을 크게(예: 1e9 kg) 둔다. 부싱 감쇠는 입력의 2배로 작용하므로 ct/2를 넣는다. `GetPos()`는 참조라 저장할 때 복사한다. 훅 입력은 다음 스텝부터 반영된다(1스텝 지연 규약).
 - 패드는 팔각(정사각 + 모서리 모따기)이고 방향은 CAD 그대로이며, 로드와 **구면(스위블) 조인트**로 잇는다. 면적은 실험 변수다(U-PAD-1~6): 타입 B `dwg_rear250`(**기본**: 전방 330 0.1071 m², 후방 250 0.0607 m², 모따기 30 mm 가정) / 타입 A `cad330`(네 다리 0.1071 m²). 형상 원본은 YAML `pad_shapes`(기본 `default_type`), 대응표 `02_params/pad_variants.json`, 실행 인자 `--pad-variant`(`outrigger_sim.pad_variants`). L1·L2b 강체 지면은 면적을 쓰지 않아 결과가 같고, SCM(S9)에서만 차이가 난다. 후방 패드는 CAD보다 2 mm 올린 위치가 완전 수축(0 mm)이다.

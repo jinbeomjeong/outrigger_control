@@ -1,0 +1,136 @@
+START 2026-11-04T12:17:36.3980027+09:00 runner=run_verdict.py workers=20 affinity=0x0FFF5555
+2026-11-04 12:17:36 start bundles=OFF,A,B,C,D,E todo=58 of 81 pending=[] workers=20
+2026-11-04 12:17:36 affinity {'requested_mask': '0xfff5555', 'set_ok': True, 'process_mask': '0xfff5555', 'system_mask': '0xfffffff'}
+C2 t=54.40 s: WARN_SUPPORT_CHANGED:G2
+C2 t=82.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=82.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=82.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=82.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+2026-11-04 12:17:55 1/58 OFF_R13 done wall 16.9 s 
+2026-11-04 12:18:23 2/58 OFF_R2 done wall 45.1 s 
+C2 t=48.10 s: relevel_predicted:RR
+C2 t=48.60 s: leg_reapproach_start:RR
+C2 t=71.10 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=71.10 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=71.10 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=71.10 s: WARN_ROD_PRESSURE_FALLBACK:RR
+2026-11-04 12:18:35 3/58 A_R12_eta0.85 done wall 39.5 s 
+C2 t=29.60 s: INFO_LOC_REVOKED:2.2
+C2 t=39.80 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=39.80 s: FAULT_LIFT_STROKE_LIMIT:soil:FR
+2026-11-04 12:18:58 4/58 A_S8_eta0.85 done wall 80.0 s 
+C2 t=37.70 s: INFO_LOC_REVOKED:2.0
+2026-11-04 12:19:02 5/58 A_R10_eta0.85 done wall 83.6 s 
+2026-11-04 12:19:02 6/58 A_R1_eta0.85 done wall 83.9 s 
+2026-11-04 12:19:02 7/58 A_R11_eta0.85 done wall 84.1 s 
+C2 t=57.30 s: WARN_SUPPORT_CHANGED:G2
+2026-11-04 12:19:04 8/58 A_R5_eta0.85 done wall 85.4 s 
+2026-11-04 12:19:04 9/58 A_R9_eta0.85 done wall 85.4 s 
+2026-11-04 12:19:04 10/58 A_R3_eta0.85 done wall 85.7 s 
+C2 t=44.00 s: INFO_LOC_REVOKED:2.0
+2026-11-04 12:19:05 11/58 A_R6_eta0.85 done wall 86.8 s 
+2026-11-04 12:19:06 12/58 A_R4_eta0.85 done wall 87.3 s 
+2026-11-04 12:19:06 13/58 A_R8_eta0.85 done wall 87.3 s 
+2026-11-04 12:19:06 14/58 A_R7_eta0.85 done wall 87.5 s 
+C2 t=86.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=86.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=86.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=86.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+2026-11-04 12:19:09 15/58 A_R13_eta0.85 done wall 45.4 s 
+2026-11-04 12:19:11 16/58 A_R2_eta0.85 done wall 93.1 s 
+C2 t=47.60 s: leg_reapproach_start:RR
+C2 t=47.60 s: relevel_predicted:RR
+C2 t=73.20 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=73.20 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=73.20 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=73.20 s: WARN_ROD_PRESSURE_FALLBACK:RR
+2026-11-04 12:19:21 17/58 A_R14_eta0.85 done wall 45.4 s 
+2026-11-04 12:19:28 18/58 A_S7_eta0.85 done wall 109.4 s 
+2026-11-04 12:19:32 19/58 A_S3_eta0.85 done wall 114.1 s 
+2026-11-04 12:19:33 20/58 A_S2_eta0.85 done wall 114.4 s 
+2026-11-04 12:19:35 21/58 A_S4_eta0.85 done wall 116.6 s 
+C2 t=26.80 s: leg_reapproach_start:FL
+C2 t=27.10 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=27.30 s: leg_reapproach_start:RR
+C2 t=28.50 s: leg_reapproach_start:FL
+C2 t=28.80 s: leg_reapproach_start:RR
+C2 t=29.20 s: leg_reapproach_start:RR
+C2 t=30.60 s: leg_reapproach_start:RL
+2026-11-04 12:19:39 22/58 A_S1_eta0.85 done wall 120.5 s 
+2026-11-04 12:19:41 23/58 A_S5_eta0.85 done wall 122.4 s 
+C2 t=26.80 s: leg_reapproach_start:FL
+C2 t=27.10 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=27.30 s: leg_reapproach_start:RR
+C2 t=28.60 s: leg_reapproach_start:RR
+C2 t=29.20 s: leg_reapproach_start:RR
+2026-11-04 12:19:44 24/58 A_R15_eta0.85 done wall 44.9 s 
+2026-11-04 12:19:45 25/58 A_R16_eta0.85 done wall 42.9 s 
+C2 t=28.60 s: INFO_LOC_REVOKED:2.1
+C2 t=46.20 s: relevel_predicted:RR
+C2 t=46.70 s: leg_reapproach_start:RR
+C2 t=55.40 s: WARN_SUPPORT_CHANGED:G2
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=68.90 s: WARN_ROD_PRESSURE_FALLBACK:RR
+2026-11-04 12:20:23 26/58 B_R12_eta0.90 done wall 38.7 s 
+C2 t=38.90 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=38.90 s: FAULT_LIFT_STROKE_LIMIT:soil:FR
+C2 t=36.50 s: INFO_LOC_REVOKED:2.1
+2026-11-04 12:20:24 27/58 B_S8_eta0.90 done wall 77.4 s 
+2026-11-04 12:20:24 28/58 B_R1_eta0.90 done wall 77.7 s 
+C2 t=84.00 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=84.00 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=84.00 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=84.00 s: WARN_ROD_PRESSURE_FALLBACK:RR
+2026-11-04 12:20:27 29/58 B_R13_eta0.90 done wall 41.2 s 
+C2 t=42.90 s: INFO_LOC_REVOKED:2.1
+2026-11-04 12:20:34 30/58 B_R3_eta0.90 done wall 84.0 s 
+2026-11-04 12:20:35 31/58 B_R4_eta0.90 done wall 82.7 s 
+2026-11-04 12:20:42 32/58 B_R2_eta0.90 done wall 95.0 s 
+2026-11-04 12:20:43 33/58 B_R5_eta0.90 done wall 82.4 s 
+2026-11-04 12:20:45 34/58 B_S1_eta0.90 done wall 102.7 s 
+2026-11-04 12:20:50 35/58 B_S2_eta0.90 done wall 107.0 s 
+2026-11-04 12:20:50 36/58 B_R6_eta0.90 done wall 82.2 s 
+2026-11-04 12:20:55 37/58 B_R8_eta0.90 done wall 81.6 s 
+2026-11-04 12:20:55 38/58 B_S3_eta0.90 done wall 110.6 s 
+2026-11-04 12:20:55 39/58 B_S7_eta0.90 done wall 109.1 s 
+2026-11-04 12:20:56 40/58 B_R7_eta0.90 done wall 83.5 s 
+2026-11-04 12:20:56 41/58 B_R10_eta0.90 done wall 77.4 s 
+2026-11-04 12:20:57 42/58 B_S4_eta0.90 done wall 113.0 s 
+2026-11-04 12:20:59 43/58 B_R11_eta0.90 done wall 77.6 s 
+2026-11-04 12:20:59 44/58 B_R9_eta0.90 done wall 84.2 s 
+C2 t=25.90 s: leg_reapproach_start:FL
+C2 t=26.20 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=26.40 s: leg_reapproach_start:RR
+C2 t=27.60 s: leg_reapproach_start:FL
+C2 t=27.90 s: leg_reapproach_start:RR
+C2 t=28.30 s: leg_reapproach_start:RR
+C2 t=29.70 s: leg_reapproach_start:RL
+C2 t=25.30 s: leg_reapproach_start:FL
+C2 t=25.60 s: WARN_D1_IMU_GYRO_MISSING
+C2 t=25.80 s: leg_reapproach_start:RR
+C2 t=27.10 s: leg_reapproach_start:RR
+C2 t=27.70 s: leg_reapproach_start:RR
+C2 t=45.70 s: leg_reapproach_start:RR
+C2 t=45.70 s: relevel_predicted:RR
+2026-11-04 12:21:06 45/58 B_S5_eta0.90 done wall 121.3 s 
+2026-11-04 12:21:06 46/58 B_R16_eta0.90 done wall 41.5 s 
+C2 t=71.30 s: WARN_ROD_PRESSURE_FALLBACK:FL
+C2 t=71.30 s: WARN_ROD_PRESSURE_FALLBACK:FR
+C2 t=71.30 s: WARN_ROD_PRESSURE_FALLBACK:RL
+C2 t=71.30 s: WARN_ROD_PRESSURE_FALLBACK:RR
+2026-11-04 12:21:08 47/58 B_R15_eta0.90 done wall 43.3 s 
+2026-11-04 12:21:08 48/58 B_R14_eta0.90 done wall 44.7 s 
+2026-11-04 12:21:30 49/58 D_R4_eta0.85_dplow done wall 62.7 s 
+2026-11-04 12:21:34 50/58 D_R4_eta0.85_dphigh done wall 58.9 s 
+2026-11-04 12:21:35 51/58 D_R4_eta0.85_proportional done wall 51.3 s 
+2026-11-04 12:21:42 52/58 E_R4_eta0.85_widthhalf done wall 51.2 s 
+2026-11-04 12:21:45 53/58 E_R4_eta0.85_widthdouble done wall 49.5 s 
+2026-11-04 12:21:45 54/58 D_S1_eta0.85_dplow done wall 70.6 s 
+2026-11-04 12:21:47 55/58 D_S1_eta0.85_proportional done wall 61.3 s 
+2026-11-04 12:21:55 56/58 D_S1_eta0.85_dphigh done wall 72.3 s 
+2026-11-04 12:22:00 57/58 E_S1_eta0.85_widthhalf done wall 68.7 s 
+2026-11-04 12:22:02 58/58 E_S1_eta0.85_widthdouble done wall 66.8 s 
+2026-11-04 12:22:03 end failed=0
+END 2026-11-04T12:22:03.1566254+09:00 exit=0 wall_s=266.8

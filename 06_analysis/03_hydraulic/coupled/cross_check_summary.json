@@ -1,0 +1,2129 @@
+{
+ "A1p": {
+  "verdict": "acceptable",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\A1p.json",
+  "worst": [
+   {
+    "quantity": "p_P",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 10977258.294195816,
+    "value_other": 10852059.475,
+    "unit": "Pa (gauge)",
+    "rel": 0.011405290450532143,
+    "verdict": "acceptable"
+   },
+   {
+    "quantity": "p_P",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 10976131.496999998,
+    "value_other": 10852059.475,
+    "unit": "Pa (gauge)",
+    "rel": 0.011303802440223084,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 309987.366,
+    "unit": "Pa (gauge)",
+    "rel": 0.0022801621497547304,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 5.245672340947749e-09,
+   "max_excess_rel_all": 5.245672340947749e-09,
+   "demand_met": true,
+   "max_speed_error_when_met_mm_s": 3.469446951953614e-15
+  },
+  "v3": {
+   "r_numpy": [
+    1.0000000000000002,
+    1.0000000000000002,
+    1.0000000000000002,
+    1.0000000000000002
+   ],
+   "r_hopsan": [
+    0.9995108776943175,
+    0.9996735231178213,
+    1.000502563084167,
+    1.0006366552794428
+   ],
+   "max_abs_dr": 0.0006366552794425662,
+   "first_slow_numpy": "FL+FR+RL+RR",
+   "first_slow_hopsan": "FL+FR+RL+RR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0008742224148745592,
+   "on_grid": false,
+   "pass": true
+  }
+ },
+ "A1c": {
+  "verdict": "acceptable",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\A1c.json",
+  "worst": [
+   {
+    "quantity": "p_P",
+    "ref": "hand",
+    "other": "numpy",
+    "value_ref": 10977258.294195816,
+    "value_other": 10780319.21945,
+    "unit": "Pa (gauge)",
+    "rel": 0.017940643234198656,
+    "verdict": "acceptable"
+   },
+   {
+    "quantity": "p_P",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 10977258.294195816,
+    "value_other": 10850164.6625,
+    "unit": "Pa (gauge)",
+    "rel": 0.011577902996326193,
+    "verdict": "acceptable"
+   },
+   {
+    "quantity": "p_h_RR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 7497874.434745001,
+    "value_other": 7414454.78,
+    "unit": "Pa (gauge)",
+    "rel": 0.011125773773755853,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 5.245672340947749e-09,
+   "max_excess_rel_all": 5.245672340947749e-09,
+   "demand_met": true,
+   "max_speed_error_when_met_mm_s": 0.003728713386611654
+  },
+  "v3": {
+   "r_numpy": [
+    0.9999820664001541,
+    1.0001153059179857,
+    0.9998217998642014,
+    0.9999460530144046
+   ],
+   "r_hopsan": [
+    0.9997450420539911,
+    0.9997784912109932,
+    1.000307556620255,
+    1.000353934461614
+   ],
+   "max_abs_dr": 0.00048575675605366797,
+   "first_slow_numpy": "FL+FR+RL+RR",
+   "first_slow_hopsan": "FL+FR+RL+RR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0017064939462156925,
+   "tie_margin_hopsan": 0.0013911075923771499,
+   "on_grid": false,
+   "pass": true
+  }
+ },
+ "A2p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\A2p.json",
+  "worst": [
+   {
+    "quantity": "Q_byp",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 4.76583285e-05,
+    "value_other": 4.751400315110091e-05,
+    "unit": "m^3/s",
+    "rel": 0.0030283342584935865,
+    "verdict": "match"
+   },
+   {
+    "quantity": "Q_byp",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 4.7658328460646204e-05,
+    "value_other": 4.751400315110091e-05,
+    "unit": "m^3/s",
+    "rel": 0.003028333435245703,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.1525421787,
+    "value_other": 310015.066125,
+    "unit": "Pa (gauge)",
+    "rel": 0.0023697247862414774,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": -0.04999999564609203,
+   "max_excess_rel_all": -0.04999999564609203,
+   "demand_met": true,
+   "max_speed_error_when_met_mm_s": 2.000000165480742e-08
+  },
+  "v3": {
+   "r_numpy": [
+    0.9999999989938668,
+    0.9999999989938668,
+    0.9999999989938668,
+    0.9999999989938668
+   ],
+   "r_hopsan": [
+    0.9997197010498251,
+    0.999865186384739,
+    1.0006318522486155,
+    1.0007626194375823
+   ],
+   "max_abs_dr": 0.0007626204437154449,
+   "first_slow_numpy": "FL+FR+RL+RR",
+   "first_slow_hopsan": "FL+FR+RL+RR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0009570816122428383,
+   "on_grid": false,
+   "pass": true
+  }
+ },
+ "A2c": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\A2c.json",
+  "worst": [
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.1525421787,
+    "value_other": 309993.459125,
+    "unit": "Pa (gauge)",
+    "rel": 0.0022998630117342287,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.1525421787,
+    "value_other": 309920.08325,
+    "unit": "Pa (gauge)",
+    "rel": 0.002062617265748411,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 309375.7048685,
+    "value_other": 309993.459125,
+    "unit": "Pa (gauge)",
+    "rel": 0.001996776885769248,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": -0.04999999564609203,
+   "max_excess_rel_all": -0.04999999564609203,
+   "demand_met": true,
+   "max_speed_error_when_met_mm_s": 0.0028764506693305936
+  },
+  "v3": {
+   "r_numpy": [
+    0.9999765152753439,
+    1.000102140712389,
+    0.9998552953944316,
+    0.9999724773095724
+   ],
+   "r_hopsan": [
+    0.9997258695738296,
+    1.0001102826560968,
+    1.0003099222874743,
+    1.0006640660699275
+   ],
+   "max_abs_dr": 0.000691588760355133,
+   "first_slow_numpy": "FL+FR+RL+RR",
+   "first_slow_hopsan": "FL+FR+RL+RR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0017531546820426236,
+   "tie_margin_hopsan": 0.001061803503902059,
+   "on_grid": false,
+   "pass": true
+  }
+ },
+ "B90p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\B90p.json",
+  "worst": [
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 309825.4,
+    "unit": "Pa (gauge)",
+    "rel": 0.0017564785208461129,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 309791.9,
+    "unit": "Pa (gauge)",
+    "rel": 0.001648163185723659,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 309382.061,
+    "value_other": 309825.4,
+    "unit": "Pa (gauge)",
+    "rel": 0.0014329822439189076,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": -1.1074196004656756e-09,
+   "max_excess_rel_all": 0.05555556053894439,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    0.8757821575273032,
+    0.9435887360751869,
+    1.0000000000000002,
+    1.0000000000000002
+   ],
+   "r_hopsan": [
+    0.8760287607400956,
+    0.9435951735660318,
+    0.9997471074494544,
+    0.9998994509235141
+   ],
+   "max_abs_dr": 0.0002528925505458357,
+   "first_slow_numpy": "FL",
+   "first_slow_hopsan": "FL",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "B90c": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\B90c.json",
+  "worst": [
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 309806.754375,
+    "unit": "Pa (gauge)",
+    "rel": 0.0016961917411313933,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 309345.94116199994,
+    "value_other": 309806.754375,
+    "unit": "Pa (gauge)",
+    "rel": 0.0014896371721223034,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 309730.329625,
+    "unit": "Pa (gauge)",
+    "rel": 0.0014490880871642182,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 0.0001853488378251722,
+   "max_excess_rel_all": 0.05555556053894439,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    0.909788428089684,
+    0.9097865657703097,
+    0.9998237031427903,
+    0.9998221594879186
+   ],
+   "r_hopsan": [
+    0.9098031489989749,
+    0.9101833378905564,
+    0.9994075960030966,
+    0.9997539638949844
+   ],
+   "max_abs_dr": 0.00041610713969375546,
+   "first_slow_numpy": "FL+FR",
+   "first_slow_hopsan": "FL+FR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0019981376806257334,
+   "tie_margin_hopsan": 0.0016198111084184674,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "B85p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\B85p.json",
+  "worst": [
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 309792.0,
+    "unit": "Pa (gauge)",
+    "rel": 0.0016484865150821581,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 309755.5,
+    "unit": "Pa (gauge)",
+    "rel": 0.0015304712992024695,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 309382.061,
+    "value_other": 309792.0,
+    "unit": "Pa (gauge)",
+    "rel": 0.0013250251119117506,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 2.220446049250313e-16,
+   "max_excess_rel_all": 0.09809877271095879,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    0.781730650450957,
+    0.8570111606496822,
+    1.0000000000000002,
+    1.0000000000000002
+   ],
+   "r_hopsan": [
+    0.7821149930280109,
+    0.8571072212035027,
+    0.9995812715679842,
+    0.9997475853626581
+   ],
+   "max_abs_dr": 0.0004187284320160689,
+   "first_slow_numpy": "FL",
+   "first_slow_hopsan": "FL",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "B85c": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\B85c.json",
+  "worst": [
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 309811.87012499996,
+    "unit": "Pa (gauge)",
+    "rel": 0.0017127324627924704,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 309730.201875,
+    "unit": "Pa (gauge)",
+    "rel": 0.0014486750339086875,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 309375.082453,
+    "value_other": 309811.87012499996,
+    "unit": "Pa (gauge)",
+    "rel": 0.0014118385635220122,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 0.00034642056027522905,
+   "max_excess_rel_all": 0.10277393825590764,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    0.8193703554559899,
+    0.8193702209289139,
+    0.9999154870991455,
+    0.9999156303012293
+   ],
+   "r_hopsan": [
+    0.8195245321259846,
+    0.8199285880744364,
+    0.9993128225970553,
+    0.9996809897667424
+   ],
+   "max_abs_dr": 0.0006026645020901222,
+   "first_slow_numpy": "FL+FR",
+   "first_slow_hopsan": "FL+FR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0019998654729239673,
+   "tie_margin_hopsan": 0.0015959440515482815,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "C190p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\C190p.json",
+  "worst": [
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 310263.663,
+    "unit": "Pa (gauge)",
+    "rel": 0.0031735114676153535,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 309382.061,
+    "value_other": 310263.663,
+    "unit": "Pa (gauge)",
+    "rel": 0.0028495575895721168,
+    "verdict": "match"
+   },
+   {
+    "quantity": "v_FR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 0.01714476374508484,
+    "value_other": 0.017106775850000002,
+    "unit": "m/s",
+    "rel": 0.0022157141182963173,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": -1.1074196004656756e-09,
+   "max_excess_rel_all": 0.05555556053894439,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    1.0000000000000002,
+    0.8193708936024896,
+    1.0000000000000002,
+    1.0000000000000002
+   ],
+   "r_hopsan": [
+    1.0009767066127861,
+    0.8175555047013956,
+    1.0018926981788088,
+    0.9992796833089629
+   ],
+   "max_abs_dr": 0.0018926981788085495,
+   "first_slow_numpy": "FR",
+   "first_slow_hopsan": "FR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "C190c": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\C190c.json",
+  "worst": [
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 310142.070125,
+    "unit": "Pa (gauge)",
+    "rel": 0.00278036600480566,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 309346.66002099996,
+    "value_other": 310142.070125,
+    "unit": "Pa (gauge)",
+    "rel": 0.0025712580958400246,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_h_RL",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 5181889.1225499995,
+    "value_other": 5195212.54,
+    "unit": "Pa (gauge)",
+    "rel": 0.0025711506238180757,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 0.0005675681081980244,
+   "max_excess_rel_all": 0.05555556053894439,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    0.999258836831222,
+    0.8911984919424565,
+    0.9995080310783749,
+    0.9011632216369715
+   ],
+   "r_hopsan": [
+    0.9997999067280662,
+    0.8895263870594383,
+    1.0013600275639627,
+    0.9009744903540682
+   ],
+   "max_abs_dr": 0.001851996485587759,
+   "first_slow_numpy": "FR",
+   "first_slow_hopsan": "FR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "C185p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\C185p.json",
+  "worst": [
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 310219.98912499996,
+    "unit": "Pa (gauge)",
+    "rel": 0.0030323010077131104,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 309382.061,
+    "value_other": 310219.98912499996,
+    "unit": "Pa (gauge)",
+    "rel": 0.0027083927306308067,
+    "verdict": "match"
+   },
+   {
+    "quantity": "Q_FR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 0.00017739970899999997,
+    "value_other": 0.00017709398475,
+    "unit": "m^3/s",
+    "rel": 0.001723363875416413,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 0.0,
+   "max_excess_rel_all": 0.09820702129453585,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    1.0000000000000002,
+    0.6387418111006392,
+    1.0000000000000002,
+    1.0000000000000002
+   ],
+   "r_hopsan": [
+    1.0007462547210115,
+    0.6376433727369436,
+    1.0016942664716413,
+    0.9988009537204797
+   ],
+   "max_abs_dr": 0.0016942664716410594,
+   "first_slow_numpy": "FR",
+   "first_slow_hopsan": "FR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "C185c": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\C185c.json",
+  "worst": [
+   {
+    "quantity": "v_RR",
+    "ref": "hand",
+    "other": "numpy",
+    "value_ref": 0.0167577274544971,
+    "value_other": 0.0168237221679,
+    "unit": "m/s",
+    "rel": 0.0039381660539650745,
+    "verdict": "match"
+   },
+   {
+    "quantity": "v_FR",
+    "ref": "hand",
+    "other": "numpy",
+    "value_ref": 0.01634839472731576,
+    "value_other": 0.0164098087106,
+    "unit": "m/s",
+    "rel": 0.003756575756127802,
+    "verdict": "match"
+   },
+   {
+    "quantity": "v_FR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 0.0164098087106,
+    "value_other": 0.0163525123375,
+    "unit": "m/s",
+    "rel": 0.0034915929923661905,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 0.0012590162253627302,
+   "max_excess_rel_all": 0.10282558961432708,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    0.9966910742894063,
+    0.7842496783453263,
+    0.9972908124807734,
+    0.8040322239834877
+   ],
+   "r_hopsan": [
+    0.9983154165504105,
+    0.7815144766153788,
+    1.0001367080132677,
+    0.8028252603804589
+   ],
+   "max_abs_dr": 0.002845895532494258,
+   "first_slow_numpy": "FR",
+   "first_slow_hopsan": "FR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "C290p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\C290p.json",
+  "worst": [
+   {
+    "quantity": "p_r_FR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 275753.17658396787,
+    "value_other": 276326.70000000007,
+    "unit": "Pa (gauge)",
+    "rel": 0.002079843369846221,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_FR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 275853.12600000005,
+    "value_other": 276326.70000000007,
+    "unit": "Pa (gauge)",
+    "rel": 0.0017167614044004788,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 308895.8125668301,
+    "value_other": 309416.6,
+    "unit": "Pa (gauge)",
+    "rel": 0.001685964690949721,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 0.0,
+   "max_excess_rel_all": 0.05555556053894439,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    0.8982971312170343,
+    0.9690498630549277,
+    0.9347615167236931,
+    0.9982305454821009
+   ],
+   "r_hopsan": [
+    0.8976791846663117,
+    0.9706617878228249,
+    0.933567598738875,
+    0.998036656095609
+   ],
+   "max_abs_dr": 0.001611924767897177,
+   "first_slow_numpy": "FL",
+   "first_slow_hopsan": "FL",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "C290c": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\C290c.json",
+  "worst": [
+   {
+    "quantity": "p_r_FR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 275728.41151577927,
+    "value_other": 276267.511375,
+    "unit": "Pa (gauge)",
+    "rel": 0.0019551842926055557,
+    "verdict": "match"
+   },
+   {
+    "quantity": "v_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 0.01955121457673366,
+    "value_other": 0.0195178184125,
+    "unit": "m/s",
+    "rel": 0.0017081375738878652,
+    "verdict": "match"
+   },
+   {
+    "quantity": "Q_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 0.00018580140510766817,
+    "value_other": 0.00018548414175,
+    "unit": "m^3/s",
+    "rel": 0.0017075401420367181,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 3.233665569979394e-05,
+   "max_excess_rel_all": 0.05555556053894439,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    0.8986454857601783,
+    0.9688752911301759,
+    0.934358654069471,
+    0.9983071391702062
+   ],
+   "r_hopsan": [
+    0.8986037178880119,
+    0.9702852172466665,
+    0.9327822860429067,
+    0.9980526191116742
+   ],
+   "max_abs_dr": 0.0015763680265643565,
+   "first_slow_numpy": "FL",
+   "first_slow_hopsan": "FL",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "C285p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\C285p.json",
+  "worst": [
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 302839.92349156394,
+    "value_other": 303711.6,
+    "unit": "Pa (gauge)",
+    "rel": 0.0028783408025802107,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 302939.61600000004,
+    "value_other": 303711.6,
+    "unit": "Pa (gauge)",
+    "rel": 0.0025483098255460203,
+    "verdict": "match"
+   },
+   {
+    "quantity": "v_RR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 0.020298164999999996,
+    "value_other": 0.020331510000000004,
+    "unit": "m/s",
+    "rel": 0.0016427593331716213,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 1.172562047457859e-09,
+   "max_excess_rel_all": 0.09740415867658458,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    0.8369846427753652,
+    0.9150867859790359,
+    0.8716370681638427,
+    0.9700761051924428
+   ],
+   "r_hopsan": [
+    0.8367949542459284,
+    0.9146489266815004,
+    0.8709198685991031,
+    0.9716697067681341
+   ],
+   "max_abs_dr": 0.001593601575691328,
+   "first_slow_numpy": "FL",
+   "first_slow_hopsan": "FL",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "C285c": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\C285c.json",
+  "worst": [
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 301275.6358682542,
+    "value_other": 301801.88075,
+    "unit": "Pa (gauge)",
+    "rel": 0.001746722333617308,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 284792.5731350571,
+    "value_other": 285217.89575,
+    "unit": "Pa (gauge)",
+    "rel": 0.001493447003413286,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 301369.3550295,
+    "value_other": 301801.88075,
+    "unit": "Pa (gauge)",
+    "rel": 0.0014352014008116372,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 4.809732283805879e-05,
+   "max_excess_rel_all": 0.10277390659673213,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    0.8304282775995896,
+    0.9202859341768923,
+    0.8808160166031294,
+    0.9626368719021446
+   ],
+   "r_hopsan": [
+    0.8304350974802783,
+    0.9203754018612302,
+    0.8807860684652857,
+    0.9626821938266534
+   ],
+   "max_abs_dr": 8.94676843379294e-05,
+   "first_slow_numpy": "FL",
+   "first_slow_hopsan": "FL",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "C390p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\C390p.json",
+  "worst": [
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 310121.307375,
+    "unit": "Pa (gauge)",
+    "rel": 0.0027132339384080655,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 309382.061,
+    "value_other": 310121.307375,
+    "unit": "Pa (gauge)",
+    "rel": 0.0023894286973542007,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 309857.30675,
+    "unit": "Pa (gauge)",
+    "rel": 0.0018596424109629673,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": -1.1074196004656756e-09,
+   "max_excess_rel_all": 0.05555556053894439,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    1.0000000000000002,
+    0.8193708936024896,
+    1.0000000000000002,
+    1.0000000000000002
+   ],
+   "r_hopsan": [
+    0.9997799249506022,
+    0.8186670020969965,
+    1.0012457431428397,
+    1.0000448378405498
+   ],
+   "max_abs_dr": 0.0012457431428394283,
+   "first_slow_numpy": "FR",
+   "first_slow_hopsan": "FR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "C390c": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\C390c.json",
+  "worst": [
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 306389.13729604863,
+    "value_other": 308081.220125,
+    "unit": "Pa (gauge)",
+    "rel": 0.005522659334088543,
+    "verdict": "match"
+   },
+   {
+    "quantity": "v_RR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 0.0206449593501,
+    "value_other": 0.0207554009625,
+    "unit": "m/s",
+    "rel": 0.005349567927314258,
+    "verdict": "match"
+   },
+   {
+    "quantity": "Q_RR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 0.0001961999652085,
+    "value_other": 0.0001972452825,
+    "unit": "m^3/s",
+    "rel": 0.00532781588615046,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 2.844739765817117e-05,
+   "max_excess_rel_all": 0.05555556053894439,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    0.921757382073649,
+    0.9071198619943557,
+    0.9999791678255442,
+    0.9866508232895859
+   ],
+   "r_hopsan": [
+    0.9173097340634586,
+    0.9067033503325997,
+    1.0015857956679861,
+    0.9919279921780263
+   ],
+   "max_abs_dr": 0.005277168888440431,
+   "first_slow_numpy": "FR",
+   "first_slow_hopsan": "FR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "C385p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\C385p.json",
+  "worst": [
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 310075.4,
+    "unit": "Pa (gauge)",
+    "rel": 0.0025648019172823363,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 309382.061,
+    "value_other": 310075.4,
+    "unit": "Pa (gauge)",
+    "rel": 0.0022410446092413754,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 309799.4000000001,
+    "unit": "Pa (gauge)",
+    "rel": 0.0016724128876169338,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 0.0,
+   "max_excess_rel_all": 0.09820698494511237,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    1.0000000000000002,
+    0.6387418111006392,
+    1.0000000000000002,
+    1.0000000000000002
+   ],
+   "r_hopsan": [
+    0.9994364638674487,
+    0.6387195260079792,
+    1.0010368140304529,
+    0.9997815172000771
+   ],
+   "max_abs_dr": 0.0010368140304526374,
+   "first_slow_numpy": "FR",
+   "first_slow_hopsan": "FR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "C385c": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\C385c.json",
+  "worst": [
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 310164.129125,
+    "unit": "Pa (gauge)",
+    "rel": 0.002851689228013446,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 309375.421613,
+    "value_other": 310164.129125,
+    "unit": "Pa (gauge)",
+    "rel": 0.0025493541403123926,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 298791.4042273236,
+    "value_other": 299294.40312499995,
+    "unit": "Pa (gauge)",
+    "rel": 0.0016834450073191173,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 4.3812781097551934e-05,
+   "max_excess_rel_all": 0.10282557437102047,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    0.8639879836682791,
+    0.8099331729720856,
+    0.9999654786726391,
+    0.9507452455253207
+   ],
+   "r_hopsan": [
+    0.8643170769918304,
+    0.8086501642275616,
+    1.0014404886017851,
+    0.95075240765447
+   ],
+   "max_abs_dr": 0.001475009929146065,
+   "first_slow_numpy": "FR",
+   "first_slow_hopsan": "FR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "D1p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\D1p.json",
+  "worst": [
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 309987.35625,
+    "unit": "Pa (gauge)",
+    "rel": 0.002280130625142372,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 309957.98625,
+    "unit": "Pa (gauge)",
+    "rel": 0.0021851687925290592,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 309382.061,
+    "value_other": 309987.35625,
+    "unit": "Pa (gauge)",
+    "rel": 0.0019564652457338978,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": -0.2913793072932933,
+   "max_excess_rel_all": -0.2913793072932933,
+   "demand_met": true,
+   "max_speed_error_when_met_mm_s": 3.469446951953614e-15
+  },
+  "v3": {
+   "r_numpy": [
+    NaN,
+    1.0000000000000002,
+    1.0000000000000002,
+    1.0000000000000002
+   ],
+   "r_hopsan": [
+    NaN,
+    0.9996754204689917,
+    1.000502948036697,
+    1.000636531331879
+   ],
+   "max_abs_dr": 0.000636531331878798,
+   "first_slow_numpy": "FR+RL+RR",
+   "first_slow_hopsan": "FR+RL+RR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0010388891371126974,
+   "on_grid": false,
+   "pass": true
+  }
+ },
+ "D2p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\D2p.json",
+  "worst": [
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 309799.20000000007,
+    "unit": "Pa (gauge)",
+    "rel": 0.0016717662288997473,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 309763.39999999997,
+    "unit": "Pa (gauge)",
+    "rel": 0.0015560143185297413,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 309382.061,
+    "value_other": 309799.20000000007,
+    "unit": "Pa (gauge)",
+    "rel": 0.0013482973080332634,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": -0.5827586198322591,
+   "max_excess_rel_all": -0.5827586198322591,
+   "demand_met": true,
+   "max_speed_error_when_met_mm_s": 6.482244958880384e-16
+  },
+  "v3": {
+   "r_numpy": [
+    NaN,
+    NaN,
+    1.0,
+    1.0
+   ],
+   "r_hopsan": [
+    NaN,
+    NaN,
+    0.9996171150582154,
+    0.9997805613736711
+   ],
+   "max_abs_dr": 0.0003828849417846225,
+   "first_slow_numpy": "RL+RR",
+   "first_slow_hopsan": "RL+RR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0018365536845442731,
+   "on_grid": false,
+   "pass": true
+  }
+ },
+ "D2c": {
+  "verdict": "mismatch",
+  "exit": 1,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\D2c.json",
+  "worst": [
+   {
+    "quantity": "p_r_FR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 200000.0,
+    "value_other": 217332.60437500002,
+    "unit": "Pa (gauge)",
+    "rel": 0.08666302187500012,
+    "verdict": "mismatch"
+   },
+   {
+    "quantity": "p_r_FR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 200043.09352900003,
+    "value_other": 217332.60437500002,
+    "unit": "Pa (gauge)",
+    "rel": 0.08642893159165002,
+    "verdict": "mismatch"
+   },
+   {
+    "quantity": "p_r_FL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 200000.0,
+    "value_other": 183096.98762499998,
+    "unit": "Pa (gauge)",
+    "rel": 0.0845150618750001,
+    "verdict": "mismatch"
+   }
+  ],
+  "warnings": [
+   "numpy:p_r_FL: declared GAUGE but min = -2.677 bar < -1 atm (below vacuum: absolute/gauge mix-up?)",
+   "numpy:p_r_FR: declared GAUGE but min = -2.501 bar < -1 atm (below vacuum: absolute/gauge mix-up?)"
+  ],
+  "v2": {
+   "max_excess_rel_steady": -0.5827586198322591,
+   "max_excess_rel_all": -0.5827586198322591,
+   "demand_met": true,
+   "max_speed_error_when_met_mm_s": 0.0004602880039963897
+  },
+  "v3": {
+   "r_numpy": [
+    NaN,
+    NaN,
+    1.0000219977714333,
+    1.0000165155910197
+   ],
+   "r_hopsan": [
+    NaN,
+    NaN,
+    0.9996629708896415,
+    0.9997261126390169
+   ],
+   "max_abs_dr": 0.00035902688179179076,
+   "first_slow_numpy": "RL+RR",
+   "first_slow_hopsan": "RL+RR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.001994517819586372,
+   "tie_margin_hopsan": 0.001936858250624507,
+   "on_grid": false,
+   "pass": true
+  }
+ },
+ "D3p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\D3p.json",
+  "worst": [
+   {
+    "quantity": "v_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 0.0,
+    "value_other": -2.345101902500724e-06,
+    "unit": "m/s",
+    "rel": 0.002345101902500724,
+    "verdict": "match"
+   },
+   {
+    "quantity": "v_RL",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 0.0,
+    "value_other": -2.345101902500724e-06,
+    "unit": "m/s",
+    "rel": 0.002345101902500724,
+    "verdict": "match"
+   },
+   {
+    "quantity": "v_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 0.0,
+    "value_other": -2.339090819000719e-06,
+    "unit": "m/s",
+    "rel": 0.002339090819000719,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": -0.4172413749220687,
+   "max_excess_rel_all": -0.4172413749220687,
+   "demand_met": true,
+   "max_speed_error_when_met_mm_s": 0.0
+  },
+  "v3": {
+   "r_numpy": [
+    1.0,
+    1.0,
+    NaN,
+    NaN
+   ],
+   "r_hopsan": [
+    0.9996868903858661,
+    0.9998321759996043,
+    NaN,
+    NaN
+   ],
+   "max_abs_dr": 0.0003131096141338885,
+   "first_slow_numpy": "FL+FR",
+   "first_slow_hopsan": "FL+FR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0018547143862617244,
+   "on_grid": false,
+   "pass": true
+  }
+ },
+ "D3c": {
+  "verdict": "mismatch",
+  "exit": 1,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\D3c.json",
+  "worst": [
+   {
+    "quantity": "p_r_RR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 199939.5267195,
+    "value_other": 219338.22187499996,
+    "unit": "Pa (gauge)",
+    "rel": 0.0970228122161901,
+    "verdict": "mismatch"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 200000.0,
+    "value_other": 219338.22187499996,
+    "unit": "Pa (gauge)",
+    "rel": 0.09669110937499979,
+    "verdict": "mismatch"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 200000.0,
+    "value_other": 180851.63225000002,
+    "unit": "Pa (gauge)",
+    "rel": 0.09574183874999988,
+    "verdict": "mismatch"
+   }
+  ],
+  "warnings": [
+   "numpy:p_r_RL: declared GAUGE but min = -4.05 bar < -1 atm (below vacuum: absolute/gauge mix-up?)",
+   "numpy:p_r_RR: declared GAUGE but min = -4.202 bar < -1 atm (below vacuum: absolute/gauge mix-up?)"
+  ],
+  "v2": {
+   "max_excess_rel_steady": -0.4172413749220687,
+   "max_excess_rel_all": -0.4172413749220687,
+   "demand_met": true,
+   "max_speed_error_when_met_mm_s": 0.0014391001332894615
+  },
+  "v3": {
+   "r_numpy": [
+    1.0000092647718466,
+    0.9999312235045738,
+    NaN,
+    NaN
+   ],
+   "r_hopsan": [
+    0.9998205249285981,
+    0.9997620693505808,
+    NaN,
+    NaN
+   ],
+   "max_abs_dr": 0.0001887398432485199,
+   "first_slow_numpy": "FL+FR",
+   "first_slow_hopsan": "FL+FR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.001921958732727047,
+   "tie_margin_hopsan": 0.0019415444219825773,
+   "on_grid": false,
+   "pass": true
+  }
+ },
+ "D485p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\D485p.json",
+  "worst": [
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 310008.796125,
+    "unit": "Pa (gauge)",
+    "rel": 0.0023494520354589853,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 309282.15254217864,
+    "value_other": 309979.96225,
+    "unit": "Pa (gauge)",
+    "rel": 0.002256223652369279,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 309382.061,
+    "value_other": 310008.796125,
+    "unit": "Pa (gauge)",
+    "rel": 0.002025764270152711,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": -0.20801216692598068,
+   "max_excess_rel_all": -0.20801216692598068,
+   "demand_met": true,
+   "max_speed_error_when_met_mm_s": 3.469446951953614e-15
+  },
+  "v3": {
+   "r_numpy": [
+    1.0000000000000002,
+    NaN,
+    1.0000000000000002,
+    1.0000000000000002
+   ],
+   "r_hopsan": [
+    0.9996655928573395,
+    NaN,
+    1.000602905787959,
+    1.0007340732974488
+   ],
+   "max_abs_dr": 0.0007340732974485675,
+   "first_slow_numpy": "FL+RL+RR",
+   "first_slow_hopsan": "FL+RL+RR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0009315195598906811,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "E1p": {
+  "verdict": "mismatch",
+  "exit": 1,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\E1p.json",
+  "worst": [
+   {
+    "quantity": "Q_byp",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 4.76583285e-05,
+    "value_other": 4.2971760000000005e-05,
+    "unit": "m^3/s",
+    "rel": 0.0983368206041887,
+    "verdict": "mismatch"
+   },
+   {
+    "quantity": "Q_byp",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 4.765832846063747e-05,
+    "value_other": 4.2971760000000005e-05,
+    "unit": "m^3/s",
+    "rel": 0.09833681985947641,
+    "verdict": "mismatch"
+   },
+   {
+    "quantity": "v_RR",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 0.0198780865,
+    "value_other": 0.020037540000000003,
+    "unit": "m/s",
+    "rel": 0.008021571895262836,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": -0.04999999564609203,
+   "max_excess_rel_all": -0.04999999564609203,
+   "demand_met": true,
+   "max_speed_error_when_met_mm_s": 2.000000165480742e-08
+  },
+  "v3": {
+   "r_numpy": [
+    0.9999999989938668,
+    0.9999999989938668,
+    0.9999999989938668,
+    0.9999999989938668
+   ],
+   "r_hopsan": [
+    0.9990096370704395,
+    1.0073479647979715,
+    1.0079073747788474,
+    1.0080215708810585
+   ],
+   "max_abs_dr": 0.008021571887191659,
+   "first_slow_numpy": "FL+FR+RL+RR",
+   "first_slow_hopsan": "FL",
+   "first_slow_same": false,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": false,
+   "pass": false
+  }
+ },
+ "T090p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\T090p.json",
+  "worst": [
+   {
+    "quantity": "p_P",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 1045314.2446613717,
+    "value_other": 1048639.0,
+    "unit": "Pa (gauge)",
+    "rel": 0.0031806276013251512,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_P",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 1045344.43,
+    "value_other": 1048639.0,
+    "unit": "Pa (gauge)",
+    "rel": 0.0031516597835604754,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 301266.9208037158,
+    "value_other": 301851.0,
+    "unit": "Pa (gauge)",
+    "rel": 0.001938743207272731,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 1.107419711487978e-09,
+   "max_excess_rel_all": 0.05555556053894439,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    0.9364426194277374,
+    0.9364426194277374,
+    0.9626284157555821,
+    0.9626284157555821
+   ],
+   "r_hopsan": [
+    0.9362381777177214,
+    0.9362381777177214,
+    0.9629143368875929,
+    0.9629143368875929
+   ],
+   "max_abs_dr": 0.00028592113201075797,
+   "first_slow_numpy": "FL+FR",
+   "first_slow_hopsan": "FL+FR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "T085p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\T085p.json",
+  "worst": [
+   {
+    "quantity": "p_P",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 929730.537159136,
+    "value_other": 933560.0000000001,
+    "unit": "Pa (gauge)",
+    "rel": 0.004118895408733489,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_P",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 929760.8879999998,
+    "value_other": 933560.0000000001,
+    "unit": "Pa (gauge)",
+    "rel": 0.004086117246954267,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 290363.38180484466,
+    "value_other": 290772.9,
+    "unit": "Pa (gauge)",
+    "rel": 0.0014103644633489214,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 0.0,
+   "max_excess_rel_all": 0.10647059490510302,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    0.8842892610571049,
+    0.8842892610571049,
+    0.9093289116039123,
+    0.9093289116039123
+   ],
+   "r_hopsan": [
+    0.8844959489591757,
+    0.8844959489591757,
+    0.9090401373300793,
+    0.9090401373300793
+   ],
+   "max_abs_dr": 0.00028877427383300347,
+   "first_slow_numpy": "FL+FR",
+   "first_slow_hopsan": "FL+FR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "T190p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\T190p.json",
+  "worst": [
+   {
+    "quantity": "p_P",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 1366950.098550178,
+    "value_other": 1371225.0,
+    "unit": "Pa (gauge)",
+    "rel": 0.0031273280965822808,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_P",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 1366980.4600000004,
+    "value_other": 1371225.0,
+    "unit": "Pa (gauge)",
+    "rel": 0.003105048041432553,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 298682.12100034446,
+    "value_other": 299140.60000000003,
+    "unit": "Pa (gauge)",
+    "rel": 0.0015350065083241076,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": 1.107419933532583e-09,
+   "max_excess_rel_all": 0.05555556053894439,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    0.9452955839634813,
+    0.9452955839634813,
+    0.9502635299426194,
+    0.9502635299426194
+   ],
+   "r_hopsan": [
+    0.9454728945409581,
+    0.9454728945409581,
+    0.9500159374494968,
+    0.9500159374494968
+   ],
+   "max_abs_dr": 0.0002475924931226725,
+   "first_slow_numpy": "FL+FR",
+   "first_slow_hopsan": "FL+FR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0020000000000000018,
+   "tie_margin_hopsan": 0.0020000000000000018,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "T185p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\T185p.json",
+  "worst": [
+   {
+    "quantity": "p_P",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 1252350.19578818,
+    "value_other": 1256172.0,
+    "unit": "Pa (gauge)",
+    "rel": 0.0030517056847783035,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_P",
+    "ref": "numpy",
+    "other": "hopsan",
+    "value_ref": 1252380.5800000003,
+    "value_other": 1256172.0,
+    "unit": "Pa (gauge)",
+    "rel": 0.0030273704819023077,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "hopsan",
+    "value_ref": 287657.5259777896,
+    "value_other": 288065.0,
+    "unit": "Pa (gauge)",
+    "rel": 0.0014165248095815946,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": -1.1102230246251565e-16,
+   "max_excess_rel_all": 0.09876374554920364,
+   "demand_met": false,
+   "max_speed_error_when_met_mm_s": null
+  },
+  "v3": {
+   "r_numpy": [
+    0.894111056017277,
+    0.894111056017277,
+    0.8956108671268628,
+    0.8956108671268628
+   ],
+   "r_hopsan": [
+    0.8942773984867431,
+    0.8942773984867431,
+    0.895378510506654,
+    0.895378510506654
+   ],
+   "max_abs_dr": 0.00023235662020881787,
+   "first_slow_numpy": "FL+FR+RL+RR",
+   "first_slow_hopsan": "FL+FR+RL+RR",
+   "first_slow_same": true,
+   "first_slow_overlap_rule": true,
+   "tie_margin_numpy": 0.0005001888904142548,
+   "tie_margin_hopsan": 0.0008988879800891914,
+   "on_grid": true,
+   "pass": true
+  }
+ },
+ "R1p": {
+  "verdict": "match",
+  "exit": 0,
+  "xcheck": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\xcheck\\R1p.json",
+  "worst": [
+   {
+    "quantity": "p_r_RL",
+    "ref": "hand",
+    "other": "numpy",
+    "value_ref": 309282.15254217864,
+    "value_other": 309382.061,
+    "unit": "Pa (gauge)",
+    "rel": 0.00032303337583544,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_r_RR",
+    "ref": "hand",
+    "other": "numpy",
+    "value_ref": 309282.15254217864,
+    "value_other": 309382.061,
+    "unit": "Pa (gauge)",
+    "rel": 0.00032303337583544,
+    "verdict": "match"
+   },
+   {
+    "quantity": "p_h_RR",
+    "ref": "hand",
+    "other": "numpy",
+    "value_ref": 7497744.333034158,
+    "value_other": 7497777.360000001,
+    "unit": "Pa (gauge)",
+    "rel": 4.404920250214558e-06,
+    "verdict": "match"
+   }
+  ],
+  "warnings": [],
+  "v2": {
+   "max_excess_rel_steady": -0.3848658993960108,
+   "max_excess_rel_all": -0.3848658993960108,
+   "demand_met": true,
+   "max_speed_error_when_met_mm_s": 3.469446951953614e-15
+  }
+ }
+}

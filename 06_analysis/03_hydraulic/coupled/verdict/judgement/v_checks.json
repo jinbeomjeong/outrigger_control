@@ -1,0 +1,71 @@
+{
+ "V5": {
+  "n_off": 23,
+  "same": 19,
+  "no_stored": [
+   "R12",
+   "R13",
+   "R16",
+   "R2"
+  ],
+  "different": []
+ },
+ "V2b": {
+  "n": 32,
+  "balance_max": 6.28680487192072e-06,
+  "balance_1ms_output_max": 0.0026238024536819975,
+  "excess_mean_max": 6.235584220999887e-05,
+  "speed_err_max": 0.0001781114450970265,
+  "limits": {
+   "balance_cm3": 0.01,
+   "excess_mean": 0.0001,
+   "speed_rel_vmax": 0.002,
+   "t_skip_s": 0.02
+  },
+  "keys": [
+   "name",
+   "eta_v",
+   "dt_s",
+   "wall_s",
+   "finite",
+   "balance_after_20ms_cm3",
+   "balance_after_20ms_1ms_output_cm3",
+   "excess_mean_steady",
+   "demand_met",
+   "speed_error_rel_vmax",
+   "excess_inst_max_rel_all",
+   "excess_inst_max_rel_after_20ms",
+   "excess_inst_max_rel_steady",
+   "excess_volume_all_cm3",
+   "excess_volume_after_20ms_cm3",
+   "excess_stroke_all_mm",
+   "excess_stroke_after_20ms_mm",
+   "Q_byp_t0_L_min",
+   "Q_byp_t_dt_L_min",
+   "first_20ms_balance_cm3",
+   "stored_csv_max_rel_diff",
+   "pass"
+  ],
+  "excess_volume_max_cm3": 4.0242195380475545
+ },
+ "V3": {
+  "n_grid": 21,
+  "pass": 21,
+  "max_dr": 0.005277168888440431,
+  "off_grid_fail": [
+   "E1p"
+  ],
+  "same_sets": 21
+ },
+ "V4_dt": {
+  "n": 12,
+  "not_match": {},
+  "worst_change": 0.00046201480378536884
+ },
+ "E4_record": {
+  "n": 48,
+  "flag_orig": 16,
+  "flag_rev3": 0,
+  "swaps_rev3_max": 0
+ }
+}

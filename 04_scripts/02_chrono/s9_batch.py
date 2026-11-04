@@ -233,7 +233,71 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     # JOURNAL-AUGER (cad 2026-10-31, journal table soil 4 x auger 3 on the final controller): the 6 missing soil cells
     # (FINAL1 / FINAL2 / FINAL5 rows unchanged) + 2 rigid flat F_s 4 cells (run_S8C set jaug, K24_top_flat_Fs4 form)
     out["JOURNAL-AUGER"] = journal_auger_rows()
+    # COUPLED_eta085 (user decision 2026-11-04, criteria 9.1 revision 5): the 10 re-judgement rows, stored final-controller
+    # runs + the shared-pump flow limit at eta_v 0.85, nominal compensator; run --resume <folder> continues a stopped batch
+    out[COUPLED_BATCH] = coupled_rows(out["FINAL-REP"], out["FINAL-REP-X"], out["FINAL-R-REP"])
     return out
+
+
+COUPLED_BATCH = "COUPLED_eta085"
+COUPLED_FLOW_ARGS = {"flow_eta_v": 0.85, "flow_dp_comp_bar": 10.0, "flow_dp_unload_bar": 20.0, "flow_width_bar": 1.0,
+                     "flow_law": "priority"}
+"""Criteria 9.1 revision 5: eta_v 0.85, nominal compensator (8.3)."""
+COUPLED_SOIL_ROWS: tuple[tuple[str, str, str, float, dict[str, float]], ...] = (
+    ("S1", "batch_FINAL-REP_20261030_223359", "P3b_J1_B_top_Fs4", 13691.0, {"pcore": 11000.0, "ecore": 13700.0}),
+    ("S6", "batch_FINAL-REP-X_20261031_020716", "P3b_J2_B_top_Fs4_m1p1_t180", 11954.0,
+     {"pcore": 12000.0, "ecore": 15000.0}),
+    ("S8", "batch_FINAL-REP_20261030_223359", "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0", 14880.0,
+     {"pcore": 15000.0, "ecore": 18700.0}),
+)
+"""(criteria id, stored batch, case, stored wall [s], pool estimates [s]). Stored walls: batch.json; S1 ran on the E pool
+(P estimate = its FINAL-REP est_s), S6 and S8 on the P pool (E estimate = P x 1.25, the est_pool_s ratio of FINAL-REP)."""
+COUPLED_RIGID_ROWS: tuple[tuple[str, str, str, float], ...] = (
+    ("R2", "final_K24_top_fdown3.5_Fs4_20261030_224211", "K24_top_fdown3.5_Fs4", 691.0),
+    ("R4", "final_K24_top_roll5.5_Fs4_20261030_230357", "K24_top_roll5.5_Fs4", 627.0),
+    ("R16", "final_G1L_RE1bF_FL_top_o050_Fs4_20261031_004637", "G1L_RE1bF_FL_top_o050_Fs4", 1037.0),
+    ("R12", "final_E_G4_Fs4_20261030_233941", "E_G4_Fs4", 881.0),
+    ("R6", "final_K0V_top_rpB_Fs0_20261031_010357", "K0V_top_rpB_Fs0", 470.0),
+    ("R8", "final_A_middle_rpB_Fs0_20261031_011149", "A_middle_rpB_Fs0", 464.0),
+    ("R9", "final_A_bottom_rpB_Fs0_20261031_011936", "A_bottom_rpB_Fs0", 499.0),
+)
+"""(criteria id, stored folder under 07_results/S8, case, stored batch.json wall [s])."""
+COUPLED_FLOW_EXTRA_S = 180.0
+"""Added to the stored wall (estimate; measured 2026-11-04 on 26 s short rows, 8 processes at once: R4 +167 s, R6 +180 s,
+soil coarse grid +95 s, about 1 ms per solved step, 16 s of the run saturated, 1e4 steps/s)."""
+
+
+def coupled_flow_argv() -> list[str]:
+    a = COUPLED_FLOW_ARGS
+    return ["--flow-eta-v", f"{a['flow_eta_v']:g}", "--flow-dp-comp-bar", f"{a['flow_dp_comp_bar']:g}",
+            "--flow-dp-unload-bar", f"{a['flow_dp_unload_bar']:g}", "--flow-width-bar", f"{a['flow_width_bar']:g}",
+            "--flow-law", a["flow_law"]]
+
+
+def coupled_rows(final_rep: list[dict], final_rep_x: list[dict], final_r_rep: list[dict]) -> list[dict]:
+    """The rows of the stored runs, argv unchanged + :func:`coupled_flow_argv`; rigid rows in their own folder
+    ``07_results/S8/coupled_eta085_<case>_<stamp>``. ``s9_batch check-sources COUPLED_eta085`` accepts exactly the flow
+    arguments as the difference from the stored ``result.json`` args of the soil rows."""
+    soil_rows = {c["case"]: c for c in [*final_rep, *final_rep_x]}
+    rigid_rows = {c["case"]: c for c in final_r_rep}
+    rows: list[dict] = []
+    for rid, batch, case, wall, pools in COUPLED_SOIL_ROWS:
+        rows.append({**soil_rows[case], "argv": soil_rows[case]["argv"] + coupled_flow_argv(),
+                     "est_s": pools["pcore"] + COUPLED_FLOW_EXTRA_S,
+                     "est_pool_s": {k: v + COUPLED_FLOW_EXTRA_S for k, v in pools.items()},
+                     "source_run": f"{batch}/{case}", "source_expected_diffs": dict(COUPLED_FLOW_ARGS),
+                     "criteria_id": rid, "stored_wall_s": wall, "group": COUPLED_BATCH, "rep_bundle": COUPLED_BATCH,
+                     "note": f"{COUPLED_BATCH} {rid} (criteria 9.1): flow limit on; pair 07_results/S9/{batch}/{case}"})
+    for rid, folder, case, wall in COUPLED_RIGID_ROWS:
+        row = rigid_rows[case]
+        argv = list(row["argv"])
+        argv[argv.index("--tag") + 1] = f"coupled_eta085_{case}"
+        rows.append({**row, "argv": argv + coupled_flow_argv(), "est_s": wall + COUPLED_FLOW_EXTRA_S,
+                     "fixed_pcore": True, "criteria_id": rid, "stored_wall_s": wall, "group": COUPLED_BATCH,
+                     "rep_bundle": COUPLED_BATCH, "controller": "final_SGS_R4",
+                     "source_run": f"{folder}/{case}",
+                     "note": f"{COUPLED_BATCH} {rid} (criteria 9.1): flow limit on; pair 07_results/S8/{folder}/{case}"})
+    return rows
 
 
 FINAL_ROW_KEYS = ("controller", "source_run", "priority", "pair_case", "pair_run", "optional", "requires",
@@ -615,7 +679,7 @@ CODE_HASH_FILES = ("03_src/outrigger_sim/control/c2.py", "03_src/outrigger_sim/c
 ENTRY_META_KEYS = ("note", "priority", "controller", "source_run", "pair_case", "pair_run", "optional", "requires",
                    "harness_case", "family", "s8_group", "also_in", "planned_pool", "est_pool_s", "depends_on", "k",
                    "direction", "h9_result", "rep_bundle", "rep_source", "rep_variable", "r4_x11_check",
-                   "expected_note", "rep_role", "source_expected_diffs")
+                   "expected_note", "rep_role", "source_expected_diffs", "criteria_id", "stored_wall_s")
 """Row keys copied into the batch.json case entries (when present)."""
 
 
@@ -701,31 +765,56 @@ def select_rows(rows: list[dict], only: list[str] | None = None, row_filter: dic
     return [c for c in rows if (not only or c["case"] in only) and row_passes(c, row_filter or {})]
 
 
+def row_finished(row: dict, folder: Path) -> bool:
+    """Whether a row of an earlier launch into ``folder`` ended well (``--resume``): an ``s8c`` row by its log
+    (:func:`s8c_case_check`), any other row by ``<folder>/<case>/result.json``, the last file run_S9 writes."""
+    if row.get("s8c"):
+        log = folder / f"{row['case']}.log"
+        return log.is_file() and s8c_case_check(log.read_text("utf-8", errors="replace"), row["case"])["ok"]
+    return (folder / row["case"] / "result.json").is_file()
+
+
 def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, parallel_e: int = 0,
               e_cases: list[str] | None = None, order: str = "given",
               order_cases: list[str] | None = None, rv6_k: float | None = None, rv6_dir: str | None = None,
-              row_filter: dict[str, set[str]] | None = None, controller_check: bool = True) -> Path:
+              row_filter: dict[str, set[str]] | None = None, controller_check: bool = True,
+              resume: str | None = None) -> Path:
     """Run the batch ``name`` with ``parallel`` P-pool slots and ``parallel_e`` E-pool slots
     (:func:`schedule_cases`). Each case process gets ``OUTRIGGER_PLACEMENT`` of its pool. ``rv6_k``: X6-rb ratio of
-    RV6; ``row_filter`` / ``only``: :func:`select_rows`; ``controller_check`` False drops ``--expect-controller``."""
+    RV6; ``row_filter`` / ``only``: :func:`select_rows`; ``controller_check`` False drops ``--expect-controller``.
+    ``resume``: an earlier batch folder; finished rows (:func:`row_finished`) are skipped, the others start from the
+    beginning in the same folder (a case has no mid-run checkpoint) and ``batch.json`` is rewritten."""
     rv6 = {k: v for k, v in (("rv6_k", rv6_k), ("rv6_dir", rv6_dir)) if v is not None}
     cases = select_rows((batches(**rv6) if rv6 else batches())[name], only, row_filter)
     if not cases:
         raise SystemExit(f"batch {name}: no rows left after --only / --row-filter")
+    stamp = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+    folder = Path(resume) if resume else ROOT / "07_results" / "S9" / f"batch_{name}_{stamp}"
+    if resume and not folder.is_dir():
+        raise SystemExit(f"--resume {resume}: no such batch folder")
+    finished = [c for c in cases if resume and row_finished(c, folder)]
+    former = {}
+    if finished and (folder / "batch.json").is_file():
+        former = {e["case"]: e for e in json.loads((folder / "batch.json").read_text("utf-8")).get("cases", [])}
+    done_names = {c["case"] for c in finished}
+    cases = [c for c in cases if c["case"] not in done_names]
+    e_cases = None if e_cases is None else [n for n in e_cases if n not in done_names]
+    order_cases = None if order_cases is None else [n for n in order_cases if n not in done_names]
     queues = schedule_cases(cases, e_cases=e_cases, order=order, order_cases=order_cases, parallel_e=parallel_e)
     slots = {"pcore": int(parallel), "ecore": int(parallel_e)}
-    stamp = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
-    folder = ROOT / "07_results" / "S9" / f"batch_{name}_{stamp}"
     folder.mkdir(parents=True, exist_ok=True)
     progress = folder / "progress.log"
     _log(progress, f"# batch {name} {len(cases)} cases, parallel P {slots['pcore']} / E {slots['ecore']}, order {order}"
                    f"{' (explicit list first)' if order_cases else ''}, started "
                    f"{_dt.datetime.now().isoformat(timespec='seconds')}")
+    for c in finished:
+        _log(progress, f"RESUME_SKIP {c['case']} (finished in an earlier launch)")
     for pool in POOLS:
         if queues[pool]:
             _log(progress, f"# queue {pool}: {' '.join(c['case'] for c in queues[pool])}")
     running: list[tuple[dict, subprocess.Popen, float, object, str]] = []
-    done: list[dict] = []
+    done: list[dict] = [former.get(c["case"]) or {"case": c["case"], "argv": c["argv"], "rc": 0, "wall_s": 0.0,
+                                                  "est_s": c["est_s"], "pool": "earlier_launch"} for c in finished]
     code_at_launch: dict[str, dict | None] = {}
     failed = False
     finished_ok: set[str] = set()
@@ -915,7 +1004,7 @@ def main(argv) -> None:
         only = (a.only or []) + (read_only_file(a.only_file) or [])
         run_batch(a.batch, only=only or None, rv6_k=a.rv6_k, rv6_dir=a.rv6_dir,
                   row_filter=parse_row_filter(a.row_filter), controller_check=not a.no_controller_check,
-                  **schedule_args(a, argv))
+                  resume=a.resume, **schedule_args(a, argv))
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -953,6 +1042,8 @@ def build_parser() -> argparse.ArgumentParser:
                         '"parallel_p": N, "parallel_e": M} (e.g. the compute-scheduler-expert LPT plan); '
                         "command-line values given explicitly win")
     r.add_argument("--only", nargs="*")
+    r.add_argument("--resume", default=None, metavar="BATCH_FOLDER",
+                   help="continue in this earlier batch folder: finished rows are skipped, the others start again")
     r.add_argument("--allow-env-override", action="store_true",
                    help="start even with OUTRIGGER_L1_FALLBACK_RATIO_SOURCE set (B(iii) comparison batch; "
                         "the L1 cases of the batch, e.g. P3-10 m3_run, take the override)")

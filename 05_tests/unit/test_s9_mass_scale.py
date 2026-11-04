@@ -58,7 +58,7 @@ def test_existing_batch_definitions_unchanged() -> None:
     # RV1 .. RV5: test_s9_rv{1..5}.py; RV6 / FINAL* (incl. FINAL-REP / FINAL-R-REP): test_s9_final.py
     assert set(b) == set(BATCH_DEF_SHA256) | {"RV1", "RV2", "RV3", "RV4", "RV5", "RV6", "FINAL1", "FINAL2", "FINAL3",
                                               "FINAL4", "FINAL5", "FINAL6", "FINAL-R", "FINAL-REP", "FINAL-R-REP",
-                                              "FINAL-REP-X", "JOURNAL-AUGER"}
+                                              "FINAL-REP-X", "JOURNAL-AUGER", "COUPLED_eta085"}
     for name, want in BATCH_DEF_SHA256.items():
         rows = [{**r, "argv": _norm(s9_batch, r["argv"])} for r in b[name]]
         assert hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest() == want, name

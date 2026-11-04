@@ -696,6 +696,21 @@ JAUG_LEVELS = ("middle", "bottom")
 """Journal auger table (cad 2026-10-31): rigid flat F_s 4 kN cases at these auger levels, the A1 row
 K24_top_flat_Fs4 otherwise unchanged (set ``jaug``)."""
 
+S4CONV_GROUP = "S4C"
+S4CONV_BASE = ("K24", "roll5.5", 4.0)
+S4CONV_CASES: tuple[tuple[str, tuple[tuple[str, Any], ...], str], ...] = (
+    ("K24_top_roll5.5_Fs4_psor100",
+     (("contact.rigid_floor.L2b_NSC.solver_max_iterations", 100),),
+     "PSOR max iterations 50 -> 100 (dt 1e-4 s unchanged)"),
+    ("K24_top_roll5.5_Fs4_dt5e-5",
+     (("simulation.L2b_NSC.dt_s", 5.0e-5),),
+     "L2b dt 1e-4 -> 5e-5 s (PSOR 50 unchanged)"),
+)
+"""S4(a) numerical convergence check (dynamics-expert design, 2026-11-02): K24_top_roll5.5_Fs4 (rigid,
+roll 5.5 deg, top, F_s 4 kN, L2b-NSC, pilot check) with one solver setting changed through
+``extra_overrides`` (``load_params(overrides=...)``); compared with the final run
+07_results/S8/final_K24_top_roll5.5_Fs4_20261030_230357 (set ``s4conv``, group S4C outside MAIN_GROUPS)."""
+
 
 def s8_cases() -> list[S8Case]:
     """The 80 cases of spec rev. 39 202 + 6 CB placeholders + 2 smoke cases."""
@@ -854,6 +869,13 @@ def s8_cases() -> list[S8Case]:
     for lv in JAUG_LEVELS:
         add(f"JA_{lv}_flat_Fs4", JAUG_GROUP, 7, _d8_scenario(lv, "flat"), fs_kN=4.0,
             notes=(f"journal auger table: K24_top_flat_Fs4 with auger {lv} (cad 2026-10-31)",))
+    # S4(a) convergence (2026-11-02): K24_top_roll5.5_Fs4 with one solver setting changed; appended last
+    # (earlier order and definitions unchanged); group S4C (not in MAIN_GROUPS), set s4conv. pair_fs0 None: the
+    # comparison is with the base case run, not an F_s 0 twin.
+    _grp, _floor, _fs = S4CONV_BASE
+    for cid, extra, note in S4CONV_CASES:
+        add(cid, S4CONV_GROUP, 8, _d8_scenario("top", _floor), fs_kN=_fs, extra_overrides=extra,
+            notes=(f"S4(a) convergence: {_grp}_top_{_floor}_{_fs_tag(_fs)} with {note}",))
     ids = [c.case_id for c in out]
     if len(ids) != len(set(ids)):
         dup = sorted({i for i in ids if ids.count(i) > 1})
@@ -898,6 +920,8 @@ def case_set(name: str) -> list[S8Case]:
         "c75": [c for c in main if c.case_id in C75_CASE_IDS],
         # journal auger table (cad 2026-10-31): K24_top_flat_Fs4 at auger middle / bottom (2)
         "jaug": [c for c in cases if c.group == JAUG_GROUP],
+        # S4(a) convergence (2026-11-02): K24_top_roll5.5_Fs4 at PSOR 100 / dt 5e-5 s (2)
+        "s4conv": [c for c in cases if c.group == S4CONV_GROUP],
     }
     if name not in sets:
         raise KeyError(f"unknown set {name!r}; sets {tuple(sets)}")
@@ -905,7 +929,7 @@ def case_set(name: str) -> list[S8Case]:
 
 
 SET_NAMES = ("p1", "p1r", "p2", "p3", "rest", "all", "cb", "smoke", "mlj", "mlj_c29",
-             "mlj_c67", "mlj_c68", "g1", "c74", "c75", "jaug")
+             "mlj_c67", "mlj_c68", "g1", "c74", "c75", "jaug", "s4conv")
 G1_CASE_IDS = frozenset(c[0] for c in G1_CASES)
 C74_CASE_IDS = frozenset(c[0] for c in C74_CASES)
 C75_CASE_IDS = frozenset(("K0V_top_rpB_Fs0", "K0_top_fdown3.2_Fs0", "K0V_top_roll5.5_Fs0",
@@ -1404,8 +1428,11 @@ def g1_event_state(ev: dict[str, Any] | None, state: dict[str, Any], t0: float,
                     "judgeable)"}
 
 
-def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None):
-    """Run one L2b S8 case (module docstring). Returns (summary, run_meta)."""
+def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
+               flow_limit: dict[str, Any] | None = None):
+    """Run one L2b S8 case (module docstring). ``flow_limit``: settings of the shared-pump flow limit
+    (``FlowLimitSetting.to_dict``), on from the end of the crawler settle; None = off, nothing below
+    runs differently. Returns (summary, run_meta)."""
     import numpy as np
 
     from outrigger_sim.chrono.l2b_pad_record_s8 import L2bPadRecorderS8
@@ -1428,6 +1455,12 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
     check_settle(start)
     from outrigger_sim.chrono.l2b_engine import L2bEngine
 
+    flow = None
+    if flow_limit is not None:
+        from outrigger_sim.hydraulics.flow_limit_run import FlowLimitSetting, RecordedFlowLimiter
+
+        flow = RecordedFlowLimiter.from_params(params, FlowLimitSetting.from_dict(flow_limit))
+        model.actuator.set_flow_limit(flow)
     t0 = float(model.system.GetChTime())
     engine = L2bEngine(model, imu_method="chrono_point")
     leg_sensors = st.leg_sensor_config_for(sc, t0) if bcase.sensor_model else LegSensorConfig()
@@ -1640,6 +1673,8 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
                "ground_patches": None if patches is None else patches.meta(),
                "controller_settle_map_meta": settle_meta,
                "lifted_reapproach": reapproach_settings_meta(c2)}  # C-S8-36
+    if flow is not None:  # key only with the limit (a run without it keeps its meta)
+        s8_meta["flow_limit"] = flow.meta()
     settings = {**asdict(sc), "snapshot": None, "start_t_s": t0, **c2_meta,
                 "reanchor_expected": expect, "bundle_c": bundle,
                 "s7c": {"engine": "L2b_NSC", "case_id": case.case_id,
@@ -1751,6 +1786,12 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None)
                    "n_control": res.n_control,
                    "us_per_step": wall / max(res.n_steps, 1) * 1e6},
     }
+    if flow is not None:  # flow_series.npz and the block only with the limit
+        from outrigger_sim.hydraulics.flow_limit_run import FLOW_SERIES_NAME
+
+        summary["flow_limit"] = {
+            **flow.meta(), "series": flow.save(case_dir / FLOW_SERIES_NAME),
+            "summary": flow.summary([t + t0 for t, _ in phases], tuple(name for _, name in phases))}
     engine.close()
     return summary, run_meta
 
@@ -2582,7 +2623,8 @@ def job_case(case, case_dir):
     else:
         c = case_table()[case.case_id]
         if c.engine == "L2b_NSC":
-            summary, run_meta = job_l2b_s8(c, d, duration_s=s.get("duration_s"))
+            flow_kw = {"flow_limit": s["flow_limit"]} if s.get("flow_limit") else {}
+            summary, run_meta = job_l2b_s8(c, d, duration_s=s.get("duration_s"), **flow_kw)
         else:
             summary, run_meta = s6c.job_bundle_c(c.base, d, duration_s=s.get("duration_s"))
             summary["settings"]["s8"] = {**c.to_meta(), "crawler_contact": "l1r_flexible",
@@ -2885,13 +2927,18 @@ def _batch_dir(tag: str) -> Path:
     return d
 
 
-def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, duration_s: float):
+def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, duration_s: float,
+              flow_limit: dict[str, Any] | None = None):
     from outrigger_sim.batch import Case
 
     l1 = [c for c in cases if c.engine == "L1R" and c.base.blocked_in(s6c.STATES)]
     if l1:
         raise SystemExit(f"L1 twins without a start snapshot (run `snaps`): "
                          f"{[c.case_id for c in l1]}")
+    if flow_limit is not None:
+        off_l2b = [c.case_id for c in cases if c.engine != "L2b_NSC"]
+        if off_l2b:
+            raise SystemExit(f"--flow-eta-v: run_S8C wires the flow limit on L2b cases only: {off_l2b}")
     batch_dir = _batch_dir(f"{tag}_check" if check else tag)
     from outrigger_sim.chrono import s8_plant_adapter as plant
 
@@ -2902,9 +2949,14 @@ def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, durati
             "c2_readiness": s6c.rerun34_readiness(),
             "env": {k: os.environ.get(k) for k in ("OUTRIGGER_ROD_SIDE_MECHANICS",
                                                     "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS")}}
+    flow_settings: dict[str, Any] = {}
+    if flow_limit is not None:  # keys only with the limit (a batch without it keeps its files)
+        meta["flow_limit"] = flow_limit
+        flow_settings["flow_limit"] = flow_limit
     (batch_dir / "batch_meta.json").write_text(json.dumps(s6c._plain(meta), indent=1), "utf-8")
     table = {c.case_id: c for c in cases}
-    jobs = [Case(c.case_id, {"duration_s": duration_s if check else None}) for c in cases]
+    jobs = [Case(c.case_id, {"duration_s": duration_s if check else None, **flow_settings})
+            for c in cases]
     t0 = time.perf_counter()
     outs = run_cases_mixed(jobs, job_case, batch_dir, layout=layout,
                            timeout_s=CHECK_TIMEOUT_S if check else CASE_TIMEOUT_S,
@@ -3849,7 +3901,14 @@ def main(argv):
     ap.add_argument("--allow-env-override", action="store_true",
                     help="run / check: start even with OUTRIGGER_L1_FALLBACK_RATIO_SOURCE set "
                          "(B(iii) comparison batch; the L1R cases take the override)")
+    from outrigger_sim.hydraulics.flow_limit_run import add_flow_limit_arguments, flow_setting_from_args
+
+    add_flow_limit_arguments(ap)
     args = ap.parse_args(argv)
+    flow_setting = flow_setting_from_args(args)
+    if flow_setting is not None and args.action not in ("run", "check"):
+        raise SystemExit("--flow-eta-v only with run / check")
+    flow_limit = None if flow_setting is None else flow_setting.to_dict()
     if args.action in ("run", "check") and not args.dry_run:
         from outrigger_sim.chrono.fallback_ratio import refuse_env_override
 
@@ -3984,11 +4043,12 @@ def main(argv):
     require_fault_reground(cases)  # C-S8-68: head-fault cases only after P-S8-24
     if args.action == "check":
         run_batch(cases, tag=tag, layout=args.workers, check=True,
-                  duration_s=args.duration)
+                  duration_s=args.duration, flow_limit=flow_limit)
         return
     if not args.approved:
         raise SystemExit("S8 main run needs the user's confirmation: add --approved")
-    run_batch(cases, tag=tag, layout=args.workers, check=False, duration_s=0.0)
+    run_batch(cases, tag=tag, layout=args.workers, check=False, duration_s=0.0,
+              flow_limit=flow_limit)
 
 
 if __name__ == "__main__":

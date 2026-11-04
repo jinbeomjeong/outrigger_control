@@ -1,0 +1,416 @@
+{
+"quantities": [
+{
+"name": "v_FL",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 0.001,
+"unit": "m/s",
+"vars": {
+"hand": "v_FL",
+"numpy": {
+"var": "v_FL",
+"unit": "m/s"
+},
+"hopsan": {
+"var": "MassFL#P2#Velocity",
+"unit": "m/s",
+"scale": 1.0
+}
+},
+"kind": "flow"
+},
+{
+"name": "Q_FL",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 1e-06,
+"unit": "m^3/s",
+"vars": {
+"hand": "Q_in_FL",
+"numpy": {
+"var": "Q_in_FL",
+"unit": "m^3/s"
+},
+"hopsan": {
+"var": "SpoolFL#PA#Flow",
+"unit": "m^3/s",
+"scale": 1.0
+}
+},
+"kind": "flow"
+},
+{
+"name": "p_h_FL",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 100000.0,
+"unit": "Pa",
+"vars": {
+"hand": "p_h_FL",
+"numpy": {
+"var": "p_h_FL",
+"unit": "Pa"
+},
+"hopsan": {
+"var": "SpoolFL#PA#Pressure",
+"unit": "Pa",
+"scale": 1.0
+}
+},
+"kind": "pressure"
+},
+{
+"name": "p_r_FL",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 100000.0,
+"unit": "Pa",
+"vars": {
+"hand": "p_r_FL",
+"numpy": {
+"var": "p_r_FL",
+"unit": "Pa"
+},
+"hopsan": {
+"var": "SpoolFL#PB#Pressure",
+"unit": "Pa",
+"scale": 1.0
+}
+},
+"kind": "pressure"
+},
+{
+"name": "v_FR",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 0.001,
+"unit": "m/s",
+"vars": {
+"hand": "v_FR",
+"numpy": {
+"var": "v_FR",
+"unit": "m/s"
+},
+"hopsan": {
+"var": "MassFR#P2#Velocity",
+"unit": "m/s",
+"scale": 1.0
+}
+},
+"kind": "flow"
+},
+{
+"name": "Q_FR",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 1e-06,
+"unit": "m^3/s",
+"vars": {
+"hand": "Q_in_FR",
+"numpy": {
+"var": "Q_in_FR",
+"unit": "m^3/s"
+},
+"hopsan": {
+"var": "SpoolFR#PA#Flow",
+"unit": "m^3/s",
+"scale": 1.0
+}
+},
+"kind": "flow"
+},
+{
+"name": "p_h_FR",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 100000.0,
+"unit": "Pa",
+"vars": {
+"hand": "p_h_FR",
+"numpy": {
+"var": "p_h_FR",
+"unit": "Pa"
+},
+"hopsan": {
+"var": "SpoolFR#PA#Pressure",
+"unit": "Pa",
+"scale": 1.0
+}
+},
+"kind": "pressure"
+},
+{
+"name": "p_r_FR",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 100000.0,
+"unit": "Pa",
+"vars": {
+"hand": "p_r_FR",
+"numpy": {
+"var": "p_r_FR",
+"unit": "Pa"
+},
+"hopsan": {
+"var": "SpoolFR#PB#Pressure",
+"unit": "Pa",
+"scale": 1.0
+}
+},
+"kind": "pressure"
+},
+{
+"name": "v_RL",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 0.001,
+"unit": "m/s",
+"vars": {
+"hand": "v_RL",
+"numpy": {
+"var": "v_RL",
+"unit": "m/s"
+},
+"hopsan": {
+"var": "MassRL#P2#Velocity",
+"unit": "m/s",
+"scale": 1.0
+}
+},
+"kind": "flow"
+},
+{
+"name": "Q_RL",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 1e-06,
+"unit": "m^3/s",
+"vars": {
+"hand": "Q_in_RL",
+"numpy": {
+"var": "Q_in_RL",
+"unit": "m^3/s"
+},
+"hopsan": {
+"var": "SpoolRL#PA#Flow",
+"unit": "m^3/s",
+"scale": 1.0
+}
+},
+"kind": "flow"
+},
+{
+"name": "p_h_RL",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 100000.0,
+"unit": "Pa",
+"vars": {
+"hand": "p_h_RL",
+"numpy": {
+"var": "p_h_RL",
+"unit": "Pa"
+},
+"hopsan": {
+"var": "SpoolRL#PA#Pressure",
+"unit": "Pa",
+"scale": 1.0
+}
+},
+"kind": "pressure"
+},
+{
+"name": "p_r_RL",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 100000.0,
+"unit": "Pa",
+"vars": {
+"hand": "p_r_RL",
+"numpy": {
+"var": "p_r_RL",
+"unit": "Pa"
+},
+"hopsan": {
+"var": "SpoolRL#PB#Pressure",
+"unit": "Pa",
+"scale": 1.0
+}
+},
+"kind": "pressure"
+},
+{
+"name": "v_RR",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 0.001,
+"unit": "m/s",
+"vars": {
+"hand": "v_RR",
+"numpy": {
+"var": "v_RR",
+"unit": "m/s"
+},
+"hopsan": {
+"var": "MassRR#P2#Velocity",
+"unit": "m/s",
+"scale": 1.0
+}
+},
+"kind": "flow"
+},
+{
+"name": "Q_RR",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 1e-06,
+"unit": "m^3/s",
+"vars": {
+"hand": "Q_in_RR",
+"numpy": {
+"var": "Q_in_RR",
+"unit": "m^3/s"
+},
+"hopsan": {
+"var": "SpoolRR#PA#Flow",
+"unit": "m^3/s",
+"scale": 1.0
+}
+},
+"kind": "flow"
+},
+{
+"name": "p_h_RR",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 100000.0,
+"unit": "Pa",
+"vars": {
+"hand": "p_h_RR",
+"numpy": {
+"var": "p_h_RR",
+"unit": "Pa"
+},
+"hopsan": {
+"var": "SpoolRR#PA#Pressure",
+"unit": "Pa",
+"scale": 1.0
+}
+},
+"kind": "pressure"
+},
+{
+"name": "p_r_RR",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 100000.0,
+"unit": "Pa",
+"vars": {
+"hand": "p_r_RR",
+"numpy": {
+"var": "p_r_RR",
+"unit": "Pa"
+},
+"hopsan": {
+"var": "SpoolRR#PB#Pressure",
+"unit": "Pa",
+"scale": 1.0
+}
+},
+"kind": "pressure"
+},
+{
+"name": "p_P",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 100000.0,
+"unit": "Pa",
+"vars": {
+"hand": "p_P",
+"numpy": {
+"var": "p_P",
+"unit": "Pa"
+},
+"hopsan": {
+"var": "Pump#P2#Pressure",
+"unit": "Pa"
+}
+},
+"kind": "pressure"
+},
+{
+"name": "Q_byp",
+"metric": "mean",
+"window": [
+4.0,
+5.0
+],
+"floor": 1e-06,
+"unit": "m^3/s",
+"vars": {
+"hand": "Q_byp",
+"numpy": {
+"var": "Q_byp",
+"unit": "m^3/s"
+},
+"hopsan": {
+"var": "Unloader#P2#Flow",
+"unit": "m^3/s"
+}
+},
+"kind": "flow"
+}
+]
+}

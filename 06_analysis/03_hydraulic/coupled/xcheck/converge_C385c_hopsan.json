@@ -1,0 +1,235 @@
+{
+ "mode": "converge",
+ "ratio": 2.0,
+ "rows": [
+  {
+   "quantity": "v_FL",
+   "metric": "mean",
+   "unit": "m/s",
+   "values": [
+    0.018085231925,
+    0.018084880587499998
+   ],
+   "rel_changes": [
+    1.942713960995727e-05
+   ],
+   "rel": 1.942713960995727e-05,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  },
+  {
+   "quantity": "p_h_FL",
+   "metric": "mean",
+   "unit": "Pa (gauge)",
+   "values": [
+    9097988.4725,
+    9098063.02125
+   ],
+   "rel_changes": [
+    8.19391444376169e-06
+   ],
+   "rel": 8.19391444376169e-06,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  },
+  {
+   "quantity": "v_FR",
+   "metric": "mean",
+   "unit": "m/s",
+   "values": [
+    0.01692044065,
+    0.0169218629375
+   ],
+   "rel_changes": [
+    8.405029075424895e-05
+   ],
+   "rel": 8.405029075424895e-05,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  },
+  {
+   "quantity": "p_h_FR",
+   "metric": "mean",
+   "unit": "Pa (gauge)",
+   "values": [
+    9209587.31,
+    9209514.4
+   ],
+   "rel_changes": [
+    7.916812638910582e-06
+   ],
+   "rel": 7.916812638910582e-06,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  },
+  {
+   "quantity": "v_RL",
+   "metric": "mean",
+   "unit": "m/s",
+   "values": [
+    0.020954443687499998,
+    0.020952902375
+   ],
+   "rel_changes": [
+    7.356081140519498e-05
+   ],
+   "rel": 7.356081140519498e-05,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  },
+  {
+   "quantity": "p_h_RL",
+   "metric": "mean",
+   "unit": "Pa (gauge)",
+   "values": [
+    5422361.921250001,
+    5422240.866250001
+   ],
+   "rel_changes": [
+    2.2325640447511716e-05
+   ],
+   "rel": 2.2325640447511716e-05,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  },
+  {
+   "quantity": "v_RR",
+   "metric": "mean",
+   "unit": "m/s",
+   "values": [
+    0.0198938309875,
+    0.0198938991625
+   ],
+   "rel_changes": [
+    3.4269300071659116e-06
+   ],
+   "rel": 3.4269300071659116e-06,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  },
+  {
+   "quantity": "p_h_RR",
+   "metric": "mean",
+   "unit": "Pa (gauge)",
+   "values": [
+    8994619.4925,
+    8994734.78125
+   ],
+   "rel_changes": [
+    1.2817359578030418e-05
+   ],
+   "rel": 1.2817359578030418e-05,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  },
+  {
+   "quantity": "p_P",
+   "metric": "mean",
+   "unit": "Pa (gauge)",
+   "values": [
+    9993483.924999999,
+    9993384.8375
+   ],
+   "rel_changes": [
+    9.915309137969528e-06
+   ],
+   "rel": 9.915309137969528e-06,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  }
+ ],
+ "verdict": "match",
+ "warnings": [],
+ "notes": [],
+ "sources": [
+  {
+   "label": "run1",
+   "kind": "hopsan",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\hopsan\\C385c.csv",
+   "format": "hopsan-rows",
+   "pressure_ref": "absolute",
+   "p_atm_Pa": 100000.0,
+   "n_samples": 2001
+  },
+  {
+   "label": "run2",
+   "kind": "hopsan",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\hopsan\\C385c_dt2.csv",
+   "format": "hopsan-rows",
+   "pressure_ref": "absolute",
+   "p_atm_Pa": 100000.0,
+   "n_samples": 2001
+  }
+ ],
+ "tolerances": {
+  "hand_sim": [
+   0.01,
+   0.05
+  ],
+  "sim_sim": [
+   0.02,
+   0.05
+  ],
+  "transient": [
+   0.05,
+   0.1
+  ],
+  "omega_h": [
+   0.05,
+   0.1
+  ],
+  "step": [
+   0.01,
+   0.03
+  ],
+  "balance": [
+   0.01,
+   0.03
+  ]
+ }
+}

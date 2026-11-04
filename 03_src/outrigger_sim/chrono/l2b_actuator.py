@@ -59,7 +59,7 @@ import numpy as np
 import pychrono as ch
 from numpy.typing import ArrayLike, NDArray
 
-from outrigger_sim.actuation import SATURATION_STOP_S, SpeedReference
+from outrigger_sim.actuation import SATURATION_STOP_S, FlowLimit, SpeedReference
 from outrigger_sim.chrono.actuators import leg_force_limits_N
 from outrigger_sim.hydraulics.counterbalance import Counterbalance
 from outrigger_sim.hydraulics.l2b_rod_side import L2bRodSide
@@ -432,6 +432,11 @@ class L2bForceActuator:
         output is the flow / ``A_p`` that integrates into ``s_ref`` and drives the dashpot."""
         self.reference.configure_valve(tau_s=tau_s, amp_ramp=amp_ramp, amp_ramp_s=amp_ramp_s)
 
+    def set_flow_limit(self, flow_limit: FlowLimit | None) -> None:
+        """Shared-pump flow limit on the speed reference (``SpeedReference.set_flow_limit``, default
+        none). It reads the force law C judges: ``F`` on the S7 path, ``F - f`` on the friction path."""
+        self.reference.set_flow_limit(flow_limit)
+
     @property
     def valve_state_m_s(self) -> NDArray[np.float64]:
         return self.reference.valve_state_m_s
@@ -508,7 +513,7 @@ class L2bForceActuator:
         if self.seal_friction is not None:
             self._friction_hook(t_s, dt_s, s, ds, s_ref_now, u_acting)
             return
-        self.reference.advance(dt_s, cylinder_force_N=self._acting_force)
+        self.reference.advance(dt_s, cylinder_force_N=self._acting_force, t_s=t_s)
         u = self.reference.u_applied_m_s
         self._monitor_piston(t_s, s, self._acting_force)
         if self.rod_side is None:
@@ -535,7 +540,7 @@ class L2bForceActuator:
         oil = self._oil
         assert sf is not None and oil is not None
         fp_acting = self._acting_force - self._acting_f
-        self.reference.advance(dt_s, cylinder_force_N=fp_acting)
+        self.reference.advance(dt_s, cylinder_force_N=fp_acting, t_s=t_s)
         u = self.reference.u_applied_m_s
         if not sf.armed or oil.arm_count != self._oil_arm_seen:
             # arming (2.6): s_p = s + F_spr / k_out, f = 0, stuck (ASSUMPTION f = 0)

@@ -1,0 +1,1920 @@
+{
+"name": "coupled_four_leg",
+"simulation": {
+"start_s": 0.0,
+"timestep_s": 1e-05,
+"stop_s": 5.0,
+"num_samples": 2001
+},
+"components": [
+{
+"name": "TankP",
+"typename": "HydraulicTankC",
+"parameters": {
+"p": 100000.0
+}
+},
+{
+"name": "TankT",
+"typename": "HydraulicTankC",
+"parameters": {
+"p": 300000.0
+}
+},
+{
+"name": "Pump",
+"typename": "HydraulicFixedDisplacementPump",
+"parameters": {
+"D_p#Value": 3e-05,
+"n_p#Value": 199.63075917988627,
+"C_lp#Value": 0.0
+}
+},
+{
+"name": "Gallery",
+"typename": "HydraulicVolumeMultiPort",
+"parameters": {
+"V#Value": 0.0005,
+"Beta_e#Value": 1000000000.0,
+"P1#Pressure": 10100000.0
+}
+},
+{
+"name": "Unloader",
+"typename": "HydraulicPressureControlledValve",
+"parameters": {
+"p_ref#Value": 2000000.0,
+"p_h#Value": 0.0,
+"tao": 0.0001,
+"k_cs": 2.6e-08,
+"k_cf": 1.9e-08,
+"q_nom": 0.003,
+"p_nom": 7000000.0
+}
+},
+{
+"name": "LSsource",
+"typename": "HydraulicPressureSourceC",
+"parameters": {
+"p#Value": 300000.0
+}
+},
+{
+"name": "LSfloor",
+"typename": "SignalConstant",
+"parameters": {
+"y#Value": 300000.0
+}
+},
+{
+"name": "LSrelief",
+"typename": "SignalConstant",
+"parameters": {
+"y#Value": 21100000.0
+}
+},
+{
+"name": "LSmax",
+"typename": "SignalMax",
+"parameters": {}
+},
+{
+"name": "LSmin",
+"typename": "SignalMin",
+"parameters": {}
+},
+{
+"name": "SumZ",
+"typename": "SignalSum",
+"parameters": {}
+},
+{
+"name": "NegZ",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": -1.0
+}
+},
+{
+"name": "FBodyZ",
+"typename": "MechanicForceTransformer",
+"parameters": {
+"F#Value": 0.0
+}
+},
+{
+"name": "FFreeZ",
+"typename": "MechanicForceTransformer",
+"parameters": {
+"F#Value": 0.0
+}
+},
+{
+"name": "BodyZ",
+"typename": "MechanicTranslationalMass",
+"parameters": {
+"m": 38400.8366,
+"B#Value": 0.0,
+"k#Value": 0.0
+}
+},
+{
+"name": "PosZ",
+"typename": "MechanicPositionSensor",
+"parameters": {}
+},
+{
+"name": "VelZ",
+"typename": "MechanicSpeedSensor",
+"parameters": {}
+},
+{
+"name": "SumR",
+"typename": "SignalSum",
+"parameters": {}
+},
+{
+"name": "NegR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": -1.0
+}
+},
+{
+"name": "FBodyR",
+"typename": "MechanicForceTransformer",
+"parameters": {
+"F#Value": 0.0
+}
+},
+{
+"name": "FFreeR",
+"typename": "MechanicForceTransformer",
+"parameters": {
+"F#Value": 0.0
+}
+},
+{
+"name": "BodyR",
+"typename": "MechanicTranslationalMass",
+"parameters": {
+"m": 533505.361,
+"B#Value": 0.0,
+"k#Value": 0.0
+}
+},
+{
+"name": "PosR",
+"typename": "MechanicPositionSensor",
+"parameters": {}
+},
+{
+"name": "VelR",
+"typename": "MechanicSpeedSensor",
+"parameters": {}
+},
+{
+"name": "SumP",
+"typename": "SignalSum",
+"parameters": {}
+},
+{
+"name": "NegP",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": -1.0
+}
+},
+{
+"name": "FBodyP",
+"typename": "MechanicForceTransformer",
+"parameters": {
+"F#Value": 0.0
+}
+},
+{
+"name": "FFreeP",
+"typename": "MechanicForceTransformer",
+"parameters": {
+"F#Value": 0.0
+}
+},
+{
+"name": "BodyP",
+"typename": "MechanicTranslationalMass",
+"parameters": {
+"m": 688692.429,
+"B#Value": 0.0,
+"k#Value": 0.0
+}
+},
+{
+"name": "PosP",
+"typename": "MechanicPositionSensor",
+"parameters": {}
+},
+{
+"name": "VelP",
+"typename": "MechanicSpeedSensor",
+"parameters": {}
+},
+{
+"name": "CompFL",
+"typename": "HydraulicPressureCompensatingValve",
+"parameters": {
+"p_ref#Value": 1000000.0,
+"p_h#Value": 0.0,
+"tao": 0.0001,
+"k_cs": 3.3e-07,
+"k_cf": 1.9e-07,
+"q_nom": 0.001667
+}
+},
+{
+"name": "VmidFL",
+"typename": "HydraulicVolumeMultiPort",
+"parameters": {
+"V#Value": 0.001,
+"Beta_e#Value": 1000000000.0,
+"P1#Pressure": 10100000.0
+}
+},
+{
+"name": "SpoolFL",
+"typename": "Hydraulic43Valve",
+"parameters": {
+"C_q#Value": 0.67,
+"rho#Value": 860.0,
+"d#Value": 0.002730368414990875,
+"f_pa#Value": 1.0,
+"f_pb#Value": 1.0,
+"f_at#Value": 1.0,
+"f_bt#Value": 1.0,
+"x_pa#Value": 0.0,
+"x_pb#Value": 0.0,
+"x_at#Value": 0.0,
+"x_bt#Value": 0.0,
+"x_vmax#Value": 0.001,
+"omega_h": 2000.0,
+"delta_h": 1.0
+}
+},
+{
+"name": "CylFL",
+"typename": "HydraulicCylinderC",
+"parameters": {
+"A_1#Value": 0.013273229,
+"A_2#Value": 0.00376991118,
+"s_l#Value": 0.7,
+"V_1#Value": 0.00094866145,
+"V_2#Value": 0.00047349555900000004,
+"B_p#Value": 0.0,
+"Beta_e#Value": 1000000000.0,
+"c_leak#Value": 0.0,
+"use_sl": false,
+"P1#Pressure": 9100000.0,
+"P2#Pressure": 300000.0,
+"P3#Position": -0.4011
+}
+},
+{
+"name": "MassFL",
+"typename": "MechanicTranslationalMass",
+"parameters": {
+"m": 106.783666,
+"B#Value": 0.0,
+"k#Value": 0.0
+}
+},
+{
+"name": "LoadFL",
+"typename": "MechanicForceTransformer",
+"parameters": {
+"F#Value": 0.0,
+"P1#Position": 0.4011
+}
+},
+{
+"name": "CmdFL",
+"typename": "SignalRamp",
+"parameters": {
+"y_0#Value": 0.0,
+"y_A#Value": 0.001,
+"t_start#Value": 0.0,
+"t_end#Value": 0.1
+}
+},
+{
+"name": "GateFL",
+"typename": "SignalConstant",
+"parameters": {
+"y#Value": 1.0
+}
+},
+{
+"name": "PSensFL",
+"typename": "HydraulicPressureSensor",
+"parameters": {}
+},
+{
+"name": "LSgatedFL",
+"typename": "SignalMultiply",
+"parameters": {}
+},
+{
+"name": "SPosFL",
+"typename": "MechanicPositionSensor",
+"parameters": {}
+},
+{
+"name": "SVelFL",
+"typename": "MechanicSpeedSensor",
+"parameters": {}
+},
+{
+"name": "TankTFL",
+"typename": "HydraulicTankC",
+"parameters": {
+"p": 300000.0
+}
+},
+{
+"name": "WrFL",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 1.32516232581
+}
+},
+{
+"name": "WpFL",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": -1.833609497
+}
+},
+{
+"name": "WSumFL",
+"typename": "SignalSum",
+"parameters": {}
+},
+{
+"name": "DWrFL",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 1.32516232581
+}
+},
+{
+"name": "DWpFL",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": -1.833609497
+}
+},
+{
+"name": "DWSumFL",
+"typename": "SignalSum",
+"parameters": {}
+},
+{
+"name": "S0FL",
+"typename": "SignalConstant",
+"parameters": {
+"y#Value": 0.4011
+}
+},
+{
+"name": "ComprnFL",
+"typename": "SignalSub",
+"parameters": {}
+},
+{
+"name": "RateFL",
+"typename": "SignalSubtract",
+"parameters": {}
+},
+{
+"name": "KFL",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 216648305.16451868
+}
+},
+{
+"name": "CFL",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 34403.519
+}
+},
+{
+"name": "dFFL",
+"typename": "SignalAdd",
+"parameters": {}
+},
+{
+"name": "F0FL",
+"typename": "SignalConstant",
+"parameters": {
+"y#Value": 100000.0
+}
+},
+{
+"name": "FtotFL",
+"typename": "SignalAdd",
+"parameters": {}
+},
+{
+"name": "GrFL",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 1.32516232581
+}
+},
+{
+"name": "GpFL",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": -1.833609497
+}
+},
+{
+"name": "CompFR",
+"typename": "HydraulicPressureCompensatingValve",
+"parameters": {
+"p_ref#Value": 1000000.0,
+"p_h#Value": 0.0,
+"tao": 0.0001,
+"k_cs": 3.3e-07,
+"k_cf": 1.9e-07,
+"q_nom": 0.001667
+}
+},
+{
+"name": "VmidFR",
+"typename": "HydraulicVolumeMultiPort",
+"parameters": {
+"V#Value": 0.001,
+"Beta_e#Value": 1000000000.0,
+"P1#Pressure": 10100000.0
+}
+},
+{
+"name": "SpoolFR",
+"typename": "Hydraulic43Valve",
+"parameters": {
+"C_q#Value": 0.67,
+"rho#Value": 860.0,
+"d#Value": 0.002730368414990875,
+"f_pa#Value": 1.0,
+"f_pb#Value": 1.0,
+"f_at#Value": 1.0,
+"f_bt#Value": 1.0,
+"x_pa#Value": 0.0,
+"x_pb#Value": 0.0,
+"x_at#Value": 0.0,
+"x_bt#Value": 0.0,
+"x_vmax#Value": 0.001,
+"omega_h": 2000.0,
+"delta_h": 1.0
+}
+},
+{
+"name": "CylFR",
+"typename": "HydraulicCylinderC",
+"parameters": {
+"A_1#Value": 0.013273229,
+"A_2#Value": 0.00376991118,
+"s_l#Value": 0.7,
+"V_1#Value": 0.00094866145,
+"V_2#Value": 0.00047349555900000004,
+"B_p#Value": 0.0,
+"Beta_e#Value": 1000000000.0,
+"c_leak#Value": 0.0,
+"use_sl": false,
+"P1#Pressure": 9100000.0,
+"P2#Pressure": 300000.0,
+"P3#Position": -0.4011
+}
+},
+{
+"name": "MassFR",
+"typename": "MechanicTranslationalMass",
+"parameters": {
+"m": 106.783666,
+"B#Value": 0.0,
+"k#Value": 0.0
+}
+},
+{
+"name": "LoadFR",
+"typename": "MechanicForceTransformer",
+"parameters": {
+"F#Value": 0.0,
+"P1#Position": 0.4011
+}
+},
+{
+"name": "CmdFR",
+"typename": "SignalRamp",
+"parameters": {
+"y_0#Value": 0.0,
+"y_A#Value": 0.001,
+"t_start#Value": 0.0,
+"t_end#Value": 0.1
+}
+},
+{
+"name": "GateFR",
+"typename": "SignalConstant",
+"parameters": {
+"y#Value": 1.0
+}
+},
+{
+"name": "PSensFR",
+"typename": "HydraulicPressureSensor",
+"parameters": {}
+},
+{
+"name": "LSgatedFR",
+"typename": "SignalMultiply",
+"parameters": {}
+},
+{
+"name": "SPosFR",
+"typename": "MechanicPositionSensor",
+"parameters": {}
+},
+{
+"name": "SVelFR",
+"typename": "MechanicSpeedSensor",
+"parameters": {}
+},
+{
+"name": "TankTFR",
+"typename": "HydraulicTankC",
+"parameters": {
+"p": 300000.0
+}
+},
+{
+"name": "WrFR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": -1.3224376741900001
+}
+},
+{
+"name": "WpFR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": -1.833609497
+}
+},
+{
+"name": "WSumFR",
+"typename": "SignalSum",
+"parameters": {}
+},
+{
+"name": "DWrFR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": -1.3224376741900001
+}
+},
+{
+"name": "DWpFR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": -1.833609497
+}
+},
+{
+"name": "DWSumFR",
+"typename": "SignalSum",
+"parameters": {}
+},
+{
+"name": "S0FR",
+"typename": "SignalConstant",
+"parameters": {
+"y#Value": 0.4011
+}
+},
+{
+"name": "ComprnFR",
+"typename": "SignalSub",
+"parameters": {}
+},
+{
+"name": "RateFR",
+"typename": "SignalSubtract",
+"parameters": {}
+},
+{
+"name": "KFR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 216648305.16451868
+}
+},
+{
+"name": "CFR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 34403.519
+}
+},
+{
+"name": "dFFR",
+"typename": "SignalAdd",
+"parameters": {}
+},
+{
+"name": "F0FR",
+"typename": "SignalConstant",
+"parameters": {
+"y#Value": 100000.0
+}
+},
+{
+"name": "FtotFR",
+"typename": "SignalAdd",
+"parameters": {}
+},
+{
+"name": "GrFR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": -1.3224376741900001
+}
+},
+{
+"name": "GpFR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": -1.833609497
+}
+},
+{
+"name": "CompRL",
+"typename": "HydraulicPressureCompensatingValve",
+"parameters": {
+"p_ref#Value": 1000000.0,
+"p_h#Value": 0.0,
+"tao": 0.0001,
+"k_cs": 3.3e-07,
+"k_cf": 1.9e-07,
+"q_nom": 0.001667
+}
+},
+{
+"name": "VmidRL",
+"typename": "HydraulicVolumeMultiPort",
+"parameters": {
+"V#Value": 0.001,
+"Beta_e#Value": 1000000000.0,
+"P1#Pressure": 10100000.0
+}
+},
+{
+"name": "SpoolRL",
+"typename": "Hydraulic43Valve",
+"parameters": {
+"C_q#Value": 0.67,
+"rho#Value": 860.0,
+"d#Value": 0.0019539587699109505,
+"f_pa#Value": 1.0,
+"f_pb#Value": 1.0,
+"f_at#Value": 1.0,
+"f_bt#Value": 1.0,
+"x_pa#Value": 0.0,
+"x_pb#Value": 0.0,
+"x_at#Value": 0.0,
+"x_bt#Value": 0.0,
+"x_vmax#Value": 0.001,
+"omega_h": 2000.0,
+"delta_h": 1.0
+}
+},
+{
+"name": "CylRL",
+"typename": "HydraulicCylinderC",
+"parameters": {
+"A_1#Value": 0.00950331778,
+"A_2#Value": 0.00314159265,
+"s_l#Value": 0.7,
+"V_1#Value": 0.000760165889,
+"V_2#Value": 0.00044207963250000003,
+"B_p#Value": 0.0,
+"Beta_e#Value": 1000000000.0,
+"c_leak#Value": 0.0,
+"use_sl": false,
+"P1#Pressure": 9100000.0,
+"P2#Pressure": 300000.0,
+"P3#Position": -0.3909
+}
+},
+{
+"name": "MassRL",
+"typename": "MechanicTranslationalMass",
+"parameters": {
+"m": 73.1629937,
+"B#Value": 0.0,
+"k#Value": 0.0
+}
+},
+{
+"name": "LoadRL",
+"typename": "MechanicForceTransformer",
+"parameters": {
+"F#Value": 0.0,
+"P1#Position": 0.3909
+}
+},
+{
+"name": "CmdRL",
+"typename": "SignalRamp",
+"parameters": {
+"y_0#Value": 0.0,
+"y_A#Value": 0.001,
+"t_start#Value": 0.0,
+"t_end#Value": 0.1
+}
+},
+{
+"name": "GateRL",
+"typename": "SignalConstant",
+"parameters": {
+"y#Value": 1.0
+}
+},
+{
+"name": "PSensRL",
+"typename": "HydraulicPressureSensor",
+"parameters": {}
+},
+{
+"name": "LSgatedRL",
+"typename": "SignalMultiply",
+"parameters": {}
+},
+{
+"name": "SPosRL",
+"typename": "MechanicPositionSensor",
+"parameters": {}
+},
+{
+"name": "SVelRL",
+"typename": "MechanicSpeedSensor",
+"parameters": {}
+},
+{
+"name": "TankTRL",
+"typename": "HydraulicTankC",
+"parameters": {
+"p": 300000.0
+}
+},
+{
+"name": "WrRL",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 1.16926232581
+}
+},
+{
+"name": "WpRL",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 3.016190503
+}
+},
+{
+"name": "WSumRL",
+"typename": "SignalSum",
+"parameters": {}
+},
+{
+"name": "DWrRL",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 1.16926232581
+}
+},
+{
+"name": "DWpRL",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 3.016190503
+}
+},
+{
+"name": "DWSumRL",
+"typename": "SignalSum",
+"parameters": {}
+},
+{
+"name": "S0RL",
+"typename": "SignalConstant",
+"parameters": {
+"y#Value": 0.3909
+}
+},
+{
+"name": "ComprnRL",
+"typename": "SignalSub",
+"parameters": {}
+},
+{
+"name": "RateRL",
+"typename": "SignalSubtract",
+"parameters": {}
+},
+{
+"name": "KRL",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 205103210.7976279
+}
+},
+{
+"name": "CRL",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 30348.4527
+}
+},
+{
+"name": "dFRL",
+"typename": "SignalAdd",
+"parameters": {}
+},
+{
+"name": "F0RL",
+"typename": "SignalConstant",
+"parameters": {
+"y#Value": 100000.0
+}
+},
+{
+"name": "FtotRL",
+"typename": "SignalAdd",
+"parameters": {}
+},
+{
+"name": "GrRL",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 1.16926232581
+}
+},
+{
+"name": "GpRL",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 3.016190503
+}
+},
+{
+"name": "CompRR",
+"typename": "HydraulicPressureCompensatingValve",
+"parameters": {
+"p_ref#Value": 1000000.0,
+"p_h#Value": 0.0,
+"tao": 0.0001,
+"k_cs": 3.3e-07,
+"k_cf": 1.9e-07,
+"q_nom": 0.001667
+}
+},
+{
+"name": "VmidRR",
+"typename": "HydraulicVolumeMultiPort",
+"parameters": {
+"V#Value": 0.001,
+"Beta_e#Value": 1000000000.0,
+"P1#Pressure": 10100000.0
+}
+},
+{
+"name": "SpoolRR",
+"typename": "Hydraulic43Valve",
+"parameters": {
+"C_q#Value": 0.67,
+"rho#Value": 860.0,
+"d#Value": 0.0019539587699109505,
+"f_pa#Value": 1.0,
+"f_pb#Value": 1.0,
+"f_at#Value": 1.0,
+"f_bt#Value": 1.0,
+"x_pa#Value": 0.0,
+"x_pb#Value": 0.0,
+"x_at#Value": 0.0,
+"x_bt#Value": 0.0,
+"x_vmax#Value": 0.001,
+"omega_h": 2000.0,
+"delta_h": 1.0
+}
+},
+{
+"name": "CylRR",
+"typename": "HydraulicCylinderC",
+"parameters": {
+"A_1#Value": 0.00950331778,
+"A_2#Value": 0.00314159265,
+"s_l#Value": 0.7,
+"V_1#Value": 0.000760165889,
+"V_2#Value": 0.00044207963250000003,
+"B_p#Value": 0.0,
+"Beta_e#Value": 1000000000.0,
+"c_leak#Value": 0.0,
+"use_sl": false,
+"P1#Pressure": 9100000.0,
+"P2#Pressure": 300000.0,
+"P3#Position": -0.3909
+}
+},
+{
+"name": "MassRR",
+"typename": "MechanicTranslationalMass",
+"parameters": {
+"m": 73.1629937,
+"B#Value": 0.0,
+"k#Value": 0.0
+}
+},
+{
+"name": "LoadRR",
+"typename": "MechanicForceTransformer",
+"parameters": {
+"F#Value": 0.0,
+"P1#Position": 0.3909
+}
+},
+{
+"name": "CmdRR",
+"typename": "SignalRamp",
+"parameters": {
+"y_0#Value": 0.0,
+"y_A#Value": 0.001,
+"t_start#Value": 0.0,
+"t_end#Value": 0.1
+}
+},
+{
+"name": "GateRR",
+"typename": "SignalConstant",
+"parameters": {
+"y#Value": 1.0
+}
+},
+{
+"name": "PSensRR",
+"typename": "HydraulicPressureSensor",
+"parameters": {}
+},
+{
+"name": "LSgatedRR",
+"typename": "SignalMultiply",
+"parameters": {}
+},
+{
+"name": "SPosRR",
+"typename": "MechanicPositionSensor",
+"parameters": {}
+},
+{
+"name": "SVelRR",
+"typename": "MechanicSpeedSensor",
+"parameters": {}
+},
+{
+"name": "TankTRR",
+"typename": "HydraulicTankC",
+"parameters": {
+"p": 300000.0
+}
+},
+{
+"name": "WrRR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": -1.24153767419
+}
+},
+{
+"name": "WpRR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 3.016190503
+}
+},
+{
+"name": "WSumRR",
+"typename": "SignalSum",
+"parameters": {}
+},
+{
+"name": "DWrRR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": -1.24153767419
+}
+},
+{
+"name": "DWpRR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 3.016190503
+}
+},
+{
+"name": "DWSumRR",
+"typename": "SignalSum",
+"parameters": {}
+},
+{
+"name": "S0RR",
+"typename": "SignalConstant",
+"parameters": {
+"y#Value": 0.3909
+}
+},
+{
+"name": "ComprnRR",
+"typename": "SignalSub",
+"parameters": {}
+},
+{
+"name": "RateRR",
+"typename": "SignalSubtract",
+"parameters": {}
+},
+{
+"name": "KRR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 205103210.7976279
+}
+},
+{
+"name": "CRR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 30348.4527
+}
+},
+{
+"name": "dFRR",
+"typename": "SignalAdd",
+"parameters": {}
+},
+{
+"name": "F0RR",
+"typename": "SignalConstant",
+"parameters": {
+"y#Value": 100000.0
+}
+},
+{
+"name": "FtotRR",
+"typename": "SignalAdd",
+"parameters": {}
+},
+{
+"name": "GrRR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": -1.24153767419
+}
+},
+{
+"name": "GpRR",
+"typename": "SignalGain",
+"parameters": {
+"k#Value": 3.016190503
+}
+}
+],
+"connections": [
+{
+"from": "TankP#P1",
+"to": "Pump#P1"
+},
+{
+"from": "Pump#P2",
+"to": "Gallery#P1"
+},
+{
+"from": "Unloader#P1",
+"to": "Gallery#P1"
+},
+{
+"from": "Unloader#P2",
+"to": "TankT#P1"
+},
+{
+"from": "Unloader#P_OPEN",
+"to": "Gallery#P1"
+},
+{
+"from": "Unloader#P_CLOSE",
+"to": "LSsource#P1"
+},
+{
+"from": "LSfloor#y",
+"to": "LSmax#in"
+},
+{
+"from": "LSgatedFL#out",
+"to": "LSmax#in"
+},
+{
+"from": "LSgatedFR#out",
+"to": "LSmax#in"
+},
+{
+"from": "LSgatedRL#out",
+"to": "LSmax#in"
+},
+{
+"from": "LSgatedRR#out",
+"to": "LSmax#in"
+},
+{
+"from": "LSmax#out",
+"to": "LSmin#in"
+},
+{
+"from": "LSrelief#y",
+"to": "LSmin#in"
+},
+{
+"from": "LSmin#out",
+"to": "LSsource#p"
+},
+{
+"from": "SumZ#out",
+"to": "NegZ#in"
+},
+{
+"from": "NegZ#out",
+"to": "FBodyZ#F"
+},
+{
+"from": "FFreeZ#P1",
+"to": "BodyZ#P1"
+},
+{
+"from": "BodyZ#P2",
+"to": "FBodyZ#P1"
+},
+{
+"from": "PosZ#P1",
+"to": "BodyZ#P2"
+},
+{
+"from": "VelZ#P1",
+"to": "BodyZ#P2"
+},
+{
+"from": "SumR#out",
+"to": "NegR#in"
+},
+{
+"from": "NegR#out",
+"to": "FBodyR#F"
+},
+{
+"from": "FFreeR#P1",
+"to": "BodyR#P1"
+},
+{
+"from": "BodyR#P2",
+"to": "FBodyR#P1"
+},
+{
+"from": "PosR#P1",
+"to": "BodyR#P2"
+},
+{
+"from": "VelR#P1",
+"to": "BodyR#P2"
+},
+{
+"from": "SumP#out",
+"to": "NegP#in"
+},
+{
+"from": "NegP#out",
+"to": "FBodyP#F"
+},
+{
+"from": "FFreeP#P1",
+"to": "BodyP#P1"
+},
+{
+"from": "BodyP#P2",
+"to": "FBodyP#P1"
+},
+{
+"from": "PosP#P1",
+"to": "BodyP#P2"
+},
+{
+"from": "VelP#P1",
+"to": "BodyP#P2"
+},
+{
+"from": "CompFL#P1",
+"to": "Gallery#P1"
+},
+{
+"from": "CompFL#P2",
+"to": "VmidFL#P1"
+},
+{
+"from": "CompFL#P_OPEN",
+"to": "VmidFL#P1"
+},
+{
+"from": "CompFL#P_CLOSE",
+"to": "CylFL#P1"
+},
+{
+"from": "SpoolFL#PP",
+"to": "VmidFL#P1"
+},
+{
+"from": "SpoolFL#PT",
+"to": "TankTFL#P1"
+},
+{
+"from": "SpoolFL#PA",
+"to": "CylFL#P1"
+},
+{
+"from": "SpoolFL#PB",
+"to": "CylFL#P2"
+},
+{
+"from": "CmdFL#out",
+"to": "SpoolFL#in"
+},
+{
+"from": "CylFL#P3",
+"to": "MassFL#P1"
+},
+{
+"from": "MassFL#P2",
+"to": "LoadFL#P1"
+},
+{
+"from": "PSensFL#P1",
+"to": "SpoolFL#PA"
+},
+{
+"from": "PSensFL#out",
+"to": "LSgatedFL#in1"
+},
+{
+"from": "GateFL#y",
+"to": "LSgatedFL#in2"
+},
+{
+"from": "SPosFL#P1",
+"to": "MassFL#P2"
+},
+{
+"from": "SVelFL#P1",
+"to": "MassFL#P2"
+},
+{
+"from": "PosR#out",
+"to": "WrFL#in"
+},
+{
+"from": "PosP#out",
+"to": "WpFL#in"
+},
+{
+"from": "PosZ#out",
+"to": "WSumFL#in"
+},
+{
+"from": "WrFL#out",
+"to": "WSumFL#in"
+},
+{
+"from": "WpFL#out",
+"to": "WSumFL#in"
+},
+{
+"from": "VelR#out",
+"to": "DWrFL#in"
+},
+{
+"from": "VelP#out",
+"to": "DWpFL#in"
+},
+{
+"from": "VelZ#out",
+"to": "DWSumFL#in"
+},
+{
+"from": "DWrFL#out",
+"to": "DWSumFL#in"
+},
+{
+"from": "DWpFL#out",
+"to": "DWSumFL#in"
+},
+{
+"from": "SPosFL#out",
+"to": "ComprnFL#insum"
+},
+{
+"from": "S0FL#y",
+"to": "ComprnFL#insub"
+},
+{
+"from": "WSumFL#out",
+"to": "ComprnFL#insub"
+},
+{
+"from": "SVelFL#out",
+"to": "RateFL#in1"
+},
+{
+"from": "DWSumFL#out",
+"to": "RateFL#in2"
+},
+{
+"from": "ComprnFL#out",
+"to": "KFL#in"
+},
+{
+"from": "RateFL#out",
+"to": "CFL#in"
+},
+{
+"from": "KFL#out",
+"to": "dFFL#in1"
+},
+{
+"from": "CFL#out",
+"to": "dFFL#in2"
+},
+{
+"from": "F0FL#y",
+"to": "FtotFL#in1"
+},
+{
+"from": "dFFL#out",
+"to": "FtotFL#in2"
+},
+{
+"from": "FtotFL#out",
+"to": "LoadFL#F"
+},
+{
+"from": "dFFL#out",
+"to": "GrFL#in"
+},
+{
+"from": "dFFL#out",
+"to": "GpFL#in"
+},
+{
+"from": "dFFL#out",
+"to": "SumZ#in"
+},
+{
+"from": "GrFL#out",
+"to": "SumR#in"
+},
+{
+"from": "GpFL#out",
+"to": "SumP#in"
+},
+{
+"from": "CompFR#P1",
+"to": "Gallery#P1"
+},
+{
+"from": "CompFR#P2",
+"to": "VmidFR#P1"
+},
+{
+"from": "CompFR#P_OPEN",
+"to": "VmidFR#P1"
+},
+{
+"from": "CompFR#P_CLOSE",
+"to": "CylFR#P1"
+},
+{
+"from": "SpoolFR#PP",
+"to": "VmidFR#P1"
+},
+{
+"from": "SpoolFR#PT",
+"to": "TankTFR#P1"
+},
+{
+"from": "SpoolFR#PA",
+"to": "CylFR#P1"
+},
+{
+"from": "SpoolFR#PB",
+"to": "CylFR#P2"
+},
+{
+"from": "CmdFR#out",
+"to": "SpoolFR#in"
+},
+{
+"from": "CylFR#P3",
+"to": "MassFR#P1"
+},
+{
+"from": "MassFR#P2",
+"to": "LoadFR#P1"
+},
+{
+"from": "PSensFR#P1",
+"to": "SpoolFR#PA"
+},
+{
+"from": "PSensFR#out",
+"to": "LSgatedFR#in1"
+},
+{
+"from": "GateFR#y",
+"to": "LSgatedFR#in2"
+},
+{
+"from": "SPosFR#P1",
+"to": "MassFR#P2"
+},
+{
+"from": "SVelFR#P1",
+"to": "MassFR#P2"
+},
+{
+"from": "PosR#out",
+"to": "WrFR#in"
+},
+{
+"from": "PosP#out",
+"to": "WpFR#in"
+},
+{
+"from": "PosZ#out",
+"to": "WSumFR#in"
+},
+{
+"from": "WrFR#out",
+"to": "WSumFR#in"
+},
+{
+"from": "WpFR#out",
+"to": "WSumFR#in"
+},
+{
+"from": "VelR#out",
+"to": "DWrFR#in"
+},
+{
+"from": "VelP#out",
+"to": "DWpFR#in"
+},
+{
+"from": "VelZ#out",
+"to": "DWSumFR#in"
+},
+{
+"from": "DWrFR#out",
+"to": "DWSumFR#in"
+},
+{
+"from": "DWpFR#out",
+"to": "DWSumFR#in"
+},
+{
+"from": "SPosFR#out",
+"to": "ComprnFR#insum"
+},
+{
+"from": "S0FR#y",
+"to": "ComprnFR#insub"
+},
+{
+"from": "WSumFR#out",
+"to": "ComprnFR#insub"
+},
+{
+"from": "SVelFR#out",
+"to": "RateFR#in1"
+},
+{
+"from": "DWSumFR#out",
+"to": "RateFR#in2"
+},
+{
+"from": "ComprnFR#out",
+"to": "KFR#in"
+},
+{
+"from": "RateFR#out",
+"to": "CFR#in"
+},
+{
+"from": "KFR#out",
+"to": "dFFR#in1"
+},
+{
+"from": "CFR#out",
+"to": "dFFR#in2"
+},
+{
+"from": "F0FR#y",
+"to": "FtotFR#in1"
+},
+{
+"from": "dFFR#out",
+"to": "FtotFR#in2"
+},
+{
+"from": "FtotFR#out",
+"to": "LoadFR#F"
+},
+{
+"from": "dFFR#out",
+"to": "GrFR#in"
+},
+{
+"from": "dFFR#out",
+"to": "GpFR#in"
+},
+{
+"from": "dFFR#out",
+"to": "SumZ#in"
+},
+{
+"from": "GrFR#out",
+"to": "SumR#in"
+},
+{
+"from": "GpFR#out",
+"to": "SumP#in"
+},
+{
+"from": "CompRL#P1",
+"to": "Gallery#P1"
+},
+{
+"from": "CompRL#P2",
+"to": "VmidRL#P1"
+},
+{
+"from": "CompRL#P_OPEN",
+"to": "VmidRL#P1"
+},
+{
+"from": "CompRL#P_CLOSE",
+"to": "CylRL#P1"
+},
+{
+"from": "SpoolRL#PP",
+"to": "VmidRL#P1"
+},
+{
+"from": "SpoolRL#PT",
+"to": "TankTRL#P1"
+},
+{
+"from": "SpoolRL#PA",
+"to": "CylRL#P1"
+},
+{
+"from": "SpoolRL#PB",
+"to": "CylRL#P2"
+},
+{
+"from": "CmdRL#out",
+"to": "SpoolRL#in"
+},
+{
+"from": "CylRL#P3",
+"to": "MassRL#P1"
+},
+{
+"from": "MassRL#P2",
+"to": "LoadRL#P1"
+},
+{
+"from": "PSensRL#P1",
+"to": "SpoolRL#PA"
+},
+{
+"from": "PSensRL#out",
+"to": "LSgatedRL#in1"
+},
+{
+"from": "GateRL#y",
+"to": "LSgatedRL#in2"
+},
+{
+"from": "SPosRL#P1",
+"to": "MassRL#P2"
+},
+{
+"from": "SVelRL#P1",
+"to": "MassRL#P2"
+},
+{
+"from": "PosR#out",
+"to": "WrRL#in"
+},
+{
+"from": "PosP#out",
+"to": "WpRL#in"
+},
+{
+"from": "PosZ#out",
+"to": "WSumRL#in"
+},
+{
+"from": "WrRL#out",
+"to": "WSumRL#in"
+},
+{
+"from": "WpRL#out",
+"to": "WSumRL#in"
+},
+{
+"from": "VelR#out",
+"to": "DWrRL#in"
+},
+{
+"from": "VelP#out",
+"to": "DWpRL#in"
+},
+{
+"from": "VelZ#out",
+"to": "DWSumRL#in"
+},
+{
+"from": "DWrRL#out",
+"to": "DWSumRL#in"
+},
+{
+"from": "DWpRL#out",
+"to": "DWSumRL#in"
+},
+{
+"from": "SPosRL#out",
+"to": "ComprnRL#insum"
+},
+{
+"from": "S0RL#y",
+"to": "ComprnRL#insub"
+},
+{
+"from": "WSumRL#out",
+"to": "ComprnRL#insub"
+},
+{
+"from": "SVelRL#out",
+"to": "RateRL#in1"
+},
+{
+"from": "DWSumRL#out",
+"to": "RateRL#in2"
+},
+{
+"from": "ComprnRL#out",
+"to": "KRL#in"
+},
+{
+"from": "RateRL#out",
+"to": "CRL#in"
+},
+{
+"from": "KRL#out",
+"to": "dFRL#in1"
+},
+{
+"from": "CRL#out",
+"to": "dFRL#in2"
+},
+{
+"from": "F0RL#y",
+"to": "FtotRL#in1"
+},
+{
+"from": "dFRL#out",
+"to": "FtotRL#in2"
+},
+{
+"from": "FtotRL#out",
+"to": "LoadRL#F"
+},
+{
+"from": "dFRL#out",
+"to": "GrRL#in"
+},
+{
+"from": "dFRL#out",
+"to": "GpRL#in"
+},
+{
+"from": "dFRL#out",
+"to": "SumZ#in"
+},
+{
+"from": "GrRL#out",
+"to": "SumR#in"
+},
+{
+"from": "GpRL#out",
+"to": "SumP#in"
+},
+{
+"from": "CompRR#P1",
+"to": "Gallery#P1"
+},
+{
+"from": "CompRR#P2",
+"to": "VmidRR#P1"
+},
+{
+"from": "CompRR#P_OPEN",
+"to": "VmidRR#P1"
+},
+{
+"from": "CompRR#P_CLOSE",
+"to": "CylRR#P1"
+},
+{
+"from": "SpoolRR#PP",
+"to": "VmidRR#P1"
+},
+{
+"from": "SpoolRR#PT",
+"to": "TankTRR#P1"
+},
+{
+"from": "SpoolRR#PA",
+"to": "CylRR#P1"
+},
+{
+"from": "SpoolRR#PB",
+"to": "CylRR#P2"
+},
+{
+"from": "CmdRR#out",
+"to": "SpoolRR#in"
+},
+{
+"from": "CylRR#P3",
+"to": "MassRR#P1"
+},
+{
+"from": "MassRR#P2",
+"to": "LoadRR#P1"
+},
+{
+"from": "PSensRR#P1",
+"to": "SpoolRR#PA"
+},
+{
+"from": "PSensRR#out",
+"to": "LSgatedRR#in1"
+},
+{
+"from": "GateRR#y",
+"to": "LSgatedRR#in2"
+},
+{
+"from": "SPosRR#P1",
+"to": "MassRR#P2"
+},
+{
+"from": "SVelRR#P1",
+"to": "MassRR#P2"
+},
+{
+"from": "PosR#out",
+"to": "WrRR#in"
+},
+{
+"from": "PosP#out",
+"to": "WpRR#in"
+},
+{
+"from": "PosZ#out",
+"to": "WSumRR#in"
+},
+{
+"from": "WrRR#out",
+"to": "WSumRR#in"
+},
+{
+"from": "WpRR#out",
+"to": "WSumRR#in"
+},
+{
+"from": "VelR#out",
+"to": "DWrRR#in"
+},
+{
+"from": "VelP#out",
+"to": "DWpRR#in"
+},
+{
+"from": "VelZ#out",
+"to": "DWSumRR#in"
+},
+{
+"from": "DWrRR#out",
+"to": "DWSumRR#in"
+},
+{
+"from": "DWpRR#out",
+"to": "DWSumRR#in"
+},
+{
+"from": "SPosRR#out",
+"to": "ComprnRR#insum"
+},
+{
+"from": "S0RR#y",
+"to": "ComprnRR#insub"
+},
+{
+"from": "WSumRR#out",
+"to": "ComprnRR#insub"
+},
+{
+"from": "SVelRR#out",
+"to": "RateRR#in1"
+},
+{
+"from": "DWSumRR#out",
+"to": "RateRR#in2"
+},
+{
+"from": "ComprnRR#out",
+"to": "KRR#in"
+},
+{
+"from": "RateRR#out",
+"to": "CRR#in"
+},
+{
+"from": "KRR#out",
+"to": "dFRR#in1"
+},
+{
+"from": "CRR#out",
+"to": "dFRR#in2"
+},
+{
+"from": "F0RR#y",
+"to": "FtotRR#in1"
+},
+{
+"from": "dFRR#out",
+"to": "FtotRR#in2"
+},
+{
+"from": "FtotRR#out",
+"to": "LoadRR#F"
+},
+{
+"from": "dFRR#out",
+"to": "GrRR#in"
+},
+{
+"from": "dFRR#out",
+"to": "GpRR#in"
+},
+{
+"from": "dFRR#out",
+"to": "SumZ#in"
+},
+{
+"from": "GrRR#out",
+"to": "SumR#in"
+},
+{
+"from": "GpRR#out",
+"to": "SumP#in"
+}
+]
+}

@@ -1,0 +1,208 @@
+{
+ "R16": {
+  "supply_L_min": 51.17,
+  "record_sample_s": 0.10000000000021103,
+  "record_end_s": 60.400000001659585,
+  "result_end_s": 57.40000000165768,
+  "record_minus_result_offset_s": 3.0,
+  "event_t_result_s": 28.049999999946177,
+  "event_t_record_s": 31.05,
+  "ramp_s": 0.05,
+  "phase_at_event_result": "level",
+  "phase_at_event_series": "level",
+  "Q_dem_at_event_L_min": 9.24,
+  "u_applied_at_event_mm_s": [
+   3.58,
+   3.567,
+   3.117,
+   3.106
+  ],
+  "whole_run_short_s": 15.3,
+  "whole_run_max_Q_dem_L_min": 57.19,
+  "windows": {
+   "-20..-10": {
+    "samples": 100,
+    "max_Q_dem_L_min": 57.19,
+    "margin_to_supply_L_min": -6.02,
+    "short_s": 10.0
+   },
+   "-10..-5": {
+    "samples": 50,
+    "max_Q_dem_L_min": 57.19,
+    "margin_to_supply_L_min": -6.02,
+    "short_s": 1.7
+   },
+   "-5..+0": {
+    "samples": 50,
+    "max_Q_dem_L_min": 56.749,
+    "margin_to_supply_L_min": -5.579,
+    "short_s": 0.8
+   },
+   "+5..+10": {
+    "samples": 50,
+    "max_Q_dem_L_min": 5.842,
+    "margin_to_supply_L_min": 45.328,
+    "short_s": 0.0
+   },
+   "+10..+20": {
+    "samples": 100,
+    "max_Q_dem_L_min": 2.731,
+    "margin_to_supply_L_min": 48.439,
+    "short_s": 0.0
+   },
+   "+20..+45": {
+    "samples": 94,
+    "max_Q_dem_L_min": 12.388,
+    "margin_to_supply_L_min": 38.782,
+    "short_s": 0.0
+   },
+   "event 0..ramp": {
+    "samples": 1,
+    "max_Q_dem_L_min": 9.24,
+    "margin_to_supply_L_min": 41.93,
+    "short_s": 0.0
+   },
+   "ramp..+5": {
+    "samples": 49,
+    "max_Q_dem_L_min": 11.287,
+    "margin_to_supply_L_min": 39.883,
+    "short_s": 0.0
+   }
+  },
+  "saturated_runs": [
+   {
+    "start_s": 8.3,
+    "stop_s": 22.8,
+    "duration_s": 14.5,
+    "phases": [
+     "touch"
+    ],
+    "max_Q_dem_L_min": 57.19,
+    "overlaps_event_ramp": false,
+    "gap_to_event_ramp_s": 8.25,
+    "relative_to_event_s": [
+     -22.75,
+     -8.25
+    ]
+   },
+   {
+    "start_s": 27.6,
+    "stop_s": 28.4,
+    "duration_s": 0.8,
+    "phases": [
+     "level"
+    ],
+    "max_Q_dem_L_min": 56.749,
+    "overlaps_event_ramp": false,
+    "gap_to_event_ramp_s": 2.65,
+    "relative_to_event_s": [
+     -3.45,
+     -2.65
+    ]
+   }
+  ]
+ },
+ "R12": {
+  "supply_L_min": 51.17,
+  "record_sample_s": 0.10000000000331966,
+  "record_end_s": 95.70000000205337,
+  "result_end_s": 92.70000000205147,
+  "record_minus_result_offset_s": 3.0,
+  "event_t_result_s": 47.70000000039165,
+  "event_t_record_s": 50.7,
+  "ramp_s": 2.0,
+  "phase_at_event_result": "ready",
+  "phase_at_event_series": "ready",
+  "Q_dem_at_event_L_min": 0.0,
+  "u_applied_at_event_mm_s": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "whole_run_short_s": 15.3,
+  "whole_run_max_Q_dem_L_min": 57.19,
+  "windows": {
+   "-20..-10": {
+    "samples": 100,
+    "max_Q_dem_L_min": 11.214,
+    "margin_to_supply_L_min": 39.956,
+    "short_s": 0.0
+   },
+   "-10..-5": {
+    "samples": 49,
+    "max_Q_dem_L_min": 1.953,
+    "margin_to_supply_L_min": 49.217,
+    "short_s": 0.0
+   },
+   "-5..+0": {
+    "samples": 50,
+    "max_Q_dem_L_min": 12.388,
+    "margin_to_supply_L_min": 38.782,
+    "short_s": 0.0
+   },
+   "+5..+10": {
+    "samples": 50,
+    "max_Q_dem_L_min": 2.012,
+    "margin_to_supply_L_min": 49.158,
+    "short_s": 0.0
+   },
+   "+10..+20": {
+    "samples": 100,
+    "max_Q_dem_L_min": 2.731,
+    "margin_to_supply_L_min": 48.439,
+    "short_s": 0.0
+   },
+   "+20..+45": {
+    "samples": 250,
+    "max_Q_dem_L_min": 12.388,
+    "margin_to_supply_L_min": 38.782,
+    "short_s": 0.0
+   },
+   "event 0..ramp": {
+    "samples": 20,
+    "max_Q_dem_L_min": 8.459,
+    "margin_to_supply_L_min": 42.711,
+    "short_s": 0.0
+   },
+   "ramp..+5": {
+    "samples": 30,
+    "max_Q_dem_L_min": 8.539,
+    "margin_to_supply_L_min": 42.631,
+    "short_s": 0.0
+   }
+  },
+  "saturated_runs": [
+   {
+    "start_s": 8.3,
+    "stop_s": 22.8,
+    "duration_s": 14.5,
+    "phases": [
+     "touch"
+    ],
+    "max_Q_dem_L_min": 57.19,
+    "overlaps_event_ramp": false,
+    "gap_to_event_ramp_s": 27.9,
+    "relative_to_event_s": [
+     -42.4,
+     -27.9
+    ]
+   },
+   {
+    "start_s": 27.6,
+    "stop_s": 28.4,
+    "duration_s": 0.8,
+    "phases": [
+     "level"
+    ],
+    "max_Q_dem_L_min": 56.756,
+    "overlaps_event_ramp": false,
+    "gap_to_event_ramp_s": 22.3,
+    "relative_to_event_s": [
+     -23.1,
+     -22.3
+    ]
+   }
+  ]
+ }
+}

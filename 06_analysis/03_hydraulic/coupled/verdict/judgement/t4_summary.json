@@ -1,0 +1,362 @@
+{
+ "nominal": {
+  "Ms_max": 1.3907745295796141,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9972587064849605,
+  "rho_plant": "top_pads_b1.6_sup_lower",
+  "Ms_z": 1.1517921903969386,
+  "n1": [
+   0
+  ],
+  "w": 0.4275237352017349
+ },
+ "single_FL": {
+  "Ms_max": 1.4041413625666728,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9973374429898835,
+  "rho_plant": "top_pads_b1.6_sup_lower",
+  "Ms_z": 1.0507991654001212,
+  "n1": [
+   1
+  ],
+  "w": 0.42049610876352406
+ },
+ "single_FR": {
+  "Ms_max": 1.3780898631057361,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9971784954477496,
+  "rho_plant": "top_pads_b1.6_sup_lower",
+  "Ms_z": 1.0393712102241421,
+  "n1": [
+   1
+  ],
+  "w": 0.4346688122710597
+ },
+ "single_RL": {
+  "Ms_max": 1.6474271741076394,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "theta",
+  "rho": 0.9973307043894526,
+  "rho_plant": "top_pads_b1.6_sup_lower",
+  "Ms_z": 1.6302441422407083,
+  "n1": [
+   1
+  ],
+  "w": 0.29444190216008276
+ },
+ "single_RR": {
+  "Ms_max": 1.6292778874547462,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-1",
+  "ch": "theta",
+  "rho": 0.9971886793695748,
+  "rho_plant": "top_pads_b1.6_sup_lower",
+  "Ms_z": 1.4370061137433436,
+  "n1": [
+   1
+  ],
+  "w": 0.31593095154527184
+ },
+ "set0_FL+FR": {
+  "Ms_max": 1.4223250345664828,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.998282069936769,
+  "rho_plant": "bottom_crawler_b1.6_sup_lower",
+  "Ms_z": 1.0186811036287287,
+  "n1": [
+   1
+  ],
+  "w": 0.42049610876352406
+ },
+ "set1_FL+FR+RL+RR": {
+  "Ms_max": 108.7194722001982,
+  "plant": "middle_pads_b1.6_sup_lower",
+  "ch": "phi",
+  "rho": 1.002395297129888,
+  "rho_plant": "top_pads_b1.6_sup_lower",
+  "Ms_z": 1.0000099368129178,
+  "n1": [
+   1
+  ],
+  "w": 0.10278050915215811
+ },
+ "set2_FL+FR": {
+  "Ms_max": 1.4223052136783507,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9982817890971591,
+  "rho_plant": "bottom_crawler_b1.6_sup_lower",
+  "Ms_z": 1.0186828471262848,
+  "n1": [
+   1
+  ],
+  "w": 0.42049610876352406
+ },
+ "set3_FL+FR": {
+  "Ms_max": 1.4223382483830125,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.998282171372586,
+  "rho_plant": "bottom_crawler_b1.6_sup_lower",
+  "Ms_z": 1.0186816080925734,
+  "n1": [
+   1
+  ],
+  "w": 0.42049610876352406
+ },
+ "set4_FL+FR": {
+  "Ms_max": 1.4224848663463694,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9982836490159432,
+  "rho_plant": "bottom_crawler_b1.6_sup_lower",
+  "Ms_z": 1.018681046258372,
+  "n1": [
+   1
+  ],
+  "w": 0.42049610876352406
+ },
+ "set5_FL+FR+RL+RR": {
+  "Ms_max": 89.96839702301148,
+  "plant": "middle_pads_b1.6_sup_lower",
+  "ch": "phi",
+  "rho": 1.0023730213609563,
+  "rho_plant": "top_pads_b1.6_sup_lower",
+  "Ms_z": 1.0135479462392503,
+  "n1": [
+   1
+  ],
+  "w": 0.10278050915215811
+ },
+ "set6_FL+FR": {
+  "Ms_max": 1.4221708518819456,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9982805473997305,
+  "rho_plant": "bottom_crawler_b1.6_sup_lower",
+  "Ms_z": 1.018681595130328,
+  "n1": [
+   1
+  ],
+  "w": 0.42049610876352406
+ },
+ "set7_FL+FR+RL+RR": {
+  "Ms_max": 132.28421025061476,
+  "plant": "middle_pads_b1.6_sup_lower",
+  "ch": "phi",
+  "rho": 1.0024153761830503,
+  "rho_plant": "top_pads_b1.6_sup_lower",
+  "Ms_z": 1.0009693463107285,
+  "n1": [
+   1
+  ],
+  "w": 0.10278050915215811
+ },
+ "set8_FL+FR": {
+  "Ms_max": 1.422123790307518,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9982733413672016,
+  "rho_plant": "bottom_crawler_b1.6_sup_lower",
+  "Ms_z": 1.0187121338383285,
+  "n1": [
+   1
+  ],
+  "w": 0.42049610876352406
+ },
+ "set9_FL+FR": {
+  "Ms_max": 1.4234020042974138,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9982920220172489,
+  "rho_plant": "bottom_crawler_b1.6_sup_lower",
+  "Ms_z": 1.0187240621498235,
+  "n1": [
+   1
+  ],
+  "w": 0.42049610876352406
+ },
+ "set10_FL+FR": {
+  "Ms_max": 1.4219890471944343,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9982757245562754,
+  "rho_plant": "bottom_crawler_b1.6_sup_lower",
+  "Ms_z": 1.0187168903440982,
+  "n1": [
+   1
+  ],
+  "w": 0.42049610876352406
+ },
+ "set11_FL+FR": {
+  "Ms_max": 1.4228076281525164,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9982868089221414,
+  "rho_plant": "bottom_crawler_b1.6_sup_lower",
+  "Ms_z": 1.0186830898290855,
+  "n1": [
+   1
+  ],
+  "w": 0.42049610876352406
+ },
+ "set12_FL+FR": {
+  "Ms_max": 1.422659513304355,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9982853021717172,
+  "rho_plant": "bottom_crawler_b1.6_sup_lower",
+  "Ms_z": 1.0186829548979488,
+  "n1": [
+   1
+  ],
+  "w": 0.42049610876352406
+ },
+ "set13_FL+FR+RL+RR": {
+  "Ms_max": 12.302466906970613,
+  "plant": "top_pads_b1.6_rigid",
+  "ch": "phi",
+  "rho": 1.001374077499164,
+  "rho_plant": "top_pads_b1.6_sup_lower",
+  "Ms_z": 1.000174684475316,
+  "n1": [
+   1
+  ],
+  "w": 0.10668585114005191
+ },
+ "set14_FL+FR+RL+RR": {
+  "Ms_max": 12.577330222087253,
+  "plant": "top_pads_b1.6_rigid",
+  "ch": "phi",
+  "rho": 1.0013513088095576,
+  "rho_plant": "top_pads_b1.6_sup_lower",
+  "Ms_z": 1.0091858586783422,
+  "n1": [
+   1
+  ],
+  "w": 0.10668585114005191
+ },
+ "set15_FL+FR+RL+RR": {
+  "Ms_max": 12.202264388611274,
+  "plant": "top_pads_b1.6_rigid",
+  "ch": "phi",
+  "rho": 1.0013825067820799,
+  "rho_plant": "top_pads_b1.6_sup_lower",
+  "Ms_z": 1.0010582729423076,
+  "n1": [
+   1
+  ],
+  "w": 0.10624469741028605
+ },
+ "set16_FL": {
+  "Ms_max": 1.4041413625170276,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9973374429896662,
+  "rho_plant": "top_pads_b1.6_sup_lower",
+  "Ms_z": 1.0507991653820998,
+  "n1": [
+   1
+  ],
+  "w": 0.42049610876352406
+ },
+ "set17_FL+FR": {
+  "Ms_max": 1.424386263911241,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9983067103871578,
+  "rho_plant": "bottom_crawler_b1.6_sup_lower",
+  "Ms_z": 1.0187486499380707,
+  "n1": [
+   1
+  ],
+  "w": 0.4187573268655427
+ },
+ "set18_FL+FR+RL+RR": {
+  "Ms_max": 2.855806398185602,
+  "plant": "top_pads_b1.6_sup_lower",
+  "ch": "phi",
+  "rho": 0.9998974735636935,
+  "rho_plant": "bottom_crawler_b1.6_sup_lower",
+  "Ms_z": 1.001428295729006,
+  "n1": [
+   1
+  ],
+  "w": 0.12181277115776774
+ },
+ "set19_FL+FR+RL+RR": {
+  "Ms_max": 7.932050097476615,
+  "plant": "bottom_pads_b1.6_rigid",
+  "ch": "phi",
+  "rho": 1.0081314635217538,
+  "rho_plant": "top_pads_b1_rigid_k0.5-1-1-0.5",
+  "Ms_z": 1.000217238990483,
+  "n1": [
+   1
+  ],
+  "w": 0.09698775151864736
+ },
+ "set20_FL+FR+RL+RR": {
+  "Ms_max": 20.295994968101333,
+  "plant": "middle_pads_b1.6_rigid",
+  "ch": "phi",
+  "rho": 1.0033652114208096,
+  "rho_plant": "top_pads_b0.69_sup_lower",
+  "Ms_z": 1.001915896176778,
+  "n1": [
+   1
+  ],
+  "w": 0.10235550429467073
+ },
+ "set21_FL+FR": {
+  "Ms_max": 1.4220542713887416,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9982084300777556,
+  "rho_plant": "bottom_crawler_b1.6_sup_lower",
+  "Ms_z": 1.0187137411450538,
+  "n1": [
+   1
+  ],
+  "w": 0.4170257349567805
+ },
+ "set22_FL+FR": {
+  "Ms_max": 1.4222570732304565,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9983046646582545,
+  "rho_plant": "bottom_crawler_b1.6_sup_lower",
+  "Ms_z": 1.0187080907686674,
+  "n1": [
+   1
+  ],
+  "w": 0.4222421105053018
+ },
+ "set23_FL+FR": {
+  "Ms_max": 1.422108965536135,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9982729670206081,
+  "rho_plant": "bottom_crawler_b1.6_sup_lower",
+  "Ms_z": 1.0187123234245854,
+  "n1": [
+   1
+  ],
+  "w": 0.42049610876352406
+ },
+ "set24_FL+FR": {
+  "Ms_max": 1.422126633240356,
+  "plant": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+  "ch": "phi",
+  "rho": 0.9982733818522691,
+  "rho_plant": "bottom_crawler_b1.6_sup_lower",
+  "Ms_z": 1.0187122751766995,
+  "n1": [
+   1
+  ],
+  "w": 0.42049610876352406
+ }
+}

@@ -1,0 +1,9581 @@
+{
+ "criteria_sha256": "d48f4b74342aa027caced7498124ed384e349d0cc06f20d505fed07d9acac44e",
+ "runs": {
+  "A_R10_eta0.85": {
+   "bundle": "A",
+   "case": "R10",
+   "name": "JA_middle_flat_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -1.4326000000000008,
+    "F_on": 53.3964,
+    "F_off": 54.829,
+    "F_leg_on": "RR",
+    "F_t_on": 34.718,
+    "R1_flag": false,
+    "att_on": 0.01586,
+    "att_off": 0.01598,
+    "datt": -0.00012000000000000205,
+    "att_after_on": 0.09522,
+    "att_after_off": 0.11488,
+    "ready_on": 42.2,
+    "ready_off": 40.2,
+    "dready": 2.0,
+    "R2_flag": [],
+    "D_on": 32.041,
+    "D_off": 29.684,
+    "dD": 2.3569999999999958,
+    "D_done_on": 2.038,
+    "D_done_off": 0.579,
+    "R3_flag": [],
+    "rut_on": 49.525787399936846,
+    "rut_off": 49.53967030996287,
+    "drut": -0.013882910026026707,
+    "stroke_on": 407.955530102477,
+    "stroke_off": 407.9985233805991,
+    "dstroke": -0.0429932781221396,
+    "guard_margin_on": 274.84446989752297,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.4999999999988347,
+    "loc_delay_off": 0.39999999999906777,
+    "dloc": 0.09999999999976694,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.6000000000000014,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      1.141,
+      3.875
+     ],
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89053,
+    "E2_min_r_level": 0.89053,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 37.526,
+    "E3_between_mm": 2.493,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.27,
+     "FL+FR": 0.874,
+     "FL+FR+RL+RR": 16.098
+    },
+    "E4_gallery": [
+     12.581,
+     105.239
+    ],
+    "E5_I_end": 0.003821,
+    "E5_I_max": 0.009837,
+    "E5_back_s": 4.69,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 52200,
+    "demand_met_chunks": 34958,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 34958,
+    "solved_chunks": 17242,
+    "audit_chunks": 34,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_R11_eta0.85": {
+   "bundle": "A",
+   "case": "R11",
+   "name": "JA_bottom_flat_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -1.1036000000000001,
+    "F_on": 53.5888,
+    "F_off": 54.6924,
+    "F_leg_on": "RR",
+    "F_t_on": 38.325,
+    "R1_flag": false,
+    "att_on": 0.01868,
+    "att_off": 0.01408,
+    "datt": 0.004599999999999998,
+    "att_after_on": 0.10703,
+    "att_after_off": 0.10254,
+    "ready_on": 42.6,
+    "ready_off": 39.8,
+    "dready": 2.8000000000000043,
+    "R2_flag": [],
+    "D_on": 31.967,
+    "D_off": 29.918,
+    "dD": 2.0489999999999995,
+    "D_done_on": 2.014,
+    "D_done_off": 0.264,
+    "R3_flag": [],
+    "rut_on": 49.54703614276013,
+    "rut_off": 49.46089227527972,
+    "drut": 0.08614386748040914,
+    "stroke_on": 408.1330451850166,
+    "stroke_off": 407.8171659731586,
+    "dstroke": 0.31587921185803225,
+    "guard_margin_on": 274.66695481498334,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.39999999999906777,
+    "loc_delay_off": 0.4999999999988347,
+    "dloc": -0.09999999999976694,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      1.138,
+      3.776
+     ],
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89254,
+    "E2_min_r_level": 0.89254,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 37.479,
+    "E3_between_mm": 2.446,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.263,
+     "FL+FR": 0.878,
+     "FL+FR+RL+RR": 16.098
+    },
+    "E4_gallery": [
+     12.581,
+     104.817
+    ],
+    "E5_I_end": 0.003933,
+    "E5_I_max": 0.010754,
+    "E5_back_s": 4.99,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 52600,
+    "demand_met_chunks": 35361,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 35361,
+    "solved_chunks": 17239,
+    "audit_chunks": 35,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_R12_eta0.85": {
+   "bundle": "A",
+   "case": "R12",
+   "name": "E_G4_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     null,
+     null
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -1.1265999999999998,
+    "F_on": 12.6202,
+    "F_off": 13.7468,
+    "F_leg_on": "RR",
+    "F_t_on": 48.733,
+    "R1_flag": false,
+    "att_on": 0.03603,
+    "att_off": 0.03398,
+    "datt": 0.0020499999999999963,
+    "att_after_on": 0.12068,
+    "att_after_off": 0.12096,
+    "ready_on": 42.3,
+    "ready_off": 39.4,
+    "dready": 2.8999999999999986,
+    "R2_flag": [],
+    "D_on": 113.256,
+    "D_off": 111.053,
+    "dD": 2.203000000000003,
+    "D_done_on": 2.047,
+    "D_done_off": 0.268,
+    "R3_flag": [],
+    "rut_on": null,
+    "rut_off": null,
+    "drut": null,
+    "stroke_on": 410.02499337700146,
+    "stroke_off": 409.8181775987819,
+    "dstroke": 0.20681577821954988,
+    "guard_margin_on": 272.7750066229985,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": null,
+    "loc_delay_off": null,
+    "dloc": null,
+    "R5_flag": [],
+    "reapp_on": 1,
+    "reapp_off": 1,
+    "p5_on": 1,
+    "p5_off": 1,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     null,
+     null
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      1.079,
+      3.882
+     ],
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89358,
+    "E2_min_r_level": 0.89358,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 37.404,
+    "E3_between_mm": 2.37,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.297,
+     "FL+FR": 0.785,
+     "FL+FR+RL+RR": 16.098
+    },
+    "E4_gallery": [
+     12.581,
+     106.678
+    ],
+    "E5_I_end": 0.003577,
+    "E5_I_max": 0.009717,
+    "E5_back_s": 4.75,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 74000,
+    "demand_met_chunks": 56820,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 56820,
+    "solved_chunks": 17180,
+    "audit_chunks": 56,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_R13_eta0.85": {
+   "bundle": "A",
+   "case": "R13",
+   "name": "E_SS_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     null,
+     null
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -1.179000000000002,
+    "F_on": 24.3174,
+    "F_off": 25.4964,
+    "F_leg_on": "RR",
+    "F_t_on": 57.499,
+    "R1_flag": false,
+    "att_on": 0.03722,
+    "att_off": 0.03704,
+    "datt": 0.00018000000000000654,
+    "att_after_on": 0.09586,
+    "att_after_off": 0.09195,
+    "ready_on": 42.3,
+    "ready_off": 39.4,
+    "dready": 2.8999999999999986,
+    "R2_flag": [],
+    "D_on": 88.61,
+    "D_off": 86.34,
+    "dD": 2.269999999999996,
+    "D_done_on": 2.047,
+    "D_done_off": 0.268,
+    "R3_flag": [],
+    "rut_on": null,
+    "rut_off": null,
+    "drut": null,
+    "stroke_on": 410.7908014243641,
+    "stroke_off": 410.9178769828545,
+    "dstroke": -0.12707555849044638,
+    "guard_margin_on": 272.0091985756359,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": null,
+    "loc_delay_off": null,
+    "dloc": null,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     null,
+     null
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      1.079,
+      3.882
+     ],
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89358,
+    "E2_min_r_level": 0.89358,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 37.404,
+    "E3_between_mm": 2.37,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.297,
+     "FL+FR": 0.785,
+     "FL+FR+RL+RR": 16.098
+    },
+    "E4_gallery": [
+     12.581,
+     106.678
+    ],
+    "E5_I_end": 0.003577,
+    "E5_I_max": 0.009717,
+    "E5_back_s": 4.75,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 89200,
+    "demand_met_chunks": 72020,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 72020,
+    "solved_chunks": 17180,
+    "audit_chunks": 72,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_R14_eta0.85": {
+   "bundle": "A",
+   "case": "R14",
+   "name": "E_RE1bF_Fs8",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     null,
+     null
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 0.0,
+    "F_on": -0.7175,
+    "F_off": -0.7175,
+    "F_leg_on": "RR",
+    "F_t_on": 47.512,
+    "R1_flag": false,
+    "att_on": 0.03938,
+    "att_off": 0.0366,
+    "datt": 0.0027799999999999978,
+    "att_after_on": 0.31337,
+    "att_after_off": 0.31295,
+    "ready_on": 42.5,
+    "ready_off": 39.4,
+    "dready": 3.1000000000000014,
+    "R2_flag": [],
+    "D_on": 184.223,
+    "D_off": 185.214,
+    "dD": -0.9909999999999854,
+    "D_done_on": 0.931,
+    "D_done_off": 0.271,
+    "R3_flag": [],
+    "rut_on": null,
+    "rut_off": null,
+    "drut": null,
+    "stroke_on": 433.05573835909183,
+    "stroke_off": 432.7447409599011,
+    "dstroke": 0.31099739919073954,
+    "guard_margin_on": 249.74426164090812,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": null,
+    "loc_delay_off": null,
+    "dloc": null,
+    "R5_flag": [],
+    "reapp_on": 1,
+    "reapp_off": 1,
+    "p5_on": 1,
+    "p5_off": 1,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.9000000000000021,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     null,
+     null
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      1.137,
+      4.25
+     ],
+     "touch": [
+      16.384,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.88074,
+    "E2_min_r_level": 0.88099,
+    "E2_long93_s": 16.401,
+    "E3_integral_mm": 40.524,
+    "E3_between_mm": 8.176,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.286,
+     "FL+FR": 0.851,
+     "FL+FR+RL+RR": 16.384
+    },
+    "E4_gallery": [
+     15.812,
+     108.837
+    ],
+    "E5_I_end": 0.002965,
+    "E5_I_max": 0.011027,
+    "E5_back_s": 4.9,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 76100,
+    "demand_met_chunks": 58579,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 58579,
+    "solved_chunks": 17521,
+    "audit_chunks": 58,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_R15_eta0.85": {
+   "bundle": "A",
+   "case": "R15",
+   "name": "G1L_RE1bF_FL_top_Fs0",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     null,
+     null
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 0.0,
+    "F_on": -1.0472,
+    "F_off": -1.0472,
+    "F_leg_on": "FL",
+    "F_t_on": 26.765,
+    "R1_flag": false,
+    "att_on": 0.02424,
+    "att_off": 0.02416,
+    "datt": 8.000000000000021e-05,
+    "att_after_on": 0.79888,
+    "att_after_off": 0.7966,
+    "ready_on": 64.6,
+    "ready_off": 62.5,
+    "dready": 2.0999999999999943,
+    "R2_flag": [],
+    "D_on": 211.615,
+    "D_off": 211.379,
+    "dD": 0.23600000000001842,
+    "D_done_on": 1.91,
+    "D_done_off": 1.839,
+    "R3_flag": [],
+    "rut_on": null,
+    "rut_off": null,
+    "drut": null,
+    "stroke_on": 446.2226783970596,
+    "stroke_off": 445.9595484471565,
+    "dstroke": 0.2631299499030888,
+    "guard_margin_on": 236.57732160294034,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": null,
+    "loc_delay_off": null,
+    "dloc": null,
+    "R5_flag": [],
+    "reapp_on": 6,
+    "reapp_off": 8,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": -0.09999999999999998,
+    "dtouch_s": 1.7000000000000028,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     null,
+     null
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      1.091,
+      3.466
+     ],
+     "touch": [
+      15.901,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.88455,
+    "E2_min_r_level": 0.90255,
+    "E2_long93_s": 15.726,
+    "E3_integral_mm": 40.128,
+    "E3_between_mm": 10.202,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.31,
+     "FL+FR": 0.891,
+     "FL+FR+RL+RR": 15.791
+    },
+    "E4_gallery": [
+     9.353,
+     104.152
+    ],
+    "E5_I_end": 0.004268,
+    "E5_I_max": 0.016002,
+    "E5_back_s": 3.63,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s",
+     "between>10mm"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 67600,
+    "demand_met_chunks": 50608,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 50608,
+    "solved_chunks": 16992,
+    "audit_chunks": 50,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_R16_eta0.85": {
+   "bundle": "A",
+   "case": "R16",
+   "name": "G1L_RE1bF_FL_top_o050_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     null,
+     null
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 0.0,
+    "F_on": -1.0472,
+    "F_off": -1.0472,
+    "F_leg_on": "FL",
+    "F_t_on": 26.765,
+    "R1_flag": false,
+    "att_on": 0.03286,
+    "att_off": 0.02888,
+    "datt": 0.003980000000000001,
+    "att_after_on": 0.79296,
+    "att_after_off": 0.7906,
+    "ready_on": 50.9,
+    "ready_off": 48.5,
+    "dready": 2.3999999999999986,
+    "R2_flag": [],
+    "D_on": 206.192,
+    "D_off": 205.876,
+    "dD": 0.3160000000000025,
+    "D_done_on": 2.608,
+    "D_done_off": 2.636,
+    "R3_flag": [],
+    "rut_on": null,
+    "rut_off": null,
+    "drut": null,
+    "stroke_on": 445.96747943966506,
+    "stroke_off": 445.66374731661836,
+    "dstroke": 0.30373212304670005,
+    "guard_margin_on": 236.8325205603349,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": null,
+    "loc_delay_off": null,
+    "dloc": null,
+    "R5_flag": [],
+    "reapp_on": 4,
+    "reapp_off": 4,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     null,
+     null
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      1.079,
+      3.882
+     ],
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89358,
+    "E2_min_r_level": 0.89358,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 37.404,
+    "E3_between_mm": 2.37,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.297,
+     "FL+FR": 0.785,
+     "FL+FR+RL+RR": 16.098
+    },
+    "E4_gallery": [
+     12.581,
+     106.678
+    ],
+    "E5_I_end": 0.003577,
+    "E5_I_max": 0.012002,
+    "E5_back_s": 3.55,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 53900,
+    "demand_met_chunks": 36720,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 36720,
+    "solved_chunks": 17180,
+    "audit_chunks": 36,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_R1_eta0.85": {
+   "bundle": "A",
+   "case": "R1",
+   "name": "K24_top_flat_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -1.2436000000000007,
+    "F_on": 53.4467,
+    "F_off": 54.6903,
+    "F_leg_on": "RR",
+    "F_t_on": 34.669,
+    "R1_flag": false,
+    "att_on": 0.01573,
+    "att_off": 0.01187,
+    "datt": 0.0038600000000000006,
+    "att_after_on": 0.09586,
+    "att_after_off": 0.09195,
+    "ready_on": 42.3,
+    "ready_off": 39.4,
+    "dready": 2.8999999999999986,
+    "R2_flag": [],
+    "D_on": 32.003,
+    "D_off": 29.823,
+    "dD": 2.1799999999999997,
+    "D_done_on": 2.047,
+    "D_done_off": 0.268,
+    "R3_flag": [],
+    "rut_on": 49.52809469691344,
+    "rut_off": 49.324555756987465,
+    "drut": 0.20353893992597705,
+    "stroke_on": 407.9531942230351,
+    "stroke_off": 407.55783328949286,
+    "dstroke": 0.39536093354223567,
+    "guard_margin_on": 274.84680577696486,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.4999999999988347,
+    "loc_delay_off": 0.4999999999988347,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      1.079,
+      3.882
+     ],
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89358,
+    "E2_min_r_level": 0.89358,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 37.404,
+    "E3_between_mm": 2.37,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.297,
+     "FL+FR": 0.785,
+     "FL+FR+RL+RR": 16.098
+    },
+    "E4_gallery": [
+     12.581,
+     106.678
+    ],
+    "E5_I_end": 0.003577,
+    "E5_I_max": 0.009717,
+    "E5_back_s": 4.75,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 52300,
+    "demand_met_chunks": 35120,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 35120,
+    "solved_chunks": 17180,
+    "audit_chunks": 35,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_R2_eta0.85": {
+   "bundle": "A",
+   "case": "R2",
+   "name": "K24_top_fdown3.5_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -1.0030000000000001,
+    "F_on": 24.5499,
+    "F_off": 25.5529,
+    "F_leg_on": "RR",
+    "F_t_on": 68.226,
+    "R1_flag": false,
+    "att_on": 0.01579,
+    "att_off": 0.01582,
+    "datt": -3.0000000000002247e-05,
+    "att_after_on": 3.59029,
+    "att_after_off": 3.57855,
+    "ready_on": 75.9,
+    "ready_off": 74.3,
+    "dready": 1.6000000000000085,
+    "R2_flag": [],
+    "D_on": 87.109,
+    "D_off": 88.702,
+    "dD": -1.5930000000000035,
+    "D_done_on": 0.266,
+    "D_done_off": 1.999,
+    "R3_flag": [],
+    "rut_on": 102.91241765029152,
+    "rut_off": 102.91145873802047,
+    "drut": 0.0009589122710451647,
+    "stroke_on": 660.6945712331421,
+    "stroke_off": 660.7282007083805,
+    "dstroke": -0.03362947523839921,
+    "guard_margin_on": 22.105428766857813,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.8999999999979025,
+    "loc_delay_off": 1.0999999999974364,
+    "dloc": -0.19999999999953388,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": -0.5,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89463,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 35.158,
+    "E3_between_mm": 0.125,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.003,
+     "FL+FR+RL+RR": 16.098
+    },
+    "E4_gallery": [
+     12.581,
+     15.77
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.006356,
+    "E5_back_s": 24.97,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 85900,
+    "demand_met_chunks": 69799,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 69799,
+    "solved_chunks": 16101,
+    "audit_chunks": 69,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_R3_eta0.85": {
+   "bundle": "A",
+   "case": "R3",
+   "name": "K24_top_fup3.5_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -0.009799999999998477,
+    "F_on": 54.4668,
+    "F_off": 54.4766,
+    "F_leg_on": "RR",
+    "F_t_on": 52.469,
+    "R1_flag": false,
+    "att_on": 0.01522,
+    "att_off": 0.01485,
+    "datt": 0.0003699999999999988,
+    "att_after_on": 3.27931,
+    "att_after_off": 3.30543,
+    "ready_on": 56.5,
+    "ready_off": 54.9,
+    "dready": 1.6000000000000014,
+    "R2_flag": [],
+    "D_on": 30.153,
+    "D_off": 30.136,
+    "dD": 0.01699999999999946,
+    "D_done_on": 0.263,
+    "D_done_off": 0.263,
+    "R3_flag": [],
+    "rut_on": 97.67496701978415,
+    "rut_off": 97.69705312710144,
+    "drut": -0.022086107317292658,
+    "stroke_on": 665.8504317528427,
+    "stroke_off": 665.847422134537,
+    "dstroke": 0.003009618305668482,
+    "guard_margin_on": 16.94956824715723,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.7999999999981355,
+    "loc_delay_off": 0.7999999999981355,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.7000000000000028,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89463,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 35.158,
+    "E3_between_mm": 0.125,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.003,
+     "FL+FR+RL+RR": 16.098
+    },
+    "E4_gallery": [
+     12.581,
+     15.77
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.006553,
+    "E5_back_s": 24.77,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 66500,
+    "demand_met_chunks": 50399,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 50399,
+    "solved_chunks": 16101,
+    "audit_chunks": 50,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_R4_eta0.85": {
+   "bundle": "A",
+   "case": "R4",
+   "name": "K24_top_roll5.5_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -6.362300000000005,
+    "F_on": 48.2658,
+    "F_off": 54.6281,
+    "F_leg_on": "RL",
+    "F_t_on": 24.061,
+    "R1_flag": true,
+    "att_on": 0.01548,
+    "att_off": 0.01567,
+    "datt": -0.0001899999999999992,
+    "att_after_on": 4.96789,
+    "att_after_off": 4.86034,
+    "ready_on": 57.9,
+    "ready_off": 56.0,
+    "dready": 1.8999999999999986,
+    "R2_flag": [],
+    "D_on": 30.956,
+    "D_off": 29.83,
+    "dD": 1.1260000000000012,
+    "D_done_on": 2.051,
+    "D_done_off": 0.461,
+    "R3_flag": [],
+    "rut_on": 79.94398206971418,
+    "rut_off": 79.93082419720818,
+    "drut": 0.013157872505999535,
+    "stroke_on": 666.5599430430628,
+    "stroke_off": 666.5838261071538,
+    "dstroke": -0.02388306409091001,
+    "guard_margin_on": 16.24005695693711,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 1.1999999999972033,
+    "loc_delay_off": 1.3999999999967372,
+    "dloc": -0.19999999999953388,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89463,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 35.158,
+    "E3_between_mm": 0.125,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.003,
+     "FL+FR+RL+RR": 16.098
+    },
+    "E4_gallery": [
+     12.581,
+     15.77
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.005961,
+    "E5_back_s": 26.07,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 67900,
+    "demand_met_chunks": 51799,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 51799,
+    "solved_chunks": 16101,
+    "audit_chunks": 51,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_R5_eta0.85": {
+   "bundle": "A",
+   "case": "R5",
+   "name": "K24_top_rpB_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -1.8648999999999987,
+    "F_on": 48.1338,
+    "F_off": 49.9987,
+    "F_leg_on": "RL",
+    "F_t_on": 23.026,
+    "R1_flag": false,
+    "att_on": 0.01515,
+    "att_off": 0.01529,
+    "datt": -0.0001399999999999995,
+    "att_after_on": 2.71419,
+    "att_after_off": 2.72789,
+    "ready_on": 56.3,
+    "ready_off": 54.4,
+    "dready": 1.8999999999999986,
+    "R2_flag": [],
+    "D_on": 31.02,
+    "D_off": 31.018,
+    "dD": 0.0019999999999988916,
+    "D_done_on": 2.051,
+    "D_done_off": 2.048,
+    "R3_flag": [],
+    "rut_on": 93.42409853702362,
+    "rut_off": 93.42155006079462,
+    "drut": 0.002548476229009111,
+    "stroke_on": 663.3517686357942,
+    "stroke_off": 663.3446081754876,
+    "dstroke": 0.007160460306636196,
+    "guard_margin_on": 19.448231364205753,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.8999999999979025,
+    "loc_delay_off": 0.7999999999981355,
+    "dloc": 0.09999999999976694,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": -0.3,
+    "dtouch_s": 1.9000000000000021,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89463,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 35.158,
+    "E3_between_mm": 0.125,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.003,
+     "FL+FR+RL+RR": 16.098
+    },
+    "E4_gallery": [
+     12.581,
+     15.77
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.00653,
+    "E5_back_s": 24.47,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 66300,
+    "demand_met_chunks": 50199,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 50199,
+    "solved_chunks": 16101,
+    "audit_chunks": 50,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_R6_eta0.85": {
+   "bundle": "A",
+   "case": "R6",
+   "name": "K0V_top_rpB_Fs0",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 0.28480000000000416,
+    "F_on": 44.8532,
+    "F_off": 44.5684,
+    "F_leg_on": "RL",
+    "F_t_on": 23.043,
+    "R1_flag": false,
+    "att_on": 0.0155,
+    "att_off": 0.01573,
+    "datt": -0.00023000000000000104,
+    "att_after_on": 2.75335,
+    "att_after_off": 2.7374,
+    "ready_on": 56.3,
+    "ready_off": 54.6,
+    "dready": 1.6999999999999957,
+    "R2_flag": [],
+    "D_on": 30.003,
+    "D_off": 30.005,
+    "dD": -0.0019999999999988916,
+    "D_done_on": 2.062,
+    "D_done_off": 2.061,
+    "R3_flag": [],
+    "rut_on": 93.19473204913376,
+    "rut_off": 93.16947800521052,
+    "drut": 0.025254043923240488,
+    "stroke_on": 663.2176080411647,
+    "stroke_off": 663.2139425696763,
+    "dstroke": 0.0036654714883752604,
+    "guard_margin_on": 19.582391958835274,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.7999999999981355,
+    "loc_delay_off": 0.7999999999981355,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": -0.09999999999999998,
+    "dtouch_s": 1.6000000000000014,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      15.901,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.88455,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 15.726,
+    "E3_integral_mm": 38.059,
+    "E3_between_mm": 8.134,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.11,
+     "FL+FR+RL+RR": 15.791
+    },
+    "E4_gallery": [
+     9.353,
+     12.757
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.006558,
+    "E5_back_s": 24.67,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 66300,
+    "demand_met_chunks": 50399,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 50399,
+    "solved_chunks": 15901,
+    "audit_chunks": 50,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_R7_eta0.85": {
+   "bundle": "A",
+   "case": "R7",
+   "name": "K8_top_rpB_Fs8",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 3.5346000000000046,
+    "F_on": 52.8528,
+    "F_off": 49.3182,
+    "F_leg_on": "RL",
+    "F_t_on": 23.051,
+    "R1_flag": false,
+    "att_on": 0.01482,
+    "att_off": 0.01547,
+    "datt": -0.0006499999999999995,
+    "att_after_on": 2.70358,
+    "att_after_off": 2.73031,
+    "ready_on": 56.2,
+    "ready_off": 54.4,
+    "dready": 1.8000000000000043,
+    "R2_flag": [],
+    "D_on": 32.25,
+    "D_off": 32.249,
+    "dD": 0.0009999999999976694,
+    "D_done_on": 2.047,
+    "D_done_off": 2.054,
+    "R3_flag": [],
+    "rut_on": 93.61243015841434,
+    "rut_off": 93.63582617691608,
+    "drut": -0.023396018501742333,
+    "stroke_on": 663.4058661248476,
+    "stroke_off": 663.4798674382282,
+    "dstroke": -0.07400131338056326,
+    "guard_margin_on": 19.394133875152306,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.7999999999981355,
+    "loc_delay_off": 0.7999999999981355,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": -0.3,
+    "dtouch_s": 1.9000000000000021,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      16.384,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.88074,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 16.401,
+    "E3_integral_mm": 40.524,
+    "E3_between_mm": 8.176,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR+RL+RR": 16.384
+    },
+    "E4_gallery": [
+     15.812,
+     18.794
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.006431,
+    "E5_back_s": 24.19,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 66200,
+    "demand_met_chunks": 49816,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 49816,
+    "solved_chunks": 16384,
+    "audit_chunks": 49,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_R8_eta0.85": {
+   "bundle": "A",
+   "case": "R8",
+   "name": "A_middle_rpB_Fs0",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 3.5696999999999974,
+    "F_on": 52.3379,
+    "F_off": 48.7682,
+    "F_leg_on": "RL",
+    "F_t_on": 22.622,
+    "R1_flag": false,
+    "att_on": 0.01508,
+    "att_off": 0.01514,
+    "datt": -6.0000000000001025e-05,
+    "att_after_on": 2.70302,
+    "att_after_off": 2.71217,
+    "ready_on": 55.9,
+    "ready_off": 54.4,
+    "dready": 1.5,
+    "R2_flag": [],
+    "D_on": 30.017,
+    "D_off": 30.019,
+    "dD": -0.0019999999999988916,
+    "D_done_on": 2.042,
+    "D_done_off": 2.045,
+    "R3_flag": [],
+    "rut_on": 93.20435596506861,
+    "rut_off": 93.20202271187968,
+    "drut": 0.0023332531889366237,
+    "stroke_on": 663.2008173443297,
+    "stroke_off": 663.202212919473,
+    "dstroke": -0.001395575143305905,
+    "guard_margin_on": 19.599182655670234,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.7999999999981355,
+    "loc_delay_off": 0.7999999999981355,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.5,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      15.901,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.88455,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 15.726,
+    "E3_integral_mm": 38.059,
+    "E3_between_mm": 8.134,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.11,
+     "FL+FR+RL+RR": 15.791
+    },
+    "E4_gallery": [
+     9.353,
+     12.757
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.006574,
+    "E5_back_s": 24.37,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 65900,
+    "demand_met_chunks": 49999,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 49999,
+    "solved_chunks": 15901,
+    "audit_chunks": 49,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_R9_eta0.85": {
+   "bundle": "A",
+   "case": "R9",
+   "name": "A_bottom_rpB_Fs0",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -8.633499999999998,
+    "F_on": 46.0691,
+    "F_off": 54.7026,
+    "F_leg_on": "RL",
+    "F_t_on": 22.498,
+    "R1_flag": true,
+    "att_on": 0.01483,
+    "att_off": 0.01507,
+    "datt": -0.00024000000000000063,
+    "att_after_on": 2.70265,
+    "att_after_off": 2.72691,
+    "ready_on": 55.8,
+    "ready_off": 54.4,
+    "dready": 1.3999999999999986,
+    "R2_flag": [],
+    "D_on": 29.918,
+    "D_off": 29.912,
+    "dD": 0.006000000000000227,
+    "D_done_on": 2.04,
+    "D_done_off": 2.033,
+    "R3_flag": [],
+    "rut_on": 93.2079148026644,
+    "rut_off": 93.19524963897052,
+    "drut": 0.01266516369388171,
+    "stroke_on": 663.1911106608568,
+    "stroke_off": 663.1925058287887,
+    "dstroke": -0.0013951679319461618,
+    "guard_margin_on": 19.60888933914316,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.8999999999979025,
+    "loc_delay_off": 0.8999999999979025,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": -0.3,
+    "dtouch_s": 1.4000000000000021,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      15.901,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.88455,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 15.726,
+    "E3_integral_mm": 38.059,
+    "E3_between_mm": 8.134,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.11,
+     "FL+FR+RL+RR": 15.791
+    },
+    "E4_gallery": [
+     9.353,
+     12.757
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.006569,
+    "E5_back_s": 24.27,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 65800,
+    "demand_met_chunks": 49899,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 49899,
+    "solved_chunks": 15901,
+    "audit_chunks": 49,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_S1_eta0.85": {
+   "bundle": "A",
+   "case": "S1",
+   "name": "P3b_J1_B_top_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "off": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -2.4728999999999957,
+    "F_on": 66.3544,
+    "F_off": 68.8273,
+    "F_leg_on": "RR",
+    "F_t_on": 32.632,
+    "R1_flag": false,
+    "att_on": 0.023,
+    "att_off": 0.01749,
+    "datt": 0.005510000000000001,
+    "att_after_on": 0.26402,
+    "att_after_off": 0.23273,
+    "ready_on": 81.4,
+    "ready_off": 64.1,
+    "dready": 17.30000000000001,
+    "R2_flag": [
+     "READY>5"
+    ],
+    "D_on": 4.546,
+    "D_off": 3.54,
+    "dD": 1.0060000000000002,
+    "D_done_on": 0.402,
+    "D_done_off": 0.478,
+    "R3_flag": [],
+    "rut_on": 71.53318926855903,
+    "rut_off": 71.6831839147174,
+    "drut": -0.1499946461583761,
+    "stroke_on": 531.900351865467,
+    "stroke_off": 516.093096211563,
+    "dstroke": 15.807255653904008,
+    "guard_margin_on": 150.89964813453298,
+    "R4_flag": [
+     "stroke>+3"
+    ],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      1,
+      1
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      1,
+      1
+     ]
+    },
+    "loc_delay_on": 0.8999999999979025,
+    "loc_delay_off": 0.8999999999979025,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     2,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      2.821,
+      5.965
+     ],
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.77708,
+    "E2_min_r_level": 0.77708,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 43.462,
+    "E3_between_mm": 8.429,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 2.444,
+     "FL+FR": 0.38,
+     "FL+FR+RL+RR": 16.098
+    },
+    "E4_gallery": [
+     12.581,
+     106.833
+    ],
+    "E5_I_end": 0.019639,
+    "E5_I_max": 0.019639,
+    "E5_back_s": 18.3,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 91400,
+    "demand_met_chunks": 72478,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 72478,
+    "solved_chunks": 18922,
+    "audit_chunks": 72,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_S2_eta0.85": {
+   "bundle": "A",
+   "case": "S2",
+   "name": "P3b_J2_B_top_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "off": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -4.631,
+    "F_on": 64.157,
+    "F_off": 68.788,
+    "F_leg_on": "RR",
+    "F_t_on": 38.984,
+    "R1_flag": false,
+    "att_on": 0.04206,
+    "att_off": 0.03344,
+    "datt": 0.008620000000000003,
+    "att_after_on": 0.33403,
+    "att_after_off": 0.2653,
+    "ready_on": 66.1,
+    "ready_off": 65.7,
+    "dready": 0.3999999999999915,
+    "R2_flag": [],
+    "D_on": 10.139,
+    "D_off": 3.503,
+    "dD": 6.635999999999999,
+    "D_done_on": 1.498,
+    "D_done_off": 0.413,
+    "R3_flag": [],
+    "rut_on": 68.3238184016193,
+    "rut_off": 72.23681865124968,
+    "drut": -3.9130002496303717,
+    "stroke_on": 589.6908799262827,
+    "stroke_off": 545.4914997899432,
+    "dstroke": 44.19938013633953,
+    "guard_margin_on": 93.10912007371724,
+    "R4_flag": [
+     "stroke>+3"
+    ],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      1,
+      1
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      1,
+      1
+     ]
+    },
+    "loc_delay_on": 0.9000000000042974,
+    "loc_delay_off": 0.9000000000042974,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      3.528,
+      9.906
+     ],
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.69143,
+    "E2_min_r_level": 0.69143,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 50.629,
+    "E3_between_mm": 15.395,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 2.15,
+     "FR": 0.241,
+     "FL+FR": 1.133,
+     "FL+FR+RL": 0.002,
+     "FL+FR+RL+RR": 16.103
+    },
+    "E4_gallery": [
+     12.581,
+     107.172
+    ],
+    "E5_I_end": 0.015613,
+    "E5_I_max": 0.016034,
+    "E5_back_s": 13.61,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s",
+     "between>10mm"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 76100,
+    "demand_met_chunks": 56471,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 56471,
+    "solved_chunks": 19629,
+    "audit_chunks": 56,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_S3_eta0.85": {
+   "bundle": "A",
+   "case": "S3",
+   "name": "P3b_J2_B_middle_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "off": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -0.8071999999999946,
+    "F_on": 68.531,
+    "F_off": 69.3382,
+    "F_leg_on": "RR",
+    "F_t_on": 37.744,
+    "R1_flag": false,
+    "att_on": 0.03093,
+    "att_off": 0.02695,
+    "datt": 0.003979999999999997,
+    "att_after_on": 0.29899,
+    "att_after_off": 0.24796,
+    "ready_on": 69.0,
+    "ready_off": 66.2,
+    "dready": 2.799999999999997,
+    "R2_flag": [],
+    "D_on": 2.663,
+    "D_off": 2.889,
+    "dD": -0.22599999999999998,
+    "D_done_on": 0.368,
+    "D_done_off": 0.657,
+    "R3_flag": [],
+    "rut_on": 73.81654644681844,
+    "rut_off": 73.33890011641499,
+    "drut": 0.47764633040344506,
+    "stroke_on": 549.234769954871,
+    "stroke_off": 544.147521246091,
+    "dstroke": 5.087248708780066,
+    "guard_margin_on": 133.56523004512894,
+    "R4_flag": [
+     "stroke>+3"
+    ],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      1,
+      1
+     ]
+    },
+    "loc_delay_on": 0.9000000000042974,
+    "loc_delay_off": 0.9000000000042974,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      2.701,
+      5.602
+     ],
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.823,
+    "E2_min_r_level": 0.823,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 43.086,
+    "E3_between_mm": 7.843,
+    "E4_swaps": 1,
+    "E4_max_in_1s": 1,
+    "E4_groups": {
+     "FL": 1.889,
+     "FR": 0.359,
+     "FL+FR": 0.455,
+     "FR+RL": 0.001,
+     "FL+FR+RL+RR": 16.098
+    },
+    "E4_gallery": [
+     12.581,
+     106.876
+    ],
+    "E5_I_end": 0.014237,
+    "E5_I_max": 0.014496,
+    "E5_back_s": 17.36,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 79000,
+    "demand_met_chunks": 60198,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 60198,
+    "solved_chunks": 18802,
+    "audit_chunks": 60,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_S4_eta0.85": {
+   "bundle": "A",
+   "case": "S4",
+   "name": "P3b_J1_B_top_Fs4_m1p1",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "boundary",
+     "reasons": [
+      "READY 71.5+31=102.5>100"
+     ]
+    },
+    "off": {
+     "class": "boundary",
+     "reasons": [
+      "READY 72.9+31=103.9>100"
+     ]
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -2.051000000000002,
+    "F_on": 73.0812,
+    "F_off": 75.1322,
+    "F_leg_on": "RR",
+    "F_t_on": 39.48,
+    "R1_flag": false,
+    "att_on": 0.06429,
+    "att_off": 0.04514,
+    "datt": 0.01915,
+    "att_after_on": 0.42234,
+    "att_after_off": 0.41494,
+    "ready_on": 71.5,
+    "ready_off": 72.9,
+    "dready": -1.4000000000000057,
+    "R2_flag": [
+     "att>0.01"
+    ],
+    "D_on": 4.322,
+    "D_off": 3.248,
+    "dD": 1.0739999999999998,
+    "D_done_on": 0.376,
+    "D_done_off": 0.688,
+    "R3_flag": [],
+    "rut_on": 60.45415743504374,
+    "rut_off": 62.789915317506455,
+    "drut": -2.3357578824627154,
+    "stroke_on": 609.6785321194823,
+    "stroke_off": 592.5625405081172,
+    "dstroke": 17.115991611365075,
+    "guard_margin_on": 73.12146788051768,
+    "R4_flag": [
+     "stroke>+3"
+    ],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      1,
+      1
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      1,
+      2
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      2,
+      2
+     ]
+    },
+    "loc_delay_on": 1.1000000000052523,
+    "loc_delay_off": 1.1000000000052523,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": true,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      2.613,
+      20.476
+     ],
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.4808,
+    "E2_min_r_level": 0.4808,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 54.704,
+    "E3_between_mm": 19.671,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 1.515,
+     "FL+FR": 1.101,
+     "FL+FR+RL+RR": 16.098
+    },
+    "E4_gallery": [
+     12.581,
+     118.852
+    ],
+    "E5_I_end": 0.02,
+    "E5_I_max": 0.02,
+    "E5_back_s": 17.23,
+    "E5_at_limit": true,
+    "E_flags": [
+     "r<0.93>=7s",
+     "between>10mm",
+     "I at limit"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 81500,
+    "demand_met_chunks": 62786,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 62786,
+    "solved_chunks": 18714,
+    "audit_chunks": 62,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_S5_eta0.85": {
+   "bundle": "A",
+   "case": "S5",
+   "name": "P3b_J2_B_top_Fs4_m1p1",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "boundary",
+     "reasons": [
+      "READY 83.9+31=114.9>100"
+     ]
+    },
+    "off": {
+     "class": "boundary",
+     "reasons": [
+      "READY 85.1+31=116.1>100"
+     ]
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -4.1053,
+    "F_on": 70.744,
+    "F_off": 74.8493,
+    "F_leg_on": "RR",
+    "F_t_on": 44.382,
+    "R1_flag": false,
+    "att_on": 0.03389,
+    "att_off": 0.04547,
+    "datt": -0.011579999999999993,
+    "att_after_on": 0.42296,
+    "att_after_off": 0.38318,
+    "ready_on": 83.9,
+    "ready_off": 85.1,
+    "dready": -1.1999999999999886,
+    "R2_flag": [],
+    "D_on": 6.36,
+    "D_off": 3.831,
+    "dD": 2.5290000000000004,
+    "D_done_on": 0.686,
+    "D_done_off": 0.198,
+    "R3_flag": [],
+    "rut_on": 76.40887003437832,
+    "rut_off": 82.3762810818239,
+    "drut": -5.96741104744558,
+    "stroke_on": 629.9947331690018,
+    "stroke_off": 617.3988936414785,
+    "dstroke": 12.595839527523367,
+    "guard_margin_on": 52.80526683099811,
+    "R4_flag": [
+     "clear<-5",
+     "stroke>+3"
+    ],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      1,
+      1
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      2,
+      1
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      2,
+      2
+     ]
+    },
+    "loc_delay_on": 1.6000000000076398,
+    "loc_delay_off": 1.5000000000071623,
+    "dloc": 0.10000000000047748,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.6999999999999993,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     2,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      3.172,
+      13.938
+     ],
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.72645,
+    "E2_min_r_level": 0.72645,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 49.528,
+    "E3_between_mm": 14.495,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 1.315,
+     "FR": 0.093,
+     "FL+FR": 1.767,
+     "FL+FR+RL+RR": 16.098
+    },
+    "E4_gallery": [
+     12.581,
+     117.0
+    ],
+    "E5_I_end": 0.02,
+    "E5_I_max": 0.02,
+    "E5_back_s": 11.88,
+    "E5_at_limit": true,
+    "E_flags": [
+     "r<0.93>=7s",
+     "between>10mm",
+     "I at limit"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 93900,
+    "demand_met_chunks": 74627,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 74627,
+    "solved_chunks": 19273,
+    "audit_chunks": 74,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_S7_eta0.85": {
+   "bundle": "A",
+   "case": "S7",
+   "name": "S9SL_X6rb_J1_B_top_Fs4_rm2p86_p0",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "boundary",
+     "reasons": [
+      "READY 78.7+31=109.7>100",
+      "guard margin 3.7<23"
+     ]
+    },
+    "off": {
+     "class": "boundary",
+     "reasons": [
+      "READY 76.4+31=107.4>100",
+      "clear 38.0-15=23.0<25",
+      "guard margin 22.5<23"
+     ]
+    },
+    "change": false
+   },
+   "new_row_flags": [
+    "P3-2"
+   ],
+   "record": {
+    "dF_kN": -0.04299999999999926,
+    "F_on": 63.3494,
+    "F_off": 63.3924,
+    "F_leg_on": "RR",
+    "F_t_on": 28.199,
+    "R1_flag": false,
+    "att_on": 0.03131,
+    "att_off": 0.03008,
+    "datt": 0.0012299999999999985,
+    "att_after_on": 2.8577,
+    "att_after_off": 2.8534,
+    "ready_on": 78.7,
+    "ready_off": 76.4,
+    "dready": 2.299999999999997,
+    "R2_flag": [],
+    "D_on": 10.019,
+    "D_off": 10.032,
+    "dD": -0.0129999999999999,
+    "D_done_on": 0.403,
+    "D_done_off": 0.433,
+    "R3_flag": [],
+    "rut_on": 57.92522851243931,
+    "rut_off": 38.003820436336454,
+    "drut": 19.921408076102857,
+    "stroke_on": 679.097513376119,
+    "stroke_off": 660.2845817260028,
+    "dstroke": 18.812931650116184,
+    "guard_margin_on": 3.7024866238809864,
+    "R4_flag": [
+     "stroke>+3"
+    ],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      1,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      1,
+      1
+     ],
+     "soil_mode_start": [
+      1,
+      0
+     ]
+    },
+    "loc_delay_on": 2.9999999999930083,
+    "loc_delay_off": 0.5999999999986017,
+    "dloc": 2.3999999999944066,
+    "R5_flag": [
+     "INFO_LOC_REVOKED",
+     "soil_mode_start",
+     "loc_delay>0.5"
+    ],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     2,
+     2
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89463,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 35.158,
+    "E3_between_mm": 0.125,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.003,
+     "FL+FR+RL+RR": 16.098
+    },
+    "E4_gallery": [
+     12.581,
+     15.77
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.018529,
+    "E5_back_s": 21.87,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 88700,
+    "demand_met_chunks": 72599,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 72599,
+    "solved_chunks": 16101,
+    "audit_chunks": 72,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "A_S8_eta0.85": {
+   "bundle": "A",
+   "case": "S8",
+   "name": "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "stroke_limited_stop",
+     "stroke_limited_stop"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "fault",
+     "fault"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "stroke_limited_stop",
+     "reasons": []
+    },
+    "off": {
+     "class": "stroke_limited_stop",
+     "reasons": []
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -0.23160000000000025,
+    "F_on": 62.8459,
+    "F_off": 63.0775,
+    "F_leg_on": "RL",
+    "F_t_on": 30.439,
+    "R1_flag": false,
+    "att_on": null,
+    "att_off": null,
+    "datt": null,
+    "att_after_on": 3.36341,
+    "att_after_off": 3.28438,
+    "ready_on": null,
+    "ready_off": null,
+    "dready": null,
+    "R2_flag": [],
+    "D_on": 10.426,
+    "D_off": 10.28,
+    "dD": 0.1460000000000008,
+    "D_done_on": null,
+    "D_done_off": null,
+    "R3_flag": [],
+    "rut_on": null,
+    "rut_off": null,
+    "drut": null,
+    "stroke_on": 681.97067058241,
+    "stroke_off": 682.0663503830292,
+    "dstroke": -0.09567980061922299,
+    "guard_margin_on": 0.8293294175899746,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.39999999999906777,
+    "loc_delay_off": 0.2999999999993008,
+    "dloc": 0.09999999999976694,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     0,
+     0
+    ],
+    "final_phase": [
+     "fault",
+     "fault"
+    ],
+    "E1": {
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89463,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 15.837,
+    "E3_integral_mm": 35.158,
+    "E3_between_mm": 0.125,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.003,
+     "FL+FR+RL+RR": 16.098
+    },
+    "E4_gallery": [
+     12.581,
+     15.77
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.001264,
+    "E5_back_s": null,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 39800,
+    "demand_met_chunks": 23699,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 23699,
+    "solved_chunks": 16101,
+    "audit_chunks": 23,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_R10_eta0.90": {
+   "bundle": "B",
+   "case": "R10",
+   "name": "JA_middle_flat_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -1.226700000000001,
+    "F_on": 53.6023,
+    "F_off": 54.829,
+    "F_leg_on": "RR",
+    "F_t_on": 36.732,
+    "R1_flag": false,
+    "att_on": 0.01487,
+    "att_off": 0.01598,
+    "datt": -0.0011100000000000016,
+    "att_after_on": 0.10809,
+    "att_after_off": 0.11488,
+    "ready_on": 40.9,
+    "ready_off": 40.2,
+    "dready": 0.6999999999999957,
+    "R2_flag": [],
+    "D_on": 32.011,
+    "D_off": 29.684,
+    "dD": 2.3270000000000017,
+    "D_done_on": 1.207,
+    "D_done_off": 0.579,
+    "R3_flag": [],
+    "rut_on": 49.548450106862596,
+    "rut_off": 49.53967030996287,
+    "drut": 0.008779796899723635,
+    "stroke_on": 407.9320593014074,
+    "stroke_off": 407.9985233805991,
+    "dstroke": -0.06646407919174635,
+    "guard_margin_on": 274.8679406985926,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.4999999999988347,
+    "loc_delay_off": 0.39999999999906777,
+    "dloc": 0.09999999999976694,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      0.728,
+      0.731
+     ],
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.9455,
+    "E2_min_r_level": 0.98189,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 17.404,
+    "E3_between_mm": 1.784,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.067,
+     "FL+FR": 0.664,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     106.432
+    ],
+    "E5_I_end": 0.003379,
+    "E5_I_max": 0.009304,
+    "E5_back_s": 4.53,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 50900,
+    "demand_met_chunks": 35102,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 35102,
+    "solved_chunks": 15798,
+    "audit_chunks": 35,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_R11_eta0.90": {
+   "bundle": "B",
+   "case": "R11",
+   "name": "JA_bottom_flat_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -1.004100000000001,
+    "F_on": 53.6883,
+    "F_off": 54.6924,
+    "F_leg_on": "RR",
+    "F_t_on": 36.918,
+    "R1_flag": false,
+    "att_on": 0.01747,
+    "att_off": 0.01408,
+    "datt": 0.003389999999999999,
+    "att_after_on": 0.11907,
+    "att_after_off": 0.10254,
+    "ready_on": 41.2,
+    "ready_off": 39.8,
+    "dready": 1.4000000000000057,
+    "R2_flag": [],
+    "D_on": 31.797,
+    "D_off": 29.918,
+    "dD": 1.8790000000000013,
+    "D_done_on": 0.914,
+    "D_done_off": 0.264,
+    "R3_flag": [],
+    "rut_on": 49.54450744109806,
+    "rut_off": 49.46089227527972,
+    "drut": 0.08361516581834394,
+    "stroke_on": 408.0708287668242,
+    "stroke_off": 407.8171659731586,
+    "dstroke": 0.25366279366562594,
+    "guard_margin_on": 274.72917123317575,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.4999999999988347,
+    "loc_delay_off": 0.4999999999988347,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.9000000000000021,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      0.768,
+      0.591
+     ],
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.9455,
+    "E2_min_r_level": 0.98317,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 17.38,
+    "E3_between_mm": 1.76,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.074,
+     "FL+FR": 0.697,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     106.119
+    ],
+    "E5_I_end": 0.003763,
+    "E5_I_max": 0.010246,
+    "E5_back_s": 4.68,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 51200,
+    "demand_met_chunks": 35362,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 35362,
+    "solved_chunks": 15838,
+    "audit_chunks": 35,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_R12_eta0.90": {
+   "bundle": "B",
+   "case": "R12",
+   "name": "E_G4_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     null,
+     null
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -1.0321999999999996,
+    "F_on": 12.7146,
+    "F_off": 13.7468,
+    "F_leg_on": "RR",
+    "F_t_on": 46.832,
+    "R1_flag": false,
+    "att_on": 0.03474,
+    "att_off": 0.03398,
+    "datt": 0.0007599999999999968,
+    "att_after_on": 0.12041,
+    "att_after_off": 0.12096,
+    "ready_on": 40.4,
+    "ready_off": 39.4,
+    "dready": 1.0,
+    "R2_flag": [],
+    "D_on": 113.034,
+    "D_off": 111.053,
+    "dD": 1.9810000000000088,
+    "D_done_on": 2.017,
+    "D_done_off": 0.268,
+    "R3_flag": [],
+    "rut_on": null,
+    "rut_off": null,
+    "drut": null,
+    "stroke_on": 409.8992518225153,
+    "stroke_off": 409.8181775987819,
+    "dstroke": 0.08107422373336703,
+    "guard_margin_on": 272.9007481774847,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": null,
+    "loc_delay_off": null,
+    "dloc": null,
+    "R5_flag": [],
+    "reapp_on": 1,
+    "reapp_off": 1,
+    "p5_on": 1,
+    "p5_off": 1,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     null,
+     null
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      0.743,
+      0.803
+     ],
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.9455,
+    "E2_min_r_level": 0.98033,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 17.436,
+    "E3_between_mm": 1.816,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.076,
+     "FL+FR": 0.67,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     106.351
+    ],
+    "E5_I_end": 0.003334,
+    "E5_I_max": 0.009499,
+    "E5_back_s": 4.12,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 71800,
+    "demand_met_chunks": 55987,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 55987,
+    "solved_chunks": 15813,
+    "audit_chunks": 55,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_R13_eta0.90": {
+   "bundle": "B",
+   "case": "R13",
+   "name": "E_SS_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     null,
+     null
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -1.189700000000002,
+    "F_on": 24.3067,
+    "F_off": 25.4964,
+    "F_leg_on": "RR",
+    "F_t_on": 55.599,
+    "R1_flag": false,
+    "att_on": 0.03709,
+    "att_off": 0.03704,
+    "datt": 5.000000000000143e-05,
+    "att_after_on": 0.0961,
+    "att_after_off": 0.09195,
+    "ready_on": 40.4,
+    "ready_off": 39.4,
+    "dready": 1.0,
+    "R2_flag": [],
+    "D_on": 88.613,
+    "D_off": 86.34,
+    "dD": 2.272999999999996,
+    "D_done_on": 2.017,
+    "D_done_off": 0.268,
+    "R3_flag": [],
+    "rut_on": null,
+    "rut_off": null,
+    "drut": null,
+    "stroke_on": 410.86776112256797,
+    "stroke_off": 410.9178769828545,
+    "dstroke": -0.050115860286553016,
+    "guard_margin_on": 271.932238877432,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": null,
+    "loc_delay_off": null,
+    "dloc": null,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     null,
+     null
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      0.743,
+      0.803
+     ],
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.9455,
+    "E2_min_r_level": 0.98033,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 17.436,
+    "E3_between_mm": 1.816,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.076,
+     "FL+FR": 0.67,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     106.351
+    ],
+    "E5_I_end": 0.003334,
+    "E5_I_max": 0.00866,
+    "E5_back_s": 4.12,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 86900,
+    "demand_met_chunks": 71087,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 71087,
+    "solved_chunks": 15813,
+    "audit_chunks": 71,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_R14_eta0.90": {
+   "bundle": "B",
+   "case": "R14",
+   "name": "E_RE1bF_Fs8",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     null,
+     null
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 0.0,
+    "F_on": -0.7175,
+    "F_off": -0.7175,
+    "F_leg_on": "RR",
+    "F_t_on": 45.612,
+    "R1_flag": false,
+    "att_on": 0.03932,
+    "att_off": 0.0366,
+    "datt": 0.00272,
+    "att_after_on": 0.31324,
+    "att_after_off": 0.31295,
+    "ready_on": 40.6,
+    "ready_off": 39.4,
+    "dready": 1.2000000000000028,
+    "R2_flag": [],
+    "D_on": 184.249,
+    "D_off": 185.214,
+    "dD": -0.9650000000000034,
+    "D_done_on": 2.021,
+    "D_done_off": 0.271,
+    "R3_flag": [],
+    "rut_on": null,
+    "rut_off": null,
+    "drut": null,
+    "stroke_on": 433.27787643539483,
+    "stroke_off": 432.7447409599011,
+    "dstroke": 0.5331354754937365,
+    "guard_margin_on": 249.52212356460512,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": null,
+    "loc_delay_off": null,
+    "dloc": null,
+    "R5_flag": [],
+    "reapp_on": 1,
+    "reapp_off": 1,
+    "p5_on": 1,
+    "p5_off": 1,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.0,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     null,
+     null
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      0.765,
+      1.136
+     ],
+     "touch": [
+      15.27,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.93676,
+    "E2_min_r_level": 0.97288,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 20.03,
+    "E3_between_mm": 5.776,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.127,
+     "FL+FR": 0.638,
+     "RL+RR": 0.001,
+     "FL+FR+RL+RR": 15.269
+    },
+    "E4_gallery": [
+     16.931,
+     109.893
+    ],
+    "E5_I_end": 0.00282,
+    "E5_I_max": 0.011013,
+    "E5_back_s": 4.04,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 74200,
+    "demand_met_chunks": 58165,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 58165,
+    "solved_chunks": 16035,
+    "audit_chunks": 58,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_R15_eta0.90": {
+   "bundle": "B",
+   "case": "R15",
+   "name": "G1L_RE1bF_FL_top_Fs0",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     null,
+     null
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 0.0,
+    "F_on": -1.0472,
+    "F_off": -1.0472,
+    "F_leg_on": "FL",
+    "F_t_on": 25.865,
+    "R1_flag": false,
+    "att_on": 0.02422,
+    "att_off": 0.02416,
+    "datt": 5.9999999999997555e-05,
+    "att_after_on": 0.79833,
+    "att_after_off": 0.7966,
+    "ready_on": 63.7,
+    "ready_off": 62.5,
+    "dready": 1.2000000000000028,
+    "R2_flag": [],
+    "D_on": 211.553,
+    "D_off": 211.379,
+    "dD": 0.1740000000000066,
+    "D_done_on": 1.906,
+    "D_done_off": 1.839,
+    "R3_flag": [],
+    "rut_on": null,
+    "rut_off": null,
+    "drut": null,
+    "stroke_on": 446.2179050116427,
+    "stroke_off": 445.9595484471565,
+    "dstroke": 0.25835656448617783,
+    "guard_margin_on": 236.58209498835726,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": null,
+    "loc_delay_off": null,
+    "dloc": null,
+    "R5_flag": [],
+    "reapp_on": 6,
+    "reapp_off": 8,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": -0.09999999999999998,
+    "dtouch_s": 0.9000000000000021,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     null,
+     null
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      0.599,
+      0.264
+     ],
+     "touch": [
+      14.87,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.93641,
+    "E2_min_r_level": 0.99241,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 19.768,
+    "E3_between_mm": 8.282,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.214,
+     "FL+FR": 0.413,
+     "FL+FR+RL+RR": 14.842
+    },
+    "E4_gallery": [
+     10.481,
+     104.603
+    ],
+    "E5_I_end": 0.004034,
+    "E5_I_max": 0.015949,
+    "E5_back_s": 3.77,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 66700,
+    "demand_met_chunks": 51231,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 51231,
+    "solved_chunks": 15469,
+    "audit_chunks": 51,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_R16_eta0.90": {
+   "bundle": "B",
+   "case": "R16",
+   "name": "G1L_RE1bF_FL_top_o050_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     null,
+     null
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 0.0,
+    "F_on": -1.0472,
+    "F_off": -1.0472,
+    "F_leg_on": "FL",
+    "F_t_on": 25.265,
+    "R1_flag": false,
+    "att_on": 0.03006,
+    "att_off": 0.02888,
+    "datt": 0.0011800000000000005,
+    "att_after_on": 0.79357,
+    "att_after_off": 0.7906,
+    "ready_on": 49.4,
+    "ready_off": 48.5,
+    "dready": 0.8999999999999986,
+    "R2_flag": [],
+    "D_on": 205.78,
+    "D_off": 205.876,
+    "dD": -0.09600000000000364,
+    "D_done_on": 2.606,
+    "D_done_off": 2.636,
+    "R3_flag": [],
+    "rut_on": null,
+    "rut_off": null,
+    "drut": null,
+    "stroke_on": 445.76477374002593,
+    "stroke_off": 445.66374731661836,
+    "dstroke": 0.10102642340757484,
+    "guard_margin_on": 237.03522625997402,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": null,
+    "loc_delay_off": null,
+    "dloc": null,
+    "R5_flag": [],
+    "reapp_on": 4,
+    "reapp_off": 4,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     null,
+     null
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      0.743,
+      0.803
+     ],
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.9455,
+    "E2_min_r_level": 0.98033,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 17.436,
+    "E3_between_mm": 1.816,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.076,
+     "FL+FR": 0.67,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     106.351
+    ],
+    "E5_I_end": 0.003334,
+    "E5_I_max": 0.011029,
+    "E5_back_s": 3.22,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 52400,
+    "demand_met_chunks": 36587,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 36587,
+    "solved_chunks": 15813,
+    "audit_chunks": 36,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_R1_eta0.90": {
+   "bundle": "B",
+   "case": "R1",
+   "name": "K24_top_flat_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -1.1940000000000026,
+    "F_on": 53.4963,
+    "F_off": 54.6903,
+    "F_leg_on": "RR",
+    "F_t_on": 36.362,
+    "R1_flag": false,
+    "att_on": 0.01269,
+    "att_off": 0.01187,
+    "datt": 0.0008199999999999995,
+    "att_after_on": 0.0961,
+    "att_after_off": 0.09195,
+    "ready_on": 40.4,
+    "ready_off": 39.4,
+    "dready": 1.0,
+    "R2_flag": [],
+    "D_on": 32.112,
+    "D_off": 29.823,
+    "dD": 2.2890000000000015,
+    "D_done_on": 2.017,
+    "D_done_off": 0.268,
+    "R3_flag": [],
+    "rut_on": 49.42184146452799,
+    "rut_off": 49.324555756987465,
+    "drut": 0.09728570754052868,
+    "stroke_on": 407.6977707352843,
+    "stroke_off": 407.55783328949286,
+    "dstroke": 0.13993744579141776,
+    "guard_margin_on": 275.1022292647157,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.39999999999906777,
+    "loc_delay_off": 0.4999999999988347,
+    "dloc": -0.09999999999976694,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      0.743,
+      0.803
+     ],
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.9455,
+    "E2_min_r_level": 0.98033,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 17.436,
+    "E3_between_mm": 1.816,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.076,
+     "FL+FR": 0.67,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     106.351
+    ],
+    "E5_I_end": 0.003334,
+    "E5_I_max": 0.00843,
+    "E5_back_s": 4.12,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 50400,
+    "demand_met_chunks": 34587,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 34587,
+    "solved_chunks": 15813,
+    "audit_chunks": 34,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_R2_eta0.90": {
+   "bundle": "B",
+   "case": "R2",
+   "name": "K24_top_fdown3.5_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -1.0124999999999993,
+    "F_on": 24.5404,
+    "F_off": 25.5529,
+    "F_leg_on": "RR",
+    "F_t_on": 67.921,
+    "R1_flag": false,
+    "att_on": 0.01609,
+    "att_off": 0.01582,
+    "datt": 0.0002699999999999994,
+    "att_after_on": 3.65235,
+    "att_after_off": 3.57855,
+    "ready_on": 75.6,
+    "ready_off": 74.3,
+    "dready": 1.2999999999999972,
+    "R2_flag": [],
+    "D_on": 87.138,
+    "D_off": 88.702,
+    "dD": -1.563999999999993,
+    "D_done_on": 0.288,
+    "D_done_off": 1.999,
+    "R3_flag": [],
+    "rut_on": 102.92762364667499,
+    "rut_off": 102.91145873802047,
+    "drut": 0.016164908654516807,
+    "stroke_on": 660.7393560758501,
+    "stroke_off": 660.7282007083805,
+    "dstroke": 0.011155367469541488,
+    "guard_margin_on": 22.060643924149872,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.8999999999979025,
+    "loc_delay_off": 1.0999999999974364,
+    "dloc": -0.19999999999953388,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.1999999999999993,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.9455,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 17.033,
+    "E3_between_mm": 1.413,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.003,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     15.886
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.006427,
+    "E5_back_s": 25.53,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 85600,
+    "demand_met_chunks": 70530,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 70530,
+    "solved_chunks": 15070,
+    "audit_chunks": 70,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_R3_eta0.90": {
+   "bundle": "B",
+   "case": "R3",
+   "name": "K24_top_fup3.5_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -9.999999999621423e-05,
+    "F_on": 54.4765,
+    "F_off": 54.4766,
+    "F_leg_on": "RR",
+    "F_t_on": 51.669,
+    "R1_flag": false,
+    "att_on": 0.01482,
+    "att_off": 0.01485,
+    "datt": -3.0000000000000512e-05,
+    "att_after_on": 3.29296,
+    "att_after_off": 3.30543,
+    "ready_on": 55.7,
+    "ready_off": 54.9,
+    "dready": 0.8000000000000043,
+    "R2_flag": [],
+    "D_on": 30.136,
+    "D_off": 30.136,
+    "dD": 0.0,
+    "D_done_on": 0.263,
+    "D_done_off": 0.263,
+    "R3_flag": [],
+    "rut_on": 97.69766126095892,
+    "rut_off": 97.69705312710144,
+    "drut": 0.0006081338574830397,
+    "stroke_on": 665.8465945351552,
+    "stroke_off": 665.847422134537,
+    "dstroke": -0.0008275993818642746,
+    "guard_margin_on": 16.953405464844764,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.8999999999979025,
+    "loc_delay_off": 0.7999999999981355,
+    "dloc": 0.09999999999976694,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.9455,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 17.033,
+    "E3_between_mm": 1.413,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.003,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     15.886
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.006304,
+    "E5_back_s": 24.83,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 65700,
+    "demand_met_chunks": 50630,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 50630,
+    "solved_chunks": 15070,
+    "audit_chunks": 50,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_R4_eta0.90": {
+   "bundle": "B",
+   "case": "R4",
+   "name": "K24_top_roll5.5_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 0.07629999999999626,
+    "F_on": 54.7044,
+    "F_off": 54.6281,
+    "F_leg_on": "RR",
+    "F_t_on": 52.565,
+    "R1_flag": false,
+    "att_on": 0.01575,
+    "att_off": 0.01567,
+    "datt": 8.000000000000021e-05,
+    "att_after_on": 4.92891,
+    "att_after_off": 4.86034,
+    "ready_on": 56.6,
+    "ready_off": 56.0,
+    "dready": 0.6000000000000014,
+    "R2_flag": [],
+    "D_on": 29.684,
+    "D_off": 29.83,
+    "dD": -0.14599999999999724,
+    "D_done_on": 0.61,
+    "D_done_off": 0.461,
+    "R3_flag": [],
+    "rut_on": 79.9302011429719,
+    "rut_off": 79.93082419720818,
+    "drut": -0.000623054236285725,
+    "stroke_on": 666.5842307996917,
+    "stroke_off": 666.5838261071538,
+    "dstroke": 0.00040469253792707605,
+    "guard_margin_on": 16.215769200308273,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.8999999999979025,
+    "loc_delay_off": 1.3999999999967372,
+    "dloc": -0.4999999999988347,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.6999999999999993,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.9455,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 17.033,
+    "E3_between_mm": 1.413,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.003,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     15.886
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.006151,
+    "E5_back_s": 25.83,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 66600,
+    "demand_met_chunks": 51530,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 51530,
+    "solved_chunks": 15070,
+    "audit_chunks": 51,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_R5_eta0.90": {
+   "bundle": "B",
+   "case": "R5",
+   "name": "K24_top_rpB_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -7.607399999999998,
+    "F_on": 42.3913,
+    "F_off": 49.9987,
+    "F_leg_on": "RL",
+    "F_t_on": 21.965,
+    "R1_flag": true,
+    "att_on": 0.01525,
+    "att_off": 0.01529,
+    "datt": -4.0000000000000105e-05,
+    "att_after_on": 2.7098,
+    "att_after_off": 2.72789,
+    "ready_on": 55.2,
+    "ready_off": 54.4,
+    "dready": 0.8000000000000043,
+    "R2_flag": [],
+    "D_on": 31.026,
+    "D_off": 31.018,
+    "dD": 0.007999999999999119,
+    "D_done_on": 2.055,
+    "D_done_off": 2.048,
+    "R3_flag": [],
+    "rut_on": 93.41799727863615,
+    "rut_off": 93.42155006079462,
+    "drut": -0.0035527821584651065,
+    "stroke_on": 663.3466847362072,
+    "stroke_off": 663.3446081754876,
+    "dstroke": 0.0020765607196153724,
+    "guard_margin_on": 19.453315263792774,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.7999999999981355,
+    "loc_delay_off": 0.7999999999981355,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": -0.3,
+    "dtouch_s": 0.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.9455,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 17.033,
+    "E3_between_mm": 1.413,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.003,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     15.886
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.006591,
+    "E5_back_s": 24.43,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 65200,
+    "demand_met_chunks": 50130,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 50130,
+    "solved_chunks": 15070,
+    "audit_chunks": 50,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_R6_eta0.90": {
+   "bundle": "B",
+   "case": "R6",
+   "name": "K0V_top_rpB_Fs0",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 5.451600000000006,
+    "F_on": 50.02,
+    "F_off": 44.5684,
+    "F_leg_on": "RL",
+    "F_t_on": 21.977,
+    "R1_flag": false,
+    "att_on": 0.01568,
+    "att_off": 0.01573,
+    "datt": -5.000000000000143e-05,
+    "att_after_on": 2.73377,
+    "att_after_off": 2.7374,
+    "ready_on": 55.2,
+    "ready_off": 54.6,
+    "dready": 0.6000000000000014,
+    "R2_flag": [],
+    "D_on": 30.002,
+    "D_off": 30.005,
+    "dD": -0.0030000000000001137,
+    "D_done_on": 2.051,
+    "D_done_off": 2.061,
+    "R3_flag": [],
+    "rut_on": 93.17428403600051,
+    "rut_off": 93.16947800521052,
+    "drut": 0.004806030789993088,
+    "stroke_on": 663.212464682006,
+    "stroke_off": 663.2139425696763,
+    "dstroke": -0.0014778876702621346,
+    "guard_margin_on": 19.58753531799391,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.8999999999979025,
+    "loc_delay_off": 0.7999999999981355,
+    "dloc": 0.09999999999976694,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.6000000000000014,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      14.87,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.93641,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 19.614,
+    "E3_between_mm": 8.127,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.028,
+     "FL+FR+RL+RR": 14.842
+    },
+    "E4_gallery": [
+     10.481,
+     12.873
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.006704,
+    "E5_back_s": 24.63,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 65200,
+    "demand_met_chunks": 50330,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 50330,
+    "solved_chunks": 14870,
+    "audit_chunks": 50,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_R7_eta0.90": {
+   "bundle": "B",
+   "case": "R7",
+   "name": "K8_top_rpB_Fs8",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 4.887500000000003,
+    "F_on": 54.2057,
+    "F_off": 49.3182,
+    "F_leg_on": "RR",
+    "F_t_on": 51.233,
+    "R1_flag": false,
+    "att_on": 0.01541,
+    "att_off": 0.01547,
+    "datt": -5.999999999999929e-05,
+    "att_after_on": 2.71899,
+    "att_after_off": 2.73031,
+    "ready_on": 55.5,
+    "ready_off": 54.4,
+    "dready": 1.1000000000000014,
+    "R2_flag": [],
+    "D_on": 32.243,
+    "D_off": 32.249,
+    "dD": -0.006000000000000227,
+    "D_done_on": 2.038,
+    "D_done_off": 2.054,
+    "R3_flag": [],
+    "rut_on": 93.6335136753539,
+    "rut_off": 93.63582617691608,
+    "drut": -0.002312501562187208,
+    "stroke_on": 663.4776495199501,
+    "stroke_off": 663.4798674382282,
+    "dstroke": -0.0022179182781201234,
+    "guard_margin_on": 19.322350480049863,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.7999999999981355,
+    "loc_delay_off": 0.7999999999981355,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": -0.09999999999999998,
+    "dtouch_s": 1.1000000000000014,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      15.27,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.93676,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 20.03,
+    "E3_between_mm": 5.776,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "RL+RR": 0.001,
+     "FL+FR+RL+RR": 15.269
+    },
+    "E4_gallery": [
+     16.931,
+     18.977
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.006613,
+    "E5_back_s": 24.53,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 65500,
+    "demand_met_chunks": 50230,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 50230,
+    "solved_chunks": 15270,
+    "audit_chunks": 50,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_R8_eta0.90": {
+   "bundle": "B",
+   "case": "R8",
+   "name": "A_middle_rpB_Fs0",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 6.192399999999999,
+    "F_on": 54.9606,
+    "F_off": 48.7682,
+    "F_leg_on": "RL",
+    "F_t_on": 21.747,
+    "R1_flag": false,
+    "att_on": 0.01504,
+    "att_off": 0.01514,
+    "datt": -0.00010000000000000113,
+    "att_after_on": 2.68975,
+    "att_after_off": 2.71217,
+    "ready_on": 55.0,
+    "ready_off": 54.4,
+    "dready": 0.6000000000000014,
+    "R2_flag": [],
+    "D_on": 30.014,
+    "D_off": 30.019,
+    "dD": -0.004999999999999005,
+    "D_done_on": 2.039,
+    "D_done_off": 2.045,
+    "R3_flag": [],
+    "rut_on": 93.20624734982852,
+    "rut_off": 93.20202271187968,
+    "drut": 0.00422463794883754,
+    "stroke_on": 663.1994318142089,
+    "stroke_off": 663.202212919473,
+    "dstroke": -0.0027811052641482092,
+    "guard_margin_on": 19.600568185791076,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.7999999999981355,
+    "loc_delay_off": 0.7999999999981355,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.19999999999999998,
+    "dtouch_s": 0.6000000000000014,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      14.87,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.93641,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 19.614,
+    "E3_between_mm": 8.127,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.028,
+     "FL+FR+RL+RR": 14.842
+    },
+    "E4_gallery": [
+     10.481,
+     12.873
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.006559,
+    "E5_back_s": 24.43,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 65000,
+    "demand_met_chunks": 50130,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 50130,
+    "solved_chunks": 14870,
+    "audit_chunks": 50,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_R9_eta0.90": {
+   "bundle": "B",
+   "case": "R9",
+   "name": "A_bottom_rpB_Fs0",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 1.5590000000000046,
+    "F_on": 56.2616,
+    "F_off": 54.7026,
+    "F_leg_on": "RR",
+    "F_t_on": 50.422,
+    "R1_flag": false,
+    "att_on": 0.01487,
+    "att_off": 0.01507,
+    "datt": -0.00020000000000000052,
+    "att_after_on": 2.68099,
+    "att_after_off": 2.72691,
+    "ready_on": 55.0,
+    "ready_off": 54.4,
+    "dready": 0.6000000000000014,
+    "R2_flag": [],
+    "D_on": 29.909,
+    "D_off": 29.912,
+    "dD": -0.0030000000000001137,
+    "D_done_on": 2.03,
+    "D_done_off": 2.033,
+    "R3_flag": [],
+    "rut_on": 93.20046038031718,
+    "rut_off": 93.19524963897052,
+    "drut": 0.005210741346658665,
+    "stroke_on": 663.1920193969918,
+    "stroke_off": 663.1925058287887,
+    "dstroke": -0.0004864317969577314,
+    "guard_margin_on": 19.607980603008173,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.7999999999981355,
+    "loc_delay_off": 0.8999999999979025,
+    "dloc": -0.09999999999976694,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.6000000000000014,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      14.87,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.93641,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 19.614,
+    "E3_between_mm": 8.127,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.028,
+     "FL+FR+RL+RR": 14.842
+    },
+    "E4_gallery": [
+     10.481,
+     12.873
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.006617,
+    "E5_back_s": 24.43,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 65000,
+    "demand_met_chunks": 50130,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 50130,
+    "solved_chunks": 14870,
+    "audit_chunks": 50,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_S1_eta0.90": {
+   "bundle": "B",
+   "case": "S1",
+   "name": "P3b_J1_B_top_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "probe",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "off": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -0.7865999999999929,
+    "F_on": 68.0407,
+    "F_off": 68.8273,
+    "F_leg_on": "RR",
+    "F_t_on": 32.266,
+    "R1_flag": false,
+    "att_on": 0.03133,
+    "att_off": 0.01749,
+    "datt": 0.013839999999999998,
+    "att_after_on": 0.26369,
+    "att_after_off": 0.23273,
+    "ready_on": 61.9,
+    "ready_off": 64.1,
+    "dready": -2.1999999999999957,
+    "R2_flag": [
+     "att>0.01"
+    ],
+    "D_on": 3.11,
+    "D_off": 3.54,
+    "dD": -0.43000000000000016,
+    "D_done_on": 0.396,
+    "D_done_off": 0.478,
+    "R3_flag": [],
+    "rut_on": 73.28149729026472,
+    "rut_off": 71.6831839147174,
+    "drut": 1.5983133755473204,
+    "stroke_on": 527.0825540337902,
+    "stroke_off": 516.093096211563,
+    "dstroke": 10.989457822227223,
+    "guard_margin_on": 155.71744596620977,
+    "R4_flag": [
+     "stroke>+3"
+    ],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      1,
+      1
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      1,
+      1
+     ]
+    },
+    "loc_delay_on": 0.7999999999981355,
+    "loc_delay_off": 0.8999999999979025,
+    "dloc": -0.09999999999976694,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.9000000000000021,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     2,
+     1
+    ],
+    "final_phase": [
+     "probe",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      1.51,
+      3.163
+     ],
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.90526,
+    "E2_min_r_level": 0.90526,
+    "E2_long93_s": 0.758,
+    "E3_integral_mm": 19.554,
+    "E3_between_mm": 3.934,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 1.027,
+     "FL+FR": 0.486,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     107.152
+    ],
+    "E5_I_end": 0.01822,
+    "E5_I_max": 0.018439,
+    "E5_back_s": 16.93,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 71900,
+    "demand_met_chunks": 55320,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 55320,
+    "solved_chunks": 16580,
+    "audit_chunks": 55,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_S2_eta0.90": {
+   "bundle": "B",
+   "case": "S2",
+   "name": "P3b_J2_B_top_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "off": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -0.024999999999991473,
+    "F_on": 68.763,
+    "F_off": 68.788,
+    "F_leg_on": "RR",
+    "F_t_on": 62.111,
+    "R1_flag": false,
+    "att_on": 0.03005,
+    "att_off": 0.03344,
+    "datt": -0.003389999999999997,
+    "att_after_on": 0.26505,
+    "att_after_off": 0.2653,
+    "ready_on": 67.3,
+    "ready_off": 65.7,
+    "dready": 1.5999999999999943,
+    "R2_flag": [],
+    "D_on": 3.31,
+    "D_off": 3.503,
+    "dD": -0.19300000000000006,
+    "D_done_on": 0.415,
+    "D_done_off": 0.413,
+    "R3_flag": [],
+    "rut_on": 72.29820160541513,
+    "rut_off": 72.23681865124968,
+    "drut": 0.061382954165452475,
+    "stroke_on": 545.1719651843282,
+    "stroke_off": 545.4914997899432,
+    "dstroke": -0.31953460561499014,
+    "guard_margin_on": 137.62803481567175,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      1
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      1,
+      1
+     ]
+    },
+    "loc_delay_on": 0.9000000000042974,
+    "loc_delay_off": 0.9000000000042974,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      2.079,
+      2.72
+     ],
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.9455,
+    "E2_min_r_level": 0.95514,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 18.672,
+    "E3_between_mm": 3.048,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 1.482,
+     "FL+FR": 0.594,
+     "FL+FR+RL": 0.006,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     107.584
+    ],
+    "E5_I_end": 0.016172,
+    "E5_I_max": 0.016598,
+    "E5_back_s": 17.12,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 77300,
+    "demand_met_chunks": 60151,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 60151,
+    "solved_chunks": 17149,
+    "audit_chunks": 60,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_S3_eta0.90": {
+   "bundle": "B",
+   "case": "S3",
+   "name": "P3b_J2_B_middle_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "off": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -0.030799999999999272,
+    "F_on": 69.3074,
+    "F_off": 69.3382,
+    "F_leg_on": "RR",
+    "F_t_on": 66.599,
+    "R1_flag": false,
+    "att_on": 0.02955,
+    "att_off": 0.02695,
+    "datt": 0.002599999999999998,
+    "att_after_on": 0.24993,
+    "att_after_off": 0.24796,
+    "ready_on": 67.3,
+    "ready_off": 66.2,
+    "dready": 1.0999999999999943,
+    "R2_flag": [],
+    "D_on": 2.87,
+    "D_off": 2.889,
+    "dD": -0.018999999999999684,
+    "D_done_on": 0.578,
+    "D_done_off": 0.657,
+    "R3_flag": [],
+    "rut_on": 73.37196120773767,
+    "rut_off": 73.33890011641499,
+    "drut": 0.033061091322679204,
+    "stroke_on": 544.5014904115477,
+    "stroke_off": 544.147521246091,
+    "dstroke": 0.3539691654567605,
+    "guard_margin_on": 138.29850958845225,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      1,
+      1
+     ]
+    },
+    "loc_delay_on": 0.9000000000042974,
+    "loc_delay_off": 0.9000000000042974,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.9000000000000021,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      1.975,
+      2.541
+     ],
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.9455,
+    "E2_min_r_level": 0.9584,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 18.359,
+    "E3_between_mm": 2.739,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 1.399,
+     "FL+FR": 0.576,
+     "FL+FR+RL": 0.003,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     107.154
+    ],
+    "E5_I_end": 0.014414,
+    "E5_I_max": 0.014721,
+    "E5_back_s": 16.79,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 77300,
+    "demand_met_chunks": 60255,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 60255,
+    "solved_chunks": 17045,
+    "audit_chunks": 60,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_S4_eta0.90": {
+   "bundle": "B",
+   "case": "S4",
+   "name": "P3b_J1_B_top_Fs4_m1p1",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "boundary",
+     "reasons": [
+      "READY 69.7+31=100.7>100"
+     ]
+    },
+    "off": {
+     "class": "boundary",
+     "reasons": [
+      "READY 72.9+31=103.9>100"
+     ]
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -1.6418000000000035,
+    "F_on": 73.4904,
+    "F_off": 75.1322,
+    "F_leg_on": "RR",
+    "F_t_on": 39.047,
+    "R1_flag": false,
+    "att_on": 0.06381,
+    "att_off": 0.04514,
+    "datt": 0.018670000000000006,
+    "att_after_on": 0.41575,
+    "att_after_off": 0.41494,
+    "ready_on": 69.7,
+    "ready_off": 72.9,
+    "dready": -3.200000000000003,
+    "R2_flag": [
+     "att>0.01"
+    ],
+    "D_on": 4.451,
+    "D_off": 3.248,
+    "dD": 1.2029999999999994,
+    "D_done_on": 0.373,
+    "D_done_off": 0.688,
+    "R3_flag": [],
+    "rut_on": 58.12545281540509,
+    "rut_off": 62.789915317506455,
+    "drut": -4.664462502101365,
+    "stroke_on": 606.9353938621405,
+    "stroke_off": 592.5625405081172,
+    "dstroke": 14.372853354023277,
+    "guard_margin_on": 75.86460613785948,
+    "R4_flag": [
+     "stroke>+3"
+    ],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      1,
+      1
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      1,
+      2
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      2,
+      2
+     ]
+    },
+    "loc_delay_on": 1.1000000000052523,
+    "loc_delay_off": 1.1000000000052523,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": true,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      2.125,
+      17.409
+     ],
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.55723,
+    "E2_min_r_level": 0.55723,
+    "E2_long93_s": 1.776,
+    "E3_integral_mm": 31.978,
+    "E3_between_mm": 16.358,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 1.268,
+     "FL+FR": 0.86,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     118.938
+    ],
+    "E5_I_end": 0.02,
+    "E5_I_max": 0.02,
+    "E5_back_s": 16.6,
+    "E5_at_limit": true,
+    "E_flags": [
+     "between>10mm",
+     "I at limit"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 79700,
+    "demand_met_chunks": 62505,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 62505,
+    "solved_chunks": 17195,
+    "audit_chunks": 62,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_S5_eta0.90": {
+   "bundle": "B",
+   "case": "S5",
+   "name": "P3b_J2_B_top_Fs4_m1p1",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [
+    {
+     "row": "item7_probe",
+     "on": 0.111,
+     "off": 0.05742,
+     "limit": 0.1,
+     "sense": "<="
+    }
+   ],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "boundary",
+     "reasons": [
+      "READY 88.6+31=119.6>100"
+     ]
+    },
+    "off": {
+     "class": "boundary",
+     "reasons": [
+      "READY 85.1+31=116.1>100"
+     ]
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -2.8593000000000046,
+    "F_on": 71.99,
+    "F_off": 74.8493,
+    "F_leg_on": "RR",
+    "F_t_on": 43.266,
+    "R1_flag": false,
+    "att_on": 0.04786,
+    "att_off": 0.04547,
+    "datt": 0.0023900000000000032,
+    "att_after_on": 0.39624,
+    "att_after_off": 0.38318,
+    "ready_on": 88.6,
+    "ready_off": 85.1,
+    "dready": 3.5,
+    "R2_flag": [],
+    "D_on": 5.594,
+    "D_off": 3.831,
+    "dD": 1.7630000000000003,
+    "D_done_on": 0.101,
+    "D_done_off": 0.198,
+    "R3_flag": [],
+    "rut_on": 75.52689271974843,
+    "rut_off": 82.3762810818239,
+    "drut": -6.849388362075473,
+    "stroke_on": 626.3734619917861,
+    "stroke_off": 617.3988936414785,
+    "dstroke": 8.974568350307663,
+    "guard_margin_on": 56.42653800821381,
+    "R4_flag": [
+     "clear<-5",
+     "stroke>+3"
+    ],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      1,
+      1
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      2,
+      1
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      2,
+      2
+     ]
+    },
+    "loc_delay_on": 1.5000000000071623,
+    "loc_delay_off": 1.5000000000071623,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     2,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      2.012,
+      11.501
+     ],
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.81344,
+    "E2_min_r_level": 0.81344,
+    "E2_long93_s": 1.136,
+    "E3_integral_mm": 25.408,
+    "E3_between_mm": 9.788,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 0.847,
+     "FL+FR": 1.168,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     117.496
+    ],
+    "E5_I_end": 0.02,
+    "E5_I_max": 0.02,
+    "E5_back_s": 13.56,
+    "E5_at_limit": true,
+    "E_flags": [
+     "I at limit"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 98600,
+    "demand_met_chunks": 81518,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 81518,
+    "solved_chunks": 17082,
+    "audit_chunks": 81,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_S7_eta0.90": {
+   "bundle": "B",
+   "case": "S7",
+   "name": "S9SL_X6rb_J1_B_top_Fs4_rm2p86_p0",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "boundary",
+     "reasons": [
+      "READY 77.9+31=108.9>100",
+      "guard margin 3.5<23"
+     ]
+    },
+    "off": {
+     "class": "boundary",
+     "reasons": [
+      "READY 76.4+31=107.4>100",
+      "clear 38.0-15=23.0<25",
+      "guard margin 22.5<23"
+     ]
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -0.10950000000000415,
+    "F_on": 63.2829,
+    "F_off": 63.3924,
+    "F_leg_on": "RR",
+    "F_t_on": 27.292,
+    "R1_flag": false,
+    "att_on": 0.03134,
+    "att_off": 0.03008,
+    "datt": 0.0012600000000000007,
+    "att_after_on": 2.86472,
+    "att_after_off": 2.8534,
+    "ready_on": 77.9,
+    "ready_off": 76.4,
+    "dready": 1.5,
+    "R2_flag": [],
+    "D_on": 10.054,
+    "D_off": 10.032,
+    "dD": 0.02200000000000024,
+    "D_done_on": 0.414,
+    "D_done_off": 0.433,
+    "R3_flag": [],
+    "rut_on": 57.69600937456731,
+    "rut_off": 38.003820436336454,
+    "drut": 19.692188938230856,
+    "stroke_on": 679.2927041531037,
+    "stroke_off": 660.2845817260028,
+    "dstroke": 19.008122427100943,
+    "guard_margin_on": 3.507295846896227,
+    "R4_flag": [
+     "stroke>+3"
+    ],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      1,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      1,
+      1
+     ],
+     "soil_mode_start": [
+      1,
+      0
+     ]
+    },
+    "loc_delay_on": 2.7999999999934744,
+    "loc_delay_off": 0.5999999999986017,
+    "dloc": 2.1999999999948727,
+    "R5_flag": [
+     "INFO_LOC_REVOKED",
+     "soil_mode_start",
+     "loc_delay>0.5"
+    ],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.8999999999999986,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     2,
+     2
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.9455,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 17.033,
+    "E3_between_mm": 1.413,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.003,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     15.886
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.018264,
+    "E5_back_s": 21.93,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 87900,
+    "demand_met_chunks": 72830,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 72830,
+    "solved_chunks": 15070,
+    "audit_chunks": 72,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "B_S8_eta0.90": {
+   "bundle": "B",
+   "case": "S8",
+   "name": "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.9,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "stroke_limited_stop",
+     "stroke_limited_stop"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "fault",
+     "fault"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "stroke_limited_stop",
+     "reasons": []
+    },
+    "off": {
+     "class": "stroke_limited_stop",
+     "reasons": []
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -0.4650000000000034,
+    "F_on": 62.6125,
+    "F_off": 63.0775,
+    "F_leg_on": "RL",
+    "F_t_on": 29.384,
+    "R1_flag": false,
+    "att_on": null,
+    "att_off": null,
+    "datt": null,
+    "att_after_on": 3.44594,
+    "att_after_off": 3.28438,
+    "ready_on": null,
+    "ready_off": null,
+    "dready": null,
+    "R2_flag": [],
+    "D_on": 10.583,
+    "D_off": 10.28,
+    "dD": 0.3030000000000008,
+    "D_done_on": null,
+    "D_done_off": null,
+    "R3_flag": [],
+    "rut_on": null,
+    "rut_off": null,
+    "drut": null,
+    "stroke_on": 681.8375465029254,
+    "stroke_off": 682.0663503830292,
+    "dstroke": -0.22880388010378283,
+    "guard_margin_on": 0.9624534970745344,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.4999999999988347,
+    "loc_delay_off": 0.2999999999993008,
+    "dloc": 0.19999999999953388,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.8999999999999986,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     0,
+     0
+    ],
+    "final_phase": [
+     "fault",
+     "fault"
+    ],
+    "E1": {
+     "touch": [
+      15.07,
+      3.01
+     ]
+    },
+    "E2_min_r": 0.9455,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 17.033,
+    "E3_between_mm": 1.413,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.003,
+     "FL+FR+RL+RR": 15.067
+    },
+    "E4_gallery": [
+     13.699,
+     15.886
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.001055,
+    "E5_back_s": null,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 38900,
+    "demand_met_chunks": 23830,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 23830,
+    "solved_chunks": 15070,
+    "audit_chunks": 23,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "C_R1_eta0.95": {
+   "bundle": "C",
+   "case": "R1",
+   "name": "K24_top_flat_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.95,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": true
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 0.0,
+    "F_on": 54.6903,
+    "F_off": 54.6903,
+    "F_leg_on": "RR",
+    "F_t_on": 35.363,
+    "R1_flag": false,
+    "att_on": 0.01187,
+    "att_off": 0.01187,
+    "datt": 0.0,
+    "att_after_on": 0.09195,
+    "att_after_off": 0.09195,
+    "ready_on": 39.4,
+    "ready_off": 39.4,
+    "dready": 0.0,
+    "R2_flag": [],
+    "D_on": 29.823,
+    "D_off": 29.823,
+    "dD": 0.0,
+    "D_done_on": 0.268,
+    "D_done_off": 0.268,
+    "R3_flag": [],
+    "rut_on": 49.324555756987465,
+    "rut_off": 49.324555756987465,
+    "drut": 0.0,
+    "stroke_on": 407.55783328949286,
+    "stroke_off": 407.55783328949286,
+    "dstroke": 0.0,
+    "guard_margin_on": 275.2421667105071,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.4999999999988347,
+    "loc_delay_off": 0.4999999999988347,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.0,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {},
+    "E2_min_r": 1.0,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 0.0,
+    "E3_between_mm": 0.0,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {},
+    "E4_gallery": null,
+    "E5_I_end": null,
+    "E5_I_max": 0.00786,
+    "E5_back_s": null,
+    "E5_at_limit": false,
+    "E_flags": []
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 5.206e-09,
+    "chunks": 49400,
+    "demand_met_chunks": 49400,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 0,
+    "solved_chunks": 49400,
+    "audit_chunks": 0,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "C_S1_eta0.95": {
+   "bundle": "C",
+   "case": "S1",
+   "name": "P3b_J1_B_top_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.95,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": true
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "off": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 0.0,
+    "F_on": 68.8273,
+    "F_off": 68.8273,
+    "F_leg_on": "RR",
+    "F_t_on": 58.911,
+    "R1_flag": false,
+    "att_on": 0.01749,
+    "att_off": 0.01749,
+    "datt": 0.0,
+    "att_after_on": 0.23273,
+    "att_after_off": 0.23273,
+    "ready_on": 64.1,
+    "ready_off": 64.1,
+    "dready": 0.0,
+    "R2_flag": [],
+    "D_on": 3.54,
+    "D_off": 3.54,
+    "dD": 0.0,
+    "D_done_on": 0.478,
+    "D_done_off": 0.478,
+    "R3_flag": [],
+    "rut_on": 71.6831839147174,
+    "rut_off": 71.6831839147174,
+    "drut": 0.0,
+    "stroke_on": 516.093096211563,
+    "stroke_off": 516.093096211563,
+    "dstroke": 0.0,
+    "guard_margin_on": 166.706903788437,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      1,
+      1
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      1,
+      1
+     ]
+    },
+    "loc_delay_on": 0.8999999999979025,
+    "loc_delay_off": 0.8999999999979025,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 0.0,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {},
+    "E2_min_r": 1.0,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 0.0,
+    "E3_integral_mm": 0.0,
+    "E3_between_mm": 0.0,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {},
+    "E4_gallery": null,
+    "E5_I_end": null,
+    "E5_I_max": 0.02,
+    "E5_back_s": null,
+    "E5_at_limit": true,
+    "E_flags": [
+     "I at limit"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 5.206e-09,
+    "chunks": 74100,
+    "demand_met_chunks": 74100,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 0,
+    "solved_chunks": 74100,
+    "audit_chunks": 0,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "D_R4_eta0.85_dphigh": {
+   "bundle": "D",
+   "case": "R4",
+   "name": "K24_top_roll5.5_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": 2000000.0,
+    "dp_unload_Pa": 3000000.0,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 0.08829999999999671,
+    "F_on": 54.7164,
+    "F_off": 54.6281,
+    "F_leg_on": "RR",
+    "F_t_on": 53.565,
+    "R1_flag": false,
+    "att_on": 0.01521,
+    "att_off": 0.01567,
+    "datt": -0.00046000000000000034,
+    "att_after_on": 4.88903,
+    "att_after_off": 4.86034,
+    "ready_on": 57.6,
+    "ready_off": 56.0,
+    "dready": 1.6000000000000014,
+    "R2_flag": [],
+    "D_on": 29.665,
+    "D_off": 29.83,
+    "dD": -0.16499999999999915,
+    "D_done_on": 0.606,
+    "D_done_off": 0.461,
+    "R3_flag": [],
+    "rut_on": 79.9519182175397,
+    "rut_off": 79.93082419720818,
+    "drut": 0.021094020331517527,
+    "stroke_on": 666.5822664304167,
+    "stroke_off": 666.5838261071538,
+    "dstroke": -0.0015596767370880116,
+    "guard_margin_on": 16.217733569583288,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 0.8999999999979025,
+    "loc_delay_off": 1.3999999999967372,
+    "dloc": -0.4999999999988347,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.5999999999999979,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      16.201,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.8928,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 15.986,
+    "E3_integral_mm": 35.963,
+    "E3_between_mm": 1.115,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.001,
+     "FL+FR+RL+RR": 16.2
+    },
+    "E4_gallery": [
+     20.872,
+     25.786
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.005838,
+    "E5_back_s": 25.67,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 67600,
+    "demand_met_chunks": 51399,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 51399,
+    "solved_chunks": 16201,
+    "audit_chunks": 51,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "D_R4_eta0.85_dplow": {
+   "bundle": "D",
+   "case": "R4",
+   "name": "K24_top_roll5.5_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": 600000.0,
+    "dp_unload_Pa": 1200000.0,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": 0.004699999999999704,
+    "F_on": 54.6328,
+    "F_off": 54.6281,
+    "F_leg_on": "RR",
+    "F_t_on": 53.665,
+    "R1_flag": false,
+    "att_on": 0.01572,
+    "att_off": 0.01567,
+    "datt": 5.000000000000143e-05,
+    "att_after_on": 4.84804,
+    "att_after_off": 4.86034,
+    "ready_on": 57.7,
+    "ready_off": 56.0,
+    "dready": 1.7000000000000028,
+    "R2_flag": [],
+    "D_on": 29.821,
+    "D_off": 29.83,
+    "dD": -0.008999999999996788,
+    "D_done_on": 0.475,
+    "D_done_off": 0.461,
+    "R3_flag": [],
+    "rut_on": 79.92943867207337,
+    "rut_off": 79.93082419720818,
+    "drut": -0.001385525134807608,
+    "stroke_on": 666.5845840096445,
+    "stroke_off": 666.5838261071538,
+    "dstroke": 0.0007579024907045095,
+    "guard_margin_on": 16.215415990355496,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 1.699999999996038,
+    "loc_delay_off": 1.3999999999967372,
+    "dloc": 0.2999999999993008,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.6999999999999993,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89291,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 15.779,
+    "E3_integral_mm": 35.739,
+    "E3_between_mm": 1.517,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.005,
+     "FL+FR+RL+RR": 16.096
+    },
+    "E4_gallery": [
+     9.263,
+     11.863
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.006153,
+    "E5_back_s": 25.97,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 67700,
+    "demand_met_chunks": 51599,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 51599,
+    "solved_chunks": 16101,
+    "audit_chunks": 51,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "D_R4_eta0.85_proportional": {
+   "bundle": "D",
+   "case": "R4",
+   "name": "K24_top_roll5.5_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": "proportional",
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -6.326900000000002,
+    "F_on": 48.3012,
+    "F_off": 54.6281,
+    "F_leg_on": "RL",
+    "F_t_on": 24.054,
+    "R1_flag": true,
+    "att_on": 0.01547,
+    "att_off": 0.01567,
+    "datt": -0.00020000000000000052,
+    "att_after_on": 4.97112,
+    "att_after_off": 4.86034,
+    "ready_on": 57.9,
+    "ready_off": 56.0,
+    "dready": 1.8999999999999986,
+    "R2_flag": [],
+    "D_on": 30.956,
+    "D_off": 29.83,
+    "dD": 1.1260000000000012,
+    "D_done_on": 2.051,
+    "D_done_off": 0.461,
+    "R3_flag": [],
+    "rut_on": 79.94459746537174,
+    "rut_off": 79.93082419720818,
+    "drut": 0.01377326816356117,
+    "stroke_on": 666.560040986628,
+    "stroke_off": 666.5838261071538,
+    "dstroke": -0.02378512052575843,
+    "guard_margin_on": 16.23995901337196,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 1.1999999999972033,
+    "loc_delay_off": 1.3999999999967372,
+    "dloc": -0.19999999999953388,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89474,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 15.85,
+    "E3_integral_mm": 35.112,
+    "E3_between_mm": 0.014,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR+RL+RR": 16.101
+    },
+    "E4_gallery": [
+     11.78,
+     14.512
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.005952,
+    "E5_back_s": 26.07,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 67900,
+    "demand_met_chunks": 51799,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 51799,
+    "solved_chunks": 16101,
+    "audit_chunks": 51,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "D_S1_eta0.85_dphigh": {
+   "bundle": "D",
+   "case": "S1",
+   "name": "P3b_J1_B_top_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": 2000000.0,
+    "dp_unload_Pa": 3000000.0,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "off": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -1.854299999999995,
+    "F_on": 66.973,
+    "F_off": 68.8273,
+    "F_leg_on": "RR",
+    "F_t_on": 33.064,
+    "R1_flag": false,
+    "att_on": 0.0253,
+    "att_off": 0.01749,
+    "datt": 0.007810000000000001,
+    "att_after_on": 0.26672,
+    "att_after_off": 0.23273,
+    "ready_on": 80.8,
+    "ready_off": 64.1,
+    "dready": 16.700000000000003,
+    "R2_flag": [
+     "READY>5"
+    ],
+    "D_on": 4.102,
+    "D_off": 3.54,
+    "dD": 0.5620000000000003,
+    "D_done_on": 0.391,
+    "D_done_off": 0.478,
+    "R3_flag": [],
+    "rut_on": 71.70124572677454,
+    "rut_off": 71.6831839147174,
+    "drut": 0.01806181205714097,
+    "stroke_on": 529.7678210385853,
+    "stroke_off": 516.093096211563,
+    "dstroke": 13.674724827022374,
+    "guard_margin_on": 153.03217896141462,
+    "R4_flag": [
+     "stroke>+3"
+    ],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      1,
+      1
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      1,
+      1
+     ]
+    },
+    "loc_delay_on": 0.7999999999981355,
+    "loc_delay_off": 0.8999999999979025,
+    "dloc": -0.09999999999976694,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.7000000000000028,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     2,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      2.922,
+      6.113
+     ],
+     "touch": [
+      16.201,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.80475,
+    "E2_min_r_level": 0.80475,
+    "E2_long93_s": 15.986,
+    "E3_integral_mm": 42.609,
+    "E3_between_mm": 6.424,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 2.072,
+     "FL+FR": 0.851,
+     "FL+FR+RL+RR": 16.2
+    },
+    "E4_gallery": [
+     20.872,
+     116.876
+    ],
+    "E5_I_end": 0.017064,
+    "E5_I_max": 0.017064,
+    "E5_back_s": 17.57,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 90800,
+    "demand_met_chunks": 71677,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 71677,
+    "solved_chunks": 19123,
+    "audit_chunks": 71,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "D_S1_eta0.85_dplow": {
+   "bundle": "D",
+   "case": "S1",
+   "name": "P3b_J1_B_top_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": 600000.0,
+    "dp_unload_Pa": 1200000.0,
+    "width_Pa": null,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "off": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -3.8999999999999915,
+    "F_on": 64.9273,
+    "F_off": 68.8273,
+    "F_leg_on": "RR",
+    "F_t_on": 33.929,
+    "R1_flag": false,
+    "att_on": 0.04166,
+    "att_off": 0.01749,
+    "datt": 0.024170000000000004,
+    "att_after_on": 0.32139,
+    "att_after_off": 0.23273,
+    "ready_on": 60.8,
+    "ready_off": 64.1,
+    "dready": -3.299999999999997,
+    "R2_flag": [
+     "att>0.01"
+    ],
+    "D_on": 9.935,
+    "D_off": 3.54,
+    "dD": 6.3950000000000005,
+    "D_done_on": 1.191,
+    "D_done_off": 0.478,
+    "R3_flag": [],
+    "rut_on": 68.53210061384418,
+    "rut_off": 71.6831839147174,
+    "drut": -3.151083300873225,
+    "stroke_on": 563.958483592268,
+    "stroke_off": 516.093096211563,
+    "dstroke": 47.86538738070499,
+    "guard_margin_on": 118.841516407732,
+    "R4_flag": [
+     "stroke>+3"
+    ],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      1,
+      1
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      1,
+      1
+     ]
+    },
+    "loc_delay_on": 0.7999999999981355,
+    "loc_delay_off": 0.8999999999979025,
+    "dloc": -0.09999999999976694,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.7000000000000028,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      3.165,
+      6.104
+     ],
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.74465,
+    "E2_min_r_level": 0.74465,
+    "E2_long93_s": 15.779,
+    "E3_integral_mm": 46.471,
+    "E3_between_mm": 12.25,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 2.307,
+     "FL+FR": 0.863,
+     "FL+FR+RL+RR": 16.096
+    },
+    "E4_gallery": [
+     9.263,
+     102.982
+    ],
+    "E5_I_end": 0.015249,
+    "E5_I_max": 0.015249,
+    "E5_back_s": 14.05,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s",
+     "between>10mm"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 70800,
+    "demand_met_chunks": 51534,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 51534,
+    "solved_chunks": 19266,
+    "audit_chunks": 51,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "D_S1_eta0.85_proportional": {
+   "bundle": "D",
+   "case": "S1",
+   "name": "P3b_J1_B_top_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": null,
+    "law": "proportional",
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "off": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -0.08549999999999613,
+    "F_on": 68.7418,
+    "F_off": 68.8273,
+    "F_leg_on": "RR",
+    "F_t_on": 60.207,
+    "R1_flag": false,
+    "att_on": 0.02035,
+    "att_off": 0.01749,
+    "datt": 0.0028600000000000014,
+    "att_after_on": 0.26416,
+    "att_after_off": 0.23273,
+    "ready_on": 65.4,
+    "ready_off": 64.1,
+    "dready": 1.3000000000000114,
+    "R2_flag": [],
+    "D_on": 3.522,
+    "D_off": 3.54,
+    "dD": -0.018000000000000238,
+    "D_done_on": 0.257,
+    "D_done_off": 0.478,
+    "R3_flag": [],
+    "rut_on": 72.25060548713056,
+    "rut_off": 71.6831839147174,
+    "drut": 0.5674215724131528,
+    "stroke_on": 517.4623695234598,
+    "stroke_off": 516.093096211563,
+    "dstroke": 1.3692733118967908,
+    "guard_margin_on": 165.3376304765402,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      1,
+      1
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      1,
+      1
+     ]
+    },
+    "loc_delay_on": 0.7999999999981355,
+    "loc_delay_off": 0.8999999999979025,
+    "dloc": -0.09999999999976694,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      2.491,
+      5.978
+     ],
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89474,
+    "E2_min_r_level": 0.9181,
+    "E2_long93_s": 15.85,
+    "E3_integral_mm": 38.313,
+    "E3_between_mm": 0.641,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR+RL+RR": 18.592
+    },
+    "E4_gallery": [
+     11.78,
+     105.366
+    ],
+    "E5_I_end": 0.017905,
+    "E5_I_max": 0.018848,
+    "E5_back_s": 4.8,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 75400,
+    "demand_met_chunks": 56808,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 56808,
+    "solved_chunks": 18592,
+    "audit_chunks": 56,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "E_R4_eta0.85_widthdouble": {
+   "bundle": "E",
+   "case": "R4",
+   "name": "K24_top_roll5.5_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": 200000.0,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -6.358400000000003,
+    "F_on": 48.2697,
+    "F_off": 54.6281,
+    "F_leg_on": "RL",
+    "F_t_on": 24.061,
+    "R1_flag": true,
+    "att_on": 0.01548,
+    "att_off": 0.01567,
+    "datt": -0.0001899999999999992,
+    "att_after_on": 4.96789,
+    "att_after_off": 4.86034,
+    "ready_on": 57.9,
+    "ready_off": 56.0,
+    "dready": 1.8999999999999986,
+    "R2_flag": [],
+    "D_on": 30.956,
+    "D_off": 29.83,
+    "dD": 1.1260000000000012,
+    "D_done_on": 2.051,
+    "D_done_off": 0.461,
+    "R3_flag": [],
+    "rut_on": 79.94400673542185,
+    "rut_off": 79.93082419720818,
+    "drut": 0.013182538213669659,
+    "stroke_on": 666.5599481790756,
+    "stroke_off": 666.5838261071538,
+    "dstroke": -0.023877928078150035,
+    "guard_margin_on": 16.24005182092435,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 1.1999999999972033,
+    "loc_delay_off": 1.3999999999967372,
+    "dloc": -0.19999999999953388,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89463,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 15.838,
+    "E3_integral_mm": 35.156,
+    "E3_between_mm": 0.12,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.002,
+     "FL+FR+RL+RR": 16.099
+    },
+    "E4_gallery": [
+     12.581,
+     16.804
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.00596,
+    "E5_back_s": 26.07,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 67900,
+    "demand_met_chunks": 51799,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 51799,
+    "solved_chunks": 16101,
+    "audit_chunks": 51,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "E_R4_eta0.85_widthhalf": {
+   "bundle": "E",
+   "case": "R4",
+   "name": "K24_top_roll5.5_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": 50000.0,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": null,
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -6.3643,
+    "F_on": 48.2638,
+    "F_off": 54.6281,
+    "F_leg_on": "RL",
+    "F_t_on": 24.061,
+    "R1_flag": true,
+    "att_on": 0.01548,
+    "att_off": 0.01567,
+    "datt": -0.0001899999999999992,
+    "att_after_on": 4.96789,
+    "att_after_off": 4.86034,
+    "ready_on": 57.9,
+    "ready_off": 56.0,
+    "dready": 1.8999999999999986,
+    "R2_flag": [],
+    "D_on": 30.956,
+    "D_off": 29.83,
+    "dD": 1.1260000000000012,
+    "D_done_on": 2.051,
+    "D_done_off": 0.461,
+    "R3_flag": [],
+    "rut_on": 79.94397007899357,
+    "rut_off": 79.93082419720818,
+    "drut": 0.013145881785391111,
+    "stroke_on": 666.5599415083254,
+    "stroke_off": 666.5838261071538,
+    "dstroke": -0.023884598828317394,
+    "guard_margin_on": 16.240058491674517,
+    "R4_flag": [],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      0,
+      0
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      0,
+      0
+     ]
+    },
+    "loc_delay_on": 1.1999999999972033,
+    "loc_delay_off": 1.3999999999967372,
+    "dloc": -0.19999999999953388,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     1,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.89463,
+    "E2_min_r_level": 1.0,
+    "E2_long93_s": 15.836,
+    "E3_integral_mm": 35.159,
+    "E3_between_mm": 0.127,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL+FR": 0.004,
+     "FL+FR+RL+RR": 16.097
+    },
+    "E4_gallery": [
+     12.581,
+     15.287
+    ],
+    "E5_I_end": 0.0,
+    "E5_I_max": 0.005961,
+    "E5_back_s": 26.07,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 67900,
+    "demand_met_chunks": 51799,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 51799,
+    "solved_chunks": 16101,
+    "audit_chunks": 51,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "E_S1_eta0.85_widthdouble": {
+   "bundle": "E",
+   "case": "S1",
+   "name": "P3b_J1_B_top_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": 200000.0,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "off": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -2.4202999999999975,
+    "F_on": 66.407,
+    "F_off": 68.8273,
+    "F_leg_on": "RR",
+    "F_t_on": 32.582,
+    "R1_flag": false,
+    "att_on": 0.02268,
+    "att_off": 0.01749,
+    "datt": 0.00519,
+    "att_after_on": 0.2638,
+    "att_after_off": 0.23273,
+    "ready_on": 81.5,
+    "ready_off": 64.1,
+    "dready": 17.400000000000006,
+    "R2_flag": [
+     "READY>5"
+    ],
+    "D_on": 4.435,
+    "D_off": 3.54,
+    "dD": 0.8949999999999996,
+    "D_done_on": 0.401,
+    "D_done_off": 0.478,
+    "R3_flag": [],
+    "rut_on": 71.48916560197395,
+    "rut_off": 71.6831839147174,
+    "drut": -0.19401831274345227,
+    "stroke_on": 531.5586717512113,
+    "stroke_off": 516.093096211563,
+    "dstroke": 15.465575539648285,
+    "guard_margin_on": 151.2413282487887,
+    "R4_flag": [
+     "stroke>+3"
+    ],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      1,
+      1
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      1,
+      1
+     ]
+    },
+    "loc_delay_on": 0.8999999999979025,
+    "loc_delay_off": 0.8999999999979025,
+    "dloc": 0.0,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     2,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      2.809,
+      5.962
+     ],
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.77965,
+    "E2_min_r_level": 0.77965,
+    "E2_long93_s": 15.838,
+    "E3_integral_mm": 43.336,
+    "E3_between_mm": 8.3,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 2.432,
+     "FL+FR": 0.379,
+     "FL+FR+RL+RR": 16.099
+    },
+    "E4_gallery": [
+     12.581,
+     107.879
+    ],
+    "E5_I_end": 0.019644,
+    "E5_I_max": 0.019644,
+    "E5_back_s": 18.21,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 91500,
+    "demand_met_chunks": 72590,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 72590,
+    "solved_chunks": 18910,
+    "audit_chunks": 72,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  },
+  "E_S1_eta0.85_widthhalf": {
+   "bundle": "E",
+   "case": "S1",
+   "name": "P3b_J1_B_top_Fs4",
+   "setting": {
+    "is_enabled": true,
+    "eta_v": 0.85,
+    "dp_comp_Pa": null,
+    "dp_unload_Pa": null,
+    "width_Pa": 50000.0,
+    "law": null,
+    "always_solve": false
+   },
+   "T1_flips": [],
+   "soil_item_rows_record_only": [],
+   "missing_rows_on": [],
+   "T2": {
+    "class": [
+     "pass",
+     "pass"
+    ],
+    "class_change": false,
+    "new_faults": [],
+    "new_warn": [],
+    "final_phase": [
+     "ready",
+     "ready"
+    ]
+   },
+   "T3a": false,
+   "T3b": {
+    "on": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "off": {
+     "class": "margin_pass",
+     "reasons": []
+    },
+    "change": false
+   },
+   "new_row_flags": [],
+   "record": {
+    "dF_kN": -2.47529999999999,
+    "F_on": 66.352,
+    "F_off": 68.8273,
+    "F_leg_on": "RR",
+    "F_t_on": 32.637,
+    "R1_flag": false,
+    "att_on": 0.02309,
+    "att_off": 0.01749,
+    "datt": 0.005600000000000001,
+    "att_after_on": 0.26407,
+    "att_after_off": 0.23273,
+    "ready_on": 81.5,
+    "ready_off": 64.1,
+    "dready": 17.400000000000006,
+    "R2_flag": [
+     "READY>5"
+    ],
+    "D_on": 4.562,
+    "D_off": 3.54,
+    "dD": 1.0220000000000002,
+    "D_done_on": 0.4,
+    "D_done_off": 0.478,
+    "R3_flag": [],
+    "rut_on": 71.54642643207833,
+    "rut_off": 71.6831839147174,
+    "drut": -0.1367574826390694,
+    "stroke_on": 531.9434569802121,
+    "stroke_off": 516.093096211563,
+    "dstroke": 15.850360768649125,
+    "guard_margin_on": 150.85654301978786,
+    "R4_flag": [
+     "stroke>+3"
+    ],
+    "rule_counts": {
+     "INFO_LOC_REVOKED": [
+      0,
+      0
+     ],
+     "INFO_DIFF_SINK_HOLD": [
+      1,
+      1
+     ],
+     "INFO_LOC_CLEARANCE_MARGIN": [
+      0,
+      0
+     ],
+     "soil_mode_start": [
+      1,
+      1
+     ]
+    },
+    "loc_delay_on": 0.7999999999981355,
+    "loc_delay_off": 0.8999999999979025,
+    "dloc": -0.09999999999976694,
+    "R5_flag": [],
+    "reapp_on": 0,
+    "reapp_off": 0,
+    "p5_on": 0,
+    "p5_off": 0,
+    "dguard_s": 0.0,
+    "dtouch_s": 1.8000000000000007,
+    "R6_flag": [],
+    "R7_flag": false,
+    "probe_rounds": [
+     2,
+     1
+    ],
+    "final_phase": [
+     "ready",
+     "ready"
+    ],
+    "E1": {
+     "level": [
+      2.822,
+      5.966
+     ],
+     "touch": [
+      16.101,
+      6.02
+     ]
+    },
+    "E2_min_r": 0.77673,
+    "E2_min_r_level": 0.77673,
+    "E2_long93_s": 15.836,
+    "E3_integral_mm": 43.484,
+    "E3_between_mm": 8.452,
+    "E4_swaps": 0,
+    "E4_max_in_1s": 0,
+    "E4_groups": {
+     "FL": 2.445,
+     "FL+FR": 0.381,
+     "FL+FR+RL+RR": 16.097
+    },
+    "E4_gallery": [
+     12.581,
+     106.291
+    ],
+    "E5_I_end": 0.019639,
+    "E5_I_max": 0.019639,
+    "E5_back_s": 18.4,
+    "E5_at_limit": false,
+    "E_flags": [
+     "r<0.93>=7s"
+    ]
+   },
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 0.0,
+    "chunks": 91500,
+    "demand_met_chunks": 72577,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 72577,
+    "solved_chunks": 18923,
+    "audit_chunks": 72,
+    "audit_mismatches": 0
+   },
+   "def_same": false,
+   "seed": [
+    null,
+    null
+   ]
+  }
+ },
+ "item8_trend": {
+  "rpB_eta0.85": {
+   "F_on": [
+    44.8532,
+    52.3379,
+    46.0691
+   ],
+   "F_off": [
+    44.5684,
+    48.7682,
+    54.7026
+   ],
+   "order_on": "top<bot<mid",
+   "order_off": "top<mid<bot",
+   "ready_on": [
+    56.3,
+    55.9,
+    55.8
+   ],
+   "ready_off": [
+    54.6,
+    54.4,
+    54.4
+   ],
+   "legs_times": [
+    [
+     "RL",
+     23.043
+    ],
+    [
+     "RL",
+     22.622
+    ],
+    [
+     "RL",
+     22.498
+    ]
+   ]
+  },
+  "rpB_eta0.90": {
+   "F_on": [
+    50.02,
+    54.9606,
+    56.2616
+   ],
+   "F_off": [
+    44.5684,
+    48.7682,
+    54.7026
+   ],
+   "order_on": "top<mid<bot",
+   "order_off": "top<mid<bot",
+   "ready_on": [
+    55.2,
+    55.0,
+    55.0
+   ],
+   "ready_off": [
+    54.6,
+    54.4,
+    54.4
+   ],
+   "legs_times": [
+    [
+     "RL",
+     21.977
+    ],
+    [
+     "RL",
+     21.747
+    ],
+    [
+     "RR",
+     50.422
+    ]
+   ]
+  },
+  "flat_eta0.85": {
+   "F_on": [
+    53.4467,
+    53.3964,
+    53.5888
+   ],
+   "F_off": [
+    54.6903,
+    54.829,
+    54.6924
+   ],
+   "order_on": "mid<top<bot",
+   "order_off": "top<bot<mid",
+   "ready_on": [
+    42.3,
+    42.2,
+    42.6
+   ],
+   "ready_off": [
+    39.4,
+    40.2,
+    39.8
+   ],
+   "legs_times": [
+    [
+     "RR",
+     34.669
+    ],
+    [
+     "RR",
+     34.718
+    ],
+    [
+     "RR",
+     38.325
+    ]
+   ]
+  },
+  "flat_eta0.90": {
+   "F_on": [
+    53.4963,
+    53.6023,
+    53.6883
+   ],
+   "F_off": [
+    54.6903,
+    54.829,
+    54.6924
+   ],
+   "order_on": "top<mid<bot",
+   "order_off": "top<bot<mid",
+   "ready_on": [
+    40.4,
+    40.9,
+    41.2
+   ],
+   "ready_off": [
+    39.4,
+    40.2,
+    39.8
+   ],
+   "legs_times": [
+    [
+     "RR",
+     36.362
+    ],
+    [
+     "RR",
+     36.732
+    ],
+    [
+     "RR",
+     36.918
+    ]
+   ]
+  }
+ },
+ "V1": {
+  "C_R1_eta0.95": {
+   "same_commands": true,
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 5.206e-09,
+    "chunks": 49400,
+    "demand_met_chunks": 49400,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 0,
+    "solved_chunks": 49400,
+    "audit_chunks": 0,
+    "audit_mismatches": 0
+   },
+   "max_abs_delta": 0.0
+  },
+  "C_S1_eta0.95": {
+   "same_commands": true,
+   "V2a": {
+    "max_sum_Q_over_supply_minus_1": 5.206e-09,
+    "chunks": 74100,
+    "demand_met_chunks": 74100,
+    "max_abs_v_minus_u_on_demand_met_m_s": 0.0,
+    "fast_path_chunks": 0,
+    "solved_chunks": 74100,
+    "audit_chunks": 0,
+    "audit_mismatches": 0
+   },
+   "max_abs_delta": 0.0
+  }
+ },
+ "V4": {
+  "E_R4_eta0.85_widthdouble": {
+   "worst": [
+    "item3_Fspec",
+    0.0001152100588860669
+   ],
+   "rows": {
+    "item2_att": {
+     "base": 0.01548,
+     "run": 0.01548,
+     "limit": 0.18000000000000002,
+     "change": 0.0,
+     "frac_of_margin": 0.0
+    },
+    "item3_Fmin": {
+     "base": 48.2658,
+     "run": 48.2697,
+     "limit": 9.41458911,
+     "change": 0.003900000000001569,
+     "frac_of_margin": 0.00010038297161557451
+    },
+    "item3_Fspec": {
+     "base": 48.2658,
+     "run": 48.2697,
+     "limit": 14.41458911,
+     "change": 0.003900000000001569,
+     "frac_of_margin": 0.0001152100588860669
+    },
+    "S8C1_first8": {
+     "base": 48.2658,
+     "run": 48.2697,
+     "limit": 14.41458911,
+     "change": 0.003900000000001569,
+     "frac_of_margin": 0.0001152100588860669
+    },
+    "S8C1_after8": {
+     "base": 55.4625,
+     "run": 55.4625,
+     "limit": 14.41458911,
+     "change": 0.0,
+     "frac_of_margin": 0.0
+    },
+    "item4_bar": {
+     "base": 106.947,
+     "run": 106.949,
+     "limit": 180.0,
+     "change": 0.001999999999995339,
+     "frac_of_margin": 2.7377383543390948e-05
+    },
+    "item4_sat": {
+     "base": 0,
+     "run": 0,
+     "limit": 0,
+     "change": 0,
+     "frac_of_margin": 0.0
+    },
+    "item5_rock": {
+     "base": 0.0063,
+     "run": 0.0063,
+     "limit": 0.06,
+     "change": 0.0,
+     "frac_of_margin": 0.0
+    },
+    "item5_resid": {
+     "base": 2e-05,
+     "run": 2e-05,
+     "limit": 0.005,
+     "change": 0.0,
+     "frac_of_margin": 0.0
+    },
+    "item7_probe": {
+     "base": 0.02392,
+     "run": 0.02392,
+     "limit": 0.1,
+     "change": 0.0,
+     "frac_of_margin": 0.0
+    },
+    "P3-6_READY": {
+     "base": 57.90000000009444,
+     "run": 57.90000000009444,
+     "limit": 100.0,
+     "change": 0.0,
+     "frac_of_margin": 0.0
+    }
+   },
+   "verdict": [
+    "pass",
+    [],
+    "pass",
+    []
+   ],
+   "same_verdict": true,
+   "same_commands": false
+  },
+  "E_R4_eta0.85_widthhalf": {
+   "worst": [
+    "item3_Fspec",
+    5.9082081479872845e-05
+   ],
+   "rows": {
+    "item2_att": {
+     "base": 0.01548,
+     "run": 0.01548,
+     "limit": 0.18000000000000002,
+     "change": 0.0,
+     "frac_of_margin": 0.0
+    },
+    "item3_Fmin": {
+     "base": 48.2658,
+     "run": 48.2638,
+     "limit": 9.41458911,
+     "change": 0.001999999999995339,
+     "frac_of_margin": 5.147844698220522e-05
+    },
+    "item3_Fspec": {
+     "base": 48.2658,
+     "run": 48.2638,
+     "limit": 14.41458911,
+     "change": 0.001999999999995339,
+     "frac_of_margin": 5.9082081479872845e-05
+    },
+    "S8C1_first8": {
+     "base": 48.2658,
+     "run": 48.2638,
+     "limit": 14.41458911,
+     "change": 0.001999999999995339,
+     "frac_of_margin": 5.9082081479872845e-05
+    },
+    "S8C1_after8": {
+     "base": 55.4625,
+     "run": 55.4625,
+     "limit": 14.41458911,
+     "change": 0.0,
+     "frac_of_margin": 0.0
+    },
+    "item4_bar": {
+     "base": 106.947,
+     "run": 106.946,
+     "limit": 180.0,
+     "change": 0.0010000000000047748,
+     "frac_of_margin": 1.3688691771792737e-05
+    },
+    "item4_sat": {
+     "base": 0,
+     "run": 0,
+     "limit": 0,
+     "change": 0,
+     "frac_of_margin": 0.0
+    },
+    "item5_rock": {
+     "base": 0.0063,
+     "run": 0.0063,
+     "limit": 0.06,
+     "change": 0.0,
+     "frac_of_margin": 0.0
+    },
+    "item5_resid": {
+     "base": 2e-05,
+     "run": 2e-05,
+     "limit": 0.005,
+     "change": 0.0,
+     "frac_of_margin": 0.0
+    },
+    "item7_probe": {
+     "base": 0.02392,
+     "run": 0.02392,
+     "limit": 0.1,
+     "change": 0.0,
+     "frac_of_margin": 0.0
+    },
+    "P3-6_READY": {
+     "base": 57.90000000009444,
+     "run": 57.90000000009444,
+     "limit": 100.0,
+     "change": 0.0,
+     "frac_of_margin": 0.0
+    }
+   },
+   "verdict": [
+    "pass",
+    [],
+    "pass",
+    []
+   ],
+   "same_verdict": true,
+   "same_commands": false
+  },
+  "E_S1_eta0.85_widthdouble": {
+   "worst": [
+    "item7_probe",
+    0.08762098828323986
+   ],
+   "rows": {
+    "item2_att": {
+     "base": 0.023,
+     "run": 0.02268,
+     "limit": 0.18000000000000002,
+     "change": 0.00032000000000000084,
+     "frac_of_margin": 0.002038216560509559
+    },
+    "item3_Fmin": {
+     "base": 66.3544,
+     "run": 66.407,
+     "limit": 9.41458911,
+     "change": 0.052599999999998204,
+     "frac_of_margin": 0.0009237824850106067
+    },
+    "item3_Fspec": {
+     "base": 66.3544,
+     "run": 66.407,
+     "limit": 14.41458911,
+     "change": 0.052599999999998204,
+     "frac_of_margin": 0.0010127106567907299
+    },
+    "S8C1_first8": {
+     "base": 66.3544,
+     "run": 66.407,
+     "limit": 14.41458911,
+     "change": 0.052599999999998204,
+     "frac_of_margin": 0.0010127106567907299
+    },
+    "S8C1_after8": {
+     "base": 67.4207,
+     "run": 67.4414,
+     "limit": 14.41458911,
+     "change": 0.020700000000005048,
+     "frac_of_margin": 0.00039052101073708956
+    },
+    "item4_bar": {
+     "base": 90.916,
+     "run": 90.915,
+     "limit": 180.0,
+     "change": 0.000999999999990564,
+     "frac_of_margin": 1.12253603339608e-05
+    },
+    "item4_sat": {
+     "base": 0,
+     "run": 0,
+     "limit": 0,
+     "change": 0,
+     "frac_of_margin": 0.0
+    },
+    "item5_rock": {
+     "base": 0.00704,
+     "run": 0.00705,
+     "limit": 0.06,
+     "change": 9.999999999999593e-06,
+     "frac_of_margin": 0.00018882175226585333
+    },
+    "item5_resid": {
+     "base": 2e-05,
+     "run": 2e-05,
+     "limit": 0.005,
+     "change": 0.0,
+     "frac_of_margin": 0.0
+    },
+    "item7_probe": {
+     "base": 0.08037,
+     "run": 0.07865,
+     "limit": 0.1,
+     "change": 0.0017199999999999993,
+     "frac_of_margin": 0.08762098828323986
+    },
+    "P3-6_READY": {
+     "base": 81.40000000020665,
+     "run": 81.50000000020712,
+     "limit": 100.0,
+     "change": 0.10000000000047748,
+     "frac_of_margin": 0.005376344086106908
+    }
+   },
+   "verdict": [
+    "pass",
+    [],
+    "pass",
+    []
+   ],
+   "same_verdict": true,
+   "same_commands": false
+  },
+  "E_S1_eta0.85_widthhalf": {
+   "worst": [
+    "P3-6_READY",
+    0.005376344086106908
+   ],
+   "rows": {
+    "item2_att": {
+     "base": 0.023,
+     "run": 0.02309,
+     "limit": 0.18000000000000002,
+     "change": 8.99999999999998e-05,
+     "frac_of_margin": 0.0005732484076433108
+    },
+    "item3_Fmin": {
+     "base": 66.3544,
+     "run": 66.352,
+     "limit": 9.41458911,
+     "change": 0.0023999999999944066,
+     "frac_of_margin": 4.2149771179094385e-05
+    },
+    "item3_Fspec": {
+     "base": 66.3544,
+     "run": 66.352,
+     "limit": 14.41458911,
+     "change": 0.0023999999999944066,
+     "frac_of_margin": 4.620733034775989e-05
+    },
+    "S8C1_first8": {
+     "base": 66.3544,
+     "run": 66.352,
+     "limit": 14.41458911,
+     "change": 0.0023999999999944066,
+     "frac_of_margin": 4.620733034775989e-05
+    },
+    "S8C1_after8": {
+     "base": 67.4207,
+     "run": 67.4178,
+     "limit": 14.41458911,
+     "change": 0.002899999999996794,
+     "frac_of_margin": 5.471067300174066e-05
+    },
+    "item4_bar": {
+     "base": 90.916,
+     "run": 90.916,
+     "limit": 180.0,
+     "change": 0.0,
+     "frac_of_margin": 0.0
+    },
+    "item4_sat": {
+     "base": 0,
+     "run": 0,
+     "limit": 0,
+     "change": 0,
+     "frac_of_margin": 0.0
+    },
+    "item5_rock": {
+     "base": 0.00704,
+     "run": 0.00703,
+     "limit": 0.06,
+     "change": 1.000000000000046e-05,
+     "frac_of_margin": 0.0001888217522658697
+    },
+    "item5_resid": {
+     "base": 2e-05,
+     "run": 2e-05,
+     "limit": 0.005,
+     "change": 0.0,
+     "frac_of_margin": 0.0
+    },
+    "item7_probe": {
+     "base": 0.08037,
+     "run": 0.08046,
+     "limit": 0.1,
+     "change": 9.000000000000674e-05,
+     "frac_of_margin": 0.00458481915435592
+    },
+    "P3-6_READY": {
+     "base": 81.40000000020665,
+     "run": 81.50000000020712,
+     "limit": 100.0,
+     "change": 0.10000000000047748,
+     "frac_of_margin": 0.005376344086106908
+    }
+   },
+   "verdict": [
+    "pass",
+    [],
+    "pass",
+    []
+   ],
+   "same_verdict": true,
+   "same_commands": false
+  }
+ },
+ "summary": {
+  "0.85": {
+   "n": 23,
+   "T1_flips": 0,
+   "T2_class_change": 0,
+   "T2_new_fault_warn": 0,
+   "T3a": 0,
+   "T3b": 0,
+   "new_row_flags": {
+    "S7": [
+     "P3-2"
+    ]
+   },
+   "dF_kN": {
+    "min": -8.633499999999998,
+    "median": -1.1036000000000001,
+    "max": 3.5696999999999974
+   },
+   "dREADY_s": {
+    "min": -1.4000000000000057,
+    "median": 1.9499999999999993,
+    "max": 17.30000000000001
+   },
+   "R1": [
+    "R4",
+    "R9"
+   ],
+   "R2": {
+    "S1": [
+     "READY>5"
+    ],
+    "S4": [
+     "att>0.01"
+    ]
+   },
+   "R3": {},
+   "R4": {
+    "S1": [
+     "stroke>+3"
+    ],
+    "S2": [
+     "stroke>+3"
+    ],
+    "S3": [
+     "stroke>+3"
+    ],
+    "S4": [
+     "stroke>+3"
+    ],
+    "S5": [
+     "clear<-5",
+     "stroke>+3"
+    ],
+    "S7": [
+     "stroke>+3"
+    ]
+   },
+   "R5": {
+    "S7": [
+     "INFO_LOC_REVOKED",
+     "soil_mode_start",
+     "loc_delay>0.5"
+    ]
+   },
+   "R6": {},
+   "R7": [
+    "S4"
+   ],
+   "E_flags": {
+    "R10": [
+     "r<0.93>=7s"
+    ],
+    "R11": [
+     "r<0.93>=7s"
+    ],
+    "R12": [
+     "r<0.93>=7s"
+    ],
+    "R13": [
+     "r<0.93>=7s"
+    ],
+    "R14": [
+     "r<0.93>=7s"
+    ],
+    "R15": [
+     "r<0.93>=7s",
+     "between>10mm"
+    ],
+    "R16": [
+     "r<0.93>=7s"
+    ],
+    "R1": [
+     "r<0.93>=7s"
+    ],
+    "R2": [
+     "r<0.93>=7s"
+    ],
+    "R3": [
+     "r<0.93>=7s"
+    ],
+    "R4": [
+     "r<0.93>=7s"
+    ],
+    "R5": [
+     "r<0.93>=7s"
+    ],
+    "R6": [
+     "r<0.93>=7s"
+    ],
+    "R7": [
+     "r<0.93>=7s"
+    ],
+    "R8": [
+     "r<0.93>=7s"
+    ],
+    "R9": [
+     "r<0.93>=7s"
+    ],
+    "S1": [
+     "r<0.93>=7s"
+    ],
+    "S2": [
+     "r<0.93>=7s",
+     "between>10mm"
+    ],
+    "S3": [
+     "r<0.93>=7s"
+    ],
+    "S4": [
+     "r<0.93>=7s",
+     "between>10mm",
+     "I at limit"
+    ],
+    "S5": [
+     "r<0.93>=7s",
+     "between>10mm",
+     "I at limit"
+    ],
+    "S7": [
+     "r<0.93>=7s"
+    ],
+    "S8": [
+     "r<0.93>=7s"
+    ]
+   }
+  },
+  "0.9": {
+   "n": 23,
+   "T1_flips": 0,
+   "T2_class_change": 0,
+   "T2_new_fault_warn": 0,
+   "T3a": 0,
+   "T3b": 0,
+   "new_row_flags": {},
+   "dF_kN": {
+    "min": -7.607399999999998,
+    "median": -0.10950000000000415,
+    "max": 6.192399999999999
+   },
+   "dREADY_s": {
+    "min": -3.200000000000003,
+    "median": 1.0,
+    "max": 3.5
+   },
+   "R1": [
+    "R5"
+   ],
+   "R2": {
+    "S1": [
+     "att>0.01"
+    ],
+    "S4": [
+     "att>0.01"
+    ]
+   },
+   "R3": {},
+   "R4": {
+    "S1": [
+     "stroke>+3"
+    ],
+    "S4": [
+     "stroke>+3"
+    ],
+    "S5": [
+     "clear<-5",
+     "stroke>+3"
+    ],
+    "S7": [
+     "stroke>+3"
+    ]
+   },
+   "R5": {
+    "S7": [
+     "INFO_LOC_REVOKED",
+     "soil_mode_start",
+     "loc_delay>0.5"
+    ]
+   },
+   "R6": {},
+   "R7": [
+    "S4"
+   ],
+   "E_flags": {
+    "S4": [
+     "between>10mm",
+     "I at limit"
+    ],
+    "S5": [
+     "I at limit"
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,235 @@
+{
+ "mode": "converge",
+ "ratio": 2.0,
+ "rows": [
+  {
+   "quantity": "v_FL",
+   "metric": "mean",
+   "unit": "m/s",
+   "values": [
+    0.01714454952405,
+    0.0171445495195
+   ],
+   "rel_changes": [
+    2.653904239986329e-10
+   ],
+   "rel": 2.653904239986329e-10,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  },
+  {
+   "quantity": "p_h_FL",
+   "metric": "mean",
+   "unit": "Pa (gauge)",
+   "values": [
+    8894166.19535,
+    8894166.19527
+   ],
+   "rel_changes": [
+    8.994728387469831e-12
+   ],
+   "rel": 8.994728387469831e-12,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  },
+  {
+   "quantity": "v_FR",
+   "metric": "mean",
+   "unit": "m/s",
+   "values": [
+    0.0171445501675,
+    0.0171445501673
+   ],
+   "rel_changes": [
+    1.1665499359311267e-11
+   ],
+   "rel": 1.1665499359311267e-11,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  },
+  {
+   "quantity": "p_h_FR",
+   "metric": "mean",
+   "unit": "Pa (gauge)",
+   "values": [
+    8894171.755694998,
+    8894171.75563
+   ],
+   "rel_changes": [
+    7.308029000723904e-12
+   ],
+   "rel": 7.308029000723904e-12,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  },
+  {
+   "quantity": "v_RL",
+   "metric": "mean",
+   "unit": "m/s",
+   "values": [
+    0.0209227397301,
+    0.020922739729550003
+   ],
+   "rel_changes": [
+    2.6287071130011508e-11
+   ],
+   "rel": 2.6287071130011508e-11,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  },
+  {
+   "quantity": "p_h_RL",
+   "metric": "mean",
+   "unit": "Pa (gauge)",
+   "values": [
+    7804527.64107,
+    7804527.641215
+   ],
+   "rel_changes": [
+    1.8579011091443094e-11
+   ],
+   "rel": 1.8579011091443094e-11,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  },
+  {
+   "quantity": "v_RR",
+   "metric": "mean",
+   "unit": "m/s",
+   "values": [
+    0.020922746003200002,
+    0.02092274600375
+   ],
+   "rel_changes": [
+    2.628706324718668e-11
+   ],
+   "rel": 2.628706324718668e-11,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  },
+  {
+   "quantity": "p_h_RR",
+   "metric": "mean",
+   "unit": "Pa (gauge)",
+   "values": [
+    7383231.110755,
+    7383231.110745
+   ],
+   "rel_changes": [
+    1.3544939412321756e-12
+   ],
+   "rel": 1.3544939412321756e-12,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  },
+  {
+   "quantity": "p_P",
+   "metric": "mean",
+   "unit": "Pa (gauge)",
+   "values": [
+    9695988.60321,
+    9695988.603335
+   ],
+   "rel_changes": [
+    1.2891955470816623e-11
+   ],
+   "rel": 1.2891955470816623e-11,
+   "observed_order": null,
+   "oscillatory": false,
+   "richardson": null,
+   "category": "step",
+   "tol_match": 0.01,
+   "tol_allowed": 0.03,
+   "verdict": "match"
+  }
+ ],
+ "verdict": "match",
+ "warnings": [],
+ "notes": [],
+ "sources": [
+  {
+   "label": "run1",
+   "kind": "om",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\numpy\\B85c.csv",
+   "format": "header-csv",
+   "pressure_ref": "absolute",
+   "p_atm_Pa": 101325.0,
+   "n_samples": 5001
+  },
+  {
+   "label": "run2",
+   "kind": "om",
+   "path": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\coupled\\numpy\\B85c_dt2.csv",
+   "format": "header-csv",
+   "pressure_ref": "absolute",
+   "p_atm_Pa": 101325.0,
+   "n_samples": 5001
+  }
+ ],
+ "tolerances": {
+  "hand_sim": [
+   0.01,
+   0.05
+  ],
+  "sim_sim": [
+   0.02,
+   0.05
+  ],
+  "transient": [
+   0.05,
+   0.1
+  ],
+  "omega_h": [
+   0.05,
+   0.1
+  ],
+  "step": [
+   0.01,
+   0.03
+  ],
+  "balance": [
+   0.01,
+   0.03
+  ]
+ }
+}

@@ -131,6 +131,13 @@ valve command passes ``amplifier ramp -> spool first-order lag -> leg speed``:
   re-integrates the pending step from its start state) and snapshots (optional keys
   :data:`VALVE_STATE_KEYS`, written only with the valve model on; absent at a run start = 0).
 
+**Shared-pump flow limit** (:meth:`L1SpeedActuator.set_flow_limit`, default none = everything above
+unchanged; ``hydraulics.flow_limit_run``, ``hydraulic_coupling_criteria.md`` 9): the same rule as
+``actuation.SpeedReference``. The speed after the valve becomes the speed the pump delivers at the
+motor force of the step just taken (the L1 path has no seal friction); stroke-end braking of the valve
+path and law C act on it afterwards. With the command ramp the opening keeps ramping by itself
+(snapshot key :data:`FLOW_OPEN_KEY`, written only with a limit).
+
 Units SI; per-leg arrays in LEG_ORDER.
 """
 
@@ -144,6 +151,7 @@ import numpy as np
 import pychrono as ch
 from numpy.typing import ArrayLike, NDArray
 
+from outrigger_sim.actuation import FLOW_OPEN_KEY, FlowLimit
 from outrigger_sim.params import Params
 
 PART_PREFIX = "l1_actuator"
@@ -317,6 +325,7 @@ class L1SpeedActuator:
         self._amp_mode = "none"
         self._amp_ramp_s = 0.0
         self._zero_valve_state()
+        self._flow_limit: FlowLimit | None = None
         self.reset_to(s0)
         # a fresh system is "not updated" (its first step runs a full Update)
         self._next_full_update = True
@@ -354,6 +363,24 @@ class L1SpeedActuator:
                 2.0 * float(cn[leg.name]) / float(kn[leg.name]) for leg in params.legs
             ],
         )
+
+    # --- shared-pump flow limit (module docstring) ----------------------------------------
+
+    def set_flow_limit(self, flow_limit: FlowLimit | None) -> None:
+        """Put a flow limit behind the valve from the next hook on (None = off); the opening starts
+        at the applied speed.
+
+        Raises:
+            ValueError: A plant with neither the valve model nor the command ramp has no opening.
+        """
+        if flow_limit is not None and not self._valve_on and not math.isfinite(self.accel_limit_m_s2):
+            raise ValueError("the flow limit needs the valve model or the command ramp")
+        self._flow_limit = flow_limit
+        self._flow_open = self._u.copy()
+
+    @property
+    def flow_limit(self) -> FlowLimit | None:
+        return self._flow_limit
 
     # --- R8 valve model (module docstring) ------------------------------------------------
 
@@ -740,7 +767,7 @@ class L1SpeedActuator:
         motors (module docstring, force saturation).
         """
         forces = None
-        if self._f_ext is not None:
+        if self._f_ext is not None or self._flow_limit is not None:
             forces = np.array([m.GetMotorForce() for m in self._motors], dtype=float)
         self.advance(dt_s, float(model.system.GetChTime()), cylinder_force_N=forces)
 
@@ -752,7 +779,8 @@ class L1SpeedActuator:
         Args:
             cylinder_force_N: Cylinder force per leg of the step just taken (+ = extend);
                 judged against the force limits when the actuator has them (module
-                docstring). None = no force saturation in this step.
+                docstring). None = no force saturation in this step. The flow limit reads the
+                same force.
         """
         dt = float(dt_s)
         a = self.accel_limit_m_s2
@@ -760,6 +788,10 @@ class L1SpeedActuator:
         u = self._u
         lo, hi = self._soft_lo, self._soft_hi
         target = np.clip(self._u_cmd, -self._v_max, self._v_max)
+        flow = self._flow_limit
+        if flow is not None and cylinder_force_N is None:
+            raise ValueError("the flow limit needs the cylinder force of the step just taken")
+        u_limited = None
         if self._valve_on:
             # R8 valve model: amplifier ramp + exact spool lag, step-mean speed; the
             # acceleration limit is off, the stroke-end braking cap stays (module docstring)
@@ -767,6 +799,8 @@ class L1SpeedActuator:
             target, end_state = self._valve_step(dt, start)
             self._valve_start = start
             self._valve_u, self._amp_u, self._amp_target, self._amp_rate = end_state
+            if flow is not None:
+                target = flow.limit(float(t_s), dt, target, cylinder_force_N)
             if math.isfinite(a):
                 half = 0.5 * a * dt
                 up = np.sqrt(half * half + 2.0 * a * np.maximum(hi - s, 0.0)) - half
@@ -785,7 +819,11 @@ class L1SpeedActuator:
             up = np.sqrt(half * half + 2.0 * a * np.maximum(hi - s, 0.0)) - half
             down = np.sqrt(half * half + 2.0 * a * np.maximum(s - lo, 0.0)) - half
             target = np.minimum(np.maximum(target, -down), up)
-            u_new = u + np.clip(target - u, -step, step)
+            if flow is None:
+                u_new = u + np.clip(target - u, -step, step)
+            else:
+                self._flow_open = self._flow_open + np.clip(target - self._flow_open, -step, step)
+                u_new = u_limited = flow.limit(float(t_s), dt, self._flow_open, cylinder_force_N)
         else:
             target = np.where((s >= hi) & (target > 0.0), 0.0, target)
             target = np.where((s <= lo) & (target < 0.0), 0.0, target)
@@ -818,6 +856,9 @@ class L1SpeedActuator:
         if np.any(clipped):
             s_new = np.clip(s_new, lo, hi)
             u_new = np.where(clipped, (s_new - s) / dt, u_new)
+        if u_limited is not None:
+            # law C and the end clip cut the opening too (module docstring)
+            self._flow_open = np.where(u_new != u_limited, u_new, self._flow_open)
         # f(t) = s(t_n) + u_new (t - t_n) = start + slope t
         self._ramp_start = s - u_new * float(t_s)
         self._ramp_slope = u_new
@@ -847,6 +888,8 @@ class L1SpeedActuator:
             valve = {"valve_u_m_s": self._valve_u.copy(), "amp_u_m_s": self._amp_u.copy(),
                      "amp_target_m_s": self._amp_target.copy(),
                      "amp_rate_m_s2": self._amp_rate.copy()}
+        if self._flow_limit is not None:
+            valve[FLOW_OPEN_KEY] = self._flow_open.copy()
         return valve | {
             "s_ref_m": self._s_ref.copy(),
             "u_applied_m_s": self._u.copy(),
@@ -911,6 +954,9 @@ class L1SpeedActuator:
                 self._amp_u = _vector(arrays["amp_u_m_s"], n, "amp_u_m_s")
                 self._amp_target = _vector(arrays["amp_target_m_s"], n, "amp_target_m_s")
                 self._amp_rate = _vector(arrays["amp_rate_m_s2"], n, "amp_rate_m_s2")
+        if self._flow_limit is not None:
+            self._flow_open = (_vector(arrays[FLOW_OPEN_KEY], n, FLOW_OPEN_KEY)
+                               if FLOW_OPEN_KEY in arrays else self._u.copy())
         full = bool(np.asarray(arrays["next_step_full_update"]).reshape(-1)[0])
         self._next_full_update = full
         if full:

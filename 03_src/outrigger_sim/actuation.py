@@ -38,6 +38,14 @@ pressure-compensated flow valve, so its output is the flow ``Q = A_p u`` and ``s
 displaced oil volume over ``A_p``. Lagging the flow (``u``) is the valve dynamics; the load
 then follows through the oil-column spring. The same ``u`` drives the dashpot term.
 
+Shared-pump flow limit (:meth:`SpeedReference.set_flow_limit`, default none = everything above bit
+for bit; ``hydraulics.flow_limit_run``, ``hydraulic_coupling_criteria.md`` 9): the speed after the
+valve (the step mean of the spool lag, or with the command ramp the ramp output) is replaced by the
+speed the pump delivers at the force of the step just taken; stroke-end braking of the valve path and
+law C act on it afterwards. With the command ramp the opening keeps ramping by itself (state
+``flow_open_m_s``): a short supply slows the leg, not the spool, so the next request stays the true
+opening. Law C and the end clip also cut the opening, as they cut ``u`` without the limit.
+
 Units SI; arrays per leg in LEG_ORDER. No pychrono import.
 """
 
@@ -45,7 +53,7 @@ from __future__ import annotations
 
 import math
 from collections.abc import Mapping, Sequence
-from typing import Any
+from typing import Any, Protocol
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
@@ -67,7 +75,17 @@ STATE_KEYS = (
 VALVE_STATE_KEYS = ("valve_u_m_s", "amp_u_m_s", "amp_target_m_s", "amp_rate_m_s2")
 """Optional snapshot keys of the valve model (written only when it is on; absent = zero)."""
 
+FLOW_OPEN_KEY = "flow_open_m_s"
+"""Optional snapshot key of the flow limit (written only with a limit; absent = the applied speed)."""
+
 AMP_RAMP_MODES = ("none", "full_scale", "per_step")
+
+
+class FlowLimit(Protocol):
+    """What the speed reference needs from a flow limit (``hydraulics.flow_limit_run``)."""
+
+    def limit(self, t_s: float, dt_s: float, request_m_s: ArrayLike,
+              force_N: ArrayLike) -> NDArray[np.float64]: ...
 
 
 def _vector(value: ArrayLike, n: int, name: str) -> NDArray[np.float64]:
@@ -159,6 +177,26 @@ class SpeedReference:
         self._amp_mode = "none"
         self._amp_ramp_s = 0.0
         self._zero_valve_state()
+        self._flow_limit: FlowLimit | None = None
+        self._flow_open = np.zeros(n)
+
+    # --- shared-pump flow limit (module docstring) ----------------------------------------
+
+    def set_flow_limit(self, flow_limit: FlowLimit | None) -> None:
+        """Put a flow limit behind the valve from the next :meth:`advance` on (None = off); the
+        opening starts at the applied speed.
+
+        Raises:
+            ValueError: A plant with neither the valve model nor the command ramp has no opening.
+        """
+        if flow_limit is not None and not self._valve_on and not math.isfinite(self.accel_limit_m_s2):
+            raise ValueError("the flow limit needs the valve model or the command ramp")
+        self._flow_limit = flow_limit
+        self._flow_open = self._u.copy()
+
+    @property
+    def flow_limit(self) -> FlowLimit | None:
+        return self._flow_limit
 
     # --- R8 valve model (module docstring) ------------------------------------------------
 
@@ -351,12 +389,15 @@ class SpeedReference:
 
     # --- step -----------------------------------------------------------------------------
 
-    def advance(self, dt_s: float, *, cylinder_force_N: ArrayLike | None = None) -> None:
+    def advance(self, dt_s: float, *, cylinder_force_N: ArrayLike | None = None,
+                t_s: float = math.nan) -> None:
         """One step of length ``dt_s`` (module docstring).
 
         Args:
             cylinder_force_N: Cylinder force per leg of the step just taken (+ = extend);
-                judged against the force limits when given and the limits exist.
+                judged against the force limits when given and the limits exist. The flow limit
+                reads the same force (L2b friction path: the pressure force ``F - f``).
+            t_s: Start time of the step; only the flow-limit record reads it.
         """
         dt = float(dt_s)
         if not (dt > 0.0 and math.isfinite(dt)):
@@ -366,9 +407,15 @@ class SpeedReference:
         u = self._u
         lo, hi = self._soft_lo, self._soft_hi
         target = np.clip(self._u_cmd, -self._v_max, self._v_max)
+        flow = self._flow_limit
+        if flow is not None and cylinder_force_N is None:
+            raise ValueError("the flow limit needs the cylinder force of the step just taken")
+        u_limited = None
         if self._valve_on:
             # R8 valve model: step-mean spool speed, no acceleration limit, end braking cap
             target = self._valve_step(dt)
+            if flow is not None:
+                target = flow.limit(t_s, dt, target, cylinder_force_N)
             if math.isfinite(a):
                 half = 0.5 * a * dt
                 up = np.sqrt(half * half + 2.0 * a * np.maximum(hi - s, 0.0)) - half
@@ -383,7 +430,11 @@ class SpeedReference:
             up = np.sqrt(half * half + 2.0 * a * np.maximum(hi - s, 0.0)) - half
             down = np.sqrt(half * half + 2.0 * a * np.maximum(s - lo, 0.0)) - half
             target = np.minimum(np.maximum(target, -down), up)
-            u_new = u + np.clip(target - u, -step, step)
+            if flow is None:
+                u_new = u + np.clip(target - u, -step, step)
+            else:
+                self._flow_open = self._flow_open + np.clip(target - self._flow_open, -step, step)
+                u_new = u_limited = flow.limit(t_s, dt, self._flow_open, cylinder_force_N)
         else:
             target = np.where((s >= hi) & (target > 0.0), 0.0, target)
             target = np.where((s <= lo) & (target < 0.0), 0.0, target)
@@ -408,6 +459,9 @@ class SpeedReference:
         if np.any(clipped):
             s_new = np.clip(s_new, lo, hi)
             u_new = np.where(clipped, (s_new - s) / dt, u_new)
+        if u_limited is not None:
+            # law C and the end clip cut the opening too (module docstring)
+            self._flow_open = np.where(u_new != u_limited, u_new, self._flow_open)
         self._u_prev = u
         self._u = u_new
         self._s_ref = s_new
@@ -420,6 +474,8 @@ class SpeedReference:
             valve = {"valve_u_m_s": self._valve_u.copy(), "amp_u_m_s": self._amp_u.copy(),
                      "amp_target_m_s": self._amp_target.copy(),
                      "amp_rate_m_s2": self._amp_rate.copy()}
+        if self._flow_limit is not None:
+            valve[FLOW_OPEN_KEY] = self._flow_open.copy()
         return valve | {
             "s_ref_m": self._s_ref.copy(),
             "u_applied_m_s": self._u.copy(),
@@ -447,7 +503,10 @@ class SpeedReference:
                 self._amp_u = _vector(arrays["amp_u_m_s"], n, "amp_u_m_s")
                 self._amp_target = _vector(arrays["amp_target_m_s"], n, "amp_target_m_s")
                 self._amp_rate = _vector(arrays["amp_rate_m_s2"], n, "amp_rate_m_s2")
+        if self._flow_limit is not None:
+            self._flow_open = (_vector(arrays[FLOW_OPEN_KEY], n, FLOW_OPEN_KEY)
+                               if FLOW_OPEN_KEY in arrays else self._u.copy())
 
 
-__all__ = ["AMP_RAMP_MODES", "SATURATION_STOP_S", "STATE_KEYS", "VALVE_STATE_KEYS",
-           "SpeedReference"]
+__all__ = ["AMP_RAMP_MODES", "FLOW_OPEN_KEY", "SATURATION_STOP_S", "STATE_KEYS", "VALVE_STATE_KEYS",
+           "FlowLimit", "SpeedReference"]

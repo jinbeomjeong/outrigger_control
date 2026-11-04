@@ -1,0 +1,11 @@
+START 2026-11-04T12:14:11.2862765+09:00 runner=run_verdict.py workers=20 affinity=0x0FFF5555
+2026-11-04 12:14:11 start bundles=OFF,A,B,C,D,E todo=58 of 81 pending=[] workers=20
+Traceback (most recent call last):
+  File "C:\workspace\outrigger_control\04_scripts\04_hydraulic\coupled\run_verdict.py", line 203, in <module>
+    main()
+  File "C:\workspace\outrigger_control\04_scripts\04_hydraulic\coupled\run_verdict.py", line 186, in main
+    _set_affinity(args.affinity)
+  File "C:\workspace\outrigger_control\04_scripts\04_hydraulic\coupled\run_verdict.py", line 147, in _set_affinity
+    import s9_soil_slope as slope
+ModuleNotFoundError: No module named 's9_soil_slope'
+END 2026-11-04T12:14:11.5250045+09:00 exit=1 wall_s=0.2

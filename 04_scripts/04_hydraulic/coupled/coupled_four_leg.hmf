@@ -1,0 +1,1016 @@
+<?xml version='1.0' encoding='utf-8'?>
+<hopsanmodelfile hmfversion="0.4" hopsancoreversion="2.24.4">
+  <requirements>
+    <componentlibrary>HopsanDefaultComponentLibrary</componentlibrary>
+  </requirements>
+  <system typename="Subsystem" name="coupled_four_leg">
+    <simulationtime start="0.0" timestep="1e-05" stop="5.0" inherit_timestep="true" />
+    <simulationlogsettings numsamples="2001" starttime="0.0" />
+    <parameters />
+    <objects>
+      <component typename="HydraulicTankC" name="TankP">
+        <parameters>
+          <parameter name="p" value="100000.0" type="double" unit="Pa" />
+        </parameters>
+      </component>
+      <component typename="HydraulicTankC" name="TankT">
+        <parameters>
+          <parameter name="p" value="300000.0" type="double" unit="Pa" />
+        </parameters>
+      </component>
+      <component typename="HydraulicFixedDisplacementPump" name="Pump">
+        <parameters>
+          <parameter name="D_p#Value" value="3e-05" type="double" unit="m^3/rev" />
+          <parameter name="n_p#Value" value="199.63075917988627" type="double" unit="rad/s" />
+          <parameter name="C_lp#Value" value="0.0" type="double" unit="(m^3/s)/Pa" />
+        </parameters>
+      </component>
+      <component typename="HydraulicVolumeMultiPort" name="Gallery">
+        <parameters>
+          <parameter name="V#Value" value="0.0005" type="double" unit="m^3" />
+          <parameter name="Beta_e#Value" value="1000000000.0" type="double" unit="Pa" />
+          <parameter name="P1#Pressure" value="10100000.0" type="double" unit="Pa" />
+        </parameters>
+      </component>
+      <component typename="HydraulicPressureControlledValve" name="Unloader">
+        <parameters>
+          <parameter name="p_ref#Value" value="2000000.0" type="double" unit="Pa" />
+          <parameter name="p_h#Value" value="0.0" type="double" unit="Pa" />
+          <parameter name="tao" value="0.0001" type="double" unit="s" />
+          <parameter name="k_cs" value="2.6e-08" type="double" unit="(m^3/s)/Pa" />
+          <parameter name="k_cf" value="1.9e-08" type="double" unit="(m^3/s)/Pa" />
+          <parameter name="q_nom" value="0.003" type="double" unit="m^3/s" />
+          <parameter name="p_nom" value="7000000.0" type="double" unit="Pa" />
+        </parameters>
+      </component>
+      <component typename="HydraulicPressureSourceC" name="LSsource">
+        <parameters>
+          <parameter name="p#Value" value="300000.0" type="double" unit="Pa" />
+        </parameters>
+      </component>
+      <component typename="SignalConstant" name="LSfloor">
+        <parameters>
+          <parameter name="y#Value" value="300000.0" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalConstant" name="LSrelief">
+        <parameters>
+          <parameter name="y#Value" value="21100000.0" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalMax" name="LSmax">
+        <parameters />
+      </component>
+      <component typename="SignalMin" name="LSmin">
+        <parameters />
+      </component>
+      <component typename="SignalSum" name="SumZ">
+        <parameters />
+      </component>
+      <component typename="SignalGain" name="NegZ">
+        <parameters>
+          <parameter name="k#Value" value="-1.0" type="double" />
+        </parameters>
+      </component>
+      <component typename="MechanicForceTransformer" name="FBodyZ">
+        <parameters>
+          <parameter name="F#Value" value="0.0" type="double" unit="N" />
+        </parameters>
+      </component>
+      <component typename="MechanicForceTransformer" name="FFreeZ">
+        <parameters>
+          <parameter name="F#Value" value="0.0" type="double" unit="N" />
+        </parameters>
+      </component>
+      <component typename="MechanicTranslationalMass" name="BodyZ">
+        <parameters>
+          <parameter name="m" value="38400.8366" type="double" unit="kg" />
+          <parameter name="B#Value" value="0.0" type="double" unit="Ns/m" />
+          <parameter name="k#Value" value="0.0" type="double" unit="N/m" />
+        </parameters>
+      </component>
+      <component typename="MechanicPositionSensor" name="PosZ">
+        <parameters />
+      </component>
+      <component typename="MechanicSpeedSensor" name="VelZ">
+        <parameters />
+      </component>
+      <component typename="SignalSum" name="SumR">
+        <parameters />
+      </component>
+      <component typename="SignalGain" name="NegR">
+        <parameters>
+          <parameter name="k#Value" value="-1.0" type="double" />
+        </parameters>
+      </component>
+      <component typename="MechanicForceTransformer" name="FBodyR">
+        <parameters>
+          <parameter name="F#Value" value="0.0" type="double" unit="N" />
+        </parameters>
+      </component>
+      <component typename="MechanicForceTransformer" name="FFreeR">
+        <parameters>
+          <parameter name="F#Value" value="0.0" type="double" unit="N" />
+        </parameters>
+      </component>
+      <component typename="MechanicTranslationalMass" name="BodyR">
+        <parameters>
+          <parameter name="m" value="533505.361" type="double" unit="kg" />
+          <parameter name="B#Value" value="0.0" type="double" unit="Ns/m" />
+          <parameter name="k#Value" value="0.0" type="double" unit="N/m" />
+        </parameters>
+      </component>
+      <component typename="MechanicPositionSensor" name="PosR">
+        <parameters />
+      </component>
+      <component typename="MechanicSpeedSensor" name="VelR">
+        <parameters />
+      </component>
+      <component typename="SignalSum" name="SumP">
+        <parameters />
+      </component>
+      <component typename="SignalGain" name="NegP">
+        <parameters>
+          <parameter name="k#Value" value="-1.0" type="double" />
+        </parameters>
+      </component>
+      <component typename="MechanicForceTransformer" name="FBodyP">
+        <parameters>
+          <parameter name="F#Value" value="0.0" type="double" unit="N" />
+        </parameters>
+      </component>
+      <component typename="MechanicForceTransformer" name="FFreeP">
+        <parameters>
+          <parameter name="F#Value" value="0.0" type="double" unit="N" />
+        </parameters>
+      </component>
+      <component typename="MechanicTranslationalMass" name="BodyP">
+        <parameters>
+          <parameter name="m" value="688692.429" type="double" unit="kg" />
+          <parameter name="B#Value" value="0.0" type="double" unit="Ns/m" />
+          <parameter name="k#Value" value="0.0" type="double" unit="N/m" />
+        </parameters>
+      </component>
+      <component typename="MechanicPositionSensor" name="PosP">
+        <parameters />
+      </component>
+      <component typename="MechanicSpeedSensor" name="VelP">
+        <parameters />
+      </component>
+      <component typename="HydraulicPressureCompensatingValve" name="CompFL">
+        <parameters>
+          <parameter name="p_ref#Value" value="1000000.0" type="double" unit="Pa" />
+          <parameter name="p_h#Value" value="0.0" type="double" unit="Pa" />
+          <parameter name="tao" value="0.0001" type="double" unit="s" />
+          <parameter name="k_cs" value="3.3e-07" type="double" unit="(m^3/s)/Pa" />
+          <parameter name="k_cf" value="1.9e-07" type="double" unit="(m^3/s)/Pa" />
+          <parameter name="q_nom" value="0.001667" type="double" unit="m^3/s" />
+        </parameters>
+      </component>
+      <component typename="HydraulicVolumeMultiPort" name="VmidFL">
+        <parameters>
+          <parameter name="V#Value" value="0.001" type="double" unit="m^3" />
+          <parameter name="Beta_e#Value" value="1000000000.0" type="double" unit="Pa" />
+          <parameter name="P1#Pressure" value="10100000.0" type="double" unit="Pa" />
+        </parameters>
+      </component>
+      <component typename="Hydraulic43Valve" name="SpoolFL">
+        <parameters>
+          <parameter name="C_q#Value" value="0.67" type="double" unit="-" />
+          <parameter name="rho#Value" value="860.0" type="double" unit="kg/m^3" />
+          <parameter name="d#Value" value="0.002730368414990875" type="double" unit="m" />
+          <parameter name="f_pa#Value" value="1.0" type="double" unit="-" />
+          <parameter name="f_pb#Value" value="1.0" type="double" unit="-" />
+          <parameter name="f_at#Value" value="1.0" type="double" unit="-" />
+          <parameter name="f_bt#Value" value="1.0" type="double" unit="-" />
+          <parameter name="x_pa#Value" value="0.0" type="double" unit="m" />
+          <parameter name="x_pb#Value" value="0.0" type="double" unit="m" />
+          <parameter name="x_at#Value" value="0.0" type="double" unit="m" />
+          <parameter name="x_bt#Value" value="0.0" type="double" unit="m" />
+          <parameter name="x_vmax#Value" value="0.001" type="double" unit="m" />
+          <parameter name="omega_h" value="2000.0" type="double" unit="rad/s" />
+          <parameter name="delta_h" value="1.0" type="double" unit="-" />
+        </parameters>
+      </component>
+      <component typename="HydraulicCylinderC" name="CylFL">
+        <parameters>
+          <parameter name="A_1#Value" value="0.013273229" type="double" unit="m^2" />
+          <parameter name="A_2#Value" value="0.00376991118" type="double" unit="m^2" />
+          <parameter name="s_l#Value" value="0.7" type="double" unit="m" />
+          <parameter name="V_1#Value" value="0.00094866145" type="double" unit="m^3" />
+          <parameter name="V_2#Value" value="0.00047349555900000004" type="double" unit="m^3" />
+          <parameter name="B_p#Value" value="0.0" type="double" unit="Ns/m" />
+          <parameter name="Beta_e#Value" value="1000000000.0" type="double" unit="Pa" />
+          <parameter name="c_leak#Value" value="0.0" type="double" unit="(m^3/s)/Pa" />
+          <parameter name="use_sl" value="false" type="bool" />
+          <parameter name="P1#Pressure" value="9100000.0" type="double" unit="Pa" />
+          <parameter name="P2#Pressure" value="300000.0" type="double" unit="Pa" />
+          <parameter name="P3#Position" value="-0.4011" type="double" />
+        </parameters>
+      </component>
+      <component typename="MechanicTranslationalMass" name="MassFL">
+        <parameters>
+          <parameter name="m" value="106.783666" type="double" unit="kg" />
+          <parameter name="B#Value" value="0.0" type="double" unit="Ns/m" />
+          <parameter name="k#Value" value="0.0" type="double" unit="N/m" />
+        </parameters>
+      </component>
+      <component typename="MechanicForceTransformer" name="LoadFL">
+        <parameters>
+          <parameter name="F#Value" value="0.0" type="double" unit="N" />
+          <parameter name="P1#Position" value="0.4011" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalRamp" name="CmdFL">
+        <parameters>
+          <parameter name="y_0#Value" value="0.0" type="double" />
+          <parameter name="y_A#Value" value="0.001" type="double" />
+          <parameter name="t_start#Value" value="0.0" type="double" unit="s" />
+          <parameter name="t_end#Value" value="0.1" type="double" unit="s" />
+        </parameters>
+      </component>
+      <component typename="SignalConstant" name="GateFL">
+        <parameters>
+          <parameter name="y#Value" value="1.0" type="double" />
+        </parameters>
+      </component>
+      <component typename="HydraulicPressureSensor" name="PSensFL">
+        <parameters />
+      </component>
+      <component typename="SignalMultiply" name="LSgatedFL">
+        <parameters />
+      </component>
+      <component typename="MechanicPositionSensor" name="SPosFL">
+        <parameters />
+      </component>
+      <component typename="MechanicSpeedSensor" name="SVelFL">
+        <parameters />
+      </component>
+      <component typename="HydraulicTankC" name="TankTFL">
+        <parameters>
+          <parameter name="p" value="300000.0" type="double" unit="Pa" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="WrFL">
+        <parameters>
+          <parameter name="k#Value" value="1.32516232581" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="WpFL">
+        <parameters>
+          <parameter name="k#Value" value="-1.833609497" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalSum" name="WSumFL">
+        <parameters />
+      </component>
+      <component typename="SignalGain" name="DWrFL">
+        <parameters>
+          <parameter name="k#Value" value="1.32516232581" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="DWpFL">
+        <parameters>
+          <parameter name="k#Value" value="-1.833609497" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalSum" name="DWSumFL">
+        <parameters />
+      </component>
+      <component typename="SignalConstant" name="S0FL">
+        <parameters>
+          <parameter name="y#Value" value="0.4011" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalSub" name="ComprnFL">
+        <parameters />
+      </component>
+      <component typename="SignalSubtract" name="RateFL">
+        <parameters />
+      </component>
+      <component typename="SignalGain" name="KFL">
+        <parameters>
+          <parameter name="k#Value" value="216648305.16451868" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="CFL">
+        <parameters>
+          <parameter name="k#Value" value="34403.519" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalAdd" name="dFFL">
+        <parameters />
+      </component>
+      <component typename="SignalConstant" name="F0FL">
+        <parameters>
+          <parameter name="y#Value" value="100000.0" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalAdd" name="FtotFL">
+        <parameters />
+      </component>
+      <component typename="SignalGain" name="GrFL">
+        <parameters>
+          <parameter name="k#Value" value="1.32516232581" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="GpFL">
+        <parameters>
+          <parameter name="k#Value" value="-1.833609497" type="double" />
+        </parameters>
+      </component>
+      <component typename="HydraulicPressureCompensatingValve" name="CompFR">
+        <parameters>
+          <parameter name="p_ref#Value" value="1000000.0" type="double" unit="Pa" />
+          <parameter name="p_h#Value" value="0.0" type="double" unit="Pa" />
+          <parameter name="tao" value="0.0001" type="double" unit="s" />
+          <parameter name="k_cs" value="3.3e-07" type="double" unit="(m^3/s)/Pa" />
+          <parameter name="k_cf" value="1.9e-07" type="double" unit="(m^3/s)/Pa" />
+          <parameter name="q_nom" value="0.001667" type="double" unit="m^3/s" />
+        </parameters>
+      </component>
+      <component typename="HydraulicVolumeMultiPort" name="VmidFR">
+        <parameters>
+          <parameter name="V#Value" value="0.001" type="double" unit="m^3" />
+          <parameter name="Beta_e#Value" value="1000000000.0" type="double" unit="Pa" />
+          <parameter name="P1#Pressure" value="10100000.0" type="double" unit="Pa" />
+        </parameters>
+      </component>
+      <component typename="Hydraulic43Valve" name="SpoolFR">
+        <parameters>
+          <parameter name="C_q#Value" value="0.67" type="double" unit="-" />
+          <parameter name="rho#Value" value="860.0" type="double" unit="kg/m^3" />
+          <parameter name="d#Value" value="0.002730368414990875" type="double" unit="m" />
+          <parameter name="f_pa#Value" value="1.0" type="double" unit="-" />
+          <parameter name="f_pb#Value" value="1.0" type="double" unit="-" />
+          <parameter name="f_at#Value" value="1.0" type="double" unit="-" />
+          <parameter name="f_bt#Value" value="1.0" type="double" unit="-" />
+          <parameter name="x_pa#Value" value="0.0" type="double" unit="m" />
+          <parameter name="x_pb#Value" value="0.0" type="double" unit="m" />
+          <parameter name="x_at#Value" value="0.0" type="double" unit="m" />
+          <parameter name="x_bt#Value" value="0.0" type="double" unit="m" />
+          <parameter name="x_vmax#Value" value="0.001" type="double" unit="m" />
+          <parameter name="omega_h" value="2000.0" type="double" unit="rad/s" />
+          <parameter name="delta_h" value="1.0" type="double" unit="-" />
+        </parameters>
+      </component>
+      <component typename="HydraulicCylinderC" name="CylFR">
+        <parameters>
+          <parameter name="A_1#Value" value="0.013273229" type="double" unit="m^2" />
+          <parameter name="A_2#Value" value="0.00376991118" type="double" unit="m^2" />
+          <parameter name="s_l#Value" value="0.7" type="double" unit="m" />
+          <parameter name="V_1#Value" value="0.00094866145" type="double" unit="m^3" />
+          <parameter name="V_2#Value" value="0.00047349555900000004" type="double" unit="m^3" />
+          <parameter name="B_p#Value" value="0.0" type="double" unit="Ns/m" />
+          <parameter name="Beta_e#Value" value="1000000000.0" type="double" unit="Pa" />
+          <parameter name="c_leak#Value" value="0.0" type="double" unit="(m^3/s)/Pa" />
+          <parameter name="use_sl" value="false" type="bool" />
+          <parameter name="P1#Pressure" value="9100000.0" type="double" unit="Pa" />
+          <parameter name="P2#Pressure" value="300000.0" type="double" unit="Pa" />
+          <parameter name="P3#Position" value="-0.4011" type="double" />
+        </parameters>
+      </component>
+      <component typename="MechanicTranslationalMass" name="MassFR">
+        <parameters>
+          <parameter name="m" value="106.783666" type="double" unit="kg" />
+          <parameter name="B#Value" value="0.0" type="double" unit="Ns/m" />
+          <parameter name="k#Value" value="0.0" type="double" unit="N/m" />
+        </parameters>
+      </component>
+      <component typename="MechanicForceTransformer" name="LoadFR">
+        <parameters>
+          <parameter name="F#Value" value="0.0" type="double" unit="N" />
+          <parameter name="P1#Position" value="0.4011" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalRamp" name="CmdFR">
+        <parameters>
+          <parameter name="y_0#Value" value="0.0" type="double" />
+          <parameter name="y_A#Value" value="0.001" type="double" />
+          <parameter name="t_start#Value" value="0.0" type="double" unit="s" />
+          <parameter name="t_end#Value" value="0.1" type="double" unit="s" />
+        </parameters>
+      </component>
+      <component typename="SignalConstant" name="GateFR">
+        <parameters>
+          <parameter name="y#Value" value="1.0" type="double" />
+        </parameters>
+      </component>
+      <component typename="HydraulicPressureSensor" name="PSensFR">
+        <parameters />
+      </component>
+      <component typename="SignalMultiply" name="LSgatedFR">
+        <parameters />
+      </component>
+      <component typename="MechanicPositionSensor" name="SPosFR">
+        <parameters />
+      </component>
+      <component typename="MechanicSpeedSensor" name="SVelFR">
+        <parameters />
+      </component>
+      <component typename="HydraulicTankC" name="TankTFR">
+        <parameters>
+          <parameter name="p" value="300000.0" type="double" unit="Pa" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="WrFR">
+        <parameters>
+          <parameter name="k#Value" value="-1.3224376741900001" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="WpFR">
+        <parameters>
+          <parameter name="k#Value" value="-1.833609497" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalSum" name="WSumFR">
+        <parameters />
+      </component>
+      <component typename="SignalGain" name="DWrFR">
+        <parameters>
+          <parameter name="k#Value" value="-1.3224376741900001" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="DWpFR">
+        <parameters>
+          <parameter name="k#Value" value="-1.833609497" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalSum" name="DWSumFR">
+        <parameters />
+      </component>
+      <component typename="SignalConstant" name="S0FR">
+        <parameters>
+          <parameter name="y#Value" value="0.4011" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalSub" name="ComprnFR">
+        <parameters />
+      </component>
+      <component typename="SignalSubtract" name="RateFR">
+        <parameters />
+      </component>
+      <component typename="SignalGain" name="KFR">
+        <parameters>
+          <parameter name="k#Value" value="216648305.16451868" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="CFR">
+        <parameters>
+          <parameter name="k#Value" value="34403.519" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalAdd" name="dFFR">
+        <parameters />
+      </component>
+      <component typename="SignalConstant" name="F0FR">
+        <parameters>
+          <parameter name="y#Value" value="100000.0" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalAdd" name="FtotFR">
+        <parameters />
+      </component>
+      <component typename="SignalGain" name="GrFR">
+        <parameters>
+          <parameter name="k#Value" value="-1.3224376741900001" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="GpFR">
+        <parameters>
+          <parameter name="k#Value" value="-1.833609497" type="double" />
+        </parameters>
+      </component>
+      <component typename="HydraulicPressureCompensatingValve" name="CompRL">
+        <parameters>
+          <parameter name="p_ref#Value" value="1000000.0" type="double" unit="Pa" />
+          <parameter name="p_h#Value" value="0.0" type="double" unit="Pa" />
+          <parameter name="tao" value="0.0001" type="double" unit="s" />
+          <parameter name="k_cs" value="3.3e-07" type="double" unit="(m^3/s)/Pa" />
+          <parameter name="k_cf" value="1.9e-07" type="double" unit="(m^3/s)/Pa" />
+          <parameter name="q_nom" value="0.001667" type="double" unit="m^3/s" />
+        </parameters>
+      </component>
+      <component typename="HydraulicVolumeMultiPort" name="VmidRL">
+        <parameters>
+          <parameter name="V#Value" value="0.001" type="double" unit="m^3" />
+          <parameter name="Beta_e#Value" value="1000000000.0" type="double" unit="Pa" />
+          <parameter name="P1#Pressure" value="10100000.0" type="double" unit="Pa" />
+        </parameters>
+      </component>
+      <component typename="Hydraulic43Valve" name="SpoolRL">
+        <parameters>
+          <parameter name="C_q#Value" value="0.67" type="double" unit="-" />
+          <parameter name="rho#Value" value="860.0" type="double" unit="kg/m^3" />
+          <parameter name="d#Value" value="0.0019539587699109505" type="double" unit="m" />
+          <parameter name="f_pa#Value" value="1.0" type="double" unit="-" />
+          <parameter name="f_pb#Value" value="1.0" type="double" unit="-" />
+          <parameter name="f_at#Value" value="1.0" type="double" unit="-" />
+          <parameter name="f_bt#Value" value="1.0" type="double" unit="-" />
+          <parameter name="x_pa#Value" value="0.0" type="double" unit="m" />
+          <parameter name="x_pb#Value" value="0.0" type="double" unit="m" />
+          <parameter name="x_at#Value" value="0.0" type="double" unit="m" />
+          <parameter name="x_bt#Value" value="0.0" type="double" unit="m" />
+          <parameter name="x_vmax#Value" value="0.001" type="double" unit="m" />
+          <parameter name="omega_h" value="2000.0" type="double" unit="rad/s" />
+          <parameter name="delta_h" value="1.0" type="double" unit="-" />
+        </parameters>
+      </component>
+      <component typename="HydraulicCylinderC" name="CylRL">
+        <parameters>
+          <parameter name="A_1#Value" value="0.00950331778" type="double" unit="m^2" />
+          <parameter name="A_2#Value" value="0.00314159265" type="double" unit="m^2" />
+          <parameter name="s_l#Value" value="0.7" type="double" unit="m" />
+          <parameter name="V_1#Value" value="0.000760165889" type="double" unit="m^3" />
+          <parameter name="V_2#Value" value="0.00044207963250000003" type="double" unit="m^3" />
+          <parameter name="B_p#Value" value="0.0" type="double" unit="Ns/m" />
+          <parameter name="Beta_e#Value" value="1000000000.0" type="double" unit="Pa" />
+          <parameter name="c_leak#Value" value="0.0" type="double" unit="(m^3/s)/Pa" />
+          <parameter name="use_sl" value="false" type="bool" />
+          <parameter name="P1#Pressure" value="9100000.0" type="double" unit="Pa" />
+          <parameter name="P2#Pressure" value="300000.0" type="double" unit="Pa" />
+          <parameter name="P3#Position" value="-0.3909" type="double" />
+        </parameters>
+      </component>
+      <component typename="MechanicTranslationalMass" name="MassRL">
+        <parameters>
+          <parameter name="m" value="73.1629937" type="double" unit="kg" />
+          <parameter name="B#Value" value="0.0" type="double" unit="Ns/m" />
+          <parameter name="k#Value" value="0.0" type="double" unit="N/m" />
+        </parameters>
+      </component>
+      <component typename="MechanicForceTransformer" name="LoadRL">
+        <parameters>
+          <parameter name="F#Value" value="0.0" type="double" unit="N" />
+          <parameter name="P1#Position" value="0.3909" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalRamp" name="CmdRL">
+        <parameters>
+          <parameter name="y_0#Value" value="0.0" type="double" />
+          <parameter name="y_A#Value" value="0.001" type="double" />
+          <parameter name="t_start#Value" value="0.0" type="double" unit="s" />
+          <parameter name="t_end#Value" value="0.1" type="double" unit="s" />
+        </parameters>
+      </component>
+      <component typename="SignalConstant" name="GateRL">
+        <parameters>
+          <parameter name="y#Value" value="1.0" type="double" />
+        </parameters>
+      </component>
+      <component typename="HydraulicPressureSensor" name="PSensRL">
+        <parameters />
+      </component>
+      <component typename="SignalMultiply" name="LSgatedRL">
+        <parameters />
+      </component>
+      <component typename="MechanicPositionSensor" name="SPosRL">
+        <parameters />
+      </component>
+      <component typename="MechanicSpeedSensor" name="SVelRL">
+        <parameters />
+      </component>
+      <component typename="HydraulicTankC" name="TankTRL">
+        <parameters>
+          <parameter name="p" value="300000.0" type="double" unit="Pa" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="WrRL">
+        <parameters>
+          <parameter name="k#Value" value="1.16926232581" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="WpRL">
+        <parameters>
+          <parameter name="k#Value" value="3.016190503" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalSum" name="WSumRL">
+        <parameters />
+      </component>
+      <component typename="SignalGain" name="DWrRL">
+        <parameters>
+          <parameter name="k#Value" value="1.16926232581" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="DWpRL">
+        <parameters>
+          <parameter name="k#Value" value="3.016190503" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalSum" name="DWSumRL">
+        <parameters />
+      </component>
+      <component typename="SignalConstant" name="S0RL">
+        <parameters>
+          <parameter name="y#Value" value="0.3909" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalSub" name="ComprnRL">
+        <parameters />
+      </component>
+      <component typename="SignalSubtract" name="RateRL">
+        <parameters />
+      </component>
+      <component typename="SignalGain" name="KRL">
+        <parameters>
+          <parameter name="k#Value" value="205103210.7976279" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="CRL">
+        <parameters>
+          <parameter name="k#Value" value="30348.4527" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalAdd" name="dFRL">
+        <parameters />
+      </component>
+      <component typename="SignalConstant" name="F0RL">
+        <parameters>
+          <parameter name="y#Value" value="100000.0" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalAdd" name="FtotRL">
+        <parameters />
+      </component>
+      <component typename="SignalGain" name="GrRL">
+        <parameters>
+          <parameter name="k#Value" value="1.16926232581" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="GpRL">
+        <parameters>
+          <parameter name="k#Value" value="3.016190503" type="double" />
+        </parameters>
+      </component>
+      <component typename="HydraulicPressureCompensatingValve" name="CompRR">
+        <parameters>
+          <parameter name="p_ref#Value" value="1000000.0" type="double" unit="Pa" />
+          <parameter name="p_h#Value" value="0.0" type="double" unit="Pa" />
+          <parameter name="tao" value="0.0001" type="double" unit="s" />
+          <parameter name="k_cs" value="3.3e-07" type="double" unit="(m^3/s)/Pa" />
+          <parameter name="k_cf" value="1.9e-07" type="double" unit="(m^3/s)/Pa" />
+          <parameter name="q_nom" value="0.001667" type="double" unit="m^3/s" />
+        </parameters>
+      </component>
+      <component typename="HydraulicVolumeMultiPort" name="VmidRR">
+        <parameters>
+          <parameter name="V#Value" value="0.001" type="double" unit="m^3" />
+          <parameter name="Beta_e#Value" value="1000000000.0" type="double" unit="Pa" />
+          <parameter name="P1#Pressure" value="10100000.0" type="double" unit="Pa" />
+        </parameters>
+      </component>
+      <component typename="Hydraulic43Valve" name="SpoolRR">
+        <parameters>
+          <parameter name="C_q#Value" value="0.67" type="double" unit="-" />
+          <parameter name="rho#Value" value="860.0" type="double" unit="kg/m^3" />
+          <parameter name="d#Value" value="0.0019539587699109505" type="double" unit="m" />
+          <parameter name="f_pa#Value" value="1.0" type="double" unit="-" />
+          <parameter name="f_pb#Value" value="1.0" type="double" unit="-" />
+          <parameter name="f_at#Value" value="1.0" type="double" unit="-" />
+          <parameter name="f_bt#Value" value="1.0" type="double" unit="-" />
+          <parameter name="x_pa#Value" value="0.0" type="double" unit="m" />
+          <parameter name="x_pb#Value" value="0.0" type="double" unit="m" />
+          <parameter name="x_at#Value" value="0.0" type="double" unit="m" />
+          <parameter name="x_bt#Value" value="0.0" type="double" unit="m" />
+          <parameter name="x_vmax#Value" value="0.001" type="double" unit="m" />
+          <parameter name="omega_h" value="2000.0" type="double" unit="rad/s" />
+          <parameter name="delta_h" value="1.0" type="double" unit="-" />
+        </parameters>
+      </component>
+      <component typename="HydraulicCylinderC" name="CylRR">
+        <parameters>
+          <parameter name="A_1#Value" value="0.00950331778" type="double" unit="m^2" />
+          <parameter name="A_2#Value" value="0.00314159265" type="double" unit="m^2" />
+          <parameter name="s_l#Value" value="0.7" type="double" unit="m" />
+          <parameter name="V_1#Value" value="0.000760165889" type="double" unit="m^3" />
+          <parameter name="V_2#Value" value="0.00044207963250000003" type="double" unit="m^3" />
+          <parameter name="B_p#Value" value="0.0" type="double" unit="Ns/m" />
+          <parameter name="Beta_e#Value" value="1000000000.0" type="double" unit="Pa" />
+          <parameter name="c_leak#Value" value="0.0" type="double" unit="(m^3/s)/Pa" />
+          <parameter name="use_sl" value="false" type="bool" />
+          <parameter name="P1#Pressure" value="9100000.0" type="double" unit="Pa" />
+          <parameter name="P2#Pressure" value="300000.0" type="double" unit="Pa" />
+          <parameter name="P3#Position" value="-0.3909" type="double" />
+        </parameters>
+      </component>
+      <component typename="MechanicTranslationalMass" name="MassRR">
+        <parameters>
+          <parameter name="m" value="73.1629937" type="double" unit="kg" />
+          <parameter name="B#Value" value="0.0" type="double" unit="Ns/m" />
+          <parameter name="k#Value" value="0.0" type="double" unit="N/m" />
+        </parameters>
+      </component>
+      <component typename="MechanicForceTransformer" name="LoadRR">
+        <parameters>
+          <parameter name="F#Value" value="0.0" type="double" unit="N" />
+          <parameter name="P1#Position" value="0.3909" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalRamp" name="CmdRR">
+        <parameters>
+          <parameter name="y_0#Value" value="0.0" type="double" />
+          <parameter name="y_A#Value" value="0.001" type="double" />
+          <parameter name="t_start#Value" value="0.0" type="double" unit="s" />
+          <parameter name="t_end#Value" value="0.1" type="double" unit="s" />
+        </parameters>
+      </component>
+      <component typename="SignalConstant" name="GateRR">
+        <parameters>
+          <parameter name="y#Value" value="1.0" type="double" />
+        </parameters>
+      </component>
+      <component typename="HydraulicPressureSensor" name="PSensRR">
+        <parameters />
+      </component>
+      <component typename="SignalMultiply" name="LSgatedRR">
+        <parameters />
+      </component>
+      <component typename="MechanicPositionSensor" name="SPosRR">
+        <parameters />
+      </component>
+      <component typename="MechanicSpeedSensor" name="SVelRR">
+        <parameters />
+      </component>
+      <component typename="HydraulicTankC" name="TankTRR">
+        <parameters>
+          <parameter name="p" value="300000.0" type="double" unit="Pa" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="WrRR">
+        <parameters>
+          <parameter name="k#Value" value="-1.24153767419" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="WpRR">
+        <parameters>
+          <parameter name="k#Value" value="3.016190503" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalSum" name="WSumRR">
+        <parameters />
+      </component>
+      <component typename="SignalGain" name="DWrRR">
+        <parameters>
+          <parameter name="k#Value" value="-1.24153767419" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="DWpRR">
+        <parameters>
+          <parameter name="k#Value" value="3.016190503" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalSum" name="DWSumRR">
+        <parameters />
+      </component>
+      <component typename="SignalConstant" name="S0RR">
+        <parameters>
+          <parameter name="y#Value" value="0.3909" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalSub" name="ComprnRR">
+        <parameters />
+      </component>
+      <component typename="SignalSubtract" name="RateRR">
+        <parameters />
+      </component>
+      <component typename="SignalGain" name="KRR">
+        <parameters>
+          <parameter name="k#Value" value="205103210.7976279" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="CRR">
+        <parameters>
+          <parameter name="k#Value" value="30348.4527" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalAdd" name="dFRR">
+        <parameters />
+      </component>
+      <component typename="SignalConstant" name="F0RR">
+        <parameters>
+          <parameter name="y#Value" value="100000.0" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalAdd" name="FtotRR">
+        <parameters />
+      </component>
+      <component typename="SignalGain" name="GrRR">
+        <parameters>
+          <parameter name="k#Value" value="-1.24153767419" type="double" />
+        </parameters>
+      </component>
+      <component typename="SignalGain" name="GpRR">
+        <parameters>
+          <parameter name="k#Value" value="3.016190503" type="double" />
+        </parameters>
+      </component>
+    </objects>
+    <connections>
+      <connect startcomponent="TankP" startport="P1" endcomponent="Pump" endport="P1" />
+      <connect startcomponent="Pump" startport="P2" endcomponent="Gallery" endport="P1" />
+      <connect startcomponent="Unloader" startport="P1" endcomponent="Gallery" endport="P1" />
+      <connect startcomponent="Unloader" startport="P2" endcomponent="TankT" endport="P1" />
+      <connect startcomponent="Unloader" startport="P_OPEN" endcomponent="Gallery" endport="P1" />
+      <connect startcomponent="Unloader" startport="P_CLOSE" endcomponent="LSsource" endport="P1" />
+      <connect startcomponent="LSfloor" startport="y" endcomponent="LSmax" endport="in" />
+      <connect startcomponent="LSgatedFL" startport="out" endcomponent="LSmax" endport="in" />
+      <connect startcomponent="LSgatedFR" startport="out" endcomponent="LSmax" endport="in" />
+      <connect startcomponent="LSgatedRL" startport="out" endcomponent="LSmax" endport="in" />
+      <connect startcomponent="LSgatedRR" startport="out" endcomponent="LSmax" endport="in" />
+      <connect startcomponent="LSmax" startport="out" endcomponent="LSmin" endport="in" />
+      <connect startcomponent="LSrelief" startport="y" endcomponent="LSmin" endport="in" />
+      <connect startcomponent="LSmin" startport="out" endcomponent="LSsource" endport="p" />
+      <connect startcomponent="SumZ" startport="out" endcomponent="NegZ" endport="in" />
+      <connect startcomponent="NegZ" startport="out" endcomponent="FBodyZ" endport="F" />
+      <connect startcomponent="FFreeZ" startport="P1" endcomponent="BodyZ" endport="P1" />
+      <connect startcomponent="BodyZ" startport="P2" endcomponent="FBodyZ" endport="P1" />
+      <connect startcomponent="PosZ" startport="P1" endcomponent="BodyZ" endport="P2" />
+      <connect startcomponent="VelZ" startport="P1" endcomponent="BodyZ" endport="P2" />
+      <connect startcomponent="SumR" startport="out" endcomponent="NegR" endport="in" />
+      <connect startcomponent="NegR" startport="out" endcomponent="FBodyR" endport="F" />
+      <connect startcomponent="FFreeR" startport="P1" endcomponent="BodyR" endport="P1" />
+      <connect startcomponent="BodyR" startport="P2" endcomponent="FBodyR" endport="P1" />
+      <connect startcomponent="PosR" startport="P1" endcomponent="BodyR" endport="P2" />
+      <connect startcomponent="VelR" startport="P1" endcomponent="BodyR" endport="P2" />
+      <connect startcomponent="SumP" startport="out" endcomponent="NegP" endport="in" />
+      <connect startcomponent="NegP" startport="out" endcomponent="FBodyP" endport="F" />
+      <connect startcomponent="FFreeP" startport="P1" endcomponent="BodyP" endport="P1" />
+      <connect startcomponent="BodyP" startport="P2" endcomponent="FBodyP" endport="P1" />
+      <connect startcomponent="PosP" startport="P1" endcomponent="BodyP" endport="P2" />
+      <connect startcomponent="VelP" startport="P1" endcomponent="BodyP" endport="P2" />
+      <connect startcomponent="CompFL" startport="P1" endcomponent="Gallery" endport="P1" />
+      <connect startcomponent="CompFL" startport="P2" endcomponent="VmidFL" endport="P1" />
+      <connect startcomponent="CompFL" startport="P_OPEN" endcomponent="VmidFL" endport="P1" />
+      <connect startcomponent="CompFL" startport="P_CLOSE" endcomponent="CylFL" endport="P1" />
+      <connect startcomponent="SpoolFL" startport="PP" endcomponent="VmidFL" endport="P1" />
+      <connect startcomponent="SpoolFL" startport="PT" endcomponent="TankTFL" endport="P1" />
+      <connect startcomponent="SpoolFL" startport="PA" endcomponent="CylFL" endport="P1" />
+      <connect startcomponent="SpoolFL" startport="PB" endcomponent="CylFL" endport="P2" />
+      <connect startcomponent="CmdFL" startport="out" endcomponent="SpoolFL" endport="in" />
+      <connect startcomponent="CylFL" startport="P3" endcomponent="MassFL" endport="P1" />
+      <connect startcomponent="MassFL" startport="P2" endcomponent="LoadFL" endport="P1" />
+      <connect startcomponent="PSensFL" startport="P1" endcomponent="SpoolFL" endport="PA" />
+      <connect startcomponent="PSensFL" startport="out" endcomponent="LSgatedFL" endport="in1" />
+      <connect startcomponent="GateFL" startport="y" endcomponent="LSgatedFL" endport="in2" />
+      <connect startcomponent="SPosFL" startport="P1" endcomponent="MassFL" endport="P2" />
+      <connect startcomponent="SVelFL" startport="P1" endcomponent="MassFL" endport="P2" />
+      <connect startcomponent="PosR" startport="out" endcomponent="WrFL" endport="in" />
+      <connect startcomponent="PosP" startport="out" endcomponent="WpFL" endport="in" />
+      <connect startcomponent="PosZ" startport="out" endcomponent="WSumFL" endport="in" />
+      <connect startcomponent="WrFL" startport="out" endcomponent="WSumFL" endport="in" />
+      <connect startcomponent="WpFL" startport="out" endcomponent="WSumFL" endport="in" />
+      <connect startcomponent="VelR" startport="out" endcomponent="DWrFL" endport="in" />
+      <connect startcomponent="VelP" startport="out" endcomponent="DWpFL" endport="in" />
+      <connect startcomponent="VelZ" startport="out" endcomponent="DWSumFL" endport="in" />
+      <connect startcomponent="DWrFL" startport="out" endcomponent="DWSumFL" endport="in" />
+      <connect startcomponent="DWpFL" startport="out" endcomponent="DWSumFL" endport="in" />
+      <connect startcomponent="SPosFL" startport="out" endcomponent="ComprnFL" endport="insum" />
+      <connect startcomponent="S0FL" startport="y" endcomponent="ComprnFL" endport="insub" />
+      <connect startcomponent="WSumFL" startport="out" endcomponent="ComprnFL" endport="insub" />
+      <connect startcomponent="SVelFL" startport="out" endcomponent="RateFL" endport="in1" />
+      <connect startcomponent="DWSumFL" startport="out" endcomponent="RateFL" endport="in2" />
+      <connect startcomponent="ComprnFL" startport="out" endcomponent="KFL" endport="in" />
+      <connect startcomponent="RateFL" startport="out" endcomponent="CFL" endport="in" />
+      <connect startcomponent="KFL" startport="out" endcomponent="dFFL" endport="in1" />
+      <connect startcomponent="CFL" startport="out" endcomponent="dFFL" endport="in2" />
+      <connect startcomponent="F0FL" startport="y" endcomponent="FtotFL" endport="in1" />
+      <connect startcomponent="dFFL" startport="out" endcomponent="FtotFL" endport="in2" />
+      <connect startcomponent="FtotFL" startport="out" endcomponent="LoadFL" endport="F" />
+      <connect startcomponent="dFFL" startport="out" endcomponent="GrFL" endport="in" />
+      <connect startcomponent="dFFL" startport="out" endcomponent="GpFL" endport="in" />
+      <connect startcomponent="dFFL" startport="out" endcomponent="SumZ" endport="in" />
+      <connect startcomponent="GrFL" startport="out" endcomponent="SumR" endport="in" />
+      <connect startcomponent="GpFL" startport="out" endcomponent="SumP" endport="in" />
+      <connect startcomponent="CompFR" startport="P1" endcomponent="Gallery" endport="P1" />
+      <connect startcomponent="CompFR" startport="P2" endcomponent="VmidFR" endport="P1" />
+      <connect startcomponent="CompFR" startport="P_OPEN" endcomponent="VmidFR" endport="P1" />
+      <connect startcomponent="CompFR" startport="P_CLOSE" endcomponent="CylFR" endport="P1" />
+      <connect startcomponent="SpoolFR" startport="PP" endcomponent="VmidFR" endport="P1" />
+      <connect startcomponent="SpoolFR" startport="PT" endcomponent="TankTFR" endport="P1" />
+      <connect startcomponent="SpoolFR" startport="PA" endcomponent="CylFR" endport="P1" />
+      <connect startcomponent="SpoolFR" startport="PB" endcomponent="CylFR" endport="P2" />
+      <connect startcomponent="CmdFR" startport="out" endcomponent="SpoolFR" endport="in" />
+      <connect startcomponent="CylFR" startport="P3" endcomponent="MassFR" endport="P1" />
+      <connect startcomponent="MassFR" startport="P2" endcomponent="LoadFR" endport="P1" />
+      <connect startcomponent="PSensFR" startport="P1" endcomponent="SpoolFR" endport="PA" />
+      <connect startcomponent="PSensFR" startport="out" endcomponent="LSgatedFR" endport="in1" />
+      <connect startcomponent="GateFR" startport="y" endcomponent="LSgatedFR" endport="in2" />
+      <connect startcomponent="SPosFR" startport="P1" endcomponent="MassFR" endport="P2" />
+      <connect startcomponent="SVelFR" startport="P1" endcomponent="MassFR" endport="P2" />
+      <connect startcomponent="PosR" startport="out" endcomponent="WrFR" endport="in" />
+      <connect startcomponent="PosP" startport="out" endcomponent="WpFR" endport="in" />
+      <connect startcomponent="PosZ" startport="out" endcomponent="WSumFR" endport="in" />
+      <connect startcomponent="WrFR" startport="out" endcomponent="WSumFR" endport="in" />
+      <connect startcomponent="WpFR" startport="out" endcomponent="WSumFR" endport="in" />
+      <connect startcomponent="VelR" startport="out" endcomponent="DWrFR" endport="in" />
+      <connect startcomponent="VelP" startport="out" endcomponent="DWpFR" endport="in" />
+      <connect startcomponent="VelZ" startport="out" endcomponent="DWSumFR" endport="in" />
+      <connect startcomponent="DWrFR" startport="out" endcomponent="DWSumFR" endport="in" />
+      <connect startcomponent="DWpFR" startport="out" endcomponent="DWSumFR" endport="in" />
+      <connect startcomponent="SPosFR" startport="out" endcomponent="ComprnFR" endport="insum" />
+      <connect startcomponent="S0FR" startport="y" endcomponent="ComprnFR" endport="insub" />
+      <connect startcomponent="WSumFR" startport="out" endcomponent="ComprnFR" endport="insub" />
+      <connect startcomponent="SVelFR" startport="out" endcomponent="RateFR" endport="in1" />
+      <connect startcomponent="DWSumFR" startport="out" endcomponent="RateFR" endport="in2" />
+      <connect startcomponent="ComprnFR" startport="out" endcomponent="KFR" endport="in" />
+      <connect startcomponent="RateFR" startport="out" endcomponent="CFR" endport="in" />
+      <connect startcomponent="KFR" startport="out" endcomponent="dFFR" endport="in1" />
+      <connect startcomponent="CFR" startport="out" endcomponent="dFFR" endport="in2" />
+      <connect startcomponent="F0FR" startport="y" endcomponent="FtotFR" endport="in1" />
+      <connect startcomponent="dFFR" startport="out" endcomponent="FtotFR" endport="in2" />
+      <connect startcomponent="FtotFR" startport="out" endcomponent="LoadFR" endport="F" />
+      <connect startcomponent="dFFR" startport="out" endcomponent="GrFR" endport="in" />
+      <connect startcomponent="dFFR" startport="out" endcomponent="GpFR" endport="in" />
+      <connect startcomponent="dFFR" startport="out" endcomponent="SumZ" endport="in" />
+      <connect startcomponent="GrFR" startport="out" endcomponent="SumR" endport="in" />
+      <connect startcomponent="GpFR" startport="out" endcomponent="SumP" endport="in" />
+      <connect startcomponent="CompRL" startport="P1" endcomponent="Gallery" endport="P1" />
+      <connect startcomponent="CompRL" startport="P2" endcomponent="VmidRL" endport="P1" />
+      <connect startcomponent="CompRL" startport="P_OPEN" endcomponent="VmidRL" endport="P1" />
+      <connect startcomponent="CompRL" startport="P_CLOSE" endcomponent="CylRL" endport="P1" />
+      <connect startcomponent="SpoolRL" startport="PP" endcomponent="VmidRL" endport="P1" />
+      <connect startcomponent="SpoolRL" startport="PT" endcomponent="TankTRL" endport="P1" />
+      <connect startcomponent="SpoolRL" startport="PA" endcomponent="CylRL" endport="P1" />
+      <connect startcomponent="SpoolRL" startport="PB" endcomponent="CylRL" endport="P2" />
+      <connect startcomponent="CmdRL" startport="out" endcomponent="SpoolRL" endport="in" />
+      <connect startcomponent="CylRL" startport="P3" endcomponent="MassRL" endport="P1" />
+      <connect startcomponent="MassRL" startport="P2" endcomponent="LoadRL" endport="P1" />
+      <connect startcomponent="PSensRL" startport="P1" endcomponent="SpoolRL" endport="PA" />
+      <connect startcomponent="PSensRL" startport="out" endcomponent="LSgatedRL" endport="in1" />
+      <connect startcomponent="GateRL" startport="y" endcomponent="LSgatedRL" endport="in2" />
+      <connect startcomponent="SPosRL" startport="P1" endcomponent="MassRL" endport="P2" />
+      <connect startcomponent="SVelRL" startport="P1" endcomponent="MassRL" endport="P2" />
+      <connect startcomponent="PosR" startport="out" endcomponent="WrRL" endport="in" />
+      <connect startcomponent="PosP" startport="out" endcomponent="WpRL" endport="in" />
+      <connect startcomponent="PosZ" startport="out" endcomponent="WSumRL" endport="in" />
+      <connect startcomponent="WrRL" startport="out" endcomponent="WSumRL" endport="in" />
+      <connect startcomponent="WpRL" startport="out" endcomponent="WSumRL" endport="in" />
+      <connect startcomponent="VelR" startport="out" endcomponent="DWrRL" endport="in" />
+      <connect startcomponent="VelP" startport="out" endcomponent="DWpRL" endport="in" />
+      <connect startcomponent="VelZ" startport="out" endcomponent="DWSumRL" endport="in" />
+      <connect startcomponent="DWrRL" startport="out" endcomponent="DWSumRL" endport="in" />
+      <connect startcomponent="DWpRL" startport="out" endcomponent="DWSumRL" endport="in" />
+      <connect startcomponent="SPosRL" startport="out" endcomponent="ComprnRL" endport="insum" />
+      <connect startcomponent="S0RL" startport="y" endcomponent="ComprnRL" endport="insub" />
+      <connect startcomponent="WSumRL" startport="out" endcomponent="ComprnRL" endport="insub" />
+      <connect startcomponent="SVelRL" startport="out" endcomponent="RateRL" endport="in1" />
+      <connect startcomponent="DWSumRL" startport="out" endcomponent="RateRL" endport="in2" />
+      <connect startcomponent="ComprnRL" startport="out" endcomponent="KRL" endport="in" />
+      <connect startcomponent="RateRL" startport="out" endcomponent="CRL" endport="in" />
+      <connect startcomponent="KRL" startport="out" endcomponent="dFRL" endport="in1" />
+      <connect startcomponent="CRL" startport="out" endcomponent="dFRL" endport="in2" />
+      <connect startcomponent="F0RL" startport="y" endcomponent="FtotRL" endport="in1" />
+      <connect startcomponent="dFRL" startport="out" endcomponent="FtotRL" endport="in2" />
+      <connect startcomponent="FtotRL" startport="out" endcomponent="LoadRL" endport="F" />
+      <connect startcomponent="dFRL" startport="out" endcomponent="GrRL" endport="in" />
+      <connect startcomponent="dFRL" startport="out" endcomponent="GpRL" endport="in" />
+      <connect startcomponent="dFRL" startport="out" endcomponent="SumZ" endport="in" />
+      <connect startcomponent="GrRL" startport="out" endcomponent="SumR" endport="in" />
+      <connect startcomponent="GpRL" startport="out" endcomponent="SumP" endport="in" />
+      <connect startcomponent="CompRR" startport="P1" endcomponent="Gallery" endport="P1" />
+      <connect startcomponent="CompRR" startport="P2" endcomponent="VmidRR" endport="P1" />
+      <connect startcomponent="CompRR" startport="P_OPEN" endcomponent="VmidRR" endport="P1" />
+      <connect startcomponent="CompRR" startport="P_CLOSE" endcomponent="CylRR" endport="P1" />
+      <connect startcomponent="SpoolRR" startport="PP" endcomponent="VmidRR" endport="P1" />
+      <connect startcomponent="SpoolRR" startport="PT" endcomponent="TankTRR" endport="P1" />
+      <connect startcomponent="SpoolRR" startport="PA" endcomponent="CylRR" endport="P1" />
+      <connect startcomponent="SpoolRR" startport="PB" endcomponent="CylRR" endport="P2" />
+      <connect startcomponent="CmdRR" startport="out" endcomponent="SpoolRR" endport="in" />
+      <connect startcomponent="CylRR" startport="P3" endcomponent="MassRR" endport="P1" />
+      <connect startcomponent="MassRR" startport="P2" endcomponent="LoadRR" endport="P1" />
+      <connect startcomponent="PSensRR" startport="P1" endcomponent="SpoolRR" endport="PA" />
+      <connect startcomponent="PSensRR" startport="out" endcomponent="LSgatedRR" endport="in1" />
+      <connect startcomponent="GateRR" startport="y" endcomponent="LSgatedRR" endport="in2" />
+      <connect startcomponent="SPosRR" startport="P1" endcomponent="MassRR" endport="P2" />
+      <connect startcomponent="SVelRR" startport="P1" endcomponent="MassRR" endport="P2" />
+      <connect startcomponent="PosR" startport="out" endcomponent="WrRR" endport="in" />
+      <connect startcomponent="PosP" startport="out" endcomponent="WpRR" endport="in" />
+      <connect startcomponent="PosZ" startport="out" endcomponent="WSumRR" endport="in" />
+      <connect startcomponent="WrRR" startport="out" endcomponent="WSumRR" endport="in" />
+      <connect startcomponent="WpRR" startport="out" endcomponent="WSumRR" endport="in" />
+      <connect startcomponent="VelR" startport="out" endcomponent="DWrRR" endport="in" />
+      <connect startcomponent="VelP" startport="out" endcomponent="DWpRR" endport="in" />
+      <connect startcomponent="VelZ" startport="out" endcomponent="DWSumRR" endport="in" />
+      <connect startcomponent="DWrRR" startport="out" endcomponent="DWSumRR" endport="in" />
+      <connect startcomponent="DWpRR" startport="out" endcomponent="DWSumRR" endport="in" />
+      <connect startcomponent="SPosRR" startport="out" endcomponent="ComprnRR" endport="insum" />
+      <connect startcomponent="S0RR" startport="y" endcomponent="ComprnRR" endport="insub" />
+      <connect startcomponent="WSumRR" startport="out" endcomponent="ComprnRR" endport="insub" />
+      <connect startcomponent="SVelRR" startport="out" endcomponent="RateRR" endport="in1" />
+      <connect startcomponent="DWSumRR" startport="out" endcomponent="RateRR" endport="in2" />
+      <connect startcomponent="ComprnRR" startport="out" endcomponent="KRR" endport="in" />
+      <connect startcomponent="RateRR" startport="out" endcomponent="CRR" endport="in" />
+      <connect startcomponent="KRR" startport="out" endcomponent="dFRR" endport="in1" />
+      <connect startcomponent="CRR" startport="out" endcomponent="dFRR" endport="in2" />
+      <connect startcomponent="F0RR" startport="y" endcomponent="FtotRR" endport="in1" />
+      <connect startcomponent="dFRR" startport="out" endcomponent="FtotRR" endport="in2" />
+      <connect startcomponent="FtotRR" startport="out" endcomponent="LoadRR" endport="F" />
+      <connect startcomponent="dFRR" startport="out" endcomponent="GrRR" endport="in" />
+      <connect startcomponent="dFRR" startport="out" endcomponent="GpRR" endport="in" />
+      <connect startcomponent="dFRR" startport="out" endcomponent="SumZ" endport="in" />
+      <connect startcomponent="GrRR" startport="out" endcomponent="SumR" endport="in" />
+      <connect startcomponent="GpRR" startport="out" endcomponent="SumP" endport="in" />
+    </connections>
+  </system>
+</hopsanmodelfile>

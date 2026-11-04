@@ -1,0 +1,277 @@
+{
+ "figures": {
+  "A": {
+   "graphml": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\hopsan_diagrams\\A_locked.graphml",
+   "png": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\hopsan_diagrams\\A_locked.png",
+   "hmf_components": 9,
+   "graph_components": 9,
+   "hmf_connections": 8,
+   "graph_edges": 8,
+   "components_equal": true,
+   "connections_equal": true,
+   "other_nodes": {
+    "group": 3,
+    "title": 2,
+    "legend": 8,
+    "note": 1
+   },
+   "typenames_in_labels": true,
+   "layout_problems": []
+  },
+  "B": {
+   "graphml": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\hopsan_diagrams\\B_locked_cb.graphml",
+   "png": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\hopsan_diagrams\\B_locked_cb.png",
+   "hmf_components": 12,
+   "graph_components": 12,
+   "hmf_connections": 11,
+   "graph_edges": 11,
+   "components_equal": true,
+   "connections_equal": true,
+   "other_nodes": {
+    "group": 3,
+    "title": 2,
+    "legend": 8,
+    "note": 1
+   },
+   "typenames_in_labels": true,
+   "layout_problems": []
+  },
+  "C": {
+   "graphml": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\hopsan_diagrams\\C_moving.graphml",
+   "png": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\hopsan_diagrams\\C_moving.png",
+   "hmf_components": 16,
+   "graph_components": 16,
+   "hmf_connections": 19,
+   "graph_edges": 19,
+   "components_equal": true,
+   "connections_equal": true,
+   "other_nodes": {
+    "group": 3,
+    "title": 2,
+    "legend": 8,
+    "note": 1
+   },
+   "typenames_in_labels": true,
+   "layout_problems": []
+  },
+  "D": {
+   "graphml": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\hopsan_diagrams\\D_cb_test.graphml",
+   "png": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\hopsan_diagrams\\D_cb_test.png",
+   "hmf_components": 10,
+   "graph_components": 10,
+   "hmf_connections": 9,
+   "graph_edges": 9,
+   "components_equal": true,
+   "connections_equal": true,
+   "other_nodes": {
+    "group": 3,
+    "title": 2,
+    "legend": 8,
+    "note": 1
+   },
+   "typenames_in_labels": true,
+   "layout_problems": []
+  },
+  "E": {
+   "graphml": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\hopsan_diagrams\\E_locked_cyl.graphml",
+   "png": "C:\\workspace\\outrigger_control\\06_analysis\\03_hydraulic\\hopsan_diagrams\\E_locked_cyl.png",
+   "hmf_components": 8,
+   "graph_components": 8,
+   "hmf_connections": 7,
+   "graph_edges": 7,
+   "components_equal": true,
+   "connections_equal": true,
+   "other_nodes": {
+    "group": 3,
+    "title": 2,
+    "legend": 8,
+    "note": 1
+   },
+   "typenames_in_labels": true,
+   "layout_problems": []
+  }
+ },
+ "scenario_groups": {
+  "A": {
+   "S1": {
+    "same_component_names": true,
+    "same_connections": true,
+    "type_differences": {}
+   },
+   "S1f": {
+    "same_component_names": true,
+    "same_connections": true,
+    "type_differences": {
+     "Rod": [
+      "MechanicTranslationalMass",
+      "MechanicTranslationalMassWithCoulombFriction"
+     ]
+    }
+   },
+   "S3": {
+    "same_component_names": true,
+    "same_connections": true,
+    "type_differences": {}
+   },
+   "S4p": {
+    "same_component_names": true,
+    "same_connections": true,
+    "type_differences": {}
+   },
+   "S5": {
+    "same_component_names": true,
+    "same_connections": true,
+    "type_differences": {
+     "Rod": [
+      "MechanicTranslationalMass",
+      "MechanicTranslationalMassWithCoulombFriction"
+     ]
+    }
+   }
+  },
+  "B": {
+   "S4": {
+    "same_component_names": true,
+    "same_connections": true,
+    "type_differences": {}
+   }
+  },
+  "C": {
+   "S2": {
+    "same_component_names": true,
+    "same_connections": true,
+    "type_differences": {}
+   },
+   "S2r": {
+    "same_component_names": true,
+    "same_connections": true,
+    "type_differences": {}
+   },
+   "S2b": {
+    "same_component_names": true,
+    "same_connections": true,
+    "type_differences": {}
+   }
+  }
+ },
+ "step_variants": {
+  "S1": {
+   "timestep": [
+    "1e-05",
+    "5e-06"
+   ],
+   "same_components_params": true,
+   "same_connections": true
+  },
+  "S1f": {
+   "timestep": [
+    "1e-05",
+    "5e-06"
+   ],
+   "same_components_params": true,
+   "same_connections": true
+  },
+  "S3": {
+   "timestep": [
+    "1e-05",
+    "5e-06"
+   ],
+   "same_components_params": true,
+   "same_connections": true
+  },
+  "S4p": {
+   "timestep": [
+    "1e-05",
+    "5e-06"
+   ],
+   "same_components_params": true,
+   "same_connections": true
+  },
+  "S5": {
+   "timestep": [
+    "1e-05",
+    "5e-06"
+   ],
+   "same_components_params": true,
+   "same_connections": true
+  },
+  "S4": {
+   "timestep": [
+    "1e-05",
+    "5e-06"
+   ],
+   "same_components_params": true,
+   "same_connections": true
+  },
+  "S2": {
+   "timestep": [
+    "1e-05",
+    "5e-06"
+   ],
+   "same_components_params": true,
+   "same_connections": true
+  },
+  "S2r": {
+   "timestep": [
+    "1e-05",
+    "5e-06"
+   ],
+   "same_components_params": true,
+   "same_connections": true
+  },
+  "S2b": {
+   "timestep": [
+    "1e-05",
+    "5e-06"
+   ],
+   "same_components_params": true,
+   "same_connections": true
+  }
+ },
+ "unconnected": {
+  "A": {
+   "components": [],
+   "power_ports": [],
+   "outputs": [
+    "Cyl.q_leak"
+   ],
+   "inputs_unwired_count": 17
+  },
+  "B": {
+   "components": [],
+   "power_ports": [],
+   "outputs": [
+    "Cyl.q_leak",
+    "CB.xv"
+   ],
+   "inputs_unwired_count": 20
+  },
+  "C": {
+   "components": [],
+   "power_ports": [],
+   "outputs": [
+    "Cyl.q_leak",
+    "PRV.xv",
+    "VB.xv"
+   ],
+   "inputs_unwired_count": 24
+  },
+  "D": {
+   "components": [],
+   "power_ports": [],
+   "outputs": [
+    "Cyl.q_leak",
+    "CB.xv"
+   ],
+   "inputs_unwired_count": 26
+  },
+  "E": {
+   "components": [],
+   "power_ports": [],
+   "outputs": [
+    "Cyl.q_leak"
+   ],
+   "inputs_unwired_count": 22
+  }
+ }
+}

@@ -1,0 +1,82 @@
+{
+ "pressure_ref": "gauge",
+ "values": {
+  "v_FL": {
+   "value": 0.019594391041710315,
+   "unit": "m/s"
+  },
+  "Q_in_FL": {
+   "value": 0.00026008083941216954,
+   "unit": "m**3/s"
+  },
+  "p_h_FL": {
+   "value": -1998.820528745211,
+   "unit": "Pa"
+  },
+  "p_r_FL": {
+   "value": 270740.91368700727,
+   "unit": "Pa"
+  },
+  "v_FR": {
+   "value": 0.019594391041710315,
+   "unit": "m/s"
+  },
+  "Q_in_FR": {
+   "value": 0.00026008083941216954,
+   "unit": "m**3/s"
+  },
+  "p_h_FR": {
+   "value": -1998.820528745211,
+   "unit": "Pa"
+  },
+  "p_r_FR": {
+   "value": 270740.91368700727,
+   "unit": "Pa"
+  },
+  "v_RL": {
+   "value": 0.02014235065259814,
+   "unit": "m/s"
+  },
+  "Q_in_RL": {
+   "value": 0.0001914191590878305,
+   "unit": "m**3/s"
+  },
+  "p_h_RL": {
+   "value": 24092.422181959882,
+   "unit": "Pa"
+  },
+  "p_r_RL": {
+   "value": 301266.9208037158,
+   "unit": "Pa"
+  },
+  "v_RR": {
+   "value": 0.02014235065259814,
+   "unit": "m/s"
+  },
+  "Q_in_RR": {
+   "value": 0.0001914191590878305,
+   "unit": "m**3/s"
+  },
+  "p_h_RR": {
+   "value": 24092.422181959882,
+   "unit": "Pa"
+  },
+  "p_r_RR": {
+   "value": 301266.9208037158,
+   "unit": "Pa"
+  },
+  "p_P": {
+   "value": 1045314.2446613717,
+   "unit": "Pa"
+  },
+  "Q_byp": {
+   "value": 0.0,
+   "unit": "m**3/s"
+  },
+  "T_self_stress": {
+   "value": 0.0,
+   "unit": "N"
+  }
+ },
+ "note": "hand_calc.py, eta 0.90, legs in the air (TOUCH), no seal friction, prescribed loads, pressures gauge"
+}
