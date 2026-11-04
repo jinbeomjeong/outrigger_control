@@ -201,7 +201,7 @@
 
 ### 실행
 
-5건 동시, placement pcore, 모두 exit 0, 벽시계 585 s. 시작 전 P 논리 0~15 평균 2.7 %, 고정 작업 없음(`affinity_map.py --threads`). R12 sample: `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace-outrigger-control\9d4aec18-3b7f-4f45-ae19-6d57127a6418\scratchpad\cad_asym\r12_eta085_ph005.sample.json`(wall 576.9 s, 최대 RSS 863 MB). sample은 프로세스 시작 뒤 약 1분 지나 붙었고, `--match` 인자 실패로 `--pid`로 바꿨다. 표의 원자료 `round2_results.json`은 scratchpad `tables_r16`에 두고 커밋하지 않았다. 이 브랜치의 `r16_results.json`·`r16_rows.csv`는 첫 세 위상 시점의 값이다.
+5건 동시, placement pcore, 모두 exit 0, 벽시계 585 s. 시작 전 P 논리 0~15 평균 2.7 %, 고정 작업 없음(`affinity_map.py --threads`). R12 sample: `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace-outrigger-control\9d4aec18-3b7f-4f45-ae19-6d57127a6418\scratchpad\cad_asym\r12_eta085_ph005.sample.json`(wall 576.9 s, 최대 RSS 863 MB). sample은 첫 시도의 `--match` 인자가 공백 때문에 실패해 `--pid`로 바꿨고, 프로세스 시작 뒤 수 초 지나 붙었다(실행 580 s, sample 577 s). 표의 원자료 `round2_results.json`은 scratchpad `tables_r16`에 두고 커밋하지 않았다. 이 브랜치의 `r16_results.json`·`r16_rows.csv`는 첫 세 위상 시점의 값이다.
 
 ## 파일
 
