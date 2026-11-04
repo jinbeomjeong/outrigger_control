@@ -2147,9 +2147,10 @@ class TouchTwistHoldSettings:
     ``|D_hat| < deadband_N``. A re-approach ends the hold for good.
 
     G2 (``vector_ramp``): in LEVEL until the first period with a command the increment limit does
-    not cut, a cut set whose per-leg increment twists by ``|n^T du| >= ramp_twist_tol_m_s`` takes
-    one common ratio on all four legs, so the command keeps its direction during the start ramp.
-    Below the tolerance the per-leg limit stays, so a symmetric start keeps its bits;
+    not cut, a cut set with ``|n^T (l - rho r)| >= ramp_twist_tol_m_s`` takes the common-ratio
+    increment ``rho r`` on all four legs, so the command keeps its direction during the start
+    ramp (``l`` per-leg limited increment, ``r`` requested increment, ``rho`` smallest ratio of the
+    cut legs). Below the tolerance the per-leg limit stays, so a symmetric start keeps its bits;
     ``ramp_twist_tol_m_s = 0`` is G1. Needs the R8 increment limit. A set the per-leg limit
     already cuts by one ratio stays as it is.
 
@@ -2168,7 +2169,9 @@ class TouchTwistHoldSettings:
     """ASSUMPTION: largest ``|tau*|``, about 68 kN of ``D`` at ``k_nom``."""
     deadband_N: float = 1.0e3
     estimate_samples: int = 3
-    """TOUCH samples (0.3 s at 10 Hz) of ``D_hat``; every leg has been at rest for 0.2 s by then."""
+    """TOUCH samples (0.3 s at 10 Hz) of ``D_hat``; every leg has been at rest for 0.2 s by then, so
+    ``D_hat`` holds the seal friction the stopped legs keep (``n^T F_s = 0`` needs all four legs
+    extending)."""
 
     def __post_init__(self) -> None:
         for name in ("gain_1_s", "hold_s", "cap_m", "estimate_samples"):
@@ -6651,8 +6654,9 @@ class C2Controller:
     def _non_negative_within_speed_limit(
         self, leg_speeds: NDArray[np.float64], correction_m_s: NDArray[np.float64]
     ) -> NDArray[np.float64]:
-        """``max(u + correction, 0)`` rescaled to ``v_max``; no leg reverses, so the seal friction
-        stays the extending one and ``n^T F_s`` stays zero."""
+        """``max(u + correction, 0)`` rescaled to ``v_max``; no leg reverses, so no seal friction
+        turns to the retracting side. ``n^T F_s = 0`` holds only while all four legs extend: a
+        leg stopped at zero keeps its friction inside the stick band."""
         requested = leg_speeds + correction_m_s
         speeds = np.maximum(requested, 0.0)
         largest = float(np.max(speeds))
@@ -8900,8 +8904,11 @@ class C2Controller:
         requested_change: NDArray[np.float64],
         limited_change: NDArray[np.float64],
     ) -> NDArray[np.float64]:
-        """G2: the per-leg ``limited_change`` as one common ratio of ``requested_change`` when it
-        twists by at least ``ramp_twist_tol_m_s``.
+        """G2: ``requested_change`` times one common ratio instead of the per-leg
+        ``limited_change`` when the two differ in twist by at least ``ramp_twist_tol_m_s``.
+
+        Compares with the common-ratio increment, not with zero: four legs cut to one value have
+        no twist of their own, yet they erase the twist the command asks for.
 
         Runs in LEVEL until a period with a command is not cut; a zero command (the TOUCH -> LEVEL
         period) does not end it. The ratio is the smallest of the cut legs, so no limit is passed.
@@ -8914,12 +8921,13 @@ class C2Controller:
             if np.any(leg_speeds != 0.0):
                 state.is_vector_ramp_done = True
             return limited_change
-        limited_twist_m_s = abs(float(self.geometry.twist_vector @ limited_change))
-        if limited_twist_m_s < self.config.touch_twist_hold.ramp_twist_tol_m_s:
-            return limited_change
         cut_ratios = np.abs(limited_change[is_cut]) / np.abs(requested_change[is_cut])
+        common_ratio_change = requested_change * float(np.min(cut_ratios))
+        twist_difference_m_s = self.geometry.twist_vector @ (limited_change - common_ratio_change)
+        if abs(float(twist_difference_m_s)) < self.config.touch_twist_hold.ramp_twist_tol_m_s:
+            return limited_change
         is_every_moving_leg_cut = bool(np.all(is_cut[requested_change != 0.0]))
         if is_every_moving_leg_cut and np.all(cut_ratios == cut_ratios[0]):
             # Already one ratio: ``requested * ratio`` could only change the last bits.
             return limited_change
-        return requested_change * float(np.min(cut_ratios))
+        return common_ratio_change

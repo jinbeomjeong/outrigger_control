@@ -60,6 +60,8 @@ HOLD_S = 1.5
 CAP_M = 3.0e-3
 DEADBAND_N = 1.0e3
 RAMP_TWIST_TOL_M_S = 0.2e-3
+TWISTING_DIRECTION = (1.0, 0.5, 0.5, 1.0)
+"""Fractions of ``v_max`` the per-leg limit cuts to one value: it erases about 2.6 mm/s of twist."""
 HOLD_PERIODS = round(HOLD_S / PERIOD_S)
 TWIST_LOAD_N = 20e3
 PERIODS_PAST_THE_HOLD = 5
@@ -412,15 +414,23 @@ def level_controller(geometry, tolerance_m_s: float = RAMP_TWIST_TOL_M_S) -> C2C
     return bench.controller
 
 
-def set_with_limited_twist(geometry, twist_m_s: float) -> tuple[np.ndarray, np.ndarray]:
-    """(requested, per-leg limited): RR cut alone, the limited set with ``n^T du = twist_m_s``."""
+def legs_cut_to_one_value(geometry, twist_difference_m_s: float) -> tuple[np.ndarray, np.ndarray]:
+    """(requested ``r``, per-leg limited ``l``): every leg cut to the limit, ``n^T l = 0`` and
+    ``n^T (l - rho r) = twist_difference_m_s``.
+
+    ``r = 4 L + delta n`` with ``n^T n = 1`` and ``n`` summing to zero gives ``rho = L / (4 L +
+    |delta| max|n|)`` and a difference of ``-rho delta``; solved here for ``delta``.
+    """
     twist = geometry.twist_vector
     limit = 0.25 * geometry.max_speed_m_s
-    limited = np.array([limit, limit, limit, limit])
-    limited[RR] = limit + twist_m_s / twist[RR]
-    requested = limited.copy()
-    requested[RR] = 2.0 * limited[RR]
-    return requested, limited
+    size = abs(twist_difference_m_s)
+    delta = 4.0 * limit * size / (limit - size * float(np.max(np.abs(twist))))
+    requested = 4.0 * limit - np.sign(twist_difference_m_s) * delta * twist
+    return requested, np.full(4, limit)
+
+
+def common_ratio_of(requested: np.ndarray, limited: np.ndarray) -> float:
+    return float(np.min(np.abs(limited) / np.abs(requested)))
 
 
 def test_tolerance_is_the_assumed_value() -> None:
@@ -428,31 +438,63 @@ def test_tolerance_is_the_assumed_value() -> None:
 
 
 @pytest.mark.parametrize("sign", [1.0, -1.0])
-def test_limited_twist_below_the_tolerance_keeps_the_per_leg_limit(geometry, sign) -> None:
+def test_bench_set_has_the_asked_twist_difference(geometry, sign) -> None:
+    difference_m_s = sign * 1.0e-3
+    requested, limited = legs_cut_to_one_value(geometry, difference_m_s)
+    rho = common_ratio_of(requested, limited)
+    measured = geometry.twist_vector @ (limited - rho * requested)
+    assert measured == pytest.approx(difference_m_s, rel=1e-9)
+
+
+@pytest.mark.parametrize("sign", [1.0, -1.0])
+def test_difference_below_the_tolerance_keeps_the_per_leg_limit(geometry, sign) -> None:
     controller = level_controller(geometry)
-    requested, limited = set_with_limited_twist(geometry, sign * 0.99 * RAMP_TWIST_TOL_M_S)
+    requested, limited = legs_cut_to_one_value(geometry, sign * 0.99 * RAMP_TWIST_TOL_M_S)
     result = controller._vector_ramp_increment(requested, requested, limited)
     assert result is limited
     assert controller._state.is_vector_ramp_done is False
 
 
 @pytest.mark.parametrize("sign", [1.0, -1.0])
-def test_limited_twist_above_the_tolerance_takes_the_common_ratio(geometry, sign) -> None:
+def test_difference_above_the_tolerance_takes_the_common_ratio(geometry, sign) -> None:
     controller = level_controller(geometry)
-    requested, limited = set_with_limited_twist(geometry, sign * 1.01 * RAMP_TWIST_TOL_M_S)
+    requested, limited = legs_cut_to_one_value(geometry, sign * 1.01 * RAMP_TWIST_TOL_M_S)
     result = controller._vector_ramp_increment(requested, requested, limited)
-    np.testing.assert_allclose(result, 0.5 * requested, rtol=1e-12)
+    np.testing.assert_array_equal(result, requested * common_ratio_of(requested, limited))
+
+
+def test_legs_cut_to_one_value_erasing_the_correction_count_as_twist(geometry) -> None:
+    """The definition: ``n^T l`` is zero here, yet the limit erases the twist of the command."""
+    controller = level_controller(geometry)
+    requested, limited = legs_cut_to_one_value(geometry, 1.0e-3)
+    twist = geometry.twist_vector
+    assert twist @ limited == pytest.approx(0.0, abs=1e-15)
+    assert abs(twist @ requested) > RAMP_TWIST_TOL_M_S
+    result = controller._vector_ramp_increment(requested, requested, limited)
+    assert abs(twist @ result) == pytest.approx(1.0e-3, rel=1e-9)
+
+
+def test_twisting_limit_of_a_twisting_command_is_no_difference(geometry) -> None:
+    """The other way round: ``n^T l`` is large, but ``l`` is nearly the common-ratio increment."""
+    controller = level_controller(geometry)
+    limit = 0.25 * geometry.max_speed_m_s
+    pattern = np.sign(geometry.twist_vector)
+    limited = limit * pattern
+    requested = 2.0 * limited
+    requested[0] *= 1.0 + 1e-6  # one ratio apart, so the equal-ratio rule does not decide
+    assert abs(geometry.twist_vector @ limited) > RAMP_TWIST_TOL_M_S
+    assert controller._vector_ramp_increment(requested, requested, limited) is limited
 
 
 def test_zero_tolerance_is_g1(geometry) -> None:
     controller = level_controller(geometry, tolerance_m_s=0.0)
-    requested, limited = set_with_limited_twist(geometry, 0.0)
+    requested, limited = legs_cut_to_one_value(geometry, 1e-9)
     result = controller._vector_ramp_increment(requested, requested, limited)
-    np.testing.assert_allclose(result, 0.5 * requested, rtol=1e-12)
+    np.testing.assert_array_equal(result, requested * common_ratio_of(requested, limited))
 
 
 def test_front_rear_difference_keeps_its_bits(geometry, monkeypatch) -> None:
-    """A level start: rear slower than front, every leg at the limit, ``n^T du`` = 0."""
+    """A level start: rear slower than front, every leg at the limit, no twist either way."""
     direction = np.array([1.0, 1.0, 0.9, 0.9])
     fractions = [direction] * 8
     bench_off = scripted_bench(geometry, monkeypatch, hold_config(is_hold_on=False), fractions)
@@ -473,7 +515,7 @@ def test_uncut_period_ends_the_ramp_also_below_the_tolerance(geometry) -> None:
 
 
 def test_ramp_scales_all_four_increments_by_one_ratio(geometry, monkeypatch) -> None:
-    direction = np.array([1.0, 0.5, -0.5, 0.0])
+    direction = np.array(TWISTING_DIRECTION)
     bench = scripted_bench(geometry, monkeypatch, hold_config(), [direction] * 8)
     commands = computed_commands_of(bench, 4)
     limit = geometry.max_speed_m_s
@@ -482,17 +524,17 @@ def test_ramp_scales_all_four_increments_by_one_ratio(geometry, monkeypatch) -> 
 
 
 def test_off_each_leg_ramps_on_its_own(geometry, monkeypatch) -> None:
-    direction = np.array([1.0, 0.5, -0.5, 0.0])
+    direction = np.array(TWISTING_DIRECTION)
     config = hold_config(is_hold_on=False)
     bench = scripted_bench(geometry, monkeypatch, config, [direction] * 8)
     first = computed_commands_of(bench, 1)[0]
     np.testing.assert_allclose(
-        first, np.array([0.25, 0.25, -0.25, 0.0]) * geometry.max_speed_m_s, rtol=1e-12
+        first, np.full(4, 0.25) * geometry.max_speed_m_s, rtol=1e-12
     )
 
 
 def test_ramp_ends_at_the_first_period_without_a_cut(geometry, monkeypatch) -> None:
-    direction = np.array([1.0, 0.5, -0.5, 0.0])
+    direction = np.array(TWISTING_DIRECTION)
     later_step = np.array([1.0, 0.0, 0.0, 1.0])
     fractions = [direction] * 5 + [later_step] * 5
     bench = scripted_bench(geometry, monkeypatch, hold_config(), fractions)
@@ -501,12 +543,12 @@ def test_ramp_ends_at_the_first_period_without_a_cut(geometry, monkeypatch) -> N
     np.testing.assert_allclose(commands[-1], direction * geometry.max_speed_m_s, rtol=1e-12)
     bench.step()
     limit = geometry.max_speed_m_s
-    expected = (direction + np.array([0.0, -0.25, 0.25, 0.25])) * limit  # per leg again
+    expected = (direction + np.array([0.0, -0.25, -0.25, 0.0])) * limit  # per leg again
     np.testing.assert_allclose(computed_command(bench.controller), expected, rtol=1e-12)
 
 
 def test_zero_command_does_not_end_the_ramp(geometry, monkeypatch) -> None:
-    direction = np.array([1.0, 0.5, -0.5, 0.0])
+    direction = np.array(TWISTING_DIRECTION)
     bench = scripted_bench(geometry, monkeypatch, hold_config(), [np.zeros(4)] * 2 + [direction])
     computed_commands_of(bench, 2)
     assert bench.controller._state.is_vector_ramp_done is False
