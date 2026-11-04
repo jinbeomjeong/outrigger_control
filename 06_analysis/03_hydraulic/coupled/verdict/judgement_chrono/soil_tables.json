@@ -1,0 +1,3381 @@
+{
+ "criteria_sha256": "1d743eab34d5091757b5e021bc1722f56fbedea9b0bc7ff2b4ca5ea0774fd0de",
+ "rows": {
+  "S8": {
+   "case": "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0",
+   "on_dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_COUPLED_eta085_20261104_142213\\S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0",
+   "off_dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-REP_20261030_223359\\S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0",
+   "on": {
+    "t_loop_start_abs": 7.999999999994694,
+    "t_end_abs": 168.00000000445348,
+    "phases": [
+     [
+      0.1,
+      "check"
+     ],
+     [
+      4.8,
+      "touch"
+     ],
+     [
+      25.3,
+      "level"
+     ],
+     [
+      42.3,
+      "fault"
+     ]
+    ],
+    "final_phase": "fault",
+    "ready_s": [],
+    "done_s": [],
+    "probe_s": [],
+    "fault_s": [
+     42.30000000055156
+    ],
+    "touch_end_s": 25.29999999998722,
+    "checks": {
+     "P3-1_crawler_zero_after_ready": null,
+     "P3-1_recontact": 49.37500000051555,
+     "P3-1_recontact_pass": false,
+     "P3-1_flags": [],
+     "P3-2_within": true,
+     "P3-2_within_2s_record": true,
+     "P3-2_loc_minus_departure_s": 1.1810000000392051,
+     "P3-2_limit_s": 2.91165281234524,
+     "P3-2_late_loc_reapproach": false,
+     "P3-2_late_loc_revoked": false,
+     "P3-2_verdict": "pass",
+     "t_loc_first_s": 42.50000000028732,
+     "t_loc_final_s": 42.50000000028732,
+     "loc_revokes": 0,
+     "P3-3_within": true,
+     "P3-4_within_0p2": false,
+     "P3-4_absmax_deg": null,
+     "P3-4_window_s": null,
+     "P3-4_window_short": true,
+     "P3-4_creep_vibration_suspect": false,
+     "P3-4_sensor_allowance_left_deg": null,
+     "P3-4_budget_residual_le_0p04_record": null,
+     "reapproach_limit_fired_FLAG": 0,
+     "P3-5_within": null,
+     "P3-5_within_after_departure_record": false,
+     "P3-5_rut_clearance_min_after_first_ready_m": null,
+     "P3-6_within": false,
+     "P3-7_within": true,
+     "P3-7_rise_min_loaded_N": 5624.562988888517,
+     "P3-7_reconstruct_ok": true,
+     "P3-8_within": true,
+     "P3-8_within_first": true,
+     "P3-9_flags": 0,
+     "pre_liftoff_flag": false,
+     "W61_warnings": 0,
+     "criteria_rev": "spec rev. 60 (U-S9P-13/14/15 (가)): P3-2 T_lim, P3-5 after the first READY, P3-7 > 0.01 W",
+     "note": "values vs criteria; decisions are control's (284) / dynamics' (physics)"
+    },
+    "P3-6": {
+     "t_ready_after_loop_start_s": null,
+     "limit_s": 120.0,
+     "limit_rule": {
+      "limit_s": 120.0,
+      "row": "slope",
+      "rear_pad_soils": [
+       "J1",
+       "J1"
+      ],
+      "floor_deg": [
+       3.85,
+       0.0
+      ],
+      "pad_variant": "dwg_rear250",
+      "rule": "spec 421.1 (Q-A): slope 120 s / flat pad B both rear pads J1-J2-S1 100 s / other flat 90 s"
+     },
+     "within": false
+    },
+    "unchanged_blocks_equal": true,
+    "params_file_match": true,
+    "P3-3_F_min_after_kN": [
+     93.4101745636023,
+     114.73151817949169,
+     61.672105379241174,
+     69.38562886540464
+    ],
+    "F_min_after_departure_kN": 61.672105379241174,
+    "F_min_leg": "RL",
+    "F_min_t_s": 33.319000000253425,
+    "F_min_after_dep_s": 0.0,
+    "D_at_F_min_kN": -11.775404625007475,
+    "F_min_twist_removed_kN": 55.51552306840968,
+    "F_min_first8_kN": 61.672105379241174,
+    "F_min_first8_leg": "RL",
+    "mean1s_min_first8_kN": 61.96165209696372,
+    "D_peak_abs_after_dep_kN": 11.978485663198008,
+    "D_lift_kN": -11.658810386206298,
+    "D_te_kN": 2.962134642535368,
+    "s_motor_te_mm": [
+     346.631,
+     345.7322,
+     341.6882,
+     341.4987
+    ],
+    "tau_te_mm": 0.3288671997223389,
+    "t_contact_rel_te_s": [
+     -0.675,
+     -0.688,
+     -0.614,
+     -0.653
+    ],
+    "s_contact_mm": [
+     344.812,
+     344.677,
+     340.217,
+     339.836
+    ],
+    "t_departure_s": 33.319000000253425,
+    "crawler_at_end_kN": 6.49956490116127,
+    "P3-4": {
+     "p34_absmax_deg": null,
+     "p34_absmax_overall_deg": null,
+     "p34_window_length_s": null,
+     "window_short": true,
+     "creep_vibration_suspect": false,
+     "sensor_allowance_left_deg": null,
+     "end_mean_roll_pitch_deg": [
+      0.5932552148412913,
+      -0.003027334445508872
+     ]
+    },
+    "P3-5": {
+     "rut_clearance_min_after_first_ready_m": null,
+     "s_motor_max_m": [
+      0.383281802402632,
+      0.6736688043546988,
+      0.3962686274121526,
+      0.6644663669777907
+     ],
+     "s_motor_limit_m": 0.6848,
+     "rut_clearance_at_loc_m": 0.0032170693713216014
+    },
+    "P3-2": {
+     "criterion": "spec rev. 60, U-S9P-13 (가): crawler_liftoff_confirmed before the first DONE; no LOC while the crawler is loaded (normal >= 0.01 W at the LOC); LOC - departure <= T_lim = plateau_window_m / (push_speed_fraction v_max) + 1 s (ASSUMPTION tail share); the former <= 2 s clause is within_2s_record",
+     "t_loc_s": 42.50000000028732,
+     "t_departure_s": 41.31900000024812,
+     "t_first_done_s": null,
+     "soil_mode_start_t_s": null,
+     "soil_mode_used": false,
+     "limit_s": 2.91165281234524,
+     "tP_minus_departure_s": 0.28100000000932823,
+     "window_s": 0.9000000000298769,
+     "loc_before_first_done": true,
+     "loc_minus_departure_s": 1.1810000000392051,
+     "crawler_normal_at_loc_N": 0.0,
+     "crawler_loaded_at_loc": false,
+     "within_2s_record": true,
+     "within": true,
+     "t_loc_first_s": 42.50000000028732,
+     "t_loc_final_s": 42.50000000028732
+    },
+    "P3-7_rise_kN": 5.624562988888517,
+    "P3-8": null,
+    "stroke_reading_max_mm": [
+     387.354,
+     680.9,
+     399.917,
+     670.59
+    ],
+    "guard_margin_mm": 1.9002526422244728,
+    "stroke_true_max_mm": [
+     383.442,
+     673.845,
+     396.382,
+     664.593
+    ],
+    "end_roll_pitch_deg": [
+     0.5932552143630304,
+     -0.0030273340406647346
+    ],
+    "att_max_after_dep_deg": 3.8428995369196475,
+    "event_list": [
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:FL"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:FR"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:RL"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:RR"
+     ],
+     [
+      25.3,
+      "floor_estimate_touch"
+     ],
+     [
+      34.5,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      34.6,
+      "INFO_D1_IMU_MASS_SOURCE:yaml"
+     ],
+     [
+      42.3,
+      "WARN_LIFT_STROKE_LIMITED:FR"
+     ],
+     [
+      42.3,
+      "FAULT_LIFT_STROKE_LIMIT:soil:FR"
+     ]
+    ],
+    "counts": {
+     "FAULT_LIFT_STROKE_LIMIT": 1,
+     "INFO_D1_IMU_MASS_SOURCE": 1,
+     "INFO_PRESSURE_ZERO_CALIBRATED": 4,
+     "WARN_LIFT_STROKE_LIMITED": 1,
+     "crawler_liftoff_confirmed": 1,
+     "floor_estimate_touch": 1
+    },
+    "saturation_step_count": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "moving_pressure": {
+     "max_bar": 104.99107711838167,
+     "leg": "FR",
+     "t_s": 42.60000000029064,
+     "head_max_bar": 109.575,
+     "any_state_bar": 104.99107711838167
+    },
+    "soil": {
+     "loc": true,
+     "soil_mode": false,
+     "t_loc_s": 42.50000000028732,
+     "t_P_s": 41.600000000257445,
+     "push_m": null,
+     "W_ratio": 1.0345715092441252,
+     "loc_revokes": null,
+     "clearance_at_P_m": 0.0060784801695579205,
+     "clearance_at_loc_m": 0.007324997056080473
+    },
+    "reapproach_limit_flag": null,
+    "command_peak_mm_s": 20.9243016,
+    "command_over_vmax_periods": 0
+   },
+   "off": {
+    "t_loop_start_abs": 7.999999999994694,
+    "t_end_abs": 168.00000000445348,
+    "phases": [
+     [
+      0.1,
+      "check"
+     ],
+     [
+      4.8,
+      "touch"
+     ],
+     [
+      23.6,
+      "level"
+     ],
+     [
+      40.6,
+      "fault"
+     ]
+    ],
+    "final_phase": "fault",
+    "ready_s": [],
+    "done_s": [],
+    "probe_s": [],
+    "fault_s": [
+     40.60000000049513
+    ],
+    "touch_end_s": 23.599999999945,
+    "checks": {
+     "P3-1_crawler_zero_after_ready": null,
+     "P3-1_recontact": 42.660000000292634,
+     "P3-1_recontact_pass": false,
+     "P3-1_flags": [],
+     "P3-2_within": true,
+     "P3-2_within_2s_record": true,
+     "P3-2_loc_minus_departure_s": 1.2550000000416617,
+     "P3-2_limit_s": 2.91165281234524,
+     "P3-2_late_loc_reapproach": false,
+     "P3-2_late_loc_revoked": false,
+     "P3-2_verdict": "pass",
+     "t_loc_first_s": 40.80000000023089,
+     "t_loc_final_s": 40.80000000023089,
+     "loc_revokes": 0,
+     "P3-3_within": true,
+     "P3-4_within_0p2": false,
+     "P3-4_absmax_deg": null,
+     "P3-4_window_s": null,
+     "P3-4_window_short": true,
+     "P3-4_creep_vibration_suspect": false,
+     "P3-4_sensor_allowance_left_deg": null,
+     "P3-4_budget_residual_le_0p04_record": null,
+     "reapproach_limit_fired_FLAG": 0,
+     "P3-5_within": null,
+     "P3-5_within_after_departure_record": false,
+     "P3-5_rut_clearance_min_after_first_ready_m": null,
+     "P3-6_within": false,
+     "P3-7_within": true,
+     "P3-7_rise_min_loaded_N": 6123.172918290469,
+     "P3-7_reconstruct_ok": true,
+     "P3-8_within": true,
+     "P3-8_within_first": true,
+     "P3-9_flags": 0,
+     "pre_liftoff_flag": false,
+     "W61_warnings": 0,
+     "criteria_rev": "spec rev. 60 (U-S9P-13/14/15 (가)): P3-2 T_lim, P3-5 after the first READY, P3-7 > 0.01 W",
+     "note": "values vs criteria; decisions are control's (284) / dynamics' (physics)"
+    },
+    "P3-6": {
+     "t_ready_after_loop_start_s": null,
+     "limit_s": 120.0,
+     "limit_rule": {
+      "limit_s": 120.0,
+      "row": "slope",
+      "rear_pad_soils": [
+       "J1",
+       "J1"
+      ],
+      "floor_deg": [
+       3.85,
+       0.0
+      ],
+      "pad_variant": "dwg_rear250",
+      "rule": "spec 421.1 (Q-A): slope 120 s / flat pad B both rear pads J1-J2-S1 100 s / other flat 90 s"
+     },
+     "within": false
+    },
+    "unchanged_blocks_equal": true,
+    "params_file_match": true,
+    "P3-3_F_min_after_kN": [
+     93.52875637887011,
+     114.61002001330134,
+     61.433628236292506,
+     68.92738123134926
+    ],
+    "F_min_after_departure_kN": 61.433628236292506,
+    "F_min_leg": "RL",
+    "F_min_t_s": 31.545000000194534,
+    "F_min_after_dep_s": 0.0,
+    "D_at_F_min_kN": -11.588802648673365,
+    "F_min_twist_removed_kN": 55.37460778963891,
+    "F_min_first8_kN": 61.433628236292506,
+    "F_min_first8_leg": "RL",
+    "mean1s_min_first8_kN": 61.8869040026032,
+    "D_peak_abs_after_dep_kN": 11.822838832261006,
+    "D_lift_kN": -11.528206246945693,
+    "D_te_kN": 3.107882429961087,
+    "s_motor_te_mm": [
+     346.5756,
+     345.695,
+     341.575,
+     341.343
+    ],
+    "tau_te_mm": 0.29793085733294333,
+    "t_contact_rel_te_s": [
+     -0.651,
+     -0.656,
+     -0.602,
+     -0.625
+    ],
+    "s_contact_mm": [
+     344.972,
+     344.886,
+     340.167,
+     339.923
+    ],
+    "t_departure_s": 31.545000000194534,
+    "crawler_at_end_kN": 6.311498191904798,
+    "P3-4": {
+     "p34_absmax_deg": null,
+     "p34_absmax_overall_deg": null,
+     "p34_window_length_s": null,
+     "window_short": true,
+     "creep_vibration_suspect": false,
+     "sensor_allowance_left_deg": null,
+     "end_mean_roll_pitch_deg": [
+      0.5651211149152143,
+      -0.013757916677417135
+     ]
+    },
+    "P3-5": {
+     "rut_clearance_min_after_first_ready_m": null,
+     "s_motor_max_m": [
+      0.3834561817051466,
+      0.6733522766938091,
+      0.3970352411682109,
+      0.6648954908277653
+     ],
+     "s_motor_limit_m": 0.6848,
+     "rut_clearance_at_loc_m": 0.0033149669646048707
+    },
+    "P3-2": {
+     "criterion": "spec rev. 60, U-S9P-13 (가): crawler_liftoff_confirmed before the first DONE; no LOC while the crawler is loaded (normal >= 0.01 W at the LOC); LOC - departure <= T_lim = plateau_window_m / (push_speed_fraction v_max) + 1 s (ASSUMPTION tail share); the former <= 2 s clause is within_2s_record",
+     "t_loc_s": 40.80000000023089,
+     "t_departure_s": 39.545000000189226,
+     "t_first_done_s": null,
+     "soil_mode_start_t_s": null,
+     "soil_mode_used": false,
+     "limit_s": 2.91165281234524,
+     "tP_minus_departure_s": 0.3550000000117848,
+     "window_s": 0.9000000000298769,
+     "loc_before_first_done": true,
+     "loc_minus_departure_s": 1.2550000000416617,
+     "crawler_normal_at_loc_N": 0.0,
+     "crawler_loaded_at_loc": false,
+     "within_2s_record": true,
+     "within": true,
+     "t_loc_first_s": 40.80000000023089,
+     "t_loc_final_s": 40.80000000023089
+    },
+    "P3-7_rise_kN": 6.123172918290469,
+    "P3-8": null,
+    "stroke_reading_max_mm": [
+     387.538,
+     680.568,
+     400.705,
+     671.0
+    ],
+    "guard_margin_mm": 2.2324743335119592,
+    "stroke_true_max_mm": [
+     383.617,
+     673.529,
+     397.15,
+     665.023
+    ],
+    "end_roll_pitch_deg": [
+     0.5651211157050323,
+     -0.013757917053088242
+    ],
+    "att_max_after_dep_deg": 3.8429830476046885,
+    "event_list": [
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:FL"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:FR"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:RL"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:RR"
+     ],
+     [
+      23.6,
+      "floor_estimate_touch"
+     ],
+     [
+      32.8,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      32.9,
+      "INFO_D1_IMU_MASS_SOURCE:yaml"
+     ],
+     [
+      40.6,
+      "WARN_LIFT_STROKE_LIMITED:FR"
+     ],
+     [
+      40.6,
+      "FAULT_LIFT_STROKE_LIMIT:soil:FR"
+     ]
+    ],
+    "counts": {
+     "FAULT_LIFT_STROKE_LIMIT": 1,
+     "INFO_D1_IMU_MASS_SOURCE": 1,
+     "INFO_PRESSURE_ZERO_CALIBRATED": 4,
+     "WARN_LIFT_STROKE_LIMITED": 1,
+     "crawler_liftoff_confirmed": 1,
+     "floor_estimate_touch": 1
+    },
+    "saturation_step_count": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "moving_pressure": {
+     "max_bar": 104.8343958172852,
+     "leg": "FR",
+     "t_s": 40.80000000023089,
+     "head_max_bar": 109.2,
+     "any_state_bar": 104.8343958172852
+    },
+    "soil": {
+     "loc": true,
+     "soil_mode": false,
+     "t_loc_s": 40.80000000023089,
+     "t_P_s": 39.90000000020101,
+     "push_m": null,
+     "W_ratio": 1.0346263080678841,
+     "loc_revokes": null,
+     "clearance_at_P_m": 0.006056670513356455,
+     "clearance_at_loc_m": 0.007265424774078433
+    },
+    "reapproach_limit_flag": null,
+    "command_peak_mm_s": 20.9243016,
+    "command_over_vmax_periods": 0
+   },
+   "off_rejudge_equals_stored_p3b": false,
+   "off_rejudge_checks_diff": [
+    [
+     ".P3-7_rise_min_loaded_N",
+     "6123.172918290469",
+     "6123.172918290498"
+    ]
+   ],
+   "flow": {
+    "present": true,
+    "setting": {
+     "eta_v": 0.85,
+     "compensator_drop_bar": 10.0,
+     "unloading_drop_bar": 20.0,
+     "smoothing_width_bar": 1.0,
+     "law": "priority",
+     "record_period_s": 0.001
+    },
+    "enabled": true,
+    "short_s": 16.1858,
+    "by_phase": {
+     "touch": 16.186
+    },
+    "deficit_by_phase_L_min": {
+     "touch": 6.02
+    },
+    "max_deficit_L_min": 6.02,
+    "min_r_by_phase": {
+     "FL": {
+      "check": 1.0,
+      "touch": 0.89463,
+      "level": 1.0
+     },
+     "FR": {
+      "check": 1.0,
+      "touch": 0.89463,
+      "level": 1.0,
+      "fault": 1.0
+     },
+     "RL": {
+      "check": 1.0,
+      "touch": 0.89488,
+      "level": 1.0
+     },
+     "RR": {
+      "check": 1.0,
+      "touch": 0.89488,
+      "level": 1.0,
+      "fault": 1.0
+     }
+    },
+    "long93_s": {
+     "FL": 16.12,
+     "FR": 16.12,
+     "RL": 16.252,
+     "RR": 16.252
+    },
+    "tracking_mm": {
+     "max_abs_integral_mm": {
+      "FL": 35.487,
+      "FR": 35.487,
+      "RL": 35.391,
+      "RR": 35.391
+     },
+     "max_between_legs_mm": 0.095
+    },
+    "limited_sets": {
+     "FL+FR": 0.076,
+     "FL+FR+RL+RR": 16.11
+    },
+    "swaps": {
+     "sample_period_s": 0.001,
+     "tie_width_bar": 0.5,
+     "group_s": {
+      "FL+FR": 0.076,
+      "FL+FR+RL+RR": 16.11
+     },
+     "disjoint_swaps": 0,
+     "max_disjoint_swaps_in_1s": 0
+    },
+    "steps": {
+     "fast_path": 1438142,
+     "solved": 161858,
+     "audit": 1438,
+     "audit_mismatches": 0,
+     "demand_met_but_limited": 0
+    },
+    "over_supply": 0.0
+   },
+   "flow_recomputed": {
+    "cols": [
+     "t",
+     "u_FL",
+     "u_FR",
+     "u_RL",
+     "u_RR",
+     "v_FL",
+     "v_FR",
+     "v_RL",
+     "v_RR",
+     "oil_force_FL",
+     "oil_force_FR",
+     "oil_force_RL",
+     "oil_force_RR",
+     "p_load_FL",
+     "p_load_FR",
+     "p_load_RL",
+     "p_load_RR",
+     "y_FL",
+     "y_FR",
+     "y_RL",
+     "y_RR",
+     "p_P",
+     "Q_byp",
+     "Q_dem",
+     "Q_sum",
+     "limited_mask",
+     "residual_mask",
+     "true_force_FL",
+     "true_force_FR",
+     "true_force_RL",
+     "true_force_RR",
+     "crawler",
+     "roll",
+     "pitch",
+     "deficit_integral_FL",
+     "deficit_integral_FR",
+     "deficit_integral_RL",
+     "deficit_integral_RR"
+    ],
+    "dt_s": 0.0010000000000331966,
+    "t_first_rel_s": 9.999999999976694e-05,
+    "t_last_rel_s": 160.0000000044588,
+    "supply_L_min": 51.169999829999995,
+    "short_s": 16.18600000053732,
+    "limited_s": 16.18600000053732,
+    "max_deficit_L_min": 6.020000277747462,
+    "r_min": {
+     "FL": 0.8946310729335518,
+     "FR": 0.8946310755982063,
+     "RL": 0.8948840207887493,
+     "RR": 0.8948839971674517
+    },
+    "below93_s": {
+     "FL": 16.12000000053513,
+     "FR": 16.12000000053513,
+     "RL": 16.25200000053951,
+     "RR": 16.25200000053951
+    },
+    "first_limited_rel_s": 5.214999999987846,
+    "last_limited_rel_s": 21.399999999950126,
+    "n_limited_runs": 1,
+    "runs_ge_0p5s": [
+     [
+      5.215,
+      21.4
+     ]
+    ],
+    "max_u_minus_v_mm_s": 2.2048503879489103,
+    "max_abs_integral_mm": [
+     35.487,
+     35.487,
+     35.391,
+     35.391
+    ],
+    "max_between_legs_mm": 0.09541417475771397
+   },
+   "V5": {
+    "commands": {
+     "first_diff_rel_s": 19.59999999995432
+    },
+    "F_cyl": {
+     "first_diff_rel_s": 5.214999999987846
+    },
+    "s_motor": {
+     "first_diff_rel_s": 5.214999999987846
+    },
+    "crawler": {
+     "first_diff_rel_s": 5.214999999987846
+    },
+    "first_limited_rel_s": 5.214999999987846
+   },
+   "settings_diff": {
+    "args": [
+     [
+      ".flow_dp_comp_bar",
+      "10.0",
+      "None"
+     ],
+     [
+      ".flow_dp_unload_bar",
+      "20.0",
+      "None"
+     ],
+     [
+      ".flow_eta_v",
+      "0.85",
+      "None"
+     ],
+     [
+      ".flow_law",
+      "priority",
+      "None"
+     ],
+     [
+      ".flow_width_bar",
+      "1.0",
+      "None"
+     ],
+     [
+      ".out_root",
+      "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_COUPLED_eta085_20261104_142213",
+      "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-REP_20261030_223359"
+     ]
+    ],
+    "plant_s8": [],
+    "c2_setup": [],
+    "sensors": [],
+    "controller_meta": [
+     [
+      ".diff_sink.first_loc_s",
+      "42.50000000028732",
+      "40.80000000023089"
+     ],
+     [
+      ".fault_reground.run.end_s",
+      "50.300000000546255",
+      "48.60000000048982"
+     ],
+     [
+      ".fault_reground.run.fault_s",
+      "50.300000000546255",
+      "48.60000000048982"
+     ],
+     [
+      ".floor_estimate_touch.floor_rad",
+      "[0.06713815598418194, -0.0001091187942282007]",
+      "[0.0670872071221884, -5.7957942063490606e-05]"
+     ],
+     [
+      ".floor_estimate_touch.floor_usage",
+      "0.8762112604431842",
+      "0.8746317846458992"
+     ],
+     [
+      ".floor_estimate_touch.latch_times_s",
+      "[33.299999999981914, 33.199999999978594, 33.299999999981914, 33.299999999981914]",
+      "[31.599999999939694, 31.499999999939927, 31.599999999939694, 31.599999999939694]"
+     ],
+     [
+      ".floor_estimate_touch.residual_m",
+      "0.00020980477192011904",
+      "2.6198361391616132e-05"
+     ],
+     [
+      ".lift_stroke_guard.soil_guard_first_s",
+      "50.3",
+      "48.6"
+     ],
+     [
+      ".lift_stroke_guard.soil_sign_history",
+      "[{'t_s': 42.5, 'sign': None}]",
+      "[{'t_s': 40.8, 'sign': None}]"
+     ],
+     [
+      ".lift_stroke_guard.soil_stop.t_s",
+      "50.3",
+      "48.6"
+     ],
+     [
+      ".reanchor.anchor_pitch_rad",
+      "0.0010735339263372224",
+      "0.001061184679592805"
+     ],
+     [
+      ".reanchor.theta_crawler_rad",
+      "0.0010735339263372224",
+      "0.001061184679592805"
+     ],
+     [
+      ".soil.W_hat_N",
+      "389602.62641581596",
+      "389623.2627521834"
+     ],
+     [
+      ".soil.W_ratio",
+      "1.0345715092441252",
+      "1.0346263080678841"
+     ],
+     [
+      ".soil.bias_corner_raw_m",
+      "[0.16352645902270102, 0.010535552656955494, 0.15265863681954225, -0.00033226954620305116]",
+      "[0.1624549127514003, 0.01030160516222245, 0.1514716258734151, -0.0006816817157627624]"
+     ],
+     [
+      ".soil.clearance_at_P_m",
+      "0.0060784801695579205",
+      "0.006056670513356455"
+     ],
+     [
+      ".soil.clearance_at_loc_m",
+      "0.007324997056080473",
+      "0.007265424774078433"
+     ],
+     [
+      ".soil.t_P_s",
+      "41.600000000257445",
+      "39.90000000020101"
+     ],
+     [
+      ".soil.t_loc_s",
+      "42.50000000028732",
+      "40.80000000023089"
+     ],
+     [
+      ".stationary_gate.mean_rate_rad_s",
+      "[-2.1428486756934432e-07, 1.8111191638162578e-06]",
+      "[-1.8849045652470332e-07, 1.7776075506150164e-06]"
+     ],
+     [
+      ".stationary_gate.motion_rms_rad_s",
+      "[1.1218744063631441e-07, 4.77456861094354e-08]",
+      "[6.642144865555206e-08, 1.1454696162960506e-07]"
+     ],
+     [
+      ".stationary_gate.rates_quiet_since_s",
+      "55.20000000070892",
+      "52.900000000632566"
+     ],
+     [
+      ".stationary_gate.zero_command_duration_s",
+      "117.60000000390724",
+      "119.30000000396367"
+     ],
+     [
+      ".support_geometry.last.heights_above_others_m",
+      "[0.13936922948677544, -0.12531318948535786, 0.12531318948535786, -0.13094966665309937]",
+      "[0.13772091458657565, -0.12198887628649713, 0.12198887628649713, -0.1295474429438499]"
+     ],
+     [
+      ".support_geometry.last.heights_delta_above_others_m",
+      "[0.13969953452475936, -0.1253251089503571, 0.1253251089503571, -0.1305528545137673]",
+      "[0.13802030755571315, -0.12232484285119738, 0.12232484285119738, -0.12952229952647265]"
+     ],
+     [
+      ".support_geometry.last.nonplanarity_delta_m",
+      "-0.0009151872593067822",
+      "-0.0010514502313053176"
+     ],
+     [
+      ".support_geometry.last.nonplanarity_m",
+      "-0.0011058731342982187",
+      "-0.0011328442240517989"
+     ],
+     [
+      ".support_geometry.last.reference_t_s",
+      "33.299999999981914",
+      "31.599999999939694"
+     ],
+     [
+      ".support_geometry.reference.heights_m",
+      "[-1.0486170063117004, -1.0482867012737165, -1.0482986207387157, -1.0486954328780478]",
+      "[-1.0484853584481395, -1.048185965479002, -1.0485219320437023, -1.0485470754610795]"
+     ],
+     [
+      ".support_geometry.reference.nonplanarity_m",
+      "-0.0001906858749914364",
+      "-8.139399274648129e-05"
+     ],
+     [
+      ".support_geometry.reference.normal",
+      "[-0.00010887295814792139, -0.06708772945285417, 0.9977470745151497]",
+      "[-5.78275654783755e-05, -0.06703689528749687, 0.997750495527908]"
+     ],
+     [
+      ".support_geometry.reference.t_s",
+      "33.299999999981914",
+      "31.599999999939694"
+     ],
+     [
+      ".support_geometry.reference_updates",
+      "[{'normal': [-0.00010887295814792139, -0.06708772945285417, 0.9977470745151497], 'heights_m': [-1.04",
+      "[{'normal': [-5.78275654783755e-05, -0.06703689528749687, 0.997750495527908], 'heights_m': [-1.04848"
+     ],
+     [
+      ".two_pressure.d1_imu_slope_mass_kg",
+      "None",
+      "24426.586075171304"
+     ],
+     [
+      ".two_pressure.fallback_rod_estimate_Pa",
+      "[1783507.0816088184, 1300000.0, 1676419.6290987122, 1300000.0]",
+      "[1716284.9659016994, 1300000.0, 1733215.6369391908, 1347004.3704425504]"
+     ]
+    ],
+    "c2_timing": [],
+    "settle_reference": [],
+    "gravity_schedule": [],
+    "mass_scale": []
+   },
+   "code_state_diff": [
+    [
+     ".files_at_start.taken_utc",
+     "2026-11-04T05:22:16+00:00",
+     "2026-10-30T13:34:01+00:00"
+    ],
+    [
+     ".git_at_start.head",
+     "7e83bbb7383928d3f212ed02175ec7dd70c67a51",
+     "1e1372c69280d618b631bfaad75f7fcbffde6400"
+    ],
+    [
+     ".git_at_start.taken_utc",
+     "2026-11-04T05:22:16+00:00",
+     "2026-10-30T13:34:01+00:00"
+    ]
+   ],
+   "params_sha": [
+    "5974670f2d91376dc5c9770a802ad0634f69f401c2881b321230f85dc8c13799",
+    "5974670f2d91376dc5c9770a802ad0634f69f401c2881b321230f85dc8c13799"
+   ],
+   "stop_on": {
+    "stopped": true,
+    "t_stop_s": 42.30000000055156,
+    "event": "FAULT_LIFT_STROKE_LIMIT:soil:FR",
+    "all_events_FAULT_WARN": [
+     [
+      42.3,
+      "WARN_LIFT_STROKE_LIMITED:FR"
+     ],
+     [
+      42.3,
+      "FAULT_LIFT_STROKE_LIMIT:soil:FR"
+     ]
+    ],
+    "FAULT_STROKE_END": 0,
+    "F_min_after_stop_kN": [
+     105.038,
+     115.169,
+     63.666,
+     70.999
+    ],
+    "F_min_after_stop_all_kN": 63.66617626662864,
+    "pad_normal_min_after_stop_kN": 65.05102192131427,
+    "crawler_at_stop_kN": 5.152517291204593,
+    "crawler_max_after_stop_kN": 10.427382422183241,
+    "crawler_end_kN": 6.49956490116127,
+    "crawler_limit_stop_plus_0p01W_kN": 8.953646411845433,
+    "weight_kN": 380.11291206408396,
+    "crawler_0p01W_kN": 3.8011291206408395,
+    "ready_count": 0,
+    "end_roll_pitch_deg": [
+     0.5933,
+     -0.003
+    ],
+    "F_at_stop_kN": [
+     111.721,
+     120.202,
+     67.631,
+     72.549
+    ]
+   },
+   "stop_off": {
+    "stopped": true,
+    "t_stop_s": 40.60000000049513,
+    "event": "FAULT_LIFT_STROKE_LIMIT:soil:FR",
+    "all_events_FAULT_WARN": [
+     [
+      40.6,
+      "WARN_LIFT_STROKE_LIMITED:FR"
+     ],
+     [
+      40.6,
+      "FAULT_LIFT_STROKE_LIMIT:soil:FR"
+     ]
+    ],
+    "FAULT_STROKE_END": 0,
+    "F_min_after_stop_kN": [
+     105.424,
+     115.841,
+     64.042,
+     71.144
+    ],
+    "F_min_after_stop_all_kN": 64.04151766064996,
+    "pad_normal_min_after_stop_kN": 65.43573338491915,
+    "crawler_at_stop_kN": 7.788696243353332,
+    "crawler_max_after_stop_kN": 9.557073253951325,
+    "crawler_end_kN": 6.311498191904798,
+    "crawler_limit_stop_plus_0p01W_kN": 11.589825363994171,
+    "weight_kN": 380.11291206408396,
+    "crawler_0p01W_kN": 3.8011291206408395,
+    "ready_count": 0,
+    "end_roll_pitch_deg": [
+     0.5651,
+     -0.0138
+    ],
+    "F_at_stop_kN": [
+     111.5,
+     119.948,
+     67.68,
+     72.05
+    ]
+   }
+  },
+  "S6": {
+   "case": "P3b_J2_B_top_Fs4_m1p1_t180",
+   "on_dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_COUPLED_eta085_20261104_142213\\P3b_J2_B_top_Fs4_m1p1_t180",
+   "off_dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-REP-X_20261031_020716\\P3b_J2_B_top_Fs4_m1p1_t180",
+   "on": {
+    "t_loop_start_abs": 7.999999999994694,
+    "t_end_abs": 188.0000000051174,
+    "phases": [
+     [
+      0.1,
+      "check"
+     ],
+     [
+      4.8,
+      "touch"
+     ],
+     [
+      25.3,
+      "level"
+     ],
+     [
+      60.1,
+      "done"
+     ],
+     [
+      60.2,
+      "probe"
+     ],
+     [
+      66.9,
+      "level"
+     ],
+     [
+      81.5,
+      "done"
+     ],
+     [
+      81.6,
+      "probe"
+     ],
+     [
+      93.5,
+      "ready"
+     ]
+    ],
+    "final_phase": "ready",
+    "ready_s": [
+     93.50000000225121
+    ],
+    "done_s": [
+     60.100000001142455,
+     81.50000000185285
+    ],
+    "probe_s": [
+     60.200000001145774,
+     81.60000000185617
+    ],
+    "fault_s": [],
+    "touch_end_s": 25.29999999998722,
+    "checks": {
+     "P3-1_crawler_zero_after_ready": true,
+     "P3-1_recontact": 56.51400000075254,
+     "P3-1_recontact_pass": true,
+     "P3-1_flags": [
+      "P3-1_transient_recontact"
+     ],
+     "P3-2_within": false,
+     "P3-2_within_2s_record": false,
+     "P3-2_loc_minus_departure_s": 3.017000000100154,
+     "P3-2_limit_s": 2.91165281234524,
+     "P3-2_late_loc_reapproach": false,
+     "P3-2_late_loc_revoked": true,
+     "P3-2_verdict": "flag",
+     "t_loc_first_s": 56.300000000745435,
+     "t_loc_final_s": 58.00000000080187,
+     "loc_revokes": 1,
+     "P3-3_within": true,
+     "P3-4_within_0p2": true,
+     "P3-4_absmax_deg": 0.016374612233266757,
+     "P3-4_window_s": [
+      106.60000000241521,
+      188.0000000051174
+     ],
+     "P3-4_window_short": false,
+     "P3-4_creep_vibration_suspect": false,
+     "P3-4_sensor_allowance_left_deg": 0.16362538776673327,
+     "P3-4_budget_residual_le_0p04_record": true,
+     "reapproach_limit_fired_FLAG": 0,
+     "P3-5_within": true,
+     "P3-5_within_after_departure_record": false,
+     "P3-5_rut_clearance_min_after_first_ready_m": 0.06962247956905276,
+     "P3-6_within": true,
+     "P3-7_within": false,
+     "P3-7_rise_min_loaded_N": 3319.0204887321556,
+     "P3-7_reconstruct_ok": true,
+     "P3-8_within": true,
+     "P3-8_within_first": true,
+     "P3-9_flags": 0,
+     "pre_liftoff_flag": true,
+     "W61_warnings": 0,
+     "criteria_rev": "spec rev. 60 (U-S9P-13/14/15 (가)): P3-2 T_lim, P3-5 after the first READY, P3-7 > 0.01 W",
+     "note": "values vs criteria; decisions are control's (284) / dynamics' (physics)"
+    },
+    "P3-6": {
+     "t_ready_after_loop_start_s": 93.50000000225121,
+     "limit_s": 100.0,
+     "limit_rule": {
+      "limit_s": 100.0,
+      "row": "flat, pad B, both rear pads on J1 / J2 / S1",
+      "rear_pad_soils": [
+       "J2",
+       "J2"
+      ],
+      "floor_deg": [
+       0.0,
+       0.0
+      ],
+      "pad_variant": "dwg_rear250",
+      "rule": "spec 421.1 (Q-A): slope 120 s / flat pad B both rear pads J1-J2-S1 100 s / other flat 90 s"
+     },
+     "within": true
+    },
+    "unchanged_blocks_equal": true,
+    "params_file_match": true,
+    "P3-3_F_min_after_kN": [
+     127.24726766823918,
+     120.27602781449372,
+     75.6559520221932,
+     74.47119090480606
+    ],
+    "F_min_after_departure_kN": 74.47119090480606,
+    "F_min_leg": "RR",
+    "F_min_t_s": 83.98500000193535,
+    "F_min_after_dep_s": 37.00200000122833,
+    "D_at_F_min_kN": -2.334742946776295,
+    "F_min_twist_removed_kN": 75.69187397975836,
+    "F_min_first8_kN": 75.90775115124572,
+    "F_min_first8_leg": "RR",
+    "mean1s_min_first8_kN": 77.36973443191155,
+    "D_peak_abs_after_dep_kN": 5.376464935407263,
+    "D_lift_kN": -0.0021840859428934323,
+    "D_at_first_done_kN": 1.6174591719572504,
+    "D_te_kN": 0.16669438649977053,
+    "s_motor_te_mm": [
+     346.4481,
+     346.4541,
+     341.3232,
+     341.3222
+    ],
+    "tau_te_mm": -0.003411276332997204,
+    "t_contact_rel_te_s": [
+     -0.938,
+     -0.938,
+     -0.699,
+     -0.7
+    ],
+    "s_contact_mm": [
+     342.078,
+     342.052,
+     339.417,
+     339.425
+    ],
+    "t_departure_s": 46.98300000070702,
+    "crawler_at_end_kN": 0.0,
+    "P3-4": {
+     "p34_absmax_deg": [
+      0.010405214441273479,
+      0.016374612233266757
+     ],
+     "p34_absmax_overall_deg": 0.016374612233266757,
+     "p34_window_length_s": 81.4000000027022,
+     "window_short": false,
+     "creep_vibration_suspect": false,
+     "sensor_allowance_left_deg": 0.16362538776673327,
+     "end_mean_roll_pitch_deg": [
+      0.010058388688330467,
+      -0.016286193065278235
+     ]
+    },
+    "P3-5": {
+     "rut_clearance_min_after_first_ready_m": 0.06962247956905276,
+     "s_motor_max_m": [
+      0.5815353017751519,
+      0.5547130811154478,
+      0.6121906213809751,
+      0.5907398612259269
+     ],
+     "s_motor_limit_m": 0.6848,
+     "rut_clearance_at_loc_m": 0.011828473662103711
+    },
+    "P3-2": {
+     "criterion": "spec rev. 60, U-S9P-13 (가): crawler_liftoff_confirmed before the first DONE; no LOC while the crawler is loaded (normal >= 0.01 W at the LOC); LOC - departure <= T_lim = plateau_window_m / (push_speed_fraction v_max) + 1 s (ASSUMPTION tail share); the former <= 2 s clause is within_2s_record",
+     "t_loc_s": 58.00000000080187,
+     "t_departure_s": 54.983000000701715,
+     "t_first_done_s": 68.10000000113715,
+     "soil_mode_start_t_s": 35.10000000004167,
+     "soil_mode_used": true,
+     "limit_s": 2.91165281234524,
+     "tP_minus_departure_s": 2.2170000000735968,
+     "window_s": 0.8000000000265572,
+     "loc_before_first_done": true,
+     "loc_minus_departure_s": 3.017000000100154,
+     "crawler_normal_at_loc_N": 0.0,
+     "crawler_loaded_at_loc": false,
+     "within_2s_record": false,
+     "within": false,
+     "t_loc_first_s": 56.300000000745435,
+     "t_loc_final_s": 58.00000000080187
+    },
+    "P3-7_rise_kN": 3.3190204887321557,
+    "P3-8": null,
+    "stroke_reading_max_mm": [
+     588.223,
+     561.004,
+     618.17,
+     596.641
+    ],
+    "guard_margin_mm": 64.63000327938857,
+    "stroke_true_max_mm": [
+     581.731,
+     554.906,
+     612.327,
+     590.88
+    ],
+    "end_roll_pitch_deg": [
+     0.010058387766784195,
+     -0.016286192825507712
+    ],
+    "att_max_after_dep_deg": 0.31115368261110615,
+    "event_list": [
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:FL"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:FR"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:RL"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:RR"
+     ],
+     [
+      24.9,
+      "INFO_TOUCH_DIP_HELD:RL"
+     ],
+     [
+      24.9,
+      "INFO_TOUCH_DIP_HELD:RR"
+     ],
+     [
+      25.3,
+      "floor_estimate_touch"
+     ],
+     [
+      27.1,
+      "soil_mode_start"
+     ],
+     [
+      48.3,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      48.3,
+      "INFO_CLEARANCE_BIAS:FL=114.8,FR=113.8,RL=143.4,RR=142.3"
+     ],
+     [
+      48.3,
+      "INFO_LOC_FLAT_SOIL_MARGIN:80"
+     ],
+     [
+      48.4,
+      "INFO_D1_IMU_MASS_SOURCE:yaml"
+     ],
+     [
+      49.1,
+      "INFO_LOC_REVOKED:2.2"
+     ],
+     [
+      49.2,
+      "soil_mode_start"
+     ],
+     [
+      49.4,
+      "INFO_DIFF_SINK_HOLD:FL,RL:6.3"
+     ],
+     [
+      50.0,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      50.0,
+      "INFO_CLEARANCE_BIAS:FL=126.6,FR=118.3,RL=168.2,RR=159.9"
+     ],
+     [
+      53.1,
+      "INFO_DIFF_SINK_RELEASE:settled"
+     ],
+     [
+      93.5,
+      "reanchor_skipped:theta_below_min"
+     ],
+     [
+      93.5,
+      "ready_heave_tail"
+     ],
+     [
+      93.8,
+      "INFO_D1_IMU_MASS_SOURCE:ready"
+     ]
+    ],
+    "counts": {
+     "INFO_CLEARANCE_BIAS": 2,
+     "INFO_D1_IMU_MASS_SOURCE": 2,
+     "INFO_DIFF_SINK_HOLD": 1,
+     "INFO_DIFF_SINK_RELEASE": 1,
+     "INFO_LOC_FLAT_SOIL_MARGIN": 1,
+     "INFO_LOC_REVOKED": 1,
+     "INFO_PRESSURE_ZERO_CALIBRATED": 4,
+     "INFO_TOUCH_DIP_HELD": 2,
+     "crawler_liftoff_confirmed": 2,
+     "floor_estimate_touch": 1,
+     "ready_heave_tail": 1,
+     "reanchor_skipped": 1,
+     "soil_mode_start": 2
+    },
+    "saturation_step_count": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "moving_pressure": {
+     "max_bar": 100.95784066481866,
+     "leg": "FL",
+     "t_s": 58.30000000081183,
+     "head_max_bar": 112.075,
+     "any_state_bar": 100.95784066481866
+    },
+    "soil": {
+     "loc": true,
+     "soil_mode": false,
+     "t_loc_s": 58.00000000080187,
+     "t_P_s": 57.20000000077531,
+     "push_m": 0.009064911784043006,
+     "W_ratio": 1.1374330370191938,
+     "loc_revokes": null,
+     "clearance_at_P_m": 0.15442914231994043,
+     "clearance_at_loc_m": 0.16084793524331276
+    },
+    "reapproach_limit_flag": null,
+    "command_peak_mm_s": 36.6175278,
+    "command_over_vmax_periods": 16
+   },
+   "off": {
+    "t_loop_start_abs": 7.999999999994694,
+    "t_end_abs": 188.0000000051174,
+    "phases": [
+     [
+      0.1,
+      "check"
+     ],
+     [
+      4.8,
+      "touch"
+     ],
+     [
+      23.6,
+      "level"
+     ],
+     [
+      75.1,
+      "done"
+     ],
+     [
+      75.2,
+      "probe"
+     ],
+     [
+      79.1,
+      "level"
+     ],
+     [
+      86.9,
+      "done"
+     ],
+     [
+      87.0,
+      "probe"
+     ],
+     [
+      98.9,
+      "ready"
+     ],
+     [
+      100.5,
+      "level"
+     ],
+     [
+      106.9,
+      "done"
+     ],
+     [
+      107.0,
+      "probe"
+     ],
+     [
+      118.9,
+      "ready"
+     ]
+    ],
+    "final_phase": "ready",
+    "ready_s": [
+     98.90000000243047,
+     118.9000000030944
+    ],
+    "done_s": [
+     75.1000000016404,
+     86.90000000203212,
+     106.90000000269605
+    ],
+    "probe_s": [
+     75.20000000164372,
+     87.00000000203543,
+     107.00000000269937
+    ],
+    "fault_s": [],
+    "touch_end_s": 23.599999999945,
+    "checks": {
+     "P3-1_crawler_zero_after_ready": true,
+     "P3-1_recontact": null,
+     "P3-1_recontact_pass": true,
+     "P3-1_flags": [],
+     "P3-2_within": false,
+     "P3-2_within_2s_record": false,
+     "P3-2_loc_minus_departure_s": 4.050000000134446,
+     "P3-2_limit_s": 2.91165281234524,
+     "P3-2_late_loc_reapproach": false,
+     "P3-2_late_loc_revoked": true,
+     "P3-2_verdict": "flag",
+     "t_loc_first_s": 55.30000000071224,
+     "t_loc_final_s": 57.40000000078195,
+     "loc_revokes": 1,
+     "P3-3_within": true,
+     "P3-4_within_0p2": true,
+     "P3-4_absmax_deg": 0.032009810630389934,
+     "P3-4_window_s": [
+      133.3190000033022,
+      188.0000000051174
+     ],
+     "P3-4_window_short": false,
+     "P3-4_creep_vibration_suspect": false,
+     "P3-4_sensor_allowance_left_deg": 0.1479901893696101,
+     "P3-4_budget_residual_le_0p04_record": true,
+     "reapproach_limit_fired_FLAG": 0,
+     "P3-5_within": true,
+     "P3-5_within_after_departure_record": false,
+     "P3-5_rut_clearance_min_after_first_ready_m": 0.07229951553810832,
+     "P3-6_within": true,
+     "P3-7_within": false,
+     "P3-7_rise_min_loaded_N": 3811.857266039757,
+     "P3-7_reconstruct_ok": true,
+     "P3-8_within": true,
+     "P3-8_within_first": true,
+     "P3-9_flags": 0,
+     "pre_liftoff_flag": true,
+     "W61_warnings": 0,
+     "criteria_rev": "spec rev. 60 (U-S9P-13/14/15 (가)): P3-2 T_lim, P3-5 after the first READY, P3-7 > 0.01 W",
+     "note": "values vs criteria; decisions are control's (284) / dynamics' (physics)"
+    },
+    "P3-6": {
+     "t_ready_after_loop_start_s": 98.90000000243047,
+     "limit_s": 100.0,
+     "limit_rule": {
+      "limit_s": 100.0,
+      "row": "flat, pad B, both rear pads on J1 / J2 / S1",
+      "rear_pad_soils": [
+       "J2",
+       "J2"
+      ],
+      "floor_deg": [
+       0.0,
+       0.0
+      ],
+      "pad_variant": "dwg_rear250",
+      "rule": "spec 421.1 (Q-A): slope 120 s / flat pad B both rear pads J1-J2-S1 100 s / other flat 90 s"
+     },
+     "within": true
+    },
+    "unchanged_blocks_equal": true,
+    "params_file_match": true,
+    "P3-3_F_min_after_kN": [
+     126.58358820509447,
+     118.8987022796561,
+     74.94878117850298,
+     73.90072237091555
+    ],
+    "F_min_after_departure_kN": 73.90072237091555,
+    "F_min_leg": "RR",
+    "F_min_t_s": 89.35600000211365,
+    "F_min_after_dep_s": 44.00600000146084,
+    "D_at_F_min_kN": -2.6426195494965725,
+    "F_min_twist_removed_kN": 75.28237381227125,
+    "F_min_first8_kN": 75.31789529000795,
+    "F_min_first8_leg": "RR",
+    "mean1s_min_first8_kN": 76.50443106436545,
+    "D_peak_abs_after_dep_kN": 6.074429499634697,
+    "D_lift_kN": 0.0013467409013330212,
+    "D_at_first_done_kN": 2.1058942413094144,
+    "D_te_kN": 0.11133067216284509,
+    "s_motor_te_mm": [
+     346.3824,
+     346.3864,
+     341.1707,
+     341.1698
+    ],
+    "tau_te_mm": -0.0024151553463980235,
+    "t_contact_rel_te_s": [
+     -0.925,
+     -0.926,
+     -0.689,
+     -0.689
+    ],
+    "s_contact_mm": [
+     342.129,
+     342.116,
+     339.353,
+     339.352
+    ],
+    "t_departure_s": 45.35000000065281,
+    "crawler_at_end_kN": 0.0,
+    "P3-4": {
+     "p34_absmax_deg": [
+      0.032009810630389934,
+      0.023743293062397614
+     ],
+     "p34_absmax_overall_deg": 0.032009810630389934,
+     "p34_window_length_s": 54.68100000181522,
+     "window_short": false,
+     "creep_vibration_suspect": false,
+     "sensor_allowance_left_deg": 0.1479901893696101,
+     "end_mean_roll_pitch_deg": [
+      0.03167329937754159,
+      -0.023668229105365746
+     ]
+    },
+    "P3-5": {
+     "rut_clearance_min_after_first_ready_m": 0.07229951553810832,
+     "s_motor_max_m": [
+      0.5957573839312834,
+      0.5612897489269361,
+      0.6228547782603159,
+      0.5969502505373037
+     ],
+     "s_motor_limit_m": 0.6848,
+     "rut_clearance_at_loc_m": 0.01796853302027923
+    },
+    "P3-2": {
+     "criterion": "spec rev. 60, U-S9P-13 (가): crawler_liftoff_confirmed before the first DONE; no LOC while the crawler is loaded (normal >= 0.01 W at the LOC); LOC - departure <= T_lim = plateau_window_m / (push_speed_fraction v_max) + 1 s (ASSUMPTION tail share); the former <= 2 s clause is within_2s_record",
+     "t_loc_s": 57.40000000078195,
+     "t_departure_s": 53.350000000647505,
+     "t_first_done_s": 83.1000000016351,
+     "soil_mode_start_t_s": 33.299999999981914,
+     "soil_mode_used": true,
+     "limit_s": 2.91165281234524,
+     "tP_minus_departure_s": 3.3500000001112085,
+     "window_s": 0.7000000000232376,
+     "loc_before_first_done": true,
+     "loc_minus_departure_s": 4.050000000134446,
+     "crawler_normal_at_loc_N": 0.0,
+     "crawler_loaded_at_loc": false,
+     "within_2s_record": false,
+     "within": false,
+     "t_loc_first_s": 55.30000000071224,
+     "t_loc_final_s": 57.40000000078195
+    },
+    "P3-7_rise_kN": 3.811857266039757,
+    "P3-8": null,
+    "stroke_reading_max_mm": [
+     602.58,
+     567.806,
+     628.976,
+     602.926
+    ],
+    "guard_margin_mm": 53.8238124956755,
+    "stroke_true_max_mm": [
+     595.952,
+     561.486,
+     622.994,
+     597.091
+    ],
+    "end_roll_pitch_deg": [
+     0.03167329834075698,
+     -0.02366822880239023
+    ],
+    "att_max_after_dep_deg": 0.4596396985580496,
+    "event_list": [
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:FL"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:FR"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:RL"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:RR"
+     ],
+     [
+      23.2,
+      "INFO_TOUCH_DIP_HELD:RL"
+     ],
+     [
+      23.2,
+      "INFO_TOUCH_DIP_HELD:RR"
+     ],
+     [
+      23.6,
+      "floor_estimate_touch"
+     ],
+     [
+      25.3,
+      "soil_mode_start"
+     ],
+     [
+      47.3,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      47.3,
+      "INFO_CLEARANCE_BIAS:FL=115.3,FR=114.3,RL=148.6,RR=147.6"
+     ],
+     [
+      47.3,
+      "INFO_LOC_FLAT_SOIL_MARGIN:80"
+     ],
+     [
+      47.4,
+      "INFO_D1_IMU_MASS_SOURCE:yaml"
+     ],
+     [
+      48.3,
+      "INFO_DIFF_SINK_HOLD:FL,RL:7.9"
+     ],
+     [
+      48.6,
+      "INFO_LOC_REVOKED:2.0"
+     ],
+     [
+      48.7,
+      "soil_mode_start"
+     ],
+     [
+      49.4,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      49.4,
+      "INFO_CLEARANCE_BIAS:FL=144.9,FR=125.7,RL=184.4,RR=165.2"
+     ],
+     [
+      51.9,
+      "INFO_DIFF_SINK_RELEASE:settled"
+     ],
+     [
+      98.9,
+      "reanchor_skipped:theta_below_min"
+     ],
+     [
+      98.9,
+      "ready_heave_tail"
+     ],
+     [
+      99.2,
+      "INFO_D1_IMU_MASS_SOURCE:ready"
+     ],
+     [
+      118.9,
+      "ready_heave_tail"
+     ],
+     [
+      120.9,
+      "INFO_FLOOR_NONPLANAR"
+     ]
+    ],
+    "counts": {
+     "INFO_CLEARANCE_BIAS": 2,
+     "INFO_D1_IMU_MASS_SOURCE": 2,
+     "INFO_DIFF_SINK_HOLD": 1,
+     "INFO_DIFF_SINK_RELEASE": 1,
+     "INFO_FLOOR_NONPLANAR": 1,
+     "INFO_LOC_FLAT_SOIL_MARGIN": 1,
+     "INFO_LOC_REVOKED": 1,
+     "INFO_PRESSURE_ZERO_CALIBRATED": 4,
+     "INFO_TOUCH_DIP_HELD": 2,
+     "crawler_liftoff_confirmed": 2,
+     "floor_estimate_touch": 1,
+     "ready_heave_tail": 2,
+     "reanchor_skipped": 1,
+     "soil_mode_start": 2
+    },
+    "saturation_step_count": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "moving_pressure": {
+     "max_bar": 102.00961829401042,
+     "leg": "FL",
+     "t_s": 57.60000000078859,
+     "head_max_bar": 112.75,
+     "any_state_bar": 102.00961829401042
+    },
+    "soil": {
+     "loc": true,
+     "soil_mode": false,
+     "t_loc_s": 57.40000000078195,
+     "t_P_s": 56.70000000075871,
+     "push_m": 0.009427626709407222,
+     "W_ratio": 1.1373911804306718,
+     "loc_revokes": null,
+     "clearance_at_P_m": 0.1659989437428233,
+     "clearance_at_loc_m": 0.17180669156822503
+    },
+    "reapproach_limit_flag": null,
+    "command_peak_mm_s": 36.6175278,
+    "command_over_vmax_periods": 22
+   },
+   "off_rejudge_equals_stored_p3b": false,
+   "off_rejudge_checks_diff": [
+    [
+     ".P3-7_rise_min_loaded_N",
+     "3811.857266039757",
+     "3811.857266039724"
+    ]
+   ],
+   "flow": {
+    "present": true,
+    "setting": {
+     "eta_v": 0.85,
+     "compensator_drop_bar": 10.0,
+     "unloading_drop_bar": 20.0,
+     "smoothing_width_bar": 1.0,
+     "law": "priority",
+     "record_period_s": 0.001
+    },
+    "enabled": true,
+    "short_s": 18.3547,
+    "by_phase": {
+     "touch": 16.186,
+     "level": 2.169
+    },
+    "deficit_by_phase_L_min": {
+     "touch": 6.02,
+     "level": 4.3996
+    },
+    "max_deficit_L_min": 6.02,
+    "min_r_by_phase": {
+     "FL": {
+      "check": 1.0,
+      "touch": 0.89463,
+      "level": 0.8739
+     },
+     "FR": {
+      "check": 1.0,
+      "touch": 0.89463,
+      "level": 0.87548
+     },
+     "RL": {
+      "check": 1.0,
+      "touch": 0.89488,
+      "level": 1.0
+     },
+     "RR": {
+      "check": 1.0,
+      "touch": 0.89488,
+      "level": 1.0
+     }
+    },
+    "long93_s": {
+     "FL": 16.12,
+     "FR": 16.12,
+     "RL": 16.252,
+     "RR": 16.252
+    },
+    "tracking_mm": {
+     "max_abs_integral_mm": {
+      "FL": 38.841,
+      "FR": 38.134,
+      "RL": 35.392,
+      "RR": 35.392
+     },
+     "max_between_legs_mm": 3.448
+    },
+    "limited_sets": {
+     "FL": 1.082,
+     "FL+FR": 1.087,
+     "FL+FR+RL+RR": 16.11
+    },
+    "swaps": {
+     "sample_period_s": 0.001,
+     "tie_width_bar": 0.5,
+     "group_s": {
+      "FL": 1.082,
+      "FL+FR": 1.163,
+      "FL+FR+RL+RR": 16.11
+     },
+     "disjoint_swaps": 0,
+     "max_disjoint_swaps_in_1s": 0
+    },
+    "steps": {
+     "fast_path": 1616453,
+     "solved": 183547,
+     "audit": 1616,
+     "audit_mismatches": 0,
+     "demand_met_but_limited": 0
+    },
+    "over_supply": 0.0
+   },
+   "flow_recomputed": {
+    "cols": [
+     "t",
+     "u_FL",
+     "u_FR",
+     "u_RL",
+     "u_RR",
+     "v_FL",
+     "v_FR",
+     "v_RL",
+     "v_RR",
+     "oil_force_FL",
+     "oil_force_FR",
+     "oil_force_RL",
+     "oil_force_RR",
+     "p_load_FL",
+     "p_load_FR",
+     "p_load_RL",
+     "p_load_RR",
+     "y_FL",
+     "y_FR",
+     "y_RL",
+     "y_RR",
+     "p_P",
+     "Q_byp",
+     "Q_dem",
+     "Q_sum",
+     "limited_mask",
+     "residual_mask",
+     "true_force_FL",
+     "true_force_FR",
+     "true_force_RL",
+     "true_force_RR",
+     "crawler",
+     "roll",
+     "pitch",
+     "deficit_integral_FL",
+     "deficit_integral_FR",
+     "deficit_integral_RL",
+     "deficit_integral_RR"
+    ],
+    "dt_s": 0.0010000000000331966,
+    "t_first_rel_s": 9.999999999976694e-05,
+    "t_last_rel_s": 180.00000000512273,
+    "supply_L_min": 51.169999829999995,
+    "short_s": 18.355000000609323,
+    "limited_s": 18.355000000609323,
+    "max_deficit_L_min": 6.020000277747462,
+    "r_min": {
+     "FL": 0.8738966547353169,
+     "FR": 0.8754849920138478,
+     "RL": 0.8948815253114886,
+     "RR": 0.8948815258733157
+    },
+    "below93_s": {
+     "FL": 16.12000000053513,
+     "FR": 16.12000000053513,
+     "RL": 16.25200000053951,
+     "RR": 16.25200000053951
+    },
+    "first_limited_rel_s": 5.214999999987846,
+    "last_limited_rel_s": 51.50000000085697,
+    "n_limited_runs": 3,
+    "runs_ge_0p5s": [
+     [
+      5.215,
+      21.4
+     ],
+     [
+      25.815,
+      26.901
+     ],
+     [
+      50.419,
+      51.5
+     ]
+    ],
+    "max_u_minus_v_mm_s": 2.7685665275848024,
+    "max_abs_integral_mm": [
+     38.841,
+     38.134,
+     35.392,
+     35.392
+    ],
+    "max_between_legs_mm": 3.448542023279323
+   },
+   "V5": {
+    "commands": {
+     "first_diff_rel_s": 19.59999999995432
+    },
+    "F_cyl": {
+     "first_diff_rel_s": 5.214999999987846
+    },
+    "s_motor": {
+     "first_diff_rel_s": 5.214999999987846
+    },
+    "crawler": {
+     "first_diff_rel_s": 5.214999999987846
+    },
+    "first_limited_rel_s": 5.214999999987846
+   },
+   "settings_diff": {
+    "args": [
+     [
+      ".flow_dp_comp_bar",
+      "10.0",
+      "None"
+     ],
+     [
+      ".flow_dp_unload_bar",
+      "20.0",
+      "None"
+     ],
+     [
+      ".flow_eta_v",
+      "0.85",
+      "None"
+     ],
+     [
+      ".flow_law",
+      "priority",
+      "None"
+     ],
+     [
+      ".flow_width_bar",
+      "1.0",
+      "None"
+     ],
+     [
+      ".out_root",
+      "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_COUPLED_eta085_20261104_142213",
+      "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-REP-X_20261031_020716"
+     ]
+    ],
+    "plant_s8": [],
+    "c2_setup": [],
+    "sensors": [],
+    "controller_meta": [
+     [
+      ".diff_sink.active_s",
+      "3.7",
+      "3.6"
+     ],
+     [
+      ".diff_sink.events",
+      "[{'t_s': 57.4, 'axis': 0, 'legs': 'FL,RL', 'r_mm_s': 6.32}, {'t_s': 61.1, 'release': 'settled'}]",
+      "[{'t_s': 56.3, 'axis': 0, 'legs': 'FL,RL', 'r_mm_s': 7.9}, {'t_s': 59.9, 'release': 'settled'}]"
+     ],
+     [
+      ".diff_sink.first_loc_s",
+      "56.300000000745435",
+      "55.30000000071224"
+     ],
+     [
+      ".floor_estimate_touch.floor_rad",
+      "[6.36660790262403e-05, 0.0009110709272195517]",
+      "[7.677467538435599e-06, 0.0009204122630842833]"
+     ],
+     [
+      ".floor_estimate_touch.floor_usage",
+      "0.01714170709218919",
+      "0.01657989235378877"
+     ],
+     [
+      ".floor_estimate_touch.latch_times_s",
+      "[33.299999999981914, 33.299999999981914, 33.199999999978594, 33.199999999978594]",
+      "[31.599999999939694, 31.599999999939694, 31.499999999939927, 31.499999999939927]"
+     ],
+     [
+      ".floor_estimate_touch.residual_m",
+      "9.176990095682847e-05",
+      "7.794819644879603e-05"
+     ],
+     [
+      ".lift_stroke_guard.soil_sign_history",
+      "[{'t_s': 56.3, 'sign': 'soil_mode'}, {'t_s': 57.1, 'sign': None, 'cleared': True}, {'t_s': 58.0, 'si",
+      "[{'t_s': 55.3, 'sign': 'soil_mode'}, {'t_s': 56.6, 'sign': None, 'cleared': True}, {'t_s': 57.4, 'si"
+     ],
+     [
+      ".loc_revoke.rise_N",
+      "[2207.81559847726]",
+      "[2023.2707573159132]"
+     ],
+     [
+      ".loc_revoke.t_revoke_s",
+      "[57.10000000077199]",
+      "[56.600000000755394]"
+     ],
+     [
+      ".lock_tail.count",
+      "1",
+      "2"
+     ],
+     [
+      ".reanchor.anchor_pitch_rad",
+      "0.0018090870658745118",
+      "0.0018022779720815935"
+     ],
+     [
+      ".reanchor.theta_crawler_rad",
+      "0.0018090870658745118",
+      "0.0018022779720815935"
+     ],
+     [
+      ".seal_band_N",
+      "2250.400754426093",
+      "1485.979588892218"
+     ],
+     [
+      ".slope_clearance_margin.flat_soil_margin_t_s",
+      "[56.300000000745435]",
+      "[55.30000000071224]"
+     ],
+     [
+      ".soil.W_hat_N",
+      "428338.5871688718",
+      "428322.8246655791"
+     ],
+     [
+      ".soil.W_ratio",
+      "1.1374330370191938",
+      "1.1373911804306718"
+     ],
+     [
+      ".soil.bias_corner_m",
+      "[0.15985957512486668, 0.1681561475472182, 0.11825437072083055, 0.12655094314318205]",
+      "[0.1651759848952942, 0.18437530490170206, 0.1257397762632283, 0.14493909626963614]"
+     ],
+     [
+      ".soil.bias_corner_raw_m",
+      "[0.15985957512486668, 0.1681561475472182, 0.11825437072083055, 0.12655094314318205]",
+      "[0.1651759848952942, 0.18437530490170206, 0.1257397762632283, 0.14493909626963614]"
+     ],
+     [
+      ".soil.clearance_at_P_m",
+      "0.15442914231994043",
+      "0.1659989437428233"
+     ],
+     [
+      ".soil.clearance_at_loc_m",
+      "0.16084793524331276",
+      "0.17180669156822503"
+     ],
+     [
+      ".soil.push_m",
+      "0.009064911784043006",
+      "0.009427626709407222"
+     ],
+     [
+      ".soil.soil_mode_t_s",
+      "57.20000000077531",
+      "56.70000000075871"
+     ],
+     [
+      ".soil.t_P_s",
+      "57.20000000077531",
+      "56.70000000075871"
+     ],
+     [
+      ".soil.t_loc_s",
+      "58.00000000080187",
+      "57.40000000078195"
+     ],
+     [
+      ".stationary_gate.mean_rate_rad_s",
+      "[-4.903032836000405e-08, 2.487895079929389e-06]",
+      "[-7.392558801641942e-09, 2.476372817992328e-06]"
+     ],
+     [
+      ".stationary_gate.motion_rms_rad_s",
+      "[1.502879343961508e-07, 1.1595512630946071e-07]",
+      "[1.7642395852088934e-07, 1.594555822969062e-07]"
+     ],
+     [
+      ".stationary_gate.rates_quiet_since_s",
+      "96.10000000206665",
+      "124.3000000030028"
+     ],
+     [
+      ".stationary_gate.zero_command_duration_s",
+      "86.00000000285823",
+      "60.60000000201503"
+     ],
+     [
+      ".support_geometry.flags_t_s.FLOOR_NONPLANAR",
+      "None",
+      "128.9000000031555"
+     ],
+     [
+      ".support_geometry.last.heights_above_others_m",
+      "[-0.002153913250155348, 0.002153913250155348, 0.002201658698533615, -0.002881511785536084]",
+      "[-0.0023823765029771238, 0.0026423898269649637, 0.0023823765029771238, -0.003145523434049391]"
+     ],
+     [
+      ".support_geometry.last.heights_delta_above_others_m",
+      "[0.0004131314176301082, 7.46613135307328e-05, -7.46613135307328e-05, -0.00026672102276092957]",
+      "[0.0004711905193666155, 0.00039359900202806664, -0.00039359900202806664, -0.0005519685867656499]"
+     ],
+     [
+      ".support_geometry.last.nonplanarity_delta_m",
+      "3.174689817020404e-05",
+      "-2.3978140393843272e-05"
+     ],
+     [
+      ".support_geometry.last.nonplanarity_m",
+      "-0.001336851711516096",
+      "-0.0015175543230354638"
+     ],
+     [
+      ".support_geometry.last.reference_t_s",
+      "103.0000000022957",
+      "128.4000000031389"
+     ],
+     [
+      ".support_geometry.max_abs_heights_delta_above_others_m",
+      "[0.0008846897497354345, 0.0005025026605873784, 0.0005025026605873784, 0.0008458874344203782]",
+      "[0.0009213134637104936, 0.0008211254631727005, 0.0007805490745060872, 0.001038130045068808]"
+     ],
+     [
+      ".support_geometry.max_abs_nonplanarity_delta_m",
+      "0.00018817039433205451",
+      "0.00019420505592204762"
+     ],
+     [
+      ".support_geometry.max_abs_nonplanarity_m",
+      "0.0015070531075447868",
+      "0.0016877812385636681"
+     ],
+     [
+      ".support_geometry.reference.heights_m",
+      "[-1.2856389601653113, -1.2831465768110566, -1.2830241700491476, -1.2857613675738317]",
+      "[-1.2939456507681897, -1.2912256694238862, -1.291092083745846, -1.2940792375951577]"
+     ],
+     [
+      ".support_geometry.reference.max_abs_height_change_m",
+      "0.26791206830880543",
+      "0.004455491844602477"
+     ]
+    ],
+    "c2_timing": [],
+    "settle_reference": [],
+    "gravity_schedule": [],
+    "mass_scale": []
+   },
+   "code_state_diff": [
+    [
+     ".files_at_start.taken_utc",
+     "2026-11-04T05:22:16+00:00",
+     "2026-10-30T17:07:17+00:00"
+    ],
+    [
+     ".git_at_start.clean",
+     "True",
+     "False"
+    ],
+    [
+     ".git_at_start.dirty",
+     "[]",
+     "[' M 04_scripts/02_chrono/run_S9.py']"
+    ],
+    [
+     ".git_at_start.head",
+     "7e83bbb7383928d3f212ed02175ec7dd70c67a51",
+     "1e1372c69280d618b631bfaad75f7fcbffde6400"
+    ],
+    [
+     ".git_at_start.taken_utc",
+     "2026-11-04T05:22:16+00:00",
+     "2026-10-30T17:07:17+00:00"
+    ],
+    [
+     ".slope_clearance_margin.flat_soil_margin_t_s",
+     "[56.300000000745435]",
+     "[55.30000000071224]"
+    ]
+   ],
+   "params_sha": [
+    "5974670f2d91376dc5c9770a802ad0634f69f401c2881b321230f85dc8c13799",
+    "5974670f2d91376dc5c9770a802ad0634f69f401c2881b321230f85dc8c13799"
+   ],
+   "stop_on": {
+    "stopped": false
+   },
+   "stop_off": {
+    "stopped": false
+   }
+  },
+  "S1": {
+   "case": "P3b_J1_B_top_Fs4",
+   "on_dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_COUPLED_eta085_20261104_142213\\P3b_J1_B_top_Fs4",
+   "off_dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-REP_20261030_223359\\P3b_J1_B_top_Fs4",
+   "on": {
+    "t_loop_start_abs": 7.999999999994694,
+    "t_end_abs": 128.00000000312562,
+    "phases": [
+     [
+      0.1,
+      "check"
+     ],
+     [
+      4.8,
+      "touch"
+     ],
+     [
+      25.3,
+      "level"
+     ],
+     [
+      44.6,
+      "done"
+     ],
+     [
+      44.7,
+      "probe"
+     ],
+     [
+      48.9,
+      "level"
+     ],
+     [
+      58.2,
+      "done"
+     ],
+     [
+      58.3,
+      "probe"
+     ],
+     [
+      70.2,
+      "ready"
+     ]
+    ],
+    "final_phase": "ready",
+    "ready_s": [
+     70.20000000147773
+    ],
+    "done_s": [
+     44.600000000627915,
+     58.20000000107938
+    ],
+    "probe_s": [
+     44.700000000631235,
+     58.3000000010827
+    ],
+    "fault_s": [],
+    "touch_end_s": 25.29999999998722,
+    "checks": {
+     "P3-1_crawler_zero_after_ready": true,
+     "P3-1_recontact": null,
+     "P3-1_recontact_pass": true,
+     "P3-1_flags": [],
+     "P3-2_within": true,
+     "P3-2_within_2s_record": false,
+     "P3-2_loc_minus_departure_s": 2.675000000088801,
+     "P3-2_limit_s": 2.91165281234524,
+     "P3-2_late_loc_reapproach": false,
+     "P3-2_late_loc_revoked": false,
+     "P3-2_verdict": "pass",
+     "t_loc_first_s": 41.700000000260765,
+     "t_loc_final_s": 41.700000000260765,
+     "loc_revokes": 0,
+     "P3-3_within": true,
+     "P3-4_within_0p2": true,
+     "P3-4_absmax_deg": 0.04868661298284634,
+     "P3-4_window_s": [
+      82.35200000161026,
+      128.00000000312562
+     ],
+     "P3-4_window_short": false,
+     "P3-4_creep_vibration_suspect": false,
+     "P3-4_sensor_allowance_left_deg": 0.13131338701715367,
+     "P3-4_budget_residual_le_0p04_record": false,
+     "reapproach_limit_fired_FLAG": 0,
+     "P3-5_within": true,
+     "P3-5_within_after_departure_record": false,
+     "P3-5_rut_clearance_min_after_first_ready_m": 0.0685438371542797,
+     "P3-6_within": true,
+     "P3-7_within": true,
+     "P3-7_rise_min_loaded_N": 7399.747263390695,
+     "P3-7_reconstruct_ok": true,
+     "P3-8_within": true,
+     "P3-8_within_first": true,
+     "P3-9_flags": 0,
+     "pre_liftoff_flag": false,
+     "W61_warnings": 0,
+     "criteria_rev": "spec rev. 60 (U-S9P-13/14/15 (가)): P3-2 T_lim, P3-5 after the first READY, P3-7 > 0.01 W",
+     "note": "values vs criteria; decisions are control's (284) / dynamics' (physics)"
+    },
+    "P3-6": {
+     "t_ready_after_loop_start_s": 70.20000000147773,
+     "limit_s": 100.0,
+     "limit_rule": {
+      "limit_s": 100.0,
+      "row": "flat, pad B, both rear pads on J1 / J2 / S1",
+      "rear_pad_soils": [
+       "J1",
+       "J1"
+      ],
+      "floor_deg": [
+       0.0,
+       0.0
+      ],
+      "pad_variant": "dwg_rear250",
+      "rule": "spec 421.1 (Q-A): slope 120 s / flat pad B both rear pads J1-J2-S1 100 s / other flat 90 s"
+     },
+     "within": true
+    },
+    "unchanged_blocks_equal": true,
+    "params_file_match": true,
+    "P3-3_F_min_after_kN": [
+     115.2117590839167,
+     112.67505189784683,
+     69.1494171186933,
+     68.11673091458331
+    ],
+    "F_min_after_departure_kN": 68.11673091458331,
+    "F_min_leg": "RR",
+    "F_min_t_s": 64.97100000130415,
+    "F_min_after_dep_s": 33.94600000112688,
+    "D_at_F_min_kN": -2.2153377396933394,
+    "F_min_twist_removed_kN": 69.27498488334703,
+    "F_min_first8_kN": 69.7618665468455,
+    "F_min_first8_leg": "RR",
+    "mean1s_min_first8_kN": 70.04549320808128,
+    "D_peak_abs_after_dep_kN": 4.693104210048546,
+    "D_lift_kN": 0.07281753662116586,
+    "D_at_first_done_kN": 1.5072077164202895,
+    "D_te_kN": 0.20267272980478523,
+    "s_motor_te_mm": [
+     346.5693,
+     346.5829,
+     341.498,
+     341.5014
+    ],
+    "tau_te_mm": -0.00470897011362581,
+    "t_contact_rel_te_s": [
+     -0.689,
+     -0.694,
+     -0.638,
+     -0.64
+    ],
+    "s_contact_mm": [
+     344.635,
+     344.628,
+     340.046,
+     340.047
+    ],
+    "t_departure_s": 31.025000000177272,
+    "crawler_at_end_kN": 0.0,
+    "P3-4": {
+     "p34_absmax_deg": [
+      0.04868661298284634,
+      0.01647713932447847
+     ],
+     "p34_absmax_overall_deg": 0.04868661298284634,
+     "p34_window_length_s": 45.648000001515356,
+     "window_short": false,
+     "creep_vibration_suspect": false,
+     "sensor_allowance_left_deg": 0.13131338701715367,
+     "end_mean_roll_pitch_deg": [
+      0.04842728339555717,
+      -0.016392156995392388
+     ]
+    },
+    "P3-5": {
+     "rut_clearance_min_after_first_ready_m": 0.0685438371542797,
+     "s_motor_max_m": [
+      0.48659852031571454,
+      0.47161310567077125,
+      0.502897661535056,
+      0.49050009008891604
+     ],
+     "s_motor_limit_m": 0.6848,
+     "rut_clearance_at_loc_m": 0.005937746016204226
+    },
+    "P3-2": {
+     "criterion": "spec rev. 60, U-S9P-13 (가): crawler_liftoff_confirmed before the first DONE; no LOC while the crawler is loaded (normal >= 0.01 W at the LOC); LOC - departure <= T_lim = plateau_window_m / (push_speed_fraction v_max) + 1 s (ASSUMPTION tail share); the former <= 2 s clause is within_2s_record",
+     "t_loc_s": 41.700000000260765,
+     "t_departure_s": 39.025000000171964,
+     "t_first_done_s": 52.60000000062261,
+     "soil_mode_start_t_s": 35.10000000004167,
+     "soil_mode_used": true,
+     "limit_s": 2.91165281234524,
+     "tP_minus_departure_s": 0.9750000000323666,
+     "window_s": 1.7000000000564341,
+     "loc_before_first_done": true,
+     "loc_minus_departure_s": 2.675000000088801,
+     "crawler_normal_at_loc_N": 0.0,
+     "crawler_loaded_at_loc": false,
+     "within_2s_record": false,
+     "within": true,
+     "t_loc_first_s": 41.700000000260765,
+     "t_loc_final_s": 41.700000000260765
+    },
+    "P3-7_rise_kN": 7.399747263390695,
+    "P3-8": null,
+    "stroke_reading_max_mm": [
+     491.769,
+     476.815,
+     507.536,
+     495.008
+    ],
+    "guard_margin_mm": 175.26411412506036,
+    "stroke_true_max_mm": [
+     486.776,
+     471.788,
+     503.022,
+     490.628
+    ],
+    "end_roll_pitch_deg": [
+     0.048427282636798866,
+     -0.01639215694792796
+    ],
+    "att_max_after_dep_deg": 0.2978389882044867,
+    "event_list": [
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:FL"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:FR"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:RL"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:RR"
+     ],
+     [
+      25.3,
+      "floor_estimate_touch"
+     ],
+     [
+      27.1,
+      "soil_mode_start"
+     ],
+     [
+      33.7,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      33.7,
+      "INFO_CLEARANCE_BIAS:FL=42.2,FR=41.1,RL=63.3,RR=62.2"
+     ],
+     [
+      33.7,
+      "INFO_LOC_FLAT_SOIL_MARGIN:80"
+     ],
+     [
+      33.8,
+      "INFO_D1_IMU_MASS_SOURCE:yaml"
+     ],
+     [
+      34.7,
+      "INFO_DIFF_SINK_HOLD:FL,RL:4.9"
+     ],
+     [
+      36.7,
+      "INFO_DIFF_SINK_RELEASE:reversed"
+     ],
+     [
+      70.2,
+      "reanchor_skipped:theta_below_min"
+     ],
+     [
+      70.2,
+      "ready_heave_tail"
+     ],
+     [
+      70.5,
+      "INFO_D1_IMU_MASS_SOURCE:ready"
+     ]
+    ],
+    "counts": {
+     "INFO_CLEARANCE_BIAS": 1,
+     "INFO_D1_IMU_MASS_SOURCE": 2,
+     "INFO_DIFF_SINK_HOLD": 1,
+     "INFO_DIFF_SINK_RELEASE": 1,
+     "INFO_LOC_FLAT_SOIL_MARGIN": 1,
+     "INFO_PRESSURE_ZERO_CALIBRATED": 4,
+     "crawler_liftoff_confirmed": 1,
+     "floor_estimate_touch": 1,
+     "ready_heave_tail": 1,
+     "reanchor_skipped": 1,
+     "soil_mode_start": 1
+    },
+    "saturation_step_count": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "moving_pressure": {
+     "max_bar": 91.03084372431285,
+     "leg": "FL",
+     "t_s": 66.90000000109731,
+     "head_max_bar": 100.375,
+     "any_state_bar": 91.05205954210093
+    },
+    "soil": {
+     "loc": true,
+     "soil_mode": false,
+     "t_loc_s": 41.700000000260765,
+     "t_P_s": 40.00000000020433,
+     "push_m": 0.04646908445959447,
+     "W_ratio": 1.0356219301218166,
+     "loc_revokes": null,
+     "clearance_at_P_m": 0.05580623527746442,
+     "clearance_at_loc_m": 0.06477133719035177
+    },
+    "reapproach_limit_flag": null,
+    "command_peak_mm_s": 27.941179257918893,
+    "command_over_vmax_periods": 10
+   },
+   "off": {
+    "t_loop_start_abs": 7.999999999994694,
+    "t_end_abs": 128.00000000312562,
+    "phases": [
+     [
+      0.1,
+      "check"
+     ],
+     [
+      4.8,
+      "touch"
+     ],
+     [
+      23.6,
+      "level"
+     ],
+     [
+      43.9,
+      "done"
+     ],
+     [
+      44.0,
+      "probe"
+     ],
+     [
+      47.4,
+      "level"
+     ],
+     [
+      62.2,
+      "done"
+     ],
+     [
+      62.3,
+      "probe"
+     ],
+     [
+      74.2,
+      "ready"
+     ]
+    ],
+    "final_phase": "ready",
+    "ready_s": [
+     74.20000000161052
+    ],
+    "done_s": [
+     43.90000000060468,
+     62.20000000121217
+    ],
+    "probe_s": [
+     44.000000000608,
+     62.30000000121549
+    ],
+    "fault_s": [],
+    "touch_end_s": 23.599999999945,
+    "checks": {
+     "P3-1_crawler_zero_after_ready": true,
+     "P3-1_recontact": null,
+     "P3-1_recontact_pass": true,
+     "P3-1_flags": [],
+     "P3-2_within": true,
+     "P3-2_within_2s_record": false,
+     "P3-2_loc_minus_departure_s": 2.4290000000806344,
+     "P3-2_limit_s": 2.91165281234524,
+     "P3-2_late_loc_reapproach": false,
+     "P3-2_late_loc_revoked": false,
+     "P3-2_verdict": "pass",
+     "t_loc_first_s": 40.00000000020433,
+     "t_loc_final_s": 40.00000000020433,
+     "loc_revokes": 0,
+     "P3-3_within": true,
+     "P3-4_within_0p2": true,
+     "P3-4_absmax_deg": 0.04659945985444369,
+     "P3-4_window_s": [
+      86.36000000174332,
+      128.00000000312562
+     ],
+     "P3-4_window_short": false,
+     "P3-4_creep_vibration_suspect": false,
+     "P3-4_sensor_allowance_left_deg": 0.13340054014555633,
+     "P3-4_budget_residual_le_0p04_record": false,
+     "reapproach_limit_fired_FLAG": 0,
+     "P3-5_within": true,
+     "P3-5_within_after_departure_record": false,
+     "P3-5_rut_clearance_min_after_first_ready_m": 0.0662805289784556,
+     "P3-6_within": true,
+     "P3-7_within": true,
+     "P3-7_rise_min_loaded_N": 7346.675388826032,
+     "P3-7_reconstruct_ok": true,
+     "P3-8_within": true,
+     "P3-8_within_first": true,
+     "P3-9_flags": 0,
+     "pre_liftoff_flag": false,
+     "W61_warnings": 0,
+     "criteria_rev": "spec rev. 60 (U-S9P-13/14/15 (가)): P3-2 T_lim, P3-5 after the first READY, P3-7 > 0.01 W",
+     "note": "values vs criteria; decisions are control's (284) / dynamics' (physics)"
+    },
+    "P3-6": {
+     "t_ready_after_loop_start_s": 74.20000000161052,
+     "limit_s": 100.0,
+     "limit_rule": {
+      "limit_s": 100.0,
+      "row": "flat, pad B, both rear pads on J1 / J2 / S1",
+      "rear_pad_soils": [
+       "J1",
+       "J1"
+      ],
+      "floor_deg": [
+       0.0,
+       0.0
+      ],
+      "pad_variant": "dwg_rear250",
+      "rule": "spec 421.1 (Q-A): slope 120 s / flat pad B both rear pads J1-J2-S1 100 s / other flat 90 s"
+     },
+     "within": true
+    },
+    "unchanged_blocks_equal": true,
+    "params_file_match": true,
+    "P3-3_F_min_after_kN": [
+     115.48665333280783,
+     112.13280983389105,
+     68.64559635635678,
+     68.09668622555529
+    ],
+    "F_min_after_departure_kN": 68.09668622555529,
+    "F_min_leg": "RR",
+    "F_min_t_s": 68.9790000014372,
+    "F_min_after_dep_s": 39.4080000013082,
+    "D_at_F_min_kN": -2.128193447465563,
+    "F_min_twist_removed_kN": 69.20937819240866,
+    "F_min_first8_kN": 69.8428327947936,
+    "F_min_first8_leg": "RR",
+    "mean1s_min_first8_kN": 70.20651003692288,
+    "D_peak_abs_after_dep_kN": 5.350683311640928,
+    "D_lift_kN": 0.1074088425745856,
+    "D_at_first_done_kN": 1.491727768152856,
+    "D_te_kN": 0.2744792790465418,
+    "s_motor_te_mm": [
+     346.5306,
+     346.5476,
+     341.3542,
+     341.3561
+    ],
+    "tau_te_mm": -0.007123619634057832,
+    "t_contact_rel_te_s": [
+     -0.663,
+     -0.663,
+     -0.621,
+     -0.621
+    ],
+    "s_contact_mm": [
+     344.858,
+     344.86,
+     340.043,
+     340.049
+    ],
+    "t_departure_s": 29.571000000129004,
+    "crawler_at_end_kN": 0.0,
+    "P3-4": {
+     "p34_absmax_deg": [
+      0.04659945985444369,
+      0.015524372096729697
+     ],
+     "p34_absmax_overall_deg": 0.04659945985444369,
+     "p34_window_length_s": 41.640000001382305,
+     "window_short": false,
+     "creep_vibration_suspect": false,
+     "sensor_allowance_left_deg": 0.13340054014555633,
+     "end_mean_roll_pitch_deg": [
+      0.04633219185592184,
+      -0.015436196127855108
+     ]
+    },
+    "P3-5": {
+     "rut_clearance_min_after_first_ready_m": 0.0662805289784556,
+     "s_motor_max_m": [
+      0.4865226406832185,
+      0.4684769836171784,
+      0.5026816627070132,
+      0.49146318801148514
+     ],
+     "s_motor_limit_m": 0.6848,
+     "rut_clearance_at_loc_m": 0.006679492297530398
+    },
+    "P3-2": {
+     "criterion": "spec rev. 60, U-S9P-13 (가): crawler_liftoff_confirmed before the first DONE; no LOC while the crawler is loaded (normal >= 0.01 W at the LOC); LOC - departure <= T_lim = plateau_window_m / (push_speed_fraction v_max) + 1 s (ASSUMPTION tail share); the former <= 2 s clause is within_2s_record",
+     "t_loc_s": 40.00000000020433,
+     "t_departure_s": 37.571000000123696,
+     "t_first_done_s": 51.90000000059937,
+     "soil_mode_start_t_s": 33.299999999981914,
+     "soil_mode_used": true,
+     "limit_s": 2.91165281234524,
+     "tP_minus_departure_s": 0.82900000002752,
+     "window_s": 1.6000000000531145,
+     "loc_before_first_done": true,
+     "loc_minus_departure_s": 2.4290000000806344,
+     "crawler_normal_at_loc_N": 0.0,
+     "crawler_loaded_at_loc": false,
+     "within_2s_record": false,
+     "within": true,
+     "t_loc_first_s": 40.00000000020433,
+     "t_loc_final_s": 40.00000000020433
+    },
+    "P3-7_rise_kN": 7.346675388826032,
+    "P3-8": null,
+    "stroke_reading_max_mm": [
+     491.687,
+     473.412,
+     507.296,
+     495.928
+    ],
+    "guard_margin_mm": 175.50351178070764,
+    "stroke_true_max_mm": [
+     486.7,
+     468.652,
+     502.805,
+     491.588
+    ],
+    "end_roll_pitch_deg": [
+     0.04633219184944016,
+     -0.015436196129199569
+    ],
+    "att_max_after_dep_deg": 0.2957536839855708,
+    "event_list": [
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:FL"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:FR"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:RL"
+     ],
+     [
+      4.3,
+      "INFO_PRESSURE_ZERO_CALIBRATED:RR"
+     ],
+     [
+      23.6,
+      "floor_estimate_touch"
+     ],
+     [
+      25.3,
+      "soil_mode_start"
+     ],
+     [
+      32.0,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      32.0,
+      "INFO_CLEARANCE_BIAS:FL=40.6,FR=39.5,RL=62.7,RR=61.6"
+     ],
+     [
+      32.0,
+      "INFO_LOC_FLAT_SOIL_MARGIN:80"
+     ],
+     [
+      32.1,
+      "INFO_D1_IMU_MASS_SOURCE:yaml"
+     ],
+     [
+      33.0,
+      "INFO_DIFF_SINK_HOLD:FL,RL:5.5"
+     ],
+     [
+      36.1,
+      "INFO_DIFF_SINK_RELEASE:settled"
+     ],
+     [
+      74.2,
+      "reanchor_skipped:theta_below_min"
+     ],
+     [
+      74.2,
+      "ready_heave_tail"
+     ],
+     [
+      74.5,
+      "INFO_D1_IMU_MASS_SOURCE:ready"
+     ]
+    ],
+    "counts": {
+     "INFO_CLEARANCE_BIAS": 1,
+     "INFO_D1_IMU_MASS_SOURCE": 2,
+     "INFO_DIFF_SINK_HOLD": 1,
+     "INFO_DIFF_SINK_RELEASE": 1,
+     "INFO_LOC_FLAT_SOIL_MARGIN": 1,
+     "INFO_PRESSURE_ZERO_CALIBRATED": 4,
+     "crawler_liftoff_confirmed": 1,
+     "floor_estimate_touch": 1,
+     "ready_heave_tail": 1,
+     "reanchor_skipped": 1,
+     "soil_mode_start": 1
+    },
+    "saturation_step_count": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "moving_pressure": {
+     "max_bar": 91.38541074479198,
+     "leg": "FL",
+     "t_s": 42.30000000028068,
+     "head_max_bar": 100.925,
+     "any_state_bar": 91.38541074479198
+    },
+    "soil": {
+     "loc": true,
+     "soil_mode": false,
+     "t_loc_s": 40.00000000020433,
+     "t_P_s": 38.400000000151216,
+     "push_m": 0.04724958145932984,
+     "W_ratio": 1.0355934611635058,
+     "loc_revokes": null,
+     "clearance_at_P_m": 0.05694148535506982,
+     "clearance_at_loc_m": 0.06568078467528227
+    },
+    "reapproach_limit_flag": null,
+    "command_peak_mm_s": 27.788597430275008,
+    "command_over_vmax_periods": 11
+   },
+   "off_rejudge_equals_stored_p3b": false,
+   "off_rejudge_checks_diff": [
+    [
+     ".P3-7_rise_min_loaded_N",
+     "7346.675388826032",
+     "7346.675388826101"
+    ]
+   ],
+   "flow": {
+    "present": true,
+    "setting": {
+     "eta_v": 0.85,
+     "compensator_drop_bar": 10.0,
+     "unloading_drop_bar": 20.0,
+     "smoothing_width_bar": 1.0,
+     "law": "priority",
+     "record_period_s": 0.001
+    },
+    "enabled": true,
+    "short_s": 18.9669,
+    "by_phase": {
+     "touch": 16.186,
+     "level": 2.781
+    },
+    "deficit_by_phase_L_min": {
+     "touch": 6.02,
+     "level": 5.0302
+    },
+    "max_deficit_L_min": 6.02,
+    "min_r_by_phase": {
+     "FL": {
+      "check": 1.0,
+      "touch": 0.89463,
+      "level": 0.85655
+     },
+     "FR": {
+      "check": 1.0,
+      "touch": 0.89463,
+      "level": 0.86342
+     },
+     "RL": {
+      "check": 1.0,
+      "touch": 0.89488,
+      "level": 1.0
+     },
+     "RR": {
+      "check": 1.0,
+      "touch": 0.89488,
+      "level": 1.0
+     }
+    },
+    "long93_s": {
+     "FL": 16.12,
+     "FR": 16.12,
+     "RL": 16.252,
+     "RR": 16.252
+    },
+    "tracking_mm": {
+     "max_abs_integral_mm": {
+      "FL": 41.039,
+      "FR": 38.376,
+      "RL": 35.392,
+      "RR": 35.392
+     },
+     "max_between_legs_mm": 5.646
+    },
+    "limited_sets": {
+     "FL": 1.694,
+     "FL+FR": 1.087,
+     "FL+FR+RL+RR": 16.11
+    },
+    "swaps": {
+     "sample_period_s": 0.001,
+     "tie_width_bar": 0.5,
+     "group_s": {
+      "FL": 1.694,
+      "FL+FR": 1.163,
+      "FL+FR+RL+RR": 16.11
+     },
+     "disjoint_swaps": 0,
+     "max_disjoint_swaps_in_1s": 0
+    },
+    "steps": {
+     "fast_path": 1010331,
+     "solved": 189669,
+     "audit": 1010,
+     "audit_mismatches": 0,
+     "demand_met_but_limited": 0
+    },
+    "over_supply": 0.0
+   },
+   "flow_recomputed": {
+    "cols": [
+     "t",
+     "u_FL",
+     "u_FR",
+     "u_RL",
+     "u_RR",
+     "v_FL",
+     "v_FR",
+     "v_RL",
+     "v_RR",
+     "oil_force_FL",
+     "oil_force_FR",
+     "oil_force_RL",
+     "oil_force_RR",
+     "p_load_FL",
+     "p_load_FR",
+     "p_load_RL",
+     "p_load_RR",
+     "y_FL",
+     "y_FR",
+     "y_RL",
+     "y_RR",
+     "p_P",
+     "Q_byp",
+     "Q_dem",
+     "Q_sum",
+     "limited_mask",
+     "residual_mask",
+     "true_force_FL",
+     "true_force_FR",
+     "true_force_RL",
+     "true_force_RR",
+     "crawler",
+     "roll",
+     "pitch",
+     "deficit_integral_FL",
+     "deficit_integral_FR",
+     "deficit_integral_RL",
+     "deficit_integral_RR"
+    ],
+    "dt_s": 0.0010000000000331966,
+    "t_first_rel_s": 9.999999999976694e-05,
+    "t_last_rel_s": 120.00000000313092,
+    "supply_L_min": 51.169999829999995,
+    "short_s": 18.96700000062964,
+    "limited_s": 18.96700000062964,
+    "max_deficit_L_min": 6.020000277747462,
+    "r_min": {
+     "FL": 0.8565501991838921,
+     "FR": 0.8634198864263108,
+     "RL": 0.8948818866396525,
+     "RR": 0.8948818879297963
+    },
+    "below93_s": {
+     "FL": 16.12000000053513,
+     "FR": 16.12000000053513,
+     "RL": 16.25200000053951,
+     "RR": 16.25200000053951
+    },
+    "first_limited_rel_s": 5.214999999987846,
+    "last_limited_rel_s": 35.7010000003325,
+    "n_limited_runs": 3,
+    "runs_ge_0p5s": [
+     [
+      5.215,
+      21.4
+     ],
+     [
+      25.815,
+      26.901
+     ],
+     [
+      34.008,
+      35.701
+     ]
+    ],
+    "max_u_minus_v_mm_s": 3.2349602637164394,
+    "max_abs_integral_mm": [
+     41.039,
+     38.376,
+     35.392,
+     35.392
+    ],
+    "max_between_legs_mm": 5.6467546767926535
+   },
+   "V5": {
+    "commands": {
+     "first_diff_rel_s": 19.59999999995432
+    },
+    "F_cyl": {
+     "first_diff_rel_s": 5.214999999987846
+    },
+    "s_motor": {
+     "first_diff_rel_s": 5.214999999987846
+    },
+    "crawler": {
+     "first_diff_rel_s": 5.214999999987846
+    },
+    "first_limited_rel_s": 5.214999999987846
+   },
+   "settings_diff": {
+    "args": [
+     [
+      ".flow_dp_comp_bar",
+      "10.0",
+      "None"
+     ],
+     [
+      ".flow_dp_unload_bar",
+      "20.0",
+      "None"
+     ],
+     [
+      ".flow_eta_v",
+      "0.85",
+      "None"
+     ],
+     [
+      ".flow_law",
+      "priority",
+      "None"
+     ],
+     [
+      ".flow_width_bar",
+      "1.0",
+      "None"
+     ],
+     [
+      ".out_root",
+      "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_COUPLED_eta085_20261104_142213",
+      "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-REP_20261030_223359"
+     ]
+    ],
+    "plant_s8": [],
+    "c2_setup": [],
+    "sensors": [],
+    "controller_meta": [
+     [
+      ".diff_sink.active_s",
+      "2.0",
+      "3.1"
+     ],
+     [
+      ".diff_sink.events",
+      "[{'t_s': 42.7, 'axis': 1, 'legs': 'FL,RL', 'r_mm_s': 4.9}, {'t_s': 44.7, 'release': 'reversed'}]",
+      "[{'t_s': 41.0, 'axis': 0, 'legs': 'FL,RL', 'r_mm_s': 5.47}, {'t_s': 44.1, 'release': 'settled'}]"
+     ],
+     [
+      ".diff_sink.first_loc_s",
+      "41.700000000260765",
+      "40.00000000020433"
+     ],
+     [
+      ".floor_estimate_touch.floor_rad",
+      "[1.5831832645276073e-05, 2.0840706222561574e-05]",
+      "[-9.270542195735162e-05, 4.5371499678779605e-05]"
+     ],
+     [
+      ".floor_estimate_touch.floor_usage",
+      "0.0005793098617933798",
+      "0.0020195620792213377"
+     ],
+     [
+      ".floor_estimate_touch.latch_times_s",
+      "[33.299999999981914, 33.299999999981914, 33.299999999981914, 33.299999999981914]",
+      "[31.599999999939694, 31.599999999939694, 31.599999999939694, 31.599999999939694]"
+     ],
+     [
+      ".floor_estimate_touch.residual_m",
+      "2.158830243570442e-05",
+      "6.99327292659202e-05"
+     ],
+     [
+      ".lift_stroke_guard.soil_sign_history",
+      "[{'t_s': 41.7, 'sign': 'soil_mode'}]",
+      "[{'t_s': 40.0, 'sign': 'soil_mode'}]"
+     ],
+     [
+      ".reanchor.anchor_pitch_rad",
+      "0.0010934685815515333",
+      "0.001082814961995331"
+     ],
+     [
+      ".reanchor.theta_crawler_rad",
+      "0.0010934685815515333",
+      "0.001082814961995331"
+     ],
+     [
+      ".slope_clearance_margin.flat_soil_margin_t_s",
+      "[41.700000000260765]",
+      "[40.00000000020433]"
+     ],
+     [
+      ".soil.W_hat_N",
+      "389998.1976538926",
+      "389987.47671210166"
+     ],
+     [
+      ".soil.W_ratio",
+      "1.0356219301218166",
+      "1.0355934611635058"
+     ],
+     [
+      ".soil.bias_corner_m",
+      "[0.06223566156085187, 0.06331879704115329, 0.0410973300801299, 0.04218046556043131]",
+      "[0.061561329746916305, 0.06265439401673922, 0.03945971196978737, 0.04055277623961029]"
+     ],
+     [
+      ".soil.bias_corner_raw_m",
+      "[0.06223566156085187, 0.06331879704115329, 0.0410973300801299, 0.04218046556043131]",
+      "[0.061561329746916305, 0.06265439401673922, 0.03945971196978737, 0.04055277623961029]"
+     ],
+     [
+      ".soil.clearance_at_P_m",
+      "0.05580623527746442",
+      "0.05694148535506982"
+     ],
+     [
+      ".soil.clearance_at_loc_m",
+      "0.06477133719035177",
+      "0.06568078467528227"
+     ],
+     [
+      ".soil.push_m",
+      "0.04646908445959447",
+      "0.04724958145932984"
+     ],
+     [
+      ".soil.soil_mode_t_s",
+      "35.10000000004167",
+      "33.299999999981914"
+     ],
+     [
+      ".soil.t_P_s",
+      "40.00000000020433",
+      "38.400000000151216"
+     ],
+     [
+      ".soil.t_loc_s",
+      "41.700000000260765",
+      "40.00000000020433"
+     ],
+     [
+      ".stationary_gate.mean_rate_rad_s",
+      "[7.579773141333525e-10, -4.506673845765269e-07]",
+      "[1.0492408982988478e-08, -4.473064433025746e-07]"
+     ],
+     [
+      ".stationary_gate.motion_rms_rad_s",
+      "[1.0336939686121549e-07, 4.38475613222548e-08]",
+      "[2.758424788927459e-09, 6.995090808155572e-10]"
+     ],
+     [
+      ".stationary_gate.rates_quiet_since_s",
+      "75.5000000013828",
+      "79.60000000151891"
+     ],
+     [
+      ".stationary_gate.zero_command_duration_s",
+      "49.30000000163991",
+      "45.30000000150712"
+     ],
+     [
+      ".support_geometry.last.heights_above_others_m",
+      "[0.00048529907589967003, 6.303973233157123e-05, -0.00038602894931139, -6.303973233157123e-05]",
+      "[-0.0020438962271085437, 0.0022505951943003755, 0.0020438962271085437, -0.0027811642476378573]"
+     ],
+     [
+      ".support_geometry.last.heights_delta_above_others_m",
+      "[0.0004996038218028076, 0.0003686110813883037, -0.00037172419496367404, -0.0003686110813883037]",
+      "[0.0005123622907228231, 0.0003263673128228728, -0.0003263673128228728, -0.0004316041138583415]"
+     ],
+     [
+      ".support_geometry.last.nonplanarity_delta_m",
+      "3.345595162479453e-05",
+      "1.752833742474369e-05"
+     ],
+     [
+      ".support_geometry.last.nonplanarity_m",
+      "0.0001933940172807458",
+      "-0.0013204344694123793"
+     ],
+     [
+      ".support_geometry.last.reference_t_s",
+      "79.70000000152223",
+      "83.70000000165501"
+     ],
+     [
+      ".support_geometry.max_abs_heights_delta_above_others_m",
+      "[0.0007131659855470485, 0.0005759661954722883, 0.000737015360575688, 0.0005759661954722883]",
+      "[0.0007559129853593749, 0.0005946464538510998, 0.0006918685633363619, 0.0006391157117471291]"
+     ],
+     [
+      ".support_geometry.max_abs_nonplanarity_delta_m",
+      "0.00019965946107874943",
+      "0.00018376961440114137"
+     ],
+     [
+      ".support_geometry.max_abs_nonplanarity_m",
+      "0.0003595975267347007",
+      "0.0014800764166724711"
+     ],
+     [
+      ".support_geometry.reference.heights_m",
+      "[-1.189989722933194, -1.1902809895363475, -1.1902952942906952, -1.1899754181872908]",
+      "[-1.1896933320528595, -1.1872567418806592, -1.1871370735350282, -1.1898130009816306]"
+     ],
+     [
+      ".support_geometry.reference.max_abs_height_change_m",
+      "0.16220480206026422",
+      "0.15904645176931487"
+     ],
+     [
+      ".support_geometry.reference.nonplanarity_m",
+      "0.00015993806565595126",
+      "-0.001337962806837123"
+     ],
+     [
+      ".support_geometry.reference.normal",
+      "[-0.006272672486400507, 0.0037748345463353796, 0.9999732017429398]",
+      "[-0.006343929063941173, 0.003714217338645599, 0.999972979211735]"
+     ],
+     [
+      ".support_geometry.reference.t_s",
+      "79.70000000152223",
+      "83.70000000165501"
+     ],
+     [
+      ".support_geometry.reference_updates",
+      "[{'normal': [2.0840706218441105e-05, -1.5831832644614706e-05, 0.9999999996575091], 'heights_m': [-1.",
+      "[{'normal': [4.537149946824482e-05, 9.2705421824562e-05, 0.9999999946735659], 'heights_m': [-1.04848"
+     ],
+     [
+      ".two_pressure.crawler_recontact.last_residual_change_N",
+      "2417.012017569027",
+      "2332.121092025336"
+     ]
+    ],
+    "c2_timing": [],
+    "settle_reference": [],
+    "gravity_schedule": [],
+    "mass_scale": []
+   },
+   "code_state_diff": [
+    [
+     ".files_at_start.taken_utc",
+     "2026-11-04T05:22:16+00:00",
+     "2026-10-30T13:34:01+00:00"
+    ],
+    [
+     ".git_at_start.head",
+     "7e83bbb7383928d3f212ed02175ec7dd70c67a51",
+     "1e1372c69280d618b631bfaad75f7fcbffde6400"
+    ],
+    [
+     ".git_at_start.taken_utc",
+     "2026-11-04T05:22:16+00:00",
+     "2026-10-30T13:34:01+00:00"
+    ],
+    [
+     ".slope_clearance_margin.flat_soil_margin_t_s",
+     "[41.700000000260765]",
+     "[40.00000000020433]"
+    ]
+   ],
+   "params_sha": [
+    "5974670f2d91376dc5c9770a802ad0634f69f401c2881b321230f85dc8c13799",
+    "5974670f2d91376dc5c9770a802ad0634f69f401c2881b321230f85dc8c13799"
+   ],
+   "stop_on": {
+    "stopped": false
+   },
+   "stop_off": {
+    "stopped": false
+   }
+  }
+ }
+}

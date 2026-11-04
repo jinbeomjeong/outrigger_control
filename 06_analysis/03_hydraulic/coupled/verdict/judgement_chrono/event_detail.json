@@ -1,0 +1,1310 @@
+{
+ "R16": {
+  "detail": {
+   "off": {
+    "event_t_s": 28.049999999946177,
+    "ready_first_s": 52.4000000014917,
+    "phase_at_event": "level",
+    "event_anchor": "loc+3.0",
+    "reference_t_s": 27.999999999946176,
+    "ramp_s": 0.05,
+    "leg_min_after_event": {
+     "FL": {
+      "min_kN": -11.385199585513888,
+      "t_rel_s": 0.013999999923086648,
+      "airborne_s": 0.809
+     },
+     "FR": {
+      "min_kN": 16.669021466894915,
+      "t_rel_s": 0.42099999990767856,
+      "airborne_s": 0.0
+     },
+     "RL": {
+      "min_kN": 15.833958443202757,
+      "t_rel_s": 2.7450000004574058,
+      "airborne_s": 0.0
+     },
+     "RR": {
+      "min_kN": -1.4201922608411774,
+      "t_rel_s": 1.7840000001523713,
+      "airborne_s": 1.223
+     }
+    },
+    "F_mean_pre_1s_kN": [
+     118.277,
+     115.94,
+     71.922,
+     70.322
+    ],
+    "F_pressure_pre_1s_kN": [
+     122.276,
+     119.937,
+     75.254,
+     73.654
+    ],
+    "f_seal_pre_1s_kN": [
+     -3.999,
+     -3.997,
+     -3.332,
+     -3.332
+    ],
+    "D_pre_1s_kN": 0.2761044791113818,
+    "drop_focus_kN": 129.66245389448068,
+    "attitude_pre_deg": null,
+    "F_hat_kN": [
+     3.065,
+     175.814,
+     106.313,
+     82.634
+    ],
+    "F_lower_kN": [
+     3.051,
+     175.799,
+     106.3,
+     82.621
+    ],
+    "F_lower_est_kN": [
+     -9.949,
+     162.799,
+     93.3,
+     69.621
+    ],
+    "F_band_kN": 13.0,
+    "leg_band_kN": [
+     13.0,
+     13.0,
+     13.0,
+     13.0
+    ],
+    "stroke_at_event_mm": [
+     399.794,
+     394.165,
+     385.161,
+     386.097
+    ],
+    "piston_minus_motor_stroke_mm": 0.0,
+    "scale_history": [
+     [
+      52.4,
+      1.3598
+     ]
+    ],
+    "events_rel": [
+     [
+      -1.15,
+      "floor_estimate_touch"
+     ],
+     [
+      -0.05,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      0.05,
+      "INFO_D1_IMU_MASS_SOURCE:yaml"
+     ],
+     [
+      3.05,
+      "leg_reapproach_start:FL"
+     ],
+     [
+      3.35,
+      "INFO_PRESSURE_STEP:FL:head:imu_residual"
+     ],
+     [
+      3.55,
+      "leg_reapproach_contact:FL"
+     ],
+     [
+      3.55,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      3.65,
+      "INFO_PRESSURE_STEP:FL:head:imu_residual"
+     ],
+     [
+      4.75,
+      "leg_reapproach_contact:RR"
+     ],
+     [
+      4.85,
+      "INFO_PRESSURE_STEP:FR:head:imu_residual"
+     ],
+     [
+      4.85,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      5.35,
+      "leg_reapproach_contact:RR"
+     ],
+     [
+      5.45,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      5.75,
+      "leg_reapproach_contact:RR"
+     ],
+     [
+      5.75,
+      "leg_reapproach_deferred:RL"
+     ],
+     [
+      27.35,
+      "reanchor_skipped:theta_below_min"
+     ],
+     [
+      27.35,
+      "ready_heave_tail"
+     ],
+     [
+      27.65,
+      "INFO_D1_IMU_MASS_SOURCE:ready"
+     ],
+     [
+      29.35,
+      "INFO_FLOOR_NONPLANAR"
+     ]
+    ],
+    "first_u_focus_rel_s": 0.04999999992172377,
+    "anchors_F_kN": {
+     "lift+1": [
+      118.216,
+      115.861,
+      71.917,
+      70.303
+     ],
+     "event-1": [
+      118.24,
+      115.901,
+      71.933,
+      70.321
+     ],
+     "level@23.9": [
+      82.79,
+      82.766,
+      57.856,
+      57.849
+     ]
+    }
+   },
+   "on": {
+    "event_t_s": 29.849999999941982,
+    "ready_first_s": 54.10000000215209,
+    "phase_at_event": "level",
+    "event_anchor": "loc+3.0",
+    "reference_t_s": 29.799999999941985,
+    "ramp_s": 0.05,
+    "leg_min_after_event": {
+     "FL": {
+      "min_kN": -11.274875746316273,
+      "t_rel_s": 0.014000000230037557,
+      "airborne_s": 0.8160000000000001
+     },
+     "FR": {
+      "min_kN": 17.281494296432818,
+      "t_rel_s": 0.42500000036049457,
+      "airborne_s": 0.0
+     },
+     "RL": {
+      "min_kN": 16.14498523928347,
+      "t_rel_s": 2.754000001099751,
+      "airborne_s": 0.0
+     },
+     "RR": {
+      "min_kN": -1.3700316022251495,
+      "t_rel_s": 1.7900000007937642,
+      "airborne_s": 1.231
+     }
+    },
+    "F_mean_pre_1s_kN": [
+     117.247,
+     117.005,
+     73.006,
+     69.167
+    ],
+    "F_pressure_pre_1s_kN": [
+     121.246,
+     121.003,
+     76.339,
+     72.499
+    ],
+    "f_seal_pre_1s_kN": [
+     -3.999,
+     -3.998,
+     -3.332,
+     -3.332
+    ],
+    "D_pre_1s_kN": -1.892426353298056,
+    "drop_focus_kN": 128.5217230980291,
+    "attitude_pre_deg": null,
+    "F_hat_kN": [
+     3.064,
+     175.121,
+     109.445,
+     81.218
+    ],
+    "F_lower_kN": [
+     3.05,
+     175.106,
+     109.432,
+     81.205
+    ],
+    "F_lower_est_kN": [
+     -9.95,
+     162.106,
+     96.432,
+     68.205
+    ],
+    "F_band_kN": 13.0,
+    "leg_band_kN": [
+     13.0,
+     13.0,
+     13.0,
+     13.0
+    ],
+    "stroke_at_event_mm": [
+     399.4,
+     393.946,
+     385.98,
+     387.021
+    ],
+    "piston_minus_motor_stroke_mm": 0.0,
+    "scale_history": [
+     [
+      54.1,
+      1.3859
+     ]
+    ],
+    "events_rel": [
+     [
+      -1.85,
+      "INFO_TOUCH_DIP_HELD:RL"
+     ],
+     [
+      -1.85,
+      "INFO_TOUCH_DIP_HELD:RR"
+     ],
+     [
+      -1.15,
+      "floor_estimate_touch"
+     ],
+     [
+      -0.05,
+      "crawler_liftoff_confirmed"
+     ],
+     [
+      0.05,
+      "INFO_D1_IMU_MASS_SOURCE:yaml"
+     ],
+     [
+      3.05,
+      "leg_reapproach_start:FL"
+     ],
+     [
+      3.35,
+      "INFO_PRESSURE_STEP:FL:head:imu_residual"
+     ],
+     [
+      3.55,
+      "leg_reapproach_contact:FL"
+     ],
+     [
+      3.55,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      3.65,
+      "INFO_PRESSURE_STEP:FL:head:imu_residual"
+     ],
+     [
+      4.75,
+      "leg_reapproach_contact:RR"
+     ],
+     [
+      4.85,
+      "INFO_PRESSURE_STEP:FR:head:imu_residual"
+     ],
+     [
+      4.85,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      5.35,
+      "leg_reapproach_contact:RR"
+     ],
+     [
+      5.45,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      5.75,
+      "leg_reapproach_contact:RR"
+     ],
+     [
+      5.75,
+      "leg_reapproach_deferred:RL"
+     ],
+     [
+      27.25,
+      "reanchor_skipped:theta_below_min"
+     ],
+     [
+      27.25,
+      "ready_heave_tail"
+     ],
+     [
+      27.55,
+      "INFO_D1_IMU_MASS_SOURCE:ready"
+     ],
+     [
+      29.25,
+      "INFO_FLOOR_NONPLANAR"
+     ]
+    ],
+    "first_u_focus_rel_s": 0.05000000024146445,
+    "anchors_F_kN": {
+     "lift+1": [
+      117.204,
+      117.157,
+      73.062,
+      68.992
+     ],
+     "event-1": [
+      117.23,
+      117.001,
+      73.054,
+      69.152
+     ],
+     "level@25.7": [
+      88.058,
+      87.979,
+      59.721,
+      59.71
+     ]
+    }
+   }
+  },
+  "saturation_vs_event": {
+   "runs_ge_50ms": [
+    {
+     "start_s": 5.231,
+     "stop_s": 21.332,
+     "dur_s": 16.101,
+     "rel_start_s": -24.619,
+     "rel_stop_s": -8.518,
+     "sets": [
+      3,
+      15
+     ]
+    },
+    {
+     "start_s": 26.334,
+     "stop_s": 27.208,
+     "dur_s": 0.874,
+     "rel_start_s": -3.516,
+     "rel_stop_s": -2.642,
+     "sets": [
+      1,
+      3
+     ]
+    }
+   ],
+   "n_runs": 2,
+   "overlap_event_ramp_plus5": false,
+   "max_Q_dem_event_ramp_plus5_L_min": 11.34425474274502,
+   "supply_L_min": 51.169999829999995,
+   "deficit_at_event_mm": [
+    37.54,
+    37.32,
+    35.033,
+    35.033
+   ],
+   "deficit_end_mm": [
+    37.54,
+    37.32,
+    35.033,
+    35.033
+   ]
+  },
+  "rows": {
+   "3 F_min (1 ms)": [
+    -11.274875746316273,
+    -11.385199585513888
+   ],
+   "3 F_min before the event": [
+    67.45605657507488,
+    67.16746571554785
+   ],
+   "3 F_min in the event transient per leg (report)": [
+    [
+     -11.274875746316273,
+     17.281494296432818,
+     16.14498523928347,
+     -1.3700316022251495
+    ],
+    [
+     -11.385199585513888,
+     16.669021466894915,
+     15.833958443202757,
+     -1.4201922608411774
+    ]
+   ],
+   "3 F_min window end .. re-READY (record, F_min + 5 kN reference)": [
+    22.222168286086887,
+    21.37097398168396
+   ],
+   "3 F_min after the re-READY": [
+    69.674506129136,
+    69.67031325982086
+   ],
+   "RE1b re-READY <= 60 s": [
+    24.25000000221011,
+    24.35000000154552
+   ],
+   "4 max moving pressure outside the event transient": [
+    142.10409318323016,
+    141.7202752527315
+   ],
+   "4 max pressure in the event transient": [
+    204.47252220704388,
+    204.78791285784212
+   ],
+   "5a rocking amplitude after the re-READY": [
+    0.00013791776755651963,
+    0.0001371633147449619
+   ],
+   "5a rocking amplitude in the event transient (report)": [
+    0.3081861956267164,
+    0.309967702624386
+   ],
+   "item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record)": [
+    [
+     0,
+     0,
+     -0.8000000002539309,
+     15,
+     -9.179572712238867
+    ],
+    [
+     0,
+     0,
+     -0.8000000000052374,
+     11,
+     -9.179572712238866
+    ]
+   ],
+   "item 9 M5 closed loop: min true / under F_min [s] / lifted [s]": [
+    [
+     -11.274875746316273,
+     0.2000000000066393,
+     2.8000000000929504
+    ],
+    [
+     -11.385199585513888,
+     0.20000000000042206,
+     2.700000000005698
+    ]
+   ],
+   "C-S8-72 event state: controller phase at the event start vs expected (LEVEL for LOC + 3.0 s, READY for READY + 5 s)": [
+    {
+     "phase_at_event": "level",
+     "expected": "level",
+     "event_t_s": 29.849999999941982,
+     "reference_t_s": 29.799999999941985,
+     "loc_t_s": 26.79999999994198,
+     "phase_offset_s": 0.05
+    },
+    {
+     "phase_at_event": "level",
+     "expected": "level",
+     "event_t_s": 28.049999999946177,
+     "reference_t_s": 27.999999999946176,
+     "loc_t_s": 24.999999999946176,
+     "phase_offset_s": 0.05
+    }
+   ],
+   "C-S8-72 U-S8-32 adjacent legs U57: lift sum <= 0.5 s, gap <= 2 mm in the physical window, 0 outside": [
+    [
+     0.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     0.0
+    ]
+   ],
+   "C-S8-72 U-S8-32 event legs (settled + diagonal): cumulative lift <= 1.8 s, last re-contact <= event + 3 s (U-S8-37; column <= 2.5 s nominal damping, display), FAULT 0 (ASSUMPTION)": [
+    [
+     1.231,
+     2.042,
+     null,
+     true
+    ],
+    [
+     1.223,
+     2.034,
+     null,
+     true
+    ]
+   ],
+   "C-S8-72 U58: head F/A_p in the window <= 350 bar, outside extension samples <= 180 bar (slow event: whole-run any-state peak <= 350)": [
+    [
+     204.47252220704388,
+     142.10409318323016,
+     null
+    ],
+    [
+     204.78791285784212,
+     141.7202752527315,
+     null
+    ]
+   ],
+   "C-S8-72 F_min U-S8-74: 0.5 s moving mean >= F_min and no pad lift after the window end (fast); 1 ms min >= F_min (slow)": [
+    [
+     50.43151232987476,
+     0.0
+    ],
+    [
+     49.50858789785218,
+     0.0
+    ]
+   ],
+   "C-S8-72 F_min 1 ms instantaneous (record, U-S8-74)": [
+    {
+     "instant_min_kN": 22.222168286086887,
+     "leg": "RL",
+     "t_s": 33.15800000121758,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    },
+    {
+     "instant_min_kN": 21.37097398168396,
+     "leg": "RL",
+     "t_s": 31.349000000579426,
+     "below_F_min_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "longest_below_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "below_zero_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     },
+     "airborne_s": {
+      "FL": 0.0,
+      "FR": 0.0,
+      "RL": 0.0,
+      "RR": 0.0
+     }
+    }
+   ],
+   "C-S8-72 end: READY and last 1 s mean true |roll|, |pitch| <= 0.2 deg": [
+    {
+     "final_phase": "ready",
+     "end_att_deg": [
+      0.0192,
+      -0.0166
+     ],
+     "last5_maxabs_deg": 0.020353727332097896
+    },
+    {
+     "final_phase": "ready",
+     "end_att_deg": [
+      0.0205,
+      -0.0157
+     ],
+     "last5_maxabs_deg": 0.02164458026230231
+    }
+   ],
+   "C-S8-72 recurrence ban (248.3): twist-work clusters of 0.5 s bins > +20 J after event + 1.5 s <= 1": [
+    {
+     "n_clusters": 1,
+     "clusters": [
+      [
+       2.5,
+       33.53
+      ]
+     ],
+     "max_bin_after_J": 33.52631469258053
+    },
+    {
+     "n_clusters": 1,
+     "clusters": [
+      [
+       2.5,
+       33.55
+      ]
+     ],
+     "max_bin_after_J": 33.55211390320902
+    }
+   ],
+   "C-S8-72 record: re-approach starts / after 1.5 s / sign changes, READY return, crawler re-contact, harness / Chrono (228.5 form)": [
+    {
+     "n_starts": 4,
+     "starts_after_1.5_s": 2,
+     "sign_changes": 0,
+     "ready_back_rel_s": 24.25000000221011,
+     "event_pair_union_s": 1.8950000000629075,
+     "crawler_contact_after_event_s": 0.0,
+     "harness_over_chrono_pair": null,
+     "harness_minus_chrono_recontact_s": null
+    },
+    {
+     "n_starts": 4,
+     "starts_after_1.5_s": 2,
+     "sign_changes": 0,
+     "ready_back_rel_s": 24.35000000154552,
+     "event_pair_union_s": 1.8840000000039758,
+     "crawler_contact_after_event_s": 0.0,
+     "harness_over_chrono_pair": null,
+     "harness_minus_chrono_recontact_s": null
+    }
+   ]
+  },
+  "reduced": {
+   "item3_min_force_after_liftoff_kN": {
+    "on": -1.0472,
+    "off": -1.0472,
+    "delta": 0.0
+   },
+   "event_min_F_after_event_FL_kN": {
+    "on": -1.05,
+    "off": -1.05,
+    "delta": 0.0
+   },
+   "event_min_F_after_event_FR_kN": {
+    "on": 16.74,
+    "off": 16.09,
+    "delta": 0.6499999999999986
+   },
+   "event_min_F_after_event_RL_kN": {
+    "on": 16.12,
+    "off": 15.77,
+    "delta": 0.3500000000000014
+   },
+   "event_min_F_after_event_RR_kN": {
+    "on": -0.72,
+    "off": -0.72,
+    "delta": 0.0
+   },
+   "event_pair_union_s": {
+    "on": 1.948,
+    "off": 1.938,
+    "delta": 0.010000000000000009
+   },
+   "event_pair_last_touch_s": {
+    "on": 2.045,
+    "off": 2.037,
+    "delta": 0.008000000000000007
+   },
+   "event_adj_lift_sum_W_s": {
+    "on": 0.0,
+    "off": 0.0,
+    "delta": 0.0
+   },
+   "event_adj_max_gap_W_mm": {
+    "on": 0.0,
+    "off": 0.0,
+    "delta": 0.0
+   },
+   "event_adj_lift_outside_W_s": {
+    "on": 0.0,
+    "off": 0.0,
+    "delta": 0.0
+   },
+   "event_t_ready_back_s": {
+    "on": 24.15,
+    "off": 24.15,
+    "delta": 0.0
+   },
+   "event_moving_outside_max_bar": {
+    "on": 148.7,
+    "off": 149.3,
+    "delta": -0.6000000000000227
+   },
+   "event_max_att_change_deg": {
+    "on": 0.79,
+    "off": 0.7895,
+    "delta": 0.000500000000000056
+   },
+   "event_fault_periods": {
+    "on": 0,
+    "off": 0,
+    "delta": 0
+   }
+  }
+ },
+ "R12": {
+  "detail": {
+   "off": {
+    "event_t_s": 47.70000000039165,
+    "ready_first_s": 42.70000000039165,
+    "phase_at_event": "ready",
+    "event_anchor": "ready+5",
+    "reference_t_s": 47.70000000039165,
+    "ramp_s": 2.0,
+    "leg_min_after_event": {
+     "FL": {
+      "min_kN": 61.588320760206116,
+      "t_rel_s": 1.5180000002163752,
+      "airborne_s": 0.0
+     },
+     "FR": {
+      "min_kN": 104.48857066588354,
+      "t_rel_s": 12.413000000578052,
+      "airborne_s": 0.0
+     },
+     "RL": {
+      "min_kN": 59.05033423286418,
+      "t_rel_s": 12.272000000573371,
+      "airborne_s": 0.0
+     },
+     "RR": {
+      "min_kN": 11.143760085285908,
+      "t_rel_s": 1.5190000002164084,
+      "airborne_s": 0.0
+     }
+    },
+    "F_mean_pre_1s_kN": [
+     118.299,
+     115.909,
+     71.894,
+     70.486
+    ],
+    "F_pressure_pre_1s_kN": [
+     121.845,
+     119.61,
+     75.005,
+     73.436
+    ],
+    "f_seal_pre_1s_kN": [
+     -3.547,
+     -3.701,
+     -3.111,
+     -2.95
+    ],
+    "D_pre_1s_kN": 0.40176711540734544,
+    "drop_focus_kN": 59.34209888393025,
+    "attitude_pre_deg": null,
+    "F_hat_kN": [
+     121.825,
+     119.589,
+     74.987,
+     73.456
+    ],
+    "F_lower_kN": [
+     121.811,
+     119.574,
+     74.974,
+     73.443
+    ],
+    "F_lower_est_kN": [
+     114.006,
+     111.769,
+     67.169,
+     65.638
+    ],
+    "F_band_kN": 7.804854850867025,
+    "leg_band_kN": [
+     7.805,
+     7.805,
+     7.805,
+     7.805
+    ],
+    "stroke_at_event_mm": [
+     401.97,
+     401.981,
+     391.628,
+     391.642
+    ],
+    "piston_minus_motor_stroke_mm": 0.0,
+    "scale_history": [
+     [
+      42.7,
+      1.3872
+     ],
+     [
+      70.5,
+      1.371
+     ]
+    ],
+    "events_rel": [
+     [
+      -2.0,
+      "reanchor_skipped:theta_below_min"
+     ],
+     [
+      -2.0,
+      "ready_heave_tail"
+     ],
+     [
+      -1.7,
+      "INFO_D1_IMU_MASS_SOURCE:ready"
+     ],
+     [
+      3.8,
+      "relevel_predicted:RR"
+     ],
+     [
+      4.4,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      4.9,
+      "leg_reapproach_contact:RR"
+     ],
+     [
+      25.8,
+      "ready_heave_tail"
+     ],
+     [
+      27.8,
+      "INFO_FLOOR_NONPLANAR"
+     ]
+    ],
+    "first_u_focus_rel_s": 0.9000000001958597,
+    "anchors_F_kN": {
+     "lift+1": [
+      118.22,
+      115.861,
+      71.918,
+      70.3
+     ],
+     "event-1": [
+      118.297,
+      115.912,
+      71.891,
+      70.487
+     ],
+     "level@23.9": [
+      82.788,
+      82.791,
+      57.886,
+      57.862
+     ],
+     "done@30.7": [
+      118.322,
+      115.862,
+      72.036,
+      70.341
+     ],
+     "probe@30.8": [
+      118.211,
+      115.976,
+      71.958,
+      70.419
+     ],
+     "ready@42.7": [
+      117.613,
+      116.532,
+      72.633,
+      69.813
+     ],
+     "level@48.5": [
+      100.516,
+      133.831,
+      92.505,
+      49.579
+     ]
+    }
+   },
+   "on": {
+    "event_t_s": 49.5000000004514,
+    "ready_first_s": 44.5000000004514,
+    "phase_at_event": "ready",
+    "event_anchor": "ready+5",
+    "reference_t_s": 49.5000000004514,
+    "ramp_s": 2.0,
+    "leg_min_after_event": {
+     "FL": {
+      "min_kN": 63.24383805509966,
+      "t_rel_s": 1.4300000002134539,
+      "airborne_s": 0.0
+     },
+     "FR": {
+      "min_kN": 104.63969792098332,
+      "t_rel_s": 12.406000000577812,
+      "airborne_s": 0.0
+     },
+     "RL": {
+      "min_kN": 59.20919018782913,
+      "t_rel_s": 12.269000000573264,
+      "airborne_s": 0.0
+     },
+     "RR": {
+      "min_kN": 12.42147314111263,
+      "t_rel_s": 1.4240000002132547,
+      "airborne_s": 0.0
+     }
+    },
+    "F_mean_pre_1s_kN": [
+     117.269,
+     116.96,
+     73.027,
+     69.327
+    ],
+    "F_pressure_pre_1s_kN": [
+     120.818,
+     120.657,
+     76.135,
+     72.276
+    ],
+    "f_seal_pre_1s_kN": [
+     -3.549,
+     -3.697,
+     -3.109,
+     -2.949
+    ],
+    "D_pre_1s_kN": -1.7871572187196705,
+    "drop_focus_kN": 56.90573663313033,
+    "attitude_pre_deg": null,
+    "F_hat_kN": [
+     120.838,
+     120.679,
+     76.119,
+     72.258
+    ],
+    "F_lower_kN": [
+     120.824,
+     120.664,
+     76.106,
+     72.245
+    ],
+    "F_lower_est_kN": [
+     113.005,
+     112.845,
+     68.287,
+     64.426
+    ],
+    "F_band_kN": 7.819203842583826,
+    "leg_band_kN": [
+     7.819,
+     7.819,
+     7.819,
+     7.819
+    ],
+    "stroke_at_event_mm": [
+     402.039,
+     402.082,
+     392.171,
+     392.193
+    ],
+    "piston_minus_motor_stroke_mm": 0.0,
+    "scale_history": [
+     [
+      44.5,
+      1.3995
+     ],
+     [
+      72.3,
+      1.3797
+     ]
+    ],
+    "events_rel": [
+     [
+      -2.0,
+      "reanchor_skipped:theta_below_min"
+     ],
+     [
+      -2.0,
+      "ready_heave_tail"
+     ],
+     [
+      -1.7,
+      "INFO_D1_IMU_MASS_SOURCE:ready"
+     ],
+     [
+      3.8,
+      "relevel_predicted:RR"
+     ],
+     [
+      4.3,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      4.8,
+      "leg_reapproach_contact:RR"
+     ],
+     [
+      25.8,
+      "ready_heave_tail"
+     ],
+     [
+      27.8,
+      "INFO_FLOOR_NONPLANAR"
+     ]
+    ],
+    "first_u_focus_rel_s": 0.9000000001958597,
+    "anchors_F_kN": {
+     "lift+1": [
+      117.217,
+      117.151,
+      73.084,
+      68.97
+     ],
+     "event-1": [
+      117.267,
+      116.964,
+      73.023,
+      69.329
+     ],
+     "level@25.7": [
+      87.917,
+      87.939,
+      59.712,
+      59.713
+     ],
+     "done@32.5": [
+      117.192,
+      117.013,
+      73.103,
+      69.248
+     ],
+     "probe@32.6": [
+      117.196,
+      117.014,
+      73.104,
+      69.247
+     ],
+     "ready@44.5": [
+      116.575,
+      117.599,
+      73.779,
+      68.643
+     ],
+     "level@50.3": [
+      99.496,
+      134.876,
+      93.629,
+      48.429
+     ]
+    }
+   }
+  },
+  "saturation_vs_event": {
+   "runs_ge_50ms": [
+    {
+     "start_s": 5.231,
+     "stop_s": 21.332,
+     "dur_s": 16.101,
+     "rel_start_s": -44.269,
+     "rel_stop_s": -28.168,
+     "sets": [
+      3,
+      15
+     ]
+    },
+    {
+     "start_s": 26.334,
+     "stop_s": 27.208,
+     "dur_s": 0.874,
+     "rel_start_s": -23.166,
+     "rel_stop_s": -22.292,
+     "sets": [
+      1,
+      3
+     ]
+    }
+   ],
+   "n_runs": 2,
+   "overlap_event_ramp_plus5": false,
+   "max_Q_dem_event_ramp_plus5_L_min": 8.42091406469013,
+   "supply_L_min": 51.169999829999995,
+   "deficit_at_event_mm": [
+    37.544,
+    37.326,
+    35.033,
+    35.033
+   ],
+   "deficit_end_mm": [
+    37.544,
+    37.326,
+    35.033,
+    35.033
+   ]
+  },
+  "rows": {
+   "3 F_min (1 ms)": [
+    12.42147314111263,
+    11.143760085285908
+   ],
+   "4 max moving pressure": [
+    136.42886869766946,
+    137.88020203868305
+   ],
+   "5a rocking amplitude": [
+    0.007791561342683814,
+    0.008633153423018014
+   ],
+   "6 min after settlement": [
+    12.42147314111263,
+    11.143760085285908
+   ],
+   "6 re-READY <= 40 s": [
+    22.800000000922857,
+    22.800000000922857
+   ],
+   "6 final >= F_min + 5 kN": [
+    [
+     117.43563577209649,
+     116.76951536278942,
+     72.97823265384956,
+     69.40342008355671
+    ],
+    [
+     117.60021974431066,
+     116.61925946935759,
+     72.80872969073101,
+     69.56740030584254
+    ]
+   ],
+   "6 attitude <= 0.2 deg (+mount)": [
+    0.0171434258334016,
+    0.01715984563957691
+   ],
+   "R-5 justified firing (floor event)": [
+    55.46357428484175,
+    55.36991745375517
+   ],
+   "G4 item 6 (1) min after settlement >= F_min": [
+    12.42147314111263,
+    11.143760085285908
+   ],
+   "item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record)": [
+    [
+     0,
+     0,
+     null,
+     0,
+     -4.49877655482269
+    ],
+    [
+     0,
+     0,
+     null,
+     0,
+     -4.48442756310589
+    ]
+   ],
+   "item 9 M5 closed loop: min true / under F_min [s] / lifted [s]": [
+    [
+     12.42147314111263,
+     0.0,
+     0.0
+    ],
+    [
+     11.143760085285908,
+     0.0,
+     0.0
+    ]
+   ]
+  },
+  "reduced": {
+   "item3_min_force_after_liftoff_kN": {
+    "on": 12.6202,
+    "off": 13.7468,
+    "delta": -1.1265999999999998
+   },
+   "event_min_F_after_event_FL_kN": {
+    "on": 62.71,
+    "off": 63.77,
+    "delta": -1.0600000000000023
+   },
+   "event_min_F_after_event_FR_kN": {
+    "on": 102.14,
+    "off": 102.08,
+    "delta": 0.060000000000002274
+   },
+   "event_min_F_after_event_RL_kN": {
+    "on": 57.62,
+    "off": 57.53,
+    "delta": 0.0899999999999963
+   },
+   "event_min_F_after_event_RR_kN": {
+    "on": 12.62,
+    "off": 13.75,
+    "delta": -1.1300000000000008
+   },
+   "event_pair_union_s": {
+    "on": 0,
+    "off": 0,
+    "delta": 0
+   },
+   "event_pair_last_touch_s": {
+    "on": 0.0,
+    "off": 0.0,
+    "delta": 0.0
+   },
+   "event_adj_lift_sum_W_s": {
+    "on": 0.0,
+    "off": 0.0,
+    "delta": 0.0
+   },
+   "event_adj_max_gap_W_mm": {
+    "on": 0.0,
+    "off": 0.0,
+    "delta": 0.0
+   },
+   "event_adj_lift_outside_W_s": {
+    "on": 0.0,
+    "off": 0.0,
+    "delta": 0.0
+   },
+   "event_t_ready_back_s": {
+    "on": 23.7,
+    "off": 23.2,
+    "delta": 0.5
+   },
+   "event_moving_outside_max_bar": {
+    "on": 98.1,
+    "off": 98.1,
+    "delta": 0.0
+   },
+   "event_max_att_change_deg": {
+    "on": 0.1212,
+    "off": 0.1213,
+    "delta": -0.00010000000000000286
+   },
+   "event_fault_periods": {
+    "on": 0,
+    "off": 0,
+    "delta": 0
+   }
+  }
+ }
+}

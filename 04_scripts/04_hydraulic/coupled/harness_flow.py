@@ -239,3 +239,40 @@ def make_flow_plant_class(base: type, setting: FlowSetting) -> type:
             return accumulated
 
     return FlowLimitedPlant
+
+
+@dataclass
+class CommandClipRecord:
+    """Largest magnitudes one run showed at the command clip [m/s]."""
+
+    v_max_m_s: float
+    peak_command_m_s: float = 0.0
+    peak_valve_m_s: float = 0.0
+
+
+def install_command_clip(closed_loop_module, v_max_m_s: float) -> CommandClipRecord:
+    """Clip the leg command to +-v_max before the valve path of the harness.
+
+    The Chrono actuators clip their command and the harness does not (criteria 9.1), so soil rows,
+    whose LEVEL commands exceed v_max, ask for more than Chrono does. Replacing
+    ``closed_loop_module._lagged_step`` covers the steady and the event paths: both call it through
+    the module attribute, and no harness file changes. The ``is_*`` markers of the wrapped function
+    are kept, as the recording hooks of the harness expect of each other.
+
+    Returns:
+        The record this run's clip fills.
+    """
+    record = CommandClipRecord(v_max_m_s)
+    lagged_step = closed_loop_module._lagged_step
+
+    def lagged_step_with_clipped_command(plant, command, valve, steps):
+        record.peak_command_m_s = max(record.peak_command_m_s, float(np.abs(command).max()))
+        accumulated = lagged_step(plant, np.clip(command, -v_max_m_s, v_max_m_s), valve, steps)
+        record.peak_valve_m_s = max(record.peak_valve_m_s, float(np.abs(valve).max()))
+        return accumulated
+
+    markers = {name: value for name, value in getattr(lagged_step, "__dict__", {}).items()
+               if name.startswith("is_")}
+    lagged_step_with_clipped_command.__dict__.update(markers)
+    closed_loop_module._lagged_step = lagged_step_with_clipped_command
+    return record

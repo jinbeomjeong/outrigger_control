@@ -12,7 +12,7 @@ from __future__ import annotations
 import hashlib
 import os
 import sys
-from dataclasses import replace
+from dataclasses import asdict, replace
 from pathlib import Path
 
 os.environ.setdefault("MKL_THREADING_LAYER", "TBB")
@@ -32,7 +32,13 @@ for _path in (HERE, S9_DIR, ROOT / "04_scripts" / "01_dynamics"):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
-from harness_flow import FlowSetting, make_flow_plant_class  # noqa: E402
+from harness_flow import (  # noqa: E402
+    CommandClipRecord,
+    FlowSetting,
+    install_command_clip,
+    make_flow_plant_class,
+)
+from params import load_params  # noqa: E402
 from verdict_cases import REANCHOR_ON, EventTwin, SteadyTwin, VerdictCase  # noqa: E402
 from verdict_metrics import run_values  # noqa: E402
 
@@ -83,6 +89,14 @@ def install_logged_controller():
 
     c2.C2Controller = LoggedController
     return c2
+
+
+def install_harness_command_clip() -> CommandClipRecord:
+    """Commands of this process are clipped to the YAML v_max before the valve path."""
+    import s9_soil_closed_loop as soil
+
+    closed_loop = soil._imports()[0]
+    return install_command_clip(closed_loop, load_params().v_max)
 
 
 def period_arrays(controller) -> dict:
@@ -225,17 +239,31 @@ def _event_time(timeline: dict, twin: EventTwin) -> float | None:
 
 
 # ---------------------------------------------------------------------------------- public API
-def execute(case: VerdictCase, setting: FlowSetting, decision: str | None) -> tuple[dict, dict]:
+def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
+            clip_command: bool = False) -> tuple[dict, dict]:
     """Run one case with one flow setting in this process.
 
+    Args:
+        case: The evaluation case, its decision applied.
+        setting: Pump and compensator values.
+        decision: The ``--decide`` choice of the case.
+        clip_command: Clip the leg command to +-v_max before the valve path. It stays in force for
+            the rest of the process, so a worker runs one such case.
+
     Returns:
-        The result dict (``error`` set on a harness failure) and the 10 Hz arrays.
+        The result dict (``error`` set on a harness failure) and the 10 Hz arrays. The logged
+        commands are the controller's, before the clip.
     """
     install_flow_plant(setting)
     install_logged_controller()
+    clip_record = install_harness_command_clip() if clip_command else None
     if isinstance(case.twin, EventTwin):
-        return _run_event(case.twin)
-    return _run_steady(case, decision)
+        result, series = _run_event(case.twin)
+    else:
+        result, series = _run_steady(case, decision)
+    if clip_record is not None:
+        result["command_clip"] = asdict(clip_record)
+    return result, series
 
 
 def warm_numba_cache() -> None:

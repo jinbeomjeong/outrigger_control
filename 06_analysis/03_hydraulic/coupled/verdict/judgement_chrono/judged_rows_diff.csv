@@ -1,0 +1,362 @@
+id,item,kind,pass_on,pass_off,value_on,value_off,limit
+R2,run,function,True,True,"""ready""","""ready""","""ready"""
+R2,2 attitude +-0.2 (+mount),function,True,True,0.03454714212648241,0.03475071688945449,0.2
+R2,3 F_min (1 ms),function,True,True,29.5980294337477,29.573612892678202,9.414589110000001
+R2,4 saturation steps,function,True,True,0,0,0
+R2,4 max moving pressure,function,True,True,116.69612710423102,116.97830470959103,180.0
+R2,5a rocking amplitude,function,True,True,0.015896529026551143,0.0159580393560268,0.06
+R2,7a probe attitude change,function,True,True,0.019501605874479643,0.01954614618201717,0.1
+R2,7b verdict = truth,function,True,True,true,true,true
+R2,7c load estimate error,record,,,-4.3728111262500295,-4.471621775530899,"""<= 0 (max(5 kN,10 %))"""
+R2,R/D8 min force >= F_min + 5 kN,function,True,True,29.5980294337477,29.573612892678202,14.414589110000001
+R2,R/D8 no pad lift-off,function,True,True,31.476726624939616,31.494620414928267,"""> 0"""
+R2,R attitude change during REANCHOR,function,True,True,0.008699119302201942,0.008683721435734293,0.1
+R2,R H4 mechanism T_READY / mu(P_stop + m_rod g),report,,,"{""legs"": [""RL"", ""RR""], ""ratio"": [0.9970469163614915, 0.9311147053197707], ""T_done_kN"": [17.72591151091378, 17.717904952894877], ""T_ready_kN"": [14.48172106198353","{""legs"": [""RL"", ""RR""], ""ratio"": [1.000429097113653, 0.9344490298442218], ""T_done_kN"": [17.70077073805667, 17.738150543757392], ""T_ready_kN"": [14.506303566450725","""[0.9, 1.1] and T_READY < T_DONE (rear legs)"""
+R2,R H4 mechanism one-sided T_READY / mu(P_stop + m_rod g),function,True,True,"{""legs"": [""RL"", ""RR""], ""ratio"": [0.9970469163614915, 0.9311147053197707], ""T_done_kN"": [17.72591151091378, 17.717904952894877], ""T_ready_kN"": [14.48172106198353","{""legs"": [""RL"", ""RR""], ""ratio"": [1.000429097113653, 0.9344490298442218], ""T_done_kN"": [17.70077073805667, 17.738150543757392], ""T_ready_kN"": [14.506303566450725","""<= 1.1 and T_READY <= T_DONE + max(0.5 kN, 3 % T_DONE) (rea"
+R2,72.1 (6) no false pressure diagnosis,function,True,True,"{""WARN_LOAD_SUM_MISMATCH"": 0, ""WARN_PRESSURE_DRIFT"": 0}","{""WARN_LOAD_SUM_MISMATCH"": 0, ""WARN_PRESSURE_DRIFT"": 0}","""0 warnings"""
+R2,D8 no pad lift-off,judged,True,True,31.476726624939616,31.494620414928267,"""> 0"""
+R2,D8 attitude last 5 s + mount <= 0.2 deg,judged,True,True,0.03454714212648241,0.03475071688945449,0.2
+R2,REANCHOR min >= F_min + 7 kN,judged,True,True,29.5980294337477,29.573612892678202,16.41458911
+R2,5.24.2 unexpected warnings,anomaly,True,True,0,0,0
+R2,5.24.2 law-C saturation steps,report,,,0,0,null
+R2,146 consistency vs reduced (142 C),consistency,,,null,null,null
+R2,"C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN",judged,True,True,51.0029925483183,50.986497113752634,14.414589110000001
+R2,C2 REANCHOR min >= F_min + 7 kN,judged,True,True,29.5980294337477,29.573612892678202,16.41458911
+R2,"F1 reading law max |F_hat - (F - f + E_s)| <= 6 sigma_F + 0.1 kN (R45-1, U-S8-18)",judged,True,True,0,0,"[0.1, 0.1, 0.1, 0.1]"
+R2,"F1 rev. 44 rule: reading error <= F_s,leg + sensor share (R43-1 / U-S8-15; record, replaced by R45-1)",record,,,0,0,0
+R2,"F1 raw reading |F_hat - F| <= F_s,leg + constant share (record)",record,,,0,0,0
+R2,"F1 calibrated reading |F_hat_cal - F| <= F_s,leg + R43-1 share (record; zero-calibration offset c_i per leg [k",record,,,495,486,0
+R2,"F1 near F_min (-5 .. +10 kN): |F_hat_cal - F + f| (sensor share, record)",record,,,0.8163625691636298,0.6817841719727439,"[0.75, 0.75, 0.75, 0.75]"
+R2,"7c split E - T2: estimator bias [kN] (U-S8-16, record)",record,,,2.404505573606187,2.4231364371017605,null
+R2,"7c split T2 - T0: probe round-trip hysteresis [kN] (U-S8-16, record)",record,,,-0.6233381932717208,-0.6301503520755318,null
+R2,"F1 airborne residual |F_hat_cal - F + f| (F < 0.5 kN, no contact; record, flag 1.7 kN, R45-3 / U-S8-19)",record,,,0.8163625691636303,0.8163625691636303,1.7
+R2,R45-4 low-load probe: F2 margin / true margin / T2 - T0 / E - T2 over 2 s after the second hold (lower bound <,record,,,0,0,null
+R2,F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off),judged,True,True,0,0,0
+R2,F3 F_band >= F_s after the first probe,judged,True,True,7.417153938529805,7.368090264388787,4.0
+R2,"F4 CHECK air seal friction F_s,air (record)",record,,,2963.659816963322,2963.659816963322,"[4000.0, 4000.0, 3333.2000000000003, 3333.2000000000003]"
+R2,S8-A2 airborne F + m g: 1 ms min / 20 ms mean range per leg [kN] (record; not judged on the 1 ms minimum),record,,,"{""min_1ms"": [-1.8578023554379004, -1.8187835642866623, -1.8986166253226069, -1.7054941834112856], ""mean20_min"": [-0.06738025835173517, -0.06635763516240605, -0.","{""min_1ms"": [-1.8578023554379004, -1.8187835642866623, -1.8986166253226069, -1.7054941834112856], ""mean20_min"": [-0.06738025835173517, -0.06635763516240605, -0.",null
+R2,S8-A3 seal band-edge chatter (stick <-> slip round trip < 1 ms) per leg / S8-A1 head-floor hits (record),record,,,"[28162, 29341, 56704, 66024]","[28621, 23989, 64673, 67038]",null
+R2,F8 no false re-level in event-free READY,judged,True,True,0,0,0
+R2,F9 twist at READY entry n^T F / n^T F_hat / n^T eps [kN] (record),record,,,"[0.03459839141520206, 0.03459839141521661, 1.3869794202037155e-14]","[0.08055068653482886, 0.07683669562845899, -0.0037139909063703272]",null
+R2,"F10 retract commands on low-load legs (periods, record)",record,,,0,0,null
+R2,item 9 J_P M1 missed / M1' late / M3 median / M2 / M4 max (record),record,,,"[0, 0, null, 6, null]","[0, 0, null, 6, null]",null
+R2,item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record),record,,,"[0, 0, null, 15, null]","[0, 0, null, 15, null]",null
+R2,item 9 J_P raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max,record,,,"[0, 0, null, 6, null]","[0, 0, null, 6, null]",null
+R2,item 9 J_C raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max,record,,,"[0, 0, null, 15, null]","[0, 0, null, 15, null]",null
+R2,item 9 J_P F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max,sensitivity,,,"[0, 0, null, 6, null]","[0, 0, null, 6, null]",null
+R2,item 9 J_C F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max,sensitivity,,,"[0, 0, null, 15, null]","[0, 0, null, 15, null]",null
+R2,"item 9 J_P all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",sensitivity,,,"[0, 0, null, 6, null]","[0, 0, null, 6, null]",null
+R2,"item 9 J_C all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",sensitivity,,,"[0, 0, null, 15, null]","[0, 0, null, 15, null]",null
+R2,item 9 M5 closed loop: min true / under F_min [s] / lifted [s],record,,,"[29.5980294337477, 0.0, 0.0]","[29.573612892678202, 0.0, 0.0]",null
+R2,C10 READY - TOUCH end vs F_s 0 [s],pair,,,null,null,"""+10 s report"""
+R2,F6 REANCHOR min vs F_s 0 [kN],pair,,,null,null,null
+R2,F9 |n^T F| at READY vs F_s 0 [kN],pair,,,null,null,"""+5 kN report"""
+R2,D8 min lift-off + 8 s .. READY vs F_s 0 [kN] (R40-4),pair,,,null,null,null
+R2,"F5 7c margin vs F_s 0 twin [kN] (R43-2, record)",pair,,,null,null,"""+2 kN report"""
+R2,"F6 H4 reduction 1 - T_READY / T_DONE per rear leg (R43-3, record)",record,,,"[0.18301966851932006, 0.23669975553138223]","[0.180470512774782, 0.23613303584780465]",null
+R2,R44-213.6 TOUCH fix: TOUCH length <= F_s 0 twin + 1 s,record,,,null,null,1.0
+R2,R44-213.6 free-air touch_seen = 0 (TOUCH slow / zero command without pad contact),judged,True,True,0,0,0
+R2,R44-213.6 1.4 side effect: no leg_reapproach_start in PROBE / event-free READY,judged,True,True,0,0,0
+R4,run,function,True,True,"""ready""","""ready""","""ready"""
+R4,2 attitude +-0.2 (+mount),function,True,True,0.03686596488824141,0.036061830281484575,0.2
+R4,3 F_min (1 ms),function,True,True,38.2050302501859,37.2542373491118,9.414589110000001
+R4,4 saturation steps,function,True,True,0,0,0
+R4,4 max moving pressure,function,True,True,122.50698916835736,123.1523507198578,180.0
+R4,5a rocking amplitude,function,True,True,0.026209162715953305,0.02825454628481694,0.06
+R4,7a probe attitude change,function,True,True,0.02424292486878943,0.024289667004366466,0.1
+R4,7b verdict = truth,function,True,True,true,true,true
+R4,7c load estimate error,record,,,-3.171480045550817,-3.075624438309915,"""<= 0 (max(5 kN,10 %))"""
+R4,R/D8 min force >= F_min + 5 kN,function,True,True,38.2050302501859,37.2542373491118,14.414589110000001
+R4,R/D8 no pad lift-off,function,True,True,39.161544264150265,38.277377306877774,"""> 0"""
+R4,72.1 (6) no false pressure diagnosis,function,True,True,"{""WARN_LOAD_SUM_MISMATCH"": 0, ""WARN_PRESSURE_DRIFT"": 0}","{""WARN_LOAD_SUM_MISMATCH"": 0, ""WARN_PRESSURE_DRIFT"": 0}","""0 warnings"""
+R4,D8 no pad lift-off,judged,True,True,39.161544264150265,38.277377306877774,"""> 0"""
+R4,D8 attitude last 5 s + mount <= 0.2 deg,judged,True,True,0.03686596488824141,0.036061830281484575,0.2
+R4,5.24.2 unexpected warnings,anomaly,True,True,0,0,0
+R4,5.24.2 law-C saturation steps,report,,,0,0,null
+R4,146 consistency vs reduced (142 C),consistency,,,null,null,null
+R4,"C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN",judged,True,True,38.2050302501859,37.2542373491118,14.414589110000001
+R4,"F1 reading law max |F_hat - (F - f + E_s)| <= 6 sigma_F + 0.1 kN (R45-1, U-S8-18)",judged,True,True,0,0,"[0.1, 0.1, 0.1, 0.1]"
+R4,"F1 rev. 44 rule: reading error <= F_s,leg + sensor share (R43-1 / U-S8-15; record, replaced by R45-1)",record,,,0,0,0
+R4,"F1 raw reading |F_hat - F| <= F_s,leg + constant share (record)",record,,,0,0,0
+R4,"F1 calibrated reading |F_hat_cal - F| <= F_s,leg + R43-1 share (record; zero-calibration offset c_i per leg [k",record,,,145,141,0
+R4,"F1 near F_min (-5 .. +10 kN): |F_hat_cal - F + f| (sensor share, record)",record,,,0.4742082978535673,0.45478304410599185,"[0.75, 0.75, 0.75, 0.75]"
+R4,"7c split E - T2: estimator bias [kN] (U-S8-16, record)",record,,,2.468633882494075,2.56899056807724,null
+R4,"7c split T2 - T0: probe round-trip hysteresis [kN] (U-S8-16, record)",record,,,-2.2284344746902462,-2.1849091119794366,null
+R4,"F1 airborne residual |F_hat_cal - F + f| (F < 0.5 kN, no contact; record, flag 1.7 kN, R45-3 / U-S8-19)",record,,,0.4742082978535673,0.4742082978535673,1.7
+R4,R45-4 low-load probe: F2 margin / true margin / T2 - T0 / E - T2 over 2 s after the second hold (lower bound <,record,,,0,0,null
+R4,F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off),judged,True,True,0,0,0
+R4,F3 F_band >= F_s after the first probe,judged,True,True,7.341682984389921,7.392226639423406,4.0
+R4,"F4 CHECK air seal friction F_s,air (record)",record,,,3342.3893239895683,3342.3893239895683,"[4000.0, 4000.0, 3333.2000000000003, 3333.2000000000003]"
+R4,S8-A2 airborne F + m g: 1 ms min / 20 ms mean range per leg [kN] (record; not judged on the 1 ms minimum),record,,,"{""min_1ms"": [-1.3514854016811795, -1.4992629630772218, -1.1252465216240057, -1.1924679991816234], ""mean20_min"": [-0.047170357265354595, -0.04512356493974425, -0","{""min_1ms"": [-1.3225687207206531, -1.60721011490928, -1.194756360625368, -1.1780771751159655], ""mean20_min"": [-0.047170357265354595, -0.04512356493974425, -0.03",null
+R4,S8-A3 seal band-edge chatter (stick <-> slip round trip < 1 ms) per leg / S8-A1 head-floor hits (record),record,,,"[44249, 52437, 37267, 26559]","[40339, 39366, 38239, 27428]",null
+R4,F8 no false re-level in event-free READY,judged,True,True,0,0,0
+R4,F9 twist at READY entry n^T F / n^T F_hat / n^T eps [kN] (record),record,,,"[3.218596402739473, 4.909853090897196, 1.6912566881577316]","[3.423599266527126, 5.023626818081153, 1.6000275515540254]",null
+R4,"F10 retract commands on low-load legs (periods, record)",record,,,0,0,null
+R4,item 9 J_P M1 missed / M1' late / M3 median / M2 / M4 max (record),record,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R4,item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record),record,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R4,item 9 J_P raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max,record,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R4,item 9 J_C raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max,record,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R4,item 9 J_P F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max,sensitivity,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R4,item 9 J_C F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max,sensitivity,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R4,"item 9 J_P all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",sensitivity,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R4,"item 9 J_C all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",sensitivity,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R4,item 9 M5 closed loop: min true / under F_min [s] / lifted [s],record,,,"[38.2050302501859, 0.0, 0.0]","[37.2542373491118, 0.0, 0.0]",null
+R4,C10 READY - TOUCH end vs F_s 0 [s],pair,,,null,null,"""+10 s report"""
+R4,F6 REANCHOR min vs F_s 0 [kN],pair,,,null,null,null
+R4,F9 |n^T F| at READY vs F_s 0 [kN],pair,,,null,null,"""+5 kN report"""
+R4,D8 min lift-off + 8 s .. READY vs F_s 0 [kN] (R40-4),pair,,,null,null,null
+R4,"F5 7c margin vs F_s 0 twin [kN] (R43-2, record)",pair,,,null,null,"""+2 kN report"""
+R4,R44-213.6 TOUCH fix: TOUCH length <= F_s 0 twin + 1 s,record,,,null,null,1.0
+R4,R44-213.6 free-air touch_seen = 0 (TOUCH slow / zero command without pad contact),judged,True,True,0,0,0
+R4,R44-213.6 1.4 side effect: no leg_reapproach_start in PROBE / event-free READY,judged,True,True,0,0,0
+R16,run,function,True,True,"""ready""","""ready""","""ready"""
+R16,2 attitude +-0.2 (+mount),function,True,True,0.0403537273320979,0.041644580262302305,0.2
+R16,3 F_min (1 ms),info,,,-11.274875746316273,-11.385199585513888,9.414589110000001
+R16,3 F_min before the event,function,True,True,67.45605657507488,67.16746571554785,9.414589110000001
+R16,3 F_min in the event transient per leg (report),info,,,"[-11.274875746316273, 17.281494296432818, 16.14498523928347, -1.3700316022251495]","[-11.385199585513888, 16.669021466894915, 15.833958443202757, -1.4201922608411774]",9.414589110000001
+R16,3 lift-off other legs: U-S8-32 adjacent-leg row (U57) judges it,info,,,"[""FR"", ""RL""]","[""FR"", ""RL""]",null
+R16,"3 F_min window end .. re-READY (record, F_min + 5 kN reference)",record,,,22.222168286086887,21.37097398168396,14.414589110000001
+R16,3 F_min after the re-READY,function,True,True,69.674506129136,69.67031325982086,9.414589110000001
+R16,3 lift-off event legs after the re-READY (report),info,,,"{""FL"": 0.0, ""RR"": 0.0}","{""FL"": 0.0, ""RR"": 0.0}",0.0
+R16,RE1b re-READY <= 60 s,function,True,True,24.25000000221011,24.35000000154552,60.0
+R16,4 saturation steps,function,True,True,0,0,0
+R16,4 max moving pressure outside the event transient,function,True,True,142.10409318323016,141.7202752527315,180.0
+R16,4 max pressure in the event transient,function,True,True,204.47252220704388,204.78791285784212,350.0
+R16,5a rocking amplitude after the re-READY,function,True,True,0.00013791776755651963,0.0001371633147449619,0.06
+R16,5a rocking amplitude in the event transient (report),info,,,0.3081861956267164,0.309967702624386,0.06
+R16,7a probe attitude change,function,True,True,0.025852773431394208,0.026234152785924655,0.1
+R16,7b verdict = truth,function,True,True,true,true,true
+R16,7c load estimate error,record,,,-4.003596841963816,-4.003049077753906,"""<= 0 (max(5 kN,10 %))"""
+R16,72.1 (6) no false pressure diagnosis,function,True,True,"{""WARN_LOAD_SUM_MISMATCH"": 0, ""WARN_PRESSURE_DRIFT"": 0}","{""WARN_LOAD_SUM_MISMATCH"": 0, ""WARN_PRESSURE_DRIFT"": 0}","""0 warnings"""
+R16,re-approach starts (report),report,,,4,4,null
+R16,5.24.2 unexpected warnings,anomaly,True,True,0,0,0
+R16,5.24.2 law-C saturation steps,report,,,0,0,null
+R16,146 consistency vs reduced (142 C),consistency,,,null,null,null
+R16,"C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN",judged,True,True,67.45605657507488,67.16746571554785,14.414589110000001
+R16,"F1 reading law max |F_hat - (F - f + E_s)| <= 6 sigma_F + 0.1 kN (R45-1, U-S8-18)",judged,True,True,0,0,"[0.1, 0.1, 0.1, 0.1]"
+R16,"F1 rev. 44 rule: reading error <= F_s,leg + sensor share (R43-1 / U-S8-15; record, replaced by R45-1)",record,,,0,0,0
+R16,"F1 raw reading |F_hat - F| <= F_s,leg + constant share (record)",record,,,0,0,0
+R16,"F1 calibrated reading |F_hat_cal - F| <= F_s,leg + R43-1 share (record; zero-calibration offset c_i per leg [k",record,,,0,0,0
+R16,"F1 near F_min (-5 .. +10 kN): |F_hat_cal - F + f| (sensor share, record)",record,,,0.015345719124579773,0.012926755946130925,"[0.75, 0.75, 0.75, 0.75]"
+R16,"7c split E - T2: estimator bias [kN] (U-S8-16, record)",record,,,3.3004189571732923,3.1709367581995735,null
+R16,"7c split T2 - T0: probe round-trip hysteresis [kN] (U-S8-16, record)",record,,,-1.8732828457649475,-1.8735732406051682,null
+R16,"F1 airborne residual |F_hat_cal - F + f| (F < 0.5 kN, no contact; record, flag 1.7 kN, R45-3 / U-S8-19)",record,,,0.015345719124580227,0.015345719124580227,1.7
+R16,R45-4 low-load probe: F2 margin / true margin / T2 - T0 / E - T2 over 2 s after the second hold (lower bound <,record,,,0,0,null
+R16,F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off),judged,True,True,0,0,0
+R16,F3 F_band >= F_s after the first probe,judged,True,True,7.774726845278451,7.761569015622311,4.0
+R16,"F4 CHECK air seal friction F_s,air (record)",record,,,3971.8646882918447,3971.8646882918447,"[4000.0, 4000.0, 3333.2000000000003, 3333.2000000000003]"
+R16,S8-A2 airborne F + m g: 1 ms min / 20 ms mean range per leg [kN] (record; not judged on the 1 ms minimum),record,,,"{""min_1ms"": [-0.7588134170972723, -0.7642807828435926, -0.38391053737915865, -0.3207288648782336], ""mean20_min"": [-2.420649154232404, -0.018838113528823898, -0.","{""min_1ms"": [-0.8060470875783603, -0.7644783822950166, -0.4199564245778216, -0.39963350378977963], ""mean20_min"": [-2.449433172340652, -0.01685595135293761, -0.0",null
+R16,S8-A3 seal band-edge chatter (stick <-> slip round trip < 1 ms) per leg / S8-A1 head-floor hits (record),record,,,"[117369, 134372, 163404, 164500]","[113952, 130088, 157531, 164933]",null
+R16,F8 no false re-level in event-free READY,judged,True,True,0,0,0
+R16,F9 twist at READY entry n^T F / n^T F_hat / n^T eps [kN] (record),record,,,"[0.34987273303188704, 3.9206422846837596, 3.5707695516518836]","[0.33278430308367385, 3.889648198926916, 3.5568638958432395]",null
+R16,"F10 retract commands on low-load legs (periods, record)",record,,,4,4,null
+R16,item 9 J_P M1 missed / M1' late / M3 median / M2 / M4 max (record),record,,,"[1, 0, -0.8000000002539309, 13, 3.8204272877611327]","[1, 0, -0.8000000000052374, 11, 3.820427287761135]",null
+R16,item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record),record,,,"[0, 0, -0.8000000002539309, 15, -9.179572712238867]","[0, 0, -0.8000000000052374, 11, -9.179572712238866]",null
+R16,item 9 J_P raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max,record,,,"[1, 0, -0.8000000002539309, 13, 3.3204272877611327]","[1, 0, -0.8000000000052374, 11, 3.320427287761135]",null
+R16,item 9 J_C raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max,record,,,"[0, 0, -0.8000000002539309, 15, -9.679572712238867]","[0, 0, -0.8000000000052374, 11, -9.679572712238866]",null
+R16,item 9 J_P F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max,sensitivity,,,"[1, 0, -0.7000000002221896, 13, 3.3204272877611327]","[1, 0, -0.7000000000090232, 11, 3.320427287761135]",null
+R16,item 9 J_C F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max,sensitivity,,,"[0, 0, -0.7000000002221896, 15, -9.679572712238867]","[0, 0, -0.7000000000090232, 11, -9.679572712238866]",null
+R16,"item 9 J_P all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",sensitivity,,,"[1, 0, -0.8000000002539309, 13, 3.8204272877611327]","[1, 0, -0.8000000000052374, 11, 3.820427287761135]",null
+R16,"item 9 J_C all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",sensitivity,,,"[0, 0, -0.8000000002539309, 15, -9.179572712238867]","[0, 0, -0.8000000000052374, 11, -9.179572712238866]",null
+R16,item 9 M5 closed loop: min true / under F_min [s] / lifted [s],record,,,"[-11.274875746316273, 0.2000000000066393, 2.8000000000929504]","[-11.385199585513888, 0.20000000000042206, 2.700000000005698]",null
+R16,R44-213.6 TOUCH fix: TOUCH length <= F_s 0 twin + 1 s,record,,,null,null,1.0
+R16,R44-213.6 free-air touch_seen = 0 (TOUCH slow / zero command without pad contact),judged,True,True,0,0,0
+R16,R44-213.6 1.4 side effect: no leg_reapproach_start in PROBE / event-free READY,judged,True,True,0,0,0
+R16,"C-S8-72 event state: controller phase at the event start vs expected (LEVEL for LOC + 3.0 s, READY for READY +",record,True,True,"{""phase_at_event"": ""level"", ""expected"": ""level"", ""event_t_s"": 29.849999999941982, ""reference_t_s"": 29.799999999941985, ""loc_t_s"": 26.79999999994198, ""phase_offs","{""phase_at_event"": ""level"", ""expected"": ""level"", ""event_t_s"": 28.049999999946177, ""reference_t_s"": 27.999999999946176, ""loc_t_s"": 24.999999999946176, ""phase_off","""level"""
+R16,"C-S8-72 U-S8-32 adjacent legs U57: lift sum <= 0.5 s, gap <= 2 mm in the physical window, 0 outside",judged,True,True,"[0.0, 0.0, 0.0]","[0.0, 0.0, 0.0]","[0.5, 2.0, 0.0]"
+R16,"C-S8-72 U-S8-32 event legs (settled + diagonal): cumulative lift <= 1.8 s, last re-contact <= event + 3 s (U-S",judged,True,True,"[1.231, 2.042, null, true]","[1.223, 2.034, null, true]","[1.8, 3.0, null, ""<= 2.5 s (flag)""]"
+R16,"C-S8-72 U58: head F/A_p in the window <= 350 bar, outside extension samples <= 180 bar (slow event: whole-run ",judged,True,True,"[204.47252220704388, 142.10409318323016, null]","[204.78791285784212, 141.7202752527315, null]","[350.0, 180.0, 350.0]"
+R16,C-S8-72 F_min U-S8-74: 0.5 s moving mean >= F_min and no pad lift after the window end (fast); 1 ms min >= F_m,judged,True,True,"[50.43151232987476, 0.0]","[49.50858789785218, 0.0]","[9.414589110000001, 0.0]"
+R16,"C-S8-72 F_min 1 ms instantaneous (record, U-S8-74)",record,,,"{""instant_min_kN"": 22.222168286086887, ""leg"": ""RL"", ""t_s"": 33.15800000121758, ""below_F_min_s"": {""FL"": 0.0, ""FR"": 0.0, ""RL"": 0.0, ""RR"": 0.0}, ""longest_below_s"": ","{""instant_min_kN"": 21.37097398168396, ""leg"": ""RL"", ""t_s"": 31.349000000579426, ""below_F_min_s"": {""FL"": 0.0, ""FR"": 0.0, ""RL"": 0.0, ""RR"": 0.0}, ""longest_below_s"": ",9.414589110000001
+R16,"C-S8-72 end: READY and last 1 s mean true |roll|, |pitch| <= 0.2 deg",judged,True,True,"{""final_phase"": ""ready"", ""end_att_deg"": [0.0192, -0.0166], ""last5_maxabs_deg"": 0.020353727332097896}","{""final_phase"": ""ready"", ""end_att_deg"": [0.0205, -0.0157], ""last5_maxabs_deg"": 0.02164458026230231}",0.2
+R16,C-S8-72 recurrence ban (248.3): twist-work clusters of 0.5 s bins > +20 J after event + 1.5 s <= 1,judged,True,True,"{""n_clusters"": 1, ""clusters"": [[2.5, 33.53]], ""max_bin_after_J"": 33.52631469258053}","{""n_clusters"": 1, ""clusters"": [[2.5, 33.55]], ""max_bin_after_J"": 33.55211390320902}",1
+R16,"C-S8-72 record: re-approach starts / after 1.5 s / sign changes, READY return, crawler re-contact, harness / C",record,,,"{""n_starts"": 4, ""starts_after_1.5_s"": 2, ""sign_changes"": 0, ""ready_back_rel_s"": 24.25000000221011, ""event_pair_union_s"": 1.8950000000629075, ""crawler_contact_af","{""n_starts"": 4, ""starts_after_1.5_s"": 2, ""sign_changes"": 0, ""ready_back_rel_s"": 24.35000000154552, ""event_pair_union_s"": 1.8840000000039758, ""crawler_contact_af",null
+R12,run,function,True,True,"""ready""","""ready""","""ready"""
+R12,2 attitude +-0.2 (+mount),function,True,True,0.037143425833401605,0.03715984563957691,0.2
+R12,3 F_min (1 ms),function,True,True,12.42147314111263,11.143760085285908,9.414589110000001
+R12,4 saturation steps,function,True,True,0,0,0
+R12,4 max moving pressure,function,True,True,136.42886869766946,137.88020203868305,180.0
+R12,5a rocking amplitude,function,True,True,0.007791561342683814,0.008633153423018014,0.06
+R12,6 min after settlement,function,True,True,12.42147314111263,11.143760085285908,9.414589110000001
+R12,6 re-READY <= 40 s,function,True,True,22.800000000922857,22.800000000922857,40.0
+R12,6 final >= F_min + 5 kN,function,True,True,"[117.43563577209649, 116.76951536278942, 72.97823265384956, 69.40342008355671]","[117.60021974431066, 116.61925946935759, 72.80872969073101, 69.56740030584254]",14.414589110000001
+R12,6 attitude <= 0.2 deg (+mount),function,True,True,0.0171434258334016,0.01715984563957691,0.2
+R12,7a probe attitude change,function,True,True,0.025000876599027173,0.0249350401330444,0.1
+R12,7b verdict = truth,function,True,True,true,true,true
+R12,7c load estimate error,record,,,-4.099385232534155,-4.0726149355973265,"""<= 0 (max(5 kN,10 %))"""
+R12,72.1 (6) no false pressure diagnosis,function,True,True,"{""WARN_LOAD_SUM_MISMATCH"": 0, ""WARN_PRESSURE_DRIFT"": 0}","{""WARN_LOAD_SUM_MISMATCH"": 0, ""WARN_PRESSURE_DRIFT"": 0}","""0 warnings"""
+R12,R-5 justified firing (floor event),judged,True,True,55.46357428484175,55.36991745375517,"""t > t_event and >= 20 kN/s (0.3 s mean)"""
+R12,re-approach starts (report),report,,,1,1,null
+R12,G4 item 6 (1) min after settlement >= F_min,judged,True,True,12.42147314111263,11.143760085285908,9.414589110000001
+R12,5.24.2 unexpected warnings,anomaly,True,True,0,0,0
+R12,5.24.2 law-C saturation steps,report,,,0,0,null
+R12,146 consistency vs reduced (142 C),consistency,,,null,null,null
+R12,"C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN",judged,True,True,53.669872192572555,54.77621807116021,14.414589110000001
+R12,"F1 reading law max |F_hat - (F - f + E_s)| <= 6 sigma_F + 0.1 kN (R45-1, U-S8-18)",judged,True,True,0,0,"[0.1, 0.1, 0.1, 0.1]"
+R12,"F1 rev. 44 rule: reading error <= F_s,leg + sensor share (R43-1 / U-S8-15; record, replaced by R45-1)",record,,,0,0,0
+R12,"F1 raw reading |F_hat - F| <= F_s,leg + constant share (record)",record,,,0,0,0
+R12,"F1 calibrated reading |F_hat_cal - F| <= F_s,leg + R43-1 share (record; zero-calibration offset c_i per leg [k",record,,,0,0,0
+R12,"F1 near F_min (-5 .. +10 kN): |F_hat_cal - F + f| (sensor share, record)",record,,,0.015345719124578864,0.012926755946132743,"[0.75, 0.75, 0.75, 0.75]"
+R12,"7c split E - T2: estimator bias [kN] (U-S8-16, record)",record,,,3.3603534313689494,3.3667799965337792,null
+R12,"7c split T2 - T0: probe round-trip hysteresis [kN] (U-S8-16, record)",record,,,-2.0929490265918247,-2.0997170307813775,null
+R12,"F1 airborne residual |F_hat_cal - F + f| (F < 0.5 kN, no contact; record, flag 1.7 kN, R45-3 / U-S8-19)",record,,,0.015345719124580227,0.015345719124580227,1.7
+R12,R45-4 low-load probe: F2 margin / true margin / T2 - T0 / E - T2 over 2 s after the second hold (lower bound <,record,,,0,0,null
+R12,F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off),judged,True,True,0,0,0
+R12,F3 F_band >= F_s after the first probe,judged,True,True,7.819203842583826,7.804854850867025,4.0
+R12,"F4 CHECK air seal friction F_s,air (record)",record,,,3971.8646882918447,3971.8646882918447,"[4000.0, 4000.0, 3333.2000000000003, 3333.2000000000003]"
+R12,S8-A2 airborne F + m g: 1 ms min / 20 ms mean range per leg [kN] (record; not judged on the 1 ms minimum),record,,,"{""min_1ms"": [-0.7582947076168937, -0.8289936895526655, -0.38391053737915865, -0.3207288648782336], ""mean20_min"": [-0.018295221697127773, -0.017733672812542407, ","{""min_1ms"": [-0.7615061642786523, -0.7717168896426351, -0.4199564245778216, -0.39963350378977963], ""mean20_min"": [-0.017219148578269824, -0.01978391763862078, -",null
+R12,S8-A3 seal band-edge chatter (stick <-> slip round trip < 1 ms) per leg / S8-A1 head-floor hits (record),record,,,"[92630, 82849, 82483, 61216]","[98816, 83403, 79543, 61823]",null
+R12,F8 no false re-level in event-free READY,judged,True,True,0,0,0
+R12,F9 twist at READY entry n^T F / n^T F_hat / n^T eps [kN] (record),record,,,"[-4.200275066932445, -0.6314473937605216, 3.5688276731719233]","[-1.9756887223753001, 1.593271611586555, 3.568960333961847]",null
+R12,"F10 retract commands on low-load legs (periods, record)",record,,,0,0,null
+R12,item 9 J_P M1 missed / M1' late / M3 median / M2 / M4 max (record),record,,,"[0, 0, null, 0, 3.320427287761135]","[0, 0, null, 0, 3.320427287761135]",null
+R12,item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record),record,,,"[0, 0, null, 0, -4.49877655482269]","[0, 0, null, 0, -4.48442756310589]",null
+R12,item 9 J_P raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max,record,,,"[0, 0, null, 0, 3.320427287761135]","[0, 0, null, 0, 3.320427287761135]",null
+R12,item 9 J_C raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max,record,,,"[0, 0, null, 0, -4.49877655482269]","[0, 0, null, 0, -4.48442756310589]",null
+R12,item 9 J_P F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max,sensitivity,,,"[0, 0, null, 0, 3.320427287761135]","[0, 0, null, 0, 3.320427287761135]",null
+R12,item 9 J_C F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max,sensitivity,,,"[0, 0, null, 0, -4.49877655482269]","[0, 0, null, 0, -4.48442756310589]",null
+R12,"item 9 J_P all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",sensitivity,,,"[0, 0, null, 0, 3.320427287761135]","[0, 0, null, 0, 3.320427287761135]",null
+R12,"item 9 J_C all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",sensitivity,,,"[0, 0, null, 0, -4.49877655482269]","[0, 0, null, 0, -4.48442756310589]",null
+R12,item 9 M5 closed loop: min true / under F_min [s] / lifted [s],record,,,"[12.42147314111263, 0.0, 0.0]","[11.143760085285908, 0.0, 0.0]",null
+R12,C10 READY - TOUCH end vs F_s 0 [s],pair,,,null,null,"""+10 s report"""
+R12,F6 REANCHOR min vs F_s 0 [kN],pair,,,null,null,null
+R12,F9 |n^T F| at READY vs F_s 0 [kN],pair,,,null,null,"""+5 kN report"""
+R12,D8 min lift-off + 8 s .. READY vs F_s 0 [kN] (R40-4),pair,,,null,null,null
+R12,"F5 7c margin vs F_s 0 twin [kN] (R43-2, record)",pair,,,null,null,"""+2 kN report"""
+R12,I4 classification vs control rev. 41 expected table (211.2),record,,,"{""p_miss"": ""none"", ""item6"": ""pass"", ""reapproach"": ""yes""}","{""p_miss"": ""none"", ""item6"": ""pass"", ""reapproach"": ""yes""}","{""p_miss"": ""n/a"", ""item6"": ""n/a"", ""reapproach"": ""if_lift""}"
+R12,R44-213.6 TOUCH fix: TOUCH length <= F_s 0 twin + 1 s,record,,,null,null,1.0
+R12,R44-213.6 free-air touch_seen = 0 (TOUCH slow / zero command without pad contact),judged,True,True,0,0,0
+R12,R44-213.6 1.4 side effect: no leg_reapproach_start in PROBE / event-free READY,judged,True,True,0,0,0
+R6,run,function,True,True,"""ready""","""ready""","""ready"""
+R6,2 attitude +-0.2 (+mount),function,True,True,0.03583773689899943,0.03577587486928341,0.2
+R6,3 F_min (1 ms),function,True,True,35.80256539817093,35.29300520856811,9.414589110000001
+R6,4 saturation steps,function,True,True,0,0,0
+R6,4 max moving pressure,function,True,True,101.71665438392623,104.40601980691272,180.0
+R6,5a rocking amplitude,function,True,True,0.019958647716882272,0.02013895467525817,0.06
+R6,7a probe attitude change,function,True,True,0.023427857672938375,0.02341418213315553,0.1
+R6,7b verdict = truth,function,True,True,true,true,true
+R6,7c load estimate error,function,True,True,-5.203656401708098,-5.311533636649043,"""<= 0 (max(5 kN,10 %))"""
+R6,72.1 (6) no false pressure diagnosis,function,True,True,"{""WARN_LOAD_SUM_MISMATCH"": 0, ""WARN_PRESSURE_DRIFT"": 0}","{""WARN_LOAD_SUM_MISMATCH"": 0, ""WARN_PRESSURE_DRIFT"": 0}","""0 warnings"""
+R6,D8 no pad lift-off,judged,True,True,36.58482269975233,36.10048158752814,"""> 0"""
+R6,D8 attitude last 5 s + mount <= 0.2 deg,judged,True,True,0.03583773689899943,0.03577587486928341,0.2
+R6,5.24.2 unexpected warnings,anomaly,True,True,0,0,0
+R6,5.24.2 law-C saturation steps,report,,,0,0,null
+R6,146 consistency vs reduced (142 C),consistency,,,null,null,null
+R6,"C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN",judged,True,True,35.80256539817093,35.29300520856811,14.414589110000001
+R6,"F1 reading law max |F_hat - (F - f + E_s)| <= 6 sigma_F + 0.1 kN (R45-1, U-S8-18)",judged,True,True,0,0,"[0.1, 0.1, 0.1, 0.1]"
+R6,"F1 rev. 44 rule: reading error <= F_s,leg + sensor share (R43-1 / U-S8-15; record, replaced by R45-1)",record,,,0,0,0
+R6,"F1 raw reading |F_hat - F| <= F_s,leg + constant share (record)",record,,,0,0,0
+R6,"F1 calibrated reading |F_hat_cal - F| <= F_s,leg + R43-1 share (record; zero-calibration offset c_i per leg [k",record,,,0,0,0
+R6,"F1 near F_min (-5 .. +10 kN): |F_hat_cal - F + f| (sensor share, record)",record,,,0.043204935374727936,0.043204935374729754,"[0.1, 0.1, 0.1, 0.1]"
+R6,"7c split E - T2: estimator bias [kN] (U-S8-16, record)",record,,,1.1713219728496966,1.1883754730303906,null
+R6,"7c split T2 - T0: probe round-trip hysteresis [kN] (U-S8-16, record)",record,,,1.3056628584435686,1.2302770431544587,null
+R6,"F1 airborne residual |F_hat_cal - F + f| (F < 0.5 kN, no contact; record, flag 1.7 kN, R45-3 / U-S8-19)",record,,,0.043204935374727936,0.043204935374727936,1.7
+R6,R45-4 low-load probe: F2 margin / true margin / T2 - T0 / E - T2 over 2 s after the second hold (lower bound <,record,,,0,0,null
+R6,F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off),judged,True,True,0,0,0
+R6,F3 F_band >= F_s after the first probe,judged,True,True,2.109235163643136,2.1004274839669765,0.0
+R6,"F4 CHECK air seal friction F_s,air (record)",record,,,45.33091058742548,45.33091058742548,"[0.0, 0.0, 0.0, 0.0]"
+R6,S8-A2 airborne F + m g: 1 ms min / 20 ms mean range per leg [kN] (record; not judged on the 1 ms minimum),record,,,"{""min_1ms"": [-1.4236552135104636, -1.4170170961091801, -1.2280882653915237, -1.2727392776886177], ""mean20_min"": [-0.05065139821874527, -0.0614385099781523, -0.0","{""min_1ms"": [-1.2988227916414183, -1.3943989826000327, -1.1568105579227326, -1.340835100976386], ""mean20_min"": [-0.05065139821874527, -0.0614385099781523, -0.03",null
+R6,S8-A3 seal band-edge chatter (stick <-> slip round trip < 1 ms) per leg / S8-A1 head-floor hits (record),record,,,null,null,null
+R6,F8 no false re-level in event-free READY,judged,True,True,0,0,0
+R6,F9 twist at READY entry n^T F / n^T F_hat / n^T eps [kN] (record),record,,,"[2.7622332933215876, 2.7622332933215876, 0.0]","[2.8782575754940916, 2.8782575754940773, -1.3853423297405242e-14]",null
+R6,"F10 retract commands on low-load legs (periods, record)",record,,,0,0,null
+R6,item 9 J_P M1 missed / M1' late / M3 median / M2 / M4 max (record),record,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R6,item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record),record,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R6,item 9 J_P raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max,record,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R6,item 9 J_C raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max,record,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R6,item 9 J_P F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max,sensitivity,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R6,item 9 J_C F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max,sensitivity,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R6,"item 9 J_P all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",sensitivity,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R6,"item 9 J_C all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",sensitivity,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R6,item 9 M5 closed loop: min true / under F_min [s] / lifted [s],record,,,"[35.80256539817093, 0.0, 0.0]","[35.29300520856811, 0.0, 0.0]",null
+R6,R41-3 K0V vs S7 L2b record (F_s 0 neutrality / code difference),record,,,"[0.1348030253735999, 1.8000000000597538]","[-0.3747571642292158, 0.0]","[0.1, 0.1]"
+R6,R44-213.6 free-air touch_seen = 0 (TOUCH slow / zero command without pad contact),judged,True,True,0,0,0
+R6,R44-213.6 1.4 side effect: no leg_reapproach_start in PROBE / event-free READY,judged,True,True,0,0,0
+R8,run,function,True,True,"""ready""","""ready""","""ready"""
+R8,2 attitude +-0.2 (+mount),function,True,True,0.03551338747468098,0.035435568986951466,0.2
+R8,3 F_min (1 ms),function,True,True,40.96132218035258,40.9010688094409,9.414589110000001
+R8,4 saturation steps,function,True,True,0,0,0
+R8,4 max moving pressure,function,True,True,98.3474808166508,98.69699471159352,180.0
+R8,5a rocking amplitude,function,True,True,0.015289485062317976,0.015677800707320166,0.06
+R8,7a probe attitude change,function,True,True,0.023906552993314314,0.02404964136368143,0.1
+R8,7b verdict = truth,function,True,True,true,true,true
+R8,7c load estimate error,function,True,True,-5.4302097519264585,-5.537809006543577,"""<= 0 (max(5 kN,10 %))"""
+R8,72.1 (6) no false pressure diagnosis,function,True,True,"{""WARN_LOAD_SUM_MISMATCH"": 0, ""WARN_PRESSURE_DRIFT"": 0}","{""WARN_LOAD_SUM_MISMATCH"": 0, ""WARN_PRESSURE_DRIFT"": 0}","""0 warnings"""
+R8,D8 no pad lift-off,judged,True,True,41.74520547334546,41.74537921683794,"""> 0"""
+R8,D8 attitude last 5 s + mount <= 0.2 deg,judged,True,True,0.03551338747468098,0.035435568986951466,0.2
+R8,5.24.2 unexpected warnings,anomaly,True,True,0,0,0
+R8,5.24.2 law-C saturation steps,report,,,0,0,null
+R8,146 consistency vs reduced (142 C),consistency,,,null,null,null
+R8,"C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN",judged,True,True,40.96132218035258,40.9010688094409,14.414589110000001
+R8,"F1 reading law max |F_hat - (F - f + E_s)| <= 6 sigma_F + 0.1 kN (R45-1, U-S8-18)",judged,True,True,0,0,"[0.1, 0.1, 0.1, 0.1]"
+R8,"F1 rev. 44 rule: reading error <= F_s,leg + sensor share (R43-1 / U-S8-15; record, replaced by R45-1)",record,,,0,0,0
+R8,"F1 raw reading |F_hat - F| <= F_s,leg + constant share (record)",record,,,0,0,0
+R8,"F1 calibrated reading |F_hat_cal - F| <= F_s,leg + R43-1 share (record; zero-calibration offset c_i per leg [k",record,,,0,0,0
+R8,"F1 near F_min (-5 .. +10 kN): |F_hat_cal - F + f| (sensor share, record)",record,,,0.04313533117299812,0.04231281927976488,"[0.1, 0.1, 0.1, 0.1]"
+R8,"7c split E - T2: estimator bias [kN] (U-S8-16, record)",record,,,0.7840765130589062,0.704008676833098,null
+R8,"7c split T2 - T0: probe round-trip hysteresis [kN] (U-S8-16, record)",record,,,1.4444956110164355,1.417778515478389,null
+R8,"F1 airborne residual |F_hat_cal - F + f| (F < 0.5 kN, no contact; record, flag 1.7 kN, R45-3 / U-S8-19)",record,,,0.04313533117299971,0.04313533117299949,1.7
+R8,R45-4 low-load probe: F2 margin / true margin / T2 - T0 / E - T2 over 2 s after the second hold (lower bound <,record,,,0,0,null
+R8,F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off),judged,True,True,0,0,0
+R8,F3 F_band >= F_s after the first probe,judged,True,True,2.1190212970561597,1.8816334543872726,0.0
+R8,"F4 CHECK air seal friction F_s,air (record)",record,,,49.033401998458544,49.033401998458544,"[0.0, 0.0, 0.0, 0.0]"
+R8,S8-A2 airborne F + m g: 1 ms min / 20 ms mean range per leg [kN] (record; not judged on the 1 ms minimum),record,,,"{""min_1ms"": [-1.5601026023764346, -1.7158552262426399, -1.1251065122131723, -1.223757903467325], ""mean20_min"": [-0.0606961555226319, -0.054978143305385856, -0.0","{""min_1ms"": [-1.5914361633013283, -1.3569207503328309, -1.1481875723767425, -1.223757903467325], ""mean20_min"": [-0.0606961555226319, -0.04895363810613935, -0.03",null
+R8,S8-A3 seal band-edge chatter (stick <-> slip round trip < 1 ms) per leg / S8-A1 head-floor hits (record),record,,,null,null,null
+R8,F8 no false re-level in event-free READY,judged,True,True,0,0,0
+R8,F9 twist at READY entry n^T F / n^T F_hat / n^T eps [kN] (record),record,,,"[2.729973325116902, 2.7299733251168945, -7.610651664435864e-15]","[2.635293348926156, 2.635293348926141, -1.4537363313138486e-14]",null
+R8,"F10 retract commands on low-load legs (periods, record)",record,,,0,0,null
+R8,item 9 J_P M1 missed / M1' late / M3 median / M2 / M4 max (record),record,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R8,item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record),record,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R8,item 9 J_P raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max,record,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R8,item 9 J_C raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max,record,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R8,item 9 J_P F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max,sensitivity,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R8,item 9 J_C F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max,sensitivity,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R8,"item 9 J_P all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",sensitivity,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R8,"item 9 J_C all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",sensitivity,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R8,item 9 M5 closed loop: min true / under F_min [s] / lifted [s],record,,,"[40.344570785227546, 0.0, 0.0]","[40.9010688094409, 0.0, 0.0]",null
+R8,R44-213.6 free-air touch_seen = 0 (TOUCH slow / zero command without pad contact),judged,True,True,0,0,0
+R8,R44-213.6 1.4 side effect: no leg_reapproach_start in PROBE / event-free READY,judged,True,True,0,0,0
+R9,run,function,True,True,"""ready""","""ready""","""ready"""
+R9,2 attitude +-0.2 (+mount),function,True,True,0.034974742262632724,0.03528496522221046,0.2
+R9,3 F_min (1 ms),function,True,True,44.7665316479565,44.545949219559006,9.414589110000001
+R9,4 saturation steps,function,True,True,0,0,0
+R9,4 max moving pressure,function,True,True,96.55865107290806,96.5520262574695,180.0
+R9,5a rocking amplitude,function,True,True,0.01407542509782056,0.014007893912869385,0.06
+R9,7a probe attitude change,function,True,True,0.02331478447940285,0.023380596043833475,0.1
+R9,7b verdict = truth,function,True,True,true,true,true
+R9,7c load estimate error,function,True,True,-5.59201461590002,-5.530999070950296,"""<= 0 (max(5 kN,10 %))"""
+R9,72.1 (6) no false pressure diagnosis,function,True,True,"{""WARN_LOAD_SUM_MISMATCH"": 0, ""WARN_PRESSURE_DRIFT"": 0}","{""WARN_LOAD_SUM_MISMATCH"": 0, ""WARN_PRESSURE_DRIFT"": 0}","""0 warnings"""
+R9,D8 no pad lift-off,judged,True,True,45.57593077439274,45.40973008836547,"""> 0"""
+R9,D8 attitude last 5 s + mount <= 0.2 deg,judged,True,True,0.034974742262632724,0.03528496522221046,0.2
+R9,5.24.2 unexpected warnings,anomaly,True,True,0,0,0
+R9,5.24.2 law-C saturation steps,report,,,0,0,null
+R9,146 consistency vs reduced (142 C),consistency,,,null,null,null
+R9,"C1 D8 min true rod force (raw 1 ms, after lift-off, outside REANCHOR) >= F_min + 5 kN",judged,True,True,44.7665316479565,44.545949219559006,14.414589110000001
+R9,"F1 reading law max |F_hat - (F - f + E_s)| <= 6 sigma_F + 0.1 kN (R45-1, U-S8-18)",judged,True,True,0,0,"[0.1, 0.1, 0.1, 0.1]"
+R9,"F1 rev. 44 rule: reading error <= F_s,leg + sensor share (R43-1 / U-S8-15; record, replaced by R45-1)",record,,,0,0,0
+R9,"F1 raw reading |F_hat - F| <= F_s,leg + constant share (record)",record,,,0,0,0
+R9,"F1 calibrated reading |F_hat_cal - F| <= F_s,leg + R43-1 share (record; zero-calibration offset c_i per leg [k",record,,,0,0,0
+R9,"F1 near F_min (-5 .. +10 kN): |F_hat_cal - F + f| (sensor share, record)",record,,,0.007489055239424488,0.007489055239424488,"[0.1, 0.1, 0.1, 0.1]"
+R9,"7c split E - T2: estimator bias [kN] (U-S8-16, record)",record,,,0.7429620304831985,0.7560830685079623,null
+R9,"7c split T2 - T0: probe round-trip hysteresis [kN] (U-S8-16, record)",record,,,1.3790188304777615,1.4002811484207172,null
+R9,"F1 airborne residual |F_hat_cal - F + f| (F < 0.5 kN, no contact; record, flag 1.7 kN, R45-3 / U-S8-19)",record,,,0.007489055239423806,0.007489055239423806,1.7
+R9,R45-4 low-load probe: F2 margin / true margin / T2 - T0 / E - T2 over 2 s after the second hold (lower bound <,record,,,0,0,null
+R9,F2 lower-bound soundness F_hat_cal - F_band - F <= sensor share (after lift-off),judged,True,True,0,0,0
+R9,F3 F_band >= F_s after the first probe,judged,True,True,1.7790594584967867,1.8346566559121456,0.0
+R9,"F4 CHECK air seal friction F_s,air (record)",record,,,3.2302113922299895,3.2302113922299895,"[0.0, 0.0, 0.0, 0.0]"
+R9,S8-A2 airborne F + m g: 1 ms min / 20 ms mean range per leg [kN] (record; not judged on the 1 ms minimum),record,,,"{""min_1ms"": [-0.7625379364198129, -0.8751290734003444, -0.5225196330586963, -0.7388348344482132], ""mean20_min"": [-0.014064126050177492, -0.021139495482350185, -","{""min_1ms"": [-0.6303423081511669, -0.8098056829146278, -0.5099097331310926, -0.6924549635264019], ""mean20_min"": [-0.01613202690049866, -0.021139495482350185, -0",null
+R9,S8-A3 seal band-edge chatter (stick <-> slip round trip < 1 ms) per leg / S8-A1 head-floor hits (record),record,,,null,null,null
+R9,F8 no false re-level in event-free READY,judged,True,True,0,0,0
+R9,F9 twist at READY entry n^T F / n^T F_hat / n^T eps [kN] (record),record,,,"[2.6509728147222997, 2.650972814722307, 6.926711648702621e-15]","[2.721203332961406, 2.7212033329614207, 1.4537363313138486e-14]",null
+R9,"F10 retract commands on low-load legs (periods, record)",record,,,0,0,null
+R9,item 9 J_P M1 missed / M1' late / M3 median / M2 / M4 max (record),record,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R9,item 9 J_C M1 missed / M1' late / M3 median / M2 / M4 max (record),record,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R9,item 9 J_P raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max,record,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R9,item 9 J_C raw reading (record): M1 missed / M1' late / M3 median / M2 / M4 max,record,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R9,item 9 J_P F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max,sensitivity,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R9,item 9 J_C F_s - m g ceiling on lifted legs (sensitivity): M1 missed / M1' late / M3 median / M2 / M4 max,sensitivity,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R9,"item 9 J_P all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",sensitivity,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R9,"item 9 J_C all-apply +0.5 kN reading (rev. 52 rule, sensitivity): M1 missed / M1' late / M3 median / M2 / M4 m",sensitivity,,,"[0, 0, null, 0, null]","[0, 0, null, 0, null]",null
+R9,item 9 M5 closed loop: min true / under F_min [s] / lifted [s],record,,,"[44.52775405228597, 0.0, 0.0]","[44.545949219559006, 0.0, 0.0]",null
+R9,R44-213.6 free-air touch_seen = 0 (TOUCH slow / zero command without pad contact),judged,True,True,0,0,0
+R9,R44-213.6 1.4 side effect: no leg_reapproach_start in PROBE / event-free READY,judged,True,True,0,0,0

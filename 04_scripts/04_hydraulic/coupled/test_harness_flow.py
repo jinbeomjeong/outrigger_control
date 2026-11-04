@@ -10,7 +10,9 @@ import importlib
 import json
 import subprocess
 import sys
+from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -23,16 +25,19 @@ from harness_flow import (  # noqa: E402
     FlowSetting,
     U,
     V,
+    install_command_clip,
     make_flow_plant_class,
 )
 from params import load_params  # noqa: E402
-from verdict_cases import ALL_CASE_IDS, build_runs, resolve_case  # noqa: E402
+from verdict_cases import ALL_CASE_IDS, build_clip_runs, build_runs, resolve_case  # noqa: E402
 from verdict_metrics import count_disjoint_swaps, flow_conservation, saturation_inputs  # noqa: E402
 
 P = load_params()
 RNG = np.random.default_rng(20261104)
 LOW_FLOW_ETA = 0.85
-SETTINGS = [FlowSetting(eta_v=0.95), FlowSetting(eta_v=LOW_FLOW_ETA),
+STORED_OFF_R1_DIGEST = "8b559936468481e55594cbcfc5193f53feec325672e731dbd1caca100e7d50de"
+"""``definition_sha256`` in verdict/OFF_R1.json; if it moves, the stored results stop resuming."""
+SETTINGS =[FlowSetting(eta_v=0.95), FlowSetting(eta_v=LOW_FLOW_ETA),
             FlowSetting(eta_v=LOW_FLOW_ETA, dp_comp_Pa=6e5, dp_unload_Pa=12e5),
             FlowSetting(eta_v=LOW_FLOW_ETA, dp_comp_Pa=20e5, dp_unload_Pa=30e5),
             FlowSetting(eta_v=LOW_FLOW_ETA, law="proportional"),
@@ -287,6 +292,55 @@ def test_r13_decision_gives_the_ss_branch_of_the_runner():
     assert case.path == PATH_EVENT
     twin = case.twin
     assert (twin.event, twin.leg, twin.timing, twin.fs_kN) == ("SS", "RR", "ready", 4.0)
+
+
+def test_clip_bundle_is_outside_the_criteria_table_and_has_its_own_ids():
+    import run_verdict
+
+    default_bundles = ["OFF", "A", "B", "C", "D", "E"]
+    assert not [r for r in run_verdict.selected_runs(default_bundles, []) if r.clip_command]
+    clipped = run_verdict.selected_runs(["CL"], ["S1"])
+    assert sorted(r.run_id for r in clipped) == ["CL_OFF_S1", "CL_S1_eta0.85", "CL_S1_eta0.90"]
+    assert all(r.clip_command for r in clipped)
+    stored_ids = {r.run_id for r in build_runs()}
+    assert not stored_ids & {r.run_id for r in build_clip_runs()}
+    assert run_verdict.default_out_dir(["CL"]) == run_verdict.CLIP_OUT
+    assert run_verdict.default_out_dir(["OFF", "A"]) == run_verdict.DEFAULT_OUT
+
+
+def test_clip_is_part_of_the_resume_key_and_absent_from_the_stored_key(tmp_path):
+    import run_verdict
+
+    plain = next(r for r in build_runs() if r.run_id == "OFF_R1")
+    clipped = replace(plain, clip_command=True)
+    plain_digest = run_verdict.definition_digest(plain, None)
+    assert plain_digest != run_verdict.definition_digest(clipped, None)
+    _store_result(tmp_path, plain, None)
+    assert not run_verdict.is_complete(tmp_path, clipped, None)
+    assert plain_digest == STORED_OFF_R1_DIGEST
+
+
+def test_command_clip_limits_the_valve_input_and_keeps_the_command():
+    module = SimpleNamespace(_lagged_step=None)
+    seen = []
+
+    def lagged_step(plant, command, valve, steps):
+        seen.append(np.array(command))
+        valve[:] = command
+        return "accumulated"
+
+    lagged_step.is_truth_hook = True
+    module._lagged_step = lagged_step
+    record = install_command_clip(module, P.v_max)
+    command = np.array([2.0, -2.0, 0.5, -0.5]) * P.v_max
+    original = command.copy()
+    valve = np.zeros(4)
+    assert module._lagged_step(None, command, valve, 2) == "accumulated"
+    assert seen[0].tolist() == [P.v_max, -P.v_max, 0.5 * P.v_max, -0.5 * P.v_max]
+    assert command.tobytes() == original.tobytes()
+    assert record.peak_command_m_s == pytest.approx(2.0 * P.v_max)
+    assert record.peak_valve_m_s == pytest.approx(P.v_max)
+    assert module._lagged_step.is_truth_hook
 
 
 def test_reanchor_on_off_run_is_not_compared_with_the_stored_row():

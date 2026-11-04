@@ -1,5 +1,8 @@
 """Runner of the coupling-verdict table (criteria 8.4 bundles A .. E plus the pair base OFF).
 
+Bundle ``CL`` (not part of the default) repeats cases with the leg command clipped to v_max:
+``CL_OFF_<case>``, ``CL_<case>_eta0.85``, ``CL_<case>_eta0.90`` in ``verdict/clip``.
+
 Resumable: a run with a result file of the same definition is skipped. Every run leaves
 ``<run id>.json`` and ``<run id>.npz`` (10 Hz commands, attitude filter, integrals) in ``--out``,
 a failure ``<run id>.error.json`` (run again on resume), and one line in ``progress.log``. Each
@@ -32,17 +35,21 @@ for _path in (HERE, S9_DIR):
         sys.path.insert(0, str(_path))
 
 import numpy as np  # noqa: E402
+from params import load_params  # noqa: E402
 from verdict_cases import (  # noqa: E402
     ALL_CASE_IDS,
     CASES,
+    CLIP_BUNDLE,
     DECISION_OPTIONS,
     STATUS_DECISION,
     VerdictRun,
+    build_clip_runs,
     build_runs,
     resolve_case,
 )
 
 DEFAULT_OUT = ROOT / "06_analysis" / "03_hydraulic" / "coupled" / "verdict"
+CLIP_OUT = DEFAULT_OUT / "clip"
 PROGRESS_LOG = "progress.log"
 DEFINITION_VERSION = 2
 ALIAS_OF_S5 = "alias_s5"
@@ -53,6 +60,8 @@ def definition_digest(run: VerdictRun, decision: str | None) -> str:
     """Changes when the run's definition changes, so a stale result is not reused."""
     definition = {"version": DEFINITION_VERSION, "run_id": run.run_id, "case": run.case_id,
                   "setting": asdict(run.setting), "decision": decision}
+    if run.clip_command:  # only here: an unclipped run keeps the digest stored in its result
+        definition["clip_v_max_m_s"] = load_params().v_max
     return hashlib.sha256(json.dumps(definition, sort_keys=True).encode("utf-8")).hexdigest()
 
 
@@ -94,12 +103,13 @@ def _run_one(job: tuple[VerdictRun, str | None, dict, str]) -> dict:
     t_start = time.perf_counter()
     header = {"run_id": run.run_id, "bundle": run.bundle, "case_id": run.case_id,
               "chrono_name": CASES[run.case_id].chrono_name, "setting": asdict(run.setting),
-              "decision": decision, "definition_sha256": definition_digest(run, decision)}
+              "decision": decision, "clip_command": run.clip_command,
+              "definition_sha256": definition_digest(run, decision)}
     try:
         import verdict_runs
 
         result, series = verdict_runs.execute(resolve_case(run.case_id, decisions), run.setting,
-                                              decision)
+                                              decision, clip_command=run.clip_command)
         if "error" in result:
             raise RuntimeError(f"{result['error']}\n{result.get('tb')}")
     except Exception as exc:  # the batch goes on; resume runs this row again
@@ -115,8 +125,13 @@ def _run_one(job: tuple[VerdictRun, str | None, dict, str]) -> dict:
 
 
 def selected_runs(bundles: list[str], cases: list[str]) -> list[VerdictRun]:
-    return [run for run in build_runs()
+    return [run for run in (*build_runs(), *build_clip_runs())
             if run.bundle in bundles and (not cases or run.case_id in cases)]
+
+
+def default_out_dir(bundles: list[str]) -> Path:
+    """The clipped runs keep to their own folder: their pair base is not the stored OFF."""
+    return CLIP_OUT if bundles == [CLIP_BUNDLE] else DEFAULT_OUT
 
 
 def split_runs(runs: list[VerdictRun], decisions: dict) -> tuple[list, list, list]:
@@ -181,36 +196,39 @@ def main() -> None:
     parser.add_argument("--workers", type=int, required=True)
     parser.add_argument("--affinity", default=None, help="hex mask, inherited by the workers")
     parser.add_argument("--decide", action="append", default=[], help="case=option")
-    parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    parser.add_argument("--out", type=Path, default=None,
+                        help=f"default {DEFAULT_OUT}, for --bundles {CLIP_BUNDLE} {CLIP_OUT}")
     parser.add_argument("--list", action="store_true")
     args = parser.parse_args()
     decisions = parse_decisions(args.decide)
     cases = [c for c in args.cases.split(",") if c]
-    runs = selected_runs(args.bundles.split(","), cases)
+    bundles = args.bundles.split(",")
+    out_dir = args.out or default_out_dir(bundles)
+    runs = selected_runs(bundles, cases)
     runnable, pending, aliased = split_runs(runs, decisions)
-    args.out.mkdir(parents=True, exist_ok=True)
+    out_dir.mkdir(parents=True, exist_ok=True)
     if args.list:
-        _print_table(runnable, pending, aliased, args.out, decisions)
+        _print_table(runnable, pending, aliased, out_dir, decisions)
         return
-    todo = todo_runs(runnable, args.out, decisions)
-    _log_line(args.out, f"start bundles={args.bundles} todo={len(todo)} of {len(runnable)} "
-                        f"pending={[r.run_id for r in pending]} workers={args.workers}")
+    todo = todo_runs(runnable, out_dir, decisions)
+    _log_line(out_dir, f"start bundles={args.bundles} todo={len(todo)} of {len(runnable)} "
+                       f"pending={[r.run_id for r in pending]} workers={args.workers}")
     if not todo:
         return
     placement = _set_affinity(args.affinity)
     if placement is not None:
-        _log_line(args.out, f"affinity {placement}")
+        _log_line(out_dir, f"affinity {placement}")
     import verdict_runs
 
     verdict_runs.warm_numba_cache()
-    jobs = [(run, decisions.get(run.case_id), decisions, str(args.out)) for run in todo]
+    jobs = [(run, decisions.get(run.case_id), decisions, str(out_dir)) for run in todo]
     n_failed = 0
     with Pool(max(1, min(args.workers, len(jobs))), maxtasksperchild=1) as pool:
         for finished, outcome in enumerate(pool.imap_unordered(_run_one, jobs, chunksize=1), 1):
             n_failed += outcome["status"] != "done"
-            _log_line(args.out, f"{finished}/{len(jobs)} {outcome['run_id']} {outcome['status']} "
-                                f"wall {outcome['wall_s']:.1f} s {outcome.get('error', '')}")
-    _log_line(args.out, f"end failed={n_failed}")
+            _log_line(out_dir, f"{finished}/{len(jobs)} {outcome['run_id']} {outcome['status']} "
+                               f"wall {outcome['wall_s']:.1f} s {outcome.get('error', '')}")
+    _log_line(out_dir, f"end failed={n_failed}")
     if n_failed:
         sys.exit(1)
 

@@ -7,7 +7,8 @@ Each case names its reduced-harness twin. ``twin_status`` says how far the twin 
   decision      no row that can be used without a choice: skipped until ``--decide`` names one
 
 Bundle ``OFF`` (flow limit off, the pair base of criteria sec. 1 and V-5) is added to the 60 runs
-of criteria 8.4. It does not depend on eta_v.
+of criteria 8.4. It does not depend on eta_v. Bundle ``CL`` (criteria 9.1, reduced-model comparison)
+is outside that table: the same cases with the leg command clipped to v_max as in Chrono.
 """
 from __future__ import annotations
 
@@ -21,6 +22,7 @@ STATUS_STORED = "stored"
 STATUS_STORED_GAP = "stored_gap"
 STATUS_NO_FINAL_ROW = "no_final_row"
 STATUS_DECISION = "decision"
+CLIP_BUNDLE = "CL"
 
 ROLL_DOWN_RIGHT_DEG = 5.5
 PITCH_VERIFY_DEG = 3.5
@@ -91,6 +93,7 @@ class VerdictRun:
     bundle: str
     case_id: str
     setting: FlowSetting = field(default_factory=FlowSetting)
+    clip_command: bool = False
 
 
 P0_FILE = "finB2_p0"
@@ -202,6 +205,18 @@ def build_runs() -> list[VerdictRun]:
                         _main_setting(ETA_NO_EFFECT, always_solve=True))
              for case_id in ("R1", "S1")]
     return runs + _sensitivity_runs()
+
+
+def build_clip_runs() -> list[VerdictRun]:
+    """Bundle ``CL``, command clipped to v_max (criteria 9.1): flow off, eta 0.85 and 0.90."""
+    runs = []
+    for case_id in ALL_CASE_IDS:
+        runs.append(VerdictRun(f"{CLIP_BUNDLE}_OFF_{case_id}", CLIP_BUNDLE, case_id,
+                               FlowSetting(is_enabled=False), clip_command=True))
+        runs += [VerdictRun(f"{CLIP_BUNDLE}_{case_id}_{_eta_tag(eta_v)}", CLIP_BUNDLE, case_id,
+                            _main_setting(eta_v), clip_command=True)
+                 for eta_v in (ETA_MAIN, ETA_MIDDLE)]
+    return runs
 
 
 def resolve_case(case_id: str, decisions: dict[str, str]) -> VerdictCase | None:
