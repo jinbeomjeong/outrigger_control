@@ -1,7 +1,7 @@
 """Flow demand of the 24 final-controller records against the pump supply (read only).
 
 Corrected from the main-session flow_demand.py: demand uses the speed the plant applies
-(clip of the command to +-v_max, actuation.py:226 = record u_applied), not issued_u.
+(clip of the command to +-v_max, actuation.py:264 = record u_applied), not issued_u.
 Demand = sum per leg: extending A_h v, retracting A_r |v|. No shared-circuit response is
 computed here; it is an exposure count. Writes flow_exposure.json.
 """

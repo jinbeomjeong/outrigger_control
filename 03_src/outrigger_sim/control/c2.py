@@ -213,6 +213,10 @@ P-S8-37 R4 (R4c30, spec 429.9, adopted 2026-10-30): a LOC after the soil mode on
 by ``SlopeClearanceMarginSettings.flat_soil_margin_m`` (event ``INFO_LOC_FLAT_SOIL_MARGIN``);
 off by default, 0.03 m in the preset since the spec 429.11 switch
 (``C2Config().with_10hz_d1(flat_soil_margin_m=0.0)`` turns it off).
+User decision 2026-11-04: the command :meth:`C2Controller.update` returns is clipped to
+``+-v_max`` (``C2Config.clip_returned_command``), the internal states keep the unclipped value;
+off by default, on in the preset (``C2Config().with_10hz_d1(clip_returned_command=False)``
+turns it off, as the v4 results ran).
 P-S8-29 (user decision 2026-10-28, variant V2b): on a creeping pad DONE may accept a twist load
 up to 15 kN that has stopped rising once attitude and clearance have held for 10 s
 (:class:`TwistCompletionRelaxSettings`, event ``INFO_TWIST_UNSETTLED``); preset on, default off.
@@ -2179,6 +2183,11 @@ class C2Config:
     loc_revoke: LocRevokeSettings = LocRevokeSettings()
     """LOC revocation after the LOC (P-S8-33, L1gs); off by default, a plain class-level default
     as ``soil``."""
+    clip_returned_command: bool = False
+    """Clip only the command :meth:`C2Controller.update` returns to ``+-v_max`` (user decision
+    2026-11-04, the DSb75 addition comes after the vector scale, up to 1.75 ``v_max``). Every
+    internal state keeps the unclipped value. Off by default, a plain class-level default as
+    ``soil``."""
 
     def __post_init__(self) -> None:
         if not self.period_s > 0.0:
@@ -2264,7 +2273,11 @@ class C2Config:
         return replace(self, r8=replace(self.r8, fast_relevel=fast_relevel))
 
     def with_10hz_d1(
-        self, *, soil_stop: bool = True, flat_soil_margin_m: float = R8_FLAT_SOIL_MARGIN_M
+        self,
+        *,
+        soil_stop: bool = True,
+        flat_soil_margin_m: float = R8_FLAT_SOIL_MARGIN_M,
+        clip_returned_command: bool = True,
     ) -> C2Config:
         """Copy with the R8-D1 design C2 (spec rev. 30 136 / 139, user decisions 2026-10-24).
 
@@ -2335,6 +2348,9 @@ class C2Config:
                 level settle after the soil mode
                 (``SlopeClearanceMarginSettings.flat_soil_margin_m``). 0.03 m by default since
                 the spec 429.11 switch; ``0`` turns it off.
+            clip_returned_command: The returned command is clipped to ``+-v_max``
+                (:attr:`clip_returned_command`). On by default since the user decision of
+                2026-11-04; ``False`` gives the preset of the v4 results.
         """
         config = self.with_r8_diagnostics()
         two_pressure = replace(
@@ -2404,6 +2420,7 @@ class C2Config:
         )
         return replace(
             config,
+            clip_returned_command=clip_returned_command,
             slope_clearance_margin=slope_clearance_margin,
             liftoff_window_reapproach=LiftoffWindowReapproachSettings(
                 mode=LiftoffWindowReapproach.RESTART
@@ -4070,7 +4087,16 @@ class C2Controller:
         if self.config.diff_sink.enable:
             self._diff_sink_after_update(measurements.t_s)
         self._clear_guard_soil_sign_without_loc(measurements.t_s)
-        return Command(t_s=measurements.t_s, leg_speed_m_s=applied)
+        return Command(t_s=measurements.t_s, leg_speed_m_s=self._returned_speeds(applied))
+
+    def _returned_speeds(self, applied: NDArray[np.float64]) -> NDArray[np.float64]:
+        """The speeds handed to the plant. Clipping here only (user decision 2026-11-04): the
+        increment limit, the output queue and the applied output keep the unclipped command,
+        so a controller behind a clipping actuator runs as it did without this clip."""
+        if not self.config.clip_returned_command:
+            return applied
+        max_speed = self.geometry.max_speed_m_s
+        return np.clip(applied, -max_speed, max_speed)
 
     def _delay_output(self, output: NDArray[np.float64]) -> NDArray[np.float64]:
         """R8 output buffer: the command of ``d`` periods ago (zero speed before that)."""
@@ -4115,6 +4141,7 @@ class C2Controller:
             "initial_seal_band_N": self.config.initial_seal_band_N,
             "seal_band_N": self._state.seal_band_N,
             "output_ramp_time_s": self.config.output_ramp_time_s,
+            "clip_returned_command": self.config.clip_returned_command,
             "gains": asdict(self.config.gains),
             "filters": asdict(self.config.filters),
             "thresholds": {
