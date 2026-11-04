@@ -1,0 +1,418 @@
+{
+ "cells": {
+  "E_G4_Fs0": {
+   "case": "E_G4_Fs0",
+   "dir": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_r12_off\\final_E_G4_Fs0Fs8_ph0_off_20261104_200729\\E_G4_Fs0",
+   "event_t_s": 47.80000000039497,
+   "phase_at_event": "ready",
+   "ready_s": 42.80000000039497,
+   "legs": {
+    "FL": {
+     "min_kN": 63.22563524281298,
+     "t_rel_s": 1.6080000002193628,
+     "airborne_s": 0.0
+    },
+    "FR": {
+     "min_kN": 106.35351304823172,
+     "t_rel_s": 12.268000000573238,
+     "airborne_s": 0.0
+    },
+    "RL": {
+     "min_kN": 61.35581515072531,
+     "t_rel_s": 12.126000000568524,
+     "airborne_s": 0.0
+    },
+    "RR": {
+     "min_kN": 12.185430282344907,
+     "t_rel_s": 1.6050000002192633,
+     "airborne_s": 0.0
+    }
+   },
+   "D_pre_kN": 0.2527925736891339,
+   "J_C": [
+    0,
+    0,
+    null,
+    0,
+    -2.073782319551774
+   ],
+   "J_P": [
+    0,
+    0,
+    null,
+    0,
+    0.0013922559961210936
+   ],
+   "reready_s": 22.700000000919538,
+   "F_min_row": 12.185430282344907,
+   "item6_min": 12.185430282344907,
+   "final_phase": "ready",
+   "end_s": 92.80000000205479,
+   "wall_s": 384.9104099999822,
+   "pid": 50636,
+   "soil_stop_in_config": true,
+   "failed": 0,
+   "hold": 0,
+   "failed_items": [],
+   "gate_rr_kN": 12.185846216270221,
+   "gate_reready_s": 22.700000000919538,
+   "rr_minus_gate_kN": -0.0004159339253142491,
+   "rr_equal_gate": false,
+   "other_legs_min_kN": 61.35581515072531
+  },
+  "E_G4_Fs0_ph0.05": {
+   "case": "E_G4_Fs0_ph0.05",
+   "dir": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_r12_off\\final_E_G4_Fs0Fs8_ph0.05_off_20261104_194735\\E_G4_Fs0_ph0.05",
+   "event_t_s": 47.850000000394964,
+   "phase_at_event": "ready",
+   "ready_s": 42.80000000039497,
+   "legs": {
+    "FL": {
+     "min_kN": 62.94244436829545,
+     "t_rel_s": 1.656000000222619,
+     "airborne_s": 0.0
+    },
+    "FR": {
+     "min_kN": 105.63750467922524,
+     "t_rel_s": 12.320000000576627,
+     "airborne_s": 0.0
+    },
+    "RL": {
+     "min_kN": 60.568920464106526,
+     "t_rel_s": 12.17400000057178,
+     "airborne_s": 0.0
+    },
+    "RR": {
+     "min_kN": 12.69122321085452,
+     "t_rel_s": 1.6490000002223866,
+     "airborne_s": 0.0
+    }
+   },
+   "D_pre_kN": 0.2521644158723502,
+   "J_C": [
+    0,
+    0,
+    null,
+    0,
+    -2.073782319551772
+   ],
+   "J_P": [
+    0,
+    0,
+    null,
+    0,
+    0.0013922559961229127
+   ],
+   "reready_s": 22.75000000092286,
+   "F_min_row": 12.69122321085452,
+   "item6_min": 12.69122321085452,
+   "final_phase": "ready",
+   "end_s": 92.9000000020581,
+   "wall_s": 390.54331809998257,
+   "pid": 49772,
+   "soil_stop_in_config": true,
+   "failed": 0,
+   "hold": 0,
+   "failed_items": [],
+   "gate_rr_kN": 12.692230473759565,
+   "gate_reready_s": 22.75000000092286,
+   "rr_minus_gate_kN": -0.0010072629050448256,
+   "rr_equal_gate": false,
+   "other_legs_min_kN": 60.568920464106526
+  },
+  "E_G4_Fs4": {
+   "case": "E_G4_Fs4",
+   "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_E_G4_Fs4_20261030_233941\\E_G4_Fs4",
+   "event_t_s": 47.70000000039165,
+   "phase_at_event": "ready",
+   "ready_s": 42.70000000039165,
+   "legs": {
+    "FL": {
+     "min_kN": 61.588320760206116,
+     "t_rel_s": 1.5180000002163752,
+     "airborne_s": 0.0
+    },
+    "FR": {
+     "min_kN": 104.48857066588354,
+     "t_rel_s": 12.413000000578052,
+     "airborne_s": 0.0
+    },
+    "RL": {
+     "min_kN": 59.05033423286418,
+     "t_rel_s": 12.272000000573371,
+     "airborne_s": 0.0
+    },
+    "RR": {
+     "min_kN": 11.143760085285908,
+     "t_rel_s": 1.5190000002164084,
+     "airborne_s": 0.0
+    }
+   },
+   "D_pre_kN": 0.4017671154073396,
+   "J_C": [
+    0,
+    0,
+    null,
+    0,
+    -4.48442756310589
+   ],
+   "J_P": [
+    0,
+    0,
+    null,
+    0,
+    3.320427287761135
+   ],
+   "reready_s": 22.800000000922857,
+   "F_min_row": 11.143760085285908,
+   "item6_min": 11.143760085285908,
+   "final_phase": "ready",
+   "end_s": 92.70000000205147,
+   "wall_s": 842.5886834000121,
+   "pid": 10748,
+   "soil_stop_in_config": true,
+   "failed": 0,
+   "hold": 0,
+   "failed_items": [],
+   "gate_rr_kN": 11.143760085285908,
+   "gate_reready_s": 22.800000000922857,
+   "rr_minus_gate_kN": 0.0,
+   "rr_equal_gate": true,
+   "other_legs_min_kN": 59.05033423286418
+  },
+  "E_G4_Fs4_ph0.05": {
+   "case": "E_G4_Fs4_ph0.05",
+   "dir": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_r12_off\\final_E_G4_Fs4_ph0.05_off_20261104_192551\\E_G4_Fs4_ph0.05",
+   "event_t_s": 47.750000000391644,
+   "phase_at_event": "ready",
+   "ready_s": 42.70000000039165,
+   "legs": {
+    "FL": {
+     "min_kN": 62.32457555538227,
+     "t_rel_s": 1.4700000002164444,
+     "airborne_s": 0.0
+    },
+    "FR": {
+     "min_kN": 104.56280921762533,
+     "t_rel_s": 12.360000000577955,
+     "airborne_s": 0.0
+    },
+    "RL": {
+     "min_kN": 59.11920093577014,
+     "t_rel_s": 12.22100000057334,
+     "airborne_s": 0.0
+    },
+    "RR": {
+     "min_kN": 11.834737392051006,
+     "t_rel_s": 1.4810000002168096,
+     "airborne_s": 0.0
+    }
+   },
+   "D_pre_kN": 0.40171931502480585,
+   "J_C": [
+    0,
+    0,
+    null,
+    0,
+    -4.484427563105892
+   ],
+   "J_P": [
+    0,
+    0,
+    null,
+    0,
+    3.3204272877611327
+   ],
+   "reready_s": 22.75000000092286,
+   "F_min_row": 11.834737392051006,
+   "item6_min": 11.834737392051006,
+   "final_phase": "ready",
+   "end_s": 92.80000000205479,
+   "wall_s": 468.6053407000145,
+   "pid": 50288,
+   "soil_stop_in_config": true,
+   "failed": 0,
+   "hold": 0,
+   "failed_items": [],
+   "gate_rr_kN": 11.834737392051006,
+   "gate_reready_s": 22.75000000092286,
+   "rr_minus_gate_kN": 0.0,
+   "rr_equal_gate": true,
+   "other_legs_min_kN": 59.11920093577014
+  },
+  "E_G4_Fs8": {
+   "case": "E_G4_Fs8",
+   "dir": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_r12_off\\final_E_G4_Fs0Fs8_ph0_off_20261104_200729\\E_G4_Fs8",
+   "event_t_s": 47.70000000039165,
+   "phase_at_event": "ready",
+   "ready_s": 42.70000000039165,
+   "legs": {
+    "FL": {
+     "min_kN": 65.23692478085587,
+     "t_rel_s": 1.3510000002108313,
+     "airborne_s": 0.0
+    },
+    "FR": {
+     "min_kN": 100.57883934777139,
+     "t_rel_s": 14.476000000646529,
+     "airborne_s": 0.0
+    },
+    "RL": {
+     "min_kN": 54.829731732801775,
+     "t_rel_s": 14.013000000631159,
+     "airborne_s": 0.0
+    },
+    "RR": {
+     "min_kN": 13.114665731372547,
+     "t_rel_s": 1.3420000002105326,
+     "airborne_s": 0.0
+    }
+   },
+   "D_pre_kN": -0.019790757876959105,
+   "J_C": [
+    0,
+    0,
+    null,
+    0,
+    -6.436262792401789
+   ],
+   "J_P": [
+    0,
+    0,
+    null,
+    0,
+    6.6304004328012365
+   ],
+   "reready_s": 24.70000000098593,
+   "F_min_row": 13.114665731372547,
+   "item6_min": 13.114665731372547,
+   "final_phase": "ready",
+   "end_s": 92.70000000205147,
+   "wall_s": 469.7994645999861,
+   "pid": 55720,
+   "soil_stop_in_config": true,
+   "failed": 0,
+   "hold": 0,
+   "failed_items": [],
+   "gate_rr_kN": 13.069607604402643,
+   "gate_reready_s": 24.80000000098925,
+   "rr_minus_gate_kN": 0.04505812696990397,
+   "rr_equal_gate": false,
+   "other_legs_min_kN": 54.829731732801775
+  },
+  "E_G4_Fs8_ph0.05": {
+   "case": "E_G4_Fs8_ph0.05",
+   "dir": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_r12_off\\final_E_G4_Fs0Fs8_ph0.05_off_20261104_194735\\E_G4_Fs8_ph0.05",
+   "event_t_s": 47.750000000391644,
+   "phase_at_event": "ready",
+   "ready_s": 42.70000000039165,
+   "legs": {
+    "FL": {
+     "min_kN": 62.57339564791993,
+     "t_rel_s": 1.3850000002136227,
+     "airborne_s": 0.0
+    },
+    "FR": {
+     "min_kN": 100.56860877282682,
+     "t_rel_s": 14.71000000065596,
+     "airborne_s": 0.0
+    },
+    "RL": {
+     "min_kN": 54.83438323915479,
+     "t_rel_s": 14.249000000640656,
+     "airborne_s": 0.0
+    },
+    "RR": {
+     "min_kN": 11.564434931655244,
+     "t_rel_s": 1.387000000213689,
+     "airborne_s": 0.0
+    }
+   },
+   "D_pre_kN": -0.020043076271307653,
+   "J_C": [
+    0,
+    0,
+    null,
+    0,
+    -6.4362627924017906
+   ],
+   "J_P": [
+    0,
+    0,
+    null,
+    0,
+    6.630400432801235
+   ],
+   "reready_s": 24.950000000995892,
+   "F_min_row": 11.564434931655244,
+   "item6_min": 11.564434931655244,
+   "final_phase": "ready",
+   "end_s": 92.80000000205479,
+   "wall_s": 472.5533613000007,
+   "pid": 41824,
+   "soil_stop_in_config": true,
+   "failed": 0,
+   "hold": 0,
+   "failed_items": [],
+   "gate_rr_kN": 11.782433860451315,
+   "gate_reready_s": 25.050000000999212,
+   "rr_minus_gate_kN": -0.21799892879607086,
+   "rr_equal_gate": false,
+   "other_legs_min_kN": 54.83438323915479
+  }
+ },
+ "tested_phase_min_per_fs": {
+  "Fs0": {
+   "min_kN": 12.185430282344907,
+   "at": "E_G4_Fs0",
+   "margin_to_F_min_kN": 2.770841172344907,
+   "gate_min_kN": 12.185846216270221,
+   "gate_at": "E_G4_Fs0"
+  },
+  "Fs4": {
+   "min_kN": 11.143760085285908,
+   "at": "E_G4_Fs4",
+   "margin_to_F_min_kN": 1.7291709752859088,
+   "gate_min_kN": 11.143760085285908,
+   "gate_at": "E_G4_Fs4"
+  },
+  "Fs8": {
+   "min_kN": 11.564434931655244,
+   "at": "E_G4_Fs8_ph0.05",
+   "margin_to_F_min_kN": 2.1498458216552443,
+   "gate_min_kN": 11.782433860451315,
+   "gate_at": "E_G4_Fs8_ph0.05"
+  }
+ },
+ "overall": [
+  "Fs4",
+  {
+   "min_kN": 11.143760085285908,
+   "at": "E_G4_Fs4",
+   "margin_to_F_min_kN": 1.7291709752859088,
+   "gate_min_kN": 11.143760085285908,
+   "gate_at": "E_G4_Fs4"
+  }
+ ],
+ "F_min_kN": 9.41458911,
+ "code_state_ph0": {
+  "main_head": "dfa1c175cf5ab845699c3542aaa26119c80b11b9",
+  "code_sha256": {
+   "04_scripts/02_chrono/run_S8C.py": "82a8e1920a4d4a981b201473a747a49b2198a35b1325be4f7f6d528843871fb1",
+   "04_scripts/02_chrono/run_S7C.py": "c3216592ea117f8c0390263e99e57aa9e4d1da219c06cc0bfd3f0b226688eea4",
+   "04_scripts/02_chrono/run_S6C.py": "ede0799d83ca6013e74d60101f82077b0d7e07d4cc0d01b8b212ea7d5c366fcf",
+   "03_src/outrigger_sim/chrono/l2b_model.py": "d6a3142069196f0f559968d1cfeb82e6961236cd1f829b3d9a574a3703ad1070",
+   "03_src/outrigger_sim/chrono/l2b_actuator.py": "03a8e55bae8ea50dff0283087b288aa802b2eba985b3e451fa52bc84021940cf",
+   "03_src/outrigger_sim/actuation.py": "06a63294d63f7fe390e693c14637aba9973906ce14524f1a670a6f4a8c15c3f4",
+   "03_src/outrigger_sim/runner.py": "b55999bb79c10467a94ab3725f518b08583c0cfed67e75e8f2689e42061ed159",
+   "03_src/outrigger_sim/control/c2.py": "fb5fb9f2091405845f9b05a26993e3b2d81fde218d5d7d8eb50b41285d809195",
+   "03_src/outrigger_sim/verify/s8_control.py": "3aa15db72e952bd7c6333776e6b2152e2729fc2ebb699794f492bb4cdb09bb09",
+   "02_params/rexome33.yaml": "ef2880f98aa6a20df18edd515fd227e886aa5c384f4ef235bc85d4cec38987ce"
+  }
+ },
+ "meta_ph0": {
+  "rows": 125,
+  "failed": 0,
+  "hold": 0
+ }
+}

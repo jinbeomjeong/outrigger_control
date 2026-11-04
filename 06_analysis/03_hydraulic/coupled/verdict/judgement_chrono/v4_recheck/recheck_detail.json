@@ -1,0 +1,1255 @@
+{
+ "N_G4_Fs0_pressure": {
+  "record": {
+   "meas.head_pressure": {
+    "count": 465,
+    "first_t": 5.300000000000987,
+    "last_t": 83.90000000166165,
+    "max_abs": 164734.59249255247,
+    "t_at_max": 40.00000000020433
+   },
+   "meas.rod_pressure": {
+    "count": 465,
+    "first_t": 5.300000000000987,
+    "last_t": 83.90000000166165,
+    "max_abs": 498322.14301097614,
+    "t_at_max": 40.00000000020433
+   },
+   "F_cyl": {
+    "count": 427,
+    "first_t": 41.300000000247486,
+    "last_t": 83.90000000166165,
+    "max_abs": 245.7075859910692,
+    "t_at_max": 42.50000000028732
+   },
+   "s_motor": {
+    "count": 427,
+    "first_t": 41.300000000247486,
+    "last_t": 83.90000000166165,
+    "max_abs": 2.669838645719125e-07,
+    "t_at_max": 76.0000000013994
+   }
+  },
+  "pads_first_diff_rawtime": {
+   "F_cyl": 41.209000000244465,
+   "F_cyl_mean_20ms": 41.20000000024417,
+   "F_cyl_mean_interval": 41.209000000244465,
+   "F_cyl_min_interval": 41.209000000244465,
+   "F_pressure": 41.209000000244465,
+   "F_pressure_max_interval": 41.209000000244465,
+   "F_pressure_min_interval": 41.209000000244465,
+   "L": 41.20000000024417,
+   "L_lateral": 41.209000000244465,
+   "N": 41.2010000002442,
+   "N_raw": 41.209000000244465,
+   "R_world": 41.20000000024417,
+   "R_world_1ms": 41.20500000024433,
+   "T": 41.20000000024417,
+   "a_world": 41.209000000244465,
+   "ball_centre_world": 41.209000000244465,
+   "body_quat_wxyz": 41.209000000244465,
+   "contact_point_world": 41.209000000244465,
+   "head_pressure": 5.226000000001159,
+   "lateral_force_world": 41.209000000244465,
+   "rod_pressure": 5.226000000001159,
+   "s_link": 41.209000000244465,
+   "s_motor": 41.40100000025084,
+   "s_piston": 41.209000000244465,
+   "stroke_true": 41.209000000244465,
+   "utilisation": 41.20000000024417
+  },
+  "pads_keys_same": [
+   "F_seal_limit",
+   "anchor_world",
+   "cb_delta",
+   "cb_y",
+   "dt_interval",
+   "f_seal",
+   "n_world",
+   "slip_total",
+   "t"
+  ],
+  "offset_new_s": 3.0000000000019043,
+  "RR_interval": {
+   "RR_new_min_N": 12865.877028849258,
+   "RR_new_t_s": 37.519000000219656,
+   "RR_old_min_N": 12865.877028849258,
+   "RR_old_t_s": 37.519000000219656,
+   "new_at_old_time_N": 12865.877028849258,
+   "old_at_new_time_N": 12865.877028849258
+  },
+  "reready": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [36.80000000019579, 'level'], [46.600000000521"
+  },
+  "reready_old": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [36.80000000019579, 'level'], [46.600000000521"
+  },
+  "phases_head": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [36.80000000019579, 'level'], [46.60000000052111, 'done'], [46.70000000052443, 'ready']]",
+  "air_meta": {
+   "samples": null
+  },
+  "capped": null
+ },
+ "N_G4_Fs4_pressure": {
+  "record": {
+   "meas.head_pressure": {
+    "count": 476,
+    "first_t": 5.300000000000987,
+    "last_t": 83.90000000166165,
+    "max_abs": 180305.73124389164,
+    "t_at_max": 40.00000000020433
+   },
+   "meas.rod_pressure": {
+    "count": 478,
+    "first_t": 5.300000000000987,
+    "last_t": 83.90000000166165,
+    "max_abs": 545424.8378019272,
+    "t_at_max": 40.00000000020433
+   },
+   "F_cyl": {
+    "count": 436,
+    "first_t": 40.40000000021761,
+    "last_t": 83.90000000166165,
+    "max_abs": 268.61444284848403,
+    "t_at_max": 44.600000000357035
+   },
+   "s_motor": {
+    "count": 436,
+    "first_t": 40.40000000021761,
+    "last_t": 83.90000000166165,
+    "max_abs": 1.7687821762812916e-07,
+    "t_at_max": 43.70000000032716
+   }
+  },
+  "pads_first_diff_rawtime": {
+   "F_cyl": 40.30100000021432,
+   "F_cyl_mean_20ms": 40.292000000214024,
+   "F_cyl_mean_interval": 40.30100000021432,
+   "F_cyl_min_interval": 40.30100000021432,
+   "F_pressure": 40.30100000021432,
+   "F_pressure_max_interval": 40.30100000021432,
+   "F_pressure_min_interval": 40.30100000021432,
+   "L": 40.292000000214024,
+   "L_lateral": 40.30100000021432,
+   "N": 40.292000000214024,
+   "N_raw": 40.30100000021432,
+   "R_world": 40.292000000214024,
+   "R_world_1ms": 40.30100000021432,
+   "T": 40.292000000214024,
+   "a_world": 40.30100000021432,
+   "ball_centre_world": 40.30100000021432,
+   "body_quat_wxyz": 40.30100000021432,
+   "contact_point_world": 40.30100000021432,
+   "f_seal": 40.47000000021993,
+   "head_pressure": 5.201000000001217,
+   "lateral_force_world": 40.30100000021432,
+   "rod_pressure": 5.201000000001217,
+   "s_link": 40.30100000021432,
+   "s_motor": 40.50100000022096,
+   "s_piston": 40.30100000021432,
+   "stroke_true": 40.30100000021432,
+   "utilisation": 40.292000000214024
+  },
+  "pads_keys_same": [
+   "F_seal_limit",
+   "anchor_world",
+   "cb_delta",
+   "cb_y",
+   "dt_interval",
+   "n_world",
+   "slip_total",
+   "t"
+  ],
+  "offset_new_s": 3.0000000000019043,
+  "RR_interval": {
+   "RR_new_min_N": 9571.884278844176,
+   "RR_new_t_s": 37.54200000022042,
+   "RR_old_min_N": 9481.845776942091,
+   "RR_old_t_s": 37.531000000220054,
+   "new_at_old_time_N": 9584.684459340358,
+   "old_at_new_time_N": 9571.886387154631
+  },
+  "reready": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [36.80000000019579, 'level'], [48.200000000574"
+  },
+  "reready_old": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [36.80000000019579, 'level'], [48.200000000574"
+  },
+  "phases_head": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [36.80000000019579, 'level'], [48.20000000057423, 'done'], [48.30000000057755, 'ready']]",
+  "air_meta": {
+   "samples": null
+  },
+  "capped": null
+ },
+ "N_G4_Fs8_pressure": {
+  "record": {
+   "meas.head_pressure": {
+    "count": 474,
+    "first_t": 5.4000000000007535,
+    "last_t": 83.90000000166165,
+    "max_abs": 192786.65803369042,
+    "t_at_max": 40.00000000020433
+   },
+   "meas.rod_pressure": {
+    "count": 478,
+    "first_t": 5.4000000000007535,
+    "last_t": 83.90000000166165,
+    "max_abs": 583179.6413956948,
+    "t_at_max": 40.00000000020433
+   },
+   "F_cyl": {
+    "count": 400,
+    "first_t": 44.00000000033712,
+    "last_t": 83.90000000166165,
+    "max_abs": 148.97578715944837,
+    "t_at_max": 50.800000000562854
+   },
+   "s_motor": {
+    "count": 400,
+    "first_t": 44.00000000033712,
+    "last_t": 83.90000000166165,
+    "max_abs": 1.8190169587262162e-07,
+    "t_at_max": 59.400000000848344
+   }
+  },
+  "pads_first_diff_rawtime": {
+   "F_cyl": 43.96300000033589,
+   "F_cyl_mean_20ms": 43.95500000033562,
+   "F_cyl_mean_interval": 43.96400000033592,
+   "F_cyl_min_interval": 43.96400000033592,
+   "F_pressure": 43.96300000033589,
+   "F_pressure_max_interval": 43.96300000033589,
+   "F_pressure_min_interval": 43.96400000033592,
+   "L": 43.95500000033562,
+   "L_lateral": 43.96400000033592,
+   "N": 43.95500000033562,
+   "N_raw": 43.96300000033589,
+   "R_world": 43.95500000033562,
+   "R_world_1ms": 43.96300000033589,
+   "T": 43.95500000033562,
+   "a_world": 43.96400000033592,
+   "ball_centre_world": 43.96400000033592,
+   "body_quat_wxyz": 43.96400000033592,
+   "contact_point_world": 43.96400000033592,
+   "f_seal": 43.965000000335955,
+   "head_pressure": 5.201000000001217,
+   "lateral_force_world": 43.96400000033592,
+   "rod_pressure": 5.201000000001217,
+   "s_link": 43.96400000033592,
+   "s_motor": 44.10100000034047,
+   "s_piston": 43.96400000033592,
+   "stroke_true": 43.96400000033592,
+   "utilisation": 43.95500000033562
+  },
+  "pads_keys_same": [
+   "F_seal_limit",
+   "anchor_world",
+   "cb_delta",
+   "cb_y",
+   "dt_interval",
+   "n_world",
+   "slip_total",
+   "t"
+  ],
+  "offset_new_s": 3.0000000000019043,
+  "RR_interval": {
+   "RR_new_min_N": 6549.930605508756,
+   "RR_new_t_s": 37.52700000021992,
+   "RR_old_min_N": 6549.930605508756,
+   "RR_old_t_s": 37.52700000021992,
+   "new_at_old_time_N": 6549.930605508756,
+   "old_at_new_time_N": 6549.930605508756
+  },
+  "reready": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [36.80000000019579, 'level'], [47.100000000537"
+  },
+  "reready_old": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [36.80000000019579, 'level'], [47.100000000537"
+  },
+  "phases_head": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [36.80000000019579, 'level'], [47.10000000053771, 'done'], [47.20000000054103, 'ready']]",
+  "air_meta": {
+   "samples": null
+  },
+  "capped": null
+ },
+ "N_SS_Fs0_pressure": {
+  "record": {
+   "meas.head_pressure": {
+    "count": 353,
+    "first_t": 5.300000000000987,
+    "last_t": 83.90000000166165,
+    "max_abs": 229628.9648870607,
+    "t_at_max": 51.20000000057613
+   },
+   "meas.rod_pressure": {
+    "count": 353,
+    "first_t": 5.300000000000987,
+    "last_t": 83.90000000166165,
+    "max_abs": 694627.6197883895,
+    "t_at_max": 51.20000000057613
+   },
+   "F_cyl": {
+    "count": 326,
+    "first_t": 51.40000000058277,
+    "last_t": 83.90000000166165,
+    "max_abs": 210.87203072134434,
+    "t_at_max": 55.70000000072552
+   },
+   "s_motor": {
+    "count": 326,
+    "first_t": 51.40000000058277,
+    "last_t": 83.90000000166165,
+    "max_abs": 5.245439414347519e-05,
+    "t_at_max": 65.3000000010442
+   }
+  },
+  "pads_first_diff_rawtime": {
+   "F_cyl": 51.33900000058075,
+   "F_cyl_mean_20ms": 51.33000000058045,
+   "F_cyl_mean_interval": 51.33900000058075,
+   "F_cyl_min_interval": 51.34000000058078,
+   "F_pressure": 51.33900000058075,
+   "F_pressure_max_interval": 51.33900000058075,
+   "F_pressure_min_interval": 51.34000000058078,
+   "L": 51.33000000058045,
+   "L_lateral": 51.33800000058071,
+   "N": 51.33000000058045,
+   "N_raw": 51.33900000058075,
+   "R_world": 51.33000000058045,
+   "R_world_1ms": 51.33900000058075,
+   "T": 51.33000000058045,
+   "a_world": 51.33900000058075,
+   "ball_centre_world": 51.33900000058075,
+   "body_quat_wxyz": 51.33900000058075,
+   "contact_point_world": 51.33900000058075,
+   "head_pressure": 5.226000000001159,
+   "lateral_force_world": 51.33800000058071,
+   "rod_pressure": 5.226000000001159,
+   "s_link": 51.33900000058075,
+   "s_motor": 51.501000000586124,
+   "s_piston": 51.33900000058075,
+   "stroke_true": 51.33900000058075,
+   "utilisation": 51.33000000058045
+  },
+  "pads_keys_same": [
+   "F_seal_limit",
+   "anchor_world",
+   "cb_delta",
+   "cb_y",
+   "dt_interval",
+   "f_seal",
+   "n_world",
+   "slip_total",
+   "t"
+  ],
+  "offset_new_s": 3.0000000000019043,
+  "RR_interval": {
+   "RR_new_min_N": 15185.970306481058,
+   "RR_new_t_s": 48.10100000057094,
+   "RR_old_min_N": 15185.970306481058,
+   "RR_old_t_s": 48.10100000057094,
+   "new_at_old_time_N": 15185.970306481058,
+   "old_at_new_time_N": 15185.970306481058
+  },
+  "reready": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [48.00000000056759, 'level'], [61.100000001002"
+  },
+  "reready_old": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [48.00000000056759, 'level'], [61.300000001009"
+  },
+  "phases_head": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [48.00000000056759, 'level'], [61.100000001002456, 'done'], [61.200000001005776, 'ready']]",
+  "air_meta": {
+   "samples": null
+  },
+  "capped": null
+ },
+ "N_SS_Fs4_pressure": {
+  "record": {
+   "meas.head_pressure": {
+    "count": 365,
+    "first_t": 5.300000000000987,
+    "last_t": 83.90000000166165,
+    "max_abs": 242840.4227049388,
+    "t_at_max": 51.10000000057281
+   },
+   "meas.rod_pressure": {
+    "count": 367,
+    "first_t": 5.300000000000987,
+    "last_t": 83.90000000166165,
+    "max_abs": 734592.2797452958,
+    "t_at_max": 51.10000000057281
+   },
+   "F_cyl": {
+    "count": 323,
+    "first_t": 51.70000000059273,
+    "last_t": 83.90000000166165,
+    "max_abs": 269.6359127522592,
+    "t_at_max": 55.70000000072552
+   },
+   "s_motor": {
+    "count": 323,
+    "first_t": 51.70000000059273,
+    "last_t": 83.90000000166165,
+    "max_abs": 2.2826913576023955e-07,
+    "t_at_max": 59.60000000085498
+   }
+  },
+  "pads_first_diff_rawtime": {
+   "F_cyl": 51.70000000059273,
+   "F_cyl_mean_20ms": 51.69100000059243,
+   "F_cyl_mean_interval": 51.6990000005927,
+   "F_cyl_min_interval": 51.70000000059273,
+   "F_pressure": 51.70000000059273,
+   "F_pressure_max_interval": 51.70000000059273,
+   "F_pressure_min_interval": 51.70000000059273,
+   "L": 51.69100000059243,
+   "L_lateral": 51.70000000059273,
+   "N": 51.69100000059243,
+   "N_raw": 51.70000000059273,
+   "R_world": 51.69100000059243,
+   "R_world_1ms": 51.6990000005927,
+   "T": 51.69100000059243,
+   "a_world": 51.70000000059273,
+   "ball_centre_world": 51.70000000059273,
+   "body_quat_wxyz": 51.70000000059273,
+   "contact_point_world": 51.70000000059273,
+   "f_seal": 51.701000000592764,
+   "head_pressure": 5.201000000001217,
+   "lateral_force_world": 51.70000000059273,
+   "rod_pressure": 5.201000000001217,
+   "s_link": 51.70000000059273,
+   "s_motor": 51.80100000059608,
+   "s_piston": 51.70000000059273,
+   "stroke_true": 51.70000000059273,
+   "utilisation": 51.69100000059243
+  },
+  "pads_keys_same": [
+   "F_seal_limit",
+   "anchor_world",
+   "cb_delta",
+   "cb_y",
+   "dt_interval",
+   "n_world",
+   "slip_total",
+   "t"
+  ],
+  "offset_new_s": 3.0000000000019043,
+  "RR_interval": {
+   "RR_new_min_N": 11997.422455927532,
+   "RR_new_t_s": 48.00100000056762,
+   "RR_old_min_N": 11997.422455927532,
+   "RR_old_t_s": 48.00100000056762,
+   "new_at_old_time_N": 11997.422455927532,
+   "old_at_new_time_N": 11997.422455927532
+  },
+  "reready": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [47.90000000056427, 'level'], [61.300000001009"
+  },
+  "reready_old": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [47.90000000056427, 'level'], [61.300000001009"
+  },
+  "phases_head": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [47.90000000056427, 'level'], [61.300000001009096, 'done'], [61.400000001012415, 'ready']]",
+  "air_meta": {
+   "samples": null
+  },
+  "capped": null
+ },
+ "N_SS_Fs8_pressure": {
+  "record": {
+   "meas.head_pressure": {
+    "count": 363,
+    "first_t": 5.4000000000007535,
+    "last_t": 83.90000000166165,
+    "max_abs": 258859.42643987853,
+    "t_at_max": 51.10000000057281
+   },
+   "meas.rod_pressure": {
+    "count": 367,
+    "first_t": 5.4000000000007535,
+    "last_t": 83.90000000166165,
+    "max_abs": 783049.7661135996,
+    "t_at_max": 51.10000000057281
+   },
+   "F_cyl": {
+    "count": 320,
+    "first_t": 52.00000000060269,
+    "last_t": 83.90000000166165,
+    "max_abs": 266.10009277655627,
+    "t_at_max": 57.10000000077199
+   },
+   "s_motor": {
+    "count": 320,
+    "first_t": 52.00000000060269,
+    "last_t": 83.90000000166165,
+    "max_abs": 2.4677469553480158e-05,
+    "t_at_max": 70.4000000012135
+   }
+  },
+  "pads_first_diff_rawtime": {
+   "F_cyl": 51.992000000602424,
+   "F_cyl_mean_20ms": 51.983000000602125,
+   "F_cyl_mean_interval": 51.992000000602424,
+   "F_cyl_min_interval": 51.992000000602424,
+   "F_pressure": 51.992000000602424,
+   "F_pressure_max_interval": 51.992000000602424,
+   "F_pressure_min_interval": 51.992000000602424,
+   "L": 51.983000000602125,
+   "L_lateral": 51.992000000602424,
+   "N": 51.983000000602125,
+   "N_raw": 51.992000000602424,
+   "R_world": 51.983000000602125,
+   "R_world_1ms": 51.992000000602424,
+   "T": 51.983000000602125,
+   "a_world": 51.992000000602424,
+   "ball_centre_world": 51.992000000602424,
+   "body_quat_wxyz": 51.992000000602424,
+   "contact_point_world": 51.992000000602424,
+   "f_seal": 51.992000000602424,
+   "head_pressure": 5.201000000001217,
+   "lateral_force_world": 51.992000000602424,
+   "rod_pressure": 5.201000000001217,
+   "s_link": 51.992000000602424,
+   "s_motor": 52.10100000060604,
+   "s_piston": 51.992000000602424,
+   "stroke_true": 51.992000000602424,
+   "utilisation": 51.983000000602125
+  },
+  "pads_keys_same": [
+   "F_seal_limit",
+   "anchor_world",
+   "cb_delta",
+   "cb_y",
+   "dt_interval",
+   "n_world",
+   "slip_total",
+   "t"
+  ],
+  "offset_new_s": 3.0000000000019043,
+  "RR_interval": {
+   "RR_new_min_N": 8150.861602553786,
+   "RR_new_t_s": 48.00100000056762,
+   "RR_old_min_N": 8150.861602553786,
+   "RR_old_t_s": 48.00100000056762,
+   "new_at_old_time_N": 8150.861602553786,
+   "old_at_new_time_N": 8150.861602553786
+  },
+  "reready": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [47.90000000056427, 'level'], [61.300000001009"
+  },
+  "reready_old": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [47.90000000056427, 'level'], [61.200000001005"
+  },
+  "phases_head": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'ready'], [47.90000000056427, 'level'], [61.300000001009096, 'done'], [61.400000001012415, 'ready']]",
+  "air_meta": {
+   "samples": null
+  },
+  "capped": null
+ },
+ "K0V_top_fdown3.5_Fs0": {
+  "record": {
+   "meas.head_pressure": {
+    "count": 666,
+    "first_t": 5.300000000000987,
+    "last_t": 91.90000000192722,
+    "max_abs": 876274.7893740227,
+    "t_at_max": 33.90000000000183
+   },
+   "meas.rod_pressure": {
+    "count": 558,
+    "first_t": 5.300000000000987,
+    "last_t": 91.90000000192722,
+    "max_abs": 2903132.363127148,
+    "t_at_max": 33.90000000000183
+   },
+   "F_cyl": {
+    "count": 656,
+    "first_t": 26.399999999951813,
+    "last_t": 91.90000000192722,
+    "max_abs": 10219.846418706205,
+    "t_at_max": 26.899999999950648
+   },
+   "s_motor": {
+    "count": 656,
+    "first_t": 26.399999999951813,
+    "last_t": 91.90000000192722,
+    "max_abs": 0.0011642728339295583,
+    "t_at_max": 27.699999999948783
+   }
+  },
+  "pads_first_diff_rawtime": {
+   "F_cyl": 26.300999999952044,
+   "F_cyl_mean_20ms": 26.291999999952065,
+   "F_cyl_mean_interval": 26.300999999952044,
+   "F_cyl_min_interval": 26.300999999952044,
+   "F_pressure": 26.300999999952044,
+   "F_pressure_max_interval": 26.300999999952044,
+   "F_pressure_min_interval": 26.300999999952044,
+   "L": 26.291999999952065,
+   "L_lateral": 26.300999999952044,
+   "N": 26.291999999952065,
+   "N_raw": 26.300999999952044,
+   "R_world": 26.291999999952065,
+   "R_world_1ms": 26.300999999952044,
+   "T": 26.291999999952065,
+   "a_world": 26.300999999952044,
+   "ball_centre_world": 26.300999999952044,
+   "body_quat_wxyz": 26.300999999952044,
+   "contact_point_world": 26.300999999952044,
+   "head_pressure": 5.227000000001157,
+   "lateral_force_world": 26.300999999952044,
+   "rod_pressure": 5.227000000001157,
+   "s_link": 26.300999999952044,
+   "s_motor": 26.300999999952044,
+   "s_piston": 26.300999999952044,
+   "stroke_true": 26.300999999952044,
+   "utilisation": 26.291999999952065
+  },
+  "pads_keys_same": [
+   "F_seal_limit",
+   "anchor_world",
+   "cb_delta",
+   "cb_y",
+   "dt_interval",
+   "f_seal",
+   "n_world",
+   "slip_total",
+   "t"
+  ],
+  "offset_new_s": 3.0000000000019043,
+  "RR_interval": {},
+  "reready": {
+   "phases_type": "list"
+  },
+  "reready_old": {
+   "phases_type": "list"
+  },
+  "phases_head": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [46.300000000511154, 'done'], [46.400000000514474, 'probe'], [58.30000000090951, 'reanchor'], [77.70000000155352, 'level'], [78.80000000159004, 'done'], [78.90000000159336, 'ready']]",
+  "air_meta": {
+   "samples": null
+  },
+  "capped": null
+ },
+ "K24_top_fdown3.5_Fs2": {
+  "record": {
+   "meas.head_pressure": {
+    "count": 289,
+    "first_t": 3.4000000000027506,
+    "last_t": 81.30000000157534,
+    "max_abs": 28236.68919900991,
+    "t_at_max": 63.50000000098445
+   },
+   "meas.rod_pressure": {
+    "count": 310,
+    "first_t": 3.4000000000027506,
+    "last_t": 81.40000000157866,
+    "max_abs": 99416.67695743125,
+    "t_at_max": 63.50000000098445
+   },
+   "F_cyl": {
+    "count": 0,
+    "first_t": null,
+    "last_t": null,
+    "max_abs": 0.0,
+    "t_at_max": 3.1000000000021175
+   },
+   "s_motor": {
+    "count": 0,
+    "first_t": null,
+    "last_t": null,
+    "max_abs": 0.0,
+    "t_at_max": 3.1000000000021175
+   }
+  },
+  "pads_first_diff_rawtime": {
+   "head_pressure": 3.3190000000025797,
+   "rod_pressure": 3.3190000000025797
+  },
+  "pads_keys_same": [
+   "F_cyl",
+   "F_cyl_mean_20ms",
+   "F_cyl_mean_interval",
+   "F_cyl_min_interval",
+   "F_pressure",
+   "F_pressure_max_interval",
+   "F_pressure_min_interval",
+   "F_seal_limit",
+   "L",
+   "L_lateral",
+   "N",
+   "N_raw",
+   "R_world",
+   "R_world_1ms",
+   "T",
+   "a_world",
+   "anchor_world",
+   "ball_centre_world",
+   "body_quat_wxyz",
+   "cb_delta",
+   "cb_y",
+   "contact_point_world",
+   "dt_interval",
+   "f_seal",
+   "lateral_force_world",
+   "n_world",
+   "s_link",
+   "s_motor",
+   "s_piston",
+   "slip_total",
+   "stroke_true",
+   "t",
+   "utilisation"
+  ],
+  "offset_new_s": 3.0000000000019043,
+  "RR_interval": {},
+  "reready": {
+   "phases_type": "list"
+  },
+  "reready_old": {
+   "phases_type": "list"
+  },
+  "phases_head": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [46.300000000511154, 'done'], [46.400000000514474, 'probe'], [58.30000000090951, 'reanchor'], [76.70000000152032, 'level'], [77.80000000155684, 'done'], [77.90000000156016, 'ready']]",
+  "air_meta": {
+   "samples": null
+  },
+  "capped": null
+ },
+ "K8_top_fdown3.5_Fs8": {
+  "record": {
+   "meas.head_pressure": {
+    "count": 271,
+    "first_t": 5.300000000000987,
+    "last_t": 79.70000000152223,
+    "max_abs": 92888.99927497283,
+    "t_at_max": 63.50000000098445
+   },
+   "meas.rod_pressure": {
+    "count": 289,
+    "first_t": 5.300000000000987,
+    "last_t": 80.00000000153219,
+    "max_abs": 327046.6862716782,
+    "t_at_max": 63.50000000098445
+   },
+   "F_cyl": {
+    "count": 0,
+    "first_t": null,
+    "last_t": null,
+    "max_abs": 0.0,
+    "t_at_max": 3.1000000000021175
+   },
+   "s_motor": {
+    "count": 0,
+    "first_t": null,
+    "last_t": null,
+    "max_abs": 0.0,
+    "t_at_max": 3.1000000000021175
+   }
+  },
+  "pads_first_diff_rawtime": {
+   "head_pressure": 5.201000000001217,
+   "rod_pressure": 5.201000000001217
+  },
+  "pads_keys_same": [
+   "F_cyl",
+   "F_cyl_mean_20ms",
+   "F_cyl_mean_interval",
+   "F_cyl_min_interval",
+   "F_pressure",
+   "F_pressure_max_interval",
+   "F_pressure_min_interval",
+   "F_seal_limit",
+   "L",
+   "L_lateral",
+   "N",
+   "N_raw",
+   "R_world",
+   "R_world_1ms",
+   "T",
+   "a_world",
+   "anchor_world",
+   "ball_centre_world",
+   "body_quat_wxyz",
+   "cb_delta",
+   "cb_y",
+   "contact_point_world",
+   "dt_interval",
+   "f_seal",
+   "lateral_force_world",
+   "n_world",
+   "s_link",
+   "s_motor",
+   "s_piston",
+   "slip_total",
+   "stroke_true",
+   "t",
+   "utilisation"
+  ],
+  "offset_new_s": 3.0000000000019043,
+  "RR_interval": {},
+  "reready": {
+   "phases_type": "list"
+  },
+  "reready_old": {
+   "phases_type": "list"
+  },
+  "phases_head": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [46.300000000511154, 'done'], [46.400000000514474, 'probe'], [58.30000000090951, 'reanchor'], [75.30000000147385, 'level'], [76.40000000151036, 'done'], [76.50000000151368, 'ready']]",
+  "air_meta": {
+   "samples": null
+  },
+  "capped": null
+ },
+ "E_SS_Fs0": {
+  "record": {
+   "meas.head_pressure": {
+    "count": 484,
+    "first_t": 5.300000000000987,
+    "last_t": 95.80000000205669,
+    "max_abs": 818555.2888378464,
+    "t_at_max": 85.00000000169817
+   },
+   "meas.rod_pressure": {
+    "count": 485,
+    "first_t": 5.300000000000987,
+    "last_t": 95.80000000205669,
+    "max_abs": 2559321.7983893035,
+    "t_at_max": 89.50000000184755
+   },
+   "F_cyl": {
+    "count": 347,
+    "first_t": 61.2000000009081,
+    "last_t": 95.80000000205669,
+    "max_abs": 3037.511795929051,
+    "t_at_max": 79.60000000151891
+   },
+   "s_motor": {
+    "count": 347,
+    "first_t": 61.2000000009081,
+    "last_t": 95.80000000205669,
+    "max_abs": 0.00046223548267920744,
+    "t_at_max": 89.70000000185419
+   }
+  },
+  "pads_first_diff_rawtime": {
+   "F_cyl": 61.11000000090511,
+   "F_cyl_mean_20ms": 61.10100000090481,
+   "F_cyl_mean_interval": 61.11000000090511,
+   "F_cyl_min_interval": 61.11100000090514,
+   "F_pressure": 61.11000000090511,
+   "F_pressure_max_interval": 61.08600000090431,
+   "F_pressure_min_interval": 61.11100000090514,
+   "L": 61.10100000090481,
+   "L_lateral": 61.11000000090511,
+   "N": 61.10100000090481,
+   "N_raw": 61.11000000090511,
+   "R_world": 61.10100000090481,
+   "R_world_1ms": 61.11000000090511,
+   "T": 61.10100000090481,
+   "a_world": 61.11000000090511,
+   "ball_centre_world": 61.11000000090511,
+   "body_quat_wxyz": 61.11000000090511,
+   "contact_point_world": 61.11000000090511,
+   "head_pressure": 5.226000000001159,
+   "lateral_force_world": 61.11000000090511,
+   "rod_pressure": 5.226000000001159,
+   "s_link": 61.11000000090511,
+   "s_motor": 61.30100000091145,
+   "s_piston": 61.11000000090511,
+   "stroke_true": 61.11000000090511,
+   "utilisation": 61.10100000090481
+  },
+  "pads_keys_same": [
+   "F_seal_limit",
+   "anchor_world",
+   "cb_delta",
+   "cb_y",
+   "dt_interval",
+   "f_seal",
+   "n_world",
+   "slip_total",
+   "t"
+  ],
+  "offset_new_s": 3.0000000000019043,
+  "RR_interval": {
+   "RR_new_min_N": 29329.781539901735,
+   "RR_new_t_s": 58.00100000089959,
+   "RR_old_min_N": 29329.781539901735,
+   "RR_old_t_s": 58.00100000089959,
+   "new_at_old_time_N": 29329.781539901735,
+   "old_at_new_time_N": 29329.781539901735
+  },
+  "reready": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'probe'], [42.80000000039497, 'ready'], [57.800000000892"
+  },
+  "reready_old": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'probe'], [42.80000000039497, 'ready'], [57.800000000892"
+  },
+  "phases_head": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'probe'], [42.80000000039497, 'ready'], [57.800000000892915, 'level'], [74.20000000143733, 'done'], [74.30000000144065, 'probe'], [86.20000000183569, 'ready",
+  "air_meta": {
+   "samples": null
+  },
+  "capped": null
+ },
+ "E_SS_Fs8": {
+  "record": {
+   "meas.head_pressure": {
+    "count": 714,
+    "first_t": 5.4000000000007535,
+    "last_t": 95.60000000205005,
+    "max_abs": 1248675.0947519671,
+    "t_at_max": 89.60000000185087
+   },
+   "meas.rod_pressure": {
+    "count": 636,
+    "first_t": 5.4000000000007535,
+    "last_t": 95.60000000205005,
+    "max_abs": 4175221.2727755383,
+    "t_at_max": 61.00000000090146
+   },
+   "F_cyl": {
+    "count": 692,
+    "first_t": 26.49999999995158,
+    "last_t": 95.60000000205005,
+    "max_abs": 12904.131295706437,
+    "t_at_max": 83.70000000165501
+   },
+   "s_motor": {
+    "count": 692,
+    "first_t": 26.49999999995158,
+    "last_t": 95.60000000205005,
+    "max_abs": 0.001049610075434304,
+    "t_at_max": 90.90000000189403
+   }
+  },
+  "pads_first_diff_rawtime": {
+   "F_cyl": 26.40099999995181,
+   "F_cyl_mean_20ms": 26.39199999995183,
+   "F_cyl_mean_interval": 26.40099999995181,
+   "F_cyl_min_interval": 26.40099999995181,
+   "F_pressure": 26.40099999995181,
+   "F_pressure_max_interval": 26.40099999995181,
+   "F_pressure_min_interval": 26.40099999995181,
+   "L": 26.39199999995183,
+   "L_lateral": 26.40099999995181,
+   "N": 26.39199999995183,
+   "N_raw": 26.40099999995181,
+   "R_world": 26.39199999995183,
+   "R_world_1ms": 26.40099999995181,
+   "T": 26.39199999995183,
+   "a_world": 26.40099999995181,
+   "ball_centre_world": 26.40099999995181,
+   "body_quat_wxyz": 26.40099999995181,
+   "contact_point_world": 26.40099999995181,
+   "f_seal": 26.40099999995181,
+   "head_pressure": 5.201000000001217,
+   "lateral_force_world": 26.40099999995181,
+   "rod_pressure": 5.201000000001217,
+   "s_link": 26.40099999995181,
+   "s_motor": 26.40099999995181,
+   "s_piston": 26.40099999995181,
+   "stroke_true": 26.40099999995181,
+   "utilisation": 26.39199999995183
+  },
+  "pads_keys_same": [
+   "F_seal_limit",
+   "anchor_world",
+   "cb_delta",
+   "cb_y",
+   "dt_interval",
+   "n_world",
+   "slip_total",
+   "t"
+  ],
+  "offset_new_s": 3.0000000000019043,
+  "RR_interval": {
+   "RR_new_min_N": 21150.505922501725,
+   "RR_new_t_s": 58.00100000089959,
+   "RR_old_min_N": 21160.295333779588,
+   "RR_old_t_s": 57.90100000089627,
+   "new_at_old_time_N": 21955.421483033904,
+   "old_at_new_time_N": 30039.520247435063
+  },
+  "reready": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.699999999993285, 'done'], [30.799999999996604, 'probe'], [42.70000000039165, 'ready'], [57.800000000892"
+  },
+  "reready_old": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.599999999989965, 'done'], [30.699999999993285, 'probe'], [42.60000000038833, 'ready'], [57.700000000889"
+  },
+  "phases_head": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.699999999993285, 'done'], [30.799999999996604, 'probe'], [42.70000000039165, 'ready'], [57.800000000892915, 'level'], [75.50000000148049, 'done'], [75.6000000014838, 'probe'], [87.50000000187885, 'ready'",
+  "air_meta": {
+   "samples": null
+  },
+  "capped": null
+ },
+ "E_RE1bF_Fs0": {
+  "record": {
+   "meas.head_pressure": {
+    "count": 584,
+    "first_t": 5.300000000000987,
+    "last_t": 95.80000000361989,
+    "max_abs": 170631.09582973336,
+    "t_at_max": 51.10000000122651
+   },
+   "meas.rod_pressure": {
+    "count": 585,
+    "first_t": 5.300000000000987,
+    "last_t": 95.80000000361989,
+    "max_abs": 516159.0656317547,
+    "t_at_max": 51.10000000122651
+   },
+   "F_cyl": {
+    "count": 431,
+    "first_t": 52.800000001766115,
+    "last_t": 95.80000000361989,
+    "max_abs": 1240.646603322879,
+    "t_at_max": 54.00000000214701
+   },
+   "s_motor": {
+    "count": 431,
+    "first_t": 52.800000001766115,
+    "last_t": 95.80000000361989,
+    "max_abs": 9.020311136365144e-07,
+    "t_at_max": 54.300000002242236
+   }
+  },
+  "pads_first_diff_rawtime": {
+   "F_cyl": 52.703000001735326,
+   "F_cyl_mean_20ms": 52.696000001733104,
+   "F_cyl_mean_interval": 52.69800000173374,
+   "F_cyl_min_interval": 52.703000001735326,
+   "F_pressure": 52.703000001735326,
+   "F_pressure_max_interval": 52.66600000172358,
+   "F_pressure_min_interval": 52.703000001735326,
+   "L": 52.696000001733104,
+   "L_lateral": 52.70500000173596,
+   "N": 52.696000001733104,
+   "N_raw": 52.70500000173596,
+   "R_world": 52.696000001733104,
+   "R_world_1ms": 52.703000001735326,
+   "T": 52.696000001733104,
+   "a_world": 52.70500000173596,
+   "ball_centre_world": 52.70500000173596,
+   "body_quat_wxyz": 52.70500000173596,
+   "contact_point_world": 52.70500000173596,
+   "head_pressure": 5.226000000001159,
+   "lateral_force_world": 52.70500000173596,
+   "rod_pressure": 5.226000000001159,
+   "s_link": 52.70500000173596,
+   "s_motor": 52.754000001751514,
+   "s_piston": 52.70500000173596,
+   "stroke_true": 52.70500000173596,
+   "utilisation": 52.696000001733104
+  },
+  "pads_keys_same": [
+   "F_seal_limit",
+   "anchor_world",
+   "cb_delta",
+   "cb_y",
+   "dt_interval",
+   "f_seal",
+   "n_world",
+   "slip_total",
+   "t"
+  ],
+  "offset_new_s": 3.0000000000019043,
+  "RR_interval": {
+   "RR_new_min_N": -14393.233932026504,
+   "RR_new_t_s": 47.81300000113351,
+   "RR_old_min_N": -14393.233932026504,
+   "RR_old_t_s": 47.81300000113351,
+   "new_at_old_time_N": -14393.233932026504,
+   "old_at_new_time_N": -14393.233932026504
+  },
+  "reready": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'probe'], [42.80000000039497, 'ready'], [47.900000001161"
+  },
+  "reready_old": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'probe'], [42.80000000039497, 'ready'], [47.900000001161"
+  },
+  "phases_head": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'probe'], [42.80000000039497, 'ready'], [47.900000001161125, 'level'], [60.10000000253246, 'done'], [60.20000000253578, 'probe'], [72.10000000293081, 'ready",
+  "air_meta": {
+   "samples": null
+  },
+  "capped": null
+ },
+ "E_RE1bP_Fs0": {
+  "record": {
+   "meas.head_pressure": {
+    "count": 446,
+    "first_t": 5.300000000000987,
+    "last_t": 79.00000000252217,
+    "max_abs": 45776.99829533324,
+    "t_at_max": 55.7000000017487
+   },
+   "meas.rod_pressure": {
+    "count": 391,
+    "first_t": 5.300000000000987,
+    "last_t": 79.00000000252217,
+    "max_abs": 138616.86446612922,
+    "t_at_max": 55.7000000017487
+   },
+   "F_cyl": {
+    "count": 387,
+    "first_t": 40.40000000124079,
+    "last_t": 79.00000000252217,
+    "max_abs": 244.0310664034041,
+    "t_at_max": 46.90000000145657
+   },
+   "s_motor": {
+    "count": 387,
+    "first_t": 40.40000000124079,
+    "last_t": 79.00000000252217,
+    "max_abs": 1.9514331395242834e-07,
+    "t_at_max": 42.500000001310504
+   }
+  },
+  "pads_first_diff_rawtime": {
+   "F_cyl": 40.3370000012387,
+   "F_cyl_mean_20ms": 40.3400000012388,
+   "F_cyl_mean_interval": 40.348000001239065,
+   "F_cyl_min_interval": 37.57900000114714,
+   "F_pressure": 40.3370000012387,
+   "F_pressure_max_interval": 40.348000001239065,
+   "F_pressure_min_interval": 37.57900000114714,
+   "L": 40.339000001238766,
+   "L_lateral": 40.348000001239065,
+   "N": 40.339000001238766,
+   "N_raw": 40.3370000012387,
+   "R_world": 40.339000001238766,
+   "R_world_1ms": 40.348000001239065,
+   "T": 40.339000001238766,
+   "a_world": 40.348000001239065,
+   "ball_centre_world": 40.348000001239065,
+   "body_quat_wxyz": 40.348000001239065,
+   "contact_point_world": 40.348000001239065,
+   "head_pressure": 5.226000000001159,
+   "lateral_force_world": 40.348000001239065,
+   "rod_pressure": 5.226000000001159,
+   "s_link": 40.348000001239065,
+   "s_motor": 40.501000001244144,
+   "s_piston": 40.348000001239065,
+   "stroke_true": 40.348000001239065,
+   "utilisation": 40.339000001238766
+  },
+  "pads_keys_same": [
+   "F_seal_limit",
+   "anchor_world",
+   "cb_delta",
+   "cb_y",
+   "dt_interval",
+   "f_seal",
+   "n_world",
+   "slip_total",
+   "t"
+  ],
+  "offset_new_s": 3.0000000000019043,
+  "RR_interval": {
+   "RR_new_min_N": -5956.49728794831,
+   "RR_new_t_s": 31.012000000035478,
+   "RR_old_min_N": -5956.49728794831,
+   "RR_old_t_s": 31.012000000035478,
+   "new_at_old_time_N": -5956.49728794831,
+   "old_at_new_time_N": -5956.49728794831
+  },
+  "reready": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'probe'], [31.100000000063407, 'level'], [43.40000000143"
+  },
+  "reready_old": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'probe'], [31.100000000063407, 'level'], [43.40000000143"
+  },
+  "phases_head": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.799999999996604, 'done'], [30.899999999999924, 'probe'], [31.100000000063407, 'level'], [43.400000001438066, 'done'], [43.500000001441386, 'probe'], [55.400000001836425, 'ready']]",
+  "air_meta": {
+   "samples": null
+  },
+  "capped": null
+ },
+ "E_RE1bP_Fs8": {
+  "record": {
+   "meas.head_pressure": {
+    "count": 546,
+    "first_t": 5.4000000000007535,
+    "last_t": 78.80000000248711,
+    "max_abs": 7468283.923748758,
+    "t_at_max": 33.90000000003025
+   },
+   "meas.rod_pressure": {
+    "count": 417,
+    "first_t": 5.4000000000007535,
+    "last_t": 78.80000000248711,
+    "max_abs": 4721059.405705377,
+    "t_at_max": 34.100000000093736
+   },
+   "F_cyl": {
+    "count": 524,
+    "first_t": 26.49999999995158,
+    "last_t": 78.80000000248711,
+    "max_abs": 80024.09602868096,
+    "t_at_max": 33.90000000003025
+   },
+   "s_motor": {
+    "count": 524,
+    "first_t": 26.49999999995158,
+    "last_t": 78.80000000248711,
+    "max_abs": 0.003750091993279192,
+    "t_at_max": 33.90000000003025
+   }
+  },
+  "pads_first_diff_rawtime": {
+   "F_cyl": 26.40099999995181,
+   "F_cyl_mean_20ms": 26.39199999995183,
+   "F_cyl_mean_interval": 26.40099999995181,
+   "F_cyl_min_interval": 26.40099999995181,
+   "F_pressure": 26.40099999995181,
+   "F_pressure_max_interval": 26.40099999995181,
+   "F_pressure_min_interval": 26.40099999995181,
+   "L": 26.39199999995183,
+   "L_lateral": 26.40099999995181,
+   "N": 26.39199999995183,
+   "N_raw": 26.40099999995181,
+   "R_world": 26.39199999995183,
+   "R_world_1ms": 26.40099999995181,
+   "T": 26.39199999995183,
+   "a_world": 26.40099999995181,
+   "ball_centre_world": 26.40099999995181,
+   "body_quat_wxyz": 26.40099999995181,
+   "contact_point_world": 26.40099999995181,
+   "dt_interval": 33.700999999995226,
+   "f_seal": 26.40099999995181,
+   "head_pressure": 5.201000000001217,
+   "lateral_force_world": 26.40099999995181,
+   "rod_pressure": 5.201000000001217,
+   "s_link": 26.40099999995181,
+   "s_motor": 26.40099999995181,
+   "s_piston": 26.40099999995181,
+   "stroke_true": 26.40099999995181,
+   "t": 33.700999999995226,
+   "utilisation": 26.39199999995183
+  },
+  "pads_keys_same": [
+   "F_seal_limit",
+   "anchor_world",
+   "cb_delta",
+   "cb_y",
+   "n_world",
+   "slip_total"
+  ],
+  "offset_new_s": 3.0000000000019043,
+  "RR_interval": {
+   "RR_new_min_N": -5962.313412799824,
+   "RR_new_t_s": 30.912000000032158,
+   "RR_old_min_N": -772.2795917425747,
+   "RR_old_t_s": 30.90000000002835,
+   "new_at_old_time_N": 70019.02049839948,
+   "old_at_new_time_N": -757.5723902801273
+  },
+  "reready": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.699999999993285, 'done'], [30.799999999996604, 'probe'], [31.000000000060087, 'level'], [43.30000000140"
+  },
+  "reready_old": {
+   "phases_sample": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.599999999989965, 'done'], [30.699999999993285, 'probe'], [30.900000000056767, 'level'], [43.20000000140"
+  },
+  "phases_head": "[[0.10000000000021103, 'check'], [4.699999999993487, 'touch'], [23.89999999994874, 'level'], [30.699999999993285, 'done'], [30.799999999996604, 'probe'], [31.000000000060087, 'level'], [43.300000001406325, 'done'], [43.400000001409644, 'probe'], [55.30000000180468, 'ready']]",
+  "air_meta": {
+   "samples": null
+  },
+  "capped": null
+ }
+}
