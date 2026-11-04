@@ -1,4 +1,4 @@
-"""C4G1: twist hold and vector ramp at the LEVEL entry (TOUCH phase study, 2026-11-04).
+"""C4G2: twist hold and vector ramp at the LEVEL entry (TOUCH phase study, 2026-11-04).
 
 Synthetic 10 Hz benches of ``test_c2_r8d1.py`` for the rules; the slow test runs stored harness rows
 in dynamics-dev (``returned_clip_hash_runner.py``) with both switches off. The bench strokes do not
@@ -59,6 +59,7 @@ GAIN_1_S = 2.5
 HOLD_S = 1.5
 CAP_M = 3.0e-3
 DEADBAND_N = 1.0e3
+RAMP_TWIST_TOL_M_S = 0.2e-3
 HOLD_PERIODS = round(HOLD_S / PERIOD_S)
 TWIST_LOAD_N = 20e3
 PERIODS_PAST_THE_HOLD = 5
@@ -349,25 +350,24 @@ def replace_controller_with_copy(bench: Bench) -> Bench:
     )
 
 
-# --- a re-approach stops the correction -----------------------------------------------------------
+# --- a re-approach ends the hold ------------------------------------------------------------------
 
 
-def test_reapproach_stops_the_correction_and_the_time_runs_on(geometry) -> None:
+def test_reapproach_ends_the_hold_and_the_meta_says_why(geometry) -> None:
     bench = level_entry_bench(geometry, TWIST_LOAD_N)
     controller = bench.controller
-    entry_t_s = bench.t_s
     bench.step(forces_with_twist(geometry, TWIST_LOAD_N))
     assert np.any(correction_of(bench) != 0.0)
-    for _ in range(HOLD_PERIODS + PERIODS_PAST_THE_HOLD):
-        bench.step(lifted_rr_forces())
-        assert RR in controller._state.active_reapproaches
-        np.testing.assert_array_equal(correction_of(bench), 0.0)
+    bench.step(lifted_rr_forces())
+    assert RR in controller._state.active_reapproaches
+    np.testing.assert_array_equal(correction_of(bench), 0.0)
     meta = controller.meta()["touch_twist_hold"]
-    assert meta["paused_periods"] >= HOLD_PERIODS - 2
-    assert meta["end_t_s"] == pytest.approx(entry_t_s + HOLD_S, abs=PERIOD_S + 1e-9)
+    assert meta["end_reason"] == "reapproach"
+    assert meta["end_t_s"] == bench.t_s
+    assert controller._state.touch_twist.is_holding is False
 
 
-def test_correction_comes_back_when_the_reapproach_ends_inside_the_hold(geometry) -> None:
+def test_correction_does_not_come_back_after_the_reapproach(geometry) -> None:
     bench = level_entry_bench(geometry, TWIST_LOAD_N)
     controller = bench.controller
     forces = forces_with_twist(geometry, TWIST_LOAD_N)
@@ -376,10 +376,100 @@ def test_correction_comes_back_when_the_reapproach_ends_inside_the_hold(geometry
     leg_speeds = np.full(4, 0.5 * geometry.max_speed_m_s)
     assert apply_hold_to(controller, leg_speeds) is leg_speeds
     del controller._state.active_reapproaches[RR]
-    assert apply_hold_to(controller, leg_speeds) is not leg_speeds
+    assert apply_hold_to(controller, leg_speeds) is leg_speeds
+    assert controller.meta()["touch_twist_hold"]["end_reason"] == "reapproach"
 
 
-# --- G1 -------------------------------------------------------------------------------------------
+def test_hold_time_is_the_end_reason_without_a_reapproach(geometry) -> None:
+    bench = level_entry_bench(geometry, TWIST_LOAD_N)
+    forces = forces_with_twist(geometry, TWIST_LOAD_N)
+    assert bench.controller.meta()["touch_twist_hold"]["end_reason"] is None
+    for _ in range(HOLD_PERIODS + PERIODS_PAST_THE_HOLD):
+        bench.step(forces)
+    assert bench.controller.meta()["touch_twist_hold"]["end_reason"] == "time"
+
+
+def test_leaving_level_is_the_end_reason(geometry) -> None:
+    bench = level_entry_bench(geometry, TWIST_LOAD_N)
+    bench.step(forces_with_twist(geometry, TWIST_LOAD_N))
+    controller = bench.controller
+    controller._state.phase = C2Phase.DONE
+    leg_speeds = np.zeros(4)
+    assert apply_hold_to(controller, leg_speeds) is leg_speeds
+    assert controller.meta()["touch_twist_hold"]["end_reason"] == "phase"
+
+
+# --- G2: the twist test ---------------------------------------------------------------------------
+
+
+def level_controller(geometry, tolerance_m_s: float = RAMP_TWIST_TOL_M_S) -> C2Controller:
+    settings = TouchTwistHoldSettings(vector_ramp=True, ramp_twist_tol_m_s=tolerance_m_s)
+    config = replace(bench_config(), touch_twist_hold=settings)
+    bench = Bench(C2Controller(geometry, config), geometry, operating_strokes(geometry))
+    for _ in range(TOUCH_HOLD_SAMPLES):
+        bench.step()
+    assert bench.controller.phase is C2Phase.LEVEL
+    return bench.controller
+
+
+def set_with_limited_twist(geometry, twist_m_s: float) -> tuple[np.ndarray, np.ndarray]:
+    """(requested, per-leg limited): RR cut alone, the limited set with ``n^T du = twist_m_s``."""
+    twist = geometry.twist_vector
+    limit = 0.25 * geometry.max_speed_m_s
+    limited = np.array([limit, limit, limit, limit])
+    limited[RR] = limit + twist_m_s / twist[RR]
+    requested = limited.copy()
+    requested[RR] = 2.0 * limited[RR]
+    return requested, limited
+
+
+def test_tolerance_is_the_assumed_value() -> None:
+    assert TouchTwistHoldSettings().ramp_twist_tol_m_s == RAMP_TWIST_TOL_M_S
+
+
+@pytest.mark.parametrize("sign", [1.0, -1.0])
+def test_limited_twist_below_the_tolerance_keeps_the_per_leg_limit(geometry, sign) -> None:
+    controller = level_controller(geometry)
+    requested, limited = set_with_limited_twist(geometry, sign * 0.99 * RAMP_TWIST_TOL_M_S)
+    result = controller._vector_ramp_increment(requested, requested, limited)
+    assert result is limited
+    assert controller._state.is_vector_ramp_done is False
+
+
+@pytest.mark.parametrize("sign", [1.0, -1.0])
+def test_limited_twist_above_the_tolerance_takes_the_common_ratio(geometry, sign) -> None:
+    controller = level_controller(geometry)
+    requested, limited = set_with_limited_twist(geometry, sign * 1.01 * RAMP_TWIST_TOL_M_S)
+    result = controller._vector_ramp_increment(requested, requested, limited)
+    np.testing.assert_allclose(result, 0.5 * requested, rtol=1e-12)
+
+
+def test_zero_tolerance_is_g1(geometry) -> None:
+    controller = level_controller(geometry, tolerance_m_s=0.0)
+    requested, limited = set_with_limited_twist(geometry, 0.0)
+    result = controller._vector_ramp_increment(requested, requested, limited)
+    np.testing.assert_allclose(result, 0.5 * requested, rtol=1e-12)
+
+
+def test_front_rear_difference_keeps_its_bits(geometry, monkeypatch) -> None:
+    """A level start: rear slower than front, every leg at the limit, ``n^T du`` = 0."""
+    direction = np.array([1.0, 1.0, 0.9, 0.9])
+    fractions = [direction] * 8
+    bench_off = scripted_bench(geometry, monkeypatch, hold_config(is_hold_on=False), fractions)
+    bench_on = scripted_bench(geometry, monkeypatch, hold_config(), fractions)
+    commands_off = computed_commands_of(bench_off, 8)
+    commands_on = computed_commands_of(bench_on, 8)
+    assert commands_on.tobytes() == commands_off.tobytes()
+
+
+def test_uncut_period_ends_the_ramp_also_below_the_tolerance(geometry) -> None:
+    controller = level_controller(geometry)
+    small = np.array([1e-5, 1e-5, 1e-5, 1e-5])
+    assert controller._vector_ramp_increment(small, small, small) is small
+    assert controller._state.is_vector_ramp_done is True
+
+
+# --- G1 rule of the ratio -------------------------------------------------------------------------
 
 
 def test_ramp_scales_all_four_increments_by_one_ratio(geometry, monkeypatch) -> None:

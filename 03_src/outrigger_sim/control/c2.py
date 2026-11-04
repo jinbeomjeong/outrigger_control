@@ -217,11 +217,14 @@ User decision 2026-11-04: the command :meth:`C2Controller.update` returns is cli
 ``+-v_max`` (``C2Config.clip_returned_command``), the internal states keep the unclipped value;
 off by default, on in the preset (``C2Config().with_10hz_d1(clip_returned_command=False)``
 turns it off, as the v4 results ran).
-C4G1 (TOUCH phase study 2026-11-04, a candidate the Chrono representative rows decide on): at
-TOUCH -> LEVEL the twist of the motor strokes is held at ``-D_hat / k_nom`` for 1.5 s, and the
-increments of the LEVEL start ramp keep the direction of the command
-(:class:`TouchTwistHoldSettings`, event ``INFO_TOUCH_TWIST_HOLD``); off by default and in the
-preset (``C2Config().with_10hz_d1(touch_twist_hold=True)`` turns it on).
+C4G2 (TOUCH phase study 2026-11-04, a candidate the Chrono representative rows decide on): at
+TOUCH -> LEVEL the twist of the motor strokes is held at ``-D_hat / k_nom`` for 1.5 s or until a
+re-approach starts, and a twisting increment of the LEVEL start ramp keeps the direction of the
+command (:class:`TouchTwistHoldSettings`, event ``INFO_TOUCH_TWIST_HOLD``); off by default and in
+the preset (``C2Config().with_10hz_d1(touch_twist_hold=True)`` turns it on).
+K1 (same study): a re-trigger start waits for a second low sample
+(``LiftedReapproachSettings.retrigger_samples``); off by default and in the preset
+(``C2Config().with_10hz_d1(reapproach_retrigger_two_samples=True)`` turns it on).
 P-S8-29 (user decision 2026-10-28, variant V2b): on a creeping pad DONE may accept a twist load
 up to 15 kN that has stopped rising once attitude and clearance have held for 10 s
 (:class:`TwistCompletionRelaxSettings`, event ``INFO_TWIST_UNSETTLED``); preset on, default off.
@@ -472,6 +475,10 @@ NO_REAPPROACH_STRONG_COUNTS = (0,) * LEG_COUNT
 """P-S8-16 RT 1: the other-diagonal confirmation counts of a run with nothing counted yet."""
 REAPPROACH_DEFERRED_EVENT = "leg_reapproach_deferred"
 """P-S8-16 RT 1: event prefix of a deferred other-diagonal start (``:<leg>``, not a warning)."""
+REAPPROACH_DEFERRED_RETRIGGER_REASON = "retrigger"
+"""K1: ``leg_reapproach_deferred:<leg>:retrigger``, a re-trigger waiting for its second sample."""
+R8_RETRIGGER_CONFIRM_SAMPLES = 2
+"""K1 (TOUCH phase study, user decision 2026-11-04): consecutive low samples of a re-trigger."""
 COMMAND_COMPONENT_NAMES = (
     "attitude",
     "heave",
@@ -1194,6 +1201,9 @@ class LiftedReapproachSettings:
       ``leg_reapproach_deferred:<leg>`` once per deferred stretch) and the guard path acts.
     * ``retrigger_window_s``: a re-approach started inside this window is a re-trigger and
       runs at ``retrigger_speed_factor`` times the speed (twist and leg mode).
+    * ``retrigger_samples`` (K1): a re-trigger also needs this many low samples in a row; a
+      first start keeps ``samples``. Until then it is deferred (event
+      ``leg_reapproach_deferred:<leg>:retrigger``).
 
     The class defaults turn both off (the P-R8-13 behaviour, bit-identical); every new key has
     a class-level default so controllers unpickled from older code read "off".
@@ -1231,6 +1241,9 @@ class LiftedReapproachSettings:
     """RT 2: a start within this time after the previous end is a re-trigger; ``None`` = off."""
     retrigger_speed_factor: float = 1.0
     """RT 2: speed factor of a re-trigger, in (0, 1]."""
+    retrigger_samples: int = 1
+    """K1: consecutive low samples of a start inside ``retrigger_window_s``; 1 = off. The other
+    legs' re-approach resets the count, as it does for ``samples``."""
     opposite_window_s: float | None = None
     """RT 1: window of the other-diagonal confirmation; ``None`` = off."""
     opposite_strong_level_N: float = 0.0
@@ -1250,6 +1263,10 @@ class LiftedReapproachSettings:
             raise ValueError(f"samples must be an int >= 1 or None, got {self.samples!r}")
         if not _is_positive_int(self.exit_samples):
             raise ValueError(f"exit_samples must be an int >= 1, got {self.exit_samples!r}")
+        if not _is_positive_int(self.retrigger_samples):
+            raise ValueError(
+                f"retrigger_samples must be an int >= 1, got {self.retrigger_samples!r}"
+            )
         if not self.exit_margin_N >= 0.0 or not self.protect_margin_N >= 0.0:
             raise ValueError("exit_margin_N and protect_margin_N must be >= 0")
         if not 0.0 < self.speed_fraction <= 1.0:
@@ -2111,26 +2128,38 @@ VECTOR_RAMP_CUT_TOLERANCE_M_S = 1e-12
 """G1: a leg counts as cut by the increment limit above this difference (rounding of the clip)."""
 
 
+class TouchTwistHoldEnd(StrEnum):
+    """Why a C4 hold ended (meta ``touch_twist_hold.end_reason``)."""
+
+    TIME = "time"
+    PHASE = "phase"
+    REAPPROACH = "reapproach"
+
+
 @dataclass(frozen=True)
 class TouchTwistHoldSettings:
-    """C4G1: twist at the LEVEL entry (TOUCH phase study, user decision 2026-11-04).
+    """C4G2: twist at the LEVEL entry (TOUCH phase study, user decisions 2026-11-04).
 
     C4 (``enable``): at TOUCH -> LEVEL, ``D_hat`` = mean ``n^T F`` of the last
     ``estimate_samples`` TOUCH samples and the target ``tau* = clip(-D_hat / k_nom, +-cap_m)``.
     For ``hold_s`` the LEVEL command becomes ``max(u + gain_1_s (tau* - n^T (s - s_te)) n, 0)``,
     rescaled to ``v_max``; ``s_te`` = motor strokes at TOUCH -> LEVEL. Nothing starts when
-    ``|D_hat| < deadband_N``. A re-approach pauses the correction, the hold time keeps running.
+    ``|D_hat| < deadband_N``. A re-approach ends the hold for good.
 
-    G1 (``vector_ramp``): in LEVEL until the first period with a command the increment limit does
-    not cut, the four increments take one common ratio, so the command keeps its direction during
-    the start ramp. Needs the R8 increment limit. A set the per-leg limit already cuts by one
-    ratio stays as it is.
+    G2 (``vector_ramp``): in LEVEL until the first period with a command the increment limit does
+    not cut, a cut set whose per-leg increment twists by ``|n^T du| >= ramp_twist_tol_m_s`` takes
+    one common ratio on all four legs, so the command keeps its direction during the start ramp.
+    Below the tolerance the per-leg limit stays, so a symmetric start keeps its bits;
+    ``ramp_twist_tol_m_s = 0`` is G1. Needs the R8 increment limit. A set the per-leg limit
+    already cuts by one ratio stays as it is.
 
     Off by default; a plain class-level default, so configs unpickled from older code read "off".
     """
 
     enable: bool = False
     vector_ramp: bool = False
+    ramp_twist_tol_m_s: float = 0.2e-3
+    """ASSUMPTION: 0.02 mm of twist a period, about 0.5 kN of ``D``."""
     gain_1_s: float = 2.5
     """ASSUMPTION: delay ``d + T/2 + tau_v`` = 0.25 s gives about 54 deg of phase margin."""
     hold_s: float = 1.5
@@ -2145,8 +2174,9 @@ class TouchTwistHoldSettings:
         for name in ("gain_1_s", "hold_s", "cap_m", "estimate_samples"):
             if not getattr(self, name) > 0:
                 raise ValueError(f"{name} must be > 0, got {getattr(self, name)!r}")
-        if self.deadband_N < 0.0:
-            raise ValueError(f"deadband_N must be >= 0, got {self.deadband_N!r}")
+        for name in ("deadband_N", "ramp_twist_tol_m_s"):
+            if getattr(self, name) < 0.0:
+                raise ValueError(f"{name} must be >= 0, got {getattr(self, name)!r}")
 
 
 @dataclass(frozen=True)
@@ -2338,6 +2368,7 @@ class C2Config:
         flat_soil_margin_m: float = R8_FLAT_SOIL_MARGIN_M,
         clip_returned_command: bool = True,
         touch_twist_hold: bool = False,
+        reapproach_retrigger_two_samples: bool = False,
     ) -> C2Config:
         """Copy with the R8-D1 design C2 (spec rev. 30 136 / 139, user decisions 2026-10-24).
 
@@ -2411,9 +2442,12 @@ class C2Config:
             clip_returned_command: The returned command is clipped to ``+-v_max``
                 (:attr:`clip_returned_command`). On by default since the user decision of
                 2026-11-04; ``False`` gives the preset of the v4 results.
-            touch_twist_hold: C4G1 (:class:`TouchTwistHoldSettings`, ``enable`` and
+            touch_twist_hold: C4G2 (:class:`TouchTwistHoldSettings`, ``enable`` and
                 ``vector_ramp``). Off: a candidate for the Chrono representative rows.
+            reapproach_retrigger_two_samples: K1, a re-trigger start needs two low samples in a
+                row (``LiftedReapproachSettings.retrigger_samples``). Off: a candidate.
         """
+        retrigger_samples = R8_RETRIGGER_CONFIRM_SAMPLES if reapproach_retrigger_two_samples else 1
         config = self.with_r8_diagnostics()
         two_pressure = replace(
             config.two_pressure,
@@ -2521,7 +2555,12 @@ class C2Config:
                 hold_std_ddof=1,
                 return_timeout_tolerance_m=R8_ZERO_RETURN_TIMEOUT_TOLERANCE_M,
             ),
-            r8=R8_D1_SETTINGS,
+            r8=replace(
+                R8_D1_SETTINGS,
+                lifted_reapproach=replace(
+                    R8_D1_SETTINGS.lifted_reapproach, retrigger_samples=retrigger_samples
+                ),
+            ),
         )
 
     def with_soil_response(self) -> C2Config:
@@ -3617,8 +3656,7 @@ class _TouchTwistState:
     start_strokes_m: NDArray[np.float64] | None = None
     start_t_s: float | None = None
     is_holding: bool = False
-    paused_periods: int = 0
-    """Hold periods without correction because a re-approach was active."""
+    end_reason: TouchTwistHoldEnd | None = None
     end_t_s: float | None = None
     end_error_m: float | None = None
     """``tau* - n^T (s - s_te)`` at the end of the hold."""
@@ -5530,9 +5568,7 @@ class C2Controller:
                 # The low count keeps rising while a start is deferred, so it equals the
                 # requirement only on the first sample of a deferred stretch.
                 if state.reapproach_low_counts[leg] == required_samples:
-                    self._add_event(
-                        reading.t_s, f"{REAPPROACH_DEFERRED_EVENT}:{LEG_ORDER[leg]}"
-                    )
+                    self._add_event(reading.t_s, self._deferred_event_name(leg, reading.t_s))
                 continue
             state.reapproach_low_counts[leg] = 0
             strong_counts[leg] = 0
@@ -5543,13 +5579,31 @@ class C2Controller:
         self, leg: int, t_s: float, strong_count: int, settings: LiftedReapproachSettings
     ) -> bool:
         """P-S8-16 RT 1 (spec rev. 52 228.3): an other-diagonal start inside the opposite
-        window waits for ``opposite_strong_samples`` samples below the strong level."""
+        window waits for ``opposite_strong_samples`` samples below the strong level. K1: a
+        re-trigger waits for ``retrigger_samples`` low samples."""
+        if self._is_retrigger_waiting(leg, t_s, settings):
+            return True
         state = self._state
         leg_sign = float(np.sign(self.geometry.twist_vector[leg]))
         needs_confirmation = settings.needs_strong_confirmation(
             t_s, state.reapproach_last_end_s, state.reapproach_last_sign, leg_sign
         )
         return needs_confirmation and strong_count < settings.opposite_strong_samples
+
+    def _is_retrigger_waiting(
+        self, leg: int, t_s: float, settings: LiftedReapproachSettings
+    ) -> bool:
+        state = self._state
+        if state.reapproach_low_counts[leg] >= settings.retrigger_samples:
+            return False
+        return settings.is_retrigger(t_s, state.reapproach_last_end_s)
+
+    def _deferred_event_name(self, leg: int, t_s: float) -> str:
+        """``leg_reapproach_deferred:<leg>``, with ``:retrigger`` when K1 is what defers it."""
+        name = f"{REAPPROACH_DEFERRED_EVENT}:{LEG_ORDER[leg]}"
+        if self._is_retrigger_waiting(leg, t_s, self.config.r8.lifted_reapproach):
+            return f"{name}:{REAPPROACH_DEFERRED_RETRIGGER_REASON}"
+        return name
 
     def _begin_reapproach(
         self, leg: int, reading: _Reading, settings: LiftedReapproachSettings
@@ -6571,20 +6625,28 @@ class C2Controller:
         twist = self.geometry.twist_vector
         moved_m = np.array(reading.motor_stroke_m, dtype=float) - hold.start_strokes_m
         error_m = hold.target_m - float(twist @ moved_m)
-        is_time_over = reading.t_s - hold.start_t_s >= settings.hold_s
-        if is_time_over or self._state.phase is not C2Phase.LEVEL:
+        end_reason = self._touch_twist_hold_end_reason(reading.t_s - hold.start_t_s)
+        if end_reason is not None:
             hold.is_holding = False
+            hold.end_reason = end_reason
             hold.end_t_s = reading.t_s
             hold.end_error_m = error_m
-            return leg_speeds
-        if self._reapproaching_legs().any():
-            # A re-approach moves along n itself; the correction would pull against it.
-            hold.paused_periods += 1
             return leg_speeds
         correction_m_s = settings.gain_1_s * error_m * twist
         self._state.command_components["touch_twist"] = correction_m_s.copy()
         self._state.raw_output_m_s = self._state.raw_output_m_s + correction_m_s
         return self._non_negative_within_speed_limit(leg_speeds, correction_m_s)
+
+    def _touch_twist_hold_end_reason(self, elapsed_s: float) -> TouchTwistHoldEnd | None:
+        if elapsed_s >= self.config.touch_twist_hold.hold_s:
+            return TouchTwistHoldEnd.TIME
+        if self._state.phase is not C2Phase.LEVEL:
+            return TouchTwistHoldEnd.PHASE
+        if self._reapproaching_legs().any():
+            # A re-approach moves along n itself; the correction would pull against it, also
+            # after the re-approach, on the travel it has made.
+            return TouchTwistHoldEnd.REAPPROACH
+        return None
 
     def _non_negative_within_speed_limit(
         self, leg_speeds: NDArray[np.float64], correction_m_s: NDArray[np.float64]
@@ -6610,8 +6672,8 @@ class C2Controller:
                 "target_m": hold.target_m,
                 "start_t_s": hold.start_t_s,
                 "end_t_s": hold.end_t_s,
+                "end_reason": None if hold.end_reason is None else str(hold.end_reason),
                 "end_error_m": hold.end_error_m,
-                "paused_periods": hold.paused_periods,
             }
         )
         return meta
@@ -8838,7 +8900,8 @@ class C2Controller:
         requested_change: NDArray[np.float64],
         limited_change: NDArray[np.float64],
     ) -> NDArray[np.float64]:
-        """G1: the per-leg ``limited_change`` as one common ratio of ``requested_change``.
+        """G2: the per-leg ``limited_change`` as one common ratio of ``requested_change`` when it
+        twists by at least ``ramp_twist_tol_m_s``.
 
         Runs in LEVEL until a period with a command is not cut; a zero command (the TOUCH -> LEVEL
         period) does not end it. The ratio is the smallest of the cut legs, so no limit is passed.
@@ -8850,6 +8913,9 @@ class C2Controller:
         if not is_cut.any():
             if np.any(leg_speeds != 0.0):
                 state.is_vector_ramp_done = True
+            return limited_change
+        limited_twist_m_s = abs(float(self.geometry.twist_vector @ limited_change))
+        if limited_twist_m_s < self.config.touch_twist_hold.ramp_twist_tol_m_s:
             return limited_change
         cut_ratios = np.abs(limited_change[is_cut]) / np.abs(requested_change[is_cut])
         is_every_moving_leg_cut = bool(np.all(is_cut[requested_change != 0.0]))

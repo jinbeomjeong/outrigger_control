@@ -25,6 +25,7 @@ PRE_SWITCH_SOIL_STOP = False
 PRE_SWITCH_FLAT_SOIL_MARGIN_M = 0.0
 PRE_SWITCH_CLIP_RETURNED_COMMAND = False
 PRE_SWITCH_TOUCH_TWIST_HOLD = False
+PRE_SWITCH_REAPPROACH_RETRIGGER_TWO_SAMPLES = False
 
 if str(SOURCE_DIR) not in sys.path:
     sys.path.insert(0, str(SOURCE_DIR))
@@ -42,6 +43,7 @@ def _install_pre_switch_preset() -> None:
         flat_soil_margin_m: float = PRE_SWITCH_FLAT_SOIL_MARGIN_M,
         clip_returned_command: bool = PRE_SWITCH_CLIP_RETURNED_COMMAND,
         touch_twist_hold: bool = PRE_SWITCH_TOUCH_TWIST_HOLD,
+        reapproach_retrigger_two_samples: bool = PRE_SWITCH_REAPPROACH_RETRIGGER_TWO_SAMPLES,
     ):
         return switched_preset(
             self,
@@ -49,6 +51,7 @@ def _install_pre_switch_preset() -> None:
             flat_soil_margin_m=flat_soil_margin_m,
             clip_returned_command=clip_returned_command,
             touch_twist_hold=touch_twist_hold,
+            reapproach_retrigger_two_samples=reapproach_retrigger_two_samples,
         )
 
     c2.C2Config.with_10hz_d1 = pre_switch_preset
