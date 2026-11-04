@@ -24,6 +24,7 @@ SOURCE_DIR = PROJECT_ROOT / "03_src"
 PRE_SWITCH_SOIL_STOP = False
 PRE_SWITCH_FLAT_SOIL_MARGIN_M = 0.0
 PRE_SWITCH_CLIP_RETURNED_COMMAND = False
+PRE_SWITCH_TOUCH_TWIST_HOLD = False
 
 if str(SOURCE_DIR) not in sys.path:
     sys.path.insert(0, str(SOURCE_DIR))
@@ -40,12 +41,14 @@ def _install_pre_switch_preset() -> None:
         soil_stop: bool = PRE_SWITCH_SOIL_STOP,
         flat_soil_margin_m: float = PRE_SWITCH_FLAT_SOIL_MARGIN_M,
         clip_returned_command: bool = PRE_SWITCH_CLIP_RETURNED_COMMAND,
+        touch_twist_hold: bool = PRE_SWITCH_TOUCH_TWIST_HOLD,
     ):
         return switched_preset(
             self,
             soil_stop=soil_stop,
             flat_soil_margin_m=flat_soil_margin_m,
             clip_returned_command=clip_returned_command,
+            touch_twist_hold=touch_twist_hold,
         )
 
     c2.C2Config.with_10hz_d1 = pre_switch_preset
