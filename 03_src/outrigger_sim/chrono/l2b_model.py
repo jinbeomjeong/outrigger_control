@@ -266,6 +266,10 @@ class L2bModel:
             spheres, ``SetDampingF`` also on the floor material because NSC combines dampingf by
             min; the pads keep compliance 0, so their contacts are unchanged) or None = the YAML
             ``contact.crawler.L2b_NSC.model`` (rigid when the block is absent).
+        pad_gap_offsets_m: Extra pad-to-floor gap per leg [m] (> 0 = larger gap, the floor under
+            that pad seen lower), applied as a smaller pad contact sphere radius so the offset
+            is along the floor normal at any tilt; the rod, the ball centre and the crawler are
+            unchanged. None (default) = the YAML radii, the model unchanged.
     """
 
     def __init__(
@@ -286,10 +290,19 @@ class L2bModel:
         actuator_ramp_s: float | None = None,
         lateral_damping_scale: float = 1.0,
         crawler_contact: str | None = None,
+        pad_gap_offsets_m: Sequence[float] | None = None,
     ) -> None:
         if params.l2b is None:
             raise ValueError('params must be loaded with model="L2b_NSC"')
         self.params = params
+        self.pad_gap_offsets_m = None if pad_gap_offsets_m is None else tuple(
+            float(g) for g in pad_gap_offsets_m)
+        if self.pad_gap_offsets_m is not None and (
+            len(self.pad_gap_offsets_m) != len(LEG_ORDER)
+            or not all(abs(g) < leg.pad.swivel_center_above_pad_bottom_m
+                       for g, leg in zip(self.pad_gap_offsets_m, params.legs, strict=True))
+        ):
+            raise ValueError(f"need one offset per leg, each below the radius: {pad_gap_offsets_m}")
         ext = (
             operating_extensions_m(params)
             if extensions_m is None
@@ -411,6 +424,8 @@ class L2bModel:
         motors, functions, centres_local, radii, ball_frames = [], [], [], [], []
         for i, (leg, body) in enumerate(zip(params.legs, legs, strict=True)):
             radius = leg.pad.swivel_center_above_pad_bottom_m
+            if self.pad_gap_offsets_m is not None:
+                radius -= self.pad_gap_offsets_m[i]
             centre_body = pad_sphere_centre_body_m(params, i, ext[i])
             centre_local = centre_body - leg_com_body_m(params, i, ext[i])
             body.EnableCollision(True)
@@ -617,6 +632,8 @@ class L2bModel:
                                 "disabled_pairs": ["rod-superstructure (incl. crawler)"]},
             input_lag_steps=1,
         )
+        if self.pad_gap_offsets_m is not None:  # key only with the option (earlier meta unchanged)
+            meta["pad_gap_offsets_m"] = list(self.pad_gap_offsets_m)
         return meta
 
     def v0_inventory(self) -> dict[str, Any]:
