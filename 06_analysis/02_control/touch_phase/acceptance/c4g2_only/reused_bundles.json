@@ -1,0 +1,13 @@
+{
+ "rule": "gap_check: no re-approach start or no retrigger event, so C4G2 + K1 row = C4G2-only row",
+ "copied": [
+  "d8/d8_both.json",
+  "d8/d8_main_off.json",
+  "crawler/crawler_both.json",
+  "regression/clip_x426_C.json",
+  "regression/clip_x426_D.json",
+  "regression/clip_r79_L1L2.json",
+  "regression/clip_r79_L3L4.json"
+ ],
+ "cut": "regression/clip_A.json from soil/soil_A.json"
+}

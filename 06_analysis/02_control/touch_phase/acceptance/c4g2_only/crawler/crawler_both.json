@@ -1,0 +1,5980 @@
+{
+ "meta": {
+  "wt": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+  "git_head": "74032beae72c7e44858e41384bc54c263e724fd3",
+  "combo": "both",
+  "c2_sha256": "28482b8d5678c3e1079c9dd89046013bd60cac718e0e8efa195101a36236df67",
+  "touch_twist_hold": true,
+  "vector_ramp": true,
+  "ramp_twist_tol_m_s": 0.0002,
+  "retrigger_samples": 2,
+  "threads": {
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1"
+  },
+  "n": 72,
+  "fs_kN": 4.0,
+  "wall_s_this_start": 1339.6
+ },
+ "runs": [
+  {
+   "id": "S3|top|pitch+",
+   "job": {
+    "id": "S3|top|pitch+",
+    "S": 3.0,
+    "level": "top",
+    "tag": "pitch+",
+    "roll": -0.000297,
+    "pitch": 3.528986
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 42.6,
+     "t_first_ready_s": 54.6
+    },
+    "forces": {
+     "t_lift_s": 20.713,
+     "after_liftoff": {
+      "min_kN": 54.667,
+      "leg": "RR",
+      "t_s": 50.578
+     },
+     "first_8s": {
+      "min_kN": 58.3322,
+      "leg": "RR",
+      "t_s": 20.841
+     },
+     "after_8s": {
+      "min_kN": 54.667,
+      "leg": "RR",
+      "t_s": 50.578
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 8e-05,
+      "pitch": 0.01477
+     },
+     "max_abs_last_5s_deg": 0.01477,
+     "max_abs_after_liftoff_deg": 3.58218,
+     "rocking_amplitude_deg": 0.00647,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.0239,
+    "pressure": {
+     "max_moving_bar": 99.388,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.792,
+     "abs_at_first_done_kN": 0.262
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 135.887,
+     "FR": 133.547,
+     "RL": 90.75,
+     "RR": 88.673
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "8752792e1a0fd84779dadec4069d2e02af4eaa06ee2348745b4b97bef92de746",
+   "max_stroke_reading_mm": 662.8067426645446,
+   "wall_s": 152.3
+  },
+  {
+   "id": "S3|top|pitch-",
+   "job": {
+    "id": "S3|top|pitch-",
+    "S": 3.0,
+    "level": "top",
+    "tag": "pitch-",
+    "roll": -0.000255,
+    "pitch": -3.521658
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.0,
+     "t_first_done_s": 42.9,
+     "t_first_ready_s": 54.9
+    },
+    "forces": {
+     "t_lift_s": 20.827,
+     "after_liftoff": {
+      "min_kN": 54.4686,
+      "leg": "RR",
+      "t_s": 50.869
+     },
+     "first_8s": {
+      "min_kN": 73.4352,
+      "leg": "RR",
+      "t_s": 28.636
+     },
+     "after_8s": {
+      "min_kN": 54.4686,
+      "leg": "RR",
+      "t_s": 50.869
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.0,
+      "pitch": 0.01526
+     },
+     "max_abs_last_5s_deg": 0.01527,
+     "max_abs_after_liftoff_deg": 3.37118,
+     "rocking_amplitude_deg": 0.00632,
+     "filter_residual_last_5s_deg": 3e-05
+    },
+    "probe_attitude_change_deg": 0.02409,
+    "pressure": {
+     "max_moving_bar": 98.526,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.149,
+     "abs_at_first_done_kN": 0.267
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.0,
+     "t_loc_last_s": 22.0,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.41,
+     "FR": 133.346,
+     "RL": 90.843,
+     "RR": 88.631
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "a69238e420e9b3dff53f57131b2897a4e194922c7aa7be834b98665b9cfbbae8",
+   "max_stroke_reading_mm": 667.5348910088034,
+   "wall_s": 152.6
+  },
+  {
+   "id": "S3|top|roll+",
+   "job": {
+    "id": "S3|top|roll+",
+    "S": 3.0,
+    "level": "top",
+    "tag": "roll+",
+    "roll": 5.54368,
+    "pitch": -0.015482
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.0,
+     "t_first_done_s": 43.6,
+     "t_first_ready_s": 55.6
+    },
+    "forces": {
+     "t_lift_s": 21.208,
+     "after_liftoff": {
+      "min_kN": 48.0564,
+      "leg": "RL",
+      "t_s": 21.307
+     },
+     "first_8s": {
+      "min_kN": 48.0564,
+      "leg": "RL",
+      "t_s": 21.307
+     },
+     "after_8s": {
+      "min_kN": 55.4614,
+      "leg": "RR",
+      "t_s": 51.565
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01553,
+      "pitch": 3e-05
+     },
+     "max_abs_last_5s_deg": 0.01553,
+     "max_abs_after_liftoff_deg": 5.29297,
+     "rocking_amplitude_deg": 0.0063,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02391,
+    "pressure": {
+     "max_moving_bar": 112.94,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.945,
+     "abs_at_first_done_kN": 2.041
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.2,
+     "t_loc_last_s": 22.2,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 135.319,
+     "FR": 153.893,
+     "RL": 89.908,
+     "RR": 105.004
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.0,
+     "INFO_TOUCH_TWIST_HOLD:-0.902"
+    ]
+   ],
+   "commands_sha256": "cbc060006651b74601e3eaf39d86b2ca35c735d9d6354cdd6a6baec283932112",
+   "max_stroke_reading_mm": 668.3538374573756,
+   "wall_s": 151.7
+  },
+  {
+   "id": "S3|top|roll-",
+   "job": {
+    "id": "S3|top|roll-",
+    "S": 3.0,
+    "level": "top",
+    "tag": "roll-",
+    "roll": -5.54424,
+    "pitch": -0.015348
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.0,
+     "t_first_done_s": 43.6,
+     "t_first_ready_s": 55.6
+    },
+    "forces": {
+     "t_lift_s": 21.202,
+     "after_liftoff": {
+      "min_kN": 47.2444,
+      "leg": "RR",
+      "t_s": 21.326
+     },
+     "first_8s": {
+      "min_kN": 47.2444,
+      "leg": "RR",
+      "t_s": 21.326
+     },
+     "after_8s": {
+      "min_kN": 53.5078,
+      "leg": "RR",
+      "t_s": 51.572
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01547,
+      "pitch": 5e-05
+     },
+     "max_abs_last_5s_deg": 0.01548,
+     "max_abs_after_liftoff_deg": 5.29938,
+     "rocking_amplitude_deg": 0.00633,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02526,
+    "pressure": {
+     "max_moving_bar": 115.079,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 32.081,
+     "abs_at_first_done_kN": 2.038
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [
+      "INFO_LIFT_PAUSED"
+     ],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.1,
+     "t_loc_last_s": 22.1,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 156.729,
+     "FR": 134.242,
+     "RL": 106.979,
+     "RR": 87.511
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.0,
+     "INFO_TOUCH_TWIST_HOLD:0.898"
+    ],
+    [
+     20.8,
+     "INFO_LIFT_PAUSED:RR"
+    ]
+   ],
+   "commands_sha256": "1f465ef27d6e8ad8a0b85983b6a0bd5e1363d678edc809afb76873e0f9784665",
+   "max_stroke_reading_mm": 668.4678852343343,
+   "wall_s": 152.1
+  },
+  {
+   "id": "S3|top|r+p+0.25",
+   "job": {
+    "id": "S3|top|r+p+0.25",
+    "S": 3.0,
+    "level": "top",
+    "tag": "r+p+0.25",
+    "roll": 1.38432,
+    "pitch": 2.664755
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.4,
+     "t_first_ready_s": 54.4
+    },
+    "forces": {
+     "t_lift_s": 20.93,
+     "after_liftoff": {
+      "min_kN": 53.7017,
+      "leg": "RR",
+      "t_s": 50.376
+     },
+     "first_8s": {
+      "min_kN": 54.0652,
+      "leg": "RL",
+      "t_s": 21.055
+     },
+     "after_8s": {
+      "min_kN": 53.7017,
+      "leg": "RR",
+      "t_s": 50.376
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.00777,
+      "pitch": 0.01494
+     },
+     "max_abs_last_5s_deg": 0.01494,
+     "max_abs_after_liftoff_deg": 2.72626,
+     "rocking_amplitude_deg": 0.00724,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02339,
+    "pressure": {
+     "max_moving_bar": 103.718,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 31.595,
+     "abs_at_first_done_kN": 1.402
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.0,
+     "t_loc_last_s": 22.0,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 133.471,
+     "FR": 141.653,
+     "RL": 91.719,
+     "RR": 87.784
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     19.4,
+     "INFO_TOUCH_DIP_HELD:FR"
+    ],
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:-1.097"
+    ]
+   ],
+   "commands_sha256": "be3006e7b5615567ac6b70db53bfc8252c2a1ba78c0ad254980d11a861396dea",
+   "max_stroke_reading_mm": 665.3238009962728,
+   "wall_s": 152.0
+  },
+  {
+   "id": "S3|top|r+p-0.25",
+   "job": {
+    "id": "S3|top|r+p-0.25",
+    "S": 3.0,
+    "level": "top",
+    "tag": "r+p-0.25",
+    "roll": 1.388158,
+    "pitch": -2.643368
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.0,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.84,
+     "after_liftoff": {
+      "min_kN": 54.4091,
+      "leg": "RR",
+      "t_s": 50.17
+     },
+     "first_8s": {
+      "min_kN": 69.7041,
+      "leg": "RL",
+      "t_s": 21.4
+     },
+     "after_8s": {
+      "min_kN": 54.4091,
+      "leg": "RR",
+      "t_s": 50.17
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.00809,
+      "pitch": 0.01502
+     },
+     "max_abs_last_5s_deg": 0.01502,
+     "max_abs_after_liftoff_deg": 2.50718,
+     "rocking_amplitude_deg": 0.00635,
+     "filter_residual_last_5s_deg": 3e-05
+    },
+    "probe_attitude_change_deg": 0.0234,
+    "pressure": {
+     "max_moving_bar": 98.506,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.202,
+     "abs_at_first_done_kN": 0.281
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.1,
+     "t_loc_last_s": 22.1,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.35,
+     "FR": 133.313,
+     "RL": 90.902,
+     "RR": 88.613
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "a9dd5009405d76341e52bd11a57887fbbc031e06f5f61b5113de6cc1aca1012b",
+   "max_stroke_reading_mm": 663.1305107742749,
+   "wall_s": 151.3
+  },
+  {
+   "id": "S3|top|r+p+0.5",
+   "job": {
+    "id": "S3|top|r+p+0.5",
+    "S": 3.0,
+    "level": "top",
+    "tag": "r+p+0.5",
+    "roll": 2.769883,
+    "pitch": 1.781349
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.4,
+     "t_first_ready_s": 54.4
+    },
+    "forces": {
+     "t_lift_s": 20.901,
+     "after_liftoff": {
+      "min_kN": 52.6991,
+      "leg": "RL",
+      "t_s": 21.02
+     },
+     "first_8s": {
+      "min_kN": 52.6991,
+      "leg": "RL",
+      "t_s": 21.02
+     },
+     "after_8s": {
+      "min_kN": 54.0533,
+      "leg": "RR",
+      "t_s": 50.374
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01517,
+      "pitch": 0.00991
+     },
+     "max_abs_last_5s_deg": 0.01517,
+     "max_abs_after_liftoff_deg": 2.78346,
+     "rocking_amplitude_deg": 0.00815,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02418,
+    "pressure": {
+     "max_moving_bar": 108.344,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.879,
+     "abs_at_first_done_kN": 0.563
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 133.895,
+     "FR": 147.803,
+     "RL": 91.349,
+     "RR": 88.181
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:-0.063"
+    ]
+   ],
+   "commands_sha256": "e4a406f7b4dac7879019768e6109a0d95ce674043faccf7e5740f47a0079b5b7",
+   "max_stroke_reading_mm": 666.6085141096739,
+   "wall_s": 151.2
+  },
+  {
+   "id": "S3|top|r+p-0.5",
+   "job": {
+    "id": "S3|top|r+p-0.5",
+    "S": 3.0,
+    "level": "top",
+    "tag": "r+p-0.5",
+    "roll": 2.774872,
+    "pitch": -1.764886
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.0,
+     "t_first_done_s": 42.1,
+     "t_first_ready_s": 54.1
+    },
+    "forces": {
+     "t_lift_s": 20.87,
+     "after_liftoff": {
+      "min_kN": 54.9172,
+      "leg": "RR",
+      "t_s": 50.071
+     },
+     "first_8s": {
+      "min_kN": 60.9969,
+      "leg": "RL",
+      "t_s": 20.87
+     },
+     "after_8s": {
+      "min_kN": 54.9172,
+      "leg": "RR",
+      "t_s": 50.071
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01496,
+      "pitch": 0.00892
+     },
+     "max_abs_last_5s_deg": 0.01497,
+     "max_abs_after_liftoff_deg": 2.72643,
+     "rocking_amplitude_deg": 0.00634,
+     "filter_residual_last_5s_deg": 3e-05
+    },
+    "probe_attitude_change_deg": 0.02416,
+    "pressure": {
+     "max_moving_bar": 98.874,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.265,
+     "abs_at_first_done_kN": 1.248
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.0,
+     "t_loc_last_s": 22.0,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.818,
+     "FR": 132.777,
+     "RL": 90.423,
+     "RR": 93.957
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.0,
+     "INFO_TOUCH_TWIST_HOLD:-0.439"
+    ]
+   ],
+   "commands_sha256": "051da84e7841b7822b3586564ac3e4323c72a5a697d921cd031584bcbcfc6feb",
+   "max_stroke_reading_mm": 658.7344914550243,
+   "wall_s": 150.3
+  },
+  {
+   "id": "S3|top|r+p+0.75",
+   "job": {
+    "id": "S3|top|r+p+0.75",
+    "S": 3.0,
+    "level": "top",
+    "tag": "r+p+0.75",
+    "roll": 4.156184,
+    "pitch": 0.884354
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.0,
+     "t_first_done_s": 42.9,
+     "t_first_ready_s": 54.9
+    },
+    "forces": {
+     "t_lift_s": 20.838,
+     "after_liftoff": {
+      "min_kN": 50.7454,
+      "leg": "RL",
+      "t_s": 20.865
+     },
+     "first_8s": {
+      "min_kN": 50.7454,
+      "leg": "RL",
+      "t_s": 20.865
+     },
+     "after_8s": {
+      "min_kN": 55.0913,
+      "leg": "RR",
+      "t_s": 50.871
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01486,
+      "pitch": 0.00321
+     },
+     "max_abs_last_5s_deg": 0.01487,
+     "max_abs_after_liftoff_deg": 4.10388,
+     "rocking_amplitude_deg": 0.00796,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02406,
+    "pressure": {
+     "max_moving_bar": 109.486,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.324,
+     "abs_at_first_done_kN": 1.379
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.0,
+     "t_loc_last_s": 22.0,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.9,
+     "FR": 149.31,
+     "RL": 90.283,
+     "RR": 92.613
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.0,
+     "INFO_TOUCH_TWIST_HOLD:-0.931"
+    ]
+   ],
+   "commands_sha256": "a3d4f67dfb231b862149b30f3395661eea5cc609f551e734b9dc214daab3bee3",
+   "max_stroke_reading_mm": 666.9408479382442,
+   "wall_s": 146.2
+  },
+  {
+   "id": "S3|top|r+p-0.75",
+   "job": {
+    "id": "S3|top|r+p-0.75",
+    "S": 3.0,
+    "level": "top",
+    "tag": "r+p-0.75",
+    "roll": 4.160838,
+    "pitch": -0.886169
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.0,
+     "t_first_done_s": 42.6,
+     "t_first_ready_s": 54.6
+    },
+    "forces": {
+     "t_lift_s": 21.04,
+     "after_liftoff": {
+      "min_kN": 55.3952,
+      "leg": "RR",
+      "t_s": 50.57
+     },
+     "first_8s": {
+      "min_kN": 55.8145,
+      "leg": "RL",
+      "t_s": 21.342
+     },
+     "after_8s": {
+      "min_kN": 55.3952,
+      "leg": "RR",
+      "t_s": 50.57
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01552,
+      "pitch": 0.00276
+     },
+     "max_abs_last_5s_deg": 0.01553,
+     "max_abs_after_liftoff_deg": 3.9974,
+     "rocking_amplitude_deg": 0.0063,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02405,
+    "pressure": {
+     "max_moving_bar": 103.69,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.973,
+     "abs_at_first_done_kN": 2.016
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.0,
+     "t_loc_last_s": 22.0,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 135.233,
+     "FR": 141.612,
+     "RL": 89.968,
+     "RR": 98.582
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.0,
+     "INFO_TOUCH_TWIST_HOLD:-0.417"
+    ]
+   ],
+   "commands_sha256": "e6b38a844f6b071f0039b4ec8f27a3e3e3a4b91645302e01f524e3bbfb93c96a",
+   "max_stroke_reading_mm": 654.41167087513,
+   "wall_s": 144.7
+  },
+  {
+   "id": "S3|top|r-p+0.5",
+   "job": {
+    "id": "S3|top|r-p+0.5",
+    "S": 3.0,
+    "level": "top",
+    "tag": "r-p+0.5",
+    "roll": -2.770477,
+    "pitch": 1.781349
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.4,
+     "t_first_ready_s": 54.4
+    },
+    "forces": {
+     "t_lift_s": 20.906,
+     "after_liftoff": {
+      "min_kN": 51.0264,
+      "leg": "RR",
+      "t_s": 21.025
+     },
+     "first_8s": {
+      "min_kN": 51.0264,
+      "leg": "RR",
+      "t_s": 21.025
+     },
+     "after_8s": {
+      "min_kN": 54.8548,
+      "leg": "RR",
+      "t_s": 50.378
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01511,
+      "pitch": 0.00998
+     },
+     "max_abs_last_5s_deg": 0.01511,
+     "max_abs_after_liftoff_deg": 2.78736,
+     "rocking_amplitude_deg": 0.00872,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02553,
+    "pressure": {
+     "max_moving_bar": 110.317,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.587,
+     "abs_at_first_done_kN": 0.603
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 150.418,
+     "FR": 132.971,
+     "RL": 90.573,
+     "RR": 88.924
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.2,
+     "INFO_TOUCH_TWIST_HOLD:0.058"
+    ]
+   ],
+   "commands_sha256": "61e571061a5f83b189da94887780822f247b763ddff0f52bd60dd708e301822e",
+   "max_stroke_reading_mm": 666.730548882901,
+   "wall_s": 146.5
+  },
+  {
+   "id": "S3|top|r-p-0.5",
+   "job": {
+    "id": "S3|top|r-p-0.5",
+    "S": 3.0,
+    "level": "top",
+    "tag": "r-p-0.5",
+    "roll": -2.775381,
+    "pitch": -1.764885
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.0,
+     "t_first_done_s": 41.9,
+     "t_first_ready_s": 53.9
+    },
+    "forces": {
+     "t_lift_s": 20.853,
+     "after_liftoff": {
+      "min_kN": 53.872,
+      "leg": "RR",
+      "t_s": 49.873
+     },
+     "first_8s": {
+      "min_kN": 59.2484,
+      "leg": "RR",
+      "t_s": 20.853
+     },
+     "after_8s": {
+      "min_kN": 53.872,
+      "leg": "RR",
+      "t_s": 49.873
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01523,
+      "pitch": 0.00913
+     },
+     "max_abs_last_5s_deg": 0.01524,
+     "max_abs_after_liftoff_deg": 2.73393,
+     "rocking_amplitude_deg": 0.00635,
+     "filter_residual_last_5s_deg": 3e-05
+    },
+    "probe_attitude_change_deg": 0.02572,
+    "pressure": {
+     "max_moving_bar": 98.092,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 31.389,
+     "abs_at_first_done_kN": 1.029
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.0,
+     "t_loc_last_s": 22.0,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.192,
+     "FR": 133.957,
+     "RL": 95.686,
+     "RR": 88.047
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.0,
+     "INFO_TOUCH_TWIST_HOLD:0.432"
+    ]
+   ],
+   "commands_sha256": "18ef4045ddb89942eac85133549a9eca3e7a3b281293586f9018544ef624228f",
+   "max_stroke_reading_mm": 655.2130906971252,
+   "wall_s": 144.6
+  },
+  {
+   "id": "S3|middle|pitch+",
+   "job": {
+    "id": "S3|middle|pitch+",
+    "S": 3.0,
+    "level": "middle",
+    "tag": "pitch+",
+    "roll": -0.000297,
+    "pitch": 3.541796
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 42.6,
+     "t_first_ready_s": 54.6
+    },
+    "forces": {
+     "t_lift_s": 20.683,
+     "after_liftoff": {
+      "min_kN": 54.6427,
+      "leg": "RR",
+      "t_s": 50.449
+     },
+     "first_8s": {
+      "min_kN": 59.4431,
+      "leg": "RR",
+      "t_s": 20.761
+     },
+     "after_8s": {
+      "min_kN": 54.6427,
+      "leg": "RR",
+      "t_s": 50.449
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 8e-05,
+      "pitch": 0.01493
+     },
+     "max_abs_last_5s_deg": 0.01493,
+     "max_abs_after_liftoff_deg": 3.59424,
+     "rocking_amplitude_deg": 0.00607,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02343,
+    "pressure": {
+     "max_moving_bar": 98.481,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.992,
+     "abs_at_first_done_kN": 0.261
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.7,
+     "t_loc_last_s": 21.7,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.701,
+     "FR": 132.721,
+     "RL": 90.97,
+     "RR": 88.493
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "13b1ef8b28eb5d918168a662880cdbb3bfb4b1c5ddf2830372e416982ac150bf",
+   "max_stroke_reading_mm": 663.7322708919825,
+   "wall_s": 144.0
+  },
+  {
+   "id": "S3|middle|pitch-",
+   "job": {
+    "id": "S3|middle|pitch-",
+    "S": 3.0,
+    "level": "middle",
+    "tag": "pitch-",
+    "roll": -0.000255,
+    "pitch": -3.539804
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.0,
+     "t_first_done_s": 43.0,
+     "t_first_ready_s": 55.0
+    },
+    "forces": {
+     "t_lift_s": 20.83,
+     "after_liftoff": {
+      "min_kN": 54.4673,
+      "leg": "RR",
+      "t_s": 50.842
+     },
+     "first_8s": {
+      "min_kN": 72.7863,
+      "leg": "RR",
+      "t_s": 28.83
+     },
+     "after_8s": {
+      "min_kN": 54.4673,
+      "leg": "RR",
+      "t_s": 50.842
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 3e-05,
+      "pitch": 0.01498
+     },
+     "max_abs_last_5s_deg": 0.01498,
+     "max_abs_after_liftoff_deg": 3.38676,
+     "rocking_amplitude_deg": 0.00613,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02372,
+    "pressure": {
+     "max_moving_bar": 98.492,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.265,
+     "abs_at_first_done_kN": 0.267
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.709,
+     "FR": 132.748,
+     "RL": 91.091,
+     "RR": 88.514
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "9655f74efc4df1f772654c7641fdfb7c9541969f79dc35f7172ac6746c2c9ac1",
+   "max_stroke_reading_mm": 668.928466739447,
+   "wall_s": 144.0
+  },
+  {
+   "id": "S3|middle|roll+",
+   "job": {
+    "id": "S3|middle|roll+",
+    "S": 3.0,
+    "level": "middle",
+    "tag": "roll+",
+    "roll": 5.556565,
+    "pitch": -0.011309
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 43.7,
+     "t_first_ready_s": 55.7
+    },
+    "forces": {
+     "t_lift_s": 21.257,
+     "after_liftoff": {
+      "min_kN": 55.0116,
+      "leg": "RR",
+      "t_s": 51.556
+     },
+     "first_8s": {
+      "min_kN": 55.569,
+      "leg": "RL",
+      "t_s": 21.569
+     },
+     "after_8s": {
+      "min_kN": 55.0116,
+      "leg": "RR",
+      "t_s": 51.556
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01524,
+      "pitch": 0.00012
+     },
+     "max_abs_last_5s_deg": 0.01525,
+     "max_abs_after_liftoff_deg": 5.29782,
+     "rocking_amplitude_deg": 0.00603,
+     "filter_residual_last_5s_deg": 3e-05
+    },
+    "probe_attitude_change_deg": 0.02406,
+    "pressure": {
+     "max_moving_bar": 109.022,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.05,
+     "abs_at_first_done_kN": 1.187
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.2,
+     "t_loc_last_s": 22.2,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 135.285,
+     "FR": 148.69,
+     "RL": 90.581,
+     "RR": 94.376
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "4044d96f8a6ee59a411cafc7f2b1db4e4d36b97d6857e4c01fb8612be7e2c971",
+   "max_stroke_reading_mm": 669.0034335358056,
+   "wall_s": 144.1
+  },
+  {
+   "id": "S3|middle|roll-",
+   "job": {
+    "id": "S3|middle|roll-",
+    "S": 3.0,
+    "level": "middle",
+    "tag": "roll-",
+    "roll": -5.557126,
+    "pitch": -0.011175
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 43.7,
+     "t_first_ready_s": 55.7
+    },
+    "forces": {
+     "t_lift_s": 21.238,
+     "after_liftoff": {
+      "min_kN": 53.0402,
+      "leg": "RR",
+      "t_s": 21.238
+     },
+     "first_8s": {
+      "min_kN": 53.0402,
+      "leg": "RR",
+      "t_s": 21.238
+     },
+     "after_8s": {
+      "min_kN": 53.8921,
+      "leg": "RR",
+      "t_s": 51.537
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.0154,
+      "pitch": 0.00011
+     },
+     "max_abs_last_5s_deg": 0.01541,
+     "max_abs_after_liftoff_deg": 5.31262,
+     "rocking_amplitude_deg": 0.006,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.0249,
+    "pressure": {
+     "max_moving_bar": 110.576,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 31.518,
+     "abs_at_first_done_kN": 1.265
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.2,
+     "t_loc_last_s": 22.2,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 150.743,
+     "FR": 133.404,
+     "RL": 96.807,
+     "RR": 87.732
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "b0511504f433fea7a49098c09e5e285075eb374f57689281e635f8cae0db9e39",
+   "max_stroke_reading_mm": 669.1159719233634,
+   "wall_s": 143.3
+  },
+  {
+   "id": "S3|middle|r+p+0.25",
+   "job": {
+    "id": "S3|middle|r+p+0.25",
+    "S": 3.0,
+    "level": "middle",
+    "tag": "r+p+0.25",
+    "roll": 1.388901,
+    "pitch": 2.658434
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.721,
+     "after_liftoff": {
+      "min_kN": 54.6446,
+      "leg": "RR",
+      "t_s": 50.05
+     },
+     "first_8s": {
+      "min_kN": 58.104,
+      "leg": "RL",
+      "t_s": 20.778
+     },
+     "after_8s": {
+      "min_kN": 54.6446,
+      "leg": "RR",
+      "t_s": 50.05
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.00738,
+      "pitch": 0.01485
+     },
+     "max_abs_last_5s_deg": 0.01485,
+     "max_abs_after_liftoff_deg": 2.71423,
+     "rocking_amplitude_deg": 0.0061,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02356,
+    "pressure": {
+     "max_moving_bar": 98.49,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.943,
+     "abs_at_first_done_kN": 0.437
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.676,
+     "FR": 134.231,
+     "RL": 90.973,
+     "RR": 88.578
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:-0.234"
+    ]
+   ],
+   "commands_sha256": "b8b8247b8c6810443e43f8642760746ff8e7006a49e99fb43d7bf948c8e10cc4",
+   "max_stroke_reading_mm": 665.0341867491657,
+   "wall_s": 137.2
+  },
+  {
+   "id": "S3|middle|r+p-0.25",
+   "job": {
+    "id": "S3|middle|r+p-0.25",
+    "S": 3.0,
+    "level": "middle",
+    "tag": "r+p-0.25",
+    "roll": 1.391088,
+    "pitch": -2.656752
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.0,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.853,
+     "after_liftoff": {
+      "min_kN": 54.4033,
+      "leg": "RR",
+      "t_s": 50.046
+     },
+     "first_8s": {
+      "min_kN": 70.0722,
+      "leg": "RL",
+      "t_s": 20.853
+     },
+     "after_8s": {
+      "min_kN": 54.4033,
+      "leg": "RR",
+      "t_s": 50.046
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.00769,
+      "pitch": 0.01436
+     },
+     "max_abs_last_5s_deg": 0.01436,
+     "max_abs_after_liftoff_deg": 2.51699,
+     "rocking_amplitude_deg": 0.00617,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02356,
+    "pressure": {
+     "max_moving_bar": 98.459,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.332,
+     "abs_at_first_done_kN": 0.272
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.668,
+     "FR": 132.796,
+     "RL": 91.149,
+     "RR": 88.51
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "b4ae9a61098f0a51e401da8770c7a352ebb982ab43f3135b3d39041d4d180325",
+   "max_stroke_reading_mm": 664.2144789124108,
+   "wall_s": 136.1
+  },
+  {
+   "id": "S3|middle|r+p+0.5",
+   "job": {
+    "id": "S3|middle|r+p+0.5",
+    "S": 3.0,
+    "level": "middle",
+    "tag": "r+p+0.5",
+    "roll": 2.77676,
+    "pitch": 1.774912
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.761,
+     "after_liftoff": {
+      "min_kN": 54.6236,
+      "leg": "RL",
+      "t_s": 20.804
+     },
+     "first_8s": {
+      "min_kN": 54.6236,
+      "leg": "RL",
+      "t_s": 20.804
+     },
+     "after_8s": {
+      "min_kN": 54.8548,
+      "leg": "RR",
+      "t_s": 50.053
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01502,
+      "pitch": 0.01004
+     },
+     "max_abs_last_5s_deg": 0.01502,
+     "max_abs_after_liftoff_deg": 2.75887,
+     "rocking_amplitude_deg": 0.0061,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.0244,
+    "pressure": {
+     "max_moving_bar": 101.755,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.915,
+     "abs_at_first_done_kN": 0.996
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.94,
+     "FR": 139.05,
+     "RL": 90.754,
+     "RR": 88.866
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:-0.209"
+    ]
+   ],
+   "commands_sha256": "fd8f74714c93935d509ff4d77601e4badde8c16f1a30bf461ebc3ebafc0e2153",
+   "max_stroke_reading_mm": 666.4276762190558,
+   "wall_s": 137.4
+  },
+  {
+   "id": "S3|middle|r+p-0.5",
+   "job": {
+    "id": "S3|middle|r+p-0.5",
+    "S": 3.0,
+    "level": "middle",
+    "tag": "r+p-0.5",
+    "roll": 2.780695,
+    "pitch": -1.773501
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.0,
+     "t_first_done_s": 42.1,
+     "t_first_ready_s": 54.1
+    },
+    "forces": {
+     "t_lift_s": 20.947,
+     "after_liftoff": {
+      "min_kN": 54.9669,
+      "leg": "RR",
+      "t_s": 49.951
+     },
+     "first_8s": {
+      "min_kN": 64.8989,
+      "leg": "RL",
+      "t_s": 21.197
+     },
+     "after_8s": {
+      "min_kN": 54.9669,
+      "leg": "RR",
+      "t_s": 49.951
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.0149,
+      "pitch": 0.00899
+     },
+     "max_abs_last_5s_deg": 0.01491,
+     "max_abs_after_liftoff_deg": 2.68748,
+     "rocking_amplitude_deg": 0.00615,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02437,
+    "pressure": {
+     "max_moving_bar": 98.846,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.35,
+     "abs_at_first_done_kN": 1.364
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.0,
+     "t_loc_last_s": 22.0,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 135.2,
+     "FR": 132.268,
+     "RL": 90.596,
+     "RR": 89.058
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.0,
+     "INFO_TOUCH_TWIST_HOLD:0.048"
+    ]
+   ],
+   "commands_sha256": "9bd27798de569f3ded78b436b552812f9ae1fc3c9e28a4bb8b56ca582e132f6b",
+   "max_stroke_reading_mm": 659.6589822659449,
+   "wall_s": 137.3
+  },
+  {
+   "id": "S3|middle|r+p+0.75",
+   "job": {
+    "id": "S3|middle|r+p+0.75",
+    "S": 3.0,
+    "level": "middle",
+    "tag": "r+p+0.75",
+    "roll": 4.166417,
+    "pitch": 0.881717
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 43.1,
+     "t_first_ready_s": 55.1
+    },
+    "forces": {
+     "t_lift_s": 20.895,
+     "after_liftoff": {
+      "min_kN": 54.3512,
+      "leg": "RR",
+      "t_s": 50.955
+     },
+     "first_8s": {
+      "min_kN": 55.4741,
+      "leg": "RL",
+      "t_s": 20.929
+     },
+     "after_8s": {
+      "min_kN": 54.3512,
+      "leg": "RR",
+      "t_s": 50.955
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01506,
+      "pitch": 0.00337
+     },
+     "max_abs_last_5s_deg": 0.01507,
+     "max_abs_after_liftoff_deg": 4.12596,
+     "rocking_amplitude_deg": 0.00606,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02417,
+    "pressure": {
+     "max_moving_bar": 105.65,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.421,
+     "abs_at_first_done_kN": 0.026
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.584,
+     "FR": 144.226,
+     "RL": 91.242,
+     "RR": 88.303
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:-0.528"
+    ]
+   ],
+   "commands_sha256": "e422653b42ddf51ecac60343585f8a88c1dbaac961e0954b562b6bc3b882b108",
+   "max_stroke_reading_mm": 667.3006950165469,
+   "wall_s": 136.8
+  },
+  {
+   "id": "S3|middle|r+p-0.75",
+   "job": {
+    "id": "S3|middle|r+p-0.75",
+    "S": 3.0,
+    "level": "middle",
+    "tag": "r+p-0.75",
+    "roll": 4.169537,
+    "pitch": -0.89002
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 42.7,
+     "t_first_ready_s": 54.7
+    },
+    "forces": {
+     "t_lift_s": 21.1,
+     "after_liftoff": {
+      "min_kN": 54.6411,
+      "leg": "RR",
+      "t_s": 50.556
+     },
+     "first_8s": {
+      "min_kN": 60.1821,
+      "leg": "RL",
+      "t_s": 21.659
+     },
+     "after_8s": {
+      "min_kN": 54.6411,
+      "leg": "RR",
+      "t_s": 50.556
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01471,
+      "pitch": 0.0025
+     },
+     "max_abs_last_5s_deg": 0.01472,
+     "max_abs_after_liftoff_deg": 4.02634,
+     "rocking_amplitude_deg": 0.00609,
+     "filter_residual_last_5s_deg": 3e-05
+    },
+    "probe_attitude_change_deg": 0.02422,
+    "pressure": {
+     "max_moving_bar": 101.538,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.866,
+     "abs_at_first_done_kN": 0.588
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.1,
+     "t_loc_last_s": 22.1,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.869,
+     "FR": 138.75,
+     "RL": 90.943,
+     "RR": 91.193
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "35eda496486d4839e27fc200e90441f0445d8b8070fa5f67bbcae06070e3ec57",
+   "max_stroke_reading_mm": 655.0155687937496,
+   "wall_s": 138.7
+  },
+  {
+   "id": "S3|middle|r-p+0.5",
+   "job": {
+    "id": "S3|middle|r-p+0.5",
+    "S": 3.0,
+    "level": "middle",
+    "tag": "r-p+0.5",
+    "roll": -2.777323,
+    "pitch": 1.775046
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.752,
+     "after_liftoff": {
+      "min_kN": 53.5584,
+      "leg": "RR",
+      "t_s": 20.808
+     },
+     "first_8s": {
+      "min_kN": 53.5584,
+      "leg": "RR",
+      "t_s": 20.808
+     },
+     "after_8s": {
+      "min_kN": 54.1827,
+      "leg": "RR",
+      "t_s": 50.045
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01522,
+      "pitch": 0.0101
+     },
+     "max_abs_last_5s_deg": 0.01523,
+     "max_abs_after_liftoff_deg": 2.76438,
+     "rocking_amplitude_deg": 0.00609,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.0252,
+    "pressure": {
+     "max_moving_bar": 103.473,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.976,
+     "abs_at_first_done_kN": 0.596
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 141.329,
+     "FR": 133.23,
+     "RL": 91.434,
+     "RR": 88.121
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:0.204"
+    ]
+   ],
+   "commands_sha256": "7b053c819c3e0d3c9a3a33c71e938eef56ead1862078b3f61835f7d40491ae33",
+   "max_stroke_reading_mm": 666.564005646595,
+   "wall_s": 137.5
+  },
+  {
+   "id": "S3|middle|r-p-0.5",
+   "job": {
+    "id": "S3|middle|r-p-0.5",
+    "S": 3.0,
+    "level": "middle",
+    "tag": "r-p-0.5",
+    "roll": -2.781204,
+    "pitch": -1.773501
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.0,
+     "t_first_done_s": 41.9,
+     "t_first_ready_s": 53.9
+    },
+    "forces": {
+     "t_lift_s": 20.918,
+     "after_liftoff": {
+      "min_kN": 53.8572,
+      "leg": "RR",
+      "t_s": 49.739
+     },
+     "first_8s": {
+      "min_kN": 63.1834,
+      "leg": "RR",
+      "t_s": 21.197
+     },
+     "after_8s": {
+      "min_kN": 53.8572,
+      "leg": "RR",
+      "t_s": 49.739
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01532,
+      "pitch": 0.00921
+     },
+     "max_abs_last_5s_deg": 0.01533,
+     "max_abs_after_liftoff_deg": 2.69814,
+     "rocking_amplitude_deg": 0.00614,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02543,
+    "pressure": {
+     "max_moving_bar": 98.031,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 31.542,
+     "abs_at_first_done_kN": 1.0
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 133.96,
+     "FR": 133.439,
+     "RL": 91.711,
+     "RR": 87.907
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.0,
+     "INFO_TOUCH_TWIST_HOLD:-0.055"
+    ]
+   ],
+   "commands_sha256": "eb7bff04fff2f48fcb770d0fcb299fa0e239dad4b85719ea01663619b1b69c09",
+   "max_stroke_reading_mm": 656.1258353454431,
+   "wall_s": 136.9
+  },
+  {
+   "id": "S3|bottom|pitch+",
+   "job": {
+    "id": "S3|bottom|pitch+",
+    "S": 3.0,
+    "level": "bottom",
+    "tag": "pitch+",
+    "roll": -0.000297,
+    "pitch": 3.546824
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 42.6,
+     "t_first_ready_s": 54.6
+    },
+    "forces": {
+     "t_lift_s": 20.682,
+     "after_liftoff": {
+      "min_kN": 54.637,
+      "leg": "RR",
+      "t_s": 50.348
+     },
+     "first_8s": {
+      "min_kN": 62.4327,
+      "leg": "RR",
+      "t_s": 20.716
+     },
+     "after_8s": {
+      "min_kN": 54.637,
+      "leg": "RR",
+      "t_s": 50.348
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 4e-05,
+      "pitch": 0.01491
+     },
+     "max_abs_last_5s_deg": 0.01491,
+     "max_abs_after_liftoff_deg": 3.59811,
+     "rocking_amplitude_deg": 0.00614,
+     "filter_residual_last_5s_deg": 1e-05
+    },
+    "probe_attitude_change_deg": 0.02324,
+    "pressure": {
+     "max_moving_bar": 98.441,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.919,
+     "abs_at_first_done_kN": 0.261
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.7,
+     "t_loc_last_s": 21.7,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.658,
+     "FR": 132.91,
+     "RL": 90.915,
+     "RR": 88.712
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "2c0cb9287da03ced6e4f0aa7190e88a77c82830f56a3a206e347113b5da2fc27",
+   "max_stroke_reading_mm": 664.0932280940048,
+   "wall_s": 149.9
+  },
+  {
+   "id": "S3|bottom|pitch-",
+   "job": {
+    "id": "S3|bottom|pitch-",
+    "S": 3.0,
+    "level": "bottom",
+    "tag": "pitch-",
+    "roll": -0.000255,
+    "pitch": -3.55795
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.0,
+     "t_first_done_s": 43.1,
+     "t_first_ready_s": 55.1
+    },
+    "forces": {
+     "t_lift_s": 20.834,
+     "after_liftoff": {
+      "min_kN": 54.5015,
+      "leg": "RR",
+      "t_s": 50.826
+     },
+     "first_8s": {
+      "min_kN": 72.1661,
+      "leg": "RR",
+      "t_s": 28.769
+     },
+     "after_8s": {
+      "min_kN": 54.5015,
+      "leg": "RR",
+      "t_s": 50.826
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 3e-05,
+      "pitch": 0.01485
+     },
+     "max_abs_last_5s_deg": 0.01485,
+     "max_abs_after_liftoff_deg": 3.40193,
+     "rocking_amplitude_deg": 0.00613,
+     "filter_residual_last_5s_deg": 1e-05
+    },
+    "probe_attitude_change_deg": 0.02369,
+    "pressure": {
+     "max_moving_bar": 98.479,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.223,
+     "abs_at_first_done_kN": 0.267
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.602,
+     "FR": 133.168,
+     "RL": 91.027,
+     "RR": 88.729
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "9fbd8caa79d0e924d9b8120589e4c3ac3b5a1f082dee5e449b5915dad8fc88d6",
+   "max_stroke_reading_mm": 670.3215810879103,
+   "wall_s": 146.6
+  },
+  {
+   "id": "S3|bottom|roll+",
+   "job": {
+    "id": "S3|bottom|roll+",
+    "S": 3.0,
+    "level": "bottom",
+    "tag": "roll+",
+    "roll": 5.56945,
+    "pitch": -0.007136
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 43.7,
+     "t_first_ready_s": 55.7
+    },
+    "forces": {
+     "t_lift_s": 21.292,
+     "after_liftoff": {
+      "min_kN": 54.9401,
+      "leg": "RR",
+      "t_s": 51.434
+     },
+     "first_8s": {
+      "min_kN": 58.6876,
+      "leg": "RL",
+      "t_s": 21.307
+     },
+     "after_8s": {
+      "min_kN": 54.9401,
+      "leg": "RR",
+      "t_s": 51.434
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01518,
+      "pitch": 3e-05
+     },
+     "max_abs_last_5s_deg": 0.01518,
+     "max_abs_after_liftoff_deg": 5.27132,
+     "rocking_amplitude_deg": 0.0061,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02356,
+    "pressure": {
+     "max_moving_bar": 104.52,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.025,
+     "abs_at_first_done_kN": 1.0
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.3,
+     "t_loc_last_s": 22.3,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 135.117,
+     "FR": 142.699,
+     "RL": 90.618,
+     "RR": 89.046
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:0.520"
+    ]
+   ],
+   "commands_sha256": "b6352e9abd7e0b9b446a758d99263bb11b3452f68071851fa002e6ad605859b0",
+   "max_stroke_reading_mm": 669.6400373437666,
+   "wall_s": 141.9
+  },
+  {
+   "id": "S3|bottom|roll-",
+   "job": {
+    "id": "S3|bottom|roll-",
+    "S": 3.0,
+    "level": "bottom",
+    "tag": "roll-",
+    "roll": -5.570011,
+    "pitch": -0.007002
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 43.7,
+     "t_first_ready_s": 55.7
+    },
+    "forces": {
+     "t_lift_s": 21.232,
+     "after_liftoff": {
+      "min_kN": 54.0717,
+      "leg": "RR",
+      "t_s": 51.441
+     },
+     "first_8s": {
+      "min_kN": 58.2369,
+      "leg": "RR",
+      "t_s": 21.333
+     },
+     "after_8s": {
+      "min_kN": 54.0717,
+      "leg": "RR",
+      "t_s": 51.441
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01516,
+      "pitch": 4e-05
+     },
+     "max_abs_last_5s_deg": 0.01516,
+     "max_abs_after_liftoff_deg": 5.30167,
+     "rocking_amplitude_deg": 0.0061,
+     "filter_residual_last_5s_deg": 1e-05
+    },
+    "probe_attitude_change_deg": 0.02482,
+    "pressure": {
+     "max_moving_bar": 106.647,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 31.071,
+     "abs_at_first_done_kN": 0.886
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.6,
+     "t_loc_last_s": 22.6,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 145.522,
+     "FR": 133.575,
+     "RL": 91.455,
+     "RR": 88.117
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:-0.527"
+    ]
+   ],
+   "commands_sha256": "a379fa8da7fb1b77d5b392547f1a608f76f43585f1ede22292f1c8e3dd51292a",
+   "max_stroke_reading_mm": 669.7564601065117,
+   "wall_s": 141.9
+  },
+  {
+   "id": "S3|bottom|r+p+0.25",
+   "job": {
+    "id": "S3|bottom|r+p+0.25",
+    "S": 3.0,
+    "level": "bottom",
+    "tag": "r+p+0.25",
+    "roll": 1.392318,
+    "pitch": 2.662588
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.713,
+     "after_liftoff": {
+      "min_kN": 54.5546,
+      "leg": "RR",
+      "t_s": 49.947
+     },
+     "first_8s": {
+      "min_kN": 62.2089,
+      "leg": "RL",
+      "t_s": 20.804
+     },
+     "after_8s": {
+      "min_kN": 54.5546,
+      "leg": "RR",
+      "t_s": 49.947
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.00742,
+      "pitch": 0.01473
+     },
+     "max_abs_last_5s_deg": 0.01473,
+     "max_abs_after_liftoff_deg": 2.71408,
+     "rocking_amplitude_deg": 0.00613,
+     "filter_residual_last_5s_deg": 1e-05
+    },
+    "probe_attitude_change_deg": 0.02306,
+    "pressure": {
+     "max_moving_bar": 98.437,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.061,
+     "abs_at_first_done_kN": 0.269
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.7,
+     "t_loc_last_s": 21.7,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.607,
+     "FR": 132.948,
+     "RL": 91.004,
+     "RR": 88.718
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "4c147d034fe21bdbde9ab3faa813d6a669c497e9f59a1c2568ce05e229510c40",
+   "max_stroke_reading_mm": 665.4895586777321,
+   "wall_s": 141.8
+  },
+  {
+   "id": "S3|bottom|r+p-0.25",
+   "job": {
+    "id": "S3|bottom|r+p-0.25",
+    "S": 3.0,
+    "level": "bottom",
+    "tag": "r+p-0.25",
+    "roll": 1.394018,
+    "pitch": -2.670136
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.0,
+     "t_first_done_s": 42.3,
+     "t_first_ready_s": 54.3
+    },
+    "forces": {
+     "t_lift_s": 20.879,
+     "after_liftoff": {
+      "min_kN": 54.4341,
+      "leg": "RR",
+      "t_s": 50.028
+     },
+     "first_8s": {
+      "min_kN": 70.3366,
+      "leg": "RL",
+      "t_s": 21.83
+     },
+     "after_8s": {
+      "min_kN": 54.4341,
+      "leg": "RR",
+      "t_s": 50.028
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.00801,
+      "pitch": 0.01502
+     },
+     "max_abs_last_5s_deg": 0.01503,
+     "max_abs_after_liftoff_deg": 2.52359,
+     "rocking_amplitude_deg": 0.00614,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02297,
+    "pressure": {
+     "max_moving_bar": 98.457,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.31,
+     "abs_at_first_done_kN": 0.27
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.521,
+     "FR": 133.164,
+     "RL": 91.089,
+     "RR": 88.734
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "445f9ca41fbeb2b8c49784b1f642af868629b297b1c4dfa4cc633df6e36b2bca",
+   "max_stroke_reading_mm": 665.4441849954973,
+   "wall_s": 141.5
+  },
+  {
+   "id": "S3|bottom|r+p+0.5",
+   "job": {
+    "id": "S3|bottom|r+p+0.5",
+    "S": 3.0,
+    "level": "bottom",
+    "tag": "r+p+0.5",
+    "roll": 2.784297,
+    "pitch": 1.774973
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.758,
+     "after_liftoff": {
+      "min_kN": 54.487,
+      "leg": "RR",
+      "t_s": 49.945
+     },
+     "first_8s": {
+      "min_kN": 60.6802,
+      "leg": "RL",
+      "t_s": 20.8
+     },
+     "after_8s": {
+      "min_kN": 54.487,
+      "leg": "RR",
+      "t_s": 49.945
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01501,
+      "pitch": 0.0099
+     },
+     "max_abs_last_5s_deg": 0.01501,
+     "max_abs_after_liftoff_deg": 2.7548,
+     "rocking_amplitude_deg": 0.00612,
+     "filter_residual_last_5s_deg": 1e-05
+    },
+    "probe_attitude_change_deg": 0.02389,
+    "pressure": {
+     "max_moving_bar": 99.268,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.164,
+     "abs_at_first_done_kN": 0.285
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.604,
+     "FR": 135.742,
+     "RL": 91.078,
+     "RR": 88.725
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "67cfc78d0dece36b2471233e448fa20123bd50d5d8a35bedd56fd8cd8988a407",
+   "max_stroke_reading_mm": 666.7876860028051,
+   "wall_s": 140.9
+  },
+  {
+   "id": "S3|bottom|r+p-0.5",
+   "job": {
+    "id": "S3|bottom|r+p-0.5",
+    "S": 3.0,
+    "level": "bottom",
+    "tag": "r+p-0.5",
+    "roll": 2.786518,
+    "pitch": -1.782117
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.0,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.955,
+     "after_liftoff": {
+      "min_kN": 54.4626,
+      "leg": "RR",
+      "t_s": 49.93
+     },
+     "first_8s": {
+      "min_kN": 66.5704,
+      "leg": "RL",
+      "t_s": 21.446
+     },
+     "after_8s": {
+      "min_kN": 54.4626,
+      "leg": "RR",
+      "t_s": 49.93
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01543,
+      "pitch": 0.00939
+     },
+     "max_abs_last_5s_deg": 0.01544,
+     "max_abs_after_liftoff_deg": 2.68884,
+     "rocking_amplitude_deg": 0.00613,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02378,
+    "pressure": {
+     "max_moving_bar": 98.481,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.228,
+     "abs_at_first_done_kN": 0.338
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.608,
+     "FR": 133.079,
+     "RL": 91.073,
+     "RR": 88.754
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "3741a55e45e4f8b47b2e320cb74b80b39967e9971ca7466f72a6ffd1e9fb2ce0",
+   "max_stroke_reading_mm": 660.6190083303036,
+   "wall_s": 140.1
+  },
+  {
+   "id": "S3|bottom|r+p+0.75",
+   "job": {
+    "id": "S3|bottom|r+p+0.75",
+    "S": 3.0,
+    "level": "bottom",
+    "tag": "r+p+0.75",
+    "roll": 4.176633,
+    "pitch": 0.883829
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 43.0,
+     "t_first_ready_s": 55.0
+    },
+    "forces": {
+     "t_lift_s": 20.848,
+     "after_liftoff": {
+      "min_kN": 54.4153,
+      "leg": "RR",
+      "t_s": 50.739
+     },
+     "first_8s": {
+      "min_kN": 61.3144,
+      "leg": "RL",
+      "t_s": 21.152
+     },
+     "after_8s": {
+      "min_kN": 54.4153,
+      "leg": "RR",
+      "t_s": 50.739
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01531,
+      "pitch": 0.0033
+     },
+     "max_abs_last_5s_deg": 0.01531,
+     "max_abs_after_liftoff_deg": 4.1119,
+     "rocking_amplitude_deg": 0.00611,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02373,
+    "pressure": {
+     "max_moving_bar": 103.83,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.318,
+     "abs_at_first_done_kN": 0.072
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.585,
+     "FR": 141.809,
+     "RL": 91.144,
+     "RR": 88.584
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:0.502"
+    ]
+   ],
+   "commands_sha256": "5c0779690ea7b406bfdde753fd1e3acac73bd2a2463bfa11a526ccfd50371538",
+   "max_stroke_reading_mm": 667.9232818327388,
+   "wall_s": 133.1
+  },
+  {
+   "id": "S3|bottom|r+p-0.75",
+   "job": {
+    "id": "S3|bottom|r+p-0.75",
+    "S": 3.0,
+    "level": "bottom",
+    "tag": "r+p-0.75",
+    "roll": 4.178236,
+    "pitch": -0.89387
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 42.8,
+     "t_first_ready_s": 54.8
+    },
+    "forces": {
+     "t_lift_s": 21.074,
+     "after_liftoff": {
+      "min_kN": 54.5885,
+      "leg": "RR",
+      "t_s": 50.532
+     },
+     "first_8s": {
+      "min_kN": 62.3336,
+      "leg": "RL",
+      "t_s": 21.13
+     },
+     "after_8s": {
+      "min_kN": 54.5885,
+      "leg": "RR",
+      "t_s": 50.532
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01513,
+      "pitch": 0.00271
+     },
+     "max_abs_last_5s_deg": 0.01513,
+     "max_abs_after_liftoff_deg": 4.03624,
+     "rocking_amplitude_deg": 0.00612,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02366,
+    "pressure": {
+     "max_moving_bar": 98.564,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.999,
+     "abs_at_first_done_kN": 0.432
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.1,
+     "t_loc_last_s": 22.1,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.751,
+     "FR": 133.513,
+     "RL": 90.963,
+     "RR": 88.775
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:0.499"
+    ]
+   ],
+   "commands_sha256": "87e5721c74e7198be6983205d3454a281c1e4a65fa8ebeb1dfc49c330fd50a83",
+   "max_stroke_reading_mm": 655.7413339241241,
+   "wall_s": 135.4
+  },
+  {
+   "id": "S3|bottom|r-p+0.5",
+   "job": {
+    "id": "S3|bottom|r-p+0.5",
+    "S": 3.0,
+    "level": "bottom",
+    "tag": "r-p+0.5",
+    "roll": -2.784861,
+    "pitch": 1.775107
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.749,
+     "after_liftoff": {
+      "min_kN": 54.5239,
+      "leg": "RR",
+      "t_s": 49.946
+     },
+     "first_8s": {
+      "min_kN": 57.9385,
+      "leg": "RR",
+      "t_s": 20.791
+     },
+     "after_8s": {
+      "min_kN": 54.5239,
+      "leg": "RR",
+      "t_s": 49.946
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01499,
+      "pitch": 0.00997
+     },
+     "max_abs_last_5s_deg": 0.01499,
+     "max_abs_after_liftoff_deg": 2.76081,
+     "rocking_amplitude_deg": 0.00613,
+     "filter_residual_last_5s_deg": 1e-05
+    },
+    "probe_attitude_change_deg": 0.02514,
+    "pressure": {
+     "max_moving_bar": 100.939,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.214,
+     "abs_at_first_done_kN": 0.09
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 137.961,
+     "FR": 133.112,
+     "RL": 91.013,
+     "RR": 88.668
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "2c5237d6ce48c9a2e236cb13689c70aa6e9d06ba54b99935d762d8f2963fceb7",
+   "max_stroke_reading_mm": 666.9238600916277,
+   "wall_s": 129.3
+  },
+  {
+   "id": "S3|bottom|r-p-0.5",
+   "job": {
+    "id": "S3|bottom|r-p-0.5",
+    "S": 3.0,
+    "level": "bottom",
+    "tag": "r-p-0.5",
+    "roll": -2.787027,
+    "pitch": -1.782117
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.1,
+     "t_first_done_s": 42.1,
+     "t_first_ready_s": 54.1
+    },
+    "forces": {
+     "t_lift_s": 20.969,
+     "after_liftoff": {
+      "min_kN": 54.542,
+      "leg": "RR",
+      "t_s": 49.833
+     },
+     "first_8s": {
+      "min_kN": 65.0323,
+      "leg": "RR",
+      "t_s": 21.252
+     },
+     "after_8s": {
+      "min_kN": 54.542,
+      "leg": "RR",
+      "t_s": 49.833
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01492,
+      "pitch": 0.00905
+     },
+     "max_abs_last_5s_deg": 0.01493,
+     "max_abs_after_liftoff_deg": 2.72462,
+     "rocking_amplitude_deg": 0.00612,
+     "filter_residual_last_5s_deg": 1e-05
+    },
+    "probe_attitude_change_deg": 0.02539,
+    "pressure": {
+     "max_moving_bar": 98.42,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.191,
+     "abs_at_first_done_kN": 0.3
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.0,
+     "t_loc_last_s": 22.0,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.493,
+     "FR": 133.17,
+     "RL": 90.989,
+     "RR": 88.791
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.1,
+     "INFO_TOUCH_TWIST_HOLD:-0.487"
+    ]
+   ],
+   "commands_sha256": "efedfb2a5071cd39309e3e836412161af8b8dd64a282c20adadcd94268ffe7d5",
+   "max_stroke_reading_mm": 657.0014963956587,
+   "wall_s": 127.8
+  },
+  {
+   "id": "S100|top|pitch+",
+   "job": {
+    "id": "S100|top|pitch+",
+    "S": 100.0,
+    "level": "top",
+    "tag": "pitch+",
+    "roll": -0.000297,
+    "pitch": 3.528986
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.5,
+     "t_first_ready_s": 54.5
+    },
+    "forces": {
+     "t_lift_s": 20.629,
+     "after_liftoff": {
+      "min_kN": 54.6655,
+      "leg": "RR",
+      "t_s": 50.478
+     },
+     "first_8s": {
+      "min_kN": 55.45,
+      "leg": "RR",
+      "t_s": 20.738
+     },
+     "after_8s": {
+      "min_kN": 54.6655,
+      "leg": "RR",
+      "t_s": 50.478
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 8e-05,
+      "pitch": 0.01517
+     },
+     "max_abs_last_5s_deg": 0.01517,
+     "max_abs_after_liftoff_deg": 3.58277,
+     "rocking_amplitude_deg": 0.00647,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02389,
+    "pressure": {
+     "max_moving_bar": 100.738,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.797,
+     "abs_at_first_done_kN": 0.262
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.7,
+     "t_loc_last_s": 21.7,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 137.692,
+     "FR": 136.323,
+     "RL": 90.754,
+     "RR": 88.674
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "20817b234c440bcfe968ef2d79c7a4f2977e1548e77d464fff4b3cb5c50ab6f6",
+   "max_stroke_reading_mm": 662.8099836633893,
+   "wall_s": 125.7
+  },
+  {
+   "id": "S100|top|pitch-",
+   "job": {
+    "id": "S100|top|pitch-",
+    "S": 100.0,
+    "level": "top",
+    "tag": "pitch-",
+    "roll": -0.000255,
+    "pitch": -3.521658
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 43.2,
+     "t_first_ready_s": 55.2
+    },
+    "forces": {
+     "t_lift_s": 20.818,
+     "after_liftoff": {
+      "min_kN": 54.4759,
+      "leg": "RR",
+      "t_s": 51.169
+     },
+     "first_8s": {
+      "min_kN": 73.5092,
+      "leg": "RR",
+      "t_s": 28.511
+     },
+     "after_8s": {
+      "min_kN": 54.4759,
+      "leg": "RR",
+      "t_s": 51.169
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.0,
+      "pitch": 0.01502
+     },
+     "max_abs_last_5s_deg": 0.01502,
+     "max_abs_after_liftoff_deg": 3.45528,
+     "rocking_amplitude_deg": 0.00632,
+     "filter_residual_last_5s_deg": 3e-05
+    },
+    "probe_attitude_change_deg": 0.02408,
+    "pressure": {
+     "max_moving_bar": 98.533,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.136,
+     "abs_at_first_done_kN": 0.268
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.419,
+     "FR": 133.339,
+     "RL": 90.837,
+     "RR": 88.633
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "2427e83db86a7cf1ddbc775ce238173339c836bc8a5c9b37e4c61727c365bd87",
+   "max_stroke_reading_mm": 667.5353154435043,
+   "wall_s": 126.5
+  },
+  {
+   "id": "S100|top|roll+",
+   "job": {
+    "id": "S100|top|roll+",
+    "S": 100.0,
+    "level": "top",
+    "tag": "roll+",
+    "roll": 5.54368,
+    "pitch": -0.015482
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 43.6,
+     "t_first_ready_s": 55.6
+    },
+    "forces": {
+     "t_lift_s": 20.739,
+     "after_liftoff": {
+      "min_kN": 34.1978,
+      "leg": "RL",
+      "t_s": 20.854
+     },
+     "first_8s": {
+      "min_kN": 34.1978,
+      "leg": "RL",
+      "t_s": 20.854
+     },
+     "after_8s": {
+      "min_kN": 55.4573,
+      "leg": "RR",
+      "t_s": 51.565
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01552,
+      "pitch": 0.0
+     },
+     "max_abs_last_5s_deg": 0.01553,
+     "max_abs_after_liftoff_deg": 5.54281,
+     "rocking_amplitude_deg": 0.02468,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02388,
+    "pressure": {
+     "max_moving_bar": 128.044,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.936,
+     "abs_at_first_done_kN": 2.027
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [
+      "INFO_LIFT_PAUSED"
+     ],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 135.312,
+     "FR": 173.902,
+     "RL": 89.912,
+     "RR": 107.318
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.9,
+     "INFO_LIFT_PAUSED:RL"
+    ]
+   ],
+   "commands_sha256": "8efb914295c630719aa73108245a0d8cd7a99fbea152370adbfbccc048b2086d",
+   "max_stroke_reading_mm": 668.3533595849772,
+   "wall_s": 125.8
+  },
+  {
+   "id": "S100|top|roll-",
+   "job": {
+    "id": "S100|top|roll-",
+    "S": 100.0,
+    "level": "top",
+    "tag": "roll-",
+    "roll": -5.54424,
+    "pitch": -0.015348
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 43.6,
+     "t_first_ready_s": 55.6
+    },
+    "forces": {
+     "t_lift_s": 20.748,
+     "after_liftoff": {
+      "min_kN": 33.9489,
+      "leg": "RR",
+      "t_s": 20.856
+     },
+     "first_8s": {
+      "min_kN": 33.9489,
+      "leg": "RR",
+      "t_s": 20.856
+     },
+     "after_8s": {
+      "min_kN": 53.5649,
+      "leg": "RR",
+      "t_s": 51.572
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01545,
+      "pitch": 2e-05
+     },
+     "max_abs_last_5s_deg": 0.01546,
+     "max_abs_after_liftoff_deg": 5.54309,
+     "rocking_amplitude_deg": 0.02265,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02524,
+    "pressure": {
+     "max_moving_bar": 128.525,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 31.971,
+     "abs_at_first_done_kN": 1.922
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [
+      "INFO_LIFT_PAUSED"
+     ],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 174.542,
+     "FR": 134.192,
+     "RL": 108.046,
+     "RR": 87.568
+    }
+   },
+   "warnings": [],
+   "events": [
+    [
+     20.9,
+     "INFO_LIFT_PAUSED:RR"
+    ]
+   ],
+   "commands_sha256": "6d14a9e67ccd47ea8b159b89ea9da69e0fee92fea579f0804b643cac2316570f",
+   "max_stroke_reading_mm": 668.4689521333472,
+   "wall_s": 126.5
+  },
+  {
+   "id": "S100|top|r+p+0.25",
+   "job": {
+    "id": "S100|top|r+p+0.25",
+    "S": 100.0,
+    "level": "top",
+    "tag": "r+p+0.25",
+    "roll": 1.38432,
+    "pitch": 2.664755
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.635,
+     "after_liftoff": {
+      "min_kN": 51.9352,
+      "leg": "RL",
+      "t_s": 20.764
+     },
+     "first_8s": {
+      "min_kN": 51.9352,
+      "leg": "RL",
+      "t_s": 20.764
+     },
+     "after_8s": {
+      "min_kN": 54.5769,
+      "leg": "RR",
+      "t_s": 50.176
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.0075,
+      "pitch": 0.01474
+     },
+     "max_abs_last_5s_deg": 0.01474,
+     "max_abs_after_liftoff_deg": 2.71938,
+     "rocking_amplitude_deg": 0.00775,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02337,
+    "pressure": {
+     "max_moving_bar": 104.986,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.923,
+     "abs_at_first_done_kN": 0.279
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.282,
+     "FR": 143.328,
+     "RL": 90.842,
+     "RR": 88.656
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "bc4b4fcf51de71dc477c30858f403c98097193cae3ad42d633ed7f1abfbe316c",
+   "max_stroke_reading_mm": 665.2850906726368,
+   "wall_s": 115.7
+  },
+  {
+   "id": "S100|top|r+p-0.25",
+   "job": {
+    "id": "S100|top|r+p-0.25",
+    "S": 100.0,
+    "level": "top",
+    "tag": "r+p-0.25",
+    "roll": 1.388158,
+    "pitch": -2.643368
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.4,
+     "t_first_ready_s": 54.4
+    },
+    "forces": {
+     "t_lift_s": 20.794,
+     "after_liftoff": {
+      "min_kN": 54.4047,
+      "leg": "RR",
+      "t_s": 50.37
+     },
+     "first_8s": {
+      "min_kN": 68.5369,
+      "leg": "RL",
+      "t_s": 20.996
+     },
+     "after_8s": {
+      "min_kN": 54.4047,
+      "leg": "RR",
+      "t_s": 50.37
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.00771,
+      "pitch": 0.01452
+     },
+     "max_abs_last_5s_deg": 0.01453,
+     "max_abs_after_liftoff_deg": 2.58786,
+     "rocking_amplitude_deg": 0.00636,
+     "filter_residual_last_5s_deg": 3e-05
+    },
+    "probe_attitude_change_deg": 0.02339,
+    "pressure": {
+     "max_moving_bar": 98.498,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.216,
+     "abs_at_first_done_kN": 0.28
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.344,
+     "FR": 133.321,
+     "RL": 90.909,
+     "RR": 92.274
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "6d948607505d695bcf881bf3a1c69e1a5e1b08bfce697eb302e23d5f5964f896",
+   "max_stroke_reading_mm": 663.0642383890917,
+   "wall_s": 129.3
+  },
+  {
+   "id": "S100|top|r+p+0.5",
+   "job": {
+    "id": "S100|top|r+p+0.5",
+    "S": 100.0,
+    "level": "top",
+    "tag": "r+p+0.5",
+    "roll": 2.769883,
+    "pitch": 1.781349
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.72,
+     "after_liftoff": {
+      "min_kN": 46.6223,
+      "leg": "RL",
+      "t_s": 20.85
+     },
+     "first_8s": {
+      "min_kN": 46.6223,
+      "leg": "RL",
+      "t_s": 20.85
+     },
+     "after_8s": {
+      "min_kN": 54.7599,
+      "leg": "RR",
+      "t_s": 50.174
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01523,
+      "pitch": 0.00981
+     },
+     "max_abs_last_5s_deg": 0.01524,
+     "max_abs_after_liftoff_deg": 2.76722,
+     "rocking_amplitude_deg": 0.01336,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02421,
+    "pressure": {
+     "max_moving_bar": 111.848,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.766,
+     "abs_at_first_done_kN": 0.795
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.544,
+     "FR": 152.425,
+     "RL": 90.642,
+     "RR": 88.89
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "4abad66e73a37ebb43749b6df62b5ba6ec04f1e0a0dca8b4c20f23cc3cb0e9c5",
+   "max_stroke_reading_mm": 666.5735691894736,
+   "wall_s": 129.8
+  },
+  {
+   "id": "S100|top|r+p-0.5",
+   "job": {
+    "id": "S100|top|r+p-0.5",
+    "S": 100.0,
+    "level": "top",
+    "tag": "r+p-0.5",
+    "roll": 2.774872,
+    "pitch": -1.764886
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.3,
+     "t_first_ready_s": 54.3
+    },
+    "forces": {
+     "t_lift_s": 20.788,
+     "after_liftoff": {
+      "min_kN": 54.6126,
+      "leg": "RR",
+      "t_s": 50.271
+     },
+     "first_8s": {
+      "min_kN": 58.4953,
+      "leg": "RL",
+      "t_s": 20.95
+     },
+     "after_8s": {
+      "min_kN": 54.6126,
+      "leg": "RR",
+      "t_s": 50.271
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01499,
+      "pitch": 0.00923
+     },
+     "max_abs_last_5s_deg": 0.015,
+     "max_abs_after_liftoff_deg": 2.76862,
+     "rocking_amplitude_deg": 0.01075,
+     "filter_residual_last_5s_deg": 3e-05
+    },
+    "probe_attitude_change_deg": 0.02416,
+    "pressure": {
+     "max_moving_bar": 102.612,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.789,
+     "abs_at_first_done_kN": 0.671
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.1,
+     "t_loc_last_s": 22.1,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.541,
+     "FR": 140.182,
+     "RL": 90.726,
+     "RR": 96.254
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "f4aebd5ed7d48a525c5b5f848965de007e167c24ca8f22f1d1bd2c22d0d1569b",
+   "max_stroke_reading_mm": 658.7323339812758,
+   "wall_s": 131.8
+  },
+  {
+   "id": "S100|top|r+p+0.75",
+   "job": {
+    "id": "S100|top|r+p+0.75",
+    "S": 100.0,
+    "level": "top",
+    "tag": "r+p+0.75",
+    "roll": 4.156184,
+    "pitch": 0.884354
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 43.0,
+     "t_first_ready_s": 55.0
+    },
+    "forces": {
+     "t_lift_s": 20.75,
+     "after_liftoff": {
+      "min_kN": 38.6122,
+      "leg": "RL",
+      "t_s": 20.855
+     },
+     "first_8s": {
+      "min_kN": 38.6122,
+      "leg": "RL",
+      "t_s": 20.855
+     },
+     "after_8s": {
+      "min_kN": 55.1417,
+      "leg": "RR",
+      "t_s": 50.971
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01526,
+      "pitch": 0.00313
+     },
+     "max_abs_last_5s_deg": 0.01527,
+     "max_abs_after_liftoff_deg": 4.15234,
+     "rocking_amplitude_deg": 0.01981,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02401,
+    "pressure": {
+     "max_moving_bar": 119.405,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.411,
+     "abs_at_first_done_kN": 1.473
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.2,
+     "t_loc_last_s": 22.2,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.961,
+     "FR": 162.446,
+     "RL": 90.232,
+     "RR": 96.745
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "43e69ba67f9b8792337b242069cd2b88e8b3bf64eb435a86e1f4a7c8f0578851",
+   "max_stroke_reading_mm": 666.9772768296352,
+   "wall_s": 129.4
+  },
+  {
+   "id": "S100|top|r+p-0.75",
+   "job": {
+    "id": "S100|top|r+p-0.75",
+    "S": 100.0,
+    "level": "top",
+    "tag": "r+p-0.75",
+    "roll": 4.160838,
+    "pitch": -0.886169
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.8,
+     "t_first_ready_s": 54.8
+    },
+    "forces": {
+     "t_lift_s": 20.763,
+     "after_liftoff": {
+      "min_kN": 46.4443,
+      "leg": "RL",
+      "t_s": 20.876
+     },
+     "first_8s": {
+      "min_kN": 46.4443,
+      "leg": "RL",
+      "t_s": 20.876
+     },
+     "after_8s": {
+      "min_kN": 55.0911,
+      "leg": "RR",
+      "t_s": 50.77
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01562,
+      "pitch": 0.00296
+     },
+     "max_abs_last_5s_deg": 0.01563,
+     "max_abs_after_liftoff_deg": 4.15731,
+     "rocking_amplitude_deg": 0.02106,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02405,
+    "pressure": {
+     "max_moving_bar": 116.213,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.397,
+     "abs_at_first_done_kN": 1.436
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.954,
+     "FR": 158.219,
+     "RL": 90.271,
+     "RR": 102.073
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "e336f060ff4504e850ca25fc846e2a007962fa7eaa86dc4ed5ad7d7d41849b09",
+   "max_stroke_reading_mm": 654.4084593004278,
+   "wall_s": 132.0
+  },
+  {
+   "id": "S100|top|r-p+0.5",
+   "job": {
+    "id": "S100|top|r-p+0.5",
+    "S": 100.0,
+    "level": "top",
+    "tag": "r-p+0.5",
+    "roll": -2.770477,
+    "pitch": 1.781349
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.719,
+     "after_liftoff": {
+      "min_kN": 44.9,
+      "leg": "RR",
+      "t_s": 20.853
+     },
+     "first_8s": {
+      "min_kN": 44.9,
+      "leg": "RR",
+      "t_s": 20.853
+     },
+     "after_8s": {
+      "min_kN": 54.2525,
+      "leg": "RR",
+      "t_s": 50.178
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01518,
+      "pitch": 0.00988
+     },
+     "max_abs_last_5s_deg": 0.01519,
+     "max_abs_after_liftoff_deg": 2.76894,
+     "rocking_amplitude_deg": 0.01468,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02558,
+    "pressure": {
+     "max_moving_bar": 113.64,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.703,
+     "abs_at_first_done_kN": 0.554
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 154.801,
+     "FR": 133.521,
+     "RL": 91.175,
+     "RR": 88.321
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "5bce19a34897513dd97b2d78c376da1eaa64f9c1c6ccd211dfb1531f1fc169ab",
+   "max_stroke_reading_mm": 666.699911696835,
+   "wall_s": 130.1
+  },
+  {
+   "id": "S100|top|r-p-0.5",
+   "job": {
+    "id": "S100|top|r-p-0.5",
+    "S": 100.0,
+    "level": "top",
+    "tag": "r-p-0.5",
+    "roll": -2.775381,
+    "pitch": -1.764885
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.1,
+     "t_first_ready_s": 54.1
+    },
+    "forces": {
+     "t_lift_s": 20.768,
+     "after_liftoff": {
+      "min_kN": 54.1575,
+      "leg": "RR",
+      "t_s": 50.073
+     },
+     "first_8s": {
+      "min_kN": 56.0063,
+      "leg": "RR",
+      "t_s": 20.954
+     },
+     "after_8s": {
+      "min_kN": 54.1575,
+      "leg": "RR",
+      "t_s": 50.073
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01526,
+      "pitch": 0.00944
+     },
+     "max_abs_last_5s_deg": 0.01527,
+     "max_abs_after_liftoff_deg": 2.77128,
+     "rocking_amplitude_deg": 0.01196,
+     "filter_residual_last_5s_deg": 3e-05
+    },
+    "probe_attitude_change_deg": 0.02572,
+    "pressure": {
+     "max_moving_bar": 105.319,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.841,
+     "abs_at_first_done_kN": 0.476
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 143.769,
+     "FR": 133.697,
+     "RL": 98.218,
+     "RR": 88.336
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "5ea5641debdea4a836d73b13c2b0de62c918a21c5d41d7c744c284cdbc465886",
+   "max_stroke_reading_mm": 655.2119957557005,
+   "wall_s": 130.4
+  },
+  {
+   "id": "S100|middle|pitch+",
+   "job": {
+    "id": "S100|middle|pitch+",
+    "S": 100.0,
+    "level": "middle",
+    "tag": "pitch+",
+    "roll": -0.000297,
+    "pitch": 3.541796
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.6,
+     "t_first_ready_s": 54.6
+    },
+    "forces": {
+     "t_lift_s": 20.664,
+     "after_liftoff": {
+      "min_kN": 54.6428,
+      "leg": "RR",
+      "t_s": 50.449
+     },
+     "first_8s": {
+      "min_kN": 58.4715,
+      "leg": "RR",
+      "t_s": 20.775
+     },
+     "after_8s": {
+      "min_kN": 54.6428,
+      "leg": "RR",
+      "t_s": 50.449
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 8e-05,
+      "pitch": 0.01494
+     },
+     "max_abs_last_5s_deg": 0.01494,
+     "max_abs_after_liftoff_deg": 3.57597,
+     "rocking_amplitude_deg": 0.00607,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02343,
+    "pressure": {
+     "max_moving_bar": 98.734,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.992,
+     "abs_at_first_done_kN": 0.261
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.7,
+     "t_loc_last_s": 21.7,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 135.033,
+     "FR": 132.721,
+     "RL": 90.97,
+     "RR": 88.493
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "d3cd4481e100b700f7b274edad4a2946588bc00aac3980819174c6ebb12f8b1b",
+   "max_stroke_reading_mm": 663.7339506961584,
+   "wall_s": 82.5
+  },
+  {
+   "id": "S100|middle|pitch-",
+   "job": {
+    "id": "S100|middle|pitch-",
+    "S": 100.0,
+    "level": "middle",
+    "tag": "pitch-",
+    "roll": -0.000255,
+    "pitch": -3.539804
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 43.3,
+     "t_first_ready_s": 55.3
+    },
+    "forces": {
+     "t_lift_s": 20.821,
+     "after_liftoff": {
+      "min_kN": 54.4727,
+      "leg": "RR",
+      "t_s": 51.141
+     },
+     "first_8s": {
+      "min_kN": 72.79,
+      "leg": "RR",
+      "t_s": 28.791
+     },
+     "after_8s": {
+      "min_kN": 54.4727,
+      "leg": "RR",
+      "t_s": 51.141
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 3e-05,
+      "pitch": 0.01473
+     },
+     "max_abs_last_5s_deg": 0.01473,
+     "max_abs_after_liftoff_deg": 3.47129,
+     "rocking_amplitude_deg": 0.00612,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02372,
+    "pressure": {
+     "max_moving_bar": 98.495,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.255,
+     "abs_at_first_done_kN": 0.267
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.713,
+     "FR": 132.74,
+     "RL": 91.087,
+     "RR": 88.512
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "3ef4a5b79eb1fa7aa762c42e82cf02ac2cfd05a74d60d1d0008f944ff2fb3115",
+   "max_stroke_reading_mm": 668.9281913445318,
+   "wall_s": 89.5
+  },
+  {
+   "id": "S100|middle|roll+",
+   "job": {
+    "id": "S100|middle|roll+",
+    "S": 100.0,
+    "level": "middle",
+    "tag": "roll+",
+    "roll": 5.556565,
+    "pitch": -0.011309
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 43.6,
+     "t_first_ready_s": 55.6
+    },
+    "forces": {
+     "t_lift_s": 20.755,
+     "after_liftoff": {
+      "min_kN": 43.5745,
+      "leg": "RL",
+      "t_s": 20.839
+     },
+     "first_8s": {
+      "min_kN": 43.5745,
+      "leg": "RL",
+      "t_s": 20.839
+     },
+     "after_8s": {
+      "min_kN": 55.1831,
+      "leg": "RR",
+      "t_s": 51.456
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01553,
+      "pitch": 8e-05
+     },
+     "max_abs_last_5s_deg": 0.01553,
+     "max_abs_after_liftoff_deg": 5.55081,
+     "rocking_amplitude_deg": 0.01133,
+     "filter_residual_last_5s_deg": 3e-05
+    },
+    "probe_attitude_change_deg": 0.02408,
+    "pressure": {
+     "max_moving_bar": 118.36,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.39,
+     "abs_at_first_done_kN": 1.523
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.1,
+     "t_loc_last_s": 22.1,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 135.431,
+     "FR": 161.042,
+     "RL": 90.41,
+     "RR": 100.44
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "1b3d0c082747d76f692b35e78de5930e4a5b9f1ed4dc6a3e499cf8fd1d6bc8f1",
+   "max_stroke_reading_mm": 668.9966378080841,
+   "wall_s": 128.1
+  },
+  {
+   "id": "S100|middle|roll-",
+   "job": {
+    "id": "S100|middle|roll-",
+    "S": 100.0,
+    "level": "middle",
+    "tag": "roll-",
+    "roll": -5.557126,
+    "pitch": -0.011175
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 43.6,
+     "t_first_ready_s": 55.6
+    },
+    "forces": {
+     "t_lift_s": 20.754,
+     "after_liftoff": {
+      "min_kN": 41.4013,
+      "leg": "RR",
+      "t_s": 20.839
+     },
+     "first_8s": {
+      "min_kN": 41.4013,
+      "leg": "RR",
+      "t_s": 20.839
+     },
+     "after_8s": {
+      "min_kN": 53.8986,
+      "leg": "RR",
+      "t_s": 51.437
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.0157,
+      "pitch": 8e-05
+     },
+     "max_abs_last_5s_deg": 0.0157,
+     "max_abs_after_liftoff_deg": 5.5535,
+     "rocking_amplitude_deg": 0.01453,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02493,
+    "pressure": {
+     "max_moving_bar": 120.612,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 31.508,
+     "abs_at_first_done_kN": 1.251
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 164.039,
+     "FR": 133.404,
+     "RL": 101.686,
+     "RR": 87.742
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "b0776442366708829c801861f522f80be128b8e1fbc68695915d8a3d7bcd10aa",
+   "max_stroke_reading_mm": 669.1160350477982,
+   "wall_s": 123.0
+  },
+  {
+   "id": "S100|middle|r+p+0.25",
+   "job": {
+    "id": "S100|middle|r+p+0.25",
+    "S": 100.0,
+    "level": "middle",
+    "tag": "r+p+0.25",
+    "roll": 1.388901,
+    "pitch": 2.658434
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.672,
+     "after_liftoff": {
+      "min_kN": 54.5594,
+      "leg": "RR",
+      "t_s": 50.05
+     },
+     "first_8s": {
+      "min_kN": 55.5763,
+      "leg": "RL",
+      "t_s": 20.797
+     },
+     "after_8s": {
+      "min_kN": 54.5594,
+      "leg": "RR",
+      "t_s": 50.05
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.00734,
+      "pitch": 0.01465
+     },
+     "max_abs_last_5s_deg": 0.01465,
+     "max_abs_after_liftoff_deg": 2.69463,
+     "rocking_amplitude_deg": 0.0061,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02357,
+    "pressure": {
+     "max_moving_bar": 102.472,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.106,
+     "abs_at_first_done_kN": 0.272
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.602,
+     "FR": 139.983,
+     "RL": 91.058,
+     "RR": 88.49
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "4ad5c4a8d54c2a7825a97911f21dfce24d4005931f9cc7017e6430691353f33e",
+   "max_stroke_reading_mm": 665.028626093941,
+   "wall_s": 118.9
+  },
+  {
+   "id": "S100|middle|r+p-0.25",
+   "job": {
+    "id": "S100|middle|r+p-0.25",
+    "S": 100.0,
+    "level": "middle",
+    "tag": "r+p-0.25",
+    "roll": 1.391088,
+    "pitch": -2.656752
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.5,
+     "t_first_ready_s": 54.5
+    },
+    "forces": {
+     "t_lift_s": 20.803,
+     "after_liftoff": {
+      "min_kN": 54.4035,
+      "leg": "RR",
+      "t_s": 50.346
+     },
+     "first_8s": {
+      "min_kN": 68.591,
+      "leg": "RL",
+      "t_s": 20.803
+     },
+     "after_8s": {
+      "min_kN": 54.4035,
+      "leg": "RR",
+      "t_s": 50.346
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.00793,
+      "pitch": 0.01503
+     },
+     "max_abs_last_5s_deg": 0.01503,
+     "max_abs_after_liftoff_deg": 2.5987,
+     "rocking_amplitude_deg": 0.00616,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02353,
+    "pressure": {
+     "max_moving_bar": 98.462,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.328,
+     "abs_at_first_done_kN": 0.272
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.673,
+     "FR": 132.794,
+     "RL": 91.146,
+     "RR": 88.721
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "7e2f184f93179c8e8da5a246c7efdd01023f1e242b3205e97807d5c09e673ae4",
+   "max_stroke_reading_mm": 664.294773409261,
+   "wall_s": 118.7
+  },
+  {
+   "id": "S100|middle|r+p+0.5",
+   "job": {
+    "id": "S100|middle|r+p+0.5",
+    "S": 100.0,
+    "level": "middle",
+    "tag": "r+p+0.5",
+    "roll": 2.77676,
+    "pitch": 1.774912
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.737,
+     "after_liftoff": {
+      "min_kN": 51.837,
+      "leg": "RL",
+      "t_s": 20.837
+     },
+     "first_8s": {
+      "min_kN": 51.837,
+      "leg": "RL",
+      "t_s": 20.837
+     },
+     "after_8s": {
+      "min_kN": 54.5909,
+      "leg": "RR",
+      "t_s": 50.053
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01505,
+      "pitch": 0.00981
+     },
+     "max_abs_last_5s_deg": 0.01506,
+     "max_abs_after_liftoff_deg": 2.77026,
+     "rocking_amplitude_deg": 0.0061,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02441,
+    "pressure": {
+     "max_moving_bar": 106.708,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.986,
+     "abs_at_first_done_kN": 0.492
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.704,
+     "FR": 145.605,
+     "RL": 91.017,
+     "RR": 88.603
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "f93d0f3525a401d8b94a6f2a354fc549104cde14aac09d75ee470c29d98192b4",
+   "max_stroke_reading_mm": 666.4281329492702,
+   "wall_s": 119.4
+  },
+  {
+   "id": "S100|middle|r+p-0.5",
+   "job": {
+    "id": "S100|middle|r+p-0.5",
+    "S": 100.0,
+    "level": "middle",
+    "tag": "r+p-0.5",
+    "roll": 2.780695,
+    "pitch": -1.773501
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.3,
+     "t_first_ready_s": 54.3
+    },
+    "forces": {
+     "t_lift_s": 20.801,
+     "after_liftoff": {
+      "min_kN": 54.4462,
+      "leg": "RR",
+      "t_s": 50.151
+     },
+     "first_8s": {
+      "min_kN": 62.4777,
+      "leg": "RL",
+      "t_s": 20.801
+     },
+     "after_8s": {
+      "min_kN": 54.4462,
+      "leg": "RR",
+      "t_s": 50.151
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01505,
+      "pitch": 0.00927
+     },
+     "max_abs_last_5s_deg": 0.01506,
+     "max_abs_after_liftoff_deg": 2.77199,
+     "rocking_amplitude_deg": 0.00615,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02439,
+    "pressure": {
+     "max_moving_bar": 98.49,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.221,
+     "abs_at_first_done_kN": 0.375
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.726,
+     "FR": 134.637,
+     "RL": 91.116,
+     "RR": 92.048
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "d247bb8cfed488448d14dacf1c48a07716c7e0e0c3fcd5b0f1c93ccb5738cf24",
+   "max_stroke_reading_mm": 659.6446865211598,
+   "wall_s": 118.6
+  },
+  {
+   "id": "S100|middle|r+p+0.75",
+   "job": {
+    "id": "S100|middle|r+p+0.75",
+    "S": 100.0,
+    "level": "middle",
+    "tag": "r+p+0.75",
+    "roll": 4.166417,
+    "pitch": 0.881717
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 43.0,
+     "t_first_ready_s": 55.0
+    },
+    "forces": {
+     "t_lift_s": 20.759,
+     "after_liftoff": {
+      "min_kN": 47.9168,
+      "leg": "RL",
+      "t_s": 20.848
+     },
+     "first_8s": {
+      "min_kN": 47.9168,
+      "leg": "RL",
+      "t_s": 20.848
+     },
+     "after_8s": {
+      "min_kN": 54.8977,
+      "leg": "RR",
+      "t_s": 50.855
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01517,
+      "pitch": 0.0032
+     },
+     "max_abs_last_5s_deg": 0.01518,
+     "max_abs_after_liftoff_deg": 4.15732,
+     "rocking_amplitude_deg": 0.01217,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02421,
+    "pressure": {
+     "max_moving_bar": 112.663,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.913,
+     "abs_at_first_done_kN": 1.025
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 135.084,
+     "FR": 153.493,
+     "RL": 90.695,
+     "RR": 91.561
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "05bbbc80a3b01b7146e9e8f097e1953c83873b16f05a9cae05907ea934b2878a",
+   "max_stroke_reading_mm": 667.2689629843859,
+   "wall_s": 90.3
+  },
+  {
+   "id": "S100|middle|r+p-0.75",
+   "job": {
+    "id": "S100|middle|r+p-0.75",
+    "S": 100.0,
+    "level": "middle",
+    "tag": "r+p-0.75",
+    "roll": 4.169537,
+    "pitch": -0.89002
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.9,
+     "t_first_ready_s": 54.9
+    },
+    "forces": {
+     "t_lift_s": 20.782,
+     "after_liftoff": {
+      "min_kN": 53.6963,
+      "leg": "RL",
+      "t_s": 20.868
+     },
+     "first_8s": {
+      "min_kN": 53.6963,
+      "leg": "RL",
+      "t_s": 20.868
+     },
+     "after_8s": {
+      "min_kN": 54.8396,
+      "leg": "RR",
+      "t_s": 50.756
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01509,
+      "pitch": 0.00281
+     },
+     "max_abs_last_5s_deg": 0.0151,
+     "max_abs_after_liftoff_deg": 4.15959,
+     "rocking_amplitude_deg": 0.01159,
+     "filter_residual_last_5s_deg": 3e-05
+    },
+    "probe_attitude_change_deg": 0.02415,
+    "pressure": {
+     "max_moving_bar": 108.268,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.883,
+     "abs_at_first_done_kN": 0.964
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 135.056,
+     "FR": 147.661,
+     "RL": 90.743,
+     "RR": 96.426
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "18f564a1efc5d76386fc52d7e7aec225ec85ba713dfcb56c89a960067b202790",
+   "max_stroke_reading_mm": 655.0820871458073,
+   "wall_s": 73.0
+  },
+  {
+   "id": "S100|middle|r-p+0.5",
+   "job": {
+    "id": "S100|middle|r-p+0.5",
+    "S": 100.0,
+    "level": "middle",
+    "tag": "r-p+0.5",
+    "roll": -2.777323,
+    "pitch": 1.775046
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.728,
+     "after_liftoff": {
+      "min_kN": 50.192,
+      "leg": "RR",
+      "t_s": 20.838
+     },
+     "first_8s": {
+      "min_kN": 50.192,
+      "leg": "RR",
+      "t_s": 20.838
+     },
+     "after_8s": {
+      "min_kN": 54.3808,
+      "leg": "RR",
+      "t_s": 50.045
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01527,
+      "pitch": 0.00987
+     },
+     "max_abs_last_5s_deg": 0.01527,
+     "max_abs_after_liftoff_deg": 2.77369,
+     "rocking_amplitude_deg": 0.00678,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02521,
+    "pressure": {
+     "max_moving_bar": 108.58,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.597,
+     "abs_at_first_done_kN": 0.22
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 148.091,
+     "FR": 133.049,
+     "RL": 91.235,
+     "RR": 88.316
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "f264693af1577c56e90ec94a9bdea5d467f7bc654a99f70a5d6c6aa4ed4c2e7d",
+   "max_stroke_reading_mm": 666.5634848116572,
+   "wall_s": 124.3
+  },
+  {
+   "id": "S100|middle|r-p-0.5",
+   "job": {
+    "id": "S100|middle|r-p-0.5",
+    "S": 100.0,
+    "level": "middle",
+    "tag": "r-p-0.5",
+    "roll": -2.781204,
+    "pitch": -1.773501
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.79,
+     "after_liftoff": {
+      "min_kN": 54.3091,
+      "leg": "RR",
+      "t_s": 50.039
+     },
+     "first_8s": {
+      "min_kN": 60.7597,
+      "leg": "RR",
+      "t_s": 21.309
+     },
+     "after_8s": {
+      "min_kN": 54.3091,
+      "leg": "RR",
+      "t_s": 50.039
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01497,
+      "pitch": 0.00917
+     },
+     "max_abs_last_5s_deg": 0.01498,
+     "max_abs_after_liftoff_deg": 2.77458,
+     "rocking_amplitude_deg": 0.00668,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02533,
+    "pressure": {
+     "max_moving_bar": 100.905,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.676,
+     "abs_at_first_done_kN": 0.139
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 137.913,
+     "FR": 133.024,
+     "RL": 94.08,
+     "RR": 88.354
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "a49e473338c5591ee00673dc0dcb9fe41fe4db6f7b5a9e3e55655cb8072261aa",
+   "max_stroke_reading_mm": 656.1131326633778,
+   "wall_s": 125.5
+  },
+  {
+   "id": "S100|bottom|pitch+",
+   "job": {
+    "id": "S100|bottom|pitch+",
+    "S": 100.0,
+    "level": "bottom",
+    "tag": "pitch+",
+    "roll": -0.000297,
+    "pitch": 3.546824
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.6,
+     "t_first_ready_s": 54.6
+    },
+    "forces": {
+     "t_lift_s": 20.662,
+     "after_liftoff": {
+      "min_kN": 54.6369,
+      "leg": "RR",
+      "t_s": 50.348
+     },
+     "first_8s": {
+      "min_kN": 62.1237,
+      "leg": "RR",
+      "t_s": 20.761
+     },
+     "after_8s": {
+      "min_kN": 54.6369,
+      "leg": "RR",
+      "t_s": 50.348
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 4e-05,
+      "pitch": 0.01492
+     },
+     "max_abs_last_5s_deg": 0.01492,
+     "max_abs_after_liftoff_deg": 3.58028,
+     "rocking_amplitude_deg": 0.00614,
+     "filter_residual_last_5s_deg": 1e-05
+    },
+    "probe_attitude_change_deg": 0.02324,
+    "pressure": {
+     "max_moving_bar": 98.442,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.919,
+     "abs_at_first_done_kN": 0.261
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.7,
+     "t_loc_last_s": 21.7,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.659,
+     "FR": 132.91,
+     "RL": 90.915,
+     "RR": 88.712
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "90d7ebf67cd08baf155da1b3e57181ae56e00bf37dcc38e9dedb3d9893db2210",
+   "max_stroke_reading_mm": 664.0948557273915,
+   "wall_s": 125.4
+  },
+  {
+   "id": "S100|bottom|pitch-",
+   "job": {
+    "id": "S100|bottom|pitch-",
+    "S": 100.0,
+    "level": "bottom",
+    "tag": "pitch-",
+    "roll": -0.000255,
+    "pitch": -3.55795
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 43.3,
+     "t_first_ready_s": 55.3
+    },
+    "forces": {
+     "t_lift_s": 20.824,
+     "after_liftoff": {
+      "min_kN": 54.4978,
+      "leg": "RR",
+      "t_s": 51.026
+     },
+     "first_8s": {
+      "min_kN": 71.9282,
+      "leg": "RR",
+      "t_s": 21.038
+     },
+     "after_8s": {
+      "min_kN": 54.4978,
+      "leg": "RR",
+      "t_s": 51.026
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 3e-05,
+      "pitch": 0.01512
+     },
+     "max_abs_last_5s_deg": 0.01513,
+     "max_abs_after_liftoff_deg": 3.48722,
+     "rocking_amplitude_deg": 0.00613,
+     "filter_residual_last_5s_deg": 1e-05
+    },
+    "probe_attitude_change_deg": 0.02369,
+    "pressure": {
+     "max_moving_bar": 98.478,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.23,
+     "abs_at_first_done_kN": 0.267
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.595,
+     "FR": 133.171,
+     "RL": 91.03,
+     "RR": 88.731
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "ef610be8255df98d10b9a0a0b89e91d80b90930540932d037592649534e06dab",
+   "max_stroke_reading_mm": 670.3279275402194,
+   "wall_s": 125.9
+  },
+  {
+   "id": "S100|bottom|roll+",
+   "job": {
+    "id": "S100|bottom|roll+",
+    "S": 100.0,
+    "level": "bottom",
+    "tag": "roll+",
+    "roll": 5.56945,
+    "pitch": -0.007136
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 43.7,
+     "t_first_ready_s": 55.7
+    },
+    "forces": {
+     "t_lift_s": 20.827,
+     "after_liftoff": {
+      "min_kN": 54.8935,
+      "leg": "RR",
+      "t_s": 51.434
+     },
+     "first_8s": {
+      "min_kN": 54.9154,
+      "leg": "RL",
+      "t_s": 20.842
+     },
+     "after_8s": {
+      "min_kN": 54.8935,
+      "leg": "RR",
+      "t_s": 51.434
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01515,
+      "pitch": 1e-05
+     },
+     "max_abs_last_5s_deg": 0.01515,
+     "max_abs_after_liftoff_deg": 5.52897,
+     "rocking_amplitude_deg": 0.0061,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02353,
+    "pressure": {
+     "max_moving_bar": 105.86,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.931,
+     "abs_at_first_done_kN": 0.907
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.1,
+     "t_loc_last_s": 22.1,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 135.074,
+     "FR": 144.489,
+     "RL": 90.665,
+     "RR": 92.389
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "c310a0f312d02f737a45cdc2ec648b7fbbf57857248aed89d6d6024b5e2ae6eb",
+   "max_stroke_reading_mm": 669.6419445356266,
+   "wall_s": 125.6
+  },
+  {
+   "id": "S100|bottom|roll-",
+   "job": {
+    "id": "S100|bottom|roll-",
+    "S": 100.0,
+    "level": "bottom",
+    "tag": "roll-",
+    "roll": -5.570011,
+    "pitch": -0.007002
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 43.7,
+     "t_first_ready_s": 55.7
+    },
+    "forces": {
+     "t_lift_s": 20.798,
+     "after_liftoff": {
+      "min_kN": 50.6222,
+      "leg": "RR",
+      "t_s": 20.827
+     },
+     "first_8s": {
+      "min_kN": 50.6222,
+      "leg": "RR",
+      "t_s": 20.827
+     },
+     "after_8s": {
+      "min_kN": 54.2009,
+      "leg": "RR",
+      "t_s": 51.441
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01512,
+      "pitch": 2e-05
+     },
+     "max_abs_last_5s_deg": 0.01512,
+     "max_abs_after_liftoff_deg": 5.54499,
+     "rocking_amplitude_deg": 0.00691,
+     "filter_residual_last_5s_deg": 1e-05
+    },
+    "probe_attitude_change_deg": 0.02479,
+    "pressure": {
+     "max_moving_bar": 108.086,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.824,
+     "abs_at_first_done_kN": 0.637
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.0,
+     "t_loc_last_s": 22.0,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 147.449,
+     "FR": 133.457,
+     "RL": 93.689,
+     "RR": 88.247
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "8235f2901672a77a850724be8ecd37014393d7a4ab061c448afd6db374190582",
+   "max_stroke_reading_mm": 669.7610408979623,
+   "wall_s": 125.3
+  },
+  {
+   "id": "S100|bottom|r+p+0.25",
+   "job": {
+    "id": "S100|bottom|r+p+0.25",
+    "S": 100.0,
+    "level": "bottom",
+    "tag": "r+p+0.25",
+    "roll": 1.392318,
+    "pitch": 2.662588
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.709,
+     "after_liftoff": {
+      "min_kN": 54.5519,
+      "leg": "RR",
+      "t_s": 49.947
+     },
+     "first_8s": {
+      "min_kN": 60.2856,
+      "leg": "RL",
+      "t_s": 20.827
+     },
+     "after_8s": {
+      "min_kN": 54.5519,
+      "leg": "RR",
+      "t_s": 49.947
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.00751,
+      "pitch": 0.0146
+     },
+     "max_abs_last_5s_deg": 0.0146,
+     "max_abs_after_liftoff_deg": 2.68099,
+     "rocking_amplitude_deg": 0.00613,
+     "filter_residual_last_5s_deg": 1e-05
+    },
+    "probe_attitude_change_deg": 0.02308,
+    "pressure": {
+     "max_moving_bar": 98.446,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.065,
+     "abs_at_first_done_kN": 0.269
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.606,
+     "FR": 134.638,
+     "RL": 91.006,
+     "RR": 88.718
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "e3a3cdde93e004da1644ba80e4b45e7452e9fff7dc0470b6565bdb17b94df9df",
+   "max_stroke_reading_mm": 665.4768611484149,
+   "wall_s": 111.9
+  },
+  {
+   "id": "S100|bottom|r+p-0.25",
+   "job": {
+    "id": "S100|bottom|r+p-0.25",
+    "S": 100.0,
+    "level": "bottom",
+    "tag": "r+p-0.25",
+    "roll": 1.394018,
+    "pitch": -2.670136
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.6,
+     "t_first_ready_s": 54.6
+    },
+    "forces": {
+     "t_lift_s": 20.826,
+     "after_liftoff": {
+      "min_kN": 54.4385,
+      "leg": "RR",
+      "t_s": 50.327
+     },
+     "first_8s": {
+      "min_kN": 69.7791,
+      "leg": "RL",
+      "t_s": 20.826
+     },
+     "after_8s": {
+      "min_kN": 54.4385,
+      "leg": "RR",
+      "t_s": 50.327
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.00783,
+      "pitch": 0.01486
+     },
+     "max_abs_last_5s_deg": 0.01486,
+     "max_abs_after_liftoff_deg": 2.60733,
+     "rocking_amplitude_deg": 0.00614,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02293,
+    "pressure": {
+     "max_moving_bar": 98.461,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.303,
+     "abs_at_first_done_kN": 0.27
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.533,
+     "FR": 133.162,
+     "RL": 91.085,
+     "RR": 88.733
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "5ec9616a26cbc32876598c751dcd7e1cfd8a6f8f6a382fbf0c85c7722c34665c",
+   "max_stroke_reading_mm": 665.4479635621526,
+   "wall_s": 101.7
+  },
+  {
+   "id": "S100|bottom|r+p+0.5",
+   "job": {
+    "id": "S100|bottom|r+p+0.5",
+    "S": 100.0,
+    "level": "bottom",
+    "tag": "r+p+0.5",
+    "roll": 2.784297,
+    "pitch": 1.774973
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.3,
+     "t_first_ready_s": 54.3
+    },
+    "forces": {
+     "t_lift_s": 20.74,
+     "after_liftoff": {
+      "min_kN": 54.5051,
+      "leg": "RR",
+      "t_s": 50.045
+     },
+     "first_8s": {
+      "min_kN": 57.53,
+      "leg": "RL",
+      "t_s": 20.835
+     },
+     "after_8s": {
+      "min_kN": 54.5051,
+      "leg": "RR",
+      "t_s": 50.045
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01468,
+      "pitch": 0.00944
+     },
+     "max_abs_last_5s_deg": 0.01468,
+     "max_abs_after_liftoff_deg": 2.77528,
+     "rocking_amplitude_deg": 0.00612,
+     "filter_residual_last_5s_deg": 1e-05
+    },
+    "probe_attitude_change_deg": 0.02382,
+    "pressure": {
+     "max_moving_bar": 101.56,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.13,
+     "abs_at_first_done_kN": 0.304
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.624,
+     "FR": 138.772,
+     "RL": 91.059,
+     "RR": 88.731
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "9570af18a6232ce4a488da7d545926771fa059eadf0c0376321d2ba30997232e",
+   "max_stroke_reading_mm": 666.7791884986076,
+   "wall_s": 101.6
+  },
+  {
+   "id": "S100|bottom|r+p-0.5",
+   "job": {
+    "id": "S100|bottom|r+p-0.5",
+    "S": 100.0,
+    "level": "bottom",
+    "tag": "r+p-0.5",
+    "roll": 2.786518,
+    "pitch": -1.782117
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.4,
+     "t_first_ready_s": 54.4
+    },
+    "forces": {
+     "t_lift_s": 20.829,
+     "after_liftoff": {
+      "min_kN": 54.4413,
+      "leg": "RR",
+      "t_s": 50.13
+     },
+     "first_8s": {
+      "min_kN": 64.8045,
+      "leg": "RL",
+      "t_s": 20.829
+     },
+     "after_8s": {
+      "min_kN": 54.4413,
+      "leg": "RR",
+      "t_s": 50.13
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01475,
+      "pitch": 0.00916
+     },
+     "max_abs_last_5s_deg": 0.01475,
+     "max_abs_after_liftoff_deg": 2.76755,
+     "rocking_amplitude_deg": 0.00613,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02377,
+    "pressure": {
+     "max_moving_bar": 98.463,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.272,
+     "abs_at_first_done_kN": 0.295
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.9,
+     "t_loc_last_s": 21.9,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.582,
+     "FR": 133.102,
+     "RL": 91.095,
+     "RR": 88.734
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "900bde9676f4c143e1f11689e328c7105fbd2feefcf2485286123947c7eef84d",
+   "max_stroke_reading_mm": 660.5602686317567,
+   "wall_s": 110.6
+  },
+  {
+   "id": "S100|bottom|r+p+0.75",
+   "job": {
+    "id": "S100|bottom|r+p+0.75",
+    "S": 100.0,
+    "level": "bottom",
+    "tag": "r+p+0.75",
+    "roll": 4.176633,
+    "pitch": 0.883829
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 43.1,
+     "t_first_ready_s": 55.1
+    },
+    "forces": {
+     "t_lift_s": 20.773,
+     "after_liftoff": {
+      "min_kN": 54.6283,
+      "leg": "RL",
+      "t_s": 20.834
+     },
+     "first_8s": {
+      "min_kN": 54.6283,
+      "leg": "RL",
+      "t_s": 20.834
+     },
+     "after_8s": {
+      "min_kN": 54.6888,
+      "leg": "RR",
+      "t_s": 50.839
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01565,
+      "pitch": 0.00323
+     },
+     "max_abs_last_5s_deg": 0.01565,
+     "max_abs_after_liftoff_deg": 4.15805,
+     "rocking_amplitude_deg": 0.00616,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02368,
+    "pressure": {
+     "max_moving_bar": 105.389,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.793,
+     "abs_at_first_done_kN": 0.581
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.0,
+     "t_loc_last_s": 22.0,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.844,
+     "FR": 143.848,
+     "RL": 90.871,
+     "RR": 88.845
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "43d3faac2103108ccae96a3c944a4607d4cb161a40b296450b7086f3bc94bb44",
+   "max_stroke_reading_mm": 667.9486825956252,
+   "wall_s": 111.6
+  },
+  {
+   "id": "S100|bottom|r+p-0.75",
+   "job": {
+    "id": "S100|bottom|r+p-0.75",
+    "S": 100.0,
+    "level": "bottom",
+    "tag": "r+p-0.75",
+    "roll": 4.178236,
+    "pitch": -0.89387
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.9,
+     "t_first_ready_s": 54.9
+    },
+    "forces": {
+     "t_lift_s": 20.818,
+     "after_liftoff": {
+      "min_kN": 54.6037,
+      "leg": "RR",
+      "t_s": 50.632
+     },
+     "first_8s": {
+      "min_kN": 58.9734,
+      "leg": "RL",
+      "t_s": 20.818
+     },
+     "after_8s": {
+      "min_kN": 54.6037,
+      "leg": "RR",
+      "t_s": 50.632
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01526,
+      "pitch": 0.00291
+     },
+     "max_abs_last_5s_deg": 0.01527,
+     "max_abs_after_liftoff_deg": 4.15047,
+     "rocking_amplitude_deg": 0.00612,
+     "filter_residual_last_5s_deg": 2e-05
+    },
+    "probe_attitude_change_deg": 0.02367,
+    "pressure": {
+     "max_moving_bar": 99.209,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 29.969,
+     "abs_at_first_done_kN": 0.47
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 22.0,
+     "t_loc_last_s": 22.0,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.764,
+     "FR": 135.648,
+     "RL": 90.947,
+     "RR": 89.883
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "c6ad96bd2712be546b48e4f25c3ca1e5150df31803d5b91c5def968cf19d2049",
+   "max_stroke_reading_mm": 655.7535628338828,
+   "wall_s": 109.0
+  },
+  {
+   "id": "S100|bottom|r-p+0.5",
+   "job": {
+    "id": "S100|bottom|r-p+0.5",
+    "S": 100.0,
+    "level": "bottom",
+    "tag": "r-p+0.5",
+    "roll": -2.784861,
+    "pitch": 1.775107
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.3,
+     "t_first_ready_s": 54.3
+    },
+    "forces": {
+     "t_lift_s": 20.737,
+     "after_liftoff": {
+      "min_kN": 54.5233,
+      "leg": "RR",
+      "t_s": 50.046
+     },
+     "first_8s": {
+      "min_kN": 55.469,
+      "leg": "RR",
+      "t_s": 20.835
+     },
+     "after_8s": {
+      "min_kN": 54.5233,
+      "leg": "RR",
+      "t_s": 50.046
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01467,
+      "pitch": 0.0095
+     },
+     "max_abs_last_5s_deg": 0.01467,
+     "max_abs_after_liftoff_deg": 2.77819,
+     "rocking_amplitude_deg": 0.00613,
+     "filter_residual_last_5s_deg": 1e-05
+    },
+    "probe_attitude_change_deg": 0.02506,
+    "pressure": {
+     "max_moving_bar": 103.747,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.212,
+     "abs_at_first_done_kN": 0.077
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 141.671,
+     "FR": 133.111,
+     "RL": 91.012,
+     "RR": 88.657
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "fe0b7e0a82bdc65630cb6aec657540ad1ee4097331e548fdf9cfd048da3e8042",
+   "max_stroke_reading_mm": 666.9166366359237,
+   "wall_s": 107.5
+  },
+  {
+   "id": "S100|bottom|r-p-0.5",
+   "job": {
+    "id": "S100|bottom|r-p-0.5",
+    "S": 100.0,
+    "level": "bottom",
+    "tag": "r-p-0.5",
+    "roll": -2.787027,
+    "pitch": -1.782117
+   },
+   "final_phase": "ready",
+   "harness_class": "pass",
+   "failed_rows": [],
+   "values": {
+    "times": {
+     "t_touch_end_s": 20.2,
+     "t_first_done_s": 42.2,
+     "t_first_ready_s": 54.2
+    },
+    "forces": {
+     "t_lift_s": 20.808,
+     "after_liftoff": {
+      "min_kN": 54.4615,
+      "leg": "RR",
+      "t_s": 49.933
+     },
+     "first_8s": {
+      "min_kN": 62.4371,
+      "leg": "RR",
+      "t_s": 20.808
+     },
+     "after_8s": {
+      "min_kN": 54.4615,
+      "leg": "RR",
+      "t_s": 49.933
+     }
+    },
+    "attitude": {
+     "end_abs_deg": {
+      "roll": 0.01499,
+      "pitch": 0.00938
+     },
+     "max_abs_last_5s_deg": 0.015,
+     "max_abs_after_liftoff_deg": 2.77511,
+     "rocking_amplitude_deg": 0.00612,
+     "filter_residual_last_5s_deg": 1e-05
+    },
+    "probe_attitude_change_deg": 0.02541,
+    "pressure": {
+     "max_moving_bar": 98.365,
+     "saturation_leg_chunks": 0
+    },
+    "twist": {
+     "peak_abs_after_liftoff_kN": 30.345,
+     "abs_at_first_done_kN": 0.153
+    },
+    "events": {
+     "fault_events": [],
+     "warn_events": [],
+     "info_rule_events": [],
+     "soil_mode_started": false,
+     "t_loc_first_s": 21.8,
+     "t_loc_last_s": 21.8,
+     "reapproach_starts_after_liftoff": 0,
+     "p5_relevels_after_liftoff": 0,
+     "probe_aborts": 0
+    },
+    "guard_active_s": 0.0,
+    "oil_force_max_kN": {
+     "FL": 134.415,
+     "FR": 133.244,
+     "RL": 91.068,
+     "RR": 88.716
+    }
+   },
+   "warnings": [],
+   "events": [],
+   "commands_sha256": "2dbb5d3c1ee45b2b08e149347e0762f5e5af83624d506cb142cf078df2896703",
+   "max_stroke_reading_mm": 657.0173136591352,
+   "wall_s": 107.4
+  }
+ ]
+}

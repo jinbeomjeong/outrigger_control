@@ -1,0 +1,2549 @@
+{
+ "table": [
+  {
+   "level": "L2",
+   "group": "G6",
+   "runs": 20,
+   "S-1": {
+    "fail": 0,
+    "upper_95": 0.13910834066826516
+   },
+   "S-2": {
+    "fail": 0,
+    "upper_95": 0.13910834066826516
+   },
+   "S-3": {
+    "fail": 0,
+    "upper_95": 0.13910834066826516
+   },
+   "S-4": {
+    "fail": 0,
+    "upper_95": 0.13910834066826516
+   },
+   "S-5": {
+    "fail": 0,
+    "upper_95": 0.13910834066826516
+   },
+   "S-6": {
+    "fail": 0,
+    "upper_95": 0.13910834066826516
+   },
+   "any": {
+    "fail": 0,
+    "upper_95": 0.13910834066826516
+   },
+   "zero_cal_failed_runs": 0,
+   "ready_late_30s_runs": 0,
+   "rod_fallback_runs": 0,
+   "absolute": {
+    "S-3_misfire": 0,
+    "S-4_misfire": 5,
+    "S-5_false_loc": 0
+   },
+   "flags": {
+    "S3_true_over_band": 0,
+    "S4_baseline": 2,
+    "S4_transient_recontact": 1,
+    "S4_threshold_chatter": 0,
+    "S5_baseline": 0
+   },
+   "g6_1_switched_to_chatter_flag": 0,
+   "g6_1_ready_part_assumed": 0
+  },
+  {
+   "level": "L2",
+   "group": "all",
+   "runs": 30,
+   "S-1": {
+    "fail": 0,
+    "upper_95": 0.09503385285530411
+   },
+   "S-2": {
+    "fail": 0,
+    "upper_95": 0.09503385285530411
+   },
+   "S-3": {
+    "fail": 0,
+    "upper_95": 0.09503385285530411
+   },
+   "S-4": {
+    "fail": 0,
+    "upper_95": 0.09503385285530411
+   },
+   "S-5": {
+    "fail": 0,
+    "upper_95": 0.09503385285530411
+   },
+   "S-6": {
+    "fail": 0,
+    "upper_95": 0.09503385285530411
+   },
+   "any": {
+    "fail": 0,
+    "upper_95": 0.09503385285530411
+   },
+   "zero_cal_failed_runs": 0,
+   "ready_late_30s_runs": 0,
+   "rod_fallback_runs": 0,
+   "absolute": {
+    "S-3_misfire": 0,
+    "S-4_misfire": 5,
+    "S-5_false_loc": 0
+   },
+   "flags": {
+    "S3_true_over_band": 0,
+    "S4_baseline": 2,
+    "S4_transient_recontact": 1,
+    "S4_threshold_chatter": 0,
+    "S5_baseline": 0
+   },
+   "g6_1_switched_to_chatter_flag": 0,
+   "g6_1_ready_part_assumed": 0
+  },
+  {
+   "level": "L2",
+   "group": "ref",
+   "runs": 10,
+   "S-1": {
+    "fail": 0,
+    "upper_95": 0.2588655508930522
+   },
+   "S-2": {
+    "fail": 0,
+    "upper_95": 0.2588655508930522
+   },
+   "S-3": {
+    "fail": 0,
+    "upper_95": 0.2588655508930522
+   },
+   "S-4": {
+    "fail": 0,
+    "upper_95": 0.2588655508930522
+   },
+   "S-5": {
+    "fail": 0,
+    "upper_95": 0.2588655508930522
+   },
+   "S-6": {
+    "fail": 0,
+    "upper_95": 0.2588655508930522
+   },
+   "any": {
+    "fail": 0,
+    "upper_95": 0.2588655508930522
+   },
+   "zero_cal_failed_runs": 0,
+   "ready_late_30s_runs": 0,
+   "rod_fallback_runs": 0,
+   "absolute": {
+    "S-3_misfire": 0,
+    "S-4_misfire": 0,
+    "S-5_false_loc": 0
+   },
+   "flags": {
+    "S3_true_over_band": 0,
+    "S4_baseline": 0,
+    "S4_transient_recontact": 0,
+    "S4_threshold_chatter": 0,
+    "S5_baseline": 0
+   },
+   "g6_1_switched_to_chatter_flag": 0,
+   "g6_1_ready_part_assumed": 0
+  }
+ ],
+ "reference": [
+  {
+   "group": "G6",
+   "runs": 4,
+   "harness_pass": 4,
+   "g6_1_switched_to_chatter_flag": 0,
+   "false_loc": 0,
+   "zero_cal_failed": 0,
+   "rod_fallback_runs": 0
+  },
+  {
+   "group": "all",
+   "runs": 6,
+   "harness_pass": 6,
+   "g6_1_switched_to_chatter_flag": 0,
+   "false_loc": 0,
+   "zero_cal_failed": 0,
+   "rod_fallback_runs": 0
+  },
+  {
+   "group": "ref",
+   "runs": 2,
+   "harness_pass": 2,
+   "g6_1_switched_to_chatter_flag": 0,
+   "false_loc": 0,
+   "zero_cal_failed": 0,
+   "rod_fallback_runs": 0
+  }
+ ],
+ "runs": [
+  {
+   "key": "cand=current#L2|s0|g6|52|ref|J1|top|Fs0",
+   "level": "L2",
+   "seed_index": 0,
+   "harness": "g6",
+   "inner": "ref|J1|top|Fs0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 10.630000000000003,
+     "max_true_stroke_mm": 521.668480542042
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 2,
+     "ready_delay_vs_L1_s": 19.300000000092155,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": true,
+     "absolute_misfire_L1": true,
+     "n_pauses": 1,
+     "loc_minus_off_s": -0.3,
+     "n_recontact_after_off": 0,
+     "misfire_events": [
+      {
+       "t_s": 29.7,
+       "leg": "FR",
+       "true_drop_kN": 2.712,
+       "true_F_kN": 39.628,
+       "true_F_over_F_min": 4.209
+      }
+     ]
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.002512181754345312,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.002512181754345312
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 19.3,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s0|g6|53|ref|J1|top|Fs4",
+   "level": "L2",
+   "seed_index": 0,
+   "harness": "g6",
+   "inner": "ref|J1|top|Fs4",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 2.4299999999999997,
+     "max_true_stroke_mm": 520.2850247114525
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 3.6000000000171894,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.3,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.0019240114586174617,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.0019240114586174617
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 3.6,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s0|g6|56|ref|J2|top|Fs0",
+   "level": "L2",
+   "seed_index": 0,
+   "harness": "g6",
+   "inner": "ref|J2|top|Fs0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 5.3999999999999915,
+     "max_true_stroke_mm": 551.5659434261254
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 7.600000000036289,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.00916850209625557,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.00916850209625557
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 7.6,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s0|g6|57|ref|J2|top|Fs4",
+   "level": "L2",
+   "seed_index": 0,
+   "harness": "g6",
+   "inner": "ref|J2|top|Fs4",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 46.99000000000001,
+     "max_true_stroke_mm": 584.4716813010384
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 6.200000000029604,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.007929188660490891,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.007929188660490891
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 6.2,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s0|ref|16|J1|B|0,0",
+   "level": "L2",
+   "seed_index": 0,
+   "harness": "ref",
+   "inner": "J1|B|0,0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 9.740000000000009,
+     "max_true_stroke_mm": 522.0467311220436
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 5.000000000023874,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.3,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.00361875917158265,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.00361875917158265
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 5.0,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s0|ref|18|J2|B|0,0",
+   "level": "L2",
+   "seed_index": 0,
+   "harness": "ref",
+   "inner": "J2|B|0,0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 7.640000000000001,
+     "max_true_stroke_mm": 551.9057878960487
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 4.600000000021964,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.006638424626491077,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.006638424626491077
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 4.6,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s1|g6|52|ref|J1|top|Fs0",
+   "level": "L2",
+   "seed_index": 1,
+   "harness": "g6",
+   "inner": "ref|J1|top|Fs0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 7.969999999999999,
+     "max_true_stroke_mm": 521.3972537664182
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 2,
+     "ready_delay_vs_L1_s": 16.200000000077353,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": true,
+     "absolute_misfire_L1": true,
+     "n_pauses": 1,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": [
+      {
+       "t_s": 29.8,
+       "leg": "FR",
+       "true_drop_kN": 3.505,
+       "true_F_kN": 41.11,
+       "true_F_over_F_min": 4.367
+      }
+     ]
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.00496445337361521,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.00496445337361521
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 16.2,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s1|g6|53|ref|J1|top|Fs4",
+   "level": "L2",
+   "seed_index": 1,
+   "harness": "g6",
+   "inner": "ref|J1|top|Fs4",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 22.650000000000006,
+     "max_true_stroke_mm": 532.0663042354124
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 4.300000000020532,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.3,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.0031527238624334685,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.0031527238624334685
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 4.3,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s1|g6|56|ref|J2|top|Fs0",
+   "level": "L2",
+   "seed_index": 1,
+   "harness": "g6",
+   "inner": "ref|J2|top|Fs0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 4.939999999999998,
+     "max_true_stroke_mm": 551.8124644375991
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 7.700000000036766,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.009631604866476929,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.009631604866476929
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 7.7,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s1|g6|57|ref|J2|top|Fs4",
+   "level": "L2",
+   "seed_index": 1,
+   "harness": "g6",
+   "inner": "ref|J2|top|Fs4",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 41.17,
+     "max_true_stroke_mm": 578.247776186578
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 8.800000000042019,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.009282842824572476,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.009282842824572476
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 8.8,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s1|ref|16|J1|B|0,0",
+   "level": "L2",
+   "seed_index": 1,
+   "harness": "ref",
+   "inner": "J1|B|0,0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 10.980000000000004,
+     "max_true_stroke_mm": 521.6362727775139
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 3.2000000000152795,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.3,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.0020496923219834318,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.0020496923219834318
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 3.2,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s1|ref|18|J2|B|0,0",
+   "level": "L2",
+   "seed_index": 1,
+   "harness": "ref",
+   "inner": "J2|B|0,0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 6.490000000000009,
+     "max_true_stroke_mm": 551.1748480753001
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 6.600000000031514,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.007871243209009442,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.007871243209009442
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 6.6,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s2|g6|52|ref|J1|top|Fs0",
+   "level": "L2",
+   "seed_index": 2,
+   "harness": "g6",
+   "inner": "ref|J1|top|Fs0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 8.32,
+     "max_true_stroke_mm": 520.7045649476867
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 2,
+     "ready_delay_vs_L1_s": 18.800000000089767,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": true,
+     "absolute_misfire_L1": true,
+     "n_pauses": 1,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": [
+      {
+       "t_s": 29.8,
+       "leg": "FR",
+       "true_drop_kN": 3.511,
+       "true_F_kN": 41.103,
+       "true_F_over_F_min": 4.366
+      }
+     ]
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.004843803966560192,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.004843803966560192
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 18.8,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s2|g6|53|ref|J1|top|Fs4",
+   "level": "L2",
+   "seed_index": 2,
+   "harness": "g6",
+   "inner": "ref|J1|top|Fs4",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 23.060000000000002,
+     "max_true_stroke_mm": 532.3782753284567
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 3.700000000017667,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.3,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.002774298678684276,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.002774298678684276
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 3.7,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s2|g6|56|ref|J2|top|Fs0",
+   "level": "L2",
+   "seed_index": 2,
+   "harness": "g6",
+   "inner": "ref|J2|top|Fs0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 4.25,
+     "max_true_stroke_mm": 549.6462389453942
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 2,
+     "ready_delay_vs_L1_s": 8.000000000038199,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.008526207934891606,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.008526207934891606
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 8.0,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s2|g6|57|ref|J2|top|Fs4",
+   "level": "L2",
+   "seed_index": 2,
+   "harness": "g6",
+   "inner": "ref|J2|top|Fs4",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 5.460000000000008,
+     "max_true_stroke_mm": 551.8530622543967
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 6.7000000000319915,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.009197378207618487,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.009197378207618487
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 6.7,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s2|ref|16|J1|B|0,0",
+   "level": "L2",
+   "seed_index": 2,
+   "harness": "ref",
+   "inner": "J1|B|0,0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 10.450000000000003,
+     "max_true_stroke_mm": 520.3265813609996
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 3.2000000000152795,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.3,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.002725457195548399,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.002725457195548399
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 3.2,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s2|ref|18|J2|B|0,0",
+   "level": "L2",
+   "seed_index": 2,
+   "harness": "ref",
+   "inner": "J2|B|0,0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 36.07000000000001,
+     "max_true_stroke_mm": 573.0609333780232
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 4.100000000019577,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.007909916802393191,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.007909916802393191
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 4.1,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s3|g6|52|ref|J1|top|Fs0",
+   "level": "L2",
+   "seed_index": 3,
+   "harness": "g6",
+   "inner": "ref|J1|top|Fs0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 9.479999999999997,
+     "max_true_stroke_mm": 521.0130366698146
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 2,
+     "ready_delay_vs_L1_s": 19.700000000094064,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [
+      "S4_baseline"
+     ],
+     "absolute_misfire": true,
+     "absolute_misfire_L1": true,
+     "n_pauses": 1,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": [
+      {
+       "t_s": 29.7,
+       "leg": "FL",
+       "true_drop_kN": 3.331,
+       "true_F_kN": 37.244,
+       "true_F_over_F_min": 3.956
+      }
+     ]
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.005694007307950956,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.005694007307950956
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 19.7,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s3|g6|53|ref|J1|top|Fs4",
+   "level": "L2",
+   "seed_index": 3,
+   "harness": "g6",
+   "inner": "ref|J1|top|Fs4",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 3.3799999999999955,
+     "max_true_stroke_mm": 518.6885732134548
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 3.6000000000171894,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.3,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.00291484335973408,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.00291484335973408
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 3.6,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s3|g6|56|ref|J2|top|Fs0",
+   "level": "L2",
+   "seed_index": 3,
+   "harness": "g6",
+   "inner": "ref|J2|top|Fs0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 5.61999999999999,
+     "max_true_stroke_mm": 552.0511603692307
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 6.400000000030559,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.009153802859638639,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.009153802859638639
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 6.4,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s3|g6|57|ref|J2|top|Fs4",
+   "level": "L2",
+   "seed_index": 3,
+   "harness": "g6",
+   "inner": "ref|J2|top|Fs4",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 38.17,
+     "max_true_stroke_mm": 575.1125192467166
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 12.600000000060163,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.007833369371396455,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.007833369371396455
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 12.6,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s3|ref|16|J1|B|0,0",
+   "level": "L2",
+   "seed_index": 3,
+   "harness": "ref",
+   "inner": "J1|B|0,0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 2.769999999999996,
+     "max_true_stroke_mm": 520.0385271257419
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 4.000000000019099,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.3,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.0025811312382118725,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.0025811312382118725
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 4.0,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s3|ref|18|J2|B|0,0",
+   "level": "L2",
+   "seed_index": 3,
+   "harness": "ref",
+   "inner": "J2|B|0,0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 40.47,
+     "max_true_stroke_mm": 577.5522855173332
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 5.900000000028172,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.009701534635005457,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.009701534635005457
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 5.9,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s4|g6|52|ref|J1|top|Fs0",
+   "level": "L2",
+   "seed_index": 4,
+   "harness": "g6",
+   "inner": "ref|J1|top|Fs0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 10.520000000000003,
+     "max_true_stroke_mm": 522.4347147121451
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 2,
+     "ready_delay_vs_L1_s": 17.300000000082605,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [
+      "S4_baseline"
+     ],
+     "absolute_misfire": true,
+     "absolute_misfire_L1": true,
+     "n_pauses": 1,
+     "loc_minus_off_s": -0.3,
+     "n_recontact_after_off": 0,
+     "misfire_events": [
+      {
+       "t_s": 29.7,
+       "leg": "FL",
+       "true_drop_kN": 3.331,
+       "true_F_kN": 37.244,
+       "true_F_over_F_min": 3.956
+      }
+     ]
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.004375442363546833,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.004375442363546833
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 17.3,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s4|g6|53|ref|J1|top|Fs4",
+   "level": "L2",
+   "seed_index": 4,
+   "harness": "g6",
+   "inner": "ref|J1|top|Fs4",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 2.779999999999994,
+     "max_true_stroke_mm": 520.3362152509292
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 4.200000000020054,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.3,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.0025993026137962946,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.0025993026137962946
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 4.2,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s4|g6|56|ref|J2|top|Fs0",
+   "level": "L2",
+   "seed_index": 4,
+   "harness": "g6",
+   "inner": "ref|J2|top|Fs0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [
+       "transient_flag"
+      ],
+      "flags": [
+       "P3-1_transient_recontact"
+      ],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 5.319999999999993,
+     "max_true_stroke_mm": 551.4403677262558
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 8.600000000041064,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [
+      "S4_transient_recontact"
+     ],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.009328041560317277,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.009328041560317277
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 8.6,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s4|g6|57|ref|J2|top|Fs4",
+   "level": "L2",
+   "seed_index": 4,
+   "harness": "g6",
+   "inner": "ref|J2|top|Fs4",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 6.700000000000003,
+     "max_true_stroke_mm": 551.1271581918282
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 5.700000000027217,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.007783396341132746,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.007783396341132746
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 5.7,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s4|ref|16|J1|B|0,0",
+   "level": "L2",
+   "seed_index": 4,
+   "harness": "ref",
+   "inner": "J1|B|0,0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 11.13000000000001,
+     "max_true_stroke_mm": 522.2515368911658
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 3.500000000016712,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.3,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.001966822724616468,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.001966822724616468
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 3.5,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s4|ref|18|J2|B|0,0",
+   "level": "L2",
+   "seed_index": 4,
+   "harness": "ref",
+   "inner": "J2|B|0,0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 4.260000000000005,
+     "max_true_stroke_mm": 549.1596614117997
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 6.800000000032469,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": -0.4,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.008614374735479526,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.008614374735479526
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 6.8,
+   "rod_fallback_legs": 0
+  }
+ ],
+ "unmatched": [
+  "cand=current#L2|s2|g6|55|ref|J1|bottom|Fs4"
+ ],
+ "errors": []
+}

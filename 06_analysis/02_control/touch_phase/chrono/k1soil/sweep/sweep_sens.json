@@ -1,0 +1,486 @@
+{
+ "FLFs0": {
+  "phases": {
+   "0.00": {
+    "M_A": 0.26,
+    "M_rule": 6.43,
+    "M_g1": 8.16,
+    "M_Banchor": 6.43,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.01": {
+    "M_A": -0.05,
+    "M_rule": 8.24,
+    "M_g1": 8.24,
+    "M_Banchor": 9.29,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.02": {
+    "M_A": -7.1,
+    "M_rule": 9.31,
+    "M_g1": 9.31,
+    "M_Banchor": 9.74,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.03": {
+    "M_A": -7.38,
+    "M_rule": 5.85,
+    "M_g1": 5.85,
+    "M_Banchor": 12.44,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RL"
+   },
+   "0.04": {
+    "M_A": -0.94,
+    "M_rule": 5.54,
+    "M_g1": 5.54,
+    "M_Banchor": 12.13,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RL"
+   },
+   "0.05": {
+    "M_A": -1.2,
+    "M_rule": 5.28,
+    "M_g1": 5.28,
+    "M_Banchor": 11.87,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RL"
+   },
+   "0.06": {
+    "M_A": -1.46,
+    "M_rule": 5.1,
+    "M_g1": 5.1,
+    "M_Banchor": 11.69,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RL"
+   },
+   "0.07": {
+    "M_A": 1.39,
+    "M_rule": 7.18,
+    "M_g1": 7.18,
+    "M_Banchor": 11.11,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.08": {
+    "M_A": -1.69,
+    "M_rule": 6.95,
+    "M_g1": 6.95,
+    "M_Banchor": 11.42,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.09": {
+    "M_A": 2.38,
+    "M_rule": 7.14,
+    "M_g1": 8.41,
+    "M_Banchor": 6.68,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.10": {
+    "M_A": 0.24,
+    "M_rule": 6.35,
+    "M_g1": 8.09,
+    "M_Banchor": 6.36,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.20": {
+    "M_A": 0.25,
+    "M_rule": 6.37,
+    "M_g1": 8.11,
+    "M_Banchor": 6.38,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.35": {
+    "M_A": -1.21,
+    "M_rule": 5.27,
+    "M_g1": 5.27,
+    "M_Banchor": 11.86,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RL"
+   },
+   "0.50": {
+    "M_A": 0.26,
+    "M_rule": 6.42,
+    "M_g1": 8.16,
+    "M_Banchor": 6.43,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.70": {
+    "M_A": 0.27,
+    "M_rule": 6.36,
+    "M_g1": 8.09,
+    "M_Banchor": 6.36,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   }
+  },
+  "M_A_min": -7.38,
+  "M_A_below_period": 7,
+  "M_A_min_phase": "0.03",
+  "M_rule_min": 5.1,
+  "M_rule_below_period": 0,
+  "M_rule_min_phase": "0.06",
+  "M_g1_min": 5.1,
+  "M_g1_below_period": 0,
+  "M_g1_min_phase": "0.06",
+  "M_Banchor_min": 6.36,
+  "M_Banchor_below_period": 0,
+  "M_Banchor_min_phase": "0.10",
+  "harness_K1_RR": {
+   "0.00": -11.44,
+   "0.01": -8.66,
+   "0.02": -13.36,
+   "0.03": -10.63,
+   "0.04": -9.13,
+   "0.05": -8.94,
+   "0.06": -8.8,
+   "0.07": -8.2,
+   "0.08": -10.67,
+   "0.09": -8.4
+  },
+  "harness_deferred": {
+   "0.00": 5,
+   "0.01": 4,
+   "0.02": 4,
+   "0.03": 4,
+   "0.04": 4,
+   "0.05": 4,
+   "0.06": 4,
+   "0.07": 4,
+   "0.08": 4,
+   "0.09": 4
+  },
+  "wide_repeat_max_diff_kN": 0.1
+ },
+ "FLFs8": {
+  "phases": {
+   "0.00": {
+    "M_A": 10.99,
+    "M_rule": -7.83,
+    "M_g1": 0.69,
+    "M_Banchor": -0.94,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.01": {
+    "M_A": 10.95,
+    "M_rule": -7.38,
+    "M_g1": 0.91,
+    "M_Banchor": -0.72,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.02": {
+    "M_A": 8.96,
+    "M_rule": -1.14,
+    "M_g1": 3.43,
+    "M_Banchor": 1.8,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.03": {
+    "M_A": 8.93,
+    "M_rule": -0.72,
+    "M_g1": 3.65,
+    "M_Banchor": 2.02,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.04": {
+    "M_A": 8.88,
+    "M_rule": -0.35,
+    "M_g1": 3.82,
+    "M_Banchor": 2.19,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.05": {
+    "M_A": 8.82,
+    "M_rule": 5.23,
+    "M_g1": 6.86,
+    "M_Banchor": 5.23,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.06": {
+    "M_A": 8.77,
+    "M_rule": 5.59,
+    "M_g1": 7.03,
+    "M_Banchor": 5.4,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.07": {
+    "M_A": 10.57,
+    "M_rule": 4.4,
+    "M_g1": 7.2,
+    "M_Banchor": 5.57,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.08": {
+    "M_A": 10.57,
+    "M_rule": -0.17,
+    "M_g1": 4.69,
+    "M_Banchor": 3.06,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.09": {
+    "M_A": 11.03,
+    "M_rule": -8.19,
+    "M_g1": 0.51,
+    "M_Banchor": -1.12,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.10": {
+    "M_A": 10.99,
+    "M_rule": -7.82,
+    "M_g1": 0.69,
+    "M_Banchor": -0.94,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.20": {
+    "M_A": 10.97,
+    "M_rule": -7.84,
+    "M_g1": 0.67,
+    "M_Banchor": -0.96,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.35": {
+    "M_A": 8.78,
+    "M_rule": 5.15,
+    "M_g1": 6.8,
+    "M_Banchor": 5.17,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.50": {
+    "M_A": 10.86,
+    "M_rule": -8.07,
+    "M_g1": 0.49,
+    "M_Banchor": -1.14,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.70": {
+    "M_A": 10.84,
+    "M_rule": -8.06,
+    "M_g1": 0.49,
+    "M_Banchor": -1.14,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   }
+  },
+  "M_A_min": 8.77,
+  "M_A_below_period": 0,
+  "M_A_min_phase": "0.06",
+  "M_rule_min": -8.19,
+  "M_rule_below_period": 7,
+  "M_rule_min_phase": "0.09",
+  "M_g1_min": 0.49,
+  "M_g1_below_period": 0,
+  "M_g1_min_phase": "0.50",
+  "M_Banchor_min": -1.14,
+  "M_Banchor_below_period": 3,
+  "M_Banchor_min_phase": "0.50",
+  "harness_K1_RR": {
+   "0.00": -10.3,
+   "0.01": -10.04,
+   "0.02": -5.53,
+   "0.03": -5.28,
+   "0.04": -5.06,
+   "0.05": -1.96,
+   "0.06": -1.74,
+   "0.07": -3.37,
+   "0.08": -5.88,
+   "0.09": -10.52
+  },
+  "harness_deferred": {
+   "0.00": 3,
+   "0.01": 3,
+   "0.02": 2,
+   "0.03": 2,
+   "0.04": 2,
+   "0.05": 2,
+   "0.06": 3,
+   "0.07": 3,
+   "0.08": 3,
+   "0.09": 3
+  },
+  "wide_repeat_max_diff_kN": 0.2
+ },
+ "RRFs0": {
+  "phases": {
+   "0.00": {
+    "M_A": 12.11,
+    "M_rule": 0.97,
+    "M_g1": 9.74,
+    "M_Banchor": 0.97,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.01": {
+    "M_A": 24.2,
+    "M_rule": 24.19,
+    "M_g1": 24.2,
+    "M_Banchor": 21.16,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.02": {
+    "M_A": 24.36,
+    "M_rule": 24.35,
+    "M_g1": 24.36,
+    "M_Banchor": 21.15,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.03": {
+    "M_A": 24.51,
+    "M_rule": 24.5,
+    "M_g1": 24.51,
+    "M_Banchor": 21.12,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.04": {
+    "M_A": 19.39,
+    "M_rule": 19.38,
+    "M_g1": 19.39,
+    "M_Banchor": 25.16,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.05": {
+    "M_A": 19.56,
+    "M_rule": 19.56,
+    "M_g1": 19.56,
+    "M_Banchor": 25.26,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.06": {
+    "M_A": 19.73,
+    "M_rule": 19.72,
+    "M_g1": 19.73,
+    "M_Banchor": 25.32,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.07": {
+    "M_A": 19.89,
+    "M_rule": 19.88,
+    "M_g1": 19.89,
+    "M_Banchor": 25.34,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.08": {
+    "M_A": 14.96,
+    "M_rule": -65.64,
+    "M_g1": -2.17,
+    "M_Banchor": -10.94,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.09": {
+    "M_A": 23.84,
+    "M_rule": 23.84,
+    "M_g1": 23.84,
+    "M_Banchor": 21.13,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.10": {
+    "M_A": 12.16,
+    "M_rule": 0.95,
+    "M_g1": 9.78,
+    "M_Banchor": 1.01,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.20": {
+    "M_A": 12.19,
+    "M_rule": 1.03,
+    "M_g1": 9.82,
+    "M_Banchor": 1.05,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.35": {
+    "M_A": 19.51,
+    "M_rule": 19.5,
+    "M_g1": 19.51,
+    "M_Banchor": 25.27,
+    "worst_leg_g1": "RL",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.50": {
+    "M_A": 12.11,
+    "M_rule": 0.92,
+    "M_g1": 9.73,
+    "M_Banchor": 0.96,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   },
+   "0.70": {
+    "M_A": 12.12,
+    "M_rule": 0.94,
+    "M_g1": 9.75,
+    "M_Banchor": 0.98,
+    "worst_leg_g1": "RR",
+    "worst_leg_Banchor": "RR"
+   }
+  },
+  "M_A_min": 12.11,
+  "M_A_below_period": 0,
+  "M_A_min_phase": "0.00",
+  "M_rule_min": -65.64,
+  "M_rule_below_period": 1,
+  "M_rule_min_phase": "0.08",
+  "M_g1_min": -2.17,
+  "M_g1_below_period": 1,
+  "M_g1_min_phase": "0.08",
+  "M_Banchor_min": -10.94,
+  "M_Banchor_below_period": 1,
+  "M_Banchor_min_phase": "0.08",
+  "harness_K1_RR": {
+   "0.00": -2.37,
+   "0.01": 0.0,
+   "0.02": 0.0,
+   "0.03": 0.0,
+   "0.04": 0.0,
+   "0.05": 0.0,
+   "0.06": 0.0,
+   "0.07": 0.0,
+   "0.08": -17.13,
+   "0.09": 0.0
+  },
+  "harness_deferred": {
+   "0.00": 1,
+   "0.01": 0,
+   "0.02": 0,
+   "0.03": 0,
+   "0.04": 0,
+   "0.05": 0,
+   "0.06": 0,
+   "0.07": 0,
+   "0.08": 3,
+   "0.09": 0
+  },
+  "wide_repeat_max_diff_kN": 0.39
+ },
+ "suffix_vs_stored_max_kN": 0.2562
+}

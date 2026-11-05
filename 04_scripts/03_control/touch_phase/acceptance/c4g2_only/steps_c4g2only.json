@@ -1,0 +1,189 @@
+[
+ {
+  "id": "noise_L1L2",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\c4g2k1\\acc_launch.py C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt\\04_scripts\\03_control\\s8\\r79_L3L4_final.py C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt run C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\noise\\r79_L1L2.json --workers 15 --levels L1,L2",
+  "cwd": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+  "env": {
+   "ACC_WT": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+   "ACC_COMBO": "c4g2",
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "CONDA_DEFAULT_ENV": "dynamics-dev",
+   "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "PYTHONDONTWRITEBYTECODE": "1",
+   "OUTRIGGER_ACC": "c4g2only",
+   "ACC_PROVENANCE": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\provenance\\noise_L1L2.json",
+   "R72_PATH": "per_leg",
+   "ACC_R79_INCLUDE_PAD_A": "1"
+  }
+ },
+ {
+  "id": "verify_L1L2",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\c4g2only\\verify_reuse.py r79_L1L2",
+  "cwd": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\c4g2only",
+  "env": {
+   "ACC_WT": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+   "ACC_COMBO": "c4g2",
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "CONDA_DEFAULT_ENV": "dynamics-dev",
+   "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "PYTHONDONTWRITEBYTECODE": "1",
+   "OUTRIGGER_ACC": "c4g2only"
+  }
+ },
+ {
+  "id": "grid_r67_main",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\c4g2k1\\acc_launch.py C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt\\04_scripts\\03_control\\s8\\r67_g1_screen.py C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid\\grid_r67_main.json 15",
+  "cwd": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+  "env": {
+   "ACC_WT": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+   "ACC_COMBO": "c4g2",
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "CONDA_DEFAULT_ENV": "dynamics-dev",
+   "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "PYTHONDONTWRITEBYTECODE": "1",
+   "OUTRIGGER_ACC": "c4g2only",
+   "ACC_PROVENANCE": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\provenance\\grid_r67_main.json",
+   "R67_MODE": "screen",
+   "R67_OFFSETS": "0,0.05"
+  }
+ },
+ {
+  "id": "grid_r67_top",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\c4g2k1\\acc_launch.py C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt\\04_scripts\\03_control\\s8\\r67_g1_screen.py C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid\\grid_r67_top.json 15",
+  "cwd": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+  "env": {
+   "ACC_WT": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+   "ACC_COMBO": "c4g2",
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "CONDA_DEFAULT_ENV": "dynamics-dev",
+   "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "PYTHONDONTWRITEBYTECODE": "1",
+   "OUTRIGGER_ACC": "c4g2only",
+   "ACC_PROVENANCE": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\provenance\\grid_r67_top.json",
+   "R67_MODE": "screen",
+   "R67_OFFSETS": "0,0.025,0.05,0.075",
+   "R67_FILTER": "screen|top"
+  }
+ },
+ {
+  "id": "grid_r69_top",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\c4g2k1\\acc_launch.py C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt\\04_scripts\\03_control\\s8\\r69_g5_screen.py C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid\\grid_r69_top.json 15",
+  "cwd": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+  "env": {
+   "ACC_WT": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+   "ACC_COMBO": "c4g2",
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "CONDA_DEFAULT_ENV": "dynamics-dev",
+   "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "PYTHONDONTWRITEBYTECODE": "1",
+   "OUTRIGGER_ACC": "c4g2only",
+   "ACC_PROVENANCE": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\provenance\\grid_r69_top.json",
+   "R67_FILTER": "|top|"
+  }
+ },
+ {
+  "id": "grid_r69_bottom",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\c4g2k1\\acc_launch.py C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt\\04_scripts\\03_control\\s8\\r69_g5_screen.py C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\grid\\grid_r69_bottom.json 15",
+  "cwd": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+  "env": {
+   "ACC_WT": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+   "ACC_COMBO": "c4g2",
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "CONDA_DEFAULT_ENV": "dynamics-dev",
+   "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "PYTHONDONTWRITEBYTECODE": "1",
+   "OUTRIGGER_ACC": "c4g2only",
+   "ACC_PROVENANCE": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\provenance\\grid_r69_bottom.json",
+   "R67_FILTER": "|bottom|"
+  }
+ },
+ {
+  "id": "noise_L3",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\c4g2k1\\acc_launch.py C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt\\04_scripts\\03_control\\s8\\r79_L3L4_final.py C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt run C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\noise\\r79_L3.json --workers 15 --levels L3",
+  "cwd": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+  "env": {
+   "ACC_WT": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+   "ACC_COMBO": "c4g2",
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "CONDA_DEFAULT_ENV": "dynamics-dev",
+   "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "PYTHONDONTWRITEBYTECODE": "1",
+   "OUTRIGGER_ACC": "c4g2only",
+   "ACC_PROVENANCE": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only\\provenance\\noise_L3.json",
+   "R72_PATH": "per_leg"
+  }
+ },
+ {
+  "id": "verify_L3",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\c4g2only\\verify_reuse.py r79_L3",
+  "cwd": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\c4g2only",
+  "env": {
+   "ACC_WT": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+   "ACC_COMBO": "c4g2",
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "CONDA_DEFAULT_ENV": "dynamics-dev",
+   "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "PYTHONDONTWRITEBYTECODE": "1",
+   "OUTRIGGER_ACC": "c4g2only"
+  }
+ },
+ {
+  "id": "judge",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\c4g2k1\\acc_judge.py --acc C:\\workspace\\outrigger_control\\06_analysis\\02_control\\touch_phase\\acceptance\\c4g2_only",
+  "cwd": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\c4g2k1",
+  "env": {
+   "ACC_WT": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\C--workspace-outrigger-control\\9d4aec18-3b7f-4f45-ae19-6d57127a6418\\scratchpad\\cad_c4g2\\wt",
+   "ACC_COMBO": "c4g2",
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "CONDA_DEFAULT_ENV": "dynamics-dev",
+   "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "PYTHONDONTWRITEBYTECODE": "1",
+   "OUTRIGGER_ACC": "c4g2only"
+  }
+ }
+]

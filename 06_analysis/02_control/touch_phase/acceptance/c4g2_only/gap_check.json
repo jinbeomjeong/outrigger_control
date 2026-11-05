@@ -1,0 +1,2960 @@
+{
+ "crawler": [
+  {
+   "key": "S3|top|pitch+",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 152.3
+  },
+  {
+   "key": "S3|top|pitch-",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.0,
+    "t_loc_last_s": 22.0,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 152.6
+  },
+  {
+   "key": "S3|top|roll+",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.2,
+    "t_loc_last_s": 22.2,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 151.7
+  },
+  {
+   "key": "S3|top|roll-",
+   "n_events": 2,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [
+     "INFO_LIFT_PAUSED"
+    ],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.1,
+    "t_loc_last_s": 22.1,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 152.1
+  },
+  {
+   "key": "S3|top|r+p+0.25",
+   "n_events": 2,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.0,
+    "t_loc_last_s": 22.0,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 152.0
+  },
+  {
+   "key": "S3|top|r+p-0.25",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.1,
+    "t_loc_last_s": 22.1,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 151.3
+  },
+  {
+   "key": "S3|top|r+p+0.5",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 151.2
+  },
+  {
+   "key": "S3|top|r+p-0.5",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.0,
+    "t_loc_last_s": 22.0,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 150.3
+  },
+  {
+   "key": "S3|top|r+p+0.75",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.0,
+    "t_loc_last_s": 22.0,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 146.2
+  },
+  {
+   "key": "S3|top|r+p-0.75",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.0,
+    "t_loc_last_s": 22.0,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 144.7
+  },
+  {
+   "key": "S3|top|r-p+0.5",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 146.5
+  },
+  {
+   "key": "S3|top|r-p-0.5",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.0,
+    "t_loc_last_s": 22.0,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 144.6
+  },
+  {
+   "key": "S3|middle|pitch+",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.7,
+    "t_loc_last_s": 21.7,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 144.0
+  },
+  {
+   "key": "S3|middle|pitch-",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 144.0
+  },
+  {
+   "key": "S3|middle|roll+",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.2,
+    "t_loc_last_s": 22.2,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 144.1
+  },
+  {
+   "key": "S3|middle|roll-",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.2,
+    "t_loc_last_s": 22.2,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 143.3
+  },
+  {
+   "key": "S3|middle|r+p+0.25",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 137.2
+  },
+  {
+   "key": "S3|middle|r+p-0.25",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 136.1
+  },
+  {
+   "key": "S3|middle|r+p+0.5",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 137.4
+  },
+  {
+   "key": "S3|middle|r+p-0.5",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.0,
+    "t_loc_last_s": 22.0,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 137.3
+  },
+  {
+   "key": "S3|middle|r+p+0.75",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 136.8
+  },
+  {
+   "key": "S3|middle|r+p-0.75",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.1,
+    "t_loc_last_s": 22.1,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 138.7
+  },
+  {
+   "key": "S3|middle|r-p+0.5",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 137.5
+  },
+  {
+   "key": "S3|middle|r-p-0.5",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 136.9
+  },
+  {
+   "key": "S3|bottom|pitch+",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.7,
+    "t_loc_last_s": 21.7,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 149.9
+  },
+  {
+   "key": "S3|bottom|pitch-",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 146.6
+  },
+  {
+   "key": "S3|bottom|roll+",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.3,
+    "t_loc_last_s": 22.3,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 141.9
+  },
+  {
+   "key": "S3|bottom|roll-",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.6,
+    "t_loc_last_s": 22.6,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 141.9
+  },
+  {
+   "key": "S3|bottom|r+p+0.25",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.7,
+    "t_loc_last_s": 21.7,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 141.8
+  },
+  {
+   "key": "S3|bottom|r+p-0.25",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 141.5
+  },
+  {
+   "key": "S3|bottom|r+p+0.5",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 140.9
+  },
+  {
+   "key": "S3|bottom|r+p-0.5",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 140.1
+  },
+  {
+   "key": "S3|bottom|r+p+0.75",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 133.1
+  },
+  {
+   "key": "S3|bottom|r+p-0.75",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.1,
+    "t_loc_last_s": 22.1,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 135.4
+  },
+  {
+   "key": "S3|bottom|r-p+0.5",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 129.3
+  },
+  {
+   "key": "S3|bottom|r-p-0.5",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.0,
+    "t_loc_last_s": 22.0,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 127.8
+  },
+  {
+   "key": "S100|top|pitch+",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.7,
+    "t_loc_last_s": 21.7,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 125.7
+  },
+  {
+   "key": "S100|top|pitch-",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 126.5
+  },
+  {
+   "key": "S100|top|roll+",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [
+     "INFO_LIFT_PAUSED"
+    ],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 125.8
+  },
+  {
+   "key": "S100|top|roll-",
+   "n_events": 1,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [
+     "INFO_LIFT_PAUSED"
+    ],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 126.5
+  },
+  {
+   "key": "S100|top|r+p+0.25",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 115.7
+  },
+  {
+   "key": "S100|top|r+p-0.25",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 129.3
+  },
+  {
+   "key": "S100|top|r+p+0.5",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 129.8
+  },
+  {
+   "key": "S100|top|r+p-0.5",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.1,
+    "t_loc_last_s": 22.1,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 131.8
+  },
+  {
+   "key": "S100|top|r+p+0.75",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.2,
+    "t_loc_last_s": 22.2,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 129.4
+  },
+  {
+   "key": "S100|top|r+p-0.75",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 132.0
+  },
+  {
+   "key": "S100|top|r-p+0.5",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 130.1
+  },
+  {
+   "key": "S100|top|r-p-0.5",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 130.4
+  },
+  {
+   "key": "S100|middle|pitch+",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.7,
+    "t_loc_last_s": 21.7,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 82.5
+  },
+  {
+   "key": "S100|middle|pitch-",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 89.5
+  },
+  {
+   "key": "S100|middle|roll+",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.1,
+    "t_loc_last_s": 22.1,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 128.1
+  },
+  {
+   "key": "S100|middle|roll-",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 123.0
+  },
+  {
+   "key": "S100|middle|r+p+0.25",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 118.9
+  },
+  {
+   "key": "S100|middle|r+p-0.25",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 118.7
+  },
+  {
+   "key": "S100|middle|r+p+0.5",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 119.4
+  },
+  {
+   "key": "S100|middle|r+p-0.5",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 118.6
+  },
+  {
+   "key": "S100|middle|r+p+0.75",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 90.3
+  },
+  {
+   "key": "S100|middle|r+p-0.75",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 73.0
+  },
+  {
+   "key": "S100|middle|r-p+0.5",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 124.3
+  },
+  {
+   "key": "S100|middle|r-p-0.5",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 125.5
+  },
+  {
+   "key": "S100|bottom|pitch+",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.7,
+    "t_loc_last_s": 21.7,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 125.4
+  },
+  {
+   "key": "S100|bottom|pitch-",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 125.9
+  },
+  {
+   "key": "S100|bottom|roll+",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.1,
+    "t_loc_last_s": 22.1,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 125.6
+  },
+  {
+   "key": "S100|bottom|roll-",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.0,
+    "t_loc_last_s": 22.0,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 125.3
+  },
+  {
+   "key": "S100|bottom|r+p+0.25",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 111.9
+  },
+  {
+   "key": "S100|bottom|r+p-0.25",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 101.7
+  },
+  {
+   "key": "S100|bottom|r+p+0.5",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 101.6
+  },
+  {
+   "key": "S100|bottom|r+p-0.5",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.9,
+    "t_loc_last_s": 21.9,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 110.6
+  },
+  {
+   "key": "S100|bottom|r+p+0.75",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.0,
+    "t_loc_last_s": 22.0,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 111.6
+  },
+  {
+   "key": "S100|bottom|r+p-0.75",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 22.0,
+    "t_loc_last_s": 22.0,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 109.0
+  },
+  {
+   "key": "S100|bottom|r-p+0.5",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 107.5
+  },
+  {
+   "key": "S100|bottom|r-p-0.5",
+   "n_events": 0,
+   "starts": 0,
+   "retrigger": 0,
+   "deferred": 0,
+   "values_events": {
+    "fault_events": [],
+    "warn_events": [],
+    "info_rule_events": [],
+    "soil_mode_started": false,
+    "t_loc_first_s": 21.8,
+    "t_loc_last_s": 21.8,
+    "reapproach_starts_after_liftoff": 0,
+    "p5_relevels_after_liftoff": 0,
+    "probe_aborts": 0
+   },
+   "wall_s": 107.4
+  }
+ ],
+ "soil_A": [
+  {
+   "key": "A|G1|FL|Fs0|two",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 94.0
+  },
+  {
+   "key": "A|G1|FL|Fs0|two",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 94.0
+  },
+  {
+   "key": "A|G1|FL|Fs0|two",
+   "timing": "level",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 94.0
+  },
+  {
+   "key": "A|G1|FL|Fs0|two",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 3,
+   "same_as_off": false,
+   "same_base": true,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 94.0
+  },
+  {
+   "key": "A|G1|FL|Fs0|two",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 4,
+   "same_as_off": false,
+   "same_base": true,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 94.0
+  },
+  {
+   "key": "A|G1|FL|Fs8|two",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 96.6
+  },
+  {
+   "key": "A|G1|FL|Fs8|two",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 96.6
+  },
+  {
+   "key": "A|G1|FL|Fs8|two",
+   "timing": "level",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 96.6
+  },
+  {
+   "key": "A|G1|FL|Fs8|two",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 2,
+   "same_as_off": false,
+   "same_base": true,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 96.6
+  },
+  {
+   "key": "A|G1|FL|Fs8|two",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 3,
+   "same_as_off": false,
+   "same_base": true,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 96.6
+  },
+  {
+   "key": "A|G1|RR|Fs0|two",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 92.3
+  },
+  {
+   "key": "A|G1|RR|Fs0|two",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 92.3
+  },
+  {
+   "key": "A|G1|RR|Fs0|two",
+   "timing": "level",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 92.3
+  },
+  {
+   "key": "A|G1|RR|Fs0|two",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 92.3
+  },
+  {
+   "key": "A|G1|RR|Fs0|two",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 2,
+   "same_as_off": false,
+   "same_base": true,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 92.3
+  },
+  {
+   "key": "A|G1|RR|Fs8|two",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 88.1
+  },
+  {
+   "key": "A|G1|RR|Fs8|two",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 88.1
+  },
+  {
+   "key": "A|G1|RR|Fs8|two",
+   "timing": "level",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 88.1
+  },
+  {
+   "key": "A|G1|RR|Fs8|two",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 88.1
+  },
+  {
+   "key": "A|G1|RR|Fs8|two",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 88.1
+  },
+  {
+   "key": "A|J2|FL|Fs0|two",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 120.2
+  },
+  {
+   "key": "A|J2|FL|Fs0|two",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 120.2
+  },
+  {
+   "key": "A|J2|FL|Fs0|two",
+   "timing": "level",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 120.2
+  },
+  {
+   "key": "A|J2|FL|Fs0|two",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 120.2
+  },
+  {
+   "key": "A|J2|FL|Fs0|two",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 1,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 120.2
+  },
+  {
+   "key": "A|J2|FL|Fs8|two",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 118.8
+  },
+  {
+   "key": "A|J2|FL|Fs8|two",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 118.8
+  },
+  {
+   "key": "A|J2|FL|Fs8|two",
+   "timing": "level",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 118.8
+  },
+  {
+   "key": "A|J2|FL|Fs8|two",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 118.8
+  },
+  {
+   "key": "A|J2|FL|Fs8|two",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 1,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 118.8
+  },
+  {
+   "key": "A|J2|RR|Fs0|two",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 109.1
+  },
+  {
+   "key": "A|J2|RR|Fs0|two",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 109.1
+  },
+  {
+   "key": "A|J2|RR|Fs0|two",
+   "timing": "level",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 109.1
+  },
+  {
+   "key": "A|J2|RR|Fs0|two",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 1,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 109.1
+  },
+  {
+   "key": "A|J2|RR|Fs0|two",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 1,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 109.1
+  },
+  {
+   "key": "A|J2|RR|Fs8|two",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 109.8
+  },
+  {
+   "key": "A|J2|RR|Fs8|two",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 109.8
+  },
+  {
+   "key": "A|J2|RR|Fs8|two",
+   "timing": "level",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 109.8
+  },
+  {
+   "key": "A|J2|RR|Fs8|two",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 1,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 109.8
+  },
+  {
+   "key": "A|J2|RR|Fs8|two",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 1,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 109.8
+  },
+  {
+   "key": "A|rigid|FL|Fs0|two",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 49.1
+  },
+  {
+   "key": "A|rigid|FL|Fs0|two",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 49.1
+  },
+  {
+   "key": "A|rigid|FL|Fs0|two",
+   "timing": "level",
+   "event": "G4",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 49.1
+  },
+  {
+   "key": "A|rigid|FL|Fs0|two",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 4,
+   "same_as_off": false,
+   "same_base": true,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 49.1
+  },
+  {
+   "key": "A|rigid|FL|Fs0|two",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 4,
+   "same_as_off": false,
+   "same_base": true,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 49.1
+  },
+  {
+   "key": "A|rigid|FL|Fs8|two",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 49.4
+  },
+  {
+   "key": "A|rigid|FL|Fs8|two",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 49.4
+  },
+  {
+   "key": "A|rigid|FL|Fs8|two",
+   "timing": "level",
+   "event": "G4",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 49.4
+  },
+  {
+   "key": "A|rigid|FL|Fs8|two",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 3,
+   "same_as_off": false,
+   "same_base": true,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 49.4
+  },
+  {
+   "key": "A|rigid|FL|Fs8|two",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 3,
+   "same_as_off": false,
+   "same_base": true,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 49.4
+  },
+  {
+   "key": "A|rigid|RR|Fs0|two",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 49.4
+  },
+  {
+   "key": "A|rigid|RR|Fs0|two",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 49.4
+  },
+  {
+   "key": "A|rigid|RR|Fs0|two",
+   "timing": "level",
+   "event": "G4",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 49.4
+  },
+  {
+   "key": "A|rigid|RR|Fs0|two",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 49.4
+  },
+  {
+   "key": "A|rigid|RR|Fs0|two",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 49.4
+  },
+  {
+   "key": "A|rigid|RR|Fs8|two",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 50.5
+  },
+  {
+   "key": "A|rigid|RR|Fs8|two",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 50.5
+  },
+  {
+   "key": "A|rigid|RR|Fs8|two",
+   "timing": "level",
+   "event": "G4",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 50.5
+  },
+  {
+   "key": "A|rigid|RR|Fs8|two",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 50.5
+  },
+  {
+   "key": "A|rigid|RR|Fs8|two",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 50.5
+  },
+  {
+   "key": "A|rigid|FL|Fs0|head",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 46.6
+  },
+  {
+   "key": "A|rigid|FL|Fs0|head",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 46.6
+  },
+  {
+   "key": "A|rigid|FL|Fs0|head",
+   "timing": "level",
+   "event": "G4",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 46.6
+  },
+  {
+   "key": "A|rigid|FL|Fs0|head",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 4,
+   "same_as_off": false,
+   "same_base": true,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 46.6
+  },
+  {
+   "key": "A|rigid|FL|Fs0|head",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 4,
+   "same_as_off": false,
+   "same_base": true,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 46.6
+  },
+  {
+   "key": "A|rigid|FL|Fs8|head",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 46.6
+  },
+  {
+   "key": "A|rigid|FL|Fs8|head",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 46.6
+  },
+  {
+   "key": "A|rigid|FL|Fs8|head",
+   "timing": "level",
+   "event": "G4",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 46.6
+  },
+  {
+   "key": "A|rigid|FL|Fs8|head",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 3,
+   "same_as_off": false,
+   "same_base": true,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 46.6
+  },
+  {
+   "key": "A|rigid|FL|Fs8|head",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 3,
+   "same_as_off": false,
+   "same_base": true,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 46.6
+  },
+  {
+   "key": "A|rigid|RR|Fs0|head",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 47.1
+  },
+  {
+   "key": "A|rigid|RR|Fs0|head",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 47.1
+  },
+  {
+   "key": "A|rigid|RR|Fs0|head",
+   "timing": "level",
+   "event": "G4",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 47.1
+  },
+  {
+   "key": "A|rigid|RR|Fs0|head",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 47.1
+  },
+  {
+   "key": "A|rigid|RR|Fs0|head",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 47.1
+  },
+  {
+   "key": "A|rigid|RR|Fs8|head",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 48.2
+  },
+  {
+   "key": "A|rigid|RR|Fs8|head",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 48.2
+  },
+  {
+   "key": "A|rigid|RR|Fs8|head",
+   "timing": "level",
+   "event": "G4",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 48.2
+  },
+  {
+   "key": "A|rigid|RR|Fs8|head",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 48.2
+  },
+  {
+   "key": "A|rigid|RR|Fs8|head",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 1,
+   "same_as_off": true,
+   "same_base": true,
+   "class": "C",
+   "pass": true,
+   "job_wall_s": 48.2
+  }
+ ],
+ "clip_A": [
+  {
+   "key": "A|J2|FL|Fs0|two",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 117.1
+  },
+  {
+   "key": "A|J2|FL|Fs0|two",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 117.1
+  },
+  {
+   "key": "A|J2|FL|Fs0|two",
+   "timing": "level",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 117.1
+  },
+  {
+   "key": "A|J2|FL|Fs0|two",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 117.1
+  },
+  {
+   "key": "A|J2|FL|Fs0|two",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 1,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 117.1
+  },
+  {
+   "key": "A|J2|FL|Fs8|two",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 116.4
+  },
+  {
+   "key": "A|J2|FL|Fs8|two",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 116.4
+  },
+  {
+   "key": "A|J2|FL|Fs8|two",
+   "timing": "level",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 116.4
+  },
+  {
+   "key": "A|J2|FL|Fs8|two",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 116.4
+  },
+  {
+   "key": "A|J2|FL|Fs8|two",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 1,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 116.4
+  },
+  {
+   "key": "A|J2|RR|Fs0|two",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 104.7
+  },
+  {
+   "key": "A|J2|RR|Fs0|two",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 104.7
+  },
+  {
+   "key": "A|J2|RR|Fs0|two",
+   "timing": "level",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 104.7
+  },
+  {
+   "key": "A|J2|RR|Fs0|two",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 1,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 104.7
+  },
+  {
+   "key": "A|J2|RR|Fs0|two",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 1,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 104.7
+  },
+  {
+   "key": "A|J2|RR|Fs8|two",
+   "timing": "ready",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 108.0
+  },
+  {
+   "key": "A|J2|RR|Fs8|two",
+   "timing": "ready",
+   "event": "SS",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 108.0
+  },
+  {
+   "key": "A|J2|RR|Fs8|two",
+   "timing": "level",
+   "event": "G4",
+   "starts": 0,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "B",
+   "pass": true,
+   "job_wall_s": 108.0
+  },
+  {
+   "key": "A|J2|RR|Fs8|two",
+   "timing": "level",
+   "event": "FS24",
+   "starts": 1,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 108.0
+  },
+  {
+   "key": "A|J2|RR|Fs8|two",
+   "timing": "level",
+   "event": "RE1bF",
+   "starts": 1,
+   "same_as_off": false,
+   "same_base": false,
+   "class": "D",
+   "pass": true,
+   "job_wall_s": 108.0
+  }
+ ],
+ "clip_r79_L1L2": [
+  {
+   "key": "cand=current#L1|s0|g6|52|ref|J1|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L1|s0|g6|53|ref|J1|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L1|s0|g6|56|ref|J2|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L1|s0|g6|57|ref|J2|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L1|s0|ref|16|J1|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L1|s0|ref|18|J2|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s0|g6|52|ref|J1|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s0|g6|53|ref|J1|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s0|g6|56|ref|J2|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s0|g6|57|ref|J2|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s0|ref|16|J1|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s0|ref|18|J2|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s1|g6|52|ref|J1|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s1|g6|53|ref|J1|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s1|g6|56|ref|J2|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s1|g6|57|ref|J2|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s1|ref|16|J1|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s1|ref|18|J2|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s2|g6|52|ref|J1|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s2|g6|53|ref|J1|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s2|g6|55|ref|J1|bottom|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s2|g6|56|ref|J2|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s2|g6|57|ref|J2|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s2|ref|16|J1|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s2|ref|18|J2|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s3|g6|52|ref|J1|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s3|g6|53|ref|J1|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s3|g6|56|ref|J2|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s3|g6|57|ref|J2|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s3|ref|16|J1|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s3|ref|18|J2|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s4|g6|52|ref|J1|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s4|g6|53|ref|J1|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s4|g6|56|ref|J2|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s4|g6|57|ref|J2|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s4|ref|16|J1|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L2|s4|ref|18|J2|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  }
+ ],
+ "clip_r79_L3L4": [
+  {
+   "key": "cand=current#L3|s0|g6|52|ref|J1|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s0|g6|53|ref|J1|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s0|g6|56|ref|J2|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s0|g6|57|ref|J2|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s0|ref|16|J1|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s0|ref|18|J2|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s1|g6|52|ref|J1|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s1|g6|53|ref|J1|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s1|g6|56|ref|J2|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s1|g6|57|ref|J2|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s1|ref|16|J1|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s1|ref|18|J2|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s2|g6|52|ref|J1|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s2|g6|53|ref|J1|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s2|g6|55|ref|J1|bottom|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s2|g6|56|ref|J2|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s2|g6|57|ref|J2|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s2|ref|16|J1|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L3|s2|ref|18|J2|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s0|g6|41|g6|G1+S1@RL|top|Fs4",
+   "starts": 1,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s0|g6|42|g6|G1+S1@RL|bottom|Fs0",
+   "starts": 1,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s0|g6|45|g6|G1+S1@RR|top|Fs4",
+   "starts": 1,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s0|g6|52|ref|J1|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s0|g6|53|ref|J1|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s0|g6|56|ref|J2|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s0|g6|57|ref|J2|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s0|ref|16|J1|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s0|ref|18|J2|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s1|g6|42|g6|G1+S1@RL|bottom|Fs0",
+   "starts": 1,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s1|g6|52|ref|J1|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s1|g6|53|ref|J1|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s1|g6|56|ref|J2|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s1|g6|57|ref|J2|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s1|ref|16|J1|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s1|ref|18|J2|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s2|g6|52|ref|J1|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s2|g6|53|ref|J1|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s2|g6|55|ref|J1|bottom|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s2|g6|56|ref|J2|top|Fs0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s2|g6|57|ref|J2|top|Fs4",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s2|ref|16|J1|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  },
+  {
+   "key": "cand=current#L4|s2|ref|18|J2|B|0,0",
+   "starts": 0,
+   "retrigger": 0
+  }
+ ],
+ "clip_x426_D": [
+  {
+   "id": "H8|J2|B|top|flat",
+   "starts": 0,
+   "retrigger": 0,
+   "n": 9,
+   "wall": 72.4
+  },
+  {
+   "id": "H8|J2|B|top|flat|FL:g20",
+   "starts": 0,
+   "retrigger": 0,
+   "n": 9,
+   "wall": 73.7
+  },
+  {
+   "id": "H8|J2|B|top|flat|FL:g55",
+   "starts": 0,
+   "retrigger": 0,
+   "n": 8,
+   "wall": 73.6
+  },
+  {
+   "id": "H8|J2|B|top|flat|FL:g110",
+   "starts": 0,
+   "retrigger": 0,
+   "n": 7,
+   "wall": 73.2
+  },
+  {
+   "id": "H8|J2|B|top|flat|FL:d60",
+   "starts": 0,
+   "retrigger": 0,
+   "n": 12,
+   "wall": 74.8
+  },
+  {
+   "id": "H8|J2|B|top|flat|FL:d150",
+   "starts": 0,
+   "retrigger": 0,
+   "n": 12,
+   "wall": 76.7
+  },
+  {
+   "id": "H8|J2|B|top|flat|RR:g20",
+   "starts": 0,
+   "retrigger": 0,
+   "n": 9,
+   "wall": 71.0
+  },
+  {
+   "id": "H8|J2|B|top|flat|RR:g55",
+   "starts": 0,
+   "retrigger": 0,
+   "n": 8,
+   "wall": 69.1
+  },
+  {
+   "id": "H8|J2|B|top|flat|RR:g110",
+   "starts": 0,
+   "retrigger": 0,
+   "n": 8,
+   "wall": 25.5
+  },
+  {
+   "id": "H8|J2|B|top|flat|RR:d60",
+   "starts": 0,
+   "retrigger": 0,
+   "n": 9,
+   "wall": 28.8
+  },
+  {
+   "id": "H8|J2|B|top|flat|RR:d150",
+   "starts": 0,
+   "retrigger": 0,
+   "n": 9,
+   "wall": 31.0
+  }
+ ]
+}

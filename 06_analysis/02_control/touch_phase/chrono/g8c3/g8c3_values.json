@@ -1,0 +1,2008 @@
+{
+ "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_g8c3_20261105",
+ "rule": "C-S8-76 (spec rev. 69 360.2, rev. 70 366) gates: D8 = min true cylinder force (1 ms interval minimum) after the crawler lift-off >= F_min + 5 kN, no pad lift after the lift-off, mean true |roll|, |pitch| of the last 1 s <= 0.2 deg, READY reached; FAULT 0 (state-based: any controller phase fault / fault_reground, named or not); maximum motor stroke over the run <= 684.8 mm on every leg (user decision 2026-10-27; the run-end value is recorded); crawler clear at the end (min gap of all crawler spheres > 0 and crawler load 0). Records: TOUCH T-2' / T-3' / T-4 FLAGs of the blocked leg, true vs controller crawler clearance, P-S8-28 event counts",
+ "failed_rows": [],
+ "flags": [],
+ "engine_pairs": {
+  "off R2-R2L1": {
+   "L2b": {
+    "row": "R2",
+    "FR_max_mm": 665.2661082285955,
+    "b_RL_mm": -68.7,
+    "min_force_kN": 34.684162139349404,
+    "min_force_leg": "RL",
+    "stopped": false,
+    "stop_events": [],
+    "final_phase": "ready",
+    "t_ready_s": 58.50000000091615,
+    "settle_roll_pitch_deg": [
+     2.7367286049730564,
+     1.7552758382365627
+    ],
+    "true_clearance_end_mm": 102.05186068342846,
+    "fs_kN_plant": 4.0
+   },
+   "L1R": {
+    "row": "R2L1",
+    "FR_max_mm": 662.1702437494906,
+    "b_RL_mm": -83.1,
+    "min_force_kN": 41.15387500966893,
+    "min_force_leg": "RL",
+    "stopped": false,
+    "stop_events": [],
+    "final_phase": "ready",
+    "t_ready_s": 59.10000000196192,
+    "settle_roll_pitch_deg": [
+     2.7677130418758265,
+     1.9929732323281493
+    ],
+    "true_clearance_end_mm": 93.67338972643451,
+    "fs_kN_plant": 0.0
+   },
+   "L2b_minus_L1R": {
+    "FR_max_mm": 3.0958644791048755,
+    "b_RL_mm": 14.399999999999991,
+    "min_force_kN": -6.469712870319526,
+    "true_clearance_end_mm": 8.37847095699395,
+    "settle_roll_pitch_deg": [
+     -0.030984436902770085,
+     -0.23769739409158652
+    ],
+    "same_stop_outcome": true
+   }
+  },
+  "C4G2 R3-R3L1": {
+   "L2b": {
+    "row": "R3",
+    "FR_max_mm": 668.1924453307015,
+    "b_RL_mm": -65.7,
+    "min_force_kN": 47.19153610186421,
+    "min_force_leg": "RL",
+    "stopped": false,
+    "stop_events": [],
+    "final_phase": "ready",
+    "t_ready_s": 58.60000000091947,
+    "settle_roll_pitch_deg": [
+     2.7367286049730564,
+     1.7552758382365627
+    ],
+    "true_clearance_end_mm": 105.03543742967807,
+    "fs_kN_plant": 4.0
+   },
+   "L1R": {
+    "row": "R3L1",
+    "FR_max_mm": 677.1835028655879,
+    "b_RL_mm": -68.2,
+    "min_force_kN": 54.54424397191029,
+    "min_force_leg": "RR",
+    "stopped": false,
+    "stop_events": [],
+    "final_phase": "ready",
+    "t_ready_s": 59.80000000198514,
+    "settle_roll_pitch_deg": [
+     2.7677130418758265,
+     1.9929732323281493
+    ],
+    "true_clearance_end_mm": 108.60722296450491,
+    "fs_kN_plant": 0.0
+   },
+   "L2b_minus_L1R": {
+    "FR_max_mm": -8.991057534886409,
+    "b_RL_mm": 2.5,
+    "min_force_kN": -7.352707870046082,
+    "true_clearance_end_mm": -3.5717855348268444,
+    "settle_roll_pitch_deg": [
+     -0.030984436902770085,
+     -0.23769739409158652
+    ],
+    "same_stop_outcome": true
+   }
+  }
+ },
+ "extra": {
+  "G8C3_top_edge_RL_g230_C4G2": {
+   "row": "E1",
+   "engine": "L1R",
+   "fs_kN_plant": 0.0,
+   "config": {
+    "flags": {
+     "touch_twist_hold": true
+    },
+    "hold": "TouchTwistHoldSettings(enable=True, vector_ramp=True, ramp_twist_tol_m_s=0.0002, gain_1_s=2.5, hold_s=1.5, cap_m=0.003, deadband_N=1000.0, estimate_samples=3)",
+    "retrigger_samples": 1,
+    "clip": true
+   },
+   "wall_s": 200.82667969999602,
+   "us_per_step": 636.5346424722536,
+   "placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "floor": "edge",
+   "grade": "ideal",
+   "seed": 12345,
+   "phases_last": [
+    [
+     46.10000000153036,
+     "done"
+    ],
+    [
+     46.20000000153368,
+     "probe"
+    ],
+    [
+     58.10000000192872,
+     "ready"
+    ]
+   ],
+   "stroke_max_mm": [
+    540.8856601894878,
+    643.3836476331525,
+    280.62827618841385,
+    492.68096117920004
+   ],
+   "anchor": "INFO_LOC_CLEARANCE_ANCHOR:-63.9,-7.0,-65.1,-8.2",
+   "b_RL_mm": -65.1,
+   "settle_roll_pitch_deg": [
+    2.2257712866011006,
+    1.8287060504310664
+   ],
+   "hold": [
+    [
+     24.700000000819955,
+     "INFO_TOUCH_TWIST_HOLD:-0.623"
+    ]
+   ],
+   "loc": [
+    [
+     26.800000000889668,
+     "crawler_liftoff_confirmed"
+    ]
+   ],
+   "guard": [],
+   "pauses": [
+    [
+     24.900000000826594,
+     "INFO_LIFT_PAUSED:RR"
+    ]
+   ],
+   "reapproach": [],
+   "block": null,
+   "g8_block_keys": {
+    "h_m": 0.11877221802566254,
+    "g_start_measured_m": 0.23,
+    "fs_kN_plant": 0.0
+   },
+   "flow_limit": null,
+   "k1_verdict": "K1 cannot act: no re-approach start in this run, a both-on run is the same command",
+   "vs_A3": {
+    "first_difference": {
+     "samples": 629,
+     "time_grid_max_diff_s": 0.0,
+     "bits_equal": false,
+     "first_diff_t_s": 25.000000000829914,
+     "max_abs_diff_mm_before_first": 0.0,
+     "max_abs_diff_mm_all": 5.274945829405853
+    },
+    "settings_diff": {},
+    "A3_stroke_max_mm": [
+     536.4395329639319,
+     638.8048706350157,
+     276.011346231397,
+     488.2638797216076
+    ]
+   }
+  },
+  "G8C3_top_rpB_RL_g230_C4G2": {
+   "row": "R3L1",
+   "engine": "L1R",
+   "fs_kN_plant": 0.0,
+   "config": {
+    "flags": {
+     "touch_twist_hold": true
+    },
+    "hold": "TouchTwistHoldSettings(enable=True, vector_ramp=True, ramp_twist_tol_m_s=0.0002, gain_1_s=2.5, hold_s=1.5, cap_m=0.003, deadband_N=1000.0, estimate_samples=3)",
+    "retrigger_samples": 1,
+    "clip": true
+   },
+   "wall_s": 204.90891070000362,
+   "us_per_step": 632.4349095679124,
+   "placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "floor": "rpB",
+   "grade": "ideal",
+   "seed": 12345,
+   "phases_last": [
+    [
+     47.800000001586795,
+     "done"
+    ],
+    [
+     47.900000001590115,
+     "probe"
+    ],
+    [
+     59.80000000198514,
+     "ready"
+    ]
+   ],
+   "stroke_max_mm": [
+    549.8583982184331,
+    677.1835028655879,
+    277.31913472887595,
+    512.5018024064976
+   ],
+   "anchor": "INFO_LOC_CLEARANCE_ANCHOR:-61.1,4.7,-68.2,-2.4",
+   "b_RL_mm": -68.2,
+   "settle_roll_pitch_deg": [
+    2.7677130418758265,
+    1.9929732323281493
+   ],
+   "hold": [
+    [
+     24.700000000819955,
+     "INFO_TOUCH_TWIST_HOLD:-0.364"
+    ]
+   ],
+   "loc": [
+    [
+     26.800000000889668,
+     "crawler_liftoff_confirmed"
+    ]
+   ],
+   "guard": [],
+   "pauses": [
+    [
+     24.900000000826594,
+     "INFO_LIFT_PAUSED:RR"
+    ]
+   ],
+   "reapproach": [],
+   "block": null,
+   "g8_block_keys": {
+    "h_m": 0.11922918018589826,
+    "g_start_measured_m": 0.23,
+    "fs_kN_plant": 0.0
+   },
+   "flow_limit": null,
+   "k1_verdict": "K1 cannot act: no re-approach start in this run, a both-on run is the same command"
+  },
+  "G8C3_top_rpB_RL_g230_off": {
+   "row": "R2L1",
+   "engine": "L1R",
+   "fs_kN_plant": 0.0,
+   "config": {
+    "flags": {},
+    "hold": "TouchTwistHoldSettings(enable=False, vector_ramp=False, ramp_twist_tol_m_s=0.0002, gain_1_s=2.5, hold_s=1.5, cap_m=0.003, deadband_N=1000.0, estimate_samples=3)",
+    "retrigger_samples": 1,
+    "clip": true
+   },
+   "wall_s": 203.52384699997492,
+   "us_per_step": 635.0198034320591,
+   "placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "floor": "rpB",
+   "grade": "ideal",
+   "seed": 12345,
+   "phases_last": [
+    [
+     47.10000000156356,
+     "done"
+    ],
+    [
+     47.20000000156688,
+     "probe"
+    ],
+    [
+     59.10000000196192,
+     "ready"
+    ]
+   ],
+   "stroke_max_mm": [
+    534.9703407385015,
+    662.1702437494906,
+    262.26821163798206,
+    497.64193357627335
+   ],
+   "anchor": "INFO_LOC_CLEARANCE_ANCHOR:-50.6,26.3,-83.1,-6.3",
+   "b_RL_mm": -83.1,
+   "settle_roll_pitch_deg": [
+    2.7677130418758265,
+    1.9929732323281493
+   ],
+   "hold": [],
+   "loc": [
+    [
+     26.700000000886348,
+     "crawler_liftoff_confirmed"
+    ]
+   ],
+   "guard": [],
+   "pauses": [
+    [
+     24.900000000826594,
+     "INFO_LIFT_PAUSED:RR"
+    ],
+    [
+     25.500000000846512,
+     "INFO_LIFT_PAUSED:RL"
+    ]
+   ],
+   "reapproach": [],
+   "block": null,
+   "g8_block_keys": {
+    "h_m": 0.11922918018589826,
+    "g_start_measured_m": 0.23,
+    "fs_kN_plant": 0.0
+   },
+   "flow_limit": null,
+   "k1_verdict": "K1 cannot act: no re-approach start in this run, a both-on run is the same command"
+  },
+  "G8CL2b_top_rpB_RL_g230_Fs4_C4G2": {
+   "row": "R3",
+   "engine": "L2b",
+   "fs_kN_plant": 4.0,
+   "config": {
+    "flags": {
+     "touch_twist_hold": true
+    },
+    "hold": "TouchTwistHoldSettings(enable=True, vector_ramp=True, ramp_twist_tol_m_s=0.0002, gain_1_s=2.5, hold_s=1.5, cap_m=0.003, deadband_N=1000.0, estimate_samples=3)",
+    "retrigger_samples": 1,
+    "clip": true
+   },
+   "wall_s": 262.7618062000256,
+   "us_per_step": 383.0347029154892,
+   "placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "floor": "rpB",
+   "grade": "ideal",
+   "seed": 12345,
+   "phases_last": [
+    [
+     46.60000000052111,
+     "done"
+    ],
+    [
+     46.70000000052443,
+     "probe"
+    ],
+    [
+     58.60000000091947,
+     "ready"
+    ]
+   ],
+   "stroke_max_mm": [
+    541.3149609239447,
+    668.1924453307015,
+    278.2928504774734,
+    504.7434223992372
+   ],
+   "anchor": "INFO_LOC_CLEARANCE_ANCHOR:-44.1,7.3,-65.7,-14.3",
+   "b_RL_mm": -65.7,
+   "settle_roll_pitch_deg": [
+    2.7367286049730564,
+    1.7552758382365627
+   ],
+   "hold": [
+    [
+     24.099999999948274,
+     "INFO_TOUCH_TWIST_HOLD:-0.127"
+    ]
+   ],
+   "loc": [
+    [
+     25.89999999994408,
+     "crawler_liftoff_confirmed"
+    ]
+   ],
+   "guard": [],
+   "pauses": [],
+   "reapproach": [],
+   "block": {
+    "g0_m": [
+     0.3510926812125799,
+     0.35109426878548744,
+     0.34089097311201805,
+     0.34089144578591585
+    ],
+    "h_m": 0.11089097311201804,
+    "g_start_measured_m": 0.23
+   },
+   "g8_block_keys": {
+    "h_m": 0.11089097311201804,
+    "g_start_measured_m": 0.23,
+    "fs_kN_plant": 4.0
+   },
+   "flow_limit": null,
+   "k1_verdict": "K1 cannot act: no re-approach start in this run, a both-on run is the same command"
+  },
+  "G8CL2b_top_rpB_RL_g230_Fs4_off": {
+   "row": "R2",
+   "engine": "L2b",
+   "fs_kN_plant": 4.0,
+   "config": {
+    "flags": {},
+    "hold": "TouchTwistHoldSettings(enable=False, vector_ramp=False, ramp_twist_tol_m_s=0.0002, gain_1_s=2.5, hold_s=1.5, cap_m=0.003, deadband_N=1000.0, estimate_samples=3)",
+    "retrigger_samples": 1,
+    "clip": true
+   },
+   "wall_s": 260.5429484999622,
+   "us_per_step": 380.3546693430105,
+   "placement": {
+    "mode": "pcore",
+    "efficiency_classes": [
+     0,
+     1
+    ],
+    "affinity_ok": true,
+    "affinity_logical_processors": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11,
+     12,
+     13,
+     14,
+     15
+    ],
+    "power_throttling_off_ok": true
+   },
+   "floor": "rpB",
+   "grade": "ideal",
+   "seed": 12345,
+   "phases_last": [
+    [
+     46.500000000517794,
+     "done"
+    ],
+    [
+     46.60000000052111,
+     "probe"
+    ],
+    [
+     58.50000000091615,
+     "ready"
+    ]
+   ],
+   "stroke_max_mm": [
+    538.3516857348552,
+    665.2661082285955,
+    275.2884934627796,
+    501.7723558236391
+   ],
+   "anchor": "INFO_LOC_CLEARANCE_ANCHOR:-56.1,7.2,-68.7,-5.5",
+   "b_RL_mm": -68.7,
+   "settle_roll_pitch_deg": [
+    2.7367286049730564,
+    1.7552758382365627
+   ],
+   "hold": [],
+   "loc": [
+    [
+     25.89999999994408,
+     "crawler_liftoff_confirmed"
+    ]
+   ],
+   "guard": [],
+   "pauses": [
+    [
+     24.699999999946876,
+     "INFO_LIFT_PAUSED:RL"
+    ]
+   ],
+   "reapproach": [],
+   "block": {
+    "g0_m": [
+     0.3510926812125799,
+     0.35109426878548744,
+     0.34089097311201805,
+     0.34089144578591585
+    ],
+    "h_m": 0.11089097311201804,
+    "g_start_measured_m": 0.23
+   },
+   "g8_block_keys": {
+    "h_m": 0.11089097311201804,
+    "g_start_measured_m": 0.23,
+    "fs_kN_plant": 4.0
+   },
+   "flow_limit": null,
+   "k1_verdict": "K1 cannot act: no re-approach start in this run, a both-on run is the same command"
+  }
+ },
+ "metrics": {
+  "G8C3_top_edge_RL_g230_C4G2": {
+   "case": "G8C3_top_edge_RL_g230_C4G2",
+   "leg": "RL",
+   "times_s": {
+    "t0": 68.5000000000269,
+    "touch": 24.700000000819955,
+    "ready": 58.10000000192872,
+    "liftoff": 25.80000000085647,
+    "end": 63.10000000209469
+   },
+   "final_phase": "ready",
+   "F_min_kN": 9.414589110000001,
+   "rule": "C-S8-76 (spec rev. 69 360.2, rev. 70 366) gates: D8 = min true cylinder force (1 ms interval minimum) after the crawler lift-off >= F_min + 5 kN, no pad lift after the lift-off, mean true |roll|, |pitch| of the last 1 s <= 0.2 deg, READY reached; FAULT 0 (state-based: any controller phase fault / fault_reground, named or not); maximum motor stroke over the run <= 684.8 mm on every leg (user decision 2026-10-27; the run-end value is recorded); crawler clear at the end (min gap of all crawler spheres > 0 and crawler load 0). Records: TOUCH T-2' / T-3' / T-4 FLAGs of the blocked leg, true vs controller crawler clearance, P-S8-28 event counts",
+   "block": {
+    "g_start_target_m": 0.23,
+    "g_start_measured_m": 0.23,
+    "g0_m": [
+     0.3395055744408039,
+     0.33836134130957224,
+     0.34877221802566255,
+     0.3477303245248387
+    ],
+    "h_m": 0.11877221802566254
+   },
+   "fs_kN_plant": 0.0,
+   "end_rule": {
+    "after_ready_s": 5.0,
+    "applied": true,
+    "stopped_early": true,
+    "end_t_s": 63.10000000209469,
+    "upper_s": 134.0,
+    "timeout": false,
+    "rule": "C-S8-72 / spec 92: READY + 5 s, the case length only as the upper bound"
+   },
+   "fault": {
+    "state_detected": false,
+    "first_t_s": null,
+    "phases": [],
+    "event_names": [],
+    "unnamed": false
+   },
+   "p28_events": {
+    "INFO_LOC_CLEARANCE_ANCHOR": 1,
+    "WARN_LIFT_STROKE_LIMITED": 0,
+    "FAULT_STROKE_END": 0,
+    "FAULT_LIFT_STROKE_LIMIT": 0,
+    "fault_reground_start": 0,
+    "fault_reground_contact": 0,
+    "fault_reground_end": 0,
+    "WARN_FAULT_REGROUND_ABORT": 0
+   },
+   "fault_reground": {
+    "events": [],
+    "start_t_s": null,
+    "end_t_s": null,
+    "phase_span_s": []
+   },
+   "stroke_end_mm": [
+    540.3859737595083,
+    642.8839611826772,
+    280.1285897379432,
+    492.18127472871663
+   ],
+   "stroke_max_mm": [
+    540.8856826213055,
+    643.3836700621142,
+    280.62829861737765,
+    492.68098360816236
+   ],
+   "min_cyl_after_liftoff": {
+    "min_kN": 54.22432743795167,
+    "leg": "RR",
+    "t_s": 53.609000001779634,
+    "per_leg_kN": [
+     102.54263724278783,
+     105.04080270279988,
+     56.32767775026237,
+     54.22432743795167
+    ],
+    "source": "F_cyl_min_interval"
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_mean_deg": [
+    -0.014965884315325747,
+    -0.01257992265504558
+   ],
+   "att_last5_maxabs_deg": 0.016047042410871747,
+   "crawler_load_end_N": 0.0,
+   "crawler_clearance_end_mm": {
+    "true_min": 105.95876591382263,
+    "controller_estimate_min": -14.62089308324499,
+    "target": 50.0,
+    "true_minus_estimate": 120.57965899706763
+   },
+   "crawler_min_gap_after_liftoff_mm": 0.13271931300289086,
+   "touch": {
+    "span_s": [
+     4.8000000001593435,
+     24.700000000819955
+    ],
+    "flags": [],
+    "escalate": [],
+    "first_contact_s": 16.143000000535892,
+    "first_contact_phase": "touch",
+    "latch_s": 17.3000000005743,
+    "T3_post_contact_stroke_mm": 9.553380636773051,
+    "T2_latch_after_contact_s": 1.1570000000384084,
+    "T4_max_att_change_deg": [
+     0.07549180715642079,
+     0.17885875985140443
+    ],
+    "crawler_min_kN": 210.4741564428821,
+    "pumping": "not computed on L1-R (no valve-speed record; harness only)"
+   }
+  },
+  "G8C3_top_rpB_RL_g230_C4G2": {
+   "case": "G8C3_top_rpB_RL_g230_C4G2",
+   "leg": "RL",
+   "times_s": {
+    "t0": 68.5000000000269,
+    "touch": 24.700000000819955,
+    "ready": 59.80000000198514,
+    "liftoff": 25.80000000085647,
+    "end": 64.80000000215112
+   },
+   "final_phase": "ready",
+   "F_min_kN": 9.414589110000001,
+   "rule": "C-S8-76 (spec rev. 69 360.2, rev. 70 366) gates: D8 = min true cylinder force (1 ms interval minimum) after the crawler lift-off >= F_min + 5 kN, no pad lift after the lift-off, mean true |roll|, |pitch| of the last 1 s <= 0.2 deg, READY reached; FAULT 0 (state-based: any controller phase fault / fault_reground, named or not); maximum motor stroke over the run <= 684.8 mm on every leg (user decision 2026-10-27; the run-end value is recorded); crawler clear at the end (min gap of all crawler spheres > 0 and crawler load 0). Records: TOUCH T-2' / T-3' / T-4 FLAGs of the blocked leg, true vs controller crawler clearance, P-S8-28 event counts",
+   "block": {
+    "g_start_target_m": 0.23,
+    "g_start_measured_m": 0.23,
+    "g0_m": [
+     0.33941494312477927,
+     0.3379957050875717,
+     0.34922918018589827,
+     0.3479368780782944
+    ],
+    "h_m": 0.11922918018589826
+   },
+   "fs_kN_plant": 0.0,
+   "end_rule": {
+    "after_ready_s": 5.0,
+    "applied": true,
+    "stopped_early": true,
+    "end_t_s": 64.80000000215112,
+    "upper_s": 134.0,
+    "timeout": false,
+    "rule": "C-S8-72 / spec 92: READY + 5 s, the case length only as the upper bound"
+   },
+   "fault": {
+    "state_detected": false,
+    "first_t_s": null,
+    "phases": [],
+    "event_names": [],
+    "unnamed": false
+   },
+   "p28_events": {
+    "INFO_LOC_CLEARANCE_ANCHOR": 1,
+    "WARN_LIFT_STROKE_LIMITED": 0,
+    "FAULT_STROKE_END": 0,
+    "FAULT_LIFT_STROKE_LIMIT": 0,
+    "fault_reground_start": 0,
+    "fault_reground_contact": 0,
+    "fault_reground_end": 0,
+    "WARN_FAULT_REGROUND_ABORT": 0
+   },
+   "fault_reground": {
+    "events": [],
+    "start_t_s": null,
+    "end_t_s": null,
+    "phase_span_s": []
+   },
+   "stroke_end_mm": [
+    549.3587117871292,
+    676.6838164151134,
+    276.81944827840607,
+    512.0021159560075
+   ],
+   "stroke_max_mm": [
+    549.8584206500661,
+    677.1835252945506,
+    277.3191571578411,
+    512.50182483546
+   ],
+   "min_cyl_after_liftoff": {
+    "min_kN": 54.54424397191029,
+    "leg": "RR",
+    "t_s": 55.3010000018358,
+    "per_leg_kN": [
+     102.33157625207811,
+     105.48667667203112,
+     55.59922000819141,
+     54.54424397191029
+    ],
+    "source": "F_cyl_min_interval"
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_mean_deg": [
+    -0.014914633593177943,
+    -0.010818277480849747
+   ],
+   "att_last5_maxabs_deg": 0.015905797578907116,
+   "crawler_load_end_N": 0.0,
+   "crawler_clearance_end_mm": {
+    "true_min": 108.60722296450491,
+    "controller_estimate_min": -17.64988377445542,
+    "target": 50.0,
+    "true_minus_estimate": 126.25710673896033
+   },
+   "crawler_min_gap_after_liftoff_mm": 0.18528036590341468,
+   "touch": {
+    "span_s": [
+     4.8000000001593435,
+     24.700000000819955
+    ],
+    "flags": [],
+    "escalate": [],
+    "first_contact_s": 16.143000000535892,
+    "first_contact_phase": "touch",
+    "latch_s": 17.3000000005743,
+    "T3_post_contact_stroke_mm": 9.55338063692035,
+    "T2_latch_after_contact_s": 1.1570000000384084,
+    "T4_max_att_change_deg": [
+     0.07332208242730642,
+     0.1776958507691524
+    ],
+    "crawler_min_kN": 208.09896514856976,
+    "pumping": "not computed on L1-R (no valve-speed record; harness only)"
+   }
+  },
+  "G8C3_top_rpB_RL_g230_off": {
+   "case": "G8C3_top_rpB_RL_g230_off",
+   "leg": "RL",
+   "times_s": {
+    "t0": 68.5000000000269,
+    "touch": 24.700000000819955,
+    "ready": 59.10000000196192,
+    "liftoff": 25.80000000085647,
+    "end": 64.10000000212789
+   },
+   "final_phase": "ready",
+   "F_min_kN": 9.414589110000001,
+   "rule": "C-S8-76 (spec rev. 69 360.2, rev. 70 366) gates: D8 = min true cylinder force (1 ms interval minimum) after the crawler lift-off >= F_min + 5 kN, no pad lift after the lift-off, mean true |roll|, |pitch| of the last 1 s <= 0.2 deg, READY reached; FAULT 0 (state-based: any controller phase fault / fault_reground, named or not); maximum motor stroke over the run <= 684.8 mm on every leg (user decision 2026-10-27; the run-end value is recorded); crawler clear at the end (min gap of all crawler spheres > 0 and crawler load 0). Records: TOUCH T-2' / T-3' / T-4 FLAGs of the blocked leg, true vs controller crawler clearance, P-S8-28 event counts",
+   "block": {
+    "g_start_target_m": 0.23,
+    "g_start_measured_m": 0.23,
+    "g0_m": [
+     0.33941494312477927,
+     0.3379957050875717,
+     0.34922918018589827,
+     0.3479368780782944
+    ],
+    "h_m": 0.11922918018589826
+   },
+   "fs_kN_plant": 0.0,
+   "end_rule": {
+    "after_ready_s": 5.0,
+    "applied": true,
+    "stopped_early": true,
+    "end_t_s": 64.10000000212789,
+    "upper_s": 134.0,
+    "timeout": false,
+    "rule": "C-S8-72 / spec 92: READY + 5 s, the case length only as the upper bound"
+   },
+   "fault": {
+    "state_detected": false,
+    "first_t_s": null,
+    "phases": [],
+    "event_names": [],
+    "unnamed": false
+   },
+   "p28_events": {
+    "INFO_LOC_CLEARANCE_ANCHOR": 1,
+    "WARN_LIFT_STROKE_LIMITED": 0,
+    "FAULT_STROKE_END": 0,
+    "FAULT_LIFT_STROKE_LIMIT": 0,
+    "fault_reground_start": 0,
+    "fault_reground_contact": 0,
+    "fault_reground_end": 0,
+    "WARN_FAULT_REGROUND_ABORT": 0
+   },
+   "fault_reground": {
+    "events": [],
+    "start_t_s": null,
+    "end_t_s": null,
+    "phase_span_s": []
+   },
+   "stroke_end_mm": [
+    534.4706543064185,
+    661.6705572990113,
+    261.7685251875116,
+    497.1422471257894
+   ],
+   "stroke_max_mm": [
+    534.9703631700244,
+    662.1702661784527,
+    262.2682340669464,
+    497.6419560052353
+   ],
+   "min_cyl_after_liftoff": {
+    "min_kN": 41.15387500966893,
+    "leg": "RL",
+    "t_s": 26.190000000869418,
+    "per_leg_kN": [
+     103.75099382752983,
+     103.41145117690608,
+     41.15387500966893,
+     56.262107431476466
+    ],
+    "source": "F_cyl_min_interval"
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_mean_deg": [
+    -0.014986593990695487,
+    -0.010870109852534678
+   ],
+   "att_last5_maxabs_deg": 0.01631175545854489,
+   "crawler_load_end_N": 0.0,
+   "crawler_clearance_end_mm": {
+    "true_min": 93.67338972643451,
+    "controller_estimate_min": -32.61172012035196,
+    "target": 50.0,
+    "true_minus_estimate": 126.28510984678647
+   },
+   "crawler_min_gap_after_liftoff_mm": 0.8931270601108404,
+   "touch": {
+    "span_s": [
+     4.8000000001593435,
+     24.700000000819955
+    ],
+    "flags": [],
+    "escalate": [],
+    "first_contact_s": 16.143000000535892,
+    "first_contact_phase": "touch",
+    "latch_s": 17.3000000005743,
+    "T3_post_contact_stroke_mm": 9.55338063692035,
+    "T2_latch_after_contact_s": 1.1570000000384084,
+    "T4_max_att_change_deg": [
+     0.07332208242730642,
+     0.1776958507691524
+    ],
+    "crawler_min_kN": 208.09896514856976,
+    "pumping": "not computed on L1-R (no valve-speed record; harness only)"
+   }
+  },
+  "G8CL2b_top_rpB_RL_g230_Fs4_C4G2": {
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_C4G2",
+   "leg": "RL",
+   "times_s": {
+    "t0": 3.0000000000019065,
+    "touch": 24.099999999948274,
+    "ready": 58.60000000091947,
+    "liftoff": 24.59999999994711,
+    "end": 68.60000000125143
+   },
+   "final_phase": "ready",
+   "F_min_kN": 9.414589110000001,
+   "rule": "C-S8-76 (spec rev. 69 360.2, rev. 70 366) gates: D8 = min true cylinder force (1 ms interval minimum) after the crawler lift-off >= F_min + 5 kN, no pad lift after the lift-off, mean true |roll|, |pitch| of the last 1 s <= 0.2 deg, READY reached; FAULT 0 (state-based: any controller phase fault / fault_reground, named or not); maximum motor stroke over the run <= 684.8 mm on every leg (user decision 2026-10-27; the run-end value is recorded); crawler clear at the end (min gap of all crawler spheres > 0 and crawler load 0). Records: TOUCH T-2' / T-3' / T-4 FLAGs of the blocked leg, true vs controller crawler clearance, P-S8-28 event counts",
+   "block": {
+    "g_start_target_m": 0.23,
+    "g_start_measured_m": 0.23,
+    "g0_m": [
+     0.3510926812125799,
+     0.35109426878548744,
+     0.34089097311201805,
+     0.34089144578591585
+    ],
+    "h_m": 0.11089097311201804
+   },
+   "fs_kN_plant": 4.0,
+   "end_rule": null,
+   "fault": {
+    "state_detected": false,
+    "first_t_s": null,
+    "phases": [],
+    "event_names": [],
+    "unnamed": false
+   },
+   "p28_events": {
+    "INFO_LOC_CLEARANCE_ANCHOR": 1,
+    "WARN_LIFT_STROKE_LIMITED": 0,
+    "FAULT_STROKE_END": 0,
+    "FAULT_LIFT_STROKE_LIMIT": 0,
+    "fault_reground_start": 0,
+    "fault_reground_contact": 0,
+    "fault_reground_end": 0,
+    "WARN_FAULT_REGROUND_ABORT": 0
+   },
+   "fault_reground": null,
+   "stroke_end_mm": [
+    547.2718713601215,
+    675.3695422901708,
+    281.14099397611403,
+    509.4392736993969
+   ],
+   "stroke_max_mm": [
+    547.7715802233635,
+    675.8692511696,
+    281.64070285554794,
+    509.9389825788727
+   ],
+   "min_cyl_after_liftoff": {
+    "min_kN": 47.19153610186421,
+    "leg": "RL",
+    "t_s": 24.699999999946876,
+    "per_leg_kN": [
+     99.37797447527416,
+     104.5692159736621,
+     47.19153610186421,
+     52.64058144188122
+    ],
+    "source": "F_cyl_min_interval"
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_mean_deg": [
+    -0.015663871288142932,
+    -0.009708939192511508
+   ],
+   "att_last5_maxabs_deg": 0.01569923020237071,
+   "crawler_load_end_N": 0.0,
+   "crawler_clearance_end_mm": {
+    "true_min": 105.03543742967807,
+    "controller_estimate_min": null,
+    "target": 50.0
+   },
+   "crawler_min_gap_after_liftoff_mm": 0.023855427461125234,
+   "touch": {
+    "span_s": [
+     4.699999999993487,
+     24.099999999948274
+    ],
+    "flags": [],
+    "escalate": [],
+    "first_contact_s": 16.037999999967063,
+    "first_contact_phase": "touch",
+    "latch_s": 16.599999999965753,
+    "T3_post_contact_stroke_mm": 8.321951802963024,
+    "T2_latch_after_contact_s": 0.5619999999986902,
+    "T4_max_att_change_deg": [
+     0.0010466129043433803,
+     0.12670086905692934
+    ],
+    "crawler_min_kN": 78.98505713331483,
+    "pumping": "not computed on L1-R (no valve-speed record; harness only)"
+   }
+  },
+  "G8CL2b_top_rpB_RL_g230_Fs4_off": {
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_off",
+   "leg": "RL",
+   "times_s": {
+    "t0": 3.0000000000019065,
+    "touch": 24.099999999948274,
+    "ready": 58.50000000091615,
+    "liftoff": 24.59999999994711,
+    "end": 68.50000000124811
+   },
+   "final_phase": "ready",
+   "F_min_kN": 9.414589110000001,
+   "rule": "C-S8-76 (spec rev. 69 360.2, rev. 70 366) gates: D8 = min true cylinder force (1 ms interval minimum) after the crawler lift-off >= F_min + 5 kN, no pad lift after the lift-off, mean true |roll|, |pitch| of the last 1 s <= 0.2 deg, READY reached; FAULT 0 (state-based: any controller phase fault / fault_reground, named or not); maximum motor stroke over the run <= 684.8 mm on every leg (user decision 2026-10-27; the run-end value is recorded); crawler clear at the end (min gap of all crawler spheres > 0 and crawler load 0). Records: TOUCH T-2' / T-3' / T-4 FLAGs of the blocked leg, true vs controller crawler clearance, P-S8-28 event counts",
+   "block": {
+    "g_start_target_m": 0.23,
+    "g_start_measured_m": 0.23,
+    "g0_m": [
+     0.3510926812125799,
+     0.35109426878548744,
+     0.34089097311201805,
+     0.34089144578591585
+    ],
+    "h_m": 0.11089097311201804
+   },
+   "fs_kN_plant": 4.0,
+   "end_rule": null,
+   "fault": {
+    "state_detected": false,
+    "first_t_s": null,
+    "phases": [],
+    "event_names": [],
+    "unnamed": false
+   },
+   "p28_events": {
+    "INFO_LOC_CLEARANCE_ANCHOR": 1,
+    "WARN_LIFT_STROKE_LIMITED": 0,
+    "FAULT_STROKE_END": 0,
+    "FAULT_LIFT_STROKE_LIMIT": 0,
+    "fault_reground_start": 0,
+    "fault_reground_contact": 0,
+    "fault_reground_end": 0,
+    "WARN_FAULT_REGROUND_ABORT": 0
+   },
+   "fault_reground": null,
+   "stroke_end_mm": [
+    544.3191074268235,
+    672.3713195486566,
+    278.0841260181893,
+    506.4946264800957
+   ],
+   "stroke_max_mm": [
+    544.8188162903291,
+    672.8710284280859,
+    278.58383489762315,
+    506.9943353595715
+   ],
+   "min_cyl_after_liftoff": {
+    "min_kN": 34.684162139349404,
+    "leg": "RL",
+    "t_s": 24.728999999946808,
+    "per_leg_kN": [
+     100.14552685377105,
+     103.82932580321997,
+     34.684162139349404,
+     53.4791401904269
+    ],
+    "source": "F_cyl_min_interval"
+   },
+   "lift_after_liftoff_s": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "att_end_mean_deg": [
+    -0.016453490008769302,
+    -0.010227291542111662
+   ],
+   "att_last5_maxabs_deg": 0.016465327307637886,
+   "crawler_load_end_N": 0.0,
+   "crawler_clearance_end_mm": {
+    "true_min": 102.05186068342846,
+    "controller_estimate_min": null,
+    "target": 50.0
+   },
+   "crawler_min_gap_after_liftoff_mm": 0.32521150534962906,
+   "touch": {
+    "span_s": [
+     4.699999999993487,
+     24.099999999948274
+    ],
+    "flags": [],
+    "escalate": [],
+    "first_contact_s": 16.037999999967063,
+    "first_contact_phase": "touch",
+    "latch_s": 16.599999999965753,
+    "T3_post_contact_stroke_mm": 8.321951802963024,
+    "T2_latch_after_contact_s": 0.5619999999986902,
+    "T4_max_att_change_deg": [
+     0.0010466129043433803,
+     0.12670086905692934
+    ],
+    "crawler_min_kN": 78.98505713331483,
+    "pumping": "not computed on L1-R (no valve-speed record; harness only)"
+   }
+  }
+ },
+ "rows": [
+  {
+   "item": "C-S8-76 D8: min true cylinder force after the crawler lift-off >= F_min + 5 kN",
+   "case": "G8C3_top_edge_RL_g230_C4G2",
+   "value": 54.22432743795167,
+   "limit": 14.414589110000001,
+   "passed": true,
+   "note": "RR at 53.609000001779634 s; lift-off 25.80000000085647 s; escalation mark < F_min + 15 kN: False",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 D8: no pad lift after the crawler lift-off",
+   "case": "G8C3_top_edge_RL_g230_C4G2",
+   "value": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "limit": 0.0,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 D8: mean true |roll|, |pitch| of the last 1 s <= 0.2 deg",
+   "case": "G8C3_top_edge_RL_g230_C4G2",
+   "value": [
+    -0.014965884315325747,
+    -0.01257992265504558
+   ],
+   "limit": 0.2,
+   "passed": true,
+   "note": "last 5 s max |att| 0.016047042410871747 deg (record)",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 D8: READY reached",
+   "case": "G8C3_top_edge_RL_g230_C4G2",
+   "value": {
+    "t_ready_s": 58.10000000192872,
+    "final_phase": "ready"
+   },
+   "limit": "ready",
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76: FAULT 0 (state-based, named or unnamed)",
+   "case": "G8C3_top_edge_RL_g230_C4G2",
+   "value": {
+    "state_detected": false,
+    "first_t_s": null,
+    "phases": [],
+    "event_names": [],
+    "unnamed": false
+   },
+   "limit": false,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76: maximum motor stroke over the run <= 684.8 mm, every leg (spec rev. 70 366)",
+   "case": "G8C3_top_edge_RL_g230_C4G2",
+   "value": [
+    540.8856826213055,
+    643.3836700621142,
+    280.62829861737765,
+    492.68098360816236
+   ],
+   "limit": 684.8,
+   "passed": true,
+   "note": "run-end (READY + 5 s) value per leg [540.3859737595083, 642.8839611826772, 280.1285897379432, 492.18127472871663] mm (record)",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76: crawler clear at the end (min gap of all crawler spheres > 0, crawler load 0)",
+   "case": "G8C3_top_edge_RL_g230_C4G2",
+   "value": {
+    "true_min_mm": 105.95876591382263,
+    "crawler_load_end_N": 0.0,
+    "min_gap_after_liftoff_mm": 0.13271931300289086
+   },
+   "limit": 0.0,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 record: true vs controller crawler clearance (over-lift = the known plane-fit bias, 360.4; escalate under-lift < -20 mm)",
+   "case": "G8C3_top_edge_RL_g230_C4G2",
+   "value": {
+    "true_min": 105.95876591382263,
+    "controller_estimate_min": -14.62089308324499,
+    "target": 50.0,
+    "true_minus_estimate": 120.57965899706763
+   },
+   "limit": null,
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s6_control.g8",
+   "escalate": []
+  },
+  {
+   "item": "C-S8-76 record: TOUCH of the blocked leg, FLAG T-3' > 40 mm, T-4 > 1.0 deg, T-2' > 3.0 s (ASSUMPTION 360.2)",
+   "case": "G8C3_top_edge_RL_g230_C4G2",
+   "value": {
+    "first_contact_s": 16.143000000535892,
+    "first_contact_phase": "touch",
+    "latch_s": 17.3000000005743,
+    "T3_post_contact_stroke_mm": 9.553380636773051,
+    "T2_latch_after_contact_s": 1.1570000000384084,
+    "T4_max_att_change_deg": [
+     0.07549180715642079,
+     0.17885875985140443
+    ],
+    "crawler_min_kN": 210.4741564428821
+   },
+   "limit": {
+    "T3_mm": 40.0,
+    "T4_deg": 1.0,
+    "T2_s": 3.0
+   },
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s6_control.g8",
+   "flag": false,
+   "flags": [],
+   "escalate": []
+  },
+  {
+   "item": "C-S8-76 record: P-S8-28 / U-S8-79 controller event counts (spec rev. 70 366)",
+   "case": "G8C3_top_edge_RL_g230_C4G2",
+   "value": {
+    "INFO_LOC_CLEARANCE_ANCHOR": 1,
+    "WARN_LIFT_STROKE_LIMITED": 0,
+    "FAULT_STROKE_END": 0,
+    "FAULT_LIFT_STROKE_LIMIT": 0,
+    "fault_reground_start": 0,
+    "fault_reground_contact": 0,
+    "fault_reground_end": 0,
+    "WARN_FAULT_REGROUND_ABORT": 0
+   },
+   "limit": null,
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s6_control.g8",
+   "reground": {
+    "events": [],
+    "start_t_s": null,
+    "end_t_s": null,
+    "phase_span_s": []
+   }
+  },
+  {
+   "item": "C-S8-76 D8: min true cylinder force after the crawler lift-off >= F_min + 5 kN",
+   "case": "G8C3_top_rpB_RL_g230_C4G2",
+   "value": 54.54424397191029,
+   "limit": 14.414589110000001,
+   "passed": true,
+   "note": "RR at 55.3010000018358 s; lift-off 25.80000000085647 s; escalation mark < F_min + 15 kN: False",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 D8: no pad lift after the crawler lift-off",
+   "case": "G8C3_top_rpB_RL_g230_C4G2",
+   "value": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "limit": 0.0,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 D8: mean true |roll|, |pitch| of the last 1 s <= 0.2 deg",
+   "case": "G8C3_top_rpB_RL_g230_C4G2",
+   "value": [
+    -0.014914633593177943,
+    -0.010818277480849747
+   ],
+   "limit": 0.2,
+   "passed": true,
+   "note": "last 5 s max |att| 0.015905797578907116 deg (record)",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 D8: READY reached",
+   "case": "G8C3_top_rpB_RL_g230_C4G2",
+   "value": {
+    "t_ready_s": 59.80000000198514,
+    "final_phase": "ready"
+   },
+   "limit": "ready",
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76: FAULT 0 (state-based, named or unnamed)",
+   "case": "G8C3_top_rpB_RL_g230_C4G2",
+   "value": {
+    "state_detected": false,
+    "first_t_s": null,
+    "phases": [],
+    "event_names": [],
+    "unnamed": false
+   },
+   "limit": false,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76: maximum motor stroke over the run <= 684.8 mm, every leg (spec rev. 70 366)",
+   "case": "G8C3_top_rpB_RL_g230_C4G2",
+   "value": [
+    549.8584206500661,
+    677.1835252945506,
+    277.3191571578411,
+    512.50182483546
+   ],
+   "limit": 684.8,
+   "passed": true,
+   "note": "run-end (READY + 5 s) value per leg [549.3587117871292, 676.6838164151134, 276.81944827840607, 512.0021159560075] mm (record)",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76: crawler clear at the end (min gap of all crawler spheres > 0, crawler load 0)",
+   "case": "G8C3_top_rpB_RL_g230_C4G2",
+   "value": {
+    "true_min_mm": 108.60722296450491,
+    "crawler_load_end_N": 0.0,
+    "min_gap_after_liftoff_mm": 0.18528036590341468
+   },
+   "limit": 0.0,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 record: true vs controller crawler clearance (over-lift = the known plane-fit bias, 360.4; escalate under-lift < -20 mm)",
+   "case": "G8C3_top_rpB_RL_g230_C4G2",
+   "value": {
+    "true_min": 108.60722296450491,
+    "controller_estimate_min": -17.64988377445542,
+    "target": 50.0,
+    "true_minus_estimate": 126.25710673896033
+   },
+   "limit": null,
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s6_control.g8",
+   "escalate": []
+  },
+  {
+   "item": "C-S8-76 record: TOUCH of the blocked leg, FLAG T-3' > 40 mm, T-4 > 1.0 deg, T-2' > 3.0 s (ASSUMPTION 360.2)",
+   "case": "G8C3_top_rpB_RL_g230_C4G2",
+   "value": {
+    "first_contact_s": 16.143000000535892,
+    "first_contact_phase": "touch",
+    "latch_s": 17.3000000005743,
+    "T3_post_contact_stroke_mm": 9.55338063692035,
+    "T2_latch_after_contact_s": 1.1570000000384084,
+    "T4_max_att_change_deg": [
+     0.07332208242730642,
+     0.1776958507691524
+    ],
+    "crawler_min_kN": 208.09896514856976
+   },
+   "limit": {
+    "T3_mm": 40.0,
+    "T4_deg": 1.0,
+    "T2_s": 3.0
+   },
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s6_control.g8",
+   "flag": false,
+   "flags": [],
+   "escalate": []
+  },
+  {
+   "item": "C-S8-76 record: P-S8-28 / U-S8-79 controller event counts (spec rev. 70 366)",
+   "case": "G8C3_top_rpB_RL_g230_C4G2",
+   "value": {
+    "INFO_LOC_CLEARANCE_ANCHOR": 1,
+    "WARN_LIFT_STROKE_LIMITED": 0,
+    "FAULT_STROKE_END": 0,
+    "FAULT_LIFT_STROKE_LIMIT": 0,
+    "fault_reground_start": 0,
+    "fault_reground_contact": 0,
+    "fault_reground_end": 0,
+    "WARN_FAULT_REGROUND_ABORT": 0
+   },
+   "limit": null,
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s6_control.g8",
+   "reground": {
+    "events": [],
+    "start_t_s": null,
+    "end_t_s": null,
+    "phase_span_s": []
+   }
+  },
+  {
+   "item": "C-S8-76 D8: min true cylinder force after the crawler lift-off >= F_min + 5 kN",
+   "case": "G8C3_top_rpB_RL_g230_off",
+   "value": 41.15387500966893,
+   "limit": 14.414589110000001,
+   "passed": true,
+   "note": "RL at 26.190000000869418 s; lift-off 25.80000000085647 s; escalation mark < F_min + 15 kN: False",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 D8: no pad lift after the crawler lift-off",
+   "case": "G8C3_top_rpB_RL_g230_off",
+   "value": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "limit": 0.0,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 D8: mean true |roll|, |pitch| of the last 1 s <= 0.2 deg",
+   "case": "G8C3_top_rpB_RL_g230_off",
+   "value": [
+    -0.014986593990695487,
+    -0.010870109852534678
+   ],
+   "limit": 0.2,
+   "passed": true,
+   "note": "last 5 s max |att| 0.01631175545854489 deg (record)",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 D8: READY reached",
+   "case": "G8C3_top_rpB_RL_g230_off",
+   "value": {
+    "t_ready_s": 59.10000000196192,
+    "final_phase": "ready"
+   },
+   "limit": "ready",
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76: FAULT 0 (state-based, named or unnamed)",
+   "case": "G8C3_top_rpB_RL_g230_off",
+   "value": {
+    "state_detected": false,
+    "first_t_s": null,
+    "phases": [],
+    "event_names": [],
+    "unnamed": false
+   },
+   "limit": false,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76: maximum motor stroke over the run <= 684.8 mm, every leg (spec rev. 70 366)",
+   "case": "G8C3_top_rpB_RL_g230_off",
+   "value": [
+    534.9703631700244,
+    662.1702661784527,
+    262.2682340669464,
+    497.6419560052353
+   ],
+   "limit": 684.8,
+   "passed": true,
+   "note": "run-end (READY + 5 s) value per leg [534.4706543064185, 661.6705572990113, 261.7685251875116, 497.1422471257894] mm (record)",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76: crawler clear at the end (min gap of all crawler spheres > 0, crawler load 0)",
+   "case": "G8C3_top_rpB_RL_g230_off",
+   "value": {
+    "true_min_mm": 93.67338972643451,
+    "crawler_load_end_N": 0.0,
+    "min_gap_after_liftoff_mm": 0.8931270601108404
+   },
+   "limit": 0.0,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 record: true vs controller crawler clearance (over-lift = the known plane-fit bias, 360.4; escalate under-lift < -20 mm)",
+   "case": "G8C3_top_rpB_RL_g230_off",
+   "value": {
+    "true_min": 93.67338972643451,
+    "controller_estimate_min": -32.61172012035196,
+    "target": 50.0,
+    "true_minus_estimate": 126.28510984678647
+   },
+   "limit": null,
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s6_control.g8",
+   "escalate": []
+  },
+  {
+   "item": "C-S8-76 record: TOUCH of the blocked leg, FLAG T-3' > 40 mm, T-4 > 1.0 deg, T-2' > 3.0 s (ASSUMPTION 360.2)",
+   "case": "G8C3_top_rpB_RL_g230_off",
+   "value": {
+    "first_contact_s": 16.143000000535892,
+    "first_contact_phase": "touch",
+    "latch_s": 17.3000000005743,
+    "T3_post_contact_stroke_mm": 9.55338063692035,
+    "T2_latch_after_contact_s": 1.1570000000384084,
+    "T4_max_att_change_deg": [
+     0.07332208242730642,
+     0.1776958507691524
+    ],
+    "crawler_min_kN": 208.09896514856976
+   },
+   "limit": {
+    "T3_mm": 40.0,
+    "T4_deg": 1.0,
+    "T2_s": 3.0
+   },
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s6_control.g8",
+   "flag": false,
+   "flags": [],
+   "escalate": []
+  },
+  {
+   "item": "C-S8-76 record: P-S8-28 / U-S8-79 controller event counts (spec rev. 70 366)",
+   "case": "G8C3_top_rpB_RL_g230_off",
+   "value": {
+    "INFO_LOC_CLEARANCE_ANCHOR": 1,
+    "WARN_LIFT_STROKE_LIMITED": 0,
+    "FAULT_STROKE_END": 0,
+    "FAULT_LIFT_STROKE_LIMIT": 0,
+    "fault_reground_start": 0,
+    "fault_reground_contact": 0,
+    "fault_reground_end": 0,
+    "WARN_FAULT_REGROUND_ABORT": 0
+   },
+   "limit": null,
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s6_control.g8",
+   "reground": {
+    "events": [],
+    "start_t_s": null,
+    "end_t_s": null,
+    "phase_span_s": []
+   }
+  },
+  {
+   "item": "C-S8-76 D8: min true cylinder force after the crawler lift-off >= F_min + 5 kN",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_C4G2",
+   "value": 47.19153610186421,
+   "limit": 14.414589110000001,
+   "passed": true,
+   "note": "RL at 24.699999999946876 s; lift-off 24.59999999994711 s; escalation mark < F_min + 15 kN: False",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 D8: no pad lift after the crawler lift-off",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_C4G2",
+   "value": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "limit": 0.0,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 D8: mean true |roll|, |pitch| of the last 1 s <= 0.2 deg",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_C4G2",
+   "value": [
+    -0.015663871288142932,
+    -0.009708939192511508
+   ],
+   "limit": 0.2,
+   "passed": true,
+   "note": "last 5 s max |att| 0.01569923020237071 deg (record)",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 D8: READY reached",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_C4G2",
+   "value": {
+    "t_ready_s": 58.60000000091947,
+    "final_phase": "ready"
+   },
+   "limit": "ready",
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76: FAULT 0 (state-based, named or unnamed)",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_C4G2",
+   "value": {
+    "state_detected": false,
+    "first_t_s": null,
+    "phases": [],
+    "event_names": [],
+    "unnamed": false
+   },
+   "limit": false,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76: maximum motor stroke over the run <= 684.8 mm, every leg (spec rev. 70 366)",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_C4G2",
+   "value": [
+    547.7715802233635,
+    675.8692511696,
+    281.64070285554794,
+    509.9389825788727
+   ],
+   "limit": 684.8,
+   "passed": true,
+   "note": "run-end (READY + 5 s) value per leg [547.2718713601215, 675.3695422901708, 281.14099397611403, 509.4392736993969] mm (record)",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76: crawler clear at the end (min gap of all crawler spheres > 0, crawler load 0)",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_C4G2",
+   "value": {
+    "true_min_mm": 105.03543742967807,
+    "crawler_load_end_N": 0.0,
+    "min_gap_after_liftoff_mm": 0.023855427461125234
+   },
+   "limit": 0.0,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 record: true vs controller crawler clearance (over-lift = the known plane-fit bias, 360.4; escalate under-lift < -20 mm)",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_C4G2",
+   "value": {
+    "true_min": 105.03543742967807,
+    "controller_estimate_min": null,
+    "target": 50.0
+   },
+   "limit": null,
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s6_control.g8",
+   "escalate": []
+  },
+  {
+   "item": "C-S8-76 record: TOUCH of the blocked leg, FLAG T-3' > 40 mm, T-4 > 1.0 deg, T-2' > 3.0 s (ASSUMPTION 360.2)",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_C4G2",
+   "value": {
+    "first_contact_s": 16.037999999967063,
+    "first_contact_phase": "touch",
+    "latch_s": 16.599999999965753,
+    "T3_post_contact_stroke_mm": 8.321951802963024,
+    "T2_latch_after_contact_s": 0.5619999999986902,
+    "T4_max_att_change_deg": [
+     0.0010466129043433803,
+     0.12670086905692934
+    ],
+    "crawler_min_kN": 78.98505713331483
+   },
+   "limit": {
+    "T3_mm": 40.0,
+    "T4_deg": 1.0,
+    "T2_s": 3.0
+   },
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s6_control.g8",
+   "flag": false,
+   "flags": [],
+   "escalate": []
+  },
+  {
+   "item": "C-S8-76 record: P-S8-28 / U-S8-79 controller event counts (spec rev. 70 366)",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_C4G2",
+   "value": {
+    "INFO_LOC_CLEARANCE_ANCHOR": 1,
+    "WARN_LIFT_STROKE_LIMITED": 0,
+    "FAULT_STROKE_END": 0,
+    "FAULT_LIFT_STROKE_LIMIT": 0,
+    "fault_reground_start": 0,
+    "fault_reground_contact": 0,
+    "fault_reground_end": 0,
+    "WARN_FAULT_REGROUND_ABORT": 0
+   },
+   "limit": null,
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s6_control.g8",
+   "reground": null
+  },
+  {
+   "item": "C-S8-76 D8: min true cylinder force after the crawler lift-off >= F_min + 5 kN",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_off",
+   "value": 34.684162139349404,
+   "limit": 14.414589110000001,
+   "passed": true,
+   "note": "RL at 24.728999999946808 s; lift-off 24.59999999994711 s; escalation mark < F_min + 15 kN: False",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 D8: no pad lift after the crawler lift-off",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_off",
+   "value": {
+    "FL": 0.0,
+    "FR": 0.0,
+    "RL": 0.0,
+    "RR": 0.0
+   },
+   "limit": 0.0,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 D8: mean true |roll|, |pitch| of the last 1 s <= 0.2 deg",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_off",
+   "value": [
+    -0.016453490008769302,
+    -0.010227291542111662
+   ],
+   "limit": 0.2,
+   "passed": true,
+   "note": "last 5 s max |att| 0.016465327307637886 deg (record)",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 D8: READY reached",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_off",
+   "value": {
+    "t_ready_s": 58.50000000091615,
+    "final_phase": "ready"
+   },
+   "limit": "ready",
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76: FAULT 0 (state-based, named or unnamed)",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_off",
+   "value": {
+    "state_detected": false,
+    "first_t_s": null,
+    "phases": [],
+    "event_names": [],
+    "unnamed": false
+   },
+   "limit": false,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76: maximum motor stroke over the run <= 684.8 mm, every leg (spec rev. 70 366)",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_off",
+   "value": [
+    544.8188162903291,
+    672.8710284280859,
+    278.58383489762315,
+    506.9943353595715
+   ],
+   "limit": 684.8,
+   "passed": true,
+   "note": "run-end (READY + 5 s) value per leg [544.3191074268235, 672.3713195486566, 278.0841260181893, 506.4946264800957] mm (record)",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76: crawler clear at the end (min gap of all crawler spheres > 0, crawler load 0)",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_off",
+   "value": {
+    "true_min_mm": 102.05186068342846,
+    "crawler_load_end_N": 0.0,
+    "min_gap_after_liftoff_mm": 0.32521150534962906
+   },
+   "limit": 0.0,
+   "passed": true,
+   "note": "",
+   "kind": "judged",
+   "source": "s6_control.g8"
+  },
+  {
+   "item": "C-S8-76 record: true vs controller crawler clearance (over-lift = the known plane-fit bias, 360.4; escalate under-lift < -20 mm)",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_off",
+   "value": {
+    "true_min": 102.05186068342846,
+    "controller_estimate_min": null,
+    "target": 50.0
+   },
+   "limit": null,
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s6_control.g8",
+   "escalate": []
+  },
+  {
+   "item": "C-S8-76 record: TOUCH of the blocked leg, FLAG T-3' > 40 mm, T-4 > 1.0 deg, T-2' > 3.0 s (ASSUMPTION 360.2)",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_off",
+   "value": {
+    "first_contact_s": 16.037999999967063,
+    "first_contact_phase": "touch",
+    "latch_s": 16.599999999965753,
+    "T3_post_contact_stroke_mm": 8.321951802963024,
+    "T2_latch_after_contact_s": 0.5619999999986902,
+    "T4_max_att_change_deg": [
+     0.0010466129043433803,
+     0.12670086905692934
+    ],
+    "crawler_min_kN": 78.98505713331483
+   },
+   "limit": {
+    "T3_mm": 40.0,
+    "T4_deg": 1.0,
+    "T2_s": 3.0
+   },
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s6_control.g8",
+   "flag": false,
+   "flags": [],
+   "escalate": []
+  },
+  {
+   "item": "C-S8-76 record: P-S8-28 / U-S8-79 controller event counts (spec rev. 70 366)",
+   "case": "G8CL2b_top_rpB_RL_g230_Fs4_off",
+   "value": {
+    "INFO_LOC_CLEARANCE_ANCHOR": 1,
+    "WARN_LIFT_STROKE_LIMITED": 0,
+    "FAULT_STROKE_END": 0,
+    "FAULT_LIFT_STROKE_LIMIT": 0,
+    "fault_reground_start": 0,
+    "fault_reground_contact": 0,
+    "fault_reground_end": 0,
+    "WARN_FAULT_REGROUND_ABORT": 0
+   },
+   "limit": null,
+   "passed": null,
+   "note": "",
+   "kind": "record",
+   "source": "s6_control.g8",
+   "reground": null
+  }
+ ]
+}

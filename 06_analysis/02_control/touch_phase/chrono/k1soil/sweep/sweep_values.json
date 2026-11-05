@@ -1,0 +1,3006 @@
+{
+ "valid": {
+  "errors": [],
+  "n": {
+   "A": 45,
+   "B": 45,
+   "Af": 30,
+   "Bf": 30
+  },
+  "main_tree": [
+   [],
+   [],
+   [],
+   []
+  ],
+  "c2": [
+   "28482b8d5678c3e1079c9dd89046013bd60cac718e0e8efa195101a36236df67"
+  ],
+  "head": [
+   "74032beae72c7e44858e41384bc54c263e724fd3"
+  ],
+  "wall_s": [
+   196.9,
+   228.0,
+   180.6,
+   187.1
+  ],
+  "FLFs0": {
+   "B0_hash_vs_soil_A": true,
+   "A0_hash_vs_stored_off": true,
+   "hold_in_A": {
+    "twist_load_estimate_N": 29.181912759078234,
+    "target_m": null,
+    "start_t_s": null,
+    "end_t_s": null,
+    "end_reason": null,
+    "end_error_m": null
+   },
+   "A_base_vs_off": true,
+   "hold_in_Af": {
+    "twist_load_estimate_N": 5169.074268280452,
+    "target_m": -0.00022766057660532585,
+    "start_t_s": 19.899999999998972,
+    "end_t_s": 21.499999999995243,
+    "end_reason": "time",
+    "end_error_m": 6.811660680854331e-06
+   }
+  },
+  "FLFs8": {
+   "B0_hash_vs_soil_A": true,
+   "A0_hash_vs_stored_off": true,
+   "hold_in_A": {
+    "twist_load_estimate_N": 8.909889044361384,
+    "target_m": null,
+    "start_t_s": null,
+    "end_t_s": null,
+    "end_reason": null,
+    "end_error_m": null
+   },
+   "A_base_vs_off": true,
+   "hold_in_Af": null
+  },
+  "RRFs0": {
+   "B0_hash_vs_soil_A": true,
+   "A0_hash_vs_stored_off": true,
+   "hold_in_A": {
+    "twist_load_estimate_N": 29.181912759078234,
+    "target_m": null,
+    "start_t_s": null,
+    "end_t_s": null,
+    "end_reason": null,
+    "end_error_m": null
+   },
+   "A_base_vs_off": true,
+   "hold_in_Af": {
+    "twist_load_estimate_N": 5169.074268280452,
+    "target_m": -0.00022766057660532585,
+    "start_t_s": 19.899999999998972,
+    "end_t_s": 21.499999999995243,
+    "end_reason": "time",
+    "end_error_m": 6.811660680854331e-06
+   }
+  }
+ },
+ "rows": {
+  "FLFs0": {
+   "phases": {
+    "0.00": {
+     "wc": 2.158,
+     "MA": 26.091,
+     "MB": 20.745,
+     "readyA": 26.1,
+     "readyB": 25.8,
+     "unionA": 1.01,
+     "unionB": 1.075,
+     "startsA": 5,
+     "startsB": 4,
+     "deferred": 5,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 59.12,
+      "FR": 56.67,
+      "RL": 35.51,
+      "RR": 41.6
+     },
+     "B": {
+      "FL": 48.0,
+      "FR": 65.68,
+      "RL": 46.51,
+      "RR": 30.16
+     }
+    },
+    "0.01": {
+     "wc": 2.155,
+     "MA": 25.784,
+     "MB": 23.609,
+     "readyA": 26.09,
+     "readyB": 24.39,
+     "unionA": 1.0,
+     "unionB": 1.069,
+     "startsA": 5,
+     "startsB": 4,
+     "deferred": 4,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 59.53,
+      "FR": 56.66,
+      "RL": 35.2,
+      "RR": 41.68
+     },
+     "B": {
+      "FL": 51.01,
+      "FR": 63.29,
+      "RL": 43.49,
+      "RR": 33.02
+     }
+    },
+    "0.02": {
+     "wc": 2.142,
+     "MA": 18.733,
+     "MB": 24.051,
+     "readyA": 28.18,
+     "readyB": 24.38,
+     "unionA": 0.999,
+     "unionB": 1.048,
+     "startsA": 5,
+     "startsB": 4,
+     "deferred": 4,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 66.94,
+      "FR": 52.59,
+      "RL": 28.15,
+      "RR": 46.83
+     },
+     "B": {
+      "FL": 50.5,
+      "FR": 63.02,
+      "RL": 44.56,
+      "RR": 33.47
+     }
+    },
+    "0.03": {
+     "wc": 2.138,
+     "MA": 18.452,
+     "MB": 26.891,
+     "readyA": 28.17,
+     "readyB": 24.37,
+     "unionA": 0.99,
+     "unionB": 1.039,
+     "startsA": 5,
+     "startsB": 4,
+     "deferred": 4,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 67.4,
+      "FR": 52.58,
+      "RL": 27.87,
+      "RR": 46.94
+     },
+     "B": {
+      "FL": 53.71,
+      "FR": 60.97,
+      "RL": 41.1,
+      "RR": 36.31
+     }
+    },
+    "0.04": {
+     "wc": 2.135,
+     "MA": 24.893,
+     "MB": 27.256,
+     "readyA": 27.46,
+     "readyB": 24.36,
+     "unionA": 0.971,
+     "unionB": 1.032,
+     "startsA": 5,
+     "startsB": 4,
+     "deferred": 4,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 60.85,
+      "FR": 53.55,
+      "RL": 34.31,
+      "RR": 45.8
+     },
+     "B": {
+      "FL": 54.36,
+      "FR": 60.96,
+      "RL": 40.79,
+      "RR": 36.67
+     }
+    },
+    "0.05": {
+     "wc": 2.132,
+     "MA": 24.637,
+     "MB": 27.553,
+     "readyA": 27.45,
+     "readyB": 24.35,
+     "unionA": 0.959,
+     "unionB": 1.024,
+     "startsA": 5,
+     "startsB": 4,
+     "deferred": 4,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 61.24,
+      "FR": 53.59,
+      "RL": 34.05,
+      "RR": 45.91
+     },
+     "B": {
+      "FL": 54.97,
+      "FR": 61.02,
+      "RL": 40.53,
+      "RR": 36.97
+     }
+    },
+    "0.06": {
+     "wc": 2.129,
+     "MA": 24.379,
+     "MB": 27.777,
+     "readyA": 27.44,
+     "readyB": 24.44,
+     "unionA": 0.95,
+     "unionB": 1.015,
+     "startsA": 5,
+     "startsB": 4,
+     "deferred": 4,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 61.61,
+      "FR": 53.62,
+      "RL": 33.79,
+      "RR": 45.99
+     },
+     "B": {
+      "FL": 55.56,
+      "FR": 61.13,
+      "RL": 40.35,
+      "RR": 37.19
+     }
+    },
+    "0.07": {
+     "wc": 2.127,
+     "MA": 27.223,
+     "MB": 25.425,
+     "readyA": 26.13,
+     "readyB": 24.43,
+     "unionA": 0.938,
+     "unionB": 1.008,
+     "startsA": 5,
+     "startsB": 4,
+     "deferred": 4,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 58.77,
+      "FR": 55.87,
+      "RL": 36.64,
+      "RR": 43.04
+     },
+     "B": {
+      "FL": 53.75,
+      "FR": 63.22,
+      "RL": 42.43,
+      "RR": 34.84
+     }
+    },
+    "0.08": {
+     "wc": 2.124,
+     "MA": 24.144,
+     "MB": 25.732,
+     "readyA": 27.42,
+     "readyB": 24.42,
+     "unionA": 0.927,
+     "unionB": 0.998,
+     "startsA": 5,
+     "startsB": 4,
+     "deferred": 4,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 62.23,
+      "FR": 53.96,
+      "RL": 33.56,
+      "RR": 45.82
+     },
+     "B": {
+      "FL": 54.43,
+      "FR": 63.35,
+      "RL": 42.2,
+      "RR": 35.15
+     }
+    },
+    "0.09": {
+     "wc": 2.172,
+     "MA": 28.214,
+     "MB": 20.995,
+     "readyA": 24.41,
+     "readyB": 24.41,
+     "unionA": 1.047,
+     "unionB": 1.104,
+     "startsA": 5,
+     "startsB": 4,
+     "deferred": 4,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 56.66,
+      "FR": 58.79,
+      "RL": 37.63,
+      "RR": 38.81
+     },
+     "B": {
+      "FL": 48.48,
+      "FR": 65.58,
+      "RL": 45.48,
+      "RR": 30.41
+     }
+    },
+    "0.10": {
+     "wc": 2.158,
+     "MA": 26.074,
+     "MB": 20.671,
+     "readyA": 26.1,
+     "readyB": 25.8,
+     "unionA": 1.011,
+     "unionB": 1.075,
+     "startsA": 5,
+     "startsB": 4,
+     "deferred": 5,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 59.06,
+      "FR": 56.68,
+      "RL": 35.49,
+      "RR": 41.56
+     },
+     "B": {
+      "FL": 47.91,
+      "FR": 65.69,
+      "RL": 46.48,
+      "RR": 30.09
+     }
+    },
+    "0.20": {
+     "wc": 2.158,
+     "MA": 26.087,
+     "MB": 20.697,
+     "readyA": 26.1,
+     "readyB": 25.8,
+     "unionA": 1.009,
+     "unionB": 1.075,
+     "startsA": 5,
+     "startsB": 4,
+     "deferred": 5,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 59.07,
+      "FR": 56.66,
+      "RL": 35.5,
+      "RR": 41.57
+     },
+     "B": {
+      "FL": 47.93,
+      "FR": 65.67,
+      "RL": 46.49,
+      "RR": 30.11
+     }
+    },
+    "0.35": {
+     "wc": 2.131,
+     "MA": 24.623,
+     "MB": 27.629,
+     "readyA": 27.45,
+     "readyB": 24.35,
+     "unionA": 0.958,
+     "unionB": 1.02,
+     "startsA": 5,
+     "startsB": 4,
+     "deferred": 4,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 61.31,
+      "FR": 53.58,
+      "RL": 34.04,
+      "RR": 45.98
+     },
+     "B": {
+      "FL": 55.04,
+      "FR": 61.0,
+      "RL": 40.52,
+      "RR": 37.04
+     }
+    },
+    "0.50": {
+     "wc": 2.158,
+     "MA": 26.091,
+     "MB": 20.744,
+     "readyA": 26.1,
+     "readyB": 25.8,
+     "unionA": 1.007,
+     "unionB": 1.075,
+     "startsA": 5,
+     "startsB": 4,
+     "deferred": 5,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 59.14,
+      "FR": 56.7,
+      "RL": 35.51,
+      "RR": 41.62
+     },
+     "B": {
+      "FL": 47.98,
+      "FR": 65.67,
+      "RL": 46.5,
+      "RR": 30.16
+     }
+    },
+    "0.70": {
+     "wc": 2.158,
+     "MA": 26.105,
+     "MB": 20.679,
+     "readyA": 26.1,
+     "readyB": 25.8,
+     "unionA": 1.01,
+     "unionB": 1.075,
+     "startsA": 5,
+     "startsB": 4,
+     "deferred": 5,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 59.06,
+      "FR": 56.7,
+      "RL": 35.52,
+      "RR": 41.56
+     },
+     "B": {
+      "FL": 47.9,
+      "FR": 65.69,
+      "RL": 46.51,
+      "RR": 30.09
+     }
+    }
+   },
+   "same_cmd_phases": 0,
+   "deferred_range": [
+    4,
+    5
+   ],
+   "t_ev_same_all": true,
+   "sep": {
+    "FL": {
+     "median": -8.182,
+     "min": -16.445,
+     "max": -5.013,
+     "S_A": 10.74,
+     "n_same_sign": 11,
+     "separated": true
+    },
+    "FR": {
+     "median": 7.508,
+     "min": 6.636,
+     "max": 10.423,
+     "S_A": 6.205,
+     "n_same_sign": 11,
+     "separated": true
+    },
+    "RL": {
+     "median": 8.292,
+     "min": 5.797,
+     "max": 16.416,
+     "S_A": 9.761,
+     "n_same_sign": 11,
+     "separated": true
+    },
+    "RR": {
+     "median": -9.126,
+     "min": -13.367,
+     "max": -8.205,
+     "S_A": 8.131,
+     "n_same_sign": 11,
+     "separated": true
+    },
+    "M": {
+     "median": 1.588,
+     "min": -7.219,
+     "max": 8.439,
+     "S_A": 9.761,
+     "n_same_sign": 6,
+     "separated": false
+    },
+    "ready": {
+     "median": -3.0,
+     "min": -3.8,
+     "max": 0.0,
+     "S_A": 3.77,
+     "n_same_sign": 10,
+     "separated": true
+    },
+    "union": {
+     "median": 0.065,
+     "min": 0.049,
+     "max": 0.071,
+     "S_A": 0.12,
+     "n_same_sign": 11,
+     "separated": true
+    }
+   },
+   "worst": {
+    "MA": 18.452,
+    "MB": 20.671,
+    "MA_d": 0.03,
+    "MB_d": 0.1,
+    "RR_below_Fmin": {
+     "A": 0,
+     "B": 0
+    },
+    "RR_below_Fmin5": {
+     "A": 0,
+     "B": 0
+    },
+    "RR_range": {
+     "A": [
+      38.81,
+      46.94
+     ],
+     "B": [
+      30.09,
+      37.19
+     ]
+    },
+    "RL_range": {
+     "A": [
+      27.87,
+      37.63
+     ],
+     "B": [
+      40.35,
+      46.51
+     ]
+    },
+    "ready_range": {
+     "A": [
+      24.41,
+      28.18
+     ],
+     "B": [
+      24.35,
+      25.8
+     ]
+    },
+    "union_max": {
+     "A": 1.047,
+     "B": 1.104
+    },
+    "fail_A": 0,
+    "fail_B": 0,
+    "pass_to_fail": [],
+    "fail_to_pass": [],
+    "fault_B": 0,
+    "fault_A": 0,
+    "crawler_B": 0,
+    "crawler_A": 0,
+    "starts": {
+     "A": [
+      5,
+      5
+     ],
+     "B": [
+      4,
+      4
+     ]
+    }
+   },
+   "estimate": {
+    "g": {
+     "FL": 1.101,
+     "FR": 1.581,
+     "RL": 1.598,
+     "RR": 1.151
+    },
+    "g_t": 1.4,
+    "anchor_delta": 0.0,
+    "chrono_common_A": {
+     "FL": 51.18,
+     "FR": 30.12,
+     "RL": 9.67,
+     "RR": 29.01
+    },
+    "chrono_common_B": {
+     "FL": 38.93,
+     "FR": 44.36,
+     "RL": 27.26,
+     "RR": 15.84
+    },
+    "MA_min": -7.383,
+    "MB_min": 5.095,
+    "MB_d": 0.06,
+    "n_below_B": 0,
+    "n_below_A": 8,
+    "below_rows": [],
+    "RR_B_min": 15.76,
+    "RR_A_min": 26.22,
+    "n_RR_below_B": 0,
+    "n_RR_below_A": 0,
+    "ready_B_max_s": 30.6,
+    "ready_loop_B_max_s": 58.9,
+    "phases": {
+     "0.00": {
+      "MA": 0.26,
+      "MB": 6.43,
+      "RR_A": 29.01,
+      "RR_B": 15.84,
+      "ready_B": 30.6
+     },
+     "0.01": {
+      "MA": -0.05,
+      "MB": 8.24,
+      "RR_A": 29.09,
+      "RR_B": 19.13,
+      "ready_B": 29.19
+     },
+     "0.02": {
+      "MA": -7.1,
+      "MB": 9.31,
+      "RR_A": 34.24,
+      "RR_B": 18.85,
+      "ready_B": 29.18
+     },
+     "0.03": {
+      "MA": -7.38,
+      "MB": 5.85,
+      "RR_A": 34.35,
+      "RR_B": 22.11,
+      "ready_B": 29.17
+     },
+     "0.04": {
+      "MA": -0.94,
+      "MB": 5.54,
+      "RR_A": 33.21,
+      "RR_B": 22.7,
+      "ready_B": 29.16
+     },
+     "0.05": {
+      "MA": -1.2,
+      "MB": 5.28,
+      "RR_A": 33.32,
+      "RR_B": 23.03,
+      "ready_B": 29.15
+     },
+     "0.06": {
+      "MA": -1.46,
+      "MB": 5.1,
+      "RR_A": 33.4,
+      "RR_B": 23.27,
+      "ready_B": 29.24
+     },
+     "0.07": {
+      "MA": 1.39,
+      "MB": 7.18,
+      "RR_A": 30.46,
+      "RR_B": 21.01,
+      "ready_B": 29.23
+     },
+     "0.08": {
+      "MA": -1.69,
+      "MB": 6.95,
+      "RR_A": 33.23,
+      "RR_B": 20.94,
+      "ready_B": 29.22
+     },
+     "0.09": {
+      "MA": 2.38,
+      "MB": 7.14,
+      "RR_A": 26.22,
+      "RR_B": 16.55,
+      "ready_B": 29.21
+     },
+     "0.10": {
+      "MA": 0.24,
+      "MB": 6.35,
+      "RR_A": 28.97,
+      "RR_B": 15.76,
+      "ready_B": 30.6
+     },
+     "0.20": {
+      "MA": 0.25,
+      "MB": 6.37,
+      "RR_A": 28.99,
+      "RR_B": 15.79,
+      "ready_B": 30.6
+     },
+     "0.35": {
+      "MA": -1.21,
+      "MB": 5.27,
+      "RR_A": 33.4,
+      "RR_B": 23.1,
+      "ready_B": 29.15
+     },
+     "0.50": {
+      "MA": 0.26,
+      "MB": 6.42,
+      "RR_A": 29.03,
+      "RR_B": 15.83,
+      "ready_B": 30.6
+     },
+     "0.70": {
+      "MA": 0.27,
+      "MB": 6.36,
+      "RR_A": 28.97,
+      "RR_B": 15.77,
+      "ready_B": 30.6
+     }
+    }
+   },
+   "forced": {
+    "hold": {
+     "twist_load_estimate_N": 5169.074268280452,
+     "target_m": -0.00022766057660532585,
+     "start_t_s": 19.899999999998972,
+     "end_t_s": 21.499999999995243,
+     "end_reason": "time",
+     "end_error_m": 6.811660680854331e-06
+    },
+    "D_pre_A_Af": [
+     1.179,
+     -2.127
+    ],
+    "F_pre_A_Af": [
+     [
+      118.462,
+      115.754,
+      71.895,
+      70.366
+     ],
+     [
+      117.689,
+      116.532,
+      72.771,
+      69.487
+     ]
+    ],
+    "compare": {
+     "M": {
+      "hold_share_median": 1.061,
+      "hold_share_range": [
+       -1.749,
+       7.791
+      ],
+      "K1_forced_median": -1.439,
+      "K1_plain_median": 1.588,
+      "K1_diff": -3.026,
+      "S_half": 4.881,
+      "unchanged": true
+     },
+     "RL": {
+      "hold_share_median": 1.069,
+      "hold_share_range": [
+       -1.749,
+       7.791
+      ],
+      "K1_forced_median": 8.252,
+      "K1_plain_median": 8.292,
+      "K1_diff": -0.04,
+      "S_half": 4.881,
+      "unchanged": true
+     },
+     "RR": {
+      "hold_share_median": -1.416,
+      "hold_share_range": [
+       -2.785,
+       2.219
+      ],
+      "K1_forced_median": -9.282,
+      "K1_plain_median": -9.126,
+      "K1_diff": -0.156,
+      "S_half": 4.065,
+      "unchanged": true
+     },
+     "FL": {
+      "hold_share_median": -1.116,
+      "hold_share_range": [
+       -8.141,
+       1.971
+      ],
+      "K1_forced_median": -7.99,
+      "K1_plain_median": -8.182,
+      "K1_diff": 0.192,
+      "S_half": 5.37,
+      "unchanged": true
+     },
+     "ready": {
+      "hold_share_median": -0.6,
+      "hold_share_range": [
+       -1.4,
+       0.7
+      ],
+      "K1_forced_median": -2.4,
+      "K1_plain_median": -3.0,
+      "K1_diff": 0.6,
+      "S_half": 1.885,
+      "unchanged": true
+     }
+    },
+    "worst": {
+     "MA": 19.713,
+     "MB": 19.7,
+     "RR_below_A": 0,
+     "RR_below_B": 0
+    },
+    "pass_to_fail": [],
+    "fault_B": 0,
+    "union_max_B": 1.125,
+    "same_cmd": 0
+   }
+  },
+  "FLFs8": {
+   "phases": {
+    "0.00": {
+     "wc": 2.088,
+     "MA": 43.028,
+     "MB": 32.723,
+     "readyA": 24.2,
+     "readyB": 27.7,
+     "unionA": 0.824,
+     "unionB": 0.966,
+     "startsA": 4,
+     "startsB": 3,
+     "deferred": 3,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 82.92,
+      "FR": 92.24,
+      "RL": 55.99,
+      "RR": 52.44
+     },
+     "B": {
+      "FL": 73.32,
+      "FR": 101.16,
+      "RL": 65.48,
+      "RR": 42.14
+     }
+    },
+    "0.01": {
+     "wc": 2.084,
+     "MA": 42.983,
+     "MB": 32.948,
+     "readyA": 24.19,
+     "readyB": 27.69,
+     "unionA": 0.788,
+     "unionB": 0.953,
+     "startsA": 4,
+     "startsB": 3,
+     "deferred": 3,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 83.1,
+      "FR": 92.43,
+      "RL": 56.07,
+      "RR": 52.4
+     },
+     "B": {
+      "FL": 73.69,
+      "FR": 101.27,
+      "RL": 65.48,
+      "RR": 42.36
+     }
+    },
+    "0.02": {
+     "wc": 2.064,
+     "MA": 40.991,
+     "MB": 35.463,
+     "readyA": 24.18,
+     "readyB": 26.88,
+     "unionA": 0.791,
+     "unionB": 0.914,
+     "startsA": 3,
+     "startsB": 3,
+     "deferred": 2,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 81.64,
+      "FR": 94.67,
+      "RL": 58.39,
+      "RR": 50.41
+     },
+     "B": {
+      "FL": 75.89,
+      "FR": 99.01,
+      "RL": 63.83,
+      "RR": 44.88
+     }
+    },
+    "0.03": {
+     "wc": 2.058,
+     "MA": 40.961,
+     "MB": 35.684,
+     "readyA": 24.17,
+     "readyB": 26.87,
+     "unionA": 0.777,
+     "unionB": 0.9,
+     "startsA": 3,
+     "startsB": 3,
+     "deferred": 2,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 81.86,
+      "FR": 94.87,
+      "RL": 58.46,
+      "RR": 50.38
+     },
+     "B": {
+      "FL": 76.26,
+      "FR": 99.14,
+      "RL": 63.85,
+      "RR": 45.1
+     }
+    },
+    "0.04": {
+     "wc": 2.052,
+     "MA": 40.911,
+     "MB": 35.86,
+     "readyA": 24.16,
+     "readyB": 26.86,
+     "unionA": 0.772,
+     "unionB": 0.888,
+     "startsA": 3,
+     "startsB": 3,
+     "deferred": 2,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 82.05,
+      "FR": 95.09,
+      "RL": 58.55,
+      "RR": 50.33
+     },
+     "B": {
+      "FL": 76.62,
+      "FR": 99.28,
+      "RL": 63.86,
+      "RR": 45.27
+     }
+    },
+    "0.05": {
+     "wc": 2.046,
+     "MA": 40.859,
+     "MB": 38.892,
+     "readyA": 24.15,
+     "readyB": 24.85,
+     "unionA": 0.768,
+     "unionB": 0.874,
+     "startsA": 3,
+     "startsB": 3,
+     "deferred": 2,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 82.23,
+      "FR": 95.32,
+      "RL": 58.63,
+      "RR": 50.27
+     },
+     "B": {
+      "FL": 79.54,
+      "FR": 96.38,
+      "RL": 60.49,
+      "RR": 48.31
+     }
+    },
+    "0.06": {
+     "wc": 2.039,
+     "MA": 40.803,
+     "MB": 39.068,
+     "readyA": 24.14,
+     "readyB": 24.84,
+     "unionA": 0.762,
+     "unionB": 0.859,
+     "startsA": 3,
+     "startsB": 3,
+     "deferred": 3,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 82.41,
+      "FR": 95.54,
+      "RL": 58.71,
+      "RR": 50.22
+     },
+     "B": {
+      "FL": 79.95,
+      "FR": 96.56,
+      "RL": 60.49,
+      "RR": 48.48
+     }
+    },
+    "0.07": {
+     "wc": 2.03,
+     "MA": 42.61,
+     "MB": 39.233,
+     "readyA": 24.13,
+     "readyB": 24.83,
+     "unionA": 0.757,
+     "unionB": 0.841,
+     "startsA": 4,
+     "startsB": 3,
+     "deferred": 3,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 84.11,
+      "FR": 93.78,
+      "RL": 56.67,
+      "RR": 52.02
+     },
+     "B": {
+      "FL": 80.38,
+      "FR": 96.72,
+      "RL": 60.47,
+      "RR": 48.65
+     }
+    },
+    "0.08": {
+     "wc": 2.02,
+     "MA": 42.604,
+     "MB": 36.724,
+     "readyA": 24.12,
+     "readyB": 26.32,
+     "unionA": 0.748,
+     "unionB": 0.819,
+     "startsA": 4,
+     "startsB": 3,
+     "deferred": 3,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 84.33,
+      "FR": 93.99,
+      "RL": 56.76,
+      "RR": 52.02
+     },
+     "B": {
+      "FL": 78.19,
+      "FR": 99.33,
+      "RL": 63.38,
+      "RR": 46.14
+     }
+    },
+    "0.09": {
+     "wc": 2.091,
+     "MA": 43.069,
+     "MB": 32.544,
+     "readyA": 24.11,
+     "readyB": 27.71,
+     "unionA": 0.848,
+     "unionB": 0.973,
+     "startsA": 4,
+     "startsB": 3,
+     "deferred": 3,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 82.78,
+      "FR": 92.07,
+      "RL": 55.93,
+      "RR": 52.48
+     },
+     "B": {
+      "FL": 73.07,
+      "FR": 101.09,
+      "RL": 65.48,
+      "RR": 41.96
+     }
+    },
+    "0.10": {
+     "wc": 2.088,
+     "MA": 43.021,
+     "MB": 32.726,
+     "readyA": 24.2,
+     "readyB": 27.7,
+     "unionA": 0.822,
+     "unionB": 0.964,
+     "startsA": 4,
+     "startsB": 3,
+     "deferred": 3,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 82.94,
+      "FR": 92.23,
+      "RL": 55.99,
+      "RR": 52.44
+     },
+     "B": {
+      "FL": 73.35,
+      "FR": 101.16,
+      "RL": 65.48,
+      "RR": 42.14
+     }
+    },
+    "0.20": {
+     "wc": 2.088,
+     "MA": 43.003,
+     "MB": 32.704,
+     "readyA": 24.2,
+     "readyB": 27.7,
+     "unionA": 0.823,
+     "unionB": 0.965,
+     "startsA": 4,
+     "startsB": 3,
+     "deferred": 3,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 82.93,
+      "FR": 92.22,
+      "RL": 55.99,
+      "RR": 52.42
+     },
+     "B": {
+      "FL": 73.36,
+      "FR": 101.16,
+      "RL": 65.48,
+      "RR": 42.12
+     }
+    },
+    "0.35": {
+     "wc": 2.047,
+     "MA": 40.82,
+     "MB": 38.831,
+     "readyA": 24.15,
+     "readyB": 24.85,
+     "unionA": 0.768,
+     "unionB": 0.876,
+     "startsA": 3,
+     "startsB": 3,
+     "deferred": 2,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 82.23,
+      "FR": 95.25,
+      "RL": 58.6,
+      "RR": 50.23
+     },
+     "B": {
+      "FL": 79.49,
+      "FR": 96.32,
+      "RL": 60.47,
+      "RR": 48.25
+     }
+    },
+    "0.50": {
+     "wc": 2.091,
+     "MA": 42.894,
+     "MB": 32.53,
+     "readyA": 24.2,
+     "readyB": 27.7,
+     "unionA": 0.833,
+     "unionB": 0.971,
+     "startsA": 4,
+     "startsB": 3,
+     "deferred": 3,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 82.77,
+      "FR": 92.14,
+      "RL": 56.0,
+      "RR": 52.31
+     },
+     "B": {
+      "FL": 73.18,
+      "FR": 101.07,
+      "RL": 65.48,
+      "RR": 41.94
+     }
+    },
+    "0.70": {
+     "wc": 2.091,
+     "MA": 42.873,
+     "MB": 32.525,
+     "readyA": 24.2,
+     "readyB": 27.7,
+     "unionA": 0.834,
+     "unionB": 0.97,
+     "startsA": 4,
+     "startsB": 3,
+     "deferred": 3,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 82.77,
+      "FR": 92.12,
+      "RL": 56.0,
+      "RR": 52.29
+     },
+     "B": {
+      "FL": 73.2,
+      "FR": 101.05,
+      "RL": 65.47,
+      "RR": 41.94
+     }
+    }
+   },
+   "same_cmd_phases": 0,
+   "deferred_range": [
+    2,
+    3
+   ],
+   "t_ev_same_all": true,
+   "sep": {
+    "FL": {
+     "median": -5.753,
+     "min": -9.705,
+     "max": -2.461,
+     "S_A": 2.688,
+     "n_same_sign": 11,
+     "separated": true
+    },
+    "FR": {
+     "median": 4.344,
+     "min": 1.013,
+     "max": 9.019,
+     "S_A": 3.474,
+     "n_same_sign": 11,
+     "separated": true
+    },
+    "RL": {
+     "median": 5.437,
+     "min": 1.78,
+     "max": 9.55,
+     "S_A": 2.784,
+     "n_same_sign": 11,
+     "separated": true
+    },
+    "RR": {
+     "median": -5.528,
+     "min": -10.525,
+     "max": -1.735,
+     "S_A": 2.266,
+     "n_same_sign": 11,
+     "separated": true
+    },
+    "M": {
+     "median": -5.528,
+     "min": -10.525,
+     "max": -1.735,
+     "S_A": 2.266,
+     "n_same_sign": 11,
+     "separated": true
+    },
+    "ready": {
+     "median": 2.7,
+     "min": 0.7,
+     "max": 3.6,
+     "S_A": 0.09,
+     "n_same_sign": 11,
+     "separated": true
+    },
+    "union": {
+     "median": 0.123,
+     "min": 0.071,
+     "max": 0.165,
+     "S_A": 0.1,
+     "n_same_sign": 11,
+     "separated": true
+    }
+   },
+   "worst": {
+    "MA": 40.803,
+    "MB": 32.525,
+    "MA_d": 0.06,
+    "MB_d": 0.7,
+    "RR_below_Fmin": {
+     "A": 0,
+     "B": 0
+    },
+    "RR_below_Fmin5": {
+     "A": 0,
+     "B": 0
+    },
+    "RR_range": {
+     "A": [
+      50.22,
+      52.48
+     ],
+     "B": [
+      41.94,
+      48.65
+     ]
+    },
+    "RL_range": {
+     "A": [
+      55.93,
+      58.71
+     ],
+     "B": [
+      60.47,
+      65.48
+     ]
+    },
+    "ready_range": {
+     "A": [
+      24.11,
+      24.2
+     ],
+     "B": [
+      24.83,
+      27.71
+     ]
+    },
+    "union_max": {
+     "A": 0.848,
+     "B": 0.973
+    },
+    "fail_A": 0,
+    "fail_B": 0,
+    "pass_to_fail": [],
+    "fail_to_pass": [],
+    "fault_B": 0,
+    "fault_A": 0,
+    "crawler_B": 0,
+    "crawler_A": 0,
+    "starts": {
+     "A": [
+      3,
+      4
+     ],
+     "B": [
+      3,
+      3
+     ]
+    }
+   },
+   "estimate": {
+    "g": {
+     "FL": 4.894,
+     "FR": 2.259,
+     "RL": 7.772,
+     "RR": 1.825
+    },
+    "g_t": 3.143,
+    "anchor_delta": 0.05,
+    "chrono_common_A": {
+     "FL": 75.34,
+     "FR": 64.96,
+     "RL": 37.12,
+     "RR": 18.23
+    },
+    "chrono_common_B": {
+     "FL": 62.19,
+     "FR": 67.37,
+     "RL": 51.59,
+     "RR": 14.64
+    },
+    "MA_min": 8.759,
+    "MB_min": -8.188,
+    "MB_d": 0.09,
+    "n_below_B": 11,
+    "n_below_A": 0,
+    "below_rows": [
+     {
+      "delta": 0.0,
+      "MB": -7.83,
+      "MA": 10.98,
+      "A_min_ok": true
+     },
+     {
+      "delta": 0.01,
+      "MB": -7.38,
+      "MA": 10.94,
+      "A_min_ok": true
+     },
+     {
+      "delta": 0.02,
+      "MB": -1.14,
+      "MA": 8.95,
+      "A_min_ok": true
+     },
+     {
+      "delta": 0.03,
+      "MB": -0.72,
+      "MA": 8.92,
+      "A_min_ok": true
+     },
+     {
+      "delta": 0.04,
+      "MB": -0.35,
+      "MA": 8.87,
+      "A_min_ok": true
+     },
+     {
+      "delta": 0.08,
+      "MB": -0.17,
+      "MA": 10.56,
+      "A_min_ok": true
+     },
+     {
+      "delta": 0.09,
+      "MB": -8.19,
+      "MA": 11.03,
+      "A_min_ok": true
+     },
+     {
+      "delta": 0.1,
+      "MB": -7.82,
+      "MA": 10.98,
+      "A_min_ok": true
+     },
+     {
+      "delta": 0.2,
+      "MB": -7.84,
+      "MA": 10.96,
+      "A_min_ok": true
+     },
+     {
+      "delta": 0.5,
+      "MB": -8.07,
+      "MA": 10.85,
+      "A_min_ok": true
+     },
+     {
+      "delta": 0.7,
+      "MB": -8.06,
+      "MA": 10.83,
+      "A_min_ok": true
+     }
+    ],
+    "RR_B_min": 1.23,
+    "RR_A_min": 18.17,
+    "n_RR_below_B": 11,
+    "n_RR_below_A": 0,
+    "ready_B_max_s": 37.92,
+    "ready_loop_B_max_s": 66.17,
+    "phases": {
+     "0.00": {
+      "MA": 10.98,
+      "MB": -7.83,
+      "RR_A": 20.4,
+      "RR_B": 1.59,
+      "ready_B": 37.7
+     },
+     "0.01": {
+      "MA": 10.94,
+      "MB": -7.38,
+      "RR_A": 20.35,
+      "RR_B": 2.04,
+      "ready_B": 37.69
+     },
+     "0.02": {
+      "MA": 8.95,
+      "MB": -1.14,
+      "RR_A": 18.36,
+      "RR_B": 8.27,
+      "ready_B": 35.17
+     },
+     "0.03": {
+      "MA": 8.92,
+      "MB": -0.72,
+      "RR_A": 18.33,
+      "RR_B": 8.7,
+      "ready_B": 35.16
+     },
+     "0.04": {
+      "MA": 8.87,
+      "MB": -0.35,
+      "RR_A": 18.28,
+      "RR_B": 9.06,
+      "ready_B": 35.15
+     },
+     "0.05": {
+      "MA": 8.82,
+      "MB": 5.23,
+      "RR_A": 18.23,
+      "RR_B": 14.64,
+      "ready_B": 28.85
+     },
+     "0.06": {
+      "MA": 8.76,
+      "MB": 5.59,
+      "RR_A": 18.17,
+      "RR_B": 15.01,
+      "ready_B": 28.84
+     },
+     "0.07": {
+      "MA": 10.57,
+      "MB": 4.4,
+      "RR_A": 19.98,
+      "RR_B": 13.82,
+      "ready_B": 28.83
+     },
+     "0.08": {
+      "MA": 10.56,
+      "MB": -0.17,
+      "RR_A": 19.97,
+      "RR_B": 9.24,
+      "ready_B": 33.53
+     },
+     "0.09": {
+      "MA": 11.03,
+      "MB": -8.19,
+      "RR_A": 20.44,
+      "RR_B": 1.23,
+      "ready_B": 37.92
+     },
+     "0.10": {
+      "MA": 10.98,
+      "MB": -7.82,
+      "RR_A": 20.39,
+      "RR_B": 1.6,
+      "ready_B": 37.7
+     },
+     "0.20": {
+      "MA": 10.96,
+      "MB": -7.84,
+      "RR_A": 20.37,
+      "RR_B": 1.57,
+      "ready_B": 37.7
+     },
+     "0.35": {
+      "MA": 8.78,
+      "MB": 5.15,
+      "RR_A": 18.19,
+      "RR_B": 14.56,
+      "ready_B": 28.85
+     },
+     "0.50": {
+      "MA": 10.85,
+      "MB": -8.07,
+      "RR_A": 20.26,
+      "RR_B": 1.35,
+      "ready_B": 37.7
+     },
+     "0.70": {
+      "MA": 10.83,
+      "MB": -8.06,
+      "RR_A": 20.24,
+      "RR_B": 1.35,
+      "ready_B": 37.7
+     }
+    }
+   }
+  },
+  "RRFs0": {
+   "phases": {
+    "0.00": {
+     "wc": 1.22,
+     "MA": 20.444,
+     "MB": 18.077,
+     "readyA": 28.1,
+     "readyB": 28.2,
+     "unionA": 0.304,
+     "unionB": 0.304,
+     "startsA": 2,
+     "startsB": 2,
+     "deferred": 1,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 56.04,
+      "FR": 104.7,
+      "RL": 64.05,
+      "RR": 29.86
+     },
+     "B": {
+      "FL": 54.04,
+      "FR": 106.45,
+      "RL": 65.86,
+      "RR": 27.49
+     }
+    },
+    "0.01": {
+     "wc": 1.218,
+     "MA": 38.263,
+     "MB": 38.263,
+     "readyA": 23.89,
+     "readyB": 23.89,
+     "unionA": 0.301,
+     "unionB": 0.301,
+     "startsA": 1,
+     "startsB": 1,
+     "deferred": 0,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": true,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 70.69,
+      "FR": 95.8,
+      "RL": 54.56,
+      "RR": 47.68
+     },
+     "B": {
+      "FL": 70.69,
+      "FR": 95.8,
+      "RL": 54.56,
+      "RR": 47.68
+     }
+    },
+    "0.02": {
+     "wc": 1.217,
+     "MA": 38.26,
+     "MB": 38.26,
+     "readyA": 23.98,
+     "readyB": 23.98,
+     "unionA": 0.298,
+     "unionB": 0.298,
+     "startsA": 1,
+     "startsB": 1,
+     "deferred": 0,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": true,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 70.85,
+      "FR": 95.89,
+      "RL": 54.72,
+      "RR": 47.67
+     },
+     "B": {
+      "FL": 70.85,
+      "FR": 95.89,
+      "RL": 54.72,
+      "RR": 47.67
+     }
+    },
+    "0.03": {
+     "wc": 1.215,
+     "MA": 38.227,
+     "MB": 38.227,
+     "readyA": 23.97,
+     "readyB": 23.97,
+     "unionA": 0.295,
+     "unionB": 0.295,
+     "startsA": 1,
+     "startsB": 1,
+     "deferred": 0,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": true,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 70.76,
+      "FR": 95.96,
+      "RL": 54.87,
+      "RR": 47.64
+     },
+     "B": {
+      "FL": 70.76,
+      "FR": 95.96,
+      "RL": 54.87,
+      "RR": 47.64
+     }
+    },
+    "0.04": {
+     "wc": 1.213,
+     "MA": 40.332,
+     "MB": 40.332,
+     "readyA": 23.86,
+     "readyB": 23.86,
+     "unionA": 0.291,
+     "unionB": 0.291,
+     "startsA": 1,
+     "startsB": 1,
+     "deferred": 0,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": true,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 70.68,
+      "FR": 91.61,
+      "RL": 49.75,
+      "RR": 51.68
+     },
+     "B": {
+      "FL": 70.68,
+      "FR": 91.61,
+      "RL": 49.75,
+      "RR": 51.68
+     }
+    },
+    "0.05": {
+     "wc": 1.212,
+     "MA": 40.507,
+     "MB": 40.507,
+     "readyA": 23.85,
+     "readyB": 23.85,
+     "unionA": 0.289,
+     "unionB": 0.289,
+     "startsA": 1,
+     "startsB": 1,
+     "deferred": 0,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": true,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 70.8,
+      "FR": 91.7,
+      "RL": 49.92,
+      "RR": 51.78
+     },
+     "B": {
+      "FL": 70.8,
+      "FR": 91.7,
+      "RL": 49.92,
+      "RR": 51.78
+     }
+    },
+    "0.06": {
+     "wc": 1.21,
+     "MA": 40.673,
+     "MB": 40.673,
+     "readyA": 23.94,
+     "readyB": 23.94,
+     "unionA": 0.285,
+     "unionB": 0.285,
+     "startsA": 1,
+     "startsB": 1,
+     "deferred": 0,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": true,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 70.71,
+      "FR": 91.79,
+      "RL": 50.09,
+      "RR": 51.84
+     },
+     "B": {
+      "FL": 70.71,
+      "FR": 91.79,
+      "RL": 50.09,
+      "RR": 51.84
+     }
+    },
+    "0.07": {
+     "wc": 1.209,
+     "MA": 40.832,
+     "MB": 40.832,
+     "readyA": 23.93,
+     "readyB": 23.93,
+     "unionA": 0.284,
+     "unionB": 0.284,
+     "startsA": 1,
+     "startsB": 1,
+     "deferred": 0,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": true,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 71.02,
+      "FR": 91.87,
+      "RL": 50.25,
+      "RR": 51.86
+     },
+     "B": {
+      "FL": 71.02,
+      "FR": 91.87,
+      "RL": 50.25,
+      "RR": 51.86
+     }
+    },
+    "0.08": {
+     "wc": 1.208,
+     "MA": 23.295,
+     "MB": 6.167,
+     "readyA": 27.42,
+     "readyB": 28.82,
+     "unionA": 0.282,
+     "unionB": 0.282,
+     "startsA": 2,
+     "startsB": 2,
+     "deferred": 3,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 57.37,
+      "FR": 103.86,
+      "RL": 63.36,
+      "RR": 32.71
+     },
+     "B": {
+      "FL": 46.5,
+      "FR": 109.28,
+      "RL": 66.41,
+      "RR": 15.58
+     }
+    },
+    "0.09": {
+     "wc": 1.222,
+     "MA": 38.239,
+     "MB": 38.239,
+     "readyA": 23.91,
+     "readyB": 23.91,
+     "unionA": 0.307,
+     "unionB": 0.307,
+     "startsA": 1,
+     "startsB": 1,
+     "deferred": 0,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": true,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 70.85,
+      "FR": 95.6,
+      "RL": 54.2,
+      "RR": 47.65
+     },
+     "B": {
+      "FL": 70.85,
+      "FR": 95.6,
+      "RL": 54.2,
+      "RR": 47.65
+     }
+    },
+    "0.10": {
+     "wc": 1.22,
+     "MA": 20.496,
+     "MB": 18.115,
+     "readyA": 28.1,
+     "readyB": 28.2,
+     "unionA": 0.303,
+     "unionB": 0.303,
+     "startsA": 2,
+     "startsB": 2,
+     "deferred": 1,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 56.02,
+      "FR": 104.7,
+      "RL": 64.07,
+      "RR": 29.91
+     },
+     "B": {
+      "FL": 54.0,
+      "FR": 106.47,
+      "RL": 65.9,
+      "RR": 27.53
+     }
+    },
+    "0.20": {
+     "wc": 1.22,
+     "MA": 20.523,
+     "MB": 18.153,
+     "readyA": 28.1,
+     "readyB": 28.2,
+     "unionA": 0.304,
+     "unionB": 0.304,
+     "startsA": 2,
+     "startsB": 2,
+     "deferred": 1,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 55.91,
+      "FR": 104.63,
+      "RL": 64.05,
+      "RR": 29.94
+     },
+     "B": {
+      "FL": 53.89,
+      "FR": 106.42,
+      "RL": 65.9,
+      "RR": 27.57
+     }
+    },
+    "0.35": {
+     "wc": 1.212,
+     "MA": 40.454,
+     "MB": 40.454,
+     "readyA": 23.95,
+     "readyB": 23.95,
+     "unionA": 0.288,
+     "unionB": 0.288,
+     "startsA": 1,
+     "startsB": 1,
+     "deferred": 0,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": true,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 70.59,
+      "FR": 91.57,
+      "RL": 49.87,
+      "RR": 51.79
+     },
+     "B": {
+      "FL": 70.59,
+      "FR": 91.57,
+      "RL": 49.87,
+      "RR": 51.79
+     }
+    },
+    "0.50": {
+     "wc": 1.221,
+     "MA": 20.446,
+     "MB": 18.069,
+     "readyA": 28.1,
+     "readyB": 28.2,
+     "unionA": 0.304,
+     "unionB": 0.304,
+     "startsA": 2,
+     "startsB": 2,
+     "deferred": 1,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 56.35,
+      "FR": 104.61,
+      "RL": 64.03,
+      "RR": 29.86
+     },
+     "B": {
+      "FL": 54.32,
+      "FR": 106.38,
+      "RL": 65.87,
+      "RR": 27.48
+     }
+    },
+    "0.70": {
+     "wc": 1.221,
+     "MA": 20.46,
+     "MB": 18.083,
+     "readyA": 28.1,
+     "readyB": 28.2,
+     "unionA": 0.305,
+     "unionB": 0.305,
+     "startsA": 2,
+     "startsB": 2,
+     "deferred": 1,
+     "passA": true,
+     "passB": true,
+     "failB": [],
+     "failA": [],
+     "faultB": 0,
+     "faultA": 0,
+     "finalB": "ready",
+     "same_cmd": false,
+     "crawlerB": 0,
+     "crawlerA": 0,
+     "t_ev_same": true,
+     "firstEvDeltaKn": null,
+     "A": {
+      "FL": 56.43,
+      "FR": 104.69,
+      "RL": 64.05,
+      "RR": 29.87
+     },
+     "B": {
+      "FL": 54.4,
+      "FR": 106.46,
+      "RL": 65.89,
+      "RR": 27.5
+     }
+    }
+   },
+   "same_cmd_phases": 9,
+   "deferred_range": [
+    0,
+    3
+   ],
+   "t_ev_same_all": true,
+   "sep": {
+    "FL": {
+     "median": 0.0,
+     "min": -10.868,
+     "max": 0.0,
+     "S_A": 14.997,
+     "n_same_sign": 3,
+     "separated": false
+    },
+    "FR": {
+     "median": 0.0,
+     "min": 0.0,
+     "max": 5.418,
+     "S_A": 13.088,
+     "n_same_sign": 3,
+     "separated": false
+    },
+    "RL": {
+     "median": 0.0,
+     "min": 0.0,
+     "max": 3.05,
+     "S_A": 14.327,
+     "n_same_sign": 3,
+     "separated": false
+    },
+    "RR": {
+     "median": 0.0,
+     "min": -17.128,
+     "max": 0.0,
+     "S_A": 21.999,
+     "n_same_sign": 3,
+     "separated": false
+    },
+    "M": {
+     "median": 0.0,
+     "min": -17.128,
+     "max": 0.0,
+     "S_A": 20.387,
+     "n_same_sign": 3,
+     "separated": false
+    },
+    "ready": {
+     "median": 0.0,
+     "min": 0.0,
+     "max": 1.4,
+     "S_A": 4.25,
+     "n_same_sign": 3,
+     "separated": false
+    },
+    "union": {
+     "median": 0.0,
+     "min": 0.0,
+     "max": 0.0,
+     "S_A": 0.025,
+     "n_same_sign": 0,
+     "separated": false
+    }
+   },
+   "worst": {
+    "MA": 20.444,
+    "MB": 6.167,
+    "MA_d": 0.0,
+    "MB_d": 0.08,
+    "RR_below_Fmin": {
+     "A": 0,
+     "B": 0
+    },
+    "RR_below_Fmin5": {
+     "A": 0,
+     "B": 0
+    },
+    "RR_range": {
+     "A": [
+      29.86,
+      51.86
+     ],
+     "B": [
+      15.58,
+      51.86
+     ]
+    },
+    "RL_range": {
+     "A": [
+      49.75,
+      64.07
+     ],
+     "B": [
+      49.75,
+      66.41
+     ]
+    },
+    "ready_range": {
+     "A": [
+      23.85,
+      28.1
+     ],
+     "B": [
+      23.85,
+      28.82
+     ]
+    },
+    "union_max": {
+     "A": 0.307,
+     "B": 0.307
+    },
+    "fail_A": 0,
+    "fail_B": 0,
+    "pass_to_fail": [],
+    "fail_to_pass": [],
+    "fault_B": 0,
+    "fault_A": 0,
+    "crawler_B": 0,
+    "crawler_A": 0,
+    "starts": {
+     "A": [
+      1,
+      2
+     ],
+     "B": [
+      1,
+      2
+     ]
+    }
+   },
+   "estimate": {
+    "g": {
+     "FL": 4.855,
+     "FR": 3.409,
+     "RL": 5.361,
+     "RR": 4.706
+    },
+    "g_t": 12.8,
+    "anchor_delta": 0.0,
+    "chrono_common_A": {
+     "FL": 42.44,
+     "FR": 88.35,
+     "RL": 43.1,
+     "RR": 21.52
+    },
+    "chrono_common_B": {
+     "FL": 32.72,
+     "FR": 94.3,
+     "RL": 52.82,
+     "RR": 10.38
+    },
+    "MA_min": 12.105,
+    "MB_min": -65.642,
+    "MB_d": 0.08,
+    "n_below_B": 1,
+    "n_below_A": 0,
+    "below_rows": [
+     {
+      "delta": 0.08,
+      "MB": -65.64,
+      "MA": 14.96,
+      "A_min_ok": true
+     }
+    ],
+    "RR_B_min": -56.23,
+    "RR_A_min": 21.52,
+    "n_RR_below_B": 1,
+    "n_RR_below_A": 0,
+    "ready_B_max_s": 46.14,
+    "ready_loop_B_max_s": 74.44,
+    "phases": {
+     "0.00": {
+      "MA": 12.11,
+      "MB": 0.97,
+      "RR_A": 21.52,
+      "RR_B": 10.38,
+      "ready_B": 30.18
+     },
+     "0.01": {
+      "MA": 24.19,
+      "MB": 24.19,
+      "RR_A": 39.34,
+      "RR_B": 39.34,
+      "ready_B": 24.69
+     },
+     "0.02": {
+      "MA": 24.35,
+      "MB": 24.35,
+      "RR_A": 39.34,
+      "RR_B": 39.34,
+      "ready_B": 24.78
+     },
+     "0.03": {
+      "MA": 24.5,
+      "MB": 24.5,
+      "RR_A": 39.3,
+      "RR_B": 39.3,
+      "ready_B": 24.77
+     },
+     "0.04": {
+      "MA": 19.38,
+      "MB": 19.38,
+      "RR_A": 43.34,
+      "RR_B": 43.34,
+      "ready_B": 24.66
+     },
+     "0.05": {
+      "MA": 19.56,
+      "MB": 19.56,
+      "RR_A": 43.44,
+      "RR_B": 43.44,
+      "ready_B": 24.65
+     },
+     "0.06": {
+      "MA": 19.72,
+      "MB": 19.72,
+      "RR_A": 43.5,
+      "RR_B": 43.5,
+      "ready_B": 24.74
+     },
+     "0.07": {
+      "MA": 19.88,
+      "MB": 19.88,
+      "RR_A": 43.52,
+      "RR_B": 43.52,
+      "ready_B": 24.73
+     },
+     "0.08": {
+      "MA": 14.96,
+      "MB": -65.64,
+      "RR_A": 24.37,
+      "RR_B": -56.23,
+      "ready_B": 46.14
+     },
+     "0.09": {
+      "MA": 23.84,
+      "MB": 23.84,
+      "RR_A": 39.31,
+      "RR_B": 39.31,
+      "ready_B": 24.71
+     },
+     "0.10": {
+      "MA": 12.16,
+      "MB": 0.95,
+      "RR_A": 21.57,
+      "RR_B": 10.37,
+      "ready_B": 30.18
+     },
+     "0.20": {
+      "MA": 12.18,
+      "MB": 1.03,
+      "RR_A": 21.6,
+      "RR_B": 10.44,
+      "ready_B": 30.18
+     },
+     "0.35": {
+      "MA": 19.5,
+      "MB": 19.5,
+      "RR_A": 43.45,
+      "RR_B": 43.45,
+      "ready_B": 24.75
+     },
+     "0.50": {
+      "MA": 12.11,
+      "MB": 0.92,
+      "RR_A": 21.52,
+      "RR_B": 10.33,
+      "ready_B": 30.18
+     },
+     "0.70": {
+      "MA": 12.12,
+      "MB": 0.94,
+      "RR_A": 21.54,
+      "RR_B": 10.35,
+      "ready_B": 30.18
+     }
+    }
+   },
+   "forced": {
+    "hold": {
+     "twist_load_estimate_N": 5169.074268280452,
+     "target_m": -0.00022766057660532585,
+     "start_t_s": 19.899999999998972,
+     "end_t_s": 21.499999999995243,
+     "end_reason": "time",
+     "end_error_m": 6.811660680854331e-06
+    },
+    "D_pre_A_Af": [
+     1.179,
+     -2.127
+    ],
+    "F_pre_A_Af": [
+     [
+      118.462,
+      115.754,
+      71.895,
+      70.366
+     ],
+     [
+      117.689,
+      116.532,
+      72.771,
+      69.487
+     ]
+    ],
+    "compare": {
+     "M": {
+      "hold_share_median": -0.453,
+      "hold_share_range": [
+       -0.503,
+       3.035
+      ],
+      "K1_forced_median": 0.0,
+      "K1_plain_median": 0.0,
+      "K1_diff": 0.0,
+      "S_half": 10.194,
+      "unchanged": true
+     },
+     "RL": {
+      "hold_share_median": 1.087,
+      "hold_share_range": [
+       -4.193,
+       1.116
+      ],
+      "K1_forced_median": 0.0,
+      "K1_plain_median": 0.0,
+      "K1_diff": 0.0,
+      "S_half": 7.163,
+      "unchanged": true
+     },
+     "RR": {
+      "hold_share_median": -0.487,
+      "hold_share_range": [
+       -0.503,
+       3.396
+      ],
+      "K1_forced_median": 0.0,
+      "K1_plain_median": 0.0,
+      "K1_diff": 0.0,
+      "S_half": 10.999,
+      "unchanged": true
+     },
+     "FL": {
+      "hold_share_median": -0.789,
+      "hold_share_range": [
+       -1.24,
+       -0.68
+      ],
+      "K1_forced_median": 0.0,
+      "K1_plain_median": 0.0,
+      "K1_diff": 0.0,
+      "S_half": 7.499,
+      "unchanged": true
+     },
+     "ready": {
+      "hold_share_median": 0.0,
+      "hold_share_range": [
+       -0.1,
+       0.1
+      ],
+      "K1_forced_median": 0.0,
+      "K1_plain_median": 0.0,
+      "K1_diff": 0.0,
+      "S_half": 2.125,
+      "unchanged": true
+     }
+    },
+    "worst": {
+     "MA": 19.949,
+     "MB": 5.8,
+     "RR_below_A": 0,
+     "RR_below_B": 0
+    },
+    "pass_to_fail": [],
+    "fault_B": 0,
+    "union_max_B": 0.305,
+    "same_cmd": 10
+   }
+  }
+ },
+ "tests": {
+  "T1": {
+   "pass": true,
+   "detail": {
+    "FLFs0": {
+     "fault_B": 0,
+     "pass_to_fail": [],
+     "fail_A": 0,
+     "fail_B": 0
+    },
+    "FLFs8": {
+     "fault_B": 0,
+     "pass_to_fail": [],
+     "fail_A": 0,
+     "fail_B": 0
+    },
+    "RRFs0": {
+     "fault_B": 0,
+     "pass_to_fail": [],
+     "fail_A": 0,
+     "fail_B": 0
+    }
+   }
+  },
+  "T2": {
+   "pass": true,
+   "detail": {
+    "FLFs0": 20.671,
+    "FLFs8": 32.525,
+    "RRFs0": 6.167
+   }
+  },
+  "T3": {
+   "pass": false,
+   "detail": {
+    "FLFs0": {
+     "MB_min": 5.095,
+     "MA_min": -7.383,
+     "n_below_B": 0,
+     "n_below_A": 8,
+     "below": []
+    },
+    "FLFs8": {
+     "MB_min": -8.188,
+     "MA_min": 8.759,
+     "n_below_B": 11,
+     "n_below_A": 0,
+     "below": [
+      {
+       "delta": 0.0,
+       "MB": -7.83,
+       "MA": 10.98,
+       "A_min_ok": true
+      },
+      {
+       "delta": 0.01,
+       "MB": -7.38,
+       "MA": 10.94,
+       "A_min_ok": true
+      },
+      {
+       "delta": 0.02,
+       "MB": -1.14,
+       "MA": 8.95,
+       "A_min_ok": true
+      },
+      {
+       "delta": 0.03,
+       "MB": -0.72,
+       "MA": 8.92,
+       "A_min_ok": true
+      },
+      {
+       "delta": 0.04,
+       "MB": -0.35,
+       "MA": 8.87,
+       "A_min_ok": true
+      },
+      {
+       "delta": 0.08,
+       "MB": -0.17,
+       "MA": 10.56,
+       "A_min_ok": true
+      },
+      {
+       "delta": 0.09,
+       "MB": -8.19,
+       "MA": 11.03,
+       "A_min_ok": true
+      },
+      {
+       "delta": 0.1,
+       "MB": -7.82,
+       "MA": 10.98,
+       "A_min_ok": true
+      },
+      {
+       "delta": 0.2,
+       "MB": -7.84,
+       "MA": 10.96,
+       "A_min_ok": true
+      },
+      {
+       "delta": 0.5,
+       "MB": -8.07,
+       "MA": 10.85,
+       "A_min_ok": true
+      },
+      {
+       "delta": 0.7,
+       "MB": -8.06,
+       "MA": 10.83,
+       "A_min_ok": true
+      }
+     ]
+    },
+    "RRFs0": {
+     "MB_min": -65.642,
+     "MA_min": 12.105,
+     "n_below_B": 1,
+     "n_below_A": 0,
+     "below": [
+      {
+       "delta": 0.08,
+       "MB": -65.64,
+       "MA": 14.96,
+       "A_min_ok": true
+      }
+     ]
+    }
+   }
+  },
+  "T3_A_ok_at_failing_phase": true,
+  "T4": {
+   "pass": false,
+   "rows_B_ge_A": 1,
+   "detail": {
+    "FLFs0": [
+     18.452,
+     20.671
+    ],
+    "FLFs8": [
+     40.803,
+     32.525
+    ],
+    "RRFs0": [
+     20.444,
+     6.167
+    ]
+   }
+  },
+  "T5": {
+   "pass": true,
+   "detail": {
+    "FLFs0": {
+     "A": 0,
+     "B": 0
+    },
+    "FLFs8": {
+     "A": 0,
+     "B": 0
+    },
+    "RRFs0": {
+     "A": 0,
+     "B": 0
+    }
+   }
+  },
+  "T6": {
+   "pass": true,
+   "detail": {
+    "FLFs0": {
+     "A": 1.047,
+     "B": 1.104
+    },
+    "FLFs8": {
+     "A": 0.848,
+     "B": 0.973
+    },
+    "RRFs0": {
+     "A": 0.307,
+     "B": 0.307
+    }
+   }
+  },
+  "T7": {
+   "pass": true,
+   "detail": {
+    "FLFs0": 58.9,
+    "FLFs8": 66.17,
+    "RRFs0": 74.44
+   }
+  },
+  "B1": {
+   "pass": false,
+   "RL_rows": 2,
+   "M_rows": 0
+  },
+  "verdict": "탈락 권고"
+ }
+}

@@ -1,0 +1,101 @@
+"""Write touch_phase/chrono/g8c3/expected_before_run.json from the stored harness and Chrono files, before any run of the batch. Read only otherwise.
+
+Usage: python -I -B -X utf8 write_expected.py
+"""
+from __future__ import annotations
+
+import json
+import statistics
+from pathlib import Path
+
+MAIN = Path(r"C:\workspace\outrigger_control")
+ACC = MAIN / "06_analysis/02_control/touch_phase/acceptance"
+OUT = MAIN / "06_analysis/02_control/touch_phase/chrono/g8c3"
+A3 = MAIN / "07_results/S6/bundleC_g8c76_p28acc_final_G8C3_top_edge_RL_g230_L1R_20261030_233212/G8C3_top_edge_RL_g230"
+KEY29, KEY12 = "|g8|29|slope|rpB|top|4.0|RL|raised|230.0", "|g8|12|slope|edge|top|4.0|RL|raised|230.0"
+
+
+def row(r: dict) -> dict:
+    return {"key": r["key"], "final": r["final"], "stopped": r["final"] == "fault", "FR_max_mm": r["FR"][1], "stroke_max_per_leg_mm": r["FR"], "b_RL_mm": r["bias"][2], "bias_FL_FR_RL_RR_mm": r["bias"], "min_force_after_liftoff_kN": round(r["minF"], 2),
+            "true_clearance_end_mm": r["clear"], "t_ready_s": r["ready"], "t_loc_s": r["t_loc"], "guard": r["guard"], "hold_start_s": r["hold"], "cmd_sha": r["sha"]}
+
+
+def spread(rows: list[dict]) -> dict:
+    fr = [r["FR"][1] for r in rows]
+    return {"seeds": len(rows), "stops": sum(r["final"] == "fault" for r in rows), "FR_min_max_median_mm": [min(fr), max(fr), statistics.median(fr)], "b_RL_min_max_mm": [min(r["bias"][2] for r in rows), max(r["bias"][2] for r in rows)],
+            "min_force_min_max_kN": [round(min(r["minF"] for r in rows), 2), round(max(r["minF"] for r in rows), 2)], "FR_above_670_mm_count": sum(f > 670.0 for f in fr)}
+
+
+def noise_rows(mark: str) -> list[dict]:
+    doc = json.loads((ACC / "noise/r79_L1L2.json").read_text(encoding="utf-8"))
+    items = doc if isinstance(doc, list) else (doc.get("rows") or doc.get("results") or list(doc.values()))
+    items = list(items.values()) if isinstance(items, dict) else items
+    return [d for d in items if isinstance(d, dict) and mark in str(d.get("key", ""))]
+
+
+def noise_view(d: dict) -> dict:
+    b, q = d["base"], d.get("r79") or {}
+    names = [str(e[1]) for e in d.get("events", [])]
+    anchor = next((n for n in names if n.startswith("INFO_LOC_CLEARANCE_ANCHOR")), None)
+    return {"key": d["key"], "final": b.get("final_phase"), "stopped": b.get("final_phase") == "fault", "FR_max_mm": b["stroke_max_run_mm"][1], "stroke_max_per_leg_mm": b["stroke_max_run_mm"], "b_RL_mm": None if anchor is None else float(anchor.split(":")[1].split(",")[2]),
+            "min_force_after_liftoff_kN": round(q.get("min_true_F_after_off_kN"), 2), "min_F_legs_kN": b.get("min_F_after_liftoff_kN"), "true_clearance_end_mm": (b.get("crawler_clearance_end_mm") or {}).get("true"), "t_ready_s": b.get("t_ready"), "cmd_sha": (b.get("cmd_sha256") or b.get("commands_sha256"))[:16],
+            "hold_event": next((n for n in names if "TWIST_HOLD" in n), None), "reapproach_events": [n for n in names if "reappr" in n or "retrig" in n]}
+
+
+def main() -> None:
+    OUT.mkdir(parents=True, exist_ok=True)
+    table = json.loads((ACC / "g8_safe_stop/g8_29_table.json").read_text(encoding="utf-8"))
+    r29 = [r for r in table if KEY29 in r["key"]]
+    off, on = [r for r in r29 if r["tag"] == "off"], [r for r in r29 if r["tag"] == "c4g2"]
+    one = lambda rows: next(r for r in rows if r["key"].startswith("L1|s0"))  # noqa: E731
+    l2off, l2on = [r for r in off if r["key"].startswith("L2|")], [r for r in on if r["key"].startswith("L2|")]
+    both = [noise_view(d) for d in noise_rows(KEY12)]
+    both29 = [noise_view(d) for d in noise_rows(KEY29)]
+    a3 = json.loads((A3 / "result.json").read_text(encoding="utf-8"))
+    a3_events = json.loads((A3 / "controller_events.json").read_text(encoding="utf-8"))
+    doc = {
+        "written_before_run": True,
+        "note": "Harness and stored values and expectations only; no acceptance rule (control-expert judges). Harness seed L1|s0 = error-free sensors, the Chrono runs have ideal leg sensors and IMU grade ideal (A3: grade ideal, seed 12345), so L1|s0 is the row to compare; L2 seeds show the sensor spread a single Chrono run cannot sample.",
+        "code": {"commit": "74032beae72c7e44858e41384bc54c263e724fd3", "c2_sha256": "28482b8d5678c3e1079c9dd89046013bd60cac718e0e8efa195101a36236df67"},
+        "units": "stroke mm, force kN (true cylinder force minimum after the crawler lift-off), time s after the run start, b_RL = applied LOC anchor bias of RL",
+        "rows": {
+            "E1": {"definition": "edge roll 2.2 pitch 1.6 deg, RL g_start 230 mm, top, C4G2 on, K1 off, L1-R plant F_s 0 (A3 conditions)",
+                   "off_pair": "A3 stored run " + A3.parent.name,
+                   "A3_off_chrono": {"FR_max_mm": a3["stroke"]["max_m"][1] * 1e3, "stroke_max_per_leg_mm": [v * 1e3 for v in a3["stroke"]["max_m"]], "true_clearance_end_mm": a3["g8"]["crawler_gap_end_m"]["min"] * 1e3, "h_m": a3["g8"]["h_m"], "g0_m": a3["g8"]["g0_m"], "anchor_event": [e for e in a3_events if "ANCHOR" in e],
+                                     "D8_min_kN_spec_19092": 43.06, "t_ready_s_spec_19092": 57.9},
+                   "harness_on_Fs4_C4G2K1": both[:1] and next((x for x in both if x["key"].endswith("L1|s0" + KEY12)), None),
+                   "harness_on_Fs4_L2_spread": {"FR_mm": [x["FR_max_mm"] for x in both if "#L2" in x["key"]], "stops": sum(x["stopped"] for x in both)},
+                   "F_s_mismatch": "Harness values are F_s 4 kN, this row is F_s 0. No harness C4G2 row at F_s 0 is stored. Stored harness F_s 0 is the older AG2c5 row (rev70/r71_p28acc_harness_Fs0.json): clearance 92.3 mm, RL min 30.37 kN.",
+                   "expected": "A hold event at the TOUCH end; s_motor bit-equal to A3 before it if the thread setting does not matter; RL minimum above the 43.06 kN of A3 (harness direction, F_s differs); FR not near 682.8 mm (harness 644.3 at F_s 4)."},
+            "R2": {"definition": "rpB roll 2.7355 pitch 1.7592 deg (rule value 1.17, outside the operating start rule), RL g_start 230 mm, top, C4G2 off, L2b F_s 4 kN, flow limit off",
+                   "harness_L1_s0_off": row(one(off)), "harness_L2_off_spread": spread(l2off),
+                   "expected": "READY about 66 s without stop; FR on one of two branches about 657 or 682 mm (b_RL about -86 or -61 mm, the t_P sample jump noted in decision_log); RL minimum about 35 kN."},
+            "R3": {"definition": "as R2, C4G2 on, K1 off", "harness_L1_s0_c4g2": row(one(on)), "harness_L2_c4g2_spread": spread(l2on),
+                   "harness_L1_s0_both_on_hash_check": next((x for x in both29 if x["key"].endswith("L1|s0" + KEY29)), None),
+                   "expected": "READY about 66 s or the known safe stop (`WARN_LIFT_STROKE_LIMITED:FR` then FAULT, 5 of 25 harness seeds, 0 of 25 off). FR about 681 to 684 mm: the row is within about 2 mm of the guard, so a Chrono offset of a few mm decides READY or stop by itself. RL minimum about 53 kN."},
+            "R2L1": {"definition": "as R2 on L1-R, plant F_s 0, flow limit off, C4G2 off", "harness_Fs0": None, "harness_Fs0_note": "No harness row of rpB RL g230 at F_s 0 is stored (search of 06_analysis/02_control for slope|rpB|top|0.0|RL|raised|230: 0 matches). The F_s 4 row below is a reference only, it is not this condition.",
+                     "reference_harness_Fs4_L1_s0_off": row(one(off)), "start_check_L1R": {"g0_mm": [339.415, 337.996, 349.229, 347.937], "h_mm": 119.229, "harness_h_mm": 118.805},
+                     "expected": "No numeric expectation at F_s 0. Same compliant crawler type as the harness (h within 0.4 mm), READY or stop not predicted."},
+            "R3L1": {"definition": "as R3 on L1-R, plant F_s 0, flow limit off, C4G2 on, K1 off", "harness_Fs0": None, "harness_Fs0_note": "As R2L1: no stored harness row at F_s 0.",
+                     "reference_harness_Fs4_L1_s0_c4g2": row(one(on)), "start_check_L1R": {"g0_mm": [339.415, 337.996, 349.229, 347.937], "h_mm": 119.229, "harness_h_mm": 118.805},
+                     "expected": "A hold event at the TOUCH end. No numeric expectation at F_s 0; the difference R3L1 minus R2L1 is the same-engine reading, subject to the b_RL branch rule."}},
+        "reading_rules": {"branch": "R2 and R3 differ by the b_RL branch as well as by the hold. The harness off row has both branches; a large FR difference between R2 and R3 is not by itself a C4G2 effect, read b_RL first.",
+                          "engines": "E1, R2L1, R3L1 are L1-R F_s 0; R2, R3 are L2b F_s 4. The pairs R2-R2L1 and R3-R3L1 change the engine, F_s and the crawler model together, so their difference is not an F_s effect alone. Do not compare E1 with R2 or R3.",
+                          "patch": "The L2b raised floor is new in this batch (unscheduled event patch); the block geometry check runs at the start of each L2b row. No stored L2b G8 run exists to compare with.",
+                          "seeds": "The table holds 23 plain L2 seeds per arm (s0 and s3 only under candidate tags), with 5 stops in the C4G2 arm; decision_log counts 25 seeds, 5 stops.",
+                          "start_geometry": {"harness_rpB_g0_mm": [339.738, 338.284, 348.806, 347.482], "harness_rpB_h_mm": 118.805, "harness_settle_roll_pitch_deg": [2.7679, 2.0018],
+                                             "L2b_rpB_g0_mm_start_check": [351.093, 351.094, 340.891, 340.891], "L2b_rpB_h_mm_start_check": 110.891, "L2b_settle_roll_pitch_deg_start_check": [2.7367, 1.7554],
+                                             "reading": "The harness crawler is compliant (body 0.24 deg more nose down than the floor); the L2b crawler is rigid and sits on the floor plane. Same g_start, so h differs by 7.9 mm and the corner clearance at t_P differs. The harness values are not a bit reference for R2, R3: an offset of several mm is expected and its size is not known before the run."}}}
+    (OUT / "expected_before_run.json").write_text(json.dumps(doc, indent=1, ensure_ascii=False, default=str), encoding="utf-8")
+    print(json.dumps(doc["rows"]["E1"]["harness_on_Fs4_C4G2K1"], ensure_ascii=False))
+    print(json.dumps(doc["rows"]["E1"]["harness_on_Fs4_L2_spread"]))
+    print(json.dumps(doc["rows"]["R2"]["harness_L1_s0_off"], ensure_ascii=False)[:500])
+    print(json.dumps(doc["rows"]["R2"]["harness_L2_off_spread"]))
+    print(json.dumps(doc["rows"]["R3"]["harness_L1_s0_c4g2"], ensure_ascii=False)[:500])
+    print(json.dumps(doc["rows"]["R3"]["harness_L2_c4g2_spread"]))
+    print(json.dumps(doc["rows"]["R3"]["harness_L1_s0_both_on_hash_check"], ensure_ascii=False)[:400])
+    print(json.dumps(doc["rows"]["E1"]["A3_off_chrono"], ensure_ascii=False)[:600])
+
+
+if __name__ == "__main__":
+    main()

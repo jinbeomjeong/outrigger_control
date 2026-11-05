@@ -1,0 +1,273 @@
+{
+ "criteria": "acceptance/criteria.md",
+ "self_test": false,
+ "grid": {
+  "parts": [
+   {
+    "name": "grid_r67_main",
+    "n": 192,
+    "failed": 22,
+    "failed_rows": [
+     "('screen|top|0.0|level|FL', 'level', 'RE1bF', 0.0)",
+     "('screen|top|0.0|level|FL', 'level', 'RE1bF', 0.05)",
+     "('screen|top|0.0|level|FL', 'level', 'FS24', 0.0)",
+     "('screen|top|0.0|level|FL', 'level', 'FS24', 0.05)",
+     "('screen|top|0.0|level|FR', 'level', 'RE1bF', 0.0)",
+     "('screen|top|0.0|level|FR', 'level', 'RE1bF', 0.05)",
+     "('screen|top|0.0|level|FR', 'level', 'FS24', 0.0)",
+     "('screen|top|0.0|level|FR', 'level', 'FS24', 0.05)",
+     "('screen|top|8.0|level|FL', 'level', 'RE1bF', 0.0)",
+     "('screen|top|8.0|level|FL', 'level', 'RE1bF', 0.05)",
+     "('screen|top|8.0|level|FR', 'level', 'RE1bF', 0.0)",
+     "('screen|top|8.0|level|FR', 'level', 'RE1bF', 0.05)",
+     "('screen|top|0.0|ready|FL', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|0.0|ready|FL', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|0.0|ready|FL', 'ready', 'FS24', 0.0)",
+     "('screen|top|0.0|ready|FR', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|0.0|ready|FR', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|0.0|ready|FR', 'ready', 'FS24', 0.0)",
+     "('screen|top|8.0|ready|FL', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|8.0|ready|FL', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|8.0|ready|FR', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|8.0|ready|FR', 'ready', 'RE1bF', 0.05)"
+    ],
+    "pass_to_fail": [],
+    "fail_to_pass": [],
+    "unmatched": [],
+    "errors": [],
+    "fault_runs": 0,
+    "same_hash": 192
+   },
+   {
+    "name": "grid_r67_top",
+    "n": 192,
+    "failed": 43,
+    "failed_rows": [
+     "('screen|top|0.0|level|FL', 'level', 'RE1bF', 0.0)",
+     "('screen|top|0.0|level|FL', 'level', 'RE1bF', 0.025)",
+     "('screen|top|0.0|level|FL', 'level', 'RE1bF', 0.05)",
+     "('screen|top|0.0|level|FL', 'level', 'RE1bF', 0.075)",
+     "('screen|top|0.0|level|FL', 'level', 'FS24', 0.0)",
+     "('screen|top|0.0|level|FL', 'level', 'FS24', 0.025)",
+     "('screen|top|0.0|level|FL', 'level', 'FS24', 0.05)",
+     "('screen|top|0.0|level|FL', 'level', 'FS24', 0.075)",
+     "('screen|top|0.0|level|FR', 'level', 'RE1bF', 0.0)",
+     "('screen|top|0.0|level|FR', 'level', 'RE1bF', 0.025)",
+     "('screen|top|0.0|level|FR', 'level', 'RE1bF', 0.05)",
+     "('screen|top|0.0|level|FR', 'level', 'RE1bF', 0.075)",
+     "('screen|top|0.0|level|FR', 'level', 'FS24', 0.0)",
+     "('screen|top|0.0|level|FR', 'level', 'FS24', 0.025)",
+     "('screen|top|0.0|level|FR', 'level', 'FS24', 0.05)",
+     "('screen|top|0.0|level|FR', 'level', 'FS24', 0.075)",
+     "('screen|top|8.0|level|FL', 'level', 'RE1bF', 0.0)",
+     "('screen|top|8.0|level|FL', 'level', 'RE1bF', 0.025)",
+     "('screen|top|8.0|level|FL', 'level', 'RE1bF', 0.05)",
+     "('screen|top|8.0|level|FL', 'level', 'RE1bF', 0.075)",
+     "('screen|top|8.0|level|FR', 'level', 'RE1bF', 0.0)",
+     "('screen|top|8.0|level|FR', 'level', 'RE1bF', 0.025)",
+     "('screen|top|8.0|level|FR', 'level', 'RE1bF', 0.05)",
+     "('screen|top|8.0|level|FR', 'level', 'RE1bF', 0.075)",
+     "('screen|top|0.0|ready|FL', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|0.0|ready|FL', 'ready', 'RE1bF', 0.025)",
+     "('screen|top|0.0|ready|FL', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|0.0|ready|FL', 'ready', 'RE1bF', 0.075)",
+     "('screen|top|0.0|ready|FL', 'ready', 'FS24', 0.0)",
+     "('screen|top|0.0|ready|FL', 'ready', 'FS24', 0.025)",
+     "('screen|top|0.0|ready|FR', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|0.0|ready|FR', 'ready', 'RE1bF', 0.025)",
+     "('screen|top|0.0|ready|FR', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|0.0|ready|FR', 'ready', 'RE1bF', 0.075)",
+     "('screen|top|0.0|ready|FR', 'ready', 'FS24', 0.0)",
+     "('screen|top|8.0|ready|FL', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|8.0|ready|FL', 'ready', 'RE1bF', 0.025)",
+     "('screen|top|8.0|ready|FL', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|8.0|ready|FL', 'ready', 'RE1bF', 0.075)",
+     "('screen|top|8.0|ready|FR', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|8.0|ready|FR', 'ready', 'RE1bF', 0.025)",
+     "('screen|top|8.0|ready|FR', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|8.0|ready|FR', 'ready', 'RE1bF', 0.075)"
+    ],
+    "pass_to_fail": [],
+    "fail_to_pass": [],
+    "unmatched": [],
+    "errors": [],
+    "fault_runs": 0,
+    "same_hash": 192
+   },
+   {
+    "name": "grid_r69_top",
+    "n": 192,
+    "failed": 35,
+    "failed_rows": [
+     "('screen|top|2.0|level|FL', 'level', 'RE1bF', 0.0)",
+     "('screen|top|2.0|level|FL', 'level', 'RE1bF', 0.025)",
+     "('screen|top|2.0|level|FL', 'level', 'RE1bF', 0.05)",
+     "('screen|top|2.0|level|FL', 'level', 'RE1bF', 0.075)",
+     "('screen|top|2.0|level|FL', 'level', 'FS24', 0.0)",
+     "('screen|top|2.0|level|FL', 'level', 'FS24', 0.025)",
+     "('screen|top|2.0|level|FL', 'level', 'FS24', 0.05)",
+     "('screen|top|2.0|level|FR', 'level', 'RE1bF', 0.0)",
+     "('screen|top|2.0|level|FR', 'level', 'RE1bF', 0.025)",
+     "('screen|top|2.0|level|FR', 'level', 'RE1bF', 0.05)",
+     "('screen|top|2.0|level|FR', 'level', 'RE1bF', 0.075)",
+     "('screen|top|4.0|level|FL', 'level', 'RE1bF', 0.0)",
+     "('screen|top|4.0|level|FL', 'level', 'RE1bF', 0.025)",
+     "('screen|top|4.0|level|FL', 'level', 'RE1bF', 0.05)",
+     "('screen|top|4.0|level|FL', 'level', 'RE1bF', 0.075)",
+     "('screen|top|4.0|level|FR', 'level', 'RE1bF', 0.0)",
+     "('screen|top|4.0|level|FR', 'level', 'RE1bF', 0.025)",
+     "('screen|top|4.0|level|FR', 'level', 'RE1bF', 0.05)",
+     "('screen|top|4.0|level|FR', 'level', 'RE1bF', 0.075)",
+     "('screen|top|2.0|ready|FL', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|2.0|ready|FL', 'ready', 'RE1bF', 0.025)",
+     "('screen|top|2.0|ready|FL', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|2.0|ready|FL', 'ready', 'RE1bF', 0.075)",
+     "('screen|top|2.0|ready|FR', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|2.0|ready|FR', 'ready', 'RE1bF', 0.025)",
+     "('screen|top|2.0|ready|FR', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|2.0|ready|FR', 'ready', 'RE1bF', 0.075)",
+     "('screen|top|4.0|ready|FL', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|4.0|ready|FL', 'ready', 'RE1bF', 0.025)",
+     "('screen|top|4.0|ready|FL', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|4.0|ready|FL', 'ready', 'RE1bF', 0.075)",
+     "('screen|top|4.0|ready|FR', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|4.0|ready|FR', 'ready', 'RE1bF', 0.025)",
+     "('screen|top|4.0|ready|FR', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|4.0|ready|FR', 'ready', 'RE1bF', 0.075)"
+    ],
+    "pass_to_fail": [],
+    "fail_to_pass": [],
+    "unmatched": [],
+    "errors": [],
+    "fault_runs": 0,
+    "same_hash": 192
+   },
+   {
+    "name": "grid_r69_bottom",
+    "n": 192,
+    "failed": 0,
+    "failed_rows": [],
+    "pass_to_fail": [],
+    "fail_to_pass": [],
+    "unmatched": [],
+    "errors": [],
+    "fault_runs": 0,
+    "same_hash": 192
+   }
+  ],
+  "n": 768,
+  "accept": true
+ },
+ "soil": {
+  "missing": true
+ },
+ "regression_flat": [
+  {
+   "name": "clip_harness",
+   "missing": true
+  },
+  {
+   "name": "clip_p0",
+   "missing": true
+  },
+  {
+   "name": "clip_x426_C",
+   "missing": true
+  },
+  {
+   "name": "clip_x426_D",
+   "missing": true
+  }
+ ],
+ "regression_A": {
+  "missing": true
+ },
+ "regression_r79_L1L2": {
+  "missing": true
+ },
+ "regression_r79_L3L4": "record only: those keys are also in the noise L3 and L4 steps",
+ "d8": {
+  "missing": true
+ },
+ "crawler": {
+  "missing": true
+ },
+ "noise_L2": {
+  "level": "L2",
+  "failures": 8,
+  "runs": 855,
+  "rate": 0.00935672514619883,
+  "cp95_upper_beta": 0.01681912856388762,
+  "cp95_upper_binom_root": 0.016819128563887637,
+  "accept": true,
+  "unmatched": 0,
+  "errors": 0,
+  "pass_to_fail": [
+   "cand=current#L2|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+   "cand=current#L2|s2|g8|25|slope|rpB|top|4.0|FR|raised|230.0",
+   "cand=current#L2|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0"
+  ],
+  "fail_to_pass": [
+   "cand=current#L2|s0|g6|80|g6r|rigid+J2@FL|top|Fs0",
+   "cand=current#L2|s2|g8|1|slope|edge|top|4.0|FL|raised|140.0",
+   "cand=current#L2|s2|g8|6|slope|edge|top|4.0|FR|raised|170.0",
+   "cand=current#L2|s2|g8|23|slope|rpB|top|4.0|FR|raised|170.0",
+   "cand=current#L2|s3|g6|80|g6r|rigid+J2@FL|top|Fs0",
+   "cand=current#L2|s3|g8|1|slope|edge|top|4.0|FL|raised|140.0"
+  ]
+ },
+ "noise_L3_record": {
+  "L3": {
+   "runs": 501,
+   "failures": 12,
+   "rate": 0.023952095808383235,
+   "cp95_upper": 0.038519118892780056,
+   "cp95_upper_binom_root": 0.03851911889278001,
+   "cp_paths_relerr": 1.2609908721576413e-15,
+   "accepted_le_3pct": false,
+   "fail_rows": {
+    "S-1": 7,
+    "S-2": 0,
+    "S-3": 2,
+    "S-4": 3,
+    "S-5": 0,
+    "S-6": 2
+   },
+   "expected_runs": 501,
+   "previous_pre_R6": {
+    "runs": 501,
+    "failures": 13
+   },
+   "flips_vs_pre_R6": {
+    "pass_to_fail": [
+     "cand=current#L3|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+     "cand=current#L3|s1|g8|30|slope|rpB|top|4.0|RR|raised|140.0",
+     "cand=current#L3|s2|g8|25|slope|rpB|top|4.0|FR|raised|230.0",
+     "cand=current#L3|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0"
+    ],
+    "fail_to_pass": [
+     "cand=current#L3|s0|g6|80|g6r|rigid+J2@FL|top|Fs0",
+     "cand=current#L3|s0|g6|85|g6r|rigid+J2@FR|top|Fs4",
+     "cand=current#L3|s1|g8|19|slope|rpB|top|4.0|FL|raised|170.0",
+     "cand=current#L3|s2|g8|6|slope|edge|top|4.0|FR|raised|170.0",
+     "cand=current#L3|s2|g8|23|slope|rpB|top|4.0|FR|raised|170.0"
+    ],
+    "no_previous": 0
+   },
+   "failed_keys": [
+    "cand=current#L3|s0|g6|109|g6r|rigid+S1@RR|top|Fs4",
+    "cand=current#L3|s0|g8|15|slope|edge|top|4.0|RR|raised|200.0",
+    "cand=current#L3|s0|g8|31|slope|rpB|top|4.0|RR|raised|170.0",
+    "cand=current#L3|s1|g6|109|g6r|rigid+S1@RR|top|Fs4",
+    "cand=current#L3|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+    "cand=current#L3|s1|g8|30|slope|rpB|top|4.0|RR|raised|140.0",
+    "cand=current#L3|s1|ref|7|rigid|B|2.2,-1.6",
+    "cand=current#L3|s2|g6|62|ref|S1|bottom|Fs0",
+    "cand=current#L3|s2|g8|25|slope|rpB|top|4.0|FR|raised|230.0",
+    "cand=current#L3|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+    "cand=current#L3|s2|g8|30|slope|rpB|top|4.0|RR|raised|140.0",
+    "cand=current#L3|s2|g8|31|slope|rpB|top|4.0|RR|raised|170.0"
+   ]
+  }
+ }
+}

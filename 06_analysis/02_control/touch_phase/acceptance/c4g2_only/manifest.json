@@ -1,0 +1,123 @@
+{
+ "seed": 20261105,
+ "rule": "criteria_c4g2_only.md",
+ "files": {
+  "r79_L1L2": {
+   "rows": 1026,
+   "acted": 21,
+   "from_split": [
+    "cand=current#L1|s0|g6|81|g6r|rigid+J2@FL|top|Fs4",
+    "cand=current#L1|s0|g8|25|slope|rpB|top|4.0|FR|raised|230.0",
+    "cand=current#L1|s0|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+    "cand=current#L2|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+    "cand=current#L2|s2|g6|81|g6r|rigid+J2@FL|top|Fs4",
+    "cand=current#L2|s2|g8|25|slope|rpB|top|4.0|FR|raised|230.0",
+    "cand=current#L2|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+    "cand=current#L2|s4|g6|81|g6r|rigid+J2@FL|top|Fs4"
+   ],
+   "seeded_inactive": 980,
+   "to_run": 38,
+   "acted_to_run": [
+    "cand=current#L1|s0|g6|80|g6r|rigid+J2@FL|top|Fs0",
+    "cand=current#L1|s0|g6|84|g6r|rigid+J2@FR|top|Fs0",
+    "cand=current#L1|s0|g6|85|g6r|rigid+J2@FR|top|Fs4",
+    "cand=current#L2|s0|g6|80|g6r|rigid+J2@FL|top|Fs0",
+    "cand=current#L2|s0|g6|81|g6r|rigid+J2@FL|top|Fs4",
+    "cand=current#L2|s0|g6|84|g6r|rigid+J2@FR|top|Fs0",
+    "cand=current#L2|s1|g6|80|g6r|rigid+J2@FL|top|Fs0",
+    "cand=current#L2|s1|g6|81|g6r|rigid+J2@FL|top|Fs4",
+    "cand=current#L2|s1|g6|84|g6r|rigid+J2@FR|top|Fs0",
+    "cand=current#L2|s1|g6|85|g6r|rigid+J2@FR|top|Fs4",
+    "cand=current#L2|s2|g6|80|g6r|rigid+J2@FL|top|Fs0",
+    "cand=current#L2|s2|g6|84|g6r|rigid+J2@FR|top|Fs0",
+    "cand=current#L2|s3|g6|80|g6r|rigid+J2@FL|top|Fs0",
+    "cand=current#L2|s3|g6|81|g6r|rigid+J2@FL|top|Fs4",
+    "cand=current#L2|s3|g6|84|g6r|rigid+J2@FR|top|Fs0",
+    "cand=current#L2|s4|g6|80|g6r|rigid+J2@FL|top|Fs0",
+    "cand=current#L2|s4|g6|84|g6r|rigid+J2@FR|top|Fs0",
+    "cand=current#L2|s4|g6|85|g6r|rigid+J2@FR|top|Fs4"
+   ],
+   "sample_near": [
+    "cand=current#L1|s0|g6|104|g6r|rigid+S1@RL|top|Fs0",
+    "cand=current#L1|s0|g6|105|g6r|rigid+S1@RL|top|Fs4",
+    "cand=current#L1|s0|g6|106|g6r|rigid+S1@RL|bottom|Fs0",
+    "cand=current#L1|s0|g6|107|g6r|rigid+S1@RL|bottom|Fs4",
+    "cand=current#L1|s0|g6|108|g6r|rigid+S1@RR|top|Fs0",
+    "cand=current#L1|s0|g6|109|g6r|rigid+S1@RR|top|Fs4",
+    "cand=current#L1|s0|g6|110|g6r|rigid+S1@RR|bottom|Fs0",
+    "cand=current#L1|s0|g6|111|g6r|rigid+S1@RR|bottom|Fs4",
+    "cand=current#L1|s0|g6|40|g6|G1+S1@RL|top|Fs0",
+    "cand=current#L1|s0|g6|41|g6|G1+S1@RL|top|Fs4"
+   ],
+   "sample_random": [
+    "cand=current#L1|s0|g8|7|slope|edge|top|4.0|FR|raised|200.0",
+    "cand=current#L2|s3|ref|6|rigid|B|-2.2,1.6",
+    "cand=current#L2|s3|g6|44|g6|G1+S1@RR|top|Fs0",
+    "cand=current#L2|s3|ref|14|G1|B|0,0",
+    "cand=current#L1|s0|ref|9|rigid|B|2.7355,1.7592",
+    "cand=current#L2|s4|g6|42|g6|G1+S1@RL|bottom|Fs0",
+    "cand=current#L2|s2|g8|41|main|flat|top|4.0|FR|lowered|150.0",
+    "cand=current#L1|s0|g8|22|slope|rpB|top|4.0|FR|raised|140.0",
+    "cand=current#L2|s1|g8|10|slope|edge|top|4.0|RL|raised|170.0",
+    "cand=current#L2|s2|g8|5|slope|edge|top|4.0|FR|raised|140.0"
+   ],
+   "near_starts": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "cpu_s_to_run": 1437,
+   "peak_wset_MB_max": 256.6
+  },
+  "r79_L3": {
+   "rows": 501,
+   "acted": 11,
+   "from_split": [],
+   "seeded_inactive": 480,
+   "to_run": 21,
+   "acted_to_run": [
+    "cand=current#L3|s0|g6|80|g6r|rigid+J2@FL|top|Fs0",
+    "cand=current#L3|s0|g6|81|g6r|rigid+J2@FL|top|Fs4",
+    "cand=current#L3|s0|g6|84|g6r|rigid+J2@FR|top|Fs0",
+    "cand=current#L3|s0|g6|85|g6r|rigid+J2@FR|top|Fs4",
+    "cand=current#L3|s1|g6|80|g6r|rigid+J2@FL|top|Fs0",
+    "cand=current#L3|s1|g6|81|g6r|rigid+J2@FL|top|Fs4",
+    "cand=current#L3|s1|g6|84|g6r|rigid+J2@FR|top|Fs0",
+    "cand=current#L3|s1|g6|85|g6r|rigid+J2@FR|top|Fs4",
+    "cand=current#L3|s2|g6|80|g6r|rigid+J2@FL|top|Fs0",
+    "cand=current#L3|s2|g6|81|g6r|rigid+J2@FL|top|Fs4",
+    "cand=current#L3|s2|g6|84|g6r|rigid+J2@FR|top|Fs0"
+   ],
+   "sample_near": [
+    "cand=current#L3|s0|g6|104|g6r|rigid+S1@RL|top|Fs0",
+    "cand=current#L3|s0|g6|105|g6r|rigid+S1@RL|top|Fs4",
+    "cand=current#L3|s0|g6|106|g6r|rigid+S1@RL|bottom|Fs0",
+    "cand=current#L3|s0|g6|107|g6r|rigid+S1@RL|bottom|Fs4",
+    "cand=current#L3|s0|g6|108|g6r|rigid+S1@RR|top|Fs0"
+   ],
+   "sample_random": [
+    "cand=current#L3|s2|g6|106|g6r|rigid+S1@RL|bottom|Fs0",
+    "cand=current#L3|s0|g6|92|g6r|rigid+J2@RR|top|Fs0",
+    "cand=current#L3|s1|g6|59|ref|J2|bottom|Fs4",
+    "cand=current#L3|s2|g8|33|slope|rpB|top|4.0|RR|raised|230.0",
+    "cand=current#L3|s0|ref|4|rigid|B|0,-3.2"
+   ],
+   "near_starts": [
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "cpu_s_to_run": 1071,
+   "peak_wset_MB_max": 263.7
+  }
+ }
+}
