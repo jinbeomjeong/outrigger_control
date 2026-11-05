@@ -49,6 +49,7 @@ QUARTER = 0.25
 MOVE_S = 0.5
 AFTER_MOVE_S = 3.0
 END_MEAN_S = 0.5
+VALVE_TAU_S = 0.1
 
 
 class HarnessBench:
@@ -69,8 +70,12 @@ class HarnessBench:
         self.v_max = load_params().v_max
         off = FlowSetting(is_enabled=False)
         base = make_flow_plant_class(rodside.make_plant_class(self.cl), off)
-        self.plant = harness_hydraulics.make_hydraulics_plant_class(base, options)(
-            "top", 0.0, 0.0, Fs=0.0)
+        if options.lock_closure is not None:
+            harness_hydraulics.install_overlap_cut(self.cl, options.lock_closure, self.v_max,
+                                                   harness_hydraulics.LOCK_SPEED_EPS_M_S)
+        plant_class = harness_hydraulics.make_hydraulics_plant_class(
+            base, options, (self.c_lock, self.c_move))
+        self.plant = plant_class("top", 0.0, 0.0, Fs=0.0)
         self.plant.step(np.zeros(4), int(round(self.cl.rcc.SETTLE_ON_CRAWLER_S / self.plant.dt)))
         self.plant.t = 0.0
         self.valve = np.zeros(4)
@@ -131,7 +136,80 @@ def check_m2_6() -> dict:
     return out
 
 
-CHECKS = {"m2_6": check_m2_6}
+TAIL_RUN_S = 1.5
+OVERLAP_TABLE_S = {(0.02, 0.25): 0.253, (0.02, 1.0): 0.391}
+"""Spec 2.5 hand values of t_ol - t_0 [s]."""
+
+
+def _lock_closure_options(delay_s: float = 0.05):
+    from outrigger_sim.hydraulics.v5_options import HydraulicOptions, LockClosureSetting
+
+    return HydraulicOptions(lock_closure=LockClosureSetting(0.02, delay_s))
+
+
+def _front_left_tail(bench: HarnessBench, fraction: float, restart_after_s: float | None = None
+                     ) -> tuple[float, float | None, float | None]:
+    """(t_0, first cut chunk start, first FL lock time after t_0)."""
+    command = np.zeros(4)
+    command[FRONT_LEFT] = fraction * bench.v_max
+    bench.run(command, 1.0)
+    t_zero = bench.plant.t
+    rows_before = len(bench.plant.flow_limiter.rows())
+    if restart_after_s is None:
+        bench.run(np.zeros(4), TAIL_RUN_S)
+    else:
+        cut_s = t_zero + VALVE_TAU_S * np.log(fraction / 0.02)
+        bench.run(np.zeros(4), cut_s + restart_after_s - t_zero)
+        bench.run(command, 1.0)
+    rows = bench.plant.flow_limiter.rows()[rows_before:]
+    zero = np.flatnonzero(rows[:, 1 + FRONT_LEFT] == 0.0)
+    cut_t = float(rows[zero[0], 0]) if zero.size else None
+    locks = [t for t, leg, locked in bench.plant.lock_events
+             if leg == FRONT_LEFT and locked and t >= t_zero]
+    return t_zero, cut_t, (locks[0] if locks else None)
+
+
+def check_lc() -> dict:
+    """Spec L-1, L-4, L-5, L-7 on the harness plant (delta_ol 2 %)."""
+    out = {}
+    for fraction in (0.25, 1.0):
+        bench = HarnessBench(_lock_closure_options())
+        bench.lift_and_arm()
+        t_zero, cut_t, lock_t = _front_left_tail(bench, fraction)
+        out[f"l1_cut_after_zero_s_{fraction}"] = cut_t - t_zero
+        out[f"l1_formula_s_{fraction}"] = VALVE_TAU_S * float(np.log(fraction / 0.02))
+        out[f"l1_table_s_{fraction}"] = OVERLAP_TABLE_S[(0.02, fraction)]
+    for delay_s in (0.02, 0.05, 0.10):
+        bench = HarnessBench(_lock_closure_options(delay_s))
+        bench.lift_and_arm()
+        _, cut_t, lock_t = _front_left_tail(bench, 1.0)
+        out[f"l4_lock_after_cut_s_{delay_s}"] = lock_t - cut_t
+    bench = HarnessBench(_lock_closure_options())
+    bench.lift_and_arm()
+    _, _, lock_t = _front_left_tail(bench, 1.0, restart_after_s=0.025)
+    out["l5_lock_time_after_restart"] = lock_t
+    out["l7_copy_equal"] = _deepcopy_continuation_is_equal()
+    return out
+
+
+def _deepcopy_continuation_is_equal() -> bool:
+    import copy
+
+    bench = HarnessBench(_lock_closure_options())
+    bench.lift_and_arm()
+    command = np.zeros(4)
+    command[FRONT_LEFT] = bench.v_max
+    bench.run(command, 1.0)
+    bench.run(np.zeros(4), 0.391 + 0.025)
+    twin = copy.copy(bench)  # the harness modules stay shared, the plant state is copied
+    twin.plant, twin.valve = copy.deepcopy(bench.plant), bench.valve.copy()
+    first = bench.run(np.zeros(4), 0.5)
+    second = twin.run(np.zeros(4), 0.5)
+    return bool(np.array_equal(np.array(first), np.array(second))
+                and bench.plant.lock_events == twin.plant.lock_events)
+
+
+CHECKS = {"m2_6": check_m2_6, "lc": check_lc}
 
 
 def _modules_outside_project() -> list[str]:
