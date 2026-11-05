@@ -454,6 +454,56 @@ def after_window_force_values(t_rel_s: np.ndarray, force_N: np.ndarray, contact_
     return out
 
 
+HOLD_TIME_TOL_S = 1e-9
+
+
+def hold_period_values(row_t_s: np.ndarray, period_t_s: np.ndarray,
+                       period_values: np.ndarray) -> np.ndarray:
+    """Zero-order hold of 10 Hz controller values on the 1 ms rows.
+
+    A value computed from the reading taken at ``t_k`` (the end of a control period) holds for
+    the rows in ``(t_k, t_{k+1}]``; rows at or before the first reading get NaN.
+    """
+    values = np.asarray(period_values, float).reshape(len(period_t_s), -1)
+    index = np.searchsorted(np.asarray(period_t_s, float),
+                            np.asarray(row_t_s, float) - HOLD_TIME_TOL_S, side="right") - 1
+    held = np.full((len(row_t_s), values.shape[1]), np.nan)
+    has_value = index >= 0
+    held[has_value] = values[index[has_value]]
+    return held
+
+
+def lower_bound_miss_values(t_rel_s: np.ndarray, force_N: np.ndarray, lower_N: np.ndarray,
+                            window_end_s: float, f_min_N: float) -> dict:
+    """Criteria 13.4 (⑥) misses after the event window (1 ms rows, times relative to the event).
+
+    A miss sample is a leg whose true F_cyl is below F_min while the controller's lower load
+    estimate (held from its last 10 Hz reading, ``lower_N``) is above F_min. A miss interval is
+    a run of such samples on one leg. Rows without an estimate do not count. No verdict here.
+    """
+    after = t_rel_s > window_end_s
+    out = {"window_end_s": _rounded(window_end_s, 3), "samples_after": int(after.sum())}
+    if not after.any():
+        return out
+    force, lower = force_N[after], lower_N[after]
+    has_estimate = np.isfinite(lower)
+    miss = (force < f_min_N) & has_estimate & (lower > f_min_N)
+    intervals_per_leg = [len(contiguous_runs(miss[:, k])) for k in range(force.shape[1])]
+    estimate_at_true_minimum = None
+    index, leg = np.unravel_index(int(np.argmin(force)), force.shape)
+    if has_estimate[index, leg]:
+        estimate_at_true_minimum = _rounded(lower[index, leg] * KN_PER_N, 4)
+    out.update({
+        "miss_intervals": int(sum(intervals_per_leg)),
+        "miss_intervals_by_leg": dict(zip(LEGS, intervals_per_leg, strict=True)),
+        "miss_ms_sum": int(miss.sum()),
+        "miss_ms_longest": max(_longest_true_run(miss[:, k]) for k in range(force.shape[1])),
+        "lower_at_true_min_kN": estimate_at_true_minimum,
+        "min_lower_kN": None if not has_estimate.any()
+        else _rounded(np.min(lower[has_estimate]) * KN_PER_N, 4)})
+    return out
+
+
 STOP_BEFORE_WINDOW_S = 1.0
 STOP_SAMPLE_HALF_WINDOW_S = 0.1
 CRAWLER_LOADED_WEIGHT_FRACTION = 0.01

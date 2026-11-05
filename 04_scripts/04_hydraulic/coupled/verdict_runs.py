@@ -43,6 +43,8 @@ from verdict_cases import REANCHOR_ON, EventTwin, SteadyTwin, VerdictCase  # noq
 from verdict_metrics import (  # noqa: E402
     after_window_force_values,
     flow_saturation_time,
+    hold_period_values,
+    lower_bound_miss_values,
     overlap_in_window,
     run_values,
     stop_crawler_values,
@@ -83,7 +85,8 @@ def install_logged_controller():
     base = _ORIGINALS.setdefault("controller", c2.C2Controller)
 
     class LoggedController(base):
-        """Project C2 and a list of (t, phase, command, integrals, filtered attitude, guard)."""
+        """Project C2 and a list of (t, phase, command, integrals, filtered attitude, guard,
+        lower load estimate)."""
 
         def update(self, measurements):
             output = super().update(measurements)
@@ -93,8 +96,16 @@ def install_logged_controller():
                         np.array(output.leg_speed_m_s, float),
                         (state.roll_integral, state.pitch_integral),
                         tuple(self.filtered_attitude_rad),
-                        state.guard_m_s is not None and bool(np.any(state.guard_m_s != 0.0))))
+                        state.guard_m_s is not None and bool(np.any(state.guard_m_s != 0.0)),
+                        self._logged_lower_estimate_N()))
             return output
+
+        def _logged_lower_estimate_N(self) -> np.ndarray:
+            """The lower load estimate the judge compares with F_min (v5 X-6, record only)."""
+            forces = self._state.last_forces
+            if forces is None:
+                return np.full(4, np.nan)
+            return np.array(self._load_estimate_N(forces.lower), float)
 
     c2.C2Controller = LoggedController
     return c2
@@ -116,7 +127,8 @@ def period_arrays(controller) -> dict:
             "command": np.array([row[2] for row in log], float).reshape(-1, 4),
             "integral": np.array([row[3] for row in log], float).reshape(-1, 2),
             "filtered_deg": np.degrees(np.array([row[4] for row in log], float).reshape(-1, 2)),
-            "guard": np.array([row[5] for row in log], bool)}
+            "guard": np.array([row[5] for row in log], bool),
+            "lower_estimate_N": np.array([row[6] for row in log], float).reshape(-1, 4)}
 
 
 def _stored_events(controller) -> list[tuple[float, str]]:
@@ -204,7 +216,7 @@ def _run_steady(case: VerdictCase, decision: str | None) -> tuple[dict, dict]:
 
 
 # -------------------------------------------------------------------------------- event cases
-def _run_event(twin: EventTwin) -> tuple[dict, dict]:
+def _run_event(twin: EventTwin, contact: str | None = None) -> tuple[dict, dict]:
     import copy
 
     import s9_soil_event_screen as study_a
@@ -218,7 +230,8 @@ def _run_event(twin: EventTwin) -> tuple[dict, dict]:
     leg = r67.LEGS.index(twin.leg)
     event = SS_EVENT if twin.event == "SS" else r67.EVENTS[twin.event]
     r67.MIN_AFTER_S = max(r67.MIN_AFTER_S, event["ramp"] + SLOW_EVENT_TAIL_S)
-    plant, controller, _ = r67.make_base(cl, c2, twin.level, twin.fs_kN)
+    judge = None if contact is None else c2.ContactJudge[contact]
+    plant, controller, _ = r67.make_base(cl, c2, twin.level, twin.fs_kN, contact=judge)
     timeline = r67.run_base(cl, c2, measurements, copy.deepcopy(plant), copy.deepcopy(controller))
     target = _event_time(timeline, twin)
     extra = {"harness_class": None, "timeline": {key: timeline[key] for key in
@@ -247,10 +260,17 @@ def _run_event(twin: EventTwin) -> tuple[dict, dict]:
     # v5 X-8 (criteria 3.1, ⑦): 1 ms minimum, trailing 0.5 s mean and lift after the window
     judged["after_window_force"] = after_window_force_values(
         rows[:, 0] - t_event, rows[:, 5:9], rows[:, 1:5], window_end, r67.F_MIN_N)
+    # v5 X-6 (criteria 13.4, ⑥): misses of the run's judge, lower estimate held on the 1 ms rows.
+    # The Chrono-style 10 Hz reference value (10 Hz reading < F_min episodes) goes next to it
+    # once control-expert has fixed its key and definition.
+    period = period_arrays(controller)
+    lower_held = hold_period_values(rows[:, 0], period["t"], period["lower_estimate_N"])
+    judged["lower_bound_miss"] = lower_bound_miss_values(
+        rows[:, 0] - t_event, rows[:, 5:9], lower_held, window_end, r67.F_MIN_N)
     phase_at_event = next((phase for t, phase in phases if t >= 0.0), None)
     extra.update(event=twin.event, leg=twin.leg, timing=twin.timing, offset_s=twin.offset_s,
                  t_event_s=round(t_event, 3), phase_at_event=phase_at_event,
-                 event_output=judged)
+                 contact_judge=controller.config.contact.name, event_output=judged)
     if is_absolute:  # criteria 13.3 record; the other timings keep their former result keys
         limiter = plant.flow_limiter
         extra["overlap_found"] = {
@@ -278,7 +298,8 @@ def _event_time(timeline: dict, twin: EventTwin) -> float | None:
 
 # ---------------------------------------------------------------------------------- public API
 def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
-            clip_command: bool = False, hydraulics=None) -> tuple[dict, dict]:
+            clip_command: bool = False, hydraulics=None,
+            contact: str | None = None) -> tuple[dict, dict]:
     """Run one case with one flow setting in this process.
 
     Args:
@@ -289,16 +310,25 @@ def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
             the rest of the process, so a worker runs one such case.
         hydraulics: v5 plant options (``HydraulicOptions``, spec v5 2.0); None or all off = the
             plant of this module bit for bit. Also in force for the rest of the process.
+        contact: ``c2.ContactJudge`` member name of an event case (v5 X-6, criteria 13.4:
+            ``"PRESSURE"``), resolved on the harness' own c2 module; None = the screen's
+            COMBINED judge, bit for bit.
 
     Returns:
         The result dict (``error`` set on a harness failure) and the 10 Hz arrays. The logged
         commands are the controller's, before the clip.
+
+    Raises:
+        ValueError: ``contact`` given for a steady case (its judge comes from the P3 runner).
     """
+    is_event = isinstance(case.twin, EventTwin)
+    if contact is not None and not is_event:
+        raise ValueError(f"{case.case_id}: the contact judge is an event-case option")
     install_plant_options(setting, hydraulics)
     install_logged_controller()
     clip_record = install_harness_command_clip() if clip_command else None
-    if isinstance(case.twin, EventTwin):
-        result, series = _run_event(case.twin)
+    if is_event:
+        result, series = _run_event(case.twin, contact)
     else:
         result, series = _run_steady(case, decision)
     if clip_record is not None:

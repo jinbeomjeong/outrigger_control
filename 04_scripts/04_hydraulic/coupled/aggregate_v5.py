@@ -8,6 +8,9 @@ M1c rows carry ``unit_status`` ``below_criteria_reference_only``. Batch ``item8`
 batch gets ``ready`` (criteria 7: S1 .. S5, S7 first READY <= 100 s, event rows back in READY
 <= 60 s, S8 no READY, rigid rows FLAG over 90 / 120 s), ``s8_stop`` (criteria 6 values) and
 ``event_force`` (criteria 3.1, ⑦: after-window 1 ms minimum, trailing 0.5 s mean, FLAG_E3_1ms).
+Batch ``pressure_only`` adds ``pressure_only`` (criteria 13.4, ⑥): the pressure-only run and the
+combined run of ``main`` side by side (after-window 1 ms minimum, time below F_min, misses of
+the lower estimate), each entry with ``unit_status``.
 
 Usage: python -I -B 04_scripts/04_hydraulic/coupled/aggregate_v5.py <batch> [<batch> ...]
 """
@@ -71,10 +74,15 @@ def value_row(record: dict) -> dict:
     if "check_delay" in hydraulics:
         out["m1c_n_fills"] = hydraulics["check_delay"]["n_fills"]
         out["unit_status"] = UNIT_STATUS
+    if record.get("contact_judge"):  # criteria 13.4 (⑥) runs: every row is reference only
+        out["contact_judge"] = record["contact_judge"]
+        out["unit_status"] = record.get("unit_status", UNIT_STATUS)
     if record.get("event_output"):
         out["t_ready_back_s"] = record["event_output"].get("t_ready_back_s")
         if record["event_output"].get("after_window_force"):  # criteria 3.1 (⑦) values
             out["after_window_force"] = record["event_output"]["after_window_force"]
+        if record["event_output"].get("lower_bound_miss"):  # criteria 13.4 (⑥) values
+            out["lower_bound_miss"] = record["event_output"]["lower_bound_miss"]
     if record.get("soil_stop_crawler"):
         out["soil_stop_crawler"] = record["soil_stop_crawler"]
     if record.get("overlap_found"):
@@ -132,6 +140,38 @@ def event_force_table(rows: list[dict]) -> list[dict]:
             for row in rows if row.get("after_window_force")]
 
 
+JUDGE_FORCE_KEYS = ("min_1ms_kN", "min_1ms_leg", "below_f_min_ms_sum", "below_f_min_ms_longest")
+JUDGE_MISS_KEYS = ("miss_intervals", "miss_ms_sum", "miss_ms_longest")
+
+
+def _judge_values(row: dict | None) -> dict | None:
+    """After-window force and miss values of one run (criteria 13.4 record), None if absent."""
+    if row is None or "error" in row:
+        return None
+    force = row.get("after_window_force") or {}
+    miss = row.get("lower_bound_miss") or {}
+    return {"commands_sha256": row["commands_sha256"],
+            **{key: force.get(key) for key in JUDGE_FORCE_KEYS},
+            **{key: miss.get(key) for key in JUDGE_MISS_KEYS}}
+
+
+def pressure_only_table(rows: list[dict], combined_rows: list[dict]) -> list[dict]:
+    """Criteria 13.4 (⑥): per row, phase and setting the pressure-only run next to the combined
+    run of ``main`` (None until ``main`` has it). Every entry carries ``unit_status``."""
+    combined = {(row["row"], row["phase"], row["setting"]): row for row in combined_rows
+                if not row.get("contact_judge")}
+    table = []
+    for row in rows:
+        if not row.get("contact_judge"):
+            continue
+        key = (row["row"], row["phase"], row["setting"])
+        table.append({"row": key[0], "phase": key[1], "setting": key[2],
+                      "unit_status": row.get("unit_status", UNIT_STATUS),
+                      row["contact_judge"].lower(): _judge_values(row),
+                      "combined": _judge_values(combined.get(key))})
+    return table
+
+
 def s8_stop_table(rows: list[dict]) -> list[dict]:
     """Criteria 6 S8 values per run: crawler at the stop (1 ms), 1 s maximum before it, +-0.1 s
     range, maximum after it and the clause margins [kN]."""
@@ -144,7 +184,7 @@ def golden_check(rows: list[dict]) -> list[dict]:
     checks = []
     for row in rows:
         if row["setting"] != "V0" or row["phase"] not in ("eps 0.0", "offset 0.0") \
-                or "error" in row:
+                or "error" in row or row.get("contact_judge"):  # golden runs: screen judge
             continue
         golden = GOLDEN_DIR / f"OFF_{row['row']}.json"
         if row["row"] == "R2ra" or not golden.exists():
@@ -229,6 +269,10 @@ def main() -> None:
         if batch == "item8":
             regression = [row for row in _value_rows("main") if row["row"] in ITEM8_LEVELS]
             report["item8_order"] = item8_order(rows + regression)
+        if batch == "pressure_only":
+            main_path = OUT_DIR / "main.jsonl"
+            combined = _value_rows("main") if main_path.exists() else []
+            report["pressure_only"] = pressure_only_table(rows, combined)
         out = OUT_DIR / f"{batch}_values.json"
         out.write_text(json.dumps(report, indent=1), encoding="utf-8")
         print(json.dumps({k: report[k] for k in ("batch", "runs", "errors", "golden_v0", "w2")}))

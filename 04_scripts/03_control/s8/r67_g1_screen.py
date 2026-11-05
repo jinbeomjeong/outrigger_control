@@ -150,8 +150,10 @@ def make_controller_class(c2):
     return CapController
 
 
-def make_base(cl, c2, level, fs_kN, zero_cal=False, pre=None, touch_cap=False):
-    """Plant settled on the crawler (+ optional pre-extension of one leg), armed, and a fresh controller."""
+def make_base(cl, c2, level, fs_kN, zero_cal=False, pre=None, touch_cap=False, contact=None):
+    """Plant settled on the crawler (+ optional pre-extension of one leg), armed, and a fresh controller.
+
+    ``contact`` (``c2.ContactJudge``, v5 X-6): judge of the preset; None = COMBINED (the screen)."""
     base = r51._reg_base("b", level, (0.0, 0.0), fs_kN, [])
     plant = r51.make_plant(cl, base)
     plant.step(np.zeros(4), int(round(cl.rcc.SETTLE_ON_CRAWLER_S / plant.dt)))
@@ -173,7 +175,8 @@ def make_base(cl, c2, level, fs_kN, zero_cal=False, pre=None, touch_cap=False):
                     pre_gap_mm=(r51.pad_gaps(cl, plant) * 1e3).round(3).tolist())
     plant.t = 0.0
     plant.arm()
-    cfg = cl.preset_config(c2.ContactJudge.COMBINED, with_imu_samples=True, with_reapproach=True)
+    judge = c2.ContactJudge.COMBINED if contact is None else contact
+    cfg = cl.preset_config(judge, with_imu_samples=True, with_reapproach=True)
     if zero_cal:
         from outrigger_sim.control.zero_calibration import ZeroCalibrationMode
         cfg = dataclasses.replace(cfg, zero_calibration=dataclasses.replace(

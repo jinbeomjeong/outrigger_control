@@ -6,7 +6,9 @@ rows), ``item8`` (criteria 13.1 (1): R6 / R8 / R9 x V0, VB x eps 1e-3, 3e-3 = 12
 2e-3 phases are the regression rows of ``main``), ``overlap`` (criteria 13.3 (③): R12 G4 at the
 VB reference time t_a + 0 / 0.025 / 0.05 / 0.075 s x V0, V3, VB = 12; t_a comes from one VB base
 run first, stored in ``overlap_t_a.json`` and used by every setting; lines carry
-``overlap_found``).
+``overlap_found``), ``pressure_only`` (criteria 13.4 (⑥): R12 4 offsets + G4 width grid 28 x V0,
+V4, V5 with the pressure-only judge = 96; lines carry ``contact_judge`` and ``unit_status``, the
+event output ``lower_bound_miss``; the combined pairs are the same rows of ``main``).
 One JSON line per run in ``06_analysis/03_hydraulic/coupled/v5/<batch>.jsonl`` (appended; runs
 already in the file are skipped). Each run has its own spawned worker (``maxtasksperchild=1``): the
 harness patches stay in the process. Deterministic (no noise). Values only; the verdict is
@@ -73,6 +75,14 @@ OVERLAP_TIMING = "flow_saturation"
 OVERLAP_REFERENCE_PATH = OUT_DIR / "overlap_t_a.json"
 """t_a of the VB reference run, written before the 12 runs and read by every worker (one
 absolute time for V0, V3 and VB)."""
+PRESSURE_ONLY_SETTINGS = ("V0", "V4", "V5")
+"""Criteria 13.4 (⑥): V0, M1c VN x1, M1c BL x1; the combined pairs are the same rows of
+``main``."""
+PRESSURE_ONLY_ROW_COUNT = 32
+"""R12 4 phases + G4 width grid 28: the first rows of :func:`required_rows`."""
+PRESSURE_ONLY_JUDGE = "PRESSURE"
+UNIT_STATUS = "below_criteria_reference_only"
+"""Criteria 13.4: every ⑥ table carries this (M1c below its unit criteria, reference only)."""
 
 
 def _lc(ratio: float = OVERLAP_RATIO, delay_s: float = CLOSING_DELAY_S) -> dict:
@@ -136,6 +146,14 @@ def l2_rows() -> list[dict]:
     return [_phase_jobs(case)[0] for case in L2_ROWS]
 
 
+def pressure_only_rows() -> list[dict]:
+    """Criteria 13.4 rows: R12 at its 4 offsets and the G4 width grid (28)."""
+    rows = required_rows()[:PRESSURE_ONLY_ROW_COUNT]
+    if any(row["case"] != "R12" for row in rows):
+        raise RuntimeError("the first required rows are no longer the R12 / G4 rows")
+    return rows
+
+
 def batch_jobs(name: str) -> list[dict]:
     if name == "main":
         jobs = [{**row, "setting": s} for s in REQUIRED_SETTINGS for row in required_rows()]
@@ -152,6 +170,9 @@ def batch_jobs(name: str) -> list[dict]:
     if name == "overlap":
         return [{"case": OVERLAP_CASE, "eps": 0.0, "offset_s": offset, "timing": OVERLAP_TIMING,
                  "setting": s} for s in OVERLAP_SETTINGS for offset in OVERLAP_OFFSETS]
+    if name == "pressure_only":
+        return [{**row, "contact": PRESSURE_ONLY_JUDGE, "setting": s}
+                for s in PRESSURE_ONLY_SETTINGS for row in pressure_only_rows()]
     raise ValueError(f"unknown batch {name!r}")
 
 
@@ -252,12 +273,17 @@ def run_one(job: dict) -> dict:
             _install_approach_scale(float(job["eps"]))
         flow, options = options_of(job["setting"])
         case, decision = _case_of(job)
-        result, series = verdict_runs.execute(case, flow, decision, hydraulics=options)
+        contact = job.get("contact")
+        result, series = verdict_runs.execute(case, flow, decision, hydraulics=options,
+                                              contact=contact)
         if "error" in result:
             return {"job": job, "error": result["error"], "tb": result.get("tb"),
                     "wall_s": round(time.perf_counter() - t_start, 1)}
         events = result["events"]
+        judge_record = {} if contact is None else {"contact_judge": result.get("contact_judge"),
+                                                   "unit_status": UNIT_STATUS}
         return {"job": job, "wall_s": round(time.perf_counter() - t_start, 1),
+                **judge_record,
                 "commands_sha256": result["commands_sha256"],
                 "final_phase": result["final_phase"], "values": result["values"],
                 "t_event_s": result.get("t_event_s"), "event_output": {
