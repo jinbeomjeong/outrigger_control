@@ -1,0 +1,71 @@
+
+===== test
+[(('1 sample', 'lift', 'miss'), 3), (('1 sample', 'under', 'caught'), 2), (('1 sample', 'under', 'miss'), 3), (('>=2', 'lift', 'caught'), 51), (('>=2', 'under', 'caught'), 12)]
+miss with true at sample < F_min: 0 of 6
+miss phases Counter({'level': 6}) probe rounds==0: 5 dt_event<=0.3: 3
+all-episode phases Counter({'level': 71})
+result keys ['case', 'episode', 'base', 'branch_t_s', 'event_t_s', 'wall_s', 'n_steps', 'f_min_kN', 'settings', 'controller_meta', 'twist_stiffness_history', 'probe_request', 's8_plant_record', 'monitor', 'pad_record', 'fine_dt', 'episode_s', 'first_period_compare', 'forced_retract']
+event null spec null stage2 None
+{'set': 'test', 'run': 'ML17_ep4', 'leg': 'FR', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 67.0, 'min_F_1ms': -4.44, 't_min_rel_on': -0.945, 'under_s': 0.354, 'air_s': 0.27, 'N_le0_s': 0.27, 'max_F_1ms': 215.4, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+pads keys ['t', 'R_world_1ms', 'N_raw', 'n_world', 'a_world', 'ball_centre_world', 'contact_point_world', 'anchor_world', 'slip_total', 'sliding', 'F_cyl', 'F_cyl_min_interval', 'head_pressure', 'rod_pressure', 's_motor', 's_link', 'stroke_true', 'lateral_force_world', 'body_quat_wxyz', 'F_pressure', 'F_pressure_min_interval', 'F_pressure_max_interval', 'f_seal', 'seal_stuck', 's_piston', 'F_seal_limit', 'cb_y', 'cb_delta', 'dt_interval', 'F_cyl_mean_interval', 'R_world', 'N', 'T', 'L', 'utilisation', 'L_lateral', 'F_cyl_mean_20ms', 'airborne', 'mu', 'every_steps', 'sample_s', 'meta_json']
+{'set': 'test', 'run': 'ML38_ep1', 'leg': 'FR', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 59.1, 'min_F_1ms': -4.99, 't_min_rel_on': -0.059, 'under_s': 0.033, 'air_s': 0.011, 'N_le0_s': 0.011, 'max_F_1ms': 164.8, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+{'set': 'test', 'run': 'ML42_ep0', 'leg': 'RR', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 65.1, 'min_F_1ms': -6.0, 't_min_rel_on': -0.075, 'under_s': 0.069, 'air_s': 0.045, 'N_le0_s': 0.045, 'max_F_1ms': 90.5, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+{'set': 'test', 'run': 'ML42_ep7', 'leg': 'FR', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 66.1, 'min_F_1ms': 2.01, 't_min_rel_on': -0.056, 'under_s': 0.053, 'air_s': 0.0, 'N_le0_s': 0.0, 'max_F_1ms': 148.7, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+{'set': 'test', 'run': 'ML47_ep3', 'leg': 'FL', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 62.1, 'min_F_1ms': -5.1, 't_min_rel_on': -0.058, 'under_s': 0.022, 'air_s': 0.0, 'N_le0_s': 0.0, 'max_F_1ms': 159.5, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+{'set': 'test', 'run': 'ML51_ep4', 'leg': 'FR', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 71.9, 'min_F_1ms': 6.93, 't_min_rel_on': -0.047, 'under_s': 0.026, 'air_s': 0.0, 'N_le0_s': 0.0, 'max_F_1ms': 220.5, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+
+===== OOD-1
+[(('1 sample', 'lift', 'caught'), 1), (('1 sample', 'lift', 'miss'), 6), (('1 sample', 'under', 'caught'), 4), (('1 sample', 'under', 'miss'), 4), (('>=2', 'lift', 'caught'), 99), (('>=2', 'under', 'caught'), 32)]
+miss with true at sample < F_min: 0 of 10
+miss phases Counter({'level': 9, 'ready': 1}) probe rounds==0: 9 dt_event<=0.3: 6
+all-episode phases Counter({'level': 145, 'ready': 1})
+{'set': 'OOD-1', 'run': 'ML01_ep0', 'leg': 'FL', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 64.7, 'min_F_1ms': -1.43, 't_min_rel_on': -0.071, 'under_s': 0.073, 'air_s': 0.033, 'N_le0_s': 0.033, 'max_F_1ms': 173.7, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+{'set': 'OOD-1', 'run': 'ML25_ep7', 'leg': 'RR', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 72.7, 'min_F_1ms': 7.5, 't_min_rel_on': -0.06, 'under_s': 0.02, 'air_s': 0.0, 'N_le0_s': 0.0, 'max_F_1ms': 152.1, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+{'set': 'OOD-1', 'run': 'ML28_ep1', 'leg': 'FR', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 66.1, 'min_F_1ms': -7.35, 't_min_rel_on': -0.067, 'under_s': 0.04, 'air_s': 0.019, 'N_le0_s': 0.019, 'max_F_1ms': 152.0, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+{'set': 'OOD-1', 'run': 'ML31_ep1', 'leg': 'RL', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 66.0, 'min_F_1ms': 9.2, 't_min_rel_on': -0.08, 'under_s': 0.019, 'air_s': 0.0, 'N_le0_s': 0.0, 'max_F_1ms': 39.8, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+{'set': 'OOD-1', 'run': 'ML31_ep3', 'leg': 'FR', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 63.1, 'min_F_1ms': -8.37, 't_min_rel_on': -0.066, 'under_s': 0.056, 'air_s': 0.034, 'N_le0_s': 0.034, 'max_F_1ms': 166.2, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+{'set': 'OOD-1', 'run': 'ML34_ep7', 'leg': 'FL', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 63.6, 'min_F_1ms': 0.56, 't_min_rel_on': -0.065, 'under_s': 0.034, 'air_s': 0.0, 'N_le0_s': 0.0, 'max_F_1ms': 170.1, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+{'set': 'OOD-1', 'run': 'ML37_ep0', 'leg': 'FR', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 67.3, 'min_F_1ms': 8.23, 't_min_rel_on': -0.027, 'under_s': 0.015, 'air_s': 0.0, 'N_le0_s': 0.0, 'max_F_1ms': 144.0, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+{'set': 'OOD-1', 'run': 'ML37_ep2', 'leg': 'RL', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 67.1, 'min_F_1ms': -3.72, 't_min_rel_on': -0.068, 'under_s': 0.031, 'air_s': 0.007, 'N_le0_s': 0.007, 'max_F_1ms': 76.7, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+{'set': 'OOD-1', 'run': 'ML61_ep6', 'leg': 'FR', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 67.1, 'min_F_1ms': -9.46, 't_min_rel_on': -0.073, 'under_s': 0.032, 'air_s': 0.011, 'N_le0_s': 0.011, 'max_F_1ms': 151.3, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+{'set': 'OOD-1', 'run': 'ML79_ep5', 'leg': 'FR', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 69.1, 'min_F_1ms': -9.93, 't_min_rel_on': -0.07, 'under_s': 0.055, 'air_s': 0.034, 'N_le0_s': 0.034, 'max_F_1ms': 145.0, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+
+===== OOD-2
+[(('1 sample', 'lift', 'miss'), 2), (('>=2', 'lift', 'caught'), 18), (('>=2', 'under', 'caught'), 7)]
+miss with true at sample < F_min: 0 of 2
+miss phases Counter({'level': 2}) probe rounds==0: 2 dt_event<=0.3: 2
+all-episode phases Counter({'level': 27})
+{'set': 'OOD-2', 'run': 'ML35_ep3', 'leg': 'FR', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 71.1, 'min_F_1ms': -3.84, 't_min_rel_on': -0.064, 'under_s': 0.022, 'air_s': 0.0, 'N_le0_s': 0.0, 'max_F_1ms': 151.9, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+{'set': 'OOD-2', 'run': 'ML95_ep6', 'leg': 'FL', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 71.1, 'min_F_1ms': -9.09, 't_min_rel_on': -0.071, 'under_s': 0.026, 'air_s': 0.005, 'N_le0_s': 0.005, 'max_F_1ms': 156.8, 'final_phase': None, 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+
+===== MLJ
+[(('1 sample', 'under', 'miss'), 2), (('>=2', 'lift', 'caught'), 11), (('>=2', 'under', 'caught'), 1)]
+miss with true at sample < F_min: 0 of 2
+miss phases Counter({'level': 2}) probe rounds==0: 0 dt_event<=0.3: 0
+all-episode phases Counter({'level': 14})
+{'set': 'MLJ', 'run': 'MLJ_FS24_Fs0', 'leg': 'RR', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 52.3, 'min_F_1ms': -0.87, 't_min_rel_on': 0.416, 'under_s': 0.187, 'air_s': 0.053, 'N_le0_s': 0.053, 'max_F_1ms': 147.3, 'final_phase': 'ready', 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+{'set': 'MLJ', 'run': 'MLJ_FS24_Fs0', 'leg': 'FR', 'ev_leg': None, 'ev_kind': None, 'stage2': None, 't_on': 53.4, 'min_F_1ms': 8.75, 't_min_rel_on': -0.064, 'under_s': 0.015, 'air_s': 0.0, 'N_le0_s': 0.0, 'max_F_1ms': 214.9, 'final_phase': 'ready', 'end_reason': None, 'failed': None, 'min_interval_end_run': None}
+
+===== validation
+[(('1 sample', 'lift', 'miss'), 1), (('1 sample', 'under', 'caught'), 6), (('1 sample', 'under', 'miss'), 5), (('>=2', 'lift', 'caught'), 74), (('>=2', 'under', 'caught'), 11)]
+miss with true at sample < F_min: 0 of 6
+miss phases Counter({'level': 5, 'ready': 1}) probe rounds==0: 4 dt_event<=0.3: 2
+all-episode phases Counter({'level': 95, 'ready': 2})
+
+===== train
+[(('1 sample', 'lift', 'caught'), 1), (('1 sample', 'lift', 'miss'), 3), (('1 sample', 'under', 'caught'), 11), (('1 sample', 'under', 'miss'), 13), (('>=2', 'lift', 'caught'), 175), (('>=2', 'lift', 'miss'), 2), (('>=2', 'under', 'caught'), 44)]
+miss with true at sample < F_min: 0 of 18
+miss phases Counter({'level': 17, 'ready': 1}) probe rounds==0: 16 dt_event<=0.3: 6
+all-episode phases Counter({'level': 248, 'ready': 1})
+
+Misses total 44 under_s stats [0.    0.042 0.642] air_s [0.    0.009 0.581]
+event-leg misses 0 final Counter({'None': 42, 'ready': 2})
+
+E/N rows 19 Counter({('scored', '>=2', True, False): 9, ('scored', '>=2', False, False): 5, ('transient', '>=2', True, False): 5})
+E/N sample counts [(2, 6), (3, 4), (6, 1), (14, 3), (15, 3), (431, 1), (432, 1)]
+test sample counts [(1, 8), (2, 19), (3, 10), (4, 10), (5, 3), (6, 1), (7, 4), (8, 3), (10, 2), (11, 4), (12, 1), (13, 3), (14, 2), (15, 1)]
+  phase of runs events: level 71 ready 0 dt_event quantiles [0.1 0.7 1.7]
+OOD-1 sample counts [(1, 15), (2, 37), (3, 23), (4, 9), (5, 10), (6, 9), (7, 8), (8, 3), (9, 4), (10, 7), (11, 9), (12, 10), (13, 1), (16, 1)]
+  phase of runs events: level 145 ready 1 dt_event quantiles [0.1 0.4 1.2]
+OOD-2 sample counts [(1, 2), (2, 7), (3, 6), (5, 4), (6, 1), (7, 1), (9, 4), (10, 1), (11, 1)]
+  phase of runs events: level 27 ready 0 dt_event quantiles [0.1  0.5  1.24]

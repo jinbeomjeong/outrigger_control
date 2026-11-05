@@ -1,0 +1,49 @@
+F_min meta values Counter({9414.589: 870})
+n 604
+Fmin 9.41458911 {('between', 'both'): 44, ('between', 'jc'): 44, ('between', 'jc_only'): 0, ('between', 'jp'): 75, ('between', 'jp_only'): 31, ('between', 'n'): 82, ('under', 'both'): 0, ('under', 'jc'): 0, ('under', 'jc_only'): 0, ('under', 'jp'): 31, ('under', 'jp_only'): 31, ('under', 'n'): 522}
+Fmin 9.4146 {('between', 'both'): 44, ('between', 'jc'): 44, ('between', 'jc_only'): 0, ('between', 'jp'): 75, ('between', 'jp_only'): 31, ('between', 'n'): 82, ('under', 'both'): 0, ('under', 'jc'): 0, ('under', 'jc_only'): 0, ('under', 'jp'): 31, ('under', 'jp_only'): 31, ('under', 'n'): 522}
+Fmin 9.0 {('between', 'both'): 44, ('between', 'jc'): 44, ('between', 'jc_only'): 0, ('between', 'jp'): 83, ('between', 'jp_only'): 39, ('between', 'n'): 91, ('under', 'both'): 0, ('under', 'jc'): 0, ('under', 'jc_only'): 0, ('under', 'jp'): 23, ('under', 'jp_only'): 23, ('under', 'n'): 513}
+Fmin 10.0 {('between', 'both'): 44, ('between', 'jc'): 44, ('between', 'jc_only'): 0, ('between', 'jp'): 67, ('between', 'jp_only'): 23, ('between', 'n'): 73, ('under', 'both'): 0, ('under', 'jc'): 0, ('under', 'jc_only'): 0, ('under', 'jp'): 39, ('under', 'jp_only'): 39, ('under', 'n'): 531}
+under & JP miss: true at sample range 3.82 9.39 lift flags 4 samples [(2, 23), (3, 7), (6, 1)] band 9.44
+caught where the estimate stays >= F_min (mark only) 0 of 560
+set split between Counter({'train': 34, 'OOD-1': 17, 'validation': 16, 'test': 11, 'OOD-2': 2, 'MLJ': 2})
+true_min(record window min): min -12.94 median 1.37 <=0 20 max 9.2
+pads F_cyl sampled window min: min -12.84 median 2.08 <=0 18
+diff record - pads: max abs 1.88 record lower count 44
+lowest [(-12.942824963833226, -12.84, True, 43, 43, 'ML36_ep3', 'FR', 65, 1, 'train'), (-11.057885630509093, -10.99, True, 37, 37, 'ML72_ep6', 'FR', 57, 1, 'validation'), (-10.055185586518126, -9.93, True, 34, 34, 'ML79_ep5', 'FR', 55, 1, 'OOD-1')]
+<=0 not lift [(-0.1, 'ML71_ep6', 'RL'), (-0.46, 'ML02_ep1', 'FL'), (-0.05, 'MLJ_FS24_Fs0', 'RR')]
+lift no air [(-4.44, 'ML06_ep6', 'FR', 0), (-5.11, 'ML47_ep3', 'FL', 0), (-3.91, 'ML35_ep3', 'FR', 0)] air no lift []
+categories Counter({(False, False, False): 24, (True, True, True): 14, (True, True, False): 3, (True, False, False): 3})
+meta keys rod weight [1047.1900381788998, 1047.1900381788998, 717.483872168105, 717.483872168105]
+ML29_ep2 RL windows [(64.0, 71.34, 72.01, 76.98, 14.78), (64.1, -2.06, 73.41, 67.94, 14.78), (64.2, 5.4, 50.88, 45.78, 14.78), (64.3, 30.71, 30.71, 37.6, 14.78)]
+   dips relative to t_on [ms] [-59, -29, 46, 60] fixed sample F at samples [73.41, 50.88] sample_every_ms 1.0
+ML56_ep4 RR windows [(61.0, 70.2, 70.52, 74.72, 13.3), (61.1, -2.91, 54.26, 49.66, 13.3), (61.2, -2.28, 42.4, 37.65, 13.3), (61.3, 21.04, 21.91, 26.35, 13.3)]
+   dips relative to t_on [ms] [-58, -16, 43, 82] fixed sample F at samples [54.26, 42.4] sample_every_ms 1.0
+{'no later same-leg episode': 40, 'next same-leg caught': 4, 'all later caught': 4}
+later rows [('ML78_ep0', 'FR', 0.5, True, True, -0.9), ('ML78_ep3', 'RR', 0.4, True, True, -0.7), ('ML42_ep0', 'RR', 0.3, True, False, 11.0), ('MLJ_FS24_Fs0', 'RR', 0.4, True, True, 3.6)]
+{'other episodes in run': 39, 'other caught': 121, 'other n': 127, 'no other': 5}
+end phase by run class no episode 452 {'probe': 73, 'level': 58, 'ready': 321}
+end phase by run class episodes, none missed 276 {'ready': 241, 'probe': 13, 'level': 20, 'fault': 2}
+end phase by run class some J_C miss 40 {'ready': 34, 'probe': 4, 'fault': 1, 'level': 1}
+non-READY end vs READY end, Fisher [[6, 34], [35, 241]] SignificanceResult(statistic=np.float64(1.215126050420168), pvalue=np.float64(0.6212895382067514))
+miss-row end phases (per interval) Counter({'ready': 38, 'probe': 4, 'level': 1, 'fault': 1}) runs 41
+test ML42_ep7 FR t_on 66.1 ev_leg FR Fs 0.37 grade conservative True end_t 93.0 phases [(63.1, 'ready'), (65.3, 'level'), (92.5, 'done'), (92.6, 'probe')]
+    n events 11 tail ["C2Event(t_s=60.80000000089482, name='reanchor_skipped:theta_below_min')", "C2Event(t_s=60.80000000089482, name='ready_heave_tail')", "C2Event(t_s=65.30000000127157, name='relevel_predicted:FR')", "C2Event(t_s=65.40000000130331, name='leg_reapproach_start:RL')", "C2Event(t_s=65.50000000133505, name='INFO_PRESSURE_STEP:RL:rod:check_opened')", "C2Event(t_s=66.20000000155724, name='leg_reapproach_contact:RL')"]
+OOD-1 ML31_ep1 RL t_on 66.0 ev_leg FR Fs 0.72 grade normal True end_t 91.0 phases [(61.1, 'ready'), (65.0, 'level'), (82.1, 'done'), (82.2, 'probe')]
+    n events 11 tail ["C2Event(t_s=58.40000000081515, name='reanchor_skipped:theta_below_min')", "C2Event(t_s=58.40000000081515, name='ready_heave_tail')", "C2Event(t_s=65.00000000103424, name='shadow_load_drop:RL')", "C2Event(t_s=65.00000000103424, name='relevel_predicted:RL')", "C2Event(t_s=65.8000000010608, name='leg_reapproach_start:RL')", "C2Event(t_s=66.3000000010774, name='leg_reapproach_contact:RL')"]
+validation ML78_ep0 FR t_on 60.2 ev_leg FL Fs 2.12 grade normal True end_t 87.0 phases [(57.1, 'ready'), (59.1, 'level')]
+    n events 37 tail ["C2Event(t_s=61.90000000189767, name='leg_reapproach_start:RL')", "C2Event(t_s=62.300000001967796, name='leg_reapproach_contact:RL')", "C2Event(t_s=62.600000001977754, name='leg_reapproach_start:RR')", "C2Event(t_s=63.00000000199103, name='leg_reapproach_contact:RR')", "C2Event(t_s=63.40000000200431, name='leg_reapproach_start:RL')", "C2Event(t_s=63.70000000201427, name='leg_reapproach_contact:RL')"]
+validation ML89_ep7 RL t_on 69.7 ev_leg FR Fs 1.3 grade normal False end_t 97.0 phases [(67.1, 'ready'), (69.1, 'level'), (86.7, 'done'), (86.8, 'probe')]
+    n events 7 tail ["C2Event(t_s=64.8000000010276, name='reanchor_skipped:nose_up')", "C2Event(t_s=64.8000000010276, name='ready_heave_tail')", "C2Event(t_s=69.10000000134087, name='leg_reapproach_start:FR')", "C2Event(t_s=69.10000000134087, name='relevel_predicted:FR')", "C2Event(t_s=69.30000000140436, name='INFO_PRESSURE_STEP:RL:rod:check_opened')", "C2Event(t_s=69.4000000014361, name='leg_reapproach_contact:FR')"]
+train ML21_ep1 FR t_on 71.5 ev_leg FR Fs 5.36 grade normal True end_t 98.0 phases [(68.1, 'ready'), (70.1, 'level'), (94.6, 'done'), (94.7, 'probe')]
+    n events 26 tail ["C2Event(t_s=72.00000000197716, name='leg_reapproach_start:FR')", "C2Event(t_s=72.30000000207238, name='leg_reapproach_contact:FR')", "C2Event(t_s=72.30000000207238, name='leg_reapproach_start:RL')", "C2Event(t_s=72.6000000021676, name='leg_reapproach_contact:RL')", "C2Event(t_s=73.00000000229457, name='leg_reapproach_start:RR')", "C2Event(t_s=73.40000000242154, name='leg_reapproach_contact:RR')"]
+train ML63_ep2 RR t_on 72.4 ev_leg RR Fs 1.13 grade conservative True end_t 99.0 phases [(69.1, 'ready'), (71.1, 'level'), (82.5, 'fault')]
+    n events 12 tail ["C2Event(t_s=66.90000000109731, name='ready_heave_tail')", "C2Event(t_s=71.10000000140727, name='INFO_PRESSURE_STEP:RR:rod:lock_load_loss')", "C2Event(t_s=71.10000000140727, name='leg_reapproach_start:RR')", "C2Event(t_s=71.10000000140727, name='relevel_predicted:RR')", "C2Event(t_s=71.30000000147075, name='INFO_PRESSURE_STEP:RR:rod:check_opened')", "C2Event(t_s=72.70000000191513, name='leg_reapproach_contact:RR')"]
+masks for fault run {'start_s': 79.50000000272172, 'end_s': 96.00000000326946, 'start_engine_s': 82.50000000272362, 'end_engine_s': 99.00000000327137, 'reasons': ['fault'], 'fault_t_s': 79.50000000272172, 'rule': "C-S8-27 �� / U-S8-34 (spec rev. 48 218.13): mask = FAULT entry .. run end (fault_t_s); the forced-retract window is no longer masked for ForcedRetract(others='controller') (U-S8-34, in-window products recorded only); pre-U-S8-27 episodes (every leg held to the run end) keep start .. end + 3 s"} n masks 3
+all runs ending in fault ['ML63_ep2', 'ML87_ep6', 'ML28_ep5']
+sign 2 vs 0 one-sided 0.25 two-sided 0.5
+CP upper one-sided 44/604 0.09267798369191854 two-sided 97.5 0.09656317082049544 rate 0.0728476821192053 J_P 106/604 0.20295009453971036 0/522 0.005722514395404499 0/19 0.14586850331224344
+discordant 62 runs 57 bases 46 reverse 0
+sign per episode p 2.168404344971009e-19 per run 6.938893903907228e-18 per base 1.4210854715202004e-14
+miss bases 35 of 97 runs with miss 41 of runs with episodes 318
+run-level CP any miss 41 318 0.16401779776400383

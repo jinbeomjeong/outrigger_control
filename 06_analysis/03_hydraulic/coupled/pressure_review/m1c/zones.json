@@ -1,0 +1,2332 @@
+{
+ "r12": {
+  "VN_c1_v1": {
+   "starts": 12,
+   "zone": 4,
+   "rows": 4,
+   "rows_zone": 4,
+   "rows_list": [
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.075,
+     "zone_starts": [
+      [
+       0.92,
+       "FL",
+       74.44,
+       26.79,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 7.27,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       0.9,
+       "FL",
+       75.33,
+       25.64,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 6.89,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.025,
+     "zone_starts": [
+      [
+       0.98,
+       "FL",
+       72.69,
+       29.05,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 6.76,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       73.57,
+       27.92,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 6.86,
+     "pass": false
+    }
+   ],
+   "by_leg": {
+    "FL": [
+     4,
+     4
+    ],
+    "RR": [
+     8,
+     0
+    ]
+   },
+   "sink_leg_first": [
+    4,
+    0
+   ]
+  },
+  "VN_c1_v05": {
+   "starts": 12,
+   "zone": 4,
+   "rows": 4,
+   "rows_zone": 4,
+   "rows_list": [
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       0.9,
+       "FL",
+       74.75,
+       25.66,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 11.95,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.075,
+     "zone_starts": [
+      [
+       0.92,
+       "FL",
+       73.85,
+       26.84,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 11.08,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       72.98,
+       27.96,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 10.32,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.025,
+     "zone_starts": [
+      [
+       0.98,
+       "FL",
+       72.11,
+       29.08,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 12.08,
+     "pass": true
+    }
+   ],
+   "by_leg": {
+    "FL": [
+     4,
+     4
+    ],
+    "RR": [
+     8,
+     0
+    ]
+   },
+   "sink_leg_first": [
+    4,
+    0
+   ]
+  },
+  "VN_c2_v05": {
+   "starts": 14,
+   "zone": 4,
+   "rows": 4,
+   "rows_zone": 4,
+   "rows_list": [
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       73.26,
+       28.08,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 11.62,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FL",
+       71.56,
+       30.27,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 10.72,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.075,
+     "zone_starts": [
+      [
+       0.92,
+       "FL",
+       74.12,
+       26.97,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 12.54,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.025,
+     "zone_starts": [
+      [
+       0.98,
+       "FL",
+       72.41,
+       29.17,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 11.5,
+     "pass": true
+    }
+   ],
+   "by_leg": {
+    "FL": [
+     4,
+     4
+    ],
+    "RR": [
+     4,
+     0
+    ],
+    "FR": [
+     4,
+     0
+    ],
+    "RL": [
+     2,
+     0
+    ]
+   },
+   "sink_leg_first": [
+    4,
+    0
+   ]
+  },
+  "VN_c2_v1": {
+   "starts": 15,
+   "zone": 4,
+   "rows": 4,
+   "rows_zone": 4,
+   "rows_list": [
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FL",
+       72.0,
+       30.05,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 7.07,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.025,
+     "zone_starts": [
+      [
+       0.98,
+       "FL",
+       72.86,
+       28.92,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 5.64,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       73.7,
+       27.84,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 5.57,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.075,
+     "zone_starts": [
+      [
+       0.92,
+       "FL",
+       74.53,
+       26.77,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 6.1,
+     "pass": false
+    }
+   ],
+   "by_leg": {
+    "FL": [
+     4,
+     4
+    ],
+    "RR": [
+     4,
+     0
+    ],
+    "FR": [
+     4,
+     0
+    ],
+    "RL": [
+     3,
+     0
+    ]
+   },
+   "sink_leg_first": [
+    4,
+    0
+   ]
+  },
+  "VN_c5_v1": {
+   "starts": 16,
+   "zone": 4,
+   "rows": 4,
+   "rows_zone": 4,
+   "rows_list": [
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FL",
+       72.0,
+       30.23,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 5.05,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.025,
+     "zone_starts": [
+      [
+       0.97,
+       "FL",
+       72.84,
+       29.15,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 5.0,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.075,
+     "zone_starts": [
+      [
+       1.02,
+       "FL",
+       71.14,
+       31.34,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 6.81,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       73.65,
+       28.1,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 5.63,
+     "pass": false
+    }
+   ],
+   "by_leg": {
+    "FL": [
+     4,
+     4
+    ],
+    "FR": [
+     4,
+     0
+    ],
+    "RL": [
+     4,
+     0
+    ],
+    "RR": [
+     4,
+     0
+    ]
+   },
+   "sink_leg_first": [
+    4,
+    0
+   ]
+  },
+  "VN_c5_v05": {
+   "starts": 16,
+   "zone": 4,
+   "rows": 4,
+   "rows_zone": 4,
+   "rows_list": [
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       73.11,
+       27.75,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 9.67,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.075,
+     "zone_starts": [
+      [
+       0.92,
+       "FL",
+       73.9,
+       26.73,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 9.94,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       0.9,
+       "FL",
+       74.75,
+       25.62,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 9.61,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.025,
+     "zone_starts": [
+      [
+       0.98,
+       "FL",
+       72.3,
+       28.79,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 9.48,
+     "pass": false
+    }
+   ],
+   "by_leg": {
+    "FL": [
+     4,
+     4
+    ],
+    "FR": [
+     4,
+     0
+    ],
+    "RL": [
+     4,
+     0
+    ],
+    "RR": [
+     4,
+     0
+    ]
+   },
+   "sink_leg_first": [
+    4,
+    0
+   ]
+  },
+  "BL_v1": {
+   "starts": 7,
+   "zone": 0,
+   "rows": 4,
+   "rows_zone": 0,
+   "rows_list": [],
+   "by_leg": {
+    "FL": [
+     3,
+     0
+    ],
+    "RR": [
+     4,
+     0
+    ]
+   },
+   "sink_leg_first": [
+    4,
+    0
+   ]
+  },
+  "BL_v05": {
+   "starts": 1,
+   "zone": 1,
+   "rows": 4,
+   "rows_zone": 1,
+   "rows_list": [
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.025,
+     "zone_starts": [
+      [
+       1.21,
+       "RR",
+       23.98,
+       6.54,
+       "pr8_ph30"
+      ]
+     ],
+     "F_min": 8.87,
+     "pass": false
+    }
+   ],
+   "by_leg": {
+    "RR": [
+     1,
+     1
+    ]
+   },
+   "sink_leg_first": [
+    1,
+    1
+   ]
+  },
+  "VR_c2_v1": {
+   "starts": 11,
+   "zone": 1,
+   "rows": 4,
+   "rows_zone": 1,
+   "rows_list": [
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.025,
+     "zone_starts": [
+      [
+       1.08,
+       "RR",
+       36.38,
+       9.53,
+       "pr8_ph30"
+      ]
+     ],
+     "F_min": 8.88,
+     "pass": false
+    }
+   ],
+   "by_leg": {
+    "FL": [
+     4,
+     0
+    ],
+    "RR": [
+     4,
+     1
+    ],
+    "FR": [
+     3,
+     0
+    ]
+   },
+   "sink_leg_first": [
+    4,
+    1
+   ]
+  },
+  "VR_c2_v05": {
+   "starts": 12,
+   "zone": 1,
+   "rows": 4,
+   "rows_zone": 1,
+   "rows_list": [
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       1.05,
+       "RR",
+       37.13,
+       9.42,
+       "pr8_ph30"
+      ]
+     ],
+     "F_min": 8.38,
+     "pass": false
+    }
+   ],
+   "by_leg": {
+    "FL": [
+     4,
+     0
+    ],
+    "RR": [
+     4,
+     1
+    ],
+    "FR": [
+     4,
+     0
+    ]
+   },
+   "sink_leg_first": [
+    4,
+    1
+   ]
+  },
+  "VN_c2_v1_E2": {
+   "starts": 16,
+   "zone": 4,
+   "rows": 4,
+   "rows_zone": 4,
+   "rows_list": [
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FL",
+       70.28,
+       20.37,
+       "pr20_ph60"
+      ]
+     ],
+     "F_min": 9.52,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.025,
+     "zone_starts": [
+      [
+       0.98,
+       "FL",
+       71.14,
+       19.26,
+       "pr20_ph60"
+      ]
+     ],
+     "F_min": 10.44,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       72.01,
+       18.13,
+       "pr20_ph60"
+      ]
+     ],
+     "F_min": 11.01,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.075,
+     "zone_starts": [
+      [
+       1.02,
+       "FL",
+       69.42,
+       21.49,
+       "pr20_ph60"
+      ]
+     ],
+     "F_min": 9.54,
+     "pass": false
+    }
+   ],
+   "by_leg": {
+    "FL": [
+     4,
+     4
+    ],
+    "RR": [
+     4,
+     0
+    ],
+    "FR": [
+     4,
+     0
+    ],
+    "RL": [
+     4,
+     0
+    ]
+   },
+   "sink_leg_first": [
+    4,
+    0
+   ]
+  },
+  "BL_v1_E2": {
+   "starts": 3,
+   "zone": 0,
+   "rows": 4,
+   "rows_zone": 0,
+   "rows_list": [],
+   "by_leg": {
+    "RR": [
+     3,
+     0
+    ]
+   },
+   "sink_leg_first": [
+    3,
+    0
+   ]
+  },
+  "VR_c2_v1_E2": {
+   "starts": 12,
+   "zone": 1,
+   "rows": 4,
+   "rows_zone": 1,
+   "rows_list": [
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.025,
+     "zone_starts": [
+      [
+       1.08,
+       "RR",
+       36.24,
+       9.39,
+       "pr8_ph30"
+      ]
+     ],
+     "F_min": 8.26,
+     "pass": false
+    }
+   ],
+   "by_leg": {
+    "FL": [
+     4,
+     0
+    ],
+    "RR": [
+     4,
+     1
+    ],
+    "FR": [
+     4,
+     0
+    ]
+   },
+   "sink_leg_first": [
+    4,
+    1
+   ]
+  },
+  "BL_v1_E4": {
+   "starts": 0,
+   "zone": 0,
+   "rows": 4,
+   "rows_zone": 0,
+   "rows_list": [],
+   "by_leg": {},
+   "sink_leg_first": [
+    0,
+    0
+   ]
+  },
+  "OFF_E2": {
+   "starts": 0,
+   "zone": 0,
+   "rows": 4,
+   "rows_zone": 0,
+   "rows_list": [],
+   "by_leg": {},
+   "sink_leg_first": [
+    0,
+    0
+   ]
+  }
+ },
+ "g4": {
+  "VN_c2_v1": {
+   "starts": 100,
+   "zone": 27,
+   "rows": 28,
+   "rows_zone": 27,
+   "rows_list": [
+    {
+     "twin": [
+      "top",
+      "FL",
+      0.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       1.05,
+       "FL",
+       70.29,
+       25.07,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 10.97,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "FL",
+      0.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FL",
+       72.98,
+       21.6,
+       "pr20_ph60"
+      ]
+     ],
+     "F_min": 8.96,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "FR",
+      0.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FR",
+       67.89,
+       29.48,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 11.07,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "FL",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       1.05,
+       "FL",
+       72.24,
+       29.75,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 7.14,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "FL",
+      8.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       0.9,
+       "FL",
+       77.63,
+       26.15,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 8.86,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "FL",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FL",
+       73.59,
+       28.01,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 8.65,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "FR",
+      0.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       1.15,
+       "FR",
+       66.37,
+       31.44,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 11.02,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "FL",
+      8.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       76.03,
+       28.22,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 9.35,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "FR",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FR",
+       70.34,
+       25.98,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 11.71,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "FR",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FR",
+       68.83,
+       27.93,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 10.3,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "FR",
+      8.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       0.9,
+       "FR",
+       73.21,
+       26.3,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 10.71,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "FR",
+      8.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.85,
+       "FR",
+       75.07,
+       23.9,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 12.29,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RL",
+      0.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       0.9,
+       "FR",
+       70.86,
+       25.48,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 11.3,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RL",
+      0.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       1.05,
+       "FR",
+       65.06,
+       32.99,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 10.42,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RL",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       0.9,
+       "FR",
+       70.6,
+       25.62,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 10.66,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RL",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FR",
+       68.93,
+       27.78,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 10.6,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RL",
+      8.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.85,
+       "FR",
+       74.35,
+       24.8,
+       "pr20_ph60"
+      ]
+     ],
+     "F_min": 9.54,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      0.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       72.87,
+       21.59,
+       "pr20_ph60"
+      ]
+     ],
+     "F_min": 7.25,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      0.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FL",
+       70.95,
+       24.08,
+       "pr20_ph60"
+      ]
+     ],
+     "F_min": 5.87,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      8.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       0.9,
+       "FL",
+       76.47,
+       27.62,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 8.43,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FL",
+       72.0,
+       30.05,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 7.07,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      8.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.85,
+       "FL",
+       78.84,
+       24.55,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 8.31,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       73.7,
+       27.84,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 5.57,
+     "pass": false
+    },
+    {
+     "twin": [
+      "bottom",
+      "FL",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FL",
+       73.7,
+       28.0,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 6.54,
+     "pass": false
+    },
+    {
+     "twin": [
+      "bottom",
+      "FL",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       75.28,
+       25.96,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 8.42,
+     "pass": false
+    },
+    {
+     "twin": [
+      "bottom",
+      "RR",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FL",
+       72.2,
+       29.92,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 6.4,
+     "pass": false
+    },
+    {
+     "twin": [
+      "bottom",
+      "RR",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       74.01,
+       27.58,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 4.25,
+     "pass": false
+    }
+   ],
+   "by_leg": {
+    "FL": [
+     28,
+     16
+    ],
+    "RR": [
+     29,
+     0
+    ],
+    "FR": [
+     25,
+     11
+    ],
+    "RL": [
+     18,
+     0
+    ]
+   },
+   "sink_leg_first": [
+    28,
+    14
+   ]
+  },
+  "VN_c2_v05": {
+   "starts": 101,
+   "zone": 26,
+   "rows": 28,
+   "rows_zone": 26,
+   "rows_list": [
+    {
+     "twin": [
+      "top",
+      "FL",
+      0.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FL",
+       72.2,
+       26.12,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 9.9,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "FL",
+      0.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       1.05,
+       "FL",
+       70.36,
+       28.51,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 9.27,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "FL",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FL",
+       73.15,
+       28.24,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 8.2,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "FL",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       74.7,
+       26.23,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 13.66,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "FL",
+      8.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       0.9,
+       "FL",
+       76.95,
+       26.11,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 7.3,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "FR",
+      0.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.1,
+       "FR",
+       66.49,
+       28.72,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 13.69,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "FR",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FR",
+       69.31,
+       27.82,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 13.69,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "FL",
+      8.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.85,
+       "FL",
+       78.81,
+       23.7,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 8.86,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "FR",
+      8.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       0.9,
+       "FR",
+       73.76,
+       26.09,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 11.42,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "FR",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FR",
+       70.76,
+       25.94,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 8.35,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "FR",
+      8.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.85,
+       "FR",
+       75.6,
+       23.71,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 10.92,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "FR",
+      0.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       1.05,
+       "FR",
+       68.0,
+       26.78,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 9.11,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RL",
+      0.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FR",
+       67.15,
+       27.73,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 7.2,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RL",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       0.9,
+       "FR",
+       71.05,
+       25.54,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 6.19,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RL",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FR",
+       69.35,
+       27.75,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 14.2,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      0.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FL",
+       70.22,
+       28.53,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 7.42,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RL",
+      8.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.85,
+       "FR",
+       74.92,
+       24.55,
+       "pr20_ph60"
+      ]
+     ],
+     "F_min": 11.45,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RL",
+      0.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       1.05,
+       "FR",
+       65.49,
+       29.87,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 12.73,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      0.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       72.12,
+       26.08,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 8.05,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FL",
+       71.56,
+       30.27,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 10.72,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       73.26,
+       28.08,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 11.62,
+     "pass": true
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      8.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.85,
+       "FL",
+       78.1,
+       24.59,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 8.47,
+     "pass": false
+    },
+    {
+     "twin": [
+      "bottom",
+      "FL",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FL",
+       73.02,
+       27.93,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 9.74,
+     "pass": true
+    },
+    {
+     "twin": [
+      "bottom",
+      "FL",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       74.69,
+       25.78,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 9.14,
+     "pass": false
+    },
+    {
+     "twin": [
+      "bottom",
+      "RR",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "FL",
+       71.55,
+       29.82,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 8.78,
+     "pass": false
+    },
+    {
+     "twin": [
+      "bottom",
+      "RR",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "FL",
+       73.38,
+       27.45,
+       "pr30_ph80"
+      ]
+     ],
+     "F_min": 8.69,
+     "pass": false
+    }
+   ],
+   "by_leg": {
+    "FL": [
+     28,
+     15
+    ],
+    "RR": [
+     26,
+     0
+    ],
+    "FR": [
+     28,
+     11
+    ],
+    "RL": [
+     19,
+     0
+    ]
+   },
+   "sink_leg_first": [
+    28,
+    14
+   ]
+  },
+  "BL_v1": {
+   "starts": 32,
+   "zone": 3,
+   "rows": 28,
+   "rows_zone": 3,
+   "rows_list": [
+    {
+     "twin": [
+      "top",
+      "FR",
+      8.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       1.37,
+       "RL",
+       24.98,
+       7.16,
+       "pr8_ph30"
+      ]
+     ],
+     "F_min": 10.35,
+     "pass": true
+    },
+    {
+     "twin": [
+      "bottom",
+      "FL",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       1.35,
+       "FL",
+       56.06,
+       16.83,
+       "pr20_ph60"
+      ]
+     ],
+     "F_min": 9.0,
+     "pass": false
+    },
+    {
+     "twin": [
+      "bottom",
+      "RR",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       1.25,
+       "FL",
+       54.87,
+       17.9,
+       "pr20_ph60"
+      ]
+     ],
+     "F_min": 4.97,
+     "pass": false
+    }
+   ],
+   "by_leg": {
+    "FL": [
+     15,
+     2
+    ],
+    "RR": [
+     11,
+     0
+    ],
+    "RL": [
+     4,
+     1
+    ],
+    "FR": [
+     2,
+     0
+    ]
+   },
+   "sink_leg_first": [
+    16,
+    1
+   ]
+  },
+  "BL_v05": {
+   "starts": 14,
+   "zone": 1,
+   "rows": 28,
+   "rows_zone": 1,
+   "rows_list": [
+    {
+     "twin": [
+      "top",
+      "RL",
+      8.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.25,
+       "RL",
+       25.95,
+       6.94,
+       "pr8_ph30"
+      ]
+     ],
+     "F_min": 12.8,
+     "pass": true
+    }
+   ],
+   "by_leg": {
+    "RR": [
+     6,
+     0
+    ],
+    "FL": [
+     3,
+     0
+    ],
+    "RL": [
+     3,
+     1
+    ],
+    "FR": [
+     2,
+     0
+    ]
+   },
+   "sink_leg_first": [
+    10,
+    1
+   ]
+  },
+  "VR_c2_v1": {
+   "starts": 80,
+   "zone": 7,
+   "rows": 28,
+   "rows_zone": 7,
+   "rows_list": [
+    {
+     "twin": [
+      "top",
+      "FR",
+      0.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       1.05,
+       "RL",
+       29.24,
+       9.05,
+       "pr8_ph30"
+      ]
+     ],
+     "F_min": 7.74,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "FR",
+      0.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "RL",
+       32.65,
+       8.54,
+       "pr8_ph30"
+      ]
+     ],
+     "F_min": 6.44,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "FR",
+      4.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.1,
+       "RL",
+       35.38,
+       9.26,
+       "pr8_ph30"
+      ]
+     ],
+     "F_min": 8.15,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RL",
+      0.0
+     ],
+     "offset": 0.0,
+     "zone_starts": [
+      [
+       1.0,
+       "RL",
+       29.54,
+       8.87,
+       "pr8_ph30"
+      ]
+     ],
+     "F_min": 6.87,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RL",
+      0.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       0.95,
+       "RL",
+       32.75,
+       8.52,
+       "pr8_ph30"
+      ]
+     ],
+     "F_min": 5.35,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RL",
+      4.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       1.05,
+       "RL",
+       35.06,
+       9.44,
+       "pr8_ph30"
+      ]
+     ],
+     "F_min": 6.81,
+     "pass": false
+    },
+    {
+     "twin": [
+      "top",
+      "RR",
+      0.0
+     ],
+     "offset": 0.05,
+     "zone_starts": [
+      [
+       1.25,
+       "RR",
+       35.38,
+       9.3,
+       "pr8_ph30"
+      ]
+     ],
+     "F_min": 14.91,
+     "pass": true
+    }
+   ],
+   "by_leg": {
+    "FL": [
+     22,
+     0
+    ],
+    "RR": [
+     22,
+     1
+    ],
+    "FR": [
+     20,
+     0
+    ],
+    "RL": [
+     16,
+     6
+    ]
+   },
+   "sink_leg_first": [
+    28,
+    4
+   ]
+  }
+ }
+}

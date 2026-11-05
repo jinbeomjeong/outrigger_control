@@ -1,0 +1,6 @@
+{('MLJ', 'runs'): 6, ('MLJ', 'with_episodes'): 2, ('MLJ', 'with_miss'): 1, ('base', 'runs'): 96, ('base', 'with_episodes'): 0, ('base', 'with_miss'): 0, ('branch', 'runs'): 768, ('branch', 'with_episodes'): 316, ('branch', 'with_miss'): 40}
+episodes by kind {'base': 0, 'branch': 590, 'MLJ': 14} misses by kind {'base': 0, 'branch': 42, 'MLJ': 2}
+non-branch runs with episodes {'MLJ_FS24_Fs0': (10, 2), 'MLJ_FS24_Fs8': (4, 0)}
+all 41 318 0.1289 CP one-sided upper 0.164
+branch only 40 316 0.1266 CP one-sided upper 0.1616
+Fisher SignificanceResult(statistic=np.float64(1.215126050420168), pvalue=np.float64(0.6212895382067514))

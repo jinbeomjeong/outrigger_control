@@ -1,0 +1,43 @@
+('between', '1', 'jc_miss', 'jp_miss') 42
+('between', '1', 'jc_ok', 'jp_miss') 21
+('between', '1', 'jc_ok', 'jp_ok') 4
+('between', '>=2', 'jc_miss', 'jp_miss') 2
+('between', '>=2', 'jc_ok', 'jp_miss') 10
+('between', '>=2', 'jc_ok', 'jp_ok') 3
+('under', '>=2', 'jc_ok', 'jp_miss') 31
+('under', '>=2', 'jc_ok', 'jp_ok') 491
+('1ms<=0', 'rec<=0', 'lift', 'air') 14
+('1ms<=0', 'rec<=0', 'lift', 'noair') 3
+('1ms<=0', 'rec<=0', 'nolift', 'noair') 1
+('1ms>0', 'rec<=0', 'nolift', 'noair') 2
+('1ms>0', 'rec>0', 'nolift', 'noair') 24
+median under ms 31
+g4.jsonl rows 168 keys ['t_touch_end', 't_lift', 'D_te', 'tau_te', 'touch_attitude_max', 'touch_attitude_span', 'stroke_te_mm', 'stroke_max_mm', 'stroke_end_mm', 's_contact', 'F_min', 'F_min_leg', 't_min_after_lift', 'F_min8', 'F_min8_leg', 'F_min8_t', 'F_RL_min8', 'mean1s_min8', 'F_RL_win', 'F_win', 'D_lift', 'D_after_lift', 'tau_lift', 'lift_after_te', 'state_at', 'job', 'wall_s', 'commands_sha256', 'harness_commands_sha256', 'final_phase', 't_event_s', 'values', 'event_output', 'event_names', 'events', 'command_stats', 'm1', 'rr_min']
+    pressure 336
+    J_P 0
+    J_C 0
+    contact 666
+    combined 0
+    missed 0
+    M1_missed 0
+   variants [('None', 168)]
+r12.jsonl rows 84 keys ['t_touch_end', 't_lift', 'D_te', 'tau_te', 'touch_attitude_max', 'touch_attitude_span', 'stroke_te_mm', 'stroke_max_mm', 'stroke_end_mm', 's_contact', 'F_min', 'F_min_leg', 't_min_after_lift', 'F_min8', 'F_min8_leg', 'F_min8_t', 'F_RL_min8', 'mean1s_min8', 'F_RL_win', 'F_win', 'D_lift', 'D_after_lift', 'tau_lift', 'lift_after_te', 'state_at', 'job', 'wall_s', 'commands_sha256', 'harness_commands_sha256', 'final_phase', 't_event_s', 'values', 'event_output', 'event_names', 'events', 'command_stats', 'm1', 'rr_min']
+    pressure 168
+    J_P 0
+    J_C 0
+    contact 336
+    combined 0
+    missed 0
+    M1_missed 0
+   variants [('None', 84)]
+early.jsonl rows 72 keys ['t_touch_end', 't_lift', 'D_te', 'tau_te', 'touch_attitude_max', 'touch_attitude_span', 'stroke_te_mm', 'stroke_max_mm', 'stroke_end_mm', 's_contact', 'F_min', 'F_min_leg', 't_min_after_lift', 'F_min8', 'F_min8_leg', 'F_min8_t', 'F_RL_min8', 'mean1s_min8', 'F_RL_win', 'F_win', 'D_lift', 'D_after_lift', 'tau_lift', 'lift_after_te', 'state_at', 'job', 'wall_s', 'commands_sha256', 'harness_commands_sha256', 'final_phase', 't_event_s', 'values', 'event_output', 'event_names', 'events', 'command_stats', 'm1', 'rr_min']
+    pressure 144
+    J_P 0
+    J_C 0
+    contact 280
+    combined 0
+    missed 0
+    M1_missed 0
+   variants [('None', 72)]
+judgement keys ['r12', 'g4', 'estimates']
+files mentioning pressure-only under pressure_review:

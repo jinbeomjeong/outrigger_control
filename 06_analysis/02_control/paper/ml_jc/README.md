@@ -20,10 +20,17 @@
 | `item9_list.py` / `.out.txt` | 항목 9 사례별 구간 수와 놓침(분모 19 재집계) | `06_analysis/02_control/s8/s8_rest_rev46_item9.json` | 없음 |
 | `item9_rows.py` / `.out.txt` | p1r·rest·CB 2개·v4 재확인 판정 파일의 항목 9 행 | 각 `verify_*.json` | 없음 |
 | `ep_table.py` / `.out.txt` | 19구간의 다리·시각·부상 표시 표, 최종 재실행의 같은 구간 | p1r·rest `verify_S8C.json`, `verify_final_v4recheck_20261104_202815.json`, `verify_final_E_RE1bF_Fs8_20261031_000914.json` | 없음 |
+| `ml_jc_pads.py` / `.out.txt` | 묶음별 창 수·부상·놓침 표, E/N 구간의 창 수 분포(434.5의 창 수 집계). 출력의 `under_s`·`air_s`는 $t_{on}$ ±1 s 창의 값이라 인용하지 않는다(인용값은 `ml_jc_missed_detail.json`). `ml_jc_missed_pads.json`을 `S`에 쓰며 이 파일은 복사하지 않았다 | `ml_jc_head.json`, 각 사례의 `result.json`·`pads.npz` | **있음**: 파일 앞쪽 상수 `S`, 입출력 폴더 |
+| `ml_phase_check.py` / `.out.txt` | ML 분기 시작·사건 직전 단계(READY 768건), C-S8-72 등 판정 파일 항목 9 합 | `ml_dataset`, `06_analysis/02_control/s8/rev6*/verify*.json`, `07_results/S8/c72_*` | 없음 |
+| `recheck_rev.py` / `.out.txt` | 434.8 재확인: 표본 시각 교차 집계, 두 힘 필드, 창 2개 구간, 뒤 구간, 실행 단위 기준율과 Fisher, 부호 검정·상한 | 이 폴더의 `ml_jc_head.json`·`ml_jc_missed_detail.json`, ML `ml_dataset*`, 각 사례 `controller_events.json`·`pads.npz`, `verify_S8ML.json` | 없음(저장소 절대 경로) |
+| `recheck_rev2.py` / `.out.txt` | 434.8 재확인: 창 수 × 판정 교차표, 힘 정의 교차표, `pressure_review/m1b` 내용 점검 | 이 폴더의 두 JSON, `pressure_review/` | 없음(저장소 절대 경로) |
+| `run_count_check.py` / `.out.txt` | 실행 수 대조: 분기 316 + MLJ 2 = 318, 놓침 40 + 1 = 41, 베이스 96건은 구간 0(434.8). `recheck_rev.out.txt`의 "some J_C miss 40"은 분기만, "41 of 318"은 MLJ 포함이다 | 이 폴더의 `ml_jc_head.json` | 없음(저장소 절대 경로) |
+| `recheck_rev3.py` / `.out.txt` | 434.8 재확인: `N_raw`·20 ms 수직력·부상 표시 교차, `F_cyl_min_interval`과 판정 진리의 동일 확인 | `ml_jc_head.json`, 각 사례 `pads.npz` | 없음(저장소 절대 경로) |
 
 - 주의: `chrono_level_miss.out.txt`의 `G4H` 행은 헤드 센서 고장 주입 사례다(434.6).
 - `ml_jc_final.py` 끝의 Chrono 블록은 찾는 경로에 판정 파일이 없어 아무것도 내지 않는다. Chrono 값은 `chrono_level_miss.out.txt`를 쓴다.
-- 표본 수 집계(1표본 67개 중 42, 2표본 이상 537개 중 2)는 `ml_jc_head.json`의 `scope == "scored"` 행에서 `samples`와 `JC_first_decision_s`로 다시 셀 수 있다. 묶음은 train, validation, test, OOD-1, OOD-2, MLJ다. `EN` 묶음은 넣지 않는다.
+- `recheck_rev*.py`, `ml_jc_pads.py`, `ml_phase_check.py`의 추가 스크립트도 인자 없이 돈다. `ml_jc_pads.py`만 실행 전에 `S`를 바꾼다.
+- 창 수 집계(10 Hz 창 1개 67개 중 42, 창 2개 이상 537개 중 2)는 `ml_jc_head.json`의 `scope == "scored"` 행에서 `samples`와 `JC_first_decision_s`로 다시 셀 수 있다. 묶음은 train, validation, test, OOD-1, OOD-2, MLJ다. `EN` 묶음은 넣지 않는다.
 
 ## 코드 판
 
@@ -75,3 +82,15 @@ $D = '06_analysis\02_control\paper\ml_jc'
 | `ep_table.out.txt` | `E72C42ACEA8AA048` |
 | `ml_jc_final.out.txt` | `1A4B853D03FFDFD2` |
 | `chrono_level_miss.out.txt` | `1CEACE9C815C96DE` |
+| `recheck_rev.py` | `5DBE3854E7F5848D` |
+| `recheck_rev2.py` | `2447602FF756135C` |
+| `recheck_rev3.py` | `4C818125E0F02D4B` |
+| `ml_jc_pads.py` | `978C8768F99A55B2` |
+| `ml_phase_check.py` | `08424E1EAB32BC3E` |
+| `recheck_rev.out.txt` | `01ED97B73ABF7B86` |
+| `recheck_rev2.out.txt` | `5939E5AC522B0234` |
+| `recheck_rev3.out.txt` | `29CCE200A1F532A6` |
+| `ml_jc_pads.out.txt` | `5E00745152A0118D` |
+| `ml_phase_check.out.txt` | `BBC0940C98300991` |
+| `run_count_check.py` | `EF74E279302945B3` |
+| `run_count_check.out.txt` | `30C4D8776A32B64A` |

@@ -1,0 +1,23 @@
+{
+ "written": "2026-11-05, before any t9 run",
+ "pass_nocheck_OFF": {
+  "quantity": "RR load minimum after the event, Hopsan no-check circuit with the OFF commands and the quintic sink, per phase against the harness OFF value of the same phase",
+  "harness_kN": {"0.0": 13.75, "0.025": 12.01, "0.05": 12.17, "0.075": 12.98},
+  "tolerance_kN": 1.0,
+  "also_reported_not_gated": ["time of the minimum, +-0.1 s", "RR load at +1.0 and +1.4 s, +-2 kN", "all leg loads at +1.0 s"],
+  "rule": "if any phase misses, write the cause; no other replay value is then used as an absolute value, only differences within Hopsan"
+ },
+ "rod_pressure_check": {
+  "quantity": "RR rod chamber pressure at +1.4 s, vent circuit, V1 and OFF commands, bar gauge",
+  "reference": "about 50 bar g in the harness VR variant, value given by the coordinator",
+  "agree_within_bar": 10,
+  "mechanism_question": "does the rod check close near 6 bar g, or does it stay open with p_r = p_B"
+ },
+ "early_release_unit": {
+  "quantity": "RR, extend from rest: line A pressure and fill stroke when the rod check first opens; rod pressure fall",
+  "m1b_rule": "p_A = (p_r + p_cr - p_T) / psi, stroke = V_line (p_A - p_T) / (beta_h A_h)",
+  "agree": "stroke within 5 %",
+  "acceptable": "stroke within 10 %",
+  "rule": "the formula is not fitted to these runs before the comparison table is written"
+ }
+}
