@@ -1,0 +1,30 @@
+{
+ "batch": "smoke",
+ "runs": 1,
+ "errors": 0,
+ "golden_v0": [
+  {
+   "row": "R12",
+   "phase": "offset 0.0",
+   "equal": true
+  }
+ ],
+ "w2": [],
+ "rows": [
+  {
+   "row": "R12",
+   "phase": "offset 0.0",
+   "setting": "V0",
+   "final_phase": "ready",
+   "t_first_ready_s": 39.4,
+   "n_rev": 22,
+   "warn_fault": {
+    "WARN_ROD_PRESSURE_FALLBACK": 4
+   },
+   "m2_shift_total_mm": null,
+   "lock_changes": 0,
+   "commands_sha256": "aa147ff6d2839b90dc27de7baff5bc2b24c330b1a3d5be169ff5b739a801b20b",
+   "t_ready_back_s": 23.2
+  }
+ ]
+}
