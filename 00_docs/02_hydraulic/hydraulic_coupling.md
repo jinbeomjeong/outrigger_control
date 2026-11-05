@@ -1,5 +1,7 @@
 # 네 다리 펌프 공유: 유량 포화 연성 모델 (2026-11-04)
 
+> **v5 구현**: 유량 포화·밸브 지연·M2·M1c·LC 옵션의 구현 명세는 [v5_hydraulic_impl_spec.md](v5_hydraulic_impl_spec.md)다(2026-11-06). 옵션은 모두 기본 끔이다.
+
 > **범위**(사용자 결정, `decision_log.md` 4절 끝): 고정 펌프 유량 포화와 다리 속도 분배. LS 라인·보상기 동특성과 파일럿 공급 공유는 넣지 않는다. 경로는 numpy 축소 모델과 Hopsan 네 다리 회로이고, 현재 치수(REXOME35)를 쓴다.
 > **이 문서는 모델 명세다.** 영향 판정은 `hydraulic_coupling_criteria.md`(봉인)를 따라 control-expert가 한다. 여기서는 판정하지 않는다.
 > **L2 이력 경로**(`l2_cylinder.py`, `l2_params.py`, 옛 치수, 결정 D7)는 건드리지 않았다.
