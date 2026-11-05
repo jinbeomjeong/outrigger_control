@@ -34,6 +34,9 @@ from outrigger_sim.hydraulics.rod_release import RodReleaseShift  # noqa: E402
 from outrigger_sim.hydraulics.v5_options import (  # noqa: E402
     LOCK_SPEED_EPS_M_S,
     HydraulicOptions,
+    apply_lock_window,
+    check_lock_window_meta,
+    validate,
 )
 
 LEG_COUNT = 4
@@ -46,6 +49,9 @@ HARNESS_VALVE_TAU_S = 0.1
 _LAST_ARMED: list = [None]
 """The plant armed last in this process (the event branch runs on it), for the run record."""
 _INSTALLED: dict = {}
+_LAST_PRESET: list = [None]
+CONTROL_PERIOD_S = 0.1
+"""R8 C2 period `T` (spec 2.6: plant rule alone needs `t_c <= T`)."""
 WAIT_SPEED_FACTOR = 2.0
 """Spec 2.5: a waiting leg hands the law ``2 eps`` so that it stays in its moving branch."""
 TIME_TOL_S = 1.0e-9
@@ -223,8 +229,7 @@ def install(verdict_runs_module, options: HydraulicOptions) -> None:
     """
     if options.flow is not None:
         raise ValueError("the harness flow limit is the FlowSetting of the run, not options.flow")
-    if options.lock_window_follows_plant:
-        raise ValueError("the controller lock window is not connected yet (spec commit 7)")
+    validate(options, period_s=CONTROL_PERIOD_S)
     if options.valve_tau_s is not None and options.valve_tau_s != HARNESS_VALVE_TAU_S:
         raise ValueError(f"the harness valve lag is fixed at {HARNESS_VALVE_TAU_S} s")
     if _INSTALLED.get(id(verdict_runs_module)) is not None:
@@ -244,4 +249,41 @@ def install(verdict_runs_module, options: HydraulicOptions) -> None:
     def make_class(base, setting):
         return make_hydraulics_plant_class(make_flow_plant_class(base, setting), options, damping)
 
+    if options.lock_window_follows_plant:
+        install_lock_window(options, load_params().v_max)
+
     verdict_runs_module.make_flow_plant_class = make_class
+
+
+def install_lock_window(options: HydraulicOptions, v_max_m_s: float) -> None:
+    """Every ``C2Config.with_10hz_d1`` preset of this process gets the plant lock window
+    (spec 2.6; ``acc_common.py`` precedent). Once per process; the last preset is kept for the
+    meta check (:func:`check_last_lock_window`)."""
+    from outrigger_sim.control import c2
+
+    if getattr(c2.C2Config, "_v5_lock_window", None) is not None:
+        if c2.C2Config._v5_lock_window != options:
+            raise RuntimeError("another lock window is installed in this process already")
+        return
+    preset = c2.C2Config.with_10hz_d1
+
+    def with_10hz_d1(self, *args, **kwargs):
+        config = apply_lock_window(preset(self, *args, **kwargs), options, v_max_m_s,
+                                   HARNESS_VALVE_TAU_S)
+        _LAST_PRESET[0] = config
+        return config
+
+    c2.C2Config.with_10hz_d1 = with_10hz_d1
+    c2.C2Config._v5_lock_window = options
+
+
+def check_last_lock_window(options: HydraulicOptions, v_max_m_s: float) -> None:
+    """Criteria P-4: the preset the run built carries the window of ``options``.
+
+    Raises:
+        RuntimeError: No preset was built, or its meta differs.
+    """
+    if _LAST_PRESET[0] is None:
+        raise RuntimeError("no C2 preset was built with the lock window installed")
+    check_lock_window_meta(_LAST_PRESET[0].two_pressure.to_meta(), options, v_max_m_s,
+                           HARNESS_VALVE_TAU_S)

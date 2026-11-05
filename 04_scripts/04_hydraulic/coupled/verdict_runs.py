@@ -272,6 +272,8 @@ def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
     if hydraulics is not None and hydraulics.is_any_on:
         import harness_hydraulics
 
+        if hydraulics.lock_window_follows_plant:
+            harness_hydraulics.check_last_lock_window(hydraulics, load_params().v_max)
         result["hydraulic_options"] = hydraulics.to_dict()
         result["hydraulics_record"] = harness_hydraulics.last_armed_record()
     return result, series

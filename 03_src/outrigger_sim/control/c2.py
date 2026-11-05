@@ -2340,6 +2340,18 @@ class C2Config:
         two_pressure = self.two_pressure.with_lock_valve(lock_valve, counterbalance)
         return replace(self, two_pressure=two_pressure)
 
+    def with_lock_closure(self, overlap_speed_m_s: float, closing_delay_s: float,
+                          valve_tau_s: float) -> C2Config:
+        """Copy whose R6-P lock window follows the plant lock closure (v5 spec 2.6, LC).
+
+        Only ``two_pressure`` is touched (:meth:`TwoPressureSettings.with_lock_closure`). Scalars
+        on purpose: the controller does not import the plant hydraulics; the v5 runners build them
+        from one ``LockClosureSetting`` (``hydraulics.v5_options.apply_lock_window``).
+        """
+        two_pressure = self.two_pressure.with_lock_closure(overlap_speed_m_s, closing_delay_s,
+                                                           valve_tau_s)
+        return replace(self, two_pressure=two_pressure)
+
     def with_fallback_ratio_source(
         self, source: str, plant_ratio: tuple[float, ...] | None = None
     ) -> C2Config:

@@ -626,6 +626,11 @@ class TwoPressureSettings:
     """Valve lag of the lock window ``W = tau_v ln(max(|u_last|, eps) / eps) + T``; 0 = the
     first command-free sample alone."""
     lock_window_eps_m_s: float = LOCK_WINDOW_EPS_M_S
+    """Speed where the plant stops the flow: ``eps`` of the lock threshold, or with the v5 lock
+    closure (LC) the overlap end ``u_ol = delta_ol v_max`` (:meth:`with_lock_closure`)."""
+    lock_window_closing_delay_s: float = 0.0
+    """LC check closing delay ``t_c`` added to the window (v5 spec 2.6 R-1); 0 = the window
+    before LC bit for bit (its meta key appears only when not 0)."""
     locked_start_extend_Pa: float = LOCKED_START_EXTEND_PA
     """Pilot-check ``p_r_hat`` while extending and the start after an extension (the
     counterbalance keeps its CB law)."""
@@ -755,6 +760,29 @@ class TwoPressureSettings:
         model = CounterbalanceRodModel.from_params(counterbalance)
         return replace(self, lock_valve=valve, counterbalance=model, moving_stroke_check=True)
 
+    def with_lock_closure(self, overlap_speed_m_s: float, closing_delay_s: float,
+                          valve_tau_s: float) -> TwoPressureSettings:
+        """Copy whose lock window follows the plant lock closure (v5 spec 2.6, LC):
+        ``W = tau_v ln(max(|u_last|, u_ol) / u_ol) + t_c + T``.
+
+        Args:
+            overlap_speed_m_s: ``u_ol``, the step mean spool speed where the plant stops the flow.
+            closing_delay_s: ``t_c``.
+            valve_tau_s: ``tau_v`` of the plant valve.
+
+        Raises:
+            ValueError: ``u_ol <= 0``, ``t_c < 0`` or ``tau_v <= 0``.
+        """
+        if not (overlap_speed_m_s > 0.0 and math.isfinite(overlap_speed_m_s)):
+            raise ValueError(f"overlap_speed_m_s must be > 0: {overlap_speed_m_s!r}")
+        if not (closing_delay_s >= 0.0 and math.isfinite(closing_delay_s)):
+            raise ValueError(f"closing_delay_s must be >= 0: {closing_delay_s!r}")
+        if not (valve_tau_s > 0.0 and math.isfinite(valve_tau_s)):
+            raise ValueError(f"valve_tau_s must be > 0: {valve_tau_s!r}")
+        return replace(self, lock_window_eps_m_s=float(overlap_speed_m_s),
+                       lock_window_closing_delay_s=float(closing_delay_s),
+                       lock_window_valve_tau_s=float(valve_tau_s))
+
     def with_cb_law_estimate(self) -> TwoPressureSettings:
         """Copy with the CB moving estimate before P-S8-15 (9.6 law, margins 11.4 / 0.7 bar),
         for regression replays."""
@@ -815,6 +843,12 @@ class TwoPressureSettings:
             del meta["imu_mass_before_ready"]
         if not self.suspend_steps_after_head_fault:
             del meta["suspend_steps_after_head_fault"]
+        # v5 LC (spec 2.6): a column-bound key that appears only when t_c is not 0, so the meta
+        # of a run without LC stays as before (kept out of COLUMN_BOUND_META_KEYS, which every
+        # column-bound meta must hold)
+        if (self.lock_window_closing_delay_s == 0.0
+                or self.locked_ratio_rule is LockedRatioRule.FIXED):
+            del meta["lock_window_closing_delay_s"]
         return meta
 
 
@@ -2309,7 +2343,8 @@ class TwoPressureMonitor:
         return stretch.lag_bound_Pa + margin_Pa
 
     def _open_lock_stretch(self, leg, stretch, t_s) -> None:
-        """``k0``: the window ``W = tau_v ln(max(|u_last|, eps) / eps) + T`` (10.4 ②) and the
+        """``k0``: the window ``W = tau_v ln(max(|u_last|, eps) / eps) + t_c + T`` (10.4 ②; ``t_c``
+        of the v5 lock closure, 0 by default) and the
         largest moving start value of the lookback (③)."""
         settings = self.settings
         eps = settings.lock_window_eps_m_s
@@ -2320,7 +2355,9 @@ class TwoPressureMonitor:
                   if sample_t_s >= lookback_start_s]
         stretch.is_open = True
         stretch.start_t_s = t_s
-        stretch.window_end_s = t_s + decay_s + self.period_s
+        # + t_c (v5 LC, 0 by default: x + 0.0 == x, the window before LC bit for bit)
+        stretch.window_end_s = (t_s + decay_s + settings.lock_window_closing_delay_s
+                                + self.period_s)
         stretch.previous_moving_max_Pa = max(recent, default=-math.inf)
         stretch.candidates = []
         stretch.stroke_window_max_m = -math.inf

@@ -198,8 +198,84 @@ def hydraulic_options_from_args(args: argparse.Namespace) -> HydraulicOptions:
         lock_window_follows_plant=hasattr(args, "lock_window_follows_plant"))
 
 
+def validate(options: HydraulicOptions, *, period_s: float, engine: str = "harness",
+             lock_valve: str = "pilot_check") -> None:
+    """Refuse the combinations of spec 2.0, 2.4, 2.6 and decision D-6 before a run starts.
+
+    Args:
+        options: The run's options.
+        period_s: Controller period ``T``.
+        engine: ``"harness"``, ``"L2b"`` or ``"L1"``.
+        lock_valve: YAML ``actuator.lock_valve`` of the plant.
+
+    Raises:
+        SystemExit: Controller window without the plant rule; a plant option on an L1 row.
+        ValueError: Plant rule alone with ``t_c > T``; BL with LC; LC or M2 with the
+            counterbalance.
+    """
+    if options.lock_window_follows_plant and options.lock_closure is None:
+        raise SystemExit("the controller lock window alone is refused (spec 2.6)")
+    plant_options = (options.rod_release_force, options.check_delay, options.lock_closure)
+    if engine == "L1" and any(option not in (None, False) for option in plant_options):
+        raise SystemExit("M2, M1c and LC are L2b / harness options, not L1 (spec 2.0)")
+    closure = options.lock_closure
+    if closure is not None and not options.lock_window_follows_plant \
+            and closure.closing_delay_s > period_s:
+        raise ValueError(f"plant rule alone with t_c {closure.closing_delay_s} s > T {period_s} s: "
+                         "the old window would close before the lock (spec 2.6)")
+    if closure is not None and options.check_delay is not None \
+            and options.check_delay.kind == CheckCircuit.BLOCKED.value:
+        raise ValueError("BL with LC is refused (decision D-6: t_c assumes A, B -> T)")
+    if lock_valve == "counterbalance" and (closure is not None or options.rod_release_force):
+        raise ValueError("LC and M2 are not defined with the counterbalance (spec 2.3, 2.5)")
+
+
+def apply_lock_window(config: Any, options: HydraulicOptions, v_max_m_s: float,
+                      valve_tau_s: float) -> Any:
+    """The C2 configuration with the controller lock window of the plant rule (spec 2.6, R-2).
+
+    Args:
+        config: ``control.c2.C2Config``.
+        options: The run's options; the window and the plant come from one ``LockClosureSetting``.
+        v_max_m_s: ``v_max`` of the plant.
+        valve_tau_s: ``tau_v`` of the plant valve.
+
+    Returns:
+        ``config`` itself when the window option is off (bit-identical path), else a copy.
+    """
+    if not options.lock_window_follows_plant:
+        return config
+    closure = options.lock_closure
+    return config.with_lock_closure(closure.overlap_speed_m_s(v_max_m_s),
+                                    closure.closing_delay_s, valve_tau_s)
+
+
+def check_lock_window_meta(two_pressure_meta: dict[str, Any], options: HydraulicOptions,
+                           v_max_m_s: float, valve_tau_s: float) -> None:
+    """After a run: the controller meta holds the window of the options (criteria P-4).
+
+    Raises:
+        RuntimeError: The meta differs from the options.
+    """
+    expected: dict[str, Any] = {"lock_window_eps_m_s": LOCK_SPEED_EPS_M_S}
+    if options.lock_window_follows_plant:
+        closure = options.lock_closure
+        expected = {"lock_window_eps_m_s": closure.overlap_speed_m_s(v_max_m_s),
+                    "lock_window_closing_delay_s": closure.closing_delay_s,
+                    "lock_window_valve_tau_s": valve_tau_s}
+    elif "lock_window_closing_delay_s" in two_pressure_meta:
+        raise RuntimeError("the controller window has t_c but the option is off")
+    differing = {key: (two_pressure_meta.get(key), value) for key, value in expected.items()
+                 if two_pressure_meta.get(key) != value}
+    if differing:
+        raise RuntimeError(f"controller lock window meta differs from the options: {differing}")
+
+
 __all__ = [
     "LOCK_SPEED_EPS_M_S",
+    "apply_lock_window",
+    "check_lock_window_meta",
+    "validate",
     "CheckCircuit",
     "CheckDelaySetting",
     "HydraulicOptions",
