@@ -269,8 +269,8 @@ def run_one(job: dict) -> dict:
                 "harness_class": result.get("harness_class"),
                 "hydraulic_options": result.get("hydraulic_options"),
                 "hydraulics_record": result.get("hydraulics_record"),
-                **({"overlap_found": result["overlap_found"]} if "overlap_found" in result
-                   else {})}
+                **{key: result[key] for key in ("overlap_found", "soil_stop_crawler")
+                   if key in result}}
     except Exception as exc:  # the batch goes on; the line records the failure
         return {"job": job, "error": repr(exc), "tb": traceback.format_exc()[-3000:],
                 "wall_s": round(time.perf_counter() - t_start, 1)}

@@ -4,7 +4,9 @@ Writes ``<batch>_values.json``: one row per run (case, phase, setting, final pha
 command sign changes, M2 shift, M1c fills, lock changes, command hash), the V0 hashes against the
 golden off runs (phase 0 rows that the golden set defines) and the W-2 pairs (L1 against L2 hashes).
 M1c rows carry ``unit_status`` ``below_criteria_reference_only``. Batch ``item8`` adds
-``item8_order`` (criteria 13.1 (1)) from its rows and the R6 / R8 / R9 rows of ``main``.
+``item8_order`` (criteria 13.1 (1)) from its rows and the R6 / R8 / R9 rows of ``main``. Every
+batch gets ``ready`` (criteria 7: S1 .. S5, S7 first READY <= 100 s, event rows back in READY
+<= 60 s, S8 no READY, rigid rows FLAG over 90 / 120 s) and ``s8_stop`` (criteria 6 values).
 
 Usage: python -I -B 04_scripts/04_hydraulic/coupled/aggregate_v5.py <batch> [<batch> ...]
 """
@@ -24,6 +26,14 @@ UNIT_STATUS = "below_criteria_reference_only"
 ITEM8_LEVELS = {"R6": "top", "R8": "middle", "R9": "bottom"}
 ITEM8_SETTINGS = ("V0", "VB")
 ITEM8_PHASES = ("eps 0.0", "eps 0.001", "eps 0.002", "eps 0.003")
+# Criteria 7 READY limits (s9_soil_slope.ready_limit_s is not used: S7 is judged at 100 s)
+SOIL_READY_LIMIT_S = 100.0
+SOIL_READY_ROWS = ("S1", "S2", "S3", "S4", "S5", "S7")
+RIGID_FLAT_READY_FLAG_S = 90.0
+RIGID_SLOPE_READY_FLAG_S = 120.0
+EVENT_RETURN_LIMIT_S = 60.0
+NO_READY_ROWS = ("S8",)
+"""Criteria 7: S8 must not reach READY (``stroke_limited_stop``)."""
 
 
 def _phase(job: dict) -> str:
@@ -62,7 +72,59 @@ def value_row(record: dict) -> dict:
         out["unit_status"] = UNIT_STATUS
     if record.get("event_output"):
         out["t_ready_back_s"] = record["event_output"].get("t_ready_back_s")
+    if record.get("soil_stop_crawler"):
+        out["soil_stop_crawler"] = record["soil_stop_crawler"]
+    if record.get("overlap_found"):
+        out["overlap_found"] = record["overlap_found"]
     return out
+
+
+def _is_flat_rigid_row(row_name: str) -> bool:
+    if str(HERE) not in sys.path:  # ``-I`` leaves the script folder off the path
+        sys.path.insert(0, str(HERE))
+    import verdict_cases
+
+    case_id = "R2" if row_name == "R2ra" else row_name
+    twin = verdict_cases.CASES[case_id].twin
+    return twin.roll_deg == 0.0 and twin.pitch_deg == 0.0
+
+
+def ready_entry(row: dict) -> dict:
+    """Criteria 7 READY item of one value row: the value, its limit and whether it holds.
+
+    ``judged``: S1 .. S5, S7 first READY <= 100 s; event rows (with ``t_ready_back_s``) back in
+    READY <= 60 s; S8 no READY. ``record``: rigid rows, first READY over 90 s (flat) / 120 s
+    (slope) or none is a FLAG.
+    """
+    name, first_ready = row["row"], row.get("t_first_ready_s")
+    entry = {"row": name, "phase": row["phase"], "setting": row["setting"]}
+    if "t_ready_back_s" in row:
+        back = row["t_ready_back_s"]
+        return {**entry, "role": "judged", "item": "return", "value_s": back,
+                "limit_s": EVENT_RETURN_LIMIT_S,
+                "within": back is not None and back <= EVENT_RETURN_LIMIT_S}
+    if name in SOIL_READY_ROWS:
+        return {**entry, "role": "judged", "item": "first_ready", "value_s": first_ready,
+                "limit_s": SOIL_READY_LIMIT_S,
+                "within": first_ready is not None and first_ready <= SOIL_READY_LIMIT_S}
+    if name in NO_READY_ROWS:
+        return {**entry, "role": "judged", "item": "no_ready", "value_s": first_ready,
+                "limit_s": None, "within": first_ready is None}
+    limit_s = RIGID_FLAT_READY_FLAG_S if _is_flat_rigid_row(name) else RIGID_SLOPE_READY_FLAG_S
+    return {**entry, "role": "record", "item": "first_ready", "value_s": first_ready,
+            "limit_s": limit_s, "flag": first_ready is None or first_ready > limit_s}
+
+
+def ready_table(rows: list[dict]) -> list[dict]:
+    """Criteria 7 READY table (and the J5 return of the event rows) of the runs without error."""
+    return [ready_entry(row) for row in rows if "error" not in row]
+
+
+def s8_stop_table(rows: list[dict]) -> list[dict]:
+    """Criteria 6 S8 values per run: crawler at the stop (1 ms), 1 s maximum before it, +-0.1 s
+    range, maximum after it and the clause margins [kN]."""
+    return [{"phase": row["phase"], "setting": row["setting"], **row["soil_stop_crawler"]}
+            for row in rows if row["row"] in NO_READY_ROWS and row.get("soil_stop_crawler")]
 
 
 def golden_check(rows: list[dict]) -> list[dict]:
@@ -149,7 +211,8 @@ def main() -> None:
         rows = _value_rows(batch)
         report = {"batch": batch, "runs": len(rows),
                   "errors": sum("error" in row for row in rows),
-                  "golden_v0": golden_check(rows), "w2": w2_pairs(rows), "rows": rows}
+                  "golden_v0": golden_check(rows), "w2": w2_pairs(rows), "rows": rows,
+                  "ready": ready_table(rows), "s8_stop": s8_stop_table(rows)}
         if batch == "item8":
             regression = [row for row in _value_rows("main") if row["row"] in ITEM8_LEVELS]
             report["item8_order"] = item8_order(rows + regression)

@@ -44,6 +44,7 @@ from verdict_metrics import (  # noqa: E402
     flow_saturation_time,
     overlap_in_window,
     run_values,
+    stop_crawler_values,
 )
 
 READY_DELAY_S = 5.0
@@ -135,10 +136,23 @@ def _finish(plant, controller, extra: dict) -> tuple[dict, dict]:
               "final_phase": str(controller.phase),
               "max_motor_stroke_reading_mm": limiter.max_stroke_reading_m * 1e3,
               "values": values, "events": [(round(t, 3), name) for t, name in events][:400]}
+    stop_values = _soil_stop_values(plant, limiter, events)
+    if stop_values is not None:  # v5 X-12, criteria 6: runs with a soil-guard stop only
+        result["soil_stop_crawler"] = stop_values
     series = {"t": period["t"], "phase": period["phase"].astype(str),
               "command": period["command"], "integral": period["integral"],
               "filtered_deg": period["filtered_deg"]}
     return result, series
+
+
+def _soil_stop_values(plant, limiter, events: list[tuple[float, str]]) -> dict | None:
+    """Criteria 6 (S8 F-5) crawler values around the soil-guard stop; None without a stop."""
+    import soil_guard_stop_rule
+
+    stop_t_s = soil_guard_stop_rule.soil_stop_time_s(events)
+    if stop_t_s is None:
+        return None
+    return stop_crawler_values(limiter.rows(), stop_t_s, float(plant.m * plant.g))
 
 
 def _command_digest(commands: np.ndarray) -> str:

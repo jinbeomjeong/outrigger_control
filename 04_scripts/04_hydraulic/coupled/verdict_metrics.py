@@ -422,30 +422,39 @@ def stop_crawler_values(rows: np.ndarray, stop_t_s: float, weight_N: float) -> d
     Clause: crawler load after the stop <= load at the stop + 0.01 W. The stop value is one
     chunk (the one at or just before the stop), so the 1 s maximum before the stop and the
     chunks within +-0.1 s of the stop are recorded with it. Margins = allowed - maximum after
-    the stop [kN] (negative: the clause fails on that basis).
+    the stop [kN] (negative: the clause fails on that basis). A run that ends at the stop (the
+    reduced harness stops at the FAULT) has no after-stop chunk: the after-stop values and the
+    margins are None and ``after_stop_chunks`` is 0.
     """
     t = rows[:, COLUMN["t"]]
     crawler = rows[:, COLUMN["crawler"]]
     threshold_N = CRAWLER_LOADED_WEIGHT_FRACTION * weight_N
     at_or_before = np.flatnonzero(t <= stop_t_s + 1e-9)
-    after = t > stop_t_s + 1e-9
-    if not at_or_before.size or not after.any():
-        return {"stop_t_s": _rounded(stop_t_s, 3), "note": "no chunk before or after the stop"}
+    if not at_or_before.size:
+        return {"stop_t_s": _rounded(stop_t_s, 3), "note": "no chunk at or before the stop"}
     at_stop_N = float(crawler[at_or_before[-1]])
     before = (t >= stop_t_s - STOP_BEFORE_WINDOW_S) & (t <= stop_t_s + 1e-9)
     near = np.abs(t - stop_t_s) <= STOP_SAMPLE_HALF_WINDOW_S + 1e-9
+    after = t > stop_t_s + 1e-9
     max_before_N = float(crawler[before].max())
-    max_after_N = float(crawler[after].max())
+    max_after_N = float(crawler[after].max()) if after.any() else None
+
+    def margin_kN(reference_N: float) -> float | None:
+        if max_after_N is None:
+            return None
+        return _rounded((reference_N + threshold_N - max_after_N) * KN_PER_N, 3)
+
     return {"stop_t_s": _rounded(stop_t_s, 3), "threshold_kN": _rounded(threshold_N * KN_PER_N, 3),
             "at_stop_kN": _rounded(at_stop_N * KN_PER_N, 3),
             "max_before_1s_kN": _rounded(max_before_N * KN_PER_N, 3),
             "near_stop_pm0p1s_kN": [_rounded(crawler[near].min() * KN_PER_N, 3),
                                     _rounded(crawler[near].max() * KN_PER_N, 3)],
-            "max_after_stop_kN": _rounded(max_after_N * KN_PER_N, 3),
+            "after_stop_chunks": int(after.sum()),
+            "max_after_stop_kN": None if max_after_N is None
+            else _rounded(max_after_N * KN_PER_N, 3),
             "end_kN": _rounded(crawler[-1] * KN_PER_N, 3),
-            "margin_at_stop_kN": _rounded((at_stop_N + threshold_N - max_after_N) * KN_PER_N, 3),
-            "margin_vs_max_before_1s_kN":
-                _rounded((max_before_N + threshold_N - max_after_N) * KN_PER_N, 3)}
+            "margin_at_stop_kN": margin_kN(at_stop_N),
+            "margin_vs_max_before_1s_kN": margin_kN(max_before_N)}
 
 
 def run_values(rows: np.ndarray, period: dict, events: list[tuple[float, str]], limiter,
