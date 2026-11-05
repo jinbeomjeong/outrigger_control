@@ -1,6 +1,7 @@
 """S9 P3b runner records (``04_scripts/02_chrono/run_S9.py``; control spec 284 P3-1 ... 9, 287, 301
 W-61-1 ... 4; dynamics 5.37.5 #2): track utilisation 5 % rule, crawler departure by the P3a-2 rule
-(< 1 % W for 0.1 s), creep stop (0.2 s sinkage rate < 0.1 mm/s), pre-lift-off minimum F_cyl
+(< 1 % W for 0.1 s), creep stop (sinkage rate < 0.1 mm/s, the 0.2 s window of its first form
+pinned here; the 1 s rule of spec 433 in test_s9_creep_rule.py), pre-lift-off minimum F_cyl
 (first 1.4 F_min .. departure, FLAG < F_min), the P3b record assembly on a synthetic run, the
 W-61 watch, the C2 soil guard, the seal-friction override and the 24 + 2 P3b batch definition.
 No Chrono: synthetic 1 ms series only."""
@@ -71,15 +72,17 @@ def test_creep_stop_first_and_final() -> None:
     t = _t(0.0, 8.0)
     s = np.where(t < 3.0, 1e-3 * t, 3e-3)[:, None].repeat(4, axis=1)
     s[t >= 5.0, 2] += 1e-3 * (np.minimum(t[t >= 5.0], 5.5) - 5.0)  # second creep 5.0 .. 5.5 s on RL
-    c = r9.creep_stop(t, s, 1.0)
+    c = r9.creep_stop(t, s, 1.0, window_s=r9.LEGACY_CREEP_RATE_WINDOW_S)
     # backward 0.2 s rate < 0.1 mm/s once less than 0.02 s of the 1 mm/s ramp is in the window
     assert c["t_first_s"] == pytest.approx(3.181, abs=1.5e-3)
     assert c["t_final_s"] == pytest.approx(5.681, abs=1.5e-3)
     assert c["rate_max_after_m_s"][0] == pytest.approx(1e-3, rel=1e-6)
     assert c["rate_at_m_s"]["+1"][0] == pytest.approx(1e-3, rel=1e-6)
     assert r9.creep_stop(t, s, None)["t_first_s"] is None
-    rate = r9.sinkage_rate(t, s)
+    rate = r9.sinkage_rate(t, s, r9.LEGACY_CREEP_RATE_WINDOW_S)
     assert np.isnan(rate[:200]).all() and np.isfinite(rate[200:]).all()
+    rate_over_1_s = r9.sinkage_rate(t, s)
+    assert np.isnan(rate_over_1_s[:1000]).all() and np.isfinite(rate_over_1_s[1000:]).all()
 
 
 def test_pre_liftoff_min_force_window_and_flag() -> None:
@@ -147,7 +150,8 @@ def test_p3b_records_nominal_run() -> None:
     assert p["P3-2_loc"]["within"] and p["P3-2_loc"]["loc_minus_departure_s"] == pytest.approx(0.8, abs=1e-9)
     assert not p["P3-2_loc"]["crawler_loaded_at_loc"] and p["P3-2_loc"]["loc_before_first_done"]
     assert p["P3-3_leg_force"]["within"] and p["P3-3_leg_force"]["F_min_after_N"] == [90e3] * 4
-    assert p["creep_stop"]["t_final_s"] == pytest.approx(32.181, abs=1.5e-3)
+    # 1 s window (spec 433): the 1 mm/s ramp ending at 32 s stays above 0.1 mm/s for 0.9 s
+    assert p["creep_stop"]["t_final_s"] == pytest.approx(32.901, abs=1.5e-3)
     a = p["P3-4_attitude"]
     assert a["within_0p2"] and a["window_after_creep_stop"] and not a["within_deadband_0p03_record"]
     assert a["end_mean_roll_pitch_deg"][1] == pytest.approx(0.05)
@@ -319,7 +323,7 @@ def test_creep_stop_two_sided_counts_the_rebound() -> None:
     t = _t(0.0, 6.0)
     s = np.zeros((t.size, 4))
     s[:, 0] = np.where(t < 2.0, 1e-3 * t, np.where(t < 3.0, 2e-3 - 1e-3 * (t - 2.0), 1e-3))
-    c = r9.creep_stop(t, s, 0.5)
+    c = r9.creep_stop(t, s, 0.5, window_s=r9.LEGACY_CREEP_RATE_WINDOW_S)
     assert c["t_final_s"] == pytest.approx(2.091, abs=1.5e-3)
     assert c["t_final_two_sided_s"] == pytest.approx(3.181, abs=1.5e-3)
     assert c["t_first_two_sided_s"] == pytest.approx(2.091, abs=1.5e-3)  # the rate passes 0 at the turn

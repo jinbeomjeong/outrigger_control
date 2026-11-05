@@ -188,12 +188,14 @@ def test_source_args_check_detects_a_difference(tmp_path, b) -> None:
 def test_controller_expectation_on_the_preset() -> None:
     from outrigger_sim.control.c2 import C2Config
 
-    assert run_S9.FINAL_CONTROLLER == "final_SGS_R4"  # spec 429.11 (was final_P36sa)
+    assert run_S9.FINAL_CONTROLLER == "final_C4G2"  # spec 433 (was final_SGS_R4, final_P36sa)
     want = dict(run_S9.CONTROLLER_EXPECTATIONS[run_S9.FINAL_CONTROLLER])
     assert want["lift_stroke_guard.soil_stop"] is True and want["lift_stroke_guard.soil_stop_scope"] == "any_loc"
     assert want["slope_clearance_margin.flat_soil_margin_m"] == 0.03
     assert {"soil.enable", "loc_revoke.enable", "loc_revoke.soil_gate", "loc_revoke.stroke_guard",
             "diff_sink.enable"} <= set(want)  # L1gs / DSb75 checks kept
+    assert want["touch_twist_hold.enable"] is True and want["touch_twist_hold.vector_ramp"] is True
+    assert want["clip_returned_command"] is True and want["r8.lifted_reapproach.retrigger_samples"] == 1
     assert run_S9.CONTROLLER_ABSENT_OR_OFF[run_S9.FINAL_CONTROLLER] == ("floor_twist_ledger", "attitude_integral_clamp")
     assert run_S9.CONTROLLER_PENDING_CHECKS == {}
     paths_all = list(want) + ["floor_twist_ledger.enable", "attitude_integral_clamp.enable"]
@@ -253,6 +255,22 @@ def test_controller_expectation_on_the_preset() -> None:
     assert not rec["ok"]
     assert all(c["got"] == ("<absent>" if c["path"].split(".")[0] in run_S9.CONTROLLER_ABSENT_OR_OFF[
         run_S9.FINAL_CONTROLLER] else "<missing>") for c in rec["checks"])
+
+
+def test_before_c4g2_tag_needs_the_old_preset() -> None:
+    from outrigger_sim.control.c2 import C2Config
+
+    assert run_S9.BEFORE_C4G2_CONTROLLER == "final_SGS_R4"
+    switched = run_S9.controller_expectation(C2Config().with_10hz_d1(), run_S9.BEFORE_C4G2_CONTROLLER)
+    assert [c["path"] for c in switched["checks"] if not c["ok"]] == ["touch_twist_hold.enable"]
+    old = C2Config().with_10hz_d1(touch_twist_hold=False)
+    assert run_S9.controller_expectation(old, run_S9.BEFORE_C4G2_CONTROLLER)["ok"]
+    rec = run_S9.controller_expectation(old, run_S9.FINAL_CONTROLLER)
+    assert {c["path"] for c in rec["checks"] if not c["ok"]} == {"touch_twist_hold.enable",
+                                                                 "touch_twist_hold.vector_ramp"}
+    k1 = C2Config().with_10hz_d1(reapproach_retrigger_two_samples=True)
+    rec = run_S9.controller_expectation(k1, run_S9.FINAL_CONTROLLER)
+    assert [c["path"] for c in rec["checks"] if not c["ok"]] == ["r8.lifted_reapproach.retrigger_samples"]
 
 
 def test_old_controller_name_is_refused() -> None:
@@ -337,7 +355,7 @@ def test_row_filter_and_only_file(tmp_path, b) -> None:
 def test_list_output(b, capsys) -> None:
     s9_batch.main(["list", "FINAL1"])
     out = capsys.readouterr().out.splitlines()
-    assert out[0] == "FINAL1 8 rows" and len(out) == 10 and "ctrl=final_SGS_R4" in out[1]
+    assert out[0] == "FINAL1 8 rows" and len(out) == 10 and "ctrl=final_C4G2" in out[1]
     s9_batch.main(["list"])
     names = [ln.split()[0] for ln in capsys.readouterr().out.splitlines()]
     assert {"RV6", "FINAL1", "FINAL5", "FINAL6", "FINAL-R"} <= set(names)
@@ -421,7 +439,7 @@ def test_rep_list_and_check_sources(b, capsys) -> None:
     out = capsys.readouterr().out.splitlines()
     assert out[0] == "FINAL-REP 7 rows" and len(out) == 9
     assert sum(" r4_x11 " in ln for ln in out) == 2 and all("prio=1" in ln for ln in out[1:8])
-    assert all("ctrl=final_SGS_R4" in ln for ln in out[1:8])
+    assert all("ctrl=final_C4G2" in ln for ln in out[1:8])
     s9_batch.main(["list", "FINAL-R-REP"])
     out = capsys.readouterr().out.splitlines()
     assert out[0] == "FINAL-R-REP 18 rows" and sum(" optional " in ln for ln in out) == 2
@@ -437,7 +455,7 @@ def test_final_rep_x_row_is_the_source_row_with_180_s(b) -> None:
     i = src["argv"].index("--duration")
     assert src["argv"][i + 1] == "120" and r["argv"][i + 1] == "180"
     assert r["argv"][:i + 1] == src["argv"][:i + 1] and r["argv"][i + 2:] == src["argv"][i + 2:]
-    assert r["argv"][r["argv"].index("--expect-controller") + 1] == run_S9.FINAL_CONTROLLER == "final_SGS_R4"
+    assert r["argv"][r["argv"].index("--expect-controller") + 1] == run_S9.FINAL_CONTROLLER == "final_C4G2"
     a = run_S9.build_parser().parse_args(r["argv"][len(s9_batch.RUN):] + ["--case", r["case"], "--out-root", "x"])
     assert a.duration == 180.0 and a.mass_scale == 1.1 and a.soil == "J2"
     # meta

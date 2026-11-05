@@ -129,20 +129,24 @@ def correction_of(bench: Bench) -> np.ndarray:
 # --- settings ------------------------------------------------------------------------------------
 
 
-def test_off_by_default_and_in_the_preset() -> None:
+def test_off_by_default_and_on_in_the_preset() -> None:
     assert C2Config().touch_twist_hold == TouchTwistHoldSettings()
     assert C2Config.touch_twist_hold == TouchTwistHoldSettings()  # class attribute (old pickles)
+    assert C2Config().touch_twist_hold.enable is False
     preset = C2Config().with_10hz_d1().touch_twist_hold
-    assert preset.enable is False
-    assert preset.vector_ramp is False
+    assert preset.enable is True
+    assert preset.vector_ramp is True
 
 
 def test_preset_keyword_touches_only_the_two_switches() -> None:
     preset = C2Config().with_10hz_d1()
-    switched_on = C2Config().with_10hz_d1(touch_twist_hold=True)
-    assert switched_on.touch_twist_hold.enable is True
-    assert switched_on.touch_twist_hold.vector_ramp is True
-    assert replace(switched_on, touch_twist_hold=TouchTwistHoldSettings()) == preset
+    switched_off = C2Config().with_10hz_d1(touch_twist_hold=False)
+    assert switched_off.touch_twist_hold == TouchTwistHoldSettings()
+    assert replace(preset, touch_twist_hold=TouchTwistHoldSettings()) == switched_off
+
+
+def test_preset_rejects_k1_by_default() -> None:
+    assert C2Config().with_10hz_d1().r8.lifted_reapproach.retrigger_samples == 1
 
 
 def test_unpickled_config_without_the_field_reads_off() -> None:

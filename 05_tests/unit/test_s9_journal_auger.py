@@ -37,7 +37,7 @@ def test_soil_rows_are_bundle_rows_with_only_level_soil_changed() -> None:
     for (bundle, case, _), r in zip(s9_batch.JOURNAL_AUGER_SOIL_ROWS, soil):
         src = next(c for c in b[bundle] if c["case"] == case)
         assert r["argv"] == src["argv"] and r["source_run"] == src["source_run"]
-        assert r["controller"] == "final_SGS_R4" and "--expect-controller" in r["argv"]
+        assert r["controller"] == "final_C4G2" and "--expect-controller" in r["argv"]
     ref = {c["case"]: _args(c["argv"]) for c in b["FINAL-REP"]}
     for r in soil:
         s = r["case"].split("_")[1]

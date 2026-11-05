@@ -94,6 +94,7 @@ import math
 import os
 import sys
 import time
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -1487,24 +1488,34 @@ def rv5_cases() -> list[dict[str, Any]]:
 
 # --- RV6 / FINAL: final-controller re-runs (spec 430.5 / 431.3, user decision 2026-10-30) ----------------------------
 
-FINAL_CONTROLLER = "final_SGS_R4"
-"""Controller tag of the RV6 / FINAL rows (final controller, spec 429.11, 2026-10-30): R8 C2 + P-S8-33 L1gs + P-S8-35
-DSb75 + P-S8-36 SGS (scope any_loc) + P-S8-37 R4 (flat-soil LOC clearance margin 0.03 m); P37t and P-S8-38 ZIC
-rejected (must be absent or off). Was ``final_P36sa`` (SGS only) before 429.11."""
+FINAL_CONTROLLER = "final_C4G2"
+"""Controller tag of the RV6 / FINAL rows (final controller, spec 433, 2026-11-05): :data:`BEFORE_C4G2_CONTROLLER` +
+returned-command clip + C4G2 (twist hold and vector ramp at the LEVEL entry); K1 rejected (``retrigger_samples`` 1)."""
+BEFORE_C4G2_CONTROLLER = "final_SGS_R4"
+"""Final controller of spec 429.11 (2026-10-30): R8 C2 + P-S8-33 L1gs + P-S8-35 DSb75 + P-S8-36 SGS (scope any_loc) +
+P-S8-37 R4 (flat-soil LOC clearance margin 0.03 m); P37t and P-S8-38 ZIC rejected (must be absent or off). Was
+``final_P36sa`` (SGS only) before 429.11. Since the C4G2 switch the preset passes this tag only through
+``05_tests/unit/pre_c4g2_preset_runner.py``."""
+_SPEC_429_11_EXPECTATIONS: tuple[tuple[str, Any], ...] = (
+    ("soil.enable", True),
+    ("loc_revoke.enable", True), ("loc_revoke.soil_gate", True), ("loc_revoke.stroke_guard", True),
+    ("diff_sink.enable", True),
+    ("lift_stroke_guard.soil_stop", True), ("lift_stroke_guard.soil_stop_scope", "any_loc"),
+    ("slope_clearance_margin.flat_soil_margin_m", 0.03))
 CONTROLLER_EXPECTATIONS: dict[str, tuple[tuple[str, Any], ...]] = {
-    FINAL_CONTROLLER: (("soil.enable", True),
-                       ("loc_revoke.enable", True), ("loc_revoke.soil_gate", True), ("loc_revoke.stroke_guard", True),
-                       ("diff_sink.enable", True),
-                       ("lift_stroke_guard.soil_stop", True), ("lift_stroke_guard.soil_stop_scope", "any_loc"),
-                       ("slope_clearance_margin.flat_soil_margin_m", 0.03)),
+    FINAL_CONTROLLER: (*_SPEC_429_11_EXPECTATIONS,
+                       ("clip_returned_command", True),
+                       ("touch_twist_hold.enable", True), ("touch_twist_hold.vector_ramp", True),
+                       ("r8.lifted_reapproach.retrigger_samples", 1)),
+    BEFORE_C4G2_CONTROLLER: _SPEC_429_11_EXPECTATIONS,
 }
 """``level --expect-controller``: (dotted C2Config attribute, required value) per controller tag. The paths are C2Config
 attributes; ``controller_meta`` keeps the same names under ``<block>.settings`` (e.g. ``lift_stroke_guard.settings.
 soil_stop``, ``slope_clearance_margin.settings.flat_soil_margin_m``). The rows do not pin the controller themselves:
-they run the run-time preset ``C2Config().with_10hz_d1()`` and this check refuses a preset without the final rules
-(the R8 preset defaults ``soil_stop`` False / ``flat_soil_margin_m`` 0.0 until python-expert switches them after B1)."""
+they run the run-time preset ``C2Config().with_10hz_d1()`` and this check refuses a preset without the final rules."""
 CONTROLLER_ABSENT_OR_OFF: dict[str, tuple[str, ...]] = {
     FINAL_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
+    BEFORE_C4G2_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "touch_twist_hold"),
 }
 """C2Config blocks a controller tag must not have on (spec 429.11: P37t / ZIC rejected): the block is absent, or its
 ``enable`` is False. A block without an ``enable`` attribute fails."""
@@ -3019,11 +3030,32 @@ def _first_run(t: np.ndarray, flag: np.ndarray, hold_s: float) -> tuple[int | No
 TRACK_UTIL_MIN_NORMAL_FRACTION = 0.05
 """Track utilisation is NaN while that track's normal force is below 5 % of its settle value
 (dynamics 5.37.5 #2: the ratio N -> 0 before lift-off is an artefact, P3a-10 11.2)."""
-CREEP_RATE_WINDOW_S = 0.2
+CREEP_RATE_WINDOW_S = 1.0
+"""Backward difference of the creep stop since the user decision of 2026-11-05 (spec 433, a change after the runs; v5
+on, the v4 values stay): 0.2 s reads the 2 Hz numerical tail of the SCM pad edge as creep, one full period does not."""
+LEGACY_CREEP_RATE_WINDOW_S = 0.2
+"""Rate window of the stored runs before 2026-11-05 and of the 1 ms series field ``sinkage_rate_0p2s_m_s``."""
 CREEP_RATE_LIMIT_M_S = 1.0e-4
-"""Creep stop: every pad's sinkage rate over 0.2 s < 0.1 mm/s (dynamics 5.37.2 / 5.37.6, 284 J1-J2 ②)."""
+"""Creep stop: every pad's sinkage rate over the window < 0.1 mm/s (dynamics 5.37.2 / 5.37.6, 284 J1-J2 ②)."""
 PRE_LIFTOFF_FMIN_FACTOR = 1.4
 """Pre-lift-off trough window starts when the leg force first exceeds 1.4 F_min (284 J1-J2 ③, 5.37.4)."""
+
+
+@dataclass(frozen=True)
+class CreepRule:
+    """How P3-4 uses the creep stop: the rate window, and what a judgement window < 5 s counts as."""
+
+    rate_window_s: float
+    is_short_window_a_pass: bool
+
+
+CREEP_RULES: dict[str, CreepRule] = {
+    "current": CreepRule(rate_window_s=CREEP_RATE_WINDOW_S, is_short_window_a_pass=False),
+    "legacy_0p2": CreepRule(rate_window_s=LEGACY_CREEP_RATE_WINDOW_S, is_short_window_a_pass=True),
+}
+"""``level --creep-rule``; ``legacy_0p2`` gives the P3-4 blocks of the runs before 2026-11-05 bit for bit."""
+CURRENT_CREEP_RULE = CREEP_RULES["current"]
+LEGACY_CREEP_RULE = CREEP_RULES["legacy_0p2"]
 
 
 def mask_track_utilisation(util: np.ndarray, track_normal_N: np.ndarray, settle_normal_N,
@@ -3211,6 +3243,7 @@ def creep_stop(t: np.ndarray, sinkage_m: np.ndarray, t_from_s: float | None, *,
     t = np.asarray(t, dtype=float)
     out: dict[str, Any] = {"rule": f"all pads: sinkage rate over {window_s:g} s < {limit_m_s * 1e3:g} mm/s "
                                    "(+ = deeper; t_*_two_sided_s: |rate|), after the crawler departure",
+                           "rate_window_s": window_s,
                            "t_from_s": t_from_s, "t_first_s": None, "t_final_s": None,
                            "t_first_two_sided_s": None, "t_final_two_sided_s": None}
     if t_from_s is None or len(t) < 2:
@@ -4115,7 +4148,7 @@ def w61_watch(events: list[tuple[float, str]], phases: list[tuple[float, str]], 
     t, f = s["t_s"], s["F_cyl_N"]
     rate = s.get("sinkage_rate_0p2s_m_s")
     if rate is None:
-        rate = sinkage_rate(t, s["pad_sinkage_geometric_m"])
+        rate = sinkage_rate(t, s["pad_sinkage_geometric_m"], LEGACY_CREEP_RATE_WINDOW_S)
     p5 = float(ctx["P5_N"])
     rows, warnings = [], []
     fallbacks = [(te, _event_leg(n)[1]) for te, n in events if n.startswith("WARN_ROD_PRESSURE_FALLBACK:")]
@@ -4167,14 +4200,25 @@ def w61_watch(events: list[tuple[float, str]], phases: list[tuple[float, str]], 
             "fallback_meta": ctx.get("fallback_meta")}
 
 
+def _p34_verdict(is_value_within: bool, is_short: bool, rule: CreepRule) -> str:
+    """``fail`` above the limit; a value inside it from a short window is ``flag`` under the current rule."""
+    if not is_value_within:
+        return "fail"
+    return "flag" if is_short and not rule.is_short_window_a_pass else "pass"
+
+
 def p34_judgement_window(t: np.ndarray, rp_deg: np.ndarray, creep: dict[str, Any],
-                         phases: list[tuple[float, str]]) -> dict[str, Any]:
+                         phases: list[tuple[float, str]], *, rule: CreepRule = CURRENT_CREEP_RULE) -> dict[str, Any]:
     """P3-4 main judgement (control D-3, user-confirmed 2026-10-26): window from max(two-sided
     creep stop, last READY entry) to the run end; value = max |roll|, |pitch| of the true attitude
     in it (absolute, target 0) <= 0.2 deg. Without a two-sided creep stop the signed one sets the
     window and ``creep_vibration_suspect`` is raised; a window < 5 s raises ``window_short``.
     ``sensor_allowance_left_deg`` = 0.2 - 0.02 (mount) - absmax; ``budget_residual_le_0p04`` =
-    absmax <= 0.04 deg (= allowance >= the 0.14 deg IMU zero error budget; record only)."""
+    absmax <= 0.04 deg (= allowance >= the 0.14 deg IMU zero error budget; record only).
+    User decision 2026-11-05 (spec 433): a short window does not count as a pass, so ``within_0p2``
+    is False there, ``verdict`` is ``flag`` when the value is inside the limit and
+    ``absmax_within_0p2_record`` keeps the plain value test (``rule`` = :data:`LEGACY_CREEP_RULE`
+    gives the former ``within_0p2`` = the value test)."""
     t = np.asarray(t, dtype=float)
     rp = np.asarray(rp_deg, dtype=float)
     t_end = float(t[-1])
@@ -4200,7 +4244,7 @@ def p34_judgement_window(t: np.ndarray, rp_deg: np.ndarray, creep: dict[str, Any
     if "no_ready" in flags or "no_creep_stop" in flags:
         out.update(p34_window_s=None, p34_absmax_deg=None, p34_absmax_overall_deg=None, window_short=True,
                    sensor_allowance_left_deg=None, budget_residual_le_0p04=None, within_0p2=False,
-                   flags=flags + ["window_short"])
+                   absmax_within_0p2_record=False, verdict="fail", flags=flags + ["window_short"])
         return out
     t0w = max(t_ready_last, t_creep)
     w = t >= t0w - 1e-9
@@ -4210,11 +4254,13 @@ def p34_judgement_window(t: np.ndarray, rp_deg: np.ndarray, creep: dict[str, Any
     absmax = np.abs(rp[w]).max(axis=0) if w.any() else np.array([np.nan, np.nan])
     overall = float(np.max(absmax))
     allowance = P3B_ATTITUDE_LIMIT_DEG - P3B_MOUNT_SHARE_DEG - overall
+    is_value_within = bool(w.any() and overall <= P3B_ATTITUDE_LIMIT_DEG)
+    verdict = _p34_verdict(is_value_within, bool(short), rule)
     out.update(p34_window_s=[float(t0w), t_end], p34_window_length_s=float(t_end - t0w),
                p34_absmax_deg=absmax.tolist(), p34_absmax_overall_deg=overall, window_short=bool(short),
                sensor_allowance_left_deg=float(allowance),
                budget_residual_le_0p04=bool(overall <= P3B_BUDGET_RESIDUAL_DEG + 1e-12),
-               within_0p2=bool(w.any() and overall <= P3B_ATTITUDE_LIMIT_DEG), flags=flags)
+               within_0p2=verdict == "pass", absmax_within_0p2_record=is_value_within, verdict=verdict, flags=flags)
     return out
 
 
@@ -4971,7 +5017,8 @@ def p3b_checks(out: dict[str, Any]) -> dict[str, Any]:
             "t_loc_first_s": p32.get("t_loc_first_s"), "t_loc_final_s": p32.get("t_loc_final_s"),
             "loc_revokes": None if p32.get("loc_revokes") is None else len(p32["loc_revokes"]),
             "P3-3_within": p33.get("within"),
-            "P3-4_within_0p2": p34["within_0p2"], "P3-4_absmax_deg": p34.get("p34_absmax_overall_deg"),
+            "P3-4_within_0p2": p34["within_0p2"], "P3-4_verdict": p34.get("verdict"),
+            "P3-4_absmax_deg": p34.get("p34_absmax_overall_deg"),
             "P3-4_window_s": p34.get("p34_window_s"), "P3-4_flags": p34.get("flags"),
             "P3-4_window_short": p34.get("window_short"),
             "P3-4_creep_vibration_suspect": p34.get("creep_vibration_suspect"),
@@ -5091,7 +5138,8 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
     p32["late_loc_revoked"] = _record_or_error(lambda: late_loc_revoked_record(timeline, p32, p33, w_n, f_min))
     out["pre_liftoff_min_F_cyl"] = pre_liftoff_min_force(t, f, f_min, t_dep)
     # P3-4 attitude (main judgement), creep stop
-    cs = creep_stop(t, sink, t_dep)
+    creep_rule = ctx.get("creep_rule", CURRENT_CREEP_RULE)
+    cs = creep_stop(t, sink, t_dep, window_s=creep_rule.rate_window_s)
     out["creep_stop"] = cs
     t_end = float(t[-1])
     w_end = t >= t_end - P3B_END_WINDOW_S - 1e-9
@@ -5103,7 +5151,9 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
                      f"t_end]; true attitude (quaternion roll / pitch, absolute, target 0) max |roll|, |pitch| <= "
                      f"{P3B_ATTITUDE_LIMIT_DEG:g} deg; window < {P3B_MIN_WINDOW_S:g} s -> window_short FLAG; no two-sided "
                      "creep stop -> signed creep stop + creep_vibration_suspect FLAG; end 1 s values, dead band "
-                     f"{P3B_DEADBAND_DEG:g} deg, post-lift-off max <= {P3B_POST_LIFTOFF_ATTITUDE_DEG:g} deg recorded",
+                     f"{P3B_DEADBAND_DEG:g} deg, post-lift-off max <= {P3B_POST_LIFTOFF_ATTITUDE_DEG:g} deg recorded"
+                     + ("" if creep_rule.is_short_window_a_pass else
+                        f"; spec 433: sinkage rate over {creep_rule.rate_window_s:g} s, window_short is not a pass"),
         "end_window_s": [float(t[w_end][0]), t_end], "end_mean_roll_pitch_deg": end_mean.tolist(),
         "end_absmax_roll_pitch_deg": end_absmax.tolist(),
         "end_mean_minus_settle_deg": (end_mean - ref_rp).tolist(),
@@ -5112,7 +5162,7 @@ def p3b_records(s: dict[str, np.ndarray], rows: list[dict[str, Any]], events: li
         "window_after_creep_stop": bool(cs.get("t_final_s") is not None and float(t[w_end][0]) >= cs["t_final_s"] - 1e-9),
         "end_1s_within_0p2_record": bool(np.all(end_absmax <= P3B_ATTITUDE_LIMIT_DEG)),
         "within_deadband_0p03_record": bool(np.all(np.abs(end_mean) <= P3B_DEADBAND_DEG))}
-    p34.update(p34_judgement_window(t, rp, cs, phases))
+    p34.update(p34_judgement_window(t, rp, cs, phases, rule=creep_rule))
     if t_dep is not None:
         a = t >= t_dep - 1e-9
         p34["post_liftoff_absmax_deg"] = np.abs(rp[a]).max(axis=0).tolist()
@@ -5222,9 +5272,11 @@ REJUDGED_BLOCKS = ("P3-1_crawler", "P3-2_loc", "P3-5_clearance_stroke", "P3-6_re
 """p3b blocks whose definition changed (spec rev. 60 C-S9-60; P3-1_crawler: Q-G threshold chatter class, spec 423.3;
 P3-6_ready: spec 421.1 limit rows; P3-8_false_triggers / W61_watch: the LOC is t_LOC^fin, spec 424.8.1 supplement,
 with the *_first record keys); every other block must come out equal."""
-REJUDGE_ADDED_KEYS = {"P3-1_crawler": ("recontact_events",)}
-"""Keys added to a block after a run (U-S9-G6d, 2026-10-28): left out of the "unchanged block" comparison when the
-stored block lacks them (the other keys of the block must still be equal)."""
+REJUDGE_ADDED_KEYS = {"P3-1_crawler": ("recontact_events",),
+                      "creep_stop": ("rate_window_s",),
+                      "P3-4_attitude": ("absmax_within_0p2_record", "verdict")}
+"""Keys added to a block after a run (U-S9-G6d, 2026-10-28; spec 433, 2026-11-05): left out of the "unchanged block"
+comparison when the stored block lacks them (the other keys of the block must still be equal)."""
 
 
 def _without_added(name: str, new: Any, old: Any) -> Any:
@@ -5232,6 +5284,12 @@ def _without_added(name: str, new: Any, old: Any) -> Any:
     if not keys or not isinstance(new, dict) or not isinstance(old, dict):
         return new
     return {k: v for k, v in new.items() if not (k in keys and k not in old)}
+
+
+def stored_creep_rule(stored_p3b: dict[str, Any]) -> CreepRule:
+    """The creep rule a stored ``p3b`` ran with: a re-judgement keeps it (a run before spec 433 has no window key)."""
+    window_s = (stored_p3b.get("creep_stop") or {}).get("rate_window_s", LEGACY_CREEP_RATE_WINDOW_S)
+    return LEGACY_CREEP_RULE if window_s == LEGACY_CREEP_RATE_WINDOW_S else CURRENT_CREEP_RULE
 
 
 def _file_sha256(path: Path) -> str:
@@ -5280,7 +5338,7 @@ def rejudge_case(case_dir: Path, write: bool = True) -> dict[str, Any]:
            "reapproach_settings": lr, "soil_meta": r.get("c2_soil"), "record": rec, **p37_plant_inputs(params),
            "control_period_s": (r.get("controller_meta") or {}).get("period_s"),
            "lwa_on": lwa_on_from_meta(r.get("controller_meta")),
-           "mass_scale": rejudge_mass_scale(r), "case_args": r.get("args")}
+           "mass_scale": rejudge_mass_scale(r), "case_args": r.get("args"), "creep_rule": stored_creep_rule(old)}
     new = _plain(p3b_records(series, r["s9_rows"], events, phases, ctx))
     diffs = sorted(k for k in set(old) | set(new)
                    if k not in REJUDGED_BLOCKS
@@ -5645,7 +5703,8 @@ def run_level(args) -> Path:
     np.savez(d / "controller_commands.npz", t_s=res.command_t_s, issued_u_m_s=res.command_m_s)
     r8_series_info = r8_rows.save(d / R8_SERIES_NAME)
     series = step_rec.arrays()
-    series["sinkage_rate_0p2s_m_s"] = sinkage_rate(series["t_s"], series["pad_sinkage_geometric_m"])
+    series["sinkage_rate_0p2s_m_s"] = sinkage_rate(series["t_s"], series["pad_sinkage_geometric_m"],
+                                                   LEGACY_CREEP_RATE_WINDOW_S)
     np.savez(d / "step_series.npz", **series)
     scm_nodes_info = None
     if scm_nodes is not None:
@@ -5664,7 +5723,8 @@ def run_level(args) -> Path:
            "reapproach_settings": c2_setup["lifted_reapproach"],
            "soil_meta": ctl_meta.get("soil"), "record": p37_record_arrays(d / "record"), **p37_plant_inputs(params),
            "control_period_s": float(c2.config.period_s), "lwa_on": lwa_on_from_meta(ctl_meta),
-           "mass_scale": mass_scale, "case_args": vars(args)}
+           "mass_scale": mass_scale, "case_args": vars(args),
+           "creep_rule": CREEP_RULES[getattr(args, "creep_rule", "current")]}
     p3b = p3b_records(series, soil_rows, events, phases, ctx)
     completion_info = completion.save(d / COMPLETION_SERIES_NAME)
     p3b_ext = p3b_ext_records(series, events, ctl_meta.get("soil"), completion.arrays(),
@@ -5947,6 +6007,9 @@ def build_parser() -> argparse.ArgumentParser:
                     help="RV6 / FINAL rows (spec 430.5 / 431.3): before the model is built, check that the run-time C2 "
                          "preset has the settings of this controller (CONTROLLER_EXPECTATIONS) and exit otherwise; "
                          "recorded as c2_setup.expect_controller. Absent = no attribute, the run is unchanged")
+    lp.add_argument("--creep-rule", choices=tuple(CREEP_RULES), default=argparse.SUPPRESS,
+                    help="P3-4 creep rule (spec 433): current = sinkage rate over 1 s, a window_short row is not a "
+                         "pass; legacy_0p2 = over 0.2 s, as the runs before 2026-11-05. Absent = current, no attribute")
     ej = sub.add_parser("event-judge", help="spec 426.3 E-1 .. E-7 of finished --soil-event case folders (harness "
                                             "judge on the Chrono 1 ms rows; writes <case>/soil_event_judgement.json)")
     ej.add_argument("paths", nargs="+")

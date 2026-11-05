@@ -217,14 +217,14 @@ User decision 2026-11-04: the command :meth:`C2Controller.update` returns is cli
 ``+-v_max`` (``C2Config.clip_returned_command``), the internal states keep the unclipped value;
 off by default, on in the preset (``C2Config().with_10hz_d1(clip_returned_command=False)``
 turns it off, as the v4 results ran).
-C4G2 (TOUCH phase study 2026-11-04, a candidate the Chrono representative rows decide on): at
+C4G2 (TOUCH phase study 2026-11-04, adopted by the user decision of 2026-11-05, spec 433): at
 TOUCH -> LEVEL the twist of the motor strokes is held at ``-D_hat / k_nom`` for 1.5 s or until a
 re-approach starts, and a twisting increment of the LEVEL start ramp keeps the direction of the
-command (:class:`TouchTwistHoldSettings`, event ``INFO_TOUCH_TWIST_HOLD``); off by default and in
-the preset (``C2Config().with_10hz_d1(touch_twist_hold=True)`` turns it on).
-K1 (same study): a re-trigger start waits for a second low sample
-(``LiftedReapproachSettings.retrigger_samples``); off by default and in the preset
-(``C2Config().with_10hz_d1(reapproach_retrigger_two_samples=True)`` turns it on).
+command (:class:`TouchTwistHoldSettings`, event ``INFO_TOUCH_TWIST_HOLD``); off by default, on in
+the preset (``C2Config().with_10hz_d1(touch_twist_hold=False)`` turns it off).
+K1 (same study, rejected by the user decision of 2026-11-05): a re-trigger start waits for a
+second low sample (``LiftedReapproachSettings.retrigger_samples``); off by default and in the
+preset (``C2Config().with_10hz_d1(reapproach_retrigger_two_samples=True)`` turns it on).
 P-S8-29 (user decision 2026-10-28, variant V2b): on a creeping pad DONE may accept a twist load
 up to 15 kN that has stopped rising once attitude and clearance have held for 10 s
 (:class:`TwistCompletionRelaxSettings`, event ``INFO_TWIST_UNSETTLED``); preset on, default off.
@@ -2154,7 +2154,8 @@ class TouchTwistHoldSettings:
     ``ramp_twist_tol_m_s = 0`` is G1. Needs the R8 increment limit. A set the per-leg limit
     already cuts by one ratio stays as it is.
 
-    Off by default; a plain class-level default, so configs unpickled from older code read "off".
+    Off by default, on in :meth:`C2Config.with_10hz_d1`; a plain class-level default, so configs
+    unpickled from older code read "off".
     """
 
     enable: bool = False
@@ -2370,7 +2371,7 @@ class C2Config:
         soil_stop: bool = True,
         flat_soil_margin_m: float = R8_FLAT_SOIL_MARGIN_M,
         clip_returned_command: bool = True,
-        touch_twist_hold: bool = False,
+        touch_twist_hold: bool = True,
         reapproach_retrigger_two_samples: bool = False,
     ) -> C2Config:
         """Copy with the R8-D1 design C2 (spec rev. 30 136 / 139, user decisions 2026-10-24).
@@ -2446,9 +2447,12 @@ class C2Config:
                 (:attr:`clip_returned_command`). On by default since the user decision of
                 2026-11-04; ``False`` gives the preset of the v4 results.
             touch_twist_hold: C4G2 (:class:`TouchTwistHoldSettings`, ``enable`` and
-                ``vector_ramp``). Off: a candidate for the Chrono representative rows.
+                ``vector_ramp``). On by default since the user decision of 2026-11-05 (spec 433);
+                ``False`` gives the preset before that switch
+                (``05_tests/unit/pre_c4g2_preset_runner.py`` runs a script that way).
             reapproach_retrigger_two_samples: K1, a re-trigger start needs two low samples in a
-                row (``LiftedReapproachSettings.retrigger_samples``). Off: a candidate.
+                row (``LiftedReapproachSettings.retrigger_samples``). Off: rejected by the user
+                decision of 2026-11-05 (the code stays for the stored K1 runs).
         """
         retrigger_samples = R8_RETRIGGER_CONFIRM_SAMPLES if reapproach_retrigger_two_samples else 1
         config = self.with_r8_diagnostics()

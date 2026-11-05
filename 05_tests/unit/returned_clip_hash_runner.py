@@ -38,13 +38,16 @@ for _path in (COUPLED_DIR, SOURCE_DIR):
     sys.path.insert(0, str(_path))
 
 
-def _preset_without_clip() -> None:
+def _preset_before_c4g2(*, is_clip_on: bool) -> None:
+    """The stored hashes predate the C4G2 switch, so C4G2 stays off whichever way the clip goes."""
     from outrigger_sim.control import c2
 
     switched_preset = c2.C2Config.with_10hz_d1
 
     def preset(self, **keywords):
-        keywords.setdefault("clip_returned_command", False)
+        keywords.setdefault("touch_twist_hold", False)
+        if not is_clip_on:
+            keywords.setdefault("clip_returned_command", False)
         return switched_preset(self, **keywords)
 
     c2.C2Config.with_10hz_d1 = preset
@@ -65,8 +68,7 @@ def _modules_outside_project() -> list[str]:
 
 def main() -> None:
     case_id, clip_switch, out_path = sys.argv[1], sys.argv[2], Path(sys.argv[3])
-    if clip_switch == "off":
-        _preset_without_clip()
+    _preset_before_c4g2(is_clip_on=clip_switch == "on")
 
     import numpy as np
     import verdict_runs

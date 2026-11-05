@@ -499,7 +499,7 @@ def harness_replay_config() -> C2Config:
         probe=r2_probe,
         thresholds=r2_thresholds,
     ).with_r41_behaviour()
-    config = legacy.with_10hz_d1()
+    config = legacy.with_10hz_d1(touch_twist_hold=False)  # the harness traces predate C4G2
     r8 = replace(
         config.r8,
         imu_sample_period_s=None,

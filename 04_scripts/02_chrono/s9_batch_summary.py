@@ -891,7 +891,8 @@ def summary_p3b(folder: Path, rejudge: bool = False) -> dict[str, Any]:
         s8c.append(row)
     return {"batch": "P3b C2 levelling on SCM (control spec 284; user decision U-S9P-6 (가) 2026-10-26)",
             "criteria": {"P3-4 (main)": "max |roll|, |pitch| (true, absolute) <= 0.2 deg over [max(two-sided creep "
-                                        "stop, last READY entry), t_end] (control D-3); window < 5 s = window_short FLAG",
+                                        "stop, last READY entry), t_end] (control D-3); sinkage rate over 1 s (0.2 s before spec "
+                                        "433); window < 5 s = window_short FLAG, not a pass",
                          "P3-2": "spec rev. 60 U-S9P-13 (가): LOC before the first DONE, crawler normal < 0.01 W at the "
                                  "LOC, 0 <= LOC - departure <= T_lim = plateau_window_m / (push_speed_fraction v_max) "
                                  "+ 1.0 s (= 2.9117 s; 1.0 s ASSUMPTION crawler load tail); former 2 s clause = "

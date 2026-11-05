@@ -21,7 +21,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-sys.path.insert(0, r"C:\workspace\outrigger_control\04_scripts\03_control")
+sys.path.insert(0, str(HERE.parent))
 import run_c2_r8_10hz_check as r8  # noqa: E402
 import numpy as np  # noqa: E402
 

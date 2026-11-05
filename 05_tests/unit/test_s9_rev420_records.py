@@ -394,7 +394,8 @@ ADDED_P32 = {"late_loc_reapproach",
              # spec 424.8.1 record fields (2026-10-29)
              "t_loc_first_s", "t_loc_final_s", "loc_revokes", "loc_timeline", "late_loc_revoked"}
 ADDED_CHECKS = {r9.P32_LATE_LOC_FLAG, "P3-2_verdict",
-                r9.P32_LATE_LOC_REVOKED_FLAG, "t_loc_first_s", "t_loc_final_s", "loc_revokes", "P3-8_within_first"}
+                r9.P32_LATE_LOC_REVOKED_FLAG, "t_loc_first_s", "t_loc_final_s", "loc_revokes", "P3-8_within_first",
+                "P3-4_verdict"}  # spec 433 (2026-11-05)
 # spec 424.8.1 supplement (2026-10-29): LOC-based records at t_LOC^fin, first-LOC values as *_first
 ADDED_OTHER = {"P3-5_clearance_stroke": {"rut_clearance_at_first_loc_m"},
                "P3-8_false_triggers": {"t_loc_s", "t_loc_first_s", "loc_basis", "counts_first", "within_first"},

@@ -207,7 +207,7 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     out["RV5"] = level_rows("rv5_cases")
     # Final-controller re-runs (spec 430.5 / 431.3, user decision 2026-10-30; run after the 03_src acceptance, 431.1
     # step 6): every row runs the run-time preset C2Config().with_10hz_d1() and refuses to start unless it has the final
-    # rules (run_S9 --expect-controller final_SGS_R4, spec 429.11). RV6 = X6-rp-sa, J2 B SGS checks k 0.75 / 0.875 (optional),
+    # rules (run_S9 --expect-controller FINAL_CONTROLLER, spec 433). RV6 = X6-rp-sa, J2 B SGS checks k 0.75 / 0.875 (optional),
     # X6-rb at --rv6-dir / --rv6-k (default roll_neg k 0.65, spec 430.3.1) + the other direction (optional); FINAL1 .. FINAL5 = spec 431.3; FINAL6 = studies D / A (the
     # stopped RV4 / RV5) on the final controller; FINAL-R = rigid S8 L2b / S6 L1-R candidates (run only the rows whose
     # harness pair acts: --only / --only-file / --row-filter). Pools: compute-scheduler-expert plan (est_pool_s)
@@ -465,7 +465,7 @@ JOURNAL_AUGER_SOIL_ROWS: tuple[tuple[str, str, str], ...] = (
     ("FINAL5", "P3b_G1_B_bottom_Fs4", "B1"),
 )
 """(source bundle, case, ``rep_variable``) of the JOURNAL-AUGER soil rows: pad B, F_s 4 kN, flat, mass x1.0, P3b
-settings, final controller (``--expect-controller final_SGS_R4``); rows copied from :func:`level_rows` of the bundle
+settings, final controller (``--expect-controller`` = ``run_S9.FINAL_CONTROLLER``); rows copied from :func:`level_rows` of the bundle
 (argv / ``source_run`` / ``est_pool_s`` unchanged). The cells J1 top, J2 top, J2 middle are FINAL-REP rows."""
 JOURNAL_AUGER_RIGID_CASES = ("JA_middle_flat_Fs4", "JA_bottom_flat_Fs4")
 JOURNAL_AUGER_RIGID_EST_S = 600.0

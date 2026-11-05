@@ -46,6 +46,7 @@ WRAPPER_CASE = "H3|J1|B|top|roll_pos@k0.75"
 WRAPPER_RECORDS = ROOT / "06_analysis" / "02_control" / "s9" / "rev81" / "fix_slope_E3c.json"
 WRAPPER_SCRIPT = ROOT / "04_scripts" / "03_control" / "s9" / "s9_slope_fix_candidates.py"
 HARNESS_PYTHON = Path(r"C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe")
+PRE_C4G2_RUNNER = Path(__file__).with_name("pre_c4g2_preset_runner.py")
 """The study-1 harness needs dynamics-dev (numba, sympy), not the Chrono-dev test env."""
 
 
@@ -312,11 +313,12 @@ def test_11_study_1_case_matches_the_e3c10_wrapper_hash(tmp_path) -> None:
                     if r["id"] == WRAPPER_CASE and r["candidate"] == "E3c10")
     out_path = tmp_path / "p31_wrapper_case.json"
     environment = {**os.environ, "MKL_THREADING_LAYER": "TBB", "OMP_NUM_THREADS": "1"}
-    # No pre-switch runner needed: on this case neither SGS (no guard period) nor R4 (P-S8-31
-    # fires first on the tilted settle) acts, so the spec 429.11 preset commands as before
-    # (pre- and post-switch "current" hashes checked equal, 2026-10-30).
+    # No pre-switch runner needed for spec 429.11: on this case neither SGS (no guard period) nor
+    # R4 (P-S8-31 fires first on the tilted settle) acts (pre- and post-switch "current" hashes
+    # checked equal, 2026-10-30). C4G2 does act here (spec 433), and the record predates it.
     subprocess.run(
-        [str(HARNESS_PYTHON), "-I", str(WRAPPER_SCRIPT), "run", "--suite", "slope",
+        [str(HARNESS_PYTHON), "-I", str(PRE_C4G2_RUNNER), str(WRAPPER_SCRIPT),
+         "run", "--suite", "slope",
          "--candidates", "current", "--filter", WRAPPER_CASE, "--workers", "1",
          "--out", str(out_path)],
         cwd=ROOT, env=environment, check=True, capture_output=True, timeout=1800,

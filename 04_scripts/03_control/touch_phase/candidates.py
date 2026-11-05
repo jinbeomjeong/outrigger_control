@@ -4,6 +4,8 @@ Each candidate is a subclass of the project ``C2Controller`` (or a config replac
 harness builds through ``c2.C2Controller``, as the study wrappers of spec 344.3 / 427.11 do.
 With ``CANDIDATES["OFF"]`` the subclass is installed but every override falls through, so the
 command hash must equal the stored harness hash (``run_touch_phase.py`` batch ``hash``).
+These wrappers were written on the preset before the C4G2 switch (spec 433): since then the
+project preset has C4G2 on, so run them through ``05_tests/unit/pre_c4g2_preset_runner.py``.
 
 Candidates (spec: this study, user decision 2026-11-04):
   A1  touch window speed 0.25 v_max, window 40 mm (grid 0.523 mm)
@@ -18,8 +20,9 @@ Candidates (spec: this study, user decision 2026-11-04):
 Trim law (period T = 0.1 s, d = 1, valve lag 0.1 s): deviation of the motor strokes from their
 common motion is driven to the target shape by ``u_i += K_TRIM e_i``; commands never reverse a
 leg (``max(u, 0)``) so the seal friction state stays the extending one, and the set is rescaled to
-v_max. The twist load D_hat = n^T F is friction free in that state (n^T F_s = 0 for the front /
-rear F_s pattern). Units: SI inside; RECORD in kN and mm.
+v_max. The twist load D_hat = n^T F is friction free only while all four legs extend
+(n^T F_s = 0 for the front / rear F_s pattern); a stopped leg keeps its stuck friction, about
++-7.3 kN of D_hat at F_s 4 kN (c4g1_rigid_judgement.md). Units: SI inside; RECORD in kN and mm.
 """
 from __future__ import annotations
 
@@ -189,8 +192,10 @@ def install_candidate(name: str | None, *, bias_N: float = 0.0, cap_m: float = T
                 return limited
             requested = leg_speeds - self._state.previous_output_m_s
             if spec.get("ramp_twist_only"):
-                # G2: the per-leg limit stays when its increment makes no twist (a front / rear
-                # difference has n^T du = 0), so a symmetric start keeps its bits.
+                # C6 only, kept for its stored rows: the per-leg limit stays when its own
+                # increment makes no twist. The adopted G2 is c2.py _vector_ramp_increment,
+                # which compares with the common-ratio increment: four legs cut to one value
+                # have no twist of their own yet erase the twist the command asks for.
                 if abs(float(self.geometry.twist_vector @ limited)) < RAMP_TWIST_TOL_M_S:
                     return limited
             cut = np.abs(requested) > np.abs(limited) + 1e-12
