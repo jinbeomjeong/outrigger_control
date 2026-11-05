@@ -4,7 +4,8 @@ Engine independent (no pychrono). :class:`RecordedFlowLimiter` sits between the 
 leg speed of ``SpeedReference`` / ``L1SpeedActuator`` (``set_flow_limit``), called once per physics
 step. It holds no state that changes the result; the record is for the coupled re-judgement
 (``hydraulic_coupling_criteria.md`` 7.3, 9, 9.1). **Off by default**: without a limiter on the
-actuator no line of this module runs (criteria 9 step 1, decision D-5 waits for the v4 paper).
+actuator no line of this module runs (criteria 9 step 1; D-5 not switched, S8 F-5, decision_log
+2026-11-05).
 
 Per step (``flow_share`` module docstring, conditions 1 to 3):
   request  speed after the valve (spool lag step mean, or the command ramp on a plant without the

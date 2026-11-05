@@ -1,8 +1,9 @@
 """Quasi-static flow sharing of the four legs on one fixed pump (engine independent, no pychrono).
 
 Option of the leg plants, **off by default** (criteria
-``00_docs/02_hydraulic/hydraulic_coupling_criteria.md`` 9 step 1; decision D-5 turns it on after
-the v4 paper, the switch stays for reproducing v4). Given the speed each valve section asks for and
+``00_docs/02_hydraulic/hydraulic_coupling_criteria.md`` 9 step 1; D-5 not switched, S8 F-5
+(decision_log 2026-11-05), the switch stays for reproducing v4). Given the speed each valve
+section asks for and
 the cylinder forces, it returns the leg speeds the shared pump can deliver.
 
 Laws (``00_docs/02_hydraulic/hydraulic_coupling.md`` 3)::
@@ -81,7 +82,8 @@ class FlowShareAssumptions:
 
     Attributes:
         eta_v: Pump volumetric efficiency; no default, the level is the choice of each run.
-        is_enabled: False = the legs get their request (default, decision D-5 waits for v4).
+        is_enabled: False = the legs get their request (default, D-5 not switched, S8 F-5
+            (decision_log 2026-11-05)).
         compensator_drop_Pa: Section compensator drop dp_c.
         unloading_drop_Pa: Inlet compensator standby drop dp_ls.
         smoothing_width_Pa: Width of the C1 compensator transition; 0 = sharp minimum.
