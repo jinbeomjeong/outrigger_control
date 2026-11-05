@@ -26,6 +26,11 @@ SOURCE_DIR = Path(__file__).resolve().parents[3] / "03_src"
 if str(SOURCE_DIR) not in sys.path:
     sys.path.insert(0, str(SOURCE_DIR))
 
+from outrigger_sim.hydraulics.check_open_delay import (  # noqa: E402
+    CheckDelayCircuit,
+    CheckDelayInputs,
+    CheckOpenDelay,
+)
 from outrigger_sim.hydraulics.rod_chamber import (  # noqa: E402
     RodChamberLegParams,
     RodChamberMode,
@@ -98,8 +103,8 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
         The plant class, deep-copied state included (the event branches copy plants).
     """
     closure = options.lock_closure
-    if closure is not None and damping_N_s_m is None:
-        raise ValueError("LC on the harness needs the locked and moving dashpots")
+    if (closure is not None or options.check_delay is not None) and damping_N_s_m is None:
+        raise ValueError("LC and M1c on the harness need the locked and moving dashpots")
 
     class HydraulicsPlant(base):
         """Harness plant with the v5 options (module docstring)."""
@@ -113,21 +118,65 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                 self.rod_pressure_lag = _RodPressureLag(self)
             self.lock_pending_since_s = np.full(LEG_COUNT, np.nan)
             self.lock_events = []
+            self.rod_pressure_seed_Pa = np.full(LEG_COUNT, np.nan)
+            self.check_delay = None
+            if options.check_delay is not None:
+                self.check_delay = CheckOpenDelay(options.check_delay,
+                                                  _check_delay_circuit(self.flow_limiter.params))
             return result
 
         def step(self, u, nsteps):
-            if closure is not None and self.armed:
+            if not self.armed:
+                return super().step(u, nsteps)
+            if closure is not None:
                 # spec 2.5: the dashpot follows the law's lock state, not the valve output
                 self.cn = np.where(self.locked, damping_N_s_m[0], damping_N_s_m[1])
-            return super().step(u, nsteps)
+            if self.check_delay is None:
+                return super().step(u, nsteps)
+            return self._step_with_check_delay(np.asarray(u, float), nsteps)
+
+        def _step_with_check_delay(self, u: np.ndarray, nsteps: int):
+            """Spec 2.0 rows 3 and 6: M1c in front of the flow limit, its shift after the chunk
+            (the order of ``m1c_plant.M1cPlant.step``)."""
+            output = self.check_delay.filter(self._check_delay_inputs(u, nsteps))
+            for i in np.flatnonzero(output.creep_shift_m != 0.0):
+                self.sref[i] -= output.creep_shift_m[i]
+                if self.locked[i]:
+                    self.c_lock[i] -= output.creep_shift_m[i]
+            for i in np.flatnonzero(output.lock_damping):
+                self.cn = np.array(self.cn, float)
+                self.cn[i] = damping_N_s_m[0][i]
+            for i in np.flatnonzero(np.isfinite(output.opening_rod_pressure_Pa)):
+                self._seed_rod_pressure(int(i), float(output.opening_rod_pressure_Pa[i]))
+            accumulated = super().step(output.speed_m_s, nsteps)
+            if output.opening_shift_m.any():
+                self.sref -= output.opening_shift_m
+            return accumulated
+
+        def _check_delay_inputs(self, u: np.ndarray, nsteps: int) -> CheckDelayInputs:
+            rod_Pa = (np.asarray(self.p_r0, float) - np.asarray(self.Gr, float)
+                      / np.asarray(self.A_ann, float))
+            head_Pa = (self.pressure() + rod_Pa * self.A_ann) / self.check_delay.A_h
+            knee_m = (self.p_r0 - self.p_floor) * self.A_ann / self.kr
+            void_m = np.where(self.locked,
+                              np.maximum(self.sref - self.x - self.c_lock - knee_m, 0.0), 0.0)
+            band_N = np.asarray(self.Fs, float) - np.asarray(self.f, float)
+            return CheckDelayInputs(self.t, nsteps * self.dt, u, head_Pa, rod_Pa, self.locked,
+                                    void_m, band_N, self.sref)
+
+        def _seed_rod_pressure(self, leg: int, pressure_Pa: float) -> None:
+            """Spec 2.4: M2 starts its release at the M1c opening pressure (no double creep)."""
+            if self.rod_release is None:
+                return
+            self.rod_pressure_seed_Pa[leg] = pressure_Pa
+            self.rod_release.seed_pressure(leg, pressure_Pa)
 
         def _rod_force(self, u):
             was_locked = self.locked.copy()
             if closure is not None:
                 u = self._closing_delay_speed(np.asarray(u, float))
             rod_force_N = super()._rod_force(u)
-            if closure is not None:
-                self._record_lock_changes(was_locked)
+            self._record_lock_changes(was_locked)
             if self.rod_release is not None:
                 self._shift_reference_for_rod_pressure(rod_force_N, was_locked)
             return rod_force_N
@@ -161,7 +210,9 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             lag = self.rod_pressure_lag
             for i in np.flatnonzero(~self.locked):
                 if was_locked[i]:
-                    lag.start(i, float(pressure_Pa[i]))
+                    seed_Pa = self.rod_pressure_seed_Pa[i]
+                    lag.start(i, float(pressure_Pa[i] if np.isnan(seed_Pa) else seed_Pa))
+                    self.rod_pressure_seed_Pa[i] = np.nan
                 pressure_Pa[i] = lag.relax(i, float(self.last_dir[i]), float(net_force_N[i]))
             shift_m = self.rod_release.shift_m(
                 pressure_Pa, self.kh, ~self.locked, STROKE_LOWER_END_M - self.sref,
@@ -206,9 +257,22 @@ def plant_record(plant) -> dict:
     record = {}
     if getattr(plant, "rod_release", None) is not None:
         record.update(plant.rod_release.record())
-    if getattr(plant, "lock_events", None) is not None and options_of(plant).lock_closure:
+    if getattr(plant, "lock_events", None) is not None:
         record["lock_events"] = plant.lock_events[:MAX_LOGGED_LOCK_EVENTS]
+    if getattr(plant, "check_delay", None) is not None:
+        record["check_delay"] = plant.check_delay.summary()
     return record
+
+
+def _check_delay_circuit(params) -> CheckDelayCircuit:
+    """The M1c circuit from the harness parameters (``params.py``, as ``m1c_plant.M1cState``)."""
+    return CheckDelayCircuit(head_area_m2=np.asarray(params.A_h, float),
+                             annulus_area_m2=np.asarray(params.A_r, float),
+                             stroke_m=float(params.stroke), rod_dead_length_m=float(params.L0r),
+                             head_dead_length_m=float(params.L0h),
+                             bulk_modulus_Pa=float(params.beta), tank_pressure_Pa=float(params.p_T),
+                             max_speed_m_s=float(params.v_max),
+                             compensator_drop_Pa=float(params.dp_comp))
 
 
 def options_of(plant) -> HydraulicOptions:

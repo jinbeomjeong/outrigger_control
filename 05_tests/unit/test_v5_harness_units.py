@@ -49,3 +49,11 @@ def test_lc_harness_cut_lock_restart_and_copy(tmp_path: Path) -> None:
         assert abs(report[f"l4_lock_after_cut_s_{delay}"] - float(delay)) <= chunk_s
     assert report["l5_lock_time_after_restart"] is None
     assert report["l7_copy_equal"] is True
+
+
+def test_c8_m2_and_m1c_do_not_count_the_retract_creep_twice(tmp_path: Path) -> None:
+    """Spec C-8 on the harness: after the M1c opening M2 starts from p_rod, so in the first
+    chunks it adds almost nothing to the creep (without the seed it would add about -creep)."""
+    report = _run_check("c8", tmp_path)
+    assert report["opened_chunk"] is not None
+    assert abs(report["m2_first_5_chunks_mm"]) < 0.1 * report["creep_mm"]

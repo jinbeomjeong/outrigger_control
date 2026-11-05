@@ -209,7 +209,34 @@ def _deepcopy_continuation_is_equal() -> bool:
                 and bench.plant.lock_events == twin.plant.lock_events)
 
 
-CHECKS = {"m2_6": check_m2_6, "lc": check_lc}
+def check_c8() -> dict:
+    """Spec C-8: M2 + M1c BL, FL retracts from a lock: creep + M2 = A_ann (p_rod - p_r) / k_h
+    once, not twice (M2 starts the release at the M1c opening pressure)."""
+    from outrigger_sim.hydraulics.v5_options import CheckDelaySetting, HydraulicOptions
+
+    bench = HarnessBench(HydraulicOptions(rod_release_force=True,
+                                          check_delay=CheckDelaySetting("BL")))
+    bench.lift_and_arm()
+    plant = bench.plant
+    command = np.zeros(4)
+    command[FRONT_LEFT] = -QUARTER * bench.v_max
+    shifts, fills = [], []
+    for _ in range(round(0.6 / bench.cl.LAG_CHUNK_S)):
+        bench.chunk(command)
+        shifts.append(float(plant.rod_release.shift_total_m[FRONT_LEFT]))
+        fills.append(int(plant.check_delay.n_fills[FRONT_LEFT, 1]))
+    opened = fills.index(1) if 1 in fills else None
+    summary = plant.check_delay.summary()
+    out = {"opened_chunk": opened, "creep_mm": summary["creep_mm"][FRONT_LEFT],
+           "discharge_mm": summary["discharge_mm"][FRONT_LEFT]}
+    if opened is not None:
+        before = shifts[opened - 1] if opened > 0 else 0.0
+        out["m2_first_5_chunks_mm"] = (shifts[min(opened + 5, len(shifts) - 1)] - before) * 1e3
+        out["m2_to_end_mm"] = (shifts[-1] - before) * 1e3
+    return out
+
+
+CHECKS = {"m2_6": check_m2_6, "lc": check_lc, "c8": check_c8}
 
 
 def _modules_outside_project() -> list[str]:
