@@ -56,7 +56,8 @@ def _fixed_body_errors(params, cases_by_name: dict, stored: dict) -> dict[str, f
         for tag, is_on in (("law", False), ("law_m2", True)):
             result = m2_check.run_law(case, params, grid, command, is_on, True)
             end_force_kN = float(result["F"][-LAST_SAMPLES:, 0].mean()) / 1e3
-            errors[f"{stored_name}.{tag}"] = abs(end_force_kN - stored["F_end_kN"][stored_name][tag])
+            stored_kN = stored["F_end_kN"][stored_name][tag]
+            errors[f"{stored_name}.{tag}"] = abs(end_force_kN - stored_kN)
     return errors
 
 

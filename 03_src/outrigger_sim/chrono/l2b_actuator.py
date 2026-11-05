@@ -63,6 +63,7 @@ from outrigger_sim.actuation import SATURATION_STOP_S, FlowLimit, SpeedReference
 from outrigger_sim.chrono.actuators import leg_force_limits_N
 from outrigger_sim.hydraulics.counterbalance import Counterbalance
 from outrigger_sim.hydraulics.l2b_rod_side import L2bRodSide
+from outrigger_sim.hydraulics.rod_release import RodReleaseShift
 from outrigger_sim.hydraulics.seal_friction import SealFriction, leg_limits_N
 from outrigger_sim.params import LEG_ORDER, Params
 
@@ -214,6 +215,8 @@ class L2bForceActuator:
         self._acting_force = np.zeros(n)
         self._k_last = np.full(n, np.nan)
         self._hook_t: float | None = None
+        self._rod_release: RodReleaseShift | None = None
+        """M2 (v5 spec 2.3, :meth:`configure_rod_release`); None = off, no line of it runs."""
         self.reset_piston_monitor()
         self._apply()
 
@@ -232,6 +235,7 @@ class L2bForceActuator:
         damping: str = "rev33",
         rod_side: bool | None = None,
         rod_side_armed: bool = True,
+        rod_release: bool | None = None,
     ) -> L2bForceActuator:
         """YAML values (``params`` loaded with ``model="L2b_NSC"``) for the legs ``legs``.
 
@@ -244,6 +248,7 @@ class L2bForceActuator:
                 head only.
             rod_side_armed: Start with the rod-side law armed (False: head only until
                 ``actuator.rod_side.arm()``, V12 rule 5.20.7).
+            rod_release: True = M2 on (:meth:`configure_rod_release`); None / False = off.
         """
         if params.l2b is None:
             raise ValueError('params must be loaded with model="L2b_NSC"')
@@ -328,7 +333,7 @@ class L2bForceActuator:
                 counterbalance = Counterbalance(
                     cb_cfg, [a.head_area_m2[i] for i in idx],
                     [params.l2b.rod_side.annulus_area_m2[i] for i in idx])
-        return cls(
+        actuator = cls(
             motors,
             functions,
             reference,
@@ -345,6 +350,9 @@ class L2bForceActuator:
             counterbalance=counterbalance,
             oil_law=oil,
         )
+        if rod_release:
+            actuator.configure_rod_release()
+        return actuator
 
     # --- law ------------------------------------------------------------------------------
 
@@ -437,6 +445,43 @@ class L2bForceActuator:
         none). It reads the force law C judges: ``F`` on the S7 path, ``F - f`` on the friction path."""
         self.reference.set_flow_limit(flow_limit)
 
+    # --- M2 rod release force (v5 spec 2.3) -----------------------------------------------------
+
+    def configure_rod_release(self) -> None:
+        """Turn M2 on: the rod pressure of a moving leg shifts ``s_ref`` (both directions, D-4).
+
+        The shift ``A_ann (p_r^(k-1) - p_r^k) / k_h(s_ref)`` is computed after the force of this
+        hook, so it acts from the next hook on. Locked legs and a disarmed law do not shift.
+
+        Raises:
+            ValueError: No rod-side law, or the counterbalance path (never tested with M2).
+        """
+        if self.rod_side is None:
+            raise ValueError("M2 needs the rod-side law (its rod pressure)")
+        if self.counterbalance is not None:
+            raise ValueError("M2 with lock_valve = counterbalance is refused (untested path)")
+        self._rod_release = RodReleaseShift(self.rod_side.annulus_area_m2)
+
+    def rod_release_record(self) -> dict[str, Any] | None:
+        """M2 totals per leg (they move the stroke reading too); None when M2 is off."""
+        return None if self._rod_release is None else self._rod_release.record()
+
+    def _shift_reference_for_rod_pressure(self, s_ref_now: NDArray[np.float64]) -> None:
+        release = self._rod_release
+        oil = self._oil
+        assert release is not None and oil is not None
+        if not oil.armed:
+            release.forget_pressure()
+            return
+        head_stiffness = np.array([oil.head_stiffness_N_m(i, float(s_ref_now[i]))
+                                   for i in range(self.n_legs)])
+        s_ref = self.reference.s_ref_m
+        soft = self.reference.soft_limits_m
+        shift = release.shift_m(oil.rod_pressure_Pa, head_stiffness, ~oil.locked,
+                                soft[:, 0] - s_ref, soft[:, 1] - s_ref)
+        if np.any(shift != 0.0):
+            self.reference.shift_reference(-shift)
+
     @property
     def valve_state_m_s(self) -> NDArray[np.float64]:
         return self.reference.valve_state_m_s
@@ -526,6 +571,8 @@ class L2bForceActuator:
             c = np.where(np.abs(u) <= self._eps, self._c_lock, self._c_move)
             self._k_last = self.axial_stiffness_N_m(s_ref_now)
             self._force = spring + c * (u - ds)
+            if self._rod_release is not None:
+                self._shift_reference_for_rod_pressure(s_ref_now)
         if not np.all(np.isfinite(self._force)):
             raise FloatingPointError(f"L2b force law not finite: {self._force}")
         self._apply()
@@ -560,6 +607,8 @@ class L2bForceActuator:
         force = spring + c * (u - ds)
         if not np.all(np.isfinite(force)):
             raise FloatingPointError(f"L2b force law not finite: {force}")
+        if self._rod_release is not None:
+            self._shift_reference_for_rod_pressure(s_ref_now)
         f_p = force - sf.f
         p_r = (oil.rod_pressure_Pa if (self.rod_side is not None and self.rod_side.armed)
                else np.zeros(self.n_legs))
@@ -713,6 +762,8 @@ class L2bForceActuator:
                 "s8_cb_below_soft_limit_steps": self.cb_below_soft_limit_steps.copy(),
                 "s8_pressure_floor_hook_hits": self.pressure_floor_hook_hits.copy(),
             })
+        if self._rod_release is not None:  # M2 keys only with M2 on
+            out.update(self._rod_release.state_arrays())
         return out
 
     def restore_state(self, arrays: Mapping[str, NDArray[Any]]) -> None:
@@ -729,6 +780,8 @@ class L2bForceActuator:
             )
         if self.seal_friction is not None:
             self._restore_s8(arrays)
+        if self._rod_release is not None:
+            self._rod_release.restore_state(arrays)
         self._apply()
 
     def _restore_s8(self, arrays: Mapping[str, NDArray[Any]]) -> None:
@@ -792,6 +845,15 @@ class L2bForceActuator:
             fn.SetConstant(float(value))
 
     def meta(self) -> dict[str, Any]:
+        out = self._base_meta()
+        if self._rod_release is not None:  # key only with M2 on: the off meta stays as it was
+            out["rod_release"] = {
+                "rule": "moving leg: s_ref += A_ann (p_r_prev - p_r) / k_h(s_ref), both directions "
+                        "(v5 spec 2.3, D-4); p_r = rod-side law value before the pressure floor",
+                "status": "ASSUMPTION p_bB, tau, p_r0 (spec 2.3)"}
+        return out
+
+    def _base_meta(self) -> dict[str, Any]:
         return {
             "type": "ChLinkMotorLinearForce, explicit force law (hook after each step)",
             "law": "F = k_ax(s)(s_ref - s) + c(u - ds/dt)",
