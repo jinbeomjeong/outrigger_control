@@ -176,8 +176,40 @@ def batch_jobs(name: str) -> list[dict]:
     raise ValueError(f"unknown batch {name!r}")
 
 
+RUNTIME_JOB_KEYS = ("mask", "t4h_dir")
+"""Job entries ``main`` adds for the worker only (not part of the job identity)."""
+T4H_SETTINGS = ("VB", "LS1", "LS2", "LS3", "LS4")
+"""Criteria 9 T4h (control-expert B): the runs that write a T4h record."""
+
+
 def job_key(job: dict) -> str:
-    return json.dumps({k: job[k] for k in sorted(job) if k != "mask"}, sort_keys=True)
+    return json.dumps({k: job[k] for k in sorted(job) if k not in RUNTIME_JOB_KEYS},
+                      sort_keys=True)
+
+
+def t4h_file_name(job: dict) -> str:
+    """``<row>_<phase>_<setting>.npz`` of a job (phase as in ``aggregate_v5``, file-safe)."""
+    row = "R2ra" if job.get("decision") == "reanchor_on" else job["case"]
+    if job.get("twin"):
+        twin = job["twin"]
+        phase = f"{twin['level']}-{twin['leg']}-Fs{twin['fs_kN']:g}-o{job.get('offset_s')}"
+    elif job.get("offset_s") is not None:
+        phase = f"o{job['offset_s']}"
+    else:
+        phase = f"e{job.get('eps', 0.0)}"
+    if job.get("timing"):
+        phase += f"-{job['timing']}"
+    return f"{row}_{phase}_{job['setting']}.npz"
+
+
+def _t4h_request(job: dict, flow, options) -> dict | None:
+    """The T4h path and meta of a VB / LS job of a batch run (None otherwise)."""
+    if job.get("t4h_dir") is None or job["setting"] not in T4H_SETTINGS:
+        return None
+    meta = {"job": {k: v for k, v in job.items() if k not in RUNTIME_JOB_KEYS},
+            "flow_setting": flow.to_dict(),
+            "hydraulic_options": None if options is None else options.to_dict()}
+    return {"path": Path(job["t4h_dir"]) / t4h_file_name(job), "meta": meta}
 
 
 def _install_approach_scale(eps: float) -> None:
@@ -274,8 +306,9 @@ def run_one(job: dict) -> dict:
         flow, options = options_of(job["setting"])
         case, decision = _case_of(job)
         contact = job.get("contact")
+        t4h = _t4h_request(job, flow, options)
         result, series = verdict_runs.execute(case, flow, decision, hydraulics=options,
-                                              contact=contact)
+                                              contact=contact, t4h=t4h)
         if "error" in result:
             return {"job": job, "error": result["error"], "tb": result.get("tb"),
                     "wall_s": round(time.perf_counter() - t_start, 1)}
@@ -295,8 +328,9 @@ def run_one(job: dict) -> dict:
                 "harness_class": result.get("harness_class"),
                 "hydraulic_options": result.get("hydraulic_options"),
                 "hydraulics_record": result.get("hydraulics_record"),
-                **{key: result[key] for key in ("overlap_found", "soil_stop_crawler")
-                   if key in result}}
+                **{key: result[key] for key in ("overlap_found", "soil_stop_crawler",
+                                                "lock_window_alignment") if key in result},
+                **({} if t4h is None else {"t4h_file": t4h["path"].name})}
     except Exception as exc:  # the batch goes on; the line records the failure
         return {"job": job, "error": repr(exc), "tb": traceback.format_exc()[-3000:],
                 "wall_s": round(time.perf_counter() - t_start, 1)}
@@ -330,6 +364,7 @@ def main() -> None:
     mask = None if args.mask is None else int(args.mask, 16)
     for job in todo:
         job["mask"] = mask
+        job["t4h_dir"] = str(OUT_DIR / args.batch / "t4h")
     import verdict_runs
 
     verdict_runs.warm_numba_cache()
@@ -340,7 +375,8 @@ def main() -> None:
     with get_context("spawn").Pool(args.workers, maxtasksperchild=1) as pool, \
             path.open("a", encoding="utf-8") as handle:
         for count, record in enumerate(pool.imap_unordered(run_one, todo), 1):
-            record["job"].pop("mask", None)
+            for key in RUNTIME_JOB_KEYS:
+                record["job"].pop(key, None)
             handle.write(json.dumps(record, default=lambda v: v.item() if hasattr(v, "item")
                                     else str(v)) + "\n")
             handle.flush()

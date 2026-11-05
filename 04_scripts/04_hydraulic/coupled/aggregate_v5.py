@@ -88,6 +88,8 @@ def value_row(record: dict) -> dict:
         out["soil_stop_crawler"] = record["soil_stop_crawler"]
     if record.get("overlap_found"):
         out["overlap_found"] = record["overlap_found"]
+    if "lock_window_alignment" in record:
+        out["lock_window_alignment"] = record["lock_window_alignment"]
     return out
 
 
@@ -174,6 +176,51 @@ def pressure_only_table(rows: list[dict], combined_rows: list[dict]) -> list[dic
                       "unit_status": row.get("unit_status", UNIT_STATUS),
                       row["contact_judge"].lower(): _judge_values(row),
                       "combined": _judge_values(combined.get(key))})
+    return table
+
+
+LOCK_WINDOW_GATE_SETTINGS = ("VB", "LS1", "LS2", "LS3", "LS4")
+"""Criteria J11 / L-e: n_late of the fallback legs gates these; L1 and the rest are records."""
+
+
+def _lock_window_side(alignments: list[dict], *, fallback_only: bool) -> dict:
+    late_key = "n_late_fallback_by_leg" if fallback_only else "n_late_by_leg"
+    late_per_run = [sum(a[late_key].values()) for a in alignments]
+    if fallback_only:
+        margins = [a["margin_min_s_fallback"] for a in alignments
+                   if a.get("margin_min_s_fallback") is not None]
+    else:
+        margins = [margin for a in alignments for margin in a["margin_min_s_by_leg"].values()
+                   if margin is not None]
+    return {"late_stretches": sum(late_per_run),
+            "runs_with_late": sum(count > 0 for count in late_per_run),
+            "margin_min_s": min(margins) if margins else None}
+
+
+def lock_window_table(rows: list[dict]) -> dict:
+    """Criteria J11 per setting: stretches, late stretches, runs with n_late > 0 and the least
+    margin, all legs and fallback legs apart."""
+    by_setting = defaultdict(list)
+    skipped = defaultdict(int)
+    for row in rows:
+        alignment = row.get("lock_window_alignment")
+        if alignment is None:
+            continue
+        if alignment.get("n_late", 0) is None:
+            skipped[row["setting"]] += 1
+            continue
+        by_setting[row["setting"]].append(alignment)
+    table = {}
+    for setting, alignments in sorted(by_setting.items()):
+        table[setting] = {
+            "role": "gate" if setting in LOCK_WINDOW_GATE_SETTINGS else "record",
+            "runs": len(alignments), "runs_without_stretches": skipped.get(setting, 0),
+            "stretches": sum(sum(a["stretches_by_leg"].values()) for a in alignments),
+            "judged": sum(sum(a["judged_by_leg"].values()) for a in alignments),
+            "unlock_in_stretch": sum(a["unlock_in_stretch"] for a in alignments),
+            "all_legs": _lock_window_side(alignments, fallback_only=False),
+            "fallback_legs": _lock_window_side(alignments, fallback_only=True),
+            "n_late_fallback": sum(a["n_late_fallback"] for a in alignments)}
     return table
 
 
@@ -270,7 +317,8 @@ def main() -> None:
                   "errors": sum("error" in row for row in rows),
                   "golden_v0": golden_check(rows), "w2": w2_pairs(rows), "rows": rows,
                   "ready": ready_table(rows), "s8_stop": s8_stop_table(rows),
-                  "event_force": event_force_table(rows)}
+                  "event_force": event_force_table(rows),
+                  "lock_window": lock_window_table(rows)}
         if batch == "item8":
             regression = [row for row in _value_rows("main") if row["row"] in ITEM8_LEVELS]
             report["item8_order"] = item8_order(rows + regression)

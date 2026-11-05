@@ -32,12 +32,15 @@ for _path in (HERE, S9_DIR, ROOT / "04_scripts" / "01_dynamics"):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
+from harness_flow import COLUMN as FLOW_COLUMN  # noqa: E402
 from harness_flow import (  # noqa: E402
+    OIL_FORCE,
     CommandClipRecord,
     FlowSetting,
     install_command_clip,
     make_flow_plant_class,
 )
+from lock_window_alignment import PlantLockHistory, lock_window_alignment  # noqa: E402
 from params import load_params  # noqa: E402
 from verdict_cases import REANCHOR_ON, EventTwin, SteadyTwin, VerdictCase  # noqa: E402
 from verdict_metrics import (  # noqa: E402
@@ -45,8 +48,8 @@ from verdict_metrics import (  # noqa: E402
     flow_saturation_time,
     hold_period_values,
     lower_bound_miss_values,
-    ref_10hz_episode_values,
     overlap_in_window,
+    ref_10hz_episode_values,
     run_values,
     stop_crawler_values,
 )
@@ -60,8 +63,13 @@ RUN_180S_LIMIT_S = 180.0
 RUN_180S_HOLD_S = 1.0e9
 """``S6=run_180s``: the run ends at 180 s, whatever the READY time."""
 SS_EVENT = {"depth": 0.0115, "ramp": 20.0}
+T4H_TIME_TOL_S = 1e-9
 SLOW_EVENT_TAIL_S = 3.0
 """Slow event branch: at least to ramp end + 3 s (study A rule, ``s9_soil_event_screen``)."""
+
+LOGGED_READINGS = ("applied_output_m_s", "head_pressure_Pa", "rod_pressure_Pa",
+                   "motor_stroke_m", "seal_band_N")
+"""Per-period arrays of ``LoggedController._logged_readings`` (v5 X-10), in that order."""
 
 _ORIGINALS: dict = {}
 
@@ -87,7 +95,8 @@ def install_logged_controller():
 
     class LoggedController(base):
         """Project C2 and a list of (t, phase, command, integrals, filtered attitude, guard,
-        lower load estimate)."""
+        lower load estimate, readings); readings = (applied output, head and rod pressure
+        readings, motor stroke reading, seal band after the update), record only (X-10)."""
 
         def update(self, measurements):
             output = super().update(measurements)
@@ -98,8 +107,16 @@ def install_logged_controller():
                         (state.roll_integral, state.pitch_integral),
                         tuple(self.filtered_attitude_rad),
                         state.guard_m_s is not None and bool(np.any(state.guard_m_s != 0.0)),
-                        self._logged_lower_estimate_N()))
+                        self._logged_lower_estimate_N(), self._logged_readings(measurements)))
             return output
+
+        def _logged_readings(self, measurements) -> tuple:
+            rod_Pa = measurements.rod_pressure_Pa
+            return (np.array(self._state.applied_output_m_s, float),
+                    np.array(measurements.head_pressure_Pa, float),
+                    np.full(4, np.nan) if rod_Pa is None else np.array(rod_Pa, float),
+                    np.array(measurements.stroke_m, float),
+                    np.array(self._leg_seal_bands_N(), float))
 
         def _logged_lower_estimate_N(self) -> np.ndarray:
             """The lower load estimate the judge compares with F_min (v5 X-6, record only)."""
@@ -129,7 +146,9 @@ def period_arrays(controller) -> dict:
             "integral": np.array([row[3] for row in log], float).reshape(-1, 2),
             "filtered_deg": np.degrees(np.array([row[4] for row in log], float).reshape(-1, 2)),
             "guard": np.array([row[5] for row in log], bool),
-            "lower_estimate_N": np.array([row[6] for row in log], float).reshape(-1, 4)}
+            "lower_estimate_N": np.array([row[6] for row in log], float).reshape(-1, 4),
+            **{name: np.array([row[7][index] for row in log], float).reshape(-1, 4)
+               for index, name in enumerate(LOGGED_READINGS)}}
 
 
 def _stored_events(controller) -> list[tuple[float, str]]:
@@ -137,11 +156,20 @@ def _stored_events(controller) -> list[tuple[float, str]]:
             if not event.name.startswith(SKIPPED_EVENT_PREFIXES)]
 
 
-def _finish(plant, controller, extra: dict) -> tuple[dict, dict]:
-    """Result dict and the 10 Hz arrays saved with it."""
+def _finish(plant, controller, extra: dict, t4h: dict | None = None) -> tuple[dict, dict]:
+    """Result dict and the 10 Hz arrays saved with it; ``t4h`` = {"path", "meta"} also writes
+    the T4h record (v5 X-10)."""
     limiter = plant.flow_limiter
     period = period_arrays(controller)
     events = _stored_events(controller)
+    # v5 X-10 (criteria J11): only plants with the v5 lock record (LC) have lock_events
+    if getattr(plant, "lock_events", None) is not None:
+        extra = {**extra, "lock_window_alignment": _lock_window_alignment(
+            plant, controller, period)}
+        if t4h is not None:
+            write_t4h_record(t4h["path"], plant, controller, period,
+                             {**t4h["meta"], "commands_sha256": _command_digest(
+                                 period["command"])})
     thresholds = controller.config.thresholds
     values = run_values(limiter.rows(), period, events, limiter,
                         controller.geometry.twist_vector, controller.geometry.head_area_m2,
@@ -157,6 +185,83 @@ def _finish(plant, controller, extra: dict) -> tuple[dict, dict]:
               "command": period["command"], "integral": period["integral"],
               "filtered_deg": period["filtered_deg"]}
     return result, series
+
+
+def _all_events(controller) -> list[tuple[float, str]]:
+    return [(float(event.t_s), event.name) for event in controller.events]
+
+
+def _lock_window_alignment(plant, controller, period: dict) -> dict:
+    """Criteria J11 n_late of the run (``lock_window_alignment``; control-expert A)."""
+    t_s = period["t"]
+    return lock_window_alignment(
+        t_s, period["applied_output_m_s"], plant.lock_events,
+        controller.meta()["two_pressure"], controller.config.period_s,
+        _all_events(controller), float(t_s[-1]) if t_s.size else 0.0)
+
+
+def _true_force_at_samples(rows: np.ndarray, t_s: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """T4h truth from the 1 ms limiter rows: ``oil_force`` of the row at t_k (NaN if none) and
+    its minimum over (t_k-1, t_k] (the first sample: up to t_0)."""
+    row_t = rows[:, FLOW_COLUMN["t"]]
+    oil = rows[:, OIL_FORCE]
+    at_sample = np.full((len(t_s), 4), np.nan)
+    window_min = np.full((len(t_s), 4), np.nan)
+    index = np.searchsorted(row_t, t_s - T4H_TIME_TOL_S, side="left")
+    starts = np.r_[-np.inf, t_s[:-1]]
+    first = np.searchsorted(row_t, starts + T4H_TIME_TOL_S, side="left")
+    last = np.searchsorted(row_t, t_s + T4H_TIME_TOL_S, side="right")
+    for k in range(len(t_s)):
+        if index[k] < len(row_t) and abs(row_t[index[k]] - t_s[k]) <= T4H_TIME_TOL_S:
+            at_sample[k] = oil[index[k]]
+        if last[k] > first[k]:
+            window_min[k] = oil[first[k]:last[k]].min(axis=0)
+    return at_sample, window_min
+
+
+def write_t4h_record(path, plant, controller, period: dict, meta: dict) -> None:
+    """T4h record of one run (control-expert B): 10 Hz controller inputs and outputs from the
+    arm to the end, the 1 ms truth taken at the samples, the plant lock state and events."""
+    import json
+
+    t_s = period["t"]
+    true_force, true_force_min = _true_force_at_samples(plant.flow_limiter.rows(), t_s)
+    history = PlantLockHistory(plant.lock_events)
+    locked = np.array([[history.is_locked_at(leg, float(t)) for leg in range(4)] for t in t_s],
+                      bool).reshape(-1, 4)
+    monitor = controller.meta()["two_pressure"]
+    full_meta = {**meta, "zero_offset_N": monitor.get("zero_offsets_N"),
+                 "two_pressure_settings": monitor.get("settings"),
+                 "F_min_N": float(controller.geometry.F_min_N),
+                 "period_s": controller.config.period_s,
+                 "events": _all_events(controller),
+                 "true_force_rule": "limiter oil_force at the 1 ms row t == t_k (NaN without "
+                                    "one) and its minimum over (t_k-1, t_k]; not true_force_*"}
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(
+        path, t_s=t_s, head_pressure_Pa=period["head_pressure_Pa"],
+        rod_pressure_Pa=period["rod_pressure_Pa"], motor_stroke_m=period["motor_stroke_m"],
+        command_m_s=period["command"], phase=period["phase"].astype(str),
+        seal_band_N=period["seal_band_N"], true_force_N=true_force,
+        true_force_min_N=true_force_min, locked=locked,
+        lock_events=np.array(plant.lock_events, float).reshape(-1, 3),
+        meta_json=np.array(json.dumps(meta_for_json(full_meta))))
+
+
+def meta_for_json(value):
+    """Plain JSON values (numpy scalars and arrays, tuples, enums as strings)."""
+    if isinstance(value, dict):
+        return {str(key): meta_for_json(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [meta_for_json(item) for item in value]
+    if isinstance(value, np.ndarray):
+        return value.tolist()
+    if isinstance(value, np.generic):
+        return value.item()
+    if value is None or isinstance(value, (bool, int, float, str)):
+        return value
+    return str(value)
 
 
 def _soil_stop_values(plant, limiter, events: list[tuple[float, str]]) -> dict | None:
@@ -193,7 +298,8 @@ def _steady_case_dict(twin: SteadyTwin, slope, is_reanchor: bool) -> dict:
     return replace(cases[0], reanchor=is_reanchor).to_dict()
 
 
-def _run_steady(case: VerdictCase, decision: str | None) -> tuple[dict, dict]:
+def _run_steady(case: VerdictCase, decision: str | None,
+                t4h: dict | None = None) -> tuple[dict, dict]:
     import s9_soil_closed_loop as sl
     import s9_soil_slope as slope
 
@@ -211,13 +317,14 @@ def _run_steady(case: VerdictCase, decision: str | None) -> tuple[dict, dict]:
              "probe_rounds": result["probe_rounds"]}
     if result["run"].get("commands_sha256") is None:
         raise RuntimeError("harness run without a command hash")
-    finished, series = _finish(captured["plant"], captured["ctrl"], extra)
+    finished, series = _finish(captured["plant"], captured["ctrl"], extra, t4h)
     finished["harness_commands_sha256"] = result["run"]["commands_sha256"]
     return finished, series
 
 
 # -------------------------------------------------------------------------------- event cases
-def _run_event(twin: EventTwin, contact: str | None = None) -> tuple[dict, dict]:
+def _run_event(twin: EventTwin, contact: str | None = None,
+               t4h: dict | None = None) -> tuple[dict, dict]:
     import copy
 
     import s9_soil_event_screen as study_a
@@ -241,7 +348,7 @@ def _run_event(twin: EventTwin, contact: str | None = None) -> tuple[dict, dict]
         base_plant, base_controller = plant, controller
         r67.run_base(cl, c2, measurements, base_plant, base_controller)
         extra["event_skipped"] = "base run without the READY / LOC / DONE of the event time"
-        return _finish(base_plant, base_controller, extra)
+        return _finish(base_plant, base_controller, extra, t4h)
     hasher = hashlib.sha256()
     is_absolute = twin.timing == FLOW_SATURATION_TIMING
     # absolute t_a: branch one control period early so that t_a + offset is exact (>= PRE_S
@@ -280,7 +387,7 @@ def _run_event(twin: EventTwin, contact: str | None = None) -> tuple[dict, dict]
             **overlap_in_window(limiter.rows(), limiter.supply_m3_s, t_event,
                                 t_event + window_end),
             "flow_limit_on": limiter.setting.is_enabled, "t_a_s": target}
-    finished, series = _finish(plant, controller, extra)
+    finished, series = _finish(plant, controller, extra, t4h)
     finished["harness_commands_sha256"] = hasher.hexdigest()
     return finished, series
 
@@ -302,7 +409,7 @@ def _event_time(timeline: dict, twin: EventTwin) -> float | None:
 # ---------------------------------------------------------------------------------- public API
 def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
             clip_command: bool = False, hydraulics=None,
-            contact: str | None = None) -> tuple[dict, dict]:
+            contact: str | None = None, t4h: dict | None = None) -> tuple[dict, dict]:
     """Run one case with one flow setting in this process.
 
     Args:
@@ -316,6 +423,8 @@ def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
         contact: ``c2.ContactJudge`` member name of an event case (v5 X-6, criteria 13.4:
             ``"PRESSURE"``), resolved on the harness' own c2 module; None = the screen's
             COMBINED judge, bit for bit.
+        t4h: ``{"path": npz path, "meta": dict}``: write the T4h record (v5 X-10) of a run
+            whose plant has the lock record (LC); None = no file.
 
     Returns:
         The result dict (``error`` set on a harness failure) and the 10 Hz arrays. The logged
@@ -331,9 +440,9 @@ def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
     install_logged_controller()
     clip_record = install_harness_command_clip() if clip_command else None
     if is_event:
-        result, series = _run_event(case.twin, contact)
+        result, series = _run_event(case.twin, contact, t4h)
     else:
-        result, series = _run_steady(case, decision)
+        result, series = _run_steady(case, decision, t4h)
     if clip_record is not None:
         result["command_clip"] = asdict(clip_record)
     result.update(plant_options_record(hydraulics))
