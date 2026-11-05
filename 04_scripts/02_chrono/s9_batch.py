@@ -239,6 +239,9 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     # V5-VB (v5 spec 2.0, 3.3; definition only, rows and timing wait for D-3): the coupled soil rows with the v5
     # reference configuration VB (flow 0.85 + M2 + LC + controller window, valve 0.1 s on the soil rows)
     out[V5_VB_BATCH] = v5_vb_rows(out[COUPLED_BATCH])
+    # V5-S6SEED (v5 criteria 13.6 / X-7; definition only, run after D-3): S6 with the noise seed changed, flow off x 4
+    # seeds + flow on (COUPLED_eta085 S6 argv) x the stored seed
+    out[V5_S6_SEED_BATCH] = v5_s6_seed_rows(out["FINAL-REP-X"], out[COUPLED_BATCH])
     return out
 
 
@@ -303,6 +306,48 @@ def v5_vb_rows(coupled: list[dict]) -> list[dict]:
         rows.append({**row, "argv": argv, "source_expected_diffs": dict(V5_VB_ARGS), "group": V5_VB_BATCH,
                      "rep_bundle": V5_VB_BATCH, "note": row["note"].replace(COUPLED_BATCH, V5_VB_BATCH)
                      .replace("flow limit on", "v5 VB (flow 0.85, M2, LC, controller window, valve 0.1 s)")})
+    return rows
+
+
+V5_S6_SEED_BATCH = "V5-S6SEED"
+V5_S6_SEED_CRITERIA_ID = "S6"
+V5_S6_SEEDS_FLOW_OFF = (20261026, 20261027, 20261028, 20261029)
+"""v5 criteria 13.6: the stored seed (run_S9 ``P3B_SEED``) and three more (ASSUMPTION, user decision)."""
+V5_S6_SEEDS_FLOW_ON = (20261026,)
+P3B_SEED_STORED = 20261026
+"""run_S9 ``P3B_SEED``, the seed of the stored S6 run: a row with it has no seed difference to accept."""
+
+
+def _seed_argv(argv: list[str], seed: int) -> list[str]:
+    out = list(argv)
+    out[out.index("--seed") + 1] = str(seed)
+    return out
+
+
+def v5_s6_seed_rows(final_rep_x: list[dict], coupled: list[dict]) -> list[dict]:
+    """v5 criteria 13.6 (⑤, X-7): the S6 row (``P3b_J2_B_top_Fs4_m1p1_t180``, same plant as the stored S6 pair: valve
+    path = command ramp, LC and M2 off) with only ``--seed`` changed. Flow off: the FINAL-REP-X argv x
+    :data:`V5_S6_SEEDS_FLOW_OFF`; flow on: the COUPLED_eta085 S6 argv x :data:`V5_S6_SEEDS_FLOW_ON`. The case name
+    carries the seed (``<case>_seed<seed>[_flow]``, the output folder; ``--case`` is not compared). Not run here (D-3).
+    ``check-sources V5-S6SEED`` accepts exactly the seed (and the flow arguments on the flow row) as the difference."""
+    _, batch, case, wall, pools = next(r for r in COUPLED_SOIL_ROWS if r[0] == V5_S6_SEED_CRITERIA_ID)
+    base_off = next(r for r in final_rep_x if r["case"] == case)
+    base_on = next(r for r in coupled if r["case"] == case and r.get("criteria_id") == V5_S6_SEED_CRITERIA_ID)
+    rows = []
+    for seed, base, flow_args, tag in ([(s, base_off, {}, "") for s in V5_S6_SEEDS_FLOW_OFF]
+                                       + [(s, base_on, dict(COUPLED_FLOW_ARGS), "_flow")
+                                          for s in V5_S6_SEEDS_FLOW_ON]):
+        expected = dict(flow_args)
+        if seed != P3B_SEED_STORED:
+            expected["seed"] = seed
+        flow_text = "flow limit on (eta_v 0.85)" if flow_args else "flow off"
+        rows.append({**base, "case": f"{case}_seed{seed}{tag}", "argv": _seed_argv(base["argv"], seed),
+                     "est_s": pools["pcore"] + (COUPLED_FLOW_EXTRA_S if flow_args else 0.0),
+                     "source_run": f"{batch}/{case}", "source_expected_diffs": expected or None,
+                     "criteria_id": V5_S6_SEED_CRITERIA_ID, "stored_wall_s": wall, "group": V5_S6_SEED_BATCH,
+                     "rep_bundle": V5_S6_SEED_BATCH,
+                     "note": f"{V5_S6_SEED_BATCH} (v5 criteria 13.6): S6 {flow_text}, seed {seed}; "
+                             f"pair 07_results/S9/{batch}/{case}"})
     return rows
 
 
