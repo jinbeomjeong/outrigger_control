@@ -1,0 +1,49 @@
+{'ep': 604, 'jc': 44, 'jp': 106, 'jc_not_jp': 0, 'act_by_tau': 15, 'act_early': 11}
+('MLJ', 'normal+zc', 'ep') 14
+('MLJ', 'normal+zc', 'jc') 2
+('OOD-1', 'conservative', 'ep') 5
+('OOD-1', 'conservative', 'jc') 1
+('OOD-1', 'no zero cal', 'ep') 7
+('OOD-1', 'no zero cal', 'jc') 0
+('OOD-1', 'normal+zc', 'ep') 134
+('OOD-1', 'normal+zc', 'jc') 9
+('OOD-2', 'conservative', 'ep') 8
+('OOD-2', 'conservative', 'jc') 1
+('OOD-2', 'normal+zc', 'ep') 19
+('OOD-2', 'normal+zc', 'jc') 1
+('conservative', 'ep') 87
+('conservative', 'jc') 9
+('no zero cal', 'ep') 85
+('no zero cal', 'jc') 7
+('normal+zc', 'ep') 432
+('normal+zc', 'jc') 28
+('test', 'conservative', 'ep') 18
+('test', 'conservative', 'jc') 3
+('test', 'no zero cal', 'ep') 5
+('test', 'no zero cal', 'jc') 0
+('test', 'normal+zc', 'ep') 48
+('test', 'normal+zc', 'jc') 3
+('train', 'conservative', 'ep') 54
+('train', 'conservative', 'jc') 4
+('train', 'no zero cal', 'ep') 57
+('train', 'no zero cal', 'jc') 5
+('train', 'normal+zc', 'ep') 138
+('train', 'normal+zc', 'jc') 9
+('validation', 'conservative', 'ep') 2
+('validation', 'conservative', 'jc') 0
+('validation', 'no zero cal', 'ep') 16
+('validation', 'no zero cal', 'jc') 2
+('validation', 'normal+zc', 'ep') 79
+('validation', 'normal+zc', 'jc') 4
+non-ready ends [('test', 'ML42_ep7', 'FR', 'probe', 0, 53), ('OOD-1', 'ML31_ep1', 'RL', 'probe', 0, 19), ('validation', 'ML78_ep0', 'FR', 'level', 0, 9), ('validation', 'ML89_ep7', 'RL', 'probe', 0, 0), ('train', 'ML21_ep1', 'FR', 'probe', 0, 28), ('train', 'ML63_ep2', 'RR', 'fault', 0, 46)]
+lift-flag misses 17 with air>0 14 air ms list asked sets [('test', 'ML38_ep1', 11), ('test', 'ML42_ep0', 45), ('test', 'ML47_ep3', 0), ('OOD-1', 'ML01_ep0', 33), ('OOD-1', 'ML28_ep1', 19), ('OOD-1', 'ML31_ep3', 34), ('OOD-1', 'ML37_ep2', 7), ('OOD-1', 'ML61_ep6', 11), ('OOD-1', 'ML79_ep5', 34), ('OOD-2', 'ML35_ep3', 0), ('OOD-2', 'ML95_ep6', 5)]
+event-leg asked sets 14 dt_ev<=0.1 10
+est-Fmin min per set {'test': 6.53, 'OOD-1': 0.23, 'OOD-2': 121.59, 'MLJ': 5.44, 'validation': 7.46, 'train': 1.21} true-at-sample min 11.16
+EN transient [('E_RE1bP_Fs0', 'RR'), ('E_RE1bP_Fs0', 'FL'), ('E_RE1bP_Fs0', 'FL'), ('E_RE1bP_Fs8', 'RR'), ('E_RE1bP_Fs8', 'FL')]
+EN E_ scored Counter({'E_RE1bF_Fs0': 3, 'E_RE1bF_Fs8': 2})
+EN phases Counter({'level': 19})
+sets floor/roll range {'test': (0.56, 3.4, 2.16), 'OOD-1': (0.3, 4.79, 3.01), 'OOD-2': (4.46, 5.23, 0.66)}
+levels {'test': Counter({'top': 36, 'bottom': 36}), 'OOD-1': Counter({'middle': 288}), 'OOD-2': Counter({'bottom': 54, 'top': 9})}
+Fs0 range {'test': (0.0, 7.1), 'OOD-1': (0.26, 8.63), 'OOD-2': (1.34, 6.78)}
+depth mm / ramp s [('ML17_ep4', 21.4, 0.175), ('ML38_ep1', 6.9, 0.085), ('ML42_ep0', 5.8, 0.061), ('ML42_ep7', 21.9, 0.786), ('ML47_ep3', 8.0, 0.066), ('ML51_ep4', 26.7, 0.236), ('ML01_ep0', 16.5, 0.365), ('ML25_ep7', 24.3, 0.205), ('ML28_ep1', 7.7, 0.071), ('ML31_ep1', 22.9, 5.319), ('ML31_ep3', 10.9, 0.078), ('ML34_ep7', 12.2, 0.25), ('ML37_ep0', 9.6, 0.149), ('ML37_ep2', 4.2, 0.059), ('ML61_ep6', 5.9, 0.05), ('ML79_ep5', 9.7, 0.072), ('ML35_ep3', 5.6, 0.056), ('ML95_ep6', 5.2, 0.052)]
+=== Chrono LEVEL-event batch item-9 rows

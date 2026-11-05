@@ -1,0 +1,135 @@
+===== p1r rev: spec rev. 46 (C-S8-22: �� pressure-only F_min rows = M5 comparison, �� level trend grouped + reference levels, �� forced wi
+  E_RE1bF_Fs0                    J_P ep=3 tr=0 M1=0 M1p=0 note=episodes 3 (crawler_transient 0), upper95 0.6315968501359612; ex-transient {'n': 3, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  E_RE1bF_Fs0                    J_C ep=3 tr=0 M1=0 M1p=0 note=episodes 3 (crawler_transient 0), upper95 0.6315968501359612; ex-transient {'n': 3, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  E_RE1bF_Fs8                    J_P ep=2 tr=0 M1=0 M1p=0 note=episodes 2 (crawler_transient 0), upper95 0.776393202250021; ex-transient {'n': 2, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  E_RE1bF_Fs8                    J_C ep=2 tr=0 M1=0 M1p=0 note=episodes 2 (crawler_transient 0), upper95 0.776393202250021; ex-transient {'n': 2, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  E_RE1bP_Fs0                    J_P ep=3 tr=3 M1=0 M1p=0 note=episodes 3 (crawler_transient 3), upper95 0.6315968501359612; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  E_RE1bP_Fs0                    J_C ep=3 tr=3 M1=0 M1p=0 note=episodes 3 (crawler_transient 3), upper95 0.6315968501359612; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  E_RE1bP_Fs8                    J_P ep=2 tr=2 M1=0 M1p=0 note=episodes 2 (crawler_transient 2), upper95 0.776393202250021; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  E_RE1bP_Fs8                    J_C ep=2 tr=2 M1=0 M1p=0 note=episodes 2 (crawler_transient 2), upper95 0.776393202250021; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  totals [ep, transient, M1, M1p] {'J_P': [10, 5, 0, 0], 'J_C': [10, 5, 0, 0]}
+===== rest rev: spec rev. 46 (C-S8-22: �� pressure-only F_min rows = M5 comparison, �� level trend grouped + reference levels, �� forced wi
+  N_G4_Fs8_pressure              J_P ep=1 tr=0 M1=1 M1p=0 note=episodes 1 (crawler_transient 0), upper95 1.0; ex-transient {'n': 1, 'M1_missed': 1, 'M1p_late': 0}; source P-S8-1 replay
+  N_G4_Fs8_pressure              J_C ep=1 tr=0 M1=0 M1p=0 note=episodes 1 (crawler_transient 0), upper95 0.95; ex-transient {'n': 1, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  N_RE1bF_Fs0_pressure           J_P ep=3 tr=0 M1=0 M1p=0 note=episodes 3 (crawler_transient 0), upper95 0.6315968501359612; ex-transient {'n': 3, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  N_RE1bF_Fs0_pressure           J_C ep=3 tr=0 M1=0 M1p=0 note=episodes 3 (crawler_transient 0), upper95 0.6315968501359612; ex-transient {'n': 3, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  N_RE1bF_Fs8_pressure           J_P ep=2 tr=0 M1=0 M1p=0 note=episodes 2 (crawler_transient 0), upper95 0.776393202250021; ex-transient {'n': 2, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  N_RE1bF_Fs8_pressure           J_C ep=2 tr=0 M1=0 M1p=0 note=episodes 2 (crawler_transient 0), upper95 0.776393202250021; ex-transient {'n': 2, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  N_RE1c_Fs0_combined            J_P ep=1 tr=0 M1=0 M1p=0 note=episodes 1 (crawler_transient 0), upper95 0.95; ex-transient {'n': 1, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  N_RE1c_Fs0_combined            J_C ep=1 tr=0 M1=0 M1p=0 note=episodes 1 (crawler_transient 0), upper95 0.95; ex-transient {'n': 1, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  N_RE1c_Fs8_combined            J_P ep=1 tr=0 M1=0 M1p=0 note=episodes 1 (crawler_transient 0), upper95 0.95; ex-transient {'n': 1, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  N_RE1c_Fs8_combined            J_C ep=1 tr=0 M1=0 M1p=0 note=episodes 1 (crawler_transient 0), upper95 0.95; ex-transient {'n': 1, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  N_SS_Fs8_pressure              J_P ep=1 tr=0 M1=1 M1p=0 note=episodes 1 (crawler_transient 0), upper95 1.0; ex-transient {'n': 1, 'M1_missed': 1, 'M1p_late': 0}; source P-S8-1 replay
+  N_SS_Fs8_pressure              J_C ep=1 tr=0 M1=0 M1p=0 note=episodes 1 (crawler_transient 0), upper95 0.95; ex-transient {'n': 1, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  totals [ep, transient, M1, M1p] {'J_P': [9, 0, 2, 0], 'J_C': [9, 0, 0, 0]}
+===== cb_old rev: spec rev. 46 (C-S8-22: �� pressure-only F_min rows = M5 comparison, �� level trend grouped + reference levels, �� forced wi
+  CB_RE1bF_Fs0                   J_P ep=5 tr=0 M1=1 M1p=0 note=episodes 5 (crawler_transient 0), upper95 0.6574083180011386; ex-transient {'n': 5, 'M1_missed': 1, 'M1p_late': 0}; source P-S8-1 replay
+  CB_RE1bF_Fs0                   J_C ep=5 tr=0 M1=1 M1p=0 note=episodes 5 (crawler_transient 0), upper95 0.6574083180011386; ex-transient {'n': 5, 'M1_missed': 1, 'M1p_late': 0}; source P-S8-1 replay
+  CB_RE1bF_Fs8                   J_P ep=2 tr=0 M1=0 M1p=0 note=episodes 2 (crawler_transient 0), upper95 0.776393202250021; ex-transient {'n': 2, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  CB_RE1bF_Fs8                   J_C ep=2 tr=0 M1=0 M1p=0 note=episodes 2 (crawler_transient 0), upper95 0.776393202250021; ex-transient {'n': 2, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  no-ep * item 9 I1-I5 no item-9 case in the batch
+  totals [ep, transient, M1, M1p] {'J_P': [7, 0, 1, 0], 'J_C': [7, 0, 1, 0]}
+===== cb_new rev: spec rev. 46 (C-S8-22: �� pressure-only F_min rows = M5 comparison, �� level trend grouped + reference levels, �� forced wi
+  CB_RE1bF_Fs0                   J_P ep=3 tr=0 M1=0 M1p=0 note=episodes 3 (crawler_transient 0), upper95 0.6315968501359612; ex-transient {'n': 3, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  CB_RE1bF_Fs0                   J_C ep=3 tr=0 M1=0 M1p=0 note=episodes 3 (crawler_transient 0), upper95 0.6315968501359612; ex-transient {'n': 3, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  CB_RE1bF_Fs8                   J_P ep=2 tr=0 M1=0 M1p=0 note=episodes 2 (crawler_transient 0), upper95 0.776393202250021; ex-transient {'n': 2, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  CB_RE1bF_Fs8                   J_C ep=2 tr=0 M1=0 M1p=0 note=episodes 2 (crawler_transient 0), upper95 0.776393202250021; ex-transient {'n': 2, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  no-ep * item 9 I1-I5 no item-9 case in the batch
+  totals [ep, transient, M1, M1p] {'J_P': [5, 0, 0, 0], 'J_C': [5, 0, 0, 0]}
+===== recheck rev: U-S8-75 = (b) (spec rev. 68 357.3: fast event on a front leg, top level, case F_s < 2 kN: U57 outside-window lift and U-
+  E_RE1bF_Fs0                    J_P ep=3 tr=0 M1=0 M1p=0 note=episodes 3 (crawler_transient 0), upper95 0.6315968501359612; ex-transient {'n': 3, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  E_RE1bF_Fs0                    J_C ep=3 tr=0 M1=0 M1p=0 note=episodes 3 (crawler_transient 0), upper95 0.6315968501359612; ex-transient {'n': 3, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  no-ep E_RE1bF_Fs0 item 9 J_P raw reading (record): M1 miss episodes 3; ex-transient {'n': 3, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_RE1bF_Fs0 item 9 J_C raw reading (record): M1 miss episodes 3; ex-transient {'n': 3, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_RE1bF_Fs0 item 9 J_P F_s - m g ceiling on lifted l episodes 3; ex-transient {'n': 3, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_RE1bF_Fs0 item 9 J_C F_s - m g ceiling on lifted l episodes 3; ex-transient {'n': 3, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_RE1bF_Fs0 item 9 J_P all-apply +0.5 kN reading (re episodes 3; ex-transient {'n': 3, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_RE1bF_Fs0 item 9 J_C all-apply +0.5 kN reading (re episodes 3; ex-transient {'n': 3, 'M1_missed': 0, 'M1p_late': 0}
+  E_RE1bP_Fs0                    J_P ep=3 tr=3 M1=0 M1p=0 note=episodes 3 (crawler_transient 3), upper95 0.6315968501359612; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  E_RE1bP_Fs0                    J_C ep=3 tr=3 M1=0 M1p=0 note=episodes 3 (crawler_transient 3), upper95 0.6315968501359612; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  no-ep E_RE1bP_Fs0 item 9 J_P raw reading (record): M1 miss episodes 3; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_RE1bP_Fs0 item 9 J_C raw reading (record): M1 miss episodes 3; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_RE1bP_Fs0 item 9 J_P F_s - m g ceiling on lifted l episodes 3; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_RE1bP_Fs0 item 9 J_C F_s - m g ceiling on lifted l episodes 3; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_RE1bP_Fs0 item 9 J_P all-apply +0.5 kN reading (re episodes 3; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_RE1bP_Fs0 item 9 J_C all-apply +0.5 kN reading (re episodes 3; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  E_RE1bP_Fs8                    J_P ep=2 tr=2 M1=0 M1p=0 note=episodes 2 (crawler_transient 2), upper95 0.776393202250021; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  E_RE1bP_Fs8                    J_C ep=2 tr=2 M1=0 M1p=0 note=episodes 2 (crawler_transient 2), upper95 0.776393202250021; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  no-ep E_RE1bP_Fs8 item 9 J_P raw reading (record): M1 miss episodes 2; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_RE1bP_Fs8 item 9 J_C raw reading (record): M1 miss episodes 2; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_RE1bP_Fs8 item 9 J_P F_s - m g ceiling on lifted l episodes 2; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_RE1bP_Fs8 item 9 J_C F_s - m g ceiling on lifted l episodes 2; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_RE1bP_Fs8 item 9 J_P all-apply +0.5 kN reading (re episodes 2; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_RE1bP_Fs8 item 9 J_C all-apply +0.5 kN reading (re episodes 2; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_SS_Fs0 item 9 J_P raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_SS_Fs0 item 9 J_C raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_SS_Fs0 item 9 J_P F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_SS_Fs0 item 9 J_C F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_SS_Fs0 item 9 J_P all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_SS_Fs0 item 9 J_C all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_SS_Fs8 item 9 J_P raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_SS_Fs8 item 9 J_C raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_SS_Fs8 item 9 J_P F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_SS_Fs8 item 9 J_C F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_SS_Fs8 item 9 J_P all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep E_SS_Fs8 item 9 J_C all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K0V_top_fdown3.5_Fs0 item 9 J_P raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K0V_top_fdown3.5_Fs0 item 9 J_C raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K0V_top_fdown3.5_Fs0 item 9 J_P F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K0V_top_fdown3.5_Fs0 item 9 J_C F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K0V_top_fdown3.5_Fs0 item 9 J_P all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K0V_top_fdown3.5_Fs0 item 9 J_C all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K24_top_fdown3.5_Fs2 item 9 J_P raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K24_top_fdown3.5_Fs2 item 9 J_C raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K24_top_fdown3.5_Fs2 item 9 J_P F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K24_top_fdown3.5_Fs2 item 9 J_C F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K24_top_fdown3.5_Fs2 item 9 J_P all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K24_top_fdown3.5_Fs2 item 9 J_C all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K8_top_fdown3.5_Fs8 item 9 J_P raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K8_top_fdown3.5_Fs8 item 9 J_C raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K8_top_fdown3.5_Fs8 item 9 J_P F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K8_top_fdown3.5_Fs8 item 9 J_C F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K8_top_fdown3.5_Fs8 item 9 J_P all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep K8_top_fdown3.5_Fs8 item 9 J_C all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_G4_Fs0_pressure item 9 J_P raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_G4_Fs0_pressure item 9 J_C raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_G4_Fs0_pressure item 9 J_P F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_G4_Fs0_pressure item 9 J_C F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_G4_Fs0_pressure item 9 J_P all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_G4_Fs0_pressure item 9 J_C all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_G4_Fs4_pressure item 9 J_P raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_G4_Fs4_pressure item 9 J_C raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_G4_Fs4_pressure item 9 J_P F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_G4_Fs4_pressure item 9 J_C F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_G4_Fs4_pressure item 9 J_P all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_G4_Fs4_pressure item 9 J_C all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  N_G4_Fs8_pressure              J_P ep=1 tr=0 M1=1 M1p=0 note=episodes 1 (crawler_transient 0), upper95 1.0; ex-transient {'n': 1, 'M1_missed': 1, 'M1p_late': 0}; source P-S8-1 replay
+  N_G4_Fs8_pressure              J_C ep=1 tr=0 M1=0 M1p=0 note=episodes 1 (crawler_transient 0), upper95 0.95; ex-transient {'n': 1, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  no-ep N_G4_Fs8_pressure item 9 J_P raw reading (record): M1 miss episodes 1; ex-transient {'n': 1, 'M1_missed': 1, 'M1p_late': 0}
+  no-ep N_G4_Fs8_pressure item 9 J_C raw reading (record): M1 miss episodes 1; ex-transient {'n': 1, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_G4_Fs8_pressure item 9 J_P F_s - m g ceiling on lifted l episodes 1; ex-transient {'n': 1, 'M1_missed': 1, 'M1p_late': 0}
+  no-ep N_G4_Fs8_pressure item 9 J_C F_s - m g ceiling on lifted l episodes 1; ex-transient {'n': 1, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_G4_Fs8_pressure item 9 J_P all-apply +0.5 kN reading (re episodes 1; ex-transient {'n': 1, 'M1_missed': 1, 'M1p_late': 0}
+  no-ep N_G4_Fs8_pressure item 9 J_C all-apply +0.5 kN reading (re episodes 1; ex-transient {'n': 1, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_SS_Fs0_pressure item 9 J_P raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_SS_Fs0_pressure item 9 J_C raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_SS_Fs0_pressure item 9 J_P F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_SS_Fs0_pressure item 9 J_C F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_SS_Fs0_pressure item 9 J_P all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_SS_Fs0_pressure item 9 J_C all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_SS_Fs4_pressure item 9 J_P raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_SS_Fs4_pressure item 9 J_C raw reading (record): M1 miss episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_SS_Fs4_pressure item 9 J_P F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_SS_Fs4_pressure item 9 J_C F_s - m g ceiling on lifted l episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_SS_Fs4_pressure item 9 J_P all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_SS_Fs4_pressure item 9 J_C all-apply +0.5 kN reading (re episodes 0; ex-transient {'n': 0, 'M1_missed': 0, 'M1p_late': 0}
+  N_SS_Fs8_pressure              J_P ep=1 tr=0 M1=1 M1p=0 note=episodes 1 (crawler_transient 0), upper95 1.0; ex-transient {'n': 1, 'M1_missed': 1, 'M1p_late': 0}; source P-S8-1 replay
+  N_SS_Fs8_pressure              J_C ep=1 tr=0 M1=0 M1p=0 note=episodes 1 (crawler_transient 0), upper95 0.95; ex-transient {'n': 1, 'M1_missed': 0, 'M1p_late': 0}; source P-S8-1 replay
+  no-ep N_SS_Fs8_pressure item 9 J_P raw reading (record): M1 miss episodes 1; ex-transient {'n': 1, 'M1_missed': 1, 'M1p_late': 0}
+  no-ep N_SS_Fs8_pressure item 9 J_C raw reading (record): M1 miss episodes 1; ex-transient {'n': 1, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_SS_Fs8_pressure item 9 J_P F_s - m g ceiling on lifted l episodes 1; ex-transient {'n': 1, 'M1_missed': 1, 'M1p_late': 0}
+  no-ep N_SS_Fs8_pressure item 9 J_C F_s - m g ceiling on lifted l episodes 1; ex-transient {'n': 1, 'M1_missed': 0, 'M1p_late': 0}
+  no-ep N_SS_Fs8_pressure item 9 J_P all-apply +0.5 kN reading (re episodes 1; ex-transient {'n': 1, 'M1_missed': 1, 'M1p_late': 0}
+  no-ep N_SS_Fs8_pressure item 9 J_C all-apply +0.5 kN reading (re episodes 1; ex-transient {'n': 1, 'M1_missed': 0, 'M1p_late': 0}
+  totals [ep, transient, M1, M1p] {'J_P': [10, 5, 2, 0], 'J_C': [10, 5, 0, 0]}
+ metric keys sample E_RE1bF_Fs0 ['item9']

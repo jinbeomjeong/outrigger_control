@@ -1,0 +1,172 @@
+{
+ "criteria": "acceptance/criteria.md",
+ "self_test": true,
+ "grid": {
+  "parts": [
+   {
+    "name": "grid_r67_main",
+    "n": 192,
+    "failed": 22,
+    "failed_rows": [
+     "('screen|top|0.0|level|FL', 'level', 'RE1bF', 0.0)",
+     "('screen|top|0.0|level|FL', 'level', 'RE1bF', 0.05)",
+     "('screen|top|0.0|level|FL', 'level', 'FS24', 0.0)",
+     "('screen|top|0.0|level|FL', 'level', 'FS24', 0.05)",
+     "('screen|top|0.0|level|FR', 'level', 'RE1bF', 0.0)",
+     "('screen|top|0.0|level|FR', 'level', 'RE1bF', 0.05)",
+     "('screen|top|0.0|level|FR', 'level', 'FS24', 0.0)",
+     "('screen|top|0.0|level|FR', 'level', 'FS24', 0.05)",
+     "('screen|top|8.0|level|FL', 'level', 'RE1bF', 0.0)",
+     "('screen|top|8.0|level|FL', 'level', 'RE1bF', 0.05)",
+     "('screen|top|8.0|level|FR', 'level', 'RE1bF', 0.0)",
+     "('screen|top|8.0|level|FR', 'level', 'RE1bF', 0.05)",
+     "('screen|top|0.0|ready|FL', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|0.0|ready|FL', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|0.0|ready|FL', 'ready', 'FS24', 0.0)",
+     "('screen|top|0.0|ready|FR', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|0.0|ready|FR', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|0.0|ready|FR', 'ready', 'FS24', 0.0)",
+     "('screen|top|8.0|ready|FL', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|8.0|ready|FL', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|8.0|ready|FR', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|8.0|ready|FR', 'ready', 'RE1bF', 0.05)"
+    ],
+    "pass_to_fail": [],
+    "fail_to_pass": [],
+    "unmatched": [],
+    "errors": [],
+    "fault_runs": 0,
+    "same_hash": 192
+   },
+   {
+    "name": "grid_r67_top",
+    "n": 192,
+    "failed": 43,
+    "failed_rows": [
+     "('screen|top|0.0|level|FL', 'level', 'RE1bF', 0.0)",
+     "('screen|top|0.0|level|FL', 'level', 'RE1bF', 0.025)",
+     "('screen|top|0.0|level|FL', 'level', 'RE1bF', 0.05)",
+     "('screen|top|0.0|level|FL', 'level', 'RE1bF', 0.075)",
+     "('screen|top|0.0|level|FL', 'level', 'FS24', 0.0)",
+     "('screen|top|0.0|level|FL', 'level', 'FS24', 0.025)",
+     "('screen|top|0.0|level|FL', 'level', 'FS24', 0.05)",
+     "('screen|top|0.0|level|FL', 'level', 'FS24', 0.075)",
+     "('screen|top|0.0|level|FR', 'level', 'RE1bF', 0.0)",
+     "('screen|top|0.0|level|FR', 'level', 'RE1bF', 0.025)",
+     "('screen|top|0.0|level|FR', 'level', 'RE1bF', 0.05)",
+     "('screen|top|0.0|level|FR', 'level', 'RE1bF', 0.075)",
+     "('screen|top|0.0|level|FR', 'level', 'FS24', 0.0)",
+     "('screen|top|0.0|level|FR', 'level', 'FS24', 0.025)",
+     "('screen|top|0.0|level|FR', 'level', 'FS24', 0.05)",
+     "('screen|top|0.0|level|FR', 'level', 'FS24', 0.075)",
+     "('screen|top|8.0|level|FL', 'level', 'RE1bF', 0.0)",
+     "('screen|top|8.0|level|FL', 'level', 'RE1bF', 0.025)",
+     "('screen|top|8.0|level|FL', 'level', 'RE1bF', 0.05)",
+     "('screen|top|8.0|level|FL', 'level', 'RE1bF', 0.075)",
+     "('screen|top|8.0|level|FR', 'level', 'RE1bF', 0.0)",
+     "('screen|top|8.0|level|FR', 'level', 'RE1bF', 0.025)",
+     "('screen|top|8.0|level|FR', 'level', 'RE1bF', 0.05)",
+     "('screen|top|8.0|level|FR', 'level', 'RE1bF', 0.075)",
+     "('screen|top|0.0|ready|FL', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|0.0|ready|FL', 'ready', 'RE1bF', 0.025)",
+     "('screen|top|0.0|ready|FL', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|0.0|ready|FL', 'ready', 'RE1bF', 0.075)",
+     "('screen|top|0.0|ready|FL', 'ready', 'FS24', 0.0)",
+     "('screen|top|0.0|ready|FL', 'ready', 'FS24', 0.025)",
+     "('screen|top|0.0|ready|FR', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|0.0|ready|FR', 'ready', 'RE1bF', 0.025)",
+     "('screen|top|0.0|ready|FR', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|0.0|ready|FR', 'ready', 'RE1bF', 0.075)",
+     "('screen|top|0.0|ready|FR', 'ready', 'FS24', 0.0)",
+     "('screen|top|8.0|ready|FL', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|8.0|ready|FL', 'ready', 'RE1bF', 0.025)",
+     "('screen|top|8.0|ready|FL', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|8.0|ready|FL', 'ready', 'RE1bF', 0.075)",
+     "('screen|top|8.0|ready|FR', 'ready', 'RE1bF', 0.0)",
+     "('screen|top|8.0|ready|FR', 'ready', 'RE1bF', 0.025)",
+     "('screen|top|8.0|ready|FR', 'ready', 'RE1bF', 0.05)",
+     "('screen|top|8.0|ready|FR', 'ready', 'RE1bF', 0.075)"
+    ],
+    "pass_to_fail": [],
+    "fail_to_pass": [],
+    "unmatched": [],
+    "errors": [],
+    "fault_runs": 0,
+    "same_hash": 192
+   },
+   {
+    "name": "grid_r69_top",
+    "missing": true
+   },
+   {
+    "name": "grid_r69_bottom",
+    "missing": true
+   }
+  ],
+  "n": 384,
+  "accept": false
+ },
+ "soil": {
+  "name": "soil_two",
+  "n": 60,
+  "failed": 2,
+  "failed_rows": [
+   "('A|rigid|FL|Fs0|two', 'level', 'FS24', None)",
+   "('A|rigid|FL|Fs0|two', 'level', 'RE1bF', None)"
+  ],
+  "pass_to_fail": [],
+  "fail_to_pass": [],
+  "unmatched": [],
+  "errors": [],
+  "fault_runs": 0,
+  "same_hash": 60,
+  "soft_failed": [],
+  "accept": true,
+  "chrono_pick": []
+ },
+ "regression_flat": [
+  {
+   "name": "clip_harness",
+   "n": 209,
+   "pass_to_fail": [],
+   "unmatched": []
+  },
+  {
+   "name": "clip_p0",
+   "n": 927,
+   "pass_to_fail": [],
+   "unmatched": []
+  },
+  {
+   "name": "clip_x426_C",
+   "n": 51,
+   "pass_to_fail": [],
+   "unmatched": []
+  },
+  {
+   "name": "clip_x426_D",
+   "n": 33,
+   "pass_to_fail": [],
+   "unmatched": []
+  }
+ ],
+ "d8": {
+  "missing": true
+ },
+ "crawler": {
+  "missing": true
+ },
+ "noise_L2": {
+  "level": "L2",
+  "failures": 11,
+  "runs": 855,
+  "rate": 0.012865497076023392,
+  "cp95_upper_beta": 0.021205569542104685,
+  "cp95_upper_binom_root": 0.021205569542104605,
+  "accept": true,
+  "unmatched": 0,
+  "errors": 0,
+  "pass_to_fail": [],
+  "fail_to_pass": []
+ }
+}

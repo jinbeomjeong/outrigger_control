@@ -1,0 +1,24 @@
+jobs 8, done 0, to run 8, workers 8, preset mismatch none
+[acc_guard] removed from sys.path: C:\workspace\outrigger_control\04_scripts\03_control
+[acc_guard] removed from sys.path: C:\workspace\outrigger_control\04_scripts\03_control
+[acc_guard] removed from sys.path: C:\workspace\outrigger_control\04_scripts\03_control
+[acc_guard] removed from sys.path: C:\workspace\outrigger_control\04_scripts\03_control
+[acc_guard] removed from sys.path: C:\workspace\outrigger_control\04_scripts\03_control
+[acc_guard] removed from sys.path: C:\workspace\outrigger_control\04_scripts\03_control
+[acc_guard] removed from sys.path: C:\workspace\outrigger_control\04_scripts\03_control
+[acc_guard] removed from sys.path: C:\workspace\outrigger_control\04_scripts\03_control
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+[1/8 109 s] cand=current#L2|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0 pass True wall 98.9
+[2/8 109 s] cand=current#L2|s2|g8|25|slope|rpB|top|4.0|FR|raised|230.0 pass True wall 99.0
+[3/8 110 s] cand=current#L2|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0 pass True wall 99.9
+[4/8 110 s] cand=current#L1|s0|g8|29|slope|rpB|top|4.0|RL|raised|230.0 pass True wall 99.6
+[5/8 110 s] cand=current#L1|s0|g8|25|slope|rpB|top|4.0|FR|raised|230.0 pass True wall 99.4
+C2 t=91.70 s: WARN_PROBE_STIFFNESS_OUT_OF_RANGE:0.714
+[6/8 118 s] cand=current#L1|s0|g6|81|g6r|rigid+J2@FL|top|Fs4 pass True wall 107.3
+[7/8 120 s] cand=current#L2|s2|g6|81|g6r|rigid+J2@FL|top|Fs4 pass True wall 109.9
+[8/8 122 s] cand=current#L2|s4|g6|81|g6r|rigid+J2@FL|top|Fs4 pass True wall 111.2
+done 121.7 s -> C:\workspace\outrigger_control\06_analysis\02_control\touch_phase\acceptance\split\r79_k1.json errors 0

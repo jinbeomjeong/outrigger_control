@@ -1,0 +1,36 @@
+jobs 8, done 0, to run 8, workers 8, preset mismatch none
+[acc_guard] removed from sys.path: C:\workspace\outrigger_control\04_scripts\03_control
+[acc_guard] removed from sys.path: C:\workspace\outrigger_control\04_scripts\03_control
+[acc_guard] removed from sys.path: C:\workspace\outrigger_control\04_scripts\03_control
+[acc_guard] removed from sys.path: C:\workspace\outrigger_control\04_scripts\03_control
+[acc_guard] removed from sys.path: C:\workspace\outrigger_control\04_scripts\03_control
+[acc_guard] removed from sys.path: C:\workspace\outrigger_control\04_scripts\03_control
+[acc_guard] removed from sys.path: C:\workspace\outrigger_control\04_scripts\03_control
+[acc_guard] removed from sys.path: C:\workspace\outrigger_control\04_scripts\03_control
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=10.10 s: WARN_GYRO_BIAS_SKIPPED
+C2 t=25.20 s: leg_reapproach_start:RR
+C2 t=26.10 s: leg_reapproach_start:RR
+C2 t=27.00 s: leg_reapproach_start:RR
+C2 t=30.70 s: leg_reapproach_start:RR
+C2 t=30.70 s: leg_reapproach_start:RR
+C2 t=31.60 s: leg_reapproach_start:RR
+C2 t=31.60 s: leg_reapproach_start:RR
+C2 t=32.50 s: leg_reapproach_start:RR
+C2 t=32.50 s: leg_reapproach_start:RR
+C2 t=54.10 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=54.10 s: FAULT_LIFT_STROKE_LIMIT:soil:FR
+C2 t=53.30 s: WARN_LIFT_STROKE_LIMITED:FR
+C2 t=53.30 s: FAULT_LIFT_STROKE_LIMIT:soil:FR
+[1/8 97 s] cand=current#L1|s0|g8|25|slope|rpB|top|4.0|FR|raised|230.0 pass True wall 87.5
+[2/8 97 s] cand=current#L2|s2|g8|25|slope|rpB|top|4.0|FR|raised|230.0 pass True wall 88.2
+[3/8 97 s] cand=current#L1|s0|g8|29|slope|rpB|top|4.0|RL|raised|230.0 pass True wall 88.2
+[4/8 98 s] cand=current#L1|s0|g6|81|g6r|rigid+J2@FL|top|Fs4 pass False wall 88.3
+[5/8 100 s] cand=current#L2|s2|g6|81|g6r|rigid+J2@FL|top|Fs4 pass False wall 91.4
+[6/8 101 s] cand=current#L2|s4|g6|81|g6r|rigid+J2@FL|top|Fs4 pass False wall 91.8
+[7/8 134 s] cand=current#L2|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0 pass False wall 125.8
+[8/8 135 s] cand=current#L2|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0 pass False wall 126.5
+done 135.0 s -> C:\workspace\outrigger_control\06_analysis\02_control\touch_phase\acceptance\split\r79_c4g2.json errors 0

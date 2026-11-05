@@ -1,0 +1,798 @@
+{
+ "L2|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0": {
+  "c4g2": {
+   "pass": false,
+   "failed": [
+    "S-1",
+    "S-6"
+   ],
+   "base_pass": false,
+   "sha": "",
+   "hold": 1,
+   "retr": 0,
+   "min": null,
+   "gates": [
+    "ready",
+    "fault0"
+   ],
+   "crawler": null,
+   "recontact": null
+  },
+  "k1": {
+   "pass": true,
+   "failed": [],
+   "base_pass": true,
+   "sha": "",
+   "hold": 0,
+   "retr": 0,
+   "min": null,
+   "gates": [],
+   "crawler": null,
+   "recontact": null
+  },
+  "off": {
+   "pass": true,
+   "failed": [],
+   "base_pass": true,
+   "sha": "",
+   "hold": 0,
+   "retr": 0,
+   "min": null,
+   "gates": [],
+   "crawler": null,
+   "recontact": null
+  },
+  "both": {
+   "pass": false,
+   "failed": [
+    "S-1",
+    "S-6"
+   ],
+   "base_pass": false,
+   "hold": 1,
+   "retr": 0,
+   "min": null,
+   "gates": [
+    "ready",
+    "fault0"
+   ],
+   "crawler": null,
+   "recontact": null
+  }
+ },
+ "L2|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0": {
+  "c4g2": {
+   "pass": false,
+   "failed": [
+    "S-1",
+    "S-6"
+   ],
+   "base_pass": false,
+   "sha": "",
+   "hold": 1,
+   "retr": 0,
+   "min": null,
+   "gates": [
+    "ready",
+    "fault0"
+   ],
+   "crawler": null,
+   "recontact": null
+  },
+  "k1": {
+   "pass": true,
+   "failed": [],
+   "base_pass": true,
+   "sha": "",
+   "hold": 0,
+   "retr": 0,
+   "min": null,
+   "gates": [],
+   "crawler": null,
+   "recontact": null
+  },
+  "off": {
+   "pass": true,
+   "failed": [],
+   "base_pass": true,
+   "sha": "",
+   "hold": 0,
+   "retr": 0,
+   "min": null,
+   "gates": [],
+   "crawler": null,
+   "recontact": null
+  },
+  "both": {
+   "pass": false,
+   "failed": [
+    "S-1",
+    "S-6"
+   ],
+   "base_pass": false,
+   "hold": 1,
+   "retr": 0,
+   "min": null,
+   "gates": [
+    "ready",
+    "fault0"
+   ],
+   "crawler": null,
+   "recontact": null
+  }
+ },
+ "L2|s2|g8|25|slope|rpB|top|4.0|FR|raised|230.0": {
+  "c4g2": {
+   "pass": false,
+   "failed": [
+    "S-4"
+   ],
+   "base_pass": true,
+   "sha": "",
+   "hold": 1,
+   "retr": 0,
+   "min": null,
+   "gates": [],
+   "crawler": null,
+   "recontact": null
+  },
+  "k1": {
+   "pass": true,
+   "failed": [],
+   "base_pass": true,
+   "sha": "",
+   "hold": 0,
+   "retr": 0,
+   "min": null,
+   "gates": [],
+   "crawler": null,
+   "recontact": null
+  },
+  "off": {
+   "pass": true,
+   "failed": [],
+   "base_pass": true,
+   "sha": "",
+   "hold": 0,
+   "retr": 0,
+   "min": null,
+   "gates": [],
+   "crawler": null,
+   "recontact": null
+  },
+  "both": {
+   "pass": false,
+   "failed": [
+    "S-4"
+   ],
+   "base_pass": true,
+   "hold": 1,
+   "retr": 0,
+   "min": null,
+   "gates": [],
+   "crawler": null,
+   "recontact": null
+  }
+ },
+ "L2|s2|g6|81|g6r|rigid+J2@FL|top|Fs4": {
+  "c4g2": {
+   "pass": true,
+   "failed": [],
+   "base_pass": false,
+   "sha": "2d786c8c",
+   "hold": 1,
+   "retr": 0,
+   "min": 11.811510144817078,
+   "gates": [
+    "G6-7_preloc"
+   ],
+   "crawler": 0.0,
+   "recontact": {
+    "departure": {
+     "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+     "departed": true,
+     "t_departure_s": 29.955999999975536,
+     "t_confirmed_s": 30.055999999975302,
+     "recontact_t_s": null,
+     "recontact_count": 0,
+     "crawler_normal_max_after_confirm_N": 0.0
+    },
+    "recontact_events": {
+     "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+     "limit_N": 3801.1291206408414,
+     "weight_N": 380112.91206408414,
+     "t_loc_s": 34.29999999998175,
+     "t_ready_s": null,
+     "chatter": {
+      "after_loc_s": 1.0,
+      "max_duration_s": 0.1,
+      "max_over_limit": 1.2,
+      "max_normal_N": 4561.354944769009,
+      "time_tolerance_s": 1e-09,
+      "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+     },
+     "events": [],
+     "pass": true,
+     "flags": [],
+     "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+    },
+    "series_step_s": 0.0010000000000047748
+   }
+  },
+  "k1": {
+   "pass": true,
+   "failed": [],
+   "base_pass": true,
+   "sha": "a053efda",
+   "hold": 0,
+   "retr": 0,
+   "min": 9.9474906688724,
+   "gates": [],
+   "crawler": 0.0,
+   "recontact": {
+    "departure": {
+     "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+     "departed": true,
+     "t_departure_s": 29.926999999975603,
+     "t_confirmed_s": 30.02699999997537,
+     "recontact_t_s": null,
+     "recontact_count": 0,
+     "crawler_normal_max_after_confirm_N": 0.0
+    },
+    "recontact_events": {
+     "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+     "limit_N": 3801.1291206408414,
+     "weight_N": 380112.91206408414,
+     "t_loc_s": 32.2999999999722,
+     "t_ready_s": null,
+     "chatter": {
+      "after_loc_s": 1.0,
+      "max_duration_s": 0.1,
+      "max_over_limit": 1.2,
+      "max_normal_N": 4561.354944769009,
+      "time_tolerance_s": 1e-09,
+      "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+     },
+     "events": [],
+     "pass": true,
+     "flags": [],
+     "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+    },
+    "series_step_s": 0.0010000000000047748
+   }
+  },
+  "off": {
+   "pass": true,
+   "failed": [],
+   "base_pass": true,
+   "sha": "a053efda",
+   "hold": 0,
+   "retr": 0,
+   "min": 9.9474906688724,
+   "gates": [],
+   "crawler": 0.0,
+   "recontact": {
+    "departure": {
+     "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+     "departed": true,
+     "t_departure_s": 29.926999999975603,
+     "t_confirmed_s": 30.02699999997537,
+     "recontact_t_s": null,
+     "recontact_count": 0,
+     "crawler_normal_max_after_confirm_N": 0.0
+    },
+    "recontact_events": {
+     "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+     "limit_N": 3801.1291206408414,
+     "weight_N": 380112.91206408414,
+     "t_loc_s": 32.2999999999722,
+     "t_ready_s": null,
+     "chatter": {
+      "after_loc_s": 1.0,
+      "max_duration_s": 0.1,
+      "max_over_limit": 1.2,
+      "max_normal_N": 4561.354944769009,
+      "time_tolerance_s": 1e-09,
+      "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+     },
+     "events": [],
+     "pass": true,
+     "flags": [],
+     "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+    },
+    "series_step_s": 0.0010000000000047748
+   }
+  },
+  "both": {
+   "pass": false,
+   "failed": [
+    "S-4"
+   ],
+   "base_pass": false,
+   "hold": 1,
+   "retr": 1,
+   "min": 11.811510144817078,
+   "gates": [
+    "G6-7_preloc"
+   ],
+   "crawler": 0.0,
+   "recontact": {
+    "departure": {
+     "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+     "departed": true,
+     "t_departure_s": 29.955999999975536,
+     "t_confirmed_s": 30.055999999975302,
+     "recontact_t_s": null,
+     "recontact_count": 0,
+     "crawler_normal_max_after_confirm_N": 0.0
+    },
+    "recontact_events": {
+     "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+     "limit_N": 3801.1291206408414,
+     "weight_N": 380112.91206408414,
+     "t_loc_s": 33.1999999999765,
+     "t_ready_s": null,
+     "chatter": {
+      "after_loc_s": 1.0,
+      "max_duration_s": 0.1,
+      "max_over_limit": 1.2,
+      "max_normal_N": 4561.354944769009,
+      "time_tolerance_s": 1e-09,
+      "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+     },
+     "events": [],
+     "pass": true,
+     "flags": [],
+     "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+    },
+    "series_step_s": 0.0010000000000047748
+   }
+  }
+ },
+ "L2|s4|g6|81|g6r|rigid+J2@FL|top|Fs4": {
+  "c4g2": {
+   "pass": true,
+   "failed": [],
+   "base_pass": false,
+   "sha": "c476ab6d",
+   "hold": 1,
+   "retr": 0,
+   "min": 12.178633460133913,
+   "gates": [
+    "G6-7_preloc"
+   ],
+   "crawler": 0.0,
+   "recontact": {
+    "departure": {
+     "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+     "departed": true,
+     "t_departure_s": 29.955999999975536,
+     "t_confirmed_s": 30.055999999975302,
+     "recontact_t_s": null,
+     "recontact_count": 0,
+     "crawler_normal_max_after_confirm_N": 0.0
+    },
+    "recontact_events": {
+     "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+     "limit_N": 3801.1291206408414,
+     "weight_N": 380112.91206408414,
+     "t_loc_s": 34.499999999982705,
+     "t_ready_s": null,
+     "chatter": {
+      "after_loc_s": 1.0,
+      "max_duration_s": 0.1,
+      "max_over_limit": 1.2,
+      "max_normal_N": 4561.354944769009,
+      "time_tolerance_s": 1e-09,
+      "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+     },
+     "events": [],
+     "pass": true,
+     "flags": [],
+     "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+    },
+    "series_step_s": 0.0010000000000047748
+   }
+  },
+  "k1": {
+   "pass": true,
+   "failed": [],
+   "base_pass": true,
+   "sha": "d1889889",
+   "hold": 0,
+   "retr": 0,
+   "min": 9.985310443881922,
+   "gates": [],
+   "crawler": 0.0,
+   "recontact": {
+    "departure": {
+     "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+     "departed": true,
+     "t_departure_s": 29.926999999975603,
+     "t_confirmed_s": 30.02699999997537,
+     "recontact_t_s": null,
+     "recontact_count": 0,
+     "crawler_normal_max_after_confirm_N": 0.0
+    },
+    "recontact_events": {
+     "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+     "limit_N": 3801.1291206408414,
+     "weight_N": 380112.91206408414,
+     "t_loc_s": 32.39999999997268,
+     "t_ready_s": null,
+     "chatter": {
+      "after_loc_s": 1.0,
+      "max_duration_s": 0.1,
+      "max_over_limit": 1.2,
+      "max_normal_N": 4561.354944769009,
+      "time_tolerance_s": 1e-09,
+      "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+     },
+     "events": [],
+     "pass": true,
+     "flags": [],
+     "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+    },
+    "series_step_s": 0.0010000000000047748
+   }
+  },
+  "off": {
+   "pass": true,
+   "failed": [],
+   "base_pass": true,
+   "sha": "d1889889",
+   "hold": 0,
+   "retr": 0,
+   "min": 9.985310443881922,
+   "gates": [],
+   "crawler": 0.0,
+   "recontact": {
+    "departure": {
+     "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+     "departed": true,
+     "t_departure_s": 29.926999999975603,
+     "t_confirmed_s": 30.02699999997537,
+     "recontact_t_s": null,
+     "recontact_count": 0,
+     "crawler_normal_max_after_confirm_N": 0.0
+    },
+    "recontact_events": {
+     "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+     "limit_N": 3801.1291206408414,
+     "weight_N": 380112.91206408414,
+     "t_loc_s": 32.39999999997268,
+     "t_ready_s": null,
+     "chatter": {
+      "after_loc_s": 1.0,
+      "max_duration_s": 0.1,
+      "max_over_limit": 1.2,
+      "max_normal_N": 4561.354944769009,
+      "time_tolerance_s": 1e-09,
+      "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+     },
+     "events": [],
+     "pass": true,
+     "flags": [],
+     "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+    },
+    "series_step_s": 0.0010000000000047748
+   }
+  },
+  "both": {
+   "pass": false,
+   "failed": [
+    "S-4"
+   ],
+   "base_pass": false,
+   "hold": 1,
+   "retr": 1,
+   "min": 12.178633460133913,
+   "gates": [
+    "G6-7_preloc"
+   ],
+   "crawler": 0.0,
+   "recontact": {
+    "departure": {
+     "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+     "departed": true,
+     "t_departure_s": 29.955999999975536,
+     "t_confirmed_s": 30.055999999975302,
+     "recontact_t_s": null,
+     "recontact_count": 0,
+     "crawler_normal_max_after_confirm_N": 0.0
+    },
+    "recontact_events": {
+     "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+     "limit_N": 3801.1291206408414,
+     "weight_N": 380112.91206408414,
+     "t_loc_s": 33.1999999999765,
+     "t_ready_s": null,
+     "chatter": {
+      "after_loc_s": 1.0,
+      "max_duration_s": 0.1,
+      "max_over_limit": 1.2,
+      "max_normal_N": 4561.354944769009,
+      "time_tolerance_s": 1e-09,
+      "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+     },
+     "events": [],
+     "pass": true,
+     "flags": [],
+     "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+    },
+    "series_step_s": 0.0010000000000047748
+   }
+  }
+ },
+ "L1|s0|g8|29|slope|rpB|top|4.0|RL|raised|230.0": {
+  "c4g2": {
+   "pass": null,
+   "failed": null,
+   "base_pass": true,
+   "sha": "",
+   "hold": 1,
+   "retr": 0,
+   "min": null,
+   "gates": [],
+   "crawler": null,
+   "recontact": null
+  },
+  "k1": {
+   "pass": null,
+   "failed": null,
+   "base_pass": true,
+   "sha": "",
+   "hold": 0,
+   "retr": 0,
+   "min": null,
+   "gates": [],
+   "crawler": null,
+   "recontact": null
+  },
+  "off": {
+   "pass": null,
+   "failed": null,
+   "base_pass": true,
+   "sha": "",
+   "hold": 0,
+   "retr": 0,
+   "min": null,
+   "gates": [],
+   "crawler": null,
+   "recontact": null
+  },
+  "both": {
+   "pass": null,
+   "failed": null,
+   "base_pass": true,
+   "hold": 1,
+   "retr": 0,
+   "min": null,
+   "gates": [],
+   "crawler": null,
+   "recontact": null
+  }
+ },
+ "L1|s0|g8|25|slope|rpB|top|4.0|FR|raised|230.0": {
+  "c4g2": {
+   "pass": null,
+   "failed": null,
+   "base_pass": true,
+   "sha": "",
+   "hold": 1,
+   "retr": 0,
+   "min": null,
+   "gates": [],
+   "crawler": null,
+   "recontact": null
+  },
+  "k1": {
+   "pass": null,
+   "failed": null,
+   "base_pass": true,
+   "sha": "",
+   "hold": 0,
+   "retr": 0,
+   "min": null,
+   "gates": [],
+   "crawler": null,
+   "recontact": null
+  },
+  "off": {
+   "pass": null,
+   "failed": null,
+   "base_pass": true,
+   "sha": "",
+   "hold": 0,
+   "retr": 0,
+   "min": null,
+   "gates": [],
+   "crawler": null,
+   "recontact": null
+  },
+  "both": {
+   "pass": null,
+   "failed": null,
+   "base_pass": true,
+   "hold": 1,
+   "retr": 0,
+   "min": null,
+   "gates": [],
+   "crawler": null,
+   "recontact": null
+  }
+ },
+ "L1|s0|g6|81|g6r|rigid+J2@FL|top|Fs4": {
+  "c4g2": {
+   "pass": null,
+   "failed": null,
+   "base_pass": false,
+   "sha": "03f6473a",
+   "hold": 1,
+   "retr": 0,
+   "min": 11.839616370444295,
+   "gates": [
+    "G6-7_preloc"
+   ],
+   "crawler": 0.0,
+   "recontact": {
+    "departure": {
+     "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+     "departed": true,
+     "t_departure_s": 24.466999999988328,
+     "t_confirmed_s": 24.566999999988095,
+     "recontact_t_s": null,
+     "recontact_count": 0,
+     "crawler_normal_max_after_confirm_N": 0.0
+    },
+    "recontact_events": {
+     "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+     "limit_N": 3801.1291206408414,
+     "weight_N": 380112.91206408414,
+     "t_loc_s": 28.79999999997823,
+     "t_ready_s": null,
+     "chatter": {
+      "after_loc_s": 1.0,
+      "max_duration_s": 0.1,
+      "max_over_limit": 1.2,
+      "max_normal_N": 4561.354944769009,
+      "time_tolerance_s": 1e-09,
+      "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+     },
+     "events": [],
+     "pass": true,
+     "flags": [],
+     "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+    },
+    "series_step_s": 0.0010000000000047748
+   }
+  },
+  "k1": {
+   "pass": null,
+   "failed": null,
+   "base_pass": true,
+   "sha": "f13333c9",
+   "hold": 0,
+   "retr": 0,
+   "min": 10.515778980226836,
+   "gates": [],
+   "crawler": 0.0,
+   "recontact": {
+    "departure": {
+     "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+     "departed": true,
+     "t_departure_s": 24.428999999988417,
+     "t_confirmed_s": 24.528999999988184,
+     "recontact_t_s": null,
+     "recontact_count": 0,
+     "crawler_normal_max_after_confirm_N": 0.0
+    },
+    "recontact_events": {
+     "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+     "limit_N": 3801.1291206408414,
+     "weight_N": 380112.91206408414,
+     "t_loc_s": 26.999999999982425,
+     "t_ready_s": null,
+     "chatter": {
+      "after_loc_s": 1.0,
+      "max_duration_s": 0.1,
+      "max_over_limit": 1.2,
+      "max_normal_N": 4561.354944769009,
+      "time_tolerance_s": 1e-09,
+      "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+     },
+     "events": [],
+     "pass": true,
+     "flags": [],
+     "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+    },
+    "series_step_s": 0.0010000000000047748
+   }
+  },
+  "off": {
+   "pass": null,
+   "failed": null,
+   "base_pass": true,
+   "sha": "f13333c9",
+   "hold": 0,
+   "retr": 0,
+   "min": 10.515778980226836,
+   "gates": [],
+   "crawler": 0.0,
+   "recontact": {
+    "departure": {
+     "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+     "departed": true,
+     "t_departure_s": 24.428999999988417,
+     "t_confirmed_s": 24.528999999988184,
+     "recontact_t_s": null,
+     "recontact_count": 0,
+     "crawler_normal_max_after_confirm_N": 0.0
+    },
+    "recontact_events": {
+     "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+     "limit_N": 3801.1291206408414,
+     "weight_N": 380112.91206408414,
+     "t_loc_s": 26.999999999982425,
+     "t_ready_s": null,
+     "chatter": {
+      "after_loc_s": 1.0,
+      "max_duration_s": 0.1,
+      "max_over_limit": 1.2,
+      "max_normal_N": 4561.354944769009,
+      "time_tolerance_s": 1e-09,
+      "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+     },
+     "events": [],
+     "pass": true,
+     "flags": [],
+     "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+    },
+    "series_step_s": 0.0010000000000047748
+   }
+  },
+  "both": {
+   "pass": null,
+   "failed": null,
+   "base_pass": false,
+   "hold": 1,
+   "retr": 1,
+   "min": 11.839616370444295,
+   "gates": [
+    "G6-7_preloc"
+   ],
+   "crawler": 0.0,
+   "recontact": {
+    "departure": {
+     "rule": "crawler SCM normal < 0.01 W (3801 N) for 0.1 s (P3a-2, dynamics 5.36.5)",
+     "departed": true,
+     "t_departure_s": 24.466999999988328,
+     "t_confirmed_s": 24.566999999988095,
+     "recontact_t_s": null,
+     "recontact_count": 0,
+     "crawler_normal_max_after_confirm_N": 0.0
+    },
+    "recontact_events": {
+     "rule": "U-S9-G6d + Q-G chatter: before the LOC, duration <= 0.5 s, ended before the LOC, max <= 0.15 W -> transient FLAG; after the LOC, start <= t_LOC + 1 s, duration <= 0.1 s, max <= 1.2 x limit, start < READY -> threshold_chatter FLAG (spec 423.3, = late_loc_rule.is_threshold_chatter); else strict fail",
+     "limit_N": 3801.1291206408414,
+     "weight_N": 380112.91206408414,
+     "t_loc_s": 27.599999999981026,
+     "t_ready_s": null,
+     "chatter": {
+      "after_loc_s": 1.0,
+      "max_duration_s": 0.1,
+      "max_over_limit": 1.2,
+      "max_normal_N": 4561.354944769009,
+      "time_tolerance_s": 1e-09,
+      "constants_source": "04_scripts/03_control/s9/late_loc_rule.py"
+     },
+     "events": [],
+     "pass": true,
+     "flags": [],
+     "chatter_rule": "spec 423.3 (Q-G): (t_LOC, t_LOC + 1 s], <= 0.1 s, <= 1.2 x threshold, before READY"
+    },
+    "series_step_s": 0.0010000000000047748
+   }
+  }
+ }
+}

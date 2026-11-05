@@ -1,0 +1,587 @@
+{
+ "table": [
+  {
+   "level": "L2",
+   "group": "G6",
+   "runs": 2,
+   "S-1": {
+    "fail": 0,
+    "upper_95": 0.776393202250021
+   },
+   "S-2": {
+    "fail": 0,
+    "upper_95": 0.776393202250021
+   },
+   "S-3": {
+    "fail": 0,
+    "upper_95": 0.776393202250021
+   },
+   "S-4": {
+    "fail": 0,
+    "upper_95": 0.776393202250021
+   },
+   "S-5": {
+    "fail": 0,
+    "upper_95": 0.776393202250021
+   },
+   "S-6": {
+    "fail": 0,
+    "upper_95": 0.776393202250021
+   },
+   "any": {
+    "fail": 0,
+    "upper_95": 0.776393202250021
+   },
+   "zero_cal_failed_runs": 0,
+   "ready_late_30s_runs": 0,
+   "rod_fallback_runs": 0,
+   "absolute": {
+    "S-3_misfire": 0,
+    "S-4_misfire": 0,
+    "S-5_false_loc": 0
+   },
+   "flags": {
+    "S3_true_over_band": 0,
+    "S4_baseline": 0,
+    "S4_transient_recontact": 0,
+    "S4_threshold_chatter": 0,
+    "S5_baseline": 0
+   },
+   "g6_1_switched_to_chatter_flag": 0,
+   "g6_1_ready_part_assumed": 0
+  },
+  {
+   "level": "L2",
+   "group": "G8",
+   "runs": 3,
+   "S-1": {
+    "fail": 2,
+    "upper_95": 0.9830475724915585
+   },
+   "S-2": {
+    "fail": 0,
+    "upper_95": 0.6315968501359612
+   },
+   "S-3": {
+    "fail": 0,
+    "upper_95": 0.6315968501359612
+   },
+   "S-4": {
+    "fail": 1,
+    "upper_95": 0.8646496378284161
+   },
+   "S-5": {
+    "fail": 0,
+    "upper_95": 0.6315968501359612
+   },
+   "S-6": {
+    "fail": 2,
+    "upper_95": 0.9830475724915585
+   },
+   "any": {
+    "fail": 3,
+    "upper_95": 1.0
+   },
+   "zero_cal_failed_runs": 0,
+   "ready_late_30s_runs": 0,
+   "rod_fallback_runs": 0,
+   "absolute": {
+    "S-3_misfire": 0,
+    "S-4_misfire": 1,
+    "S-5_false_loc": 0
+   },
+   "flags": {
+    "S3_true_over_band": 0,
+    "S4_baseline": 0,
+    "S4_transient_recontact": 0,
+    "S4_threshold_chatter": 0,
+    "S5_baseline": 0
+   },
+   "g6_1_switched_to_chatter_flag": 0,
+   "g6_1_ready_part_assumed": 0
+  },
+  {
+   "level": "L2",
+   "group": "all",
+   "runs": 5,
+   "S-1": {
+    "fail": 2,
+    "upper_95": 0.8107446225622291
+   },
+   "S-2": {
+    "fail": 0,
+    "upper_95": 0.45071972834694096
+   },
+   "S-3": {
+    "fail": 0,
+    "upper_95": 0.45071972834694096
+   },
+   "S-4": {
+    "fail": 1,
+    "upper_95": 0.6574083180011386
+   },
+   "S-5": {
+    "fail": 0,
+    "upper_95": 0.45071972834694096
+   },
+   "S-6": {
+    "fail": 2,
+    "upper_95": 0.8107446225622291
+   },
+   "any": {
+    "fail": 3,
+    "upper_95": 0.923559608587671
+   },
+   "zero_cal_failed_runs": 0,
+   "ready_late_30s_runs": 0,
+   "rod_fallback_runs": 0,
+   "absolute": {
+    "S-3_misfire": 0,
+    "S-4_misfire": 1,
+    "S-5_false_loc": 0
+   },
+   "flags": {
+    "S3_true_over_band": 0,
+    "S4_baseline": 0,
+    "S4_transient_recontact": 0,
+    "S4_threshold_chatter": 0,
+    "S5_baseline": 0
+   },
+   "g6_1_switched_to_chatter_flag": 0,
+   "g6_1_ready_part_assumed": 0
+  }
+ ],
+ "reference": [
+  {
+   "group": "G6",
+   "runs": 1,
+   "harness_pass": 1,
+   "g6_1_switched_to_chatter_flag": 0,
+   "false_loc": 0,
+   "zero_cal_failed": 0,
+   "rod_fallback_runs": 0
+  },
+  {
+   "group": "G8",
+   "runs": 2,
+   "harness_pass": 2,
+   "g6_1_switched_to_chatter_flag": 0,
+   "false_loc": 0,
+   "zero_cal_failed": 0,
+   "rod_fallback_runs": 0
+  },
+  {
+   "group": "all",
+   "runs": 3,
+   "harness_pass": 3,
+   "g6_1_switched_to_chatter_flag": 0,
+   "false_loc": 0,
+   "zero_cal_failed": 0,
+   "rod_fallback_runs": 0
+  }
+ ],
+ "runs": [
+  {
+   "key": "cand=current#L2|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+   "level": "L2",
+   "seed_index": 1,
+   "harness": "g8",
+   "inner": "slope|rpB|top|4.0|RL|raised|230.0",
+   "rows": {
+    "S-1": {
+     "ok": false,
+     "L1_pass": true,
+     "pass": false,
+     "g6_1": {}
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": true,
+     "anchor_differs": false,
+     "c_min_shift_mm": 0.1599999999999966,
+     "max_true_stroke_mm": 682.9841074127725
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 0,
+     "ready_delay_vs_L1_s": null,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": 1.1,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.0,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.0
+    },
+    "S-6": {
+     "new_fault": [
+      "FAULT_LIFT_STROKE_LIMIT"
+     ],
+     "new_warn": [
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "ok": false
+    }
+   },
+   "pass": false,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": null,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+   "level": "L2",
+   "seed_index": 2,
+   "harness": "g8",
+   "inner": "slope|rpB|top|4.0|RL|raised|230.0",
+   "rows": {
+    "S-1": {
+     "ok": false,
+     "L1_pass": true,
+     "pass": false,
+     "g6_1": {}
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": true,
+     "anchor_differs": false,
+     "c_min_shift_mm": 0.07000000000000028,
+     "max_true_stroke_mm": 682.8497740395641
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 0,
+     "ready_delay_vs_L1_s": null,
+     "events": []
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 0,
+     "loc_minus_off_s": 1.1,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.0,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.0
+    },
+    "S-6": {
+     "new_fault": [
+      "FAULT_LIFT_STROKE_LIMIT"
+     ],
+     "new_warn": [
+      "WARN_LIFT_STROKE_LIMITED"
+     ],
+     "ok": false
+    }
+   },
+   "pass": false,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": null,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s2|g8|25|slope|rpB|top|4.0|FR|raised|230.0",
+   "level": "L2",
+   "seed_index": 2,
+   "harness": "g8",
+   "inner": "slope|rpB|top|4.0|FR|raised|230.0",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {}
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 0.03999999999999204,
+     "max_true_stroke_mm": 544.7771957372829
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 0,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 0.20000000000095497,
+     "events": []
+    },
+    "S-4": {
+     "ok": false,
+     "fail_misfire_new": true,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": true,
+     "absolute_misfire_L1": false,
+     "n_pauses": 1,
+     "loc_minus_off_s": 0.9,
+     "n_recontact_after_off": 0,
+     "misfire_events": [
+      {
+       "t_s": 29.6,
+       "leg": "RL",
+       "true_drop_kN": 0.777,
+       "true_F_kN": 38.282,
+       "true_F_over_F_min": 4.066
+      }
+     ]
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.0,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.0
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": false,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 0.2,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s2|g6|81|g6r|rigid+J2@FL|top|Fs4",
+   "level": "L2",
+   "seed_index": 2,
+   "harness": "g6",
+   "inner": "g6r|rigid+J2@FL|top|Fs4",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 0.46000000000000085,
+     "max_true_stroke_mm": 523.8721040789075
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 1,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 7.400000000035334,
+     "events": [
+      {
+       "t_s": 59.6,
+       "D_meas_kN": -13.2,
+       "D_true_kN": -13.483,
+       "D_read_error_kN": 0.283,
+       "true_abs_D_kN": 13.483,
+       "true_min_F_to_ready_kN": 40.71,
+       "window_rise_kN": 0.0
+      }
+     ]
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 2,
+     "loc_minus_off_s": 4.1,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.0,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.0
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 7.4,
+   "rod_fallback_legs": 0
+  },
+  {
+   "key": "cand=current#L2|s4|g6|81|g6r|rigid+J2@FL|top|Fs4",
+   "level": "L2",
+   "seed_index": 4,
+   "harness": "g6",
+   "inner": "g6r|rigid+J2@FL|top|Fs4",
+   "rows": {
+    "S-1": {
+     "ok": true,
+     "L1_pass": true,
+     "pass": true,
+     "g6_1": {
+      "stored": true,
+      "gate": true,
+      "classes": [],
+      "flags": [],
+      "switched_to_flag": false,
+      "ready_part_assumed": false
+     }
+    },
+    "S-2": {
+     "misfire": false,
+     "miss": false,
+     "stroke_end_fault": false,
+     "ok": true,
+     "new_guard": false,
+     "anchor_differs": false,
+     "c_min_shift_mm": 1.259999999999998,
+     "max_true_stroke_mm": 508.22850349054613
+    },
+    "S-3": {
+     "ok": true,
+     "fail_low_to_ready": false,
+     "fail_over_band_new": false,
+     "miss": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_relax": 1,
+     "n_done_entries": 1,
+     "ready_delay_vs_L1_s": 6.7000000000319915,
+     "events": [
+      {
+       "t_s": 58.9,
+       "D_meas_kN": -14.7,
+       "D_true_kN": -13.003,
+       "D_read_error_kN": 1.697,
+       "true_abs_D_kN": 13.003,
+       "true_min_F_to_ready_kN": 40.909,
+       "window_rise_kN": 0.0
+      }
+     ]
+    },
+    "S-4": {
+     "ok": true,
+     "fail_misfire_new": false,
+     "miss": false,
+     "gate_fail": false,
+     "recontact_new": false,
+     "flags": [],
+     "absolute_misfire": false,
+     "absolute_misfire_L1": false,
+     "n_pauses": 2,
+     "loc_minus_off_s": 4.3,
+     "n_recontact_after_off": 0,
+     "misfire_events": []
+    },
+    "S-5": {
+     "ok": true,
+     "false_loc": false,
+     "false_loc_L1": false,
+     "flags": [],
+     "crawler_at_loc_over_W": 0.0,
+     "crawler_at_loc_over_W_L1": 0.0,
+     "rise_over_W": 0.0
+    },
+    "S-6": {
+     "new_fault": [],
+     "new_warn": [],
+     "ok": true
+    }
+   },
+   "pass": true,
+   "zero_cal_all": true,
+   "ready_delay_vs_L1_s": 6.7,
+   "rod_fallback_legs": 0
+  }
+ ],
+ "unmatched": [],
+ "errors": []
+}

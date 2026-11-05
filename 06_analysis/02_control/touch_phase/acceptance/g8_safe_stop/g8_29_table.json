@@ -1,0 +1,5908 @@
+[
+ {
+  "tag": "off",
+  "key": "L2|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s1",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.30000000012977,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -42.1,
+   24.9,
+   -87.0,
+   -20.0
+  ],
+  "smax": 656.7853570593201,
+  "FR": [
+   526.28,
+   656.79,
+   259.8,
+   497.85
+  ],
+  "end": [
+   525.78,
+   656.29,
+   259.3,
+   497.35
+  ],
+  "minF": 34.64193551523722,
+  "clear": 89.0,
+  "ce_note": null,
+  "att_tP": [
+   2.9663,
+   2.305
+  ],
+  "settle": [
+   2.8397,
+   1.9312
+  ],
+  "c_tP": [
+   -0.98,
+   -61.95,
+   19.88,
+   -41.09
+  ],
+  "raw_b": [
+   -25.02,
+   -92.03,
+   19.88,
+   -47.12
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "98232a77eb419160",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s2",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.30000000012977,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -41.9,
+   24.2,
+   -84.3,
+   -18.3
+  ],
+  "smax": 659.2400707991213,
+  "FR": [
+   528.85,
+   659.24,
+   262.53,
+   500.38
+  ],
+  "end": [
+   528.35,
+   658.74,
+   262.03,
+   499.88
+  ],
+  "minF": 29.730061004126682,
+  "clear": 91.6,
+  "ce_note": null,
+  "att_tP": [
+   2.9628,
+   2.2714
+  ],
+  "settle": [
+   2.8444,
+   1.93
+  ],
+  "c_tP": [
+   -1.34,
+   -61.73,
+   19.16,
+   -41.23
+  ],
+  "raw_b": [
+   -23.3,
+   -89.33,
+   19.16,
+   -46.88
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "aabe6e81c3b64760",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L1|s0|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s0",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.40000000013502,
+  "t_loc": 32.79999999997459,
+  "t_P": 31.799999999971238,
+  "bias": [
+   -36.9,
+   21.4,
+   -61.0,
+   -2.7
+  ],
+  "smax": 684.2836285650218,
+  "FR": [
+   557.22,
+   684.28,
+   284.61,
+   519.46
+  ],
+  "end": [
+   556.72,
+   683.78,
+   284.11,
+   518.97
+  ],
+  "minF": 34.98492548154887,
+  "clear": 115.5,
+  "ce_note": null,
+  "att_tP": [
+   2.7296,
+   2.0641
+  ],
+  "settle": [
+   2.7679,
+   2.0018
+  ],
+  "c_tP": [
+   -1.89,
+   -62.03,
+   18.19,
+   -41.94
+  ],
+  "raw_b": [
+   -7.72,
+   -66.04,
+   16.37,
+   -41.94
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "cae3f271c8b9ea9a",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s4|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s4",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.40000000013502,
+  "t_loc": 32.79999999997459,
+  "t_P": 31.799999999971238,
+  "bias": [
+   -37.1,
+   20.2,
+   -60.2,
+   -2.8
+  ],
+  "smax": 683.3017154279623,
+  "FR": [
+   552.93,
+   683.3,
+   286.64,
+   524.44
+  ],
+  "end": [
+   552.43,
+   682.8,
+   286.14,
+   523.94
+  ],
+  "minF": 34.70794383691998,
+  "clear": 115.7,
+  "ce_note": null,
+  "att_tP": [
+   2.7788,
+   1.9803
+  ],
+  "settle": [
+   2.839,
+   1.9309
+  ],
+  "c_tP": [
+   -1.79,
+   -62.0,
+   18.09,
+   -42.12
+  ],
+  "raw_b": [
+   -7.84,
+   -65.18,
+   15.22,
+   -42.12
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "df3c7e888fa20e07",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s2|g8|25|slope|rpB|top|4.0|FR|raised|230.0",
+  "seed": "s2",
+  "case": "25",
+  "final": "ready",
+  "ready": 63.900000000123086,
+  "t_loc": 30.999999999973102,
+  "t_P": 29.999999999975433,
+  "bias": [
+   -27.4,
+   -92.3,
+   32.0,
+   -32.9
+  ],
+  "smax": 561.7892646371992,
+  "FR": [
+   539.91,
+   561.79,
+   392.66,
+   511.52
+  ],
+  "end": [
+   539.41,
+   561.29,
+   392.16,
+   511.02
+  ],
+  "minF": 41.63838603695733,
+  "clear": 102.7,
+  "ce_note": null,
+  "att_tP": [
+   2.7653,
+   1.7153
+  ],
+  "settle": [
+   2.839,
+   1.927
+  ],
+  "c_tP": [
+   -34.4,
+   26.95,
+   -80.16,
+   -18.81
+  ],
+  "raw_b": [
+   -37.91,
+   26.95,
+   -97.29,
+   -32.43
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "a7fb32fbd330603e",
+  "hold": null,
+  "pause": [
+   [
+    29.6,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L1|s0|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s0",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.40000000013502,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -33.7,
+   21.1,
+   -62.2,
+   -7.4
+  ],
+  "smax": 683.3045690919569,
+  "FR": [
+   556.07,
+   683.3,
+   283.59,
+   518.26
+  ],
+  "end": [
+   555.57,
+   682.8,
+   283.09,
+   517.76
+  ],
+  "minF": 53.47834574585019,
+  "clear": 114.4,
+  "ce_note": null,
+  "att_tP": [
+   2.5695,
+   2.0764
+  ],
+  "settle": [
+   2.7679,
+   2.0018
+  ],
+  "c_tP": [
+   1.82,
+   -62.38,
+   25.53,
+   -38.66
+  ],
+  "raw_b": [
+   -12.44,
+   -67.17,
+   16.07,
+   -38.66
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "f9f4e79e59ce5556",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L1|s0|g8|25|slope|rpB|top|4.0|FR|raised|230.0",
+  "seed": "s0",
+  "case": "25",
+  "final": "ready",
+  "ready": 63.70000000012213,
+  "t_loc": 30.999999999973102,
+  "t_P": 29.999999999975433,
+  "bias": [
+   -26.2,
+   -90.5,
+   31.9,
+   -32.4
+  ],
+  "smax": 563.4817018175079,
+  "FR": [
+   544.91,
+   563.48,
+   391.33,
+   507.15
+  ],
+  "end": [
+   544.41,
+   562.98,
+   390.83,
+   506.65
+  ],
+  "minF": 41.79631647342954,
+  "clear": 103.3,
+  "ce_note": null,
+  "att_tP": [
+   2.7075,
+   1.8095
+  ],
+  "settle": [
+   2.7679,
+   2.0018
+  ],
+  "c_tP": [
+   -34.5,
+   26.89,
+   -80.26,
+   -18.87
+  ],
+  "raw_b": [
+   -37.38,
+   26.89,
+   -95.5,
+   -31.24
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "f0e371e8a14bda50",
+  "hold": null,
+  "pause": [
+   [
+    29.6,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s4|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s4",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.40000000013502,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -33.9,
+   20.2,
+   -62.3,
+   -8.2
+  ],
+  "smax": 681.3828324587407,
+  "FR": [
+   550.85,
+   681.38,
+   284.71,
+   522.32
+  ],
+  "end": [
+   550.35,
+   680.88,
+   284.21,
+   521.82
+  ],
+  "minF": 52.752378264907755,
+  "clear": 113.7,
+  "ce_note": null,
+  "att_tP": [
+   2.6177,
+   2.0047
+  ],
+  "settle": [
+   2.839,
+   1.9309
+  ],
+  "c_tP": [
+   2.15,
+   -62.5,
+   25.76,
+   -38.89
+  ],
+  "raw_b": [
+   -13.15,
+   -67.25,
+   15.21,
+   -38.89
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "c5fb89b39f908b9a",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L1|s0|g8|25|slope|rpB|top|4.0|FR|raised|230.0",
+  "seed": "s0",
+  "case": "25",
+  "final": "ready",
+  "ready": 62.700000000117356,
+  "t_loc": 31.09999999997287,
+  "t_P": 30.0999999999752,
+  "bias": [
+   -32.8,
+   -74.8,
+   13.1,
+   -28.9
+  ],
+  "smax": 544.7257244556415,
+  "FR": [
+   526.01,
+   544.73,
+   372.6,
+   488.21
+  ],
+  "end": [
+   525.51,
+   544.23,
+   372.1,
+   487.71
+  ],
+  "minF": 53.4718884595454,
+  "clear": 84.5,
+  "ce_note": null,
+  "att_tP": [
+   3.1522,
+   1.9882
+  ],
+  "settle": [
+   2.7679,
+   2.0018
+  ],
+  "c_tP": [
+   -33.93,
+   26.38,
+   -78.96,
+   -18.64
+  ],
+  "raw_b": [
+   -33.93,
+   8.06,
+   -79.83,
+   -37.85
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "c84caa61691b1dd1",
+  "hold": 29.2,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s1",
+  "case": "29",
+  "final": "fault",
+  "ready": null,
+  "t_loc": 33.09999999997602,
+  "t_P": 32.099999999971246,
+  "bias": [
+   -34.9,
+   20.4,
+   -58.3,
+   -3.0
+  ],
+  "smax": 682.9841074127725,
+  "FR": [
+   552.47,
+   682.98,
+   286.32,
+   524.03
+  ],
+  "end": [
+   552.47,
+   682.98,
+   286.32,
+   524.03
+  ],
+  "minF": 55.21761328317947,
+  "clear": 115.8,
+  "ce_note": null,
+  "att_tP": [
+   2.671,
+   1.9437
+  ],
+  "settle": [
+   2.8397,
+   1.9312
+  ],
+  "c_tP": [
+   0.88,
+   -62.54,
+   23.49,
+   -39.93
+  ],
+  "raw_b": [
+   -7.97,
+   -63.35,
+   15.44,
+   -39.93
+  ],
+  "guard": [
+   [
+    54.1,
+    "WARN_LIFT_STROKE_LIMITED:FR"
+   ],
+   [
+    54.1,
+    "FAULT_LIFT_STROKE_LIMIT:soil:FR"
+   ]
+  ],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": false,
+   "fault0": false,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": false,
+  "sha": "c2b268399c966a6f",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [
+   "FAULT_LIFT_STROKE_LIMIT",
+   "WARN_LIFT_STROKE_LIMITED"
+  ],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s2|g8|25|slope|rpB|top|4.0|FR|raised|230.0",
+  "seed": "s2",
+  "case": "25",
+  "final": "ready",
+  "ready": 62.90000000011831,
+  "t_loc": 31.09999999997287,
+  "t_P": 30.0999999999752,
+  "bias": [
+   -33.4,
+   -77.0,
+   14.9,
+   -28.7
+  ],
+  "smax": 544.7771957372829,
+  "FR": [
+   522.81,
+   544.78,
+   375.7,
+   494.3
+  ],
+  "end": [
+   522.31,
+   544.28,
+   375.2,
+   493.8
+  ],
+  "minF": 53.20295579176453,
+  "clear": 85.7,
+  "ce_note": null,
+  "att_tP": [
+   3.1841,
+   1.8785
+  ],
+  "settle": [
+   2.839,
+   1.927
+  ],
+  "c_tP": [
+   -33.75,
+   26.39,
+   -78.92,
+   -18.78
+  ],
+  "raw_b": [
+   -33.75,
+   9.94,
+   -82.04,
+   -38.36
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "b2a219601603a03b",
+  "hold": 29.2,
+  "pause": [
+   [
+    29.6,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s2",
+  "case": "29",
+  "final": "fault",
+  "ready": null,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -38.9,
+   8.3,
+   -57.3,
+   -10.1
+  ],
+  "smax": 682.8497740395641,
+  "FR": [
+   552.65,
+   682.85,
+   286.97,
+   524.31
+  ],
+  "end": [
+   552.65,
+   682.85,
+   286.97,
+   524.31
+  ],
+  "minF": 57.81028220365347,
+  "clear": 116.3,
+  "ce_note": null,
+  "att_tP": [
+   2.4954,
+   1.8591
+  ],
+  "settle": [
+   2.8444,
+   1.93
+  ],
+  "c_tP": [
+   1.55,
+   -62.31,
+   24.54,
+   -39.31
+  ],
+  "raw_b": [
+   -15.09,
+   -62.31,
+   3.34,
+   -43.87
+  ],
+  "guard": [
+   [
+    53.3,
+    "WARN_LIFT_STROKE_LIMITED:FR"
+   ],
+   [
+    53.3,
+    "FAULT_LIFT_STROKE_LIMIT:soil:FR"
+   ]
+  ],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": false,
+   "fault0": false,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": false,
+  "sha": "21ef562e8df832d2",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [
+   "FAULT_LIFT_STROKE_LIMIT",
+   "WARN_LIFT_STROKE_LIMITED"
+  ],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+A",
+  "key": "L2|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s1",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.60000000013598,
+  "t_loc": 33.09999999997602,
+  "t_P": 32.099999999971246,
+  "bias": [
+   -34.9,
+   20.4,
+   -58.3,
+   -3.0
+  ],
+  "smax": 684.9837938632453,
+  "FR": [
+   554.38,
+   684.98,
+   288.05,
+   525.84
+  ],
+  "end": [
+   552.38,
+   682.98,
+   286.05,
+   523.84
+  ],
+  "minF": 53.19998171017312,
+  "clear": 115.8,
+  "ce_note": null,
+  "att_tP": [
+   2.671,
+   1.9437
+  ],
+  "settle": [
+   2.8397,
+   1.9312
+  ],
+  "c_tP": [
+   0.88,
+   -62.54,
+   23.49,
+   -39.93
+  ],
+  "raw_b": [
+   -7.97,
+   -63.35,
+   15.44,
+   -39.93
+  ],
+  "guard": [
+   [
+    54.1,
+    "WARN_LIFT_STROKE_LIMITED:FR"
+   ]
+  ],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": false,
+   "crawler_clear": true
+  },
+  "passed": false,
+  "sha": "7f66d3086528f69f",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [
+   "WARN_LIFT_STROKE_LIMITED"
+  ],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+C",
+  "key": "L2|s0|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s0",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.50000000013073,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -37.1,
+   24.5,
+   -75.7,
+   -14.0
+  ],
+  "smax": 667.759409815736,
+  "FR": [
+   537.47,
+   667.76,
+   271.14,
+   508.93
+  ],
+  "end": [
+   536.97,
+   667.26,
+   270.65,
+   508.43
+  ],
+  "minF": 45.18600137984951,
+  "clear": 100.2,
+  "ce_note": null,
+  "att_tP": [
+   2.8538,
+   2.2081
+  ],
+  "settle": [
+   2.8439,
+   1.933
+  ],
+  "c_tP": [
+   -1.34,
+   -62.51,
+   19.54,
+   -41.63
+  ],
+  "raw_b": [
+   -19.03,
+   -80.67,
+   19.54,
+   -42.11
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "77fb6ef30c0e94fc",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": true,
+  "stw": 62.81
+ },
+ {
+  "tag": "c4g2+A",
+  "key": "L2|s0|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s0",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.30000000013455,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -34.0,
+   20.2,
+   -60.4,
+   -6.2
+  ],
+  "smax": 683.0700406538666,
+  "FR": [
+   552.65,
+   683.07,
+   286.48,
+   524.06
+  ],
+  "end": [
+   552.15,
+   682.57,
+   285.98,
+   523.56
+  ],
+  "minF": 53.13832523978277,
+  "clear": 115.5,
+  "ce_note": null,
+  "att_tP": [
+   2.6289,
+   1.9798
+  ],
+  "settle": [
+   2.8439,
+   1.933
+  ],
+  "c_tP": [
+   2.05,
+   -62.43,
+   25.49,
+   -38.99
+  ],
+  "raw_b": [
+   -11.22,
+   -65.44,
+   15.24,
+   -38.99
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "7ad3987f04de17ec",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+B",
+  "key": "L2|s0|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s0",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.40000000013502,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -34.0,
+   20.8,
+   -59.5,
+   -4.8
+  ],
+  "smax": 684.0487645587299,
+  "FR": [
+   553.6,
+   684.05,
+   287.4,
+   525.0
+  ],
+  "end": [
+   553.1,
+   683.55,
+   286.9,
+   524.5
+  ],
+  "minF": 53.14122663701651,
+  "clear": 116.4,
+  "ce_note": null,
+  "att_tP": [
+   2.6401,
+   1.9657
+  ],
+  "settle": [
+   2.8439,
+   1.933
+  ],
+  "c_tP": [
+   2.05,
+   -62.43,
+   25.49,
+   -38.99
+  ],
+  "raw_b": [
+   -9.77,
+   -64.53,
+   15.77,
+   -38.99
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "3006647f80fb73be",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+C",
+  "key": "L2|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s1",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.70000000013168,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -38.1,
+   24.5,
+   -77.5,
+   -14.9
+  ],
+  "smax": 666.2926143516117,
+  "FR": [
+   535.8,
+   666.29,
+   269.34,
+   507.36
+  ],
+  "end": [
+   535.3,
+   665.79,
+   268.84,
+   506.86
+  ],
+  "minF": 45.14181428604718,
+  "clear": 98.5,
+  "ce_note": null,
+  "att_tP": [
+   2.8693,
+   2.2201
+  ],
+  "settle": [
+   2.8397,
+   1.9312
+  ],
+  "c_tP": [
+   -1.33,
+   -62.49,
+   19.52,
+   -41.64
+  ],
+  "raw_b": [
+   -19.91,
+   -82.48,
+   19.52,
+   -43.05
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "4a4992d5d3180d08",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": true,
+  "stw": 62.84
+ },
+ {
+  "tag": "c4g2+B",
+  "key": "L2|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s1",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.5000000001355,
+  "t_loc": 33.09999999997602,
+  "t_P": 32.099999999971246,
+  "bias": [
+   -34.9,
+   20.0,
+   -59.9,
+   -5.0
+  ],
+  "smax": 683.937124027432,
+  "FR": [
+   553.32,
+   683.94,
+   286.98,
+   524.79
+  ],
+  "end": [
+   552.82,
+   683.44,
+   286.49,
+   524.29
+  ],
+  "minF": 53.428975251557894,
+  "clear": 116.0,
+  "ce_note": null,
+  "att_tP": [
+   2.6611,
+   1.9681
+  ],
+  "settle": [
+   2.8397,
+   1.9312
+  ],
+  "c_tP": [
+   0.88,
+   -62.54,
+   23.49,
+   -39.93
+  ],
+  "raw_b": [
+   -10.0,
+   -64.91,
+   14.97,
+   -39.93
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "f15cb7b414be109b",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+A",
+  "key": "L2|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s2",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.60000000013598,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -38.9,
+   8.3,
+   -57.3,
+   -10.1
+  ],
+  "smax": 684.8494604900368,
+  "FR": [
+   554.37,
+   684.85,
+   288.24,
+   525.84
+  ],
+  "end": [
+   552.37,
+   682.85,
+   286.24,
+   523.84
+  ],
+  "minF": 52.73470285962956,
+  "clear": 115.9,
+  "ce_note": null,
+  "att_tP": [
+   2.4954,
+   1.8591
+  ],
+  "settle": [
+   2.8444,
+   1.93
+  ],
+  "c_tP": [
+   1.55,
+   -62.31,
+   24.54,
+   -39.31
+  ],
+  "raw_b": [
+   -15.09,
+   -62.31,
+   3.34,
+   -43.87
+  ],
+  "guard": [
+   [
+    53.3,
+    "WARN_LIFT_STROKE_LIMITED:FR"
+   ]
+  ],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": false,
+   "crawler_clear": true
+  },
+  "passed": false,
+  "sha": "f99c8315b6e3cab0",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [
+   "WARN_LIFT_STROKE_LIMITED"
+  ],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+B",
+  "key": "L2|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s2",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.5000000001355,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -34.3,
+   19.9,
+   -59.4,
+   -5.2
+  ],
+  "smax": 684.1764843683206,
+  "FR": [
+   553.69,
+   684.18,
+   287.56,
+   525.16
+  ],
+  "end": [
+   553.19,
+   683.68,
+   287.06,
+   524.66
+  ],
+  "minF": 52.90709466776065,
+  "clear": 116.5,
+  "ce_note": null,
+  "att_tP": [
+   2.6432,
+   1.9627
+  ],
+  "settle": [
+   2.8444,
+   1.93
+  ],
+  "c_tP": [
+   1.55,
+   -62.31,
+   24.54,
+   -39.31
+  ],
+  "raw_b": [
+   -10.16,
+   -64.41,
+   14.95,
+   -39.31
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "3dcbc6c2629d559a",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+C",
+  "key": "L2|s2|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s2",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.70000000013168,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -37.7,
+   23.8,
+   -74.1,
+   -12.6
+  ],
+  "smax": 669.3909423979636,
+  "FR": [
+   539.02,
+   669.39,
+   272.73,
+   510.55
+  ],
+  "end": [
+   538.52,
+   668.89,
+   272.23,
+   510.05
+  ],
+  "minF": 42.86726894397117,
+  "clear": 101.8,
+  "ce_note": null,
+  "att_tP": [
+   2.8631,
+   2.1784
+  ],
+  "settle": [
+   2.8444,
+   1.93
+  ],
+  "c_tP": [
+   -1.65,
+   -62.26,
+   18.84,
+   -41.78
+  ],
+  "raw_b": [
+   -17.62,
+   -79.12,
+   18.84,
+   -42.67
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "b26d74d3196e5c42",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": true,
+  "stw": 63.41
+ },
+ {
+  "tag": "c4g2+A",
+  "key": "L2|s3|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s3",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.40000000013502,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -34.0,
+   20.5,
+   -62.0,
+   -7.4
+  ],
+  "smax": 681.6316426402445,
+  "FR": [
+   551.07,
+   681.63,
+   284.99,
+   522.7
+  ],
+  "end": [
+   550.57,
+   681.13,
+   284.49,
+   522.2
+  ],
+  "minF": 53.14952227341378,
+  "clear": 114.0,
+  "ce_note": null,
+  "att_tP": [
+   2.6283,
+   1.9967
+  ],
+  "settle": [
+   2.8368,
+   1.9283
+  ],
+  "c_tP": [
+   1.89,
+   -62.57,
+   25.49,
+   -38.97
+  ],
+  "raw_b": [
+   -12.44,
+   -66.96,
+   15.55,
+   -38.97
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "69480bf8bea24506",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+C",
+  "key": "L2|s3|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s3",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.6000000001312,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -38.1,
+   24.4,
+   -76.5,
+   -14.0
+  ],
+  "smax": 667.0136599751544,
+  "FR": [
+   536.62,
+   667.01,
+   270.35,
+   508.24
+  ],
+  "end": [
+   536.12,
+   666.51,
+   269.85,
+   507.74
+  ],
+  "minF": 45.15536715452127,
+  "clear": 99.4,
+  "ce_note": null,
+  "att_tP": [
+   2.8646,
+   2.2035
+  ],
+  "settle": [
+   2.8368,
+   1.9283
+  ],
+  "c_tP": [
+   -1.3,
+   -62.45,
+   19.38,
+   -41.76
+  ],
+  "raw_b": [
+   -19.0,
+   -81.47,
+   19.38,
+   -43.09
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "adecd2a802d42112",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": true,
+  "stw": 62.86
+ },
+ {
+  "tag": "c4g2+B",
+  "key": "L2|s3|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s3",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.5000000001355,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -34.0,
+   21.2,
+   -60.2,
+   -5.0
+  ],
+  "smax": 683.4097378820602,
+  "FR": [
+   552.85,
+   683.41,
+   286.78,
+   524.49
+  ],
+  "end": [
+   552.35,
+   682.91,
+   286.28,
+   523.99
+  ],
+  "minF": 53.15214025606997,
+  "clear": 115.7,
+  "ce_note": null,
+  "att_tP": [
+   2.6415,
+   1.9689
+  ],
+  "settle": [
+   2.8368,
+   1.9283
+  ],
+  "c_tP": [
+   1.89,
+   -62.57,
+   25.49,
+   -38.97
+  ],
+  "raw_b": [
+   -10.03,
+   -65.18,
+   16.18,
+   -38.97
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "c58e92cfc35b5a8e",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+B",
+  "key": "L2|s0|g8|2|slope|edge|top|4.0|FL|raised|170.0",
+  "seed": "s0",
+  "case": "2",
+  "final": "ready",
+  "ready": 61.600000000112104,
+  "t_loc": 30.999999999973102,
+  "t_P": 29.999999999975433,
+  "bias": [
+   -134.0,
+   -42.0,
+   -54.4,
+   37.6
+  ],
+  "smax": 631.9164579796117,
+  "FR": [
+   356.97,
+   631.92,
+   390.89,
+   487.1
+  ],
+  "end": [
+   356.47,
+   631.42,
+   390.39,
+   486.6
+  ],
+  "minF": 54.67555715703516,
+  "clear": 95.6,
+  "ce_note": null,
+  "att_tP": [
+   2.1851,
+   1.5365
+  ],
+  "settle": [
+   2.2978,
+   1.7596
+  ],
+  "c_tP": [
+   37.97,
+   -59.4,
+   -27.25,
+   -124.62
+  ],
+  "raw_b": [
+   32.59,
+   -59.4,
+   -46.97,
+   -138.96
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "84cc428e75902b53",
+  "hold": 29.1,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+A",
+  "key": "L2|s4|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s4",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.40000000013502,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -33.9,
+   20.2,
+   -62.3,
+   -8.2
+  ],
+  "smax": 681.3828324587407,
+  "FR": [
+   550.85,
+   681.38,
+   284.71,
+   522.32
+  ],
+  "end": [
+   550.35,
+   680.88,
+   284.21,
+   521.82
+  ],
+  "minF": 52.752378264907755,
+  "clear": 113.7,
+  "ce_note": null,
+  "att_tP": [
+   2.6177,
+   2.0047
+  ],
+  "settle": [
+   2.839,
+   1.9309
+  ],
+  "c_tP": [
+   2.15,
+   -62.5,
+   25.76,
+   -38.89
+  ],
+  "raw_b": [
+   -13.15,
+   -67.25,
+   15.21,
+   -38.89
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "c5fb89b39f908b9a",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+B",
+  "key": "L2|s4|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s4",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.5000000001355,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -33.9,
+   21.4,
+   -59.9,
+   -4.7
+  ],
+  "smax": 683.7049140652018,
+  "FR": [
+   553.18,
+   683.7,
+   287.02,
+   524.63
+  ],
+  "end": [
+   552.68,
+   683.21,
+   286.52,
+   524.13
+  ],
+  "minF": 52.75507515283973,
+  "clear": 116.0,
+  "ce_note": null,
+  "att_tP": [
+   2.6421,
+   1.9685
+  ],
+  "settle": [
+   2.839,
+   1.9309
+  ],
+  "c_tP": [
+   2.15,
+   -62.5,
+   25.76,
+   -38.89
+  ],
+  "raw_b": [
+   -9.66,
+   -64.92,
+   16.38,
+   -38.89
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "7c0422dabeda6d42",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+C",
+  "key": "L2|s4|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s4",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.6000000001312,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -38.2,
+   24.7,
+   -76.2,
+   -13.3
+  ],
+  "smax": 667.2740647090751,
+  "FR": [
+   536.88,
+   667.27,
+   270.63,
+   508.44
+  ],
+  "end": [
+   536.38,
+   666.77,
+   270.13,
+   507.95
+  ],
+  "minF": 45.16113505997728,
+  "clear": 99.7,
+  "ce_note": null,
+  "att_tP": [
+   2.8717,
+   2.198
+  ],
+  "settle": [
+   2.839,
+   1.9309
+  ],
+  "c_tP": [
+   -1.17,
+   -62.48,
+   19.65,
+   -41.65
+  ],
+  "raw_b": [
+   -18.35,
+   -81.21,
+   19.65,
+   -43.21
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "31b59e8117dd63c3",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": true,
+  "stw": 62.91
+ },
+ {
+  "tag": "c4g2+B",
+  "key": "L2|s1|g8|2|slope|edge|top|4.0|FL|raised|170.0",
+  "seed": "s1",
+  "case": "2",
+  "final": "ready",
+  "ready": 61.70000000011258,
+  "t_loc": 30.999999999973102,
+  "t_P": 29.999999999975433,
+  "bias": [
+   -134.2,
+   -41.7,
+   -54.4,
+   38.0
+  ],
+  "smax": 632.0474972685297,
+  "FR": [
+   356.96,
+   632.05,
+   390.94,
+   487.27
+  ],
+  "end": [
+   356.46,
+   631.55,
+   390.44,
+   486.77
+  ],
+  "minF": 54.787584272522146,
+  "clear": 95.6,
+  "ce_note": null,
+  "att_tP": [
+   2.1885,
+   1.5354
+  ],
+  "settle": [
+   2.2904,
+   1.7621
+  ],
+  "c_tP": [
+   37.89,
+   -59.44,
+   -27.26,
+   -124.59
+  ],
+  "raw_b": [
+   33.04,
+   -59.44,
+   -46.7,
+   -139.17
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "e90dfb7eef9ae74c",
+  "hold": 29.1,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+B",
+  "key": "L2|s0|g8|21|slope|rpB|top|4.0|FL|raised|230.0",
+  "seed": "s0",
+  "case": "21",
+  "final": "ready",
+  "ready": 63.500000000121176,
+  "t_loc": 31.199999999972636,
+  "t_P": 30.199999999974967,
+  "bias": [
+   -94.4,
+   -38.7,
+   -32.6,
+   23.1
+  ],
+  "smax": 668.8074377115072,
+  "FR": [
+   428.69,
+   668.81,
+   391.06,
+   509.92
+  ],
+  "end": [
+   428.19,
+   668.31,
+   390.56,
+   509.42
+  ],
+  "minF": 54.1878008709675,
+  "clear": 101.3,
+  "ce_note": null,
+  "att_tP": [
+   2.6086,
+   1.6173
+  ],
+  "settle": [
+   2.841,
+   1.9292
+  ],
+  "c_tP": [
+   29.16,
+   -37.64,
+   -12.53,
+   -79.33
+  ],
+  "raw_b": [
+   18.08,
+   -37.64,
+   -43.66,
+   -99.38
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "c9e1683f4339de93",
+  "hold": 29.1,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+B",
+  "key": "L2|s1|g8|21|slope|rpB|top|4.0|FL|raised|230.0",
+  "seed": "s1",
+  "case": "21",
+  "final": "ready",
+  "ready": 63.500000000121176,
+  "t_loc": 30.999999999973102,
+  "t_P": 29.999999999975433,
+  "bias": [
+   -91.4,
+   -33.8,
+   -32.9,
+   24.7
+  ],
+  "smax": 668.4964186029197,
+  "FR": [
+   428.33,
+   668.5,
+   390.89,
+   509.67
+  ],
+  "end": [
+   427.83,
+   668.0,
+   390.39,
+   509.17
+  ],
+  "minF": 54.90856579188781,
+  "clear": 101.0,
+  "ce_note": null,
+  "att_tP": [
+   2.6953,
+   1.7011
+  ],
+  "settle": [
+   2.8432,
+   1.9358
+  ],
+  "c_tP": [
+   26.79,
+   -37.86,
+   -16.68,
+   -81.33
+  ],
+  "raw_b": [
+   19.74,
+   -37.86,
+   -38.82,
+   -96.43
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "2ba293f402da75bd",
+  "hold": 29.1,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off+B",
+  "key": "L2|s1|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s1",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.30000000013455,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -36.1,
+   19.8,
+   -63.6,
+   -7.7
+  ],
+  "smax": 680.1707474277341,
+  "FR": [
+   549.68,
+   680.17,
+   283.17,
+   521.19
+  ],
+  "end": [
+   549.18,
+   679.67,
+   282.67,
+   520.69
+  ],
+  "minF": 34.64193551523722,
+  "clear": 112.3,
+  "ce_note": null,
+  "att_tP": [
+   2.7336,
+   2.0349
+  ],
+  "settle": [
+   2.8397,
+   1.9312
+  ],
+  "c_tP": [
+   -0.98,
+   -61.95,
+   19.88,
+   -41.09
+  ],
+  "raw_b": [
+   -12.71,
+   -68.62,
+   14.83,
+   -41.09
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "6c80de111df0b114",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off+B",
+  "key": "L2|s4|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s4",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.30000000013455,
+  "t_loc": 32.79999999997459,
+  "t_P": 31.799999999971238,
+  "bias": [
+   -37.1,
+   18.5,
+   -63.5,
+   -7.8
+  ],
+  "smax": 680.0710618683039,
+  "FR": [
+   549.67,
+   680.07,
+   283.35,
+   521.18
+  ],
+  "end": [
+   549.17,
+   679.57,
+   282.85,
+   520.68
+  ],
+  "minF": 34.70794383691998,
+  "clear": 112.4,
+  "ce_note": null,
+  "att_tP": [
+   2.7433,
+   2.0319
+  ],
+  "settle": [
+   2.839,
+   1.9309
+  ],
+  "c_tP": [
+   -1.79,
+   -62.0,
+   18.09,
+   -42.12
+  ],
+  "raw_b": [
+   -12.84,
+   -68.5,
+   13.53,
+   -42.12
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "a005c2aa95106d2f",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s5|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s5",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.5000000001355,
+  "t_loc": 32.79999999997459,
+  "t_P": 31.799999999971238,
+  "bias": [
+   -37.2,
+   21.4,
+   -60.2,
+   -1.7
+  ],
+  "smax": 683.3898803230367,
+  "FR": [
+   552.94,
+   683.39,
+   286.66,
+   524.41
+  ],
+  "end": [
+   552.44,
+   682.89,
+   286.16,
+   523.91
+  ],
+  "minF": 34.724003212546336,
+  "clear": 115.7,
+  "ce_note": null,
+  "att_tP": [
+   2.7997,
+   1.9822
+  ],
+  "settle": [
+   2.8392,
+   1.9347
+  ],
+  "c_tP": [
+   -1.73,
+   -62.17,
+   18.26,
+   -42.18
+  ],
+  "raw_b": [
+   -6.67,
+   -65.23,
+   16.38,
+   -42.18
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "be9a9c6fce4bcae3",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s6|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s6",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.2000000001293,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -41.6,
+   25.1,
+   -85.3,
+   -18.7
+  ],
+  "smax": 658.250908947537,
+  "FR": [
+   527.95,
+   658.25,
+   261.47,
+   499.28
+  ],
+  "end": [
+   527.45,
+   657.75,
+   260.97,
+   498.78
+  ],
+  "minF": 34.65501907029002,
+  "clear": 90.6,
+  "ce_note": null,
+  "att_tP": [
+   2.9584,
+   2.2811
+  ],
+  "settle": [
+   2.8434,
+   1.9272
+  ],
+  "c_tP": [
+   -0.91,
+   -62.1,
+   20.11,
+   -41.08
+  ],
+  "raw_b": [
+   -23.66,
+   -90.34,
+   20.11,
+   -46.57
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "23a6418df48736c6",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s6|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s6",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.5000000001355,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -34.0,
+   20.1,
+   -60.6,
+   -6.5
+  ],
+  "smax": 683.1293174935547,
+  "FR": [
+   552.67,
+   683.13,
+   286.33,
+   523.95
+  ],
+  "end": [
+   552.17,
+   682.63,
+   285.83,
+   523.45
+  ],
+  "minF": 53.16975161447913,
+  "clear": 115.4,
+  "ce_note": null,
+  "att_tP": [
+   2.6229,
+   1.9755
+  ],
+  "settle": [
+   2.8434,
+   1.9272
+  ],
+  "c_tP": [
+   2.14,
+   -62.5,
+   25.64,
+   -39.0
+  ],
+  "raw_b": [
+   -11.48,
+   -65.6,
+   15.13,
+   -39.0
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "e6625852d18846d1",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s7|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s7",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.5000000001355,
+  "t_loc": 32.79999999997459,
+  "t_P": 31.799999999971238,
+  "bias": [
+   -37.1,
+   20.5,
+   -61.0,
+   -3.4
+  ],
+  "smax": 682.624132627526,
+  "FR": [
+   552.14,
+   682.62,
+   285.95,
+   523.8
+  ],
+  "end": [
+   551.64,
+   682.12,
+   285.45,
+   523.3
+  ],
+  "minF": 34.70457759543428,
+  "clear": 115.0,
+  "ce_note": null,
+  "att_tP": [
+   2.7807,
+   1.9906
+  ],
+  "settle": [
+   2.839,
+   1.9301
+  ],
+  "c_tP": [
+   -1.74,
+   -62.1,
+   18.29,
+   -42.07
+  ],
+  "raw_b": [
+   -8.41,
+   -65.99,
+   15.51,
+   -42.07
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "33cf37a576560ff2",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s7|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s7",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.5000000001355,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -33.9,
+   20.3,
+   -60.8,
+   -6.5
+  ],
+  "smax": 682.932519219351,
+  "FR": [
+   552.3,
+   682.93,
+   286.28,
+   523.93
+  ],
+  "end": [
+   551.81,
+   682.43,
+   285.78,
+   523.43
+  ],
+  "minF": 52.45743962200342,
+  "clear": 115.2,
+  "ce_note": null,
+  "att_tP": [
+   2.6254,
+   1.9807
+  ],
+  "settle": [
+   2.839,
+   1.9301
+  ],
+  "c_tP": [
+   1.93,
+   -62.5,
+   25.51,
+   -38.92
+  ],
+  "raw_b": [
+   -11.5,
+   -65.75,
+   15.33,
+   -38.92
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "ea8ed285532985f1",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s5|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s5",
+  "case": "29",
+  "final": "fault",
+  "ready": null,
+  "t_loc": 33.09999999997602,
+  "t_P": 32.099999999971246,
+  "bias": [
+   -34.9,
+   21.1,
+   -58.7,
+   -2.8
+  ],
+  "smax": 682.9155608334203,
+  "FR": [
+   552.34,
+   682.92,
+   286.26,
+   523.79
+  ],
+  "end": [
+   552.34,
+   682.92,
+   286.26,
+   523.79
+  ],
+  "minF": 55.82836117297769,
+  "clear": 115.7,
+  "ce_note": null,
+  "att_tP": [
+   2.6867,
+   1.9555
+  ],
+  "settle": [
+   2.8392,
+   1.9347
+  ],
+  "c_tP": [
+   0.85,
+   -62.35,
+   23.35,
+   -39.85
+  ],
+  "raw_b": [
+   -7.76,
+   -63.69,
+   16.08,
+   -39.85
+  ],
+  "guard": [
+   [
+    54.6,
+    "WARN_LIFT_STROKE_LIMITED:FR"
+   ],
+   [
+    54.6,
+    "FAULT_LIFT_STROKE_LIMIT:soil:FR"
+   ]
+  ],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": false,
+   "fault0": false,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": false,
+  "sha": "2041b65aceb25ab9",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [
+   "FAULT_LIFT_STROKE_LIMIT",
+   "WARN_LIFT_STROKE_LIMITED"
+  ],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s8|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s8",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.40000000013502,
+  "t_loc": 32.79999999997459,
+  "t_P": 31.799999999971238,
+  "bias": [
+   -37.1,
+   21.2,
+   -60.5,
+   -2.3
+  ],
+  "smax": 683.0118976982116,
+  "FR": [
+   552.61,
+   683.01,
+   286.33,
+   524.22
+  ],
+  "end": [
+   552.11,
+   682.51,
+   285.84,
+   523.72
+  ],
+  "minF": 34.66520449995006,
+  "clear": 115.4,
+  "ce_note": null,
+  "att_tP": [
+   2.8004,
+   1.9852
+  ],
+  "settle": [
+   2.8408,
+   1.929
+  ],
+  "c_tP": [
+   -1.72,
+   -61.93,
+   18.15,
+   -42.06
+  ],
+  "raw_b": [
+   -7.26,
+   -65.54,
+   16.22,
+   -42.06
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "4b8b53357c05c39b",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s8|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s8",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.30000000013455,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -33.8,
+   19.5,
+   -62.1,
+   -8.8
+  ],
+  "smax": 681.5631651751186,
+  "FR": [
+   551.02,
+   681.56,
+   284.9,
+   522.58
+  ],
+  "end": [
+   550.52,
+   681.06,
+   284.4,
+   522.08
+  ],
+  "minF": 53.109954620782325,
+  "clear": 113.9,
+  "ce_note": null,
+  "att_tP": [
+   2.6069,
+   2.002
+  ],
+  "settle": [
+   2.8408,
+   1.929
+  ],
+  "c_tP": [
+   2.0,
+   -62.38,
+   25.61,
+   -38.77
+  ],
+  "raw_b": [
+   -13.84,
+   -67.07,
+   14.45,
+   -38.77
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "02b1bae8a70f2ae6",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s9|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s9",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.5000000001355,
+  "t_loc": 32.79999999997459,
+  "t_P": 31.799999999971238,
+  "bias": [
+   -37.1,
+   20.7,
+   -61.7,
+   -3.9
+  ],
+  "smax": 681.9676318602485,
+  "FR": [
+   551.48,
+   681.97,
+   285.25,
+   523.21
+  ],
+  "end": [
+   550.98,
+   681.47,
+   284.75,
+   522.71
+  ],
+  "minF": 34.661870446392605,
+  "clear": 114.3,
+  "ce_note": null,
+  "att_tP": [
+   2.7814,
+   1.9953
+  ],
+  "settle": [
+   2.8322,
+   1.9241
+  ],
+  "c_tP": [
+   -1.87,
+   -62.08,
+   18.14,
+   -42.07
+  ],
+  "raw_b": [
+   -8.87,
+   -66.66,
+   15.72,
+   -42.07
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "951d1b400a3c73e7",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s9|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s9",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.40000000013502,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -33.9,
+   20.7,
+   -63.6,
+   -9.0
+  ],
+  "smax": 680.0861410748471,
+  "FR": [
+   549.58,
+   680.09,
+   283.36,
+   521.31
+  ],
+  "end": [
+   549.08,
+   679.59,
+   282.86,
+   520.81
+  ],
+  "minF": 52.38233890766222,
+  "clear": 112.4,
+  "ce_note": null,
+  "att_tP": [
+   2.6204,
+   2.0187
+  ],
+  "settle": [
+   2.8322,
+   1.9241
+  ],
+  "c_tP": [
+   2.22,
+   -62.47,
+   25.78,
+   -38.92
+  ],
+  "raw_b": [
+   -13.96,
+   -68.55,
+   15.67,
+   -38.92
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "74e71e238a95af68",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s10|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s10",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.10000000012882,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -41.9,
+   25.0,
+   -86.2,
+   -19.3
+  ],
+  "smax": 657.1199298291508,
+  "FR": [
+   526.84,
+   657.12,
+   260.63,
+   498.57
+  ],
+  "end": [
+   526.34,
+   656.62,
+   260.13,
+   498.07
+  ],
+  "minF": 34.60524748892015,
+  "clear": 89.7,
+  "ce_note": null,
+  "att_tP": [
+   2.9531,
+   2.2937
+  ],
+  "settle": [
+   2.8342,
+   1.9298
+  ],
+  "c_tP": [
+   -0.91,
+   -62.15,
+   20.03,
+   -41.21
+  ],
+  "raw_b": [
+   -24.31,
+   -91.21,
+   20.03,
+   -46.87
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "018ece9ccd7c2f7f",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s10|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s10",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.30000000013455,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -34.0,
+   20.3,
+   -62.1,
+   -7.8
+  ],
+  "smax": 681.2064897247486,
+  "FR": [
+   550.8,
+   681.21,
+   284.83,
+   522.56
+  ],
+  "end": [
+   550.3,
+   680.71,
+   284.33,
+   522.06
+  ],
+  "minF": 53.03421155902841,
+  "clear": 113.8,
+  "ce_note": null,
+  "att_tP": [
+   2.6215,
+   2.0028
+  ],
+  "settle": [
+   2.8342,
+   1.9298
+  ],
+  "c_tP": [
+   2.04,
+   -62.44,
+   25.49,
+   -38.99
+  ],
+  "raw_b": [
+   -12.8,
+   -67.14,
+   15.35,
+   -38.99
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "06b89f33352eb6c2",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s11|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s11",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.5000000001355,
+  "t_loc": 32.79999999997459,
+  "t_P": 31.799999999971238,
+  "bias": [
+   -37.1,
+   21.0,
+   -61.4,
+   -3.3
+  ],
+  "smax": 682.3327495426813,
+  "FR": [
+   551.79,
+   682.33,
+   285.6,
+   523.42
+  ],
+  "end": [
+   551.29,
+   681.83,
+   285.1,
+   522.92
+  ],
+  "minF": 34.7074477777564,
+  "clear": 114.6,
+  "ce_note": null,
+  "att_tP": [
+   2.7899,
+   1.9966
+  ],
+  "settle": [
+   2.8366,
+   1.9299
+  ],
+  "c_tP": [
+   -1.8,
+   -62.07,
+   18.19,
+   -42.07
+  ],
+  "raw_b": [
+   -8.32,
+   -66.36,
+   15.96,
+   -42.07
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "cd34f2160276b747",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s11|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s11",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.40000000013502,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -34.0,
+   20.7,
+   -63.0,
+   -8.3
+  ],
+  "smax": 680.7183932017425,
+  "FR": [
+   550.06,
+   680.72,
+   284.09,
+   521.68
+  ],
+  "end": [
+   549.56,
+   680.22,
+   283.59,
+   521.18
+  ],
+  "minF": 51.89009715103353,
+  "clear": 113.0,
+  "ce_note": null,
+  "att_tP": [
+   2.6302,
+   2.0134
+  ],
+  "settle": [
+   2.8366,
+   1.9299
+  ],
+  "c_tP": [
+   1.91,
+   -62.6,
+   25.54,
+   -38.97
+  ],
+  "raw_b": [
+   -13.3,
+   -67.97,
+   15.7,
+   -38.97
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "0eb69624e2efe070",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s12|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s12",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.2000000001293,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -41.9,
+   25.0,
+   -85.9,
+   -19.1
+  ],
+  "smax": 657.879098482507,
+  "FR": [
+   527.37,
+   657.88,
+   260.94,
+   498.94
+  ],
+  "end": [
+   526.87,
+   657.38,
+   260.44,
+   498.44
+  ],
+  "minF": 34.6650484166598,
+  "clear": 90.1,
+  "ce_note": null,
+  "att_tP": [
+   2.9631,
+   2.2922
+  ],
+  "settle": [
+   2.8401,
+   1.9315
+  ],
+  "c_tP": [
+   -0.89,
+   -61.84,
+   19.96,
+   -41.0
+  ],
+  "raw_b": [
+   -24.08,
+   -90.9,
+   19.96,
+   -46.86
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "dc540808807730d4",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s12|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s12",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.30000000013455,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -34.0,
+   21.2,
+   -62.7,
+   -7.6
+  ],
+  "smax": 680.9188139527407,
+  "FR": [
+   550.41,
+   680.92,
+   284.2,
+   522.05
+  ],
+  "end": [
+   549.91,
+   680.42,
+   283.7,
+   521.55
+  ],
+  "minF": 53.369150588623214,
+  "clear": 113.2,
+  "ce_note": null,
+  "att_tP": [
+   2.6407,
+   2.0119
+  ],
+  "settle": [
+   2.8401,
+   1.9315
+  ],
+  "c_tP": [
+   2.1,
+   -62.55,
+   25.66,
+   -38.98
+  ],
+  "raw_b": [
+   -12.58,
+   -67.72,
+   16.15,
+   -38.98
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "407690fba021c1f4",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+C",
+  "key": "L2|s1|g8|28|slope|rpB|top|4.0|RL|raised|200.0",
+  "seed": "s1",
+  "case": "28",
+  "final": "ready",
+  "ready": 65.2000000001293,
+  "t_loc": 32.39999999997268,
+  "t_P": 31.39999999997217,
+  "bias": [
+   -44.3,
+   32.2,
+   -94.7,
+   -18.2
+  ],
+  "smax": 669.537382121146,
+  "FR": [
+   539.13,
+   669.54,
+   242.84,
+   510.75
+  ],
+  "end": [
+   538.63,
+   669.04,
+   242.34,
+   510.25
+  ],
+  "minF": 46.570849558794485,
+  "clear": 102.0,
+  "ce_note": null,
+  "att_tP": [
+   2.8375,
+   2.1289
+  ],
+  "settle": [
+   2.842,
+   1.9336
+  ],
+  "c_tP": [
+   -10.42,
+   -87.11,
+   27.37,
+   -49.32
+  ],
+  "raw_b": [
+   -23.19,
+   -99.67,
+   27.16,
+   -49.32
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": false,
+  "sha": "fba972e1ad3e9565",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": true,
+  "stw": 78.54
+ },
+ {
+  "tag": "c4g2+C",
+  "key": "L2|s1|g8|26|slope|rpB|top|4.0|RL|raised|140.0",
+  "seed": "s1",
+  "case": "26",
+  "final": "ready",
+  "ready": 65.10000000012882,
+  "t_loc": 32.39999999997268,
+  "t_P": 31.39999999997217,
+  "bias": [
+   -62.8,
+   43.4,
+   -135.7,
+   -29.5
+  ],
+  "smax": 669.9484261879156,
+  "FR": [
+   539.59,
+   669.95,
+   183.13,
+   511.16
+  ],
+  "end": [
+   539.09,
+   669.45,
+   182.63,
+   510.66
+  ],
+  "minF": 45.5470700493464,
+  "clear": 102.4,
+  "ce_note": null,
+  "att_tP": [
+   2.8157,
+   2.1184
+  ],
+  "settle": [
+   2.8422,
+   1.9321
+  ],
+  "c_tP": [
+   -21.22,
+   -128.68,
+   39.71,
+   -67.76
+  ],
+  "raw_b": [
+   -34.46,
+   -140.66,
+   38.44,
+   -67.76
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "5f3a87aead5e9932",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": true,
+  "stw": 109.84
+ },
+ {
+  "tag": "c4g2+B",
+  "key": "L2|s1|g8|28|slope|rpB|top|4.0|RL|raised|200.0",
+  "seed": "s1",
+  "case": "28",
+  "final": "ready",
+  "ready": 65.80000000013216,
+  "t_loc": 32.69999999997411,
+  "t_P": 31.69999999997147,
+  "bias": [
+   -44.7,
+   25.4,
+   -82.1,
+   -12.0
+  ],
+  "smax": 682.1052449631466,
+  "FR": [
+   551.57,
+   682.11,
+   255.48,
+   523.18
+  ],
+  "end": [
+   551.07,
+   681.61,
+   254.98,
+   522.68
+  ],
+  "minF": 52.99523764558137,
+  "clear": 114.5,
+  "ce_note": null,
+  "att_tP": [
+   2.6347,
+   1.8888
+  ],
+  "settle": [
+   2.842,
+   1.9336
+  ],
+  "c_tP": [
+   -7.14,
+   -87.12,
+   33.17,
+   -46.81
+  ],
+  "raw_b": [
+   -17.02,
+   -87.12,
+   20.41,
+   -49.69
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": false,
+  "sha": "81089c9e44f6b157",
+  "hold": 30.3,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+B",
+  "key": "L2|s1|g8|26|slope|rpB|top|4.0|RL|raised|140.0",
+  "seed": "s1",
+  "case": "26",
+  "final": "ready",
+  "ready": 65.80000000013216,
+  "t_loc": 32.59999999997363,
+  "t_P": 31.599999999971704,
+  "bias": [
+   -64.1,
+   36.8,
+   -123.5,
+   -22.6
+  ],
+  "smax": 682.1403700400236,
+  "FR": [
+   551.65,
+   682.14,
+   195.41,
+   523.26
+  ],
+  "end": [
+   551.15,
+   681.64,
+   194.91,
+   522.76
+  ],
+  "minF": 53.634032534349586,
+  "clear": 114.5,
+  "ce_note": null,
+  "att_tP": [
+   2.6646,
+   1.8814
+  ],
+  "settle": [
+   2.8422,
+   1.9321
+  ],
+  "c_tP": [
+   -19.12,
+   -128.51,
+   43.56,
+   -65.83
+  ],
+  "raw_b": [
+   -27.59,
+   -128.51,
+   31.83,
+   -69.09
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "2587fc1d3ecb093b",
+  "hold": 30.3,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+B",
+  "key": "L2|s1|g8|20|slope|rpB|top|4.0|FL|raised|200.0",
+  "seed": "s1",
+  "case": "20",
+  "final": "ready",
+  "ready": 63.60000000012165,
+  "t_loc": 30.999999999973102,
+  "t_P": 29.999999999975433,
+  "bias": [
+   -113.1,
+   -38.6,
+   -43.7,
+   30.9
+  ],
+  "smax": 668.7410846429489,
+  "FR": [
+   398.42,
+   668.74,
+   391.06,
+   509.81
+  ],
+  "end": [
+   397.92,
+   668.24,
+   390.56,
+   509.31
+  ],
+  "minF": 54.754723454318636,
+  "clear": 101.2,
+  "ce_note": null,
+  "att_tP": [
+   2.7093,
+   1.6964
+  ],
+  "settle": [
+   2.8415,
+   1.9292
+  ],
+  "c_tP": [
+   32.18,
+   -48.67,
+   -22.3,
+   -103.16
+  ],
+  "raw_b": [
+   25.88,
+   -48.67,
+   -43.57,
+   -118.12
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "ab0f18bf46913a1e",
+  "hold": 29.1,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+C",
+  "key": "L2|s1|g8|20|slope|rpB|top|4.0|FL|raised|200.0",
+  "seed": "s1",
+  "case": "20",
+  "final": "ready",
+  "ready": 63.500000000121176,
+  "t_loc": 31.199999999972636,
+  "t_P": 30.199999999974967,
+  "bias": [
+   -126.0,
+   -49.9,
+   -43.9,
+   32.2
+  ],
+  "smax": 668.4975789657051,
+  "FR": [
+   398.12,
+   668.5,
+   390.88,
+   509.49
+  ],
+  "end": [
+   397.62,
+   668.0,
+   390.38,
+   508.99
+  ],
+  "minF": 53.66678121661268,
+  "clear": 100.9,
+  "ce_note": null,
+  "att_tP": [
+   2.6847,
+   1.4695
+  ],
+  "settle": [
+   2.8415,
+   1.9292
+  ],
+  "c_tP": [
+   34.68,
+   -48.88,
+   -17.87,
+   -101.43
+  ],
+  "raw_b": [
+   27.2,
+   -48.88,
+   -54.9,
+   -130.99
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "b2f57a9f19d663d8",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": true,
+  "stw": 67.34
+ },
+ {
+  "tag": "c4g2+C",
+  "key": "L2|s1|g8|33|slope|rpB|top|4.0|RR|raised|230.0",
+  "seed": "s1",
+  "case": "33",
+  "final": "ready",
+  "ready": 66.00000000013311,
+  "t_loc": 33.49999999997793,
+  "t_P": 32.499999999973156,
+  "bias": [
+   23.2,
+   -48.3,
+   -12.0,
+   -83.5
+  ],
+  "smax": 668.7486798780045,
+  "FR": [
+   538.26,
+   668.75,
+   391.17,
+   392.17
+  ],
+  "end": [
+   537.76,
+   668.25,
+   390.67,
+   391.67
+  ],
+  "minF": 53.305984026375086,
+  "clear": 101.1,
+  "ce_note": null,
+  "att_tP": [
+   2.4978,
+   2.1924
+  ],
+  "settle": [
+   2.8389,
+   1.9315
+  ],
+  "c_tP": [
+   -55.42,
+   -0.27,
+   -37.0,
+   18.16
+  ],
+  "raw_b": [
+   -88.47,
+   -17.04,
+   -53.26,
+   18.16
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "8afcd1557a5c88df",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": true,
+  "stw": 62.03
+ },
+ {
+  "tag": "c4g2+B",
+  "key": "L2|s1|g8|33|slope|rpB|top|4.0|RR|raised|230.0",
+  "seed": "s1",
+  "case": "33",
+  "final": "ready",
+  "ready": 66.5000000001355,
+  "t_loc": 33.49999999997793,
+  "t_P": 32.499999999973156,
+  "bias": [
+   23.4,
+   -43.2,
+   -1.0,
+   -67.7
+  ],
+  "smax": 679.7328338325892,
+  "FR": [
+   549.33,
+   679.73,
+   402.11,
+   403.21
+  ],
+  "end": [
+   548.83,
+   679.23,
+   401.61,
+   402.71
+  ],
+  "minF": 54.349310940937166,
+  "clear": 112.1,
+  "ce_note": null,
+  "att_tP": [
+   2.6045,
+   2.0268
+  ],
+  "settle": [
+   2.8389,
+   1.9315
+  ],
+  "c_tP": [
+   -55.35,
+   0.12,
+   -37.05,
+   18.42
+  ],
+  "raw_b": [
+   -72.65,
+   -6.0,
+   -48.23,
+   18.42
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "9504a3f69d1c96b0",
+  "hold": 31.2,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2+C",
+  "key": "L2|s1|g8|12|slope|edge|top|4.0|RL|raised|230.0",
+  "seed": "s1",
+  "case": "12",
+  "final": "ready",
+  "ready": 62.300000000115446,
+  "t_loc": 32.2999999999722,
+  "t_P": 31.299999999972403,
+  "bias": [
+   -46.4,
+   29.0,
+   -85.3,
+   -9.8
+  ],
+  "smax": 621.5971588977721,
+  "FR": [
+   516.11,
+   621.6,
+   261.49,
+   477.11
+  ],
+  "end": [
+   515.61,
+   621.1,
+   260.99,
+   476.61
+  ],
+  "minF": 50.103390409124145,
+  "clear": 85.4,
+  "ce_note": null,
+  "att_tP": [
+   2.5481,
+   1.8895
+  ],
+  "settle": [
+   2.2984,
+   1.7547
+  ],
+  "c_tP": [
+   -6.18,
+   -69.68,
+   24.05,
+   -39.46
+  ],
+  "raw_b": [
+   -14.85,
+   -90.25,
+   24.05,
+   -51.36
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "ffefc565c845156e",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": true,
+  "stw": 63.18
+ },
+ {
+  "tag": "c4g2+B",
+  "key": "L2|s1|g8|12|slope|edge|top|4.0|RL|raised|230.0",
+  "seed": "s1",
+  "case": "12",
+  "final": "ready",
+  "ready": 63.500000000121176,
+  "t_loc": 32.499999999973156,
+  "t_P": 31.499999999971937,
+  "bias": [
+   -38.2,
+   17.0,
+   -64.7,
+   -9.5
+  ],
+  "smax": 642.2952629969785,
+  "FR": [
+   536.69,
+   642.3,
+   282.22,
+   497.62
+  ],
+  "end": [
+   536.19,
+   641.8,
+   281.72,
+   497.12
+  ],
+  "minF": 53.83208420086735,
+  "clear": 106.0,
+  "ce_note": null,
+  "att_tP": [
+   2.0808,
+   1.6695
+  ],
+  "settle": [
+   2.2984,
+   1.7547
+  ],
+  "c_tP": [
+   -4.12,
+   -69.69,
+   27.88,
+   -37.69
+  ],
+  "raw_b": [
+   -14.49,
+   -69.69,
+   12.03,
+   -43.16
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "23a7ba816ab7a760",
+  "hold": 30.1,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s13|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s13",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.30000000013455,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -34.0,
+   20.7,
+   -62.7,
+   -8.0
+  ],
+  "smax": 680.8965663776585,
+  "FR": [
+   550.43,
+   680.9,
+   284.17,
+   521.98
+  ],
+  "end": [
+   549.93,
+   680.4,
+   283.67,
+   521.48
+  ],
+  "minF": 52.80249369941592,
+  "clear": 113.2,
+  "ce_note": null,
+  "att_tP": [
+   2.6345,
+   2.0144
+  ],
+  "settle": [
+   2.8388,
+   1.9317
+  ],
+  "c_tP": [
+   2.1,
+   -62.36,
+   25.48,
+   -38.98
+  ],
+  "raw_b": [
+   -12.96,
+   -67.68,
+   15.74,
+   -38.98
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "6a869d9df8c2411e",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s13|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s13",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.40000000013502,
+  "t_loc": 32.79999999997459,
+  "t_P": 31.799999999971238,
+  "bias": [
+   -37.0,
+   21.8,
+   -61.7,
+   -2.9
+  ],
+  "smax": 681.9014001720556,
+  "FR": [
+   551.54,
+   681.9,
+   285.09,
+   523.11
+  ],
+  "end": [
+   551.04,
+   681.4,
+   284.59,
+   522.61
+  ],
+  "minF": 34.609078321012454,
+  "clear": 114.2,
+  "ce_note": null,
+  "att_tP": [
+   2.8104,
+   2.0053
+  ],
+  "settle": [
+   2.8388,
+   1.9317
+  ],
+  "c_tP": [
+   -1.81,
+   -61.95,
+   18.13,
+   -42.01
+  ],
+  "raw_b": [
+   -7.89,
+   -66.68,
+   16.78,
+   -42.01
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "f468a0dde8f4e9a7",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s14|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s14",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.40000000013502,
+  "t_loc": 32.79999999997459,
+  "t_P": 31.799999999971238,
+  "bias": [
+   -37.1,
+   20.8,
+   -60.1,
+   -2.2
+  ],
+  "smax": 683.3636284821856,
+  "FR": [
+   553.03,
+   683.36,
+   286.63,
+   524.44
+  ],
+  "end": [
+   552.53,
+   682.86,
+   286.13,
+   523.94
+  ],
+  "minF": 34.67055067947624,
+  "clear": 115.7,
+  "ce_note": null,
+  "att_tP": [
+   2.7925,
+   1.9802
+  ],
+  "settle": [
+   2.8402,
+   1.9326
+  ],
+  "c_tP": [
+   -1.85,
+   -62.09,
+   18.11,
+   -42.13
+  ],
+  "raw_b": [
+   -7.19,
+   -65.15,
+   15.84,
+   -42.13
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "8d617771617242aa",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s15|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s15",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.10000000012882,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -43.1,
+   24.0,
+   -87.0,
+   -19.9
+  ],
+  "smax": 656.4947396142924,
+  "FR": [
+   526.23,
+   656.49,
+   259.84,
+   497.75
+  ],
+  "end": [
+   525.73,
+   656.0,
+   259.34,
+   497.25
+  ],
+  "minF": 29.65179319474376,
+  "clear": 89.0,
+  "ce_note": null,
+  "att_tP": [
+   2.9818,
+   2.2961
+  ],
+  "settle": [
+   2.8384,
+   1.9308
+  ],
+  "c_tP": [
+   -1.36,
+   -61.64,
+   19.03,
+   -41.24
+  ],
+  "raw_b": [
+   -24.85,
+   -91.97,
+   19.03,
+   -48.08
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "41f11c4619ea8043",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s16|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s16",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.30000000013455,
+  "t_loc": 32.79999999997459,
+  "t_P": 31.799999999971238,
+  "bias": [
+   -36.9,
+   21.6,
+   -61.5,
+   -3.0
+  ],
+  "smax": 682.0868517667853,
+  "FR": [
+   551.66,
+   682.09,
+   285.3,
+   523.19
+  ],
+  "end": [
+   551.16,
+   681.59,
+   284.8,
+   522.69
+  ],
+  "minF": 34.67269628306379,
+  "clear": 114.4,
+  "ce_note": null,
+  "att_tP": [
+   2.8006,
+   2.0023
+  ],
+  "settle": [
+   2.8345,
+   1.9312
+  ],
+  "c_tP": [
+   -1.78,
+   -61.94,
+   18.21,
+   -41.95
+  ],
+  "raw_b": [
+   -7.97,
+   -66.51,
+   16.59,
+   -41.95
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "4deb8d26828e5e10",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s16|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s16",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.40000000013502,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -33.9,
+   19.7,
+   -59.8,
+   -6.1
+  ],
+  "smax": 683.8742867488613,
+  "FR": [
+   553.31,
+   683.87,
+   287.13,
+   524.8
+  ],
+  "end": [
+   552.81,
+   683.37,
+   286.63,
+   524.3
+  ],
+  "minF": 52.98510446161124,
+  "clear": 116.1,
+  "ce_note": null,
+  "att_tP": [
+   2.6103,
+   1.9677
+  ],
+  "settle": [
+   2.8345,
+   1.9312
+  ],
+  "c_tP": [
+   1.9,
+   -62.43,
+   25.42,
+   -38.91
+  ],
+  "raw_b": [
+   -11.14,
+   -64.78,
+   14.73,
+   -38.91
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "49aba4d713baed37",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s14|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s14",
+  "case": "29",
+  "final": "fault",
+  "ready": null,
+  "t_loc": 33.09999999997602,
+  "t_P": 32.099999999971246,
+  "bias": [
+   -34.8,
+   20.1,
+   -57.4,
+   -2.5
+  ],
+  "smax": 682.8986796079331,
+  "FR": [
+   552.7,
+   682.9,
+   286.9,
+   524.25
+  ],
+  "end": [
+   552.7,
+   682.9,
+   286.9,
+   524.25
+  ],
+  "minF": 54.65913009037467,
+  "clear": 116.2,
+  "ce_note": null,
+  "att_tP": [
+   2.6664,
+   1.932
+  ],
+  "settle": [
+   2.8402,
+   1.9326
+  ],
+  "c_tP": [
+   0.75,
+   -62.42,
+   23.43,
+   -39.75
+  ],
+  "raw_b": [
+   -7.53,
+   -62.42,
+   15.1,
+   -39.79
+  ],
+  "guard": [
+   [
+    53.4,
+    "WARN_LIFT_STROKE_LIMITED:FR"
+   ],
+   [
+    53.4,
+    "FAULT_LIFT_STROKE_LIMIT:soil:FR"
+   ]
+  ],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": false,
+   "fault0": false,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": false,
+  "sha": "eb261242cb06506d",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [
+   "FAULT_LIFT_STROKE_LIMIT",
+   "WARN_LIFT_STROKE_LIMITED"
+  ],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s15|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s15",
+  "case": "29",
+  "final": "fault",
+  "ready": null,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -38.7,
+   8.6,
+   -57.2,
+   -9.9
+  ],
+  "smax": 682.8846472463185,
+  "FR": [
+   552.8,
+   682.88,
+   287.03,
+   524.44
+  ],
+  "end": [
+   552.8,
+   682.88,
+   287.03,
+   524.44
+  ],
+  "minF": 56.290618366704315,
+  "clear": 116.4,
+  "ce_note": null,
+  "att_tP": [
+   2.4915,
+   1.8622
+  ],
+  "settle": [
+   2.8384,
+   1.9308
+  ],
+  "c_tP": [
+   1.59,
+   -62.22,
+   24.51,
+   -39.31
+  ],
+  "raw_b": [
+   -14.95,
+   -62.22,
+   3.56,
+   -43.72
+  ],
+  "guard": [
+   [
+    53.3,
+    "WARN_LIFT_STROKE_LIMITED:FR"
+   ],
+   [
+    53.3,
+    "FAULT_LIFT_STROKE_LIMIT:soil:FR"
+   ]
+  ],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": false,
+   "fault0": false,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": false,
+  "sha": "4df3ba227579bcca",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [
+   "FAULT_LIFT_STROKE_LIMIT",
+   "WARN_LIFT_STROKE_LIMITED"
+  ],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s17|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s17",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.10000000012882,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -41.9,
+   24.9,
+   -86.3,
+   -19.5
+  ],
+  "smax": 657.0638023622455,
+  "FR": [
+   526.7,
+   657.06,
+   260.63,
+   498.35
+  ],
+  "end": [
+   526.2,
+   656.56,
+   260.13,
+   497.85
+  ],
+  "minF": 34.70723363669694,
+  "clear": 89.6,
+  "ce_note": null,
+  "att_tP": [
+   2.9635,
+   2.2979
+  ],
+  "settle": [
+   2.8428,
+   1.9307
+  ],
+  "c_tP": [
+   -0.91,
+   -61.94,
+   19.88,
+   -41.14
+  ],
+  "raw_b": [
+   -24.53,
+   -91.31,
+   19.88,
+   -46.9
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "4f27847725ff1821",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s17|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s17",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.30000000013455,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -34.1,
+   20.4,
+   -61.5,
+   -7.0
+  ],
+  "smax": 681.8442699401919,
+  "FR": [
+   551.4,
+   681.84,
+   285.42,
+   523.05
+  ],
+  "end": [
+   550.9,
+   681.34,
+   284.92,
+   522.55
+  ],
+  "minF": 53.339612767153895,
+  "clear": 114.3,
+  "ce_note": null,
+  "att_tP": [
+   2.6261,
+   1.9914
+  ],
+  "settle": [
+   2.8428,
+   1.9307
+  ],
+  "c_tP": [
+   2.19,
+   -62.62,
+   25.7,
+   -39.11
+  ],
+  "raw_b": [
+   -12.05,
+   -66.52,
+   15.36,
+   -39.11
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "9e9a994a1e45e75e",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s18|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s18",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.2000000001293,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -42.0,
+   25.0,
+   -85.6,
+   -18.6
+  ],
+  "smax": 657.9115584703375,
+  "FR": [
+   527.59,
+   657.91,
+   261.26,
+   499.23
+  ],
+  "end": [
+   527.09,
+   657.41,
+   260.76,
+   498.73
+  ],
+  "minF": 34.6261561405603,
+  "clear": 90.4,
+  "ce_note": null,
+  "att_tP": [
+   2.9679,
+   2.2825
+  ],
+  "settle": [
+   2.8419,
+   1.9301
+  ],
+  "c_tP": [
+   -0.92,
+   -61.9,
+   20.03,
+   -40.95
+  ],
+  "raw_b": [
+   -23.58,
+   -90.56,
+   20.03,
+   -46.96
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "4ab9b208f3466c33",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s18|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s18",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.20000000013407,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -33.8,
+   21.1,
+   -63.0,
+   -8.1
+  ],
+  "smax": 680.464131799358,
+  "FR": [
+   550.09,
+   680.46,
+   283.91,
+   521.68
+  ],
+  "end": [
+   549.59,
+   679.96,
+   283.41,
+   521.18
+  ],
+  "minF": 52.132858079443764,
+  "clear": 112.9,
+  "ce_note": null,
+  "att_tP": [
+   2.6434,
+   2.0183
+  ],
+  "settle": [
+   2.8419,
+   1.9301
+  ],
+  "c_tP": [
+   2.08,
+   -62.29,
+   25.56,
+   -38.82
+  ],
+  "raw_b": [
+   -13.05,
+   -67.96,
+   16.09,
+   -38.82
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "d44877f2e3e493b4",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s19|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s19",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.10000000012882,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -42.1,
+   25.0,
+   -84.9,
+   -17.8
+  ],
+  "smax": 658.4829822177503,
+  "FR": [
+   528.09,
+   658.48,
+   261.91,
+   499.66
+  ],
+  "end": [
+   527.59,
+   657.98,
+   261.41,
+   499.16
+  ],
+  "minF": 34.71136420700191,
+  "clear": 91.0,
+  "ce_note": null,
+  "att_tP": [
+   2.9676,
+   2.2774
+  ],
+  "settle": [
+   2.8423,
+   1.9358
+  ],
+  "c_tP": [
+   -0.83,
+   -61.99,
+   20.02,
+   -41.13
+  ],
+  "raw_b": [
+   -22.8,
+   -89.93,
+   20.02,
+   -47.11
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "29ca52a163e0d034",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s19|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s19",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.40000000013502,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -33.9,
+   20.6,
+   -61.4,
+   -6.9
+  ],
+  "smax": 682.1568208789549,
+  "FR": [
+   551.66,
+   682.16,
+   285.51,
+   523.19
+  ],
+  "end": [
+   551.16,
+   681.66,
+   285.01,
+   522.69
+  ],
+  "minF": 53.257286748830786,
+  "clear": 114.5,
+  "ce_note": null,
+  "att_tP": [
+   2.6329,
+   1.9976
+  ],
+  "settle": [
+   2.8423,
+   1.9358
+  ],
+  "c_tP": [
+   2.09,
+   -62.44,
+   25.58,
+   -38.94
+  ],
+  "raw_b": [
+   -11.87,
+   -66.41,
+   15.6,
+   -38.94
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "eaf79dd72a8230b1",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s20|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s20",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.2000000001293,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -42.3,
+   24.9,
+   -86.0,
+   -18.8
+  ],
+  "smax": 657.5028758530359,
+  "FR": [
+   527.1,
+   657.5,
+   260.98,
+   498.78
+  ],
+  "end": [
+   526.6,
+   657.0,
+   260.48,
+   498.28
+  ],
+  "minF": 34.7072836889975,
+  "clear": 90.0,
+  "ce_note": null,
+  "att_tP": [
+   2.9681,
+   2.2905
+  ],
+  "settle": [
+   2.8378,
+   1.9351
+  ],
+  "c_tP": [
+   -0.95,
+   -61.92,
+   19.91,
+   -41.06
+  ],
+  "raw_b": [
+   -23.8,
+   -90.98,
+   19.91,
+   -47.27
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "e527e86f4f6be5f9",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s20|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s20",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.40000000013502,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -33.9,
+   19.6,
+   -60.9,
+   -7.3
+  ],
+  "smax": 682.5395502099436,
+  "FR": [
+   552.11,
+   682.54,
+   286.12,
+   523.8
+  ],
+  "end": [
+   551.61,
+   682.04,
+   285.62,
+   523.3
+  ],
+  "minF": 53.59595731875733,
+  "clear": 115.1,
+  "ce_note": null,
+  "att_tP": [
+   2.609,
+   1.9895
+  ],
+  "settle": [
+   2.8378,
+   1.9351
+  ],
+  "c_tP": [
+   2.08,
+   -62.38,
+   25.51,
+   -38.95
+  ],
+  "raw_b": [
+   -12.33,
+   -65.88,
+   14.6,
+   -38.95
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "12ea2feb19184960",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s21|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s21",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.30000000012977,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -41.4,
+   25.1,
+   -86.9,
+   -20.4
+  ],
+  "smax": 656.9396505051312,
+  "FR": [
+   526.44,
+   656.94,
+   260.01,
+   497.94
+  ],
+  "end": [
+   525.94,
+   656.44,
+   259.51,
+   497.44
+  ],
+  "minF": 34.68236008074307,
+  "clear": 89.2,
+  "ce_note": null,
+  "att_tP": [
+   2.9572,
+   2.3021
+  ],
+  "settle": [
+   2.8414,
+   1.9218
+  ],
+  "c_tP": [
+   -0.91,
+   -61.89,
+   20.1,
+   -40.88
+  ],
+  "raw_b": [
+   -25.36,
+   -91.87,
+   20.1,
+   -46.4
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "00715e58098af14e",
+  "hold": null,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s21|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s21",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.5000000001355,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -34.0,
+   20.6,
+   -61.1,
+   -6.6
+  ],
+  "smax": 682.6345617266853,
+  "FR": [
+   552.03,
+   682.63,
+   285.85,
+   523.54
+  ],
+  "end": [
+   551.53,
+   682.13,
+   285.35,
+   523.04
+  ],
+  "minF": 52.78733824737336,
+  "clear": 114.8,
+  "ce_note": null,
+  "att_tP": [
+   2.6329,
+   1.9785
+  ],
+  "settle": [
+   2.8414,
+   1.9218
+  ],
+  "c_tP": [
+   2.03,
+   -62.5,
+   25.57,
+   -38.97
+  ],
+  "raw_b": [
+   -11.55,
+   -66.15,
+   15.63,
+   -38.97
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "0d6a1bc4babd1506",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s22|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s22",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.30000000013455,
+  "t_loc": 32.79999999997459,
+  "t_P": 31.799999999971238,
+  "bias": [
+   -37.0,
+   21.2,
+   -61.6,
+   -3.4
+  ],
+  "smax": 681.8968382804993,
+  "FR": [
+   551.59,
+   681.9,
+   285.21,
+   523.21
+  ],
+  "end": [
+   551.09,
+   681.4,
+   284.71,
+   522.71
+  ],
+  "minF": 34.6072630359864,
+  "clear": 114.3,
+  "ce_note": null,
+  "att_tP": [
+   2.7974,
+   1.9982
+  ],
+  "settle": [
+   2.837,
+   1.9265
+  ],
+  "c_tP": [
+   -1.91,
+   -61.95,
+   18.08,
+   -41.96
+  ],
+  "raw_b": [
+   -8.41,
+   -66.56,
+   16.19,
+   -41.96
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "a13ed48d0f0fdcea",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s22|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s22",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.40000000013502,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -33.9,
+   19.9,
+   -61.3,
+   -7.4
+  ],
+  "smax": 682.3077878835155,
+  "FR": [
+   551.84,
+   682.31,
+   285.61,
+   523.41
+  ],
+  "end": [
+   551.34,
+   681.81,
+   285.11,
+   522.91
+  ],
+  "minF": 54.1930254351938,
+  "clear": 114.6,
+  "ce_note": null,
+  "att_tP": [
+   2.6156,
+   1.9862
+  ],
+  "settle": [
+   2.837,
+   1.9265
+  ],
+  "c_tP": [
+   1.99,
+   -62.45,
+   25.49,
+   -38.95
+  ],
+  "raw_b": [
+   -12.41,
+   -66.29,
+   14.93,
+   -38.95
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "9e2eec29998fce2f",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s23|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s23",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.10000000012882,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -42.3,
+   25.0,
+   -87.3,
+   -20.0
+  ],
+  "smax": 656.1548938650843,
+  "FR": [
+   525.85,
+   656.15,
+   259.52,
+   497.33
+  ],
+  "end": [
+   525.35,
+   655.66,
+   259.02,
+   496.83
+  ],
+  "minF": 34.67195897553179,
+  "clear": 88.6,
+  "ce_note": null,
+  "att_tP": [
+   2.9675,
+   2.3093
+  ],
+  "settle": [
+   2.8398,
+   1.9327
+  ],
+  "c_tP": [
+   -0.8,
+   -62.02,
+   19.97,
+   -41.25
+  ],
+  "raw_b": [
+   -25.01,
+   -92.32,
+   19.97,
+   -47.34
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "d944733e92a2cc88",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s23|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s23",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.20000000013407,
+  "t_loc": 33.1999999999765,
+  "t_P": 32.19999999997172,
+  "bias": [
+   -33.9,
+   20.5,
+   -63.0,
+   -8.5
+  ],
+  "smax": 680.4182369771225,
+  "FR": [
+   550.04,
+   680.42,
+   283.99,
+   521.6
+  ],
+  "end": [
+   549.54,
+   679.92,
+   283.49,
+   521.1
+  ],
+  "minF": 52.52098886150878,
+  "clear": 112.9,
+  "ce_note": null,
+  "att_tP": [
+   2.6276,
+   2.0173
+  ],
+  "settle": [
+   2.8398,
+   1.9327
+  ],
+  "c_tP": [
+   2.01,
+   -62.52,
+   25.58,
+   -38.94
+  ],
+  "raw_b": [
+   -13.55,
+   -67.96,
+   15.47,
+   -38.94
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "fce91a3618a88b96",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "off",
+  "key": "L2|s24|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s24",
+  "case": "29",
+  "final": "ready",
+  "ready": 65.2000000001293,
+  "t_loc": 32.899999999975066,
+  "t_P": 31.899999999971005,
+  "bias": [
+   -41.6,
+   24.9,
+   -86.6,
+   -20.0
+  ],
+  "smax": 657.1110177125163,
+  "FR": [
+   526.65,
+   657.11,
+   260.27,
+   498.18
+  ],
+  "end": [
+   526.15,
+   656.61,
+   259.77,
+   497.68
+  ],
+  "minF": 34.67489869008259,
+  "clear": 89.4,
+  "ce_note": null,
+  "att_tP": [
+   2.9659,
+   2.3037
+  ],
+  "settle": [
+   2.8471,
+   1.9306
+  ],
+  "c_tP": [
+   -1.06,
+   -61.91,
+   19.91,
+   -40.95
+  ],
+  "raw_b": [
+   -25.05,
+   -91.57,
+   19.91,
+   -46.61
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "4cb0f0f2b08e7922",
+  "hold": null,
+  "pause": [
+   [
+    31.2,
+    "RL"
+   ]
+  ],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ },
+ {
+  "tag": "c4g2",
+  "key": "L2|s24|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "seed": "s24",
+  "case": "29",
+  "final": "ready",
+  "ready": 66.5000000001355,
+  "t_loc": 33.09999999997602,
+  "t_P": 32.099999999971246,
+  "bias": [
+   -34.8,
+   20.2,
+   -59.5,
+   -4.5
+  ],
+  "smax": 684.2346510074233,
+  "FR": [
+   553.65,
+   684.23,
+   287.47,
+   525.17
+  ],
+  "end": [
+   553.15,
+   683.73,
+   286.97,
+   524.67
+  ],
+  "minF": 52.94752276568025,
+  "clear": 116.5,
+  "ce_note": null,
+  "att_tP": [
+   2.6714,
+   1.9641
+  ],
+  "settle": [
+   2.8471,
+   1.9306
+  ],
+  "c_tP": [
+   0.99,
+   -62.33,
+   23.55,
+   -39.76
+  ],
+  "raw_b": [
+   -9.54,
+   -64.48,
+   15.18,
+   -39.76
+  ],
+  "guard": [],
+  "gates": {
+   "Fmin_plus5": true,
+   "no_lift": true,
+   "end_att": true,
+   "ready": true,
+   "fault0": true,
+   "stroke_end": true,
+   "crawler_clear": true
+  },
+  "passed": true,
+  "sha": "96d274a487cc5581",
+  "hold": 30.8,
+  "pause": [],
+  "warn": [],
+  "skipped": null,
+  "stw": null
+ }
+]

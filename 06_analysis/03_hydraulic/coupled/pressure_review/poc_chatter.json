@@ -1,0 +1,568 @@
+{
+ "meta": {
+  "dimensions": "current REXOME35, FL",
+  "pressure": "bar gauge",
+  "poc": "Hopsan binary pilot check, no hysteresis",
+  "meter_out_ratio": "A->T land / P->A land; 0.284 = A_r/A_h (symmetric meter-in/out flow areas), 1 = asymmetric"
+ },
+ "cases": {
+  "mo1_a0.05": {
+   "ratio": 1.0,
+   "alpha": 0.05,
+   "wall_s": 3.552,
+   "rows": [
+    {
+     "motion": "ret_after_ext",
+     "t_move_after_cmd_s": 1.0426,
+     "t_move_ideal_s": 0.28559999999999997,
+     "stroke_lag_at_hold_end_mm": 0.8372878882593371,
+     "peak_abs_dF_kN": 10.323399999999994,
+     "p_r_cmd_end_bar_g": 11.940218299999996,
+     "p_h_cmd_end_bar_g": 94.56739080000001,
+     "p_r_max_bar_g": 27.97683,
+     "v_ripple_mm_s_in_cmd": 5.6622730553119105
+    },
+    {
+     "motion": "ret_again",
+     "t_move_after_cmd_s": 1.0801207814821412,
+     "t_move_ideal_s": 0.2861207814821407,
+     "stroke_lag_at_hold_end_mm": 0.8435812846148343,
+     "peak_abs_dF_kN": 10.549906000000004,
+     "p_r_cmd_end_bar_g": 12.018579599999999,
+     "p_h_cmd_end_bar_g": 94.5615503,
+     "p_r_max_bar_g": 27.9666,
+     "v_ripple_mm_s_in_cmd": 5.682668710251282
+    },
+    {
+     "motion": "ext_after_ret",
+     "t_move_after_cmd_s": 0.6572415629642823,
+     "t_move_ideal_s": 0.28564156296428145,
+     "stroke_lag_at_hold_end_mm": 0.5378011166274828,
+     "peak_abs_dF_kN": 1.0871764000000113,
+     "p_r_cmd_end_bar_g": 2.8085689800000004,
+     "p_h_cmd_end_bar_g": 89.79801389999999,
+     "p_r_max_bar_g": 3.0074069999999997,
+     "v_ripple_mm_s_in_cmd": 0.018614217263352297
+    },
+    {
+     "motion": "ext_again",
+     "t_move_after_cmd_s": 0.6619623444464224,
+     "t_move_ideal_s": 0.2861623444464225,
+     "stroke_lag_at_hold_end_mm": 0.5451692877382563,
+     "peak_abs_dF_kN": 1.217464399999997,
+     "p_r_cmd_end_bar_g": 2.80841763,
+     "p_h_cmd_end_bar_g": 89.79823029999997,
+     "p_r_max_bar_g": 2.982538,
+     "v_ripple_mm_s_in_cmd": 0.01646742797414271
+    }
+   ],
+   "retract_window": {
+    "v_mean_mm_s": -1.1814840861229294,
+    "v_std_mm_s": 5.6622730553119105,
+    "v_dom_Hz": 7.846556233653872,
+    "force_ptp_kN": 16.974399999999996,
+    "p_r_min": 0.17301900000000003,
+    "p_r_max": 22.13875,
+    "p_h_min": 86.93139,
+    "p_h_max": 99.6492,
+    "net_force_10Hz_std_kN": 2.532797344141109
+   }
+  },
+  "mo1_a0.25": {
+   "ratio": 1.0,
+   "alpha": 0.25,
+   "wall_s": 1.512,
+   "rows": [
+    {
+     "motion": "ret_after_ext",
+     "t_move_after_cmd_s": 0.28400000000000003,
+     "t_move_ideal_s": 0.10240000000000005,
+     "stroke_lag_at_hold_end_mm": 0.3083972024490167,
+     "peak_abs_dF_kN": 14.484699999999997,
+     "p_r_cmd_end_bar_g": 2.1076969404,
+     "p_h_cmd_end_bar_g": 83.9018486,
+     "p_r_max_bar_g": 27.98069,
+     "v_ripple_mm_s_in_cmd": 10.290634463876067
+    },
+    {
+     "motion": "ret_again",
+     "t_move_after_cmd_s": 0.25770415629642773,
+     "t_move_ideal_s": 0.1029041562964279,
+     "stroke_lag_at_hold_end_mm": 0.27672377535743453,
+     "peak_abs_dF_kN": 16.419550799999996,
+     "p_r_cmd_end_bar_g": 5.25484137,
+     "p_h_cmd_end_bar_g": 82.84079390000001,
+     "p_r_max_bar_g": 28.13173,
+     "v_ripple_mm_s_in_cmd": 10.443183281806991
+    },
+    {
+     "motion": "ext_after_ret",
+     "t_move_after_cmd_s": 0.21340831259285542,
+     "t_move_ideal_s": 0.10240831259285565,
+     "stroke_lag_at_hold_end_mm": 0.5570892420196545,
+     "peak_abs_dF_kN": 5.772827600000019,
+     "p_r_cmd_end_bar_g": 2.5190745,
+     "p_h_cmd_end_bar_g": 90.1477686,
+     "p_r_max_bar_g": 4.346809,
+     "v_ripple_mm_s_in_cmd": 1.454345681211954
+    },
+    {
+     "motion": "ext_again",
+     "t_move_after_cmd_s": 0.210312468889283,
+     "t_move_ideal_s": 0.10291246888928374,
+     "stroke_lag_at_hold_end_mm": 0.5256620292273151,
+     "peak_abs_dF_kN": 2.443107199999984,
+     "p_r_cmd_end_bar_g": 2.63505991,
+     "p_h_cmd_end_bar_g": 89.95415210000002,
+     "p_r_max_bar_g": 3.735817,
+     "v_ripple_mm_s_in_cmd": 0.9478210072074065
+    }
+   ],
+   "retract_window": {
+    "v_mean_mm_s": -10.31469592599564,
+    "v_std_mm_s": 10.290634463876067,
+    "v_dom_Hz": 8.71839581516613,
+    "force_ptp_kN": 22.447299999999988,
+    "p_r_min": -0.93235546,
+    "p_r_max": 27.98069,
+    "p_h_min": 82.88826,
+    "p_h_max": 97.66397,
+    "net_force_10Hz_std_kN": 3.1212078234522944
+   }
+  },
+  "mo1_a1": {
+   "ratio": 1.0,
+   "alpha": 1.0,
+   "wall_s": 1.168,
+   "rows": [
+    {
+     "motion": "ret_after_ext",
+     "t_move_after_cmd_s": 0.11399999999999999,
+     "t_move_ideal_s": 0.04720000000000002,
+     "stroke_lag_at_hold_end_mm": -0.4632764142422446,
+     "peak_abs_dF_kN": 41.07198999999999,
+     "p_r_cmd_end_bar_g": 21.8217279,
+     "p_h_cmd_end_bar_g": 95.2489544,
+     "p_r_max_bar_g": 28.00979,
+     "v_ripple_mm_s_in_cmd": 0.20099812544740775
+    },
+    {
+     "motion": "ret_again",
+     "t_move_after_cmd_s": 0.21282603907410702,
+     "t_move_ideal_s": 0.047826039074106985,
+     "stroke_lag_at_hold_end_mm": 0.9245294465131014,
+     "peak_abs_dF_kN": 46.333180999999996,
+     "p_r_cmd_end_bar_g": 4.837613489999999,
+     "p_h_cmd_end_bar_g": 105.04114599999998,
+     "p_r_max_bar_g": 32.88383,
+     "v_ripple_mm_s_in_cmd": 10.99145044605546
+    },
+    {
+     "motion": "ext_after_ret",
+     "t_move_after_cmd_s": 0.06165207814821372,
+     "t_move_ideal_s": 0.04745207814821395,
+     "stroke_lag_at_hold_end_mm": 0.3487098105992757,
+     "peak_abs_dF_kN": 39.85332159999998,
+     "p_r_cmd_end_bar_g": 1.7804307499999998,
+     "p_h_cmd_end_bar_g": 94.34728550000001,
+     "p_r_max_bar_g": 10.42449,
+     "v_ripple_mm_s_in_cmd": 7.551722770312389
+    },
+    {
+     "motion": "ext_again",
+     "t_move_after_cmd_s": 0.10087811722232054,
+     "t_move_ideal_s": 0.048078117222321026,
+     "stroke_lag_at_hold_end_mm": 0.5113022147675028,
+     "peak_abs_dF_kN": 6.513416799999992,
+     "p_r_cmd_end_bar_g": 3.3859173900000004,
+     "p_h_cmd_end_bar_g": 92.56515590000001,
+     "p_r_max_bar_g": 4.967267,
+     "v_ripple_mm_s_in_cmd": 5.441295039118656
+    }
+   ],
+   "retract_window": {
+    "v_mean_mm_s": -3.0508863951048957,
+    "v_std_mm_s": 0.20099812544740775,
+    "v_dom_Hz": 17.48251748251941,
+    "force_ptp_kN": 0.5758000000000029,
+    "p_r_min": 11.67287,
+    "p_r_max": 24.35693,
+    "p_h_min": 91.99804,
+    "p_h_max": 95.85532,
+    "net_force_10Hz_std_kN": 0.027049810315707874
+   }
+  },
+  "mo0.5_a0.05": {
+   "ratio": 0.5,
+   "alpha": 0.05,
+   "wall_s": 3.529,
+   "rows": [
+    {
+     "motion": "ret_after_ext",
+     "t_move_after_cmd_s": 1.0426,
+     "t_move_ideal_s": 0.28559999999999997,
+     "stroke_lag_at_hold_end_mm": 0.09921395189137243,
+     "peak_abs_dF_kN": 10.294199999999996,
+     "p_r_cmd_end_bar_g": 10.6094524,
+     "p_h_cmd_end_bar_g": 93.3241706,
+     "p_r_max_bar_g": 27.97683,
+     "v_ripple_mm_s_in_cmd": 5.378079056087358
+    },
+    {
+     "motion": "ret_again",
+     "t_move_after_cmd_s": 1.0839207814821403,
+     "t_move_ideal_s": 0.2861207814821407,
+     "stroke_lag_at_hold_end_mm": 0.10928344415324842,
+     "peak_abs_dF_kN": 10.371826400000005,
+     "p_r_cmd_end_bar_g": 10.415462400000001,
+     "p_h_cmd_end_bar_g": 93.52640020000001,
+     "p_r_max_bar_g": 27.96728,
+     "v_ripple_mm_s_in_cmd": 5.416667782143178
+    },
+    {
+     "motion": "ext_after_ret",
+     "t_move_after_cmd_s": 0.6560415629642815,
+     "t_move_ideal_s": 0.28564156296428145,
+     "stroke_lag_at_hold_end_mm": 0.5360974166503412,
+     "peak_abs_dF_kN": 1.0914752000000008,
+     "p_r_cmd_end_bar_g": 2.808440310000001,
+     "p_h_cmd_end_bar_g": 89.79811510000002,
+     "p_r_max_bar_g": 2.9887140000000003,
+     "v_ripple_mm_s_in_cmd": 0.017701967190062635
+    },
+    {
+     "motion": "ext_again",
+     "t_move_after_cmd_s": 0.6617623444464229,
+     "t_move_ideal_s": 0.2861623444464225,
+     "stroke_lag_at_hold_end_mm": 0.5451756492255011,
+     "peak_abs_dF_kN": 1.2171588000000046,
+     "p_r_cmd_end_bar_g": 2.80838243,
+     "p_h_cmd_end_bar_g": 89.79821969999999,
+     "p_r_max_bar_g": 2.9814809999999996,
+     "v_ripple_mm_s_in_cmd": 0.01668048139418579
+    }
+   ],
+   "retract_window": {
+    "v_mean_mm_s": -1.3249361952877596,
+    "v_std_mm_s": 5.378079056087358,
+    "v_dom_Hz": 7.846556233653872,
+    "force_ptp_kN": 16.9472,
+    "p_r_min": 10.18959,
+    "p_r_max": 25.32251,
+    "p_h_min": 89.93346,
+    "p_h_max": 100.1283,
+    "net_force_10Hz_std_kN": 2.4171482343245634
+   }
+  },
+  "mo0.5_a0.25": {
+   "ratio": 0.5,
+   "alpha": 0.25,
+   "wall_s": 1.527,
+   "rows": [
+    {
+     "motion": "ret_after_ext",
+     "t_move_after_cmd_s": 0.28400000000000003,
+     "t_move_ideal_s": 0.10240000000000005,
+     "stroke_lag_at_hold_end_mm": 0.11342066253353904,
+     "peak_abs_dF_kN": 10.725699999999996,
+     "p_r_cmd_end_bar_g": 18.5572871,
+     "p_h_cmd_end_bar_g": 90.09044599999999,
+     "p_r_max_bar_g": 27.98069,
+     "v_ripple_mm_s_in_cmd": 8.362996153894514
+    },
+    {
+     "motion": "ret_again",
+     "t_move_after_cmd_s": 0.2589041562964276,
+     "t_move_ideal_s": 0.1029041562964279,
+     "stroke_lag_at_hold_end_mm": 0.1381537821653015,
+     "peak_abs_dF_kN": 10.207263999999995,
+     "p_r_cmd_end_bar_g": 21.030051399999998,
+     "p_h_cmd_end_bar_g": 88.86581260000001,
+     "p_r_max_bar_g": 28.15763,
+     "v_ripple_mm_s_in_cmd": 7.7212626403916325
+    },
+    {
+     "motion": "ext_after_ret",
+     "t_move_after_cmd_s": 0.21620831259285556,
+     "t_move_ideal_s": 0.10240831259285565,
+     "stroke_lag_at_hold_end_mm": 0.5627292670813311,
+     "peak_abs_dF_kN": 4.034038000000001,
+     "p_r_cmd_end_bar_g": 2.56860451,
+     "p_h_cmd_end_bar_g": 89.9888581,
+     "p_r_max_bar_g": 4.11259,
+     "v_ripple_mm_s_in_cmd": 1.305644072535693
+    },
+    {
+     "motion": "ext_again",
+     "t_move_after_cmd_s": 0.21051246888928343,
+     "t_move_ideal_s": 0.10291246888928374,
+     "stroke_lag_at_hold_end_mm": 0.5262484203170448,
+     "peak_abs_dF_kN": 2.443670800000007,
+     "p_r_cmd_end_bar_g": 2.63488309,
+     "p_h_cmd_end_bar_g": 89.95340479999999,
+     "p_r_max_bar_g": 3.7370470000000005,
+     "v_ripple_mm_s_in_cmd": 0.9502721630272282
+    }
+   ],
+   "retract_window": {
+    "v_mean_mm_s": -6.565277627916304,
+    "v_std_mm_s": 8.362996153894514,
+    "v_dom_Hz": 8.71839581516613,
+    "force_ptp_kN": 19.934400000000007,
+    "p_r_min": 13.3972,
+    "p_r_max": 27.98069,
+    "p_h_min": 88.37945,
+    "p_h_max": 99.5977,
+    "net_force_10Hz_std_kN": 2.166170662924917
+   }
+  },
+  "mo0.5_a1": {
+   "ratio": 0.5,
+   "alpha": 1.0,
+   "wall_s": 1.158,
+   "rows": [
+    {
+     "motion": "ret_after_ext",
+     "t_move_after_cmd_s": 0.11399999999999999,
+     "t_move_ideal_s": 0.04720000000000002,
+     "stroke_lag_at_hold_end_mm": 0.13292892727872718,
+     "peak_abs_dF_kN": 14.335600000000007,
+     "p_r_cmd_end_bar_g": 21.8217279,
+     "p_h_cmd_end_bar_g": 95.2489544,
+     "p_r_max_bar_g": 28.30863,
+     "v_ripple_mm_s_in_cmd": 0.20099812544740775
+    },
+    {
+     "motion": "ret_again",
+     "t_move_after_cmd_s": 0.09562603907410705,
+     "t_move_ideal_s": 0.047826039074106985,
+     "stroke_lag_at_hold_end_mm": -0.00654250742776737,
+     "peak_abs_dF_kN": 18.607771999999983,
+     "p_r_cmd_end_bar_g": 22.620259,
+     "p_h_cmd_end_bar_g": 94.8228627,
+     "p_r_max_bar_g": 28.18141,
+     "v_ripple_mm_s_in_cmd": 1.999866011550023
+    },
+    {
+     "motion": "ext_after_ret",
+     "t_move_after_cmd_s": 0.11345207814821379,
+     "t_move_ideal_s": 0.04745207814821395,
+     "stroke_lag_at_hold_end_mm": 0.5497173098217156,
+     "peak_abs_dF_kN": 11.469584000000003,
+     "p_r_cmd_end_bar_g": 4.44664016,
+     "p_h_cmd_end_bar_g": 92.15627909999999,
+     "p_r_max_bar_g": 6.076745,
+     "v_ripple_mm_s_in_cmd": 8.35018626489776
+    },
+    {
+     "motion": "ext_again",
+     "t_move_after_cmd_s": 0.10467811722232057,
+     "t_move_ideal_s": 0.048078117222321026,
+     "stroke_lag_at_hold_end_mm": 0.49591641585905943,
+     "peak_abs_dF_kN": 7.141598799999993,
+     "p_r_cmd_end_bar_g": 3.6356844800000006,
+     "p_h_cmd_end_bar_g": 92.9344121,
+     "p_r_max_bar_g": 5.474911,
+     "v_ripple_mm_s_in_cmd": 6.7815825447706315
+    }
+   ],
+   "retract_window": {
+    "v_mean_mm_s": -3.0508863951048957,
+    "v_std_mm_s": 0.20099812544740775,
+    "v_dom_Hz": 17.48251748251941,
+    "force_ptp_kN": 0.5758000000000029,
+    "p_r_min": 11.67287,
+    "p_r_max": 24.35693,
+    "p_h_min": 91.99804,
+    "p_h_max": 95.85532,
+    "net_force_10Hz_std_kN": 0.027049810315707874
+   }
+  },
+  "mo0.284_a0.05": {
+   "ratio": 0.284,
+   "alpha": 0.05,
+   "wall_s": 3.51,
+   "rows": [
+    {
+     "motion": "ret_after_ext",
+     "t_move_after_cmd_s": 1.0426,
+     "t_move_ideal_s": 0.28559999999999997,
+     "stroke_lag_at_hold_end_mm": 0.5994284455931163,
+     "peak_abs_dF_kN": 10.281599999999992,
+     "p_r_cmd_end_bar_g": 23.108011,
+     "p_h_cmd_end_bar_g": 96.95741249999999,
+     "p_r_max_bar_g": 27.97683,
+     "v_ripple_mm_s_in_cmd": 5.4314593390515
+    },
+    {
+     "motion": "ret_again",
+     "t_move_after_cmd_s": 1.0925207814821407,
+     "t_move_ideal_s": 0.2861207814821407,
+     "stroke_lag_at_hold_end_mm": 0.6176506268925377,
+     "peak_abs_dF_kN": 10.438169999999998,
+     "p_r_cmd_end_bar_g": 22.818505399999996,
+     "p_h_cmd_end_bar_g": 97.2350429,
+     "p_r_max_bar_g": 27.96187,
+     "v_ripple_mm_s_in_cmd": 5.479167210683207
+    },
+    {
+     "motion": "ext_after_ret",
+     "t_move_after_cmd_s": 0.6536415629642818,
+     "t_move_ideal_s": 0.28564156296428145,
+     "stroke_lag_at_hold_end_mm": 0.5311875923312885,
+     "peak_abs_dF_kN": 1.1050295999999944,
+     "p_r_cmd_end_bar_g": 2.8086174999999995,
+     "p_h_cmd_end_bar_g": 89.79796600000002,
+     "p_r_max_bar_g": 3.0108109999999995,
+     "v_ripple_mm_s_in_cmd": 0.01896844638500506
+    },
+    {
+     "motion": "ext_again",
+     "t_move_after_cmd_s": 0.6617623444464229,
+     "t_move_ideal_s": 0.2861623444464225,
+     "stroke_lag_at_hold_end_mm": 0.5451657145824045,
+     "peak_abs_dF_kN": 1.217333200000008,
+     "p_r_cmd_end_bar_g": 2.80840776,
+     "p_h_cmd_end_bar_g": 89.79822539999999,
+     "p_r_max_bar_g": 2.9821709999999997,
+     "v_ripple_mm_s_in_cmd": 0.01653373394352833
+    }
+   ],
+   "retract_window": {
+    "v_mean_mm_s": -0.7965375503400174,
+    "v_std_mm_s": 5.4314593390515,
+    "v_dom_Hz": 7.846556233653872,
+    "force_ptp_kN": 16.965300000000003,
+    "p_r_min": 16.66745,
+    "p_r_max": 26.70469,
+    "p_h_min": 90.32818,
+    "p_h_max": 100.3401,
+    "net_force_10Hz_std_kN": 2.438503979063453
+   }
+  },
+  "mo0.284_a0.25": {
+   "ratio": 0.284,
+   "alpha": 0.25,
+   "wall_s": 1.505,
+   "rows": [
+    {
+     "motion": "ret_after_ext",
+     "t_move_after_cmd_s": 0.28400000000000003,
+     "t_move_ideal_s": 0.10240000000000005,
+     "stroke_lag_at_hold_end_mm": 0.6296576869001713,
+     "peak_abs_dF_kN": 10.403799999999988,
+     "p_r_cmd_end_bar_g": 25.8637906,
+     "p_h_cmd_end_bar_g": 93.02302930000002,
+     "p_r_max_bar_g": 28.15633,
+     "v_ripple_mm_s_in_cmd": 7.857924936358547
+    },
+    {
+     "motion": "ret_again",
+     "t_move_after_cmd_s": 0.25750415629642776,
+     "t_move_ideal_s": 0.1029041562964279,
+     "stroke_lag_at_hold_end_mm": 0.6146808410258378,
+     "peak_abs_dF_kN": 10.069324800000002,
+     "p_r_cmd_end_bar_g": 28.082092800000005,
+     "p_h_cmd_end_bar_g": 91.25536930000003,
+     "p_r_max_bar_g": 28.67022,
+     "v_ripple_mm_s_in_cmd": 7.1286471773068865
+    },
+    {
+     "motion": "ext_after_ret",
+     "t_move_after_cmd_s": 0.2166083125928555,
+     "t_move_ideal_s": 0.10240831259285565,
+     "stroke_lag_at_hold_end_mm": 0.5658064200042425,
+     "peak_abs_dF_kN": 4.3036883999999995,
+     "p_r_cmd_end_bar_g": 2.5607109699999997,
+     "p_h_cmd_end_bar_g": 89.9954882,
+     "p_r_max_bar_g": 4.162717,
+     "v_ripple_mm_s_in_cmd": 1.3438780025002326
+    },
+    {
+     "motion": "ext_again",
+     "t_move_after_cmd_s": 0.21051246888928343,
+     "t_move_ideal_s": 0.10291246888928374,
+     "stroke_lag_at_hold_end_mm": 0.5266651499244096,
+     "peak_abs_dF_kN": 2.4428127999999996,
+     "p_r_cmd_end_bar_g": 2.63650692,
+     "p_h_cmd_end_bar_g": 89.94685359999998,
+     "p_r_max_bar_g": 3.738697,
+     "v_ripple_mm_s_in_cmd": 0.9494854376532043
+    }
+   ],
+   "retract_window": {
+    "v_mean_mm_s": -4.8791249071926766,
+    "v_std_mm_s": 7.857924936358547,
+    "v_dom_Hz": 8.71839581516613,
+    "force_ptp_kN": 19.311399999999995,
+    "p_r_min": 17.29654,
+    "p_r_max": 27.9807,
+    "p_h_min": 89.25485,
+    "p_h_max": 100.52,
+    "net_force_10Hz_std_kN": 1.7354142109291275
+   }
+  },
+  "mo0.284_a1": {
+   "ratio": 0.284,
+   "alpha": 1.0,
+   "wall_s": 1.141,
+   "rows": [
+    {
+     "motion": "ret_after_ext",
+     "t_move_after_cmd_s": 0.11399999999999999,
+     "t_move_ideal_s": 0.04720000000000002,
+     "stroke_lag_at_hold_end_mm": 0.6441976682966164,
+     "peak_abs_dF_kN": 11.7545,
+     "p_r_cmd_end_bar_g": 21.8217279,
+     "p_h_cmd_end_bar_g": 95.2489544,
+     "p_r_max_bar_g": 29.6512,
+     "v_ripple_mm_s_in_cmd": 0.20099812544740775
+    },
+    {
+     "motion": "ret_again",
+     "t_move_after_cmd_s": 0.09462603907410694,
+     "t_move_ideal_s": 0.047826039074106985,
+     "stroke_lag_at_hold_end_mm": 0.5736838921801996,
+     "peak_abs_dF_kN": 16.453643200000005,
+     "p_r_cmd_end_bar_g": 22.661605499999993,
+     "p_h_cmd_end_bar_g": 94.74309169999997,
+     "p_r_max_bar_g": 29.42177,
+     "v_ripple_mm_s_in_cmd": 1.7853330469794708
+    },
+    {
+     "motion": "ext_after_ret",
+     "t_move_after_cmd_s": 0.11205207814821394,
+     "t_move_ideal_s": 0.04745207814821395,
+     "stroke_lag_at_hold_end_mm": 0.5461431464502471,
+     "peak_abs_dF_kN": 10.020131200000003,
+     "p_r_cmd_end_bar_g": 4.25435984,
+     "p_h_cmd_end_bar_g": 92.16670709999997,
+     "p_r_max_bar_g": 5.794453000000001,
+     "v_ripple_mm_s_in_cmd": 7.7811106686791645
+    },
+    {
+     "motion": "ext_again",
+     "t_move_after_cmd_s": 0.10467811722232057,
+     "t_move_ideal_s": 0.048078117222321026,
+     "stroke_lag_at_hold_end_mm": 0.49709022293496946,
+     "peak_abs_dF_kN": 6.985104800000001,
+     "p_r_cmd_end_bar_g": 3.62173171,
+     "p_h_cmd_end_bar_g": 92.9110003,
+     "p_r_max_bar_g": 5.449001999999999,
+     "v_ripple_mm_s_in_cmd": 6.699230811112732
+    }
+   ],
+   "retract_window": {
+    "v_mean_mm_s": -3.0508863951048957,
+    "v_std_mm_s": 0.20099812544740775,
+    "v_dom_Hz": 17.48251748251941,
+    "force_ptp_kN": 0.5758000000000029,
+    "p_r_min": 11.67287,
+    "p_r_max": 24.35693,
+    "p_h_min": 91.99804,
+    "p_h_max": 95.85532,
+    "net_force_10Hz_std_kN": 0.027049810315707874
+   }
+  }
+ }
+}

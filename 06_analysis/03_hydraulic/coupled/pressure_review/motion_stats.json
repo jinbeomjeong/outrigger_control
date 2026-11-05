@@ -1,0 +1,56 @@
+{
+ "meta": {
+  "dead_ext_mm": 0.4,
+  "dead_ret_mm": 0.8400000000000001,
+  "record_dt_s": 0.1,
+  "note": "applied speed sampled at the 10 Hz record; only the legs with a load (F_cyl > 5 kN at the motion start) count as grounded motions"
+ },
+ "rigid_fdown3.5_off": {
+  "t_end": 87.40000000187864,
+  "ext": 26,
+  "ret": 22,
+  "ext_short": 5,
+  "ret_short": 0,
+  "ext_mm": 60.435463440345885,
+  "ret_mm": 58.200789589816246,
+  "dead_mm": 28.098740272478363,
+  "ext_peak_speed_median_mm_s": 1.905197727076293,
+  "ret_peak_speed_median_mm_s": 2.092335114716458
+ },
+ "rigid_roll5.5_on085": {
+  "t_end": 70.9000000013309,
+  "ext": 10,
+  "ret": 4,
+  "ext_short": 0,
+  "ret_short": 0,
+  "ext_mm": 439.5553767062356,
+  "ret_mm": 7.998411310368529,
+  "dead_mm": 7.360000000000001,
+  "ext_peak_speed_median_mm_s": 4.532430249460447,
+  "ret_peak_speed_median_mm_s": 3.3807536949273023
+ },
+ "soil_J1_on085": {
+  "t_end": 119.90000000313115,
+  "ext": 21,
+  "ret": 13,
+  "ext_short": 8,
+  "ret_short": 6,
+  "ext_mm": 599.4214256374125,
+  "ret_mm": 17.20598648553119,
+  "dead_mm": 12.589768078252783,
+  "ext_peak_speed_median_mm_s": 3.5714285714285716,
+  "ret_peak_speed_median_mm_s": 0.4214523450329326
+ },
+ "soil_S8_off": {
+  "t_end": 159.90000000445903,
+  "ext": 4,
+  "ret": 0,
+  "ext_short": 0,
+  "ret_short": 0,
+  "ext_mm": 756.390026530896,
+  "ret_mm": 0.0,
+  "dead_mm": 1.6,
+  "ext_peak_speed_median_mm_s": 13.875335980491954,
+  "ret_peak_speed_median_mm_s": null
+ }
+}

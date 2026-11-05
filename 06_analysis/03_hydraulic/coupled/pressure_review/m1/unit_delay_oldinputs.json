@@ -1,0 +1,61 @@
+{
+ "A_h_m2": 0.013273229,
+ "A_r_m2": 0.00376991118,
+ "v_max_m_s": 0.0209243016,
+ "p_T_Pa": 200000.0,
+ "dead_extend_mm": 0.3886394184866395,
+ "dead_retract_mm": 1.1928852468538607,
+ "discharge_mm": 0.37575634384067363,
+ "hand_review_mm": {
+  "extend": 0.389,
+  "retract": 1.19,
+  "net_retract": 0.82
+ },
+ "net_retract_mm": 0.8171289030131869,
+ "rows": [
+  {
+   "command_fraction": 0.05,
+   "m1_retract_s": 1.24,
+   "hopsan_retract_s": 1.043,
+   "retract_rel_to_hopsan": 0.189,
+   "m1_extend_s": 0.662,
+   "hopsan_extend_s": 0.658,
+   "extend_rel_to_hopsan": 0.007,
+   "added_retract_s": 0.955,
+   "added_extend_s": 0.376
+  },
+  {
+   "command_fraction": 0.1,
+   "m1_retract_s": 0.67,
+   "hopsan_retract_s": 0.571,
+   "retract_rel_to_hopsan": 0.173,
+   "m1_extend_s": 0.379,
+   "hopsan_extend_s": 0.361,
+   "extend_rel_to_hopsan": 0.05,
+   "added_retract_s": 0.491,
+   "added_extend_s": 0.199
+  },
+  {
+   "command_fraction": 0.25,
+   "m1_retract_s": 0.324,
+   "hopsan_retract_s": 0.284,
+   "retract_rel_to_hopsan": 0.141,
+   "m1_extend_s": 0.199,
+   "hopsan_extend_s": 0.214,
+   "extend_rel_to_hopsan": -0.071,
+   "added_retract_s": 0.221,
+   "added_extend_s": 0.096
+  },
+  {
+   "command_fraction": 1.0,
+   "m1_retract_s": 0.13,
+   "hopsan_retract_s": 0.114,
+   "retract_rel_to_hopsan": 0.137,
+   "m1_extend_s": 0.086,
+   "hopsan_extend_s": 0.062,
+   "extend_rel_to_hopsan": 0.382,
+   "added_retract_s": 0.083,
+   "added_extend_s": 0.038
+  }
+ ]
+}

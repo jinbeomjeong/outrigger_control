@@ -1,0 +1,18 @@
+===== rev65\verify_S8C_c68b_c71.json 07_results\S8\g4h_c68b_20261027_135040 judge rev C-S8-71 (spec rev. 66 338, U-S8-72 (a): G4-4 = 0.5 s mean min >= F_min and insta
+ MLJ_G4H_FS24_FR_Fs0 FR t_on=48.5 ev=47.70000000039165 samples=4 lift=True transient=False sampling_only=True act=-0.7000000002221896 JPmiss=True off=3.00 min=-2.02 samples_F=[-1.1, -0.9, -1.0, 74.7] under_ms=345 air_ms=317
+ MLJ_G4H_FS24_FR_Fs0 FR t_on=49.2 ev=47.70000000039165 samples=4 lift=True transient=False sampling_only=True act=-1.4000000004443791 JPmiss=True off=3.00 min=-2.56 samples_F=[-0.5, -0.9, -0.9, 88.8] under_ms=287 air_ms=258
+ MLJ_G4H_FS24_FR_Fs0 FR t_on=49.9 ev=47.70000000039165 samples=3 lift=True transient=False sampling_only=True act=-2.1000000006665687 JPmiss=True off=3.00 min=-2.86 samples_F=[-1.4, -1.0, 49.0] under_ms=210 air_ms=181
+ MLJ_G4H_FS24_FR_Fs0 FR t_on=50.6 ev=47.70000000039165 samples=2 lift=True transient=False sampling_only=True act=-2.8000000008887582 JPmiss=True off=3.00 min=-2.45 samples_F=[-0.8, 102.6] under_ms=136 air_ms=104
+ MLJ_G4H_FS24_FR_Fs0 FR t_on=51.1 ev=47.70000000039165 samples=2 lift=True transient=False sampling_only=True act=-3.300000001047465 JPmiss=True off=3.00 min=-1.72 samples_F=[4.9, 70.2] under_ms=52 air_ms=10
+ MLJ_G4H_FS24_FR_Fs8 FR t_on=48.4 ev=47.60000000038833 samples=4 lift=True transient=False sampling_only=True act=-0.7000000002221896 JPmiss=True off=3.00 min=-2.08 samples_F=[-1.0, -0.9, -1.0, 105.3] under_ms=314 air_ms=287
+ MLJ_G4H_FS24_FR_Fs8 FR t_on=49.1 ev=47.60000000038833 samples=3 lift=True transient=False sampling_only=True act=-1.4000000004443791 JPmiss=True off=3.00 min=-2.84 samples_F=[-1.1, -1.0, 33.3] under_ms=233 air_ms=207
+ MLJ_G4H_FS24_FR_Fs8 FR t_on=49.8 ev=47.60000000038833 samples=2 lift=True transient=False sampling_only=True act=-2.1000000006665687 JPmiss=True off=3.00 min=-2.24 samples_F=[-1.0, 70.5] under_ms=140 air_ms=111
+ tally [(('1', 'caught', ''), 1), (('>=2', 'caught', ''), 49), (('>=2', 'miss', ''), 8)]
+===== rev68\verify_S8C_c72_u75.json 07_results\S8\c72_20261027_155426 judge rev U-S8-75 = (b) (spec rev. 68 357.3: fast event on a front leg, top level, case F_
+ G1L_FS24_FR_top_Fs0 FR t_on=30.2 ev=28.024999999946175 samples=1 lift=False transient=True sampling_only=True act=-2.100000000346821 JPmiss=True off=3.00 min=8.79 samples_F=[36.8] under_ms=12 air_ms=0
+ G1L_FS24_FR_top_Fs0 RL t_on=30.5 ev=28.024999999946175 samples=1 lift=False transient=True sampling_only=True act=-2.2000000004496165 JPmiss=True off=3.00 min=9.93 samples_F=[47.1] under_ms=0 air_ms=0
+ tally [(('1', 'caught', 'transient'), 3), (('1', 'miss', 'transient'), 2), (('>=2', 'caught', ''), 30), (('>=2', 'caught', 'transient'), 53)]
+===== rev68\verify_S8C_c74_u75.json 07_results\S8\c74_20261027_164128 judge rev U-S8-75 = (b) (spec rev. 68 357.3: fast event on a front leg, top level, case F_
+ G1L_RE1bF_FL_top_o000_Fs4 FL t_on=30.3 ev=27.999999999946176 samples=1 lift=False transient=True sampling_only=True act=-2.2000000003785622 JPmiss=True off=3.00 min=3.91 samples_F=[46.2] under_ms=46 air_ms=0
+ G1R_RE1bF_FR_top_o075_Fs2 FR t_on=50.1 ev=47.87500000039497 samples=1 lift=False transient=False sampling_only=True act=-2.20000000069831 JPmiss=True off=3.00 min=3.75 samples_F=[25.1] under_ms=36 air_ms=0
+ tally [(('1', 'caught', ''), 1), (('1', 'caught', 'transient'), 3), (('1', 'miss', ''), 1), (('1', 'miss', 'transient'), 1), (('>=2', 'caught', ''), 37), (('>=2', 'caught', 'transient'), 65)]

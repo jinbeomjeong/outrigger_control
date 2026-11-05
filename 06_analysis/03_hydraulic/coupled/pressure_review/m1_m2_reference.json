@@ -1,0 +1,1126 @@
+{
+ "status": "reference values for unit tests; every hydraulic input below is an ASSUMPTION until the maker answers V-6, L-1 and the hose data",
+ "dimensions": "current REXOME35 (02_params/rexome33.yaml); L2 history not used",
+ "pressure_reference": "bar gauge unless named Pa",
+ "user_decision_2026_11_05": "M2 joins the v5 scope, M1 is decided after the harness test, the full two-chamber model stays out",
+ "inputs": {
+  "V_line_m3": 0.000285,
+  "beta_hose_Pa": 500000000.0,
+  "beta_Pa": 1000000000.0,
+  "psi": 3.5,
+  "p_crack_bar": 3.0,
+  "tau_v_s": 0.1,
+  "p_T_bar_g": 2.0,
+  "p_r0_bar_g": 2.0,
+  "neutral": "A,B->T",
+  "stroke_step_mm": 3.0,
+  "beta_chamber_Pa": 1000000000.0,
+  "L0h_m": 0.05,
+  "L0r_m": 0.05,
+  "stroke_m": 0.7,
+  "A_h_m2": {
+   "FL": 0.013273229,
+   "RL": 0.00950331778
+  },
+  "A_ann_m2": {
+   "FL": 0.00376991118,
+   "RL": 0.00314159265
+  },
+  "s0_m": {
+   "FL": 0.4011,
+   "RL": 0.3909
+  },
+  "static_load_note": "flat, top auger, single leg mass = F0 / g",
+  "piston_damper_N_s_m": {
+   "FL": 34403.5,
+   "RL": 30348.5
+  },
+  "rear_friction_scale": 0.833
+ },
+ "M1": {
+  "purpose": "start delay until the check valves pass flow; off by default",
+  "retract": {
+   "opening_condition": "p_T + psi p_B - p_h - p_crack = 0 with p_h rising by (A_ann dp_r - F_s)+ / A_h while the rod creeps on the compressible head",
+   "volume": "V_line (p_open - p_T) / beta_hose + V_r (p_open - p_r0) / beta + A_ann creep, creep = V_h dp_h / (beta A_h)",
+   "after_opening": "the head chamber charges line A: extra piston travel V_line (p_h - p_T) / (beta_hose A_h)"
+  },
+  "extend": {
+   "volume": "V_line (p_h + p_crack - p_T) / beta_hose + (V_line / beta_hose + V_h / beta) F_s / A_h"
+  },
+  "time_from_volume": "invert s = v (t - tau_v (1 - exp(-t / tau_v))) for the lagged command; see the hand values",
+  "metrics": {
+   "retract_check_open_s": "first time POC-A is open after the command",
+   "extend_piston_0p2mm_s": "piston moved 0.2 mm (hand: dead stroke + 0.2 mm)",
+   "warning": "retract_piston_0p2mm_s is reached by elastic creep before the check opens when F_s is small; use check opening for retract"
+  },
+  "tolerance_proposal": {
+   "retract_check_open": "+-5 % against hopsan",
+   "extend_0p2mm": "+-10 % against hopsan for F_s 0; +-15 % with friction"
+  },
+  "table": {
+   "FL": {
+    "Fs0": {
+     "hand_inputs": {
+      "p_h0_bar_g": 89.543462629436,
+      "p_open_line_B_bar_g": 27.977636024517476,
+      "dp_h_at_open_bar": 7.378263456375174,
+      "piston_creep_before_open_mm": 0.3328334645170841,
+      "V_line_cm3": 1.4807252533974962,
+      "V_rod_cm3": 3.4168956449053036,
+      "V_creep_cm3": 1.2547525989610888,
+      "retract_open_V_cm3": 6.152373497263889,
+      "retract_open_stroke_mm": 1.6319677582599939,
+      "extend_open_V_cm3": 5.160977369877852,
+      "extend_friction_V_cm3": 0.0,
+      "extend_dead_stroke_mm": 0.38882606258641755,
+      "head_dump_stroke_mm": 0.4076278942291462
+     },
+     "F_s_N": 0.0,
+     "by_command": {
+      "0.05": {
+       "retract_check_open_s": {
+        "hopsan": 1.6625999999999999,
+        "hand": 1.6598778711836282
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 1.0426
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.6572415629642823,
+        "hand": 0.6626830638830423
+       },
+       "ideal_0p2mm_s": 0.28559999999999997,
+       "stroke_lag_retract_mm": 0.8372878882593371,
+       "stroke_lag_extend_mm": 0.5378011166274828,
+       "line_b_at_open_bar_g": 27.97657,
+       "p_h_at_open_bar_g": 96.49581
+      },
+      "0.1": {
+       "retract_check_open_s": {
+        "hopsan": 0.8808,
+        "hand": 0.8799238538940011
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.5711999999999999
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.36092078148214046,
+        "hand": 0.3791516126292236
+       },
+       "ideal_0p2mm_s": 0.17900000000000005,
+       "stroke_lag_retract_mm": 0.7485655289611791,
+       "stroke_lag_extend_mm": 0.5316633560314705,
+       "line_b_at_open_bar_g": 27.98518,
+       "p_h_at_open_bar_g": 96.00201
+      },
+      "0.25": {
+       "retract_check_open_s": {
+        "hopsan": 0.40959999999999996,
+        "hand": 0.4103236632276481
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.28400000000000003
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.21340831259285542,
+        "hand": 0.19887669115659626
+       },
+       "ideal_0p2mm_s": 0.10240000000000005,
+       "stroke_lag_retract_mm": 0.3083972024490167,
+       "stroke_lag_extend_mm": 0.5570892420196545,
+       "line_b_at_open_bar_g": 27.95915,
+       "p_h_at_open_bar_g": 96.69801
+      },
+      "1": {
+       "retract_check_open_s": {
+        "hopsan": 0.15780000000000005,
+        "hand": 0.1572390492898396
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.11399999999999999
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.06165207814821372,
+        "hand": 0.08569553040505609
+       },
+       "ideal_0p2mm_s": 0.04720000000000002,
+       "stroke_lag_retract_mm": -0.4632764142422446,
+       "stroke_lag_extend_mm": 0.3487098105992757,
+       "line_b_at_open_bar_g": 27.97075,
+       "p_h_at_open_bar_g": 96.17283
+      }
+     }
+    },
+    "Fs2": {
+     "hand_inputs": {
+      "p_h0_bar_g": 89.543462629436,
+      "p_open_line_B_bar_g": 27.509102614920895,
+      "dp_h_at_open_bar": 5.738396522787147,
+      "piston_creep_before_open_mm": 0.25885906714292817,
+      "V_line_cm3": 1.4540188490504908,
+      "V_rod_cm3": 3.3552684142661393,
+      "V_creep_cm3": 0.9758756912664954,
+      "retract_open_V_cm3": 5.785162954583126,
+      "retract_open_stroke_mm": 1.5345621364435238,
+      "extend_open_V_cm3": 5.160977369877852,
+      "extend_friction_V_cm3": 0.9880871643064397,
+      "extend_dead_stroke_mm": 0.46326817191086606,
+      "head_dump_stroke_mm": 0.40058571819085764
+     },
+     "F_s_N": 2000.0,
+     "by_command": {
+      "0.05": {
+       "retract_check_open_s": {
+        "hopsan": 1.5708000000000002,
+        "hand": 1.5667749962368467
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 1.2914
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.6706415629642812,
+        "hand": 0.7339042658681116
+       },
+       "ideal_0p2mm_s": 0.28559999999999997,
+       "stroke_lag_retract_mm": 0.551197481261767,
+       "stroke_lag_extend_mm": 0.6065967006691323,
+       "line_b_at_open_bar_g": 27.51433,
+       "p_h_at_open_bar_g": 95.01698
+      },
+      "0.1": {
+       "retract_check_open_s": {
+        "hopsan": 0.8335999999999999,
+        "hand": 0.833363476259401
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.6890000000000001
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.37372078148214083,
+        "hand": 0.41541469884319854
+       },
+       "ideal_0p2mm_s": 0.17900000000000005,
+       "stroke_lag_retract_mm": 0.6640581587266692,
+       "stroke_lag_extend_mm": 0.5923471830898378,
+       "line_b_at_open_bar_g": 27.50903,
+       "p_h_at_open_bar_g": 94.85438
+      },
+      "0.25": {
+       "retract_check_open_s": {
+        "hopsan": 0.38859999999999995,
+        "hand": 0.39135811627309
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.3276
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.21820831259285578,
+        "hand": 0.21516458682969478
+       },
+       "ideal_0p2mm_s": 0.10240000000000005,
+       "stroke_lag_retract_mm": 0.2856108679984152,
+       "stroke_lag_extend_mm": 0.6337767977798487,
+       "line_b_at_open_bar_g": 27.4575,
+       "p_h_at_open_bar_g": 94.17397
+      },
+      "1": {
+       "retract_check_open_s": {
+        "hopsan": 0.15500000000000003,
+        "hand": 0.15131785969978934
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.13119999999999998
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.11185207814821396,
+        "hand": 0.09174467610262435
+       },
+       "ideal_0p2mm_s": 0.04720000000000002,
+       "stroke_lag_retract_mm": -0.32397130994292594,
+       "stroke_lag_extend_mm": 0.6637065163567384,
+       "line_b_at_open_bar_g": 27.79224,
+       "p_h_at_open_bar_g": 95.20878
+      }
+     }
+    },
+    "Fs4": {
+     "hand_inputs": {
+      "p_h0_bar_g": 89.543462629436,
+      "p_open_line_B_bar_g": 27.04056920532432,
+      "dp_h_at_open_bar": 4.0985295891991225,
+      "piston_creep_before_open_mm": 0.1848846697687724,
+      "V_line_cm3": 1.4273124447034862,
+      "V_rod_cm3": 3.2936411836269763,
+      "V_creep_cm3": 0.6969987835719031,
+      "retract_open_V_cm3": 5.417952411902365,
+      "retract_open_stroke_mm": 1.4371565146270542,
+      "extend_open_V_cm3": 5.160977369877852,
+      "extend_friction_V_cm3": 1.9761743286128794,
+      "extend_dead_stroke_mm": 0.5377102812353145,
+      "head_dump_stroke_mm": 0.39354354215256904
+     },
+     "F_s_N": 4000.0,
+     "by_command": {
+      "0.05": {
+       "retract_check_open_s": {
+        "hopsan": 1.4762,
+        "hand": 1.4736721066798533
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 1.4776
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.7660415629642809,
+        "hand": 0.8050910857699063
+       },
+       "ideal_0p2mm_s": 0.28559999999999997,
+       "stroke_lag_retract_mm": 0.7017988227426086,
+       "stroke_lag_extend_mm": 0.719304715953408,
+       "line_b_at_open_bar_g": 27.04013,
+       "p_h_at_open_bar_g": 93.08166
+      },
+      "0.1": {
+       "retract_check_open_s": {
+        "hopsan": 0.788,
+        "hand": 0.7867977924771752
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.7894000000000001
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.4269207814821412,
+        "hand": 0.45146675910650835
+       },
+       "ideal_0p2mm_s": 0.17900000000000005,
+       "stroke_lag_retract_mm": 0.6654355159561074,
+       "stroke_lag_extend_mm": 0.7154358180323317,
+       "line_b_at_open_bar_g": 27.04973,
+       "p_h_at_open_bar_g": 93.2549
+      },
+      "0.25": {
+       "retract_check_open_s": {
+        "hopsan": 0.3722,
+        "hand": 0.37231874466247816
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.37339999999999995
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.2432083125928557,
+        "hand": 0.23110931282550645
+       },
+       "ideal_0p2mm_s": 0.10240000000000005,
+       "stroke_lag_retract_mm": 0.34672910966085546,
+       "stroke_lag_extend_mm": 0.7628850666065812,
+       "line_b_at_open_bar_g": 27.049,
+       "p_h_at_open_bar_g": 92.70881
+      },
+      "1": {
+       "retract_check_open_s": {
+        "hopsan": 0.1442,
+        "hand": 0.1452958807773972
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.14580000000000004
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.11565207814821399,
+        "hand": 0.0975592580519913
+       },
+       "ideal_0p2mm_s": 0.04720000000000002,
+       "stroke_lag_retract_mm": 0.7308828675202771,
+       "stroke_lag_extend_mm": 0.7253161372519437,
+       "line_b_at_open_bar_g": 27.00275,
+       "p_h_at_open_bar_g": 92.59919
+      }
+     }
+    },
+    "Fs8": {
+     "hand_inputs": {
+      "p_h0_bar_g": 89.543462629436,
+      "p_open_line_B_bar_g": 26.103502386131158,
+      "dp_h_at_open_bar": 0.8187957220230676,
+      "piston_creep_before_open_mm": 0.03693587502046058,
+      "V_line_cm3": 1.3738996360094757,
+      "V_rod_cm3": 3.1703867223486486,
+      "V_creep_cm3": 0.13924496818271706,
+      "retract_open_V_cm3": 4.683531326540841,
+      "retract_open_stroke_mm": 1.2423452709941143,
+      "extend_open_V_cm3": 5.160977369877852,
+      "extend_friction_V_cm3": 3.952348657225759,
+      "extend_dead_stroke_mm": 0.6865944998842115,
+      "head_dump_stroke_mm": 0.37945919007599177
+     },
+     "F_s_N": 8000.0,
+     "by_command": {
+      "0.05": {
+       "retract_check_open_s": {
+        "hopsan": 1.2862,
+        "hand": 1.2874661593842864
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 1.3074
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 1.0290415629642808,
+        "hand": 0.9474227539547685
+       },
+       "ideal_0p2mm_s": 0.28559999999999997,
+       "stroke_lag_retract_mm": 0.8242583144896304,
+       "stroke_lag_extend_mm": 1.0038707148143928,
+       "line_b_at_open_bar_g": 26.08272,
+       "p_h_at_open_bar_g": 90.07136
+      },
+      "0.1": {
+       "retract_check_open_s": {
+        "hopsan": 0.6994,
+        "hand": 0.6936360277748307
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.7188000000000001
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.5567207814821407,
+        "hand": 0.5231808319618063
+       },
+       "ideal_0p2mm_s": 0.17900000000000005,
+       "stroke_lag_retract_mm": 0.7924985272570508,
+       "stroke_lag_extend_mm": 0.9981441712312337,
+       "line_b_at_open_bar_g": 26.15817,
+       "p_h_at_open_bar_g": 90.27448
+      },
+      "0.25": {
+       "retract_check_open_s": {
+        "hopsan": 0.32799999999999996,
+        "hand": 0.3339477347419797
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.34619999999999995
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.2578083125928554,
+        "hand": 0.2622219406241943
+       },
+       "ideal_0p2mm_s": 0.10240000000000005,
+       "stroke_lag_retract_mm": 0.38745244777735327,
+       "stroke_lag_extend_mm": 0.8482934948359875,
+       "line_b_at_open_bar_g": 25.97375,
+       "p_h_at_open_bar_g": 89.08669
+      },
+      "1": {
+       "retract_check_open_s": {
+        "hopsan": 0.13019999999999998,
+        "hand": 0.13289882176586007
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.1452
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.11805207814821372,
+        "hand": 0.10862281812881541
+       },
+       "ideal_0p2mm_s": 0.04720000000000002,
+       "stroke_lag_retract_mm": 0.6368060949663514,
+       "stroke_lag_extend_mm": 0.7840825780794612,
+       "line_b_at_open_bar_g": 25.94315,
+       "p_h_at_open_bar_g": 89.503
+      }
+     }
+    }
+   },
+   "RL": {
+    "Fs0": {
+     "hand_inputs": {
+      "p_h0_bar_g": 76.52590549571546,
+      "p_open_line_B_bar_g": 24.25198060937092,
+      "dp_h_at_open_bar": 7.356026637082761,
+      "piston_creep_before_open_mm": 0.32432721442897894,
+      "V_line_cm3": 1.2683628947341423,
+      "V_rod_cm3": 2.5103481150065887,
+      "V_creep_cm3": 1.018903993045054,
+      "retract_open_V_cm3": 4.797615002785785,
+      "retract_open_stroke_mm": 1.5271282872353884,
+      "extend_open_V_cm3": 4.41897661325578,
+      "extend_friction_V_cm3": 0.0,
+      "extend_dead_stroke_mm": 0.46499303880542026,
+      "head_dump_stroke_mm": 0.49112007402213786
+     },
+     "F_s_N": 0.0,
+     "by_command": {
+      "0.05": {
+       "retract_check_open_s": {
+        "hopsan": 1.5621999999999998,
+        "hand": 1.5596695257089017
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 1.0034
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.7238415629642816,
+        "hand": 0.7355540021884341
+       },
+       "ideal_0p2mm_s": 0.28559999999999997,
+       "stroke_lag_retract_mm": 0.7812305587724446,
+       "stroke_lag_extend_mm": 0.6487125190283152,
+       "line_b_at_open_bar_g": 24.25209,
+       "p_h_at_open_bar_g": 83.27501
+      },
+      "0.1": {
+       "retract_check_open_s": {
+        "hopsan": 0.8298000000000001,
+        "hand": 0.8298098722987849
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.5502
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.4033207814821411,
+        "hand": 0.4162521275524131
+       },
+       "ideal_0p2mm_s": 0.17900000000000005,
+       "stroke_lag_retract_mm": 0.9533010028601872,
+       "stroke_lag_extend_mm": 0.6463961398478375,
+       "line_b_at_open_bar_g": 24.25016,
+       "p_h_at_open_bar_g": 83.11914
+      },
+      "0.25": {
+       "retract_check_open_s": {
+        "hopsan": 0.3892,
+        "hand": 0.3899078512392401
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.27680000000000005
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.22400831259285559,
+        "hand": 0.21553762189892509
+       },
+       "ideal_0p2mm_s": 0.10240000000000005,
+       "stroke_lag_retract_mm": 0.4902747922753079,
+       "stroke_lag_extend_mm": 0.6533796958215478,
+       "line_b_at_open_bar_g": 24.24489,
+       "p_h_at_open_bar_g": 82.85948
+      },
+      "1": {
+       "retract_check_open_s": {
+        "hopsan": 0.14980000000000004,
+        "hand": 0.15086196495825013
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.11180000000000001
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.09705207814821382,
+        "hand": 0.09188189718885126
+       },
+       "ideal_0p2mm_s": 0.04720000000000002,
+       "stroke_lag_retract_mm": -0.4106388305253284,
+       "stroke_lag_extend_mm": 0.878850168034692,
+       "line_b_at_open_bar_g": 24.19225,
+       "p_h_at_open_bar_g": 82.65801
+      }
+     }
+    },
+    "Fs2": {
+     "hand_inputs": {
+      "p_h0_bar_g": 76.52590549571546,
+      "p_open_line_B_bar_g": 23.698860119002372,
+      "dp_h_at_open_bar": 5.420104920792829,
+      "piston_creep_before_open_mm": 0.2389724259577558,
+      "V_line_cm3": 1.2368350267831352,
+      "V_rod_cm3": 2.4479480525248034,
+      "V_creep_cm3": 0.7507540169415549,
+      "retract_open_V_cm3": 4.435537096249494,
+      "retract_open_stroke_mm": 1.4118753098844605,
+      "extend_open_V_cm3": 4.41897661325578,
+      "extend_friction_V_cm3": 0.8344645021573227,
+      "extend_dead_stroke_mm": 0.5528007414914735,
+      "head_dump_stroke_mm": 0.4795085989159643
+     },
+     "F_s_N": 1666.0,
+     "by_command": {
+      "0.05": {
+       "retract_check_open_s": {
+        "hopsan": 1.453,
+        "hand": 1.4495076527270252
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 1.2818
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.740841562964281,
+        "hand": 0.8195192295836435
+       },
+       "ideal_0p2mm_s": 0.28559999999999997,
+       "stroke_lag_retract_mm": 0.7239254962012195,
+       "stroke_lag_extend_mm": 0.6699678456751179,
+       "line_b_at_open_bar_g": 23.70416,
+       "p_h_at_open_bar_g": 81.32806
+      },
+      "0.1": {
+       "retract_check_open_s": {
+        "hopsan": 0.7754000000000001,
+        "hand": 0.774710652636596
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.6954
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.4139207814821404,
+        "hand": 0.4587556438677972
+       },
+       "ideal_0p2mm_s": 0.17900000000000005,
+       "stroke_lag_retract_mm": 0.7894595538777067,
+       "stroke_lag_extend_mm": 0.6644309881332058,
+       "line_b_at_open_bar_g": 23.70446,
+       "p_h_at_open_bar_g": 81.35403
+      },
+      "0.25": {
+       "retract_check_open_s": {
+        "hopsan": 0.36460000000000004,
+        "hand": 0.36736312813388133
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.32420000000000004
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.2260083125928558,
+        "hand": 0.2343060363313351
+       },
+       "ideal_0p2mm_s": 0.10240000000000005,
+       "stroke_lag_retract_mm": 0.5087632570323963,
+       "stroke_lag_extend_mm": 0.6503641820882522,
+       "line_b_at_open_bar_g": 23.63574,
+       "p_h_at_open_bar_g": 81.20743
+      },
+      "1": {
+       "retract_check_open_s": {
+        "hopsan": 0.14639999999999997,
+        "hand": 0.14371498501741511
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.129
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.12025207814821393,
+        "hand": 0.09871280325996472
+       },
+       "ideal_0p2mm_s": 0.04720000000000002,
+       "stroke_lag_retract_mm": -0.3089806702253962,
+       "stroke_lag_extend_mm": 0.7731332467103564,
+       "line_b_at_open_bar_g": 23.94518,
+       "p_h_at_open_bar_g": 81.78835
+      }
+     }
+    },
+    "Fs4": {
+     "hand_inputs": {
+      "p_h0_bar_g": 76.52590549571546,
+      "p_open_line_B_bar_g": 23.145739628633816,
+      "dp_h_at_open_bar": 3.4841832045028935,
+      "piston_creep_before_open_mm": 0.15361763748653257,
+      "V_line_cm3": 1.2053071588321276,
+      "V_rod_cm3": 2.3855479900430185,
+      "V_creep_cm3": 0.48260404083805525,
+      "retract_open_V_cm3": 4.073459189713201,
+      "retract_open_stroke_mm": 1.2966223325335322,
+      "extend_open_V_cm3": 4.41897661325578,
+      "extend_friction_V_cm3": 1.6689290043146454,
+      "extend_dead_stroke_mm": 0.6406084441775266,
+      "head_dump_stroke_mm": 0.46789712380979076
+     },
+     "F_s_N": 3332.0,
+     "by_command": {
+      "0.05": {
+       "retract_check_open_s": {
+        "hopsan": 1.3396,
+        "hand": 1.3393457117596834
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 1.3458
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.8444415629642812,
+        "hand": 0.9034638273677403
+       },
+       "ideal_0p2mm_s": 0.28559999999999997,
+       "stroke_lag_retract_mm": 0.7896178710066848,
+       "stroke_lag_extend_mm": 0.7867740823655642,
+       "line_b_at_open_bar_g": 23.13498,
+       "p_h_at_open_bar_g": 79.38049
+      },
+      "0.1": {
+       "retract_check_open_s": {
+        "hopsan": 0.7174,
+        "hand": 0.7195979728015571
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.7234
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.46192078148214044,
+        "hand": 0.5010712589599587
+       },
+       "ideal_0p2mm_s": 0.17900000000000005,
+       "stroke_lag_retract_mm": 0.7996393147505367,
+       "stroke_lag_extend_mm": 0.7721192853181811,
+       "line_b_at_open_bar_g": 23.12372,
+       "p_h_at_open_bar_g": 78.99496
+      },
+      "0.25": {
+       "retract_check_open_s": {
+        "hopsan": 0.34019999999999995,
+        "hand": 0.3446845802053971
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.34619999999999995
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.2528083125928555,
+        "hand": 0.2527057754585212
+       },
+       "ideal_0p2mm_s": 0.10240000000000005,
+       "stroke_lag_retract_mm": 0.6159215464457308,
+       "stroke_lag_extend_mm": 0.7834900677221965,
+       "line_b_at_open_bar_g": 23.04412,
+       "p_h_at_open_bar_g": 79.1216
+      },
+      "1": {
+       "retract_check_open_s": {
+        "hopsan": 0.13319999999999999,
+        "hand": 0.13640493675607104
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.13839999999999997
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.11945207814821401,
+        "hand": 0.10527670988609436
+       },
+       "ideal_0p2mm_s": 0.04720000000000002,
+       "stroke_lag_retract_mm": 0.8276831228158952,
+       "stroke_lag_extend_mm": 0.7712200840135648,
+       "line_b_at_open_bar_g": 22.93063,
+       "p_h_at_open_bar_g": 78.58557
+      }
+     }
+    },
+    "Fs8": {
+     "hand_inputs": {
+      "p_h0_bar_g": 76.52590549571546,
+      "p_open_line_B_bar_g": 22.150258713061557,
+      "dp_h_at_open_bar": 0.0,
+      "piston_creep_before_open_mm": 0.0,
+      "V_line_cm3": 1.1485647466445086,
+      "V_rod_cm3": 2.273243216647725,
+      "V_creep_cm3": 0.0,
+      "retract_open_V_cm3": 3.4218079632922334,
+      "retract_open_stroke_mm": 1.0891953045829266,
+      "extend_open_V_cm3": 4.41897661325578,
+      "extend_friction_V_cm3": 3.337858008629291,
+      "extend_dead_stroke_mm": 0.8162238495496329,
+      "head_dump_stroke_mm": 0.4469993229307524
+     },
+     "F_s_N": 6664.0,
+     "by_command": {
+      "0.05": {
+       "retract_check_open_s": {
+        "hopsan": 1.1438,
+        "hand": 1.1410805260829993
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 1.1652
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 1.1324415629642814,
+        "hand": 1.0713313653047631
+       },
+       "ideal_0p2mm_s": 0.28559999999999997,
+       "stroke_lag_retract_mm": 0.9497651661773885,
+       "stroke_lag_extend_mm": 1.0948880814010344,
+       "line_b_at_open_bar_g": 22.15302,
+       "p_h_at_open_bar_g": 75.95305
+      },
+      "0.1": {
+       "retract_check_open_s": {
+        "hopsan": 0.621,
+        "hand": 0.6203385596577254
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.6416
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.610320781482141,
+        "hand": 0.5853798970648622
+       },
+       "ideal_0p2mm_s": 0.17900000000000005,
+       "stroke_lag_retract_mm": 0.9587959837553537,
+       "stroke_lag_extend_mm": 1.0876875103646724,
+       "line_b_at_open_bar_g": 22.15979,
+       "p_h_at_open_bar_g": 75.72322
+      },
+      "0.25": {
+       "retract_check_open_s": {
+        "hopsan": 0.3036,
+        "hand": 0.30340425533568416
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.3226
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.2986083125928558,
+        "hand": 0.28869195009147597
+       },
+       "ideal_0p2mm_s": 0.10240000000000005,
+       "stroke_lag_retract_mm": 0.702433808783375,
+       "stroke_lag_extend_mm": 1.0249154726383785,
+       "line_b_at_open_bar_g": 22.16568,
+       "p_h_at_open_bar_g": 75.95178
+      },
+      "1": {
+       "retract_check_open_s": {
+        "hopsan": 0.123,
+        "hand": 0.1227523470985301
+       },
+       "retract_piston_0p2mm_s": {
+        "hopsan": 0.13839999999999997
+       },
+       "extend_piston_0p2mm_s": {
+        "hopsan": 0.13405207814821374,
+        "hand": 0.1177671823958485
+       },
+       "ideal_0p2mm_s": 0.04720000000000002,
+       "stroke_lag_retract_mm": 0.8645629208095525,
+       "stroke_lag_extend_mm": 1.0126126062431113,
+       "line_b_at_open_bar_g": 22.23015,
+       "p_h_at_open_bar_g": 75.5386
+      }
+     }
+    }
+   }
+  },
+  "neutral_variants": "poc_reversal.json cases a0.1_blocked, a0.25_blocked: same-direction restart delay nearly gone with A,B blocked; first motion after a reversal remains"
+ },
+ "hand_16_percent_mismatch": {
+  "result": "resolved: the first hand calculation left out the piston creep and compared check opening with a 0.2 mm stroke mark",
+  "numbers_FL_Fs0_0p05": {
+   "first_hand_open_s": 1.24,
+   "piston_0p2mm_hopsan_s": 1.043,
+   "corrected_hand_open_s": 1.6598778711836282,
+   "check_open_hopsan_s": 1.6625999999999999
+  },
+  "max_error_corrected_retract_open": 0.02406108675729013
+ },
+ "M2": {
+  "rule": "moving leg, armed law: s_ref += A_ann (p_r_prev - p_r) / k_h(s_ref) each step, k_h = beta A_h / (L0h + s_ref); force then moves by (k2 / k_h) A_ann dp",
+  "coefficient": {
+   "k_h_N_m": 29424138.771890935,
+   "k_out_N_m": 216648305.16451868,
+   "k2_N_m": 25905744.234828375,
+   "k2_over_k_h": 0.88042489316888,
+   "leg": "FL at s0",
+   "derivation": "oil force G = k_h (s_ref - s_p) - A_ann p_r + const: a rod pressure drop acts as s_ref shift A_ann dp / k_h; series k_out gives k2 / k_h"
+  },
+  "body_fixed_unit_case": {
+   "description": "FL, body held, extend 0.25 v_max 0.5 s, end force of rod start 34.818 against 2 bar g",
+   "expected_kN": 10.892699987703377,
+   "numpy_kN": 10.879170935412432,
+   "law_with_M2_wrapper_kN": 10.699977920142235,
+   "law_without_M2_kN": 0.0,
+   "tolerance_kN": 0.3,
+   "implied_coefficient": {
+    "numpy": 0.8793313796753127,
+    "wrapper": 0.8648477354453263
+   },
+   "hopsan_excluded": {
+    "value_kN": 8.459432499999995,
+    "reason": "end pressures differ (5.84 / 4.78 bar g) and the mass Position drift enters k_st directly with the body held; cause not separated"
+   }
+  },
+  "free_body_cases": {
+   "C2_release_ground": {
+    "hopsan": [
+     21.51405320000001,
+     0.9182219999999652,
+     0.2519422799999738,
+     22.21118971999998
+    ],
+    "numpy": [
+     21.152155894483613,
+     -5.093170329928399e-13,
+     1.1641532182693482e-13,
+     21.885690395210403
+    ],
+    "law": [
+     16.65478240325414,
+     0.07816694786111475,
+     0.0854556063660566,
+     17.950089328632572
+    ],
+    "law_m2": [
+     19.78786270532805,
+     0.07778163073390897,
+     0.06714635943439498,
+     21.16469280422639
+    ],
+    "hopsan_F_end_kN": [
+     139.320713218,
+     96.075078218,
+     54.150607487,
+     86.79364248700001
+    ],
+    "numpy_F_end_kN": [
+     139.18194051670827,
+     96.0807380698209,
+     54.364972799867026,
+     86.81727773016392
+    ],
+    "law_F_end_kN": [
+     134.17951182014934,
+     100.2421578534968,
+     56.1652032090299,
+     85.85222941398244
+    ],
+    "law_m2_F_end_kN": [
+     137.9508444713514,
+     97.17535941379303,
+     54.16890415864987,
+     87.15578263129925
+    ]
+   },
+   "C3_release_ground_r2": {
+    "hopsan": [
+     17.475652400000005,
+     0.9669223999999668,
+     0.2927828799999697,
+     18.299979399999998
+    ],
+    "numpy": [
+     16.913886047557405,
+     -5.093170329928399e-13,
+     1.1641532182693482e-13,
+     17.887779833395253
+    ],
+    "law": [
+     16.65478240325414,
+     0.07816694786111475,
+     0.0854556063660566,
+     17.950089328632572
+    ],
+    "law_m2": [
+     16.352496732187415,
+     0.07834354339937272,
+     0.1170302386325784,
+     17.652205096309785
+    ],
+    "hopsan_F_end_kN": [
+     135.19346821800002,
+     99.82432821800002,
+     56.019207487,
+     85.39111998700002
+    ],
+    "numpy_F_end_kN": [
+     134.98173985814705,
+     99.86508952897968,
+     56.29679511775834,
+     85.36562378433527
+    ],
+    "law_F_end_kN": [
+     134.17951182014934,
+     100.2421578534968,
+     56.1652032090299,
+     85.85222941398244
+    ],
+    "law_m2_F_end_kN": [
+     133.69941838704864,
+     100.61176254862252,
+     56.465565853524566,
+     85.67272605699205
+    ]
+   },
+   "B_twist": {
+    "hopsan": [
+     1.004552400000015,
+     55.752522399999975,
+     60.32144287999997,
+     1.2182793999999848
+    ],
+    "numpy": [
+     -6.693881005048752e-13,
+     55.47673813058469,
+     60.22834668520845,
+     0.6292652615667029
+    ],
+    "law": [
+     0.07611866256182839,
+     54.40357470156107,
+     58.90952051728172,
+     0.7571179815504147
+    ],
+    "law_m2": [
+     0.0762231336452096,
+     54.16758395168898,
+     58.64769613258068,
+     0.9114787435481995
+    ],
+    "hopsan_F_end_kN": [
+     65.12956021800001,
+     169.38282321799997,
+     131.34681748699995,
+     10.757479987
+    ],
+    "numpy_F_end_kN": [
+     65.00034596505613,
+     169.50532200727994,
+     131.49260255858255,
+     10.616289169146148
+    ],
+    "law_F_end_kN": [
+     65.99539347222378,
+     168.07878681315773,
+     130.4117503473614,
+     12.086530338392079
+    ],
+    "law_m2_F_end_kN": [
+     66.20850524997869,
+     167.86565180303398,
+     130.1193897000813,
+     12.378908075155008
+    ]
+   },
+   "A_stop_all_eta95": {
+    "hopsan": [
+     0.3826039999999339,
+     0.3041092000000645,
+     0.7119147200000007,
+     0.6467482000000455
+    ],
+    "numpy": [
+     0.3597841001180932,
+     0.3665171302841482,
+     0.6435773042789369,
+     0.6690260461140424
+    ],
+    "law": [
+     0.49522033237604773,
+     0.4984927988084819,
+     0.7412801328373171,
+     0.7542940245436476
+    ],
+    "law_m2": [
+     0.49533809878311874,
+     0.4975947982319485,
+     0.7418223231132143,
+     0.7538131438422715
+    ],
+    "hopsan_F_end_kN": [
+     118.124103218,
+     116.06864821799999,
+     71.964739987,
+     70.256798987
+    ],
+    "numpy_F_end_kN": [
+     118.10428464322263,
+     116.09093322177857,
+     72.0238066821285,
+     70.19370647807021
+    ],
+    "law_F_end_kN": [
+     118.10431605878102,
+     116.10011313112187,
+     72.0785068685522,
+     70.29928719392923
+    ],
+    "law_m2_F_end_kN": [
+     118.10437559507119,
+     116.09983842656148,
+     72.07870134786324,
+     70.29926263797618
+    ]
+   }
+  },
+  "free_body_net_force_10Hz_error_kN": {
+   "C2_release_ground": {
+    "law": [
+     5.611604820522189,
+     5.494232221991493,
+     5.009643387475495,
+     4.917134740096823
+    ],
+    "law_m2": [
+     2.6656506969514595,
+     2.3975525681177676,
+     2.2606565516701593,
+     2.0498444065806543
+    ]
+   },
+   "C3_release_ground_r2": {
+    "law": [
+     1.2669986134905193,
+     1.1240009898217105,
+     1.0607577121766154,
+     0.8242138644681399
+    ],
+    "law_m2": [
+     1.7997573508246278,
+     1.5600598072980065,
+     1.5510793780575622,
+     1.1833043147602003
+    ]
+   },
+   "B_twist": {
+    "law": [
+     2.792520729854237,
+     2.969644570375414,
+     2.361928034776662,
+     2.6014903349590406
+    ],
+    "law_m2": [
+     3.1014560137118825,
+     3.244260525537131,
+     2.6537458337760618,
+     2.916878238271509
+    ]
+   },
+   "A_stop_all_eta95": {
+    "law": [
+     0.5953958153738494,
+     0.5173645971452061,
+     0.48559903539635707,
+     0.4269083665945218
+    ],
+    "law_m2": [
+     0.5950374950075348,
+     0.517562319767123,
+     0.485092424818271,
+     0.42690011197759303
+    ]
+   }
+  },
+  "tolerance_proposal": {
+   "C2_minus_C3_F_end_FL_kN": {
+    "hopsan": 4.127244999999988,
+    "numpy": 4.200200658561215,
+    "wrapper": 4.25142608430275,
+    "tolerance_kN": 0.5
+   },
+   "A_stop_all": "no change beyond 0.05 kN against the law without M2"
+  },
+  "implementation_notes": [
+   "03_src not changed; the wrapper is scratch code m2_check.py",
+   "off by default, absent = bit identical",
+   "snapshot must keep the previous rod pressure",
+   "friction path: use the oil-law rod pressure before the head-floor split; check k_h is the same oil k_h",
+   "CB path not tested",
+   "retract after extend not tested in the four-leg model (no check valve there)",
+   "L1 and the reduced harness need their own decision: the wrapper is L2b only"
+  ]
+ },
+ "sources": [
+  "poc_friction.json",
+  "poc_sustained.json",
+  "m2_check.json",
+  "poc_reversal.json",
+  "four_leg.json"
+ ]
+}
