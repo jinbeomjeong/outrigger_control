@@ -42,7 +42,10 @@ Env: R79_LEVELS (comma, default L1), R79_SET (default identity), R79_SEEDS (comm
   ``s9_slope_fix_candidates.py`` candidates, e.g. ``current,D1,D2+D3``; every job runs once per
   candidate, key ``cand=<name>#<key>``, record ``candidate`` / ``candidate_record``),
   R72_PATH (G6 soil path of ``r72_g6_screen``; unset or empty = ``per_leg``, spec 429.11.1:
-  recorded as ``r72_path``; a weak-pad G6 run without the per-pad soil is an error record).
+  recorded as ``r72_path``; a weak-pad G6 run without the per-pad soil is an error record),
+  R79_V5_SETTING (v5 X-1: a ``run_v5.SETTINGS`` name, e.g. VB; installed in each worker before the
+  ChunkProbe; records ``v5_setting``, ``hydraulic_options``, ``hydraulics_record`` and
+  ``rod_fallback_reasons``; unset = the former runs).
 """
 
 from __future__ import annotations
@@ -847,6 +850,9 @@ def run_job(key: str) -> dict:
            "r72_path": normalise_r72_path()}
     t_wall = time.perf_counter()
     _place_worker()
+    # v5 X-1: flow setting and plant options first, so that the LC overlap cut sits inside the
+    # ChunkProbe and the r72 recorders that wrap ``_lagged_step`` later in the job
+    v5_options = _install_v5_setting()
     adapter = SensorAdapter(level, seed, rod_split_function(rod_model),
                             always_split=rod_model != "harness")
     run = ActiveRun(level, adapter)
@@ -875,12 +881,40 @@ def run_job(key: str) -> dict:
         return out
     out.update(_run_summary(run, plant))
     out["r79"]["recontact_events"] = recontact_summary(base)
+    out.update(_v5_record(v5_options, run.ctrl))
     if candidate not in (None, "current"):  # spec 424.5: the candidate's own record
         controller = run.ctrl
         fix = getattr(controller, "fix", None)
         out["candidate_record"] = None if fix is None else _candidate_record(fix)
     out["wall_s"] = round(time.perf_counter() - t_wall, 1)
     return out
+
+
+V5_SETTING_ENV = "R79_V5_SETTING"
+"""v5 X-1: a ``run_v5.SETTINGS`` name (VB for the stage 2 noise runs): flow limit and v5 plant
+options of every plant of the run (``verdict_runs.install_plant_options``, the verdict-run way);
+unset = the former runs, no v5 module imported."""
+ROD_FAULT_REASON_EVENT = "INFO_ROD_PRESSURE_FAULT_REASON"
+
+
+def _install_v5_setting():
+    """The ``R79_V5_SETTING`` options installed in this worker (r67 helper), or None."""
+    import r67_g1_screen as r67
+
+    return r67.install_v5_setting(V5_SETTING_ENV)
+
+
+def _v5_record(options, ctrl) -> dict:
+    """v5 keys of a run with ``R79_V5_SETTING`` (empty without it): setting, options, the plant
+    record (M2 / LC lock events) and the rod-pressure fallback reasons of the controller."""
+    import r67_g1_screen as r67
+
+    record = r67.v5_setting_record(options, V5_SETTING_ENV)
+    if not record:
+        return {}
+    reasons = [(round(float(e.t_s), 3), e.name) for e in ctrl.events
+               if e.name.startswith(ROD_FAULT_REASON_EVENT)]
+    return {**record, "rod_fallback_reasons": reasons}
 
 
 RECONTACT_EVENT_KEYS = ("t_start_s", "t_end_s", "duration_s", "max_normal_N", "max_over_W",
@@ -1001,6 +1035,8 @@ def main() -> None:
             "rod_model": os.environ.get("R79_ROD_MODEL", DEFAULT_ROD_MODEL),
             "r72_path": r72_path,
             "wall_s": round(time.perf_counter() - t0, 1), "n_jobs": len(jobs)}
+    if os.environ.get(V5_SETTING_ENV):  # v5 X-1; the former meta without it
+        meta["v5_setting"] = os.environ[V5_SETTING_ENV]
     out_path.write_text(json.dumps({"meta": meta, "results": results}, indent=1, default=float),
                         encoding="utf-8")
     print("done", meta["wall_s"], "s ->", out_path)

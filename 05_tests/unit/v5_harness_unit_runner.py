@@ -17,6 +17,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SOURCE_DIR = PROJECT_ROOT / "03_src"
 COUPLED_DIR = PROJECT_ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+S8_DIR = PROJECT_ROOT / "04_scripts" / "03_control" / "s8"
 MAIN_TREE_ROOT = Path(r"C:\workspace\outrigger_control")
 """``r8d1_td.py`` inserts a folder of this tree whichever checkout it runs in."""
 
@@ -242,7 +243,42 @@ def check_c8() -> dict:
     return out
 
 
-CHECKS = {"m2_6": check_m2_6, "lc": check_lc, "c8": check_c8}
+def check_x1_locked() -> dict:
+    """v5 X-1 (5): with LC the ``plant.locked`` that the r79 ``DynMapRodModel`` reads follows
+    the closing-delay timer: FL extends at v_max for 1 s, then a zero command; the first chunk
+    end with ``plant.locked[FL]`` True is compared with the cut chunk and the lock event."""
+    delay_s = 0.05
+    bench = HarnessBench(_lock_closure_options(delay_s))
+    sys.path.append(str(S8_DIR))  # after the harness folders: only r79 comes from here
+    import r79_sensor_screen as r79
+
+    bench.lift_and_arm()
+    command = np.zeros(4)
+    command[FRONT_LEFT] = bench.v_max
+    bench.run(command, 1.0)
+    t_zero = bench.plant.t
+    rows_before = len(bench.plant.flow_limiter.rows())
+    rod_model = r79.DynMapRodModel()
+    locked_times, locked_reads, locked_values = [], [], []
+    for _ in range(round(TAIL_RUN_S / bench.cl.LAG_CHUNK_S)):
+        bench.chunk(np.zeros(4))
+        rod_model.step_chunk(bench.plant, bench.valve, bench.cl.LAG_CHUNK_S)
+        if bench.plant.locked[FRONT_LEFT] and not locked_times:
+            locked_times.append(bench.plant.t)
+            locked_reads.append(float(rod_model.rod_Pa[FRONT_LEFT]))
+            locked_values.append(float(rod_model.locked_value_Pa(bench.plant)[FRONT_LEFT]))
+    rows = bench.plant.flow_limiter.rows()[rows_before:]
+    zero = np.flatnonzero(rows[:, 1 + FRONT_LEFT] == 0.0)
+    cut_t = float(rows[zero[0], 0]) if zero.size else None
+    locks = [t for t, leg, locked in bench.plant.lock_events
+             if leg == FRONT_LEFT and locked and t >= t_zero]
+    return {"cut_t": cut_t, "first_locked_chunk_end": locked_times[0] if locked_times else None,
+            "lock_event_t": locks[0] if locks else None, "delay_s": delay_s,
+            "rod_reading_at_lock_Pa": locked_reads[0] if locked_reads else None,
+            "locked_value_Pa": locked_values[0] if locked_values else None}
+
+
+CHECKS = {"m2_6": check_m2_6, "lc": check_lc, "c8": check_c8, "x1_locked": check_x1_locked}
 
 
 def _modules_outside_project() -> list[str]:

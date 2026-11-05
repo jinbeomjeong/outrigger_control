@@ -60,6 +60,19 @@ def test_lc_harness_cut_lock_restart_and_copy(tmp_path: Path) -> None:
     assert report["l7_copy_equal"] is True
 
 
+def test_x1_lc_plant_locked_follows_the_closing_delay(tmp_path: Path) -> None:
+    """v5 X-1 (5): the r79 ``DynMapRodModel`` reads ``plant.locked``; with LC that flag turns
+    True t_c after the cut (one 1 ms chunk tolerance), at the lock event, and the rod reading
+    is then the locked value."""
+    report = _run_check("x1_locked", tmp_path)
+    chunk_s = 1.0e-3
+    assert report["first_locked_chunk_end"] is not None and report["cut_t"] is not None
+    elapsed_s = report["first_locked_chunk_end"] - report["cut_t"]
+    assert abs(elapsed_s - report["delay_s"]) <= 2 * chunk_s
+    assert abs(report["first_locked_chunk_end"] - report["lock_event_t"]) <= chunk_s
+    assert report["rod_reading_at_lock_Pa"] == report["locked_value_Pa"]
+
+
 def test_c8_m2_and_m1c_do_not_count_the_retract_creep_twice(tmp_path: Path) -> None:
     """Spec C-8 on the harness: after the M1c opening M2 starts from p_rod, so in the first
     chunks it adds almost nothing to the creep (without the seed it would add about -creep)."""
