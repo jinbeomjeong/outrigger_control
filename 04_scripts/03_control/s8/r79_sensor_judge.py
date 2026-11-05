@@ -37,6 +37,10 @@ Usage (any env with numpy + scipy):
   python -I r79_sensor_judge.py judge <out_json> <run_json> [<run_json> ...]
   python -I r79_sensor_judge.py judge-merged <out_json> <rerun_json>[,<rerun_json>...]
                                              <run_json> [<run_json> ...]
+    ``judge`` and ``judge-merged`` take ``--s4-late-loc`` (v5 criteria 13.2, ②): an S-4 LOC gate
+    failure of a run whose stored spec 419.8 record is a FLAG becomes the FLAG ``S4_late_loc``;
+    run on the stored ``c4g2_only`` run files it gives the re-aggregated reference (no run).
+    Without it the result is the former one.
     spec 407.2 (5): the runs of the re-run files (comma list, no key twice) replace the same
     keys of the stored runs (their command hashes must be the stored ones: reported in
     ``merge``), then judge as above.
@@ -100,6 +104,11 @@ S4_TRANSIENT_FLAG = "S4_transient_recontact"
 """Spec 407.2 (3): a U-S9-G6d transient recontact is not an S-4 failure, only this FLAG."""
 S4_CHATTER_FLAG = "S4_threshold_chatter"
 """Spec 423.4: a threshold-chatter recontact (423.3) is not an S-4 failure, only this FLAG."""
+S4_LATE_LOC_FLAG = "S4_late_loc"
+"""v5 criteria 13.2 (②): a LOC gate failure (LOC - departure > 2.9 s, new against L1) of a run
+whose spec 419.8 record is a FLAG (re-approach delay, load condition met) is only this FLAG."""
+LATE_LOC_OPTION = "--s4-late-loc"
+"""``judge`` / ``judge-merged`` option that turns the 13.2 rule on (off: the former result)."""
 G61_GATE = "G6-1_crawler"
 
 
@@ -344,8 +353,19 @@ def _new_recontact(run: dict, ref: dict) -> tuple[bool, list[str]]:
     return is_new, flags
 
 
-def judge_s4(run: dict, ref: dict) -> dict:
-    """control-expert rule (failure new against L1); the design's absolute misfire recorded."""
+def late_loc_reapproach_flag(run: dict) -> bool:
+    """v5 criteria 13.2 (②): the run's stored spec 419.8 record (r72 ``late_loc_reapproach``,
+    the five conditions of ``late_loc_rule`` with the load condition) gives the FLAG. Runs
+    without the record (G8, older records) never do."""
+    record = run.get("base", {}).get("late_loc_reapproach") or {}
+    return bool(record.get("is_flag"))
+
+
+def judge_s4(run: dict, ref: dict, late_loc_flag: bool = False) -> dict:
+    """control-expert rule (failure new against L1); the design's absolute misfire recorded.
+
+    ``late_loc_flag`` (v5 criteria 13.2, off = the former judgement): a LOC gate failure whose
+    run carries a spec 419.8 FLAG record is the FLAG ``S4_late_loc`` instead of a failure."""
     s, s_ref = run["r79"], ref["r79"]
     bad = bad_pauses(s)
     new_bad, baseline = [], []
@@ -367,8 +387,11 @@ def judge_s4(run: dict, ref: dict) -> dict:
     loc_ok_ref = (s_ref["loc_minus_off_s"] is not None
                   and s_ref["loc_minus_off_s"] <= LOC_DELAY_MAX_S)
     recontact_new, recontact_flags = _new_recontact(run, ref)
-    gate_fail = (loc_ok_ref and not loc_ok) or recontact_new
-    flags = (["S4_baseline"] if baseline else []) + recontact_flags
+    loc_late_new = loc_ok_ref and not loc_ok
+    is_late_loc_flagged = loc_late_new and late_loc_flag and late_loc_reapproach_flag(run)
+    gate_fail = (loc_late_new and not is_late_loc_flagged) or recontact_new
+    flags = ((["S4_baseline"] if baseline else []) + recontact_flags
+             + ([S4_LATE_LOC_FLAG] if is_late_loc_flagged else []))
     return {"ok": not (new_bad or miss or gate_fail), "fail_misfire_new": bool(new_bad),
             "miss": miss, "gate_fail": gate_fail, "recontact_new": recontact_new,
             "flags": flags,
@@ -406,12 +429,13 @@ def judge_s6(run: dict, ref: dict) -> dict:
             "ok": not new_fault}
 
 
-def judge_run(run: dict, ref: dict) -> dict:
+def judge_run(run: dict, ref: dict, late_loc_flag: bool = False) -> dict:
     verdict, verdict_ref = harness_verdict(run["base"], run), harness_verdict(ref["base"], ref)
     _, g61 = g61_gate(run)
     rows = {"S-1": {"ok": not (verdict_ref and not verdict), "L1_pass": verdict_ref,
                     "pass": verdict, "g6_1": g61},
-            "S-2": judge_s2(run, ref), "S-3": judge_s3(run, ref), "S-4": judge_s4(run, ref),
+            "S-2": judge_s2(run, ref), "S-3": judge_s3(run, ref),
+            "S-4": judge_s4(run, ref, late_loc_flag),
             "S-5": judge_s5(run, ref), "S-6": judge_s6(run, ref)}
     ready, ready_ref = _ready_time(run), _ready_time(ref)
     return {"key": run["key"], "level": run["level"], "seed_index": run["seed_index"],
@@ -427,8 +451,9 @@ def case_group(harness: str, inner: str) -> str:
     return {"g6": "G6", "g8": "G8", "ref": "ref"}[harness]
 
 
-def aggregate(judged: list[dict]) -> list[dict]:
-    """Failure counts and upper bounds per (level, group) and per (level, all)."""
+def aggregate(judged: list[dict], late_loc_flag: bool = False) -> list[dict]:
+    """Failure counts and upper bounds per (level, group) and per (level, all); the
+    ``S4_late_loc`` FLAG count only with the v5 criteria 13.2 rule on."""
     buckets: dict[tuple[str, str], list[dict]] = defaultdict(list)
     for row in judged:
         buckets[(row["level"], case_group(row["harness"], row["inner"]))].append(row)
@@ -457,6 +482,9 @@ def aggregate(judged: list[dict]) -> list[dict]:
             for name, flag in (("S-3", "S3_true_over_band"), ("S-4", "S4_baseline"),
                                ("S-4", S4_TRANSIENT_FLAG), ("S-4", S4_CHATTER_FLAG),
                                ("S-5", "S5_baseline"))}
+        if late_loc_flag:
+            entry["flags"][S4_LATE_LOC_FLAG] = sum(
+                1 for r in rows if S4_LATE_LOC_FLAG in r["rows"]["S-4"]["flags"])
         # spec 423.4 acceptance: G6-1 strict failures switched to the chatter FLAG
         entry["g6_1_switched_to_chatter_flag"] = sum(
             1 for r in rows if r["rows"]["S-1"]["g6_1"].get("switched_to_flag"))
@@ -492,7 +520,9 @@ def _pair_key(run: dict) -> tuple[str, str, str]:
             run.get("candidate", "current"))
 
 
-def judge_results(results: list[dict]) -> dict:
+def judge_results(results: list[dict], late_loc_flag: bool = False) -> dict:
+    """S-1 .. S-6 of every level run against its L1 run; ``late_loc_flag``: v5 criteria 13.2
+    (``S4_late_loc``), recorded in the report as ``s4_late_loc_rule``."""
     references = {_pair_key(r): r for r in results
                   if r.get("level") == REFERENCE_LEVEL and "error" not in r}
     judged, unmatched, errors = [], [], []
@@ -506,9 +536,13 @@ def judge_results(results: list[dict]) -> dict:
         if ref is None:
             unmatched.append(r["key"])
             continue
-        judged.append(judge_run(r, ref))
-    return {"table": aggregate(judged), "reference": reference_table(results), "runs": judged,
-            "unmatched": unmatched, "errors": errors}
+        judged.append(judge_run(r, ref, late_loc_flag))
+    report = {"table": aggregate(judged, late_loc_flag), "reference": reference_table(results),
+              "runs": judged, "unmatched": unmatched, "errors": errors}
+    if late_loc_flag:  # the former report keys stay as they were without the option
+        report["s4_late_loc_rule"] = ("v5 criteria 13.2: S-4 LOC gate failure with a spec 419.8 "
+                                      "FLAG record -> FLAG S4_late_loc")
+    return report
 
 
 def summary_lines(report: dict) -> list[str]:
@@ -768,17 +802,19 @@ def main() -> None:
               "re-runs, hash differs", len(merge["hash_differs"]), "without stored run",
               len(merge["rerun_without_stored"]), "->", out_path)
         return
-    if sys.argv[1] == "judge-merged":
-        if len(sys.argv) < 5:
+    late_loc_flag = LATE_LOC_OPTION in sys.argv
+    args = [arg for arg in sys.argv if arg != LATE_LOC_OPTION]
+    if args[1] == "judge-merged":
+        if len(args) < 5:
             raise SystemExit(__doc__)
-        rerun_files, reruns = _load_reruns(sys.argv[3])
-        results, merge = merge_reruns(_load_results(sys.argv[4:]), reruns)
-        report = {"merge": {**merge, "rerun_files": rerun_files, "stored_files": sys.argv[4:]},
-                  **judge_results(results)}
+        rerun_files, reruns = _load_reruns(args[3])
+        results, merge = merge_reruns(_load_results(args[4:]), reruns)
+        report = {"merge": {**merge, "rerun_files": rerun_files, "stored_files": args[4:]},
+                  **judge_results(results, late_loc_flag)}
         print("merge: replaced", merge["replaced"], "of", merge["rerun_runs"], "re-runs, hash differs",
               len(merge["hash_differs"]), "without stored run", len(merge["rerun_without_stored"]))
     else:
-        report = judge_results(_load_results(sys.argv[3:]))
+        report = judge_results(_load_results(args[3:]), late_loc_flag)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(report, indent=1, default=float), encoding="utf-8")
     print("\n".join(summary_lines(report)))

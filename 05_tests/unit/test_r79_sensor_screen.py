@@ -356,6 +356,26 @@ def test_s4_fails_on_new_pauses_meeting_both_conditions():
     assert judge.judge_s4(_run(loc_minus_off_s=3.5), ref)["gate_fail"]
 
 
+def test_s4_late_loc_with_a_419_8_flag_record_is_a_flag_only_with_the_v5_rule():
+    """v5 criteria 13.2 (②): a late LOC (new against L1) whose 419.8 record is a FLAG is the
+    FLAG ``S4_late_loc`` with the rule on; off (default) and without the FLAG record it fails."""
+    ref = _run("L1")
+    late = _run(loc_minus_off_s=3.5)
+    late["base"]["late_loc_reapproach"] = {"is_flag": True, "verdict": "flag"}
+    assert not judge.judge_s4(late, ref)["ok"]
+    flagged = judge.judge_s4(late, ref, late_loc_flag=True)
+    assert flagged["ok"] and not flagged["gate_fail"] and flagged["flags"] == ["S4_late_loc"]
+    not_flagged = _run(loc_minus_off_s=3.5)
+    not_flagged["base"]["late_loc_reapproach"] = {"is_flag": False, "verdict": "fail"}
+    assert judge.judge_s4(not_flagged, ref, late_loc_flag=True)["gate_fail"]
+    assert judge.judge_s4(_run(loc_minus_off_s=3.5), ref, late_loc_flag=True)["gate_fail"]
+    report_off = judge.judge_results([ref, late])
+    report_on = judge.judge_results([ref, late], late_loc_flag=True)
+    assert "S4_late_loc" not in report_off["table"][0]["flags"]
+    assert report_on["table"][0]["flags"]["S4_late_loc"] == 1
+    assert report_on["table"][0]["S-4"]["fail"] == 0
+
+
 def _recontacts(*classes):
     return {"t_departure_confirmed_s": 30.1, "pass": "strict_fail" not in classes,
             "flags": ["P3-1_transient_recontact"] if "transient_flag" in classes else [],
