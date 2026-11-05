@@ -256,11 +256,7 @@ def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
         The result dict (``error`` set on a harness failure) and the 10 Hz arrays. The logged
         commands are the controller's, before the clip.
     """
-    if hydraulics is not None and hydraulics.is_any_on:
-        import harness_hydraulics
-
-        harness_hydraulics.install(sys.modules[__name__], hydraulics)
-    install_flow_plant(setting)
+    install_plant_options(setting, hydraulics)
     install_logged_controller()
     clip_record = install_harness_command_clip() if clip_command else None
     if isinstance(case.twin, EventTwin):
@@ -269,14 +265,35 @@ def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
         result, series = _run_steady(case, decision)
     if clip_record is not None:
         result["command_clip"] = asdict(clip_record)
+    result.update(plant_options_record(hydraulics))
+    return result, series
+
+
+def install_plant_options(setting: FlowSetting, hydraulics=None) -> None:
+    """Every plant built from now on in this process carries the flow setting and the v5 plant
+    options (``HydraulicOptions``; None or all off = no v5 patch). Shared with the screen
+    runners (``r67_g1_screen``, ``r69_g8_screen``, v5 X-3)."""
     if hydraulics is not None and hydraulics.is_any_on:
         import harness_hydraulics
 
-        if hydraulics.lock_window_follows_plant:
-            harness_hydraulics.check_last_lock_window(hydraulics, load_params().v_max)
-        result["hydraulic_options"] = hydraulics.to_dict()
-        result["hydraulics_record"] = harness_hydraulics.last_armed_record()
-    return result, series
+        harness_hydraulics.install(sys.modules[__name__], hydraulics)
+    install_flow_plant(setting)
+
+
+def plant_options_record(hydraulics=None) -> dict:
+    """After a run: the criteria P-4 window check and the v5 record (empty without options).
+
+    Raises:
+        RuntimeError: The lock window of the built preset differs from the options.
+    """
+    if hydraulics is None or not hydraulics.is_any_on:
+        return {}
+    import harness_hydraulics
+
+    if hydraulics.lock_window_follows_plant:
+        harness_hydraulics.check_last_lock_window(hydraulics, load_params().v_max)
+    return {"hydraulic_options": hydraulics.to_dict(),
+            "hydraulics_record": harness_hydraulics.last_armed_record()}
 
 
 def warm_numba_cache() -> None:

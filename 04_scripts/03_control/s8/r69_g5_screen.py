@@ -10,6 +10,8 @@ after W; the U-S8-74 0.5 s mean and the U-S8-75 (b) exception are applied in the
 Usage (repo root, dynamics-dev, MKL_THREADING_LAYER=TBB, OMP_NUM_THREADS=1):
   python -I r69_g5_screen.py <project_root> <out_json> [workers]
 Env: as r67 (R67_FILTER, R67_SLICE, R67_AFFINITY, R67_OFFSETS); R69_FS = comma list (default 2,4).
+v5 X-3 (grid 768 VB): R67_V5_SETTING and ``--keys`` of r67 apply unchanged (each job is r67's ``run_job`` and
+``main``; keys are checked against the job list with the replaced ``FS_KN``).
 """
 from __future__ import annotations
 

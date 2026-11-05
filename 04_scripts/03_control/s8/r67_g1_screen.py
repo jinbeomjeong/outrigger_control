@@ -52,6 +52,10 @@ split into two processes); R67_AFFINITY = hex mask set on the parent before the 
 R67_OFFSETS = comma list (default 0,0.05); R67_FILTER = substring list of job keys; R67_CANDIDATE = wrapper candidate
 (s9_slope_fix_candidates tokens, e.g. P36s+P37t+R4c30+P38z; spec 427.11 / 429.5). Every screen run stores commands_sha256
 (prefix + branch commands). Deterministic.
+v5 X-3: R67_V5_SETTING = a run_v5.SETTINGS name (VB = flow limit eta_v 0.85 + M2 + LC + plant lock window): every
+plant of the run carries it (verdict_runs.install_plant_options), results get v5_setting / hydraulic_options /
+hydraulics_record; ``--keys <k>[,<k>...]`` or ``--keys @<file>`` after the positional arguments runs exactly these
+job keys (sample hash check against a stored grid).
 """
 from __future__ import annotations
 
@@ -503,11 +507,81 @@ def _install_candidate():
     return fx.install_screen_candidate(name)
 
 
+V5_SETTING_ENV = "R67_V5_SETTING"
+"""v5 X-3: a ``run_v5.SETTINGS`` name (e.g. ``VB``): flow limit and v5 plant options of every
+plant of the run; unset = the plant as before (no v5 module is imported)."""
+KEYS_OPTION = "--keys"
+"""v5 X-3: ``--keys <key>[,<key>...]`` (or ``@<file>`` with one key per line) runs exactly these
+job keys (sample hash check against a stored grid); mode, filter and slice are not applied."""
+
+
+def v5_setting_name(env_name: str = V5_SETTING_ENV) -> str | None:
+    return os.environ.get(env_name) or None
+
+
+def install_v5_setting(env_name: str = V5_SETTING_ENV):
+    """Install the v5 setting named by ``env_name`` in this worker (once per process; the same
+    setting for every job of the run). Returns its ``HydraulicOptions`` (None: unset or no
+    plant option)."""
+    name = v5_setting_name(env_name)
+    if name is None:
+        return None
+    coupled_dir = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+    if str(coupled_dir) not in sys.path:
+        sys.path.insert(0, str(coupled_dir))
+    import run_v5
+    import verdict_runs
+
+    flow, options = run_v5.options_of(name)
+    verdict_runs.install_plant_options(flow, options)
+    return options
+
+
+def v5_setting_record(options, env_name: str = V5_SETTING_ENV) -> dict:
+    """The result keys of a run with a v5 setting (empty without one)."""
+    name = v5_setting_name(env_name)
+    if name is None:
+        return {}
+    import verdict_runs
+
+    return {"v5_setting": name, **verdict_runs.plant_options_record(options)}
+
+
+def split_keys_option(argv: list[str]) -> tuple[list[str], list[str] | None]:
+    """``argv`` without ``--keys <value>`` and the keys it names (None: no option)."""
+    if KEYS_OPTION not in argv:
+        return argv, None
+    index = argv.index(KEYS_OPTION)
+    if index + 1 >= len(argv):
+        raise SystemExit(f"{KEYS_OPTION} needs a value")
+    value = argv[index + 1]
+    if value.startswith("@"):
+        lines = Path(value[1:]).read_text(encoding="utf-8").splitlines()
+        keys = [line.strip() for line in lines if line.strip()]
+    else:
+        keys = [key for key in value.split(",") if key]
+    return argv[:index] + argv[index + 2:], keys
+
+
+def select_keys(keys: list[str], known: list[str]) -> list[str]:
+    """The ``--keys`` jobs in the given order.
+
+    Raises:
+        SystemExit: A key that is no job of the runner.
+    """
+    unknown = sorted(set(keys) - set(known))
+    if unknown:
+        raise SystemExit(f"unknown job keys: {unknown[:5]}")
+    return list(keys)
+
+
 def run_job(key):
     try:
         restore = _install_candidate()
         try:
+            options = install_v5_setting()
             out = screen_job(key) if key.startswith("screen|") else ps7_job(key)
+            out.update(v5_setting_record(options))
         finally:
             restore()
         out["candidate"] = _candidate_name() or "current"
@@ -528,15 +602,18 @@ def all_jobs(mode):
 
 def main():
     set_affinity_from_env()
-    out = Path(sys.argv[2])
-    workers = int(sys.argv[3]) if len(sys.argv) > 3 else 8
+    argv, keys = split_keys_option(sys.argv)
+    out = Path(argv[2])
+    workers = int(argv[3]) if len(argv) > 3 else 8
     jobs = all_jobs(os.environ.get("R67_MODE", "all"))
     filt = os.environ.get("R67_FILTER")
+    if keys is not None:
+        jobs, filt = select_keys(keys, all_jobs("all")), None
     if filt:
         jobs = [j for j in jobs if any(f in j for f in filt.split(","))]
     # long jobs first (LEVEL screens run longest), then slice
     jobs.sort(key=lambda k: (0 if "|level|" in k else 1 if k.startswith("screen") else 2, k))
-    sl = os.environ.get("R67_SLICE")
+    sl = None if keys is not None else os.environ.get("R67_SLICE")
     if sl:
         a, b = (float(x) for x in sl.split(":"))
         n = len(jobs)
@@ -545,13 +622,18 @@ def main():
     t0 = time.perf_counter()
     with Pool(max(1, min(workers, len(jobs)))) as pool:
         res = pool.map(run_job, jobs, chunksize=1)
-    out.write_text(json.dumps({"meta": {"script": "04_scripts/03_control/s8/r67_g1_screen.py",
-                                        "spec": "rev. 67 (G1 / G2 / G7 reduced screen)",
-                                        "wall_s": round(time.perf_counter() - t0, 1), "workers": workers,
-                                        "affinity": os.environ.get("R67_AFFINITY"), "slice": sl,
-                                        "offsets_s": os.environ.get("R67_OFFSETS", "0,0.05"), "n_jobs": len(jobs),
-                                        "candidate": _candidate_name() or "current"},
-                               "results": res}, indent=1, default=float), encoding="utf-8")
+    meta = {"script": "04_scripts/03_control/s8/r67_g1_screen.py",
+            "spec": "rev. 67 (G1 / G2 / G7 reduced screen)",
+            "wall_s": round(time.perf_counter() - t0, 1), "workers": workers,
+            "affinity": os.environ.get("R67_AFFINITY"), "slice": sl,
+            "offsets_s": os.environ.get("R67_OFFSETS", "0,0.05"), "n_jobs": len(jobs),
+            "candidate": _candidate_name() or "current"}
+    # v5 X-3 keys only when used, so a run without them writes the former meta
+    if v5_setting_name() is not None:
+        meta["v5_setting"] = v5_setting_name()
+    if keys is not None:
+        meta["keys_option"] = keys
+    out.write_text(json.dumps({"meta": meta, "results": res}, indent=1, default=float), encoding="utf-8")
     print("done", round(time.perf_counter() - t0, 1), "s ->", out)
 
 

@@ -45,7 +45,8 @@ Usage (repo root, dynamics-dev, MKL_THREADING_LAYER=TBB, OMP_NUM_THREADS=1):
   python -I r69_g8_screen.py <project_root> <out_json> [workers]
   python -I r69_g8_screen.py <project_root> --list            (job keys, one per line)
 Env: R69_MODE = main | slope | all (default all); R69_FILTER = comma list of substrings (a job is kept if any
-  matches); R69_SLICE = "a:b" fraction of the sorted list; R69_AFFINITY = hex mask set on the parent (inherited).
+  matches); R69_SLICE = "a:b" fraction of the sorted list; R69_AFFINITY = hex mask set on the parent (inherited);
+  R69_V5_SETTING = a run_v5.SETTINGS name (v5 X-3, as R67_V5_SETTING). ``--keys`` as in r67_g1_screen.
 """
 from __future__ import annotations
 
@@ -270,9 +271,16 @@ def job(key):
     return res
 
 
+V5_SETTING_ENV = "R69_V5_SETTING"
+"""v5 X-3: as ``r67_g1_screen.V5_SETTING_ENV`` for this runner."""
+
+
 def run_job(key):
     try:
-        return job(key)
+        options = r67.install_v5_setting(V5_SETTING_ENV)
+        out = job(key)
+        out.update(r67.v5_setting_record(options, V5_SETTING_ENV))
+        return out
     except Exception as exc:  # keep the batch going; the error is reported
         import traceback
         return {"key": key, "error": f"{type(exc).__name__}: {exc}", "trace": traceback.format_exc()[-2000:]}
@@ -301,13 +309,16 @@ def main():
             print(j)
         return
     set_parent_placement()
-    out = Path(sys.argv[2])
-    workers = int(sys.argv[3]) if len(sys.argv) > 3 else 8
+    argv, keys = r67.split_keys_option(sys.argv)
+    out = Path(argv[2])
+    workers = int(argv[3]) if len(argv) > 3 else 8
     jobs = all_jobs(os.environ.get("R69_MODE", "all"))
     filt = os.environ.get("R69_FILTER")
+    if keys is not None:
+        jobs, filt = r67.select_keys(keys, all_jobs("all")), None
     if filt:
         jobs = [j for j in jobs if any(f in j for f in filt.split(","))]
-    sl = os.environ.get("R69_SLICE")
+    sl = None if keys is not None else os.environ.get("R69_SLICE")
     if sl:
         a, b = (float(x) for x in sl.split(":"))
         n = len(jobs)
@@ -316,12 +327,17 @@ def main():
     with Pool(max(1, min(workers, len(jobs)))) as pool:
         res = pool.map(run_job, jobs, chunksize=1)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps({"meta": {"script": "04_scripts/03_control/s8/r69_g8_screen.py",
-                                        "spec": "rev. 69 draft (G8 non-planar start + G5 remainder)",
-                                        "wall_s": round(time.perf_counter() - t0, 1), "workers": workers,
-                                        "affinity": os.environ.get("R69_AFFINITY"), "filter": filt, "slice": sl,
-                                        "n_jobs": len(jobs)},
-                               "results": res}, indent=1, default=float), encoding="utf-8")
+    meta = {"script": "04_scripts/03_control/s8/r69_g8_screen.py",
+            "spec": "rev. 69 draft (G8 non-planar start + G5 remainder)",
+            "wall_s": round(time.perf_counter() - t0, 1), "workers": workers,
+            "affinity": os.environ.get("R69_AFFINITY"), "filter": filt, "slice": sl,
+            "n_jobs": len(jobs)}
+    # v5 X-3 keys only when used, so a run without them writes the former meta
+    if r67.v5_setting_name(V5_SETTING_ENV) is not None:
+        meta["v5_setting"] = r67.v5_setting_name(V5_SETTING_ENV)
+    if keys is not None:
+        meta["keys_option"] = keys
+    out.write_text(json.dumps({"meta": meta, "results": res}, indent=1, default=float), encoding="utf-8")
     print("done", round(time.perf_counter() - t0, 1), "s ->", out)
 
 
