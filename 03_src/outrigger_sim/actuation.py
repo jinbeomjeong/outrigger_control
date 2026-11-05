@@ -179,6 +179,42 @@ class SpeedReference:
         self._zero_valve_state()
         self._flow_limit: FlowLimit | None = None
         self._flow_open = np.zeros(n)
+        self._overlap_speed_m_s: float | None = None
+        self._zero_command_m_s = 0.0
+        self.overlap_cut_steps = np.zeros(n, dtype=np.int64)
+        """Steps whose spool flow the overlap cut stopped (LC, v5 spec 2.5); record only."""
+
+    # --- LC overlap tail cut (v5 spec 2.5) -------------------------------------------------
+
+    def configure_lock_closure(self, setting: Any, *, zero_command_m_s: float) -> None:
+        """Cut the spool tail of a zero command: ``u = 0`` once ``|u_c| <= eps`` and the step mean
+        spool speed ``|u_v| <= u_ol = delta_ol v_max`` (overlap end, ASSUMPTION). A small
+        non-zero command keeps flowing; the spool state keeps decaying. Off by default.
+
+        Args:
+            setting: ``hydraulics.v5_options.LockClosureSetting`` (``overlap_speed_m_s(v_max)``).
+            zero_command_m_s: ``eps`` of a zero command (the plant lock threshold).
+
+        Raises:
+            ValueError: The valve model is off (the command ramp has no spool to cut).
+        """
+        if not self._valve_on:
+            raise ValueError("the lock closure needs the valve model (configure_valve first)")
+        self._overlap_speed_m_s = float(setting.overlap_speed_m_s(self._v_max))
+        self._zero_command_m_s = float(zero_command_m_s)
+
+    @property
+    def lock_closure_on(self) -> bool:
+        return self._overlap_speed_m_s is not None
+
+    def _cut_overlap_tail(self, spool_speed: NDArray[np.float64]) -> NDArray[np.float64]:
+        command = np.clip(self._u_cmd, -self._v_max, self._v_max)
+        cut = ((np.abs(command) <= self._zero_command_m_s)
+               & (np.abs(spool_speed) <= self._overlap_speed_m_s) & (spool_speed != 0.0))
+        if not np.any(cut):
+            return spool_speed
+        self.overlap_cut_steps += cut
+        return np.where(cut, 0.0, spool_speed)
 
     # --- shared-pump flow limit (module docstring) ----------------------------------------
 
@@ -414,6 +450,8 @@ class SpeedReference:
         if self._valve_on:
             # R8 valve model: step-mean spool speed, no acceleration limit, end braking cap
             target = self._valve_step(dt)
+            if self._overlap_speed_m_s is not None:
+                target = self._cut_overlap_tail(target)
             if flow is not None:
                 target = flow.limit(t_s, dt, target, cylinder_force_N)
             if math.isfinite(a):

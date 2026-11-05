@@ -92,6 +92,8 @@ class L2bRodSide:
         lock_eps_m_s: ``eps``.
         mechanics: ``"one_sided_parallel"`` or ``"off"``.
         armed: Start with the law on (False: head only until :meth:`arm`).
+        closing_delay_s: ``t_c`` from the flow cut (``|u| <= eps``) to the lock (LC, v5 spec
+            2.5); 0 = the lock in the first standstill step (the default, bit for bit).
     """
 
     def __init__(
@@ -112,6 +114,7 @@ class L2bRodSide:
         mechanics: str = "one_sided_parallel",
         armed: bool = True,
         counterbalance: Any = None,
+        closing_delay_s: float = 0.0,
     ) -> None:
         self._a_p = np.array(head_area_m2, dtype=float).reshape(-1)
         n = self._a_p.size
@@ -135,7 +138,7 @@ class L2bRodSide:
             mechanics=RodSideMechanics.ONE_SIDED_PARALLEL,
             predictor=False,
             mode_epsilon_m_s=self._eps,
-            poc_close_delay_s=0.0,
+            poc_close_delay_s=float(closing_delay_s),
             rod_pressure_lag_s=self._tau,
         )
         self._legs = [RodChamberLeg(self._leg_params(i, 0.5 * stroke_m), self._options)
@@ -165,7 +168,8 @@ class L2bRodSide:
     @classmethod
     def from_params(cls, params: Any, legs: Sequence[int], *, include_concrete: bool = True,
                     armed: bool = True, mechanics: str | None = None,
-                    oil_only: bool = False, counterbalance: Any = None) -> L2bRodSide:
+                    oil_only: bool = False, counterbalance: Any = None,
+                    closing_delay_s: float = 0.0) -> L2bRodSide:
         """From ``params.l2b`` (loaded with ``model="L2b_NSC"``) for the leg indices ``legs``.
 
         ``oil_only``: ``k_out = inf`` (the oil law G of the seal-friction / CB path, S8 spec
@@ -196,7 +200,20 @@ class L2bRodSide:
             mechanics=rs.mechanics if mechanics is None else mechanics,
             armed=armed,
             counterbalance=counterbalance,
+            closing_delay_s=closing_delay_s,
         )
+
+    @property
+    def closing_delay_s(self) -> float:
+        return self._options.poc_close_delay_s
+
+    def set_closing_delay(self, closing_delay_s: float) -> None:
+        """LC (v5 spec 2.5): a leg waits ``t_c`` in the moving law after the flow cut before it
+        locks; a new command inside it releases without a lock (H5). Call before the run."""
+        self._options = dataclasses.replace(self._options,
+                                            poc_close_delay_s=float(closing_delay_s))
+        for leg in self._legs:
+            leg.options = self._options
 
     # --- stiffness of the oil columns -------------------------------------------------------
 

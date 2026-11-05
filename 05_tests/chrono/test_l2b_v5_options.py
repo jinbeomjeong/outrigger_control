@@ -294,3 +294,162 @@ def test_from_params_without_the_option_has_no_rod_release() -> None:
     with_m2 = L2bForceActuator.from_params(params, motors, functions, [0.3] * 4, rod_release=True)
     assert plain.rod_release_record() is None
     assert with_m2.rod_release_record() is not None
+
+# --- LC: overlap tail cut and check closing delay (spec 2.5, L-1 .. L-8) ----------------------
+
+TAIL_START_S = 1.0
+"""Command 0 from here on; 1 s at a constant command settles the 0.1 s valve lag (e^-10)."""
+TAIL_RUN_S = 3.0
+OVERLAP_TABLE_S = {(0.01, 0.25): 0.322, (0.01, 1.0): 0.461, (0.02, 0.25): 0.253,
+                   (0.02, 1.0): 0.391, (0.05, 0.25): 0.161, (0.05, 1.0): 0.300}
+"""Spec 2.5 hand values of t_ol - t_0 [s] per (delta_ol, command / v_max)."""
+LOST_STROKE_MM = {0.01: 0.0209, 0.02: 0.0418, 0.05: 0.1046}
+FORCE_STEP_N = {0: 42.0, 2: 36.0}
+"""Spec L-3, delta_ol 2 %: c_move u_ol of FL and RL."""
+REAR_LEFT = 2
+
+
+@dataclass
+class _Tail:
+    t_s: np.ndarray
+    speed_m_s: np.ndarray
+    force_N: np.ndarray
+    locked: np.ndarray
+    s_ref_m: np.ndarray
+
+
+def _lock_closure(ratio: float, delay_s: float):
+    from outrigger_sim.hydraulics.v5_options import LockClosureSetting
+
+    return LockClosureSetting(ratio, delay_s)
+
+
+def _drive_tail(leg: int, fraction: float, *, ratio: float | None, delay_s: float = 0.05,
+                restart_s: float | None = None, actuator=None, motors=None, first_step: int = 0,
+                last_step: int | None = None) -> tuple[_Tail, L2bForceActuator, list]:
+    """Body fixed; ``leg`` at ``fraction`` v_max until ``TAIL_START_S``, then 0 (again the same
+    command from ``restart_s`` on)."""
+    if actuator is None:
+        case = _Case(TAIL_START_S + TAIL_RUN_S, [], is_body_fixed=True)
+        actuator, motors = _make_actuator(case)
+        if ratio is not None:
+            actuator.configure_lock_closure(_lock_closure(ratio, delay_s))
+    last = round((TAIL_START_S + TAIL_RUN_S) / DT_S) if last_step is None else last_step
+    rows = {name: [] for name in ("t", "u", "F", "locked", "s_ref")}
+    for k in range(first_step, last):
+        t_s = k * DT_S
+        command = np.zeros(4)
+        if t_s < TAIL_START_S or (restart_s is not None and t_s >= restart_s):
+            command[leg] = fraction * P.v_max
+        actuator.set_command(command)
+        actuator.hook(t_s, DT_S)
+        actuator.on_step_end()
+        rows["t"].append(t_s)
+        rows["u"].append(actuator.reference.u_applied_m_s[leg])
+        rows["F"].append(actuator.force_N[leg])
+        rows["locked"].append(bool(actuator.rod_side.locked[leg]))
+        rows["s_ref"].append(actuator.reference.s_ref_m[leg])
+    tail = _Tail(*(np.array(rows[name]) for name in ("t", "u", "F", "locked", "s_ref")))
+    return tail, actuator, motors
+
+
+def _first_index_after(tail: _Tail, flags: np.ndarray, t_from_s: float) -> int:
+    return int(np.flatnonzero(flags & (tail.t_s >= t_from_s - 1e-12))[0])
+
+
+@pytest.mark.parametrize("ratio, fraction", sorted(OVERLAP_TABLE_S))
+def test_l1_cut_time_is_the_hand_value(ratio, fraction) -> None:
+    tail, _, _ = _drive_tail(FRONT_LEFT, fraction, ratio=ratio)
+    cut = _first_index_after(tail, tail.speed_m_s == 0.0,
+                             TAIL_START_S)
+    elapsed_s = tail.t_s[cut] - TAIL_START_S
+    overlap_speed = ratio * P.v_max
+    formula_s = VALVE_TAU_S * np.log(max(fraction * P.v_max, overlap_speed) / overlap_speed)
+    assert abs(elapsed_s - formula_s) <= DT_S + 1e-12
+    assert abs(elapsed_s - OVERLAP_TABLE_S[(ratio, fraction)]) <= 0.001
+
+
+@pytest.mark.parametrize("ratio", sorted(LOST_STROKE_MM))
+def test_l2_cut_loses_the_tail_stroke(ratio) -> None:
+    with_cut, _, _ = _drive_tail(FRONT_LEFT, 1.0, ratio=ratio)
+    without, _, _ = _drive_tail(FRONT_LEFT, 1.0, ratio=None)
+    lost_mm = (without.s_ref_m[-1] - with_cut.s_ref_m[-1]) * 1e3
+    assert lost_mm == pytest.approx(LOST_STROKE_MM[ratio], rel=0.01)
+
+
+@pytest.mark.parametrize("leg", sorted(FORCE_STEP_N))
+def test_l3_force_step_at_the_cut_is_the_moving_dashpot(leg) -> None:
+    tail, _, _ = _drive_tail(leg, 1.0, ratio=0.02)
+    cut = _first_index_after(tail, tail.speed_m_s == 0.0, TAIL_START_S)
+    force = tail.force_N
+    step_N = (force[cut] - force[cut - 1]) - (force[cut - 1] - force[cut - 2])
+    assert -step_N == pytest.approx(FORCE_STEP_N[leg], rel=0.05)
+
+
+@pytest.mark.parametrize("delay_s", [0.02, 0.05, 0.10])
+def test_l4_lock_follows_the_cut_by_the_closing_delay_without_a_force_step(delay_s) -> None:
+    tail, _, _ = _drive_tail(FRONT_LEFT, 1.0, ratio=0.02, delay_s=delay_s)
+    cut = _first_index_after(tail, tail.speed_m_s == 0.0, TAIL_START_S)
+    lock = _first_index_after(tail, tail.locked, TAIL_START_S)
+    assert abs(tail.t_s[lock] - tail.t_s[cut] - delay_s) <= DT_S + 1e-9
+    differences = np.diff(tail.force_N[lock - 5:lock + 5])
+    assert abs(differences[4]) <= 1.0
+
+
+def test_l5_new_command_inside_the_delay_does_not_lock() -> None:
+    probe, _, _ = _drive_tail(FRONT_LEFT, 1.0, ratio=0.02, delay_s=0.05)
+    cut_s = probe.t_s[_first_index_after(probe, probe.speed_m_s == 0.0, TAIL_START_S)]
+    tail, actuator, _ = _drive_tail(FRONT_LEFT, 1.0, ratio=0.02, delay_s=0.05,
+                                    restart_s=cut_s + 0.025)
+    assert not tail.locked[tail.t_s >= TAIL_START_S].any()
+    assert not actuator.rod_side.locked[FRONT_LEFT]  # no new anchor: it moves on
+
+
+def test_l6_small_non_zero_command_keeps_flowing() -> None:
+    case = _Case(2.0, [], is_body_fixed=True)
+    actuator, _ = _make_actuator(case)
+    actuator.configure_lock_closure(_lock_closure(0.02, 0.05))
+    command = np.zeros(4)
+    command[FRONT_LEFT] = 0.16e-3
+    for k in range(round(2.0 / DT_S)):
+        actuator.set_command(command)
+        actuator.hook(k * DT_S, DT_S)
+        actuator.on_step_end()
+    assert actuator.reference.u_applied_m_s[FRONT_LEFT] == pytest.approx(0.16e-3, rel=1e-6)
+    assert actuator.reference.overlap_cut_steps[FRONT_LEFT] == 0
+
+
+def test_l7_snapshot_inside_the_delay_continues_bit_identically() -> None:
+    whole, _, _ = _drive_tail(FRONT_LEFT, 1.0, ratio=0.02, delay_s=0.05)
+    cut = _first_index_after(whole, whole.speed_m_s == 0.0, TAIL_START_S)
+    split = cut + round(0.025 / DT_S)
+    head, first, _ = _drive_tail(FRONT_LEFT, 1.0, ratio=0.02, delay_s=0.05, last_step=split)
+    case = _Case(TAIL_START_S + TAIL_RUN_S, [], is_body_fixed=True)
+    second, motors = _make_actuator(case)
+    second.configure_lock_closure(_lock_closure(0.02, 0.05))
+    second.restore_state(first.state_arrays())
+    rest, _, _ = _drive_tail(FRONT_LEFT, 1.0, ratio=0.02, actuator=second, motors=motors,
+                             first_step=split)
+    assert np.array_equal(np.concatenate([head.force_N, rest.force_N]), whole.force_N)
+    assert np.array_equal(np.concatenate([head.locked, rest.locked]), whole.locked)
+
+
+def test_l8_without_the_option_nothing_changes() -> None:
+    case = _Case(1.0, [], is_body_fixed=True)
+    actuator, _ = _make_actuator(case)
+    assert actuator.rod_side.closing_delay_s == 0.0
+    assert not actuator.reference.lock_closure_on
+    assert "lock_closure" not in actuator.meta()
+    plain, _, _ = _drive_tail(FRONT_LEFT, 1.0, ratio=None)
+    assert plain.speed_m_s[-1] != 0.0  # the epsilon tail of the exponential valve is still there
+
+
+def test_lc_refuses_the_counterbalance_and_a_plant_without_the_valve_model() -> None:
+    case = _Case(1.0, [], is_body_fixed=True)
+    actuator, _ = _make_actuator(case)
+    actuator.counterbalance = object()
+    with pytest.raises(ValueError, match="counterbalance"):
+        actuator.configure_lock_closure(_lock_closure(0.02, 0.05))
+    reference = SpeedReference([0.3] * 4, [STROKE_RANGE_M] * 4, max_speed_m_s=P.v_max, ramp_s=0.1)
+    with pytest.raises(ValueError, match="valve model"):
+        reference.configure_lock_closure(_lock_closure(0.02, 0.05), zero_command_m_s=1e-6)

@@ -217,6 +217,8 @@ class L2bForceActuator:
         self._hook_t: float | None = None
         self._rod_release: RodReleaseShift | None = None
         """M2 (v5 spec 2.3, :meth:`configure_rod_release`); None = off, no line of it runs."""
+        self._lock_closure: Any = None
+        """LC setting (v5 spec 2.5, :meth:`configure_lock_closure`); None = off."""
         self.reset_piston_monitor()
         self._apply()
 
@@ -462,6 +464,32 @@ class L2bForceActuator:
             raise ValueError("M2 with lock_valve = counterbalance is refused (untested path)")
         self._rod_release = RodReleaseShift(self.rod_side.annulus_area_m2)
 
+    # --- LC overlap cut and check closing delay (v5 spec 2.5) ------------------------------------
+
+    def configure_lock_closure(self, setting: Any) -> None:
+        """Turn LC on: the spool tail of a zero command stops at the overlap end, the leg locks
+        ``t_c`` later and the dashpot follows the law's lock state instead of ``|u| <= eps``.
+
+        Args:
+            setting: ``hydraulics.v5_options.LockClosureSetting``.
+
+        Raises:
+            ValueError: No rod-side law, the counterbalance path, or the valve model off.
+        """
+        if self.rod_side is None:
+            raise ValueError("LC needs the rod-side law (its lock state machine)")
+        if self.counterbalance is not None:
+            raise ValueError("LC with lock_valve = counterbalance is refused (other lock rule)")
+        self.reference.configure_lock_closure(setting, zero_command_m_s=self._eps)
+        self.rod_side.set_closing_delay(setting.closing_delay_s)
+        self._lock_closure = setting
+
+    def _dashpot_N_s_m(self, u: NDArray[np.float64]) -> NDArray[np.float64]:
+        """Locked or moving dashpot per leg; with LC by the law's lock state (spec 2.5)."""
+        if self._lock_closure is not None and self.rod_side is not None and self.rod_side.armed:
+            return np.where(self.rod_side.locked, self._c_lock, self._c_move)
+        return np.where(np.abs(u) <= self._eps, self._c_lock, self._c_move)
+
     def rod_release_record(self) -> dict[str, Any] | None:
         """M2 totals per leg (they move the stroke reading too); None when M2 is off."""
         return None if self._rod_release is None else self._rod_release.record()
@@ -568,7 +596,7 @@ class L2bForceActuator:
             spring = self.rod_side.spring_force_N(
                 t_s, dt_s, u_acting, s_ref_now, s_ref_now - s, self._acting_force
             )
-            c = np.where(np.abs(u) <= self._eps, self._c_lock, self._c_move)
+            c = self._dashpot_N_s_m(u)
             self._k_last = self.axial_stiffness_N_m(s_ref_now)
             self._force = spring + c * (u - ds)
             if self._rod_release is not None:
@@ -602,7 +630,7 @@ class L2bForceActuator:
                          t_s=t_s)
         oil.refresh_readings(s_ref_now - sf.s_p)
         self._monitor_piston_sp(t_s, self._acting_sp)
-        c = np.where(np.abs(u) <= self._eps, self._c_lock, self._c_move)
+        c = self._dashpot_N_s_m(u)
         self._k_last = self.axial_stiffness_N_m(s_ref_now)
         force = spring + c * (u - ds)
         if not np.all(np.isfinite(force)):
@@ -851,6 +879,14 @@ class L2bForceActuator:
                 "rule": "moving leg: s_ref += A_ann (p_r_prev - p_r) / k_h(s_ref), both directions "
                         "(v5 spec 2.3, D-4); p_r = rod-side law value before the pressure floor",
                 "status": "ASSUMPTION p_bB, tau, p_r0 (spec 2.3)"}
+        if self._lock_closure is not None:  # key only with LC on
+            out["lock_closure"] = {
+                "overlap_ratio": self._lock_closure.overlap_ratio,
+                "closing_delay_s": self._lock_closure.closing_delay_s,
+                "rule": "zero command: u = 0 once the step mean spool speed <= overlap_ratio "
+                        "v_max; lock closing_delay_s later; dashpot by the law's lock state "
+                        "(v5 spec 2.5)",
+                "status": "ASSUMPTION (V-5, V-6, L-6, L-7 unanswered)"}
         return out
 
     def _base_meta(self) -> dict[str, Any]:

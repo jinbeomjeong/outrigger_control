@@ -55,13 +55,15 @@ class HarnessBench:
     """One harness plant with the options and the chunk loop of the closed-loop harness."""
 
     def __init__(self, options) -> None:
+        import importlib
+
+        importlib.import_module("verdict_runs")  # first: it puts the harness folders on sys.path
         import harness_hydraulics
-        import s8_g4_rodside_check as rodside
-        import s9_soil_closed_loop as soil
-        import verdict_runs  # noqa: F401  (puts the harness folders on sys.path)
         from harness_flow import FlowSetting, make_flow_plant_class
         from params import load_params
 
+        rodside = importlib.import_module("s8_g4_rodside_check")
+        soil = importlib.import_module("s9_soil_closed_loop")
         self.cl = soil._imports()[0]
         self.c_lock, self.c_move = soil.C_LOCK, soil.C_MOVE
         self.v_max = load_params().v_max
