@@ -47,8 +47,12 @@ ROD_PRESSURE_RETRACT_PA = 34.818 * BAR
 ROD_PRESSURE_EXTEND_PA = 2.0 * BAR
 QUARTER = 0.25
 MOVE_S = 0.5
-AFTER_MOVE_S = 3.0
-END_MEAN_S = 0.5
+SETTLE_AFTER_MOVE_S = 30.0
+"""M2-6 (revised 2026-11-06): stand still this long after the FL move."""
+SETTLED_MEAN_FROM_S = 10.0
+"""M2-6: mean of the FL force from this time after the move to the end of the rest; the
+lightly damped rocking (two modes) is still a few kN at 3 s, so a 0.5 s mean there is not the
+settled value."""
 VALVE_TAU_S = 0.1
 
 
@@ -111,20 +115,22 @@ class HarnessBench:
 
 
 def front_left_release_force_N(options, rod_pressure_FL_Pa: float) -> float:
-    """C2 / C3 on the harness: FL extends 0.25 v_max for 0.5 s from a lock, end force of FL."""
+    """C2 / C3 on the harness: FL extends 0.25 v_max for 0.5 s from a lock, then all legs stand
+    still for 30 s; settled FL force = mean over 10 .. 30 s after the move."""
     bench = HarnessBench(options)
     bench.lift_and_arm()
     bench.plant.p_r0[FRONT_LEFT] = rod_pressure_FL_Pa
     command = np.zeros(4)
     command[FRONT_LEFT] = QUARTER * bench.v_max
     bench.run(command, MOVE_S)
-    forces = bench.run(np.zeros(4), AFTER_MOVE_S)
-    last = round(END_MEAN_S / bench.cl.LAG_CHUNK_S)
-    return float(np.mean([row[FRONT_LEFT] for row in forces[-last:]]))
+    forces = bench.run(np.zeros(4), SETTLE_AFTER_MOVE_S)
+    first_settled = round(SETTLED_MEAN_FROM_S / bench.cl.LAG_CHUNK_S)
+    return float(np.mean([row[FRONT_LEFT] for row in forces[first_settled:]]))
 
 
 def check_m2_6() -> dict:
-    """Spec M2-6: harness plant C2 - C3, FL end force difference [kN], M2 on and off."""
+    """Spec M2-6 (revised, v5_criteria revision section to follow): harness plant C2 - C3,
+    settled FL force difference [kN] (mean 10 .. 30 s after the move), M2 on and off."""
     from outrigger_sim.hydraulics.v5_options import HydraulicOptions
 
     out = {}

@@ -30,11 +30,20 @@ def _run_check(check: str, tmp_path: Path) -> dict:
     return report
 
 
+M2_6_SETTLED_DIFFERENCE_KN = 2.43
+"""dynamics-expert 3-DOF reference 2.433 kN (harness 2.436 kN), settled C2 - C3 of FL."""
+M2_6_TOLERANCE_KN = 0.25
+
+
 def test_m2_6_harness_release_pair(tmp_path: Path) -> None:
-    """Spec M2-6: C2 - C3 end force of FL 4.13 .. 4.25 +- 1 kN; 0 without the option."""
+    """Spec M2-6, revised (user decision 2026-11-06; v5_criteria revision section to follow):
+    lift, FL 0.25 v_max for 0.5 s, stand still 30 s; settled C2 - C3 FL force (mean 10 .. 30 s
+    after the move) 2.43 +- 0.25 kN; 0 without the option. The old 4.13 .. 4.25 +- 1 kN value
+    was a 3 s value inside the rocking transient."""
     report = _run_check("m2_6", tmp_path)
     assert report["difference_off_kN"] == 0.0
-    assert 4.13 - 1.0 <= report["difference_on_kN"] <= 4.25 + 1.0
+    assert report["difference_on_kN"] == pytest.approx(M2_6_SETTLED_DIFFERENCE_KN,
+                                                       abs=M2_6_TOLERANCE_KN)
 
 
 def test_lc_harness_cut_lock_restart_and_copy(tmp_path: Path) -> None:
