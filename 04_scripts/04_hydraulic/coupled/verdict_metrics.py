@@ -504,6 +504,77 @@ def lower_bound_miss_values(t_rel_s: np.ndarray, force_N: np.ndarray, lower_N: n
     return out
 
 
+REF_10HZ_LIFT_CONTACT_N = 500.0
+"""Criteria 13.4 reference value (control-expert 2026-11-06 C): a 10 Hz interval whose 1 ms pad
+contact minimum is at most this counts as lift (L)."""
+REF_10HZ_DETECT_DELAY_S = 0.3
+"""An episode first flagged later than this after its start is ``late``."""
+REF_10HZ_BASIS = ("spec 203.1-203.3 decision level (Chrono N_*_pressure J_P style), 10 Hz "
+                  "estimate < F_min; reference only; no spec 232 +0.5 kN (L2b-NSC only)")
+REF_10HZ_UNIT_STATUS = "below_criteria_reference_only"
+
+
+def _interval_minima(t_rel_s: np.ndarray, values: np.ndarray, starts_s: np.ndarray,
+                     ends_s: np.ndarray) -> np.ndarray:
+    """Per 10 Hz interval (start, end] the 1 ms minimum per leg (NaN without rows)."""
+    first = np.searchsorted(t_rel_s, starts_s + HOLD_TIME_TOL_S, side="left")
+    last = np.searchsorted(t_rel_s, ends_s + HOLD_TIME_TOL_S, side="right")
+    minima = np.full((len(starts_s), values.shape[1]), np.nan)
+    for k, (lo, hi) in enumerate(zip(first, last, strict=True)):
+        if hi > lo:
+            minima[k] = values[lo:hi].min(axis=0)
+    return minima
+
+
+def ref_10hz_episode_values(t_rel_s: np.ndarray, contact_N: np.ndarray, force_N: np.ndarray,
+                            period_t_rel_s: np.ndarray, lower_N: np.ndarray,
+                            window_end_s: float, f_min_N: float, judge: str) -> dict:
+    """Criteria 13.4 reference value next to ``lower_bound_miss`` (Chrono J_P style, 10 Hz).
+
+    Samples k whose interval (t_{k-1}, t_k] lies after the event window. Per leg: L = the 1 ms
+    pad contact minimum in the interval <= 0.5 kN, U = not L and the 1 ms F_cyl minimum below
+    F_min. An episode is a run of consecutive U or L samples of one leg; it is ``missed`` when
+    the lower estimate of no sample in [t_on, t_off] is below F_min and ``late`` when the first
+    such sample comes more than 0.3 s after t_on. Reference only, not judged.
+    """
+    out = {"basis": REF_10HZ_BASIS, "judge": judge, "estimate": "lower_estimate_N",
+           "scope": "10 Hz samples whose (t_k-1, t_k] lies after the event window end",
+           "f_min_N": f_min_N, "lift_contact_N": REF_10HZ_LIFT_CONTACT_N,
+           "detect_delay_s": REF_10HZ_DETECT_DELAY_S, "unit_status": REF_10HZ_UNIT_STATUS}
+    if judge == "COMBINED":
+        out["partial_jc"] = True
+    starts, ends = period_t_rel_s[:-1], period_t_rel_s[1:]
+    in_scope = starts >= window_end_s - HOLD_TIME_TOL_S
+    starts, ends, lower = starts[in_scope], ends[in_scope], lower_N[1:][in_scope]
+    contact_min = _interval_minima(t_rel_s, contact_N, starts, ends)
+    force_min = _interval_minima(t_rel_s, force_N, starts, ends)
+    has_rows = np.isfinite(force_min).all(axis=1)
+    ends, lower = ends[has_rows], lower[has_rows]
+    lifted = contact_min[has_rows] <= REF_10HZ_LIFT_CONTACT_N
+    under = ~lifted & (force_min[has_rows] < f_min_N)
+    flagged = np.nan_to_num(lower, nan=np.inf) < f_min_N
+    by_leg = {leg: 0 for leg in LEGS}
+    missed_by_leg = {leg: 0 for leg in LEGS}
+    n_lift = n_late = 0
+    delays = []
+    for k, leg in enumerate(LEGS):
+        for first, last in contiguous_runs(lifted[:, k] | under[:, k]):
+            by_leg[leg] += 1
+            n_lift += bool(lifted[first:last + 1, k].any())
+            flag_index = np.flatnonzero(flagged[first:last + 1, k])
+            if flag_index.size == 0:
+                missed_by_leg[leg] += 1
+                continue
+            delay_s = float(ends[first + flag_index[0]] - ends[first])
+            delays.append(delay_s)
+            n_late += delay_s > REF_10HZ_DETECT_DELAY_S + HOLD_TIME_TOL_S
+    out.update(samples_after=int(len(ends)), episodes=sum(by_leg.values()),
+               episodes_by_leg=by_leg, episodes_lift=n_lift,
+               missed=sum(missed_by_leg.values()), missed_by_leg=missed_by_leg, late=n_late,
+               first_flag_delay_s_max=_rounded(max(delays), 3) if delays else None)
+    return out
+
+
 STOP_BEFORE_WINDOW_S = 1.0
 STOP_SAMPLE_HALF_WINDOW_S = 0.1
 CRAWLER_LOADED_WEIGHT_FRACTION = 0.01

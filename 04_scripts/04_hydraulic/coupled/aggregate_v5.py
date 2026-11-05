@@ -81,8 +81,9 @@ def value_row(record: dict) -> dict:
         out["t_ready_back_s"] = record["event_output"].get("t_ready_back_s")
         if record["event_output"].get("after_window_force"):  # criteria 3.1 (⑦) values
             out["after_window_force"] = record["event_output"]["after_window_force"]
-        if record["event_output"].get("lower_bound_miss"):  # criteria 13.4 (⑥) values
-            out["lower_bound_miss"] = record["event_output"]["lower_bound_miss"]
+        for key in ("lower_bound_miss", "ref_10hz_episodes"):  # criteria 13.4 (⑥) values
+            if record["event_output"].get(key):
+                out[key] = record["event_output"][key]
     if record.get("soil_stop_crawler"):
         out["soil_stop_crawler"] = record["soil_stop_crawler"]
     if record.get("overlap_found"):
@@ -142,6 +143,8 @@ def event_force_table(rows: list[dict]) -> list[dict]:
 
 JUDGE_FORCE_KEYS = ("min_1ms_kN", "min_1ms_leg", "below_f_min_ms_sum", "below_f_min_ms_longest")
 JUDGE_MISS_KEYS = ("miss_intervals", "miss_ms_sum", "miss_ms_longest")
+REF_10HZ_KEYS = ("episodes", "missed", "late")
+"""Criteria 13.4 reference value (10 Hz J_P style) in the table; not judged."""
 
 
 def _judge_values(row: dict | None) -> dict | None:
@@ -150,9 +153,11 @@ def _judge_values(row: dict | None) -> dict | None:
         return None
     force = row.get("after_window_force") or {}
     miss = row.get("lower_bound_miss") or {}
+    reference = row.get("ref_10hz_episodes") or {}
     return {"commands_sha256": row["commands_sha256"],
             **{key: force.get(key) for key in JUDGE_FORCE_KEYS},
-            **{key: miss.get(key) for key in JUDGE_MISS_KEYS}}
+            **{key: miss.get(key) for key in JUDGE_MISS_KEYS},
+            "ref_10hz_episodes": {key: reference.get(key) for key in REF_10HZ_KEYS}}
 
 
 def pressure_only_table(rows: list[dict], combined_rows: list[dict]) -> list[dict]:

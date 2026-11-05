@@ -45,6 +45,7 @@ from verdict_metrics import (  # noqa: E402
     flow_saturation_time,
     hold_period_values,
     lower_bound_miss_values,
+    ref_10hz_episode_values,
     overlap_in_window,
     run_values,
     stop_crawler_values,
@@ -260,13 +261,15 @@ def _run_event(twin: EventTwin, contact: str | None = None) -> tuple[dict, dict]
     # v5 X-8 (criteria 3.1, ⑦): 1 ms minimum, trailing 0.5 s mean and lift after the window
     judged["after_window_force"] = after_window_force_values(
         rows[:, 0] - t_event, rows[:, 5:9], rows[:, 1:5], window_end, r67.F_MIN_N)
-    # v5 X-6 (criteria 13.4, ⑥): misses of the run's judge, lower estimate held on the 1 ms rows.
-    # The Chrono-style 10 Hz reference value (10 Hz reading < F_min episodes) goes next to it
-    # once control-expert has fixed its key and definition.
+    # v5 X-6 (criteria 13.4, ⑥): misses of the run's judge, lower estimate held on the 1 ms rows,
+    # and the Chrono-style 10 Hz reference value (control-expert definition C, not judged)
     period = period_arrays(controller)
     lower_held = hold_period_values(rows[:, 0], period["t"], period["lower_estimate_N"])
     judged["lower_bound_miss"] = lower_bound_miss_values(
         rows[:, 0] - t_event, rows[:, 5:9], lower_held, window_end, r67.F_MIN_N)
+    judged["ref_10hz_episodes"] = ref_10hz_episode_values(
+        rows[:, 0] - t_event, rows[:, 1:5], rows[:, 5:9], period["t"] - t_event,
+        period["lower_estimate_N"], window_end, r67.F_MIN_N, controller.config.contact.name)
     phase_at_event = next((phase for t, phase in phases if t >= 0.0), None)
     extra.update(event=twin.event, leg=twin.leg, timing=twin.timing, offset_s=twin.offset_s,
                  t_event_s=round(t_event, 3), phase_at_event=phase_at_event,
