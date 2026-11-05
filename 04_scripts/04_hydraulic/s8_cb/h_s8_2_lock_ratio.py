@@ -172,6 +172,8 @@ def load_case(c: Path):
     with np.load(c / "pads.npz", allow_pickle=True) as z:
         pads = {k: z[k] for k in ("t", "head_pressure", "rod_pressure", "s_motor", "F_pressure",
                                   "airborne", "cb_delta")}
+        if LAW_LOCKED_FIELD in z.files:  # v5 records only (X-11)
+            pads[LAW_LOCKED_FIELD] = z[LAW_LOCKED_FIELD]
     with np.load(c / "r8_series.npz", allow_pickle=True) as z:
         r8 = {k: z[k] for k in ("t", "issued_u", "F_lower_est_N", "phase")}
     with np.load(c / "record" / "record.npz", allow_pickle=True) as z:
@@ -286,6 +288,27 @@ def true_lock_time(p, leg, t_from, t_to):
         if run >= 50:
             return j0 + j - 49  # index of the first still sample of the run
     return None
+
+
+LAW_LOCKED_FIELD = "law_locked"
+"""v5 ``pads.npz`` field (``l2b_pad_record_s8.V5_FIELDS``): rod-side law lock state per leg."""
+
+
+def true_lock_time_v5(p, leg, t_from, t_to):
+    """v5 plant lock (X-11): first 1 ms sample in [t_from, t_to] whose rod-side law state is
+    locked (``law_locked`` = 1). With LC the ``s_motor`` standstill of :func:`true_lock_time`
+    is the flow cut, ``t_c`` before the lock, so the law state is the lock time.
+
+    Raises:
+        ValueError: The record has no ``law_locked`` field (made before v5).
+    """
+    if LAW_LOCKED_FIELD not in p:
+        raise ValueError("pads record without law_locked (before v5): use true_lock_time")
+    t = p["t"]
+    j0 = int(np.searchsorted(t, t_from - 1e-9))
+    j1 = int(np.searchsorted(t, t_to + 1e-9))
+    locked = np.flatnonzero(np.asarray(p[LAW_LOCKED_FIELD][j0:j1, leg]) == 1)
+    return None if locked.size == 0 else j0 + int(locked[0])
 
 
 def window_estimate(case, sign, hm, st, cand, leg, m_prev=-np.inf):

@@ -10,7 +10,8 @@
 * ``f_seal``, ``seal_stuck``, ``s_piston``, ``F_seal_limit`` (1 ms samples of the state that
   belongs to the acting force) and the CB state ``cb_y``, ``cb_delta``;
 * ``head_pressure`` = ``(F_p + p_r A_ann) / A_p`` (was ``F`` in S7: equal without friction),
-  ``stroke_true`` = ``s_p`` (friction state) or ``s + F / k_out``.
+  ``stroke_true`` = ``s_p`` (friction state) or ``s + F / k_out``;
+* ``law_locked`` (v5): the rod-side law lock state per leg (:data:`V5_FIELDS`).
 
 Sampling is on **time** (every :attr:`sample_s`, crossing rule): a dt window of 1e-5 s keeps the
 1 ms grid (the S7 recorder counted steps). The per-interval contact mean is step-length
@@ -39,6 +40,10 @@ from outrigger_sim.frames import quat_to_matrix
 S8_FIELDS = ("F_pressure", "F_pressure_min_interval", "F_pressure_max_interval", "f_seal",
              "seal_stuck", "s_piston", "F_seal_limit", "cb_y", "cb_delta", "dt_interval",
              "F_cyl_mean_interval")
+V5_FIELDS = ("law_locked",)
+"""v5 X-11: ``law_locked`` = rod-side law lock state per leg at the sample (int8: 1 locked,
+0 moving, -1 no armed law; :func:`s8_plant_adapter.law_lock_state`). The v5 lock time reads it
+instead of the ``s_motor`` standstill (with LC the standstill is the flow cut, not the lock)."""
 DERIVED_AIR_FIELDS = ("F_cyl_mean_20ms", "airborne")
 """S8-A2 (``dynamics_model.md`` 5.26.10): ``F_cyl_mean_20ms`` = centred 20 ms mean of the
 step-weighted 1 ms mean rod force, ``airborne`` = 20 ms pad normal ``N <= 0``. Airborne samples
@@ -55,7 +60,7 @@ class L2bPadRecorderS8(L2bPadRecorder):
         self.sample_s = float(sample_s)
         self.window_samples = max(1, round(float(window_s) / self.sample_s))
         self.window_s = self.window_samples * self.sample_s
-        for k in S8_FIELDS:
+        for k in (*S8_FIELDS, *V5_FIELDS):
             self._rows[k] = []
         n = len(self.model.legs)
         self._fp_min = np.full(n, np.inf)
@@ -133,6 +138,7 @@ class L2bPadRecorderS8(L2bPadRecorder):
             "cb_delta": np.full(nleg, np.nan) if cb is None else cb["cb_delta_m"],
             "dt_interval": self._w,
             "F_cyl_mean_interval": self._f_sum_w / self._w,
+            "law_locked": plant.law_lock_state(act),
         }
         for key, value in row.items():
             self._rows[key].append(np.array(value, copy=True))
@@ -149,6 +155,7 @@ class L2bPadRecorderS8(L2bPadRecorder):
                    contact_window_samples=self.window_samples,
                    sampling="time (crossing rule), contact mean step-length weighted",
                    s8_fields=list(S8_FIELDS), base_fields=list(FIELDS),
+                   v5_fields=list(V5_FIELDS),
                    derived_air_fields=list(DERIVED_AIR_FIELDS),
                    air_rule="S8-A2: airborne (20 ms N <= 0) samples are not judged on the 1 ms "
                             "rod-force minimum; F_cyl_mean_20ms and the 1 ms minimum are "
@@ -170,4 +177,4 @@ class L2bPadRecorderS8(L2bPadRecorder):
         return out
 
 
-__all__ = ["S8_FIELDS", "L2bPadRecorderS8"]
+__all__ = ["S8_FIELDS", "V5_FIELDS", "L2bPadRecorderS8"]

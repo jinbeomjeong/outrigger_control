@@ -147,6 +147,20 @@ def piston_position_m(actuator: Any, s_link_m, acting_force_N) -> NDArray[np.flo
     return actuator.stroke_true_m(s_link_m, acting_force_N)
 
 
+LAW_LOCK_UNARMED = -1
+"""``law_lock_state`` value of a leg without an armed rod-side law."""
+
+
+def law_lock_state(actuator: Any) -> NDArray[np.int8]:
+    """Per-leg lock state of the rod-side law (v5 spec 2.5: the plant lock, not the ``s_ref``
+    standstill): 1 locked, 0 moving, :data:`LAW_LOCK_UNARMED` without an armed law. It is the
+    state the LC dashpot follows (``L2bForceActuator._dashpot_N_s_m``)."""
+    law = getattr(actuator, "rod_side", None)
+    if law is None or not law.armed:
+        return np.full(actuator.n_legs, LAW_LOCK_UNARMED, dtype=np.int8)
+    return np.asarray(law.locked, dtype=np.int8).reshape(actuator.n_legs)
+
+
 def plant_available(params: Any) -> dict[str, bool]:
     """Which S8 YAML keys the loaded parameters carry."""
     def has(key: str) -> bool:
@@ -211,6 +225,7 @@ def adapter_meta() -> Mapping[str, Any]:
             "friction_level_key": FRICTION_LEVEL_KEY, "lock_valve_key": LOCK_VALVE_KEY}
 
 
-__all__ = ["FRICTION_LEVEL_KEY", "LOCK_VALVES", "PlantNotAvailableError", "adapter_meta",
-           "cb_state", "check_model", "friction_state", "lock_valve_overrides",
-           "piston_position_m", "plant_available", "pressure_force_N", "seal_friction_overrides"]
+__all__ = ["FRICTION_LEVEL_KEY", "LAW_LOCK_UNARMED", "LOCK_VALVES", "PlantNotAvailableError",
+           "adapter_meta", "cb_state", "check_model", "friction_state", "law_lock_state",
+           "lock_valve_overrides", "piston_position_m", "plant_available", "pressure_force_N",
+           "seal_friction_overrides"]
