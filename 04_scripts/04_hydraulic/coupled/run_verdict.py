@@ -62,6 +62,8 @@ def definition_digest(run: VerdictRun, decision: str | None) -> str:
                   "setting": asdict(run.setting), "decision": decision}
     if run.clip_command:  # only here: an unclipped run keeps the digest stored in its result
         definition["clip_v_max_m_s"] = load_params().v_max
+    if run.hydraulics is not None:  # v5 options: same rule, the stored digests stay valid
+        definition["hydraulics"] = run.hydraulics.to_dict()
     return hashlib.sha256(json.dumps(definition, sort_keys=True).encode("utf-8")).hexdigest()
 
 
@@ -109,7 +111,8 @@ def _run_one(job: tuple[VerdictRun, str | None, dict, str]) -> dict:
         import verdict_runs
 
         result, series = verdict_runs.execute(resolve_case(run.case_id, decisions), run.setting,
-                                              decision, clip_command=run.clip_command)
+                                              decision, clip_command=run.clip_command,
+                                              hydraulics=run.hydraulics)
         if "error" in result:
             raise RuntimeError(f"{result['error']}\n{result.get('tb')}")
     except Exception as exc:  # the batch goes on; resume runs this row again

@@ -94,6 +94,8 @@ class VerdictRun:
     case_id: str
     setting: FlowSetting = field(default_factory=FlowSetting)
     clip_command: bool = False
+    hydraulics: object | None = None
+    """v5 plant options (``HydraulicOptions``); None = none, the definition digest is unchanged."""
 
 
 P0_FILE = "finB2_p0"

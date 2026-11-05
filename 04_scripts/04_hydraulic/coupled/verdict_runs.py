@@ -240,7 +240,7 @@ def _event_time(timeline: dict, twin: EventTwin) -> float | None:
 
 # ---------------------------------------------------------------------------------- public API
 def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
-            clip_command: bool = False) -> tuple[dict, dict]:
+            clip_command: bool = False, hydraulics=None) -> tuple[dict, dict]:
     """Run one case with one flow setting in this process.
 
     Args:
@@ -249,11 +249,17 @@ def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
         decision: The ``--decide`` choice of the case.
         clip_command: Clip the leg command to +-v_max before the valve path. It stays in force for
             the rest of the process, so a worker runs one such case.
+        hydraulics: v5 plant options (``HydraulicOptions``, spec v5 2.0); None or all off = the
+            plant of this module bit for bit. Also in force for the rest of the process.
 
     Returns:
         The result dict (``error`` set on a harness failure) and the 10 Hz arrays. The logged
         commands are the controller's, before the clip.
     """
+    if hydraulics is not None and hydraulics.is_any_on:
+        import harness_hydraulics
+
+        harness_hydraulics.install(sys.modules[__name__], hydraulics)
     install_flow_plant(setting)
     install_logged_controller()
     clip_record = install_harness_command_clip() if clip_command else None
@@ -263,6 +269,11 @@ def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
         result, series = _run_steady(case, decision)
     if clip_record is not None:
         result["command_clip"] = asdict(clip_record)
+    if hydraulics is not None and hydraulics.is_any_on:
+        import harness_hydraulics
+
+        result["hydraulic_options"] = hydraulics.to_dict()
+        result["hydraulics_record"] = harness_hydraulics.last_armed_record()
     return result, series
 
 
