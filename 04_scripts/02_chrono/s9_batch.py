@@ -236,6 +236,9 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     # COUPLED_eta085 (user decision 2026-11-04, criteria 9.1 revision 5): the 10 re-judgement rows, stored final-controller
     # runs + the shared-pump flow limit at eta_v 0.85, nominal compensator; run --resume <folder> continues a stopped batch
     out[COUPLED_BATCH] = coupled_rows(out["FINAL-REP"], out["FINAL-REP-X"], out["FINAL-R-REP"])
+    # V5-VB (v5 spec 2.0, 3.3; definition only, rows and timing wait for D-3): the coupled soil rows with the v5
+    # reference configuration VB (flow 0.85 + M2 + LC + controller window, valve 0.1 s on the soil rows)
+    out[V5_VB_BATCH] = v5_vb_rows(out[COUPLED_BATCH])
     return out
 
 
@@ -272,6 +275,35 @@ def coupled_flow_argv() -> list[str]:
     return ["--flow-eta-v", f"{a['flow_eta_v']:g}", "--flow-dp-comp-bar", f"{a['flow_dp_comp_bar']:g}",
             "--flow-dp-unload-bar", f"{a['flow_dp_unload_bar']:g}", "--flow-width-bar", f"{a['flow_width_bar']:g}",
             "--flow-law", a["flow_law"]]
+
+
+V5_VB_BATCH = "V5-VB"
+V5_VB_ARGS = {**COUPLED_FLOW_ARGS, "valve_tau_s": 0.1, "rod_release_force": True, "lock_overlap_ratio": 0.02,
+              "lock_closing_delay_s": 0.05, "lock_window_follows_plant": True}
+"""v5 spec 3.3 VB (all ASSUMPTION values; delta_ol 2 %, t_c 50 ms, tau_v 0.1 s, eta_v 0.85)."""
+
+
+def v5_vb_argv() -> list[str]:
+    a = V5_VB_ARGS
+    return coupled_flow_argv() + ["--valve-tau-s", f"{a['valve_tau_s']:g}", "--rod-release-force",
+                                  "--lock-overlap-ratio", f"{a['lock_overlap_ratio']:g}",
+                                  "--lock-closing-delay-s", f"{a['lock_closing_delay_s']:g}",
+                                  "--lock-window-follows-plant"]
+
+
+def v5_vb_rows(coupled: list[dict]) -> list[dict]:
+    """The soil rows of :func:`coupled_rows` with the VB options instead of the flow options alone. Not run here:
+    the Chrono rows and their timing are decided after the harness verdict (D-3). ``check-sources V5-VB`` accepts
+    exactly the VB arguments as the difference from the stored ``result.json`` args."""
+    rows = []
+    for row in coupled:
+        if row.get("source_expected_diffs") != COUPLED_FLOW_ARGS:
+            continue
+        argv = row["argv"][:len(row["argv"]) - len(coupled_flow_argv())] + v5_vb_argv()
+        rows.append({**row, "argv": argv, "source_expected_diffs": dict(V5_VB_ARGS), "group": V5_VB_BATCH,
+                     "rep_bundle": V5_VB_BATCH, "note": row["note"].replace(COUPLED_BATCH, V5_VB_BATCH)
+                     .replace("flow limit on", "v5 VB (flow 0.85, M2, LC, controller window, valve 0.1 s)")})
+    return rows
 
 
 def coupled_rows(final_rep: list[dict], final_rep_x: list[dict], final_r_rep: list[dict]) -> list[dict]:

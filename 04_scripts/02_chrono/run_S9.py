@@ -2336,6 +2336,26 @@ def _soil_overrides(items) -> dict[str, float]:
     return out
 
 
+def v5_hydraulic_options(args, params):
+    """The v5 options of the run (spec v5 2.0) or None when none is given (the run is unchanged).
+
+    Raises:
+        SystemExit: The controller window alone, a lock window without ``--valve-tau-s``.
+        ValueError: Refused combinations (``v5_options.validate``).
+    """
+    from outrigger_sim.control.c2 import R8_PERIOD_S
+    from outrigger_sim.hydraulics.v5_options import hydraulic_options_from_args, validate
+
+    options = hydraulic_options_from_args(args)
+    plant_only = options.without_flow()
+    if not plant_only.is_any_on:
+        return None
+    validate(options, period_s=R8_PERIOD_S, engine="L2b", lock_valve=params.l2b.lock_valve)
+    if options.valve_tau_s is None and (options.lock_closure or options.check_delay):
+        raise SystemExit("LC and M1c need the valve model on the soil rows: add --valve-tau-s")
+    return options
+
+
 def load_inputs(args):
     from outrigger_sim.chrono.scm_model import load_soil_set
     from outrigger_sim.pad_variants import apply_pad_variant, pad_variant_meta
@@ -5567,10 +5587,22 @@ def run_level(args) -> Path:
     placement = place()
     params, pv, soil = load_inputs(args)
     params_ctrl = load_params(level=args.level)
+    # v5 hydraulic options (spec v5 2.0); all absent = no attribute, nothing of them runs
+    v5_options = v5_hydraulic_options(args, params)
+    if v5_options is not None:
+        from outrigger_sim.hydraulics.v5_options import apply_lock_window
+
+        config = apply_lock_window(config, v5_options, params.actuator.max_speed_m_s,
+                                   v5_options.valve_tau_s)
     from outrigger_sim.chrono.scm_model import gravity_ramp_factor
 
     tb = time.perf_counter()
     model = build_machine(args, params, pv, soil)
+    v5_meta = None
+    if v5_options is not None:  # right after the build, before the settle and the flow limit
+        from outrigger_sim.chrono.v5_plant import apply_plant_options
+
+        v5_meta = apply_plant_options(model.actuator, v5_options, params)
     if model.actuator.friction_path != (args.fs_kN > 0.0):
         raise RuntimeError(f"--fs-kN {args.fs_kN:g}: the plant friction path is {model.actuator.friction_path} "
                            "(seal friction override not applied)")
@@ -5630,6 +5662,11 @@ def run_level(args) -> Path:
         model.actuator.set_flow_limit(flow)
     engine = S9Engine(model, imu_method="chrono_point")
     c2 = C2Controller.from_params(params_ctrl, config)
+    if v5_options is not None:  # criteria P-4: the controller window is the one of the options
+        from outrigger_sim.hydraulics.v5_options import check_lock_window_meta
+
+        check_lock_window_meta(c2.config.two_pressure.to_meta(), v5_options,
+                               params.actuator.max_speed_m_s, v5_options.valve_tau_s)
     # control D-1: IMU --imu-grade (10 ms samples), pressure / stroke --pressure-grade (WIKA A-10 normal default)
     suite = SensorSuite(imu_cfg, leg_cfg, seed=args.seed)
     soil_rows: list[dict[str, Any]] = []
@@ -5789,6 +5826,10 @@ def run_level(args) -> Path:
                                            "keys": sorted(series), "rows": int(len(series["t_s"]))}}
     if scm_nodes_info is not None:  # case GIFs: key only with --record-scm-nodes
         summary["scm_nodes"] = scm_nodes_info
+    if v5_meta is not None:  # the block only with a v5 option
+        from outrigger_sim.chrono.v5_plant import plant_records
+
+        summary["v5_hydraulics"] = {**v5_meta, "records": plant_records(model.actuator)}
     if flow is not None:  # flow_series.npz and the block only with --flow-eta-v
         summary["flow_limit"] = {
             **flow.meta(), "series": flow.save(d / FLOW_SERIES_NAME),
@@ -6003,6 +6044,9 @@ def build_parser() -> argparse.ArgumentParser:
     from outrigger_sim.hydraulics.flow_limit_run import add_flow_limit_arguments
 
     add_flow_limit_arguments(lp)  # shared-pump flow limit (criteria 9); absent = no attribute, the run is unchanged
+    from outrigger_sim.hydraulics.v5_options import add_hydraulic_arguments
+
+    add_hydraulic_arguments(lp, with_valve_tau=True)  # v5 options (spec v5 2.0); absent = none
     lp.add_argument("--expect-controller", choices=tuple(CONTROLLER_EXPECTATIONS), default=argparse.SUPPRESS,
                     help="RV6 / FINAL rows (spec 430.5 / 431.3): before the model is built, check that the run-time C2 "
                          "preset has the settings of this controller (CONTROLLER_EXPECTATIONS) and exit otherwise; "

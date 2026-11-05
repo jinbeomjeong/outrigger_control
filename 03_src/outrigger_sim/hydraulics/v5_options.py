@@ -124,6 +124,25 @@ class HydraulicOptions:
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
+    @classmethod
+    def from_dict(cls, values: dict[str, Any]) -> HydraulicOptions:
+        """The options of :meth:`to_dict` (a job description passed to a worker process)."""
+        flow = values.get("flow")
+        check_delay = values.get("check_delay")
+        lock_closure = values.get("lock_closure")
+        return cls(
+            flow=None if flow is None else FlowLimitSetting.from_dict(flow),
+            valve_tau_s=values.get("valve_tau_s"),
+            rod_release_force=bool(values.get("rod_release_force", False)),
+            check_delay=None if check_delay is None else CheckDelaySetting.from_dict(check_delay),
+            lock_closure=None if lock_closure is None else LockClosureSetting(**lock_closure),
+            lock_window_follows_plant=bool(values.get("lock_window_follows_plant", False)))
+
+    def without_flow(self) -> HydraulicOptions:
+        """The plant options alone (the runners keep the flow limit on their own path)."""
+        return HydraulicOptions(None, self.valve_tau_s, self.rod_release_force, self.check_delay,
+                                self.lock_closure, self.lock_window_follows_plant)
+
 
 def add_hydraulic_arguments(parser: argparse.ArgumentParser, *, with_valve_tau: bool) -> None:
     """CLI options of spec 2.0 (the flow options stay in ``add_flow_limit_arguments``).

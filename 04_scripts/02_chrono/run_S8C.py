@@ -1345,7 +1345,7 @@ def reapproach_settings_meta(controller) -> dict[str, Any] | None:
 
 
 def _controller(case: S8Case, params_ctrl, params_plant, variant: str | None = None, *,
-                soil_off_replay: bool = False):
+                soil_off_replay: bool = False, hydraulics=None):
     """C2 controller of an L2b S8 case.
 
     ``params_ctrl`` is the L1 YAML (C-R11: controller at beta 1.0) and has no
@@ -1374,6 +1374,11 @@ def _controller(case: S8Case, params_ctrl, params_plant, variant: str | None = N
                                f"{getattr(l2b, 'lock_valve', None)!r} / no actuator.counterbalance")
         config = config.with_lock_valve("counterbalance", l2b.counterbalance)
     config = with_lock_window_tau(config, case.base.tau_v_s)
+    if hydraulics is not None:  # v5 spec 2.6: the window of the plant LC rule (or unchanged)
+        from outrigger_sim.hydraulics.v5_options import apply_lock_window
+
+        config = apply_lock_window(config, hydraulics, params_plant.actuator.max_speed_m_s,
+                                   case.base.tau_v_s)
     config = with_reapproach_variant(config, variant)
     if soil_off_replay:
         config = with_soil_off_replay(config)
@@ -1429,7 +1434,8 @@ def g1_event_state(ev: dict[str, Any] | None, state: dict[str, Any], t0: float,
 
 
 def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
-               flow_limit: dict[str, Any] | None = None):
+               flow_limit: dict[str, Any] | None = None,
+               hydraulics: dict[str, Any] | None = None):
     """Run one L2b S8 case (module docstring). ``flow_limit``: settings of the shared-pump flow limit
     (``FlowLimitSetting.to_dict``), on from the end of the crawler settle; None = off, nothing below
     runs differently. Returns (summary, run_meta)."""
@@ -1455,6 +1461,16 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
     check_settle(start)
     from outrigger_sim.chrono.l2b_engine import L2bEngine
 
+    # v5 plant options (spec v5 2.0, ``HydraulicOptions.to_dict``); None = nothing below runs
+    v5_options = v5_meta = None
+    if hydraulics is not None:
+        from outrigger_sim.chrono.v5_plant import apply_plant_options
+        from outrigger_sim.control.c2 import R8_PERIOD_S
+        from outrigger_sim.hydraulics.v5_options import HydraulicOptions, validate
+
+        v5_options = HydraulicOptions.from_dict(hydraulics)
+        validate(v5_options, period_s=R8_PERIOD_S, engine="L2b", lock_valve=case.lock_valve)
+        v5_meta = apply_plant_options(model.actuator, v5_options, params)
     flow = None
     if flow_limit is not None:
         from outrigger_sim.hydraulics.flow_limit_run import FlowLimitSetting, RecordedFlowLimiter
@@ -1466,7 +1482,13 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
     leg_sensors = st.leg_sensor_config_for(sc, t0) if bcase.sensor_model else LegSensorConfig()
     suite = SensorSuite(imu_config_for_grade(sc.grade, sample_period_s=s6c.IMU_SAMPLE_PERIOD_S),
                         leg_sensors, seed=sc.seed)
-    c2, config, settle_meta, fallback_ratio_meta = _controller(case, params_ctrl, params)
+    c2, config, settle_meta, fallback_ratio_meta = _controller(case, params_ctrl, params,
+                                                               hydraulics=v5_options)
+    if v5_options is not None:  # criteria P-4: the controller window is the one of the options
+        from outrigger_sim.hydraulics.v5_options import check_lock_window_meta
+
+        check_lock_window_meta(c2.config.two_pressure.to_meta(), v5_options,
+                               params.actuator.max_speed_m_s, case.base.tau_v_s)
     controller = c2
     forced = None
     if ev and ev["kind"] == "retract":
@@ -1675,6 +1697,8 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
                "lifted_reapproach": reapproach_settings_meta(c2)}  # C-S8-36
     if flow is not None:  # key only with the limit (a run without it keeps its meta)
         s8_meta["flow_limit"] = flow.meta()
+    if v5_meta is not None:  # key only with a v5 option
+        s8_meta["v5_hydraulics"] = v5_meta
     settings = {**asdict(sc), "snapshot": None, "start_t_s": t0, **c2_meta,
                 "reanchor_expected": expect, "bundle_c": bundle,
                 "s7c": {"engine": "L2b_NSC", "case_id": case.case_id,
@@ -1792,6 +1816,10 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
         summary["flow_limit"] = {
             **flow.meta(), "series": flow.save(case_dir / FLOW_SERIES_NAME),
             "summary": flow.summary([t + t0 for t, _ in phases], tuple(name for _, name in phases))}
+    if v5_meta is not None:  # the block only with a v5 option
+        from outrigger_sim.chrono.v5_plant import plant_records
+
+        summary["v5_hydraulics"] = {**v5_meta, "records": plant_records(model.actuator)}
     engine.close()
     return summary, run_meta
 
@@ -2624,6 +2652,8 @@ def job_case(case, case_dir):
         c = case_table()[case.case_id]
         if c.engine == "L2b_NSC":
             flow_kw = {"flow_limit": s["flow_limit"]} if s.get("flow_limit") else {}
+            if s.get("hydraulics"):
+                flow_kw["hydraulics"] = s["hydraulics"]
             summary, run_meta = job_l2b_s8(c, d, duration_s=s.get("duration_s"), **flow_kw)
         else:
             summary, run_meta = s6c.job_bundle_c(c.base, d, duration_s=s.get("duration_s"))
@@ -2928,7 +2958,8 @@ def _batch_dir(tag: str) -> Path:
 
 
 def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, duration_s: float,
-              flow_limit: dict[str, Any] | None = None):
+              flow_limit: dict[str, Any] | None = None,
+              hydraulics: dict[str, Any] | None = None):
     from outrigger_sim.batch import Case
 
     l1 = [c for c in cases if c.engine == "L1R" and c.base.blocked_in(s6c.STATES)]
@@ -2939,6 +2970,10 @@ def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, durati
         off_l2b = [c.case_id for c in cases if c.engine != "L2b_NSC"]
         if off_l2b:
             raise SystemExit(f"--flow-eta-v: run_S8C wires the flow limit on L2b cases only: {off_l2b}")
+    if hydraulics is not None:  # spec v5 2.0: M2, M1c, LC are L2b options; L1 rows refused
+        off_l2b = [c.case_id for c in cases if c.engine != "L2b_NSC"]
+        if off_l2b:
+            raise SystemExit(f"v5 hydraulic options on L2b cases only: {off_l2b}")
     batch_dir = _batch_dir(f"{tag}_check" if check else tag)
     from outrigger_sim.chrono import s8_plant_adapter as plant
 
@@ -2953,6 +2988,9 @@ def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, durati
     if flow_limit is not None:  # keys only with the limit (a batch without it keeps its files)
         meta["flow_limit"] = flow_limit
         flow_settings["flow_limit"] = flow_limit
+    if hydraulics is not None:  # keys only with a v5 option
+        meta["hydraulics"] = hydraulics
+        flow_settings["hydraulics"] = hydraulics
     (batch_dir / "batch_meta.json").write_text(json.dumps(s6c._plain(meta), indent=1), "utf-8")
     table = {c.case_id: c for c in cases}
     jobs = [Case(c.case_id, {"duration_s": duration_s if check else None, **flow_settings})
@@ -3904,11 +3942,21 @@ def main(argv):
     from outrigger_sim.hydraulics.flow_limit_run import add_flow_limit_arguments, flow_setting_from_args
 
     add_flow_limit_arguments(ap)
+    from outrigger_sim.hydraulics.v5_options import add_hydraulic_arguments
+
+    add_hydraulic_arguments(ap, with_valve_tau=False)  # v5 options (spec v5 2.0); absent = none
     args = ap.parse_args(argv)
     flow_setting = flow_setting_from_args(args)
     if flow_setting is not None and args.action not in ("run", "check"):
         raise SystemExit("--flow-eta-v only with run / check")
     flow_limit = None if flow_setting is None else flow_setting.to_dict()
+    from outrigger_sim.hydraulics.v5_options import hydraulic_options_from_args
+
+    v5_options = hydraulic_options_from_args(args).without_flow()
+    hydraulics = v5_options.to_dict() if v5_options.is_any_on else None
+    if hydraulics is not None and args.action not in ("run", "check"):
+        # the ML branch restore (refresh_restored_controller) is not defined with the v5 options
+        raise SystemExit("v5 hydraulic options only with run / check")
     if args.action in ("run", "check") and not args.dry_run:
         from outrigger_sim.chrono.fallback_ratio import refuse_env_override
 
@@ -4043,12 +4091,12 @@ def main(argv):
     require_fault_reground(cases)  # C-S8-68: head-fault cases only after P-S8-24
     if args.action == "check":
         run_batch(cases, tag=tag, layout=args.workers, check=True,
-                  duration_s=args.duration, flow_limit=flow_limit)
+                  duration_s=args.duration, flow_limit=flow_limit, hydraulics=hydraulics)
         return
     if not args.approved:
         raise SystemExit("S8 main run needs the user's confirmation: add --approved")
     run_batch(cases, tag=tag, layout=args.workers, check=False, duration_s=0.0,
-              flow_limit=flow_limit)
+              flow_limit=flow_limit, hydraulics=hydraulics)
 
 
 if __name__ == "__main__":
