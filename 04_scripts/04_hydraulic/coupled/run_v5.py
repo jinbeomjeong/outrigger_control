@@ -2,7 +2,8 @@
 
 Batches: ``main`` (required 72 rows x 15 settings + L2 8 rows + regression 28 rows x 4 = 1,200),
 ``smoke`` (V0 R12 phase 0, compared with the golden hash), ``w2`` (spec W-2: L1 and L2 on the 8
-rows).
+rows), ``item8`` (criteria 13.1 (1): R6 / R8 / R9 x V0, VB x eps 1e-3, 3e-3 = 12; the eps 0 and
+2e-3 phases are the regression rows of ``main``).
 One JSON line per run in ``06_analysis/03_hydraulic/coupled/v5/<batch>.jsonl`` (appended; runs
 already in the file are skipped). Each run has its own spawned worker (``maxtasksperchild=1``): the
 harness patches stay in the process. Deterministic (no noise). Values only; the verdict is
@@ -55,6 +56,11 @@ L2_ROWS = ("R12", "R14", "R16", "S1", "S7", "R2", "R7", "S8")
 REQUIRED_SETTINGS = ("V0", "V1", "V2", "V3", "L1", "VB", "V4", "V5", "V6", "V7", "V8",
                      "LS1", "LS2", "LS3", "LS4")
 REGRESSION_SETTINGS = ("V0", "VB", "V4", "V5")
+ITEM8_ROWS = ("R6", "R8", "R9")
+"""Criteria 13.1 (1): item 8 rows top / middle / bottom (rpB, F_s 0)."""
+ITEM8_EXTRA_EPS = (1e-3, 3e-3)
+"""Criteria 13.1: the phases the regression batch (eps 0, 2e-3) does not run."""
+ITEM8_SETTINGS = ("V0", "VB")
 
 
 def _lc(ratio: float = OVERLAP_RATIO, delay_s: float = CLOSING_DELAY_S) -> dict:
@@ -128,6 +134,9 @@ def batch_jobs(name: str) -> list[dict]:
         return [{**_phase_jobs("R12")[0], "setting": "V0"}]
     if name == "w2":
         return [{**row, "setting": s} for s in ("L1", "L2") for row in l2_rows()]
+    if name == "item8":
+        return [{"case": case, "eps": eps, "setting": s}
+                for s in ITEM8_SETTINGS for case in ITEM8_ROWS for eps in ITEM8_EXTRA_EPS]
     raise ValueError(f"unknown batch {name!r}")
 
 
