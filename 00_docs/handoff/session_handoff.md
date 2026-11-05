@@ -2,8 +2,8 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
 
-- 갱신: 2026-11-05 15:30, C4G2 단독 인수 합격 뒤 중간 커밋 직전(커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
-- 직전 커밋: **1a9b4e6**(M1b·M1c, S8 끔 맞춤 판정; 푸시 완료). 결정 경과 원본은 `decision_log.md` 4절 끝.
+- 갱신: 2026-11-05 21:00, C4G2 병합 직전(커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
+- 직전 커밋: **7320f00**(C4G2 단독 인수, K1 탈락; 푸시 완료). 이 커밋 직전 `merge-c4g2`(`95268ab`, `3f2867e`)를 fast-forward로 병합. 결정 경과 원본은 `decision_log.md` 4절 끝.
 
 ## 현재 위치
 
@@ -14,7 +14,9 @@
 
 ## 진행 중
 
-1. **C4G2 단독 Chrono 1건** `S9EV_G1_FLFs0_RE1bF_d003_C4G2`: 14:31 시작, 러너 PID 168096, P 0x55, 예상 16시쯤. 로그 `scratchpad\cad_k1soil\logs\runner_d003.log`, 결과 `07_results\S9\batch_k1soil_G1_20261105\`, 추출 `scratchpad\cad_k1soil\extract_d003.py`. 끝나면 control-expert 판정. 세션 cron `ae169c13`이 점검한다(새 세션으로 이어지지 않음).
+1. **G1 FL F_s 0 RL 약점(끝남):** 끔 위상 6개 RL 5.96~9.79 kN, E-3 3/6 실패, 0.5 s 평균·창 뒤 부상 기준 충족, C4G2 단독 δ 0.03 7.30 kN(끔 7.14) → 저장 약점으로 기록, 사전 조건 충족(`chrono/k1soil/phase_judgement.md`). 대응은 병합 뒤 v5 구현과 함께.
+2. **병합 끝:** 이어서 최종 대표 묶음 + S7을 밤사이(사용자 결정, 판정 실패면 멈추고 묻는다). 집계 스크립트가 `P3-4_within_0p2`만 읽어 FLAG가 실패처럼 보이는 점과 `COUPLED_eta085` 저장 짝이 C4G2 이전인 점은 v5에서 처리.
+3. **v4:** 43쪽, G1 다물체 반영(초록 포함), 바뀐 절 리뷰 진행 중. 표 22 "강체 사건 창 안 ≤ 185.5 bar"를 "강체 다물체"로 좁히는 수정 대기. 리뷰 뒤 사용자 입력·Word 확인·투고.
 
 scratchpad: `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace-outrigger-control\9d4aec18-3b7f-4f45-ae19-6d57127a6418\scratchpad`.
 
@@ -27,7 +29,7 @@ scratchpad: `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace-outrigger-c
 
 ## 미병합 브랜치
 
-`worktree-agent-a1212bd2c33c92475`(C2 반환 명령 절단), `worktree-agent-ae9039e69988d5282`(패드 틈 옵션), `worktree-agent-a7f0f4f0aceadde2c`(C4G2, K1 코드도 있으나 켜지 않음). 구동 스크립트 사본 `04_scripts/03_control/touch_phase/{acceptance,chrono_runners}`(이번 C4G2 단독·K1 토양 러너 포함)는 scratchpad 경로 의존(기록용).
+코드는 모두 master에 병합됨(`3f2867e`). 남은 것은 `worktree-agent-ae9039e69988d5282`의 코드 뒤 커밋 `02efc57`(R16 asym 보고서·원자료, master에 없는 파일 21개)뿐이다. 구동 스크립트 사본 `04_scripts/03_control/touch_phase/{acceptance,chrono_runners}`(이번 C4G2 단독·K1 토양 러너 포함)는 scratchpad 경로 의존(기록용).
 
 ## 정리
 

@@ -19138,9 +19138,18 @@ Chrono-dev, 프로젝트 루트에서 `python -I -X utf8 -u 04_scripts/02_chrono
 - (a) 재사용은 431.2 스캔(SGS·R4 조건)과 L1gs·DSb75 오프라인 재생에 기댄다. ZIC 기각으로 ZIC 재구성은 판정에 쓰지 않는다. E3 재생으로 다시 확인하고, 하나라도 작동하면 그 사례는 (b)로 돌리고 사용자에게 알린다.
 - E1·E5는 ZIC·P37t와 무관하다(R2DS 기준). 최종 인수(finB2) 결과로 다시 만들 때 R4c30·SGS 효과가 들어간다.
 
+## 433. 최종 제어기 전환: C4G2 기본 켬 (2026-11-05)
+
+- **433.1 구성:** R8 C2 + L1gs + DSb75 + SGS any_loc + R4c30(429.11) + 반환 명령 절단(±v_max, 2026-11-04) + C4G2. C4(`TouchTwistHoldSettings`): TOUCH→LEVEL에서 D̂ = nᵀF 마지막 TOUCH 3표본 평균, |D̂| < 1 kN이면 미작동, τ* = clip(−D̂/k_nom, ±3 mm), 1.5 s 또는 재접근 시작까지 u + 2.5(τ* − nᵀ(s − s_te))n, 음수 없음, v_max로 재조정. G2(`vector_ramp`): 첫 무절단 주기까지, |nᵀ(l − ρr)| ≥ 0.2 mm/s면 공통 비율 증분. K1은 탈락(코드 유지, 기본 끔, `retrigger_samples` 1). 태그 `final_C4G2`.
+- **433.2 켜는 법:** `C2Config().with_10hz_d1()`. 클래스 기본값은 끔. 끔: `touch_twist_hold=False`.
+- **433.3 전환 전 재현:** `05_tests/unit/pre_c4g2_preset_runner.py <script> ...`(이번 전환만 되돌림). 옛 태그 `final_SGS_R4`는 이 경로에서만 통과. 429.11 이전은 `pre_switch_preset_runner.py`. v4 프리셋은 `clip_returned_command=False, touch_twist_hold=False`.
+- **433.4 근거:** 인수 `acceptance/c4g2_only`(잡음 L2 8/855, CP 1.682 %, L3 12/501, 3.852 % 기록, 거짓 LOC 0, 격자 통과→실패 0). 잡음 1,527건 중 59건 재실행, K1 비작동 행은 재사용(`criteria_c4g2_only.md`). 격자 768행은 끔과 해시가 같아 C4G2를 시험하지 못한다(힘 이득 근거는 Chrono, 비평면 `chrono/g8c3/g8c3_judgement.md`). 끔 대비 잡음 통과→실패 L2 3행·L3(기록) 4행, 실패→통과 L2 6행. 전환 동일성: 프리셋 경로로 c4g2 저장값 27행(해시 22행, 저장 해시가 없는 5행은 사건 목록·전체 기록 동일), 전환 전 경로로 끔 저장값 4행 재현(hold 이벤트가 있는 행은 잡음 11행). 비평면 5건과 토양 Chrono는 74032be 러너의 값이고 병합 코드로 다시 돌린 것이 아니다.
+- **433.5 알려진 한계:** 강체 FL F_s 0 FS24·RE1bF 실패(끔과 같음). `g8|29` 안전 정지: 하네스 유연 크롤러 + F_s 4에서만 관측, Chrono L1-R F_s 0·L2b F_s 4에서는 정지 없음(상한 여유 3.8~8.9 mm), 두 조건을 함께 가진 Chrono 없음, 운용 조건 밖. G1 FL F_s 0 RE1bF 대각 RL 1 ms 약점: 끔 위상 6개 5.96~9.79 kN(E-3 3/6 실패, ≤ 66 ms, 0.5 s 평균 ≥ 45.6 kN, 창 뒤 부상 0), C4G2 단독은 δ 0.03에서 7.30 kN(끔 7.14 kN)이라 기존 약점. 하한이 아니며 대응은 v5(`chrono/k1soil/phase_judgement.md`).
+- **433.6 P3-4 크리프 규칙 사후 변경(v5부터, v4 값 불변):** 침하율 창 0.2 s → 1.0 s, 사유는 SCM 패드 가장자리 2 Hz 수치 꼬리. `window_short` 행은 통과로 세지 않고 FLAG(`verdict` flag, `within_0p2` False, `absmax_within_0p2_record`에 값 판정). 옛 규칙: `level --creep-rule legacy_0p2`, 저장 행 재판정은 저장 규칙 유지. 저장 116행: 통과→비통과 0, 통과 90→91, FLAG 1(J2 ×1.1, 창 0.32 s). `P3-4_within_0p2`만 읽는 옛 집계 스크립트는 FLAG를 실패처럼 보이므로 v5 집계에서 `P3-4_verdict`를 읽게 고친다.
+
 ## 434. 논문 v4 저하중 놓침 근거: 분모 19와 ML 기록 재생(control 2026-11-05)
 
-433절은 C4G2 문구용으로 예약돼 있어 건너뛴다. 근거 파일은 `06_analysis/02_control/paper/ml_jc/`(`README.md`)에 있다. 새 시뮬레이션은 없고 저장 기록의 오프라인 재생과 집계다(판정 주기 10 Hz). 기존 절은 고치지 않았다.
+433절은 C4G2 전환 절이다. 근거 파일은 `06_analysis/02_control/paper/ml_jc/`(`README.md`)에 있다. 새 시뮬레이션은 없고 저장 기록의 오프라인 재생과 집계다(판정 주기 10 Hz). 기존 절은 고치지 않았다.
 
 ### 434.1 분모 19의 구성
 - 216.4의 "J_C 0/19, J_P 2/19"는 파일럿 체크 두 배치의 **다리별 $F_{min}$ 미달 구간 19개, 실행 10건**이다. 사건 수가 아니다.
