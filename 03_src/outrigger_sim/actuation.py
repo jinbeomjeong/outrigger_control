@@ -183,6 +183,7 @@ class SpeedReference:
         self._zero_command_m_s = 0.0
         self.overlap_cut_steps = np.zeros(n, dtype=np.int64)
         """Steps whose spool flow the overlap cut stopped (LC, v5 spec 2.5); record only."""
+        self._check_delay: Any = None
 
     # --- LC overlap tail cut (v5 spec 2.5) -------------------------------------------------
 
@@ -202,6 +203,22 @@ class SpeedReference:
             raise ValueError("the lock closure needs the valve model (configure_valve first)")
         self._overlap_speed_m_s = float(setting.overlap_speed_m_s(self._v_max))
         self._zero_command_m_s = float(zero_command_m_s)
+
+    # --- M1c check opening delay (v5 spec 2.4) ---------------------------------------------
+
+    def set_check_delay(self, check_delay: Any) -> None:
+        """Put the M1c filter behind the valve (and the LC cut), before the flow limit.
+
+        Args:
+            check_delay: An object with ``filter_speed(t_s, dt_s, request_m_s) -> speeds`` (the
+                L2b adapter of ``hydraulics.check_open_delay``); None = off.
+
+        Raises:
+            ValueError: The valve model is off (the command-ramp path was never tested).
+        """
+        if check_delay is not None and not self._valve_on:
+            raise ValueError("M1c needs the valve model (configure_valve first)")
+        self._check_delay = check_delay
 
     @property
     def lock_closure_on(self) -> bool:
@@ -452,6 +469,8 @@ class SpeedReference:
             target = self._valve_step(dt)
             if self._overlap_speed_m_s is not None:
                 target = self._cut_overlap_tail(target)
+            if self._check_delay is not None:
+                target = self._check_delay.filter_speed(t_s, dt, target)
             if flow is not None:
                 target = flow.limit(t_s, dt, target, cylinder_force_N)
             if math.isfinite(a):

@@ -51,6 +51,7 @@ Units SI; per-leg arrays in LEG_ORDER.
 
 from __future__ import annotations
 
+import dataclasses
 import math
 from collections.abc import Mapping, Sequence
 from typing import Any
@@ -61,6 +62,11 @@ from numpy.typing import ArrayLike, NDArray
 
 from outrigger_sim.actuation import SATURATION_STOP_S, FlowLimit, SpeedReference
 from outrigger_sim.chrono.actuators import leg_force_limits_N
+from outrigger_sim.hydraulics.check_open_delay import (
+    CheckDelayInputs,
+    CheckDelayOutput,
+    CheckOpenDelay,
+)
 from outrigger_sim.hydraulics.counterbalance import Counterbalance
 from outrigger_sim.hydraulics.l2b_rod_side import L2bRodSide
 from outrigger_sim.hydraulics.rod_release import RodReleaseShift
@@ -105,6 +111,25 @@ def split_pressures(force_N: ArrayLike, rod_pressure_Pa: ArrayLike, head_area_m2
 
 class L2bHookMissedError(RuntimeError):
     """A step would run with a force the actuator hook did not set for it."""
+
+
+class _CheckDelayAdapter:
+    """M1c between the hook and the speed reference: the hook sets the plant inputs before
+    ``advance``, the reference calls :meth:`filter_speed` behind the valve (v5 spec 2.0 row 3)."""
+
+    def __init__(self, model: CheckOpenDelay) -> None:
+        self.model = model
+        self.inputs: CheckDelayInputs | None = None
+        self.output: CheckDelayOutput | None = None
+        self.pending_opening_m = np.zeros(len(model.A_h))
+
+    def filter_speed(self, t_s: float, dt_s: float, request_m_s: ArrayLike) -> NDArray[np.float64]:
+        if self.inputs is None:
+            raise RuntimeError("M1c filter without the hook inputs")
+        inputs = dataclasses.replace(self.inputs, t_s=float(t_s), dt_s=float(dt_s),
+                                     u_m_s=np.asarray(request_m_s, dtype=float))
+        self.output = self.model.filter(inputs)
+        return self.output.speed_m_s
 
 
 def make_force_motor(
@@ -219,6 +244,8 @@ class L2bForceActuator:
         """M2 (v5 spec 2.3, :meth:`configure_rod_release`); None = off, no line of it runs."""
         self._lock_closure: Any = None
         """LC setting (v5 spec 2.5, :meth:`configure_lock_closure`); None = off."""
+        self._check_delay: _CheckDelayAdapter | None = None
+        """M1c (v5 spec 2.4, :meth:`configure_check_delay`); None = off."""
         self.reset_piston_monitor()
         self._apply()
 
@@ -485,10 +512,74 @@ class L2bForceActuator:
         self._lock_closure = setting
 
     def _dashpot_N_s_m(self, u: NDArray[np.float64]) -> NDArray[np.float64]:
-        """Locked or moving dashpot per leg; with LC by the law's lock state (spec 2.5)."""
+        """Locked or moving dashpot per leg; with LC by the law's lock state (spec 2.5); a leg
+        that M1c holds takes the locked dashpot (spec 2.4)."""
         if self._lock_closure is not None and self.rod_side is not None and self.rod_side.armed:
-            return np.where(self.rod_side.locked, self._c_lock, self._c_move)
-        return np.where(np.abs(u) <= self._eps, self._c_lock, self._c_move)
+            c = np.where(self.rod_side.locked, self._c_lock, self._c_move)
+        else:
+            c = np.where(np.abs(u) <= self._eps, self._c_lock, self._c_move)
+        if self._check_delay is not None and self._check_delay.output is not None:
+            c = np.where(self._check_delay.output.lock_damping, self._c_lock, c)
+        return c
+
+    # --- M1c check opening delay (v5 spec 2.4, reference values) --------------------------------
+
+    def configure_check_delay(self, setting: Any, circuit: Any) -> None:
+        """Turn M1c on (``hydraulics.check_open_delay``; the units missed their criteria, the
+        results are reference values).
+
+        Args:
+            setting: ``CheckDelaySetting`` (VN or BL).
+            circuit: ``CheckDelayCircuit`` of these legs.
+
+        Raises:
+            ValueError: No rod-side law, the counterbalance path or the valve model off.
+        """
+        if self.rod_side is None:
+            raise ValueError("M1c needs the rod-side law (its lock state and pressures)")
+        if self.counterbalance is not None:
+            raise ValueError("M1c with lock_valve = counterbalance is refused (untested path)")
+        adapter = _CheckDelayAdapter(CheckOpenDelay(setting, circuit))
+        self.reference.set_check_delay(adapter)
+        self._check_delay = adapter
+
+    def check_delay_summary(self) -> dict[str, Any] | None:
+        return None if self._check_delay is None else self._check_delay.model.summary()
+
+    def _prepare_check_delay(self, pressure_force_N: NDArray[np.float64]) -> None:
+        """Inputs of the M1c filter from the state at the hook (before ``advance``)."""
+        oil = self._oil
+        assert oil is not None
+        rod_Pa = oil.rod_pressure_Pa
+        head_Pa = (pressure_force_N + rod_Pa * oil.annulus_area_m2) / self._area
+        band_N = np.zeros(self.n_legs)
+        if self.seal_friction is not None:
+            band_N = self.seal_friction.F_s_N - self._acting_f
+        self._check_delay.inputs = CheckDelayInputs(
+            math.nan, math.nan, np.zeros(self.n_legs), head_Pa, rod_Pa, oil.locked, oil.void_m(),
+            band_N, self.reference.s_ref_m)
+
+    def _apply_check_delay(self) -> None:
+        """After the force of this hook: seeds, the creep now, the opening shift one hook later
+        (after the law has released, as the harness applies it after the chunk)."""
+        adapter = self._check_delay
+        oil = self._oil
+        assert adapter is not None and oil is not None
+        if adapter.pending_opening_m.any():
+            self.reference.shift_reference(adapter.pending_opening_m)
+            adapter.pending_opening_m = np.zeros(self.n_legs)
+        output = adapter.output
+        if output is None:
+            return
+        for i in np.flatnonzero(np.isfinite(output.opening_rod_pressure_Pa)):
+            oil.seed_release_pressure(int(i), float(output.opening_rod_pressure_Pa[i]))
+            if self._rod_release is not None:
+                self._rod_release.seed_pressure(int(i), float(output.opening_rod_pressure_Pa[i]))
+        if output.creep_shift_m.any():
+            self.reference.shift_reference(output.creep_shift_m)
+            for i in np.flatnonzero(output.creep_shift_m != 0.0):
+                oil.shift_head(int(i), float(output.creep_shift_m[i]))
+        adapter.pending_opening_m = output.opening_shift_m.copy()
 
     def rod_release_record(self) -> dict[str, Any] | None:
         """M2 totals per leg (they move the stroke reading too); None when M2 is off."""
@@ -586,6 +677,8 @@ class L2bForceActuator:
         if self.seal_friction is not None:
             self._friction_hook(t_s, dt_s, s, ds, s_ref_now, u_acting)
             return
+        if self._check_delay is not None:
+            self._prepare_check_delay(self._acting_force)
         self.reference.advance(dt_s, cylinder_force_N=self._acting_force, t_s=t_s)
         u = self.reference.u_applied_m_s
         self._monitor_piston(t_s, s, self._acting_force)
@@ -599,6 +692,8 @@ class L2bForceActuator:
             c = self._dashpot_N_s_m(u)
             self._k_last = self.axial_stiffness_N_m(s_ref_now)
             self._force = spring + c * (u - ds)
+            if self._check_delay is not None:
+                self._apply_check_delay()
             if self._rod_release is not None:
                 self._shift_reference_for_rod_pressure(s_ref_now)
         if not np.all(np.isfinite(self._force)):
@@ -615,6 +710,8 @@ class L2bForceActuator:
         oil = self._oil
         assert sf is not None and oil is not None
         fp_acting = self._acting_force - self._acting_f
+        if self._check_delay is not None:
+            self._prepare_check_delay(fp_acting)
         self.reference.advance(dt_s, cylinder_force_N=fp_acting, t_s=t_s)
         u = self.reference.u_applied_m_s
         if not sf.armed or oil.arm_count != self._oil_arm_seen:
@@ -635,6 +732,8 @@ class L2bForceActuator:
         force = spring + c * (u - ds)
         if not np.all(np.isfinite(force)):
             raise FloatingPointError(f"L2b force law not finite: {force}")
+        if self._check_delay is not None:
+            self._apply_check_delay()
         if self._rod_release is not None:
             self._shift_reference_for_rod_pressure(s_ref_now)
         f_p = force - sf.f
@@ -792,6 +891,9 @@ class L2bForceActuator:
             })
         if self._rod_release is not None:  # M2 keys only with M2 on
             out.update(self._rod_release.state_arrays())
+        if self._check_delay is not None:  # M1c keys only with M1c on
+            out.update(self._check_delay.model.state_arrays())
+            out["m1c_pending_opening_m"] = self._check_delay.pending_opening_m.copy()
         return out
 
     def restore_state(self, arrays: Mapping[str, NDArray[Any]]) -> None:
@@ -810,6 +912,11 @@ class L2bForceActuator:
             self._restore_s8(arrays)
         if self._rod_release is not None:
             self._rod_release.restore_state(arrays)
+        if self._check_delay is not None:
+            self._check_delay.model.restore_state(arrays)
+            if "m1c_pending_opening_m" in arrays:
+                self._check_delay.pending_opening_m = np.array(arrays["m1c_pending_opening_m"],
+                                                               dtype=float)
         self._apply()
 
     def _restore_s8(self, arrays: Mapping[str, NDArray[Any]]) -> None:
@@ -879,6 +986,8 @@ class L2bForceActuator:
                 "rule": "moving leg: s_ref += A_ann (p_r_prev - p_r) / k_h(s_ref), both directions "
                         "(v5 spec 2.3, D-4); p_r = rod-side law value before the pressure floor",
                 "status": "ASSUMPTION p_bB, tau, p_r0 (spec 2.3)"}
+        if self._check_delay is not None:  # key only with M1c on
+            out["check_delay"] = self._check_delay.model.meta()
         if self._lock_closure is not None:  # key only with LC on
             out["lock_closure"] = {
                 "overlap_ratio": self._lock_closure.overlap_ratio,

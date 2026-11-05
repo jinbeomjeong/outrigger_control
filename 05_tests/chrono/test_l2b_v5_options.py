@@ -453,3 +453,101 @@ def test_lc_refuses_the_counterbalance_and_a_plant_without_the_valve_model() -> 
     reference = SpeedReference([0.3] * 4, [STROKE_RANGE_M] * 4, max_speed_m_s=P.v_max, ramp_s=0.1)
     with pytest.raises(ValueError, match="valve model"):
         reference.configure_lock_closure(_lock_closure(0.02, 0.05), zero_command_m_s=1e-6)
+
+# --- M1c on the L2b hook (spec 2.4, C-6, C-7) ----------------------------------------------------
+
+def _check_delay_circuit():
+    from outrigger_sim.hydraulics.check_open_delay import CheckDelayCircuit
+
+    return CheckDelayCircuit(head_area_m2=P.A_h, annulus_area_m2=P.A_r, stroke_m=P.stroke,
+                             rod_dead_length_m=P.L0r, head_dead_length_m=P.L0h,
+                             bulk_modulus_Pa=P.beta, tank_pressure_Pa=2e5, max_speed_m_s=P.v_max,
+                             compensator_drop_Pa=P.dp_comp)
+
+
+def _m1c_actuator(kind: str):
+    from outrigger_sim.hydraulics.v5_options import CheckDelaySetting
+
+    case = _Case(3.0, [], is_body_fixed=True)
+    actuator, motors = _make_actuator(case)
+    actuator.configure_check_delay(CheckDelaySetting(kind), _check_delay_circuit())
+    return actuator, motors
+
+
+def _drive_front_left(actuator, speed_m_s: float, duration_s: float, first_step: int = 0):
+    command = np.zeros(4)
+    command[FRONT_LEFT] = speed_m_s
+    speeds = []
+    for k in range(first_step, first_step + round(duration_s / DT_S)):
+        actuator.set_command(command)
+        actuator.hook(k * DT_S, DT_S)
+        actuator.on_step_end()
+        speeds.append(actuator.reference.u_applied_m_s[FRONT_LEFT])
+    return np.array(speeds)
+
+
+def test_c6_hook_inputs_are_the_harness_definitions() -> None:
+    """Spec C-6: p_h = (F_p + p_r A_ann) / A_p without the floor, the law's lock state and p_r;
+    the friction-sign question of C-6 needs the harness kernel and is not settled here."""
+    actuator, _ = _m1c_actuator("BL")
+    _drive_front_left(actuator, 0.0, 0.01)
+    inputs = actuator._check_delay.inputs
+    oil = actuator.rod_side
+    expected_head = (actuator.acting_pressure_force_N + oil.rod_pressure_Pa * P.A_r) / P.A_h
+    assert np.array_equal(inputs.p_h, expected_head)
+    assert np.array_equal(inputs.p_r, oil.rod_pressure_Pa)
+    assert np.array_equal(inputs.locked, oil.locked)
+    assert np.all(inputs.band_N == 0.0)
+
+
+def test_m1c_holds_the_extending_leg_then_lets_it_go() -> None:
+    actuator, _ = _m1c_actuator("BL")
+    _drive_front_left(actuator, 0.0, 0.01)
+    speeds = _drive_front_left(actuator, 0.25 * P.v_max, 2.0, first_step=100)
+    held = np.flatnonzero(speeds <= 2e-6)
+    assert held.size > 0 and speeds[-1] > 0.2 * P.v_max
+    summary = actuator.check_delay_summary()
+    assert summary["unit_status"] == "below_criteria_reference_only"
+    assert summary["n_fills"][FRONT_LEFT][0] == 1
+
+
+def test_c7_step_convergence_of_the_head_opening() -> None:
+    """Spec C-7: head opening stroke with 1 ms against 1e-4 s steps within 1 %."""
+    from outrigger_sim.hydraulics.check_open_delay import CheckDelayInputs, CheckOpenDelay
+    from outrigger_sim.hydraulics.v5_options import CheckDelaySetting
+
+    strokes = []
+    for dt in (1e-3, 1e-4):
+        model = CheckOpenDelay(CheckDelaySetting("VN"), _check_delay_circuit())
+        u = np.zeros(4)
+        u[FRONT_LEFT] = 0.25 * P.v_max
+        pushed = 0.0
+        for k in range(round(10.0 / dt)):
+            model.filter(CheckDelayInputs(k * dt, dt, u, np.full(4, 89.5e5), np.full(4, 2e5),
+                                          np.ones(4, bool), np.zeros(4), np.zeros(4), P.s0))
+            pushed += u[FRONT_LEFT] * dt
+            if model.is_open[FRONT_LEFT]:
+                break
+        strokes.append(pushed)
+    assert strokes[0] == pytest.approx(strokes[1], rel=0.01)
+
+
+def test_m1c_snapshot_round_trip_and_refusals() -> None:
+    from outrigger_sim.hydraulics.v5_options import CheckDelaySetting
+
+    first, _ = _m1c_actuator("VN")
+    _drive_front_left(first, 0.0, 0.01)
+    _drive_front_left(first, 0.25 * P.v_max, 0.05, first_step=100)
+    second, _ = _m1c_actuator("VN")
+    second.restore_state(first.state_arrays())
+    a = _drive_front_left(first, 0.25 * P.v_max, 0.5, first_step=600)
+    b = _drive_front_left(second, 0.25 * P.v_max, 0.5, first_step=600)
+    assert np.array_equal(a, b)
+    plain, _ = _make_actuator(_Case(1.0, [], is_body_fixed=True))
+    assert not [key for key in plain.state_arrays() if key.startswith("m1c_")]
+    plain.counterbalance = object()
+    with pytest.raises(ValueError, match="counterbalance"):
+        plain.configure_check_delay(CheckDelaySetting("VN"), _check_delay_circuit())
+    reference = SpeedReference([0.3] * 4, [STROKE_RANGE_M] * 4, max_speed_m_s=P.v_max, ramp_s=0.1)
+    with pytest.raises(ValueError, match="valve model"):
+        reference.set_check_delay(object())

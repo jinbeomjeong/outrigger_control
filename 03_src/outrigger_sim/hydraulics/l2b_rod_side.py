@@ -484,13 +484,32 @@ class L2bRodSide:
                                             / self._a_r[i])
         self._last_force = out
 
+    def void_m(self) -> NDArray[np.float64]:
+        """Per leg ``(dc - dc_knee)+`` of a locked leg at the last call: the oil the floor-limited
+        rod spring did not get (M1c input, v5 spec 2.4); 0 while moving or disarmed."""
+        out = np.zeros(self._n)
+        if not self._armed or not hasattr(self, "_last_c"):
+            return out
+        for i in np.flatnonzero(self._locked):
+            knee_c = self.knee_force_N(int(i)) / self.k1_lock(int(i))
+            out[i] = max(float(self._last_c[i] - self._c_lock[i]) - knee_c, 0.0)
+        return out
+
+    def seed_release_pressure(self, i: int, pressure_Pa: float) -> None:
+        """M1c retract opening (v5 spec 2.4): the moving pressure lag of the next release starts
+        at ``pressure_Pa`` (the release step reads ``_last_p_r``)."""
+        self._last_p_r[i] = pressure_Pa
+
     def shift_head(self, i: int, delta_m: float) -> None:
         """CB head discharge of ``delta_m = dV / A_p`` (spec 4.2): the caller lowers ``s_ref`` by
         ``delta_m``; a locked leg moves its anchor so that the head force drops by ``k_h delta``
         and the rod side is unchanged (``c_lock -= delta``, ``F_lock -= k_h delta``)."""
         if self._armed and self._locked[i]:
             self._c_lock[i] -= delta_m
-            self._f_lock[i] -= self._k_h[i] * delta_m
+            # oil-only law (CB path): k_h; with the outer path in series the head force drops by
+            # k_2 delta (M1c on the S7 path, v5 spec 2.4)
+            stiffness = self._k_h[i] if self.oil_only else self.k2_lock(i)
+            self._f_lock[i] -= stiffness * delta_m
 
     def vent_rod(self, i: int, volume_m3: float) -> None:
         """CB rod-side discharge (spec 4.2): ``p_r0 -= k_r dV / A_ann^2``, ``F_lock += k_r dV /

@@ -389,6 +389,24 @@ class CheckOpenDelay:
             self.crept[i] = target
             self.creep_mm[i] += step * 1e3
 
+    # --- snapshot ------------------------------------------------------------------------------
+    STATE_FIELDS = ("x", "line_dir", "is_open", "charged", "crept", "fill_start_t",
+                    "rod_released", "p_b_after", "hold_s", "lost_mm", "n_fills", "discharge_mm",
+                    "creep_mm", "void_peak_mm")
+
+    def state_arrays(self, prefix: str = "m1c_") -> dict[str, NDArray[Any]]:
+        """Line state and counters (the fill log is a record, not state)."""
+        return {prefix + name: np.array(getattr(self, name)) for name in self.STATE_FIELDS}
+
+    def restore_state(self, arrays: dict[str, NDArray[Any]], prefix: str = "m1c_") -> None:
+        """A snapshot without the keys starts with empty lines (all checks shut)."""
+        for name in self.STATE_FIELDS:
+            key = prefix + name
+            if key in arrays:
+                current = getattr(self, name)
+                restored = np.array(arrays[key], dtype=current.dtype).reshape(current.shape)
+                setattr(self, name, restored)
+
     # --- record --------------------------------------------------------------------------------
     def summary(self) -> dict[str, Any]:
         return {"unit_status": UNIT_STATUS, "setting": {"kind": self.setting.kind,
