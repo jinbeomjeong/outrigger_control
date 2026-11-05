@@ -10,6 +10,7 @@ Usage: python -I -B 04_scripts/04_hydraulic/coupled/aggregate_v5.py <batch> [<ba
 """
 from __future__ import annotations
 
+import itertools
 import json
 import statistics
 import sys
@@ -104,7 +105,7 @@ def _level_summary(rows: list[dict], row_name: str, setting: str) -> dict:
 
 def _is_ordered_and_apart(summaries: list[dict]) -> bool:
     """Medians strictly rising and each range wholly below the next one."""
-    for lower, upper in zip(summaries, summaries[1:]):
+    for lower, upper in itertools.pairwise(summaries):
         if lower["median_kN"] >= upper["median_kN"]:
             return False
         if lower["range_kN"][1] >= upper["range_kN"][0]:
