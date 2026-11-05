@@ -18,7 +18,10 @@ controller's own settings classes (:class:`~outrigger_sim.control.c2.FastRelevel
 controller's recorded events and probe results (not recomputed). The re-approach follows the
 re-trigger rule RT of P-S8-16 (spec rev. 52 228.3) when the settings turn it on: an
 other-diagonal start inside the opposite window waits for the strong confirmation (event
-``leg_reapproach_deferred``), so the replay gives the controller's start times.
+``leg_reapproach_deferred``), and K1 when ``retrigger_samples`` asks for it: a start inside the
+re-trigger window waits for that many low samples. So the replay gives the controller's start
+times. :attr:`ActionKind.REAPPROACH_DEFERRED` has no reason field; the controller event of K1 is
+``leg_reapproach_deferred:<leg>:retrigger``.
 
 :attr:`WatchMode.CONTROLLER` gates P5 / R-5 / re-approach on the recorded phases (READY, PROBE
 with the low-load abort, the re-approach phases), so a replay of the controller's own judge
@@ -99,7 +102,7 @@ class ActionKind(StrEnum):
     REAPPROACH_CONTACT = "leg_reapproach_contact"
     REAPPROACH_NO_CONTACT = "leg_reapproach_no_contact"
     REAPPROACH_DEFERRED = "leg_reapproach_deferred"
-    """P-S8-16 RT 1: first sample of a deferred other-diagonal start (bookkeeping)."""
+    """P-S8-16 RT 1 and K1: first sample of a deferred start (bookkeeping)."""
     GE2 = "support_changed"
     R5_FALLBACK_SLOPE = FALLBACK_SLOPE_EVENT
     """P-S8-22: a fallback leg's R-5 fall passed the rate threshold (information)."""
@@ -533,10 +536,16 @@ class _Replayer:
             self._add(row, leg, ActionKind.REAPPROACH_START)
 
     def _defers_reapproach(self, row: int, leg: int, rules: LiftedReapproachSettings) -> bool:
-        """``C2Controller._defers_reapproach`` (P-S8-16 RT 1)."""
+        """``C2Controller._defers_reapproach`` (P-S8-16 RT 1, K1)."""
         state = self.state
+        t_s = float(self.inputs.t_s[row])
+        is_retrigger_waiting = state.low_counts[leg] < rules.retrigger_samples and (
+            rules.is_retrigger(t_s, state.last_end_s)
+        )
+        if is_retrigger_waiting:
+            return True
         needs_confirmation = rules.needs_strong_confirmation(
-            float(self.inputs.t_s[row]), state.last_end_s, state.last_sign, DIAGONAL_SIGNS[leg]
+            t_s, state.last_end_s, state.last_sign, DIAGONAL_SIGNS[leg]
         )
         return needs_confirmation and state.strong_counts[leg] < rules.opposite_strong_samples
 
