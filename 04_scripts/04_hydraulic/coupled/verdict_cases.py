@@ -70,6 +70,9 @@ class EventTwin:
     offset_s: float
     fs_kN: float
     level: str = "top"
+    event_time_s: float | None = None
+    """Timing ``flow_saturation`` (v5 criteria 13.3, X-4): absolute reference time t_a [s]; the
+    event starts at t_a + ``offset_s``. Unused by the other timings."""
 
 
 @dataclass(frozen=True)

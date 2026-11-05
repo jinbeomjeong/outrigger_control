@@ -3,7 +3,10 @@
 Batches: ``main`` (required 72 rows x 15 settings + L2 8 rows + regression 28 rows x 4 = 1,200),
 ``smoke`` (V0 R12 phase 0, compared with the golden hash), ``w2`` (spec W-2: L1 and L2 on the 8
 rows), ``item8`` (criteria 13.1 (1): R6 / R8 / R9 x V0, VB x eps 1e-3, 3e-3 = 12; the eps 0 and
-2e-3 phases are the regression rows of ``main``).
+2e-3 phases are the regression rows of ``main``), ``overlap`` (criteria 13.3 (③): R12 G4 at the
+VB reference time t_a + 0 / 0.025 / 0.05 / 0.075 s x V0, V3, VB = 12; t_a comes from one VB base
+run first, stored in ``overlap_t_a.json`` and used by every setting; lines carry
+``overlap_found``).
 One JSON line per run in ``06_analysis/03_hydraulic/coupled/v5/<batch>.jsonl`` (appended; runs
 already in the file are skipped). Each run has its own spawned worker (``maxtasksperchild=1``): the
 harness patches stay in the process. Deterministic (no noise). Values only; the verdict is
@@ -61,6 +64,15 @@ ITEM8_ROWS = ("R6", "R8", "R9")
 ITEM8_EXTRA_EPS = (1e-3, 3e-3)
 """Criteria 13.1: the phases the regression batch (eps 0, 2e-3) does not run."""
 ITEM8_SETTINGS = ("V0", "VB")
+OVERLAP_CASE = "R12"
+"""Criteria 13.3 (③): the R12 G4 event (RR 11.5 mm / 2 s, F_s 4, top)."""
+OVERLAP_SETTINGS = ("V0", "V3", "VB")
+OVERLAP_OFFSETS = (0.0, 0.025, 0.05, 0.075)
+OVERLAP_REFERENCE_SETTING = "VB"
+OVERLAP_TIMING = "flow_saturation"
+OVERLAP_REFERENCE_PATH = OUT_DIR / "overlap_t_a.json"
+"""t_a of the VB reference run, written before the 12 runs and read by every worker (one
+absolute time for V0, V3 and VB)."""
 
 
 def _lc(ratio: float = OVERLAP_RATIO, delay_s: float = CLOSING_DELAY_S) -> dict:
@@ -137,6 +149,9 @@ def batch_jobs(name: str) -> list[dict]:
     if name == "item8":
         return [{"case": case, "eps": eps, "setting": s}
                 for s in ITEM8_SETTINGS for case in ITEM8_ROWS for eps in ITEM8_EXTRA_EPS]
+    if name == "overlap":
+        return [{"case": OVERLAP_CASE, "eps": 0.0, "offset_s": offset, "timing": OVERLAP_TIMING,
+                 "setting": s} for s in OVERLAP_SETTINGS for offset in OVERLAP_OFFSETS]
     raise ValueError(f"unknown batch {name!r}")
 
 
@@ -170,7 +185,44 @@ def _case_of(job: dict):
         case = replace(case, twin=replace(case.twin, offset_s=float(job["offset_s"])))
     if job.get("twin"):
         case = replace(case, twin=replace(case.twin, **job["twin"]))
+    if job.get("timing") == OVERLAP_TIMING:
+        t_a = overlap_reference()["t_a_s"]
+        case = replace(case, twin=replace(case.twin, timing=OVERLAP_TIMING, event_time_s=t_a))
     return case, decision
+
+
+def overlap_reference() -> dict:
+    """The stored t_a record of the ``overlap`` batch.
+
+    Raises:
+        RuntimeError: No reference yet, or it has no t_a.
+    """
+    if not OVERLAP_REFERENCE_PATH.exists():
+        raise RuntimeError(f"no t_a reference {OVERLAP_REFERENCE_PATH} (run_v5 overlap writes it)")
+    reference = json.loads(OVERLAP_REFERENCE_PATH.read_text(encoding="utf-8"))
+    if reference.get("t_a_s") is None:
+        raise RuntimeError(f"t_a reference without a time: {reference.get('basis')}")
+    return reference
+
+
+def run_overlap_reference(job: dict) -> dict:
+    """Worker: t_a of the VB base run of the overlap case (criteria 13.3)."""
+    import verdict_cases
+    import verdict_runs
+
+    flow, options = options_of(job["setting"])
+    case = verdict_cases.resolve_case(job["case"], {"R13": "ss_fs4"})
+    return verdict_runs.flow_saturation_reference(case, flow, options)
+
+
+def write_overlap_reference() -> dict:
+    """Run the VB reference in one spawned worker (its plant patches stay there) and store t_a."""
+    job = {"case": OVERLAP_CASE, "setting": OVERLAP_REFERENCE_SETTING}
+    with get_context("spawn").Pool(1, maxtasksperchild=1) as pool:
+        reference = pool.apply(run_overlap_reference, (job,))
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    OVERLAP_REFERENCE_PATH.write_text(json.dumps(reference, indent=1), encoding="utf-8")
+    return reference
 
 
 def options_of(setting: str):
@@ -216,7 +268,9 @@ def run_one(job: dict) -> dict:
                 "command_stats": command_stats(series),
                 "harness_class": result.get("harness_class"),
                 "hydraulic_options": result.get("hydraulic_options"),
-                "hydraulics_record": result.get("hydraulics_record")}
+                "hydraulics_record": result.get("hydraulics_record"),
+                **({"overlap_found": result["overlap_found"]} if "overlap_found" in result
+                   else {})}
     except Exception as exc:  # the batch goes on; the line records the failure
         return {"job": job, "error": repr(exc), "tb": traceback.format_exc()[-3000:],
                 "wall_s": round(time.perf_counter() - t_start, 1)}
@@ -253,6 +307,9 @@ def main() -> None:
     import verdict_runs
 
     verdict_runs.warm_numba_cache()
+    if args.batch == "overlap" and not OVERLAP_REFERENCE_PATH.exists():
+        reference = write_overlap_reference()
+        print(f"overlap t_a {reference['t_a_s']} s ({reference['basis']})", flush=True)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     with get_context("spawn").Pool(args.workers, maxtasksperchild=1) as pool, \
             path.open("a", encoding="utf-8") as handle:

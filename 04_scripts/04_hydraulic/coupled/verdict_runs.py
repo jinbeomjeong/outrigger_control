@@ -40,9 +40,16 @@ from harness_flow import (  # noqa: E402
 )
 from params import load_params  # noqa: E402
 from verdict_cases import REANCHOR_ON, EventTwin, SteadyTwin, VerdictCase  # noqa: E402
-from verdict_metrics import run_values  # noqa: E402
+from verdict_metrics import (  # noqa: E402
+    flow_saturation_time,
+    overlap_in_window,
+    run_values,
+)
 
 READY_DELAY_S = 5.0
+FLOW_SATURATION_TIMING = "flow_saturation"
+"""v5 criteria 13.3 (③, X-4): the event at an absolute reference time t_a (``event_time_s``)."""
+CONTROL_PERIOD_S = 0.1
 SKIPPED_EVENT_PREFIXES = ("INFO_PRESSURE", "shadow", "INFO_D1")
 RUN_180S_LIMIT_S = 180.0
 RUN_180S_HOLD_S = 1.0e9
@@ -207,9 +214,12 @@ def _run_event(twin: EventTwin) -> tuple[dict, dict]:
         extra["event_skipped"] = "base run without the READY / LOC / DONE of the event time"
         return _finish(base_plant, base_controller, extra)
     hasher = hashlib.sha256()
-    state = r67.run_base(cl, c2, measurements, plant, controller, stop_t=target - r67.PRE_S,
-                         hasher=hasher)
-    t_event = plant.t + r67.PRE_S + twin.offset_s
+    is_absolute = twin.timing == FLOW_SATURATION_TIMING
+    # absolute t_a: branch one control period early so that t_a + offset is exact (>= PRE_S
+    # after the branch); the other timings keep the branch-relative event time
+    stop_t = target - r67.PRE_S - (CONTROL_PERIOD_S if is_absolute else 0.0)
+    state = r67.run_base(cl, c2, measurements, plant, controller, stop_t=stop_t, hasher=hasher)
+    t_event = (target if is_absolute else plant.t + r67.PRE_S) + twin.offset_s
     attitude_before = np.degrees(plant.attitude())
     rows, phases, events, crawler, t_ready_back, controller = r67.branch(
         cl, measurements, plant, controller, state["cmd"].copy(), state["valve"].copy(), event,
@@ -223,12 +233,22 @@ def _run_event(twin: EventTwin) -> tuple[dict, dict]:
     extra.update(event=twin.event, leg=twin.leg, timing=twin.timing, offset_s=twin.offset_s,
                  t_event_s=round(t_event, 3), phase_at_event=phase_at_event,
                  event_output=judged)
+    if is_absolute:  # criteria 13.3 record; the other timings keep their former result keys
+        limiter = plant.flow_limiter
+        extra["overlap_found"] = {
+            **overlap_in_window(limiter.rows(), limiter.supply_m3_s, t_event,
+                                t_event + window_end),
+            "flow_limit_on": limiter.setting.is_enabled, "t_a_s": target}
     finished, series = _finish(plant, controller, extra)
     finished["harness_commands_sha256"] = hasher.hexdigest()
     return finished, series
 
 
 def _event_time(timeline: dict, twin: EventTwin) -> float | None:
+    if twin.timing == FLOW_SATURATION_TIMING:
+        if twin.event_time_s is None:
+            raise ValueError("timing flow_saturation needs the reference time event_time_s")
+        return twin.event_time_s
     if timeline["t_ready"] is None:
         return None
     if twin.timing == "ready":
@@ -267,6 +287,39 @@ def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
         result["command_clip"] = asdict(clip_record)
     result.update(plant_options_record(hydraulics))
     return result, series
+
+
+def flow_saturation_reference(case: VerdictCase, setting: FlowSetting,
+                              hydraulics=None) -> dict:
+    """Criteria 13.3 (③, X-4): t_a of the base run (no event) of an event case with this flow
+    setting and these plant options (the VB reference run). In force for the rest of the
+    process, like :func:`execute`.
+
+    Raises:
+        ValueError: ``case`` is not an event case.
+    """
+    if not isinstance(case.twin, EventTwin):
+        raise ValueError(f"{case.case_id}: t_a needs an event case")
+    install_plant_options(setting, hydraulics)
+    install_logged_controller()
+    import s9_soil_event_screen as study_a
+
+    modules = study_a._s8_modules()
+    r51, r67 = modules["r51"], modules["r67"]
+    r51.place_worker()
+    cl, c2, measurements = r51._imports()
+    cl.rmf.CONFIG.clear()
+    cl.rpt.RCFG.clear()
+    plant, controller, _ = r67.make_base(cl, c2, case.twin.level, case.twin.fs_kN)
+    timeline = r67.run_base(cl, c2, measurements, plant, controller)
+    period = period_arrays(controller)
+    limiter = plant.flow_limiter
+    reference = flow_saturation_time(limiter.rows(), period["t"], period["phase"],
+                                     limiter.supply_m3_s)
+    return {**reference, "case": case.case_id, "flow_setting": setting.to_dict(),
+            "hydraulic_options": None if hydraulics is None else hydraulics.to_dict(),
+            "timeline": {key: timeline[key] for key in ("t_lift", "t_loc", "t_done", "t_ready")},
+            "commands_sha256": _command_digest(period["command"])}
 
 
 def install_plant_options(setting: FlowSetting, hydraulics=None) -> None:

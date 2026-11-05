@@ -372,6 +372,82 @@ def event_counts(events: list[tuple[float, str]], t_lift_s: float | None) -> dic
     }
 
 
+def flow_saturation_time(rows: np.ndarray, period_t: np.ndarray, period_phase: np.ndarray,
+                         supply_m3_s: float) -> dict:
+    """Criteria 13.3 (③) reference time t_a of a base run: the first chunk after the first
+    lift-off with Q_dem > Q_sup; without one the LEVEL chunk with the largest Q_dem / Q_sup."""
+    phases = chunk_phases(rows, period_t, period_phase)
+    lift_index = _first_lift_index(rows, phases)
+    t = rows[:, COLUMN["t"]]
+    ratio = rows[:, COLUMN["Q_dem"]] / supply_m3_s
+    out = {"t_lift_s": None if lift_index is None else _rounded(t[lift_index], 3),
+           "supply_L_min": _rounded(supply_m3_s * L_MIN_PER_M3_S, 4)}
+    if lift_index is not None:
+        over = np.flatnonzero(ratio[lift_index:] > 1.0)
+        if over.size:
+            index = lift_index + int(over[0])
+            return {**out, "t_a_s": float(t[index]), "basis": "first_overlap_after_liftoff",
+                    "ratio_at_t_a": _rounded(ratio[index], 6)}
+    level = np.flatnonzero(phases == "level")
+    if not level.size:
+        return {**out, "t_a_s": None, "basis": "no_level_chunk", "ratio_at_t_a": None}
+    index = int(level[np.argmax(ratio[level])])
+    return {**out, "t_a_s": float(t[index]), "basis": "largest_level_ratio",
+            "ratio_at_t_a": _rounded(ratio[index], 6)}
+
+
+def overlap_in_window(rows: np.ndarray, supply_m3_s: float, t_start_s: float,
+                      t_end_s: float) -> dict:
+    """Criteria 13.3 ``overlap_found``: chunks of [t_start, t_end] with Q_dem > Q_sup [ms] and
+    the largest shortfall Q_dem - Q_sup [L/min]."""
+    t = rows[:, COLUMN["t"]]
+    window = (t >= t_start_s) & (t <= t_end_s)
+    shortfall = rows[window, COLUMN["Q_dem"]] - supply_m3_s
+    over = shortfall > 0.0
+    return {"window_s": [_rounded(t_start_s, 3), _rounded(t_end_s, 3)],
+            "over_ms": int(over.sum()),  # one chunk = CHUNK_S = 1 ms
+            "max_shortfall_L_min": _rounded(shortfall[over].max() * L_MIN_PER_M3_S, 4)
+            if over.any() else 0.0,
+            "found": bool(over.any())}
+
+
+STOP_BEFORE_WINDOW_S = 1.0
+STOP_SAMPLE_HALF_WINDOW_S = 0.1
+CRAWLER_LOADED_WEIGHT_FRACTION = 0.01
+
+
+def stop_crawler_values(rows: np.ndarray, stop_t_s: float, weight_N: float) -> dict:
+    """Criteria 6 (S8 F-5) values of a soil-guard stop from the 1 ms true crawler force.
+
+    Clause: crawler load after the stop <= load at the stop + 0.01 W. The stop value is one
+    chunk (the one at or just before the stop), so the 1 s maximum before the stop and the
+    chunks within +-0.1 s of the stop are recorded with it. Margins = allowed - maximum after
+    the stop [kN] (negative: the clause fails on that basis).
+    """
+    t = rows[:, COLUMN["t"]]
+    crawler = rows[:, COLUMN["crawler"]]
+    threshold_N = CRAWLER_LOADED_WEIGHT_FRACTION * weight_N
+    at_or_before = np.flatnonzero(t <= stop_t_s + 1e-9)
+    after = t > stop_t_s + 1e-9
+    if not at_or_before.size or not after.any():
+        return {"stop_t_s": _rounded(stop_t_s, 3), "note": "no chunk before or after the stop"}
+    at_stop_N = float(crawler[at_or_before[-1]])
+    before = (t >= stop_t_s - STOP_BEFORE_WINDOW_S) & (t <= stop_t_s + 1e-9)
+    near = np.abs(t - stop_t_s) <= STOP_SAMPLE_HALF_WINDOW_S + 1e-9
+    max_before_N = float(crawler[before].max())
+    max_after_N = float(crawler[after].max())
+    return {"stop_t_s": _rounded(stop_t_s, 3), "threshold_kN": _rounded(threshold_N * KN_PER_N, 3),
+            "at_stop_kN": _rounded(at_stop_N * KN_PER_N, 3),
+            "max_before_1s_kN": _rounded(max_before_N * KN_PER_N, 3),
+            "near_stop_pm0p1s_kN": [_rounded(crawler[near].min() * KN_PER_N, 3),
+                                    _rounded(crawler[near].max() * KN_PER_N, 3)],
+            "max_after_stop_kN": _rounded(max_after_N * KN_PER_N, 3),
+            "end_kN": _rounded(crawler[-1] * KN_PER_N, 3),
+            "margin_at_stop_kN": _rounded((at_stop_N + threshold_N - max_after_N) * KN_PER_N, 3),
+            "margin_vs_max_before_1s_kN":
+                _rounded((max_before_N + threshold_N - max_after_N) * KN_PER_N, 3)}
+
+
 def run_values(rows: np.ndarray, period: dict, events: list[tuple[float, str]], limiter,
                twist_vector: np.ndarray, head_area_m2: np.ndarray, integral_limit: float) -> dict:
     """All values of one run. ``period``: arrays t, phase, integral, filtered_deg, guard."""
