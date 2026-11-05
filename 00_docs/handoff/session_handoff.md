@@ -2,38 +2,34 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
 
-- 갱신: 2026-11-05 21:00, C4G2 병합 직전(커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
-- 직전 커밋: **7320f00**(C4G2 단독 인수, K1 탈락; 푸시 완료). 이 커밋 직전 `merge-c4g2`(`95268ab`, `3f2867e`)를 fast-forward로 병합. 결정 경과 원본은 `decision_log.md` 4절 끝.
+- 갱신: 2026-11-06, C4G2 병합 뒤 Chrono 판정·v5 구현 명세 커밋(커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
+- 직전 커밋: **e747d8c**(C4G2 전환 기록, G1 토양 위상 판정; 푸시 완료). 결정 경과 원본은 `decision_log.md` 4절 끝.
 
 ## 현재 위치
 
-- S9 완료. 논문 `09_paper/v4/` 43쪽(본문 40쪽), 최종 정합 점검 투고 차단 없음, 현 제어기(R8 C2 + L1gs + DSb75 + SGS any_loc + R4c30) 값으로 투고. 저자·소속·사사·투고처 입력과 Word 확인 대기(사용자, 커밋 안 함). 수치 646 + 163칸 불일치 0(표 6·24 일부와 4.8.1 패드 B 분리 값은 명세 인용·산술로만 확인).
-- **제어기 후보 결론(사용자 11-05): C4G2 채택, K1 탈락.** C4G2 단독 인수 하네스 `touch_phase/acceptance/c4g2_only/judgement_report.md`: `criteria.md` 전 묶음 충족, L2 8/855 CP 1.682 %. 격자 768행은 끔과 해시가 같아 C4G2를 시험하지 못한다. 힘 이득 근거는 Chrono(비평면 5건 `chrono/g8c3/g8c3_judgement.md` +11.2~+13.4 kN). 알려진 한계: `g8|29`(운용 조건 밖, 하네스 유연 크롤러 + F_s 4에서만), 강체 FL F_s 0 FS24·RE1bF 실패 유지(현행과 같음). K1 근거 `chrono/k1soil/k1soil_judgement.md`, `sweep/sweep_judgement.md`. 코드 `worktree-agent-a7f0f4f0aceadde2c`(`74032be`, 켜기 `touch_twist_hold=True`, `ce21ffa` 재생기).
-- **유압 연성:** 유량 포화 10행 중 9행 판정 변화 없음, S8 조항 T-2·F-5 확정, 유량과 정지 위상 미분리로 닫음(`judgement_chrono/s8off169_report.md`). 체크 밸브 열림 지연은 M1c(`pressure_review/m1c/`, 단위 기준 미달 상태의 참고 값): R12 ×1은 어느 회로든 F_min 아래, 정상 행 F_min 미달 0, 재충전 없는 환기에서 READY 지연·복귀 실패. 옛 M1·M1b 값은 쓰지 않는다. **모델 수정은 제조사 답까지 멈춘다.** G4는 급침하(2 s), 느린 침하는 SS(미시험).
-- SCM 꼬리 진동(FL F_s 8 켬 행 2 Hz)은 격자 노드 스위칭 수치 현상. 감쇠 추정·실기 예측 근거로 쓰지 않는다.
+- 최종 제어기는 `final_C4G2`(명세 433절, 프리셋 기본 켬). 논문 v4 값은 전환 전 제어기(`final_SGS_R4`)다.
+- **병합 뒤 Chrono 판정(`06_analysis/02_control/touch_phase/chrono/final_c4g2/final_judgement.md`):** 대표 7행 중 5행 통과(P3-2 FLAG 3, P3-4 FLAG 1), 2행 사전 분류대로 SA-4 안전 정지, 강체 16/16 통과, v4 값보다 나빠진 행 0, 투고 차단 없음. C4G2 이득은 대각·비평면 시작 7행 +8.69~+11.37 kN, 그 밖은 ≤ +0.41 kN, 연약 ±0.23 kN. 이번 행에 SCM 사건 행이 없어 G1 RL 약점의 새 근거는 없다.
+- **논문 v4(`09_paper/v4/`, 커밋 안 함):** 44쪽(본문 41쪽), 빌드 오류·경고 0, MANIFEST 84항목 불일치 0, 정합 점검 차단 없음, 범위 문구 수정 끝(CHANGES 22절), `09_paper` 루트를 v4에 맞춤(수정 전 `09_paper/history/20261106_pre_v4_scope_sync/`). **투고처 미정**(사용자). 정해지면 저자·소속·이메일·사사 입력(`main.tex`, `draft/00_front_abstract.md`, `draft/05_conclusion.md`), Word 확인, 재빌드. LaTeX 원본 제출이면 주석의 scratchpad 경로 제거. 정합 점검에서 보지 않은 것: 4절 표 전체 칸 재대조, 그림 내부 글자, Word 표 숫자, 서지 DOI.
 
-## 진행 중
+## 진행 중: v5 유압 구현 (v4와 병행, 사용자 결정 11-06)
 
-1. **G1 FL F_s 0 RL 약점(끝남):** 끔 위상 6개 RL 5.96~9.79 kN, E-3 3/6 실패, 0.5 s 평균·창 뒤 부상 기준 충족, C4G2 단독 δ 0.03 7.30 kN(끔 7.14) → 저장 약점으로 기록, 사전 조건 충족(`chrono/k1soil/phase_judgement.md`). 대응은 병합 뒤 v5 구현과 함께.
-2. **병합 끝:** 이어서 최종 대표 묶음 + S7을 밤사이(사용자 결정, 판정 실패면 멈추고 묻는다). 집계 스크립트가 `P3-4_within_0p2`만 읽어 FLAG가 실패처럼 보이는 점과 `COUPLED_eta085` 저장 짝이 C4G2 이전인 점은 v5에서 처리.
-3. **v4:** 43쪽, G1 다물체 반영(초록 포함), 바뀐 절 리뷰 진행 중. 표 22 "강체 사건 창 안 ≤ 185.5 bar"를 "강체 다물체"로 좁히는 수정 대기. 리뷰 뒤 사용자 입력·Word 확인·투고.
+명세 `00_docs/02_hydraulic/v5_hydraulic_impl_spec.md`(개정 1). 범위는 유량 포화(기본 끔 유지, D-5 전환 안 함) + 밸브 지연 + M2 + M1c(기본 끔, VN·BL, 식 변경 없이 이식) + 오버랩·닫힘 항 LC(제어기 잠금 창 동반).
+
+- 결정: D-1 LC 넣음(권고와 다름, 제어기 변경 동반), D-2 M1c $p_r$ 그대로·한계 기록, D-3 Chrono는 하네스 판정 뒤, D-4 M2 양방향, D-5 기준 구성 $\eta_v$ 0.85, D-6 BL + LC 거부.
+- 조합: 모두 끔 = `final_C4G2` 비트 동일 대상, 플랜트만 = 비교용, 제어기만 = 금지, 둘 다 = v5 기준 구성(VB).
+- 순서: control-expert Q-1~Q-6 답·기준 초안(`06_analysis/03_hydraulic/coupled/v5/v5_criteria_draft.md`, 진행 중) → 미룬 판정 항목 8개 사용자 결정 → python-expert 커밋 13개(커밋 7만 Q-1 답 필요, 커밋 12·13은 커밋 7 뒤에 끝남; 첫 커밋에서 scratchpad `hyd_review/{common,four_leg,m2_check}.py`를 저장소로 옮김) → 기준 봉인 → compute-scheduler-expert 배치 → 하네스 약 1,200건 → Chrono 행 결정.
+- 그 뒤: G1 RL 약점 대응 설계, 앵커 도약·과상승 조사, 논문 v5.
+- 제조사 답 뒤: M1c 기본 켬, G4·불감대 대응, BL + LC 재검토. 질문지 1차 28건·2차 37건은 발송 시점 미정(사용자가 직접). 포스터·GIF 보류.
 
 scratchpad: `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace-outrigger-control\9d4aec18-3b7f-4f45-ae19-6d57127a6418\scratchpad`.
 
-## 사전 결정(사용자)
-
-- **병합(메모리 `c4g2-merge-authorization-20261105`):** 위 Chrono에서 F_min 아래가 확인되지 않으면 master 병합(C2 반환 명령 절단 `a1212bd2…`, 패드 틈 `ae9039e6…`, C4G2, 침하율 창 1.0 s + `window_short` FLAG), 기본 켬, `FINAL_CONTROLLER` 키, 명세 433절, CLAUDE.md 기준값까지 integrity-checker 통과 뒤 자동 진행하고 사후 보고한다. F_min 아래면 멈추고 묻는다. 프리셋 전환 뒤 인수 묶음 해시 재현 필요.
-- 병합 뒤 최종 대표 묶음 + S7 Chrono(시작 전 시간 안내). v5는 그 뒤 구현부터(유량 포화·밸브 지연·M2·M1c 기본 끔, 재충전 없는 환기·차단 2종, E2·E4 제외, 인수 행은 decision_log). READY 한계 연약 100 s 유지.
-- 제조사 질문지 1차 28건·2차 37건은 발송 시점 미정(사용자가 직접 검토 뒤). 답이 늦으면 v5는 가정 범위로 쓴다. M1c 기본 켬, G4·불감대 대응, 불감대 분리는 답 뒤.
-- 앵커 도약·과상승 조사는 채택·병합 뒤. 포스터·GIF는 사용자 지시 때. 저자·소속·사사·투고처는 사용자 입력(`main.tex`, `draft/00_front_abstract.md`, `draft/05_conclusion.md` 뒤 Word 재빌드). LaTeX 원본 제출이 정해지면 주석의 scratchpad 경로 제거.
-
 ## 미병합 브랜치
 
-코드는 모두 master에 병합됨(`3f2867e`). 남은 것은 `worktree-agent-ae9039e69988d5282`의 코드 뒤 커밋 `02efc57`(R16 asym 보고서·원자료, master에 없는 파일 21개)뿐이다. 구동 스크립트 사본 `04_scripts/03_control/touch_phase/{acceptance,chrono_runners}`(이번 C4G2 단독·K1 토양 러너 포함)는 scratchpad 경로 의존(기록용).
+코드는 모두 master에 병합됨. 남은 것은 `worktree-agent-ae9039e69988d5282`의 코드 뒤 커밋 `02efc57`(R16 asym 보고서·원자료, master에 없는 파일 21개)뿐이다.
 
 ## 정리
 
-compute-scheduler-expert 기록 모드(하네스·S8·S7·K1 토양·비평면 실측), `r8d1_td.py:24` 경로, `candidates.py:21` 주석·`_limited_increment`, `extract_g8c.py` L2b FR 필드(`s_motor` 대 가드 좌표).
+compute-scheduler-expert 기록 모드(하네스·S8·K1 토양·비평면·대표·강체 실측, `batch.json`), worktree `.claude/worktrees/merge-c4g2`·scratchpad `cad_finalC4/wt` 제거(`git -c core.longpaths=true worktree remove --force`), `r8d1_td.py:24` 경로, `candidates.py:21` 주석·`_limited_increment`, `extract_g8c.py` L2b FR 필드(`s_motor` 대 가드 좌표), 명세 433.7(`final_judgement.md` 7절)·434.9(`phase_judgement.md`) 제안 반영 여부.
 
 ## 논문·포스터 (커밋 안 함)
 

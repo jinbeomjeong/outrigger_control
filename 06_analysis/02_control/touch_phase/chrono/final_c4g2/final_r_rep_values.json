@@ -1,0 +1,2613 @@
+{
+ "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105",
+ "pair_batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-REP_20261030_223425",
+ "controller": "final_C4G2",
+ "commit": "e747d8c99650e65a7a81cb368dea2abdec91630f",
+ "rows": [
+  {
+   "case": "K24_top_flat_Fs4",
+   "variable": "A1",
+   "engine": null,
+   "pair": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K24_top_flat_Fs4_20261030_223426\\K24_top_flat_Fs4",
+   "worse": [],
+   "new_flags": [],
+   "rows_new": 48,
+   "rows_pair": 48,
+   "rows_matched": 48,
+   "new_faults": [],
+   "failed_new": [],
+   "failed_pair": [],
+   "meta_new": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "meta_pair": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "first_diff": {
+    "samples": {
+     "new": 527,
+     "pair": 527,
+     "common": 527
+    },
+    "time_grid_equal": true,
+    "u_cmd": null,
+    "u_applied": null,
+    "s_motor": null,
+    "F_cyl": null
+   },
+   "settings_diff_other": [
+    "settings.l2b_start.settle.wall_s"
+   ],
+   "new": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105\\final_K24_top_flat_Fs4\\K24_top_flat_Fs4",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 42.70000000039165,
+    "final_phase": "ready",
+    "end_t_s": 52.70000000072361,
+    "stroke_max_mm": [
+     406.6567562812934,
+     406.5893450830033,
+     395.6364611364839,
+     395.57507914686124
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 469.0771158999996,
+    "us_per_step": 890.0894039848191,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {
+     "twist_load_estimate_N": -40.53428383011609,
+     "target_m": null,
+     "start_t_s": null,
+     "end_t_s": null,
+     "end_reason": null,
+     "end_error_m": null
+    },
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "pair_values": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K24_top_flat_Fs4_20261030_223426\\K24_top_flat_Fs4",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 42.70000000039165,
+    "final_phase": "ready",
+    "end_t_s": 52.70000000072361,
+    "stroke_max_mm": [
+     406.6567562812934,
+     406.5893450830033,
+     395.6364611364839,
+     395.57507914686124
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 432.71634449998965,
+    "us_per_step": 821.0936328273049,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {},
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "judged_new": {
+    "attitude_deg": 0.02057206474889485,
+    "min_F_kN": 54.776200272358736,
+    "reanchor_min_kN": null,
+    "p_max_bar": 98.20635077078491,
+    "stroke_max": null
+   },
+   "judged_pair": {
+    "attitude_deg": 0.02057206474889485,
+    "min_F_kN": 54.776200272358736,
+    "reanchor_min_kN": null,
+    "p_max_bar": 98.20635077078491,
+    "stroke_max": null
+   }
+  },
+  {
+   "case": "K24_top_fdown3.5_Fs4",
+   "variable": "A2",
+   "engine": null,
+   "pair": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K24_top_fdown3.5_Fs4_20261030_224211\\K24_top_fdown3.5_Fs4",
+   "worse": [],
+   "new_flags": [],
+   "rows_new": 58,
+   "rows_pair": 58,
+   "rows_matched": 58,
+   "new_faults": [],
+   "failed_new": [],
+   "failed_pair": [],
+   "meta_new": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "meta_pair": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "first_diff": {
+    "samples": {
+     "new": 875,
+     "pair": 875,
+     "common": 875
+    },
+    "time_grid_equal": true,
+    "u_cmd": {
+     "t_abs_s": 33.59999999999187,
+     "t_s": 30.59999999998997,
+     "relative_te_s": 6.700000000041225,
+     "phase": "level",
+     "legs": [
+      "FL"
+     ]
+    },
+    "u_applied": null,
+    "s_motor": null,
+    "F_cyl": null
+   },
+   "settings_diff_other": [
+    "settings.l2b_start.settle.wall_s"
+   ],
+   "new": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105\\final_K24_top_fdown3.5_Fs4\\K24_top_fdown3.5_Fs4",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 77.50000000154688,
+    "final_phase": "ready",
+    "end_t_s": 87.50000000187885,
+    "stroke_max_mm": [
+     662.6717757835459,
+     662.56846094251,
+     351.5236467265772,
+     351.4325236720543
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 711.5812758000102,
+    "us_per_step": 813.2357437714402,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {
+     "twist_load_estimate_N": -87.70840447432784,
+     "target_m": null,
+     "start_t_s": null,
+     "end_t_s": null,
+     "end_reason": null,
+     "end_error_m": null
+    },
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "pair_values": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K24_top_fdown3.5_Fs4_20261030_224211\\K24_top_fdown3.5_Fs4",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 77.50000000154688,
+    "final_phase": "ready",
+    "end_t_s": 87.50000000187885,
+    "stroke_max_mm": [
+     662.6717757835459,
+     662.56846094251,
+     351.5236467265772,
+     351.4325236720543
+    ],
+    "u_cmd_max_mm_s": 20.924301600000003,
+    "wall_s": 663.5317607999896,
+    "us_per_step": 758.3220123428453,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {},
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "judged_new": {
+    "attitude_deg": 0.03475071688945449,
+    "min_F_kN": 50.986497113752634,
+    "reanchor_min_kN": 29.573612892678202,
+    "p_max_bar": 116.97830470959103,
+    "stroke_max": null
+   },
+   "judged_pair": {
+    "attitude_deg": 0.03475071688945449,
+    "min_F_kN": 50.986497113752634,
+    "reanchor_min_kN": 29.573612892678202,
+    "p_max_bar": 116.97830470959103,
+    "stroke_max": null
+   }
+  },
+  {
+   "case": "K24_top_fup3.5_Fs4",
+   "variable": "A2",
+   "engine": null,
+   "pair": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K24_top_fup3.5_Fs4_20261030_225345\\K24_top_fup3.5_Fs4",
+   "worse": [],
+   "new_flags": [],
+   "rows_new": 52,
+   "rows_pair": 52,
+   "rows_matched": 52,
+   "new_faults": [],
+   "failed_new": [],
+   "failed_pair": [],
+   "meta_new": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "meta_pair": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "first_diff": {
+    "samples": {
+     "new": 690,
+     "pair": 690,
+     "common": 690
+    },
+    "time_grid_equal": true,
+    "u_cmd": null,
+    "u_applied": null,
+    "s_motor": null,
+    "F_cyl": null
+   },
+   "settings_diff_other": [
+    "settings.l2b_start.settle.wall_s"
+   ],
+   "new": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105\\final_K24_top_fup3.5_Fs4\\K24_top_fup3.5_Fs4",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 59.00000000093275,
+    "final_phase": "ready",
+    "end_t_s": 69.00000000126471,
+    "stroke_max_mm": [
+     378.788852918343,
+     378.6929151885202,
+     667.6426791366083,
+     667.5538295144997
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 577.4515088000335,
+    "us_per_step": 836.8862446377296,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {
+     "twist_load_estimate_N": 9.057717663051639,
+     "target_m": null,
+     "start_t_s": null,
+     "end_t_s": null,
+     "end_reason": null,
+     "end_error_m": null
+    },
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "pair_values": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K24_top_fup3.5_Fs4_20261030_225345\\K24_top_fup3.5_Fs4",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 59.00000000093275,
+    "final_phase": "ready",
+    "end_t_s": 69.00000000126471,
+    "stroke_max_mm": [
+     378.788852918343,
+     378.6929151885202,
+     667.6426791366083,
+     667.5538295144997
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 582.6619005000102,
+    "us_per_step": 844.4375369565366,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {},
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "judged_new": {
+    "attitude_deg": 0.035911652888148515,
+    "min_F_kN": 57.07345108213518,
+    "reanchor_min_kN": null,
+    "p_max_bar": 96.30088493153997,
+    "stroke_max": null
+   },
+   "judged_pair": {
+    "attitude_deg": 0.035911652888148515,
+    "min_F_kN": 57.07345108213518,
+    "reanchor_min_kN": null,
+    "p_max_bar": 96.30088493153997,
+    "stroke_max": null
+   }
+  },
+  {
+   "case": "K24_top_roll5.5_Fs4",
+   "variable": "A2",
+   "engine": null,
+   "pair": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K24_top_roll5.5_Fs4_20261030_230357\\K24_top_roll5.5_Fs4",
+   "worse": [],
+   "new_flags": [],
+   "rows_new": 52,
+   "rows_pair": 52,
+   "rows_matched": 52,
+   "new_faults": [],
+   "failed_new": [],
+   "failed_pair": [],
+   "meta_new": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "meta_pair": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "first_diff": {
+    "samples": {
+     "new": 692,
+     "pair": 692,
+     "common": 692
+    },
+    "time_grid_equal": true,
+    "u_cmd": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "RL",
+      "RR"
+     ]
+    },
+    "u_applied": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "RL",
+      "RR"
+     ]
+    },
+    "s_motor": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ]
+    },
+    "F_cyl": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ]
+    }
+   },
+   "settings_diff_other": [
+    "settings.l2b_start.settle.wall_s"
+   ],
+   "new": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105\\final_K24_top_roll5.5_Fs4\\K24_top_roll5.5_Fs4",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 59.20000000093939,
+    "final_phase": "ready",
+    "end_t_s": 69.20000000127135,
+    "stroke_max_mm": [
+     411.46691224240374,
+     668.4411926445704,
+     414.7777697987045,
+     648.7852168445604
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 579.1344196999562,
+    "us_per_step": 836.8994504334627,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [
+     [
+      27.49999999994925,
+      "INFO_LIFT_PAUSED:RL"
+     ]
+    ],
+    "hold_meta": {
+     "twist_load_estimate_N": -788.5567761261542,
+     "target_m": null,
+     "start_t_s": null,
+     "end_t_s": null,
+     "end_reason": null,
+     "end_error_m": null
+    },
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "pair_values": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K24_top_roll5.5_Fs4_20261030_230357\\K24_top_roll5.5_Fs4",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 59.20000000093939,
+    "final_phase": "ready",
+    "end_t_s": 69.20000000127135,
+    "stroke_max_mm": [
+     411.4665404303026,
+     668.441691328877,
+     414.7780965010735,
+     648.7843815107032
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 591.979563299974,
+    "us_per_step": 855.4617966762629,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [
+     [
+      27.49999999994925,
+      "INFO_LIFT_PAUSED:RL"
+     ]
+    ],
+    "hold_meta": {},
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "judged_new": {
+    "attitude_deg": 0.036063430085383374,
+    "min_F_kN": 37.6628390611534,
+    "reanchor_min_kN": null,
+    "p_max_bar": 122.7799759378654,
+    "stroke_max": null
+   },
+   "judged_pair": {
+    "attitude_deg": 0.036061830281484575,
+    "min_F_kN": 37.2542373491118,
+    "reanchor_min_kN": null,
+    "p_max_bar": 123.1523507198578,
+    "stroke_max": null
+   }
+  },
+  {
+   "case": "K24_top_rpB_Fs4",
+   "variable": "A2",
+   "engine": null,
+   "pair": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K24_top_rpB_Fs4_20261030_231426\\K24_top_rpB_Fs4",
+   "worse": [],
+   "new_flags": [],
+   "rows_new": 50,
+   "rows_pair": 50,
+   "rows_matched": 50,
+   "new_faults": [],
+   "failed_new": [],
+   "failed_pair": [],
+   "meta_new": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "meta_pair": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "first_diff": {
+    "samples": {
+     "new": 678,
+     "pair": 678,
+     "common": 678
+    },
+    "time_grid_equal": true,
+    "u_cmd": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "RR"
+     ]
+    },
+    "u_applied": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "RR"
+     ]
+    },
+    "s_motor": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ]
+    },
+    "F_cyl": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ]
+    }
+   },
+   "settings_diff_other": [
+    "settings.l2b_start.settle.wall_s"
+   ],
+   "new": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105\\final_K24_top_rpB_Fs4\\K24_top_rpB_Fs4",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 57.800000000892915,
+    "final_phase": "ready",
+    "end_t_s": 67.80000000122487,
+    "stroke_max_mm": [
+     537.0560106695352,
+     665.0494809444525,
+     382.65017178528524,
+     499.2086903408982
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 570.8441671999753,
+    "us_per_step": 841.9530489675152,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {
+     "twist_load_estimate_N": -274.55843702357623,
+     "target_m": null,
+     "start_t_s": null,
+     "end_t_s": null,
+     "end_reason": null,
+     "end_error_m": null
+    },
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "pair_values": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K24_top_rpB_Fs4_20261030_231426\\K24_top_rpB_Fs4",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 57.800000000892915,
+    "final_phase": "ready",
+    "end_t_s": 67.80000000122487,
+    "stroke_max_mm": [
+     537.05215405331,
+     665.0451841482624,
+     382.6412758001432,
+     499.2071602095372
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 579.7550346999778,
+    "us_per_step": 855.095921386398,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {},
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "judged_new": {
+    "attitude_deg": 0.03611101159802879,
+    "min_F_kN": 51.931398632839176,
+    "reanchor_min_kN": null,
+    "p_max_bar": 106.13327131433921,
+    "stroke_max": null
+   },
+   "judged_pair": {
+    "attitude_deg": 0.03618313709258443,
+    "min_F_kN": 41.13319112637042,
+    "reanchor_min_kN": null,
+    "p_max_bar": 101.37656739731466,
+    "stroke_max": null
+   }
+  },
+  {
+   "case": "G8C1_top_edge_FL_g170",
+   "variable": "A3",
+   "engine": null,
+   "pair": "C:\\workspace\\outrigger_control\\07_results\\S6\\bundleC_g8c76_p28acc_final_G8C1_top_edge_FL_g170_L1R_20261030_232436\\G8C1_top_edge_FL_g170",
+   "worse": [],
+   "new_flags": [],
+   "rows_new": 10,
+   "rows_pair": 10,
+   "rows_matched": 10,
+   "new_faults": [],
+   "failed_new": [],
+   "failed_pair": [],
+   "meta_new": {
+    "failed": 0,
+    "hold": null,
+    "passed": null
+   },
+   "meta_pair": {
+    "failed": 0,
+    "hold": null,
+    "passed": null
+   },
+   "first_diff": {
+    "samples": {
+     "new": 599,
+     "pair": 613,
+     "common": 599
+    },
+    "time_grid_equal": true,
+    "u_cmd": {
+     "t_abs_s": 92.50000000082362,
+     "t_s": 92.50000000082362,
+     "relative_te_s": 0.30000000000995897,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "RR"
+     ]
+    },
+    "u_applied": {
+     "t_abs_s": 92.50000000082362,
+     "t_s": 92.50000000082362,
+     "relative_te_s": 0.30000000000995897,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "RR"
+     ]
+    },
+    "s_motor": {
+     "t_abs_s": 92.50000000082362,
+     "t_s": 92.50000000082362,
+     "relative_te_s": 0.30000000000995897,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ]
+    },
+    "F_cyl": {
+     "t_abs_s": 92.50000000082362,
+     "t_s": 92.50000000082362,
+     "relative_te_s": 0.30000000000995897,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ]
+    }
+   },
+   "settings_diff_other": [
+    "settings.bundle_c.snapshot_dir"
+   ],
+   "new": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105\\final_G8C1_top_edge_FL_g170\\G8C1_top_edge_FL_g170",
+    "t_te_s": 92.20000000081366,
+    "ready_t_s": 54.90000000182249,
+    "final_phase": null,
+    "end_t_s": null,
+    "stroke_max_mm": [
+     335.1963383677127,
+     607.2334474761478,
+     363.2626861306758,
+     456.59263241030953
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 400.16362820001086,
+    "us_per_step": 1336.1056033389343,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [
+     [
+      92.4000000008203,
+      "INFO_LIFT_PAUSED:RR"
+     ]
+    ],
+    "hold_meta": {
+     "twist_load_estimate_N": -83.26802391428221,
+     "target_m": null,
+     "start_t_s": null,
+     "end_t_s": null,
+     "end_reason": null,
+     "end_error_m": null
+    },
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "pair_values": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S6\\bundleC_g8c76_p28acc_final_G8C1_top_edge_FL_g170_L1R_20261030_232436\\G8C1_top_edge_FL_g170",
+    "t_te_s": 92.20000000081366,
+    "ready_t_s": 56.300000001868966,
+    "final_phase": null,
+    "end_t_s": null,
+    "stroke_max_mm": [
+     361.2259023255366,
+     633.185742285043,
+     389.2350365398407,
+     482.6542502110274
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 441.63335050002206,
+    "us_per_step": 1440.8918450245417,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [
+     [
+      92.4000000008203,
+      "INFO_LIFT_PAUSED:RR"
+     ]
+    ],
+    "hold_meta": {},
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "judged_new": {
+    "attitude_deg": [
+     -0.015271342691051893,
+     -0.011740214246836569
+    ],
+    "min_F_kN": 55.03361282966943,
+    "reanchor_min_kN": null,
+    "p_max_bar": null,
+    "stroke_max": [
+     335.1963383677127,
+     607.2334474761478,
+     363.2626861306758,
+     456.59263241030953
+    ]
+   },
+   "judged_pair": {
+    "attitude_deg": [
+     -0.015058928256695771,
+     -0.011433219880795032
+    ],
+    "min_F_kN": 46.343365818867206,
+    "reanchor_min_kN": null,
+    "p_max_bar": null,
+    "stroke_max": [
+     361.2259023255366,
+     633.185742285043,
+     389.2350365398407,
+     482.6542502110274
+    ]
+   }
+  },
+  {
+   "case": "G8C3_top_edge_RL_g230",
+   "variable": "A3",
+   "engine": null,
+   "pair": "C:\\workspace\\outrigger_control\\07_results\\S6\\bundleC_g8c76_p28acc_final_G8C3_top_edge_RL_g230_L1R_20261030_233212\\G8C3_top_edge_RL_g230",
+   "worse": [],
+   "new_flags": [],
+   "rows_new": 10,
+   "rows_pair": 10,
+   "rows_matched": 10,
+   "new_faults": [],
+   "failed_new": [],
+   "failed_pair": [],
+   "meta_new": {
+    "failed": 0,
+    "hold": null,
+    "passed": null
+   },
+   "meta_pair": {
+    "failed": 0,
+    "hold": null,
+    "passed": null
+   },
+   "first_diff": {
+    "samples": {
+     "new": 631,
+     "pair": 629,
+     "common": 629
+    },
+    "time_grid_equal": true,
+    "u_cmd": {
+     "t_abs_s": 93.50000000085682,
+     "t_s": 93.50000000085682,
+     "relative_te_s": 0.30000000000995897,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "RL",
+      "RR"
+     ]
+    },
+    "u_applied": {
+     "t_abs_s": 93.50000000085682,
+     "t_s": 93.50000000085682,
+     "relative_te_s": 0.30000000000995897,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "RL",
+      "RR"
+     ]
+    },
+    "s_motor": {
+     "t_abs_s": 93.50000000085682,
+     "t_s": 93.50000000085682,
+     "relative_te_s": 0.30000000000995897,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ]
+    },
+    "F_cyl": {
+     "t_abs_s": 93.50000000085682,
+     "t_s": 93.50000000085682,
+     "relative_te_s": 0.30000000000995897,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ]
+    }
+   },
+   "settings_diff_other": [
+    "settings.bundle_c.snapshot_dir"
+   ],
+   "new": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105\\final_G8C3_top_edge_RL_g230\\G8C3_top_edge_RL_g230",
+    "t_te_s": 93.20000000084686,
+    "ready_t_s": 58.10000000192872,
+    "final_phase": null,
+    "end_t_s": null,
+    "stroke_max_mm": [
+     540.8856826213055,
+     643.3836700621142,
+     280.62829861737765,
+     492.68098360816236
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 412.00841320003383,
+    "us_per_step": 1305.8903746435303,
+    "hold_events": [
+     [
+      93.20000000084686,
+      "INFO_TOUCH_TWIST_HOLD:-0.623"
+     ]
+    ],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [
+     [
+      93.4000000008535,
+      "INFO_LIFT_PAUSED:RR"
+     ]
+    ],
+    "hold_meta": {
+     "twist_load_estimate_N": 14149.470857341921,
+     "target_m": -0.0006231825133196061,
+     "start_t_s": 93.20000000084686,
+     "end_t_s": 94.70000000089665,
+     "end_reason": "time",
+     "end_error_m": 5.45760209343289e-05
+    },
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "pair_values": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S6\\bundleC_g8c76_p28acc_final_G8C3_top_edge_RL_g230_L1R_20261030_233212\\G8C3_top_edge_RL_g230",
+    "t_te_s": 93.20000000084686,
+    "ready_t_s": 57.90000000192208,
+    "final_phase": null,
+    "end_t_s": null,
+    "stroke_max_mm": [
+     536.4395553956923,
+     638.8048930639783,
+     276.0113686603592,
+     488.2639021505695
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 440.10962770000333,
+    "us_per_step": 1399.3946826709168,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [
+     [
+      93.4000000008535,
+      "INFO_LIFT_PAUSED:RR"
+     ],
+     [
+      94.00000000087341,
+      "INFO_LIFT_PAUSED:RL"
+     ]
+    ],
+    "hold_meta": {},
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "judged_new": {
+    "attitude_deg": [
+     -0.014965884315325747,
+     -0.01257992265504558
+    ],
+    "min_F_kN": 54.22432743795167,
+    "reanchor_min_kN": null,
+    "p_max_bar": null,
+    "stroke_max": [
+     540.8856826213055,
+     643.3836700621142,
+     280.62829861737765,
+     492.68098360816236
+    ]
+   },
+   "judged_pair": {
+    "attitude_deg": [
+     -0.015001983302231214,
+     -0.012637334810325649
+    ],
+    "min_F_kN": 43.06112171892707,
+    "reanchor_min_kN": null,
+    "p_max_bar": null,
+    "stroke_max": [
+     536.4395553956923,
+     638.8048930639783,
+     276.0113686603592,
+     488.2639021505695
+    ]
+   }
+  },
+  {
+   "case": "E_G4_Fs4",
+   "variable": "A4",
+   "engine": null,
+   "pair": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_E_G4_Fs4_20261030_233941\\E_G4_Fs4",
+   "worse": [],
+   "new_flags": [],
+   "rows_new": 56,
+   "rows_pair": 56,
+   "rows_matched": 56,
+   "new_faults": [],
+   "failed_new": [],
+   "failed_pair": [],
+   "meta_new": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "meta_pair": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "first_diff": {
+    "samples": {
+     "new": 927,
+     "pair": 927,
+     "common": 927
+    },
+    "time_grid_equal": true,
+    "u_cmd": null,
+    "u_applied": null,
+    "s_motor": null,
+    "F_cyl": null
+   },
+   "settings_diff_other": [
+    "settings.l2b_start.settle.wall_s"
+   ],
+   "new": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105\\final_E_G4_Fs4\\E_G4_Fs4",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 42.70000000039165,
+    "final_phase": "ready",
+    "end_t_s": 92.70000000205147,
+    "stroke_max_mm": [
+     408.84157916139145,
+     409.6067724880675,
+     398.1912531767995,
+     410.3295125356136
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 816.7627578000538,
+    "us_per_step": 881.0817236246535,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [
+     [
+      52.10000000060601,
+      "leg_reapproach_start:RR"
+     ]
+    ],
+    "lift_paused": [],
+    "hold_meta": {
+     "twist_load_estimate_N": 2.871638576599556,
+     "target_m": null,
+     "start_t_s": null,
+     "end_t_s": null,
+     "end_reason": null,
+     "end_error_m": null
+    },
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": 47.70000000039165,
+    "after_event": {
+     "FL": {
+      "min_1ms_kN": 61.588320760206116,
+      "t_rel_s": 1.5180000002163752,
+      "min_mean_0p5s_kN": 65.93885335721053,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "FR": {
+      "min_1ms_kN": 102.38476249440846,
+      "t_rel_s": 21.141000000867784,
+      "min_mean_0p5s_kN": 103.14669377359576,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RL": {
+      "min_1ms_kN": 57.76633431501353,
+      "t_rel_s": 21.60000000088302,
+      "min_mean_0p5s_kN": 58.19748298922758,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RR": {
+      "min_1ms_kN": 11.143760085285908,
+      "t_rel_s": 1.5190000002164084,
+      "min_mean_0p5s_kN": 15.33370078401772,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     }
+    },
+    "pad_step_s": 0.0010000000000331966,
+    "re_ready_after_event_s": 22.800000000922857,
+    "phase_at_event": "ready"
+   },
+   "pair_values": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_E_G4_Fs4_20261030_233941\\E_G4_Fs4",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 42.70000000039165,
+    "final_phase": "ready",
+    "end_t_s": 92.70000000205147,
+    "stroke_max_mm": [
+     408.84157916139145,
+     409.6067724880675,
+     398.1912531767995,
+     410.3295125356136
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 842.5886834000121,
+    "us_per_step": 908.9414060410055,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [
+     [
+      52.10000000060601,
+      "leg_reapproach_start:RR"
+     ]
+    ],
+    "lift_paused": [],
+    "hold_meta": {},
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": 47.70000000039165,
+    "after_event": {
+     "FL": {
+      "min_1ms_kN": 61.588320760206116,
+      "t_rel_s": 1.5180000002163752,
+      "min_mean_0p5s_kN": 65.93885335721053,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "FR": {
+      "min_1ms_kN": 102.38476249440846,
+      "t_rel_s": 21.141000000867784,
+      "min_mean_0p5s_kN": 103.14669377359576,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RL": {
+      "min_1ms_kN": 57.76633431501353,
+      "t_rel_s": 21.60000000088302,
+      "min_mean_0p5s_kN": 58.19748298922758,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RR": {
+      "min_1ms_kN": 11.143760085285908,
+      "t_rel_s": 1.5190000002164084,
+      "min_mean_0p5s_kN": 15.33370078401772,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     }
+    },
+    "pad_step_s": 0.0010000000000331966,
+    "re_ready_after_event_s": 22.800000000922857,
+    "phase_at_event": "ready"
+   },
+   "judged_new": {
+    "attitude_deg": 0.03715984563957691,
+    "min_F_kN": 54.77621807116021,
+    "reanchor_min_kN": null,
+    "p_max_bar": 137.88020203868305,
+    "stroke_max": null
+   },
+   "judged_pair": {
+    "attitude_deg": 0.03715984563957691,
+    "min_F_kN": 54.77621807116021,
+    "reanchor_min_kN": null,
+    "p_max_bar": 137.88020203868305,
+    "stroke_max": null
+   }
+  },
+  {
+   "case": "E_SS_Fs4",
+   "variable": "A4",
+   "engine": null,
+   "pair": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_E_SS_Fs4_20261030_235425\\E_SS_Fs4",
+   "worse": [],
+   "new_flags": [],
+   "rows_new": 50,
+   "rows_pair": 50,
+   "rows_matched": 50,
+   "new_faults": [],
+   "failed_new": [],
+   "failed_pair": [],
+   "meta_new": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "meta_pair": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "first_diff": {
+    "samples": {
+     "new": 927,
+     "pair": 927,
+     "common": 927
+    },
+    "time_grid_equal": true,
+    "u_cmd": null,
+    "u_applied": null,
+    "s_motor": null,
+    "F_cyl": null
+   },
+   "settings_diff_other": [
+    "settings.l2b_start.settle.wall_s"
+   ],
+   "new": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105\\final_E_SS_Fs4\\E_SS_Fs4",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 42.70000000039165,
+    "final_phase": "ready",
+    "end_t_s": 92.70000000205147,
+    "stroke_max_mm": [
+     409.51406484422165,
+     410.5823203078363,
+     399.34764843311825,
+     411.65022006097576
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 829.4975791000179,
+    "us_per_step": 894.8193949299007,
+    "hold_events": [],
+    "warn_fault": [
+     [
+      60.7000000008915,
+      "WARN_SUPPORT_CHANGED:G2"
+     ]
+    ],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {
+     "twist_load_estimate_N": 2.871638576599556,
+     "target_m": null,
+     "start_t_s": null,
+     "end_t_s": null,
+     "end_reason": null,
+     "end_error_m": null
+    },
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": 47.70000000039165,
+    "after_event": {
+     "FL": {
+      "min_1ms_kN": 76.80429407347413,
+      "t_rel_s": 10.202000000504654,
+      "min_mean_0p5s_kN": 78.49083344399976,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "FR": {
+      "min_1ms_kN": 103.08510071312813,
+      "t_rel_s": 36.852000001389335,
+      "min_mean_0p5s_kN": 103.79353935101206,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RL": {
+      "min_1ms_kN": 58.55028689610942,
+      "t_rel_s": 37.31100000140457,
+      "min_mean_0p5s_kN": 58.92253857415901,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RR": {
+      "min_1ms_kN": 25.58274115656892,
+      "t_rel_s": 10.20100000050462,
+      "min_mean_0p5s_kN": 27.41242398126052,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     }
+    },
+    "pad_step_s": 0.0010000000000331966,
+    "re_ready_after_event_s": 38.50000000144404,
+    "phase_at_event": "ready"
+   },
+   "pair_values": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_E_SS_Fs4_20261030_235425\\E_SS_Fs4",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 42.70000000039165,
+    "final_phase": "ready",
+    "end_t_s": 92.70000000205147,
+    "stroke_max_mm": [
+     409.51406484422165,
+     410.5823203078363,
+     399.34764843311825,
+     411.65022006097576
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 853.8897822000145,
+    "us_per_step": 921.1324511327017,
+    "hold_events": [],
+    "warn_fault": [
+     [
+      60.7000000008915,
+      "WARN_SUPPORT_CHANGED:G2"
+     ]
+    ],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {},
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": 47.70000000039165,
+    "after_event": {
+     "FL": {
+      "min_1ms_kN": 76.80429407347413,
+      "t_rel_s": 10.202000000504654,
+      "min_mean_0p5s_kN": 78.49083344399976,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "FR": {
+      "min_1ms_kN": 103.08510071312813,
+      "t_rel_s": 36.852000001389335,
+      "min_mean_0p5s_kN": 103.79353935101206,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RL": {
+      "min_1ms_kN": 58.55028689610942,
+      "t_rel_s": 37.31100000140457,
+      "min_mean_0p5s_kN": 58.92253857415901,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RR": {
+      "min_1ms_kN": 25.58274115656892,
+      "t_rel_s": 10.20100000050462,
+      "min_mean_0p5s_kN": 27.41242398126052,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     }
+    },
+    "pad_step_s": 0.0010000000000331966,
+    "re_ready_after_event_s": 38.50000000144404,
+    "phase_at_event": "ready"
+   },
+   "judged_new": {
+    "attitude_deg": 0.04274495719293965,
+    "min_F_kN": 54.77621807116021,
+    "reanchor_min_kN": null,
+    "p_max_bar": 114.99558646216724,
+    "stroke_max": null
+   },
+   "judged_pair": {
+    "attitude_deg": 0.04274495719293965,
+    "min_F_kN": 54.77621807116021,
+    "reanchor_min_kN": null,
+    "p_max_bar": 114.99558646216724,
+    "stroke_max": null
+   }
+  },
+  {
+   "case": "E_RE1bF_Fs8",
+   "variable": "A4",
+   "engine": null,
+   "pair": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_E_RE1bF_Fs8_20261031_000914\\E_RE1bF_Fs8",
+   "worse": [],
+   "new_flags": [],
+   "rows_new": 61,
+   "rows_pair": 61,
+   "rows_matched": 61,
+   "new_faults": [],
+   "failed_new": [],
+   "failed_pair": [],
+   "meta_new": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "meta_pair": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "first_diff": {
+    "samples": {
+     "new": 927,
+     "pair": 927,
+     "common": 927
+    },
+    "time_grid_equal": true,
+    "u_cmd": null,
+    "u_applied": null,
+    "s_motor": null,
+    "F_cyl": null
+   },
+   "settings_diff_other": [
+    "settings.l2b_start.settle.wall_s"
+   ],
+   "new": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105\\final_E_RE1bF_Fs8\\E_RE1bF_Fs8",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 42.70000000039165,
+    "final_phase": "ready",
+    "end_t_s": 92.70000000358624,
+    "stroke_max_mm": [
+     412.9541545887803,
+     413.7887463918436,
+     402.3731648973475,
+     433.65559714302265
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 1226.7981355999946,
+    "us_per_step": 868.2223181882481,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [
+     [
+      50.80000000115971,
+      "leg_reapproach_start:RR"
+     ]
+    ],
+    "lift_paused": [],
+    "hold_meta": {
+     "twist_load_estimate_N": -19.527224022515536,
+     "target_m": null,
+     "start_t_s": null,
+     "end_t_s": null,
+     "end_reason": null,
+     "end_error_m": null
+    },
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": 47.70000000039165,
+    "after_event": {
+     "FL": {
+      "min_1ms_kN": -0.9136028934594048,
+      "t_rel_s": 0.29100000082678434,
+      "min_mean_0p5s_kN": 38.216217277076304,
+      "under_F_min_s": 0.06100000001936223,
+      "airborne_s": 0.0
+     },
+     "FR": {
+      "min_1ms_kN": 100.56372164475519,
+      "t_rel_s": 22.740000002455638,
+      "min_mean_0p5s_kN": 101.17392692514288,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RL": {
+      "min_1ms_kN": 55.35880413066932,
+      "t_rel_s": 13.73100000215657,
+      "min_mean_0p5s_kN": 55.77757232065013,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RR": {
+      "min_1ms_kN": -14.234488699730392,
+      "t_rel_s": 0.01300000073854335,
+      "min_mean_0p5s_kN": -0.7906643039659583,
+      "under_F_min_s": 0.02500000000793534,
+      "airborne_s": 1.3060000004145422
+     }
+    },
+    "pad_step_s": 0.0010000000000331966,
+    "re_ready_after_event_s": 24.400000002510744,
+    "phase_at_event": "ready"
+   },
+   "pair_values": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_E_RE1bF_Fs8_20261031_000914\\E_RE1bF_Fs8",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 42.70000000039165,
+    "final_phase": "ready",
+    "end_t_s": 92.70000000358624,
+    "stroke_max_mm": [
+     412.9541545887803,
+     413.7887463918436,
+     402.3731648973475,
+     433.65559714302265
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 1214.5929804000189,
+    "us_per_step": 859.5845579617968,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [
+     [
+      50.80000000115971,
+      "leg_reapproach_start:RR"
+     ]
+    ],
+    "lift_paused": [],
+    "hold_meta": {},
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": 47.70000000039165,
+    "after_event": {
+     "FL": {
+      "min_1ms_kN": -0.9136028934594048,
+      "t_rel_s": 0.29100000082678434,
+      "min_mean_0p5s_kN": 38.216217277076304,
+      "under_F_min_s": 0.06100000001936223,
+      "airborne_s": 0.0
+     },
+     "FR": {
+      "min_1ms_kN": 100.56372164475519,
+      "t_rel_s": 22.740000002455638,
+      "min_mean_0p5s_kN": 101.17392692514288,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RL": {
+      "min_1ms_kN": 55.35880413066932,
+      "t_rel_s": 13.73100000215657,
+      "min_mean_0p5s_kN": 55.77757232065013,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RR": {
+      "min_1ms_kN": -14.234488699730392,
+      "t_rel_s": 0.01300000073854335,
+      "min_mean_0p5s_kN": -0.7906643039659583,
+      "under_F_min_s": 0.02500000000793534,
+      "airborne_s": 1.3060000004145422
+     }
+    },
+    "pad_step_s": 0.0010000000000331966,
+    "re_ready_after_event_s": 24.400000002510744,
+    "phase_at_event": "ready"
+   },
+   "judged_new": {
+    "attitude_deg": 0.04370718390788101,
+    "min_F_kN": 53.479596704506584,
+    "reanchor_min_kN": null,
+    "p_max_bar": 100.29845896361383,
+    "stroke_max": null
+   },
+   "judged_pair": {
+    "attitude_deg": 0.04370718390788101,
+    "min_F_kN": 53.479596704506584,
+    "reanchor_min_kN": null,
+    "p_max_bar": 100.29845896361383,
+    "stroke_max": null
+   }
+  },
+  {
+   "case": "G1L_RE1bF_FL_top_Fs0",
+   "variable": "A4",
+   "engine": null,
+   "pair": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_G1L_RE1bF_FL_top_Fs0_20261031_003000\\G1L_RE1bF_FL_top_Fs0",
+   "worse": [],
+   "new_flags": [],
+   "rows_new": 62,
+   "rows_pair": 62,
+   "rows_matched": 62,
+   "new_faults": [],
+   "failed_new": [],
+   "failed_pair": [],
+   "meta_new": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "meta_pair": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "first_diff": {
+    "samples": {
+     "new": 600,
+     "pair": 600,
+     "common": 600
+    },
+    "time_grid_equal": true,
+    "u_cmd": null,
+    "u_applied": null,
+    "s_motor": null,
+    "F_cyl": null
+   },
+   "settings_diff_other": [
+    "settings.l2b_start.settle.wall_s"
+   ],
+   "new": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105\\final_G1L_RE1bF_FL_top_Fs0\\G1L_RE1bF_FL_top_Fs0",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 55.00000000211802,
+    "final_phase": "ready",
+    "end_t_s": 60.000000002284004,
+    "stroke_max_mm": [
+     446.4112141890629,
+     414.64438624371036,
+     403.1095128550622,
+     401.55034685275893
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 991.5450104000047,
+    "us_per_step": 756.3272390541607,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [
+     [
+      31.099999999869805,
+      "leg_reapproach_start:FL"
+     ],
+     [
+      31.599999999850876,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      31.999999999835733,
+      "leg_reapproach_start:FL"
+     ],
+     [
+      32.399999999962695,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      32.9000000001214,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      33.50000000031185,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      34.1000000005023,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      35.400000000914936,
+      "leg_reapproach_start:RL"
+     ]
+    ],
+    "lift_paused": [],
+    "hold_meta": {
+     "twist_load_estimate_N": 10.68139808505172,
+     "target_m": null,
+     "start_t_s": null,
+     "end_t_s": null,
+     "end_reason": null,
+     "end_error_m": null
+    },
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": 28.049999999946177,
+    "after_event": {
+     "FL": {
+      "min_1ms_kN": -11.302443422497978,
+      "t_rel_s": 0.013999999923086648,
+      "min_mean_0p5s_kN": 16.4372172438461,
+      "under_F_min_s": 0.1280000000274839,
+      "airborne_s": 0.8790000001031437
+     },
+     "FR": {
+      "min_1ms_kN": 12.18420786597236,
+      "t_rel_s": 3.6080000007313338,
+      "min_mean_0p5s_kN": 81.06837551888405,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RL": {
+      "min_1ms_kN": -0.8331039047771679,
+      "t_rel_s": 3.8370000008040215,
+      "min_mean_0p5s_kN": 37.03535970384722,
+      "under_F_min_s": 0.324000000102842,
+      "airborne_s": 0.05400000001714034
+     },
+     "RR": {
+      "min_1ms_kN": -1.5702331474342845,
+      "t_rel_s": 1.7920000001549106,
+      "min_mean_0p5s_kN": -0.6971314588142272,
+      "under_F_min_s": 0.09600000002016884,
+      "airborne_s": 1.205000000176426
+     }
+    },
+    "pad_step_s": 0.0010000000000331966,
+    "re_ready_after_event_s": 26.950000002171844,
+    "phase_at_event": "level"
+   },
+   "pair_values": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_G1L_RE1bF_FL_top_Fs0_20261031_003000\\G1L_RE1bF_FL_top_Fs0",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 55.00000000211802,
+    "final_phase": "ready",
+    "end_t_s": 60.000000002284004,
+    "stroke_max_mm": [
+     446.4112141890629,
+     414.64438624371036,
+     403.1095128550622,
+     401.55034685275893
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 965.4122262000164,
+    "us_per_step": 736.3937652174039,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [
+     [
+      31.099999999869805,
+      "leg_reapproach_start:FL"
+     ],
+     [
+      31.599999999850876,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      31.999999999835733,
+      "leg_reapproach_start:FL"
+     ],
+     [
+      32.399999999962695,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      32.9000000001214,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      33.50000000031185,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      34.1000000005023,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      35.400000000914936,
+      "leg_reapproach_start:RL"
+     ]
+    ],
+    "lift_paused": [],
+    "hold_meta": {},
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": 28.049999999946177,
+    "after_event": {
+     "FL": {
+      "min_1ms_kN": -11.302443422497978,
+      "t_rel_s": 0.013999999923086648,
+      "min_mean_0p5s_kN": 16.4372172438461,
+      "under_F_min_s": 0.1280000000274839,
+      "airborne_s": 0.8790000001031437
+     },
+     "FR": {
+      "min_1ms_kN": 12.18420786597236,
+      "t_rel_s": 3.6080000007313338,
+      "min_mean_0p5s_kN": 81.06837551888405,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RL": {
+      "min_1ms_kN": -0.8331039047771679,
+      "t_rel_s": 3.8370000008040215,
+      "min_mean_0p5s_kN": 37.03535970384722,
+      "under_F_min_s": 0.324000000102842,
+      "airborne_s": 0.05400000001714034
+     },
+     "RR": {
+      "min_1ms_kN": -1.5702331474342845,
+      "t_rel_s": 1.7920000001549106,
+      "min_mean_0p5s_kN": -0.6971314588142272,
+      "under_F_min_s": 0.09600000002016884,
+      "airborne_s": 1.205000000176426
+     }
+    },
+    "pad_step_s": 0.0010000000000331966,
+    "re_ready_after_event_s": 26.950000002171844,
+    "phase_at_event": "level"
+   },
+   "judged_new": {
+    "attitude_deg": 0.052795174210948564,
+    "min_F_kN": 67.24510501106404,
+    "reanchor_min_kN": null,
+    "p_max_bar": 163.7897628331234,
+    "stroke_max": null
+   },
+   "judged_pair": {
+    "attitude_deg": 0.052795174210948564,
+    "min_F_kN": 67.24510501106404,
+    "reanchor_min_kN": null,
+    "p_max_bar": 163.7897628331234,
+    "stroke_max": null
+   }
+  },
+  {
+   "case": "G1L_RE1bF_FL_top_o050_Fs4",
+   "variable": "A4",
+   "engine": null,
+   "pair": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_G1L_RE1bF_FL_top_o050_Fs4_20261031_004637\\G1L_RE1bF_FL_top_o050_Fs4",
+   "worse": [],
+   "new_flags": [],
+   "rows_new": 62,
+   "rows_pair": 62,
+   "rows_matched": 62,
+   "new_faults": [],
+   "failed_new": [],
+   "failed_pair": [],
+   "meta_new": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "meta_pair": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "first_diff": {
+    "samples": {
+     "new": 574,
+     "pair": 574,
+     "common": 574
+    },
+    "time_grid_equal": true,
+    "u_cmd": null,
+    "u_applied": null,
+    "s_motor": null,
+    "F_cyl": null
+   },
+   "settings_diff_other": [
+    "settings.l2b_start.settle.wall_s"
+   ],
+   "new": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105\\final_G1L_RE1bF_FL_top_o050_Fs4\\G1L_RE1bF_FL_top_o050_Fs4",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 52.4000000014917,
+    "final_phase": "ready",
+    "end_t_s": 57.40000000165768,
+    "stroke_max_mm": [
+     445.19770181101086,
+     413.791514554667,
+     402.3419407247981,
+     401.51382176441433
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 1015.7464463000069,
+    "us_per_step": 911.801118761227,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [
+     [
+      31.099999999869805,
+      "leg_reapproach_start:FL"
+     ],
+     [
+      31.599999999850876,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      32.9000000001214,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      33.50000000031185,
+      "leg_reapproach_start:RR"
+     ]
+    ],
+    "lift_paused": [],
+    "hold_meta": {
+     "twist_load_estimate_N": -38.347053932632356,
+     "target_m": null,
+     "start_t_s": null,
+     "end_t_s": null,
+     "end_reason": null,
+     "end_error_m": null
+    },
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": 28.049999999946177,
+    "after_event": {
+     "FL": {
+      "min_1ms_kN": -11.385199585513888,
+      "t_rel_s": 0.013999999923086648,
+      "min_mean_0p5s_kN": 16.887195220109053,
+      "under_F_min_s": 0.12300000002554157,
+      "airborne_s": 0.8090000000823458
+     },
+     "FR": {
+      "min_1ms_kN": 16.669021466894915,
+      "t_rel_s": 0.42099999990767856,
+      "min_mean_0p5s_kN": 91.5831870059036,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RL": {
+      "min_1ms_kN": 15.833958443202757,
+      "t_rel_s": 2.7450000004574058,
+      "min_mean_0p5s_kN": 50.18570874352637,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RR": {
+      "min_1ms_kN": -1.4201922608411774,
+      "t_rel_s": 1.7840000001523713,
+      "min_mean_0p5s_kN": -0.698284471270884,
+      "under_F_min_s": 0.09200000001818864,
+      "airborne_s": 1.2230000001800079
+     }
+    },
+    "pad_step_s": 0.0010000000000021103,
+    "re_ready_after_event_s": 24.35000000154552,
+    "phase_at_event": "level"
+   },
+   "pair_values": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_G1L_RE1bF_FL_top_o050_Fs4_20261031_004637\\G1L_RE1bF_FL_top_o050_Fs4",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 52.4000000014917,
+    "final_phase": "ready",
+    "end_t_s": 57.40000000165768,
+    "stroke_max_mm": [
+     445.19770181101086,
+     413.791514554667,
+     402.3419407247981,
+     401.51382176441433
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 1004.5801427999977,
+    "us_per_step": 901.7775070017933,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [
+     [
+      31.099999999869805,
+      "leg_reapproach_start:FL"
+     ],
+     [
+      31.599999999850876,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      32.9000000001214,
+      "leg_reapproach_start:RR"
+     ],
+     [
+      33.50000000031185,
+      "leg_reapproach_start:RR"
+     ]
+    ],
+    "lift_paused": [],
+    "hold_meta": {},
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": 28.049999999946177,
+    "after_event": {
+     "FL": {
+      "min_1ms_kN": -11.385199585513888,
+      "t_rel_s": 0.013999999923086648,
+      "min_mean_0p5s_kN": 16.887195220109053,
+      "under_F_min_s": 0.12300000002554157,
+      "airborne_s": 0.8090000000823458
+     },
+     "FR": {
+      "min_1ms_kN": 16.669021466894915,
+      "t_rel_s": 0.42099999990767856,
+      "min_mean_0p5s_kN": 91.5831870059036,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RL": {
+      "min_1ms_kN": 15.833958443202757,
+      "t_rel_s": 2.7450000004574058,
+      "min_mean_0p5s_kN": 50.18570874352637,
+      "under_F_min_s": 0.0,
+      "airborne_s": 0.0
+     },
+     "RR": {
+      "min_1ms_kN": -1.4201922608411774,
+      "t_rel_s": 1.7840000001523713,
+      "min_mean_0p5s_kN": -0.698284471270884,
+      "under_F_min_s": 0.09200000001818864,
+      "airborne_s": 1.2230000001800079
+     }
+    },
+    "pad_step_s": 0.0010000000000021103,
+    "re_ready_after_event_s": 24.35000000154552,
+    "phase_at_event": "level"
+   },
+   "judged_new": {
+    "attitude_deg": 0.041644580262302305,
+    "min_F_kN": 67.16746571554785,
+    "reanchor_min_kN": null,
+    "p_max_bar": 141.7202752527315,
+    "stroke_max": null
+   },
+   "judged_pair": {
+    "attitude_deg": 0.041644580262302305,
+    "min_F_kN": 67.16746571554785,
+    "reanchor_min_kN": null,
+    "p_max_bar": 141.7202752527315,
+    "stroke_max": null
+   }
+  },
+  {
+   "case": "K0V_top_rpB_Fs0",
+   "variable": "B1",
+   "engine": null,
+   "pair": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K0V_top_rpB_Fs0_20261031_010357\\K0V_top_rpB_Fs0",
+   "worse": [],
+   "new_flags": [],
+   "rows_new": 45,
+   "rows_pair": 45,
+   "rows_matched": 45,
+   "new_faults": [],
+   "failed_new": [],
+   "failed_pair": [],
+   "meta_new": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "meta_pair": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "first_diff": {
+    "samples": {
+     "new": 678,
+     "pair": 678,
+     "common": 678
+    },
+    "time_grid_equal": true,
+    "u_cmd": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "RR"
+     ]
+    },
+    "u_applied": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "RR"
+     ]
+    },
+    "s_motor": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ]
+    },
+    "F_cyl": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ]
+    }
+   },
+   "settings_diff_other": [
+    "settings.l2b_start.settle.wall_s"
+   ],
+   "new": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105\\final_K0V_top_rpB_Fs0\\K0V_top_rpB_Fs0",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 57.800000000892915,
+    "final_phase": "ready",
+    "end_t_s": 67.80000000122487,
+    "stroke_max_mm": [
+     536.8833408471048,
+     664.8006005853539,
+     382.5156428694481,
+     499.0106472149804
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 461.7921232000226,
+    "us_per_step": 681.1093262537207,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {
+     "twist_load_estimate_N": -41.08662742609037,
+     "target_m": null,
+     "start_t_s": null,
+     "end_t_s": null,
+     "end_reason": null,
+     "end_error_m": null
+    },
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "pair_values": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K0V_top_rpB_Fs0_20261031_010357\\K0V_top_rpB_Fs0",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 57.800000000892915,
+    "final_phase": "ready",
+    "end_t_s": 67.80000000122487,
+    "stroke_max_mm": [
+     536.8865673923015,
+     664.8052806608331,
+     382.51375685742073,
+     499.02207549734175
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 440.79694210001617,
+    "us_per_step": 650.1429824484014,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [
+     [
+      27.49999999994925,
+      "INFO_LIFT_PAUSED:RL"
+     ],
+     [
+      28.09999999994785,
+      "INFO_LIFT_PAUSED:RL"
+     ]
+    ],
+    "hold_meta": {},
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "judged_new": {
+    "attitude_deg": 0.0357427159388667,
+    "min_F_kN": 46.169325786898135,
+    "reanchor_min_kN": null,
+    "p_max_bar": 107.6688781215389,
+    "stroke_max": null
+   },
+   "judged_pair": {
+    "attitude_deg": 0.03577587486928341,
+    "min_F_kN": 35.29300520856811,
+    "reanchor_min_kN": null,
+    "p_max_bar": 104.40601980691272,
+    "stroke_max": null
+   }
+  },
+  {
+   "case": "A_middle_rpB_Fs0",
+   "variable": "B1",
+   "engine": null,
+   "pair": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_A_middle_rpB_Fs0_20261031_011149\\A_middle_rpB_Fs0",
+   "worse": [],
+   "new_flags": [],
+   "rows_new": 44,
+   "rows_pair": 44,
+   "rows_matched": 44,
+   "new_faults": [],
+   "failed_new": [],
+   "failed_pair": [],
+   "meta_new": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "meta_pair": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "first_diff": {
+    "samples": {
+     "new": 678,
+     "pair": 678,
+     "common": 678
+    },
+    "time_grid_equal": true,
+    "u_cmd": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "RR"
+     ]
+    },
+    "u_applied": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "RR"
+     ]
+    },
+    "s_motor": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ]
+    },
+    "F_cyl": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ]
+    }
+   },
+   "settings_diff_other": [
+    "settings.l2b_start.settle.wall_s"
+   ],
+   "new": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105\\final_A_middle_rpB_Fs0\\A_middle_rpB_Fs0",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 57.800000000892915,
+    "final_phase": "ready",
+    "end_t_s": 67.80000000122487,
+    "stroke_max_mm": [
+     536.8469705252446,
+     664.7783095384598,
+     382.5169987535238,
+     499.01352166936056
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 463.0486986999749,
+    "us_per_step": 682.9626824483406,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {
+     "twist_load_estimate_N": -56.948973000050806,
+     "target_m": null,
+     "start_t_s": null,
+     "end_t_s": null,
+     "end_reason": null,
+     "end_error_m": null
+    },
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "pair_values": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_A_middle_rpB_Fs0_20261031_011149\\A_middle_rpB_Fs0",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 57.800000000892915,
+    "final_phase": "ready",
+    "end_t_s": 67.80000000122487,
+    "stroke_max_mm": [
+     536.8536859820675,
+     664.7767458362068,
+     382.5080616790579,
+     499.02348904432597
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 440.6755839000107,
+    "us_per_step": 649.9639880531131,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {},
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "judged_new": {
+    "attitude_deg": 0.03546703929360629,
+    "min_F_kN": 51.18245018764822,
+    "reanchor_min_kN": null,
+    "p_max_bar": 103.64161539861834,
+    "stroke_max": null
+   },
+   "judged_pair": {
+    "attitude_deg": 0.035435568986951466,
+    "min_F_kN": 40.9010688094409,
+    "reanchor_min_kN": null,
+    "p_max_bar": 98.69699471159352,
+    "stroke_max": null
+   }
+  },
+  {
+   "case": "A_bottom_rpB_Fs0",
+   "variable": "B1",
+   "engine": null,
+   "pair": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_A_bottom_rpB_Fs0_20261031_011936\\A_bottom_rpB_Fs0",
+   "worse": [],
+   "new_flags": [],
+   "rows_new": 44,
+   "rows_pair": 44,
+   "rows_matched": 44,
+   "new_faults": [],
+   "failed_new": [],
+   "failed_pair": [],
+   "meta_new": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "meta_pair": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "first_diff": {
+    "samples": {
+     "new": 679,
+     "pair": 678,
+     "common": 678
+    },
+    "time_grid_equal": true,
+    "u_cmd": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "RR"
+     ]
+    },
+    "u_applied": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "RR"
+     ]
+    },
+    "s_motor": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ]
+    },
+    "F_cyl": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ]
+    }
+   },
+   "settings_diff_other": [
+    "settings.l2b_start.settle.wall_s"
+   ],
+   "new": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105\\final_A_bottom_rpB_Fs0\\A_bottom_rpB_Fs0",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 57.900000000896235,
+    "final_phase": "ready",
+    "end_t_s": 67.9000000012282,
+    "stroke_max_mm": [
+     536.8828350110094,
+     664.8358323872707,
+     382.54790715540565,
+     499.057849176748
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 490.18233390001114,
+    "us_per_step": 721.9180175257897,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {
+     "twist_load_estimate_N": -7.990728246969714,
+     "target_m": null,
+     "start_t_s": null,
+     "end_t_s": null,
+     "end_reason": null,
+     "end_error_m": null
+    },
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "pair_values": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_A_bottom_rpB_Fs0_20261031_011936\\A_bottom_rpB_Fs0",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 57.800000000892915,
+    "final_phase": "ready",
+    "end_t_s": 67.80000000122487,
+    "stroke_max_mm": [
+     536.8361720717224,
+     664.7590933349969,
+     382.50691823110174,
+     499.01409795754165
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 466.49378009999054,
+    "us_per_step": 688.0439234513135,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {},
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "judged_new": {
+    "attitude_deg": 0.035772598842325545,
+    "min_F_kN": 54.96150319627179,
+    "reanchor_min_kN": null,
+    "p_max_bar": 99.34388655727824,
+    "stroke_max": null
+   },
+   "judged_pair": {
+    "attitude_deg": 0.03528496522221046,
+    "min_F_kN": 44.545949219559006,
+    "reanchor_min_kN": null,
+    "p_max_bar": 96.5520262574695,
+    "stroke_max": null
+   }
+  },
+  {
+   "case": "K8_top_rpB_Fs8",
+   "variable": "B2",
+   "engine": null,
+   "pair": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K8_top_rpB_Fs8_20261031_012756\\K8_top_rpB_Fs8",
+   "worse": [],
+   "new_flags": [],
+   "rows_new": 51,
+   "rows_pair": 51,
+   "rows_matched": 51,
+   "new_faults": [],
+   "failed_new": [],
+   "failed_pair": [],
+   "meta_new": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "meta_pair": {
+    "failed": 0,
+    "hold": 0,
+    "passed": null
+   },
+   "first_diff": {
+    "samples": {
+     "new": 678,
+     "pair": 678,
+     "common": 678
+    },
+    "time_grid_equal": true,
+    "u_cmd": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "RR"
+     ]
+    },
+    "u_applied": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "RR"
+     ]
+    },
+    "s_motor": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ]
+    },
+    "F_cyl": {
+     "t_abs_s": 27.19999999994995,
+     "t_s": 24.199999999948044,
+     "relative_te_s": 0.2999999999993008,
+     "phase": "level",
+     "legs": [
+      "FL",
+      "FR",
+      "RL",
+      "RR"
+     ]
+    }
+   },
+   "settings_diff_other": [
+    "settings.l2b_start.settle.wall_s"
+   ],
+   "new": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_FINAL-R-C4G2_20261105\\final_K8_top_rpB_Fs8\\K8_top_rpB_Fs8",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 57.800000000892915,
+    "final_phase": "ready",
+    "end_t_s": 67.80000000122487,
+    "stroke_max_mm": [
+     537.2247234287149,
+     665.2324003832135,
+     382.80780149827996,
+     499.386437498297
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 572.054641499999,
+    "us_per_step": 843.7384092920339,
+    "hold_events": [],
+    "warn_fault": [],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {
+     "twist_load_estimate_N": -35.76966700366635,
+     "target_m": null,
+     "start_t_s": null,
+     "end_t_s": null,
+     "end_reason": null,
+     "end_error_m": null
+    },
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "pair_values": {
+    "dir": "C:\\workspace\\outrigger_control\\07_results\\S8\\final_K8_top_rpB_Fs8_20261031_012756\\K8_top_rpB_Fs8",
+    "t_te_s": 23.899999999948744,
+    "ready_t_s": 57.800000000892915,
+    "final_phase": "ready",
+    "end_t_s": 67.80000000122487,
+    "stroke_max_mm": [
+     537.2294738139984,
+     665.2304458930009,
+     382.8079324391728,
+     499.39403020606824
+    ],
+    "u_cmd_max_mm_s": 20.9243016,
+    "wall_s": 553.1236229999922,
+    "us_per_step": 815.8165530973337,
+    "hold_events": [],
+    "warn_fault": [
+     [
+      60.80000000089482,
+      "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:2.309"
+     ]
+    ],
+    "reapproach_starts": [],
+    "lift_paused": [],
+    "hold_meta": {},
+    "head": null,
+    "flow_limit": null,
+    "event_t_s": null
+   },
+   "judged_new": {
+    "attitude_deg": 0.03663881309248806,
+    "min_F_kN": 49.2107203757922,
+    "reanchor_min_kN": null,
+    "p_max_bar": 110.30160113721888,
+    "stroke_max": null
+   },
+   "judged_pair": {
+    "attitude_deg": 0.03666569014671156,
+    "min_F_kN": 37.83879998432348,
+    "reanchor_min_kN": null,
+    "p_max_bar": 103.04923227393309,
+    "stroke_max": null
+   }
+  }
+ ],
+ "missing": [],
+ "any_worse": []
+}
