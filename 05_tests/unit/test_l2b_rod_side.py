@@ -108,6 +108,80 @@ def test_lock_after_retract_uses_yaml_pressure(p2) -> None:
     np.testing.assert_allclose(law.rod_pressure_Pa, p2.l2b.rod_side.p_r0_after_retract_Pa)
 
 
+CREEP_M = 0.3327e-3  # M1c creep of the spec example (FL, BL)
+FL = 0
+
+
+def _locked_after_retract(p2, oil_only=False):
+    """All legs locked at ``c0`` after a retract (p_r0 = YAML retract pressure), s = e_op."""
+    law = L2bRodSide.from_params(p2, [0, 1, 2, 3], armed=True, mechanics="one_sided_parallel",
+                                 oil_only=oil_only)
+    s = np.array(p2.contact.rigid_floor.L1.operating_extension_m)
+    c0 = np.full(4, 3e-3)
+    law.spring_force_N(DT, DT, np.full(4, -1e-3), s, c0, np.zeros(4))
+    law.spring_force_N(2 * DT, DT, np.zeros(4), s, c0, np.zeros(4))
+    assert np.all(law.locked)
+    return law, s, c0
+
+
+def _shift_fl_with_body_fixed(law, c):
+    """Head-only shift of FL by CREEP_M; s_ref drops by the same amount, the body stays."""
+    f0 = law.oil_force_N(FL, c[FL])
+    law.refresh_readings(c)
+    p_r0 = law.rod_pressure_Pa.copy()
+    law.shift_head(FL, CREEP_M)
+    c_after = c.copy()
+    c_after[FL] -= CREEP_M
+    f1 = law.oil_force_N(FL, c_after[FL])
+    law.refresh_readings(c_after)
+    return f1 - f0, law.rod_pressure_Pa - p_r0
+
+
+def test_head_shift_on_the_outer_path_lock_region(p2) -> None:
+    """v5 M1c on the S7 path (k_out finite), LOCK region: the exact series solve gives
+    dF = -k_h k_out delta / (k_h + k_r + k_out) and the rod reading moves by
+    -k_r k_h delta / ((k_h + k_r + k_out) A_ann); FL at e_op: -8,256.3 N."""
+    law, s, c0 = _locked_after_retract(p2)
+    knee_c = law.knee_force_N(FL) / law.k1_lock(FL)
+    c = c0 + 0.3 * knee_c
+    k_h = law.head_stiffness_N_m(FL, s[FL])
+    k_r = law.rod_stiffness_N_m(FL, s[FL])
+    k_out = float(law.meta()["k_out_N_m"][FL])
+    total = k_h + k_r + k_out
+    d_force, d_p_r = _shift_fl_with_body_fixed(law, c)
+    assert d_force == pytest.approx(-k_h * k_out * CREEP_M / total, rel=1e-9)
+    assert d_force == pytest.approx(-8256.3, abs=0.5)
+    a_r = law.annulus_area_m2[FL]
+    assert d_p_r[FL] == pytest.approx(-k_r * k_h * CREEP_M / (total * a_r), rel=1e-9)
+    np.testing.assert_array_equal(d_p_r[1:], 0.0)
+    assert law.mode()[FL] == "LOCK"
+
+
+def test_head_shift_on_the_outer_path_floor_region(p2) -> None:
+    """FLOOR region (rod side at the floor): dF = -k_2 delta."""
+    law, s, c0 = _locked_after_retract(p2)
+    knee_c = law.knee_force_N(FL) / law.k1_lock(FL)
+    c = c0 + 1.5 * knee_c
+    d_force, _ = _shift_fl_with_body_fixed(law, c)
+    assert d_force == pytest.approx(-law.k2_lock(FL) * CREEP_M, rel=1e-9)
+    assert law.mode()[FL] == "FLOOR"
+
+
+def test_head_shift_on_the_oil_only_path_is_bit_identical(p2) -> None:
+    """k_out = inf: the anchor moves by exactly the old ``c_lock -= delta``, ``F_lock -= k_h
+    delta`` (CB and seal-friction paths unchanged)."""
+    law, _, _ = _locked_after_retract(p2, oil_only=True)
+    before = law.state_arrays()
+    law.shift_head(FL, CREEP_M)
+    after = law.state_arrays()
+    expected_c = before["c_lock_m"].copy()
+    expected_f = before["F_lock_N"].copy()
+    expected_c[FL] = expected_c[FL] - CREEP_M
+    expected_f[FL] = expected_f[FL] - before["k_h_N_m"][FL] * CREEP_M
+    np.testing.assert_array_equal(after["c_lock_m"], expected_c)
+    np.testing.assert_array_equal(after["F_lock_N"], expected_f)
+
+
 def test_disarmed_is_head_only_and_state_round_trip(p2) -> None:
     law = _law(p2, armed=False)
     s = np.full(4, 0.35)

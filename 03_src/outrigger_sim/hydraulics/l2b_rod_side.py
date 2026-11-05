@@ -501,15 +501,15 @@ class L2bRodSide:
         self._last_p_r[i] = pressure_Pa
 
     def shift_head(self, i: int, delta_m: float) -> None:
-        """CB head discharge of ``delta_m = dV / A_p`` (spec 4.2): the caller lowers ``s_ref`` by
-        ``delta_m``; a locked leg moves its anchor so that the head force drops by ``k_h delta``
-        and the rod side is unchanged (``c_lock -= delta``, ``F_lock -= k_h delta``)."""
+        """Head-only shift of ``delta_m = dV / A_p`` (CB discharge spec 4.2, M1c creep v5 spec
+        2.4): the caller lowers ``s_ref`` by ``delta_m``; on a locked leg ``dc`` keeps the rod
+        side, and the knee moves by ``k_h delta / k_out`` in ``c``
+        (``c_lock -= delta (1 + k_h / k_out)``, ``F_lock -= k_h delta``). With ``k_out = inf``
+        (oil-only law) the ratio is 0.0 and the shift is the plain ``c_lock -= delta``."""
         if self._armed and self._locked[i]:
-            self._c_lock[i] -= delta_m
-            # oil-only law (CB path): k_h; with the outer path in series the head force drops by
-            # k_2 delta (M1c on the S7 path, v5 spec 2.4)
-            stiffness = self._k_h[i] if self.oil_only else self.k2_lock(i)
-            self._f_lock[i] -= stiffness * delta_m
+            ratio = self._k_h[i] / self._k_out[i]
+            self._c_lock[i] -= delta_m * (1.0 + ratio)
+            self._f_lock[i] -= self._k_h[i] * delta_m
 
     def vent_rod(self, i: int, volume_m3: float) -> None:
         """CB rod-side discharge (spec 4.2): ``p_r0 -= k_r dV / A_ann^2``, ``F_lock += k_r dV /

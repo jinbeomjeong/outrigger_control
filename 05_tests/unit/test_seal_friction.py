@@ -244,6 +244,28 @@ def test_band_edge_chatter_count() -> None:
     assert fr3.chatter_count[0] == 0 and fr3.f[0] == fr.f[0] and fr3.s_p[0] == fr.s_p[0]
 
 
+@pytest.mark.parametrize(
+    ("oil_N", "outer_N", "f_expected_N", "band_expected_N"),
+    [(41487.8189231131, 62177.359856557814, 4000.0, 0.0),
+     (64717.6298270643, 60308.3082447442, -4000.0, 8000.0)],
+)
+def test_friction_sign_matches_the_harness_kernel(oil_N, outer_N, f_expected_N,
+                                                  band_expected_N) -> None:
+    """v5 C-6: f = outer force - oil force, saturated at +-F_s (f > 0 resists retraction);
+    the M1c retract band is F_s - f. Rows of the hydraulics-expert sign check (kernel and L2b
+    identical in 2,000 cases; F_s 4 kN, k_o 2.9e7, k_out 2.5e8 N/m)."""
+    k_oil, k_out, f_s = 2.9e7, 2.5e8, 4.0e3
+    s_ref = 0.40
+    piston = s_ref - oil_N / k_oil
+    body = piston - outer_N / k_out
+    fr = SealFriction([f_s], [k_out])
+    fr.arm([piston])
+    fr.stuck[:] = True
+    fr.step([body], [s_ref], lambda i, c: k_oil * c, lambda i, c: k_oil)
+    assert float(fr.f[0]) == f_expected_N
+    assert f_s - float(fr.f[0]) == band_expected_N
+
+
 def test_split_pressures_floor() -> None:
     """S8-A1: p_h floored, p_r re-solved, net force unchanged; legs above the floor keep the
     unfloored expression bit for bit."""

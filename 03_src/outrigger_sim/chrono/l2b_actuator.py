@@ -567,6 +567,10 @@ class L2bForceActuator:
         assert adapter is not None and oil is not None
         if adapter.pending_opening_m.any():
             self.reference.shift_reference(adapter.pending_opening_m)
+            # guard: a leg still locked here keeps its head anchor with the reference (a
+            # released leg is a no-op in shift_head)
+            for i in np.flatnonzero(adapter.pending_opening_m != 0.0):
+                oil.shift_head(int(i), float(adapter.pending_opening_m[i]))
             adapter.pending_opening_m = np.zeros(self.n_legs)
         output = adapter.output
         if output is None:
