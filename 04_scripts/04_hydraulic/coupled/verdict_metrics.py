@@ -411,6 +411,49 @@ def overlap_in_window(rows: np.ndarray, supply_m3_s: float, t_start_s: float,
             "found": bool(over.any())}
 
 
+TRAILING_MEAN_S = 0.5
+"""Criteria 3.1 (⑦): trailing (not centred) moving mean of the 1 ms true F_cyl."""
+
+
+def _longest_true_run(flags: np.ndarray) -> int:
+    runs = contiguous_runs(flags)
+    return max((last - first + 1 for first, last in runs), default=0)
+
+
+def after_window_force_values(t_rel_s: np.ndarray, force_N: np.ndarray, contact_N: np.ndarray,
+                              window_end_s: float, f_min_N: float) -> dict:
+    """Criteria 3.1 (⑦) values after the event window (1 ms rows, times relative to the event).
+
+    The trailing 0.5 s mean uses samples after the window only (its first value is 0.5 s after
+    the window end). ``FLAG_E3_1ms`` = the 1 ms minimum after the window is below F_min (with
+    the leg, the summed and the longest time below F_min over all legs [ms]). Lift = pad contact
+    force <= 0 after the window [ms, summed over the legs]. No verdict here.
+    """
+    after = t_rel_s > window_end_s
+    out = {"window_end_s": _rounded(window_end_s, 3), "samples_after": int(after.sum())}
+    if not after.any():
+        return out
+    force = force_N[after]
+    index, leg = np.unravel_index(int(np.argmin(force)), force.shape)
+    below = force < f_min_N
+    window = round(TRAILING_MEAN_S / CHUNK_S)
+    trailing = None
+    if len(force) >= window:
+        kernel = np.ones(window) / window
+        trailing = np.column_stack([np.convolve(force[:, k], kernel, "valid")
+                                    for k in range(force.shape[1])])
+    out.update({
+        "min_1ms_kN": _rounded(force[index, leg] * KN_PER_N, 4), "min_1ms_leg": LEGS[int(leg)],
+        "min_1ms_t_rel_s": _rounded(t_rel_s[after][index], 3),
+        "below_f_min_ms_sum": int(below.sum()),
+        "below_f_min_ms_longest": max(_longest_true_run(below[:, k]) for k in range(4)),
+        "min_trailing_0p5s_kN": None if trailing is None
+        else _rounded(trailing.min() * KN_PER_N, 4),
+        "lift_ms_after_window": int((contact_N[after] <= 0.0).sum()),
+        "FLAG_E3_1ms": bool(force[index, leg] < f_min_N)})
+    return out
+
+
 STOP_BEFORE_WINDOW_S = 1.0
 STOP_SAMPLE_HALF_WINDOW_S = 0.1
 CRAWLER_LOADED_WEIGHT_FRACTION = 0.01

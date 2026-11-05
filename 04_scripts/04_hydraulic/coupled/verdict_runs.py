@@ -41,6 +41,7 @@ from harness_flow import (  # noqa: E402
 from params import load_params  # noqa: E402
 from verdict_cases import REANCHOR_ON, EventTwin, SteadyTwin, VerdictCase  # noqa: E402
 from verdict_metrics import (  # noqa: E402
+    after_window_force_values,
     flow_saturation_time,
     overlap_in_window,
     run_values,
@@ -243,6 +244,9 @@ def _run_event(twin: EventTwin) -> tuple[dict, dict]:
     window_end = judged["W_end_s"] if r67.is_fast(event) else event["ramp"] + SLOW_EVENT_TAIL_S
     judged["pressure"] = study_a._pressure_rows(rows[:, 0] - t_event, rows[:, 5:9], rows[:, 9:13],
                                                 controller.geometry.head_area_m2, window_end)
+    # v5 X-8 (criteria 3.1, ⑦): 1 ms minimum, trailing 0.5 s mean and lift after the window
+    judged["after_window_force"] = after_window_force_values(
+        rows[:, 0] - t_event, rows[:, 5:9], rows[:, 1:5], window_end, r67.F_MIN_N)
     phase_at_event = next((phase for t, phase in phases if t >= 0.0), None)
     extra.update(event=twin.event, leg=twin.leg, timing=twin.timing, offset_s=twin.offset_s,
                  t_event_s=round(t_event, 3), phase_at_event=phase_at_event,

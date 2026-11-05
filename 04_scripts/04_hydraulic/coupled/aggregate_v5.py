@@ -6,7 +6,8 @@ golden off runs (phase 0 rows that the golden set defines) and the W-2 pairs (L1
 M1c rows carry ``unit_status`` ``below_criteria_reference_only``. Batch ``item8`` adds
 ``item8_order`` (criteria 13.1 (1)) from its rows and the R6 / R8 / R9 rows of ``main``. Every
 batch gets ``ready`` (criteria 7: S1 .. S5, S7 first READY <= 100 s, event rows back in READY
-<= 60 s, S8 no READY, rigid rows FLAG over 90 / 120 s) and ``s8_stop`` (criteria 6 values).
+<= 60 s, S8 no READY, rigid rows FLAG over 90 / 120 s), ``s8_stop`` (criteria 6 values) and
+``event_force`` (criteria 3.1, ⑦: after-window 1 ms minimum, trailing 0.5 s mean, FLAG_E3_1ms).
 
 Usage: python -I -B 04_scripts/04_hydraulic/coupled/aggregate_v5.py <batch> [<batch> ...]
 """
@@ -72,6 +73,8 @@ def value_row(record: dict) -> dict:
         out["unit_status"] = UNIT_STATUS
     if record.get("event_output"):
         out["t_ready_back_s"] = record["event_output"].get("t_ready_back_s")
+        if record["event_output"].get("after_window_force"):  # criteria 3.1 (⑦) values
+            out["after_window_force"] = record["event_output"]["after_window_force"]
     if record.get("soil_stop_crawler"):
         out["soil_stop_crawler"] = record["soil_stop_crawler"]
     if record.get("overlap_found"):
@@ -118,6 +121,15 @@ def ready_entry(row: dict) -> dict:
 def ready_table(rows: list[dict]) -> list[dict]:
     """Criteria 7 READY table (and the J5 return of the event rows) of the runs without error."""
     return [ready_entry(row) for row in rows if "error" not in row]
+
+
+def event_force_table(rows: list[dict]) -> list[dict]:
+    """Criteria 3.1 (⑦) values of the event runs: 1 ms minimum after the window, the summed
+    and longest time below F_min, the trailing 0.5 s mean minimum, lift after the window and
+    ``FLAG_E3_1ms`` (harness rigid events keep the 1 ms E-3; the 0.5 s mean is recorded)."""
+    return [{"row": row["row"], "phase": row["phase"], "setting": row["setting"],
+             **row["after_window_force"]}
+            for row in rows if row.get("after_window_force")]
 
 
 def s8_stop_table(rows: list[dict]) -> list[dict]:
@@ -212,7 +224,8 @@ def main() -> None:
         report = {"batch": batch, "runs": len(rows),
                   "errors": sum("error" in row for row in rows),
                   "golden_v0": golden_check(rows), "w2": w2_pairs(rows), "rows": rows,
-                  "ready": ready_table(rows), "s8_stop": s8_stop_table(rows)}
+                  "ready": ready_table(rows), "s8_stop": s8_stop_table(rows),
+                  "event_force": event_force_table(rows)}
         if batch == "item8":
             regression = [row for row in _value_rows("main") if row["row"] in ITEM8_LEVELS]
             report["item8_order"] = item8_order(rows + regression)
