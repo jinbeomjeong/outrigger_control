@@ -1,0 +1,5974 @@
+{
+ "meta": {
+  "script": "04_scripts/03_control/s8/r67_g1_screen.py",
+  "spec": "rev. 67 (G1 / G2 / G7 reduced screen)",
+  "wall_s": 32.2,
+  "workers": 8,
+  "affinity": "5555",
+  "slice": null,
+  "offsets_s": "0,0.05",
+  "n_jobs": 8,
+  "candidate": "current",
+  "keys_option": [
+   "screen|top|0.0|level|FL",
+   "screen|top|8.0|level|RR",
+   "screen|top|0.0|ready|FR",
+   "screen|top|8.0|ready|FL",
+   "screen|bottom|0.0|level|RL",
+   "screen|bottom|8.0|level|FL",
+   "screen|bottom|0.0|ready|RR",
+   "screen|bottom|8.0|ready|FR"
+  ]
+ },
+ "results": [
+  {
+   "key": "screen|bottom|0.0|level|RL",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "timing": "level",
+   "leg": "RL",
+   "base": {
+    "timeline": [
+     [
+      0.1,
+      "check"
+     ],
+     [
+      1.0,
+      "touch"
+     ],
+     [
+      19.9,
+      "level"
+     ],
+     [
+      27.6,
+      "done"
+     ],
+     [
+      27.7,
+      "probe"
+     ],
+     [
+      39.6,
+      "ready"
+     ]
+    ],
+    "t_lift": 21.099999999996175,
+    "t_loc": 21.699999999994777,
+    "t_done": 27.6,
+    "t_ready": 39.60000000000706
+   },
+   "runs": [
+    {
+     "run_after_s": 26.7,
+     "lifts": {},
+     "pair": [
+      "RL",
+      "FR"
+     ],
+     "pair_union_s": 0,
+     "pair_last_touch_s": 0.0,
+     "W_end_s": 0.82,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 118.2,
+      "RR": 70.39
+     },
+     "min_F_after_W_kN": {
+      "FL": 103.21,
+      "FR": 67.12,
+      "RL": 19.32,
+      "RR": 54.16
+     },
+     "min_F_after_event_kN": {
+      "FL": 103.21,
+      "FR": 67.12,
+      "RL": 19.32,
+      "RR": 54.16
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.7,
+     "att_end_deg": [
+      0.0197,
+      -0.0095
+     ],
+     "max_att_change_deg": 0.1237,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       1.3,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -0.0,
+       -4.4,
+       -74.7,
+       -267.1,
+       3.4,
+       -1.0,
+       -1.3,
+       -0.9,
+       -0.6,
+       -0.4,
+       -0.3,
+       -0.2,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 3.4,
+      "D0_kN": 0.7
+     },
+     "warnings": [],
+     "gates": {
+      "no_lift": true,
+      "Fmin_after_event": true,
+      "fault0": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 1.8,
+      "last_touch_to_3.0_s": 3.0,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 9.91,
+      "Fmin_after_event_minus_Fmin_kN": 9.91
+     },
+     "event": "G4",
+     "offset_s": 0.0,
+     "phase_at_event": "level",
+     "t_ev_s": 24.7,
+     "fast": false,
+     "commands_sha256": "c2b9ad39baea1e839d2c6086c2139e07133c9ec73a0d4c34122eaac5009ffc9f"
+    },
+    {
+     "run_after_s": 26.65,
+     "lifts": {},
+     "pair": [
+      "RL",
+      "FR"
+     ],
+     "pair_union_s": 0,
+     "pair_last_touch_s": 0.0,
+     "W_end_s": 0.82,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 118.19,
+      "RR": 70.4
+     },
+     "min_F_after_W_kN": {
+      "FL": 103.22,
+      "FR": 68.59,
+      "RL": 20.81,
+      "RR": 54.17
+     },
+     "min_F_after_event_kN": {
+      "FL": 103.22,
+      "FR": 68.59,
+      "RL": 20.81,
+      "RR": 54.17
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.65,
+     "att_end_deg": [
+      0.0195,
+      -0.0096
+     ],
+     "max_att_change_deg": 0.1237,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       1.25,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -0.0,
+       -4.4,
+       -101.9,
+       -234.6,
+       4.3,
+       -0.9,
+       -1.0,
+       -0.7,
+       -0.5,
+       -0.3,
+       -0.2,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 4.3,
+      "D0_kN": 0.71
+     },
+     "warnings": [],
+     "gates": {
+      "no_lift": true,
+      "Fmin_after_event": true,
+      "fault0": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 1.8,
+      "last_touch_to_3.0_s": 3.0,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 11.4,
+      "Fmin_after_event_minus_Fmin_kN": 11.4
+     },
+     "event": "G4",
+     "offset_s": 0.05,
+     "phase_at_event": "level",
+     "t_ev_s": 24.75,
+     "fast": false,
+     "commands_sha256": "715b58247f98107bd735d145a64ba91ef1ebd0e37880e8e53b9829982f54fded"
+    },
+    {
+     "run_after_s": 27.5,
+     "lifts": {
+      "RL": {
+       "sum_s": 1.21,
+       "n": 2,
+       "first_s": 0.015,
+       "last_touch_s": 1.401,
+       "max_gap_mm": 23.5
+      }
+     },
+     "pair": [
+      "RL",
+      "FR"
+     ],
+     "pair_union_s": 1.21,
+     "pair_last_touch_s": 1.401,
+     "W_end_s": 2.221,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 98.12,
+      "RR": 53.91
+     },
+     "min_F_after_W_kN": {
+      "FL": 100.59,
+      "FR": 103.64,
+      "RL": 58.54,
+      "RR": 52.88
+     },
+     "min_F_after_event_kN": {
+      "FL": 98.12,
+      "FR": 3.21,
+      "RL": -0.72,
+      "RR": 52.88
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 24.5,
+     "att_end_deg": [
+      0.0247,
+      -0.0048
+     ],
+     "max_att_change_deg": 0.3408,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.1,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -260.1,
+       -686.7,
+       -629.5,
+       -147.1,
+       2.4,
+       -0.6,
+       -0.6,
+       -0.4,
+       -0.3,
+       -0.2,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.0,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 2.4,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "WARN_D1_IMU_GYRO_MISSING"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.59,
+      "last_touch_to_3.0_s": 1.599,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 43.47,
+      "Fmin_after_event_minus_Fmin_kN": -10.13
+     },
+     "event": "RE1bF",
+     "offset_s": 0.0,
+     "phase_at_event": "level",
+     "t_ev_s": 24.7,
+     "fast": true,
+     "commands_sha256": "c3d403f3ac3a2201386d385923e9d47a925ad91a127abacb86709e29e6418d65"
+    },
+    {
+     "run_after_s": 27.45,
+     "lifts": {
+      "RL": {
+       "sum_s": 1.162,
+       "n": 2,
+       "first_s": 0.015,
+       "last_touch_s": 1.369,
+       "max_gap_mm": 23.5
+      }
+     },
+     "pair": [
+      "RL",
+      "FR"
+     ],
+     "pair_union_s": 1.162,
+     "pair_last_touch_s": 1.369,
+     "W_end_s": 2.189,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 97.39,
+      "RR": 53.92
+     },
+     "min_F_after_W_kN": {
+      "FL": 101.12,
+      "FR": 103.64,
+      "RL": 58.54,
+      "RR": 53.22
+     },
+     "min_F_after_event_kN": {
+      "FL": 97.39,
+      "FR": 4.48,
+      "RL": -0.72,
+      "RR": 53.22
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 24.45,
+     "att_end_deg": [
+      0.0247,
+      -0.0048
+     ],
+     "max_att_change_deg": 0.3421,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.05,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -341.0,
+       -690.2,
+       -590.3,
+       -108.3,
+       1.6,
+       -0.7,
+       -0.6,
+       -0.4,
+       -0.3,
+       -0.2,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.0,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 1.6,
+      "D0_kN": 0.71
+     },
+     "warnings": [],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.638,
+      "last_touch_to_3.0_s": 1.631,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 43.8,
+      "Fmin_after_event_minus_Fmin_kN": -10.13
+     },
+     "event": "RE1bF",
+     "offset_s": 0.05,
+     "phase_at_event": "level",
+     "t_ev_s": 24.75,
+     "fast": true,
+     "commands_sha256": "2d60a99124534c147dc7c253540b689245628f080d083c171fa9a084376cca90"
+    },
+    {
+     "run_after_s": 26.6,
+     "lifts": {
+      "RL": {
+       "sum_s": 0.878,
+       "n": 2,
+       "first_s": 0.116,
+       "last_touch_s": 1.043,
+       "max_gap_mm": 11.5
+      }
+     },
+     "pair": [
+      "RL",
+      "FR"
+     ],
+     "pair_union_s": 0.878,
+     "pair_last_touch_s": 1.043,
+     "W_end_s": 1.863,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 106.63,
+      "RR": 62.53
+     },
+     "min_F_after_W_kN": {
+      "FL": 105.1,
+      "FR": 97.95,
+      "RL": 56.36,
+      "RR": 56.26
+     },
+     "min_F_after_event_kN": {
+      "FL": 105.1,
+      "FR": 11.75,
+      "RL": -0.72,
+      "RR": 56.26
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.6,
+     "att_end_deg": [
+      0.0353,
+      0.001
+     ],
+     "max_att_change_deg": 0.2832,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.1,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -304.6,
+       -678.7,
+       -323.3,
+       -8.7,
+       -0.1,
+       -0.1,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.0,
+      "D0_kN": 0.7
+     },
+     "warnings": [],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.922,
+      "last_touch_to_3.0_s": 1.957,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 46.85,
+      "Fmin_after_event_minus_Fmin_kN": -10.13
+     },
+     "event": "FS24",
+     "offset_s": 0.0,
+     "phase_at_event": "level",
+     "t_ev_s": 24.7,
+     "fast": true,
+     "commands_sha256": "d128800a36687e94d8558f0dabe0e75f7232910d8d806adcf28387f566505cb3"
+    },
+    {
+     "run_after_s": 26.75,
+     "lifts": {
+      "RL": {
+       "sum_s": 0.955,
+       "n": 1,
+       "first_s": 0.116,
+       "last_touch_s": 1.071,
+       "max_gap_mm": 12.53
+      }
+     },
+     "pair": [
+      "RL",
+      "FR"
+     ],
+     "pair_union_s": 0.955,
+     "pair_last_touch_s": 1.071,
+     "W_end_s": 1.891,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 87.41,
+      "RR": 31.24
+     },
+     "min_F_after_W_kN": {
+      "FL": 76.18,
+      "FR": 103.87,
+      "RL": 58.7,
+      "RR": 30.85
+     },
+     "min_F_after_event_kN": {
+      "FL": 76.18,
+      "FR": 10.46,
+      "RL": -0.72,
+      "RR": 30.85
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.75,
+     "att_end_deg": [
+      0.035,
+      0.0004
+     ],
+     "max_att_change_deg": 0.287,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.15,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -226.3,
+       -679.3,
+       -376.2,
+       51.5,
+       -12.0,
+       -17.1,
+       -11.6,
+       -7.4,
+       -4.6,
+       -3.0,
+       -1.9,
+       -1.2,
+       -0.8,
+       -0.5,
+       -0.4,
+       -0.2
+      ],
+      "bundles": [
+       [
+        1.5,
+        51.5
+       ]
+      ],
+      "n_bundles": 1,
+      "max_judged_bin_J": 51.5,
+      "D0_kN": 0.71
+     },
+     "warnings": [],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.845,
+      "last_touch_to_3.0_s": 1.929,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 21.44,
+      "Fmin_after_event_minus_Fmin_kN": -10.13
+     },
+     "event": "FS24",
+     "offset_s": 0.05,
+     "phase_at_event": "level",
+     "t_ev_s": 24.75,
+     "fast": true,
+     "commands_sha256": "6fbe87d0892e19bfcd6deef6c361ff27af25764747d60d72cc5f89ec313e7ffe"
+    }
+   ],
+   "prefix_commands_sha256": "8f563330e87d0b49f72254489a9a7c3a66db59bf7d6bf97cda99f326165ebae5",
+   "branch_t_s": 24.2,
+   "branch_phase": "level",
+   "wall_s": 25.8,
+   "candidate": "current"
+  },
+  {
+   "key": "screen|bottom|8.0|level|FL",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "timing": "level",
+   "leg": "FL",
+   "base": {
+    "timeline": [
+     [
+      0.1,
+      "check"
+     ],
+     [
+      1.0,
+      "touch"
+     ],
+     [
+      20.0,
+      "level"
+     ],
+     [
+      28.2,
+      "done"
+     ],
+     [
+      28.3,
+      "probe"
+     ],
+     [
+      40.2,
+      "ready"
+     ]
+    ],
+    "t_lift": 20.799999999996874,
+    "t_loc": 21.399999999995476,
+    "t_done": 28.2,
+    "t_ready": 40.20000000000992
+   },
+   "runs": [
+    {
+     "run_after_s": 25.7,
+     "lifts": {},
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 0,
+     "pair_last_touch_s": 0.0,
+     "W_end_s": 0.82,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 115.96,
+      "RL": 71.93
+     },
+     "min_F_after_W_kN": {
+      "FL": 68.16,
+      "FR": 100.44,
+      "RL": 55.27,
+      "RR": 13.91
+     },
+     "min_F_after_event_kN": {
+      "FL": 68.16,
+      "FR": 100.44,
+      "RL": 55.27,
+      "RR": 13.91
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 22.7,
+     "att_end_deg": [
+      0.0213,
+      -0.0359
+     ],
+     "max_att_change_deg": 0.1448,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       1.4,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       0.0,
+       -4.1,
+       -39.5,
+       -297.9,
+       -15.3,
+       -0.2,
+       -0.5,
+       -0.4,
+       -0.4,
+       -0.3,
+       -0.2,
+       -0.2,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.0,
+      "D0_kN": 0.71
+     },
+     "warnings": [],
+     "gates": {
+      "no_lift": true,
+      "Fmin_after_event": true,
+      "fault0": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 1.8,
+      "last_touch_to_3.0_s": 3.0,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 4.5,
+      "Fmin_after_event_minus_Fmin_kN": 4.5
+     },
+     "event": "G4",
+     "offset_s": 0.0,
+     "phase_at_event": "level",
+     "t_ev_s": 24.8,
+     "fast": false,
+     "commands_sha256": "50eeb222f1aa43ca5c3bcd6a4a897aa358a4ea4ce49333ce199606f27ed8c1c5"
+    },
+    {
+     "run_after_s": 25.75,
+     "lifts": {},
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 0,
+     "pair_last_touch_s": 0.0,
+     "W_end_s": 0.82,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 115.96,
+      "RL": 71.92
+     },
+     "min_F_after_W_kN": {
+      "FL": 68.97,
+      "FR": 100.46,
+      "RL": 55.28,
+      "RR": 14.55
+     },
+     "min_F_after_event_kN": {
+      "FL": 68.97,
+      "FR": 100.46,
+      "RL": 55.28,
+      "RR": 14.55
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 22.75,
+     "att_end_deg": [
+      0.0215,
+      -0.036
+     ],
+     "max_att_change_deg": 0.1448,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       1.35,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -0.0,
+       -4.1,
+       -49.3,
+       -293.8,
+       -7.3,
+       -0.2,
+       -0.3,
+       -0.3,
+       -0.3,
+       -0.2,
+       -0.2,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.0,
+      "D0_kN": 0.71
+     },
+     "warnings": [],
+     "gates": {
+      "no_lift": true,
+      "Fmin_after_event": true,
+      "fault0": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 1.8,
+      "last_touch_to_3.0_s": 3.0,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 5.13,
+      "Fmin_after_event_minus_Fmin_kN": 5.13
+     },
+     "event": "G4",
+     "offset_s": 0.05,
+     "phase_at_event": "level",
+     "t_ev_s": 24.85,
+     "fast": false,
+     "commands_sha256": "ebd046c462d8c4c7ac97c9ae2b117cb4a88a24cca4e66e9dd1573fd0a856eabf"
+    },
+    {
+     "run_after_s": 26.8,
+     "lifts": {
+      "FL": {
+       "sum_s": 0.597,
+       "n": 3,
+       "first_s": 0.016,
+       "last_touch_s": 1.18,
+       "max_gap_mm": 22.23
+      },
+      "RR": {
+       "sum_s": 1.206,
+       "n": 4,
+       "first_s": 0.092,
+       "last_touch_s": 1.76,
+       "max_gap_mm": 27.44
+      }
+     },
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 1.543,
+     "pair_last_touch_s": 1.76,
+     "W_end_s": 2.58,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 31.73,
+      "RL": 71.95
+     },
+     "min_F_after_W_kN": {
+      "FL": 101.32,
+      "FR": 102.43,
+      "RL": 57.51,
+      "RR": 52.04
+     },
+     "min_F_after_event_kN": {
+      "FL": -1.05,
+      "FR": 31.73,
+      "RL": 57.51,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.8,
+     "att_end_deg": [
+      0.0188,
+      -0.0313
+     ],
+     "max_att_change_deg": 0.7763,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.1,
+       "FL"
+      ],
+      [
+       0.4,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -162.4,
+       -421.7,
+       -398.1,
+       -293.9,
+       -78.1,
+       -2.9,
+       -0.7,
+       -0.3,
+       -0.1,
+       -0.0,
+       0.0,
+       -0.0,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.1
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.0,
+      "D0_kN": 0.71
+     },
+     "warnings": [
+      "WARN_D1_IMU_GYRO_MISSING"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.257,
+      "last_touch_to_3.0_s": 1.24,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 42.62,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "RE1bF",
+     "offset_s": 0.0,
+     "phase_at_event": "level",
+     "t_ev_s": 24.8,
+     "fast": true,
+     "commands_sha256": "70075468ae67b1bc2836f73f2db1d75cf9c639ccc5d8e9864fde69f01539baff"
+    },
+    {
+     "run_after_s": 26.85,
+     "lifts": {
+      "FL": {
+       "sum_s": 0.512,
+       "n": 3,
+       "first_s": 0.016,
+       "last_touch_s": 1.096,
+       "max_gap_mm": 22.23
+      },
+      "RR": {
+       "sum_s": 0.919,
+       "n": 3,
+       "first_s": 0.092,
+       "last_touch_s": 1.338,
+       "max_gap_mm": 26.83
+      }
+     },
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 1.232,
+     "pair_last_touch_s": 1.338,
+     "W_end_s": 2.158,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 30.83,
+      "RL": 71.93
+     },
+     "min_F_after_W_kN": {
+      "FL": 101.42,
+      "FR": 102.35,
+      "RL": 57.55,
+      "RR": 51.97
+     },
+     "min_F_after_event_kN": {
+      "FL": -1.05,
+      "FR": 30.83,
+      "RL": 57.55,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.85,
+     "att_end_deg": [
+      0.0192,
+      -0.0317
+     ],
+     "max_att_change_deg": 0.7695,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.05,
+       "FL"
+      ],
+      [
+       0.95,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -193.0,
+       -581.2,
+       -386.9,
+       -96.6,
+       -4.4,
+       -0.9,
+       -0.4,
+       -0.2,
+       -0.0,
+       0.0,
+       0.0,
+       0.0,
+       -0.0,
+       -0.1,
+       -0.1,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.0,
+      "D0_kN": 0.71
+     },
+     "warnings": [
+      "WARN_D1_IMU_GYRO_MISSING"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.568,
+      "last_touch_to_3.0_s": 1.662,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 42.56,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "RE1bF",
+     "offset_s": 0.05,
+     "phase_at_event": "level",
+     "t_ev_s": 24.85,
+     "fast": true,
+     "commands_sha256": "3d08190da96aac32de89c6eab375b42675b9ea9fa1a2fbb0bc326aaa028dcccd"
+    },
+    {
+     "run_after_s": 26.4,
+     "lifts": {
+      "FL": {
+       "sum_s": 0.184,
+       "n": 2,
+       "first_s": 0.148,
+       "last_touch_s": 0.72,
+       "max_gap_mm": 2.64
+      },
+      "RR": {
+       "sum_s": 0.916,
+       "n": 3,
+       "first_s": 0.176,
+       "last_touch_s": 1.331,
+       "max_gap_mm": 18.27
+      }
+     },
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 0.985,
+     "pair_last_touch_s": 1.331,
+     "W_end_s": 2.151,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 80.99,
+      "RL": 71.95
+     },
+     "min_F_after_W_kN": {
+      "FL": 101.27,
+      "FR": 102.43,
+      "RL": 57.54,
+      "RR": 52.05
+     },
+     "min_F_after_event_kN": {
+      "FL": -1.05,
+      "FR": 80.99,
+      "RL": 57.54,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.4,
+     "att_end_deg": [
+      0.0233,
+      -0.0344
+     ],
+     "max_att_change_deg": 0.5699,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.2,
+       "FL"
+      ],
+      [
+       0.5,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -78.8,
+       -526.1,
+       -334.6,
+       -127.0,
+       -6.6,
+       -1.2,
+       -0.6,
+       -0.3,
+       -0.1,
+       -0.0,
+       0.0,
+       0.0,
+       0.0,
+       -0.0,
+       -0.1,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.0,
+      "D0_kN": 0.71
+     },
+     "warnings": [],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.815,
+      "last_touch_to_3.0_s": 1.669,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 42.64,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "FS24",
+     "offset_s": 0.0,
+     "phase_at_event": "level",
+     "t_ev_s": 24.8,
+     "fast": true,
+     "commands_sha256": "1895094da17194ce8fcfa9fa38d90c8c4201c409392178f644c7dd2f5d489685"
+    },
+    {
+     "run_after_s": 26.45,
+     "lifts": {
+      "FL": {
+       "sum_s": 0.183,
+       "n": 2,
+       "first_s": 0.148,
+       "last_touch_s": 0.716,
+       "max_gap_mm": 2.84
+      },
+      "RR": {
+       "sum_s": 0.852,
+       "n": 3,
+       "first_s": 0.176,
+       "last_touch_s": 1.315,
+       "max_gap_mm": 17.91
+      }
+     },
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 0.964,
+     "pair_last_touch_s": 1.315,
+     "W_end_s": 2.135,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 79.61,
+      "RL": 71.93
+     },
+     "min_F_after_W_kN": {
+      "FL": 101.27,
+      "FR": 102.43,
+      "RL": 57.54,
+      "RR": 52.06
+     },
+     "min_F_after_event_kN": {
+      "FL": -1.05,
+      "FR": 79.61,
+      "RL": 57.54,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.45,
+     "att_end_deg": [
+      0.0253,
+      -0.0355
+     ],
+     "max_att_change_deg": 0.567,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.15,
+       "FL"
+      ],
+      [
+       0.45,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -100.5,
+       -494.8,
+       -319.0,
+       -106.9,
+       -5.5,
+       -1.3,
+       -0.6,
+       -0.3,
+       -0.1,
+       -0.0,
+       0.0,
+       0.0,
+       0.0,
+       -0.0,
+       -0.1,
+       -0.1
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.0,
+      "D0_kN": 0.71
+     },
+     "warnings": [],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.836,
+      "last_touch_to_3.0_s": 1.685,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 42.64,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "FS24",
+     "offset_s": 0.05,
+     "phase_at_event": "level",
+     "t_ev_s": 24.85,
+     "fast": true,
+     "commands_sha256": "2f3d93d251d6b423eb8c516e0c874ba837e8111e8909171dad4aa16915a3bec7"
+    }
+   ],
+   "prefix_commands_sha256": "c64fdccbf1d5f5e24fa84c49876d549fb99aee6f2a1dc48df4e8d9589fafae56",
+   "branch_t_s": 24.3,
+   "branch_phase": "level",
+   "wall_s": 25.5,
+   "candidate": "current"
+  },
+  {
+   "key": "screen|top|0.0|level|FL",
+   "level": "top",
+   "fs_kN": 0.0,
+   "timing": "level",
+   "leg": "FL",
+   "base": {
+    "timeline": [
+     [
+      0.1,
+      "check"
+     ],
+     [
+      1.0,
+      "touch"
+     ],
+     [
+      19.9,
+      "level"
+     ],
+     [
+      27.2,
+      "done"
+     ],
+     [
+      27.3,
+      "probe"
+     ],
+     [
+      39.2,
+      "ready"
+     ]
+    ],
+    "t_lift": 20.999999999996408,
+    "t_loc": 21.499999999995243,
+    "t_done": 27.2,
+    "t_ready": 39.20000000000515
+   },
+   "runs": [
+    {
+     "run_after_s": 25.6,
+     "lifts": {},
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 0,
+     "pair_last_touch_s": 0.0,
+     "W_end_s": 0.82,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 115.81,
+      "RL": 71.73
+     },
+     "min_F_after_W_kN": {
+      "FL": 75.85,
+      "FR": 101.57,
+      "RL": 56.32,
+      "RR": 20.79
+     },
+     "min_F_after_event_kN": {
+      "FL": 75.85,
+      "FR": 101.57,
+      "RL": 56.32,
+      "RR": 20.79
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 22.6,
+     "att_end_deg": [
+      0.0169,
+      -0.0267
+     ],
+     "max_att_change_deg": 0.144,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       1.3,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       0.0,
+       -3.6,
+       -64.2,
+       -215.6,
+       -0.2,
+       -0.1,
+       -0.2,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.0,
+      "D0_kN": 0.7
+     },
+     "warnings": [],
+     "gates": {
+      "no_lift": true,
+      "Fmin_after_event": true,
+      "fault0": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 1.8,
+      "last_touch_to_3.0_s": 3.0,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 11.38,
+      "Fmin_after_event_minus_Fmin_kN": 11.38
+     },
+     "event": "G4",
+     "offset_s": 0.0,
+     "phase_at_event": "level",
+     "t_ev_s": 24.4,
+     "fast": false,
+     "commands_sha256": "5a5df2de993304675784abfc0e0baac303fe45532d437312b375112a7c43a762"
+    },
+    {
+     "run_after_s": 25.65,
+     "lifts": {},
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 0,
+     "pair_last_touch_s": 0.0,
+     "W_end_s": 0.82,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 116.05,
+      "RL": 71.69
+     },
+     "min_F_after_W_kN": {
+      "FL": 75.0,
+      "FR": 101.57,
+      "RL": 56.31,
+      "RR": 19.42
+     },
+     "min_F_after_event_kN": {
+      "FL": 75.0,
+      "FR": 101.57,
+      "RL": 56.31,
+      "RR": 19.42
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 22.65,
+     "att_end_deg": [
+      0.0172,
+      -0.0268
+     ],
+     "max_att_change_deg": 0.1457,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       1.35,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -0.0,
+       -3.6,
+       -44.2,
+       -239.1,
+       -1.5,
+       -0.1,
+       -0.3,
+       -0.2,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.0,
+      "D0_kN": 0.7
+     },
+     "warnings": [],
+     "gates": {
+      "no_lift": true,
+      "Fmin_after_event": true,
+      "fault0": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 1.8,
+      "last_touch_to_3.0_s": 3.0,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 10.01,
+      "Fmin_after_event_minus_Fmin_kN": 10.01
+     },
+     "event": "G4",
+     "offset_s": 0.05,
+     "phase_at_event": "level",
+     "t_ev_s": 24.45,
+     "fast": false,
+     "commands_sha256": "4cedb47fc2cd7257dae1965b29d77746a12fb07e8d9955115017dd84743ebc91"
+    },
+    {
+     "run_after_s": 40.7,
+     "lifts": {
+      "FL": {
+       "sum_s": 1.042,
+       "n": 4,
+       "first_s": 0.016,
+       "last_touch_s": 2.325,
+       "max_gap_mm": 22.84
+      },
+      "RL": {
+       "sum_s": 0.036,
+       "n": 1,
+       "first_s": 2.78,
+       "last_touch_s": 2.816,
+       "max_gap_mm": 0.06
+      },
+      "RR": {
+       "sum_s": 1.323,
+       "n": 4,
+       "first_s": 0.139,
+       "last_touch_s": 2.563,
+       "max_gap_mm": 25.6
+      }
+     },
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 2.166,
+     "pair_last_touch_s": 2.563,
+     "W_end_s": 3.383,
+     "adj_lift_sum_W_s": 0.036,
+     "adj_max_gap_W_mm": 0.059,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 14.48,
+      "RL": -0.72
+     },
+     "min_F_after_W_kN": {
+      "FL": 59.04,
+      "FR": 15.37,
+      "RL": -0.22,
+      "RR": 24.19
+     },
+     "min_F_after_event_kN": {
+      "FL": -1.05,
+      "FR": 14.48,
+      "RL": -0.72,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 37.7,
+     "att_end_deg": [
+      0.0242,
+      -0.0182
+     ],
+     "max_att_change_deg": 0.8046,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.1,
+       "FL"
+      ],
+      [
+       0.5,
+       "RR"
+      ],
+      [
+       1.0,
+       "FL"
+      ],
+      [
+       1.3,
+       "RR"
+      ],
+      [
+       1.7,
+       "FL"
+      ],
+      [
+       2.0,
+       "RR"
+      ],
+      [
+       2.3,
+       "FL"
+      ],
+      [
+       2.6,
+       "RR"
+      ],
+      [
+       3.1,
+       "RR"
+      ],
+      [
+       4.4,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 6,
+     "sign_changes": 1,
+     "twist": {
+      "bins_J": [
+       -65.8,
+       -207.9,
+       -143.0,
+       -148.6,
+       -102.7,
+       5.5,
+       21.6,
+       -5.6,
+       -16.3,
+       -30.4,
+       5.1,
+       -2.2,
+       -1.8,
+       -1.2,
+       -0.8,
+       -0.5
+      ],
+      "bundles": [
+       [
+        3.0,
+        21.6
+       ]
+      ],
+      "n_bundles": 1,
+      "max_judged_bin_J": 21.6,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "WARN_D1_IMU_GYRO_MISSING"
+     ],
+     "gates": {
+      "U832_pair_union": false,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": false,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": false,
+     "margins": {
+      "pair_union_to_1.8_s": -0.366,
+      "last_touch_to_3.0_s": 0.437,
+      "adj_sum_to_0.5_s": 0.464,
+      "Fmin_after_W_minus_Fmin_kN": -9.63,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "RE1bF",
+     "offset_s": 0.0,
+     "phase_at_event": "level",
+     "t_ev_s": 24.4,
+     "fast": true,
+     "commands_sha256": "7cd664e4c922e0a7c0e920104495d04939ec5fd7a24cf9a9bc283c41eaab02cf"
+    },
+    {
+     "run_after_s": 41.05,
+     "lifts": {
+      "FL": {
+       "sum_s": 0.984,
+       "n": 4,
+       "first_s": 0.016,
+       "last_touch_s": 2.296,
+       "max_gap_mm": 22.83
+      },
+      "RL": {
+       "sum_s": 0.141,
+       "n": 2,
+       "first_s": 3.359,
+       "last_touch_s": 3.939,
+       "max_gap_mm": 0.38
+      },
+      "RR": {
+       "sum_s": 1.283,
+       "n": 3,
+       "first_s": 0.139,
+       "last_touch_s": 2.073,
+       "max_gap_mm": 24.58
+      }
+     },
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 2.066,
+     "pair_last_touch_s": 2.296,
+     "W_end_s": 3.116,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.141,
+     "adj_min_F_in_W_kN": {
+      "FR": 9.8,
+      "RL": -0.39
+     },
+     "min_F_after_W_kN": {
+      "FL": 56.07,
+      "FR": 9.35,
+      "RL": -0.72,
+      "RR": 21.17
+     },
+     "min_F_after_event_kN": {
+      "FL": -1.05,
+      "FR": 9.35,
+      "RL": -0.72,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 38.05,
+     "att_end_deg": [
+      0.024,
+      -0.0189
+     ],
+     "max_att_change_deg": 0.7952,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.05,
+       "FL"
+      ],
+      [
+       0.55,
+       "RR"
+      ],
+      [
+       1.75,
+       "FL"
+      ],
+      [
+       2.05,
+       "RR"
+      ],
+      [
+       2.45,
+       "RR"
+      ],
+      [
+       3.05,
+       "RR"
+      ],
+      [
+       3.95,
+       "RL"
+      ],
+      [
+       4.45,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 6,
+     "sign_changes": 1,
+     "twist": {
+      "bins_J": [
+       -133.1,
+       -136.6,
+       -169.7,
+       -184.4,
+       -111.5,
+       11.3,
+       46.4,
+       2.6,
+       -73.9,
+       1.4,
+       1.2,
+       -4.8,
+       -3.5,
+       -2.3,
+       -1.5,
+       -1.0
+      ],
+      "bundles": [
+       [
+        3.0,
+        46.4
+       ]
+      ],
+      "n_bundles": 1,
+      "max_judged_bin_J": 46.4,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "WARN_D1_IMU_GYRO_MISSING"
+     ],
+     "gates": {
+      "U832_pair_union": false,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": false,
+      "Fmin_after_W": false,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": false,
+     "margins": {
+      "pair_union_to_1.8_s": -0.266,
+      "last_touch_to_3.0_s": 0.704,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": -10.13,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "RE1bF",
+     "offset_s": 0.05,
+     "phase_at_event": "level",
+     "t_ev_s": 24.45,
+     "fast": true,
+     "commands_sha256": "ecd47c0a61f752c3f76869b5b6752941661aad49b64e0e2f8b05b4ecd56f5136"
+    },
+    {
+     "run_after_s": 43.3,
+     "lifts": {
+      "FL": {
+       "sum_s": 0.646,
+       "n": 3,
+       "first_s": 0.123,
+       "last_touch_s": 1.617,
+       "max_gap_mm": 9.73
+      },
+      "RR": {
+       "sum_s": 0.948,
+       "n": 3,
+       "first_s": 0.217,
+       "last_touch_s": 1.886,
+       "max_gap_mm": 20.27
+      }
+     },
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 1.497,
+     "pair_last_touch_s": 1.886,
+     "W_end_s": 2.706,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 13.11,
+      "RL": 4.19
+     },
+     "min_F_after_W_kN": {
+      "FL": 51.94,
+      "FR": 19.33,
+      "RL": 4.77,
+      "RR": 18.3
+     },
+     "min_F_after_event_kN": {
+      "FL": -1.05,
+      "FR": 13.11,
+      "RL": 4.19,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 40.3,
+     "att_end_deg": [
+      0.0232,
+      -0.0177
+     ],
+     "max_att_change_deg": 0.6681,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.2,
+       "FL"
+      ],
+      [
+       0.6,
+       "RR"
+      ],
+      [
+       1.0,
+       "FL"
+      ],
+      [
+       1.3,
+       "RR"
+      ],
+      [
+       1.6,
+       "FL"
+      ],
+      [
+       1.9,
+       "RR"
+      ],
+      [
+       2.4,
+       "RR"
+      ],
+      [
+       3.7,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 4,
+     "sign_changes": 1,
+     "twist": {
+      "bins_J": [
+       -23.7,
+       -289.3,
+       -144.4,
+       -83.5,
+       -5.9,
+       9.0,
+       -7.6,
+       -21.4,
+       16.2,
+       -4.6,
+       -4.5,
+       -2.8,
+       -1.8,
+       -1.2,
+       -0.8,
+       -0.5
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 16.2,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "WARN_D1_IMU_GYRO_MISSING"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": false,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": false,
+     "margins": {
+      "pair_union_to_1.8_s": 0.303,
+      "last_touch_to_3.0_s": 1.114,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": -4.65,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "FS24",
+     "offset_s": 0.0,
+     "phase_at_event": "level",
+     "t_ev_s": 24.4,
+     "fast": true,
+     "commands_sha256": "5b7b5780ebb5e03979edff3935902ddf71b3a053ae658adc4b07ad575462f8a0"
+    },
+    {
+     "run_after_s": 43.35,
+     "lifts": {
+      "FL": {
+       "sum_s": 0.645,
+       "n": 3,
+       "first_s": 0.123,
+       "last_touch_s": 1.611,
+       "max_gap_mm": 9.41
+      },
+      "RR": {
+       "sum_s": 1.016,
+       "n": 3,
+       "first_s": 0.217,
+       "last_touch_s": 1.899,
+       "max_gap_mm": 19.68
+      }
+     },
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 1.565,
+     "pair_last_touch_s": 1.899,
+     "W_end_s": 2.719,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 17.72,
+      "RL": 0.13
+     },
+     "min_F_after_W_kN": {
+      "FL": 52.86,
+      "FR": 17.77,
+      "RL": 4.81,
+      "RR": 24.3
+     },
+     "min_F_after_event_kN": {
+      "FL": -1.05,
+      "FR": 17.72,
+      "RL": 0.13,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 40.35,
+     "att_end_deg": [
+      0.0232,
+      -0.0172
+     ],
+     "max_att_change_deg": 0.6608,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.15,
+       "FL"
+      ],
+      [
+       0.55,
+       "RR"
+      ],
+      [
+       0.95,
+       "FL"
+      ],
+      [
+       1.25,
+       "RR"
+      ],
+      [
+       1.75,
+       "RR"
+      ],
+      [
+       2.15,
+       "FL"
+      ],
+      [
+       3.25,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 3,
+     "sign_changes": 1,
+     "twist": {
+      "bins_J": [
+       -65.6,
+       -263.9,
+       -105.2,
+       -85.1,
+       4.2,
+       8.1,
+       -25.7,
+       -0.4,
+       -0.3,
+       -0.5,
+       -0.3,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 8.1,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "WARN_D1_IMU_GYRO_MISSING"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": false,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": false,
+     "margins": {
+      "pair_union_to_1.8_s": 0.235,
+      "last_touch_to_3.0_s": 1.101,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": -4.6,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "FS24",
+     "offset_s": 0.05,
+     "phase_at_event": "level",
+     "t_ev_s": 24.45,
+     "fast": true,
+     "commands_sha256": "80fe65d1f0b842bcdd7d715f8cae26020d949f324a6e914843bfa25dea491e3a"
+    }
+   ],
+   "prefix_commands_sha256": "1e841c1b59ae3678b2a9a5dbe090fc8eba9f9dd2af4e343c14382184b05d0d09",
+   "branch_t_s": 23.9,
+   "branch_phase": "level",
+   "wall_s": 30.3,
+   "candidate": "current"
+  },
+  {
+   "key": "screen|top|8.0|level|RR",
+   "level": "top",
+   "fs_kN": 8.0,
+   "timing": "level",
+   "leg": "RR",
+   "base": {
+    "timeline": [
+     [
+      0.1,
+      "check"
+     ],
+     [
+      1.0,
+      "touch"
+     ],
+     [
+      19.9,
+      "level"
+     ],
+     [
+      27.4,
+      "done"
+     ],
+     [
+      27.5,
+      "probe"
+     ],
+     [
+      39.4,
+      "ready"
+     ]
+    ],
+    "t_lift": 20.59999999999734,
+    "t_loc": 21.199999999995942,
+    "t_done": 27.4,
+    "t_ready": 39.4000000000061
+   },
+   "runs": [
+    {
+     "run_after_s": 27.9,
+     "lifts": {},
+     "pair": [
+      "RR",
+      "FL"
+     ],
+     "pair_union_s": 0,
+     "pair_last_touch_s": 0.0,
+     "W_end_s": 0.82,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 115.86,
+      "RL": 71.97
+     },
+     "min_F_after_W_kN": {
+      "FL": 63.48,
+      "FR": 99.84,
+      "RL": 54.72,
+      "RR": 13.83
+     },
+     "min_F_after_event_kN": {
+      "FL": 63.48,
+      "FR": 99.84,
+      "RL": 54.72,
+      "RR": 13.83
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 24.9,
+     "att_end_deg": [
+      -0.0288,
+      -0.0029
+     ],
+     "max_att_change_deg": 0.1234,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       1.3,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       0.0,
+       -4.8,
+       -81.8,
+       -322.3,
+       -8.5,
+       -1.0,
+       -1.3,
+       -1.0,
+       -0.8,
+       -0.5,
+       -0.4,
+       -0.3,
+       -0.2,
+       -0.2,
+       -0.1,
+       -0.1
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.1,
+      "D0_kN": 0.72
+     },
+     "warnings": [],
+     "gates": {
+      "no_lift": true,
+      "Fmin_after_event": true,
+      "fault0": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 1.8,
+      "last_touch_to_3.0_s": 3.0,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 4.42,
+      "Fmin_after_event_minus_Fmin_kN": 4.42
+     },
+     "event": "G4",
+     "offset_s": 0.0,
+     "phase_at_event": "level",
+     "t_ev_s": 24.3,
+     "fast": false,
+     "commands_sha256": "81993a2cb48116f7937050e87e4b80122f6277369cf9a71c3ab7708cc4add390"
+    },
+    {
+     "run_after_s": 27.95,
+     "lifts": {},
+     "pair": [
+      "RR",
+      "FL"
+     ],
+     "pair_union_s": 0,
+     "pair_last_touch_s": 0.0,
+     "W_end_s": 0.82,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 115.85,
+      "RL": 71.94
+     },
+     "min_F_after_W_kN": {
+      "FL": 65.16,
+      "FR": 99.85,
+      "RL": 54.73,
+      "RR": 14.93
+     },
+     "min_F_after_event_kN": {
+      "FL": 65.16,
+      "FR": 99.85,
+      "RL": 54.73,
+      "RR": 14.93
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 24.95,
+     "att_end_deg": [
+      -0.0288,
+      -0.0027
+     ],
+     "max_att_change_deg": 0.1235,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       1.25,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -0.0,
+       -4.8,
+       -112.7,
+       -292.7,
+       -2.9,
+       -0.9,
+       -1.0,
+       -0.8,
+       -0.6,
+       -0.4,
+       -0.3,
+       -0.2,
+       -0.2,
+       -0.1,
+       -0.1,
+       -0.1
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.1,
+      "D0_kN": 0.72
+     },
+     "warnings": [],
+     "gates": {
+      "no_lift": true,
+      "Fmin_after_event": true,
+      "fault0": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 1.8,
+      "last_touch_to_3.0_s": 3.0,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 5.51,
+      "Fmin_after_event_minus_Fmin_kN": 5.51
+     },
+     "event": "G4",
+     "offset_s": 0.05,
+     "phase_at_event": "level",
+     "t_ev_s": 24.35,
+     "fast": false,
+     "commands_sha256": "2e700c669f5e645b2f68b5134a2d089f82a5bd7aaeeafcbfd30ca82492c52df9"
+    },
+    {
+     "run_after_s": 27.8,
+     "lifts": {
+      "FL": {
+       "sum_s": 0.035,
+       "n": 1,
+       "first_s": 0.281,
+       "last_touch_s": 0.316,
+       "max_gap_mm": 0.04
+      },
+      "RR": {
+       "sum_s": 1.332,
+       "n": 1,
+       "first_s": 0.015,
+       "last_touch_s": 1.347,
+       "max_gap_mm": 24.74
+      }
+     },
+     "pair": [
+      "RR",
+      "FL"
+     ],
+     "pair_union_s": 1.332,
+     "pair_last_touch_s": 1.347,
+     "W_end_s": 2.167,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 110.65,
+      "RL": 63.89
+     },
+     "min_F_after_W_kN": {
+      "FL": 102.73,
+      "FR": 99.98,
+      "RL": 55.15,
+      "RR": 54.2
+     },
+     "min_F_after_event_kN": {
+      "FL": -1.05,
+      "FR": 99.98,
+      "RL": 55.15,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 24.8,
+     "att_end_deg": [
+      -0.0269,
+      -0.0039
+     ],
+     "max_att_change_deg": 0.3123,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.1,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -351.5,
+       -622.3,
+       -647.6,
+       -166.7,
+       2.2,
+       -0.8,
+       -0.8,
+       -0.6,
+       -0.4,
+       -0.3,
+       -0.3,
+       -0.2,
+       -0.2,
+       -0.1,
+       -0.1,
+       -0.1
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 2.2,
+      "D0_kN": 0.72
+     },
+     "warnings": [],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.468,
+      "last_touch_to_3.0_s": 1.653,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 44.79,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "RE1bF",
+     "offset_s": 0.0,
+     "phase_at_event": "level",
+     "t_ev_s": 24.3,
+     "fast": true,
+     "commands_sha256": "d5899a73f827e426dcc6648e16c6870f23b755489e03f32857489a1e7c9eb84e"
+    },
+    {
+     "run_after_s": 27.85,
+     "lifts": {
+      "RR": {
+       "sum_s": 1.256,
+       "n": 1,
+       "first_s": 0.015,
+       "last_touch_s": 1.271,
+       "max_gap_mm": 24.74
+      }
+     },
+     "pair": [
+      "RR",
+      "FL"
+     ],
+     "pair_union_s": 1.256,
+     "pair_last_touch_s": 1.271,
+     "W_end_s": 2.091,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 111.74,
+      "RL": 63.27
+     },
+     "min_F_after_W_kN": {
+      "FL": 102.73,
+      "FR": 99.98,
+      "RL": 55.13,
+      "RR": 54.19
+     },
+     "min_F_after_event_kN": {
+      "FL": 0.9,
+      "FR": 99.98,
+      "RL": 55.13,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 24.85,
+     "att_end_deg": [
+      -0.0272,
+      -0.0036
+     ],
+     "max_att_change_deg": 0.3142,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.05,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -429.9,
+       -627.5,
+       -631.1,
+       -121.2,
+       1.5,
+       -0.9,
+       -0.8,
+       -0.6,
+       -0.4,
+       -0.3,
+       -0.3,
+       -0.2,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.1
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 1.5,
+      "D0_kN": 0.72
+     },
+     "warnings": [],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.544,
+      "last_touch_to_3.0_s": 1.729,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 44.78,
+      "Fmin_after_event_minus_Fmin_kN": -10.13
+     },
+     "event": "RE1bF",
+     "offset_s": 0.05,
+     "phase_at_event": "level",
+     "t_ev_s": 24.35,
+     "fast": true,
+     "commands_sha256": "a051ba6d09c74f16bb5904b8252dd6c69b19f2094634c924413dba0561403309"
+    },
+    {
+     "run_after_s": 26.9,
+     "lifts": {
+      "RR": {
+       "sum_s": 0.871,
+       "n": 1,
+       "first_s": 0.098,
+       "last_touch_s": 0.969,
+       "max_gap_mm": 11.8
+      }
+     },
+     "pair": [
+      "RR",
+      "FL"
+     ],
+     "pair_union_s": 0.871,
+     "pair_last_touch_s": 0.969,
+     "W_end_s": 1.789,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 115.93,
+      "RL": 71.46
+     },
+     "min_F_after_W_kN": {
+      "FL": 101.62,
+      "FR": 101.13,
+      "RL": 56.46,
+      "RR": 52.9
+     },
+     "min_F_after_event_kN": {
+      "FL": 3.43,
+      "FR": 101.13,
+      "RL": 56.46,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.9,
+     "att_end_deg": [
+      -0.0327,
+      -0.0011
+     ],
+     "max_att_change_deg": 0.2742,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.1,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -352.5,
+       -619.8,
+       -328.9,
+       -10.1,
+       -0.1,
+       0.1,
+       0.1,
+       0.1,
+       0.1,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 0.1,
+      "D0_kN": 0.72
+     },
+     "warnings": [],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.929,
+      "last_touch_to_3.0_s": 2.031,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 43.48,
+      "Fmin_after_event_minus_Fmin_kN": -10.13
+     },
+     "event": "FS24",
+     "offset_s": 0.0,
+     "phase_at_event": "level",
+     "t_ev_s": 24.3,
+     "fast": true,
+     "commands_sha256": "25c9916845fae7e985b71cf79b98398fbba9b82fd36c9c92fbd282f35e49155c"
+    },
+    {
+     "run_after_s": 26.95,
+     "lifts": {
+      "RR": {
+       "sum_s": 0.892,
+       "n": 1,
+       "first_s": 0.098,
+       "last_touch_s": 0.99,
+       "max_gap_mm": 11.89
+      }
+     },
+     "pair": [
+      "RR",
+      "FL"
+     ],
+     "pair_union_s": 0.892,
+     "pair_last_touch_s": 0.99,
+     "W_end_s": 1.81,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 105.67,
+      "RL": 55.63
+     },
+     "min_F_after_W_kN": {
+      "FL": 102.93,
+      "FR": 99.82,
+      "RL": 52.49,
+      "RR": 54.34
+     },
+     "min_F_after_event_kN": {
+      "FL": 1.11,
+      "FR": 99.82,
+      "RL": 52.49,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.95,
+     "att_end_deg": [
+      -0.0327,
+      -0.0015
+     ],
+     "max_att_change_deg": 0.2737,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.15,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -280.4,
+       -614.4,
+       -389.8,
+       0.1,
+       -5.6,
+       -7.5,
+       -5.1,
+       -3.5,
+       -2.4,
+       -1.7,
+       -1.2,
+       -0.9,
+       -0.6,
+       -0.5,
+       -0.3,
+       -0.2
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 0.1,
+      "D0_kN": 0.72
+     },
+     "warnings": [],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.908,
+      "last_touch_to_3.0_s": 2.01,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 43.08,
+      "Fmin_after_event_minus_Fmin_kN": -10.13
+     },
+     "event": "FS24",
+     "offset_s": 0.05,
+     "phase_at_event": "level",
+     "t_ev_s": 24.35,
+     "fast": true,
+     "commands_sha256": "29b3220b456497cb63e85eff83419bc6ac418675f00b64a3c65ec804eb5e6fd5"
+    }
+   ],
+   "prefix_commands_sha256": "ada69edd3dd7af886052f0b8162c65bf424615f11222b01eed4499d9dc1ac385",
+   "branch_t_s": 23.8,
+   "branch_phase": "level",
+   "wall_s": 26.2,
+   "candidate": "current"
+  },
+  {
+   "key": "screen|bottom|0.0|ready|RR",
+   "level": "bottom",
+   "fs_kN": 0.0,
+   "timing": "ready",
+   "leg": "RR",
+   "base": {
+    "timeline": [
+     [
+      0.1,
+      "check"
+     ],
+     [
+      1.0,
+      "touch"
+     ],
+     [
+      19.9,
+      "level"
+     ],
+     [
+      27.6,
+      "done"
+     ],
+     [
+      27.7,
+      "probe"
+     ],
+     [
+      39.6,
+      "ready"
+     ]
+    ],
+    "t_lift": 21.099999999996175,
+    "t_loc": 21.699999999994777,
+    "t_done": 27.6,
+    "t_ready": 39.60000000000706
+   },
+   "runs": [
+    {
+     "run_after_s": 26.3,
+     "lifts": {},
+     "pair": [
+      "RR",
+      "FL"
+     ],
+     "pair_union_s": 0,
+     "pair_last_touch_s": 0.0,
+     "W_end_s": 0.82,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 115.98,
+      "RL": 71.96
+     },
+     "min_F_after_W_kN": {
+      "FL": 63.17,
+      "FR": 103.5,
+      "RL": 58.56,
+      "RR": 11.16
+     },
+     "min_F_after_event_kN": {
+      "FL": 63.17,
+      "FR": 103.5,
+      "RL": 58.56,
+      "RR": 11.16
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.3,
+     "att_end_deg": [
+      -0.017,
+      -0.0083
+     ],
+     "max_att_change_deg": 0.1205,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       1.5,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       0.0,
+       0.0,
+       -32.8,
+       -282.2,
+       -62.0,
+       -0.4,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.0,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "no_lift": true,
+      "Fmin_after_event": true,
+      "fault0": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 1.8,
+      "last_touch_to_3.0_s": 3.0,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 1.75,
+      "Fmin_after_event_minus_Fmin_kN": 1.75
+     },
+     "event": "G4",
+     "offset_s": 0.0,
+     "phase_at_event": "ready",
+     "t_ev_s": 44.6,
+     "fast": false,
+     "commands_sha256": "3fed85da5fab576d44cfee6f03ff42342a3e92e65b3cbc48aed656d740aa72d2"
+    },
+    {
+     "run_after_s": 26.35,
+     "lifts": {},
+     "pair": [
+      "RR",
+      "FL"
+     ],
+     "pair_union_s": 0,
+     "pair_last_touch_s": 0.0,
+     "W_end_s": 0.82,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 115.97,
+      "RL": 71.97
+     },
+     "min_F_after_W_kN": {
+      "FL": 64.04,
+      "FR": 103.52,
+      "RL": 58.58,
+      "RR": 12.17
+     },
+     "min_F_after_event_kN": {
+      "FL": 64.04,
+      "FR": 103.52,
+      "RL": 58.58,
+      "RR": 12.17
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.35,
+     "att_end_deg": [
+      -0.0173,
+      -0.0081
+     ],
+     "max_att_change_deg": 0.1208,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       1.45,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       0.0,
+       -0.3,
+       -34.5,
+       -297.8,
+       -40.8,
+       -0.4,
+       -0.1,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.0,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "no_lift": true,
+      "Fmin_after_event": true,
+      "fault0": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 1.8,
+      "last_touch_to_3.0_s": 3.0,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 2.75,
+      "Fmin_after_event_minus_Fmin_kN": 2.75
+     },
+     "event": "G4",
+     "offset_s": 0.05,
+     "phase_at_event": "ready",
+     "t_ev_s": 44.65,
+     "fast": false,
+     "commands_sha256": "aa43ae4447d6372996117bd336596cbd5a10e55f6c1b98f6eee5d9aa28393458"
+    },
+    {
+     "run_after_s": 27.9,
+     "lifts": {
+      "RR": {
+       "sum_s": 1.215,
+       "n": 2,
+       "first_s": 0.013,
+       "last_touch_s": 1.392,
+       "max_gap_mm": 24.39
+      }
+     },
+     "pair": [
+      "RR",
+      "FL"
+     ],
+     "pair_union_s": 1.215,
+     "pair_last_touch_s": 1.392,
+     "W_end_s": 2.212,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 99.42,
+      "RL": 57.92
+     },
+     "min_F_after_W_kN": {
+      "FL": 105.31,
+      "FR": 101.37,
+      "RL": 56.37,
+      "RR": 56.27
+     },
+     "min_F_after_event_kN": {
+      "FL": 10.51,
+      "FR": 99.42,
+      "RL": 56.37,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 24.9,
+     "att_end_deg": [
+      -0.0245,
+      -0.0051
+     ],
+     "max_att_change_deg": 0.3279,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.1,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -245.9,
+       -675.3,
+       -639.2,
+       -149.9,
+       1.9,
+       -0.4,
+       -0.4,
+       -0.3,
+       -0.2,
+       -0.2,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 1.9,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_D1_IMU_GYRO_MISSING",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.585,
+      "last_touch_to_3.0_s": 1.608,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 46.85,
+      "Fmin_after_event_minus_Fmin_kN": -10.13
+     },
+     "event": "RE1bF",
+     "offset_s": 0.0,
+     "phase_at_event": "ready",
+     "t_ev_s": 44.6,
+     "fast": true,
+     "commands_sha256": "1e3779c3b901c12cafe41ac7ed6279f07087e65deaa81226eacd37b16b071fd2"
+    },
+    {
+     "run_after_s": 27.75,
+     "lifts": {
+      "RR": {
+       "sum_s": 1.141,
+       "n": 2,
+       "first_s": 0.013,
+       "last_touch_s": 1.344,
+       "max_gap_mm": 24.39
+      }
+     },
+     "pair": [
+      "RR",
+      "FL"
+     ],
+     "pair_union_s": 1.141,
+     "pair_last_touch_s": 1.344,
+     "W_end_s": 2.164,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 99.63,
+      "RL": 59.64
+     },
+     "min_F_after_W_kN": {
+      "FL": 105.32,
+      "FR": 101.48,
+      "RL": 56.37,
+      "RR": 56.27
+     },
+     "min_F_after_event_kN": {
+      "FL": 10.59,
+      "FR": 99.63,
+      "RL": 56.37,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 24.75,
+     "att_end_deg": [
+      -0.0258,
+      -0.0043
+     ],
+     "max_att_change_deg": 0.3299,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.05,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -329.0,
+       -677.6,
+       -597.0,
+       -108.9,
+       1.3,
+       -0.5,
+       -0.5,
+       -0.3,
+       -0.2,
+       -0.2,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 1.3,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.659,
+      "last_touch_to_3.0_s": 1.656,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 46.86,
+      "Fmin_after_event_minus_Fmin_kN": -10.13
+     },
+     "event": "RE1bF",
+     "offset_s": 0.05,
+     "phase_at_event": "level",
+     "t_ev_s": 44.65,
+     "fast": true,
+     "commands_sha256": "eadc5a93271bee37130a5240c9576829f5793a6c74c2593005040897425a4f8c"
+    },
+    {
+     "run_after_s": 27.0,
+     "lifts": {
+      "RR": {
+       "sum_s": 0.925,
+       "n": 1,
+       "first_s": 0.11,
+       "last_touch_s": 1.035,
+       "max_gap_mm": 11.98
+      }
+     },
+     "pair": [
+      "RR",
+      "FL"
+     ],
+     "pair_union_s": 0.925,
+     "pair_last_touch_s": 1.035,
+     "W_end_s": 1.855,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 106.74,
+      "RL": 65.53
+     },
+     "min_F_after_W_kN": {
+      "FL": 101.24,
+      "FR": 103.49,
+      "RL": 58.59,
+      "RR": 54.02
+     },
+     "min_F_after_event_kN": {
+      "FL": 17.74,
+      "FR": 103.49,
+      "RL": 58.59,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 24.0,
+     "att_end_deg": [
+      -0.0296,
+      -0.0021
+     ],
+     "max_att_change_deg": 0.2781,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.1,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -281.7,
+       -675.8,
+       -326.6,
+       -8.3,
+       -0.2,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.0,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.875,
+      "last_touch_to_3.0_s": 1.965,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 44.61,
+      "Fmin_after_event_minus_Fmin_kN": -10.13
+     },
+     "event": "FS24",
+     "offset_s": 0.0,
+     "phase_at_event": "ready",
+     "t_ev_s": 44.6,
+     "fast": true,
+     "commands_sha256": "b73d6e187ea978279f55e2ad845891b2a7dc40c2d7b854fded64351f650dbcf1"
+    },
+    {
+     "run_after_s": 26.95,
+     "lifts": {
+      "RR": {
+       "sum_s": 0.951,
+       "n": 1,
+       "first_s": 0.11,
+       "last_touch_s": 1.061,
+       "max_gap_mm": 13.38
+      }
+     },
+     "pair": [
+      "RR",
+      "FL"
+     ],
+     "pair_union_s": 0.951,
+     "pair_last_touch_s": 1.061,
+     "W_end_s": 1.881,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 105.4,
+      "RL": 63.78
+     },
+     "min_F_after_W_kN": {
+      "FL": 100.99,
+      "FR": 103.48,
+      "RL": 58.61,
+      "RR": 54.01
+     },
+     "min_F_after_event_kN": {
+      "FL": 13.58,
+      "FR": 103.48,
+      "RL": 58.61,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.95,
+     "att_end_deg": [
+      -0.0301,
+      -0.0019
+     ],
+     "max_att_change_deg": 0.2812,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.15,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -200.1,
+       -671.4,
+       -382.2,
+       -15.0,
+       -0.3,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.0,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.849,
+      "last_touch_to_3.0_s": 1.939,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 44.59,
+      "Fmin_after_event_minus_Fmin_kN": -10.13
+     },
+     "event": "FS24",
+     "offset_s": 0.05,
+     "phase_at_event": "ready",
+     "t_ev_s": 44.65,
+     "fast": true,
+     "commands_sha256": "a2f363101cda878b2c7e5cb5d1f60a2c7da9bf377f73f564c65ecfdc68ae7197"
+    }
+   ],
+   "prefix_commands_sha256": "bb2f4006e0f81124c27de0963dd14bcda88d2a8e89704c0d8fc004dcc43727c7",
+   "branch_t_s": 44.1,
+   "branch_phase": "ready",
+   "wall_s": 27.0,
+   "candidate": "current"
+  },
+  {
+   "key": "screen|bottom|8.0|ready|FR",
+   "level": "bottom",
+   "fs_kN": 8.0,
+   "timing": "ready",
+   "leg": "FR",
+   "base": {
+    "timeline": [
+     [
+      0.1,
+      "check"
+     ],
+     [
+      1.0,
+      "touch"
+     ],
+     [
+      20.0,
+      "level"
+     ],
+     [
+      28.2,
+      "done"
+     ],
+     [
+      28.3,
+      "probe"
+     ],
+     [
+      40.2,
+      "ready"
+     ]
+    ],
+    "t_lift": 20.799999999996874,
+    "t_loc": 21.399999999995476,
+    "t_done": 28.2,
+    "t_ready": 40.20000000000992
+   },
+   "runs": [
+    {
+     "run_after_s": 25.6,
+     "lifts": {},
+     "pair": [
+      "FR",
+      "RL"
+     ],
+     "pair_union_s": 0,
+     "pair_last_touch_s": 0.0,
+     "W_end_s": 0.82,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 118.16,
+      "RR": 70.44
+     },
+     "min_F_after_W_kN": {
+      "FL": 102.05,
+      "FR": 65.7,
+      "RL": 14.56,
+      "RR": 52.82
+     },
+     "min_F_after_event_kN": {
+      "FL": 102.05,
+      "FR": 65.7,
+      "RL": 14.56,
+      "RR": 52.82
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 22.6,
+     "att_end_deg": [
+      -0.0215,
+      -0.032
+     ],
+     "max_att_change_deg": 0.1435,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       1.3,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -0.0,
+       -0.8,
+       -67.5,
+       -284.7,
+       -6.6,
+       -0.0,
+       0.0,
+       0.0,
+       0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.0,
+      "D0_kN": 0.64
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "no_lift": true,
+      "Fmin_after_event": true,
+      "fault0": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 1.8,
+      "last_touch_to_3.0_s": 3.0,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 5.14,
+      "Fmin_after_event_minus_Fmin_kN": 5.14
+     },
+     "event": "G4",
+     "offset_s": 0.0,
+     "phase_at_event": "ready",
+     "t_ev_s": 45.2,
+     "fast": false,
+     "commands_sha256": "484251591272551ac20b514382a7b446849fbb521a83c3acf4d621a14d81d0ce"
+    },
+    {
+     "run_after_s": 25.65,
+     "lifts": {},
+     "pair": [
+      "FR",
+      "RL"
+     ],
+     "pair_union_s": 0,
+     "pair_last_touch_s": 0.0,
+     "W_end_s": 0.82,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 118.17,
+      "RR": 70.44
+     },
+     "min_F_after_W_kN": {
+      "FL": 101.73,
+      "FR": 64.6,
+      "RL": 13.49,
+      "RR": 52.46
+     },
+     "min_F_after_event_kN": {
+      "FL": 101.73,
+      "FR": 64.6,
+      "RL": 13.49,
+      "RR": 52.46
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 22.65,
+     "att_end_deg": [
+      -0.0218,
+      -0.0321
+     ],
+     "max_att_change_deg": 0.1452,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       1.35,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -0.0,
+       -1.4,
+       -43.7,
+       -307.2,
+       -10.9,
+       -0.0,
+       0.1,
+       0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 0.1,
+      "D0_kN": 0.64
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "no_lift": true,
+      "Fmin_after_event": true,
+      "fault0": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 1.8,
+      "last_touch_to_3.0_s": 3.0,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 4.08,
+      "Fmin_after_event_minus_Fmin_kN": 4.08
+     },
+     "event": "G4",
+     "offset_s": 0.05,
+     "phase_at_event": "ready",
+     "t_ev_s": 45.25,
+     "fast": false,
+     "commands_sha256": "0d4457b4858a316fc4c709c0d08c1f8a847d2c783e0892a4cd2766c9e2abf69b"
+    },
+    {
+     "run_after_s": 27.4,
+     "lifts": {
+      "FR": {
+       "sum_s": 0.564,
+       "n": 3,
+       "first_s": 0.015,
+       "last_touch_s": 1.136,
+       "max_gap_mm": 23.29
+      },
+      "RL": {
+       "sum_s": 0.949,
+       "n": 3,
+       "first_s": 0.089,
+       "last_touch_s": 1.371,
+       "max_gap_mm": 27.69
+      }
+     },
+     "pair": [
+      "FR",
+      "RL"
+     ],
+     "pair_union_s": 1.284,
+     "pair_last_touch_s": 1.371,
+     "W_end_s": 2.191,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 23.62,
+      "RR": 70.44
+     },
+     "min_F_after_W_kN": {
+      "FL": 103.51,
+      "FR": 98.54,
+      "RL": 54.13,
+      "RR": 54.59
+     },
+     "min_F_after_event_kN": {
+      "FL": 23.62,
+      "FR": -1.05,
+      "RL": -0.72,
+      "RR": 54.59
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 24.4,
+     "att_end_deg": [
+      -0.0198,
+      -0.031
+     ],
+     "max_att_change_deg": 0.7787,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.1,
+       "FR"
+      ],
+      [
+       1.0,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -146.4,
+       -586.9,
+       -436.9,
+       -105.2,
+       -8.2,
+       -3.3,
+       -2.1,
+       -1.4,
+       -1.0,
+       -0.9,
+       -0.8,
+       -0.6,
+       -0.4,
+       -0.3,
+       -0.2,
+       -0.2
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.2,
+      "D0_kN": 0.64
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_D1_IMU_GYRO_MISSING",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.516,
+      "last_touch_to_3.0_s": 1.629,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 44.72,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "RE1bF",
+     "offset_s": 0.0,
+     "phase_at_event": "ready",
+     "t_ev_s": 45.2,
+     "fast": true,
+     "commands_sha256": "90a89c55b833571cd9e9fbf3f3c1699a1caf4d7977e681240372af3f01467e6c"
+    },
+    {
+     "run_after_s": 25.15,
+     "lifts": {
+      "FR": {
+       "sum_s": 0.596,
+       "n": 3,
+       "first_s": 0.015,
+       "last_touch_s": 1.17,
+       "max_gap_mm": 23.29
+      },
+      "RL": {
+       "sum_s": 1.053,
+       "n": 4,
+       "first_s": 0.089,
+       "last_touch_s": 1.686,
+       "max_gap_mm": 26.64
+      }
+     },
+     "pair": [
+      "FR",
+      "RL"
+     ],
+     "pair_union_s": 1.429,
+     "pair_last_touch_s": 1.686,
+     "W_end_s": 2.506,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 28.45,
+      "RR": 70.44
+     },
+     "min_F_after_W_kN": {
+      "FL": 103.48,
+      "FR": 100.24,
+      "RL": 55.01,
+      "RR": 54.53
+     },
+     "min_F_after_event_kN": {
+      "FL": 28.45,
+      "FR": -1.05,
+      "RL": -0.72,
+      "RR": 54.53
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 22.15,
+     "att_end_deg": [
+      -0.0175,
+      -0.0326
+     ],
+     "max_att_change_deg": 0.7672,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.05,
+       "FR"
+      ],
+      [
+       0.45,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -187.7,
+       -447.1,
+       -381.4,
+       -245.1,
+       -44.8,
+       -0.5,
+       -0.1,
+       -0.0,
+       -0.0,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.0,
+      "D0_kN": 0.64
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_D1_IMU_GYRO_MISSING",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.371,
+      "last_touch_to_3.0_s": 1.314,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 45.11,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "RE1bF",
+     "offset_s": 0.05,
+     "phase_at_event": "level",
+     "t_ev_s": 45.25,
+     "fast": true,
+     "commands_sha256": "3770d51d3979bfe54fb46dab92762eb2259b6ff429d70e9060f61fe5dffb6605"
+    },
+    {
+     "run_after_s": 27.6,
+     "lifts": {
+      "FR": {
+       "sum_s": 0.211,
+       "n": 2,
+       "first_s": 0.191,
+       "last_touch_s": 0.731,
+       "max_gap_mm": 4.0
+      },
+      "RL": {
+       "sum_s": 0.87,
+       "n": 3,
+       "first_s": 0.165,
+       "last_touch_s": 1.332,
+       "max_gap_mm": 18.26
+      }
+     },
+     "pair": [
+      "FR",
+      "RL"
+     ],
+     "pair_union_s": 0.982,
+     "pair_last_touch_s": 1.332,
+     "W_end_s": 2.152,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 86.23,
+      "RR": 70.44
+     },
+     "min_F_after_W_kN": {
+      "FL": 103.55,
+      "FR": 100.17,
+      "RL": 52.88,
+      "RR": 54.56
+     },
+     "min_F_after_event_kN": {
+      "FL": 86.23,
+      "FR": -1.05,
+      "RL": -0.72,
+      "RR": 54.56
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 24.6,
+     "att_end_deg": [
+      -0.024,
+      -0.0331
+     ],
+     "max_att_change_deg": 0.5716,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.2,
+       "FR"
+      ],
+      [
+       0.5,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -82.5,
+       -525.4,
+       -336.5,
+       -111.8,
+       -10.2,
+       -4.2,
+       -2.4,
+       -1.6,
+       -1.0,
+       -0.7,
+       -0.5,
+       -0.4,
+       -0.4,
+       -0.4,
+       -0.3,
+       -0.2
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.2,
+      "D0_kN": 0.64
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.818,
+      "last_touch_to_3.0_s": 1.668,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 43.47,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "FS24",
+     "offset_s": 0.0,
+     "phase_at_event": "ready",
+     "t_ev_s": 45.2,
+     "fast": true,
+     "commands_sha256": "14c96618180ed802fd065528a7e54b6c95cc8111cea79ff09c5f1cfbffa09194"
+    },
+    {
+     "run_after_s": 26.45,
+     "lifts": {
+      "FR": {
+       "sum_s": 0.218,
+       "n": 2,
+       "first_s": 0.191,
+       "last_touch_s": 0.727,
+       "max_gap_mm": 4.58
+      },
+      "RL": {
+       "sum_s": 0.815,
+       "n": 3,
+       "first_s": 0.165,
+       "last_touch_s": 1.319,
+       "max_gap_mm": 18.54
+      }
+     },
+     "pair": [
+      "FR",
+      "RL"
+     ],
+     "pair_union_s": 0.963,
+     "pair_last_touch_s": 1.319,
+     "W_end_s": 2.139,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 78.92,
+      "RR": 70.44
+     },
+     "min_F_after_W_kN": {
+      "FL": 103.54,
+      "FR": 100.17,
+      "RL": 54.87,
+      "RR": 54.59
+     },
+     "min_F_after_event_kN": {
+      "FL": 78.92,
+      "FR": -1.05,
+      "RL": -0.72,
+      "RR": 54.59
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.45,
+     "att_end_deg": [
+      -0.0214,
+      -0.0328
+     ],
+     "max_att_change_deg": 0.5763,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.15,
+       "FR"
+      ],
+      [
+       0.45,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -97.1,
+       -484.5,
+       -319.7,
+       -106.2,
+       -6.1,
+       -1.6,
+       -0.8,
+       -0.5,
+       -0.3,
+       -0.2,
+       -0.1,
+       -0.2,
+       -0.2,
+       -0.2,
+       -0.1,
+       -0.1
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.1,
+      "D0_kN": 0.64
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.837,
+      "last_touch_to_3.0_s": 1.681,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 45.17,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "FS24",
+     "offset_s": 0.05,
+     "phase_at_event": "ready",
+     "t_ev_s": 45.25,
+     "fast": true,
+     "commands_sha256": "05801bfae1f394541d1e00f34ca76be00b115a01e16ecec239a86640a48688bc"
+    }
+   ],
+   "prefix_commands_sha256": "93150da9620fc8f544d0868daafd78809f7c27d28a813171768aa0c399942817",
+   "branch_t_s": 44.7,
+   "branch_phase": "ready",
+   "wall_s": 26.9,
+   "candidate": "current"
+  },
+  {
+   "key": "screen|top|0.0|ready|FR",
+   "level": "top",
+   "fs_kN": 0.0,
+   "timing": "ready",
+   "leg": "FR",
+   "base": {
+    "timeline": [
+     [
+      0.1,
+      "check"
+     ],
+     [
+      1.0,
+      "touch"
+     ],
+     [
+      19.9,
+      "level"
+     ],
+     [
+      27.2,
+      "done"
+     ],
+     [
+      27.3,
+      "probe"
+     ],
+     [
+      39.2,
+      "ready"
+     ]
+    ],
+    "t_lift": 20.999999999996408,
+    "t_loc": 21.499999999995243,
+    "t_done": 27.2,
+    "t_ready": 39.20000000000515
+   },
+   "runs": [
+    {
+     "run_after_s": 29.5,
+     "lifts": {},
+     "pair": [
+      "FR",
+      "RL"
+     ],
+     "pair_union_s": 0,
+     "pair_last_touch_s": 0.0,
+     "W_end_s": 0.82,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 118.27,
+      "RR": 70.3
+     },
+     "min_F_after_W_kN": {
+      "FL": 105.44,
+      "FR": 68.33,
+      "RL": 15.99,
+      "RR": 56.56
+     },
+     "min_F_after_event_kN": {
+      "FL": 105.44,
+      "FR": 68.33,
+      "RL": 15.99,
+      "RR": 56.56
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 26.5,
+     "att_end_deg": [
+      -0.029,
+      -0.0273
+     ],
+     "max_att_change_deg": 0.1518,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -0.0,
+       -0.0,
+       -29.2,
+       -71.7,
+       -67.4,
+       -47.6,
+       -32.2,
+       -21.8,
+       -14.7,
+       -10.0,
+       -6.8,
+       -4.6,
+       -3.1,
+       -2.2,
+       -1.5,
+       -1.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -1.0,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "no_lift": true,
+      "Fmin_after_event": true,
+      "fault0": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 1.8,
+      "last_touch_to_3.0_s": 3.0,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 6.57,
+      "Fmin_after_event_minus_Fmin_kN": 6.57
+     },
+     "event": "G4",
+     "offset_s": 0.0,
+     "phase_at_event": "ready",
+     "t_ev_s": 44.2,
+     "fast": false,
+     "commands_sha256": "bd93d3e07b3ca6b739ca3adc4b8a879d978edf4c76d27ccf8b726b2a9818db6b"
+    },
+    {
+     "run_after_s": 25.55,
+     "lifts": {},
+     "pair": [
+      "FR",
+      "RL"
+     ],
+     "pair_union_s": 0,
+     "pair_last_touch_s": 0.0,
+     "W_end_s": 0.82,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 118.13,
+      "RR": 70.36
+     },
+     "min_F_after_W_kN": {
+      "FL": 104.92,
+      "FR": 68.22,
+      "RL": 15.28,
+      "RR": 56.16
+     },
+     "min_F_after_event_kN": {
+      "FL": 104.92,
+      "FR": 68.22,
+      "RL": 15.28,
+      "RR": 56.16
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 22.55,
+     "att_end_deg": [
+      -0.0169,
+      -0.0244
+     ],
+     "max_att_change_deg": 0.1516,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       1.65,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 1,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -0.0,
+       -0.0,
+       -27.0,
+       -181.2,
+       -103.0,
+       -1.6,
+       -0.3,
+       -0.2,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": -0.0,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "no_lift": true,
+      "Fmin_after_event": true,
+      "fault0": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 1.8,
+      "last_touch_to_3.0_s": 3.0,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 5.87,
+      "Fmin_after_event_minus_Fmin_kN": 5.87
+     },
+     "event": "G4",
+     "offset_s": 0.05,
+     "phase_at_event": "ready",
+     "t_ev_s": 44.25,
+     "fast": false,
+     "commands_sha256": "bea2db0ad7f9c47616016c150cfc22444a74103cc727a446745515864d1b8f65"
+    },
+    {
+     "run_after_s": 29.0,
+     "lifts": {
+      "FR": {
+       "sum_s": 0.954,
+       "n": 4,
+       "first_s": 0.015,
+       "last_touch_s": 2.271,
+       "max_gap_mm": 23.9
+      },
+      "RL": {
+       "sum_s": 1.253,
+       "n": 3,
+       "first_s": 0.128,
+       "last_touch_s": 2.047,
+       "max_gap_mm": 25.56
+      }
+     },
+     "pair": [
+      "FR",
+      "RL"
+     ],
+     "pair_union_s": 2.003,
+     "pair_last_touch_s": 2.271,
+     "W_end_s": 3.091,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 11.62,
+      "RR": -0.28
+     },
+     "min_F_after_W_kN": {
+      "FL": 36.75,
+      "FR": 40.61,
+      "RL": 19.35,
+      "RR": 14.41
+     },
+     "min_F_after_event_kN": {
+      "FL": 11.62,
+      "FR": -1.05,
+      "RL": -0.72,
+      "RR": -0.28
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 26.0,
+     "att_end_deg": [
+      -0.0246,
+      -0.0267
+     ],
+     "max_att_change_deg": 0.7952,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.1,
+       "FR"
+      ],
+      [
+       0.5,
+       "RL"
+      ],
+      [
+       1.0,
+       "FR"
+      ],
+      [
+       1.3,
+       "RL"
+      ],
+      [
+       1.7,
+       "FR"
+      ],
+      [
+       2.0,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 2,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -82.5,
+       -269.4,
+       -167.0,
+       -148.3,
+       -74.3,
+       6.3,
+       -0.0,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 6.3,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_D1_IMU_GYRO_MISSING",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "U832_pair_union": false,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": false,
+     "margins": {
+      "pair_union_to_1.8_s": -0.203,
+      "last_touch_to_3.0_s": 0.729,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 5.0,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "RE1bF",
+     "offset_s": 0.0,
+     "phase_at_event": "ready",
+     "t_ev_s": 44.2,
+     "fast": true,
+     "commands_sha256": "a8b3fa7e29806b6f2b27518a6d275d34aa8766905bb37607d34f84373e113c48"
+    },
+    {
+     "run_after_s": 28.95,
+     "lifts": {
+      "FR": {
+       "sum_s": 0.909,
+       "n": 4,
+       "first_s": 0.015,
+       "last_touch_s": 2.229,
+       "max_gap_mm": 23.89
+      },
+      "RL": {
+       "sum_s": 1.212,
+       "n": 3,
+       "first_s": 0.128,
+       "last_touch_s": 2.007,
+       "max_gap_mm": 24.49
+      }
+     },
+     "pair": [
+      "FR",
+      "RL"
+     ],
+     "pair_union_s": 1.929,
+     "pair_last_touch_s": 2.229,
+     "W_end_s": 3.049,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 16.91,
+      "RR": 2.46
+     },
+     "min_F_after_W_kN": {
+      "FL": 39.25,
+      "FR": 41.19,
+      "RL": 19.77,
+      "RR": 15.95
+     },
+     "min_F_after_event_kN": {
+      "FL": 16.91,
+      "FR": -1.05,
+      "RL": -0.72,
+      "RR": 2.46
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 25.95,
+     "att_end_deg": [
+      -0.0253,
+      -0.0274
+     ],
+     "max_att_change_deg": 0.7858,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.05,
+       "FR"
+      ],
+      [
+       0.55,
+       "RL"
+      ],
+      [
+       0.95,
+       "FR"
+      ],
+      [
+       1.35,
+       "RL"
+      ],
+      [
+       1.85,
+       "RL"
+      ]
+     ],
+     "n_late_starts": 1,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -150.0,
+       -290.5,
+       -161.5,
+       -120.8,
+       -64.1,
+       2.6,
+       0.1,
+       0.0,
+       0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 2.6,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_D1_IMU_GYRO_MISSING",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "U832_pair_union": false,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": false,
+     "margins": {
+      "pair_union_to_1.8_s": -0.129,
+      "last_touch_to_3.0_s": 0.771,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 6.54,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "RE1bF",
+     "offset_s": 0.05,
+     "phase_at_event": "level",
+     "t_ev_s": 44.25,
+     "fast": true,
+     "commands_sha256": "ce6f7dd19367175ed1bd5c1bcbecd3f723da2f7aa47a3a8e530472edbdcb033a"
+    },
+    {
+     "run_after_s": 30.8,
+     "lifts": {
+      "FR": {
+       "sum_s": 0.672,
+       "n": 3,
+       "first_s": 0.113,
+       "last_touch_s": 1.628,
+       "max_gap_mm": 9.94
+      },
+      "RL": {
+       "sum_s": 0.987,
+       "n": 4,
+       "first_s": 0.196,
+       "last_touch_s": 1.895,
+       "max_gap_mm": 19.73
+      },
+      "RR": {
+       "sum_s": 0.058,
+       "n": 2,
+       "first_s": 2.092,
+       "last_touch_s": 2.676,
+       "max_gap_mm": 0.07
+      }
+     },
+     "pair": [
+      "FR",
+      "RL"
+     ],
+     "pair_union_s": 1.54,
+     "pair_last_touch_s": 1.895,
+     "W_end_s": 2.715,
+     "adj_lift_sum_W_s": 0.058,
+     "adj_max_gap_W_mm": 0.067,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 14.94,
+      "RR": -0.72
+     },
+     "min_F_after_W_kN": {
+      "FL": 24.84,
+      "FR": 47.39,
+      "RL": 23.33,
+      "RR": 5.46
+     },
+     "min_F_after_event_kN": {
+      "FL": 14.94,
+      "FR": -1.05,
+      "RL": -0.72,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 27.8,
+     "att_end_deg": [
+      -0.0224,
+      -0.0263
+     ],
+     "max_att_change_deg": 0.6612,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.2,
+       "FR"
+      ],
+      [
+       0.6,
+       "RL"
+      ],
+      [
+       1.0,
+       "FR"
+      ],
+      [
+       1.3,
+       "RL"
+      ],
+      [
+       1.6,
+       "FR"
+      ],
+      [
+       1.9,
+       "RL"
+      ],
+      [
+       3.2,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 3,
+     "sign_changes": 1,
+     "twist": {
+      "bins_J": [
+       -27.8,
+       -293.8,
+       -149.6,
+       -81.7,
+       4.4,
+       -6.1,
+       -27.5,
+       0.8,
+       -0.8,
+       -0.8,
+       -0.5,
+       -0.3,
+       -0.2,
+       -0.1,
+       -0.1,
+       -0.1
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 4.4,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_D1_IMU_GYRO_MISSING",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": false,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": false,
+     "margins": {
+      "pair_union_to_1.8_s": 0.26,
+      "last_touch_to_3.0_s": 1.105,
+      "adj_sum_to_0.5_s": 0.442,
+      "Fmin_after_W_minus_Fmin_kN": -3.95,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "FS24",
+     "offset_s": 0.0,
+     "phase_at_event": "ready",
+     "t_ev_s": 44.2,
+     "fast": true,
+     "commands_sha256": "1d0e43e621a89114174d1a44c7d665b0b17ab8c6a757319730fe39fbc780c85d"
+    },
+    {
+     "run_after_s": 31.35,
+     "lifts": {
+      "FR": {
+       "sum_s": 0.667,
+       "n": 3,
+       "first_s": 0.113,
+       "last_touch_s": 1.616,
+       "max_gap_mm": 9.73
+      },
+      "RL": {
+       "sum_s": 0.943,
+       "n": 3,
+       "first_s": 0.196,
+       "last_touch_s": 1.883,
+       "max_gap_mm": 19.34
+      }
+     },
+     "pair": [
+      "FR",
+      "RL"
+     ],
+     "pair_union_s": 1.49,
+     "pair_last_touch_s": 1.883,
+     "W_end_s": 2.703,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FL": 17.81,
+      "RR": 2.47
+     },
+     "min_F_after_W_kN": {
+      "FL": 29.97,
+      "FR": 43.4,
+      "RL": 19.79,
+      "RR": 11.34
+     },
+     "min_F_after_event_kN": {
+      "FL": 17.81,
+      "FR": -1.05,
+      "RL": -0.72,
+      "RR": 2.47
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 28.35,
+     "att_end_deg": [
+      -0.0225,
+      -0.026
+     ],
+     "max_att_change_deg": 0.6557,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.15,
+       "FR"
+      ],
+      [
+       0.55,
+       "RL"
+      ],
+      [
+       0.95,
+       "FR"
+      ],
+      [
+       1.25,
+       "RL"
+      ],
+      [
+       1.75,
+       "RL"
+      ],
+      [
+       3.15,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 2,
+     "sign_changes": 1,
+     "twist": {
+      "bins_J": [
+       -65.9,
+       -265.4,
+       -140.9,
+       -80.2,
+       -12.0,
+       -2.1,
+       -19.6,
+       9.4,
+       -2.7,
+       -2.2,
+       -1.5,
+       -1.0,
+       -0.6,
+       -0.5,
+       -0.3,
+       -0.2
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 9.4,
+      "D0_kN": 0.7
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_D1_IMU_GYRO_MISSING",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.31,
+      "last_touch_to_3.0_s": 1.117,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 1.92,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "FS24",
+     "offset_s": 0.05,
+     "phase_at_event": "ready",
+     "t_ev_s": 44.25,
+     "fast": true,
+     "commands_sha256": "48644d89e47abc88a3a6c309bcd53b7e6ca9be5588f407af54d9f3dc0b2bf969"
+    }
+   ],
+   "prefix_commands_sha256": "6392b41e330b00dda8ee5f6c0aa2b796544d1425afc810975724f939ce43ad4b",
+   "branch_t_s": 43.7,
+   "branch_phase": "ready",
+   "wall_s": 28.3,
+   "candidate": "current"
+  },
+  {
+   "key": "screen|top|8.0|ready|FL",
+   "level": "top",
+   "fs_kN": 8.0,
+   "timing": "ready",
+   "leg": "FL",
+   "base": {
+    "timeline": [
+     [
+      0.1,
+      "check"
+     ],
+     [
+      1.0,
+      "touch"
+     ],
+     [
+      19.9,
+      "level"
+     ],
+     [
+      27.4,
+      "done"
+     ],
+     [
+      27.5,
+      "probe"
+     ],
+     [
+      39.4,
+      "ready"
+     ]
+    ],
+    "t_lift": 20.59999999999734,
+    "t_loc": 21.199999999995942,
+    "t_done": 27.4,
+    "t_ready": 39.4000000000061
+   },
+   "runs": [
+    {
+     "run_after_s": 25.9,
+     "lifts": {},
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 0,
+     "pair_last_touch_s": 0.0,
+     "W_end_s": 0.82,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 115.97,
+      "RL": 72.08
+     },
+     "min_F_after_W_kN": {
+      "FL": 68.75,
+      "FR": 99.95,
+      "RL": 54.8,
+      "RR": 12.28
+     },
+     "min_F_after_event_kN": {
+      "FL": 68.75,
+      "FR": 99.95,
+      "RL": 54.8,
+      "RR": 12.28
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 22.9,
+     "att_end_deg": [
+      0.0228,
+      -0.0281
+     ],
+     "max_att_change_deg": 0.146,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       1.3,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       0.0,
+       -0.8,
+       -66.9,
+       -287.4,
+       1.1,
+       -1.6,
+       -1.5,
+       -1.0,
+       -1.0,
+       -1.1,
+       -0.9,
+       -0.6,
+       -0.5,
+       -0.4,
+       -0.3,
+       -0.2
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 1.1,
+      "D0_kN": 0.23
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "no_lift": true,
+      "Fmin_after_event": true,
+      "fault0": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 1.8,
+      "last_touch_to_3.0_s": 3.0,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 2.87,
+      "Fmin_after_event_minus_Fmin_kN": 2.87
+     },
+     "event": "G4",
+     "offset_s": 0.0,
+     "phase_at_event": "ready",
+     "t_ev_s": 44.4,
+     "fast": false,
+     "commands_sha256": "a81923cd2f0343ebe8f3dd34d0fd51dd3ef24175a3035626d5674217371a6f25"
+    },
+    {
+     "run_after_s": 25.85,
+     "lifts": {},
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 0,
+     "pair_last_touch_s": 0.0,
+     "W_end_s": 0.82,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 116.17,
+      "RL": 71.97
+     },
+     "min_F_after_W_kN": {
+      "FL": 70.45,
+      "FR": 99.97,
+      "RL": 54.82,
+      "RR": 14.12
+     },
+     "min_F_after_event_kN": {
+      "FL": 70.45,
+      "FR": 99.97,
+      "RL": 54.82,
+      "RR": 14.12
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 22.85,
+     "att_end_deg": [
+      0.0225,
+      -0.0281
+     ],
+     "max_att_change_deg": 0.144,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       1.25,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       0.0,
+       -1.4,
+       -97.4,
+       -253.3,
+       3.1,
+       -1.6,
+       -1.3,
+       -0.9,
+       -0.9,
+       -1.0,
+       -0.8,
+       -0.6,
+       -0.5,
+       -0.4,
+       -0.3,
+       -0.2
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 3.1,
+      "D0_kN": 0.24
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "no_lift": true,
+      "Fmin_after_event": true,
+      "fault0": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 1.8,
+      "last_touch_to_3.0_s": 3.0,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 4.7,
+      "Fmin_after_event_minus_Fmin_kN": 4.7
+     },
+     "event": "G4",
+     "offset_s": 0.05,
+     "phase_at_event": "ready",
+     "t_ev_s": 44.45,
+     "fast": false,
+     "commands_sha256": "06403430868afe092cef8132a06b4176a91ed8076937159018914c711c32195e"
+    },
+    {
+     "run_after_s": 26.8,
+     "lifts": {
+      "FL": {
+       "sum_s": 0.877,
+       "n": 3,
+       "first_s": 0.015,
+       "last_touch_s": 1.739,
+       "max_gap_mm": 24.12
+      },
+      "RR": {
+       "sum_s": 1.325,
+       "n": 3,
+       "first_s": 0.129,
+       "last_touch_s": 2.046,
+       "max_gap_mm": 25.96
+      }
+     },
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 1.958,
+     "pair_last_touch_s": 2.046,
+     "W_end_s": 2.866,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 15.7,
+      "RL": 39.96
+     },
+     "min_F_after_W_kN": {
+      "FL": 101.97,
+      "FR": 88.93,
+      "RL": 55.6,
+      "RR": 45.53
+     },
+     "min_F_after_event_kN": {
+      "FL": -1.05,
+      "FR": 15.7,
+      "RL": 39.96,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.8,
+     "att_end_deg": [
+      0.0187,
+      -0.0274
+     ],
+     "max_att_change_deg": 0.7938,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.1,
+       "FL"
+      ],
+      [
+       0.5,
+       "RR"
+      ],
+      [
+       1.0,
+       "FL"
+      ],
+      [
+       1.3,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -76.0,
+       -229.8,
+       -203.1,
+       -230.1,
+       -109.5,
+       1.2,
+       0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 1.2,
+      "D0_kN": 0.23
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_D1_IMU_GYRO_MISSING",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "U832_pair_union": false,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": false,
+     "margins": {
+      "pair_union_to_1.8_s": -0.158,
+      "last_touch_to_3.0_s": 0.954,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 36.11,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "RE1bF",
+     "offset_s": 0.0,
+     "phase_at_event": "ready",
+     "t_ev_s": 44.4,
+     "fast": true,
+     "commands_sha256": "24e82619ff01a257118a8baedfa10b82b5eaf2c43281f76db605de9aa8263a82"
+    },
+    {
+     "run_after_s": 26.85,
+     "lifts": {
+      "FL": {
+       "sum_s": 0.855,
+       "n": 3,
+       "first_s": 0.015,
+       "last_touch_s": 1.716,
+       "max_gap_mm": 24.12
+      },
+      "RR": {
+       "sum_s": 1.301,
+       "n": 3,
+       "first_s": 0.129,
+       "last_touch_s": 2.021,
+       "max_gap_mm": 24.94
+      }
+     },
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 1.923,
+     "pair_last_touch_s": 2.021,
+     "W_end_s": 2.841,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 16.57,
+      "RL": 47.27
+     },
+     "min_F_after_W_kN": {
+      "FL": 100.45,
+      "FR": 94.73,
+      "RL": 57.36,
+      "RR": 43.6
+     },
+     "min_F_after_event_kN": {
+      "FL": -1.05,
+      "FR": 16.57,
+      "RL": 47.27,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.85,
+     "att_end_deg": [
+      0.0184,
+      -0.0271
+     ],
+     "max_att_change_deg": 0.7829,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.05,
+       "FL"
+      ],
+      [
+       0.55,
+       "RR"
+      ],
+      [
+       1.85,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 1,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -143.7,
+       -240.9,
+       -205.2,
+       -212.6,
+       -107.5,
+       -2.0,
+       -0.2,
+       0.0,
+       0.1,
+       0.1,
+       0.0,
+       0.0,
+       0.0,
+       -0.0,
+       -0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 0.1,
+      "D0_kN": 0.24
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "U832_pair_union": false,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": false,
+     "margins": {
+      "pair_union_to_1.8_s": -0.123,
+      "last_touch_to_3.0_s": 0.979,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 34.19,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "RE1bF",
+     "offset_s": 0.05,
+     "phase_at_event": "level",
+     "t_ev_s": 44.45,
+     "fast": true,
+     "commands_sha256": "d76aa3475702bf8abc611745884ccf80e3c9c9fd5e9c88c978c5087e074c9269"
+    },
+    {
+     "run_after_s": 26.4,
+     "lifts": {
+      "FL": {
+       "sum_s": 0.465,
+       "n": 2,
+       "first_s": 0.105,
+       "last_touch_s": 0.995,
+       "max_gap_mm": 6.77
+      },
+      "RR": {
+       "sum_s": 0.826,
+       "n": 2,
+       "first_s": 0.194,
+       "last_touch_s": 1.323,
+       "max_gap_mm": 18.35
+      }
+     },
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 1.175,
+     "pair_last_touch_s": 1.323,
+     "W_end_s": 2.143,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 33.99,
+      "RL": 33.5
+     },
+     "min_F_after_W_kN": {
+      "FL": 90.37,
+      "FR": 84.61,
+      "RL": 57.38,
+      "RR": 34.87
+     },
+     "min_F_after_event_kN": {
+      "FL": -1.05,
+      "FR": 33.99,
+      "RL": 33.5,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.4,
+     "att_end_deg": [
+      0.0246,
+      -0.0296
+     ],
+     "max_att_change_deg": 0.6324,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.1,
+       "FL"
+      ],
+      [
+       0.6,
+       "RR"
+      ],
+      [
+       1.0,
+       "FL"
+      ],
+      [
+       1.3,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 0,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -123.0,
+       -330.2,
+       -149.4,
+       -47.7,
+       -1.0,
+       -0.1,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       -0.0
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 0.0,
+      "D0_kN": 0.23
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.625,
+      "last_touch_to_3.0_s": 1.677,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 25.45,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "FS24",
+     "offset_s": 0.0,
+     "phase_at_event": "ready",
+     "t_ev_s": 44.4,
+     "fast": true,
+     "commands_sha256": "628e3ec10c9885b477692ef88ce25204f1be8786e0e0950ea295d5d8cfaa0add"
+    },
+    {
+     "run_after_s": 26.85,
+     "lifts": {
+      "FL": {
+       "sum_s": 0.563,
+       "n": 3,
+       "first_s": 0.105,
+       "last_touch_s": 1.525,
+       "max_gap_mm": 7.72
+      },
+      "RR": {
+       "sum_s": 0.862,
+       "n": 2,
+       "first_s": 0.194,
+       "last_touch_s": 1.359,
+       "max_gap_mm": 19.25
+      }
+     },
+     "pair": [
+      "FL",
+      "RR"
+     ],
+     "pair_union_s": 1.301,
+     "pair_last_touch_s": 1.525,
+     "W_end_s": 2.345,
+     "adj_lift_sum_W_s": 0.0,
+     "adj_max_gap_W_mm": 0.0,
+     "adj_lift_outside_W_s": 0.0,
+     "adj_min_F_in_W_kN": {
+      "FR": 33.07,
+      "RL": 28.96
+     },
+     "min_F_after_W_kN": {
+      "FL": 102.72,
+      "FR": 79.12,
+      "RL": 46.16,
+      "RR": 54.55
+     },
+     "min_F_after_event_kN": {
+      "FL": -1.05,
+      "FR": 33.07,
+      "RL": 28.96,
+      "RR": -0.72
+     },
+     "fault_periods": 0,
+     "fault_events": [],
+     "final_phase": "ready",
+     "t_ready_back_s": 23.85,
+     "att_end_deg": [
+      0.0267,
+      -0.0307
+     ],
+     "max_att_change_deg": 0.6433,
+     "crawler_contact_after_event_ms": 0,
+     "reapproach_starts": [
+      [
+       0.15,
+       "FL"
+      ],
+      [
+       0.55,
+       "RR"
+      ],
+      [
+       1.75,
+       "RR"
+      ]
+     ],
+     "n_late_starts": 1,
+     "sign_changes": 0,
+     "twist": {
+      "bins_J": [
+       -60.8,
+       -306.3,
+       -170.8,
+       -91.8,
+       2.9,
+       -2.5,
+       -3.6,
+       -2.9,
+       -2.2,
+       -1.6,
+       -1.2,
+       -0.9,
+       -0.7,
+       -0.5,
+       -0.3,
+       -0.2
+      ],
+      "bundles": [],
+      "n_bundles": 0,
+      "max_judged_bin_J": 2.9,
+      "D0_kN": 0.24
+     },
+     "warnings": [
+      "INFO_ROD_PRESSURE_FAULT_REASON:FL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:FR:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RL:D6",
+      "INFO_ROD_PRESSURE_FAULT_REASON:RR:D6",
+      "WARN_D1_IMU_GYRO_MISSING",
+      "WARN_ROD_PRESSURE_FALLBACK:FL",
+      "WARN_ROD_PRESSURE_FALLBACK:FR",
+      "WARN_ROD_PRESSURE_FALLBACK:RL",
+      "WARN_ROD_PRESSURE_FALLBACK:RR"
+     ],
+     "gates": {
+      "U832_pair_union": true,
+      "U832_last_touch": true,
+      "fault0": true,
+      "U57_sum": true,
+      "U57_gap": true,
+      "U57_outside": true,
+      "Fmin_after_W": true,
+      "end_att": true,
+      "recurrence": true
+     },
+     "pass": true,
+     "margins": {
+      "pair_union_to_1.8_s": 0.499,
+      "last_touch_to_3.0_s": 1.475,
+      "adj_sum_to_0.5_s": 0.5,
+      "Fmin_after_W_minus_Fmin_kN": 36.74,
+      "Fmin_after_event_minus_Fmin_kN": -10.46
+     },
+     "event": "FS24",
+     "offset_s": 0.05,
+     "phase_at_event": "ready",
+     "t_ev_s": 44.45,
+     "fast": true,
+     "commands_sha256": "f20970fdf45c71f78527ac5b113e3067f05b435176716152a890257b18788fc3"
+    }
+   ],
+   "prefix_commands_sha256": "95ca9b2a91f7b799f5fab19a288adbc0c2c5dda093fda46b97448b4c872b3ba1",
+   "branch_t_s": 43.9,
+   "branch_phase": "ready",
+   "wall_s": 26.6,
+   "candidate": "current"
+  }
+ ]
+}
