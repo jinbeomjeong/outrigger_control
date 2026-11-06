@@ -164,7 +164,7 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None) -> tuple[di
     events = _stored_events(controller)
     # v5 X-10 (criteria J11): only plants with the v5 lock record (LC) have lock_events
     if getattr(plant, "lock_events", None) is not None:
-        extra = {**extra, "lock_window_alignment": _lock_window_alignment(
+        extra = {**extra, "lock_window_alignment": lock_window_record(
             plant, controller, period)}
         if t4h is not None:
             write_t4h_record(t4h["path"], plant, controller, period,
@@ -191,8 +191,11 @@ def _all_events(controller) -> list[tuple[float, str]]:
     return [(float(event.t_s), event.name) for event in controller.events]
 
 
-def _lock_window_alignment(plant, controller, period: dict) -> dict:
-    """Criteria J11 n_late of the run (``lock_window_alignment``; control-expert A)."""
+def lock_window_record(plant, controller, period: dict) -> dict:
+    """Criteria J11 n_late of the run (``lock_window_alignment``; control-expert A).
+
+    ``period`` needs ``t`` (update times) and ``applied_output_m_s`` (after each update), as
+    :func:`period_arrays`; shared with ``r79_sensor_screen``."""
     t_s = period["t"]
     return lock_window_alignment(
         t_s, period["applied_output_m_s"], plant.lock_events,

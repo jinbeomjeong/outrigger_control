@@ -540,14 +540,18 @@ def install_v5_setting(env_name: str = V5_SETTING_ENV):
     return options
 
 
-def v5_setting_record(options, env_name: str = V5_SETTING_ENV) -> dict:
-    """The result keys of a run with a v5 setting (empty without one)."""
+def v5_setting_record(options, env_name: str = V5_SETTING_ENV,
+                      t_lift_s: float | None = None) -> dict:
+    """The result keys of a run with a v5 setting (empty without one).
+
+    ``t_lift_s`` = the first crawler lift-off of the run: the M2 clipped steps are split before /
+    after it (``verdict_runs.plant_options_record``; None = all after)."""
     name = v5_setting_name(env_name)
     if name is None:
         return {}
     import verdict_runs
 
-    return {"v5_setting": name, **verdict_runs.plant_options_record(options)}
+    return {"v5_setting": name, **verdict_runs.plant_options_record(options, t_lift_s)}
 
 
 def split_keys_option(argv: list[str]) -> tuple[list[str], list[str] | None]:

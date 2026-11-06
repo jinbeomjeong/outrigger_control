@@ -44,8 +44,10 @@ Env: R79_LEVELS (comma, default L1), R79_SET (default identity), R79_SEEDS (comm
   R72_PATH (G6 soil path of ``r72_g6_screen``; unset or empty = ``per_leg``, spec 429.11.1:
   recorded as ``r72_path``; a weak-pad G6 run without the per-pad soil is an error record),
   R79_V5_SETTING (v5 X-1: a ``run_v5.SETTINGS`` name, e.g. VB; installed in each worker before the
-  ChunkProbe; records ``v5_setting``, ``hydraulic_options``, ``hydraulics_record`` and
-  ``rod_fallback_reasons``; unset = the former runs).
+  ChunkProbe; records ``v5_setting``, ``hydraulic_options``, ``hydraulics_record`` with the M2
+  clipped steps split at the first crawler lift-off ``t_lift_s`` (also recorded),
+  ``rod_fallback_reasons`` and, with LC lock events, ``lock_window_alignment``; unset = the former
+  runs).
 """
 
 from __future__ import annotations
@@ -427,16 +429,40 @@ class ActiveRun:
     truth: TruthLog = field(default_factory=TruthLog)
     ctrl: object | None = None
     plant: object | None = None
+    applied_before_update: list[np.ndarray] = field(default_factory=list)
+    """Controller applied output at every truth row, i.e. after the previous update (v5 n_late)."""
 
     def after_period(self, plant, ideal, head_area):
         """Truth row, then the delivered measurements (called before the controller update)."""
         self.plant = plant
         phase = "none" if self.ctrl is None else str(self.ctrl.phase)
         self.truth.append(plant, phase, self.probe)
+        self.applied_before_update.append(self._applied_output_m_s())
         delivered = self.adapter.deliver(ideal, plant, head_area, self.probe.gyro_samples,
                                          self.probe.sample_times)
         self.probe.reset_period()
         return delivered
+
+    def _applied_output_m_s(self) -> np.ndarray:
+        state = None if self.ctrl is None else getattr(self.ctrl, "_state", None)
+        if state is None:
+            return np.full(len(LEGS), np.nan)
+        return np.array(state.applied_output_m_s, float)
+
+    def controller_period_arrays(self) -> dict[str, np.ndarray]:
+        """Controller log in the ``verdict_runs.period_arrays`` form (``t``, ``phase`` and
+        ``applied_output_m_s`` after each update).
+
+        A truth row is taken just before update k, so it holds the phase and applied output
+        after update k - 1; the values after the last update are the controller's current ones.
+        """
+        phase_after, applied_after = [], []
+        if self.truth.t_s:
+            phase_after = [*self.truth.phase[1:], str(self.ctrl.phase)]
+            applied_after = [*self.applied_before_update[1:], self._applied_output_m_s()]
+        return {"t": np.asarray(self.truth.t_s, float),
+                "phase": np.asarray(phase_after, dtype=object),
+                "applied_output_m_s": np.asarray(applied_after, float).reshape(-1, len(LEGS))}
 
 
 _ACTIVE: ActiveRun | None = None
@@ -881,7 +907,7 @@ def run_job(key: str) -> dict:
         return out
     out.update(_run_summary(run, plant))
     out["r79"]["recontact_events"] = recontact_summary(base)
-    out.update(_v5_record(v5_options, run.ctrl))
+    out.update(_v5_record(v5_options, run, plant))
     if candidate not in (None, "current"):  # spec 424.5: the candidate's own record
         controller = run.ctrl
         fix = getattr(controller, "fix", None)
@@ -904,17 +930,38 @@ def _install_v5_setting():
     return r67.install_v5_setting(V5_SETTING_ENV)
 
 
-def _v5_record(options, ctrl) -> dict:
-    """v5 keys of a run with ``R79_V5_SETTING`` (empty without it): setting, options, the plant
-    record (M2 / LC lock events) and the rod-pressure fallback reasons of the controller."""
+def _v5_record(options, run: ActiveRun, plant) -> dict:
+    """v5 keys of a run with ``R79_V5_SETTING`` (empty without it): setting, options, the first
+    crawler lift-off ``t_lift_s``, the plant record (M2 clipped steps split at ``t_lift_s``, LC
+    lock events), the rod-pressure fallback reasons of the controller and, for a plant with LC
+    lock events, ``lock_window_alignment`` (criteria J11 n_late, as the stage 1 runs)."""
     import r67_g1_screen as r67
 
-    record = r67.v5_setting_record(options, V5_SETTING_ENV)
-    if not record:
+    if r67.v5_setting_name(V5_SETTING_ENV) is None:
         return {}
-    reasons = [(round(float(e.t_s), 3), e.name) for e in ctrl.events
+    import verdict_runs
+
+    period = run.controller_period_arrays()
+    t_lift_s = _first_lift_time_s(plant, period)
+    record = r67.v5_setting_record(options, V5_SETTING_ENV, t_lift_s)
+    reasons = [(round(float(e.t_s), 3), e.name) for e in run.ctrl.events
                if e.name.startswith(ROD_FAULT_REASON_EVENT)]
-    return {**record, "rod_fallback_reasons": reasons}
+    out = {**record, "t_lift_s": t_lift_s, "rod_fallback_reasons": reasons}
+    if getattr(plant, "lock_events", None) is not None:
+        out["lock_window_alignment"] = verdict_runs.lock_window_record(plant, run.ctrl, period)
+    return out
+
+
+def _first_lift_time_s(plant, period: dict) -> float | None:
+    """First crawler lift-off on the plant's 1 ms flow-limiter rows (``verdict_metrics``, the
+    ``values.forces.t_lift_s`` rule). A plant without the limiter rows gives None, so that every
+    M2 clipped step counts after the lift-off (the cautious side of the H-9 stop)."""
+    import verdict_metrics
+
+    limiter = getattr(plant, "flow_limiter", None)
+    if limiter is None:
+        return None
+    return verdict_metrics.first_lift_time_s(limiter.rows(), period["t"], period["phase"])
 
 
 RECONTACT_EVENT_KEYS = ("t_start_s", "t_end_s", "duration_s", "max_normal_N", "max_over_W",

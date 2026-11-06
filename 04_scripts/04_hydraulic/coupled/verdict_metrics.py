@@ -223,6 +223,26 @@ def _first_lift_index(rows: np.ndarray, phases: np.ndarray) -> int | None:
     return int(hits[0]) if hits.size else None
 
 
+def first_lift_time_s(rows: np.ndarray, period_t: np.ndarray,
+                      period_phase: np.ndarray) -> float | None:
+    """First crawler lift-off of a run [s], the ``values.forces.t_lift_s`` rule and rounding.
+
+    For runners without :func:`run_values` (``r79_sensor_screen``, v5 criteria rev. 2 2.1).
+
+    Args:
+        rows: The 1 ms chunk record of ``harness_flow``.
+        period_t: Controller update times.
+        period_phase: Controller phase after each update.
+
+    Returns:
+        The lift-off time, or None without a lift-off.
+    """
+    lift_index = _first_lift_index(rows, chunk_phases(rows, period_t, period_phase))
+    if lift_index is None:
+        return None
+    return _rounded(rows[lift_index, COLUMN["t"]], 3)
+
+
 def _force_minimum(rows: np.ndarray, selected: np.ndarray) -> dict | None:
     if not selected.any():
         return None
