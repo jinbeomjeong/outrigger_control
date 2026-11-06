@@ -44,12 +44,17 @@ NO_READY_ROWS = ("S8",)
 
 
 def _phase(job: dict) -> str:
+    """Phase label of a job; a ``timing`` job gets ``-<timing>`` (as ``run_v5.t4h_file_name``)."""
     if job.get("twin"):
         twin = job["twin"]
-        return f"{twin['level']}|{twin['leg']}|{twin['fs_kN']:g}|{job.get('offset_s')}"
-    if job.get("offset_s") is not None:
-        return f"offset {job['offset_s']}"
-    return f"eps {job.get('eps', 0.0)}"
+        phase = f"{twin['level']}|{twin['leg']}|{twin['fs_kN']:g}|{job.get('offset_s')}"
+    elif job.get("offset_s") is not None:
+        phase = f"offset {job['offset_s']}"
+    else:
+        phase = f"eps {job.get('eps', 0.0)}"
+    if job.get("timing"):
+        phase += f"-{job['timing']}"
+    return phase
 
 
 def _row_name(job: dict) -> str:
@@ -60,6 +65,8 @@ def value_row(record: dict) -> dict:
     """The values of one run line (spec 3.3 list, what the record holds)."""
     job = record["job"]
     out = {"row": _row_name(job), "phase": _phase(job), "setting": job["setting"]}
+    if job.get("timing"):  # a timed event run is not the phase of the golden set
+        out["timing"] = job["timing"]
     if "error" in record:
         return {**out, "error": record["error"]}
     times = (record.get("values") or {}).get("times", {})
@@ -280,10 +287,13 @@ def golden_check(rows: list[dict], golden_dir: Path = GOLDEN_DIR) -> list[dict]:
     """V0 rows at the phase the golden set defines: hash equal to ``golden_off/OFF_<case>.json``.
 
     Event rows are compared at the golden file's own ``offset_s`` (R15 / R16 run 0.05 s by
-    definition, ``verdict_cases``), steady rows at eps 0.
+    definition, ``verdict_cases``), steady rows at eps 0. Rows with a ``timing`` (the overlap
+    batch's moved event) are not golden phases and are skipped.
     """
     checks = []
     for row in rows:
+        if row.get("timing"):
+            continue
         is_offset_phase = row["phase"].startswith("offset ")
         if row["setting"] != "V0" or not (row["phase"] == "eps 0.0" or is_offset_phase) \
                 or "error" in row or row.get("contact_judge"):  # golden runs: screen judge

@@ -11,7 +11,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
-from aggregate_v5 import golden_check  # noqa: E402
+from aggregate_v5 import golden_check, value_row  # noqa: E402
+from run_v5 import t4h_file_name  # noqa: E402
 
 GOLDEN_HASH = "a" * 64
 OTHER_HASH = "b" * 64
@@ -51,3 +52,35 @@ def test_other_settings_are_not_compared(tmp_path):
     _write_golden(tmp_path, "R12", 0.0)
 
     assert golden_check([_row("R12", "offset 0.0", GOLDEN_HASH, setting="VB")], tmp_path) == []
+
+
+def _error_record(job: dict) -> dict:
+    return {"job": job, "error": "x"}
+
+
+def test_timed_row_carries_its_timing_in_the_row_and_the_phase():
+    job = {"case": "R12", "setting": "V0", "offset_s": 0.0, "timing": "flow_saturation"}
+
+    row = value_row(_error_record(job))
+
+    assert row["timing"] == "flow_saturation"
+    assert row["phase"] == "offset 0.0-flow_saturation"
+    assert t4h_file_name(job) == "R12_o0.0-flow_saturation_V0.npz"  # same suffix rule
+
+
+def test_untimed_row_has_no_timing_key():
+    row = value_row(_error_record({"case": "R12", "setting": "V0", "offset_s": 0.0}))
+
+    assert "timing" not in row
+    assert row["phase"] == "offset 0.0"
+
+
+def test_timed_rows_are_not_compared_with_the_golden_set(tmp_path):
+    _write_golden(tmp_path, "R12", 0.0)
+    timed = {**_row("R12", "offset 0.0-flow_saturation", OTHER_HASH), "timing": "flow_saturation"}
+    rows = [timed, _row("R12", "offset 0.0", GOLDEN_HASH)]
+
+    checks = golden_check(rows, tmp_path)
+
+    assert checks == [{"row": "R12", "phase": "offset 0.0", "golden_offset_s": 0.0,
+                       "equal": True}]
