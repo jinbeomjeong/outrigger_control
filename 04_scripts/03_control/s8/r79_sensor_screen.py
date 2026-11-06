@@ -942,7 +942,7 @@ def _v5_record(options, run: ActiveRun, plant) -> dict:
     import verdict_runs
 
     period = run.controller_period_arrays()
-    t_lift_s = _first_lift_time_s(plant, period)
+    t_lift_s = r67.first_lift_time_s(plant, period)
     record = r67.v5_setting_record(options, V5_SETTING_ENV, t_lift_s)
     reasons = [(round(float(e.t_s), 3), e.name) for e in run.ctrl.events
                if e.name.startswith(ROD_FAULT_REASON_EVENT)]
@@ -950,18 +950,6 @@ def _v5_record(options, run: ActiveRun, plant) -> dict:
     if getattr(plant, "lock_events", None) is not None:
         out["lock_window_alignment"] = verdict_runs.lock_window_record(plant, run.ctrl, period)
     return out
-
-
-def _first_lift_time_s(plant, period: dict) -> float | None:
-    """First crawler lift-off on the plant's 1 ms flow-limiter rows (``verdict_metrics``, the
-    ``values.forces.t_lift_s`` rule). A plant without the limiter rows gives None, so that every
-    M2 clipped step counts after the lift-off (the cautious side of the H-9 stop)."""
-    import verdict_metrics
-
-    limiter = getattr(plant, "flow_limiter", None)
-    if limiter is None:
-        return None
-    return verdict_metrics.first_lift_time_s(limiter.rows(), period["t"], period["phase"])
 
 
 RECONTACT_EVENT_KEYS = ("t_start_s", "t_end_s", "duration_s", "max_normal_N", "max_over_W",

@@ -54,7 +54,9 @@ R67_OFFSETS = comma list (default 0,0.05); R67_FILTER = substring list of job ke
 (prefix + branch commands). Deterministic.
 v5 X-3: R67_V5_SETTING = a run_v5.SETTINGS name (VB = flow limit eta_v 0.85 + M2 + LC + plant lock window): every
 plant of the run carries it (verdict_runs.install_plant_options), results get v5_setting / hydraulic_options /
-hydraulics_record; ``--keys <k>[,<k>...]`` or ``--keys @<file>`` after the positional arguments runs exactly these
+hydraulics_record (M2 clips split at the first crawler lift-off t_lift_s, also recorded) and, with LC lock events,
+lock_window_alignment; every screen branch run gets its own t_lift_s / hydraulics_record / lock_window_alignment
+(prefix + branch; the job-level keys cover the prefix plant only); ``--keys <k>[,<k>...]`` or ``--keys @<file>`` after the positional arguments runs exactly these
 job keys (sample hash check against a stored grid).
 """
 from __future__ import annotations
@@ -390,6 +392,7 @@ def screen_job(key):
     cl.rpt.RCFG.clear()
     t0 = time.perf_counter()
     plant, ctrl, info = make_base(cl, c2, level, fs)
+    V5_JOB_RUN.update(plant=plant, ctrl=ctrl)
     tl = run_base(cl, c2, Meas, copy.deepcopy(plant), copy.deepcopy(ctrl))
     res = {"key": key, "level": level, "fs_kN": fs, "timing": timing, "leg": leg_name, "base": {
         k: tl[k] for k in ("timeline", "t_lift", "t_loc", "t_done", "t_ready")}, "runs": []}
@@ -419,6 +422,7 @@ def screen_job(key):
             candidate_record = _candidate_record(ct)
             if candidate_record is not None:  # spec 427.11: only with R67_CANDIDATE
                 j["candidate_record"] = candidate_record
+            j.update(v5_branch_record(pl, ct))
             res["runs"].append(j)
     res["wall_s"] = round(time.perf_counter() - t0, 1)
     return res
@@ -434,6 +438,7 @@ def ps7_job(key):
     t0 = time.perf_counter()
     plant, ctrl, info = make_base(cl, c2, level, fs, zero_cal=(var == "cal"), pre=PS7[case],
                                   touch_cap=(var == "cap"))
+    V5_JOB_RUN.update(plant=plant, ctrl=ctrl)
     rec, crawler, log = [], [], []
     tl = run_base(cl, c2, Meas, plant, ctrl, rec=rec, crawler=crawler, log=log)
     rec = np.array(rec)
@@ -540,6 +545,75 @@ def install_v5_setting(env_name: str = V5_SETTING_ENV):
     return options
 
 
+def install_v5_run(env_name: str = V5_SETTING_ENV):
+    """:func:`install_v5_setting` plus the record-only 10 Hz controller log of
+    ``verdict_runs`` (as run_v5), which the lift-off time and n_late of :func:`v5_job_record`
+    and :func:`v5_branch_record` read. Nothing is installed without a setting."""
+    options = install_v5_setting(env_name)
+    if v5_setting_name(env_name) is not None:
+        import verdict_runs
+
+        verdict_runs.install_logged_controller()
+    return options
+
+
+V5_JOB_RUN: dict = {}
+"""The plant and controller a job ran last (``plant`` / ``ctrl``, set by the jobs): screen jobs
+store the prefix run (the plant armed in ``make_base``), ps7 and r69 G8 jobs their only run."""
+
+
+def first_lift_time_s(plant, period: dict) -> float | None:
+    """First crawler lift-off on the plant's 1 ms flow-limiter rows with the ``verdict_metrics``
+    rule (``values.forces.t_lift_s`` of the verdict runs). None without a lift-off, without
+    limiter rows or without a controller log: every M2 clipped step then counts after the
+    lift-off (the cautious side of the H-9 stop)."""
+    limiter = getattr(plant, "flow_limiter", None)
+    if limiter is None or len(period["t"]) == 0:
+        return None
+    import verdict_metrics
+
+    return verdict_metrics.first_lift_time_s(limiter.rows(), period["t"], period["phase"])
+
+
+def _lift_and_lock_window(plant, ctrl) -> tuple[float | None, dict]:
+    """``t_lift_s`` of a run and, for a plant with LC lock events, its ``lock_window_alignment``
+    (criteria J11 n_late, ``verdict_runs.lock_window_record``)."""
+    import verdict_runs
+
+    period = verdict_runs.period_arrays(ctrl)
+    t_lift_s = first_lift_time_s(plant, period)
+    extra = {}
+    if getattr(plant, "lock_events", None) is not None:
+        extra["lock_window_alignment"] = verdict_runs.lock_window_record(plant, ctrl, period)
+    return t_lift_s, extra
+
+
+def v5_job_record(options, env_name: str = V5_SETTING_ENV) -> dict:
+    """Job-level v5 keys (empty without a setting): :func:`v5_setting_record` with the M2 clips
+    of the :data:`V5_JOB_RUN` plant split at its lift-off, ``t_lift_s`` and the n_late record."""
+    if v5_setting_name(env_name) is None:
+        return {}
+    plant, ctrl = V5_JOB_RUN.get("plant"), V5_JOB_RUN.get("ctrl")
+    t_lift_s, extra = (None, {}) if plant is None else _lift_and_lock_window(plant, ctrl)
+    return {**v5_setting_record(options, env_name, t_lift_s), "t_lift_s": t_lift_s, **extra}
+
+
+def v5_branch_record(plant, ctrl) -> dict:
+    """v5 keys of one screen branch run (empty without a setting): ``t_lift_s``, the plant record
+    of the branch plant (a copy of the prefix plant, so prefix + branch; M2 clips split at
+    ``t_lift_s``) and the n_late record over prefix + branch."""
+    if v5_setting_name() is None:
+        return {}
+    import harness_hydraulics
+
+    t_lift_s, extra = _lift_and_lock_window(plant, ctrl)
+    out = {"t_lift_s": t_lift_s, **extra}
+    record = harness_hydraulics.plant_record(plant, t_lift_s)
+    if record:
+        out["hydraulics_record"] = record
+    return out
+
+
 def v5_setting_record(options, env_name: str = V5_SETTING_ENV,
                       t_lift_s: float | None = None) -> dict:
     """The result keys of a run with a v5 setting (empty without one).
@@ -586,9 +660,10 @@ def run_job(key):
     try:
         restore = _install_candidate()
         try:
-            options = install_v5_setting()
+            options = install_v5_run()
+            V5_JOB_RUN.clear()
             out = screen_job(key) if key.startswith("screen|") else ps7_job(key)
-            out.update(v5_setting_record(options))
+            out.update(v5_job_record(options))
         finally:
             restore()
         out["candidate"] = _candidate_name() or "current"

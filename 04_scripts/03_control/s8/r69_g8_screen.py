@@ -172,6 +172,7 @@ def job(key):
     cl.rpt.RCFG.clear()
     t_wall = time.perf_counter()
     plant, ctrl, info, node_d0 = make_base_g8(cl, c2, level, fs, FLOORS[floor_id], leg, gap_spec)
+    r67.V5_JOB_RUN.update(plant=plant, ctrl=ctrl)
     rec, crawler, log = [], [], []
     tl = r67.run_base(cl, c2, Meas, plant, ctrl, rec=rec, crawler=crawler, log=log)
     rec = np.array(rec)
@@ -277,9 +278,10 @@ V5_SETTING_ENV = "R69_V5_SETTING"
 
 def run_job(key):
     try:
-        options = r67.install_v5_setting(V5_SETTING_ENV)
+        options = r67.install_v5_run(V5_SETTING_ENV)
+        r67.V5_JOB_RUN.clear()
         out = job(key)
-        out.update(r67.v5_setting_record(options, V5_SETTING_ENV))
+        out.update(r67.v5_job_record(options, V5_SETTING_ENV))
         return out
     except Exception as exc:  # keep the batch going; the error is reported
         import traceback
