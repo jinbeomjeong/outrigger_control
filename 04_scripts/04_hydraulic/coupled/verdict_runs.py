@@ -445,7 +445,8 @@ def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
         result, series = _run_steady(case, decision, t4h)
     if clip_record is not None:
         result["command_clip"] = asdict(clip_record)
-    result.update(plant_options_record(hydraulics))
+    t_lift_s = ((result.get("values") or {}).get("forces") or {}).get("t_lift_s")
+    result.update(plant_options_record(hydraulics, t_lift_s))
     return result, series
 
 
@@ -493,8 +494,11 @@ def install_plant_options(setting: FlowSetting, hydraulics=None) -> None:
     install_flow_plant(setting)
 
 
-def plant_options_record(hydraulics=None) -> dict:
+def plant_options_record(hydraulics=None, t_lift_s: float | None = None) -> dict:
     """After a run: the criteria P-4 window check and the v5 record (empty without options).
+
+    ``t_lift_s`` = the first crawler lift-off of the run (``values.forces.t_lift_s``): the M2
+    clipped steps are split before / after it (criteria rev. 2 2.1; None = all after).
 
     Raises:
         RuntimeError: The lock window of the built preset differs from the options.
@@ -506,7 +510,7 @@ def plant_options_record(hydraulics=None) -> dict:
     if hydraulics.lock_window_follows_plant:
         harness_hydraulics.check_last_lock_window(hydraulics, load_params().v_max)
     return {"hydraulic_options": hydraulics.to_dict(),
-            "hydraulics_record": harness_hydraulics.last_armed_record()}
+            "hydraulics_record": harness_hydraulics.last_armed_record(t_lift_s)}
 
 
 def warm_numba_cache() -> None:

@@ -216,7 +216,7 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                 pressure_Pa[i] = lag.relax(i, float(self.last_dir[i]), float(net_force_N[i]))
             shift_m = self.rod_release.shift_m(
                 pressure_Pa, self.kh, ~self.locked, STROKE_LOWER_END_M - self.sref,
-                self.geo.stroke - self.sref)
+                self.geo.stroke - self.sref, t_s=float(self.t))
             self.sref += shift_m
 
     HydraulicsPlant.v5_options = options
@@ -250,13 +250,36 @@ def install_overlap_cut(closed_loop_module, setting, v_max_m_s: float, zero_comm
     closed_loop_module._lagged_step = lagged_step_with_overlap_cut
 
 
-def plant_record(plant) -> dict:
-    """Per-leg v5 totals of one plant for the result (M2 shift, clipped steps)."""
+LIFT_TIME_TOL_S = 1e-9
+
+
+def clipped_steps_by_lift(clip_times_s: list[list[float]], total: list[int],
+                          t_lift_s: float | None) -> dict:
+    """v5 criteria rev. 2 2.1: M2 clipped steps per leg before (t < t_lift - 1e-9) and after the
+    first crawler lift-off; without a lift-off every clip counts after.
+
+    Raises:
+        RuntimeError: The split does not add up to the clipped-step total.
+    """
+    pre = [0 if t_lift_s is None else sum(t < t_lift_s - LIFT_TIME_TOL_S for t in times)
+           for times in clip_times_s]
+    post = [len(times) - before for times, before in zip(clip_times_s, pre, strict=True)]
+    if [a + b for a, b in zip(pre, post, strict=True)] != list(total):
+        raise RuntimeError(f"M2 clip split {pre} + {post} != total {list(total)}")
+    return {"m2_clipped_steps_pre_lift": pre, "m2_clipped_steps_post_lift": post,
+            "m2_clip_split_t_lift_s": t_lift_s}
+
+
+def plant_record(plant, t_lift_s: float | None = None) -> dict:
+    """Per-leg v5 totals of one plant for the result (M2 shift, clipped steps split at the
+    first lift-off ``t_lift_s``)."""
     if plant is None:
         return {}
     record = {}
     if getattr(plant, "rod_release", None) is not None:
         record.update(plant.rod_release.record())
+        record.update(clipped_steps_by_lift(plant.rod_release.clip_times_s,
+                                            record["m2_clipped_steps"], t_lift_s))
     if getattr(plant, "lock_events", None) is not None:
         record["lock_events"] = plant.lock_events[:MAX_LOGGED_LOCK_EVENTS]
     if getattr(plant, "check_delay", None) is not None:
@@ -279,8 +302,8 @@ def options_of(plant) -> HydraulicOptions:
     return getattr(type(plant), "v5_options", HydraulicOptions())
 
 
-def last_armed_record() -> dict:
-    return plant_record(_LAST_ARMED[0])
+def last_armed_record(t_lift_s: float | None = None) -> dict:
+    return plant_record(_LAST_ARMED[0], t_lift_s)
 
 
 def install(verdict_runs_module, options: HydraulicOptions) -> None:

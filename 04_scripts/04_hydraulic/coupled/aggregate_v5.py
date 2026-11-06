@@ -11,7 +11,9 @@ batch gets ``ready`` (criteria 7: S1 .. S5, S7 first READY <= 100 s, event rows 
 Batch ``pressure_only`` adds ``pressure_only`` (criteria 13.4, ⑥): the pressure-only run and the
 combined run of ``main`` side by side (after-window 1 ms minimum, time below F_min, misses of
 the lower estimate), each entry with ``unit_status``. Every batch gets ``lock_window`` (criteria
-J11 per setting) and, when ``<batch>/t4h/t4h_replay.json`` exists, ``t4h`` (criteria 9).
+J11 per setting), ``m2_clip`` (J9 / H-9: only clips after the first lift-off stop; the
+clips before it are recorded) and, when ``<batch>/t4h/t4h_replay.json`` exists, ``t4h``
+(criteria 9).
 
 Usage: python -I -B 04_scripts/04_hydraulic/coupled/aggregate_v5.py <batch> [<batch> ...]
 """
@@ -72,6 +74,11 @@ def value_row(record: dict) -> dict:
                m2_shift_total_mm=hydraulics.get("m2_shift_total_mm"),
                lock_changes=len(hydraulics.get("lock_events", [])),
                commands_sha256=record["commands_sha256"])
+    if "m2_clipped_steps_post_lift" in hydraulics:  # criteria rev. 2 2.1 (J9 / H-9)
+        post = hydraulics["m2_clipped_steps_post_lift"]
+        out.update(m2_clipped_steps=hydraulics["m2_clipped_steps"],
+                   m2_clipped_steps_pre_lift=hydraulics["m2_clipped_steps_pre_lift"],
+                   m2_clipped_steps_post_lift=post, m2_clip_after_lift=any(n > 0 for n in post))
     if "check_delay" in hydraulics:
         out["m1c_n_fills"] = hydraulics["check_delay"]["n_fills"]
         out["unit_status"] = UNIT_STATUS
@@ -227,6 +234,23 @@ def lock_window_table(rows: list[dict]) -> dict:
     return table
 
 
+def m2_clip_table(rows: list[dict]) -> dict:
+    """Criteria J9 / H-9 (rev. 2 2.1): runs with an M2 clip after the first lift-off (the stop
+    condition) and the clips before it (record only), per setting."""
+    table = defaultdict(lambda: {"runs": 0, "runs_clip_after_lift": [], "pre_lift_steps": 0,
+                                 "post_lift_steps": 0})
+    for row in rows:
+        if "m2_clipped_steps_post_lift" not in row:
+            continue
+        entry = table[row["setting"]]
+        entry["runs"] += 1
+        entry["pre_lift_steps"] += sum(row["m2_clipped_steps_pre_lift"])
+        entry["post_lift_steps"] += sum(row["m2_clipped_steps_post_lift"])
+        if row["m2_clip_after_lift"]:
+            entry["runs_clip_after_lift"].append(f"{row['row']}|{row['phase']}")
+    return dict(sorted(table.items()))
+
+
 T4H_REPLAY_FILE = "t4h_replay.json"
 """``t4h_replay.py`` output the aggregation reads from ``<batch>/t4h/`` when present."""
 
@@ -339,7 +363,7 @@ def main() -> None:
                   "golden_v0": golden_check(rows), "w2": w2_pairs(rows), "rows": rows,
                   "ready": ready_table(rows), "s8_stop": s8_stop_table(rows),
                   "event_force": event_force_table(rows),
-                  "lock_window": lock_window_table(rows)}
+                  "lock_window": lock_window_table(rows), "m2_clip": m2_clip_table(rows)}
         if batch == "item8":
             regression = [row for row in _value_rows("main") if row["row"] in ITEM8_LEVELS]
             report["item8_order"] = item8_order(rows + regression)
