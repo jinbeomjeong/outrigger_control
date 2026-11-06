@@ -10,9 +10,13 @@ Inner step of an armed plant (spec 2.0, the numbers are the rows of its table):
 M2 (spec 2.3): the harness has no tracked rod pressure, so this class solves its first-order lag.
 The start is ``p_r0 - G_r / A_ann`` at the release, the target comes from
 ``RodChamberLegParams.moving_target_rod_pressure_Pa`` (the law is not copied here) with the net oil
-force. Revision 3 (``flow_limited_r3``): the lag is capped by the valve flow of the kernel speed
+force. Revision 3: the lag is capped by the valve flow of the kernel speed
 (``rod_release.flow_limited_rod_pressure``, the function L2b calls), ``C_r`` from ``kh``, ``kr``.
-All pressures are model values and ASSUMPTIONS.
+Revision 4 (``flow_limited_r4``, 2026-11-07): the base release decay ``Gr = r0 exp(-(t - t_rel) /
+tau)`` of ``RodSidePlant`` already moves ``Gr / k_h``, so M2 reads ``p_hat = p + Delta w`` with
+``Delta = Gr(t_rel) / A_ann`` (set at the release) and ``w = exp(-(t - t_rel) / tau)`` (the same
+``tau``): ``Delta w`` equals ``Gr / A_ann`` of every moving step. All pressures are model values
+and ASSUMPTIONS.
 
 Pressures gauge [Pa], speeds m/s, extension positive.
 """
@@ -38,8 +42,10 @@ from outrigger_sim.hydraulics.rod_chamber import (  # noqa: E402
     RodChamberMode,
 )
 from outrigger_sim.hydraulics.rod_release import (  # noqa: E402
+    ReleaseStart,
     RodPressureFlowLaw,
     RodReleaseShift,
+    release_weight,
 )
 from outrigger_sim.hydraulics.v5_options import (  # noqa: E402
     LOCK_SPEED_EPS_M_S,
@@ -182,11 +188,11 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                                     void_m, band_N, self.sref)
 
         def _seed_rod_pressure(self, leg: int, pressure_Pa: float) -> None:
-            """Spec 2.4: M2 starts its release at the M1c opening pressure (no double creep)."""
+            """Spec 2.4: M2 starts its release at the M1c opening pressure (no double creep);
+            the seed goes into ``p`` only, ``Delta`` stays (revision 4)."""
             if self.rod_release is None:
                 return
             self.rod_pressure_seed_Pa[leg] = pressure_Pa
-            self.rod_release.seed_pressure(leg, pressure_Pa)
 
         def _rod_force(self, u):
             was_locked = self.locked.copy()
@@ -228,17 +234,28 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             net_force_N = self.pressure()
             lag = self.rod_pressure_lag
             speed_m_s = np.broadcast_to(kernel_speed_m_s, (LEG_COUNT,))
+            weight = np.zeros(LEG_COUNT)
             for i in np.flatnonzero(~self.locked):
                 if was_locked[i]:
-                    seed_Pa = self.rod_pressure_seed_Pa[i]
-                    lag.start(i, float(pressure_Pa[i] if np.isnan(seed_Pa) else seed_Pa))
-                    self.rod_pressure_seed_Pa[i] = np.nan
+                    self._start_release(i, float(pressure_Pa[i]), float(rod_force_N[i]))
                 pressure_Pa[i] = lag.relax(i, float(self.last_dir[i]), float(net_force_N[i]),
                                            float(speed_m_s[i]))
+                weight[i] = release_weight(float(self.t - self.t_rel[i]), float(self.tau))
             shift_m = self.rod_release.shift_m(
                 pressure_Pa, self.kh, ~self.locked, STROKE_LOWER_END_M - self.sref,
-                self.geo.stroke - self.sref, t_s=float(self.t))
+                self.geo.stroke - self.sref, release_weight=weight, t_s=float(self.t))
             self.sref += shift_m
+
+        def _start_release(self, leg: int, locked_pressure_Pa: float,
+                           release_force_N: float) -> None:
+            """The lag starts at the locked pressure or the M1c seed; ``Delta = Gr(t_rel) /
+            A_ann`` (= ``p_r0 - p_r,rel``; ``Gr`` is ``r0`` in the release step)."""
+            seed_Pa = self.rod_pressure_seed_Pa[leg]
+            start_Pa = locked_pressure_Pa if np.isnan(seed_Pa) else float(seed_Pa)
+            self.rod_pressure_seed_Pa[leg] = np.nan
+            self.rod_pressure_lag.start(leg, start_Pa)
+            self.rod_release.release(
+                leg, ReleaseStart(start_Pa, release_force_N / float(self.A_ann[leg])))
 
     HydraulicsPlant.v5_options = options
     return HydraulicsPlant

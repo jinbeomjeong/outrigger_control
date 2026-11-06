@@ -481,8 +481,10 @@ class L2bForceActuator:
 
         The shift ``A_ann (p_r^(k-1) - p_r^k) / k_h(s_ref)`` is computed after the force of this
         hook, so it acts from the next hook on. Locked legs and a disarmed law do not shift. The
-        moving rod pressure follows revision 3 (``flow_limited_r3``, user decision 2026-11-06):
-        its lag is capped by the valve flow (``rod_release.flow_limited_rod_pressure``).
+        moving rod pressure follows revision 3 (user decision 2026-11-06): its lag is capped by
+        the valve flow (``rod_release.flow_limited_rod_pressure``). Revision 4
+        (``flow_limited_r4``, 2026-11-07): the shift reads ``p_r + Delta w`` with ``Delta`` of
+        the release and ``w`` the release decay of the rod-side machine (no double count).
 
         Raises:
             ValueError: No rod-side law, or the counterbalance path (never tested with M2).
@@ -492,7 +494,7 @@ class L2bForceActuator:
         if self.counterbalance is not None:
             raise ValueError("M2 with lock_valve = counterbalance is refused (untested path)")
         self._rod_release = RodReleaseShift(self.rod_side.annulus_area_m2)
-        # revision 3 (flow_limited_r3): the moving rod pressure M2 reads is capped by the valve
+        # revision 3 pressure law: the moving rod pressure M2 reads is capped by the valve
         # flow; the friction path reads it from its oil law G, which may be another object
         law = RodPressureFlowLaw()
         self.rod_side.set_rod_pressure_flow_law(law)
@@ -584,9 +586,8 @@ class L2bForceActuator:
         if output is None:
             return
         for i in np.flatnonzero(np.isfinite(output.opening_rod_pressure_Pa)):
+            # M2 takes the seed as the start of the release lag (``releases_of_last_call``)
             oil.seed_release_pressure(int(i), float(output.opening_rod_pressure_Pa[i]))
-            if self._rod_release is not None:
-                self._rod_release.seed_pressure(int(i), float(output.opening_rod_pressure_Pa[i]))
         if output.creep_shift_m.any():
             self.reference.shift_reference(output.creep_shift_m)
             for i in np.flatnonzero(output.creep_shift_m != 0.0):
@@ -604,12 +605,15 @@ class L2bForceActuator:
         if not oil.armed:
             release.forget_pressure()
             return
+        for leg, start in oil.releases_of_last_call.items():
+            release.release(leg, start)
         head_stiffness = np.array([oil.head_stiffness_N_m(i, float(s_ref_now[i]))
                                    for i in range(self.n_legs)])
+        weight = np.array([oil.release_weight(i) for i in range(self.n_legs)])
         s_ref = self.reference.s_ref_m
         soft = self.reference.soft_limits_m
         shift = release.shift_m(oil.rod_pressure_Pa, head_stiffness, ~oil.locked,
-                                soft[:, 0] - s_ref, soft[:, 1] - s_ref)
+                                soft[:, 0] - s_ref, soft[:, 1] - s_ref, release_weight=weight)
         if np.any(shift != 0.0):
             self.reference.shift_reference(-shift)
 
@@ -998,8 +1002,9 @@ class L2bForceActuator:
             assert flow_law is not None
             law_meta = flow_law.meta()
             out["rod_release"] = {
-                "rule": "moving leg: s_ref += A_ann (p_r_prev - p_r) / k_h(s_ref), both directions "
-                        "(v5 spec 2.3, D-4); p_r = rod-side law value before the pressure floor",
+                "rule": "moving leg: s_ref += A_ann (p_hat_prev - p_hat) / k_h(s_ref), both "
+                        "directions (v5 spec 2.3, D-4); p_hat = p_r + Delta w (revision 4), p_r = "
+                        "rod-side law value before the pressure floor",
                 "status": "ASSUMPTION p_bB, tau, p_r0 (spec 2.3)",
                 "law": law_meta.pop("law"),
                 "pressure_law": law_meta}

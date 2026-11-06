@@ -679,6 +679,11 @@ class RodChamberLeg:
         pad_force_N = max(self._locked_force_N(anchor, self.deflection_m), 0.0)
         return pad_force_N - anchor.pad_force_N
 
+    def release_decay(self) -> float:
+        """Weight ``exp(-(t - t_rel) / tau_v)`` of the release residual at the current step
+        (0 while locked); M2 revision 4 reads it as ``w``."""
+        return self._release_decay()
+
     def _release_decay(self) -> float:
         elapsed_s = self.time_s - self.release_time_s
         lag_s = self.options.rod_pressure_lag_s

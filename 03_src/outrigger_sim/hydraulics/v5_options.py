@@ -124,7 +124,8 @@ class HydraulicOptions:
 
     def to_dict(self) -> dict[str, Any]:
         """The fields, plus ``m2_law`` with M2 on: the definition digests and metas of M2 runs
-        change with the rod-pressure law (revision 3); the M2-off dict stays as it was."""
+        change with the M2 law (revision 4, ``flow_limited_r4``); the M2-off dict stays as it
+        was."""
         values = asdict(self)
         if self.rod_release_force:
             values["m2_law"] = FLOW_LIMITED_LAW
@@ -135,7 +136,8 @@ class HydraulicOptions:
         """The options of :meth:`to_dict` (a job description passed to a worker process).
 
         Raises:
-            ValueError: An ``m2_law`` other than the one this code runs.
+            ValueError: An ``m2_law`` other than the one this code runs (a stored
+                ``flow_limited_r3`` run is refused: this code cannot rerun it).
         """
         if values.get("m2_law", FLOW_LIMITED_LAW) != FLOW_LIMITED_LAW:
             raise ValueError(f"M2 law {values['m2_law']!r} is not {FLOW_LIMITED_LAW!r}")

@@ -13,10 +13,14 @@ from outrigger_sim.hydraulics.rod_release import (
     CLIPPED_STEPS_KEY,
     FLOW_LIMITED_LAW,
     PREVIOUS_PRESSURE_KEY,
+    RELEASE_DROP_KEY,
     SHIFT_TOTAL_KEY,
+    ReleaseStart,
     RodPressureFlowLaw,
     RodReleaseShift,
+    compensated_rod_pressure_Pa,
     flow_limited_rod_pressure,
+    release_weight,
 )
 
 BAR = 1.0e5
@@ -89,11 +93,73 @@ def test_first_call_and_forgotten_pressure_start_without_a_shift() -> None:
     assert _one_leg_shift(rule, 30.0 * BAR) == 0.0
 
 
-def test_seed_replaces_the_previous_pressure_of_one_leg() -> None:
+LIFTED_ROD_PRESSURE_PA = 84.72 * BAR
+"""Rod pressure of a lifted FR-size leg locked at 2 bar (hydraulics-expert P-1 hand value)."""
+LOCK_ROD_PRESSURE_PA = 2.0 * BAR
+
+
+def _released_leg(start_Pa: float = LIFTED_ROD_PRESSURE_PA) -> RodReleaseShift:
+    """One leg locked at the lifted pressure, released with ``Delta = p_r0 - p_r,rel``."""
     rule = RodReleaseShift([ANNULUS_FL_M2])
-    _one_leg_shift(rule, 2.0 * BAR)
-    rule.seed_pressure(0, 27.96 * BAR)
-    assert _one_leg_shift(rule, 27.96 * BAR) == 0.0
+    _one_leg_shift(rule, LIFTED_ROD_PRESSURE_PA, is_moving=False)
+    rule.release(0, ReleaseStart(start_Pa, LOCK_ROD_PRESSURE_PA - LIFTED_ROD_PRESSURE_PA))
+    return rule
+
+
+def test_release_starts_the_compensated_pressure_at_the_lock_anchor() -> None:
+    """Revision 4: ``p_hat`` before the release step is ``start + Delta`` = ``p_r0``; at ``w = 1``
+    the release step moves only by the first lag step of ``p``."""
+    rule = _released_leg()
+    first_lag_Pa = LIFTED_ROD_PRESSURE_PA - 1.0 * BAR
+    shift_m = rule.shift_m([first_lag_Pa], [K_H_FL_N_M], [True], [-WIDE_ROOM_M], [WIDE_ROOM_M],
+                           release_weight=[1.0])
+    assert shift_m[0] == pytest.approx(ANNULUS_FL_M2 * 1.0 * BAR / K_H_FL_N_M, rel=1e-12)
+
+
+def test_whole_release_moves_from_the_lock_anchor_to_the_target() -> None:
+    """Revision 4: sum of the shifts = ``A_ann (p_r0 - p*) / k_h`` whatever path ``p`` and ``w``
+    take, as long as ``w`` ends at 0 and ``p`` at ``p*``."""
+    target_Pa = 5.0 * BAR
+    rule = _released_leg()
+    pressures = np.linspace(LIFTED_ROD_PRESSURE_PA, target_Pa, 400)
+    weights = np.exp(-np.arange(400) * 0.05)
+    weights[-1] = 0.0
+    for pressure_Pa, weight in zip(pressures, weights, strict=True):
+        rule.shift_m([pressure_Pa], [K_H_FL_N_M], [True], [-WIDE_ROOM_M], [WIDE_ROOM_M],
+                     release_weight=[weight])
+    expected_m = ANNULUS_FL_M2 * (LOCK_ROD_PRESSURE_PA - target_Pa) / K_H_FL_N_M
+    assert rule.shift_total_m[0] == pytest.approx(expected_m, abs=1e-12)
+
+
+def test_a_seed_moves_the_start_and_keeps_delta() -> None:
+    """Spec P-1 with M1c: the seed goes into ``p`` only; ``p_hat`` starts at ``seed + Delta``."""
+    seed_Pa = 27.96 * BAR
+    rule = _released_leg(start_Pa=seed_Pa)
+    drop_Pa = LOCK_ROD_PRESSURE_PA - LIFTED_ROD_PRESSURE_PA
+    assert rule.release_drop_Pa[0] == drop_Pa
+    shift_m = rule.shift_m([seed_Pa], [K_H_FL_N_M], [True], [-WIDE_ROOM_M], [WIDE_ROOM_M],
+                           release_weight=[1.0])
+    assert shift_m[0] == 0.0
+
+
+def test_lock_clears_delta_and_a_released_leg_needs_the_weight() -> None:
+    rule = _released_leg()
+    with pytest.raises(ValueError, match="release weight"):
+        _one_leg_shift(rule, LIFTED_ROD_PRESSURE_PA)
+    _one_leg_shift(rule, 3.0 * BAR, is_moving=False)
+    assert rule.release_drop_Pa[0] == 0.0
+    assert _one_leg_shift(rule, 3.0 * BAR) == 0.0
+
+
+def test_compensated_pressure_and_release_weight() -> None:
+    assert release_weight(0.0, LAG_S) == 1.0
+    assert release_weight(LAG_S, LAG_S) == pytest.approx(math.exp(-1.0), rel=1e-15)
+    assert release_weight(-1.0, LAG_S) == 1.0
+    assert release_weight(math.nan, LAG_S) == 0.0
+    assert release_weight(0.01, 0.0) == 0.0
+    compensated = compensated_rod_pressure_Pa([10.0 * BAR, 3.0 * BAR], [-80.0 * BAR, 0.0],
+                                              [0.5, 0.7])
+    assert compensated.tolist() == [-30.0 * BAR, 3.0 * BAR]
 
 
 def test_shift_stays_inside_the_travel_room_and_is_counted() -> None:
@@ -113,7 +179,8 @@ def test_clip_times_are_kept_only_with_a_step_time_and_not_in_the_snapshot() -> 
     _one_leg_shift(rule, 4.0 * BAR, room_up_m=0.0)  # clipped, no time given
     assert rule.clipped_steps[0] == 2
     assert rule.clip_times_s == [[1.25]]
-    assert set(rule.state_arrays()) == {PREVIOUS_PRESSURE_KEY, SHIFT_TOTAL_KEY, CLIPPED_STEPS_KEY}
+    assert set(rule.state_arrays()) == {PREVIOUS_PRESSURE_KEY, SHIFT_TOTAL_KEY, CLIPPED_STEPS_KEY,
+                                         RELEASE_DROP_KEY}
     rule.restore_state(rule.state_arrays())
     assert rule.clip_times_s == [[]]
 
@@ -146,7 +213,7 @@ def test_flow_law_constants_are_the_flow_share_assumptions() -> None:
     assert law.tank_pressure_Pa == shared.tank_pressure_Pa
     assert law.spool_reference_drop_Pa == shared.compensator_drop_Pa
     assert law.meter_out_ratio == shared.back_land_ratio
-    assert law.meta()["law"] == FLOW_LIMITED_LAW == "flow_limited_r3"
+    assert law.meta()["law"] == FLOW_LIMITED_LAW == "flow_limited_r4"
     assert _front_left_compliance_m3_Pa() == pytest.approx(1.80e-12, rel=0.005)
 
 
@@ -223,4 +290,5 @@ def test_snapshot_without_keys_starts_at_the_current_pressure() -> None:
     rule.restore_state({})
     assert _one_leg_shift(rule, 20.0 * BAR) == 0.0
     assert rule.shift_total_m[0] == 0.0
-    assert set(rule.state_arrays()) == {PREVIOUS_PRESSURE_KEY, SHIFT_TOTAL_KEY, CLIPPED_STEPS_KEY}
+    assert set(rule.state_arrays()) == {PREVIOUS_PRESSURE_KEY, SHIFT_TOTAL_KEY, CLIPPED_STEPS_KEY,
+                                         RELEASE_DROP_KEY}

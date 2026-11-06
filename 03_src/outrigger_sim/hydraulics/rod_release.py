@@ -28,6 +28,20 @@ fills or drains the rod chamber (:func:`flow_limited_rod_pressure`)::
 ``b_T``, ``dp_c`` and ``p_T`` are ASSUMPTIONS (the values of ``coupled/params.py`` and of the flow
 share model). ``u = 0`` holds the pressure on the filled side.
 
+Revision 4 (``flow_limited_r4``, user decision 2026-11-07, hydraulics-expert P-1): the base L1-R
+release decay ``G_r exp(-(t - t_rel) / tau)`` already moves the share of the rod pressure that
+built up while the leg was locked (``p_r0 - p_r,rel``, about 1.06 mm on a lifted leg). M2 moves
+only the change from the lock anchor ``p_r0`` to ``p*``, so it reads the pressure plus the part of
+that share the base decay still carries (:func:`compensated_rod_pressure_Pa`)::
+
+    Delta = p_r0 - p_r,rel = G_r(t_rel) / A_ann    set at the release, cleared at the lock
+    w^k   = exp(-(t_k - t_rel) / tau)               the base release decay weight
+    p_hat^k = p_r^k + Delta w^k
+    d s_ref^k = A_ann (p_hat^(k-1) - p_hat^k) / k_h,   p_hat before the release step = start + Delta
+
+``p_r`` itself (the reading, the lag start ``p_r,rel`` or the M1c seed) is unchanged; with a seed
+``Delta`` stays as it is (spec P-1). The move over a whole release is ``A_ann (p_r0 - p*) / k_h``.
+
 Units SI; gauge pressures; arrays per leg.
 """
 
@@ -42,12 +56,15 @@ import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
 PREVIOUS_PRESSURE_KEY = "m2_p_prev_Pa"
+"""Previous compensated pressure ``p_hat^(k-1)`` (revision 4)."""
 SHIFT_TOTAL_KEY = "m2_shift_total_m"
 CLIPPED_STEPS_KEY = "m2_clipped_steps"
+RELEASE_DROP_KEY = "m2_release_drop_Pa"
 """Optional snapshot keys (written only with the option on)."""
 
-FLOW_LIMITED_LAW = "flow_limited_r3"
-"""Name of the moving rod-pressure law in the meta and the definition digests (M2 on only)."""
+FLOW_LIMITED_LAW = "flow_limited_r4"
+"""Name of the M2 law in the meta and the definition digests (M2 on only): revision 3 pressure
+lag plus the revision 4 release-decay compensation."""
 METER_OUT_RATIO = 1.0
 """``b_T``: meter-out (A -> T) over meter-in (P -> A) opening at the same spool stroke
 (ASSUMPTION)."""
@@ -103,6 +120,45 @@ def flow_limited_rod_pressure(
     return lagged_Pa
 
 
+def release_weight(elapsed_s: float, decay_s: float) -> float:
+    """``w = exp(-max(t - t_rel, 0) / tau)``: the share of ``G_r(t_rel)`` the base release decay
+    still carries (``RodSidePlant`` on the harness; L2b reads ``RodChamberLeg.release_decay``).
+
+    Args:
+        elapsed_s: ``t - t_rel``; not finite (no release yet) gives 0.
+        decay_s: ``tau`` of the base release decay; 0 gives 0 (the decay is cut in one step).
+    """
+    if not math.isfinite(elapsed_s) or decay_s == 0.0:
+        return 0.0
+    return math.exp(-max(elapsed_s, 0.0) / decay_s)
+
+
+def compensated_rod_pressure_Pa(pressure_Pa: ArrayLike, release_drop_Pa: ArrayLike,
+                                weight: ArrayLike) -> NDArray[np.float64]:
+    """``p_hat = p_r + Delta w`` per leg: the pressure M2 moves ``s_ref`` by (revision 4).
+
+    Args:
+        pressure_Pa: ``p_r`` (the revision 3 lag on moving legs).
+        release_drop_Pa: ``Delta = p_r0 - p_r,rel`` of the last release, 0 on locked legs.
+        weight: ``w`` of :func:`release_weight`.
+    """
+    return (np.asarray(pressure_Pa, dtype=float)
+            + np.asarray(release_drop_Pa, dtype=float) * np.asarray(weight, dtype=float))
+
+
+@dataclass(frozen=True)
+class ReleaseStart:
+    """A leg that left its lock in this step (L2b: ``L2bRodSide.releases_of_last_call``).
+
+    Attributes:
+        start_pressure_Pa: Start of the moving pressure lag (``p_r,rel`` or the M1c seed).
+        drop_Pa: ``Delta = p_r0 - p_r,rel`` at the release instant (not changed by a seed).
+    """
+
+    start_pressure_Pa: float
+    drop_Pa: float
+
+
 @dataclass(frozen=True)
 class RodPressureFlowLaw:
     """Constants of the revision 3 law; the harness and the L2b law call the same function.
@@ -139,7 +195,9 @@ class RodPressureFlowLaw:
         return {"law": self.name,
                 "rule": "moving p_r: lag to p* capped by the valve flow; retract meter-in "
                         "A_ann |u|, extend meter-out b_T A_h |u| sqrt((p_r - p_T) / dp_c); "
-                        "C_r = A_ann^2 (1/k_r + 1/k_h), B hose not included",
+                        "C_r = A_ann^2 (1/k_r + 1/k_h), B hose not included; "
+                        "M2 reads p_hat = p_r + Delta w, Delta = p_r0 - p_r,rel at the release, "
+                        "w = base release decay (revision 4)",
                 "meter_out_ratio": self.meter_out_ratio,
                 "spool_reference_drop_Pa": self.spool_reference_drop_Pa,
                 "tank_pressure_Pa": self.tank_pressure_Pa,
@@ -157,6 +215,9 @@ class RodReleaseShift:
         self._annulus_area_m2 = np.array(annulus_area_m2, dtype=float).reshape(-1)
         leg_count = self._annulus_area_m2.size
         self._previous_pressure_Pa: NDArray[np.float64] | None = None
+        """``p_hat^(k-1)`` per leg (None: the next call starts from its own pressure)."""
+        self._release_drop_Pa = np.zeros(leg_count)
+        """``Delta`` of the last release per leg; 0 while locked."""
         self._shift_total_m = np.zeros(leg_count)
         self._clipped_steps = np.zeros(leg_count, dtype=np.int64)
         self._clip_times_s: list[list[float]] = [[] for _ in range(leg_count)]
@@ -176,19 +237,34 @@ class RodReleaseShift:
         rev. 2 2.1: split before / after the first lift-off). Not part of the snapshot."""
         return [list(times) for times in self._clip_times_s]
 
+    @property
+    def release_drop_Pa(self) -> NDArray[np.float64]:
+        """``Delta`` per leg (0 while locked)."""
+        return self._release_drop_Pa.copy()
+
     def forget_pressure(self) -> None:
         """The next call starts from its own pressure (rod law disarmed: no pressure exists)."""
         self._previous_pressure_Pa = None
+        self._release_drop_Pa[:] = 0.0
 
-    def seed_pressure(self, leg: int, pressure_Pa: float) -> None:
-        """Previous pressure of ``leg``: M1c has already moved the reference to this pressure."""
+    def release(self, leg: int, start: ReleaseStart) -> None:
+        """``leg`` leaves its lock in this step: set ``Delta`` and ``p_hat`` before the step.
+
+        ``p_hat^(k-1) = start + Delta`` (``p_r0`` without an M1c seed): the move of the whole
+        release is then ``A_ann (p_hat^(k-1) - p*) / k_h``. Call before :meth:`shift_m` of the
+        release step.
+        """
+        self._release_drop_Pa[leg] = start.drop_Pa
         if self._previous_pressure_Pa is not None:
-            self._previous_pressure_Pa[leg] = pressure_Pa
+            self._previous_pressure_Pa[leg] = start.start_pressure_Pa + start.drop_Pa
 
     def shift_m(self, rod_pressure_Pa: ArrayLike, head_stiffness_N_m: ArrayLike,
                 is_moving: ArrayLike, room_down_m: ArrayLike, room_up_m: ArrayLike,
-                *, t_s: float | None = None) -> NDArray[np.float64]:
+                *, release_weight: ArrayLike | None = None,
+                t_s: float | None = None) -> NDArray[np.float64]:
         """Advance one step; the amount to add to ``s_ref`` per leg [m].
+
+        A locked leg does not shift and its ``Delta`` is cleared (the lock ends the release).
 
         Args:
             rod_pressure_Pa: ``p_r`` of this step (before any pressure split floor).
@@ -196,9 +272,20 @@ class RodReleaseShift:
             is_moving: False on locked legs.
             room_down_m: Allowed shift towards the lower limit, ``<= 0``.
             room_up_m: Allowed shift towards the upper limit, ``>= 0``.
+            release_weight: ``w`` per leg (:func:`release_weight`); None only while no leg has
+                a ``Delta``.
             t_s: Step time; a clipped leg records it (:attr:`clip_times_s`). None = no time.
+
+        Raises:
+            ValueError: A leg has a ``Delta`` and no ``release_weight`` was given.
         """
-        pressure_Pa = np.array(rod_pressure_Pa, dtype=float)
+        self._release_drop_Pa[~np.asarray(is_moving, dtype=bool)] = 0.0
+        if release_weight is None:
+            if np.any(self._release_drop_Pa != 0.0):
+                raise ValueError("a released leg needs the release weight w (revision 4)")
+            release_weight = np.zeros_like(self._release_drop_Pa)
+        pressure_Pa = compensated_rod_pressure_Pa(rod_pressure_Pa, self._release_drop_Pa,
+                                                  release_weight)
         previous_Pa = (pressure_Pa if self._previous_pressure_Pa is None
                        else self._previous_pressure_Pa)
         wanted_m = np.where(is_moving, self._annulus_area_m2 * (previous_Pa - pressure_Pa)
@@ -215,7 +302,8 @@ class RodReleaseShift:
 
     def state_arrays(self) -> dict[str, NDArray[Any]]:
         arrays: dict[str, NDArray[Any]] = {SHIFT_TOTAL_KEY: self._shift_total_m.copy(),
-                                           CLIPPED_STEPS_KEY: self._clipped_steps.copy()}
+                                           CLIPPED_STEPS_KEY: self._clipped_steps.copy(),
+                                           RELEASE_DROP_KEY: self._release_drop_Pa.copy()}
         if self._previous_pressure_Pa is not None:
             arrays[PREVIOUS_PRESSURE_KEY] = self._previous_pressure_Pa.copy()
         return arrays
@@ -232,6 +320,8 @@ class RodReleaseShift:
                                        dtype=float)
         self._clipped_steps = np.array(arrays.get(CLIPPED_STEPS_KEY, np.zeros(leg_count)),
                                        dtype=np.int64)
+        self._release_drop_Pa = np.array(arrays.get(RELEASE_DROP_KEY, np.zeros(leg_count)),
+                                         dtype=float)
 
     def record(self) -> dict[str, Any]:
         """Per-leg totals for the run summary."""
@@ -240,5 +330,6 @@ class RodReleaseShift:
 
 
 __all__ = ["CLIPPED_STEPS_KEY", "FLOW_LIMITED_LAW", "METER_OUT_RATIO", "PREVIOUS_PRESSURE_KEY",
-           "SHIFT_TOTAL_KEY", "SPOOL_REFERENCE_DROP_PA", "TANK_PRESSURE_PA", "RodPressureFlowLaw",
-           "RodReleaseShift", "flow_limited_rod_pressure"]
+           "RELEASE_DROP_KEY", "SHIFT_TOTAL_KEY", "SPOOL_REFERENCE_DROP_PA", "TANK_PRESSURE_PA",
+           "ReleaseStart", "RodPressureFlowLaw", "RodReleaseShift", "compensated_rod_pressure_Pa",
+           "flow_limited_rod_pressure", "release_weight"]

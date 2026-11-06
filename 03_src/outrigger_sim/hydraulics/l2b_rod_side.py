@@ -56,7 +56,7 @@ from outrigger_sim.hydraulics.rod_chamber import (
     RodChamberOptions,
     RodSideMechanics,
 )
-from outrigger_sim.hydraulics.rod_release import RodPressureFlowLaw
+from outrigger_sim.hydraulics.rod_release import ReleaseStart, RodPressureFlowLaw
 
 STATE_KEYS = (
     "armed",
@@ -165,6 +165,7 @@ class L2bRodSide:
         self._t_rel = np.full(n, np.nan)
         self._last_force = np.zeros(n)
         self._last_p_r = np.zeros(n)
+        self._releases_of_last_call: dict[int, ReleaseStart] = {}
         for leg in self._legs:
             leg.reset()
 
@@ -219,7 +220,7 @@ class L2bRodSide:
             leg.options = self._options
 
     def set_rod_pressure_flow_law(self, law: RodPressureFlowLaw) -> None:
-        """M2 revision 3 (v5 spec 2.3, ``flow_limited_r3``): the moving rod pressure of every leg
+        """M2 (v5 spec 2.3, revision 3 pressure law): the moving rod pressure of every leg
         lags towards its target no faster than the valve flow allows; ``C_r`` from ``k_h``,
         ``k_r`` at the step's column coordinate. Call before the run (not in the snapshot)."""
         self._rod_pressure_flow_law = law
@@ -229,6 +230,17 @@ class L2bRodSide:
     @property
     def rod_pressure_flow_law(self) -> RodPressureFlowLaw | None:
         return self._rod_pressure_flow_law
+
+    @property
+    def releases_of_last_call(self) -> dict[int, ReleaseStart]:
+        """Legs that left their lock in the last :meth:`spring_force_N` call (M2 revision 4):
+        the moving pressure lag start and ``Delta = p_r0 - p_r`` of the locked law at the
+        release compression. Not in the snapshot: M2 reads it in the same hook."""
+        return dict(self._releases_of_last_call)
+
+    def release_weight(self, i: int) -> float:
+        """``w`` of leg ``i`` at the last call: the machine's release decay (0 while locked)."""
+        return self._legs[i].release_decay()
 
     # --- stiffness of the oil columns -------------------------------------------------------
 
@@ -353,6 +365,12 @@ class L2bRodSide:
         knee_c = self.knee_force_N(i) / k1
         return float(self._f_lock[i] + k2 * dc + (k1 - k2) * min(dc, knee_c))
 
+    def _locked_rod_pressure_Pa(self, i: int, locked_force_N: float) -> float:
+        """Rod pressure of the locked law at the force ``locked_force_N`` (module docstring)."""
+        share = self._k_r[i] / (self._k_h[i] + self._k_r[i])
+        return max(self.p_floor_gauge_Pa,
+                   float(self._p_r0[i] - share * (locked_force_N - self._f_lock[i]) / self._a_r[i]))
+
     def _moving_force(self, i: int, s: float, c: float, t: float) -> float:
         residual = 0.0
         if math.isfinite(self._t_rel[i]) and self._tau > 0.0:
@@ -385,6 +403,7 @@ class L2bRodSide:
         self._last_c = c.copy()
         self._last_s = s.copy()
         self._last_t = float(t_s)
+        self._releases_of_last_call = {}
         out = np.empty(self._n)
         p_r = np.zeros(self._n)
         if not self._armed:
@@ -454,6 +473,9 @@ class L2bRodSide:
                                                  deflection_m=float(c[i]))
             elif was_locked and not now_locked:
                 locked_value = self._locked_force(i, float(c[i]))
+                self._releases_of_last_call[i] = ReleaseStart(
+                    start_pressure_Pa=float(self._last_p_r[i]),
+                    drop_Pa=float(self._p_r0[i] - self._locked_rod_pressure_Pa(i, locked_value)))
                 self._locked[i] = False
                 self._r0[i] = locked_value - self.k2_N_m(i, float(s[i])) * float(c[i])
                 self._t_rel[i] = float(t_s)
@@ -580,6 +602,7 @@ class L2bRodSide:
         if missing:
             raise ValueError(f"L2b rod-side state lacks {missing}")
         self._armed = bool(np.asarray(arrays["armed"]).reshape(-1)[0])
+        self._releases_of_last_call = {}
         self._locked = np.array(arrays["locked"], dtype=bool).reshape(self._n)
         for name, attr in (("c_lock_m", "_c_lock"), ("F_lock_N", "_f_lock"),
                            ("k_h_N_m", "_k_h"), ("k_r_N_m", "_k_r"), ("p_r0_Pa", "_p_r0"),
