@@ -1,8 +1,10 @@
-"""M2 revision 3 on both plant paths (spec ``v5_hydraulic_impl_spec.md`` 2.3, M2-12, M2-13).
+"""M2 revisions 3 and 4 on both plant paths (spec ``v5_hydraulic_impl_spec.md`` 2.3, M2-12,
+M2-13).
 
 M2-12: the harness lag (``harness_hydraulics._RodPressureLag``) and the L2b state machine
 (``RodChamberLeg`` with the law of ``L2bRodSide.set_rod_pressure_flow_law``) give the same rod
-pressure for the same inputs. M2-13: the law on the valve input of the stored Hopsan C2 run reaches
+pressure for the same inputs, and (revision 4) the same compensated pressure ``p + Delta w``.
+M2-13: the law on the valve input of the stored Hopsan C2 run reaches
 20 bar within 5 ms of Hopsan (``05_tests/data/m2_13_hopsan_c2_release.*``, hydraulics-expert run
 of 2026-11-06). No pychrono, no numba.
 """
@@ -21,7 +23,11 @@ import pytest
 
 from outrigger_sim.hydraulics.l2b_rod_side import L2bRodSide
 from outrigger_sim.hydraulics.rod_chamber import RodChamberLegInput
-from outrigger_sim.hydraulics.rod_release import RodPressureFlowLaw
+from outrigger_sim.hydraulics.rod_release import (
+    RodPressureFlowLaw,
+    compensated_rod_pressure_Pa,
+    release_weight,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 HARNESS_HYDRAULICS = (PROJECT_ROOT / "04_scripts" / "04_hydraulic" / "coupled"
@@ -110,6 +116,44 @@ def test_m2_12_harness_and_l2b_give_the_same_pressure(leg: int) -> None:
         from_l2b = machine.tracked_rod_pressure_Pa
         worst = max(worst, abs(from_harness - from_l2b) / max(abs(from_l2b), 1.0))
     assert not machine.is_locked  # both paths stayed in their moving law
+    assert worst <= 1e-12
+
+
+RELEASE_DROP_PA = -82.72 * BAR
+"""``Delta`` of a lifted leg (2 bar lock, about 84.7 bar at the release; P-1 hand value)."""
+
+
+@pytest.mark.parametrize("leg", range(4))
+def test_m2_12_harness_and_l2b_give_the_same_compensated_pressure(leg: int) -> None:
+    """Spec M2-12, revision 4: ``p_hat = p + Delta w`` is the same on both paths (relative
+    1e-12); the harness ``w`` is ``release_weight(t - t_rel, tau)``, the L2b ``w`` the release
+    decay of the rod-side machine. Both legs are released at t = 0."""
+    harness = _load_harness_hydraulics()
+    rod_side = _rod_side()
+    machine = rod_side._legs[leg]
+    lag = harness._RodPressureLag(_harness_plant(rod_side))
+    start_Pa = 84.72 * BAR
+    lag.start(leg, start_Pa)
+    machine.tracked_rod_pressure_Pa = start_Pa
+    machine.release_time_s = 0.0  # as if the machine had left its lock at t = 0
+    direction = 1.0
+    worst = 0.0
+    for k, (speed_m_s, force_N) in enumerate(_input_sequence(leg)):
+        if abs(speed_m_s) > LOCK_EPS_M_S:
+            direction = math.copysign(1.0, speed_m_s)
+        t_s = k * STEP_S
+        harness_p_Pa = lag.relax(leg, direction, force_N, speed_m_s)
+        harness_hat = compensated_rod_pressure_Pa(
+            harness_p_Pa, RELEASE_DROP_PA, release_weight(t_s - 0.0, LAG_S))
+        machine.step(RodChamberLegInput(
+            time_s=t_s, step_s=STEP_S, applied_speed_m_s=speed_m_s, pad_deflection_m=0.0,
+            pad_deflection_rate_m_s=0.0, motor_position_m=EXTENSION_M[leg],
+            cylinder_force_N=force_N))
+        l2b_hat = compensated_rod_pressure_Pa(
+            machine.tracked_rod_pressure_Pa, RELEASE_DROP_PA, machine.release_decay())
+        worst = max(worst, abs(float(harness_hat - l2b_hat)) / max(abs(float(l2b_hat)), 1.0))
+    assert not machine.is_locked
+    assert machine.release_decay() < 1e-6  # the sequence runs out the decay
     assert worst <= 1e-12
 
 
