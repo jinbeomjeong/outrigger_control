@@ -71,6 +71,60 @@ def test_m2_14_lifted_leg_release(tmp_path: Path) -> None:
         assert report[f"off_{fraction}"]["kick_mm"] == pytest.approx(1.0599, abs=0.001)
 
 
+M2_14B_LOST_STROKE_MM = {"VN_0.25": 0.1041, "BL_0.25": 0.0963, "VN_1.0": 0.0994,
+                         "BL_1.0": 0.0937}
+"""hydraulics-expert 1-leg replica ``m2_14b_m1c.json`` (2026-11-07): command minus M1c output."""
+M2_14B_LOST_TOLERANCE = 0.10
+M2_14B_KICK_DIFFERENCE_MM = 0.005
+M2_14B_TOTAL_TOLERANCE_M = 1e-9
+
+
+def test_m2_14b_lifted_leg_release_with_m1c(tmp_path: Path) -> None:
+    """Spec M2-14b (hydraulics-expert 2026-11-07): the M2-14 lift-off with M1c VN / BL. An
+    extension re-approach gets no seed (start = p_r,rel); M2 total = A_ann (p_start + Delta -
+    p_end - Delta w_end) / k_h within 1e-9 m; the kick against the M1c output speed within 5 %
+    of the independent model and within 0.005 mm of M1c off (revision 3: about 2.08 mm); lost
+    stroke (command - output) within 10 % of the replica. Release delays are recorded only."""
+    report = _run_check("m2_14b", tmp_path)
+    for fraction, independent_mm in M2_14_INDEPENDENT_KICK_MM.items():
+        without = report[f"off_{fraction}"]
+        for kind in ("VN", "BL"):
+            row = report[f"{kind}_{fraction}"]
+            assert row["start_bar"] == pytest.approx(row["rod_pressure_at_release_bar"],
+                                                     abs=1e-9)  # no seed
+            total_m = row["m2_total_mm"] / 1e3
+            assert abs(total_m - row["formula_total_mm"] / 1e3) <= M2_14B_TOTAL_TOLERANCE_M
+            assert row["kick_vs_delivered_mm"] == pytest.approx(independent_mm,
+                                                                rel=M2_14_KICK_TOLERANCE)
+            assert abs(row["kick_vs_delivered_mm"] - without["kick_vs_delivered_mm"]) \
+                <= M2_14B_KICK_DIFFERENCE_MM
+            assert row["lost_stroke_mm"] == pytest.approx(
+                M2_14B_LOST_STROKE_MM[f"{kind}_{fraction}"], rel=M2_14B_LOST_TOLERANCE)
+
+
+M2_14C_CREEP_MM = {"VN": -0.336, "BL": -0.375}
+M2_14C_SEED_BAR = {"VN": 25.11, "BL": 28.14}
+"""hydraulics-expert 1-leg replica (2026-11-07), retract after a 0.5 mm floor rise."""
+M2_14C_PRESSURE_GAP_BAR = 0.5
+"""``|p_k - p|`` at 1.2 s (replica 0.21 / 0.23 bar; revision 3 about 3.1 bar)."""
+
+
+def test_m2_14c_retract_with_m1c_counts_g_r_once(tmp_path: Path) -> None:
+    """Spec M2-14c (optional, hydraulics-expert 2026-11-07): FR loaded while locked (Delta
+    2.91 bar), 0.25 v_max retract with M1c. The kernel pressure p_r0 - G_r / A_ann - (k_h /
+    A_ann) (S_M2 + S_creep) (head opening shift left out) meets the tracked p within 0.5 bar;
+    the seed goes into p only, Delta stays."""
+    report = _run_check("m2_14c", tmp_path)
+    for kind in ("VN", "BL"):
+        row = report[kind]
+        assert abs(row["kernel_minus_tracked_bar"]) <= M2_14C_PRESSURE_GAP_BAR
+        assert row["delta_bar"] == pytest.approx(2.91, abs=0.01)
+        assert row["start_bar"] == pytest.approx(M2_14C_SEED_BAR[kind], abs=0.05)
+        assert row["creep_mm"] == pytest.approx(M2_14C_CREEP_MM[kind], rel=0.05)
+        total_m = row["m2_total_mm"] / 1e3
+        assert abs(total_m - row["formula_total_mm"] / 1e3) <= M2_14B_TOTAL_TOLERANCE_M
+
+
 def test_lc_harness_cut_lock_restart_and_copy(tmp_path: Path) -> None:
     """Spec L-1, L-4, L-5, L-7 on the harness plant: one 1 ms chunk tolerance."""
     report = _run_check("lc", tmp_path)

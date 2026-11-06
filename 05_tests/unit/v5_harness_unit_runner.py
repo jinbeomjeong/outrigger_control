@@ -306,16 +306,28 @@ class _BodyFixedLegs:
     It offers what ``RodSidePlant`` and the v5 adapter read of the harness ``FlexPlant``.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, floor_move_m: float = GROUND_DROP_M,
+                 floor_move_s: float = GROUND_DROP_S) -> None:
         import dyn_model as dm
         import l2b_reference as l2b
+        from params import load_params
 
         p = dm.load_params()
         self.geo = dm.geometry_from_params(p)
         legs = l2b.leg_parameters(p, self.geo)
         extension_m = np.zeros(4) + np.asarray(legs["e_op"], float)
         self.ko = np.asarray(legs["k_h_f"](extension_m), float)
-        self.flow_limiter = _Namespace(params=_Namespace(A_h=np.asarray(legs["A_p"], float)))
+        circuit = load_params()  # the M1c circuit of the harness (``_check_delay_circuit``)
+        self.flow_limiter = _Namespace(params=_Namespace(
+            A_h=np.asarray(legs["A_p"], float), A_r=circuit.A_r, stroke=circuit.stroke,
+            L0r=circuit.L0r, L0h=circuit.L0h, beta=circuit.beta, p_T=circuit.p_T,
+            v_max=circuit.v_max, dp_comp=circuit.dp_comp))
+        self.floor_move_m, self.floor_move_s = floor_move_m, floor_move_s
+        self.Fs = np.zeros(4)
+        self.f = np.zeros(4)
+        """No seal friction (M2-14b, M2-14c: F_s 0)."""
+        self.cn = np.zeros(4)
+        """Dashpot the adapter sets; the massless rods here do not use it."""
         self.dt = KERNEL_STEP_S
         self.t = 0.0
         self.x = extension_m.copy()
@@ -326,7 +338,7 @@ class _BodyFixedLegs:
 
     def floor_m(self, t_s: float) -> np.ndarray:
         floor = self.floor_start_m.copy()
-        floor[LIFTED_LEG] += GROUND_DROP_M * _poly345(t_s / GROUND_DROP_S)
+        floor[LIFTED_LEG] += self.floor_move_m * _poly345(t_s / self.floor_move_s)
         return floor
 
     def step(self, u, nsteps: int) -> np.ndarray:
@@ -346,7 +358,8 @@ class _Namespace:
         self.__dict__.update(values)
 
 
-def _lifted_leg_plant(options):
+def _lifted_leg_plant(options, floor_move_m: float = GROUND_DROP_M,
+                      floor_move_s: float = GROUND_DROP_S):
     import importlib
 
     importlib.import_module("verdict_runs")  # first: it puts the harness folders on sys.path
@@ -354,9 +367,12 @@ def _lifted_leg_plant(options):
 
     rodside = importlib.import_module("s8_g4_rodside_check")
     rodside._setup_path()
+    # the kernel stand-in has no dashpot: M1c only needs the arrays to exist
+    dashpots = (np.zeros(4), np.zeros(4)) if options.check_delay is not None else None
     plant_class = harness_hydraulics.make_hydraulics_plant_class(
-        rodside.make_plant_class(_Namespace(rmf=_Namespace(FlexPlant=_BodyFixedLegs))), options)
-    plant = plant_class()
+        rodside.make_plant_class(_Namespace(rmf=_Namespace(FlexPlant=_BodyFixedLegs))), options,
+        dashpots)
+    plant = plant_class(floor_move_m, floor_move_s)
     plant.arm()
     return plant
 
@@ -422,8 +438,130 @@ def check_m2_14() -> dict:
     return out
 
 
+CHUNK_STEPS = 2
+"""M2-14b, M2-14c: M1c filters each 1 ms chunk (2 kernel steps), as the replica does."""
+FLOOR_RISE_M, FLOOR_RISE_S = -0.0005, 0.05
+"""M2-14c: the floor under FR rises 0.5 mm while it is locked (load up, Delta 2.91 bar)."""
+M1C_KINDS = ("VN", "BL")
+
+
+class _M1cRecorder:
+    """Wraps ``plant.check_delay.filter`` and ``plant.rod_release.release`` of one plant: the
+    delivered speed, the creep and opening shifts of the leg, and the release start."""
+
+    def __init__(self, plant, leg: int) -> None:
+        self.leg = leg
+        self.delivered_m_s = None
+        self.creep_m = 0.0
+        self.opening_m = 0.0
+        self.release_start = None
+        if plant.check_delay is not None:
+            self._filter = plant.check_delay.filter
+            plant.check_delay.filter = self._recorded_filter
+        self._release = plant.rod_release.release
+        plant.rod_release.release = self._recorded_release
+
+    def _recorded_filter(self, inputs):
+        output = self._filter(inputs)
+        self.delivered_m_s = float(output.speed_m_s[self.leg])
+        self.creep_m += float(output.creep_shift_m[self.leg])
+        self.opening_m += float(output.opening_shift_m[self.leg])
+        return output
+
+    def _recorded_release(self, leg, start) -> None:
+        if leg == self.leg:
+            self.release_start = start
+        self._release(leg, start)
+
+
+def _release_with_m1c(options, fraction: float, v_max_m_s: float, floor_move_m: float,
+                      floor_move_s: float) -> dict:
+    """FR locked while its floor moves, then a command of ``fraction`` v_max (negative =
+    retract) from ``RELEASE_AT_S`` through the 0.1 s valve lag, in 1 ms chunks (M2-14b, 14c)."""
+    from outrigger_sim.hydraulics.rod_release import release_weight
+
+    plant = _lifted_leg_plant(options, floor_move_m, floor_move_s)
+    leg = LIFTED_LEG
+    recorder = _M1cRecorder(plant, leg)
+    chunk_s = CHUNK_STEPS * KERNEL_STEP_S
+    command_m_s = np.zeros(4)
+    commanded_m, delivered_m = 0.0, 0.0
+    x_before_m, release_t_s = None, None
+    for _ in range(round(KICK_END_S / chunk_s)):
+        t_s = plant.t
+        command_m_s[leg] = 0.0
+        if t_s >= RELEASE_AT_S:
+            command_m_s[leg] = fraction * v_max_m_s * (1.0 - np.exp(-(t_s - RELEASE_AT_S)
+                                                                    / VALVE_TAU_S))
+        was_locked, x_chunk_start_m = bool(plant.locked[leg]), float(plant.x[leg])
+        recorder.delivered_m_s = None
+        plant.step(command_m_s.copy(), CHUNK_STEPS)
+        delivered_m_s = (command_m_s[leg] if recorder.delivered_m_s is None
+                         else recorder.delivered_m_s)
+        commanded_m += command_m_s[leg] * chunk_s
+        delivered_m += delivered_m_s * chunk_s
+        if was_locked and not plant.locked[leg] and release_t_s is None:
+            x_before_m, release_t_s = x_chunk_start_m, t_s  # releases at the first inner step
+    release = plant.rod_release
+    start = recorder.release_start
+    area_m2, head_N_m = float(plant.A_ann[leg]), float(plant.kh[leg])
+    end_Pa = float(plant.rod_pressure_lag.pressure_Pa[leg])
+    drop_Pa = float(release.release_drop_Pa[leg])
+    weight_end = release_weight(plant.t - plant.dt - float(plant.t_rel[leg]), float(plant.tau))
+    m2_total_m = float(release.shift_total_m[leg])
+    kernel_Pa = (float(plant.p_r0[leg]) - float(plant.Gr[leg]) / area_m2
+                 - head_N_m / area_m2 * (m2_total_m - recorder.creep_m))
+    return {
+        "release_delay_ms": (release_t_s - RELEASE_AT_S) * 1e3,
+        "start_bar": start.start_pressure_Pa / BAR, "delta_bar": start.drop_Pa / BAR,
+        "rod_pressure_at_release_bar": (float(plant.p_r0[leg]) - start.drop_Pa) / BAR,
+        "end_bar": end_Pa / BAR, "weight_end": weight_end,
+        "m2_total_mm": m2_total_m * 1e3,
+        "formula_total_mm": area_m2 * (start.start_pressure_Pa + drop_Pa - end_Pa
+                                       - drop_Pa * weight_end) / head_N_m * 1e3,
+        "kick_vs_delivered_mm": (float(plant.x[leg]) - x_before_m - delivered_m) * 1e3,
+        "lost_stroke_mm": (commanded_m - delivered_m) * 1e3,
+        "creep_mm": -recorder.creep_m * 1e3, "opening_shift_mm": recorder.opening_m * 1e3,
+        "kernel_minus_tracked_bar": (kernel_Pa - end_Pa) / BAR,
+    }
+
+
+def check_m2_14b() -> dict:
+    """Spec M2-14b (hydraulics-expert 2026-11-07): the M2-14 lift-off with M1c VN / BL (and
+    without M1c for the kick difference). Extension re-approach: no seed, start = p_r,rel."""
+    from params import load_params
+
+    from outrigger_sim.hydraulics.v5_options import CheckDelaySetting, HydraulicOptions
+
+    v_max_m_s = load_params().v_max
+    out = {}
+    for fraction in M2_14_SPEEDS:
+        out[f"off_{fraction}"] = _release_with_m1c(
+            HydraulicOptions(rod_release_force=True), fraction, v_max_m_s, GROUND_DROP_M,
+            GROUND_DROP_S)
+        for kind in M1C_KINDS:
+            options = HydraulicOptions(rod_release_force=True,
+                                       check_delay=CheckDelaySetting(kind))
+            out[f"{kind}_{fraction}"] = _release_with_m1c(options, fraction, v_max_m_s,
+                                                          GROUND_DROP_M, GROUND_DROP_S)
+    return out
+
+
+def check_m2_14c() -> dict:
+    """Spec M2-14c (optional): FR loaded while locked (floor +0.5 mm), then 0.25 v_max retract
+    with M1c VN / BL: creep, seed and the kernel pressure invariant at 1.2 s."""
+    from params import load_params
+
+    from outrigger_sim.hydraulics.v5_options import CheckDelaySetting, HydraulicOptions
+
+    v_max_m_s = load_params().v_max
+    return {kind: _release_with_m1c(
+        HydraulicOptions(rod_release_force=True, check_delay=CheckDelaySetting(kind)),
+        -0.25, v_max_m_s, FLOOR_RISE_M, FLOOR_RISE_S) for kind in M1C_KINDS}
+
+
 CHECKS = {"m2_6": check_m2_6, "lc": check_lc, "c8": check_c8, "x1_locked": check_x1_locked,
-          "m2_14": check_m2_14}
+          "m2_14": check_m2_14, "m2_14b": check_m2_14b, "m2_14c": check_m2_14c}
 
 
 def _modules_outside_project() -> list[str]:
