@@ -278,7 +278,152 @@ def check_x1_locked() -> dict:
             "locked_value_Pa": locked_values[0] if locked_values else None}
 
 
-CHECKS = {"m2_6": check_m2_6, "lc": check_lc, "c8": check_c8, "x1_locked": check_x1_locked}
+LIFTED_LEG = 1
+"""M2-14: FR, the leg of the independent two-chamber model (hydraulics-expert P-1)."""
+LIFT_LOCK_FORCE_N = 116.106e3
+"""FR static cylinder force of the independent model."""
+ROD_WEIGHT_N = 150.0 * 9.81
+"""Rod and pad weight of the independent model (ASSUMPTION there, kept for the same kick)."""
+FLOOR_STIFFNESS_N_M = 2.0e8
+GROUND_DROP_M, GROUND_DROP_S = 0.024, 0.3
+"""The floor under FR falls 24 mm along a 3-4-5 polynomial: the locked leg lifts off."""
+RELEASE_AT_S = 0.17
+KICK_END_S = 1.2
+KERNEL_STEP_S = 5.0e-4
+M2_14_SPEEDS = (0.25, 1.0)
+"""Command fractions of v_max of the independent model cases."""
+
+
+def _poly345(fraction: float) -> float:
+    x = min(max(fraction, 0.0), 1.0)
+    return x**3 * (10.0 - 15.0 * x + 6.0 * x * x)
+
+
+class _BodyFixedLegs:
+    """Harness kernel stand-in for M2-14: per leg a massless rod between the oil spring
+    ``k_h (s_ref - x)`` and a pad on a stiff floor; the body (cylinder barrels) stays put.
+
+    It offers what ``RodSidePlant`` and the v5 adapter read of the harness ``FlexPlant``.
+    """
+
+    def __init__(self) -> None:
+        import dyn_model as dm
+        import l2b_reference as l2b
+
+        p = dm.load_params()
+        self.geo = dm.geometry_from_params(p)
+        legs = l2b.leg_parameters(p, self.geo)
+        extension_m = np.zeros(4) + np.asarray(legs["e_op"], float)
+        self.ko = np.asarray(legs["k_h_f"](extension_m), float)
+        self.flow_limiter = _Namespace(params=_Namespace(A_h=np.asarray(legs["A_p"], float)))
+        self.dt = KERNEL_STEP_S
+        self.t = 0.0
+        self.x = extension_m.copy()
+        self.sref = self.x + (LIFT_LOCK_FORCE_N - ROD_WEIGHT_N) / self.ko
+        self.floor_start_m = self.x - LIFT_LOCK_FORCE_N / FLOOR_STIFFNESS_N_M
+        self.acc = np.zeros(32)
+        self.hist_t, self.hist = [], []
+
+    def floor_m(self, t_s: float) -> np.ndarray:
+        floor = self.floor_start_m.copy()
+        floor[LIFTED_LEG] += GROUND_DROP_M * _poly345(t_s / GROUND_DROP_S)
+        return floor
+
+    def step(self, u, nsteps: int) -> np.ndarray:
+        for _ in range(nsteps):
+            self.t += self.dt
+            self.sref = self.sref + np.asarray(u, float) * self.dt
+            floor = self.floor_m(self.t)
+            free = self.sref + ROD_WEIGHT_N / self.ko
+            pressed = ((self.ko * self.sref + ROD_WEIGHT_N + FLOOR_STIFFNESS_N_M * floor)
+                       / (self.ko + FLOOR_STIFFNESS_N_M))
+            self.x = np.where(free <= floor, free, pressed)
+        return self.acc[:24]
+
+
+class _Namespace:
+    def __init__(self, **values) -> None:
+        self.__dict__.update(values)
+
+
+def _lifted_leg_plant(options):
+    import importlib
+
+    importlib.import_module("verdict_runs")  # first: it puts the harness folders on sys.path
+    import harness_hydraulics
+
+    rodside = importlib.import_module("s8_g4_rodside_check")
+    rodside._setup_path()
+    plant_class = harness_hydraulics.make_hydraulics_plant_class(
+        rodside.make_plant_class(_Namespace(rmf=_Namespace(FlexPlant=_BodyFixedLegs))), options)
+    plant = plant_class()
+    plant.arm()
+    return plant
+
+
+def _lifted_leg_release(options, fraction: float, v_max_m_s: float) -> dict:
+    """FR lifts off while locked, then extends from ``RELEASE_AT_S`` at ``fraction`` v_max
+    through the 0.1 s valve lag; kick = pad travel beyond the integrated speed at 1.2 s."""
+    from outrigger_sim.hydraulics.rod_chamber import RodChamberMode
+    from outrigger_sim.hydraulics.rod_release import release_weight
+
+    plant = _lifted_leg_plant(options)
+    leg = LIFTED_LEG
+    speed_m_s = np.zeros(4)
+    travel_m, x_before_m, lock_pressure_Pa, worst_form_Pa = 0.0, None, None, 0.0
+    rod_pressure_at_release_Pa = None
+    for _ in range(round(KICK_END_S / KERNEL_STEP_S)):
+        t_s = plant.t
+        speed_m_s[leg] = 0.0
+        if t_s >= RELEASE_AT_S:
+            speed_m_s[leg] = fraction * v_max_m_s * (1.0 - np.exp(-(t_s - RELEASE_AT_S)
+                                                                  / VALVE_TAU_S))
+        if x_before_m is None and abs(speed_m_s[leg]) > plant.eps:
+            x_before_m = float(plant.x[leg])
+            lock_pressure_Pa = float(plant.p_r0[leg])
+            rod_pressure_at_release_Pa = float(plant.p_r0[leg] - plant.Gr[leg] / plant.A_ann[leg])
+        plant.step(speed_m_s.copy(), 1)
+        travel_m += speed_m_s[leg] * KERNEL_STEP_S
+        release = getattr(plant, "rod_release", None)
+        if release is not None and not plant.locked[leg]:
+            weighted_Pa = release.release_drop_Pa[leg] * release_weight(
+                t_s - float(plant.t_rel[leg]), float(plant.tau))
+            worst_form_Pa = max(worst_form_Pa,
+                                abs(weighted_Pa - float(plant.Gr[leg] / plant.A_ann[leg])))
+    out = {"kick_mm": (float(plant.x[leg]) - x_before_m - travel_m) * 1e3,
+           "rod_pressure_at_release_bar": rod_pressure_at_release_Pa / BAR,
+           "lock_pressure_bar": lock_pressure_Pa / BAR}
+    if release is not None:
+        lag_leg = plant.rod_pressure_lag._legs[leg]
+        target_Pa = lag_leg.moving_target_rod_pressure_Pa(RodChamberMode.EXT,
+                                                         float(plant.pressure()[leg]))
+        out.update({"m2_total_mm": float(release.shift_total_m[leg]) * 1e3,
+                    "expected_total_mm": float(plant.A_ann[leg] * (lock_pressure_Pa - target_Pa)
+                                               / plant.kh[leg]) * 1e3,
+                    "target_bar": target_Pa / BAR,
+                    "max_delta_w_minus_gr_over_a_Pa": worst_form_Pa})
+    return out
+
+
+def check_m2_14() -> dict:
+    """Spec M2-14 (revision 4): a lifted FR leg released on the harness plant law with a fixed
+    body. M2 total = ``A_ann (p_r0 - p*) / k_h``; kick within 5 % of the independent two-chamber
+    model (1.0556 mm at 0.25 v_max, 1.0305 mm at v_max). M2 off gives the base decay alone."""
+    from params import load_params
+
+    from outrigger_sim.hydraulics.v5_options import HydraulicOptions
+
+    v_max_m_s = load_params().v_max
+    out = {}
+    for fraction in M2_14_SPEEDS:
+        for name, options in (("on", HydraulicOptions(rod_release_force=True)),
+                              ("off", HydraulicOptions())):
+            out[f"{name}_{fraction}"] = _lifted_leg_release(options, fraction, v_max_m_s)
+    return out
+
+
+CHECKS = {"m2_6": check_m2_6, "lc": check_lc, "c8": check_c8, "x1_locked": check_x1_locked,
+          "m2_14": check_m2_14}
 
 
 def _modules_outside_project() -> list[str]:

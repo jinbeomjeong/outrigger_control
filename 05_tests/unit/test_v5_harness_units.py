@@ -32,7 +32,9 @@ def _run_check(check: str, tmp_path: Path) -> dict:
 
 M2_6_SETTLED_DIFFERENCE_KN = 2.43
 """dynamics-expert 3-DOF reference 2.433 kN, settled C2 - C3 of FL. Revision 3 of the M2 law
-(flow_limited_r3, 2026-11-06): 3-DOF wrapper 2.456 kN, harness 2.475 kN (plain lag: 2.436)."""
+(flow_limited_r3, 2026-11-06): 3-DOF wrapper 2.456 kN, harness 2.475 kN (plain lag: 2.436).
+Revision 4 (flow_limited_r4, 2026-11-07): harness 2.475 kN, the revision 3 value to the last bit
+(FL releases right after the arm, before its locked rod force has changed: ``Delta`` about 0)."""
 M2_6_TOLERANCE_KN = 0.25
 
 
@@ -45,6 +47,28 @@ def test_m2_6_harness_release_pair(tmp_path: Path) -> None:
     assert report["difference_off_kN"] == 0.0
     assert report["difference_on_kN"] == pytest.approx(M2_6_SETTLED_DIFFERENCE_KN,
                                                        abs=M2_6_TOLERANCE_KN)
+
+
+M2_14_INDEPENDENT_KICK_MM = {"0.25": 1.0556, "1.0": 1.0305}
+"""hydraulics-expert independent two-chamber model (``liftoff_release.json`` 2026-11-07), FR
+lifted off a 2 bar lock, body fixed, kick at 1.2 s per command fraction of v_max."""
+M2_14_KICK_TOLERANCE = 0.05
+M2_14_EQUAL_FORMS_PA = 1e-6
+"""``Delta w`` and the harness ``Gr / A_ann`` agree to rounding (about 1e-9 Pa at 85 bar)."""
+
+
+def test_m2_14_lifted_leg_release(tmp_path: Path) -> None:
+    """Spec M2-14 (revision 4, 2026-11-07): released lifted leg; M2 total = A_ann (p_r0 - p*) /
+    k_h; the kick (pad travel beyond the integrated speed) within 5 % of the independent model;
+    M2 off leaves the base release decay alone (r F_lock / k_h, about 1.06 mm)."""
+    report = _run_check("m2_14", tmp_path)
+    for fraction, independent_mm in M2_14_INDEPENDENT_KICK_MM.items():
+        on = report[f"on_{fraction}"]
+        assert on["m2_total_mm"] == pytest.approx(on["expected_total_mm"], rel=1e-4)
+        assert on["kick_mm"] == pytest.approx(independent_mm, rel=M2_14_KICK_TOLERANCE)
+        assert on["max_delta_w_minus_gr_over_a_Pa"] <= M2_14_EQUAL_FORMS_PA
+        assert on["rod_pressure_at_release_bar"] == pytest.approx(84.72, abs=0.01)
+        assert report[f"off_{fraction}"]["kick_mm"] == pytest.approx(1.0599, abs=0.001)
 
 
 def test_lc_harness_cut_lock_restart_and_copy(tmp_path: Path) -> None:
