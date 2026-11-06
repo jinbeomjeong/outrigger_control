@@ -14,13 +14,29 @@ pressure is a model value of the plant law, not a measured one: ``p_bB`` 5 bar, 
 The shift is clipped to the travel range: a reference outside it would be clipped back by the next
 speed reference step, which turns the difference into a large speed. Clipped steps are counted.
 
+Moving rod pressure, revision 3 (``flow_limited_r3``, user decision 2026-11-06, P-A without the B
+hose): the first-order lag towards ``p*`` may not change the pressure faster than the valve flow
+fills or drains the rod chamber (:func:`flow_limited_rod_pressure`)::
+
+    p_lag = p* + (p_r^(k-1) - p*) exp(-dt / tau)
+    retract, p* > p_r^(k-1):  p_r^k = min(p_lag, p_r^(k-1) + Q_in dt / C_r),  Q_in = A_ann |u|
+    extend,  p* < p_r^(k-1):  p_r^k = max(p_lag, p_r^(k-1) - Q_out dt / C_r),
+                              Q_out = b_T A_h |u| sqrt(max(p_r^(k-1) - p_T, 0) / dp_c)
+    otherwise                 p_r^k = p_lag
+    C_r = A_ann^2 (1 / k_r + 1 / k_h)   (B hose not included: ASSUMPTION)
+
+``b_T``, ``dp_c`` and ``p_T`` are ASSUMPTIONS (the values of ``coupled/params.py`` and of the flow
+share model). ``u = 0`` holds the pressure on the filled side.
+
 Units SI; gauge pressures; arrays per leg.
 """
 
 from __future__ import annotations
 
+import math
 from collections.abc import Mapping
-from typing import Any
+from dataclasses import dataclass
+from typing import Any, ClassVar
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
@@ -29,6 +45,105 @@ PREVIOUS_PRESSURE_KEY = "m2_p_prev_Pa"
 SHIFT_TOTAL_KEY = "m2_shift_total_m"
 CLIPPED_STEPS_KEY = "m2_clipped_steps"
 """Optional snapshot keys (written only with the option on)."""
+
+FLOW_LIMITED_LAW = "flow_limited_r3"
+"""Name of the moving rod-pressure law in the meta and the definition digests (M2 on only)."""
+METER_OUT_RATIO = 1.0
+"""``b_T``: meter-out (A -> T) over meter-in (P -> A) opening at the same spool stroke
+(ASSUMPTION)."""
+SPOOL_REFERENCE_DROP_PA = 10.0e5
+"""``dp_c``: spool drop at which the opening passes ``A_h |u|`` (compensator drop, ASSUMPTION)."""
+TANK_PRESSURE_PA = 2.0e5
+"""``p_T``: return line pressure, gauge (ASSUMPTION)."""
+
+
+def flow_limited_rod_pressure(
+    previous_Pa: float,
+    target_Pa: float,
+    speed_m_s: float,
+    step_s: float,
+    lag_s: float,
+    compliance_m3_Pa: float,
+    head_area_m2: float,
+    annulus_area_m2: float,
+    is_retract: bool,
+    *,
+    meter_out_ratio: float = METER_OUT_RATIO,
+    spool_reference_drop_Pa: float = SPOOL_REFERENCE_DROP_PA,
+    tank_pressure_Pa: float = TANK_PRESSURE_PA,
+) -> float:
+    """Moving rod pressure after one step of the revision 3 law (module docstring).
+
+    The flow cap is explicit on the previous pressure and never passes the lagged value.
+
+    Args:
+        previous_Pa: ``p_r^(k-1)``.
+        target_Pa: ``p*`` of the moving direction.
+        speed_m_s: Delivered leg speed ``u`` of this step (its magnitude is used).
+        step_s: ``dt``.
+        lag_s: ``tau``; 0 jumps to the target as the plain lag does.
+        compliance_m3_Pa: ``C_r`` (:meth:`RodPressureFlowLaw.rod_compliance_m3_Pa`).
+        head_area_m2: ``A_h``.
+        annulus_area_m2: ``A_ann``.
+        is_retract: The leg moves in its retract direction (meter-in on the rod side).
+
+    Returns:
+        ``p_r^k`` [Pa gauge].
+    """
+    keep = math.exp(-step_s / lag_s) if lag_s > 0.0 else 0.0
+    lagged_Pa = target_Pa + (previous_Pa - target_Pa) * keep
+    if is_retract and target_Pa > previous_Pa:
+        fill_m3_s = annulus_area_m2 * abs(speed_m_s)
+        return min(lagged_Pa, previous_Pa + fill_m3_s * step_s / compliance_m3_Pa)
+    if not is_retract and target_Pa < previous_Pa:
+        orifice_drop_Pa = max(previous_Pa - tank_pressure_Pa, 0.0)
+        drain_m3_s = (meter_out_ratio * head_area_m2 * abs(speed_m_s)
+                      * math.sqrt(orifice_drop_Pa / spool_reference_drop_Pa))
+        return max(lagged_Pa, previous_Pa - drain_m3_s * step_s / compliance_m3_Pa)
+    return lagged_Pa
+
+
+@dataclass(frozen=True)
+class RodPressureFlowLaw:
+    """Constants of the revision 3 law; the harness and the L2b law call the same function.
+
+    Attributes:
+        meter_out_ratio: ``b_T``.
+        spool_reference_drop_Pa: ``dp_c``.
+        tank_pressure_Pa: ``p_T``.
+    """
+
+    meter_out_ratio: float = METER_OUT_RATIO
+    spool_reference_drop_Pa: float = SPOOL_REFERENCE_DROP_PA
+    tank_pressure_Pa: float = TANK_PRESSURE_PA
+    name: ClassVar[str] = FLOW_LIMITED_LAW
+
+    @staticmethod
+    def rod_compliance_m3_Pa(annulus_area_m2: float, head_stiffness_N_m: float,
+                             rod_stiffness_N_m: float) -> float:
+        """``C_r = A_ann^2 (1 / k_r + 1 / k_h)``: rod-chamber oil per pressure change, the head
+        column included (B hose not included, ASSUMPTION)."""
+        return annulus_area_m2**2 * (1.0 / rod_stiffness_N_m + 1.0 / head_stiffness_N_m)
+
+    def rod_pressure_Pa(self, previous_Pa: float, target_Pa: float, speed_m_s: float,
+                        step_s: float, lag_s: float, compliance_m3_Pa: float,
+                        head_area_m2: float, annulus_area_m2: float, is_retract: bool) -> float:
+        """:func:`flow_limited_rod_pressure` with these constants."""
+        return flow_limited_rod_pressure(
+            previous_Pa, target_Pa, speed_m_s, step_s, lag_s, compliance_m3_Pa, head_area_m2,
+            annulus_area_m2, is_retract, meter_out_ratio=self.meter_out_ratio,
+            spool_reference_drop_Pa=self.spool_reference_drop_Pa,
+            tank_pressure_Pa=self.tank_pressure_Pa)
+
+    def meta(self) -> dict[str, Any]:
+        return {"law": self.name,
+                "rule": "moving p_r: lag to p* capped by the valve flow; retract meter-in "
+                        "A_ann |u|, extend meter-out b_T A_h |u| sqrt((p_r - p_T) / dp_c); "
+                        "C_r = A_ann^2 (1/k_r + 1/k_h), B hose not included",
+                "meter_out_ratio": self.meter_out_ratio,
+                "spool_reference_drop_Pa": self.spool_reference_drop_Pa,
+                "tank_pressure_Pa": self.tank_pressure_Pa,
+                "status": "ASSUMPTION b_T, dp_c, p_T (coupled/params.py values)"}
 
 
 class RodReleaseShift:
@@ -124,4 +239,6 @@ class RodReleaseShift:
                 "m2_clipped_steps": self._clipped_steps.tolist()}
 
 
-__all__ = ["CLIPPED_STEPS_KEY", "PREVIOUS_PRESSURE_KEY", "SHIFT_TOTAL_KEY", "RodReleaseShift"]
+__all__ = ["CLIPPED_STEPS_KEY", "FLOW_LIMITED_LAW", "METER_OUT_RATIO", "PREVIOUS_PRESSURE_KEY",
+           "SHIFT_TOTAL_KEY", "SPOOL_REFERENCE_DROP_PA", "TANK_PRESSURE_PA", "RodPressureFlowLaw",
+           "RodReleaseShift", "flow_limited_rod_pressure"]
