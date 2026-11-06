@@ -276,19 +276,27 @@ def s8_stop_table(rows: list[dict]) -> list[dict]:
             for row in rows if row["row"] in NO_READY_ROWS and row.get("soil_stop_crawler")]
 
 
-def golden_check(rows: list[dict]) -> list[dict]:
-    """V0 phase-0 rows of cases in the golden set: hash equal to ``golden_off/OFF_<case>.json``."""
+def golden_check(rows: list[dict], golden_dir: Path = GOLDEN_DIR) -> list[dict]:
+    """V0 rows at the phase the golden set defines: hash equal to ``golden_off/OFF_<case>.json``.
+
+    Event rows are compared at the golden file's own ``offset_s`` (R15 / R16 run 0.05 s by
+    definition, ``verdict_cases``), steady rows at eps 0.
+    """
     checks = []
     for row in rows:
-        if row["setting"] != "V0" or row["phase"] not in ("eps 0.0", "offset 0.0") \
+        is_offset_phase = row["phase"].startswith("offset ")
+        if row["setting"] != "V0" or not (row["phase"] == "eps 0.0" or is_offset_phase) \
                 or "error" in row or row.get("contact_judge"):  # golden runs: screen judge
             continue
-        golden = GOLDEN_DIR / f"OFF_{row['row']}.json"
+        golden = golden_dir / f"OFF_{row['row']}.json"
         if row["row"] == "R2ra" or not golden.exists():
             continue
-        stored = json.loads(golden.read_text(encoding="utf-8"))["commands_sha256"]
+        stored = json.loads(golden.read_text(encoding="utf-8"))
+        if is_offset_phase and float(row["phase"].split()[1]) != stored["offset_s"]:
+            continue  # the golden set defines one phase only
         checks.append({"row": row["row"], "phase": row["phase"],
-                       "equal": stored == row["commands_sha256"]})
+                       "golden_offset_s": stored.get("offset_s"),
+                       "equal": stored["commands_sha256"] == row["commands_sha256"]})
     return checks
 
 
