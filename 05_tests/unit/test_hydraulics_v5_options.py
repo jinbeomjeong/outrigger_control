@@ -88,6 +88,23 @@ def test_overlap_speed_is_the_ratio_of_v_max() -> None:
     assert LockClosureSetting(0.02, 0.05).overlap_speed_m_s(0.020924) == pytest.approx(0.41848e-3)
 
 
+def test_m2_law_is_in_the_dict_of_m2_runs_only() -> None:
+    """User decision 2026-11-06: ``m2_law`` only with M2 on (digests and metas of M2-off runs,
+    final_C4G2 and the golden values stay bit for bit)."""
+    with_m2 = HydraulicOptions(rod_release_force=True, lock_closure=LockClosureSetting(0.02, 0.05))
+    assert with_m2.to_dict()["m2_law"] == "flow_limited_r3"
+    assert HydraulicOptions.from_dict(with_m2.to_dict()) == with_m2
+    without = HydraulicOptions(valve_tau_s=0.1, lock_closure=LockClosureSetting(0.02, 0.05))
+    assert "m2_law" not in without.to_dict()
+    assert "m2_law" not in HydraulicOptions().to_dict()
+
+
+def test_a_stored_other_m2_law_is_refused() -> None:
+    stored = {**HydraulicOptions(rod_release_force=True).to_dict(), "m2_law": "lag_only"}
+    with pytest.raises(ValueError, match="M2 law"):
+        HydraulicOptions.from_dict(stored)
+
+
 def test_b3_golden_digest_is_the_stored_definition() -> None:
     stored = json.loads((GOLDEN_DIR / "OFF_R1.json").read_text(encoding="utf-8"))
     assert stored["definition_sha256"] == STORED_OFF_R1_DIGEST

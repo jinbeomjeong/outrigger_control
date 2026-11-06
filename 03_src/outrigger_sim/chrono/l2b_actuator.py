@@ -69,7 +69,7 @@ from outrigger_sim.hydraulics.check_open_delay import (
 )
 from outrigger_sim.hydraulics.counterbalance import Counterbalance
 from outrigger_sim.hydraulics.l2b_rod_side import L2bRodSide
-from outrigger_sim.hydraulics.rod_release import RodReleaseShift
+from outrigger_sim.hydraulics.rod_release import RodPressureFlowLaw, RodReleaseShift
 from outrigger_sim.hydraulics.seal_friction import SealFriction, leg_limits_N
 from outrigger_sim.params import LEG_ORDER, Params
 
@@ -480,7 +480,9 @@ class L2bForceActuator:
         """Turn M2 on: the rod pressure of a moving leg shifts ``s_ref`` (both directions, D-4).
 
         The shift ``A_ann (p_r^(k-1) - p_r^k) / k_h(s_ref)`` is computed after the force of this
-        hook, so it acts from the next hook on. Locked legs and a disarmed law do not shift.
+        hook, so it acts from the next hook on. Locked legs and a disarmed law do not shift. The
+        moving rod pressure follows revision 3 (``flow_limited_r3``, user decision 2026-11-06):
+        its lag is capped by the valve flow (``rod_release.flow_limited_rod_pressure``).
 
         Raises:
             ValueError: No rod-side law, or the counterbalance path (never tested with M2).
@@ -490,6 +492,12 @@ class L2bForceActuator:
         if self.counterbalance is not None:
             raise ValueError("M2 with lock_valve = counterbalance is refused (untested path)")
         self._rod_release = RodReleaseShift(self.rod_side.annulus_area_m2)
+        # revision 3 (flow_limited_r3): the moving rod pressure M2 reads is capped by the valve
+        # flow; the friction path reads it from its oil law G, which may be another object
+        law = RodPressureFlowLaw()
+        self.rod_side.set_rod_pressure_flow_law(law)
+        if self._oil is not None and self._oil is not self.rod_side:
+            self._oil.set_rod_pressure_flow_law(law)
 
     # --- LC overlap cut and check closing delay (v5 spec 2.5) ------------------------------------
 
@@ -986,10 +994,15 @@ class L2bForceActuator:
     def meta(self) -> dict[str, Any]:
         out = self._base_meta()
         if self._rod_release is not None:  # key only with M2 on: the off meta stays as it was
+            flow_law = self.rod_side.rod_pressure_flow_law
+            assert flow_law is not None
+            law_meta = flow_law.meta()
             out["rod_release"] = {
                 "rule": "moving leg: s_ref += A_ann (p_r_prev - p_r) / k_h(s_ref), both directions "
                         "(v5 spec 2.3, D-4); p_r = rod-side law value before the pressure floor",
-                "status": "ASSUMPTION p_bB, tau, p_r0 (spec 2.3)"}
+                "status": "ASSUMPTION p_bB, tau, p_r0 (spec 2.3)",
+                "law": law_meta.pop("law"),
+                "pressure_law": law_meta}
         if self._check_delay is not None:  # key only with M1c on
             out["check_delay"] = self._check_delay.model.meta()
         if self._lock_closure is not None:  # key only with LC on

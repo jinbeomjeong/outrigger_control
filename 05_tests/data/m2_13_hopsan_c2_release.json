@@ -1,0 +1,18 @@
+{
+ "source": "hydraulics-expert Hopsan run m2_6_hyd/hop_C2_32 (2026-11-06), case C2_release_ground of pressure_review/four_leg.py: FL locked at 34.818 bar g rod pressure, extends 0.25 v_max from 1.5 s for 0.5 s, others still",
+ "valve_input": "four_leg.command_series u_snap (valve lag 0.1 s + overlap snap) x v_max, 1 ms grid; the law steps 1e-4 s on it (index round(t / 1 ms))",
+ "window_s": [
+  1.45,
+  2.2
+ ],
+ "head_area_FL_m2": 0.013273229,
+ "annulus_area_FL_m2": 0.00376991118,
+ "head_stiffness_FL_N_m": 29424138.771890935,
+ "rod_stiffness_FL_N_m": 10805133.791917458,
+ "operating_extension_FL_m": 0.4011,
+ "rod_pressure_start_Pa": 3481800.0,
+ "extend_target_Pa": 500000.0,
+ "lag_s": 0.05,
+ "step_s": 0.0001,
+ "hopsan_t_to_20bar_s": 1.5778
+}

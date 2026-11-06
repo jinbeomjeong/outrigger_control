@@ -10,7 +10,9 @@ Inner step of an armed plant (spec 2.0, the numbers are the rows of its table):
 M2 (spec 2.3): the harness has no tracked rod pressure, so this class solves its first-order lag.
 The start is ``p_r0 - G_r / A_ann`` at the release, the target comes from
 ``RodChamberLegParams.moving_target_rod_pressure_Pa`` (the law is not copied here) with the net oil
-force. All pressures are model values and ASSUMPTIONS.
+force. Revision 3 (``flow_limited_r3``): the lag is capped by the valve flow of the kernel speed
+(``rod_release.flow_limited_rod_pressure``, the function L2b calls), ``C_r`` from ``kh``, ``kr``.
+All pressures are model values and ASSUMPTIONS.
 
 Pressures gauge [Pa], speeds m/s, extension positive.
 """
@@ -35,7 +37,10 @@ from outrigger_sim.hydraulics.rod_chamber import (  # noqa: E402
     RodChamberLegParams,
     RodChamberMode,
 )
-from outrigger_sim.hydraulics.rod_release import RodReleaseShift  # noqa: E402
+from outrigger_sim.hydraulics.rod_release import (  # noqa: E402
+    RodPressureFlowLaw,
+    RodReleaseShift,
+)
 from outrigger_sim.hydraulics.v5_options import (  # noqa: E402
     LOCK_SPEED_EPS_M_S,
     HydraulicOptions,
@@ -63,7 +68,7 @@ TIME_TOL_S = 1.0e-9
 
 
 class _RodPressureLag:
-    """First-order lag of the moving rod pressure of one plant (module docstring)."""
+    """Moving rod pressure of one plant: lag capped by the valve flow (module docstring)."""
 
     def __init__(self, plant) -> None:
         head_area_m2 = plant.flow_limiter.params.A_h
@@ -76,16 +81,28 @@ class _RodPressureLag:
                 outer_stiffness_N_m=UNUSED_OUTER_STIFFNESS_N_M,
                 rod_weight_N=0.0)
             for i in range(LEG_COUNT)]
-        self._keep = math.exp(-plant.dt / plant.tau)
+        self.flow_law = RodPressureFlowLaw()
+        # the harness oil columns are frozen at e_op, so C_r is one value per leg
+        self._compliance_m3_Pa = [
+            self.flow_law.rod_compliance_m3_Pa(leg.annulus_area_m2, leg.head_stiffness_N_m,
+                                               leg.rod_stiffness_N_m)
+            for leg in self._legs]
+        self._step_s = float(plant.dt)
+        self._lag_s = float(plant.tau)
         self.pressure_Pa = np.zeros(LEG_COUNT)
 
     def start(self, leg: int, pressure_Pa: float) -> None:
         self.pressure_Pa[leg] = pressure_Pa
 
-    def relax(self, leg: int, direction: float, force_N: float) -> float:
+    def relax(self, leg: int, direction: float, force_N: float, speed_m_s: float) -> float:
+        """One inner step of ``leg``; ``speed_m_s`` is the kernel speed of the step."""
         mode = RodChamberMode.EXT if direction > 0.0 else RodChamberMode.RET
-        target_Pa = self._legs[leg].moving_target_rod_pressure_Pa(mode, force_N)
-        self.pressure_Pa[leg] = target_Pa + (self.pressure_Pa[leg] - target_Pa) * self._keep
+        params = self._legs[leg]
+        target_Pa = params.moving_target_rod_pressure_Pa(mode, force_N)
+        self.pressure_Pa[leg] = self.flow_law.rod_pressure_Pa(
+            float(self.pressure_Pa[leg]), target_Pa, speed_m_s, self._step_s, self._lag_s,
+            self._compliance_m3_Pa[leg], params.head_area_m2, params.annulus_area_m2,
+            is_retract=mode is RodChamberMode.RET)
         return self.pressure_Pa[leg]
 
 
@@ -173,12 +190,13 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
 
         def _rod_force(self, u):
             was_locked = self.locked.copy()
+            kernel_speed_m_s = np.asarray(u, float)  # the flow cap reads it, not the 2 eps wait
             if closure is not None:
-                u = self._closing_delay_speed(np.asarray(u, float))
+                u = self._closing_delay_speed(kernel_speed_m_s)
             rod_force_N = super()._rod_force(u)
             self._record_lock_changes(was_locked)
             if self.rod_release is not None:
-                self._shift_reference_for_rod_pressure(rod_force_N, was_locked)
+                self._shift_reference_for_rod_pressure(rod_force_N, was_locked, kernel_speed_m_s)
             return rod_force_N
 
         def _closing_delay_speed(self, u: np.ndarray) -> np.ndarray:
@@ -203,17 +221,20 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             for i in np.flatnonzero(self.locked != was_locked):
                 self.lock_events.append((round(float(self.t), 6), int(i), bool(self.locked[i])))
 
-        def _shift_reference_for_rod_pressure(self, rod_force_N, was_locked) -> None:
+        def _shift_reference_for_rod_pressure(self, rod_force_N, was_locked,
+                                              kernel_speed_m_s) -> None:
             """Spec 2.3: M2 on the state after the law; acts from this inner step on."""
             pressure_Pa = self.p_r0 - rod_force_N / self.A_ann
             net_force_N = self.pressure()
             lag = self.rod_pressure_lag
+            speed_m_s = np.broadcast_to(kernel_speed_m_s, (LEG_COUNT,))
             for i in np.flatnonzero(~self.locked):
                 if was_locked[i]:
                     seed_Pa = self.rod_pressure_seed_Pa[i]
                     lag.start(i, float(pressure_Pa[i] if np.isnan(seed_Pa) else seed_Pa))
                     self.rod_pressure_seed_Pa[i] = np.nan
-                pressure_Pa[i] = lag.relax(i, float(self.last_dir[i]), float(net_force_N[i]))
+                pressure_Pa[i] = lag.relax(i, float(self.last_dir[i]), float(net_force_N[i]),
+                                           float(speed_m_s[i]))
             shift_m = self.rod_release.shift_m(
                 pressure_Pa, self.kh, ~self.locked, STROKE_LOWER_END_M - self.sref,
                 self.geo.stroke - self.sref, t_s=float(self.t))
@@ -277,6 +298,7 @@ def plant_record(plant, t_lift_s: float | None = None) -> dict:
         return {}
     record = {}
     if getattr(plant, "rod_release", None) is not None:
+        record["m2_law"] = plant.rod_pressure_lag.flow_law.meta()
         record.update(plant.rod_release.record())
         record.update(clipped_steps_by_lift(plant.rod_release.clip_times_s,
                                             record["m2_clipped_steps"], t_lift_s))

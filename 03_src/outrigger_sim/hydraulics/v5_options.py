@@ -18,6 +18,7 @@ from enum import StrEnum
 from typing import Any
 
 from .flow_limit_run import FlowLimitSetting, flow_setting_from_args
+from .rod_release import FLOW_LIMITED_LAW
 
 LOCK_SPEED_EPS_M_S = 1.0e-6
 """``|u_c| <=`` this = a zero command; same value as YAML ``actuator.rod_side.lock_eps_m_s``."""
@@ -122,11 +123,22 @@ class HydraulicOptions:
         return self != HydraulicOptions()
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        """The fields, plus ``m2_law`` with M2 on: the definition digests and metas of M2 runs
+        change with the rod-pressure law (revision 3); the M2-off dict stays as it was."""
+        values = asdict(self)
+        if self.rod_release_force:
+            values["m2_law"] = FLOW_LIMITED_LAW
+        return values
 
     @classmethod
     def from_dict(cls, values: dict[str, Any]) -> HydraulicOptions:
-        """The options of :meth:`to_dict` (a job description passed to a worker process)."""
+        """The options of :meth:`to_dict` (a job description passed to a worker process).
+
+        Raises:
+            ValueError: An ``m2_law`` other than the one this code runs.
+        """
+        if values.get("m2_law", FLOW_LIMITED_LAW) != FLOW_LIMITED_LAW:
+            raise ValueError(f"M2 law {values['m2_law']!r} is not {FLOW_LIMITED_LAW!r}")
         flow = values.get("flow")
         check_delay = values.get("check_delay")
         lock_closure = values.get("lock_closure")

@@ -31,7 +31,8 @@ def _run_check(check: str, tmp_path: Path) -> dict:
 
 
 M2_6_SETTLED_DIFFERENCE_KN = 2.43
-"""dynamics-expert 3-DOF reference 2.433 kN (harness 2.436 kN), settled C2 - C3 of FL."""
+"""dynamics-expert 3-DOF reference 2.433 kN, settled C2 - C3 of FL. Revision 3 of the M2 law
+(flow_limited_r3, 2026-11-06): 3-DOF wrapper 2.456 kN, harness 2.475 kN (plain lag: 2.436)."""
 M2_6_TOLERANCE_KN = 0.25
 
 

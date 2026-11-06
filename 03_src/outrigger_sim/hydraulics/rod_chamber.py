@@ -54,13 +54,16 @@ A/B (``p_bA``, ``p_bB``, POC-A/B, line A/B) are leg-based head/rod names, not MC
 from __future__ import annotations
 
 import math
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import asdict, dataclass
 from enum import IntEnum, StrEnum
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
+
+if TYPE_CHECKING:
+    from outrigger_sim.hydraulics.rod_release import RodPressureFlowLaw
 
 ATMOSPHERE_PA = 1.01325e5
 DEFAULT_MODE_EPSILON_M_S = 1.0e-6
@@ -414,7 +417,24 @@ class RodChamberLeg:
     def __init__(self, params: RodChamberLegParams, options: RodChamberOptions) -> None:
         self.params = params
         self.options = options
+        self.rod_pressure_flow_law: RodPressureFlowLaw | None = None
+        """M2 revision 3 (v5 spec 2.3): the moving pressure lag capped by the valve flow; None =
+        the plain lag (default, bit for bit). Not part of the snapshot: a run sets it."""
+        self._oil_stiffness_at: Callable[[float], tuple[float, float]] | None = None
         self.reset()
+
+    def set_rod_pressure_flow_law(
+        self, law: RodPressureFlowLaw, oil_stiffness_at: Callable[[float], tuple[float, float]]
+    ) -> None:
+        """Turn the flow cap of the moving rod pressure on.
+
+        Args:
+            law: Constants and function of ``hydraulics.rod_release`` (the harness calls the same).
+            oil_stiffness_at: ``(k_h, k_r)`` at the column coordinate ``motor_position_m`` of the
+                step (``C_r`` follows the extension).
+        """
+        self.rod_pressure_flow_law = law
+        self._oil_stiffness_at = oil_stiffness_at
 
     def reset(self) -> None:
         """Fresh state (also used when a snapshot has no rod-chamber keys)."""
@@ -521,8 +541,24 @@ class RodChamberLeg:
             self.moving_mode, signals.cylinder_force_N
         )
         lag_s = self.options.rod_pressure_lag_s
+        if self.rod_pressure_flow_law is not None:
+            self.tracked_rod_pressure_Pa = self._flow_limited_pressure_Pa(target_Pa, lag_s, signals)
+            return
         keep = math.exp(-signals.step_s / lag_s) if lag_s > 0.0 else 0.0
         self.tracked_rod_pressure_Pa = target_Pa + (self.tracked_rod_pressure_Pa - target_Pa) * keep
+
+    def _flow_limited_pressure_Pa(self, target_Pa: float, lag_s: float,
+                                  signals: RodChamberLegInput) -> float:
+        """M2 revision 3: the same lag, capped by the valve flow of ``applied_speed_m_s``."""
+        law = self.rod_pressure_flow_law
+        assert law is not None and self._oil_stiffness_at is not None
+        params = self.params
+        head_N_m, rod_N_m = self._oil_stiffness_at(signals.motor_position_m)
+        compliance_m3_Pa = law.rod_compliance_m3_Pa(params.annulus_area_m2, head_N_m, rod_N_m)
+        return law.rod_pressure_Pa(
+            self.tracked_rod_pressure_Pa, target_Pa, signals.applied_speed_m_s, signals.step_s,
+            lag_s, compliance_m3_Pa, params.head_area_m2, params.annulus_area_m2,
+            is_retract=self.moving_mode is RodChamberMode.RET)
 
     # --- outputs ---
 

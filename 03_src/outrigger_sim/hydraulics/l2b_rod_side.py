@@ -38,6 +38,7 @@ Units SI; gauge pressures except ``p_floor_abs_Pa``. Arrays per leg in the order
 from __future__ import annotations
 
 import dataclasses
+import functools
 import math
 from collections.abc import Mapping, Sequence
 from typing import Any
@@ -55,6 +56,7 @@ from outrigger_sim.hydraulics.rod_chamber import (
     RodChamberOptions,
     RodSideMechanics,
 )
+from outrigger_sim.hydraulics.rod_release import RodPressureFlowLaw
 
 STATE_KEYS = (
     "armed",
@@ -143,6 +145,7 @@ class L2bRodSide:
         )
         self._legs = [RodChamberLeg(self._leg_params(i, 0.5 * stroke_m), self._options)
                       for i in range(n)]
+        self._rod_pressure_flow_law: RodPressureFlowLaw | None = None
         self._n = n
         self._armed = bool(armed) and self.mechanics is RodSideMechanics.ONE_SIDED_PARALLEL
         self._reset_state()
@@ -215,6 +218,18 @@ class L2bRodSide:
         for leg in self._legs:
             leg.options = self._options
 
+    def set_rod_pressure_flow_law(self, law: RodPressureFlowLaw) -> None:
+        """M2 revision 3 (v5 spec 2.3, ``flow_limited_r3``): the moving rod pressure of every leg
+        lags towards its target no faster than the valve flow allows; ``C_r`` from ``k_h``,
+        ``k_r`` at the step's column coordinate. Call before the run (not in the snapshot)."""
+        self._rod_pressure_flow_law = law
+        for i, leg in enumerate(self._legs):
+            leg.set_rod_pressure_flow_law(law, functools.partial(self.oil_stiffness_N_m, i))
+
+    @property
+    def rod_pressure_flow_law(self) -> RodPressureFlowLaw | None:
+        return self._rod_pressure_flow_law
+
     # --- stiffness of the oil columns -------------------------------------------------------
 
     def head_stiffness_N_m(self, i: int, s_m: float) -> float:
@@ -222,6 +237,10 @@ class L2bRodSide:
 
     def rod_stiffness_N_m(self, i: int, s_m: float) -> float:
         return self._beta * self._a_r[i] / (self._stroke - s_m + self._l0r[i])
+
+    def oil_stiffness_N_m(self, i: int, s_m: float) -> tuple[float, float]:
+        """``(k_h, k_r)`` of leg ``i`` at the column coordinate ``s_m``."""
+        return self.head_stiffness_N_m(i, s_m), self.rod_stiffness_N_m(i, s_m)
 
     def k2_N_m(self, i: int, s_m: float) -> float:
         return _series(self.head_stiffness_N_m(i, s_m), self._k_out[i])

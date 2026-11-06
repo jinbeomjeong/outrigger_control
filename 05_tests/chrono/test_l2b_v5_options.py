@@ -192,18 +192,20 @@ def _front_left_pair(*, with_m2: bool, is_body_fixed: bool, friction_N: float = 
 
 
 def test_m2_1_body_fixed_pair_is_the_hand_value_and_zero_without_the_option() -> None:
-    """Spec M2-1: 10.89 +- 0.3 kN (hand 10.893, numpy 10.879, wrapper 10.700)."""
+    """Spec M2-1: 10.89 +- 0.3 kN (hand 10.893, numpy 10.879, wrapper with revision 3 10.702)."""
     assert _front_left_pair(with_m2=True, is_body_fixed=True) == pytest.approx(10.89, abs=0.3)
     assert _front_left_pair(with_m2=False, is_body_fixed=True) == 0.0
 
 
 def test_m2_1_equals_the_stored_wrapper_value() -> None:
-    """The hook reproduces the review wrapper of ``m2_check.json`` (10.700 kN end difference)."""
-    assert _front_left_pair(with_m2=True, is_body_fixed=True) == pytest.approx(10.700, abs=0.001)
+    """The hook reproduces the 3-DOF review wrapper with the revision 3 law (hydraulics-expert
+    ``law.json`` 2026-11-06, ``pa``: 10.702 kN end difference; the plain lag gave 10.700)."""
+    assert _front_left_pair(with_m2=True, is_body_fixed=True) == pytest.approx(10.702, abs=0.001)
 
 
 def test_m2_2_free_body_pair_of_front_left() -> None:
-    """Spec M2-2: 4.13 .. 4.25 +- 0.5 kN (Hopsan 4.13, numpy 4.20, wrapper 4.25)."""
+    """Spec M2-2: 4.13 .. 4.25 +- 0.5 kN (Hopsan 4.13, numpy 4.20). With revision 3 the value
+    at 3.0 s is 4.316 kN (wrapper ``pa``); this mean of the last 200 steps is 4.224 kN."""
     difference_kN = _front_left_pair(with_m2=True, is_body_fixed=False)
     assert 4.13 - 0.5 <= difference_kN <= 4.25 + 0.5
 
@@ -261,11 +263,17 @@ def test_m2_off_writes_no_snapshot_key_and_on_writes_them() -> None:
     _run(case, off, off_motors, last_step=2)
     assert not [key for key in off.state_arrays() if key.startswith("m2_")]
     assert off.rod_release_record() is None
+    assert "rod_release" not in off.meta()
+    assert off.rod_side.rod_pressure_flow_law is None
     on, on_motors = _make_actuator(case)
     on.configure_rod_release()
     _run(case, on, on_motors, last_step=2)
     assert "m2_p_prev_Pa" in on.state_arrays()
     assert "m2_shift_total_m" in on.state_arrays()
+    assert {key for key in on.state_arrays() if key.startswith("m2_")} == {
+        "m2_p_prev_Pa", "m2_shift_total_m", "m2_clipped_steps"}  # revision 3: no new state
+    assert on.meta()["rod_release"]["law"] == "flow_limited_r3"
+    assert on.meta()["rod_release"]["pressure_law"]["tank_pressure_Pa"] == 2.0e5
 
 
 def test_m2_shift_is_clipped_at_the_soft_limit_and_counted() -> None:
