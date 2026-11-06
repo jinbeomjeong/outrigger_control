@@ -1,8 +1,10 @@
-# v5 유압 연성 구현 명세 (2026-11-06, 개정 1)
+# v5 유압 연성 구현 명세 (2026-11-06, 개정 2)
 
 작성: hydraulics-expert. 구현: python-expert. 기준 코드: master e747d8c(`final_C4G2`). 이 문서는 코드를 고치지 않았고 새 시뮬레이션도 돌리지 않았다. 수치는 저장 결과와 수계산이다. 결정 원문은 `decision_log.md` 4절 줄 286~349.
 
 **개정 1**(사용자 결정): D-1 넣음, D-2 그대로 두고 한계 기록, D-3 하네스 판정 뒤 결정, D-4 양방향, D-5 $\eta_v$ 0.85, D-6 BL + LC 거부. 그래서 오버랩·체크 닫힘(LC, 2.5절)과 제어기 쪽 요구(2.6절)를 더했고 시험·건수·커밋 순서를 다시 계산했다.
+
+**개정 2**(사용자 결정 2026-11-06, `decision_log.md` 4절 v5 구현 줄): M2-6 기준을 **정착값**으로 바꿨다. 옛 기준 4.13~4.25 kN은 정지 1 s 뒤(t = 3.0 s) 순간값이고, 그 시각은 ζ 약 0.01의 로킹 진동(2.95 Hz) 한가운데라 위상에 따라 값이 달라진다. 세 기준 모델을 정지 뒤 30 s까지 다시 돌린 정착값은 Hopsan 2.344, numpy 2.401, 3자유도 법칙 + M2 2.433 kN이고 하네스 2.436 kN(dynamics-expert)과 함께 2.43 ± 0.25 kN 안이다(3.1절 M2-6 아래 표). 같은 개정에서 2.4절에 `shift_head` S7 정확식, $r_s>1$ 마찰 띠 한계, 시험 C-10을 더했다. 개정 2는 hydraulics-expert가 새 기준 실행(scratchpad, 아래)을 돌렸다. 봉인 기준 `v5_criteria.md`는 고치지 않았다(개정 절은 control-expert가 따로 쓴다).
 
 **범위**: 펌프 유량 포화 + 밸브 지연(오버랩·체크 닫힘 포함) + M2(로드 압력 힘). M1c는 기본 끔 옵션. 두 챔버 압력 동역학, D-5 전환, M1c 수정, G4·불감대 제어기 대응, RL 약점 대응은 하지 않는다.
 
@@ -172,9 +174,26 @@ $$\text{로드 체크 개방: }p_T+\psi(p_A-p_{ref})-p_r-p_{cr}>0,\qquad \text{�
 |---|---|
 | **공통 입력** | `CheckDelayInputs(t, dt, u, p_h, p_r, locked, void_m, band_N, s_ref)` → `filter`가 전달 속도, 지연 이동량, 잠금 감쇠 마스크를 돌려준다 |
 | **하네스** | `harness_hydraulics`가 `plant`에서 입력을 만든다(`p_r = p_r0 - Gr/A_ann`, `p_h = (pressure() + p_r A_ann)/A_h`, `band = Fs - f`). `plant.cn[i] = C_LOCK[i]`, `c_lock` 이동, `pending_shift` 처리는 저장 코드와 같게 |
-| **L2b** | `SpeedReference.set_check_delay(obj)`(기본 None)를 두고 `advance`의 `_valve_step` 다음, `flow.limit` 앞에서 부른다. 입력은 `hook`에서 `advance` 전에 넣는다. `p_h=(F_p+p_rA_{ann})/A_p`(바닥 없이, 하네스와 같게), `band=` 마찰 한계 $-f$(S7 경로 0), `void`는 $dc-dc_{knee}$의 양수 부분. 잠금 감쇠 마스크가 켜진 다리는 $c=c_{lock}$(지금은 $\lvert u\rvert\le\varepsilon$로만 고른다, `:526`·`:558`). 지연 이동은 `shift_reference` + `oil.shift_head`(CB 방출 경로와 같은 앵커 이동, `:577-582`) |
+| **L2b** | `SpeedReference.set_check_delay(obj)`(기본 None)를 두고 `advance`의 `_valve_step` 다음, `flow.limit` 앞에서 부른다. 입력은 `hook`에서 `advance` 전에 넣는다. `p_h=(F_p+p_rA_{ann})/A_p`(바닥 없이, 하네스와 같게), `band=` 마찰 한계 $-f$(S7 경로 0, $r_s>1$ 한계는 아래 표), `void`는 $dc-dc_{knee}$의 양수 부분. 잠금 감쇠 마스크가 켜진 다리는 $c=c_{lock}$(지금은 $\lvert u\rvert\le\varepsilon$로만 고른다, `:526`·`:558`). 지연 이동은 `shift_reference` + `oil.shift_head`. 잠긴 다리의 앵커 이동은 경로마다 다르다(개정 2, 아래 식) |
 | **거부** | 밸브 모델이 꺼진 플랜트(명령 램프)에서 켜면 `ValueError`. 램프 경로에는 `_flow_open`이 따로 있어 시험하지 않았다 |
 | **스냅숏** | 옵션이 켜졌을 때만 상태 키를 쓴다 |
+
+**`shift_head` 앵커 이동(개정 2)**: 잠긴 법칙은 $F=F_{lock}+k_2\,dc+(k_1-k_2)\min(dc,\,dc_{knee})$, $dc=c-c_{lock}$, $c=s_{ref}-s$다. 헤드 기름만 $\delta$만큼 빠지는 이동($s_{ref}$를 $\delta$ 낮춤)을 이 법칙에 정확히 옮기면 다음과 같다.
+
+$$\text{S7 경로}(k_{out}\ \text{유한}):\quad c_{lock}\leftarrow c_{lock}-\delta\Big(1+\frac{k_h}{k_{out}}\Big),\qquad F_{lock}\leftarrow F_{lock}-k_h\,\delta$$
+
+$$\text{기름 법칙 G}(k_{out}=\infty,\ \text{CB·마찰 경로}):\quad c_{lock}\leftarrow c_{lock}-\delta,\qquad F_{lock}\leftarrow F_{lock}-k_h\,\delta\quad(\text{위 식의 극한, 기존 CB 식과 비트 동일})$$
+
+| 기호 | 뜻 | 단위 |
+|---|---|---|
+| $\delta$ | 헤드 방출 체적 / $A_h$ (M1c 개방 이동) | m |
+| $k_h$, $k_r$, $k_{out}$ | 헤드 기름, 로드 기름, 외부 경로(패드·구조) 강성 | N/m |
+| $k_1$, $k_2$ | 무릎 아래(로드 스프링 병렬) / 위 잠김 강성 | N/m |
+| $c_{lock}$, $F_{lock}$ | 잠금 순간 앵커 압축, 힘 | m, N |
+
+- 몸체 고정 힘 감소: 무릎 아래 $k_hk_{out}\delta/(k_h+k_r+k_{out})$, 무릎 위 $k_2\delta$. 로드 쪽 기름량(로드 법칙의 기준 압력 $p_{r0}$, 무릎 기준)은 그대로다. 무릎 아래에서는 피스톤 이동 때문에 로드 압력 판독이 $-k_rk_h\delta/((k_h+k_r+k_{out})A_{ann})$ 바뀌고, 무릎 위(바닥)에서는 바뀌지 않는다(control-expert 정정 2026-11-06, 판정을 느슨하게 하지 않음; 개정 1 2.1의 같은 문구도 이 뜻으로 읽는다).
+- 옛 구현(a506c29, `l2b_rod_side.py` `shift_head`)은 S7 경로에 $c_{lock}\mathrel{-}=\delta$, $F_{lock}\mathrel{-}=k_2\delta$를 썼다. 이 값은 $(k_h+k_r+k_{out})/(k_h+k_{out})$배, REXOME 강체 바닥에서 1.02~1.16배 과대였다(hydraulics-expert 수치 확인 2026-11-06, `decision_log.md` 4절 v5 구현 줄). 커밋 c8a3e63에서 위 정확식으로 고쳤고 시험 C-10(662ac2c에서 δ 0.1·0.3327 mm, 무릎 위 Δp_r = 0 보강)으로 확인했다.
+- 개방 이동에는 `oil.shift_head` 보호 장치(잠기지 않은 다리·disarm이면 앵커를 건드리지 않음)를 둔다.
 
 **M2와 함께 켤 때 이중 계산을 막는다.** 수축 크리프 `creep_ref`$=A_{ann}(p_{rod}-p_r)/k_h$는 M2 이동과 **같은 항**이다(FL 0.3327 mm, BL, $F_{band}$ 0). M1c 수축 개방 때 M2의 직전 압력과 추적 압력을 $p_{rod}$로 시드한다. `retract_dead`의 결과에 `p_rod`를 더하고(값은 안 바뀜), L2b는 `L2bRodSide.seed_release_pressure(i, p)`를 새로 둔다(개방 스텝의 `spring_force_N` 뒤 `_last_p_r[i]`에 쓴다, `:391`이 다음 스텝에 읽음). 신장 쪽은 겹치는 항이 없다.
 
@@ -187,6 +206,7 @@ $$\text{로드 체크 개방: }p_T+\psi(p_A-p_{ref})-p_r-p_{cr}>0,\qquad \text{�
 | 고정 해제 | E2 없음. 켜면 값이 F_min을 넘어가고 복귀 실패가 는다(가장 큰 미결) | `decision_log.md:332` |
 | 하네스 $p_r$ 판독 | 수축 잠금 뒤 신장에서 $p_r$이 $p_{r0}$(약 34.8 bar)로 돌아간다. 단위 재현은 2 bar로 떨어진다고 가정했다(`unit_m1c.py:65`). 그래서 수축 뒤 신장의 헤드 개방이 $p_A$ 5.4 bar에서 일어나 지연이 거의 없다($p_B$가 5 bar로 떨어지면 75 bar). 코드로 확인했고, 저장 계열에는 BL FR 31 ms 짧은 구간(34.24 → 34.29 bar)뿐이다 | D-2 결정: 그대로 두고 한계로 기록 |
 | 유량·M2·LC 조합 | Hopsan 기준과 폐루프 실행이 없다 | |
+| L2b 정지 마찰비 $r_s>1$(개정 2) | 입력 `band = F_s − f`는 미끄럼 한계 기준이다(`l2b_actuator.py:555-557`, 하네스도 같은 식). 붙음 상태의 실제 남은 띠는 $r_sF_s-f$라서 $(r_s-1)F_s$만큼 작게 들어간다. 결과: `retract_dead`의 $p_{open}$·need가 커지고(개방이 늦어지는 쪽), $f>F_s$로 붙어 있으면 band < 0이 되어 `creep_start`가 음수가 된다. YAML 기본 $r_s$ = 1.0(`actuator.seal_friction.static_ratio`)에서는 차이가 없다 | 고치지 않고 한계로 기록. $r_s>1$ 행의 M1c 값은 참고 값. 바꾸려면 붙음 다리에 $r_sF_s-f$를 넘기는 것이 맞지만 단위 기준(`unit_m1c.json`)이 $r_s$ = 1에서만 있다 |
 
 ### 2.5 LC: 오버랩 꼬리 차단 + 체크 닫힘 지연 (기본 끔)
 
@@ -310,11 +330,11 @@ M1c 코드(2.4절)는 **고치지 않는다.** LC가 M1c 입력을 바꾸는 점
 | V-1 | 밸브 켬 계단 응답 $\tau_v$ 0.1 s | $t$ = 0.1 s에 $u/v_{max}$ 0.632, $s_{ref}$ 0.770 mm | 수계산 |
 | V-2 | `run_S9` 옵션 없음 | `valve_model_on` False, `command_ramp_active` True, args 키 없음 | 저장 meta |
 | M2-1 | 실제 `L2bRodSide` + `SpeedReference`, 몸체 고정, FL 신장 0.25 $v_{max}$ 0.5 s, 로드 34.818 대 2 bar 끝 힘 차 | **10.89 ± 0.3 kN**, 옵션 없음 0.0 | 수계산 10.893, numpy 10.879, 래퍼 10.700. Hopsan 8.46은 제외(보고서 12.4) |
-| M2-2 | 자유 몸체 C2 − C3 끝 힘 FL | **4.13~4.25 ± 0.5 kN** | Hopsan 4.13, numpy 4.20, 래퍼 4.25 |
+| M2-2 | 자유 몸체 C2 − C3 끝 힘 FL(t = 3.0 s, 저장 실행 길이 그대로) | **4.13~4.25 ± 0.5 kN** | Hopsan 4.13, numpy 4.20, 래퍼 4.25. **주석(개정 2)**: 정지 1 s 뒤 순간값이라 로킹 진동(2.95 Hz, ζ 약 0.01, 진폭 약 1.9 kN) 위상에 따라 달라진다. 정착값은 **2.43 kN**(M2-6). 이 시험은 래퍼 재현용으로 그대로 둔다 |
 | M2-3 | 네 다리 정지 A 켬·끔 차 | ≤ 0.05 kN | 래퍼 ≤ 0.01 kN |
 | M2-4 | 마찰 경로 $F_s$ 4 kN, M2-1 짝 차 | 10.89 ± 0.3 kN | **수계산만**(미끄러지면 $f$ 같은 한계). Hopsan 기준 없음 |
 | M2-5 | 이동 합: $s_{ref}$ 고정, 34.818 → 5 bar | FL 0.3820 mm(1×10⁻⁹ m 안) | 수계산 |
-| M2-6 | 하네스 플랜트 C2 − C3 | 4.13~4.25 ± 1 kN | 3자유도 기준과 모델이 달라 허용을 넓혔다. 벗어나면 멈추고 dynamics-expert |
+| M2-6 | 하네스 플랜트 C2 − C3, FL 힘 **정착값**(개정 2). 측정: 정지(t = 2.0 s) 뒤 **30 s 이상** 실행, 정지 뒤 **10~30 s 평균**(t 12~32 s) 또는 정지 뒤 1 s부터의 **상수 + 감쇠 정현파 맞춤의 상수항** | **2.43 ± 0.25 kN** | 아래 표. 허용 ±0.25 kN의 근거: 하네스 횡 패드 스프링 효과 약 6 %, 모델 간 이동량 차 약 2 %, 맞춤 오차. 벗어나면 멈추고 dynamics-expert. ~~4.13~4.25 ± 1 kN~~(개정 1, 순간값 기준이라 폐기) |
 | M2-7 | 스냅숏 복원 뒤 연속 실행과 비트 동일 | | |
 | M2-8 | 신장 뒤 수축 시작 | **기대값 없음.** Hopsan 대조가 없다(보고서 12.4 미시험). 부호와 M2-5 합만 시험 | hydraulics-expert가 기준 1건 추가 가능 |
 | C-1 | 이식본이 저장 표를 재현: `unit_m1c.json`의 `vent_ref`, `block_lowA` 60행 | 행정 차 ≤ 1×10⁻⁴ mm | 저장 값 |
@@ -326,6 +346,7 @@ M1c 코드(2.4절)는 **고치지 않는다.** LC가 M1c 입력을 바꾸는 점
 | C-7 | 스텝 수렴 1 ms 대 1×10⁻⁴ s | 헤드 개방 행정 차 ≤ 1 % | 새 기준 |
 | C-8 | M2 + M1c 수축: 크리프 + M2 합 | $A_{ann}(p_{rod}-p_r)/k_h$ = 0.3327 mm(FL, BL), **2배가 아님** | 수계산 |
 | C-9 | meta에 `unit_status`, VR·E2·E4 값을 주면 `ValueError` | | 사용자 결정 |
+| C-10 | `shift_head` 앵커 이동(개정 2): 잠긴 다리, 몸체 고정, $\delta$ 0.1 mm, 무릎 아래·위 각 1건, S7 경로와 기름 법칙 G | 힘 감소 무릎 아래 $k_hk_{out}\delta/(k_h+k_r+k_{out})$, 위 $k_2\delta$(상대 1×10⁻⁹ 안). 로드 쪽 불변. 기름 법칙 G는 기존 CB 식과 비트 동일 | 2.4절 정확식 |
 | L-1 | 꼬리 차단 시각, $\delta_{ol}$ 1·2·5 %, 0.25·1.0 $v_{max}$에서 명령 0 | 2.5절 표 값, 1 스텝(하네스 1 조각) 안 | 수계산 |
 | L-2 | 차단으로 잃는 행정(명령 0 뒤 $\int u\,dt$가 이상값보다 작은 양) | 0.0209 / 0.0418 / 0.1046 mm, 상대 1 % 안 | 수계산, 11.3의 0.04 mm와 맞음 |
 | L-3 | 차단 순간 힘 단계(이동 감쇠) | FL 42 N, RL 36 N($\delta_{ol}$ 2 %), 상대 5 % 안 | 수계산. 스프링 변화가 없는 몸체 고정 조건 |
@@ -342,6 +363,20 @@ M1c 코드(2.4절)는 **고치지 않는다.** LC가 M1c 입력을 바꾸는 점
 | W-4 | 플랜트만, $t_c>T$ | `ValueError` | 2.6절 표 |
 | W-5 | 새 창 끔: 기존 `two_pressure` 시험과 `test_s8_ml_main.py:229` | 비트 동일 | |
 | W-6 | T4·T5(새 플랜트 기록 재생) | 통과 기준 하한 ≤ 진값 + 0.6 kN. **새 플랜트 Chrono 기록이 있어야 한다**(Q-2) | 10.4 |
+
+M2-6 기준값(개정 2, FL 힘 C2 − C3 [kN], C2 로드 34.818 bar g / C3 2 bar g 해제, FL 0.25 $v_{max}$ 0.5 s 신장, 3자유도 몸체):
+
+| 모델 | t = 3.0 s 순간값 | 정지 뒤 3~10 s 평균 | **정지 뒤 10~30 s 평균** | 맞춤 상수항(3~32 s, 2모드) | 로킹 모드 f / ζ |
+|---|---|---|---|---|---|
+| Hopsan 두 챔버(Δt 1×10⁻⁵ s) | 4.10 | 2.340 | **2.344** | 2.342 | 2.953 Hz / 0.0080 |
+| numpy 두 챔버(RK4 5×10⁻⁵ s) | 4.18 | 2.398 | **2.401** | 2.400 | 2.952 Hz / 0.0080 |
+| 3자유도 법칙 + M2(`m2_check.run_law`) | 4.23 | 2.431 | **2.433** | 2.433 | 2.947 Hz / 0.0108 |
+| 하네스(dynamics-expert, 6자유도) | | | 2.436 | | |
+
+- 2모드 맞춤의 둘째 모드는 4.86 Hz(ζ 0.014~0.018)다. 맞춤 RMS 잔차 ≤ 0.004 kN.
+- Hopsan 스텝 절반(5×10⁻⁶ s, 12 s 실행): 정지 뒤 3~10 s 평균 2.3375 대 2.340 kN(0.1 %).
+- Hopsan·numpy는 법칙 모델(3자유도·하네스)보다 1~4 % 낮다(Hopsan ↔ numpy 2.4 %, numpy ↔ 3자유도 1.3 %, Hopsan ↔ 3자유도 3.7 %)(두 챔버 잠김 강성·끝 로드 압력 차로 추정, 원인 분리 안 함). 정지 뒤 10~20 s 창 ptp가 약 1 kN이므로 10 s보다 짧은 창 평균은 쓰지 않는다.
+- 실행: scratchpad `m2_6_hyd\run_long.py`, `settle.py`, 결과 `settle.json`, `settle.png`(보존 보장 없음). 모델 스크립트는 워크트리 a506c29의 `04_scripts/04_hydraulic/pressure_review/{four_leg,m2_check}.py`를 읽기만 했다.
 
 C-4 기대값(FL, 단위 mm, 압력 bar):
 
@@ -432,7 +467,7 @@ BL은 LC 끔에서만 돌린다(D-6 결정, BL + LC 거부).
 | 7 | **제어기 창**(control-expert Q-1 답 뒤) | R-1~R-3. 조합 거부. 새 창 끔이 기본 | W-1, W-3, W-4, W-5, B-2 |
 | 8 | M1c 모듈 | `check_open_delay.py` 이식, VR·E2·E4 삭제 | C-1~4, C-9 |
 | 9 | M1c 하네스 | 어댑터. M2 시드 포함, D-6 거부 | C-5, C-8, L-10, B-2 |
-| 10 | M1c L2b | `set_check_delay`, 감쇠 마스크, `seed_release_pressure`, 스냅숏 | C-6, C-7, B-7 |
+| 10 | M1c L2b | `set_check_delay`, 감쇠 마스크, `seed_release_pressure`, 스냅숏. 개정 2: `shift_head` S7 정확식 | C-6, C-7, C-10, B-7 |
 | 11 | 토양 밸브 옵션과 Chrono 인자 | `run_S9 --valve-tau-s`, `run_S8C`·`run_S9`에 M2·M1c·LC·창 인자, `s9_batch` 행 정의(실행 안 함) | V-1, V-2, B-6 |
 | 12 | 러너·집계 | `run_v5.py`, `aggregate_v5.py`. `--list` 1,200건 확인, 행 1개 짧은 연기 시험 | V0 R12 해시 = 황금값, W-2 |
 | 13 | 회귀 묶음 | B-4, B-5 실행(메인 세션이 띄움). `hydraulic_coupling.md` 머리에 이 명세 링크 | 일치. 다르면 멈추고 보고 |
@@ -468,5 +503,11 @@ BL은 LC 끔에서만 돌린다(D-6 결정, BL + LC 거부).
 - M2 + 마찰 경로, M2 + M1c, M1c + 유량, 신장 뒤 수축의 M2: Hopsan 기준 없음.
 - M2의 $p_{bB}$ 5 bar가 C3·비틀림을 약간 나쁘게 한다(최대 +0.5 kN, 원인 미시험).
 - 저속 수축 리밋 사이클(7.8~8.7 Hz)은 넣지 않는다. 실제 여부 미상, M-시험 뒤.
+
+**⑥ 압력만 판정 비교: 하네스와 Chrono 설정 차이**(2026-11-06): 하네스 ⑥ 압력만 판정(`c2py_r8d1_closed_loop.preset_config(ContactJudge.PRESSURE, with_imu_samples=True, with_reapproach=True)`)과 Chrono `N_G4_*_pressure`는 접지 판정 코드가 같다(`ContactJudge.PRESSURE`, `C2Controller._load_estimate_N`이 `forces.lower`를 그대로 씀). 설정은 `reanchor.enable`, `target.acceptance`, `target.check_time_s`, `target.slope_limit_mode`, `zero_calibration.mode` 다섯 가지가 다르고, 같은 차이가 결합 판정 짝(하네스 COMBINED 대 Chrono `E_G4_Fs4`)에도 있다. 그래서 하네스 안의 짝 비교(압력만 대 결합, 같은 행·위상·설정)는 이 차이의 영향을 받지 않고, 하네스 값을 Chrono N_G4 값과 직접 맞댈 때만 걸린다. 사용자 결정(2026-11-06): 그대로 구현한다. 판정 근거는 봉인 기준 13.4(1 ms 진값·하한, 창 뒤 놓침 구간 수)이고, Chrono식 10 Hz 지표(명세 `s6_control_spec.md` 203.1~203.3, 키 `event_output.ref_10hz_episodes`)는 참고값이며 판정에 쓰지 않는다. 다섯 설정의 양쪽 값은 손으로 적지 않고 하네스 meta `controller.config.to_meta()`와 Chrono 저장 `controller_meta`에서 읽어 1단계 판정 보고서 ⑥ 표에 붙인다.
+
+**n_late(J11) 정의**(control-expert 2026-11-06): 다리별 명령 0 구간(시작 = 작용 명령이 0.0인 첫 10 Hz 표본, 창 끝 = `_LockStretch.window_end_s`, 닫힘 = 명령이 다시 0이 아닌 첫 표본 또는 실행 끝) 중 작용 명령 0인 열린 표본 가운데 $t_k \ge t_w - 10^{-9}$ s인 것이 있는 구간만 판정하고($t_w - 10^{-9} \le t_{last}$, $t_{last}$ = 닫힌 구간 $t_c - T$, 열린 구간 $t_{end}$; 그 밖은 `unjudged`, 다음 명령이 창 끝 전에 들어온 경우 포함 — 11-06 정정), 창 끝 + 10⁻⁶ s의 플랜트 잠금 상태(`plant.lock_events`)가 풀림이면 늦음으로 센다. 단위는 구간(건), 실행당 다리마다. 관문은 대체 다리의 `n_late_fallback` > 0(VB → H-7, LS → L-e)이고 나머지는 기록이다. 창 끝은 명령 기록에서 다시 계산해 제어기 값과 ≤ 10⁻¹² s로 맞춘다. 결과 키 `lock_window_alignment`, T4h 저장은 VB·LS1~4 행 10 Hz만(세부 키는 구현 커밋 docstring).
+
+**T4h 판정 표본**(사용자 결정 2026-11-06, 봉인 9절 문구는 그대로): 작용 명령(직전 주기 출력)이 0이고 그 다리 플랜트가 표본 시각 $t_k$에 잠긴(`lock_events` 기준) 표본만 판정한다. 대체를 강제한 하한 − `true_force_N` > 0.6 kN인 수가 0이면 잠정 통과다. 명령 0이지만 아직 잠기지 않은 표본(밸브 꼬리 + $t_c$)은 하네스 로드 판독이 기반 법칙의 이동 값(배압 없음, `r64_g4_closed_loop.with_two_pressures`의 ASSUMPTION)이라 진값이 아니므로 판정하지 않고 `unlocked_tail_samples_by_leg`·`unlocked_tail_max_excess_N`으로 기록만 하며, 이 구간은 Chrono T4·T5(기준 13.5)에 맡긴다. 근거: R12 VB 초과 16표본(최대 8.22 kN = (34.82 − 13.0) bar × $A_{ann}$)이 모두 READY 꼬리 신장 뒤 잠기기 전 표본이고, 잠긴 표본에서 하한 − 진값은 −8.3~−10.9 kN(보수 쪽).
 
 **이 명세 밖, 기준 쪽에 적어 둔 v5 항목**(control-expert 기준 작성 때 본다): 항목 8 위상 무관 지표(`decision_log.md:297`), S-4 늦은 LOC FLAG(`:293`), 사건·포화 겹침 합성 사례(`:296`), R12 유량 켬 10.92 kN(`:305`), S6 끔 시드 변경 검토(`:307`), 압력만 판정 비교(`:328`), 토양 빠른 사건 1 ms·0.5 s 통일(`:346`), P3-4 집계 `P3-4_verdict`(명세 433.6). 넣을지는 기준 초안을 본 뒤 사용자가 정한다.
