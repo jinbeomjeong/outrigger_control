@@ -44,6 +44,7 @@ class RodReleaseShift:
         self._previous_pressure_Pa: NDArray[np.float64] | None = None
         self._shift_total_m = np.zeros(leg_count)
         self._clipped_steps = np.zeros(leg_count, dtype=np.int64)
+        self._clip_times_s: list[list[float]] = [[] for _ in range(leg_count)]
 
     @property
     def shift_total_m(self) -> NDArray[np.float64]:
@@ -53,6 +54,12 @@ class RodReleaseShift:
     @property
     def clipped_steps(self) -> NDArray[np.int64]:
         return self._clipped_steps.copy()
+
+    @property
+    def clip_times_s(self) -> list[list[float]]:
+        """Per leg the step times of the clipped steps that were given a ``t_s`` (v5 criteria
+        rev. 2 2.1: split before / after the first lift-off). Not part of the snapshot."""
+        return [list(times) for times in self._clip_times_s]
 
     def forget_pressure(self) -> None:
         """The next call starts from its own pressure (rod law disarmed: no pressure exists)."""
@@ -64,8 +71,8 @@ class RodReleaseShift:
             self._previous_pressure_Pa[leg] = pressure_Pa
 
     def shift_m(self, rod_pressure_Pa: ArrayLike, head_stiffness_N_m: ArrayLike,
-                is_moving: ArrayLike, room_down_m: ArrayLike, room_up_m: ArrayLike
-                ) -> NDArray[np.float64]:
+                is_moving: ArrayLike, room_down_m: ArrayLike, room_up_m: ArrayLike,
+                *, t_s: float | None = None) -> NDArray[np.float64]:
         """Advance one step; the amount to add to ``s_ref`` per leg [m].
 
         Args:
@@ -74,6 +81,7 @@ class RodReleaseShift:
             is_moving: False on locked legs.
             room_down_m: Allowed shift towards the lower limit, ``<= 0``.
             room_up_m: Allowed shift towards the upper limit, ``>= 0``.
+            t_s: Step time; a clipped leg records it (:attr:`clip_times_s`). None = no time.
         """
         pressure_Pa = np.array(rod_pressure_Pa, dtype=float)
         previous_Pa = (pressure_Pa if self._previous_pressure_Pa is None
@@ -81,7 +89,11 @@ class RodReleaseShift:
         wanted_m = np.where(is_moving, self._annulus_area_m2 * (previous_Pa - pressure_Pa)
                             / np.asarray(head_stiffness_N_m, dtype=float), 0.0)
         shift_m = np.clip(wanted_m, room_down_m, room_up_m)
-        self._clipped_steps += shift_m != wanted_m
+        is_clipped = shift_m != wanted_m
+        self._clipped_steps += is_clipped
+        if t_s is not None:
+            for leg in np.flatnonzero(is_clipped):
+                self._clip_times_s[leg].append(float(t_s))
         self._shift_total_m += shift_m
         self._previous_pressure_Pa = pressure_Pa
         return shift_m
@@ -94,8 +106,10 @@ class RodReleaseShift:
         return arrays
 
     def restore_state(self, arrays: Mapping[str, NDArray[Any]]) -> None:
-        """A snapshot without the keys continues from the current pressure with a zero record."""
+        """A snapshot without the keys continues from the current pressure with a zero record.
+        The clip times are not in the snapshot: they restart empty."""
         leg_count = self._annulus_area_m2.size
+        self._clip_times_s = [[] for _ in range(leg_count)]
         self._previous_pressure_Pa = None
         if PREVIOUS_PRESSURE_KEY in arrays:
             self._previous_pressure_Pa = np.array(arrays[PREVIOUS_PRESSURE_KEY], dtype=float)

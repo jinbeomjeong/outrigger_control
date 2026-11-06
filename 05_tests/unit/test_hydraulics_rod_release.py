@@ -85,6 +85,20 @@ def test_shift_stays_inside_the_travel_room_and_is_counted() -> None:
     assert rule.clipped_steps[0] == 1
 
 
+def test_clip_times_are_kept_only_with_a_step_time_and_not_in_the_snapshot() -> None:
+    """v5 criteria rev. 2 2.1: a clipped step given ``t_s`` records its time; the total and
+    the snapshot keys stay as before."""
+    rule = RodReleaseShift([ANNULUS_FL_M2])
+    rule.shift_m([34.818 * BAR], [K_H_FL_N_M], [True], [-WIDE_ROOM_M], [1.0e-5], t_s=0.5)
+    rule.shift_m([5.0 * BAR], [K_H_FL_N_M], [True], [-WIDE_ROOM_M], [1.0e-5], t_s=1.25)
+    _one_leg_shift(rule, 4.0 * BAR, room_up_m=0.0)  # clipped, no time given
+    assert rule.clipped_steps[0] == 2
+    assert rule.clip_times_s == [[1.25]]
+    assert set(rule.state_arrays()) == {PREVIOUS_PRESSURE_KEY, SHIFT_TOTAL_KEY, CLIPPED_STEPS_KEY}
+    rule.restore_state(rule.state_arrays())
+    assert rule.clip_times_s == [[]]
+
+
 def test_snapshot_round_trip_continues_bit_identically() -> None:
     rule = RodReleaseShift([ANNULUS_FL_M2])
     _one_leg_shift(rule, 34.0 * BAR)
