@@ -114,9 +114,12 @@ def test_m2_12_harness_and_l2b_give_the_same_pressure(leg: int) -> None:
 
 
 def _hopsan_reference() -> tuple[dict, dict]:
+    """Meta and the series; each ``.npy`` holds rows (time, value) (``*.npz`` is git-ignored)."""
     meta = json.loads((DATA_DIR / "m2_13_hopsan_c2_release.json").read_text(encoding="utf-8"))
-    with np.load(DATA_DIR / "m2_13_hopsan_c2_release.npz") as arrays:
-        return meta, {name: arrays[name] for name in arrays.files}
+    hopsan = np.load(DATA_DIR / "m2_13_hopsan_c2_release_hopsan.npy", allow_pickle=False)
+    valve = np.load(DATA_DIR / "m2_13_hopsan_c2_release_valve.npy", allow_pickle=False)
+    return meta, {"hopsan_t_s": hopsan[0], "hopsan_rod_pressure_FL_Pa": hopsan[1],
+                  "valve_t_s": valve[0], "valve_speed_FL_m_s": valve[1]}
 
 
 def _first_time_at_or_below(t_s: np.ndarray, pressure_Pa: np.ndarray, level_Pa: float) -> float:
