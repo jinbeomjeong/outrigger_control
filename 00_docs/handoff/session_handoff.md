@@ -2,8 +2,8 @@
 
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
 
-- 갱신: 2026-11-06, v5 유압 구현 병합(f91c37b, fast-forward)과 v5 인수 기준 봉인(본·rev1·rev2) 커밋(커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
-- 직전 코드 커밋: **f91c37b**(v5 구현 35커밋 병합). 결정 경과 원본은 `decision_log.md` 4절 끝.
+- 갱신: 2026-11-06 저녁, v5 1단계 통과(M2 개정 3 재실행)와 기준 rev3·rev4, 유압 그림 4장 커밋(커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력).
+- 직전 코드 커밋: **e4e80f9**(M2 개정 3 `flow_limited_r3` + golden_check). 결정 경과 원본은 `decision_log.md` 4절 끝.
 
 ## 현재 위치
 
@@ -13,9 +13,9 @@
 
 ## 진행 중: v5 유압 구현 (v4와 병행, 사용자 결정 11-06)
 
-**현재(11-06)**: 구현 병합 완료(B-2 OFF 23행 황금값 일치, B-7 5,615 통과·실패 0, 병합 전 확인 실행 overlap·item8·r67 VB 통과, 정합 점검 차단 0). 기준 `06_analysis/03_hydraulic/coupled/v5/v5_criteria.md`(봉인) + `v5_criteria_rev1.md`(M2-6 2.43 ± 0.25 kN, C-1~10) + `v5_criteria_rev2.md`(M2 잘림은 첫 이륙 뒤만, 잡음 기준 쌍 = master 끔 V0 1,527, n_late·T4h 정의 보충). **다음**: compute-scheduler-expert 배치로 1단계 1,320건 + 잡음 V0 1,527 + Chrono B-4·B-5·LC/M2 비용 probe 동시 시작(사용자 사전 승인, 메모리 `v5-merge-stage1-authorization-20261106`). 잡음 VB 묶음(2단계)은 r79 러너에 이륙 시각 연결(M2 잘림 pre/post) 뒤. 격자 768도 출처가 다르면 V0 768 전체. 병합 전 확인 산출물 `v5/pre_merge_check/`.
+**현재(11-06 저녁)**: **1단계 통과**(`v5/stage1_judgement.md` R절). 첫 판정은 J8 리밋 사이클로 멈춤 → 원인은 M2의 즉시 이동(유량 무관) → M2 개정 3(유량 제한 `flow_limited_r3`, 사용자 결정) → M2 켠 1,030건 재실행(옛 행은 `*_m2r2*`, `m2r2_archive_manifest.json`) → 통과. B-7 5,629 통과·실패 0. 기준: `v5_criteria.md`(봉인) + rev1(M2-6 2.43 ± 0.25, C-1~10) + rev2(M2 잘림 이륙 뒤만, 잡음 기준 쌍 = master 끔 V0, n_late·T4h 정의) + rev3(잡음 1,503건, L2 문턱 16) + rev4(M2 개정 3 사실·M2-1~13·재실행 범위). 잡음 V0 1,503 완료(`v5/noise_v0/`, 커밋 안 함). Chrono B-4·B-5 비트 동일, 비용 probe 6건은 동시 실행으로 오염된 참고값. **진행**: 2단계(사용자 사전 승인, 메모리 `v5-stage2-overnight-authorization-20261106`) — scratchpad `v5_stage2\` 러너 A(격자 V0 표본 8 → 다르면 V0 768 → VB 768), 러너 N(잡음 VB 1,503, r79 러너 이륙 시각·lock_window 연결 커밋 뒤 `v5/noise_vb/READY_r79_lift`로 시작). 밤사이 관문 실패는 원인 분석까지만, 아침에 질문. 큰 결과 파일(`main.jsonl`, `main_m2r2.jsonl`, `noise_v0/`)은 로컬 보관.
 
-명세 `00_docs/02_hydraulic/v5_hydraulic_impl_spec.md`(개정 2 + 11-06 보충). 범위는 유량 포화(기본 끔 유지, D-5 전환 안 함) + 밸브 지연 + M2 + M1c(기본 끔, VN·BL, 식 변경 없이 이식) + 오버랩·닫힘 항 LC(제어기 잠금 창 동반).
+명세 `00_docs/02_hydraulic/v5_hydraulic_impl_spec.md`(개정 3). 유압 그림 `00_docs/02_hydraulic/figures/`(1 범위, 2 목적, 3 블록, 4 ISO 1219 회로도; 명세 `hydraulic_model_figspec.md`). 범위는 유량 포화(기본 끔 유지, D-5 전환 안 함) + 밸브 지연 + M2 + M1c(기본 끔, VN·BL, 식 변경 없이 이식) + 오버랩·닫힘 항 LC(제어기 잠금 창 동반).
 
 - 결정: D-1 LC 넣음(권고와 다름, 제어기 변경 동반), D-2 M1c $p_r$ 그대로·한계 기록, D-3 Chrono는 하네스 판정 뒤, D-4 M2 양방향, D-5 기준 구성 $\eta_v$ 0.85, D-6 BL + LC 거부.
 - 조합: 모두 끔 = `final_C4G2` 비트 동일 대상, 플랜트만 = 비교용, 제어기만 = 금지, 둘 다 = v5 기준 구성(VB).

@@ -1,0 +1,35 @@
+{
+ "t_lift_s": 22.375,
+ "supply_L_min": 51.17,
+ "t_a_s": 22.374999999993204,
+ "basis": "first_overlap_after_liftoff",
+ "ratio_at_t_a": 1.005057,
+ "case": "R12",
+ "flow_setting": {
+  "is_enabled": true,
+  "eta_v": 0.85,
+  "dp_comp_Pa": null,
+  "dp_unload_Pa": null,
+  "width_Pa": null,
+  "law": null,
+  "always_solve": false
+ },
+ "hydraulic_options": {
+  "flow": null,
+  "valve_tau_s": null,
+  "rod_release_force": true,
+  "check_delay": null,
+  "lock_closure": {
+   "overlap_ratio": 0.02,
+   "closing_delay_s": 0.05
+  },
+  "lock_window_follows_plant": true
+ },
+ "timeline": {
+  "t_lift": 22.399999999993145,
+  "t_loc": 22.999999999991747,
+  "t_done": 30.3,
+  "t_ready": 42.30000000001995
+ },
+ "commands_sha256": "7e1792495cf568ff9cb8fc5e4503e154708f3dc9aeeeb59506c92de3160e4251"
+}
