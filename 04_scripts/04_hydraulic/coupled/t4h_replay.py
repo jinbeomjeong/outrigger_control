@@ -4,12 +4,15 @@ Each ``t4h/<row>_<phase>_<setting>.npz`` (``run_v5`` VB / LS runs) holds the 10 
 inputs and outputs and the 1 ms truth at the samples. The two-pressure monitor of the run's
 setting (harness preset + ``apply_lock_window`` of its options; the stored monitor settings
 must be equal) is run offline with the rod-side fallback forced on all four legs from the first
-row (``contact_replay.replay_fallback_monitor``). Values: per leg the samples with a zero acting
-command where ``lower - true_force_N > 0.6 kN`` (0 = provisional pass) and the largest
-``lower - true_force_N``; ``lower - true_force_min_N`` is recorded only.
+row (``contact_replay.replay_fallback_monitor``). Judged samples (user decision 2026-11-06): a
+zero acting command and the plant leg locked at t_k. Values: per leg the judged samples where
+``lower - true_force_N > 0.6 kN`` (0 = provisional pass) and the largest ``lower - true_force_N``.
+Zero-command samples whose leg is not locked yet (the valve tail; the Chrono T4 / T5 rule) are
+recorded only (``unlocked_tail_*``), as is the ``lower - true_force_min_N`` value.
 
 Usage (dynamics-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/t4h_replay.py <out_json> <npz or folder> [...]
+``aggregate_v5`` reads ``<batch>/t4h/t4h_replay.json`` (write the output there for its table).
 """
 from __future__ import annotations
 
@@ -94,20 +97,34 @@ def replay_values(path: Path) -> dict:
     acting = np.zeros_like(arrays["command_m_s"])
     acting[1:] = arrays["command_m_s"][:-1]
     is_zero = acting == 0.0
+    is_locked = np.asarray(arrays["locked"], bool)
     excess = replay.lower_reading_N - arrays["true_force_N"]
-    judged = is_zero & np.isfinite(excess)
+    zero_with_truth = is_zero & np.isfinite(excess)
+    judged = zero_with_truth & is_locked
+    unlocked_tail = zero_with_truth & ~is_locked
     over = judged & (excess > EXCESS_LIMIT_N)
     excess_min_basis = replay.lower_reading_N - arrays["true_force_min_N"]
-    recorded = is_zero & np.isfinite(excess_min_basis)
+    recorded = judged & np.isfinite(excess_min_basis)
     return {"file": path.name, "samples": int(len(t_s)),
-            "judged_samples_by_leg": dict(zip(LEGS, judged.sum(axis=0).tolist(), strict=True)),
-            "over_0p6kN_by_leg": dict(zip(LEGS, over.sum(axis=0).tolist(), strict=True)),
+            "judged_samples_by_leg": _by_leg(judged.sum(axis=0)),
+            "over_0p6kN_by_leg": _by_leg(over.sum(axis=0)),
             "over_0p6kN": int(over.sum()),
-            "max_excess_N": float(excess[judged].max()) if judged.any() else None,
-            "max_excess_vs_window_min_N": (float(excess_min_basis[recorded].max())
-                                           if recorded.any() else None),
+            "max_excess_N": _max_or_none(excess[judged]),
+            "max_excess_vs_window_min_N": _max_or_none(excess_min_basis[recorded]),
+            "unlocked_tail_samples_by_leg": _by_leg(unlocked_tail.sum(axis=0)),
+            "unlocked_tail_over_0p6kN_by_leg": _by_leg(
+                (unlocked_tail & (excess > EXCESS_LIMIT_N)).sum(axis=0)),
+            "unlocked_tail_max_excess_N": _max_or_none(excess[unlocked_tail]),
             "provisional_pass": bool(over.sum() == 0),
             "settings_equal": True, "commands_sha256": meta.get("commands_sha256")}
+
+
+def _by_leg(counts) -> dict[str, int]:
+    return dict(zip(LEGS, np.asarray(counts).tolist(), strict=True))
+
+
+def _max_or_none(values: np.ndarray) -> float | None:
+    return float(values.max()) if values.size else None
 
 
 def record_files(paths: list[str]) -> list[Path]:
@@ -122,8 +139,9 @@ def main() -> int:
         print(__doc__)
         return 2
     rows = [replay_values(path) for path in record_files(sys.argv[2:])]
-    report = {"rule": "criteria 9 T4h: zero acting command samples, lower - true_force_N "
-                      "> 0.6 kN count (0 = provisional pass); fallback forced on all legs",
+    report = {"rule": "criteria 9 T4h: zero acting command samples of a locked plant leg, "
+                      "lower - true_force_N > 0.6 kN count (0 = provisional pass); fallback "
+                      "forced on all legs; unlocked tail samples recorded only",
               "runs": len(rows), "runs_over": sum(not row["provisional_pass"] for row in rows),
               "rows": rows}
     Path(sys.argv[1]).write_text(json.dumps(report, indent=1), encoding="utf-8")

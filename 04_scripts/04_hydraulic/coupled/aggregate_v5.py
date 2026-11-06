@@ -10,7 +10,8 @@ batch gets ``ready`` (criteria 7: S1 .. S5, S7 first READY <= 100 s, event rows 
 ``event_force`` (criteria 3.1, ⑦: after-window 1 ms minimum, trailing 0.5 s mean, FLAG_E3_1ms).
 Batch ``pressure_only`` adds ``pressure_only`` (criteria 13.4, ⑥): the pressure-only run and the
 combined run of ``main`` side by side (after-window 1 ms minimum, time below F_min, misses of
-the lower estimate), each entry with ``unit_status``.
+the lower estimate), each entry with ``unit_status``. Every batch gets ``lock_window`` (criteria
+J11 per setting) and, when ``<batch>/t4h/t4h_replay.json`` exists, ``t4h`` (criteria 9).
 
 Usage: python -I -B 04_scripts/04_hydraulic/coupled/aggregate_v5.py <batch> [<batch> ...]
 """
@@ -226,6 +227,24 @@ def lock_window_table(rows: list[dict]) -> dict:
     return table
 
 
+T4H_REPLAY_FILE = "t4h_replay.json"
+"""``t4h_replay.py`` output the aggregation reads from ``<batch>/t4h/`` when present."""
+
+
+def t4h_table(report: dict) -> dict:
+    """Criteria 9 T4h per run: judged samples (zero command, plant leg locked) over 0.6 kN and
+    the maximum, the unlocked tail (recorded only) and the window-minimum value."""
+    rows = [{"file": row["file"], "provisional_pass": row["provisional_pass"],
+             "over_0p6kN": row["over_0p6kN"], "max_excess_N": row["max_excess_N"],
+             "unlocked_tail_samples": sum(row["unlocked_tail_samples_by_leg"].values()),
+             "unlocked_tail_over_0p6kN": sum(row["unlocked_tail_over_0p6kN_by_leg"].values()),
+             "unlocked_tail_max_excess_N": row["unlocked_tail_max_excess_N"],
+             "max_excess_vs_window_min_N": row["max_excess_vs_window_min_N"]}
+            for row in report["rows"]]
+    return {"runs": len(rows), "runs_over": sum(not row["provisional_pass"] for row in rows),
+            "rows": rows}
+
+
 def s8_stop_table(rows: list[dict]) -> list[dict]:
     """Criteria 6 S8 values per run: crawler at the stop (1 ms), 1 s maximum before it, +-0.1 s
     range, maximum after it and the clause margins [kN]."""
@@ -324,6 +343,9 @@ def main() -> None:
         if batch == "item8":
             regression = [row for row in _value_rows("main") if row["row"] in ITEM8_LEVELS]
             report["item8_order"] = item8_order(rows + regression)
+        replay_path = OUT_DIR / batch / "t4h" / T4H_REPLAY_FILE
+        if replay_path.exists():
+            report["t4h"] = t4h_table(json.loads(replay_path.read_text(encoding="utf-8")))
         if batch == "pressure_only":
             main_path = OUT_DIR / "main.jsonl"
             combined = _value_rows("main") if main_path.exists() else []
