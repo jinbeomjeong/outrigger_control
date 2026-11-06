@@ -217,6 +217,8 @@ def lock_window_table(rows: list[dict]) -> dict:
             "runs": len(alignments), "runs_without_stretches": skipped.get(setting, 0),
             "stretches": sum(sum(a["stretches_by_leg"].values()) for a in alignments),
             "judged": sum(sum(a["judged_by_leg"].values()) for a in alignments),
+            "unjudged_command_resumed": sum(sum(a["unjudged_command_resumed_by_leg"].values())
+                                            for a in alignments),
             "unlock_in_stretch": sum(a["unlock_in_stretch"] for a in alignments),
             "all_legs": _lock_window_side(alignments, fallback_only=False),
             "fallback_legs": _lock_window_side(alignments, fallback_only=True),

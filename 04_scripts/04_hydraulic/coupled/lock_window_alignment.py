@@ -3,7 +3,11 @@
 The controller's lock window (``two_pressure._open_lock_stretch``) ends at
 ``W = ((t_o + tau_v ln(max(|u_last|, eps) / eps)) + t_c) + T`` after the first 10 Hz sample t_o of
 a command-free stretch. The plant locks by its law (``plant.lock_events``, 1 ms, all legs locked
-at arm). A stretch is late when the plant leg is not locked at ``W + 1e-6 s``.
+at arm). A stretch is judged only when a sample with a zero acting command lies at or after
+``W - 1e-9 s``: ``W - 1e-9 <= t_last`` with ``t_last = t_c - T`` (closed: the command of t_c
+moves the plant from ``t_c - T``) or the run end (open); otherwise it is unjudged
+(``unjudged_command_resumed_by_leg`` for closed ones). A judged stretch is late when the plant
+leg is not locked at ``W + 1e-6 s``. Unlocks inside a stretch count before ``t_c - T - 1e-6 s``.
 
 The stretches are rebuilt from the command record (acting command of sample k = the applied
 output of sample k - 1, ``d = 1``; zero before the first sample), the windows recomputed from
@@ -22,7 +26,9 @@ import numpy as np
 
 LEGS = ("FL", "FR", "RL", "RR")
 TIME_TOL_S = 1.0e-6
-"""Plant lock state read at ``W + TIME_TOL_S`` (control-expert A)."""
+"""Plant lock state read at ``W + TIME_TOL_S``; unlocks counted before ``t_c - T - TIME_TOL_S``."""
+JUDGE_TOL_S = 1.0e-9
+"""A stretch is judged when a zero-command sample lies at or after ``W - JUDGE_TOL_S``."""
 WINDOW_MATCH_TOL_S = 1.0e-12
 MAX_LATE_ROWS = 50
 FALLBACK_EVENT = "WARN_ROD_PRESSURE_FALLBACK"
@@ -165,12 +171,13 @@ def _match_monitor_log(stretches: list[Stretch], monitor_entries: list[dict]) ->
 def _stretch_row(stretch: Stretch, history: PlantLockHistory, t_end_s: float,
                  is_fallback: bool, period_s: float) -> dict:
     t_w = stretch.window_end_s
-    # the acting command of sample t_c drove the plant from t_c - T on: the plant may unlock
-    # from there, so unlocks are counted up to t_c - T
-    zero_until_s = t_end_s if stretch.close_s is None else stretch.close_s - period_s
-    is_judged = t_w <= t_end_s if stretch.close_s is None else t_w < stretch.close_s
+    # t_last = last sample with a zero acting command: the acting command of sample t_c drove
+    # the plant from t_c - T on (closed stretch), else the run end (open stretch)
+    t_last = t_end_s if stretch.close_s is None else stretch.close_s - period_s
+    is_judged = t_w - JUDGE_TOL_S <= t_last
     row = {"leg": LEGS[stretch.leg], "t_start_s": stretch.start_s, "window_end_s": t_w,
-           "t_close_s": stretch.close_s, "fallback": is_fallback, "judged": is_judged}
+           "t_close_s": stretch.close_s, "fallback": is_fallback, "judged": is_judged,
+           "command_resumed": not is_judged and stretch.close_s is not None}
     if not is_judged:
         return row
     is_late = not history.is_locked_at(stretch.leg, t_w + TIME_TOL_S)
@@ -180,11 +187,9 @@ def _stretch_row(stretch: Stretch, history: PlantLockHistory, t_end_s: float,
         t_lock = history.last_lock_at_or_before(stretch.leg, t_w + TIME_TOL_S)
     lock_in_stretch = t_lock if t_lock is not None and t_lock >= stretch.start_s else None
     unlock_from = stretch.start_s if lock_in_stretch is None else lock_in_stretch
-    # recorded beside the definition: the next command already drove the plant at t_w
-    resumed = stretch.close_s is not None and t_w > zero_until_s + TIME_TOL_S
-    row.update(late=is_late, t_lock_s=t_lock, command_resumed_before_window_end=resumed,
+    row.update(late=is_late, t_lock_s=t_lock,
                margin_s=None if t_lock is None else t_w - t_lock,
-               unlocks=(history.unlocks_between(stretch.leg, unlock_from, zero_until_s)
+               unlocks=(history.unlocks_between(stretch.leg, unlock_from, t_last)
                         if t_lock is not None else 0))
     return row
 
@@ -250,11 +255,9 @@ def _summary(rows: list[dict], window_check: dict, fallback: dict) -> dict:
             "n_late_fallback": sum(n_late_fallback.values()),
             "fallback_legs": fallback, "margin_min_s_by_leg": margins,
             "margin_min_s_fallback": min(fallback_margins, default=None),
-            "late_after_command_resumed": sum(
-                row["command_resumed_before_window_end"] for row in late),
+            "unjudged_command_resumed_by_leg": _per_leg(rows, lambda row: row["command_resumed"]),
             "late": [{key: row[key] for key in ("leg", "t_start_s", "window_end_s", "t_close_s",
-                                                "t_lock_s", "margin_s", "fallback",
-                                                "command_resumed_before_window_end")}
+                                                "t_lock_s", "margin_s", "fallback")}
                      for row in late[:MAX_LATE_ROWS]],
             "window_check": window_check,
             "unlock_in_stretch": sum(row.get("unlocks", 0) for row in judged),
