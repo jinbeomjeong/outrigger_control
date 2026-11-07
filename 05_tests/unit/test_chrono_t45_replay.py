@@ -9,6 +9,7 @@ replay (spec #5).
 from __future__ import annotations
 
 import importlib
+import inspect
 import json
 import sys
 from pathlib import Path
@@ -167,8 +168,8 @@ def test_m2_records_read_beta_from_the_loaded_l2b_params(t45) -> None:
 @pytest.mark.skipif(not VB_STAGE3_RECORD.is_dir(), reason="stored stage 3 VB record not present")
 def test_replay_case_of_a_stage3_vb_record_with_m2_records(t45) -> None:
     """A stage 3 VB row with ``hydraulics_record`` replays to the end; the values equal
-    control-expert's work-around run (``s3_t45_records.json``, 2026-11-07)."""
-    row = t45.replay_case(VB_STAGE3_RECORD)
+    control-expert's work-around run (``s3_t45_records.json``, 2026-11-07, criteria rev. 6)."""
+    row = t45.replay_case(VB_STAGE3_RECORD, criteria=t45.CRITERIA_REV6)
     assert row["settings_equal"] and row["t4_0"]
     assert row["T4"]["over_0p6kN"] == 0
     ext_lock = row["ext_lock"]
@@ -185,7 +186,7 @@ def test_replay_case_of_a_stage3_vb_record_with_m2_records(t45) -> None:
 def test_b_t4_0_on_a_stored_v0_record(t45) -> None:
     """Spec #7 (b): the settings rebuild and the replay with the run's events reproduce the
     recorded lower reading; T4 runs on it."""
-    row = t45.replay_case(V0_RECORD)
+    row = t45.replay_case(V0_RECORD, criteria=t45.CRITERIA_REV6)
     assert row["settings_equal"], row["setting_differences"]
     assert row["t4_0"] and row["max_relative_difference"] <= 1e-12
     assert row["lift"]["t_lift_basis"] == "bracket_10Hz"
@@ -211,6 +212,22 @@ def test_r4_lock_window_of_a_stored_vb_record(lock_window) -> None:
 
 
 # ------------------------------------------------------------------- criteria rev. 7 (3)
+def test_criteria_default_is_rev7_and_rev6_only_on_request(t45) -> None:
+    """User decision 2026-11-08: ``--criteria`` defaults to rev7; rev6 needs the argument."""
+    assert t45.parse_args(["out.json", "case"]).criteria == t45.CRITERIA_REV7
+    assert t45.parse_args(["out.json", "case", "--criteria", "rev6"]).criteria == "rev6"
+    for function in (t45.t4, t45.t5, t45.replay_case):
+        assert inspect.signature(function).parameters["criteria"].default == "rev7"
+
+
+def test_rev6_report_keeps_its_original_shape(t45) -> None:
+    """The explicit rev6 document has no rev7 keys (its output is byte-identical to before)."""
+    report = t45.report_of([], t45.CRITERIA_REV6, None)
+    assert list(report) == ["rule", "record", "summary", "rows"]
+    assert "criteria" not in report["summary"]
+    assert t45.report_of([], t45.CRITERIA_REV7, None)["criteria"] == "rev7"
+
+
 def test_rev7_e5_reads_the_last_nonzero_command_before_the_row(t45) -> None:
     """E5: the last nonzero acting command before ``k`` (not ``k`` itself) is a retraction."""
     acting = np.array([[0.0], [-1.0], [0.0], [0.0], [2.0], [0.0], [-3.0]])

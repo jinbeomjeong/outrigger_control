@@ -20,7 +20,8 @@ Truth: ``pads.npz`` ``F_pressure`` (net oil force) at ``j = searchsorted(t_pads,
 when ``|t_pads[j] - t_k| <= 0.5 ms``; ``law_locked``, ``airborne`` and
 ``F_pressure_min_interval`` at the same ``j``.
 
-Criteria revision (``--criteria``, default ``rev6``; the rev. 6 output is unchanged):
+Criteria revision (``--criteria``, default ``rev7`` since the user decision of 2026-11-08;
+``rev6`` only when given explicitly, its output is unchanged):
 
 * ``rev6``: the judged samples and the failure above;
 * ``rev7`` (``v5_criteria_rev7.md`` 3): the E samples (CHECK, before the leg's zero calibration,
@@ -32,7 +33,7 @@ Criteria revision (``--criteria``, default ``rev6``; the rev. 6 output is unchan
 
 Usage (dynamics-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/chrono_t45_replay.py <out_json> <case or batch>
-      [...] [--t5] [--extend-start tracked_bound] [--criteria rev7]
+      [...] [--t5] [--extend-start tracked_bound] [--criteria rev6]
 """
 from __future__ import annotations
 
@@ -80,6 +81,8 @@ READY_PHASE = "ready"
 CHECK_PHASE = "check"
 """``C2Phase.CHECK.value`` (criteria rev. 7 E1)."""
 CRITERIA_REV6, CRITERIA_REV7 = "rev6", "rev7"
+DEFAULT_CRITERIA = CRITERIA_REV7
+"""Criteria revision used unless ``rev6`` is asked for explicitly (user decision 2026-11-08)."""
 GUARD_LIMIT_N = 0.0
 """Criteria rev. 7 3.2: an E sample leaves the judged samples only below this forced lower."""
 
@@ -397,7 +400,7 @@ def _rev7_totals(legs: dict, samples: Rev7Samples) -> dict:
             "max_own_excess_N": max(owns) if owns else None}
 
 
-def t4(record: CaseRecord, criteria: str = CRITERIA_REV6) -> dict:
+def t4(record: CaseRecord, criteria: str = DEFAULT_CRITERIA) -> dict:
     """Criteria rev. 6 4.3 / 4.5: all legs fall back from the first row; ``rev7`` judges the
     samples left after the guarded E exclusion, sensor-error rows on the own excess (3)."""
     t0 = float(np.asarray(record.episode["t_s"], float)[0])
@@ -538,7 +541,7 @@ class _Rev7StartTally:
                 "max_own_excess_N": finite_or_none(self.worst_own_N)}
 
 
-def t5(record: CaseRecord, criteria: str = CRITERIA_REV6) -> dict:
+def t5(record: CaseRecord, criteria: str = DEFAULT_CRITERIA) -> dict:
     """Criteria rev. 6 4.4: per leg, stretch and start ``m``, that leg alone from ``m``;
     ``rev7`` applies the guarded E exclusion and B1 to every start (3)."""
     stepper, states = _stepper_with_states(record)
@@ -790,7 +793,7 @@ def ext_lock_counters(hydraulics: dict, params) -> dict:
 
 # --------------------------------------------------------------------------------- driver
 def replay_case(case_dir: Path, *, with_t5: bool = False,
-                extend_start: str | None = None, criteria: str = CRITERIA_REV6) -> dict:
+                extend_start: str | None = None, criteria: str = DEFAULT_CRITERIA) -> dict:
     """All values of one case folder (module docstring); ``criteria`` picks the T4 / T5
     judgement (``rev6`` or ``rev7``)."""
     from outrigger_sim.control.extend_start_bound import check_extend_start_meta
@@ -920,7 +923,8 @@ def report_of(rows: list[dict], criteria: str, extend_start: str | None) -> dict
             "rows": rows}
 
 
-def main() -> int:
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Command line of ``main`` (``argv`` None reads ``sys.argv``)."""
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("out_json")
     parser.add_argument("cases", nargs="+", help="case folders or batch folders")
@@ -928,9 +932,14 @@ def main() -> int:
     parser.add_argument("--extend-start", choices=("constant", "tracked_bound"), default=None,
                         help="override the ③ start rule (record T4-P3, criteria rev. 6 4.7)")
     parser.add_argument("--criteria", choices=(CRITERIA_REV6, CRITERIA_REV7),
-                        default=CRITERIA_REV6,
-                        help="T4 / T5 judgement revision (rev7: E exclusion, guard, B1)")
-    args = parser.parse_args()
+                        default=DEFAULT_CRITERIA,
+                        help=("T4 / T5 judgement revision (default rev7: E exclusion, guard, "
+                              "B1; rev6 reproduces the stage 3 judgement)"))
+    return parser.parse_args(argv)
+
+
+def main() -> int:
+    args = parse_args()
     rows = [replay_case(folder, with_t5=args.t5, extend_start=args.extend_start,
                         criteria=args.criteria)
             for folder in case_folders(args.cases)]
