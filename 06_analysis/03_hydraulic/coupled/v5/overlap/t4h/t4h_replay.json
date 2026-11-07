@@ -1,5 +1,7 @@
 {
  "rule": "criteria 9 T4h: zero acting command samples of a locked plant leg, lower - true_force_N > 0.6 kN count (0 = provisional pass); fallback forced on all legs; unlocked tail samples recorded only",
+ "record": "T4h",
+ "extend_start_rule": null,
  "runs": 4,
  "runs_over": 0,
  "rows": [

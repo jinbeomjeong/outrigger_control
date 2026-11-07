@@ -1,0 +1,147 @@
+{
+ "rule": "criteria 9 T4h: zero acting command samples of a locked plant leg, lower - true_force_N > 0.6 kN count (0 = provisional pass); fallback forced on all legs; unlocked tail samples recorded only",
+ "runs": 4,
+ "runs_over": 0,
+ "rows": [
+  {
+   "file": "R12_o0.0-flow_saturation_VB.npz",
+   "samples": 496,
+   "judged_samples_by_leg": {
+    "FL": 135,
+    "FR": 134,
+    "RL": 131,
+    "RR": 131
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -2808.879322091605,
+   "max_excess_vs_window_min_N": 1075.6146296232546,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 7,
+    "FR": 8,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 2,
+    "FR": 2,
+    "RL": 2,
+    "RR": 2
+   },
+   "unlocked_tail_max_excess_N": 8224.362894324164,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "5856d2b746cd9bce95a0bf5e0c3e265bd3e7b6a0be6c05080974fbcad1c5f5be"
+  },
+  {
+   "file": "R12_o0.025-flow_saturation_VB.npz",
+   "samples": 496,
+   "judged_samples_by_leg": {
+    "FL": 135,
+    "FR": 134,
+    "RL": 131,
+    "RR": 131
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -2809.3587745134428,
+   "max_excess_vs_window_min_N": 1075.5779767709755,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 7,
+    "FR": 8,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 2,
+    "FR": 2,
+    "RL": 2,
+    "RR": 2
+   },
+   "unlocked_tail_max_excess_N": 8224.361930803047,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "90a0abdaefbf1f397852197d80e143f62197b6a757cee0ec8e25cb816dab31b3"
+  },
+  {
+   "file": "R12_o0.05-flow_saturation_VB.npz",
+   "samples": 484,
+   "judged_samples_by_leg": {
+    "FL": 135,
+    "FR": 135,
+    "RL": 131,
+    "RR": 131
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -2774.3868260399904,
+   "max_excess_vs_window_min_N": 1110.2223620581499,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 7,
+    "FR": 7,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 2,
+    "FR": 2,
+    "RL": 2,
+    "RR": 2
+   },
+   "unlocked_tail_max_excess_N": 8224.36255748733,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "c03165c343390a6fe32ffdc04954e5589035127e07b24016321d68fd36e0ed9d"
+  },
+  {
+   "file": "R12_o0.075-flow_saturation_VB.npz",
+   "samples": 484,
+   "judged_samples_by_leg": {
+    "FL": 135,
+    "FR": 135,
+    "RL": 131,
+    "RR": 131
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -2540.6255406706478,
+   "max_excess_vs_window_min_N": 1340.0062667078455,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 7,
+    "FR": 7,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 2,
+    "FR": 2,
+    "RL": 2,
+    "RR": 2
+   },
+   "unlocked_tail_max_excess_N": 8224.375354375312,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "3df059c948378da84312456daf197be095dcb07863d60337ee14b965881e3d47"
+  }
+ ]
+}

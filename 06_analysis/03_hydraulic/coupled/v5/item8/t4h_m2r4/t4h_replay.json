@@ -1,0 +1,217 @@
+{
+ "rule": "criteria 9 T4h: zero acting command samples of a locked plant leg, lower - true_force_N > 0.6 kN count (0 = provisional pass); fallback forced on all legs; unlocked tail samples recorded only",
+ "runs": 6,
+ "runs_over": 0,
+ "rows": [
+  {
+   "file": "R6_e0.001_VB.npz",
+   "samples": 661,
+   "judged_samples_by_leg": {
+    "FL": 207,
+    "FR": 202,
+    "RL": 261,
+    "RR": 204
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.0704449999903,
+   "max_excess_vs_window_min_N": 8589.596268009198,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 13,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "d0eaa3a019e18bd6ee572666848bac3114432264ac2b4d305a261b300ea0925c"
+  },
+  {
+   "file": "R6_e0.003_VB.npz",
+   "samples": 664,
+   "judged_samples_by_leg": {
+    "FL": 208,
+    "FR": 205,
+    "RL": 271,
+    "RR": 205
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.0704449999903,
+   "max_excess_vs_window_min_N": 9085.422642969708,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 14,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "ddc4e162b895e293f0c9767e49593b11d09c9c67af814f4a43c59e6da111ada9"
+  },
+  {
+   "file": "R8_e0.001_VB.npz",
+   "samples": 659,
+   "judged_samples_by_leg": {
+    "FL": 205,
+    "FR": 204,
+    "RL": 252,
+    "RR": 203
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.0704449999903,
+   "max_excess_vs_window_min_N": 4079.976082665591,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 10,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999903,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "2dd0ae30bfa520ead33b9fc65e8e367f04424dcd6372a63f26443f4a1f31a9ac"
+  },
+  {
+   "file": "R8_e0.003_VB.npz",
+   "samples": 660,
+   "judged_samples_by_leg": {
+    "FL": 205,
+    "FR": 204,
+    "RL": 254,
+    "RR": 203
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.0704449999903,
+   "max_excess_vs_window_min_N": 3507.741983097563,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 10,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "077e995ae1205c7dde84d9fe7eb19a902c454946c711e00d010141c499f3b4cb"
+  },
+  {
+   "file": "R9_e0.001_VB.npz",
+   "samples": 659,
+   "judged_samples_by_leg": {
+    "FL": 205,
+    "FR": 204,
+    "RL": 253,
+    "RR": 203
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.0704449999903,
+   "max_excess_vs_window_min_N": 2316.3741911629113,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 10,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "0a19b61390dea943f05a8aa4bc546091967f8fd3bcc7be889e056b30a0fa4681"
+  },
+  {
+   "file": "R9_e0.003_VB.npz",
+   "samples": 659,
+   "judged_samples_by_leg": {
+    "FL": 203,
+    "FR": 203,
+    "RL": 247,
+    "RR": 202
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.0704449999903,
+   "max_excess_vs_window_min_N": 2773.056082676063,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 10,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "aea13cabb36894bde10770cbbae810e39702e51a0fd5d02a201ea6ce3f987b9f"
+  }
+ ]
+}

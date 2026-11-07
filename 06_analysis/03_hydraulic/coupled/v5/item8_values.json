@@ -84,22 +84,22 @@
    "commands_sha256": "5ac351ee379cbdc71d6b47bb8e59b18f3b66556f6ce97f35b841165fa8a6f4fe"
   },
   {
-   "row": "R8",
+   "row": "R6",
    "phase": "eps 0.001",
    "setting": "VB",
    "final_phase": "ready",
-   "t_first_ready_s": 55.9,
-   "min_force_after_liftoff_kN": 54.594,
+   "t_first_ready_s": 56.1,
+   "min_force_after_liftoff_kN": 54.3055,
    "n_rev": 8,
    "warn_fault": {},
    "m2_shift_total_mm": [
-    -0.10459703063304072,
-    -0.146644950174727,
-    -0.19454029641422704,
-    -0.17054802258180715
+    -0.10325323078124261,
+    -0.14622384662505747,
+    -0.19501351085302177,
+    -0.17019163132771814
    ],
    "lock_changes": 40,
-   "commands_sha256": "2dd0ae30bfa520ead33b9fc65e8e367f04424dcd6372a63f26443f4a1f31a9ac",
+   "commands_sha256": "d0eaa3a019e18bd6ee572666848bac3114432264ac2b4d305a261b300ea0925c",
    "m2_clipped_steps": [
     25,
     25,
@@ -166,63 +166,22 @@
    }
   },
   {
-   "row": "R9",
+   "row": "R6",
    "phase": "eps 0.003",
    "setting": "VB",
    "final_phase": "ready",
-   "t_first_ready_s": 55.9,
-   "min_force_after_liftoff_kN": 54.539,
+   "t_first_ready_s": 56.4,
+   "min_force_after_liftoff_kN": 53.916,
    "n_rev": 8,
    "warn_fault": {},
    "m2_shift_total_mm": [
-    -0.10379637715267379,
-    -0.14758169764777296,
-    -0.19614894417008,
-    -0.17044061743810082
+    -0.10297747191377354,
+    -0.1848632577854357,
+    -0.1517989021935516,
+    -0.16970598076458165
    ],
    "lock_changes": 40,
-   "commands_sha256": "aea13cabb36894bde10770cbbae810e39702e51a0fd5d02a201ea6ce3f987b9f",
-   "m2_clipped_steps": [
-    25,
-    25,
-    28,
-    28
-   ],
-   "m2_clipped_steps_pre_lift": [
-    25,
-    25,
-    28,
-    28
-   ],
-   "m2_clipped_steps_post_lift": [
-    0,
-    0,
-    0,
-    0
-   ],
-   "m2_clip_after_lift": false,
-   "lock_window_alignment": {
-    "n_late": null,
-    "reason": "no rod reading"
-   }
-  },
-  {
-   "row": "R6",
-   "phase": "eps 0.001",
-   "setting": "VB",
-   "final_phase": "ready",
-   "t_first_ready_s": 56.1,
-   "min_force_after_liftoff_kN": 54.3055,
-   "n_rev": 8,
-   "warn_fault": {},
-   "m2_shift_total_mm": [
-    -0.10325323078124261,
-    -0.14622384662505747,
-    -0.19501351085302177,
-    -0.17019163132771814
-   ],
-   "lock_changes": 40,
-   "commands_sha256": "d0eaa3a019e18bd6ee572666848bac3114432264ac2b4d305a261b300ea0925c",
+   "commands_sha256": "ddc4e162b895e293f0c9767e49593b11d09c9c67af814f4a43c59e6da111ada9",
    "m2_clipped_steps": [
     25,
     25,
@@ -289,22 +248,63 @@
    }
   },
   {
-   "row": "R6",
+   "row": "R9",
    "phase": "eps 0.003",
    "setting": "VB",
    "final_phase": "ready",
-   "t_first_ready_s": 56.4,
-   "min_force_after_liftoff_kN": 53.916,
+   "t_first_ready_s": 55.9,
+   "min_force_after_liftoff_kN": 54.539,
    "n_rev": 8,
    "warn_fault": {},
    "m2_shift_total_mm": [
-    -0.10297747191377354,
-    -0.1848632577854357,
-    -0.1517989021935516,
-    -0.16970598076458165
+    -0.10379637715267379,
+    -0.14758169764777296,
+    -0.19614894417008,
+    -0.17044061743810027
    ],
    "lock_changes": 40,
-   "commands_sha256": "ddc4e162b895e293f0c9767e49593b11d09c9c67af814f4a43c59e6da111ada9",
+   "commands_sha256": "aea13cabb36894bde10770cbbae810e39702e51a0fd5d02a201ea6ce3f987b9f",
+   "m2_clipped_steps": [
+    25,
+    25,
+    28,
+    28
+   ],
+   "m2_clipped_steps_pre_lift": [
+    25,
+    25,
+    28,
+    28
+   ],
+   "m2_clipped_steps_post_lift": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "m2_clip_after_lift": false,
+   "lock_window_alignment": {
+    "n_late": null,
+    "reason": "no rod reading"
+   }
+  },
+  {
+   "row": "R8",
+   "phase": "eps 0.001",
+   "setting": "VB",
+   "final_phase": "ready",
+   "t_first_ready_s": 55.9,
+   "min_force_after_liftoff_kN": 54.594,
+   "n_rev": 8,
+   "warn_fault": {},
+   "m2_shift_total_mm": [
+    -0.10459703063304072,
+    -0.146644950174727,
+    -0.19454029641422704,
+    -0.17054802258180715
+   ],
+   "lock_changes": 40,
+   "commands_sha256": "2dd0ae30bfa520ead33b9fc65e8e367f04424dcd6372a63f26443f4a1f31a9ac",
    "m2_clipped_steps": [
     25,
     25,
@@ -392,28 +392,18 @@
    "flag": false
   },
   {
-   "row": "R8",
+   "row": "R6",
    "phase": "eps 0.001",
    "setting": "VB",
    "role": "record",
    "item": "first_ready",
-   "value_s": 55.9,
+   "value_s": 56.1,
    "limit_s": 120.0,
    "flag": false
   },
   {
    "row": "R9",
    "phase": "eps 0.001",
-   "setting": "VB",
-   "role": "record",
-   "item": "first_ready",
-   "value_s": 55.9,
-   "limit_s": 120.0,
-   "flag": false
-  },
-  {
-   "row": "R9",
-   "phase": "eps 0.003",
    "setting": "VB",
    "role": "record",
    "item": "first_ready",
@@ -423,11 +413,11 @@
   },
   {
    "row": "R6",
-   "phase": "eps 0.001",
+   "phase": "eps 0.003",
    "setting": "VB",
    "role": "record",
    "item": "first_ready",
-   "value_s": 56.1,
+   "value_s": 56.4,
    "limit_s": 120.0,
    "flag": false
   },
@@ -442,12 +432,22 @@
    "flag": false
   },
   {
-   "row": "R6",
+   "row": "R9",
    "phase": "eps 0.003",
    "setting": "VB",
    "role": "record",
    "item": "first_ready",
-   "value_s": 56.4,
+   "value_s": 55.9,
+   "limit_s": 120.0,
+   "flag": false
+  },
+  {
+   "row": "R8",
+   "phase": "eps 0.001",
+   "setting": "VB",
+   "role": "record",
+   "item": "first_ready",
+   "value_s": 55.9,
    "limit_s": 120.0,
    "flag": false
   }
