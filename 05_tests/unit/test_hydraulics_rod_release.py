@@ -9,6 +9,7 @@ import numpy as np
 import pytest
 
 from outrigger_sim.hydraulics.flow_share import FlowShareAssumptions
+from outrigger_sim.hydraulics.l2b_rod_side import LOCK_ANCHOR_AFTER_EXTEND_M2
 from outrigger_sim.hydraulics.rod_release import (
     CLIPPED_STEPS_KEY,
     FLOW_LIMITED_LAW,
@@ -215,7 +216,10 @@ def test_flow_law_constants_are_the_flow_share_assumptions() -> None:
     assert law.spool_reference_drop_Pa == shared.compensator_drop_Pa
     assert law.meter_out_ratio == shared.back_land_ratio
     assert law.meta()["law"] == FLOW_LIMITED_LAW == "flow_limited_r5"
-    assert "p_r0 = max(p_ext + max(p_tr - p*, 0), p_floor)" in law.meta()["rule"]
+    # the anchor carries the upper cap p_tr as the L2b and harness laws do (meta text only)
+    anchor = "p_r0 = max(min(p_tr, p_ext + max(p_tr - p*, 0)), p_floor)"
+    assert anchor in law.meta()["rule"]
+    assert anchor in LOCK_ANCHOR_AFTER_EXTEND_M2
     assert _front_left_compliance_m3_Pa() == pytest.approx(1.80e-12, rel=0.005)
 
 

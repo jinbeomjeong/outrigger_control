@@ -45,10 +45,12 @@ that share the base decay still carries (:func:`compensated_rod_pressure_Pa`)::
 Revision 5 (``flow_limited_r5``, user decision 2026-11-07, plan B): the lock anchor after an
 extension keeps the rod pressure the moving lag had not yet relieved::
 
-    p_r0 = max(p_ext + max(p_tr - p*, 0), p_floor)    extension lock, M2 on only
+    p_r0 = max(min(p_tr, p_ext + max(p_tr - p*, 0)), p_floor)    extension lock, M2 on only
     p_tr = moving rod pressure of the last step,  p* = moving target of the extension
 
-A finished (or hanging) extension has ``p_tr = p*`` and keeps ``p_r0 = p_ext``. Retract locks
+The upper cap ``p_tr`` (hydraulics-expert 2026-11-07) keeps the anchor at or below the tracked
+pressure when ``p_ext > p*``. A finished (or hanging) extension has ``p_tr = p*`` and keeps
+``p_r0 = min(p*, p_ext)``, which is ``p_ext`` in the YAML conditions (``p* > p_ext``). Retract locks
 keep ``p_ret``. The anchor is set by the plant laws (L2b ``l2b_rod_side``, harness
 ``harness_hydraulics``); this module carries the name of the law and its snapshot marker
 (:data:`LAW_REVISION_KEY`).
@@ -217,7 +219,8 @@ class RodPressureFlowLaw:
                         "C_r = A_ann^2 (1/k_r + 1/k_h), B hose not included; "
                         "M2 reads p_hat = p_r + Delta w, Delta = p_r0 - p_r,rel at the release, "
                         "w = base release decay (revision 4); extension lock anchor "
-                        "p_r0 = max(p_ext + max(p_tr - p*, 0), p_floor), p_tr = moving rod "
+                        "p_r0 = max(min(p_tr, p_ext + max(p_tr - p*, 0)), p_floor), p_tr = "
+                        "moving rod "
                         "pressure before the lock, p* = extension target; retract lock "
                         "keeps p_ret (revision 5)",
                 "meter_out_ratio": self.meter_out_ratio,
