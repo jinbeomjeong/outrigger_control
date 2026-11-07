@@ -1511,7 +1511,9 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
         if ev and ev.get("probe_after") else None
     dt_fine = float(params.get("simulation.dt_transition_s"))
     schedule = DtSchedule(model.dt_s, config.period_s) if ev and ev.get("fine") else None
-    pads = L2bPadRecorderS8(engine, sample_s=s7c.PAD_RECORD_S)
+    # v5 stage 3 R-3 / R-5 fields only with a v5 option (a run without keeps its pads.npz)
+    pads = L2bPadRecorderS8(engine, sample_s=s7c.PAD_RECORD_S,
+                            v5_records=v5_options is not None)
     sat_rec = s6c.SaturationRecorder(model, t0)
     series = S8Series(model, c2, model.actuator.head_area_m2,
                       params.l2b.rod_side.annulus_area_m2)
@@ -1820,8 +1822,27 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
         from outrigger_sim.chrono.v5_plant import plant_records
 
         summary["v5_hydraulics"] = {**v5_meta, "records": plant_records(model.actuator)}
+        summary["hydraulics_record"] = v5_release_record(model.actuator, pads)
     engine.close()
     return summary, run_meta
+
+
+def v5_release_record(actuator, pads) -> dict[str, Any]:
+    """v5 stage 3 R-1 / R-2 (``stage3_impl_spec.md`` 1): ``result.json hydraulics_record``
+    (harness key names). The release entries get ``was_lifted`` from the 1 ms ``airborne`` of the
+    pad record; the clip split at the lift-off is made by the judge (the Chrono ``t_lift`` is
+    computed there from ``pads.npz crawler_normal_N``, dynamics-expert D-a). Times are absolute
+    Chrono times, as ``pads.npz t``. Empty without M2."""
+    from outrigger_sim.chrono.m2_release_log import fill_was_lifted
+
+    record = actuator.m2_release_record()
+    if record is None:
+        return {}
+    arrays = pads.arrays()
+    if arrays["t"].size:
+        fill_was_lifted(record["m2_releases"], arrays["t"], arrays["airborne"])
+    record["time_base"] = "absolute Chrono time (pads.npz t)"
+    return record
 
 
 # --- ML episodes (C-S8-4, spec 205) ----------------------------------------------------------------

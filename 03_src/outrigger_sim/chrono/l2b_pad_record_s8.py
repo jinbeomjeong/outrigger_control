@@ -44,7 +44,19 @@ V5_FIELDS = ("law_locked",)
 """v5 X-11: ``law_locked`` = rod-side law lock state per leg at the sample (int8: 1 locked,
 0 moving, -1 no armed law; :func:`s8_plant_adapter.law_lock_state`). The v5 lock time reads it
 instead of the ``s_motor`` standstill (with LC the standstill is the flow cut, not the lock)."""
-DERIVED_AIR_FIELDS = ("F_cyl_mean_20ms", "airborne")
+V5_RECORD_FIELDS = ("crawler_normal_N", "crawler_normal_max_interval_N", "m2_p_hat_Pa",
+                    "m2_shift_cum_m")
+"""v5 stage 3 R-3 / R-5 (``stage3_impl_spec.md`` 1, dynamics-expert D-a 2026-11-07), written only
+with ``v5_records=True`` (rows with a v5 option; a run without it keeps its arrays and meta):
+
+* ``crawler_normal_N``: ``superstructure.GetContactForce() . n_world`` at the sample step end
+  (crawler normal force sum, rigid NSC crawler) [N];
+* ``crawler_normal_max_interval_N``: maximum of that value over the steps of the interval
+  (``F_pressure_max_interval`` rule) [N];
+* ``m2_p_hat_Pa``: M2 compensated rod pressure ``p_hat`` of the last hook per leg (NaN without M2
+  or before its first hook) [Pa gauge];
+* ``m2_shift_cum_m``: accumulated M2 shift per leg, ``s_ref`` sign (NaN without M2) [m]."""
+DERIVED_AIR_FIELDS =("F_cyl_mean_20ms", "airborne")
 """S8-A2 (``dynamics_model.md`` 5.26.10): ``F_cyl_mean_20ms`` = centred 20 ms mean of the
 step-weighted 1 ms mean rod force, ``airborne`` = 20 ms pad normal ``N <= 0``. Airborne samples
 are not judged on the 1 ms rod-force minimum (rod ringing); both values are recorded."""
@@ -54,14 +66,17 @@ class L2bPadRecorderS8(L2bPadRecorder):
     """Time-sampled S8 pad record (module docstring)."""
 
     def __init__(self, engine: Any, sample_s: float = 1.0e-3, *, friction: float | None = None,
-                 window_s: float = CONTACT_WINDOW_S) -> None:
+                 window_s: float = CONTACT_WINDOW_S, v5_records: bool = False) -> None:
         every = max(1, round(float(sample_s) / float(engine.model.dt_s)))
         super().__init__(engine, every_steps=every, friction=friction, window_s=window_s)
         self.sample_s = float(sample_s)
         self.window_samples = max(1, round(float(window_s) / self.sample_s))
         self.window_s = self.window_samples * self.sample_s
-        for k in (*S8_FIELDS, *V5_FIELDS):
+        self.v5_records = bool(v5_records)
+        """R-3 / R-5 fields (:data:`V5_RECORD_FIELDS`); False = the record of before."""
+        for k in (*S8_FIELDS, *V5_FIELDS, *(V5_RECORD_FIELDS if self.v5_records else ())):
             self._rows[k] = []
+        self._cr_max = -np.inf
         n = len(self.model.legs)
         self._fp_min = np.full(n, np.inf)
         self._fp_max = np.full(n, -np.inf)
@@ -90,6 +105,12 @@ class L2bPadRecorderS8(L2bPadRecorder):
             self._r_sum_w[i, 1] += c.y * dt
             self._r_sum_w[i, 2] += c.z * dt
         self._w += dt
+        cr_n = None
+        if self.v5_records:
+            cr = model.superstructure.GetContactForce()
+            n_w = model.floor_normal_world()
+            cr_n = float(cr.x * n_w[0] + cr.y * n_w[1] + cr.z * n_w[2])
+            self._cr_max = max(self._cr_max, cr_n)
         if t < self._next_t - 0.5 * dt:
             return
         while self._next_t <= t + 0.5 * dt:
@@ -140,6 +161,12 @@ class L2bPadRecorderS8(L2bPadRecorder):
             "F_cyl_mean_interval": self._f_sum_w / self._w,
             "law_locked": plant.law_lock_state(act),
         }
+        if self.v5_records:
+            m2 = act.m2_state() if hasattr(act, "m2_state") else None
+            row.update(crawler_normal_N=cr_n, crawler_normal_max_interval_N=self._cr_max,
+                       m2_p_hat_Pa=np.full(nleg, np.nan) if m2 is None else m2[0],
+                       m2_shift_cum_m=np.full(nleg, np.nan) if m2 is None else m2[1])
+            self._cr_max = -np.inf
         for key, value in row.items():
             self._rows[key].append(np.array(value, copy=True))
         self._f_min[:] = np.inf
@@ -155,7 +182,8 @@ class L2bPadRecorderS8(L2bPadRecorder):
                    contact_window_samples=self.window_samples,
                    sampling="time (crossing rule), contact mean step-length weighted",
                    s8_fields=list(S8_FIELDS), base_fields=list(FIELDS),
-                   v5_fields=list(V5_FIELDS),
+                   v5_fields=list(V5_FIELDS) + (list(V5_RECORD_FIELDS) if self.v5_records
+                                                else []),
                    derived_air_fields=list(DERIVED_AIR_FIELDS),
                    air_rule="S8-A2: airborne (20 ms N <= 0) samples are not judged on the 1 ms "
                             "rod-force minimum; F_cyl_mean_20ms and the 1 ms minimum are "
@@ -177,4 +205,4 @@ class L2bPadRecorderS8(L2bPadRecorder):
         return out
 
 
-__all__ = ["S8_FIELDS", "V5_FIELDS", "L2bPadRecorderS8"]
+__all__ = ["S8_FIELDS", "V5_FIELDS", "V5_RECORD_FIELDS", "L2bPadRecorderS8"]

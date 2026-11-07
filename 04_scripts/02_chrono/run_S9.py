@@ -5830,6 +5830,15 @@ def run_level(args) -> Path:
         from outrigger_sim.chrono.v5_plant import plant_records
 
         summary["v5_hydraulics"] = {**v5_meta, "records": plant_records(model.actuator)}
+        # v5 stage 3 R-1 / R-2 (harness key names); was_lifted from the 1 ms SCM pad normal
+        m2_record = model.actuator.m2_release_record()
+        if m2_record is not None:
+            from outrigger_sim.chrono.m2_release_log import fill_was_lifted
+
+            fill_was_lifted(m2_record["m2_releases"], series["t_s"],
+                            np.asarray(series["scm_pad_normal_N"], float) <= 0.0)
+            m2_record["time_base"] = "absolute Chrono time (step_series.npz t_s)"
+        summary["hydraulics_record"] = {} if m2_record is None else m2_record
     if flow is not None:  # flow_series.npz and the block only with --flow-eta-v
         summary["flow_limit"] = {
             **flow.meta(), "series": flow.save(d / FLOW_SERIES_NAME),

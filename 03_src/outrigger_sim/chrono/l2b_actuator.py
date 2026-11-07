@@ -62,6 +62,7 @@ from numpy.typing import ArrayLike, NDArray
 
 from outrigger_sim.actuation import SATURATION_STOP_S, FlowLimit, SpeedReference
 from outrigger_sim.chrono.actuators import leg_force_limits_N
+from outrigger_sim.chrono.m2_release_log import M2ReleaseLog, release_record
 from outrigger_sim.hydraulics.check_open_delay import (
     CheckDelayInputs,
     CheckDelayOutput,
@@ -69,7 +70,11 @@ from outrigger_sim.hydraulics.check_open_delay import (
 )
 from outrigger_sim.hydraulics.counterbalance import Counterbalance
 from outrigger_sim.hydraulics.l2b_rod_side import L2bRodSide
-from outrigger_sim.hydraulics.rod_release import RodPressureFlowLaw, RodReleaseShift
+from outrigger_sim.hydraulics.rod_release import (
+    PREVIOUS_PRESSURE_KEY,
+    RodPressureFlowLaw,
+    RodReleaseShift,
+)
 from outrigger_sim.hydraulics.seal_friction import SealFriction, leg_limits_N
 from outrigger_sim.params import LEG_ORDER, Params
 
@@ -242,6 +247,8 @@ class L2bForceActuator:
         self._hook_t: float | None = None
         self._rod_release: RodReleaseShift | None = None
         """M2 (v5 spec 2.3, :meth:`configure_rod_release`); None = off, no line of it runs."""
+        self._m2_log: M2ReleaseLog | None = None
+        """M2 release record (v5 stage 3 R-1); exists with M2 only."""
         self._lock_closure: Any = None
         """LC setting (v5 spec 2.5, :meth:`configure_lock_closure`); None = off."""
         self._check_delay: _CheckDelayAdapter | None = None
@@ -494,6 +501,8 @@ class L2bForceActuator:
         if self.counterbalance is not None:
             raise ValueError("M2 with lock_valve = counterbalance is refused (untested path)")
         self._rod_release = RodReleaseShift(self.rod_side.annulus_area_m2)
+        # v5 stage 3 R-1: read-only release record (never feeds back)
+        self._m2_log = M2ReleaseLog(self.rod_side.annulus_area_m2)
         # revision 3 pressure law: the moving rod pressure M2 reads is capped by the valve
         # flow; the friction path reads it from its oil law G, which may be another object
         law = RodPressureFlowLaw()
@@ -598,24 +607,58 @@ class L2bForceActuator:
         """M2 totals per leg (they move the stroke reading too); None when M2 is off."""
         return None if self._rod_release is None else self._rod_release.record()
 
-    def _shift_reference_for_rod_pressure(self, s_ref_now: NDArray[np.float64]) -> None:
+    def m2_release_record(self) -> dict[str, Any] | None:
+        """v5 stage 3 R-1 / R-2 block (``chrono.m2_release_log.release_record``); None when M2
+        is off. Closes the open releases at the last hook (call once, at the run end)."""
+        if self._rod_release is None:
+            return None
+        law = self._oil.rod_pressure_flow_law
+        record = self._rod_release.record()
+        return release_record(self._m2_log, None if law is None else law.meta(),
+                              self._rod_release.clip_times_s, record["m2_clipped_steps"],
+                              record["m2_shift_total_mm"])
+
+    def m2_state(self) -> tuple[NDArray[np.float64], NDArray[np.float64]] | None:
+        """v5 stage 3 R-5: (``p_hat`` of the last hook, accumulated shift ``s_ref`` sign) per
+        leg; None when M2 is off."""
+        if self._rod_release is None:
+            return None
+        return self._m2_p_hat(), self._rod_release.shift_total_m
+
+    def _m2_p_hat(self) -> NDArray[np.float64]:
+        """``p_hat`` of the last M2 hook from the snapshot view (NaN before the first hook)."""
+        arrays = self._rod_release.state_arrays()
+        if PREVIOUS_PRESSURE_KEY not in arrays:
+            return np.full(self.n_legs, np.nan)
+        return np.asarray(arrays[PREVIOUS_PRESSURE_KEY], dtype=float)
+
+    def _shift_reference_for_rod_pressure(self, s_ref_now: NDArray[np.float64],
+                                          t_s: float) -> None:
         release = self._rod_release
         oil = self._oil
         assert release is not None and oil is not None
         if not oil.armed:
             release.forget_pressure()
+            self._m2_log.disarmed(t_s)
             return
-        for leg, start in oil.releases_of_last_call.items():
+        releases = oil.releases_of_last_call
+        for leg, start in releases.items():
             release.release(leg, start)
         head_stiffness = np.array([oil.head_stiffness_N_m(i, float(s_ref_now[i]))
                                    for i in range(self.n_legs)])
         weight = np.array([oil.release_weight(i) for i in range(self.n_legs)])
         s_ref = self.reference.s_ref_m
         soft = self.reference.soft_limits_m
+        clipped_before = release.clipped_steps
+        # t_s: the clipped steps get their time (R-2, criteria rev. 2 2.1); values unchanged
         shift = release.shift_m(oil.rod_pressure_Pa, head_stiffness, ~oil.locked,
-                                soft[:, 0] - s_ref, soft[:, 1] - s_ref, release_weight=weight)
+                                soft[:, 0] - s_ref, soft[:, 1] - s_ref, release_weight=weight,
+                                t_s=float(t_s))
         if np.any(shift != 0.0):
             self.reference.shift_reference(-shift)
+        self._m2_log.observe(t_s, oil, releases, shift, release.clipped_steps > clipped_before,
+                             head_stiffness, weight, p_hat_Pa=self._m2_p_hat(),
+                             s_ref_now_m=s_ref_now, s_ref_after_m=self.reference.s_ref_m)
 
     @property
     def valve_state_m_s(self) -> NDArray[np.float64]:
@@ -711,7 +754,7 @@ class L2bForceActuator:
             if self._check_delay is not None:
                 self._apply_check_delay()
             if self._rod_release is not None:
-                self._shift_reference_for_rod_pressure(s_ref_now)
+                self._shift_reference_for_rod_pressure(s_ref_now, t_s)
         if not np.all(np.isfinite(self._force)):
             raise FloatingPointError(f"L2b force law not finite: {self._force}")
         self._apply()
@@ -751,7 +794,7 @@ class L2bForceActuator:
         if self._check_delay is not None:
             self._apply_check_delay()
         if self._rod_release is not None:
-            self._shift_reference_for_rod_pressure(s_ref_now)
+            self._shift_reference_for_rod_pressure(s_ref_now, t_s)
         f_p = force - sf.f
         p_r = (oil.rod_pressure_Pa if (self.rod_side is not None and self.rod_side.armed)
                else np.zeros(self.n_legs))
