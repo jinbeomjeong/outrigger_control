@@ -182,7 +182,8 @@ def test_review_record_is_kept_with_the_option_on_and_off() -> None:
     off, on = metas
     assert "extend_start_record" not in off
     assert set(on["extend_start_record"]) == {"extend_bound_Pa", "valve_estimate_m_s",
-                                              "saturated_substeps", "saturation_stop_periods"}
+                                              "saturated_substeps", "saturation_stop_periods",
+                                              "lock_seed_raises"}
     assert off["review_record"] == on["review_record"]
     assert off["review_record"]["tension_substeps"] == [0, 0, 0, 0]
     assert off["review_record"]["d2_violation_start_ratio"] == [[], [], [], []]
@@ -243,6 +244,29 @@ def test_locked_model_bound_is_the_column_model_part_with_its_source() -> None:
     assert monitor.locked_model_bound_sources()[FL] == "pilot_model"
 
 
+def test_extension_after_a_lock_starts_from_the_lock_model_bound() -> None:
+    """Revision 4 (spec 11): after a long extension ``p_hat`` is near ``p_bB``; while locked
+    the head drops (load leaves the leg), ④ rises; the next extension starts the bound at ④,
+    so the moving estimate is far above the pilot 13 bar (the S-5 R12 FR case)."""
+    monitor = _monitor(_tracked())
+    t_s = _run(monitor, [0.5 * V_MAX] * 30)
+    assert monitor._extend_tracker.pressure_Pa[FL] < 10.0 * BAR
+    commanded = np.zeros(4)
+    for head_bar in (80.0, 70.0, 60.0, 50.0, 40.0):
+        t_s += PERIOD_S
+        monitor.read(t_s, np.full(4, head_bar * BAR), np.full(4, 5.0 * BAR), commanded, False,
+                     2e3, stroke_m=np.full(4, 0.3))
+    model_Pa = monitor.locked_model_bound_Pa()[FL]
+    assert model_Pa > 40.0 * BAR
+    commanded[FL] = 0.25 * V_MAX
+    monitor.read(t_s + PERIOD_S, np.full(4, 40.0 * BAR), np.full(4, 5.0 * BAR), commanded,
+                 False, 2e3, stroke_m=np.full(4, 0.3))
+    tracker = monitor._extend_tracker
+    assert tracker.lock_seed_raises.tolist() == [1, 0, 0, 0]
+    assert monitor._legs[FL].rod_estimate_Pa == tracker.bound_Pa(FL)
+    assert tracker.bound_Pa(FL) > 30.0 * BAR  # relieved over one period from ④, not 5.5 bar
+
+
 def test_runner_hands_the_bound_through_controller_wrappers() -> None:
     """5.5 #2 (Chrono): the runner finds the bound through ``inner`` / ``ctrl`` wrappers and
     calls the engine check only when the bound is not None."""
@@ -264,5 +288,5 @@ def test_runner_hands_the_bound_through_controller_wrappers() -> None:
 
 def test_t_p3_1_meta_carries_the_bound_revision() -> None:
     """The option meta carries ``revision`` 3 (spec 10); the off meta has no ③ key."""
-    assert _tracked().to_meta()["extend_start_bound"]["revision"] == 3
+    assert _tracked().to_meta()["extend_start_bound"]["revision"] == 4
     assert "extend_start_bound" not in _settings().to_meta()

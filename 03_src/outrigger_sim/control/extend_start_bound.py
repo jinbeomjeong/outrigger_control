@@ -18,6 +18,8 @@ in 1 ms sub-steps per leg::
                one is >= p_sat 200 bar or NaN (relief stop: valve open, no flow)
     pressure   p <- flow_limited_rod_pressure(p, p_bB, u_lb, dt, tau, h C_r(s), ...)
     retract    p <- max(p, p_ret, retract moving model)   (no sub-steps)
+    re-extend  p <- max(p, ④) before the first extending period after a lock stretch
+               (revision 4; ④ = the monitor's locked model bound of the stretch's last read)
     C_r(s)     A_ann^2 (1/k_r + 1/k_h), k_h = beta A_h / (L0h + s),
                k_r = beta A_ann / (L0r + s_max - s), times the hose factor h
 
@@ -62,10 +64,12 @@ from outrigger_sim.hydraulics.rod_release import RodPressureFlowLaw, flow_limite
 BAR_PA = 1.0e5
 LEG_COUNT = 4
 
-EXTEND_START_REVISION = 3
+EXTEND_START_REVISION = 4
 """Revision of the bound rule in the meta (v2: overlap cut with a zero command only, sub-step
 mean valve, start / end saturation test; spec 3 and its v2 review. 3: no relief counted in a
-period whose head reading or the previous one is at the relief stop, spec 10). A
+period whose head reading or the previous one is at the relief stop, spec 10. 4: an extension
+that ends a lock stretch starts at ``max(p, ④)``, ④ = the monitor's model bound of the stretch's
+last read, spec 11). A
 ``tracked_bound`` meta of another revision, or without one (v1), is refused
 (:func:`check_extend_start_meta`)."""
 TRACKED_BOUND_RULE = "tracked_bound"
@@ -200,7 +204,17 @@ class ExtendStartTracker:
         self.saturation_stop_periods = np.zeros(LEG_COUNT, dtype=np.int64)
         """Periods per leg without counted relief for a relief stop (revision 3, spec 10)."""
         self.previous_head_Pa: NDArray[np.float64] | None = None
+        self.lock_seed_raises = np.zeros(LEG_COUNT, dtype=np.int64)
+        """Extensions after a lock that raised ``p`` to the lock's ④ (revision 4)."""
         self._law = RodPressureFlowLaw()
+
+    def raise_to(self, leg: int, pressure_Pa: float) -> None:
+        """Revision 4: ``p <- max(p, pressure_Pa)`` at the start of an extension that ends a
+        lock (``pressure_Pa`` = the monitor's model bound ④ of the lock; NaN = none, no
+        change). Counted in ``lock_seed_raises`` when it raises ``p``."""
+        if math.isfinite(pressure_Pa) and pressure_Pa > self.pressure_Pa[leg]:
+            self.pressure_Pa[leg] = pressure_Pa
+            self.lock_seed_raises[leg] += 1
 
     def bound_Pa(self, leg: int) -> float:
         """``p + delta_m``: the bound the start value and the moving estimate take."""
@@ -313,7 +327,8 @@ class ExtendStartTracker:
         return {"extend_bound_Pa": self.pressure_Pa.tolist(),
                 "valve_estimate_m_s": self.valve_m_s.tolist(),
                 "saturated_substeps": self.saturated_substeps,
-                "saturation_stop_periods": self.saturation_stop_periods.tolist()}
+                "saturation_stop_periods": self.saturation_stop_periods.tolist(),
+                "lock_seed_raises": self.lock_seed_raises.tolist()}
 
 
 TENSION_READ_SIGMA_PA = 0.20e5

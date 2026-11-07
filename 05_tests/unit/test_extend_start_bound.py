@@ -331,19 +331,20 @@ def test_relief_stop_holds_one_period_after_the_last_high_reading() -> None:
 
 
 def test_revision_is_in_the_meta_and_v1_meta_is_refused() -> None:
-    """The bound meta carries ``revision`` 3 (spec 10); a ``tracked_bound`` meta without it
-    (v1) or with another revision (v2) is refused; a ``constant`` meta is not checked."""
+    """The bound meta carries ``revision`` 4 (spec 11); a ``tracked_bound`` meta without it
+    (v1) or with an older revision (2, 3) is refused; a ``constant`` meta is not checked."""
     meta = ExtendStartBound().to_meta()
-    assert meta["revision"] == EXTEND_START_REVISION == 3
+    assert meta["revision"] == EXTEND_START_REVISION == 4
     assert meta["saturation_stop_head_Pa"] == 200.0e5
     check_extend_start_meta({"extend_start_rule": "tracked_bound", "extend_start_bound": meta})
     check_extend_start_meta({"locked_ratio_rule": "column"})
     v1 = {key: value for key, value in meta.items() if key != "revision"}
     with pytest.raises(ValueError, match="v1"):
         check_extend_start_meta({"extend_start_rule": "tracked_bound", "extend_start_bound": v1})
-    with pytest.raises(ValueError, match="revision 2"):
-        check_extend_start_meta({"extend_start_rule": "tracked_bound",
-                                 "extend_start_bound": {**meta, "revision": 2}})
+    for old in (2, 3):
+        with pytest.raises(ValueError, match=f"revision {old}"):
+            check_extend_start_meta({"extend_start_rule": "tracked_bound",
+                                     "extend_start_bound": {**meta, "revision": old}})
     with pytest.raises(ValueError, match="revision"):
         ExtendStartBound(revision=1)
 

@@ -2305,8 +2305,19 @@ class TwoPressureMonitor:
         floor_Pa = [max(self._retract_lock_floor_Pa[leg],
                         self._retract_rod_estimate_Pa(float(head[leg])))
                     for leg in range(LEG_COUNT)]
-        self._extend_bound_state().advance(commanded, stroke, floor_Pa, self.period_s,
-                                           head_Pa=head)
+        tracker = self._extend_bound_state()
+        self._seed_extension_after_lock(tracker, commanded)
+        tracker.advance(commanded, stroke, floor_Pa, self.period_s, head_Pa=head)
+
+    def _seed_extension_after_lock(self, tracker: ExtendStartTracker, commanded) -> None:
+        """Revision 4 (user decision 2026-11-07, S-5 finding): a leg that ends a lock stretch
+        with an extension starts the bound at ``max(p_hat, ④)``, ④ = the model bound of the
+        stretch's last read. While locked the load may raise the rod pressure by the locked
+        law (R12: 2 -> 27.6 bar), which ``p_hat`` does not follow; ④ covers it. The same
+        after a retract lock (④ then holds the retract floor and the load term)."""
+        for leg, stretch in enumerate(self._lock_stretches or []):
+            if commanded[leg] > 0.0 and stretch.is_open:
+                tracker.raise_to(leg, stretch.model_bound_Pa)
 
     def _extend_bound_Pa(self, leg: int) -> float:
         return self._extend_bound_state().bound_Pa(leg)
