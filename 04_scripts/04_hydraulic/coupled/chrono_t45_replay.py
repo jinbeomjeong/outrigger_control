@@ -529,7 +529,7 @@ def release_judgements(hydraulics: dict, params, head_area_m2) -> dict:
     from outrigger_sim.chrono.m2_release_log import judge_release
 
     rod_side = params.l2b.rod_side
-    beta = params.actuator.oil_bulk_modulus_eff_Pa
+    beta = params.l2b.actuator.oil_bulk_modulus_eff_Pa  # L2b block (L1 Actuator has no beta)
     rows = []
     for entry in hydraulics.get("m2_releases") or []:
         leg = int(entry["leg"])
@@ -545,7 +545,7 @@ def ext_lock_counters(hydraulics: dict, params) -> dict:
     ``p_r0 - p_ext``; ``dF_knee = (p_r0 - p_floor) A_ann (k_h + k_r) / k_r`` with ``k_h`` of the
     release and ``k_r = beta A_ann / (L0r + s_max - s_ref,rel)``."""
     rod_side = params.l2b.rod_side
-    beta = params.actuator.oil_bulk_modulus_eff_Pa
+    beta = params.l2b.actuator.oil_bulk_modulus_eff_Pa
     floor_Pa = rod_side.p_floor_abs_Pa - 101325.0
     counts = {key: [0] * len(LEGS) for key in ("ext_lock_count", "ext_lock_excess_count",
                                                "ext_lock_risk_count")}

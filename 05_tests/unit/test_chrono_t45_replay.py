@@ -24,6 +24,9 @@ V0_RECORD = (PROJECT_ROOT / "07_results" / "S8" / "final_G1L_RE1bF_FL_top_Fs0_20
 VB_RECORD = (PROJECT_ROOT / "07_results" / "S8" / "probe_rigid_vb_20261106_162854"
              / "K24_top_fdown3.5_Fs4")
 """VB cost probe (M2 r3 + LC + controller window), stored."""
+VB_STAGE3_RECORD = (PROJECT_ROOT / "07_results" / "S8" / "v5s3_VB_E_G4_Fs4_20261107_194230"
+                    / "E_G4_Fs4")
+"""Stage 3 VB event row (M2 r5, ``hydraulics_record`` with ``m2_releases``), stored."""
 WEIGHT_N = 376.7e3
 
 
@@ -112,8 +115,8 @@ def test_ext_lock_counters_from_released_locks(t45) -> None:
                                                                  31.193e5, 30.591e5),
         p_floor_abs_Pa=1.0e4, annulus_area_m2=(3.76991118e-3,) * 2 + (3.14159265e-3,) * 2,
         rod_dead_length_m=(0.05,) * 4, stroke_m=0.70)
-    params = SimpleNamespace(l2b=SimpleNamespace(rod_side=rod_side),
-                             actuator=SimpleNamespace(oil_bulk_modulus_eff_Pa=1.0e9))
+    params = SimpleNamespace(l2b=SimpleNamespace(
+        rod_side=rod_side, actuator=SimpleNamespace(oil_bulk_modulus_eff_Pa=1.0e9)))
     releases = [{"leg": 0, "p_r0_Pa": 34.818e5, "s_ref_rel_m": 0.3, "k_h_at_rel_N_m": 4e7},
                 {"leg": 0, "p_r0_Pa": 14.0e5, "s_ref_rel_m": 0.3, "k_h_at_rel_N_m": 4e7},
                 {"leg": 2, "p_r0_Pa": 2.05e5, "s_ref_rel_m": 0.3, "k_h_at_rel_N_m": 3e7}]
@@ -125,6 +128,37 @@ def test_ext_lock_counters_from_released_locks(t45) -> None:
     k_r = 1.0e9 * 3.76991118e-3 / (0.05 + 0.70 - 0.3)
     knee = (14.0e5 - (1.0e4 - 101325.0)) * 3.76991118e-3 * (4e7 + k_r) / k_r / 1e3
     assert record["ext_lock_knee_max_kN"][0] == pytest.approx(knee, rel=1e-12)
+
+
+def test_m2_records_read_beta_from_the_loaded_l2b_params(t45) -> None:
+    """Regression (stage 3 judgement 2026-11-07): ``beta`` is ``params.l2b.actuator``, not the
+    L1 ``params.actuator`` (AttributeError on every row with a ``hydraulics_record``)."""
+    from outrigger_sim.params import load_params
+
+    params = load_params(level="top", model="L2b_NSC")
+    assert not hasattr(params.actuator, "oil_bulk_modulus_eff_Pa")
+    releases = [{"leg": 0, "p_r0_Pa": 14.0e5, "s_ref_rel_m": 0.3, "k_h_at_rel_N_m": 4e7}]
+    record = t45.ext_lock_counters({"m2_releases": releases}, params)
+    assert record["ext_lock_count"] == [1, 0, 0, 0]
+    assert t45.release_judgements({"m2_releases": []}, params, (0.0133,) * 4) == {
+        "releases": [], "flags": []}
+
+
+@pytest.mark.skipif(not VB_STAGE3_RECORD.is_dir(), reason="stored stage 3 VB record not present")
+def test_replay_case_of_a_stage3_vb_record_with_m2_records(t45) -> None:
+    """A stage 3 VB row with ``hydraulics_record`` replays to the end; the values equal
+    control-expert's work-around run (``s3_t45_records.json``, 2026-11-07)."""
+    row = t45.replay_case(VB_STAGE3_RECORD)
+    assert row["settings_equal"] and row["t4_0"]
+    assert row["T4"]["over_0p6kN"] == 0
+    ext_lock = row["ext_lock"]
+    assert ext_lock["ext_lock_count"] == [6, 8, 8, 8]
+    assert ext_lock["ext_lock_risk_count"] == [0, 0, 0, 0]
+    assert ext_lock["ext_lock_knee_max_kN"] == pytest.approx(
+        [59.100620627354026, 59.100620627354026, 42.44353503099572, 42.44353503099572],
+        rel=1e-12)
+    judgement = row["m2_release_judgement"]
+    assert len(judgement["releases"]) == 42 and judgement["flags"] == []
 
 
 @pytest.mark.skipif(not V0_RECORD.is_dir(), reason="stored V0 Chrono record not present")
