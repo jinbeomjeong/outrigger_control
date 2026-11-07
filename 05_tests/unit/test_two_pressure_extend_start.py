@@ -1,0 +1,180 @@
+"""``extend_start_rule`` of ``control/two_pressure`` (spec ``p3_extend_start_spec.md`` 4,
+T-P3-1 meta, T-P3-4 retract reset, refusals and pickles; review 2026-11-07 records)."""
+
+from __future__ import annotations
+
+import pickle
+from dataclasses import replace
+
+import numpy as np
+import pytest
+
+from outrigger_sim.control.extend_start_bound import ExtendStartBound
+from outrigger_sim.control.two_pressure import (
+    ExtendStartRule,
+    LockedRatioRule,
+    RodSensorState,
+    TwoPressureMonitor,
+    TwoPressureSettings,
+)
+from outrigger_sim.hydraulics.v5_options import (
+    CheckDelaySetting,
+    HydraulicOptions,
+    check_extend_start,
+)
+from outrigger_sim.params import load_params
+
+BAR = 1e5
+PERIOD_S = 0.1
+HEAD_AREA = np.array([1.3273229e-2, 1.3273229e-2, 9.50331778e-3, 9.50331778e-3])
+ANNULUS = np.array([3.76991118e-3, 3.76991118e-3, 3.14159265e-3, 3.14159265e-3])
+V_MAX = 0.020924
+F_MIN_N = 9414.59
+RETRACT_ANCHOR_PA = (34.818 * BAR, 34.352 * BAR, 31.193 * BAR, 30.591 * BAR)
+CONSTANT_START_PA = 13.0 * BAR
+FL = 0
+EXTEND_KEYS = {"extend_start_rule", "extend_start_bound"}
+
+
+def _settings(**changes) -> TwoPressureSettings:
+    return replace(TwoPressureSettings().with_r8_period(), **changes)
+
+
+def _tracked() -> TwoPressureSettings:
+    return _settings(extend_start_rule="tracked_bound")
+
+
+def _monitor(settings: TwoPressureSettings) -> TwoPressureMonitor:
+    monitor = TwoPressureMonitor(HEAD_AREA, ANNULUS, V_MAX, F_MIN_N, PERIOD_S, settings=settings,
+                                 stroke_max_m=0.70,
+                                 retract_lock_rod_pressure_Pa=RETRACT_ANCHOR_PA)
+    monitor.rod_state[FL] = RodSensorState.FALLBACK
+    return monitor
+
+
+def _read(monitor: TwoPressureMonitor, t_s: float, command_FL: float,
+          stroke_m: float = 0.3) -> None:
+    commanded = np.zeros(4)
+    commanded[FL] = command_FL
+    monitor.read(t_s, np.full(4, 80.0 * BAR), np.full(4, 5.0 * BAR), commanded, False, 2e3,
+                 stroke_m=np.full(4, stroke_m))
+
+
+def _run(monitor: TwoPressureMonitor, commands: list[float], t0_s: float = 0.0) -> float:
+    t_s = t0_s
+    for command in commands:
+        t_s += PERIOD_S
+        _read(monitor, t_s, command)
+    return t_s
+
+
+def test_t_p3_1_meta_has_the_keys_only_with_the_option() -> None:
+    assert not EXTEND_KEYS & set(_settings().to_meta())
+    assert _settings().extend_start_rule is ExtendStartRule.CONSTANT
+    meta = _tracked().to_meta()
+    assert meta["extend_start_rule"] == "tracked_bound"
+    assert meta["extend_start_bound"] == ExtendStartBound().to_meta()
+    assert meta["extend_start_bound"]["hose_factor"] == 1.40
+
+
+def test_t_p3_1_option_off_reads_bit_for_bit() -> None:
+    """``constant`` is the default: the estimate of a fallback leg is the old one."""
+    commands = [0.25 * V_MAX] * 5 + [0.0] * 10 + [-0.1 * V_MAX] * 3 + [0.0] * 5
+    off, default = _monitor(_settings(extend_start_rule="constant")), _monitor(_settings())
+    for k, command in enumerate(commands):
+        _read(off, (k + 1) * PERIOD_S, command)
+        _read(default, (k + 1) * PERIOD_S, command)
+        assert off._legs[FL].rod_estimate_Pa == default._legs[FL].rod_estimate_Pa
+    assert off.meta() == default.meta()
+
+
+def test_moving_and_start_estimates_take_the_bound() -> None:
+    """A short extension from the run start (``p = p_ret``): moving estimate and lock start are
+    ``max(13 bar, p + delta_m)``, above the constant 13 bar."""
+    monitor = _monitor(_tracked())
+    _run(monitor, [0.25 * V_MAX] * 2)
+    tracker = monitor._extend_tracker
+    moving_Pa = monitor._legs[FL].rod_estimate_Pa
+    assert moving_Pa == max(CONSTANT_START_PA, tracker.bound_Pa(FL))
+    assert moving_Pa > CONSTANT_START_PA
+    constant = _monitor(_settings())
+    _run(constant, [0.25 * V_MAX] * 2)
+    assert constant._legs[FL].rod_estimate_Pa == CONSTANT_START_PA
+    t_s = _run(monitor, [0.0], t0_s=0.2)
+    stretch = monitor._lock_stretches[FL]
+    assert stretch.candidates[0][0] >= tracker.bound_Pa(FL)
+    current = monitor.meta()["fallback_lock_current"][0]
+    assert current["extend_bound_Pa"] == tracker.bound_Pa(FL)  # at the stretch start
+    _run(constant, [0.0], t0_s=0.2)
+    assert "extend_bound_Pa" not in constant.meta()["fallback_lock_current"][0]
+    assert t_s == pytest.approx(0.3)
+
+
+def test_long_extension_comes_back_to_the_constant() -> None:
+    monitor = _monitor(_tracked())
+    _run(monitor, [0.5 * V_MAX] * 30)
+    assert monitor._legs[FL].rod_estimate_Pa == CONSTANT_START_PA
+
+
+def test_t_p3_4_retract_resets_the_bound_to_p_ret() -> None:
+    monitor = _monitor(_tracked())
+    _run(monitor, [0.5 * V_MAX] * 30)
+    assert monitor._extend_tracker.pressure_Pa[FL] < 10.0 * BAR
+    _run(monitor, [-0.1 * V_MAX], t0_s=3.0)
+    assert monitor._extend_tracker.pressure_Pa[FL] >= RETRACT_ANCHOR_PA[FL]
+
+
+def test_t_p3_4_counterbalance_and_fixed_are_refused() -> None:
+    params = load_params(level="top", model="L2b_NSC").l2b.counterbalance
+    with pytest.raises(ValueError, match="extend_start_rule"):
+        _tracked().with_lock_valve("counterbalance", params)
+    with pytest.raises(ValueError, match="extend_start_rule"):
+        _settings(extend_start_rule="tracked_bound", locked_ratio_rule=LockedRatioRule.FIXED)
+    with pytest.raises(ValueError):
+        _settings(extend_start_rule="other")
+
+
+def test_t_p3_4_m1c_is_refused() -> None:
+    """Review 2026-11-07 (2c): the bound with M1c is refused."""
+    with_m1c = HydraulicOptions(rod_release_force=True, check_delay=CheckDelaySetting("VN"))
+    with pytest.raises(ValueError, match="M1c"):
+        check_extend_start(with_m1c, "tracked_bound")
+    check_extend_start(with_m1c, "constant")
+    check_extend_start(HydraulicOptions(rod_release_force=True), "tracked_bound")
+
+
+def test_t_p3_4_pickle_round_trip_continues_bit_for_bit() -> None:
+    monitor = _monitor(_tracked())
+    t_s = _run(monitor, [0.25 * V_MAX] * 3)
+    copy = pickle.loads(pickle.dumps(monitor))
+    for command in (0.25 * V_MAX, 0.0, 0.0, -0.1 * V_MAX, 0.3 * V_MAX):
+        t_s += PERIOD_S
+        _read(monitor, t_s, command)
+        _read(copy, t_s, command)
+        assert copy._legs[FL].rod_estimate_Pa == monitor._legs[FL].rod_estimate_Pa
+    assert copy.meta() == monitor.meta()
+
+
+def test_t_p3_4_old_pickle_starts_at_p_ret() -> None:
+    """A monitor pickled before the option has no tracker: the first read creates it with
+    ``p = p_ret`` and ``u_v = 0`` (10.4 ⑧ precedent)."""
+    monitor = _monitor(_settings())
+    _run(monitor, [0.25 * V_MAX] * 3)
+    old = pickle.loads(pickle.dumps(monitor))
+    assert "_extend_tracker" not in old.__dict__
+    old.refresh_settings(_tracked())
+    _read(old, 0.4, 0.25 * V_MAX)
+    fresh = _monitor(_tracked())
+    _read(fresh, 0.4, 0.25 * V_MAX)
+    assert np.array_equal(old._extend_tracker.pressure_Pa, fresh._extend_tracker.pressure_Pa)
+
+
+def test_records_tension_and_d2_ratio_with_the_option() -> None:
+    """Review 2026-11-07 records: tension sub-steps and the delivered / commanded ratio at a
+    D2 violation start, in the meta only with the option on."""
+    assert "extend_start_record" not in _monitor(_settings()).meta()
+    monitor = _monitor(_tracked())
+    _run(monitor, [0.25 * V_MAX] * 2)
+    record = monitor.meta()["extend_start_record"]
+    assert record["tension_substeps"] == [0, 0, 0, 0]
+    assert record["d2_violation_start_ratio"] == [[], [], [], []]

@@ -114,6 +114,11 @@ from typing import Any
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
+from outrigger_sim.control.extend_start_bound import (
+    BoundGeometry,
+    ExtendStartBound,
+    ExtendStartTracker,
+)
 from outrigger_sim.params import LEG_ORDER
 from outrigger_sim.sensors.pressure_error import (
     SIGNAL_CURRENT_RANGE_MA,
@@ -372,6 +377,17 @@ class LockedRatioRule(StrEnum):
     FIXED = "fixed"
     """``fallback_locked_ratio`` from the first command-free sample (the rule before P-S8-13,
     kept bit for bit for regression)."""
+
+
+class ExtendStartRule(StrEnum):
+    """③ start value after an extension and the extending estimate (``p3_extend_start_spec.md``
+    4)."""
+
+    CONSTANT = "constant"
+    """``locked_start_extend_Pa`` (13 bar), the rule before the option (default)."""
+    TRACKED_BOUND = "tracked_bound"
+    """Plan D-p: ``max(13 bar, p + delta_m)`` with ``p`` the recursive bound of
+    :mod:`outrigger_sim.control.extend_start_bound`."""
 
 
 class CbMovingRule(StrEnum):
@@ -700,6 +716,14 @@ class TwoPressureSettings:
     stroke reading the leg is not judged. A settings object pickled before U-S8-28 keeps its
     stored ``False`` (refresh it with :meth:`TwoPressureMonitor.refresh_settings`)."""
     moving_stroke_speed_fraction: float = STROKE_CHECK_SPEED_FRACTION
+    # ③ start after an extension (p3_extend_start_spec.md 4; class defaults for old pickles)
+    extend_start_rule: ExtendStartRule = ExtendStartRule.CONSTANT
+    """``tracked_bound``: the start value after an extension and the extending estimate take
+    the recursive bound (refused with the counterbalance and the ``fixed`` rule). Its meta
+    keys appear only when on."""
+    extend_start_bound: ExtendStartBound | None = None
+    """Conservative parameters of ``tracked_bound`` (ASSUMPTIONS, spec 3 and the
+    hydraulics-expert review); ``None`` = :class:`ExtendStartBound` defaults when on."""
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "lock_valve", LockValve(self.lock_valve))
@@ -730,6 +754,21 @@ class TwoPressureSettings:
                              "(U-S8-36, control rev. 49 219); only 0 is accepted")
         if self.lock_valve is LockValve.COUNTERBALANCE and self.counterbalance is None:
             raise ValueError("lock_valve = counterbalance needs the CB law (counterbalance)")
+        self._check_extend_start()
+
+    def _check_extend_start(self) -> None:
+        """``tracked_bound``: resolve the default bound; refuse the CB and ``fixed`` paths."""
+        object.__setattr__(self, "extend_start_rule", ExtendStartRule(self.extend_start_rule))
+        if self.extend_start_rule is ExtendStartRule.CONSTANT:
+            return
+        if self.lock_valve is LockValve.COUNTERBALANCE or self.counterbalance is not None:
+            raise ValueError("extend_start_rule tracked_bound is not defined with the "
+                             "counterbalance (it has its own law)")
+        if self.locked_ratio_rule is LockedRatioRule.FIXED:
+            raise ValueError("extend_start_rule tracked_bound needs locked_ratio_rule "
+                             "column_bound")
+        if self.extend_start_bound is None:
+            object.__setattr__(self, "extend_start_bound", ExtendStartBound())
 
     def with_lock_valve(
         self, lock_valve: str, counterbalance: Any | None = None
@@ -849,6 +888,12 @@ class TwoPressureSettings:
         if (self.lock_window_closing_delay_s == 0.0
                 or self.locked_ratio_rule is LockedRatioRule.FIXED):
             del meta["lock_window_closing_delay_s"]
+        # ③ start option (p3 spec 4 #1): keys only when on, so stored metas compare as before
+        if self.extend_start_rule is ExtendStartRule.CONSTANT:
+            del meta["extend_start_rule"]
+            del meta["extend_start_bound"]
+        else:
+            meta["extend_start_rule"] = str(self.extend_start_rule)
         return meta
 
 
@@ -1016,10 +1061,16 @@ class _LockStretch:
     """Stroke reading behind ``ratio_bound`` (-inf = none; NaN = not yet computed)."""
     online_reference: tuple[float, float, float] | None = None
     """(head, rod, stroke) of the first two-sensor sample after the lock window (④)."""
+    extend_bound_Pa: float = math.nan
+    """``p + delta_m`` of the ③ start bound when the stretch opened (``tracked_bound`` only;
+    NaN = option off, no meta key)."""
 
     def summary(self, leg: int) -> dict[str, Any]:
-        """Meta row of the stretch (10.4 ⑦)."""
+        """Meta row of the stretch (10.4 ⑦); ``extend_bound_Pa`` only with the ③ option."""
+        extend_bound = (
+            {} if math.isnan(self.extend_bound_Pa) else {"extend_bound_Pa": self.extend_bound_Pa})
         return {
+            **extend_bound,
             "leg": LEG_ORDER[leg],
             "t_start_s": self.start_t_s,
             "window_end_s": self.window_end_s,
@@ -1154,6 +1205,11 @@ class TwoPressureMonitor:
     # P-S8-25: class default for monitors pickled before it.
     _step_rule_suspended_by: int | None = None
     """Leg whose head fault suspended the D1 step rule (``None`` = the rule runs)."""
+    # ③ start option (p3 spec 4 #2 / #5): created on the first read with the option on, so a
+    # monitor without it (or pickled before it) carries no new state
+    _extend_tracker: ExtendStartTracker | None = None
+    _d2_start_ratios: list[list[float]] | None = None
+    """Per leg the stroke rate / acting command at each D2 violation start (review record)."""
     _BUFFER_SIZING_FIELDS = (
         "stuck_window_s",
         "rising_window_s",
@@ -1278,6 +1334,8 @@ class TwoPressureMonitor:
         self._recontact = None
         self._held_head_Pa = None
         self._step_rule_suspended_by = None
+        self.__dict__.pop("_extend_tracker", None)
+        self.__dict__.pop("_d2_start_ratios", None)
 
     def refresh_settings(self, settings: TwoPressureSettings) -> None:
         """Use ``settings`` from the next read on, keeping the run's state.
@@ -1305,6 +1363,8 @@ class TwoPressureMonitor:
             self._retract_lock_floor_Pa = self._resolve_retract_floor_Pa(None)
         if settings.counterbalance_lag_tau_s is not None:
             self._cb_lag_tau_s = self._resolve_cb_lag_tau_s(None)
+        if self._extend_tracker is not None and settings.extend_start_bound is not None:
+            self._extend_tracker.bound = settings.extend_start_bound  # state carries over
 
     # --- public ---
 
@@ -1595,6 +1655,7 @@ class TwoPressureMonitor:
             optional["d1_step_suspended_by"] = LEG_ORDER[suspended_by]
         if self._uses_cb_lag_bound:
             optional["counterbalance_lag_tau_s_used"] = self._cb_lag_tau_s
+        optional.update(self._extend_start_meta())
         if self._is_tracking_online_ratio:
             optional["r5_online_ratio"] = [
                 None if learned is None else {"ratio": learned[0], "stroke_m": learned[1]}
@@ -2127,6 +2188,8 @@ class TwoPressureMonitor:
                 continue
             if watch.violation_since_s is None:
                 watch.violation_since_s = t_s
+                if sign > 0:
+                    self._record_d2_start(leg, float(commanded[leg]))
             if t_s - watch.violation_since_s >= settings.violation_hold_s - 1e-9:
                 self._fall_back(leg, "D2" if sign > 0 else "D3")
 
@@ -2187,9 +2250,63 @@ class TwoPressureMonitor:
             return
         stroke = (np.full(LEG_COUNT, np.nan) if stroke_m is None
                   else np.asarray(stroke_m, dtype=float))
+        if self._uses_extend_bound:
+            self._advance_extend_bound(head, rod, commanded, stroke)
         for leg in range(LEG_COUNT):
             self._update_column_bound(leg, float(t_s), float(head[leg]), float(rod[leg]),
                                       float(commanded[leg]), float(stroke[leg]))
+
+    # --- ③ start bound after an extension (p3_extend_start_spec.md 3 / 4) ---
+
+    @property
+    def _uses_extend_bound(self) -> bool:
+        return self.settings.extend_start_rule is ExtendStartRule.TRACKED_BOUND
+
+    def _extend_bound_state(self) -> ExtendStartTracker:
+        """The tracker, created with ``p = p_ret``, ``u_v = 0`` when missing (a new run or a
+        monitor pickled before the option, 10.4 ⑧ precedent)."""
+        if self._extend_tracker is None:
+            geometry = BoundGeometry(
+                head_area_m2=tuple(float(a) for a in self.head_area_m2),
+                annulus_area_m2=tuple(float(a) for a in self.annulus_area_m2),
+                stroke_max_m=self._column_stroke_max_m, max_speed_m_s=self.max_speed_m_s,
+                valve_tau_s=self.settings.lock_window_valve_tau_s)
+            self._extend_tracker = ExtendStartTracker(self.settings.extend_start_bound, geometry,
+                                                      self._retract_lock_floor_Pa)
+        return self._extend_tracker
+
+    def _advance_extend_bound(self, head, rod, commanded, stroke) -> None:
+        """One period of the bound with the acting command (spec 4 #2): the retract floor is
+        ``max(p_ret, retract moving model)``; the force of the tension record uses the rod
+        reading where the sensor is OK, else the current estimate."""
+        estimates = np.array([watch.rod_estimate_Pa for watch in self._legs])
+        is_reading_ok = np.array([state is RodSensorState.OK for state in self.rod_state])
+        rod_Pa = np.where(is_reading_ok & np.isfinite(rod), rod, estimates)
+        force_N = head * self.head_area_m2 - rod_Pa * self.annulus_area_m2
+        floor_Pa = [max(self._retract_lock_floor_Pa[leg],
+                        self._retract_rod_estimate_Pa(float(head[leg])))
+                    for leg in range(LEG_COUNT)]
+        self._extend_bound_state().advance(commanded, stroke, force_N, floor_Pa, self.period_s)
+
+    def _extend_bound_Pa(self, leg: int) -> float:
+        return self._extend_bound_state().bound_Pa(leg)
+
+    def _record_d2_start(self, leg: int, command_m_s: float) -> None:
+        """Review record: delivered (stroke rate) over commanded speed at a D2 violation start."""
+        if not self._uses_extend_bound:
+            return
+        if self._d2_start_ratios is None:
+            self._d2_start_ratios = [[] for _ in range(LEG_COUNT)]
+        rate = self._stroke_rate_m_s
+        ratio = math.nan if rate is None else float(rate[leg]) / command_m_s
+        self._d2_start_ratios[leg].append(ratio)
+
+    def _extend_start_meta(self) -> dict[str, Any]:
+        if not self._uses_extend_bound:
+            return {}
+        ratios = self._d2_start_ratios or [[] for _ in range(LEG_COUNT)]
+        return {"extend_start_record": {**self._extend_bound_state().record(),
+                                        "d2_violation_start_ratio": [list(r) for r in ratios]}}
 
     def _update_fixed_ratio_estimates(self, head, commanded) -> None:
         """The estimate before P-S8-13 (``locked_ratio_rule = "fixed"``): the moving value of
@@ -2365,6 +2482,8 @@ class TwoPressureMonitor:
         stretch.valid_head_max_Pa = -math.inf
         stretch.valid_stroke_m = -math.inf
         stretch.online_reference = None
+        if self._uses_extend_bound:
+            stretch.extend_bound_Pa = self._extend_bound_Pa(leg)
         self._seed_from_old_anchor(leg, stretch)
 
     def _seed_from_old_anchor(self, leg, stretch) -> None:
@@ -2570,9 +2689,13 @@ class TwoPressureMonitor:
         )
 
     def _moving_rod_estimate_Pa(self, leg: int, sign: float, head_Pa: float) -> float:
-        """``p_r_hat`` of a moving leg: unchanged but for the pilot extend value (10.4 ③)."""
+        """``p_r_hat`` of a moving leg: unchanged but for the pilot extend value (10.4 ③); with
+        ``tracked_bound`` the extend value is at least the ③ bound ``p + delta_m``."""
         if sign > 0.0:
-            return self._extend_rod_estimate_Pa(head_Pa, self.settings.locked_start_extend_Pa)
+            extend_Pa = self._extend_rod_estimate_Pa(head_Pa, self.settings.locked_start_extend_Pa)
+            if self._uses_extend_bound:
+                return max(extend_Pa, self._extend_bound_Pa(leg))
+            return extend_Pa
         return self._retract_rod_estimate_Pa(head_Pa)
 
     def _lock_start_model_Pa(self, leg: int, sign: float, head_Pa: float) -> float:

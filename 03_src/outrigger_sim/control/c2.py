@@ -320,6 +320,7 @@ from outrigger_sim.control.target import (
 from outrigger_sim.control.two_pressure import (
     BODY_MASS_WITHOUT_YAML_KG,
     NOMINAL_DEAD_LENGTH_M,
+    ExtendStartRule,
     FallbackRatioChoice,
     FallbackRatioSource,
     FallbackSlopeInputs,
@@ -2385,6 +2386,7 @@ class C2Config:
         clip_returned_command: bool = True,
         touch_twist_hold: bool = True,
         reapproach_retrigger_two_samples: bool = False,
+        extend_start_tracked: bool = False,
     ) -> C2Config:
         """Copy with the R8-D1 design C2 (spec rev. 30 136 / 139, user decisions 2026-10-24).
 
@@ -2465,6 +2467,10 @@ class C2Config:
             reapproach_retrigger_two_samples: K1, a re-trigger start needs two low samples in a
                 row (``LiftedReapproachSettings.retrigger_samples``). Off: rejected by the user
                 decision of 2026-11-05 (the code stays for the stored K1 runs).
+            extend_start_tracked: ③ start bound after an extension
+                (``TwoPressureSettings.extend_start_rule = "tracked_bound"``,
+                ``p3_extend_start_spec.md`` 4). Off: the design is not adopted (diagnosis
+                option); off keeps the preset bit for bit.
         """
         retrigger_samples = R8_RETRIGGER_CONFIRM_SAMPLES if reapproach_retrigger_two_samples else 1
         config = self.with_r8_diagnostics()
@@ -2474,6 +2480,9 @@ class C2Config:
             crawler_recontact_watch=True,
             suspend_steps_after_head_fault=True,
         )
+        if extend_start_tracked:
+            two_pressure = replace(two_pressure,
+                                   extend_start_rule=ExtendStartRule.TRACKED_BOUND)
         reground_settings = replace(
             config.fault_reground,
             enable=True,

@@ -12,12 +12,15 @@ recorded only (``unlocked_tail_*``), as is the ``lower - true_force_min_N`` valu
 
 Usage (dynamics-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/t4h_replay.py <out_json> <npz or folder> [...]
+      [--extend-start tracked_bound]   (③ start rule override, record T4h-P3)
 ``aggregate_v5`` reads ``<batch>/t4h/t4h_replay.json`` (write the output there for its table).
 """
 from __future__ import annotations
 
+import argparse
 import json
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
@@ -33,6 +36,9 @@ EXCESS_LIMIT_N = 600.0
 """Criteria 9 T4h: lower bound <= truth + 0.6 kN."""
 FALLBACK_EVENT = "WARN_ROD_PRESSURE_FALLBACK"
 HARNESS_VALVE_TAU_S = 0.1
+EXTEND_START_KEYS = ("extend_start_rule", "extend_start_bound")
+"""Two-pressure meta keys of the ③ start option (present only with the option on)."""
+EXTEND_START_CHOICES = ("constant", "tracked_bound")
 
 
 class _Record:
@@ -55,13 +61,22 @@ def load_record(path: Path) -> tuple[dict, dict]:
     return arrays, meta
 
 
-def run_config(meta: dict):
-    """C2Config of the run: harness preset + the lock window of its options."""
+def run_config(meta: dict, extend_start: str | None = None):
+    """C2Config of the run: harness preset + the lock window of its options; ``extend_start``
+    overrides the ③ start rule (``p3_extend_start_spec.md`` 4 #8, ``T4h-P3``).
+
+    Raises:
+        ValueError: ``tracked_bound`` on a run with M1c (review 2026-11-07, 2c).
+    """
     import s9_soil_closed_loop as soil
     from params import load_params
 
     from outrigger_sim.control import c2
-    from outrigger_sim.hydraulics.v5_options import HydraulicOptions, apply_lock_window
+    from outrigger_sim.hydraulics.v5_options import (
+        HydraulicOptions,
+        apply_lock_window,
+        check_extend_start,
+    )
 
     closed_loop = soil._imports()[0]
     contact = (meta.get("job") or {}).get("contact") or "COMBINED"
@@ -71,25 +86,38 @@ def run_config(meta: dict):
     options = HydraulicOptions.from_stored(meta["hydraulic_options"])
     if options.lock_window_follows_plant:
         config = apply_lock_window(config, options, load_params().v_max, HARNESS_VALVE_TAU_S)
+    if extend_start is not None:
+        check_extend_start(options, extend_start)
+        config = replace(config, two_pressure=replace(config.two_pressure,
+                                                      extend_start_rule=extend_start))
     return closed_loop, config
+
+
+def _settings_for_comparison(settings: dict, extend_start: str | None) -> dict:
+    """With an override the stored meta differs only in the ③ start keys: leave them out."""
+    if extend_start is None:
+        return settings
+    return {key: value for key, value in settings.items() if key not in EXTEND_START_KEYS}
 
 
 def _plain(value):
     return json.loads(json.dumps(value, default=str))
 
 
-def replay_values(path: Path) -> dict:
+def replay_values(path: Path, extend_start: str | None = None) -> dict:
     """T4h values of one record (module docstring).
 
     Raises:
-        RuntimeError: The rebuilt monitor settings differ from the stored ones.
+        RuntimeError: The rebuilt monitor settings differ from the stored ones (with
+            ``extend_start``: apart from the ③ start keys).
     """
     from outrigger_sim.control.c2 import C2Geometry
     from outrigger_sim.control.contact_replay import replay_fallback_monitor
 
     arrays, meta = load_record(path)
-    closed_loop, config = run_config(meta)
-    if _plain(config.two_pressure.to_meta()) != meta["two_pressure_settings"]:
+    closed_loop, config = run_config(meta, extend_start)
+    rebuilt = _settings_for_comparison(_plain(config.two_pressure.to_meta()), extend_start)
+    if rebuilt != _settings_for_comparison(meta["two_pressure_settings"], extend_start):
         raise RuntimeError(f"{path.name}: rebuilt two_pressure settings differ from the record")
     t_s = arrays["t_s"]
     forced = [(float(t_s[0]), f"{FALLBACK_EVENT}:{leg}") for leg in LEGS]
@@ -135,17 +163,29 @@ def record_files(paths: list[str]) -> list[Path]:
     return files
 
 
+def _parse_arguments() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("out_json")
+    parser.add_argument("records", nargs="+", help="npz files or folders")
+    parser.add_argument("--extend-start", choices=EXTEND_START_CHOICES, default=None,
+                        help="override the ③ start rule (record T4h-P3; spec p3 4 #8)")
+    return parser.parse_args()
+
+
 def main() -> int:
     if len(sys.argv) < 3:
         print(__doc__)
         return 2
-    rows = [replay_values(path) for path in record_files(sys.argv[2:])]
+    args = _parse_arguments()
+    rows = [replay_values(path, args.extend_start) for path in record_files(args.records)]
     report = {"rule": "criteria 9 T4h: zero acting command samples of a locked plant leg, "
                       "lower - true_force_N > 0.6 kN count (0 = provisional pass); fallback "
                       "forced on all legs; unlocked tail samples recorded only",
+              "record": "T4h" if args.extend_start is None else "T4h-P3",
+              "extend_start_rule": args.extend_start,
               "runs": len(rows), "runs_over": sum(not row["provisional_pass"] for row in rows),
               "rows": rows}
-    Path(sys.argv[1]).write_text(json.dumps(report, indent=1), encoding="utf-8")
+    Path(args.out_json).write_text(json.dumps(report, indent=1), encoding="utf-8")
     print(json.dumps({k: report[k] for k in ("runs", "runs_over")}))
     return 0
 

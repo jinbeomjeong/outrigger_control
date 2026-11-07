@@ -284,6 +284,19 @@ def validate(options: HydraulicOptions, *, period_s: float, engine: str = "harne
         raise ValueError("LC and M2 are not defined with the counterbalance (spec 2.3, 2.5)")
 
 
+def check_extend_start(options: HydraulicOptions | None, extend_start_rule: str) -> None:
+    """Refuse the ③ start bound with M1c (hydraulics-expert review 2026-11-07, 2c): M1c holds
+    the extending leg back, which the bound's speed lower bound does not cover.
+
+    Raises:
+        ValueError: ``extend_start_rule`` is ``"tracked_bound"`` and M1c is on.
+    """
+    if extend_start_rule == "tracked_bound" and options is not None \
+            and options.check_delay is not None:
+        raise ValueError("extend_start_rule tracked_bound with M1c is refused "
+                         "(review 2026-11-07: the speed lower bound does not hold)")
+
+
 def apply_lock_window(config: Any, options: HydraulicOptions, v_max_m_s: float,
                       valve_tau_s: float) -> Any:
     """The C2 configuration with the controller lock window of the plant rule (spec 2.6, R-2).
@@ -328,6 +341,7 @@ def check_lock_window_meta(two_pressure_meta: dict[str, Any], options: Hydraulic
 __all__ = [
     "LOCK_SPEED_EPS_M_S",
     "apply_lock_window",
+    "check_extend_start",
     "check_lock_window_meta",
     "validate",
     "CheckCircuit",
