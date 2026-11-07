@@ -530,6 +530,23 @@ def test_candidates_report_pairs_with_current_and_judges_a4():
     assert unpaired["unmatched"] == [f"cand=D1p#L2|s0|g6|0|{j2}"]
 
 
+def test_t4h_record_helpers_name_the_file_and_find_the_fallback_starts(monkeypatch):
+    """``tension_premise.md`` S-4: a file-safe name per key, the first fallback per leg, and
+    the option refused without the v5 plant."""
+    assert (screen.t4h_file_name("cand=current#L3|s0|g6|11|g6|G1+J1@RL|bottom|Fs4")
+            == "cand_current_L3_s0_g6_11_g6_G1_J1_RL_bottom_Fs4.npz")
+    events = [types.SimpleNamespace(t_s=35.7, name="WARN_ROD_PRESSURE_FALLBACK:RR"),
+              types.SimpleNamespace(t_s=40.0, name="WARN_ROD_PRESSURE_FALLBACK:RR"),
+              types.SimpleNamespace(t_s=12.0, name="INFO_ROD_PRESSURE_FAULT_REASON:FL:D2")]
+    assert screen.fallback_start_s(events) == [None, None, None, 35.7]
+    monkeypatch.delenv(screen.T4H_DIR_ENV, raising=False)
+    assert screen._install_t4h_log() is None
+    monkeypatch.setenv(screen.T4H_DIR_ENV, "somewhere")
+    monkeypatch.delenv(screen.V5_SETTING_ENV, raising=False)
+    with pytest.raises(ValueError, match=screen.V5_SETTING_ENV):
+        screen._install_t4h_log()
+
+
 def test_identity_rows_compare_command_hashes():
     run = {"key": "L0|s0|g8|0|k", "level": "L0", "harness": "g8", "inner": "k",
            "base": {"cmd_sha256": "abc", "pass": True}, "wall_s": 1.0}

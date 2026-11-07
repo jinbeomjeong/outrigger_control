@@ -229,9 +229,12 @@ def _true_force_at_samples(rows: np.ndarray, t_s: np.ndarray) -> tuple[np.ndarra
     return at_sample, window_min
 
 
-def write_t4h_record(path, plant, controller, period: dict, meta: dict) -> None:
+def write_t4h_record(path, plant, controller, period: dict, meta: dict,
+                     extra_arrays: dict | None = None) -> None:
     """T4h record of one run (control-expert B): 10 Hz controller inputs and outputs from the
-    arm to the end, the 1 ms truth taken at the samples, the plant lock state and events."""
+    arm to the end, the 1 ms truth taken at the samples, the plant lock state and events.
+    ``extra_arrays`` are saved beside them (the r79 Dg-3 record adds the run's own lower
+    readings, ``r79_sensor_screen`` ``R79_T4H_DIR``)."""
     import json
 
     t_s = period["t"]
@@ -259,7 +262,7 @@ def write_t4h_record(path, plant, controller, period: dict, meta: dict) -> None:
         seal_band_N=period["seal_band_N"], true_force_N=true_force,
         true_force_min_N=true_force_min, locked=locked,
         lock_events=np.array(plant.lock_events, float).reshape(-1, 3),
-        meta_json=np.array(json.dumps(meta_for_json(full_meta))))
+        meta_json=np.array(json.dumps(meta_for_json(full_meta))), **(extra_arrays or {}))
 
 
 def meta_for_json(value):

@@ -47,7 +47,8 @@ Env: R79_LEVELS (comma, default L1), R79_SET (default identity), R79_SEEDS (comm
   ChunkProbe; records ``v5_setting``, ``hydraulic_options``, ``hydraulics_record`` with the M2
   clipped steps split at the first crawler lift-off ``t_lift_s`` (also recorded),
   ``rod_fallback_reasons`` and, with LC lock events, ``lock_window_alignment``; unset = the former
-  runs).
+  runs), R79_T4H_DIR (a folder: a T4h-form record per run, ``T4H_DIR_ENV``; needs
+  R79_V5_SETTING; record only).
 """
 
 from __future__ import annotations
@@ -56,6 +57,7 @@ import ctypes
 import json
 import math
 import os
+import re
 import sys
 import time
 import types
@@ -879,6 +881,7 @@ def run_job(key: str) -> dict:
     # v5 X-1: flow setting and plant options first, so that the LC overlap cut sits inside the
     # ChunkProbe and the r72 recorders that wrap ``_lagged_step`` later in the job
     v5_options = _install_v5_setting()
+    t4h_dir = _install_t4h_log()
     adapter = SensorAdapter(level, seed, rod_split_function(rod_model),
                             always_split=rod_model != "harness")
     run = ActiveRun(level, adapter)
@@ -908,6 +911,8 @@ def run_job(key: str) -> dict:
     out.update(_run_summary(run, plant))
     out["r79"]["recontact_events"] = recontact_summary(base)
     out.update(_v5_record(v5_options, run, plant))
+    if t4h_dir is not None:
+        out["t4h_file"] = write_t4h(t4h_dir, key, v5_options, run.ctrl, plant)
     if candidate not in (None, "current"):  # spec 424.5: the candidate's own record
         controller = run.ctrl
         fix = getattr(controller, "fix", None)
@@ -928,6 +933,75 @@ def _install_v5_setting():
     import r67_g1_screen as r67
 
     return r67.install_v5_setting(V5_SETTING_ENV)
+
+
+T4H_DIR_ENV = "R79_T4H_DIR"
+"""``tension_premise.md`` S-4 (Dg-3): a folder; every run writes a T4h-form record
+``<folder>/<key>.npz`` (``verdict_runs.write_t4h_record`` arrays and meta, read by
+``t4h_replay``) plus the run's own 10 Hz lower readings ``lower_reading_N`` /
+``lower_estimate_N``, and in the meta the fallback start time per leg and the plant
+``tension_truth``. Needs ``R79_V5_SETTING`` (the flow-limited plant with its lock record).
+Unset = no record; the commands are the same either way (the log is record only)."""
+FALLBACK_EVENT = "WARN_ROD_PRESSURE_FALLBACK"
+T4H_FILE_CHARACTERS = re.compile(r"[^A-Za-z0-9._-]")
+
+
+def _install_t4h_log() -> Path | None:
+    """With ``R79_T4H_DIR``: the record-only controller log of the verdict runs (its period
+    arrays feed the record); returns the folder, or None without the option.
+
+    Raises:
+        ValueError: The option without ``R79_V5_SETTING``.
+    """
+    folder = os.environ.get(T4H_DIR_ENV)
+    if not folder:
+        return None
+    if not os.environ.get(V5_SETTING_ENV):
+        raise ValueError(f"{T4H_DIR_ENV} needs {V5_SETTING_ENV} (the plant lock record)")
+    import verdict_runs
+
+    verdict_runs.install_logged_controller()
+    return Path(folder)
+
+
+def t4h_file_name(key: str) -> str:
+    return T4H_FILE_CHARACTERS.sub("_", key) + ".npz"
+
+
+def fallback_start_s(events) -> list[float | None]:
+    """First ``WARN_ROD_PRESSURE_FALLBACK:<leg>`` time per leg (None = no fallback)."""
+    starts: list[float | None] = [None] * len(LEGS)
+    for event in events:
+        name = event.name
+        if not name.startswith(FALLBACK_EVENT):
+            continue
+        leg = LEGS.index(name.rsplit(":", 1)[-1])
+        if starts[leg] is None:
+            starts[leg] = round(float(event.t_s), 6)
+    return starts
+
+
+def write_t4h(folder: Path, key: str, options, ctrl, plant) -> str:
+    """The S-4 record of one run (``T4H_DIR_ENV``); returns the file name."""
+    import verdict_runs
+
+    period = verdict_runs.period_arrays(ctrl)
+    lower_estimate_N = period["lower_estimate_N"]
+    is_pressure_judge = ctrl.config.contact.name == "PRESSURE"
+    lower_reading_N = (lower_estimate_N if is_pressure_judge
+                       else lower_estimate_N + period["seal_band_N"])
+    name = t4h_file_name(key)
+    meta = {"job": {"key": key, "setting": os.environ.get(V5_SETTING_ENV), "contact": None},
+            "hydraulic_options": None if options is None else options.to_dict(),
+            "commands_sha256": verdict_runs._command_digest(period["command"]),
+            "fallback_start_s": fallback_start_s(ctrl.events),
+            "lower_reading_rule": "the run's own monitor lower reading at each update "
+                                  "(lower_estimate_N + seal band unless the PRESSURE judge); "
+                                  "lower_estimate_N = the value compared with F_min"}
+    verdict_runs.write_t4h_record(folder / name, plant, ctrl, period, meta,
+                                  extra_arrays={"lower_reading_N": lower_reading_N,
+                                                "lower_estimate_N": lower_estimate_N})
+    return name
 
 
 def _v5_record(options, run: ActiveRun, plant) -> dict:
