@@ -257,6 +257,36 @@ def controller_output_delay_periods(controller: Controller) -> int:
     return int(value) if isinstance(value, int | float) and not isinstance(value, bool) else 0
 
 
+CONTROLLER_WRAPPER_ATTRIBUTES = ("inner", "ctrl")
+"""Attributes through which the run scripts' controller wrappers hold the C2 controller."""
+MAX_WRAPPER_DEPTH = 5
+
+
+def _extend_bound_source(controller: Any) -> Any | None:
+    """The controller (or the one a wrapper holds) that reports the ③ bound, or None."""
+    current = controller
+    for _ in range(MAX_WRAPPER_DEPTH):
+        if current is None:
+            return None
+        if callable(getattr(current, "extend_bound_Pa", None)):
+            return current
+        current = next((getattr(current, name) for name in CONTROLLER_WRAPPER_ATTRIBUTES
+                        if getattr(current, name, None) is not None), None)
+    return None
+
+
+def _check_extend_bound(engine: Any, controller: Any, t_s: float) -> None:
+    """``tension_premise.md`` 5.5 (record only): an engine that keeps the ③ bound check gets
+    the controller's ``p_hat + delta_m`` of the read just made; nothing with the option off."""
+    check = getattr(engine, "check_extend_bound", None)
+    if check is None:
+        return
+    source = _extend_bound_source(controller)
+    bound_Pa = None if source is None else source.extend_bound_Pa()
+    if bound_Pa is not None:
+        check(float(t_s), bound_Pa)
+
+
 def runner_meta(
     controller: Controller, sensors: SensorSuite, period_s: float, dt_s: float
 ) -> dict[str, Any]:
@@ -422,6 +452,7 @@ def run_closed_loop(
         if type(delivered) is not Measurements:
             raise RunnerError(f"sensors returned {type(delivered).__name__}, not Measurements")
         command = controller.update(delivered)  # Measurements only (plan S6 risk 1)
+        _check_extend_bound(eng, controller, delivered.t_s)
         if not isinstance(command, Command):
             raise RunnerError(f"controller returned {type(command).__name__}, not a Command")
         if command.t_s != delivered.t_s:

@@ -153,7 +153,8 @@ def replay_values(path: Path, extend_start: str | None = None) -> dict:
             "provisional_pass": bool(over.sum() == 0),
             "settings_equal": True, "commands_sha256": meta.get("commands_sha256"),
             "extend_start_revision": (rebuilt.get("extend_start_bound") or {}).get("revision"),
-            "tension_truth": meta.get("tension_truth")}
+            "tension_truth": meta.get("tension_truth"),
+            "extend_bound_check": meta.get("extend_bound_check")}
 
 
 def _by_leg(counts) -> dict[str, int]:

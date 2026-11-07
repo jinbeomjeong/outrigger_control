@@ -37,7 +37,11 @@ SOURCE_DIR = Path(__file__).resolve().parents[3] / "03_src"
 if str(SOURCE_DIR) not in sys.path:
     sys.path.insert(0, str(SOURCE_DIR))
 
-from outrigger_sim.control.extend_start_bound import TensionTruthCounter  # noqa: E402
+from outrigger_sim.control.extend_start_bound import (  # noqa: E402
+    ExtendBoundCheck,
+    TensionTruthCounter,
+    extend_bound_states,
+)
 from outrigger_sim.hydraulics.check_open_delay import (  # noqa: E402
     CheckDelayCircuit,
     CheckDelayInputs,
@@ -69,6 +73,8 @@ STROKE_LOWER_END_M = 0.0
 MAX_LOGGED_LOCK_EVENTS = 2000
 HARNESS_VALVE_TAU_S = 0.1
 """The harness valve lag is always on with this value (``c2py_r8d1_closed_loop.VALVE_LAG_S``)."""
+_LAST_STEPPED: list = [None]
+"""The plant stepped last in this process (the one the next controller read measures)."""
 _LAST_ARMED: list = [None]
 """The plant armed last in this process (the event branch runs on it), for the run record."""
 _INSTALLED: dict = {}
@@ -218,9 +224,12 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                                                   _check_delay_circuit(self.flow_limiter.params))
             self.tension_truth = TensionTruthCounter()
             self.extend_targets = _extend_target_model(self)
+            self.extend_bound_check = None
+            """Created on the first controller read with the ③ bound on (5.5); None = off."""
             return result
 
         def step(self, u, nsteps):
+            _LAST_STEPPED[0] = self
             if not self.armed:
                 return super().step(u, nsteps)
             if closure is not None:
@@ -245,7 +254,28 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             target_Pa = self.extend_targets.moving_target_Pa(
                 np.asarray(self.pressure(), float), mode, np.abs(valve_m_s))
             self.tension_truth.add(is_extending, target_Pa, nsteps * float(self.dt),
-                                   float(self.t))
+                                   float(self.t), self.plant_rod_pressure_Pa())
+
+        def plant_rod_pressure_Pa(self) -> np.ndarray | None:
+            """``p_tr`` per leg: the M2 lag of a moving leg, ``p_r0 - G_r / A_ann`` of a locked
+            one (5.5); None without M2 (no moving rod pressure in this plant)."""
+            if self.rod_release is None:
+                return None
+            locked_Pa = (np.asarray(self.p_r0, float)
+                         - np.asarray(self.Gr, float) / np.asarray(self.A_ann, float))
+            return np.where(np.asarray(self.locked, bool), locked_Pa,
+                            self.rod_pressure_lag.pressure_Pa)
+
+        def check_extend_bound(self, t_s: float, bound_Pa: np.ndarray) -> None:
+            """5.5: the controller's ③ bound of the read at ``t_s`` against this plant (record
+            only; the plant has not moved since the read)."""
+            plant_Pa = self.plant_rod_pressure_Pa()
+            if plant_Pa is None:
+                return
+            if self.extend_bound_check is None:
+                self.extend_bound_check = ExtendBoundCheck()
+            self.extend_bound_check.add(t_s, bound_Pa, plant_Pa,
+                                        extend_bound_states(self.locked, self.last_dir))
 
         def _step_with_check_delay(self, u: np.ndarray, nsteps: int):
             """Spec 2.0 rows 3 and 6: M1c in front of the flow limit, its shift after the chunk
@@ -440,7 +470,36 @@ def plant_record(plant, t_lift_s: float | None = None) -> dict:
         record["check_delay"] = plant.check_delay.summary()
     if getattr(plant, "tension_truth", None) is not None:
         record["tension_truth"] = plant.tension_truth.record()
+        check = getattr(plant, "extend_bound_check", None)
+        record["extend_bound_check"] = None if check is None else check.record()
     return record
+
+
+def install_extend_bound_check() -> None:
+    """Every ``c2.C2Controller`` of this process hands its ③ bound to the plant it reads after
+    each update (``tension_premise.md`` 5.5; record only, the output is untouched). The plant
+    is the harness plant stepped last, taken only when its time equals the read time."""
+    from outrigger_sim.control import c2
+
+    base = c2.C2Controller
+    if getattr(base, "_extend_bound_checked", False):
+        return
+
+    class BoundCheckedController(base):
+        _extend_bound_checked = True
+
+        def update(self, measurements):
+            output = super().update(measurements)
+            plant = _LAST_STEPPED[0]
+            check = getattr(plant, "check_extend_bound", None)
+            if check is None or abs(float(plant.t) - float(measurements.t_s)) > TIME_TOL_S:
+                return output
+            bound_Pa = self.extend_bound_Pa()
+            if bound_Pa is not None:
+                check(float(measurements.t_s), bound_Pa)
+            return output
+
+    c2.C2Controller = BoundCheckedController
 
 
 def _extend_target_model(plant):
@@ -506,6 +565,7 @@ def install(verdict_runs_module, options: HydraulicOptions) -> None:
 
     if options.lock_window_follows_plant:
         install_lock_window(options, load_params().v_max)
+    install_extend_bound_check()
 
     verdict_runs_module.make_flow_plant_class = make_class
 

@@ -17,11 +17,14 @@ import pytest
 from outrigger_sim.control.extend_start_bound import (
     EXTEND_START_REVISION,
     BoundGeometry,
+    ExtendBoundCheck,
+    ExtendBoundState,
     ExtendStartBound,
     ExtendStartTracker,
     PremiseRecord,
     TensionTruthCounter,
     check_extend_start_meta,
+    extend_bound_states,
 )
 from outrigger_sim.hydraulics.rod_release import (
     METER_OUT_RATIO,
@@ -233,6 +236,44 @@ def test_tension_truth_counts_the_plant_target_above_p_bB() -> None:
     assert record["substeps_over_margin"] == [0, 1, 0, 0]
     assert record["max_excess_bar"] == pytest.approx([0.3, 1.0, 0.0, 0.0])
     assert record["first_t_s"] == [1.0, 1.0, None, None]
+    assert record["active_substeps"] == [0, 0, 0, 0]  # no plant pressure given
+    assert record["min_p_tr_minus_p_star_bar"] == [None] * 4
+    assert "diagnostic" in record["rule"]
+
+
+def test_tension_truth_active_part_needs_the_target_above_the_plant() -> None:
+    """5.5 #4: a break-away (``p*`` 13.4 bar, plant 34.8 bar) is counted but not active; a
+    target above the plant pressure is active."""
+    truth = TensionTruthCounter()
+    extending = np.array([True, True, False, False])
+    truth.add(extending, np.array([13.4e5, 7.0e5, 0.0, 0.0]), 1.0e-3, 10.2,
+              np.array([34.8e5, 6.0e5, 5.0e5, 5.0e5]))
+    record = truth.record()
+    assert record["substeps"] == [1, 1, 0, 0]
+    assert record["active_substeps"] == [0, 1, 0, 0]
+    assert record["min_p_tr_minus_p_star_bar"] == pytest.approx([21.4, -1.0, None, None])
+
+
+def test_extend_bound_check_counts_breach_margin_and_retract_apart() -> None:
+    """5.5 #2-3: the judged legs (moving, locked after an extension), the retracting leg apart,
+    a leg locked after a retraction not compared; the smallest gap with its time and state."""
+    check = ExtendBoundCheck()
+    states = extend_bound_states([False, True, False, True], [1.0, 1.0, -1.0, -1.0])
+    assert states == [ExtendBoundState.EXTEND_MOVING, ExtendBoundState.EXTEND_LOCKED,
+                      ExtendBoundState.RETRACT, None]
+    check.add(1.0, np.full(4, 5.5e5), np.array([5.0e5, 5.2e5, 6.0e5, 9.0e5]), states)
+    check.add(2.0, np.full(4, 5.5e5), np.array([5.6e5, 1.0e5, 1.0e5, 9.0e5]), states)
+    record = check.record()
+    assert record["reads"] == [2, 2, 0, 0]
+    assert record["breach_reads"] == [1, 0, 0, 0]
+    assert record["locked_breach_reads"] == [0, 0, 0, 0]
+    assert record["margin_used_reads"] == [1, 1, 0, 0]
+    assert record["min_gap_bar"] == pytest.approx([-0.1, 0.3, None, None])
+    assert record["min_gap_t_s"] == [2.0, 1.0, None, None]
+    assert record["min_gap_state"] == ["ext_moving", "ext_locked", None, None]
+    assert record["first_breach_t_s"] == [2.0, None, None, None]
+    assert record["retract_reads"] == [0, 0, 2, 0]
+    assert record["retract_breach_reads"] == [0, 0, 1, 0]
 
 
 def test_bound_parameters_can_be_replaced() -> None:
@@ -244,19 +285,49 @@ def test_bound_parameters_can_be_replaced() -> None:
         ExtendStartBound(speed_factor=1.5)
 
 
+@pytest.mark.parametrize("head_bar, is_stopped", [(199.0, False), (201.0, True),
+                                                   (float("nan"), True)])
+def test_relief_stop_reading_boundary(head_bar, is_stopped) -> None:
+    """Spec 10 (revision 3): a head reading at or above ``p_sat`` 200 bar, or NaN, stops the
+    counted relief for that period; 199 bar does not."""
+    tracker = _tracker()
+    tracker.valve_m_s = np.full(4, 0.5 * MAX_SPEED_M_S)
+    head = np.array([head_bar, 100.0, 100.0, 100.0]) * BAR
+    tracker.advance(np.full(4, 0.5 * MAX_SPEED_M_S), np.full(4, 0.3), RETRACT_ANCHOR_PA,
+                    PERIOD_S, head_Pa=head)
+    assert bool(tracker.pressure_Pa[0] == RETRACT_ANCHOR_PA[0]) is is_stopped
+    assert tracker.pressure_Pa[1] < RETRACT_ANCHOR_PA[1]
+    assert tracker.saturation_stop_periods.tolist() == [int(is_stopped), 0, 0, 0]
+
+
+def test_relief_stop_holds_one_period_after_the_last_high_reading() -> None:
+    """Spec 10 #1: the previous reading also counts (a stop that ended inside the period)."""
+    tracker = _tracker()
+    tracker.valve_m_s = np.full(4, 0.5 * MAX_SPEED_M_S)
+    command = np.full(4, 0.5 * MAX_SPEED_M_S)
+    high, low = np.full(4, 205.0 * BAR), np.full(4, 150.0 * BAR)
+    for head in (high, low):
+        tracker.advance(command, np.full(4, 0.3), RETRACT_ANCHOR_PA, PERIOD_S, head_Pa=head)
+    assert np.array_equal(tracker.pressure_Pa, np.array(RETRACT_ANCHOR_PA))
+    tracker.advance(command, np.full(4, 0.3), RETRACT_ANCHOR_PA, PERIOD_S, head_Pa=low)
+    assert np.all(tracker.pressure_Pa < np.array(RETRACT_ANCHOR_PA))
+    assert tracker.saturation_stop_periods.tolist() == [2, 2, 2, 2]
+
+
 def test_revision_is_in_the_meta_and_v1_meta_is_refused() -> None:
-    """v2 review: the bound meta carries ``revision`` 2; a ``tracked_bound`` meta without it
-    (v1) or with another revision is refused; a ``constant`` meta is not checked."""
+    """The bound meta carries ``revision`` 3 (spec 10); a ``tracked_bound`` meta without it
+    (v1) or with another revision (v2) is refused; a ``constant`` meta is not checked."""
     meta = ExtendStartBound().to_meta()
-    assert meta["revision"] == EXTEND_START_REVISION == 2
+    assert meta["revision"] == EXTEND_START_REVISION == 3
+    assert meta["saturation_stop_head_Pa"] == 200.0e5
     check_extend_start_meta({"extend_start_rule": "tracked_bound", "extend_start_bound": meta})
     check_extend_start_meta({"locked_ratio_rule": "column"})
     v1 = {key: value for key, value in meta.items() if key != "revision"}
     with pytest.raises(ValueError, match="v1"):
         check_extend_start_meta({"extend_start_rule": "tracked_bound", "extend_start_bound": v1})
-    with pytest.raises(ValueError, match="revision 3"):
+    with pytest.raises(ValueError, match="revision 2"):
         check_extend_start_meta({"extend_start_rule": "tracked_bound",
-                                 "extend_start_bound": {**meta, "revision": 3}})
+                                 "extend_start_bound": {**meta, "revision": 2}})
     with pytest.raises(ValueError, match="revision"):
         ExtendStartBound(revision=1)
 
@@ -485,3 +556,86 @@ def test_t_p3_3_saturation_with_falling_valves_stays_below_the_bound(plant_step_
         saturated += tracker.saturated_substeps
     assert saturated > 0
     assert violations == 0, f"{violations} sub-steps above the bound, worst {worst_Pa / BAR} bar"
+
+
+# --- T-P3-3, relief stop while extending (spec 10, revision 3) ------------------------------
+
+RELIEF_SEQUENCES = 300
+RELIEF_PERIODS = 20
+RELIEF_HEAD_STOPPED_PA = 210.0e5
+RELIEF_HEAD_MOVING_PA = 120.0e5
+
+
+def _relief_stop_sequences(rng: np.random.Generator) -> dict[str, np.ndarray]:
+    """One extending leg (FL or RL) at 0.1-1.0 ``v_max`` from the retract anchor; a relief
+    stop (valve open, plant delivery 0) of 0.1-1.0 s starting at 0-1.0 s, at any time inside a
+    period."""
+    count = RELIEF_SEQUENCES
+    return {"leg": rng.choice([0, 2], size=count),
+            "command": rng.uniform(0.1, 1.0, size=count) * MAX_SPEED_M_S,
+            "stop_start": rng.uniform(0.0, 1.0, size=count),
+            "stop_length": rng.uniform(0.1, 1.0, size=count),
+            "beta": rng.choice(PLANT_BULK_MODULI_PA, size=count),
+            "head_dead": rng.choice(PLANT_HEAD_DEAD_M, size=count),
+            "rod_dead": rng.choice(PLANT_ROD_DEAD_M, size=count),
+            "hose": rng.choice(PLANT_HOSE_FACTORS, size=count)}
+
+
+def _relief_stop_plant(sequences, step_s: float) -> tuple[np.ndarray, np.ndarray]:
+    """Plant rod pressure and the head reading at every period end; during the stop the plant
+    delivers 0 (the M2 law holds) and its head reads the relief pressure."""
+    leg = sequences["leg"]
+    count = RELIEF_SEQUENCES
+    pressure = np.asarray(RETRACT_ANCHOR_PA)[leg].copy()
+    valve = np.zeros(count)
+    stroke = np.full(count, 0.3)
+    keep = math.exp(-step_s / VALVE_TAU_S)
+    steps = round(PERIOD_S / step_s)
+    stop_end = sequences["stop_start"] + sequences["stop_length"]
+    plant_at_end = np.empty((count, RELIEF_PERIODS))
+    head_at_end = np.empty((count, RELIEF_PERIODS))
+    t_s = 0.0
+    for period in range(RELIEF_PERIODS):
+        for _ in range(steps):
+            t_s += step_s
+            valve = sequences["command"] + (valve - sequences["command"]) * keep
+            is_stopped = (t_s > sequences["stop_start"]) & (t_s <= stop_end)
+            delivered = np.where(is_stopped, 0.0, valve)
+            compliance = _plant_compliance(leg, sequences["beta"], sequences["head_dead"],
+                                           sequences["rod_dead"], sequences["hose"], stroke)
+            pressure = _plant_step(pressure, BACK_PRESSURE_PA, delivered, step_s, compliance,
+                                   leg, np.zeros(count, dtype=bool))
+            stroke = np.clip(stroke + delivered * step_s, 0.0, STROKE_MAX_M)
+        is_stopped = (t_s > sequences["stop_start"]) & (t_s <= stop_end)
+        plant_at_end[:, period] = pressure
+        head_at_end[:, period] = np.where(is_stopped, RELIEF_HEAD_STOPPED_PA,
+                                          RELIEF_HEAD_MOVING_PA)
+    return plant_at_end, head_at_end
+
+
+def _relief_stop_violations(sequences, plant, head, with_heads: bool) -> int:
+    violations = 0
+    for row in range(RELIEF_SEQUENCES):
+        leg = int(sequences["leg"][row])
+        tracker = _tracker()
+        command = np.zeros(4)
+        command[leg] = sequences["command"][row]
+        for period in range(RELIEF_PERIODS):
+            reading = np.full(4, RELIEF_HEAD_MOVING_PA)
+            reading[leg] = head[row, period]
+            tracker.advance(command, np.full(4, 0.3), RETRACT_ANCHOR_PA, PERIOD_S,
+                            head_Pa=reading if with_heads else None)
+            violations += int(plant[row, period] - tracker.pressure_Pa[leg] > ROUNDING_PA)
+    return violations
+
+
+@pytest.mark.parametrize("plant_step_s", PLANT_STEPS_S)
+def test_t_p3_3_relief_stop_needs_the_head_reading_test(plant_step_s) -> None:
+    """Spec 10 #6 (b): an extending leg stopped at the relief (valve open, delivery 0), seed
+    20261107 (own stream), 300 sequences, sensitivity-end oil; at every read the bound is
+    compared with the plant. Without the head readings (revision 2) the bound relieves through
+    the stop and falls below the plant; with them (revision 3) never."""
+    sequences = _relief_stop_sequences(np.random.default_rng([PROPERTY_SEED, 2]))
+    plant, head = _relief_stop_plant(sequences, plant_step_s)
+    assert _relief_stop_violations(sequences, plant, head, with_heads=False) > 0
+    assert _relief_stop_violations(sequences, plant, head, with_heads=True) == 0

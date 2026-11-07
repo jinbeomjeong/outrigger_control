@@ -4,6 +4,7 @@ T-P3-1 meta, T-P3-4 retract reset, refusals and pickles; review 2026-11-07 recor
 from __future__ import annotations
 
 import pickle
+import types
 from dataclasses import replace
 
 import numpy as np
@@ -181,7 +182,7 @@ def test_review_record_is_kept_with_the_option_on_and_off() -> None:
     off, on = metas
     assert "extend_start_record" not in off
     assert set(on["extend_start_record"]) == {"extend_bound_Pa", "valve_estimate_m_s",
-                                              "saturated_substeps"}
+                                              "saturated_substeps", "saturation_stop_periods"}
     assert off["review_record"] == on["review_record"]
     assert off["review_record"]["tension_substeps"] == [0, 0, 0, 0]
     assert off["review_record"]["d2_violation_start_ratio"] == [[], [], [], []]
@@ -215,7 +216,35 @@ def test_review_record_counts_tension_and_a_d2_start_with_the_option_off() -> No
     assert ratios[FL] == [pytest.approx(0.006 / (0.3 * V_MAX))]
 
 
+def test_extend_bound_accessor_is_none_off_and_the_tracker_bound_on() -> None:
+    """5.5 #1: ``extend_bound_Pa()`` = ``p_hat + delta_m`` per leg after a read; None with the
+    option off or before the first read."""
+    off = _monitor(_settings())
+    _run(off, [0.25 * V_MAX] * 2)
+    assert off.extend_bound_Pa() is None
+    on = _monitor(_tracked())
+    assert on.extend_bound_Pa() is None
+    _run(on, [0.25 * V_MAX] * 2)
+    expected = [on._extend_tracker.bound_Pa(leg) for leg in range(4)]
+    assert on.extend_bound_Pa().tolist() == expected
+
+
+def test_runner_hands_the_bound_through_controller_wrappers() -> None:
+    """5.5 #2 (Chrono): the runner finds the bound through ``inner`` / ``ctrl`` wrappers and
+    calls the engine check only when the bound is not None."""
+    from outrigger_sim import runner
+
+    calls = []
+    engine = types.SimpleNamespace(check_extend_bound=lambda t, bound: calls.append((t, bound)))
+    c2_like = types.SimpleNamespace(extend_bound_Pa=lambda: np.full(4, 5.5e5))
+    wrapper = types.SimpleNamespace(inner=types.SimpleNamespace(ctrl=c2_like))
+    runner._check_extend_bound(engine, wrapper, 1.5)
+    runner._check_extend_bound(engine, types.SimpleNamespace(extend_bound_Pa=lambda: None), 1.6)
+    runner._check_extend_bound(types.SimpleNamespace(), wrapper, 1.7)
+    assert len(calls) == 1 and calls[0][0] == 1.5
+
+
 def test_t_p3_1_meta_carries_the_bound_revision() -> None:
-    """v2 review: the option meta carries ``revision`` 2; the off meta has no ③ key."""
-    assert _tracked().to_meta()["extend_start_bound"]["revision"] == 2
+    """The option meta carries ``revision`` 3 (spec 10); the off meta has no ③ key."""
+    assert _tracked().to_meta()["extend_start_bound"]["revision"] == 3
     assert "extend_start_bound" not in _settings().to_meta()

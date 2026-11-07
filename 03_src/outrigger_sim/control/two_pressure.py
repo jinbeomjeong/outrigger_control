@@ -2281,14 +2281,24 @@ class TwoPressureMonitor:
 
     def _advance_extend_bound(self, head, commanded, stroke) -> None:
         """One period of the bound with the acting command (spec 4 #2): the retract floor is
-        ``max(p_ret, retract moving model)``."""
+        ``max(p_ret, retract moving model)``; the head readings feed the relief-stop test
+        (revision 3, spec 10)."""
         floor_Pa = [max(self._retract_lock_floor_Pa[leg],
                         self._retract_rod_estimate_Pa(float(head[leg])))
                     for leg in range(LEG_COUNT)]
-        self._extend_bound_state().advance(commanded, stroke, floor_Pa, self.period_s)
+        self._extend_bound_state().advance(commanded, stroke, floor_Pa, self.period_s,
+                                           head_Pa=head)
 
     def _extend_bound_Pa(self, leg: int) -> float:
         return self._extend_bound_state().bound_Pa(leg)
+
+    def extend_bound_Pa(self) -> NDArray[np.float64] | None:
+        """The ③ bound ``p_hat + delta_m`` per leg after the last read (``tension_premise.md``
+        5.5: the plant adapters compare it with the plant rod pressure); None with the option
+        off or before the first read. Read only."""
+        if not self._uses_extend_bound or self._extend_tracker is None:
+            return None
+        return np.array([self._extend_tracker.bound_Pa(leg) for leg in range(LEG_COUNT)])
 
     def _extend_start_meta(self) -> dict[str, Any]:
         if not self._uses_extend_bound:

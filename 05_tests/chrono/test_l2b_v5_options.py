@@ -302,7 +302,17 @@ def test_m2_record_has_the_premise_truth_of_the_extend_target() -> None:
     assert not actuator.rod_side.locked[FRONT_LEFT]
     actuator._count_tension_truth(1.0, 1.0e-3, np.array([0.25 * P.v_max, 0.0, 0.0, 0.0]),
                                   np.array([-3.0e3, 1.0e4, 1.0e4, 1.0e4]))
-    truth = actuator.m2_release_record()["tension_truth"]
+    plant_Pa = actuator.rod_side.rod_pressure_Pa.copy()
+    actuator.check_extend_bound(1.0, plant_Pa + 0.5e5)
+    actuator.check_extend_bound(1.1, plant_Pa - 0.1e5)
+    record = actuator.m2_release_record()
+    check = record["extend_bound_check"]
+    assert check["reads"][FRONT_LEFT] == 2
+    assert check["min_gap_state"][FRONT_LEFT] == "ext_moving"
+    assert check["breach_reads"][FRONT_LEFT] == 1
+    assert check["min_gap_bar"][FRONT_LEFT] == pytest.approx(-0.1)
+    assert check["first_breach_t_s"][FRONT_LEFT] == 1.1
+    truth = record["tension_truth"]
     assert truth["substeps"] == [1, 0, 0, 0]
     assert truth["substeps_over_margin"] == [1, 0, 0, 0]
     assert truth["max_excess_bar"][FRONT_LEFT] == pytest.approx(

@@ -616,6 +616,7 @@ def replay_case(case_dir: Path, *, with_t5: bool = False,
         row["ext_lock"] = ext_lock_counters(hydraulics, params)
         # premise ① truth of the ③ bound (tension_premise.md S-2; None before it was recorded)
         row["tension_truth"] = hydraulics.get("tension_truth")
+        row["extend_bound_check"] = hydraulics.get("extend_bound_check")
     return row
 
 
@@ -642,6 +643,13 @@ def summary(rows: list[dict]) -> dict:
             "tension_truth_substeps_over_margin": sum(
                 sum(row["tension_truth"]["substeps_over_margin"]) for row in judged
                 if row.get("tension_truth")),
+            # ③ judgement (tension_premise.md 5.4): breach sum 0 passes, margin use is a FLAG
+            "extend_bound_breach_reads": sum(
+                sum(row["extend_bound_check"]["breach_reads"]) for row in judged
+                if row.get("extend_bound_check")),
+            "extend_bound_margin_used_reads": sum(
+                sum(row["extend_bound_check"]["margin_used_reads"]) for row in judged
+                if row.get("extend_bound_check")),
             "anchor_note": "앵커 위험 미관측" if risk == 0 else "앵커 위험 관측"}
 
 

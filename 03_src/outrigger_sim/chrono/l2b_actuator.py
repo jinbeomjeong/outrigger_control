@@ -63,7 +63,11 @@ from numpy.typing import ArrayLike, NDArray
 from outrigger_sim.actuation import SATURATION_STOP_S, FlowLimit, SpeedReference
 from outrigger_sim.chrono.actuators import leg_force_limits_N
 from outrigger_sim.chrono.m2_release_log import M2ReleaseLog, release_record
-from outrigger_sim.control.extend_start_bound import TensionTruthCounter
+from outrigger_sim.control.extend_start_bound import (
+    ExtendBoundCheck,
+    TensionTruthCounter,
+    extend_bound_states,
+)
 from outrigger_sim.hydraulics.check_open_delay import (
     CheckDelayInputs,
     CheckDelayOutput,
@@ -506,6 +510,8 @@ class L2bForceActuator:
         self._m2_log = M2ReleaseLog(self.rod_side.annulus_area_m2)
         # premise ① truth of the ③ bound (tension_premise.md S-2): record only
         self._tension_truth = TensionTruthCounter()
+        self._extend_bound_check: ExtendBoundCheck | None = None
+        """Created on the first controller read with the ③ bound on (5.5); None = off."""
         # revision 3 pressure law: the moving rod pressure M2 reads is capped by the valve
         # flow; the friction path reads it from its oil law G, which may be another object
         law = RodPressureFlowLaw()
@@ -621,6 +627,8 @@ class L2bForceActuator:
                              self._rod_release.clip_times_s, record["m2_clipped_steps"],
                              record["m2_shift_total_mm"])
         out["tension_truth"] = self._tension_truth.record()
+        check = self._extend_bound_check
+        out["extend_bound_check"] = None if check is None else check.record()
         return out
 
     def _count_tension_truth(self, t_s: float, dt_s: float, u_acting_m_s: NDArray[np.float64],
@@ -636,7 +644,20 @@ class L2bForceActuator:
         if not is_extending.any():
             return
         target_Pa = oil.extension_targets_Pa(cylinder_force_N)
-        self._tension_truth.add(is_extending, target_Pa, float(dt_s), float(t_s))
+        self._tension_truth.add(is_extending, target_Pa, float(dt_s), float(t_s),
+                                oil.rod_pressure_Pa)
+
+    def check_extend_bound(self, t_s: float, bound_Pa: ArrayLike) -> None:
+        """``tension_premise.md`` 5.5: the controller's ③ bound of the read at ``t_s`` against
+        the rod-side machine (its tracked pressure while moving, its locked pressure); record
+        only, kept with M2 on (``m2_release_record``)."""
+        oil = self._oil
+        if self._rod_release is None or oil is None or not oil.armed:
+            return
+        if self._extend_bound_check is None:
+            self._extend_bound_check = ExtendBoundCheck()
+        self._extend_bound_check.add(t_s, bound_Pa, oil.rod_pressure_Pa,
+                                     extend_bound_states(oil.locked, oil.last_directions))
 
     def m2_state(self) -> tuple[NDArray[np.float64], NDArray[np.float64]] | None:
         """v5 stage 3 R-5: (``p_hat`` of the last hook, accumulated shift ``s_ref`` sign) per

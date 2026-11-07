@@ -251,6 +251,10 @@ def write_t4h_record(path, plant, controller, period: dict, meta: dict,
                  # premise ① truth of the ③ bound (tension_premise.md S-2), record only
                  "tension_truth": (None if getattr(plant, "tension_truth", None) is None
                                    else plant.tension_truth.record()),
+                 # the ③ bound against the plant at the reads (5.5; None = option off)
+                 "extend_bound_check": (
+                     None if getattr(plant, "extend_bound_check", None) is None
+                     else plant.extend_bound_check.record()),
                  "true_force_rule": "limiter oil_force at the 1 ms row t == t_k (NaN without "
                                     "one) and its minimum over (t_k-1, t_k]; not true_force_*"}
     path = Path(path)

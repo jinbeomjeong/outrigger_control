@@ -179,6 +179,12 @@ class L2bEngine:
             "link_displacement_m": s,
         }
 
+    def check_extend_bound(self, t_s: float, bound_Pa: NDArray[np.float64]) -> None:
+        """The controller's ③ bound of the read at ``t_s`` against the rod-side machine
+        (``L2bForceActuator.check_extend_bound``, record only; the runner calls it after each
+        update)."""
+        self.model.actuator.check_extend_bound(t_s, bound_Pa)
+
     def measure(self) -> Measurements:
         """Ideal measurements with the instantaneous IMU (the runner averages
         :meth:`imu_sample` over the period; module docstring for the leg readings)."""

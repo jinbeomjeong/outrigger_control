@@ -13,16 +13,27 @@ in 1 ms sub-steps per leg::
                0 if u_v <= 0, if the acting command is 0 (|u| <= eps) and u_v < delta_ol v_max
                (the plant's tail cut; v2, spec 3 (i)), if the pump demand
                sum A_h |u_v| (extend) + A_ann |u_v| (retract) > eta_v Q_pump with per leg the
-               larger |u_v| of the sub-step start and end, or if the stroke reading >= the end
-               margin
-
-The relief speed is the exact sub-step mean of the valve, not its end value: with v2 a ramp
-from rest counts from the first sub-step, and the end value over the whole sub-step relieved up to
-210 Pa more than the plant there (T-P3-3, seed 20261107, plant step 1e-4 s).
+               larger |u_v| of the sub-step start and end, if the stroke reading >= the end
+               margin, or (revision 3) if the head reading of the period or of the previous
+               one is >= p_sat 200 bar or NaN (relief stop: valve open, no flow)
     pressure   p <- flow_limited_rod_pressure(p, p_bB, u_lb, dt, tau, h C_r(s), ...)
     retract    p <- max(p, p_ret, retract moving model)   (no sub-steps)
     C_r(s)     A_ann^2 (1/k_r + 1/k_h), k_h = beta A_h / (L0h + s),
                k_r = beta A_ann / (L0r + s_max - s), times the hose factor h
+
+The relief speed is the exact sub-step mean of the valve, not its end value: with v2 a ramp
+from rest counts from the first sub-step, and the end value over the whole sub-step relieved up to
+210 Pa more than the plant there (T-P3-3, seed 20261107, plant step 1e-4 s).
+
+Records kept by the plant adapters (harness ``harness_hydraulics``, L2b actuator; record only):
+
+* ``hydraulics_record.extend_bound_check`` (:class:`ExtendBoundCheck`, the judged record,
+  ``tension_premise.md`` 5.4): per leg ``reads``, ``breach_reads``, ``margin_used_reads``,
+  ``min_gap_bar``, ``min_gap_t_s``, ``min_gap_state``, ``first_breach_t_s``,
+  ``retract_reads``, ``retract_breach_reads``; ``null`` = option off. Rule of a ③-on run:
+  ``sum(breach_reads) == 0`` passes, ``sum(margin_used_reads) > 0`` is a FLAG.
+* ``hydraulics_record.tension_truth`` (:class:`TensionTruthCounter`): premise ① diagnostic
+  (``substeps``, ``substeps_over_margin``, ``active_substeps``, ``min_p_tr_minus_p_star_bar``).
 
 The step is increasing in ``p``, decreasing in the speed and increasing in ``C_r``, so a lower
 speed and a larger compliance from an equal or higher start bound the plant from above (spec 3).
@@ -34,6 +45,7 @@ from __future__ import annotations
 import math
 from collections.abc import Mapping
 from dataclasses import asdict, dataclass
+from enum import StrEnum
 from typing import Any
 
 import numpy as np
@@ -44,10 +56,12 @@ from outrigger_sim.hydraulics.rod_release import RodPressureFlowLaw, flow_limite
 BAR_PA = 1.0e5
 LEG_COUNT = 4
 
-EXTEND_START_REVISION = 2
+EXTEND_START_REVISION = 3
 """Revision of the bound rule in the meta (v2: overlap cut with a zero command only, sub-step
-mean valve, start / end saturation test; spec 3 and its v2 review). A ``tracked_bound`` meta
-without it is v1 and is refused (:func:`check_extend_start_meta`)."""
+mean valve, start / end saturation test; spec 3 and its v2 review. 3: no relief counted in a
+period whose head reading or the previous one is at the relief stop, spec 10). A
+``tracked_bound`` meta of another revision, or without one (v1), is refused
+(:func:`check_extend_start_meta`)."""
 TRACKED_BOUND_RULE = "tracked_bound"
 
 BOUND_BULK_MODULUS_PA = 0.69e9
@@ -78,6 +92,11 @@ BOUND_VOLUMETRIC_EFFICIENCY = 0.85
 counts saturation earlier (ASSUMPTION)."""
 BOUND_STROKE_END_M = 0.6848
 """End-margin stroke: at or beyond it the end braking may slow the leg (no relief counted)."""
+BOUND_SATURATION_STOP_HEAD_PA = 200.0e5
+"""``p_sat`` (spec 10, revision 3): a head reading at or above it (or NaN) in the period or the
+previous one means the leg may stand at the relief stop (210 bar) with its valve open, so no
+relief is counted. ASSUMPTION: relief 210 bar minus a 10 bar reading allowance (at least twice
+the normal-grade +-4 bar)."""
 
 
 @dataclass(frozen=True)
@@ -98,6 +117,7 @@ class ExtendStartBound:
         pump_flow_m3_s: ``Q_pump``.
         volumetric_efficiency: ``eta_v`` of the saturation test.
         stroke_end_m: End-margin stroke.
+        saturation_stop_head_Pa: ``p_sat`` of the relief-stop test.
         revision: Rule revision (only :data:`EXTEND_START_REVISION` runs in this code).
     """
 
@@ -114,6 +134,7 @@ class ExtendStartBound:
     pump_flow_m3_s: float = BOUND_PUMP_FLOW_M3_S
     volumetric_efficiency: float = BOUND_VOLUMETRIC_EFFICIENCY
     stroke_end_m: float = BOUND_STROKE_END_M
+    saturation_stop_head_Pa: float = BOUND_SATURATION_STOP_HEAD_PA
     revision: int = EXTEND_START_REVISION
 
     def __post_init__(self) -> None:
@@ -170,6 +191,9 @@ class ExtendStartTracker:
         self.pressure_Pa = np.array(start_Pa, dtype=float).reshape(LEG_COUNT)
         self.valve_m_s = np.zeros(LEG_COUNT)
         self.saturated_substeps = 0
+        self.saturation_stop_periods = np.zeros(LEG_COUNT, dtype=np.int64)
+        """Periods per leg without counted relief for a relief stop (revision 3, spec 10)."""
+        self.previous_head_Pa: NDArray[np.float64] | None = None
         self._law = RodPressureFlowLaw()
 
     def bound_Pa(self, leg: int) -> float:
@@ -189,7 +213,8 @@ class ExtendStartTracker:
                                                                   rod_stiffness)
 
     def advance(self, command_m_s: ArrayLike, stroke_m: ArrayLike,
-                retract_floor_Pa: ArrayLike, period_s: float) -> None:
+                retract_floor_Pa: ArrayLike, period_s: float,
+                head_Pa: ArrayLike | None = None) -> None:
         """One controller period with the acting command ``command_m_s``.
 
         Args:
@@ -197,6 +222,8 @@ class ExtendStartTracker:
             stroke_m: Stroke reading per leg (NaN = unknown).
             retract_floor_Pa: ``max(p_ret, retract moving model)`` per leg.
             period_s: Controller period ``T``.
+            head_Pa: Head pressure reading per leg of this period (the relief-stop test with
+                the previous one, revision 3); None = no reading given (no stop counted).
         """
         command = np.asarray(command_m_s, dtype=float)
         stroke = np.asarray(stroke_m, dtype=float)
@@ -205,9 +232,26 @@ class ExtendStartTracker:
             is_retracting, np.maximum(self.pressure_Pa, np.asarray(retract_floor_Pa, float)),
             self.pressure_Pa)
         compliance = [self.compliance_m3_Pa(leg, float(stroke[leg])) for leg in range(LEG_COUNT)]
+        is_stopped = self._relief_stop(head_Pa)
+        self.saturation_stop_periods += is_stopped & ~is_retracting
         is_at_end = np.isfinite(stroke) & (stroke >= self.bound.stroke_end_m)
         for _ in range(round(period_s / self.bound.substep_s)):
-            self._substep(command, is_retracting, is_at_end, compliance)
+            self._substep(command, is_retracting, is_at_end | is_stopped, compliance)
+
+    def _relief_stop(self, head_Pa: ArrayLike | None) -> NDArray[np.bool_]:
+        """Spec 10 #1, #3: head reading of this period or the previous one at or above
+        ``p_sat``, or NaN (a stop that starts inside the period shows in one of the two)."""
+        if head_Pa is None:
+            return np.zeros(LEG_COUNT, dtype=bool)
+        head = np.asarray(head_Pa, dtype=float).reshape(LEG_COUNT)
+        previous = self.previous_head_Pa
+        self.previous_head_Pa = head.copy()
+        readings = [head] if previous is None else [head, previous]
+        is_stopped = np.zeros(LEG_COUNT, dtype=bool)
+        for reading in readings:
+            with np.errstate(invalid="ignore"):
+                is_stopped |= ~(reading < self.bound.saturation_stop_head_Pa)
+        return is_stopped
 
     def _substep(self, command, is_retracting, is_at_end, compliance) -> None:
         bound, geometry = self.bound, self.geometry
@@ -262,7 +306,8 @@ class ExtendStartTracker:
     def record(self) -> dict[str, object]:
         return {"extend_bound_Pa": self.pressure_Pa.tolist(),
                 "valve_estimate_m_s": self.valve_m_s.tolist(),
-                "saturated_substeps": self.saturated_substeps}
+                "saturated_substeps": self.saturated_substeps,
+                "saturation_stop_periods": self.saturation_stop_periods.tolist()}
 
 
 TENSION_READ_SIGMA_PA = 0.20e5
@@ -336,14 +381,18 @@ class PremiseRecord:
                 "d2_violation_start_ratio": [list(ratios) for ratios in self.d2_start_ratios]}
 
 
-TENSION_TRUTH_RULE = "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms"
+TENSION_TRUTH_RULE = ("plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; "
+                      "diagnostic; judged by extend_bound_check")
 
 
 class TensionTruthCounter:
-    """Plant truth of premise ① (``tension_premise.md`` 4, S-2): time an extending leg spends
-    with the plant's extend target ``p*`` above ``p_bB``, kept by the plant adapters (harness,
-    L2b) and recorded as ``hydraulics_record.tension_truth``. ``substeps_over_margin == 0``
-    means premise ① held with the bound's margin ``delta_m``. Records only.
+    """Plant truth of premise ① (``tension_premise.md`` 4, S-2), a **diagnostic** record since
+    5.4: the bound is judged by :class:`ExtendBoundCheck`. Time an extending leg spends with the
+    plant's extend target ``p*`` above ``p_bB``, kept by the plant adapters (harness, L2b) and
+    recorded as ``hydraulics_record.tension_truth``. ``active_substeps`` = the part where ``p*``
+    is also above the plant rod pressure ``p_tr`` (the target holds the plant up: the case that
+    can break the bound; a break-away after a retract lock relieves from above, 5.2). Records
+    only.
 
     The adapters add every plant step (1 ms harness chunk, L2b step); the counts are the summed
     time in 1 ms sub-steps.
@@ -352,11 +401,13 @@ class TensionTruthCounter:
     def __init__(self) -> None:
         self.seconds = np.zeros(LEG_COUNT)
         self.seconds_over_margin = np.zeros(LEG_COUNT)
+        self.seconds_active = np.zeros(LEG_COUNT)
         self.max_excess_Pa = np.zeros(LEG_COUNT)
+        self.min_plant_minus_target_Pa = np.full(LEG_COUNT, np.inf)
         self.first_t_s: list[float | None] = [None] * LEG_COUNT
 
     def add(self, is_extending: ArrayLike, target_Pa: ArrayLike, duration_s: float,
-            t_s: float) -> None:
+            t_s: float, plant_rod_Pa: ArrayLike | None = None) -> None:
         """One plant step.
 
         Args:
@@ -364,13 +415,15 @@ class TensionTruthCounter:
             target_Pa: Plant extend target ``p*`` per leg (gauge; NaN = not extending).
             duration_s: Step length.
             t_s: Plant time at the step end.
+            plant_rod_Pa: Plant rod pressure ``p_tr`` per leg (None = not known: no
+                ``active_substeps``).
         """
         extending = np.asarray(is_extending, bool)
         if not extending.any():
             return
+        target = np.asarray(target_Pa, float)
         with np.errstate(invalid="ignore"):
-            excess_Pa = np.where(extending, np.asarray(target_Pa, float) - BOUND_BACK_PRESSURE_PA,
-                                 -np.inf)
+            excess_Pa = np.where(extending, target - BOUND_BACK_PRESSURE_PA, -np.inf)
         over = excess_Pa > 0.0
         if not over.any():
             return
@@ -378,19 +431,145 @@ class TensionTruthCounter:
         self.seconds_over_margin += duration_s * (excess_Pa > BOUND_MARGIN_PA)
         self.max_excess_Pa = np.where(over, np.maximum(self.max_excess_Pa, excess_Pa),
                                       self.max_excess_Pa)
+        if plant_rod_Pa is not None:
+            plant_minus_target_Pa = np.asarray(plant_rod_Pa, float) - target
+            with np.errstate(invalid="ignore"):
+                self.seconds_active += duration_s * (over & (plant_minus_target_Pa < 0.0))
+                self.min_plant_minus_target_Pa = np.where(
+                    over, np.fmin(self.min_plant_minus_target_Pa, plant_minus_target_Pa),
+                    self.min_plant_minus_target_Pa)
         for leg in np.flatnonzero(over):
             if self.first_t_s[leg] is None:
                 self.first_t_s[leg] = round(float(t_s), 6)
 
     def record(self) -> dict[str, object]:
+        known = np.isfinite(self.min_plant_minus_target_Pa)
         return {"rule": TENSION_TRUTH_RULE,
-                "substeps": [round(s / BOUND_SUBSTEP_S) for s in self.seconds.tolist()],
-                "substeps_over_margin": [round(s / BOUND_SUBSTEP_S)
-                                         for s in self.seconds_over_margin.tolist()],
+                "substeps": _substeps(self.seconds),
+                "substeps_over_margin": _substeps(self.seconds_over_margin),
+                "active_substeps": _substeps(self.seconds_active),
                 "max_excess_bar": (self.max_excess_Pa / BAR_PA).tolist(),
+                "min_p_tr_minus_p_star_bar": [
+                    float(value) / BAR_PA if is_known else None
+                    for value, is_known in zip(self.min_plant_minus_target_Pa, known,
+                                               strict=True)],
                 "first_t_s": list(self.first_t_s),
                 "back_pressure_bar": BOUND_BACK_PRESSURE_PA / BAR_PA,
                 "margin_bar": BOUND_MARGIN_PA / BAR_PA}
+
+
+def _substeps(seconds: NDArray[np.float64]) -> list[int]:
+    return [round(value / BOUND_SUBSTEP_S) for value in seconds.tolist()]
+
+
+EXTEND_BOUND_CHECK_RULE = (
+    "③ judged here (tension_premise.md 5.4): at every controller read, plant rod pressure p_tr "
+    "against the bound p_hat + delta_m of that read, on moving legs and on legs locked after an "
+    "extension; breach_reads = p_tr > p_hat + delta_m (judged: the sum must be 0), "
+    "margin_used_reads = p_tr > p_hat (FLAG), both beyond a 1 Pa rounding allowance; "
+    "retracting legs are counted apart (premise ④); null record = option off")
+
+
+BOUND_CHECK_TOLERANCE_PA = 1.0
+"""Rounding allowance of :class:`ExtendBoundCheck`: in a steady extension the plant lag and the
+bound's ``p_hat`` both converge to ``p_bB`` and differ by float rounding only (ASSUMPTION,
+1 Pa = 1e-5 bar, far below any physical margin)."""
+
+
+class ExtendBoundState(StrEnum):
+    """Leg state of one bound comparison (``min_gap_state``)."""
+
+    EXTEND_MOVING = "ext_moving"
+    EXTEND_LOCKED = "ext_locked"
+    RETRACT = "retract"
+
+
+class ExtendBoundCheck:
+    """The ③ bound against the plant at the controller reads (``tension_premise.md`` 5.5),
+    kept by the plant adapters as ``hydraulics_record.extend_bound_check``. Records only.
+
+    Judged legs: moving while extending (``ext_moving``) and locked after an extension
+    (``ext_locked``). A retracting leg (``retract``, the bound is the retract floor there,
+    premise ④) has its own counts. A leg locked after a retraction is not compared.
+    """
+
+    def __init__(self) -> None:
+        self.reads = np.zeros(LEG_COUNT, dtype=np.int64)
+        self.breach_reads = np.zeros(LEG_COUNT, dtype=np.int64)
+        self.locked_breach_reads = np.zeros(LEG_COUNT, dtype=np.int64)
+        """The part of ``breach_reads`` on legs locked after an extension (their rod pressure
+        follows the locked law after the lock, not the relief the bound tracks)."""
+        self.margin_used_reads = np.zeros(LEG_COUNT, dtype=np.int64)
+        self.retract_reads = np.zeros(LEG_COUNT, dtype=np.int64)
+        self.retract_breach_reads = np.zeros(LEG_COUNT, dtype=np.int64)
+        self.min_gap_Pa = np.full(LEG_COUNT, np.inf)
+        self.min_gap_t_s: list[float | None] = [None] * LEG_COUNT
+        self.min_gap_state: list[str | None] = [None] * LEG_COUNT
+        self.first_breach_t_s: list[float | None] = [None] * LEG_COUNT
+
+    def add(self, t_s: float, bound_Pa: ArrayLike, plant_rod_Pa: ArrayLike,
+            states: list[ExtendBoundState | None]) -> None:
+        """One controller read.
+
+        Args:
+            t_s: Read time.
+            bound_Pa: The controller's ``p_hat + delta_m`` per leg.
+            plant_rod_Pa: Plant rod pressure ``p_tr`` per leg at the read.
+            states: Leg state per leg; None = not compared (locked after a retraction).
+        """
+        bound = np.asarray(bound_Pa, float)
+        plant = np.asarray(plant_rod_Pa, float)
+        for leg, state in enumerate(states):
+            if state is None or not math.isfinite(plant[leg]):
+                continue
+            gap_Pa = float(bound[leg] - plant[leg])
+            is_breach = gap_Pa < -BOUND_CHECK_TOLERANCE_PA
+            if state is ExtendBoundState.RETRACT:
+                self.retract_reads[leg] += 1
+                self.retract_breach_reads[leg] += int(is_breach)
+                continue
+            self.reads[leg] += 1
+            self.breach_reads[leg] += int(is_breach)
+            if state is ExtendBoundState.EXTEND_LOCKED:
+                self.locked_breach_reads[leg] += int(is_breach)
+            self.margin_used_reads[leg] += int(gap_Pa < BOUND_MARGIN_PA - BOUND_CHECK_TOLERANCE_PA)
+            if is_breach and self.first_breach_t_s[leg] is None:
+                self.first_breach_t_s[leg] = round(float(t_s), 6)
+            if gap_Pa < self.min_gap_Pa[leg]:
+                self.min_gap_Pa[leg] = gap_Pa
+                self.min_gap_t_s[leg] = round(float(t_s), 6)
+                self.min_gap_state[leg] = state.value
+
+    def record(self) -> dict[str, object]:
+        return {"rule": EXTEND_BOUND_CHECK_RULE,
+                "reads": self.reads.tolist(),
+                "breach_reads": self.breach_reads.tolist(),
+                "locked_breach_reads": self.locked_breach_reads.tolist(),
+                "margin_used_reads": self.margin_used_reads.tolist(),
+                "min_gap_bar": [float(value) / BAR_PA if math.isfinite(value) else None
+                                for value in self.min_gap_Pa],
+                "min_gap_t_s": list(self.min_gap_t_s),
+                "min_gap_state": list(self.min_gap_state),
+                "first_breach_t_s": list(self.first_breach_t_s),
+                "retract_reads": self.retract_reads.tolist(),
+                "retract_breach_reads": self.retract_breach_reads.tolist()}
+
+
+def extend_bound_states(is_locked: ArrayLike, last_direction: ArrayLike
+                        ) -> list[ExtendBoundState | None]:
+    """Leg states of :class:`ExtendBoundCheck` from the plant lock state and the sign of its
+    last moving direction (> 0 extension)."""
+    states: list[ExtendBoundState | None] = []
+    for locked, direction in zip(np.asarray(is_locked, bool), np.asarray(last_direction, float),
+                                 strict=True):
+        if direction > 0.0:
+            states.append(ExtendBoundState.EXTEND_LOCKED if locked
+                          else ExtendBoundState.EXTEND_MOVING)
+        elif locked:
+            states.append(None)
+        else:
+            states.append(ExtendBoundState.RETRACT)
+    return states
 
 
 def check_extend_start_meta(settings_meta: Mapping[str, Any]) -> None:
@@ -418,5 +597,5 @@ def initial_pressure_Pa(retract_floor_Pa: ArrayLike) -> NDArray[np.float64]:
 
 
 __all__ = ["EXTEND_START_REVISION", "BoundGeometry", "ExtendStartBound", "ExtendStartTracker",
-           "PremiseRecord", "TensionTruthCounter", "check_extend_start_meta",
-           "initial_pressure_Pa"]
+           "ExtendBoundCheck", "ExtendBoundState", "PremiseRecord", "TensionTruthCounter",
+           "check_extend_start_meta", "extend_bound_states", "initial_pressure_Pa"]

@@ -4261,6 +4261,12 @@ class C2Controller:
         queue.append(output.copy())
         return queue.popleft()
 
+    def extend_bound_Pa(self) -> NDArray[np.float64] | None:
+        """The ③ bound ``p_hat + delta_m`` per leg of the last update
+        (:meth:`TwoPressureMonitor.extend_bound_Pa`; None with the option off). Read only: the
+        plant adapters compare it with the plant (``tension_premise.md`` 5.5)."""
+        return self._pressures.extend_bound_Pa()
+
     def meta(self) -> dict[str, Any]:
         """Name, settings and current friction band (JSON-serialisable, new dict per call)."""
         geometry = self.geometry

@@ -363,6 +363,12 @@ class L2bRodSide:
     def k2_lock(self, i: int) -> float:
         return _series(self._k_h[i], self._k_out[i])
 
+    @property
+    def last_directions(self) -> NDArray[np.float64]:
+        """+1 where the last move of the leg was an extension, -1 a retraction (read only)."""
+        return np.array([1.0 if leg.last_direction is RodChamberMode.EXT else -1.0
+                         for leg in self._legs])
+
     def extension_targets_Pa(self, cylinder_force_N: ArrayLike) -> NDArray[np.float64]:
         """``p*`` an extension of each leg takes at ``cylinder_force_N``: the machine's own
         ``moving_target_rod_pressure_Pa(EXT, F)`` (read only; the premise ① record)."""
