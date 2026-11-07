@@ -75,6 +75,13 @@ STATE_KEYS = (
 )
 
 
+LOCK_ANCHOR_AFTER_EXTEND_M2 = (
+    "M2 revision 5 (B): p_r0 = max(p_ext + max(p_tr - p*, 0), p_floor), p_tr = tracked M2 rod "
+    "pressure of the hook before the lock, p* = moving_target_rod_pressure_Pa(EXT, F_cyl) of the "
+    "lock step, p_ext = p_r0_after_extend_Pa; M2 off: p_ext")
+"""Meta text of the extend lock anchor with M2 on (``r5_spec.md``, hydraulics-expert 2026-11-07)."""
+
+
 def _series(*values: float) -> float:
     return 1.0 / sum(1.0 / v for v in values)
 
@@ -237,6 +244,18 @@ class L2bRodSide:
         the moving pressure lag start and ``Delta = p_r0 - p_r`` of the locked law at the
         release compression. Not in the snapshot: M2 reads it in the same hook."""
         return dict(self._releases_of_last_call)
+
+    @property
+    def lock_anchor_rod_pressure_Pa(self) -> NDArray[np.float64]:
+        """``p_r0`` of the current or last lock per leg (NaN before the first lock); read-only
+        view for the v5 stage 3 M2 release record (R-1)."""
+        return self._p_r0.copy()
+
+    @property
+    def release_residual_N(self) -> NDArray[np.float64]:
+        """``r0`` per leg: the locked-law residual the base release decay carries from the last
+        release (0 while locked); read-only view for the M2 release record (R-1)."""
+        return self._r0.copy()
 
     def release_weight(self, i: int) -> float:
         """``w`` of leg ``i`` at the last call: the machine's release decay (0 while locked)."""
@@ -434,6 +453,15 @@ class L2bRodSide:
                     leg.last_direction, float(f_cyl[i]))
             elif not was_locked and standstill and leg.last_direction is RodChamberMode.RET:
                 override = float(self._p_ret[i])
+            elif (not was_locked and standstill and self._rod_pressure_flow_law is not None
+                  and leg.last_direction is RodChamberMode.EXT):
+                # M2 revision 5 (B, user decision 2026-11-07): the extend anchor keeps the part
+                # of the tracked pressure above the extend target, p_r0 = max(p_ext + max(p_tr -
+                # p*, 0), p_floor) (the floor in _lock_rod_pressure_Pa); M2 off keeps p_ext
+                target_Pa = leg.params.moving_target_rod_pressure_Pa(RodChamberMode.EXT,
+                                                                     float(f_cyl[i]))
+                override = float(self._p_ext[i]) + max(
+                    float(leg.tracked_rod_pressure_Pa) - target_Pa, 0.0)
             f_before = (
                 self._locked_force(i, float(c[i])) if was_locked
                 else self._moving_force(i, float(s[i]), float(c[i]), t_s)
@@ -633,6 +661,12 @@ class L2bRodSide:
         }
 
     def meta(self) -> dict[str, Any]:
+        out = self._base_meta()
+        if self._rod_pressure_flow_law is not None:  # key only with M2 (M2-off meta unchanged)
+            out["lock_anchor_after_extend"] = LOCK_ANCHOR_AFTER_EXTEND_M2
+        return out
+
+    def _base_meta(self) -> dict[str, Any]:
         return {
             "law": "moving k2(s) c + R0 exp(-(t - t_rel)/tau); locked F_lock + k2 dc + "
                    "(k1 - k2) min(dc, dc_knee), k_h and k_r frozen at s_lock (dyn rev. 33 5.20.2)",
