@@ -75,6 +75,9 @@ STATE_KEYS = (
 )
 
 
+M2_EXTENDED_KEY = "m2_extended_since_arm"
+"""Optional snapshot key (M2 on only): per leg, an extend step since the arming (r5 anchor)."""
+
 LOCK_ANCHOR_AFTER_EXTEND_M2 = (
     "M2 revision 5 (B): p_r0 = max(p_ext + max(p_tr - p*, 0), p_floor), p_tr = tracked M2 rod "
     "pressure of the hook before the lock, p* = moving_target_rod_pressure_Pa(EXT, F_cyl) of the "
@@ -173,6 +176,9 @@ class L2bRodSide:
         self._last_force = np.zeros(n)
         self._last_p_r = np.zeros(n)
         self._releases_of_last_call: dict[int, ReleaseStart] = {}
+        self._m2_extended = np.zeros(n, dtype=bool)
+        """M2 r5: the leg took an extend step (u > eps) since the arming (optional snapshot key
+        :data:`M2_EXTENDED_KEY`, written with M2 on only)."""
         for leg in self._legs:
             leg.reset()
 
@@ -443,6 +449,8 @@ class L2bRodSide:
                 p_r[i] = max(self.p_floor_gauge_Pa,
                              self._p_r0[i] - share * (out[i] - self._f_lock[i]) / self._a_r[i])
                 continue
+            if self._rod_pressure_flow_law is not None and u[i] > self._eps:
+                self._m2_extended[i] = True
             if not was_locked and standstill:
                 # the machine locks in this step: its parameters at s_lock (5.20.2)
                 leg.params = self._leg_params(i, float(s[i]))
@@ -454,10 +462,13 @@ class L2bRodSide:
             elif not was_locked and standstill and leg.last_direction is RodChamberMode.RET:
                 override = float(self._p_ret[i])
             elif (not was_locked and standstill and self._rod_pressure_flow_law is not None
-                  and leg.last_direction is RodChamberMode.EXT):
+                  and leg.last_direction is RodChamberMode.EXT and self._m2_extended[i]):
                 # M2 revision 5 (B, user decision 2026-11-07): the extend anchor keeps the part
                 # of the tracked pressure above the extend target, p_r0 = max(p_ext + max(p_tr -
-                # p*, 0), p_floor) (the floor in _lock_rod_pressure_Pa); M2 off keeps p_ext
+                # p*, 0), p_floor) (the floor in _lock_rod_pressure_Pa); M2 off keeps p_ext.
+                # Only after an extension of this arming: the first lock of a leg that has not
+                # moved keeps p_ext (its EXT direction and tracked p_ext are the initial values,
+                # spec "first lock at arming = p_ext"; matters when p_ext > p*)
                 target_Pa = leg.params.moving_target_rod_pressure_Pa(RodChamberMode.EXT,
                                                                      float(f_cyl[i]))
                 override = float(self._p_ext[i]) + max(
@@ -600,6 +611,12 @@ class L2bRodSide:
     # --- snapshot ---------------------------------------------------------------------------
 
     def state_arrays(self) -> dict[str, NDArray[Any]]:
+        out = self._base_state_arrays()
+        if self._rod_pressure_flow_law is not None:  # M2 r5 only; M2-off snapshots unchanged
+            out[M2_EXTENDED_KEY] = self._m2_extended.copy()
+        return out
+
+    def _base_state_arrays(self) -> dict[str, NDArray[Any]]:
         machine = [leg.state_values() for leg in self._legs]
         keys = sorted(machine[0])
         return {
@@ -643,6 +660,8 @@ class L2bRodSide:
         for i, leg in enumerate(self._legs):
             leg.params = self._leg_params(i, float(s_params[i]))
             leg.restore_values({k: float(v) for k, v in zip(keys, table[i], strict=True)})
+        self._m2_extended = (np.array(arrays[M2_EXTENDED_KEY], dtype=bool).reshape(self._n)
+                             if M2_EXTENDED_KEY in arrays else np.zeros(self._n, dtype=bool))
 
     def lock_table(self) -> dict[str, Any]:
         """Per-leg lock record for the run record (5.20.11 supplement 1: the judge first

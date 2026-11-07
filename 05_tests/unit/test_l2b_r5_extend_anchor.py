@@ -216,6 +216,29 @@ def test_u8_m1c_seed_moves_only_the_release_start() -> None:
     assert start.drop_Pa == pytest.approx(anchor[0] - locked_p[0], abs=1e-6)
 
 
+def test_first_lock_after_arming_keeps_p_ext_even_above_the_target() -> None:
+    """The EXT direction and the tracked p_ext at the arming are initial values, not an
+    extension: a leg that has not moved locks at p_ext (here 34.818 bar > p* 5 bar)."""
+    law = L2bRodSide(head_area_m2=HEAD, annulus_area_m2=ANNULUS, k_out_N_m=[math.inf] * 2,
+                     bulk_modulus_Pa=BETA, head_dead_length_m=L0, rod_dead_length_m=[L0] * 2,
+                     stroke_m=STROKE, p_r0_after_extend_Pa=[P_RET] * 2,
+                     p_r0_after_retract_Pa=[P_RET] * 2, p_floor_abs_Pa=P_FLOOR_ABS,
+                     release_tau_s=TAU, lock_eps_m_s=1.0e-6)
+    law.set_rod_pressure_flow_law(RodPressureFlowLaw())
+    drive = _Drive(law)
+    drive.step(0.0)
+    assert np.array_equal(law.lock_anchor_rod_pressure_Pa, np.full(2, P_RET))
+    # after an extension the r5 rule applies
+    drive.extend(0.01, 0.5)
+    drive.step(0.0)
+    assert np.all(law.lock_anchor_rod_pressure_Pa > P_RET)
+
+
+def test_extended_flag_is_a_snapshot_key_with_m2_only() -> None:
+    assert "m2_extended_since_arm" in _law(m2=True).state_arrays()
+    assert "m2_extended_since_arm" not in _law(m2=False).state_arrays()
+
+
 def test_meta_key_only_with_m2() -> None:
     assert "lock_anchor_after_extend" in _law(m2=True).meta()
     assert "lock_anchor_after_extend" not in _law(m2=False).meta()
