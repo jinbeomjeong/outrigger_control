@@ -612,6 +612,15 @@ C74_CASES: tuple[tuple[str, str, str, str, float, float, str, str], ...] = tuple
 """C-S8-74 (spec rev. 68 355.1): #1-#8 of C-S8-72 with F_s 2 / 4 kN (front value, rear x 0.833)
 = 16 cases; same event, leg, time and phase. Last field = the C-S8-72 source case id."""
 
+V5REC_PHASE_S = 0.050
+"""v5 stage 3 family F phase (user decision D-3 2, 2026-11-07; criteria rev. 6 3 #29 / 30)."""
+V5REC_CASES: tuple[tuple[str, str, str, str, float, float, str, str], ...] = (
+    (_c74_case_id("FS24", "FL", G1_READY_ANCHOR, V5REC_PHASE_S, "top", 0.0), "FS24", "FL",
+     G1_READY_ANCHOR, V5REC_PHASE_S, 0.0, "top", "G1R_FS24_FL_top_Fs0"),
+)
+"""Set ``v5rec``: ``G1R_FS24_FL_top_o050_Fs0`` = C-S8-72 ``G1R_FS24_FL_top_Fs0`` (FS24, FL, READY + 5 s,
+top, F_s 0) with the phase 0.050 s instead of 0.025 s. Last field = the C-S8-72 source case id."""
+
 
 def step_us(fs_kN: float, lock_valve: str = "pilot_check") -> float:
     """Estimated P-core wall per L2b step [us] with the p7e8 pool full (C-S8-19 ⑥, p1r)."""
@@ -876,6 +885,14 @@ def s8_cases() -> list[S8Case]:
     for cid, extra, note in S4CONV_CASES:
         add(cid, S4CONV_GROUP, 8, _d8_scenario("top", _floor), fs_kN=_fs, extra_overrides=extra,
             notes=(f"S4(a) convergence: {_grp}_top_{_floor}_{_fs_tag(_fs)} with {note}",))
+    # v5 stage 3 family F (v5 criteria rev. 6 3 #29 / 30, user decision D-3 2, 2026-11-07): the C-S8-72
+    # G1R_FS24_FL_top_Fs0 event and anchor with the phase 0.050 s; appended last (earlier order and definitions
+    # unchanged); group G1 (same judge rows), set v5rec (not in g1 / c74)
+    for cid, base, leg, at, off, fs, level, src in V5REC_CASES:
+        ev = g1_event_name(base, leg, at)
+        add(cid, G1_GROUP, 6, _g1_scenario(ev, level), fs_kN=fs, event=ev, phase_offset_s=off,
+            notes=(f"v5 stage 3 family F: {base} on {leg}, READY + 5 s + {off:g} s, F_s {fs:g} kN, "
+                   f"{level}; C-S8-72 source case {src} with the phase only changed",))
     ids = [c.case_id for c in out]
     if len(ids) != len(set(ids)):
         dup = sorted({i for i in ids if ids.count(i) > 1})
@@ -922,6 +939,8 @@ def case_set(name: str) -> list[S8Case]:
         "jaug": [c for c in cases if c.group == JAUG_GROUP],
         # S4(a) convergence (2026-11-02): K24_top_roll5.5_Fs4 at PSOR 100 / dt 5e-5 s (2)
         "s4conv": [c for c in cases if c.group == S4CONV_GROUP],
+        # v5 stage 3 family F (2026-11-07): G1R_FS24_FL_top_o050_Fs0 (1)
+        "v5rec": [c for c in cases if c.case_id in V5REC_CASE_IDS],
     }
     if name not in sets:
         raise KeyError(f"unknown set {name!r}; sets {tuple(sets)}")
@@ -929,8 +948,9 @@ def case_set(name: str) -> list[S8Case]:
 
 
 SET_NAMES = ("p1", "p1r", "p2", "p3", "rest", "all", "cb", "smoke", "mlj", "mlj_c29",
-             "mlj_c67", "mlj_c68", "g1", "c74", "c75", "jaug", "s4conv")
+             "mlj_c67", "mlj_c68", "g1", "c74", "c75", "jaug", "s4conv", "v5rec")
 G1_CASE_IDS = frozenset(c[0] for c in G1_CASES)
+V5REC_CASE_IDS = frozenset(c[0] for c in V5REC_CASES)
 C74_CASE_IDS = frozenset(c[0] for c in C74_CASES)
 C75_CASE_IDS = frozenset(("K0V_top_rpB_Fs0", "K0_top_fdown3.2_Fs0", "K0V_top_roll5.5_Fs0",
                           "K0_top_roll4.4_Fs0", "K24_top_rpB_Fs4", "K24_top_rpBop_Fs4"))

@@ -242,6 +242,15 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     # V5-S6SEED (v5 criteria 13.6 / X-7; definition only, run after D-3): S6 with the noise seed changed, flow off x 4
     # seeds + flow on (COUPLED_eta085 S6 argv) x the stored seed
     out[V5_S6_SEED_BATCH] = v5_s6_seed_rows(out["FINAL-REP-X"], out[COUPLED_BATCH])
+    # v5 stage 3 (criteria rev. 6 3, user decision D-3 2026-11-07): rigid T4 / T5 (VB 12, LS 6), R12 (3), family F
+    # (2), soil V0v (3); V5-STAGE3 = these + V5-VB (3) + V5-S6SEED (5) = 34 rows (a run convenience)
+    out[V5_T45_BATCH] = v5_t45_rows(out["FINAL-R"])
+    out[V5_T45LS_BATCH] = v5_t45_rows(out["FINAL-R"], settings=tuple(V5_LS_ARGS), ids=V5_T45LS_IDS,
+                                      group=V5_T45LS_BATCH)
+    out[V5_R12_BATCH] = v5_r12_rows(out["FINAL-R"])
+    out[V5_REC_BATCH] = v5_rec_rows()
+    out[V5_V0V_BATCH] = v5_v0v_rows(out[V5_VB_BATCH])
+    out[V5_STAGE3_BATCH] = v5_stage3_rows(out)
     return out
 
 
@@ -348,6 +357,163 @@ def v5_s6_seed_rows(final_rep_x: list[dict], coupled: list[dict]) -> list[dict]:
                      "rep_bundle": V5_S6_SEED_BATCH,
                      "note": f"{V5_S6_SEED_BATCH} (v5 criteria 13.6): S6 {flow_text}, seed {seed}; "
                              f"pair 07_results/S9/{batch}/{case}"})
+    return rows
+
+
+# --- v5 stage 3 (criteria rev. 6 3, stage3_plan.md 2, stage3_impl_spec.md 3; user decision D-3 2026-11-07) -------------
+
+V5_VB_RIGID_ARGS = {k: v for k, v in V5_VB_ARGS.items() if k != "valve_tau_s"}
+"""VB on the rigid run_S8C rows: the row definition turns the valve lag 0.1 s on (``run_S8C.py`` S8 case), so the
+argument set is V5_VB_ARGS without ``valve_tau_s`` (stage3_plan.md 1)."""
+V5_LS_ARGS = {"LS1": (0.01, 0.05), "LS4": (0.02, 0.1)}
+"""T4 sensitivity (criteria rev. 6 3 #13-18): (overlap ratio, closing delay [s]) instead of VB's (0.02, 0.05)."""
+V5_STAGE3_CONTROLLER = "final_C4G2"
+V5_T45_BATCH, V5_T45LS_BATCH, V5_R12_BATCH, V5_REC_BATCH, V5_V0V_BATCH, V5_STAGE3_BATCH = (
+    "V5-T45", "V5-T45LS", "V5-R12", "V5-REC", "V5-V0V", "V5-STAGE3")
+V5_T45_IDS = ("K0V_top_fup3.5_Fs0", "K0_top_fup3.2_Fs0", "K0V_top_roll5.5_Fs0", "K0_top_fdown3.2_Fs0",
+              "K0V_top_fdown3.5_Fs0", "E_G4_Fs8", "K0_top_rpBop_Fs0", "E_RE1bF_Fs0", "E_RE1bF_Fs8",
+              "K8_top_rpB_Fs8", "S_top_fdown3.5_wika_Fs8", "K8_top_fdown3.5_Fs8")
+"""Criteria rev. 6 3 #1-12 (set p1r)."""
+V5_T45LS_IDS = ("K0V_top_fup3.5_Fs0", "E_G4_Fs8", "E_RE1bF_Fs8")
+"""Criteria rev. 6 3 #13-18 (x LS1, LS4)."""
+V5_REC_ID = "G1R_FS24_FL_top_o050_Fs0"
+V5_REC_SET = "v5rec"
+V5_FINAL_R_C4G2 = "07_results/S9/batch_FINAL-R-C4G2_20261105"
+"""The stored V0 C4G2 rigid runs (FINAL-R-C4G2): per-case wall and the V0 pair of E_G4_Fs4 (stage3_plan.md 2.2)."""
+V5_RIGID_EXTRA_S = 180.0
+V5_RIGID_VB_FACTOR = 1.08
+"""stage3_plan.md 7.3 (ASSUMPTION): VB rigid wall = (V0 + 180 s) x 1.08."""
+V5_REC_V0_PROXY_S = 1022.0
+"""stage3_plan.md 7.3: family F V0 wall proxy = FINAL-R-C4G2 G1L_RE1bF_FL_top_Fs0 1,022 s."""
+V5_SOIL_VB_FACTOR, V5_SOIL_V0V_FACTOR = 1.2, 1.0
+"""stage3_plan.md 7.3 (ASSUMPTION): soil VB / V0v wall over the stored flow-limit (COUPLED) wall."""
+
+
+def v5_rigid_setting_args(setting: str) -> dict:
+    """The v5 arguments of a rigid row (``dest -> value``, run_S8C ``vars(args)`` form): VB, LS1, LS4 or V0 ({})."""
+    if setting == "V0":
+        return {}
+    args = dict(V5_VB_RIGID_ARGS)
+    if setting in V5_LS_ARGS:
+        args["lock_overlap_ratio"], args["lock_closing_delay_s"] = V5_LS_ARGS[setting]
+    elif setting != "VB":
+        raise KeyError(f"unknown v5 rigid setting {setting!r}")
+    return args
+
+
+def v5_rigid_argv(setting: str) -> list[str]:
+    """CLI form of :func:`v5_rigid_setting_args` (order of :func:`v5_vb_argv`)."""
+    a = v5_rigid_setting_args(setting)
+    if not a:
+        return []
+    return coupled_flow_argv() + ["--rod-release-force", "--lock-overlap-ratio", f"{a['lock_overlap_ratio']:g}",
+                                  "--lock-closing-delay-s", f"{a['lock_closing_delay_s']:g}",
+                                  "--lock-window-follows-plant"]
+
+
+def _final_r_c4g2_walls() -> dict[str, float]:
+    p = ROOT / V5_FINAL_R_C4G2 / "batch.json"
+    if not p.is_file():
+        return {}
+    return {c["case"]: float(c["wall_s"]) for c in json.loads(p.read_text("utf-8")).get("cases", [])
+            if c.get("wall_s") is not None}
+
+
+def v5_rigid_row(case_id: str, set_name: str, setting: str, *, criteria_id: str, group: str, v0_wall_s: float,
+                 source_run: str | None, pair_case: str | None, note: str, name: str | None = None) -> dict:
+    """One rigid v5 stage 3 row (stage3_impl_spec.md 3.1): ``run_S8C run --set <set> --only <id> --tag
+    v5s3_<setting>_<id> --approved --workers p7`` + the setting arguments. ``case`` is the batch name (folder / log);
+    ``s8c_case_id`` the run_S8C id (outcome check). ``controller`` records ``code_at_launch`` (FINAL-R precedent)."""
+    est = v0_wall_s if setting == "V0" else (v0_wall_s + V5_RIGID_EXTRA_S) * V5_RIGID_VB_FACTOR
+    return {"case": name or case_id, "s8c_case_id": case_id, "est_s": round(est), "s8c": True,
+            "argv": S8C + ["run", "--set", set_name, "--only", case_id, "--tag", f"v5s3_{setting}_{case_id}",
+                           "--approved", "--workers", "p7"] + v5_rigid_argv(setting),
+            "family": set_name, "engine": "L2b_NSC", "controller": V5_STAGE3_CONTROLLER, "criteria_id": criteria_id,
+            "v5_setting": setting, "group": group, "rep_bundle": group, "source_run": source_run,
+            "pair_case": pair_case, "note": note}
+
+
+def v5_t45_rows(final_r: list[dict], *, settings: tuple[str, ...] = ("VB",), ids: tuple[str, ...] = V5_T45_IDS,
+                group: str = V5_T45_BATCH) -> list[dict]:
+    """V5-T45 (criteria rev. 6 3 #1-12, VB) or V5-T45LS (#13-18, LS1 / LS4: case ``<id>_<LS>``). ``source_run`` = the
+    FINAL-R source of the id; the V0 wall = FINAL-R-C4G2 measured when there, else the FINAL-R estimate."""
+    by_id = {r["case"]: r for r in final_r if r.get("s8c")}
+    walls = _final_r_c4g2_walls()
+    rows = []
+    first_no = 13 if group == V5_T45LS_BATCH else 1
+    k = 0
+    for setting in settings:
+        for cid in ids:
+            base = by_id[cid]
+            name = cid if setting == "VB" else f"{cid}_{setting}"
+            rows.append(v5_rigid_row(
+                cid, base["family"], setting, criteria_id=f"T45#{first_no + k}", group=group,
+                v0_wall_s=walls.get(cid, float(base["est_s"])), source_run=base["source_run"], pair_case=None,
+                name=name, note=f"{group} (v5 criteria rev. 6 3 #{first_no + k}): {cid} {setting}; T4 / T5 judge "
+                                f"(4); V0 wall {'FINAL-R-C4G2' if cid in walls else 'FINAL-R estimate'}"))
+            k += 1
+    return rows
+
+
+def v5_r12_rows(final_r: list[dict]) -> list[dict]:
+    """V5-R12 (criteria rev. 6 3 #19 / 20 / 31): E_G4_Fs4 VB, E_G4_Fs4_ph0.05 VB and V0 (record, 8.3)."""
+    by_id = {r["case"]: r for r in final_r if r.get("s8c")}
+    walls = _final_r_c4g2_walls()
+    v0 = walls.get("E_G4_Fs4", float(by_id["E_G4_Fs4"]["est_s"]))
+    stored = f"{V5_FINAL_R_C4G2}/final_E_G4_Fs4/E_G4_Fs4"
+    ph = "E_G4_Fs4_ph0.05"
+    return [
+        v5_rigid_row("E_G4_Fs4", by_id["E_G4_Fs4"]["family"], "VB", criteria_id="R12#19", group=V5_R12_BATCH,
+                     v0_wall_s=v0, source_run=stored, pair_case=stored,
+                     note="V5-R12 #19: E_G4_Fs4 VB; V0 pair = FINAL-R-C4G2 stored run (8.3)"),
+        v5_rigid_row(ph, by_id[ph]["family"], "VB", criteria_id="R12#20", group=V5_R12_BATCH, v0_wall_s=v0,
+                     source_run=by_id[ph]["source_run"], pair_case=f"{ph}_V0",
+                     note="V5-R12 #20: E_G4_Fs4_ph0.05 VB; V0 pair = row #31"),
+        v5_rigid_row(ph, by_id[ph]["family"], "V0", criteria_id="R12#31", group=V5_R12_BATCH, v0_wall_s=v0,
+                     source_run=by_id[ph]["source_run"], pair_case=ph, name=f"{ph}_V0",
+                     note="V5-R12 #31: E_G4_Fs4_ph0.05 V0 (final_C4G2, no v5 argument); VB pair = row #20")]
+
+
+def v5_rec_rows() -> list[dict]:
+    """V5-REC (criteria rev. 6 3 #29 / 30, family F): G1R_FS24_FL_top_o050_Fs0 VB and V0 (set v5rec)."""
+    v0 = V5_REC_V0_PROXY_S
+    return [
+        v5_rigid_row(V5_REC_ID, V5_REC_SET, "VB", criteria_id="F#29", group=V5_REC_BATCH, v0_wall_s=v0,
+                     source_run=None, pair_case=f"{V5_REC_ID}_V0",
+                     note="V5-REC #29: family F (FS24 FL F_s 0 READY + 5 s + 0.050 s) VB; record (8.2)"),
+        v5_rigid_row(V5_REC_ID, V5_REC_SET, "V0", criteria_id="F#30", group=V5_REC_BATCH, v0_wall_s=v0,
+                     source_run=None, pair_case=V5_REC_ID, name=f"{V5_REC_ID}_V0",
+                     note="V5-REC #30: family F V0 pair (final_C4G2, no v5 argument)")]
+
+
+def v5_v0v_rows(v5_vb: list[dict]) -> list[dict]:
+    """V5-V0V (criteria rev. 6 3 #32-34): the V5-VB soil rows with the stored argv + ``--valve-tau-s 0.1`` only
+    (case ``<case>_v0v``); ``check-sources`` accepts exactly ``valve_tau_s`` as the difference."""
+    vb_tail = len(v5_vb_argv())
+    rows = []
+    for row in v5_vb:
+        stored_flow_wall = float(row["est_s"]) - COUPLED_FLOW_EXTRA_S
+        rows.append({**row, "case": f"{row['case']}_v0v",
+                     "argv": row["argv"][:len(row["argv"]) - vb_tail] + ["--valve-tau-s", "0.1"],
+                     "source_expected_diffs": {"valve_tau_s": 0.1}, "group": V5_V0V_BATCH, "rep_bundle": V5_V0V_BATCH,
+                     "v5_setting": "V0v", "pair_case": row["case"],
+                     "est_s": round((stored_flow_wall + COUPLED_FLOW_EXTRA_S) * V5_SOIL_V0V_FACTOR),
+                     "est_pool_s": {k: round(v * V5_SOIL_V0V_FACTOR) for k, v in (row.get("est_pool_s") or {}).items()},
+                     "note": f"V5-V0V (v5 criteria rev. 6 3 #32-34): {row['case']} stored argv + valve 0.1 s only; "
+                             f"VB pair {row['case']}"})
+    return rows
+
+
+def v5_stage3_rows(out: dict[str, list[dict]]) -> list[dict]:
+    """V5-STAGE3: the 34 rows of the seven stage 3 bundles (criteria rev. 6 3); names must be unique."""
+    vb = [{**r, "v5_setting": "VB", "pair_case": f"{r['case']}_v0v"} for r in out[V5_VB_BATCH]]
+    seed = [{**r, "v5_setting": r.get("v5_setting") or "S6SEED"} for r in out[V5_S6_SEED_BATCH]]
+    rows = [*out[V5_T45_BATCH], *out[V5_T45LS_BATCH], *out[V5_R12_BATCH], *seed, *vb, *out[V5_REC_BATCH],
+            *out[V5_V0V_BATCH]]
+    names = [r["case"] for r in rows]
+    dup = sorted({n for n in names if names.count(n) > 1})
+    if dup or len(rows) != 34:
+        raise RuntimeError(f"V5-STAGE3: {len(rows)} rows (34 expected), duplicate names {dup}")
     return rows
 
 
@@ -756,7 +922,8 @@ CODE_HASH_FILES = ("03_src/outrigger_sim/control/c2.py", "03_src/outrigger_sim/c
 ENTRY_META_KEYS = ("note", "priority", "controller", "source_run", "pair_case", "pair_run", "optional", "requires",
                    "harness_case", "family", "s8_group", "also_in", "planned_pool", "est_pool_s", "depends_on", "k",
                    "direction", "h9_result", "rep_bundle", "rep_source", "rep_variable", "r4_x11_check",
-                   "expected_note", "rep_role", "source_expected_diffs", "criteria_id", "stored_wall_s")
+                   "expected_note", "rep_role", "source_expected_diffs", "criteria_id", "stored_wall_s",
+                   "s8c_case_id", "v5_setting")
 """Row keys copied into the batch.json case entries (when present)."""
 
 
@@ -847,7 +1014,8 @@ def row_finished(row: dict, folder: Path) -> bool:
     (:func:`s8c_case_check`), any other row by ``<folder>/<case>/result.json``, the last file run_S9 writes."""
     if row.get("s8c"):
         log = folder / f"{row['case']}.log"
-        return log.is_file() and s8c_case_check(log.read_text("utf-8", errors="replace"), row["case"])["ok"]
+        return log.is_file() and s8c_case_check(log.read_text("utf-8", errors="replace"),
+                                                row.get("s8c_case_id", row["case"]))["ok"]
     return (folder / row["case"] / "result.json").is_file()
 
 
@@ -935,7 +1103,8 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
                 entry["controller_check"] = bool(controller_check)
             note = ""
             if c.get("s8c") and rc == 0:  # run_S8C returns 0 even when its case failed: read the outcome
-                chk = s8c_case_check((folder / f"{c['case']}.log").read_text("utf-8", errors="replace"), c["case"])
+                chk = s8c_case_check((folder / f"{c['case']}.log").read_text("utf-8", errors="replace"),
+                                     c.get("s8c_case_id", c["case"]))  # v5 stage 3: batch name != run_S8C id
                 entry["s8c_check"] = chk
                 if not chk["ok"]:
                     rc = entry["rc"] = S8C_FAILED_RC
@@ -1039,6 +1208,9 @@ def check_sources(name: str, rows: list[dict]) -> dict:
         if c.get("s6c") and c.get("source_run"):
             res.append({"case": c["case"], **s6c_source_check(c)})
             continue
+        if c.get("s8c") and c.get("v5_setting"):
+            res.append({"case": c["case"], **v5_rigid_source_check(c)})
+            continue
         if c.get("s8c") or not c.get("source_run"):
             res.append({"case": c["case"], "status": "no_source_defined" if not c.get("source_run") else "not_level",
                         "source": c.get("source_run")})
@@ -1046,7 +1218,72 @@ def check_sources(name: str, rows: list[dict]) -> dict:
         chk = r9.source_args_check(c["argv"][len(RUN):], ROOT / "07_results" / "S9" / c["source_run"])
         chk = expected_diff_check(chk, c.get("source_expected_diffs"))
         res.append({"case": c["case"], **chk})
-    return {"batch": name, "rows": res, "ok": not any(r["status"] == "differs" for r in res)}
+    ok = not any(r["status"] == "differs" for r in res)
+    if name == V5_STAGE3_BATCH:  # stage3_impl_spec.md 4: 34 rows, no duplicate name
+        names = [c["case"] for c in rows]
+        if len(rows) != 34 or len(set(names)) != len(names):
+            res.append({"case": "<batch>", "status": "differs", "source": None,
+                        "diffs": [{"key": "rows", "former": 34, "row": len(rows)},
+                                  {"key": "unique_names", "former": len(rows), "row": len(set(names))}]})
+            ok = False
+    return {"batch": name, "rows": res, "ok": ok}
+
+
+def v5_rigid_source_check(c: dict, root: Path = ROOT) -> dict:
+    """stage3_impl_spec.md 4 for a rigid v5 row: (a) the id is in the ``--set`` of its argv, (b) the v5 / flow
+    arguments after ``--workers p7`` parse (run_S8C parser parts: ``add_flow_limit_arguments`` +
+    ``add_hydraulic_arguments(with_valve_tau=False)``, then ``flow_setting_from_args`` / ``hydraulic_options_from_args``)
+    to exactly :func:`v5_rigid_setting_args` of the row setting, (c) a V0 row has none of them. ``ok`` / ``differs``;
+    ``no_source`` when no stored run to compare is defined or present (not a failure)."""
+    import argparse as _ap  # noqa: PLC0415
+
+    src = str(root / "03_src")
+    added = src not in sys.path
+    if added:
+        sys.path.insert(0, src)
+    sys.path.insert(0, str(HERE))
+    try:
+        import run_S8C as s8  # noqa: PLC0415
+        from outrigger_sim.hydraulics.flow_limit_run import (  # noqa: PLC0415
+            add_flow_limit_arguments,
+            flow_setting_from_args,
+        )
+        from outrigger_sim.hydraulics.v5_options import (  # noqa: PLC0415
+            add_hydraulic_arguments,
+            hydraulic_options_from_args,
+        )
+    finally:
+        sys.path.remove(str(HERE))
+        if added:
+            sys.path.remove(src)
+    argv = c["argv"]
+    set_name = argv[argv.index("--set") + 1]
+    case_id = argv[argv.index("--only") + 1]
+    diffs = []
+    if case_id != c.get("s8c_case_id", c["case"]):
+        diffs.append({"key": "--only", "former": c.get("s8c_case_id"), "row": case_id})
+    if case_id not in {k.case_id for k in s8.case_set(set_name)}:
+        diffs.append({"key": "case_set", "former": set_name, "row": case_id})
+    tail = argv[argv.index("--workers") + 2:]
+    parser = _ap.ArgumentParser(add_help=False)
+    add_flow_limit_arguments(parser)
+    add_hydraulic_arguments(parser, with_valve_tau=False)
+    try:
+        parsed = parser.parse_args(tail)
+        flow_setting_from_args(parsed)
+        hydraulic_options_from_args(parsed)
+        got = vars(parsed)
+    except SystemExit as e:
+        got = {"<parse error>": str(e)}
+    want = v5_rigid_setting_args(c["v5_setting"])
+    for key in sorted(set(got) | set(want)):
+        if got.get(key) != want.get(key):
+            diffs.append({"key": key, "former": want.get(key), "row": got.get(key)})
+    status = "differs" if diffs else "ok"
+    source = c.get("source_run")
+    if status == "ok" and (not source or not (root / source).exists()):
+        status = "no_source"
+    return {"source": source, "status": status, "diffs": diffs, "v5_setting": c["v5_setting"]}
 
 
 def expected_diff_check(chk: dict, expected: dict | None) -> dict:
