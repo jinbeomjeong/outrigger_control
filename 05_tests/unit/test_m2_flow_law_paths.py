@@ -157,6 +157,59 @@ def test_m2_12_harness_and_l2b_give_the_same_compensated_pressure(leg: int) -> N
     assert worst <= 1e-12
 
 
+ANCHOR_START_PA = 34.818 * BAR
+ANCHOR_FORCE_N = 94.0e3
+ANCHOR_CASES = ((0.01, 0.5), (0.10, 0.1), (0.01, 1.0), (0.25, 0.1), (0.01, 5.0))
+"""r5 spec U1, U2, U2b, U3b, U3: (fraction of v_max, extension time [s])."""
+
+
+def _anchor_rod_side() -> L2bRodSide:
+    """Two legs (FL, RL) locked after a retract at 34.818 bar, M2 on, no LC wait."""
+    law = L2bRodSide(head_area_m2=HEAD_AREA_M2[::2], annulus_area_m2=ANNULUS_M2[::2],
+                     k_out_N_m=[math.inf] * 2, bulk_modulus_Pa=1.0e9, head_dead_length_m=0.05,
+                     rod_dead_length_m=[0.05] * 2, stroke_m=0.70,
+                     p_r0_after_extend_Pa=[2.0 * BAR] * 2,
+                     p_r0_after_retract_Pa=[ANCHOR_START_PA] * 2, p_floor_abs_Pa=1.0e4,
+                     release_tau_s=LAG_S, lock_eps_m_s=LOCK_EPS_M_S)
+    law.set_rod_pressure_flow_law(RodPressureFlowLaw())
+    return law
+
+
+def _l2b_extension_anchor(fraction: float, duration_s: float) -> np.ndarray:
+    """L2b: retract-lock, extend, stop; the lock anchor of both legs."""
+    law = _anchor_rod_side()
+    stroke_m = np.array(EXTENSION_M[::2])
+    head_stiffness = np.array([law.head_stiffness_N_m(i, stroke_m[i]) for i in range(2)])
+    compression_m = ANCHOR_FORCE_N / head_stiffness
+    force_N = np.full(2, ANCHOR_FORCE_N)
+    t_s = 0.0
+    speeds = ([-0.01 * MAX_SPEED_M_S] * 20 + [0.0] * 6
+              + [fraction * MAX_SPEED_M_S] * round(duration_s / STEP_S) + [0.0])
+    for speed_m_s in speeds:
+        law.spring_force_N(t_s, STEP_S, np.full(2, speed_m_s), stroke_m, compression_m, force_N)
+        t_s += STEP_S
+    return law.lock_anchor_rod_pressure_Pa
+
+
+@pytest.mark.parametrize("fraction, duration_s", ANCHOR_CASES)
+def test_m2_12_r5_extension_anchor_is_the_same_on_both_paths(fraction, duration_s) -> None:
+    """M2-12, revision 5: the harness anchor ``p_ext + _RodPressureLag.extension_excess_Pa``
+    (floor ``p_floor``) equals the L2b lock anchor for the same extension at the same oil
+    columns and step (relative 1e-12)."""
+    harness = _load_harness_hydraulics()
+    rod_side = _rod_side()
+    lag = harness._RodPressureLag(_harness_plant(rod_side))
+    l2b_anchor_Pa = _l2b_extension_anchor(fraction, duration_s)
+    floor_Pa = 1.0e4 - 101325.0
+    for index, leg in enumerate((0, 2)):
+        lag.start(leg, ANCHOR_START_PA)
+        for _ in range(round(duration_s / STEP_S)):
+            lag.relax(leg, 1.0, ANCHOR_FORCE_N, fraction * MAX_SPEED_M_S)
+        harness_anchor_Pa = max(2.0 * BAR + lag.extension_excess_Pa(leg, ANCHOR_FORCE_N),
+                                floor_Pa)
+        assert harness_anchor_Pa == pytest.approx(float(l2b_anchor_Pa[index]), rel=1e-12)
+
+
 def _hopsan_reference() -> tuple[dict, dict]:
     """Meta and the series; each ``.npy`` holds rows (time, value) (``*.npz`` is git-ignored)."""
     meta = json.loads((DATA_DIR / "m2_13_hopsan_c2_release.json").read_text(encoding="utf-8"))
