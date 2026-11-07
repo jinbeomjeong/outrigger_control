@@ -92,19 +92,30 @@ def test_m2_law_is_in_the_dict_of_m2_runs_only() -> None:
     """User decision 2026-11-06: ``m2_law`` only with M2 on (digests and metas of M2-off runs,
     final_C4G2 and the golden values stay bit for bit)."""
     with_m2 = HydraulicOptions(rod_release_force=True, lock_closure=LockClosureSetting(0.02, 0.05))
-    assert with_m2.to_dict()["m2_law"] == "flow_limited_r4"
+    assert with_m2.to_dict()["m2_law"] == "flow_limited_r5"
     assert HydraulicOptions.from_dict(with_m2.to_dict()) == with_m2
     without = HydraulicOptions(valve_tau_s=0.1, lock_closure=LockClosureSetting(0.02, 0.05))
     assert "m2_law" not in without.to_dict()
     assert "m2_law" not in HydraulicOptions().to_dict()
 
 
-@pytest.mark.parametrize("stored_law", ["lag_only", "flow_limited_r3"])
+@pytest.mark.parametrize("stored_law", ["lag_only", "flow_limited_r3", "flow_limited_r4"])
 def test_a_stored_other_m2_law_is_refused(stored_law: str) -> None:
-    """User decision 2026-11-07: only revision 4 runs; a stored revision 3 job is refused."""
+    """User decision 2026-11-07: only revision 5 runs; stored revision 3 and 4 jobs are
+    refused."""
     stored = {**HydraulicOptions(rod_release_force=True).to_dict(), "m2_law": stored_law}
     with pytest.raises(ValueError, match="M2 law"):
         HydraulicOptions.from_dict(stored)
+
+
+@pytest.mark.parametrize("stored_law", ["flow_limited_r3", "flow_limited_r4", "flow_limited_r5"])
+def test_a_stored_record_of_an_earlier_law_is_read(stored_law: str) -> None:
+    """``from_stored`` (read only, ``t4h_replay``) keeps the settings of an earlier law."""
+    options = HydraulicOptions(rod_release_force=True, lock_closure=LockClosureSetting(0.02, 0.05),
+                               lock_window_follows_plant=True)
+    assert HydraulicOptions.from_stored({**options.to_dict(), "m2_law": stored_law}) == options
+    with pytest.raises(ValueError, match="M2 law"):
+        HydraulicOptions.from_stored({**options.to_dict(), "m2_law": "lag_only"})
 
 
 def test_b3_golden_digest_is_the_stored_definition() -> None:

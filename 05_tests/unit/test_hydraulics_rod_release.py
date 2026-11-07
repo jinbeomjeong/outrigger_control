@@ -12,6 +12,7 @@ from outrigger_sim.hydraulics.flow_share import FlowShareAssumptions
 from outrigger_sim.hydraulics.rod_release import (
     CLIPPED_STEPS_KEY,
     FLOW_LIMITED_LAW,
+    LAW_REVISION_KEY,
     PREVIOUS_PRESSURE_KEY,
     RELEASE_DROP_KEY,
     SHIFT_TOTAL_KEY,
@@ -180,7 +181,7 @@ def test_clip_times_are_kept_only_with_a_step_time_and_not_in_the_snapshot() -> 
     assert rule.clipped_steps[0] == 2
     assert rule.clip_times_s == [[1.25]]
     assert set(rule.state_arrays()) == {PREVIOUS_PRESSURE_KEY, SHIFT_TOTAL_KEY, CLIPPED_STEPS_KEY,
-                                         RELEASE_DROP_KEY}
+                                         RELEASE_DROP_KEY, LAW_REVISION_KEY}
     rule.restore_state(rule.state_arrays())
     assert rule.clip_times_s == [[]]
 
@@ -213,7 +214,8 @@ def test_flow_law_constants_are_the_flow_share_assumptions() -> None:
     assert law.tank_pressure_Pa == shared.tank_pressure_Pa
     assert law.spool_reference_drop_Pa == shared.compensator_drop_Pa
     assert law.meter_out_ratio == shared.back_land_ratio
-    assert law.meta()["law"] == FLOW_LIMITED_LAW == "flow_limited_r4"
+    assert law.meta()["law"] == FLOW_LIMITED_LAW == "flow_limited_r5"
+    assert "p_r0 = max(p_ext + max(p_tr - p*, 0), p_floor)" in law.meta()["rule"]
     assert _front_left_compliance_m3_Pa() == pytest.approx(1.80e-12, rel=0.005)
 
 
@@ -291,4 +293,19 @@ def test_snapshot_without_keys_starts_at_the_current_pressure() -> None:
     assert _one_leg_shift(rule, 20.0 * BAR) == 0.0
     assert rule.shift_total_m[0] == 0.0
     assert set(rule.state_arrays()) == {PREVIOUS_PRESSURE_KEY, SHIFT_TOTAL_KEY, CLIPPED_STEPS_KEY,
-                                         RELEASE_DROP_KEY}
+                                         RELEASE_DROP_KEY, LAW_REVISION_KEY}
+
+
+def test_snapshot_of_another_law_revision_is_refused() -> None:
+    """Revision 5 (user decision 2026-11-07): M2 state without the marker (revision 4 or older)
+    or with another revision is refused; a snapshot without M2 keys still restores."""
+    rule = RodReleaseShift([ANNULUS_FL_M2])
+    _one_leg_shift(rule, 34.0 * BAR)
+    arrays = rule.state_arrays()
+    without_marker = {key: value for key, value in arrays.items() if key != LAW_REVISION_KEY}
+    with pytest.raises(ValueError, match="revision 4 or older"):
+        RodReleaseShift([ANNULUS_FL_M2]).restore_state(without_marker)
+    with pytest.raises(ValueError, match="law revision"):
+        RodReleaseShift([ANNULUS_FL_M2]).restore_state({**arrays,
+                                                        LAW_REVISION_KEY: np.array([4])})
+    RodReleaseShift([ANNULUS_FL_M2]).restore_state({"force_N": np.zeros(1)})

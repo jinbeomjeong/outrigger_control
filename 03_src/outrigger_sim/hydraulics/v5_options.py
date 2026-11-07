@@ -18,7 +18,7 @@ from enum import StrEnum
 from typing import Any
 
 from .flow_limit_run import FlowLimitSetting, flow_setting_from_args
-from .rod_release import FLOW_LIMITED_LAW
+from .rod_release import FLOW_LIMITED_LAW, STORED_LAWS
 
 LOCK_SPEED_EPS_M_S = 1.0e-6
 """``|u_c| <=`` this = a zero command; same value as YAML ``actuator.rod_side.lock_eps_m_s``."""
@@ -124,7 +124,7 @@ class HydraulicOptions:
 
     def to_dict(self) -> dict[str, Any]:
         """The fields, plus ``m2_law`` with M2 on: the definition digests and metas of M2 runs
-        change with the M2 law (revision 4, ``flow_limited_r4``); the M2-off dict stays as it
+        change with the M2 law (revision 5, ``flow_limited_r5``); the M2-off dict stays as it
         was."""
         values = asdict(self)
         if self.rod_release_force:
@@ -136,11 +136,32 @@ class HydraulicOptions:
         """The options of :meth:`to_dict` (a job description passed to a worker process).
 
         Raises:
-            ValueError: An ``m2_law`` other than the one this code runs (a stored
-                ``flow_limited_r3`` run is refused: this code cannot rerun it).
+            ValueError: An ``m2_law`` other than the one this code runs (stored
+                ``flow_limited_r3`` and ``flow_limited_r4`` runs are refused: this code cannot
+                rerun them).
         """
         if values.get("m2_law", FLOW_LIMITED_LAW) != FLOW_LIMITED_LAW:
             raise ValueError(f"M2 law {values['m2_law']!r} is not {FLOW_LIMITED_LAW!r}")
+        return cls._from_fields(values)
+
+    @classmethod
+    def from_stored(cls, values: dict[str, Any]) -> HydraulicOptions:
+        """The options of a stored record, for reading it only (never to rerun it).
+
+        Accepts the M2 laws of :data:`rod_release.STORED_LAWS`; the stored law is dropped, so
+        ``to_dict`` of the result names the law of this code. Readers that need only the
+        controller-side settings (``t4h_replay``: the lock window) use it.
+
+        Raises:
+            ValueError: An ``m2_law`` no revision of this project wrote.
+        """
+        stored_law = values.get("m2_law", FLOW_LIMITED_LAW)
+        if stored_law not in STORED_LAWS:
+            raise ValueError(f"M2 law {stored_law!r} is not one of {STORED_LAWS}")
+        return cls._from_fields(values)
+
+    @classmethod
+    def _from_fields(cls, values: dict[str, Any]) -> HydraulicOptions:
         flow = values.get("flow")
         check_delay = values.get("check_delay")
         lock_closure = values.get("lock_closure")

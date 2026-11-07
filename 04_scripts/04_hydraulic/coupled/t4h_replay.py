@@ -67,7 +67,8 @@ def run_config(meta: dict):
     contact = (meta.get("job") or {}).get("contact") or "COMBINED"
     config = closed_loop.preset_config(c2.ContactJudge[contact], with_imu_samples=True,
                                        with_reapproach=True)
-    options = HydraulicOptions.from_dict(meta["hydraulic_options"])
+    # read only: records of earlier M2 laws keep their lock window (the replay reruns no plant)
+    options = HydraulicOptions.from_stored(meta["hydraulic_options"])
     if options.lock_window_follows_plant:
         config = apply_lock_window(config, options, load_params().v_max, HARNESS_VALVE_TAU_S)
     return closed_loop, config

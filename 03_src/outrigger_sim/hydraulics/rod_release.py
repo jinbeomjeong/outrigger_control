@@ -42,6 +42,17 @@ that share the base decay still carries (:func:`compensated_rod_pressure_Pa`)::
 ``p_r`` itself (the reading, the lag start ``p_r,rel`` or the M1c seed) is unchanged; with a seed
 ``Delta`` stays as it is (spec P-1). The move over a whole release is ``A_ann (p_r0 - p*) / k_h``.
 
+Revision 5 (``flow_limited_r5``, user decision 2026-11-07, plan B): the lock anchor after an
+extension keeps the rod pressure the moving lag had not yet relieved::
+
+    p_r0 = max(p_ext + max(p_tr - p*, 0), p_floor)    extension lock, M2 on only
+    p_tr = moving rod pressure of the last step,  p* = moving target of the extension
+
+A finished (or hanging) extension has ``p_tr = p*`` and keeps ``p_r0 = p_ext``. Retract locks
+keep ``p_ret``. The anchor is set by the plant laws (L2b ``l2b_rod_side``, harness
+``harness_hydraulics``); this module carries the name of the law and its snapshot marker
+(:data:`LAW_REVISION_KEY`).
+
 Units SI; gauge pressures; arrays per leg.
 """
 
@@ -61,10 +72,18 @@ SHIFT_TOTAL_KEY = "m2_shift_total_m"
 CLIPPED_STEPS_KEY = "m2_clipped_steps"
 RELEASE_DROP_KEY = "m2_release_drop_Pa"
 """Optional snapshot keys (written only with the option on)."""
+LAW_REVISION_KEY = "m2_law_revision"
+"""Snapshot marker of the M2 law (a snapshot payload holds numbers only, so the revision number
+stands for :data:`FLOW_LIMITED_LAW`). Snapshots before revision 5 have no marker."""
 
-FLOW_LIMITED_LAW = "flow_limited_r4"
+FLOW_LIMITED_LAW = "flow_limited_r5"
 """Name of the M2 law in the meta and the definition digests (M2 on only): revision 3 pressure
-lag plus the revision 4 release-decay compensation."""
+lag, revision 4 release-decay compensation and the revision 5 extension lock anchor."""
+LAW_REVISION = 5
+"""Revision number of :data:`FLOW_LIMITED_LAW` (snapshot marker)."""
+STORED_LAWS = ("flow_limited_r3", "flow_limited_r4", FLOW_LIMITED_LAW)
+"""M2 law names stored results may carry; only :data:`FLOW_LIMITED_LAW` can be rerun."""
+_M2_STATE_KEYS = (PREVIOUS_PRESSURE_KEY, SHIFT_TOTAL_KEY, CLIPPED_STEPS_KEY, RELEASE_DROP_KEY)
 METER_OUT_RATIO = 1.0
 """``b_T``: meter-out (A -> T) over meter-in (P -> A) opening at the same spool stroke
 (ASSUMPTION)."""
@@ -197,11 +216,27 @@ class RodPressureFlowLaw:
                         "A_ann |u|, extend meter-out b_T A_h |u| sqrt((p_r - p_T) / dp_c); "
                         "C_r = A_ann^2 (1/k_r + 1/k_h), B hose not included; "
                         "M2 reads p_hat = p_r + Delta w, Delta = p_r0 - p_r,rel at the release, "
-                        "w = base release decay (revision 4)",
+                        "w = base release decay (revision 4); extension lock anchor "
+                        "p_r0 = max(p_ext + max(p_tr - p*, 0), p_floor), p_tr = moving rod "
+                        "pressure before the lock, p* = extension target; retract lock "
+                        "keeps p_ret (revision 5)",
                 "meter_out_ratio": self.meter_out_ratio,
                 "spool_reference_drop_Pa": self.spool_reference_drop_Pa,
                 "tank_pressure_Pa": self.tank_pressure_Pa,
                 "status": "ASSUMPTION b_T, dp_c, p_T (coupled/params.py values)"}
+
+
+def _check_law_revision(arrays: Mapping[str, NDArray[Any]]) -> None:
+    """Refuse M2 state of another law revision; a snapshot without M2 keys passes."""
+    if not any(key in arrays for key in _M2_STATE_KEYS):
+        return
+    if LAW_REVISION_KEY not in arrays:
+        raise ValueError(f"snapshot M2 state has no law marker (revision 4 or older), "
+                         f"this code runs {FLOW_LIMITED_LAW!r}")
+    stored = np.asarray(arrays[LAW_REVISION_KEY]).reshape(-1)
+    if stored.size != 1 or int(stored[0]) != LAW_REVISION:
+        raise ValueError(f"snapshot M2 law revision {stored.tolist()} is not {LAW_REVISION} "
+                         f"({FLOW_LIMITED_LAW!r})")
 
 
 class RodReleaseShift:
@@ -303,14 +338,21 @@ class RodReleaseShift:
     def state_arrays(self) -> dict[str, NDArray[Any]]:
         arrays: dict[str, NDArray[Any]] = {SHIFT_TOTAL_KEY: self._shift_total_m.copy(),
                                            CLIPPED_STEPS_KEY: self._clipped_steps.copy(),
-                                           RELEASE_DROP_KEY: self._release_drop_Pa.copy()}
+                                           RELEASE_DROP_KEY: self._release_drop_Pa.copy(),
+                                           LAW_REVISION_KEY: np.array([LAW_REVISION])}
         if self._previous_pressure_Pa is not None:
             arrays[PREVIOUS_PRESSURE_KEY] = self._previous_pressure_Pa.copy()
         return arrays
 
     def restore_state(self, arrays: Mapping[str, NDArray[Any]]) -> None:
         """A snapshot without the keys continues from the current pressure with a zero record.
-        The clip times are not in the snapshot: they restart empty."""
+        The clip times are not in the snapshot: they restart empty.
+
+        Raises:
+            ValueError: The snapshot has M2 keys of another law revision (a snapshot without
+                the marker is revision 4 or older).
+        """
+        _check_law_revision(arrays)
         leg_count = self._annulus_area_m2.size
         self._clip_times_s = [[] for _ in range(leg_count)]
         self._previous_pressure_Pa = None
@@ -329,7 +371,8 @@ class RodReleaseShift:
                 "m2_clipped_steps": self._clipped_steps.tolist()}
 
 
-__all__ = ["CLIPPED_STEPS_KEY", "FLOW_LIMITED_LAW", "METER_OUT_RATIO", "PREVIOUS_PRESSURE_KEY",
-           "RELEASE_DROP_KEY", "SHIFT_TOTAL_KEY", "SPOOL_REFERENCE_DROP_PA", "TANK_PRESSURE_PA",
+__all__ = ["CLIPPED_STEPS_KEY", "FLOW_LIMITED_LAW", "LAW_REVISION", "LAW_REVISION_KEY",
+           "METER_OUT_RATIO", "PREVIOUS_PRESSURE_KEY", "RELEASE_DROP_KEY", "SHIFT_TOTAL_KEY",
+           "STORED_LAWS", "SPOOL_REFERENCE_DROP_PA", "TANK_PRESSURE_PA",
            "ReleaseStart", "RodPressureFlowLaw", "RodReleaseShift", "compensated_rod_pressure_Pa",
            "flow_limited_rod_pressure", "release_weight"]

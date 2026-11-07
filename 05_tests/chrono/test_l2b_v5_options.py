@@ -271,8 +271,9 @@ def test_m2_off_writes_no_snapshot_key_and_on_writes_them() -> None:
     assert "m2_p_prev_Pa" in on.state_arrays()
     assert "m2_shift_total_m" in on.state_arrays()
     assert {key for key in on.state_arrays() if key.startswith("m2_")} == {
-        "m2_p_prev_Pa", "m2_shift_total_m", "m2_clipped_steps", "m2_release_drop_Pa"}
-    assert on.meta()["rod_release"]["law"] == "flow_limited_r4"
+        "m2_p_prev_Pa", "m2_shift_total_m", "m2_clipped_steps", "m2_release_drop_Pa",
+        "m2_law_revision"}
+    assert on.meta()["rod_release"]["law"] == "flow_limited_r5"
     assert on.meta()["rod_release"]["pressure_law"]["tank_pressure_Pa"] == 2.0e5
 
 

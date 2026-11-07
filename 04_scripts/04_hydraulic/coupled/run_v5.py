@@ -39,7 +39,7 @@ OUT_DIR = ROOT / "06_analysis" / "03_hydraulic" / "coupled" / "v5"
 GOLDEN_DIR = OUT_DIR / "golden_off"
 S9_DIR = ROOT / "04_scripts" / "03_control" / "s9"
 M1_DIR = ROOT / "04_scripts" / "03_control" / "m1_check"
-for _path in (HERE, S9_DIR, M1_DIR):
+for _path in (HERE, S9_DIR, M1_DIR, ROOT / "03_src"):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
@@ -337,11 +337,23 @@ def run_one(job: dict) -> dict:
 
 
 def _done_keys(path: Path) -> set[str]:
+    """Job keys of the finished runs in ``path``.
+
+    Raises:
+        RuntimeError: The file holds an M2 run of another M2 law (the job key has no law: it
+            would count as done). Archive the file first (``*_m2r3`` precedent).
+    """
+    from outrigger_sim.hydraulics.rod_release import FLOW_LIMITED_LAW
+
     if not path.exists():
         return set()
     done = set()
     for line in path.read_text(encoding="utf-8").splitlines():
         record = json.loads(line)
+        stored_law = (record.get("hydraulic_options") or {}).get("m2_law", FLOW_LIMITED_LAW)
+        if stored_law != FLOW_LIMITED_LAW:
+            raise RuntimeError(f"{path.name}: M2 law {stored_law!r} is not {FLOW_LIMITED_LAW!r}; "
+                               "archive the file before running this law")
         if "error" not in record:
             done.add(job_key(record["job"]))
     return done
