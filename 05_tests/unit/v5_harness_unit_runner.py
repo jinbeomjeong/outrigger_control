@@ -560,8 +560,208 @@ def check_m2_14c() -> dict:
         -0.25, v_max_m_s, FLOOR_RISE_M, FLOOR_RISE_S) for kind in M1C_KINDS}
 
 
+ANCHOR_START_PA = 34.818 * BAR
+"""Revision 5 units: the extension starts from a retract lock anchor (spec table)."""
+ANCHOR_REFERENCE_STEP_S = 1.0e-4
+"""The 1-leg replica of the spec runs at the L2b step."""
+ANCHOR_HOLD_S = 0.05
+ANCHOR_LOAD_RISE_M, ANCHOR_LOAD_RISE_S = -3.0e-3, 3.0
+"""After the lock the floor under the leg rises 3 mm in 3 s: the rod reading reaches the floor
+pressure (the knee) well before the end."""
+HANGING_FORCE_N = 40.0e3
+"""U4: the leg hangs with this net pull (``F = -40 kN``)."""
+FREE_FLOOR_M = 1.0
+ANCHOR_CASES = (
+    ("U1", 0, 0.01, 0.5, False), ("U1", 2, 0.01, 0.5, False),
+    ("U2", 0, 0.10, 0.1, False), ("U2", 2, 0.10, 0.1, False),
+    ("U2b", 0, 0.01, 1.0, False),
+    ("U3", 0, 0.01, 5.0, False), ("U3", 2, 0.01, 5.0, False),
+    ("U3b", 0, 0.25, 0.1, False),
+    ("U4", 0, 0.01, 1.0, True),
+)
+"""(name, leg, fraction of v_max, extension time [s], hanging): spec ``r5_spec.md`` table."""
+
+
+class _AnchorLegs(_BodyFixedLegs):
+    """``_BodyFixedLegs`` with one chosen leg whose floor rises from ``rise_from_s`` on, or
+    which hangs free with a pull of :data:`HANGING_FORCE_N` (the stand-in rod weight)."""
+
+    def __init__(self, leg: int, is_hanging: bool) -> None:
+        super().__init__(floor_move_m=0.0, floor_move_s=1.0)
+        self.leg = leg
+        self.rise_from_s = np.inf
+        self.rod_weight_N = np.full(4, ROD_WEIGHT_N)
+        self.is_hanging = is_hanging
+        if is_hanging:
+            self.rod_weight_N[leg] = HANGING_FORCE_N
+            self.floor_start_m[leg] = FREE_FLOOR_M
+
+    def floor_m(self, t_s: float) -> np.ndarray:
+        floor = self.floor_start_m.copy()
+        if t_s > self.rise_from_s:
+            floor[self.leg] += ANCHOR_LOAD_RISE_M * _poly345(
+                (t_s - self.rise_from_s) / ANCHOR_LOAD_RISE_S)
+        return floor
+
+    def step(self, u, nsteps: int) -> np.ndarray:
+        for _ in range(nsteps):
+            self.t += self.dt
+            self.sref = self.sref + np.asarray(u, float) * self.dt
+            floor = self.floor_m(self.t)
+            free = self.sref + self.rod_weight_N / self.ko
+            pressed = ((self.ko * self.sref + self.rod_weight_N + FLOOR_STIFFNESS_N_M * floor)
+                       / (self.ko + FLOOR_STIFFNESS_N_M))
+            self.x = np.where(free <= floor, free, pressed)
+        return self.acc[:24]
+
+
+def _anchor_plant(options, leg: int, is_hanging: bool):
+    import importlib
+
+    importlib.import_module("verdict_runs")  # first: it puts the harness folders on sys.path
+    import harness_hydraulics
+
+    rodside = importlib.import_module("s8_g4_rodside_check")
+    rodside._setup_path()
+    plant_class = harness_hydraulics.make_hydraulics_plant_class(
+        rodside.make_plant_class(_Namespace(rmf=_Namespace(FlexPlant=_AnchorLegs))), options)
+    plant = plant_class(leg, is_hanging)
+    plant.step(np.zeros(4), 1)  # not armed yet: settles x of a hanging leg
+    plant.arm()
+    plant.p_r0[leg] = ANCHOR_START_PA
+    return plant
+
+
+def _extension_target_Pa(plant, leg: int) -> float:
+    from outrigger_sim.hydraulics.rod_chamber import RodChamberMode
+
+    pull_N = HANGING_FORCE_N if plant.is_hanging else 0.0
+    return plant.rod_pressure_lag._legs[leg].moving_target_rod_pressure_Pa(RodChamberMode.EXT,
+                                                                           -pull_N)
+
+
+def _anchor_replica_Pa(plant, leg: int, speed_m_s: float, duration_s: float,
+                       step_s: float) -> float:
+    """1-leg replica of the extension lag at the harness ``k_h``, ``k_r`` (fixed at e_op)."""
+    from outrigger_sim.hydraulics.rod_release import RodPressureFlowLaw
+
+    params = plant.rod_pressure_lag._legs[leg]
+    law = RodPressureFlowLaw()
+    compliance = law.rod_compliance_m3_Pa(params.annulus_area_m2, params.head_stiffness_N_m,
+                                          params.rod_stiffness_N_m)
+    target_Pa = _extension_target_Pa(plant, leg)
+    pressure_Pa = ANCHOR_START_PA
+    for _ in range(round(duration_s / step_s)):
+        pressure_Pa = law.rod_pressure_Pa(pressure_Pa, target_Pa, speed_m_s, step_s,
+                                          float(plant.tau), compliance, params.head_area_m2,
+                                          params.annulus_area_m2, is_retract=False)
+    return pressure_Pa
+
+
+def _knee_force_N(plant, leg: int, anchor_Pa: float) -> float:
+    """Spec ``dF_knee = (p_r0 - p_floor) A_ann (k_h + k_r) / k_r``."""
+    return float((anchor_Pa - plant.p_floor) * plant.A_ann[leg]
+                 * (plant.kh[leg] + plant.kr[leg]) / plant.kr[leg])
+
+
+def _measured_knee_force_N(plant, leg: int) -> float | None:
+    """Load the locked leg up (floor rise) until its rod reading clamps at ``p_floor``; the
+    force change from the lock to the clamp, extrapolated on the last two unclamped steps."""
+    plant.rise_from_s = plant.t
+    force_lock_N = float(plant.pressure()[leg])
+    samples = []
+    for _ in range(round(ANCHOR_LOAD_RISE_S / plant.dt)):
+        plant.step(np.zeros(4), 1)
+        rod_Pa = float(plant.p_r0[leg] - plant.Gr[leg] / plant.A_ann[leg])
+        if rod_Pa <= plant.p_floor + 1e-6:
+            if len(samples) < 2:
+                return None
+            (force_a, rod_a), (force_b, rod_b) = samples[-2], samples[-1]
+            slope = (force_b - force_a) / (rod_b - rod_a)
+            return force_b + slope * (plant.p_floor - rod_b) - force_lock_N
+        samples.append((float(plant.pressure()[leg]), rod_Pa))
+    return None
+
+
+def _anchor_case(options, leg: int, fraction: float, duration_s: float, is_hanging: bool,
+                 v_max_m_s: float) -> dict:
+    """Extend ``leg`` at ``fraction`` v_max (a step, no valve lag: the replica's constant u)
+    for ``duration_s`` from the 34.818 bar anchor, then lock; the anchor, the lock step force
+    and (pressed legs) the knee measured by loading the locked leg up."""
+    plant = _anchor_plant(options, leg, is_hanging)
+    speed_m_s = np.zeros(4)
+    speed_m_s[leg] = fraction * v_max_m_s
+    for _ in range(round(duration_s / plant.dt)):
+        plant.step(speed_m_s, 1)
+    tracked_Pa = (None if plant.rod_release is None
+                  else float(plant.rod_pressure_lag.pressure_Pa[leg]))
+    force_before_lock_N = float(plant.pressure()[leg])
+    gr_before_lock_N = float(plant.Gr[leg])
+    plant.step(np.zeros(4), 1)  # the lock step
+    anchor_Pa = float(plant.p_r0[leg])
+    out = {"locked": bool(plant.locked[leg]), "p_r0_Pa": anchor_Pa, "p_r0_bar": anchor_Pa / BAR,
+           "lock_step_gr_minus_before_N": float(plant.Gr[leg]) - gr_before_lock_N,
+           "lock_step_force_minus_before_N": float(plant.pressure()[leg]) - force_before_lock_N,
+           "knee_formula_kN": _knee_force_N(plant, leg, anchor_Pa) / 1e3}
+    if tracked_Pa is not None:
+        target_Pa = _extension_target_Pa(plant, leg)
+        reference_Pa = _anchor_replica_Pa(plant, leg, speed_m_s[leg], duration_s,
+                                          ANCHOR_REFERENCE_STEP_S)
+        reference_anchor_Pa = max(plant.p_ext[leg] + max(reference_Pa - target_Pa, 0.0),
+                                  plant.p_floor)
+        out.update({
+            "p_tr_bar": tracked_Pa / BAR, "target_bar": target_Pa / BAR,
+            "replica_p_tr_bar": reference_Pa / BAR,
+            "replica_harness_step_p_tr_bar": _anchor_replica_Pa(
+                plant, leg, speed_m_s[leg], duration_s, plant.dt) / BAR,
+            "replica_p_r0_bar": reference_anchor_Pa / BAR,
+            "replica_knee_kN": _knee_force_N(plant, leg, reference_anchor_Pa) / 1e3,
+            "record": plant.anchor_record.record()})
+    for _ in range(round(ANCHOR_HOLD_S / plant.dt)):
+        plant.step(np.zeros(4), 1)
+    if not is_hanging:
+        measured_N = _measured_knee_force_N(plant, leg)
+        out["measured_knee_kN"] = None if measured_N is None else measured_N / 1e3
+    return out
+
+
+def _retract_lock_case(options, leg: int, v_max_m_s: float) -> dict:
+    """U10: 1 % v_max retract for 0.5 s from the extension anchor, then the lock."""
+    plant = _anchor_plant(options, leg, is_hanging=False)
+    plant.p_r0[leg] = plant.p_ext[leg]
+    speed_m_s = np.zeros(4)
+    speed_m_s[leg] = -0.01 * v_max_m_s
+    for _ in range(round(0.5 / plant.dt)):
+        plant.step(speed_m_s, 1)
+    plant.step(np.zeros(4), 1)
+    return {"locked": bool(plant.locked[leg]), "p_r0_Pa": float(plant.p_r0[leg]),
+            "p_ret_Pa": float(plant.p_ret[leg])}
+
+
+def check_anchor_r5() -> dict:
+    """M2 revision 5 (spec ``r5_spec.md``): the extension lock anchor on the harness plant law
+    (body fixed, kernel step 5e-4 s) against the 1-leg replica at the harness ``k_h``, ``k_r``;
+    U1 with M2 off keeps ``p_ext``; U10 retract locks keep ``p_ret`` with M2 on and off."""
+    from params import load_params
+
+    from outrigger_sim.hydraulics.v5_options import HydraulicOptions
+
+    v_max_m_s = load_params().v_max
+    on, off = HydraulicOptions(rod_release_force=True), HydraulicOptions()
+    out = {}
+    for name, leg, fraction, duration_s, is_hanging in ANCHOR_CASES:
+        out[f"{name}_{leg}"] = _anchor_case(on, leg, fraction, duration_s, is_hanging,
+                                            v_max_m_s)
+    for leg in (0, 2):
+        out[f"U1_off_{leg}"] = _anchor_case(off, leg, 0.01, 0.5, False, v_max_m_s)
+        out[f"U10_on_{leg}"] = _retract_lock_case(on, leg, v_max_m_s)
+        out[f"U10_off_{leg}"] = _retract_lock_case(off, leg, v_max_m_s)
+    return out
+
+
 CHECKS = {"m2_6": check_m2_6, "lc": check_lc, "c8": check_c8, "x1_locked": check_x1_locked,
-          "m2_14": check_m2_14, "m2_14b": check_m2_14b, "m2_14c": check_m2_14c}
+          "m2_14": check_m2_14, "m2_14b": check_m2_14b, "m2_14c": check_m2_14c,
+          "anchor_r5": check_anchor_r5}
 
 
 def _modules_outside_project() -> list[str]:

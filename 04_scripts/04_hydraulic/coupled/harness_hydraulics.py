@@ -15,8 +15,12 @@ force. Revision 3: the lag is capped by the valve flow of the kernel speed
 Revision 4 (``flow_limited_r4``, 2026-11-07): the base release decay ``Gr = r0 exp(-(t - t_rel) /
 tau)`` of ``RodSidePlant`` already moves ``Gr / k_h``, so M2 reads ``p_hat = p + Delta w`` with
 ``Delta = Gr(t_rel) / A_ann`` (set at the release) and ``w = exp(-(t - t_rel) / tau)`` (the same
-``tau``): ``Delta w`` equals ``Gr / A_ann`` of every moving step. All pressures are model values
-and ASSUMPTIONS.
+``tau``): ``Delta w`` equals ``Gr / A_ann`` of every moving step. Revision 5 (``flow_limited_r5``,
+2026-11-07, plan B): a leg that locks after an extension gets the anchor
+``p_r0 = max(p_ext + max(p_tr - p*, 0), p_floor)`` instead of ``p_ext`` (``p_tr`` the lag of the
+last moving step, ``p*`` the extension target of the lock step's net force); the lock step keeps
+the moving ``Gr``, so the knee moves from the next step on (as on L2b). Retract locks keep
+``p_ret``. All pressures are model values and ASSUMPTIONS.
 
 Pressures gauge [Pa], speeds m/s, extension positive.
 """
@@ -71,6 +75,9 @@ CONTROL_PERIOD_S = 0.1
 WAIT_SPEED_FACTOR = 2.0
 """Spec 2.5: a waiting leg hands the law ``2 eps`` so that it stays in its moving branch."""
 TIME_TOL_S = 1.0e-9
+ANCHOR_EXCESS_COUNTED_PA = 0.1e5
+"""Revision 5 record: an extension lock whose ``p_tr - p*`` passes this counts as raised."""
+BAR = 1.0e5
 
 
 class _RodPressureLag:
@@ -111,6 +118,34 @@ class _RodPressureLag:
             is_retract=mode is RodChamberMode.RET)
         return self.pressure_Pa[leg]
 
+    def extension_excess_Pa(self, leg: int, force_N: float) -> float:
+        """``max(p_tr - p*, 0)``: the rod pressure an ended extension had not yet relieved
+        (``p_tr`` = the lag of the last moving step, ``p*`` = extension target at ``force_N``)."""
+        target_Pa = self._legs[leg].moving_target_rod_pressure_Pa(RodChamberMode.EXT, force_N)
+        return max(float(self.pressure_Pa[leg]) - target_Pa, 0.0)
+
+
+class _AnchorRecord:
+    """Revision 5 counters of one plant: extension locks, raised ones, largest raise."""
+
+    def __init__(self) -> None:
+        self.extension_locks = 0
+        self.raised_locks = 0
+        self.max_excess_Pa = 0.0
+        self.max_knee_change_N = 0.0
+
+    def add(self, excess_Pa: float, knee_change_N: float) -> None:
+        self.extension_locks += 1
+        self.raised_locks += int(excess_Pa > ANCHOR_EXCESS_COUNTED_PA)
+        self.max_excess_Pa = max(self.max_excess_Pa, excess_Pa)
+        self.max_knee_change_N = max(self.max_knee_change_N, knee_change_N)
+
+    def record(self) -> dict:
+        return {"anchor_extension_locks": self.extension_locks,
+                "anchor_excess_over_0p1bar_locks": self.raised_locks,
+                "anchor_max_excess_bar": self.max_excess_Pa / BAR,
+                "anchor_max_knee_change_kN": self.max_knee_change_N / 1e3}
+
 
 def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                                 damping_N_s_m: tuple[np.ndarray, np.ndarray] | None = None) -> type:
@@ -139,6 +174,7 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             if options.rod_release_force:
                 self.rod_release = RodReleaseShift(self.A_ann)
                 self.rod_pressure_lag = _RodPressureLag(self)
+                self.anchor_record = _AnchorRecord()
             self.lock_pending_since_s = np.full(LEG_COUNT, np.nan)
             self.lock_events = []
             self.rod_pressure_seed_Pa = np.full(LEG_COUNT, np.nan)
@@ -202,8 +238,25 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             rod_force_N = super()._rod_force(u)
             self._record_lock_changes(was_locked)
             if self.rod_release is not None:
+                self._anchor_extension_locks(was_locked)
                 self._shift_reference_for_rod_pressure(rod_force_N, was_locked, kernel_speed_m_s)
             return rod_force_N
+
+        def _anchor_extension_locks(self, was_locked) -> None:
+            """Revision 5: the anchor of a leg locked in this step after an extension keeps the
+            unrelieved rod pressure, ``p_r0 = max(p_ext + max(p_tr - p*, 0), p_floor)``."""
+            newly_locked = self.locked & ~was_locked & (self.last_dir > 0)
+            if not newly_locked.any():
+                return
+            net_force_N = self.pressure()
+            for i in np.flatnonzero(newly_locked):
+                excess_Pa = self.rod_pressure_lag.extension_excess_Pa(int(i),
+                                                                      float(net_force_N[i]))
+                self.p_r0[i] = max(self.p_ext[i] + excess_Pa, self.p_floor)
+                # knee force of the oil-only branch, against the revision 4 anchor p_ext
+                knee_change_N = ((self.p_r0[i] - self.p_ext[i]) * self.A_ann[i]
+                                 * (self.kh[i] + self.kr[i]) / self.kr[i])
+                self.anchor_record.add(excess_Pa, float(knee_change_N))
 
         def _closing_delay_speed(self, u: np.ndarray) -> np.ndarray:
             """Spec 2.5 timer: a leg whose flow stopped stays in the moving law for ``t_c``.
@@ -317,6 +370,7 @@ def plant_record(plant, t_lift_s: float | None = None) -> dict:
     if getattr(plant, "rod_release", None) is not None:
         record["m2_law"] = plant.rod_pressure_lag.flow_law.meta()
         record.update(plant.rod_release.record())
+        record.update(plant.anchor_record.record())
         record.update(clipped_steps_by_lift(plant.rod_release.clip_times_s,
                                             record["m2_clipped_steps"], t_lift_s))
     if getattr(plant, "lock_events", None) is not None:

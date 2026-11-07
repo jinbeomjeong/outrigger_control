@@ -34,7 +34,9 @@ M2_6_SETTLED_DIFFERENCE_KN = 2.43
 """dynamics-expert 3-DOF reference 2.433 kN, settled C2 - C3 of FL. Revision 3 of the M2 law
 (flow_limited_r3, 2026-11-06): 3-DOF wrapper 2.456 kN, harness 2.475 kN (plain lag: 2.436).
 Revision 4 (flow_limited_r4, 2026-11-07): harness 2.475 kN, the revision 3 value to the last bit
-(FL releases right after the arm, before its locked rod force has changed: ``Delta`` about 0)."""
+(FL releases right after the arm, before its locked rod force has changed: ``Delta`` about 0).
+Revision 5 (flow_limited_r5, 2026-11-07): 2.4745938373796 kN, r4 + 3e-14 kN (the FL lock after
+the 0.5 s move keeps a tiny unrelieved share)."""
 M2_6_TOLERANCE_KN = 0.25
 
 
@@ -123,6 +125,50 @@ def test_m2_14c_retract_with_m1c_counts_g_r_once(tmp_path: Path) -> None:
         assert row["creep_mm"] == pytest.approx(M2_14C_CREEP_MM[kind], rel=0.05)
         total_m = row["m2_total_mm"] / 1e3
         assert abs(total_m - row["formula_total_mm"] / 1e3) <= M2_14B_TOTAL_TOLERANCE_M
+
+
+ANCHOR_P_R0_TOLERANCE_BAR = 0.05
+ANCHOR_KNEE_TOLERANCE_KN = 0.1
+"""Spec ``r5_spec.md`` harness comparison (kernel step 5e-4 s against the 1e-4 s replica)."""
+ANCHOR_EXACT_PA = 1e-6
+ANCHOR_RAISED_CASES = ("U1_0", "U1_2", "U2_0", "U2_2", "U2b_0", "U3b_0")
+ANCHOR_P_EXT_CASES = ("U3_0", "U3_2", "U4_0")
+"""U3 (relieved extension) and U4 (hanging leg, ``p_tr`` = ``p*``) keep ``p_ext`` = 2 bar."""
+P_EXT_PA = 2.0e5
+
+
+def test_r5_extension_lock_anchor_on_the_harness(tmp_path: Path) -> None:
+    """M2 revision 5 (plan B, user decision 2026-11-07) on the harness law: ``p_r0`` = ``p_ext +
+    max(p_tr - p*, 0)`` against the 1-leg replica at the harness ``k_h``, ``k_r`` (the spec table
+    is at s 0.30 m; the harness columns are frozen at e_op); the lock step keeps the moving
+    force; the knee measured by loading the locked leg up is ``dF_knee``; M2 off and retract
+    locks unchanged."""
+    report = _run_check("anchor_r5", tmp_path)
+    for case in ANCHOR_RAISED_CASES + ANCHOR_P_EXT_CASES:
+        row = report[case]
+        assert row["locked"]
+        # same function and dt; the hanging leg's harness force carries the tiny moving Gr
+        assert row["p_tr_bar"] == pytest.approx(row["replica_harness_step_p_tr_bar"], rel=1e-12)
+        assert row["p_r0_bar"] == pytest.approx(row["replica_p_r0_bar"],
+                                                abs=ANCHOR_P_R0_TOLERANCE_BAR)
+        assert row["knee_formula_kN"] == pytest.approx(row["replica_knee_kN"],
+                                                       abs=ANCHOR_KNEE_TOLERANCE_KN)
+        assert row["lock_step_force_minus_before_N"] == 0.0
+        if "measured_knee_kN" in row:
+            assert row["measured_knee_kN"] == pytest.approx(row["knee_formula_kN"],
+                                                            abs=ANCHOR_KNEE_TOLERANCE_KN)
+    for case in ANCHOR_RAISED_CASES:
+        record = report[case]["record"]
+        assert report[case]["p_r0_bar"] > 2.1
+        assert record["anchor_excess_over_0p1bar_locks"] == 1
+    for case in ANCHOR_P_EXT_CASES:
+        assert abs(report[case]["p_r0_Pa"] - P_EXT_PA) <= ANCHOR_EXACT_PA
+        assert report[case]["record"]["anchor_excess_over_0p1bar_locks"] == 0
+    for leg in (0, 2):
+        assert report[f"U1_off_{leg}"]["p_r0_Pa"] == P_EXT_PA
+        for state in ("on", "off"):
+            row = report[f"U10_{state}_{leg}"]
+            assert row["locked"] and row["p_r0_Pa"] == row["p_ret_Pa"]
 
 
 def test_lc_harness_cut_lock_restart_and_copy(tmp_path: Path) -> None:
