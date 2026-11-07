@@ -37,6 +37,7 @@ SOURCE_DIR = Path(__file__).resolve().parents[3] / "03_src"
 if str(SOURCE_DIR) not in sys.path:
     sys.path.insert(0, str(SOURCE_DIR))
 
+from outrigger_sim.control.extend_start_bound import TensionTruthCounter  # noqa: E402
 from outrigger_sim.hydraulics.check_open_delay import (  # noqa: E402
     CheckDelayCircuit,
     CheckDelayInputs,
@@ -59,6 +60,7 @@ from outrigger_sim.hydraulics.v5_options import (  # noqa: E402
     check_lock_window_meta,
     validate,
 )
+from outrigger_sim.sensors.rod_side import LegMode, RodSideParams, RodSideSynth  # noqa: E402
 
 LEG_COUNT = 4
 UNUSED_OUTER_STIFFNESS_N_M = math.inf
@@ -214,6 +216,8 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             if options.check_delay is not None:
                 self.check_delay = CheckOpenDelay(options.check_delay,
                                                   _check_delay_circuit(self.flow_limiter.params))
+            self.tension_truth = TensionTruthCounter()
+            self.extend_targets = _extend_target_model(self)
             return result
 
         def step(self, u, nsteps):
@@ -223,8 +227,25 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
                 # spec 2.5: the dashpot follows the law's lock state, not the valve output
                 self.cn = np.where(self.locked, damping_N_s_m[0], damping_N_s_m[1])
             if self.check_delay is None:
-                return super().step(u, nsteps)
-            return self._step_with_check_delay(np.asarray(u, float), nsteps)
+                accumulated = super().step(u, nsteps)
+            else:
+                accumulated = self._step_with_check_delay(np.asarray(u, float), nsteps)
+            self._count_tension_truth(u, nsteps)
+            return accumulated
+
+        def _count_tension_truth(self, u, nsteps: int) -> None:
+            """Premise ① truth of this chunk (``tension_premise.md`` S-2, record only): an
+            unlocked leg with valve speed > 0 and the plant extend target ``p*`` above
+            ``p_bB``; ``p*`` = ``RodSideSynth.moving_target_Pa`` of the net force."""
+            valve_m_s = np.broadcast_to(np.asarray(u, float), (LEG_COUNT,))
+            is_extending = ~np.asarray(self.locked, bool) & (valve_m_s > 0.0)
+            if not is_extending.any():
+                return
+            mode = np.where(is_extending, LegMode.EXTEND, LegMode.LOCKED)
+            target_Pa = self.extend_targets.moving_target_Pa(
+                np.asarray(self.pressure(), float), mode, np.abs(valve_m_s))
+            self.tension_truth.add(is_extending, target_Pa, nsteps * float(self.dt),
+                                   float(self.t))
 
         def _step_with_check_delay(self, u: np.ndarray, nsteps: int):
             """Spec 2.0 rows 3 and 6: M1c in front of the flow limit, its shift after the chunk
@@ -417,7 +438,21 @@ def plant_record(plant, t_lift_s: float | None = None) -> dict:
         record["lock_events"] = plant.lock_events[:MAX_LOGGED_LOCK_EVENTS]
     if getattr(plant, "check_delay", None) is not None:
         record["check_delay"] = plant.check_delay.summary()
+    if getattr(plant, "tension_truth", None) is not None:
+        record["tension_truth"] = plant.tension_truth.record()
     return record
+
+
+def _extend_target_model(plant):
+    """``RodSideSynth`` of the plant's legs for its ``moving_target_Pa`` (the extend target the
+    ``dyn_map`` rod reading of r79 uses; the stroke, dead length and period do not enter it)."""
+    from outrigger_sim.params import load_params
+
+    params = load_params()
+    flow_params = plant.flow_limiter.params
+    return RodSideSynth(RodSideParams.from_params(params), np.asarray(flow_params.A_h, float),
+                        np.asarray(plant.A_ann, float), float(flow_params.stroke),
+                        float(flow_params.L0h), CONTROL_PERIOD_S)
 
 
 def _check_delay_circuit(params) -> CheckDelayCircuit:

@@ -245,6 +245,9 @@ def write_t4h_record(path, plant, controller, period: dict, meta: dict) -> None:
                  "F_min_N": float(controller.geometry.F_min_N),
                  "period_s": controller.config.period_s,
                  "events": _all_events(controller),
+                 # premise ① truth of the ③ bound (tension_premise.md S-2), record only
+                 "tension_truth": (None if getattr(plant, "tension_truth", None) is None
+                                   else plant.tension_truth.record()),
                  "true_force_rule": "limiter oil_force at the 1 ms row t == t_k (NaN without "
                                     "one) and its minimum over (t_k-1, t_k]; not true_force_*"}
     path = Path(path)

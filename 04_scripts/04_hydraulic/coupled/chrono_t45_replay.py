@@ -614,6 +614,8 @@ def replay_case(case_dir: Path, *, with_t5: bool = False,
         row["m2_release_judgement"] = release_judgements(hydraulics, params,
                                                          record.geometry.head_area_m2)
         row["ext_lock"] = ext_lock_counters(hydraulics, params)
+        # premise ① truth of the ③ bound (tension_premise.md S-2; None before it was recorded)
+        row["tension_truth"] = hydraulics.get("tension_truth")
     return row
 
 
@@ -637,6 +639,9 @@ def summary(rows: list[dict]) -> dict:
     return {"rows": len(rows), "settings_equal": sum(row["settings_equal"] for row in rows),
             "t4_0_passed": len(judged), "T4_over_0p6kN": over_t4, "T5_over_0p6kN": over_t5,
             "ext_lock_risk_count": risk,
+            "tension_truth_substeps_over_margin": sum(
+                sum(row["tension_truth"]["substeps_over_margin"]) for row in judged
+                if row.get("tension_truth")),
             "anchor_note": "앵커 위험 미관측" if risk == 0 else "앵커 위험 관측"}
 
 

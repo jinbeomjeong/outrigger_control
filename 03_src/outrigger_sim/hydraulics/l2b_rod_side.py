@@ -363,6 +363,13 @@ class L2bRodSide:
     def k2_lock(self, i: int) -> float:
         return _series(self._k_h[i], self._k_out[i])
 
+    def extension_targets_Pa(self, cylinder_force_N: ArrayLike) -> NDArray[np.float64]:
+        """``p*`` an extension of each leg takes at ``cylinder_force_N``: the machine's own
+        ``moving_target_rod_pressure_Pa(EXT, F)`` (read only; the premise ① record)."""
+        force = np.array(cylinder_force_N, dtype=float).reshape(self._n)
+        return np.array([self._legs[i].params.moving_target_rod_pressure_Pa(
+            RodChamberMode.EXT, float(force[i])) for i in range(self._n)])
+
     def head_pressure_Pa(self, force_N: ArrayLike) -> NDArray[np.float64]:
         f = np.array(force_N, dtype=float).reshape(self._n)
         return (f + self._last_p_r * self._a_r) / self._a_p

@@ -20,6 +20,7 @@ from outrigger_sim.control.extend_start_bound import (
     ExtendStartBound,
     ExtendStartTracker,
     PremiseRecord,
+    TensionTruthCounter,
     check_extend_start_meta,
 )
 from outrigger_sim.hydraulics.rod_release import (
@@ -188,19 +189,50 @@ def test_saturation_early_in_a_falling_sub_step_counts_no_relief() -> None:
     assert np.array_equal(tracker.pressure_Pa, np.array(RETRACT_ANCHOR_PA))
 
 
-def test_premise_record_counts_a_pull_beyond_the_back_pressure() -> None:
-    """Review item ①: an extending leg pulled beyond ``p_bB A_ann`` (FL 1.88 kN) is counted
-    per 1 ms sub-step of the period; a retracting or still leg is not."""
-    record = PremiseRecord(ANNULUS_M2)
-    force = np.array([-1.9e3, -1.8e3, -1.9e3, FORCE_N])
-    command = np.array([0.1, 0.1, -0.1, 0.1]) * MAX_SPEED_M_S
-    record.count_tension(command, force, PERIOD_S)
+def test_premise_record_threshold_is_back_pressure_plus_three_sigma() -> None:
+    """``tension_premise.md`` S-1: ``p_bB A_ann + 3 x 0.20 bar sqrt(A_h^2 + A_ann^2)``: front
+    1.885 + 0.828, rear 1.571 + 0.600 = 2.171 kN."""
+    meta = PremiseRecord(HEAD_AREA_M2, ANNULUS_M2).to_meta()
+    assert meta["tension_rule"] == "zero_corrected_3sigma"
+    assert meta["tension_read_margin_N"][0] == pytest.approx(827.9, abs=0.1)
+    assert meta["tension_read_margin_N"][2] == pytest.approx(600.5, abs=0.1)
+    assert meta["tension_threshold_N"][0] == pytest.approx(2712.8, abs=0.1)
+    assert meta["tension_threshold_N"][2] == pytest.approx(2171.3, abs=0.1)
+
+
+def test_premise_record_counts_net_force_beyond_the_threshold() -> None:
+    """S-3 units: the zero-corrected net force is compared. FL raw -1.9 kN with the offset
+    -4.286 kN is a push (no count); a calibrated rear pull of 2.6 kN counts; the same pull on
+    a leg without an offset goes to ``tension_substeps_uncalibrated``; a retracting leg is not
+    counted. D2 start ratios keep ``None`` for a missing rate."""
+    record = PremiseRecord(HEAD_AREA_M2, ANNULUS_M2)
+    offsets = np.array([-4.286e3, 0.0, 0.1e3, 0.0])
+    raw = np.array([-1.9e3, -1.8e3, -2.5e3, -2.6e3])
+    command = np.array([0.1, 0.1, 0.1, 0.1]) * MAX_SPEED_M_S
+    record.count_tension(command, raw - offsets, offsets != 0.0, PERIOD_S)
+    record.count_tension(-command, raw - offsets, offsets != 0.0, PERIOD_S)
     record.add_d2_start(2, 0.2e-3, 1.0e-3)
     record.add_d2_start(2, None, 1.0e-3)
     meta = record.to_meta()
-    assert meta["tension_substeps"] == [100, 0, 0, 0]
-    assert meta["tension_threshold_N"][0] == pytest.approx(1884.96, abs=0.01)
+    assert meta["tension_substeps"] == [0, 0, 100, 0]
+    assert meta["tension_substeps_uncalibrated"] == [0, 0, 0, 100]
     assert meta["d2_violation_start_ratio"] == [[], [], [pytest.approx(0.2), None], []]
+
+
+def test_tension_truth_counts_the_plant_target_above_p_bB() -> None:
+    """S-2: time of an extending leg with ``p* > p_bB`` in 1 ms sub-steps, the part above
+    ``p_bB + delta_m`` separately, the largest excess and the first time."""
+    truth = TensionTruthCounter()
+    extending = np.array([True, True, True, False])
+    target = np.array([5.3e5, 6.0e5, 4.0e5, 9.0e5])
+    for k in range(10):  # ten L2b steps of 1e-4 s = one 1 ms sub-step
+        truth.add(extending, target, 1.0e-4, 1.0 + k * 1.0e-4)
+    truth.add(extending, np.full(4, np.nan), 1.0e-3, 2.0)
+    record = truth.record()
+    assert record["substeps"] == [1, 1, 0, 0]
+    assert record["substeps_over_margin"] == [0, 1, 0, 0]
+    assert record["max_excess_bar"] == pytest.approx([0.3, 1.0, 0.0, 0.0])
+    assert record["first_t_s"] == [1.0, 1.0, None, None]
 
 
 def test_bound_parameters_can_be_replaced() -> None:

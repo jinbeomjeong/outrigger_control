@@ -2300,17 +2300,20 @@ class TwoPressureMonitor:
     def _premise_record_state(self) -> PremiseRecord:
         """Created on first use (a new run, or a monitor pickled before the record)."""
         if self._premise_record is None:
-            self._premise_record = PremiseRecord(self.annulus_area_m2)
+            self._premise_record = PremiseRecord(self.head_area_m2, self.annulus_area_m2)
         return self._premise_record
 
     def _count_tension(self, head, rod, commanded) -> None:
-        """The force of the tension record: the rod reading where the sensor is OK, else the
-        current estimate (before this read updates it)."""
+        """The net force of the tension record, as the diagnosis reads it: the rod reading where
+        the sensor is OK, else the current estimate (before this read updates it), minus the
+        zero offset ``c_i`` (``tension_premise.md`` S-1; a leg with ``c_i = 0`` counts as not
+        calibrated)."""
         estimates = np.array([watch.rod_estimate_Pa for watch in self._legs])
         is_reading_ok = np.array([state is RodSensorState.OK for state in self.rod_state])
         rod_Pa = np.where(is_reading_ok & np.isfinite(rod), rod, estimates)
-        force_N = head * self.head_area_m2 - rod_Pa * self.annulus_area_m2
-        self._premise_record_state().count_tension(commanded, force_N, self.period_s)
+        net_N = head * self.head_area_m2 - rod_Pa * self.annulus_area_m2 - self.zero_offsets_N
+        self._premise_record_state().count_tension(commanded, net_N, self.zero_offsets_N != 0.0,
+                                                   self.period_s)
 
     def _record_d2_start(self, leg: int, command_m_s: float) -> None:
         """Delivered (stroke rate) over commanded speed at a D2 violation start."""
@@ -2319,7 +2322,7 @@ class TwoPressureMonitor:
         self._premise_record_state().add_d2_start(leg, rate_m_s, command_m_s)
 
     def _review_record_meta(self) -> dict[str, Any]:
-        record = self._premise_record or PremiseRecord(self.annulus_area_m2)
+        record = self._premise_record or PremiseRecord(self.head_area_m2, self.annulus_area_m2)
         return record.to_meta()
 
     def _update_fixed_ratio_estimates(self, head, commanded) -> None:

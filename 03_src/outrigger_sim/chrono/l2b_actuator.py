@@ -63,6 +63,7 @@ from numpy.typing import ArrayLike, NDArray
 from outrigger_sim.actuation import SATURATION_STOP_S, FlowLimit, SpeedReference
 from outrigger_sim.chrono.actuators import leg_force_limits_N
 from outrigger_sim.chrono.m2_release_log import M2ReleaseLog, release_record
+from outrigger_sim.control.extend_start_bound import TensionTruthCounter
 from outrigger_sim.hydraulics.check_open_delay import (
     CheckDelayInputs,
     CheckDelayOutput,
@@ -503,6 +504,8 @@ class L2bForceActuator:
         self._rod_release = RodReleaseShift(self.rod_side.annulus_area_m2)
         # v5 stage 3 R-1: read-only release record (never feeds back)
         self._m2_log = M2ReleaseLog(self.rod_side.annulus_area_m2)
+        # premise ① truth of the ③ bound (tension_premise.md S-2): record only
+        self._tension_truth = TensionTruthCounter()
         # revision 3 pressure law: the moving rod pressure M2 reads is capped by the valve
         # flow; the friction path reads it from its oil law G, which may be another object
         law = RodPressureFlowLaw()
@@ -614,9 +617,26 @@ class L2bForceActuator:
             return None
         law = self._oil.rod_pressure_flow_law
         record = self._rod_release.record()
-        return release_record(self._m2_log, None if law is None else law.meta(),
-                              self._rod_release.clip_times_s, record["m2_clipped_steps"],
-                              record["m2_shift_total_mm"])
+        out = release_record(self._m2_log, None if law is None else law.meta(),
+                             self._rod_release.clip_times_s, record["m2_clipped_steps"],
+                             record["m2_shift_total_mm"])
+        out["tension_truth"] = self._tension_truth.record()
+        return out
+
+    def _count_tension_truth(self, t_s: float, dt_s: float, u_acting_m_s: NDArray[np.float64],
+                             cylinder_force_N: NDArray[np.float64]) -> None:
+        """Premise ① truth of the step just taken (``tension_premise.md`` S-2, record only):
+        an unlocked leg with an applied speed > 0 whose machine extend target ``p*`` (the
+        state machine's ``moving_target_rod_pressure_Pa(EXT, F)`` of the force that acted) is
+        above ``p_bB``."""
+        oil = self._oil
+        if oil is None or not oil.armed:
+            return
+        is_extending = ~np.asarray(oil.locked, bool) & (np.asarray(u_acting_m_s, float) > 0.0)
+        if not is_extending.any():
+            return
+        target_Pa = oil.extension_targets_Pa(cylinder_force_N)
+        self._tension_truth.add(is_extending, target_Pa, float(dt_s), float(t_s))
 
     def m2_state(self) -> tuple[NDArray[np.float64], NDArray[np.float64]] | None:
         """v5 stage 3 R-5: (``p_hat`` of the last hook, accumulated shift ``s_ref`` sign) per
@@ -755,6 +775,7 @@ class L2bForceActuator:
                 self._apply_check_delay()
             if self._rod_release is not None:
                 self._shift_reference_for_rod_pressure(s_ref_now, t_s)
+                self._count_tension_truth(t_s, dt_s, u_acting, self._acting_force)
         if not np.all(np.isfinite(self._force)):
             raise FloatingPointError(f"L2b force law not finite: {self._force}")
         self._apply()
@@ -795,6 +816,7 @@ class L2bForceActuator:
             self._apply_check_delay()
         if self._rod_release is not None:
             self._shift_reference_for_rod_pressure(s_ref_now, t_s)
+            self._count_tension_truth(t_s, dt_s, u_acting, fp_acting)
         f_p = force - sf.f
         p_r = (oil.rod_pressure_Pa if (self.rod_side is not None and self.rod_side.armed)
                else np.zeros(self.n_legs))

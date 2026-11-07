@@ -288,6 +288,27 @@ def test_m2_shift_is_clipped_at_the_soft_limit_and_counted() -> None:
     assert actuator.rod_release_record()["m2_clipped_steps"][FRONT_LEFT] > 0
 
 
+def test_m2_record_has_the_premise_truth_of_the_extend_target() -> None:
+    """``tension_premise.md`` S-2 on L2b: a pushing leg never has ``p* > p_bB`` (0 sub-steps);
+    the machine target of a 3 kN pull on the extending front left is 3e3 / A_ann = 7.96 bar,
+    2.96 bar above ``p_bB`` (counted, also above the 0.5 bar margin)."""
+    case = _Case(1.0, [(0.2, FRONT_LEFT_QUARTER)], is_body_fixed=True)
+    actuator, motors = _make_actuator(case)
+    actuator.configure_rod_release()
+    _run(case, actuator, motors)
+    assert actuator._tension_truth.record()["substeps"] == [0, 0, 0, 0]
+    target_Pa = actuator.rod_side.extension_targets_Pa([-3.0e3, 1.0e4, 1.0e4, 1.0e4])
+    assert target_Pa[FRONT_LEFT] == pytest.approx(3.0e3 / P.A_r[FRONT_LEFT])
+    assert not actuator.rod_side.locked[FRONT_LEFT]
+    actuator._count_tension_truth(1.0, 1.0e-3, np.array([0.25 * P.v_max, 0.0, 0.0, 0.0]),
+                                  np.array([-3.0e3, 1.0e4, 1.0e4, 1.0e4]))
+    truth = actuator.m2_release_record()["tension_truth"]
+    assert truth["substeps"] == [1, 0, 0, 0]
+    assert truth["substeps_over_margin"] == [1, 0, 0, 0]
+    assert truth["max_excess_bar"][FRONT_LEFT] == pytest.approx(
+        3.0e3 / P.A_r[FRONT_LEFT] / 1e5 - 5.0, rel=1e-9)
+
+
 def test_m2_with_counterbalance_is_refused() -> None:
     actuator, _motors = _make_actuator(_release_case(ROD_PRESSURE_RETRACT_PA, is_body_fixed=True))
     actuator.counterbalance = object()  # the CB path has never been tested with M2

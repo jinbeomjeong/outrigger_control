@@ -265,32 +265,61 @@ class ExtendStartTracker:
                 "saturated_substeps": self.saturated_substeps}
 
 
+TENSION_READ_SIGMA_PA = 0.20e5
+"""ASSUMPTION: white noise of one pressure reading, normal grade (``pressure_error`` table, spec
+71); the static errors are removed by the zero offsets, not by this margin."""
+TENSION_READ_K = 3.0
+"""ASSUMPTION: the read margin is ``k sigma_F``, ``sigma_F = sigma sqrt(A_h^2 + A_ann^2)``
+(hydraulics-expert ``tension_premise.md`` 4, S-1)."""
+TENSION_RULE = "zero_corrected_3sigma"
+"""``review_record.tension_rule``; a record without it is the raw-reading count of 83e8a36 and
+earlier (judged invalid)."""
+
+
 class PremiseRecord:
     """Review records of the bound's premises, kept with the ③ option on or off (criteria
     rev. 6 14.5, hydraulics-expert ③ review 2026-11-07; user decision 2026-11-07). Records only:
-    nothing here feeds a command.
+    nothing here feeds a command. The premise itself is judged on the plant truth
+    (:class:`TensionTruthCounter`); these are the controller's readings, kept for the machine.
 
-    * ``tension_substeps``: 1 ms sub-steps of an extending leg whose force read a pull beyond
-      ``p_bB A_ann`` (the plant target then exceeds ``p_bB``: counter-example ①).
+    * ``tension_substeps``: 1 ms sub-steps of an extending, zero-calibrated leg whose net force
+      reading (zero offset removed) pulls beyond ``p_bB A_ann`` plus the read margin
+      ``k sigma_F`` (front 828 N, rear 600 N); ``tension_substeps_uncalibrated`` the same for a
+      leg without a zero offset (its static sensor error is still in the reading).
     * ``d2_violation_start_ratio``: stroke rate over the acting command at each D2 violation
       start (priority saturation shows as 1-2 % ``v_max`` delivered; ``None`` = no rate).
 
     Args:
+        head_area_m2: ``A_h`` per leg.
         annulus_area_m2: ``A_ann`` per leg.
     """
 
-    def __init__(self, annulus_area_m2: ArrayLike) -> None:
+    def __init__(self, head_area_m2: ArrayLike, annulus_area_m2: ArrayLike) -> None:
+        head = np.asarray(head_area_m2, dtype=float).reshape(LEG_COUNT)
         annulus = np.asarray(annulus_area_m2, dtype=float).reshape(LEG_COUNT)
-        self.tension_threshold_N = BOUND_BACK_PRESSURE_PA * annulus
+        self.tension_read_margin_N = (TENSION_READ_K * TENSION_READ_SIGMA_PA
+                                      * np.sqrt(head**2 + annulus**2))
+        self.tension_threshold_N = BOUND_BACK_PRESSURE_PA * annulus + self.tension_read_margin_N
         self.tension_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
+        self.tension_substeps_uncalibrated = np.zeros(LEG_COUNT, dtype=np.int64)
         self.d2_start_ratios: list[list[float | None]] = [[] for _ in range(LEG_COUNT)]
 
-    def count_tension(self, command_m_s: ArrayLike, force_N: ArrayLike,
-                      period_s: float) -> None:
-        """One controller period: the force reading holds over its 1 ms sub-steps."""
+    def count_tension(self, command_m_s: ArrayLike, net_force_N: ArrayLike,
+                      is_calibrated: ArrayLike, period_s: float) -> None:
+        """One controller period: the net force reading holds over its 1 ms sub-steps.
+
+        Args:
+            command_m_s: Acting command per leg.
+            net_force_N: ``p_h A_h - p_r A_ann - c_i`` per leg (``c_i`` 0 if not calibrated).
+            is_calibrated: The leg has a zero offset.
+            period_s: Controller period.
+        """
         is_pulled = ((np.asarray(command_m_s, float) > 0.0)
-                     & (np.asarray(force_N, float) < -self.tension_threshold_N))
-        self.tension_substeps += round(period_s / BOUND_SUBSTEP_S) * is_pulled
+                     & (np.asarray(net_force_N, float) < -self.tension_threshold_N))
+        calibrated = np.asarray(is_calibrated, bool)
+        substeps = round(period_s / BOUND_SUBSTEP_S)
+        self.tension_substeps += substeps * (is_pulled & calibrated)
+        self.tension_substeps_uncalibrated += substeps * (is_pulled & ~calibrated)
 
     def add_d2_start(self, leg: int, stroke_rate_m_s: float | None,
                      command_m_s: float) -> None:
@@ -299,9 +328,69 @@ class PremiseRecord:
             float(stroke_rate_m_s) / command_m_s if is_known else None)
 
     def to_meta(self) -> dict[str, object]:
-        return {"tension_substeps": self.tension_substeps.tolist(),
+        return {"tension_rule": TENSION_RULE,
+                "tension_substeps": self.tension_substeps.tolist(),
+                "tension_substeps_uncalibrated": self.tension_substeps_uncalibrated.tolist(),
                 "tension_threshold_N": self.tension_threshold_N.tolist(),
+                "tension_read_margin_N": self.tension_read_margin_N.tolist(),
                 "d2_violation_start_ratio": [list(ratios) for ratios in self.d2_start_ratios]}
+
+
+TENSION_TRUTH_RULE = "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms"
+
+
+class TensionTruthCounter:
+    """Plant truth of premise ① (``tension_premise.md`` 4, S-2): time an extending leg spends
+    with the plant's extend target ``p*`` above ``p_bB``, kept by the plant adapters (harness,
+    L2b) and recorded as ``hydraulics_record.tension_truth``. ``substeps_over_margin == 0``
+    means premise ① held with the bound's margin ``delta_m``. Records only.
+
+    The adapters add every plant step (1 ms harness chunk, L2b step); the counts are the summed
+    time in 1 ms sub-steps.
+    """
+
+    def __init__(self) -> None:
+        self.seconds = np.zeros(LEG_COUNT)
+        self.seconds_over_margin = np.zeros(LEG_COUNT)
+        self.max_excess_Pa = np.zeros(LEG_COUNT)
+        self.first_t_s: list[float | None] = [None] * LEG_COUNT
+
+    def add(self, is_extending: ArrayLike, target_Pa: ArrayLike, duration_s: float,
+            t_s: float) -> None:
+        """One plant step.
+
+        Args:
+            is_extending: Unlocked leg with a valve speed > 0 in this step.
+            target_Pa: Plant extend target ``p*`` per leg (gauge; NaN = not extending).
+            duration_s: Step length.
+            t_s: Plant time at the step end.
+        """
+        extending = np.asarray(is_extending, bool)
+        if not extending.any():
+            return
+        with np.errstate(invalid="ignore"):
+            excess_Pa = np.where(extending, np.asarray(target_Pa, float) - BOUND_BACK_PRESSURE_PA,
+                                 -np.inf)
+        over = excess_Pa > 0.0
+        if not over.any():
+            return
+        self.seconds += duration_s * over
+        self.seconds_over_margin += duration_s * (excess_Pa > BOUND_MARGIN_PA)
+        self.max_excess_Pa = np.where(over, np.maximum(self.max_excess_Pa, excess_Pa),
+                                      self.max_excess_Pa)
+        for leg in np.flatnonzero(over):
+            if self.first_t_s[leg] is None:
+                self.first_t_s[leg] = round(float(t_s), 6)
+
+    def record(self) -> dict[str, object]:
+        return {"rule": TENSION_TRUTH_RULE,
+                "substeps": [round(s / BOUND_SUBSTEP_S) for s in self.seconds.tolist()],
+                "substeps_over_margin": [round(s / BOUND_SUBSTEP_S)
+                                         for s in self.seconds_over_margin.tolist()],
+                "max_excess_bar": (self.max_excess_Pa / BAR_PA).tolist(),
+                "first_t_s": list(self.first_t_s),
+                "back_pressure_bar": BOUND_BACK_PRESSURE_PA / BAR_PA,
+                "margin_bar": BOUND_MARGIN_PA / BAR_PA}
 
 
 def check_extend_start_meta(settings_meta: Mapping[str, Any]) -> None:
@@ -329,4 +418,5 @@ def initial_pressure_Pa(retract_floor_Pa: ArrayLike) -> NDArray[np.float64]:
 
 
 __all__ = ["EXTEND_START_REVISION", "BoundGeometry", "ExtendStartBound", "ExtendStartTracker",
-           "PremiseRecord", "check_extend_start_meta", "initial_pressure_Pa"]
+           "PremiseRecord", "TensionTruthCounter", "check_extend_start_meta",
+           "initial_pressure_Pa"]

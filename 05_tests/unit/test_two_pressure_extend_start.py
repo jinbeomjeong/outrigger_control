@@ -187,20 +187,28 @@ def test_review_record_is_kept_with_the_option_on_and_off() -> None:
     assert off["review_record"]["d2_violation_start_ratio"] == [[], [], [], []]
 
 
+def _pulled_rod_Pa(head_Pa: float, pull_N: np.ndarray) -> np.ndarray:
+    """Rod readings whose raw net force ``p_h A_h - p_r A_ann`` is ``-pull_N``."""
+    return (head_Pa * HEAD_AREA + pull_N) / ANNULUS
+
+
 def test_review_record_counts_tension_and_a_d2_start_with_the_option_off() -> None:
-    """A FL pull of 2 kN while extending (rod reading 80 bar head, rod chosen for the force)
-    counts 100 sub-steps per period; a D2 violation start records its ratio (option off)."""
+    """``tension_premise.md`` S-1 (option off): the zero offset is removed before the
+    threshold. FL raw -1.9 kN with the offset -4.286 kN (the L3 FR false count) is a push; RL
+    raw -2.6 kN with an offset of +0.1 kN pulls beyond 2.171 kN; FR raw -3.0 kN without an
+    offset goes to the uncalibrated count. A D2 violation start records its ratio."""
     monitor = TwoPressureMonitor(HEAD_AREA, ANNULUS, V_MAX, F_MIN_N, PERIOD_S,
                                  settings=_settings(), stroke_max_m=0.70,
                                  retract_lock_rod_pressure_Pa=RETRACT_ANCHOR_PA)
+    monitor.set_zero_offsets_N([-4.286e3, 0.0, 0.1e3, 0.2e3])
     head_Pa = 10.0 * BAR
-    pull_rod_Pa = (head_Pa * HEAD_AREA[FL] + 2.0e3) / ANNULUS[FL]
-    rod = np.full(4, 5.0 * BAR)
-    rod[FL] = pull_rod_Pa
-    commanded = np.array([0.3 * V_MAX, 0.0, 0.0, 0.0])
+    rod = _pulled_rod_Pa(head_Pa, np.array([1.9e3, 3.0e3, 2.6e3, 1.0e3]))
+    commanded = np.full(4, 0.3 * V_MAX)
     monitor.read(0.1, np.full(4, head_Pa), rod, commanded, False, 2e3,
                  stroke_m=np.full(4, 0.3))
-    assert monitor.meta()["review_record"]["tension_substeps"] == [100, 0, 0, 0]
+    record = monitor.meta()["review_record"]
+    assert record["tension_substeps"] == [0, 0, 100, 0]
+    assert record["tension_substeps_uncalibrated"] == [0, 100, 0, 0]
     monitor._stroke_rate_m_s = np.array([0.006, 0.0, 0.0, 0.0])
     monitor._record_d2_start(FL, 0.3 * V_MAX)
     ratios = monitor.meta()["review_record"]["d2_violation_start_ratio"]

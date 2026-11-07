@@ -152,7 +152,8 @@ def replay_values(path: Path, extend_start: str | None = None) -> dict:
             "unlocked_tail_max_excess_N": _max_or_none(excess[unlocked_tail]),
             "provisional_pass": bool(over.sum() == 0),
             "settings_equal": True, "commands_sha256": meta.get("commands_sha256"),
-            "extend_start_revision": (rebuilt.get("extend_start_bound") or {}).get("revision")}
+            "extend_start_revision": (rebuilt.get("extend_start_bound") or {}).get("revision"),
+            "tension_truth": meta.get("tension_truth")}
 
 
 def _by_leg(counts) -> dict[str, int]:
