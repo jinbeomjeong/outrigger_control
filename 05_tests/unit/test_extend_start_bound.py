@@ -3,7 +3,8 @@ hydraulics-expert review of 2026-11-07): the recursive bound against the plant l
 
 T-P3-2: the r5 replica cases (s 0.30 m); T-P3-3: property test, seed 20261107, 1,000 random
 command sequences against the plant law at the plant steps (L2b 1e-4 s, harness 5e-4 s) with the
-nominal and the sensitivity-end parameters (B hose +36 %).
+nominal and the sensitivity-end parameters (B hose +36 %). v2 (user decision 2026-11-07): the
+overlap cut holds only with a zero acting command.
 """
 
 from __future__ import annotations
@@ -87,13 +88,52 @@ def test_t_p3_2_start_value_covers_the_r5_replica(name, fraction, duration_s, fl
         assert over_kN < 15.0, f"{name} leg {leg}: over-conservatism {over_kN:.2f} kN"
 
 
-def test_relief_is_not_counted_below_the_overlap_cut() -> None:
-    """A 1 % ``v_max`` command stays below ``delta_ol`` 5 %: no relief, the bound keeps
-    ``p_ret``."""
+def test_small_non_zero_command_counts_relief_below_the_overlap_cut() -> None:
+    """v2 (user decision 2026-11-07, spec 3 (i)): a 1 % ``v_max`` command is below
+    ``delta_ol`` 5 % but flows in the plant (L-6), so the bound counts ``kappa_x`` times the
+    sub-step mean of ``u_v`` and relieves; v1 kept ``p_ret`` here (Dg-2 over-conservatism,
+    spec 8)."""
     tracker = _tracker()
     command = np.array([0.01 * MAX_SPEED_M_S, 0.0, 0.0, 0.0])
+    stroke = np.full(4, 0.3)
+    expected_Pa = RETRACT_ANCHOR_PA[0]
+    expected_valve = 0.0
+    keep = math.exp(-1.0e-3 / VALVE_TAU_S)
+    mean_share = VALVE_TAU_S / 1.0e-3 * (1.0 - keep)
+    compliance = tracker.compliance_m3_Pa(0, 0.3)
     for _ in range(20):
-        _advance(tracker, command, np.full(4, 0.3))
+        _advance(tracker, command, stroke)
+        for _ in range(100):
+            mean_valve = command[0] + (expected_valve - command[0]) * mean_share
+            expected_valve = command[0] + (expected_valve - command[0]) * keep
+            expected_Pa = flow_limited_rod_pressure(
+                expected_Pa, BACK_PRESSURE_PA, 0.8 * mean_valve, 1.0e-3, LAG_S, compliance,
+                HEAD_AREA_M2[0], ANNULUS_M2[0], False)
+    assert tracker.valve_m_s[0] < 0.05 * MAX_SPEED_M_S
+    assert tracker.pressure_Pa[0] == pytest.approx(expected_Pa, rel=1e-12)
+    assert tracker.pressure_Pa[0] < RETRACT_ANCHOR_PA[0] - 1.0 * BAR
+    assert tracker.pressure_Pa[1:].tolist() == list(RETRACT_ANCHOR_PA[1:])
+
+
+def test_zero_command_tail_below_the_overlap_cut_holds() -> None:
+    """With a zero acting command and ``u_v`` below 5 % ``v_max`` the plant cuts the tail:
+    no relief is counted, the bound holds."""
+    for zero_command_m_s in (0.0, 0.5e-6):  # the plant's zero is |u| <= 1e-6 m/s
+        tracker = _tracker()
+        tracker.valve_m_s = np.array([0.04 * MAX_SPEED_M_S, 0.0, 0.0, 0.0])
+        for _ in range(5):
+            _advance(tracker, np.array([zero_command_m_s, 0.0, 0.0, 0.0]), np.full(4, 0.3))
+        assert tracker.pressure_Pa[0] == RETRACT_ANCHOR_PA[0]
+
+
+def test_negative_valve_under_an_extend_command_counts_no_relief() -> None:
+    """Right after a retract the valve is still negative under a small extend command: the
+    plant fills, so the bound does not relieve until ``u_v > 0``."""
+    tracker = _tracker()
+    tracker.valve_m_s = np.array([-0.5 * MAX_SPEED_M_S, 0.0, 0.0, 0.0])
+    tracker.advance(np.array([0.01 * MAX_SPEED_M_S, 0.0, 0.0, 0.0]), np.full(4, 0.3),
+                    np.full(4, FORCE_N), RETRACT_ANCHOR_PA, 1.0e-3)
+    assert tracker.valve_m_s[0] < 0.0
     assert tracker.pressure_Pa[0] == RETRACT_ANCHOR_PA[0]
 
 

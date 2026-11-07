@@ -9,9 +9,15 @@ The controller runs the plant's own pure function
 in 1 ms sub-steps per leg::
 
     valve      u_v <- u + (u_v - u) exp(-dt / tau_v)              (acting command u)
-    speed      u_lb = kappa_x u_v,  0 if u_v < delta_ol v_max, the pump demand
-               sum A_h |u_v| (extend) + A_ann |u_v| (retract) > eta_v Q_pump, or the stroke
+    speed      u_lb = kappa_x max(mean u_v over the sub-step, 0),
+               0 if u_v <= 0, if the acting command is 0 (|u| <= eps) and u_v < delta_ol v_max
+               (the plant's tail cut; v2, spec 3 (i)), if the pump demand
+               sum A_h |u_v| (extend) + A_ann |u_v| (retract) > eta_v Q_pump, or if the stroke
                reading >= the end margin
+
+The relief speed is the exact sub-step mean of the valve, not its end value: with v2 a ramp
+from rest counts from the first sub-step, and the end value over the whole sub-step relieved up to
+210 Pa more than the plant there (T-P3-3, seed 20261107, plant step 1e-4 s).
     pressure   p <- flow_limited_rod_pressure(p, p_bB, u_lb, dt, tau, h C_r(s), ...)
     retract    p <- max(p, p_ret, retract moving model)   (no sub-steps)
     C_r(s)     A_ann^2 (1/k_r + 1/k_h), k_h = beta A_h / (L0h + s),
@@ -44,7 +50,12 @@ BOUND_HOSE_FACTOR = 1.40
 BOUND_SPEED_FACTOR = 0.8
 """``kappa_x``: delivered speed lower bound over the valve estimate (flow share, ``b_T``)."""
 BOUND_OVERLAP_CUT_RATIO = 0.05
-"""``delta_ol,max``: below this valve fraction of ``v_max`` no relief is counted (LS2 end)."""
+"""``delta_ol,max``: with a zero acting command, below this valve fraction of ``v_max`` no relief
+is counted (LS2 end). A small non-zero command flows in the plant (spec L-6) and counts
+``kappa_x u_v`` (v2, user decision 2026-11-07; v1 cut every command below it)."""
+ZERO_COMMAND_M_S = 1.0e-6
+"""``eps`` of a zero acting command: the plant cuts the tail at ``|u| <= eps`` (L2b
+``LOCK_EPS_M_S``, the harness ``install_overlap_cut``), so the bound treats it as zero too."""
 BOUND_LAG_S = 0.05
 BOUND_BACK_PRESSURE_PA = 5.0 * BAR_PA
 """``p_bB``: extension target of the plant (its ASSUMPTION)."""
@@ -195,8 +206,7 @@ class ExtendStartTracker:
     def _substep(self, command, is_retracting, is_at_end, compliance) -> None:
         bound, geometry = self.bound, self.geometry
         step_s = bound.substep_s
-        keep = math.exp(-step_s / geometry.valve_tau_s) if geometry.valve_tau_s > 0.0 else 0.0
-        self.valve_m_s = command + (self.valve_m_s - command) * keep
+        mean_valve_m_s = self._advance_valve(command, step_s)
         is_saturated = self._pump_demand_m3_s() > (bound.volumetric_efficiency
                                                    * bound.pump_flow_m3_s)
         self.saturated_substeps += int(is_saturated)
@@ -205,12 +215,29 @@ class ExtendStartTracker:
             if is_retracting[leg]:
                 continue
             valve = float(self.valve_m_s[leg])
-            counts_relief = valve >= cut_m_s and not is_saturated and not is_at_end[leg]
-            speed_m_s = bound.speed_factor * valve if counts_relief else 0.0
+            # The plant closes the tail only with a zero acting command (spec L-6); a valve
+            # still negative after a retract fills, so it never counts relief.
+            is_tail_cut = abs(command[leg]) <= ZERO_COMMAND_M_S and valve < cut_m_s
+            counts_relief = (valve > 0.0 and not is_tail_cut and not is_saturated
+                             and not is_at_end[leg])
+            mean_speed_m_s = max(float(mean_valve_m_s[leg]), 0.0)
+            speed_m_s = bound.speed_factor * mean_speed_m_s if counts_relief else 0.0
             self.pressure_Pa[leg] = flow_limited_rod_pressure(
                 float(self.pressure_Pa[leg]), bound.back_pressure_Pa, speed_m_s, step_s,
                 bound.lag_s, compliance[leg], geometry.head_area_m2[leg],
                 geometry.annulus_area_m2[leg], False)
+
+    def _advance_valve(self, command: NDArray[np.float64], step_s: float
+                       ) -> NDArray[np.float64]:
+        """Move ``u_v`` to the end of the sub-step; return its exact mean over the sub-step."""
+        tau_s = self.geometry.valve_tau_s
+        start_m_s = self.valve_m_s
+        if tau_s <= 0.0:
+            self.valve_m_s = np.array(command, dtype=float)
+            return self.valve_m_s.copy()
+        keep = math.exp(-step_s / tau_s)
+        self.valve_m_s = command + (start_m_s - command) * keep
+        return command + (start_m_s - command) * (tau_s / step_s) * (1.0 - keep)
 
     def _pump_demand_m3_s(self) -> float:
         valve = self.valve_m_s
