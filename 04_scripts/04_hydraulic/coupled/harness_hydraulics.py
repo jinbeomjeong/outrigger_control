@@ -266,16 +266,19 @@ def make_hydraulics_plant_class(base: type, options: HydraulicOptions,
             return np.where(np.asarray(self.locked, bool), locked_Pa,
                             self.rod_pressure_lag.pressure_Pa)
 
-        def check_extend_bound(self, t_s: float, bound_Pa: np.ndarray) -> None:
-            """5.5: the controller's ③ bound of the read at ``t_s`` against this plant (record
-            only; the plant has not moved since the read)."""
+        def check_extend_bound(self, t_s: float, bound_Pa: np.ndarray,
+                               locked_model_bound_Pa: np.ndarray | None = None,
+                               locked_sources: list | None = None) -> None:
+            """5.5 / 6.4: the controller's ③ bound (and its locked model bound ④) of the read
+            at ``t_s`` against this plant (record only; the plant has not moved since)."""
             plant_Pa = self.plant_rod_pressure_Pa()
             if plant_Pa is None:
                 return
             if self.extend_bound_check is None:
-                self.extend_bound_check = ExtendBoundCheck()
+                self.extend_bound_check = ExtendBoundCheck(self.A_ann)
             self.extend_bound_check.add(t_s, bound_Pa, plant_Pa,
-                                        extend_bound_states(self.locked, self.last_dir))
+                                        extend_bound_states(self.locked, self.last_dir),
+                                        locked_model_bound_Pa, locked_sources)
 
         def _step_with_check_delay(self, u: np.ndarray, nsteps: int):
             """Spec 2.0 rows 3 and 6: M1c in front of the flow limit, its shift after the chunk
@@ -496,7 +499,8 @@ def install_extend_bound_check() -> None:
                 return output
             bound_Pa = self.extend_bound_Pa()
             if bound_Pa is not None:
-                check(float(measurements.t_s), bound_Pa)
+                check(float(measurements.t_s), bound_Pa, self.locked_model_bound_Pa(),
+                      self.locked_model_bound_sources())
             return output
 
     c2.C2Controller = BoundCheckedController

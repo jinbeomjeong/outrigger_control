@@ -1014,6 +1014,17 @@ class _ImuInput:
         return self.f_z_m_s2 is not None and math.isfinite(self.f_z_m_s2)
 
 
+class LockStartSource(StrEnum):
+    """Which term set a lock-instant start value ``M_j`` (``tension_premise.md`` 6.4)."""
+
+    EXTEND_BOUND = "extend_bound"
+    """The ③ bound ``p_hat + delta_m`` (``tracked_bound``)."""
+    PILOT_MODEL = "pilot_model"
+    """The moving model of the direction (pilot extend value, or the retract model)."""
+    PREVIOUS_MOVING = "previous_moving"
+    """The largest moving start value of the lookback before the stretch."""
+
+
 @dataclass
 class _LockStretch:
     """P-S8-13 state of one leg for the column-bound fallback estimate (10.4 ②-⑤).
@@ -1065,6 +1076,14 @@ class _LockStretch:
     extend_bound_Pa: float = math.nan
     """``p + delta_m`` of the ③ start bound when the stretch opened (``tracked_bound`` only;
     NaN = option off, no meta key)."""
+    # tension_premise.md 6.4 (records; immutable defaults: class attributes for pickles)
+    candidate_sources: tuple[str, ...] = ()
+    """Per candidate, the term that set ``M_j`` (:class:`LockStartSource` value)."""
+    model_bound_Pa: float = math.nan
+    """④ ``max_j [M_j + R_ub (p_h,j - p_h)^+]`` of the last read, before the ⑤ reading bound
+    (NaN = none yet)."""
+    model_bound_source: str | None = None
+    """Source of the ``M_j`` behind :attr:`model_bound_Pa`."""
 
     def summary(self, leg: int) -> dict[str, Any]:
         """Meta row of the stretch (10.4 ⑦); ``extend_bound_Pa`` only with the ③ option."""
@@ -2300,6 +2319,27 @@ class TwoPressureMonitor:
             return None
         return np.array([self._extend_tracker.bound_Pa(leg) for leg in range(LEG_COUNT)])
 
+    def locked_model_bound_Pa(self) -> NDArray[np.float64]:
+        """④ model bound ``max_j [M_j + R_ub (p_h,j - p_h)^+]`` per leg of the last read,
+        before the ⑤ reading bound joins (``tension_premise.md`` 6.4); NaN where no lock
+        stretch is open. Read only."""
+        stretches = self._lock_stretches or []
+        values = np.full(LEG_COUNT, np.nan)
+        for leg, stretch in enumerate(stretches):
+            if stretch.is_open:
+                values[leg] = stretch.model_bound_Pa
+        return values
+
+    def locked_model_bound_sources(self) -> list[str | None]:
+        """:class:`LockStartSource` value of the ``M_j`` behind each leg's ④ bound (None where
+        no lock stretch is open)."""
+        stretches = self._lock_stretches or []
+        sources: list[str | None] = [None] * LEG_COUNT
+        for leg, stretch in enumerate(stretches):
+            if stretch.is_open:
+                sources[leg] = stretch.model_bound_source
+        return sources
+
     def _extend_start_meta(self) -> dict[str, Any]:
         if not self._uses_extend_bound:
             return {}
@@ -2504,6 +2544,9 @@ class TwoPressureMonitor:
                                 + self.period_s)
         stretch.previous_moving_max_Pa = max(recent, default=-math.inf)
         stretch.candidates = []
+        stretch.candidate_sources = ()
+        stretch.model_bound_Pa = math.nan
+        stretch.model_bound_source = None
         stretch.stroke_window_max_m = -math.inf
         stretch.valid_rod_Pa = None
         stretch.valid_head_max_Pa = -math.inf
@@ -2521,6 +2564,8 @@ class TwoPressureMonitor:
             return
         if watch.lock_head_Pa is not None:
             stretch.candidates.append((watch.lock_rod_estimate_Pa, watch.lock_head_Pa))
+            stretch.candidate_sources = (*stretch.candidate_sources,
+                                         LockStartSource.PREVIOUS_MOVING.value)
 
     def _close_lock_stretch(self, leg, stretch) -> None:
         if not stretch.is_open:
@@ -2532,11 +2577,23 @@ class TwoPressureMonitor:
             self._fallback_lock_log.append(stretch.summary(leg))
 
     def _add_lock_candidate(self, leg, stretch, head_Pa, stroke_m) -> None:
-        start_Pa = max(self._lock_start_model_Pa(leg, stretch.last_sign, head_Pa),
-                       stretch.previous_moving_max_Pa)
+        model_Pa = self._lock_start_model_Pa(leg, stretch.last_sign, head_Pa)
+        start_Pa = max(model_Pa, stretch.previous_moving_max_Pa)
         stretch.candidates.append((start_Pa, head_Pa))
+        stretch.candidate_sources = (*stretch.candidate_sources,
+                                     self._lock_start_source(leg, stretch, head_Pa, model_Pa))
         if math.isfinite(stroke_m):
             stretch.stroke_window_max_m = max(stretch.stroke_window_max_m, stroke_m)
+
+    def _lock_start_source(self, leg, stretch, head_Pa, model_Pa) -> str:
+        """Record only (``tension_premise.md`` 6.4): the term behind ``M_j``."""
+        if stretch.previous_moving_max_Pa > model_Pa:
+            return LockStartSource.PREVIOUS_MOVING.value
+        if (self._uses_extend_bound and stretch.last_sign > 0.0
+                and self._extend_bound_Pa(leg) > self._extend_rod_estimate_Pa(
+                    head_Pa, self.settings.locked_start_extend_Pa)):
+            return LockStartSource.EXTEND_BOUND.value
+        return LockStartSource.PILOT_MODEL.value
 
     def _track_valid_reading(self, leg, stretch, t_s, head_Pa, rod_Pa, stroke_m) -> None:
         """⑤: ``k_v`` is the newest sample with the rod sensor not fallen back (after D1-D3 of
@@ -2554,10 +2611,16 @@ class TwoPressureMonitor:
         """④ model bound and ⑤ reading bound, the larger one; the meta fields follow it."""
         ratio = self._level_ratio(leg, self._ratio_bound(leg, stretch.stroke_window_max_m))
         best_Pa, best_start_Pa, best_head_Pa = -math.inf, math.nan, math.nan
-        for start_Pa, candidate_head_Pa in stretch.candidates:
+        sources = stretch.candidate_sources
+        best_source = None
+        for index, (start_Pa, candidate_head_Pa) in enumerate(stretch.candidates):
             bound_Pa = start_Pa + ratio * max(candidate_head_Pa - head_Pa, 0.0)
             if bound_Pa > best_Pa:
                 best_Pa, best_start_Pa, best_head_Pa = bound_Pa, start_Pa, candidate_head_Pa
+                best_source = sources[index] if index < len(sources) else None
+        # record only (tension_premise.md 6.4): ④ before the ⑤ reading bound joins
+        stretch.model_bound_Pa = best_Pa if math.isfinite(best_Pa) else math.nan
+        stretch.model_bound_source = best_source
         stretch.ratio_bound = ratio
         stretch.ratio_stroke_m = stretch.stroke_window_max_m
         stretch.estimate_source = EstimateSource.MODEL

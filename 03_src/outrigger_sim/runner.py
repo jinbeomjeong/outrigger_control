@@ -283,8 +283,12 @@ def _check_extend_bound(engine: Any, controller: Any, t_s: float) -> None:
         return
     source = _extend_bound_source(controller)
     bound_Pa = None if source is None else source.extend_bound_Pa()
-    if bound_Pa is not None:
-        check(float(t_s), bound_Pa)
+    if bound_Pa is None:
+        return
+    model_bound = getattr(source, "locked_model_bound_Pa", None)
+    model_sources = getattr(source, "locked_model_bound_sources", None)
+    check(float(t_s), bound_Pa, None if model_bound is None else model_bound(),
+          None if model_sources is None else model_sources())
 
 
 def runner_meta(

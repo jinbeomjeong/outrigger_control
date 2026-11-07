@@ -647,17 +647,21 @@ class L2bForceActuator:
         self._tension_truth.add(is_extending, target_Pa, float(dt_s), float(t_s),
                                 oil.rod_pressure_Pa)
 
-    def check_extend_bound(self, t_s: float, bound_Pa: ArrayLike) -> None:
-        """``tension_premise.md`` 5.5: the controller's ③ bound of the read at ``t_s`` against
-        the rod-side machine (its tracked pressure while moving, its locked pressure); record
-        only, kept with M2 on (``m2_release_record``)."""
+    def check_extend_bound(self, t_s: float, bound_Pa: ArrayLike,
+                           locked_model_bound_Pa: ArrayLike | None = None,
+                           locked_sources: list[str | None] | None = None) -> None:
+        """``tension_premise.md`` 5.5 / 6.4: the controller's ③ bound (and its locked model
+        bound ④) of the read at ``t_s`` against the rod-side machine (its tracked pressure
+        while moving, its locked pressure); record only, kept with M2 on
+        (``m2_release_record``)."""
         oil = self._oil
         if self._rod_release is None or oil is None or not oil.armed:
             return
         if self._extend_bound_check is None:
-            self._extend_bound_check = ExtendBoundCheck()
+            self._extend_bound_check = ExtendBoundCheck(oil.annulus_area_m2)
         self._extend_bound_check.add(t_s, bound_Pa, oil.rod_pressure_Pa,
-                                     extend_bound_states(oil.locked, oil.last_directions))
+                                     extend_bound_states(oil.locked, oil.last_directions),
+                                     locked_model_bound_Pa, locked_sources)
 
     def m2_state(self) -> tuple[NDArray[np.float64], NDArray[np.float64]] | None:
         """v5 stage 3 R-5: (``p_hat`` of the last hook, accumulated shift ``s_ref`` sign) per

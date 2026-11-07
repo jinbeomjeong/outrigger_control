@@ -255,24 +255,40 @@ def test_tension_truth_active_part_needs_the_target_above_the_plant() -> None:
 
 
 def test_extend_bound_check_counts_breach_margin_and_retract_apart() -> None:
-    """5.5 #2-3: the judged legs (moving, locked after an extension), the retracting leg apart,
-    a leg locked after a retraction not compared; the smallest gap with its time and state."""
-    check = ExtendBoundCheck()
+    """5.5 / 6.4: moving legs against ``p_hat + delta_m``; a leg locked after an extension
+    against the monitor's ④ (0.6 kN tolerance, source of the smallest gap; unpaired without
+    ④), with ``p_hat + delta_m`` as a diagnostic; the retracting leg apart; a leg locked after
+    a retraction not compared."""
+    check = ExtendBoundCheck(ANNULUS_M2)
     states = extend_bound_states([False, True, False, True], [1.0, 1.0, -1.0, -1.0])
     assert states == [ExtendBoundState.EXTEND_MOVING, ExtendBoundState.EXTEND_LOCKED,
                       ExtendBoundState.RETRACT, None]
-    check.add(1.0, np.full(4, 5.5e5), np.array([5.0e5, 5.2e5, 6.0e5, 9.0e5]), states)
-    check.add(2.0, np.full(4, 5.5e5), np.array([5.6e5, 1.0e5, 1.0e5, 9.0e5]), states)
+    # FR locked: plant 17 bar, ③ 5.5 bar (diagnostic breach), ④ 18 bar then 16.5 bar
+    model = np.array([np.nan, 18.0e5, np.nan, np.nan])
+    sources = [None, "pilot_model", None, None]
+    check.add(1.0, np.full(4, 5.5e5), np.array([5.0e5, 17.0e5, 6.0e5, 9.0e5]), states,
+              model, sources)
+    model[1] = 16.5e5
+    check.add(2.0, np.full(4, 5.5e5), np.array([5.6e5, 17.0e5, 1.0e5, 9.0e5]), states,
+              model, ["x", "extend_bound", None, None])
+    check.add(3.0, np.full(4, 5.5e5), np.array([5.0e5, 17.0e5, 1.0e5, 9.0e5]), states)
     record = check.record()
-    assert record["reads"] == [2, 2, 0, 0]
+    assert record["reads"] == [3, 0, 0, 0]
     assert record["breach_reads"] == [1, 0, 0, 0]
-    assert record["locked_breach_reads"] == [0, 0, 0, 0]
-    assert record["margin_used_reads"] == [1, 1, 0, 0]
-    assert record["min_gap_bar"] == pytest.approx([-0.1, 0.3, None, None])
-    assert record["min_gap_t_s"] == [2.0, 1.0, None, None]
-    assert record["min_gap_state"] == ["ext_moving", "ext_locked", None, None]
+    assert record["margin_used_reads"] == [1, 0, 0, 0]
+    assert record["min_gap_bar"] == pytest.approx([-0.1, None, None, None])
+    assert record["min_gap_t_s"] == [2.0, None, None, None]
     assert record["first_breach_t_s"] == [2.0, None, None, None]
-    assert record["retract_reads"] == [0, 0, 2, 0]
+    assert record["locked_reads"] == [0, 2, 0, 0]
+    assert record["locked_unpaired_reads"] == [0, 1, 0, 0]
+    assert record["locked_breach_reads"] == [0, 1, 0, 0]
+    assert record["locked_breach_over_tol_reads"] == [0, 0, 0, 0]  # 0.5 < 1.59 bar
+    assert record["locked_min_gap_bar"] == pytest.approx([None, -0.5, None, None])
+    assert record["locked_min_gap_t_s"] == [None, 2.0, None, None]
+    assert record["locked_bound_source"] == [None, "extend_bound", None, None]
+    assert record["locked_tolerance_bar"][1] == pytest.approx(600.0 / ANNULUS_M2[1] / BAR)
+    assert record["locked_vs_extend_bound_reads"] == [0, 3, 0, 0]
+    assert record["retract_reads"] == [0, 0, 3, 0]
     assert record["retract_breach_reads"] == [0, 0, 1, 0]
 
 

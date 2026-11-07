@@ -650,6 +650,10 @@ def summary(rows: list[dict]) -> dict:
             "extend_bound_margin_used_reads": sum(
                 sum(row["extend_bound_check"]["margin_used_reads"]) for row in judged
                 if row.get("extend_bound_check")),
+            # locked legs: judged by T4h-P3 (T4 here); the online ④ check is a FLAG (6.3)
+            "extend_bound_locked_over_tol_reads": sum(
+                sum(row["extend_bound_check"].get("locked_breach_over_tol_reads", []))
+                for row in judged if row.get("extend_bound_check")),
             "anchor_note": "앵커 위험 미관측" if risk == 0 else "앵커 위험 관측"}
 
 

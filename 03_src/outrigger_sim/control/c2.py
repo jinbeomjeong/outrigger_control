@@ -4267,6 +4267,15 @@ class C2Controller:
         plant adapters compare it with the plant (``tension_premise.md`` 5.5)."""
         return self._pressures.extend_bound_Pa()
 
+    def locked_model_bound_Pa(self) -> NDArray[np.float64]:
+        """The monitor's ④ locked model bound per leg (NaN without an open lock stretch; read
+        only, ``tension_premise.md`` 6.4)."""
+        return self._pressures.locked_model_bound_Pa()
+
+    def locked_model_bound_sources(self) -> list[str | None]:
+        """Source of the ``M_j`` behind each leg's ④ bound (read only)."""
+        return self._pressures.locked_model_bound_sources()
+
     def meta(self) -> dict[str, Any]:
         """Name, settings and current friction band (JSON-serialisable, new dict per call)."""
         geometry = self.geometry

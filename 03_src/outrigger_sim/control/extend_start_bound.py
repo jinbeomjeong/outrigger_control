@@ -27,11 +27,17 @@ from rest counts from the first sub-step, and the end value over the whole sub-s
 
 Records kept by the plant adapters (harness ``harness_hydraulics``, L2b actuator; record only):
 
-* ``hydraulics_record.extend_bound_check`` (:class:`ExtendBoundCheck`, the judged record,
-  ``tension_premise.md`` 5.4): per leg ``reads``, ``breach_reads``, ``margin_used_reads``,
-  ``min_gap_bar``, ``min_gap_t_s``, ``min_gap_state``, ``first_breach_t_s``,
-  ``retract_reads``, ``retract_breach_reads``; ``null`` = option off. Rule of a ③-on run:
-  ``sum(breach_reads) == 0`` passes, ``sum(margin_used_reads) > 0`` is a FLAG.
+* ``hydraulics_record.extend_bound_check`` (:class:`ExtendBoundCheck`, ``tension_premise.md``
+  5.4, 6.3): per leg, moving legs ``reads``, ``breach_reads``, ``margin_used_reads``,
+  ``min_gap_bar``, ``min_gap_t_s``, ``first_breach_t_s``; legs locked after an extension
+  against the monitor's ④ ``locked_reads``, ``locked_unpaired_reads``,
+  ``locked_breach_reads``, ``locked_breach_over_tol_reads``, ``locked_min_gap_bar``,
+  ``locked_min_gap_t_s``, ``locked_bound_source``, ``locked_tolerance_bar`` and the
+  diagnostic ``locked_vs_extend_bound_reads``; ``retract_reads``, ``retract_breach_reads``;
+  ``null`` = option off or no rod reading. Rule of a ③-on run (:data:`EXTEND_BOUND_CHECK_RULE`):
+  moving ``sum(breach_reads) == 0`` passes and margin use is a FLAG; locked legs are judged
+  by the T4h-P3 replay (``over_0p6kN == 0``), ``locked_breach_over_tol_reads > 0`` is a
+  cross-check FLAG.
 * ``hydraulics_record.tension_truth`` (:class:`TensionTruthCounter`): premise ① diagnostic
   (``substeps``, ``substeps_over_margin``, ``active_substeps``, ``min_p_tr_minus_p_star_bar``).
 
@@ -463,11 +469,15 @@ def _substeps(seconds: NDArray[np.float64]) -> list[int]:
 
 
 EXTEND_BOUND_CHECK_RULE = (
-    "③ judged here (tension_premise.md 5.4): at every controller read, plant rod pressure p_tr "
-    "against the bound p_hat + delta_m of that read, on moving legs and on legs locked after an "
-    "extension; breach_reads = p_tr > p_hat + delta_m (judged: the sum must be 0), "
-    "margin_used_reads = p_tr > p_hat (FLAG), both beyond a 1 Pa rounding allowance; "
-    "retracting legs are counted apart (premise ④); null record = option off")
+    "③-on rows (tension_premise.md 5.4, 6.3), plant rod pressure p_tr at every controller "
+    "read. ext_moving (judged): breach_reads = p_tr > p_hat + delta_m, the sum must be 0; "
+    "margin_used_reads = p_tr > p_hat is a FLAG. ext_locked: judged by the T4h-P3 replay "
+    "(t4h_replay --extend-start tracked_bound, over_0p6kN == 0); here a cross-check FLAG "
+    "against the monitor's model bound ④ (before the reading bound ⑤): locked_breach_reads = "
+    "p_tr > ④, locked_breach_over_tol_reads = p_tr > ④ + 0.6 kN / A_ann (the T4h tolerance; > 0 "
+    "is a FLAG, a T4h-P3 disagreement is a replay mismatch); locked_vs_extend_bound_reads = "
+    "p_tr > p_hat + delta_m on locked legs, diagnostic only. 1 Pa rounding allowance; "
+    "retracting legs apart (premise ④); null record = option off or no rod reading")
 
 
 BOUND_CHECK_TOLERANCE_PA = 1.0
@@ -484,31 +494,53 @@ class ExtendBoundState(StrEnum):
     RETRACT = "retract"
 
 
-class ExtendBoundCheck:
-    """The ③ bound against the plant at the controller reads (``tension_premise.md`` 5.5),
-    kept by the plant adapters as ``hydraulics_record.extend_bound_check``. Records only.
+LOCKED_CHECK_TOLERANCE_N = 600.0
+"""The T4h tolerance (criteria 9: lower bound <= truth + 0.6 kN), as a rod pressure
+``0.6 kN / A_ann`` in ``locked_breach_over_tol_reads``."""
 
-    Judged legs: moving while extending (``ext_moving``) and locked after an extension
-    (``ext_locked``). A retracting leg (``retract``, the bound is the retract floor there,
-    premise ④) has its own counts. A leg locked after a retraction is not compared.
+
+class ExtendBoundCheck:
+    """The ③ bound against the plant at the controller reads (``tension_premise.md`` 5.5,
+    6.4), kept by the plant adapters as ``hydraulics_record.extend_bound_check``. Records only;
+    the judgement of the keys is :data:`EXTEND_BOUND_CHECK_RULE`.
+
+    * ``ext_moving`` (moving while extending): ``p_tr`` against ``p_hat + delta_m``
+      (``reads``, ``breach_reads``, ``margin_used_reads``, ``min_gap_*``,
+      ``first_breach_t_s``).
+    * ``ext_locked`` (locked after an extension): ``p_tr`` against the monitor's model bound ④
+      (``locked_*``; its locked law follows the load after the lock, which ``p_hat`` does not),
+      and against ``p_hat + delta_m`` as a diagnostic (``locked_vs_extend_bound_reads``).
+    * ``retract``: apart (premise ④). A leg locked after a retraction is not compared.
+
+    Args:
+        annulus_area_m2: ``A_ann`` per leg (the 0.6 kN tolerance as a pressure).
     """
 
-    def __init__(self) -> None:
+    def __init__(self, annulus_area_m2: ArrayLike) -> None:
+        annulus = np.asarray(annulus_area_m2, dtype=float).reshape(LEG_COUNT)
+        self.locked_tolerance_Pa = LOCKED_CHECK_TOLERANCE_N / annulus
         self.reads = np.zeros(LEG_COUNT, dtype=np.int64)
         self.breach_reads = np.zeros(LEG_COUNT, dtype=np.int64)
-        self.locked_breach_reads = np.zeros(LEG_COUNT, dtype=np.int64)
-        """The part of ``breach_reads`` on legs locked after an extension (their rod pressure
-        follows the locked law after the lock, not the relief the bound tracks)."""
         self.margin_used_reads = np.zeros(LEG_COUNT, dtype=np.int64)
-        self.retract_reads = np.zeros(LEG_COUNT, dtype=np.int64)
-        self.retract_breach_reads = np.zeros(LEG_COUNT, dtype=np.int64)
         self.min_gap_Pa = np.full(LEG_COUNT, np.inf)
         self.min_gap_t_s: list[float | None] = [None] * LEG_COUNT
-        self.min_gap_state: list[str | None] = [None] * LEG_COUNT
         self.first_breach_t_s: list[float | None] = [None] * LEG_COUNT
+        self.locked_reads = np.zeros(LEG_COUNT, dtype=np.int64)
+        self.locked_unpaired_reads = np.zeros(LEG_COUNT, dtype=np.int64)
+        """Locked plant leg without an open monitor lock stretch (no ④ to compare)."""
+        self.locked_breach_reads = np.zeros(LEG_COUNT, dtype=np.int64)
+        self.locked_breach_over_tol_reads = np.zeros(LEG_COUNT, dtype=np.int64)
+        self.locked_vs_extend_bound_reads = np.zeros(LEG_COUNT, dtype=np.int64)
+        self.locked_min_gap_Pa = np.full(LEG_COUNT, np.inf)
+        self.locked_min_gap_t_s: list[float | None] = [None] * LEG_COUNT
+        self.locked_bound_source: list[str | None] = [None] * LEG_COUNT
+        self.retract_reads = np.zeros(LEG_COUNT, dtype=np.int64)
+        self.retract_breach_reads = np.zeros(LEG_COUNT, dtype=np.int64)
 
     def add(self, t_s: float, bound_Pa: ArrayLike, plant_rod_Pa: ArrayLike,
-            states: list[ExtendBoundState | None]) -> None:
+            states: list[ExtendBoundState | None],
+            locked_model_bound_Pa: ArrayLike | None = None,
+            locked_sources: list[str | None] | None = None) -> None:
         """One controller read.
 
         Args:
@@ -516,9 +548,15 @@ class ExtendBoundCheck:
             bound_Pa: The controller's ``p_hat + delta_m`` per leg.
             plant_rod_Pa: Plant rod pressure ``p_tr`` per leg at the read.
             states: Leg state per leg; None = not compared (locked after a retraction).
+            locked_model_bound_Pa: The monitor's ④ per leg (NaN = no open lock stretch);
+                None = not given (locked legs then count as unpaired).
+            locked_sources: The ``M_j`` source behind each ④.
         """
         bound = np.asarray(bound_Pa, float)
         plant = np.asarray(plant_rod_Pa, float)
+        model = (np.full(LEG_COUNT, np.nan) if locked_model_bound_Pa is None
+                 else np.asarray(locked_model_bound_Pa, float))
+        sources = locked_sources or [None] * LEG_COUNT
         for leg, state in enumerate(states):
             if state is None or not math.isfinite(plant[leg]):
                 continue
@@ -527,32 +565,57 @@ class ExtendBoundCheck:
             if state is ExtendBoundState.RETRACT:
                 self.retract_reads[leg] += 1
                 self.retract_breach_reads[leg] += int(is_breach)
-                continue
-            self.reads[leg] += 1
-            self.breach_reads[leg] += int(is_breach)
-            if state is ExtendBoundState.EXTEND_LOCKED:
-                self.locked_breach_reads[leg] += int(is_breach)
-            self.margin_used_reads[leg] += int(gap_Pa < BOUND_MARGIN_PA - BOUND_CHECK_TOLERANCE_PA)
-            if is_breach and self.first_breach_t_s[leg] is None:
-                self.first_breach_t_s[leg] = round(float(t_s), 6)
-            if gap_Pa < self.min_gap_Pa[leg]:
-                self.min_gap_Pa[leg] = gap_Pa
-                self.min_gap_t_s[leg] = round(float(t_s), 6)
-                self.min_gap_state[leg] = state.value
+            elif state is ExtendBoundState.EXTEND_LOCKED:
+                self.locked_vs_extend_bound_reads[leg] += int(is_breach)
+                self._add_locked(leg, t_s, float(model[leg]) - float(plant[leg]), sources[leg])
+            else:
+                self._add_moving(leg, t_s, gap_Pa, is_breach)
+
+    def _add_moving(self, leg: int, t_s: float, gap_Pa: float, is_breach: bool) -> None:
+        self.reads[leg] += 1
+        self.breach_reads[leg] += int(is_breach)
+        self.margin_used_reads[leg] += int(gap_Pa < BOUND_MARGIN_PA - BOUND_CHECK_TOLERANCE_PA)
+        if is_breach and self.first_breach_t_s[leg] is None:
+            self.first_breach_t_s[leg] = round(float(t_s), 6)
+        if gap_Pa < self.min_gap_Pa[leg]:
+            self.min_gap_Pa[leg] = gap_Pa
+            self.min_gap_t_s[leg] = round(float(t_s), 6)
+
+    def _add_locked(self, leg: int, t_s: float, gap_Pa: float, source: str | None) -> None:
+        if not math.isfinite(gap_Pa):
+            self.locked_unpaired_reads[leg] += 1
+            return
+        self.locked_reads[leg] += 1
+        self.locked_breach_reads[leg] += int(gap_Pa < -BOUND_CHECK_TOLERANCE_PA)
+        self.locked_breach_over_tol_reads[leg] += int(gap_Pa < -self.locked_tolerance_Pa[leg])
+        if gap_Pa < self.locked_min_gap_Pa[leg]:
+            self.locked_min_gap_Pa[leg] = gap_Pa
+            self.locked_min_gap_t_s[leg] = round(float(t_s), 6)
+            self.locked_bound_source[leg] = source
 
     def record(self) -> dict[str, object]:
         return {"rule": EXTEND_BOUND_CHECK_RULE,
                 "reads": self.reads.tolist(),
                 "breach_reads": self.breach_reads.tolist(),
-                "locked_breach_reads": self.locked_breach_reads.tolist(),
                 "margin_used_reads": self.margin_used_reads.tolist(),
-                "min_gap_bar": [float(value) / BAR_PA if math.isfinite(value) else None
-                                for value in self.min_gap_Pa],
+                "min_gap_bar": _bar_or_none(self.min_gap_Pa),
                 "min_gap_t_s": list(self.min_gap_t_s),
-                "min_gap_state": list(self.min_gap_state),
                 "first_breach_t_s": list(self.first_breach_t_s),
+                "locked_reads": self.locked_reads.tolist(),
+                "locked_unpaired_reads": self.locked_unpaired_reads.tolist(),
+                "locked_breach_reads": self.locked_breach_reads.tolist(),
+                "locked_breach_over_tol_reads": self.locked_breach_over_tol_reads.tolist(),
+                "locked_min_gap_bar": _bar_or_none(self.locked_min_gap_Pa),
+                "locked_min_gap_t_s": list(self.locked_min_gap_t_s),
+                "locked_bound_source": list(self.locked_bound_source),
+                "locked_tolerance_bar": (self.locked_tolerance_Pa / BAR_PA).tolist(),
+                "locked_vs_extend_bound_reads": self.locked_vs_extend_bound_reads.tolist(),
                 "retract_reads": self.retract_reads.tolist(),
                 "retract_breach_reads": self.retract_breach_reads.tolist()}
+
+
+def _bar_or_none(values_Pa: NDArray[np.float64]) -> list[float | None]:
+    return [float(value) / BAR_PA if math.isfinite(value) else None for value in values_Pa]
 
 
 def extend_bound_states(is_locked: ArrayLike, last_direction: ArrayLike

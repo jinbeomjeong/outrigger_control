@@ -229,19 +229,37 @@ def test_extend_bound_accessor_is_none_off_and_the_tracker_bound_on() -> None:
     assert on.extend_bound_Pa().tolist() == expected
 
 
+def test_locked_model_bound_is_the_column_model_part_with_its_source() -> None:
+    """6.4 #1: ④ per leg of an open lock stretch (NaN while moving), equal to the estimate of
+    a fallback leg (no reading bound ⑤ there); the pilot extend model sets ``M_j``."""
+    monitor = _monitor(_settings())
+    _run(monitor, [0.25 * V_MAX] * 2)
+    assert np.isnan(monitor.locked_model_bound_Pa()[FL])
+    assert monitor.locked_model_bound_sources()[FL] is None
+    _run(monitor, [0.0] * 3, t0_s=0.2)
+    model_Pa = monitor.locked_model_bound_Pa()
+    assert model_Pa[FL] == monitor._legs[FL].rod_estimate_Pa
+    assert model_Pa[FL] >= CONSTANT_START_PA
+    assert monitor.locked_model_bound_sources()[FL] == "pilot_model"
+
+
 def test_runner_hands_the_bound_through_controller_wrappers() -> None:
     """5.5 #2 (Chrono): the runner finds the bound through ``inner`` / ``ctrl`` wrappers and
     calls the engine check only when the bound is not None."""
     from outrigger_sim import runner
 
     calls = []
-    engine = types.SimpleNamespace(check_extend_bound=lambda t, bound: calls.append((t, bound)))
-    c2_like = types.SimpleNamespace(extend_bound_Pa=lambda: np.full(4, 5.5e5))
+    engine = types.SimpleNamespace(
+        check_extend_bound=lambda t, bound, model, sources: calls.append((t, model, sources)))
+    c2_like = types.SimpleNamespace(extend_bound_Pa=lambda: np.full(4, 5.5e5),
+                                    locked_model_bound_Pa=lambda: np.full(4, 13.0e5),
+                                    locked_model_bound_sources=lambda: ["pilot_model"] * 4)
     wrapper = types.SimpleNamespace(inner=types.SimpleNamespace(ctrl=c2_like))
     runner._check_extend_bound(engine, wrapper, 1.5)
     runner._check_extend_bound(engine, types.SimpleNamespace(extend_bound_Pa=lambda: None), 1.6)
     runner._check_extend_bound(types.SimpleNamespace(), wrapper, 1.7)
     assert len(calls) == 1 and calls[0][0] == 1.5
+    assert calls[0][1].tolist() == [13.0e5] * 4 and calls[0][2] == ["pilot_model"] * 4
 
 
 def test_t_p3_1_meta_carries_the_bound_revision() -> None:
