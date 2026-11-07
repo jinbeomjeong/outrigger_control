@@ -15,9 +15,12 @@ import numpy as np
 import pytest
 
 from outrigger_sim.control.extend_start_bound import (
+    EXTEND_START_REVISION,
     BoundGeometry,
     ExtendStartBound,
     ExtendStartTracker,
+    PremiseRecord,
+    check_extend_start_meta,
 )
 from outrigger_sim.hydraulics.rod_release import (
     METER_OUT_RATIO,
@@ -48,7 +51,7 @@ def _tracker(start_Pa=RETRACT_ANCHOR_PA, bound: ExtendStartBound | None = None
 
 
 def _advance(tracker: ExtendStartTracker, command_m_s, stroke_m) -> None:
-    tracker.advance(command_m_s, stroke_m, np.full(4, FORCE_N), RETRACT_ANCHOR_PA, PERIOD_S)
+    tracker.advance(command_m_s, stroke_m, RETRACT_ANCHOR_PA, PERIOD_S)
 
 
 # --- T-P3-2 ---------------------------------------------------------------------------------
@@ -132,7 +135,7 @@ def test_negative_valve_under_an_extend_command_counts_no_relief() -> None:
     tracker = _tracker()
     tracker.valve_m_s = np.array([-0.5 * MAX_SPEED_M_S, 0.0, 0.0, 0.0])
     tracker.advance(np.array([0.01 * MAX_SPEED_M_S, 0.0, 0.0, 0.0]), np.full(4, 0.3),
-                    np.full(4, FORCE_N), RETRACT_ANCHOR_PA, 1.0e-3)
+                    RETRACT_ANCHOR_PA, 1.0e-3)
     assert tracker.valve_m_s[0] < 0.0
     assert tracker.pressure_Pa[0] == RETRACT_ANCHOR_PA[0]
 
@@ -165,13 +168,39 @@ def test_retract_period_raises_the_bound_to_the_retract_floor() -> None:
     assert tracker.pressure_Pa[1] == 6.0 * BAR
 
 
-def test_tension_substeps_count_a_pull_beyond_the_back_pressure() -> None:
-    """Review item ①: an extending leg pulled beyond ``p_bB A_ann`` (FL 1.88 kN) is counted."""
+def test_saturation_early_in_a_falling_sub_step_counts_no_relief() -> None:
+    """v2 review (spec 3 (ii)): four valves fall through the ``eta_v Q_pump`` demand within one
+    sub-step. The end values alone are below it; the start values are above it, so the sub-step
+    is saturated and no relief is counted."""
+    bound = ExtendStartBound()
+    demand_per_speed = 2.0 * HEAD_AREA_M2[0] + 2.0 * HEAD_AREA_M2[2]
+    threshold_m_s = bound.volumetric_efficiency * bound.pump_flow_m3_s / demand_per_speed
+    command_m_s = 0.5 * MAX_SPEED_M_S
+    keep = math.exp(-bound.substep_s / VALVE_TAU_S)
+    end_m_s = 0.999 * threshold_m_s
+    start_m_s = command_m_s + (end_m_s - command_m_s) / keep
+    assert start_m_s > threshold_m_s > end_m_s
     tracker = _tracker()
-    force = np.array([-1.9e3, -1.8e3, FORCE_N, FORCE_N])
-    command = np.array([0.1, 0.1, 0.0, 0.0]) * MAX_SPEED_M_S
-    tracker.advance(command, np.full(4, 0.3), force, RETRACT_ANCHOR_PA, PERIOD_S)
-    assert tracker.tension_substeps.tolist() == [100, 0, 0, 0]
+    tracker.valve_m_s = np.full(4, start_m_s)
+    tracker.advance(np.full(4, command_m_s), np.full(4, 0.3), RETRACT_ANCHOR_PA, bound.substep_s)
+    assert tracker.valve_m_s[0] == pytest.approx(end_m_s, rel=1e-12)
+    assert tracker.saturated_substeps == 1
+    assert np.array_equal(tracker.pressure_Pa, np.array(RETRACT_ANCHOR_PA))
+
+
+def test_premise_record_counts_a_pull_beyond_the_back_pressure() -> None:
+    """Review item ①: an extending leg pulled beyond ``p_bB A_ann`` (FL 1.88 kN) is counted
+    per 1 ms sub-step of the period; a retracting or still leg is not."""
+    record = PremiseRecord(ANNULUS_M2)
+    force = np.array([-1.9e3, -1.8e3, -1.9e3, FORCE_N])
+    command = np.array([0.1, 0.1, -0.1, 0.1]) * MAX_SPEED_M_S
+    record.count_tension(command, force, PERIOD_S)
+    record.add_d2_start(2, 0.2e-3, 1.0e-3)
+    record.add_d2_start(2, None, 1.0e-3)
+    meta = record.to_meta()
+    assert meta["tension_substeps"] == [100, 0, 0, 0]
+    assert meta["tension_threshold_N"][0] == pytest.approx(1884.96, abs=0.01)
+    assert meta["d2_violation_start_ratio"] == [[], [], [pytest.approx(0.2), None], []]
 
 
 def test_bound_parameters_can_be_replaced() -> None:
@@ -181,6 +210,23 @@ def test_bound_parameters_can_be_replaced() -> None:
         _tracker().compliance_m3_Pa(0, 0.3) / 1.40, rel=1e-12)
     with pytest.raises(ValueError):
         ExtendStartBound(speed_factor=1.5)
+
+
+def test_revision_is_in_the_meta_and_v1_meta_is_refused() -> None:
+    """v2 review: the bound meta carries ``revision`` 2; a ``tracked_bound`` meta without it
+    (v1) or with another revision is refused; a ``constant`` meta is not checked."""
+    meta = ExtendStartBound().to_meta()
+    assert meta["revision"] == EXTEND_START_REVISION == 2
+    check_extend_start_meta({"extend_start_rule": "tracked_bound", "extend_start_bound": meta})
+    check_extend_start_meta({"locked_ratio_rule": "column"})
+    v1 = {key: value for key, value in meta.items() if key != "revision"}
+    with pytest.raises(ValueError, match="v1"):
+        check_extend_start_meta({"extend_start_rule": "tracked_bound", "extend_start_bound": v1})
+    with pytest.raises(ValueError, match="revision 3"):
+        check_extend_start_meta({"extend_start_rule": "tracked_bound",
+                                 "extend_start_bound": {**meta, "revision": 3}})
+    with pytest.raises(ValueError, match="revision"):
+        ExtendStartBound(revision=1)
 
 
 # --- T-P3-3 ---------------------------------------------------------------------------------
@@ -322,6 +368,88 @@ def _substep_bounds(tracker, command, stroke, floor) -> np.ndarray:
     bound = tracker.bound
     values = np.empty((100, 4))
     for substep in range(100):
-        tracker.advance(command, stroke, np.full(4, FORCE_N), floor, bound.substep_s)
+        tracker.advance(command, stroke, floor, bound.substep_s)
         values[substep] = tracker.pressure_Pa
     return values
+
+
+# --- T-P3-3, priority saturation with falling valves (v2 review, spec 3 (ii)) ---------------
+
+SATURATION_SEQUENCES = 300
+SATURATION_PERIODS = 6
+PLANT_VOLUMETRIC_EFFICIENCIES = (0.85, 0.95)
+"""The plant's ``eta_v`` (VB 0.85, nominal 0.95); the bound uses 0.85."""
+LEGS = np.arange(4)
+
+
+def _saturation_sequences(rng: np.random.Generator) -> dict[str, np.ndarray]:
+    """Four legs extending at 0.85-1.0 ``v_max`` (demand above ``eta_v Q_pump``), then falling
+    commands of 0.2-0.95 ``v_max`` per period: the valves cross the saturation demand inside a
+    sub-step."""
+    count = SATURATION_SEQUENCES
+    commands = rng.uniform(0.2, 0.95, size=(count, SATURATION_PERIODS, 4)) * MAX_SPEED_M_S
+    return {
+        "start_valve": rng.uniform(0.85, 1.0, size=(count, 4)) * MAX_SPEED_M_S,
+        "commands": commands,
+        "eta": rng.choice(PLANT_VOLUMETRIC_EFFICIENCIES, size=(count, 1)),
+        "beta": rng.choice(PLANT_BULK_MODULI_PA, size=(count, 1)),
+        "head_dead": rng.choice(PLANT_HEAD_DEAD_M, size=(count, 1)),
+        "rod_dead": rng.choice(PLANT_ROD_DEAD_M, size=(count, 1)),
+        "hose": rng.choice(PLANT_HOSE_FACTORS, size=(count, 1)),
+        "stroke": rng.uniform(0.02, 0.6, size=(count, 4)),
+    }
+
+
+def _saturated_plant_at_substeps(sequences, step_s: float) -> tuple[np.ndarray, np.ndarray]:
+    """Plant rod pressure of the four legs at every 1 ms boundary and the strokes at every
+    period start. While the plant's demand ``sum A_h u_v`` exceeds its ``eta_v Q_pump`` every
+    leg delivers 0 (the worst flow share: no relief)."""
+    bound = ExtendStartBound()
+    count = SATURATION_SEQUENCES
+    pressure = np.tile(np.asarray(RETRACT_ANCHOR_PA), (count, 1))
+    valve = sequences["start_valve"].copy()
+    stroke = sequences["stroke"].copy()
+    supply_m3_s = sequences["eta"][:, 0] * bound.pump_flow_m3_s
+    steps_per_ms = round(1.0e-3 / step_s)
+    keep = math.exp(-step_s / VALVE_TAU_S)
+    samples = np.empty((count, SATURATION_PERIODS * 100, 4))
+    strokes = np.empty((count, SATURATION_PERIODS, 4))
+    for period in range(SATURATION_PERIODS):
+        strokes[:, period] = stroke
+        command = sequences["commands"][:, period]
+        for substep in range(100):
+            for _ in range(steps_per_ms):
+                valve = command + (valve - command) * keep
+                is_saturated = (valve @ np.asarray(HEAD_AREA_M2)) > supply_m3_s
+                delivered = np.where(is_saturated[:, None], 0.0, valve)
+                compliance = _plant_compliance(LEGS, sequences["beta"], sequences["head_dead"],
+                                               sequences["rod_dead"], sequences["hose"], stroke)
+                pressure = _plant_step(pressure, BACK_PRESSURE_PA, delivered, step_s, compliance,
+                                       LEGS, np.zeros_like(pressure, dtype=bool))
+                stroke = np.clip(stroke + delivered * step_s, 0.0, STROKE_MAX_M)
+            samples[:, period * 100 + substep] = pressure
+    return samples, strokes
+
+
+@pytest.mark.parametrize("plant_step_s", PLANT_STEPS_S)
+def test_t_p3_3_saturation_with_falling_valves_stays_below_the_bound(plant_step_s) -> None:
+    """Spec 3 (ii) v2 review: priority saturation on falling valves, seed 20261107 (own
+    stream), 300 four-leg sequences, plant ``eta_v`` 0.85 / 0.95, sensitivity-end oil. The
+    bound judges saturation on the larger of the sub-step start and end demand; ``p >= p_plant``
+    at every 1 ms sub-step of every leg, and saturation occurs."""
+    sequences = _saturation_sequences(np.random.default_rng([PROPERTY_SEED, 1]))
+    plant, strokes = _saturated_plant_at_substeps(sequences, plant_step_s)
+    violations, worst_Pa, saturated = 0, -math.inf, 0
+    floor = np.array(RETRACT_ANCHOR_PA)
+    for row in range(SATURATION_SEQUENCES):
+        tracker = _tracker()
+        tracker.valve_m_s = sequences["start_valve"][row].copy()
+        for period in range(SATURATION_PERIODS):
+            values = _substep_bounds(tracker, sequences["commands"][row, period],
+                                     strokes[row, period], floor)
+            gap = plant[row, period * 100:(period + 1) * 100] - values
+            violations += int(np.sum(gap > ROUNDING_PA))
+            worst_Pa = max(worst_Pa, float(gap.max()))
+        saturated += tracker.saturated_substeps
+    assert saturated > 0
+    assert violations == 0, f"{violations} sub-steps above the bound, worst {worst_Pa / BAR} bar"

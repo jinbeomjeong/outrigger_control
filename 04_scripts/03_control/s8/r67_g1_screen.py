@@ -576,13 +576,14 @@ def first_lift_time_s(plant, period: dict) -> float | None:
 
 
 def _lift_and_lock_window(plant, ctrl) -> tuple[float | None, dict]:
-    """``t_lift_s`` of a run and, for a plant with LC lock events, its ``lock_window_alignment``
-    (criteria J11 n_late, ``verdict_runs.lock_window_record``)."""
+    """``t_lift_s`` of a run, its ``review_record`` (criteria rev. 6 14.5) and, for a plant with
+    LC lock events, its ``lock_window_alignment`` (criteria J11 n_late,
+    ``verdict_runs.lock_window_record``)."""
     import verdict_runs
 
     period = verdict_runs.period_arrays(ctrl)
     t_lift_s = first_lift_time_s(plant, period)
-    extra = {}
+    extra = {"review_record": verdict_runs.review_record_of(ctrl)}  # criteria rev. 6 14.5
     if getattr(plant, "lock_events", None) is not None:
         extra["lock_window_alignment"] = verdict_runs.lock_window_record(plant, ctrl, period)
     return t_lift_s, extra

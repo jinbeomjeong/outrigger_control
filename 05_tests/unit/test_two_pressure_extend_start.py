@@ -169,12 +169,45 @@ def test_t_p3_4_old_pickle_starts_at_p_ret() -> None:
     assert np.array_equal(old._extend_tracker.pressure_Pa, fresh._extend_tracker.pressure_Pa)
 
 
-def test_records_tension_and_d2_ratio_with_the_option() -> None:
-    """Review 2026-11-07 records: tension sub-steps and the delivered / commanded ratio at a
-    D2 violation start, in the meta only with the option on."""
-    assert "extend_start_record" not in _monitor(_settings()).meta()
-    monitor = _monitor(_tracked())
-    _run(monitor, [0.25 * V_MAX] * 2)
-    record = monitor.meta()["extend_start_record"]
-    assert record["tension_substeps"] == [0, 0, 0, 0]
-    assert record["d2_violation_start_ratio"] == [[], [], [], []]
+def test_review_record_is_kept_with_the_option_on_and_off() -> None:
+    """Criteria rev. 6 14.5 (user decision 2026-11-07): tension sub-steps and the delivered /
+    commanded ratio at a D2 violation start are in ``review_record`` on and off, equal for the
+    same reads; the bound state stays in ``extend_start_record`` (option on only)."""
+    metas = []
+    for settings in (_settings(), _tracked()):
+        monitor = _monitor(settings)
+        _run(monitor, [0.25 * V_MAX] * 2)
+        metas.append(monitor.meta())
+    off, on = metas
+    assert "extend_start_record" not in off
+    assert set(on["extend_start_record"]) == {"extend_bound_Pa", "valve_estimate_m_s",
+                                              "saturated_substeps"}
+    assert off["review_record"] == on["review_record"]
+    assert off["review_record"]["tension_substeps"] == [0, 0, 0, 0]
+    assert off["review_record"]["d2_violation_start_ratio"] == [[], [], [], []]
+
+
+def test_review_record_counts_tension_and_a_d2_start_with_the_option_off() -> None:
+    """A FL pull of 2 kN while extending (rod reading 80 bar head, rod chosen for the force)
+    counts 100 sub-steps per period; a D2 violation start records its ratio (option off)."""
+    monitor = TwoPressureMonitor(HEAD_AREA, ANNULUS, V_MAX, F_MIN_N, PERIOD_S,
+                                 settings=_settings(), stroke_max_m=0.70,
+                                 retract_lock_rod_pressure_Pa=RETRACT_ANCHOR_PA)
+    head_Pa = 10.0 * BAR
+    pull_rod_Pa = (head_Pa * HEAD_AREA[FL] + 2.0e3) / ANNULUS[FL]
+    rod = np.full(4, 5.0 * BAR)
+    rod[FL] = pull_rod_Pa
+    commanded = np.array([0.3 * V_MAX, 0.0, 0.0, 0.0])
+    monitor.read(0.1, np.full(4, head_Pa), rod, commanded, False, 2e3,
+                 stroke_m=np.full(4, 0.3))
+    assert monitor.meta()["review_record"]["tension_substeps"] == [100, 0, 0, 0]
+    monitor._stroke_rate_m_s = np.array([0.006, 0.0, 0.0, 0.0])
+    monitor._record_d2_start(FL, 0.3 * V_MAX)
+    ratios = monitor.meta()["review_record"]["d2_violation_start_ratio"]
+    assert ratios[FL] == [pytest.approx(0.006 / (0.3 * V_MAX))]
+
+
+def test_t_p3_1_meta_carries_the_bound_revision() -> None:
+    """v2 review: the option meta carries ``revision`` 2; the off meta has no ③ key."""
+    assert _tracked().to_meta()["extend_start_bound"]["revision"] == 2
+    assert "extend_start_bound" not in _settings().to_meta()

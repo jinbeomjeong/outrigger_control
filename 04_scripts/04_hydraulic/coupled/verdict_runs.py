@@ -177,7 +177,8 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None) -> tuple[di
     result = {**extra, "commands_sha256": _command_digest(period["command"]),
               "final_phase": str(controller.phase),
               "max_motor_stroke_reading_mm": limiter.max_stroke_reading_m * 1e3,
-              "values": values, "events": [(round(t, 3), name) for t, name in events][:400]}
+              "values": values, "events": [(round(t, 3), name) for t, name in events][:400],
+              "review_record": review_record_of(controller)}
     stop_values = _soil_stop_values(plant, limiter, events)
     if stop_values is not None:  # v5 X-12, criteria 6: runs with a soil-guard stop only
         result["soil_stop_crawler"] = stop_values
@@ -185,6 +186,12 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None) -> tuple[di
               "command": period["command"], "integral": period["integral"],
               "filtered_deg": period["filtered_deg"]}
     return result, series
+
+
+def review_record_of(controller) -> dict | None:
+    """Criteria rev. 6 14.5 records of the run (``two_pressure.review_record``: tension
+    sub-steps and D2 violation-start ratios; record only, not a judged value)."""
+    return meta_for_json(controller.meta()["two_pressure"].get("review_record"))
 
 
 def _all_events(controller) -> list[tuple[float, str]]:

@@ -118,6 +118,7 @@ from outrigger_sim.control.extend_start_bound import (
     BoundGeometry,
     ExtendStartBound,
     ExtendStartTracker,
+    PremiseRecord,
 )
 from outrigger_sim.params import LEG_ORDER
 from outrigger_sim.sensors.pressure_error import (
@@ -1208,8 +1209,9 @@ class TwoPressureMonitor:
     # ③ start option (p3 spec 4 #2 / #5): created on the first read with the option on, so a
     # monitor without it (or pickled before it) carries no new state
     _extend_tracker: ExtendStartTracker | None = None
-    _d2_start_ratios: list[list[float]] | None = None
-    """Per leg the stroke rate / acting command at each D2 violation start (review record)."""
+    _premise_record: PremiseRecord | None = None
+    """Review records of the ③ premises (meta ``review_record``, option on or off); created on
+    first use, so a monitor pickled before it carries none."""
     _BUFFER_SIZING_FIELDS = (
         "stuck_window_s",
         "rising_window_s",
@@ -1335,7 +1337,7 @@ class TwoPressureMonitor:
         self._held_head_Pa = None
         self._step_rule_suspended_by = None
         self.__dict__.pop("_extend_tracker", None)
-        self.__dict__.pop("_d2_start_ratios", None)
+        self.__dict__.pop("_premise_record", None)
 
     def refresh_settings(self, settings: TwoPressureSettings) -> None:
         """Use ``settings`` from the next read on, keeping the run's state.
@@ -1656,6 +1658,7 @@ class TwoPressureMonitor:
         if self._uses_cb_lag_bound:
             optional["counterbalance_lag_tau_s_used"] = self._cb_lag_tau_s
         optional.update(self._extend_start_meta())
+        optional["review_record"] = self._review_record_meta()  # record only, every run
         if self._is_tracking_online_ratio:
             optional["r5_online_ratio"] = [
                 None if learned is None else {"ratio": learned[0], "stroke_m": learned[1]}
@@ -2245,13 +2248,14 @@ class TwoPressureMonitor:
 
     def _update_rod_estimates(self, t_s, head, rod, commanded, stroke_m=None) -> None:
         """Model upper bound ``p_r_hat`` of every leg (used on fallback legs only)."""
+        self._count_tension(head, rod, commanded)
         if self.settings.locked_ratio_rule is LockedRatioRule.FIXED:
             self._update_fixed_ratio_estimates(head, commanded)
             return
         stroke = (np.full(LEG_COUNT, np.nan) if stroke_m is None
                   else np.asarray(stroke_m, dtype=float))
         if self._uses_extend_bound:
-            self._advance_extend_bound(head, rod, commanded, stroke)
+            self._advance_extend_bound(head, commanded, stroke)
         for leg in range(LEG_COUNT):
             self._update_column_bound(leg, float(t_s), float(head[leg]), float(rod[leg]),
                                       float(commanded[leg]), float(stroke[leg]))
@@ -2275,38 +2279,48 @@ class TwoPressureMonitor:
                                                       self._retract_lock_floor_Pa)
         return self._extend_tracker
 
-    def _advance_extend_bound(self, head, rod, commanded, stroke) -> None:
+    def _advance_extend_bound(self, head, commanded, stroke) -> None:
         """One period of the bound with the acting command (spec 4 #2): the retract floor is
-        ``max(p_ret, retract moving model)``; the force of the tension record uses the rod
-        reading where the sensor is OK, else the current estimate."""
-        estimates = np.array([watch.rod_estimate_Pa for watch in self._legs])
-        is_reading_ok = np.array([state is RodSensorState.OK for state in self.rod_state])
-        rod_Pa = np.where(is_reading_ok & np.isfinite(rod), rod, estimates)
-        force_N = head * self.head_area_m2 - rod_Pa * self.annulus_area_m2
+        ``max(p_ret, retract moving model)``."""
         floor_Pa = [max(self._retract_lock_floor_Pa[leg],
                         self._retract_rod_estimate_Pa(float(head[leg])))
                     for leg in range(LEG_COUNT)]
-        self._extend_bound_state().advance(commanded, stroke, force_N, floor_Pa, self.period_s)
+        self._extend_bound_state().advance(commanded, stroke, floor_Pa, self.period_s)
 
     def _extend_bound_Pa(self, leg: int) -> float:
         return self._extend_bound_state().bound_Pa(leg)
 
-    def _record_d2_start(self, leg: int, command_m_s: float) -> None:
-        """Review record: delivered (stroke rate) over commanded speed at a D2 violation start."""
-        if not self._uses_extend_bound:
-            return
-        if self._d2_start_ratios is None:
-            self._d2_start_ratios = [[] for _ in range(LEG_COUNT)]
-        rate = self._stroke_rate_m_s
-        ratio = math.nan if rate is None else float(rate[leg]) / command_m_s
-        self._d2_start_ratios[leg].append(ratio)
-
     def _extend_start_meta(self) -> dict[str, Any]:
         if not self._uses_extend_bound:
             return {}
-        ratios = self._d2_start_ratios or [[] for _ in range(LEG_COUNT)]
-        return {"extend_start_record": {**self._extend_bound_state().record(),
-                                        "d2_violation_start_ratio": [list(r) for r in ratios]}}
+        return {"extend_start_record": self._extend_bound_state().record()}
+
+    # --- review records of the ③ premises (criteria rev. 6 14.5), with the option on or off ---
+
+    def _premise_record_state(self) -> PremiseRecord:
+        """Created on first use (a new run, or a monitor pickled before the record)."""
+        if self._premise_record is None:
+            self._premise_record = PremiseRecord(self.annulus_area_m2)
+        return self._premise_record
+
+    def _count_tension(self, head, rod, commanded) -> None:
+        """The force of the tension record: the rod reading where the sensor is OK, else the
+        current estimate (before this read updates it)."""
+        estimates = np.array([watch.rod_estimate_Pa for watch in self._legs])
+        is_reading_ok = np.array([state is RodSensorState.OK for state in self.rod_state])
+        rod_Pa = np.where(is_reading_ok & np.isfinite(rod), rod, estimates)
+        force_N = head * self.head_area_m2 - rod_Pa * self.annulus_area_m2
+        self._premise_record_state().count_tension(commanded, force_N, self.period_s)
+
+    def _record_d2_start(self, leg: int, command_m_s: float) -> None:
+        """Delivered (stroke rate) over commanded speed at a D2 violation start."""
+        rate = self._stroke_rate_m_s
+        rate_m_s = None if rate is None else float(rate[leg])
+        self._premise_record_state().add_d2_start(leg, rate_m_s, command_m_s)
+
+    def _review_record_meta(self) -> dict[str, Any]:
+        record = self._premise_record or PremiseRecord(self.annulus_area_m2)
+        return record.to_meta()
 
     def _update_fixed_ratio_estimates(self, head, commanded) -> None:
         """The estimate before P-S8-13 (``locked_ratio_rule = "fixed"``): the moving value of

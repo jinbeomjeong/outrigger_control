@@ -328,6 +328,7 @@ def run_one(job: dict) -> dict:
                 "harness_class": result.get("harness_class"),
                 "hydraulic_options": result.get("hydraulic_options"),
                 "hydraulics_record": result.get("hydraulics_record"),
+                "review_record": result.get("review_record"),
                 **{key: result[key] for key in ("overlap_found", "soil_stop_crawler",
                                                 "lock_window_alignment") if key in result},
                 **({} if t4h is None else {"t4h_file": t4h["path"].name})}

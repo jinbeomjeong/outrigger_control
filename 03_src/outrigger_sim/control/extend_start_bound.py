@@ -12,8 +12,9 @@ in 1 ms sub-steps per leg::
     speed      u_lb = kappa_x max(mean u_v over the sub-step, 0),
                0 if u_v <= 0, if the acting command is 0 (|u| <= eps) and u_v < delta_ol v_max
                (the plant's tail cut; v2, spec 3 (i)), if the pump demand
-               sum A_h |u_v| (extend) + A_ann |u_v| (retract) > eta_v Q_pump, or if the stroke
-               reading >= the end margin
+               sum A_h |u_v| (extend) + A_ann |u_v| (retract) > eta_v Q_pump with per leg the
+               larger |u_v| of the sub-step start and end, or if the stroke reading >= the end
+               margin
 
 The relief speed is the exact sub-step mean of the valve, not its end value: with v2 a ramp
 from rest counts from the first sub-step, and the end value over the whole sub-step relieved up to
@@ -31,7 +32,9 @@ Every parameter is an ASSUMPTION (hydraulics-expert review); units SI, gauge pre
 from __future__ import annotations
 
 import math
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass
+from typing import Any
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
@@ -40,6 +43,12 @@ from outrigger_sim.hydraulics.rod_release import RodPressureFlowLaw, flow_limite
 
 BAR_PA = 1.0e5
 LEG_COUNT = 4
+
+EXTEND_START_REVISION = 2
+"""Revision of the bound rule in the meta (v2: overlap cut with a zero command only, sub-step
+mean valve, start / end saturation test; spec 3 and its v2 review). A ``tracked_bound`` meta
+without it is v1 and is refused (:func:`check_extend_start_meta`)."""
+TRACKED_BOUND_RULE = "tracked_bound"
 
 BOUND_BULK_MODULUS_PA = 0.69e9
 BOUND_HEAD_DEAD_LENGTH_M = 0.08
@@ -89,6 +98,7 @@ class ExtendStartBound:
         pump_flow_m3_s: ``Q_pump``.
         volumetric_efficiency: ``eta_v`` of the saturation test.
         stroke_end_m: End-margin stroke.
+        revision: Rule revision (only :data:`EXTEND_START_REVISION` runs in this code).
     """
 
     bulk_modulus_Pa: float = BOUND_BULK_MODULUS_PA
@@ -104,8 +114,12 @@ class ExtendStartBound:
     pump_flow_m3_s: float = BOUND_PUMP_FLOW_M3_S
     volumetric_efficiency: float = BOUND_VOLUMETRIC_EFFICIENCY
     stroke_end_m: float = BOUND_STROKE_END_M
+    revision: int = EXTEND_START_REVISION
 
     def __post_init__(self) -> None:
+        if self.revision != EXTEND_START_REVISION:
+            raise ValueError(f"extend start bound revision {self.revision!r}: this code runs "
+                             f"revision {EXTEND_START_REVISION} only")
         positive = ("bulk_modulus_Pa", "hose_factor", "substep_s", "pump_flow_m3_s",
                     "volumetric_efficiency")
         for name in positive:
@@ -117,7 +131,7 @@ class ExtendStartBound:
         if not (self.lag_s >= 0.0 and self.margin_Pa >= 0.0):
             raise ValueError("lag_s and margin_Pa must be >= 0")
 
-    def to_meta(self) -> dict[str, float]:
+    def to_meta(self) -> dict[str, float | int]:
         return asdict(self)
 
 
@@ -155,9 +169,6 @@ class ExtendStartTracker:
         self.geometry = geometry
         self.pressure_Pa = np.array(start_Pa, dtype=float).reshape(LEG_COUNT)
         self.valve_m_s = np.zeros(LEG_COUNT)
-        self.tension_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
-        """Sub-steps of an extending leg whose force read a pull beyond ``p_bB A_ann`` (the
-        plant target then exceeds ``p_bB``: a premise of the bound, review item ①)."""
         self.saturated_substeps = 0
         self._law = RodPressureFlowLaw()
 
@@ -177,14 +188,13 @@ class ExtendStartTracker:
         return bound.hose_factor * self._law.rod_compliance_m3_Pa(annulus, head_stiffness,
                                                                   rod_stiffness)
 
-    def advance(self, command_m_s: ArrayLike, stroke_m: ArrayLike, force_N: ArrayLike,
+    def advance(self, command_m_s: ArrayLike, stroke_m: ArrayLike,
                 retract_floor_Pa: ArrayLike, period_s: float) -> None:
         """One controller period with the acting command ``command_m_s``.
 
         Args:
             command_m_s: Acting command per leg (the output of the previous period).
             stroke_m: Stroke reading per leg (NaN = unknown).
-            force_N: Cylinder force reading per leg (the tension record).
             retract_floor_Pa: ``max(p_ret, retract moving model)`` per leg.
             period_s: Controller period ``T``.
         """
@@ -196,19 +206,16 @@ class ExtendStartTracker:
             self.pressure_Pa)
         compliance = [self.compliance_m3_Pa(leg, float(stroke[leg])) for leg in range(LEG_COUNT)]
         is_at_end = np.isfinite(stroke) & (stroke >= self.bound.stroke_end_m)
-        is_pulled = (command > 0.0) & (np.asarray(force_N, float)
-                                       < -self.bound.back_pressure_Pa
-                                       * np.asarray(self.geometry.annulus_area_m2))
         for _ in range(round(period_s / self.bound.substep_s)):
             self._substep(command, is_retracting, is_at_end, compliance)
-            self.tension_substeps += is_pulled
 
     def _substep(self, command, is_retracting, is_at_end, compliance) -> None:
         bound, geometry = self.bound, self.geometry
         step_s = bound.substep_s
+        start_valve_m_s = self.valve_m_s
         mean_valve_m_s = self._advance_valve(command, step_s)
-        is_saturated = self._pump_demand_m3_s() > (bound.volumetric_efficiency
-                                                   * bound.pump_flow_m3_s)
+        demand_m3_s = self._pump_demand_m3_s(start_valve_m_s, self.valve_m_s)
+        is_saturated = demand_m3_s > bound.volumetric_efficiency * bound.pump_flow_m3_s
         self.saturated_substeps += int(is_saturated)
         cut_m_s = bound.overlap_cut_ratio * geometry.max_speed_m_s
         for leg in range(LEG_COUNT):
@@ -239,17 +246,81 @@ class ExtendStartTracker:
         self.valve_m_s = command + (start_m_s - command) * keep
         return command + (start_m_s - command) * (tau_s / step_s) * (1.0 - keep)
 
-    def _pump_demand_m3_s(self) -> float:
-        valve = self.valve_m_s
+    def _pump_demand_m3_s(self, start_valve_m_s: NDArray[np.float64],
+                          end_valve_m_s: NDArray[np.float64]) -> float:
+        """``sum A |u_v|`` with per leg the larger demand of the sub-step start and end: on a
+        falling valve the end value alone misses a saturation early in the sub-step (spec 3
+        (ii), v2 review)."""
+        return float(np.sum(np.maximum(self._leg_demand_m3_s(start_valve_m_s),
+                                       self._leg_demand_m3_s(end_valve_m_s))))
+
+    def _leg_demand_m3_s(self, valve_m_s: NDArray[np.float64]) -> NDArray[np.float64]:
         head = np.asarray(self.geometry.head_area_m2)
         annulus = np.asarray(self.geometry.annulus_area_m2)
-        return float(np.sum(np.where(valve > 0.0, head * valve, -annulus * valve)))
+        return np.where(valve_m_s > 0.0, head * valve_m_s, -annulus * valve_m_s)
 
     def record(self) -> dict[str, object]:
         return {"extend_bound_Pa": self.pressure_Pa.tolist(),
                 "valve_estimate_m_s": self.valve_m_s.tolist(),
-                "tension_substeps": self.tension_substeps.tolist(),
                 "saturated_substeps": self.saturated_substeps}
+
+
+class PremiseRecord:
+    """Review records of the bound's premises, kept with the ③ option on or off (criteria
+    rev. 6 14.5, hydraulics-expert ③ review 2026-11-07; user decision 2026-11-07). Records only:
+    nothing here feeds a command.
+
+    * ``tension_substeps``: 1 ms sub-steps of an extending leg whose force read a pull beyond
+      ``p_bB A_ann`` (the plant target then exceeds ``p_bB``: counter-example ①).
+    * ``d2_violation_start_ratio``: stroke rate over the acting command at each D2 violation
+      start (priority saturation shows as 1-2 % ``v_max`` delivered; ``None`` = no rate).
+
+    Args:
+        annulus_area_m2: ``A_ann`` per leg.
+    """
+
+    def __init__(self, annulus_area_m2: ArrayLike) -> None:
+        annulus = np.asarray(annulus_area_m2, dtype=float).reshape(LEG_COUNT)
+        self.tension_threshold_N = BOUND_BACK_PRESSURE_PA * annulus
+        self.tension_substeps = np.zeros(LEG_COUNT, dtype=np.int64)
+        self.d2_start_ratios: list[list[float | None]] = [[] for _ in range(LEG_COUNT)]
+
+    def count_tension(self, command_m_s: ArrayLike, force_N: ArrayLike,
+                      period_s: float) -> None:
+        """One controller period: the force reading holds over its 1 ms sub-steps."""
+        is_pulled = ((np.asarray(command_m_s, float) > 0.0)
+                     & (np.asarray(force_N, float) < -self.tension_threshold_N))
+        self.tension_substeps += round(period_s / BOUND_SUBSTEP_S) * is_pulled
+
+    def add_d2_start(self, leg: int, stroke_rate_m_s: float | None,
+                     command_m_s: float) -> None:
+        is_known = stroke_rate_m_s is not None and math.isfinite(stroke_rate_m_s)
+        self.d2_start_ratios[leg].append(
+            float(stroke_rate_m_s) / command_m_s if is_known else None)
+
+    def to_meta(self) -> dict[str, object]:
+        return {"tension_substeps": self.tension_substeps.tolist(),
+                "tension_threshold_N": self.tension_threshold_N.tolist(),
+                "d2_violation_start_ratio": [list(ratios) for ratios in self.d2_start_ratios]}
+
+
+def check_extend_start_meta(settings_meta: Mapping[str, Any]) -> None:
+    """Refuse a stored two-pressure settings meta of an older ``tracked_bound`` rule.
+
+    Args:
+        settings_meta: ``TwoPressureSettings.to_meta()`` of a stored run.
+
+    Raises:
+        ValueError: The rule is ``tracked_bound`` and its bound has no ``revision`` (v1) or
+            another revision than :data:`EXTEND_START_REVISION`.
+    """
+    if settings_meta.get("extend_start_rule") != TRACKED_BOUND_RULE:
+        return
+    revision = (settings_meta.get("extend_start_bound") or {}).get("revision")
+    if revision != EXTEND_START_REVISION:
+        label = "v1 (no revision)" if revision is None else f"revision {revision!r}"
+        raise ValueError(f"stored tracked_bound meta is {label}; this code runs revision "
+                         f"{EXTEND_START_REVISION}")
 
 
 def initial_pressure_Pa(retract_floor_Pa: ArrayLike) -> NDArray[np.float64]:
@@ -257,4 +328,5 @@ def initial_pressure_Pa(retract_floor_Pa: ArrayLike) -> NDArray[np.float64]:
     return np.array(retract_floor_Pa, dtype=float).reshape(LEG_COUNT)
 
 
-__all__ = ["BoundGeometry", "ExtendStartBound", "ExtendStartTracker", "initial_pressure_Pa"]
+__all__ = ["EXTEND_START_REVISION", "BoundGeometry", "ExtendStartBound", "ExtendStartTracker",
+           "PremiseRecord", "check_extend_start_meta", "initial_pressure_Pa"]

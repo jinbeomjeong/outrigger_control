@@ -93,9 +93,11 @@ def run_config(meta: dict, extend_start: str | None = None):
     return closed_loop, config
 
 
-def _settings_for_comparison(settings: dict, extend_start: str | None) -> dict:
-    """With an override the stored meta differs only in the ③ start keys: leave them out."""
-    if extend_start is None:
+def _settings_for_comparison(settings: dict, stored: dict, extend_start: str | None) -> dict:
+    """An override of another rule than the stored one changes only the ③ start keys: leave
+    them out. The same rule compares them all (the bound ``revision`` included)."""
+    stored_rule = stored.get("extend_start_rule", "constant")
+    if extend_start is None or extend_start == stored_rule:
         return settings
     return {key: value for key, value in settings.items() if key not in EXTEND_START_KEYS}
 
@@ -113,11 +115,15 @@ def replay_values(path: Path, extend_start: str | None = None) -> dict:
     """
     from outrigger_sim.control.c2 import C2Geometry
     from outrigger_sim.control.contact_replay import replay_fallback_monitor
+    from outrigger_sim.control.extend_start_bound import check_extend_start_meta
 
     arrays, meta = load_record(path)
+    stored = meta["two_pressure_settings"]
+    check_extend_start_meta(stored)
     closed_loop, config = run_config(meta, extend_start)
-    rebuilt = _settings_for_comparison(_plain(config.two_pressure.to_meta()), extend_start)
-    if rebuilt != _settings_for_comparison(meta["two_pressure_settings"], extend_start):
+    rebuilt = _plain(config.two_pressure.to_meta())
+    if (_settings_for_comparison(rebuilt, stored, extend_start)
+            != _settings_for_comparison(stored, stored, extend_start)):
         raise RuntimeError(f"{path.name}: rebuilt two_pressure settings differ from the record")
     t_s = arrays["t_s"]
     forced = [(float(t_s[0]), f"{FALLBACK_EVENT}:{leg}") for leg in LEGS]
@@ -145,7 +151,8 @@ def replay_values(path: Path, extend_start: str | None = None) -> dict:
                 (unlocked_tail & (excess > EXCESS_LIMIT_N)).sum(axis=0)),
             "unlocked_tail_max_excess_N": _max_or_none(excess[unlocked_tail]),
             "provisional_pass": bool(over.sum() == 0),
-            "settings_equal": True, "commands_sha256": meta.get("commands_sha256")}
+            "settings_equal": True, "commands_sha256": meta.get("commands_sha256"),
+            "extend_start_revision": (rebuilt.get("extend_start_bound") or {}).get("revision")}
 
 
 def _by_leg(counts) -> dict[str, int]:
@@ -161,6 +168,13 @@ def record_files(paths: list[str]) -> list[Path]:
     for path in map(Path, paths):
         files += sorted(path.glob("*.npz")) if path.is_dir() else [path]
     return files
+
+
+def _override_revision(extend_start: str | None) -> int | None:
+    """Bound revision of a ``tracked_bound`` override (None otherwise)."""
+    from outrigger_sim.control.extend_start_bound import EXTEND_START_REVISION
+
+    return EXTEND_START_REVISION if extend_start == "tracked_bound" else None
 
 
 def _parse_arguments() -> argparse.Namespace:
@@ -183,6 +197,7 @@ def main() -> int:
                       "forced on all legs; unlocked tail samples recorded only",
               "record": "T4h" if args.extend_start is None else "T4h-P3",
               "extend_start_rule": args.extend_start,
+              "extend_start_revision": _override_revision(args.extend_start),
               "runs": len(rows), "runs_over": sum(not row["provisional_pass"] for row in rows),
               "rows": rows}
     Path(args.out_json).write_text(json.dumps(report, indent=1), encoding="utf-8")

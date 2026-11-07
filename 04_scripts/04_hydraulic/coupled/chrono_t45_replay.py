@@ -576,17 +576,26 @@ def ext_lock_counters(hydraulics: dict, params) -> dict:
 def replay_case(case_dir: Path, *, with_t5: bool = False,
                 extend_start: str | None = None) -> dict:
     """All values of one case folder (module docstring)."""
+    from outrigger_sim.control.extend_start_bound import check_extend_start_meta
     from outrigger_sim.control.r5_fallback_replay import monitor_setting_differences
     from outrigger_sim.params import load_params
 
     record = load_case(case_dir, extend_start)
+    stored_settings = record.result["controller_meta"]["two_pressure"]["settings"]
+    check_extend_start_meta(stored_settings)
     differences, notes = monitor_setting_differences(record.result["controller_meta"],
                                                      record.config, record.geometry)
-    if extend_start is not None:
+    # an override of another rule changes only the ③ start keys; the same rule compares them
+    # all, the bound revision included
+    stored_rule = stored_settings.get("extend_start_rule", "constant")
+    if extend_start is not None and extend_start != stored_rule:
         differences = [d for d in differences if ".extend_start_" not in d]
+    replay_settings = record.config.two_pressure.to_meta()
     row = {"case": Path(case_dir).name, "settings_equal": not differences,
            "setting_differences": differences, "setting_notes": notes,
-           "extend_start_rule": extend_start}
+           "extend_start_rule": extend_start,
+           "extend_start_revision": (replay_settings.get("extend_start_bound") or {}).get(
+               "revision")}
     if differences:
         return row
     row.update(t4_0(record))

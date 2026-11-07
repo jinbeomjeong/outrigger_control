@@ -946,7 +946,8 @@ def _v5_record(options, run: ActiveRun, plant) -> dict:
     record = r67.v5_setting_record(options, V5_SETTING_ENV, t_lift_s)
     reasons = [(round(float(e.t_s), 3), e.name) for e in run.ctrl.events
                if e.name.startswith(ROD_FAULT_REASON_EVENT)]
-    out = {**record, "t_lift_s": t_lift_s, "rod_fallback_reasons": reasons}
+    out = {**record, "t_lift_s": t_lift_s, "rod_fallback_reasons": reasons,
+           "review_record": verdict_runs.review_record_of(run.ctrl)}  # criteria rev. 6 14.5
     if getattr(plant, "lock_events", None) is not None:
         out["lock_window_alignment"] = verdict_runs.lock_window_record(plant, run.ctrl, period)
     return out
