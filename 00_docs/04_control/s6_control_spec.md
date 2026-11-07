@@ -19100,8 +19100,13 @@ Chrono-dev, 프로젝트 루트에서 `python -I -X utf8 -u 04_scripts/02_chrono
   - 표 18 $F_s$ 0 최소 힘 35.67 kN과 표 17 강체 중단 41.89 kN은 최종 값 35.29·40.90 kN으로 바꾼다.
   - 4.9절 "사건 창 밖 최대 이동 압력은 모든 묶음에서 137.9 bar 이하"는 LEVEL 중 사건(C-S8-72) G1L_RE1bF_FL_top_Fs0의 창 밖 163.8 bar(판정 180 bar 안, 이전 판과 비트 같음)와 맞지 않을 수 있다. 문장 범위를 S8 결합 판정 73사례로 한정할지 확인한다.
 ### 432.6.3 확장 후보(실행하지 않음; 사용자가 다시 정하면 돌린다)
-- 2단계 7건(ZIC 기각으로 10 → 7): `P3b_S1_B_top_Fs4`, `P3b_J2_B_bottom_Fs4`, `P3b_J1_B_top_Fs8`, `P3b_J1_A_top_Fs4`, `P3b_J2_B_top_Fs4_sgRRd150`, `P3b_J2_B_top_Fs0_spFLJ2_RE1bF` + `_base`. 추가 시간은 약 3.5~4.5 h(추정)다.
+- 2단계 7건(ZIC 기각으로 10 → 7): `P3b_S1_B_top_Fs4`, `P3b_J2_B_bottom_Fs4`(정정 2026-11-08: `final_SGS_R4`로 실행됨, 아래), `P3b_J1_B_top_Fs8`, `P3b_J1_A_top_Fs4`, `P3b_J2_B_top_Fs4_sgRRd150`, `P3b_J2_B_top_Fs0_spFLJ2_RE1bF` + `_base`. 추가 시간은 약 3.5~4.5 h(추정)다.
   - `P3b_J2_B_top_Fs4_sgRRd150`은 FINAL6로 따로 실행했다(2026-10-31, 426.9.D.2, 통과).
+  - **정정(2026-11-08, X-00)**: `P3b_J2_B_bottom_Fs4`는 ~~실행하지 않음~~ → 2026-10-31 JOURNAL-AUGER 묶음으로 **`final_SGS_R4`(논문 v4 제어기)에서 이미 실행됐다**(`07_results/S9/batch_JOURNAL-AUGER_20261031_165543/P3b_J2_B_bottom_Fs4`, rc 0). 이 절을 쓸 때 그 실행과 판정이 명세·결정 기록에 없어서 빠졌다. 저장 기록 재판정(control-expert, 새 시뮬레이션 0, `run_S9.rejudge_case(write=False)`): **통과, P3-2 FLAG 1(LOC 취소에 의한 지연)**.
+    - P3-2: 크롤러 이탈 43.111 s, 첫 LOC 45.10 s → 45.40 s 취소(`INFO_LOC_REVOKED`), 최종 LOC 46.60 s. LOC − 이탈 3.489 s > $T_{lim}$ 2.912 s지만 424.8.1의 6조건이 모두 참이다(취소 뒤 1.20 s ≤ $T_{lim}$, 최종 LOC 주기 크롤러 진값 0 N, 첫 DONE 54.2 s 전, 3.489 ≤ $(1+n_{revoke})T_{lim}$ = 5.823 s). 419.8(재접근 지연) 규칙은 재접근 구간이 없어 해당하지 않는다.
+    - 그 밖: P3-3 이탈 뒤 최소 116.3 / 112.6 / 69.9 / 68.9 kN(FL/FR/RL/RR), P3-4 `pass` 0.0113°, P3-5 최소 틈 73.1 mm·최대 행정 532.8 mm, P3-6 첫 READY 87.0 s(루프 시작 기준, 탐침 2회차) ≤ 100 s, P3-7 7.93 kN ≥ 4 kN, P3-8·9 통과, FAULT·WARN 없음.
+    - 남는 것: `final_C4G2`·v5 VB로는 돌리지 않았다. C4G2는 TOUCH 단계만 바꾸므로 같은 결과일 수 있으나 확인하지 않았다(추정). 이 행은 "C4G2 판 미확인" 사유로만 후보에 남는다.
+    - 근거: `06_analysis/03_hydraulic/coupled/v5/stage3_judgement.md` 9절(X-00), `06_analysis/02_control/s9/rev85/evidence/journal_auger_digest.json`, 결정 기록 4절(2026-11-08 3단계 판정 줄).
   - X4-nd·X4-ed·G6 J1@RR은 최종 동치(a)가 돼서 후보에서 뺐다.
 - 그 밖: 431.3 FINAL1~6의 나머지 행((b)만 대상: 432.1 목록), RV6 선택 3건. P37t가 기각돼 `spRRJ2_RE1bF` 추가 사유는 없어졌다.
 
@@ -19119,7 +19124,7 @@ Chrono-dev, 프로젝트 루트에서 `python -I -X utf8 -u 04_scripts/02_chrono
 | 표 14 | G8 516 하네스 + L1-R 4(FINAL-R-REP). 연약 비평면은 하네스 x426 D만, "Chrono 미확인"으로 표시한다 | (연약 Chrono 없음) |
 | 표 15·그림 8 | 하네스 116 + x426 C. Chrono는 G1RR·J1RR(0.6 kN 판)·J1FL·J2RR(최종 동치 (a), E3 확인 조건)이다. J2FL·S1FL(R4 작동, (b))은 부록 이력이다. 그림 8(J1RR + G1 대조)은 최종 동치로 그대로 쓴다 | J2FL·S1FL |
 | 표 16 | 강체 FINAL-R-REP 5행 + 하네스 연구 A 80(연약, "Chrono 미확인") | (연약 Chrono 없음) |
-| 표 17 | 강체 FINAL-R-REP(A_middle·bottom rpB $F_s$ 0) + G1(재사용) + J2 B 상단·중단(최종). J2 B 하단, J2 A, S1 A·B는 하네스 + 부록 이력이다. 4.5절 P-Δ 문단은 J2 B 하단이 이력 판(D424R ③, R4 전)임을 명시한다 | J2 B 하단, 연구 ③ 6건 |
+| 표 17 | 강체 FINAL-R-REP(A_middle·bottom rpB $F_s$ 0) + G1(재사용) + J2 B 상단·중단(최종). ~~J2 B 하단,~~ J2 A, S1 A·B는 하네스 + 부록 이력이다. ~~4.5절 P-Δ 문단은 J2 B 하단이 이력 판(D424R ③, R4 전)임을 명시한다~~ **정정(2026-11-08, X-00)**: J2 B 하단은 `final_SGS_R4` Chrono가 있다(JOURNAL-AUGER 2026-10-31, 432.6.3 정정 참조). 결과는 통과 + P3-2 FLAG 1(LOC 취소 지연, 424.8.1), 첫 READY 87.0 s(탐침 2회차, J2 B 상단·중단 81.5·81.7 s와 같은 회차 구조, +5.3 s). 이전 판(D424R ③)의 "하단이 셋째 다리까지 탐침해 가장 늦다(첫 READY 57.8 s, 마지막 91.2 s)"는 최종판에서 재현되지 않았다(사실 기록, P-Δ 기구 판정은 dynamics-expert 몫). `final_C4G2`로는 돌리지 않았다. 원고 반영은 사용자 결정(2026-11-08)으로 하지 않는다(논문 불변) | ~~J2 B 하단,~~ 연구 ③ 6건(정정: J2 B 하단은 `final_SGS_R4` Chrono 있음) |
 | 표 18 | 강체 FINAL-R-REP(K0V rpB $F_s$ 0, K24 $F_s$ 4, K8 rpB $F_s$ 8) + 연약 G1 $F_s$ 0/4/8(재사용 = 최종 동치) + 하네스 J1 | J1 $F_s$ 0·8 |
 | 표 19 | Chrono는 G1 A·B(재사용)와 J1 B(최종). J1·J2 패드 A는 하네스(대표, 432.4.3) + 이력 | J1 A, J2 A |
 | 표 20 → B4 표 | ×1.0(B0)·×1.1 J1·J2(최종)·×1.2(재사용) + 하네스 h6 32 + x426 B1 21. 표 20은 센서·β만 남긴다 | — |
