@@ -547,6 +547,18 @@ def test_t4h_record_helpers_name_the_file_and_find_the_fallback_starts(monkeypat
         screen._install_t4h_log()
 
 
+def test_zero_calibration_outcome_records_the_e6_allowance_and_its_start():
+    """User decision 2026-11-08: the per-leg E-6 allowance and the update that set it."""
+    meta = {"zero_calibration": {
+        "is_active": True, "offsets_N": [0.0] * 4,
+        "pressure_offset_allowance_N": np.array([5500.0, 0.0, 0.0, 0.0]),
+        "result": {"t_end_s": 4.2, "legs": {"FL": {"status": "skipped", "reason": "grounded"}}}}}
+    outcome = screen.zero_calibration_outcome(meta)
+    assert outcome["pressure_offset_allowance_N"] == [5500.0, 0.0, 0.0, 0.0]
+    assert outcome["pressure_offset_allowance_from_s"] == 4.2
+    assert screen.zero_calibration_outcome({})["pressure_offset_allowance_N"] is None
+
+
 def test_identity_rows_compare_command_hashes():
     run = {"key": "L0|s0|g8|0|k", "level": "L0", "harness": "g8", "inner": "k",
            "base": {"cmd_sha256": "abc", "pass": True}, "wall_s": 1.0}

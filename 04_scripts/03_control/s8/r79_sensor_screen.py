@@ -597,14 +597,20 @@ def summarise_run(truth, events, f_min_N: float, weight_N: float, twist_vector) 
 
 
 def zero_calibration_outcome(meta: dict) -> dict:
-    """Per-leg CHECK zero calibration result (as run_S9.zero_calibration_outcome)."""
+    """Per-leg CHECK zero calibration result (as run_S9.zero_calibration_outcome), with the
+    E-6 allowance record (``pressure_offset_allowance_N`` per leg and its start
+    ``pressure_offset_allowance_from_s``, ``verdict_runs.offset_allowance_record``; record
+    only, added 2026-11-08)."""
     zc = (meta or {}).get("zero_calibration") or {}
     legs = ((zc.get("result") or {}).get("legs")) or {}
     rows = {leg: {"status": (legs.get(leg) or {}).get("status"),
                   "reason": (legs.get(leg) or {}).get("reason")} for leg in LEGS}
+    allowance = zc.get("pressure_offset_allowance_N")
     return {"is_active": zc.get("is_active"), "legs": rows,
             "all_calibrated": all(r["status"] == "calibrated" for r in rows.values()),
-            "offsets_N": zc.get("offsets_N")}
+            "offsets_N": zc.get("offsets_N"),
+            "pressure_offset_allowance_N": None if allowance is None else list(allowance),
+            "pressure_offset_allowance_from_s": (zc.get("result") or {}).get("t_end_s")}
 
 
 # --------------------------------------------------------------------------------------- case sets

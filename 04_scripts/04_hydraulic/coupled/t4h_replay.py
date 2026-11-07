@@ -10,9 +10,19 @@ zero acting command and the plant leg locked at t_k. Values: per leg the judged 
 Zero-command samples whose leg is not locked yet (the valve tail; the Chrono T4 / T5 rule) are
 recorded only (``unlocked_tail_*``), as is the ``lower - true_force_min_N`` value.
 
+E-6 pressure-zero allowance (user decision 2026-11-08): the monitor deducts it from the lower
+bound after the zero calibration, so the replay does too (:func:`offset_allowance_of`). A record
+with ``pressure_offset_allowance_N`` / ``pressure_offset_allowance_from_s`` (written since
+2026-11-08) uses them; an older one rebuilds them from its events: the setting's
+``failure_allowance_N`` (front 5.5, rear 4.0 kN) on the legs the calibration skipped or found
+implausible, from the time of the calibration events. Records without a failed leg replay as
+before. ``--check-recorded`` also replays a record with the run's own events and reports the
+largest difference to the run's own lower reading (``lower_reading_N``, r79 Dg-3 records).
+
 Usage (dynamics-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/t4h_replay.py <out_json> <npz or folder> [...]
       [--extend-start tracked_bound]   (③ start rule override, record T4h-P3)
+      [--check-recorded]               (own-event replay against lower_reading_N)
 ``aggregate_v5`` reads ``<batch>/t4h/t4h_replay.json`` (write the output there for its table).
 """
 from __future__ import annotations
@@ -39,6 +49,11 @@ HARNESS_VALVE_TAU_S = 0.1
 EXTEND_START_KEYS = ("extend_start_rule", "extend_start_bound")
 """Two-pressure meta keys of the ③ start option (present only with the option on)."""
 EXTEND_START_CHOICES = ("constant", "tracked_bound")
+ZERO_CALIBRATED_EVENT = "INFO_PRESSURE_ZERO_CALIBRATED"
+ZERO_FAILED_EVENTS = ("WARN_PRESSURE_ZERO_SKIPPED", "WARN_PRESSURE_ZERO_IMPLAUSIBLE")
+"""Per-leg outcome events of the zero calibration (``zero_calibration.ZeroCalibration.events``);
+``WARN_PRESSURE_ZERO_SKIPPED:all:<reason>`` covers every leg."""
+ALL_LEGS_TOKEN = "all"
 
 
 class _Record:
@@ -106,8 +121,92 @@ def _plain(value):
     return json.loads(json.dumps(value, default=str))
 
 
-def replay_values(path: Path, extend_start: str | None = None) -> dict:
-    """T4h values of one record (module docstring).
+def _failed_legs(name: str) -> list[int]:
+    """Legs a zero-calibration outcome event marks as failed (empty for other events)."""
+    if not name.startswith(ZERO_FAILED_EVENTS):
+        return []
+    leg_name = name.split(":")[1]
+    return list(range(len(LEGS))) if leg_name == ALL_LEGS_TOKEN else [LEGS.index(leg_name)]
+
+
+def rebuilt_offset_allowance(events: list, failure_allowance_N, setting_allowance_N):
+    """E-6 allowance of a record written before the allowance was recorded.
+
+    The controller sets ``max(setting allowance, failure_allowance_N on the failed legs)`` at
+    the update that ends the calibration, where it also raises the outcome events; the
+    deduction acts on the reads after it. A run with outcome events at more than one time
+    (a restarted CHECK) is rebuilt from the first one (noted).
+
+    Args:
+        events: ``(t_s, name)`` controller events of the run (T4h meta ``events``).
+        failure_allowance_N: ``ZeroCalibrationSettings.failure_allowance_N`` of the run.
+        setting_allowance_N: ``C2Config.pressure_offset_allowance_N`` of the run.
+
+    Returns:
+        ``r5_fallback_replay.OffsetAllowance``.
+
+    Raises:
+        ValueError: A nonzero setting allowance (it acts from the start, which a single start
+            time cannot express; harness presets carry 0).
+    """
+    from outrigger_sim.control.r5_fallback_replay import OffsetAllowance
+
+    if np.any(np.asarray(setting_allowance_N, float) != 0.0):
+        raise ValueError("nonzero pressure_offset_allowance_N setting: not rebuildable")
+    outcomes = [(float(t), str(name)) for t, name in events
+                if str(name).startswith((ZERO_CALIBRATED_EVENT, *ZERO_FAILED_EVENTS))]
+    if not outcomes:
+        return OffsetAllowance(np.zeros(len(LEGS)), None, "rebuilt: no zero calibration, 0")
+    from_s = min(t for t, _ in outcomes)
+    is_failed = np.zeros(len(LEGS), bool)
+    for t_s, name in outcomes:
+        if t_s == from_s:
+            is_failed[_failed_legs(name)] = True
+    deduction = np.where(is_failed, np.asarray(failure_allowance_N, float), 0.0)
+    note = "rebuilt: failure_allowance_N on the skipped / implausible legs"
+    if len({t for t, _ in outcomes}) > 1:
+        note += " (outcome events at several times: the first calibration)"
+    return OffsetAllowance(deduction, from_s, note)
+
+
+def offset_allowance_of(meta: dict, config):
+    """E-6 allowance of a record: the recorded fields, else :func:`rebuilt_offset_allowance`
+    with the run's controller setting ``config``."""
+    from outrigger_sim.control.r5_fallback_replay import OffsetAllowance
+
+    recorded = meta.get("pressure_offset_allowance_N")
+    if recorded is not None:
+        return OffsetAllowance(np.asarray(recorded, float),
+                               meta.get("pressure_offset_allowance_from_s"), "recorded")
+    return rebuilt_offset_allowance(meta.get("events") or [],
+                                    config.zero_calibration.failure_allowance_N,
+                                    config.pressure_offset_allowance_N)
+
+
+def recorded_lower_difference_N(arrays: dict, meta: dict, closed_loop, config,
+                                allowance) -> float | None:
+    """Largest ``|replay - lower_reading_N|`` of the replay with the run's own events (None
+    without the run's lower reading); NaN in both counts as equal."""
+    from outrigger_sim.control.c2 import C2Geometry
+    from outrigger_sim.control.contact_replay import replay_fallback_monitor
+
+    if "lower_reading_N" not in arrays:
+        return None
+    events = [(float(t), str(name)) for t, name in meta.get("events") or []]
+    replay = replay_fallback_monitor(_Record(arrays, meta), events,
+                                     C2Geometry.from_params(closed_loop.PARAMS), config,
+                                     offset_allowance_N=allowance.deduction_N,
+                                     offset_allowance_from_s=allowance.from_s)
+    recorded = arrays["lower_reading_N"]
+    both_nan = np.isnan(replay.lower_reading_N) & np.isnan(recorded)
+    difference = np.where(both_nan, 0.0, np.abs(replay.lower_reading_N - recorded))
+    return float(np.max(difference)) if difference.size else 0.0
+
+
+def replay_values(path: Path, extend_start: str | None = None,
+                  check_recorded: bool = False) -> dict:
+    """T4h values of one record (module docstring); ``check_recorded`` adds the own-event
+    replay difference ``recorded_lower_max_abs_N``.
 
     Raises:
         RuntimeError: The rebuilt monitor settings differ from the stored ones (with
@@ -128,7 +227,10 @@ def replay_values(path: Path, extend_start: str | None = None) -> dict:
     t_s = arrays["t_s"]
     forced = [(float(t_s[0]), f"{FALLBACK_EVENT}:{leg}") for leg in LEGS]
     geometry = C2Geometry.from_params(closed_loop.PARAMS)
-    replay = replay_fallback_monitor(_Record(arrays, meta), forced, geometry, config)
+    allowance = offset_allowance_of(meta, config)
+    replay = replay_fallback_monitor(_Record(arrays, meta), forced, geometry, config,
+                                     offset_allowance_N=allowance.deduction_N,
+                                     offset_allowance_from_s=allowance.from_s)
     acting = np.zeros_like(arrays["command_m_s"])
     acting[1:] = arrays["command_m_s"][:-1]
     is_zero = acting == 0.0
@@ -140,7 +242,13 @@ def replay_values(path: Path, extend_start: str | None = None) -> dict:
     over = judged & (excess > EXCESS_LIMIT_N)
     excess_min_basis = replay.lower_reading_N - arrays["true_force_min_N"]
     recorded = judged & np.isfinite(excess_min_basis)
+    own_events = {} if not check_recorded else {
+        "recorded_lower_max_abs_N": recorded_lower_difference_N(arrays, meta, closed_loop,
+                                                                config, allowance)}
     return {"file": path.name, "samples": int(len(t_s)),
+            "offset_allowance_N": allowance.deduction_N.tolist(),
+            "offset_allowance_from_s": allowance.from_s,
+            "offset_allowance_source": allowance.note, **own_events,
             "judged_samples_by_leg": _by_leg(judged.sum(axis=0)),
             "over_0p6kN_by_leg": _by_leg(over.sum(axis=0)),
             "over_0p6kN": int(over.sum()),
@@ -185,6 +293,8 @@ def _parse_arguments() -> argparse.Namespace:
     parser.add_argument("records", nargs="+", help="npz files or folders")
     parser.add_argument("--extend-start", choices=EXTEND_START_CHOICES, default=None,
                         help="override the ③ start rule (record T4h-P3; spec p3 4 #8)")
+    parser.add_argument("--check-recorded", action="store_true",
+                        help="also replay with the run's own events against lower_reading_N")
     return parser.parse_args()
 
 
@@ -193,7 +303,8 @@ def main() -> int:
         print(__doc__)
         return 2
     args = _parse_arguments()
-    rows = [replay_values(path, args.extend_start) for path in record_files(args.records)]
+    rows = [replay_values(path, args.extend_start, args.check_recorded)
+            for path in record_files(args.records)]
     report = {"rule": "criteria 9 T4h: zero acting command samples of a locked plant leg, "
                       "lower - true_force_N > 0.6 kN count (0 = provisional pass); fallback "
                       "forced on all legs; unlocked tail samples recorded only",
@@ -201,7 +312,13 @@ def main() -> int:
               "extend_start_rule": args.extend_start,
               "extend_start_revision": _override_revision(args.extend_start),
               "runs": len(rows), "runs_over": sum(not row["provisional_pass"] for row in rows),
+              "offset_allowance_runs": sum(any(value != 0.0 for value in
+                                               row["offset_allowance_N"]) for row in rows),
               "rows": rows}
+    if args.check_recorded:
+        differences = [row["recorded_lower_max_abs_N"] for row in rows
+                       if row["recorded_lower_max_abs_N"] is not None]
+        report["recorded_lower_max_abs_N"] = max(differences) if differences else None
     Path(args.out_json).write_text(json.dumps(report, indent=1), encoding="utf-8")
     print(json.dumps({k: report[k] for k in ("runs", "runs_over")}))
     return 0

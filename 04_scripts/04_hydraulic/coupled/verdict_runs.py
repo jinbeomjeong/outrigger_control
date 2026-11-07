@@ -242,8 +242,10 @@ def write_t4h_record(path, plant, controller, period: dict, meta: dict,
     history = PlantLockHistory(plant.lock_events)
     locked = np.array([[history.is_locked_at(leg, float(t)) for leg in range(4)] for t in t_s],
                       bool).reshape(-1, 4)
-    monitor = controller.meta()["two_pressure"]
+    controller_meta = controller.meta()
+    monitor = controller_meta["two_pressure"]
     full_meta = {**meta, "zero_offset_N": monitor.get("zero_offsets_N"),
+                 **offset_allowance_record(controller_meta),
                  "two_pressure_settings": monitor.get("settings"),
                  "F_min_N": float(controller.geometry.F_min_N),
                  "period_s": controller.config.period_s,
@@ -267,6 +269,23 @@ def write_t4h_record(path, plant, controller, period: dict, meta: dict,
         true_force_min_N=true_force_min, locked=locked,
         lock_events=np.array(plant.lock_events, float).reshape(-1, 3),
         meta_json=np.array(json.dumps(meta_for_json(full_meta))), **(extra_arrays or {}))
+
+
+def offset_allowance_record(controller_meta: dict) -> dict:
+    """E-6 pressure-zero allowance of a run, record only (user decision 2026-11-08).
+
+    ``pressure_offset_allowance_N``: the per-leg lower-bound deduction the monitor holds at the
+    end of the run (``zero_calibration.pressure_offset_allowance_N``);
+    ``pressure_offset_allowance_from_s``: the update that set it, i.e. the end of the zero
+    calibration (``zero_calibration.result.t_end_s``; None without a calibration). The
+    deduction acts on the reads after that update (``contact_replay.replay_fallback_monitor``
+    ``offset_allowance_from_s``). Read from the controller meta after the run, so the commands
+    do not change.
+    """
+    calibration = controller_meta.get("zero_calibration") or {}
+    allowance = calibration.get("pressure_offset_allowance_N")
+    return {"pressure_offset_allowance_N": None if allowance is None else list(allowance),
+            "pressure_offset_allowance_from_s": (calibration.get("result") or {}).get("t_end_s")}
 
 
 def meta_for_json(value):
