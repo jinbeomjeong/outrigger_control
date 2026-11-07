@@ -228,10 +228,30 @@ def test_first_lock_after_arming_keeps_p_ext_even_above_the_target() -> None:
     drive = _Drive(law)
     drive.step(0.0)
     assert np.array_equal(law.lock_anchor_rod_pressure_Pa, np.full(2, P_RET))
-    # after an extension the r5 rule applies
-    drive.extend(0.01, 0.5)
+    # after an extension the r5 rule applies (here its p_tr cap binds: below p_ext)
+    p_tr = drive.extend(0.01, 0.5).copy()
     drive.step(0.0)
-    assert np.all(law.lock_anchor_rod_pressure_Pa > P_RET)
+    assert np.array_equal(law.lock_anchor_rod_pressure_Pa, p_tr)
+    assert np.all(p_tr < P_RET)
+
+
+def test_anchor_is_capped_at_the_tracked_pressure_when_p_ext_is_above_the_target() -> None:
+    """hydraulics-expert 2026-11-07: p_r0 = min(p_tr, p_ext + max(p_tr - p*, 0)). With p_ext
+    34.818 bar (> p* 5 bar) a short extension after the arming locks at p_tr, not above it."""
+    law = L2bRodSide(head_area_m2=HEAD, annulus_area_m2=ANNULUS, k_out_N_m=[math.inf] * 2,
+                     bulk_modulus_Pa=BETA, head_dead_length_m=L0, rod_dead_length_m=[L0] * 2,
+                     stroke_m=STROKE, p_r0_after_extend_Pa=[P_RET] * 2,
+                     p_r0_after_retract_Pa=[P_RET] * 2, p_floor_abs_Pa=P_FLOOR_ABS,
+                     release_tau_s=TAU, lock_eps_m_s=1.0e-6)
+    law.set_rod_pressure_flow_law(RodPressureFlowLaw())
+    drive = _Drive(law)
+    drive.step(0.0)  # arming lock at p_ext
+    p_tr = drive.extend(0.01, 0.1).copy()
+    drive.step(0.0)
+    anchor = law.lock_anchor_rod_pressure_Pa
+    assert np.all(p_tr > P_STAR)
+    assert np.all(anchor <= p_tr)
+    assert np.array_equal(anchor, p_tr)  # the cap binds: p_ext + (p_tr - p*) > p_tr
 
 
 def test_extended_flag_is_a_snapshot_key_with_m2_only() -> None:

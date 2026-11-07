@@ -79,7 +79,8 @@ M2_EXTENDED_KEY = "m2_extended_since_arm"
 """Optional snapshot key (M2 on only): per leg, an extend step since the arming (r5 anchor)."""
 
 LOCK_ANCHOR_AFTER_EXTEND_M2 = (
-    "M2 revision 5 (B): p_r0 = max(p_ext + max(p_tr - p*, 0), p_floor), p_tr = tracked M2 rod "
+    "M2 revision 5 (B): p_r0 = max(min(p_tr, p_ext + max(p_tr - p*, 0)), p_floor) after an "
+    "extension of the arming, p_tr = tracked M2 rod "
     "pressure of the hook before the lock, p* = moving_target_rod_pressure_Pa(EXT, F_cyl) of the "
     "lock step, p_ext = p_r0_after_extend_Pa; M2 off: p_ext")
 """Meta text of the extend lock anchor with M2 on (``r5_spec.md``, hydraulics-expert 2026-11-07)."""
@@ -471,8 +472,11 @@ class L2bRodSide:
                 # spec "first lock at arming = p_ext"; matters when p_ext > p*)
                 target_Pa = leg.params.moving_target_rod_pressure_Pa(RodChamberMode.EXT,
                                                                      float(f_cyl[i]))
-                override = float(self._p_ext[i]) + max(
-                    float(leg.tracked_rod_pressure_Pa) - target_Pa, 0.0)
+                tracked_Pa = float(leg.tracked_rod_pressure_Pa)
+                # upper cap p_tr (hydraulics-expert 2026-11-07): with p_ext > p* the sum could
+                # count more trapped pressure than the chamber holds
+                override = min(tracked_Pa,
+                               float(self._p_ext[i]) + max(tracked_Pa - target_Pa, 0.0))
             f_before = (
                 self._locked_force(i, float(c[i])) if was_locked
                 else self._moving_force(i, float(s[i]), float(c[i]), t_s)
