@@ -9,6 +9,7 @@ replay (spec #5).
 from __future__ import annotations
 
 import importlib
+import json
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -28,6 +29,25 @@ VB_STAGE3_RECORD = (PROJECT_ROOT / "07_results" / "S8" / "v5s3_VB_E_G4_Fs4_20261
                     / "E_G4_Fs4")
 """Stage 3 VB event row (M2 r5, ``hydraulics_record`` with ``m2_releases``), stored."""
 WEIGHT_N = 376.7e3
+STAGE3_RESULTS = PROJECT_ROOT / "07_results" / "S8"
+"""Case folders of batch ``V5-STAGE3_20261107_184341`` (``v5s3_<setting>_<case>_<stamp>``)."""
+STAGE3_ROW_COUNT = 23
+STAGE3_T45_ROWS = {
+    "VB": ("K0V_top_fup3.5_Fs0", "K0_top_fup3.2_Fs0", "K0V_top_roll5.5_Fs0",
+           "K0_top_fdown3.2_Fs0", "K0V_top_fdown3.5_Fs0", "E_G4_Fs8", "K0_top_rpBop_Fs0",
+           "E_RE1bF_Fs0", "E_RE1bF_Fs8", "K8_top_rpB_Fs8", "S_top_fdown3.5_wika_Fs8",
+           "K8_top_fdown3.5_Fs8"),
+    "LS1": ("K0V_top_fup3.5_Fs0", "E_G4_Fs8", "E_RE1bF_Fs8"),
+    "LS4": ("K0V_top_fup3.5_Fs0", "E_G4_Fs8", "E_RE1bF_Fs8")}
+"""The 18 T4 / T5 rows of the stage 3 judgement (criteria rev. 7 5: VB 12 + LS 6)."""
+REV7_REFERENCE = (PROJECT_ROOT / "06_analysis" / "03_hydraulic" / "coupled" / "v5" / "rev7_ref"
+                  / "h7_exclusion_v2.json")
+
+
+def _stage3_case(setting: str, case: str) -> Path:
+    folders = sorted(STAGE3_RESULTS.glob(f"v5s3_{setting}_{case}_2*"))
+    assert len(folders) == 1, (setting, case, folders)
+    return folders[0] / case
 
 
 @pytest.fixture(scope="module")
@@ -188,3 +208,89 @@ def test_r4_lock_window_of_a_stored_vb_record(lock_window) -> None:
     record = lock_window.chrono_lock_window_alignment(VB_RECORD)
     assert record["n_late_fallback"] == 0
     assert sum(record["judged_by_leg"].values()) > 0
+
+
+# ------------------------------------------------------------------- criteria rev. 7 (3)
+def test_rev7_e5_reads_the_last_nonzero_command_before_the_row(t45) -> None:
+    """E5: the last nonzero acting command before ``k`` (not ``k`` itself) is a retraction."""
+    acting = np.array([[0.0], [-1.0], [0.0], [0.0], [2.0], [0.0], [-3.0]])
+    retraction = t45.last_motion_was_retraction(acting)
+    assert retraction[:, 0].tolist() == [False, False, True, True, True, False, False]
+
+
+def test_rev7_sensor_model_row_key(t45) -> None:
+    """3.3: ``settings.bundle_c.sensor_model``; a missing key (or the top level) is false."""
+    assert t45.is_sensor_model_row({"settings": {"bundle_c": {"sensor_model": True}}})
+    assert not t45.is_sensor_model_row({"settings": {"bundle_c": {"sensor_model": False}}})
+    assert not t45.is_sensor_model_row({"settings": {}})
+    assert not t45.is_sensor_model_row({"bundle_c": {"sensor_model": True}})
+
+
+def test_rev7_guard_keeps_e_samples_with_a_nonnegative_forced_lower(t45) -> None:
+    """3.2: an E sample leaves only below 0 kN; the others stay judged and are counted."""
+    candidate = np.array([True, True, True, False])
+    lower = np.array([-4.5e3, 0.0, np.nan, -9.0e3])
+    excluded, violations = t45.guarded_exclusion(candidate, lower)
+    assert excluded.tolist() == [True, False, False, False]
+    assert violations.tolist() == [False, True, True, False]
+
+
+def test_rev7_b1_own_excess(t45) -> None:
+    """3.3: equals the raw excess where the plain path is not optimistic."""
+    raw = np.array([1.0e3, 1.0e3, 0.2e3])
+    plain = np.array([-0.5e3, 0.7e3, 0.9e3])
+    assert t45.own_excess_N(raw, plain).tolist() == [1.0e3, 0.3e3, -0.7e3]
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(not STAGE3_RESULTS.is_dir() or not any(STAGE3_RESULTS.glob("v5s3_*")),
+                    reason="stored stage 3 records not present")
+def test_rev7_regression_on_the_stage3_records(t45) -> None:
+    """Criteria rev. 7 4 / 5: the 18 stored stage 3 rows give the sealed reference values
+    (``rev7_ref/h7_exclusion_v2.json``, off path); T5 runs on the F_s 8 rows (the only rows
+    with T5 excess under rev. 6). The guard is 3.2 (forced lower < 0), not ``guard_bad``."""
+    folders = sorted(path for path in STAGE3_RESULTS.glob("v5s3_*/*")
+                     if (path / "result.json").is_file())
+    assert len(folders) == STAGE3_ROW_COUNT
+    sensor_rows = [folder.name for folder in folders if t45.is_sensor_model_row(
+        json.loads((folder / "result.json").read_text(encoding="utf-8")))]
+    assert sensor_rows == ["S_top_fdown3.5_wika_Fs8"]
+
+    reference = {(row["setting"], row["case"]): row["off"] for row in json.loads(
+        REV7_REFERENCE.read_text(encoding="utf-8"))["rows"]}
+    rows = []
+    for setting, cases in STAGE3_T45_ROWS.items():
+        for case in cases:
+            row = t45.replay_case(_stage3_case(setting, case), with_t5="Fs8" in case,
+                                  criteria=t45.CRITERIA_REV7)
+            assert row["settings_equal"] and row["t4_0"], (setting, case)
+            expected, t4 = reference[(setting, case)], row["T4"]
+            assert t4["judged_samples_rev6"] == expected["T4_before"]["n"], (setting, case)
+            assert t4["judged_samples"] == expected["T4_after"]["n"], (setting, case)
+            assert t4["e_excluded"] == expected["excluded"], (setting, case)
+            assert t4["e1_to_e4_samples"] == expected["excluded_no_E5"], (setting, case)
+            assert t4["over_0p6kN_rev6"] == expected["T4_before"]["over"], (setting, case)
+            assert t4["raw_over_0p6kN"] == expected["T4_after"]["over"], (setting, case)
+            rows.append(row)
+
+    totals = t45.rev7_summary(rows)
+    assert totals["T4_judged_samples_rev6"] == 26_380
+    assert totals["T4_judged_samples"] == 26_210
+    assert totals["T4_e_excluded"] == 170
+    assert totals["T4_e1_to_e4_samples"] == 386
+    assert totals["T4_over_0p6kN_rev6"] == 75
+    assert totals["T4_raw_over_0p6kN"] == 5
+    assert sum(row["T4"]["over_0p6kN"] for row in rows) == 0
+    assert totals["T4_guard_violations"] == 0
+    assert totals["T4_check_precal_grounded"] == 0
+    assert sum(leg["e_excluded_over_0p6kN"] for row in rows
+               for leg in row["T4"]["legs"].values()) == 70
+    assert totals["T5_over_0p6kN_rev6"] == 104
+    assert totals["T5_raw_over_0p6kN"] == 31
+    assert sum(row["T5"]["over_0p6kN"] for row in rows if "T5" in row) == 0
+    assert totals["T5_guard_violations"] == 0
+    assert totals["T5_e_excluded"] == 148
+    assert totals["sensor_model_rows"] == 1
+    own_max_N = 0.18899124462126202e3
+    assert totals["T4_max_own_excess_N"] == pytest.approx(own_max_N, rel=1e-9)
+    assert totals["T5_max_own_excess_N"] == pytest.approx(own_max_N, rel=1e-9)

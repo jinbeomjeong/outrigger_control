@@ -20,11 +20,19 @@ Truth: ``pads.npz`` ``F_pressure`` (net oil force) at ``j = searchsorted(t_pads,
 when ``|t_pads[j] - t_k| <= 0.5 ms``; ``law_locked``, ``airborne`` and
 ``F_pressure_min_interval`` at the same ``j``.
 
-The criteria rev. 6 is not sealed: running this on stage 3 VB records waits for the seal.
+Criteria revision (``--criteria``, default ``rev6``; the rev. 6 output is unchanged):
+
+* ``rev6``: the judged samples and the failure above;
+* ``rev7`` (``v5_criteria_rev7.md`` 3): the E samples (CHECK, before the leg's zero calibration,
+  tail, airborne, last motion a retraction) leave the judged samples when the forced lower
+  bound there is below 0 kN (guard 3.2; T4 forced from the first row, T5 from the start ``m``);
+  sensor-error rows (``settings.bundle_c.sensor_model``) fail on the fallback's own excess
+  ``(lower - F_p) - max(plain - F_p, 0)`` (B1 3.3, ``plain`` = replay without any fallback);
+  the 3.4 records are added and the report carries ``"criteria": "rev7"``.
 
 Usage (dynamics-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/chrono_t45_replay.py <out_json> <case or batch>
-      [...] [--t5] [--extend-start tracked_bound]
+      [...] [--t5] [--extend-start tracked_bound] [--criteria rev7]
 """
 from __future__ import annotations
 
@@ -69,6 +77,11 @@ CONSERVATISM_PERCENTILES = (50, 90, 99)
 HARNESS_VALVE_TAU_S = 0.1
 READY_PHASE = "ready"
 """``C2Phase.READY.value``."""
+CHECK_PHASE = "check"
+"""``C2Phase.CHECK.value`` (criteria rev. 7 E1)."""
+CRITERIA_REV6, CRITERIA_REV7 = "rev6", "rev7"
+GUARD_LIMIT_N = 0.0
+"""Criteria rev. 7 3.2: an E sample leaves the judged samples only below this forced lower."""
 
 
 # ------------------------------------------------------------------------------- inputs
@@ -219,12 +232,15 @@ def command_free_stretches(acting_column: np.ndarray) -> list[tuple[int, int]]:
 
 
 def _excess_summary(record: CaseRecord, lower: np.ndarray, judged: np.ndarray,
-                    leg: int) -> dict:
+                    leg: int, failure_excess_N: np.ndarray | None = None) -> dict:
+    """Judged-sample counts and the over counts of one leg; ``failure_excess_N`` (n,) is the
+    quantity the failure reads (rev. 7 B1), the raw excess ``lower - F_p`` without it."""
     t_s = np.asarray(record.episode["t_s"], float)
     excess = lower[:, leg] - record.truth_N[:, leg]
+    failing = excess if failure_excess_N is None else failure_excess_N
     locked = judged[:, leg] & (record.law_state[:, leg] == LAW_LOCKED)
     tail = judged[:, leg] & (record.law_state[:, leg] == LAW_MOVING)
-    over = judged[:, leg] & (excess > EXCESS_LIMIT_N)
+    over = judged[:, leg] & (failing > EXCESS_LIMIT_N)
     out = {"judged_locked": int(locked.sum()), "judged_tail": int(tail.sum()),
            "airborne_judged": int((judged[:, leg] & record.airborne[:, leg]).sum()),
            "over_0p6kN_locked": int((over & locked).sum()),
@@ -269,11 +285,126 @@ def _tail_after_extension(record: CaseRecord, judged: np.ndarray, leg: int) -> i
     return count
 
 
-def t4(record: CaseRecord) -> dict:
-    """Criteria rev. 6 4.3 / 4.5: all legs fall back from the first row."""
+# ------------------------------------------------------------------- criteria rev. 7 (3)
+@dataclass(frozen=True)
+class Rev7Samples:
+    """Criteria rev. 7 3.1 / 3.3 inputs of one record; masks are (n, 4) on the rev. 6
+    judged samples."""
+
+    excluded_candidate: np.ndarray
+    """E1-E5 all hold (the guard 3.2 still decides per forced lower)."""
+    e1_to_e4: np.ndarray
+    """E1-E4 (3.4 reference count, E5 left out)."""
+    check_precalibration: np.ndarray
+    """E1 and E2 (CHECK before the leg's zero calibration)."""
+    is_sensor_model_row: bool
+    plain_lower_N: np.ndarray | None
+    """Replay without any fallback event (B1 ``l^plain``); only on sensor-error rows."""
+
+
+def last_motion_was_retraction(acting_m_s: np.ndarray) -> np.ndarray:
+    """(n, 4): the last nonzero acting command before row ``k`` is negative (E5)."""
+    acting_m_s = np.asarray(acting_m_s, float)
+    is_retraction = np.zeros(acting_m_s.shape, bool)
+    for leg in range(acting_m_s.shape[1]):
+        last_command = 0.0
+        for row, command in enumerate(acting_m_s[:, leg]):
+            is_retraction[row, leg] = last_command < 0.0
+            if command != 0.0:
+                last_command = command
+    return is_retraction
+
+
+def is_sensor_model_row(result: dict) -> bool:
+    """Criteria rev. 7 3.3: ``settings.bundle_c.sensor_model`` of ``result.json`` (absent =
+    false)."""
+    bundle_c = ((result.get("settings") or {}).get("bundle_c") or {})
+    return bool(bundle_c.get("sensor_model"))
+
+
+def rev7_samples(record: CaseRecord, judged: np.ndarray) -> Rev7Samples:
+    """The E masks (3.1) and the plain lower bound of a sensor-error row (3.3)."""
+    from outrigger_sim.control.contact_replay import _calibration_rows
+
+    t_s = np.asarray(record.episode["t_s"], float)
+    is_check = (np.asarray(record.episode["phase"]).astype(str) == CHECK_PHASE)[:, None]
+    calibration_rows = _calibration_rows(record.events, t_s, record.config.period_s)
+    is_precalibration = np.arange(t_s.size)[:, None] < calibration_rows[None, :]
+    check_precalibration = judged & is_check & is_precalibration
+    e1_to_e4 = (check_precalibration & (record.law_state == LAW_MOVING)
+                & record.airborne)
+    candidate = e1_to_e4 & last_motion_was_retraction(record.acting_m_s)
+    is_sensor_row = is_sensor_model_row(record.result)
+    plain = _replay(record, _without_fallback(record.events)) if is_sensor_row else None
+    return Rev7Samples(candidate, e1_to_e4, check_precalibration, is_sensor_row, plain)
+
+
+def guarded_exclusion(candidate: np.ndarray,
+                      forced_lower_N: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """(excluded, guard violations): an E sample leaves only with a forced lower < 0 kN."""
+    is_negative = np.asarray(forced_lower_N, float) < GUARD_LIMIT_N
+    return candidate & is_negative, candidate & ~is_negative
+
+
+def own_excess_N(raw_excess_N: np.ndarray, plain_excess_N: np.ndarray) -> np.ndarray:
+    """B1: ``(l^forced - F_p) - max(l^plain - F_p, 0)``."""
+    return raw_excess_N - np.maximum(plain_excess_N, 0.0)
+
+
+def _over_and_max(values: np.ndarray) -> tuple[int, float | None]:
+    over = int(np.sum(values > EXCESS_LIMIT_N))
+    return over, (float(values.max()) if values.size else None)
+
+
+def _rev7_leg_record(record: CaseRecord, samples: Rev7Samples, lower: np.ndarray,
+                     judged_rev6: np.ndarray, judged: np.ndarray, leg: int) -> dict:
+    """Criteria rev. 7 3.4 records of one leg (T4)."""
+    t_s = np.asarray(record.episode["t_s"], float)
+    raw_excess = lower[:, leg] - record.truth_N[:, leg]
+    candidate = samples.excluded_candidate[:, leg]
+    excluded = candidate & ~judged[:, leg]
+    grounded = samples.check_precalibration[:, leg] & ~record.airborne[:, leg]
+    excluded_over, excluded_max = _over_and_max(raw_excess[excluded])
+    rev6_over, _ = _over_and_max(raw_excess[judged_rev6[:, leg]])
+    raw_over, _ = _over_and_max(raw_excess[judged[:, leg]])
+    out = {"judged_samples_rev6": int(judged_rev6[:, leg].sum()),
+           "e_excluded": int(excluded.sum()),
+           "e_excluded_over_0p6kN": excluded_over,
+           "e_excluded_max_excess_N": excluded_max,
+           "guard_violations": int((candidate & judged[:, leg]).sum()),
+           "e1_to_e4_samples": int(samples.e1_to_e4[:, leg].sum()),
+           "check_precal_grounded": int(grounded.sum()),
+           "check_precal_grounded_t_s": [float(t) for t in t_s[grounded]],
+           "over_0p6kN_rev6": rev6_over, "raw_over_0p6kN": raw_over}
+    if samples.is_sensor_model_row:
+        plain_excess = samples.plain_lower_N[:, leg] - record.truth_N[:, leg]
+        own = own_excess_N(raw_excess, plain_excess)[judged[:, leg]]
+        out["own_over_0p6kN"], out["max_own_excess_N"] = _over_and_max(own)
+        out["plain_over_0p6kN"], out["max_plain_excess_N"] = _over_and_max(
+            plain_excess[judged[:, leg]])
+    return out
+
+
+def _rev7_totals(legs: dict, samples: Rev7Samples) -> dict:
+    """Row totals of the rev. 7 leg records (T4 and T5 share the keys they have)."""
+    keys = ("judged_samples_rev6", "e_excluded", "guard_violations", "over_0p6kN_rev6",
+            "raw_over_0p6kN", "check_precal_grounded")
+    totals = {key: sum(row[key] for row in legs.values()) for key in keys
+              if all(key in row for row in legs.values())}
+    owns = [row["max_own_excess_N"] for row in legs.values()
+            if row.get("max_own_excess_N") is not None]
+    return {"criteria": CRITERIA_REV7, "sensor_model": samples.is_sensor_model_row, **totals,
+            "max_own_excess_N": max(owns) if owns else None}
+
+
+def t4(record: CaseRecord, criteria: str = CRITERIA_REV6) -> dict:
+    """Criteria rev. 6 4.3 / 4.5: all legs fall back from the first row; ``rev7`` judges the
+    samples left after the guarded E exclusion, sensor-error rows on the own excess (3)."""
     t0 = float(np.asarray(record.episode["t_s"], float)[0])
     lower = _replay(record, forced_events(record, {leg: t0 for leg in range(len(LEGS))}))
     judged = _judged(record)
+    if criteria == CRITERIA_REV7:
+        return _t4_rev7(record, lower, judged)
     legs = {}
     for leg, name in enumerate(LEGS):
         legs[name] = {**_excess_summary(record, lower, judged, leg),
@@ -283,6 +414,28 @@ def t4(record: CaseRecord) -> dict:
                       "tail_ready_extend_samples": _tail_after_extension(record, judged, leg)}
     over = sum(row["over_0p6kN_locked"] + row["over_0p6kN_tail"] for row in legs.values())
     return {"legs": legs, "over_0p6kN": over}
+
+
+def _t4_rev7(record: CaseRecord, lower: np.ndarray, judged_rev6: np.ndarray) -> dict:
+    samples = rev7_samples(record, judged_rev6)
+    excluded, _ = guarded_exclusion(samples.excluded_candidate, lower)
+    judged = judged_rev6 & ~excluded
+    failure = lower - record.truth_N
+    if samples.is_sensor_model_row:
+        failure = own_excess_N(failure, samples.plain_lower_N - record.truth_N)
+    legs = {}
+    for leg, name in enumerate(LEGS):
+        legs[name] = {**_excess_summary(record, lower, judged, leg, failure[:, leg]),
+                      "unarmed": int(((record.acting_m_s[:, leg] == 0.0)
+                                      & (record.law_state[:, leg] == LAW_UNARMED)).sum()),
+                      "conservatism": _conservatism(record, lower, judged, leg),
+                      "tail_ready_extend_samples": _tail_after_extension(record, judged, leg),
+                      **_rev7_leg_record(record, samples, lower, judged_rev6, judged, leg)}
+    over = sum(row["over_0p6kN_locked"] + row["over_0p6kN_tail"] for row in legs.values())
+    judged_samples = sum(row["judged_locked"] + row["judged_tail"] for row in legs.values())
+    return {"legs": legs, "over_0p6kN": over, "judged_samples": judged_samples,
+            "e1_to_e4_samples": int(samples.e1_to_e4.sum()),
+            **_rev7_totals(legs, samples)}
 
 
 class _MonitorStepper:
@@ -336,18 +489,66 @@ class _MonitorStepper:
         return np.asarray(forces.lower, float)
 
 
-def t5(record: CaseRecord) -> dict:
-    """Criteria rev. 6 4.4: per leg, stretch and start ``m``, that leg alone from ``m``."""
+def _stepper_with_states(record: CaseRecord) -> tuple[_MonitorStepper, list]:
+    """The T4-0 replay stepped through, with the monitor state before every row."""
     stepper = _MonitorStepper(record, record.events)
     states = []
     for row in range(len(stepper.t_s)):
         states.append(copy.deepcopy(stepper.monitor))
         stepper.step(row)
+    return stepper, states
+
+
+@dataclass
+class _Rev7StartTally:
+    """Criteria rev. 7 counts of one leg over all T5 starts (guard per start, 3.2)."""
+
+    over: int = 0
+    raw_over: int = 0
+    e_excluded: int = 0
+    guard_violations: int = 0
+    worst_N: float = -math.inf
+    worst_own_N: float = -math.inf
+
+    def add(self, raw_excess: np.ndarray, own_excess: np.ndarray | None,
+            candidate: np.ndarray, lower: np.ndarray) -> None:
+        """One start: arrays over the judged rev. 6 rows of the stretch from that start."""
+        excluded, violations = guarded_exclusion(candidate, lower)
+        self.e_excluded += int(excluded.sum())
+        self.guard_violations += int(violations.sum())
+        kept = ~excluded
+        if not kept.any():
+            return
+        raw = raw_excess[kept]
+        failure = raw if own_excess is None else own_excess[kept]
+        self.raw_over += int(np.sum(raw > EXCESS_LIMIT_N))
+        self.over += int(np.sum(failure > EXCESS_LIMIT_N))
+        self.worst_N = max(self.worst_N, float(raw.max()))
+        if own_excess is not None:
+            self.worst_own_N = max(self.worst_own_N, float(failure.max()))
+
+    def record(self, rev6_over: int, rev6_worst_N: float) -> dict:
+        def finite_or_none(value: float) -> float | None:
+            return None if value == -math.inf else value
+
+        return {"over_0p6kN": self.over, "max_excess_N": finite_or_none(self.worst_N),
+                "over_0p6kN_rev6": rev6_over, "max_excess_N_rev6": finite_or_none(rev6_worst_N),
+                "raw_over_0p6kN": self.raw_over, "e_excluded": self.e_excluded,
+                "guard_violations": self.guard_violations,
+                "max_own_excess_N": finite_or_none(self.worst_own_N)}
+
+
+def t5(record: CaseRecord, criteria: str = CRITERIA_REV6) -> dict:
+    """Criteria rev. 6 4.4: per leg, stretch and start ``m``, that leg alone from ``m``;
+    ``rev7`` applies the guarded E exclusion and B1 to every start (3)."""
+    stepper, states = _stepper_with_states(record)
     judged = _judged(record)
+    samples = rev7_samples(record, judged) if criteria == CRITERIA_REV7 else None
     legs = {}
     for leg, name in enumerate(LEGS):
         starts = over = 0
         worst = -math.inf
+        tally = _Rev7StartTally()
         for first, last in command_free_stretches(record.acting_m_s[:, leg]):
             for start in range(first, last + 1):
                 lower = _stepped_lower(stepper, states[start], leg, start, last)
@@ -355,12 +556,31 @@ def t5(record: CaseRecord) -> dict:
                 starts += 1
                 if not rows:
                     continue
-                excess = lower[[row - start for row in rows]] - record.truth_N[rows, leg]
+                judged_lower = lower[[row - start for row in rows]]
+                excess = judged_lower - record.truth_N[rows, leg]
                 over += int(np.sum(excess > EXCESS_LIMIT_N))
                 worst = max(worst, float(excess.max()))
-        legs[name] = {"starts": starts, "over_0p6kN": over,
-                      "max_excess_N": None if worst == -math.inf else worst}
-    return {"legs": legs, "over_0p6kN": sum(row["over_0p6kN"] for row in legs.values())}
+                if samples is not None:
+                    _add_rev7_start(tally, samples, record, judged_lower, excess, rows, leg)
+        if samples is None:
+            legs[name] = {"starts": starts, "over_0p6kN": over,
+                          "max_excess_N": None if worst == -math.inf else worst}
+        else:
+            legs[name] = {"starts": starts, **tally.record(over, worst)}
+    out = {"legs": legs, "over_0p6kN": sum(row["over_0p6kN"] for row in legs.values())}
+    if samples is not None:
+        out.update(_rev7_totals(legs, samples))
+    return out
+
+
+def _add_rev7_start(tally: _Rev7StartTally, samples: Rev7Samples, record: CaseRecord,
+                    lower: np.ndarray, raw_excess: np.ndarray, rows: list[int],
+                    leg: int) -> None:
+    own = None
+    if samples.is_sensor_model_row:
+        plain_excess = samples.plain_lower_N[rows, leg] - record.truth_N[rows, leg]
+        own = own_excess_N(raw_excess, plain_excess)
+    tally.add(raw_excess, own, samples.excluded_candidate[rows, leg], lower)
 
 
 def _stepped_lower(stepper: _MonitorStepper, state, leg: int, start: int,
@@ -372,11 +592,7 @@ def _stepped_lower(stepper: _MonitorStepper, state, leg: int, start: int,
 
 def t5_naive_check(record: CaseRecord, samples: int = 3, seed: int = 0) -> dict:
     """Spec R-6 #5: the copied-state T5 equals a full replay with the start forced."""
-    stepper = _MonitorStepper(record, record.events)
-    states = []
-    for row in range(len(stepper.t_s)):
-        states.append(copy.deepcopy(stepper.monitor))
-        stepper.step(row)
+    stepper, states = _stepper_with_states(record)
     t_s = np.asarray(record.episode["t_s"], float)
     candidates = [(leg, start, last) for leg in range(len(LEGS))
                   for first, last in command_free_stretches(record.acting_m_s[:, leg])
@@ -574,8 +790,9 @@ def ext_lock_counters(hydraulics: dict, params) -> dict:
 
 # --------------------------------------------------------------------------------- driver
 def replay_case(case_dir: Path, *, with_t5: bool = False,
-                extend_start: str | None = None) -> dict:
-    """All values of one case folder (module docstring)."""
+                extend_start: str | None = None, criteria: str = CRITERIA_REV6) -> dict:
+    """All values of one case folder (module docstring); ``criteria`` picks the T4 / T5
+    judgement (``rev6`` or ``rev7``)."""
     from outrigger_sim.control.extend_start_bound import check_extend_start_meta
     from outrigger_sim.control.r5_fallback_replay import monitor_setting_differences
     from outrigger_sim.params import load_params
@@ -601,9 +818,9 @@ def replay_case(case_dir: Path, *, with_t5: bool = False,
     row.update(t4_0(record))
     if not row["t4_0"]:
         return row
-    row["T4"] = t4(record)
+    row["T4"] = t4(record, criteria)
     if with_t5:
-        row["T5"] = t5(record)
+        row["T5"] = t5(record, criteria)
     lift = lift_record(record)
     row["lift"] = lift
     hydraulics = record.result.get("hydraulics_record") or {}
@@ -657,6 +874,52 @@ def summary(rows: list[dict]) -> dict:
             "anchor_note": "앵커 위험 미관측" if risk == 0 else "앵커 위험 관측"}
 
 
+def rev7_summary(rows: list[dict]) -> dict:
+    """Criteria rev. 7 3.4 totals over the rows (added to ``summary`` under ``rev7``)."""
+    judged = [row for row in rows if row.get("t4_0")]
+
+    def total(test: str, key: str) -> int:
+        return sum(row[test][key] for row in judged if test in row)
+
+    def largest(test: str, key: str) -> float | None:
+        values = [row[test][key] for row in judged
+                  if test in row and row[test][key] is not None]
+        return max(values) if values else None
+
+    judged_samples = total("T4", "judged_samples")
+    excluded = total("T4", "e_excluded")
+    return {"T4_judged_samples_rev6": total("T4", "judged_samples_rev6"),
+            "T4_judged_samples": judged_samples, "T4_e_excluded": excluded,
+            "T4_e1_to_e4_samples": total("T4", "e1_to_e4_samples"),
+            "T4_over_0p6kN_rev6": total("T4", "over_0p6kN_rev6"),
+            "T4_raw_over_0p6kN": total("T4", "raw_over_0p6kN"),
+            "T4_guard_violations": total("T4", "guard_violations"),
+            "T4_check_precal_grounded": total("T4", "check_precal_grounded"),
+            "T4_max_own_excess_N": largest("T4", "max_own_excess_N"),
+            "T5_over_0p6kN_rev6": total("T5", "over_0p6kN_rev6"),
+            "T5_raw_over_0p6kN": total("T5", "raw_over_0p6kN"),
+            "T5_e_excluded": total("T5", "e_excluded"),
+            "T5_guard_violations": total("T5", "guard_violations"),
+            "T5_max_own_excess_N": largest("T5", "max_own_excess_N"),
+            "sensor_model_rows": sum(row["T4"]["sensor_model"] for row in judged),
+            "sample_note": (f"개정 7 판정 표본(E 제외 {judged_samples:,}, "
+                            f"제외 표본 {excluded:,})")}
+
+
+def report_of(rows: list[dict], criteria: str, extend_start: str | None) -> dict:
+    """The output document; the rev. 6 document is the tool's original one."""
+    record = "T4" if extend_start is None else "T4-P3"
+    if criteria == CRITERIA_REV6:
+        return {"rule": "criteria rev. 6 4 (T4-0, T4, T5) and 5 / 7 records",
+                "record": record, "summary": summary(rows), "rows": rows}
+    return {"rule": ("criteria rev. 7 3 (E exclusion, guard, B1) on rev. 6 4 (T4-0, T4, T5) "
+                     "and 5 / 7 records"),
+            "criteria": CRITERIA_REV7, "record": record,
+            "summary": {**summary(rows), "criteria": CRITERIA_REV7,
+                        "rev7": rev7_summary(rows)},
+            "rows": rows}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("out_json")
@@ -664,12 +927,14 @@ def main() -> int:
     parser.add_argument("--t5", action="store_true")
     parser.add_argument("--extend-start", choices=("constant", "tracked_bound"), default=None,
                         help="override the ③ start rule (record T4-P3, criteria rev. 6 4.7)")
+    parser.add_argument("--criteria", choices=(CRITERIA_REV6, CRITERIA_REV7),
+                        default=CRITERIA_REV6,
+                        help="T4 / T5 judgement revision (rev7: E exclusion, guard, B1)")
     args = parser.parse_args()
-    rows = [replay_case(folder, with_t5=args.t5, extend_start=args.extend_start)
+    rows = [replay_case(folder, with_t5=args.t5, extend_start=args.extend_start,
+                        criteria=args.criteria)
             for folder in case_folders(args.cases)]
-    report = {"rule": "criteria rev. 6 4 (T4-0, T4, T5) and 5 / 7 records",
-              "record": "T4" if args.extend_start is None else "T4-P3",
-              "summary": summary(rows), "rows": rows}
+    report = report_of(rows, args.criteria, args.extend_start)
     Path(args.out_json).write_text(json.dumps(report, indent=1, default=str), encoding="utf-8")
     print(json.dumps(report["summary"]))
     return 0
