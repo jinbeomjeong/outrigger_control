@@ -158,12 +158,17 @@ def test_r5_extension_lock_anchor_on_the_harness(tmp_path: Path) -> None:
             assert row["measured_knee_kN"] == pytest.approx(row["knee_formula_kN"],
                                                             abs=ANCHOR_KNEE_TOLERANCE_KN)
     for case in ANCHOR_RAISED_CASES:
-        record = report[case]["record"]
+        record, leg = report[case]["record"], int(case.rsplit("_", 1)[1])
         assert report[case]["p_r0_bar"] > 2.1
-        assert record["anchor_excess_over_0p1bar_locks"] == 1
+        assert record["ext_lock_count"][leg] == 1
+        assert record["ext_lock_excess_count"][leg] == 1
+        assert record["ext_lock_excess_max_bar"][leg] == pytest.approx(
+            report[case]["p_r0_bar"] - P_EXT_PA / 1e5, abs=1e-9)
+        assert record["ext_lock_knee_max_kN"][leg] == pytest.approx(
+            report[case]["knee_formula_kN"], rel=1e-12)
     for case in ANCHOR_P_EXT_CASES:
         assert abs(report[case]["p_r0_Pa"] - P_EXT_PA) <= ANCHOR_EXACT_PA
-        assert report[case]["record"]["anchor_excess_over_0p1bar_locks"] == 0
+        assert sum(report[case]["record"]["ext_lock_excess_count"]) == 0
     for leg in (0, 2):
         assert report[f"U1_off_{leg}"]["p_r0_Pa"] == P_EXT_PA
         for state in ("on", "off"):

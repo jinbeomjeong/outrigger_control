@@ -205,8 +205,9 @@ def test_m2_12_r5_extension_anchor_is_the_same_on_both_paths(fraction, duration_
         lag.start(leg, ANCHOR_START_PA)
         for _ in range(round(duration_s / STEP_S)):
             lag.relax(leg, 1.0, ANCHOR_FORCE_N, fraction * MAX_SPEED_M_S)
-        harness_anchor_Pa = max(2.0 * BAR + lag.extension_excess_Pa(leg, ANCHOR_FORCE_N),
-                                floor_Pa)
+        tracked_Pa = float(lag.pressure_Pa[leg])
+        harness_anchor_Pa = max(min(tracked_Pa, 2.0 * BAR
+                                    + lag.extension_excess_Pa(leg, ANCHOR_FORCE_N)), floor_Pa)
         assert harness_anchor_Pa == pytest.approx(float(l2b_anchor_Pa[index]), rel=1e-12)
 
 
