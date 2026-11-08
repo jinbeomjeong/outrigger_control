@@ -55,6 +55,10 @@ Env: R72_FILTER (substrings), R72_AFFINITY (hex mask on the parent),
 Rigid base (user decision 2026-10-27, ``MixedRigidPads``): soil string "rigid+<weak>@<leg>"; the three rigid legs keep
   the harness rigid pad spring and floor offset 0 every chunk, the weak leg is one soil element on the flat floor
   (surface at the floor level), crawler on the rigid floor.
+D-1 verification matrix (2026-11-08, ``04_scripts/04_hydraulic/coupled/d1_runs.py``): ``job(key, slope=,
+  settle_hook=)`` adds a floor slope (rigid base: tilted rigid floor, patch surface = that plane; soil base: the
+  settle row ``<base>|<level>|<roll>|<pitch>`` with settle_hook "harness"). Keys and results without them are
+  unchanged.
 """
 from __future__ import annotations
 
@@ -159,7 +163,9 @@ class SoilPadsPerLeg(sl.SoilPads):
 class MixedRigidPads(SoilPadsPerLeg):
     """Rigid base (user decision 2026-10-27): rigid legs keep the harness rigid pad spring (``ks_rigid``, concrete
     slab included) and floor offset 0; the weak leg is one soil element (k_s = series(k_rod, k_frame) as the s9 soil
-    plant). Crawler on the flat rigid floor; the weak patch surface is at the floor level (h = 0)."""
+    plant). Crawler on the rigid floor; the weak patch surface is the floor plane (h = 0). On a tilted floor (D-1
+    P-2, ``job(..., slope=...)``) the plane is the plant's tilted floor: ``soil_floor_per_leg`` measures the
+    penetration along the floor normal ``plant.nrm``, so no other change is needed."""
 
     def __init__(self, leg_keys, pad_type, pad_xy, ks_soil, ks_rigid, k_scale=1.0):
         weak = next((k for k in leg_keys if k != "rigid"), "J1")
@@ -374,8 +380,17 @@ def pad_of_key(key: str) -> str:
     raise ValueError(f"r72 job key needs 4 fields or a fifth '{X426_PAD_A_FIELD}': {key!r}")
 
 
-def job(key):
-    """key = '<set>|<soil string>|<level>|Fs<f>' and optionally '|PA' (pad A, spec 426.5)."""
+def job(key, slope=None, settle_hook=None):
+    """key = '<set>|<soil string>|<level>|Fs<f>' and optionally '|PA' (pad A, spec 426.5).
+
+    Args:
+        slope: floor (roll, pitch) [deg] (D-1 P-2 / P-3); None = flat, the case dict of every
+            former key unchanged. A rigid base tilts the rigid floor and the patch element's
+            surface with it (``MixedRigidPads``); a soil base looks up its settle row for this
+            slope.
+        settle_hook: the s9 settle hook of the run ("harness" = the dynamics row of the BASE soil,
+            auger level and slope); None = ``$S9_SETTLE_HOOK`` as before.
+    """
     _install()
     _CAP.clear()
     _CAP["crawler_series"] = []  # 1 ms true crawler force (spec 419.8 condition 3, record only)
@@ -384,6 +399,10 @@ def job(key):
     pad = pad_of_key(key)
     case = {"id": key, "soil": soil, "pad": pad, "level": level, "fs_kN": float(fs[2:]),
             "variant": {}}
+    if slope is not None:  # only D-1 cases carry the keys (s9 run_case reads both)
+        case["slope"] = (float(slope[0]), float(slope[1]))
+    if settle_hook is not None:
+        case["settle_hook"] = settle_hook
     try:
         out = sl.run_case(case)
     except Exception as exc:  # keep the batch going
@@ -505,6 +524,8 @@ def job(key):
         "twist_unsettled_D_kN": [float(n.split(":")[1]) for n in names if n.startswith("INFO_TWIST_UNSETTLED:")],
         "warnings": sorted({n.split(":")[0] for n in names if n.startswith(("WARN", "FAULT"))}),
     }
+    if slope is not None:  # D-1 records (the former keys keep their records)
+        rec["slope_deg"] = list(case["slope"])
     if revoked is not None:  # spec 424.8.1 records (only with a revocation: former records unchanged)
         rec.update(late_loc_revoked=revoked, t_loc_first_s=timeline["t_loc_first_s"],
                    t_loc_final_s=t_loc, loc_revokes=timeline["revoke_times_s"])

@@ -253,17 +253,19 @@ def preset_controller(cl, c2, variant: dict | None = None):
 
 
 def make_event_base(cl, c2, soil: str, level: str, pad: str, fs_kN: float,
-                    settle_hook: str = SETTLE_HOOK):
+                    settle_hook: str = SETTLE_HOOK, slope=(0.0, 0.0)):
     """Plant settled on the crawler and armed, a fresh project preset controller, settle info.
 
     Same construction as ``s9_soil_closed_loop.run_case`` without a case dict (T-2 identity).
+    ``slope`` (roll, pitch) [deg] (D-1 P-4): the floor slope; with the hook "harness" a soil base
+    takes the settle row ``<soil>|<level>|<roll>|<pitch>`` (KeyError without one).
 
     Returns:
         (plant, controller, info); info = settle snapshot and the pad-surface heights h0 [m].
     """
     cl.rmf.CONFIG.clear()
     cl.rpt.RCFG.clear()
-    plant = sl.make_plant(cl, level, soil, pad, fs_kN, settle_hook=settle_hook)
+    plant = sl.make_plant(cl, level, soil, pad, fs_kN, slope=slope, settle_hook=settle_hook)
     plant.step(np.zeros(4), int(round(cl.rcc.SETTLE_ON_CRAWLER_S / plant.dt)))
     plant.t = 0.0
     plant.arm()
@@ -395,13 +397,28 @@ def run_base_soil(cl, Meas, plant, ctrl, readings=READINGS_TWO, stop_t=None,
             "commands_sha256": hasher.hexdigest(), "stroke_max_mm": float(stroke_max.max() * 1e3)}
 
 
+def progressive_sink_event(depth_mm: float, ramp_s: float) -> dict:
+    """PS-c event of the D-1 matrix (``d1_rows_final.md`` 3): Poly345 lowering of ``depth_mm``
+    over ``ramp_s``, the form of :data:`EVENTS` (depth in m).
+
+    Raises:
+        ValueError: a negative depth or a ramp that is not positive.
+    """
+    if not depth_mm >= 0.0 or not ramp_s > 0.0:
+        raise ValueError(f"PS-c needs depth >= 0 and ramp > 0, got {depth_mm!r} mm / {ramp_s!r} s")
+    return {"depth": depth_mm * 1e-3, "ramp": float(ramp_s)}
+
+
 def branch_soil(cl, Meas, plant, ctrl, cmd, valve, event_id: str | None, leg: int, t_ev: float,
-                readings: str = READINGS_TWO) -> BranchResult:
+                readings: str = READINGS_TWO, event_spec: dict | None = None) -> BranchResult:
     """One event branch from a deepcopied state 0.5 s before ``t_ev`` (r67 ``branch``).
 
     Runs until READY has held 3 s and at least max(12 s, ramp + 3 s) after the event, at most
-    60 s; ``event_id`` None runs the same branch without an event."""
-    event = None if event_id is None else EVENTS[event_id]
+    60 s; ``event_id`` None runs the same branch without an event. ``event_spec`` ({"depth" m,
+    "ramp" s}, e.g. :func:`progressive_sink_event`) replaces the :data:`EVENTS` entry of
+    ``event_id`` (then only a label); a depth of 0 runs the hook without moving the surface."""
+    event = event_spec if event_spec is not None else (
+        None if event_id is None else EVENTS[event_id])
     floor_fn = None if event is None else soil_event_floor(leg, event["depth"], event["ramp"], t_ev)
     min_after_s = MIN_AFTER_S if event is None else max(MIN_AFTER_S,
                                                         event["ramp"] + SLOW_WINDOW_TAIL_S)

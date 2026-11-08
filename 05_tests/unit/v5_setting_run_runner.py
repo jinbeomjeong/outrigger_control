@@ -20,7 +20,7 @@ COUPLED_DIR = PROJECT_ROOT / "04_scripts" / "04_hydraulic" / "coupled"
 MAIN_TREE_ROOT = Path(r"C:\workspace\outrigger_control")
 """``r8d1_td.py`` inserts a folder of this tree whichever checkout it runs in."""
 T4H_META_KEYS = ("pressure_offset_allowance_N", "pressure_offset_allowance_from_s",
-                 "controller_tag", "extend_bound_check")
+                 "controller_tag", "extend_bound_check", "head_only_declared")
 
 
 class _ThisCheckoutSysPath(list):
@@ -76,6 +76,7 @@ def main() -> None:
               "controller_tag": record.get("controller_tag"),
               "hydraulic_options": record.get("hydraulic_options"),
               "extend_bound_check": hydraulics.get("extend_bound_check"),
+              "head_only_declared": record.get("head_only_declared"),
               "t4h": _t4h_meta(t4h_folder, record.get("t4h_file")),
               "foreign_modules": _modules_outside_project()}
     out_path.write_text(json.dumps(report), encoding="utf-8")

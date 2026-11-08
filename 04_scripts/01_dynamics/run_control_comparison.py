@@ -68,6 +68,11 @@ T_CTRL = 0.02
 # rev. 26), 1 = Chrono L1 (normal along the floor normal, Coulomb cap on the whole floor-plane force). Plant.__init__
 # reads this at construction; FlexPlant can override it per run with run_mast_flex_c2_check.CONFIG['fric_mode'].
 PAD_FRICTION_MODE = 0
+# crawler stiffness factor (D-1 verification matrix, user decision U6 2026-11-08): the crawler
+# normal and tangential stiffness x s, their dashpots x sqrt(s) (same zeta). Plant.__init__ reads it
+# at construction (FlexPlant and the soil harness build through Plant.__init__ positionally), before
+# the analytic settle pose. 1.0 leaves every stored run bit for bit.
+CRAWLER_K_SCALE = 1.0
 N_SUB = int(round(T_CTRL / DT))
 T_MAX = 150.0
 T_HOLD = 10.0           # run on this long after the controller declares "done"
@@ -325,7 +330,8 @@ def physics(nsteps, dt, u_cmd, r, v, q, w, sref, x, f, panc, pflag, canc, cflag,
 
 class Plant:
     def __init__(self, level="top", slope_roll_deg=0.0, slope_pitch_deg=0.0, beta=1.0e9, Fs=0.0,
-                 soft_FL=False, dt=DT, init_ext=None):
+                 soft_FL=False, dt=DT, init_ext=None, crawler_k_scale=None):
+        """``crawler_k_scale`` None = the module value :data:`CRAWLER_K_SCALE`."""
         p = dm.load_params()
         geo = dm.geometry_from_params(p)
         self.geo = geo
@@ -346,6 +352,13 @@ class Plant:
         nc = len(cxy)
         n_rol = int((cgap <= 0).sum())   # dashpot per level mass (crawler heave zeta 0.05 at every auger level)
         c_tot = dm.crawler_damping_total(float(p["contact"]["crawler"]["kn_total_N_m"]), self.m)
+        scale = CRAWLER_K_SCALE if crawler_k_scale is None else float(crawler_k_scale)
+        if not scale > 0.0:
+            raise ValueError(f"crawler_k_scale must be > 0, got {scale!r}")
+        if scale != 1.0:  # x1 keeps the arithmetic of the stored runs (no multiply at all)
+            kcr = kcr * scale
+            c_tot = c_tot * math.sqrt(scale)
+        self.crawler_k_scale = scale
         self.kcr = kcr.copy(); self.ccr = np.full(nc, c_tot / n_rol)
         self.ktcr = self.kcr.copy(); self.ctcr = self.ccr.copy()
         self.imu_rel = np.array(CA["imu_point_body_m"]) - com

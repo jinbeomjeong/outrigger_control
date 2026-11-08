@@ -11,7 +11,9 @@ V4, V5 with the pressure-only judge = 96; lines carry ``contact_judge`` and ``un
 event output ``lower_bound_miss``; the combined pairs are the same rows of ``main``),
 ``p3_hash`` (criteria revision 8 7.2: the first VB line per case of ``main.jsonl`` = 22 jobs
 with the revision 8 VB definition, ③ on; ``p3_hash_check.py`` compares them with the stored
-lines).
+lines), ``d1`` (D-1 verification matrix, ``d1_rows.py`` / ``d1_runs.py``: 217 rows x VB / V0
+x eps {0, 2e-3} = 868; ``--list`` also prints rows per group, missing settle-table keys and a
+cost estimate; lines carry the ``d1`` record of ``d1_selection_rules.md`` 3).
 One JSON line per run in ``06_analysis/03_hydraulic/coupled/v5/<batch>.jsonl`` (appended; runs
 already in the file are skipped). Each run has its own spawned worker (``maxtasksperchild=1``): the
 harness patches stay in the process. Deterministic (no noise). Values only; the verdict is
@@ -183,7 +185,16 @@ def batch_jobs(name: str) -> list[dict]:
                 for s in PRESSURE_ONLY_SETTINGS for row in pressure_only_rows()]
     if name == P3_HASH_BATCH:
         return [job for _, job in p3_hash_jobs()]
+    if name == D1_BATCH:
+        import d1_rows
+
+        return d1_rows.jobs()
     raise ValueError(f"unknown batch {name!r}")
+
+
+D1_BATCH = "d1"
+"""D-1 verification matrix harness rows (``d1_rows.py``: H-R 105 + H-S 112 rows x VB / V0 x
+eps {0, 2e-3} = 868 runs; output ``d1.jsonl``, a new file: the VB lines are ③ on)."""
 
 
 P3_HASH_BATCH = "p3_hash"
@@ -345,11 +356,19 @@ def run_one(job: dict) -> dict:
         if job.get("eps"):
             _install_approach_scale(float(job["eps"]))
         flow, options = options_of(job["setting"])
-        case, decision = _case_of(job)
         contact = job.get("contact")
-        t4h = _t4h_request(job, flow, options)
-        result, series = verdict_runs.execute(case, flow, decision, hydraulics=options,
-                                              contact=contact, t4h=t4h)
+        if job.get("d1") is not None:  # D-1 row (no T4h record: criteria 9 is not its judge)
+            import d1_runs
+
+            t4h = None
+            result, series = d1_runs.execute(job["d1"], flow, options,
+                                             setting_name=job["setting"],
+                                             eps=float(job.get("eps", 0.0)))
+        else:
+            case, decision = _case_of(job)
+            t4h = _t4h_request(job, flow, options)
+            result, series = verdict_runs.execute(case, flow, decision, hydraulics=options,
+                                                  contact=contact, t4h=t4h)
         if "error" in result:
             return {"job": job, "error": result["error"], "tb": result.get("tb"),
                     "wall_s": round(time.perf_counter() - t_start, 1)}
@@ -371,7 +390,8 @@ def run_one(job: dict) -> dict:
                 "hydraulics_record": result.get("hydraulics_record"),
                 "review_record": result.get("review_record"),
                 **{key: result[key] for key in ("overlap_found", "soil_stop_crawler",
-                                                "lock_window_alignment", "controller_tag")
+                                                "lock_window_alignment", "controller_tag",
+                                                "head_only_declared", "d1")
                    if key in result},
                 **({} if t4h is None else {"t4h_file": t4h["path"].name})}
     except Exception as exc:  # the batch goes on; the line records the failure
@@ -433,6 +453,10 @@ def main() -> None:
     todo = [job for job in jobs if job_key(job) not in done]
     print(f"{args.batch}: {len(jobs)} runs, {len(todo)} to do", flush=True)
     if args.list:
+        if args.batch == D1_BATCH:
+            import d1_rows
+
+            print(d1_rows.list_report(jobs), flush=True)
         return
     mask = None if args.mask is None else int(args.mask, 16)
     for job in todo:
