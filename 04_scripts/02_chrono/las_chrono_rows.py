@@ -79,10 +79,11 @@ START_ENV = {"OMP_WAIT_POLICY": "PASSIVE"}
 K3_FACTOR = 3.0
 CRAWLER_VARIANTS: tuple[tuple[str, float], ...] = (("K1", 1.0), ("K3", K3_FACTOR))
 """(variant, ``--crawler-kn-scale``); all four rows required (user decision 2026-11-08: K1 / K3 x LAS off / on)."""
-MIXED_US_PER_STEP = {"pcore": 2500.0, "ecore": 3300.0}
-"""ASSUMPTION: per-step cost [us] of the mixed ground (rigid base + one 1 cm J1 pad terrain, 4 threads) under a
-parallel P batch; set from the rigid+FR smoke (see the cad report 2026-11-08) with margin."""
-E_POOL_FACTOR = 1.3
+MIXED_US_PER_STEP = {"pcore": 2800.0, "ecore": 3700.0}
+"""ASSUMPTION: per-step cost [us] of the mixed ground (rigid base + one 1 cm J1 pad terrain, 4 threads). Measured
+2026-11-08 (E cores, contended by 3 other S9 runs + other sessions, OMP PASSIVE): rigid + J1@FR open-loop lift 36 s
+3650 us/step, rigid only 1770-1860 us/step; P = E x 0.75 (ASSUMPTION, P / E speed of the S9 runs)."""
+E_POOL_FACTOR = 1.0
 
 
 def _r9() -> ModuleType:
