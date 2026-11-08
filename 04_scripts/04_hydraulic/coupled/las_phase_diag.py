@@ -1,89 +1,102 @@
 """LAS-b phase diagnosis on the reduced harness (FB rejected, user decision 2026-11-08).
 
-Background (``06_analysis/02_control/verif_matrix/fb_judgement.md``, control-expert): on the
-G-3 keys ``D1|H-R-A|rigid+J1@FR|T|diag-op|K3|{VB,V0}|e0.002`` the FB budget delays the TOUCH
-end, LAS-b (03_src ``C2Config.with_10hz_d1().liftoff_approach_slow``) starts one sample later
-(rho 0.20 -> 0.281, 9 -> 5 active periods) and the RL minimum falls 11.57 -> 8.76 kN. This tool
-records why, without changing a command.
+Pre-registration: ``06_analysis/02_control/verif_matrix/las_phase_diag_plan.md`` (control-expert,
+sealed; sha256 :data:`PLAN_SHA256`). Where this text and the plan differ, the plan wins. ``run``
+and ``judge`` stop with exit 2 when the plan file is missing or has another sha256.
 
-Bundles (one line per run; the FB / LAS-b set-up of ``fb_targeted.py`` is reused as it is):
-  D-a  4 runs: the two G-3 keys x {L (no FB), LF (FB rev3 on)}.
-  D-b 10 runs: the two G-3 keys x LF with the starting budget
-       ``Q_b0 = s Q(4 v_max)`` for s in :data:`TOUCH_SCALE_STEPS` (provisional values; the
-       steps are control-expert's to fix). s is the FB scale of a TOUCH period with all four
-       legs extending at v_max. Only ``Q_b0`` changes: ``Q_nom`` (cut floor 0.5 Q_nom, the
-       ``nominal_scale`` record) stays the LF value, and Q_b is global, so a LEVEL command
-       above Q_b is scaled too. s = 0.877 is not bit for bit the LF nominal
-       (``s_nom = Q_nom / Q(4 v_max)``, recorded as ``diag.budget_seed.s_nom``); the D-a LF line
-       is the exact nominal point.
+Background (``fb_judgement.md``, control-expert): on the G-3 keys
+``D1|H-R-A|rigid+J1@FR|T|diag-op|K3|{VB,V0}|e0.002`` the FB budget delays the TOUCH end, LAS-b
+(03_src ``C2Config.with_10hz_d1().liftoff_approach_slow``) starts one sample later and the RL
+minimum falls. This tool records why, without changing a command.
+
+Bundles (one line per run):
+  D-a  4 runs: the two G-3 keys x {L (no FB), LF (FB rev3 on, ``fb_targeted`` wrapper)}.
+  D-b 30 runs (plan 1): the two G-3 keys x candidate ``LT`` (TOUCH-only budget) on the grid
+       centre s_c in {1.0, 0.94, s_nom} x j = 0..4. ``LT`` installs no FB wrapper (detection
+       U / A97 off); a ramp hook scales the ramp output by ``fb_targeted.budget_output`` with
+       ``Q_b = s Q(4 v_max)`` only in a period whose phase is TOUCH at the ramp (any other
+       phase: no budget, as L). The ramp output and ``previous_output_m_s`` are handled as the
+       FB wrapper does, so A-2 can reproduce LF bit for bit.
+         s_{c,j} = s_c T_c / (T_c + j delta),  T_c = T_1 / s_c,  delta = 0.025 s,
+         T_1 = 165 x 0.1 x 0.8768421 = 14.468 s (plan 1.2).
+       The budget is computed as ``base x T_c / (T_c + j delta)`` with base = Q(4 v_max) for
+       s_c = 1.0, 0.94 Q(4 v_max) for 0.94 and the LF nominal ``Q_nom`` itself for the s_nom
+       centre (plan "0.8768421" = ``Q_nom / Q(4 v_max)`` of the YAML, recorded as ``s_nom``):
+       j = 0 of that centre is then exactly the LF budget. Every acted period is counted by the
+       phase at the end of its update; ``level_budget_periods`` != 0 marks the line
+       ``excluded`` (plan 1.1: a tool defect candidate).
+       Anchors (plan 1.3, checked by ``judge``): A-1 s_c 1.0 j 0 = stored L (b0 act,
+       ``las_T1.jsonl``) hash, A-2 s_nom j 0 = stored ``fb_F2.jsonl`` LF hash (both keys).
   D-c  2 runs (optional): verdict key ``S5|V0|etadef|e0.002`` (F-1) x {L, LF}, last LOC ~ DONE.
 Run path: ``run_v5.run_one`` (D-1 branch for the G-3 keys, verdict branch for S5), spawned
-workers with ``maxtasksperchild=1``; the worker checks that the preset has LAS-b ``b0`` on
-(``fb_targeted._install_candidate``), installs the FB wrapper for LF, then the recorder.
+workers with ``maxtasksperchild=1``; ``fb_targeted._install_candidate`` checks the thread
+variables and that the preset has LAS-b ``b0`` on and installs the FB wrapper for LF; then this
+tool's hooks.
 
 The recorder (``diag.record`` true) patches, in the worker only and after FB:
-  ``C2Controller.update`` (outermost), ``C2Controller._apply_liftoff_approach_slow`` and the
-  module function ``fb_targeted.budget_output``. Each hook calls the original with the same
-  arguments, returns its result object unchanged, copies what it reads and calls only reading
-  methods (``_load_estimate_N``, ``_diff_sink_rates_m_s``, ``plant.attitude``). States created
-  lazily by the controller are read as attributes (never through their creating getters).
-  ``--no-record`` runs without the recorder (the on / off command hash check).
+  ``C2Controller.update`` (outermost), ``C2Controller._apply_liftoff_approach_slow``,
+  ``C2Controller._apply_output_ramp`` (D-b only: the TOUCH budget) and the module function
+  ``fb_targeted.budget_output`` (record of every budget call). Each record hook calls the
+  original with the same arguments, returns its result object unchanged, copies what it reads
+  and calls only reading methods (``_load_estimate_N``, ``_diff_sink_rates_m_s``,
+  ``plant.attitude``). Lazily created controller states are read as attributes.
+  ``--no-record`` keeps only the D-b budget hook (the on / off command hash check).
 
-Line = the ``run_v5`` line (``commands_sha256``, ``d1``, ``values`` ...) + ``fb`` (the block of
-``fb_targeted._fb_block``: budget meta, saturation, U-9 values) + ``las`` (``las_block_of``) +
-``diag``:
-  bundle, candidate (``L`` / ``LF`` / ``LF-s<s>``), touch_scale (None = LF / L as built),
-  record, identity (``fb_targeted.run_identity`` with this file's sha256 added: commit,
-  ``code_diff_sha256`` of uncommitted 03_src / 04_scripts / 02_params, tool sha256, threads),
-  budget_seed {s, Q_b0_L_min, Q_nom_L_min, Q_full_L_min, s_nom} (D-b only),
-  window {t0_s, t1_s, rule}: the periods kept (D-a / D-b: first TOUCH end - 0.5 s to the first
-      LOC after it + 2 s, no LOC = run end; D-c: last LOC onset - 0.5 s to the first DONE after
-      it + 1 s, no DONE = run end),
-  summary {t_touch_end_s, t_las_start_s, las_start_rho, las_start_rho_prev,
-      las_active_periods, las_scaled_periods, las_end_s, las_end_reason, t_loc_s (first LOC),
-      t_loc_last_s, t_done_after_loc_s, F_judged_min_kN (``d1``), t_lift_s, focus_leg (RL),
-      focus_min_after_lift_kN, t_focus_min_s, min_leg_after_lift, min_after_lift_kN,
-      touch_min_scale (FB min_scale_by_phase["touch"]), touch_min_scale_eff},
+Line = the ``run_v5`` line (``commands_sha256``, ``d1``, ``values`` ...) + ``fb``
+(``fb_targeted._fb_block``) + ``las`` (``las_block_of``) + ``diag``:
+  key, bundle, candidate (``L`` / ``LF`` / ``LT-c<centre>-j<j>``), record, identity (commit,
+  ``code_diff_sha256``, tool sha256 with this file and ``las_phase_judge.py``, threads,
+  ``plan_sha256``), touch_budget (D-b: centre, j, s, s_c, s_nom, T_1_s, T_c_s,
+  Q_b_L_min, Q_full_L_min, Q_nom_L_min, acted_by_end_phase, level_budget_periods, excluded),
+  window {t0_s, t1_s, rule}: D-a / D-b first TOUCH end - 0.5 s .. first LOC after it + 2 s
+      (no LOC: run end); D-c last LOC onset - 0.5 s .. first DONE after it + 1 s,
+  summary (plan 2): F_RL_kN (RL minimum of the 1 ms true force after the lift-off,
+      ``values.forces.t_lift_s``), t_RL_min_s, min_leg_after_lift, min_after_lift_kN,
+      F_judged_min_kN (``d1``, all legs, D8), t_touch_end_s, t_lift_s, t_las_start_s,
+      las_start_period (periods from the TOUCH end), las_start_rho, las_start_rho_prev,
+      las_active_periods, las_scaled_periods, las_end_s, las_end_reason,
+      gates_false_before_start (the gates false in the LEVEL period before the start),
+      level_budget_periods, gate_consistent (every LAS period of the run), t_loc_s,
+      t_loc_last_s, t_done_after_loc_s, touch_min_scale (FB meta, LF), window,
   touch_ends [every TOUCH -> other phase transition]: t_s, phase_after, motor_stroke_mm,
-      rod_stroke_mm, filtered_attitude_deg, plant (g6 path only: t_s, stroke_ref_mm, pad_x_mm,
+      rod_stroke_mm, filtered_attitude_deg, plant (g6 path: t_s, stroke_ref_mm, pad_x_mm,
       attitude_true_deg, soil_sinkage_mm = ``plant.soil.z`` (FR is the J1 patch; rigid legs 0),
       soil_plastic_mm = ``soil.sp``, soil_force_kN),
-  force_window (1 ms plant record, ``harness_flow.COLUMNS``) around the focus-leg minimum after
-      the lift-off, +-0.5 s: columns [t, true_force_FL..RR (N), v_FL..RR (m/s, delivered),
-      u_FL..RR (m/s, demanded), crawler (N), roll, pitch (rad)], rows,
-  periods [one per controller update inside the window]:
-      t_s, phase_before, phase (after), cmd_mm_s (returned command), loads_kN (lower load
-      estimate after the update), loc (LOC confirmed), soil_mode, in_crawler_zone,
-      reapproaching (legs, LEVEL periods only),
-      las (LEVEL periods with LAS-b on; None otherwise): gates {S1 soil or not required,
-          S2 LEVEL, S3 no LOC seen, S4 no soil mode, S5 crawler zone, S6 no reapproach,
-          S7_sum sum L >= alpha W_ref, S7_light min L < beta F_min, S7p_rise rho >= rho_on and
-          rho > rho_{k-1}, S8 mean u > gamma v_max}, all_hold, sum_over_W, min_over_F_min,
-          lightest_leg, rho, rho_prev, mean_u_over_v_max, armed_before, active_before,
-          started, active_after, end_reason (this period), sum_periods, is_scaled,
-          input_mm_s / output_mm_s (LAS-b stage), gate_consistent (armed_before and all_hold
-          == started: the recorded gates are the controller's),
-      budget (LF): phase, Q_b_L_min (before), Q_in_L_min (Q(u) of the ramp output), acted,
-          scale (output / input),
-      done (LEVEL / DONE, P-S8-29 on): D_kN, complete_since_s, settled_s, is_settled (>= 10 s),
+  force_window: 1 ms plant rows around the RL minimum after the lift-off, +-0.5 s, columns
+      [t, true_force_FL..RR (N), v_FL..RR (delivered m/s), u_FL..RR (demanded m/s),
+      crawler (N), roll, pitch (rad)],
+  periods [one per controller update inside the window]: t_s, phase_before, phase,
+      cmd_mm_s (returned command), loads_kN (lower load estimate), loc, soil_mode,
+      in_crawler_zone, reapproaching,
+      las (LEVEL with LAS-b on): gates {S1 soil or not required, S2 LEVEL, S3 no LOC seen,
+          S4 no soil mode, S5 crawler zone, S6 no reapproach, S7_sum sum L >= alpha W_ref,
+          S7_light min L < beta F_min, S7p_rise rho >= rho_on and rho > rho_{k-1},
+          S8 mean u > gamma v_max}, all_hold, sum_over_W, min_over_F_min, lightest_leg, rho,
+          rho_prev, mean_u_over_v_max, armed_before, active_before, started, active_after,
+          end_reason, sum_periods, is_scaled, input_mm_s, output_mm_s, gate_consistent,
+      budget (a ``budget_output`` call): phase, Q_b_L_min, Q_in_L_min, acted, scale,
+      done (LEVEL / DONE, P-S8-29 on): D_kN, complete_since_s, settled_s, is_settled,
           window_span_s, is_window_full, oldest_kN, newest_kN, largest_kN, is_non_increasing,
           is_D_small, min_load_over_F_min,
-      diff_sink (DSb75 state exists): gate_open, first_loc_s, watch_over, above_periods,
-          below_periods, r_mm_s [front, rear], hold {axis, legs, periods, t_start_s}.
+      diff_sink (DSb75): gate_open, first_loc_s, watch_over, above_periods, below_periods,
+          r_mm_s [front, rear], hold {axis, legs, periods, t_start_s}.
 Output: ``06_analysis/03_hydraulic/coupled/v5/las/diag/diag_<bundle>.jsonl``, opened with
-``"x"`` (an existing file is never appended to or overwritten; exit 2). ``--out`` must lie in
-that folder or outside the project (a scratch check). An error line carries ``error``.
+``"x"`` (exit 2 when it exists). ``--out`` must lie in that folder or outside the project.
 
 Usage (dynamics-dev python.exe, project root, PowerShell):
   python -I -B 04_scripts/04_hydraulic/coupled/las_phase_diag.py list [--bundle D-a ..]
-  python -I -B 04_scripts/04_hydraulic/coupled/las_phase_diag.py run --bundle D-a
-      [--workers 4] [--affinity HEX] [--out <jsonl>] [--keys K1,K2] [--candidates L,LF]
+  python -I -B 04_scripts/04_hydraulic/coupled/las_phase_diag.py run --bundle D-b
+      [--workers 4] [--affinity HEX] [--out <jsonl>] [--keys K1,K2] [--candidates L1,L2]
       [--limit N] [--no-record]
-Exit codes: 0 done, 1 a run error or a run identity change, 2 input error.
+  python -I -B 04_scripts/04_hydraulic/coupled/las_phase_diag.py judge <diag_Db.jsonl>
+      [--out <md>]
+Exit codes: 0 done, 1 a run error / a run identity change (run) or anchors failed (judge),
+2 input error (plan check included).
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import subprocess
@@ -103,15 +116,31 @@ import numpy as np  # noqa: E402
 
 ROOT = fb.ROOT
 DIAG_DIR = fb.V5_DIR / "las" / "diag"
+PLAN_PATH = ROOT / "06_analysis" / "02_control" / "verif_matrix" / "las_phase_diag_plan.md"
+PLAN_SHA256 = "0f24fcbef1ec802259428ba91c6f2892a7b10d5bd236c89eb6064c1f81967785"
+"""``las_phase_diag_plan.md`` as sealed by control-expert (2026-11-08)."""
 G3_KEYS = ("D1|H-R-A|rigid+J1@FR|T|diag-op|K3|VB|e0.002",
            "D1|H-R-A|rigid+J1@FR|T|diag-op|K3|V0|e0.002")
 F1_KEY = "S5|V0|etadef|e0.002"
-TOUCH_SCALE_STEPS = (1.0, 0.95, 0.92, 0.90, 0.877)
-"""D-b ``s = Q_b0 / Q(4 v_max)``; provisional (the brief's example), control-expert fixes them."""
 BUNDLES = ("D-a", "D-b", "D-c")
-BUNDLE_COUNTS = {"D-a": 4, "D-b": 10, "D-c": 2}
 LEG_ORDER = ("FL", "FR", "RL", "RR")
 FOCUS_LEG = "RL"
+
+# Plan 1.2 grid.
+CENTRE_NOMINAL = "nom"
+GRID_CENTRES = ("1", "0.94", CENTRE_NOMINAL)
+"""s_c labels: 1.0, 0.94 and s_nom (the plan's 0.8768421, the LF ``Q_nom / Q(4 v_max)``)."""
+CENTRE_SCALES = {"1": 1.0, "0.94": 0.94}
+GRID_STEPS = (0, 1, 2, 3, 4)
+GRID_DELAY_STEP_S = 0.025
+TOUCH_FREE_PERIODS = 165
+PERIOD_S = 0.1
+PLAN_S_NOM = 0.8768421
+T1_S = TOUCH_FREE_PERIODS * PERIOD_S * PLAN_S_NOM
+"""TOUCH free extension time at s = 1 (plan 1.2: 14.468 s)."""
+
+BUNDLE_COUNTS = {"D-a": 4, "D-b": len(G3_KEYS) * len(GRID_CENTRES) * len(GRID_STEPS),
+                 "D-c": 2}
 FORCE_WINDOW_HALF_S = 0.5
 TOUCH_END_LEAD_S = 0.5
 LOC_TAIL_S = 2.0
@@ -121,13 +150,27 @@ TIME_TOLERANCE_S = 1e-9
 M_TO_MM = 1e3
 N_TO_KN = 1e-3
 PHASE_TOUCH = "touch"
+PHASE_LEVEL = "level"
 LEVEL_PHASES = ("level", "done")
 CANDIDATE_L = "L"
 CANDIDATE_LF = "LF"
-DIAG_IDENTITY_FILES = {**fb.IDENTITY_FILES, "las_phase_diag.py": HERE / "las_phase_diag.py"}
+CANDIDATE_LT = "LT"
+IDENTITY_FILES = {**fb.IDENTITY_FILES, "las_phase_diag.py": HERE / "las_phase_diag.py",
+                  "las_phase_judge.py": HERE / "las_phase_judge.py"}
 FORCE_WINDOW_COLUMNS = ("t", *(f"true_force_{leg}" for leg in LEG_ORDER),
                         *(f"v_{leg}" for leg in LEG_ORDER), *(f"u_{leg}" for leg in LEG_ORDER),
                         "crawler", "roll", "pitch")
+
+
+# ------------------------------------------------------------------------------- plan check
+def plan_problem(path: Path = PLAN_PATH, expected: str = PLAN_SHA256) -> str | None:
+    """Why the run may not start (None = the sealed plan is there with its sha256)."""
+    if not path.exists():
+        return f"missing {path}"
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    if digest != expected:
+        return f"{path.name} sha256 {digest} != sealed {expected}"
+    return None
 
 
 # ------------------------------------------------------------------------------- pure helpers
@@ -298,6 +341,35 @@ def periods_in(periods: list[dict], window: dict) -> list[dict]:
     return [period for period in periods if t0_s <= period["t_s"] <= t1_s]
 
 
+def las_start_details(periods: list[dict]) -> dict:
+    """The LAS-b start period, the gates false in the LEVEL period before it and whether every
+    recorded LAS period is gate-consistent (plan 2)."""
+    previous_las = None
+    start = {"gates_false_before_start": None, "has_level_period_before_start": False}
+    for period in periods:
+        las = period.get("las")
+        if las is None:
+            continue
+        if las["started"]:
+            if previous_las is not None:
+                start = {"gates_false_before_start": [
+                    name for name, ok in previous_las["gates"].items() if not ok],
+                    "has_level_period_before_start": True}
+            break
+        previous_las = las
+    consistent = [period["las"]["gate_consistent"] for period in periods if period.get("las")]
+    return {**start, "gate_consistent": all(consistent) if consistent else None,
+            "las_periods_recorded": len(consistent)}
+
+
+def periods_between(t_from_s: float | None, t_to_s: float | None,
+                    period_s: float = PERIOD_S) -> int | None:
+    """Whole control periods from ``t_from_s`` to ``t_to_s``."""
+    if t_from_s is None or t_to_s is None:
+        return None
+    return round((t_to_s - t_from_s) / period_s)
+
+
 def force_window(rows: np.ndarray, columns: dict[str, int], t_lift_s: float | None,
                  focus_leg: str = FOCUS_LEG, half_width_s: float = FORCE_WINDOW_HALF_S
                  ) -> dict | None:
@@ -334,15 +406,53 @@ def full_flow_m3_s(head_area_m2, annulus_area_m2, max_speed_m_s: float) -> float
     return fb.command_flow_m3_s(np.full(4, float(max_speed_m_s)), head_area_m2, annulus_area_m2)
 
 
-def seeded_budget(scale: float, nominal_m3_s: float, head_area_m2, annulus_area_m2,
-                  max_speed_m_s: float) -> tuple[fb.FbState, dict]:
-    """The FB state of a D-b run (``Q_b0 = s Q(4 v_max)``, ``Q_nom`` kept) and its record."""
-    full_m3_s = full_flow_m3_s(head_area_m2, annulus_area_m2, max_speed_m_s)
-    state = fb.FbState(nominal_m3_s=nominal_m3_s, budget_m3_s=scale * full_m3_s)
-    record = {"s": scale, "Q_b0_L_min": state.budget_m3_s * fb.M3_S_TO_L_MIN,
-              "Q_nom_L_min": nominal_m3_s * fb.M3_S_TO_L_MIN,
-              "Q_full_L_min": full_m3_s * fb.M3_S_TO_L_MIN, "s_nom": nominal_m3_s / full_m3_s}
-    return state, record
+@dataclass(frozen=True)
+class TouchBudget:
+    """D-b grid point ``(centre, j)`` resolved for one geometry (plan 1.2)."""
+
+    centre: str
+    j: int
+    budget_m3_s: float
+    full_m3_s: float
+    nominal_m3_s: float
+    centre_scale: float
+    centre_time_s: float
+
+    @property
+    def scale(self) -> float:
+        return self.budget_m3_s / self.full_m3_s
+
+    def record(self) -> dict:
+        return {"centre": self.centre, "j": self.j, "s": self.scale, "s_c": self.centre_scale,
+                "s_nom": self.nominal_m3_s / self.full_m3_s, "T_1_s": T1_S,
+                "T_c_s": self.centre_time_s, "delay_s": self.j * GRID_DELAY_STEP_S,
+                "Q_b_L_min": self.budget_m3_s * fb.M3_S_TO_L_MIN,
+                "Q_full_L_min": self.full_m3_s * fb.M3_S_TO_L_MIN,
+                "Q_nom_L_min": self.nominal_m3_s * fb.M3_S_TO_L_MIN}
+
+
+def touch_budget_for(centre: str, j: int, full_m3_s: float, nominal_m3_s: float
+                     ) -> TouchBudget:
+    """``Q_b = base T_c / (T_c + j delta)``; base = s_c Q(4 v_max), or ``Q_nom`` itself for the
+    nominal centre (its j = 0 is then exactly the LF budget, anchor A-2).
+
+    Raises:
+        ValueError: Unknown centre or j.
+    """
+    if j not in GRID_STEPS:
+        raise ValueError(f"grid step j={j} not in {GRID_STEPS}")
+    if centre == CENTRE_NOMINAL:
+        centre_scale = nominal_m3_s / full_m3_s
+        base_m3_s = nominal_m3_s
+    elif centre in CENTRE_SCALES:
+        centre_scale = CENTRE_SCALES[centre]
+        base_m3_s = centre_scale * full_m3_s
+    else:
+        raise ValueError(f"unknown grid centre {centre!r}")
+    centre_time_s = T1_S / centre_scale
+    factor = centre_time_s / (centre_time_s + j * GRID_DELAY_STEP_S)
+    return TouchBudget(centre, j, base_m3_s * factor, full_m3_s, nominal_m3_s, centre_scale,
+                       centre_time_s)
 
 
 # ------------------------------------------------------------------------------- recorder
@@ -352,7 +462,9 @@ class RunLog:
 
     periods: list[dict] = field(default_factory=list)
     touch_ends: list[dict] = field(default_factory=list)
-    budget_seed: dict | None = None
+    touch_budget: TouchBudget | None = None
+    budget_state: fb.FbState | None = None
+    acted_by_end_phase: dict[str, int] = field(default_factory=dict)
 
 
 _PERIOD: dict = {}
@@ -450,6 +562,38 @@ def _budget_hook(original):
     return budget_output
 
 
+def _touch_budget_state(controller, centre: str, j: int, nominal_m3_s: float) -> fb.FbState:
+    """The run's TOUCH budget (created on the first ramp call from the run's geometry)."""
+    log = _log_of(controller)
+    if log.budget_state is None:
+        geometry = controller.geometry
+        full_m3_s = full_flow_m3_s(geometry.head_area_m2, geometry.annulus_area_m2,
+                                   geometry.max_speed_m_s)
+        log.touch_budget = touch_budget_for(centre, j, full_m3_s, nominal_m3_s)
+        log.budget_state = fb.FbState(nominal_m3_s=nominal_m3_s,
+                                      budget_m3_s=log.touch_budget.budget_m3_s)
+    return log.budget_state
+
+
+def _ramp_hook(original, centre: str, j: int, nominal_m3_s: float):
+    """D-b: the FB-a budget of ``fb_targeted`` on the ramp output, TOUCH periods only."""
+
+    def apply_output_ramp(self, leg_speeds):
+        output = original(self, leg_speeds)
+        phase = str(self._state.phase)
+        if phase != PHASE_TOUCH:
+            return output
+        state = _touch_budget_state(self, centre, j, nominal_m3_s)
+        clip_returned = bool(getattr(self.config, "clip_returned_command", False))
+        scaled = fb.budget_output(state, output, self.geometry, phase, clip_returned)
+        if scaled is not output:
+            self._state.previous_output_m_s = scaled
+            _PERIOD["touch_budget_acted"] = True
+        return scaled
+
+    return apply_output_ramp
+
+
 def _relax_settings(controller) -> RelaxSettings:
     settings = controller.config.twist_completion_relax
     return RelaxSettings(float(settings.settle_s), float(settings.window_s),
@@ -536,27 +680,23 @@ def _touch_end_record(controller, t_s: float) -> dict:
     return record
 
 
-def _seed_budget_once(controller, scale: float, nominal_m3_s: float) -> None:
-    """D-b: put the seeded FB state in place before the FB wrapper creates its own."""
-    if "_fb_run" in controller.__dict__:
+def _count_touch_budget(controller) -> None:
+    """Count an acted TOUCH budget by the phase at the end of the update (plan 1.1)."""
+    if not _PERIOD.get("touch_budget_acted"):
         return
-    geometry = controller.geometry
-    state, record = seeded_budget(scale, nominal_m3_s, geometry.head_area_m2,
-                                  geometry.annulus_area_m2, geometry.max_speed_m_s)
-    controller.__dict__["_fb_run"] = state
-    _log_of(controller).budget_seed = record
+    counts = _log_of(controller).acted_by_end_phase
+    phase = str(controller._state.phase)
+    counts[phase] = counts.get(phase, 0) + 1
 
 
-def _update_hook(original, touch_scale: float | None, nominal_m3_s: float | None,
-                 is_recording: bool):
+def _update_hook(original, is_recording: bool):
     def update(self, measurements):
-        if touch_scale is not None:
-            _seed_budget_once(self, touch_scale, nominal_m3_s)
-        if not is_recording:
-            return original(self, measurements)
         _PERIOD.clear()
         phase_before = str(self._state.phase)
         command = original(self, measurements)
+        _count_touch_budget(self)
+        if not is_recording:
+            return command
         t_s = float(measurements.t_s)
         log = _log_of(self)
         log.periods.append(_period_record(self, t_s, phase_before, command))
@@ -567,15 +707,15 @@ def _update_hook(original, touch_scale: float | None, nominal_m3_s: float | None
     return update
 
 
-def install(is_recording: bool, touch_scale: float | None = None, controller_class=None,
-            nominal_m3_s: float | None = None) -> None:
+def install(is_recording: bool, grid_point: tuple[str, int] | None = None,
+            controller_class=None, nominal_m3_s: float | None = None) -> None:
     """Patch this worker's controller class (after the FB wrapper) and ``fb.budget_output``.
 
     Args:
-        is_recording: Install the recording hooks (False: only the D-b budget seed, if any).
-        touch_scale: D-b ``s`` (None = no seed).
+        is_recording: Install the recording hooks (False: only the D-b budget, if any).
+        grid_point: D-b ``(centre, j)`` (None = no TOUCH budget).
         controller_class: ``c2.C2Controller`` by default (tests pass a stand-in).
-        nominal_m3_s: ``Q_nom`` of the seed; None = the FB value from the YAML.
+        nominal_m3_s: ``Q_nom``; None = the FB value from the YAML.
 
     Raises:
         RuntimeError: Installed twice in one process, or ``c2.C2Controller`` is already
@@ -590,12 +730,16 @@ def install(is_recording: bool, touch_scale: float | None = None, controller_cla
         controller_class = c2.C2Controller
         if controller_class.__name__ != "C2Controller":
             raise RuntimeError(f"c2.C2Controller is {controller_class.__name__}, not the original")
-    if touch_scale is not None and nominal_m3_s is None:
+    if nominal_m3_s is None:
         nominal_m3_s = fb.nominal_budget_m3_s(fb.pump_flow_m3_s())
     cls = controller_class
     originals = {"update": cls.update, "las": cls._apply_liftoff_approach_slow,
-                 "budget": fb.budget_output}
-    cls.update = _update_hook(originals["update"], touch_scale, nominal_m3_s, is_recording)
+                 "ramp": cls._apply_output_ramp, "budget": fb.budget_output}
+    cls.update = _update_hook(originals["update"], is_recording)
+    if grid_point is not None:
+        centre, j = grid_point
+        touch_budget_for(centre, j, 1.0, 1.0)  # validates the point before any run
+        cls._apply_output_ramp = _ramp_hook(originals["ramp"], centre, j, nominal_m3_s)
     if is_recording:
         cls._apply_liftoff_approach_slow = _las_hook(originals["las"])
         fb.budget_output = _budget_hook(originals["budget"])
@@ -609,21 +753,23 @@ def uninstall() -> None:
     cls, originals = _INSTALLED["cls"], _INSTALLED["originals"]
     cls.update = originals["update"]
     cls._apply_liftoff_approach_slow = originals["las"]
+    cls._apply_output_ramp = originals["ramp"]
     fb.budget_output = originals["budget"]
     _INSTALLED.clear()
     _PERIOD.clear()
 
 
 # ------------------------------------------------------------------------------- jobs
-def candidate_label(name: str, touch_scale: float | None) -> str:
-    return name if touch_scale is None else f"{name}-s{touch_scale:g}"
+def grid_label(centre: str, j: int) -> str:
+    return f"{CANDIDATE_LT}-c{centre}-j{j}"
 
 
-def _diag_job(base: dict, bundle: str, name: str, touch_scale: float | None,
-              mask: int | None, is_recording: bool) -> dict:
+def _diag_job(base: dict, bundle: str, label: str, fb_candidate: str,
+              grid_point: tuple[str, int] | None, mask: int | None, is_recording: bool) -> dict:
     return {**base, "mask": mask,
-            "diag": {"bundle": bundle, "name": name, "touch_scale": touch_scale,
-                     "label": candidate_label(name, touch_scale), "record": is_recording}}
+            "diag": {"bundle": bundle, "label": label, "fb_candidate": fb_candidate,
+                     "grid_point": None if grid_point is None else list(grid_point),
+                     "record": is_recording}}
 
 
 def bundle_base_jobs(bundle: str) -> list[dict]:
@@ -645,6 +791,14 @@ def bundle_base_jobs(bundle: str) -> list[dict]:
     raise ValueError(f"unknown bundle {bundle!r}")
 
 
+def _variants(bundle: str) -> list[tuple[str, str, tuple[str, int] | None]]:
+    """(label, ``fb_targeted`` candidate, grid point) of a bundle's candidates."""
+    if bundle == "D-b":
+        return [(grid_label(centre, j), CANDIDATE_L, (centre, j))
+                for centre in GRID_CENTRES for j in GRID_STEPS]
+    return [(CANDIDATE_L, CANDIDATE_L, None), (CANDIDATE_LF, CANDIDATE_LF, None)]
+
+
 def bundle_jobs(bundle: str, mask: int | None = None, is_recording: bool = True,
                 keys: list[str] | None = None, candidates: list[str] | None = None
                 ) -> list[dict]:
@@ -652,16 +806,12 @@ def bundle_jobs(bundle: str, mask: int | None = None, is_recording: bool = True,
     base = bundle_base_jobs(bundle)
     if keys is not None:
         base = [job for job in base if fb.fb_key(job) in set(keys)]
-    if bundle == "D-b":
-        variants = [(CANDIDATE_LF, scale) for scale in TOUCH_SCALE_STEPS]
-    else:
-        variants = [(CANDIDATE_L, None), (CANDIDATE_LF, None)]
     jobs = []
     for job in base:
-        for name, scale in variants:
-            label = candidate_label(name, scale)
+        for label, fb_candidate, grid_point in _variants(bundle):
             if candidates is None or label in candidates:
-                jobs.append(_diag_job(job, bundle, name, scale, mask, is_recording))
+                jobs.append(_diag_job(job, bundle, label, fb_candidate, grid_point, mask,
+                                      is_recording))
     return jobs
 
 
@@ -670,30 +820,43 @@ def job_label(job: dict) -> tuple[str, str]:
 
 
 # ------------------------------------------------------------------------------- worker
-def _summary(line: dict, las: dict, log: RunLog, window: dict, forces: dict | None) -> dict:
-    budget = (line.get("fb") or {}).get("budget") or {}
+def touch_budget_record(log: RunLog) -> dict | None:
+    """The D-b block: the grid point, the acted periods by end phase and the exclusion."""
+    if log.touch_budget is None:
+        return None
+    level_periods = sum(count for phase, count in log.acted_by_end_phase.items()
+                        if phase != PHASE_TOUCH)
+    return {**log.touch_budget.record(), "acted_by_end_phase": dict(log.acted_by_end_phase),
+            "level_budget_periods": level_periods, "excluded": level_periods != 0}
+
+
+def _summary(line: dict, las: dict, log: RunLog, window: dict, forces: dict | None,
+             budget_block: dict | None) -> dict:
+    fb_budget = (line.get("fb") or {}).get("budget") or {}
     d1 = line.get("d1") or {}
+    forces = forces or {}
     t_touch_s = first_touch_end_s(log.touch_ends)
     t_loc_last_s = last_loc_onset_s(log.periods)
     f_judged = d1.get("F_judged_min_N")
-    forces = forces or {}
     return {
-        "t_touch_end_s": t_touch_s, "t_las_start_s": las.get("start_t_s"),
+        "F_RL_kN": forces.get("focus_min_kN"), "t_RL_min_s": forces.get("t_focus_min_s"),
+        "min_leg_after_lift": forces.get("min_leg"), "min_after_lift_kN": forces.get("min_kN"),
+        "F_judged_min_kN": None if f_judged is None else f_judged * N_TO_KN,
+        "t_touch_end_s": t_touch_s,
+        "t_lift_s": ((line.get("values") or {}).get("forces") or {}).get("t_lift_s"),
+        "t_las_start_s": las.get("start_t_s"),
+        "las_start_period": periods_between(t_touch_s, las.get("start_t_s")),
         "las_start_rho": las.get("start_rho"), "las_start_rho_prev": las.get("start_rho_prev"),
         "las_active_periods": las.get("active_periods"),
         "las_scaled_periods": las.get("scaled_periods"), "las_end_s": las.get("end_t_s"),
         "las_end_reason": las.get("end_reason"),
+        **las_start_details(log.periods),
+        "level_budget_periods": None if budget_block is None
+        else budget_block["level_budget_periods"],
         "t_loc_s": first_loc_after_s(log.periods, t_touch_s), "t_loc_last_s": t_loc_last_s,
         "t_done_after_loc_s": None if t_loc_last_s is None
         else first_done_after_s(log.periods, t_loc_last_s),
-        "F_judged_min_kN": None if f_judged is None else f_judged * N_TO_KN,
-        "t_lift_s": ((line.get("values") or {}).get("forces") or {}).get("t_lift_s"),
-        "focus_leg": FOCUS_LEG, "focus_min_after_lift_kN": forces.get("focus_min_kN"),
-        "t_focus_min_s": forces.get("t_focus_min_s"),
-        "min_leg_after_lift": forces.get("min_leg"),
-        "min_after_lift_kN": forces.get("min_kN"),
-        "touch_min_scale": (budget.get("min_scale_by_phase") or {}).get(PHASE_TOUCH),
-        "touch_min_scale_eff": (budget.get("min_scale_eff_by_phase") or {}).get(PHASE_TOUCH),
+        "touch_min_scale": (fb_budget.get("min_scale_by_phase") or {}).get(PHASE_TOUCH),
         "window": window}
 
 
@@ -702,30 +865,37 @@ def diag_block(entry: dict, line: dict, las: dict, controller, plant, identity: 
     from harness_flow import COLUMN
 
     log = controller.__dict__.get(LOG_ATTRIBUTE) or RunLog()
+    budget_block = touch_budget_record(log)
     block = {"bundle": entry["bundle"], "candidate": entry["label"],
-             "touch_scale": entry["touch_scale"], "record": entry["record"],
-             "identity": identity, "budget_seed": log.budget_seed}
+             "record": entry["record"], "identity": identity, "touch_budget": budget_block}
     if not entry["record"]:
         return block
     window = record_window(entry["bundle"], log.periods, log.touch_ends)
     t_lift_s = ((line.get("values") or {}).get("forces") or {}).get("t_lift_s")
     forces = force_window(plant.flow_limiter.rows(), COLUMN, t_lift_s)
-    block.update(summary=_summary(line, las, log, window, forces), window=window,
+    block.update(summary=_summary(line, las, log, window, forces, budget_block), window=window,
                  touch_ends=log.touch_ends, force_window=forces,
                  periods=periods_in(log.periods, window), periods_total=len(log.periods))
     return block
 
 
+def run_identity() -> dict:
+    """``fb_targeted.run_identity`` with this tool's files and the plan sha256."""
+    return {**fb.run_identity(files=IDENTITY_FILES), "plan_sha256": PLAN_SHA256}
+
+
 def _install_all(entry: dict) -> fb.FbParams:
-    params = fb.CANDIDATES[entry["name"]]
+    params = fb.CANDIDATES[entry["fb_candidate"]]
     fb._install_candidate(params)  # thread check, preset LAS-b b0, FB wrapper, run capture
-    if entry["record"] or entry["touch_scale"] is not None:
-        install(entry["record"], entry["touch_scale"])
+    grid_point = None if entry["grid_point"] is None else tuple(entry["grid_point"])
+    if entry["record"] or grid_point is not None:
+        install(entry["record"], grid_point)
     return params
 
 
 def run_diag_job(job: dict) -> dict:
-    """Worker: install FB (LF) and the recorder, run the job, add ``fb``, ``las`` and ``diag``."""
+    """Worker: install FB (LF), the TOUCH budget (D-b) and the recorder, run the job, add
+    ``fb``, ``las`` and ``diag``."""
     t_start = time.perf_counter()
     entry = job.pop("diag")
     head = {"job": job, "diag": {"bundle": entry["bundle"], "candidate": entry["label"],
@@ -733,7 +903,7 @@ def run_diag_job(job: dict) -> dict:
     try:
         import run_v5  # sys.path and thread variables first
 
-        identity = fb.run_identity(files=DIAG_IDENTITY_FILES)
+        identity = run_identity()
         params = _install_all(entry)
     except Exception as exc:  # recorded as an error line; the batch goes on
         return {**head, "error": f"install: {exc!r}", "tb": traceback.format_exc()[-3000:],
@@ -781,11 +951,13 @@ def _print_line(count: int, total: int, record: dict) -> None:
         state = f"ERROR {record['error'][:200]}"
     else:
         summary = diag.get("summary") or {}
+        budget = diag.get("touch_budget") or {}
         state = (f"{(record.get('d1') or {}).get('verdict', record.get('final_phase'))} "
-                 f"{record['commands_sha256'][:12]} touch_end {summary.get('t_touch_end_s')} "
-                 f"las {summary.get('t_las_start_s')} rho {summary.get('las_start_rho')} "
+                 f"{record['commands_sha256'][:12]} s {budget.get('s')} "
+                 f"touch_end {summary.get('t_touch_end_s')} "
+                 f"start +{summary.get('las_start_period')} rho {summary.get('las_start_rho')} "
                  f"active {summary.get('las_active_periods')} "
-                 f"{FOCUS_LEG} {summary.get('focus_min_after_lift_kN')} kN {record['wall_s']}s")
+                 f"F_RL {summary.get('F_RL_kN')} kN {record['wall_s']}s")
     print(f"{count}/{total} {diag.get('candidate')} {diag.get('key')}: {state}", flush=True)
 
 
@@ -844,10 +1016,13 @@ def _parse_args(argv: list[str] | None):
     run.add_argument("--out", type=Path, default=None)
     run.add_argument("--keys", default=None, help="comma-separated keys (subset)")
     run.add_argument("--candidates", default=None,
-                     help="comma-separated candidate labels (subset), e.g. LF or LF-s0.95")
+                     help="comma-separated candidate labels (subset), e.g. LF or LT-c1-j0")
     run.add_argument("--limit", type=int, default=None, help="first N runs only")
     run.add_argument("--no-record", action="store_true",
                      help="no recording hooks (on / off command hash check)")
+    judge = sub.add_parser("judge", help="plan 1.3 anchors and plan 3 measures of a D-b file")
+    judge.add_argument("path", type=Path)
+    judge.add_argument("--out", type=Path, default=None, help="new Markdown file")
     return parser.parse_args(argv)
 
 
@@ -859,7 +1034,7 @@ def _run_command(args) -> int:
         print(json.dumps({"bundle": args.bundle, "stop": "out", "reason": problem}))
         return 2
     try:
-        identity = fb.run_identity(files=DIAG_IDENTITY_FILES)
+        identity = run_identity()
         mask = None if args.affinity is None else int(args.affinity, 16)
         jobs = bundle_jobs(args.bundle, mask, not args.no_record,
                            args.keys.split(",") if args.keys else None,
@@ -879,10 +1054,37 @@ def _run_command(args) -> int:
     return 1 if summary["errors"] or summary["stop"] else 0
 
 
+def _judge_command(args) -> int:
+    import las_phase_judge
+
+    if args.out is not None and args.out.exists():
+        print(f"input error: --out {args.out} exists (new files only)")
+        return 2
+    try:
+        lines = las_phase_judge.read_lines(args.path)
+    except (OSError, ValueError) as exc:
+        print(f"input error: {exc!r}")
+        return 2
+    result = las_phase_judge.judge(lines)
+    report = las_phase_judge.report_markdown(result, args.path)
+    print(report)
+    if args.out is not None:
+        with args.out.open("x", encoding="utf-8") as handle:
+            handle.write(report)
+    print(json.dumps({"verdict": result["verdict"], "anchors_pass": result["anchors_pass"],
+                      "excluded": result["excluded"], "missing": result["missing"]}))
+    return 0 if result["anchors_pass"] else 1
+
+
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
-    if args.command == "run":
-        return _run_command(args)
+    if args.command in ("run", "judge"):
+        problem = plan_problem()
+        if problem is not None:
+            print(f"input error (plan): {problem}")
+            print(json.dumps({"stop": "plan", "reason": problem}))
+            return 2
+        return _run_command(args) if args.command == "run" else _judge_command(args)
     all_problems = []
     for bundle in args.bundle:
         lines, problems = list_bundle(bundle)
