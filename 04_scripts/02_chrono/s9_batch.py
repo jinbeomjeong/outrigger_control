@@ -1168,6 +1168,12 @@ def _case_env(pool: str, start_env: dict[str, str] | None = None) -> dict[str, s
     return env
 
 
+def launch_env_record(child_env: dict[str, str]) -> dict[str, str | None]:
+    """batch.json keys of the env a case process was started with (v5 criteria rev. 12a: run_S8C rows keep no
+    OMP_WAIT_POLICY in their result.json, so the batch records the value it put into the child env; None = unset)."""
+    return {"omp_wait_policy": child_env.get("OMP_WAIT_POLICY")}
+
+
 CODE_HASH_FILES = ("03_src/outrigger_sim/control/c2.py", "03_src/outrigger_sim/control/zero_calibration.py")
 """Controller files hashed at every case launch (``code_at_launch``; FINAL 2026-10-30)."""
 ENTRY_META_KEYS = ("note", "priority", "controller", "source_run", "pair_case", "pair_run", "optional", "requires",
@@ -1318,6 +1324,7 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
     done: list[dict] = [former.get(c["case"]) or {"case": c["case"], "argv": c["argv"], "rc": 0, "wall_s": 0.0,
                                                   "est_s": c["est_s"], "pool": "earlier_launch"} for c in finished]
     code_at_launch: dict[str, dict | None] = {}
+    launch_env: dict[str, dict] = {}
     failed = False
     finished_ok: set[str] = set()
     while any(queues.values()) or running:
@@ -1339,10 +1346,13 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
                 code_at_launch[c["case"]] = launch_code_state() if c.get("controller") or c.get("group") == "FINAL-R" \
                     else None
                 logf = (folder / f"{c['case']}.log").open("w", encoding="utf-8")
+                child_env = _case_env(pool, c.get("start_env"))
+                launch_env[c["case"]] = launch_env_record(child_env)
                 p = subprocess.Popen(argv, cwd=str(ROOT), stdout=logf, stderr=subprocess.STDOUT,
-                                     stdin=subprocess.DEVNULL, env=_case_env(pool, c.get("start_env")))
+                                     stdin=subprocess.DEVNULL, env=child_env)
                 _log(progress, f"START {c['case']} {_dt.datetime.now().isoformat(timespec='seconds')} pid={p.pid} "
-                               f"est_s={c['est_s']} pool={pool}")
+                               f"est_s={c['est_s']} pool={pool} "
+                               f"OMP_WAIT_POLICY={launch_env[c['case']]['omp_wait_policy']}")
                 running.append((c, p, time.perf_counter(), logf, pool))
         time.sleep(2.0)
         for item in list(running):
@@ -1355,6 +1365,7 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
             running.remove(item)
             entry = {"case": c["case"], "argv": c["argv"], "rc": rc, "wall_s": wall, "est_s": c["est_s"], "pool": pool}
             entry.update({k: c[k] for k in ENTRY_META_KEYS if c.get(k) is not None})  # note: G6P rows (2026-10-28)
+            entry.update(launch_env.get(c["case"], {}))  # criteria rev. 12a: the child env value actually set
             if code_at_launch.get(c["case"]) is not None:  # RV6 / FINAL (2026-10-30)
                 entry["code_at_launch"] = code_at_launch[c["case"]]
                 entry["controller_check"] = bool(controller_check)
