@@ -309,7 +309,8 @@ def _line(candidate: str, key: str, *, verdict="pass", fail_items=(), events=Non
             "event_names": events or {}, "values": {"times": {"t_first_ready_s": t_ready}},
             "d1": {"verdict": verdict, "fail_items": list(fail_items), "t_ready_s": t_ready,
                    "stroke_max_m": stroke, "F_judged_min_N": 12e3},
-            "fb": {"candidate": candidate, "key": key, "budget": {"cuts": []},
+            "fb": {"candidate": candidate, "key": key,
+                   "budget": {"cuts": [], "min_scale_eff": 1.0},
                    "saturation_s": {"all": {"any_s": 0.0}}}}
 
 
@@ -341,7 +342,8 @@ def _sealed_set(folder: Path, monkeypatch) -> dict[str, Path]:
     paths = {}
     for stem, constant in (("fb_targeted_rules", "RULES_SHA256"),
                            ("fb_targeted_rules_rev1", "RULES_REV1_SHA256"),
-                           ("fb_targeted_rules_rev2", "RULES_REV2_SHA256")):
+                           ("fb_targeted_rules_rev2", "RULES_REV2_SHA256"),
+                           ("fb_targeted_rules_rev3", "RULES_REV3_SHA256")):
         text = folder / f"{stem}.md"
         text.write_text(f"sealed {stem}", encoding="utf-8")
         digest = ft.file_sha256(text)
@@ -356,7 +358,9 @@ def _sealed_set(folder: Path, monkeypatch) -> dict[str, Path]:
             "rev1_path": paths["fb_targeted_rules_rev1"],
             "rev1_sha_path": paths["fb_targeted_rules_rev1_sha"],
             "rev2_path": paths["fb_targeted_rules_rev2"],
-            "rev2_sha_path": paths["fb_targeted_rules_rev2_sha"], "design_path": design}
+            "rev2_sha_path": paths["fb_targeted_rules_rev2_sha"],
+            "rev3_path": paths["fb_targeted_rules_rev3"],
+            "rev3_sha_path": paths["fb_targeted_rules_rev3_sha"], "design_path": design}
 
 
 def test_sealed_check_passes_the_sealed_set(tmp_path, monkeypatch) -> None:
@@ -538,7 +542,7 @@ def test_run_identity_records_commit_hashes_and_threads(tmp_path) -> None:
 
 
 IDENTITY = {"git_head": "a" * 40, "git_dirty": False, "sha256": {"c2.py": "1" * 64},
-            "threads": {"MKL_NUM_THREADS": "1"}}
+            "budget_rule": ft.BUDGET_RULE, "threads": {"MKL_NUM_THREADS": "1"}}
 
 
 def _identified(line: dict, identity: dict | None = IDENTITY) -> dict:
@@ -622,7 +626,8 @@ def test_main_stops_with_h1_on_an_empty_sha256_file(tmp_path, monkeypatch, capsy
     # sealed_check's defaults are bound at definition: point them at the test set
     monkeypatch.setattr(ft.sealed_check, "__defaults__", (
         paths["rules_path"], paths["sha_path"], paths["design_path"], paths["rev1_path"],
-        paths["rev1_sha_path"], paths["rev2_path"], paths["rev2_sha_path"]))
+        paths["rev1_sha_path"], paths["rev2_path"], paths["rev2_sha_path"],
+        paths["rev3_path"], paths["rev3_sha_path"]))
     assert ft.main(["list", "--bundle", "F-0"]) == 2
     assert fj.main(["--out-dir", str(tmp_path)]) == 2
     assert "H-1" in capsys.readouterr().out
@@ -799,10 +804,15 @@ def test_budget_without_a_cut_scales_four_full_legs_to_s_nom() -> None:
 
 
 def _budget_line(key: str, by_phase: dict, *, cuts=(), nominal=0.876840,
-                 candidate="LF") -> dict:
-    line = _line(candidate, key)
+                 candidate="LF", eff_by_phase: dict | None = None,
+                 clipped: dict | None = None, events=None) -> dict:
+    line = _line(candidate, key, events=events)
+    eff = dict(by_phase) if eff_by_phase is None else eff_by_phase
     line["fb"]["budget"] = {"cuts": list(cuts), "min_scale": min(by_phase.values(), default=1.0),
                             "min_scale_by_phase": by_phase, "nominal_scale": nominal,
+                            "min_scale_eff": min(eff.values(), default=1.0),
+                            "min_scale_eff_by_phase": eff,
+                            "clipped_budget_periods": clipped or {},
                             "acted_periods": {phase: 3 for phase in by_phase},
                             "Q_b_final_L_min": 50.15}
     return line
@@ -916,6 +926,157 @@ def test_out_must_lie_in_v5_fb(monkeypatch, capsys) -> None:
     monkeypatch.setattr(ft, "run_identity", lambda: pytest.fail("must stop before"))
     assert ft.main(["run", "--bundle", "F-0", "--out", str(ft.LAS_STORED_PATHS[0])]) == 2
     assert '"stop": "out"' in capsys.readouterr().out.splitlines()[-1]
+
+
+# ------------------------------------------------------------------------------- rev3
+def _old_budget_output(state: ft.FbState, output: np.ndarray, phase: str) -> np.ndarray:
+    """The rev2 tool's ``budget_output`` (original rule 1.1), for the bit rule."""
+    flow = ft.command_flow_m3_s(output, HEAD_M2, ANNULUS_M2)
+    scale = ft.budget_scale(flow, state.budget_m3_s)
+    return output if scale >= 1.0 else output * scale
+
+
+def _random_speeds(rng, count: int, peak: float) -> list[np.ndarray]:
+    return [rng.uniform(-peak, peak, 4) for _ in range(count)]
+
+
+@pytest.mark.parametrize("clip_returned", [True, False])
+def test_bit_rule_inside_v_max_matches_the_old_formula(clip_returned) -> None:
+    rng = np.random.default_rng(20261108)
+    for speeds in _random_speeds(rng, 2000, V_MAX_M_S):
+        budget = rng.uniform(0.3, 1.0) * NOMINAL_M3_S
+        new = ft.budget_output(ft.FbState(NOMINAL_M3_S, budget), speeds, GEOMETRY, "level",
+                               clip_returned)
+        old = _old_budget_output(ft.FbState(NOMINAL_M3_S, budget), speeds, "level")
+        assert new.tobytes() == old.tobytes()
+
+
+def test_clip_off_keeps_the_old_formula_above_v_max() -> None:
+    rng = np.random.default_rng(7)
+    for speeds in _random_speeds(rng, 500, 1.75 * V_MAX_M_S):
+        state = ft.FbState(NOMINAL_M3_S, 0.6 * NOMINAL_M3_S)
+        new = ft.budget_output(state, speeds, GEOMETRY, "level", clip_returned=False)
+        old = _old_budget_output(ft.FbState(NOMINAL_M3_S, 0.6 * NOMINAL_M3_S), speeds, "level")
+        assert new.tobytes() == old.tobytes()
+        assert state.clipped_budget_periods == {}
+
+
+def _clipped_q(speeds) -> float:
+    return ft.clipped_flow_m3_s(speeds, HEAD_M2, ANNULUS_M2, V_MAX_M_S)
+
+
+@pytest.mark.parametrize("clipped_legs", [0, 1, 2, 3, 4])
+def test_s_star_meets_the_budget_and_is_the_largest(clipped_legs) -> None:
+    rng = np.random.default_rng(100 + clipped_legs)
+    for _ in range(300):
+        magnitudes = rng.uniform(0.2, 0.95, 4) * V_MAX_M_S
+        magnitudes[:clipped_legs] = rng.uniform(1.05, 1.75, clipped_legs) * V_MAX_M_S
+        speeds = magnitudes * rng.choice([-1.0, 1.0], 4)  # mixed signs: annulus areas too
+        full = _clipped_q(speeds)
+        budget = rng.uniform(0.2, 0.98) * full
+        scale = ft.clipped_budget_scale(speeds, budget, HEAD_M2, ANNULUS_M2, V_MAX_M_S)
+        assert 0.0 < scale < 1.0
+        assert _clipped_q(scale * speeds) == pytest.approx(budget, rel=1e-12)
+        assert _clipped_q(min(1.0, scale * (1 + 1e-9)) * speeds) > budget
+
+
+def test_budget_output_above_v_max_scales_the_unclipped_vector() -> None:
+    speeds = np.array([1.75, 1.0, 1.0, 1.0]) * V_MAX_M_S
+    state = ft.FbState(NOMINAL_M3_S, NOMINAL_M3_S)
+    out = ft.budget_output(state, speeds, GEOMETRY, "level", clip_returned=True)
+    assert _clipped_q(out) == pytest.approx(NOMINAL_M3_S, rel=1e-12)
+    old = _old_budget_output(ft.FbState(NOMINAL_M3_S, NOMINAL_M3_S), speeds, "level")
+    assert _clipped_q(old) < NOMINAL_M3_S  # the old rule slowed the legs more than needed
+    assert out[1] > old[1]
+    assert state.min_scale < state.min_scale_eff
+    assert state.min_scale_eff == pytest.approx(NOMINAL_M3_S / _clipped_q(speeds), rel=1e-12)
+    assert state.clipped_budget_periods == {"level": 1}
+    assert state.max_flow_over_budget == pytest.approx(_clipped_q(speeds) / NOMINAL_M3_S)
+    meta = ft.budget_meta(state, ft.CANDIDATES["LF"])
+    assert {"min_scale", "min_scale_eff", "min_scale_eff_by_phase",
+            "clipped_budget_periods"} <= set(meta) and meta["budget_rule"] == "R3-1"
+
+
+def test_above_v_max_inside_the_returned_budget_does_not_act() -> None:
+    speeds = np.array([1.5, 0.6, 0.6, 0.6]) * V_MAX_M_S
+    old_flow = ft.command_flow_m3_s(speeds, HEAD_M2, ANNULUS_M2)
+    budget = 0.5 * (old_flow + _clipped_q(speeds))  # the old rule acts, R3-1 does not
+    state = ft.FbState(NOMINAL_M3_S, budget)
+    assert ft.budget_output(state, speeds, GEOMETRY, "level", True) is speeds
+    assert state.acted_periods == {}
+
+
+def test_wrapper_passes_the_controllers_clip_switch(installed) -> None:
+    controller = installed("LF")
+    controller.config.clip_returned_command = True
+    speeds = np.array([1.75, 1.0, 1.0, 1.0]) * V_MAX_M_S
+    out = controller._apply_output_ramp(speeds)
+    assert _clipped_q(out) == pytest.approx(NOMINAL_M3_S, rel=1e-12)
+    assert controller._state.previous_output_m_s is out and out[0] > V_MAX_M_S
+    del controller.config.clip_returned_command
+
+
+def test_h4_counts_a_pair_with_three_texts_once() -> None:
+    reference = _line("L", "k")
+    candidate = _line("LF", "k", verdict="fail", fail_items=["P3-2_x"],
+                      events={"WARN_X": 1, "FAULT_Y": 1})
+    assert len(fj.c2_violations(reference, candidate)) == 4
+    watch = ft.preloaded_watch("F-1", {}, [_identified(reference), _identified(candidate)],
+                               IDENTITY)
+    assert watch.violating_pairs == 1 and len(watch.c2_violations) == 4
+    assert fj.h4_counts(_data({"F-1": [reference, candidate]}), "F-1") == (1, 4)
+    watch.note(_identified(_line("LF", "k")))  # the key's later pair replaces the texts
+    assert watch.violating_pairs == 0
+
+
+def test_rev3_defects_use_s_eff_and_list_clipped_runs_apart() -> None:
+    sink = {"INFO_DIFF_SINK_START": 1}
+    lines = [
+        _budget_line("clip", {"level": 0.70}, eff_by_phase={"level": 0.87684},
+                     clipped={"level": 4}, events=sink),
+        _budget_line("bad-eff", {"level": 0.80}),
+        _budget_line("mismatch", {"level": 0.90}, eff_by_phase={"level": 0.95}),
+    ]
+    data = _data({"F-1": lines})
+    reference = fj.reference_nominal_scale(data)
+    assert fj.scale_defects(lines[0], reference) == []
+    assert "s_eff" in fj.scale_defects(lines[1], reference)[0]
+    assert "s_vec != s_eff" in fj.scale_defects(lines[2], reference)[-1]
+    clipped = fj.clipped_report(data)
+    assert len(clipped) == 1 and "INFO_DIFF_SINK_START" in clipped[0]
+    assert "뺀 실행 1" in fj.level_range_report(data)
+    old_tool = _budget_line("old", {"level": 0.9})
+    del old_tool["fb"]["budget"]["min_scale_eff"]
+    assert "R3-1" in fj.scale_defects(old_tool, reference)[0]
+
+
+def test_lines_of_a_tool_without_r3_1_hold_the_verdict() -> None:
+    old = _identified(_line("LF", "a"), {**IDENTITY, "budget_rule": None})
+    data = _data({"F-1": [_identified(_line("L", "a")), old]})
+    problems = fj.identity_problems(fj.bundle_identities(data))
+    assert any("R3-1" in text for text in problems)
+    assert ft.identity_mismatch({**IDENTITY, "budget_rule": None}, IDENTITY)
+
+
+def test_sealed_check_needs_rev3(tmp_path, monkeypatch) -> None:
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["rev3_path"].unlink()
+    assert ft.sealed_check(**paths) == [f"missing {paths['rev3_path']}"]
+
+
+def test_rev3_seal_value_is_the_sealed_one() -> None:
+    assert ft.RULES_REV3_SHA256 == (
+        "99cea69a8719ef738b81c96ae311762a36e73ffecf5884345d6a0ecbd6b9c356")
+
+
+def test_the_draft_carries_the_r3_3_disclosure_and_four_hashes(tmp_path) -> None:
+    bundles = {bundle: [] for bundle in ft.BUNDLES}
+    bundles["F-1"] = [_identified(_line("L", "a")), _identified(_line("LF", "a"))]
+    data = _data(bundles)
+    criteria = [criterion(data) for criterion in fj.CRITERIA]
+    text = fj.render(data, criteria, tmp_path)
+    assert fj.PRIOR_OBSERVATION_NOTE in text and "5468c67" in text
+    assert ft.RULES_REV3_SHA256[:12] in text and ft.RULES_REV2_SHA256[:12] in text
 
 
 def test_event_count_record_marks_truncation(monkeypatch) -> None:
