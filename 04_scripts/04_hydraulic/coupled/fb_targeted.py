@@ -39,7 +39,12 @@ FB-a (rules 1.1): after ``_apply_output_ramp`` (increment limit or FAULT stop 0)
 scaled by ``min(1, Q_b / Q(u))``, ``Q(u) = sum_i A_i(u_i) |u_i|`` (head area extending,
 annulus area retracting), and the scaled value is stored as ``previous_output_m_s``.
 ``Q_nom = rho eta_v,min Q_th`` with ``Q_th`` = YAML ``actuator.pump_flow_m3_s``, eta 0.85,
-rho 0.98; ``Q_b = Q_nom`` at the start.
+rho 0.98; ``Q_b = Q_nom`` at the start. rev3 R3-1: with ``clip_returned_command`` on and a leg
+above v_max (DSb75) the flow is that of the returned command, ``Q(c(u))`` with
+``c = clip(., -v_max, v_max)``, and the unclipped vector is scaled by
+``s* = max{s <= 1 : Q(c(s u)) <= Q_b}``; every other period keeps the original formula bit for
+bit. The meta reports ``min_scale`` (s_vec), ``min_scale_eff`` (s_eff = returned-flow ratio,
+the s of rev2 R2-3) and ``clipped_budget_periods``.
 
 FB-b (rules 1.2), at the end of every ``update`` (after the command): the valve model
 (first-order lag tau_v 0.1 s of the returned command, x_0 = 0) gives the period mean m_k,
@@ -73,14 +78,16 @@ such as ``v5/las/las_T1.jsonl`` must never get lines.
 ``fb.events_total`` / ``events_truncated`` record how many events the run had against the
 first 400 that ``verdict_runs._finish`` stores in ``events``.
 
-Stops (rules 6, rev1 3, rev2 R2-5): H-1 (rules, addendum rev1 or rev2 or design missing, a
-``.sha256`` without a value, or the sha256 of the rules, rev1 or rev2 is not the sealed one)
-before any run; H-2:
+Stops (rules 6, rev1 3, rev2 R2-5, rev3 R3-4): H-1 (rules, addendum rev1 .. rev3 or design
+missing, a ``.sha256`` without a value, or the sha256 of the rules or an addendum is not the
+sealed one) before any run; lines of a tool without R3-1 (``budget_rule``) are another run
+identity, so F-1 .. F-5 never resume on them; H-2:
 F-1 .. F-5 run only after F-0 passed C-7 (``fb_judge.check_c7``) and S-1 of rev2 R2-1 (the L
 hash of both F-0 keys = the stored b0 act hash, ``fb_judge.check_s1``); H-3: an error line is
 retried once, a second error stops the bundle (a run whose plant or controller was not
-captured is an error line); H-4: 5 C-2 violations in a bundle stop it (finished lines stay,
-and the lines already in the file count).
+captured is an error line); H-4: 5 pairs with a C-2 violation in a bundle stop it (rev3
+R3-2: a pair counts once however many texts it has; finished lines stay, and the lines
+already in the file count).
 
 Usage (dynamics-dev python, project root, PowerShell):
   python -I -B 04_scripts/04_hydraulic/coupled/fb_targeted.py list [--bundle F-0 ..]
@@ -136,6 +143,15 @@ RULES_REV2_SHA_PATH = RULES_DIR / "fb_targeted_rules_rev2.sha256"
 RULES_REV2_SHA256 = "12ed20ea215fab24b475bc0b05b36fa01afe50aa4ad300b5af1ede441bcaaba0"
 """``fb_targeted_rules_rev2.sha256`` (sealed addendum 2 2026-11-08 19:00:42 +09:00, before any
 run: R2-1 03_src LAS-b and S-1, R2-2 A97 ``touch_seen`` timing, R2-3 s report, R2-5 H-1)."""
+RULES_REV3_PATH = RULES_DIR / "fb_targeted_rules_rev3.md"
+RULES_REV3_SHA_PATH = RULES_DIR / "fb_targeted_rules_rev3.sha256"
+RULES_REV3_SHA256 = "99cea69a8719ef738b81c96ae311762a36e73ffecf5884345d6a0ecbd6b9c356"
+"""``fb_targeted_rules_rev3.sha256`` (sealed addendum 3 2026-11-08 19:31:35 +09:00, before any
+LF result: R3-1 budget flow on the returned command, R3-2 H-4 per pair, R3-3 disclosure,
+R3-4 H-1)."""
+BUDGET_RULE = "R3-1"
+"""rev3 R3-4: the budget rule of this tool (returned-command flow ``Q(c(u))``); a line without
+it (``fb.identity.budget_rule``, budget meta ``min_scale_eff``) comes from an older tool."""
 S1_STORED_HASHES = {
     "D1|H-R-A|rigid+J1@FR|T|diag-op|K1|VB|e0":
         "aff9b0f10ac54cf8d65e1e220cd832334e29fdfd6b3d54a8a772141a84e4cc5b",
@@ -202,7 +218,7 @@ F4_SETTINGS = ("V0", "VB")
 F5_ROWS = ("D1|H-S-0|J1|T|flat|K1", "D1|H-S-0|J2|T|flat|K1", "D1|H-R-0|rigid|T|flat|K1")
 F5_SETTINGS = ("VB", "V0")
 C2_STOP_COUNT = 5
-"""Rules 6 H-4."""
+"""Rules 6 H-4: pairs with at least one C-2 violation (rev3 R3-2), not violation texts."""
 
 LAS_CANDIDATE = "b0"
 LAS_MODE = "act"
@@ -217,7 +233,7 @@ C2_PATH = ROOT / "03_src" / "outrigger_sim" / "control" / "c2.py"
 IDENTITY_FILES = {"fb_targeted.py": HERE / "fb_targeted.py",
                   "las_targeted.py": HERE / "las_targeted.py", "c2.py": C2_PATH}
 """Files whose sha256 every line records (rules 3.1 run identity)."""
-IDENTITY_KEYS = ("git_head", "code_diff_sha256", "sha256")
+IDENTITY_KEYS = ("git_head", "code_diff_sha256", "sha256", "budget_rule")
 """What must be equal between lines of one bundle file (resume, H-2, during a batch)."""
 CODE_DIFF_PATHS = ("03_src", "04_scripts", "02_params")
 """Tracked trees whose uncommitted changes are part of the run identity."""
@@ -354,6 +370,11 @@ class FbState:
     """rev2 R2-3: phase (the ``acted_periods`` strings) -> smallest s = Q_b / Q(u) acted."""
     nominal_scale: float | None = None
     """rev2 R2-3: s_nom = Q_nom / Q(4 v_max) of the run's geometry (set on the first period)."""
+    min_scale_eff: float = 1.0
+    """rev3 R3-1: smallest s_eff = Q(c(s* u)) / Q(c(u)) (the returned-flow ratio)."""
+    min_scale_eff_by_phase: dict[str, float] = field(default_factory=dict)
+    clipped_budget_periods: dict[str, int] = field(default_factory=dict)
+    """rev3 R3-1: acted periods with a leg |u_i| > v_max (clip on), per phase."""
     max_flow_over_budget: float = 0.0
     evaluated_periods: int = 0
     r_min: list[float] = field(default_factory=lambda: [math.inf] * 4)
@@ -485,21 +506,89 @@ def detect_step(state: FbState, stroke_m, force_N, command_m_s, phase: str,
     return events
 
 
-def budget_output(state: FbState, output_m_s: np.ndarray, geometry, phase: str) -> np.ndarray:
-    """FB-a on the ramp output: the input object when the budget does not act."""
+def clipped_flow_m3_s(speeds, head_area_m2, annulus_area_m2, max_speed_m_s: float) -> float:
+    """``Q(c(u))``: the flow of the returned command ``clip(u, -v_max, v_max)``."""
+    clipped = np.clip(np.asarray(speeds, float), -max_speed_m_s, max_speed_m_s)
+    return command_flow_m3_s(clipped, head_area_m2, annulus_area_m2)
+
+
+def clipped_budget_scale(speeds, budget_m3_s: float, head_area_m2, annulus_area_m2,
+                         max_speed_m_s: float) -> float:
+    """rev3 R3-1: ``s* = max{s in (0, 1] : Q(c(s u)) <= Q_b}`` (1 when ``u`` fits).
+
+    ``Q(c(s u))`` is continuous, non-decreasing and piecewise linear in ``s``; a leg with
+    ``|u_i| > v_max`` is clipped from ``s_i = v_max / |u_i|`` on. On each piece the clipped legs
+    give ``A_i v_max`` and the others ``s A_i |u_i|``, so the piece holding ``Q_b`` is solved
+    directly. Scaling by ``s > 0`` keeps every sign, hence every area.
+    """
+    speeds = np.asarray(speeds, float)
+    weights = areas_for(speeds, head_area_m2, annulus_area_m2) * np.abs(speeds)
+    full_flow = clipped_flow_m3_s(speeds, head_area_m2, annulus_area_m2, max_speed_m_s)
+    if full_flow <= budget_m3_s:
+        return 1.0
+    clip_from = np.where(np.abs(speeds) > max_speed_m_s,
+                         max_speed_m_s / np.maximum(np.abs(speeds), np.finfo(float).tiny),
+                         np.inf)
+    clip_flow = areas_for(speeds, head_area_m2, annulus_area_m2) * max_speed_m_s
+    edges = sorted({float(edge) for edge in clip_from if edge < 1.0} | {1.0})
+    for upper in edges:
+        is_clipped = clip_from < upper  # clipped all through the piece ending at ``upper``
+        fixed = float(np.sum(clip_flow[is_clipped]))
+        slope = float(np.sum(weights[~is_clipped]))
+        if fixed + slope * upper >= budget_m3_s:
+            return min(upper, (budget_m3_s - fixed) / slope)
+    return 1.0  # not reached: Q(c(u)) > Q_b at s = 1
+
+
+def _first_nominal_scale(state: FbState, geometry) -> None:
     if state.nominal_scale is None:
         full_flow = command_flow_m3_s(np.full(4, float(geometry.max_speed_m_s)),
                                       geometry.head_area_m2, geometry.annulus_area_m2)
         state.nominal_scale = state.nominal_m3_s / full_flow
-    flow = command_flow_m3_s(output_m_s, geometry.head_area_m2, geometry.annulus_area_m2)
-    state.max_flow_over_budget = max(state.max_flow_over_budget, flow / state.budget_m3_s)
-    scale = budget_scale(flow, state.budget_m3_s)
-    if scale >= 1.0:
-        return output_m_s
+
+
+def _note_acted(state: FbState, phase: str, scale: float, scale_eff: float,
+                has_clipped_leg: bool) -> None:
     state.acted_periods[phase] = state.acted_periods.get(phase, 0) + 1
     state.min_scale = min(state.min_scale, scale)
     state.min_scale_by_phase[phase] = min(state.min_scale_by_phase.get(phase, 1.0), scale)
-    return output_m_s * scale
+    state.min_scale_eff = min(state.min_scale_eff, scale_eff)
+    state.min_scale_eff_by_phase[phase] = min(state.min_scale_eff_by_phase.get(phase, 1.0),
+                                              scale_eff)
+    if has_clipped_leg:
+        state.clipped_budget_periods[phase] = state.clipped_budget_periods.get(phase, 0) + 1
+
+
+def budget_output(state: FbState, output_m_s: np.ndarray, geometry, phase: str,
+                  clip_returned: bool = False) -> np.ndarray:
+    """FB-a on the ramp output: the input object when the budget does not act.
+
+    rev3 R3-1: with ``clip_returned`` (the controller's ``clip_returned_command``) and a leg
+    above ``v_max`` the budget reads the returned command, ``Q(c(u))``, and the unclipped
+    vector is scaled by :func:`clipped_budget_scale`. Otherwise the original rule
+    ``budget_scale(Q(u), Q_b)`` runs unchanged (bit for bit).
+    """
+    _first_nominal_scale(state, geometry)
+    v_max = float(geometry.max_speed_m_s)
+    head, annulus = geometry.head_area_m2, geometry.annulus_area_m2
+    has_clipped_leg = clip_returned and float(np.max(np.abs(output_m_s))) > v_max
+    if not has_clipped_leg:
+        flow = command_flow_m3_s(output_m_s, head, annulus)
+        state.max_flow_over_budget = max(state.max_flow_over_budget, flow / state.budget_m3_s)
+        scale = budget_scale(flow, state.budget_m3_s)
+        if scale >= 1.0:
+            return output_m_s
+        _note_acted(state, phase, scale, scale, has_clipped_leg=False)
+        return output_m_s * scale
+    flow = clipped_flow_m3_s(output_m_s, head, annulus, v_max)
+    state.max_flow_over_budget = max(state.max_flow_over_budget, flow / state.budget_m3_s)
+    if flow <= state.budget_m3_s:
+        return output_m_s
+    scale = clipped_budget_scale(output_m_s, state.budget_m3_s, head, annulus, v_max)
+    scaled = output_m_s * scale
+    scale_eff = clipped_flow_m3_s(scaled, head, annulus, v_max) / flow
+    _note_acted(state, phase, scale, scale_eff, has_clipped_leg=True)
+    return scaled
 
 
 def _finite_or_none(value: float) -> float | None:
@@ -514,6 +603,10 @@ def budget_meta(state: FbState | None, params: FbParams) -> dict | None:
             "Q_b_final_L_min": state.budget_m3_s * M3_S_TO_L_MIN,
             "acted_periods": dict(state.acted_periods), "min_scale": state.min_scale,
             "min_scale_by_phase": dict(state.min_scale_by_phase),
+            "min_scale_eff": state.min_scale_eff,
+            "min_scale_eff_by_phase": dict(state.min_scale_eff_by_phase),
+            "clipped_budget_periods": dict(state.clipped_budget_periods),
+            "budget_rule": BUDGET_RULE,
             "nominal_scale": state.nominal_scale,
             "max_Q_over_Qb": state.max_flow_over_budget,
             "cuts": [asdict(cut) for cut in state.cuts],
@@ -571,7 +664,9 @@ def install(params: FbParams, controller_class=None, phase_enum=None,
         if not params.enable:
             return output
         state = _state_of(self, nominal)
-        scaled = budget_output(state, output, self.geometry, str(self._state.phase))
+        clip_returned = bool(getattr(self.config, "clip_returned_command", False))
+        scaled = budget_output(state, output, self.geometry, str(self._state.phase),
+                               clip_returned)
         if scaled is not output:
             self._state.previous_output_m_s = scaled
         return scaled
@@ -708,17 +803,20 @@ def sealed_check(rules_path: Path = RULES_PATH, sha_path: Path = RULES_SHA_PATH,
                  design_path: Path = DESIGN_PATH, rev1_path: Path = RULES_REV1_PATH,
                  rev1_sha_path: Path = RULES_REV1_SHA_PATH,
                  rev2_path: Path = RULES_REV2_PATH,
-                 rev2_sha_path: Path = RULES_REV2_SHA_PATH) -> list[str]:
-    """Problems of H-1 (empty = the sealed rules, the sealed addenda rev1 and rev2 and the
-    design copy are there; rev1 3 and rev2 R2-5 add the addenda to the original check)."""
+                 rev2_sha_path: Path = RULES_REV2_SHA_PATH,
+                 rev3_path: Path = RULES_REV3_PATH,
+                 rev3_sha_path: Path = RULES_REV3_SHA_PATH) -> list[str]:
+    """Problems of H-1 (empty = the sealed rules, the sealed addenda rev1 .. rev3 and the
+    design copy are there; rev1 3, rev2 R2-5 and rev3 R3-4 add the addenda)."""
     paths = (rules_path, sha_path, rev1_path, rev1_sha_path, rev2_path, rev2_sha_path,
-             design_path)
+             rev3_path, rev3_sha_path, design_path)
     problems = [f"missing {path}" for path in paths if not path.exists()]
     if problems:
         return problems
     problems += _seal_problems(rules_path, sha_path, RULES_SHA256)
     problems += _seal_problems(rev1_path, rev1_sha_path, RULES_REV1_SHA256)
     problems += _seal_problems(rev2_path, rev2_sha_path, RULES_REV2_SHA256)
+    problems += _seal_problems(rev3_path, rev3_sha_path, RULES_REV3_SHA256)
     return problems
 
 
@@ -792,7 +890,7 @@ def run_identity(root: Path = ROOT, files: dict[str, Path] | None = None) -> dic
             "dirty_files": [line[3:] for line in dirty[:DIRTY_FILES_SHOWN]],
             "code_diff_sha256": code_diff_sha256(root),
             "sha256": {name: file_sha256(path) for name, path in files.items()},
-            "threads": thread_values()}
+            "budget_rule": BUDGET_RULE, "threads": thread_values()}
 
 
 def identity_mismatch(recorded: dict | None, current: dict) -> list[str]:
@@ -1106,12 +1204,24 @@ class BatchWatch:
     current_identity: dict | None = None
     """None = no identity check (the earlier lines of the file were checked by ``main``)."""
     lines: dict = field(default_factory=dict)
-    c2_violations: list = field(default_factory=list)
+    violations_by_pair: dict = field(default_factory=dict)
+    """Key -> the C-2 violation texts of its pair (a later pair of the key replaces them)."""
     retried: set = field(default_factory=set)
     identity_problems: list = field(default_factory=list)
 
+    @property
+    def c2_violations(self) -> list[str]:
+        """Every violation text, for the report."""
+        return [f"{key}: {text}" for key, texts in self.violations_by_pair.items()
+                for text in texts]
+
+    @property
+    def violating_pairs(self) -> int:
+        """rev3 R3-2: H-4 counts pairs with at least one C-2 violation text."""
+        return sum(1 for texts in self.violations_by_pair.values() if texts)
+
     def note(self, record: dict) -> None:
-        """Add a finished line; count the C-2 violations of a completed pair."""
+        """Add a finished line; keep the C-2 violations of a completed pair."""
         import fb_judge
 
         key, name = record["fb"]["key"], record["fb"]["candidate"]
@@ -1125,8 +1235,7 @@ class BatchWatch:
         if pair is None:
             return
         reference, candidate = pair
-        for violation in fb_judge.c2_violations(reference, candidate):
-            self.c2_violations.append(f"{key}: {violation}")
+        self.violations_by_pair[key] = fb_judge.c2_violations(reference, candidate)
 
 
 def _print_line(count: int, total: int, record: dict) -> None:
@@ -1168,9 +1277,10 @@ def run_batch(jobs: list[dict], path: Path, workers: int, bundle: str,
         reason) and ``c2_violations``.
     """
     watch = preloaded_watch(bundle, stored_reference, existing_lines or [], current_identity)
-    if len(watch.c2_violations) >= C2_STOP_COUNT:
+    if watch.violating_pairs >= C2_STOP_COUNT:
         return {"runs": 0, "errors": 0, "c2_violations": watch.c2_violations,
-                "stop": f"H-4: {len(watch.c2_violations)} C-2 violations in the file already"}
+                "stop": f"H-4: {watch.violating_pairs} pairs with C-2 violations in the file "
+                        "already"}
     import verdict_runs
 
     verdict_runs.warm_numba_cache()
@@ -1218,8 +1328,8 @@ def run_batch(jobs: list[dict], path: Path, workers: int, bundle: str,
             watch.note(record)
             if watch.identity_problems:
                 stop = f"run identity changed during the batch: {watch.identity_problems[:3]}"
-            elif len(watch.c2_violations) >= C2_STOP_COUNT:
-                stop = f"H-4: {len(watch.c2_violations)} C-2 violations"
+            elif watch.violating_pairs >= C2_STOP_COUNT:
+                stop = f"H-4: {watch.violating_pairs} pairs with C-2 violations"
         if stop is not None:
             pool.terminate()
     return {"runs": written, "errors": errors, "stop": stop,
