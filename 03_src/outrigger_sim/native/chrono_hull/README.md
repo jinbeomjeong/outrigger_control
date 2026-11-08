@@ -81,7 +81,7 @@ PyChrono 10.0.0(conda `pychrono 10.0.0 py312h418371c_1198`)의 `SCMTerrain`은 �
 
 | 환경 변수 | 값 | 기본 |
 |---|---|---|
-| `OUTRIGGER_HULL_HOOK` | `off` \| `fast` \| `shadow` \| `dump`(대소문자 무관) | 없음 = off |
+| `OUTRIGGER_HULL_HOOK` | `off` \| `fast` \| `shadow` \| `dump`(대소문자 무관) | DLL 함수 기준: 없음 = off. **프로젝트 Python 래퍼(`outrigger_sim/chrono/hull_hook.py`) 기준: 없음 = fast(2026-11-09 채택)**, `off`면 DLL을 싣지 않는다 |
 | `OUTRIGGER_HULL_HOOK_DUMP` | 덤프 파일 경로(`.ohull`) | 없음 |
 | `OUTRIGGER_HULL_HOOK_DUMP_EVERY` | 정수 ≥ 1 | 1 |
 | `OUTRIGGER_HULL_HOOK_DUMP_MAX` | 정수(0 = 무제한) | 0 |

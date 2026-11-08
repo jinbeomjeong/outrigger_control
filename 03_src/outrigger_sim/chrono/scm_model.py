@@ -110,9 +110,10 @@ from outrigger_sim.pad_variants import PROJECT_ROOT
 from outrigger_sim.params import LEG_ORDER, Params, axial_stiffness_N_m, scm_run_sha256
 from outrigger_sim.signals import TruthState
 
-# Opt-in SCM convex-hull hook, installed right after Chrono_vehicle.dll is loaded (``import pychrono.vehicle``
-# above) and before any SCM step (native/chrono_hull README): nothing happens without OUTRIGGER_HULL_HOOK; a
-# failed install prints the status string and exits 2. Counters: ``hull_hook.stats_record()``.
+# SCM convex-hull hook, installed right after Chrono_vehicle.dll is loaded (``import pychrono.vehicle`` above)
+# and before any SCM step (native/chrono_hull README). Default fast since 2026-11-09 (G-D 1.30x, bit-identical);
+# OUTRIGGER_HULL_HOOK=off restores the original code path. A failed default install falls back to off (recorded);
+# an explicit request that fails exits 2. Record: ``hull_hook.stats_record()`` -> result.json ``hull_hook``.
 _hull_hook.install_from_env()
 
 SOIL_SETS_JSON =PROJECT_ROOT / "02_params" / "scm_soil_sets.json"

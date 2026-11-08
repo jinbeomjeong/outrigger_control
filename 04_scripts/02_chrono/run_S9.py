@@ -2452,8 +2452,9 @@ def place():
 
 
 def add_hull_hook_record(summary: dict) -> None:
-    """``result.json`` ``hull_hook`` (install meta + counters of ``native/chrono_hull``) only when the opt-in hook
-    is active (``OUTRIGGER_HULL_HOOK``); without it the summary is unchanged."""
+    """``result.json`` ``hull_hook`` (resolved mode ``mode``/``requested``/``source``/``fallback_reason``, install
+    meta and counters of ``native/chrono_hull``) whenever the SCM model was imported (default fast since
+    2026-11-09, ``OUTRIGGER_HULL_HOOK=off`` included); rows that never load SCM keep the summary unchanged."""
     from outrigger_sim.chrono import hull_hook  # noqa: PLC0415
 
     rec = hull_hook.stats_record()

@@ -1222,10 +1222,30 @@ def _case_env(pool: str, start_env: dict[str, str] | None = None,
     return env
 
 
+def _hull_hook_module():
+    """``outrigger_sim.chrono.hull_hook`` (stdlib-only module) imported from this checkout's ``03_src``."""
+    src = str(HERE.parents[1] / "03_src")
+    added = src not in sys.path
+    if added:
+        sys.path.insert(0, src)
+    try:
+        from outrigger_sim.chrono import hull_hook  # noqa: PLC0415
+    finally:
+        if added:
+            sys.path.remove(src)
+    return hull_hook
+
+
 def launch_env_record(child_env: dict[str, str]) -> dict[str, str | None]:
     """batch.json keys of the env a case process was started with (v5 criteria rev. 12a: run_S8C rows keep no
-    OMP_WAIT_POLICY in their result.json, so the batch records the value it put into the child env; None = unset)."""
-    return {"omp_wait_policy": child_env.get("OMP_WAIT_POLICY")}
+    OMP_WAIT_POLICY in their result.json, so the batch records the value it put into the child env; None = unset).
+    ``hull_hook_env`` = the child's raw ``OUTRIGGER_HULL_HOOK`` (None = unset), ``hull_hook_requested`` = the mode
+    it resolves to (default fast since 2026-11-09); the effective mode (a default install may fall back to off) is
+    in the row's result.json ``hull_hook`` when the row loads SCM."""
+    hh = _hull_hook_module()
+    req, source = hh.requested_mode(child_env)
+    return {"omp_wait_policy": child_env.get("OMP_WAIT_POLICY"), "hull_hook_env": child_env.get(hh.ENV_MODE),
+            "hull_hook_requested": req, "hull_hook_source": source}
 
 
 CODE_HASH_FILES = ("03_src/outrigger_sim/control/c2.py", "03_src/outrigger_sim/control/zero_calibration.py")
@@ -1441,7 +1461,8 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
                                      stdin=subprocess.DEVNULL, env=child_env)
                 _log(progress, f"START {c['case']} {_dt.datetime.now().isoformat(timespec='seconds')} pid={p.pid} "
                                f"est_s={c['est_s']} pool={pool} "
-                               f"OMP_WAIT_POLICY={launch_env[c['case']]['omp_wait_policy']}")
+                               f"OMP_WAIT_POLICY={launch_env[c['case']]['omp_wait_policy']} "
+                               f"hull_hook={launch_env[c['case']]['hull_hook_requested']}")
                 running.append((c, p, time.perf_counter(), logf, pool))
         time.sleep(2.0)
         for item in list(running):
