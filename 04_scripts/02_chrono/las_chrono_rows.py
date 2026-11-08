@@ -4,18 +4,19 @@ Batch ``V5-LAS-CHRONO`` of ``s9_batch`` (``list`` / ``check-sources`` / ``run``)
 problem family ``D1|H-R-A|rigid+J1@FR|T|diag-op`` (rigid base, J1 patch under FR, auger top, floor rpB-op
 (2.3351, 1.5017) deg, K1 / K3).
 
-Engine choice (cad 2026-11-08): the S9 SCM model has no rigid contact at all (``scm_model.S9Model``: SMC system, pads /
-crawler only on SCM rays; run_S9 ``d424_cases`` note "the S9 model has no rigid base"). Chrono itself can mix a rigid
-patch with an SCM patch (``demo_VEH_RigidSCMTerrain_MixedPatches.cpp``, chrono-rag 10.0.0), but that would be a new
-S9Model contact path in 03_src, not a row definition. The nearest existing model is used instead:
+Engine (cad 2026-11-08 rev. 2, user decision "강체 + SCM 혼합 지형, 구현 뒤 LAS 확인"): the S9 mixed ground
+``S9Model(rigid_base=RigidBaseSpec(("FR",), k))`` (``03_src/outrigger_sim/chrono/rigid_base.py``; Chrono pattern
+``demo_VEH_RigidSCMTerrain_MixedPatches.cpp:148``): rigid SMC base (L1 floor-patch path, concrete k 3.24e8 N/m on the
+FL / RL / RR pad spheres, the 24 L1 crawler spheres) + J1 SCM under FR only (``--rigid-base FR --soil J1 --grid
+0.01``), i.e. the harness family itself ``rigid+J1@FR``:
 
-* base G1 (compacted gravel K30, ``scm_soil_sets.json``) under FL / RL / RR and the crawler, J1 patch under FR (G6
-  triple layout ``--soil-patch FR:J1``, patch grid 0.01 m), pad B, auger top, F_s 4 kN (D-1 Chrono convention), floor
-  (2.3351, 1.5017) deg, ``--start-limit record_only`` (harness preset_config: target acceptance off), closed loop
-  160 s (S9SL length), VB plant arguments ``s9_batch.v5_vb_argv()``, ``--threads`` fixed (``run_S9.SCM_THREADS_FIXED``).
-* crawler K1 = G1 as it is; K3 analogue (optional) = ``--soil-override elastic_K=<3 x G1 elastic_K>`` on the base
-  set (the patch set takes no override): the SCM unloading branch of the crawler (and the elastic reload of the three
-  G1 pads) x3. It is not the harness K3 (crawler contact stiffness x3 on a rigid floor); recorded as an analogue.
+* pad B, auger top, F_s 4 kN (D-1 Chrono convention), floor (2.3351, 1.5017) deg, ``--start-limit record_only``
+  (harness preset_config: target acceptance off), closed loop 160 s (S9SL length), VB plant arguments
+  ``s9_batch.v5_vb_argv()``, ``--threads`` fixed (``run_S9.SCM_THREADS_FIXED``);
+* crawler K1 = YAML ``contact.crawler.kn_total_N_m`` (1e8 N/m), K3 = ``--crawler-kn-scale 3`` (spheres x3, dashpot
+  x sqrt 3, same heave zeta) = the harness K3 (crawler contact stiffness x3 on a rigid floor).
+
+Rev. 1 (d4ceda6, superseded) used the G6 triple layout G1 base + J1@FR patch with a K3 analogue (G1 elastic_K x3).
 
 LAS-b off / on: the rows do not pin the controller; the run-time preset ``C2Config().with_10hz_d1()`` runs and
 ``--expect-controller`` refuses a wrong preset.
@@ -42,9 +43,8 @@ Compared quantities (off vs on, per K variant; run_S9 ``result.json`` p3b blocks
 
 Harness reference (``las_judgement.md`` 3.1, K1 VB e0): base 9.103 kN -> b0 11.377 kN, LOC - t_off 1.0 s, READY +0.5 s.
 
-Estimates (ASSUMPTION): ``run_S9.final_est_pool_s`` of the G6 form (G1 base + patch, 168 s basis P 8,500 / E 11,100 s;
-the floor slope is not in the G6 basis) x ``s9_batch.V5_SOIL_VB_FACTOR`` (1.2). Cross-check: the running D-1 G1 + J1@FL
-VB rows (200 s loop) were estimated 12,600 s, x 168 / 208 = 10,200 s.
+Estimates (ASSUMPTION): :data:`MIXED_US_PER_STEP` (measured on the mixed ground, see there) x 168 s / dt x
+``s9_batch.V5_SOIL_VB_FACTOR`` (1.2); E pool x :data:`E_POOL_FACTOR`.
 """
 
 from __future__ import annotations
@@ -64,7 +64,10 @@ LAS_SOURCE = "s6_control_spec.md 436 / 06_analysis/02_control/verif_matrix/las_j
 LAS_FAMILY = "D1|H-R-A|rigid+J1@FR|T|diag-op"
 LAS_FLOOR_DEG = (2.3351, 1.5017)
 """rpB-op floor (roll, pitch) [deg] of the harness family (``v5/d1.jsonl`` job.d1 roll_deg / pitch_deg)."""
-LAS_BASE, LAS_PATCH_SET, LAS_PATCH_LEG = "G1", "J1", "FR"
+LAS_BASE, LAS_PATCH_SET, LAS_PATCH_LEG = "rigid", "J1", "FR"
+"""Rigid base, J1 SCM under FR (``--rigid-base FR --soil J1``)."""
+LAS_GRID_M = 0.01
+"""J1 pad grid (``run_S9.P3B_PAD_GRID_M``)."""
 LAS_PAD, LAS_LEVEL, LAS_FS_KN = "B", "top", 4.0
 LAS_DURATION_S = 160.0
 """Closed loop after the 8 s settle (S9SL length; harness READY of the family 68.7 s, P3-6 slope limit 120 s)."""
@@ -74,8 +77,12 @@ LAS_ON_CONTROLLER = "final_C4G2_P3_LAS"
 PRE_LAS_RUNNER = ROOT / "05_tests" / "unit" / "pre_las_preset_runner.py"
 START_ENV = {"OMP_WAIT_POLICY": "PASSIVE"}
 K3_FACTOR = 3.0
-CRAWLER_VARIANTS: tuple[tuple[str, bool], ...] = (("K1", False), ("K3", True))
-"""(variant, optional). K3 = elastic_K x :data:`K3_FACTOR` on the base set (analogue, see module doc)."""
+CRAWLER_VARIANTS: tuple[tuple[str, float], ...] = (("K1", 1.0), ("K3", K3_FACTOR))
+"""(variant, ``--crawler-kn-scale``); all four rows required (user decision 2026-11-08: K1 / K3 x LAS off / on)."""
+MIXED_US_PER_STEP = {"pcore": 2500.0, "ecore": 3300.0}
+"""ASSUMPTION: per-step cost [us] of the mixed ground (rigid base + one 1 cm J1 pad terrain, 4 threads) under a
+parallel P batch; set from the rigid+FR smoke (see the cad report 2026-11-08) with margin."""
+E_POOL_FACTOR = 1.3
 
 
 def _r9() -> ModuleType:
@@ -93,59 +100,66 @@ def las_merged(r9: ModuleType | None = None) -> bool:
     return LAS_ON_CONTROLLER in getattr(r9, "CONTROLLER_EXPECTATIONS", {}) and PRE_LAS_RUNNER.is_file()
 
 
-def base_elastic_k(soil: str = LAS_BASE) -> float:
-    doc = json.loads((ROOT / "02_params" / "scm_soil_sets.json").read_text("utf-8"))
-    return float(doc["sets"][soil]["chrono"]["elastic_K"])
-
-
 def _tag(v: float) -> str:
     return f"{v:g}".replace("-", "m").replace(".", "p")
 
 
 def base_case(r9: ModuleType) -> dict[str, Any]:
-    """The run_S9 case dict shared by all rows (G6 triple layout + S9SL floor / start-limit keys)."""
-    c = r9.g6_case(LAS_BASE, LAS_PATCH_SET, LAS_PATCH_LEG, pad=LAS_PAD, level=LAS_LEVEL, fs=LAS_FS_KN,
-                   group=LAS_BATCH, duration_s=LAS_DURATION_S)
-    c.update(floor_deg=LAS_FLOOR_DEG, start_limit=r9.S9SL_START_LIMIT)
+    """The run_S9 case dict shared by all rows: the P3b case of J1 (pad B, top, F_s 4 kN, grid 0.01) with the S9SL
+    floor / start-limit keys and the loop length; :func:`level_argv` turns it into the mixed-ground argv."""
+    c = r9.p3b_case(LAS_BATCH, LAS_PATCH_SET, LAS_PAD, LAS_LEVEL, LAS_FS_KN)
+    c.update(floor_deg=LAS_FLOOR_DEG, start_limit=r9.S9SL_START_LIMIT, duration_s=LAS_DURATION_S,
+             grid_m=LAS_GRID_M)
     return c
 
 
+def level_argv(r9: ModuleType, c: dict[str, Any], kn_scale: float) -> list[str]:
+    """``run_S9.p3b_level_argv`` of the case without ``--crawler-grid`` and with ``--rigid-base FR`` (+
+    ``--crawler-kn-scale`` for K3) inserted after the soil."""
+    a = r9.p3b_level_argv(c)
+    k = a.index("--crawler-grid")
+    del a[k:k + 2]
+    extra = ["--rigid-base", LAS_PATCH_LEG] + ([] if kn_scale == 1.0 else ["--crawler-kn-scale", f"{kn_scale:g}"])
+    a[3:3] = extra
+    return a
+
+
+def est_pool_s() -> dict[str, float]:
+    sim_s = 8.0 + LAS_DURATION_S
+    p = sim_s / 1.0e-4 * MIXED_US_PER_STEP["pcore"] * 1e-6
+    return {"pcore": round(p, -2), "ecore": round(sim_s / 1.0e-4 * MIXED_US_PER_STEP["ecore"] * 1e-6 * E_POOL_FACTOR,
+                                                 -2)}
+
+
 def las_rows(sb: ModuleType) -> list[dict[str, Any]]:
-    """2 required (K1 off / on) + 2 optional (K3 analogue off / on) rows."""
+    """4 required rows: K1 / K3 x LAS-b off / on (mixed ground rigid + J1@FR)."""
     r9 = _r9()
     merged = las_merged(r9)
-    k_el = base_elastic_k()
     roll, pitch = LAS_FLOOR_DEG
     rows = []
-    for variant, optional in CRAWLER_VARIANTS:
+    for variant, kn_scale in CRAWLER_VARIANTS:
         for las in ("off", "on"):
             c = base_case(r9)
             ctrl = LAS_OFF_CONTROLLER if las == "off" else getattr(sb, "V5_P3_LAS_CONTROLLER", LAS_ON_CONTROLLER)
             c["controller"] = ctrl
-            c["case"] = (f"LASC_{LAS_BASE}_{LAS_PAD}_{LAS_LEVEL}_Fs{LAS_FS_KN:g}_sp{LAS_PATCH_SET}{LAS_PATCH_LEG}"
+            c["case"] = (f"LASC_{LAS_BASE}_{LAS_PATCH_SET}{LAS_PATCH_LEG}_{LAS_PAD}_{LAS_LEVEL}_Fs{LAS_FS_KN:g}"
                          f"_r{_tag(roll)}_p{_tag(pitch)}_{variant}_las{las}")
-            level_argv = r9.p3b_level_argv(c)
-            if variant == "K3":
-                level_argv[3:3] = ["--soil-override", f"elastic_K={K3_FACTOR * k_el:g}"]
+            argv_level = level_argv(r9, c, kn_scale)
             head = list(sb.RUN)
             if las == "off" and merged:
                 head = head[:-1] + [str(PRE_LAS_RUNNER), head[-1]]
-            est = r9.final_est_pool_s({k: v for k, v in c.items() if k != "floor_deg"})
-            pools = {k: round(v * sb.V5_SOIL_VB_FACTOR, -2) for k, v in est.items()}
+            pools = {k: round(v * sb.V5_SOIL_VB_FACTOR, -2) for k, v in est_pool_s().items()}
             ready = las == "off" or merged
             r = {"case": c["case"], "est_s": pools["pcore"], "est_pool_s": pools,
-                 "argv": head + level_argv + sb.v5_vb_argv(), "controller": ctrl, "group": LAS_BATCH,
+                 "argv": head + argv_level + sb.v5_vb_argv(), "controller": ctrl, "group": LAS_BATCH,
                  "criteria_id": f"LAS-C-{variant}", "v5_setting": "VB", "planned_pool": "pcore",
                  "las": las, "las_family": LAS_FAMILY, "las_crawler": variant, "las_ready": ready,
                  "pair_case": c["case"][:-len(las)] + ("on" if las == "off" else "off"),
                  "start_env": dict(START_ENV),
-                 "note": (f"{LAS_BATCH} {variant} LAS-b {las}: G1 base + J1@FR (triple layout), pad B top, F_s 4 kN, "
-                          f"floor ({roll:g}, {pitch:g}) deg, record_only start, {LAS_DURATION_S:g} s, SCM VB, "
-                          f"{ctrl}; Chrono stand-in of {LAS_FAMILY} {variant} (no rigid base in S9)"
-                          + ("; K3 analogue = base elastic_K x3" if variant == "K3" else "")
+                 "note": (f"{LAS_BATCH} {variant} LAS-b {las}: mixed ground rigid + J1@FR (rigid_base.py), pad B top, "
+                          f"F_s 4 kN, floor ({roll:g}, {pitch:g}) deg, record_only start, {LAS_DURATION_S:g} s, SCM VB, "
+                          f"{ctrl}; crawler kn x{kn_scale:g}"
                           + ("" if las == "on" or not merged else "; pre_las_preset_runner"))}
-            if optional:
-                r["optional"] = True
             if not ready:
                 r["requires"] = "LAS-b 03_src merge (run_S9 CONTROLLER_EXPECTATIONS['final_C4G2_P3_LAS'])"
             rows.append(r)
@@ -194,7 +208,9 @@ def argv_check(row: dict[str, Any], sb: ModuleType) -> dict[str, Any]:
         a = r9.build_parser().parse_args(level)
     except SystemExit as e:
         return {**out, "status": "differs", "diffs": [{"key": "argparse", "former": "ok", "row": str(e)}]}
-    want = {"threads": r9.SCM_THREADS_FIXED, "soil": LAS_BASE, "soil_patch": f"{LAS_PATCH_LEG}:{LAS_PATCH_SET}",
+    kn = dict(CRAWLER_VARIANTS)[row["las_crawler"]]
+    want = {"threads": r9.SCM_THREADS_FIXED, "soil": LAS_PATCH_SET, "rigid_base": LAS_PATCH_LEG, "soil_patch": None,
+            "crawler_grid": None, "grid": LAS_GRID_M, "crawler_kn_scale": None if kn == 1.0 else kn,
             "floor_roll": LAS_FLOOR_DEG[0], "floor_pitch": LAS_FLOOR_DEG[1], "level": LAS_LEVEL,
             "start_limit": r9.S9SL_START_LIMIT, "expect_controller": row["controller"], "duration": LAS_DURATION_S}
     for k, v in want.items():
@@ -225,8 +241,12 @@ def build_model(row: dict[str, Any]) -> dict[str, Any]:
     model = r9.build_machine(a, params, pv, soil)
     n = np.asarray(model.floor_normal_world(), float) if callable(getattr(model, "floor_normal_world", None)) \
         else np.asarray(model.normal_world, float)
+    rb = model.rigid_base
     return {"case": row["case"], "build_s": time.perf_counter() - t0, "soil_patch_leg": model.soil_patch_leg,
             "soil_patch_set": model.soil_patch_set.key, "soil_patch_grid_m": model.soil_patch_grid_m,
+            "rigid_base": None if rb is None else {"scm_legs": list(rb.scm_legs),
+                                                   "crawler_kn_scale": rb.crawler_kn_scale},
+            "n_terrains": len(model.terrains),
             "floor_normal_world": n.tolist(), "soil_base": str(getattr(soil, "key", None)),
             "soil_base_meta": soil.meta() if callable(getattr(soil, "meta", None)) else None,
             "gravity": list(map(float, (lambda g: (g.x, g.y, g.z))(model.system.GetGravitationalAcceleration()))),

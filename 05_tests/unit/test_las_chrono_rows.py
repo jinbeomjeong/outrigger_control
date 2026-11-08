@@ -31,26 +31,28 @@ def test_four_rows_two_pairs(rows) -> None:
     assert len(rows) == 4
     assert sorted((r["las_crawler"], r["las"]) for r in rows) == [("K1", "off"), ("K1", "on"), ("K3", "off"),
                                                                     ("K3", "on")]
-    assert [r["case"] for r in rows if not r.get("optional")] == [
-        "LASC_G1_B_top_Fs4_spJ1FR_r2p3351_p1p5017_K1_lasoff", "LASC_G1_B_top_Fs4_spJ1FR_r2p3351_p1p5017_K1_lason"]
+    assert not any(r.get("optional") for r in rows)  # all four required (user decision 2026-11-08)
+    assert [r["case"] for r in rows][:2] == [
+        "LASC_rigid_J1FR_B_top_Fs4_r2p3351_p1p5017_K1_lasoff", "LASC_rigid_J1FR_B_top_Fs4_r2p3351_p1p5017_K1_lason"]
     names = {r["case"] for r in rows}
     assert all(r["pair_case"] in names and r["pair_case"] != r["case"] for r in rows)
 
 
 def test_argv_settings(rows) -> None:
-    k_el = las.base_elastic_k()
     for r in rows:
         a = r["argv"]
-        assert _arg(a, "--soil") == "G1" and _arg(a, "--soil-patch") == "FR:J1" and _arg(a, "--soil-patch-grid") == "0.01"
+        assert _arg(a, "--soil") == "J1" and _arg(a, "--rigid-base") == "FR" and _arg(a, "--grid") == "0.01"
+        assert "--soil-patch" not in a and "--crawler-grid" not in a
         assert _arg(a, "--floor-roll") == "2.3351" and _arg(a, "--floor-pitch") == "1.5017"
         assert _arg(a, "--threads") == str(r9.SCM_THREADS_FIXED)
         assert _arg(a, "--start-limit") == r9.S9SL_START_LIMIT and _arg(a, "--duration") == "160"
         assert _arg(a, "--expect-controller") == r["controller"]
         assert a[-len(sb.v5_vb_argv()):] == sb.v5_vb_argv()
         assert r["start_env"] == {"OMP_WAIT_POLICY": "PASSIVE"}
-        assert ("--soil-override" in a) is (r["las_crawler"] == "K3")
+        assert "--soil-override" not in a
+        assert ("--crawler-kn-scale" in a) is (r["las_crawler"] == "K3")
         if r["las_crawler"] == "K3":
-            assert float(_arg(a, "--soil-override").split("=")[1]) == pytest.approx(3.0 * k_el)
+            assert float(_arg(a, "--crawler-kn-scale")) == 3.0
         # the two rows of a pair differ only by the controller tag (and the pre-LAS runner after the merge)
         other = next(o for o in rows if o["case"] == r["pair_case"])
         strip = [t for t in sb.strip_controller_check(a) if t != str(las.PRE_LAS_RUNNER)]
