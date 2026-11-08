@@ -279,14 +279,24 @@ def omp_wait_policy(run: CaseRun, row_value: str | None = None) -> dict[str, str
     return {"value": UNRECORDED, "source": UNRECORDED}
 
 
+def hull_hook_mode(run: CaseRun) -> dict[str, str | None]:
+    """``{mode, fallback_reason}`` of the SCM convex-hull hook the run actually used (``result.json`` ``hull_hook``;
+    recorded only, the hook is bit-identical by G-A~G-D). ``mode`` is ``unrecorded`` for a run without the record
+    (before the hook existed, or a row that never loaded SCM)."""
+    record = run.result.get("hull_hook")
+    if not isinstance(record, dict):
+        return {"mode": UNRECORDED, "fallback_reason": None}
+    return {"mode": str(record.get("mode")), "fallback_reason": record.get("fallback_reason")}
+
+
 def run_conditions(run: CaseRun, row_pool: str | None = None,
                    row_omp: str | None = None) -> dict[str, Any]:
-    """``threads``, ``pool`` (conditions) and ``omp_wait_policy`` (record) of a run."""
+    """``threads``, ``pool`` (conditions), ``omp_wait_policy`` and ``hull_hook`` (records) of a run."""
     threads = (run.result.get("args") or {}).get("threads")
     if threads is None:
         threads = run.result.get("num_threads_chrono")
     return {"threads": threads, "pool": _pool(run, row_pool),
-            "omp_wait_policy": omp_wait_policy(run, row_omp)}
+            "omp_wait_policy": omp_wait_policy(run, row_omp), "hull_hook": hull_hook_mode(run)}
 
 
 def not_comparable_reasons(stored: dict[str, Any], rerun: dict[str, Any]) -> list[str]:

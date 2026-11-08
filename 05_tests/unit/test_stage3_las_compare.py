@@ -228,6 +228,18 @@ def test_unrecorded_omp_against_passive_is_compared(tmp_path: Path, rerun_batch:
     assert row["plant_check"]["plant_first"] is False
 
 
+def test_hull_hook_mode_is_recorded_not_a_condition(tmp_path: Path, rerun_batch: Path) -> None:
+    stored = _s9_case(tmp_path / "stored" / "A")
+    rerun = _s9_case(rerun_batch / "A")
+    result = json.loads((rerun / "result.json").read_text(encoding="utf-8"))
+    result["hull_hook"] = {"mode": "fast", "fallback_reason": None, "source": "default"}
+    (rerun / "result.json").write_text(json.dumps(result), encoding="utf-8")
+    row = _only_row(_report(_batch(rerun_batch, [_s9_row("A", stored)]), 1))
+    assert row["status"] == las.RowStatus.SILENT_CONFIRMED
+    assert row["conditions"]["stored"]["hull_hook"] == {"mode": "unrecorded", "fallback_reason": None}
+    assert row["conditions"]["rerun"]["hull_hook"] == {"mode": "fast", "fallback_reason": None}
+
+
 def test_omp_sources_case_json_then_batch_row(tmp_path: Path) -> None:
     stored = _s8c_case(tmp_path / "S8" / "stored" / "B")
     rerun = _s8c_case(tmp_path / "S8" / "rerun" / "B", omp=None)

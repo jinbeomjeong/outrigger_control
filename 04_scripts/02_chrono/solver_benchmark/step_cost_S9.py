@@ -55,6 +55,17 @@ COMPARE_KEYS = ("t_s", "s_motor_m", "F_cyl_N", "roll_pitch_deg", "z_origin_m", "
 DEFAULT_CASES = "G1:40,S1:50,J1:40,J2:45"
 
 
+HULL_HOOK_SUMMARY_KEYS = ("mode", "source", "dll_sha256", "fallback_reason")
+
+
+def hull_hook_summary(record: dict | None) -> dict | None:
+    """Summary-row ``hull_hook`` block from run_S9 result.json ``hull_hook`` (effective mode, request source, DLL
+    SHA-256, fallback reason); None when the record is missing (code before the hook record)."""
+    if not isinstance(record, dict):
+        return None
+    return {key: record.get(key) for key in HULL_HOOK_SUMMARY_KEYS}
+
+
 # --- one case (child process) ----------------------------------------------------------------------
 
 
@@ -126,7 +137,7 @@ def run_case(args) -> None:
         "placement": res.get("placement"), "cpu_affinity_end": proc.cpu_affinity(),
         "cpu_user_s": cpu1.user - cpu0.user, "cpu_system_s": cpu1.system - cpu0.system,
         "peak_rss_MB": getattr(mem, "peak_wset", mem.rss) / 2**20, "rss_end_MB": mem.rss / 2**20,
-        "phases": res.get("phases"),
+        "phases": res.get("phases"), "hull_hook": hull_hook_summary(res.get("hull_hook")),
     }
     (Path(d) / "step_timing.json").write_text(json.dumps(out, indent=1), "utf-8")
     print("step_timing ->", Path(d) / "step_timing.json", flush=True)
@@ -269,6 +280,7 @@ def run_batch(args) -> int:
                    "num_threads_chrono", "dt_s", "n_steps_timed", "n_steps_run_S9", "build_s", "settle_wall_s",
                    "loop_wall_s", "us_per_step_run_S9", "placement", "cpu_affinity_end", "cpu_user_s",
                    "cpu_system_s", "peak_rss_MB", "phases")},
+               "hull_hook": timing.get("hull_hook"),
                "phase_detection": {k2: v for k2, v in ph.items() if k2 != "windows"}, "windows": costs}
         summary["cases"].append(row)
         fl = costs.get("full_load", {})

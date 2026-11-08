@@ -754,7 +754,8 @@ V5_OPENLOOP_R_EST_POOL_S = {"pcore": 2215.0, "ecore": 2769.0}
 """ASSUMPTION: the base row batch wall on P (2 slots, 2026-11-08); E = P x 1.25 (FINAL-REP ratio). R does not change
 the step count (360,000) and SCM cost is node / ray bound, so the base cost is kept."""
 V5_OPENLOOP_R_RUN_ENV = {"OMP_WAIT_POLICY": "PASSIVE"}
-"""Run condition recorded on the rows (set in the launching shell, not by s9_batch; SCM rule 2026-11-08: bit-neutral)."""
+"""Run condition of the rows: s9_batch puts it into each child env (row key ``run_env``, :func:`_case_env`) and
+records the value set in batch.json ``omp_wait_policy`` (SCM rule 2026-11-08: bit-neutral)."""
 
 
 def soil_override_token(key: str, value: float) -> str:
@@ -1248,6 +1249,112 @@ def launch_env_record(child_env: dict[str, str]) -> dict[str, str | None]:
             "hull_hook_requested": req, "hull_hook_source": source}
 
 
+PRE_SWITCH_HULL_REQUEST = "pre-switch"
+"""``hull_hook_requested`` read from a batch.json row that has no such key (launched before the record existed)."""
+MIXED_HULL_ARG = "--allow-mixed-hull"
+
+
+def hull_hook_effective(folder: Path, case: str) -> dict | None:
+    """``{"mode", "fallback_reason"}`` from ``<folder>/<case>/result.json`` ``hull_hook`` (the mode the case process
+    actually ran, after a possible default fallback). None when result.json is missing or has no ``hull_hook`` (the
+    row never loaded SCM); an unreadable result.json gives ``mode`` None and ``error``."""
+    path = folder / case / "result.json"
+    if not path.is_file():
+        return None
+    try:
+        hull = json.loads(path.read_text("utf-8")).get("hull_hook")
+    except (OSError, json.JSONDecodeError) as e:
+        return {"mode": None, "fallback_reason": None, "error": f"{type(e).__name__}: {e}"}
+    if not isinstance(hull, dict):
+        return None
+    return {"mode": hull.get("mode"), "fallback_reason": hull.get("fallback_reason")}
+
+
+def hull_modes_by_case(entries: list[dict]) -> dict[str, list[str]]:
+    """Effective hull mode -> cases over the SCM rows (``hull_hook_effective`` not None); two keys or more = mixed."""
+    by_mode: dict[str, list[str]] = {}
+    for entry in entries:
+        effective = entry.get("hull_hook_effective")
+        if effective is not None:
+            by_mode.setdefault(str(effective.get("mode")), []).append(entry["case"])
+    return by_mode
+
+
+def _git_head(root: Path) -> str | None:
+    kw: dict = {"cwd": str(root), "capture_output": True, "text": True, "timeout": 20.0, "stdin": subprocess.DEVNULL}
+    if os.name == "nt":
+        kw["creationflags"] = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+    try:
+        return subprocess.run(["git", "rev-parse", "HEAD"], check=True, **kw).stdout.strip() or None
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+
+def former_hull_request(case: str, former: dict[str, dict], progress_text: str = "") -> str | None:
+    """Hull request of a row in the earlier launch: its batch.json entry ``hull_hook_requested``
+    (:data:`PRE_SWITCH_HULL_REQUEST` when the entry lacks the key). A row without an entry (the earlier launch
+    stopped before writing batch.json) is read from its last progress.log START line (``hull_hook=<mode>``; a START
+    line without it is pre-switch). None when neither records the row."""
+    if case in former:
+        return former[case].get("hull_hook_requested", PRE_SWITCH_HULL_REQUEST)
+    starts = [line.split() for line in progress_text.splitlines() if line.startswith(f"START {case} ")]
+    if not starts:
+        return None
+    tokens = [tok for tok in starts[-1] if tok.startswith("hull_hook=")]
+    return tokens[-1].split("=", 1)[1] if tokens else PRE_SWITCH_HULL_REQUEST
+
+
+def resume_launch_check(kept: list[dict], former: dict[str, dict], allow_mixed_hull: bool,
+                        progress_text: str = "", root: Path | None = None) -> dict:
+    """``--resume`` check of the rows kept from the earlier launch (``kept``; ``former`` = their batch.json entries,
+    ``progress_text`` = the earlier progress.log).
+
+    ``hull_conflicts``: rows whose earlier hull request (:func:`former_hull_request`) differs from what this launch
+    requests for them (same env rule, :func:`_case_env`). ``hull_unrecorded``: rows with no earlier record at all
+    (warning only). ``head_changes``: rows whose ``code_at_launch.git.head`` differs from the current commit
+    (warning only).
+
+    Raises:
+        SystemExit: ``hull_conflicts`` without ``allow_mixed_hull`` (the batch would mix hull modes).
+    """
+    conflicts, unrecorded, head_changes = [], [], []
+    head_now = None
+    for row in kept:
+        entry = former.get(row["case"], {})
+        before = former_hull_request(row["case"], former, progress_text)
+        now = launch_env_record(_case_env("pcore", row.get("start_env"), row.get("run_env")))["hull_hook_requested"]
+        if before is None:
+            unrecorded.append(row["case"])
+        elif before != now:
+            conflicts.append({"case": row["case"], "before": before, "now": now})
+        head_before = ((entry.get("code_at_launch") or {}).get("git") or {}).get("head")
+        if head_before:
+            head_now = head_now or _git_head(root or ROOT)
+            if head_now and head_before != head_now:
+                head_changes.append({"case": row["case"], "before": head_before, "now": head_now})
+    if conflicts and not allow_mixed_hull:
+        listed = ", ".join(f"{c['case']} ({c['before']} -> {c['now']})" for c in conflicts)
+        raise SystemExit(f"--resume: finished rows were launched with another hull hook request: {listed}. "
+                         f"Rerun them in a new batch, or pass {MIXED_HULL_ARG} to continue (recorded).")
+    return {"hull_conflicts": conflicts, "hull_unrecorded": unrecorded, "allow_mixed_hull": bool(allow_mixed_hull),
+            "head_changes": head_changes}
+
+
+def log_resume_check(progress: Path, check: dict) -> None:
+    """progress.log lines of :func:`resume_launch_check` (and a printed line per warning)."""
+    for c in check["hull_conflicts"]:
+        _log(progress, f"RESUME_MIXED_HULL {c['case']} requested {c['before']} earlier, {c['now']} now "
+                       f"({MIXED_HULL_ARG})")
+    for case in check["hull_unrecorded"]:
+        line = f"WARN_RESUME_HULL_UNRECORDED {case} (no batch.json entry nor START line of the earlier launch)"
+        print(line)
+        _log(progress, line)
+    for c in check["head_changes"]:
+        line = f"WARN_RESUME_HEAD {c['case']} code_at_launch.git.head {c['before'][:12]} != now {c['now'][:12]}"
+        print(line)
+        _log(progress, line)
+
+
 CODE_HASH_FILES = ("03_src/outrigger_sim/control/c2.py", "03_src/outrigger_sim/control/zero_calibration.py")
 """Controller files hashed at every case launch (``code_at_launch``; FINAL 2026-10-30)."""
 ENTRY_META_KEYS = ("note", "priority", "controller", "source_run", "pair_case", "pair_run", "optional", "requires",
@@ -1388,13 +1495,15 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
               e_cases: list[str] | None = None, order: str = "given",
               order_cases: list[str] | None = None, rv6_k: float | None = None, rv6_dir: str | None = None,
               row_filter: dict[str, set[str]] | None = None, controller_check: bool = True,
-              resume: str | None = None, las_off: bool = False) -> Path:
+              resume: str | None = None, las_off: bool = False, allow_mixed_hull: bool = False) -> Path:
     """Run the batch ``name`` with ``parallel`` P-pool slots and ``parallel_e`` E-pool slots
     (:func:`schedule_cases`). Each case process gets ``OUTRIGGER_PLACEMENT`` of its pool. ``rv6_k``: X6-rb ratio of
     RV6; ``row_filter`` / ``only``: :func:`select_rows`; ``controller_check`` False drops ``--expect-controller``.
     ``resume``: an earlier batch folder; finished rows (:func:`row_finished`) are skipped, the others start from the
-    beginning in the same folder (a case has no mid-run checkpoint) and ``batch.json`` is rewritten. ``las_off``:
-    :func:`with_las_off` on every launched row."""
+    beginning in the same folder (a case has no mid-run checkpoint) and ``batch.json`` is rewritten; the kept rows
+    pass :func:`resume_launch_check` first (``allow_mixed_hull``: continue despite a different hull request).
+    ``las_off``: :func:`with_las_off` on every launched row. At the end every row gets ``hull_hook_effective``
+    (:func:`hull_hook_effective`) and SCM rows with different effective modes log ``MIXED_HULL_MODE``."""
     rv6 = {k: v for k, v in (("rv6_k", rv6_k), ("rv6_dir", rv6_dir)) if v is not None}
     cases = select_rows((batches(**rv6) if rv6 else batches())[name], only, row_filter)
     if not cases:
@@ -1410,6 +1519,11 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
     former = {}
     if finished and (folder / "batch.json").is_file():
         former = {e["case"]: e for e in json.loads((folder / "batch.json").read_text("utf-8")).get("cases", [])}
+    resume_check = None
+    if finished:
+        earlier_progress = folder / "progress.log"
+        progress_text = earlier_progress.read_text("utf-8", errors="replace") if earlier_progress.is_file() else ""
+        resume_check = resume_launch_check(finished, former, allow_mixed_hull, progress_text)
     done_names = {c["case"] for c in finished}
     cases = [c for c in cases if c["case"] not in done_names]
     if las_off:  # before the launch: a row whose runner lacks the option stops the batch here
@@ -1426,6 +1540,8 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
                    f"{_dt.datetime.now().isoformat(timespec='seconds')}")
     for c in finished:
         _log(progress, f"RESUME_SKIP {c['case']} (finished in an earlier launch)")
+    if resume_check is not None:
+        log_resume_check(progress, resume_check)
     for pool in POOLS:
         if queues[pool]:
             _log(progress, f"# queue {pool}: {' '.join(c['case'] for c in queues[pool])}")
@@ -1504,11 +1620,19 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
                     done.append({"case": c["case"], "argv": c["argv"], "rc": None, "wall_s": 0.0, "est_s": c["est_s"],
                                  "pool": pool, **{k: c[k] for k in ENTRY_META_KEYS if c.get(k) is not None}})
                 queues[pool] = []
+    for entry in done:
+        entry["hull_hook_effective"] = hull_hook_effective(folder, entry["case"])
+    hull_modes = hull_modes_by_case(done)
+    if len(hull_modes) > 1:
+        _log(progress, "MIXED_HULL_MODE " + "; ".join(f"{mode}: {' '.join(names)}"
+                                                       for mode, names in sorted(hull_modes.items())))
     status = {"batch": name, "folder": folder.as_posix(), "parallel": parallel, "parallel_e": parallel_e,
               "order": order, "order_cases": order_cases, "e_cases": sorted(e_cases or ()),
               **({"rv6_k": rv6_k, "rv6_dir": rv6_dir} if name == "RV6" else {}),
               **({"row_filter": {k: sorted(v) for k, v in row_filter.items()}} if row_filter else {}),
               **({} if controller_check else {"controller_check": False}),
+              **({"resume_check": resume_check} if resume_check is not None else {}),
+              "mixed_hull_mode": len(hull_modes) > 1,
               "cases": done, "failed": failed,
               "wall_serial_s": sum(d["wall_s"] for d in done), "est_serial_s": sum(d["est_s"] for d in done)}
     (folder / "batch.json").write_text(json.dumps(status, indent=1), "utf-8")
@@ -1699,7 +1823,7 @@ def main(argv) -> None:
         only = (a.only or []) + (read_only_file(a.only_file) or [])
         run_batch(a.batch, only=only or None, rv6_k=a.rv6_k, rv6_dir=a.rv6_dir,
                   row_filter=parse_row_filter(a.row_filter), controller_check=not a.no_controller_check,
-                  resume=a.resume, las_off=a.las_off, **schedule_args(a, argv))
+                  resume=a.resume, las_off=a.las_off, allow_mixed_hull=a.allow_mixed_hull, **schedule_args(a, argv))
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -1744,7 +1868,13 @@ def build_parser() -> argparse.ArgumentParser:
                         "command-line values given explicitly win")
     r.add_argument("--only", nargs="*")
     r.add_argument("--resume", default=None, metavar="BATCH_FOLDER",
-                   help="continue in this earlier batch folder: finished rows are skipped, the others start again")
+                   help="continue in this earlier batch folder: finished rows are skipped, the others start again; "
+                        "stops when a finished row's batch.json hull_hook_requested ('pre-switch' when missing; "
+                        "progress.log START line when the row has no entry) differs from this launch's request, "
+                        "warns when its code_at_launch commit differs or nothing recorded its request")
+    r.add_argument(MIXED_HULL_ARG, dest="allow_mixed_hull", action="store_true",
+                   help="--resume: continue despite a different hull hook request (recorded in batch.json "
+                        "resume_check and progress.log RESUME_MIXED_HULL)")
     r.add_argument("--allow-env-override", action="store_true",
                    help="start even with OUTRIGGER_L1_FALLBACK_RATIO_SOURCE set (B(iii) comparison batch; "
                         "the L1 cases of the batch, e.g. P3-10 m3_run, take the override)")

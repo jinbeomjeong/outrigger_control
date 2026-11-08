@@ -99,6 +99,13 @@ PyChrono 10.0.0(conda `pychrono 10.0.0 py312h418371c_1198`)의 `SCMTerrain`은 �
 - 슬롯 4개가 모두 있고, 각각 `Chrono_core.dll` export 주소를 가리켜야 한다.
 - pychrono를 갱신하면 설치가 `hash_mismatch`로 거부된다. 새 빌드는 G-A를 다시 통과한 뒤 상수를 갱신한다.
 
+검증한 훅 DLL 고정(Python 래퍼, 2026-11-09 전환 후 감사): `hull_hook.py`는 DLL을 싣기 전에 `chrono_hull_hook.dll`
+자체의 SHA-256을 `VALIDATED_DLL_SHA256`(`cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15`, G-A~G-D와
+짝 실행에 쓴 빌드)과 비교한다. 다르면 기본 모드(`OUTRIGGER_HULL_HOOK` 없음)는 off로 폴백하고 `result.json` `hull_hook`에
+`fallback_reason="dll_sha_unvalidated"`와 실제 해시(`dll_sha256`)를 남기며, 명시 모드(`fast`·`shadow`·`dump`)는 exit 2로
+멈춘다. 새 빌드를 검증할 때만 `OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED=1`을 주면 경고를 내고 설치를 진행한다(기록:
+`dll_sha_validated=false`, `allow_unvalidated=true`). 새 빌드가 G-A~G-D를 다시 통과하면 이 상수를 갱신한다.
+
 호출 시점과 스레드:
 - `import pychrono.vehicle`(Chrono_vehicle.dll 적재) 뒤, **SCM 스텝을 돌리기 전**에 설치한다.
 - 설치·제거는 스텝 중에 부르지 않는다. 카운터는 언제든 읽어도 된다.
