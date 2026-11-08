@@ -2019,8 +2019,18 @@ class LiftoffApproachSlowSettings:
     response (U-6 ABL, user decision 2026-11-08); without the soil response there is no LOC and
     no soil mode, so S3 / S4 always hold and the ``loc`` / ``soil`` ends never come. ``False``
     also adds the end ``zone`` (the crawler zone left, spec 436.9.4) in their place."""
+    min_active_periods: int = 0
+    """``n_min`` (``las_rev_targeted_rules.md`` 1.4, candidate ③): the ``sum`` end needs at least
+    this many acted periods since the start. Only ``sum`` waits; the ``loc`` / ``phase`` /
+    ``soil`` / ``reapproach`` / ``zone`` and ``time`` ends do not. 0 (and anything up to 4 with
+    ``off_periods`` 5) changes nothing, so the b0 commands stay bit for bit; configs unpickled
+    from older code read 0."""
 
     def __post_init__(self) -> None:
+        if self.min_active_periods < 0:
+            raise ValueError(
+                f"min_active_periods must be >= 0, got {self.min_active_periods!r}"
+            )
         for name in ("sum_on_fraction_W", "light_leg_fraction_of_F_min", "max_s"):
             if not getattr(self, name) > 0.0:
                 raise ValueError(f"{name} must be > 0, got {getattr(self, name)!r}")
@@ -7574,7 +7584,10 @@ class C2Controller:
             slow.sum_periods += 1
         else:
             slow.sum_periods = 0
-        if slow.sum_periods >= settings.off_periods:
+        if (
+            slow.sum_periods >= settings.off_periods
+            and slow.active_periods >= settings.min_active_periods
+        ):
             return LiftoffSlowEnd.SUM
         assert slow.start_s is not None  # active implies started
         if t_s - slow.start_s >= settings.max_s - LIFTOFF_SLOW_TIME_TOLERANCE_S:
