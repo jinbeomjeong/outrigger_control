@@ -210,8 +210,18 @@ def level_ge3_longest_s(line: dict) -> float | None:
     return ((line.get("fb") or {}).get("u9_values") or {}).get("longest_ge3_s")
 
 
+def is_events_truncated(line: dict) -> bool:
+    """The run had more events than ``verdict_runs`` stores: its event set is incomplete."""
+    return bool((line.get("fb") or {}).get("events_truncated"))
+
+
+def is_pair_truncated(reference: dict, candidate: dict) -> bool:
+    return is_events_truncated(reference) or is_events_truncated(candidate)
+
+
 def c2_violations(reference: dict, candidate: dict) -> list[str]:
-    """C-2 (a) .. (c) of one pair (texts; empty = no violation)."""
+    """C-2 (a) .. (c) of one pair (texts; empty = no violation). (c) is not judged on a pair
+    with a truncated event list (the pair stays incomplete in :func:`c2`)."""
     out = []
     ref_d1, cand_d1 = reference.get("d1"), candidate.get("d1")
     if ref_d1 is not None and cand_d1 is not None:
@@ -223,7 +233,8 @@ def c2_violations(reference: dict, candidate: dict) -> list[str]:
                 out.append(f"(a) new {item} failure")
     elif reference["final_phase"] == "ready" and candidate["final_phase"] != "ready":
         out.append(f"(b) final ready -> {candidate['final_phase']}")
-    out += [f"(c) new {name}" for name in new_events(reference, candidate)]
+    if not is_pair_truncated(reference, candidate):
+        out += [f"(c) new {name}" for name in new_events(reference, candidate)]
     return out
 
 
@@ -305,9 +316,13 @@ def c2(data: Data) -> Criterion:
         change = (ref["d1"]["verdict"], cand["d1"]["verdict"])
         if change[0] != change[1] and change != ("pass", "fail"):
             notes.append(f"참고(위반 아님) {bundle} {key}: {change[0]} -> {change[1]}")
-    details = failures + notes
-    return Criterion("C-2", "판정", _status(data.missing_pairs() == 0, failures),
-                     f"짝 {len(pairs)}, 위반 {len(failures)}", details)
+    truncated = [f"{b} {k}" for b, k, ref, cand in pairs if is_pair_truncated(ref, cand)]
+    details = failures + notes + [f"사건 목록 절단(400개 초과)으로 (c) 미완: {text}"
+                                  for text in truncated]
+    is_complete = data.missing_pairs() == 0 and not truncated
+    return Criterion("C-2", "판정", _status(is_complete, failures),
+                     f"짝 {len(pairs)}, 위반 {len(failures)}, 사건 절단 짝 {len(truncated)}",
+                     details)
 
 
 def c3(data: Data) -> Criterion:
@@ -326,10 +341,13 @@ def c3(data: Data) -> Criterion:
 
 
 def c4(data: Data) -> Criterion:
-    deltas, different, failures = [], [], []
+    deltas, different, failures, truncated = [], [], [], []
     for bundle, key, ref, cand in data.pairs():
         t_ref, t_cand = ready_time_s(ref), ready_time_s(cand)
         if t_ref is None or t_cand is None:
+            continue
+        if is_pair_truncated(ref, cand):  # the event set is not known: no READY judgement
+            truncated.append(f"{bundle} {key}")
             continue
         if event_set(ref) != event_set(cand):
             different.append(f"{bundle} {key}: dt {t_cand - t_ref:+.1f} s, 사건 차 "
@@ -352,8 +370,9 @@ def c4(data: Data) -> Criterion:
                           f"{sum(text.startswith(f'{bundle} ') for text in different)}"
                           for bundle in JUDGED_BUNDLES]
     details += [f"집합 다름(READY 판정 제외) {text}" for text in different]
-    # No judged pair is no evidence: incomplete, not a pass.
-    is_complete = data.missing_pairs() == 0 and bool(deltas)
+    details += [f"사건 목록 절단(400개 초과)으로 미완: {text}" for text in truncated]
+    # No judged pair is no evidence: incomplete, not a pass; so is a truncated event set.
+    is_complete = data.missing_pairs() == 0 and bool(deltas) and not truncated
     return Criterion("C-4", "READY", _status(is_complete, failures), summary, details)
 
 
