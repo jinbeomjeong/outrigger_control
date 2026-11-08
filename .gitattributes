@@ -5,5 +5,10 @@
 06_analysis/02_control/verif_matrix/u3_u6_rerun_rules* -text
 06_analysis/02_control/verif_matrix/u9_targeted_rules* -text
 06_analysis/02_control/verif_matrix/las_targeted_rules* -text
+06_analysis/02_control/verif_matrix/fb_targeted_rules* -text
 # Run records whose SHA-256 is quoted in a judgement document
 06_analysis/03_hydraulic/coupled/v5/las/*.jsonl -text
+06_analysis/03_hydraulic/coupled/v5/d1.jsonl -text
+06_analysis/02_control/verif_matrix/fb_design.md -text
+06_analysis/03_hydraulic/coupled/v5/fb/*.jsonl -text
+06_analysis/03_hydraulic/coupled/v5/paper_runs/scripts/*.py -text
