@@ -6028,7 +6028,8 @@ def _gravity_ramp_args(p: argparse.ArgumentParser) -> None:
                    help="full damping until T0, linear to 0 at T1 [s]")
 
 
-def main(argv) -> None:
+def main(argv=None) -> None:
+    # argv None = sys.argv[1:] (05_tests/unit/pre_*_preset_runner.py call ``main()``; V5-LAS-CHRONO off rows)
     args = build_parser().parse_args(argv)
     if args.action == "plan":
         print(json.dumps(_plain(plan_summary()), indent=1))
