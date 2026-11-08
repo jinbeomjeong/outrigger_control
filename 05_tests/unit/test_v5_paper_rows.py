@@ -46,6 +46,38 @@ def test_openloop_rows_are_the_stored_p3a_rows_plus_vb(sb, all_batches) -> None:
         assert r["source_expected_diffs"] is None
 
 
+def test_openloop_prop_row_changes_only_the_flow_law(sb, all_batches) -> None:
+    vb = {r["case"]: r for r in all_batches[sb.V5_OPENLOOP_BATCH]}
+    prop = all_batches[sb.V5_OPENLOOP_PROP_BATCH]
+    assert [r["case"] for r in prop] == ["P3a_J1_B_VB_prop"]
+    r, base = prop[0], vb["P3a_J1_B_VB"]
+    diff = [(a, b) for a, b in zip(r["argv"], base["argv"], strict=True) if a != b]
+    assert diff == [("proportional", "priority")]
+    assert r["argv"][r["argv"].index("--flow-law") + 1] == "proportional"
+    assert r["source_expected_diffs"] == {**sb.V5_VB_ARGS, "flow_law": "proportional"}
+    assert r["pair_case"] == "P3a_J1_B_VB" and r["source_run"] == base["source_run"]
+    assert base["argv"][base["argv"].index("--flow-law") + 1] == "priority"  # VB row unchanged
+
+
+def test_openloop_fb_rows_change_only_the_lift_speed_and_time(sb, all_batches) -> None:
+    fb = all_batches[sb.V5_OPENLOOP_FB_BATCH]
+    assert [r["case"] for r in fb] == ["P3a_J1_B_VB_FB", "P3a_J1_B_V0_FB"]
+    pairs = {"P3a_J1_B_VB_FB": ({r["case"]: r for r in all_batches[sb.V5_OPENLOOP_BATCH]}["P3a_J1_B_VB"],
+                                sb.V5_VB_ARGS),
+             "P3a_J1_B_V0_FB": ({r["case"]: r for r in all_batches[sb.V5_OPENLOOP_V0_BATCH]}["P3a_J1_B_V0"], {})}
+    for r in fb:
+        base, vb_args = pairs[r["case"]]
+        k = base["argv"].index("--lift-s")
+        assert base["argv"][k + 1] == "28"
+        want = base["argv"][:k + 1] + ["31.93", "--lift-speed-fraction", "0.87684"] + base["argv"][k + 2:]
+        assert r["argv"] == want
+        assert "--abort-on-limit" in r["argv"] and "--expect-controller" not in r["argv"]
+        assert r["source_expected_diffs"] == {**vb_args, "lift_s": 31.93, "lift_speed_fraction": 0.87684}
+        assert r["pair_case"] == base["case"]
+    assert fb[0]["argv"][fb[0]["argv"].index("--flow-law") + 1] == "priority"
+    assert not fb[0].get("optional") and fb[1]["optional"]
+
+
 def test_jp_rows_use_the_live_rigid_vb_arguments(sb, all_batches) -> None:
     vb = all_batches[sb.V5_JP_BATCH]
     v0 = all_batches[sb.V5_JP_V0_BATCH]
