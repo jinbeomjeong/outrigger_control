@@ -1,0 +1,96 @@
+{
+ "base": {
+  "series_sha256": "1da6ea10a775f51f5f9067ad74f89a7eb6af6217c887b5f1c642b95402e679b1",
+  "result_sha256": "349b6f072197d59aafdcec9910986170b90b1f0162378862c21f514f35528ec1"
+ },
+ "rep_a": {
+  "series_sha256": "1da6ea10a775f51f5f9067ad74f89a7eb6af6217c887b5f1c642b95402e679b1",
+  "result_sha256": "7e2b42d9160837d3b8322d5acfb642a8f95fb864de1b6eb8d1da9ae365ab0de1",
+  "file_equal_base": true,
+  "n_keys": 18,
+  "n_common": 18,
+  "only_row": [],
+  "only_base": [],
+  "keys_differ": [],
+  "identity": {
+   "params_sha256": "d06a97dddf71553995b89254b5e1161cd85af43bc87a1c1658945cada64d8859",
+   "scm_run_sha256": "de20851ad27e121b9a30262685bf1af94be53a8419bbcbc7535ebed30310c07b",
+   "pad_variants_sha256": "00cf734bddc2877be1365da2cf995689b38ccb2736156ba6d307823cfab443ee",
+   "table_sha256": "b21f0fc11b8883aa0402c5e4e6c1d97b846460f3a50417a34df8980357d739a3"
+  },
+  "identity_ok": {
+   "params_sha256": true,
+   "scm_run_sha256": true,
+   "pad_variants_sha256": true,
+   "table_sha256": true
+  },
+  "damping_R": [
+   992000.0
+  ],
+  "overrides": [
+   {},
+   {}
+  ],
+  "threads": 4,
+  "placement": {
+   "mode": "pcore",
+   "requested": "pcore"
+  },
+  "hull_hook_key": false
+ },
+ "R1490k": {
+  "series_sha256": "18631962fff08ede222bc8ae688aeb5ab56c769275634c926a700a8a42f3f277",
+  "result_sha256": "7a2c092cc775b63852122d1efae8e7e563309fd033e1284819dff197f039a728",
+  "file_equal_base": false,
+  "n_keys": 18,
+  "n_common": 18,
+  "only_row": [],
+  "only_base": [],
+  "keys_differ": [
+   "F_cyl_N",
+   "body_omega_world_rad_s",
+   "body_pos_m",
+   "node_n_contact",
+   "node_sinkage_mean_contact_m",
+   "pad_sinkage_geometric_m",
+   "pad_tilt_deg",
+   "roll_pitch_deg",
+   "rut_clearance_m",
+   "s_motor_m",
+   "scm_contact_patches",
+   "scm_crawler_normal_N",
+   "scm_pad_normal_N",
+   "scm_ray_hits",
+   "track_utilisation"
+  ],
+  "identity": {
+   "params_sha256": "d06a97dddf71553995b89254b5e1161cd85af43bc87a1c1658945cada64d8859",
+   "scm_run_sha256": "de20851ad27e121b9a30262685bf1af94be53a8419bbcbc7535ebed30310c07b",
+   "pad_variants_sha256": "00cf734bddc2877be1365da2cf995689b38ccb2736156ba6d307823cfab443ee",
+   "table_sha256": "b21f0fc11b8883aa0402c5e4e6c1d97b846460f3a50417a34df8980357d739a3"
+  },
+  "identity_ok": {
+   "params_sha256": true,
+   "scm_run_sha256": true,
+   "pad_variants_sha256": true,
+   "table_sha256": true
+  },
+  "damping_R": [
+   1490000.0
+  ],
+  "overrides": [
+   {
+    "damping_R": 1490000.0
+   },
+   {
+    "damping_R": 1490000.0
+   }
+  ],
+  "threads": 4,
+  "placement": {
+   "mode": "pcore",
+   "requested": "pcore"
+  },
+  "hull_hook_key": false
+ }
+}
