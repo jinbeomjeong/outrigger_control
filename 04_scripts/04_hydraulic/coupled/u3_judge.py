@@ -8,7 +8,11 @@ Grades per key (rules 4, the judge functions of v4):
   g6, C             r72 gates with the G6-7 demotion (``b5_official.demote_preloc_gate``,
                     spec 377 / U-S9-G6c); a soil-guard stop is the safe stop
   g8                fix-candidates g8 record (P-S8-28 family gates of ``r70_p28_screen``)
-  p3b               fix-candidates p3b record (``p3_lite_gates``, as v4)
+  p3b               fix-candidates p3b record (``p3_lite_gates``, as v4; rules rev1 1 #3)
+Rules rev1 (``u3_u6_rerun_rules_rev1.md``, its SHA-256 read from the file into the report):
+G-4 asks a rod reading and J-P3 ``pass`` of the g8 VB runs (``ROD_READING_SUITES``) and
+``no_rod_reading`` of the others; G-6 stops on a ``WARN_ROD_PRESSURE_FALLBACK`` event in a g8
+VB run; the previous-edition g6 grade is the stored verdict (``previous_g6_demotion``).
 Grade classes: ``pass``, ``flag`` (passed with a FLAG), ``safe_stop``
 (``stroke_limited_stop``) and ``fail``.
 
@@ -17,7 +21,7 @@ VB - V0 differences (first READY s, min F after lift-off kN, max stroke mm, READ
 attitude deg; ``NA`` when one side lacks the value), the classes of rules 5.1 and the previous
 edition (V0 - v4 ``final_SGS_R4``, record only). U-6 (5.2): per controller lite pass, C2 safe
 stops, crawler-load failures and the official verdicts, with the v4 values of the same keys.
-Gates G-1 .. G-5 (rules 7) first; any failed gate stops the judgement (no phrases).
+Gates G-1 .. G-6 (rules 7, rev1) first; any failed gate stops the judgement (no phrases).
 
 Exit code: 0 judged, 1 a gate stopped it, 2 an input missing.
 
@@ -58,6 +62,18 @@ DEFAULT_U3_DIR = v5_rerun.OUT_DIR
 DEFAULT_V4_DIR = ROOT / "06_analysis" / "02_control" / "s9"
 U6_CONTROLLERS = ("C2", "ABL", "IND")
 U6_TAGS = {"C2": v5_rerun.TAG_VB, "ABL": v5_rerun.TAG_ABL, "IND": v5_rerun.TAG_IND}
+RULES_REVISIONS = (v5_rerun.RULES_PATH.with_name("u3_u6_rerun_rules_rev1.md"),)
+"""Sealed addenda (rev1 2026-11-08: g8 reads rod pressures, P3b = p3_lite_gates, G-6, the
+previous-edition g6 without the G6-7 demotion)."""
+
+
+def revision_record(path: Path) -> dict:
+    """Name, SHA-256 read from the file, the sealed SHA-256 (``<stem>.sha256``) and their match."""
+    seal = path.with_suffix(".sha256")
+    sealed = seal.read_text(encoding="utf-8").split()[0] if seal.is_file() else None
+    sha = v5_rerun.text_sha256(path)
+    return {"rules": path.name, "sha256": sha, "sealed_sha256": sealed,
+            "match_seal": sha is not None and sha == sealed}
 
 
 @dataclasses.dataclass(frozen=True)
@@ -275,18 +291,75 @@ def run_v5_problems(entry: dict, setting: str, expected_tag: str, *, needs_bound
     return problems
 
 
+def rod_reading_suites() -> tuple[str, ...]:
+    """``s9_slope_fix_candidates.ROD_READING_SUITES`` (g8): the bundles with rod readings."""
+    import s9_slope_fix_candidates
+
+    return tuple(s9_slope_fix_candidates.ROD_READING_SUITES)
+
+
+def _j_p3_stop(entry: dict, reason: str) -> dict:
+    v5 = entry.get("v5") or {}
+    return {"key": v5_rerun.entry_key(entry), "suite": entry.get("suite"),
+            "j_p3": v5.get("j_p3"), "has_rod_reading": v5.get("has_rod_reading"),
+            "head_only_declared": v5.get("head_only_declared"), "reason": reason}
+
+
+def _rod_suite_stops(entries: list[dict]) -> list[dict]:
+    """Rules rev1 4: a g8 VB run has a rod reading and J-P3 ``pass``; the runs together pass
+    ``extend_start_bound.j_p3_judgement`` with their rod-reading flags."""
+    from outrigger_sim.control.extend_start_bound import j_p3_judgement
+
+    stops = [_j_p3_stop(e, "rod-reading suite without a rod reading or J-P3 not pass")
+             for e in entries
+             if not e["v5"].get("has_rod_reading") or e["v5"].get("j_p3") != "pass"]
+    if entries:
+        judged = j_p3_judgement([e["v5"].get("extend_bound_check") for e in entries],
+                                [bool(e["v5"].get("has_rod_reading")) for e in entries],
+                                [bool(e["v5"].get("head_only_declared")) for e in entries])
+        if judged["status"] != "pass" and not stops:
+            stops.append({"suite": entries[0].get("suite"), "j_p3": judged["status"],
+                          "reason": "j_p3_judgement over the rod-reading runs",
+                          "runs_by_case": judged["runs_by_case"]})
+    return stops
+
+
 def gate_j_p3(entries: list[dict]) -> list[dict]:
-    """Rules 7 G-4: every VB C2 run ``no_rod_reading`` (declared, no rod reading)."""
+    """Rules 7 G-4 with rev1 4: VB C2 runs of a head-only suite are ``no_rod_reading``
+    (declared, no rod reading); those of a rod-reading suite (g8) have a rod reading and pass
+    J-P3. Anything else (setting defect, H-7, the wrong reading kind) stops."""
+    rod_suites = rod_reading_suites()
+    vb_runs = [e for e in entries
+               if (e.get("v5") or {}).get("controller_tag") == v5_rerun.TAG_VB]
+    rod_runs = [e for e in vb_runs if e.get("suite") in rod_suites]
+    stops = _rod_suite_stops(rod_runs)
+    for entry in vb_runs:
+        if entry.get("suite") in rod_suites:
+            continue
+        v5 = entry["v5"]
+        if (v5.get("j_p3") != J_P3_HEAD_ONLY or v5.get("has_rod_reading")
+                or not v5.get("head_only_declared")):
+            stops.append(_j_p3_stop(entry, "head-only suite with a rod reading or J-P3 not "
+                                           "no_rod_reading"))
+    return stops
+
+
+def gate_fallback(entries: list[dict]) -> list[dict]:
+    """Rules rev1 G-6: no ``WARN_ROD_PRESSURE_FALLBACK`` event in a g8 VB run (else the ③
+    bound reached the command on that key: stop and ask)."""
+    rod_suites = rod_reading_suites()
     stops = []
     for entry in entries:
         v5 = entry.get("v5") or {}
-        if v5.get("controller_tag") != v5_rerun.TAG_VB:
+        if v5.get("controller_tag") != v5_rerun.TAG_VB or entry.get("suite") not in rod_suites:
             continue
-        if (v5.get("j_p3") != J_P3_HEAD_ONLY or v5.get("has_rod_reading")
-                or not v5.get("head_only_declared")):
-            stops.append({"key": v5_rerun.entry_key(entry), "j_p3": v5.get("j_p3"),
-                          "has_rod_reading": v5.get("has_rod_reading"),
-                          "head_only_declared": v5.get("head_only_declared")})
+        count = v5.get("rod_pressure_fallback_events")
+        if count is None:  # a record before the count: the warnings name set
+            count = sum(1 for name in entry.get("warnings") or []
+                        if name.startswith(v5_rerun.FALLBACK_EVENT_PREFIX))
+        if count >= 1:
+            stops.append({"key": v5_rerun.entry_key(entry), "suite": entry.get("suite"),
+                          "fallback_events": count})
     return stops
 
 
@@ -311,7 +384,7 @@ def judge_bundle(bundle: Bundle, u3_dir: Path, v4_dir: Path) -> dict:
                                 suites=None if bundle.suite is None else (bundle.suite,))
     baseline = _settle_baseline(v4_payload) if bundle.settle_v2 else None
     graded, values, gate2, commits, errors, keysets = {}, {}, [], {}, {}, {}
-    j_p3_stops, reused = [], 0
+    j_p3_stops, fallback_stops, reused = [], [], 0
     for setting in v5_rerun.SETTINGS:
         payload = read_json(u3_dir / f"u3_{bundle.name}_{setting}.json")
         commits[setting] = _file_commit(payload)
@@ -328,13 +401,30 @@ def judge_bundle(bundle: Bundle, u3_dir: Path, v4_dir: Path) -> dict:
                   if (p := run_v5_problems(e, setting, tag, needs_bound=setting == "VB"))]
         if setting == "VB":
             j_p3_stops = gate_j_p3(items)
+            fallback_stops = gate_fallback(items)
             reused = sum(1 for e in items if e.get("reuse") == "d1")
     v4_items = {v5_rerun.entry_key(e): e for e in entries_of(v4_payload, bundle.suite)}
-    v4_graded = {k: grade(v4_items[k], bundle, baseline) for k in v4_keys}
+    v4_graded = {k: previous_grade(v4_items[k], bundle, baseline) for k in v4_keys}
     v4_values = {k: quantities(v4_items[k], bundle.kind) for k in v4_keys}
     return _bundle_report(bundle, graded, values, v4_graded, v4_values, {
         "keys": keysets, "v4_keys": v4_keys, "errors": errors, "gate2": gate2,
-        "commits": commits, "j_p3_stops": j_p3_stops, "reused": reused})
+        "commits": commits, "j_p3_stops": j_p3_stops, "fallback_stops": fallback_stops,
+        "reused": reused})
+
+
+PREVIOUS_G6_DEMOTION = "not_applied"
+"""Rules rev1 1 #6: the v4 g6 records keep no r72 gates, so the previous-edition g6 grade is
+the stored verdict without the G6-7 demotion (record only)."""
+
+
+def previous_grade(entry: dict, bundle: Bundle, baseline: dict | None) -> dict:
+    """Grade of a v4 stored record: the stored verdict for g6 (rules rev1), else :func:`grade`."""
+    if bundle.kind != "g6":
+        return grade(entry, bundle, baseline)
+    flags = list(entry.get("flags") or [])
+    return {"grade": _verdict_grade(entry.get("verdict"), bool(flags)),
+            "verdict": entry.get("verdict"), "flags": flags,
+            "previous_g6_demotion": PREVIOUS_G6_DEMOTION}
 
 
 def _bundle_report(bundle: Bundle, graded, values, v4_graded, v4_values, inputs) -> dict:
@@ -362,6 +452,8 @@ def _bundle_report(bundle: Bundle, graded, values, v4_graded, v4_values, inputs)
             "classes": classes,
             "previous_edition": {
                 "note": "V0 - v4 (final_SGS_R4): record only (rules 5.1)",
+                **({"previous_g6_demotion": PREVIOUS_G6_DEMOTION} if bundle.kind == "g6"
+                   else {}),
                 "transition_v4_V0": transition_table([(v4_graded[k]["grade"], v0[k]["grade"])
                                                        for k in v0 if k in v4_graded]),
                 "differences_V0_minus_v4": differences(v4_values, values["V0"])},
@@ -369,7 +461,9 @@ def _bundle_report(bundle: Bundle, graded, values, v4_graded, v4_values, inputs)
                       "G-4": {"pass": not inputs["j_p3_stops"],
                               "stops": inputs["j_p3_stops"][:20]},
                       "G-5": {"pass": not classes["vb_only_failure"],
-                              "vb_only_failures": classes["vb_only_failure"]}},
+                              "vb_only_failures": classes["vb_only_failure"]},
+                      "G-6": {"pass": not inputs["fallback_stops"],
+                              "stops": inputs["fallback_stops"][:20]}},
             "grades": {s: {k: r["grade"] for k, r in graded[s].items()} for s in graded}}
 
 
@@ -447,7 +541,7 @@ def _hash_of(entry: dict) -> str | None:
 
 # -------------------------------------------------------------------------------------- main
 def _missing_inputs(bundles, u3_dir: Path, v4_dir: Path, with_u6: bool) -> list[str]:
-    paths = [v4_dir / b.v4_file for b in bundles]
+    paths = [*RULES_REVISIONS, *(v4_dir / b.v4_file for b in bundles)]
     paths += [u3_dir / f"u3_{b.name}_{s}.json" for b in bundles for s in v5_rerun.SETTINGS]
     if with_u6:
         paths += [u3_dir / f"u6_{name}_VB.json" for name, *_ in U6_BUNDLES]
@@ -465,6 +559,7 @@ def judge(args) -> int:
         return 2
     report = {"rules": v5_rerun.RULES_PATH.name,
               "rules_sha256": v5_rerun.text_sha256(v5_rerun.RULES_PATH),
+              "rules_revisions": [revision_record(path) for path in RULES_REVISIONS],
               "script_sha256": v5_rerun.text_sha256(Path(__file__)),
               "u3": {b.name: judge_bundle(b, u3_dir, v4_dir) for b in bundles}}
     if not args.no_u6:

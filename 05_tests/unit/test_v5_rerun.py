@@ -223,7 +223,63 @@ def test_gate_g2_and_g4_fields() -> None:
     rod = copy.deepcopy(good)
     rod["v5"].update(has_rod_reading=True, j_p3="pass")
     assert u3_judge.gate_j_p3([rod])[0]["j_p3"] == "pass"
+    assert u3_judge.gate_j_p3([rod])[0]["reason"].startswith("head-only suite")
     abl = copy.deepcopy(good)
     abl["v5"]["controller_tag"] = "ABL"
     assert u3_judge.run_v5_problems(abl, "VB", "ABL", needs_bound=False) == [
         "③ on where it must be off"]
+
+
+# ----------------------------------------------------------- rules rev1 (g8 rod readings, G-6)
+def _vb_run(suite: str, *, rod: bool, j_p3: str, fallback: int = 0, breach: int = 0) -> dict:
+    bound = {"breach_reads": [breach, 0, 0, 0], "margin_used_reads": [0] * 4,
+             "locked_breach_over_tol_reads": [0] * 4} if rod else None
+    return {"suite": suite, "id": f"{suite}|key", "warnings": [],
+            "v5": {"v5_setting": "VB", "controller_tag": "final_C4G2_P3", "j_p3": j_p3,
+                   "has_rod_reading": rod, "head_only_declared": suite != "g8",
+                   "extend_bound_check": bound, "rod_pressure_fallback_events": fallback}}
+
+
+def test_g8_rod_reading_and_j_p3_pass_passes_g4() -> None:
+    assert u3_judge.rod_reading_suites() == ("g8",)
+    assert u3_judge.gate_j_p3([_vb_run("g8", rod=True, j_p3="pass")]) == []
+    assert u3_judge.gate_fallback([_vb_run("g8", rod=True, j_p3="pass")]) == []
+
+
+def test_g8_without_rod_reading_stops_g4() -> None:
+    stops = u3_judge.gate_j_p3([_vb_run("g8", rod=False, j_p3="no_rod_reading")])
+    assert [(s["suite"], s["j_p3"], s["has_rod_reading"]) for s in stops] == [
+        ("g8", "no_rod_reading", False)]
+    breach = u3_judge.gate_j_p3([_vb_run("g8", rod=True, j_p3="H-7", breach=1)])
+    assert breach and breach[0]["j_p3"] == "H-7"
+
+
+def test_head_only_suite_with_a_rod_reading_stops_g4() -> None:
+    stops = u3_judge.gate_j_p3([_vb_run("slope", rod=True, j_p3="pass")])
+    assert [(s["suite"], s["j_p3"], s["has_rod_reading"]) for s in stops] == [
+        ("slope", "pass", True)]
+    assert u3_judge.gate_j_p3([_vb_run("slope", rod=False, j_p3="no_rod_reading")]) == []
+
+
+def test_one_g8_fallback_stops_g6() -> None:
+    stops = u3_judge.gate_fallback([_vb_run("g8", rod=True, j_p3="pass", fallback=1),
+                                    _vb_run("slope", rod=False, j_p3="no_rod_reading",
+                                            fallback=3)])
+    assert stops == [{"key": "g8|key", "suite": "g8", "fallback_events": 1}]
+
+
+def test_previous_g6_grade_is_the_stored_verdict() -> None:
+    g6 = u3_judge.Bundle("g6", "x", "g6", 1, "g6")
+    stored = {"verdict": "fail", "failed_rows": ["G6-7_preloc"], "flags": []}
+    previous = u3_judge.previous_grade(stored, g6, None)
+    assert previous["grade"] == "fail" and previous["previous_g6_demotion"] == "not_applied"
+
+
+def test_rules_revision_record_reads_the_file(tmp_path) -> None:
+    text = tmp_path / "u3_u6_rerun_rules_rev1.md"
+    text.write_bytes(b"rev1\r\n")
+    sha = v5_rerun.text_sha256(text)
+    (tmp_path / "u3_u6_rerun_rules_rev1.sha256").write_text(f"{sha}  x\n", encoding="utf-8")
+    assert u3_judge.revision_record(text) == {"rules": text.name, "sha256": sha,
+                                              "sealed_sha256": sha, "match_seal": True}
+    assert u3_judge.RULES_REVISIONS[0].name == "u3_u6_rerun_rules_rev1.md"

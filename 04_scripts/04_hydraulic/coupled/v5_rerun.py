@@ -334,6 +334,16 @@ def j_p3_status(tag: str, bound_check: dict | None, rod_reading: bool,
     return "no_rod_reading" if case == J_P3_NO_ROD_READING else "setting_defect"
 
 
+FALLBACK_EVENT_PREFIX = "WARN_ROD_PRESSURE_FALLBACK"
+"""Rod-pressure fallback of the two-pressure monitor (rules rev1 G-6: 0 in every g8 VB run)."""
+
+
+def fallback_event_count(controller) -> int:
+    """Number of ``WARN_ROD_PRESSURE_FALLBACK:<leg>`` events of the run's controller."""
+    events = getattr(controller, "events", None) or []
+    return sum(1 for event in events if event.name.startswith(FALLBACK_EVENT_PREFIX))
+
+
 def _lift_time_s(plant, period: dict) -> float | None:
     limiter = getattr(plant, "flow_limiter", None)
     if limiter is None or len(period["t"]) == 0:
@@ -379,7 +389,8 @@ def run_record(plant, controller, *, harness_commands_sha256: str | None,
               "logged_commands_sha256": (
                   None if not period or not len(period["t"])
                   else verdict_runs._command_digest(period["command"])),
-              "t_lift_s": t_lift_s}
+              "t_lift_s": t_lift_s,
+              "rod_pressure_fallback_events": fallback_event_count(controller)}
     if bound_check is not None:
         record["extend_bound_check"] = bound_check
     if hydraulics:
