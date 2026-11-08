@@ -45,6 +45,7 @@ from params import load_params  # noqa: E402
 from verdict_cases import REANCHOR_ON, EventTwin, SteadyTwin, VerdictCase  # noqa: E402
 from verdict_metrics import (  # noqa: E402
     after_window_force_values,
+    chunk_phases,
     flow_saturation_time,
     hold_period_values,
     lower_bound_miss_values,
@@ -52,6 +53,7 @@ from verdict_metrics import (  # noqa: E402
     ref_10hz_episode_values,
     run_values,
     stop_crawler_values,
+    u9_values,
 )
 
 READY_DELAY_S = 5.0
@@ -161,9 +163,10 @@ def _stored_events(controller) -> list[tuple[float, str]]:
             if not event.name.startswith(SKIPPED_EVENT_PREFIXES)]
 
 
-def _finish(plant, controller, extra: dict, t4h: dict | None = None) -> tuple[dict, dict]:
+def _finish(plant, controller, extra: dict, t4h: dict | None = None, *,
+            u9_metrics: bool = False) -> tuple[dict, dict]:
     """Result dict and the 10 Hz arrays saved with it; ``t4h`` = {"path", "meta"} also writes
-    the T4h record (v5 X-10)."""
+    the T4h record (v5 X-10); ``u9_metrics`` adds ``values["U9"]`` (U-9 targeted runs)."""
     limiter = plant.flow_limiter
     period = period_arrays(controller)
     events = _stored_events(controller)
@@ -179,6 +182,10 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None) -> tuple[di
     values = run_values(limiter.rows(), period, events, limiter,
                         controller.geometry.twist_vector, controller.geometry.head_area_m2,
                         thresholds.integrator_limit_rad_s)
+    if u9_metrics:  # u9_targeted_rules_rev1.md 3.2 P-3: only the jobs that ask for it
+        rows = limiter.rows()
+        values["U9"] = u9_values(rows, chunk_phases(rows, period["t"], period["phase"]), period,
+                                 is_flow_on=limiter.setting.is_enabled)
     result = {**extra, "commands_sha256": _command_digest(period["command"]),
               "final_phase": str(controller.phase),
               "max_motor_stroke_reading_mm": limiter.max_stroke_reading_m * 1e3,
@@ -342,8 +349,8 @@ def _steady_case_dict(twin: SteadyTwin, slope, is_reanchor: bool) -> dict:
     return replace(cases[0], reanchor=is_reanchor).to_dict()
 
 
-def _run_steady(case: VerdictCase, decision: str | None,
-                t4h: dict | None = None) -> tuple[dict, dict]:
+def _run_steady(case: VerdictCase, decision: str | None, t4h: dict | None = None, *,
+                u9_metrics: bool = False) -> tuple[dict, dict]:
     import s9_soil_closed_loop as sl
     import s9_soil_slope as slope
 
@@ -361,14 +368,15 @@ def _run_steady(case: VerdictCase, decision: str | None,
              "probe_rounds": result["probe_rounds"]}
     if result["run"].get("commands_sha256") is None:
         raise RuntimeError("harness run without a command hash")
-    finished, series = _finish(captured["plant"], captured["ctrl"], extra, t4h)
+    finished, series = _finish(captured["plant"], captured["ctrl"], extra, t4h,
+                               u9_metrics=u9_metrics)
     finished["harness_commands_sha256"] = result["run"]["commands_sha256"]
     return finished, series
 
 
 # -------------------------------------------------------------------------------- event cases
-def _run_event(twin: EventTwin, contact: str | None = None,
-               t4h: dict | None = None) -> tuple[dict, dict]:
+def _run_event(twin: EventTwin, contact: str | None = None, t4h: dict | None = None, *,
+               u9_metrics: bool = False) -> tuple[dict, dict]:
     import copy
 
     import s9_soil_event_screen as study_a
@@ -392,7 +400,7 @@ def _run_event(twin: EventTwin, contact: str | None = None,
         base_plant, base_controller = plant, controller
         r67.run_base(cl, c2, measurements, base_plant, base_controller)
         extra["event_skipped"] = "base run without the READY / LOC / DONE of the event time"
-        return _finish(base_plant, base_controller, extra, t4h)
+        return _finish(base_plant, base_controller, extra, t4h, u9_metrics=u9_metrics)
     hasher = hashlib.sha256()
     is_absolute = twin.timing == FLOW_SATURATION_TIMING
     # absolute t_a: branch one control period early so that t_a + offset is exact (>= PRE_S
@@ -431,7 +439,7 @@ def _run_event(twin: EventTwin, contact: str | None = None,
             **overlap_in_window(limiter.rows(), limiter.supply_m3_s, t_event,
                                 t_event + window_end),
             "flow_limit_on": limiter.setting.is_enabled, "t_a_s": target}
-    finished, series = _finish(plant, controller, extra, t4h)
+    finished, series = _finish(plant, controller, extra, t4h, u9_metrics=u9_metrics)
     finished["harness_commands_sha256"] = hasher.hexdigest()
     return finished, series
 
@@ -453,7 +461,8 @@ def _event_time(timeline: dict, twin: EventTwin) -> float | None:
 # ---------------------------------------------------------------------------------- public API
 def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
             clip_command: bool = False, hydraulics=None,
-            contact: str | None = None, t4h: dict | None = None) -> tuple[dict, dict]:
+            contact: str | None = None, t4h: dict | None = None,
+            u9_metrics: bool = False) -> tuple[dict, dict]:
     """Run one case with one flow setting in this process.
 
     Args:
@@ -469,6 +478,9 @@ def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
             COMBINED judge, bit for bit.
         t4h: ``{"path": npz path, "meta": dict}``: write the T4h record (v5 X-10) of a run
             whose plant has the lock record (LC); None = no file.
+        u9_metrics: Add ``values["U9"]`` (``verdict_metrics.u9_values``,
+            ``u9_targeted_rules_rev1.md`` 3.3); False = the values as before. Record only:
+            the commands do not change.
 
     Returns:
         The result dict (``error`` set on a harness failure) and the 10 Hz arrays. The logged
@@ -488,9 +500,9 @@ def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
     if t4h is not None:
         t4h = {**t4h, "meta": {**t4h["meta"], HEAD_ONLY_DECLARED_KEY: is_head_only}}
     if is_event:
-        result, series = _run_event(case.twin, contact, t4h)
+        result, series = _run_event(case.twin, contact, t4h, u9_metrics=u9_metrics)
     else:
-        result, series = _run_steady(case, decision, t4h)
+        result, series = _run_steady(case, decision, t4h, u9_metrics=u9_metrics)
     if clip_record is not None:
         result["command_clip"] = asdict(clip_record)
     t_lift_s = ((result.get("values") or {}).get("forces") or {}).get("t_lift_s")

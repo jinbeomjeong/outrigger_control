@@ -78,6 +78,9 @@ def main() -> None:
               "extend_bound_check": hydraulics.get("extend_bound_check"),
               "head_only_declared": record.get("head_only_declared"),
               "t4h": _t4h_meta(t4h_folder, record.get("t4h_file")),
+              "t4h_file": record.get("t4h_file"),
+              "u9": record["values"].get("U9"),
+              "supply_L_min": record["values"].get("supply_L_min"),
               "foreign_modules": _modules_outside_project()}
     out_path.write_text(json.dumps(report), encoding="utf-8")
 

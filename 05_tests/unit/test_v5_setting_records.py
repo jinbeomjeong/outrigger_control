@@ -271,6 +271,25 @@ def test_vb_event_row_with_rod_readings_passes_j_p3(tmp_path: Path) -> None:
     assert check is not None and sum(check["breach_reads"]) == 0
 
 
+U9_REFERENCE_JOB = {"case": "S2", "eps": 0.002, "setting": "VB", "eta_v": 0.85,
+                    "u9_metrics": True}
+U9_REFERENCE_HASH = "8aa56d2a1136989692afb21d810d370ea8dd9ecb7e85b3d11b4904a542c5ec49"
+"""``p3_hash.jsonl`` S2 line (eps 2e-3, revision 8 VB definition, ③ on)."""
+
+
+@pytest.mark.slow
+def test_u9_vb_reference_row_keeps_the_p3_hash(tmp_path: Path) -> None:
+    """``u9_targeted_rules_rev1.md`` 3.2 P-4: the eta_v 0.85 VB S2 eps 2e-3 job of
+    ``u9_targeted`` gives the command hash of the ``p3_hash`` S2 line; the U9 values are
+    record only, and the T4h name carries the supply."""
+    report = run_job(U9_REFERENCE_JOB, tmp_path)
+    assert report["hash"] == U9_REFERENCE_HASH
+    assert report["controller_tag"] == "final_C4G2_P3"
+    assert report["t4h_file"] == "S2_e0.002_VB-eta0.85.npz"
+    assert set(report["u9"]) >= {"level_count_s", "post_touch_count_s", "longest_ge3_s",
+                                 "longest_eq4_s", "ge3_runs", "level_sat_rate_max_deg_s"}
+
+
 @pytest.mark.slow
 def test_v0_keeps_final_c4g2(tmp_path: Path) -> None:
     """Revision 8 3.1: V0 is not a ③ setting: same hash, no tag."""
