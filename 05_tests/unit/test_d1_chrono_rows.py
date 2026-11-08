@@ -43,6 +43,7 @@ def test_c2_rows_use_live_vb_argv(b) -> None:
         assert r["s8c"] and r["v5_setting"] == "VB" and r["argv"][-len(vb):] == vb
         assert r["argv"][r["argv"].index("--set") + 1] == "d1c2"
         assert d1.D1_C2_TAG in r["d1_tag"]
+        assert r["controller"] == "final_C4G2_P3" and "--extend-start-tracked" in r["argv"]
     floors = {c.case_id: (c.scenario.level, s8.st.FLOORS[c.floor], c.fs_kN) for c in s8.case_set("d1c2")}
     assert floors["D1C2_middle_rpBop_Fs4"] == ("middle", (2.3351, 1.5017), 4.0)
     assert floors["D1C2_bottom_rollm4.4_Fs4"] == ("bottom", (-4.4, 0.0), 4.0)
@@ -55,6 +56,9 @@ def test_soil_rows_vb_and_level_patch(b) -> None:
     for r in rows:
         a = r["argv"]
         assert a[-len(vb):] == vb and "--expect-controller" in a
+        # criteria revision 8 3.1: the VB rows run (and are checked as) final_C4G2_P3
+        assert a[a.index("--expect-controller") + 1] == r["controller"] == "final_C4G2_P3"
+        assert "--extend-start-tracked" in a
         assert a[a.index("--level") + 1] in ("middle", "bottom")
     patch = [r for r in rows if r["d1_id"] in ("S-03", "S-04")]
     assert all(r["argv"][r["argv"].index("--soil-patch") + 1] == "FL:J1" for r in patch)
