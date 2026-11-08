@@ -93,11 +93,16 @@ V1_KEYS = (
     "D1|H-R-0|rigid|T|roll+op|K1|V0|e0", "D1|H-R-0|rigid|T|roll+op|K1|VB|e0",
     "D1|H-R-0|rigid|T|diag-op|K3|V0|e0", "D1|H-R-0|rigid|T|diag-op|K3|VB|e0",
     "D1|H-R-A|rigid+J1@FL|T|flat|K1|V0|e0", "D1|H-R-A|rigid+J1@FL|T|flat|K1|VB|e0",
+    "D1|H-R-0|rigid|T|flat|K1|V0|e0", "D1|H-R-0|rigid|M|flat|K1|V0|e0",
+    "D1|H-R-0|rigid|B|flat|K1|V0|e0", "D1|H-R-0|rigid|T|fdown-op|K1|V0|e0",
+    "D1|H-R-0|rigid|T|flat|K1|VB|e0", "D1|H-R-A|rigid+J1@RL|T|flat|K1|V0|e0",
+    "D1|H-R-A|rigid+J1@RL|T|fup-psa|K1|V0|e0", "D1|H-R-A|rigid+J1@RL|T|flat|K1|VB|e0",
 )
-"""V-1 instrumented runs (rules 4): the family (expected to fire), rigid uniform rows (expected
-silent, A-3) and one other H-R-A row; VB and V0. Expectations only; V-1 counts what happens."""
+"""V-1 instrumented runs (rules 4: >= 10, >= 3 firing and >= 3 silent, VB and V0). With b0
+(gate-only, 2026-11-08) the first 10 gave 9 firing (the rigid roll / diagonal rows fire too)
+and 1 silent; the last 8 (flat, nose-down and rear-patch rows) were all silent."""
 STAGES = ("T-0", "T-1", "T-2", "V-1")
-STAGE_COUNTS = {"T-0": 2, "T-1": 8, "T-2": 184, "V-1": 10}
+STAGE_COUNTS = {"T-0": 2, "T-1": 8, "T-2": 184, "V-1": 18}
 
 
 # ------------------------------------------------------------------------------- candidates
