@@ -1,5 +1,6 @@
 """FB (command flow budget + saturation detection) targeted runs on the reduced harness
-(sealed ``fb_targeted_rules.md``; design copy ``fb_design.md``).
+(sealed ``fb_targeted_rules.md`` and its sealed addendum ``fb_targeted_rules_rev1.md``;
+design copy ``fb_design.md``).
 
 The candidates wrap ``c2.C2Controller`` in the worker process only (spawned,
 ``maxtasksperchild=1``); no project file changes. Every worker first installs the LAS-b
@@ -38,13 +39,17 @@ counter to 0 and adds ``INFO_FLOW_BUDGET_CUT:<U|A97>``; Q_b never rises again in
 ``verdict_metrics.chunk_phases`` gives the chunks that period's command drives).
 
 Bundles (rules 3.2): F-0 4, F-1 92, F-2 192 (LF only; L = stored ``v5/las/las_T1.jsonl`` /
-``las_T2.jsonl`` b0 act lines), F-3 32, F-4 28, F-5 12. Output
+``las_T2.jsonl`` b0 act lines), F-3 32, F-4 28 (rev1 1: verdict case ``R2ra``, i.e. ``R2``
+with decision ``reanchor_on``, instead of ``R2``), F-5 12. Output
 ``06_analysis/03_hydraulic/coupled/v5/fb/fb_F<n>.jsonl`` (appended; finished lines skipped).
 
-Stops (rules 6): H-1 (rules / design missing or the rules sha256 is not the sealed one) before
-any run; H-2: F-1 .. F-5 run only after F-0 passed C-7 (``fb_judge.check_c7``); H-3: an error
-line is retried once, a second error stops the bundle; H-4: 5 C-2 violations in a bundle
-stop it (finished lines stay).
+The LAS-b preset switch (2026-11-08): ``las_targeted.install`` turns the preset's own LAS-b
+off, so L = the pre-switch preset + the b0 wrapper, the condition of the stored lines.
+
+Stops (rules 6, rev1 3): H-1 (rules, addendum rev1 or design missing, or the sha256 of the
+rules or of rev1 is not the sealed one) before any run; H-2: F-1 .. F-5 run only after F-0
+passed C-7 (``fb_judge.check_c7``); H-3: an error line is retried once, a second error stops
+the bundle; H-4: 5 C-2 violations in a bundle stop it (finished lines stay).
 
 Usage (dynamics-dev python, project root, PowerShell):
   python -I -B 04_scripts/04_hydraulic/coupled/fb_targeted.py list [--bundle F-0 ..]
@@ -87,6 +92,11 @@ RULES_SHA_PATH = RULES_DIR / "fb_targeted_rules.sha256"
 DESIGN_PATH = RULES_DIR / "fb_design.md"
 RULES_SHA256 = "e517b0d08bc46100bb20ec3824de5066cdb8890715f03f3e9a1299437e5dcb89"
 """``fb_targeted_rules.sha256`` (sealed 2026-11-08 17:19:52 +09:00)."""
+RULES_REV1_PATH = RULES_DIR / "fb_targeted_rules_rev1.md"
+RULES_REV1_SHA_PATH = RULES_DIR / "fb_targeted_rules_rev1.sha256"
+RULES_REV1_SHA256 = "0163b6c3f065bd18320c6857c605186112f411ff7c20e02f403bf82a26ba9d63"
+"""``fb_targeted_rules_rev1.sha256`` (sealed addendum 2026-11-08 17:45:04 +09:00: F-4 R2 ->
+R2ra, readings I-1 .. I-8, H-1 extended to rev1)."""
 V5_DIR = ROOT / "06_analysis" / "03_hydraulic" / "coupled" / "v5"
 OUT_DIR = V5_DIR / "fb"
 LAS_STORED_PATHS = (V5_DIR / "las" / "las_T1.jsonl", V5_DIR / "las" / "las_T2.jsonl")
@@ -135,9 +145,10 @@ F4_D1_ROWS = (
     "D1|H-R-A-stop|rigid+J1@RL|T|fup-op|K1", "D1|H-S-C|J1|T|flat|K1|c-mid@FL",
     "D1|H-S-C|J1|T|flat|K1|c-mid@RL", "D1|H-S-C-g|J1|T|fdown-rec|K1|c-mid@FL|dsb_gated_off",
 )
-F4_CASES = ("R2", "R12", "R14", "R15", "R16")
-"""Rules 3.2 F-4: verdict cases at the first ``run_v5._phase_jobs`` job (eps 0). ``R2`` is
-the case as named (decision ``reanchor_off``, the run_v5 default), not ``R2ra``."""
+F4_CASES = ("R2ra", "R12", "R14", "R15", "R16")
+"""Rules 3.2 F-4 with rev1 1: verdict cases at the first ``run_v5._phase_jobs`` job (eps 0).
+``R2ra`` is case ``R2`` with decision ``reanchor_on`` (the original ``R2``, decision
+``reanchor_off``, skips the REANCHOR path the row is meant to test, so it is not run)."""
 F4_SETTINGS = ("V0", "VB")
 F5_ROWS = ("D1|H-S-0|J1|T|flat|K1", "D1|H-S-0|J2|T|flat|K1", "D1|H-R-0|rigid|T|flat|K1")
 F5_SETTINGS = ("VB", "V0")
@@ -609,20 +620,29 @@ def file_sha256(path: Path) -> str:
 
 
 def sealed_check(rules_path: Path = RULES_PATH, sha_path: Path = RULES_SHA_PATH,
-                 design_path: Path = DESIGN_PATH) -> list[str]:
-    """Problems of H-1 (empty = the sealed rules and the design copy are there)."""
-    problems = []
-    for path in (rules_path, sha_path, design_path):
-        if not path.exists():
-            problems.append(f"missing {path}")
+                 design_path: Path = DESIGN_PATH, rev1_path: Path = RULES_REV1_PATH,
+                 rev1_sha_path: Path = RULES_REV1_SHA_PATH) -> list[str]:
+    """Problems of H-1 (empty = the sealed rules, the sealed addendum rev1 and the design copy
+    are there; rev1 3 adds the addendum to the original check)."""
+    problems = [f"missing {path}"
+                for path in (rules_path, sha_path, rev1_path, rev1_sha_path, design_path)
+                if not path.exists()]
     if problems:
         return problems
-    digest = file_sha256(rules_path)
+    problems += _seal_problems(rules_path, sha_path, RULES_SHA256)
+    problems += _seal_problems(rev1_path, rev1_sha_path, RULES_REV1_SHA256)
+    return problems
+
+
+def _seal_problems(text_path: Path, sha_path: Path, expected_sha256: str) -> list[str]:
+    """The ``.sha256`` file holds ``expected_sha256`` (first token) and the text hashes to it."""
+    problems = []
     sealed = sha_path.read_text(encoding="utf-8").split()[0].lower()
-    if sealed != RULES_SHA256:
-        problems.append(f"{sha_path.name} holds {sealed}, the tool expects {RULES_SHA256}")
+    if sealed != expected_sha256:
+        problems.append(f"{sha_path.name} holds {sealed}, the tool expects {expected_sha256}")
+    digest = file_sha256(text_path)
     if digest != sealed:
-        problems.append(f"{rules_path.name} sha256 {digest} != sealed {sealed}")
+        problems.append(f"{text_path.name} sha256 {digest} != sealed {sealed}")
     return problems
 
 

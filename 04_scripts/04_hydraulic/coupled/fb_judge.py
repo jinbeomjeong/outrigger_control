@@ -1,11 +1,12 @@
-"""FB targeted-run judge (sealed ``fb_targeted_rules.md`` 4 C-1 .. C-10, 6 H-2 .. H-4).
+"""FB targeted-run judge (sealed ``fb_targeted_rules.md`` 4 C-1 .. C-10, 6 H-2 .. H-4, with
+the sealed addendum ``fb_targeted_rules_rev1.md``).
 
 Reads ``v5/fb/fb_F<n>.jsonl`` (``fb_targeted.py``), pairs LF with L by key (F-2: L = the stored
 ``v5/las/las_T1.jsonl`` / ``las_T2.jsonl`` b0 act line of the key) and writes the judgement
 draft ``06_analysis/02_control/verif_matrix/fb_judgement.md``. Values only from the lines; no
 run here.
 
-Readings of the rules text this judge fixes (stated in the draft too):
+Readings of the rules text (fixed by rev1 2 I-1 .. I-8; stated in the draft too):
   * C-2 (a) "L pass -> LF fail": ``d1.verdict`` "pass" -> "fail" (``allowed_stop`` is not
     "fail"; such pairs are listed); "P3-2 / G6-2 new failure" = an LF fail item whose name
     starts with ``P3-2`` or ``G6-2`` that L does not fail.
@@ -16,6 +17,9 @@ Readings of the rules text this judge fixes (stated in the draft too):
     the first period that ended in TOUCH, in [0, 1.0] s.
   * C-10 attitude change "size" = hypot(roll change, pitch change) over the window; the
     per-axis values are listed as well.
+  * C-4 (I-6): the pairs whose event sets differ are left out of the READY check and
+    counted per bundle in the details.
+  * F-4 verdict case 1 is ``R2ra`` (decision ``reanchor_on``, rev1 1).
 
 Usage (dynamics-dev python, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/fb_judge.py [--out-dir DIR] [--md PATH]
@@ -276,7 +280,11 @@ def c4(data: Data) -> Criterion:
                f"{None if median is None else round(median, 2)} s, 최대 "
                f"{None if not deltas else round(max(deltas), 2)} s, 집합이 다른 짝 "
                f"{len(different)}")
-    details = failures + [f"집합 다름(READY 판정 제외) {text}" for text in different]
+    # rev1 4 (I-6): the pairs left out for a different event set, counted per bundle.
+    details = failures + [f"집합 다름으로 빠진 짝 {bundle}: "
+                          f"{sum(text.startswith(f'{bundle} ') for text in different)}"
+                          for bundle in JUDGED_BUNDLES]
+    details += [f"집합 다름(READY 판정 제외) {text}" for text in different]
     return Criterion("C-4", "READY", _status(data.missing_pairs() == 0, failures), summary,
                      details)
 
@@ -474,7 +482,8 @@ def _mark(passed: bool | None) -> str:
 def render(data: Data, criteria: list[Criterion], out_dir: Path) -> str:
     counts = {bundle: sum(len(v) for v in data.bundles[bundle].values()) for bundle in ft.BUNDLES}
     text = ["# FB 표적 판정서 (초안, fb_judge.py 생성)", "",
-            f"- 규칙: `fb_targeted_rules.md`(sha256 `{ft.RULES_SHA256[:12]}…`), 후보 LF 대 L",
+            f"- 규칙: `fb_targeted_rules.md`(sha256 `{ft.RULES_SHA256[:12]}…`) + 덧붙임 판 "
+            f"`fb_targeted_rules_rev1.md`(sha256 `{ft.RULES_REV1_SHA256[:12]}…`), 후보 LF 대 L",
             f"- 실행 줄: `{out_dir}` " + ", ".join(f"{b} {n}/{ft.BUNDLE_COUNTS[b]}"
                                                   for b, n in counts.items()),
             "- F-2의 L: 저장 `v5/las/las_T1.jsonl`·`las_T2.jsonl` b0 act 줄",
@@ -500,8 +509,8 @@ def render(data: Data, criteria: list[Criterion], out_dir: Path) -> str:
              "- VB(eta 0.85) = 설정 VB이고 `eta_v`가 없거나 0.85",
              "- C-6: 첫 깎기 시각 − 첫 TOUCH 주기(그 주기 끝 단계가 TOUCH) 시각 ∈ [0, 1.0] s",
              "- C-10 자세 변화 크기 = hypot(roll 변화, pitch 변화), 축별 값은 상세에 둔다",
-             "- F-4 `R2`는 이름 그대로(run_v5 기본 결정 `reanchor_off`)다. `R2ra`(REANCHOR 켬)가 "
-             "의도라면 사용자 결정이 필요하다", ""]
+             "- 위 해석은 rev1 2절 I-1~I-8로 확정",
+             "- F-4 verdict 1번 = `R2ra`(reanchor_on), rev1 1절", ""]
     return "\n".join(text)
 
 

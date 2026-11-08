@@ -10,8 +10,9 @@ from __future__ import annotations
 
 import os
 import sys
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from pathlib import Path
+from types import SimpleNamespace
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -338,3 +339,43 @@ def test_t2_judge_adopts_only_with_184_clean_keys(tmp_path: Path) -> None:
     result = lj.judge_t2(lines, baseline, None, None)
     assert result["stop"] == "H-4" and "C6" in result["failed_keys"]
     assert result["t2_prime_allowed"] is False
+
+
+# ------------------------------------------------------------------------------- preset LAS-b
+@dataclass(frozen=True)
+class _LasSwitch:
+    enable: bool
+
+
+def _stand_in_c2():
+    """A ``c2`` with a fresh ``C2Config`` whose preset turns LAS-b on (as after the switch)."""
+
+    @dataclass(frozen=True)
+    class StandInConfig:
+        liftoff_approach_slow: _LasSwitch = _LasSwitch(False)
+        soil_stop: bool = False
+
+        def with_10hz_d1(self, *, soil_stop: bool = True, liftoff_approach_slow: bool = True):
+            return replace(self, soil_stop=soil_stop,
+                           liftoff_approach_slow=_LasSwitch(liftoff_approach_slow))
+
+    return SimpleNamespace(C2Config=StandInConfig)
+
+
+def test_wrapper_turns_the_preset_las_off_and_keeps_the_other_keywords() -> None:
+    c2 = _stand_in_c2()
+    lt._turn_preset_las_off(c2)
+    preset = c2.C2Config().with_10hz_d1(soil_stop=False)
+    assert preset.liftoff_approach_slow.enable is False
+    assert preset.soil_stop is False
+    asked = c2.C2Config().with_10hz_d1(liftoff_approach_slow=True)
+    assert asked.liftoff_approach_slow.enable is True
+
+
+def test_a_controller_with_the_preset_las_on_is_refused() -> None:
+    c2 = _stand_in_c2()
+    on = SimpleNamespace(config=c2.C2Config().with_10hz_d1())
+    with pytest.raises(RuntimeError, match="act twice"):
+        lt._refuse_preset_las(on)
+    lt._refuse_preset_las(SimpleNamespace(config=c2.C2Config()))
+    lt._refuse_preset_las(SimpleNamespace(config=SimpleNamespace()))  # an older config

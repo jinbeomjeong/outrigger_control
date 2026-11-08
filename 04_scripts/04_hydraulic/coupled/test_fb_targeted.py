@@ -335,13 +335,65 @@ def test_c7_needs_equal_hashes_and_the_stored_b0_hash() -> None:
     assert not fj.check_c7(lines, {vb_key: _line("b0", vb_key)})["pass"]
 
 
-def test_sealed_check_reports_a_changed_file(tmp_path) -> None:
-    rules = tmp_path / "fb_targeted_rules.md"
-    rules.write_text("changed", encoding="utf-8")
-    sha = tmp_path / "fb_targeted_rules.sha256"
-    sha.write_text(f"{ft.RULES_SHA256}  fb_targeted_rules.md  sealed\n", encoding="utf-8")
-    design = tmp_path / "fb_design.md"
-    assert any("missing" in p for p in ft.sealed_check(rules, sha, design))
+def _sealed_set(folder: Path, monkeypatch) -> dict[str, Path]:
+    """Rules, rev1 and design texts sealed in ``folder`` (the tool's sealed values patched to
+    their hashes), as the keywords of ``sealed_check``."""
+    paths = {}
+    for stem, constant in (("fb_targeted_rules", "RULES_SHA256"),
+                           ("fb_targeted_rules_rev1", "RULES_REV1_SHA256")):
+        text = folder / f"{stem}.md"
+        text.write_text(f"sealed {stem}", encoding="utf-8")
+        digest = ft.file_sha256(text)
+        sha = folder / f"{stem}.sha256"
+        sha.write_text(f"{digest}  {text.name}  sealed\n", encoding="utf-8")
+        monkeypatch.setattr(ft, constant, digest)
+        paths[stem] = text
+        paths[f"{stem}_sha"] = sha
+    design = folder / "fb_design.md"
     design.write_text("d", encoding="utf-8")
-    problems = ft.sealed_check(rules, sha, design)
-    assert len(problems) == 1 and "!= sealed" in problems[0]
+    return {"rules_path": paths["fb_targeted_rules"], "sha_path": paths["fb_targeted_rules_sha"],
+            "rev1_path": paths["fb_targeted_rules_rev1"],
+            "rev1_sha_path": paths["fb_targeted_rules_rev1_sha"], "design_path": design}
+
+
+def test_sealed_check_passes_the_sealed_set(tmp_path, monkeypatch) -> None:
+    assert ft.sealed_check(**_sealed_set(tmp_path, monkeypatch)) == []
+
+
+def test_sealed_check_reports_a_changed_rules_file(tmp_path, monkeypatch) -> None:
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["rules_path"].write_text("changed", encoding="utf-8")
+    problems = ft.sealed_check(**paths)
+    assert len(problems) == 1 and "fb_targeted_rules.md sha256" in problems[0]
+    paths["design_path"].unlink()
+    assert any("missing" in p for p in ft.sealed_check(**paths))
+
+
+def test_sealed_check_stops_without_rev1(tmp_path, monkeypatch) -> None:
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["rev1_path"].unlink()
+    assert ft.sealed_check(**paths) == [f"missing {paths['rev1_path']}"]
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["rev1_sha_path"].unlink()
+    assert ft.sealed_check(**paths) == [f"missing {paths['rev1_sha_path']}"]
+
+
+def test_sealed_check_reports_a_changed_rev1_byte(tmp_path, monkeypatch) -> None:
+    paths = _sealed_set(tmp_path, monkeypatch)
+    raw = bytearray(paths["rev1_path"].read_bytes())
+    raw[0] ^= 1
+    paths["rev1_path"].write_bytes(bytes(raw))
+    problems = ft.sealed_check(**paths)
+    assert len(problems) == 1 and "fb_targeted_rules_rev1.md sha256" in problems[0]
+
+
+def test_sealed_check_reports_a_rev1_seal_value_the_tool_does_not_expect(
+        tmp_path, monkeypatch) -> None:
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["rev1_sha_path"].write_text("0" * 64 + "  fb_targeted_rules_rev1.md\n", encoding="utf-8")
+    problems = ft.sealed_check(**paths)
+    assert any("fb_targeted_rules_rev1.sha256 holds" in p for p in problems)
+
+
+def test_f4_runs_r2_with_reanchor_on() -> None:
+    assert ft.F4_CASES[0] == "R2ra"
