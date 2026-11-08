@@ -260,6 +260,8 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     # D-1 verification matrix Chrono rows (cad 2026-11-08, d1_chrono_rows.py): D1-CHRONO (16 required rows + roll /
     # slope candidates), D1-PSC (optional PS-c); built with this module's live VB argument functions
     out.update(_d1_batches())
+    # LAS-b Chrono check rows (cad 2026-11-08, las_chrono_rows.py): V5-LAS-CHRONO, LAS-b off / on pairs (spec 436)
+    out.update(_las_module().las_batches(sys.modules[__name__]))
     return out
 
 
@@ -270,6 +272,15 @@ def _d1_batches() -> dict[str, list[dict]]:
     finally:
         sys.path.remove(str(HERE))
     return d1_chrono_rows.d1_batches(sys.modules[__name__])
+
+
+def _las_module():
+    sys.path.insert(0, str(HERE))
+    try:
+        import las_chrono_rows  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    return las_chrono_rows
 
 
 COUPLED_BATCH = "COUPLED_eta085"
@@ -1045,9 +1056,12 @@ def next_runnable(queue: list[dict], finished_ok: set[str]) -> int | None:
     return None
 
 
-def _case_env(pool: str) -> dict[str, str]:
+def _case_env(pool: str, start_env: dict[str, str] | None = None) -> dict[str, str]:
+    """Child env: this process's env, ``OUTRIGGER_PLACEMENT`` = ``pool`` and a row's ``start_env`` (e.g.
+    V5-LAS-CHRONO ``OMP_WAIT_POLICY=PASSIVE``, set before the process starts)."""
     env = dict(os.environ)
     env[PLACEMENT_ENV] = pool
+    env.update({str(k): str(v) for k, v in (start_env or {}).items()})
     return env
 
 
@@ -1058,7 +1072,8 @@ ENTRY_META_KEYS = ("note", "priority", "controller", "source_run", "pair_case", 
                    "direction", "h9_result", "rep_bundle", "rep_source", "rep_variable", "r4_x11_check",
                    "expected_note", "rep_role", "source_expected_diffs", "criteria_id", "stored_wall_s",
                    "s8c_case_id", "v5_setting",
-                   "d1_id", "d1_role", "d1_select", "d1_tag", "d1_slope", "d1_flag", "d1_source")
+                   "d1_id", "d1_role", "d1_select", "d1_tag", "d1_slope", "d1_flag", "d1_source",
+                   "las", "las_family", "las_crawler", "las_ready", "start_env")
 """Row keys copied into the batch.json case entries (when present)."""
 
 
@@ -1168,7 +1183,10 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
     cases = select_rows((batches(**rv6) if rv6 else batches())[name], only, row_filter)
     if not cases:
         raise SystemExit(f"batch {name}: no rows left after --only / --row-filter")
-    stamp = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+    blocked = [c["case"] for c in cases if c.get("las_ready") is False]
+    if blocked:  # V5-LAS-CHRONO on rows before the LAS-b merge (--row-filter las=off runs the off rows)
+        raise SystemExit(f"batch {name}: rows need {cases[0].get('requires') or 'the LAS-b merge'}: {blocked}")
+    stamp =_dt.datetime.now().strftime("%Y%m%d_%H%M%S")
     folder = Path(resume) if resume else ROOT / "07_results" / "S9" / f"batch_{name}_{stamp}"
     if resume and not folder.is_dir():
         raise SystemExit(f"--resume {resume}: no such batch folder")
@@ -1218,7 +1236,7 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
                     else None
                 logf = (folder / f"{c['case']}.log").open("w", encoding="utf-8")
                 p = subprocess.Popen(argv, cwd=str(ROOT), stdout=logf, stderr=subprocess.STDOUT,
-                                     stdin=subprocess.DEVNULL, env=_case_env(pool))
+                                     stdin=subprocess.DEVNULL, env=_case_env(pool, c.get("start_env")))
                 _log(progress, f"START {c['case']} {_dt.datetime.now().isoformat(timespec='seconds')} pid={p.pid} "
                                f"est_s={c['est_s']} pool={pool}")
                 running.append((c, p, time.perf_counter(), logf, pool))
@@ -1340,6 +1358,9 @@ def check_sources(name: str, rows: list[dict]) -> dict:
         sys.path.remove(str(HERE))
     res = []
     for c in rows:
+        if c.get("las_family"):  # V5-LAS-CHRONO: new rows, build check of the argv (las_chrono_rows.argv_check)
+            res.append(_las_module().argv_check(c, sys.modules[__name__]))
+            continue
         if c.get("s6c") and c.get("source_run"):
             res.append({"case": c["case"], **s6c_source_check(c)})
             continue
