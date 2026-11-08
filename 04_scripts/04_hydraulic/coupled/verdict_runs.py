@@ -546,10 +546,17 @@ def plant_options_record(hydraulics=None, t_lift_s: float | None = None) -> dict
         return {}
     import harness_hydraulics
 
+    from outrigger_sim.hydraulics.v5_options import controller_tag
+
     if hydraulics.lock_window_follows_plant:
         harness_hydraulics.check_last_lock_window(hydraulics, load_params().v_max)
-    return {"hydraulic_options": hydraulics.to_dict(),
-            "hydraulics_record": harness_hydraulics.last_armed_record(t_lift_s)}
+    harness_hydraulics.check_last_extend_start(hydraulics)
+    record = {"hydraulic_options": hydraulics.to_dict(),
+              "hydraulics_record": harness_hydraulics.last_armed_record(t_lift_s)}
+    tag = controller_tag(hydraulics)
+    if tag is not None:  # criteria revision 8: the VB / LS controller (key only with ③ on)
+        record["controller_tag"] = tag
+    return record
 
 
 def warm_numba_cache() -> None:

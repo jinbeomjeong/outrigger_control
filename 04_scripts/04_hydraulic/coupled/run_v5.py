@@ -8,7 +8,10 @@ VB reference time t_a + 0 / 0.025 / 0.05 / 0.075 s x V0, V3, VB = 12; t_a comes 
 run first, stored in ``overlap_t_a.json`` and used by every setting; lines carry
 ``overlap_found``), ``pressure_only`` (criteria 13.4 (⑥): R12 4 offsets + G4 width grid 28 x V0,
 V4, V5 with the pressure-only judge = 96; lines carry ``contact_judge`` and ``unit_status``, the
-event output ``lower_bound_miss``; the combined pairs are the same rows of ``main``).
+event output ``lower_bound_miss``; the combined pairs are the same rows of ``main``),
+``p3_hash`` (criteria revision 8 7.2: the first VB line per case of ``main.jsonl`` = 22 jobs
+with the revision 8 VB definition, ③ on; ``p3_hash_check.py`` compares them with the stored
+lines).
 One JSON line per run in ``06_analysis/03_hydraulic/coupled/v5/<batch>.jsonl`` (appended; runs
 already in the file are skipped). Each run has its own spawned worker (``maxtasksperchild=1``): the
 harness patches stay in the process. Deterministic (no noise). Values only; the verdict is
@@ -98,7 +101,9 @@ def _bl(scale: float) -> dict:
 
 
 _M2 = {"rod_release_force": True}
-_VB = {**_M2, "lock_closure": _lc(), "lock_window_follows_plant": True}
+_VB_PLANT = {**_M2, "lock_closure": _lc(), "lock_window_follows_plant": True}
+_P3 = {"extend_start_tracked": True}
+"""Criteria revision 8 3.1: the VB / LS controller ``final_C4G2_P3`` (③ start bound on)."""
 SETTINGS: dict[str, tuple[bool, dict]] = {
     "V0": (False, {}),
     "V1": (False, _M2),
@@ -106,18 +111,21 @@ SETTINGS: dict[str, tuple[bool, dict]] = {
     "V3": (True, _M2),
     "L1": (False, {"lock_closure": _lc()}),
     "L2": (False, {"lock_closure": _lc(), "lock_window_follows_plant": True}),
-    "VB": (True, _VB),
+    "VB": (True, {**_VB_PLANT, **_P3}),
     "V4": (True, {**_M2, "check_delay": _vn(1.0)}),
     "V5": (True, {**_M2, "check_delay": _bl(1.0)}),
     "V6": (True, {**_M2, "check_delay": _vn(0.5)}),
     "V7": (True, {**_M2, "check_delay": _bl(0.5)}),
-    "V8": (True, {**_VB, "check_delay": _vn(1.0)}),
-    "LS1": (True, {**_VB, "lock_closure": _lc(0.01, 0.05)}),
-    "LS2": (True, {**_VB, "lock_closure": _lc(0.05, 0.05)}),
-    "LS3": (True, {**_VB, "lock_closure": _lc(0.02, 0.02)}),
-    "LS4": (True, {**_VB, "lock_closure": _lc(0.02, 0.10)}),
+    "V8": (True, {**_VB_PLANT, "check_delay": _vn(1.0)}),
+    "LS1": (True, {**_VB_PLANT, "lock_closure": _lc(0.01, 0.05), **_P3}),
+    "LS2": (True, {**_VB_PLANT, "lock_closure": _lc(0.05, 0.05), **_P3}),
+    "LS3": (True, {**_VB_PLANT, "lock_closure": _lc(0.02, 0.02), **_P3}),
+    "LS4": (True, {**_VB_PLANT, "lock_closure": _lc(0.02, 0.10), **_P3}),
 }
-"""Spec 3.3: (flow limit at eta_v 0.85, plant options as ``HydraulicOptions.to_dict`` keys)."""
+"""Spec 3.3: (flow limit at eta_v 0.85, plant options as ``HydraulicOptions.to_dict`` keys).
+Criteria revision 8: VB and LS1 .. LS4 run the controller with the ③ start bound
+(``extend_start_tracked``); V0 .. V3, L1, L2 keep ``final_C4G2``; V4 .. V8 carry M1c, which
+refuses the bound, so they keep it off."""
 
 
 def _phase_jobs(case: str, *, two: bool = False) -> list[dict]:
@@ -173,7 +181,35 @@ def batch_jobs(name: str) -> list[dict]:
     if name == "pressure_only":
         return [{**row, "contact": PRESSURE_ONLY_JUDGE, "setting": s}
                 for s in PRESSURE_ONLY_SETTINGS for row in pressure_only_rows()]
+    if name == P3_HASH_BATCH:
+        return [job for _, job in p3_hash_jobs()]
     raise ValueError(f"unknown batch {name!r}")
+
+
+P3_HASH_BATCH = "p3_hash"
+P3_HASH_SOURCE = OUT_DIR / "main.jsonl"
+P3_HASH_CASES = 22
+"""Criteria revision 8 7.2: per case the first VB line of ``main.jsonl`` (r5, ③ off), rerun
+with the VB definition of revision 8 (③ on); ``p3_hash_check.py`` compares the two."""
+
+
+def p3_hash_jobs(source: Path = P3_HASH_SOURCE) -> list[tuple[int, dict]]:
+    """(1-based line number, job) of the first VB line per case of ``source``.
+
+    Raises:
+        RuntimeError: Not :data:`P3_HASH_CASES` cases.
+    """
+    jobs: dict[str, tuple[int, dict]] = {}
+    for number, line in enumerate(source.read_text(encoding="utf-8").splitlines(), 1):
+        record = json.loads(line)
+        job = record["job"]
+        if "error" in record or job["setting"] != "VB" or job["case"] in jobs:
+            continue
+        jobs[job["case"]] = (number, {k: v for k, v in job.items()
+                                      if k not in RUNTIME_JOB_KEYS})
+    if len(jobs) != P3_HASH_CASES:
+        raise RuntimeError(f"{source.name}: {len(jobs)} VB cases, {P3_HASH_CASES} expected")
+    return list(jobs.values())
 
 
 RUNTIME_JOB_KEYS = ("mask", "t4h_dir")
@@ -206,9 +242,14 @@ def _t4h_request(job: dict, flow, options) -> dict | None:
     """The T4h path and meta of a VB / LS job of a batch run (None otherwise)."""
     if job.get("t4h_dir") is None or job["setting"] not in T4H_SETTINGS:
         return None
+    from outrigger_sim.hydraulics.v5_options import controller_tag
+
     meta = {"job": {k: v for k, v in job.items() if k not in RUNTIME_JOB_KEYS},
             "flow_setting": flow.to_dict(),
             "hydraulic_options": None if options is None else options.to_dict()}
+    tag = controller_tag(options)
+    if tag is not None:  # criteria revision 8 (key only with ③ on)
+        meta["controller_tag"] = tag
     return {"path": Path(job["t4h_dir"]) / t4h_file_name(job), "meta": meta}
 
 
@@ -330,11 +371,29 @@ def run_one(job: dict) -> dict:
                 "hydraulics_record": result.get("hydraulics_record"),
                 "review_record": result.get("review_record"),
                 **{key: result[key] for key in ("overlap_found", "soil_stop_crawler",
-                                                "lock_window_alignment") if key in result},
+                                                "lock_window_alignment", "controller_tag")
+                   if key in result},
                 **({} if t4h is None else {"t4h_file": t4h["path"].name})}
     except Exception as exc:  # the batch goes on; the line records the failure
         return {"job": job, "error": repr(exc), "tb": traceback.format_exc()[-3000:],
                 "wall_s": round(time.perf_counter() - t_start, 1)}
+
+
+def _check_stored_definition(path: Path, record: dict) -> None:
+    """A finished line counts as done only with the options its setting has now.
+
+    Raises:
+        RuntimeError: The stored options differ (criteria revision 8: VB / LS lines written
+            before the ③ start bound joined their definition). Archive the file first; the
+            stored lines stay valid as ``final_C4G2_P3`` results once the 7.2 hash check
+            (``p3_hash_check.py``) passed.
+    """
+    _, options = options_of(record["job"]["setting"])
+    current = None if options is None else options.to_dict()
+    if record.get("hydraulic_options") != current:
+        raise RuntimeError(f"{path.name}: {record['job']} was run with other options "
+                           f"({record.get('hydraulic_options')} != {current}); archive the "
+                           "file before running this definition")
 
 
 def _done_keys(path: Path) -> set[str]:
@@ -356,6 +415,7 @@ def _done_keys(path: Path) -> set[str]:
             raise RuntimeError(f"{path.name}: M2 law {stored_law!r} is not {FLOW_LIMITED_LAW!r}; "
                                "archive the file before running this law")
         if "error" not in record:
+            _check_stored_definition(path, record)
             done.add(job_key(record["job"]))
     return done
 

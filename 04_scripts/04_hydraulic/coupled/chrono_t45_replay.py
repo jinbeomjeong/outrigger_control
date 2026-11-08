@@ -118,13 +118,16 @@ def align_truth(t_pads: np.ndarray, t_s: np.ndarray) -> tuple[np.ndarray, np.nda
 
 
 def run_config(result: dict, extend_start: str | None = None):
-    """The run's controller setting: R8 preset, valve lag of the plant, lock window of the
-    stored v5 options (read only, ``HydraulicOptions.from_stored``), L2b ratio source."""
+    """The run's controller setting: R8 preset, valve lag of the plant, controller options of
+    the stored v5 options (read only, ``HydraulicOptions.from_stored``: lock window and, for a
+    criteria revision 8 VB / LS run, the ③ start bound; a ③-on run without the option key
+    takes the stored monitor rule), L2b ratio source. ``extend_start`` overrides the rule."""
     from outrigger_sim.chrono.fallback_ratio import with_engine_fallback_ratio
     from outrigger_sim.control.c2 import C2Config
     from outrigger_sim.hydraulics.v5_options import (
+        EXTEND_START_TRACKED_RULE,
         HydraulicOptions,
-        apply_lock_window,
+        apply_controller_options,
         check_extend_start,
     )
     from outrigger_sim.params import load_params
@@ -140,8 +143,12 @@ def run_config(result: dict, extend_start: str | None = None):
     stored = v5.get("hydraulic_options")
     options = None if stored is None else HydraulicOptions.from_stored(stored)
     if options is not None:
-        config = apply_lock_window(config, options, load_params().actuator.max_speed_m_s,
-                                   valve_tau_s)
+        config = apply_controller_options(config, options,
+                                          load_params().actuator.max_speed_m_s, valve_tau_s)
+    stored_rule = (((result.get("controller_meta") or {}).get("two_pressure") or {})
+                   .get("settings") or {}).get("extend_start_rule")
+    if extend_start is None and stored_rule == EXTEND_START_TRACKED_RULE:
+        extend_start = stored_rule
     if extend_start is not None:
         check_extend_start(options, extend_start)
         config = replace(config, two_pressure=replace(config.two_pressure,
@@ -814,6 +821,9 @@ def replay_case(case_dir: Path, *, with_t5: bool = False,
     row = {"case": Path(case_dir).name, "settings_equal": not differences,
            "setting_differences": differences, "setting_notes": notes,
            "extend_start_rule": extend_start,
+           # key only for a run with a ③ rule (the rows of ③-off runs stay as they were)
+           **({} if "extend_start_rule" not in stored_settings
+              else {"run_extend_start_rule": stored_rule}),
            "extend_start_revision": (replay_settings.get("extend_start_bound") or {}).get(
                "revision")}
     if differences:
@@ -870,11 +880,19 @@ def summary(rows: list[dict]) -> dict:
             "extend_bound_margin_used_reads": sum(
                 sum(row["extend_bound_check"]["margin_used_reads"]) for row in judged
                 if row.get("extend_bound_check")),
-            # locked legs: judged by T4h-P3 (T4 here); the online ④ check is a FLAG (6.3)
+            # locked legs: judged by T4 (③-on setting); the online ④ check is a FLAG (6.3)
             "extend_bound_locked_over_tol_reads": sum(
                 sum(row["extend_bound_check"].get("locked_breach_over_tol_reads", []))
                 for row in judged if row.get("extend_bound_check")),
             "anchor_note": "앵커 위험 미관측" if risk == 0 else "앵커 위험 관측"}
+
+
+def j_p3_of(rows: list[dict]) -> dict:
+    """Criteria revision 8 3.2: J-P3 over the rows that ran with the ③ bound (rev7 reports)."""
+    from outrigger_sim.control.extend_start_bound import j_p3_judgement
+
+    return j_p3_judgement([row.get("extend_bound_check") for row in rows
+                           if row.get("run_extend_start_rule") == "tracked_bound"])
 
 
 def rev7_summary(rows: list[dict]) -> dict:
@@ -911,7 +929,9 @@ def rev7_summary(rows: list[dict]) -> dict:
 
 def report_of(rows: list[dict], criteria: str, extend_start: str | None) -> dict:
     """The output document; the rev. 6 document is the tool's original one."""
-    record = "T4" if extend_start is None else "T4-P3"
+    # criteria revision 8 2 #3 / #4: the run's own (or a tracked_bound) setting is T4, the
+    # ③-off override is the record T4-const
+    record = "T4-const" if extend_start == "constant" else "T4"
     if criteria == CRITERIA_REV6:
         return {"rule": "criteria rev. 6 4 (T4-0, T4, T5) and 5 / 7 records",
                 "record": record, "summary": summary(rows), "rows": rows}
@@ -919,7 +939,7 @@ def report_of(rows: list[dict], criteria: str, extend_start: str | None) -> dict
                      "and 5 / 7 records"),
             "criteria": CRITERIA_REV7, "record": record,
             "summary": {**summary(rows), "criteria": CRITERIA_REV7,
-                        "rev7": rev7_summary(rows)},
+                        "rev7": rev7_summary(rows), "J-P3": j_p3_of(rows)},
             "rows": rows}
 
 
@@ -930,7 +950,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("cases", nargs="+", help="case folders or batch folders")
     parser.add_argument("--t5", action="store_true")
     parser.add_argument("--extend-start", choices=("constant", "tracked_bound"), default=None,
-                        help="override the ③ start rule (record T4-P3, criteria rev. 6 4.7)")
+                        help="override the ③ start rule (constant: record T4-const)")
     parser.add_argument("--criteria", choices=(CRITERIA_REV6, CRITERIA_REV7),
                         default=DEFAULT_CRITERIA,
                         help=("T4 / T5 judgement revision (default rev7: E exclusion, guard, "

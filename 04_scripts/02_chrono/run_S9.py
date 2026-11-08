@@ -1502,11 +1502,18 @@ _SPEC_429_11_EXPECTATIONS: tuple[tuple[str, Any], ...] = (
     ("diff_sink.enable", True),
     ("lift_stroke_guard.soil_stop", True), ("lift_stroke_guard.soil_stop_scope", "any_loc"),
     ("slope_clearance_margin.flat_soil_margin_m", 0.03))
+FINAL_P3_CONTROLLER = "final_C4G2_P3"
+"""v5 VB / LS controller (criteria revision 8 3.1, user decision 2026-11-08): :data:`FINAL_CONTROLLER` + the ③ start
+bound (``two_pressure.extend_start_rule`` ``tracked_bound``, revision 4), switched on by ``--extend-start-tracked``
+(``v5_options.EXTEND_START_CONTROLLER_TAG``)."""
+_FINAL_EXPECTATIONS: tuple[tuple[str, Any], ...] = (
+    *_SPEC_429_11_EXPECTATIONS, ("clip_returned_command", True),
+    ("touch_twist_hold.enable", True), ("touch_twist_hold.vector_ramp", True),
+    ("r8.lifted_reapproach.retrigger_samples", 1))
 CONTROLLER_EXPECTATIONS: dict[str, tuple[tuple[str, Any], ...]] = {
-    FINAL_CONTROLLER: (*_SPEC_429_11_EXPECTATIONS,
-                       ("clip_returned_command", True),
-                       ("touch_twist_hold.enable", True), ("touch_twist_hold.vector_ramp", True),
-                       ("r8.lifted_reapproach.retrigger_samples", 1)),
+    FINAL_CONTROLLER: _FINAL_EXPECTATIONS,
+    FINAL_P3_CONTROLLER: (*_FINAL_EXPECTATIONS, ("two_pressure.extend_start_rule", "tracked_bound"),
+                          ("two_pressure.extend_start_bound.revision", 4)),
     BEFORE_C4G2_CONTROLLER: _SPEC_429_11_EXPECTATIONS,
 }
 """``level --expect-controller``: (dotted C2Config attribute, required value) per controller tag. The paths are C2Config
@@ -1515,6 +1522,7 @@ soil_stop``, ``slope_clearance_margin.settings.flat_soil_margin_m``). The rows d
 they run the run-time preset ``C2Config().with_10hz_d1()`` and this check refuses a preset without the final rules."""
 CONTROLLER_ABSENT_OR_OFF: dict[str, tuple[str, ...]] = {
     FINAL_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
+    FINAL_P3_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
     BEFORE_C4G2_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "touch_twist_hold"),
 }
 """C2Config blocks a controller tag must not have on (spec 429.11: P37t / ZIC rejected): the block is absent, or its
@@ -5570,14 +5578,6 @@ def run_level(args) -> Path:
 
     config, c2_meta["fallback_ratio"] = with_engine_fallback_ratio(config, "SCM")
     imu_cfg, leg_cfg, config, sensor_meta = level_sensor_setup(args.pressure_grade, args.imu_grade, config)
-    # RV6 / FINAL (spec 430.5 / 431.3): the run-time preset must be the named controller (fails before the model build)
-    expect = getattr(args, "expect_controller", None)
-    if expect is not None:
-        c2_meta["expect_controller"] = controller_expectation(config, expect)
-        if not c2_meta["expect_controller"]["ok"]:
-            bad = [f"{r['path']}={r['got']!r} (want {r['want']!r})" for r in c2_meta["expect_controller"]["checks"]
-                   if not r["ok"]]
-            raise SystemExit(f"--expect-controller {expect}: the run-time C2 preset differs: {'; '.join(bad)}")
     from outrigger_sim.chrono.scm_engine import S9Engine
     from outrigger_sim.params import load_params
     from outrigger_sim.record import make_run_meta, save_record
@@ -5589,11 +5589,20 @@ def run_level(args) -> Path:
     params_ctrl = load_params(level=args.level)
     # v5 hydraulic options (spec v5 2.0); all absent = no attribute, nothing of them runs
     v5_options = v5_hydraulic_options(args, params)
-    if v5_options is not None:
-        from outrigger_sim.hydraulics.v5_options import apply_lock_window
+    if v5_options is not None:  # lock window and, for the revision 8 VB / LS rows, the ③ bound
+        from outrigger_sim.hydraulics.v5_options import apply_controller_options
 
-        config = apply_lock_window(config, v5_options, params.actuator.max_speed_m_s,
-                                   v5_options.valve_tau_s)
+        config = apply_controller_options(config, v5_options, params.actuator.max_speed_m_s,
+                                          v5_options.valve_tau_s)
+    # RV6 / FINAL (spec 430.5 / 431.3): the run-time controller must be the named one (fails before the model build;
+    # after the v5 controller options, so that final_C4G2_P3 sees the ③ bound)
+    expect = getattr(args, "expect_controller", None)
+    if expect is not None:
+        c2_meta["expect_controller"] = controller_expectation(config, expect)
+        if not c2_meta["expect_controller"]["ok"]:
+            bad = [f"{r['path']}={r['got']!r} (want {r['want']!r})" for r in c2_meta["expect_controller"]["checks"]
+                   if not r["ok"]]
+            raise SystemExit(f"--expect-controller {expect}: the run-time C2 preset differs: {'; '.join(bad)}")
     from outrigger_sim.chrono.scm_model import gravity_ramp_factor
 
     tb = time.perf_counter()
@@ -5601,8 +5610,11 @@ def run_level(args) -> Path:
     v5_meta = None
     if v5_options is not None:  # right after the build, before the settle and the flow limit
         from outrigger_sim.chrono.v5_plant import apply_plant_options
+        from outrigger_sim.hydraulics.v5_options import controller_tag
 
         v5_meta = apply_plant_options(model.actuator, v5_options, params)
+        if controller_tag(v5_options) is not None:  # criteria rev. 8 3.1 (key only with ③ on)
+            v5_meta["controller_tag"] = controller_tag(v5_options)
     if model.actuator.friction_path != (args.fs_kN > 0.0):
         raise RuntimeError(f"--fs-kN {args.fs_kN:g}: the plant friction path is {model.actuator.friction_path} "
                            "(seal friction override not applied)")

@@ -1394,11 +1394,11 @@ def _controller(case: S8Case, params_ctrl, params_plant, variant: str | None = N
                                f"{getattr(l2b, 'lock_valve', None)!r} / no actuator.counterbalance")
         config = config.with_lock_valve("counterbalance", l2b.counterbalance)
     config = with_lock_window_tau(config, case.base.tau_v_s)
-    if hydraulics is not None:  # v5 spec 2.6: the window of the plant LC rule (or unchanged)
-        from outrigger_sim.hydraulics.v5_options import apply_lock_window
+    if hydraulics is not None:  # v5 spec 2.6 window of the plant LC rule, criteria rev. 8 ③ bound
+        from outrigger_sim.hydraulics.v5_options import apply_controller_options
 
-        config = apply_lock_window(config, hydraulics, params_plant.actuator.max_speed_m_s,
-                                   case.base.tau_v_s)
+        config = apply_controller_options(config, hydraulics, params_plant.actuator.max_speed_m_s,
+                                          case.base.tau_v_s)
     config = with_reapproach_variant(config, variant)
     if soil_off_replay:
         config = with_soil_off_replay(config)
@@ -1486,11 +1486,13 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
     if hydraulics is not None:
         from outrigger_sim.chrono.v5_plant import apply_plant_options
         from outrigger_sim.control.c2 import R8_PERIOD_S
-        from outrigger_sim.hydraulics.v5_options import HydraulicOptions, validate
+        from outrigger_sim.hydraulics.v5_options import HydraulicOptions, controller_tag, validate
 
         v5_options = HydraulicOptions.from_dict(hydraulics)
         validate(v5_options, period_s=R8_PERIOD_S, engine="L2b", lock_valve=case.lock_valve)
         v5_meta = apply_plant_options(model.actuator, v5_options, params)
+        if controller_tag(v5_options) is not None:  # criteria rev. 8 3.1 (key only with ③ on)
+            v5_meta["controller_tag"] = controller_tag(v5_options)
     flow = None
     if flow_limit is not None:
         from outrigger_sim.hydraulics.flow_limit_run import FlowLimitSetting, RecordedFlowLimiter

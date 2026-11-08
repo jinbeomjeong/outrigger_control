@@ -996,8 +996,12 @@ def write_t4h(folder: Path, key: str, options, ctrl, plant) -> str:
     is_pressure_judge = ctrl.config.contact.name == "PRESSURE"
     lower_reading_N = (lower_estimate_N if is_pressure_judge
                        else lower_estimate_N + period["seal_band_N"])
+    from outrigger_sim.hydraulics.v5_options import controller_tag
+
     name = t4h_file_name(key)
+    tag = controller_tag(options)
     meta = {"job": {"key": key, "setting": os.environ.get(V5_SETTING_ENV), "contact": None},
+            **({} if tag is None else {"controller_tag": tag}),  # criteria revision 8
             "hydraulic_options": None if options is None else options.to_dict(),
             "commands_sha256": verdict_runs._command_digest(period["command"]),
             "fallback_start_s": fallback_start_s(ctrl.events),

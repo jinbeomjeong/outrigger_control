@@ -21,7 +21,10 @@ largest difference to the run's own lower reading (``lower_reading_N``, r79 Dg-3
 
 Usage (dynamics-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/t4h_replay.py <out_json> <npz or folder> [...]
-      [--extend-start tracked_bound]   (③ start rule override, record T4h-P3)
+      [--extend-start tracked_bound|constant]   (③ start rule override)
+``record`` (criteria revision 8 2 #3): ``T4h`` = the run's own monitor setting, rebuilt from its
+meta (③ on for the revision 8 VB / LS records, the judged value) or the ``tracked_bound``
+override; ``T4h-const`` = the ``constant`` override (③ off replay, a record).
       [--check-recorded]               (own-event replay against lower_reading_N)
 ``aggregate_v5`` reads ``<batch>/t4h/t4h_replay.json`` (write the output there for its table).
 """
@@ -77,8 +80,9 @@ def load_record(path: Path) -> tuple[dict, dict]:
 
 
 def run_config(meta: dict, extend_start: str | None = None):
-    """C2Config of the run: harness preset + the lock window of its options; ``extend_start``
-    overrides the ③ start rule (``p3_extend_start_spec.md`` 4 #8, ``T4h-P3``).
+    """C2Config of the run: harness preset + the controller options of its options (lock
+    window, ③ start bound) or, for a ③-on record without the option key, the stored monitor
+    rule; ``extend_start`` overrides the ③ start rule (``p3_extend_start_spec.md`` 4 #8).
 
     Raises:
         ValueError: ``tracked_bound`` on a run with M1c (review 2026-11-07, 2c).
@@ -88,8 +92,9 @@ def run_config(meta: dict, extend_start: str | None = None):
 
     from outrigger_sim.control import c2
     from outrigger_sim.hydraulics.v5_options import (
+        EXTEND_START_TRACKED_RULE,
         HydraulicOptions,
-        apply_lock_window,
+        apply_controller_options,
         check_extend_start,
     )
 
@@ -97,10 +102,14 @@ def run_config(meta: dict, extend_start: str | None = None):
     contact = (meta.get("job") or {}).get("contact") or "COMBINED"
     config = closed_loop.preset_config(c2.ContactJudge[contact], with_imu_samples=True,
                                        with_reapproach=True)
-    # read only: records of earlier M2 laws keep their lock window (the replay reruns no plant)
+    # read only: records of earlier M2 laws keep their lock window (the replay reruns no plant);
+    # a record of the revision 8 VB / LS definition brings its ③ start bound
     options = HydraulicOptions.from_stored(meta["hydraulic_options"])
-    if options.lock_window_follows_plant:
-        config = apply_lock_window(config, options, load_params().v_max, HARNESS_VALVE_TAU_S)
+    config = apply_controller_options(config, options, load_params().v_max, HARNESS_VALVE_TAU_S)
+    stored_rule = (meta.get("two_pressure_settings") or {}).get("extend_start_rule")
+    if extend_start is None and stored_rule == EXTEND_START_TRACKED_RULE:
+        # a ③-on run whose options predate the option key (Dg-3 v4): the stored monitor rule
+        extend_start = stored_rule
     if extend_start is not None:
         check_extend_start(options, extend_start)
         config = replace(config, two_pressure=replace(config.two_pressure,
@@ -262,7 +271,10 @@ def replay_values(path: Path, extend_start: str | None = None,
             "settings_equal": True, "commands_sha256": meta.get("commands_sha256"),
             "extend_start_revision": (rebuilt.get("extend_start_bound") or {}).get("revision"),
             "tension_truth": meta.get("tension_truth"),
-            "extend_bound_check": meta.get("extend_bound_check")}
+            "extend_bound_check": meta.get("extend_bound_check"),
+            **({} if "extend_start_rule" not in stored
+               else {"run_extend_start_rule": stored["extend_start_rule"],
+                     "has_rod_reading": bool(np.isfinite(arrays["rod_pressure_Pa"]).any())})}
 
 
 def _by_leg(counts) -> dict[str, int]:
@@ -280,6 +292,11 @@ def record_files(paths: list[str]) -> list[Path]:
     return files
 
 
+def record_name(extend_start: str | None) -> str:
+    """Criteria revision 8 2 #3: ``T4h-const`` for the ③-off override, else ``T4h``."""
+    return "T4h-const" if extend_start == "constant" else "T4h"
+
+
 def _override_revision(extend_start: str | None) -> int | None:
     """Bound revision of a ``tracked_bound`` override (None otherwise)."""
     from outrigger_sim.control.extend_start_bound import EXTEND_START_REVISION
@@ -292,7 +309,7 @@ def _parse_arguments() -> argparse.Namespace:
     parser.add_argument("out_json")
     parser.add_argument("records", nargs="+", help="npz files or folders")
     parser.add_argument("--extend-start", choices=EXTEND_START_CHOICES, default=None,
-                        help="override the ③ start rule (record T4h-P3; spec p3 4 #8)")
+                        help="override the ③ start rule (constant: record T4h-const)")
     parser.add_argument("--check-recorded", action="store_true",
                         help="also replay with the run's own events against lower_reading_N")
     return parser.parse_args()
@@ -302,25 +319,32 @@ def main() -> int:
     if len(sys.argv) < 3:
         print(__doc__)
         return 2
+    from outrigger_sim.control.extend_start_bound import j_p3_judgement
+
     args = _parse_arguments()
     rows = [replay_values(path, args.extend_start, args.check_recorded)
             for path in record_files(args.records)]
+    p3_rows = [row for row in rows if row.get("run_extend_start_rule") == "tracked_bound"]
     report = {"rule": "criteria 9 T4h: zero acting command samples of a locked plant leg, "
                       "lower - true_force_N > 0.6 kN count (0 = provisional pass); fallback "
                       "forced on all legs; unlocked tail samples recorded only",
-              "record": "T4h" if args.extend_start is None else "T4h-P3",
+              "record": record_name(args.extend_start),
               "extend_start_rule": args.extend_start,
               "extend_start_revision": _override_revision(args.extend_start),
               "runs": len(rows), "runs_over": sum(not row["provisional_pass"] for row in rows),
               "offset_allowance_runs": sum(any(value != 0.0 for value in
                                                row["offset_allowance_N"]) for row in rows),
+              "J-P3": j_p3_judgement(
+                  [row["extend_bound_check"] for row in p3_rows],
+                  [row["has_rod_reading"] for row in p3_rows]),
               "rows": rows}
     if args.check_recorded:
         differences = [row["recorded_lower_max_abs_N"] for row in rows
                        if row["recorded_lower_max_abs_N"] is not None]
         report["recorded_lower_max_abs_N"] = max(differences) if differences else None
     Path(args.out_json).write_text(json.dumps(report, indent=1), encoding="utf-8")
-    print(json.dumps({k: report[k] for k in ("runs", "runs_over")}))
+    print(json.dumps({"runs": report["runs"], "runs_over": report["runs_over"],
+                      "J-P3": report["J-P3"]["status"]}))
     return 0
 
 

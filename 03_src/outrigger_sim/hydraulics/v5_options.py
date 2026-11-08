@@ -6,20 +6,26 @@ are ASSUMPTIONS (spec 2.4, 2.5); U-R8-9 and the manufacturer answers replace the
 
 Combinations refused here:
   * rod-side lock window of the controller without the plant lock rule (spec 2.6, ``SystemExit``);
-  * circuit BL with the lock closure (decision D-6, ``ValueError``).
+  * circuit BL with the lock closure (decision D-6, ``ValueError``);
+  * the controller's ③ start bound with M1c (review 2026-11-07, ``ValueError``).
 """
 
 from __future__ import annotations
 
 import argparse
 import math
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from enum import StrEnum
 from typing import Any
 
 from .flow_limit_run import FlowLimitSetting, flow_setting_from_args
 from .rod_release import FLOW_LIMITED_LAW, STORED_LAWS
 
+EXTEND_START_TRACKED_RULE = "tracked_bound"
+"""``TwoPressureSettings.extend_start_rule`` of the ③ start bound."""
+EXTEND_START_CONTROLLER_TAG = "final_C4G2_P3"
+"""Controller tag of a run with ``extend_start_tracked`` (criteria revision 8 3.1: ``final_C4G2``
+plus the ③ start bound, revision 4)."""
 LOCK_SPEED_EPS_M_S = 1.0e-6
 """``|u_c| <=`` this = a zero command; same value as YAML ``actuator.rod_side.lock_eps_m_s``."""
 DEFAULT_VOLUME_SCALE = 1.0
@@ -104,6 +110,10 @@ class HydraulicOptions:
         check_delay: M1c (spec 2.4).
         lock_closure: LC (spec 2.5).
         lock_window_follows_plant: The controller lock window takes the plant lock rule (spec 2.6).
+        extend_start_tracked: The controller's ③ start bound after an extension
+            (``TwoPressureSettings.extend_start_rule = "tracked_bound"``, revision 4); the v5
+            VB and LS1 .. LS4 definition since criteria revision 8 (controller tag
+            :data:`EXTEND_START_CONTROLLER_TAG`). Refused with M1c (:func:`check_extend_start`).
     """
 
     flow: FlowLimitSetting | None = None
@@ -112,11 +122,14 @@ class HydraulicOptions:
     check_delay: CheckDelaySetting | None = None
     lock_closure: LockClosureSetting | None = None
     lock_window_follows_plant: bool = False
+    extend_start_tracked: bool = False
 
     def __post_init__(self) -> None:
         if self.lock_window_follows_plant and self.lock_closure is None:
             raise SystemExit("the controller lock window needs the plant lock rule "
                              "(spec 2.6: controller alone is refused)")
+        if self.extend_start_tracked:
+            check_extend_start(self, EXTEND_START_TRACKED_RULE)
 
     @property
     def is_any_on(self) -> bool:
@@ -125,8 +138,11 @@ class HydraulicOptions:
     def to_dict(self) -> dict[str, Any]:
         """The fields, plus ``m2_law`` with M2 on: the definition digests and metas of M2 runs
         change with the M2 law (revision 5, ``flow_limited_r5``); the M2-off dict stays as it
-        was."""
+        was. ``extend_start_tracked`` appears only when on, so the dicts (and digests) of the
+        runs without the ③ bound stay as they were (criteria revision 8)."""
         values = asdict(self)
+        if not self.extend_start_tracked:
+            del values["extend_start_tracked"]
         if self.rod_release_force:
             values["m2_law"] = FLOW_LIMITED_LAW
         return values
@@ -171,12 +187,12 @@ class HydraulicOptions:
             rod_release_force=bool(values.get("rod_release_force", False)),
             check_delay=None if check_delay is None else CheckDelaySetting.from_dict(check_delay),
             lock_closure=None if lock_closure is None else LockClosureSetting(**lock_closure),
-            lock_window_follows_plant=bool(values.get("lock_window_follows_plant", False)))
+            lock_window_follows_plant=bool(values.get("lock_window_follows_plant", False)),
+            extend_start_tracked=bool(values.get("extend_start_tracked", False)))
 
     def without_flow(self) -> HydraulicOptions:
         """The plant options alone (the runners keep the flow limit on their own path)."""
-        return HydraulicOptions(None, self.valve_tau_s, self.rod_release_force, self.check_delay,
-                                self.lock_closure, self.lock_window_follows_plant)
+        return replace(self, flow=None)
 
 
 def add_hydraulic_arguments(parser: argparse.ArgumentParser, *, with_valve_tau: bool) -> None:
@@ -213,6 +229,10 @@ def add_hydraulic_arguments(parser: argparse.ArgumentParser, *, with_valve_tau: 
     group.add_argument("--lock-window-follows-plant", dest="lock_window_follows_plant",
                        action="store_true", default=argparse.SUPPRESS,
                        help="the controller lock window takes the LC rule (spec 2.6, needs LC)")
+    group.add_argument("--extend-start-tracked", dest="extend_start_tracked",
+                       action="store_true", default=argparse.SUPPRESS,
+                       help="controller ③ start bound, revision 4 (v5 VB / LS definition, "
+                            "criteria revision 8; refused with M1c)")
 
 
 def _check_delay_from_args(args: argparse.Namespace) -> CheckDelaySetting | None:
@@ -249,7 +269,8 @@ def hydraulic_options_from_args(args: argparse.Namespace) -> HydraulicOptions:
         rod_release_force=hasattr(args, "rod_release_force"),
         check_delay=_check_delay_from_args(args),
         lock_closure=_lock_closure_from_args(args),
-        lock_window_follows_plant=hasattr(args, "lock_window_follows_plant"))
+        lock_window_follows_plant=hasattr(args, "lock_window_follows_plant"),
+        extend_start_tracked=hasattr(args, "extend_start_tracked"))
 
 
 def validate(options: HydraulicOptions, *, period_s: float, engine: str = "harness",
@@ -315,6 +336,29 @@ def apply_lock_window(config: Any, options: HydraulicOptions, v_max_m_s: float,
     closure = options.lock_closure
     return config.with_lock_closure(closure.overlap_speed_m_s(v_max_m_s),
                                     closure.closing_delay_s, valve_tau_s)
+
+
+def apply_controller_options(config: Any, options: HydraulicOptions, v_max_m_s: float,
+                             valve_tau_s: float) -> Any:
+    """The C2 configuration with every controller-side v5 option: the lock window
+    (:func:`apply_lock_window`) and the ③ start bound (``extend_start_tracked``).
+
+    Returns:
+        ``config`` itself when both are off (bit-identical path), else a copy.
+    """
+    config = apply_lock_window(config, options, v_max_m_s, valve_tau_s)
+    if not options.extend_start_tracked:
+        return config
+    two_pressure = replace(config.two_pressure, extend_start_rule=EXTEND_START_TRACKED_RULE)
+    return replace(config, two_pressure=two_pressure)
+
+
+def controller_tag(options: HydraulicOptions | None) -> str | None:
+    """:data:`EXTEND_START_CONTROLLER_TAG` for a run with the ③ start bound, else None (the
+    run keeps the tag of its runner, ``final_C4G2``)."""
+    if options is None or not options.extend_start_tracked:
+        return None
+    return EXTEND_START_CONTROLLER_TAG
 
 
 def check_lock_window_meta(two_pressure_meta: dict[str, Any], options: HydraulicOptions,

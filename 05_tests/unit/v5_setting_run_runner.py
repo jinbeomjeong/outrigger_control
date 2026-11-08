@@ -58,7 +58,9 @@ def _t4h_meta(folder: Path, file_name: str | None) -> dict | None:
 
     with np.load(folder / file_name, allow_pickle=False) as data:
         meta = json.loads(str(data["meta_json"]))
+        has_rod_reading = bool(np.isfinite(data["rod_pressure_Pa"]).any())
     return {"extend_start_rule": meta["two_pressure_settings"].get("extend_start_rule"),
+            "has_rod_reading": has_rod_reading,
             **{key: meta.get(key) for key in T4H_META_KEYS}}
 
 

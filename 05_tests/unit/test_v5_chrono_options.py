@@ -21,7 +21,7 @@ V_MAX = 0.020924
 DT_S = 1.0e-4
 V5_KEYS = {"valve_tau_s", "rod_release_force", "check_delay", "check_delay_volume_scale",
            "check_delay_cv", "lock_overlap_ratio", "lock_closing_delay_s",
-           "lock_window_follows_plant"}
+           "lock_window_follows_plant", "extend_start_tracked"}
 
 
 def test_v1_valve_step_response_at_tau() -> None:
@@ -74,6 +74,10 @@ def test_options_survive_the_job_dictionary() -> None:
                                lock_window_follows_plant=True)
     assert HydraulicOptions.from_dict(options.to_dict()) == options
     assert options.without_flow() == options
+    vb = HydraulicOptions(valve_tau_s=0.1, rod_release_force=True,
+                          lock_closure=LockClosureSetting(0.02, 0.05),
+                          lock_window_follows_plant=True, extend_start_tracked=True)
+    assert HydraulicOptions.from_dict(vb.to_dict()) == vb and vb.without_flow() == vb
 
 
 def test_v5_vb_rows_carry_exactly_the_vb_arguments() -> None:
@@ -88,3 +92,29 @@ def test_v5_vb_rows_carry_exactly_the_vb_arguments() -> None:
         assert row["argv"][-len(s9_batch.v5_vb_argv()):] == s9_batch.v5_vb_argv()
         assert row["source_expected_diffs"] == s9_batch.V5_VB_ARGS
         assert np.sum([token.startswith("--flow-eta-v") for token in row["argv"]]) == 1
+        # criteria revision 8 3.1: VB = final_C4G2_P3 (③ argument, controller tag)
+        assert "--extend-start-tracked" in row["argv"]
+        assert row["argv"][row["argv"].index("--expect-controller") + 1] == "final_C4G2_P3"
+        assert row["controller"] == "final_C4G2_P3"
+
+
+def test_run_s9_extend_start_argument_sets_the_option_and_the_p3_tag(run_s9) -> None:
+    """Criteria revision 8 3.1: ``--extend-start-tracked`` is a v5 option; the tag
+    ``final_C4G2_P3`` = ``final_C4G2`` + the ③ rule, revision 4."""
+    from outrigger_sim.control.c2 import C2Config
+    from outrigger_sim.hydraulics.v5_options import (
+        EXTEND_START_CONTROLLER_TAG,
+        apply_controller_options,
+        hydraulic_options_from_args,
+    )
+
+    args = run_s9.build_parser().parse_args(
+        ["level", "--soil", "J1", "--case", "x", "--out-root", "x", "--extend-start-tracked"])
+    options = hydraulic_options_from_args(args)
+    assert options.extend_start_tracked
+    assert run_s9.FINAL_P3_CONTROLLER == EXTEND_START_CONTROLLER_TAG
+    preset = C2Config().with_10hz_d1()
+    tracked = apply_controller_options(preset, options, V_MAX, 0.1)
+    assert run_s9.controller_expectation(tracked, run_s9.FINAL_P3_CONTROLLER)["ok"]
+    assert not run_s9.controller_expectation(preset, run_s9.FINAL_P3_CONTROLLER)["ok"]
+    assert run_s9.controller_expectation(preset, run_s9.FINAL_CONTROLLER)["ok"]

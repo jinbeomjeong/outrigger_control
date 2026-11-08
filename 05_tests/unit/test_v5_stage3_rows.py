@@ -40,7 +40,10 @@ def test_rigid_rows_carry_their_setting_arguments(sb, all_batches) -> None:
     for name in (sb.V5_T45_BATCH, sb.V5_T45LS_BATCH, sb.V5_R12_BATCH, sb.V5_REC_BATCH):
         for row in all_batches[name]:
             argv = row["argv"]
-            assert row["s8c"] and row["controller"] == "final_C4G2"
+            # criteria revision 8 3.1: VB and LS run final_C4G2_P3, V0 final_C4G2
+            expected = "final_C4G2" if row["v5_setting"] == "V0" else "final_C4G2_P3"
+            assert row["s8c"] and row["controller"] == expected
+            assert ("--extend-start-tracked" in argv) == (row["v5_setting"] != "V0")
             assert argv[argv.index("--only") + 1] == row["s8c_case_id"]
             assert argv[argv.index("--tag") + 1] == f"v5s3_{row['v5_setting']}_{row['s8c_case_id']}"
             tail = argv[argv.index("--workers") + 2:]
@@ -65,8 +68,13 @@ def test_v0v_rows_add_only_the_valve(sb, all_batches) -> None:
     for row in all_batches[sb.V5_V0V_BATCH]:
         base = vb[row["case"][: -len("_v0v")]]
         stored = base["argv"][: len(base["argv"]) - len(sb.v5_vb_argv())]
+        # the VB row runs final_C4G2_P3; V0v keeps the stored controller (no ③ bound)
+        stored = sb.with_expected_controller(stored, base["p3_base_controller"])
         assert row["argv"] == stored + ["--valve-tau-s", "0.1"]
         assert row["source_expected_diffs"] == {"valve_tau_s": 0.1}
+        assert row["controller"] == base["p3_base_controller"] != "final_C4G2_P3"
+        assert "--extend-start-tracked" not in row["argv"]
+        assert base["argv"][base["argv"].index("--expect-controller") + 1] == "final_C4G2_P3"
 
 
 def test_rigid_source_check_finds_a_wrong_argument(sb, all_batches) -> None:

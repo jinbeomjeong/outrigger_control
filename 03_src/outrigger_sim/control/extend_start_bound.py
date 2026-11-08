@@ -37,9 +37,10 @@ Records kept by the plant adapters (harness ``harness_hydraulics``, L2b actuator
   ``locked_min_gap_t_s``, ``locked_bound_source``, ``locked_tolerance_bar`` and the
   diagnostic ``locked_vs_extend_bound_reads``; ``retract_reads``, ``retract_breach_reads``;
   ``null`` = option off or no rod reading. Rule of a ③-on run (:data:`EXTEND_BOUND_CHECK_RULE`):
-  moving ``sum(breach_reads) == 0`` passes and margin use is a FLAG; locked legs are judged
-  by the T4h-P3 replay (``over_0p6kN == 0``), ``locked_breach_over_tol_reads > 0`` is a
-  cross-check FLAG.
+  moving ``sum(breach_reads) == 0`` passes (J-P3, criteria revision 8 3.2) and margin use is a
+  FLAG; locked legs are judged by the VB T4h replay with the ③-on setting (``over_0p6kN ==
+  0``; ``T4h-P3`` before revision 8), ``locked_breach_over_tol_reads > 0`` is a cross-check
+  FLAG.
 * ``hydraulics_record.tension_truth`` (:class:`TensionTruthCounter`): premise ① diagnostic
   (``substeps``, ``substeps_over_margin``, ``active_substeps``, ``min_p_tr_minus_p_star_bar``).
 
@@ -486,11 +487,11 @@ def _substeps(seconds: NDArray[np.float64]) -> list[int]:
 EXTEND_BOUND_CHECK_RULE = (
     "③-on rows (tension_premise.md 5.4, 6.3), plant rod pressure p_tr at every controller "
     "read. ext_moving (judged): breach_reads = p_tr > p_hat + delta_m, the sum must be 0; "
-    "margin_used_reads = p_tr > p_hat is a FLAG. ext_locked: judged by the T4h-P3 replay "
-    "(t4h_replay --extend-start tracked_bound, over_0p6kN == 0); here a cross-check FLAG "
+    "margin_used_reads = p_tr > p_hat is a FLAG. ext_locked: judged by the VB T4h replay "
+    "(t4h_replay with the ③-on setting, over_0p6kN == 0); here a cross-check FLAG "
     "against the monitor's model bound ④ (before the reading bound ⑤): locked_breach_reads = "
     "p_tr > ④, locked_breach_over_tol_reads = p_tr > ④ + 0.6 kN / A_ann (the T4h tolerance; > 0 "
-    "is a FLAG, a T4h-P3 disagreement is a replay mismatch); locked_vs_extend_bound_reads = "
+    "is a FLAG, a VB T4h disagreement is a replay mismatch); locked_vs_extend_bound_reads = "
     "p_tr > p_hat + delta_m on locked legs, diagnostic only. 1 Pa rounding allowance; "
     "retracting legs apart (premise ④); null record = option off or no rod reading")
 
@@ -627,6 +628,57 @@ class ExtendBoundCheck:
                 "locked_vs_extend_bound_reads": self.locked_vs_extend_bound_reads.tolist(),
                 "retract_reads": self.retract_reads.tolist(),
                 "retract_breach_reads": self.retract_breach_reads.tolist()}
+
+
+J_P3_NAME = "extend_bound_check.ext_moving.breach_reads == 0"
+"""Judgement J-P3 of criteria revision 8 3.2."""
+
+
+def j_p3_judgement(records: list[dict[str, object] | None],
+                   has_rod_reading: list[bool] | None = None) -> dict[str, object]:
+    """J-P3 over the ③-on runs (criteria revision 8 3.2): the ext_moving ``breach_reads`` of
+    every run summed over its legs.
+
+    The monitor runs the ③ tracker only on reads with a rod-side pressure, so a run without
+    any rod reading (the head-only harness rows) has no record by construction; it is counted
+    as ``no_rod_reading_runs`` and not as a setting defect (the record docstring: "null record
+    = option off or no rod reading").
+
+    Args:
+        records: ``hydraulics_record.extend_bound_check`` of each ③-on run (None = missing).
+        has_rod_reading: Per run, whether it had a rod-side reading; None = all had one.
+
+    Returns:
+        ``status`` ``"pass"`` (all sums 0), ``"H-7"`` (a breach), ``"setting_defect"`` (a
+        run with rod readings but without the record: not judged, stop) or ``"no_p3_runs"``;
+        counts, ``margin_used_reads`` (FLAG) and ``locked_breach_over_tol_reads``
+        (cross-check FLAG).
+    """
+    rod = [True] * len(records) if has_rod_reading is None else list(has_rod_reading)
+    present = [record for record in records if record]
+    no_rod = sum(not record and not has_rod for record, has_rod in zip(records, rod,
+                                                                       strict=True))
+    missing = len(records) - len(present) - no_rod
+
+    def total(key: str) -> int:
+        return int(sum(sum(record.get(key) or []) for record in present))
+
+    breach_reads = total("breach_reads")
+    if not records:
+        status = "no_p3_runs"
+    elif missing:
+        status = "setting_defect"
+    elif breach_reads:
+        status = "H-7"
+    else:
+        status = "pass"
+    return {"name": J_P3_NAME, "status": status, "runs": len(records),
+            "missing_records": missing, "no_rod_reading_runs": no_rod,
+            "breach_reads": breach_reads,
+            "runs_with_breach": sum(bool(sum(record.get("breach_reads") or []))
+                                    for record in present),
+            "margin_used_reads_flag": total("margin_used_reads"),
+            "locked_breach_over_tol_reads_flag": total("locked_breach_over_tol_reads")}
 
 
 def _bar_or_none(values_Pa: NDArray[np.float64]) -> list[float | None]:

@@ -291,8 +291,11 @@ def coupled_flow_argv() -> list[str]:
 
 V5_VB_BATCH = "V5-VB"
 V5_VB_ARGS = {**COUPLED_FLOW_ARGS, "valve_tau_s": 0.1, "rod_release_force": True, "lock_overlap_ratio": 0.02,
-              "lock_closing_delay_s": 0.05, "lock_window_follows_plant": True}
-"""v5 spec 3.3 VB (all ASSUMPTION values; delta_ol 2 %, t_c 50 ms, tau_v 0.1 s, eta_v 0.85)."""
+              "lock_closing_delay_s": 0.05, "lock_window_follows_plant": True, "extend_start_tracked": True}
+"""v5 spec 3.3 VB (all ASSUMPTION values; delta_ol 2 %, t_c 50 ms, tau_v 0.1 s, eta_v 0.85) with the controller
+``final_C4G2_P3`` (③ start bound, criteria revision 8 3.1, user decision 2026-11-08)."""
+V5_P3_CONTROLLER = "final_C4G2_P3"
+"""Controller tag of the VB / LS rows (run_S9 ``FINAL_P3_CONTROLLER``, ``v5_options.EXTEND_START_CONTROLLER_TAG``)."""
 
 
 def v5_vb_argv() -> list[str]:
@@ -300,19 +303,32 @@ def v5_vb_argv() -> list[str]:
     return coupled_flow_argv() + ["--valve-tau-s", f"{a['valve_tau_s']:g}", "--rod-release-force",
                                   "--lock-overlap-ratio", f"{a['lock_overlap_ratio']:g}",
                                   "--lock-closing-delay-s", f"{a['lock_closing_delay_s']:g}",
-                                  "--lock-window-follows-plant"]
+                                  "--lock-window-follows-plant", "--extend-start-tracked"]
+
+
+def with_expected_controller(argv: list[str], controller: str) -> list[str]:
+    """``argv`` with the value of its ``--expect-controller`` replaced (unchanged without one)."""
+    out = list(argv)
+    if "--expect-controller" in out:
+        out[out.index("--expect-controller") + 1] = controller
+    return out
 
 
 def v5_vb_rows(coupled: list[dict]) -> list[dict]:
-    """The soil rows of :func:`coupled_rows` with the VB options instead of the flow options alone. Not run here:
-    the Chrono rows and their timing are decided after the harness verdict (D-3). ``check-sources V5-VB`` accepts
-    exactly the VB arguments as the difference from the stored ``result.json`` args."""
+    """The soil rows of :func:`coupled_rows` with the VB options instead of the flow options alone (controller
+    ``final_C4G2_P3``: ``--expect-controller`` and ``controller`` follow). Not run here: the Chrono rows and their
+    timing are decided after the harness verdict (D-3). ``check-sources V5-VB`` accepts exactly the VB arguments
+    as the difference from the stored ``result.json`` args."""
     rows = []
     for row in coupled:
         if row.get("source_expected_diffs") != COUPLED_FLOW_ARGS:
             continue
         argv = row["argv"][:len(row["argv"]) - len(coupled_flow_argv())] + v5_vb_argv()
+        if row.get("controller"):
+            argv = with_expected_controller(argv, V5_P3_CONTROLLER)
         rows.append({**row, "argv": argv, "source_expected_diffs": dict(V5_VB_ARGS), "group": V5_VB_BATCH,
+                     **({"controller": V5_P3_CONTROLLER, "p3_base_controller": row["controller"]}
+                        if row.get("controller") else {}),
                      "rep_bundle": V5_VB_BATCH, "note": row["note"].replace(COUPLED_BATCH, V5_VB_BATCH)
                      .replace("flow limit on", "v5 VB (flow 0.85, M2, LC, controller window, valve 0.1 s)")})
     return rows
@@ -401,6 +417,12 @@ def v5_rigid_setting_args(setting: str) -> dict:
     return args
 
 
+def v5_rigid_controller(setting: str) -> str:
+    """Controller tag of a rigid row: ``final_C4G2_P3`` for VB and LS (criteria revision 8 3.1), else
+    :data:`V5_STAGE3_CONTROLLER`."""
+    return V5_P3_CONTROLLER if v5_rigid_setting_args(setting).get("extend_start_tracked") else V5_STAGE3_CONTROLLER
+
+
 def v5_rigid_argv(setting: str) -> list[str]:
     """CLI form of :func:`v5_rigid_setting_args` (order of :func:`v5_vb_argv`)."""
     a = v5_rigid_setting_args(setting)
@@ -408,7 +430,8 @@ def v5_rigid_argv(setting: str) -> list[str]:
         return []
     return coupled_flow_argv() + ["--rod-release-force", "--lock-overlap-ratio", f"{a['lock_overlap_ratio']:g}",
                                   "--lock-closing-delay-s", f"{a['lock_closing_delay_s']:g}",
-                                  "--lock-window-follows-plant"]
+                                  "--lock-window-follows-plant"] + (
+        ["--extend-start-tracked"] if a.get("extend_start_tracked") else [])
 
 
 def _final_r_c4g2_walls() -> dict[str, float]:
@@ -428,7 +451,8 @@ def v5_rigid_row(case_id: str, set_name: str, setting: str, *, criteria_id: str,
     return {"case": name or case_id, "s8c_case_id": case_id, "est_s": round(est), "s8c": True,
             "argv": S8C + ["run", "--set", set_name, "--only", case_id, "--tag", f"v5s3_{setting}_{case_id}",
                            "--approved", "--workers", "p7"] + v5_rigid_argv(setting),
-            "family": set_name, "engine": "L2b_NSC", "controller": V5_STAGE3_CONTROLLER, "criteria_id": criteria_id,
+            "family": set_name, "engine": "L2b_NSC", "controller": v5_rigid_controller(setting),
+            "criteria_id": criteria_id,
             "v5_setting": setting, "group": group, "rep_bundle": group, "source_run": source_run,
             "pair_case": pair_case, "note": note}
 
@@ -491,10 +515,16 @@ def v5_v0v_rows(v5_vb: list[dict]) -> list[dict]:
     (case ``<case>_v0v``); ``check-sources`` accepts exactly ``valve_tau_s`` as the difference."""
     vb_tail = len(v5_vb_argv())
     rows = []
-    for row in v5_vb:
+    for vb_row in v5_vb:
+        # V0v keeps the controller of the stored run (final_C4G2 family, no ③ bound)
+        row = {k: v for k, v in vb_row.items() if k != "p3_base_controller"}
+        argv = row["argv"][:len(row["argv"]) - vb_tail]
+        if vb_row.get("p3_base_controller"):
+            row["controller"] = vb_row["p3_base_controller"]
+            argv = with_expected_controller(argv, vb_row["p3_base_controller"])
         stored_flow_wall = float(row["est_s"]) - COUPLED_FLOW_EXTRA_S
         rows.append({**row, "case": f"{row['case']}_v0v",
-                     "argv": row["argv"][:len(row["argv"]) - vb_tail] + ["--valve-tau-s", "0.1"],
+                     "argv": argv + ["--valve-tau-s", "0.1"],
                      "source_expected_diffs": {"valve_tau_s": 0.1}, "group": V5_V0V_BATCH, "rep_bundle": V5_V0V_BATCH,
                      "v5_setting": "V0v", "pair_case": row["case"],
                      "est_s": round((stored_flow_wall + COUPLED_FLOW_EXTRA_S) * V5_SOIL_V0V_FACTOR),
