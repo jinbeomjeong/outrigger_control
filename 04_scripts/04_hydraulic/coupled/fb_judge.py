@@ -26,7 +26,15 @@ complete only when the paired keys equal the expected key set; C-4 without a jud
 incomplete; the G-3 family must be the 8 keys. The lines of one bundle must carry one run
 identity (``fb.identity``: commit and tool sha256); the stored F-2 L lines are not ours and are
 listed apart. H-1 (``fb_targeted.sealed_check``) runs first; the draft records the measured
-sha256 of the rules, rev1 and the design copy.
+sha256 of the rules, rev1, rev2 and the design copy.
+
+rev2 (sealed before any run): S-1 (R2-1, ``check_s1``) = the L hash of both F-0 keys equals
+the stored b0 act hash; a mismatch makes the verdict an S-1 stop and the R2-1 wording ① .. ③
+(``LAS_PATH_NOTE``) is written only after S-1 and C-7 passed. R2-3: s = Q_b / Q(u) is reported
+for every LF / OL-LF run per phase (record only): s_nom = the run's Q_nom / Q(4 v_max)
+(0.8768421 with the 94e03bb YAML; rev2 prints 0.876840 from the 57.1902 L/min of rules 1.1,
+the geometry gives 57.1900), floor 0.5 s_nom; a run with s < s_nom and no cut, or s < floor,
+or an s_nom other than the other runs', is an implementation defect candidate.
 
 Usage (dynamics-dev python, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/fb_judge.py [--out-dir DIR] [--md PATH]
@@ -66,23 +74,50 @@ STROKE_INCREASE_M = 1.0e-3
 OPEN_LOOP_SPREAD_MM = 1.0
 OPEN_LOOP_ATTITUDE_MARGIN_DEG = 0.05
 OPEN_LOOP_VB_COUNT = 3
-SCALE_REPORT_BELOW = 0.8947
-"""Rules 4 last bullet: report the smallest s of a run whose budget a detection cut."""
+SCALE_NOMINAL_REV2 = 0.876840
+"""The s_nom rev2 R2-3 prints (50.1466 / 57.1902 L/min; replaces the rules 4 value 0.8947).
+Record only: the reference is the value each run computes from its geometry
+(``fb.budget.nominal_scale`` = Q_nom / Q(4 v_max)), 0.8768421 with the YAML of 94e03bb, where
+Q(4 v_max) is 57.19000 L/min, not the 57.1902 of rules 1.1."""
+SCALE_TOLERANCE = 1e-6
+NOMINAL_SPREAD_TOLERANCE = 1e-9
+"""Runs of one judgement share the geometry, so their s_nom must agree to rounding."""
+PHASE_LEVEL = "level"
+"""``str(c2.C2Phase.LEVEL)``, the phase string of ``acted_periods``."""
+SCALE_CANDIDATES = ("LF", "OL-LF")
+"""rev2 R2-3 report 1: the runs with the budget on."""
 FAMILY_KEY_COUNT = 8
 """Rules 4 C-3: the G-3 family of F-2 T-1."""
 NEW_EVENT_PREFIXES = ("FAULT", "WARN")
 FAILED_ITEM_PREFIXES = ("P3-2", "G6-2")
 REFERENCE = "L"
 CANDIDATE = "LF"
+LAS_PATH_TITLE = "**LAS-b 구현(원판 3.1 대체, rev2 R2-1)**"
 LAS_PATH_NOTE = (
-    "LAS-b 경로: 규칙 3.1절(80행)에 따라 래퍼(`las_targeted.install`) 대신 병합된 03_src "
-    "LAS-b(bacb2d2, R8 프리셋 기본 켬, b0 값)를 썼다. 실행마다 프리셋·실행 제어기의 LAS-b "
-    "켬과 b0 값을 단언했고, FB 래퍼만 설치했다. F-0 C-7(L 해시 = 저장 `las_T1` b0 해시, "
-    "LF-off = L)로 재현 조건을 다시 확인했다. 이 대체는 사후 변경 공개 대상이 아니다. "
-    "`las` 블록은 제어기 meta `liftoff_approach_slow`에서 만들었다(`s7p_first`는 없음, "
-    "`start_rho`·`start_rho_prev`를 더함)."
+    "① 이 판정의 모든 새 실행(F-0 L·LF-off, F-1·F-3·F-4의 L·LF, F-2 LF, F-5 OL-L·OL-LF)은 "
+    "LAS-b를 03_src 프리셋 구현(`C2Config.with_10hz_d1().liftoff_approach_slow`, P-S8-39, "
+    "병합 `bacb2d2`, 이후 `334d544` 포함)으로 돌렸다. 원판 3.1의 `las_targeted.install` b0 "
+    "래퍼는 설치하지 않았다. 실행 코드는 각 줄 `fb.identity`의 커밋 `{commit}`과 도구 "
+    "sha256이다. 새 L 줄의 제어기 태그는 `final_C4G2_P3_LAS`(VB)·`final_C4G2_LAS`(V0)다. 저장 "
+    "F-2 L 줄의 태그는 `final_C4G2_P3`·`final_C4G2`(래퍼)다. 짝은 키로만 맞추고 태그로 거르지 "
+    "않았다.\n"
+    "② 이 대체는 원판 3.1에 따른 것이다. 원판 7절의 사후 변경 공개 대상이 아니다. 대체 전에 "
+    "S-1을 확인했다. F-0 두 키의 03_src L 해시는 K1 VB `aff9b0f1…`와 K3 V0 `fc2ca22f…`였고, 둘 "
+    "다 저장 b0 act 해시와 {s1}. C-7(LF-off = L 2/2)은 {c7}.\n"
+    "③ F-2의 L은 원판 3.2대로 저장 `v5/las/las_T1.jsonl`·`las_T2.jsonl`의 b0 act 줄이다. 이 "
+    "줄은 03_src에 LAS-b가 들어가기 전의 코드에 b0 래퍼를 얹어 만든 것이다. 줄에는 커밋 필드가 "
+    "없다. 파일 시각 15:28·15:51과 git 기록으로 보면 `655844a`(15:09) 뒤, `11d28c6`(17:37) "
+    "앞이다. 따라서 F-2의 LF − L 짝에는 FB의 효과와 함께 \"03_src LAS-b ↔ 래퍼 b0\" 구현 차이가 "
+    "들어갈 수 있다. 이 차이가 0이라는 근거는 다음과 같다. 첫째, 비트 시험 B-1~B-3"
+    "(`11d28c6`)이다. B-2는 T-1 8키 = 래퍼, B-3은 T-2 작동 12키 = 래퍼, 미작동 10키 = 기준이다. "
+    "둘째, `334d544` 뒤 재확인 3키(K3 V0 e0, K3 VB e0, K1 VB e0)다. 셋째, 위 ②의 S-1이다. "
+    "그래서 F-2 192키 가운데 해시로 같음을 직접 보인 것은 T-1 8키와 T-2 22키, 합 30키다. "
+    "나머지 162키는 구현 동등성 가정이다(한계)."
 )
-"""Rules 3.1 line 80: the judgement states the replacement of the wrapper."""
+"""rev2 R2-1 wording ① .. ③, verbatim; ``{commit}``, ``{s1}`` ("같았다") and ``{c7}``
+("통과했다") are filled after the run. With S-1 or C-7 not passed the wording is not written
+(rev2: an S-1 stop is reported instead)."""
+S1_STOP_NOTE = "S-1 멈춤(rev2 R2-1): LAS-b 구현 문구를 쓰지 않는다. {problems}"
 
 
 # ------------------------------------------------------------------------------- reading
@@ -376,6 +411,33 @@ def check_c7(f0_lines: list[dict], stored_t1: dict[str, dict]) -> dict:
     return {"pass": not problems, "problems": problems, "rows": rows}
 
 
+def check_s1(f0_lines: list[dict], stored_t1: dict[str, dict],
+             expected: dict[str, str] | None = None) -> dict:
+    """rev2 R2-1 S-1: the 03_src L hash of both F-0 keys = the stored b0 act hash.
+
+    ``expected`` (default the hashes rev2 states) must also be the hash of the stored
+    ``las_T1`` b0 act line of the key, when that line is there.
+    """
+    expected = ft.S1_STORED_HASHES if expected is None else expected
+    by_key = lines_by_key(f0_lines)
+    problems, rows = [], []
+    for key, sealed_hash in expected.items():
+        stored = stored_t1.get(key)
+        if stored is not None and stored["commands_sha256"] != sealed_hash:
+            problems.append(f"{key}: stored las_T1 b0 {stored['commands_sha256'][:12]} != "
+                            f"rev2 {sealed_hash[:12]}")
+        reference = by_key.get(key, {}).get(REFERENCE)
+        if reference is None:
+            problems.append(f"{key}: missing L")
+            continue
+        rows.append(f"S-1 {key}: L {reference['commands_sha256'][:12]} 저장 b0 "
+                    f"{sealed_hash[:12]}")
+        if reference["commands_sha256"] != sealed_hash:
+            problems.append(f"{key}: L hash {reference['commands_sha256']} != stored b0 "
+                            f"{sealed_hash}")
+    return {"pass": not problems, "problems": problems, "rows": rows}
+
+
 def c7(data: Data) -> Criterion:
     lines = [line for lines in data.bundles.get("F-0", {}).values() for line in lines.values()]
     result = check_c7(lines, data.stored)
@@ -456,9 +518,18 @@ def error_lines(out_dir: Path) -> dict[str, list[str]]:
     return out
 
 
+def s1_result(data: Data) -> dict:
+    lines = [line for lines in data.bundles.get("F-0", {}).values() for line in lines.values()]
+    return check_s1(lines, data.stored)
+
+
 def stop_report(data: Data, out_dir: Path) -> list[str]:
     c7_result = c7(data)
-    lines = [f"H-2 (F-0 C-7): {'통과' if c7_result.passed else c7_result.summary}"]
+    s1 = s1_result(data)
+    lines = [f"H-2 (F-0 C-7): {'통과' if c7_result.passed else c7_result.summary}",
+             f"S-1 (rev2 R2-1, H-2와 같이 처리): "
+             f"{'통과' if s1['pass'] else '; '.join(s1['problems'])}"]
+    lines += [f"  {row}" for row in s1["rows"]]
     errors = error_lines(out_dir)
     for bundle, labels in errors.items():
         twice = sorted({label for label in labels if labels.count(label) >= 2})
@@ -472,18 +543,109 @@ def stop_report(data: Data, out_dir: Path) -> list[str]:
     return lines
 
 
-def detection_scale_report(data: Data) -> list[str]:
-    """Rules 4 last bullet: runs a detection cut, with their smallest scale s."""
+def budget_lines(data: Data) -> list[tuple[str, str, dict]]:
+    """(bundle, key, line) of every run with the budget on: LF and OL-LF (rev2 R2-3 1)."""
     out = []
-    for bundle, key, line in data.candidate_lines(ft.BUNDLES, CANDIDATE) + \
-            data.candidate_lines(("F-5",), "OL-LF"):
-        budget = (line.get("fb") or {}).get("budget") or {}
-        if budget.get("cuts"):
-            note = " (< 0.8947)" if budget["min_scale"] < SCALE_REPORT_BELOW else ""
-            out.append(f"{bundle} {key}: 깎기 {len(budget['cuts'])}, 최종 Q_b "
-                       f"{budget['Q_b_final_L_min']:.2f} L/min, "
-                       f"최소 s {budget['min_scale']:.4f}{note}")
+    for name in SCALE_CANDIDATES:
+        out += data.candidate_lines(ft.BUNDLES, name)
     return out
+
+
+def _budget(line: dict) -> dict | None:
+    return (line.get("fb") or {}).get("budget")
+
+
+def _spread(values: list[float]) -> str:
+    return (f"최소 {min(values):.6f} · 중앙 {statistics.median(values):.6f} · "
+            f"최대 {max(values):.6f}")
+
+
+def scale_summary(data: Data) -> list[str]:
+    """rev2 R2-3 1: per bundle and phase, the runs' smallest s and acted periods."""
+    by_group: dict[tuple[str, str], tuple[list[float], list[float]]] = {}
+    for bundle, _, line in budget_lines(data):
+        budget = _budget(line) or {}
+        acted = budget.get("acted_periods") or {}
+        for phase, scale in (budget.get("min_scale_by_phase") or {}).items():
+            scales, periods = by_group.setdefault((bundle, phase), ([], []))
+            scales.append(scale)
+            periods.append(float(acted.get(phase, 0)))
+    return [f"{bundle} {phase}: 실행 {len(scales)}, s {_spread(scales)}; 작용 주기 "
+            f"{_spread(periods)}"
+            for (bundle, phase), (scales, periods) in sorted(by_group.items())]
+
+
+def cut_scale_report(data: Data) -> list[str]:
+    """rev2 R2-3 2: runs a detection cut (rule, time, final Q_b, smallest s), one per line."""
+    out = []
+    for bundle, key, line in budget_lines(data):
+        budget = _budget(line) or {}
+        cuts = budget.get("cuts") or []
+        if cuts:
+            rules = ", ".join(f"{cut['rule']}@{cut['t_s']:g}s" for cut in cuts)
+            out.append(f"{bundle} {key}: 깎기 {len(cuts)}({rules}), 최종 Q_b "
+                       f"{budget['Q_b_final_L_min']:.2f} L/min, 최소 s "
+                       f"{budget['min_scale']:.6f}")
+    return out
+
+
+def reference_nominal_scale(data: Data) -> float | None:
+    """The median s_nom of the budget-on runs (None without one)."""
+    values = [(_budget(line) or {}).get("nominal_scale") for _, _, line in budget_lines(data)]
+    values = [value for value in values if value is not None]
+    return statistics.median(values) if values else None
+
+
+def scale_defects(line: dict, reference_nominal: float | None) -> list[str]:
+    """rev2 R2-3 3: why a budget-on run is an implementation defect candidate (empty = none).
+
+    No budget meta or s_nom, an s_nom other than the other runs', s < s_nom without a cut, or
+    s < 0.5 s_nom (tolerance 1e-6; s_nom = the run's own Q_nom / Q(4 v_max)).
+    """
+    budget = _budget(line)
+    if budget is None:
+        return ["예산 meta 없음"]
+    nominal = budget.get("nominal_scale")
+    if nominal is None:
+        return ["s_nom 없음"]
+    out = []
+    if reference_nominal is not None and abs(nominal - reference_nominal) > \
+            NOMINAL_SPREAD_TOLERANCE:
+        out.append(f"s_nom {nominal:.9f} != 다른 실행 {reference_nominal:.9f}")
+    scales = list((budget.get("min_scale_by_phase") or {}).values())
+    if not scales:
+        return out
+    smallest = min(scales)
+    if not budget.get("cuts") and smallest < nominal - SCALE_TOLERANCE:
+        out.append(f"깎기 없이 s {smallest:.6f} < s_nom {nominal:.6f}")
+    floor = ft.FLOOR_FRACTION * nominal
+    if smallest < floor - SCALE_TOLERANCE:
+        out.append(f"s {smallest:.6f} < 하한 {floor:.6f}")
+    return out
+
+
+def defect_report(data: Data) -> list[str]:
+    reference = reference_nominal_scale(data)
+    out = []
+    for bundle, key, line in budget_lines(data):
+        problems = scale_defects(line, reference)
+        if problems:
+            out.append(f"{bundle} {line['fb']['candidate']} {key}: {'; '.join(problems)}")
+    return out
+
+
+def level_range_report(data: Data) -> str:
+    """rev2 R2-3 4: the LEVEL smallest s against the linear margin table range [floor, 1]."""
+    level = [(_budget(line) or {}).get("min_scale_by_phase", {}).get(PHASE_LEVEL)
+             for _, _, line in budget_lines(data)]
+    level = [value for value in level if value is not None]
+    if not level:
+        return "LEVEL 작용 없음(대조할 s 없음)"
+    smallest = min(level)
+    # The margin table's lower point is rev2's printed floor 0.438420.
+    inside = ft.FLOOR_FRACTION * SCALE_NOMINAL_REV2 - SCALE_TOLERANCE <= smallest <= 1.0
+    return (f"LEVEL 최소 s {smallest:.6f}({len(level)}실행): "
+            + ("선형 여유 표 범위 안" if inside else "선형 여유 표 범위 밖(control-expert 재판단)"))
 
 
 # ------------------------------------------------------------------------------- identity
@@ -560,11 +722,20 @@ def load_data(out_dir: Path, family_keys: list[str] | None = None,
 
 
 IDENTITY_VERDICT = "판정 보류(실행 정체성)"
+S1_VERDICT = "멈춤(S-1 불일치, rev2 R2-1)"
 
 
-def verdict_of(criteria: list[Criterion], identity_issues: list[str] | None = None) -> str:
+def _is_s1_mismatch(s1: dict | None) -> bool:
+    """S-1 failed on a hash (missing L lines leave C-7 incomplete instead)."""
+    return s1 is not None and any("missing" not in text for text in s1["problems"])
+
+
+def verdict_of(criteria: list[Criterion], identity_issues: list[str] | None = None,
+               s1: dict | None = None) -> str:
     if identity_issues:
         return IDENTITY_VERDICT
+    if _is_s1_mismatch(s1):
+        return S1_VERDICT
     if any(c.passed is False for c in criteria):
         return "미달"
     if any(c.passed is None for c in criteria):
@@ -577,9 +748,43 @@ def _mark(passed: bool | None) -> str:
 
 
 def sealed_hashes() -> dict[str, str]:
-    """Measured sha256 of the sealed rules, the addendum rev1 and the design copy."""
+    """Measured sha256 of the sealed rules, the addenda rev1 and rev2 and the design copy."""
     return {path.name: ft.file_sha256(path)
-            for path in (ft.RULES_PATH, ft.RULES_REV1_PATH, ft.DESIGN_PATH)}
+            for path in (ft.RULES_PATH, ft.RULES_REV1_PATH, ft.RULES_REV2_PATH, ft.DESIGN_PATH)}
+
+
+def las_path_text(data: Data, identities: dict[str, dict]) -> list[str]:
+    """rev2 R2-1 wording ① .. ③ with the commit, S-1 and C-7 filled; an S-1 stop note (or a
+    placeholder before F-0) instead when they did not pass."""
+    s1, c7_result = s1_result(data), c7(data)
+    if not (s1["pass"] and c7_result.passed):
+        reason = s1["problems"] + ([] if c7_result.passed else [f"C-7 {c7_result.summary}"])
+        return [S1_STOP_NOTE.format(problems="; ".join(reason))]
+    commits = sorted({commit for record in identities.values() for commit in record["commits"]})
+    commit = ", ".join(commit[:12] for commit in commits) or "(기록 없음)"
+    note = LAS_PATH_NOTE.format(commit=commit, s1="같았다", c7="통과했다")
+    return [LAS_PATH_TITLE, *note.split("\n")]
+
+
+def scale_text(data: Data) -> list[str]:
+    """rev2 R2-3 report 1 .. 4 (record only, not a criterion)."""
+    reference = reference_nominal_scale(data)
+    computed = "실행 없음" if reference is None else (
+        f"{reference:.7f}(차 {reference - SCALE_NOMINAL_REV2:+.1e})")
+    text = ["", "## 예산 축척 s(rev2 R2-3, 기록)", "",
+            f"- s = Q_b/Q(u). s_nom = Q_nom/Q(4 v_max): 실행 계산값 {computed}, rev2 표기 "
+            f"{SCALE_NOMINAL_REV2:.6f}(규칙 1.1의 57.1902 L/min 기준; 94e03bb YAML로는 "
+            "57.1900 L/min). 하한 = 0.5 s_nom, 결함 후보 판정은 실행 계산값 기준, 허용 "
+            f"{SCALE_TOLERANCE:g}",
+            "", "### 1. LF·OL-LF 실행의 단계별 최소 s(묶음별)", ""]
+    text += [f"- {line}" for line in scale_summary(data)] or ["- 작용 없음"]
+    text += ["", "### 2. 검출로 예산을 깎은 실행", ""]
+    text += [f"- {line}" for line in cut_scale_report(data)] or ["- 없음"]
+    text += ["", "### 3. 구현 결함 후보", ""]
+    text += [f"- {line}" for line in defect_report(data)] or ["- 없음"]
+    text += ["", "### 4. LEVEL s와 선형 여유 표 범위 [0.438420, 1]", "",
+             f"- {level_range_report(data)}"]
+    return text
 
 
 def render(data: Data, criteria: list[Criterion], out_dir: Path,
@@ -590,24 +795,24 @@ def render(data: Data, criteria: list[Criterion], out_dir: Path,
     seal_lines = [f"  - `{name}` 실측 sha256 `{digest}`" for name, digest in (seal or {}).items()]
     text = ["# FB 표적 판정서 (초안, fb_judge.py 생성)", "",
             f"- 규칙: `fb_targeted_rules.md`(sha256 `{ft.RULES_SHA256[:12]}…`) + 덧붙임 판 "
-            f"`fb_targeted_rules_rev1.md`(sha256 `{ft.RULES_REV1_SHA256[:12]}…`), 후보 LF 대 L",
+            f"`fb_targeted_rules_rev1.md`(sha256 `{ft.RULES_REV1_SHA256[:12]}…`) + "
+            f"`fb_targeted_rules_rev2.md`(sha256 `{ft.RULES_REV2_SHA256[:12]}…`), 후보 LF 대 L",
             "- H-1 봉인 확인(판정 시작 때 `fb_targeted.sealed_check` 통과)", *seal_lines,
             f"- 실행 줄: `{out_dir}` " + ", ".join(f"{b} {n}/{ft.BUNDLE_COUNTS[b]}"
                                                   for b, n in counts.items()),
             "- F-2의 L: 저장 `v5/las/las_T1.jsonl`·`las_T2.jsonl` b0 act 줄",
-            f"- {LAS_PATH_NOTE}",
             "- 두 경로 판정(python-expert 도구, control-expert 재집계)이 같아야 확정이다"
             "(규칙 8절).",
-            "", f"## 판정: **{verdict_of(criteria, issues)}**", "",
+            "", "## LAS-b 구현", ""]
+    text += [f"> {line}" for line in las_path_text(data, identities)]
+    text += ["", f"## 판정: **{verdict_of(criteria, issues, s1_result(data))}**", "",
             "| # | 항목 | 결과 | 요약 |", "|---|---|---|---|"]
     text += [f"| {c.name} | {c.title} | {_mark(c.passed)} | {c.summary} |" for c in criteria]
     text += ["", "## 실행 정체성", ""]
     text += [f"- {line}" for line in identity_report(data, identities)]
     text += [f"- 문제: {issue}" for issue in issues] or ["- 묶음별 커밋·도구 해시 하나씩"]
     text += ["", "## 멈춤 조건", ""] + [f"- {line}" for line in stop_report(data, out_dir)]
-    scale = detection_scale_report(data)
-    text += ["", "## 검출로 예산을 깎은 실행(규칙 4절 마지막 항목)", ""]
-    text += [f"- {line}" for line in scale] or ["- 없음"]
+    text += scale_text(data)
     text += ["", "## 항목별 상세", ""]
     for criterion in criteria:
         text.append(f"### {criterion.name} {criterion.title}")
@@ -622,7 +827,8 @@ def render(data: Data, criteria: list[Criterion], out_dir: Path,
              "- C-6: 첫 깎기 시각 − 첫 TOUCH 주기(그 주기 끝 단계가 TOUCH) 시각 ∈ [0, 1.0] s",
              "- C-10 자세 변화 크기 = hypot(roll 변화, pitch 변화), 축별 값은 상세에 둔다",
              "- 위 해석은 rev1 2절 I-1~I-8로 확정",
-             "- F-4 verdict 1번 = `R2ra`(reanchor_on), rev1 1절", ""]
+             "- F-4 verdict 1번 = `R2ra`(reanchor_on), rev1 1절",
+             "- A97 단계 조건의 `touch_seen`은 주기 k+1 update 끝 값(rev2 R2-2)", ""]
     return "\n".join(text)
 
 
@@ -631,10 +837,13 @@ def judge(out_dir: Path, md_path: Path | None, family_keys: list[str] | None = N
     data = load_data(out_dir, family_keys)
     criteria = [criterion(data) for criterion in CRITERIA]
     issues = identity_problems(bundle_identities(data))
+    s1 = s1_result(data)
     if md_path is not None:
         md_path.write_text(render(data, criteria, out_dir, seal), encoding="utf-8")
-    return {"verdict": verdict_of(criteria, issues),
+    return {"verdict": verdict_of(criteria, issues, s1),
             "criteria": {c.name: c.passed for c in criteria},
+            "s1": {"pass": s1["pass"], "problems": s1["problems"]},
+            "scale_defects": len(defect_report(data)),
             "identity_problems": issues, "sealed_sha256": seal or {},
             "lines": {b: sum(len(v) for v in data.bundles[b].values()) for b in ft.BUNDLES}}
 
