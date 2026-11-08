@@ -52,6 +52,11 @@ TAG_VB_LAS = "final_C4G2_P3_LAS"
 TAG_ABL_LAS = "ABL_LAS"
 """Tags since the LAS-b switch (``u3_u6_rerun_rules_rev2.md`` 1): V0, VB / U-6 C2 and ABL
 with LAS-b; IND keeps ``IND`` (no LAS-b, user decision Q1 = I-2)."""
+TAG_IND_LAS = "IND_LAS"
+"""U-6 record-only column (rules rev2 3): IND + the head-force slowdown; its own name, not
+``IND`` + the ``_LAS`` suffix rule (the C8 skeleton has no C2 config)."""
+INDUSTRY_NAMES = (TAG_IND, TAG_IND_LAS)
+"""C8-skeleton controllers: no ③, no C2 lock window or preset check, J-P3 not applicable."""
 SETTING_TAGS_LAS = {"V0": TAG_V0_LAS, "VB": TAG_VB_LAS}
 """Rules rev2 1 #1 / #2: the U-3 (and D-1 reuse) tag of each setting."""
 PRE_SWITCH_TAGS = (TAG_V0, TAG_VB, TAG_ABL)
@@ -59,6 +64,8 @@ PRE_SWITCH_TAGS = (TAG_V0, TAG_VB, TAG_ABL)
 J_P3_NOT_APPLICABLE = "not_applicable"
 RULES_PATH = ROOT / "06_analysis" / "02_control" / "verif_matrix" / "u3_u6_rerun_rules.md"
 OUT_DIR = ROOT / "06_analysis" / "02_control" / "v5_rerun"
+LAS_OUT_DIR = OUT_DIR / "las"
+"""Rules rev2 1 #9: the LAS-tag outputs (the judge reads this folder only)."""
 PAD_A_KEY_FIELD = "PA"
 WIDE_PREFIXES = ("S|", "G|")
 """``b5_baseline_compare`` wide ids: ``S|<slope id>`` / ``G|<g6 key>``."""
@@ -302,7 +309,7 @@ def controller_tag(options, controller_name: str = "C2", config=None) -> str:
     """
     from outrigger_sim.hydraulics.v5_options import is_liftoff_slow_on, with_liftoff_slow_tag
 
-    if controller_name in (TAG_ABL, TAG_IND):
+    if controller_name in (TAG_ABL, *INDUSTRY_NAMES):
         tag = controller_name
     elif options is not None and options.extend_start_tracked:
         tag = TAG_VB
@@ -421,7 +428,7 @@ def run_record(plant, controller, *, harness_commands_sha256: str | None,
     if hydraulics:
         record["hydraulics_record"] = hydraulics
     has_lock_record = plant is not None and getattr(plant, "lock_events", None) is not None
-    if has_lock_record and controller_name != TAG_IND:  # J11 n_late reads the C2 lock window
+    if has_lock_record and controller_name not in INDUSTRY_NAMES:  # J11 reads the C2 window
         record["lock_window_alignment"] = verdict_runs.lock_window_record(plant, controller,
                                                                           period)
     _check_built_preset(options, controller_name)
@@ -437,7 +444,7 @@ def _worker_code_commit() -> dict:
 
 def _check_built_preset(options, controller_name: str) -> None:
     """Criteria P-4 / revision 8 3.1 checks of a C2 run (``verdict_runs.plant_options_record``)."""
-    if options is None or controller_name == TAG_IND:
+    if options is None or controller_name in INDUSTRY_NAMES:
         return
     import harness_hydraulics
     from params import load_params
@@ -450,7 +457,8 @@ def _check_built_preset(options, controller_name: str) -> None:
 # --------------------------------------------------------------------------------------- meta
 def definition(setting: str, controller_name: str = "C2") -> dict:
     """The setting definition a run used (flow setting, plant options, controller tag)."""
-    flow, options = options_of(setting, extend_start=controller_name not in (TAG_ABL, TAG_IND))
+    flow, options = options_of(setting,
+                               extend_start=controller_name not in (TAG_ABL, *INDUSTRY_NAMES))
     return {"setting": setting, "flow_setting": flow.to_dict(),
             "hydraulic_options": None if options is None else options.to_dict(),
             "controller_tag": controller_tag(options, controller_name)}
