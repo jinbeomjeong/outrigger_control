@@ -119,6 +119,26 @@ def test_rigid_slope_mixed_kernel_equals_the_rigid_path(tmp_path: Path) -> None:
     assert mixed["settle"]["gap_mm"] is not None  # the mixed kernel ran
 
 
+R1_V0_STORED_HASH = "a91e95796d41e1a06dd5513b1a191bbd0b5bb12e5cfa50e9df8feafebb27820f"
+"""``main.jsonl`` line of {"case": "R1", "eps": 0.0, "setting": "V0"} (rigid top flat)."""
+
+
+@pytest.mark.slow
+def test_d1_steady_row_is_the_v5_steady_run(tmp_path: Path) -> None:
+    """``run_v5`` job of D-1 row H-R-0 T flat K1 (V0, eps 0) = the stored v5 R1 V0 run, and
+    its ``d1`` record carries the sealed selection fields."""
+    sys.path.insert(0, str(ROOT / "04_scripts" / "04_hydraulic" / "coupled"))
+    import d1_rows
+    import d1_select
+
+    row = next(r for r in d1_rows.all_rows() if r.key == "D1|H-R-0|rigid|T|flat|K1")
+    report = _run({"kind": "v5", "job": {"d1": row.to_job(), "eps": 0.0, "setting": "V0"}},
+                  tmp_path)
+    assert report["hash"] == R1_V0_STORED_HASH
+    assert set(d1_select.REQUIRED_FIELDS) <= set(report["d1"])
+    assert report["d1"]["verdict"] == "pass" and report["d1"]["j_p3"] == "not_applicable"
+
+
 # ------------------------------------------------------------------------------------------ P-4
 def test_progressive_sink_event_form() -> None:
     event = screen.progressive_sink_event(20.0, 6.0)
