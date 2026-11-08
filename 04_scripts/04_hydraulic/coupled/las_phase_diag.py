@@ -1,8 +1,10 @@
 """LAS-b phase diagnosis on the reduced harness (FB rejected, user decision 2026-11-08).
 
 Pre-registration: ``06_analysis/02_control/verif_matrix/las_phase_diag_plan.md`` (control-expert,
-sealed; sha256 :data:`PLAN_SHA256`). Where this text and the plan differ, the plan wins. ``run``
-and ``judge`` stop with exit 2 when the plan file is missing or has another sha256.
+sealed; sha256 :data:`PLAN_SHA256`) and its judging addendum ``las_phase_diag_plan_rev1.md``
+(:data:`PLAN_REV1_SHA256`; rev1 wins over the original). Where this text and the plans differ,
+the plans win. ``run`` and ``judge`` stop with exit 2 when either file is missing or has another
+sha256 (computed with CRLF read as LF, as the seals are).
 
 Background (``fb_judgement.md``, control-expert): on the G-3 keys
 ``D1|H-R-A|rigid+J1@FR|T|diag-op|K3|{VB,V0}|e0.002`` the FB budget delays the TOUCH end, LAS-b
@@ -90,8 +92,8 @@ Usage (dynamics-dev python.exe, project root, PowerShell):
       [--limit N] [--no-record]
   python -I -B 04_scripts/04_hydraulic/coupled/las_phase_diag.py judge <diag_Db.jsonl>
       [--out <md>]
-Exit codes: 0 done, 1 a run error / a run identity change (run) or anchors failed (judge),
-2 input error (plan check included).
+Exit codes: 0 done, 1 a run error / a run identity change (run) or a rev1 4 exclusion
+problem, i.e. verdict ``undecidable_tool`` (judge), 2 input error (plan check included).
 """
 from __future__ import annotations
 
@@ -116,9 +118,14 @@ import numpy as np  # noqa: E402
 
 ROOT = fb.ROOT
 DIAG_DIR = fb.V5_DIR / "las" / "diag"
-PLAN_PATH = ROOT / "06_analysis" / "02_control" / "verif_matrix" / "las_phase_diag_plan.md"
+PLAN_DIR = ROOT / "06_analysis" / "02_control" / "verif_matrix"
+PLAN_PATH = PLAN_DIR / "las_phase_diag_plan.md"
 PLAN_SHA256 = "0f24fcbef1ec802259428ba91c6f2892a7b10d5bd236c89eb6064c1f81967785"
 """``las_phase_diag_plan.md`` as sealed by control-expert (2026-11-08)."""
+PLAN_REV1_PATH = PLAN_DIR / "las_phase_diag_plan_rev1.md"
+PLAN_REV1_SHA256 = "91cd13e71252aa2bf75c31020b33c020d32fd50ddea1c43bd0bc04404ff8772e"
+"""``las_phase_diag_plan_rev1.md`` (judging rules; sealed with LF line ends)."""
+SEALED_PLANS = ((PLAN_PATH, PLAN_SHA256), (PLAN_REV1_PATH, PLAN_REV1_SHA256))
 G3_KEYS = ("D1|H-R-A|rigid+J1@FR|T|diag-op|K3|VB|e0.002",
            "D1|H-R-A|rigid+J1@FR|T|diag-op|K3|V0|e0.002")
 F1_KEY = "S5|V0|etadef|e0.002"
@@ -163,14 +170,26 @@ FORCE_WINDOW_COLUMNS = ("t", *(f"true_force_{leg}" for leg in LEG_ORDER),
 
 
 # ------------------------------------------------------------------------------- plan check
+def lf_sha256(path: Path) -> str:
+    """sha256 of the file with CRLF read as LF (rev1 7: the seals are LF digests, a CRLF
+    checkout must not change them)."""
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+
+
 def plan_problem(path: Path = PLAN_PATH, expected: str = PLAN_SHA256) -> str | None:
     """Why the run may not start (None = the sealed plan is there with its sha256)."""
     if not path.exists():
         return f"missing {path}"
-    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    digest = lf_sha256(path)
     if digest != expected:
         return f"{path.name} sha256 {digest} != sealed {expected}"
     return None
+
+
+def sealed_plan_problems(plans=SEALED_PLANS) -> list[str]:
+    """The original plan and rev1 must both be there with their sealed sha256."""
+    problems = (plan_problem(path, expected) for path, expected in plans)
+    return [problem for problem in problems if problem is not None]
 
 
 # ------------------------------------------------------------------------------- pure helpers
@@ -1072,18 +1091,17 @@ def _judge_command(args) -> int:
         with args.out.open("x", encoding="utf-8") as handle:
             handle.write(report)
     print(json.dumps({"verdict": result["verdict"], "anchors_pass": result["anchors_pass"],
-                      "excluded": len(result["excluded"]),
-                      "missing": len(result["missing"])}))
-    return 0 if result["anchors_pass"] else 1
+                      "exclusion_problems": len(result["exclusion_problems"])}))
+    return 1 if result["exclusion_problems"] else 0
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
     if args.command in ("run", "judge"):
-        problem = plan_problem()
-        if problem is not None:
-            print(f"input error (plan): {problem}")
-            print(json.dumps({"stop": "plan", "reason": problem}))
+        problems = sealed_plan_problems()
+        if problems:
+            print(f"input error (plan): {problems}")
+            print(json.dumps({"stop": "plan", "reasons": problems}))
             return 2
         return _run_command(args) if args.command == "run" else _judge_command(args)
     all_problems = []

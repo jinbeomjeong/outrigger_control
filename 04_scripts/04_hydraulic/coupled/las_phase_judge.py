@@ -1,29 +1,32 @@
-"""Judge aid of the LAS-b phase diagnosis D-b (``las_phase_diag_plan.md`` 1.3 and 3).
+"""Judge aid of the LAS-b phase diagnosis D-b (``las_phase_diag_plan.md`` 1.3 / 3 as read by
+``las_phase_diag_plan_rev1.md``; rev1 wins where they differ).
 
-Reads the D-b lines of ``las_phase_diag.py`` and computes, per key and grid centre c:
+Per key and grid centre c (``cell``):
   R_c = max_{j<=3} F_RL - min_{j<=3} F_RL,  M_c = mean_{j<=3} F_RL,  P_c = |F_RL(4) - F_RL(0)|
-and the plan 3 conditions:
-  P1  some key / centre has R_c >= 1.0 kN
-  P2  every key / centre has P_c <= max(0.3 kN, 0.25 R_c)
-  P3  inside each key / centre at most one exception among the ordered pairs (below)
-  P4  per key, max_c M_c - min_c M_c <= max_c R_c
-  speed  every R_c < 0.5 kN, both keys M_1.0 > M_0.94 > M_nom (or both the reverse) and
-         |M_1.0 - M_nom| >= 1.0 kN on both keys
-  mixed  P1, P2, P3, and per key M_c strictly monotone with |M_1.0 - M_nom| >= max_c R_c
-Verdict, in this order: anchors failed or a point missing / excluded -> ``undecidable``;
-P1 .. P4 -> ``phase``; mixed -> ``mixed``; speed -> ``speed``; else ``undecidable``. Every
-condition is reported as well (``phase`` and ``mixed`` can both hold at the equality edge).
-
-P3 reading (this tool's; control-expert recomputes independently): a pair (a, b) of the five
-lines (j = 0 .. 4) predicts "a lower" when a has fewer active periods and a start rho not
-smaller, or the same or fewer active periods and a larger start rho. A pair whose two signs
-disagree (fewer active periods but a smaller rho), or with equal values, or without a start
-rho predicts nothing and is counted as ``unordered``. An exception is a predicting pair with
-F_RL(a) >= F_RL(b).
+Conditions:
+  P1  some cell has R_c >= 1.0 kN
+  P2  every cell has P_c <= max(0.3 kN, 0.25 R_c)
+  P3  (rev1 1) evaluated only in the cells with R_c >= 1.0 kN, over the 10 pairs of j = 0 .. 4.
+      a is predicted lower than b when active_a <= active_b and rho_a >= rho_b with one of the
+      two strict (dominance); crossed or equal pairs predict nothing. A line without a LAS
+      start (rho or active None) takes part in no pair. A contradiction is a predicting pair
+      whose predicted-lower line has an F_RL more than 0.2 kN above the other's.
+      Per evaluated cell: not-started lines <= 1 and predicting pairs >= 6 (else P3 is
+      ``undetermined``) and contradictions <= 1 (else ``fail``). P3 ``pass`` needs at least
+      one evaluated cell, all of them passing; no evaluated cell = ``not_evaluated``.
+  P4  (rev1 2) per key, max_c M_c - min_c M_c <= max_c R_c
+  mixed  (rev1 2) P1, P2, P3 pass and per key M_c strictly monotone over (1.0, 0.94, nom) with
+         |M_1.0 - M_nom| > max_c R_c (strict)
+  speed  (rev1 3) per key: every R_c < 0.5 kN, M_c strictly monotone, |M_1.0 - M_nom| >= 1.0
+         kN; and both keys change in the same direction
+Verdict order (rev1 5): exclusion checks (rev1 4: an error line, fewer than 30 grid lines,
+``gate_consistent`` False, LEVEL budget periods != 0, an anchor mismatch) -> ``undecidable_tool``;
+P3 undetermined -> ``undecidable``; phase (P1 .. P4); mixed (when phase and mixed both hold,
+mixed); speed; else ``undecidable``.
 
 Anchors (plan 1.3): A-1 centre 1.0, j 0 = the stored L (b0 act) hash of ``las_T1.jsonl``,
-A-2 centre s_nom, j 0 = the stored LF hash of ``fb_F2.jsonl`` (the values below were read from
-those files on 2026-11-08).
+A-2 centre s_nom, j 0 = the stored LF hash of ``fb_F2.jsonl`` (values read from those files on
+2026-11-08).
 """
 from __future__ import annotations
 
@@ -38,6 +41,8 @@ KEYS = (KEY_VB, KEY_V0)
 CENTRES = ("1", "0.94", "nom")
 PHASE_STEPS = (0, 1, 2, 3)
 PERIODICITY_STEP = 4
+ALL_STEPS = (*PHASE_STEPS, PERIODICITY_STEP)
+GRID_LINES = len(KEYS) * len(CENTRES) * len(ALL_STEPS)
 ANCHORS = {
     "A-1": {"centre": "1", "j": 0, "source": "las_T1.jsonl b0 act (L)", "hashes": {
         KEY_VB: "eec974b66af2b06063eaf146fc7098eaf968bb017d5567d14fbfe4fa72b5ab15",
@@ -49,13 +54,21 @@ ANCHORS = {
 P1_RANGE_KN = 1.0
 P2_FLOOR_KN = 0.3
 P2_FRACTION = 0.25
-P3_MAX_EXCEPTIONS = 1
+P3_MAX_NOT_STARTED = 1
+P3_MIN_PREDICTING_PAIRS = 6
+P3_MAX_CONTRADICTIONS = 1
+P3_CONTRADICTION_MARGIN_KN = 0.2
 SPEED_RANGE_KN = 0.5
 SPEED_CHANGE_KN = 1.0
+P3_PASS = "pass"
+P3_FAIL = "fail"
+P3_UNDETERMINED = "undetermined"
+P3_NOT_EVALUATED = "not_evaluated"
 VERDICT_PHASE = "phase"
 VERDICT_SPEED = "speed"
 VERDICT_MIXED = "mixed"
 VERDICT_UNDECIDABLE = "undecidable"
+VERDICT_UNDECIDABLE_TOOL = "undecidable_tool"
 
 
 def read_lines(path: Path) -> list[dict]:
@@ -109,44 +122,88 @@ def check_anchors(points: dict[tuple[str, str, int], dict]) -> dict:
     return out
 
 
-def predicts_lower(a: dict, b: dict) -> bool | None:
-    """P3: True = a predicted lower than b, False = b lower than a, None = unordered."""
-    if a["rho"] is None or b["rho"] is None or a["active"] is None or b["active"] is None:
-        return None
-    a_lower = ((a["active"] < b["active"] and a["rho"] >= b["rho"])
-               or (a["active"] <= b["active"] and a["rho"] > b["rho"]))
-    b_lower = ((b["active"] < a["active"] and b["rho"] >= a["rho"])
-               or (b["active"] <= a["active"] and b["rho"] > a["rho"]))
-    if a_lower == b_lower:
-        return None
-    return a_lower
+# ------------------------------------------------------------------------------- exclusion
+def exclusion_problems(lines: list[dict], points: dict, anchors: dict) -> list[str]:
+    """Rev1 4: any of these makes the whole judgement ``undecidable_tool``."""
+    problems = [f"error line: {(line.get('diag') or {}).get('key')} "
+                f"{(line.get('diag') or {}).get('candidate')}"
+                for line in lines if "error" in line]
+    missing = [f"{setting_of(key)} c{centre} j{j}" for key in KEYS for centre in CENTRES
+               for j in ALL_STEPS if (key, centre, j) not in points
+               or points[(key, centre, j)]["F_RL_kN"] is None]
+    if missing:
+        problems.append(f"{GRID_LINES - len(missing)} of {GRID_LINES} grid lines: "
+                        f"missing {missing}")
+    for (key, centre, j), point in sorted(points.items()):
+        label = f"{setting_of(key)} c{centre} j{j}"
+        if point["gate_consistent"] is False:
+            problems.append(f"{label}: gate_consistent False")
+        if point["level_budget_periods"]:
+            problems.append(f"{label}: LEVEL budget periods {point['level_budget_periods']}")
+    problems += [f"anchor {name} mismatch" for name, entry in anchors.items()
+                 if not entry["pass"]]
+    return problems
 
 
-def order_exceptions(line_points: list[dict]) -> dict:
-    """P3 counts of one key / centre (all pairs of its lines)."""
-    exceptions = unordered = predicting = 0
-    for a, b in itertools.combinations(line_points, 2):
-        lower = predicts_lower(a, b)
-        if lower is None:
-            unordered += 1
+# ------------------------------------------------------------------------------- P3
+def has_las_start(point: dict) -> bool:
+    return point["rho"] is not None and point["active"] is not None
+
+
+def predicts_lower(a: dict, b: dict) -> bool:
+    """Rev1 1 dominance: active_a <= active_b and rho_a >= rho_b, one of them strict."""
+    is_weakly_dominant = a["active"] <= b["active"] and a["rho"] >= b["rho"]
+    is_strict = a["active"] < b["active"] or a["rho"] > b["rho"]
+    return is_weakly_dominant and is_strict
+
+
+def p3_cell(line_points: list[dict]) -> dict:
+    """Rev1 1 counts of one cell (the lines of j = 0 .. 4) and its P3 status."""
+    started = [point for point in line_points if has_las_start(point)]
+    not_started = len(line_points) - len(started)
+    predicting = contradictions = 0
+    for a, b in itertools.combinations(started, 2):
+        if predicts_lower(a, b):
+            low, high = a, b
+        elif predicts_lower(b, a):
+            low, high = b, a
+        else:
             continue
         predicting += 1
-        low, high = (a, b) if lower else (b, a)
-        if low["F_RL_kN"] >= high["F_RL_kN"]:
-            exceptions += 1
-    return {"exceptions": exceptions, "predicting_pairs": predicting,
-            "unordered_pairs": unordered}
+        if low["F_RL_kN"] > high["F_RL_kN"] + P3_CONTRADICTION_MARGIN_KN:
+            contradictions += 1
+    if not_started > P3_MAX_NOT_STARTED or predicting < P3_MIN_PREDICTING_PAIRS:
+        status = P3_UNDETERMINED
+    elif contradictions > P3_MAX_CONTRADICTIONS:
+        status = P3_FAIL
+    else:
+        status = P3_PASS
+    return {"not_started": not_started, "predicting_pairs": predicting,
+            "contradictions": contradictions, "status": status}
 
 
+def p3_overall(measures: dict) -> str:
+    """P3 over the evaluated cells (R_c >= 1.0 kN): undetermined > fail > pass."""
+    statuses = [cell["p3"]["status"] for by_centre in measures.values()
+                for cell in by_centre.values() if cell["p3_evaluated"]]
+    if not statuses:
+        return P3_NOT_EVALUATED
+    if P3_UNDETERMINED in statuses:
+        return P3_UNDETERMINED
+    return P3_FAIL if P3_FAIL in statuses else P3_PASS
+
+
+# ------------------------------------------------------------------------------- measures
 def centre_measures(by_step: dict[int, dict]) -> dict:
-    """R_c, M_c, P_c and the P3 counts of one key / centre (all five steps present)."""
+    """R_c, M_c, P_c, P2 and the rev1 P3 counts of one cell (all five steps present)."""
     phase_values = [by_step[j]["F_RL_kN"] for j in PHASE_STEPS]
     range_kN = max(phase_values) - min(phase_values)
     periodicity_kN = abs(by_step[PERIODICITY_STEP]["F_RL_kN"] - by_step[0]["F_RL_kN"])
     return {"R_c": range_kN, "M_c": sum(phase_values) / len(phase_values),
             "P_c": periodicity_kN,
             "P2_ok": periodicity_kN <= max(P2_FLOOR_KN, P2_FRACTION * range_kN),
-            **order_exceptions([by_step[j] for j in sorted(by_step)])}
+            "p3_evaluated": range_kN >= P1_RANGE_KN,
+            "p3": p3_cell([by_step[j] for j in ALL_STEPS])}
 
 
 def _monotone_direction(values: list[float]) -> int:
@@ -160,127 +217,132 @@ def _monotone_direction(values: list[float]) -> int:
 
 
 def key_conditions(measures: dict[str, dict]) -> dict:
-    """Per key: P4, the M_c direction over the centres (1.0, 0.94, nom) and the change."""
+    """Per key: P4, the M_c direction over (1.0, 0.94, nom), the change and the speed part."""
     means = [measures[centre]["M_c"] for centre in CENTRES]
-    largest_range = max(measures[centre]["R_c"] for centre in CENTRES)
+    ranges = [measures[centre]["R_c"] for centre in CENTRES]
+    largest_range = max(ranges)
+    spread = max(means) - min(means)
+    direction = _monotone_direction(means)
     change = abs(means[0] - means[-1])
-    return {"M_spread": max(means) - min(means), "max_R_c": largest_range,
-            "P4_ok": max(means) - min(means) <= largest_range,
-            "direction": _monotone_direction(means), "M_change": change}
+    return {"M_spread": spread, "max_R_c": largest_range, "P4_ok": spread <= largest_range,
+            "direction": direction, "M_change": change,
+            "mixed_ok": direction != 0 and change > largest_range,
+            "speed_ok": all(value < SPEED_RANGE_KN for value in ranges) and direction != 0
+            and change >= SPEED_CHANGE_KN}
 
 
-def _grid_points(lines: list[dict]) -> tuple[dict, list[str]]:
-    points = {}
-    for line in lines:
-        point = point_of(line)
-        if point is not None:
-            points[(point["key"], point["centre"], point["j"])] = point
-    missing = [f"{key} c{centre} j{j}" for key in KEYS for centre in CENTRES
-               for j in (*PHASE_STEPS, PERIODICITY_STEP)
-               if (key, centre, j) not in points
-               or points[(key, centre, j)]["F_RL_kN"] is None]
-    return points, missing
+def conditions(measures: dict, keys: dict) -> dict:
+    """P1 .. P4, mixed and speed of a complete grid (module docstring)."""
+    cells = [measures[key][centre] for key in KEYS for centre in CENTRES]
+    p3 = p3_overall(measures)
+    is_p123 = (any(cell["R_c"] >= P1_RANGE_KN for cell in cells)
+               and all(cell["P2_ok"] for cell in cells) and p3 == P3_PASS)
+    directions = {keys[key]["direction"] for key in KEYS}
+    return {"P1": any(cell["R_c"] >= P1_RANGE_KN for cell in cells),
+            "P2": all(cell["P2_ok"] for cell in cells), "P3": p3,
+            "P4": all(keys[key]["P4_ok"] for key in KEYS),
+            "phase": is_p123 and all(keys[key]["P4_ok"] for key in KEYS),
+            "mixed": is_p123 and all(keys[key]["mixed_ok"] for key in KEYS),
+            "speed": all(keys[key]["speed_ok"] for key in KEYS) and len(directions) == 1}
 
 
-def _verdict(flags: dict, anchors_pass: bool, is_complete: bool) -> str:
-    if not anchors_pass or not is_complete:
+def verdict_of(flags: dict) -> str:
+    """Rev1 5 order after the exclusion checks."""
+    if flags["P3"] == P3_UNDETERMINED:
         return VERDICT_UNDECIDABLE
-    if flags["P1"] and flags["P2"] and flags["P3"] and flags["P4"]:
-        return VERDICT_PHASE
-    if flags["mixed"]:
+    if flags["mixed"]:  # rev1 2: mixed when phase and mixed both hold
         return VERDICT_MIXED
+    if flags["phase"]:
+        return VERDICT_PHASE
     if flags["speed"]:
         return VERDICT_SPEED
     return VERDICT_UNDECIDABLE
 
 
-def _flags(measures: dict, keys: dict) -> dict:
-    all_centres = [measures[key][centre] for key in KEYS for centre in CENTRES]
-    directions = {keys[key]["direction"] for key in KEYS}
-    is_p1 = any(m["R_c"] >= P1_RANGE_KN for m in all_centres)
-    is_p2 = all(m["P2_ok"] for m in all_centres)
-    is_p3 = all(m["exceptions"] <= P3_MAX_EXCEPTIONS for m in all_centres)
-    is_p4 = all(keys[key]["P4_ok"] for key in KEYS)
-    is_speed = (all(m["R_c"] < SPEED_RANGE_KN for m in all_centres)
-                and len(directions) == 1 and 0 not in directions
-                and all(keys[key]["M_change"] >= SPEED_CHANGE_KN for key in KEYS))
-    is_mixed = (is_p1 and is_p2 and is_p3
-                and all(keys[key]["direction"] != 0
-                        and keys[key]["M_change"] >= keys[key]["max_R_c"] for key in KEYS))
-    return {"P1": is_p1, "P2": is_p2, "P3": is_p3, "P4": is_p4, "speed": is_speed,
-            "mixed": is_mixed}
+def _grid_points(lines: list[dict]) -> dict:
+    points = {}
+    for line in lines:
+        point = point_of(line)
+        if point is not None:
+            points[(point["key"], point["centre"], point["j"])] = point
+    return points
 
 
 def judge(lines: list[dict]) -> dict:
-    """Anchors, measures, conditions and verdict of a D-b file (module docstring)."""
-    points, missing = _grid_points(lines)
+    """Exclusion checks, anchors, measures, conditions and verdict of a D-b file."""
+    points = _grid_points(lines)
     anchors = check_anchors(points)
-    anchors_pass = all(entry["pass"] for entry in anchors.values())
-    excluded = sorted(f"{p['key']} c{p['centre']} j{p['j']}" for p in points.values()
-                      if p["excluded"])
-    out = {"anchors": anchors, "anchors_pass": anchors_pass, "missing": missing,
-           "excluded": excluded, "points": sorted(points.values(),
-                                                  key=lambda p: (p["key"], p["centre"], p["j"])),
+    problems = exclusion_problems(lines, points, anchors)
+    out = {"anchors": anchors, "anchors_pass": all(entry["pass"] for entry in anchors.values()),
+           "exclusion_problems": problems,
+           "points": sorted(points.values(), key=lambda p: (p["key"], p["centre"], p["j"])),
            "errors": sum(1 for line in lines if "error" in line)}
-    is_complete = not missing and not excluded
-    if not is_complete:
+    if problems:
         return {**out, "measures": None, "keys": None, "flags": None,
-                "verdict": VERDICT_UNDECIDABLE}
-    measures = {key: {centre: centre_measures({j: points[(key, centre, j)]
-                                               for j in (*PHASE_STEPS, PERIODICITY_STEP)})
+                "verdict": VERDICT_UNDECIDABLE_TOOL}
+    measures = {key: {centre: centre_measures({j: points[(key, centre, j)] for j in ALL_STEPS})
                       for centre in CENTRES} for key in KEYS}
     keys = {key: key_conditions(measures[key]) for key in KEYS}
-    flags = _flags(measures, keys)
+    flags = conditions(measures, keys)
     return {**out, "measures": measures, "keys": keys, "flags": flags,
-            "verdict": _verdict(flags, anchors_pass, is_complete)}
+            "verdict": verdict_of(flags)}
 
 
+# ------------------------------------------------------------------------------- report
 def _number(value, digits: int = 3) -> str:
     if value is None or (isinstance(value, float) and not math.isfinite(value)):
         return "-"
     return f"{value:.{digits}f}" if isinstance(value, float) else str(value)
 
 
-def report_markdown(result: dict, source: Path) -> str:
-    """A Markdown summary of :func:`judge` (record; control-expert recomputes)."""
-    lines = [f"# LAS-b phase diagnosis D-b: judge aid ({source.name})", "",
-             f"- verdict: **{result['verdict']}** (anchors pass: {result['anchors_pass']}, "
-             f"errors {result['errors']}, missing {len(result['missing'])}, "
-             f"excluded {len(result['excluded'])})", "", "## Anchors (plan 1.3)", "",
-             "| anchor | source | expected | got | pass |", "|---|---|---|---|---|"]
-    for name, entry in result["anchors"].items():
-        lines.append(f"| `{name}` | {entry['source']} | {entry['expected'][:12]} | "
-                     f"{(entry['got'] or '-')[:12]} | {entry['pass']} |")
-    lines += ["", "## Points (plan 2)", "",
-              "| key | c | j | s | F_RL kN | TOUCH end s | lift s | start +k | rho | rho_prev "
-              "| active | end | false before start | LEVEL budget | gate ok |",
-              "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
-    for p in result["points"]:
-        setting = setting_of(p["key"])
-        lines.append(
-            f"| {setting} | {p['centre']} | {p['j']} | {_number(p['s'], 6)} | "
+def _point_rows(points: list[dict]) -> list[str]:
+    rows = ["| key | c | j | s | F_RL kN | TOUCH end s | lift s | start +k | rho | rho_prev "
+            "| active | end | false before start | LEVEL budget | gate ok |",
+            "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+    for p in points:
+        rows.append(
+            f"| {setting_of(p['key'])} | {p['centre']} | {p['j']} | {_number(p['s'], 6)} | "
             f"{_number(p['F_RL_kN'])} | {_number(p['t_touch_end_s'], 2)} | "
             f"{_number(p['t_lift_s'], 3)} | {p['start_period']} | {_number(p['rho'], 4)} | "
             f"{_number(p['rho_prev'], 4)} | {p['active']} | {p['end_reason']} | "
             f"{','.join(p['gates_false_before_start'] or []) or '-'} | "
             f"{p['level_budget_periods']} | {p['gate_consistent']} |")
-    if result["missing"] or result["excluded"]:
-        lines += ["", f"- missing: {result['missing']}", f"- excluded: {result['excluded']}"]
+    return rows
+
+
+def _measure_rows(result: dict) -> list[str]:
+    rows = ["| key | c | R_c | M_c | P_c | P2 | P3 evaluated | not started | predicting pairs "
+            "| contradictions | P3 cell |", "|---|---|---|---|---|---|---|---|---|---|---|"]
+    for key, by_centre in result["measures"].items():
+        for centre, m in by_centre.items():
+            p3 = m["p3"]
+            rows.append(f"| {setting_of(key)} | {centre} | {_number(m['R_c'])} | "
+                        f"{_number(m['M_c'])} | {_number(m['P_c'])} | {m['P2_ok']} | "
+                        f"{m['p3_evaluated']} | {p3['not_started']} | "
+                        f"{p3['predicting_pairs']} | {p3['contradictions']} | {p3['status']} |")
+    for key, k in result["keys"].items():
+        rows.append(f"- {setting_of(key)}: M spread {_number(k['M_spread'])}, max R_c "
+                    f"{_number(k['max_R_c'])}, P4 {k['P4_ok']}, direction {k['direction']}, "
+                    f"|M_1.0 - M_nom| {_number(k['M_change'])}, mixed part {k['mixed_ok']}, "
+                    f"speed part {k['speed_ok']}")
+    rows.append(f"- conditions: {result['flags']}")
+    return rows
+
+
+def report_markdown(result: dict, source: Path) -> str:
+    """A Markdown summary of :func:`judge` (record; control-expert recomputes)."""
+    lines = [f"# LAS-b phase diagnosis D-b: judge aid ({source.name})", "",
+             f"- verdict: **{result['verdict']}** (anchors pass: {result['anchors_pass']}, "
+             f"errors {result['errors']}, exclusion problems "
+             f"{len(result['exclusion_problems'])})", "", "## Anchors (plan 1.3)", "",
+             "| anchor | source | expected | got | pass |", "|---|---|---|---|---|"]
+    for name, entry in result["anchors"].items():
+        lines.append(f"| `{name}` | {entry['source']} | {entry['expected'][:12]} | "
+                     f"{(entry['got'] or '-')[:12]} | {entry['pass']} |")
+    if result["exclusion_problems"]:
+        lines += ["", "## Exclusion checks (rev1 4)", ""]
+        lines += [f"- {problem}" for problem in result["exclusion_problems"]]
+    lines += ["", "## Points (plan 2)", "", *_point_rows(result["points"])]
     if result["measures"] is not None:
-        lines += ["", "## Measures (plan 3)", "",
-                  "| key | c | R_c | M_c | P_c | P2 | P3 exceptions | predicting | unordered |",
-                  "|---|---|---|---|---|---|---|---|---|"]
-        for key, by_centre in result["measures"].items():
-            setting = setting_of(key)
-            for centre, m in by_centre.items():
-                lines.append(f"| {setting} | {centre} | {_number(m['R_c'])} | "
-                             f"{_number(m['M_c'])} | {_number(m['P_c'])} | {m['P2_ok']} | "
-                             f"{m['exceptions']} | {m['predicting_pairs']} | "
-                             f"{m['unordered_pairs']} |")
-        for key, k in result["keys"].items():
-            setting = setting_of(key)
-            lines.append(f"- {setting}: M spread {_number(k['M_spread'])}, max R_c "
-                         f"{_number(k['max_R_c'])}, P4 {k['P4_ok']}, direction "
-                         f"{k['direction']}, |M_1.0 - M_nom| {_number(k['M_change'])}")
-        lines.append(f"- conditions: {result['flags']}")
+        lines += ["", "## Measures (plan 3, rev1 1 .. 3)", "", *_measure_rows(result)]
     return "\n".join(lines) + "\n"

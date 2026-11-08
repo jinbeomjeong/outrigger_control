@@ -151,6 +151,12 @@ def test_plan_problem(tmp_path):
     digest = __import__("hashlib").sha256(b"sealed").hexdigest()
     assert diag.plan_problem(plan, digest) is None
     assert "!=" in diag.plan_problem(plan, "0" * 64)
+    crlf = tmp_path / "crlf.md"
+    crlf.write_bytes(b"a\r\nb\n")
+    assert diag.lf_sha256(crlf) == __import__("hashlib").sha256(b"a\nb\n").hexdigest()
+    rev1 = tmp_path / "rev1.md"
+    problems = diag.sealed_plan_problems(((plan, digest), (rev1, "0" * 64)))
+    assert len(problems) == 1 and "missing" in problems[0]
 
 
 def test_las_start_details():
