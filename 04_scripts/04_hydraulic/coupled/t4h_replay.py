@@ -197,24 +197,51 @@ def offset_allowance_of(meta: dict, config):
                                     config.pressure_offset_allowance_N)
 
 
-def recorded_lower_difference_N(arrays: dict, meta: dict, closed_loop, config,
-                                allowance) -> float | None:
-    """Largest ``|replay - lower_reading_N|`` of the replay with the run's own events (None
-    without the run's lower reading); NaN in both counts as equal."""
+def own_event_replay_lower_N(arrays: dict, meta: dict, closed_loop, config,
+                             allowance) -> np.ndarray:
+    """Per-period lower reading of the replay with the run's own events (the
+    ``--check-recorded`` path; ``las_shadow`` rebuilds L-hat from it)."""
     from outrigger_sim.control.c2 import C2Geometry
     from outrigger_sim.control.contact_replay import replay_fallback_monitor
 
-    if "lower_reading_N" not in arrays:
-        return None
     events = [(float(t), str(name)) for t, name in meta.get("events") or []]
     replay = replay_fallback_monitor(_Record(arrays, meta), events,
                                      C2Geometry.from_params(closed_loop.PARAMS), config,
                                      offset_allowance_N=allowance.deduction_N,
                                      offset_allowance_from_s=allowance.from_s)
+    return np.asarray(replay.lower_reading_N, float)
+
+
+def recorded_lower_difference_N(arrays: dict, meta: dict, closed_loop, config,
+                                allowance) -> float | None:
+    """Largest ``|replay - lower_reading_N|`` of the replay with the run's own events (None
+    without the run's lower reading); NaN in both counts as equal."""
+    if "lower_reading_N" not in arrays:
+        return None
+    replayed = own_event_replay_lower_N(arrays, meta, closed_loop, config, allowance)
     recorded = arrays["lower_reading_N"]
-    both_nan = np.isnan(replay.lower_reading_N) & np.isnan(recorded)
-    difference = np.where(both_nan, 0.0, np.abs(replay.lower_reading_N - recorded))
+    both_nan = np.isnan(replayed) & np.isnan(recorded)
+    difference = np.where(both_nan, 0.0, np.abs(replayed - recorded))
     return float(np.max(difference)) if difference.size else 0.0
+
+
+def checked_run_config(path_name: str, meta: dict, extend_start: str | None = None):
+    """:func:`run_config` of a record after the stored-settings checks of :func:`replay_values`.
+
+    Raises:
+        RuntimeError: The rebuilt monitor settings differ from the stored ones (with
+            ``extend_start``: apart from the ③ start keys).
+    """
+    from outrigger_sim.control.extend_start_bound import check_extend_start_meta
+
+    stored = meta["two_pressure_settings"]
+    check_extend_start_meta(stored)
+    closed_loop, config = run_config(meta, extend_start)
+    rebuilt = _plain(config.two_pressure.to_meta())
+    if (_settings_for_comparison(rebuilt, stored, extend_start)
+            != _settings_for_comparison(stored, stored, extend_start)):
+        raise RuntimeError(f"{path_name}: rebuilt two_pressure settings differ from the record")
+    return closed_loop, config, rebuilt
 
 
 def replay_values(path: Path, extend_start: str | None = None,
@@ -228,16 +255,10 @@ def replay_values(path: Path, extend_start: str | None = None,
     """
     from outrigger_sim.control.c2 import C2Geometry
     from outrigger_sim.control.contact_replay import replay_fallback_monitor
-    from outrigger_sim.control.extend_start_bound import check_extend_start_meta
 
     arrays, meta = load_record(path)
     stored = meta["two_pressure_settings"]
-    check_extend_start_meta(stored)
-    closed_loop, config = run_config(meta, extend_start)
-    rebuilt = _plain(config.two_pressure.to_meta())
-    if (_settings_for_comparison(rebuilt, stored, extend_start)
-            != _settings_for_comparison(stored, stored, extend_start)):
-        raise RuntimeError(f"{path.name}: rebuilt two_pressure settings differ from the record")
+    closed_loop, config, rebuilt = checked_run_config(path.name, meta, extend_start)
     t_s = arrays["t_s"]
     forced = [(float(t_s[0]), f"{FALLBACK_EVENT}:{leg}") for leg in LEGS]
     geometry = C2Geometry.from_params(closed_loop.PARAMS)
