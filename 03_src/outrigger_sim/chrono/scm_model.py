@@ -1230,8 +1230,9 @@ class S9Model:
         self.track_values = track_tangential_values(params, soil, interface=interface)
         if rigid_base is not None:  # rigid tracks: 6 roller k_t, no soil in series, mu 0.5 (rigid_base.py)
             rc = self.rigid_crawler_values
+            # k_soil_N_m = 0 stands for "no soil in series" (meta JSON; the rigid_base meta carries the basis)
             self.track_values = TrackTangentialValues(rc.track_k_N_m, rc.track_c_actual_N_s_m, rc.track_c_input_N_s_m,
-                                                      rc.friction, rc.track_k_N_m, math.inf, 0.0)
+                                                      rc.friction, rc.track_k_N_m, 0.0, 0.0)
         surface_point = p_plane
         self.pad_bushing: GroundBushingCoulomb | None = None
         self.crawler_bushing: GroundBushingCoulomb | None = None
