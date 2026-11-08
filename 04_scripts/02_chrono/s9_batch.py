@@ -251,6 +251,9 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     out[V5_REC_BATCH] = v5_rec_rows()
     out[V5_V0V_BATCH] = v5_v0v_rows(out[V5_VB_BATCH])
     out[V5_STAGE3_BATCH] = v5_stage3_rows(out)
+    # V5-STAGE3-LAS (criteria rev. 12 2.1, user decision Q2 2026-11-08; v5_stage3_las_rows.py): the 34 stage 3 rows + 3
+    # pair rows on the LAS-b tags, definitions only; V5-STAGE3 above unchanged
+    out.update(_stage3_las_module().las_stage3_batches(sys.modules[__name__], out))
     # paper v5 (user decision 2026-11-08; definitions only): 2.8 open-loop lift SCM J1 B / G1 B on VB (+ optional V0
     # re-runs of the stored argv), 3.5.2 J_P run_S8C G4 / SS x F_s 0 / 4 / 8 on VB (+ optional V0 = final_C4G2)
     out[V5_OPENLOOP_BATCH] = v5_openloop_rows(out["P3a"])
@@ -276,6 +279,15 @@ def _d1_batches() -> dict[str, list[dict]]:
     finally:
         sys.path.remove(str(HERE))
     return d1_chrono_rows.d1_batches(sys.modules[__name__])
+
+
+def _stage3_las_module():
+    sys.path.insert(0, str(HERE))
+    try:
+        import v5_stage3_las_rows  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    return v5_stage3_las_rows
 
 
 def _las_module():
@@ -1164,7 +1176,8 @@ ENTRY_META_KEYS = ("note", "priority", "controller", "source_run", "pair_case", 
                    "expected_note", "rep_role", "source_expected_diffs", "criteria_id", "stored_wall_s",
                    "s8c_case_id", "v5_setting",
                    "d1_id", "d1_role", "d1_select", "d1_tag", "d1_slope", "d1_flag", "d1_source",
-                   "las", "las_family", "las_crawler", "las_ready", "start_env")
+                   "las", "las_family", "las_crawler", "las_ready", "start_env",
+                   "stored_result", "stored_pool", "hash_comparable", "stored_argv_check", "stage3_controller")
 """Row keys copied into the batch.json case entries (when present)."""
 
 
