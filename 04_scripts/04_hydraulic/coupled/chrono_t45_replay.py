@@ -137,7 +137,7 @@ def run_config(result: dict, extend_start: str | None = None):
     v5 = result.get("v5_hydraulics") or {}
     valve_tau_s = float(((v5.get("actuator") or {}).get("valve") or {}).get(
         "tau_v_s", HARNESS_VALVE_TAU_S))
-    config = C2Config().with_10hz_d1()
+    config = C2Config().with_10hz_d1(liftoff_approach_slow=recorded_liftoff_slow(result))
     config, _ = with_engine_fallback_ratio(config, "L2b_NSC")
     if config.two_pressure.lock_window_valve_tau_s != valve_tau_s:
         config = replace(config, two_pressure=replace(config.two_pressure,
@@ -889,6 +889,18 @@ def summary(rows: list[dict]) -> dict:
                 sum(row["extend_bound_check"].get("locked_breach_over_tol_reads", []))
                 for row in judged if row.get("extend_bound_check")),
             "anchor_note": "앵커 위험 미관측" if risk == 0 else "앵커 위험 관측"}
+
+
+def recorded_liftoff_slow(result: dict) -> bool:
+    """LAS-b of the recorded run (switch 2026-11-08): on when its controller meta has the block
+    on or its tag ends with ``_LAS``; a run before the switch has neither and replays it off."""
+    from outrigger_sim.hydraulics.v5_options import is_liftoff_slow_tag
+
+    block = ((result.get("controller_meta") or {}).get("liftoff_approach_slow") or {})
+    if (block.get("settings") or {}).get("enable"):
+        return True
+    expected = ((result.get("c2_setup") or {}).get("expect_controller") or {}).get("name")
+    return is_liftoff_slow_tag(run_controller_tag(result)) or is_liftoff_slow_tag(expected)
 
 
 def run_controller_tag(result: dict) -> str | None:

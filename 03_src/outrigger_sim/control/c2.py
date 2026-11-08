@@ -225,6 +225,12 @@ the preset (``C2Config().with_10hz_d1(touch_twist_hold=False)`` turns it off).
 K1 (same study, rejected by the user decision of 2026-11-05): a re-trigger start waits for a
 second low sample (``LiftedReapproachSettings.retrigger_samples``); off by default and in the
 preset (``C2Config().with_10hz_d1(reapproach_retrigger_two_samples=True)`` turns it on).
+LAS-b (variant b0, adopted 2026-11-08 after the targeted runs of ``las_targeted_rules.md``):
+once per run, before the LOC and the soil mode, a crawler-zone LEVEL period with a heavy load
+sum, a light leg and a rising diagonal deficit scales the command to a mean of 0.16 ``v_max``
+for up to 1.5 s (:class:`LiftoffApproachSlowSettings`, events ``INFO_LIFTOFF_SLOW`` /
+``INFO_LIFTOFF_SLOW_END``); off by default, on in the preset
+(``C2Config().with_10hz_d1(liftoff_approach_slow=False)`` turns it off).
 P-S8-29 (user decision 2026-10-28, variant V2b): on a creeping pad DONE may accept a twist load
 up to 15 kN that has stopped rising once attitude and clearance have held for 10 s
 (:class:`TwistCompletionRelaxSettings`, event ``INFO_TWIST_UNSETTLED``); preset on, default off.
@@ -507,6 +513,9 @@ class OutputLimit(StrEnum):
     slowdown."""
     INCREMENT = "increment"
     """The R8 increment limit, or the R7 output ramp."""
+    LIFTOFF_SLOW = "liftoff_slow"
+    """LEVEL: the LAS-b lift-off approach slowdown scaled the command to its mean
+    (:class:`LiftoffApproachSlowSettings`)."""
 
 
 class ContactJudge(StrEnum):
@@ -1570,6 +1579,16 @@ R8_SLOPE_MARGIN_MIN_CLEARANCE_AT_P_M = 0.010
 rigid slope reads with sensor noise (r79 L2 ref), spec 417.3."""
 R8_FLAT_SOIL_MARGIN_M = 0.03
 """P-S8-37 R4c30 flat-soil clearance margin of the R8 preset (spec 429.9 / 429.11)."""
+# LAS-b lift-off approach slowdown (variant b0 of ``las_targeted_rules.md`` 1.2 / 1.3 and rev1 2,
+# adopted 2026-11-08 after the targeted runs T-1 / T-2)
+R8_LAS_SUM_ON_FRACTION_W = 0.6
+R8_LAS_LIGHT_LEG_FRACTION_OF_F_MIN = 3.5
+R8_LAS_SLOW_MEAN_FRACTION = 0.16
+R8_LAS_SUM_OFF_FRACTION_W = 0.85
+R8_LAS_OFF_PERIODS = 5
+R8_LAS_MAX_S = 1.5
+R8_LAS_RHO_ON = 0.18
+"""ASSUMPTION of rev1 1 #2: the diagonal deficit ratio that starts the slowdown."""
 R8_D1_SETTINGS = R8Settings(
     output_delay_periods=1,
     imu_sample_period_s=R8_IMU_SAMPLE_PERIOD_S,
@@ -1930,7 +1949,91 @@ class PreLocLiftPauseSettings:
             )
 
 
-SLOPE_MARGIN_EVENT = "INFO_LOC_CLEARANCE_MARGIN"
+LIFTOFF_SLOW_EVENT = "INFO_LIFTOFF_SLOW"
+"""``INFO_LIFTOFF_SLOW:<leg>``: the LAS-b slowdown started; the leg is the lightest one."""
+LIFTOFF_SLOW_END_EVENT = "INFO_LIFTOFF_SLOW_END"
+"""``INFO_LIFTOFF_SLOW_END:<reason>``: the LAS-b slowdown ended (:class:`LiftoffSlowEnd`)."""
+LIFTOFF_SLOW_TIME_TOLERANCE_S = 1e-9
+"""Sample times are sums of 0.1 s steps; the time limit must not miss its period."""
+DIAGONAL_PARTNER_LEG = (3, 2, 1, 0)
+"""Diagonal partner per leg (LEG_ORDER FL, FR, RL, RR): FL-RR and FR-RL."""
+
+
+class LiftoffSlowEnd(StrEnum):
+    """Why a LAS-b slowdown ended, in the order the end conditions are tested."""
+
+    LOC = "loc"
+    """A lift-off confirmation was seen in this run."""
+    PHASE = "phase"
+    """The period is not a LEVEL period (also a period without a LEVEL step)."""
+    SOIL = "soil"
+    """The soil mode has started."""
+    REAPPROACH = "reapproach"
+    """A leg is being re-approached."""
+    SUM = "sum"
+    """The load sum stayed at or above ``sum_off_fraction_W W_ref`` for ``off_periods``."""
+    TIME = "time"
+    """``max_s`` since the start."""
+
+
+@dataclass(frozen=True)
+class LiftoffApproachSlowSettings:
+    """LAS-b lift-off approach slowdown (variant b0, ``las_targeted_rules.md`` 1.2 and rev1 2).
+
+    On a weak pad the attitude loop can lift the crawler at the saturated speed while the
+    lightest leg's diagonal is already unloading (the P-S8-30 slowdown does not act there: the
+    crawler-zone rule has raised the smallest leg command to zero). Once per run, in a LEVEL
+    period before any LOC and before the soil mode, inside the crawler zone, without a
+    re-approach, with the load sum at least ``sum_on_fraction_W W_ref``, the lightest leg below
+    ``light_leg_fraction_of_F_min F_min``, the diagonal deficit ratio ``rho`` at least ``rho_on``
+    and rising since the last LEVEL period, and a mean command above ``slow_mean_fraction
+    v_max``, the command is scaled to that mean until an end reason (:class:`LiftoffSlowEnd`).
+    ``rho = (sum L - 2 (L_i* + L_p(i*))) / sum L`` with ``i*`` the lightest leg (the smaller
+    index on a tie) and ``p`` its diagonal partner. Events :data:`LIFTOFF_SLOW_EVENT` and
+    :data:`LIFTOFF_SLOW_END_EVENT`.
+
+    Off by default, on in :meth:`C2Config.with_10hz_d1`; plain class-level defaults, so
+    configs unpickled from older code read "off".
+    """
+
+    enable: bool = False
+    sum_on_fraction_W: float = R8_LAS_SUM_ON_FRACTION_W
+    """``alpha``: start needs ``sum L >= alpha W_ref``."""
+    light_leg_fraction_of_F_min: float = R8_LAS_LIGHT_LEG_FRACTION_OF_F_MIN
+    """``beta``: start needs ``min L < beta F_min``."""
+    slow_mean_fraction: float = R8_LAS_SLOW_MEAN_FRACTION
+    """``gamma``: start needs a mean above ``gamma v_max``; the slowdown scales to that mean."""
+    sum_off_fraction_W: float = R8_LAS_SUM_OFF_FRACTION_W
+    """``alpha_end``: end ``sum`` counts periods with ``sum L >= alpha_end W_ref``."""
+    off_periods: int = R8_LAS_OFF_PERIODS
+    """``n_end``: periods in a row of the ``sum`` end."""
+    max_s: float = R8_LAS_MAX_S
+    """``T_max``: longest slowdown."""
+    rho_on: float = R8_LAS_RHO_ON
+    """S7' of rev1 2: start needs ``rho >= rho_on`` and ``rho`` above the last LEVEL period's."""
+    require_soil_response: bool = True
+    """S1: start only with ``soil.enable``. ``False`` drops S1 for a baseline without the soil
+    response (U-6 ABL, user decision 2026-11-08); without the soil response there is no LOC and
+    no soil mode, so S3 / S4 always hold and the ``loc`` / ``soil`` ends never come."""
+
+    def __post_init__(self) -> None:
+        for name in ("sum_on_fraction_W", "light_leg_fraction_of_F_min", "max_s"):
+            if not getattr(self, name) > 0.0:
+                raise ValueError(f"{name} must be > 0, got {getattr(self, name)!r}")
+        if not 0.0 < self.slow_mean_fraction <= 1.0:
+            raise ValueError(
+                f"slow_mean_fraction must be in (0, 1], got {self.slow_mean_fraction!r}"
+            )
+        if not self.sum_off_fraction_W >= self.sum_on_fraction_W:
+            raise ValueError(
+                f"sum_off_fraction_W must be >= sum_on_fraction_W "
+                f"({self.sum_on_fraction_W!r}), got {self.sum_off_fraction_W!r}"
+            )
+        if self.off_periods < 1:
+            raise ValueError(f"off_periods must be >= 1, got {self.off_periods!r}")
+
+
+SLOPE_MARGIN_EVENT ="INFO_LOC_CLEARANCE_MARGIN"
 """``INFO_LOC_CLEARANCE_MARGIN:<effective target mm, integer>``: P-S8-31 raised the clearance
 target at the LOC."""
 FLAT_SOIL_MARGIN_EVENT = "INFO_LOC_FLAT_SOIL_MARGIN"
@@ -2263,6 +2366,9 @@ class C2Config:
     pre_loc_lift_pause: PreLocLiftPauseSettings = PreLocLiftPauseSettings()
     """Pre-LOC lift slowdown and fast re-approach (P-S8-30); off by default, a plain
     class-level default as ``soil``."""
+    liftoff_approach_slow: LiftoffApproachSlowSettings = LiftoffApproachSlowSettings()
+    """LAS-b lift-off approach slowdown (variant b0); off by default, a plain class-level
+    default as ``soil``."""
     slope_clearance_margin: SlopeClearanceMarginSettings = SlopeClearanceMarginSettings()
     """Clearance target margin at the LOC on a tilted settle (P-S8-31); off by default, a plain
     class-level default as ``soil``."""
@@ -2387,6 +2493,7 @@ class C2Config:
         touch_twist_hold: bool = True,
         reapproach_retrigger_two_samples: bool = False,
         extend_start_tracked: bool = False,
+        liftoff_approach_slow: bool = True,
     ) -> C2Config:
         """Copy with the R8-D1 design C2 (spec rev. 30 136 / 139, user decisions 2026-10-24).
 
@@ -2471,6 +2578,10 @@ class C2Config:
                 (``TwoPressureSettings.extend_start_rule = "tracked_bound"``,
                 ``p3_extend_start_spec.md`` 4). Off: the design is not adopted (diagnosis
                 option); off keeps the preset bit for bit.
+            liftoff_approach_slow: LAS-b, variant b0 (:class:`LiftoffApproachSlowSettings`,
+                ``las_targeted_rules.md`` 1.2 and rev1 2). On by default since its adoption of
+                2026-11-08; ``False`` gives the preset before that switch
+                (``05_tests/unit/pre_las_preset_runner.py`` runs a script that way).
         """
         retrigger_samples = R8_RETRIGGER_CONFIRM_SAMPLES if reapproach_retrigger_two_samples else 1
         config = self.with_r8_diagnostics()
@@ -2567,6 +2678,9 @@ class C2Config:
             lock_tail=lock_tail,
             twist_completion_relax=twist_completion_relax,
             pre_loc_lift_pause=pre_loc_lift_pause,
+            liftoff_approach_slow=replace(
+                config.liftoff_approach_slow, enable=liftoff_approach_slow
+            ),
             period_s=R8_PERIOD_S,
             output_ramp_time_s=None,
             gains=replace(config.gains, **R8_D1_C2_GAINS),
@@ -3474,6 +3588,22 @@ def _no_output_limits() -> dict[str, NDArray[np.bool_]]:
     return {limit.value: np.zeros(LEG_COUNT, dtype=bool) for limit in OutputLimit}
 
 
+def diagonal_deficit_ratio(loads_N: ArrayLike) -> tuple[float, int]:
+    """``(rho, i*)`` of LAS-b S7' (``las_targeted_rules_rev1.md`` 2).
+
+    ``i*`` is the lightest leg (the smaller index on a tie) and ``rho`` how much less its
+    diagonal carries than the other one, over the load sum; ``rho`` is NaN when the sum is not
+    positive (the start gate is then false).
+    """
+    loads = np.asarray(loads_N, dtype=float)
+    lightest_leg = int(np.argmin(loads))
+    total_N = float(np.sum(loads))
+    if not total_N > 0.0:
+        return float("nan"), lightest_leg
+    diagonal_N = float(loads[lightest_leg] + loads[DIAGONAL_PARTNER_LEG[lightest_leg]])
+    return (total_N - 2.0 * diagonal_N) / total_N, lightest_leg
+
+
 def _leg_names(legs: Sequence[int]) -> str:
     """``FL,RR``-style event text of leg indices, in the given order."""
     return ",".join(LEG_ORDER[leg] for leg in legs)
@@ -3669,6 +3799,29 @@ class _DiffSinkState:
     hold_periods: int = 0
     """Periods with a hold at the end of ``update`` (meta ``active_s``)."""
     events: list[dict[str, Any]] = field(default_factory=list)
+
+
+@dataclass
+class _LiftoffSlowState:
+    """LAS-b of one run (:class:`LiftoffApproachSlowSettings`)."""
+
+    is_armed: bool = True
+    """No start yet (one start per run)."""
+    is_active: bool = False
+    has_loc_been_seen: bool = False
+    """A LEVEL step saw a confirmed LOC in this run (a revocation does not clear it)."""
+    has_level_step_run: bool = False
+    """This period's command came from a LEVEL step."""
+    previous_rho: float | None = None
+    """``rho`` of the last period's LEVEL step; ``None`` after a period without one."""
+    start_s: float | None = None
+    start_leg: int | None = None
+    sum_periods: int = 0
+    """Active periods in a row with ``sum L >= sum_off_fraction_W W_ref``."""
+    end_s: float | None = None
+    end_reason: LiftoffSlowEnd | None = None
+    active_periods: int = 0
+    scaled_periods: int = 0
 
 
 @dataclass
@@ -4027,6 +4180,9 @@ class _RunState:
     soil_stop_preempted: str | None = None
     """Phase that a stroke-end FAULT or the hold limit set in the stop period (kept, no soil
     stop event)."""
+    # LAS-b (immutable default: class attribute for run states pickled before it)
+    liftoff_slow: _LiftoffSlowState | None = None
+    """Created by the first update with the rule on."""
 
 
 @dataclass(frozen=True)
@@ -4220,7 +4376,11 @@ class C2Controller:
         phase_before = state.phase
         reanchor_stage_before = None if state.reanchor is None else state.reanchor.stage
         self._update_lifted_reapproach(reading)
+        if self.config.liftoff_approach_slow.enable:
+            self._liftoff_slow_state().has_level_step_run = False
         leg_speeds = self._phase_command(reading)
+        if self.config.liftoff_approach_slow.enable:
+            self._finish_liftoff_slow_period(reading.t_s)
         if state.command_components is None:
             self._record_phase_path_command(leg_speeds)
         self._request_lock_tails(reading, phase_before, reanchor_stage_before)
@@ -4300,6 +4460,7 @@ class C2Controller:
             "lift_stroke_guard": self._lift_stroke_guard_meta(),
             "twist_relax": self._twist_relax_meta(),
             "pre_loc_lift_pause": self._pre_loc_lift_pause_meta(),
+            "liftoff_approach_slow": self._liftoff_approach_slow_meta(),
             "slope_clearance_margin": self._slope_clearance_margin_meta(),
             "liftoff_window_reapproach": self._liftoff_window_reapproach_meta(),
             "loc_revoke": self._loc_revoke_meta(),
@@ -6783,6 +6944,10 @@ class C2Controller:
             leg_speeds = lifted_speeds
         leg_speeds = self._apply_reapproach_speeds(leg_speeds, reapproaching)
         leg_speeds = self._apply_pre_loc_lift_pause(reading, leg_speeds)
+        if self.config.liftoff_approach_slow.enable:
+            slowed_speeds = self._apply_liftoff_approach_slow(reading, leg_speeds, reapproaching)
+            self._note_output_limit(OutputLimit.LIFTOFF_SLOW, leg_speeds, slowed_speeds)
+            leg_speeds = slowed_speeds
         if self._is_diff_sink_holding():
             leg_speeds = self._diff_sink_added_speeds(leg_speeds)  # before the P-S8-28 guard
         leg_speeds = self._apply_lift_stroke_guard(reading, leg_speeds)
@@ -7293,6 +7458,162 @@ class C2Controller:
             "pauses": state.pre_loc_pause_count,
             "pause_periods": state.pre_loc_pause_periods,
         }
+
+    # --- LAS-b lift-off approach slowdown (las_targeted_rules.md 1.2, rev1 2) ---
+
+    def _liftoff_slow_state(self) -> _LiftoffSlowState:
+        state = self._state
+        if state.liftoff_slow is None:
+            state.liftoff_slow = _LiftoffSlowState()
+        return state.liftoff_slow
+
+    def _apply_liftoff_approach_slow(
+        self,
+        reading: _Reading,
+        leg_speeds: NDArray[np.float64],
+        reapproaching: NDArray[np.bool_],
+    ) -> NDArray[np.float64]:
+        """LAS-b right after the P-S8-30 stage: start (once per run), end check, then the
+        scale to the slow mean.
+
+        Every LEVEL step stores its ``rho`` as the next period's ``rho_{k-1}``, before and
+        after the start. An ending period keeps its command.
+        """
+        slow = self._liftoff_slow_state()
+        slow.has_level_step_run = True
+        slow.has_loc_been_seen = slow.has_loc_been_seen or self._is_liftoff_confirmed()
+        loads_N = np.asarray(self._load_estimate_N(reading.cylinder_force_lower_N), dtype=float)
+        is_reapproaching = bool(np.any(reapproaching))
+        rho, lightest_leg = diagonal_deficit_ratio(loads_N)
+        should_start = slow.is_armed and self._liftoff_slow_start_gates_hold(
+            loads_N, rho, leg_speeds, is_reapproaching
+        )
+        slow.previous_rho = rho
+        if should_start:
+            slow.is_armed = False
+            slow.is_active = True
+            slow.start_s = float(reading.t_s)
+            slow.start_leg = lightest_leg
+            self._add_event(reading.t_s, f"{LIFTOFF_SLOW_EVENT}:{LEG_ORDER[lightest_leg]}")
+        if not slow.is_active:
+            return leg_speeds
+        reason = self._liftoff_slow_end_reason(loads_N, is_reapproaching, float(reading.t_s))
+        if reason is not None:
+            self._end_liftoff_slow(reading.t_s, reason)
+            return leg_speeds
+        slow.active_periods += 1
+        return self._scaled_to_liftoff_slow_mean(leg_speeds)
+
+    def _liftoff_slow_start_gates_hold(
+        self,
+        loads_N: NDArray[np.float64],
+        rho: float,
+        leg_speeds: NDArray[np.float64],
+        is_reapproaching: bool,
+    ) -> bool:
+        """S1 .. S8 of rules 1.2 with S7' of rev1 2 (``rho`` of this period against the stored
+        ``rho_{k-1}``; no previous LEVEL period = not rising)."""
+        settings = self.config.liftoff_approach_slow
+        slow = self._liftoff_slow_state()
+        is_window_open = (
+            (self.config.soil.enable or not settings.require_soil_response)
+            and self._state.phase is C2Phase.LEVEL
+            and not slow.has_loc_been_seen
+            and not self._has_soil_mode_started()
+            and self._state.in_crawler_zone
+            and not is_reapproaching
+        )
+        if not is_window_open:
+            return False
+        previous_rho = slow.previous_rho
+        is_twist_rising = (
+            previous_rho is not None and rho >= settings.rho_on and rho > previous_rho
+        )
+        is_sum_heavy = (
+            float(np.sum(loads_N)) >= settings.sum_on_fraction_W * self._reference_weight_N()
+        )
+        is_leg_light = (
+            float(np.min(loads_N))
+            < settings.light_leg_fraction_of_F_min * self.geometry.F_min_N
+        )
+        is_fast = (
+            float(np.mean(leg_speeds))
+            > settings.slow_mean_fraction * self.geometry.max_speed_m_s
+        )
+        return is_sum_heavy and is_leg_light and is_twist_rising and is_fast
+
+    def _liftoff_slow_end_reason(
+        self, loads_N: NDArray[np.float64], is_reapproaching: bool, t_s: float
+    ) -> LiftoffSlowEnd | None:
+        """The end table of rules 1.2 in its order; the ``sum`` count is updated here (active
+        periods only, back to 0 on a period below the level)."""
+        settings = self.config.liftoff_approach_slow
+        slow = self._liftoff_slow_state()
+        if slow.has_loc_been_seen:
+            return LiftoffSlowEnd.LOC
+        if self._state.phase is not C2Phase.LEVEL:
+            return LiftoffSlowEnd.PHASE
+        if self._has_soil_mode_started():
+            return LiftoffSlowEnd.SOIL
+        if is_reapproaching:
+            return LiftoffSlowEnd.REAPPROACH
+        if float(np.sum(loads_N)) >= settings.sum_off_fraction_W * self._reference_weight_N():
+            slow.sum_periods += 1
+        else:
+            slow.sum_periods = 0
+        if slow.sum_periods >= settings.off_periods:
+            return LiftoffSlowEnd.SUM
+        assert slow.start_s is not None  # active implies started
+        if t_s - slow.start_s >= settings.max_s - LIFTOFF_SLOW_TIME_TOLERANCE_S:
+            return LiftoffSlowEnd.TIME
+        return None
+
+    def _scaled_to_liftoff_slow_mean(
+        self, leg_speeds: NDArray[np.float64]
+    ) -> NDArray[np.float64]:
+        """``u gamma v_max / mean(u)`` when the mean is above ``gamma v_max``, else ``u``."""
+        slow_mean_m_s = (
+            self.config.liftoff_approach_slow.slow_mean_fraction * self.geometry.max_speed_m_s
+        )
+        mean_m_s = float(np.mean(leg_speeds))
+        if mean_m_s <= slow_mean_m_s:
+            return leg_speeds
+        self._liftoff_slow_state().scaled_periods += 1
+        return leg_speeds * (slow_mean_m_s / mean_m_s)
+
+    def _end_liftoff_slow(self, t_s: float, reason: LiftoffSlowEnd) -> None:
+        slow = self._liftoff_slow_state()
+        slow.is_active = False
+        slow.end_s = float(t_s)
+        slow.end_reason = reason
+        self._add_event(t_s, f"{LIFTOFF_SLOW_END_EVENT}:{reason}")
+
+    def _finish_liftoff_slow_period(self, t_s: float) -> None:
+        """After the phase command: a period without a LEVEL step forgets ``rho_{k-1}`` and
+        ends a running slowdown (reason ``phase``)."""
+        slow = self._liftoff_slow_state()
+        if slow.has_level_step_run:
+            return
+        slow.previous_rho = None
+        if slow.is_active:
+            self._end_liftoff_slow(t_s, LiftoffSlowEnd.PHASE)
+
+    def _liftoff_approach_slow_meta(self) -> dict[str, Any]:
+        slow = self._state.liftoff_slow
+        meta: dict[str, Any] = {"settings": asdict(self.config.liftoff_approach_slow)}
+        if slow is None:
+            return meta
+        meta.update(
+            {
+                "start_s": slow.start_s,
+                "start_leg": None if slow.start_leg is None else LEG_ORDER[slow.start_leg],
+                "end_s": slow.end_s,
+                "end_reason": None if slow.end_reason is None else str(slow.end_reason),
+                "active_periods": slow.active_periods,
+                "scaled_periods": slow.scaled_periods,
+            }
+        )
+        return meta
 
     # --- stroke-budget guard and stroke-end FAULT (P-S8-28, spec rev. 70 369.2 .. 369.4) ---
 

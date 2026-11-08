@@ -1506,27 +1506,48 @@ FINAL_P3_CONTROLLER = "final_C4G2_P3"
 """v5 VB / LS controller (criteria revision 8 3.1, user decision 2026-11-08): :data:`FINAL_CONTROLLER` + the ③ start
 bound (``two_pressure.extend_start_rule`` ``tracked_bound``, revision 4), switched on by ``--extend-start-tracked``
 (``v5_options.EXTEND_START_CONTROLLER_TAG``)."""
+FINAL_LAS_CONTROLLER = "final_C4G2_LAS"
+"""Preset since the LAS-b switch (2026-11-08, ``las_targeted_rules.md`` b0): :data:`FINAL_CONTROLLER` + the lift-off
+approach slowdown (``liftoff_approach_slow``); ``v5_options.LAS_CONTROLLER_TAG``. The two tags without ``_LAS`` refuse
+the switched preset (their results ran without LAS-b; ``05_tests/unit/pre_las_preset_runner.py`` reproduces them)."""
+FINAL_P3_LAS_CONTROLLER = "final_C4G2_P3_LAS"
+"""v5 VB / LS controller since the LAS-b switch: :data:`FINAL_P3_CONTROLLER` + LAS-b
+(``v5_options.EXTEND_START_LAS_CONTROLLER_TAG``)."""
 _FINAL_EXPECTATIONS: tuple[tuple[str, Any], ...] = (
     *_SPEC_429_11_EXPECTATIONS, ("clip_returned_command", True),
     ("touch_twist_hold.enable", True), ("touch_twist_hold.vector_ramp", True),
     ("r8.lifted_reapproach.retrigger_samples", 1))
+_P3_EXPECTATIONS: tuple[tuple[str, Any], ...] = (
+    ("two_pressure.extend_start_rule", "tracked_bound"), ("two_pressure.extend_start_bound.revision", 4))
+_LAS_EXPECTATIONS: tuple[tuple[str, Any], ...] = (
+    ("liftoff_approach_slow.enable", True), ("liftoff_approach_slow.sum_on_fraction_W", 0.6),
+    ("liftoff_approach_slow.light_leg_fraction_of_F_min", 3.5), ("liftoff_approach_slow.slow_mean_fraction", 0.16),
+    ("liftoff_approach_slow.sum_off_fraction_W", 0.85), ("liftoff_approach_slow.off_periods", 5),
+    ("liftoff_approach_slow.max_s", 1.5), ("liftoff_approach_slow.rho_on", 0.18),
+    ("liftoff_approach_slow.require_soil_response", True))
+"""LAS-b variant b0 (``las_targeted_rules.md`` 1.3, rev1 1 #2)."""
 CONTROLLER_EXPECTATIONS: dict[str, tuple[tuple[str, Any], ...]] = {
     FINAL_CONTROLLER: _FINAL_EXPECTATIONS,
-    FINAL_P3_CONTROLLER: (*_FINAL_EXPECTATIONS, ("two_pressure.extend_start_rule", "tracked_bound"),
-                          ("two_pressure.extend_start_bound.revision", 4)),
+    FINAL_P3_CONTROLLER: (*_FINAL_EXPECTATIONS, *_P3_EXPECTATIONS),
     BEFORE_C4G2_CONTROLLER: _SPEC_429_11_EXPECTATIONS,
+    FINAL_LAS_CONTROLLER: (*_FINAL_EXPECTATIONS, *_LAS_EXPECTATIONS),
+    FINAL_P3_LAS_CONTROLLER: (*_FINAL_EXPECTATIONS, *_P3_EXPECTATIONS, *_LAS_EXPECTATIONS),
 }
 """``level --expect-controller``: (dotted C2Config attribute, required value) per controller tag. The paths are C2Config
 attributes; ``controller_meta`` keeps the same names under ``<block>.settings`` (e.g. ``lift_stroke_guard.settings.
 soil_stop``, ``slope_clearance_margin.settings.flat_soil_margin_m``). The rows do not pin the controller themselves:
 they run the run-time preset ``C2Config().with_10hz_d1()`` and this check refuses a preset without the final rules."""
 CONTROLLER_ABSENT_OR_OFF: dict[str, tuple[str, ...]] = {
-    FINAL_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
-    FINAL_P3_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
-    BEFORE_C4G2_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "touch_twist_hold"),
+    FINAL_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "liftoff_approach_slow"),
+    FINAL_P3_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "liftoff_approach_slow"),
+    BEFORE_C4G2_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "touch_twist_hold",
+                             "liftoff_approach_slow"),
+    FINAL_LAS_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
+    FINAL_P3_LAS_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
 }
-"""C2Config blocks a controller tag must not have on (spec 429.11: P37t / ZIC rejected): the block is absent, or its
-``enable`` is False. A block without an ``enable`` attribute fails."""
+"""C2Config blocks a controller tag must not have on (spec 429.11: P37t / ZIC rejected; the tags before the LAS-b
+switch: ``liftoff_approach_slow``): the block is absent, or its ``enable`` is False. A block without an ``enable``
+attribute fails."""
 CONTROLLER_PENDING_CHECKS: dict[str, tuple[tuple[str, Any], ...]] = {}
 """Recorded, not checked (placeholders). Empty since 429.11: R4 moved to :data:`CONTROLLER_EXPECTATIONS`, P37t / ZIC
 to :data:`CONTROLLER_ABSENT_OR_OFF`."""
@@ -5653,8 +5674,9 @@ def run_level(args) -> Path:
         from outrigger_sim.hydraulics.v5_options import controller_tag
 
         v5_meta = apply_plant_options(model.actuator, v5_options, params)
-        if controller_tag(v5_options) is not None:  # criteria rev. 8 3.1 (key only with ③ on)
-            v5_meta["controller_tag"] = controller_tag(v5_options)
+        tag = controller_tag(v5_options, config)
+        if tag is not None:  # criteria rev. 8 3.1 (key only with ③ or LAS-b on)
+            v5_meta["controller_tag"] = tag
     if model.actuator.friction_path != (args.fs_kN > 0.0):
         raise RuntimeError(f"--fs-kN {args.fs_kN:g}: the plant friction path is {model.actuator.friction_path} "
                            "(seal friction override not applied)")

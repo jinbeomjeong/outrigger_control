@@ -1528,10 +1528,13 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
     c2, config, settle_meta, fallback_ratio_meta = _controller(case, params_ctrl, params,
                                                                hydraulics=v5_options)
     if v5_options is not None:  # criteria P-4: the controller window is the one of the options
-        from outrigger_sim.hydraulics.v5_options import check_lock_window_meta
+        from outrigger_sim.hydraulics.v5_options import check_lock_window_meta, controller_tag
 
         check_lock_window_meta(c2.config.two_pressure.to_meta(), v5_options,
                                params.actuator.max_speed_m_s, case.base.tau_v_s)
+        tag = controller_tag(v5_options, c2.config)
+        if tag is not None:  # the built controller decides the LAS-b suffix (2026-11-08)
+            v5_meta["controller_tag"] = tag
     controller = c2
     forced = None
     if ev and ev["kind"] == "retract":

@@ -281,13 +281,22 @@ def extend_start_record(controller) -> dict:
             "revision": (settings.get("extend_start_bound") or {}).get("revision")}
 
 
-def controller_tag(options, controller_name: str = "C2") -> str:
-    """Rules 1 / 7 G-2 tag: V0 ``final_C4G2``, VB C2 ``final_C4G2_P3``, U-6 ``ABL`` / ``IND``."""
+def controller_tag(options, controller_name: str = "C2", config=None) -> str:
+    """Rules 1 / 7 G-2 tag: V0 ``final_C4G2``, VB C2 ``final_C4G2_P3``, U-6 ``ABL`` / ``IND``.
+
+    ``config`` = the C2 config the run built: with LAS-b on (switch 2026-11-08) the tag gets
+    ``_LAS`` (``final_C4G2_LAS``, ``final_C4G2_P3_LAS``, ``ABL_LAS``). The setting definition
+    (:func:`definition`, its sealed digest) is built without it and keeps the tag before it.
+    """
+    from outrigger_sim.hydraulics.v5_options import is_liftoff_slow_on, with_liftoff_slow_tag
+
     if controller_name in (TAG_ABL, TAG_IND):
-        return controller_name
-    if options is not None and options.extend_start_tracked:
-        return TAG_VB
-    return TAG_V0
+        tag = controller_name
+    elif options is not None and options.extend_start_tracked:
+        tag = TAG_VB
+    else:
+        tag = TAG_V0
+    return with_liftoff_slow_tag(tag) if is_liftoff_slow_on(config) else tag
 
 
 def has_rod_reading(controller) -> bool:
@@ -374,7 +383,7 @@ def run_record(plant, controller, *, harness_commands_sha256: str | None,
     options = installed_options()
     period = verdict_runs.period_arrays(controller) if hasattr(controller, "__dict__") else None
     t_lift_s = None if plant is None or period is None else _lift_time_s(plant, period)
-    tag = controller_tag(options, controller_name)
+    tag = controller_tag(options, controller_name, getattr(controller, "config", None))
     hydraulics = harness_hydraulics.plant_record(plant, t_lift_s) if options is not None else {}
     bound_check = hydraulics.get("extend_bound_check")
     rod_reading = has_rod_reading(controller)
