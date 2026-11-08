@@ -180,6 +180,8 @@ def test_start_on_a_rising_twist_and_scale_to_the_slow_mean(controller) -> None:
     meta = controller.meta()["liftoff_approach_slow"]
     assert meta["start_s"] == pytest.approx(20.2)
     assert meta["start_leg"] == "FR"
+    assert meta["start_rho"] == diagonal_deficit_ratio(MORE_TWISTED_LOADS_N)[0]
+    assert meta["start_rho_prev"] == diagonal_deficit_ratio(TWISTED_LOADS_N)[0]
     assert meta["active_periods"] == 1
     assert meta["scaled_periods"] == 1
 
@@ -318,6 +320,42 @@ def test_end_on_a_reapproach(controller) -> None:
     start(controller)
     _end_and_check(controller, LiftoffSlowEnd.REAPPROACH,
                    reapproaching=np.array([False, False, True, False]))
+
+
+def _without_soil_response(controller) -> None:
+    """The U-6 ABL settings: soil response off, S1 dropped."""
+    _block_s1(controller)
+    settings = replace(controller.config.liftoff_approach_slow, require_soil_response=False)
+    controller.config = replace(controller.config, liftoff_approach_slow=settings)
+
+
+def test_abl_ends_in_the_period_that_leaves_the_crawler_zone(controller) -> None:
+    """Spec 436.9.4: ``zone`` (S5 false) ends a slowdown without the soil response."""
+    _without_soil_response(controller)
+    start(controller)
+    assert stage(controller, MORE_TWISTED_LOADS_N) is not FAST_SPEEDS_M_S  # still in the zone
+    _block_s5(controller)
+    _end_and_check(controller, LiftoffSlowEnd.ZONE)
+
+
+def test_zone_comes_after_reapproach_and_before_sum(controller) -> None:
+    _without_soil_response(controller)
+    start(controller)
+    _block_s5(controller)
+    _end_and_check(controller, LiftoffSlowEnd.REAPPROACH,
+                   reapproaching=np.array([False, False, True, False]))
+    assert list(LiftoffSlowEnd).index(LiftoffSlowEnd.ZONE) == (
+        list(LiftoffSlowEnd).index(LiftoffSlowEnd.REAPPROACH) + 1)
+    assert list(LiftoffSlowEnd).index(LiftoffSlowEnd.SUM) == (
+        list(LiftoffSlowEnd).index(LiftoffSlowEnd.ZONE) + 1)
+
+
+def test_leaving_the_zone_does_not_end_the_c2_slowdown(controller) -> None:
+    """With the soil response (C2 / V0 / VB) there is no ``zone`` end: commands unchanged."""
+    start(controller)
+    _block_s5(controller)
+    assert stage(controller, MORE_TWISTED_LOADS_N) is not FAST_SPEEDS_M_S
+    assert slow_events(controller) == [f"{LIFTOFF_SLOW_EVENT}:FR"]
 
 
 def test_end_on_a_period_without_a_level_step(controller) -> None:

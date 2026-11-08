@@ -12,6 +12,10 @@ its D-1 run only if all of:
   Q-5  the reused record is the slope-suite record of the D-1 run (``d1.u3``, written by
        ``d1_runs.u3_record``) and is judged by the U-3 judge like any other record; a D-1
        line without that block is not reused.
+  Q-6  (rules rev2 1 #6, LAS-b switch) the D-1 line carries the LAS tag of the setting
+       (V0 ``final_C4G2_LAS``, VB ``final_C4G2_P3_LAS``): only ``v5/d1_las.jsonl`` lines are
+       reused; a line without a tag or with another tag is not. The reused record keeps the
+       line's tag.
 A reused record carries ``reuse: "d1"`` and ``d1_key``.
 """
 
@@ -106,7 +110,21 @@ def _d1_line_for(lines: list[dict], row_key: str, setting: str) -> tuple[dict | 
         return None, f"Q-1: the D-1 line has an error ({line['error'][:80]})"
     if "u3" not in (line.get("d1") or {}):
         return None, "Q-5: the D-1 line has no u3 block (D-1 run before d1_runs.u3_record)"
-    return line, ""
+    return line, _tag_problem(line, setting)
+
+
+def _tag_problem(line: dict, setting: str) -> str:
+    """Rules rev2 1 #6: only a D-1 line with the LAS tag of the setting is reused
+    (``v5/d1_las.jsonl``; the pre-switch ``v5/d1.jsonl`` lines carry another tag or none)."""
+    import v5_rerun
+
+    tag = line.get("controller_tag")
+    expected = v5_rerun.SETTING_TAGS_LAS[setting]
+    if tag is None:
+        return "Q-6: the D-1 line has no controller_tag (a run before the LAS-b switch)"
+    if tag != expected:
+        return f"Q-6: D-1 controller_tag {tag!r} != {expected!r} (rules rev2 1 #6)"
+    return ""
 
 
 def q2_problems(payload: dict, row: dict, settle_hook: str) -> list[str]:
@@ -152,7 +170,7 @@ def plan(d1_path: Path, setting: str, jobs: list[dict], *, settle_hook: str) -> 
             continue
         family, row_key = REUSE_TABLE[key]
         line, reason = _d1_line_for(lines, row_key, setting)
-        if line is None:
+        if line is None or reason:
             rejected[key] = reason
             continue
         problems = q2_problems(job["payload"], line["job"]["d1"], settle_hook)
@@ -193,11 +211,16 @@ def reused_record(plan_: Plan, job: dict, decision: Decision) -> dict:
     """The U-3 record of a key that reuses its D-1 run (the D-1 ``u3`` block and its v5 keys)."""
     import v5_rerun
 
+    from outrigger_sim.hydraulics.v5_options import EXTEND_START_TAGS
+
     line = plan_.lines[job["id"]]
     d1 = line["d1"]
     setting = line["job"]["setting"]
+    problem = _tag_problem(line, setting)
+    if problem:  # plan() rejects such a line; a hand-made plan must not slip one through
+        raise ValueError(f"{job['id']}: {problem}")
     v5 = {"v5_setting": setting,
-          "controller_tag": line.get("controller_tag") or v5_rerun.TAG_V0,
+          "controller_tag": line["controller_tag"],
           "definition_sha256": v5_rerun.definition_sha256(setting),
           "code": "D-1 line (no commit recorded; rules 6 Q-3 -> Q-4 sample hash)",
           "head_only_declared": d1.get("head_only_declared"),
@@ -209,7 +232,7 @@ def reused_record(plan_: Plan, job: dict, decision: Decision) -> dict:
     bound = (line.get("hydraulics_record") or {}).get("extend_bound_check")
     if bound is not None:
         v5["extend_bound_check"] = bound
-    if v5["controller_tag"] == v5_rerun.TAG_VB:
+    if v5["controller_tag"] in EXTEND_START_TAGS:
         # the D-1 worker refused a VB run whose preset rule was not the bound
         # (harness_hydraulics.check_last_extend_start); this code runs revision 4 only
         from outrigger_sim.control.extend_start_bound import EXTEND_START_REVISION

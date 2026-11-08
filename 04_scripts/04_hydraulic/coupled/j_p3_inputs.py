@@ -25,8 +25,10 @@ for _path in (HERE, ROOT / "03_src"):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
+from outrigger_sim.hydraulics.v5_options import EXTEND_START_TAGS  # noqa: E402
+
 P3_CONTROLLER_TAG = "final_C4G2_P3"
-P3_CONTROLLER_TAGS = (P3_CONTROLLER_TAG, "final_C4G2_P3_LAS")
+P3_CONTROLLER_TAGS = EXTEND_START_TAGS
 """③-on tags: before and after the LAS-b switch (``v5_options.EXTEND_START_TAGS``)."""
 P3_RULE = "tracked_bound"
 P3_SETTING_PREFIXES = ("VB", "LS")

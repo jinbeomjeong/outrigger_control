@@ -478,11 +478,48 @@ def _slow_lift_scaled(original):
 _INSTALLED: dict = {}
 
 
+def _turn_preset_las_off(c2) -> None:
+    """Give ``C2Config.with_10hz_d1`` the pre-switch default ``liftoff_approach_slow=False``.
+
+    Since the LAS-b switch (2026-11-08) the preset runs LAS-b b0 itself; the wrapper of this
+    module is LAS-b (or its reference ``current``) on top of the preset *before* the switch,
+    which is the condition of the stored lines (``las_T1`` / ``las_T2``, ``fb_F*``). Without
+    this the slowdown would act twice and its events would be logged twice
+    (``pre_las_preset_runner.py`` does the same for a whole script). A caller that passes the
+    keyword still gets what it asks for, and :func:`_refuse_preset_las` stops such a run.
+    """
+    switched_preset = c2.C2Config.with_10hz_d1
+
+    def pre_las_preset(self, *args, liftoff_approach_slow: bool = False, **keywords):
+        return switched_preset(self, *args, liftoff_approach_slow=liftoff_approach_slow,
+                               **keywords)
+
+    c2.C2Config.with_10hz_d1 = pre_las_preset
+    if c2.C2Config().with_10hz_d1().liftoff_approach_slow.enable:
+        raise RuntimeError("las_targeted.install: the preset still has LAS-b on")
+
+
+def _refuse_preset_las(controller) -> None:
+    """Stop a run whose controller has the in-controller LAS-b on (double application).
+
+    Raises:
+        RuntimeError: ``config.liftoff_approach_slow.enable`` is true.
+    """
+    settings = getattr(controller.config, "liftoff_approach_slow", None)
+    if settings is not None and settings.enable:
+        raise RuntimeError("las_targeted wrapper on a controller with liftoff_approach_slow "
+                           "on: LAS-b would act twice (build the config with "
+                           "with_10hz_d1(liftoff_approach_slow=False))")
+
+
 def install(params: LasParams, mode: str = MODE_ACT) -> None:
     """Patch ``c2.C2Controller`` of this process (call once per worker, before the run).
 
+    The R8 preset gets LAS-b off first (:func:`_turn_preset_las_off`), and a controller that
+    still has it on is refused in its first control period (:func:`_refuse_preset_las`).
+
     Raises:
-        RuntimeError: Installed twice in one process.
+        RuntimeError: Installed twice in one process, or the preset keeps LAS-b on.
         ValueError: ``--gate-only`` with a candidate that is not LAS-b (it would act).
     """
     if _INSTALLED:
@@ -491,6 +528,7 @@ def install(params: LasParams, mode: str = MODE_ACT) -> None:
         raise ValueError(f"gate-only needs a LAS-b candidate, got kind {params.kind!r}")
     from outrigger_sim.control import c2
 
+    _turn_preset_las_off(c2)
     cls = c2.C2Controller
     original_reapproach = cls._apply_reapproach_speeds
     original_pause = cls._apply_pre_loc_lift_pause
@@ -524,6 +562,7 @@ def install(params: LasParams, mode: str = MODE_ACT) -> None:
         return scaled
 
     def phase_command(self, reading):
+        _refuse_preset_las(self)
         run = _run_of(self, params, mode)
         run.has_level_step_run = False
         speeds = original_phase_command(self, reading)
