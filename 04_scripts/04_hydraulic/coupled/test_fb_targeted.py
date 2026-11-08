@@ -397,3 +397,321 @@ def test_sealed_check_reports_a_rev1_seal_value_the_tool_does_not_expect(
 
 def test_f4_runs_r2_with_reanchor_on() -> None:
     assert ft.F4_CASES[0] == "R2ra"
+
+
+# ------------------------------------------------------------------------------- audit fixes
+def _c2_or_skip():
+    try:
+        from outrigger_sim.control import c2
+    except ImportError:
+        pytest.skip("outrigger_sim not importable")
+    return c2
+
+
+def test_the_r8_preset_is_las_b_b0_and_a_changed_value_is_refused() -> None:
+    from dataclasses import replace
+
+    c2 = _c2_or_skip()
+    settings = c2.C2Config().with_10hz_d1().liftoff_approach_slow
+    assert ft.preset_las_problems(settings) == []
+    off = replace(settings, enable=False)
+    assert ft.preset_las_problems(off) == ["liftoff_approach_slow.enable is False"]
+    other = replace(settings, rho_on=0.2)
+    assert ft.preset_las_problems(other) == ["rho_on 0.2 != b0 0.18"]
+    assert ft.preset_las_problems(None) == ["no liftoff_approach_slow settings"]
+    no_soil = replace(settings, require_soil_response=False)
+    assert "require_soil_response" in ft.preset_las_problems(no_soil)[0]
+
+
+def test_install_candidate_checks_the_preset_and_never_installs_the_las_wrapper(
+        monkeypatch) -> None:
+    import las_targeted as lt
+
+    calls = []
+    monkeypatch.setattr(ft, "check_preset_las", lambda: calls.append("preset"))
+    monkeypatch.setattr(ft, "install", lambda params: calls.append("fb"))
+    monkeypatch.setattr(ft, "_capture_runs", lambda: calls.append("capture"))
+    monkeypatch.setattr(lt, "install", lambda *args: calls.append("las wrapper"))
+    ft._install_candidate(ft.CANDIDATES["L"])
+    assert calls == ["preset", "capture"]
+    calls.clear()
+    ft._install_candidate(ft.CANDIDATES["LF"])
+    assert calls == ["preset", "fb", "capture"]
+
+
+def test_check_preset_las_stops_when_the_preset_has_las_off(monkeypatch) -> None:
+    c2 = _c2_or_skip()
+    preset = c2.C2Config.with_10hz_d1
+    monkeypatch.setattr(c2.C2Config, "with_10hz_d1",
+                        lambda self, **kw: preset(self, **{**kw, "liftoff_approach_slow": False}))
+    with pytest.raises(RuntimeError, match="not LAS-b b0"):
+        ft.check_preset_las()
+
+
+def test_check_preset_las_stops_with_the_las_wrapper_installed(monkeypatch) -> None:
+    import las_targeted as lt
+
+    _c2_or_skip()
+    monkeypatch.setitem(lt._INSTALLED, "params", lt.CANDIDATES["b0"])
+    with pytest.raises(RuntimeError, match="act twice"):
+        ft.check_preset_las()
+
+
+def _las_meta(start_s=22.8, leg="RL") -> dict:
+    settings = {"enable": True, "sum_on_fraction_W": 0.6, "light_leg_fraction_of_F_min": 3.5,
+                "slow_mean_fraction": 0.16, "sum_off_fraction_W": 0.85, "off_periods": 5,
+                "max_s": 1.5, "rho_on": 0.18, "require_soil_response": True}
+    return {"settings": settings, "start_s": start_s, "start_leg": leg, "start_rho": 0.207,
+            "start_rho_prev": 0.132, "end_s": 23.5, "end_reason": "sum", "active_periods": 7,
+            "scaled_periods": 7}
+
+
+def test_las_block_from_meta_has_the_las_targeted_fields() -> None:
+    import las_targeted as lt
+
+    harness = {"loc_delay_s": 1.0, "t_loc_s": 24.6, "t_off_s": 23.6}
+    block = ft.las_block_from_meta(_las_meta(), True, 376583.56, harness)
+    wrapper_block = lt.las_block("b0", lt.CANDIDATES["b0"], lt.MODE_ACT, lt.LasRun(
+        lt.CANDIDATES["b0"], lt.MODE_ACT), harness)
+    assert set(wrapper_block) <= set(block)
+    assert block["params"] == lt.CANDIDATES["b0"].to_dict()
+    assert (block["candidate"], block["mode"]) == ("b0", "act")
+    assert block["start_leg"] == 2 and block["start_t_s"] == 22.8
+    assert block["end_reason"] == "sum" and block["active_periods"] == 7
+    assert block["s7p_first"] is None and block["start_rho"] == 0.207
+    assert block["loc_minus_t_off_s"] == 1.0 and block["source"] == ft.LAS_SOURCE
+
+
+def test_las_block_without_a_las_state_is_not_reached() -> None:
+    meta = {"settings": _las_meta()["settings"]}
+    block = ft.las_block_from_meta(meta, True, 1.0, None)
+    assert block["wrapper_reached"] is False and block["params"]["n_end"] == 5
+    assert ft.las_block_from_meta(_las_meta(start_s=None, leg=None), True, 1.0,
+                                  None)["start_leg"] is None
+
+
+def test_a_run_without_captured_objects_is_an_error() -> None:
+    entry = {"name": "L", "bundle": "F-0"}
+    job = {"d1": {"key": "D1|x"}, "setting": "VB", "eps": 0.0}
+    with pytest.raises(RuntimeError, match="not captured"):
+        ft._fb_block(entry, job, ft.CANDIDATES["L"], None, object(), {})
+    with pytest.raises(RuntimeError, match="not captured"):
+        ft._fb_block(entry, job, ft.CANDIDATES["L"], object(), None, {})
+
+
+def test_thread_variables_are_forced_to_one() -> None:
+    import os
+
+    assert all(os.environ[name] == "1" for name in ft.THREAD_VARIABLES)
+    values = ft.thread_values({"MKL_NUM_THREADS": "1", "OMP_NUM_THREADS": "4"})
+    assert ft.thread_problems(values) == ["OMP_NUM_THREADS='4'", "OPENBLAS_NUM_THREADS=None",
+                                          "NUMBA_NUM_THREADS=None"]
+    assert ft.thread_problems(ft.thread_values()) == []
+
+
+def test_run_identity_records_commit_hashes_and_threads(tmp_path) -> None:
+    import subprocess
+
+    tool = tmp_path / "tool.py"
+    tool.write_text("x = 1\n", encoding="utf-8")
+    try:
+        subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=60)
+        for args in (["add", "tool.py"], ["-c", "user.name=t", "-c", "user.email=t@t",
+                                          "commit", "-q", "-m", "t"]):
+            subprocess.run(["git", "-C", str(tmp_path), *args], check=True, timeout=60)
+    except (OSError, subprocess.SubprocessError):
+        pytest.skip("git not usable")
+    identity = ft.run_identity(tmp_path, {"tool.py": tool})
+    assert len(identity["git_head"]) == 40 and identity["git_dirty"] is False
+    assert identity["sha256"]["tool.py"] == ft.file_sha256(tool)
+    assert identity["threads"]["MKL_NUM_THREADS"] == "1"
+    (tmp_path / "untracked.md").write_text("u", encoding="utf-8")
+    assert ft.run_identity(tmp_path, {"tool.py": tool})["git_dirty"] is False
+    tool.write_text("x = 2\n", encoding="utf-8")
+    changed = ft.run_identity(tmp_path, {"tool.py": tool})
+    assert changed["git_dirty"] is True and changed["dirty_files"] == ["tool.py"]
+    assert ft.identity_mismatch(identity, changed) == [
+        f"sha256 {identity['sha256']} != {changed['sha256']}"]
+
+
+IDENTITY = {"git_head": "a" * 40, "git_dirty": False, "sha256": {"c2.py": "1" * 64},
+            "threads": {"MKL_NUM_THREADS": "1"}}
+
+
+def _identified(line: dict, identity: dict | None = IDENTITY) -> dict:
+    line["fb"]["identity"] = identity
+    return line
+
+
+def test_stale_lines_name_another_commit_or_a_missing_identity() -> None:
+    same = _identified(_line("L", "k1"))
+    other = _identified(_line("LF", "k1"), {**IDENTITY, "git_head": "b" * 40})
+    none = _identified(_line("L", "k2"), None)
+    assert ft.stale_lines([same], IDENTITY) == []
+    stale = ft.stale_lines([same, other, none], IDENTITY)
+    assert len(stale) == 2 and "git_head" in stale[0] and "no run identity" in stale[1]
+
+
+def test_f0_gate_stops_on_lines_of_another_identity(tmp_path) -> None:
+    import json
+
+    vb_key, v0_key = ft.F0_KEYS
+    lines = [_identified(_line(name, key), {**IDENTITY, "git_head": "b" * 40})
+             for key in (vb_key, v0_key) for name in ("L", "LF-off")]
+    (tmp_path / "fb_F0.jsonl").write_text("".join(json.dumps(x) + "\n" for x in lines),
+                                          encoding="utf-8")
+    reason = ft._check_f0_gate(tmp_path, IDENTITY)
+    assert reason is not None and "another run identity" in reason
+
+
+def test_main_refuses_to_resume_into_a_file_of_another_identity(tmp_path, monkeypatch,
+                                                               capsys) -> None:
+    import json
+
+    out = tmp_path / "fb_F0.jsonl"
+    old = _identified(_line("L", ft.F0_KEYS[0]), {**IDENTITY, "git_head": "b" * 40})
+    out.write_text(json.dumps(old) + "\n", encoding="utf-8")
+    monkeypatch.setattr(ft, "sealed_check", lambda: [])
+    monkeypatch.setattr(ft, "run_identity", lambda: IDENTITY)
+    monkeypatch.setattr(ft, "run_batch", lambda *a, **k: pytest.fail("must not run"))
+    assert ft.main(["run", "--bundle", "F-0", "--out", str(out)]) == 1
+    assert json.loads(capsys.readouterr().out.splitlines()[-1])["stop"] == "identity"
+
+
+def test_batch_watch_counts_the_earlier_lines_and_checks_identity() -> None:
+    lines = []
+    for index in range(5):
+        key = f"k{index}"
+        lines += [_identified(_line("L", key)),
+                  _identified(_line("LF", key, verdict="fail"))]
+    watch = ft.preloaded_watch("F-1", {}, lines[:8], IDENTITY)
+    assert len(watch.c2_violations) == 4 and watch.identity_problems == []
+    watch.note(lines[8])
+    watch.note(lines[9])
+    assert len(watch.c2_violations) == 5
+    watch.note(_identified(_line("L", "k9"), {**IDENTITY, "git_head": "c" * 40}))
+    assert watch.identity_problems and "git_head" in watch.identity_problems[0]
+
+
+def test_run_batch_stops_before_running_when_the_file_has_five_violations() -> None:
+    lines = []
+    for index in range(5):
+        lines += [_identified(_line("L", f"k{index}")),
+                  _identified(_line("LF", f"k{index}", verdict="fail"))]
+    summary = ft.run_batch([{"never": "run"}], Path("unused.jsonl"), 1, "F-1", None, lines,
+                           IDENTITY)
+    assert summary["runs"] == 0 and summary["stop"].startswith("H-4")
+
+
+@pytest.mark.parametrize("content", ["", "   \n", "not-a-hash  fb_targeted_rules.md\n"])
+def test_sealed_check_reports_a_sha256_file_without_a_value(tmp_path, monkeypatch,
+                                                            content) -> None:
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["sha_path"].write_text(content, encoding="utf-8")
+    problems = ft.sealed_check(**paths)
+    assert problems == ["fb_targeted_rules.sha256 holds no sha256 value"]
+
+
+def test_main_stops_with_h1_on_an_empty_sha256_file(tmp_path, monkeypatch, capsys) -> None:
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["sha_path"].write_text("", encoding="utf-8")
+    # sealed_check's defaults are bound at definition: point them at the test set
+    monkeypatch.setattr(ft.sealed_check, "__defaults__", (
+        paths["rules_path"], paths["sha_path"], paths["design_path"], paths["rev1_path"],
+        paths["rev1_sha_path"]))
+    assert ft.main(["list", "--bundle", "F-0"]) == 2
+    assert fj.main(["--out-dir", str(tmp_path)]) == 2
+    assert "H-1" in capsys.readouterr().out
+
+
+# ------------------------------------------------------------------------------- judge fixes
+def _data(bundles: dict, expected: dict | None = None, family=None, stored=None) -> fj.Data:
+    by_bundle = {bundle: fj.lines_by_key(lines) for bundle, lines in bundles.items()}
+    expected = expected if expected is not None else {
+        bundle: sorted(by_bundle.get(bundle, {})) for bundle in fj.JUDGED_BUNDLES}
+    family = family if family is not None else [f"fam{i}" for i in range(8)]
+    return fj.Data(by_bundle, stored or {}, family, expected)
+
+
+def test_missing_saturation_breaks_c1_and_c5() -> None:
+    line = _line("LF", "k")
+    line["fb"]["saturation_s"] = None
+    data = _data({"F-1": [_line("L", "k"), line]})
+    assert fj.c1(data).passed is False
+    eta80 = _line("LF", "k80")
+    eta80["job"]["eta_v"] = 0.80
+    eta80["fb"]["u9_values"] = {"longest_ge3_s": 0.0}
+    result = fj.c5(_data({"F-1": [eta80]}))
+    assert result.passed is False and any("TOUCH" in text for text in result.details)
+
+
+def test_completion_needs_the_paired_keys_to_equal_the_expected_keys() -> None:
+    lines = [_line("L", "a"), _line("LF", "a"), _line("L", "b"), _line("LF", "b")]
+    expected = {"F-1": ["a", "c"], "F-2": ["x"], "F-3": ["y"], "F-4": ["z"]}
+    data = _data({"F-1": lines}, expected)
+    # "b" paired but not expected and "c" expected but not paired: 2 (+ 3 empty bundles)
+    assert data.missing_pairs(("F-1",)) == 2
+    assert fj.c2(data).passed is None
+    nothing_expected = _data({"F-1": lines}, {"F-1": []})
+    assert nothing_expected.missing_pairs(("F-1",)) == 3
+
+
+def _every_bundle_paired(reference_ready_s: float | None) -> fj.Data:
+    """One pair per judged bundle (F-2: stored L); the L lines have the given READY time."""
+    bundles, stored = {}, {}
+    for bundle in fj.JUDGED_BUNDLES:
+        key = f"{bundle}-k"
+        reference = _line("L", key)
+        reference["d1"]["t_ready_s"] = reference_ready_s
+        if bundle == "F-2":
+            stored[key] = reference
+            bundles[bundle] = [_line("LF", key)]
+        else:
+            bundles[bundle] = [reference, _line("LF", key)]
+    return _data(bundles, stored=stored)
+
+
+def test_c4_without_a_judged_pair_is_incomplete() -> None:
+    no_ready = _every_bundle_paired(None)
+    assert no_ready.missing_pairs() == 0
+    assert fj.c4(no_ready).passed is None
+    assert fj.c4(_every_bundle_paired(60.0)).passed is True
+
+
+def test_c3_needs_all_eight_family_keys() -> None:
+    family = [f"fam{i}" for i in range(8)]
+    stored = {key: _line("b0", key) for key in family}
+    lines = [_line("LF", key) for key in family[:7]]
+    assert fj.c3(_data({"F-2": lines}, family=family, stored=stored)).passed is None
+    lines.append(_line("LF", family[7]))
+    assert fj.c3(_data({"F-2": lines}, family=family, stored=stored)).passed is True
+
+
+def test_load_data_refuses_a_family_that_is_not_eight_keys(tmp_path) -> None:
+    with pytest.raises(ValueError, match="8"):
+        fj.load_data(tmp_path, family_keys=["a"] * 8, stored_paths=())
+
+
+def test_identity_problems_per_bundle_and_f2_stored_lines_apart() -> None:
+    good = [_identified(_line("L", "a")), _identified(_line("LF", "a"))]
+    assert fj.identity_problems(fj.bundle_identities(_data({"F-1": good}))) == []
+    mixed = good + [_identified(_line("L", "b"), {**IDENTITY, "git_head": "b" * 40}),
+                    _identified(_line("LF", "b"), None)]
+    problems = fj.identity_problems(fj.bundle_identities(_data({"F-1": mixed})))
+    assert any("without identity" in p for p in problems)
+    assert any("2 commits" in p for p in problems)
+    stored = {"s": _line("b0", "s")}  # a stored F-2 L line has no identity: not a problem
+    f2 = _data({"F-2": [_identified(_line("LF", "s"))]}, stored=stored)
+    assert fj.identity_problems(fj.bundle_identities(f2)) == []
+    assert any("저장" in text for text in fj.identity_report(f2, fj.bundle_identities(f2)))
+    assert fj.verdict_of([], ["F-1: 2 commits"]) == fj.IDENTITY_VERDICT
+
+
+def test_event_count_record_marks_truncation(monkeypatch) -> None:
+    import verdict_runs
+
+    monkeypatch.setattr(verdict_runs, "_stored_events", lambda controller: [(0.0, "x")] * 401)
+    assert ft.event_count_record(object()) == {"events_total": 401, "events_truncated": True,
+                                               "events_stored_limit": 400}
+    monkeypatch.setattr(verdict_runs, "_stored_events", lambda controller: [])
+    assert ft.event_count_record(object())["events_truncated"] is False
