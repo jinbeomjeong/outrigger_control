@@ -91,6 +91,11 @@ def point_of(line: dict) -> dict | None:
             "gate_consistent": summary.get("gate_consistent")}
 
 
+def setting_of(key: str) -> str:
+    """``VB`` / ``V0`` of a G-3 key (Markdown cells cannot hold the key's ``|``)."""
+    return "VB" if key == KEY_VB else "V0"
+
+
 def check_anchors(points: dict[tuple[str, str, int], dict]) -> dict:
     """Plan 1.3: every anchor point's hash against the stored hash (both keys)."""
     out = {}
@@ -98,8 +103,9 @@ def check_anchors(points: dict[tuple[str, str, int], dict]) -> dict:
         for key, expected in anchor["hashes"].items():
             point = points.get((key, anchor["centre"], anchor["j"]))
             got = None if point is None else point["hash"]
-            out[f"{name} {key}"] = {"source": anchor["source"], "expected": expected,
-                                    "got": got, "pass": got == expected}
+            out[f"{name} {setting_of(key)}"] = {"key": key, "source": anchor["source"],
+                                                "expected": expected, "got": got,
+                                                "pass": got == expected}
     return out
 
 
@@ -250,7 +256,7 @@ def report_markdown(result: dict, source: Path) -> str:
               "| active | end | false before start | LEVEL budget | gate ok |",
               "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for p in result["points"]:
-        setting = "VB" if p["key"] == KEY_VB else "V0"
+        setting = setting_of(p["key"])
         lines.append(
             f"| {setting} | {p['centre']} | {p['j']} | {_number(p['s'], 6)} | "
             f"{_number(p['F_RL_kN'])} | {_number(p['t_touch_end_s'], 2)} | "
@@ -265,14 +271,14 @@ def report_markdown(result: dict, source: Path) -> str:
                   "| key | c | R_c | M_c | P_c | P2 | P3 exceptions | predicting | unordered |",
                   "|---|---|---|---|---|---|---|---|---|"]
         for key, by_centre in result["measures"].items():
-            setting = "VB" if key == KEY_VB else "V0"
+            setting = setting_of(key)
             for centre, m in by_centre.items():
                 lines.append(f"| {setting} | {centre} | {_number(m['R_c'])} | "
                              f"{_number(m['M_c'])} | {_number(m['P_c'])} | {m['P2_ok']} | "
                              f"{m['exceptions']} | {m['predicting_pairs']} | "
                              f"{m['unordered_pairs']} |")
         for key, k in result["keys"].items():
-            setting = "VB" if key == KEY_VB else "V0"
+            setting = setting_of(key)
             lines.append(f"- {setting}: M spread {_number(k['M_spread'])}, max R_c "
                          f"{_number(k['max_R_c'])}, P4 {k['P4_ok']}, direction "
                          f"{k['direction']}, |M_1.0 - M_nom| {_number(k['M_change'])}")

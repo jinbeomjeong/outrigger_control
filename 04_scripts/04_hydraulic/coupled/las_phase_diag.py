@@ -1072,7 +1072,8 @@ def _judge_command(args) -> int:
         with args.out.open("x", encoding="utf-8") as handle:
             handle.write(report)
     print(json.dumps({"verdict": result["verdict"], "anchors_pass": result["anchors_pass"],
-                      "excluded": result["excluded"], "missing": result["missing"]}))
+                      "excluded": len(result["excluded"]),
+                      "missing": len(result["missing"])}))
     return 0 if result["anchors_pass"] else 1
 
 
