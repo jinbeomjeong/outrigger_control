@@ -30,14 +30,14 @@ FAST_SPEEDS = np.array([0.020, 0.012, 0.006, 0.0])
 
 
 def _inputs(**changes) -> lt.GateInputs:
-    """All of S1 .. S8 true: sum L = 0.7 W_ref, min L = 2 F_min."""
+    """All of S1 .. S8 true: sum L = 0.7 W_ref, min L = 2 F_min, rho 0.43 > previous 0.3."""
     loads = (2 * F_MIN_N, 0.3 * W_REF_N, 0.2 * W_REF_N, 0.7 * W_REF_N - 0.5 * W_REF_N
              - 2 * F_MIN_N)
     base = lt.GateInputs(t_s=10.0, soil_enable=True, is_level=True, has_loc_been_seen=False,
                          has_soil_mode_started=False, in_crawler_zone=True,
                          is_reapproaching=False, loads_N=loads, weight_ref_N=W_REF_N,
                          F_min_N=F_MIN_N, mean_speed_m_s=float(FAST_SPEEDS.mean()),
-                         v_max_m_s=V_MAX_M_S)
+                         v_max_m_s=V_MAX_M_S, previous_rho=0.3)
     return replace(base, **changes)
 
 
@@ -65,6 +65,8 @@ HIGH_MIN = (4 * F_MIN_N, 0.2 * W_REF_N, 0.2 * W_REF_N, 0.2 * W_REF_N)
     ("S6", {"is_reapproaching": True}),
     ("S7", {"loads_N": LOW_SUM}),
     ("S7", {"loads_N": HIGH_MIN}),
+    ("S7", {"previous_rho": None}),
+    ("S7", {"previous_rho": 0.5}),
     ("S8", {"mean_speed_m_s": 0.16 * V_MAX_M_S}),
 ])
 def test_each_false_gate_blocks_the_start(gate: str, changes: dict) -> None:
@@ -85,6 +87,92 @@ def test_s7_sum_is_inclusive_and_min_is_strict() -> None:
     loads[1] = B0.alpha * W_REF_N - loads[0] - 2 * edge_N
     assert loads.sum() == pytest.approx(B0.alpha * W_REF_N)
     assert lt.start_gates(_inputs(loads_N=tuple(loads)), B0)["S7"]  # sum == alpha W_ref
+
+
+# ------------------------------------------------------------------------------- S7' (rev1 2)
+def test_rho_is_the_deficit_of_the_lightest_legs_diagonal() -> None:
+    rho, leg = lt.diagonal_deficit_ratio([10e3, 40e3, 30e3, 20e3])  # FL + RR = 30 of 100 kN
+    assert leg == 0 and rho == pytest.approx((100 - 2 * 30) / 100)
+
+
+@pytest.mark.parametrize(("lightest", "partner"), [(0, 3), (1, 2), (2, 1), (3, 0)])
+def test_diagonal_partners_are_fl_rr_and_fr_rl(lightest: int, partner: int) -> None:
+    loads = np.array([50e3, 60e3, 70e3, 80e3])
+    loads[lightest] = 5e3
+    rho, leg = lt.diagonal_deficit_ratio(loads)
+    total = loads.sum()
+    assert leg == lightest
+    assert rho == pytest.approx((total - 2 * (loads[lightest] + loads[partner])) / total)
+
+
+def test_a_tie_picks_the_smaller_index() -> None:
+    rho, leg = lt.diagonal_deficit_ratio([10e3, 10e3, 50e3, 30e3])
+    assert leg == 0 and rho == pytest.approx(0.2)  # FR (partner RL) would give -0.2
+
+
+def test_rho_needs_a_previous_level_period_and_a_rise() -> None:
+    inputs = _inputs()
+    rho, _ = lt.diagonal_deficit_ratio(inputs.loads_N)
+    assert rho >= B0.rho_on and lt.twist_rise_gate(inputs, B0)
+    assert not lt.twist_rise_gate(replace(inputs, previous_rho=None), B0)  # first LEVEL step
+    assert not lt.twist_rise_gate(replace(inputs, previous_rho=rho), B0)  # equal: not rising
+    low = (20e3, 60e3, 60e3, 65e3)  # rho (205 - 2 x 85) / 205 = 0.17 < 0.18
+    assert not lt.twist_rise_gate(replace(inputs, loads_N=low, previous_rho=-1.0), B0)
+    assert lt.twist_rise_gate(replace(inputs, previous_rho=None), lt.CANDIDATES["LASa"])
+
+
+def test_a_period_without_a_level_step_clears_rho() -> None:
+    run = lt.LasRun(B0, lt.MODE_ACT)
+    inputs = _inputs(previous_rho=None)
+    lt.note_twist_ratio(run, inputs, lt.start_gates(inputs, B0))
+    assert run.previous_rho == pytest.approx(lt.diagonal_deficit_ratio(inputs.loads_N)[0])
+    assert run.s7p_first is None  # no rho_{k-1}: S7' false
+    run.has_level_step_run = True
+    assert lt.finish_period(run, 10.0) is None and run.previous_rho is not None
+    run.has_level_step_run = False
+    assert lt.finish_period(run, 10.1) is None and run.previous_rho is None
+
+
+def test_finish_period_ends_an_active_slowdown_with_phase() -> None:
+    run = lt.LasRun(B0, lt.MODE_ACT)
+    lt.lasb_step(run.lasb, _inputs(), B0, FAST_SPEEDS)
+    assert lt.finish_period(run, 10.1) == "INFO_LIFTOFF_SLOW_END:phase"
+    assert run.lasb.end_reason == "phase" and not run.lasb.is_active
+
+
+def test_s7p_first_records_time_rho_previous_and_leg() -> None:
+    run = lt.LasRun(B0, lt.MODE_GATE)
+    inputs = _inputs()
+    lt.note_twist_ratio(run, inputs, lt.start_gates(inputs, B0))
+    rho, _ = lt.diagonal_deficit_ratio(inputs.loads_N)
+    assert run.s7p_first == {"t_s": 10.0, "rho": rho, "rho_prev": 0.3, "leg": 0}
+
+
+def test_rigid_type_lift_never_meets_s7_prime() -> None:
+    """Rigid roll (rev1 3): the light leg rises while lifting and both diagonals are even, so
+    the lightest leg's diagonal carries more than half (rho < 0)."""
+    run = lt.LasRun(B0, lt.MODE_GATE)
+    for step in range(20):
+        light_N = 25e3 + 1.5e3 * step  # +1.5 kN per period, stays below beta F_min
+        loads = (min(light_N, 32e3), 80e3 + 0.5e3 * step, 34e3 + 0.2e3 * step,
+                 92e3 + 0.7e3 * step)
+        inputs = _inputs(t_s=10.0 + 0.1 * step, loads_N=loads, previous_rho=run.previous_rho)
+        assert lt.diagonal_deficit_ratio(loads)[0] < 0.0
+        gates = lt.start_gates(inputs, B0)
+        lt.note_twist_ratio(run, inputs, gates)
+        assert lt.sum_gate(inputs, B0) and lt.min_gate(inputs, B0) and not gates["S7"]
+    assert run.s7p_first is None
+
+
+def test_named_variants_keep_the_sealed_rho_on() -> None:
+    assert all(lt.CANDIDATES[name].rho_on == 0.18 for name in lt.LASB_VARIANTS)
+    assert lt.CANDIDATES["LASa"].rho_on is None
+
+    class Args:
+        rho_on = 0.25
+
+    with pytest.raises(ValueError, match="custom"):
+        lt.resolve_candidates(["b0"], Args)
 
 
 # ------------------------------------------------------------------------------- end reasons

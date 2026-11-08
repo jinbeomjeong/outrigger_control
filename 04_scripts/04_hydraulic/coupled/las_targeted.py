@@ -1,4 +1,5 @@
-"""LAS-b targeted runs on the reduced harness (sealed ``las_targeted_rules.md`` 1 .. 2).
+"""LAS-b targeted runs on the reduced harness (sealed ``las_targeted_rules.md`` 1 .. 2 and its
+sealed addendum ``las_targeted_rules_rev1.md``).
 
 The candidates wrap ``C2Controller._apply_pre_loc_lift_pause`` in the worker process only
 (spawned, ``maxtasksperchild=1``); no project file changes. One run is ``run_v5.run_one`` of a
@@ -9,17 +10,32 @@ Candidates (rules 1.3):
   b0 .. b-T20  LAS-b (rules 1.2): one start per run when S1 .. S8 hold, then the command is
             scaled to the mean ``gamma v_max`` until an end reason (loc, phase, soil, reapproach,
             sum, time). Events ``INFO_LIFTOFF_SLOW:<leg>`` / ``INFO_LIFTOFF_SLOW_END:<reason>``.
+            S7 is S7' of rev1 2 (rho_on 0.18 for every variant, rev1 1 #2): the sum and min
+            conditions and the diagonal deficit ratio rho_k >= rho_on and rho_k > rho_{k-1}.
   LASa      comparison only (rules 1.3): control-expert ``probe.py`` intervention ``approach``,
             i.e. ``_approach`` (every pre-LOC crawler-zone period with sum L >= alpha W_ref, mean
             scaled to gamma v_max) plus ``_slow_lift_scaled`` (P30fz completed by a scale).
-            As the probe it tests the *current* LOC (``_is_in_pre_loc_window``); the rules' S3
-            ("no LOC in this run") differs after a LOC revocation: the ``las`` block counts the
-            periods it acted on after one (``acted_after_revoke_periods``).
-  custom    LAS-b with ``--alpha --beta --gamma --alpha-end --n-end --t-max``.
+            Its S3 is the *current* LOC state (``_is_in_pre_loc_window``, not confirmed now),
+            as the probe and as rev1 1 #3 / 5 I-5 fix it; it differs from "no LOC in this run"
+            only after a LOC revocation: the ``las`` block counts the periods it acted on after
+            one (``acted_after_revoke_periods``). LAS-a has no S7'.
+  custom    LAS-b with ``--alpha --beta --gamma --alpha-end --n-end --t-max`` and ``--rho-on``
+            (default 0.18).
+
+S7' (rev1 2): legs FL, FR, RL, RR (0 .. 3), diagonal partners FL-RR and FR-RL; i* = the lightest
+leg of L-hat (a tie picks the smaller index), rho_k = (sum L - 2 (L_i* + L_p(i*))) / sum L. The
+controller keeps rho of the last LEVEL step (``LasRun.previous_rho``) and clears it in a period
+without a LEVEL step, so the first LEVEL step of a run, or the first after a non-LEVEL period,
+has no rho_{k-1} and S7' is false ("not rising"). rho is updated in every LEVEL step, before
+and after the start. The ``las`` block records the first LEVEL step where S7' held alone
+(``s7p_first``: time, rho, rho_prev, i*).
 ``--gate-only`` (V-1 of rules 4): the start gates of the candidate are evaluated in every LEVEL
 step and recorded, the command is never changed; ``--gate-npz-dir`` writes a T4h-like record
-(``t_s``, ``phase``, ``lower_estimate_N``, ``command_m_s``, ``meta_json``) per run for
-``las_shadow.py v1``.
+per run for ``las_shadow.py v1`` / ``r2``: ``t_s``, ``phase``, ``lower_estimate_N``,
+``command_m_s`` and the replay inputs of ``t4h_replay`` (``head_pressure_Pa``,
+``rod_pressure_Pa``, ``motor_stroke_m``, ``seal_band_N``, ``lower_reading_N``; meta with the
+monitor settings, zero offsets, E-6 allowance and hydraulic options), so the same run is
+judged once from the stored L-hat and once from the rebuilt one (rev1 4 R-1, R-6).
 
 Where the gates read the controller (rules 1.1 / 1.2): the wrapper runs right after
 ``_apply_pre_loc_lift_pause`` in ``_level_step`` (before the DSb75 addition). S6 is the
@@ -34,7 +50,11 @@ Usage (dynamics-dev python, project root):
       [--rules <md>] [--baseline <d1.jsonl>]
   python -I -B 04_scripts/04_hydraulic/coupled/las_targeted.py run --stage T-1
       --candidate b0 b-a5 ... [--workers 4] [--affinity HEX] [--out <jsonl>]
-      [--gate-only] [--gate-npz-dir DIR] [--keys K1,K2] [--limit N]
+      [--gate-only] [--gate-npz-dir DIR] [--keys K1,K2 | --from-t4h NPZ ...] [--limit N]
+      [--rho-on 0.18]   (custom only; the named LAS-b variants keep the sealed 0.18)
+``--from-t4h`` runs the stored ``run_v5`` jobs of T4h records (V-1 rebuild-path runs of rev1
+R-6: D-1 rows and steady runs are head-only, only the event runs carry rod-side readings the
+replay needs); a non-D-1 job's controller is the one ``verdict_runs._finish`` recorded.
 Exit codes: 0 done / keys equal, 1 mismatch or a run error, 2 input error.
 """
 from __future__ import annotations
@@ -68,6 +88,9 @@ BASELINE_PATH = ROOT / "06_analysis" / "03_hydraulic" / "coupled" / "v5" / "d1.j
 RULES_PATH = ROOT / "06_analysis" / "02_control" / "verif_matrix" / "las_targeted_rules.md"
 RULES_SHA256 = "00b48fd834d81b9d499015f2d44380623e9fbcb2f1515913a8fd0589503eaf40"
 """``las_targeted_rules.sha256`` (sealed 2026-11-08)."""
+RULES_REV1_PATH = RULES_PATH.with_name("las_targeted_rules_rev1.md")
+RULES_REV1_SHA256 = "0d5f59f8e4a09448b93e0cde42adb7d23c2f99f6b365809876efaa6212d27625"
+"""``las_targeted_rules_rev1.sha256`` (sealed addendum 2026-11-08: S7', L-hat rebuild)."""
 
 KIND_OFF = "off"
 KIND_LASB = "lasb"
@@ -80,6 +103,10 @@ END_REASONS = ("loc", "phase", "soil", "reapproach", "sum", "time")
 """Rules 1.2 end table, in the order they are tested."""
 TIME_TOLERANCE_S = 1e-9
 GATE_NAMES = ("S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8")
+RHO_ON_DEFAULT = 0.18
+"""rev1 1 #2: rho_on of every LAS-b variant (an assumption of the sealed addendum)."""
+DIAGONAL_PARTNER = (3, 2, 1, 0)
+"""rev1 2: p(FL) = RR, p(FR) = RL, p(RL) = FR, p(RR) = FL (leg order FL, FR, RL, RR)."""
 
 FAMILY_ROW_KEYS = ("D1|H-R-A|rigid+J1@FR|T|diag-op|K1", "D1|H-R-A|rigid+J1@FR|T|diag-op|K3")
 """Rules appendix A: the G-3 family rows (x V0 / VB x eps 0 / 2e-3 = 8 keys)."""
@@ -108,7 +135,8 @@ STAGE_COUNTS = {"T-0": 2, "T-1": 8, "T-2": 184, "V-1": 18}
 # ------------------------------------------------------------------------------- candidates
 @dataclass(frozen=True)
 class LasParams:
-    """One candidate (rules 1.3). ``None`` = the condition does not exist (LAS-a)."""
+    """One candidate (rules 1.3, rev1 1 #2). ``None`` = the condition does not exist (LAS-a;
+    ``rho_on`` None = no S7' twist condition)."""
 
     kind: str
     alpha: float | None = None
@@ -117,6 +145,7 @@ class LasParams:
     alpha_end: float | None = None
     n_end: int | None = None
     t_max_s: float | None = None
+    rho_on: float | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -128,7 +157,7 @@ class LasParams:
 
 def _lasb(alpha: float = 0.6, t_max_s: float = 1.5) -> LasParams:
     return LasParams(KIND_LASB, alpha=alpha, beta=3.5, gamma=0.16, alpha_end=0.85, n_end=5,
-                     t_max_s=t_max_s)
+                     t_max_s=t_max_s, rho_on=RHO_ON_DEFAULT)
 
 
 CANDIDATES: dict[str, LasParams] = {
@@ -151,7 +180,8 @@ def candidate_label(name: str, params: LasParams) -> str:
     if name != "custom":
         return name
     return (f"custom(a={params.alpha:g},b={params.beta:g},g={params.gamma:g},"
-            f"ae={params.alpha_end:g},n={params.n_end},T={params.t_max_s:g})")
+            f"ae={params.alpha_end:g},n={params.n_end},T={params.t_max_s:g},"
+            f"rho={params.rho_on:g})")
 
 
 # ------------------------------------------------------------------------------- the rule
@@ -171,10 +201,30 @@ class GateInputs:
     F_min_N: float
     mean_speed_m_s: float
     v_max_m_s: float
+    previous_rho: float | None = None
+    """rho of the previous control period when it was a LEVEL step, else None (rev1 2)."""
 
     @property
     def load_sum_N(self) -> float:
         return float(np.sum(self.loads_N))
+
+
+def lightest_leg(loads_N) -> int:
+    """i* of rev1 2: the smallest L-hat; ``np.argmin`` returns the first, i.e. the smaller
+    index on a tie."""
+    return int(np.argmin(np.asarray(loads_N, float)))
+
+
+def diagonal_deficit_ratio(loads_N) -> tuple[float, int]:
+    """(rho_k, i*) of rev1 2: how much less the lightest leg's diagonal carries than the other
+    one, over the load sum; rho is NaN when the sum is not positive (S7' then false)."""
+    loads = np.asarray(loads_N, float)
+    leg = lightest_leg(loads)
+    total_N = float(np.sum(loads))
+    if not total_N > 0.0:
+        return float("nan"), leg
+    diagonal_N = float(loads[leg] + loads[DIAGONAL_PARTNER[leg]])
+    return (total_N - 2.0 * diagonal_N) / total_N, leg
 
 
 def sum_gate(inputs: GateInputs, params: LasParams) -> bool:
@@ -189,8 +239,19 @@ def min_gate(inputs: GateInputs, params: LasParams) -> bool:
     return float(np.min(inputs.loads_N)) < params.beta * inputs.F_min_N
 
 
+def twist_rise_gate(inputs: GateInputs, params: LasParams) -> bool:
+    """S7' addition (rev1 2): rho_k >= rho_on and rho_k > rho_{k-1}; false without a previous
+    LEVEL step ("not rising"); always true without ``rho_on``."""
+    if params.rho_on is None:
+        return True
+    if inputs.previous_rho is None:
+        return False
+    rho, _ = diagonal_deficit_ratio(inputs.loads_N)
+    return bool(rho >= params.rho_on and rho > inputs.previous_rho)
+
+
 def start_gates(inputs: GateInputs, params: LasParams) -> dict[str, bool]:
-    """S1 .. S8 of rules 1.2 for one LEVEL step."""
+    """S1 .. S8 of rules 1.2 for one LEVEL step; S7 is S7' of rev1 2 when ``rho_on`` is set."""
     return {
         "S1": bool(inputs.soil_enable),
         "S2": bool(inputs.is_level),
@@ -198,7 +259,8 @@ def start_gates(inputs: GateInputs, params: LasParams) -> dict[str, bool]:
         "S4": not inputs.has_soil_mode_started,
         "S5": bool(inputs.in_crawler_zone),
         "S6": not inputs.is_reapproaching,
-        "S7": sum_gate(inputs, params) and min_gate(inputs, params),
+        "S7": (sum_gate(inputs, params) and min_gate(inputs, params)
+               and twist_rise_gate(inputs, params)),
         "S8": inputs.mean_speed_m_s > params.gamma * inputs.v_max_m_s,
     }
 
@@ -260,7 +322,7 @@ def lasb_step(state: LasbState, inputs: GateInputs, params: LasParams,
         state.is_armed = False
         state.is_active = True
         state.t_start_s = inputs.t_s
-        state.start_leg = int(np.argmin(inputs.loads_N))
+        state.start_leg = lightest_leg(inputs.loads_N)
         events.append(f"{START_EVENT}:{state.start_leg}")
     if not state.is_active:
         return speeds, events
@@ -311,6 +373,31 @@ class LasRun:
     lasa_first_t_s: float | None = None
     lasa_last_t_s: float | None = None
     lasa_acted_after_revoke: int = 0
+    previous_rho: float | None = None
+    """rho of the last LEVEL step; cleared in a period without one (rev1 2)."""
+    s7p_first: dict | None = None
+    """First LEVEL step where S7' held: ``t_s``, ``rho``, ``rho_prev``, ``leg`` (i*)."""
+
+
+def note_twist_ratio(run: LasRun, inputs: GateInputs, gates: dict[str, bool]) -> None:
+    """After the gates of a LEVEL step: the first S7' record, then rho_k becomes rho_{k-1}."""
+    rho, leg = diagonal_deficit_ratio(inputs.loads_N)
+    if run.s7p_first is None and gates["S7"]:
+        run.s7p_first = {"t_s": inputs.t_s, "rho": rho, "rho_prev": inputs.previous_rho,
+                         "leg": leg}
+    run.previous_rho = rho
+
+
+def finish_period(run: LasRun, t_s: float) -> str | None:
+    """After ``_phase_command``: a period without a LEVEL step clears rho_{k-1} (rev1 2) and
+    ends an active slowdown with reason ``phase`` (S2 false); returns the event to add."""
+    if run.has_level_step_run:
+        return None
+    run.previous_rho = None
+    if not (run.lasb.is_active and run.mode == MODE_ACT):
+        return None
+    end_slowdown(run.lasb, t_s, "phase")
+    return f"{END_EVENT}:phase"
 
 
 def _run_of(controller, params: LasParams, mode: str) -> LasRun:
@@ -337,6 +424,7 @@ def _gate_inputs(controller, reading, speeds: np.ndarray, run: LasRun, c2) -> Ga
         F_min_N=float(geometry.F_min_N),
         mean_speed_m_s=float(np.mean(speeds)),
         v_max_m_s=float(geometry.max_speed_m_s),
+        previous_rho=run.previous_rho,
     )
 
 
@@ -425,8 +513,10 @@ def install(params: LasParams, mode: str = MODE_ACT) -> None:
         if params.kind == KIND_LASA:
             return _lasa_step(self, reading, speeds, run)
         inputs = _gate_inputs(self, reading, speeds, run, c2)
+        gates = start_gates(inputs, params)
+        note_twist_ratio(run, inputs, gates)
         if mode == MODE_GATE:
-            _note_gates(run, inputs, start_gates(inputs, params))
+            _note_gates(run, inputs, gates)
             return speeds
         scaled, events = lasb_step(run.lasb, inputs, params, speeds)
         for name in events:
@@ -437,14 +527,26 @@ def install(params: LasParams, mode: str = MODE_ACT) -> None:
         run = _run_of(self, params, mode)
         run.has_level_step_run = False
         speeds = original_phase_command(self, reading)
-        if not run.has_level_step_run and run.lasb.is_active and mode == MODE_ACT:
-            end_slowdown(run.lasb, float(reading.t_s), "phase")  # S2 false: no LEVEL step
-            self._add_event(reading.t_s, f"{END_EVENT}:phase")
+        event = finish_period(run, float(reading.t_s))
+        if event is not None:
+            self._add_event(reading.t_s, event)
         return speeds
+
+    original_update = cls.update
+
+    def update(self, measurements):
+        """Gate-only runs also log the lower reading after each update (record only)."""
+        output = original_update(self, measurements)
+        forces = self._state.last_forces
+        lower = np.full(4, np.nan) if forces is None else np.array(forces.lower, float)
+        self.__dict__.setdefault("_las_lower_log", []).append(lower)
+        return output
 
     cls._apply_reapproach_speeds = apply_reapproach_speeds
     cls._apply_pre_loc_lift_pause = apply_pre_loc_lift_pause
     cls._phase_command = phase_command
+    if mode == MODE_GATE:
+        cls.update = update
     if params.kind == KIND_LASA:
         cls._slow_lift = _slow_lift_scaled(cls._slow_lift)
     _INSTALLED.update(params=params, mode=mode)
@@ -568,6 +670,12 @@ def list_check(stage: str, rules_path: Path, baseline_path: Path) -> tuple[list[
                  f"({'sealed' if digest == RULES_SHA256 else 'NOT the sealed text'})")
     if digest != RULES_SHA256:
         problems.append(f"rules sha256 {digest} != sealed {RULES_SHA256}")
+    rev1_path = rules_path.with_name(RULES_REV1_PATH.name)
+    rev1_digest = file_sha256(rev1_path) if rev1_path.exists() else None
+    lines.append(f"addendum {rev1_path.name} sha256 {str(rev1_digest)[:12]} "
+                 f"({'sealed' if rev1_digest == RULES_REV1_SHA256 else 'NOT the sealed text'})")
+    if rev1_digest != RULES_REV1_SHA256:
+        problems.append(f"addendum sha256 {rev1_digest} != sealed {RULES_REV1_SHA256}")
     baseline = load_baseline(baseline_path)
     missing = [key for key in keys if key not in baseline]
     if missing:
@@ -611,13 +719,34 @@ def _appendix_column_problems(sealed: list[dict], baseline: dict[str, dict]) -> 
 _CAPTURE: dict = {}
 
 
+def run_controller(job: dict):
+    """The controller of the finished run: the ``d1_record`` one of a D-1 job, else the one
+    ``verdict_runs._finish`` recorded (an event run also ran a timeline copy and may branch
+    into another object; ``_finish`` gets the one whose log is the run's record)."""
+    if "d1" in job:
+        return _CAPTURE.get("controller")
+    return _CAPTURE.get("finish_controller")
+
+
+def _capture_finish() -> None:
+    import verdict_runs
+
+    original = verdict_runs._finish
+
+    def finish(plant, controller, extra, t4h=None, **options):
+        _CAPTURE["finish_controller"] = controller
+        return original(plant, controller, extra, t4h, **options)
+
+    verdict_runs._finish = finish
+
+
 def _capture_d1_record() -> None:
     import d1_runs
 
     original = d1_runs.d1_record
 
     def d1_record(row, setting_name, eps, result, plant, controller, harness):
-        _CAPTURE.update(controller=controller, harness=harness)
+        _CAPTURE.update(controller=controller, harness=harness, plant=plant)
         return original(row, setting_name, eps, result, plant, controller, harness)
 
     d1_runs.d1_record = d1_record
@@ -645,7 +774,7 @@ def las_block(name: str, params: LasParams, mode: str, run: LasRun | None,
     block.update(wrapper_reached=True, soil_enable=run.soil_enable, W_ref_N=run.weight_ref_N,
                  start_t_s=state.t_start_s, start_leg=state.start_leg, end_t_s=state.end_t_s,
                  end_reason=state.end_reason, active_periods=state.active_periods,
-                 scaled_periods=state.scaled_periods)
+                 scaled_periods=state.scaled_periods, s7p_first=run.s7p_first)
     if params.kind == KIND_LASA:
         block.update(start_t_s=run.lasa_first_t_s, end_t_s=run.lasa_last_t_s,
                      active_periods=run.lasa_acted_periods,
@@ -656,27 +785,58 @@ def las_block(name: str, params: LasParams, mode: str, run: LasRun | None,
     return block
 
 
-def gate_file_name(key: str) -> str:
+def gate_file_name(key: str, job: dict | None = None) -> str:
+    """File-safe composite key of a D-1 job; another ``run_v5`` job keeps the name of its T4h
+    record (``run_v5.t4h_file_name``), prefixed ``gate_``."""
+    if job is not None and "d1" not in job:
+        import run_v5
+
+        return f"gate_{run_v5.t4h_file_name(job)}"
     return re.sub(r"[^A-Za-z0-9.\-]+", "_", key) + ".npz"
 
 
+def _hydraulic_options_dict(job: dict) -> dict:
+    """``HydraulicOptions.to_dict`` of the job's setting; ``{}`` (all off) for V0, which
+    ``t4h_replay.run_config`` reads as the options of a run without plant options."""
+    import run_v5
+
+    _, options = run_v5.options_of(job["setting"], job.get("eta_v"))
+    return {} if options is None else options.to_dict()
+
+
 def write_gate_record(directory: Path, key: str, controller, line: dict, run: LasRun) -> Path:
-    """T4h-like record of an instrumented run (``las_shadow.py`` reads it as a T4h)."""
+    """T4h-like record of an instrumented run (``las_shadow.py`` reads it as a T4h).
+
+    Besides the stored L-hat it holds what ``t4h_replay``'s own-event replay reads (the
+    rebuild path of rev1 4 R-1) and the run's own lower reading per update
+    (``lower_reading_N``, captured after ``update`` as ``LoggedController`` logs L-hat).
+    """
     import verdict_runs
 
     period = verdict_runs.period_arrays(controller)
+    controller_meta = controller.meta()
+    monitor = controller_meta["two_pressure"]
     meta = {"job": line["job"], "commands_sha256": line.get("commands_sha256"),
             "F_min_N": float(controller.geometry.F_min_N), "W_ref_N": run.weight_ref_N,
             "v_max_m_s": float(controller.geometry.max_speed_m_s),
             "soil_enable": run.soil_enable, "period_s": controller.config.period_s,
             "events": [(float(event.t_s), event.name) for event in controller.events],
             "las_gates": asdict(run.gates), "las_params": run.params.to_dict(),
-            "lower_estimate_rule": "verdict_runs LoggedController._logged_lower_estimate_N"}
+            "lower_estimate_rule": "verdict_runs LoggedController._logged_lower_estimate_N",
+            "hydraulic_options": _hydraulic_options_dict(line["job"]),
+            "zero_offset_N": monitor.get("zero_offsets_N"),
+            **verdict_runs.offset_allowance_record(controller_meta),
+            "two_pressure_settings": monitor.get("settings")}
+    lower_log = controller.__dict__.get("_las_lower_log", [])
     directory.mkdir(parents=True, exist_ok=True)
-    path = directory / gate_file_name(key)
-    np.savez_compressed(path, t_s=period["t"], phase=period["phase"].astype(str),
-                        lower_estimate_N=period["lower_estimate_N"],
-                        command_m_s=period["command"], meta_json=np.array(json.dumps(meta)))
+    path = directory / gate_file_name(key, line["job"])
+    np.savez_compressed(
+        path, t_s=period["t"], phase=period["phase"].astype(str),
+        lower_estimate_N=period["lower_estimate_N"], command_m_s=period["command"],
+        head_pressure_Pa=period["head_pressure_Pa"], rod_pressure_Pa=period["rod_pressure_Pa"],
+        motor_stroke_m=period["motor_stroke_m"], seal_band_N=period["seal_band_N"],
+        lower_reading_N=np.array(lower_log, float).reshape(-1, 4),
+        meta_json=np.array(json.dumps(verdict_runs.meta_for_json(meta))))
     return path
 
 
@@ -690,11 +850,12 @@ def run_las_job(job: dict) -> dict:
 
         install(params, las["mode"])
         _capture_d1_record()
+        _capture_finish()
     except Exception as exc:  # recorded as an error line, the batch goes on
         return {"job": job, "error": f"install: {exc!r}", "las": {"candidate": las["name"]},
                 "wall_s": round(time.perf_counter() - t_start, 1)}
     line = run_v5.run_one(job)
-    controller = _CAPTURE.get("controller")
+    controller = run_controller(job)
     run = None if controller is None else controller.__dict__.get("_las_run")
     line["las"] = las_block(las["name"], params, las["mode"], run, _CAPTURE.get("harness"))
     line["las"]["key"] = composite_key(job)
@@ -720,10 +881,28 @@ def done_labels(path: Path) -> set[tuple[str, str, str]]:
     return done
 
 
+def jobs_from_t4h(paths: list[Path]) -> list[dict]:
+    """The stored ``run_v5`` jobs of T4h records (V-1 rebuild-path runs, rev1 R-6).
+
+    Raises:
+        ValueError: A record without a ``run_v5`` job (``case``).
+    """
+    jobs = []
+    for path in paths:
+        with np.load(path, allow_pickle=False) as data:
+            job = json.loads(str(data["meta_json"])).get("job") or {}
+        if "case" not in job:
+            raise ValueError(f"{path.name}: not a run_v5 job ({sorted(job)})")
+        jobs.append(job)
+    return jobs
+
+
 def build_jobs(keys: list[str], candidates: list[tuple[str, LasParams]], mode: str,
-               mask: int | None, gate_npz_dir: str | None) -> list[dict]:
-    """One job per (candidate, key); VB keys first (the longer runs start early)."""
-    base = jobs_for_keys(keys)
+               mask: int | None, gate_npz_dir: str | None,
+               base: list[dict] | None = None) -> list[dict]:
+    """One job per (candidate, key) of ``keys`` (or per job of ``base``); VB first (the
+    longer runs start early)."""
+    base = jobs_for_keys(keys) if base is None else base
     ordered = sorted(base, key=lambda job: job["setting"] != "VB")
     jobs = []
     for name, params in candidates:
@@ -743,22 +922,29 @@ def _custom_params(args) -> LasParams:
     values = (args.alpha, args.beta, args.gamma, args.alpha_end, args.n_end, args.t_max)
     if any(value is None for value in values):
         raise ValueError("custom needs --alpha --beta --gamma --alpha-end --n-end --t-max")
+    rho_on = getattr(args, "rho_on", None)
     return LasParams(KIND_LASB, alpha=args.alpha, beta=args.beta, gamma=args.gamma,
-                     alpha_end=args.alpha_end, n_end=int(args.n_end), t_max_s=args.t_max)
+                     alpha_end=args.alpha_end, n_end=int(args.n_end), t_max_s=args.t_max,
+                     rho_on=RHO_ON_DEFAULT if rho_on is None else float(rho_on))
 
 
 def resolve_candidates(names: list[str], args) -> list[tuple[str, LasParams]]:
     """(label, params) per requested name.
 
     Raises:
-        ValueError: Unknown name or incomplete custom parameters.
+        ValueError: Unknown name, incomplete custom parameters, or ``--rho-on`` other than
+            the sealed 0.18 with a named variant (rev1 1 #2 fixes it; use ``custom``).
     """
+    rho_on = getattr(args, "rho_on", None)
     out = []
     for name in names:
         if name == "custom":
             params = _custom_params(args)
         elif name in CANDIDATES:
             params = CANDIDATES[name]
+            if rho_on is not None and params.rho_on != rho_on:
+                raise ValueError(f"{name} uses the sealed rho_on {params.rho_on}; "
+                                 f"--rho-on {rho_on} needs the custom candidate")
         else:
             raise ValueError(f"unknown candidate {name!r} ({', '.join(CANDIDATES)}, custom)")
         out.append((candidate_label(name, params), params))
@@ -792,6 +978,7 @@ def run_batch(jobs: list[dict], path: Path, workers: int) -> int:
                 state = (f"{d1.get('verdict', record['final_phase'])} "
                          f"F {d1.get('F_judged_min_N')} N {record['commands_sha256'][:12]} "
                          f"start {las.get('start_t_s')} end {las.get('end_reason')} "
+                         f"S7' {(las.get('s7p_first') or {}).get('t_s')} "
                          f"{record['wall_s']}s")
             print(f"{count}/{len(jobs)} {las.get('candidate')} {las.get('key')}: {state}",
                   flush=True)
@@ -811,12 +998,16 @@ def _parse_args(argv: list[str] | None):
     for name in ("--alpha", "--beta", "--gamma", "--alpha-end", "--t-max"):
         run.add_argument(name, type=float)
     run.add_argument("--n-end", type=int)
+    run.add_argument("--rho-on", type=float, default=None,
+                     help=f"S7' rho_on of custom (default {RHO_ON_DEFAULT}, rev1 2)")
     run.add_argument("--workers", type=int, default=4)
     run.add_argument("--affinity", default=None, help="hex mask, set in every worker")
     run.add_argument("--out", type=Path, default=None)
     run.add_argument("--gate-only", action="store_true")
     run.add_argument("--gate-npz-dir", type=Path, default=None)
     run.add_argument("--keys", default=None, help="comma-separated composite keys (subset)")
+    run.add_argument("--from-t4h", type=Path, nargs="+", default=None,
+                     help="run the stored steady run_v5 jobs of these T4h records instead")
     run.add_argument("--limit", type=int, default=None, help="first N jobs only (checks)")
     return parser.parse_args(argv)
 
@@ -843,8 +1034,9 @@ def main(argv: list[str] | None = None) -> int:
             raise ValueError("--gate-only takes LAS-b candidates only")
         mask = None if args.affinity is None else int(args.affinity, 16)
         gate_dir = None if args.gate_npz_dir is None else str(args.gate_npz_dir.resolve())
-        jobs = build_jobs(keys, candidates, mode, mask, gate_dir)
-    except (KeyError, ValueError) as exc:
+        base = None if args.from_t4h is None else jobs_from_t4h(args.from_t4h)
+        jobs = build_jobs(keys, candidates, mode, mask, gate_dir, base)
+    except (KeyError, OSError, ValueError) as exc:
         print(f"input error: {exc}")
         return 2
     path = args.out or default_out(args.stage)
