@@ -62,7 +62,8 @@ def test_existing_batch_definitions_unchanged() -> None:
                                               "FINAL4", "FINAL5", "FINAL6", "FINAL-R", "FINAL-REP", "FINAL-R-REP",
                                               "FINAL-REP-X", "JOURNAL-AUGER", "COUPLED_eta085", "V5-VB",
                                               "V5-S6SEED", "V5-T45", "V5-T45LS", "V5-R12", "V5-REC", "V5-V0V",
-                                              "V5-STAGE3"}
+                                              "V5-STAGE3",
+                                              "D1-CHRONO", "D1-PSC"}  # D-1 (2026-11-08): test_d1_chrono_rows.py
     for name, want in BATCH_DEF_SHA256.items():
         rows = [{**r, "argv": _norm(s9_batch, r["argv"])} for r in b[name]]
         assert hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest() == want, name

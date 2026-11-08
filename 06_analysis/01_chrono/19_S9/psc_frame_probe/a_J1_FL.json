@@ -1,0 +1,117 @@
+{
+ "probe": "D-1 C-3 PS-c frame lowering (run_S9.SoilEventDriver on the single-pad layout)",
+ "mode": "a",
+ "soil": "J1",
+ "leg": "FL",
+ "pad_variant": "dwg_rear250",
+ "grid_m": 0.01,
+ "dt_s": 0.0001,
+ "scm_threads": 4,
+ "placement": {
+  "mode": "pcore",
+  "efficiency_classes": [
+   0,
+   1
+  ],
+  "affinity_ok": true,
+  "affinity_logical_processors": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "power_throttling_off_ok": true,
+  "requested": "pcore",
+  "env_var": "OUTRIGGER_PLACEMENT",
+  "env_value": null
+ },
+ "normal_load_N": 10000.0,
+ "load_kind": "light",
+ "load_ramp_s": 1.0,
+ "settle_hold_s": 1.0,
+ "virgin_tau_s": null,
+ "t_lock_s": null,
+ "t_ev_s": 2.0,
+ "t_end_s": 3.6999999999999997,
+ "frame_profile": {
+  "depth_m": 0.01,
+  "ramp_s": 1.3,
+  "shape": "P345",
+  "peak_speed_m_s": 0.014423076923076922
+ },
+ "driver": {
+  "t_ev_s": 2.0,
+  "depth_m": 0.01,
+  "ramp_s": 1.3,
+  "offset_end_m": 0.01,
+  "frame_z_end_m": -0.01,
+  "plane_z_m": 0.0,
+  "n_frame_updates": 13000,
+  "first_update_t_s": 2.0000999999997964,
+  "last_update_t_s": 3.3000000000025396
+ },
+ "values": {
+  "elastic_K_Pa_m": 200000000.0,
+  "pad_area_m2": 0.1071,
+  "KA_N_m": 21420000.0,
+  "k_leg_N_m": 25905744.2,
+  "k_series_N_m": 11725141.36109454,
+  "share_mass_kg": 997.3121814779283,
+  "series_damping_N_s_m": null
+ },
+ "before_event": {
+  "z_bottom_mm": 1.13202610178649,
+  "Fz_scm_N": 9999.9974009623,
+  "Fz_over_load": 0.99999974009623
+ },
+ "check_a": {
+  "rule": "pad bottom follows the lowered surface: |(z_bottom - z_bottom(t_ev)) + offset| <= 0.1 mm over t >= t_ev (constant load)",
+  "max_abs_err_mm": 0.07160465770275626,
+  "end_err_mm": 6.9697898119373455e-06,
+  "offset_end_mm": 10.0,
+  "Fz_end_over_load": 1.0000008674881447,
+  "pass": true
+ },
+ "plastic_memory": {
+  "rule": "node sinkage_plastic / sigma_yield under the pad before t_ev vs the run end (frame-relative records)",
+  "n_nodes_probe": 929,
+  "n_nodes_contact_before": 929,
+  "contact_area_nodes_m2": 0.09290000000000001,
+  "sinkage_plastic_mean_before_mm": -1.5980165274440798,
+  "sinkage_plastic_max_abs_change_mm": 0.0,
+  "sigma_yield_mean_before_Pa": 320337.3793556283,
+  "sigma_yield_max_abs_change_Pa": 0.0,
+  "sigma_mean_before_Pa": 93196.92464248583,
+  "sigma_mean_after_Pa": 93195.2882577348,
+  "unchanged": true
+ },
+ "ray": {
+  "ray_hits_pre": 1073,
+  "ray_hits_end": 1073,
+  "patches_pre": 1,
+  "patches_end": 1,
+  "window": "SCM ray test +0.1 m / -0.5 m along the frame normal (SCMLoader defaults), pad active domain height 0.40 m (scm_model.ACTIVE_DOMAIN_HEIGHT_M)"
+ },
+ "python_warnings": [],
+ "cost": {
+  "wall_s": 28.95982149563497,
+  "steps": 37000,
+  "us_per_step_before_event": 828.1785296858288,
+  "us_per_step_during_ramp": 832.8023614370837,
+  "driver_update_us_per_step": 3.6309863475302384,
+  "driver_frame_calls": 13000,
+  "us_per_frame_call": 10.334345758355294
+ }
+}

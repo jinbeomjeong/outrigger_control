@@ -1,0 +1,64 @@
+{
+ "check": "D-1 C-4 auger level + soil patch",
+ "rows": {
+  "D1S_G1_B_middle_Fs4_spJ1FL": {
+   "level": "middle",
+   "soil": "G1",
+   "soil_patch": "FL:J1",
+   "terrains": 3,
+   "layout": "triple",
+   "soil_patch_leg": "FL",
+   "soil_patch_set": "J1",
+   "patch_is_leg_terrain": true,
+   "v0": {
+    "mass_kg": 38400.8366,
+    "mass_yaml_kg": 38400.8366,
+    "mass_rel": 0.0,
+    "com_body_m": [
+     0.460190503,
+     -0.00136232581,
+     1.48302254
+    ],
+    "com_yaml_m": [
+     0.460190503,
+     -0.00136232581,
+     1.48302254
+    ],
+    "com_abs_diff_m": 0.0,
+    "inertia_rel_max": 0.0,
+    "ok_1e-9": true,
+    "basis": "Chrono superstructure body (COG frame) vs YAML superstructure.auger_levels.<level>; inertia about the COG, body axes (x fwd, y left, z up)"
+   }
+  },
+  "D1S_G1_B_bottom_Fs4_spJ1FL": {
+   "level": "bottom",
+   "soil": "G1",
+   "soil_patch": "FL:J1",
+   "terrains": 3,
+   "layout": "triple",
+   "soil_patch_leg": "FL",
+   "soil_patch_set": "J1",
+   "patch_is_leg_terrain": true,
+   "v0": {
+    "mass_kg": 38400.8366,
+    "mass_yaml_kg": 38400.8366,
+    "mass_rel": 0.0,
+    "com_body_m": [
+     0.460190503,
+     -0.00136232581,
+     0.782572771
+    ],
+    "com_yaml_m": [
+     0.460190503,
+     -0.00136232581,
+     0.782572771
+    ],
+    "com_abs_diff_m": 0.0,
+    "inertia_rel_max": 0.0,
+    "ok_1e-9": true,
+    "basis": "Chrono superstructure body (COG frame) vs YAML superstructure.auger_levels.<level>; inertia about the COG, body axes (x fwd, y left, z up)"
+   }
+  }
+ },
+ "ok": true
+}

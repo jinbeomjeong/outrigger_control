@@ -69,6 +69,13 @@ the C1 FL g170 re-run (spec rev. 70 366; FAULT end rule max(FAULT + 10 s, fault_
     python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py run --set g8c76 --approved --jobs 4 --tag c76
     python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py judge-g8 --batch 07_results/S6/bundleC_g8c76_c76_L1R_<stamp>
 
+D-1 C1-09 ... 12 (2026-11-08, user decision U6): set ``d1c1`` = D8 top / bottom x flat / rpBop on the
+run-time preset with the plant crawler x3 (:func:`crawler_k_overrides`, controller unchanged), started
+from the x3 settled snapshots (``S6_crawler_<level>_<floor>_crx3``, built first)::
+
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py snaps-crx --jobs 4
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py run --set d1c1 --approved --jobs 4 --tag d1
+
 ``run`` refuses to start without ``--approved`` (the user approves the bundle separately).
 C-9 cases (R-5 on) are conditional: ``run`` leaves them out unless ``--with-c9`` (spec 150:
 only when the C-1 G4 cases miss F_min).
@@ -238,8 +245,14 @@ class BundleCCase:
     """C-S8-76 (spec rev. 69 360.1 / 363): ``(leg, g_start_m)``: after the crawler settle a rigid
     block under that pad makes its zero-stroke gap ``g_start`` (block height h = g0 - g_start,
     g0 measured on the restored start snapshot; ``chrono/pad_block``). None = no block."""
+    crawler_k_factor: float | None = field(default=None, repr=False)
+    """D-1 C1 (user decision U6, 2026-11-08): crawler stiffness factor s of the plant
+    (:func:`crawler_k_overrides`: sphere ``kn`` x s, ``gn`` x sqrt s, ``damping_total`` x sqrt s, so
+    the crawler bushing ``k_t`` x s and ``c_t`` x sqrt s follow, same zeta); the start snapshot is
+    the settle of the analytic pose of that crawler (:func:`crawler_k_snapshot_name`). The
+    controller keeps the YAML crawler and the x1 settle map. None = YAML crawler."""
 
-    OPTIONAL_META = ("preground_leg", "end_after_ready_s", "pad_block")
+    OPTIONAL_META = ("preground_leg", "end_after_ready_s", "pad_block", "crawler_k_factor")
     """Fields left out of :meth:`to_meta` while None and out of ``repr`` (``repr=False``), so
     the earlier cases' definitions (meta and repr hashes) stay as they were."""
 
@@ -732,10 +745,44 @@ def g8c76_p28_acceptance_cases() -> list[BundleCCase]:
 G8_P28_SETS = ("g8c76_p28", "g8c76_p28acc")
 """Sets run with every case (no conditional filter); C3 / C4 still need --allow-p28-cases."""
 
+D1_FLOORS: dict[str, tuple[float, float]] = {"rpBop": (2.3351, 1.5017)}
+"""D-1 diag-op (user decision U2, 2026-11-08): rpB direction x 0.85364, R_c = 1.0000 (= run_S8C
+``NEW_FLOORS["rpBop"]``, same values; the name is shared)."""
+st.FLOORS.update(D1_FLOORS)
+D1C1_FACTOR = 3.0
+"""U6: crawler x3 (normal + bushing tangential stiffness x3, damping x sqrt 3)."""
+D1C1_ROWS = (("C1-09", "top", "flat"), ("C1-10", "top", "rpBop"),
+             ("C1-11", "bottom", "flat"), ("C1-12", "bottom", "rpBop"))
+"""D-1 Chrono rows C1-09 ... 12 (d1_rows_final.md 4): L1 V0 (VB is not available on L1, v5 spec 2.0),
+auger top / bottom x flat / diag-op, record rows (crawler stiffness sensitivity)."""
+D1C1_NOTE = ("D-1 C1 (record, crawler stiffness sensitivity, U6): L1-R V0, crawler x3 (kn x3, gn and "
+             "damping_total x sqrt 3: bushing k_t x3, c_t x sqrt 3), start = settle of the x3 analytic "
+             "crawler pose; controller: YAML crawler, x1 settle map (floor estimate error recorded); "
+             "VB transfer by the 2x2 rule of d1_rows_final.md 5")
+
+
+def d1c1_cases() -> list[BundleCCase]:
+    """D-1 C1-09 ... 12: the D8 scenario of (level, floor) on the run-time preset
+    (``with_10hz_d1()``), crawler factor :data:`D1C1_FACTOR`, start snapshot
+    :func:`crawler_k_snapshot_name` (``snaps-crx``), ideal leg sensors, beta 1.0."""
+    out = []
+    for rid, level, floor in D1C1_ROWS:
+        cid = f"D1C1_{level}_{floor}_crx{D1C1_FACTOR:g}"
+        sc = _d8(level, floor)
+        sc = replace(sc, case_id=cid, group="D1-C1",
+                     snapshot_override=crawler_k_snapshot_name(level, floor, D1C1_FACTOR),
+                     notes=(f"{rid}: {D1C1_NOTE}",))
+        out.append(BundleCCase(cid, "D1-C1", sc, notes=(f"{rid}: {D1C1_NOTE}",),
+                               crawler_k_factor=D1C1_FACTOR))
+    return out
+
+
+D1C1_IDS = {rid: f"D1C1_{lv}_{fl}_crx{D1C1_FACTOR:g}" for rid, lv, fl in D1C1_ROWS}
+
 CASE_SETS = {"bundleC": bundle_c_cases, "rerun32": rerun32_cases, "rerun33": rerun33_cases,
              "rerun34": rerun34_cases, "rerun35": rerun35_cases, "ps7r8": ps7r8_cases,
              "g8c76": g8c76_run_cases, "g8c76_p28": g8c76_def_cases,
-             "g8c76_p28acc": g8c76_p28_acceptance_cases}
+             "g8c76_p28acc": g8c76_p28_acceptance_cases, "d1c1": d1c1_cases}
 GROUP_SETS = {"rerun32": rerun32_groups, "rerun33": rerun33_groups, "rerun34": rerun34_groups,
               "rerun35": rerun35_groups}
 ROLE_SETS = {"rerun34": RERUN34_ROLES, "rerun35": RERUN35_ROLES}
@@ -779,16 +826,46 @@ def front_frame_overrides(kn_N_m: dict[str, float], k_frame_yaml_N_m: float,
     return out
 
 
+CRAWLER_KN_KEY = "contact.crawler.kn_per_sphere_N_m"
+CRAWLER_GN_KEY = "contact.crawler.gn_per_sphere_1_s"
+CRAWLER_C_TOTAL_KEY = "contact.crawler.damping_total_N_s_m"
+
+
+def crawler_k_overrides(level: str, factor: float) -> dict[str, float]:
+    """D-1 C1 / U6 crawler factor s (the run_S3 ``_x3_overrides`` rule extended to the bushing):
+    sphere ``kn`` x s, ``gn`` x sqrt s (SMC sphere damping, same heave zeta) and
+    ``damping_total_N_s_m`` x sqrt s, the source of the crawler bushing ``c_t``
+    (``chrono/crawler_bushing``: ``k_t = (kt/kn)_pad kn_sphere`` x s follows ``kn`` by itself,
+    ``c_t = damping_total / 12 sqrt(k_t / kn_sphere)`` x sqrt s). Values of the YAML of ``level``."""
+    from outrigger_sim.params import load_params
+
+    f = float(factor)
+    if not (f > 0.0 and math.isfinite(f)):
+        raise ValueError(f"crawler factor must be > 0: {factor!r}")
+    base = load_params(level=level)
+    root = math.sqrt(f)
+    return {CRAWLER_KN_KEY: float(base.get(CRAWLER_KN_KEY)) * f,
+            CRAWLER_GN_KEY: float(base.get(CRAWLER_GN_KEY)) * root,
+            CRAWLER_C_TOTAL_KEY: float(base.get(CRAWLER_C_TOTAL_KEY)) * root}
+
+
+def crawler_k_snapshot_name(level: str, floor: str, factor: float) -> str:
+    """Start snapshot of a crawler-factor case: ``S6_crawler_<level>_<floor>_crx<s>``."""
+    return f"{st.snapshot_name(level, floor)}_crx{float(factor):g}"
+
+
 def param_overrides(case: BundleCCase, *, include_frame: bool = True,
-                    include_beta: bool = True) -> dict[str, Any]:
+                    include_beta: bool = True, include_crawler: bool = True) -> dict[str, Any]:
     """Run-time YAML overrides of the case (module docstring); ``include_frame`` False leaves
     out the C-11 front frame term, ``include_beta`` False the beta terms (pad ``kn`` and the oil
-    bulk modulus). The plant uses both; the controller neither
-    (:func:`controller_param_overrides`)."""
+    bulk modulus), ``include_crawler`` False the D-1 crawler factor terms. The plant uses all;
+    the controller none of them (:func:`controller_param_overrides`)."""
     from outrigger_sim.params import load_params
     from outrigger_sim.verify.reference import BETA_K_L1_N_M, load_references
 
     over: dict[str, Any] = {}
+    if include_crawler and case.crawler_k_factor is not None:
+        over.update(crawler_k_overrides(case.scenario.level, case.crawler_k_factor))
     if include_beta and case.beta_GPa != 1.0:
         key = BETA_KEYS[case.beta_GPa]
         k = load_references().get(BETA_K_L1_N_M, beta=key)
@@ -824,8 +901,9 @@ CONTROLLER_BETA_GPA = 1.0
 
 def controller_param_overrides(case: BundleCCase) -> dict[str, Any]:
     """C-R11: overrides the controller sees = the case overrides without the beta and C-11
-    frame terms (only ``L_0r`` remains; C2 reads no rod-side key, spec 176.1)."""
-    return param_overrides(case, include_frame=False, include_beta=False)
+    frame terms (only ``L_0r`` remains; C2 reads no rod-side key, spec 176.1); the D-1 crawler
+    factor is plant only as well (U6: the controller keeps the x1 crawler and settle map)."""
+    return param_overrides(case, include_frame=False, include_beta=False, include_crawler=False)
 
 
 def crawler_kt_scales(case: BundleCCase, params, params_noframe, params_nominal
@@ -1647,7 +1725,10 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
                                           settlement_legs=("RR",) if settles else (),
                                           **model_kw)
     check_settle_offset(case, model.dt_s)
-    snap = load_snapshot(case.snapshot, params_sha256=base_params.sha256, directory=states)
+    # D-1 C1: a crawler-factor snapshot carries the fingerprint of its crawler overrides
+    snap_params = (base_params if case.crawler_k_factor is None else load_params(
+        level=sc.level, overrides=crawler_k_overrides(sc.level, case.crawler_k_factor)))
+    snap = load_snapshot(case.snapshot, params_sha256=snap_params.sha256, directory=states)
     # dyn rev. 37 5.24.3: refuse to re-tag a snapshot that is not "legs unloaded"
     snap, retag_check = retag_snapshot(snap, params.sha256, name=case.snapshot,
                                        preground_leg=case.preground_leg)  # C-S8-72
@@ -2108,6 +2189,44 @@ def build_snapshots(jobs: int):
     return report
 
 
+def job_snapshot_crx_case(case, case_dir):
+    """D-1 C1 start snapshot: :func:`s6_stage2.job_snapshot` with the crawler-factor overrides
+    (analytic pose of that crawler, the stage-2 ramp + settle)."""
+    from outrigger_sim.batch import CaseResult
+
+    s = case.settings
+    summary = st.job_snapshot(s["level"], s["floor"], Path(case_dir), STATES,
+                              overrides=crawler_k_overrides(s["level"], s["factor"]),
+                              name=crawler_k_snapshot_name(s["level"], s["floor"], s["factor"]))
+    summary["crawler_k_factor"] = s["factor"]
+    (Path(case_dir) / "result.json").write_text(
+        json.dumps(_plain(summary), indent=1, ensure_ascii=False), encoding="utf-8")
+    return CaseResult(summary=_plain({"snapshot": summary["snapshot"],
+                                      "timing": summary["timing"]}), run_meta=None)
+
+
+def build_crawler_k_snapshots(jobs: int):
+    """``snaps-crx``: the missing start snapshots of the :func:`d1c1_cases` (crawler factor)."""
+    from outrigger_sim.batch import Case, run_cases
+
+    todo = sorted({(c.scenario.level, c.scenario.floor, c.crawler_k_factor) for c in d1c1_cases()
+                   if not (STATES / f"{c.snapshot}.npz").exists()})
+    if not todo:
+        print("all crawler-factor snapshots exist")
+        return None
+    stamp = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+    out = RESULTS / f"snapshots_d1c1_L1R_{stamp}"
+    cases = [Case(crawler_k_snapshot_name(lv, f, k), {"level": lv, "floor": f, "factor": k})
+             for lv, f, k in todo]
+    report = run_cases(cases, job_snapshot_crx_case, out, max_workers=min(jobs, MAX_WORKERS),
+                       placement="pcore", timeout_s=1800.0)
+    for o in report.outcomes:
+        print(f"{o.case_id}: {o.status} {o.wall_s:.1f}s" + ("" if o.status == "ok"
+              else "\n" + (o.error or "")[-2000:]), flush=True)
+    print(f"-> {out}")
+    return report
+
+
 def build_preground_snapshot(leg: str, *, overwrite: bool = False,
                              placement: str = "pcore") -> dict[str, Any]:
     """C-S8-72 (spec rev. 67 345.3): the PS-7a start snapshot of ``leg``
@@ -2181,8 +2300,8 @@ def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DU
 
 def main(argv):
     ap = argparse.ArgumentParser()
-    ap.add_argument("action", choices=("list", "plan", "snaps", "snaps-pre", "check", "run",
-                                       "judge", "judge-ps7", "judge-g8"))
+    ap.add_argument("action", choices=("list", "plan", "snaps", "snaps-pre", "snaps-crx", "check",
+                                       "run", "judge", "judge-ps7", "judge-g8"))
     ap.add_argument("--leg", choices=st.PREGROUND_LEGS, default="FL",
                     help="snaps-pre (C-S8-72): leg of the pre-grounded PS-7a start snapshot")
     ap.add_argument("--overwrite", action="store_true",
@@ -2242,6 +2361,9 @@ def main(argv):
         return
     if args.action == "snaps":
         build_snapshots(jobs)
+        return
+    if args.action == "snaps-crx":  # D-1 C1: crawler x3 start snapshots
+        build_crawler_k_snapshots(jobs)
         return
     if args.action == "snaps-pre":  # C-S8-72: FLpre (spec rev. 67 345.3)
         build_preground_snapshot(args.leg, overwrite=args.overwrite, placement=args.placement)
