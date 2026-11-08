@@ -378,6 +378,15 @@ def stop_expectation(row: D1Row, values: dict, rows: np.ndarray, controller) -> 
     return {"met": all(conditions.values()), "conditions": conditions, "guard_events": guard}
 
 
+def u3_record(harness: dict) -> dict:
+    """The slope-suite record fields of a steady run (``s9_slope_fix_candidates
+    .slope_record_fields``): what the U-3 judge reads when a U-3 key reuses this run
+    (``u3_u6_rerun_rules.md`` 6 Q-5). Record only, after the run."""
+    import s9_slope_fix_candidates as fix
+
+    return fix.slope_record_fields(harness)
+
+
 def d1_record(row: D1Row, setting_name: str, eps: float, result: dict, plant, controller,
               harness: dict) -> dict:
     """The ``d1`` block of a run (module docstring)."""
@@ -407,6 +416,8 @@ def d1_record(row: D1Row, setting_name: str, eps: float, result: dict, plant, co
         "has_rod_reading": has_rod, "head_only_declared": head_only,
         "j_p3": j_p3_status(setting_name, bound_check, has_rod, head_only),
         "harness_class": result.get("harness_class")}
+    if row.path == "steady" and "rows" in harness:
+        record["u3"] = u3_record(harness)
     expectation = stop_expectation(row, values, rows, controller)
     if expectation is not None:
         record["expectation"] = expectation

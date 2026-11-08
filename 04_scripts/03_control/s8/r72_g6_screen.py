@@ -59,6 +59,10 @@ D-1 verification matrix (2026-11-08, ``04_scripts/04_hydraulic/coupled/d1_runs.p
   settle_hook=)`` adds a floor slope (rigid base: tilted rigid floor, patch surface = that plane; soil base: the
   settle row ``<base>|<level>|<roll>|<pitch>`` with settle_hook "harness"). Keys and results without them are
   unchanged.
+Paper v5 U-3 study C (``u3_u6_rerun_rules.md``, ``04_hydraulic/coupled/v5_rerun.py``):
+  ``--v5-setting {V0,VB}``, ``--ids-from <v4 json>`` and ``--pad B`` anywhere after the root
+  (stripped before the positional arguments); each result then carries a ``v5`` block and the
+  meta a ``v5`` entry. Without them nothing changes.
 """
 from __future__ import annotations
 
@@ -603,29 +607,61 @@ def set_parent_placement():
     k32.SetProcessAffinityMask(k32.GetCurrentProcess(), int(mask, 16))
 
 
+def _v5_rerun():
+    """``coupled/v5_rerun.py`` (paper v5 U-3 study C); its folder joins ``sys.path`` at the end."""
+    coupled = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+    if str(coupled) not in sys.path:
+        sys.path.append(str(coupled))
+    import v5_rerun
+    return v5_rerun
+
+
+def rerun_job(key):
+    """``job`` with the ``--v5-setting`` of the parent installed and the ``v5`` record block."""
+    v5 = _v5_rerun()
+    v5.install_in_worker()
+    rec = job(key)
+    if "error" not in rec:
+        rec["v5"] = v5.run_record(_CAP.get("plant"), _CAP.get("ctrl"),
+                                  harness_commands_sha256=rec.get("commands_sha256"))
+    return rec
+
+
 def main():
+    # paper v5 U-3: --v5-setting / --ids-from / --pad leave the positional arguments in place
+    sys.argv, rerun = _v5_rerun().split_argv(sys.argv)
     jobs = all_jobs(os.environ.get(SET_ENV) or DEFAULT_SET)
     filt = os.environ.get("R72_FILTER")
     if filt:
         jobs = [j for j in jobs if any(f in j for f in filt.split(","))]
+    if rerun.ids_from is not None:
+        jobs = _v5_rerun().select_known(_v5_rerun().ids_from(rerun.ids_from, rerun.pad), jobs)
     if len(sys.argv) > 2 and sys.argv[2] == "--list":
         for j in jobs:
             print(j)
+        if rerun.ids_from is not None:
+            print(len(jobs), "jobs")
         return
     set_parent_placement()
     out = Path(sys.argv[2])
     workers = int(sys.argv[3]) if len(sys.argv) > 3 else 8
+    _v5_rerun().activate(rerun.setting)  # the pool workers inherit it
     t0 = time.perf_counter()
     with Pool(max(1, min(workers, len(jobs)))) as pool:
-        res = pool.map(job, jobs, chunksize=1)
+        res = pool.map(rerun_job if rerun.is_active else job, jobs, chunksize=1)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps({"meta": {"script": "04_scripts/03_control/s8/r72_g6_screen.py",
-                                        "spec": "rev. 72 draft (G6 weak patch under one pad)",
-                                        "path": soil_path(), "filter": filt,
-                                        "settle_hook": sl.resolve_settle_hook(),
-                                        "workers": workers, "affinity": os.environ.get("R72_AFFINITY"),
-                                        "wall_s": round(time.perf_counter() - t0, 1), "n_jobs": len(jobs)},
-                               "results": res}, indent=1, default=float), encoding="utf-8")
+    meta = {"script": "04_scripts/03_control/s8/r72_g6_screen.py",
+            "spec": "rev. 72 draft (G6 weak patch under one pad)",
+            "path": soil_path(), "filter": filt,
+            "settle_hook": sl.resolve_settle_hook(),
+            "workers": workers, "affinity": os.environ.get("R72_AFFINITY"),
+            "wall_s": round(time.perf_counter() - t0, 1), "n_jobs": len(jobs)}
+    if rerun.is_active or rerun.ids_from is not None:  # paper v5 U-3 (former metas unchanged)
+        meta["v5"] = {**_v5_rerun().file_meta(rerun, jobs), "set": os.environ.get(SET_ENV),
+                      "ids_from": None if rerun.ids_from is None else str(rerun.ids_from),
+                      "pad": rerun.pad}
+    out.write_text(json.dumps({"meta": meta, "results": res}, indent=1, default=float),
+                   encoding="utf-8")
     print("done", round(time.perf_counter() - t0, 1), "s ->", out)
     for r in res:
         if "error" in r:
