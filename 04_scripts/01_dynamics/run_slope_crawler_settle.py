@@ -63,6 +63,16 @@ EXTRA += [(s, "top", sl) for s in ("J1", "J2") for sl in _B5_OOS]
 # by all_cases(). Appended last (job order kept).
 _H9 = tuple((round(k * r, 4), 0.0) for r in (4.4, -4.4) for k in (0.6, 0.65, 0.7, 0.75, 0.8, 0.875))
 EXTRA += [(s, "top", sl) for s in ("J1", "J2") for sl in _H9 if (s, "top", sl) not in EXTRA]
+# D-1 verification matrix (user decisions U2/U3/U4/U8, 2026-11-08). Slopes as s9_soil_slope._scaled_slope
+# (round(k * base, 4)) of SLOPES_DEG nose_down / nose_up (0, +-3.2), roll_pos / roll_neg (+-4.4, 0), edge_nd (2.2, 1.6).
+_D1_SOFT = ((0.0, 0.0), (0.0, round(0.875 * 3.2, 4)), (0.0, round(0.875 * -3.2, 4)),
+            (round(0.875 * 2.2, 4), round(0.875 * 1.6, 4)), (round(0.6 * -4.4, 4), 0.0), (round(0.5 * 4.4, 4), 0.0))
+# PS-a on a G1 base: fore-aft at R_c 0.75 (U4); roll_neg, edge_nd and the +-3.2 stroke-stop record rows are base slopes
+_D1_PSA_G1 = ((0.0, round(0.75 * 3.2, 4)), (0.0, round(0.75 * -3.2, 4)))
+_D1 = ([(s, lv, sl) for s in ("G1", "J1", "J2") for lv in ("top", "middle", "bottom") for sl in _D1_SOFT]
+       + [("G1", lv, sl) for lv in ("top", "middle", "bottom") for sl in _D1_PSA_G1])
+_BASE = {(s, lv, sl) for s in SOILS for lv in LEVELS for sl in SLOPES}
+EXTRA += [c for c in _D1 if c not in EXTRA and c not in _BASE]
 # --merge: existing hook_harness keys recomputed as the bit-identity regression sample
 REGRESSION_KEYS = ("G1|top|0|0", "J1|top|0|3.2", "S1|top|2.7355|1.7592", "J2|bottom|4.4|0", "G1|bottom|-4.4|0",
                    "S1|top|0|3.5")

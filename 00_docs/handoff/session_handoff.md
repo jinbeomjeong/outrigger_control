@@ -3,8 +3,9 @@
 새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
 
 - 갱신: 2026-11-08 오전, v5 **3단계 판정 확정**(`v5/stage3_judgement.md`: 개정 6 기준 H-7 `불일치` + H-14·H-18 한계, 개정 7 참고 재판정 T4·T5 초과 0). 기준 **개정 7 봉인**(`v5_criteria_rev7.md`, `9ccde7a5…`, CHECK 공중 수축 꼬리 제외 E1~E5 + B1, 다음 Chrono T4부터 전향 적용). X-00 정정은 명세 432.6.3·432.7만(논문 불변). (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력)
-- 직전 코드 커밋: **15ca10d**(`chrono_t45_replay` β 경로), 그 앞 d1ec93f·852fde5·d74ab26(`extend_bound_check`, S-5, ③ revision 3·4). 결정 경과 원본은 `decision_log.md` 4절 끝(395행 이후는 주제순).
-- **다음(사용자 결정 11-08)**: Dg-3 v4(135, 오류 0, 08:05 종료) 판정 → ③ 채택 + 모니터 재신장 수정(설계안 scratchpad `ctrl_monitor\monitor_reextend_design.md`, 안 A) 묶어서 결정. 지금 시작: 논문 v5 구조 설계(수치 없음), 유압 명세 본문·그림 3 r4·r5 반영, 개정 7을 `chrono_t45_replay`에 구현, 검증 행렬 D-1 준비(실행은 ③ 결정 뒤). 큰 결과(seedext·dg3)는 로컬 보관.
+- 갱신(11-08 오전 후반): **③ revision 4를 v5 VB에서 채택**(태그 `final_C4G2_P3`, 프리셋·클래스 기본 꺼짐, 명세 435절), 조건 4는 Dg-3 v4 폐루프 근거로 면제. 기준 개정 8(VB 정의·J-P3) → 개정 9(로드 판독 없는 행 = `no_rod_reading`) → 개정 10(Chrono 대조 `fallback_rod_estimate_Pa` 조건부 허용, 결과를 본 뒤). 해시 대조 확정(하네스 22·Chrono 2 통과) → 저장 VB·LS 결과 재사용. D-1 선별 규칙 봉인(`06_analysis/02_control/verif_matrix/d1_selection_rules.md`), 정착 표 314행, D-1 Chrono 행(`s9_batch list D1-CHRONO`, ×3 스냅숏 생성됨). 유압 명세 개정 4·그림 2·3. 논문 v5 구조(`09_paper/v5/STRUCTURE.md`, 커밋 안 함; U-1 v4 대체 다음 판, U-3·U-6 VB 재실행, 2.8 SCM VB 2·3.5.2 Chrono VB J_P 6 실행 결정).
+- 직전 코드: master 3d848a7까지(2105ef7 rev7 재생, ec2c08c D-1 Chrono 행, 0fdffb4·fa55755·f2eff83·39bdfa1·3d848a7). 진행 중: python-expert worktree D-1 하네스 지원(P-1~P-6, 선별 스크립트, 개정 9 J-P3 보강, `p3_chrono_check` 개정 10 조건), control-expert U-9 포화 운전점 루프 여유. 결정 경과 원본은 `decision_log.md` 4절 끝(395행 이후는 주제순).
+- **다음**: D-1 하네스 지원 병합 → 배치(D-1 하네스 844 + Chrono 16, v4 하네스 묶음·기준선 비교 VB 재실행, SCM VB 2, Chrono VB J_P 6) 비용·예상 종료를 보이고 사용자 승인 뒤 실행 → 선별 → 판정 → 논문 v5 2단계. 큰 결과(seedext·dg3)는 로컬 보관.
 
 ## 현재 위치
 

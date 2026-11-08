@@ -13,13 +13,13 @@
   <key attr.name="description" attr.type="string" for="edge" id="d9"/>
   <key for="edge" id="d10" yfiles.type="edgegraphics"/>
   <graph edgedefault="directed" id="G">
-    <data key="d0" xml:space="preserve">그림 3. 모델링 부분 — 블록과 신호 흐름(다리 하나 기준, 블록 순서 = v5 명세 2.0 표 L2b 열)</data>
+    <data key="d0" xml:space="preserve">그림 3. 모델링 부분 — 블록과 신호 흐름(다리 하나 기준, 블록 순서 = v5 명세 2.0 표 L2b 열) · M2 = flow_limited_r5(2026-11-08, v5 명세 개정 4)</data>
     <node id="G_CTRL" yfiles.foldertype="group">
       <data key="d6">
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="575.6755" width="175.748" x="31.1811" y="115.5029"/>
+              <y:Geometry height="649.123" width="175.748" x="31.1811" y="115.5029"/>
               <y:Fill color="#FFF1DA" transparent="false"/>
               <y:BorderStyle color="#8A4B00" type="line" width="0.8"/>
               <y:NodeLabel alignment="left" autoSizePolicy="node_width" backgroundColor="#FFF1DA" fontFamily="Dialog" fontSize="7" fontStyle="bold" hasLineColor="false" height="13.472" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="175.748" x="0.0" xml:space="preserve" y="0.0">제어기</y:NodeLabel>
@@ -62,7 +62,7 @@ mm/s)</y:NodeLabel>
           <data key="d5" xml:space="preserve">압력 신호 처리(제어기 안) 영점 교정 · 순 힘 · 잠금 창 | [기본] / 새 창 [v5 · 기본 끔] [VB 켬] | F = p_h A_p − p_r A_ann ≥ F_min 9.415 kN, 350 bar 판정. 잠금 창 W = τ_v ln(·) + t_c + T(새 창은 v5 옵션) | 원본: YAML control.F_min_cylinder_N, control/two_pressure.py, v5 명세 2.6</data>
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="56.9061" width="147.4016" x="45.3543" y="622.9337"/>
+              <y:Geometry height="56.9061" width="147.4016" x="45.3543" y="645.9737"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#8A4B00" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.08" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="136.7187" x="5.3414" xml:space="preserve" y="4.413">압력 신호 처리(제어기 안)
@@ -71,6 +71,20 @@ mm/s)</y:NodeLabel>
 F = p_h A_p − p_r A_ann ≥ F_min 9.415 kN, 350
 bar 판정. 잠금 창 W = τ_v ln(·) + t_c + T(새 창은
 v5 옵션)</y:NodeLabel>
+              <y:Shape type="roundrectangle"/>
+            </y:ShapeNode>
+          </data>
+        </node>
+        <node id="B_P3">
+          <data key="d5" xml:space="preserve">③ 대체 시작값 상계 (제어기 안, 기본 꺼짐) | [옵션 · VB에서 켬] | 플랜트와 같은 함수 flow_limited_rod_pressure를 보수 입력(β 0.69 GPa, L_0h 0.08, L_0r 0.10 m, B 호스 ×1.40, κ_x 0.8)으로 1 ms 소단계 실행 → p̂. 신장 뒤 잠금 시작값·신장 이동 추정 = max(13 bar, p̂ + 0.5 bar). 재신장 전 p̂ ← max(p̂, ④)(revision 4). 로드 센서 고장 다리의 대체 추정에만 쓰임 | 원본: control/extend_start_bound.py, two_pressure.py extend_start_rule, v5 명세 2.8, p3_extend_start_spec.md 3·12절. extend_start_rule="tracked_bound": 프리셋 기본 꺼짐 · v5 VB에서 켬(사용자 채택 2026-11-08) | 가정값 포함</data>
+          <data key="d6">
+            <y:ShapeNode>
+              <y:Geometry height="34.2501" width="147.4016" x="45.3543" y="724.7065"/>
+              <y:Fill color="#FFFFFF" transparent="false"/>
+              <y:BorderStyle color="#8A4B00" type="dashed" width="1.0"/>
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="7" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="28.88" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="73.195" x="37.1033" xml:space="preserve" y="2.685">③ 대체 시작값 상계
+(제어기 안, 기본 꺼짐)
+[옵션 · VB에서 켬]</y:NodeLabel>
               <y:Shape type="roundrectangle"/>
             </y:ShapeNode>
           </data>
@@ -228,7 +242,7 @@ s_ref ← clip(s_ref + u Δt, 0, 0.70). 밸브가 넣은
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="266.8407" width="1003.4646" x="445.0394" y="293.7308"/>
+              <y:Geometry height="289.8807" width="1003.4646" x="445.0394" y="293.7308"/>
               <y:Fill color="#E2F1E7" transparent="false"/>
               <y:BorderStyle color="#2E6B45" type="line" width="0.8"/>
               <y:NodeLabel alignment="left" autoSizePolicy="node_width" backgroundColor="#E2F1E7" fontFamily="Dialog" fontSize="7" fontStyle="bold" hasLineColor="false" height="13.472" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="1003.4646" x="0.0" xml:space="preserve" y="0.0">플랜트-유압(힘 법칙)</y:NodeLabel>
@@ -255,10 +269,10 @@ s_ref ← clip(s_ref + u Δt, 0, 0.70). 밸브가 넣은
           <data key="d5" xml:space="preserve">헤드 기름 강성 k_h = β A_p/(L_0h + s) | [기본] | β 1.0 GPa, L_0h 0.05 m. 바깥 경로 k_out = series(k_rod, k_frame, k_concrete)와 직렬. 운용점 k_ax FL 2.59×10⁷, RL 1.95×10⁷ N/m | 원본: chrono/l2b_actuator.py, YAML actuator.L2b_NSC.axial_stiffness | 가정값 포함</data>
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="102.2181" width="147.4016" x="1286.9291" y="316.4079"/>
+              <y:Geometry height="125.2581" width="147.4016" x="1286.9291" y="316.4079"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#2E6B45" type="dashed" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.08" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="136.3506" x="5.5255" xml:space="preserve" y="27.069">헤드 기름 강성
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.08" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="136.3506" x="5.5255" xml:space="preserve" y="38.589">헤드 기름 강성
 k_h = β A_p/(L_0h + s)
 [기본]
 β 1.0 GPa, L_0h 0.05 m. 바깥 경로 k_out =
@@ -269,44 +283,44 @@ k_ax FL 2.59×10⁷, RL 1.95×10⁷ N/m</y:NodeLabel>
           </data>
         </node>
         <node id="B_ROD">
-          <data key="d5" xml:space="preserve">로드측 L1-R 상태 기계 이동 ↔ 잠김(LOCK·FLOOR) | [기본](L2b) | 잠김: F = F_lock + k_2 dc + (k_1 − k_2) min(dc, dc_knee). 잠금 |u| ≤ 1×10⁻⁶ m/s. p_r0 2 bar(신장 뒤) / 34.8 bar(FL 수축 뒤). 바닥 0.1 bar abs. 이동 중 1차 지연 τ 0.05 s, 신장 배압 목표 5 bar. 개정 3: M2 켬이면 이 이동 중 추적 압력을 B_M2의 유량 제한으로 자른다(진값·판독도 그 값) | 원본: hydraulics/l2b_rod_side.py, rod_chamber.py, YAML actuator.rod_side.* | 가정값 포함</data>
+          <data key="d5" xml:space="preserve">로드측 L1-R 상태 기계 이동 ↔ 잠김(LOCK·FLOOR) | [기본](L2b) r5 앵커 [v5 · 기본 끔] [VB 켬] | 잠김: F = F_lock + k_2 dc + (k_1 − k_2) min(dc, dc_knee). 잠금 |u| ≤ 1×10⁻⁶ m/s. p_r0 2 bar(신장 뒤) / 34.8 bar(FL 수축 뒤). 바닥 0.1 bar abs. 이동 중 1차 지연 τ 0.05 s, 신장 배압 목표 5 bar. 개정 3: M2 켬이면 이 이동 중 추적 압력을 B_M2의 유량 제한으로 자른다(진값·판독도 그 값). r5(M2 켬, 신장 뒤 잠금): p_r0 = max(min(p_tr, p_ext + max(p_tr − p*, 0)), p_floor) — 감압 안 끝난 몫을 앵커가 가짐(최대 31.8 bar), 감압 끝난 신장·매달린 다리는 2 bar 그대로. r4: 해제 순간 Δ = p_r0 − p_r,rel과 해제 감쇠 w를 B_M2에 넘김 | 원본: hydraulics/l2b_rod_side.py(앵커 :478-492, 해제 Δ :530-537), rod_chamber.py, YAML actuator.rod_side.* | 가정값 포함</data>
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="102.2181" width="147.4016" x="873.0709" y="316.4079"/>
+              <y:Geometry height="125.2581" width="147.4016" x="873.0709" y="316.4079"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#2E6B45" type="dashed" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="71.12" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="136.402" x="5.4998" xml:space="preserve" y="15.549">로드측 L1-R 상태 기계
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="117.2" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="135.3322" x="6.0347" xml:space="preserve" y="4.029">로드측 L1-R 상태 기계
 이동 ↔ 잠김(LOCK·FLOOR)
+신장 뒤 잠금(M2 켬): p_r0 = max(min(p_tr, p_ext
++ (p_tr − p*)⁺), p_floor)
 [기본](L2b)
+r5 앵커 [v5 · 기본 끔] [VB 켬]
 잠김: F = F_lock + k_2 dc + (k_1 − k_2) min(dc,
 dc_knee). 잠금 |u| ≤ 1×10⁻⁶ m/s. p_r0 2
 bar(신장 뒤) / 34.8 bar(FL 수축 뒤). 바닥 0.1 bar
 abs. 이동 중 1차 지연 τ 0.05 s, 신장 배압 목표 5
-bar. 개정 3: M2 켬이면 이 이동 중 추적 압력을
-B_M2의 유량 제한으로 자른다(진값·판독도 그 값)</y:NodeLabel>
+bar. 개정 3: M2 켬이면 이동 중 추적 압력을
+B_M2의 유량 제한으로 자른다. r5 앵커: 감압 안
+끝난 몫(최대 31.8 bar), 감압 끝난 신장·매달린
+다리는 2 bar. r4: 해제 Δ = p_r0 − p_r,rel, 감쇠
+w를 B_M2에 넘김</y:NodeLabel>
               <y:Shape type="roundrectangle"/>
             </y:ShapeNode>
           </data>
         </node>
         <node id="B_M2">
-          <data key="d5" xml:space="preserve">M2 로드 압력 해제 이동 유량 제한(개정 3, flow_limited_r3) | [v5 · 기본 끔] [VB 켬] | 이동 중 p_r^k = 1차 지연 p_lag를 밸브 유량으로 자름: 수축 승압 ≤ A_ann|u| Δt / C_r, 신장 감압 ≤ b_T A_h|u| √((p_r − p_T)/Δp_c) Δt / C_r, C_r = A_ann²(1/k_r + 1/k_h)(FL 1.80×10⁻¹² m³/Pa, B 호스 미포함). δs_ref = A_ann (p_r^(k−1) − p_r^k) / k_h, 신장·수축 양방향, 잠김 0, u = 0이면 유량 쪽 정지. 34.8 → 5 bar 총 FL 0.382 mm, 1 % v_max에서 0.056 mm/s로 퍼짐. b_T 1.0, Δp_c 10 bar, p_T 2 bar(가정) | 원본: hydraulics/rod_release.py flow_limited_rod_pressure·RodPressureFlowLaw(하네스·L2b 공용), v5 명세 2.3 개정 3. meta·digest m2_law: "flow_limited_r3"(M2 켬만) | 가정값 포함</data>
+          <data key="d5" xml:space="preserve">M2 로드 압력 해제 이동 flow_limited_r5 (유량 제한 · 해제 보상 · 신장 잠금 앵커) | [v5 · 기본 끔] [VB 켬] | ① 이동 중 p_r^k = 1차 지연 p_lag를 밸브 유량으로 자름: 수축 승압 ≤ A_ann|u| Δt / C_r, 신장 감압 ≤ b_T A_h|u| √((p_r − p_T)/Δp_c) Δt / C_r, C_r = A_ann²(1/k_r + 1/k_h)(FL 1.80×10⁻¹² m³/Pa, B 호스 미포함). ② r4: 보상 압력 p̂ = p_r + Δ w(Δ = p_r0 − p_r,rel, w = e^(−(t − t_rel)/τ)), δs_ref = A_ann (p̂^(k−1) − p̂^k) / k_h — 해제 감쇠가 이미 옮기는 몫을 다시 옮기지 않음(뜬 다리 킥 2.08 → 1.02 mm). ③ r5: 신장 뒤 잠금 앵커는 B_ROD에서(p_tr 입력). 신장·수축 양방향, 잠김 0, u = 0이면 유량 쪽 정지. b_T 1.0, Δp_c 10 bar, p_T 2 bar, τ 0.05 s(가정) | 원본: hydraulics/rod_release.py flow_limited_rod_pressure·RodPressureFlowLaw·RodReleaseShift·compensated_rod_pressure_Pa(하네스·L2b 공용), v5 명세 2.3·2.3.1·2.3.2(개정 4). meta·digest m2_law: "flow_limited_r5"(M2 켬만, r3·r4 거부) | 가정값 포함</data>
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="102.2181" width="147.4016" x="1080.0" y="316.4079"/>
+              <y:Geometry height="125.2581" width="147.4016" x="1080.0" y="316.4079"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#2E6B45" type="dashed" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="94.16" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="138.3027" x="4.5494" xml:space="preserve" y="4.029">M2 로드 압력 해제 이동
-유량 제한(개정 3, flow_limited_r3)
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.08" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="126.5923" x="10.4046" xml:space="preserve" y="38.589">M2 로드 압력 해제 이동
+flow_limited_r5
+(유량 제한 · 해제 보상 · 신장 잠금 앵커)
 [v5 · 기본 끔] [VB 켬]
-이동 중 p_r^k = 1차 지연 p_lag를 밸브 유량으로
-자름: 수축 승압 ≤ A_ann|u| Δt / C_r, 신장 감압 ≤
-b_T A_h|u| √((p_r − p_T)/Δp_c) Δt / C_r, C_r =
-A_ann²(1/k_r + 1/k_h)(FL 1.80×10⁻¹² m³/Pa, B
-호스 미포함). δs_ref = A_ann (p_r^(k−1) − p_r^k)
-/ k_h, 신장·수축 양방향, 잠김 0, u = 0이면 유량
-쪽 정지. 34.8 → 5 bar 총 FL 0.382 mm, 1 %
-v_max에서 0.056 mm/s로 퍼짐. b_T 1.0, Δp_c 10
-bar, p_T 2 bar(가정)</y:NodeLabel>
+p̂ = p_r + Δ·w,  δs_ref = A_ann(p̂^(k−1) −
+p̂^k)/k_h</y:NodeLabel>
               <y:Shape type="roundrectangle"/>
             </y:ShapeNode>
           </data>
@@ -315,10 +329,10 @@ bar, p_T 2 bar(가정)</y:NodeLabel>
           <data key="d5" xml:space="preserve">LC 체크 닫힘 지연 t_c 50 ms | [v5 · 기본 끔] [VB 켬] | 잠김 법칙 전환 t_lock = t_ol + t_c. t_c 동안 유량 0, 이동 법칙·이동 감쇠 유지. 개정 3: M2 켬이면 t_c 동안 유량으로 채우는 쪽 로드 압력은 멈춤(u = 0) | 원본: L2bRodSide(closing_delay_s), v5 명세 2.5 | 가정값 포함</data>
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="102.2181" width="147.4016" x="666.1417" y="316.4079"/>
+              <y:Geometry height="125.2581" width="147.4016" x="666.1417" y="316.4079"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#2E6B45" type="dashed" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="55.76" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="135.04" x="6.1808" xml:space="preserve" y="23.229">LC 체크 닫힘 지연
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="55.76" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="135.04" x="6.1808" xml:space="preserve" y="34.749">LC 체크 닫힘 지연
 t_c 50 ms
 [v5 · 기본 끔] [VB 켬]
 잠김 법칙 전환 t_lock = t_ol + t_c. t_c 동안 유량
@@ -333,10 +347,10 @@ t_c 동안 유량으로 채우는 쪽 로드 압력은 멈춤(u
           <data key="d5" xml:space="preserve">카운터 밸런스 (로크 밸브 대체) | [옵션] lock_valve="counterbalance", 기본 끔 | 잠김에서 p ≥ p_set − (ψ − 1) p_T면 Q = Q_r y 배출, s_ref 이동. p_set 330 bar, ψ 4, τ 10 ms, 60 L/min @ +20 bar | 원본: hydraulics/counterbalance.py, YAML actuator.counterbalance | 가정값 포함</data>
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="102.2181" width="147.4016" x="459.2126" y="316.4079"/>
+              <y:Geometry height="125.2581" width="147.4016" x="459.2126" y="316.4079"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#2E6B45" type="dashed" width="1.0"/>
-              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.08" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="134.9696" x="6.216" xml:space="preserve" y="27.069">카운터 밸런스
+              <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.08" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="134.9696" x="6.216" xml:space="preserve" y="38.589">카운터 밸런스
 (로크 밸브 대체)
 [옵션] lock_valve="counterbalance", 기본 끔
 잠김에서 p ≥ p_set − (ψ − 1) p_T면 Q = Q_r y
@@ -350,7 +364,7 @@ L/min @ +20 bar</y:NodeLabel>
           <data key="d5" xml:space="preserve">실 마찰 F_s 4 kN(전방), 후방 × 0.833 | [옵션] L2b만, YAML 기본 0, 실행이 덮어씀 | F = k_out (s_p − s), F = G(s_ref − s_p) + f, |f| ≤ F_s. 압력 힘 F_p = F − f. 감도 0/2/4/8 kN | 원본: hydraulics/seal_friction.py, YAML actuator.seal_friction | 가정값 포함</data>
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="56.9061" width="147.4016" x="1286.9291" y="492.3268"/>
+              <y:Geometry height="56.9061" width="147.4016" x="1286.9291" y="515.3668"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#2E6B45" type="dashed" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="40.4" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="132.3743" x="7.5136" xml:space="preserve" y="8.253">실 마찰 F_s
@@ -366,7 +380,7 @@ F_s. 압력 힘 F_p = F − f. 감도 0/2/4/8 kN</y:NodeLabel>
           <data key="d5" xml:space="preserve">기름 감쇠 c (u − ṡ) | [기본] | 잠김 34,403.5 / 30,348.5, 이동 100,206 / 86,949 N·s/m(전방 / 후방, 잠김 다리 ζ 0.03, 이동 ζ 0.10) | 원본: chrono/l2b_actuator.py 머리말(dynamics 5.20.3) | 가정값 포함</data>
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="56.9061" width="147.4016" x="873.0709" y="492.3268"/>
+              <y:Geometry height="56.9061" width="147.4016" x="873.0709" y="515.3668"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#2E6B45" type="dashed" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="40.4" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="135.718" x="5.8418" xml:space="preserve" y="8.253">기름 감쇠
@@ -382,7 +396,7 @@ N·s/m(전방 / 후방, 잠김 다리 ζ 0.03, 이동 ζ 0.10)</y:NodeLabel>
           <data key="d5" xml:space="preserve">실린더 힘 F_cyl 명시 1스텝 | [기본] | 훅에서 상태 t_n으로 F 계산 → ChLinkMotorLinearForce에 다음 스텝 적용 | 원본: chrono/l2b_actuator.py</data>
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="56.9061" width="147.4016" x="1080.0" y="492.3268"/>
+              <y:Geometry height="56.9061" width="147.4016" x="1080.0" y="515.3668"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#2E6B45" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="7" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="46.8" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="137.4666" x="4.9675" xml:space="preserve" y="5.053">실린더 힘 F_cyl
@@ -401,7 +415,7 @@ ChLinkMotorLinearForce에 다음 스텝 적용</y:NodeLabel>
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="90.9218" width="175.748" x="1479.685" y="469.6496"/>
+              <y:Geometry height="90.9218" width="175.748" x="1479.685" y="492.6896"/>
               <y:Fill color="#EFE6F5" transparent="false"/>
               <y:BorderStyle color="#5B2C83" type="line" width="0.8"/>
               <y:NodeLabel alignment="left" autoSizePolicy="node_width" backgroundColor="#EFE6F5" fontFamily="Dialog" fontSize="7" fontStyle="bold" hasLineColor="false" height="13.472" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="175.748" x="0.0" xml:space="preserve" y="0.0">플랜트-기계</y:NodeLabel>
@@ -411,7 +425,7 @@ ChLinkMotorLinearForce에 다음 스텝 적용</y:NodeLabel>
               <y:BorderInsets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="0" rightF="0.0" top="0" topF="0.0"/>
             </y:GroupNode>
             <y:GroupNode>
-              <y:Geometry height="33.472" width="48.0636" x="1479.685" y="469.6496"/>
+              <y:Geometry height="33.472" width="48.0636" x="1479.685" y="492.6896"/>
               <y:Fill color="#EFE6F5" transparent="false"/>
               <y:BorderStyle color="#5B2C83" type="line" width="0.8"/>
               <y:NodeLabel alignment="left" autoSizePolicy="node_width" backgroundColor="#EFE6F5" fontFamily="Dialog" fontSize="7" fontStyle="bold" hasLineColor="false" height="13.472" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="48.0636" x="0.0" xml:space="preserve" y="0.0">플랜트-기계</y:NodeLabel>
@@ -428,7 +442,7 @@ ChLinkMotorLinearForce에 다음 스텝 적용</y:NodeLabel>
           <data key="d5" xml:space="preserve">Chrono 기계 다리·패드·접촉·상부체 | [기본] | 상부체 38,400.8 kg, 이동부 106.78 / 73.16 kg, 구면 조인트, 횡 부싱, NSC 강체(μ 0.5) 또는 SCM 토양 | 원본: YAML superstructure, legs.&lt;leg&gt;.moving_part, contact | 가정값 포함</data>
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="56.9061" width="147.4016" x="1493.8583" y="492.3268"/>
+              <y:Geometry height="56.9061" width="147.4016" x="1493.8583" y="515.3668"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#5B2C83" type="dashed" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.08" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="134.878" x="6.2618" xml:space="preserve" y="4.413">Chrono 기계
@@ -448,7 +462,7 @@ ChLinkMotorLinearForce에 다음 스텝 적용</y:NodeLabel>
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="182.7956" width="1003.4646" x="651.9685" y="600.2565"/>
+              <y:Geometry height="182.7956" width="1003.4646" x="651.9685" y="623.2965"/>
               <y:Fill color="#FBE6E6" transparent="false"/>
               <y:BorderStyle color="#8C2D2D" type="line" width="0.8"/>
               <y:NodeLabel alignment="left" autoSizePolicy="node_width" backgroundColor="#FBE6E6" fontFamily="Dialog" fontSize="7" fontStyle="bold" hasLineColor="false" height="13.472" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="1003.4646" x="0.0" xml:space="preserve" y="0.0">센서</y:NodeLabel>
@@ -458,7 +472,7 @@ ChLinkMotorLinearForce에 다음 스텝 적용</y:NodeLabel>
               <y:BorderInsets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="0" rightF="0.0" top="0" topF="0.0"/>
             </y:GroupNode>
             <y:GroupNode>
-              <y:Geometry height="33.472" width="22.8" x="651.9685" y="600.2565"/>
+              <y:Geometry height="33.472" width="22.8" x="651.9685" y="623.2965"/>
               <y:Fill color="#FBE6E6" transparent="false"/>
               <y:BorderStyle color="#8C2D2D" type="line" width="0.8"/>
               <y:NodeLabel alignment="left" autoSizePolicy="node_width" backgroundColor="#FBE6E6" fontFamily="Dialog" fontSize="7" fontStyle="bold" hasLineColor="false" height="13.472" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="22.8" x="0.0" xml:space="preserve" y="0.0">센서</y:NodeLabel>
@@ -475,7 +489,7 @@ ChLinkMotorLinearForce에 다음 스텝 적용</y:NodeLabel>
           <data key="d5" xml:space="preserve">진값 계산 p_h, p_r, 행정 | [기본] | p_h = (F_p + p_r A_ann)/A_p(바닥 분할, 이동 중 헤드 바닥 2 bar), 행정 = 피스톤 위치 s_p(L1: s_motor − F_cyl/k_oil) | 원본: l2b_actuator.split_pressures, CLAUDE.md 모델 규약 | 가정값 포함</data>
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="56.9061" width="147.4016" x="1080.0" y="622.9337"/>
+              <y:Geometry height="56.9061" width="147.4016" x="1080.0" y="645.9737"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#8C2D2D" type="dashed" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="48.08" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="134.236" x="6.5828" xml:space="preserve" y="4.413">진값 계산
@@ -492,7 +506,7 @@ s_motor − F_cyl/k_oil)</y:NodeLabel>
           <data key="d5" xml:space="preserve">압력 센서 ×8 WIKA A-10, 10 Hz | [기본] | 0~400 bar g, normal 등급 ±4 bar 절단, 4~20 mA 포화(−5 / 412.5 bar), 분해능 0.025 bar, 순간 표본 | 원본: sensors/hydraulic.py, sensors/pressure_error.py</data>
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="56.9061" width="147.4016" x="666.1417" y="622.9337"/>
+              <y:Geometry height="56.9061" width="147.4016" x="666.1417" y="645.9737"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#8C2D2D" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="40.4" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="138.3012" x="4.5502" xml:space="preserve" y="8.253">압력 센서 ×8
@@ -508,7 +522,7 @@ WIKA A-10, 10 Hz
           <data key="d5" xml:space="preserve">행정 센서 ×4 10 Hz | [기본] | 측정 끝 0.6948 m, FAULT 0.6938 m | 원본: YAML sensors.stroke | 가정값 포함</data>
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="49.3541" width="147.4016" x="873.0709" y="725.1941"/>
+              <y:Geometry height="49.3541" width="147.4016" x="873.0709" y="748.2341"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#8C2D2D" type="dashed" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="7" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="37.84" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="115.3753" x="16.0132" xml:space="preserve" y="5.757">행정 센서 ×4
@@ -523,7 +537,7 @@ WIKA A-10, 10 Hz
           <data key="d5" xml:space="preserve">IMU 100 Hz | [기본] | 자세(roll·pitch) 입력. 유압 밖, 루프 완결용으로만 표시 | 원본: CLAUDE.md 센서·주기</data>
           <data key="d6">
             <y:ShapeNode>
-              <y:Geometry height="49.3541" width="147.4016" x="1493.8583" y="725.1941"/>
+              <y:Geometry height="49.3541" width="147.4016" x="1493.8583" y="748.2341"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#8C2D2D" type="line" width="1.0"/>
               <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="40.4" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="134.2934" x="6.5541" xml:space="preserve" y="4.477">IMU
@@ -542,7 +556,7 @@ WIKA A-10, 10 Hz
         <y:ProxyAutoBoundsNode>
           <y:Realizers active="0">
             <y:GroupNode>
-              <y:Geometry height="160.7244" width="453.5433" x="1241.5748" y="814.2332"/>
+              <y:Geometry height="192.4724" width="453.5433" x="1241.5748" y="837.2732"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#555555" type="line" width="0.8"/>
               <y:NodeLabel alignment="left" autoSizePolicy="node_width" backgroundColor="#FFFFFF" fontFamily="Dialog" fontSize="7" fontStyle="bold" hasLineColor="false" height="13.472" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="453.5433" x="0.0" xml:space="preserve" y="0.0">범례</y:NodeLabel>
@@ -552,7 +566,7 @@ WIKA A-10, 10 Hz
               <y:BorderInsets bottom="0" bottomF="0.0" left="0" leftF="0.0" right="0" rightF="0.0" top="0" topF="0.0"/>
             </y:GroupNode>
             <y:GroupNode>
-              <y:Geometry height="33.472" width="22.8" x="1241.5748" y="814.2332"/>
+              <y:Geometry height="33.472" width="22.8" x="1241.5748" y="837.2732"/>
               <y:Fill color="#FFFFFF" transparent="false"/>
               <y:BorderStyle color="#555555" type="line" width="0.8"/>
               <y:NodeLabel alignment="left" autoSizePolicy="node_width" backgroundColor="#FFFFFF" fontFamily="Dialog" fontSize="7" fontStyle="bold" hasLineColor="false" height="13.472" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="t" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="22.8" x="0.0" xml:space="preserve" y="0.0">범례</y:NodeLabel>
@@ -584,13 +598,27 @@ L1-R: 실행 스위치(YAML 기본 끔)</y:NodeLabel>
     <node id="ann_HARN">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="39.8821" width="606.6142" x="11.3386" y="814.2332"/>
+          <y:Geometry height="47.8181" width="606.6142" x="11.3386" y="837.2732"/>
           <y:Fill color="#F7F7F7" transparent="false"/>
           <y:BorderStyle color="#555555" type="line" width="0.8"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.72" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="553.7753" x="26.4194" xml:space="preserve" y="3.581">하네스 경로 주석
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="40.4" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="553.7753" x="26.4194" xml:space="preserve" y="3.709">하네스 경로 주석
 v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged_step(τ_v 0.1 s 항상 켬) → LC 꼬리 → M1c → FlowLimitedPlant → 내부 스텝 _rod_force(LC 닫힘 타이머 → M2 이동 → 법칙 C·마찰 커널).
 하네스에는 로드 압력 추적이 없어 M2용 로드 압력을 하네스가 직접 푼다(harness_hydraulics._RodPressureLag, 개정 3: L2b와 같은 공용 함수 flow_limited_rod_pressure, 입력 u는 LC 닫힘 타이머가 2ε로
-바꾸기 전 커널 속도).</y:NodeLabel>
+바꾸기 전 커널 속도). r4·r5: 해제 보상 Δ w(Δ = G_r(t_rel)/A_ann)와 신장 뒤 잠금 앵커(_anchor_extension_locks)도 L2b와 같은 식이다. 하네스는 무장 때 네 다리가 잠긴 채 시작하므로 L2b의 무장 보정이
+필요 없다.</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="N3_REC">
+      <data key="d5" xml:space="preserve">관측 기록, 되먹임 없음(figspec 3.4 r4·r5 추가 주석 상자). 어떤 블록과도 엣지로 잇지 않음</data>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="24.0101" width="606.6142" x="11.3386" y="893.5952"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#8A8A8A" type="dashed" width="0.8"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.36" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#4A4A4A" verticalTextPosition="bottom" visible="true" width="504.0122" x="51.301" xml:space="preserve" y="3.325">관측 기록(되먹임 없음)
+기록만(명령·플랜트 값 불변): M2 해제 기록 m2_releases(L2b), 앵커 계수기 ext_lock_*, hydraulics_record.tension_truth(진값 진단), extend_bound_check(③ 켬만), 제어기 review_record(늘)</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -598,7 +626,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_00">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="175.748" x="640.6299" y="827.2726"/>
+          <y:Geometry height="15.874" width="175.748" x="640.6299" y="850.3126"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="16.0" x="79.874" xml:space="preserve" y="3.097">설정</y:NodeLabel>
@@ -609,7 +637,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_01">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="62.3622" x="816.378" y="827.2726"/>
+          <y:Geometry height="15.874" width="62.3622" x="816.378" y="850.3126"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="29.776" x="16.2931" xml:space="preserve" y="3.097">유량(η_v)</y:NodeLabel>
@@ -620,7 +648,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_02">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="39.685" x="878.7402" y="827.2726"/>
+          <y:Geometry height="15.874" width="39.685" x="878.7402" y="850.3126"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="13.264" x="13.2105" xml:space="preserve" y="3.097">M2</y:NodeLabel>
@@ -631,7 +659,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_03">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="79.3701" x="918.4252" y="827.2726"/>
+          <y:Geometry height="15.874" width="79.3701" x="918.4252" y="850.3126"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="41.4794" x="18.9454" xml:space="preserve" y="3.097">LC(δ_ol / t_c)</y:NodeLabel>
@@ -642,7 +670,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_04">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="56.6929" x="997.7953" y="827.2726"/>
+          <y:Geometry height="15.874" width="56.6929" x="997.7953" y="850.3126"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="32.224" x="12.2345" xml:space="preserve" y="3.097">새 잠금 창</y:NodeLabel>
@@ -653,7 +681,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_05">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="51.0236" x="1054.4882" y="827.2726"/>
+          <y:Geometry height="15.874" width="51.0236" x="1054.4882" y="850.3126"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="16.186" x="17.4188" xml:space="preserve" y="3.097">M1c</y:NodeLabel>
@@ -664,7 +692,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_10">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="175.748" x="640.6299" y="843.1466"/>
+          <y:Geometry height="15.874" width="175.748" x="640.6299" y="866.1866"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="93.046" x="41.351" xml:space="preserve" y="3.097">V0(기본, final_C4G2와 비트 동일)</y:NodeLabel>
@@ -675,7 +703,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_11">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="62.3622" x="816.378" y="843.1466"/>
+          <y:Geometry height="15.874" width="62.3622" x="816.378" y="866.1866"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="10.0" x="26.1811" xml:space="preserve" y="3.097">끔</y:NodeLabel>
@@ -686,7 +714,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_12">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="39.685" x="878.7402" y="843.1466"/>
+          <y:Geometry height="15.874" width="39.685" x="878.7402" y="866.1866"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="10.0" x="14.8425" xml:space="preserve" y="3.097">끔</y:NodeLabel>
@@ -697,7 +725,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_13">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="79.3701" x="918.4252" y="843.1466"/>
+          <y:Geometry height="15.874" width="79.3701" x="918.4252" y="866.1866"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="10.0" x="34.685" xml:space="preserve" y="3.097">끔</y:NodeLabel>
@@ -708,7 +736,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_14">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="56.6929" x="997.7953" y="843.1466"/>
+          <y:Geometry height="15.874" width="56.6929" x="997.7953" y="866.1866"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="10.0" x="23.3465" xml:space="preserve" y="3.097">끔</y:NodeLabel>
@@ -719,7 +747,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_15">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="51.0236" x="1054.4882" y="843.1466"/>
+          <y:Geometry height="15.874" width="51.0236" x="1054.4882" y="866.1866"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="10.0" x="20.5118" xml:space="preserve" y="3.097">끔</y:NodeLabel>
@@ -730,7 +758,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_20">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="175.748" x="640.6299" y="859.0206"/>
+          <y:Geometry height="15.874" width="175.748" x="640.6299" y="882.0606"/>
           <y:Fill color="#E8F0FA" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="51.07" x="62.339" xml:space="preserve" y="3.097">VB(v5 기준 구성)</y:NodeLabel>
@@ -741,7 +769,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_21">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="62.3622" x="816.378" y="859.0206"/>
+          <y:Geometry height="15.874" width="62.3622" x="816.378" y="882.0606"/>
           <y:Fill color="#E8F0FA" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="16.012" x="23.1751" xml:space="preserve" y="3.097">0.85</y:NodeLabel>
@@ -752,7 +780,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_22">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="39.685" x="878.7402" y="859.0206"/>
+          <y:Geometry height="15.874" width="39.685" x="878.7402" y="882.0606"/>
           <y:Fill color="#E8F0FA" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="10.0" x="14.8425" xml:space="preserve" y="3.097">켬</y:NodeLabel>
@@ -763,7 +791,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_23">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="79.3701" x="918.4252" y="859.0206"/>
+          <y:Geometry height="15.874" width="79.3701" x="918.4252" y="882.0606"/>
           <y:Fill color="#E8F0FA" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="39.082" x="20.144" xml:space="preserve" y="3.097">2 % / 50 ms</y:NodeLabel>
@@ -774,7 +802,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_24">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="56.6929" x="997.7953" y="859.0206"/>
+          <y:Geometry height="15.874" width="56.6929" x="997.7953" y="882.0606"/>
           <y:Fill color="#E8F0FA" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="10.0" x="23.3465" xml:space="preserve" y="3.097">켬</y:NodeLabel>
@@ -785,7 +813,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_25">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="51.0236" x="1054.4882" y="859.0206"/>
+          <y:Geometry height="15.874" width="51.0236" x="1054.4882" y="882.0606"/>
           <y:Fill color="#E8F0FA" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="10.0" x="20.5118" xml:space="preserve" y="3.097">끔</y:NodeLabel>
@@ -796,7 +824,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_30">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="175.748" x="640.6299" y="874.8946"/>
+          <y:Geometry height="15.874" width="175.748" x="640.6299" y="897.9346"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="43.306" x="66.221" xml:space="preserve" y="3.097">V4·V5 등(참고)</y:NodeLabel>
@@ -807,7 +835,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_31">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="62.3622" x="816.378" y="874.8946"/>
+          <y:Geometry height="15.874" width="62.3622" x="816.378" y="897.9346"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="15.232" x="23.5651" xml:space="preserve" y="3.097">0.85</y:NodeLabel>
@@ -818,7 +846,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_32">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="39.685" x="878.7402" y="874.8946"/>
+          <y:Geometry height="15.874" width="39.685" x="878.7402" y="897.9346"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="10.0" x="14.8425" xml:space="preserve" y="3.097">켬</y:NodeLabel>
@@ -829,7 +857,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_33">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="79.3701" x="918.4252" y="874.8946"/>
+          <y:Geometry height="15.874" width="79.3701" x="918.4252" y="897.9346"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="10.0" x="34.685" xml:space="preserve" y="3.097">끔</y:NodeLabel>
@@ -840,7 +868,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_34">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="56.6929" x="997.7953" y="874.8946"/>
+          <y:Geometry height="15.874" width="56.6929" x="997.7953" y="897.9346"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="10.0" x="23.3465" xml:space="preserve" y="3.097">끔</y:NodeLabel>
@@ -851,7 +879,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="tab_35">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="15.874" width="51.0236" x="1054.4882" y="874.8946"/>
+          <y:Geometry height="15.874" width="51.0236" x="1054.4882" y="897.9346"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#777777" type="line" width="0.5"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="9.68" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="25.378" x="12.8228" xml:space="preserve" y="3.097">VN / BL</y:NodeLabel>
@@ -862,17 +890,27 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="lg_dash">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="13.0394" width="34.0157" x="1252.9134" y="924.2174"/>
+          <y:Geometry height="13.0394" width="34.0157" x="1252.9134" y="963.1315"/>
           <y:Fill color="#FFFFFF" transparent="false"/>
           <y:BorderStyle color="#1A1A1A" type="dashed" width="1.0"/>
           <y:Shape type="roundrectangle"/>
         </y:ShapeNode>
       </data>
     </node>
+    <node id="lg_rec">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="13.0394" width="34.0157" x="1252.9134" y="979.0055"/>
+          <y:Fill color="#FFFFFF" transparent="false"/>
+          <y:BorderStyle color="#8A8A8A" type="dashed" width="0.8"/>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
     <node id="lg_g0">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="13.0394" width="73.7008" x="1252.9134" y="940.0915"/>
+          <y:Geometry height="13.0394" width="73.7008" x="1252.9134" y="994.8795"/>
           <y:Fill color="#FFF1DA" transparent="false"/>
           <y:BorderStyle color="#8A4B00" type="line" width="0.8"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="5" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="8.4" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="19.0" x="27.3504" xml:space="preserve" y="2.3197">제어기</y:NodeLabel>
@@ -883,7 +921,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="lg_g1">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="13.0394" width="73.7008" x="1330.8661" y="940.0915"/>
+          <y:Geometry height="13.0394" width="73.7008" x="1330.8661" y="994.8795"/>
           <y:Fill color="#E3EEF9" transparent="false"/>
           <y:BorderStyle color="#1F4E79" type="line" width="0.8"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="5" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="8.4" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="31.05" x="21.3254" xml:space="preserve" y="2.3197">플랜트-명령</y:NodeLabel>
@@ -894,7 +932,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="lg_g2">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="13.0394" width="73.7008" x="1408.8189" y="940.0915"/>
+          <y:Geometry height="13.0394" width="73.7008" x="1408.8189" y="994.8795"/>
           <y:Fill color="#E2F1E7" transparent="false"/>
           <y:BorderStyle color="#2E6B45" type="line" width="0.8"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="5" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="8.4" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="31.05" x="21.3254" xml:space="preserve" y="2.3197">플랜트-유압</y:NodeLabel>
@@ -905,7 +943,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="lg_g3">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="13.0394" width="73.7008" x="1486.7717" y="940.0915"/>
+          <y:Geometry height="13.0394" width="73.7008" x="1486.7717" y="994.8795"/>
           <y:Fill color="#EFE6F5" transparent="false"/>
           <y:BorderStyle color="#5B2C83" type="line" width="0.8"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="5" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="8.4" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="31.05" x="21.3254" xml:space="preserve" y="2.3197">플랜트-기계</y:NodeLabel>
@@ -916,7 +954,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="lg_g4">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="13.0394" width="73.7008" x="1564.7244" y="940.0915"/>
+          <y:Geometry height="13.0394" width="73.7008" x="1564.7244" y="994.8795"/>
           <y:Fill color="#FBE6E6" transparent="false"/>
           <y:BorderStyle color="#8C2D2D" type="line" width="0.8"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="5" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="8.4" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="14.0" x="29.8504" xml:space="preserve" y="2.3197">센서</y:NodeLabel>
@@ -927,10 +965,10 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="t_TITLE">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="12.9097" width="464.0129" x="9.6378" y="9.4501"/>
+          <y:Geometry height="12.9097" width="734.6177" x="9.6378" y="9.4501"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
-          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="12.9097" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="464.0129" x="0.0" xml:space="preserve" y="0.0">그림 3. 모델링 부분 — 블록과 신호 흐름(다리 하나 기준, 블록 순서 = v5 명세 2.0 표 L2b 열)</y:NodeLabel>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="10" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="12.9097" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="734.6177" x="0.0" xml:space="preserve" y="0.0">그림 3. 모델링 부분 — 블록과 신호 흐름(다리 하나 기준, 블록 순서 = v5 명세 2.0 표 L2b 열) · M2 = flow_limited_r5(2026-11-08, v5 명세 개정 4)</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -938,7 +976,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="t_TAB">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="9.0677" width="37.1105" x="638.9291" y="814.1651"/>
+          <y:Geometry height="9.0677" width="37.1105" x="638.9291" y="837.2051"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="7" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="9.0677" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="37.1105" x="0.0" xml:space="preserve" y="0.0">v5 설정 표</y:NodeLabel>
@@ -946,10 +984,21 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
         </y:ShapeNode>
       </data>
     </node>
+    <node id="t_TABNOTE">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="8.4414" width="297.7159" x="638.9291" y="917.997"/>
+          <y:Fill hasColor="false" transparent="false"/>
+          <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="8.4414" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="297.7159" x="0.0" xml:space="preserve" y="0.0">M2 켬 = 법칙 flow_limited_r5. ③ 대체 시작값 보강(extend_start_rule)은 프리셋 기본 꺼짐, v5 VB에서 켬.</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
     <node id="lg_t0">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="8.4189" width="91.5425" x="1293.7323" y="831.8842"/>
+          <y:Geometry height="8.4189" width="91.5425" x="1293.7323" y="854.9242"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="8.4189" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="91.5425" x="0.0" xml:space="preserve" y="0.0">굵은 실선 — 명령·힘의 주 경로</y:NodeLabel>
@@ -960,7 +1009,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="lg_t1">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="8.5452" width="93.0977" x="1293.7323" y="847.7751"/>
+          <y:Geometry height="8.5452" width="93.0977" x="1293.7323" y="870.8151"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="8.5452" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="93.0977" x="0.0" xml:space="preserve" y="0.0">가는 실선 — 상태 되먹임(s, p_r)</y:NodeLabel>
@@ -971,7 +1020,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="lg_t2">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="8.3851" width="140.5313" x="1293.7323" y="863.6491"/>
+          <y:Geometry height="8.3851" width="140.5313" x="1293.7323" y="886.6891"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="8.3851" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="140.5313" x="0.0" xml:space="preserve" y="0.0">점선 — 옵션 경로(v5·CB) 또는 다리 간 공유 신호</y:NodeLabel>
@@ -982,7 +1031,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="lg_bd0">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="8.3851" width="20.7809" x="1251.2126" y="879.5231"/>
+          <y:Geometry height="8.3851" width="20.7809" x="1251.2126" y="902.5631"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="8.3851" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#333333" verticalTextPosition="bottom" visible="true" width="20.7809" x="0.0" xml:space="preserve" y="0.0">[기본]</y:NodeLabel>
@@ -993,7 +1042,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="lg_bdt0">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="8.4189" width="24.6689" x="1336.252" y="879.5062"/>
+          <y:Geometry height="8.4189" width="24.6689" x="1336.252" y="902.5462"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="8.4189" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="24.6689" x="0.0" xml:space="preserve" y="0.0">항상 켬</y:NodeLabel>
@@ -1004,7 +1053,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="lg_bd1">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="8.3851" width="42.5537" x="1251.2126" y="895.3971"/>
+          <y:Geometry height="8.3851" width="42.5537" x="1251.2126" y="918.4371"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="8.3851" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#6A2C91" verticalTextPosition="bottom" visible="true" width="42.5537" x="0.0" xml:space="preserve" y="0.0">[v5 · 기본 끔]</y:NodeLabel>
@@ -1015,7 +1064,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="lg_bdt1">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="8.3851" width="102.4289" x="1336.252" y="895.3971"/>
+          <y:Geometry height="8.3851" width="102.4289" x="1336.252" y="918.4371"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="8.3851" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="102.4289" x="0.0" xml:space="preserve" y="0.0">옵션 없으면 코드 경로가 돌지 않음</y:NodeLabel>
@@ -1026,7 +1075,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="lg_bd2">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="8.3851" width="24.6689" x="1251.2126" y="911.2711"/>
+          <y:Geometry height="8.3851" width="24.6689" x="1251.2126" y="934.3111"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="8.3851" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#6A2C91" verticalTextPosition="bottom" visible="true" width="24.6689" x="0.0" xml:space="preserve" y="0.0">[VB 켬]</y:NodeLabel>
@@ -1037,7 +1086,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="lg_bdt2">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="8.3851" width="60.4385" x="1336.252" y="911.2711"/>
+          <y:Geometry height="8.3851" width="60.4385" x="1336.252" y="934.3111"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="8.3851" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="60.4385" x="0.0" xml:space="preserve" y="0.0">v5 기준 구성에서 켬</y:NodeLabel>
@@ -1045,10 +1094,32 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
         </y:ShapeNode>
       </data>
     </node>
+    <node id="lg_bd3">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="8.3851" width="55.7729" x="1251.2126" y="950.1852"/>
+          <y:Fill hasColor="false" transparent="false"/>
+          <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="8.3851" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#8A4B00" verticalTextPosition="bottom" visible="true" width="55.7729" x="0.0" xml:space="preserve" y="0.0">[옵션 · VB에서 켬]</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="lg_bdt3">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="8.3851" width="149.0849" x="1336.252" y="950.1852"/>
+          <y:Fill hasColor="false" transparent="false"/>
+          <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="8.3851" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="149.0849" x="0.0" xml:space="preserve" y="0.0">제어기 옵션(B_P3): 프리셋 기본 꺼짐 · v5 VB에서 켬</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
     <node id="lg_dasht">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="8.4189" width="81.4337" x="1293.7323" y="927.1283"/>
+          <y:Geometry height="8.4189" width="81.4337" x="1293.7323" y="966.0423"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="8.4189" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="81.4337" x="0.0" xml:space="preserve" y="0.0">점선 테두리 — 가정값 포함</y:NodeLabel>
@@ -1056,10 +1127,21 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
         </y:ShapeNode>
       </data>
     </node>
+    <node id="lg_rect">
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="8.4301" width="156.8609" x="1293.7323" y="981.9107"/>
+          <y:Fill hasColor="false" transparent="false"/>
+          <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="8.4301" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="156.8609" x="0.0" xml:space="preserve" y="0.0">회색 점선 테두리 주석 상자 — 관측 기록, 되먹임 없음</y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
     <node id="lg_gt">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="8.3851" width="194.9633" x="1251.2126" y="955.93"/>
+          <y:Geometry height="8.3851" width="194.9633" x="1251.2126" y="1010.7181"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.5" hasColor="false"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="8.3851" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#1A1A1A" verticalTextPosition="bottom" visible="true" width="194.9633" x="0.0" xml:space="preserve" y="0.0">그룹 색 — 제어기 / 플랜트-명령 / 플랜트-유압 / 플랜트-기계 / 센서</y:NodeLabel>
@@ -1070,7 +1152,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="pt_lg0a">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1.7008" width="1.7008" x="1252.063" y="834.6426"/>
+          <y:Geometry height="1.7008" width="1.7008" x="1252.063" y="857.6826"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.3" hasColor="false"/>
           <y:Shape type="ellipse"/>
@@ -1080,7 +1162,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="pt_lg0b">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1.7008" width="1.7008" x="1286.0787" y="834.6426"/>
+          <y:Geometry height="1.7008" width="1.7008" x="1286.0787" y="857.6826"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.3" hasColor="false"/>
           <y:Shape type="ellipse"/>
@@ -1090,7 +1172,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="pt_lg1a">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1.7008" width="1.7008" x="1252.063" y="850.5167"/>
+          <y:Geometry height="1.7008" width="1.7008" x="1252.063" y="873.5567"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.3" hasColor="false"/>
           <y:Shape type="ellipse"/>
@@ -1100,7 +1182,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="pt_lg1b">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1.7008" width="1.7008" x="1286.0787" y="850.5167"/>
+          <y:Geometry height="1.7008" width="1.7008" x="1286.0787" y="873.5567"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.3" hasColor="false"/>
           <y:Shape type="ellipse"/>
@@ -1110,7 +1192,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="pt_lg2a">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1.7008" width="1.7008" x="1252.063" y="866.3907"/>
+          <y:Geometry height="1.7008" width="1.7008" x="1252.063" y="889.4307"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.3" hasColor="false"/>
           <y:Shape type="ellipse"/>
@@ -1120,7 +1202,7 @@ v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → _lagged
     <node id="pt_lg2b">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="1.7008" width="1.7008" x="1286.0787" y="866.3907"/>
+          <y:Geometry height="1.7008" width="1.7008" x="1286.0787" y="889.4307"/>
           <y:Fill hasColor="false" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="0.3" hasColor="false"/>
           <y:Shape type="ellipse"/>
@@ -1247,7 +1329,7 @@ v_i ≤ u_i</y:EdgeLabel>
       <data key="d9" xml:space="preserve">B_SREF → B_HEAD: s_ref [m]</data>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="44.2205" sy="32.421" tx="44.2205" ty="-51.109"/>
+          <y:Path sx="44.2205" sy="32.421" tx="44.2205" ty="-62.629"/>
           <y:LineStyle color="#1A1A1A" type="line" width="1.6"/>
           <y:Arrows source="none" target="standard"/>
           <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasLineColor="false" height="9.936" modelName="centered" modelPosition="center" textColor="#1A1A1A" visible="true" width="28.2158" xml:space="preserve">s_ref [m]</y:EdgeLabel>
@@ -1259,7 +1341,7 @@ v_i ≤ u_i</y:EdgeLabel>
       <data key="d9" xml:space="preserve">B_SREF → B_ROD: c = s_ref − s</data>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="-56.0126" sy="32.421" tx="44.2205" ty="-51.109">
+          <y:Path sx="-56.0126" sy="32.421" tx="44.2205" ty="-62.629">
             <y:Point x="1304.6173" y="290.8961"/>
             <y:Point x="990.9921" y="290.8961"/>
           </y:Path>
@@ -1274,9 +1356,9 @@ v_i ≤ u_i</y:EdgeLabel>
       <data key="d9" xml:space="preserve">B_HEAD → B_FCYL: 헤드 기름 힘</data>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="-44.2205" sy="51.109" tx="44.2205" ty="-28.453">
-            <y:Point x="1316.4094" y="452.6418"/>
-            <y:Point x="1197.9213" y="452.6418"/>
+          <y:Path sx="-44.2205" sy="62.629" tx="44.2205" ty="-28.453">
+            <y:Point x="1316.4094" y="475.6818"/>
+            <y:Point x="1197.9213" y="475.6818"/>
           </y:Path>
           <y:LineStyle color="#1A1A1A" type="line" width="1.6"/>
           <y:Arrows source="none" target="standard"/>
@@ -1289,9 +1371,9 @@ v_i ≤ u_i</y:EdgeLabel>
       <data key="d9" xml:space="preserve">B_ROD → B_FCYL: 로드측 힘(잠김 스프링)</data>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="36.8504" sy="51.109" tx="-7.3701" ty="-28.453">
-            <y:Point x="983.622" y="435.6339"/>
-            <y:Point x="1146.3307" y="435.6339"/>
+          <y:Path sx="36.8504" sy="62.629" tx="-7.3701" ty="-28.453">
+            <y:Point x="983.622" y="458.6739"/>
+            <y:Point x="1146.3307" y="458.6739"/>
           </y:Path>
           <y:LineStyle color="#1A1A1A" type="line" width="1.6"/>
           <y:Arrows source="none" target="standard"/>
@@ -1304,7 +1386,7 @@ v_i ≤ u_i</y:EdgeLabel>
       <data key="d9" xml:space="preserve">B_M2 → B_SREF: δs_ref(다음 스텝)</data>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="-51.109" tx="-29.4803" ty="32.421">
+          <y:Path sx="0.0" sy="-62.629" tx="-29.4803" ty="32.421">
             <y:Point x="1153.7008" y="265.3843"/>
             <y:Point x="1331.1496" y="265.3843"/>
           </y:Path>
@@ -1319,16 +1401,18 @@ v_i ≤ u_i</y:EdgeLabel>
       <data key="d9" xml:space="preserve">B_ROD → B_M2: p*, p_r^(k−1),
 k_r·k_h
 (이동 중,
-개정 3)</data>
+개정 3)
+· 해제 Δ, w(r4)</data>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="73.7008" sy="-25.5545" tx="-73.7008" ty="-25.5545"/>
+          <y:Path sx="73.7008" sy="-31.3145" tx="-73.7008" ty="-31.3145"/>
           <y:LineStyle color="#1A1A1A" type="line" width="0.8"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasLineColor="false" height="33.744" modelName="centered" modelPosition="center" textColor="#1A1A1A" visible="true" width="42.6136" xml:space="preserve">p*, p_r^(k−1),
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasLineColor="false" height="41.68" modelName="centered" modelPosition="center" textColor="#1A1A1A" visible="true" width="43.6986" xml:space="preserve">p*, p_r^(k−1),
 k_r·k_h
 (이동 중,
-개정 3)</y:EdgeLabel>
+개정 3)
+· 해제 Δ, w(r4)</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -1337,16 +1421,20 @@ k_r·k_h
       <data key="d9" xml:space="preserve">B_M2 → B_ROD: 유량 제한된
 p_r^k(L2b 추적
 압력 대체,
-M2 켬, 개정 3)</data>
+M2 켬, 개정 3)
+· 잠금 직전
+p_tr → 앵커(r5)</data>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="-73.7008" sy="22.488" tx="73.7008" ty="22.488"/>
+          <y:Path sx="-73.7008" sy="27.5568" tx="73.7008" ty="27.5568"/>
           <y:LineStyle color="#1A1A1A" type="dashed" width="0.8"/>
           <y:Arrows source="none" target="standard"/>
-          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasLineColor="false" height="33.744" modelName="centered" modelPosition="center" textColor="#1A1A1A" visible="true" width="46.6374" xml:space="preserve">유량 제한된
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasLineColor="false" height="49.616" modelName="centered" modelPosition="center" textColor="#1A1A1A" visible="true" width="46.749" xml:space="preserve">유량 제한된
 p_r^k(L2b 추적
 압력 대체,
-M2 켬, 개정 3)</y:EdgeLabel>
+M2 켬, 개정 3)
+· 잠금 직전
+p_tr → 앵커(r5)</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>
@@ -1357,7 +1445,7 @@ M2 켬, 개정 3)</y:EdgeLabel>
 입력, 개정 3)</data>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="-36.8504" sy="32.421" tx="-36.8504" ty="-51.109"/>
+          <y:Path sx="-36.8504" sy="32.421" tx="-36.8504" ty="-62.629"/>
           <y:LineStyle color="#1A1A1A" type="dashed" width="0.8"/>
           <y:Arrows source="none" target="standard"/>
           <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasLineColor="false" height="25.808" modelName="centered" modelPosition="center" textColor="#1A1A1A" visible="true" width="39.8298" xml:space="preserve">전달 속도 u
@@ -1385,7 +1473,7 @@ t_ol + t_c</y:EdgeLabel>
       <data key="d9" xml:space="preserve">B_LCCUT → B_LCCLOSE: t_ol</data>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="36.8504" sy="32.421" tx="-14.7402" ty="-51.109">
+          <y:Path sx="36.8504" sy="32.421" tx="-14.7402" ty="-62.629">
             <y:Point x="569.7638" y="220.03"/>
             <y:Point x="725.1024" y="220.03"/>
           </y:Path>
@@ -1400,7 +1488,7 @@ t_ol + t_c</y:EdgeLabel>
       <data key="d9" xml:space="preserve">B_CB → B_SREF: 배출 체적 / A_p(옵션)</data>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="56.0126" sy="-51.109" tx="7.3701" ty="32.421">
+          <y:Path sx="56.0126" sy="-62.629" tx="7.3701" ty="32.421">
             <y:Point x="588.926" y="242.7071"/>
             <y:Point x="1368.0" y="242.7071"/>
           </y:Path>
@@ -1415,9 +1503,9 @@ t_ol + t_c</y:EdgeLabel>
       <data key="d9" xml:space="preserve">B_CB → B_ROD: 이동 중 로드측 목표 대체(옵션)</data>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="56.0126" sy="51.109" tx="-29.4803" ty="51.109">
-            <y:Point x="588.926" y="472.4843"/>
-            <y:Point x="917.2913" y="472.4843"/>
+          <y:Path sx="56.0126" sy="62.629" tx="-29.4803" ty="62.629">
+            <y:Point x="588.926" y="495.5243"/>
+            <y:Point x="917.2913" y="495.5243"/>
           </y:Path>
           <y:LineStyle color="#1A1A1A" type="dashed" width="0.8"/>
           <y:Arrows source="none" target="standard"/>
@@ -1457,8 +1545,8 @@ t_ol + t_c</y:EdgeLabel>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="51.5906" sy="28.453" tx="-29.4803" ty="28.453">
-            <y:Point x="1205.2913" y="583.2486"/>
-            <y:Point x="1538.0787" y="583.2486"/>
+            <y:Point x="1205.2913" y="606.2886"/>
+            <y:Point x="1538.0787" y="606.2886"/>
           </y:Path>
           <y:LineStyle color="#1A1A1A" type="line" width="1.6"/>
           <y:Arrows source="none" target="standard"/>
@@ -1472,7 +1560,7 @@ t_ol + t_c</y:EdgeLabel>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="-28.453" tx="73.7008" ty="0.0">
-            <y:Point x="1567.5591" y="367.517"/>
+            <y:Point x="1567.5591" y="379.037"/>
           </y:Path>
           <y:LineStyle color="#1A1A1A" type="line" width="0.8"/>
           <y:Arrows source="none" target="standard"/>
@@ -1502,8 +1590,8 @@ t_ol + t_c</y:EdgeLabel>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="66.3307" sy="-28.453" tx="51.5906" ty="32.421">
-            <y:Point x="1220.0315" y="435.6339"/>
-            <y:Point x="1257.1654" y="435.6339"/>
+            <y:Point x="1220.0315" y="458.6739"/>
+            <y:Point x="1257.1654" y="458.6739"/>
             <y:Point x="1257.1654" y="211.526"/>
             <y:Point x="1205.2913" y="211.526"/>
           </y:Path>
@@ -1532,11 +1620,11 @@ t_ol + t_c</y:EdgeLabel>
       <data key="d9" xml:space="preserve">B_ROD → B_TRUTH: p_r 진값</data>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="-58.9606" sy="51.109" tx="-44.2205" ty="-28.453">
-            <y:Point x="887.811" y="461.1457"/>
-            <y:Point x="843.3071" y="461.1457"/>
-            <y:Point x="843.3071" y="566.2408"/>
-            <y:Point x="1109.4803" y="566.2408"/>
+          <y:Path sx="-58.9606" sy="62.629" tx="-44.2205" ty="-28.453">
+            <y:Point x="887.811" y="484.1857"/>
+            <y:Point x="843.3071" y="484.1857"/>
+            <y:Point x="843.3071" y="589.2808"/>
+            <y:Point x="1109.4803" y="589.2808"/>
           </y:Path>
           <y:LineStyle color="#1A1A1A" type="line" width="0.8"/>
           <y:Arrows source="none" target="standard"/>
@@ -1562,8 +1650,8 @@ t_ol + t_c</y:EdgeLabel>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="-29.4803" sy="28.453" tx="0.0" ty="-24.677">
-            <y:Point x="1124.2205" y="702.5169"/>
-            <y:Point x="946.7717" y="702.5169"/>
+            <y:Point x="1124.2205" y="725.5569"/>
+            <y:Point x="946.7717" y="725.5569"/>
           </y:Path>
           <y:LineStyle color="#1A1A1A" type="line" width="0.8"/>
           <y:Arrows source="none" target="standard"/>
@@ -1577,8 +1665,8 @@ t_ol + t_c</y:EdgeLabel>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="73.7008" sy="0.0" tx="73.7008" ty="0.0">
-            <y:Point x="1658.2677" y="520.7798"/>
-            <y:Point x="1658.2677" y="749.8711"/>
+            <y:Point x="1658.2677" y="543.8198"/>
+            <y:Point x="1658.2677" y="772.9111"/>
           </y:Path>
           <y:LineStyle color="#1A1A1A" type="line" width="0.8"/>
           <y:Arrows source="none" target="standard"/>
@@ -1604,7 +1692,7 @@ t_ol + t_c</y:EdgeLabel>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="-73.7008" sy="-4.9354" tx="-73.7008" ty="6.4842">
-            <y:Point x="22.6772" y="744.9357"/>
+            <y:Point x="22.6772" y="767.9757"/>
             <y:Point x="22.6772" y="177.0853"/>
           </y:Path>
           <y:LineStyle color="#1A1A1A" type="line" width="0.8"/>
@@ -1619,8 +1707,8 @@ t_ol + t_c</y:EdgeLabel>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="24.677" tx="-73.7008" ty="22.6947">
-            <y:Point x="1567.5591" y="791.556"/>
-            <y:Point x="11.3386" y="791.556"/>
+            <y:Point x="1567.5591" y="814.596"/>
+            <y:Point x="11.3386" y="814.596"/>
             <y:Point x="11.3386" y="193.2958"/>
           </y:Path>
           <y:LineStyle color="#1A1A1A" type="line" width="0.8"/>
@@ -1647,11 +1735,68 @@ t_ol + t_c</y:EdgeLabel>
 (신장 p_h, 수축 p_r)</data>
       <data key="d10">
         <y:PolyLineEdge>
-          <y:Path sx="0.0" sy="-51.109" tx="0.0" ty="32.421"/>
+          <y:Path sx="0.0" sy="-62.629" tx="0.0" ty="32.421"/>
           <y:LineStyle color="#1A1A1A" type="dashed" width="0.8"/>
           <y:Arrows source="none" target="standard"/>
           <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasLineColor="false" height="17.872" modelName="centered" modelPosition="center" textColor="#1A1A1A" visible="true" width="59.0064" xml:space="preserve">부하 압력 p_L,i
 (신장 p_h, 수축 p_r)</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e37" source="B_C2" target="B_P3">
+      <data key="d9" xml:space="preserve">B_C2 → B_P3: 작용 명령 u
+(직전 주기 출력)</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-73.7008" sy="-22.6947" tx="-73.7008" ty="0.0">
+            <y:Point x="38.2677" y="147.9063"/>
+            <y:Point x="38.2677" y="741.8316"/>
+          </y:Path>
+          <y:LineStyle color="#1A1A1A" type="dashed" width="0.8"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasLineColor="false" height="17.872" modelName="centered" modelPosition="center" textColor="#1A1A1A" visible="true" width="49.3468" xml:space="preserve">작용 명령 u
+(직전 주기 출력)</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e38" source="B_SSENS" target="B_P3">
+      <data key="d9" xml:space="preserve">B_SSENS → B_P3: 행정 판독(C_r(s), 끝 여유)</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-73.7008" sy="-20.8045" tx="73.7008" ty="10.275"/>
+          <y:LineStyle color="#1A1A1A" type="dashed" width="0.8"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasLineColor="false" height="9.936" modelName="centered" modelPosition="center" textColor="#1A1A1A" visible="true" width="74.3266" xml:space="preserve">행정 판독(C_r(s), 끝 여유)</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e39" source="B_PSENS" target="B_P3">
+      <data key="d9" xml:space="preserve">B_PSENS → B_P3: 헤드 판독(≥ 200 bar 포화 정지 판정)</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-44.2205" sy="28.453" tx="73.7008" ty="-6.85">
+            <y:Point x="695.622" y="734.9815"/>
+          </y:Path>
+          <y:LineStyle color="#1A1A1A" type="dashed" width="0.8"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasLineColor="false" height="9.936" modelName="centered" modelPosition="center" textColor="#1A1A1A" visible="true" width="106.6148" xml:space="preserve">헤드 판독(≥ 200 bar 포화 정지 판정)</y:EdgeLabel>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e40" source="B_P3" target="B_EST">
+      <data key="d9" xml:space="preserve">B_P3 → B_EST: ③ 시작값 max(13 bar, p̂ + δ_m)
+(대체 다리만, 옵션 켬)</data>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="-44.2205" sy="-17.125" tx="-44.2205" ty="28.453"/>
+          <y:LineStyle color="#1A1A1A" type="dashed" width="0.8"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:EdgeLabel alignment="center" backgroundColor="#FFFFFF" fontFamily="Dialog" fontSize="6" fontStyle="plain" hasLineColor="false" height="17.872" modelName="centered" modelPosition="center" textColor="#1A1A1A" visible="true" width="98.553" xml:space="preserve">③ 시작값 max(13 bar, p̂ + δ_m)
+(대체 다리만, 옵션 켬)</y:EdgeLabel>
           <y:BendStyle smoothed="false"/>
         </y:PolyLineEdge>
       </data>

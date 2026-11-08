@@ -4,6 +4,8 @@
 
 **갱신(2026-11-06, M2 개정 3)**: M2 로드 압력 법칙이 유량 제한(`flow_limited_r3`, B 호스 미포함, 사용자 결정 2026-11-06)으로 바뀌어 그림 3의 B_M2·B_ROD·B_LCCLOSE 노드, B_M2 관련 엣지, 3.4 하네스 주석과 그림 2의 M_M2REF 노드·M_M2REF ↔ M_HARN 엣지를 고쳤다. 다시 그릴 노드·엣지 id는 각 절 표의 "개정 3" 표시 행이다.
 
+**갱신(2026-11-08, M2 r4·r5, v5 명세 개정 4)**: M2 법칙이 `flow_limited_r5`(개정 3 유량 제한 → r4 해제 이중 계산 제거 → r5 신장 뒤 잠금 앵커 B안)로 바뀌었고, 제어기에 ③ 대체 시작값 보강 옵션(프리셋 기본 꺼짐, 2026-11-08 v5 VB에서 켬으로 채택, `final_C4G2_P3`)과 관측 전용 기록이 생겼다. 그림 3의 변경안은 **3.7절**(바꿀 id 목록)에 모았고, 3.2·3.3·3.4·3.5·3.6 표의 해당 행에 "**r4·r5**" 표시를 달았다. 그림 2는 한 건(3.7절 끝)이다. graphml-expert가 그림 2·3을 이 명세대로 고쳤다(2026-11-08, 반영됨). 그림 1은 바뀌지 않는다. 그림 파일은 graphml-expert가 고친다(이 문서는 내용만).
+
 | 원본 | 쓴 곳 |
 |---|---|
 | `CLAUDE.md` 현재 기준값 표, 모델 규약(구동기 운용안 B) | 세 그림 전체 |
@@ -11,7 +13,8 @@
 | `00_docs/02_hydraulic/hydraulic_coupling.md` 2~4·8·9절 | 그림 1·2·3 |
 | `00_docs/02_hydraulic/l2_hydraulic_model_spec.md` 머리말·0절 | 그림 2 |
 | `00_docs/02_hydraulic/s8_seal_friction_counterbalance.md` 0·2·4·11절 | 그림 1·3 |
-| `00_docs/02_hydraulic/v5_hydraulic_impl_spec.md` 개정 3 (2.0~2.6, 3.1, 3.3, 5절) | 그림 2·3 |
+| `00_docs/02_hydraulic/v5_hydraulic_impl_spec.md` 개정 3 (2.0~2.6, 3.1, 3.3, 5절), **개정 4**(2.3.1 r4, 2.3.2 r5, 2.8 ③·기록, 3.4) | 그림 2·3 |
+| `06_analysis/03_hydraulic/coupled/v5/p3_extend_start_spec.md` 3·12절, `03_src/outrigger_sim/control/extend_start_bound.py` | 그림 3 B_P3(r4·r5 갱신) |
 | `03_src/outrigger_sim/hydraulics/*.py`, `chrono/l2b_actuator.py`, `sensors/hydraulic.py`, `sensors/pressure_error.py` | 그림 3 |
 | `04_scripts/04_hydraulic/coupled/harness_hydraulics.py`, `04_scripts/02_chrono/l1r_variant.py` | 그림 2·3 |
 | `02_params/rexome33.yaml` `actuator`, `legs.<leg>.cylinder`, `control`, `sensors` | 수치 |
@@ -231,8 +234,8 @@ L1 경로는 별도 작은 삽화(오른쪽 위)로 둔다: "L1: s_ref → 강�
 | B_LAWC | 법칙 C 힘 포화<br>210 bar | G_CMD | 신장 278.7 / 199.6 kN, 수축 79.2 / 66.0 kN(전방 / 후방). 포화 정지 2 ms 감속, 행정 끝 제동 | `actuation.SpeedReference`, YAML `legs.<leg>.cylinder.max_force_*` | [기본] | |
 | B_SREF | s_ref 적분<br>[0, 0.70] m | G_CMD | s_ref ← clip(s_ref + u Δt, 0, 0.70). 밸브가 넣은 기름 체적 / A_p | `actuation.py`, YAML `actuator.stroke_m` | [기본] | |
 | B_HEAD | 헤드 기름 강성<br>k_h = β A_p/(L_0h + s) | G_HYD | β 1.0 GPa, L_0h 0.05 m. 바깥 경로 k_out = series(k_rod, k_frame, k_concrete)와 직렬. 운용점 k_ax FL 2.59×10⁷, RL 1.95×10⁷ N/m | `chrono/l2b_actuator.py`, YAML `actuator.L2b_NSC.axial_stiffness` | [기본] | ○ |
-| B_ROD | 로드측 L1-R 상태 기계<br>이동 ↔ 잠김(LOCK·FLOOR) | G_HYD | 잠김: F = F_lock + k_2 dc + (k_1 − k_2) min(dc, dc_knee). 잠금 \|u\| ≤ 1×10⁻⁶ m/s. p_r0 2 bar(신장 뒤) / 34.8 bar(FL 수축 뒤). 바닥 0.1 bar abs. 이동 중 1차 지연 τ 0.05 s, 신장 배압 목표 5 bar. **개정 3**: M2 켬이면 이 이동 중 추적 압력을 B_M2의 유량 제한으로 자른다(진값·판독도 그 값) | `hydraulics/l2b_rod_side.py`, `rod_chamber.py`, YAML `actuator.rod_side.*` | [기본](L2b) | ○ |
-| B_M2 | M2 로드 압력 해제 이동<br>유량 제한(개정 3, `flow_limited_r3`) | G_HYD | 이동 중 p_r^k = 1차 지연 p_lag를 밸브 유량으로 자름: 수축 승압 ≤ A_ann\|u\| Δt / C_r, 신장 감압 ≤ b_T A_h\|u\| √((p_r − p_T)/Δp_c) Δt / C_r, C_r = A_ann²(1/k_r + 1/k_h)(FL 1.80×10⁻¹² m³/Pa, B 호스 미포함). δs_ref = A_ann (p_r^(k−1) − p_r^k) / k_h, 신장·수축 양방향, 잠김 0, u = 0이면 유량 쪽 정지. 34.8 → 5 bar 총 FL 0.382 mm, 1 % v_max에서 0.056 mm/s로 퍼짐. b_T 1.0, Δp_c 10 bar, p_T 2 bar(가정) | `hydraulics/rod_release.py` `flow_limited_rod_pressure`·`RodPressureFlowLaw`(하네스·L2b 공용), v5 명세 2.3 개정 3. meta·digest `m2_law: "flow_limited_r3"`(M2 켬만) | [v5 · 기본 끔] [VB 켬] | ○ |
+| B_ROD | 로드측 L1-R 상태 기계<br>이동 ↔ 잠김(LOCK·FLOOR) | G_HYD | 잠김: F = F_lock + k_2 dc + (k_1 − k_2) min(dc, dc_knee). 잠금 \|u\| ≤ 1×10⁻⁶ m/s. p_r0 2 bar(신장 뒤) / 34.8 bar(FL 수축 뒤). 바닥 0.1 bar abs. 이동 중 1차 지연 τ 0.05 s, 신장 배압 목표 5 bar. **개정 3**: M2 켬이면 이 이동 중 추적 압력을 B_M2의 유량 제한으로 자른다(진값·판독도 그 값). **r5(M2 켬, 신장 뒤 잠금)**: p_r0 = max(min(p_tr, p_ext + max(p_tr − p*, 0)), p_floor) — 감압 안 끝난 몫을 앵커가 가짐(최대 31.8 bar), 감압 끝난 신장·매달린 다리는 2 bar 그대로. **r4**: 해제 순간 Δ = p_r0 − p_r,rel과 해제 감쇠 w를 B_M2에 넘김 | `hydraulics/l2b_rod_side.py`(앵커 :478-492, 해제 Δ :530-537), `rod_chamber.py`, YAML `actuator.rod_side.*` | [기본](L2b) / r5 앵커 [v5 · 기본 끔] [VB 켬] | ○ |
+| B_M2 | M2 로드 압력 해제 이동<br>`flow_limited_r5`<br>(유량 제한 · 해제 보상 · 신장 잠금 앵커) | G_HYD | ① 이동 중 p_r^k = 1차 지연 p_lag를 밸브 유량으로 자름: 수축 승압 ≤ A_ann\|u\| Δt / C_r, 신장 감압 ≤ b_T A_h\|u\| √((p_r − p_T)/Δp_c) Δt / C_r, C_r = A_ann²(1/k_r + 1/k_h)(FL 1.80×10⁻¹² m³/Pa, B 호스 미포함). ② **r4**: 보상 압력 p̂ = p_r + Δ w(Δ = p_r0 − p_r,rel, w = e^(−(t − t_rel)/τ)), δs_ref = A_ann (p̂^(k−1) − p̂^k) / k_h — 해제 감쇠가 이미 옮기는 몫을 다시 옮기지 않음(뜬 다리 킥 2.08 → 1.02 mm). ③ **r5**: 신장 뒤 잠금 앵커는 B_ROD에서(p_tr 입력). 신장·수축 양방향, 잠김 0, u = 0이면 유량 쪽 정지. b_T 1.0, Δp_c 10 bar, p_T 2 bar, τ 0.05 s(가정) | `hydraulics/rod_release.py` `flow_limited_rod_pressure`·`RodPressureFlowLaw`·`RodReleaseShift`·`compensated_rod_pressure_Pa`(하네스·L2b 공용), v5 명세 2.3·2.3.1·2.3.2(개정 4). meta·digest `m2_law: "flow_limited_r5"`(M2 켬만, r3·r4 거부) | [v5 · 기본 끔] [VB 켬] | ○ |
 | B_LCCLOSE | LC 체크 닫힘 지연<br>t_c 50 ms | G_HYD | 잠김 법칙 전환 t_lock = t_ol + t_c. t_c 동안 유량 0, 이동 법칙·이동 감쇠 유지. **개정 3**: M2 켬이면 t_c 동안 유량으로 채우는 쪽 로드 압력은 멈춤(u = 0) | `L2bRodSide(closing_delay_s)`, v5 명세 2.5 | [v5 · 기본 끔] [VB 켬] | ○ |
 | B_CB | 카운터 밸런스<br>(로크 밸브 대체) | G_HYD | 잠김에서 p ≥ p_set − (ψ − 1) p_T면 Q = Q_r y 배출, s_ref 이동. p_set 330 bar, ψ 4, τ 10 ms, 60 L/min @ +20 bar | `hydraulics/counterbalance.py`, YAML `actuator.counterbalance` | [옵션] `lock_valve="counterbalance"`, 기본 끔 | ○ |
 | B_SEAL | 실 마찰 F_s<br>4 kN(전방), 후방 × 0.833 | G_HYD | F = k_out (s_p − s), F = G(s_ref − s_p) + f, \|f\| ≤ F_s. 압력 힘 F_p = F − f. 감도 0/2/4/8 kN | `hydraulics/seal_friction.py`, YAML `actuator.seal_friction` | [옵션] L2b만, YAML 기본 0, 실행이 덮어씀 | ○ |
@@ -244,6 +247,7 @@ L1 경로는 별도 작은 삽화(오른쪽 위)로 둔다: "L1: s_ref → 강�
 | B_SSENS | 행정 센서 ×4<br>10 Hz | G_SENS | 측정 끝 0.6948 m, FAULT 0.6938 m | YAML `sensors.stroke` | [기본] | ○ |
 | B_IMU | IMU<br>100 Hz | G_SENS | 자세(roll·pitch) 입력. 유압 밖, 루프 완결용으로만 표시 | `CLAUDE.md` 센서·주기 | [기본] | |
 | B_EST | 압력 신호 처리(제어기 안)<br>영점 교정 · 순 힘 · 잠금 창 | G_CTRL | F = p_h A_p − p_r A_ann ≥ F_min 9.415 kN, 350 bar 판정. 잠금 창 W = τ_v ln(·) + t_c + T(새 창은 v5 옵션) | YAML `control.F_min_cylinder_N`, `control/two_pressure.py`, v5 명세 2.6 | [기본] / 새 창 [v5 · 기본 끔] [VB 켬] | |
+| B_P3 (**r4·r5 새 노드**) | ③ 대체 시작값 상계<br>(제어기 안, 기본 꺼짐) | G_CTRL | 플랜트와 같은 함수 `flow_limited_rod_pressure`를 보수 입력(β 0.69 GPa, L_0h 0.08, L_0r 0.10 m, B 호스 ×1.40, κ_x 0.8)으로 1 ms 소단계 실행 → p̂. 신장 뒤 잠금 시작값·신장 이동 추정 = max(13 bar, p̂ + 0.5 bar). 재신장 전 p̂ ← max(p̂, ④)(revision 4). 로드 센서 고장 다리의 대체 추정에만 쓰임 | `control/extend_start_bound.py`, `two_pressure.py` `extend_start_rule`, v5 명세 2.8, `p3_extend_start_spec.md` 3·12절 | [옵션 · VB에서 켬] `extend_start_rule="tracked_bound"`(revision 4, 프리셋·클래스 기본 꺼짐, v5 VB에서 켬 — 2026-11-08 채택, `final_C4G2_P3`) | ○ |
 
 ### 3.3 엣지
 
@@ -262,9 +266,13 @@ L1 경로는 별도 작은 삽화(오른쪽 위)로 둔다: "L1: s_ref → 강�
 | B_HEAD | B_FCYL | 헤드 기름 힘 |
 | B_ROD | B_FCYL | 로드측 힘(잠김 스프링) |
 | B_M2 | B_SREF | δs_ref(다음 스텝) |
-| B_ROD | B_M2 | p*, p_r^(k−1), k_r·k_h(이동 중, 개정 3) |
+| B_ROD | B_M2 | p*, p_r^(k−1), k_r·k_h(이동 중, 개정 3); **r4**: 해제 순간 Δ = p_r0 − p_r,rel, 해제 감쇠 w |
 | B_LAWC | B_M2 | 전달 속도 u(유량 제한 입력, 개정 3) — 점선 |
-| B_M2 | B_ROD | 유량 제한된 p_r^k(L2b 추적 압력 대체, M2 켬, 개정 3) — 점선 |
+| B_M2 | B_ROD | 유량 제한된 p_r^k(L2b 추적 압력 대체, M2 켬, 개정 3) — 점선. **r5**: 잠금 훅 직전 p_tr → 신장 뒤 잠금 앵커 p_r0 |
+| B_C2 | B_P3 | **r4·r5 새 엣지**: 작용 명령 u(직전 주기 출력) — 점선(옵션) |
+| B_SSENS | B_P3 | **r4·r5 새 엣지**: 행정 판독(C_r(s), 끝 여유) — 점선 |
+| B_PSENS | B_P3 | **r4·r5 새 엣지**: 헤드 판독(≥ 200 bar 포화 정지 판정) — 점선 |
+| B_P3 | B_EST | **r4·r5 새 엣지**: ③ 시작값 max(13 bar, p̂ + δ_m)(대체 다리만, 옵션 켬) — 점선 |
 | B_LCCLOSE | B_ROD | 잠금 시각 t_ol + t_c |
 | B_LCCUT | B_LCCLOSE | t_ol |
 | B_CB | B_SREF | 배출 체적 / A_p(옵션) |
@@ -290,7 +298,9 @@ B_ROD → B_FLOW 엣지는 유량 분배가 다리 부하 압력을 읽는다는
 
 ### 3.4 하네스 경로 주석(그림 아래 작은 상자)
 
-"v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → `_lagged_step`(τ_v 0.1 s 항상 켬) → LC 꼬리 → M1c → `FlowLimitedPlant` → 내부 스텝 `_rod_force`(LC 닫힘 타이머 → M2 이동 → 법칙 C·마찰 커널). 하네스에는 로드 압력 추적이 없어 M2용 로드 압력을 하네스가 직접 푼다(`harness_hydraulics._RodPressureLag`, 개정 3: L2b와 같은 공용 함수 `flow_limited_rod_pressure`, 입력 u는 LC 닫힘 타이머가 2ε로 바꾸기 전 커널 속도)."
+"v5 하네스(축소 6자유도, 1 ms 조각)는 같은 순서다: C2 → `_lagged_step`(τ_v 0.1 s 항상 켬) → LC 꼬리 → M1c → `FlowLimitedPlant` → 내부 스텝 `_rod_force`(LC 닫힘 타이머 → M2 이동 → 법칙 C·마찰 커널). 하네스에는 로드 압력 추적이 없어 M2용 로드 압력을 하네스가 직접 푼다(`harness_hydraulics._RodPressureLag`, 개정 3: L2b와 같은 공용 함수 `flow_limited_rod_pressure`, 입력 u는 LC 닫힘 타이머가 2ε로 바꾸기 전 커널 속도). **r4·r5**: 해제 보상 Δ w(Δ = G_r(t_rel)/A_ann)와 신장 뒤 잠금 앵커(`_anchor_extension_locks`)도 L2b와 같은 식이다. 하네스는 무장 때 네 다리가 잠긴 채 시작하므로 L2b의 무장 보정이 필요 없다."
+
+**r4·r5 추가 주석 상자(그림 아래, 3.4 상자 옆)** — 관측 기록, 되먹임 없음: "기록만(명령·플랜트 값 불변): M2 해제 기록 `m2_releases`(L2b), 앵커 계수기 `ext_lock_*`, `hydraulics_record.tension_truth`(진값 진단), `extend_bound_check`(③ 켬만), 제어기 `review_record`(늘)". 블록에 엣지로 잇지 않는다(되먹임이 있는 것처럼 보이지 않게).
 
 ### 3.5 v5 설정 표(그림 오른쪽 아래 작은 표로 넣는다)
 
@@ -299,6 +309,10 @@ B_ROD → B_FLOW 엣지는 유량 분배가 다리 부하 압력을 읽는다는
 | V0(기본, final_C4G2와 비트 동일) | 끔 | 끔 | 끔 | 끔 | 끔 |
 | **VB(v5 기준 구성)** | 0.85 | 켬 | 2 % / 50 ms | 켬 | 끔 |
 | V4·V5 등(참고) | 0.85 | 켬 | 끔 | 끔 | VN / BL |
+
+**r4·r5 표 주석**(표 아래 한 줄, 그림에 반영됨): "M2 켬 = 법칙 flow_limited_r5. ③ 대체 시작값 보강(extend_start_rule)은 프리셋 기본 꺼짐, v5 VB에서 켬."
+
+**③ 열을 두지 않는다**(2026-11-08 결정, hydraulics-expert): ③가 켜지는 행은 VB 하나뿐이고 나머지 행(V0, V4·V5 등)은 모두 꺼짐이다. 열을 더하면 한 칸만 의미가 있고 표 폭만 늘어난다. 그래서 그림처럼 표 주석 한 줄로 둔다. VB 행 설정 칸은 그대로 둔다(③는 주석으로 표시). 설정이 더 생겨 ③ 켬·끔 행이 섞이면 그때 열을 더한다.
 
 ### 3.6 범례
 
@@ -310,8 +324,32 @@ B_ROD → B_FLOW 엣지는 유량 분배가 다리 부하 압력을 읽는다는
 | 배지 [기본] | 항상 켬 |
 | 배지 [v5 · 기본 끔] | 옵션 없으면 코드 경로가 돌지 않음 |
 | 배지 [VB 켬] | v5 기준 구성에서 켬 |
+| 배지 [옵션 · VB에서 켬](B_P3, **r4·r5**) | 제어기 옵션(B_P3): 프리셋 기본 꺼짐 · v5 VB에서 켬 |
+| 회색 점선 테두리 주석 상자(**r4·r5**) | 관측 기록, 되먹임 없음 |
 | 점선 테두리 | 가정값 포함 |
 | 그룹 색 | 제어기 / 플랜트-명령 / 플랜트-유압 / 플랜트-기계 / 센서 |
+
+### 3.7 r4·r5 변경안 (2026-11-08, graphml-expert용 목록)
+
+그림 3(`hyd_fig3_blocks.graphml` → `.svg`·`.png`)에서 바꿀 것만 모았다. 아래에 없는 노드·엣지·위치는 그대로 둔다.
+
+| # | 종류 | id | 지금(개정 3) | 바꿀 내용 |
+|---|---|---|---|---|
+| 1 | 노드 라벨 | B_M2 | "M2 로드 압력 해제 이동 / 유량 제한(개정 3, `flow_limited_r3`)" | "M2 로드 압력 해제 이동 / `flow_limited_r5` / (유량 제한 · 해제 보상 · 신장 잠금 앵커)". 상자 아래 식 한 줄: "p̂ = p_r + Δ·w,  δs_ref = A_ann(p̂^(k−1) − p̂^k)/k_h". 툴팁은 3.2 B_M2 행 |
+| 2 | 노드 라벨·식 | B_ROD | 개정 3 문구 | 둘째 줄 아래 식 한 줄 추가: "신장 뒤 잠금(M2 켬): p_r0 = max(min(p_tr, p_ext + (p_tr − p*)⁺), p_floor)". 배지에 `[v5 · 기본 끔][VB 켬]`(r5 앵커 몫) 추가. 툴팁은 3.2 B_ROD 행 |
+| 3 | 엣지 라벨 | B_ROD → B_M2(graphml `e14`) | "p*, p_r^(k−1), k_r·k_h(이동 중, 개정 3)" | 끝에 "· 해제 Δ, w(r4)" 추가 |
+| 4 | 엣지 라벨 | B_M2 → B_ROD(점선, graphml `e15`) | "유량 제한된 p_r^k(…)" | 끝에 "· 잠금 직전 p_tr → 앵커(r5)" 추가 |
+| 5 | 새 노드 | B_P3 | 없음 | G_CTRL 안, B_EST 왼쪽 또는 아래. 라벨 "③ 대체 시작값 상계 / (제어기 안)". **점선 테두리**(가정 포함) + 배지 `[옵션 · VB에서 켬]`(2026-11-08 ③ v5 VB 채택 뒤 갱신, 그림 반영됨). 툴팁은 3.2 B_P3 행 |
+| 6 | 새 엣지 4개(모두 점선) | B_C2 → B_P3, B_SSENS → B_P3, B_PSENS → B_P3, B_P3 → B_EST | 없음 | 라벨은 3.3 표 "r4·r5 새 엣지" 행. 기존 B_PSENS → B_EST, B_SSENS → B_C2 엣지와 겹치지 않게 |
+| 7 | 주석 상자 | 3.4 하네스 주석 | 개정 3 문구 | 3.4절 새 문구로 교체(끝에 r4·r5 두 문장) |
+| 8 | 새 주석 상자 | N3_REC | 없음 | 회색 점선 테두리, 3.4 상자 옆. 문구는 3.4절 "r4·r5 추가 주석 상자". 어떤 블록과도 엣지로 잇지 않는다 |
+| 9 | 표 주석 | 3.5 v5 설정 표 | 없음 | 표 아래 한 줄(3.5절 "r4·r5 표 주석") |
+| 10 | 범례 | 3.6 | - | 두 줄 추가: 배지 `[옵션 · VB에서 켬]`(프리셋 기본 꺼짐 · v5 VB에서 켬), 회색 점선 주석 상자 = 관측 기록 |
+| 11 | 그림 제목·캡션(있으면) | - | 개정 3 표시 | "M2 = `flow_limited_r5`(2026-11-08, v5 명세 개정 4)"로 날짜·법칙 표시 갱신 |
+
+**넣지 않는 것**: ③ 채택 경위·조건 4 면제 문구(그림에는 배지 `[옵션 · VB에서 켬]`과 표 주석만), 판정 결과 수치(3단계 등), 개정 7 T4 규칙. 그림 3은 모델 구조도라서 판정 문구를 싣지 않는다.
+
+**그림 2(반영됨, 2026-11-08 사용자 결정 ⑦)**: 엣지 M_M2REF ↔ M_HARN(graphml `x3`) 라벨 끝에 "· r4: 뜬 다리 킥 1.0214 mm ↔ 독립 두 챔버 1.03~1.06 mm(M2-14)"를 붙였다. 근거 v5 명세 3.1 M2-14 행. M2-6 값은 r5에서도 2.4746 kN이라 지금 라벨의 "2.475 kN"은 그대로 맞다.
 
 ---
 
@@ -328,3 +366,5 @@ B_ROD → B_FLOW 엣지는 유량 분배가 다리 부하 압력을 읽는다는
 | MCV A/B ↔ 헤드/로드 대응의 실물 배관 | 회로도 판독만(`hydraulic_circuit.md` 8절, 확인 필요) | 그림 1 주석 |
 | OpenModelica 교차 검증 | 실행 기록 없음(L2 명세에서 생략). 이번에도 돌리지 않았다 | 그림 2 M_OM은 "실행 안 함"으로 표시 |
 | 그림 2의 교차 검증 결과 수치 | 문서 값을 옮겼고 다시 실행하지 않았다 | 그림 2 엣지 라벨 |
+| (r4·r5) 그림 3 현재 파일 상태 | 변경 전에는 B_M2 라벨이 `flow_limited_r3`, B_ROD 툴팁이 개정 3 문구였다. graphml-expert 반영 뒤(2026-11-08) graphml 텍스트로 B_P3 배지 `[옵션 · VB에서 켬]`, B_ROD 식 `(p_tr − p*)⁺`, 3.5 주석, 범례 문구, 그림 2 M2-14 라벨을 확인했다. 렌더 그림(svg·png)은 hydraulics-expert가 보지 않았다 | 3.7절 반영 확인 |
+| (r4·r5) `rod_release.py` 문서 문구(fa55755로 수정 완료. meta는 정의 해시·명령 해시·재생 대조에 들어가지 않음 확인) | 수정 전에는 모듈 docstring·`meta()`가 r5 앵커를 상한 min(p_tr, ·) 없이 적었다. 동작 코드와 L2b meta에는 원래 상한이 있었다(v5 명세 5절) | 그림은 동작 코드 식(상한 포함)을 쓴다 |
