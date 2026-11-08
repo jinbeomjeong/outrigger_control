@@ -97,7 +97,7 @@
 ### 1.6 J1 VB 비례(흐름 분배) 유량 법칙 대조 (사용자 결정 H-1, 2026-11-08 추가)
 
 - 작성: cad-expert, 2026-11-08. 코드 worktree `agent-ae596978405e81b46` 커밋 `85eb7f9`(행 정의만, 기존 49개 묶음 정의 해시 불변). 판정 위임 범위 밖의 해석은 하지 않았다(아래 핸드오프).
-- 실행: `s9_batch run V5-OPENLOOP-VB-PROP` 1행 `P3a_J1_B_VB_prop` = VB J1 argv에서 `--flow-law priority`만 `proportional`로 바꿈(`check-sources` ok_expected_diff, 차이 = VB 인자 + `flow_law`). `--threads 4`(원 행과 같음), `OMP_WAIT_POLICY=PASSIVE`, **E 풀**(G-D P코어 단독 측정 예정이라 P를 비움, 예약 `v5-openloop-prop` 0x0FFF0000, 끝난 뒤 해제). 폴더 `07_results\S9\batch_V5-OPENLOOP-VB-PROP_20261108_164953\P3a_J1_B_VB_prop`, rc 0, 벽시계 2,997 s(8.31 ms/스텝; P 2슬롯 VB 5.86 ms/스텝의 1.42배). 코드는 VB 실행(11:20) 이후 플랜트 파일 변경 없음(`git log` 03_src·04_scripts/02_chrono·02_params: 10:43 행 정의 커밋 뿐).
+- 실행: `s9_batch run V5-OPENLOOP-VB-PROP` 1행 `P3a_J1_B_VB_prop` = VB J1 argv에서 `--flow-law priority`만 `proportional`로 바꿈(`check-sources` ok_expected_diff, 차이 = VB 인자 + `flow_law`). `--threads 4`(원 행과 같음), `OMP_WAIT_POLICY=PASSIVE`, **E 풀**(G-D P코어 단독 측정 예정이라 P를 비움, 예약 `v5-openloop-prop` 0x0FFF0000, 끝난 뒤 해제). 폴더 `07_results\S9\batch_V5-OPENLOOP-VB-PROP_20261108_164953\P3a_J1_B_VB_prop`, rc 0, 벽시계 2,997 s(배치 요약의 프로세스 시간; 결과 JSON `wall_s` 2,992.2 s는 실행 안 시계라 출처가 달라 몇 초 차이가 난다)(8.31 ms/스텝; P 2슬롯 VB 5.86 ms/스텝의 1.42배). 코드는 VB 실행(11:20) 이후 플랜트 파일 변경 없음(`git log` 03_src·04_scripts/02_chrono·02_params: 10:43 행 정의 커밋 뿐).
 - 값: `paper_runs\openloop_prop_compare.json`(스크립트 `paper_runs\scripts\openloop_prop_compare.py`; 표 7 항목은 `openloop_compare.py`의 `analyse` 정의를 그대로 실행, SHA-256 기록). 속도비는 `flow_series.npz` 1 ms 행의 v/u(8.5 s < t ≤ 36 s, u ≥ 0.1 v_max).
 
 | 항목 | J1 v4 (= V0) | J1 VB priority | **J1 VB proportional** | 비고 |
@@ -141,6 +141,7 @@
   - `P3a_J1_B_VB_FB`(VB J1 argv: priority 법칙, η_v 0.85, τ_v 0.1 s)와 `P3a_J1_B_V0_FB`(V0 J1 argv)에 `--lift-s 31.93 --lift-speed-fraction 0.87684`를 더했다.
   - 정착 8 s + 들어 올림 31.93 s로, 끝은 39.93 s다. 같은 명령 행정이다.
   - rc 0 / 0, 벽시계 1,724 / 1,666 s(P코어).
+  - 이 벽시계는 배치 요약(프로세스 시간) 값이다. 결과 JSON `wall_s` 1,717.8 / 1,659.1 s는 실행 안 시계라 출처가 다르다(차 약 6~7 s, 시작·종료 처리 시간).
 - 값: `paper_runs\openloop_fb_compare.json`.
   - 스크립트 `paper_runs\scripts\openloop_fb_compare.py`(SHA-256 `D59C5BDD…`)는 `openloop_compare.py`의 `analyse` 정의(SHA-256 `A91A8FE1…`)를 그대로 실행한다. 그 정의의 창은 시계열 끝을 쓰므로 39.93 s 끝을 그대로 받는다.
   - 속도비 창은 8.5 s < t ≤ 실행 끝이다(36 s 고정에서 바꿨다).

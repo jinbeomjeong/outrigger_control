@@ -19455,7 +19455,7 @@ $$u_k\leftarrow u_k\cdot\min\!\left(1,\ \frac{\gamma\,v_{max}}{\bar u_k}\right)$
 
 ### 436.9 구현 확정: 이름·태그·`--expect-controller`·전환 전 재현 (2026-11-08)
 
-python-expert 구현(worktree `worktree-agent-acb3257c41a47bbbe`, 커밋 `11d28c6`, master 병합 전)을 control-expert가 읽고 적었다. 436.2~436.6의 "가칭"은 이 절의 이름으로 읽는다. 위 절은 고치지 않았다. 비트 시험 B-1~B-3(봉인 원판 6절)은 python-expert 보고로 모두 통과다(래퍼 해시와 같음).
+python-expert 구현(worktree `worktree-agent-acb3257c41a47bbbe`, 커밋 `11d28c6`, 작성 당시 master 병합 전)을 control-expert가 읽고 적었다. **master 병합 완료(해소, `bacb2d2`; 436.9.5 결함 수정은 `32b8585`).** 436.2~436.6의 "가칭"은 이 절의 이름으로 읽는다. 위 절은 고치지 않았다. 비트 시험 B-1~B-3(봉인 원판 6절)은 python-expert 보고로 모두 통과다(래퍼 해시와 같음).
 
 **설정·상수**(`03_src/outrigger_sim/control/c2.py`)
 
@@ -19469,7 +19469,7 @@ python-expert 구현(worktree `worktree-agent-acb3257c41a47bbbe`, 커밋 `11d28c
 | $n_{end}$ | `off_periods` | `R8_LAS_OFF_PERIODS` | 5 [주기] |
 | $T_{max}$ | `max_s` | `R8_LAS_MAX_S` | 1.5 s |
 | $\rho_{on}$ | `rho_on` | `R8_LAS_RHO_ON` | 0.18 |
-| S1 스위치 | `require_soil_response` | – | `True`(S1 적용). U-6 ABL만 `False`(436.9.4). ABL28은 `True`(436.9.4 ABL28 결정, 구현 위임 W-6) |
+| S1 스위치 | `require_soil_response` | – | `True`(S1 적용). U-6 ABL만 `False`(436.9.4). ABL28은 `True`(436.9.4 ABL28 결정, 구현 위임 W-6; master 병합 완료(해소, `9789ede`)) |
 
 - 설정 검사: $\alpha,\beta,T_{max}>0$, $0<\gamma\le1$, $\alpha_{end}\ge\alpha$, $n_{end}\ge1$. 어기면 `ValueError`.
 - 프리셋 키워드: `C2Config.with_10hz_d1(liftoff_approach_slow=True)`(기본). `False`면 전환 전 프리셋이다.
@@ -19498,7 +19498,7 @@ python-expert 구현(worktree `worktree-agent-acb3257c41a47bbbe`, 커밋 `11d28c
 | VB·LS(③ 켬) | `final_C4G2_P3` | `final_C4G2_P3_LAS` | `v5_options.EXTEND_START_LAS_CONTROLLER_TAG` |
 | U-6 ABL | `ABL` | `ABL_LAS` | `v5_rerun.controller_tag` |
 | U-6 IND | `IND` | `IND`(LAS-b 없음, 사용자 결정 Q1 = I-2, 436.9.4) | `v5_rerun.TAG_IND` |
-| U-6 기록 열(IND + 헤드 힘 어댑터) | – | `IND_LAS`(기록 전용) | 436.9.4, 구현 대기 |
+| U-6 기록 열(IND + 헤드 힘 어댑터) | – | `IND_LAS`(기록 전용) | 436.9.4, 구현 대기 → master 병합 완료(해소, `4bd2f3b`) |
 
 - 태그는 **만든 제어기 설정**에서 정한다. `v5_options.controller_tag(options, config)`가 `config.liftoff_approach_slow.enable`이면 접미사 `_LAS`를 한 번 붙인다. `config` 없이 부르면 전환 전 태그가 나온다. 그래서 제어기 설정을 넘기지 않는 호출부는 결함이다(436.9.5).
 - ③ 켬 판별은 태그 집합 `EXTEND_START_TAGS = (final_C4G2_P3, final_C4G2_P3_LAS)`로 한다. 태그 문자열 하나와 같은지로 판별하면 안 된다.
@@ -19573,7 +19573,9 @@ python-expert 구현(worktree `worktree-agent-acb3257c41a47bbbe`, 커밋 `11d28c
 - 비트 영향: C2·ABL·IND 명령은 바뀌지 않는다(어댑터는 별도 클래스). IND_LAS는 관문이 한 번도 서지 않은 실행에서 명령이 IND와 비트 단위로 같다.
 - 구현 명세는 control-expert 리포트(2026-11-08)의 python-expert 위임 W-5다.
 
-#### 436.9.5 병합 전에 고칠 구현 결함(control-expert 검토, 2026-11-08)
+#### 436.9.5 병합 전에 고칠 구현 결함(control-expert 검토, 2026-11-08) — master 병합 완료(해소, `32b8585`)
+
+> 2026-11-08 확인: D-1·D-2의 태그 단일 비교(`tag != TAG_VB`, `controller_tag == TAG_VB`)는 04_scripts에 남아 있지 않다. D-5는 `r79_sensor_screen.py` 1012행에서 `controller_tag(options, ctrl.config)`로 고쳐졌다. D-6은 `d1_chrono_rows.py` 101행이 LAS 태그로 바꾼다. 아래 표는 당시 기록이다.
 
 태그 문자열을 `final_C4G2_P3` 하나와 비교하는 곳이 남아 있다. LAS 태그 실행에서는 판정 대상에서 **조용히 빠지거나**(관문이 빈 집합으로 통과) 잘못된 태그가 남는다.
 
