@@ -16,7 +16,8 @@ Controllers (``--controllers``):
         switches of spec 429.11 are set off explicitly (``lift_stroke_guard.soil_stop`` False =
         no P-S8-36 SGS, ``slope_clearance_margin.flat_soil_margin_m`` 0 = no R4), so ABL stays
         the soil-response-off baseline whatever the preset defaults are.
-  ABL28 attribution run: ABL with the soil response back on (LOC anchor off).
+  ABL28 attribution run: ABL with the soil response back on (LOC anchor off); LAS-b as C2
+        (``require_soil_response`` True).
   IND   industry-style baseline on ``control/c8.py`` (C8 skeleton, comparison doc 7.2 alt. 1):
         pressure-threshold touchdown (1.5 F_min), four legs extended together to the
         stroke-based crawler clearance 50 mm, highest-leg attitude trim (P on the height
@@ -69,9 +70,12 @@ plant (``04_hydraulic/coupled/v5_rerun.py``; the ③ bound on C2 only, tags sinc
 switch ``final_C4G2_P3_LAS``, ``ABL_LAS`` (ABL + LAS-b without S1, end ``zone``, spec 436.9.4)
 and ``IND`` (no LAS-b), ``u3_u6_rerun_rules_rev2.md`` 1), ``--ids-from <v4 json> [--pad B]``
 keeps exactly the stored cases of ``--cases``; the default ``--out`` is then
-``06_analysis/02_control/v5_rerun/u6_b5_<label>_VB.json``. ``--controllers IND_LAS`` alone is the
-record-only column of rules rev2 3 (:class:`IndustryC8Las`, spec 436.9.4); its default ``--out``
-is ``06_analysis/02_control/v5_rerun/las/u6_b5_<label>_VB_IND_LAS.json``.
+``06_analysis/02_control/v5_rerun/las/u6_b5_<label>_VB.json`` (LAS-tag runs, rules rev2 1 #9).
+``--controllers IND_LAS`` alone is the record-only column of rules rev2 3
+(:class:`IndustryC8Las`, spec 436.9.4); it needs ``--v5-setting`` and its default ``--out`` is
+``06_analysis/02_control/v5_rerun/las/u6_b5_<label>_VB_IND_LAS.json``. With ``--v5-setting`` an
+existing output needs ``--overwrite``; a file directly in ``v5_rerun/`` (pre-switch) is never
+written (``v5_rerun.check_out_path``).
 ``--out`` defaults to ``06_analysis/02_control/s9/rev84/b5_<main|wide|oos|cases>.json``. Table and
 figure: ``b5_baseline_table.py`` and ``b5_baseline_figure.py``. Units SI unless the key says
 otherwise (mm, kN, bar, deg, s).
@@ -664,9 +668,10 @@ def _c2_config(cl, c2, name: str, variant: dict):
         config = replace(config, reanchor=replace(config.reanchor, enable=True))
     if name == "ABL":
         return ablation_config(c2, config)
-    if name == "ABL28":  # attribution: soil response on, P-S8-28 .. 35 off
+    if name == "ABL28":  # soil response on, P-S8-28 .. 35 off, LAS-b as C2 (spec 436.9.4)
         soil = replace(config.soil, loc_anchor_enable=False)
-        return replace(ablation_config(c2, config), soil=soil)
+        return replace(ablation_config(c2, config), soil=soil,
+                       liftoff_approach_slow=config.liftoff_approach_slow)
     return config
 
 
@@ -1278,12 +1283,18 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
 def _rerun_case_ids(case_ids: list[str], controllers: list[str], rerun) -> list[str]:
     """Paper v5 U-6: with ``--ids-from`` exactly the stored cases (each once, stored order),
     which must be cases of ``--cases``; with ``--v5-setting`` only C2 / ABL / IND, or one
-    record-only column (IND_LAS, rules rev2 3) alone.
+    record-only column (IND_LAS, rules rev2 3) alone, which needs ``--v5-setting``.
 
     Raises:
         SystemExit: Another controller with ``--v5-setting``, a record-only column with
-            another controller, or a stored case outside ``--cases``.
+            another controller or without ``--v5-setting`` (its default file would be the
+            ``rev84/b5_<label>.json`` of the v4 baseline), or a stored case outside ``--cases``.
     """
+    record_only_without_setting = [name for name in controllers
+                                   if name in V5_RECORD_CONTROLLERS and not rerun.is_active]
+    if record_only_without_setting:
+        raise SystemExit(f"{record_only_without_setting} is a record-only column of the v5 U-6 "
+                         "rerun (rules rev2 3); it needs --v5-setting VB")
     if rerun.is_active:
         record_only = [name for name in controllers if name in V5_RECORD_CONTROLLERS]
         if record_only and controllers != record_only[:1]:
@@ -1309,7 +1320,7 @@ def _out_path(args: argparse.Namespace, rerun) -> Path:
     v5 = _v5_rerun()
     if args.controllers in V5_RECORD_CONTROLLERS:  # rules rev2 3: its own file under las/
         return v5.LAS_OUT_DIR / f"u6_b5_{label}_{rerun.setting}_{args.controllers}.json"
-    return v5.default_out_path(f"b5_{label}", rerun.setting, study="u6")
+    return v5.default_out_path(f"b5_{label}", rerun.setting, study="u6")  # las/ (rev2 1 #9)
 
 
 def _without_unsettled_cases(case_ids: list[str], args: argparse.Namespace) -> list[str]:
@@ -1350,6 +1361,7 @@ def main(argv: list[str] | None = None) -> None:
     check_oos_overlap(case_ids)
     case_ids = _without_unsettled_cases(case_ids, args)
     out_path = _out_path(args, rerun)
+    _v5_rerun().check_out_path(out_path, rerun)  # before the runs (rules rev2 1 #9 / #10)
     options = BatchOptions(is_official=args.official,
                            allow_no_settle_row=args.allow_no_settle_row, rerun=rerun)
     records = run_batch(case_ids, controllers, args.workers, args.affinity, out_path, options)

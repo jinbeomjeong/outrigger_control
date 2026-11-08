@@ -1206,6 +1206,16 @@ def with_las_off(row: dict, argv: list[str]) -> list[str]:
     return [*argv, LAS_OFF_ARG]
 
 
+def las_off_summary(rows: list[dict]) -> str:
+    """One line for ``run --las-off``: how many launched rows carry ``--las-off`` and the names of the rows that
+    do not (no ``controller`` key, or a tag outside :data:`PRE_LAS_CONTROLLERS` such as ``final_SGS_R4``)."""
+    without = [r["case"] for r in rows if LAS_OFF_ARG not in r["argv"]]
+    line = f"{LAS_OFF_ARG}: {len(rows) - len(without)} of {len(rows)} rows run with it"
+    if without:
+        line += f"; not on {len(without)} row(s) (no pre-switch tag): {', '.join(without)}"
+    return line
+
+
 def parse_row_filter(items: list[str] | None) -> dict[str, set[str]]:
     """``--row-filter KEY=V1,V2`` (repeatable) -> {KEY: {V1, V2}}; a row passes when every KEY's value (``str``; a
     list value passes when any element matches) is in the set."""
@@ -1289,6 +1299,7 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
     cases = [c for c in cases if c["case"] not in done_names]
     if las_off:  # before the launch: a row whose runner lacks the option stops the batch here
         cases = [{**c, "argv": with_las_off(c, c["argv"])} for c in cases]
+        print(las_off_summary(cases))
     e_cases = None if e_cases is None else [n for n in e_cases if n not in done_names]
     order_cases = None if order_cases is None else [n for n in order_cases if n not in done_names]
     queues = schedule_cases(cases, e_cases=e_cases, order=order, order_cases=order_cases, parallel_e=parallel_e)
@@ -1593,7 +1604,9 @@ def build_parser() -> argparse.ArgumentParser:
     r.add_argument(LAS_OFF_ARG, dest="las_off", action="store_true",
                    help="rows with a tag before the LAS-b switch (final_C4G2 / final_C4G2_P3: FINAL, RV6, V5-VB, "
                         "stage 3 reproductions) get --las-off (the LAS-b-off preset, spec 436.9) and keep their tag "
-                        "check; other rows unchanged; a run_S6C / m3 row with such a tag stops the batch")
+                        "check; other rows unchanged: it is NOT added to rows without a controller key nor to tags "
+                        "before C4G2 (final_SGS_R4 etc.). A run_S6C / m3 row with such a tag stops the batch. The "
+                        "run prints how many rows got it and the names of those that did not")
     r.add_argument("--parallel", "--parallel-p", dest="parallel", type=int, default=2,
                    help="P-pool slots (OUTRIGGER_PLACEMENT=pcore); --parallel keeps its former meaning")
     r.add_argument("--parallel-e", type=int, default=0, help="E-pool slots (OUTRIGGER_PLACEMENT=ecore)")

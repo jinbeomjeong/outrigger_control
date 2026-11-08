@@ -19,6 +19,10 @@ expects the rules rev2 1 tags (:data:`SETTING_TAGS_LAS`, IND unchanged).
 The parent sets :data:`SETTING_ENV` (:func:`activate`); every spawned worker inherits it and
 installs the setting once (:func:`install_in_worker`). Each run record gets a ``v5`` block
 (:func:`run_record`), each output file a ``v5`` meta (:func:`file_meta`).
+
+Outputs (rules rev2 1 #9 / #10): the default file of a rerun is in ``v5_rerun/las/``
+(:func:`default_out_path`); :func:`check_out_path` refuses an existing file without
+``--overwrite`` and never writes a file directly in ``v5_rerun/`` (the pre-switch outputs).
 """
 
 from __future__ import annotations
@@ -43,6 +47,7 @@ SETTING_OPTION = "--v5-setting"
 IDS_FROM_OPTION = "--ids-from"
 PAD_OPTION = "--pad"
 REUSE_OPTION = "--reuse-d1"
+OVERWRITE_OPTION = "--overwrite"
 TAG_V0 = "final_C4G2"
 TAG_VB = "final_C4G2_P3"
 TAG_ABL = "ABL"
@@ -66,6 +71,10 @@ RULES_PATH = ROOT / "06_analysis" / "02_control" / "verif_matrix" / "u3_u6_rerun
 OUT_DIR = ROOT / "06_analysis" / "02_control" / "v5_rerun"
 LAS_OUT_DIR = OUT_DIR / "las"
 """Rules rev2 1 #9: the LAS-tag outputs (the judge reads this folder only)."""
+PRE_SWITCH_OUT_DIR = OUT_DIR
+"""Folder of the pre-switch outputs (e.g. ``u3_slope_V0.json``, untracked): rules rev2 1 #9 /
+#10 keep them unmoved and unchanged for the command-hash comparison, so
+:func:`check_out_path` refuses to write a file directly in it (``--overwrite`` included)."""
 PAD_A_KEY_FIELD = "PA"
 WIDE_PREFIXES = ("S|", "G|")
 """``b5_baseline_compare`` wide ids: ``S|<slope id>`` / ``G|<g6 key>``."""
@@ -82,6 +91,8 @@ class RerunOptions:
     ids_from: Path | None = None
     pad: str | None = None
     reuse_d1: Path | None = None
+    overwrite: bool = False
+    """``--overwrite``: a rerun may replace its existing output file (:func:`check_out_path`)."""
 
     @property
     def is_active(self) -> bool:
@@ -101,6 +112,10 @@ def add_arguments(parser: argparse.ArgumentParser, *, with_reuse: bool = False) 
     group.add_argument(PAD_OPTION, dest="pad", choices=("A", "B"), default=None,
                        help="with --ids-from: keep the keys of this pad (rigid p3b keys and "
                             "keys without a pad field count as pad B)")
+    group.add_argument(OVERWRITE_OPTION, dest="overwrite", action="store_true",
+                       help="with --v5-setting: replace an existing output file (refused "
+                            "without it). A file directly in v5_rerun/ (pre-switch outputs, "
+                            "rules rev2 1 #9 / #10) is never written, even with this option")
     if with_reuse:
         group.add_argument(REUSE_OPTION, dest="reuse_d1", type=Path, default=None,
                            help="reuse D-1 runs (run_v5 v5/d1_las.jsonl, LAS tags only, "
@@ -117,7 +132,8 @@ def options_from_args(args: argparse.Namespace) -> RerunOptions:
     options = RerunOptions(setting=getattr(args, "v5_setting", None),
                            ids_from=getattr(args, "ids_from", None),
                            pad=getattr(args, "pad", None),
-                           reuse_d1=getattr(args, "reuse_d1", None))
+                           reuse_d1=getattr(args, "reuse_d1", None),
+                           overwrite=bool(getattr(args, "overwrite", False)))
     _check_options(options)
     return options
 
@@ -132,7 +148,12 @@ def split_argv(argv: list[str]) -> tuple[list[str], RerunOptions]:
     rest = []
     index = 0
     names = (SETTING_OPTION, IDS_FROM_OPTION, PAD_OPTION)
+    overwrite = False
     while index < len(argv):
+        if argv[index] == OVERWRITE_OPTION:
+            overwrite = True
+            index += 1
+            continue
         if argv[index] in names:
             if index + 1 >= len(argv):
                 raise SystemExit(f"{argv[index]} needs a value")
@@ -149,7 +170,7 @@ def split_argv(argv: list[str]) -> tuple[list[str], RerunOptions]:
         raise SystemExit(f"{PAD_OPTION} must be A or B, got {pad!r}")
     ids_from = values.get(IDS_FROM_OPTION)
     options = RerunOptions(setting=setting, ids_from=None if ids_from is None else Path(ids_from),
-                           pad=pad)
+                           pad=pad, overwrite=overwrite)
     _check_options(options)
     return rest, options
 
@@ -162,8 +183,53 @@ def _check_options(options: RerunOptions) -> None:
 
 
 def default_out_path(bundle: str, setting: str, *, study: str = "u3") -> Path:
-    """``06_analysis/02_control/v5_rerun/u3_<bundle>_<setting>.json`` (rules 3.1 4)."""
-    return OUT_DIR / f"{study}_{bundle}_{setting}.json"
+    """``06_analysis/02_control/v5_rerun/las/<study>_<bundle>_<setting>.json`` (rules 3.1 4,
+    folder rules rev2 1 #9).
+
+    Every ``--v5-setting`` run since the LAS-b switch is a LAS-tag run (the screens build the
+    switched preset and have no LAS-off option), so its file goes to :data:`LAS_OUT_DIR`, the
+    folder ``u3_judge`` reads. The file name is the one of the sealed rules.
+    """
+    return LAS_OUT_DIR / f"{study}_{bundle}_{setting}.json"
+
+
+def _is_in_pre_switch_folder(path: Path) -> bool:
+    return Path(path).resolve().parent == PRE_SWITCH_OUT_DIR.resolve()
+
+
+def refuse_pre_switch_file(path: Path) -> None:
+    """Refuse to write over an existing file directly in ``v5_rerun/`` (rules rev2 1 #9 / #10).
+
+    Raises:
+        SystemExit: ``path`` is an existing file directly in :data:`PRE_SWITCH_OUT_DIR`.
+    """
+    if _is_in_pre_switch_folder(path) and Path(path).exists():
+        raise SystemExit(f"{path} is a pre-switch output in {PRE_SWITCH_OUT_DIR.name}/ (kept for "
+                         "the command-hash comparison, rules rev2 1 #9 / #10); not overwritten, "
+                         f"{OVERWRITE_OPTION} included. Write LAS-tag runs to "
+                         f"{LAS_OUT_DIR.relative_to(ROOT).as_posix()}/")
+
+
+def check_out_path(path: Path, options: RerunOptions) -> None:
+    """Check the output file of a screen run before the runs start.
+
+    Any run: an existing file directly in ``v5_rerun/`` is refused
+    (:func:`refuse_pre_switch_file`). A rerun (``--v5-setting``) also refuses a new file
+    there (its LAS-tag output belongs in ``v5_rerun/las/``) and an existing file anywhere
+    unless ``--overwrite``. Without ``--v5-setting`` other paths behave as before.
+
+    Raises:
+        SystemExit: One of the refusals above.
+    """
+    refuse_pre_switch_file(path)
+    if not options.is_active:
+        return
+    if _is_in_pre_switch_folder(path):
+        raise SystemExit(f"{path}: a --v5-setting run is a LAS-tag run; write it to "
+                         f"{LAS_OUT_DIR.relative_to(ROOT).as_posix()}/, not directly in "
+                         f"{PRE_SWITCH_OUT_DIR.name}/ (rules rev2 1 #9)")
+    if Path(path).exists() and not options.overwrite:
+        raise SystemExit(f"{path} exists; pass {OVERWRITE_OPTION} to replace it")
 
 
 # ---------------------------------------------------------------------------------- key lists

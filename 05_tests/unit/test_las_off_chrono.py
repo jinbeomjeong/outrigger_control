@@ -130,6 +130,19 @@ def test_batch_las_off_touches_only_pre_switch_rows(s9_batch) -> None:
         s9_batch.with_las_off({"case": "d", "controller": "final_C4G2", "s6c": True}, ["run"])
 
 
+def test_batch_las_off_summary_names_the_rows_without_it(s9_batch) -> None:
+    """Integrity Medium: rows without a controller key or with a tag before C4G2 do not get it."""
+    rows = [{"case": "a", "controller": "final_C4G2", "argv": ["level"]},
+            {"case": "b", "controller": "final_SGS_R4", "argv": ["level"]},
+            {"case": "c", "argv": ["level"]}]
+    launched = [{**row, "argv": s9_batch.with_las_off(row, row["argv"])} for row in rows]
+    assert s9_batch.las_off_summary(launched) == (
+        "--las-off: 1 of 3 rows run with it; not on 2 row(s) (no pre-switch tag): b, c")
+    assert s9_batch.las_off_summary(launched[:1]) == "--las-off: 1 of 1 rows run with it"
+    source = Path(s9_batch.__file__).read_text(encoding="utf-8")
+    assert "final_SGS_R4" in source and "NOT added to rows without a controller key" in source
+
+
 def test_d1_rows_expect_the_las_tags(s9_batch) -> None:
     rows = s9_batch.batches()["D1-CHRONO"]
     soil = [row for row in rows if "--expect-controller" in row["argv"]]
