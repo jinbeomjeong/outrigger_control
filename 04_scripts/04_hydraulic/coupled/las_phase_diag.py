@@ -76,6 +76,8 @@ Line = the ``run_v5`` line (``commands_sha256``, ``d1``, ``values`` ...) + ``fb`
           S8 mean u > gamma v_max}, all_hold, sum_over_W, min_over_F_min, lightest_leg, rho,
           rho_prev, mean_u_over_v_max, armed_before, active_before, started, active_after,
           end_reason, sum_periods, is_scaled, input_mm_s, output_mm_s, gate_consistent,
+          ramp_m, ramp_factor, ramp_scaled (LAS-b end ramp, las_revA_targeted_rules.md 4;
+          None / False outside a ramp period),
       budget (a ``budget_output`` call): phase, Q_b_L_min, Q_in_L_min, acted, scale,
       done (LEVEL / DONE, P-S8-29 on): D_kN, complete_since_s, settled_s, is_settled,
           window_span_s, is_window_full, oldest_kN, newest_kN, largest_kN, is_non_increasing,
@@ -139,6 +141,8 @@ GRID_CENTRES = ("1", "0.94", CENTRE_NOMINAL)
 """s_c labels: 1.0, 0.94 and s_nom (the plan's 0.8768421, the LF ``Q_nom / Q(4 v_max)``)."""
 CENTRE_SCALES = {"1": 1.0, "0.94": 0.94}
 GRID_STEPS = (0, 1, 2, 3, 4)
+HALF_GRID_STEPS = (0.5, 1.5, 2.5, 3.5)
+"""R-H of ``las_revA_targeted_rules.md`` 3.2: the phases between the D-b points."""
 GRID_DELAY_STEP_S = 0.025
 TOUCH_FREE_PERIODS = 165
 PERIOD_S = 0.1
@@ -430,7 +434,8 @@ class TouchBudget:
     """D-b grid point ``(centre, j)`` resolved for one geometry (plan 1.2)."""
 
     centre: str
-    j: int
+    j: int | float
+    """D-b integer step, or an R-H half step (a float, recorded as such)."""
     budget_m3_s: float
     full_m3_s: float
     nominal_m3_s: float
@@ -450,16 +455,19 @@ class TouchBudget:
                 "Q_nom_L_min": self.nominal_m3_s * fb.M3_S_TO_L_MIN}
 
 
-def touch_budget_for(centre: str, j: int, full_m3_s: float, nominal_m3_s: float
+def touch_budget_for(centre: str, j: int | float, full_m3_s: float, nominal_m3_s: float
                      ) -> TouchBudget:
     """``Q_b = base T_c / (T_c + j delta)``; base = s_c Q(4 v_max), or ``Q_nom`` itself for the
-    nominal centre (its j = 0 is then exactly the LF budget, anchor A-2).
+    nominal centre (its j = 0 is then exactly the LF budget, anchor A-2). ``j`` is a D-b step
+    (int) or an R-H half step (float, ``las_revA_targeted_rules.md`` 3.2).
 
     Raises:
         ValueError: Unknown centre or j.
     """
-    if j not in GRID_STEPS:
-        raise ValueError(f"grid step j={j} not in {GRID_STEPS}")
+    is_integer_step = isinstance(j, int) and not isinstance(j, bool) and j in GRID_STEPS
+    is_half_step = isinstance(j, float) and j in HALF_GRID_STEPS
+    if not (is_integer_step or is_half_step):
+        raise ValueError(f"grid step j={j!r} not in {GRID_STEPS} or {HALF_GRID_STEPS}")
     if centre == CENTRE_NOMINAL:
         centre_scale = nominal_m3_s / full_m3_s
         base_m3_s = nominal_m3_s
@@ -515,12 +523,32 @@ class _SlowSnapshot:
     is_active: bool
     previous_rho: float | None
     end_s: float | None
+    ramp_periods_applied: int = 0
+    ramp_scaled_periods: int = 0
 
 
 def _slow_snapshot(slow) -> _SlowSnapshot:
     if slow is None:
         return _SlowSnapshot(True, False, None, None)
-    return _SlowSnapshot(slow.is_armed, slow.is_active, slow.previous_rho, slow.end_s)
+    return _SlowSnapshot(slow.is_armed, slow.is_active, slow.previous_rho, slow.end_s,
+                         int(getattr(slow, "ramp_periods_applied", 0)),
+                         int(getattr(slow, "ramp_scaled_periods", 0)))
+
+
+def ramp_period_values(controller, before: _SlowSnapshot) -> dict:
+    """``ramp_m``, ``ramp_factor`` (lambda_m) and ``ramp_scaled`` of this period
+    (``las_revA_targeted_rules.md`` 4); None / False when no ramp period was applied."""
+    from outrigger_sim.control import c2
+
+    slow = controller._state.liftoff_slow
+    applied = int(getattr(slow, "ramp_periods_applied", 0))
+    if slow is None or applied == before.ramp_periods_applied:
+        return {"ramp_m": None, "ramp_factor": None, "ramp_scaled": False}
+    step = int(slow.ramp_step) - 1  # the step counter moved on after the applied period
+    ramp_periods = controller.config.liftoff_approach_slow.end_ramp_periods
+    return {"ramp_m": step,
+            "ramp_factor": c2.liftoff_ramp_factor(slow.ramp_start_factor, step, ramp_periods),
+            "ramp_scaled": int(slow.ramp_scaled_periods) > before.ramp_scaled_periods}
 
 
 def _las_period_record(controller, reading, speeds_in, reapproaching, before: _SlowSnapshot,
@@ -547,7 +575,8 @@ def _las_period_record(controller, reading, speeds_in, reapproaching, before: _S
         sum_periods=int(slow.sum_periods), is_loc_now=is_loc,
         is_scaled=not np.array_equal(np.asarray(output, float), speeds_in),
         input_mm_s=rounded_list(speeds_in, M_TO_MM), output_mm_s=rounded_list(output, M_TO_MM),
-        gate_consistent=(before.is_armed and record["all_hold"]) == is_started)
+        gate_consistent=(before.is_armed and record["all_hold"]) == is_started,
+        **ramp_period_values(controller, before))
     return record
 
 

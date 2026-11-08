@@ -26,6 +26,10 @@ What it checks (rules section in brackets):
   Ranking [9]     min F_judged of (ga), changed pairs of (na)+(da), R-1 median, P5 > P3 > P53.
 None / missing [5.0]: a field the criteria need that is missing makes the pair undecidable
 (H-4); None values count as failures as the rules say.
+Audit items of 2026-11-09: an expected candidate without R-G lines is ``incomplete`` /
+``not_run`` and the exit is 1 (ga); a missing field in the R-T / R-S K checks is H-4
+(undecidable), not an H-3 stop (na); a line's ``controller_tag`` must be the one of its setting
+(V0 ``final_C4G2_LAS``, VB ``final_C4G2_P3_LAS``) (da).
 
 Usage (python-dev, project root, PowerShell):
   python -I -B 04_scripts/04_hydraulic/coupled/las_rev_judge.py [files ...] [--out <md>]
@@ -471,8 +475,18 @@ def stroke_increase_m(cand: dict, l_line: dict) -> float | None:
 
 
 # ------------------------------------------------------------------------------- done clock
-def exception_record(cand: dict, l_line: dict, rx_line: dict | None) -> dict:
+def las_end_s(line: dict) -> float | None:
+    """The LAS-b end restarts must follow (rules 6): ``las.end_t_s``."""
+    return (line.get("las") or {}).get("end_t_s")
+
+
+def exception_record(cand: dict, l_line: dict, rx_line: dict | None,
+                     las_end_of=las_end_s) -> dict:
     """Rules 6 for one pair with a READY delay above +1.0 s.
+
+    Args:
+        las_end_of: The time every counted restart must follow (``las_revA_judge`` passes
+            the end of the end ramp).
 
     Returns:
         ``is_exception`` and the values behind it (``reason`` when it is not one).
@@ -487,7 +501,7 @@ def exception_record(cand: dict, l_line: dict, rx_line: dict | None) -> dict:
     loss_s, l_loss_s = clock.get("loss_s"), rx_line["done_clock"].get("loss_s")
     out.update(loss_cand_s=loss_s, loss_L_s=l_loss_s,
                resets=clock.get("resets"), t_las_start_s=(cand.get("las") or {}).get("start_t_s"),
-               t_las_end_s=(cand.get("las") or {}).get("end_t_s"),
+               t_las_end_s=las_end_of(cand),
                t_loc_last_s=clock.get("t_loc_last_before_done_s"))
     if loss_s is None or l_loss_s is None:
         return {**out, "reason": "loss_s None"}
@@ -640,21 +654,21 @@ def _rx_lines(lines: list[dict]) -> dict[str, dict]:
             if rev_of(line).get("bundle") == "R-X" and not is_error(line)}
 
 
-def _pair_records(cand_by_key: dict, stored: dict, sources: tuple[str, ...], rx: dict
-                  ) -> dict:
+def _pair_records(cand_by_key: dict, stored: dict, sources: tuple[str, ...], rx: dict,
+                  las_end_of=las_end_s) -> dict:
     """Per pair: C-2 type, F, stroke, hash, READY delta and the exception record."""
     expected = {key for source in sources for key in stored[source]}
     out = {"missing": sorted(expected - set(cand_by_key)), "pairs": {}, "undecidable": []}
     for key in sorted(expected & set(cand_by_key)):
         cand, l_line = cand_by_key[key], stored_line(stored, key)
         try:
-            out["pairs"][key] = _pair_record(key, cand, l_line, rx)
+            out["pairs"][key] = _pair_record(key, cand, l_line, rx, las_end_of)
         except MissingField as exc:
             out["undecidable"].append(f"{key}: missing {exc}")
     return out
 
 
-def _pair_record(key: str, cand: dict, l_line: dict, rx: dict) -> dict:
+def _pair_record(key: str, cand: dict, l_line: dict, rx: dict, las_end_of=las_end_s) -> dict:
     is_case = is_verdict_case(l_line)
     record = {"violations": pair_violations(cand, l_line),
               "changed": cand["commands_sha256"] != l_line["commands_sha256"],
@@ -668,7 +682,7 @@ def _pair_record(key: str, cand: dict, l_line: dict, rx: dict) -> dict:
     both_ready = record["ready_cand_s"] is not None and record["ready_L_s"] is not None
     record["dt_s"] = record["ready_cand_s"] - record["ready_L_s"] if both_ready else None
     if record["changed"] and both_ready and record["dt_s"] > EXCEPTION_DT_FLOOR_S:
-        record["exception"] = exception_record(cand, l_line, rx.get(key))
+        record["exception"] = exception_record(cand, l_line, rx.get(key), las_end_of)
     return record
 
 
@@ -724,10 +738,10 @@ def exception_excess(pairs: dict, exceptions: list[str]) -> bool:
         pairs[key]["dt_s"] > EXCEPTION_DT_LIMIT_S for key in exceptions)
 
 
-def judge_t(lines: list[dict], stored: dict, candidate: str) -> dict:
+def judge_t(lines: list[dict], stored: dict, candidate: str, las_end_of=las_end_s) -> dict:
     """(na) R-T of one candidate (rules 5.2)."""
     cand_by_key, errors = _pair_lines(lines, "R-T", candidate)
-    records = _pair_records(cand_by_key, stored, ("T-1", "T-2"), _rx_lines(lines))
+    records = _pair_records(cand_by_key, stored, ("T-1", "T-2"), _rx_lines(lines), las_end_of)
     pairs = records["pairs"]
     c2 = {key: pair["violations"] for key, pair in pairs.items() if pair["violations"]}
     forces = _force_checks(pairs, set(stored["T-1"]))
@@ -744,10 +758,10 @@ def judge_t(lines: list[dict], stored: dict, candidate: str) -> dict:
             "pass": is_complete and all(value is True for value in checks.values())}
 
 
-def judge_s(lines: list[dict], stored: dict, candidate: str) -> dict:
+def judge_s(lines: list[dict], stored: dict, candidate: str, las_end_of=las_end_s) -> dict:
     """(da) R-S of one candidate (rules 5.3): C-2 type, C-S; READY recorded only."""
     cand_by_key, errors = _pair_lines(lines, "R-S", candidate)
-    records = _pair_records(cand_by_key, stored, ("F-3", "F-4"), _rx_lines(lines))
+    records = _pair_records(cand_by_key, stored, ("F-3", "F-4"), _rx_lines(lines), las_end_of)
     pairs = records["pairs"]
     c2 = {key: pair["violations"] for key, pair in pairs.items() if pair["violations"]}
     forces = _force_checks(pairs, set())
@@ -843,13 +857,23 @@ IDENTITY_GROUPS = {"P5": ("R-G", "R-T", "R-S"), "P3": ("R-G", "R-T", "R-S"),
 
 CONTROLLER_TAGS = ("final_C4G2_LAS", "final_C4G2_P3_LAS")
 """The LAS-b preset tags a run may carry (V0 / VB); any other tag is another controller."""
+CONTROLLER_TAG_BY_SETTING = {"V0": "final_C4G2_LAS", "VB": "final_C4G2_P3_LAS"}
+"""The tag each setting must carry (audit item (da), 2026-11-09)."""
 
 
 def tag_problems(line: dict) -> list[str]:
-    """The line's ``controller_tag`` (and the ``rev`` copy) is one of :data:`CONTROLLER_TAGS`."""
+    """The line's ``controller_tag`` (and the ``rev`` copy) is the one of its ``job.setting``
+    (:data:`CONTROLLER_TAG_BY_SETTING`: V0 -> ``final_C4G2_LAS``, VB -> ``final_C4G2_P3_LAS``)."""
     tags = {line.get("controller_tag"), rev_of(line).get("controller_tag")}
     bad = sorted(str(tag) for tag in tags if tag not in CONTROLLER_TAGS)
-    return [f"controller_tag {bad} not in {list(CONTROLLER_TAGS)}"] if bad else []
+    if bad:
+        return [f"controller_tag {bad} not in {list(CONTROLLER_TAGS)}"]
+    setting = (line.get("job") or {}).get("setting")
+    expected = CONTROLLER_TAG_BY_SETTING.get(setting)
+    if expected is None:
+        return [f"setting {setting!r} has no expected controller_tag"]
+    wrong = sorted(str(tag) for tag in tags if tag != expected)
+    return [f"controller_tag {wrong} != {expected} for setting {setting}"] if wrong else []
 
 
 def identity_problems(lines: list[dict]) -> dict[str, list[str]]:
@@ -883,9 +907,14 @@ def identity_problems(lines: list[dict]) -> dict[str, list[str]]:
     return out
 
 
+MISSING_FIELD_MARK = "H-4"
+"""Prefix of a missing-field problem: undecidable (rules 8 H-4), not an H-3 stop."""
+
+
 def pair_k_problems(lines: list[dict], stored: dict, candidate: str) -> list[str]:
     """K-3 / K-4 (H-3) of one candidate's R-T / R-S lines (an H-3 stop also leaves pairs
-    unrun, which must not read as a criteria failure)."""
+    unrun, which must not read as a criteria failure); a missing field is an ``H-4`` entry
+    (audit item (na), 2026-11-09)."""
     k3_keys = p3_identical_keys(stored) if stored else None
     out = []
     for bundle in ("R-T", "R-S"):
@@ -893,8 +922,14 @@ def pair_k_problems(lines: list[dict], stored: dict, candidate: str) -> list[str
             try:
                 out += [f"{key}: {text}" for text in k_problems(line, stored or None, k3_keys)]
             except MissingField as exc:
-                out.append(f"{key}: missing {exc}")
+                out.append(f"{MISSING_FIELD_MARK} {key}: missing {exc}")
     return out
+
+
+def split_k_problems(problems: list[str]) -> tuple[list[str], list[str]]:
+    """(H-3 stop problems, H-4 missing-field problems) of :func:`pair_k_problems`."""
+    missing = [text for text in problems if text.startswith(MISSING_FIELD_MARK)]
+    return [text for text in problems if text not in missing], missing
 
 
 # ------------------------------------------------------------------------------- verdict
@@ -955,19 +990,28 @@ def judge(lines: list[dict], stored: dict) -> dict:
     return out
 
 
+NOT_RUN = "not_run: no R-G lines"
+"""``at`` of an expected candidate without any R-G line (audit item (ga), 2026-11-09)."""
+
+
 def _candidate_verdicts(out: dict) -> dict:
     verdicts = {}
     for name in GRID_CANDIDATES:
         grid = out["grid"].get(name)
         if grid is None:
+            verdicts[name] = {"verdict": "incomplete", "at": NOT_RUN, "not_run": True}
             continue
         t_result, s_result = out["R-T"].get(name), out["R-S"].get(name)
         if name in out["identity"]:
             verdicts[name] = {"verdict": "undecidable", "at": "H-4 run identity"}
             continue
-        if grid["status"] == GRID_STOP or name in out["pair_k_problems"]:
+        stop_problems, missing = split_k_problems(out["pair_k_problems"].get(name, []))
+        if grid["status"] == GRID_STOP or stop_problems:
             verdicts[name] = {"verdict": "stop",
                               "at": "G-4 / H-3 K mismatch (implementation defect candidate)"}
+            continue
+        if missing:
+            verdicts[name] = {"verdict": "undecidable", "at": "H-4 missing field"}
             continue
         if grid["status"] == GRID_UNDECIDABLE:
             verdicts[name] = {"verdict": "undecidable", "at": "G-3 exclusion check"}
@@ -1079,10 +1123,15 @@ def main(argv: list[str] | None = None) -> int:
             handle.write(report)
     print(json.dumps({"candidates": result["candidates"], "ranking": result["ranking"],
                       "R-0": result["R-0"]["pass"], "stops": result["stops"]}))
-    is_stop = bool(result["stops"]) or any(
-        verdict["verdict"] in ("undecidable", "ask", "stop")
+    return 1 if is_stop_result(result) else 0
+
+
+def is_stop_result(result: dict) -> bool:
+    """Exit 1: a stop condition, an undecidable / ask / stop candidate, or an expected
+    candidate without R-G lines (audit item (ga))."""
+    return bool(result["stops"]) or any(
+        verdict["verdict"] in ("undecidable", "ask", "stop") or verdict.get("not_run")
         for verdict in result["candidates"].values())
-    return 1 if is_stop else 0
 
 
 if __name__ == "__main__":
