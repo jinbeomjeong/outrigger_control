@@ -1,7 +1,7 @@
 # chrono_hull — SCM 볼록 껍질 고속화 (비트 동일)
 
 소유: cpp-expert(C/C++). Python 연동은 cad-expert가 맡는다.
-상태: **기본 꺼짐.** 채택 여부는 관문 G-A~G-D를 통과한 뒤 사용자가 정한다.
+상태: DLL 단독 기본은 off, 프로젝트 래퍼(`hull_hook.py`) 기본은 **fast**(2026-11-09 채택, G-A~G-D 통과, G-D 1.30배). `OUTRIGGER_HULL_HOOK=off`로 되돌린다.
 
 ## 무엇을 하나
 
