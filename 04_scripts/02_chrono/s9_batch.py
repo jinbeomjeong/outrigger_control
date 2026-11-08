@@ -257,6 +257,8 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     out[V5_OPENLOOP_V0_BATCH] = v5_openloop_rows(out["P3a"], setting="V0")
     # user decision 2026-11-08 H-1: J1 B VB with the proportional (flow-sharing) law instead of priority
     out[V5_OPENLOOP_PROP_BATCH] = v5_openloop_prop_rows(out[V5_OPENLOOP_BATCH])
+    # F-6 (fb_targeted_rules.md 3.3, user decision 2026-11-08): J1 B VB (+ optional V0) at the budget speed, same stroke
+    out[V5_OPENLOOP_FB_BATCH] = v5_openloop_fb_rows(out[V5_OPENLOOP_BATCH], out[V5_OPENLOOP_V0_BATCH])
     out[V5_JP_BATCH] = v5_jp_rows()
     out[V5_JP_V0_BATCH] = v5_jp_rows(setting="V0")
     # D-1 verification matrix Chrono rows (cad 2026-11-08, d1_chrono_rows.py): D1-CHRONO (16 required rows + roll /
@@ -653,6 +655,55 @@ def v5_openloop_prop_rows(vb_rows: list[dict]) -> list[dict]:
                      "pair_case": case,
                      "note": base["note"].replace(V5_OPENLOOP_BATCH, V5_OPENLOOP_PROP_BATCH)
                      .replace("flow 0.85", "flow 0.85 proportional law") + f"; priority pair {case}"})
+    return rows
+
+
+V5_OPENLOOP_FB_BATCH = "V5-OPENLOOP-FB"
+V5_OPENLOOP_FB_CASES = ("P3a_J1_B",)
+V5_OPENLOOP_FB_SPEED_FRACTION = 0.87684
+"""fb_targeted_rules.md 3.3 (F-6, sealed 2026-11-08): budget speed Q_nom / sum(A_h v_max) = 50.1466 / 57.1902 L/min
+(18.347 mm/s)."""
+V5_OPENLOOP_FB_LIFT_S = 31.93
+"""fb_targeted_rules.md 3.3: the same commanded stroke as the stored 28 s at v_max (585.9 mm)."""
+
+
+def _fb_argv(argv: list[str]) -> list[str]:
+    """``argv`` with ``--lift-s`` set to :data:`V5_OPENLOOP_FB_LIFT_S` and ``--lift-speed-fraction``
+    :data:`V5_OPENLOOP_FB_SPEED_FRACTION` inserted after it (the stored P3a argv has no fraction)."""
+    out = list(argv)
+    if "--lift-speed-fraction" in out:
+        raise RuntimeError("stored argv already has --lift-speed-fraction")
+    k = out.index("--lift-s")
+    out[k + 1] = f"{V5_OPENLOOP_FB_LIFT_S:g}"
+    out[k + 2:k + 2] = ["--lift-speed-fraction", f"{V5_OPENLOOP_FB_SPEED_FRACTION:g}"]
+    return out
+
+
+def v5_openloop_fb_rows(vb_rows: list[dict], v0_rows: list[dict]) -> list[dict]:
+    """F-6 (``fb_targeted_rules.md`` 3.3): ``P3a_J1_B_VB_FB`` = the ``V5-OPENLOOP-VB`` J1 row (stored P3a argv +
+    :func:`v5_vb_argv`, priority law) with the budget speed and the same commanded stroke (:func:`_fb_argv`), and the
+    optional pair ``P3a_J1_B_V0_FB`` (stored argv, same two changes). ``--abort-on-limit`` stays. ``check-sources``
+    accepts exactly the VB arguments (V0: none) plus ``lift_s`` / ``lift_speed_fraction`` as the difference. The run
+    ends at settle + 31.93 s (39.93 s), not 36 s."""
+    fb = {"lift_s": V5_OPENLOOP_FB_LIFT_S, "lift_speed_fraction": V5_OPENLOOP_FB_SPEED_FRACTION}
+    rows = []
+    for setting, src in (("VB", vb_rows), ("V0", v0_rows)):
+        by_case = {r["case"]: r for r in src}
+        for case in V5_OPENLOOP_FB_CASES:
+            base = by_case[f"{case}_{setting}"]
+            vb = setting == "VB"
+            rows.append({**base, "case": f"{case}_{setting}_FB", "argv": _fb_argv(base["argv"]),
+                         "source_expected_diffs": {**(base["source_expected_diffs"] or {}), **fb},
+                         "v5_setting": f"{setting}_FB", "group": V5_OPENLOOP_FB_BATCH,
+                         "rep_bundle": V5_OPENLOOP_FB_BATCH, "optional": not vb,
+                         "pair_case": f"{case}_{setting}",
+                         "est_s": round(base["est_s"] * V5_OPENLOOP_FB_LIFT_S / 28.0 * 1.1),
+                         "est_pool_s": {k: round(v * V5_OPENLOOP_FB_LIFT_S / 28.0 * 1.1)
+                                        for k, v in base["est_pool_s"].items()},
+                         "note": f"{V5_OPENLOOP_FB_BATCH} (fb_targeted_rules.md 3.3 F-6, record for paper 2.8): {case} "
+                                 f"{setting} + --lift-speed-fraction {V5_OPENLOOP_FB_SPEED_FRACTION:g} + --lift-s "
+                                 f"{V5_OPENLOOP_FB_LIFT_S:g}; pair {case}_{setting}"
+                                 + ("" if vb else " (optional pair)")})
     return rows
 
 
