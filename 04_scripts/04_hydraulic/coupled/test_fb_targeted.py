@@ -575,6 +575,7 @@ def test_main_refuses_to_resume_into_a_file_of_another_identity(tmp_path, monkey
     old = _identified(_line("L", ft.F0_KEYS[0]), {**IDENTITY, "git_head": "b" * 40})
     out.write_text(json.dumps(old) + "\n", encoding="utf-8")
     monkeypatch.setattr(ft, "sealed_check", lambda: [])
+    monkeypatch.setattr(ft, "out_path_problem", lambda path: None)  # tmp_path is not v5/fb
     monkeypatch.setattr(ft, "run_identity", lambda: IDENTITY)
     monkeypatch.setattr(ft, "run_batch", lambda *a, **k: pytest.fail("must not run"))
     assert ft.main(["run", "--bundle", "F-0", "--out", str(out)]) == 1
@@ -845,6 +846,76 @@ def test_a97_counter_is_zero_in_the_period_touch_seen_first_holds() -> None:
         if k == 2:
             assert state.a97_count == 1
     assert events == [] and state.a97_count == 0 and state.cuts == []
+
+
+# ------------------------------------------------------------------------------- re-audit
+def _git_repo(tmp_path: Path) -> Path:
+    import subprocess
+
+    (tmp_path / "04_scripts").mkdir()
+    (tmp_path / "04_scripts" / "tool.py").write_text("x = 1\n", encoding="utf-8")
+    (tmp_path / "README.md").write_text("doc\n", encoding="utf-8")
+    try:
+        subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=60)
+        for args in (["add", "."], ["-c", "user.name=t", "-c", "user.email=t@t", "commit",
+                                    "-q", "-m", "t"]):
+            subprocess.run(["git", "-C", str(tmp_path), *args], check=True, timeout=60)
+    except (OSError, subprocess.SubprocessError):
+        pytest.skip("git not usable")
+    return tmp_path
+
+
+def test_code_diff_hash_ignores_documents_and_catches_code_changes(tmp_path) -> None:
+    repo = _git_repo(tmp_path)
+    tool = repo / "04_scripts" / "tool.py"
+    clean = ft.run_identity(repo, {"tool.py": tool})
+    assert clean["code_diff_sha256"] == ft.EMPTY_SHA256 and clean["git_dirty"] is False
+    (repo / "README.md").write_text("doc changed\n", encoding="utf-8")
+    docs_only = ft.run_identity(repo, {"tool.py": tool})
+    assert docs_only["git_dirty"] is True and docs_only["dirty_files"] == ["README.md"]
+    assert docs_only["code_diff_sha256"] == ft.EMPTY_SHA256
+    assert ft.identity_mismatch(clean, docs_only) == []
+    tool.write_text("x = 2\n", encoding="utf-8")
+    code = ft.run_identity(repo, {"tool.py": tool})
+    assert code["code_diff_sha256"] != ft.EMPTY_SHA256
+    assert any(text.startswith("code_diff_sha256") for text in
+               ft.identity_mismatch(docs_only, code))
+
+
+def test_identity_compares_the_code_diff() -> None:
+    assert "code_diff_sha256" in ft.IDENTITY_KEYS
+    other = {**IDENTITY, "code_diff_sha256": "9" * 64}
+    assert ft.identity_mismatch({**IDENTITY, "code_diff_sha256": ft.EMPTY_SHA256}, other)
+
+
+def _truncated(line: dict) -> dict:
+    line["fb"]["events_truncated"] = True
+    return line
+
+
+def test_a_truncated_event_list_leaves_c2_c_and_c4_incomplete() -> None:
+    reference = _line("L", "F-1-k")
+    candidate = _truncated(_line("LF", "F-1-k", events={"WARN_X": 1}))
+    assert fj.c2_violations(reference, candidate) == []  # (c) not judged
+    data = _every_bundle_paired(60.0)
+    assert fj.c2(data).passed is True and fj.c4(data).passed is True
+    data.bundles["F-1"]["F-1-k"]["LF"] = _truncated(data.bundles["F-1"]["F-1-k"]["LF"])
+    assert fj.c2(data).passed is None
+    assert fj.c4(data).passed is None
+    assert any("절단" in text for text in fj.c4(data).details)
+    failing = _truncated(_line("LF", "F-1-k", verdict="fail"))
+    assert fj.c2_violations(reference, failing) == ["(a) pass -> fail []"]
+
+
+def test_out_must_lie_in_v5_fb(monkeypatch, capsys) -> None:
+    assert ft.out_path_problem(ft.OUT_DIR / "fb_F0.jsonl") is None
+    for path in (ft.LAS_STORED_PATHS[0], ft.V5_DIR / "fb_F0.jsonl",
+                 ft.OUT_DIR / ".." / "las" / "las_T2.jsonl"):
+        assert ft.out_path_problem(path) is not None
+    monkeypatch.setattr(ft, "sealed_check", lambda: [])
+    monkeypatch.setattr(ft, "run_identity", lambda: pytest.fail("must stop before"))
+    assert ft.main(["run", "--bundle", "F-0", "--out", str(ft.LAS_STORED_PATHS[0])]) == 2
+    assert '"stop": "out"' in capsys.readouterr().out.splitlines()[-1]
 
 
 def test_event_count_record_marks_truncation(monkeypatch) -> None:

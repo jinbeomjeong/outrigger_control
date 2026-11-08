@@ -61,11 +61,15 @@ with decision ``reanchor_on``, instead of ``R2``), F-5 12. Output
 ``06_analysis/03_hydraulic/coupled/v5/fb/fb_F<n>.jsonl`` (appended; finished lines skipped).
 
 Run identity (``fb.identity`` of every line): ``git rev-parse HEAD``, whether tracked files
-differ from it (``git_dirty``, ``dirty_files``), the sha256 of ``fb_targeted.py``,
+differ from it (``git_dirty``, ``dirty_files``, record only), the sha256 of the uncommitted
+``git diff HEAD -- 03_src 04_scripts 02_params`` (``code_diff_sha256``; the empty-diff hash when
+only documents are dirty), the sha256 of ``fb_targeted.py``,
 ``las_targeted.py`` and ``03_src/outrigger_sim/control/c2.py``, and the thread variables (set
 to 1 here, not ``setdefault``; a worker whose value is not 1 writes an error line). Resuming
 into a file whose lines carry another commit or other tool hashes stops, so does an F-0 file
 of another identity (H-2) and a line of another identity arriving during the batch.
+``--out`` must lie in ``v5/fb/`` (exit 2 otherwise): the batch appends, and a stored baseline
+such as ``v5/las/las_T1.jsonl`` must never get lines.
 ``fb.events_total`` / ``events_truncated`` record how many events the run had against the
 first 400 that ``verdict_runs._finish`` stores in ``events``.
 
@@ -213,8 +217,12 @@ C2_PATH = ROOT / "03_src" / "outrigger_sim" / "control" / "c2.py"
 IDENTITY_FILES = {"fb_targeted.py": HERE / "fb_targeted.py",
                   "las_targeted.py": HERE / "las_targeted.py", "c2.py": C2_PATH}
 """Files whose sha256 every line records (rules 3.1 run identity)."""
-IDENTITY_KEYS = ("git_head", "sha256")
+IDENTITY_KEYS = ("git_head", "code_diff_sha256", "sha256")
 """What must be equal between lines of one bundle file (resume, H-2, during a batch)."""
+CODE_DIFF_PATHS = ("03_src", "04_scripts", "02_params")
+"""Tracked trees whose uncommitted changes are part of the run identity."""
+EMPTY_SHA256 = hashlib.sha256(b"").hexdigest()
+"""``code_diff_sha256`` of a run without uncommitted code changes."""
 DIRTY_FILES_SHOWN = 20
 GIT_TIMEOUT_S = 60
 EVENTS_STORED_LIMIT = 400
@@ -759,10 +767,21 @@ def thread_problems(values: dict[str, str | None]) -> list[str]:
             if values.get(name) != "1"]
 
 
+def code_diff_sha256(root: Path = ROOT, paths: tuple[str, ...] = CODE_DIFF_PATHS) -> str:
+    """sha256 of ``git diff HEAD -- <paths>`` (raw bytes): uncommitted changes to tracked
+    code and parameters; equals :data:`EMPTY_SHA256` when there are none."""
+    completed = subprocess.run(["git", "-C", str(root), "diff", "HEAD", "--no-color",
+                                "--no-ext-diff", "--", *paths], capture_output=True,
+                               check=True, timeout=GIT_TIMEOUT_S)
+    return hashlib.sha256(completed.stdout).hexdigest()
+
+
 def run_identity(root: Path = ROOT, files: dict[str, Path] | None = None) -> dict:
     """Commit, tracked-file changes, tool sha256 and thread variables of this run.
 
     Untracked files do not count as dirty: the sealed rules are untracked copies by design.
+    ``code_diff_sha256`` covers uncommitted changes in ``03_src``, ``04_scripts`` and
+    ``02_params`` (documents may be dirty without changing the identity).
 
     Raises:
         subprocess.CalledProcessError, OSError: git or a tool file is not there.
@@ -771,6 +790,7 @@ def run_identity(root: Path = ROOT, files: dict[str, Path] | None = None) -> dic
     dirty = _git(root, "status", "--porcelain", "--untracked-files=no").splitlines()
     return {"git_head": _git(root, "rev-parse", "HEAD").strip(), "git_dirty": bool(dirty),
             "dirty_files": [line[3:] for line in dirty[:DIRTY_FILES_SHOWN]],
+            "code_diff_sha256": code_diff_sha256(root),
             "sha256": {name: file_sha256(path) for name, path in files.items()},
             "threads": thread_values()}
 
@@ -1064,6 +1084,14 @@ def default_out(bundle: str) -> Path:
     return OUT_DIR / f"fb_{bundle.replace('-', '')}.jsonl"
 
 
+def out_path_problem(path: Path, out_dir: Path = OUT_DIR) -> str | None:
+    """Why ``--out`` is refused (None = inside ``v5/fb/``): lines are appended, so a path
+    elsewhere could extend a stored baseline such as ``v5/las/las_T1.jsonl``."""
+    if path.resolve().is_relative_to(out_dir.resolve()):
+        return None
+    return f"--out {path} is outside {out_dir} (stored baselines are never appended to)"
+
+
 def _json_default(value):
     return value.item() if hasattr(value, "item") else str(value)
 
@@ -1283,6 +1311,11 @@ def main(argv: list[str] | None = None) -> int:
                           "problems": len(all_problems)}))
         return 1 if all_problems else 0
     path = args.out or default_out(args.bundle)
+    problem = out_path_problem(path)
+    if problem is not None:
+        print(f"input error: {problem}")
+        print(json.dumps({"bundle": args.bundle, "stop": "out", "reason": problem}))
+        return 2
     try:
         identity = run_identity()
     except (OSError, subprocess.SubprocessError) as exc:
