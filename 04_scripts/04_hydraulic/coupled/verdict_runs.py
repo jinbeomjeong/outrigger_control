@@ -170,14 +170,15 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None, *,
     limiter = plant.flow_limiter
     period = period_arrays(controller)
     events = _stored_events(controller)
+    _LAST_FINISHED_CONFIG[0] = getattr(controller, "config", None)  # plant_options_record tag
     # v5 X-10 (criteria J11): only plants with the v5 lock record (LC) have lock_events
     if getattr(plant, "lock_events", None) is not None:
         extra = {**extra, "lock_window_alignment": lock_window_record(
             plant, controller, period)}
         if t4h is not None:
             write_t4h_record(t4h["path"], plant, controller, period,
-                             {**t4h["meta"], "commands_sha256": _command_digest(
-                                 period["command"])})
+                             {**_meta_with_controller_tag(t4h["meta"], _LAST_FINISHED_CONFIG[0]),
+                              "commands_sha256": _command_digest(period["command"])})
     thresholds = controller.config.thresholds
     values = run_values(limiter.rows(), period, events, limiter,
                         controller.geometry.twist_vector, controller.geometry.head_area_m2,
@@ -198,6 +199,20 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None, *,
               "command": period["command"], "integral": period["integral"],
               "filtered_deg": period["filtered_deg"]}
     return result, series
+
+
+_LAST_FINISHED_CONFIG: list = [None]
+"""C2 config of the last :func:`_finish` of this process (one run per worker process)."""
+
+
+def _meta_with_controller_tag(meta: dict, config) -> dict:
+    """T4h meta whose ``controller_tag`` names a LAS-b controller (the request meta is built
+    before the run, from the options only); unchanged with LAS-b off."""
+    from outrigger_sim.hydraulics.v5_options import is_liftoff_slow_on, with_liftoff_slow_tag
+
+    if not is_liftoff_slow_on(config):
+        return meta
+    return {**meta, "controller_tag": with_liftoff_slow_tag(meta.get("controller_tag"))}
 
 
 def review_record_of(controller) -> dict | None:
@@ -561,22 +576,28 @@ def plant_options_record(hydraulics=None, t_lift_s: float | None = None) -> dict
     ``t_lift_s`` = the first crawler lift-off of the run (``values.forces.t_lift_s``): the M2
     clipped steps are split before / after it (criteria rev. 2 2.1; None = all after).
 
+    The ``controller_tag`` follows the controller of the last :func:`_finish` of this process
+    (LAS-b switch 2026-11-08: ``final_C4G2_LAS`` / ``final_C4G2_P3_LAS``; a run without options
+    then gets only that key).
+
     Raises:
         RuntimeError: The lock window of the built preset differs from the options.
     """
-    if hydraulics is None or not hydraulics.is_any_on:
-        return {}
-    import harness_hydraulics
-
     from outrigger_sim.hydraulics.v5_options import controller_tag
+
+    config = _LAST_FINISHED_CONFIG[0]
+    if hydraulics is None or not hydraulics.is_any_on:
+        tag = controller_tag(None, config)
+        return {} if tag is None else {"controller_tag": tag}
+    import harness_hydraulics
 
     if hydraulics.lock_window_follows_plant:
         harness_hydraulics.check_last_lock_window(hydraulics, load_params().v_max)
     harness_hydraulics.check_last_extend_start(hydraulics)
     record = {"hydraulic_options": hydraulics.to_dict(),
               "hydraulics_record": harness_hydraulics.last_armed_record(t_lift_s)}
-    tag = controller_tag(hydraulics)
-    if tag is not None:  # criteria revision 8: the VB / LS controller (key only with ③ on)
+    tag = controller_tag(hydraulics, config)
+    if tag is not None:  # criteria revision 8: key only with ③ (or LAS-b) on
         record["controller_tag"] = tag
     return record
 

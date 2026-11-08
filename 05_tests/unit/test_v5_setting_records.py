@@ -230,7 +230,8 @@ def test_allowance_record_leaves_the_command_hash_alone(tmp_path: Path) -> None:
     # the stage 2 rows run without a CHECK zero calibration: no calibration end
     assert t4h["pressure_offset_allowance_from_s"] is None
     # criteria revision 8: LS runs final_C4G2_P3, its commands unchanged without a fallback
-    assert report["controller_tag"] == t4h["controller_tag"] == "final_C4G2_P3"
+    # since the LAS-b switch (2026-11-08) the tag is final_C4G2_P3_LAS (LAS-b silent here)
+    assert report["controller_tag"] == t4h["controller_tag"] == "final_C4G2_P3_LAS"
     assert t4h["extend_start_rule"] == "tracked_bound"
 
 
@@ -243,7 +244,7 @@ def test_vb_with_the_p3_bound_keeps_the_stored_hash_and_judges_j_p3(tmp_path: Pa
 
     report = run_job(VB_JOB, tmp_path)
     assert report["hash"] == VB_STORED_HASH
-    assert report["controller_tag"] == "final_C4G2_P3"
+    assert report["controller_tag"] == "final_C4G2_P3_LAS"  # LAS-b switch, silent here
     assert report["hydraulic_options"]["extend_start_tracked"] is True
     assert report["t4h"]["extend_start_rule"] == "tracked_bound"
     assert report["t4h"]["has_rod_reading"] is False and report["extend_bound_check"] is None
@@ -284,7 +285,7 @@ def test_u9_vb_reference_row_keeps_the_p3_hash(tmp_path: Path) -> None:
     record only, and the T4h name carries the supply."""
     report = run_job(U9_REFERENCE_JOB, tmp_path)
     assert report["hash"] == U9_REFERENCE_HASH
-    assert report["controller_tag"] == "final_C4G2_P3"
+    assert report["controller_tag"] == "final_C4G2_P3_LAS"  # LAS-b switch, silent here
     assert report["t4h_file"] == "S2_e0.002_VB-eta0.85.npz"
     assert set(report["u9"]) >= {"level_count_s", "post_touch_count_s", "longest_ge3_s",
                                  "longest_eq4_s", "ge3_runs", "level_sat_rate_max_deg_s"}
@@ -292,7 +293,8 @@ def test_u9_vb_reference_row_keeps_the_p3_hash(tmp_path: Path) -> None:
 
 @pytest.mark.slow
 def test_v0_keeps_final_c4g2(tmp_path: Path) -> None:
-    """Revision 8 3.1: V0 is not a ③ setting: same hash, no tag."""
+    """Revision 8 3.1: V0 is not a ③ setting: same hash; since the LAS-b switch (2026-11-08)
+    the tag is final_C4G2_LAS (LAS-b silent on this row)."""
     report = run_job(V0_JOB, tmp_path)
     assert report["hash"] == V0_STORED_HASH
-    assert report["controller_tag"] is None and report["hydraulic_options"] is None
+    assert report["controller_tag"] == "final_C4G2_LAS" and report["hydraulic_options"] is None

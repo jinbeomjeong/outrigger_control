@@ -255,6 +255,10 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     # re-runs of the stored argv), 3.5.2 J_P run_S8C G4 / SS x F_s 0 / 4 / 8 on VB (+ optional V0 = final_C4G2)
     out[V5_OPENLOOP_BATCH] = v5_openloop_rows(out["P3a"])
     out[V5_OPENLOOP_V0_BATCH] = v5_openloop_rows(out["P3a"], setting="V0")
+    # user decision 2026-11-08 H-1: J1 B VB with the proportional (flow-sharing) law instead of priority
+    out[V5_OPENLOOP_PROP_BATCH] = v5_openloop_prop_rows(out[V5_OPENLOOP_BATCH])
+    # F-6 (fb_targeted_rules.md 3.3, user decision 2026-11-08): J1 B VB (+ optional V0) at the budget speed, same stroke
+    out[V5_OPENLOOP_FB_BATCH] = v5_openloop_fb_rows(out[V5_OPENLOOP_BATCH], out[V5_OPENLOOP_V0_BATCH])
     out[V5_JP_BATCH] = v5_jp_rows()
     out[V5_JP_V0_BATCH] = v5_jp_rows(setting="V0")
     # D-1 verification matrix Chrono rows (cad 2026-11-08, d1_chrono_rows.py): D1-CHRONO (16 required rows + roll /
@@ -325,6 +329,12 @@ V5_VB_ARGS = {**COUPLED_FLOW_ARGS, "valve_tau_s": 0.1, "rod_release_force": True
 ``final_C4G2_P3`` (③ start bound, criteria revision 8 3.1, user decision 2026-11-08)."""
 V5_P3_CONTROLLER = "final_C4G2_P3"
 """Controller tag of the VB / LS rows (run_S9 ``FINAL_P3_CONTROLLER``, ``v5_options.EXTEND_START_CONTROLLER_TAG``)."""
+V5_P3_LAS_CONTROLLER = "final_C4G2_P3_LAS"
+V5_LAS_CONTROLLER = "final_C4G2_LAS"
+"""Tags of a row re-run after the LAS-b switch (2026-11-08; run_S9 ``FINAL_P3_LAS_CONTROLLER`` /
+``FINAL_LAS_CONTROLLER``): the rows above keep the tags of their stored results, which the switched preset refuses
+(``--expect-controller``); a re-run row takes these through :func:`with_expected_controller`, a reproduction of the
+stored result runs through ``05_tests/unit/pre_las_preset_runner.py``."""
 
 
 def v5_vb_argv() -> list[str]:
@@ -633,6 +643,84 @@ def v5_openloop_rows(p3a: list[dict], *, setting: str = "VB") -> list[dict]:
                              + ("v5 VB plant (flow 0.85, valve 0.1 s, M2, LC; controller options not applied)"
                                 if vb else "stored argv re-run on the current code (V0, code-drift pair)")
                              + f"; stored 07_results/S9/{V5_OPENLOOP_SOURCE}/{case}"})
+    return rows
+
+
+V5_OPENLOOP_PROP_BATCH = "V5-OPENLOOP-VB-PROP"
+V5_OPENLOOP_PROP_CASES = ("P3a_J1_B_VB",)
+"""User decision 2026-11-08 H-1: the open-loop J1 B VB row with ``--flow-law proportional`` (flow sharing, same spool
+drop on every section) instead of the VB ``priority`` (pre-compensated); all other arguments unchanged (ASSUMPTION law,
+Q-M5 unanswered)."""
+
+
+def v5_openloop_prop_rows(vb_rows: list[dict]) -> list[dict]:
+    """:data:`V5_OPENLOOP_PROP_CASES` of ``V5-OPENLOOP-VB`` with the flow law value replaced by ``proportional``
+    (case ``<case>_prop``, pair = the VB row). ``check-sources`` accepts exactly the VB arguments with
+    ``flow_law = proportional`` as the difference from the stored P3a ``result.json``."""
+    by_case = {r["case"]: r for r in vb_rows}
+    rows = []
+    for case in V5_OPENLOOP_PROP_CASES:
+        base = by_case[case]
+        argv = list(base["argv"])
+        k = argv.index("--flow-law")
+        if argv[k + 1] != "priority":
+            raise RuntimeError(f"{case}: VB flow law {argv[k + 1]!r}, priority expected")
+        argv[k + 1] = "proportional"
+        rows.append({**base, "case": f"{case}_prop", "argv": argv,
+                     "source_expected_diffs": {**base["source_expected_diffs"], "flow_law": "proportional"},
+                     "v5_setting": "VB_prop", "group": V5_OPENLOOP_PROP_BATCH, "rep_bundle": V5_OPENLOOP_PROP_BATCH,
+                     "pair_case": case,
+                     "note": base["note"].replace(V5_OPENLOOP_BATCH, V5_OPENLOOP_PROP_BATCH)
+                     .replace("flow 0.85", "flow 0.85 proportional law") + f"; priority pair {case}"})
+    return rows
+
+
+V5_OPENLOOP_FB_BATCH = "V5-OPENLOOP-FB"
+V5_OPENLOOP_FB_CASES = ("P3a_J1_B",)
+V5_OPENLOOP_FB_SPEED_FRACTION = 0.87684
+"""fb_targeted_rules.md 3.3 (F-6, sealed 2026-11-08): budget speed Q_nom / sum(A_h v_max) = 50.1466 / 57.1902 L/min
+(18.347 mm/s)."""
+V5_OPENLOOP_FB_LIFT_S = 31.93
+"""fb_targeted_rules.md 3.3: the same commanded stroke as the stored 28 s at v_max (585.9 mm)."""
+
+
+def _fb_argv(argv: list[str]) -> list[str]:
+    """``argv`` with ``--lift-s`` set to :data:`V5_OPENLOOP_FB_LIFT_S` and ``--lift-speed-fraction``
+    :data:`V5_OPENLOOP_FB_SPEED_FRACTION` inserted after it (the stored P3a argv has no fraction)."""
+    out = list(argv)
+    if "--lift-speed-fraction" in out:
+        raise RuntimeError("stored argv already has --lift-speed-fraction")
+    k = out.index("--lift-s")
+    out[k + 1] = f"{V5_OPENLOOP_FB_LIFT_S:g}"
+    out[k + 2:k + 2] = ["--lift-speed-fraction", f"{V5_OPENLOOP_FB_SPEED_FRACTION:g}"]
+    return out
+
+
+def v5_openloop_fb_rows(vb_rows: list[dict], v0_rows: list[dict]) -> list[dict]:
+    """F-6 (``fb_targeted_rules.md`` 3.3): ``P3a_J1_B_VB_FB`` = the ``V5-OPENLOOP-VB`` J1 row (stored P3a argv +
+    :func:`v5_vb_argv`, priority law) with the budget speed and the same commanded stroke (:func:`_fb_argv`), and the
+    optional pair ``P3a_J1_B_V0_FB`` (stored argv, same two changes). ``--abort-on-limit`` stays. ``check-sources``
+    accepts exactly the VB arguments (V0: none) plus ``lift_s`` / ``lift_speed_fraction`` as the difference. The run
+    ends at settle + 31.93 s (39.93 s), not 36 s."""
+    fb = {"lift_s": V5_OPENLOOP_FB_LIFT_S, "lift_speed_fraction": V5_OPENLOOP_FB_SPEED_FRACTION}
+    rows = []
+    for setting, src in (("VB", vb_rows), ("V0", v0_rows)):
+        by_case = {r["case"]: r for r in src}
+        for case in V5_OPENLOOP_FB_CASES:
+            base = by_case[f"{case}_{setting}"]
+            vb = setting == "VB"
+            rows.append({**base, "case": f"{case}_{setting}_FB", "argv": _fb_argv(base["argv"]),
+                         "source_expected_diffs": {**(base["source_expected_diffs"] or {}), **fb},
+                         "v5_setting": f"{setting}_FB", "group": V5_OPENLOOP_FB_BATCH,
+                         "rep_bundle": V5_OPENLOOP_FB_BATCH, "optional": not vb,
+                         "pair_case": f"{case}_{setting}",
+                         "est_s": round(base["est_s"] * V5_OPENLOOP_FB_LIFT_S / 28.0 * 1.1),
+                         "est_pool_s": {k: round(v * V5_OPENLOOP_FB_LIFT_S / 28.0 * 1.1)
+                                        for k, v in base["est_pool_s"].items()},
+                         "note": f"{V5_OPENLOOP_FB_BATCH} (fb_targeted_rules.md 3.3 F-6, record for paper 2.8): {case} "
+                                 f"{setting} + --lift-speed-fraction {V5_OPENLOOP_FB_SPEED_FRACTION:g} + --lift-s "
+                                 f"{V5_OPENLOOP_FB_LIFT_S:g}; pair {case}_{setting}"
+                                 + ("" if vb else " (optional pair)")})
     return rows
 
 

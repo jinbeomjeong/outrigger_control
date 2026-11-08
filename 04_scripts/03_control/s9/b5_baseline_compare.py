@@ -321,7 +321,13 @@ def ablation_config(c2, config):
 
     The final-controller switches (spec 429.11: SGS ``soil_stop``, R4 ``flat_soil_margin_m``)
     are set off by value, not left to the settings defaults: the R8 preset turns them on.
+    LAS-b stays as the preset has it (user decision 2026-11-08: ABL runs with LAS-b too); it
+    starts without the soil response (``require_soil_response`` False), else it would never
+    start in ABL. The pre-switch preset (``pre_las_preset_runner.py``) gives the ABL before it.
     """
+    liftoff_slow = config.liftoff_approach_slow
+    if liftoff_slow.enable:
+        liftoff_slow = replace(liftoff_slow, require_soil_response=False)
     return replace(
         config,
         soil=c2.SoilResponseSettings(),
@@ -333,6 +339,7 @@ def ablation_config(c2, config):
         liftoff_window_reapproach=c2.LiftoffWindowReapproachSettings(),
         loc_revoke=c2.LocRevokeSettings(),
         diff_sink=c2.DiffSinkSettings(),
+        liftoff_approach_slow=liftoff_slow,
     )
 
 
