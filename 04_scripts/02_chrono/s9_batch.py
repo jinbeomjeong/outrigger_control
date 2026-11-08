@@ -1186,6 +1186,26 @@ def strip_controller_check(argv: list[str]) -> list[str]:
     return out
 
 
+LAS_OFF_ARG = "--las-off"
+PRE_LAS_CONTROLLERS = ("final_C4G2", "final_C4G2_P3")
+"""Row tags before the LAS-b switch (run_S9 ``FINAL_CONTROLLER`` / ``FINAL_P3_CONTROLLER``): the switched preset
+refuses them, ``run --las-off`` gives their rows back the LAS-b-off preset (spec 436.9)."""
+
+
+def with_las_off(row: dict, argv: list[str]) -> list[str]:
+    """``run --las-off``: ``argv`` + ``--las-off`` for a row that keeps a tag before the LAS-b switch (FINAL, RV6,
+    V5-VB, stage 3 reproductions: run_S9 ``level`` and run_S8C ``run`` take it); other rows unchanged.
+
+    Raises:
+        SystemExit: A pre-switch row whose runner has no ``--las-off`` (run_S6C, m3_run).
+    """
+    if row.get("controller") not in PRE_LAS_CONTROLLERS or LAS_OFF_ARG in argv:
+        return list(argv)
+    if row.get("s6c") or row.get("m3"):
+        raise SystemExit(f"{row['case']}: {LAS_OFF_ARG} is not an option of its runner (run_S6C / m3_run)")
+    return [*argv, LAS_OFF_ARG]
+
+
 def parse_row_filter(items: list[str] | None) -> dict[str, set[str]]:
     """``--row-filter KEY=V1,V2`` (repeatable) -> {KEY: {V1, V2}}; a row passes when every KEY's value (``str``; a
     list value passes when any element matches) is in the set."""
@@ -1246,12 +1266,13 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
               e_cases: list[str] | None = None, order: str = "given",
               order_cases: list[str] | None = None, rv6_k: float | None = None, rv6_dir: str | None = None,
               row_filter: dict[str, set[str]] | None = None, controller_check: bool = True,
-              resume: str | None = None) -> Path:
+              resume: str | None = None, las_off: bool = False) -> Path:
     """Run the batch ``name`` with ``parallel`` P-pool slots and ``parallel_e`` E-pool slots
     (:func:`schedule_cases`). Each case process gets ``OUTRIGGER_PLACEMENT`` of its pool. ``rv6_k``: X6-rb ratio of
     RV6; ``row_filter`` / ``only``: :func:`select_rows`; ``controller_check`` False drops ``--expect-controller``.
     ``resume``: an earlier batch folder; finished rows (:func:`row_finished`) are skipped, the others start from the
-    beginning in the same folder (a case has no mid-run checkpoint) and ``batch.json`` is rewritten."""
+    beginning in the same folder (a case has no mid-run checkpoint) and ``batch.json`` is rewritten. ``las_off``:
+    :func:`with_las_off` on every launched row."""
     rv6 = {k: v for k, v in (("rv6_k", rv6_k), ("rv6_dir", rv6_dir)) if v is not None}
     cases = select_rows((batches(**rv6) if rv6 else batches())[name], only, row_filter)
     if not cases:
@@ -1266,6 +1287,8 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
         former = {e["case"]: e for e in json.loads((folder / "batch.json").read_text("utf-8")).get("cases", [])}
     done_names = {c["case"] for c in finished}
     cases = [c for c in cases if c["case"] not in done_names]
+    if las_off:  # before the launch: a row whose runner lacks the option stops the batch here
+        cases = [{**c, "argv": with_las_off(c, c["argv"])} for c in cases]
     e_cases = None if e_cases is None else [n for n in e_cases if n not in done_names]
     order_cases = None if order_cases is None else [n for n in order_cases if n not in done_names]
     queues = schedule_cases(cases, e_cases=e_cases, order=order, order_cases=order_cases, parallel_e=parallel_e)
@@ -1541,7 +1564,7 @@ def main(argv) -> None:
         only = (a.only or []) + (read_only_file(a.only_file) or [])
         run_batch(a.batch, only=only or None, rv6_k=a.rv6_k, rv6_dir=a.rv6_dir,
                   row_filter=parse_row_filter(a.row_filter), controller_check=not a.no_controller_check,
-                  resume=a.resume, **schedule_args(a, argv))
+                  resume=a.resume, las_off=a.las_off, **schedule_args(a, argv))
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -1567,6 +1590,10 @@ def build_parser() -> argparse.ArgumentParser:
                         "missing key reads 'None' (repeatable)")
     r.add_argument("--no-controller-check", action="store_true",
                    help="RV6 / FINAL: drop run_S9 --expect-controller (run whatever preset is installed; recorded)")
+    r.add_argument(LAS_OFF_ARG, dest="las_off", action="store_true",
+                   help="rows with a tag before the LAS-b switch (final_C4G2 / final_C4G2_P3: FINAL, RV6, V5-VB, "
+                        "stage 3 reproductions) get --las-off (the LAS-b-off preset, spec 436.9) and keep their tag "
+                        "check; other rows unchanged; a run_S6C / m3 row with such a tag stops the batch")
     r.add_argument("--parallel", "--parallel-p", dest="parallel", type=int, default=2,
                    help="P-pool slots (OUTRIGGER_PLACEMENT=pcore); --parallel keeps its former meaning")
     r.add_argument("--parallel-e", type=int, default=0, help="E-pool slots (OUTRIGGER_PLACEMENT=ecore)")

@@ -1385,8 +1385,25 @@ def reapproach_settings_meta(controller) -> dict[str, Any] | None:
                      else getattr(lr, f.name)) for f in dataclasses.fields(lr)}
 
 
+LAS_OFF_OPTION = "--las-off"
+LAS_OFF_PRESET = "C2Config().with_10hz_d1(liftoff_approach_slow=False)"
+"""``run / check --las-off`` (L2b cases): the controller's LAS-b block is the one of this preset call (LAS-b off,
+the keyword of the switch, spec 436.9): reproduction of a result before the switch, or the LAS-off pair of a LAS-b
+run. Recorded as ``las_off`` in the case bundle meta and the batch meta."""
+
+
+def with_las_off(config):
+    """``config`` with the LAS-b block of :data:`LAS_OFF_PRESET` (the preset keyword path, LAS-b off)."""
+    from dataclasses import replace
+
+    from outrigger_sim.control.c2 import C2Config
+
+    off = C2Config().with_10hz_d1(liftoff_approach_slow=False).liftoff_approach_slow
+    return replace(config, liftoff_approach_slow=off)
+
+
 def _controller(case: S8Case, params_ctrl, params_plant, variant: str | None = None, *,
-                soil_off_replay: bool = False, hydraulics=None):
+                soil_off_replay: bool = False, hydraulics=None, las_off: bool = False):
     """C2 controller of an L2b S8 case.
 
     ``params_ctrl`` is the L1 YAML (C-R11: controller at beta 1.0) and has no
@@ -1394,7 +1411,7 @@ def _controller(case: S8Case, params_ctrl, params_plant, variant: str | None = N
     comes from the L2b plant params ``params_plant`` (from :func:`build_l2b`). Pilot-check cases
     do not touch the config (bit-identical to the S7 / pre-P-S8-11 path). ``variant``: C-S8-36
     re-approach variant (:func:`with_reapproach_variant`; None = the preset).
-    ``soil_off_replay``: option (가), :func:`with_soil_off_replay`.
+    ``soil_off_replay``: option (가), :func:`with_soil_off_replay`. ``las_off``: :func:`with_las_off`.
 
     Returns ``(controller, config, settle_meta, fallback_ratio_meta)``; the last item is the
     ``with_engine_fallback_ratio`` meta (U-S8-61), written to the result as ``fallback_ratio``
@@ -1403,6 +1420,8 @@ def _controller(case: S8Case, params_ctrl, params_plant, variant: str | None = N
 
     config, settle_meta = s7c.apply_settle_map(s6c.controller_config(params_ctrl, case.base),
                                                "L2b_NSC", case.scenario.level)
+    if las_off:
+        config = with_las_off(config)
     # U-S8-61 (spec 304 1): L2b-NSC keeps the preset R-5 fallback ratio (column_nominal); the
     # L1 cases of this runner go through run_S6C.job_bundle_c (plant_meta there)
     from outrigger_sim.chrono.fallback_ratio import with_engine_fallback_ratio
@@ -1476,10 +1495,11 @@ def g1_event_state(ev: dict[str, Any] | None, state: dict[str, Any], t0: float,
 
 def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
                flow_limit: dict[str, Any] | None = None,
-               hydraulics: dict[str, Any] | None = None):
+               hydraulics: dict[str, Any] | None = None, las_off: bool = False):
     """Run one L2b S8 case (module docstring). ``flow_limit``: settings of the shared-pump flow limit
     (``FlowLimitSetting.to_dict``), on from the end of the crawler settle; None = off, nothing below
-    runs differently. Returns (summary, run_meta)."""
+    runs differently. ``las_off``: the controller with LAS-b off (``--las-off``, :data:`LAS_OFF_PRESET`).
+    Returns (summary, run_meta)."""
     import numpy as np
 
     from outrigger_sim.chrono.l2b_pad_record_s8 import L2bPadRecorderS8
@@ -1526,7 +1546,8 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
     suite = SensorSuite(imu_config_for_grade(sc.grade, sample_period_s=s6c.IMU_SAMPLE_PERIOD_S),
                         leg_sensors, seed=sc.seed)
     c2, config, settle_meta, fallback_ratio_meta = _controller(case, params_ctrl, params,
-                                                               hydraulics=v5_options)
+                                                               hydraulics=v5_options,
+                                                               las_off=las_off)
     if v5_options is not None:  # criteria P-4: the controller window is the one of the options
         from outrigger_sim.hydraulics.v5_options import check_lock_window_meta, controller_tag
 
@@ -1723,6 +1744,7 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
               "controller_param_overrides": {},
               "controller_params_beta_GPa": s6c.CONTROLLER_BETA_GPA,
               "fallback_ratio": fallback_ratio_meta,  # U-S8-61, as run_S7C bundle_c
+              **({"las_off": {"preset": LAS_OFF_PRESET}} if las_off else {}),  # spec 436.9
               "valve": model.actuator.valve_meta(),
               "imu_sample_period_s": s6c.IMU_SAMPLE_PERIOD_S,
               "leg_sensors": "WIKA error model" if bcase.sensor_model
@@ -2721,6 +2743,8 @@ def job_case(case, case_dir):
             flow_kw = {"flow_limit": s["flow_limit"]} if s.get("flow_limit") else {}
             if s.get("hydraulics"):
                 flow_kw["hydraulics"] = s["hydraulics"]
+            if s.get("las_off"):
+                flow_kw["las_off"] = True
             summary, run_meta = job_l2b_s8(c, d, duration_s=s.get("duration_s"), **flow_kw)
         else:
             summary, run_meta = s6c.job_bundle_c(c.base, d, duration_s=s.get("duration_s"))
@@ -3026,9 +3050,13 @@ def _batch_dir(tag: str) -> Path:
 
 def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, duration_s: float,
               flow_limit: dict[str, Any] | None = None,
-              hydraulics: dict[str, Any] | None = None):
+              hydraulics: dict[str, Any] | None = None, las_off: bool = False):
     from outrigger_sim.batch import Case
 
+    if las_off:  # the controller block of L2b cases only (job_l2b_s8); L1 twins would run LAS-b on
+        off_l2b = [c.case_id for c in cases if c.engine != "L2b_NSC"]
+        if off_l2b:
+            raise SystemExit(f"{LAS_OFF_OPTION} on L2b cases only: {off_l2b}")
     l1 = [c for c in cases if c.engine == "L1R" and c.base.blocked_in(s6c.STATES)]
     if l1:
         raise SystemExit(f"L1 twins without a start snapshot (run `snaps`): "
@@ -3058,6 +3086,9 @@ def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, durati
     if hydraulics is not None:  # keys only with a v5 option
         meta["hydraulics"] = hydraulics
         flow_settings["hydraulics"] = hydraulics
+    if las_off:  # key only with --las-off
+        meta["las_off"] = {"preset": LAS_OFF_PRESET}
+        flow_settings["las_off"] = True
     (batch_dir / "batch_meta.json").write_text(json.dumps(s6c._plain(meta), indent=1), "utf-8")
     table = {c.case_id: c for c in cases}
     jobs = [Case(c.case_id, {"duration_s": duration_s if check else None, **flow_settings})
@@ -4012,7 +4043,13 @@ def main(argv):
     from outrigger_sim.hydraulics.v5_options import add_hydraulic_arguments
 
     add_hydraulic_arguments(ap, with_valve_tau=False)  # v5 options (spec v5 2.0); absent = none
+    ap.add_argument(LAS_OFF_OPTION, dest="las_off", action="store_true",
+                    help=f"run / check, L2b cases: the controller with LAS-b off ({LAS_OFF_PRESET}); "
+                         "reproduction of a result before the LAS-b switch or the LAS-off pair of a LAS-b "
+                         "run (spec 436.9). Recorded as las_off in the batch and case meta")
     args = ap.parse_args(argv)
+    if args.las_off and args.action not in ("run", "check"):
+        raise SystemExit(f"{LAS_OFF_OPTION} only with run / check")
     flow_setting = flow_setting_from_args(args)
     if flow_setting is not None and args.action not in ("run", "check"):
         raise SystemExit("--flow-eta-v only with run / check")
@@ -4158,12 +4195,13 @@ def main(argv):
     require_fault_reground(cases)  # C-S8-68: head-fault cases only after P-S8-24
     if args.action == "check":
         run_batch(cases, tag=tag, layout=args.workers, check=True,
-                  duration_s=args.duration, flow_limit=flow_limit, hydraulics=hydraulics)
+                  duration_s=args.duration, flow_limit=flow_limit, hydraulics=hydraulics,
+                  las_off=args.las_off)
         return
     if not args.approved:
         raise SystemExit("S8 main run needs the user's confirmation: add --approved")
     run_batch(cases, tag=tag, layout=args.workers, check=False, duration_s=0.0,
-              flow_limit=flow_limit, hydraulics=hydraulics)
+              flow_limit=flow_limit, hydraulics=hydraulics, las_off=args.las_off)
 
 
 if __name__ == "__main__":

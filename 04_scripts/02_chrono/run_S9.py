@@ -1894,8 +1894,9 @@ def final_rep_x_cases() -> list[dict[str, Any]]:
     return [r]
 
 
-SOURCE_ARGS_IGNORE = ("case", "out_root", "note", "expect_controller")
-"""``level`` args not compared by :func:`source_args_check` (run location, free note, the new controller check)."""
+SOURCE_ARGS_IGNORE = ("case", "out_root", "note", "expect_controller", "las_off")
+"""``level`` args not compared by :func:`source_args_check` (run location, free note, the new controller check, and
+``--las-off``, which gives back the pre-switch preset of a former run)."""
 
 
 def source_args_check(argv: list[str], source_dir: Path) -> dict[str, Any]:
@@ -3722,6 +3723,30 @@ def level_c2_config(allow_soil_off: bool, config: Any = None) -> tuple[Any, dict
     return config, {"preset": "C2Config().with_10hz_d1()", "soil_enable": enabled,
                     "soil_settings": soil.to_meta() if hasattr(soil, "to_meta") else None,
                     "allow_soil_off": bool(allow_soil_off)}
+
+
+LAS_OFF_OPTION = "--las-off"
+LAS_OFF_PRESET = "C2Config().with_10hz_d1(liftoff_approach_slow=False)"
+"""``level --las-off``: the preset with LAS-b off (the keyword of the switch, spec 436.9), for the reproduction of a
+result before the LAS-b switch under its own tag (``--expect-controller final_C4G2`` / ``final_C4G2_P3``) and the
+LAS-off pair of a LAS-b run. Recorded in ``c2_setup`` (``preset``, ``las_off``)."""
+
+
+def las_off_config(args: argparse.Namespace) -> Any:
+    """The C2 preset with LAS-b off for ``--las-off``, else None (``level_c2_config`` builds the preset)."""
+    if not getattr(args, "las_off", False):
+        return None
+    from outrigger_sim.control.c2 import C2Config
+
+    return C2Config().with_10hz_d1(liftoff_approach_slow=False)
+
+
+def level_c2_config_of_args(args: argparse.Namespace) -> tuple[Any, dict[str, Any]]:
+    """:func:`level_c2_config` of the ``level`` arguments; ``--las-off`` gives it the LAS-off preset and records it."""
+    config, c2_meta = level_c2_config(args.allow_current_c2, las_off_config(args))
+    if getattr(args, "las_off", False):
+        c2_meta.update(preset=LAS_OFF_PRESET, las_off=True)
+    return config, c2_meta
 
 
 PRESSURE_GRADES = ("ideal", "normal", "conservative", "old_worst")
@@ -5627,7 +5652,7 @@ def run_level(args) -> Path:
     # spec 420.4 (1): hashes of the controller files as imported by this process (record only)
     code_files = _record_or_error(code_state_files)
     git_files = _record_or_error(git_state)  # FINAL (2026-10-30): commit + controller-tree status at the start
-    config, c2_meta = level_c2_config(args.allow_current_c2)
+    config, c2_meta = level_c2_config_of_args(args)  # --las-off: the LAS-b-off preset (spec 436.9)
     # G6P (2026-10-28): P-S8-29 relaxation preset / off, recorded in c2_setup
     config, c2_meta["twist_relax"] = apply_twist_relax(config, getattr(args, "twist_relax", TWIST_RELAX_PRESET))
     # study ① (2026-10-28): start / target slope limits preset or verification, recorded in c2_setup
@@ -6141,6 +6166,10 @@ def build_parser() -> argparse.ArgumentParser:
                     help="RV6 / FINAL rows (spec 430.5 / 431.3): before the model is built, check that the run-time C2 "
                          "preset has the settings of this controller (CONTROLLER_EXPECTATIONS) and exit otherwise; "
                          "recorded as c2_setup.expect_controller. Absent = no attribute, the run is unchanged")
+    lp.add_argument(LAS_OFF_OPTION, dest="las_off", action="store_true", default=argparse.SUPPRESS,
+                    help=f"build the preset as {LAS_OFF_PRESET} (LAS-b off): reproduction of a result before the LAS-b "
+                         "switch with its own --expect-controller tag, or the LAS-off pair of a LAS-b run. Recorded "
+                         "in c2_setup (preset, las_off). Absent = no attribute, the run is unchanged")
     lp.add_argument("--creep-rule", choices=tuple(CREEP_RULES), default=argparse.SUPPRESS,
                     help="P3-4 creep rule (spec 433): current = sinkage rate over 1 s, a window_short row is not a "
                          "pass; legacy_0p2 = over 0.2 s, as the runs before 2026-11-05. Absent = current, no attribute")
