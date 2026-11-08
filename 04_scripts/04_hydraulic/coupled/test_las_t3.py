@@ -77,6 +77,50 @@ def test_g1_uniform_line_that_fires_fails_k4_and_is_judged_by_k6() -> None:
     assert len(k7) == 1 and k7[0]["start_s"] == 30.0
 
 
+def test_silent_g1_hash_change_is_k5_not_k4() -> None:
+    """rev4a 3: a fired G1 line is H-T3-4; a silent line with another hash is H-T3-5."""
+    entry = _entry()
+    criteria, _ = tj.t3_criteria([_line(entry, sha="5" * 64)],
+                                 {"T-3a": [entry], "T-3b": [], "T-3c": []}, _baseline(entry))
+    assert criteria["K-4"] == {} and entry["line_key"] in criteria["K-5"]
+    assert tj.first_stop({"K-5": criteria["K-5"]}) == "H-T3-5"
+
+
+def _stored_dg3(tmp_path: Path, folder: str, options: dict, rule: str) -> dict:
+    entry = {**_dg3_entry(folder), "result_file": f"dg3\\{folder}\\r.json"}
+    record = {"key": entry["key"], "v5_setting": "VB", "hydraulic_options": options,
+              "controller_settings": {"soil.enable": True, "two_pressure.extend_start_rule": rule}}
+    path = tmp_path / "dg3" / folder / "r.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps({"meta": {"preset_settings": {
+        "two_pressure.extend_start_rule": rule}}, "results": [record]}), encoding="utf-8")
+    return entry
+
+
+def test_dg3_run_condition_against_the_stored_record(tmp_path: Path) -> None:
+    stored_options = {"rod_release_force": True, "m2_law": "flow_limited_r5"}
+    entry = _stored_dg3(tmp_path, "v4_on", stored_options, "tracked_bound")
+    line = {**_line(entry, "T-3b", tag=tj.TAG_P3_LAS), "v5_setting": "VB",
+            "hydraulic_options": {**stored_options, "extend_start_tracked": True},
+            "extend_start_rule": "tracked_bound",
+            "controller_settings": {"soil.enable": True,
+                                    "two_pressure.extend_start_rule": "tracked_bound",
+                                    "liftoff_approach_slow.enable": True,
+                                    "full_config": {"x": 1}, "full_config_sha256": "f" * 64}}
+    assert tj.condition_problems(entry, line, True, tmp_path) == []
+    changed = {**line, "controller_settings": {**line["controller_settings"],
+                                               "soil.enable": False}}
+    assert "controller_settings differ" in tj.condition_problems(entry, changed, True,
+                                                                  tmp_path)[0]
+    other = {**line, "hydraulic_options": {"rod_release_force": False}}
+    assert "hydraulic_options" in tj.condition_problems(entry, other, True, tmp_path)[0]
+    off = _stored_dg3(tmp_path, "off", stored_options, "constant")
+    wrong = {**line, "t3": {**line["t3"], "line_key": off["line_key"]},
+             "controller_tag": tj.TAG_V0_LAS, "hydraulic_options": stored_options}
+    problems = tj.condition_problems(off, wrong, True, tmp_path)
+    assert any("③ rule tracked_bound != stored preset constant" in p for p in problems)
+
+
 def test_k6_p32_none_fails_and_silent_hash_change_is_k5() -> None:
     entry = _entry(base="J1")
     fired = _line(entry, fired=True, p32=None)
@@ -346,13 +390,16 @@ def test_h7_and_k6_share_one_function() -> None:
 
 def test_key_list_entries_are_compared_with_d1_lines(tmp_path: Path) -> None:
     entry = {**_entry(), "commands_sha256": HASH, "verdict": "pass", "P3-2": True,
-             "t_ready_s": 60.0, "stroke_max_m": 0.4, "fault_names": [], "G6-2": None}
+             "t_ready_s": 60.0, "stroke_max_m": 0.4, "fault_names": [], "G6-2": None,
+             "fail_items": []}
     record = {"commands_sha256": HASH, "event_names": {},
               "d1": {"verdict": "pass", "items": {"P3-2": True, "G6-2_loc": True},
-                     "t_ready_s": 60.0, "stroke_max_m": 0.4}}
-    assert tj._entry_differences(entry, record) == []
+                     "t_ready_s": 60.0, "stroke_max_m": 0.4, "fail_items": []}}
+    assert tj._entry_differences(entry, record) == []  # the void G6-2 field is not compared
     assert tj._entry_differences({**entry, "verdict": "fail"}, record)[0].endswith(
         "!= d1.jsonl 'pass'")
+    assert "fail_items" in tj._entry_differences({**entry, "fail_items": ["READY"]}, record)[0]
+    assert tj.CRITERION_STOP["key-list"] == "H-T3-3"
     baseline_path = tmp_path / "d1.jsonl"
     baseline_path.write_text(json.dumps(record) + "\n", encoding="utf-8")
     keys = {"d1_baseline": {"sha256": "0" * 64}}

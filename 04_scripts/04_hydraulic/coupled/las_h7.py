@@ -17,15 +17,19 @@ Criteria (rev4 2, a violation if any holds):
          None is not.
   C5'-S  new stroke max - baseline > 0.001 m; None on either side is a violation.
 A quantity the batch format does not have ("형식 없음", extractor None) is not judged and is listed
-as such. Interpretation (to confirm by control-expert): for G6-2 and P3-2 a baseline value of None
-means the row has no such item (a G6 row has no P3-2, a steady row no G6-2), so the criterion does
-not apply to that line; it is listed per line as "baseline without the item".
+as such. For G6-2 and P3-2 a baseline row without the item does not take the criterion (rev4a 2:
+"기준 항목 없음", listed per line); an item that is there and not failed with a new None is a
+violation. A line whose event list may be cut (``incomplete``: at the stored limit or flagged)
+is undecidable and stops (rev4a 5, :class:`UndecidableLine`).
 
-Field note: rev4 3 J-1 names the G6-2 item ``d1.items["G6-2"]``; the stored D-1 lines name it
-``G6-2_loc`` (``v5/d1.jsonl``, all 868 lines) and have no ``G6-2`` key, so the J-1 format reads
-``G6-2_loc`` (reading ``G6-2`` would make C4' vacuous). The rev3 key list has the same ``G6-2``
-field (None on all 76 T-3c entries although ``G6-2_loc`` is true there); the T-3 judge therefore
-takes the baseline items from ``v5/d1.jsonl`` (rev3 K-6b: "d1.items").
+Field table (rev4a 1 and 5): the G6-2 item is ``G6-2_loc`` everywhere (the rev3 key list's
+``G6-2`` field is void). Declared: J-1, r72 (J-10 .. J-12), J-9 / J-13 main (``judged`` written
+by the sealed judge, with ``judged.judge`` = name, version, sha256; without it C2 "verdict
+missing"). Drafts until control-expert confirms: J-3' (fields there in ``d1s_judge.json``; the
+events come from ``cases.<id>.events`` = Chrono ``result.json`` ``events``, the S9 case folders
+have no ``controller_events.json``), J-7 slope (fields there in ``u3_slope_V0.json``; the
+``v5_rerun`` record has no event list, so "fired" cannot be read from a new record), J-5 / J-6,
+grid_vb, J-15.
 """
 from __future__ import annotations
 
@@ -87,6 +91,8 @@ class BatchFormat:
     p32: Extractor | None
     ready_s: Extractor | None
     stroke_m: Extractor | None
+    incomplete: Callable[[dict], str | None] | None = None
+    """Why a line's event list may be cut (then the line is undecidable, rev4a 5), or None."""
 
     @property
     def absent(self) -> list[str]:
@@ -157,10 +163,48 @@ def _r79_stroke_m(line: dict) -> float | None:
     return None if value is None else float(value) / MM_PER_M
 
 
+JUDGE_IDENTITY_FIELDS = ("name", "version", "sha256")
+"""rev4a 5: a ``judged`` block counts only with the sealed judge's name, version and sha256."""
+
+
+def judged_by(line: dict) -> dict | None:
+    """``line["judged"]["judge"]`` when it names the judge fully, else None."""
+    judge = _get(line, "judged", "judge")
+    if not isinstance(judge, dict) or any(not judge.get(k) for k in JUDGE_IDENTITY_FIELDS):
+        return None
+    return judge
+
+
 def _judged(field: str) -> Extractor:
-    """A value the batch's own judge writes into ``line["judged"]`` before H-7' (the rev4 3
-    "판정 원천" of the batches whose lines carry no verdict field)."""
-    return lambda line: _get(line, "judged", field)
+    """A value the batch's sealed judge writes into ``line["judged"]`` before H-7' (rev4 3 /
+    rev4a 5); without the judge's identity the value is None (C2: "verdict missing")."""
+    return lambda line: None if judged_by(line) is None else _get(line, "judged", field)
+
+
+D1_EVENTS_LIMIT = 400
+"""``verdict_runs._finish`` keeps the first 400 events; ``event_names`` counts those."""
+R79_EVENTS_LIMIT = 200
+"""``r79_sensor_screen`` keeps the first 200 events (``INFO_PRESSURE*`` / ``shadow*`` left out)."""
+INCOMPLETE_KEYS = ("events_incomplete", "events_truncated", "incomplete")
+
+
+def _flagged_incomplete(line: dict) -> str | None:
+    flagged = [key for key in INCOMPLETE_KEYS if line.get(key)]
+    return f"flagged {flagged}" if flagged else None
+
+
+def _d1_incomplete(line: dict) -> str | None:
+    names = line.get("event_names")
+    if names is not None and sum(names.values()) >= D1_EVENTS_LIMIT:
+        return f"event_names count {sum(names.values())} at the {D1_EVENTS_LIMIT} limit"
+    return _flagged_incomplete(line)
+
+
+def _r72_incomplete(line: dict) -> str | None:
+    events = line.get("events")
+    if events is not None and len(events) >= R79_EVENTS_LIMIT:
+        return f"{len(events)} events at the {R79_EVENTS_LIMIT} limit"
+    return _flagged_incomplete(line)
 
 
 D1_FORMAT = BatchFormat(
@@ -172,6 +216,7 @@ D1_FORMAT = BatchFormat(
     p32=_d1_p32,
     ready_s=lambda line: _get(line, "d1", "t_ready_s"),
     stroke_m=lambda line: _get(line, "d1", "stroke_max_m"),
+    incomplete=_d1_incomplete,
 )
 R72_FORMAT = BatchFormat(
     name="J-10 / J-11 / J-12 r72 (dg3 v4_on, dg3 off, stage-2 noise)",
@@ -182,6 +227,7 @@ R72_FORMAT = BatchFormat(
     p32=_r72_p32,
     ready_s=lambda line: _get(line, "base", "t_ready_s"),
     stroke_m=_r79_stroke_m,
+    incomplete=_r72_incomplete,
 )
 READY_ONLY_FORMAT = BatchFormat(
     name="J-9 U-9 V0 / J-13 main and pressure_only", status=FormatStatus.DECLARED,
@@ -190,6 +236,68 @@ READY_ONLY_FORMAT = BatchFormat(
     g62=None, p32=None,
     ready_s=lambda line: _get(line, "values", "times", "t_first_ready_s"),
     stroke_m=None,
+)
+
+
+def _d1s_fail_items(case: dict) -> list[str] | None:
+    """J-3' failed items: false gates plus false / ``fail`` P3 checks (rev4a 5)."""
+    gates, checks = case.get("gates"), case.get("p3_checks")
+    if gates is None or checks is None:
+        return None
+    failed = [name for name, ok in gates.items() if ok is False]
+    failed += [name for name, value in checks.items() if value is False or value == VERDICT_FAIL]
+    return sorted(failed)
+
+
+def _d1s_p32(case: dict) -> P32State | None:
+    value = _get(case, "p3_checks", "P3-2_verdict")
+    if value is None:
+        return None
+    return P32State.FAILED if value == VERDICT_FAIL else P32State.OK
+
+
+def _mm_to_m(path: tuple[str, ...]) -> Extractor:
+    def extract(line: dict) -> float | None:
+        value = _get(line, *path)
+        return None if value is None else float(value) / MM_PER_M
+
+    return extract
+
+
+D1S_FORMAT = BatchFormat(
+    name="J-3' D-1 Chrono SCM S-03 / S-04 (d1s_judge.json cases.<id>)",
+    status=FormatStatus.DRAFT,  # event source differs from rev4a 5 (module docstring)
+    verdict=lambda case: case.get("verdict"), fail_items=_d1s_fail_items,
+    event_names=lambda case: case.get("events"),
+    g62=lambda case: _get(case, "gates", "G6-2_loc"), p32=_d1s_p32,
+    ready_s=lambda case: case.get("t_ready_rel_s"),
+    stroke_m=_mm_to_m(("stroke_max_mm",)),
+)
+
+
+def _u3_faults_as_events(record: dict) -> list[str] | None:
+    """J-7: the ``FAULT*`` names are in ``warnings`` (rev4a 5); the record has no event list."""
+    warnings = record.get("warnings")
+    return None if warnings is None else list(warnings)
+
+
+def _u3_p32(record: dict) -> P32State | None:
+    value = _get(record, "late_loc_reapproach", "verdict")
+    if value is None:
+        return None
+    return P32State.FAILED if value == VERDICT_FAIL else P32State.OK
+
+
+U3_SLOPE_FORMAT = BatchFormat(
+    name="J-7 U-3 slope V0 110 (u3_slope_V0.json records[i])",
+    status=FormatStatus.DRAFT,  # the rerun record has no event list for "fired" (docstring)
+    verdict=lambda record: record.get("verdict"),
+    fail_items=lambda record: record.get("failed_rows"),
+    event_names=_u3_faults_as_events,
+    g62=None,  # no G6 gates in these records: 형식 없음 (rev4a 5)
+    p32=_u3_p32,
+    ready_s=lambda record: record.get("t_ready_s"),
+    stroke_m=_mm_to_m(("max_stroke_mm",)),
 )
 
 
@@ -203,9 +311,9 @@ def _draft(name: str) -> BatchFormat:
 
 BATCH_FORMATS: dict[str, BatchFormat] = {
     "J-1": D1_FORMAT,
-    "J-3'": _draft("J-3' D-1 Chrono SCM S-03 / S-04 (d1s_judge row verdict)"),
+    "J-3'": D1S_FORMAT,
     "J-5": _draft("J-5 / J-6 D-1 G1 Chrono and J_P fired reruns (original row verdict)"),
-    "J-7-slope": _draft("J-7 U-3 slope V0 110 (u3_u6_rerun_rules_rev2: 형식에 따름)"),
+    "J-7-slope": U3_SLOPE_FORMAT,
     "J-9": READY_ONLY_FORMAT,
     "J-10": R72_FORMAT,
     "J-11": R72_FORMAT,
@@ -293,15 +401,34 @@ _CHECKS = {"C2": _c2, "C3": _c3, "C4'": _c4, "P3-2": _p32, "C5'-R": _c5_ready,
            "C5'-S": _c5_stroke}
 
 
+class UndecidableLine(ValueError):
+    """A line H-7' cannot judge (an event list that may be cut, rev4a 5): stop, not a pass."""
+
+
+def incomplete_reason(new: dict, base: dict, fmt: BatchFormat) -> str | None:
+    """Why the new or the baseline line has a possibly cut event list (None = both whole)."""
+    if fmt.incomplete is None:
+        return None
+    for side, line in (("new", new), ("baseline", base)):
+        reason = fmt.incomplete(line)
+        if reason is not None:
+            return f"{side}: {reason}"
+    return None
+
+
 def h7_violations(new: dict, base: dict, fmt: BatchFormat, *,
                   allow_draft: bool = False) -> dict[str, str]:
     """``criterion -> problem`` of one target line against its baseline (empty = no violation).
 
     Raises:
         ValueError: ``fmt`` is a draft and ``allow_draft`` is not set (rev4 3: confirm first).
+        UndecidableLine: An event list that may be cut (rev4a 5: undecidable, stop).
     """
     if fmt.status is not FormatStatus.DECLARED and not allow_draft:
         raise ValueError(f"{fmt.name}: {fmt.status}")
+    reason = incomplete_reason(new, base, fmt)
+    if reason is not None:
+        raise UndecidableLine(f"{fmt.name}: {reason}")
     absent = set(fmt.absent)
     out = {}
     for name, check in _CHECKS.items():
@@ -347,16 +474,24 @@ def judge_batch(batch: str, lines: list[TargetLine], *, allow_draft: bool = Fals
                 "fired": sorted(line.key for line in fired), "targets": 0, "violations": {}}
     fmt = BATCH_FORMATS[batch]
     targets = [line for line in fired if line.base is not None]
-    violations = {}
+    violations, undecidable = {}, {}
     for line in targets:
-        found = h7_violations(line.new, line.base, fmt, allow_draft=allow_draft)
+        try:
+            found = h7_violations(line.new, line.base, fmt, allow_draft=allow_draft)
+        except UndecidableLine as exc:
+            undecidable[line.key] = str(exc)
+            continue
         if found:
             violations[line.key] = found
+    fired_ids = {id(line) for line in fired}
+    for line in lines:  # "not fired" needs a whole event list too
+        if id(line) not in fired_ids and fmt.incomplete is not None and fmt.incomplete(line.new):
+            undecidable[line.key] = f"new: {fmt.incomplete(line.new)} (fired state unknown)"
     return {"batch": batch, "h7_applies": True, "format": fmt.name, "status": str(fmt.status),
             "format_absent": fmt.absent, "lines": len(lines),
             "fired": sorted(line.key for line in fired),
             "fired_without_baseline": sorted(line.key for line in fired if line.base is None),
-            "targets": len(targets), "violations": violations,
+            "targets": len(targets), "violations": violations, "undecidable": undecidable,
             "not_applicable": {line.key: not_applicable(line.base, fmt) for line in targets
                                if not_applicable(line.base, fmt)},
-            "stop": bool(violations)}
+            "stop": bool(violations or undecidable)}

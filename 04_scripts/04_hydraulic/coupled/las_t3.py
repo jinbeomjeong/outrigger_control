@@ -1,5 +1,6 @@
 """T-3 targeted check of LAS-b (sealed ``las_targeted_rules_rev3.md`` 2 .. 4, its key list
-``las_targeted_rules_rev3_keys.json`` and ``las_targeted_rules_rev4.md`` 1 #1: T-3c included).
+``las_targeted_rules_rev3_keys.json``, ``las_targeted_rules_rev4.md`` 1 #1: T-3c included, and
+``las_targeted_rules_rev4a.md``: G6-2_loc, stop attribution, Dg-3 off reproduction).
 
 Bundles (key list): R-0 7 (LAS-b off: D-1 5 + Dg-3 2), T-3a 228, T-3b 4 (Dg-3 2 keys x folders
 ``off`` / ``v4_on``), T-3c 76; R-0 runs first and T-3 starts only when R-0 passes K-1 .. K-3
@@ -27,7 +28,8 @@ event in the T4h meta events.
 
 Every file starts with a header line (``{"header": ...}``): commit, tool and ``c2.py`` sha256,
 thread variables, workers, affinity, seals; every line carries the same values (``t3.identity``,
-the worker's own reading). Before any run (H-T3-0): the six sealed files equal their ``.sha256``
+the worker's own reading). Before any run (H-T3-0): the seven sealed files (original, rev1 ..
+rev4, rev4a, the rev3 key list) equal their ``.sha256``
 values, ``git status --porcelain -- 03_src 04_scripts`` is empty, no output exists (files are
 opened with ``"x"``: no resume, no overwrite), no wrapper is installed, the preset is LAS-b b0 and
 has no flow budget (FB). An error line is retried once (H-T3-2: both lines are kept).
@@ -83,8 +85,8 @@ T3_FILE = "las_T3.jsonl"
 REPORT_FILE = "las_T3.md"
 JUDGE_FILE = "las_T3_judge.json"
 DG3_FOLDER = "t3_dg3_t4h"
-T3_REQUIRED_SEALS = ("original", "rev1", "rev2", "rev3", "rev3_keys", "rev4")
-"""Rev3 K-0 and the coordinator's rev4 seal (2026-11-08): all six before any run."""
+T3_REQUIRED_SEALS = ("original", "rev1", "rev2", "rev3", "rev3_keys", "rev4", "rev4a")
+"""Rev3 K-0 with the rev4 and rev4a seals (2026-11-08): all seven before any run."""
 R0 = "R-0"
 T3_BUNDLES = ("T-3a", "T-3b", "T-3c")
 BUNDLES = (R0, *T3_BUNDLES)
@@ -385,6 +387,8 @@ def dg3_line(job: dict, t3: dict, record: dict, t4h_path: Path, folder: Path) ->
             "extend_start_rule": settings.get("two_pressure.extend_start_rule"),
             "las_enable": settings.get("liftoff_approach_slow.enable"),
             "base_pass": base.get("pass"), "G6-2_loc": (base.get("gates") or {}).get("G6-2_loc"),
+            "hydraulic_options": record.get("hydraulic_options"),
+            "controller_settings": settings, "v5_setting": record.get("v5_setting"),
             "las_t3": {"enable": settings.get("liftoff_approach_slow.enable"),
                        "fired": las_h7.is_fired(las_events_), "events": las_events_,
                        "loc_minus_t_off_s": base.get("loc_delay_s")},

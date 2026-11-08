@@ -2,30 +2,31 @@
 H-T3-0 .. H-T3-6, ``las_targeted_rules_rev4.md`` 1 #1: T-3c fixed at 76); called by
 ``las_judge.py --stage T-3`` and by ``las_t3.py`` (R-0 gate and the final judge).
 
-Baselines: the composite-key line of ``v5/d1.jsonl`` (its sha256 must be the key list's
-``d1_baseline.sha256``) for the D-1 lines, the key list's stored T4h hash
-(``shadow_commands_sha256_all_folders``, one value) for the Dg-3 lines. The key list's own
-baseline fields are checked against ``d1.jsonl`` first (hash, verdict, P3-2, READY, stroke,
-FAULT names); its ``G6-2`` field is None where ``d1.items["G6-2_loc"]`` is true (all 76 T-3c
-entries), so K-6 reads the items of ``d1.jsonl`` (rev3 K-6b "d1.items") and the report lists the
-field difference as a note.
+Baselines (rev4a 1): the composite-key line of ``v5/d1.jsonl`` (its sha256 must be the key
+list's ``d1_baseline.sha256``) for the D-1 lines, the key list's stored T4h hash
+(``shadow_commands_sha256_all_folders``, one value) for the Dg-3 lines. The key list is the
+source of the key sets and counts; its ``G6-2`` field is void, its other baseline fields
+(verdict, fail items, P3-2, READY, stroke, FAULT names, hash) must equal ``d1.jsonl``
+(``key-list``, else H-T3-3).
 
-  K-0  seals (the six sealed files) and every line's ``t3.identity`` = its file header's
+  K-0  seals (the seven sealed files) and every line's ``t3.identity`` = its file header's
   K-1  key set per bundle = the key list (R-0 7, T-3a 228, T-3b 4, T-3c 76); no error left
        after the one retry (H-T3-2)
   K-2  R-0: hash = baseline, controller tag without ``_LAS`` (V0 none, VB ``final_C4G2_P3``;
        Dg-3: as its folder), LAS-b off and not fired
   K-3  T-3: tag = ``final_C4G2_LAS`` (V0, Dg-3 off) / ``final_C4G2_P3_LAS`` (VB, Dg-3 v4_on),
-       ``_FB`` fails; Dg-3 also its folder's ③ start rule
-  K-4  T-3a G1 uniform 72 + T-3b 4: not fired and hash = baseline
-  K-5  every T-3 line that did not fire: hash = baseline
+       ``_FB`` fails; a Dg-3 line (R-0 too) has the stored record's plant options, controller
+       settings (LAS-b block and the full-config record left out) and ③ rule (rev4a 4)
+  K-4  T-3a G1 uniform 72 + T-3b 4: not fired (a fired G1 line is H-T3-4, rev4a 3)
+  K-5  every T-3 line that did not fire, G1 and Dg-3 included: hash = baseline (H-T3-5)
   K-6  every fired T-3 D-1 line: ``las_h7.h7_violations`` with the J-1 format (C2, C3, C4'
-       G6-2, P3-2, C5'-R READY, C5'-S stroke; a missing value fails as rev4 2)
+       G6-2, P3-2, C5'-R READY, C5'-S stroke; rev4a 2); a possibly cut event list is
+       ``K-6-undecidable`` (H-T3-3)
   K-7  table of the fired lines (start, leg, end, active / scaled periods, LOC - t_off,
        Delta F_judged_min, start rho); a record, not a criterion
-Stops: H-T3-0 (K-0), H-T3-3 (K-1 key set, K-3), H-T3-2 (errors), H-T3-1 (K-2), H-T3-4 (K-4),
-H-T3-5 (K-5), H-T3-6 (K-6). Exit codes: 0 passed, 1 a criterion failed (K-2, K-4 .. K-6), 2 a
-stop without a verdict (H-T3-0, H-T3-2, H-T3-3) or an input error.
+Stops: H-T3-0 (K-0), H-T3-3 (key-list, K-1 key set, K-3, K-6-undecidable), H-T3-2 (errors),
+H-T3-1 (K-2), H-T3-4 (K-4), H-T3-5 (K-5), H-T3-6 (K-6). Exit codes: 0 passed, 1 a criterion
+failed (K-2, K-4 .. K-6), 2 a stop without a verdict (H-T3-0, H-T3-2, H-T3-3) or an input error.
 """
 from __future__ import annotations
 
@@ -47,8 +48,19 @@ IDENTITY_KEYS = ("git_head", "sha256", "c2_sha256", "threads", "workers", "affin
 UNIFORM_G1 = "G1"
 NO_VERDICT_STOPS = ("H-T3-0", "H-T3-2", "H-T3-3")
 STOP_ORDER = ("H-T3-0", "H-T3-3", "H-T3-2", "H-T3-1", "H-T3-4", "H-T3-5", "H-T3-6")
-CRITERION_STOP = {"K-0": "H-T3-0", "K-1": "H-T3-3", "K-3": "H-T3-3", "errors": "H-T3-2",
-                  "K-2": "H-T3-1", "K-4": "H-T3-4", "K-5": "H-T3-5", "K-6": "H-T3-6"}
+CRITERION_STOP = {"K-0": "H-T3-0", "key-list": "H-T3-3", "K-1": "H-T3-3", "K-3": "H-T3-3",
+                  "K-6-undecidable": "H-T3-3", "errors": "H-T3-2", "K-2": "H-T3-1",
+                  "K-4": "H-T3-4", "K-5": "H-T3-5", "K-6": "H-T3-6"}
+"""rev3 4 with rev4a: a key-list field != ``d1.jsonl``, a Dg-3 run condition != the stored
+record and a possibly cut event list are H-T3-3 (rev4a 1, 4 #2, 5); a fired G1 line is H-T3-4,
+a silent line with another hash H-T3-5 wherever it is (rev4a 3)."""
+DG3_IGNORED_SETTING_PREFIXES = ("liftoff_approach_slow", "full_config")
+"""rev4a 4 #2: the LAS-b block and the full-config record are left out of the comparison."""
+DG3_OPTION_REPRESENTATION = {"v4_on": {"extend_start_tracked": True}}
+"""The one declared option difference of a folder (to confirm by control-expert): the stored
+v4_on run switched ③ on through the preset (``with_10hz_d1(extend_start_tracked=True)``,
+commit d74ab26, no option key), today's ``VB`` carries it as the option ``extend_start_tracked``.
+The ③ state itself is compared through ``two_pressure.extend_start_rule`` (K-3)."""
 
 
 # ------------------------------------------------------------------------------- input
@@ -126,7 +138,6 @@ def key_list_problems(keys: dict, entries: dict[str, list[dict]], baseline: dict
     digest = hashlib.sha256(baseline_path.read_bytes()).hexdigest()
     if digest != keys["d1_baseline"]["sha256"]:
         problems.append(f"d1.jsonl sha256 {digest} != key list {keys['d1_baseline']['sha256']}")
-    g62_differences = 0
     for bundle in ("T-3a", "T-3c"):
         for entry in entries[bundle]:
             record = baseline.get(entry["line_key"])
@@ -134,14 +145,10 @@ def key_list_problems(keys: dict, entries: dict[str, list[dict]], baseline: dict
                 problems.append(f"{entry['line_key']}: no d1.jsonl line")
                 continue
             problems += _entry_differences(entry, record)
-            if entry.get("G6-2") != record["d1"]["items"].get("G6-2_loc"):
-                g62_differences += 1
     for entry in entries[las_t3.R0] + entries["T-3b"]:
         if entry["kind"] == las_t3.KIND_DG3 and baseline_hash(entry, baseline) is None:
             problems.append(f"{entry['line_key']}: not one stored T4h hash")
-    if g62_differences:
-        notes.append(f"key list G6-2 field differs from d1.items G6-2_loc on {g62_differences} "
-                     f"entries (K-6 reads d1.jsonl)")
+    notes.append("key list G6-2 field void (rev4a 1); K-6 reads d1.items G6-2_loc of d1.jsonl")
     return problems, notes
 
 
@@ -151,6 +158,7 @@ def _entry_differences(entry: dict, record: dict) -> list[str]:
                     if name.startswith(las_h7.FAULT_PREFIX))
     pairs = {"commands_sha256": (entry["commands_sha256"], record["commands_sha256"]),
              "verdict": (entry["verdict"], d1["verdict"]),
+             "fail_items": (sorted(entry["fail_items"]), sorted(d1["fail_items"])),
              "P3-2": (entry["P3-2"], d1["items"].get("P3-2")),
              "t_ready_s": (entry["t_ready_s"], d1["t_ready_s"]),
              "stroke_max_m": (entry["stroke_max_m"], d1["stroke_max_m"]),
@@ -195,6 +203,44 @@ def tag_problems(entry: dict, line: dict, is_las_on: bool) -> list[str]:
     return problems
 
 
+def _compared_settings(settings: dict | None) -> dict:
+    return {key: value for key, value in (settings or {}).items()
+            if not key.startswith(DG3_IGNORED_SETTING_PREFIXES)}
+
+
+def dg3_condition_problems(entry: dict, line: dict, stored_dir: Path) -> list[str]:
+    """rev4a 4 #2, #3: the Dg-3 run used the stored record's plant options and controller
+    settings (LAS-b block and identity left out) and the stored folder's ③ rule."""
+    meta, record = las_t3.stored_dg3_record(entry, stored_dir)
+    problems = []
+    if line.get("v5_setting") != record.get("v5_setting"):
+        problems.append(f"v5_setting {line.get('v5_setting')} != {record.get('v5_setting')}")
+    options = dict(line.get("hydraulic_options") or {})
+    for key, value in DG3_OPTION_REPRESENTATION.get(entry["folder"], {}).items():
+        if options.get(key) == value:
+            del options[key]
+    if options != (record.get("hydraulic_options") or {}):
+        problems.append(f"hydraulic_options {options} != stored {record.get('hydraulic_options')}")
+    new, stored = (_compared_settings(line.get("controller_settings")),
+                   _compared_settings(record.get("controller_settings")))
+    differing = sorted(key for key in set(new) | set(stored) if new.get(key) != stored.get(key))
+    if differing:
+        problems.append(f"controller_settings differ: "
+                        f"{ {key: (new.get(key), stored.get(key)) for key in differing} }")
+    stored_rule = (meta.get("preset_settings") or {}).get("two_pressure.extend_start_rule")
+    if line.get("extend_start_rule") != stored_rule:
+        problems.append(f"③ rule {line.get('extend_start_rule')} != stored preset {stored_rule}")
+    return problems
+
+
+def condition_problems(entry: dict, line: dict, is_las_on: bool, stored_dir: Path) -> list[str]:
+    """K-3 (T-3) / the R-0 run condition: tag, LAS-b state, and a Dg-3 line's condition."""
+    problems = tag_problems(entry, line, is_las_on)
+    if entry["kind"] == las_t3.KIND_DG3:
+        problems += dg3_condition_problems(entry, line, stored_dir)
+    return problems
+
+
 def hash_problem(entry: dict, line: dict, baseline: dict[str, dict]) -> str | None:
     stored = baseline_hash(entry, baseline)
     new = line.get("commands_sha256")
@@ -219,15 +265,17 @@ def k7_row(entry: dict, line: dict, baseline: dict[str, dict]) -> dict:
 
 
 # ------------------------------------------------------------------------------- R-0
-def r0_criteria(lines: list[dict], entries: list[dict], baseline: dict[str, dict]) -> dict:
-    """K-1 (R-0), errors and K-2 of the R-0 lines: ``criterion -> problems``."""
+def r0_criteria(lines: list[dict], entries: list[dict], baseline: dict[str, dict],
+                stored_dir: Path = las_t3.V5_DIR) -> dict:
+    """K-1 (R-0), errors, K-2 and the run condition (K-3 form) of the R-0 lines."""
     good, errors = good_lines(lines)
-    k2 = {}
+    k2, k3 = {}, {}
     for entry in entries:
         line = good.get(entry["line_key"])
         if line is None:
             continue
-        found = tag_problems(entry, line, is_las_on=False)
+        found = [problem for problem in tag_problems(entry, line, is_las_on=False)
+                 if problem.startswith(("tag", "LAS-b"))]
         problem = hash_problem(entry, line, baseline)
         if problem:
             found.append(problem)
@@ -235,8 +283,12 @@ def r0_criteria(lines: list[dict], entries: list[dict], baseline: dict[str, dict
             found.append("fired")
         if found:
             k2[entry["line_key"]] = found
+        if entry["kind"] == las_t3.KIND_DG3:
+            condition = dg3_condition_problems(entry, line, stored_dir)
+            if condition:
+                k3[entry["line_key"]] = condition
     return {"K-1": key_set_problems(las_t3.R0, entries, good, lines),
-            "errors": errors, "K-2": k2}
+            "errors": errors, "K-2": k2, "K-3": k3}
 
 
 def first_stop(criteria: dict) -> str | None:
@@ -245,17 +297,19 @@ def first_stop(criteria: dict) -> str | None:
 
 
 def r0_gate(lines: list[dict], entries: list[dict], baseline_path: Path) -> dict:
-    """The run's R-0 gate: T-3 starts only without a stop (H-T3-1 / H-T3-2 / H-T3-3)."""
-    criteria = r0_criteria(lines, entries, load_baseline(baseline_path))
+    """The run's R-0 gate: T-3 starts only without a stop (H-T3-1 / H-T3-2 / H-T3-3); the
+    Dg-3 records are read from the folder of ``baseline_path`` (the v5 folder)."""
+    criteria = r0_criteria(lines, entries, load_baseline(baseline_path), baseline_path.parent)
     return {"criteria": criteria, "stop": first_stop(criteria)}
 
 
 # ------------------------------------------------------------------------------- T-3
-def t3_criteria(lines: list[dict], entries: dict[str, list[dict]],
-                baseline: dict[str, dict]) -> tuple[dict, list[dict]]:
-    """K-1 (T-3 bundles), errors, K-3 .. K-6 and the K-7 rows."""
+def t3_criteria(lines: list[dict], entries: dict[str, list[dict]], baseline: dict[str, dict],
+                stored_dir: Path = las_t3.V5_DIR) -> tuple[dict, list[dict]]:
+    """K-1 (T-3 bundles), errors, K-3 .. K-6 (and undecidable K-6 lines), the K-7 rows."""
     good, errors = good_lines(lines)
-    criteria = {"K-1": [], "errors": errors, "K-3": {}, "K-4": {}, "K-5": {}, "K-6": {}}
+    criteria = {"K-1": [], "errors": errors, "K-3": {}, "K-4": {}, "K-5": {}, "K-6": {},
+                "K-6-undecidable": {}}
     k7 = []
     for bundle in las_t3.T3_BUNDLES:
         criteria["K-1"] += key_set_problems(bundle, entries[bundle], good, lines)
@@ -263,7 +317,7 @@ def t3_criteria(lines: list[dict], entries: dict[str, list[dict]],
             line = good.get(entry["line_key"])
             if line is None:
                 continue
-            _judge_t3_line(bundle, entry, line, baseline, criteria)
+            _judge_t3_line(bundle, entry, line, baseline, criteria, stored_dir)
             if is_fired(line):
                 k7.append(k7_row(entry, line, baseline))
     return criteria, k7
@@ -274,19 +328,23 @@ def _is_k4_line(bundle: str, entry: dict) -> bool:
 
 
 def _judge_t3_line(bundle: str, entry: dict, line: dict, baseline: dict[str, dict],
-                   criteria: dict) -> None:
+                   criteria: dict, stored_dir: Path) -> None:
     key = entry["line_key"]
-    found = tag_problems(entry, line, is_las_on=True)
+    found = condition_problems(entry, line, True, stored_dir)
     if found:
         criteria["K-3"][key] = found
     fired = is_fired(line)
     hash_issue = hash_problem(entry, line, baseline)
-    if _is_k4_line(bundle, entry) and (fired or hash_issue):
-        criteria["K-4"][key] = "fired" if fired else hash_issue
-    if not fired and hash_issue:
+    if _is_k4_line(bundle, entry) and fired:  # rev4a 3: a fired G1 line
+        criteria["K-4"][key] = "fired"
+    if not fired and hash_issue:  # rev4a 3: any silent line, G1 and Dg-3 included
         criteria["K-5"][key] = hash_issue
     if fired and entry["kind"] == las_t3.KIND_D1:
-        violations = las_h7.h7_violations(line, baseline[key], las_h7.D1_FORMAT)
+        try:
+            violations = las_h7.h7_violations(line, baseline[key], las_h7.D1_FORMAT)
+        except las_h7.UndecidableLine as exc:
+            criteria["K-6-undecidable"][key] = str(exc)
+            return
         if violations:
             criteria["K-6"][key] = violations
 
@@ -303,9 +361,10 @@ def judge_t3(r0_path: Path, t3_path: Path, keys_path: Path, baseline_path: Path,
     baseline = load_baseline(baseline_path)
     r0_header, r0_lines = read_jsonl(r0_path)
     t3_header, t3_lines = read_jsonl(t3_path)
+    stored_dir = baseline_path.parent
     seals = lt.seal_problems(rules_dir, las_t3.T3_REQUIRED_SEALS)
     list_problems, notes = key_list_problems(keys, entries, baseline, baseline_path)
-    k0 = seals + list_problems + las_t3.count_problems(entries)
+    k0 = seals + las_t3.count_problems(entries)
     k0 += identity_problems("R-0", r0_header, r0_lines)
     k0 += identity_problems("T-3", t3_header, t3_lines)
     if r0_header and t3_header and r0_header.get("identity") != t3_header.get("identity"):
@@ -313,11 +372,12 @@ def judge_t3(r0_path: Path, t3_path: Path, keys_path: Path, baseline_path: Path,
     for label, header in (("R-0", r0_header), ("T-3", t3_header)):
         if header and header.get("keys_subset"):
             k0.append(f"{label}: a --keys subset run is not a T-3 verdict")
-    r0 = r0_criteria(r0_lines, entries[las_t3.R0], baseline)
-    t3, k7 = t3_criteria(t3_lines, entries, baseline)
-    criteria = {"K-0": k0, "K-1": r0["K-1"] + t3["K-1"], "errors": r0["errors"] + t3["errors"],
-                "K-2": r0["K-2"], "K-3": t3["K-3"], "K-4": t3["K-4"], "K-5": t3["K-5"],
-                "K-6": t3["K-6"]}
+    r0 = r0_criteria(r0_lines, entries[las_t3.R0], baseline, stored_dir)
+    t3, k7 = t3_criteria(t3_lines, entries, baseline, stored_dir)
+    criteria = {"K-0": k0, "key-list": list_problems, "K-1": r0["K-1"] + t3["K-1"],
+                "errors": r0["errors"] + t3["errors"], "K-2": r0["K-2"],
+                "K-3": {**r0["K-3"], **t3["K-3"]}, "K-4": t3["K-4"], "K-5": t3["K-5"],
+                "K-6": t3["K-6"], "K-6-undecidable": t3["K-6-undecidable"]}
     stops = [CRITERION_STOP[name] for name, found in criteria.items() if found]
     counts = {"R-0": len(good_lines(r0_lines)[0]),
               **{bundle: sum(line["t3"]["bundle"] == bundle

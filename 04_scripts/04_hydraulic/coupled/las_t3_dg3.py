@@ -11,8 +11,11 @@ pool workers, which re-import this file as ``__mp_main__``, get the same conditi
                   run was made at d1ec93f, when ``VB`` had no ③ option and the preset kept the
                   constant start rule; ``hydraulic_options`` of that record has no ③ key either).
 Every run records ``two_pressure.extend_start_rule`` and ``liftoff_approach_slow.enable`` in its
-``controller_settings`` (``las_t3.py`` checks both against the bundle). The parent refuses to start
-when the preset's LAS-b state is not the one asked for.
+``controller_settings``, plus the whole controller config (``full_config`` and its sha256, rev4a
+4 #2); the record's ``hydraulic_options`` are the options the plant used. ``las_t3.py`` compares
+both with the stored record and checks the ③ rule (rev4a 4). One job = one new process
+(``las_t3.py`` worker -> this file -> one r79 pool worker): off and v4_on never share a process.
+The parent refuses to start when the preset's LAS-b state is not the one asked for.
 
 Usage (by ``las_t3.py``; dynamics-dev, env R79_V5_SETTING / R79_T4H_DIR / R72_PATH set):
   python -I -B las_t3_dg3.py <project_root> run <out_json> --levels L2,L3 --keys <plain key>
@@ -77,6 +80,24 @@ import r79_L3L4_final as final  # noqa: E402  (after the condition: it reads the
 
 final.RECORDED_SETTINGS = (*final.RECORDED_SETTINGS, "two_pressure.extend_start_rule",
                            "liftoff_approach_slow.enable")
+FULL_CONFIG_KEY = "full_config"
+FULL_CONFIG_SHA_KEY = "full_config_sha256"
+_recorded_settings = final.controller_settings
+
+
+def controller_settings_with_full_config(config) -> dict:
+    """The r79 settings plus the whole controller config of the run (rev4a 4 #2: every
+    setting is recorded; the stored records hold the r79 subset, which is what is compared)."""
+    import dataclasses
+    import hashlib
+    import json
+
+    text = json.dumps(dataclasses.asdict(config), default=str, sort_keys=True)
+    return {**_recorded_settings(config), FULL_CONFIG_KEY: json.loads(text),
+            FULL_CONFIG_SHA_KEY: hashlib.sha256(text.encode("utf-8")).hexdigest()}
+
+
+final.controller_settings = controller_settings_with_full_config
 
 
 def main() -> None:

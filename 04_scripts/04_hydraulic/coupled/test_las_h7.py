@@ -94,7 +94,8 @@ def test_r72_format_reads_the_dg3_fields() -> None:
 def test_ready_only_format_skips_the_absent_quantities() -> None:
     fmt = las_h7.READY_ONLY_FORMAT
     assert fmt.absent == ["C4'", "P3-2", "C5'-S"]
-    line = {"event_names": {}, "judged": {"verdict": "pass", "fail_items": []},
+    judge = {"name": "u9_judge", "version": "rules_rev1", "sha256": "e" * 64}
+    line = {"event_names": {}, "judged": {"verdict": "pass", "fail_items": [], "judge": judge},
             "values": {"times": {"t_first_ready_s": 50.0}}}
     late = copy.deepcopy(line)
     late["values"]["times"]["t_first_ready_s"] = 56.0
@@ -102,6 +103,53 @@ def test_ready_only_format_skips_the_absent_quantities() -> None:
     no_verdict = copy.deepcopy(line)
     del no_verdict["judged"]
     assert list(las_h7.h7_violations(no_verdict, line, fmt)) == ["C2"]
+    anonymous = copy.deepcopy(line)  # rev4a 5: a judged block without the judge's identity
+    del anonymous["judged"]["judge"]["sha256"]
+    assert "verdict missing" in las_h7.h7_violations(anonymous, line, fmt)["C2"]
+
+
+def test_a_possibly_cut_event_list_is_undecidable() -> None:
+    capped = _d1()
+    capped["event_names"] = {"INFO_X": las_h7.D1_EVENTS_LIMIT}
+    with pytest.raises(las_h7.UndecidableLine, match="baseline"):
+        las_h7.h7_violations(_d1(), capped, D1)
+    full = _r72(events=[(str(i), "INFO_X") for i in range(las_h7.R79_EVENTS_LIMIT)])
+    with pytest.raises(las_h7.UndecidableLine, match="new"):
+        las_h7.h7_violations(full, _r72(), R72)
+    flagged = {**_r72(), "events_incomplete": True}
+    with pytest.raises(las_h7.UndecidableLine):
+        las_h7.h7_violations(flagged, _r72(), R72)
+    fired_full = las_h7.TargetLine("a", full, _r72(), [[1.0, "INFO_LIFTOFF_SLOW:FL"]])
+    silent_full = las_h7.TargetLine("b", full, _r72(), [])
+    result = las_h7.judge_batch("J-10", [fired_full, silent_full])
+    assert sorted(result["undecidable"]) == ["a", "b"] and result["stop"]
+
+
+def _d1s_case(verdict="pass", p32="pass", ready=67.3, stroke_mm=438.5, g62=True) -> dict:
+    """The shape of ``paper_runs/d1_scm/d1s_judge.json`` ``cases.<id>`` (2026-11-08)."""
+    return {"verdict": verdict, "gates": {"G6-2_loc": g62, "G6-3_Fmin": True},
+            "p3_checks": {"P3-2_verdict": p32, "P3-3_within": True},
+            "t_ready_rel_s": ready, "stroke_max_mm": stroke_mm,
+            "events": ["INFO_PRESSURE_ZERO_CALIBRATED:FL", "crawler_liftoff_confirmed"]}
+
+
+def _u3_record(verdict="pass", late="pass", ready=39.3, stroke_mm=407.2, warnings=()) -> dict:
+    """The shape of ``v5_rerun/u3_slope_V0.json`` ``records[i]`` (2026-11-08)."""
+    return {"verdict": verdict, "failed_rows": [], "late_loc_reapproach": {"verdict": late},
+            "t_ready_s": ready, "max_stroke_mm": stroke_mm, "warnings": list(warnings)}
+
+
+def test_j3_and_j7_formats_read_the_stored_fields() -> None:
+    d1s, u3 = las_h7.BATCH_FORMATS["J-3'"], las_h7.BATCH_FORMATS["J-7-slope"]
+    assert d1s.status is las_h7.FormatStatus.DRAFT and u3.status is las_h7.FormatStatus.DRAFT
+    assert las_h7.h7_violations(_d1s_case(), _d1s_case(), d1s, allow_draft=True) == {}
+    found = las_h7.h7_violations(_d1s_case(p32="fail", stroke_mm=440.0), _d1s_case(), d1s,
+                                 allow_draft=True)
+    assert sorted(found) == ["C5'-S", "P3-2"]
+    assert u3.absent == ["C4'"]
+    fault = _u3_record(warnings=("FAULT_STROKE_END:FL",))
+    assert list(las_h7.h7_violations(fault, _u3_record(), u3, allow_draft=True)) == ["C3"]
+    assert las_h7.h7_violations(_u3_record(late="flag"), _u3_record(), u3, allow_draft=True) == {}
 
 
 def test_a_draft_format_does_not_judge_without_confirmation() -> None:
