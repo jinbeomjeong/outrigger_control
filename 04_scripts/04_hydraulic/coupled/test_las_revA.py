@@ -211,6 +211,14 @@ def test_grid_gate_and_earlier_identity(tmp_path):
     assert reva.earlier_identity_problems("R-T", {**current, "git_head": "c1"}, tmp_path)
 
 
+def test_reference_is_needed_after_r0(tmp_path):
+    missing = tmp_path / "rev_RG.jsonl"
+    assert reva.load_reference_for("R-0", missing) is None
+    for bundle in ("R-0P5", "R-G", "R-H", "R-T", "R-P0", "R-X"):
+        with pytest.raises(ValueError, match="H-10"):
+            reva.load_reference_for(bundle, missing)
+
+
 def test_r0p5_line_check():
     ref = reference()
     line = r0p5_lines(ref)[0]

@@ -26,7 +26,8 @@ Bundles (rules 3), output ``06_analysis/03_hydraulic/coupled/v5/las/revA/revA_R<
   R-P0   P0 on the union of the keys whose hash changed in the revA R-T / R-S files.
   R-X    P0 with the DONE record on the keys of the C-4 exception claims, or --keys.
 Gates before a run (exit 2): H-1 seals; H-10 the reference ``rev_RG.jsonl`` (``--ref-rg``,
-raw sha256 7e8c3b41..) for R-0P5, R-G, R-T, R-S; H-2 R-0 passed before R-0P5, and R-0 and R-0P5
+raw sha256 7e8c3b41..) for every bundle but R-0 (R-0P5 / R-G read it, the later bundles judge
+R-0P5 and (ga) with it); H-2 R-0 passed before R-0P5, and R-0 and R-0P5
 passed with the current tool sha256 before R-G and later; R-T / R-S / R-P0 / R-X need every
 earlier revA R-G / R-H / R-T / R-S / R-P0 line from the current commit and tool sha256, and
 R-T / R-S need each given candidate's 30 R-G + 24 R-H lines with the (ga) status ``pass``
@@ -89,8 +90,9 @@ BUNDLE_CANDIDATES = {"R-0": ("P0",), "R-0P5": ("P5",), "R-G": judge.JUDGED_CANDI
 """None: the candidates must be given (those that passed (ga), rules 3 order)."""
 BUNDLE_COUNTS = {"R-0": 6, "R-0P5": judge.GRID_LINES, "R-G": 2 * judge.GRID_LINES,
                  "R-H": 3 * judge.HALF_LINES}
-REFERENCE_BUNDLES = ("R-0P5", "R-G", "R-T", "R-S")
-"""H-10: the bundles that read the reference P5 lines (R-T / R-S through the (ga) gate)."""
+REFERENCE_BUNDLES = tuple(name for name in judge.BUNDLES if name != "R-0")
+"""H-10: R-0P5 / R-G read the reference P5 lines; every later bundle needs them too, for the
+H-2 gate (R-0P5 judged against the reference) and the (ga) gate of R-T / R-S."""
 WHOLE_BUNDLE_RERUN = judge.GRID_BUNDLES
 EARLIER_BUNDLE_FILES = ("revA_RG*.jsonl", "revA_RH*.jsonl", "revA_RT*.jsonl", "revA_RS*.jsonl",
                         "revA_RP0*.jsonl")
@@ -500,7 +502,8 @@ def load_reference_for(bundle: str, path: Path) -> dict | None:
     problems = judge.reference_problems(path)
     if problems:
         if bundle in REFERENCE_BUNDLES:
-            raise ValueError(f"{problems} (rules 8 H-10: R-0P5 / R-G are not run)")
+            raise ValueError(f"{problems} (rules 8 H-10; give --ref-rg, the main checkout's "
+                             f"file)")
         return None
     return judge.load_reference(path)
 
