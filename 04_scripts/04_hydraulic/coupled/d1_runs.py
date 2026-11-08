@@ -17,7 +17,9 @@ the crawler factor from ``run_control_comparison.CRAWLER_K_SCALE`` (P-1), both f
 Record ``d1`` of every run (``d1_selection_rules.md`` 3, the field names of that sealed text):
   key, verdict (``pass`` / ``fail`` / ``allowed_stop``), fail_items, F_judged_min_N,
   F_first_level_min_N, t_ready_s, t_ready_limit_s, att_judged_deg, stroke_max_m, imu_R_c,
-  dsb75_events, j_p3; and the records of the row definition: R_c_floor, R_c_settle_true,
+  dsb75_events, j_p3; ``ready_limit_rule`` (the rev1 READY rule with the SHA-256 of
+  ``d1_selection_rules_rev1.md`` read from the file); and the records of the row definition:
+  R_c_floor, R_c_settle_true,
   floor_estimate_error_deg (the x1 settle map against the true settle), crawler_k_scale_plant,
   F_first_level_after_liftoff_min_N, has_rod_reading, head_only_declared, expectation (H-R-A-stop).
 
@@ -27,7 +29,8 @@ Judgement per family (D-5: the existing criteria, ``d1_selection_rules.md`` 11):
        H-R-A also the r72 G6 gates; a soil-guard safe stop of a row that allows it is
        ``allowed_stop``.
   H-S  P3 rows of ``s9_soil_slope`` (H-S-0 / H-S-1) or the r72 G6 gates (H-S-A), READY with
-       the row's limit (100 / 120 s); ``stroke_limited_stop`` allowed.
+       the row's spec 421.1 limit (slope 120 s, flat uniform J1 / J2 / S1 100 s, other flat
+       90 s; ``d1_selection_rules_rev1.md`` 1); ``stroke_limited_stop`` allowed.
   PS-c 426.3 E-1 .. E-7 (slow / fast) with the run-maximum stroke <= 684.8 mm.
 """
 
@@ -60,6 +63,7 @@ from d1_rows import (  # noqa: E402
     TAG_STROKE_STOP_ALLOWED,
     TAG_STROKE_STOP_EXPECTED,
     D1Row,
+    ready_rule_record,
 )
 from harness_flow import COLUMN, TRUE_FORCE  # noqa: E402
 from verdict_metrics import chunk_phases  # noqa: E402
@@ -374,6 +378,15 @@ def stop_expectation(row: D1Row, values: dict, rows: np.ndarray, controller) -> 
     return {"met": all(conditions.values()), "conditions": conditions, "guard_events": guard}
 
 
+def u3_record(harness: dict) -> dict:
+    """The slope-suite record fields of a steady run (``s9_slope_fix_candidates
+    .slope_record_fields``): what the U-3 judge reads when a U-3 key reuses this run
+    (``u3_u6_rerun_rules.md`` 6 Q-5). Record only, after the run."""
+    import s9_slope_fix_candidates as fix
+
+    return fix.slope_record_fields(harness)
+
+
 def d1_record(row: D1Row, setting_name: str, eps: float, result: dict, plant, controller,
               harness: dict) -> dict:
     """The ``d1`` block of a run (module docstring)."""
@@ -395,6 +408,7 @@ def d1_record(row: D1Row, setting_name: str, eps: float, result: dict, plant, co
         **{k: v for k, v in judged.items() if k != "items"}, "items": judged["items"],
         "F_first_level_min_N": first_level, "F_first_level_after_liftoff_min_N": after_lift,
         "t_ready_s": t_ready_s, "t_ready_limit_s": row.ready_limit_s,
+        "ready_limit_rule": ready_rule_record(),
         "stroke_max_m": float(plant.flow_limiter.max_stroke_reading_m),
         **settle_map_records(row, settle_rad),
         "crawler_k_scale_plant": float(getattr(plant, "crawler_k_scale", 1.0)),
@@ -402,6 +416,8 @@ def d1_record(row: D1Row, setting_name: str, eps: float, result: dict, plant, co
         "has_rod_reading": has_rod, "head_only_declared": head_only,
         "j_p3": j_p3_status(setting_name, bound_check, has_rod, head_only),
         "harness_class": result.get("harness_class")}
+    if row.path == "steady" and "rows" in harness:
+        record["u3"] = u3_record(harness)
     expectation = stop_expectation(row, values, rows, controller)
     if expectation is not None:
         record["expectation"] = expectation

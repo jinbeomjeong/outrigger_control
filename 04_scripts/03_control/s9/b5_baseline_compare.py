@@ -61,6 +61,11 @@ Usage (dynamics-dev, numba; PowerShell):
   python -I b5_baseline_compare.py run --cases oos --controllers C2,ABL,IND --official \
       --workers 4 --affinity 0x0F000000 --out 06_analysis/02_control/s9/rev84/b5_oos.json
   python -I b5_baseline_compare.py list
+Paper v5 U-6 (``u3_u6_rerun_rules.md`` 1, 3): ``--v5-setting VB`` runs C2 / ABL / IND on the VB
+plant (``04_hydraulic/coupled/v5_rerun.py``; the ③ bound on C2 only, tags ``final_C4G2_P3``,
+``ABL``, ``IND``), ``--ids-from <v4 json> [--pad B]`` keeps exactly the stored cases of
+``--cases``; the default ``--out`` is then
+``06_analysis/02_control/v5_rerun/u6_b5_<label>_VB.json``.
 ``--out`` defaults to ``06_analysis/02_control/s9/rev84/b5_<main|wide|oos|cases>.json``. Table and
 figure: ``b5_baseline_table.py`` and ``b5_baseline_figure.py``. Units SI unless the key says
 otherwise (mm, kN, bar, deg, s).
@@ -464,6 +469,8 @@ def make_factory(name: str):
             ctrl = c2.C2Controller.from_params(cl.PARAMS, _c2_config(cl, c2, name, variant))
         ctrl.reset()
         _RUN["ctrl"] = ctrl
+        if _RUN.get("v5_setting"):  # paper v5 U-6: has_rod_reading of every controller
+            _v5_rerun().observe_rod_readings(ctrl)
         on_created = _RUN.get("on_controller_created")
         if on_created is not None:  # --official: the judge's capture of the settle state
             on_created(cl, ctrl)
@@ -533,6 +540,7 @@ def _install_step_hook(cl) -> None:
         is_moving = ((np.abs(np.asarray(command, float)) > MOVING_SPEED_EPS)
                      | (np.abs(valve) > MOVING_SPEED_EPS))
         accumulated = inner(plant, command, valve, steps)
+        _RUN["plant"] = plant  # paper v5 U-6 record (the plant of the v5 block)
         peak_N = np.asarray(accumulated[16:20], float).copy()
         _RUN["pmax_move_N"] = np.maximum(_RUN["pmax_move_N"],
                                          np.where(is_moving, peak_N, -np.inf))
@@ -708,10 +716,25 @@ def _run_g6(sl, spec: dict, run_input: dict, controller: str, is_official: bool,
     return out, official
 
 
-def _new_run_state(spec: dict) -> None:
+def _new_run_state(spec: dict, v5_setting: str | None = None) -> None:
     _RUN.clear()
     _RUN.update(pmax_move_N=np.full(4, -np.inf), pmax_lock_N=np.full(4, -np.inf),
-                crawler=[], log=[], event=spec.get("event"))
+                crawler=[], log=[], event=spec.get("event"), v5_setting=v5_setting)
+
+
+V5_CONTROLLERS = ("C2", "ABL", "IND")
+"""Controllers of the paper v5 U-6 rerun (rules 1: the VB plant for all, ③ on C2 only)."""
+
+
+def _v5_rerun():
+    """``coupled/v5_rerun.py`` (paper v5 U-6); its folder joins ``sys.path`` at the end so that
+    no module this script imported before resolves differently."""
+    coupled = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+    if str(coupled) not in sys.path:
+        sys.path.append(str(coupled))
+    import v5_rerun
+
+    return v5_rerun
 
 
 def run_job(job: dict) -> dict:
@@ -725,10 +748,12 @@ def run_job(job: dict) -> dict:
     try:
         spec = case_spec(case_id)
         record["src"] = spec["src"]
+        if job.get("v5_setting"):  # paper v5 U-6: one job per process (maxtasksperchild 1)
+            _v5_rerun().install_in_worker(extend_start=controller == "C2")
         import late_loc_rule
         import s9_soil_closed_loop as sl
 
-        _new_run_state(spec)
+        _new_run_state(spec, job.get("v5_setting"))
         if spec["harness"] == "slope":
             sl, run_input, slope_case = _prepare_slope_run(spec, job)
         else:
@@ -749,6 +774,10 @@ def run_job(job: dict) -> dict:
             out = sl.run_case(run_input)
         record.update(metrics(out, _RUN["ctrl"]))
         record.update(official)
+        if job.get("v5_setting"):
+            record["v5"] = _v5_rerun().run_record(
+                _RUN.get("plant"), _RUN["ctrl"], controller_name=controller,
+                harness_commands_sha256=record.get("commands_sha256"))
     except Exception as exc:  # noqa: BLE001  keep the batch going; the record carries it
         record.update(error=repr(exc), tb=traceback.format_exc()[-3000:])
     if _RUN.get("ctrl") is not None:
@@ -969,6 +998,8 @@ class BatchOptions:
 
     is_official: bool = False
     allow_no_settle_row: bool = False
+    rerun: object | None = None
+    """``v5_rerun.RerunOptions`` of a paper v5 U-6 run (None: the batch as before)."""
 
 
 def run_batch(case_ids: list[str], controllers: list[str], workers: int,
@@ -980,6 +1011,10 @@ def run_batch(case_ids: list[str], controllers: list[str], workers: int,
     jobs = [{"case": case_id, "controller": name, "official": options.is_official,
              "allow_no_settle_row": options.allow_no_settle_row}
             for case_id in case_ids for name in controllers]
+    rerun = options.rerun
+    if rerun is not None and rerun.is_active:
+        _v5_rerun().activate(rerun.setting)  # the pool workers inherit it
+        jobs = [{**job, "v5_setting": rerun.setting} for job in jobs]
     t0 = time.perf_counter()
     # one process per job: the harness patches (make_plant, control_period, hold time) and the
     # numba state never leak from one case into the next
@@ -992,6 +1027,10 @@ def run_batch(case_ids: list[str], controllers: list[str], workers: int,
             "controller_settings": settings_meta(records),
             "r72_path_env": os.environ.get(R72_PATH_ENV),  # raw value; records hold the used one
             "wall_s": round(time.perf_counter() - t0, 1), **placement}
+    if rerun is not None and (rerun.is_active or rerun.ids_from is not None):
+        meta["v5"] = {**_v5_rerun().file_meta(rerun, case_ids, tuple(controllers)),
+                      "ids_from": None if rerun.ids_from is None else str(rerun.ids_from),
+                      "pad": rerun.pad}
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps({"meta": meta, "records": records}, indent=1, default=float),
                         encoding="utf-8")
@@ -1015,8 +1054,36 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
                         help="run X| soil cases without a settle-table row uncorrected")
     no_row.add_argument("--skip-no-settle-row", action="store_true",
                         help="leave out X| soil cases without a settle-table row")
+    _v5_rerun().add_arguments(run)
     sub.add_parser("list", help="print the table cases and the out-of-sample cases")
     return parser.parse_args(argv)
+
+
+def _rerun_case_ids(case_ids: list[str], controllers: list[str], rerun) -> list[str]:
+    """Paper v5 U-6: with ``--ids-from`` exactly the stored cases (each once, stored order),
+    which must be cases of ``--cases``; with ``--v5-setting`` only C2 / ABL / IND.
+
+    Raises:
+        SystemExit: Another controller with ``--v5-setting``, or a stored case outside
+            ``--cases``.
+    """
+    if rerun.is_active:
+        others = [name for name in controllers if name not in V5_CONTROLLERS]
+        if others:
+            raise SystemExit(f"--v5-setting runs {V5_CONTROLLERS} only, got {others}")
+    if rerun.ids_from is None:
+        return case_ids
+    v5 = _v5_rerun()
+    return v5.select_known(v5.ids_from(rerun.ids_from, rerun.pad), case_ids)
+
+
+def _out_path(args: argparse.Namespace, rerun) -> Path:
+    if args.out is not None:
+        return args.out
+    if not rerun.is_active:
+        return default_out_path(args.cases)
+    label = {"all": "main", "wide": "wide", "oos": "oos"}.get(args.cases, "cases")
+    return _v5_rerun().default_out_path(f"b5_{label}", rerun.setting, study="u6")
 
 
 def _without_unsettled_cases(case_ids: list[str], args: argparse.Namespace) -> list[str]:
@@ -1048,16 +1115,17 @@ def main(argv: list[str] | None = None) -> None:
     if args.cmd == "list":
         _print_case_list()
         return
-    case_ids = resolve_case_ids(args.cases)
+    rerun = _v5_rerun().options_from_args(args)
     controllers = args.controllers.split(",")
+    case_ids = _rerun_case_ids(resolve_case_ids(args.cases), controllers, rerun)
     invalid = _invalid_arguments(case_ids, controllers)
     if invalid:
         raise SystemExit("invalid arguments: " + "; ".join(invalid))
     check_oos_overlap(case_ids)
     case_ids = _without_unsettled_cases(case_ids, args)
-    out_path = args.out if args.out is not None else default_out_path(args.cases)
+    out_path = _out_path(args, rerun)
     options = BatchOptions(is_official=args.official,
-                           allow_no_settle_row=args.allow_no_settle_row)
+                           allow_no_settle_row=args.allow_no_settle_row, rerun=rerun)
     records = run_batch(case_ids, controllers, args.workers, args.affinity, out_path, options)
     _print_records(records)
 

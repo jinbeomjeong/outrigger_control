@@ -166,6 +166,11 @@ Usage (project root; dynamics-dev with numba; MKL_THREADING_LAYER=TBB, OMP_NUM_T
       [--settle-hook harness|p0] [--out JSON]
   python -I s9_slope_fix_candidates.py list --suite g8 [--filter ...]
   python -I s9_slope_fix_candidates.py compare --out JSON RUN_JSON [RUN_JSON ...]
+Paper v5 U-3 (``u3_u6_rerun_rules.md``, ``04_hydraulic/coupled/v5_rerun.py``): ``run`` /
+``list`` take ``--v5-setting {V0,VB}`` (plant setting and controller tag per run, ``v5`` block),
+``--ids-from <v4 json> [--pad B]`` (exactly the stored keys of the suite) and, for ``run``,
+``--reuse-d1 <d1.jsonl>`` (rules 6, ``u3_reuse.py``); with one suite the default ``--out`` is
+``06_analysis/02_control/v5_rerun/u3_<suite>_<setting>.json``. Without them nothing changes.
 Units SI unless the key says otherwise (mm, kN, deg, s).
 """
 
@@ -205,6 +210,11 @@ import soil_guard_stop_rule  # noqa: E402  (spec 427.9 safe-stop class)
 from late_loc_rule import crawler_recontact_record  # noqa: E402
 
 DEFAULT_OUT_DIR = ROOT / "06_analysis" / "02_control" / "s9" / "rev80"
+COUPLED_DIR = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+ROD_READING_SUITES = ("g8",)
+"""Suites whose harness gives the controller rod-side pressures (g8: the r69 G8 / s8 rod-side
+harness of ``r70_p28_screen``); their runs are not declared head-only (v5 criteria revision 9
+3.1), so J-P3 judges them (``u3_u6_rerun_rules.md`` 1 assumes head-only bundles: G-4)."""
 SETTLE_TABLE_PATH = ROOT / "06_analysis" / "00_dynamics" / "slope_crawler_settle.json"
 SETTLE_TABLE_KEY = "hook_harness"
 SETTLE_HOOK_ENV = "S9_SETTLE_HOOK"
@@ -2639,6 +2649,14 @@ def _slope_record(payload: dict) -> dict:
     result = slope.run_one(payload)
     if "error" in result:
         return {"error": result["error"], "tb": result.get("tb")}
+    return slope_record_fields(result)
+
+
+def slope_record_fields(result: dict) -> dict:
+    """The slope-suite record of one ``s9_soil_slope.run_one`` result (also the U-3 block of a
+    D-1 steady run, ``d1_runs``, so that a reused D-1 run is judged from the same fields)."""
+    import s9_soil_slope as slope
+
     run, rows = result["run"], result["rows"]
     return {"verdict": result["verdict"], "passed": result["verdict"] in (
         slope.VERDICT_PASS, slope.VERDICT_STROKE_LIMITED_PASS),
@@ -2662,6 +2680,7 @@ def _g6_record(key: str) -> dict:
     rec = g6.job(key)
     if "error" in rec:
         return {"error": rec["error"], "tb": rec.get("tb")}
+    _RUNNING["r72_record"] = rec  # paper v5 U-3: the gates of the G6-7 demotion (v5 block only)
     # spec 427.9: r72 gives a soil-guard stop its own verdict (stroke_limited_stop or fail)
     verdict = rec.get("verdict") or ("pass" if rec["pass"] else "fail")
     record = {"verdict": verdict, "passed": rec["pass"], "soil_stop": rec.get("soil_stop"),
@@ -2825,11 +2844,37 @@ def _controller_record(controller) -> dict:
     return metrics
 
 
+def _v5_rerun():
+    """``coupled/v5_rerun.py`` (paper v5 U-3 / U-6); its folder joins ``sys.path`` at the end so
+    that no module this script imported before resolves differently."""
+    if str(COUPLED_DIR) not in sys.path:
+        sys.path.append(str(COUPLED_DIR))
+    import v5_rerun
+
+    return v5_rerun
+
+
+def _v5_block(suite: str, record: dict, controller) -> dict:
+    """The ``v5`` block of a run with ``--v5-setting`` (the g6 suite adds the r72 gates that the
+    G6-7 demotion of ``b5_official.demote_preloc_gate`` reads)."""
+    v5 = _v5_rerun()
+    block = v5.run_record(_TRUTH["plant"], controller,
+                          harness_commands_sha256=record.get("hash"),
+                          head_only_declared=suite not in ROD_READING_SUITES)
+    r72_record = _RUNNING.pop("r72_record", None)
+    if suite == "g6" and r72_record is not None:
+        block["r72"] = {key: r72_record.get(key) for key in (
+            "gates", "flags", "preloc_flag_ok", "preloc_starts", "verdict", "pass")}
+    return block
+
+
 def run_job(job: dict) -> dict:
     """Worker entry: one case of one suite with one candidate."""
     t0 = time.perf_counter()
     record = {"suite": job["suite"], "id": job["id"], "candidate": job["candidate"]}
     try:
+        if job.get("v5_setting"):  # paper v5 U-3: before the candidate wraps c2.C2Controller
+            _v5_rerun().install_in_worker()
         _install_candidate(job["candidate"], job.get("params") or {})
         record.update(SUITE_RUNNERS[job["suite"]](job["payload"]))
         controller = _RUNNING.get("controller")
@@ -2841,6 +2886,8 @@ def run_job(job: dict) -> dict:
                         _slope_harness_log(),
                         [(float(e.t_s), e.name) for e in controller.events],
                         record.get("t_ready_s")))
+            if job.get("v5_setting"):
+                record["v5"] = _v5_block(job["suite"], record, controller)
     except Exception as exc:  # keep the batch going, record the failure
         record.update(error=repr(exc), tb=traceback.format_exc()[-3000:])
     record["wall_s"] = round(time.perf_counter() - t0, 1)
@@ -3210,13 +3257,16 @@ def build_parser() -> argparse.ArgumentParser:
         command.add_argument("--filter", default="", help="comma list of case-id substrings")
         command.add_argument("--ids", default="",
                              help="semicolon list of exact case ids (with --filter: both apply)")
+        _v5_rerun().add_arguments(command, with_reuse=name == "run")
     run = sub.choices["run"]
     run.add_argument("--candidates", default=BASELINE)
     run.add_argument("--workers", type=int, default=2)
     run.add_argument("--affinity", default=None, help="hex mask of the parent (inherited)")
     run.add_argument("--param", action="append", default=[], help="name=value override")
     run.add_argument("--settle-hook", default="harness", choices=("harness", "p0"))
-    run.add_argument("--out", type=Path, default=DEFAULT_OUT_DIR / "fix_candidates.json")
+    run.add_argument("--out", type=Path, default=None,
+                     help="default rev80/fix_candidates.json; with --v5-setting and one suite "
+                          "06_analysis/02_control/v5_rerun/u3_<suite>_<setting>.json")
     merge = sub.add_parser("compare")
     merge.add_argument("--out", type=Path, required=True)
     merge.add_argument("inputs", nargs="+", type=Path)
@@ -3274,24 +3324,95 @@ def _run(args) -> None:
     for candidate in candidates:
         parse_candidate(candidate, overrides)  # fail before any run
     _check_ids(args.suite, args.ids)
+    rerun = _v5_rerun().options_from_args(args)
+    out_path = _out_path(args, rerun)
+    _v5_rerun().activate(rerun.setting)  # paper v5 U-3: the pool workers inherit it
     placement = slope.set_parent_affinity(slope.parse_affinity(args.affinity))
     records, t0 = [], time.perf_counter()
+    reuse_reports = {}
     for suite in args.suite.split(","):
-        cases = _filtered(suite_cases(suite), args.filter, args.ids)
+        cases = _rerun_cases(suite, args, rerun)
         jobs = [{"suite": suite, "id": case_id, "payload": payload, "candidate": candidate,
                  "params": overrides} for case_id, payload in cases for candidate in candidates]
-        with Pool(max(1, min(args.workers, len(jobs)))) as pool:
-            records += pool.map(run_job, jobs, chunksize=1)
+        if rerun.is_active:
+            jobs = [{**job, "v5_setting": rerun.setting} for job in jobs]
+        if rerun.reuse_d1 is not None:
+            suite_records, reuse_reports[suite] = _run_with_reuse(jobs, args, rerun)
+            records += suite_records
+            continue
+        records += _run_jobs(jobs, args.workers)
     meta = {"script": "04_scripts/03_control/s9/s9_slope_fix_candidates.py",
             "suites": args.suite, "candidates": candidates, "params": overrides,
             "defaults": asdict(CandidateSettings()), "filter": args.filter, "ids": args.ids,
             "settle_hook": args.settle_hook, "workers": args.workers, "placement": placement,
             "wall_s": round(time.perf_counter() - t0, 1), "n_records": len(records),
             "harness_sha256": harness_sha256()}
-    summary = write_outputs(args.out, records, meta)
+    if rerun.is_active or rerun.ids_from is not None:  # paper v5 U-3 (former metas unchanged)
+        meta["v5"] = {**_v5_rerun().file_meta(rerun, [r["id"] for r in records]),
+                      "ids_from": None if rerun.ids_from is None else str(rerun.ids_from),
+                      "pad": rerun.pad}
+    if reuse_reports:
+        meta["v5"]["reuse_d1"] = reuse_reports
+    summary = write_outputs(out_path, records, meta)
     _print_records(records)
     print(json.dumps(summary["by_suite_candidate"], indent=1))
-    print("wall", meta["wall_s"], "s ->", args.out)
+    print("wall", meta["wall_s"], "s ->", out_path)
+
+
+def _run_jobs(jobs: list[dict], workers: int) -> list[dict]:
+    if not jobs:
+        return []
+    with Pool(max(1, min(workers, len(jobs)))) as pool:
+        return pool.map(run_job, jobs, chunksize=1)
+
+
+def _out_path(args, rerun) -> Path:
+    """``--out``, else the v5 rerun file of the one suite (``--v5-setting``), else the former
+    default ``rev80/fix_candidates.json``.
+
+    Raises:
+        SystemExit: ``--v5-setting`` with several suites and no ``--out``.
+    """
+    if args.out is not None:
+        return args.out
+    if not rerun.is_active:
+        return DEFAULT_OUT_DIR / "fix_candidates.json"
+    suites = args.suite.split(",")
+    if len(suites) != 1:
+        raise SystemExit("--v5-setting with several suites needs --out")
+    return _v5_rerun().default_out_path(suites[0], rerun.setting)
+
+
+def _rerun_cases(suite: str, args, rerun) -> list[tuple[str, object]]:
+    """The suite's cases after ``--filter`` / ``--ids`` and, with ``--ids-from``, exactly the
+    stored keys of this suite in the stored order (every key must be a case: rules 7 G-1)."""
+    cases = _filtered(suite_cases(suite), args.filter, args.ids)
+    if rerun.ids_from is None:
+        return cases
+    v5 = _v5_rerun()
+    keys = v5.ids_from(rerun.ids_from, rerun.pad, suites=(suite,))
+    by_id = dict(cases)
+    v5.select_known(keys, list(by_id))
+    return [(key, by_id[key]) for key in keys]
+
+
+def _run_with_reuse(jobs: list[dict], args, rerun) -> tuple[list[dict], dict]:
+    """Rules 6: the Q-4 samples and the keys without a D-1 twin run first; a family whose sample
+    hash equals its D-1 run reuses the D-1 runs of its other keys, the others run here."""
+    _v5_rerun()  # puts the coupled folder on sys.path
+    import u3_reuse
+
+    plan = u3_reuse.plan(rerun.reuse_d1, rerun.setting, jobs, settle_hook=args.settle_hook)
+    first = [job for job in jobs if job["id"] not in plan.reusable_ids]
+    records = _run_jobs(first, args.workers)
+    decision = u3_reuse.decide(plan, {r["id"]: r for r in records})
+    reused = [u3_reuse.reused_record(plan, job, decision) for job in jobs
+              if job["id"] in decision.reused_ids]
+    rest = [job for job in jobs if job["id"] in plan.reusable_ids
+            and job["id"] not in decision.reused_ids]
+    records += _run_jobs(rest, args.workers) + reused
+    order = {job["id"]: index for index, job in enumerate(jobs)}
+    return sorted(records, key=lambda r: order[r["id"]]), decision.report()
 
 
 def _print_records(records: list[dict]) -> None:
@@ -3316,8 +3437,9 @@ def main() -> None:
     args = build_parser().parse_args()
     if args.command == "list":
         _check_ids(args.suite, args.ids)
+        rerun = _v5_rerun().options_from_args(args)
         for suite in args.suite.split(","):
-            cases = _filtered(suite_cases(suite), args.filter, args.ids)
+            cases = _rerun_cases(suite, args, rerun)
             for case_id, _ in cases:
                 print(suite, case_id)
             print(suite, len(cases), "cases")

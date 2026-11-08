@@ -25,6 +25,7 @@ of a soil row is built from these floats (``settle_table_key``, ``{:g}``).
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import sys
@@ -80,9 +81,13 @@ SOIL_PATCH_POINTS = (("flat", "FL"), ("flat", "RL"), ("fdown-psa", "FL"), ("fup-
 SOIL_BASES = ("G1", "J1", "J2")
 PSC_SOILS = ("J1", "J2")
 
-READY_LIMITS_S = {"H-R": (90.0, 120.0), "H-S": (100.0, 120.0)}
-"""(flat, slope) READY limit of the judged rows (``d1_rows_final.md`` 2 / 3; H-S flat 100 s also
-for G1, as the table says; the harness class of ``s9_soil_slope`` keeps its own 90 s for G1)."""
+READY_LIMITS_S = {"H-R": (90.0, 120.0)}
+"""(flat, slope) READY limit of the rigid rows (``d1_rows_final.md`` 2, unchanged). The soil rows
+take the spec 421.1 limit per soil and patch (:func:`soil_ready_limit_s`)."""
+READY_RULES = ("d1_selection_rules_rev1.md 1 (sealed 2026-11-08): H-S READY = spec 421.1 "
+               "(s9_soil_slope.ready_limit_s)")
+RULES_REV1_PATH = (ROOT / "06_analysis" / "02_control" / "verif_matrix"
+                   / "d1_selection_rules_rev1.md")
 
 TAG_STROKE_STOP_ALLOWED = "stroke_limited_stop_allowed"
 TAG_STROKE_STOP_EXPECTED = "stroke_stop_expected"
@@ -209,15 +214,40 @@ def slope_deg(name: str) -> tuple[float, float]:
     return _slope_module()._scaled_slope(direction, k)
 
 
-def _ready_limit(family: str, slope_name: str) -> float:
-    flat_s, slope_s = READY_LIMITS_S[family]
-    return flat_s if slope_name == "flat" else slope_s
+def text_sha256(path: Path) -> str | None:
+    """SHA-256 of a text file with LF line ends (None without the file)."""
+    if not path.is_file():
+        return None
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+
+
+def ready_rule_record(path: Path = RULES_REV1_PATH) -> dict:
+    """The READY rule of the rows: text, the rev1 file name and its SHA-256 (read from the file;
+    None when the file is absent, e.g. in a worktree without the sealed text)."""
+    return {"text": READY_RULES, "rules": path.name, "sha256": text_sha256(path)}
+
+
+def soil_ready_limit_s(soil: str, roll_deg: float, pitch_deg: float) -> float:
+    """Spec 421.1 READY limit of a pad B soil row (``d1_selection_rules_rev1.md`` 1): slope
+    120 s, flat on a uniform J1 / J2 / S1 100 s, any other flat (G1, ``G1+<w>@<leg>``) 90 s."""
+    case = {"soil": soil, "pad": PAD, "roll_deg": roll_deg, "pitch_deg": pitch_deg}
+    return float(_slope_module().ready_limit_s(case))
+
+
+def _ready_limit(group: str, soil: str, slope_name: str, roll_deg: float,
+                 pitch_deg: float) -> float:
+    if group.startswith("H-R"):
+        flat_s, slope_s = READY_LIMITS_S["H-R"]
+        return flat_s if slope_name == "flat" else slope_s
+    return soil_ready_limit_s(soil, roll_deg, pitch_deg)
 
 
 def _row(group: str, base: str, level: str, slope_name: str, **kwargs) -> D1Row:
     roll, pitch = slope_deg(slope_name)
+    patch_soil, patch_leg = kwargs.get("patch_soil"), kwargs.get("patch_leg")
+    soil = base if patch_soil is None else f"{base}+{patch_soil}@{patch_leg}"
     return D1Row(group, base, level, slope_name, roll, pitch,
-                 ready_limit_s=_ready_limit(group[:3], slope_name), **kwargs)
+                 ready_limit_s=_ready_limit(group, soil, slope_name, roll, pitch), **kwargs)
 
 
 # --------------------------------------------------------------------------------------- rows
@@ -338,4 +368,18 @@ def list_report(job_list: list[dict], table_path: Path | None = None) -> str:
              f"settle-table keys needed {len(settle_keys_needed(list(unique.values())))}, "
              f"missing {len(missing)}" + (f": {missing}" if missing else ""),
              f"cost (ASSUMPTION): {cost['runs_by_path']} -> {cost['core_s'] / 3600:.1f} core h"]
+    lines += ready_limit_lines(list(unique.values()))
     return "\n".join(lines)
+
+
+def ready_limit_lines(rows: list[D1Row]) -> list[str]:
+    """Rows per READY limit, then one ``<key>  READY <limit> s`` line per row."""
+    per_limit: dict[float, int] = {}
+    for row in rows:
+        per_limit[row.ready_limit_s] = per_limit.get(row.ready_limit_s, 0) + 1
+    counts = ", ".join(f"{limit:g} s {count}" for limit, count in sorted(per_limit.items()))
+    rule = ready_rule_record()
+    lines = [f"READY limit ({READY_RULES}, sha256 {rule['sha256']}): {counts}"]
+    width = max((len(row.key) for row in rows), default=0)
+    lines += [f"  {row.key:<{width}}  READY {row.ready_limit_s:g} s" for row in rows]
+    return lines

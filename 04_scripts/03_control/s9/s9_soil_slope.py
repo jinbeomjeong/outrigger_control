@@ -8,6 +8,9 @@ settle pitch. Run limit 240 s (``S9_RUN_LIMIT_S``), hold 10 s after READY.
 Controller: the project preset of the harness (``c2py_r8d1_closed_loop.preset_config(COMBINED)``
 = ``C2Config.with_10hz_d1()`` without CHECK / zero calibration / REANCHOR / target check), as the
 r72 G6 screen. H4 turns REANCHOR on: ``replace(cfg, reanchor=replace(cfg.reanchor, enable=True))``.
+Paper v5 U-3 study D (``u3_u6_rerun_rules.md``, ``04_hydraulic/coupled/v5_rerun.py``):
+``--v5-setting {V0,VB}``, ``--ids-from <v4 json> [--pad B]``; default ``--out`` then
+``06_analysis/02_control/v5_rerun/u3_D_<setting>.json``. Without them nothing changes.
 
 Case sets (177):
   H1 main grid      soil {G1, J1, J2, S1} x pad {B, A} x 8 slopes x top                     = 64
@@ -1677,7 +1680,9 @@ def set_parent_affinity(mask: int | None) -> dict:
 # ------------------------------------------------------------------------------------ main
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="S9 soft soil x floor slope screen (study 1)")
-    parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    parser.add_argument("--out", type=Path, default=None,
+                        help="result JSON (default: the study-1 file; with --v5-setting "
+                             "06_analysis/02_control/v5_rerun/u3_D_<setting>.json)")
     parser.add_argument("--workers", type=int, default=12)
     parser.add_argument("--affinity", default=os.environ.get(PLACEMENT_ENV),
                         help=f"ecore | pcore | os | hex mask (default ${PLACEMENT_ENV})")
@@ -1704,7 +1709,44 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--list", action="store_true", help="print the case ids and stop")
     parser.add_argument("--from-json", type=Path, default=None,
                         help="rebuild the summary of an existing result file (no runs)")
+    _v5_rerun().add_arguments(parser)
     return parser
+
+
+V5_STUDY_D_BUNDLE = "D"
+"""Paper v5 U-3 bundle name of study D (H8): ``v5_rerun/u3_D_<setting>.json``."""
+
+
+def _v5_rerun():
+    """``coupled/v5_rerun.py`` (paper v5 U-3 study D); its folder joins ``sys.path`` at the end
+    so that no module this script imported before resolves differently."""
+    coupled = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+    if str(coupled) not in sys.path:
+        sys.path.append(str(coupled))
+    import v5_rerun
+
+    return v5_rerun
+
+
+def rerun_one(case: dict) -> dict:
+    """:func:`run_one` with the parent's ``--v5-setting`` installed and the ``v5`` block."""
+    v5 = _v5_rerun()
+    v5.install_in_worker()
+    result = run_one(case)
+    if "error" not in result:
+        result["v5"] = v5.run_record(_CAP.get("plant"), _CAP.get("ctrl"),
+                                     harness_commands_sha256=result["run"].get("commands_sha256"))
+    return result
+
+
+def _rerun_cases(cases: list[SlopeCase], rerun) -> list[SlopeCase]:
+    """With ``--ids-from``: exactly the stored keys, in the stored order (rules 7 G-1)."""
+    if rerun.ids_from is None:
+        return cases
+    v5 = _v5_rerun()
+    by_id = {case.case_id: case for case in cases}
+    keys = v5.select_known(v5.ids_from(rerun.ids_from, rerun.pad), list(by_id))
+    return [by_id[key] for key in keys]
 
 
 def _file_sha256(path: Path | None) -> str | None:
@@ -1783,20 +1825,27 @@ def main() -> None:
             "script_sha256": _script_sha256(),
             "rules": "verdict recomputed from the stored rows (stroke-limited pass needs P3-1, "
                      "P3-3, P3-4); rut clearance as stored (rut_definition per result)"}}
-        summary = write_outputs(args.out, results, meta)
+        summary = write_outputs(args.out or DEFAULT_OUT, results, meta)
         print(json.dumps(summary["counts"]))
         return
-    cases = select_cases(args)
+    rerun = _v5_rerun().options_from_args(args)
+    cases = _rerun_cases(select_cases(args), rerun)
     if args.list:
         for case in cases:
             print(case.case_id, case.settle_table_status or "")
         print(len(cases), "cases", dict(Counter(c.settle_table_status for c in cases)))
         return
+    out_path = args.out
+    if out_path is None:
+        out_path = (DEFAULT_OUT if not rerun.is_active
+                    else _v5_rerun().default_out_path(V5_STUDY_D_BUNDLE, rerun.setting))
     placement = set_parent_affinity(parse_affinity(args.affinity))
     workers = max(1, min(args.workers, len(cases)))
+    _v5_rerun().activate(rerun.setting)  # the pool workers inherit it
     t0 = time.perf_counter()
     with Pool(workers) as pool:
-        results = pool.map(run_one, [c.to_dict() for c in cases], chunksize=1)
+        results = pool.map(rerun_one if rerun.is_active else run_one,
+                           [c.to_dict() for c in cases], chunksize=1)
     meta = {"script": "04_scripts/03_control/s9/s9_soil_slope.py",
             "script_sha256": _script_sha256(), "design": "extra studies 1 (control 2026-10-28)",
             "n_cases": len(cases), "groups": args.groups, "filter": args.filter,
@@ -1819,10 +1868,14 @@ def main() -> None:
         meta["fs_kN_override"] = args.fs_kn
     if args.level is not None:
         meta["level_override"] = args.level
-    summary = write_outputs(args.out, results, meta)
+    if rerun.is_active or rerun.ids_from is not None:  # paper v5 U-3 (former metas unchanged)
+        meta["v5"] = {**_v5_rerun().file_meta(rerun, [c.case_id for c in cases]),
+                      "ids_from": None if rerun.ids_from is None else str(rerun.ids_from),
+                      "pad": rerun.pad}
+    summary = write_outputs(out_path, results, meta)
     for result in results:
         _print_result(result)
-    print("counts", json.dumps(summary["counts"]), "wall", meta["wall_s"], "s ->", args.out)
+    print("counts", json.dumps(summary["counts"]), "wall", meta["wall_s"], "s ->", out_path)
 
 
 if __name__ == "__main__":

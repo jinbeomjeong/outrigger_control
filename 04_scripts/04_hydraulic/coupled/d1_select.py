@@ -17,6 +17,9 @@ missing, no rules text, no input file).
 Usage (python-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/d1_select.py <out_json> <d1.jsonl> [...]
       [--rules 06_analysis/02_control/verif_matrix/d1_selection_rules.md]
+      [--revisions 06_analysis/02_control/verif_matrix/d1_selection_rules_rev1.md]
+The report records each revision's SHA-256 read from the file and its seal (``rules_revisions``;
+rev1 2026-11-08: H-S READY limit = spec 421.1, carried by ``d1_rows`` / ``d1.t_ready_limit_s``).
 """
 
 from __future__ import annotations
@@ -34,6 +37,8 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
 DEFAULT_RULES = ROOT / "06_analysis" / "02_control" / "verif_matrix" / "d1_selection_rules.md"
+DEFAULT_REVISIONS = (DEFAULT_RULES.with_name("d1_selection_rules_rev1.md"),)
+"""Sealed addenda of the rules (rev1 2026-11-08: H-S READY limit = spec 421.1)."""
 REQUIRED_FIELDS = ("key", "verdict", "fail_items", "F_judged_min_N", "F_first_level_min_N",
                    "t_ready_s", "t_ready_limit_s", "att_judged_deg", "stroke_max_m", "imu_R_c",
                    "dsb75_events", "j_p3")
@@ -76,9 +81,17 @@ def file_sha256(path: Path) -> str:
 
 
 def sealed_rules_sha256(rules: Path) -> str | None:
-    """First token of ``d1_selection_rules.sha256`` beside the rules text (None without it)."""
+    """First token of ``<rules stem>.sha256`` beside the rules text (None without it)."""
     seal = rules.with_suffix(".sha256")
     return seal.read_text(encoding="utf-8").split()[0] if seal.is_file() else None
+
+
+def revision_record(path: Path) -> dict:
+    """Name, SHA-256 (read from the file), sealed SHA-256 and their match of one addendum."""
+    sha = file_sha256(path)
+    sealed = sealed_rules_sha256(path)
+    return {"rules": path.name, "sha256": sha, "sealed_sha256": sealed,
+            "match_seal": sha == sealed}
 
 
 # -------------------------------------------------------------------------------------- runs
@@ -418,10 +431,13 @@ def main() -> int:
     parser.add_argument("out_json")
     parser.add_argument("results", nargs="+", help="run_v5 d1 result files (jsonl)")
     parser.add_argument("--rules", default=str(DEFAULT_RULES))
+    parser.add_argument("--revisions", nargs="*", default=[str(p) for p in DEFAULT_REVISIONS],
+                        help="sealed addenda of the rules (default: rev1)")
     args = parser.parse_args()
     rules, inputs = Path(args.rules), [Path(p) for p in args.results]
-    if not rules.is_file() or not all(p.is_file() for p in inputs):
-        print(json.dumps({"error": "rules text or input missing"}))
+    revisions = [Path(p) for p in args.revisions]
+    if not all(p.is_file() for p in (rules, *revisions, *inputs)):
+        print(json.dumps({"error": "rules text, a rules revision or an input missing"}))
         return 2
     import d1_rows
 
@@ -431,10 +447,12 @@ def main() -> int:
     report = {"rules": str(rules), "rules_sha256": rules_sha,
               "rules_sealed_sha256": sealed_rules_sha256(rules),
               "rules_match_seal": rules_sha == sealed_rules_sha256(rules),
+              "rules_revisions": [revision_record(p) for p in revisions],
               "script_sha256": file_sha256(Path(__file__)),
               "inputs": [str(p) for p in inputs], "exit_code": code, **report}
     Path(args.out_json).write_text(json.dumps(report, indent=1, default=str), encoding="utf-8")
     summary = {k: report.get(k) for k in ("exit_code", "rules_sha256", "script_sha256")}
+    summary["rules_revisions_sha256"] = [r["sha256"] for r in report["rules_revisions"]]
     summary["gates"] = {name: gate["pass"] for name, gate in report["gates"].items()}
     print(json.dumps(summary))
     return code
