@@ -92,6 +92,7 @@ import pychrono as ch
 import pychrono.vehicle as veh
 from numpy.typing import ArrayLike, NDArray
 
+from outrigger_sim.chrono import hull_hook as _hull_hook
 from outrigger_sim.chrono.bodies import BodyPose, make_superstructure
 from outrigger_sim.chrono.contact import FAMILY_ROD, FAMILY_SUPERSTRUCTURE, set_family
 from outrigger_sim.chrono.crawler_bushing import crawler_bushing_values
@@ -109,7 +110,12 @@ from outrigger_sim.pad_variants import PROJECT_ROOT
 from outrigger_sim.params import LEG_ORDER, Params, axial_stiffness_N_m, scm_run_sha256
 from outrigger_sim.signals import TruthState
 
-SOIL_SETS_JSON = PROJECT_ROOT / "02_params" / "scm_soil_sets.json"
+# Opt-in SCM convex-hull hook, installed right after Chrono_vehicle.dll is loaded (``import pychrono.vehicle``
+# above) and before any SCM step (native/chrono_hull README): nothing happens without OUTRIGGER_HULL_HOOK; a
+# failed install prints the status string and exits 2. Counters: ``hull_hook.stats_record()``.
+_hull_hook.install_from_env()
+
+SOIL_SETS_JSON =PROJECT_ROOT / "02_params" / "scm_soil_sets.json"
 SCM_SHEAR_MODES = ("bprime", "native")
 STIFFNESS_MODES = ("series", "l1_kt", "janosi")
 KAPPA_HORIZONTAL = 0.8

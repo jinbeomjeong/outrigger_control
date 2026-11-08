@@ -1048,6 +1048,9 @@ def next_runnable(queue: list[dict], finished_ok: set[str]) -> int | None:
 def _case_env(pool: str) -> dict[str, str]:
     env = dict(os.environ)
     env[PLACEMENT_ENV] = pool
+    # SCM OpenMP threads sleep between regions (user decision 2026-11-08, run_S9.OMP_WAIT_POLICY_DEFAULT); an
+    # explicit value in the batch environment wins
+    env.setdefault("OMP_WAIT_POLICY", "PASSIVE")
     return env
 
 

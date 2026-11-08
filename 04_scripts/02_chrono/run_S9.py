@@ -100,6 +100,12 @@ from typing import Any
 
 os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
 os.environ.setdefault("MKL_NUM_THREADS", "1")
+OMP_WAIT_POLICY_DEFAULT = "PASSIVE"
+"""SCM OpenMP threads sleep instead of spinning between parallel regions (user decision 2026-11-08, CLAUDE.md SCM
+run rules): vcomp honours it, same speed and the same bits, CPU / wall of 4 threads 3.97 -> 1.88. Set before
+pychrono is imported (the OpenMP runtime reads it at start); an explicit OMP_WAIT_POLICY in the environment wins.
+Recorded in result.json ``placement.omp_wait_policy``."""
+os.environ.setdefault("OMP_WAIT_POLICY", OMP_WAIT_POLICY_DEFAULT)
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
@@ -2418,8 +2424,19 @@ def place():
 
     mode = placement_mode()
     info = dict(place_process(mode))
-    info.update(requested=mode, env_var=PLACEMENT_ENV, env_value=os.environ.get(PLACEMENT_ENV))
+    info.update(requested=mode, env_var=PLACEMENT_ENV, env_value=os.environ.get(PLACEMENT_ENV),
+                omp_wait_policy=os.environ.get("OMP_WAIT_POLICY"))
     return info
+
+
+def add_hull_hook_record(summary: dict) -> None:
+    """``result.json`` ``hull_hook`` (install meta + counters of ``native/chrono_hull``) only when the opt-in hook
+    is active (``OUTRIGGER_HULL_HOOK``); without it the summary is unchanged."""
+    from outrigger_sim.chrono import hull_hook  # noqa: PLC0415
+
+    rec = hull_hook.stats_record()
+    if rec is not None:
+        summary["hull_hook"] = rec
 
 
 def out_dir(action: str, tag: str, root: str | None = None) -> Path:
@@ -2799,6 +2816,7 @@ def run_single_pad(args) -> Path:
     tag = args.case or f"{args.soil}_{args.pad_variant}_{args.leg}_{args.scm_shear}_F{args.force:.0f}"
     d = out_dir("single", tag, args.out_root)
     np.savez(d / "series.npz", **r)
+    add_hull_hook_record(summary)
     (d / "result.json").write_text(json.dumps(_plain(summary), indent=1, ensure_ascii=False), "utf-8")
     print(json.dumps(_plain({k: summary.get(k) for k in ("settle_end", "first_step", "hold", "us_per_step",
                                                          "limit_N")}),
@@ -3031,6 +3049,7 @@ def run_machine(args) -> Path:
     if flow is not None:  # flow_series.npz and the block only with --flow-eta-v
         summary["flow_limit"] = {**flow.meta(), "series": flow.save(d / FLOW_SERIES_NAME),
                                  "summary": flow.summary([t_settle_steps * dt], ("lift",))}
+    add_hull_hook_record(summary)
     (d / "result.json").write_text(json.dumps(_plain(summary), indent=1, ensure_ascii=False), "utf-8")
     print(json.dumps(_plain({k: summary[k] for k in ("end", "first_step", "start_rise", "settle_last_1s",
                                                      "us_per_step", "build_s")}), indent=1), flush=True)
@@ -5911,6 +5930,7 @@ def run_level(args) -> Path:
             "head_area_m2": [float(v) for v in c2.geometry.head_area_m2],
             "branch_commands_sha256": hasher.hexdigest(), "event_reached": bool(
                 t_ev is not None and float(model.system.GetChTime()) >= t_ev + soil_event_spec["ramp_s"])}
+    add_hull_hook_record(summary)
     (d / "result.json").write_text(json.dumps(_plain(summary), indent=1, ensure_ascii=False), "utf-8")
     if soil_event_rows is not None:
         se = summary["soil_event"]
