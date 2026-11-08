@@ -1,19 +1,23 @@
-"""Criteria revision 12 2.2: record each LAS-tag rerun row of v5 stage 3 against its stored row.
+"""Criteria revision 12a: record each LAS-tag rerun row of v5 stage 3 against its stored row.
 
-A record tool, not a judgement (revision 12 2.2: "기록만 한다"). Per row of the rerun
-``batch.json`` (one or more files, ``07_results/S9/batch_V5-STAGE3-LAS_<stamp>/batch.json``):
+Revision 12a amends revision 12 2.2 (``v5_criteria_rev12a.md`` 1, 3 and 4). A record tool, not
+a judgement (revision 12 2.2: "기록만 한다"). Per row of the rerun ``batch.json`` (one or
+more files, ``07_results/S9/batch_V5-STAGE3-LAS_<stamp>/batch.json``):
 
 * stored row folder: row field ``stored_result`` (case folder or its ``result.json``), or an
   entry of ``--stored-map`` (JSON ``{case: path}``; the map wins). Relative paths are read
   against ``--root``.
 * rerun row folder: S9 rows ``<batch.json folder>/<case>``; run_S8C rows the folder of
   ``s8c_check.result_json``.
-* conditions (revision 12 2.2 "해시 비교가 성립하는 조건"): ``--threads`` (``result.json``
-  ``args.threads``, else ``num_threads_chrono``; run_S8C has none on both sides),
-  ``OMP_WAIT_POLICY`` (``placement.omp_wait_policy`` of ``result.json``, else of
-  ``case.json`` ``runner``; absent = ``unrecorded``) and the pool (``placement.mode``, else
-  ``case.json`` ``runner.placement.mode``, the rerun side also the batch row ``pool``). Any of
-  them different, or a stored row not on P cores -> ``not_comparable`` (no comparison).
+* conditions (revision 12a 1 "해시 비교가 성립하는 조건"): ``--threads`` (``result.json``
+  ``args.threads``, else ``num_threads_chrono``; run_S8C has none on both sides) and the pool
+  (``placement.mode``, else ``case.json`` ``runner.placement.mode``, the rerun side also the
+  batch row ``pool``). Either different, or a stored row not on P cores -> ``not_comparable``
+  (no comparison).
+* ``OMP_WAIT_POLICY`` is recorded only (revision 12a 3): ``{value, source}`` per side from
+  ``result.json`` ``placement.omp_wait_policy``, else ``case.json``
+  ``runner.placement.omp_wait_policy``, else the rerun batch row field ``omp_wait_policy``,
+  else ``unrecorded``; ``omp_equal`` says whether the two values match.
 * check 1: command arrays bit-identical. S9: ``controller_commands.npz`` ``issued_u_m_s``;
   run_S8C: ``r8_series.npz`` ``issued_u``.
 * check 2: controller events (time, name) equal (``controller_events.json``, else
@@ -23,11 +27,17 @@ A record tool, not a judgement (revision 12 2.2: "기록만 한다"). Per row of
   ``p3_chrono_check`` (revision 10 1) and ``two_pressure.fallback_rod_estimate_Pa`` under
   revision 10 conditions A, B, C (``p3_chrono_check.fallback_estimate_conditions``). Other
   differing keys are recorded for a cause check (python-expert).
+* plant check (revision 12a 4, rows meeting the conditions): plant arrays compared byte for
+  byte (dtype and shape included) with their time array. S9: ``step_series.npz`` (time
+  ``t_s``); run_S8C: ``pads.npz`` (time ``t``); keys in ``PLANT_SOURCES``. t_p = time of the
+  first differing plant sample, t_c = time of the first differing command period (+inf when
+  equal). t_p < t_c - 1e-6 s -> ``not_comparable`` ("plant diverged first"); a plant array or
+  key absent -> ``not_comparable`` ("plant series missing"). Checks 1-3 stay recorded.
 
 Row status: ``silent_confirmed`` (checks 1 and 2 equal: LAS-b and ③ not acting),
 ``differs`` (first differing control period index and time, the events of that period,
 ``INFO_LIFTOFF_SLOW*`` and fallback events), ``not_comparable`` (reasons) or ``missing``
-(reasons).
+(reasons). ``plant_check`` times are JSON numbers; +inf is written as ``Infinity``.
 
 Read only. Writes one JSON file; the last stdout line is a ``status`` JSON.
 Exit code 0 = recorded (``differs`` included), 2 = input error: a batch file or the stored map
@@ -60,10 +70,12 @@ import p3_chrono_check as p3_check  # noqa: E402
 ROOT = HERE.parents[2]
 DEFAULT_EXPECTED_ROWS = 37
 """Criteria revision 12 2.1: 34 stage 3 rows + 3 pair rows."""
-RULE = "criteria revision 12 2.2 (rerun <-> stored row of the same name: record only)"
+RULE = "criteria revision 12a (rev. 12 2.2 amended), sha256 e171141dce180fbb"
 CONTROL_PERIOD_S = 0.1
 EVENT_TIME_TOL_S = 1e-6
 """Event times and control instants of one run share the engine clock (rounding only)."""
+PLANT_FIRST_TOL_S = EVENT_TIME_TOL_S
+"""Revision 12a 4 and 7: plant first when t_p < t_c - this margin."""
 MAX_LISTED_EVENTS = 20
 LIFTOFF_SLOW_EVENT_PREFIX = "INFO_LIFTOFF_SLOW"
 UNRECORDED = "unrecorded"
@@ -102,6 +114,24 @@ class CommandSource:
 COMMAND_SOURCES = {
     RowKind.S9: CommandSource("controller_commands.npz", "t_s", "issued_u_m_s"),
     RowKind.S8C: CommandSource("r8_series.npz", "t", "issued_u"),
+}
+
+
+@dataclass(frozen=True)
+class PlantSource:
+    """Plant series file of a row kind (revision 12a 4), first axis = sample."""
+
+    file_name: str
+    time_key: str
+    array_keys: tuple[str, ...]
+
+
+PLANT_SOURCES = {
+    RowKind.S9: PlantSource("step_series.npz", "t_s",
+                            ("F_cyl_N", "s_motor_m", "roll_pitch_deg", "z_origin_m",
+                             "scm_pad_normal_N", "scm_crawler_normal_N")),
+    RowKind.S8C: PlantSource("pads.npz", "t",
+                             ("F_cyl", "s_motor", "body_quat_wxyz", "N", "crawler_normal_N")),
 }
 
 
@@ -216,20 +246,43 @@ def _pool(run: CaseRun, row_pool: str | None) -> str:
     return POOL_NAMES.get(str(mode), UNRECORDED)
 
 
-def run_conditions(run: CaseRun, row_pool: str | None = None) -> dict[str, Any]:
-    """``threads``, ``omp_wait_policy`` and ``pool`` of a run (revision 12 2.2)."""
+def omp_wait_policy(run: CaseRun, row_value: str | None = None) -> dict[str, str]:
+    """``{value, source}`` of ``OMP_WAIT_POLICY`` (revision 12a 3, recorded only).
+
+    Args:
+        run: The case run.
+        row_value: Batch row field ``omp_wait_policy`` (rerun side only).
+    """
+    result_placement = run.result.get("placement")
+    if isinstance(result_placement, dict) and result_placement.get("omp_wait_policy"):
+        return {"value": str(result_placement["omp_wait_policy"]),
+                "source": "result.json placement.omp_wait_policy"}
+    runner_placement = (run.case_json.get("runner") or {}).get("placement") or {}
+    if runner_placement.get("omp_wait_policy"):
+        return {"value": str(runner_placement["omp_wait_policy"]),
+                "source": "case.json runner.placement.omp_wait_policy"}
+    if row_value:
+        return {"value": str(row_value), "source": "batch row omp_wait_policy"}
+    return {"value": UNRECORDED, "source": UNRECORDED}
+
+
+def run_conditions(run: CaseRun, row_pool: str | None = None,
+                   row_omp: str | None = None) -> dict[str, Any]:
+    """``threads``, ``pool`` (conditions) and ``omp_wait_policy`` (record) of a run."""
     threads = (run.result.get("args") or {}).get("threads")
     if threads is None:
         threads = run.result.get("num_threads_chrono")
-    return {"threads": threads,
-            "omp_wait_policy": _placement(run).get("omp_wait_policy") or UNRECORDED,
-            "pool": _pool(run, row_pool)}
+    return {"threads": threads, "pool": _pool(run, row_pool),
+            "omp_wait_policy": omp_wait_policy(run, row_omp)}
 
 
 def not_comparable_reasons(stored: dict[str, Any], rerun: dict[str, Any]) -> list[str]:
-    """Why the hash comparison does not hold (empty = comparable)."""
+    """Why the hash comparison does not hold (empty = comparable; revision 12a 1).
+
+    ``omp_wait_policy`` is not a condition (revision 12a 3).
+    """
     reasons = [f"{key}: stored {stored[key]!r}, rerun {rerun[key]!r}"
-               for key in ("threads", "omp_wait_policy", "pool") if stored[key] != rerun[key]]
+               for key in ("threads", "pool") if stored[key] != rerun[key]]
     if stored["pool"] != P_CORE_POOL:  # equal pools off P cores are not comparable either
         reasons.append(f"stored pool {stored['pool']!r} (not P cores)")
     return reasons
@@ -377,6 +430,78 @@ def compare_runs(stored: CaseRun, rerun: CaseRun, kind: RowKind) -> dict[str, An
     return record
 
 
+def load_plant_series(run: CaseRun, kind: RowKind,
+                      side: str) -> tuple[dict[str, np.ndarray] | None, list[str]]:
+    """Time and plant arrays of a run, or None with the absent file or keys."""
+    source = PLANT_SOURCES[kind]
+    path = run.folder / source.file_name
+    if not path.is_file():
+        return None, [f"{side} {source.file_name}"]
+    keys = (source.time_key, *source.array_keys)
+    with np.load(path, allow_pickle=False) as data:
+        absent = [key for key in keys if key not in data.files]
+        if absent:
+            return None, [f"{side} {source.file_name} key {key}" for key in absent]
+        return {key: np.asarray(data[key]) for key in keys}, []
+
+
+def _sample_time(times: dict[str, np.ndarray], index: int) -> float:
+    """Earliest time of sample ``index`` over the sides that have it."""
+    return min(float(side_times[index]) for side_times in times.values()
+               if index < len(side_times))
+
+
+def first_plant_difference(stored: dict[str, np.ndarray], rerun: dict[str, np.ndarray],
+                           time_key: str) -> tuple[float, str | None]:
+    """(t_p, first differing array name); (+inf, None) when all arrays are identical.
+
+    Arrays are compared byte for byte per sample (time array included); the array with the
+    earliest differing sample wins, ties in key order.
+    """
+    first_index, first_array = None, None
+    for key in stored:
+        index = first_differing_period(stored[key], rerun[key])
+        if index is not None and (first_index is None or index < first_index):
+            first_index, first_array = index, key
+    if first_index is None:
+        return float("inf"), None
+    times = {"stored": stored[time_key], "rerun": rerun[time_key]}
+    return _sample_time(times, first_index), first_array
+
+
+def command_divergence_time(comparison: dict[str, Any]) -> float:
+    """t_c: rerun time of the first differing command period (+inf when commands equal)."""
+    first = comparison.get("first_difference")
+    if first is None:
+        return float("inf")
+    times = first["t_s"]
+    return times["rerun"] if times["rerun"] is not None else times["stored"]
+
+
+def plant_check(stored: CaseRun, rerun: CaseRun, kind: RowKind,
+                t_c_s: float) -> dict[str, Any]:
+    """Revision 12a 4: does the plant diverge before the commands do?"""
+    stored_series, stored_absent = load_plant_series(stored, kind, "stored")
+    rerun_series, rerun_absent = load_plant_series(rerun, kind, "rerun")
+    if stored_series is None or rerun_series is None:
+        return {"t_p_s": None, "t_c_s": t_c_s, "first_array": None, "plant_first": None,
+                "missing": stored_absent + rerun_absent}
+    t_p_s, first_array = first_plant_difference(stored_series, rerun_series,
+                                                PLANT_SOURCES[kind].time_key)
+    return {"t_p_s": t_p_s, "t_c_s": t_c_s, "first_array": first_array,
+            "plant_first": t_p_s < t_c_s - PLANT_FIRST_TOL_S}
+
+
+def plant_check_reasons(check: dict[str, Any]) -> list[str]:
+    """``not_comparable`` reasons of a plant check (empty = comparison stands)."""
+    if check.get("missing"):
+        return [f"plant series missing: {'; '.join(check['missing'])}"]
+    if check["plant_first"]:
+        return [f"plant diverged first (t_p={check['t_p_s']}, t_c={check['t_c_s']}, "
+                f"array={check['first_array']})"]
+    return []
+
+
 def record_row(row: BatchRow, stored_map: dict[str, str], root: Path) -> dict[str, Any]:
     """The record of one rerun row (status and its details)."""
     stored_dir, stored_source = _stored_folder(row, stored_map, root)
@@ -391,19 +516,34 @@ def record_row(row: BatchRow, stored_map: dict[str, str], root: Path) -> dict[st
     if stored is None or rerun is None:
         return {**record, "status": RowStatus.MISSING, "reasons": stored_missing + rerun_missing}
     conditions = {"stored": run_conditions(stored),
-                  "rerun": run_conditions(rerun, row.fields.get("pool"))}
+                  "rerun": run_conditions(rerun, row.fields.get("pool"),
+                                          row.fields.get("omp_wait_policy"))}
+    conditions["omp_equal"] = (conditions["stored"]["omp_wait_policy"]["value"]
+                               == conditions["rerun"]["omp_wait_policy"]["value"])
     record["conditions"] = conditions
     reasons = not_comparable_reasons(conditions["stored"], conditions["rerun"])
     if reasons:
         return {**record, "status": RowStatus.NOT_COMPARABLE, "reasons": reasons}
-    return {**record, **compare_runs(stored, rerun, row.kind)}
+    comparison = compare_runs(stored, rerun, row.kind)
+    check = plant_check(stored, rerun, row.kind, command_divergence_time(comparison))
+    record = {**record, **comparison, "plant_check": check}
+    plant_reasons = plant_check_reasons(check)
+    if plant_reasons:  # checks 1-3 stay recorded; only the status changes (revision 12a 4)
+        return {**record, "status": RowStatus.NOT_COMPARABLE, "reasons": plant_reasons}
+    return record
 
 
 def summarize(rows: list[dict[str, Any]], expected_rows: int) -> dict[str, Any]:
-    """Status counts, the input errors of the row set and the rows for a meta cause check."""
-    counts = {status.value: 0 for status in RowStatus}
+    """Status counts, the input errors of the row set and the rows for a meta cause check.
+
+    ``counts["plant_first"]`` lists the rows whose plant diverged first (revision 12a 4; the
+    main session reports them).
+    """
+    counts: dict[str, Any] = {status.value: 0 for status in RowStatus}
     for row in rows:
         counts[row["status"]] += 1
+    counts["plant_first"] = [row["case"] for row in rows
+                             if row.get("plant_check", {}).get("plant_first")]
     errors = []
     if len(rows) != expected_rows:
         errors.append(f"{len(rows)} batch rows, expected {expected_rows}")

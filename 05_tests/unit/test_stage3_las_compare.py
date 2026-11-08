@@ -1,5 +1,6 @@
-"""``stage3_las_compare`` (criteria revision 12 2.2): the four row results, the allowed meta keys,
-the empty set and the row count guard. Synthetic case folders and batch files."""
+"""``stage3_las_compare`` (criteria revision 12a, amending 12 2.2): the four row results, the
+allowed meta keys, the empty set, the row count guard, ``OMP_WAIT_POLICY`` as a record only and
+the plant check. Synthetic case folders and batch files."""
 
 from __future__ import annotations
 
@@ -26,6 +27,26 @@ EVENTS = [{"t_s": 10.1, "name": "INFO_PRESSURE_ZERO_CALIBRATED:FL"},
 ESTIMATE_PA = [1.5e6, 1.4e6, 1.3e6, 1.2e6]
 S9_ARGV = ["python.exe", "run_S9.py", "level", "--threads", "4"]
 S8C_ARGV = ["python.exe", "C:\\x\\04_scripts\\02_chrono\\run_S8C.py", "run"]
+PLANT_SAMPLES = 60
+PLANT_TIMES_S = 10.0 + 0.01 * np.arange(1, PLANT_SAMPLES + 1)
+"""Plant samples every 10 ms; sample 39 is t = 10.4 s, the command instant of period 3."""
+PLANT_WIDTHS = {"roll_pitch_deg": 2, "z_origin_m": 0, "scm_crawler_normal_N": 2,
+                "body_quat_wxyz": 4, "crawler_normal_N": 0}
+"""Second axis of the plant arrays (0 = one value per sample); the rest have four legs."""
+
+
+def _plant(kind: las.RowKind, changes: dict[str, int] | None = None,
+           drop: tuple[str, ...] = ()) -> dict[str, np.ndarray]:
+    """Plant series of a row kind; ``changes`` = {array: first changed sample index}."""
+    source = las.PLANT_SOURCES[kind]
+    series = {source.time_key: PLANT_TIMES_S.copy()}
+    for number, key in enumerate(source.array_keys):
+        width = PLANT_WIDTHS.get(key, 4)
+        shape = (PLANT_SAMPLES,) if width == 0 else (PLANT_SAMPLES, width)
+        series[key] = np.full(shape, 1000.0 + number)
+    for key, index in (changes or {}).items():
+        series[key][index:] += 1.0
+    return {key: value for key, value in series.items() if key not in drop}
 
 
 def _result(*, pool: str = "pcore", threads: int | None = 4, omp: str | None = "PASSIVE",
@@ -45,20 +66,23 @@ def _result(*, pool: str = "pcore", threads: int | None = 4, omp: str | None = "
 
 
 def _s9_case(folder: Path, *, commands: np.ndarray = COMMANDS, events: list | None = None,
-             **result_options: Any) -> Path:
+             plant: dict[str, np.ndarray] | None = None, **result_options: Any) -> Path:
     folder.mkdir(parents=True)
     np.savez(folder / "controller_commands.npz", t_s=TIMES_S[:len(commands)],
              issued_u_m_s=commands)
+    np.savez(folder / "step_series.npz", **(_plant(las.RowKind.S9) if plant is None else plant))
     result = {**_result(**result_options), "events": EVENTS if events is None else events}
     (folder / "result.json").write_text(json.dumps(result), encoding="utf-8")
     return folder
 
 
 def _s8c_case(folder: Path, *, commands: np.ndarray = COMMANDS, events: list | None = None,
-              pool: str = "pcore", **result_options: Any) -> Path:
+              pool: str = "pcore", plant: dict[str, np.ndarray] | None = None,
+              **result_options: Any) -> Path:
     """run_S8C layout: placement in ``case.json`` runner, events as ``C2Event(...)`` strings."""
     folder.mkdir(parents=True)
     np.savez(folder / "r8_series.npz", t=TIMES_S[:len(commands)], issued_u=commands)
+    np.savez(folder / "pads.npz", **(_plant(las.RowKind.S8C) if plant is None else plant))
     result = _result(threads=None, **result_options)
     placement = result.pop("placement")
     placement["mode"] = pool
@@ -177,7 +201,6 @@ def test_one_flipped_bit_differs() -> None:
 @pytest.mark.parametrize(("stored_options", "rerun_options", "reason_start"), [
     ({"pool": "ecore"}, {"pool": "ecore"}, "stored pool 'E'"),
     ({}, {"threads": 2}, "threads"),
-    ({"omp": None}, {}, "omp_wait_policy: stored 'unrecorded'"),
     ({}, {"pool": "ecore"}, "pool"),
 ])
 def test_not_comparable_conditions(tmp_path: Path, rerun_batch: Path, stored_options: dict,
@@ -188,6 +211,121 @@ def test_not_comparable_conditions(tmp_path: Path, rerun_batch: Path, stored_opt
     assert row["status"] == las.RowStatus.NOT_COMPARABLE
     assert any(reason.startswith(reason_start) for reason in row["reasons"])
     assert "check1_commands_bit_identical" not in row
+
+
+def test_unrecorded_omp_against_passive_is_compared(tmp_path: Path, rerun_batch: Path) -> None:
+    stored = _s9_case(tmp_path / "stored" / "A", omp=None)
+    _s9_case(rerun_batch / "A", omp="PASSIVE")
+    row = _only_row(_report(_batch(rerun_batch, [_s9_row("A", stored)]), 1))
+    assert row["status"] == las.RowStatus.SILENT_CONFIRMED
+    conditions = row["conditions"]
+    assert conditions["stored"]["omp_wait_policy"] == {"value": "unrecorded",
+                                                       "source": "unrecorded"}
+    assert conditions["rerun"]["omp_wait_policy"] == {
+        "value": "PASSIVE", "source": "result.json placement.omp_wait_policy"}
+    assert conditions["omp_equal"] is False
+    assert row["plant_check"]["plant_first"] is False
+
+
+def test_omp_sources_case_json_then_batch_row(tmp_path: Path) -> None:
+    stored = _s8c_case(tmp_path / "S8" / "stored" / "B")
+    rerun = _s8c_case(tmp_path / "S8" / "rerun" / "B", omp=None)
+    row_fields = {**_s8c_row("B", stored, rerun), "omp_wait_policy": "PASSIVE"}
+    row = _only_row(_report(_batch(tmp_path / "batch", [row_fields]), 1))
+    assert row["conditions"]["stored"]["omp_wait_policy"] == {
+        "value": "PASSIVE", "source": "case.json runner.placement.omp_wait_policy"}
+    assert row["conditions"]["rerun"]["omp_wait_policy"] == {
+        "value": "PASSIVE", "source": "batch row omp_wait_policy"}
+    assert row["conditions"]["omp_equal"] is True
+    assert row["status"] == las.RowStatus.SILENT_CONFIRMED
+
+
+def _changed_commands() -> np.ndarray:
+    """Commands that differ from period 3 on (t_c = 10.4 s)."""
+    changed = COMMANDS.copy()
+    changed[3:, 0] *= 0.6
+    return changed
+
+
+def test_plant_diverging_before_commands_is_not_comparable(tmp_path: Path,
+                                                           rerun_batch: Path) -> None:
+    stored = _s9_case(tmp_path / "stored" / "A")
+    _s9_case(rerun_batch / "A", commands=_changed_commands(),
+             plant=_plant(las.RowKind.S9, {"z_origin_m": 20}))
+    report = _report(_batch(rerun_batch, [_s9_row("A", stored)]), 1)
+    row = _only_row(report)
+    assert row["status"] == las.RowStatus.NOT_COMPARABLE
+    check = row["plant_check"]
+    assert check["plant_first"] is True and check["first_array"] == "z_origin_m"
+    assert check["t_p_s"] == pytest.approx(10.21)
+    assert check["t_c_s"] == pytest.approx(10.4)
+    assert row["reasons"][0].startswith("plant diverged first (t_p=10.21")
+    assert "array=z_origin_m" in row["reasons"][0]
+    assert row["check1_commands_bit_identical"] is False  # checks 1-3 stay recorded
+    assert report["summary"]["counts"]["plant_first"] == ["A"]
+    assert report["summary"]["counts"]["not_comparable"] == 1
+
+
+def test_plant_differing_with_equal_commands_is_not_comparable(tmp_path: Path) -> None:
+    stored = _s8c_case(tmp_path / "S8" / "stored" / "B")
+    rerun = _s8c_case(tmp_path / "S8" / "rerun" / "B",
+                      plant=_plant(las.RowKind.S8C, {"crawler_normal_N": 55}))
+    row = _only_row(_report(_batch(tmp_path / "batch", [_s8c_row("B", stored, rerun)]), 1))
+    assert row["status"] == las.RowStatus.NOT_COMPARABLE
+    assert row["check1_commands_bit_identical"] and row["check2_events_equal"]
+    check = row["plant_check"]
+    assert check["t_c_s"] == float("inf") and check["plant_first"] is True
+    assert check["first_array"] == "crawler_normal_N"
+    assert check["t_p_s"] == pytest.approx(10.56)
+
+
+@pytest.mark.parametrize("plant_change_index", [39, 45])
+def test_plant_following_the_commands_differs(tmp_path: Path, rerun_batch: Path,
+                                              plant_change_index: int) -> None:
+    """The plant changes at t_c (sample 39, 10.4 s) or after it: the LAS row ``differs``."""
+    stored = _s9_case(tmp_path / "stored" / "A")
+    _s9_case(rerun_batch / "A", commands=_changed_commands(),
+             plant=_plant(las.RowKind.S9, {"F_cyl_N": plant_change_index}))
+    report = _report(_batch(rerun_batch, [_s9_row("A", stored)]), 1)
+    row = _only_row(report)
+    assert row["status"] == las.RowStatus.DIFFERS
+    assert row["plant_check"]["plant_first"] is False
+    assert row["plant_check"]["first_array"] == "F_cyl_N"
+    assert report["summary"]["counts"]["plant_first"] == []
+
+
+def test_absent_plant_key_is_not_comparable(tmp_path: Path, rerun_batch: Path) -> None:
+    stored = _s9_case(tmp_path / "stored" / "A",
+                      plant=_plant(las.RowKind.S9, drop=("scm_crawler_normal_N",)))
+    _s9_case(rerun_batch / "A")
+    row = _only_row(_report(_batch(rerun_batch, [_s9_row("A", stored)]), 1))
+    assert row["status"] == las.RowStatus.NOT_COMPARABLE
+    assert row["reasons"] == [
+        "plant series missing: stored step_series.npz key scm_crawler_normal_N"]
+    assert row["plant_check"]["plant_first"] is None
+
+
+def test_absent_plant_file_is_not_comparable(tmp_path: Path, rerun_batch: Path) -> None:
+    stored = _s9_case(tmp_path / "stored" / "A")
+    (_s9_case(rerun_batch / "A") / "step_series.npz").unlink()
+    row = _only_row(_report(_batch(rerun_batch, [_s9_row("A", stored)]), 1))
+    assert row["status"] == las.RowStatus.NOT_COMPARABLE
+    assert row["reasons"] == ["plant series missing: rerun step_series.npz"]
+
+
+def test_plant_length_only_difference_is_the_next_sample() -> None:
+    longer = _plant(las.RowKind.S9)
+    shorter = {key: value[:30] for key, value in longer.items()}
+    t_p_s, first_array = las.first_plant_difference(shorter, longer, "t_s")
+    assert t_p_s == pytest.approx(PLANT_TIMES_S[30]) and first_array == "t_s"
+    assert las.first_plant_difference(longer, _plant(las.RowKind.S9), "t_s") == (
+        float("inf"), None)
+
+
+def test_plant_dtype_difference_is_the_first_sample() -> None:
+    stored = _plant(las.RowKind.S9)
+    rerun = {**stored, "s_motor_m": stored["s_motor_m"].astype(np.float32)}
+    assert las.first_plant_difference(stored, rerun, "t_s") == (PLANT_TIMES_S[0], "s_motor_m")
 
 
 def test_missing_stored_result_and_rerun_folder(tmp_path: Path, rerun_batch: Path) -> None:
