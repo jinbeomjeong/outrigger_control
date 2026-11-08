@@ -721,6 +721,18 @@ roll 5.5 deg, top, F_s 4 kN, L2b-NSC, pilot check) with one solver setting chang
 07_results/S8/final_K24_top_roll5.5_Fs4_20261030_230357 (set ``s4conv``, group S4C outside MAIN_GROUPS)."""
 
 
+D1C2_GROUP = "D1C2"
+D1C2_LEVELS = ("middle", "bottom")
+D1_ROLL_NEG_FLOOR = "rollm4.4"
+st.FLOORS.update({D1_ROLL_NEG_FLOOR: (-4.4, 0.0)})
+D1C2_FLOORS = ("fdown3.2", "fup3.2", "roll4.4", D1_ROLL_NEG_FLOOR, "rpBop")
+"""D-1 C2 operating boundary directions (d1_rows_final.md 1): fdown-op (0, 3.2), fup-op (0, -3.2), roll+op (4.4, 0),
+roll-op (-4.4, 0) (new floor ``rollm4.4``), diag-op = ``rpBop`` (2.3351, 1.5017) (U2). The roll sign is chosen by the
+D-1 selection (one of roll4.4 / rollm4.4 per level), so 10 cases are defined for 8 rows."""
+D1C2_TAG = ("tag 'rigid crawler upper bound for 8 s after lift-off' (S8-L1 / S8-L5: L2b-NSC crawler is rigid, the "
+            "lift-off transient is an upper bound); VB arguments from s9_batch.v5_rigid_argv('VB')")
+
+
 def s8_cases() -> list[S8Case]:
     """The 80 cases of spec rev. 39 202 + 6 CB placeholders + 2 smoke cases."""
     out: list[S8Case] = []
@@ -893,6 +905,13 @@ def s8_cases() -> list[S8Case]:
         add(cid, G1_GROUP, 6, _g1_scenario(ev, level), fs_kN=fs, event=ev, phase_offset_s=off,
             notes=(f"v5 stage 3 family F: {base} on {leg}, READY + 5 s + {off:g} s, F_s {fs:g} kN, "
                    f"{level}; C-S8-72 source case {src} with the phase only changed",))
+    # D-1 C2 (d1_rows_final.md 4, user decisions U1 / U2 2026-11-08): auger middle / bottom x the operating boundary
+    # directions, F_s 4 kN, L2b-NSC rigid crawler; appended last (earlier order and definitions unchanged); group D1C2
+    # (not in MAIN_GROUPS), set d1c2. Both roll signs are defined; the D-1 selection keeps one per level.
+    for lv in D1C2_LEVELS:
+        for f in D1C2_FLOORS:
+            add(f"D1C2_{lv}_{f}_Fs4", D1C2_GROUP, 9, _d8_scenario(lv, f), fs_kN=4.0,
+                notes=(f"D-1 C2 ({lv}, {f} {st.FLOORS[f]} deg, F_s 4 kN): {D1C2_TAG}",))
     ids = [c.case_id for c in out]
     if len(ids) != len(set(ids)):
         dup = sorted({i for i in ids if ids.count(i) > 1})
@@ -941,6 +960,8 @@ def case_set(name: str) -> list[S8Case]:
         "s4conv": [c for c in cases if c.group == S4CONV_GROUP],
         # v5 stage 3 family F (2026-11-07): G1R_FS24_FL_top_o050_Fs0 (1)
         "v5rec": [c for c in cases if c.case_id in V5REC_CASE_IDS],
+        # D-1 C2 (2026-11-08): middle / bottom x 5 operating directions, F_s 4 kN (10; 8 run after the roll selection)
+        "d1c2": [c for c in cases if c.group == D1C2_GROUP],
     }
     if name not in sets:
         raise KeyError(f"unknown set {name!r}; sets {tuple(sets)}")
@@ -948,7 +969,7 @@ def case_set(name: str) -> list[S8Case]:
 
 
 SET_NAMES = ("p1", "p1r", "p2", "p3", "rest", "all", "cb", "smoke", "mlj", "mlj_c29",
-             "mlj_c67", "mlj_c68", "g1", "c74", "c75", "jaug", "s4conv", "v5rec")
+             "mlj_c67", "mlj_c68", "g1", "c74", "c75", "jaug", "s4conv", "v5rec", "d1c2")
 G1_CASE_IDS = frozenset(c[0] for c in G1_CASES)
 V5REC_CASE_IDS = frozenset(c[0] for c in V5REC_CASES)
 C74_CASE_IDS = frozenset(c[0] for c in C74_CASES)

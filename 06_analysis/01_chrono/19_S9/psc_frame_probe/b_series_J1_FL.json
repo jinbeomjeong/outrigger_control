@@ -1,0 +1,123 @@
+{
+ "probe": "D-1 C-3 PS-c frame lowering (run_S9.SoilEventDriver on the single-pad layout)",
+ "mode": "b_series",
+ "soil": "J1",
+ "leg": "FL",
+ "pad_variant": "dwg_rear250",
+ "grid_m": 0.01,
+ "dt_s": 0.0001,
+ "scm_threads": 4,
+ "placement": {
+  "mode": "pcore",
+  "efficiency_classes": [
+   0,
+   1
+  ],
+  "affinity_ok": true,
+  "affinity_logical_processors": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "power_throttling_off_ok": true,
+  "requested": "pcore",
+  "env_var": "OUTRIGGER_PLACEMENT",
+  "env_value": null
+ },
+ "normal_load_N": 119146.2887808078,
+ "load_kind": "design",
+ "load_ramp_s": 1.0,
+ "settle_hold_s": 1.9,
+ "virgin_tau_s": 0.3631253392704034,
+ "t_lock_s": 2.9,
+ "t_ev_s": 3.1999999999999997,
+ "t_end_s": 4.799999999999999,
+ "frame_profile": {
+  "depth_m": 0.002,
+  "ramp_s": 1.0,
+  "shape": "P345",
+  "peak_speed_m_s": 0.00375
+ },
+ "driver": {
+  "t_ev_s": 3.1999999999999997,
+  "depth_m": 0.002,
+  "ramp_s": 1.0,
+  "offset_end_m": 0.002,
+  "frame_z_end_m": -0.002,
+  "plane_z_m": 0.0,
+  "n_frame_updates": 10000,
+  "first_update_t_s": 3.2001000000023287,
+  "last_update_t_s": 4.20000000000355
+ },
+ "values": {
+  "elastic_K_Pa_m": 200000000.0,
+  "pad_area_m2": 0.1071,
+  "KA_N_m": 21420000.0,
+  "k_leg_N_m": 25905744.2,
+  "k_series_N_m": 11725141.36109454,
+  "share_mass_kg": 12127.136207093994,
+  "series_damping_N_s_m": 784702.7955733871
+ },
+ "before_event": {
+  "z_bottom_mm": -52.600296955493505,
+  "Fz_scm_N": 119146.40926943671,
+  "Fz_over_load": 1.0000010112663194
+ },
+ "check_b": {
+  "rule": "load drop per frame metre (end hold mean vs pre-event mean) within +-10% of 1/(1/KA + 1/k_hold), k_hold = k_leg",
+  "k_hold_N_m": 25905744.2,
+  "KA_alone_N_per_mm": 21420.0,
+  "expected_N_per_mm": 11725.14136109454,
+  "drop_N": 23474.200627935934,
+  "depth_mm": 2.0,
+  "slope_N_per_mm": 11737.100313967967,
+  "rel_err": 0.001019941039952732,
+  "fit_slope_0.2_1mm_N_per_mm": 12017.884393454722,
+  "fit_note": "during the ramp (share inertia / damping lag included); the judged value is the end-hold chord",
+  "share_drop_mm": 0.9061353328589372,
+  "pass": true
+ },
+ "plastic_memory": {
+  "rule": "node sinkage_plastic / sigma_yield under the pad before t_ev vs the run end (frame-relative records)",
+  "n_nodes_probe": 929,
+  "n_nodes_contact_before": 929,
+  "contact_area_nodes_m2": 0.09290000000000001,
+  "sinkage_plastic_mean_before_mm": 47.048275623232264,
+  "sinkage_plastic_max_abs_change_mm": 0.0,
+  "sigma_yield_mean_before_Pa": 1111553.04865318,
+  "sigma_yield_max_abs_change_Pa": 0.0,
+  "sigma_mean_before_Pa": 1110404.5138238224,
+  "sigma_mean_after_Pa": 891632.8679083574,
+  "unchanged": true
+ },
+ "ray": {
+  "ray_hits_pre": 1073,
+  "ray_hits_end": 1073,
+  "patches_pre": 1,
+  "patches_end": 1,
+  "window": "SCM ray test +0.1 m / -0.5 m along the frame normal (SCMLoader defaults), pad active domain height 0.40 m (scm_model.ACTIVE_DOMAIN_HEIGHT_M)"
+ },
+ "python_warnings": [],
+ "cost": {
+  "wall_s": 38.28988400590606,
+  "steps": 48000,
+  "us_per_step_before_event": 803.3913688086614,
+  "us_per_step_during_ramp": 812.1754205494653,
+  "driver_update_us_per_step": 2.351527168987862,
+  "driver_frame_calls": 10000,
+  "us_per_frame_call": 11.287330411141738
+ }
+}

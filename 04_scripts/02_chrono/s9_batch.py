@@ -251,7 +251,19 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     out[V5_REC_BATCH] = v5_rec_rows()
     out[V5_V0V_BATCH] = v5_v0v_rows(out[V5_VB_BATCH])
     out[V5_STAGE3_BATCH] = v5_stage3_rows(out)
+    # D-1 verification matrix Chrono rows (cad 2026-11-08, d1_chrono_rows.py): D1-CHRONO (16 required rows + roll /
+    # slope candidates), D1-PSC (optional PS-c); built with this module's live VB argument functions
+    out.update(_d1_batches())
     return out
+
+
+def _d1_batches() -> dict[str, list[dict]]:
+    sys.path.insert(0, str(HERE))
+    try:
+        import d1_chrono_rows  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    return d1_chrono_rows.d1_batches(sys.modules[__name__])
 
 
 COUPLED_BATCH = "COUPLED_eta085"
@@ -953,7 +965,8 @@ ENTRY_META_KEYS = ("note", "priority", "controller", "source_run", "pair_case", 
                    "harness_case", "family", "s8_group", "also_in", "planned_pool", "est_pool_s", "depends_on", "k",
                    "direction", "h9_result", "rep_bundle", "rep_source", "rep_variable", "r4_x11_check",
                    "expected_note", "rep_role", "source_expected_diffs", "criteria_id", "stored_wall_s",
-                   "s8c_case_id", "v5_setting")
+                   "s8c_case_id", "v5_setting",
+                   "d1_id", "d1_role", "d1_select", "d1_tag", "d1_slope", "d1_flag", "d1_source")
 """Row keys copied into the batch.json case entries (when present)."""
 
 

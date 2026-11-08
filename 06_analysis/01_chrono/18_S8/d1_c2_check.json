@@ -1,0 +1,326 @@
+{
+ "check": "D-1 C-2 L2b V0",
+ "cases": {
+  "D1C2_middle_fdown3.2_Fs4": {
+   "level": "middle",
+   "floor": "fdown3.2",
+   "floor_deg": [
+    0.0,
+    3.2
+   ],
+   "fs_kN": 4.0,
+   "overrides": [
+    "actuator.lock_valve",
+    "actuator.seal_friction.level_N"
+   ],
+   "v0": {
+    "mass_kg": 38400.8366,
+    "mass_yaml_kg": 38400.8366,
+    "mass_rel": 0.0,
+    "com_body_m": [
+     0.460190503,
+     -0.00136232581,
+     1.48302254
+    ],
+    "com_yaml_m": [
+     0.460190503,
+     -0.00136232581,
+     1.48302254
+    ],
+    "com_abs_diff_m": 0.0,
+    "inertia_rel_max": 0.0,
+    "ok_1e-9": true,
+    "basis": "Chrono superstructure body (COG frame) vs YAML superstructure.auger_levels.<level>; inertia about the COG, body axes (x fwd, y left, z up)"
+   }
+  },
+  "D1C2_middle_fup3.2_Fs4": {
+   "level": "middle",
+   "floor": "fup3.2",
+   "floor_deg": [
+    0.0,
+    -3.2
+   ],
+   "fs_kN": 4.0,
+   "overrides": [
+    "actuator.lock_valve",
+    "actuator.seal_friction.level_N"
+   ],
+   "v0": {
+    "mass_kg": 38400.8366,
+    "mass_yaml_kg": 38400.8366,
+    "mass_rel": 0.0,
+    "com_body_m": [
+     0.460190503,
+     -0.00136232581,
+     1.48302254
+    ],
+    "com_yaml_m": [
+     0.460190503,
+     -0.00136232581,
+     1.48302254
+    ],
+    "com_abs_diff_m": 0.0,
+    "inertia_rel_max": 0.0,
+    "ok_1e-9": true,
+    "basis": "Chrono superstructure body (COG frame) vs YAML superstructure.auger_levels.<level>; inertia about the COG, body axes (x fwd, y left, z up)"
+   }
+  },
+  "D1C2_middle_roll4.4_Fs4": {
+   "level": "middle",
+   "floor": "roll4.4",
+   "floor_deg": [
+    4.4,
+    0.0
+   ],
+   "fs_kN": 4.0,
+   "overrides": [
+    "actuator.lock_valve",
+    "actuator.seal_friction.level_N"
+   ],
+   "v0": {
+    "mass_kg": 38400.8366,
+    "mass_yaml_kg": 38400.8366,
+    "mass_rel": 0.0,
+    "com_body_m": [
+     0.460190503,
+     -0.00136232581,
+     1.48302254
+    ],
+    "com_yaml_m": [
+     0.460190503,
+     -0.00136232581,
+     1.48302254
+    ],
+    "com_abs_diff_m": 0.0,
+    "inertia_rel_max": 0.0,
+    "ok_1e-9": true,
+    "basis": "Chrono superstructure body (COG frame) vs YAML superstructure.auger_levels.<level>; inertia about the COG, body axes (x fwd, y left, z up)"
+   }
+  },
+  "D1C2_middle_rollm4.4_Fs4": {
+   "level": "middle",
+   "floor": "rollm4.4",
+   "floor_deg": [
+    -4.4,
+    0.0
+   ],
+   "fs_kN": 4.0,
+   "overrides": [
+    "actuator.lock_valve",
+    "actuator.seal_friction.level_N"
+   ],
+   "v0": {
+    "mass_kg": 38400.8366,
+    "mass_yaml_kg": 38400.8366,
+    "mass_rel": 0.0,
+    "com_body_m": [
+     0.460190503,
+     -0.00136232581,
+     1.48302254
+    ],
+    "com_yaml_m": [
+     0.460190503,
+     -0.00136232581,
+     1.48302254
+    ],
+    "com_abs_diff_m": 0.0,
+    "inertia_rel_max": 0.0,
+    "ok_1e-9": true,
+    "basis": "Chrono superstructure body (COG frame) vs YAML superstructure.auger_levels.<level>; inertia about the COG, body axes (x fwd, y left, z up)"
+   }
+  },
+  "D1C2_middle_rpBop_Fs4": {
+   "level": "middle",
+   "floor": "rpBop",
+   "floor_deg": [
+    2.3351,
+    1.5017
+   ],
+   "fs_kN": 4.0,
+   "overrides": [
+    "actuator.lock_valve",
+    "actuator.seal_friction.level_N"
+   ],
+   "v0": {
+    "mass_kg": 38400.8366,
+    "mass_yaml_kg": 38400.8366,
+    "mass_rel": 0.0,
+    "com_body_m": [
+     0.460190503,
+     -0.00136232581,
+     1.48302254
+    ],
+    "com_yaml_m": [
+     0.460190503,
+     -0.00136232581,
+     1.48302254
+    ],
+    "com_abs_diff_m": 0.0,
+    "inertia_rel_max": 0.0,
+    "ok_1e-9": true,
+    "basis": "Chrono superstructure body (COG frame) vs YAML superstructure.auger_levels.<level>; inertia about the COG, body axes (x fwd, y left, z up)"
+   }
+  },
+  "D1C2_bottom_fdown3.2_Fs4": {
+   "level": "bottom",
+   "floor": "fdown3.2",
+   "floor_deg": [
+    0.0,
+    3.2
+   ],
+   "fs_kN": 4.0,
+   "overrides": [
+    "actuator.lock_valve",
+    "actuator.seal_friction.level_N"
+   ],
+   "v0": {
+    "mass_kg": 38400.8366,
+    "mass_yaml_kg": 38400.8366,
+    "mass_rel": 0.0,
+    "com_body_m": [
+     0.460190503,
+     -0.00136232581,
+     0.782572771
+    ],
+    "com_yaml_m": [
+     0.460190503,
+     -0.00136232581,
+     0.782572771
+    ],
+    "com_abs_diff_m": 0.0,
+    "inertia_rel_max": 0.0,
+    "ok_1e-9": true,
+    "basis": "Chrono superstructure body (COG frame) vs YAML superstructure.auger_levels.<level>; inertia about the COG, body axes (x fwd, y left, z up)"
+   }
+  },
+  "D1C2_bottom_fup3.2_Fs4": {
+   "level": "bottom",
+   "floor": "fup3.2",
+   "floor_deg": [
+    0.0,
+    -3.2
+   ],
+   "fs_kN": 4.0,
+   "overrides": [
+    "actuator.lock_valve",
+    "actuator.seal_friction.level_N"
+   ],
+   "v0": {
+    "mass_kg": 38400.8366,
+    "mass_yaml_kg": 38400.8366,
+    "mass_rel": 0.0,
+    "com_body_m": [
+     0.460190503,
+     -0.00136232581,
+     0.782572771
+    ],
+    "com_yaml_m": [
+     0.460190503,
+     -0.00136232581,
+     0.782572771
+    ],
+    "com_abs_diff_m": 0.0,
+    "inertia_rel_max": 0.0,
+    "ok_1e-9": true,
+    "basis": "Chrono superstructure body (COG frame) vs YAML superstructure.auger_levels.<level>; inertia about the COG, body axes (x fwd, y left, z up)"
+   }
+  },
+  "D1C2_bottom_roll4.4_Fs4": {
+   "level": "bottom",
+   "floor": "roll4.4",
+   "floor_deg": [
+    4.4,
+    0.0
+   ],
+   "fs_kN": 4.0,
+   "overrides": [
+    "actuator.lock_valve",
+    "actuator.seal_friction.level_N"
+   ],
+   "v0": {
+    "mass_kg": 38400.8366,
+    "mass_yaml_kg": 38400.8366,
+    "mass_rel": 0.0,
+    "com_body_m": [
+     0.460190503,
+     -0.00136232581,
+     0.782572771
+    ],
+    "com_yaml_m": [
+     0.460190503,
+     -0.00136232581,
+     0.782572771
+    ],
+    "com_abs_diff_m": 0.0,
+    "inertia_rel_max": 0.0,
+    "ok_1e-9": true,
+    "basis": "Chrono superstructure body (COG frame) vs YAML superstructure.auger_levels.<level>; inertia about the COG, body axes (x fwd, y left, z up)"
+   }
+  },
+  "D1C2_bottom_rollm4.4_Fs4": {
+   "level": "bottom",
+   "floor": "rollm4.4",
+   "floor_deg": [
+    -4.4,
+    0.0
+   ],
+   "fs_kN": 4.0,
+   "overrides": [
+    "actuator.lock_valve",
+    "actuator.seal_friction.level_N"
+   ],
+   "v0": {
+    "mass_kg": 38400.8366,
+    "mass_yaml_kg": 38400.8366,
+    "mass_rel": 0.0,
+    "com_body_m": [
+     0.460190503,
+     -0.00136232581,
+     0.782572771
+    ],
+    "com_yaml_m": [
+     0.460190503,
+     -0.00136232581,
+     0.782572771
+    ],
+    "com_abs_diff_m": 0.0,
+    "inertia_rel_max": 0.0,
+    "ok_1e-9": true,
+    "basis": "Chrono superstructure body (COG frame) vs YAML superstructure.auger_levels.<level>; inertia about the COG, body axes (x fwd, y left, z up)"
+   }
+  },
+  "D1C2_bottom_rpBop_Fs4": {
+   "level": "bottom",
+   "floor": "rpBop",
+   "floor_deg": [
+    2.3351,
+    1.5017
+   ],
+   "fs_kN": 4.0,
+   "overrides": [
+    "actuator.lock_valve",
+    "actuator.seal_friction.level_N"
+   ],
+   "v0": {
+    "mass_kg": 38400.8366,
+    "mass_yaml_kg": 38400.8366,
+    "mass_rel": 0.0,
+    "com_body_m": [
+     0.460190503,
+     -0.00136232581,
+     0.782572771
+    ],
+    "com_yaml_m": [
+     0.460190503,
+     -0.00136232581,
+     0.782572771
+    ],
+    "com_abs_diff_m": 0.0,
+    "inertia_rel_max": 0.0,
+    "ok_1e-9": true,
+    "basis": "Chrono superstructure body (COG frame) vs YAML superstructure.auger_levels.<level>; inertia about the COG, body axes (x fwd, y left, z up)"
+   }
+  }
+ },
+ "all_v0_ok": true
+}

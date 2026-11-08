@@ -1,0 +1,239 @@
+{
+ "check": "D-1 C-1 crawler x3",
+ "placement": {
+  "mode": "pcore",
+  "efficiency_classes": [
+   0,
+   1
+  ],
+  "affinity_ok": true,
+  "affinity_logical_processors": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "power_throttling_off_ok": true
+ },
+ "levels": {
+  "top": {
+   "overrides": {
+    "contact.crawler.kn_per_sphere_N_m": 24999999.990000002,
+    "contact.crawler.gn_per_sphere_1_s": 0.740005024332423,
+    "contact.crawler.damping_total_N_s_m": 341001.7445325504
+   },
+   "analytic": {
+    "x1": {
+     "u_z_mm": -3.153652443849049,
+     "mean_active_compression_mm": 3.2581106096729338,
+     "W_over_kn_total_mm": 3.2581106096727934,
+     "pitch_deg": 0.17879920192848717,
+     "roll_deg": 0.0002573483542578072,
+     "active": 14,
+     "kn_float32_N_m": 8333333.5,
+     "modes_Hz": {
+      "pitch": 1.329420619583587,
+      "roll": 3.0613188644147575,
+      "heave": 8.758154396782151
+     },
+     "zeta": {
+      "pitch": 0.00842530118082463,
+      "roll": 0.019114047609937034,
+      "heave": 0.0541680615526131
+     }
+    },
+    "x3": {
+     "u_z_mm": -1.190682970900823,
+     "mean_active_compression_mm": 1.2670430402125556,
+     "W_over_kn_total_mm": 1.2670430402136132,
+     "pitch_deg": 0.08584183764304723,
+     "roll_deg": 9.950070458211405e-05,
+     "active": 12,
+     "kn_float32_N_m": 25000000.0,
+     "modes_Hz": {
+      "pitch": 1.7801685678962824,
+      "roll": 4.9153483390744555,
+      "heave": 14.010711949985422
+     },
+     "zeta": {
+      "pitch": 0.006444649914152895,
+      "roll": 0.01761645876252784,
+      "heave": 0.050029811483164516
+     }
+    }
+   },
+   "expect": {
+    "u_z_m": -0.00127,
+    "u_z_tol": 0.05,
+    "active": 12,
+    "heave_Hz": 14.0,
+    "heave_tol": 0.1
+   },
+   "analytic_pass": true,
+   "material_x1": {
+    "kn_N_m": 8333333.33,
+    "gn_1_s": 0.4272421,
+    "source": "contact.crawler.kn_per_sphere_N_m, .gn_per_sphere_1_s",
+    "kt_N_m": 0.0,
+    "gt_1_s": 0.0,
+    "friction": 0.0
+   },
+   "material_x3": {
+    "kn_N_m": 24999999.990000002,
+    "gn_1_s": 0.740005024332423,
+    "source": "contact.crawler.kn_per_sphere_N_m, .gn_per_sphere_1_s",
+    "kt_N_m": 0.0,
+    "gt_1_s": 0.0,
+    "friction": 0.0
+   },
+   "bushing_x1": {
+    "kt_N_m": 1942437.5460074937,
+    "ct_N_s_m": 7920.979376872223,
+    "damping_input_N_s_m": 3960.4896884361115,
+    "kt_over_kn_pad": 0.23309250561413625,
+    "kn_sphere_N_m": 8333333.33,
+    "cn_sphere_N_s_m": 16406.454083333334,
+    "kt_scale": 1.0,
+    "mu": 0.5,
+    "basis": "kt = (kt/kn)_pad mean x kn_sphere x kt_scale; ct = cn_sphere sqrt(kt/kn_sphere); input ct/2 (ASSUMPTION)"
+   },
+   "bushing_x3": {
+    "kt_N_m": 5827312.638022481,
+    "ct_N_s_m": 13719.538726447954,
+    "damping_input_N_s_m": 6859.769363223977,
+    "kt_over_kn_pad": 0.23309250561413625,
+    "kn_sphere_N_m": 24999999.990000002,
+    "cn_sphere_N_s_m": 28416.8120443792,
+    "kt_scale": 1.0,
+    "mu": 0.5,
+    "basis": "kt = (kt/kn)_pad mean x kn_sphere x kt_scale; ct = cn_sphere sqrt(kt/kn_sphere); input ct/2 (ASSUMPTION)"
+   },
+   "ratios_x3_over_x1": {
+    "kn": 2.9999999400000013,
+    "gn": 1.7320508075688772,
+    "bushing_kt": 3.0,
+    "bushing_ct": 1.732050807568877
+   }
+  },
+  "bottom": {
+   "overrides": {
+    "contact.crawler.kn_per_sphere_N_m": 24999999.990000002,
+    "contact.crawler.gn_per_sphere_1_s": 0.740005024332423,
+    "contact.crawler.damping_total_N_s_m": 341001.7445325504
+   },
+   "analytic": {
+    "x1": {
+     "u_z_mm": -3.15833825407837,
+     "mean_active_compression_mm": 3.258110609672775,
+     "W_over_kn_total_mm": 3.2581106096727934,
+     "pitch_deg": 0.17688102981853582,
+     "roll_deg": 0.00025627701948560206,
+     "active": 14,
+     "kn_float32_N_m": 8333333.5,
+     "modes_Hz": {
+      "pitch": 1.9191350172040058,
+      "roll": 4.396892474628005,
+      "heave": 8.786473371367626
+     },
+     "zeta": {
+      "pitch": 0.012032115821710744,
+      "roll": 0.027338725204181367,
+      "heave": 0.054343488381165664
+     }
+    },
+    "x3": {
+     "u_z_mm": -1.1935133102676847,
+     "mean_active_compression_mm": 1.2670430402132031,
+     "W_over_kn_total_mm": 1.2670430402136132,
+     "pitch_deg": 0.08532332826902646,
+     "roll_deg": 9.934014428920714e-05,
+     "active": 12,
+     "kn_float32_N_m": 25000000.0,
+     "modes_Hz": {
+      "pitch": 2.570335287985486,
+      "roll": 7.059475506605308,
+      "heave": 14.020068134223463
+     },
+     "zeta": {
+      "pitch": 0.009249038374793513,
+      "roll": 0.0252601185925188,
+      "heave": 0.05006324140995661
+     }
+    }
+   },
+   "expect": "top only (dynamics 3.1); bottom recorded",
+   "analytic_pass": null,
+   "material_x1": {
+    "kn_N_m": 8333333.33,
+    "gn_1_s": 0.4272421,
+    "source": "contact.crawler.kn_per_sphere_N_m, .gn_per_sphere_1_s",
+    "kt_N_m": 0.0,
+    "gt_1_s": 0.0,
+    "friction": 0.0
+   },
+   "material_x3": {
+    "kn_N_m": 24999999.990000002,
+    "gn_1_s": 0.740005024332423,
+    "source": "contact.crawler.kn_per_sphere_N_m, .gn_per_sphere_1_s",
+    "kt_N_m": 0.0,
+    "gt_1_s": 0.0,
+    "friction": 0.0
+   },
+   "bushing_x1": {
+    "kt_N_m": 1942437.5460074937,
+    "ct_N_s_m": 7920.979376872223,
+    "damping_input_N_s_m": 3960.4896884361115,
+    "kt_over_kn_pad": 0.23309250561413625,
+    "kn_sphere_N_m": 8333333.33,
+    "cn_sphere_N_s_m": 16406.454083333334,
+    "kt_scale": 1.0,
+    "mu": 0.5,
+    "basis": "kt = (kt/kn)_pad mean x kn_sphere x kt_scale; ct = cn_sphere sqrt(kt/kn_sphere); input ct/2 (ASSUMPTION)"
+   },
+   "bushing_x3": {
+    "kt_N_m": 5827312.638022481,
+    "ct_N_s_m": 13719.538726447954,
+    "damping_input_N_s_m": 6859.769363223977,
+    "kt_over_kn_pad": 0.23309250561413625,
+    "kn_sphere_N_m": 24999999.990000002,
+    "cn_sphere_N_s_m": 28416.8120443792,
+    "kt_scale": 1.0,
+    "mu": 0.5,
+    "basis": "kt = (kt/kn)_pad mean x kn_sphere x kt_scale; ct = cn_sphere sqrt(kt/kn_sphere); input ct/2 (ASSUMPTION)"
+   },
+   "ratios_x3_over_x1": {
+    "kn": 2.9999999400000013,
+    "gn": 1.7320508075688772,
+    "bushing_kt": 3.0,
+    "bushing_ct": 1.732050807568877
+   }
+  }
+ },
+ "chrono_top_flat": {
+  "start": "x3 analytic crawler_slope_pose (flat), crawler bushings attached, full gravity at t = 0",
+  "cog_z_drift_0.5_1s_mm": 0.0001354594551262194,
+  "cog_z_drift_end_mm": 0.0001278434332779632,
+  "pulse": "gravity x1.02 for 20 ms at t = 1 s",
+  "heave_Hz_zero_crossings": 14.03016485443704,
+  "active_spheres_end": 12,
+  "sphere_normal_sum_N": 380110.8050565936,
+  "weight_N": 380112.91206408397,
+  "wall_s": 13.68208759999834,
+  "steps": 25000,
+  "us_per_step": 547.2835039999336,
+  "pass": true,
+  "pass_rule": "end COG drift from the analytic pose <= 5 % of |u_z| (0.064 mm), 12 active spheres, heave 14.0 Hz +-10 %"
+ }
+}

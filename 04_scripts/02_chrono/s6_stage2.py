@@ -945,9 +945,13 @@ def build_crawler_model(params, floor: str, *, attach: bool, settlement_legs=(),
 
 
 def job_snapshot(level: str, floor: str, case_dir: Path, states_dir: Path, *,
-                 off: bool = False) -> dict[str, Any]:
+                 off: bool = False, overrides: dict[str, Any] | None = None,
+                 name: str | None = None) -> dict[str, Any]:
     """Settle on the crawler (in-plane gravity ramp + settle) and save the snapshot; ``off``
-    builds the L1-R-off twin (:func:`snapshot_name`)."""
+    builds the L1-R-off twin (:func:`snapshot_name`). ``overrides`` (D-1 crawler x3, 2026-11-08):
+    run-time YAML overrides of the model (the analytic start pose and the settle use them; the
+    snapshot carries their fingerprint) saved under ``name``; both None = the stage-2 snapshot as
+    before."""
     import numpy as np
 
     from outrigger_sim.chrono.system import set_gravity
@@ -956,7 +960,9 @@ def job_snapshot(level: str, floor: str, case_dir: Path, states_dir: Path, *,
     from outrigger_sim.record import save_snapshot
     from outrigger_sim.scenarios.slope import floor_normal, floor_rotation, gravity_ramp
 
-    params = load_params(level=level)
+    if (overrides is None) != (name is None):
+        raise ValueError("job_snapshot: overrides and name go together")
+    params = load_params(level=level, overrides=overrides) if overrides else load_params(level=level)
     extra = {"rod_side_mechanics": "off"} if off else {}
     (model, start) = build_crawler_model(params, floor, attach=True, **extra)
     from outrigger_sim.scenarios.crawler_slope import crawler_slope_pose
@@ -995,10 +1001,11 @@ def job_snapshot(level: str, floor: str, case_dir: Path, states_dir: Path, *,
     cb.assert_hold_released(f"snapshot {level}/{floor}")
     arr = {k: np.asarray(v) for k, v in rows.items()}
     np.savez_compressed(case_dir / "series.npz", **arr)
-    name = snapshot_name(level, floor, off=off)
+    name = snapshot_name(level, floor, off=off) if name is None else name
     save_snapshot(model.snapshot(), name, directory=states_dir, overwrite=True,
                   note={"stage": "S6 stage 2 start", "level": level, "floor": floor,
                         "floor_slope_deg": FLOORS[floor],
+                        **({"param_overrides": dict(overrides)} if overrides else {}),
                         "procedure": f"analytic crawler_slope_pose, crawler anchor bushings "
                         f"(Q12) at zero deformation, in-plane gravity ramp {SNAP_RAMP_S} s, "
                         f"settle {SNAP_SETTLE_S} s",
