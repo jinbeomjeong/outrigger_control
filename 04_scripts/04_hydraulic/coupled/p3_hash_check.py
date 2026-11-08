@@ -1,5 +1,8 @@
 """Criteria revision 8 7.2: the 22 VB lines rerun with ③ on against the stored ③-off lines.
 
+For records before the LAS-b switch only (``EXPECTED_TAG`` stays ``final_C4G2_P3``; a LAS
+record fails check 5 loudly, ``u3_u6_rerun_rules_rev2.md`` 4).
+
 Reads ``main.jsonl`` (stored, r5, ③ off) and ``p3_hash.jsonl`` (``run_v5.py p3_hash``) and
 checks per job:
 

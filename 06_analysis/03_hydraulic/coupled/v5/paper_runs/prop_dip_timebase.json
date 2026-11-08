@@ -1,0 +1,173 @@
+{
+ "V0": {
+  "t_rear_contact_s": 24.29849999995671,
+  "t_front_contact_s": 24.446599999956366,
+  "contact_gap_sref_mm": 3.098844399992778,
+  "crawler_front_sink_rate_mm_s_0p06_0p14": -7.21839603093078,
+  "by_time": [
+   {
+    "t_rel_s": 0.04,
+    "dz_crawler_front_mm": 0.05266914014066034,
+    "F_rear_kN": 10.626090123950577
+   },
+   {
+    "t_rel_s": 0.08,
+    "dz_crawler_front_mm": -0.08252018185164571,
+    "F_rear_kN": 18.31221874170925
+   },
+   {
+    "t_rel_s": 0.1,
+    "dz_crawler_front_mm": -0.2174364744756917,
+    "F_rear_kN": 18.90668417203999
+   },
+   {
+    "t_rel_s": 0.12,
+    "dz_crawler_front_mm": -0.38097758418526356,
+    "F_rear_kN": 18.754583148049512
+   },
+   {
+    "t_rel_s": 0.14,
+    "dz_crawler_front_mm": -0.5590027703243031,
+    "F_rear_kN": 18.137430458291394
+   }
+  ],
+  "by_sref": [
+   {
+    "sref_prog_mm": 1.0,
+    "F_rear_kN": 16.31921976198888,
+    "dz_crawler_front_mm": 0.03741315886520206,
+    "dpitch_mdeg": 3.450255864838018
+   },
+   {
+    "sref_prog_mm": 2.0,
+    "F_rear_kN": 18.839263091889382,
+    "dz_crawler_front_mm": -0.1874797902721144,
+    "dpitch_mdeg": 17.351002244539757
+   },
+   {
+    "sref_prog_mm": 2.5,
+    "F_rear_kN": 18.77344225836421,
+    "dz_crawler_front_mm": -0.3723913971482725,
+    "dpitch_mdeg": 27.214367886186306
+   },
+   {
+    "sref_prog_mm": 3.0,
+    "F_rear_kN": 18.00602877118934,
+    "dz_crawler_front_mm": -0.5867968592440308,
+    "dpitch_mdeg": 39.0558654969646
+   }
+  ],
+  "F_rear_at_front_contact_kN": [
+   17818.344858735785,
+   17713.44322653711
+  ],
+  "F_rear_min_kN": [
+   11659.744661635956,
+   11730.358862209294
+  ],
+  "t_min_rel_front_contact_s": 0.07039999999983593,
+  "dip_from_front_contact_kN": [
+   -6.15860019709983,
+   -5.983084364327817
+  ],
+  "rear_peak_before_front_kN": [
+   18.96235022644081,
+   18.870095188190692
+  ]
+ },
+ "prop": {
+  "t_rear_contact_s": 26.235299999952197,
+  "t_front_contact_s": 26.400199999951813,
+  "contact_gap_sref_mm": 3.0871709944466836,
+  "crawler_front_sink_rate_mm_s_0p06_0p14": -6.591993809688953,
+  "by_time": [
+   {
+    "t_rel_s": 0.04,
+    "dz_crawler_front_mm": 0.049886310518954806,
+    "F_rear_kN": 9.945882889020773
+   },
+   {
+    "t_rel_s": 0.08,
+    "dz_crawler_front_mm": -0.08486167997578063,
+    "F_rear_kN": 16.752742042088418
+   },
+   {
+    "t_rel_s": 0.1,
+    "dz_crawler_front_mm": -0.20176554077616649,
+    "F_rear_kN": 17.01047373211405
+   },
+   {
+    "t_rel_s": 0.12,
+    "dz_crawler_front_mm": -0.3582576674762139,
+    "F_rear_kN": 16.89931903666487
+   },
+   {
+    "t_rel_s": 0.14,
+    "dz_crawler_front_mm": -0.5256981658876263,
+    "F_rear_kN": 16.342258144935514
+   }
+  ],
+  "by_sref": [
+   {
+    "sref_prog_mm": 1.0,
+    "F_rear_kN": 15.738001876372982,
+    "dz_crawler_front_mm": 0.014401747849768047,
+    "dpitch_mdeg": 4.250284066058963
+   },
+   {
+    "sref_prog_mm": 2.0,
+    "F_rear_kN": 17.01525654179201,
+    "dz_crawler_front_mm": -0.2535415563723669,
+    "dpitch_mdeg": 20.29012417450509
+   },
+   {
+    "sref_prog_mm": 2.5,
+    "F_rear_kN": 16.591952220954344,
+    "dz_crawler_front_mm": -0.4669894383553686,
+    "dpitch_mdeg": 31.25398702704065
+   },
+   {
+    "sref_prog_mm": 3.0,
+    "F_rear_kN": 15.367018944805503,
+    "dz_crawler_front_mm": -0.697827888644015,
+    "dpitch_mdeg": 44.329376828878736
+   }
+  ],
+  "F_rear_at_front_contact_kN": [
+   15165.986205210289,
+   14942.065773423707
+  ],
+  "F_rear_min_kN": [
+   9280.949908839691,
+   9174.311283751993
+  ],
+  "t_min_rel_front_contact_s": 0.06479999999984898,
+  "dip_from_front_contact_kN": [
+   -5.885036296370598,
+   -5.767754489671714
+  ],
+  "rear_peak_before_front_kN": [
+   17.143124593288647,
+   16.89479589340249
+  ]
+ },
+ "diff_prop_minus_V0": {
+  "F_rear_at_front_contact_kN": [
+   -2.6523586535254964,
+   -2.771377453113404
+  ],
+  "F_rear_min_kN": [
+   -2.378794752796264,
+   -2.556047578457301
+  ],
+  "rear_peak_kN": [
+   -1.8192256331521648,
+   -1.9752992947882007
+  ],
+  "rear_peak_ratio": [
+   0.9040611732497449,
+   0.8953211801483447
+  ]
+ },
+ "soil_n_R": {}
+}

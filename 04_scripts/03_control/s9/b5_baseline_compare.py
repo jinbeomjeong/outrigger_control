@@ -16,7 +16,8 @@ Controllers (``--controllers``):
         switches of spec 429.11 are set off explicitly (``lift_stroke_guard.soil_stop`` False =
         no P-S8-36 SGS, ``slope_clearance_margin.flat_soil_margin_m`` 0 = no R4), so ABL stays
         the soil-response-off baseline whatever the preset defaults are.
-  ABL28 attribution run: ABL with the soil response back on (LOC anchor off).
+  ABL28 attribution run: ABL with the soil response back on (LOC anchor off); LAS-b as C2
+        (``require_soil_response`` True).
   IND   industry-style baseline on ``control/c8.py`` (C8 skeleton, comparison doc 7.2 alt. 1):
         pressure-threshold touchdown (1.5 F_min), four legs extended together to the
         stroke-based crawler clearance 50 mm, highest-leg attitude trim (P on the height
@@ -26,6 +27,9 @@ Controllers (``--controllers``):
         0.8 s x 2 on the 10 ms IMU samples (:class:`IndustryC8`, :class:`HarnessIndustry`).
         SGS and R4 are C2 config switches; IND has neither (meta ``controller_settings``
         None).
+  IND_LAS  IND + a head-force lift-off approach slowdown in the C8 LIFT phase (record-only
+        attribution column of U-6, spec 436.9.4, :class:`IndustryC8Las`); not in the
+        ``--controllers`` default.
 The C2 / ABL / IND values of these switches go into every record and the result meta
 (``controller_settings``).
 
@@ -62,10 +66,16 @@ Usage (dynamics-dev, numba; PowerShell):
       --workers 4 --affinity 0x0F000000 --out 06_analysis/02_control/s9/rev84/b5_oos.json
   python -I b5_baseline_compare.py list
 Paper v5 U-6 (``u3_u6_rerun_rules.md`` 1, 3): ``--v5-setting VB`` runs C2 / ABL / IND on the VB
-plant (``04_hydraulic/coupled/v5_rerun.py``; the ③ bound on C2 only, tags ``final_C4G2_P3``,
-``ABL``, ``IND``), ``--ids-from <v4 json> [--pad B]`` keeps exactly the stored cases of
-``--cases``; the default ``--out`` is then
-``06_analysis/02_control/v5_rerun/u6_b5_<label>_VB.json``.
+plant (``04_hydraulic/coupled/v5_rerun.py``; the ③ bound on C2 only, tags since the LAS-b
+switch ``final_C4G2_P3_LAS``, ``ABL_LAS`` (ABL + LAS-b without S1, end ``zone``, spec 436.9.4)
+and ``IND`` (no LAS-b), ``u3_u6_rerun_rules_rev2.md`` 1), ``--ids-from <v4 json> [--pad B]``
+keeps exactly the stored cases of ``--cases``; the default ``--out`` is then
+``06_analysis/02_control/v5_rerun/las/u6_b5_<label>_VB.json`` (LAS-tag runs, rules rev2 1 #9).
+``--controllers IND_LAS`` alone is the record-only column of rules rev2 3
+(:class:`IndustryC8Las`, spec 436.9.4); it needs ``--v5-setting`` and its default ``--out`` is
+``06_analysis/02_control/v5_rerun/las/u6_b5_<label>_VB_IND_LAS.json``. With ``--v5-setting`` an
+existing output needs ``--overwrite``; a file directly in ``v5_rerun/`` (pre-switch) is never
+written (``v5_rerun.check_out_path``).
 ``--out`` defaults to ``06_analysis/02_control/s9/rev84/b5_<main|wide|oos|cases>.json``. Table and
 figure: ``b5_baseline_table.py`` and ``b5_baseline_figure.py``. Units SI unless the key says
 otherwise (mm, kN, bar, deg, s).
@@ -82,7 +92,7 @@ import os
 import sys
 import time
 import traceback
-from dataclasses import dataclass, replace
+from dataclasses import asdict, dataclass, replace
 from multiprocessing import Pool
 from pathlib import Path
 
@@ -101,7 +111,21 @@ for _path in (ROOT / "03_src", S9_DIR, S8_DIR):
 import b5_oos_cases as oos  # noqa: E402
 
 from outrigger_sim.control import c8  # noqa: E402
-from outrigger_sim.control.c2 import C2Phase, _SoilState  # noqa: E402
+from outrigger_sim.control.c2 import (  # noqa: E402
+    LIFTOFF_SLOW_END_EVENT,
+    LIFTOFF_SLOW_EVENT,
+    LIFTOFF_SLOW_TIME_TOLERANCE_S,
+    R8_LAS_LIGHT_LEG_FRACTION_OF_F_MIN,
+    R8_LAS_MAX_S,
+    R8_LAS_OFF_PERIODS,
+    R8_LAS_RHO_ON,
+    R8_LAS_SLOW_MEAN_FRACTION,
+    R8_LAS_SUM_OFF_FRACTION_W,
+    R8_LAS_SUM_ON_FRACTION_W,
+    C2Phase,
+    _SoilState,
+    diagonal_deficit_ratio,
+)
 from outrigger_sim.control.two_pressure import BODY_MASS_WITHOUT_YAML_KG  # noqa: E402
 from outrigger_sim.sensors.attitude import AttitudeEstimator, CascadedLowPass  # noqa: E402
 from outrigger_sim.sensors.imu import STANDARD_GRAVITY_M_S2  # noqa: E402
@@ -109,7 +133,11 @@ from outrigger_sim.signals import Command  # noqa: E402
 
 SETTLE_TABLE_PATH = ROOT / "06_analysis" / "00_dynamics" / "slope_crawler_settle.json"
 DEFAULT_OUT_DIR = ROOT / "06_analysis" / "02_control" / "s9" / "rev84"
-CONTROLLERS = ("C2", "ABL", "IND", "ABL28")
+CONTROLLERS = ("C2", "ABL", "IND", "ABL28", "IND_LAS")
+DEFAULT_CONTROLLERS = ("C2", "ABL", "IND", "ABL28")
+"""``--controllers`` default (the set before IND_LAS; IND_LAS is asked for by name)."""
+INDUSTRY_CONTROLLERS = ("IND", "IND_LAS")
+"""C8-skeleton controllers (``b5_official`` ``is_industry``)."""
 LEGS = ("FL", "FR", "RL", "RR")
 RIGID_SOIL = "rigid"
 LOC_EVENT = "crawler_liftoff_confirmed"
@@ -386,6 +414,187 @@ class IndustryC8(c8.C8Controller):
         return Command(t_s=measurements.t_s, leg_speed_m_s=delayed)
 
 
+def industry_reference_weight_N(geometry) -> float:
+    """``W_ref`` as ``C2Controller._reference_weight_N``: YAML superstructure mass x g."""
+    mass_kg = geometry.superstructure_mass_kg
+    if mass_kg is None:
+        mass_kg = BODY_MASS_WITHOUT_YAML_KG
+    return mass_kg * STANDARD_GRAVITY_M_S2
+
+
+@dataclass(frozen=True)
+class IndustryLiftoffSlowSettings:
+    """IND_LAS head-force lift-off approach slowdown (spec 436.9.4; the C2 b0 thresholds).
+
+    A record-only attribution column of U-6 (user decision Q1 = I-2), not LAS-b itself: the
+    gates read the C8 LIFT phase and the C8 load estimate (head pressure x head area, which
+    reads high by the seal friction while extending; not validated on IND).
+    """
+
+    enable: bool = True
+    sum_on_fraction_W: float = R8_LAS_SUM_ON_FRACTION_W
+    light_leg_fraction_of_F_min: float = R8_LAS_LIGHT_LEG_FRACTION_OF_F_MIN
+    slow_mean_fraction: float = R8_LAS_SLOW_MEAN_FRACTION
+    sum_off_fraction_W: float = R8_LAS_SUM_OFF_FRACTION_W
+    off_periods: int = R8_LAS_OFF_PERIODS
+    max_s: float = R8_LAS_MAX_S
+    rho_on: float = R8_LAS_RHO_ON
+
+
+IND_LAS_END_PHASE = "phase"
+IND_LAS_END_SUM = "sum"
+IND_LAS_END_TIME = "time"
+
+
+@dataclass
+class _IndustryLiftoffSlowState:
+    """One run of :class:`IndustryC8Las` (meta reads all of it)."""
+
+    is_armed: bool = True
+    is_active: bool = False
+    has_left_lift: bool = False
+    has_lift_started: bool = False
+    previous_rho: float | None = None
+    start_s: float | None = None
+    start_leg: int | None = None
+    start_rho: float | None = None
+    start_rho_prev: float | None = None
+    sum_periods: int = 0
+    end_s: float | None = None
+    end_reason: str | None = None
+    active_periods: int = 0
+    scaled_periods: int = 0
+
+
+class IndustryC8Las(IndustryC8):
+    """IND + the head-force lift-off approach slowdown (IND_LAS, spec 436.9.4 table).
+
+    In a C8 ``LIFT`` period whose command came from ``_lift`` (not the period that moves on to
+    ``REGROUND``), once per run: ``sum L >= alpha W_ref``, ``min L < beta F_min``, ``rho >=
+    rho_on`` and ``rho > rho_{k-1}`` (``c2.diagonal_deficit_ratio``; ``rho_{k-1}`` of the last
+    LIFT period, cleared in any other period) and a mean command above ``gamma v_max`` start
+    it; the command is scaled to that mean until ``phase`` (a period that is not such a LIFT
+    period), ``sum`` (``off_periods`` active periods in a row at ``sum L >= alpha_end W_ref``)
+    or ``time`` (``max_s``). An ending period keeps its command. The scale acts before the
+    stroke-end clip, the 0.4 s ramp and the output delay d = 1. With ``enable`` False, or when
+    it never starts, the commands are those of :class:`IndustryC8`.
+    """
+
+    def __init__(self, geometry, settings: c8.C8Settings | None = None,
+                 slow: IndustryLiftoffSlowSettings | None = None) -> None:
+        self.slow_settings = slow if slow is not None else IndustryLiftoffSlowSettings()
+        super().__init__(geometry, settings)
+
+    def reset(self) -> None:
+        super().reset()
+        self._slow = _IndustryLiftoffSlowState()
+        self._pending_events: list[tuple[float, str]] = []
+
+    def drain_events(self) -> list[tuple[float, str]]:
+        """The slowdown events of the last update (``HarnessIndustry`` adds them after the
+        ``ind_phase:*`` event of the same period)."""
+        events, self._pending_events = self._pending_events, []
+        return events
+
+    def _phase_command(self, t_s, force_N, rod_stroke_m):
+        phase_before = self.phase
+        speeds = super()._phase_command(t_s, force_N, rod_stroke_m)
+        if not self.slow_settings.enable:
+            return speeds
+        is_lift_step = phase_before is c8.C8Phase.LIFT and self.phase is c8.C8Phase.LIFT
+        slow = self._slow
+        slow.has_lift_started = slow.has_lift_started or phase_before is c8.C8Phase.LIFT
+        if slow.has_lift_started and self.phase is not c8.C8Phase.LIFT:
+            slow.has_left_lift = True
+        if not is_lift_step:
+            return self._outside_lift(float(t_s), speeds)
+        return self._lift_step(float(t_s), np.asarray(force_N, float), speeds)
+
+    def _outside_lift(self, t_s: float, speeds):
+        """S2 false: forget ``rho_{k-1}``; a running slowdown ends (``phase``, no action)."""
+        self._slow.previous_rho = None
+        if self._slow.is_active:
+            self._end_slow(t_s, IND_LAS_END_PHASE)
+        return speeds
+
+    def _lift_step(self, t_s: float, loads_N, speeds):
+        slow = self._slow
+        rho, lightest_leg = diagonal_deficit_ratio(loads_N)
+        should_start = slow.is_armed and not slow.has_left_lift and self._start_gates_hold(
+            loads_N, rho, speeds)
+        rho_before = slow.previous_rho
+        slow.previous_rho = rho
+        if should_start:
+            slow.is_armed = False
+            slow.is_active = True
+            slow.start_s, slow.start_leg = t_s, lightest_leg
+            slow.start_rho, slow.start_rho_prev = float(rho), rho_before
+            self._pending_events.append((t_s, f"{LIFTOFF_SLOW_EVENT}:{LEGS[lightest_leg]}"))
+        if not slow.is_active:
+            return speeds
+        reason = self._end_reason(t_s, loads_N)
+        if reason is not None:
+            self._end_slow(t_s, reason)
+            return speeds
+        slow.active_periods += 1
+        return self._scaled_to_slow_mean(speeds)
+
+    def _start_gates_hold(self, loads_N, rho: float, speeds) -> bool:
+        settings = self.slow_settings
+        previous_rho = self._slow.previous_rho
+        is_twist_rising = (previous_rho is not None and rho >= settings.rho_on
+                           and rho > previous_rho)
+        weight_N = industry_reference_weight_N(self.geometry)
+        is_sum_heavy = float(np.sum(loads_N)) >= settings.sum_on_fraction_W * weight_N
+        is_leg_light = (float(np.min(loads_N))
+                        < settings.light_leg_fraction_of_F_min * self.geometry.F_min_N)
+        is_fast = (float(np.mean(speeds))
+                   > settings.slow_mean_fraction * self.geometry.max_speed_m_s)
+        return is_sum_heavy and is_leg_light and is_twist_rising and is_fast
+
+    def _end_reason(self, t_s: float, loads_N) -> str | None:
+        """``sum`` then ``time`` (``phase`` is :meth:`_outside_lift`); the ``sum`` count is
+        updated here, active periods only."""
+        settings, slow = self.slow_settings, self._slow
+        weight_N = industry_reference_weight_N(self.geometry)
+        if float(np.sum(loads_N)) >= settings.sum_off_fraction_W * weight_N:
+            slow.sum_periods += 1
+        else:
+            slow.sum_periods = 0
+        if slow.sum_periods >= settings.off_periods:
+            return IND_LAS_END_SUM
+        if t_s - slow.start_s >= settings.max_s - LIFTOFF_SLOW_TIME_TOLERANCE_S:
+            return IND_LAS_END_TIME
+        return None
+
+    def _scaled_to_slow_mean(self, speeds):
+        """``u min(1, gamma v_max / mean(u))``."""
+        slow_mean_m_s = self.slow_settings.slow_mean_fraction * self.geometry.max_speed_m_s
+        mean_m_s = float(np.mean(speeds))
+        if mean_m_s <= slow_mean_m_s:
+            return speeds
+        self._slow.scaled_periods += 1
+        return speeds * (slow_mean_m_s / mean_m_s)
+
+    def _end_slow(self, t_s: float, reason: str) -> None:
+        slow = self._slow
+        slow.is_active = False
+        slow.end_s, slow.end_reason = t_s, reason
+        self._pending_events.append((t_s, f"{LIFTOFF_SLOW_END_EVENT}:{reason}"))
+
+    def meta(self) -> dict:
+        """C8 meta + ``liftoff_approach_slow`` (settings, load basis, start / end record)."""
+        slow = self._slow
+        return {**super().meta(), "liftoff_approach_slow": {
+            "settings": asdict(self.slow_settings),
+            "load_basis": str(self.settings.load_estimate),
+            "start_s": slow.start_s,
+            "start_leg": None if slow.start_leg is None else LEGS[slow.start_leg],
+            "start_rho": slow.start_rho, "start_rho_prev": slow.start_rho_prev,
+            "end_s": slow.end_s, "end_reason": slow.end_reason,
+            "active_periods": slow.active_periods, "scaled_periods": slow.scaled_periods}}
+
+
 IND_PHASE_AS_C2 = {
     "touch": C2Phase.TOUCH, "attitude": C2Phase.LEVEL, "lift": C2Phase.LEVEL,
     "reground": C2Phase.LEVEL, "trim": C2Phase.LEVEL, "done": C2Phase.DONE,
@@ -409,9 +618,8 @@ class HarnessIndustry:
     a default (empty) soil state, ``W_ref`` as C2 computes it, no clearance estimate (nan) and
     no REANCHOR anchor. The rows built on them are NA for IND."""
 
-    name = "IND"
-
-    def __init__(self, inner: IndustryC8) -> None:
+    def __init__(self, inner: IndustryC8, name: str = "IND") -> None:
+        self.name = name
         self.inner = inner
         self.geometry = inner.geometry
         self.period_s = inner.period_s
@@ -430,10 +638,7 @@ class HarnessIndustry:
 
     def _reference_weight_N(self) -> float:
         """``W_ref`` as ``C2Controller._reference_weight_N``: YAML superstructure mass x g."""
-        mass_kg = self.geometry.superstructure_mass_kg
-        if mass_kg is None:
-            mass_kg = BODY_MASS_WITHOUT_YAML_KG
-        return mass_kg * STANDARD_GRAVITY_M_S2
+        return industry_reference_weight_N(self.geometry)
 
     def _clearance_estimate_m(self, rod_stroke_m) -> float:
         del rod_stroke_m  # IND keeps no crawler clearance estimate of its own
@@ -450,6 +655,9 @@ class HarnessIndustry:
         if phase != self._last_phase:
             self.events.append(PhaseEvent(float(measurements.t_s), f"ind_phase:{phase}"))
             self._last_phase = phase
+        drain = getattr(self.inner, "drain_events", None)  # IND_LAS: after the phase event
+        if drain is not None:
+            self.events += [PhaseEvent(t_s, name) for t_s, name in drain()]
         return command
 
 
@@ -460,9 +668,10 @@ def _c2_config(cl, c2, name: str, variant: dict):
         config = replace(config, reanchor=replace(config.reanchor, enable=True))
     if name == "ABL":
         return ablation_config(c2, config)
-    if name == "ABL28":  # attribution: soil response on, P-S8-28 .. 35 off
+    if name == "ABL28":  # soil response on, P-S8-28 .. 35 off, LAS-b as C2 (spec 436.9.4)
         soil = replace(config.soil, loc_anchor_enable=False)
-        return replace(ablation_config(c2, config), soil=soil)
+        return replace(ablation_config(c2, config), soil=soil,
+                       liftoff_approach_slow=config.liftoff_approach_slow)
     return config
 
 
@@ -472,6 +681,8 @@ def make_factory(name: str):
     def factory(cl, c2, variant):
         if name == "IND":
             ctrl = HarnessIndustry(IndustryC8.from_params(cl.PARAMS))
+        elif name == "IND_LAS":  # record-only attribution column (spec 436.9.4)
+            ctrl = HarnessIndustry(IndustryC8Las.from_params(cl.PARAMS), name="IND_LAS")
         else:
             ctrl = c2.C2Controller.from_params(cl.PARAMS, _c2_config(cl, c2, name, variant))
         ctrl.reset()
@@ -731,6 +942,8 @@ def _new_run_state(spec: dict, v5_setting: str | None = None) -> None:
 
 V5_CONTROLLERS = ("C2", "ABL", "IND")
 """Controllers of the paper v5 U-6 rerun (rules 1: the VB plant for all, ③ on C2 only)."""
+V5_RECORD_CONTROLLERS = ("IND_LAS",)
+"""Record-only U-6 columns (rules rev2 3): run alone, written to their own file."""
 
 
 def _v5_rerun():
@@ -798,13 +1011,13 @@ def _judge_slope_official(case: dict, out: dict, sl, cl, controller: str) -> dic
 
     settle_table = json.loads(SETTLE_TABLE_PATH.read_text(encoding="utf-8"))
     return b5_official.judge_slope(case, out, sl, cl, settle_table,
-                                   is_industry=controller == "IND")
+                                   is_industry=controller in INDUSTRY_CONTROLLERS)
 
 
 def _judge_g6_official(rec: dict, controller: str) -> dict:
     import b5_official
 
-    return b5_official.judge_g6(rec, is_industry=controller == "IND")
+    return b5_official.judge_g6(rec, is_industry=controller in INDUSTRY_CONTROLLERS)
 
 
 # ----------------------------------------------------------------------------------- metrics
@@ -1049,7 +1262,8 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     sub = parser.add_subparsers(dest="cmd", required=True)
     run = sub.add_parser("run", help="run the cases and write the result JSON")
     run.add_argument("--cases", default="all", help="all, wide, oos or comma-separated ids")
-    run.add_argument("--controllers", default=",".join(CONTROLLERS))
+    run.add_argument("--controllers", default=",".join(DEFAULT_CONTROLLERS),
+                     help=f"comma list of {', '.join(CONTROLLERS)} (default without IND_LAS)")
     run.add_argument("--workers", type=int, default=1)
     run.add_argument("--affinity", default=None, help="hex mask, e.g. 0x00000002")
     run.add_argument("--out", type=Path, default=None,
@@ -1068,16 +1282,29 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
 
 def _rerun_case_ids(case_ids: list[str], controllers: list[str], rerun) -> list[str]:
     """Paper v5 U-6: with ``--ids-from`` exactly the stored cases (each once, stored order),
-    which must be cases of ``--cases``; with ``--v5-setting`` only C2 / ABL / IND.
+    which must be cases of ``--cases``; with ``--v5-setting`` only C2 / ABL / IND, or one
+    record-only column (IND_LAS, rules rev2 3) alone, which needs ``--v5-setting``.
 
     Raises:
-        SystemExit: Another controller with ``--v5-setting``, or a stored case outside
-            ``--cases``.
+        SystemExit: Another controller with ``--v5-setting``, a record-only column with
+            another controller or without ``--v5-setting`` (its default file would be the
+            ``rev84/b5_<label>.json`` of the v4 baseline), or a stored case outside ``--cases``.
     """
+    record_only_without_setting = [name for name in controllers
+                                   if name in V5_RECORD_CONTROLLERS and not rerun.is_active]
+    if record_only_without_setting:
+        raise SystemExit(f"{record_only_without_setting} is a record-only column of the v5 U-6 "
+                         "rerun (rules rev2 3); it needs --v5-setting VB")
     if rerun.is_active:
-        others = [name for name in controllers if name not in V5_CONTROLLERS]
+        record_only = [name for name in controllers if name in V5_RECORD_CONTROLLERS]
+        if record_only and controllers != record_only[:1]:
+            raise SystemExit(f"--v5-setting: {record_only} runs alone (own output file), got "
+                             f"{controllers}")
+        others = [name for name in controllers
+                  if name not in V5_CONTROLLERS + V5_RECORD_CONTROLLERS]
         if others:
-            raise SystemExit(f"--v5-setting runs {V5_CONTROLLERS} only, got {others}")
+            raise SystemExit(f"--v5-setting runs {V5_CONTROLLERS} (or "
+                             f"{V5_RECORD_CONTROLLERS} alone) only, got {others}")
     if rerun.ids_from is None:
         return case_ids
     v5 = _v5_rerun()
@@ -1090,7 +1317,10 @@ def _out_path(args: argparse.Namespace, rerun) -> Path:
     if not rerun.is_active:
         return default_out_path(args.cases)
     label = {"all": "main", "wide": "wide", "oos": "oos"}.get(args.cases, "cases")
-    return _v5_rerun().default_out_path(f"b5_{label}", rerun.setting, study="u6")
+    v5 = _v5_rerun()
+    if args.controllers in V5_RECORD_CONTROLLERS:  # rules rev2 3: its own file under las/
+        return v5.LAS_OUT_DIR / f"u6_b5_{label}_{rerun.setting}_{args.controllers}.json"
+    return v5.default_out_path(f"b5_{label}", rerun.setting, study="u6")  # las/ (rev2 1 #9)
 
 
 def _without_unsettled_cases(case_ids: list[str], args: argparse.Namespace) -> list[str]:
@@ -1131,6 +1361,7 @@ def main(argv: list[str] | None = None) -> None:
     check_oos_overlap(case_ids)
     case_ids = _without_unsettled_cases(case_ids, args)
     out_path = _out_path(args, rerun)
+    _v5_rerun().check_out_path(out_path, rerun)  # before the runs (rules rev2 1 #9 / #10)
     options = BatchOptions(is_official=args.official,
                            allow_no_settle_row=args.allow_no_settle_row, rerun=rerun)
     records = run_batch(case_ids, controllers, args.workers, args.affinity, out_path, options)

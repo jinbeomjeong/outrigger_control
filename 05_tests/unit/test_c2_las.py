@@ -180,6 +180,8 @@ def test_start_on_a_rising_twist_and_scale_to_the_slow_mean(controller) -> None:
     meta = controller.meta()["liftoff_approach_slow"]
     assert meta["start_s"] == pytest.approx(20.2)
     assert meta["start_leg"] == "FR"
+    assert meta["start_rho"] == diagonal_deficit_ratio(MORE_TWISTED_LOADS_N)[0]
+    assert meta["start_rho_prev"] == diagonal_deficit_ratio(TWISTED_LOADS_N)[0]
     assert meta["active_periods"] == 1
     assert meta["scaled_periods"] == 1
 
@@ -318,6 +320,101 @@ def test_end_on_a_reapproach(controller) -> None:
     start(controller)
     _end_and_check(controller, LiftoffSlowEnd.REAPPROACH,
                    reapproaching=np.array([False, False, True, False]))
+
+
+def _without_soil_response(controller) -> None:
+    """The U-6 ABL settings: soil response off, S1 dropped."""
+    _block_s1(controller)
+    settings = replace(controller.config.liftoff_approach_slow, require_soil_response=False)
+    controller.config = replace(controller.config, liftoff_approach_slow=settings)
+
+
+def test_abl_ends_in_the_period_that_leaves_the_crawler_zone(controller) -> None:
+    """Spec 436.9.4: ``zone`` (S5 false) ends a slowdown without the soil response."""
+    _without_soil_response(controller)
+    start(controller)
+    assert stage(controller, MORE_TWISTED_LOADS_N) is not FAST_SPEEDS_M_S  # still in the zone
+    _block_s5(controller)
+    _end_and_check(controller, LiftoffSlowEnd.ZONE)
+
+
+def test_zone_comes_after_reapproach_and_before_sum(controller) -> None:
+    _without_soil_response(controller)
+    start(controller)
+    _block_s5(controller)
+    _end_and_check(controller, LiftoffSlowEnd.REAPPROACH,
+                   reapproaching=np.array([False, False, True, False]))
+    assert list(LiftoffSlowEnd).index(LiftoffSlowEnd.ZONE) == (
+        list(LiftoffSlowEnd).index(LiftoffSlowEnd.REAPPROACH) + 1)
+    assert list(LiftoffSlowEnd).index(LiftoffSlowEnd.SUM) == (
+        list(LiftoffSlowEnd).index(LiftoffSlowEnd.ZONE) + 1)
+
+
+def test_leaving_the_zone_does_not_end_the_c2_slowdown(controller) -> None:
+    """With the soil response (C2 / V0 / VB) there is no ``zone`` end: commands unchanged."""
+    start(controller)
+    _block_s5(controller)
+    assert stage(controller, MORE_TWISTED_LOADS_N) is not FAST_SPEEDS_M_S
+    assert slow_events(controller) == [f"{LIFTOFF_SLOW_EVENT}:FR"]
+
+
+def _release_zone_into_soil_mode(controller) -> None:
+    """The crawler zone released before any LOC: with the soil response on, the soil mode
+    starts in the same period (U-S9-C1)."""
+    _block_s5(controller)
+    _block_s4(controller)
+
+
+NO_ACTION = None
+REAPPROACHING_RL = np.array([False, False, True, False])
+SOIL_ON_SCENARIOS = {
+    "time": [(NO_ACTION, MORE_TWISTED_LOADS_N, None)] * 15,
+    "sum": [(NO_ACTION, HEAVY_LOADS_N, None)] * 5,
+    "reapproach": [(NO_ACTION, MORE_TWISTED_LOADS_N, REAPPROACHING_RL)],
+    "loc": [(_block_s3, MORE_TWISTED_LOADS_N, None)],
+    "phase": [(_block_s2, MORE_TWISTED_LOADS_N, None)],
+    "zone released before LOC": [(NO_ACTION, MORE_TWISTED_LOADS_N, None),
+                                 (_release_zone_into_soil_mode, MORE_TWISTED_LOADS_N, None)],
+}
+"""Steps after :func:`start`: (state change before the step, loads, re-approach flags)."""
+TAIL_STEPS = 2
+"""Steps after the scenario (no second start may differ either)."""
+
+
+def _soil_on_run(bench_geometry, require_soil_response: bool, steps) -> tuple[list[bytes], str]:
+    """Per-period command bytes and the end reason of one scenario with the soil response on."""
+    bench_controller = level_bench(
+        bench_geometry, las_config(require_soil_response=require_soil_response)).controller
+    bench_controller._state.in_crawler_zone = True
+    bench_controller._state.liftoff_slow = None
+    bench_controller._las_t_s = 20.0
+    commands = [stage(bench_controller, TWISTED_LOADS_N),
+                stage(bench_controller, MORE_TWISTED_LOADS_N)]
+    for action, loads, reapproaching in steps:
+        if action is not None:
+            action(bench_controller)
+        commands.append(stage(bench_controller, loads, reapproaching=reapproaching))
+    for _ in range(TAIL_STEPS):
+        commands.append(stage(bench_controller, MORE_TWISTED_LOADS_N))
+    end_reason = bench_controller.meta()["liftoff_approach_slow"]["end_reason"]
+    return [np.asarray(command).tobytes() for command in commands], end_reason
+
+
+@pytest.mark.parametrize("scenario", sorted(SOIL_ON_SCENARIOS))
+def test_require_soil_response_is_inert_with_soil_response_on(
+    geometry, scenario  # noqa: F811
+) -> None:
+    """ABL28 (control-expert decision (가), spec 436.9.4): with the soil response on, dropping
+    S1 changes nothing, the ``zone`` end never comes first (a zone released before LOC starts
+    the soil mode, end ``soil``)."""
+    steps = SOIL_ON_SCENARIOS[scenario]
+    commands_with_s1, end_with_s1 = _soil_on_run(geometry, True, steps)
+    commands_without_s1, end_without_s1 = _soil_on_run(geometry, False, steps)
+    assert commands_with_s1 == commands_without_s1
+    assert end_with_s1 == end_without_s1
+    assert end_with_s1 != str(LiftoffSlowEnd.ZONE)
+    if scenario == "zone released before LOC":
+        assert end_with_s1 == str(LiftoffSlowEnd.SOIL)
 
 
 def test_end_on_a_period_without_a_level_step(controller) -> None:

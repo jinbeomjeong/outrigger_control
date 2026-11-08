@@ -262,6 +262,8 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     out[V5_OPENLOOP_PROP_BATCH] = v5_openloop_prop_rows(out[V5_OPENLOOP_BATCH])
     # F-6 (fb_targeted_rules.md 3.3, user decision 2026-11-08): J1 B VB (+ optional V0) at the budget speed, same stroke
     out[V5_OPENLOOP_FB_BATCH] = v5_openloop_fb_rows(out[V5_OPENLOOP_BATCH], out[V5_OPENLOOP_V0_BATCH])
+    # J1 soil damping R sensitivity (definition 2026-11-08, run after user approval): V0 J1 + --soil-override damping_R
+    out[V5_OPENLOOP_R_BATCH] = v5_openloop_r_rows(out[V5_OPENLOOP_V0_BATCH])
     out[V5_JP_BATCH] = v5_jp_rows()
     out[V5_JP_V0_BATCH] = v5_jp_rows(setting="V0")
     # D-1 verification matrix Chrono rows (cad 2026-11-08, d1_chrono_rows.py): D1-CHRONO (16 required rows + roll /
@@ -736,6 +738,55 @@ def v5_openloop_fb_rows(vb_rows: list[dict], v0_rows: list[dict]) -> list[dict]:
     return rows
 
 
+V5_OPENLOOP_R_BATCH = "V5-OPENLOOP-R"
+V5_OPENLOOP_R_BASE_RUN = "batch_V5-OPENLOOP-V0_20261108_123517/P3a_J1_B_V0"
+"""Base of the J1 soil damping R sensitivity (definition 2026-11-08, run waits for the user): the stored V0 J1 open-loop
+row (bit-identical to v4 ``batch_P3a_20261026_092653/P3a_J1_B``, ``--threads 4``, P pool, 2,215 s batch wall /
+2,177 s run wall)."""
+V5_OPENLOOP_R_VALUES_PA_S_M: tuple[tuple[str, float], ...] = (
+    ("R888k", 887600.0),
+    ("R600k", 600000.0),
+    ("R300k", 300000.0),
+)
+"""(case suffix, SCM ``damping_R`` [Pa s/m]); J1 base 9.92e5 (``02_params/scm_soil_sets.json`` J1 ``chrono``).
+887,600 = 9.92e5 x 0.8948 (the VB supply ratio); 6e5 / 3e5 = the J1 ``sensitivity.damping_R_Pa_s_m`` Lysmer values."""
+V5_OPENLOOP_R_EST_POOL_S = {"pcore": 2215.0, "ecore": 2769.0}
+"""ASSUMPTION: the base row batch wall on P (2 slots, 2026-11-08); E = P x 1.25 (FINAL-REP ratio). R does not change
+the step count (360,000) and SCM cost is node / ray bound, so the base cost is kept."""
+V5_OPENLOOP_R_RUN_ENV = {"OMP_WAIT_POLICY": "PASSIVE"}
+"""Run condition recorded on the rows (set in the launching shell, not by s9_batch; SCM rule 2026-11-08: bit-neutral)."""
+
+
+def soil_override_token(key: str, value: float) -> str:
+    """``--soil-override`` item ``key=value`` with the value in ``%.10g`` (887600.0 -> ``damping_R=887600``)."""
+    return f"{key}={value:.10g}"
+
+
+def v5_openloop_r_rows(v0_rows: list[dict]) -> list[dict]:
+    """J1 soil damping R sensitivity (open loop, no controller): the ``V5-OPENLOOP-V0`` J1 row argv unchanged +
+    ``--soil-override damping_R=<R>`` (run_S9 ``machine`` applies it to the one soil set of the run: pads and crawler,
+    ``SetSoilParameters`` damping_R). ``source_run`` = the stored V0 J1 run; ``check-sources`` accepts exactly
+    ``soil_override`` = that one item as the difference. Judgement items: ``06_analysis/03_hydraulic/coupled/v5/paper_runs/openloop_R_sensitivity_rows.md``."""
+    base = {r["case"]: r for r in v0_rows}["P3a_J1_B_V0"]
+    if "--soil-override" in base["argv"] or base["argv"][base["argv"].index("--threads") + 1] != "4":
+        raise RuntimeError("V5-OPENLOOP-R: base V0 J1 argv must have --threads 4 and no --soil-override")
+    rows = []
+    for suffix, r_val in V5_OPENLOOP_R_VALUES_PA_S_M:
+        tok = soil_override_token("damping_R", r_val)
+        rows.append({"case": f"P3a_J1_B_V0_{suffix}", "argv": base["argv"] + ["--soil-override", tok],
+                     "est_s": V5_OPENLOOP_R_EST_POOL_S["pcore"], "est_pool_s": dict(V5_OPENLOOP_R_EST_POOL_S),
+                     "planned_pool": "pcore", "threads": 4, "run_env": dict(V5_OPENLOOP_R_RUN_ENV),
+                     "source_run": V5_OPENLOOP_R_BASE_RUN, "source_expected_diffs": {"soil_override": [tok]},
+                     "soil_damping_R_Pa_s_m": r_val, "soil_damping_R_base_Pa_s_m": 992000.0,
+                     "soil_damping_R_ratio": round(r_val / 992000.0, 6),
+                     "v5_setting": f"V0_{suffix}", "stored_wall_s": 2215.0, "group": V5_OPENLOOP_R_BATCH,
+                     "rep_bundle": V5_OPENLOOP_R_BATCH, "pair_case": "P3a_J1_B_V0",
+                     "note": f"{V5_OPENLOOP_R_BATCH} (J1 soil damping R sensitivity, open loop): P3a_J1_B_V0 argv + "
+                             f"--soil-override {tok} (J1 9.92e5 Pa s/m, ratio {r_val / 992000.0:.4f}); --threads 4, "
+                             f"OMP_WAIT_POLICY=PASSIVE, P pool; base 07_results/S9/{V5_OPENLOOP_R_BASE_RUN}"})
+    return rows
+
+
 def v5_jp_rows(*, setting: str = "VB") -> list[dict]:
     """Paper v5 3.5.2 (v4 table 10 pressure-only column, S8 item 9): run_S8C ``N_{G4,SS}_Fs{0,4,8}_pressure`` (L2b-NSC,
     rigid, top, pressure-only contact judge) with :func:`v5_rigid_argv` of ``setting`` (VB: controller
@@ -1156,14 +1207,17 @@ def next_runnable(queue: list[dict], finished_ok: set[str]) -> int | None:
     return None
 
 
-def _case_env(pool: str, start_env: dict[str, str] | None = None) -> dict[str, str]:
-    """Child env: this process's env, ``OUTRIGGER_PLACEMENT`` = ``pool`` and a row's ``start_env`` (e.g.
-    V5-LAS-CHRONO ``OMP_WAIT_POLICY=PASSIVE``, set before the process starts)."""
+def _case_env(pool: str, start_env: dict[str, str] | None = None,
+              run_env: dict[str, str] | None = None) -> dict[str, str]:
+    """Child env: this process's env, ``OUTRIGGER_PLACEMENT`` = ``pool`` and the row's env keys, set before the
+    process starts. Two row keys carry the same meaning (both branches named it on their own): ``start_env``
+    (V5-LAS-CHRONO / V5-STAGE3-LAS) and ``run_env`` (V5-OPENLOOP-R); ``start_env`` is applied last."""
     env = dict(os.environ)
     env[PLACEMENT_ENV] = pool
     # SCM OpenMP threads sleep between regions (user decision 2026-11-08, run_S9.OMP_WAIT_POLICY_DEFAULT); an
-    # explicit value in the batch environment or the row's start_env wins
+    # explicit value in the batch environment or the row's run_env / start_env wins
     env.setdefault("OMP_WAIT_POLICY", "PASSIVE")
+    env.update({str(k): str(v) for k, v in (run_env or {}).items()})
     env.update({str(k): str(v) for k, v in (start_env or {}).items()})
     return env
 
@@ -1181,6 +1235,7 @@ ENTRY_META_KEYS = ("note", "priority", "controller", "source_run", "pair_case", 
                    "direction", "h9_result", "rep_bundle", "rep_source", "rep_variable", "r4_x11_check",
                    "expected_note", "rep_role", "source_expected_diffs", "criteria_id", "stored_wall_s",
                    "s8c_case_id", "v5_setting",
+                   "threads", "run_env", "soil_damping_R_Pa_s_m", "soil_damping_R_base_Pa_s_m", "soil_damping_R_ratio",
                    "d1_id", "d1_role", "d1_select", "d1_tag", "d1_slope", "d1_flag", "d1_source",
                    "las", "las_family", "las_crawler", "las_ready", "start_env",
                    "stored_result", "stored_pool", "hash_comparable", "stored_argv_check", "stage3_controller")
@@ -1221,6 +1276,36 @@ def strip_controller_check(argv: list[str]) -> list[str]:
             continue
         out.append(tok)
     return out
+
+
+LAS_OFF_ARG = "--las-off"
+PRE_LAS_CONTROLLERS = ("final_C4G2", "final_C4G2_P3")
+"""Row tags before the LAS-b switch (run_S9 ``FINAL_CONTROLLER`` / ``FINAL_P3_CONTROLLER``): the switched preset
+refuses them, ``run --las-off`` gives their rows back the LAS-b-off preset (spec 436.9)."""
+
+
+def with_las_off(row: dict, argv: list[str]) -> list[str]:
+    """``run --las-off``: ``argv`` + ``--las-off`` for a row that keeps a tag before the LAS-b switch (FINAL, RV6,
+    V5-VB, stage 3 reproductions: run_S9 ``level`` and run_S8C ``run`` take it); other rows unchanged.
+
+    Raises:
+        SystemExit: A pre-switch row whose runner has no ``--las-off`` (run_S6C, m3_run).
+    """
+    if row.get("controller") not in PRE_LAS_CONTROLLERS or LAS_OFF_ARG in argv:
+        return list(argv)
+    if row.get("s6c") or row.get("m3"):
+        raise SystemExit(f"{row['case']}: {LAS_OFF_ARG} is not an option of its runner (run_S6C / m3_run)")
+    return [*argv, LAS_OFF_ARG]
+
+
+def las_off_summary(rows: list[dict]) -> str:
+    """One line for ``run --las-off``: how many launched rows carry ``--las-off`` and the names of the rows that
+    do not (no ``controller`` key, or a tag outside :data:`PRE_LAS_CONTROLLERS` such as ``final_SGS_R4``)."""
+    without = [r["case"] for r in rows if LAS_OFF_ARG not in r["argv"]]
+    line = f"{LAS_OFF_ARG}: {len(rows) - len(without)} of {len(rows)} rows run with it"
+    if without:
+        line += f"; not on {len(without)} row(s) (no pre-switch tag): {', '.join(without)}"
+    return line
 
 
 def parse_row_filter(items: list[str] | None) -> dict[str, set[str]]:
@@ -1283,12 +1368,13 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
               e_cases: list[str] | None = None, order: str = "given",
               order_cases: list[str] | None = None, rv6_k: float | None = None, rv6_dir: str | None = None,
               row_filter: dict[str, set[str]] | None = None, controller_check: bool = True,
-              resume: str | None = None) -> Path:
+              resume: str | None = None, las_off: bool = False) -> Path:
     """Run the batch ``name`` with ``parallel`` P-pool slots and ``parallel_e`` E-pool slots
     (:func:`schedule_cases`). Each case process gets ``OUTRIGGER_PLACEMENT`` of its pool. ``rv6_k``: X6-rb ratio of
     RV6; ``row_filter`` / ``only``: :func:`select_rows`; ``controller_check`` False drops ``--expect-controller``.
     ``resume``: an earlier batch folder; finished rows (:func:`row_finished`) are skipped, the others start from the
-    beginning in the same folder (a case has no mid-run checkpoint) and ``batch.json`` is rewritten."""
+    beginning in the same folder (a case has no mid-run checkpoint) and ``batch.json`` is rewritten. ``las_off``:
+    :func:`with_las_off` on every launched row."""
     rv6 = {k: v for k, v in (("rv6_k", rv6_k), ("rv6_dir", rv6_dir)) if v is not None}
     cases = select_rows((batches(**rv6) if rv6 else batches())[name], only, row_filter)
     if not cases:
@@ -1306,6 +1392,9 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
         former = {e["case"]: e for e in json.loads((folder / "batch.json").read_text("utf-8")).get("cases", [])}
     done_names = {c["case"] for c in finished}
     cases = [c for c in cases if c["case"] not in done_names]
+    if las_off:  # before the launch: a row whose runner lacks the option stops the batch here
+        cases = [{**c, "argv": with_las_off(c, c["argv"])} for c in cases]
+        print(las_off_summary(cases))
     e_cases = None if e_cases is None else [n for n in e_cases if n not in done_names]
     order_cases = None if order_cases is None else [n for n in order_cases if n not in done_names]
     queues = schedule_cases(cases, e_cases=e_cases, order=order, order_cases=order_cases, parallel_e=parallel_e)
@@ -1346,7 +1435,7 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
                 code_at_launch[c["case"]] = launch_code_state() if c.get("controller") or c.get("group") == "FINAL-R" \
                     else None
                 logf = (folder / f"{c['case']}.log").open("w", encoding="utf-8")
-                child_env = _case_env(pool, c.get("start_env"))
+                child_env = _case_env(pool, c.get("start_env"), c.get("run_env"))
                 launch_env[c["case"]] = launch_env_record(child_env)
                 p = subprocess.Popen(argv, cwd=str(ROOT), stdout=logf, stderr=subprocess.STDOUT,
                                      stdin=subprocess.DEVNULL, env=child_env)
@@ -1589,7 +1678,7 @@ def main(argv) -> None:
         only = (a.only or []) + (read_only_file(a.only_file) or [])
         run_batch(a.batch, only=only or None, rv6_k=a.rv6_k, rv6_dir=a.rv6_dir,
                   row_filter=parse_row_filter(a.row_filter), controller_check=not a.no_controller_check,
-                  resume=a.resume, **schedule_args(a, argv))
+                  resume=a.resume, las_off=a.las_off, **schedule_args(a, argv))
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -1615,6 +1704,12 @@ def build_parser() -> argparse.ArgumentParser:
                         "missing key reads 'None' (repeatable)")
     r.add_argument("--no-controller-check", action="store_true",
                    help="RV6 / FINAL: drop run_S9 --expect-controller (run whatever preset is installed; recorded)")
+    r.add_argument(LAS_OFF_ARG, dest="las_off", action="store_true",
+                   help="rows with a tag before the LAS-b switch (final_C4G2 / final_C4G2_P3: FINAL, RV6, V5-VB, "
+                        "stage 3 reproductions) get --las-off (the LAS-b-off preset, spec 436.9) and keep their tag "
+                        "check; other rows unchanged: it is NOT added to rows without a controller key nor to tags "
+                        "before C4G2 (final_SGS_R4 etc.). A run_S6C / m3 row with such a tag stops the batch. The "
+                        "run prints how many rows got it and the names of those that did not")
     r.add_argument("--parallel", "--parallel-p", dest="parallel", type=int, default=2,
                    help="P-pool slots (OUTRIGGER_PLACEMENT=pcore); --parallel keeps its former meaning")
     r.add_argument("--parallel-e", type=int, default=0, help="E-pool slots (OUTRIGGER_PLACEMENT=ecore)")

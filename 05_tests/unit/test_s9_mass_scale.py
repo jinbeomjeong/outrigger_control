@@ -65,7 +65,12 @@ def test_existing_batch_definitions_unchanged() -> None:
                                               "V5-STAGE3",
                                               "D1-CHRONO", "D1-PSC",  # D-1 (2026-11-08): test_d1_chrono_rows.py
                                               # paper v5 2.8 / 3.5.2 (2026-11-08): test_v5_paper_rows.py
-                                              "V5-OPENLOOP-VB", "V5-OPENLOOP-V0", "V5-JP-VB", "V5-JP-V0"}
+                                              "V5-OPENLOOP-VB", "V5-OPENLOOP-V0", "V5-JP-VB", "V5-JP-V0",
+                                              # H-1 / F-6 / J1 R sensitivity (2026-11-08): test_v5_paper_rows.py
+                                              "V5-OPENLOOP-VB-PROP", "V5-OPENLOOP-FB", "V5-OPENLOOP-R",
+                                              # LAS-b Chrono rows (2026-11-08): test_las_chrono_rows.py,
+                                              # test_v5_stage3_las_rows.py
+                                              "V5-LAS-CHRONO", "V5-STAGE3-LAS"}
     for name, want in BATCH_DEF_SHA256.items():
         rows = [{**r, "argv": _norm(s9_batch, r["argv"])} for r in b[name]]
         assert hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest() == want, name

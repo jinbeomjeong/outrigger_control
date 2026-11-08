@@ -10,7 +10,9 @@ Controller: the project preset of the harness (``c2py_r8d1_closed_loop.preset_co
 r72 G6 screen. H4 turns REANCHOR on: ``replace(cfg, reanchor=replace(cfg.reanchor, enable=True))``.
 Paper v5 U-3 study D (``u3_u6_rerun_rules.md``, ``04_hydraulic/coupled/v5_rerun.py``):
 ``--v5-setting {V0,VB}``, ``--ids-from <v4 json> [--pad B]``; default ``--out`` then
-``06_analysis/02_control/v5_rerun/u3_D_<setting>.json``. Without them nothing changes.
+``06_analysis/02_control/v5_rerun/las/u3_D_<setting>.json`` (LAS-tag runs, rules rev2 1 #9); an
+existing output needs ``--overwrite`` and a file directly in ``v5_rerun/`` is never written
+(``v5_rerun.check_out_path``). Without them nothing changes.
 
 Case sets (177):
   H1 main grid      soil {G1, J1, J2, S1} x pad {B, A} x 8 slopes x top                     = 64
@@ -1682,7 +1684,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="S9 soft soil x floor slope screen (study 1)")
     parser.add_argument("--out", type=Path, default=None,
                         help="result JSON (default: the study-1 file; with --v5-setting "
-                             "06_analysis/02_control/v5_rerun/u3_D_<setting>.json)")
+                             "06_analysis/02_control/v5_rerun/las/u3_D_<setting>.json)")
     parser.add_argument("--workers", type=int, default=12)
     parser.add_argument("--affinity", default=os.environ.get(PLACEMENT_ENV),
                         help=f"ecore | pcore | os | hex mask (default ${PLACEMENT_ENV})")
@@ -1714,7 +1716,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 V5_STUDY_D_BUNDLE = "D"
-"""Paper v5 U-3 bundle name of study D (H8): ``v5_rerun/u3_D_<setting>.json``."""
+"""Paper v5 U-3 bundle name of study D (H8): ``v5_rerun/las/u3_D_<setting>.json``."""
 
 
 def _v5_rerun():
@@ -1825,6 +1827,7 @@ def main() -> None:
             "script_sha256": _script_sha256(),
             "rules": "verdict recomputed from the stored rows (stroke-limited pass needs P3-1, "
                      "P3-3, P3-4); rut clearance as stored (rut_definition per result)"}}
+        _v5_rerun().refuse_pre_switch_file(args.out or DEFAULT_OUT)
         summary = write_outputs(args.out or DEFAULT_OUT, results, meta)
         print(json.dumps(summary["counts"]))
         return
@@ -1839,6 +1842,7 @@ def main() -> None:
     if out_path is None:
         out_path = (DEFAULT_OUT if not rerun.is_active
                     else _v5_rerun().default_out_path(V5_STUDY_D_BUNDLE, rerun.setting))
+    _v5_rerun().check_out_path(out_path, rerun)  # before the runs (rules rev2 1 #9 / #10)
     placement = set_parent_affinity(parse_affinity(args.affinity))
     workers = max(1, min(args.workers, len(cases)))
     _v5_rerun().activate(rerun.setting)  # the pool workers inherit it

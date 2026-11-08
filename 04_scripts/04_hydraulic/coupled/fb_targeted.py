@@ -1,14 +1,32 @@
 """FB (command flow budget + saturation detection) targeted runs on the reduced harness
-(sealed ``fb_targeted_rules.md``; design copy ``fb_design.md``).
+(sealed ``fb_targeted_rules.md`` and its sealed addendum ``fb_targeted_rules_rev1.md``;
+design copy ``fb_design.md``).
 
 The candidates wrap ``c2.C2Controller`` in the worker process only (spawned,
-``maxtasksperchild=1``); no project file changes. Every worker first installs the LAS-b
-candidate ``b0`` of ``las_targeted`` (``MODE_ACT``, rules 3.1), then the FB wrapper (only
-for the candidates that have one). One run is ``run_v5.run_one`` of a ``d1_rows`` job or a
-``run_v5`` verdict / U-9 job; its line gets an ``fb`` and an ``las`` block.
+``maxtasksperchild=1``); no project file changes. LAS-b is the controller's own (03_src,
+merged in bacb2d2, on in the R8 preset): rules 3.1 line 80 says a merged 03_src LAS-b replaces
+the ``las_targeted`` wrapper once F-0 reproduces with it, so a worker checks that the preset
+has LAS-b on with the ``b0`` values (else it stops) and installs the FB wrapper only (for the
+candidates that have one); the ``las_targeted`` wrapper is never installed. One run is
+``run_v5.run_one`` of a ``d1_rows`` job or a ``run_v5`` verdict / U-9 job; its line gets an
+``fb`` and an ``las`` block.
+
+The ``las`` block is built from the controller meta ``liftoff_approach_slow``, in the fields
+of ``las_targeted.las_block`` (``candidate`` "b0", ``mode`` "act", ``source`` names the meta):
+  params           <- settings (alpha = sum_on_fraction_W, beta = light_leg_fraction_of_F_min,
+                      gamma = slow_mean_fraction, alpha_end = sum_off_fraction_W,
+                      n_end = off_periods, t_max_s = max_s, rho_on = rho_on)
+  start_t_s, end_t_s, end_reason, active_periods, scaled_periods <- start_s, end_s,
+                      end_reason, active_periods, scaled_periods
+  start_leg        <- index of the meta's leg name (FL, FR, RL, RR = 0 .. 3)
+  soil_enable, W_ref_N <- ``config.soil.enable``, ``_reference_weight_N()`` (a constant)
+  wrapper_reached  <- the run has a LAS-b state (the meta has ``start_s``)
+  s7p_first        None: the 03_src meta has no "first S7' period" record; it adds
+                      ``start_rho`` / ``start_rho_prev`` (rho of the start period instead)
+  loc_minus_t_off_s, t_loc_s, t_off_s <- ``las_targeted.loc_delay_record`` (unchanged).
 
 Candidates (rules 2):
-  L       LAS-b ``b0`` only (no FB wrapper installed). The comparison reference.
+  L       the preset as it is (LAS-b on, no FB wrapper installed). The comparison reference.
   LF      L + budget FB-a (rules 1.1) + detection FB-b (rules 1.2).
   LF-off  the FB wrapper installed with ``enable=False`` (F-0 only): must reproduce L.
   OL-L    L + the open-loop equivalent: from the first LEVEL period on, for 8.0 s, the
@@ -21,7 +39,12 @@ FB-a (rules 1.1): after ``_apply_output_ramp`` (increment limit or FAULT stop 0)
 scaled by ``min(1, Q_b / Q(u))``, ``Q(u) = sum_i A_i(u_i) |u_i|`` (head area extending,
 annulus area retracting), and the scaled value is stored as ``previous_output_m_s``.
 ``Q_nom = rho eta_v,min Q_th`` with ``Q_th`` = YAML ``actuator.pump_flow_m3_s``, eta 0.85,
-rho 0.98; ``Q_b = Q_nom`` at the start.
+rho 0.98; ``Q_b = Q_nom`` at the start. rev3 R3-1: with ``clip_returned_command`` on and a leg
+above v_max (DSb75) the flow is that of the returned command, ``Q(c(u))`` with
+``c = clip(., -v_max, v_max)``, and the unclipped vector is scaled by
+``s* = max{s <= 1 : Q(c(s u)) <= Q_b}``; every other period keeps the original formula bit for
+bit. The meta reports ``min_scale`` (s_vec), ``min_scale_eff`` (s_eff = returned-flow ratio,
+the s of rev2 R2-3) and ``clipped_budget_periods``.
 
 FB-b (rules 1.2), at the end of every ``update`` (after the command): the valve model
 (first-order lag tau_v 0.1 s of the returned command, x_0 = 0) gives the period mean m_k,
@@ -38,13 +61,33 @@ counter to 0 and adds ``INFO_FLOW_BUDGET_CUT:<U|A97>``; Q_b never rises again in
 ``verdict_metrics.chunk_phases`` gives the chunks that period's command drives).
 
 Bundles (rules 3.2): F-0 4, F-1 92, F-2 192 (LF only; L = stored ``v5/las/las_T1.jsonl`` /
-``las_T2.jsonl`` b0 act lines), F-3 32, F-4 28, F-5 12. Output
+``las_T2.jsonl`` b0 act lines), F-3 32, F-4 28 (rev1 1: verdict case ``R2ra``, i.e. ``R2``
+with decision ``reanchor_on``, instead of ``R2``), F-5 12. Output
 ``06_analysis/03_hydraulic/coupled/v5/fb/fb_F<n>.jsonl`` (appended; finished lines skipped).
 
-Stops (rules 6): H-1 (rules / design missing or the rules sha256 is not the sealed one) before
-any run; H-2: F-1 .. F-5 run only after F-0 passed C-7 (``fb_judge.check_c7``); H-3: an error
-line is retried once, a second error stops the bundle; H-4: 5 C-2 violations in a bundle
-stop it (finished lines stay).
+Run identity (``fb.identity`` of every line): ``git rev-parse HEAD``, whether tracked files
+differ from it (``git_dirty``, ``dirty_files``, record only), the sha256 of the uncommitted
+``git diff HEAD -- 03_src 04_scripts 02_params`` (``code_diff_sha256``; the empty-diff hash when
+only documents are dirty), the sha256 of ``fb_targeted.py``,
+``las_targeted.py`` and ``03_src/outrigger_sim/control/c2.py``, and the thread variables (set
+to 1 here, not ``setdefault``; a worker whose value is not 1 writes an error line). Resuming
+into a file whose lines carry another commit or other tool hashes stops, so does an F-0 file
+of another identity (H-2) and a line of another identity arriving during the batch.
+``--out`` must lie in ``v5/fb/`` (exit 2 otherwise): the batch appends, and a stored baseline
+such as ``v5/las/las_T1.jsonl`` must never get lines.
+``fb.events_total`` / ``events_truncated`` record how many events the run had against the
+first 400 that ``verdict_runs._finish`` stores in ``events``.
+
+Stops (rules 6, rev1 3, rev2 R2-5, rev3 R3-4): H-1 (rules, addendum rev1 .. rev3 or design
+missing, a ``.sha256`` without a value, or the sha256 of the rules or an addendum is not the
+sealed one) before any run; lines of a tool without R3-1 (``budget_rule``) are another run
+identity, so F-1 .. F-5 never resume on them; H-2:
+F-1 .. F-5 run only after F-0 passed C-7 (``fb_judge.check_c7``) and S-1 of rev2 R2-1 (the L
+hash of both F-0 keys = the stored b0 act hash, ``fb_judge.check_s1``); H-3: an error line is
+retried once, a second error stops the bundle (a run whose plant or controller was not
+captured is an error line); H-4: 5 pairs with a C-2 violation in a bundle stop it (rev3
+R3-2: a pair counts once however many texts it has; finished lines stay, and the lines
+already in the file count).
 
 Usage (dynamics-dev python, project root, PowerShell):
   python -I -B 04_scripts/04_hydraulic/coupled/fb_targeted.py list [--bundle F-0 ..]
@@ -61,6 +104,8 @@ import json
 import math
 import os
 import queue
+import re
+import subprocess
 import sys
 import time
 import traceback
@@ -69,9 +114,12 @@ from multiprocessing import get_context
 from pathlib import Path
 
 # As run_v5: one BLAS / OpenMP thread, set before numpy loads (here and in every spawned
-# worker, which inherits them). Multi-threaded reductions change the command hash.
-for _name in ("MKL_NUM_THREADS", "OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "NUMBA_NUM_THREADS"):
-    os.environ.setdefault(_name, "1")
+# worker, which inherits them). Multi-threaded reductions change the command hash, so the
+# value is forced (a caller's other value would make lines of another run identity).
+THREAD_VARIABLES = ("MKL_NUM_THREADS", "OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS",
+                    "NUMBA_NUM_THREADS")
+for _name in THREAD_VARIABLES:
+    os.environ[_name] = "1"
 os.environ.setdefault("MKL_THREADING_LAYER", "TBB")
 
 import numpy as np  # noqa: E402
@@ -87,6 +135,33 @@ RULES_SHA_PATH = RULES_DIR / "fb_targeted_rules.sha256"
 DESIGN_PATH = RULES_DIR / "fb_design.md"
 RULES_SHA256 = "e517b0d08bc46100bb20ec3824de5066cdb8890715f03f3e9a1299437e5dcb89"
 """``fb_targeted_rules.sha256`` (sealed 2026-11-08 17:19:52 +09:00)."""
+RULES_REV1_PATH = RULES_DIR / "fb_targeted_rules_rev1.md"
+RULES_REV1_SHA_PATH = RULES_DIR / "fb_targeted_rules_rev1.sha256"
+RULES_REV1_SHA256 = "0163b6c3f065bd18320c6857c605186112f411ff7c20e02f403bf82a26ba9d63"
+RULES_REV2_PATH = RULES_DIR / "fb_targeted_rules_rev2.md"
+RULES_REV2_SHA_PATH = RULES_DIR / "fb_targeted_rules_rev2.sha256"
+RULES_REV2_SHA256 = "12ed20ea215fab24b475bc0b05b36fa01afe50aa4ad300b5af1ede441bcaaba0"
+"""``fb_targeted_rules_rev2.sha256`` (sealed addendum 2 2026-11-08 19:00:42 +09:00, before any
+run: R2-1 03_src LAS-b and S-1, R2-2 A97 ``touch_seen`` timing, R2-3 s report, R2-5 H-1)."""
+RULES_REV3_PATH = RULES_DIR / "fb_targeted_rules_rev3.md"
+RULES_REV3_SHA_PATH = RULES_DIR / "fb_targeted_rules_rev3.sha256"
+RULES_REV3_SHA256 = "99cea69a8719ef738b81c96ae311762a36e73ffecf5884345d6a0ecbd6b9c356"
+"""``fb_targeted_rules_rev3.sha256`` (sealed addendum 3 2026-11-08 19:31:35 +09:00, before any
+LF result: R3-1 budget flow on the returned command, R3-2 H-4 per pair, R3-3 disclosure,
+R3-4 H-1)."""
+BUDGET_RULE = "R3-1"
+"""rev3 R3-4: the budget rule of this tool (returned-command flow ``Q(c(u))``); a line without
+it (``fb.identity.budget_rule``, budget meta ``min_scale_eff``) comes from an older tool."""
+S1_STORED_HASHES = {
+    "D1|H-R-A|rigid+J1@FR|T|diag-op|K1|VB|e0":
+        "aff9b0f10ac54cf8d65e1e220cd832334e29fdfd6b3d54a8a772141a84e4cc5b",
+    "D1|H-R-A|rigid+J1@FR|T|diag-op|K3|V0|e0":
+        "fc2ca22f285097be8ddb151389cebb9f7af26b0b52c6b4d3898c479712d61cc2",
+}
+"""rev2 R2-1 S-1: the stored ``las_T1.jsonl`` b0 act hash of each F-0 key; the 03_src L of
+both keys must reproduce it (a mismatch blocks F-1 .. F-5 as H-2 does)."""
+"""``fb_targeted_rules_rev1.sha256`` (sealed addendum 2026-11-08 17:45:04 +09:00: F-4 R2 ->
+R2ra, readings I-1 .. I-8, H-1 extended to rev1)."""
 V5_DIR = ROOT / "06_analysis" / "03_hydraulic" / "coupled" / "v5"
 OUT_DIR = V5_DIR / "fb"
 LAS_STORED_PATHS = (V5_DIR / "las" / "las_T1.jsonl", V5_DIR / "las" / "las_T2.jsonl")
@@ -135,14 +210,40 @@ F4_D1_ROWS = (
     "D1|H-R-A-stop|rigid+J1@RL|T|fup-op|K1", "D1|H-S-C|J1|T|flat|K1|c-mid@FL",
     "D1|H-S-C|J1|T|flat|K1|c-mid@RL", "D1|H-S-C-g|J1|T|fdown-rec|K1|c-mid@FL|dsb_gated_off",
 )
-F4_CASES = ("R2", "R12", "R14", "R15", "R16")
-"""Rules 3.2 F-4: verdict cases at the first ``run_v5._phase_jobs`` job (eps 0). ``R2`` is
-the case as named (decision ``reanchor_off``, the run_v5 default), not ``R2ra``."""
+F4_CASES = ("R2ra", "R12", "R14", "R15", "R16")
+"""Rules 3.2 F-4 with rev1 1: verdict cases at the first ``run_v5._phase_jobs`` job (eps 0).
+``R2ra`` is case ``R2`` with decision ``reanchor_on`` (the original ``R2``, decision
+``reanchor_off``, skips the REANCHOR path the row is meant to test, so it is not run)."""
 F4_SETTINGS = ("V0", "VB")
 F5_ROWS = ("D1|H-S-0|J1|T|flat|K1", "D1|H-S-0|J2|T|flat|K1", "D1|H-R-0|rigid|T|flat|K1")
 F5_SETTINGS = ("VB", "V0")
 C2_STOP_COUNT = 5
-"""Rules 6 H-4."""
+"""Rules 6 H-4: pairs with at least one C-2 violation (rev3 R3-2), not violation texts."""
+
+LAS_CANDIDATE = "b0"
+LAS_MODE = "act"
+LAS_SOURCE = "03_src c2 meta liftoff_approach_slow"
+LAS_PARAM_SETTINGS = {
+    "alpha": "sum_on_fraction_W", "beta": "light_leg_fraction_of_F_min",
+    "gamma": "slow_mean_fraction", "alpha_end": "sum_off_fraction_W", "n_end": "off_periods",
+    "t_max_s": "max_s", "rho_on": "rho_on",
+}
+"""``las_targeted.LasParams`` field -> ``c2.LiftoffApproachSlowSettings`` field."""
+C2_PATH = ROOT / "03_src" / "outrigger_sim" / "control" / "c2.py"
+IDENTITY_FILES = {"fb_targeted.py": HERE / "fb_targeted.py",
+                  "las_targeted.py": HERE / "las_targeted.py", "c2.py": C2_PATH}
+"""Files whose sha256 every line records (rules 3.1 run identity)."""
+IDENTITY_KEYS = ("git_head", "code_diff_sha256", "sha256", "budget_rule")
+"""What must be equal between lines of one bundle file (resume, H-2, during a batch)."""
+CODE_DIFF_PATHS = ("03_src", "04_scripts", "02_params")
+"""Tracked trees whose uncommitted changes are part of the run identity."""
+EMPTY_SHA256 = hashlib.sha256(b"").hexdigest()
+"""``code_diff_sha256`` of a run without uncommitted code changes."""
+DIRTY_FILES_SHOWN = 20
+GIT_TIMEOUT_S = 60
+EVENTS_STORED_LIMIT = 400
+"""``verdict_runs._finish`` keeps the first 400 events in ``events`` (recorded, not changed)."""
+SHA256_PATTERN = re.compile(r"[0-9a-f]{64}")
 
 
 # ------------------------------------------------------------------------------- candidates
@@ -265,6 +366,15 @@ class FbState:
     cuts: list[Cut] = field(default_factory=list)
     acted_periods: dict[str, int] = field(default_factory=dict)
     min_scale: float = 1.0
+    min_scale_by_phase: dict[str, float] = field(default_factory=dict)
+    """rev2 R2-3: phase (the ``acted_periods`` strings) -> smallest s = Q_b / Q(u) acted."""
+    nominal_scale: float | None = None
+    """rev2 R2-3: s_nom = Q_nom / Q(4 v_max) of the run's geometry (set on the first period)."""
+    min_scale_eff: float = 1.0
+    """rev3 R3-1: smallest s_eff = Q(c(s* u)) / Q(c(u)) (the returned-flow ratio)."""
+    min_scale_eff_by_phase: dict[str, float] = field(default_factory=dict)
+    clipped_budget_periods: dict[str, int] = field(default_factory=dict)
+    """rev3 R3-1: acted periods with a leg |u_i| > v_max (clip on), per phase."""
     max_flow_over_budget: float = 0.0
     evaluated_periods: int = 0
     r_min: list[float] = field(default_factory=lambda: [math.inf] * 4)
@@ -396,16 +506,89 @@ def detect_step(state: FbState, stroke_m, force_N, command_m_s, phase: str,
     return events
 
 
-def budget_output(state: FbState, output_m_s: np.ndarray, geometry, phase: str) -> np.ndarray:
-    """FB-a on the ramp output: the input object when the budget does not act."""
-    flow = command_flow_m3_s(output_m_s, geometry.head_area_m2, geometry.annulus_area_m2)
-    state.max_flow_over_budget = max(state.max_flow_over_budget, flow / state.budget_m3_s)
-    scale = budget_scale(flow, state.budget_m3_s)
-    if scale >= 1.0:
-        return output_m_s
+def clipped_flow_m3_s(speeds, head_area_m2, annulus_area_m2, max_speed_m_s: float) -> float:
+    """``Q(c(u))``: the flow of the returned command ``clip(u, -v_max, v_max)``."""
+    clipped = np.clip(np.asarray(speeds, float), -max_speed_m_s, max_speed_m_s)
+    return command_flow_m3_s(clipped, head_area_m2, annulus_area_m2)
+
+
+def clipped_budget_scale(speeds, budget_m3_s: float, head_area_m2, annulus_area_m2,
+                         max_speed_m_s: float) -> float:
+    """rev3 R3-1: ``s* = max{s in (0, 1] : Q(c(s u)) <= Q_b}`` (1 when ``u`` fits).
+
+    ``Q(c(s u))`` is continuous, non-decreasing and piecewise linear in ``s``; a leg with
+    ``|u_i| > v_max`` is clipped from ``s_i = v_max / |u_i|`` on. On each piece the clipped legs
+    give ``A_i v_max`` and the others ``s A_i |u_i|``, so the piece holding ``Q_b`` is solved
+    directly. Scaling by ``s > 0`` keeps every sign, hence every area.
+    """
+    speeds = np.asarray(speeds, float)
+    weights = areas_for(speeds, head_area_m2, annulus_area_m2) * np.abs(speeds)
+    full_flow = clipped_flow_m3_s(speeds, head_area_m2, annulus_area_m2, max_speed_m_s)
+    if full_flow <= budget_m3_s:
+        return 1.0
+    clip_from = np.where(np.abs(speeds) > max_speed_m_s,
+                         max_speed_m_s / np.maximum(np.abs(speeds), np.finfo(float).tiny),
+                         np.inf)
+    clip_flow = areas_for(speeds, head_area_m2, annulus_area_m2) * max_speed_m_s
+    edges = sorted({float(edge) for edge in clip_from if edge < 1.0} | {1.0})
+    for upper in edges:
+        is_clipped = clip_from < upper  # clipped all through the piece ending at ``upper``
+        fixed = float(np.sum(clip_flow[is_clipped]))
+        slope = float(np.sum(weights[~is_clipped]))
+        if fixed + slope * upper >= budget_m3_s:
+            return min(upper, (budget_m3_s - fixed) / slope)
+    return 1.0  # not reached: Q(c(u)) > Q_b at s = 1
+
+
+def _first_nominal_scale(state: FbState, geometry) -> None:
+    if state.nominal_scale is None:
+        full_flow = command_flow_m3_s(np.full(4, float(geometry.max_speed_m_s)),
+                                      geometry.head_area_m2, geometry.annulus_area_m2)
+        state.nominal_scale = state.nominal_m3_s / full_flow
+
+
+def _note_acted(state: FbState, phase: str, scale: float, scale_eff: float,
+                has_clipped_leg: bool) -> None:
     state.acted_periods[phase] = state.acted_periods.get(phase, 0) + 1
     state.min_scale = min(state.min_scale, scale)
-    return output_m_s * scale
+    state.min_scale_by_phase[phase] = min(state.min_scale_by_phase.get(phase, 1.0), scale)
+    state.min_scale_eff = min(state.min_scale_eff, scale_eff)
+    state.min_scale_eff_by_phase[phase] = min(state.min_scale_eff_by_phase.get(phase, 1.0),
+                                              scale_eff)
+    if has_clipped_leg:
+        state.clipped_budget_periods[phase] = state.clipped_budget_periods.get(phase, 0) + 1
+
+
+def budget_output(state: FbState, output_m_s: np.ndarray, geometry, phase: str,
+                  clip_returned: bool = False) -> np.ndarray:
+    """FB-a on the ramp output: the input object when the budget does not act.
+
+    rev3 R3-1: with ``clip_returned`` (the controller's ``clip_returned_command``) and a leg
+    above ``v_max`` the budget reads the returned command, ``Q(c(u))``, and the unclipped
+    vector is scaled by :func:`clipped_budget_scale`. Otherwise the original rule
+    ``budget_scale(Q(u), Q_b)`` runs unchanged (bit for bit).
+    """
+    _first_nominal_scale(state, geometry)
+    v_max = float(geometry.max_speed_m_s)
+    head, annulus = geometry.head_area_m2, geometry.annulus_area_m2
+    has_clipped_leg = clip_returned and float(np.max(np.abs(output_m_s))) > v_max
+    if not has_clipped_leg:
+        flow = command_flow_m3_s(output_m_s, head, annulus)
+        state.max_flow_over_budget = max(state.max_flow_over_budget, flow / state.budget_m3_s)
+        scale = budget_scale(flow, state.budget_m3_s)
+        if scale >= 1.0:
+            return output_m_s
+        _note_acted(state, phase, scale, scale, has_clipped_leg=False)
+        return output_m_s * scale
+    flow = clipped_flow_m3_s(output_m_s, head, annulus, v_max)
+    state.max_flow_over_budget = max(state.max_flow_over_budget, flow / state.budget_m3_s)
+    if flow <= state.budget_m3_s:
+        return output_m_s
+    scale = clipped_budget_scale(output_m_s, state.budget_m3_s, head, annulus, v_max)
+    scaled = output_m_s * scale
+    scale_eff = clipped_flow_m3_s(scaled, head, annulus, v_max) / flow
+    _note_acted(state, phase, scale, scale_eff, has_clipped_leg=True)
+    return scaled
 
 
 def _finite_or_none(value: float) -> float | None:
@@ -419,6 +602,12 @@ def budget_meta(state: FbState | None, params: FbParams) -> dict | None:
     return {"enable": params.enable, "Q_nom_L_min": state.nominal_m3_s * M3_S_TO_L_MIN,
             "Q_b_final_L_min": state.budget_m3_s * M3_S_TO_L_MIN,
             "acted_periods": dict(state.acted_periods), "min_scale": state.min_scale,
+            "min_scale_by_phase": dict(state.min_scale_by_phase),
+            "min_scale_eff": state.min_scale_eff,
+            "min_scale_eff_by_phase": dict(state.min_scale_eff_by_phase),
+            "clipped_budget_periods": dict(state.clipped_budget_periods),
+            "budget_rule": BUDGET_RULE,
+            "nominal_scale": state.nominal_scale,
             "max_Q_over_Qb": state.max_flow_over_budget,
             "cuts": [asdict(cut) for cut in state.cuts],
             "evaluated_periods": state.evaluated_periods,
@@ -475,7 +664,9 @@ def install(params: FbParams, controller_class=None, phase_enum=None,
         if not params.enable:
             return output
         state = _state_of(self, nominal)
-        scaled = budget_output(state, output, self.geometry, str(self._state.phase))
+        clip_returned = bool(getattr(self.config, "clip_returned_command", False))
+        scaled = budget_output(state, output, self.geometry, str(self._state.phase),
+                               clip_returned)
         if scaled is not output:
             self._state.previous_output_m_s = scaled
         return scaled
@@ -609,21 +800,206 @@ def file_sha256(path: Path) -> str:
 
 
 def sealed_check(rules_path: Path = RULES_PATH, sha_path: Path = RULES_SHA_PATH,
-                 design_path: Path = DESIGN_PATH) -> list[str]:
-    """Problems of H-1 (empty = the sealed rules and the design copy are there)."""
-    problems = []
-    for path in (rules_path, sha_path, design_path):
-        if not path.exists():
-            problems.append(f"missing {path}")
+                 design_path: Path = DESIGN_PATH, rev1_path: Path = RULES_REV1_PATH,
+                 rev1_sha_path: Path = RULES_REV1_SHA_PATH,
+                 rev2_path: Path = RULES_REV2_PATH,
+                 rev2_sha_path: Path = RULES_REV2_SHA_PATH,
+                 rev3_path: Path = RULES_REV3_PATH,
+                 rev3_sha_path: Path = RULES_REV3_SHA_PATH) -> list[str]:
+    """Problems of H-1 (empty = the sealed rules, the sealed addenda rev1 .. rev3 and the
+    design copy are there; rev1 3, rev2 R2-5 and rev3 R3-4 add the addenda)."""
+    paths = (rules_path, sha_path, rev1_path, rev1_sha_path, rev2_path, rev2_sha_path,
+             rev3_path, rev3_sha_path, design_path)
+    problems = [f"missing {path}" for path in paths if not path.exists()]
     if problems:
         return problems
-    digest = file_sha256(rules_path)
-    sealed = sha_path.read_text(encoding="utf-8").split()[0].lower()
-    if sealed != RULES_SHA256:
-        problems.append(f"{sha_path.name} holds {sealed}, the tool expects {RULES_SHA256}")
-    if digest != sealed:
-        problems.append(f"{rules_path.name} sha256 {digest} != sealed {sealed}")
+    problems += _seal_problems(rules_path, sha_path, RULES_SHA256)
+    problems += _seal_problems(rev1_path, rev1_sha_path, RULES_REV1_SHA256)
+    problems += _seal_problems(rev2_path, rev2_sha_path, RULES_REV2_SHA256)
+    problems += _seal_problems(rev3_path, rev3_sha_path, RULES_REV3_SHA256)
     return problems
+
+
+def _sealed_value(sha_path: Path) -> str | None:
+    """The first token of a ``.sha256`` file when it is a sha256 hex value, else None."""
+    try:
+        tokens = sha_path.read_text(encoding="utf-8").split()
+    except (OSError, UnicodeDecodeError):
+        return None
+    if not tokens or SHA256_PATTERN.fullmatch(tokens[0].lower()) is None:
+        return None
+    return tokens[0].lower()
+
+
+def _seal_problems(text_path: Path, sha_path: Path, expected_sha256: str) -> list[str]:
+    """The ``.sha256`` file holds ``expected_sha256`` (first token) and the text hashes to it;
+    a file without a sha256 value (empty, unreadable) is a problem too (H-1)."""
+    sealed = _sealed_value(sha_path)
+    if sealed is None:
+        return [f"{sha_path.name} holds no sha256 value"]
+    problems = []
+    if sealed != expected_sha256:
+        problems.append(f"{sha_path.name} holds {sealed}, the tool expects {expected_sha256}")
+    digest = file_sha256(text_path)
+    if digest != sealed:
+        problems.append(f"{text_path.name} sha256 {digest} != sealed {sealed}")
+    return problems
+
+
+# ------------------------------------------------------------------------------- identity
+def _git(root: Path, *args: str) -> str:
+    completed = subprocess.run(["git", "-C", str(root), *args], capture_output=True,
+                               text=True, encoding="utf-8", check=True, timeout=GIT_TIMEOUT_S)
+    return completed.stdout
+
+
+def thread_values(environ=None) -> dict[str, str | None]:
+    """The thread variables (and the MKL threading layer) as the process sees them."""
+    environ = os.environ if environ is None else environ
+    return {name: environ.get(name) for name in (*THREAD_VARIABLES, "MKL_THREADING_LAYER")}
+
+
+def thread_problems(values: dict[str, str | None]) -> list[str]:
+    """Thread variables that are not 1 (such a run would not reproduce the command hash)."""
+    return [f"{name}={values.get(name)!r}" for name in THREAD_VARIABLES
+            if values.get(name) != "1"]
+
+
+def code_diff_sha256(root: Path = ROOT, paths: tuple[str, ...] = CODE_DIFF_PATHS) -> str:
+    """sha256 of ``git diff HEAD -- <paths>`` (raw bytes): uncommitted changes to tracked
+    code and parameters; equals :data:`EMPTY_SHA256` when there are none."""
+    completed = subprocess.run(["git", "-C", str(root), "diff", "HEAD", "--no-color",
+                                "--no-ext-diff", "--", *paths], capture_output=True,
+                               check=True, timeout=GIT_TIMEOUT_S)
+    return hashlib.sha256(completed.stdout).hexdigest()
+
+
+def run_identity(root: Path = ROOT, files: dict[str, Path] | None = None) -> dict:
+    """Commit, tracked-file changes, tool sha256 and thread variables of this run.
+
+    Untracked files do not count as dirty: the sealed rules are untracked copies by design.
+    ``code_diff_sha256`` covers uncommitted changes in ``03_src``, ``04_scripts`` and
+    ``02_params`` (documents may be dirty without changing the identity).
+
+    Raises:
+        subprocess.CalledProcessError, OSError: git or a tool file is not there.
+    """
+    files = IDENTITY_FILES if files is None else files
+    dirty = _git(root, "status", "--porcelain", "--untracked-files=no").splitlines()
+    return {"git_head": _git(root, "rev-parse", "HEAD").strip(), "git_dirty": bool(dirty),
+            "dirty_files": [line[3:] for line in dirty[:DIRTY_FILES_SHOWN]],
+            "code_diff_sha256": code_diff_sha256(root),
+            "sha256": {name: file_sha256(path) for name, path in files.items()},
+            "budget_rule": BUDGET_RULE, "threads": thread_values()}
+
+
+def identity_mismatch(recorded: dict | None, current: dict) -> list[str]:
+    """How a line's ``fb.identity`` differs from ``current`` (commit and tool hashes)."""
+    if not recorded:
+        return ["no run identity"]
+    return [f"{name} {recorded.get(name)} != {current.get(name)}" for name in IDENTITY_KEYS
+            if recorded.get(name) != current.get(name)]
+
+
+def stale_lines(lines: list[dict], current: dict) -> list[str]:
+    """Labels of lines whose run identity is not ``current`` (resume, H-2)."""
+    out = []
+    for record in lines:
+        fb = record.get("fb") or {}
+        problems = identity_mismatch(fb.get("identity"), current)
+        if problems:
+            out.append(f"{fb.get('candidate')} {fb.get('key')}: {'; '.join(problems)}")
+    return out
+
+
+# ------------------------------------------------------------------------------- LAS-b (03_src)
+def las_params_of(settings: dict) -> dict:
+    """``LasParams.to_dict`` of ``asdict(LiftoffApproachSlowSettings)`` (``kind`` "lasb")."""
+    values = {name: settings[field_name] for name, field_name in LAS_PARAM_SETTINGS.items()}
+    return {"kind": "lasb", **values}
+
+
+def preset_las_problems(settings) -> list[str]:
+    """Why ``settings`` is not LAS-b ``b0`` acting (rules 3.1: L = the 03_src LAS-b)."""
+    import las_targeted
+
+    if settings is None:
+        return ["no liftoff_approach_slow settings"]
+    problems = []
+    if not settings.enable:
+        problems.append("liftoff_approach_slow.enable is False")
+    if not settings.require_soil_response:
+        problems.append("liftoff_approach_slow.require_soil_response is False")
+    expected = las_targeted.CANDIDATES[LAS_CANDIDATE].to_dict()
+    actual = las_params_of(asdict(settings))
+    problems += [f"{name} {actual[name]!r} != b0 {expected[name]!r}" for name in actual
+                 if actual[name] != expected[name]]
+    return problems
+
+
+def check_preset_las() -> None:
+    """The R8 preset of this process has LAS-b ``b0`` on (the condition of L).
+
+    Raises:
+        RuntimeError: LAS-b off or other values, or the ``las_targeted`` wrapper installed.
+    """
+    import las_targeted
+
+    from outrigger_sim.control import c2
+
+    if las_targeted._INSTALLED:
+        raise RuntimeError("the las_targeted wrapper is installed: LAS-b would act twice")
+    problems = preset_las_problems(c2.C2Config().with_10hz_d1().liftoff_approach_slow)
+    if problems:
+        raise RuntimeError(f"R8 preset is not LAS-b b0: {problems}")
+
+
+def las_block_from_meta(meta: dict, soil_enable: bool, weight_ref_N: float,
+                        harness: dict | None, leg_order=("FL", "FR", "RL", "RR")) -> dict:
+    """The ``las`` block of a line from the controller meta ``liftoff_approach_slow``, in the
+    fields of ``las_targeted.las_block`` (mapping in the module docstring)."""
+    import las_targeted
+
+    block = {"candidate": LAS_CANDIDATE, "params": las_params_of(meta["settings"]),
+             "mode": LAS_MODE, "source": LAS_SOURCE,
+             **las_targeted.loc_delay_record(harness)}
+    if "start_s" not in meta:
+        return {**block, "wrapper_reached": False}
+    leg = meta["start_leg"]
+    block.update(wrapper_reached=True, soil_enable=bool(soil_enable),
+                 W_ref_N=float(weight_ref_N), start_t_s=meta["start_s"],
+                 start_leg=None if leg is None else list(leg_order).index(leg),
+                 end_t_s=meta["end_s"], end_reason=meta["end_reason"],
+                 active_periods=meta["active_periods"], scaled_periods=meta["scaled_periods"],
+                 s7p_first=None, start_rho=meta["start_rho"],
+                 start_rho_prev=meta["start_rho_prev"])
+    return block
+
+
+def las_block_of(controller, harness: dict | None) -> dict:
+    """The ``las`` block of a finished run (its controller must have LAS-b b0 on).
+
+    Raises:
+        RuntimeError: The run's controller does not have LAS-b ``b0`` on.
+    """
+    from outrigger_sim.control import c2
+
+    settings = getattr(controller.config, "liftoff_approach_slow", None)
+    problems = preset_las_problems(settings)
+    if problems:
+        raise RuntimeError(f"the run's controller is not LAS-b b0: {problems}")
+    return las_block_from_meta(controller.meta()["liftoff_approach_slow"],
+                               controller.config.soil.enable,
+                               controller._reference_weight_N(), harness, c2.LEG_ORDER)
+
+
+def event_count_record(controller) -> dict:
+    """How many events the run stored against the ``events`` limit of ``verdict_runs``."""
+    import verdict_runs
+
+    total = len(verdict_runs._stored_events(controller))
+    return {"events_total": total, "events_truncated": total > EVENTS_STORED_LIMIT,
+            "events_stored_limit": EVENTS_STORED_LIMIT}
 
 
 # ------------------------------------------------------------------------------- worker
@@ -730,26 +1106,38 @@ def run_metrics(plant, controller, state: FbState | None, params: FbParams) -> d
 
 
 def _install_candidate(params: FbParams) -> None:
-    import las_targeted
-
-    las_targeted.install(las_targeted.CANDIDATES["b0"], las_targeted.MODE_ACT)
+    """The preset's own LAS-b (checked on, never the ``las_targeted`` wrapper), then FB."""
+    problems = thread_problems(thread_values())
+    if problems:
+        raise RuntimeError(f"thread variables not 1: {problems}")
+    check_preset_las()
     if params.has_wrapper:
         install(params)
     _capture_runs()
 
 
-def _fb_block(entry: dict, job: dict, params: FbParams, controller, plant) -> dict:
-    state = None if controller is None else controller.__dict__.get("_fb_run")
+def _fb_block(entry: dict, job: dict, params: FbParams, controller, plant,
+              identity: dict) -> dict:
+    """The ``fb`` block; the plant and the controller of the run must have been captured.
+
+    Raises:
+        RuntimeError: No plant or no controller (a run without metrics is an error line).
+    """
+    if plant is None or controller is None:
+        raise RuntimeError(f"run objects not captured (plant {plant is not None}, "
+                           f"controller {controller is not None})")
+    state = controller.__dict__.get("_fb_run")
     block = {"candidate": entry["name"], "bundle": entry["bundle"], "key": fb_key(job),
              "params": params.to_dict(), "wrapper_installed": params.has_wrapper,
-             "budget": budget_meta(state, params)}
-    if plant is not None and controller is not None:
-        block.update(run_metrics(plant, controller, state, params))
+             "las_source": LAS_SOURCE, "identity": identity,
+             "budget": budget_meta(state, params), **event_count_record(controller)}
+    block.update(run_metrics(plant, controller, state, params))
     return block
 
 
 def run_fb_job(job: dict) -> dict:
-    """Worker: install LAS-b b0 then the candidate, run the job, add ``fb`` and ``las``."""
+    """Worker: check the preset LAS-b, install the candidate, run the job, add ``fb`` and
+    ``las``."""
     t_start = time.perf_counter()
     entry = job.pop("fb")
     params = FbParams.from_dict(entry["params"])
@@ -758,6 +1146,7 @@ def run_fb_job(job: dict) -> dict:
     try:
         import run_v5  # sys.path and thread variables first
 
+        identity = run_identity()
         _install_candidate(params)
     except Exception as exc:  # recorded as an error line, the batch decides (H-3)
         return {**error_head, "error": f"install: {exc!r}",
@@ -766,14 +1155,9 @@ def run_fb_job(job: dict) -> dict:
     if "error" in line:
         return {**line, "fb": error_head["fb"]}
     try:
-        import las_targeted
-
         plant, controller = _run_objects(job)
-        line["fb"] = _fb_block(entry, job, params, controller, plant)
-        las_run = None if controller is None else controller.__dict__.get("_las_run")
-        line["las"] = las_targeted.las_block("b0", las_targeted.CANDIDATES["b0"],
-                                             las_targeted.MODE_ACT, las_run,
-                                             _CAPTURE.get("harness"))
+        line["fb"] = _fb_block(entry, job, params, controller, plant, identity)
+        line["las"] = las_block_of(controller, _CAPTURE.get("harness"))
     except Exception as exc:
         return {**error_head, "error": f"metrics: {exc!r}", "tb": traceback.format_exc()[-3000:],
                 "wall_s": round(time.perf_counter() - t_start, 1)}
@@ -798,33 +1182,60 @@ def default_out(bundle: str) -> Path:
     return OUT_DIR / f"fb_{bundle.replace('-', '')}.jsonl"
 
 
+def out_path_problem(path: Path, out_dir: Path = OUT_DIR) -> str | None:
+    """Why ``--out`` is refused (None = inside ``v5/fb/``): lines are appended, so a path
+    elsewhere could extend a stored baseline such as ``v5/las/las_T1.jsonl``."""
+    if path.resolve().is_relative_to(out_dir.resolve()):
+        return None
+    return f"--out {path} is outside {out_dir} (stored baselines are never appended to)"
+
+
 def _json_default(value):
     return value.item() if hasattr(value, "item") else str(value)
 
 
 @dataclass
 class BatchWatch:
-    """H-3 retries and the H-4 count of one bundle."""
+    """H-3 retries and the H-4 count of one bundle (the file's earlier lines included), and
+    the run identity of the arriving lines."""
 
     bundle: str
     stored_reference: dict
+    current_identity: dict | None = None
+    """None = no identity check (the earlier lines of the file were checked by ``main``)."""
     lines: dict = field(default_factory=dict)
-    c2_violations: list = field(default_factory=list)
+    violations_by_pair: dict = field(default_factory=dict)
+    """Key -> the C-2 violation texts of its pair (a later pair of the key replaces them)."""
     retried: set = field(default_factory=set)
+    identity_problems: list = field(default_factory=list)
+
+    @property
+    def c2_violations(self) -> list[str]:
+        """Every violation text, for the report."""
+        return [f"{key}: {text}" for key, texts in self.violations_by_pair.items()
+                for text in texts]
+
+    @property
+    def violating_pairs(self) -> int:
+        """rev3 R3-2: H-4 counts pairs with at least one C-2 violation text."""
+        return sum(1 for texts in self.violations_by_pair.values() if texts)
 
     def note(self, record: dict) -> None:
-        """Add a finished line; count the C-2 violations of a completed pair."""
+        """Add a finished line; keep the C-2 violations of a completed pair."""
         import fb_judge
 
         key, name = record["fb"]["key"], record["fb"]["candidate"]
+        if self.current_identity is not None:
+            for problem in identity_mismatch(record["fb"].get("identity"),
+                                             self.current_identity):
+                self.identity_problems.append(f"{name} {key}: {problem}")
         self.lines.setdefault(key, {})[name] = record
         pair = fb_judge.reference_and_candidate(self.bundle, key, self.lines[key],
                                                 self.stored_reference)
         if pair is None:
             return
         reference, candidate = pair
-        for violation in fb_judge.c2_violations(reference, candidate):
-            self.c2_violations.append(f"{key}: {violation}")
+        self.violations_by_pair[key] = fb_judge.c2_violations(reference, candidate)
 
 
 def _print_line(count: int, total: int, record: dict) -> None:
@@ -841,20 +1252,40 @@ def _print_line(count: int, total: int, record: dict) -> None:
     print(f"{count}/{total} {fb.get('candidate')} {fb.get('key')}: {state}", flush=True)
 
 
+def preloaded_watch(bundle: str, stored_reference: dict | None, existing_lines: list[dict],
+                    current_identity: dict | None) -> BatchWatch:
+    """A watch that already holds the file's finished lines, so H-4 counts across resumes."""
+    watch = BatchWatch(bundle, stored_reference or {})
+    for record in existing_lines:
+        watch.note(record)
+    watch.current_identity = current_identity
+    return watch
+
+
 def run_batch(jobs: list[dict], path: Path, workers: int, bundle: str,
-              stored_reference: dict | None = None) -> dict:
+              stored_reference: dict | None = None, existing_lines: list[dict] | None = None,
+              current_identity: dict | None = None) -> dict:
     """Run the jobs in spawned workers (one run each), append the lines (H-3, H-4).
+
+    Args:
+        existing_lines: The error-free lines already in ``path`` (their C-2 violations count
+            for H-4).
+        current_identity: The run identity every new line must carry (None = not checked).
 
     Returns:
         ``runs``, ``errors`` (lines with an error after the retry), ``stop`` (None or the
         reason) and ``c2_violations``.
     """
+    watch = preloaded_watch(bundle, stored_reference, existing_lines or [], current_identity)
+    if watch.violating_pairs >= C2_STOP_COUNT:
+        return {"runs": 0, "errors": 0, "c2_violations": watch.c2_violations,
+                "stop": f"H-4: {watch.violating_pairs} pairs with C-2 violations in the file "
+                        "already"}
     import verdict_runs
 
     verdict_runs.warm_numba_cache()
     path.parent.mkdir(parents=True, exist_ok=True)
     error_path = path.with_name(path.stem + "_errors.jsonl")
-    watch = BatchWatch(bundle, stored_reference or {})
     results: queue.Queue = queue.Queue()
     by_label = {(fb_key(job), job["fb"]["name"]): job for job in jobs}
     stop = None
@@ -895,8 +1326,10 @@ def run_batch(jobs: list[dict], path: Path, workers: int, bundle: str,
             written += 1
             _print_line(written, len(jobs), record)
             watch.note(record)
-            if len(watch.c2_violations) >= C2_STOP_COUNT:
-                stop = f"H-4: {len(watch.c2_violations)} C-2 violations"
+            if watch.identity_problems:
+                stop = f"run identity changed during the batch: {watch.identity_problems[:3]}"
+            elif watch.violating_pairs >= C2_STOP_COUNT:
+                stop = f"H-4: {watch.violating_pairs} pairs with C-2 violations"
         if stop is not None:
             pool.terminate()
     return {"runs": written, "errors": errors, "stop": stop,
@@ -927,16 +1360,31 @@ def list_bundle(bundle: str) -> tuple[list[str], list[str]]:
     return lines, problems
 
 
-def _check_f0_gate(out_dir: Path) -> str | None:
-    """H-2: the reason F-1 .. F-5 may not run (None = F-0 passed C-7)."""
+def _check_f0_gate(out_dir: Path, current_identity: dict) -> str | None:
+    """H-2: the reason F-1 .. F-5 may not run (None = F-0 passed C-7 with this identity)."""
     import fb_judge
 
     f0_path = out_dir / "fb_F0.jsonl"
     if not f0_path.exists():
         return f"no {f0_path.name}: run F-0 first (H-2)"
-    result = fb_judge.check_c7(fb_judge.read_lines(f0_path),
-                               fb_judge.load_stored_reference(LAS_STORED_PATHS[:1]))
-    return None if result["pass"] else f"F-0 C-7 not passed (H-2): {result['problems']}"
+    f0_lines = fb_judge.read_lines(f0_path)
+    stale = stale_lines(f0_lines, current_identity)
+    if stale:
+        return f"F-0 lines of another run identity (H-2): {stale[:3]}"
+    stored_t1 = fb_judge.load_stored_reference(LAS_STORED_PATHS[:1])
+    result = fb_judge.check_c7(f0_lines, stored_t1)
+    if not result["pass"]:
+        return f"F-0 C-7 not passed (H-2): {result['problems']}"
+    # rev2 R2-1 / R2-5: S-1 blocks like H-2; never fall back to the las_targeted wrapper.
+    s1 = fb_judge.check_s1(f0_lines, stored_t1)
+    return None if s1["pass"] else f"F-0 S-1 not passed (rev2 R2-1, as H-2): {s1['problems']}"
+
+
+def _existing_lines(path: Path) -> list[dict]:
+    """The error-free ``fb`` lines of ``path`` (``[]`` without the file)."""
+    import fb_judge
+
+    return [record for record in fb_judge.read_lines(path) if "fb" in record]
 
 
 def _parse_args(argv: list[str] | None):
@@ -973,12 +1421,32 @@ def main(argv: list[str] | None = None) -> int:
                           "problems": len(all_problems)}))
         return 1 if all_problems else 0
     path = args.out or default_out(args.bundle)
+    problem = out_path_problem(path)
+    if problem is not None:
+        print(f"input error: {problem}")
+        print(json.dumps({"bundle": args.bundle, "stop": "out", "reason": problem}))
+        return 2
+    try:
+        identity = run_identity()
+    except (OSError, subprocess.SubprocessError) as exc:
+        print(f"input error: run identity: {exc!r}")
+        return 2
+    print(f"run identity: {identity['git_head']} dirty {identity['git_dirty']} "
+          f"threads {identity['threads']}", flush=True)
     if args.bundle != "F-0":
-        reason = _check_f0_gate(path.parent)
+        reason = _check_f0_gate(path.parent, identity)
         if reason is not None:
             print(reason)
             print(json.dumps({"bundle": args.bundle, "stop": "H-2", "reason": reason}))
             return 1
+    existing = _existing_lines(path)
+    stale = stale_lines(existing, identity)
+    if stale:
+        reason = f"{path.name} has lines of another run identity: {stale[:3]}"
+        print(reason)
+        print(json.dumps({"bundle": args.bundle, "stop": "identity", "reason": reason,
+                          "stale_lines": len(stale)}))
+        return 1
     try:
         mask = None if args.affinity is None else int(args.affinity, 16)
         keys = args.keys.split(",") if args.keys else None
@@ -996,8 +1464,8 @@ def main(argv: list[str] | None = None) -> int:
         import fb_judge
 
         stored = fb_judge.load_stored_reference(LAS_STORED_PATHS)
-    summary = (run_batch(todo, path, args.workers, args.bundle, stored) if todo
-               else {"runs": 0, "errors": 0, "stop": None, "c2_violations": []})
+    summary = (run_batch(todo, path, args.workers, args.bundle, stored, existing, identity)
+               if todo else {"runs": 0, "errors": 0, "stop": None, "c2_violations": []})
     print(json.dumps({"bundle": args.bundle, "out": str(path), **summary}))
     return 1 if summary["errors"] or summary["stop"] else 0
 

@@ -19452,3 +19452,166 @@ $$u_k\leftarrow u_k\cdot\min\!\left(1,\ \frac{\gamma\,v_{max}}{\bar u_k}\right)$
   - CLAUDE.md "제어기" 칸: 최종 제어기 = … + LAS-b(P-S8-39), 태그.
   - decision_log 4절 한 줄.
   - v5 기준과 U-3·U-6 규칙의 태그 덧붙임 판(control-expert).
+
+### 436.9 구현 확정: 이름·태그·`--expect-controller`·전환 전 재현 (2026-11-08)
+
+python-expert 구현(worktree `worktree-agent-acb3257c41a47bbbe`, 커밋 `11d28c6`, 작성 당시 master 병합 전)을 control-expert가 읽고 적었다. **master 병합 완료(해소, `bacb2d2`; 436.9.5 결함 수정은 `32b8585`).** 436.2~436.6의 "가칭"은 이 절의 이름으로 읽는다. 위 절은 고치지 않았다. 비트 시험 B-1~B-3(봉인 원판 6절)은 python-expert 보고로 모두 통과다(래퍼 해시와 같음).
+
+**설정·상수**(`03_src/outrigger_sim/control/c2.py`)
+
+| 기호(436.2) | `LiftoffApproachSlowSettings` 필드 | 프리셋 상수 | 값 |
+|---|---|---|---|
+| – | `enable` | – | 클래스 기본 `False`, 프리셋 `True` |
+| $\alpha$ | `sum_on_fraction_W` | `R8_LAS_SUM_ON_FRACTION_W` | 0.6 |
+| $\beta$ | `light_leg_fraction_of_F_min` | `R8_LAS_LIGHT_LEG_FRACTION_OF_F_MIN` | 3.5 |
+| $\gamma$ | `slow_mean_fraction` | `R8_LAS_SLOW_MEAN_FRACTION` | 0.16 |
+| $\alpha_{end}$ | `sum_off_fraction_W` | `R8_LAS_SUM_OFF_FRACTION_W` | 0.85 |
+| $n_{end}$ | `off_periods` | `R8_LAS_OFF_PERIODS` | 5 [주기] |
+| $T_{max}$ | `max_s` | `R8_LAS_MAX_S` | 1.5 s |
+| $\rho_{on}$ | `rho_on` | `R8_LAS_RHO_ON` | 0.18 |
+| S1 스위치 | `require_soil_response` | – | `True`(S1 적용). U-6 ABL만 `False`(436.9.4). ABL28은 `True`(436.9.4 ABL28 결정, 구현 위임 W-6; master 병합 완료(해소, `9789ede`)) |
+
+- 설정 검사: $\alpha,\beta,T_{max}>0$, $0<\gamma\le1$, $\alpha_{end}\ge\alpha$, $n_{end}\ge1$. 어기면 `ValueError`.
+- 프리셋 키워드: `C2Config.with_10hz_d1(liftoff_approach_slow=True)`(기본). `False`면 전환 전 프리셋이다.
+- 끄는 법: `replace(config, liftoff_approach_slow=replace(config.liftoff_approach_slow, enable=False))` 또는 위 키워드. 옛 피클은 클래스 기본값 때문에 "끔"으로 읽힌다.
+- 대각 짝 `DIAGONAL_PARTNER_LEG = (3, 2, 1, 0)`, $\rho$ = `diagonal_deficit_ratio(loads)`. 하중 합이 0 이하이면 $\rho$ = NaN이고 S7′은 거짓이다.
+- 시간 끝 판정 허용치 `LIFTOFF_SLOW_TIME_TOLERANCE_S` = $10^{-9}$ s(436.2 `time`과 같음).
+- $\rho_{k-1}$: LEVEL 단계를 거친 주기마다 저장한다(시작 전후 모두). LEVEL 단계가 없는 주기에는 지우고, 작동 중이면 그 주기에 `phase`로 끝낸다(`_finish_liftoff_slow_period`).
+- S3의 "LOC 한 번도 없음"은 LEVEL 단계에서 본 `crawler_liftoff_confirmed`로 기록한다. 취소(L1gs)로 지워지지 않는다.
+
+**사건·기록**
+
+| 항목 | 이름 |
+|---|---|
+| 시작 사건 | `INFO_LIFTOFF_SLOW:<가장 가벼운 다리>` |
+| 끝 사건 | `INFO_LIFTOFF_SLOW_END:<loc\|phase\|soil\|reapproach\|zone\|sum\|time>`(`LiftoffSlowEnd`, 판정 순서도 이 순서). `zone`(크롤러 구역을 벗어남, S5 거짓)은 `require_soil_response = False`일 때만 본다(436.9.4 보강, 334d544) |
+| 출력 제한 기록 | `OutputLimit.LIFTOFF_SLOW` = `liftoff_slow` |
+| meta 블록 | `liftoff_approach_slow`: `settings`(모든 필드), `start_s`, `start_leg`, `start_rho`, `start_rho_prev`, `end_s`, `end_reason`, `active_periods`, `scaled_periods` |
+
+- 436.2가 meta에 넣기로 한 첫 $\rho$·$\rho_{k-1}$은 334d544(W-3)에서 `start_rho`·`start_rho_prev`로 들어갔다. 명령에는 닿지 않는다(B-2·B-3 래퍼 해시 재확인). 재개 배치에서 $\rho_{on}$ 여유(436.7, T-2 첫 $\rho$ 최소 0.182)를 이 두 키로 읽는다. 시작하지 않은 실행은 둘 다 `None`이다.
+
+#### 436.9.1 제어기 태그
+
+| 실행 | 전환 전 태그 | LAS-b 태그(새 기준) | 원본 |
+|---|---|---|---|
+| V0, 그 밖 ③ 없는 실행 | `final_C4G2`(v5 기록에는 키 없음) | `final_C4G2_LAS` | `v5_options.LAS_CONTROLLER_TAG` |
+| VB·LS(③ 켬) | `final_C4G2_P3` | `final_C4G2_P3_LAS` | `v5_options.EXTEND_START_LAS_CONTROLLER_TAG` |
+| U-6 ABL | `ABL` | `ABL_LAS` | `v5_rerun.controller_tag` |
+| U-6 IND | `IND` | `IND`(LAS-b 없음, 사용자 결정 Q1 = I-2, 436.9.4) | `v5_rerun.TAG_IND` |
+| U-6 기록 열(IND + 헤드 힘 어댑터) | – | `IND_LAS`(기록 전용) | 436.9.4, 구현 대기 → master 병합 완료(해소, `4bd2f3b`) |
+
+- 태그는 **만든 제어기 설정**에서 정한다. `v5_options.controller_tag(options, config)`가 `config.liftoff_approach_slow.enable`이면 접미사 `_LAS`를 한 번 붙인다. `config` 없이 부르면 전환 전 태그가 나온다. 그래서 제어기 설정을 넘기지 않는 호출부는 결함이다(436.9.5).
+- ③ 켬 판별은 태그 집합 `EXTEND_START_TAGS = (final_C4G2_P3, final_C4G2_P3_LAS)`로 한다. 태그 문자열 하나와 같은지로 판별하면 안 된다.
+- `v5_rerun.definition()`과 `definition_sha256`은 LAS-b를 넣지 않는다(봉인 다이제스트 유지). 설정 정의 해시는 플랜트 설정과 ③만 가리킨다. 제어기 판은 태그와 코드 커밋으로 구별한다.
+
+#### 436.9.2 `--expect-controller`(run_S9 `level`)
+
+| 태그 | 요구 값(`CONTROLLER_EXPECTATIONS`) | 꺼져 있어야 하는 블록(`CONTROLLER_ABSENT_OR_OFF`) |
+|---|---|---|
+| `final_C4G2` | 433 최종 규칙 | P37t, ZIC, **LAS-b** |
+| `final_C4G2_P3` | 위 + ③ `tracked_bound` revision 4 | P37t, ZIC, **LAS-b** |
+| `final_C4G2_LAS` | 433 최종 규칙 + LAS-b 9값(위 표, `require_soil_response` True 포함) | P37t, ZIC |
+| `final_C4G2_P3_LAS` | 위 + ③ revision 4 | P37t, ZIC |
+| 전환 전 C4G2 이전 태그 | 429.11 규칙 | P37t, ZIC, C4, **LAS-b** |
+
+- 전환 전 태그를 단 행을 새 프리셋으로 돌리면 run_S9가 **멈춘다**(LAS-b가 켜져 있음). 의도된 동작이다. 저장 결과를 재현할 때는 LAS-b를 끈 프리셋으로 돌리고(436.9.3), 새로 돌리는 행은 `_LAS` 태그를 단다(`s9_batch.with_expected_controller`, `V5_LAS_CONTROLLER`, `V5_P3_LAS_CONTROLLER`).
+- `--no-controller-check`(s9_batch)로 검사를 빼는 방법은 재개 배치에 쓰지 않는다.
+
+#### 436.9.3 전환 전 재현
+
+- 러너: `05_tests/unit/pre_las_preset_runner.py <script.py> [인자 …]`. `with_10hz_d1`의 `liftoff_approach_slow` 기본값만 `False`로 바꾸고 스크립트의 `main()`을 부른다. 그 밖 프리셋 키워드는 지금 값 그대로다.
+- **스레드 변수를 numpy보다 먼저 건다.** 러너는 c2(곧 numpy)를 스크립트보다 먼저 불러온다. 그래서 import 전에 `MKL_NUM_THREADS`·`OMP_NUM_THREADS`·`OPENBLAS_NUM_THREADS`·`NUMBA_NUM_THREADS` = 1, `MKL_THREADING_LAYER` = TBB를 `setdefault`로 건다. 이것이 없으면 v5 main 저장 명령 해시가 재현되지 않는다(python-expert 실측 2026-11-08).
+- 패치는 import 때 걸리므로 spawn 작업자(`__mp_main__` 재import)에도 걸린다. 키워드를 명시해 넘기는 호출자는 넘긴 값을 받는다.
+- C4G2 이전 결과는 `pre_c4g2_preset_runner.py`, 그보다 옛 결과는 `pre_switch_preset_runner.py`로 재현한다. 둘 다 LAS-b를 끈다.
+- **Chrono 행은 러너가 아니라 `--las-off`로 재현한다**(af3ea93, W-4로 해소)
+  - 러너는 인자 없는 `main()`만 부르고, `s9_batch.py`는 `run_S9.py`를 별도 프로세스로 띄운다. 그래서 Chrono 행에는 이 러너를 쓰지 않는다(이 사실은 그대로다).
+  - `run_S9.py level --las-off`: 프리셋을 `C2Config().with_10hz_d1(liftoff_approach_slow=False)`로 만들고 `c2_setup`에 `preset`·`las_off`를 기록한다. `check-sources` 비교 대상은 아니다.
+  - `run_S8C.py run|check --las-off`: L2b 사례의 제어기 블록을 그 프리셋 호출의 LAS-b 끔으로 만든다. 배치·사례 meta에 `las_off`를 기록한다(L1 짝에는 걸리지 않는다).
+  - `s9_batch.py run --las-off`: 전환 전 태그 행(`PRE_LAS_CONTROLLERS` = `final_C4G2`·`final_C4G2_P3`; FINAL, RV6, V5-VB, 3단계 재현)에만 `--las-off`를 붙이고, 그 행의 `--expect-controller` 검사는 그대로 둔다. `_LAS` 태그 행에는 붙지 않는다. 전환 전 태그인데 실행기에 이 선택지가 없는 행(run_S6C·m3_run)은 배치 시작 전에 멈춘다.
+  - 이것으로 J-14 "끔" 2행과 Chrono 전환 전 재현을 돌릴 수 있다.
+- v4 원고 값(`final_SGS_R4`·`final_C4G2`)과 LAS 전환 전 v5 기록(`v5/d1.jsonl` 등)은 전환 전 제어기 값이다. 이 기록들은 해시 대조의 기준선으로 남긴다.
+
+#### 436.9.4 U-6 기준선의 LAS-b
+
+**ABL**(`b5_baseline_compare.ablation_config`)
+- 프리셋 LAS-b를 그대로 두고 `require_soil_response = False`로 S1만 뺀다. control-expert는 이 선택을 **승인한다**. 사용자 결정(U-6 세 제어기 모두 LAS-b)과 ABL의 정의("C2에서 토양 대응과 P-S8-28~35를 끔")에 맞는다. LAS-b(P-S8-39)는 끄는 목록에 없고, S1은 설정 스위치일 뿐 물리 조건이 아니다. C2 프리셋은 강체 행에서도 토양 대응이 켜져 있어 S1이 늘 참이다.
+- 토양 대응이 없으면 LOC·토양 모드가 없다. 그래서 S3·S4는 늘 참이고 `loc`·`soil` 끝은 오지 않는다.
+- 이때 ABL의 크롤러 구역은 틈 추정으로만 풀린다(C2처럼 LOC까지 붙잡지 않는다). C2에서는 구역이 풀리면 토양 모드가 서서 `soil`로 끝난다. ABL에는 이에 해당하는 끝이 없다. 그래서 크롤러가 떠 구역을 벗어난 뒤에도 `sum`·`time`이 올 때까지 최대 1.5 s 감속이 이어질 수 있다. 이때는 크롤러 구역 규칙이 빠져 $u\ge0$이 보장되지 않는다(436.2 작용 문단의 전제가 깨진다).
+- **보강(control-expert 결정, 사용자 확인 2026-11-08)**: `require_soil_response = False`일 때만 끝 사유 `zone`(S5 거짓, 크롤러 구역을 벗어남)을 더한다. ABL에서는 이것이 C2의 `loc`·`soil` 끝에 해당한다. `require_soil_response = True`(C2·VB·V0)에는 넣지 않으므로 C2 명령은 비트 단위로 그대로다. ABL에 LAS-b를 넣은 실행은 아직 없으므로 저장 결과에도 영향이 없다(위임 W-2).
+- ABL28(귀속용, 토양 대응 다시 켬)은 S1이 참이 되어 C2와 같은 관문으로 돈다. 다만 P30fz는 꺼져 있다. 기록 전용이다.
+- **ABL28의 S1 스위치(control-expert 결정, 2026-11-08)**: ABL28은 `require_soil_response = True`로 둔다(C2와 같은 LAS-b 설정). 병합 코드(32b8585)는 `replace(ablation_config(...), soil=soil)`이라 `False`를 물려받는다. 코드를 이 문단에 맞춘다(위임 W-6).
+  - 근거 1(정의): ABL28은 "ABL + 토양 대응 다시 켬"이고, S1은 "토양 대응이 켜져 있을 때만"이라는 뜻의 스위치다. `False`는 토양 대응이 없는 기준선을 위한 대체다. 토양 대응을 켠 실행에 그 대체를 남기면 설정 기록(`settings.require_soil_response`)이 "S1 생략"으로 읽혀 귀속 열의 정의와 어긋난다.
+  - 근거 2(명령 불변, 코드 경로 확인): `soil.enable = True`이면 두 값의 명령이 같다. S1 항 `(soil.enable or not require_soil_response)`는 둘 다 참이다. `zone` 끝은 LOC 전에는 오지 않는다. `_update_crawler_zone`이 LAS-b보다 먼저 돌고, LOC 전에 풀린 구역을 같은 호출 안에서 토양 모드로 다시 잡기 때문이다(`_hold_crawler_zone_until_liftoff`). LOC 뒤에 구역이 풀려도 `has_loc_been_seen`이 같은 주기에 서므로 `loc`가 먼저다. 토양 모드가 서면 `soil`이 먼저다. `in_crawler_zone`을 거짓으로 만드는 곳은 이 해제 하나뿐이다.
+  - 그래서 바뀌는 것은 설정 기록뿐이다. ABL28은 기록 전용이고 LAS-b로 돌린 ABL28 결과가 아직 없으므로 저장 결과에도 영향이 없다. 근거 2가 코드 변경으로 깨지면(토양 대응을 켠 실행에서 `zone`이 오면) 그것은 C2에도 없는 끝이므로, `True`로 두는 쪽이 C2와 같은 관문이라는 문장을 지킨다.
+  - 명세를 "S1 생략 유지"로 고치는 안(나)은 택하지 않았다. 명령은 같지만, 토양 대응을 켠 실행에 기준선용 대체가 남고 그 이유를 설명할 정의가 없다.
+
+**IND**(C8 골격, `HarnessIndustry`)
+- 구조상 LAS-b를 넣지 않았다. 대응하는 $\hat L$(하한 하중 추정)·띠·크롤러 구역·LOC·재접근·LEVEL 단계가 없다.
+- **사용자 결정(2026-11-08, Q1 = I-2)**
+  - IND는 LAS-b 없이 판정에 쓴다(태그 `IND`). 11-08 16:2x 결정("세 제어기 모두")의 IND 부분을 바꾼 것이다.
+  - 헤드 힘 기반 어댑터 `IND_LAS`를 **기록 전용 귀속 열**로 더한다(ABL28과 같은 지위). 판정 문장과 C2 ↔ ABL ↔ IND 비교 문장에는 쓰지 않는다.
+  - 범위·관문·출력은 `06_analysis/02_control/verif_matrix/u3_u6_rerun_rules_rev2.md` 3절(봉인)이 정한다.
+
+**IND_LAS 어댑터 정의**(헤드 힘 기반 이륙 접근 감속. LAS-b와 같은 규칙이 아니라 C8 골격에 맞춘 대응 규칙이다)
+
+| LAS-b(436.2) | IND_LAS | 비고 |
+|---|---|---|
+| S1 토양 대응 | 없음(늘 참) | ABL과 같다 |
+| S2 LEVEL | C8 단계가 `LIFT`인 주기, 그리고 그 주기 명령이 `_lift`에서 나왔다(LIFT → REGROUND로 넘어가는 주기는 아님) | ATTITUDE는 가장 높은 다리 기준이라 크롤러를 들지 않는다(가정) |
+| S3·S4 LOC 전·토양 모드 전 | 이 실행에서 LIFT를 아직 떠나지 않았다(첫 LIFT 진입부터 REGROUND 진입 전까지) | C8의 LIFT 끝(틈 추정 ≥ `clearance_target_m` 0.05 m)이 LOC를 대신한다 |
+| S5 크롤러 구역 | 틈 추정 < `clearance_target_m`(S2에 포함, 따로 보지 않음) | |
+| S6 재접근 없음 | 늘 참 | C8 REGROUND는 LIFT 뒤에 온다 |
+| S7′ | $\sum_i L_i\ge\alpha W_{ref}$, $\min_i L_i<\beta F_{min}$, $\rho\ge\rho_{on}$, $\rho>\rho_{k-1}$. **$L_i$ = C8 하중 추정**(`cylinder_force_from_pressures(…, C8Settings.load_estimate)`, 기본 HEAD_ONLY = 헤드 압력 × 헤드 면적) [N]. $\rho$ = `c2.diagonal_deficit_ratio(L)`. $\rho_{k-1}$은 직전 LIFT 주기 값이고, LIFT가 아닌 주기에 지운다 | 헤드 전용 힘은 신장 중 실 마찰만큼 크게 읽는다. 그래서 문턱의 뜻이 C2와 다르고, IND에서 검증되지 않았다 |
+| S8 | $\bar u>\gamma v_{max}$($\bar u$ = `_lift` 명령 평균, LIFT에서는 $v_{max}$) | 사실상 늘 참 |
+| 작용 | $u\leftarrow u\cdot\min(1,\gamma v_{max}/\bar u)$ = 네 다리 0.16 $v_{max}$ 균일 | 행정 끝 자르기·출력 램프(0.25 $v_{max}$/주기)·출력 지연 $d$ = 1 **앞**에 둔다(C2에서 LAS-b가 증분 제한 앞에 있는 것과 같다) |
+| 끝 | `phase`(S2 거짓), `sum`($\sum L\ge\alpha_{end}W_{ref}$ 연속 $n_{end}$ 작용 주기), `time`($t-t_{start}\ge T_{max}-10^{-9}$ s). 순서는 이 표 순서다. 끝난 주기는 작용하지 않고, 다시 시작하지 않는다 | `loc`·`soil`·`reapproach`·`zone`은 없다 |
+| 문턱 | C2 b0 상수 그대로(`R8_LAS_*`, 436.9 표) | 가정 |
+| $W_{ref}$ | `HarnessIndustry._reference_weight_N()`(YAML 상부체 질량 × g, C2와 같은 값) | |
+| 사건 | `INFO_LIFTOFF_SLOW:<가장 가벼운 다리>`, `INFO_LIFTOFF_SLOW_END:<phase\|sum\|time>`(C2와 같은 이름) | `HarnessIndustry.events`로 넘긴다 |
+| 태그 | `IND_LAS`, ③ 끔 | |
+
+- 비트 영향: C2·ABL·IND 명령은 바뀌지 않는다(어댑터는 별도 클래스). IND_LAS는 관문이 한 번도 서지 않은 실행에서 명령이 IND와 비트 단위로 같다.
+- 구현 명세는 control-expert 리포트(2026-11-08)의 python-expert 위임 W-5다.
+
+#### 436.9.5 병합 전에 고칠 구현 결함(control-expert 검토, 2026-11-08) — master 병합 완료(해소, `32b8585`)
+
+> 2026-11-08 확인: D-1·D-2의 태그 단일 비교(`tag != TAG_VB`, `controller_tag == TAG_VB`)는 04_scripts에 남아 있지 않다. D-5는 `r79_sensor_screen.py` 1012행에서 `controller_tag(options, ctrl.config)`로 고쳐졌다. D-6은 `d1_chrono_rows.py` 101행이 LAS 태그로 바꾼다. 아래 표는 당시 기록이다.
+
+태그 문자열을 `final_C4G2_P3` 하나와 비교하는 곳이 남아 있다. LAS 태그 실행에서는 판정 대상에서 **조용히 빠지거나**(관문이 빈 집합으로 통과) 잘못된 태그가 남는다.
+
+| # | 위치(worktree `11d28c6`) | 현상 | 영향 |
+|---|---|---|---|
+| D-1 | `04_scripts/04_hydraulic/coupled/v5_rerun.py` `j_p3_status`: `if tag != TAG_VB: return not_applicable` | `final_C4G2_P3_LAS` 실행의 J-P3가 `not_applicable` | U-3·U-6 VB C2 실행의 J-P3 판정이 사라진다 |
+| D-2 | `04_scripts/04_hydraulic/coupled/u3_judge.py` `gate_j_p3`·`gate_fallback`: `controller_tag == TAG_VB`로 고름 | LAS 실행이 하나도 골라지지 않아 G-4·G-6이 **빈 집합으로 통과** | 봉인 관문 무력화(조용한 통과) |
+| D-3 | `u3_judge.py` `U6_TAGS`, `judge_bundle`의 기대 태그(`TAG_VB`/`TAG_V0`) | LAS 실행이 모두 G-2 불일치 | 소리 나는 실패(덧붙임 판 2로 고침) |
+| D-4 | `04_scripts/04_hydraulic/coupled/u3_reuse.py` `reused_record`: `controller_tag == TAG_VB`일 때만 `extend_start` 기록, 태그 없음 → `TAG_V0` | `d1_las.jsonl` VB 줄을 재사용하면 ③ 기록이 빠져 G-2 실패. 태그 없는 옛 줄은 V0 전환 전 태그가 된다 | 재사용 행 G-2 |
+| D-5 | `04_scripts/03_control/s8/r79_sensor_screen.py` 1011행 `controller_tag(options)`(제어기 설정 안 넘김) | 잡음 묶음(J-10~J-12)의 T4h meta가 LAS 실행인데 전환 전 태그 | `t4h_replay`가 태그로 LAS-b를 켜고 끄므로 재생이 LAS 끔으로 돌아 해시가 어긋난다 |
+| D-6 | `04_scripts/02_chrono/d1_chrono_rows.py` 142~150행 `sb.V5_P3_CONTROLLER` | D-1 Chrono 행(J-3·J-4)이 `--expect-controller final_C4G2_P3`로 새 프리셋에서 멈춤 | 소리 나는 실패 |
+| D-7 | `pre_las_preset_runner.py` + run_S9 `main(argv)`, s9_batch 하위 프로세스 | 436.9.3 제한 | Chrono 전환 전 재현·J-14 끔 행 불가 |
+
+- `p3_hash_check.EXPECTED_TAG`·`p3_chrono_check.EXPECTED_TAG`(`final_C4G2_P3`)는 ③ revision 4 전환 확인용으로 닫힌 검사다. 전환 전 기록만 읽으므로 그대로 둔다. LAS 기록에 잘못 쓰면 태그 불일치로 **소리 나게** 실패하므로 조용한 통과 위험은 없다. 모듈 설명에 "LAS 전환 전 기록 전용" 한 줄만 더한다(위임 W-1).
+
+#### 436.9.6 $\rho_{on}$ 감도(오프라인 그림자, 판정 문장)
+
+- 입력은 저장 T4h 2,047기록(규칙 H 포함)이고, 판정 불가는 세 값 모두 0이다.
+  - python-expert 출력: `06_analysis/03_hydraulic/coupled/v5/las/shadow_rho015.jsonl`(SHA-256 앞 16자리 `2742cfd07f63d24a`), `shadow_rho021.jsonl`(`90955710f679b9a1`), 기준 `shadow_b0_r8.jsonl`(`dace2745f19d8ec4`).
+  - control-expert가 jsonl을 직접 다시 셌고(경로 2) 결과가 같다.
+
+| $\rho_{on}$ | 작동 기록 | 작동 키 | 0.18 대비 |
+|---|---|---|---|
+| 0.15 | 117 | 39 | 고유 1키(`L3\|s1\|g6\|72\|g6r\|rigid+J1@RL\|top\|Fs0`, 3폴더, 첫 작동 31.2 s). 공통 키 `L3\|s0\|g6\|93\|g6r\|rigid+J2@RR\|top\|Fs4`의 첫 작동이 31.4 → 31.3 s |
+| 0.18(b0) | 114 | 38 | – |
+| 0.21 | 114 | 38 | 같은 집합, 첫 작동 시각 모두 같음 |
+
+- 모든 작동은 dg3(2단계 잡음 L3 G6 계열) 기록이다. 미작동 1,933기록 중 LOC 전 $\rho$ 최대가 0.15·0.18·0.21 이상인 기록은 282·269·188건이다. 이들은 S7′의 다른 조건으로 막혔다.
+- 설계 계열(T-2 b0 작동 54키)에서 첫 S7′ 성립 $\rho$는 최소 0.182다. 0.21보다 작은 키가 9개, 0.25보다 작은 키가 18개다(control-expert 재집계, `las_T2.jsonl` `las.s7p_first.rho`). 그래서 그림자에서 위쪽(0.21)이 무감도인 것은 **그림자 모집단에 한한 결과**다. 설계 계열에서는 0.21이면 일부 키의 시작이 늦어지거나 사라진다(그 결과는 실행하지 않았다).
+- **판정서에 적을 문장**: "$\rho_{on}$을 0.15·0.21로 바꾼 오프라인 그림자(2,047기록, 판정 불가 0)에서 작동 집합은 0.21에서 b0와 같고, 0.15에서 dg3 1키가 더해지고 1키의 첫 작동이 0.1 s 빨라질 뿐이다. 작동은 모두 이미 재실행 범위(J-10·J-11)에 든 dg3 계열이므로, b0($\rho_{on}$ 0.18)를 유지해도 재실행 범위와 판정 절차는 바뀌지 않는다. 다만 설계 계열의 첫 $\rho$ 최소가 0.182라 위쪽 여유는 작다(436.7). 이 감도는 강건성 근거가 아니라 재실행 범위가 문턱에 민감하지 않다는 확인이다."
+
+#### 436.9.7 Chrono 그림자(J-5·J-6)
+
+- J_P Chrono 12건(J-6): 그림자 모두 미작동이다(`shadow_jp_b0.jsonl`). 저장 결과를 재사용한다. 재사용 근거는 "시작 관문 미성립 = 명령 비트 불변"(436.6 명령 불변 조건)이다.
+- D-1 G1 Chrono 2행(S-03·S-04, J-5): **재생 도구를 만들지 않는다.** 재개 배치에서 LAS 태그로 다시 돌리기로 했으므로, 도구가 줄 정보(작동 여부)를 재실행이 직접 준다.
+  - 재실행한 `controller_commands`가 저장 결과(옛 VB 태그)와 비트 단위로 같으면 "미작동 확인"으로 기록한다.
+  - 다르면 새 결과가 판정이다.
+  - 같은 `--threads`·P코어 조건이어야 비트 비교가 성립한다(SCM 실행 규칙). 조건이 다르면 해시 비교 없이 새 결과로 판정한다.
+- 재실행 비용은 2 × 약 12,600 s(가정)다. 도구 개발(재생 경로의 SCM 측정값 재구성)보다 확실하고, 작동하면 어차피 재실행해야 한다.

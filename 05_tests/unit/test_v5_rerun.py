@@ -42,6 +42,80 @@ def test_split_argv_refuses_bad_options(argv) -> None:
         v5_rerun.split_argv(argv)
 
 
+def test_split_argv_and_argparse_take_overwrite() -> None:
+    rest, options = v5_rerun.split_argv(["r72.py", "root", "out.json", "--overwrite",
+                                         "--v5-setting", "V0"])
+    assert rest == ["r72.py", "root", "out.json"]
+    assert options == v5_rerun.RerunOptions("V0", overwrite=True)
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    v5_rerun.add_arguments(parser)
+    assert v5_rerun.options_from_args(parser.parse_args([])).overwrite is False
+    assert v5_rerun.options_from_args(parser.parse_args(
+        ["--v5-setting", "VB", "--overwrite"])).overwrite is True
+
+
+# ------------------------------------------------------------------------------ out paths
+def test_default_out_path_is_the_las_folder() -> None:
+    """Rules rev2 1 #9: LAS-tag outputs in ``v5_rerun/las/``, the folder the judge reads."""
+    path = v5_rerun.default_out_path("slope", "V0")
+    assert path == v5_rerun.LAS_OUT_DIR / "u3_slope_V0.json"
+    assert path.parent == u3_judge.DEFAULT_U3_DIR
+    assert v5_rerun.default_out_path("b5_wide", "VB", study="u6") == (
+        v5_rerun.LAS_OUT_DIR / "u6_b5_wide_VB.json")
+
+
+@pytest.fixture
+def out_folders(tmp_path, monkeypatch) -> tuple[Path, Path]:
+    """(pre-switch folder, its ``las`` folder) in ``tmp_path``."""
+    pre_switch = tmp_path / "v5_rerun"
+    las = pre_switch / "las"
+    las.mkdir(parents=True)
+    monkeypatch.setattr(v5_rerun, "PRE_SWITCH_OUT_DIR", pre_switch)
+    return pre_switch, las
+
+
+def test_rerun_refuses_an_existing_file_without_overwrite(out_folders) -> None:
+    _, las = out_folders
+    target = las / "u3_slope_V0.json"
+    rerun = v5_rerun.RerunOptions("V0")
+    v5_rerun.check_out_path(target, rerun)  # new file: fine
+    target.write_text("{}", encoding="utf-8")
+    with pytest.raises(SystemExit, match="--overwrite"):
+        v5_rerun.check_out_path(target, rerun)
+    v5_rerun.check_out_path(target, v5_rerun.RerunOptions("V0", overwrite=True))
+    v5_rerun.check_out_path(target, v5_rerun.RerunOptions())  # no setting: as before
+
+
+def test_pre_switch_files_are_never_written(out_folders) -> None:
+    pre_switch, _ = out_folders
+    old = pre_switch / "u3_slope_V0.json"
+    old.write_text("{}", encoding="utf-8")
+    for options in (v5_rerun.RerunOptions("V0", overwrite=True), v5_rerun.RerunOptions()):
+        with pytest.raises(SystemExit, match="pre-switch"):
+            v5_rerun.check_out_path(old, options)
+    with pytest.raises(SystemExit, match="pre-switch"):
+        v5_rerun.refuse_pre_switch_file(old)
+    new = pre_switch / "u3_D_VB.json"
+    with pytest.raises(SystemExit, match="LAS-tag run"):  # a rerun belongs in las/
+        v5_rerun.check_out_path(new, v5_rerun.RerunOptions("VB", overwrite=True))
+    v5_rerun.check_out_path(new, v5_rerun.RerunOptions())  # a new file without a setting
+
+
+def test_screens_use_the_las_default_and_check_before_the_runs() -> None:
+    """The three callers of the integrity finding take the las/ default (no harness run)."""
+    import s9_slope_fix_candidates as fix
+
+    args = fix.build_parser().parse_args(["run", "--suite", "slope", "--v5-setting", "V0"])
+    rerun = v5_rerun.options_from_args(args)
+    assert fix._out_path(args, rerun) == v5_rerun.LAS_OUT_DIR / "u3_slope_V0.json"
+    for script in ("s9_slope_fix_candidates.py", "s9_soil_slope.py",
+                   "b5_baseline_compare.py"):
+        text = (S9_DIR / script).read_text(encoding="utf-8")
+        assert "check_out_path(out_path, rerun)" in text, script
+
+
 def test_vb_and_u6_definitions() -> None:
     _, vb = v5_rerun.options_of("VB")
     _, plant_only = v5_rerun.options_of("VB", extend_start=False)
@@ -63,6 +137,16 @@ def test_j_p3_of_a_head_only_vb_run() -> None:
     assert v5_rerun.j_p3_status("final_C4G2_P3", None, True, True) == "setting_defect"
     assert v5_rerun.j_p3_status("final_C4G2", None, False, True) == "not_applicable"
     assert v5_rerun.j_p3_status("ABL", None, False, True) == "not_applicable"
+
+
+def test_j_p3_of_a_las_tag_vb_run_is_judged() -> None:
+    """Rules rev2 1 #5: a ``final_C4G2_P3_LAS`` run is a ③ run, not ``not_applicable``."""
+    bound = {"breach_reads": [0, 0, 0, 0], "margin_used_reads": [0] * 4,
+             "locked_breach_over_tol_reads": [0] * 4}
+    assert v5_rerun.j_p3_status("final_C4G2_P3_LAS", None, False, True) == "no_rod_reading"
+    assert v5_rerun.j_p3_status("final_C4G2_P3_LAS", bound, True, False) == "pass"
+    assert v5_rerun.j_p3_status("final_C4G2_LAS", None, False, True) == "not_applicable"
+    assert v5_rerun.j_p3_status("ABL_LAS", None, False, True) == "not_applicable"
 
 
 # ------------------------------------------------------------------------------ key lists
@@ -121,7 +205,7 @@ def _line(soil: str, *, eps: float = 0.0, setting: str = "VB", sha: str = "s",
         d1["u3"] = {"verdict": "pass", "passed": True, "failed_rows": [], "hash": "h",
                     "t_ready_s": 40.0, "flags": [], "warnings": []}
     return {"job": {"d1": row, "eps": eps, "setting": setting}, "commands_sha256": sha,
-            "controller_tag": "final_C4G2_P3" if setting == "VB" else None,
+            "controller_tag": "final_C4G2_P3_LAS" if setting == "VB" else "final_C4G2_LAS",
             "hydraulic_options": None if options is None else options.to_dict(), "d1": d1}
 
 
@@ -145,7 +229,7 @@ def test_reuse_after_an_equal_sample_hash(tmp_path) -> None:
     assert decision.reused_ids == {"H1|J1|B|top|flat"}
     record = u3_reuse.reused_record(plan, _jobs("J1")[0], decision)
     assert record["reuse"] == "d1" and record["d1_key"] == "D1|H-S-0|J1|T|flat|K1|VB|e0"
-    assert record["v5"]["controller_tag"] == "final_C4G2_P3"
+    assert record["v5"]["controller_tag"] == "final_C4G2_P3_LAS"
     assert record["v5"]["extend_start"]["revision"] == 4
     assert record["verdict"] == "pass" and record["id"] == "H1|J1|B|top|flat"
 
@@ -214,19 +298,19 @@ def test_differences_count_one_sided_values_as_na() -> None:
 
 
 def test_gate_g2_and_g4_fields() -> None:
-    good = {"v5": {"v5_setting": "VB", "controller_tag": "final_C4G2_P3",
+    good = {"v5": {"v5_setting": "VB", "controller_tag": "final_C4G2_P3_LAS",
                    "extend_start": {"rule": "tracked_bound", "revision": 4},
                    "definition_sha256": "d", "head_only_declared": True,
                    "has_rod_reading": False, "j_p3": "no_rod_reading"}, "id": "k"}
-    assert u3_judge.run_v5_problems(good, "VB", "final_C4G2_P3", needs_bound=True) == []
+    assert u3_judge.run_v5_problems(good, "VB", "final_C4G2_P3_LAS", needs_bound=True) == []
     assert u3_judge.gate_j_p3([good]) == []
     rod = copy.deepcopy(good)
     rod["v5"].update(has_rod_reading=True, j_p3="pass")
     assert u3_judge.gate_j_p3([rod])[0]["j_p3"] == "pass"
     assert u3_judge.gate_j_p3([rod])[0]["reason"].startswith("head-only suite")
     abl = copy.deepcopy(good)
-    abl["v5"]["controller_tag"] = "ABL"
-    assert u3_judge.run_v5_problems(abl, "VB", "ABL", needs_bound=False) == [
+    abl["v5"]["controller_tag"] = "ABL_LAS"
+    assert u3_judge.run_v5_problems(abl, "VB", "ABL_LAS", needs_bound=False) == [
         "③ on where it must be off"]
 
 
@@ -235,7 +319,7 @@ def _vb_run(suite: str, *, rod: bool, j_p3: str, fallback: int = 0, breach: int 
     bound = {"breach_reads": [breach, 0, 0, 0], "margin_used_reads": [0] * 4,
              "locked_breach_over_tol_reads": [0] * 4} if rod else None
     return {"suite": suite, "id": f"{suite}|key", "warnings": [],
-            "v5": {"v5_setting": "VB", "controller_tag": "final_C4G2_P3", "j_p3": j_p3,
+            "v5": {"v5_setting": "VB", "controller_tag": "final_C4G2_P3_LAS", "j_p3": j_p3,
                    "has_rod_reading": rod, "head_only_declared": suite != "g8",
                    "extend_bound_check": bound, "rod_pressure_fallback_events": fallback}}
 
@@ -268,6 +352,64 @@ def test_one_g8_fallback_stops_g6() -> None:
     assert stops == [{"key": "g8|key", "suite": "g8", "fallback_events": 1}]
 
 
+# ------------------------------------------------- rules rev2 (LAS-b tags, count-fixed gates)
+def test_gates_do_not_pass_an_empty_or_short_pick() -> None:
+    """Rules rev2 1 #5: the picked VB C2 count must equal the bundle's keys."""
+    assert u3_judge.gate_j_p3([], 2)[0]["picked"] == 0
+    assert u3_judge.gate_fallback([], 2)[0]["expected"] == 2
+    runs = [_vb_run("g8", rod=True, j_p3="pass"), _vb_run("slope", rod=False,
+                                                         j_p3="no_rod_reading")]
+    assert u3_judge.gate_j_p3(runs, 2) == []
+    assert u3_judge.gate_fallback(runs, 2) == []
+    assert u3_judge.gate_j_p3(runs, 3)[0]["picked"] == 2
+
+
+def test_gates_pick_by_setting_and_controller_not_by_tag() -> None:
+    pre_switch = _vb_run("g8", rod=False, j_p3="no_rod_reading")
+    pre_switch["v5"]["controller_tag"] = "final_C4G2_P3"
+    assert u3_judge.gate_j_p3([pre_switch], 1)[0]["suite"] == "g8"  # picked, and stops
+    u6 = [{**_vb_run("slope", rod=False, j_p3="no_rod_reading"), "controller": name}
+          for name in u3_judge.U6_CONTROLLERS]
+    assert u3_judge.vb_c2_runs(u6) == [u6[0]]
+    v0 = _vb_run("slope", rod=False, j_p3="not_applicable")
+    v0["v5"]["v5_setting"] = "V0"
+    assert u3_judge.vb_c2_runs([v0]) == []
+
+
+def test_las_tags_and_pre_switch_tags_in_g2() -> None:
+    assert u3_judge.EXPECTED_TAGS == {"V0": "final_C4G2_LAS", "VB": "final_C4G2_P3_LAS"}
+    assert u3_judge.U6_TAGS == {"C2": "final_C4G2_P3_LAS", "ABL": "ABL_LAS", "IND": "IND"}
+    run = {"v5": {"v5_setting": "VB", "controller_tag": "final_C4G2_P3",
+                  "extend_start": {"rule": "tracked_bound", "revision": 4},
+                  "definition_sha256": "d", "head_only_declared": True,
+                  "has_rod_reading": False}}
+    problems = u3_judge.run_v5_problems(run, "VB", "final_C4G2_P3_LAS", needs_bound=True)
+    assert len(problems) == 1 and "before the LAS-b switch" in problems[0]
+    assert u3_judge.DEFAULT_U3_DIR == v5_rerun.OUT_DIR / "las"
+
+
+def test_reuse_refuses_a_pre_switch_or_untagged_d1_line(tmp_path) -> None:
+    old = _line("J1", sha="b")
+    old["controller_tag"] = "final_C4G2_P3"
+    untagged = _line("G1", sha="a")
+    untagged.pop("controller_tag")
+    plan = u3_reuse.plan(_write(tmp_path, [untagged, old]), "VB", _jobs("G1", "J1"),
+                         settle_hook="harness")
+    assert plan.lines == {}
+    assert plan.rejected["H1|G1|B|top|flat"].startswith("Q-6: the D-1 line has no")
+    assert "final_C4G2_P3" in plan.rejected["H1|J1|B|top|flat"]
+
+
+def test_reused_v0_record_keeps_the_las_tag_without_the_bound(tmp_path) -> None:
+    path = _write(tmp_path, [_line("G1", sha="a", setting="V0"),
+                             _line("J1", sha="b", setting="V0")])
+    plan = u3_reuse.plan(path, "V0", _jobs("G1", "J1"), settle_hook="harness")
+    decision = u3_reuse.decide(plan, {"H1|G1|B|top|flat": {"v5": {"logged_commands_sha256": "a"}}})
+    record = u3_reuse.reused_record(plan, _jobs("J1")[0], decision)
+    assert record["v5"]["controller_tag"] == "final_C4G2_LAS"
+    assert "extend_start" not in record["v5"]
+
+
 def test_previous_g6_grade_is_the_stored_verdict() -> None:
     g6 = u3_judge.Bundle("g6", "x", "g6", 1, "g6")
     stored = {"verdict": "fail", "failed_rows": ["G6-7_preloc"], "flags": []}
@@ -282,4 +424,5 @@ def test_rules_revision_record_reads_the_file(tmp_path) -> None:
     (tmp_path / "u3_u6_rerun_rules_rev1.sha256").write_text(f"{sha}  x\n", encoding="utf-8")
     assert u3_judge.revision_record(text) == {"rules": text.name, "sha256": sha,
                                               "sealed_sha256": sha, "match_seal": True}
-    assert u3_judge.RULES_REVISIONS[0].name == "u3_u6_rerun_rules_rev1.md"
+    assert [path.name for path in u3_judge.RULES_REVISIONS] == [
+        "u3_u6_rerun_rules_rev1.md", "u3_u6_rerun_rules_rev2.md"]

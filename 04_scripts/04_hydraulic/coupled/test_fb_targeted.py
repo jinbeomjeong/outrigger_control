@@ -309,7 +309,8 @@ def _line(candidate: str, key: str, *, verdict="pass", fail_items=(), events=Non
             "event_names": events or {}, "values": {"times": {"t_first_ready_s": t_ready}},
             "d1": {"verdict": verdict, "fail_items": list(fail_items), "t_ready_s": t_ready,
                    "stroke_max_m": stroke, "F_judged_min_N": 12e3},
-            "fb": {"candidate": candidate, "key": key, "budget": {"cuts": []},
+            "fb": {"candidate": candidate, "key": key,
+                   "budget": {"cuts": [], "min_scale_eff": 1.0},
                    "saturation_s": {"all": {"any_s": 0.0}}}}
 
 
@@ -335,13 +336,803 @@ def test_c7_needs_equal_hashes_and_the_stored_b0_hash() -> None:
     assert not fj.check_c7(lines, {vb_key: _line("b0", vb_key)})["pass"]
 
 
-def test_sealed_check_reports_a_changed_file(tmp_path) -> None:
-    rules = tmp_path / "fb_targeted_rules.md"
-    rules.write_text("changed", encoding="utf-8")
-    sha = tmp_path / "fb_targeted_rules.sha256"
-    sha.write_text(f"{ft.RULES_SHA256}  fb_targeted_rules.md  sealed\n", encoding="utf-8")
-    design = tmp_path / "fb_design.md"
-    assert any("missing" in p for p in ft.sealed_check(rules, sha, design))
+def _sealed_set(folder: Path, monkeypatch) -> dict[str, Path]:
+    """Rules, rev1 and design texts sealed in ``folder`` (the tool's sealed values patched to
+    their hashes), as the keywords of ``sealed_check``."""
+    paths = {}
+    for stem, constant in (("fb_targeted_rules", "RULES_SHA256"),
+                           ("fb_targeted_rules_rev1", "RULES_REV1_SHA256"),
+                           ("fb_targeted_rules_rev2", "RULES_REV2_SHA256"),
+                           ("fb_targeted_rules_rev3", "RULES_REV3_SHA256")):
+        text = folder / f"{stem}.md"
+        text.write_text(f"sealed {stem}", encoding="utf-8")
+        digest = ft.file_sha256(text)
+        sha = folder / f"{stem}.sha256"
+        sha.write_text(f"{digest}  {text.name}  sealed\n", encoding="utf-8")
+        monkeypatch.setattr(ft, constant, digest)
+        paths[stem] = text
+        paths[f"{stem}_sha"] = sha
+    design = folder / "fb_design.md"
     design.write_text("d", encoding="utf-8")
-    problems = ft.sealed_check(rules, sha, design)
-    assert len(problems) == 1 and "!= sealed" in problems[0]
+    return {"rules_path": paths["fb_targeted_rules"], "sha_path": paths["fb_targeted_rules_sha"],
+            "rev1_path": paths["fb_targeted_rules_rev1"],
+            "rev1_sha_path": paths["fb_targeted_rules_rev1_sha"],
+            "rev2_path": paths["fb_targeted_rules_rev2"],
+            "rev2_sha_path": paths["fb_targeted_rules_rev2_sha"],
+            "rev3_path": paths["fb_targeted_rules_rev3"],
+            "rev3_sha_path": paths["fb_targeted_rules_rev3_sha"], "design_path": design}
+
+
+def test_sealed_check_passes_the_sealed_set(tmp_path, monkeypatch) -> None:
+    assert ft.sealed_check(**_sealed_set(tmp_path, monkeypatch)) == []
+
+
+def test_sealed_check_reports_a_changed_rules_file(tmp_path, monkeypatch) -> None:
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["rules_path"].write_text("changed", encoding="utf-8")
+    problems = ft.sealed_check(**paths)
+    assert len(problems) == 1 and "fb_targeted_rules.md sha256" in problems[0]
+    paths["design_path"].unlink()
+    assert any("missing" in p for p in ft.sealed_check(**paths))
+
+
+def test_sealed_check_stops_without_rev1(tmp_path, monkeypatch) -> None:
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["rev1_path"].unlink()
+    assert ft.sealed_check(**paths) == [f"missing {paths['rev1_path']}"]
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["rev1_sha_path"].unlink()
+    assert ft.sealed_check(**paths) == [f"missing {paths['rev1_sha_path']}"]
+
+
+def test_sealed_check_reports_a_changed_rev1_byte(tmp_path, monkeypatch) -> None:
+    paths = _sealed_set(tmp_path, monkeypatch)
+    raw = bytearray(paths["rev1_path"].read_bytes())
+    raw[0] ^= 1
+    paths["rev1_path"].write_bytes(bytes(raw))
+    problems = ft.sealed_check(**paths)
+    assert len(problems) == 1 and "fb_targeted_rules_rev1.md sha256" in problems[0]
+
+
+def test_sealed_check_reports_a_rev1_seal_value_the_tool_does_not_expect(
+        tmp_path, monkeypatch) -> None:
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["rev1_sha_path"].write_text("0" * 64 + "  fb_targeted_rules_rev1.md\n", encoding="utf-8")
+    problems = ft.sealed_check(**paths)
+    assert any("fb_targeted_rules_rev1.sha256 holds" in p for p in problems)
+
+
+def test_f4_runs_r2_with_reanchor_on() -> None:
+    assert ft.F4_CASES[0] == "R2ra"
+
+
+# ------------------------------------------------------------------------------- audit fixes
+def _c2_or_skip():
+    try:
+        from outrigger_sim.control import c2
+    except ImportError:
+        pytest.skip("outrigger_sim not importable")
+    return c2
+
+
+def test_the_r8_preset_is_las_b_b0_and_a_changed_value_is_refused() -> None:
+    from dataclasses import replace
+
+    c2 = _c2_or_skip()
+    settings = c2.C2Config().with_10hz_d1().liftoff_approach_slow
+    assert ft.preset_las_problems(settings) == []
+    off = replace(settings, enable=False)
+    assert ft.preset_las_problems(off) == ["liftoff_approach_slow.enable is False"]
+    other = replace(settings, rho_on=0.2)
+    assert ft.preset_las_problems(other) == ["rho_on 0.2 != b0 0.18"]
+    assert ft.preset_las_problems(None) == ["no liftoff_approach_slow settings"]
+    no_soil = replace(settings, require_soil_response=False)
+    assert "require_soil_response" in ft.preset_las_problems(no_soil)[0]
+
+
+def test_install_candidate_checks_the_preset_and_never_installs_the_las_wrapper(
+        monkeypatch) -> None:
+    import las_targeted as lt
+
+    calls = []
+    monkeypatch.setattr(ft, "check_preset_las", lambda: calls.append("preset"))
+    monkeypatch.setattr(ft, "install", lambda params: calls.append("fb"))
+    monkeypatch.setattr(ft, "_capture_runs", lambda: calls.append("capture"))
+    monkeypatch.setattr(lt, "install", lambda *args: calls.append("las wrapper"))
+    ft._install_candidate(ft.CANDIDATES["L"])
+    assert calls == ["preset", "capture"]
+    calls.clear()
+    ft._install_candidate(ft.CANDIDATES["LF"])
+    assert calls == ["preset", "fb", "capture"]
+
+
+def test_check_preset_las_stops_when_the_preset_has_las_off(monkeypatch) -> None:
+    c2 = _c2_or_skip()
+    preset = c2.C2Config.with_10hz_d1
+    monkeypatch.setattr(c2.C2Config, "with_10hz_d1",
+                        lambda self, **kw: preset(self, **{**kw, "liftoff_approach_slow": False}))
+    with pytest.raises(RuntimeError, match="not LAS-b b0"):
+        ft.check_preset_las()
+
+
+def test_check_preset_las_stops_with_the_las_wrapper_installed(monkeypatch) -> None:
+    import las_targeted as lt
+
+    _c2_or_skip()
+    monkeypatch.setitem(lt._INSTALLED, "params", lt.CANDIDATES["b0"])
+    with pytest.raises(RuntimeError, match="act twice"):
+        ft.check_preset_las()
+
+
+def _las_meta(start_s=22.8, leg="RL") -> dict:
+    settings = {"enable": True, "sum_on_fraction_W": 0.6, "light_leg_fraction_of_F_min": 3.5,
+                "slow_mean_fraction": 0.16, "sum_off_fraction_W": 0.85, "off_periods": 5,
+                "max_s": 1.5, "rho_on": 0.18, "require_soil_response": True}
+    return {"settings": settings, "start_s": start_s, "start_leg": leg, "start_rho": 0.207,
+            "start_rho_prev": 0.132, "end_s": 23.5, "end_reason": "sum", "active_periods": 7,
+            "scaled_periods": 7}
+
+
+def test_las_block_from_meta_has_the_las_targeted_fields() -> None:
+    import las_targeted as lt
+
+    harness = {"loc_delay_s": 1.0, "t_loc_s": 24.6, "t_off_s": 23.6}
+    block = ft.las_block_from_meta(_las_meta(), True, 376583.56, harness)
+    wrapper_block = lt.las_block("b0", lt.CANDIDATES["b0"], lt.MODE_ACT, lt.LasRun(
+        lt.CANDIDATES["b0"], lt.MODE_ACT), harness)
+    assert set(wrapper_block) <= set(block)
+    assert block["params"] == lt.CANDIDATES["b0"].to_dict()
+    assert (block["candidate"], block["mode"]) == ("b0", "act")
+    assert block["start_leg"] == 2 and block["start_t_s"] == 22.8
+    assert block["end_reason"] == "sum" and block["active_periods"] == 7
+    assert block["s7p_first"] is None and block["start_rho"] == 0.207
+    assert block["loc_minus_t_off_s"] == 1.0 and block["source"] == ft.LAS_SOURCE
+
+
+def test_las_block_without_a_las_state_is_not_reached() -> None:
+    meta = {"settings": _las_meta()["settings"]}
+    block = ft.las_block_from_meta(meta, True, 1.0, None)
+    assert block["wrapper_reached"] is False and block["params"]["n_end"] == 5
+    assert ft.las_block_from_meta(_las_meta(start_s=None, leg=None), True, 1.0,
+                                  None)["start_leg"] is None
+
+
+def test_a_run_without_captured_objects_is_an_error() -> None:
+    entry = {"name": "L", "bundle": "F-0"}
+    job = {"d1": {"key": "D1|x"}, "setting": "VB", "eps": 0.0}
+    with pytest.raises(RuntimeError, match="not captured"):
+        ft._fb_block(entry, job, ft.CANDIDATES["L"], None, object(), {})
+    with pytest.raises(RuntimeError, match="not captured"):
+        ft._fb_block(entry, job, ft.CANDIDATES["L"], object(), None, {})
+
+
+def test_thread_variables_are_forced_to_one() -> None:
+    import os
+
+    assert all(os.environ[name] == "1" for name in ft.THREAD_VARIABLES)
+    values = ft.thread_values({"MKL_NUM_THREADS": "1", "OMP_NUM_THREADS": "4"})
+    assert ft.thread_problems(values) == ["OMP_NUM_THREADS='4'", "OPENBLAS_NUM_THREADS=None",
+                                          "NUMBA_NUM_THREADS=None"]
+    assert ft.thread_problems(ft.thread_values()) == []
+
+
+def test_run_identity_records_commit_hashes_and_threads(tmp_path) -> None:
+    import subprocess
+
+    tool = tmp_path / "tool.py"
+    tool.write_text("x = 1\n", encoding="utf-8")
+    try:
+        subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=60)
+        for args in (["add", "tool.py"], ["-c", "user.name=t", "-c", "user.email=t@t",
+                                          "commit", "-q", "-m", "t"]):
+            subprocess.run(["git", "-C", str(tmp_path), *args], check=True, timeout=60)
+    except (OSError, subprocess.SubprocessError):
+        pytest.skip("git not usable")
+    identity = ft.run_identity(tmp_path, {"tool.py": tool})
+    assert len(identity["git_head"]) == 40 and identity["git_dirty"] is False
+    assert identity["sha256"]["tool.py"] == ft.file_sha256(tool)
+    assert identity["threads"]["MKL_NUM_THREADS"] == "1"
+    (tmp_path / "untracked.md").write_text("u", encoding="utf-8")
+    assert ft.run_identity(tmp_path, {"tool.py": tool})["git_dirty"] is False
+    tool.write_text("x = 2\n", encoding="utf-8")
+    changed = ft.run_identity(tmp_path, {"tool.py": tool})
+    assert changed["git_dirty"] is True and changed["dirty_files"] == ["tool.py"]
+    assert ft.identity_mismatch(identity, changed) == [
+        f"sha256 {identity['sha256']} != {changed['sha256']}"]
+
+
+IDENTITY = {"git_head": "a" * 40, "git_dirty": False, "sha256": {"c2.py": "1" * 64},
+            "budget_rule": ft.BUDGET_RULE, "threads": {"MKL_NUM_THREADS": "1"}}
+
+
+def _identified(line: dict, identity: dict | None = IDENTITY) -> dict:
+    line["fb"]["identity"] = identity
+    return line
+
+
+def test_stale_lines_name_another_commit_or_a_missing_identity() -> None:
+    same = _identified(_line("L", "k1"))
+    other = _identified(_line("LF", "k1"), {**IDENTITY, "git_head": "b" * 40})
+    none = _identified(_line("L", "k2"), None)
+    assert ft.stale_lines([same], IDENTITY) == []
+    stale = ft.stale_lines([same, other, none], IDENTITY)
+    assert len(stale) == 2 and "git_head" in stale[0] and "no run identity" in stale[1]
+
+
+def test_f0_gate_stops_on_lines_of_another_identity(tmp_path) -> None:
+    import json
+
+    vb_key, v0_key = ft.F0_KEYS
+    lines = [_identified(_line(name, key), {**IDENTITY, "git_head": "b" * 40})
+             for key in (vb_key, v0_key) for name in ("L", "LF-off")]
+    (tmp_path / "fb_F0.jsonl").write_text("".join(json.dumps(x) + "\n" for x in lines),
+                                          encoding="utf-8")
+    reason = ft._check_f0_gate(tmp_path, IDENTITY)
+    assert reason is not None and "another run identity" in reason
+
+
+def test_main_refuses_to_resume_into_a_file_of_another_identity(tmp_path, monkeypatch,
+                                                               capsys) -> None:
+    import json
+
+    out = tmp_path / "fb_F0.jsonl"
+    old = _identified(_line("L", ft.F0_KEYS[0]), {**IDENTITY, "git_head": "b" * 40})
+    out.write_text(json.dumps(old) + "\n", encoding="utf-8")
+    monkeypatch.setattr(ft, "sealed_check", lambda: [])
+    monkeypatch.setattr(ft, "out_path_problem", lambda path: None)  # tmp_path is not v5/fb
+    monkeypatch.setattr(ft, "run_identity", lambda: IDENTITY)
+    monkeypatch.setattr(ft, "run_batch", lambda *a, **k: pytest.fail("must not run"))
+    assert ft.main(["run", "--bundle", "F-0", "--out", str(out)]) == 1
+    assert json.loads(capsys.readouterr().out.splitlines()[-1])["stop"] == "identity"
+
+
+def test_batch_watch_counts_the_earlier_lines_and_checks_identity() -> None:
+    lines = []
+    for index in range(5):
+        key = f"k{index}"
+        lines += [_identified(_line("L", key)),
+                  _identified(_line("LF", key, verdict="fail"))]
+    watch = ft.preloaded_watch("F-1", {}, lines[:8], IDENTITY)
+    assert len(watch.c2_violations) == 4 and watch.identity_problems == []
+    watch.note(lines[8])
+    watch.note(lines[9])
+    assert len(watch.c2_violations) == 5
+    watch.note(_identified(_line("L", "k9"), {**IDENTITY, "git_head": "c" * 40}))
+    assert watch.identity_problems and "git_head" in watch.identity_problems[0]
+
+
+def test_run_batch_stops_before_running_when_the_file_has_five_violations() -> None:
+    lines = []
+    for index in range(5):
+        lines += [_identified(_line("L", f"k{index}")),
+                  _identified(_line("LF", f"k{index}", verdict="fail"))]
+    summary = ft.run_batch([{"never": "run"}], Path("unused.jsonl"), 1, "F-1", None, lines,
+                           IDENTITY)
+    assert summary["runs"] == 0 and summary["stop"].startswith("H-4")
+
+
+@pytest.mark.parametrize("content", ["", "   \n", "not-a-hash  fb_targeted_rules.md\n"])
+def test_sealed_check_reports_a_sha256_file_without_a_value(tmp_path, monkeypatch,
+                                                            content) -> None:
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["sha_path"].write_text(content, encoding="utf-8")
+    problems = ft.sealed_check(**paths)
+    assert problems == ["fb_targeted_rules.sha256 holds no sha256 value"]
+
+
+def test_main_stops_with_h1_on_an_empty_sha256_file(tmp_path, monkeypatch, capsys) -> None:
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["sha_path"].write_text("", encoding="utf-8")
+    # sealed_check's defaults are bound at definition: point them at the test set
+    monkeypatch.setattr(ft.sealed_check, "__defaults__", (
+        paths["rules_path"], paths["sha_path"], paths["design_path"], paths["rev1_path"],
+        paths["rev1_sha_path"], paths["rev2_path"], paths["rev2_sha_path"],
+        paths["rev3_path"], paths["rev3_sha_path"]))
+    assert ft.main(["list", "--bundle", "F-0"]) == 2
+    assert fj.main(["--out-dir", str(tmp_path)]) == 2
+    assert "H-1" in capsys.readouterr().out
+
+
+# ------------------------------------------------------------------------------- judge fixes
+def _data(bundles: dict, expected: dict | None = None, family=None, stored=None) -> fj.Data:
+    by_bundle = {bundle: fj.lines_by_key(lines) for bundle, lines in bundles.items()}
+    expected = expected if expected is not None else {
+        bundle: sorted(by_bundle.get(bundle, {})) for bundle in fj.JUDGED_BUNDLES}
+    family = family if family is not None else [f"fam{i}" for i in range(8)]
+    return fj.Data(by_bundle, stored or {}, family, expected)
+
+
+def test_missing_saturation_breaks_c1_and_c5() -> None:
+    line = _line("LF", "k")
+    line["fb"]["saturation_s"] = None
+    data = _data({"F-1": [_line("L", "k"), line]})
+    assert fj.c1(data).passed is False
+    eta80 = _line("LF", "k80")
+    eta80["job"]["eta_v"] = 0.80
+    eta80["fb"]["u9_values"] = {"longest_ge3_s": 0.0}
+    result = fj.c5(_data({"F-1": [eta80]}))
+    assert result.passed is False and any("TOUCH" in text for text in result.details)
+
+
+def test_completion_needs_the_paired_keys_to_equal_the_expected_keys() -> None:
+    lines = [_line("L", "a"), _line("LF", "a"), _line("L", "b"), _line("LF", "b")]
+    expected = {"F-1": ["a", "c"], "F-2": ["x"], "F-3": ["y"], "F-4": ["z"]}
+    data = _data({"F-1": lines}, expected)
+    # "b" paired but not expected and "c" expected but not paired: 2 (+ 3 empty bundles)
+    assert data.missing_pairs(("F-1",)) == 2
+    assert fj.c2(data).passed is None
+    nothing_expected = _data({"F-1": lines}, {"F-1": []})
+    assert nothing_expected.missing_pairs(("F-1",)) == 3
+
+
+def _every_bundle_paired(reference_ready_s: float | None) -> fj.Data:
+    """One pair per judged bundle (F-2: stored L); the L lines have the given READY time."""
+    bundles, stored = {}, {}
+    for bundle in fj.JUDGED_BUNDLES:
+        key = f"{bundle}-k"
+        reference = _line("L", key)
+        reference["d1"]["t_ready_s"] = reference_ready_s
+        if bundle == "F-2":
+            stored[key] = reference
+            bundles[bundle] = [_line("LF", key)]
+        else:
+            bundles[bundle] = [reference, _line("LF", key)]
+    return _data(bundles, stored=stored)
+
+
+def test_c4_without_a_judged_pair_is_incomplete() -> None:
+    no_ready = _every_bundle_paired(None)
+    assert no_ready.missing_pairs() == 0
+    assert fj.c4(no_ready).passed is None
+    assert fj.c4(_every_bundle_paired(60.0)).passed is True
+
+
+def test_c3_needs_all_eight_family_keys() -> None:
+    family = [f"fam{i}" for i in range(8)]
+    stored = {key: _line("b0", key) for key in family}
+    lines = [_line("LF", key) for key in family[:7]]
+    assert fj.c3(_data({"F-2": lines}, family=family, stored=stored)).passed is None
+    lines.append(_line("LF", family[7]))
+    assert fj.c3(_data({"F-2": lines}, family=family, stored=stored)).passed is True
+
+
+def test_load_data_refuses_a_family_that_is_not_eight_keys(tmp_path) -> None:
+    with pytest.raises(ValueError, match="8"):
+        fj.load_data(tmp_path, family_keys=["a"] * 8, stored_paths=())
+
+
+def test_identity_problems_per_bundle_and_f2_stored_lines_apart() -> None:
+    good = [_identified(_line("L", "a")), _identified(_line("LF", "a"))]
+    assert fj.identity_problems(fj.bundle_identities(_data({"F-1": good}))) == []
+    mixed = good + [_identified(_line("L", "b"), {**IDENTITY, "git_head": "b" * 40}),
+                    _identified(_line("LF", "b"), None)]
+    problems = fj.identity_problems(fj.bundle_identities(_data({"F-1": mixed})))
+    assert any("without identity" in p for p in problems)
+    assert any("2 commits" in p for p in problems)
+    stored = {"s": _line("b0", "s")}  # a stored F-2 L line has no identity: not a problem
+    f2 = _data({"F-2": [_identified(_line("LF", "s"))]}, stored=stored)
+    assert fj.identity_problems(fj.bundle_identities(f2)) == []
+    assert any("저장" in text for text in fj.identity_report(f2, fj.bundle_identities(f2)))
+    assert fj.verdict_of([], ["F-1: 2 commits"]) == fj.IDENTITY_VERDICT
+
+
+# ------------------------------------------------------------------------------- rev2
+def test_sealed_check_stops_without_rev2_or_on_a_changed_rev2(tmp_path, monkeypatch) -> None:
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["rev2_sha_path"].unlink()
+    assert ft.sealed_check(**paths) == [f"missing {paths['rev2_sha_path']}"]
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["rev2_path"].write_text("changed", encoding="utf-8")
+    problems = ft.sealed_check(**paths)
+    assert len(problems) == 1 and "fb_targeted_rules_rev2.md sha256" in problems[0]
+
+
+def test_rev2_seal_value_is_the_sealed_one() -> None:
+    assert ft.RULES_REV2_SHA256 == (
+        "12ed20ea215fab24b475bc0b05b36fa01afe50aa4ad300b5af1ede441bcaaba0")
+
+
+def _f0_lines(v0_hash: str) -> list[dict]:
+    vb_key, v0_key = ft.F0_KEYS
+    vb_hash = ft.S1_STORED_HASHES[vb_key]
+    return [_identified(_line(name, vb_key, sha=vb_hash)) for name in ("L", "LF-off")] + [
+        _identified(_line(name, v0_key, sha=v0_hash)) for name in ("L", "LF-off")]
+
+
+def test_s1_needs_both_f0_keys_at_the_stored_hash() -> None:
+    v0_key = ft.F0_KEYS[1]
+    assert fj.check_s1(_f0_lines(ft.S1_STORED_HASHES[v0_key]), {})["pass"]
+    result = fj.check_s1(_f0_lines("e" * 64), {})
+    assert not result["pass"] and v0_key in result["problems"][0]
+    stored = {v0_key: _line("b0", v0_key, sha="f" * 64)}
+    assert not fj.check_s1(_f0_lines(ft.S1_STORED_HASHES[v0_key]), stored)["pass"]
+
+
+def test_f0_gate_blocks_on_a_v0_s1_mismatch_that_c7_misses(tmp_path) -> None:
+    import json
+
+    lines = _f0_lines("e" * 64)  # LF-off = L on both keys, VB = stored: C-7 passes
+    stored_t1 = {ft.F0_KEYS[0]: _line("b0", ft.F0_KEYS[0],
+                                      sha=ft.S1_STORED_HASHES[ft.F0_KEYS[0]])}
+    assert fj.check_c7(lines, stored_t1)["pass"]
+    (tmp_path / "fb_F0.jsonl").write_text("".join(json.dumps(x) + "\n" for x in lines),
+                                          encoding="utf-8")
+    reason = ft._check_f0_gate(tmp_path, IDENTITY)
+    assert reason is not None and "S-1" in reason
+    data = _data({"F-0": lines})
+    assert fj.verdict_of([], [], fj.s1_result(data)) == fj.S1_VERDICT
+    assert fj.las_path_text(data, {})[0].startswith("S-1 멈춤")
+
+
+def test_las_path_text_fills_rev2_wording_after_s1_and_c7() -> None:
+    v0_key = ft.F0_KEYS[1]
+    lines = _f0_lines(ft.S1_STORED_HASHES[v0_key])
+    stored = {key: _line("b0", key, sha=digest) for key, digest in ft.S1_STORED_HASHES.items()}
+    data = _data({"F-0": lines}, stored=stored)
+    text = fj.las_path_text(data, fj.bundle_identities(data))
+    assert text[0] == fj.LAS_PATH_TITLE and len(text) == 4
+    assert text[1].startswith("①") and "aaaaaaaaaaaa" in text[1]
+    assert "같았다. C-7(LF-off = L 2/2)은 통과했다." in text[2] and text[3].startswith("③")
+
+
+def _real_geometry():
+    c2 = _c2_or_skip()
+    from outrigger_sim.params import load_params
+
+    return c2.C2Geometry.from_params(load_params(ft.YAML_PATH))
+
+
+def test_budget_without_a_cut_scales_four_full_legs_to_s_nom() -> None:
+    geometry = _real_geometry()
+    nominal = ft.nominal_budget_m3_s(ft.pump_flow_m3_s())
+    state = ft.FbState(nominal, nominal)
+    full = np.full(4, float(geometry.max_speed_m_s))
+    ft.budget_output(state, full, geometry, "touch")
+    # The YAML geometry gives Q(4 v_max) = 57.1900 L/min, so s_nom = 0.8768421; rev2 prints
+    # 0.876840 from the 57.1902 L/min of rules 1.1 (2.1e-6 apart, reported, not hidden).
+    assert state.min_scale == state.nominal_scale
+    assert state.min_scale == pytest.approx(0.8768421, abs=1e-6)
+    assert state.min_scale == pytest.approx(fj.SCALE_NOMINAL_REV2, abs=5e-6)
+    assert state.min_scale_by_phase == {"touch": state.min_scale}
+    state.budget_m3_s = ft.FLOOR_FRACTION * nominal  # a cut down to the floor
+    ft.budget_output(state, full, geometry, "level")
+    assert state.min_scale_by_phase["level"] == pytest.approx(0.5 * state.nominal_scale,
+                                                              abs=1e-12)
+    assert state.min_scale_by_phase["level"] == pytest.approx(0.438420, abs=2e-6)
+    meta = ft.budget_meta(state, ft.CANDIDATES["LF"])
+    assert set(meta["min_scale_by_phase"]) == set(meta["acted_periods"]) == {"touch", "level"}
+
+
+def _budget_line(key: str, by_phase: dict, *, cuts=(), nominal=0.876840,
+                 candidate="LF", eff_by_phase: dict | None = None,
+                 clipped: dict | None = None, events=None) -> dict:
+    line = _line(candidate, key, events=events)
+    eff = dict(by_phase) if eff_by_phase is None else eff_by_phase
+    line["fb"]["budget"] = {"cuts": list(cuts), "min_scale": min(by_phase.values(), default=1.0),
+                            "min_scale_by_phase": by_phase, "nominal_scale": nominal,
+                            "min_scale_eff": min(eff.values(), default=1.0),
+                            "min_scale_eff_by_phase": eff,
+                            "clipped_budget_periods": clipped or {},
+                            "acted_periods": {phase: 3 for phase in by_phase},
+                            "Q_b_final_L_min": 50.15}
+    return line
+
+
+def test_scale_report_summary_cuts_and_defect_candidates() -> None:
+    cut = {"t_s": 21.3, "rule": "U", "budget_L_min": 30.0, "delivered_L_min": 31.0}
+    lines = [_budget_line("a", {"touch": 0.87684, "level": 0.9}),
+             _budget_line("b", {"touch": 0.80}),  # below s_nom without a cut
+             _budget_line("c", {"level": 0.5}, cuts=[cut]),
+             _budget_line("d", {"level": 0.43}, cuts=[cut]),  # below the floor
+             _budget_line("e", {"touch": 0.9}, nominal=0.88)]
+    data = _data({"F-1": lines})
+    summary = fj.scale_summary(data)
+    assert any(text.startswith("F-1 level: 실행 3") for text in summary)
+    assert [text.split(":")[0] for text in fj.cut_scale_report(data)] == ["F-1 c", "F-1 d"]
+    assert "U@21.3s" in fj.cut_scale_report(data)[0]
+    defects = fj.defect_report(data)
+    assert [text.split(":")[0] for text in defects] == ["F-1 LF b", "F-1 LF d", "F-1 LF e"]
+    reference = fj.reference_nominal_scale(data)
+    assert reference == 0.876840
+    assert fj.scale_defects(lines[0], reference) == []
+    assert fj.scale_defects(lines[2], reference) == []
+    assert "범위 밖" in fj.level_range_report(data)
+    assert "범위 안" in fj.level_range_report(_data({"F-1": lines[:1]}))
+    ol = _budget_line("o", {"level": 0.87684}, candidate="OL-LF")
+    assert [k for _, k, _ in fj.budget_lines(_data({"F-5": [ol]}))] == ["o"]
+    assert fj.scale_defects(_budget_line("n", {}, nominal=None), reference) == ["s_nom 없음"]
+
+
+def test_a97_counter_is_zero_in_the_period_touch_seen_first_holds() -> None:
+    """rev2 R2-2: touch_seen is read at the end of update k+1."""
+    state = ft.FbState(NOMINAL_M3_S, NOMINAL_M3_S)
+    stroke = np.full(4, 0.1)
+    command = np.full(4, V_MAX_M_S)
+    for k, touch_seen in enumerate((False, False, False, True)):
+        if state.previous is not None:
+            stroke = stroke + 0.95 * state.previous.mean_m_s * PERIOD_S
+        events = ft.detect_step(state, stroke, np.zeros(4), command, "touch", touch_seen,
+                                GEOMETRY, PERIOD_S, k * PERIOD_S)
+        if k == 2:
+            assert state.a97_count == 1
+    assert events == [] and state.a97_count == 0 and state.cuts == []
+
+
+# ------------------------------------------------------------------------------- re-audit
+def _git_repo(tmp_path: Path) -> Path:
+    import subprocess
+
+    (tmp_path / "04_scripts").mkdir()
+    (tmp_path / "04_scripts" / "tool.py").write_text("x = 1\n", encoding="utf-8")
+    (tmp_path / "README.md").write_text("doc\n", encoding="utf-8")
+    try:
+        subprocess.run(["git", "init", "-q", str(tmp_path)], check=True, timeout=60)
+        for args in (["add", "."], ["-c", "user.name=t", "-c", "user.email=t@t", "commit",
+                                    "-q", "-m", "t"]):
+            subprocess.run(["git", "-C", str(tmp_path), *args], check=True, timeout=60)
+    except (OSError, subprocess.SubprocessError):
+        pytest.skip("git not usable")
+    return tmp_path
+
+
+def test_code_diff_hash_ignores_documents_and_catches_code_changes(tmp_path) -> None:
+    repo = _git_repo(tmp_path)
+    tool = repo / "04_scripts" / "tool.py"
+    clean = ft.run_identity(repo, {"tool.py": tool})
+    assert clean["code_diff_sha256"] == ft.EMPTY_SHA256 and clean["git_dirty"] is False
+    (repo / "README.md").write_text("doc changed\n", encoding="utf-8")
+    docs_only = ft.run_identity(repo, {"tool.py": tool})
+    assert docs_only["git_dirty"] is True and docs_only["dirty_files"] == ["README.md"]
+    assert docs_only["code_diff_sha256"] == ft.EMPTY_SHA256
+    assert ft.identity_mismatch(clean, docs_only) == []
+    tool.write_text("x = 2\n", encoding="utf-8")
+    code = ft.run_identity(repo, {"tool.py": tool})
+    assert code["code_diff_sha256"] != ft.EMPTY_SHA256
+    assert any(text.startswith("code_diff_sha256") for text in
+               ft.identity_mismatch(docs_only, code))
+
+
+def test_identity_compares_the_code_diff() -> None:
+    assert "code_diff_sha256" in ft.IDENTITY_KEYS
+    other = {**IDENTITY, "code_diff_sha256": "9" * 64}
+    assert ft.identity_mismatch({**IDENTITY, "code_diff_sha256": ft.EMPTY_SHA256}, other)
+
+
+def _truncated(line: dict) -> dict:
+    line["fb"]["events_truncated"] = True
+    return line
+
+
+def test_a_truncated_event_list_leaves_c2_c_and_c4_incomplete() -> None:
+    reference = _line("L", "F-1-k")
+    candidate = _truncated(_line("LF", "F-1-k", events={"WARN_X": 1}))
+    assert fj.c2_violations(reference, candidate) == []  # (c) not judged
+    data = _every_bundle_paired(60.0)
+    assert fj.c2(data).passed is True and fj.c4(data).passed is True
+    data.bundles["F-1"]["F-1-k"]["LF"] = _truncated(data.bundles["F-1"]["F-1-k"]["LF"])
+    assert fj.c2(data).passed is None
+    assert fj.c4(data).passed is None
+    assert any("절단" in text for text in fj.c4(data).details)
+    failing = _truncated(_line("LF", "F-1-k", verdict="fail"))
+    assert fj.c2_violations(reference, failing) == ["(a) pass -> fail []"]
+
+
+def test_out_must_lie_in_v5_fb(monkeypatch, capsys) -> None:
+    assert ft.out_path_problem(ft.OUT_DIR / "fb_F0.jsonl") is None
+    for path in (ft.LAS_STORED_PATHS[0], ft.V5_DIR / "fb_F0.jsonl",
+                 ft.OUT_DIR / ".." / "las" / "las_T2.jsonl"):
+        assert ft.out_path_problem(path) is not None
+    monkeypatch.setattr(ft, "sealed_check", lambda: [])
+    monkeypatch.setattr(ft, "run_identity", lambda: pytest.fail("must stop before"))
+    assert ft.main(["run", "--bundle", "F-0", "--out", str(ft.LAS_STORED_PATHS[0])]) == 2
+    assert '"stop": "out"' in capsys.readouterr().out.splitlines()[-1]
+
+
+# ------------------------------------------------------------------------------- rev3
+def _old_budget_output(state: ft.FbState, output: np.ndarray, phase: str) -> np.ndarray:
+    """The rev2 tool's ``budget_output`` (original rule 1.1), for the bit rule."""
+    flow = ft.command_flow_m3_s(output, HEAD_M2, ANNULUS_M2)
+    scale = ft.budget_scale(flow, state.budget_m3_s)
+    return output if scale >= 1.0 else output * scale
+
+
+def _random_speeds(rng, count: int, peak: float) -> list[np.ndarray]:
+    return [rng.uniform(-peak, peak, 4) for _ in range(count)]
+
+
+@pytest.mark.parametrize("clip_returned", [True, False])
+def test_bit_rule_inside_v_max_matches_the_old_formula(clip_returned) -> None:
+    rng = np.random.default_rng(20261108)
+    for speeds in _random_speeds(rng, 2000, V_MAX_M_S):
+        budget = rng.uniform(0.3, 1.0) * NOMINAL_M3_S
+        new = ft.budget_output(ft.FbState(NOMINAL_M3_S, budget), speeds, GEOMETRY, "level",
+                               clip_returned)
+        old = _old_budget_output(ft.FbState(NOMINAL_M3_S, budget), speeds, "level")
+        assert new.tobytes() == old.tobytes()
+
+
+def test_clip_off_keeps_the_old_formula_above_v_max() -> None:
+    rng = np.random.default_rng(7)
+    for speeds in _random_speeds(rng, 500, 1.75 * V_MAX_M_S):
+        state = ft.FbState(NOMINAL_M3_S, 0.6 * NOMINAL_M3_S)
+        new = ft.budget_output(state, speeds, GEOMETRY, "level", clip_returned=False)
+        old = _old_budget_output(ft.FbState(NOMINAL_M3_S, 0.6 * NOMINAL_M3_S), speeds, "level")
+        assert new.tobytes() == old.tobytes()
+        assert state.clipped_budget_periods == {}
+
+
+def _clipped_q(speeds) -> float:
+    return ft.clipped_flow_m3_s(speeds, HEAD_M2, ANNULUS_M2, V_MAX_M_S)
+
+
+@pytest.mark.parametrize("clipped_legs", [0, 1, 2, 3, 4])
+def test_s_star_meets_the_budget_and_is_the_largest(clipped_legs) -> None:
+    rng = np.random.default_rng(100 + clipped_legs)
+    for _ in range(300):
+        magnitudes = rng.uniform(0.2, 0.95, 4) * V_MAX_M_S
+        magnitudes[:clipped_legs] = rng.uniform(1.05, 1.75, clipped_legs) * V_MAX_M_S
+        speeds = magnitudes * rng.choice([-1.0, 1.0], 4)  # mixed signs: annulus areas too
+        full = _clipped_q(speeds)
+        budget = rng.uniform(0.2, 0.98) * full
+        scale = ft.clipped_budget_scale(speeds, budget, HEAD_M2, ANNULUS_M2, V_MAX_M_S)
+        assert 0.0 < scale < 1.0
+        assert _clipped_q(scale * speeds) == pytest.approx(budget, rel=1e-12)
+        assert _clipped_q(min(1.0, scale * (1 + 1e-9)) * speeds) > budget
+
+
+def test_budget_output_above_v_max_scales_the_unclipped_vector() -> None:
+    speeds = np.array([1.75, 1.0, 1.0, 1.0]) * V_MAX_M_S
+    state = ft.FbState(NOMINAL_M3_S, NOMINAL_M3_S)
+    out = ft.budget_output(state, speeds, GEOMETRY, "level", clip_returned=True)
+    assert _clipped_q(out) == pytest.approx(NOMINAL_M3_S, rel=1e-12)
+    old = _old_budget_output(ft.FbState(NOMINAL_M3_S, NOMINAL_M3_S), speeds, "level")
+    assert _clipped_q(old) < NOMINAL_M3_S  # the old rule slowed the legs more than needed
+    assert out[1] > old[1]
+    assert state.min_scale < state.min_scale_eff
+    assert state.min_scale_eff == pytest.approx(NOMINAL_M3_S / _clipped_q(speeds), rel=1e-12)
+    assert state.clipped_budget_periods == {"level": 1}
+    assert state.max_flow_over_budget == pytest.approx(_clipped_q(speeds) / NOMINAL_M3_S)
+    meta = ft.budget_meta(state, ft.CANDIDATES["LF"])
+    assert {"min_scale", "min_scale_eff", "min_scale_eff_by_phase",
+            "clipped_budget_periods"} <= set(meta) and meta["budget_rule"] == "R3-1"
+
+
+def test_above_v_max_inside_the_returned_budget_does_not_act() -> None:
+    speeds = np.array([1.5, 0.6, 0.6, 0.6]) * V_MAX_M_S
+    old_flow = ft.command_flow_m3_s(speeds, HEAD_M2, ANNULUS_M2)
+    budget = 0.5 * (old_flow + _clipped_q(speeds))  # the old rule acts, R3-1 does not
+    state = ft.FbState(NOMINAL_M3_S, budget)
+    assert ft.budget_output(state, speeds, GEOMETRY, "level", True) is speeds
+    assert state.acted_periods == {}
+
+
+def test_wrapper_passes_the_controllers_clip_switch(installed) -> None:
+    controller = installed("LF")
+    controller.config.clip_returned_command = True
+    speeds = np.array([1.75, 1.0, 1.0, 1.0]) * V_MAX_M_S
+    out = controller._apply_output_ramp(speeds)
+    assert _clipped_q(out) == pytest.approx(NOMINAL_M3_S, rel=1e-12)
+    assert controller._state.previous_output_m_s is out and out[0] > V_MAX_M_S
+    del controller.config.clip_returned_command
+
+
+def test_h4_counts_a_pair_with_three_texts_once() -> None:
+    reference = _line("L", "k")
+    candidate = _line("LF", "k", verdict="fail", fail_items=["P3-2_x"],
+                      events={"WARN_X": 1, "FAULT_Y": 1})
+    assert len(fj.c2_violations(reference, candidate)) == 4
+    watch = ft.preloaded_watch("F-1", {}, [_identified(reference), _identified(candidate)],
+                               IDENTITY)
+    assert watch.violating_pairs == 1 and len(watch.c2_violations) == 4
+    assert fj.h4_counts(_data({"F-1": [reference, candidate]}), "F-1") == (1, 4)
+    watch.note(_identified(_line("LF", "k")))  # the key's later pair replaces the texts
+    assert watch.violating_pairs == 0
+
+
+def test_rev3_defects_use_s_eff_and_list_clipped_runs_apart() -> None:
+    sink = {"INFO_DIFF_SINK_START": 1}
+    lines = [
+        _budget_line("clip", {"level": 0.70}, eff_by_phase={"level": 0.87684},
+                     clipped={"level": 4}, events=sink),
+        _budget_line("bad-eff", {"level": 0.80}),
+        _budget_line("mismatch", {"level": 0.90}, eff_by_phase={"level": 0.95}),
+    ]
+    data = _data({"F-1": lines})
+    reference = fj.reference_nominal_scale(data)
+    assert fj.scale_defects(lines[0], reference) == []
+    assert "s_eff" in fj.scale_defects(lines[1], reference)[0]
+    assert "s_vec != s_eff" in fj.scale_defects(lines[2], reference)[-1]
+    clipped = fj.clipped_report(data)
+    assert len(clipped) == 1 and "INFO_DIFF_SINK_START" in clipped[0]
+    assert "뺀 실행 1" in fj.level_range_report(data)
+    old_tool = _budget_line("old", {"level": 0.9})
+    del old_tool["fb"]["budget"]["min_scale_eff"]
+    assert "R3-1" in fj.scale_defects(old_tool, reference)[0]
+
+
+def test_lines_of_a_tool_without_r3_1_hold_the_verdict() -> None:
+    old = _identified(_line("LF", "a"), {**IDENTITY, "budget_rule": None})
+    data = _data({"F-1": [_identified(_line("L", "a")), old]})
+    problems = fj.identity_problems(fj.bundle_identities(data))
+    assert any("R3-1" in text for text in problems)
+    assert ft.identity_mismatch({**IDENTITY, "budget_rule": None}, IDENTITY)
+
+
+def test_sealed_check_needs_rev3(tmp_path, monkeypatch) -> None:
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["rev3_path"].unlink()
+    assert ft.sealed_check(**paths) == [f"missing {paths['rev3_path']}"]
+
+
+def test_rev3_seal_value_is_the_sealed_one() -> None:
+    assert ft.RULES_REV3_SHA256 == (
+        "99cea69a8719ef738b81c96ae311762a36e73ffecf5884345d6a0ecbd6b9c356")
+
+
+def test_the_draft_carries_the_r3_3_disclosure_and_four_hashes(tmp_path) -> None:
+    bundles = {bundle: [] for bundle in ft.BUNDLES}
+    bundles["F-1"] = [_identified(_line("L", "a")), _identified(_line("LF", "a"))]
+    data = _data(bundles)
+    criteria = [criterion(data) for criterion in fj.CRITERIA]
+    text = fj.render(data, criteria, tmp_path)
+    assert fj.PRIOR_OBSERVATION_NOTE in text and "5468c67" in text
+    assert ft.RULES_REV3_SHA256[:12] in text and ft.RULES_REV2_SHA256[:12] in text
+
+
+# ------------------------------------------------------------------------------- judge, record
+def test_defect_b_and_margin_check_exclude_only_the_clipped_phase() -> None:
+    line = _budget_line("k", {"touch": 0.90, "level": 0.70},
+                        eff_by_phase={"touch": 0.95, "level": 0.87684},
+                        clipped={"level": 2})
+    defects = fj.scale_defects(line, 0.87684)
+    assert defects == ["절단 없이 s_vec != s_eff (['touch'])"]
+    touch_clipped = _budget_line("t", {"touch": 0.80, "level": 0.90},
+                                 eff_by_phase={"touch": 0.87684, "level": 0.90},
+                                 clipped={"touch": 3})
+    assert fj.scale_defects(touch_clipped, 0.87684) == []
+    report = fj.level_range_report(_data({"F-1": [line, touch_clipped]}))
+    assert report.startswith("LEVEL 최소 s_eff 0.900000(1실행)") and "뺀 실행 1" in report
+
+
+def _tagged(line: dict, tag: str | None) -> dict:
+    line["controller_tag"] = tag
+    return line
+
+
+def test_controller_tag_check_backs_the_clip_on_assumption() -> None:
+    v0 = _tagged(_line("L", "b", setting="V0"), "final_C4G2_LAS")
+    vb = _tagged(_line("LF", "a"), "final_C4G2_P3_LAS")
+    assert fj.controller_tag_check(_data({"F-1": [vb, v0]})) == (2, [])
+    wrong = _tagged(_line("L", "a"), "final_C4G2_P3")
+    matching, others = fj.controller_tag_check(_data({"F-1": [wrong, vb]}))
+    assert matching == 1 and "final_C4G2_P3" in others[0]
+    report = fj.clip_report(_data({"F-1": [wrong]}))
+    assert "c2.py:2496" in report[0] and "근거 없음" in report[-1]
+
+
+def test_commit_table_shows_every_bundle_and_whether_they_agree() -> None:
+    same = {"F-0": {"lines": 4, "commits": ["a" * 40]}, "F-1": {"lines": 2, "commits": ["a" * 40]}}
+    table = fj.commit_table(same)
+    assert "| F-0 | 4 | `aaaaaaaaaaaa` |" in table and table[-1] == "- 묶음 사이 커밋 같음"
+    other = {**same, "F-5": {"lines": 1, "commits": ["b" * 40]}}
+    assert fj.commit_table(other)[-1] == "- 묶음 사이 커밋 다름(2개)"
+
+
+def test_the_draft_has_the_record_lines(tmp_path) -> None:
+    bundles = {bundle: [] for bundle in ft.BUNDLES}
+    bundles["F-1"] = [_identified(_line("L", "a")), _identified(_line("LF", "a"))]
+    data = _data(bundles)
+    text = fj.render(data, [criterion(data) for criterion in fj.CRITERIA], tmp_path)
+    for note in (fj.PRIOR_OBSERVATION_REV3_NOTE, fj.CHANGED_RUNS_NOTE, fj.CLIP_NOTE):
+        assert note in text
+    assert "f0_rev3" in text and "b6a8a82" in text and "| F-1 | 2 |" in text
+
+
+def test_event_count_record_marks_truncation(monkeypatch) -> None:
+    import verdict_runs
+
+    monkeypatch.setattr(verdict_runs, "_stored_events", lambda controller: [(0.0, "x")] * 401)
+    assert ft.event_count_record(object()) == {"events_total": 401, "events_truncated": True,
+                                               "events_stored_limit": 400}
+    monkeypatch.setattr(verdict_runs, "_stored_events", lambda controller: [])
+    assert ft.event_count_record(object())["events_truncated"] is False

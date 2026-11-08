@@ -1,0 +1,270 @@
+{
+ "V0": {
+  "pre": {
+   "8": {
+    "z_body_mm": 0.45407828011390095,
+    "pitch_deg": 0.06430981812893866,
+    "crawler_kN": 380.08241059939877
+   },
+   "12": {
+    "z_body_mm": 0.45436163227163817,
+    "pitch_deg": 0.0644179210355902,
+    "crawler_kN": 380.1002440755957
+   },
+   "16": {
+    "z_body_mm": 0.454547214108203,
+    "pitch_deg": 0.06448799388115782,
+    "crawler_kN": 380.07708549285445
+   },
+   "20": {
+    "z_body_mm": 0.45410337400708656,
+    "pitch_deg": 0.06434405517415803,
+    "crawler_kN": 380.1278348259045
+   },
+   "24": {
+    "z_body_mm": 0.45436066349724413,
+    "pitch_deg": 0.06448768693764569,
+    "crawler_kN": 380.14040450438125
+   },
+   "rear_contact": {
+    "t": 24.29899999995671,
+    "z_body_mm": 0.45431492865155576,
+    "pitch_deg": 0.06437809563323282,
+    "crawler_kN": 380.0749803911017
+   },
+   "z_body_rate_12s_to_contact_mm_s": 4.655479637916877e-06
+  },
+  "rear_only": [
+   {
+    "prog_mm": 0.5,
+    "t_rel_s": 0.06149999999985667,
+    "dz_body_mm": 0.13987126821568552,
+    "dz_crawler_front_mm": 0.0015818247496911329,
+    "dz_crawler_rear_mm": 0.27922447663141836,
+    "dpitch_mdeg": 6.094924201395756,
+    "crawler_kN": 343.3864144712432,
+    "F_rear_kN": 17.171670000639814,
+    "F_front_kN": -1.0264477958854086,
+    "rear_stroke_minus_body_rise_mm": null
+   },
+   {
+    "prog_mm": 1.0,
+    "t_rel_s": 0.08849999999979374,
+    "dz_body_mm": 0.19341999436228718,
+    "dz_crawler_front_mm": -0.1316137631633507,
+    "dz_crawler_rear_mm": 0.5209540115611989,
+    "dpitch_mdeg": 14.325432696536625,
+    "crawler_kN": 339.4649304352126,
+    "F_rear_kN": 18.616787103282892,
+    "F_front_kN": -1.028677989371375,
+    "rear_stroke_minus_body_rise_mm": null
+   },
+   {
+    "prog_mm": 1.5,
+    "t_rel_s": 0.11349999999973548,
+    "dz_body_mm": 0.23402648999315545,
+    "dz_crawler_front_mm": -0.3216567935796545,
+    "dz_crawler_rear_mm": 0.7939842603626793,
+    "dpitch_mdeg": 24.491005303610248,
+    "crawler_kN": 340.9015639595077,
+    "F_rear_kN": 18.86208303902642,
+    "F_front_kN": -1.0376606496267673,
+    "rear_stroke_minus_body_rise_mm": null
+   },
+   {
+    "prog_mm": 2.0,
+    "t_rel_s": 0.13649999999968188,
+    "dz_body_mm": 0.28186605459978864,
+    "dz_crawler_front_mm": -0.52242114276379,
+    "dz_crawler_rear_mm": 1.0923400765584719,
+    "dpitch_mdeg": 35.447893788721956,
+    "crawler_kN": 342.3211926575397,
+    "F_rear_kN": 18.296835984702245,
+    "F_front_kN": -1.0392741323718138,
+    "rear_stroke_minus_body_rise_mm": null
+   },
+   {
+    "prog_mm": 2.4,
+    "t_rel_s": 0.15349999999964226,
+    "dz_body_mm": 0.32618846771237386,
+    "dz_crawler_front_mm": -0.6820356128691091,
+    "dz_crawler_rear_mm": 1.3421681181444836,
+    "dpitch_mdeg": 44.43614201598214,
+    "crawler_kN": 343.34578951834874,
+    "F_rear_kN": 17.51074909745212,
+    "F_front_kN": -0.950661589831172,
+    "rear_stroke_minus_body_rise_mm": null
+   },
+   {
+    "prog_mm": 3.0,
+    "t_rel_s": 0.178499999999584,
+    "dz_body_mm": 0.5064231190425872,
+    "dz_crawler_front_mm": -0.8164424746288145,
+    "dz_crawler_rear_mm": 1.8394646018960765,
+    "dpitch_mdeg": 58.30355029264568,
+    "crawler_kN": 315.64978688483575,
+    "F_rear_kN": 15.037882840673388,
+    "F_front_kN": 25.635363173040215,
+    "rear_stroke_minus_body_rise_mm": null
+   },
+   {
+    "prog_mm": 3.5,
+    "t_rel_s": 0.19649999999954204,
+    "dz_body_mm": 0.7730036959734399,
+    "dz_crawler_front_mm": -0.7503737270880214,
+    "dz_crawler_rear_mm": 2.3080994069046046,
+    "dpitch_mdeg": 67.14084380533617,
+    "crawler_kN": 276.5995935760287,
+    "F_rear_kN": 12.808452107914519,
+    "F_front_kN": 35.752778715334294,
+    "rear_stroke_minus_body_rise_mm": null
+   },
+   {
+    "prog_mm": 4.0,
+    "t_rel_s": 0.2174999999994931,
+    "dz_body_mm": 1.0472614324750218,
+    "dz_crawler_front_mm": -0.6566585900094726,
+    "dz_crawler_rear_mm": 2.764288532055551,
+    "dpitch_mdeg": 75.09801993553681,
+    "crawler_kN": 247.80347554136216,
+    "F_rear_kN": 11.698365402934053,
+    "F_front_kN": 48.47879488083924,
+    "rear_stroke_minus_body_rise_mm": null
+   }
+  ]
+ },
+ "prop": {
+  "pre": {
+   "8": {
+    "z_body_mm": 0.45407815530484896,
+    "pitch_deg": 0.0643098180225673,
+    "crawler_kN": 380.08281857103503
+   },
+   "12": {
+    "z_body_mm": 0.4540856472301513,
+    "pitch_deg": 0.06441618293056614,
+    "crawler_kN": 380.1661343859113
+   },
+   "16": {
+    "z_body_mm": 0.45451763340942364,
+    "pitch_deg": 0.06449049356357649,
+    "crawler_kN": 380.0832281311485
+   },
+   "20": {
+    "z_body_mm": 0.45408728560669687,
+    "pitch_deg": 0.06434259334525494,
+    "crawler_kN": 380.12539496202805
+   },
+   "24": {
+    "z_body_mm": 0.45437198293818426,
+    "pitch_deg": 0.06448860409636688,
+    "crawler_kN": 380.1362839408024
+   },
+   "rear_contact": {
+    "t": 26.235999999952195,
+    "z_body_mm": 0.45405401360998354,
+    "pitch_deg": 0.06437289769412653,
+    "crawler_kN": 380.1164480836468
+   },
+   "z_body_rate_12s_to_contact_mm_s": 2.833856651219649e-06
+  },
+  "rear_only": [
+   {
+    "prog_mm": 0.5,
+    "t_rel_s": 0.06669999999984455,
+    "dz_body_mm": 0.1284923018718409,
+    "dz_crawler_front_mm": -0.030098643899785373,
+    "dz_crawler_rear_mm": 0.2883031779955568,
+    "dpitch_mdeg": 6.989686047463306,
+    "crawler_kN": 347.508073990029,
+    "F_rear_kN": 16.323473200167,
+    "F_front_kN": -1.0350303573103683,
+    "rear_stroke_minus_body_rise_mm": null
+   },
+   {
+    "prog_mm": 1.0,
+    "t_rel_s": 0.09569999999977696,
+    "dz_body_mm": 0.1908767359872776,
+    "dz_crawler_front_mm": -0.167821507092662,
+    "dz_crawler_rear_mm": 0.5523341963216784,
+    "dpitch_mdeg": 15.809150344029407,
+    "crawler_kN": 341.68235666736695,
+    "F_rear_kN": 16.97417210252205,
+    "F_front_kN": -1.028204860501304,
+    "rear_stroke_minus_body_rise_mm": null
+   },
+   {
+    "prog_mm": 1.5,
+    "t_rel_s": 0.12169999999971637,
+    "dz_body_mm": 0.2232320900006357,
+    "dz_crawler_front_mm": -0.366559805752926,
+    "dz_crawler_rear_mm": 0.8175608464907631,
+    "dpitch_mdeg": 25.99429724438377,
+    "crawler_kN": 345.49131489785685,
+    "F_rear_kN": 16.882785700772544,
+    "F_front_kN": -1.041047013079064,
+    "rear_stroke_minus_body_rise_mm": null
+   },
+   {
+    "prog_mm": 2.0,
+    "t_rel_s": 0.14769999999965577,
+    "dz_body_mm": 0.27314164747327396,
+    "dz_crawler_front_mm": -0.5848008869251365,
+    "dz_crawler_rear_mm": 1.137683739828595,
+    "dpitch_mdeg": 37.8126817582972,
+    "crawler_kN": 347.252871791521,
+    "F_rear_kN": 16.05306758532987,
+    "F_front_kN": -1.0409019302884472,
+    "rear_stroke_minus_body_rise_mm": null
+   },
+   {
+    "prog_mm": 2.4,
+    "t_rel_s": 0.1666999999996115,
+    "dz_body_mm": 0.3246909097409656,
+    "dz_crawler_front_mm": -0.752714437883177,
+    "dz_crawler_rear_mm": 1.410383990808371,
+    "dpitch_mdeg": 47.485214802837454,
+    "crawler_kN": 347.90041147745956,
+    "F_rear_kN": 14.988108201363863,
+    "F_front_kN": -0.7978395278749365,
+    "rear_stroke_minus_body_rise_mm": null
+   },
+   {
+    "prog_mm": 3.0,
+    "t_rel_s": 0.1926999999995509,
+    "dz_body_mm": 0.522923414219445,
+    "dz_crawler_front_mm": -0.8683491947741231,
+    "dz_crawler_rear_mm": 1.9248981202052715,
+    "dpitch_mdeg": 61.31849895960483,
+    "crawler_kN": 316.7150177578851,
+    "F_rear_kN": 12.149607170553924,
+    "F_front_kN": 20.771826884828887,
+    "rear_stroke_minus_body_rise_mm": null
+   },
+   {
+    "prog_mm": 3.5,
+    "t_rel_s": 0.21369999999950196,
+    "dz_body_mm": 0.8136266113036861,
+    "dz_crawler_front_mm": -0.7928495531721366,
+    "dz_crawler_rear_mm": 2.432460284737015,
+    "dpitch_mdeg": 70.80331085602224,
+    "crawler_kN": 277.22152018212466,
+    "F_rear_kN": 9.812563443214284,
+    "F_front_kN": 35.70852014942228,
+    "rear_stroke_minus_body_rise_mm": null
+   },
+   {
+    "prog_mm": 4.0,
+    "t_rel_s": 0.23769999999944602,
+    "dz_body_mm": 1.0502981662550148,
+    "dz_crawler_front_mm": -0.7250106931364783,
+    "dz_crawler_rear_mm": 2.839263247641828,
+    "dpitch_mdeg": 78.24438844255127,
+    "crawler_kN": 254.06606144834998,
+    "F_rear_kN": 9.344474908510122,
+    "F_front_kN": 49.477264909838965,
+    "rear_stroke_minus_body_rise_mm": null
+   }
+  ]
+ }
+}
