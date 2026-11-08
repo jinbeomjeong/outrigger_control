@@ -1888,7 +1888,8 @@ def source_args_check(argv: list[str], source_dir: Path) -> dict[str, Any]:
         old = json.load(f).get("args") or {}
     ap = build_parser()
     new = vars(ap.parse_args(list(argv) + ["--case", "x", "--out-root", "x"]))
-    defaults = vars(ap.parse_args(["level", "--soil", str(new["soil"]), "--case", "x", "--out-root", "x"]))
+    # defaults of the row's own action (``level`` rows as before; ``machine`` = the v5 open-loop rows, 2026-11-08)
+    defaults = vars(ap.parse_args([str(new["action"]), "--soil", str(new["soil"]), "--case", "x", "--out-root", "x"]))
 
     def norm(v: Any) -> Any:
         return list(v) if isinstance(v, (list, tuple)) else v
@@ -2362,6 +2363,14 @@ def v5_hydraulic_options(args, params):
     if options.valve_tau_s is None and (options.lock_closure or options.check_delay):
         raise SystemExit("LC and M1c need the valve model on the soil rows: add --valve-tau-s")
     return options
+
+
+def machine_controller_options_meta(options) -> dict[str, Any]:
+    """``machine`` (open loop, no controller): the controller-side v5 options of the setting are kept in the argv so
+    that a VB row carries the whole VB definition, but nothing consumes them; recorded, never applied."""
+    return {"lock_window_follows_plant": bool(options.lock_window_follows_plant),
+            "extend_start_tracked": bool(options.extend_start_tracked), "applied": False,
+            "reason": "machine open-loop lift: no controller (the plant options alone act)"}
 
 
 def load_inputs(args):
@@ -2876,8 +2885,22 @@ def run_machine(args) -> Path:
 
     placement = place()
     params, pv, soil = load_inputs(args)
+    # v5 open-loop lift (paper v5 2.8, cad 2026-11-08): the plant options of the v5 setting right after the build (as
+    # ``level``); every option absent = no attribute, None here, the run and result.json unchanged
+    v5_options, v5_meta = v5_hydraulic_options(args, params), None
+    if (v5_options is not None or hasattr(args, "flow_eta_v")) and args.lift_s <= 0.0:
+        raise SystemExit("machine: the v5 / flow options need --lift-s > 0 (they act from the end of the settle)")
     tb = time.perf_counter()
     model = build_machine(args, params, pv, soil)
+    if v5_options is not None:
+        from outrigger_sim.chrono.v5_plant import apply_plant_options
+
+        v5_meta = apply_plant_options(model.actuator, v5_options, params)
+        v5_meta["controller_options"] = machine_controller_options_meta(v5_options)
+    from outrigger_sim.hydraulics.flow_limit_run import FLOW_SERIES_NAME, RecordedFlowLimiter, flow_setting_from_args
+
+    flow_setting = flow_setting_from_args(args)
+    flow = None if flow_setting is None else RecordedFlowLimiter.from_params(params, flow_setting)
     dashpot = add_settle_dashpot(args, model)
     build_s = time.perf_counter() - tb
     dt = model.dt_s
@@ -2897,6 +2920,8 @@ def run_machine(args) -> Path:
     for k in range(t_settle_steps + t_lift_steps):
         if k == t_settle_steps:
             rut = model.mark_rut_reference()
+            if flow is not None:  # shared-pump flow limit from the end of the settle (the ``level`` rule)
+                model.actuator.set_flow_limit(flow)
             if t_lift_steps:
                 model.set_command([v_lift] * 4)
         model.set_gravity_factor(gravity_ramp_factor(k * dt, args.gravity_ramp, args.gravity_ramp_shape))
@@ -2991,6 +3016,21 @@ def run_machine(args) -> Path:
                   node_n_contact=np.asarray([[s["n_contact"] for s in n["pad_nodes"]] for n in node_rows],
                                             dtype=float).reshape(-1, 4))
     np.savez(d / "series.npz", **series)
+    if v5_meta is not None:  # the blocks only with a v5 option (``level`` key names)
+        from outrigger_sim.chrono.v5_plant import plant_records
+
+        summary["v5_hydraulics"] = {**v5_meta, "records": plant_records(model.actuator)}
+        m2_record = model.actuator.m2_release_record()
+        if m2_record is not None:
+            from outrigger_sim.chrono.m2_release_log import fill_was_lifted
+
+            fill_was_lifted(m2_record["m2_releases"], series["t_s"],
+                            np.asarray(series["scm_pad_normal_N"], float) <= 0.0)
+            m2_record["time_base"] = f"absolute Chrono time (series.npz t_s, {RECORD_S:g} s rows)"
+        summary["hydraulics_record"] = {} if m2_record is None else m2_record
+    if flow is not None:  # flow_series.npz and the block only with --flow-eta-v
+        summary["flow_limit"] = {**flow.meta(), "series": flow.save(d / FLOW_SERIES_NAME),
+                                 "summary": flow.summary([t_settle_steps * dt], ("lift",))}
     (d / "result.json").write_text(json.dumps(_plain(summary), indent=1, ensure_ascii=False), "utf-8")
     print(json.dumps(_plain({k: summary[k] for k in ("end", "first_step", "start_rise", "settle_last_1s",
                                                      "us_per_step", "build_s")}), indent=1), flush=True)
@@ -6008,6 +6048,13 @@ def build_parser() -> argparse.ArgumentParser:
                          "extension limit or s_motor exceeds the end-margin stroke (the batch stops new launches)")
     mp.add_argument("--floor-roll", type=float, default=0.0)
     mp.add_argument("--floor-pitch", type=float, default=0.0)
+    from outrigger_sim.hydraulics.flow_limit_run import add_flow_limit_arguments
+    from outrigger_sim.hydraulics.v5_options import add_hydraulic_arguments
+
+    # v5 open-loop lift rows (paper v5 2.8, cad 2026-11-08): flow limit + plant options with --lift-s; the controller
+    # window / ③ bound options are accepted (whole VB argv) and recorded as not applied; absent = no attribute
+    add_flow_limit_arguments(mp)
+    add_hydraulic_arguments(mp, with_valve_tau=True)
     lp = sub.add_parser("level")
     _common(lp)
     _gravity_ramp_args(lp)

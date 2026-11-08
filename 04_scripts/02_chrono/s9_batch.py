@@ -251,6 +251,12 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     out[V5_REC_BATCH] = v5_rec_rows()
     out[V5_V0V_BATCH] = v5_v0v_rows(out[V5_VB_BATCH])
     out[V5_STAGE3_BATCH] = v5_stage3_rows(out)
+    # paper v5 (user decision 2026-11-08; definitions only): 2.8 open-loop lift SCM J1 B / G1 B on VB (+ optional V0
+    # re-runs of the stored argv), 3.5.2 J_P run_S8C G4 / SS x F_s 0 / 4 / 8 on VB (+ optional V0 = final_C4G2)
+    out[V5_OPENLOOP_BATCH] = v5_openloop_rows(out["P3a"])
+    out[V5_OPENLOOP_V0_BATCH] = v5_openloop_rows(out["P3a"], setting="V0")
+    out[V5_JP_BATCH] = v5_jp_rows()
+    out[V5_JP_V0_BATCH] = v5_jp_rows(setting="V0")
     # D-1 verification matrix Chrono rows (cad 2026-11-08, d1_chrono_rows.py): D1-CHRONO (16 required rows + roll /
     # slope candidates), D1-PSC (optional PS-c); built with this module's live VB argument functions
     out.update(_d1_batches())
@@ -556,6 +562,92 @@ def v5_stage3_rows(out: dict[str, list[dict]]) -> list[dict]:
     dup = sorted({n for n in names if names.count(n) > 1})
     if dup or len(rows) != 34:
         raise RuntimeError(f"V5-STAGE3: {len(rows)} rows (34 expected), duplicate names {dup}")
+    return rows
+
+
+# --- paper v5 (user decision 2026-11-08): 2.8 open-loop lift and 3.5.2 J_P on VB (definitions only) ------------------
+
+V5_OPENLOOP_BATCH, V5_OPENLOOP_V0_BATCH = "V5-OPENLOOP-VB", "V5-OPENLOOP-V0"
+V5_OPENLOOP_SOURCE = "batch_P3a_20261026_092653"
+"""v4 paper 2.7 / table 7 / figure 5 open-loop lift runs (07_results/S9, P3a rows, run_S9 ``machine --lift-s 28``)."""
+V5_OPENLOOP_CASES: tuple[tuple[str, float, dict[str, float]], ...] = (
+    ("P3a_J1_B", 1838.0, {"pcore": 2500.0, "ecore": 3100.0}),
+    ("P3a_G1_B", 1312.0, {"pcore": 1800.0, "ecore": 2300.0}),
+)
+"""(case, stored batch.json wall [s], VB pool estimates [s]). Estimates (ASSUMPTION): the VB / V0 cost per step of the
+build check (2026-11-08, 1 s settle + 1 s lift, alone on P: J1 2,891 / 2,543 us = 1.14, G1 2,457 / 2,075 us = 1.18) on
+the stored wall (2 slots, 2026-10-26), + about 20 % for a loaded batch, rounded up; E = P x 1.25 (FINAL-REP ratio)."""
+V5_JP_BATCH, V5_JP_V0_BATCH = "V5-JP-VB", "V5-JP-V0"
+V5_JP_SOURCE = "07_results/S8/final_v4recheck_20261104_202815"
+"""v4 paper 3.5.2 table 10 J_P (pressure-only) values: final-controller re-run of 2026-11-04 (controller before C4G2),
+4 workers on the P pool; ``06_analysis/03_hydraulic/coupled/verdict/judgement_chrono/v4_recheck/recheck_values.json``."""
+V5_JP_IDS = ("N_G4_Fs0_pressure", "N_G4_Fs4_pressure", "N_G4_Fs8_pressure",
+             "N_SS_Fs0_pressure", "N_SS_Fs4_pressure", "N_SS_Fs8_pressure")
+V5_JP_SET = "rest"
+"""run_S8C set holding the N group (priority 3)."""
+V5_JP_EST_S = {"VB": 1350.0, "V0": 870.0}
+"""Per-row estimate [s] (ASSUMPTION): the measured walls of the same-event rigid rows of batch_V5-STAGE3_20261107_184341
+(P pool, full batch): E_G4_Fs4 VB 1,348 s, E_G4_Fs8 VB 1,342 s, E_G4_Fs4_ph0.05 V0 862 s. The stage 3 rule
+(V0 + 180 s) x 1.08 under-read those rows by 1.2-1.8 x, so it is not used here."""
+
+
+def _batch_walls(folder: Path, key: str = "case") -> dict[str, float]:
+    p = folder / ("batch.json" if (folder / "batch.json").is_file() else "batch_meta.json")
+    if not p.is_file():
+        return {}
+    return {c.get(key) or c.get("case_id"): float(c["wall_s"]) for c in json.loads(p.read_text("utf-8")).get("cases", [])
+            if c.get("wall_s") is not None}
+
+
+def v5_openloop_rows(p3a: list[dict], *, setting: str = "VB") -> list[dict]:
+    """Paper v5 2.8 (v4 2.7): the stored P3a open-loop lift rows J1 B / G1 B (``machine --lift-s 28``, top, dashpot
+    settle, ``--abort-on-limit``) with argv unchanged + :func:`v5_vb_argv` (VB) or unchanged (V0 re-run on the current
+    code, the code-drift pair). The plant options act (flow 0.85, valve 0.1 s, M2, LC); the controller window and the
+    ③ bound have no consumer in an open loop (run_S9 records them as not applied), so no ``--expect-controller``.
+    ``check-sources`` accepts exactly the VB arguments (V0: none) as the difference from the stored ``result.json``."""
+    by_case = {r["case"]: r for r in p3a}
+    rows = []
+    for case, wall, pools in V5_OPENLOOP_CASES:
+        base = by_case[case]
+        vb = setting == "VB"
+        est = pools if vb else {"pcore": wall, "ecore": round(wall * 1.25)}
+        group = V5_OPENLOOP_BATCH if vb else V5_OPENLOOP_V0_BATCH
+        rows.append({"case": f"{case}_{setting}", "argv": base["argv"] + (v5_vb_argv() if vb else []),
+                     "est_s": est["pcore"], "est_pool_s": dict(est), "planned_pool": "pcore",
+                     "source_run": f"{V5_OPENLOOP_SOURCE}/{case}",
+                     "source_expected_diffs": dict(V5_VB_ARGS) if vb else None,
+                     "v5_setting": setting, "stored_wall_s": wall, "group": group, "rep_bundle": group,
+                     "pair_case": f"{case}_{'V0' if vb else 'VB'}",
+                     "note": f"{group} (paper v5 2.8 open-loop lift, v4 2.7 table 7 / figure 5): {case} "
+                             + ("v5 VB plant (flow 0.85, valve 0.1 s, M2, LC; controller options not applied)"
+                                if vb else "stored argv re-run on the current code (V0, code-drift pair)")
+                             + f"; stored 07_results/S9/{V5_OPENLOOP_SOURCE}/{case}"})
+    return rows
+
+
+def v5_jp_rows(*, setting: str = "VB") -> list[dict]:
+    """Paper v5 3.5.2 (v4 table 10 pressure-only column, S8 item 9): run_S8C ``N_{G4,SS}_Fs{0,4,8}_pressure`` (L2b-NSC,
+    rigid, top, pressure-only contact judge) with :func:`v5_rigid_argv` of ``setting`` (VB: controller
+    ``final_C4G2_P3``; V0: current ``final_C4G2``, the controller-change pair of the 2026-11-04 source). ``source_run`` =
+    the v4 re-run case folder; ``check-sources`` checks the set / id and the v5 arguments (:func:`v5_rigid_source_check`).
+    ``est_s`` = :data:`V5_JP_EST_S` (or the stage 3 rule when larger); ``stored_wall_s`` = the v4 re-run wall (4 workers
+    on P)."""
+    walls = _batch_walls(ROOT / V5_JP_SOURCE)
+    group = V5_JP_BATCH if setting == "VB" else V5_JP_V0_BATCH
+    rows = []
+    for k, cid in enumerate(V5_JP_IDS, 1):
+        name = cid if setting == "VB" else f"{cid}_V0"
+        r = v5_rigid_row(cid, V5_JP_SET, setting, criteria_id=f"JP#{k}", group=group,
+                         v0_wall_s=walls.get(cid, 500.0), source_run=f"{V5_JP_SOURCE}/{cid}",
+                         pair_case=f"{cid}_V0" if setting == "VB" else cid, name=name,
+                         note=f"{group} (paper v5 3.5.2, v4 table 10 J_P): {cid} {setting}; pair "
+                              f"{V5_JP_SOURCE}/{cid} (v4 value, controller before C4G2)"
+                              + ("" if setting == "VB" else "; separates the controller change from VB"))
+        argv = r["argv"]
+        argv[argv.index("--tag") + 1] = f"v5jp_{setting}_{cid}"
+        r["stored_wall_s"] = walls.get(cid)
+        r["est_s"] = round(max(float(r["est_s"]), V5_JP_EST_S[setting]))
+        rows.append(r)
     return rows
 
 
