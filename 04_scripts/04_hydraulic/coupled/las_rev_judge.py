@@ -780,6 +780,40 @@ def judge_rp0(lines: list[dict], stored: dict) -> dict:
             "pass": not mismatches and needed <= reproduced}
 
 
+ALLOWED_DIRTY = (".gitattributes", "00_docs/decision_log.md")
+EMPTY_SHA256 = hashlib.sha256(b"").hexdigest()
+IDENTITY_GROUPS = {"P5": ("R-G", "R-T", "R-S"), "P3": ("R-G", "R-T", "R-S"),
+                   "P53": ("R-G", "R-T", "R-S"), "P0": ("R-P0", "R-X")}
+"""Rules 4.1: the lines of one candidate come from one commit (R-0 is its own test)."""
+
+
+def identity_problems(lines: list[dict]) -> dict[str, list[str]]:
+    """H-4 (rules 4.1) per candidate: one commit, no code diff, allowed dirty files only,
+    the sealed rules sha256."""
+    out = {}
+    for candidate, bundles in IDENTITY_GROUPS.items():
+        heads, problems = set(), []
+        for line in lines:
+            rev = rev_of(line)
+            if rev.get("candidate") != candidate or rev.get("bundle") not in bundles or is_error(
+                    line):
+                continue
+            identity = rev.get("identity") or {}
+            heads.add(identity.get("git_head"))
+            if identity.get("code_diff_sha256") != EMPTY_SHA256:
+                problems.append(f"{rev.get('key')}: code diff")
+            extra = set(identity.get("dirty_files") or ()) - set(ALLOWED_DIRTY)
+            if extra:
+                problems.append(f"{rev.get('key')}: dirty {sorted(extra)}")
+            if rev.get("rules_sha256") != RULES_SHA256:
+                problems.append(f"{rev.get('key')}: rules sha256 {rev.get('rules_sha256')}")
+        if len(heads) > 1:
+            problems.append(f"{len(heads)} commits: {sorted(map(str, heads))}")
+        if problems:
+            out[candidate] = problems
+    return out
+
+
 # ------------------------------------------------------------------------------- verdict
 def rank(passing: list[str], grid: dict, t_results: dict, s_results: dict) -> list[str]:
     """Rules 9: min F_judged (0.3 kN tie), fewer changed pairs, smaller R-1 median, order."""
@@ -819,6 +853,9 @@ def judge(lines: list[dict], stored: dict) -> dict:
         if _pair_lines(lines, "R-S", name)[0]:
             out["R-S"][name] = judge_s(lines, stored, name)
     out["R-P0"] = judge_rp0(lines, stored)
+    out["identity"] = identity_problems(lines)
+    for candidate, problems in out["identity"].items():
+        out["stops"].append(f"H-4 identity {candidate}: {problems[:3]}")
     if out["R-P0"]["H-5"]:
         out["stops"].append(f"H-5 reproduction failed: {out['R-P0']['H-5'][:3]}")
     if not out["R-0"]["pass"] and out["R-0"]["ran"]:
@@ -837,6 +874,9 @@ def _candidate_verdicts(out: dict) -> dict:
         if grid is None:
             continue
         t_result, s_result = out["R-T"].get(name), out["R-S"].get(name)
+        if name in out["identity"]:
+            verdicts[name] = {"verdict": "undecidable", "at": "H-4 run identity"}
+            continue
         if not grid["pass"]:
             verdicts[name] = {"verdict": "fail", "at": "(ga)"}
             continue

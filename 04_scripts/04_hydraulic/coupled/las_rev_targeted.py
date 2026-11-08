@@ -582,16 +582,22 @@ def identity_problems(identity: dict) -> list[str]:
     return problems + fb.thread_problems(identity["threads"])
 
 
+_RUN: dict = {}
+"""The worker's run values (one run per worker)."""
+
+
 def _install_all(entry: dict) -> None:
     import las_phase_diag
 
     fb._install_candidate(fb.CANDIDATES["L"])  # threads, preset LAS-b b0, run capture
+    # Read before the run: the harness later patches with_10hz_d1 (and keeps its last result).
+    _RUN["preset_settings"] = preset_las_settings()
     grid_point = None if entry["grid_point"] is None else tuple(entry["grid_point"])
     if entry["record_diag"] or grid_point is not None:
         las_phase_diag.install(entry["record_diag"], grid_point)
     candidate = CANDIDATES[entry["candidate"]]
     if candidate.name != "P0":
-        install_candidate(candidate)
+        install_candidate(candidate, preset_settings=_RUN["preset_settings"])
     if entry["record_done"]:
         install_done_recorder()
 
@@ -611,7 +617,8 @@ def las_block(controller, harness: dict | None, candidate: str) -> dict:
 
 def rev_block(entry: dict, job: dict, controller, line: dict, identity: dict) -> dict:
     settings = asdict(controller.config.liftoff_approach_slow)
-    expected = asdict(CANDIDATES[entry["candidate"]].settings_from(preset_las_settings()))
+    preset = _RUN.get("preset_settings") or preset_las_settings()
+    expected = asdict(CANDIDATES[entry["candidate"]].settings_from(preset))
     return {**{name: entry[name] for name in ("bundle", "candidate", "label", "grid_point",
                                               "record_diag", "record_done")},
             "key": fb.fb_key(job), "identity": identity, "rules_sha256": judge.RULES_SHA256,
@@ -779,7 +786,7 @@ def run_batch(jobs: list[dict], path: Path, workers: int, bundle: str, stored: d
                 break
             record = results.get()
             in_flight -= 1
-            record["job"].pop("mask", None)
+            record.setdefault("job", {}).pop("mask", None)
             handle.write(json.dumps(record, default=_json_default) + "\n")
             handle.flush()
             state.runs += 1

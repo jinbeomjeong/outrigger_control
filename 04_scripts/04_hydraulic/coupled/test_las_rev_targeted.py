@@ -261,7 +261,9 @@ def _rev_line(candidate, point, sha, start, f_rl=11.0, f_judged=11.0, active=9, 
                     "label": f"{candidate}-LT", "grid_point": [point[1], point[2]],
                     "settings": {"light_leg_fraction_of_F_min": beta,
                                  "min_active_periods": n_min},
-                    "settings_match": True},
+                    "settings_match": True, "rules_sha256": judge.RULES_SHA256,
+                    "identity": {"git_head": "c0", "code_diff_sha256": judge.EMPTY_SHA256,
+                                 "dirty_files": [".gitattributes"]}},
             "diag": {"summary": {"F_RL_kN": f_rl, "F_judged_min_kN": f_judged,
                                  "gate_consistent": True, "las_start_period": 6,
                                  "t_lift_s": 23.0, "min_leg_after_lift": "RL"},
@@ -300,6 +302,21 @@ def test_judge_grid_pass_and_failures():
     assert not low["G-1"] and not low["pass"]
     missing = judge.judge_grid(judge._grid_lines(_grid("P5")[1:])["P5"])
     assert not missing["G-3"]
+
+
+def test_judge_with_the_grid_only_and_identity():
+    lines = _grid("P5") + _grid("P3")
+    result = judge.judge(lines, {})
+    assert result["candidates"]["P5"]["verdict"] == "incomplete"
+    assert result["identity"] == {}
+    lines[0]["rev"]["identity"] = {**lines[0]["rev"]["identity"], "git_head": "c1"}
+    lines[1]["rev"]["identity"] = {**lines[1]["rev"]["identity"], "dirty_files": ["03_src/a"]}
+    result = judge.judge(lines, {})
+    problems = result["identity"]["P5"]
+    assert any("2 commits" in text for text in problems)
+    assert any("dirty" in text for text in problems)
+    assert result["candidates"]["P5"]["verdict"] == "undecidable"
+    assert any(text.startswith("H-4") for text in result["stops"])
 
 
 def test_rank_rules():
