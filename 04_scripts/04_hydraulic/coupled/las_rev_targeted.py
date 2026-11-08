@@ -28,6 +28,10 @@ Bundles (rules 3), output ``06_analysis/03_hydraulic/coupled/v5/las/rev/rev_R<bu
   R-P0  P0 on the union of the keys whose hash changed in the R-T / R-S files (rules 7.3).
   R-X   P0 with the DONE record on the keys of the C-4 exception claims (rules 6), or --keys.
 Job dicts of R-T / R-S are compared with the stored L lines' ``job`` first (H-4: exit 2).
+R-T / R-S / R-P0 / R-X also need an ``rev_RG*.jsonl`` and every earlier bundle line
+(``rev_RG*``, ``rev_RT*``, ``rev_RS*``, ``rev_RP0*``) from the current commit and tool sha256
+(exit 2 otherwise). A line whose ``controller_tag`` is not ``final_C4G2_LAS`` /
+``final_C4G2_P3_LAS`` stops the batch.
 
 DONE record (rules 4.2, record only; on in every bundle unless ``--no-done-record``): from the
 first LOC (soil response off: the first LEVEL step) to the first READY + 1 s, one
@@ -695,6 +699,10 @@ def check_line(record: dict, bundle: str, state: BatchState, stored: dict, k3_ke
     if problems:
         state.stop = f"run identity changed during the batch: {problems[:3]}"
         return
+    tags = judge.tag_problems(record)
+    if tags:
+        state.stop = f"{rev['key']}: {tags}"
+        return
     try:
         k_found = judge.k_problems(record, stored, k3_keys)
     except judge.MissingField as exc:
@@ -899,6 +907,33 @@ def _keys_of(args, stored: dict) -> list[str] | None:
     return None
 
 
+EARLIER_BUNDLE_FILES = ("rev_RG*.jsonl", "rev_RT*.jsonl", "rev_RS*.jsonl", "rev_RP0*.jsonl")
+"""The bundle files that must come from the current run identity before R-T .. R-X."""
+
+
+def earlier_identity_problems(bundle: str, current: dict, directory: Path = REV_DIR
+                              ) -> list[str]:
+    """Rules 4.1 before R-T / R-S / R-P0 / R-X: an R-G file exists and every earlier bundle
+    line has the current commit and tool sha256 (otherwise the candidate's lines would mix
+    run identities)."""
+    if bundle in ("R-0", "R-G"):
+        return []
+    paths = sorted({path for pattern in EARLIER_BUNDLE_FILES
+                    for path in directory.glob(pattern)})
+    if not any(path.name.startswith("rev_RG") for path in paths):
+        return [f"no rev_RG*.jsonl in {directory}"]
+    problems = []
+    for path in paths:
+        for line in judge.read_lines(path):
+            if "error" in line:
+                continue
+            recorded = (line.get("rev") or {}).get("identity") or {}
+            for name in ("git_head", "sha256"):
+                if recorded.get(name) != current.get(name):
+                    problems.append(f"{path.name} {(line.get('rev') or {}).get('key')}: {name}")
+    return problems
+
+
 def _prepare(args) -> tuple[list[dict], Path, dict, dict]:
     """Jobs, output path, stored lines and identity of a run (raises on input errors)."""
     candidates = resolve_candidates(args.bundle, args.candidates)
@@ -910,6 +945,9 @@ def _prepare(args) -> tuple[list[dict], Path, dict, dict]:
     problems = identity_problems(identity)
     if problems:
         raise ValueError(f"run identity (rules 4.1): {problems}")
+    problems = earlier_identity_problems(args.bundle, identity)
+    if problems:
+        raise ValueError(f"earlier bundle lines of another run identity: {problems[:5]}")
     stored = judge.load_stored()
     mask = None if args.affinity is None else int(args.affinity, 16)
     keys = _keys_of(args, stored)

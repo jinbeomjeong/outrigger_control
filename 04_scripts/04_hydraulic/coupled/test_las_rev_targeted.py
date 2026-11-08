@@ -6,6 +6,7 @@ The judge is checked on hand-made lines (no simulation).
 """
 from __future__ import annotations
 
+import json
 import sys
 from dataclasses import replace
 from pathlib import Path
@@ -303,8 +304,11 @@ def _rev_line(candidate, point, sha, start, f_rl=11.0, f_judged=11.0, active=9, 
                     "settings": {"light_leg_fraction_of_F_min": beta,
                                  "min_active_periods": n_min},
                     "settings_match": True, "rules_sha256": judge.RULES_SHA256,
+                    "controller_tag": "final_C4G2_LAS",
                     "identity": {"git_head": "c0", "code_diff_sha256": judge.EMPTY_SHA256,
-                                 "dirty_files": [".gitattributes"]}},
+                                 "dirty_files": [".gitattributes"],
+                                 "rules_rev1_sha256": judge.RULES_REV1_SHA256}},
+            "controller_tag": "final_C4G2_LAS",
             "diag": {"summary": {"F_RL_kN": f_rl, "F_judged_min_kN": f_judged,
                                  "gate_consistent": True, "las_start_period": 6,
                                  "t_lift_s": 23.0, "min_leg_after_lift": "RL"},
@@ -358,6 +362,57 @@ def test_judge_with_the_grid_only_and_identity():
     assert any("dirty" in text for text in problems)
     assert result["candidates"]["P5"]["verdict"] == "undecidable"
     assert any(text.startswith("H-4") for text in result["stops"])
+
+
+def test_grid_outcome_order():
+    """G-4 / H-3 stop and G-3 undecidable come before a G-1 / G-2 fail."""
+    lines = _grid("P5", f_rl=10.0)[1:]  # G-1 short and a line missing
+    assert judge.judge(lines, {})["candidates"]["P5"]["verdict"] == "undecidable"
+    k_lines = _grid("P5", f_rl=10.0)
+    group_a = next(line for line in k_lines
+                   if tuple(judge.grid_point_of(line)) == ("VB", "1", 0))
+    group_a["commands_sha256"] = "z" * 64  # K-1 mismatch, then the run stops the candidate
+    result = judge.judge(k_lines[:-5], {})
+    assert result["grid"]["P5"]["status"] == judge.GRID_STOP
+    assert result["candidates"]["P5"]["verdict"] == "stop"
+    short = judge.judge(_grid("P5", f_rl=10.0), {})
+    assert short["candidates"]["P5"]["verdict"] == "fail"
+    assert judge.grid_status(True, False, False) == judge.GRID_FAIL
+
+
+def test_h6_counts_g1_g2_failures_only():
+    undecided = [line for name in judge.GRID_CANDIDATES for line in _grid(name)[1:]]
+    result = judge.judge(undecided, {})
+    assert all(v["verdict"] == "undecidable" for v in result["candidates"].values())
+    assert not any(text.startswith("H-6") for text in result["stops"])
+    failed = [line for name in judge.GRID_CANDIDATES for line in _grid(name, f_rl=10.0)]
+    assert any(text.startswith("H-6") for text in judge.judge(failed, {})["stops"])
+
+
+def test_controller_tag_and_rev1_identity():
+    line = _grid("P5")[0]
+    assert judge.tag_problems(line) == []
+    other = {**line, "controller_tag": "final_C4G2"}
+    assert judge.tag_problems(other)
+    lines = _grid("P5")
+    lines[0] = other
+    lines[1]["rev"]["identity"] = {**lines[1]["rev"]["identity"], "rules_rev1_sha256": None}
+    problems = judge.judge(lines, {})["identity"]["P5"]
+    assert any("controller_tag" in text for text in problems)
+    assert any("rev1" in text for text in problems)
+
+
+def test_earlier_identity_problems(tmp_path):
+    current = {"git_head": "c0", "sha256": {"a.py": "1"}}
+    assert rev.earlier_identity_problems("R-G", current, tmp_path) == []
+    assert rev.earlier_identity_problems("R-T", current, tmp_path)  # no rev_RG file
+    line = {"rev": {"key": "k", "identity": {"git_head": "c0", "sha256": {"a.py": "1"}}}}
+    (tmp_path / "rev_RG.jsonl").write_text(json.dumps(line) + "\n", encoding="utf-8")
+    assert rev.earlier_identity_problems("R-T", current, tmp_path) == []
+    moved = {"rev": {"key": "k2", "identity": {"git_head": "c1", "sha256": {"a.py": "1"}}}}
+    (tmp_path / "rev_RT_P5.jsonl").write_text(json.dumps(moved) + "\n", encoding="utf-8")
+    assert rev.earlier_identity_problems("R-S", current, tmp_path) == [
+        "rev_RT_P5.jsonl k2: git_head"]
 
 
 def test_rank_rules():

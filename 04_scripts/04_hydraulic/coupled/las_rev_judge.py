@@ -573,11 +573,29 @@ def judge_grid(result: GridResult) -> dict:
     cells = _grid_cells(result)
     g2_fail = [cell for cell in cells if not cell["ok"]]
     forces = [row["F_judged_min_kN"] for row in rows if row["F_judged_min_kN"] is not None]
+    status = grid_status(bool(g1_fail or g2_fail), bool(g3), bool(k_fail))
     return {"candidate": result.candidate, "G-1": not g1_fail, "G-1_fail": g1_fail,
             "G-2": not g2_fail and not g3, "cells": cells, "G-3": not g3, "G-3_problems": g3,
             "G-4": not k_fail, "G-4_problems": k_fail, "between_thresholds": between,
             "min_F_judged_kN": min(forces) if forces else None, "rows": rows,
-            "pass": not (g1_fail or g2_fail or g3 or k_fail)}
+            "status": status, "pass": status == GRID_PASS}
+
+
+GRID_PASS = "pass"
+GRID_FAIL = "fail"
+GRID_UNDECIDABLE = "undecidable"
+GRID_STOP = "stop"
+
+
+def grid_status(has_measure_failure: bool, has_g3_problem: bool, has_k_problem: bool) -> str:
+    """(ga) outcome: a K mismatch (G-4 / H-3, which also leaves lines unrun) is a stop
+    (implementation defect candidate), a G-3 problem undecidable; only then do G-1 / G-2
+    shortfalls make a ``fail``."""
+    if has_k_problem:
+        return GRID_STOP
+    if has_g3_problem:
+        return GRID_UNDECIDABLE
+    return GRID_FAIL if has_measure_failure else GRID_PASS
 
 
 def _grid_cells(result: GridResult) -> list[dict]:
@@ -745,7 +763,7 @@ def judge_s(lines: list[dict], stored: dict, candidate: str) -> dict:
 
 # ------------------------------------------------------------------------------- R-0 / R-P0
 def judge_r0(lines: list[dict]) -> dict:
-    found = {}
+    found, tags = {}, []
     errors = 0
     for line in lines:
         rev = rev_of(line)
@@ -755,10 +773,11 @@ def judge_r0(lines: list[dict]) -> dict:
             errors += 1
             continue
         found[(rev["key"], rev["label"])] = line["commands_sha256"]
+        tags += [f"{rev['key']}: {text}" for text in tag_problems(line)]
     rows = [{"key": key, "label": label, "expected": sha, "got": found.get((key, label)),
              "equal": found.get((key, label)) == sha} for (key, label), sha in R0_EXPECTED.items()]
-    return {"rows": rows, "errors": errors, "ran": len(found),
-            "pass": errors == 0 and all(row["equal"] for row in rows)}
+    return {"rows": rows, "errors": errors, "ran": len(found), "tag_problems": tags,
+            "pass": errors == 0 and not tags and all(row["equal"] for row in rows)}
 
 
 def changed_keys(lines: list[dict], stored: dict) -> set[str]:
@@ -822,6 +841,17 @@ IDENTITY_GROUPS = {"P5": ("R-G", "R-T", "R-S"), "P3": ("R-G", "R-T", "R-S"),
 """Rules 4.1: the lines of one candidate come from one commit (R-0 is its own test)."""
 
 
+CONTROLLER_TAGS = ("final_C4G2_LAS", "final_C4G2_P3_LAS")
+"""The LAS-b preset tags a run may carry (V0 / VB); any other tag is another controller."""
+
+
+def tag_problems(line: dict) -> list[str]:
+    """The line's ``controller_tag`` (and the ``rev`` copy) is one of :data:`CONTROLLER_TAGS`."""
+    tags = {line.get("controller_tag"), rev_of(line).get("controller_tag")}
+    bad = sorted(str(tag) for tag in tags if tag not in CONTROLLER_TAGS)
+    return [f"controller_tag {bad} not in {list(CONTROLLER_TAGS)}"] if bad else []
+
+
 def identity_problems(lines: list[dict]) -> dict[str, list[str]]:
     """H-4 (rules 4.1) per candidate: one commit, no code diff, allowed dirty files only,
     the sealed rules sha256."""
@@ -842,10 +872,28 @@ def identity_problems(lines: list[dict]) -> dict[str, list[str]]:
                 problems.append(f"{rev.get('key')}: dirty {sorted(extra)}")
             if rev.get("rules_sha256") != RULES_SHA256:
                 problems.append(f"{rev.get('key')}: rules sha256 {rev.get('rules_sha256')}")
+            if identity.get("rules_rev1_sha256") != RULES_REV1_SHA256:
+                problems.append(f"{rev.get('key')}: rules rev1 sha256 "
+                                f"{identity.get('rules_rev1_sha256')}")
+            problems += [f"{rev.get('key')}: {text}" for text in tag_problems(line)]
         if len(heads) > 1:
             problems.append(f"{len(heads)} commits: {sorted(map(str, heads))}")
         if problems:
             out[candidate] = problems
+    return out
+
+
+def pair_k_problems(lines: list[dict], stored: dict, candidate: str) -> list[str]:
+    """K-3 / K-4 (H-3) of one candidate's R-T / R-S lines (an H-3 stop also leaves pairs
+    unrun, which must not read as a criteria failure)."""
+    k3_keys = p3_identical_keys(stored) if stored else None
+    out = []
+    for bundle in ("R-T", "R-S"):
+        for key, line in _pair_lines(lines, bundle, candidate)[0].items():
+            try:
+                out += [f"{key}: {text}" for text in k_problems(line, stored or None, k3_keys)]
+            except MissingField as exc:
+                out.append(f"{key}: missing {exc}")
     return out
 
 
@@ -879,14 +927,19 @@ def judge(lines: list[dict], stored: dict) -> dict:
     for name in GRID_CANDIDATES:
         if grids[name].lines or grids[name].errors:
             out["grid"][name] = judge_grid(grids[name])
-    if out["grid"] and not any(result["pass"] for result in out["grid"].values()) and len(
-            out["grid"]) == len(GRID_CANDIDATES):
+    grid_failures = [name for name, result in out["grid"].items()
+                     if result["status"] == GRID_FAIL]
+    if len(grid_failures) == len(GRID_CANDIDATES):  # G-1 / G-2 shortfalls only (rules 8 H-6)
         out["stops"].append("H-6 every candidate failed (ga)")
+    out["pair_k_problems"] = {}
     for name in GRID_CANDIDATES:
         if _pair_lines(lines, "R-T", name)[0]:
             out["R-T"][name] = judge_t(lines, stored, name)
         if _pair_lines(lines, "R-S", name)[0]:
             out["R-S"][name] = judge_s(lines, stored, name)
+        problems = pair_k_problems(lines, stored, name)
+        if problems:
+            out["pair_k_problems"][name] = problems
     out["R-P0"] = judge_rp0(lines, stored)
     out["identity"] = identity_problems(lines)
     for candidate, problems in out["identity"].items():
@@ -912,8 +965,15 @@ def _candidate_verdicts(out: dict) -> dict:
         if name in out["identity"]:
             verdicts[name] = {"verdict": "undecidable", "at": "H-4 run identity"}
             continue
-        if not grid["pass"]:
-            verdicts[name] = {"verdict": "fail", "at": "(ga)"}
+        if grid["status"] == GRID_STOP or name in out["pair_k_problems"]:
+            verdicts[name] = {"verdict": "stop",
+                              "at": "G-4 / H-3 K mismatch (implementation defect candidate)"}
+            continue
+        if grid["status"] == GRID_UNDECIDABLE:
+            verdicts[name] = {"verdict": "undecidable", "at": "G-3 exclusion check"}
+            continue
+        if grid["status"] == GRID_FAIL:
+            verdicts[name] = {"verdict": "fail", "at": "(ga) G-1 / G-2"}
             continue
         if t_result is None or s_result is None:
             verdicts[name] = {"verdict": "incomplete", "at": "(na)/(da) not run"}
@@ -953,7 +1013,8 @@ def report_markdown(result: dict, sources: list[Path]) -> str:
               f"{(row['got'] or 'None')[:12]} | {row['equal']} |" for row in r0["rows"]]
     for name, grid in result["grid"].items():
         lines += ["", f"## (ga) {name}", "",
-                  f"- G-1 {grid['G-1']}, G-2 {grid['G-2']}, G-3 {grid['G-3']}, "
+                  f"- status {grid['status']}, G-1 {grid['G-1']}, G-2 {grid['G-2']}, "
+                  f"G-3 {grid['G-3']}, "
                   f"G-4 {grid['G-4']}, min F_judged {_fmt(grid['min_F_judged_kN'])} kN",
                   f"- G-1 failures {grid['G-1_fail']}", f"- G-3 {grid['G-3_problems']}",
                   f"- G-4 {grid['G-4_problems']}",
@@ -1019,7 +1080,8 @@ def main(argv: list[str] | None = None) -> int:
     print(json.dumps({"candidates": result["candidates"], "ranking": result["ranking"],
                       "R-0": result["R-0"]["pass"], "stops": result["stops"]}))
     is_stop = bool(result["stops"]) or any(
-        verdict["verdict"] in ("undecidable", "ask") for verdict in result["candidates"].values())
+        verdict["verdict"] in ("undecidable", "ask", "stop")
+        for verdict in result["candidates"].values())
     return 1 if is_stop else 0
 
 
