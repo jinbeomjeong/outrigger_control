@@ -1079,6 +1079,55 @@ def test_the_draft_carries_the_r3_3_disclosure_and_four_hashes(tmp_path) -> None
     assert ft.RULES_REV3_SHA256[:12] in text and ft.RULES_REV2_SHA256[:12] in text
 
 
+# ------------------------------------------------------------------------------- judge, record
+def test_defect_b_and_margin_check_exclude_only_the_clipped_phase() -> None:
+    line = _budget_line("k", {"touch": 0.90, "level": 0.70},
+                        eff_by_phase={"touch": 0.95, "level": 0.87684},
+                        clipped={"level": 2})
+    defects = fj.scale_defects(line, 0.87684)
+    assert defects == ["절단 없이 s_vec != s_eff (['touch'])"]
+    touch_clipped = _budget_line("t", {"touch": 0.80, "level": 0.90},
+                                 eff_by_phase={"touch": 0.87684, "level": 0.90},
+                                 clipped={"touch": 3})
+    assert fj.scale_defects(touch_clipped, 0.87684) == []
+    report = fj.level_range_report(_data({"F-1": [line, touch_clipped]}))
+    assert report.startswith("LEVEL 최소 s_eff 0.900000(1실행)") and "뺀 실행 1" in report
+
+
+def _tagged(line: dict, tag: str | None) -> dict:
+    line["controller_tag"] = tag
+    return line
+
+
+def test_controller_tag_check_backs_the_clip_on_assumption() -> None:
+    v0 = _tagged(_line("L", "b", setting="V0"), "final_C4G2_LAS")
+    vb = _tagged(_line("LF", "a"), "final_C4G2_P3_LAS")
+    assert fj.controller_tag_check(_data({"F-1": [vb, v0]})) == (2, [])
+    wrong = _tagged(_line("L", "a"), "final_C4G2_P3")
+    matching, others = fj.controller_tag_check(_data({"F-1": [wrong, vb]}))
+    assert matching == 1 and "final_C4G2_P3" in others[0]
+    report = fj.clip_report(_data({"F-1": [wrong]}))
+    assert "c2.py:2496" in report[0] and "근거 없음" in report[-1]
+
+
+def test_commit_table_shows_every_bundle_and_whether_they_agree() -> None:
+    same = {"F-0": {"lines": 4, "commits": ["a" * 40]}, "F-1": {"lines": 2, "commits": ["a" * 40]}}
+    table = fj.commit_table(same)
+    assert "| F-0 | 4 | `aaaaaaaaaaaa` |" in table and table[-1] == "- 묶음 사이 커밋 같음"
+    other = {**same, "F-5": {"lines": 1, "commits": ["b" * 40]}}
+    assert fj.commit_table(other)[-1] == "- 묶음 사이 커밋 다름(2개)"
+
+
+def test_the_draft_has_the_record_lines(tmp_path) -> None:
+    bundles = {bundle: [] for bundle in ft.BUNDLES}
+    bundles["F-1"] = [_identified(_line("L", "a")), _identified(_line("LF", "a"))]
+    data = _data(bundles)
+    text = fj.render(data, [criterion(data) for criterion in fj.CRITERIA], tmp_path)
+    for note in (fj.PRIOR_OBSERVATION_REV3_NOTE, fj.CHANGED_RUNS_NOTE, fj.CLIP_NOTE):
+        assert note in text
+    assert "f0_rev3" in text and "b6a8a82" in text and "| F-1 | 2 |" in text
+
+
 def test_event_count_record_marks_truncation(monkeypatch) -> None:
     import verdict_runs
 

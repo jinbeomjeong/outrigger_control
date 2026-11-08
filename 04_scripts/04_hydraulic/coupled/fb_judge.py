@@ -99,6 +99,23 @@ PRIOR_OBSERVATION_NOTE = (
     "`v5/fb/fb_F0.jsonl`(rev3 도구로 다시 돈 줄)만 쓴다."
 )
 """rev3 R3-3 wording, verbatim."""
+PRIOR_OBSERVATION_REV3_NOTE = (
+    "**사전 관찰(공개, rev3 봉인 뒤)**: rev3 봉인(19:31:35) 뒤 rev3 도구 확인으로 scratch에서 "
+    "F-0 4줄을 다시 돌렸다(`scratchpad\\fbfix\\f0_rev3\\fb_F0.jsonl`, 커밋 `b6a8a82`, 19:42, "
+    "L·LF-off만이라 LF 결과는 없다). 해시는 rev2 R2-1 표와 같았다. 판정에는 쓰지 않는다."
+)
+CHANGED_RUNS_NOTE = (
+    "명령이 바뀐 실행 수는 R3-5 정의 기준(예산 작용 + 절단 다리 주기)이며, rev3:41의 둘째 "
+    "경우(옛 식은 작용하고 새 식은 작용하지 않는 주기)는 줄에 기록이 없어 세지 않았다."
+)
+CLIP_NOTE = (
+    "`clip_returned_command`는 R8 프리셋 기본 켬(`c2.py:2496`, 클래스 기본 꺼짐)이다. 실행 "
+    "줄에는 이 값이 없고 `controller_tag`만 있다. 그래서 줄의 `controller_tag`가 기대 태그"
+    "(C4G2 포함)인지로 절단 켬 가정을 확인한다."
+)
+EXPECTED_CONTROLLER_TAGS = {"VB": "final_C4G2_P3_LAS", "V0": "final_C4G2_LAS"}
+"""rev2 R2-1 ①: the controller tag of a new line per setting (C4G2 = the preset with the
+returned-command clip; LAS = 03_src LAS-b)."""
 PHASE_LEVEL = "level"
 """``str(c2.C2Phase.LEVEL)``, the phase string of ``acted_periods``."""
 SCALE_CANDIDATES = ("LF", "OL-LF")
@@ -671,8 +688,9 @@ def scale_defects(line: dict, reference_nominal: float | None) -> list[str]:
 
     No budget meta, s_nom or ``min_scale_eff`` (an older tool, R3-4); an s_nom other than the
     other runs'; (가) s_eff outside its range: > 1, < s_nom without a cut, < 0.5 s_nom; (나)
-    no clipped period but s_vec != s_eff in a phase. s_vec < s_nom from a leg above v_max is
-    not a defect (:func:`clipped_report`). Tolerance 1e-6; s_nom = the run's own value.
+    s_vec != s_eff in a phase without clipped budget periods (per phase: a run's clipped
+    LEVEL does not exempt its TOUCH). s_vec < s_nom from a leg above v_max is not a defect
+    (:func:`clipped_report`). Tolerance 1e-6; s_nom = the run's own value.
     """
     budget = _budget(line)
     if budget is None:
@@ -696,12 +714,12 @@ def scale_defects(line: dict, reference_nominal: float | None) -> list[str]:
         floor = ft.FLOOR_FRACTION * nominal
         if smallest < floor - SCALE_TOLERANCE:
             out.append(f"s_eff {smallest:.6f} < 하한 {floor:.6f}")
-    if not has_clipped_periods(line):
-        vector = budget.get("min_scale_by_phase") or {}
-        differing = sorted(phase for phase in set(vector) | set(effective)
-                           if vector.get(phase) != effective.get(phase))
-        if differing:
-            out.append(f"절단 없이 s_vec != s_eff ({differing})")
+    vector = budget.get("min_scale_by_phase") or {}
+    clipped_phases = set(budget.get("clipped_budget_periods") or {})
+    differing = sorted(phase for phase in (set(vector) | set(effective)) - clipped_phases
+                       if vector.get(phase) != effective.get(phase))
+    if differing:
+        out.append(f"절단 없이 s_vec != s_eff ({differing})")
     return out
 
 
@@ -716,19 +734,20 @@ def defect_report(data: Data) -> list[str]:
 
 
 def level_range_report(data: Data) -> str:
-    """rev2 R2-3 4: the LEVEL smallest s against the linear margin table range [floor, 1]; runs
-    with clipped budget periods are left out (rev3 R3-1: not a uniform-scale map, record
-    only)."""
+    """rev2 R2-3 4: the LEVEL smallest s against the linear margin table range [floor, 1]; a
+    run whose LEVEL had clipped budget periods is left out (rev3 R3-1: not a uniform-scale
+    map, record only); clipped periods in another phase do not remove its LEVEL value."""
     level, clipped = [], 0
     for _, _, line in budget_lines(data):
-        value = (_budget(line) or {}).get("min_scale_eff_by_phase", {}).get(PHASE_LEVEL)
+        budget = _budget(line) or {}
+        value = (budget.get("min_scale_eff_by_phase") or {}).get(PHASE_LEVEL)
         if value is None:
             continue
-        if has_clipped_periods(line):
+        if PHASE_LEVEL in (budget.get("clipped_budget_periods") or {}):
             clipped += 1
             continue
         level.append(value)
-    note = f", 절단 주기가 있어 표 대조에서 뺀 실행 {clipped}(기록만)" if clipped else ""
+    note = f", LEVEL 절단 주기가 있어 표 대조에서 뺀 실행 {clipped}(기록만)" if clipped else ""
     if not level:
         return f"LEVEL 작용 없음(대조할 s 없음){note}"
     smallest = min(level)
@@ -794,6 +813,48 @@ def identity_problems(identities: dict[str, dict]) -> list[str]:
         if record["tool_hash_sets"] > 1:
             problems.append(f"{bundle}: {record['tool_hash_sets']} tool sha256 sets")
     return problems
+
+
+def controller_tag_check(data: Data) -> tuple[int, list[str]]:
+    """(lines with the expected tag, texts of the others) over our lines (the stored F-2 L
+    lines are wrapper-era and not checked): the evidence for the clip-on assumption."""
+    matching, others = 0, []
+    for bundle in ft.BUNDLES:
+        for key, by_candidate in data.bundles.get(bundle, {}).items():
+            for name, line in by_candidate.items():
+                setting = (line.get("job") or {}).get("setting")
+                expected = EXPECTED_CONTROLLER_TAGS.get(setting)
+                tag = line.get("controller_tag")
+                if expected is not None and tag == expected:
+                    matching += 1
+                else:
+                    others.append(f"{bundle} {name} {key}: 설정 {setting}, 태그 {tag!r}, "
+                                  f"기대 {expected!r}")
+    return matching, others
+
+
+def clip_report(data: Data) -> list[str]:
+    matching, others = controller_tag_check(data)
+    lines = [CLIP_NOTE, f"기대 태그 줄 {matching}, 그 밖 {len(others)}"
+             + ("" if others else "(절단 켬 가정의 근거)")]
+    lines += [f"기대와 다른 태그(절단 켬 가정 근거 없음): {text}" for text in others]
+    return lines
+
+
+def commit_table(identities: dict[str, dict]) -> list[str]:
+    """Markdown rows: every bundle's commits, and whether all bundles share one."""
+    rows = ["| 묶음 | 줄 | 커밋 |", "|---|---|---|"]
+    rows += [f"| {bundle} | {record['lines']} | "
+             f"{', '.join(f'`{commit[:12]}`' for commit in record['commits']) or '-'} |"
+             for bundle, record in identities.items()]
+    commits = {commit for record in identities.values() for commit in record["commits"]}
+    if not commits:
+        verdict = "커밋 기록 없음"
+    elif len(commits) == 1:
+        verdict = "묶음 사이 커밋 같음"
+    else:
+        verdict = f"묶음 사이 커밋 다름({len(commits)}개)"
+    return [*rows, "", f"- {verdict}"]
 
 
 def identity_report(data: Data, identities: dict[str, dict]) -> list[str]:
@@ -887,6 +948,7 @@ def scale_text(data: Data) -> list[str]:
             "`clip_returned_command` 켬)이고, 축척 s* = max{s ≤ 1 : Q(c(s u)) ≤ Q_b}를 절단 전 "
             "벡터에 곱한다. 모든 |u_i| ≤ v_max이거나 절단이 꺼진 주기는 원판 식 그대로다.",
             f"- 명령이 바뀐 실행(예산 작용 + 절단 다리 주기가 있는 LF·OL-LF 줄): {len(clipped)}",
+            f"- {CHANGED_RUNS_NOTE}",
             f"- s = s_eff = Q(c(s* u))/Q(c(u)), s_vec = s*. s_nom = Q_nom/Q(4 v_max): 실행 계산값 "
             f"{computed}, rev2 표기 {SCALE_NOMINAL_REV2:.6f}(규칙 1.1의 57.1902 L/min 기준; "
             "YAML로는 57.1900 L/min). 하한 = 0.5 s_nom, 결함 후보 판정은 실행 계산값 기준, 허용 "
@@ -925,14 +987,16 @@ def render(data: Data, criteria: list[Criterion], out_dir: Path,
             "- F-2의 L: 저장 `v5/las/las_T1.jsonl`·`las_T2.jsonl` b0 act 줄",
             "- 두 경로 판정(python-expert 도구, control-expert 재집계)이 같아야 확정이다"
             "(규칙 8절).",
-            "", "## 사전 관찰(rev3 R3-3)", "", f"> {PRIOR_OBSERVATION_NOTE}",
+            "", "## 사전 관찰(rev3 R3-3)", "", f"> {PRIOR_OBSERVATION_NOTE}", "",
+            f"> {PRIOR_OBSERVATION_REV3_NOTE}",
             "", "## LAS-b 구현", ""]
     text += [f"> {line}" for line in las_path_text(data, identities)]
     text += ["", f"## 판정: **{verdict_of(criteria, issues, s1_result(data))}**", "",
             "| # | 항목 | 결과 | 요약 |", "|---|---|---|---|"]
     text += [f"| {c.name} | {c.title} | {_mark(c.passed)} | {c.summary} |" for c in criteria]
-    text += ["", "## 실행 정체성", ""]
+    text += ["", "## 실행 정체성", ""] + commit_table(identities) + [""]
     text += [f"- {line}" for line in identity_report(data, identities)]
+    text += ["", "### 반환 명령 절단 스위치", ""] + [f"- {line}" for line in clip_report(data)]
     text += [f"- 문제: {issue}" for issue in issues] or ["- 묶음별 커밋·도구 해시 하나씩"]
     text += ["", "## 멈춤 조건", ""] + [f"- {line}" for line in stop_report(data, out_dir)]
     text += scale_text(data)
@@ -971,6 +1035,7 @@ def judge(out_dir: Path, md_path: Path | None, family_keys: list[str] | None = N
             "s1": {"pass": s1["pass"], "problems": s1["problems"]},
             "scale_defects": len(defect_report(data)),
             "clipped_budget_runs": len(clipped_report(data)),
+            "controller_tag_others": len(controller_tag_check(data)[1]),
             "h4_pairs": {bundle: h4_counts(data, bundle)[0] for bundle in JUDGED_BUNDLES},
             "identity_problems": issues, "sealed_sha256": seal or {},
             "lines": {b: sum(len(v) for v in data.bundles[b].values()) for b in ft.BUNDLES}}
