@@ -1,5 +1,5 @@
-"""T4h shadow judge of the adopted LAS-b variant (sealed ``las_targeted_rules.md`` 4 and its
-sealed addendum ``las_targeted_rules_rev1.md`` 1, 2, 4, 5).
+"""T4h shadow judge of the adopted LAS-b variant (sealed ``las_targeted_rules.md`` 4, its
+sealed addenda ``las_targeted_rules_rev1.md`` 1, 2, 4, 5 and ``las_targeted_rules_rev2.md`` 2).
 
 Per stored record: did the variant's start gate (S1 .. S8 of rules 1.2, S7 = S7' of rev1 2)
 hold in any LEVEL step? ``fires`` = rerun needed, ``silent`` = the rule never starts, the
@@ -24,6 +24,13 @@ Inputs: T4h npz (``t_s``, ``phase``, ``meta_json`` with ``events`` and ``F_min_N
            LS) only the event runs carry rod-side readings; the steady runs are head-only
            (2026-11-08: 820 rebuildable, 822 head-only). ``r2`` also leaves out the records
            ``t4h_replay`` refuses (a ③ bound meta of revision 3, 135 Dg-3 records).
+  rule H   rev2 R-7 for a head-only record without it, given the R-8 result (``--r8``):
+           L-hat = p_h A_h - z - a(t) - b_k (``rule_h_load_estimate_N``; module part "Rule H"
+           below). R-8 (``r8``) measures max |rule H - stored L-hat| over the pre-LOC LEVEL
+           steps of (a) the stored head-only gate records (D-1) and (b) gate-mode reruns of
+           sampled head-only T4h records; R-9 sets the mode as R-3 .. R-5 (exact <= 1 N, band
+           <= 500 N, otherwise H-9: stop). A record judged this way carries ``mode:
+           head_only_rule``, ``source`` and ``head_only_basis`` (rev2 R-10).
 W_ref is ``meta.W_ref_N`` or, without it, the YAML superstructure mass x g
 (``C2Controller._reference_weight_N``); S1 is ``meta.soil_enable`` or, without it, true
 (assumption, listed per record; rev1 I-3).
@@ -92,16 +99,51 @@ Confirmation 2 (rules 4): in a soil-response run before the LOC every LEVEL step
 Same-time order: every event above is raised at ``reading.t_s`` = ``t_s[k]`` and, except the
   LOC revocation (after the command, not read here), before the wrapper point of that update.
 
+Rule H (rev2 R-7, checked in the code 2026-11-08).
+  Controller path. ``TwoPressureMonitor.read`` takes the head-only branch when
+  ``rod_pressure_Pa is None`` or ``load_estimate is LoadEstimate.HEAD_ONLY``: all four readings
+  are ``head_only = head_pressure_Pa * head_area_m2`` and ``_corrected`` takes the E-3 zero
+  offsets off them and the E-6 allowance off ``lower`` (``lower - offsets - allowance``, in that
+  order). ``head_area_m2`` is ``C2Geometry.head_area_m2`` (``leg_head_areas_from_params``). The
+  ``head_pressure_Pa`` the monitor reads differs from the logged input only after
+  ``hold_head_readings`` (P-S8-24, called when ``fault_reground_start`` is raised after a
+  ``FAULT_HEAD_PRESSURE``): such a record before its LOC is undecidable (rev2 R-7 exclusion).
+  ``C2Controller._load_estimate_N`` then subtracts ``_leg_seal_bands_N()`` (b_k = the logged
+  ``seal_band_N`` row, confirmation 1; 0 for ``ContactJudge.PRESSURE``).
+  Times. The zero offsets act from the row after each leg's ``INFO_PRESSURE_ZERO_CALIBRATED``
+  event, the allowance after ``pressure_offset_allowance_from_s`` (or, without it, from those
+  calibration rows), as ``contact_replay.replay_fallback_monitor`` applies them. z = meta
+  ``zero_offset_N``; a(t) = ``t4h_replay.offset_allowance_of`` (the recorded fields, else
+  ``rebuilt_offset_allowance`` from the events and the run's setting).
+  Target (``head_only_basis``), per record source:
+    main, item8   ``run_v5`` steady jobs written by ``verdict_runs.write_t4h_record`` before the
+                  ``head_only_declared`` key: ``verdict_runs.execute`` ("the steady path never
+                  gives the controller a rod reading") and ``LoggedController._logged_readings``
+                  (NaN when ``measurements.rod_pressure_Pa is None``) -> ``rod_pressure_Pa`` all
+                  NaN. ``j_p3_inputs.harness_head_only_declared`` reads these as declared by the
+                  steady path of the case.
+    p3_hash       ``run_v5.py p3_hash`` reruns of the same steady jobs (``p3_hash_check.py`` 4:
+                  "T4h rod_pressure_Pa all NaN, the head-only harness rows").
+    u9_targeted   ``run_v5`` jobs with ``eta_v``; ``verdict_runs.execute`` writes meta
+                  ``head_only_declared`` True for the steady path, and the rod row is all NaN.
+    D-1           ``d1_runs`` (``head_only_declared = row.path != "event"``) through
+                  ``las_targeted.py --gate-npz-dir`` (``period_arrays`` of the same logger).
+  A record with ``head_only_declared`` but finite rod readings, or a monitor setting
+  ``load_estimate`` other than ``head_only`` with finite rod readings, is not a target.
+
 Usage (dynamics-dev python, project root):
   python -I -B .../las_shadow.py r2 --t4h DIR_OR_NPZ ... --out <r2 json> [--workers 4]
+  python -I -B .../las_shadow.py r8 [--stored GATE_DIR_OR_NPZ ...] [--rerun T4H_NPZ ...]
+      [--v0-twin] [--workers 2] [--affinity HEX] [--reuse-runs] --out-dir DIR
   python -I -B .../las_shadow.py judge (--t4h DIR_OR_NPZ ... | --jsonl X --t4h-dir D)
-      [--r2 <r2 json>] [--candidate b0 | custom --alpha ...] [--workers 4] --out <jsonl>
+      [--r2 <r2 json>] [--r8 <r8 json>] [--candidate b0 | custom --alpha ...] [--workers 4]
+      --out <jsonl>
   python -I -B .../las_shadow.py v1 --instrumented <las_V1.jsonl> --npz-dir DIR [--r2 <json>]
   python -I -B .../las_shadow.py v2 --shadow <judge out jsonl> [--count 3] [--candidate b0]
       [--workers 3] [--affinity HEX] --out <jsonl>
 The last stdout line is JSON. Exit codes: 0 done / check passed, 1 check failed (r2 rejected or
-a validation record could not be rebuilt, judge over the R-5 undecidable limit, V-1, V-2) or
-run errors, 2 input error.
+a validation record could not be rebuilt, r8 H-9 or incomplete, judge over the R-5 undecidable
+limit, V-1, V-2) or run errors, 2 input error.
 """
 from __future__ import annotations
 
@@ -109,7 +151,7 @@ import argparse
 import functools
 import json
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from multiprocessing import get_context
 from pathlib import Path
 
@@ -162,11 +204,31 @@ V1_MIN_REBUILT = 3
 """rev1 R-6: V-1 holds at least 3 records judged on the rebuild path."""
 V2_COUNT = 3
 
+MODE_HEAD_ONLY = "head_only_rule"
+"""rev2 R-10: the mode of a record judged with rule H."""
+HEAD_ONLY_ARRAYS = ("t_s", "phase", "head_pressure_Pa", "seal_band_N")
+HEAD_ONLY_META = ("events", "two_pressure_settings", "hydraulic_options")
+HEAD_ONLY_SETTING = "head_only"
+"""``LoadEstimate.HEAD_ONLY`` value in the monitor settings meta (``load_estimate``)."""
+HEAD_FAULT_EVENTS = ("FAULT_HEAD_PRESSURE", "fault_reground_start")
+"""A head-sensor fault and the start of its re-ground, where the head reading is held."""
+ALLOWANCE_TIME_TOLERANCE_S = 1e-9
+"""``replay_fallback_monitor``: the allowance acts on rows with t > from_s + 1e-9."""
+KNOWN_SOURCES = ("main", "item8", "p3_hash", "u9_targeted", "overlap", "dg3")
+"""v5 batch folders of the stored T4h records (the record source of rev2 R-7)."""
+SOURCE_D1 = "D-1"
+SOURCE_OTHER = "other"
+R8_MIN_PER_SOURCE = {"main": 2, "item8": 1, "p3_hash": 1, "u9_targeted": 2}
+"""rev2 R-8 (b): rerun samples per record source (6 or more)."""
+R8_RUN_FILE = "r8_rerun.jsonl"
+V0_SETTING = "V0"
+
 
 # ------------------------------------------------------------------------------- record
 @dataclass(frozen=True)
 class RebuildSetting:
-    """The R-2 result a judge applies to every rebuilt record."""
+    """The R-2 result a judge applies to every rebuilt record (or the R-8 / R-9 result it
+    applies to every rule-H record)."""
 
     delta_N: float
     mode: str
@@ -174,6 +236,18 @@ class RebuildSetting:
     @classmethod
     def from_r2(cls, path: Path) -> RebuildSetting:
         report = json.loads(path.read_text(encoding="utf-8"))
+        return cls(float(report["max_abs_N"]), str(report["mode"]))
+
+    @classmethod
+    def from_r8(cls, path: Path) -> RebuildSetting:
+        """The R-9 mode of an ``r8`` output.
+
+        Raises:
+            ValueError: The R-8 check was incomplete (a part or a sample group missing).
+        """
+        report = json.loads(path.read_text(encoding="utf-8"))
+        if not report.get("complete"):
+            raise ValueError(f"{path.name}: R-8 incomplete ({report.get('problems')})")
         return cls(float(report["max_abs_N"]), str(report["mode"]))
 
 
@@ -201,6 +275,11 @@ class ShadowRecord:
     mode: str = MODE_STORED
     delta_N: float = 0.0
     """The widening of the gate (0 except in band mode)."""
+    source: str | None = None
+    head_only_basis: str | None = None
+    """Why the record is a rule-H target (rule-H records only)."""
+    rule_h_mode: str | None = None
+    """R-9 mode of rule H, ``exact`` or ``band`` (rule-H records only)."""
 
 
 class _LoadEstimateView:
@@ -264,6 +343,122 @@ def rebuilt_load_estimate_N(arrays: dict, meta: dict, name: str) -> tuple[np.nda
     return load_estimate_transform(config, lower, arrays["seal_band_N"]), config
 
 
+# ------------------------------------------------------------------------------- rule H
+def record_source(path: Path, job: dict | None = None) -> str:
+    """Record source of rev2 R-7: ``D-1`` for a D-1 job, else the v5 batch folder."""
+    if job is not None and "d1" in job:
+        return SOURCE_D1
+    for part in reversed(path.parts[:-1]):
+        if part in KNOWN_SOURCES:
+            return part
+    return SOURCE_OTHER
+
+
+def _is_head_only_setting(meta: dict | None) -> bool:
+    value = ((meta or {}).get("two_pressure_settings") or {}).get("load_estimate")
+    # str() of the enum member may carry the class name ("LoadEstimate.HEAD_ONLY")
+    return value is not None and str(value).lower().endswith(HEAD_ONLY_SETTING)
+
+
+def head_only_basis(arrays: dict, meta: dict | None) -> str | None:
+    """Why no rod-side reading reached the controller (rev2 R-7 target), None = not a target.
+
+    Raises:
+        ValueError: The record declares a head-only run but carries finite rod readings.
+    """
+    is_declared = bool((meta or {}).get("head_only_declared"))
+    if "rod_pressure_Pa" not in arrays:
+        return "no rod_pressure_Pa"
+    if not np.isfinite(np.asarray(arrays["rod_pressure_Pa"], float)).any():
+        return "rod_pressure_Pa all NaN" + ("; head_only_declared" if is_declared else "")
+    if _is_head_only_setting(meta):
+        return "LoadEstimate.HEAD_ONLY"
+    if is_declared:
+        raise ValueError("head_only_declared with finite rod_pressure_Pa readings")
+    return None
+
+
+def head_fault_before_loc(events: list[tuple[float, str]]) -> str | None:
+    """The first head-fault event before the first LOC (rev2 R-7 exclusion), or None."""
+    t_loc = _first_time(events, LOC_EVENTS)
+    for t_s, name in sorted(events):
+        if t_loc is not None and t_s >= t_loc - TIME_TOLERANCE_S:
+            return None
+        if name.split(":")[0] in HEAD_FAULT_EVENTS:
+            return f"{name} at {t_s:.3f} s"
+    return None
+
+
+def correction_masks(t_s: np.ndarray, events: list[tuple[float, str]], period_s: float,
+                     allowance_from_s: float | None) -> tuple[np.ndarray, np.ndarray]:
+    """(zero offset on, allowance on) per row and leg, as ``replay_fallback_monitor``."""
+    from outrigger_sim.control.contact_replay import _calibration_rows
+
+    rows = np.arange(len(t_s))[:, None]
+    is_calibrated = _calibration_rows(events, t_s, period_s)[None, :] <= rows
+    if allowance_from_s is None:
+        return is_calibrated, is_calibrated
+    after = t_s[:, None] > allowance_from_s + ALLOWANCE_TIME_TOLERANCE_S
+    return is_calibrated, np.broadcast_to(after, is_calibrated.shape)
+
+
+def rule_h_lower_N(head_pressure_Pa: np.ndarray, head_area_m2: np.ndarray,
+                   zero_offset_N: np.ndarray, is_offset: np.ndarray, allowance_N: np.ndarray,
+                   has_allowance: np.ndarray) -> np.ndarray:
+    """``p_h A_h - z - a`` per row: the monitor's head-only ``lower`` (``_corrected`` order)."""
+    head_only = np.asarray(head_pressure_Pa, float) * np.asarray(head_area_m2, float)
+    offsets = np.where(is_offset, np.asarray(zero_offset_N, float), 0.0)
+    allowance = np.where(has_allowance, np.asarray(allowance_N, float), 0.0)
+    return head_only - offsets - allowance
+
+
+def rule_h_load_estimate_N(arrays: dict, meta: dict, name: str) -> tuple[np.ndarray, object]:
+    """rev2 R-7: (L-hat per update, run config) of a head-only record.
+
+    Raises:
+        KeyError: A field rule H needs is missing.
+        RuntimeError: The rebuilt monitor settings differ from the stored ones.
+        ValueError: The run setting cannot be rebuilt (``t4h_replay``).
+    """
+    import t4h_replay as tr
+
+    from outrigger_sim.control.c2 import C2Geometry
+
+    missing = [field for field in HEAD_ONLY_ARRAYS if field not in arrays]
+    missing += [f"meta.{field}" for field in HEAD_ONLY_META if meta.get(field) is None]
+    if missing:
+        raise KeyError(f"missing {missing}")
+    closed_loop, config, _ = tr.checked_run_config(name, meta)
+    allowance = tr.offset_allowance_of(meta, config)
+    head_area_m2 = C2Geometry.from_params(closed_loop.PARAMS).head_area_m2
+    t_s = np.asarray(arrays["t_s"], float)
+    events = [(float(t), str(event)) for t, event in meta["events"]]
+    period_s = float(meta.get("period_s") or config.period_s)
+    is_offset, has_allowance = correction_masks(t_s, events, period_s, allowance.from_s)
+    zero_offset_N = meta.get("zero_offset_N") or np.zeros(4)
+    lower = rule_h_lower_N(arrays["head_pressure_Pa"], head_area_m2, zero_offset_N, is_offset,
+                           allowance.deduction_N, has_allowance)
+    return load_estimate_transform(config, lower, arrays["seal_band_N"]), config
+
+
+def head_only_record(path: Path, arrays: dict, meta: dict, rule_h: RebuildSetting, basis: str
+                     ) -> tuple[ShadowRecord | None, str | None]:
+    """The record judged with rule H (rev2 R-7, R-9, R-10), or why it cannot be."""
+    if rule_h.mode == MODE_REJECT:
+        return None, f"H-9: R-8 delta {rule_h.delta_N:.3f} N > {BAND_LIMIT_N:g} N"
+    events = [(float(t), str(name)) for t, name in meta.get("events") or []]
+    fault = head_fault_before_loc(events)
+    if fault is not None:
+        return None, f"R-7: head fault before LOC ({fault})"
+    try:
+        estimate, _ = rule_h_load_estimate_N(arrays, meta, path.name)
+    except (KeyError, RuntimeError, ValueError) as exc:
+        return None, f"R-7: rule H failed: {exc}"
+    delta_N = rule_h.delta_N if rule_h.mode == MODE_BAND else 0.0
+    record = _shadow_record(path, arrays, meta, estimate, MODE_HEAD_ONLY, delta_N)
+    return replace(record, head_only_basis=basis, rule_h_mode=rule_h.mode), None
+
+
 def _load_npz(path: Path) -> tuple[dict, dict | None]:
     with np.load(path, allow_pickle=False) as data:
         arrays = {name: np.asarray(data[name]) for name in data.files if name != "meta_json"}
@@ -271,14 +466,17 @@ def _load_npz(path: Path) -> tuple[dict, dict | None]:
     return arrays, meta
 
 
-def read_record(path: Path, rebuild: RebuildSetting | None = None
-                ) -> tuple[ShadowRecord | None, str | None]:
-    """(record, None) or (None, why it cannot be judged)."""
+def read_record(path: Path, rebuild: RebuildSetting | None = None,
+                rule_h: RebuildSetting | None = None) -> tuple[ShadowRecord | None, str | None]:
+    """(record, None) or (None, why it cannot be judged).
+
+    A stored L-hat is used as it is; without one a head-only record takes rule H (with
+    ``rule_h``), any other record the R-1 rebuild (with ``rebuild``)."""
     arrays, meta = _load_npz(path)
     missing = [name for name in BASE_ARRAYS if name != "meta_json" and name not in arrays]
     if meta is None:
         missing.append("meta_json")
-    if "lower_estimate_N" not in arrays and rebuild is None:
+    if "lower_estimate_N" not in arrays and rebuild is None and rule_h is None:
         missing.append("lower_estimate_N")
     if missing:
         return None, f"missing {missing}"
@@ -289,6 +487,15 @@ def read_record(path: Path, rebuild: RebuildSetting | None = None
     if "lower_estimate_N" in arrays:
         estimate = np.asarray(arrays["lower_estimate_N"], float).reshape(-1, 4)
         return _shadow_record(path, arrays, meta, estimate, MODE_STORED, 0.0), None
+    if rule_h is not None:
+        try:
+            basis = head_only_basis(arrays, meta)
+        except ValueError as exc:
+            return None, f"R-7: {exc}"
+        if basis is not None:
+            return head_only_record(path, arrays, meta, rule_h, basis)
+    if rebuild is None:
+        return None, "missing ['lower_estimate_N'] (not head-only, no --r2)"
     return rebuilt_record(path, arrays, meta, rebuild)
 
 
@@ -313,7 +520,8 @@ def _shadow_record(path: Path, arrays: dict, meta: dict, estimate: np.ndarray, m
         events=[(float(t), str(name)) for t, name in meta.get("events") or []],
         F_min_N=meta.get("F_min_N"), weight_ref_N=meta.get("W_ref_N"),
         soil_enable=meta.get("soil_enable"), job=meta.get("job"),
-        commands_sha256=meta.get("commands_sha256"), mode=mode, delta_N=delta_N)
+        commands_sha256=meta.get("commands_sha256"), mode=mode, delta_N=delta_N,
+        source=record_source(path, meta.get("job")))
 
 
 _YAML_WEIGHT: dict = {}
@@ -444,7 +652,10 @@ def shadow_judge(record: ShadowRecord, params: lt.LasParams) -> dict:
         assumptions.append("S1 assumed true")
     out = {"file": record.name, "job": record.job, "commands_sha256": record.commands_sha256,
            "assumptions": assumptions, "mode": record.mode, "delta_N": record.delta_N,
-           "s7p_first_t_s": float(record.t_s[s7_alone[0]]) if s7_alone.size else None}
+           "s7p_first_t_s": float(record.t_s[s7_alone[0]]) if s7_alone.size else None,
+           "source": record.source}
+    if record.mode == MODE_HEAD_ONLY:
+        out.update(head_only_basis=record.head_only_basis, rule_h_mode=record.rule_h_mode)
     if fired.size:
         k = int(fired[0])
         return {**out, "status": FIRES, "first_fire_t_s": float(record.t_s[k])}
@@ -463,10 +674,12 @@ def shadow_judge(record: ShadowRecord, params: lt.LasParams) -> dict:
                         "closest": closest, "max_pre_loc_rho": _max_pre_loc_rho(record, gates)}}
 
 
-def judge_file(path: Path, params: lt.LasParams, rebuild: RebuildSetting | None = None) -> dict:
-    record, why = read_record(path, rebuild)
+def judge_file(path: Path, params: lt.LasParams, rebuild: RebuildSetting | None = None,
+               rule_h: RebuildSetting | None = None) -> dict:
+    record, why = read_record(path, rebuild, rule_h)
     if record is None:
-        return {"file": path.name, "status": UNDECIDABLE, "reason": why}
+        return {"file": path.name, "status": UNDECIDABLE, "reason": why,
+                "source": record_source(path)}
     return shadow_judge(record, params)
 
 
@@ -518,10 +731,29 @@ def _mode_counts(results: list[dict]) -> dict[str, dict[str, int]]:
     return out
 
 
+def _source_counts(results: list[dict]) -> dict[str, dict[str, int]]:
+    out: dict[str, dict[str, int]] = {}
+    for result in results:
+        by_status = out.setdefault(str(result.get("source")),
+                                   {FIRES: 0, SILENT: 0, UNDECIDABLE: 0})
+        by_status[result["status"]] += 1
+    return out
+
+
+def _reason_group(reason: str) -> str:
+    """R-5 / H-9 by their rule, R-7 by its cause (the event or field left out)."""
+    if reason.startswith(("R-5", "H-9")):
+        return reason.split(":")[0]
+    if reason.startswith("R-7"):
+        return ":".join(reason.split(" (")[0].split(":")[:2])
+    return reason
+
+
 def run_judge(args) -> int:
     params = params_from_args(args)
     rebuild = None if args.r2 is None else RebuildSetting.from_r2(args.r2)
-    judge = functools.partial(judge_file, params=params, rebuild=rebuild)
+    rule_h = None if args.r8 is None else RebuildSetting.from_r8(args.r8)
+    judge = functools.partial(judge_file, params=params, rebuild=rebuild, rule_h=rule_h)
     if args.jsonl is not None:
         pairs = files_of_jsonl(args.jsonl, args.t4h_dir)
         present = [path for _, path in pairs if path is not None and path.exists()]
@@ -539,15 +771,16 @@ def run_judge(args) -> int:
     reasons: dict[str, int] = {}
     for result in results:
         if result["status"] == UNDECIDABLE:
-            reason = result["reason"].split(":")[0] if result["reason"].startswith("R-5") \
-                else result["reason"]
+            reason = _reason_group(result["reason"])
             reasons[reason] = reasons.get(reason, 0) + 1
     is_over_limit = counts[UNDECIDABLE] > UNDECIDABLE_LIMIT
     print(f"{len(results)} records: {counts}; by mode {_mode_counts(results)}; "
-          f"undecidable reasons {reasons}")
+          f"by source {_source_counts(results)}; undecidable reasons {reasons}")
     print(json.dumps({"command": "judge", "params": params.to_dict(), "records": len(results),
                       **counts, "by_mode": _mode_counts(results),
+                      "by_source": _source_counts(results),
                       "rebuild": None if rebuild is None else vars(rebuild),
+                      "rule_h": None if rule_h is None else vars(rule_h),
                       "undecidable_reasons": reasons, "stop_R5": is_over_limit,
                       "out": str(args.out)}))
     return 1 if is_over_limit else 0
@@ -623,6 +856,231 @@ def run_r2(args) -> int:
             print(f"{row['file']}: {row['status']} {row.get('max_abs_N', row.get('reason'))}")
     print(json.dumps({**verdict, "out": str(args.out)}))
     return 0 if verdict["mode"] != MODE_REJECT and not verdict["failed"] else 1
+
+
+# ------------------------------------------------------------------------------- R-8
+def rule_h_difference(arrays: dict, meta: dict, name: str, stored_N: np.ndarray) -> dict:
+    """max |rule H - stored L-hat| over the pre-LOC LEVEL steps (and over all steps).
+
+    Raises:
+        KeyError, RuntimeError, ValueError: As :func:`rule_h_load_estimate_N`; ValueError also
+            when the stored L-hat has another number of rows.
+    """
+    estimate, config = rule_h_load_estimate_N(arrays, meta, name)
+    stored = np.asarray(stored_N, float).reshape(-1, 4)
+    if stored.shape != estimate.shape:
+        raise ValueError(f"stored L-hat {stored.shape} != rule H {estimate.shape}")
+    events = [(float(t), str(event)) for t, event in meta.get("events") or []]
+    rows = _pre_loc_level_rows(np.asarray(arrays["phase"]).astype(str),
+                               np.asarray(arrays["t_s"], float), events)
+    difference = _abs_difference(estimate, stored)
+    pre_loc = difference[rows]
+    return {"rows": int(rows.sum()), "max_abs_N": float(pre_loc.max()) if pre_loc.size else 0.0,
+            "all_rows_max_abs_N": float(difference.max()) if difference.size else 0.0,
+            "transform": transform_name(config)}
+
+
+def rule_h_check(arrays: dict, meta: dict | None, name: str, stored_N: np.ndarray) -> dict:
+    """``status`` and values of rule H on one record against ``stored_N``."""
+    if meta is None:
+        return {"status": "failed", "reason": "missing meta_json"}
+    try:
+        basis = head_only_basis(arrays, meta)
+    except ValueError as exc:
+        return {"status": "not a target", "reason": str(exc)}
+    if basis is None:
+        return {"status": "not a target", "reason": "rod-side readings present"}
+    fault = head_fault_before_loc([(float(t), str(e)) for t, e in meta.get("events") or []])
+    if fault is not None:
+        return {"status": "excluded", "reason": f"head fault before LOC ({fault})"}
+    try:
+        values = rule_h_difference(arrays, meta, name, stored_N)
+    except (KeyError, RuntimeError, ValueError) as exc:
+        return {"status": "failed", "reason": repr(exc)}
+    return {"status": "compared", "basis": basis, **values}
+
+
+def r8_stored_record(path: Path, source: str | None = None) -> dict:
+    """R-8 (a): rule H on a record with a stored L-hat (a gate record) against that L-hat."""
+    arrays, meta = _load_npz(path)
+    row = {"file": path.name,
+           "source": source or record_source(path, (meta or {}).get("job"))}
+    if "lower_estimate_N" not in arrays:
+        return {**row, "status": "no stored L-hat"}
+    return {**row, **rule_h_check(arrays, meta, path.name, arrays["lower_estimate_N"])}
+
+
+@dataclass(frozen=True)
+class RerunSample:
+    """One R-8 (b) rerun: the stored T4h record it repeats (None for the V0 twin)."""
+
+    source: str
+    job: dict
+    original: Path | None
+
+    @property
+    def label(self) -> str:
+        name = "V0 twin" if self.original is None else self.original.name
+        return f"{self.source}/{name}"
+
+
+def r8_samples(paths: list[Path], with_v0_twin: bool) -> list[RerunSample]:
+    """The R-8 (b) reruns of ``paths``; ``with_v0_twin`` adds the first main job with V0.
+
+    The stored head-only T4h records are all VB / LS runs (``run_v5.T4H_SETTINGS``), so the V0
+    side of rev2 R-8 is a twin run of a sampled job, judged on its own gate record.
+
+    Raises:
+        ValueError: A record without a ``run_v5`` job, or a twin without a main sample.
+    """
+    samples = []
+    for path in paths:
+        _, meta = _load_npz(path)
+        job = dict((meta or {}).get("job") or {})
+        if "case" not in job:
+            raise ValueError(f"{path.name}: not a run_v5 job ({sorted(job)})")
+        samples.append(RerunSample(record_source(path, job), job, path))
+    if with_v0_twin:
+        main = [sample for sample in samples if sample.source == "main"]
+        if not main:
+            raise ValueError("--v0-twin needs a main sample")
+        twin = {key: value for key, value in main[0].job.items()
+                if key not in ("eta_v", "u9_metrics")}
+        samples.append(RerunSample("main", {**twin, "setting": V0_SETTING}, None))
+    return samples
+
+
+def r8_coverage(samples: list[RerunSample]) -> list[str]:
+    """rev2 R-8 (b) sample rules: per-source counts, eps 0 and > 0, VB and V0."""
+    problems = []
+    stored = [sample for sample in samples if sample.original is not None]
+    for source, needed in R8_MIN_PER_SOURCE.items():
+        count = sum(sample.source == source for sample in stored)
+        if count < needed:
+            problems.append(f"{source}: {count} samples < {needed}")
+    eps = [float(sample.job.get("eps") or 0.0) for sample in samples]
+    if not (any(value == 0.0 for value in eps) and any(value > 0.0 for value in eps)):
+        problems.append(f"eps {sorted(set(eps))} (0 and > 0 needed)")
+    settings = {sample.job.get("setting") for sample in samples}
+    if not {"VB", V0_SETTING} <= settings:
+        problems.append(f"settings {sorted(map(str, settings))} (VB and V0 needed)")
+    return problems
+
+
+def _rerun_lines(samples: list[RerunSample], params: lt.LasParams, args) -> list[dict]:
+    """Gate-mode lines of the samples (``las_targeted.run_las_job``), in sample order; with
+    ``--reuse-runs`` the lines of an earlier run in ``--out-dir``."""
+    path = args.out_dir / R8_RUN_FILE
+    if args.reuse_runs:
+        lines = [json.loads(t) for t in path.read_text(encoding="utf-8").splitlines()]
+        by_index = {line["r8_sample"]: line for line in lines}
+        return [by_index[index] for index in range(len(samples))]
+    mask = None if args.affinity is None else int(args.affinity, 16)
+    jobs = []
+    for index, sample in enumerate(samples):
+        gate_dir = str((args.out_dir / f"gate_{index:02d}").resolve())  # no name collisions
+        jobs += lt.with_las([dict(sample.job)], args.candidate, params, lt.MODE_GATE, mask,
+                            gate_dir)
+    import run_v5  # noqa: F401  (sys.path of the harness, as las_targeted.run_batch)
+    import verdict_runs
+
+    verdict_runs.warm_numba_cache()
+    with get_context("spawn").Pool(args.workers, maxtasksperchild=1) as pool:
+        lines = pool.map(lt.run_las_job, jobs, chunksize=1)
+    args.out_dir.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as handle:
+        for index, line in enumerate(lines):
+            line["r8_sample"] = index
+            line["job"].pop("mask", None)
+            handle.write(json.dumps(line, default=str) + "\n")
+    return lines
+
+
+def r8_rerun_row(index: int, sample: RerunSample, line: dict, out_dir: Path) -> dict:
+    """R-8 (b) of one rerun: rule H on its gate record against its stored L-hat and, when the
+    command hash equals the stored record's, rule H on the stored record against it."""
+    row = {"label": sample.label, "source": sample.source, "setting": sample.job.get("setting"),
+           "eps": sample.job.get("eps"), "eta_v": sample.job.get("eta_v"),
+           "commands_sha256": line.get("commands_sha256")}
+    gate_name = (line.get("las") or {}).get("gate_npz")
+    if "error" in line or gate_name is None:
+        return {**row, "status": "run error", "reason": str(line.get("error"))[:300]}
+    gate_path = out_dir / f"gate_{index:02d}" / gate_name
+    row["rerun"] = r8_stored_record(gate_path, sample.source)
+    if sample.original is None:
+        return {**row, "status": row["rerun"]["status"]}
+    arrays, meta = _load_npz(sample.original)
+    row["hash_equal"] = line.get("commands_sha256") == (meta or {}).get("commands_sha256")
+    gate_arrays, _ = _load_npz(gate_path)
+    is_same_rows = all(np.array_equal(arrays[name], gate_arrays[name], equal_nan=True)
+                       for name in ("t_s", "head_pressure_Pa", "seal_band_N"))
+    row["inputs_equal"] = is_same_rows
+    if not (row["hash_equal"] and is_same_rows):
+        row["original"] = {"status": "not compared (rerun differs from the stored record)"}
+    else:
+        row["original"] = rule_h_check(arrays, meta, sample.original.name,
+                                       gate_arrays["lower_estimate_N"])
+    is_compared = row["rerun"]["status"] == row["original"]["status"] == "compared"
+    return {**row, "status": "compared" if is_compared else "incomplete"}
+
+
+def _compared_values(row: dict) -> list[float]:
+    """The rule-H differences of an R-8 row (a stored record, or both parts of a rerun)."""
+    parts = [row] if "rerun" not in row else [row["rerun"], row.get("original") or {}]
+    return [part["max_abs_N"] for part in parts if part.get("status") == "compared"]
+
+
+def r8_verdict(stored_rows: list[dict], rerun_rows: list[dict], problems: list[str]) -> dict:
+    """R-9 of the R-8 rows: largest difference per source and overall, the mode."""
+    problems = list(problems)
+    compared_a = [row for row in stored_rows if row["status"] == "compared"]
+    if not compared_a:
+        problems.append("(a): no compared stored head-only record")
+    problems += [f"(a) {row['file']}: {row['status']}" for row in stored_rows
+                 if row["status"] == "failed"]
+    if not rerun_rows:
+        problems.append("(b): no rerun")
+    problems += [f"(b) {row['label']}: {row['status']}" for row in rerun_rows
+                 if row["status"] != "compared"]
+    by_source: dict[str, dict] = {}
+    for part, rows in (("a", compared_a), ("b", rerun_rows)):
+        for row in rows:
+            values = _compared_values(row)
+            entry = by_source.setdefault(row["source"], {"records": 0, "max_abs_N": 0.0})
+            entry["records"] += 1 if values else 0
+            entry["max_abs_N"] = max([entry["max_abs_N"], *values])
+            entry.setdefault("parts", set()).add(part)
+    for entry in by_source.values():
+        entry["parts"] = sorted(entry["parts"])
+    values = [value for row in [*compared_a, *rerun_rows] for value in _compared_values(row)]
+    delta_N = max(values) if values else float("nan")
+    mode = rebuild_mode(delta_N)
+    return {"command": "r8", "records_a": len(compared_a),
+            "records_b": sum(row["status"] == "compared" for row in rerun_rows),
+            "by_source": by_source, "max_abs_N": delta_N, "mode": mode,
+            "stop_H9": mode == MODE_REJECT, "complete": not problems, "problems": problems}
+
+
+def run_r8(args) -> int:
+    params = params_from_args(args)
+    stored_rows = [r8_stored_record(path) for path in npz_files(args.stored)]
+    samples = r8_samples(args.rerun, args.v0_twin) if args.rerun else []
+    problems = r8_coverage(samples) if samples else []
+    lines = _rerun_lines(samples, params, args) if samples else []
+    rerun_rows = [r8_rerun_row(index, sample, line, args.out_dir)
+                  for index, (sample, line) in enumerate(zip(samples, lines, strict=True))]
+    verdict = r8_verdict(stored_rows, rerun_rows, problems)
+    args.out_dir.mkdir(parents=True, exist_ok=True)
+    out = args.out_dir / "r8.json"
+    out.write_text(json.dumps({**verdict, "stored_rows": stored_rows, "rerun_rows": rerun_rows},
+                              indent=1, default=str), encoding="utf-8")
+    for row in rerun_rows:
+        print(f"{row['label']:<44} {row['setting']} eps {row['eps']}: {row['status']} "
+              f"rerun {row.get('rerun', {}).get('max_abs_N')} "
+              f"stored {(row.get('original') or {}).get('max_abs_N')} "
+              f"hash_equal {row.get('hash_equal')}")
+    print(json.dumps({**verdict, "out": str(out)}, default=str))
+    return 0 if verdict["complete"] and not verdict["stop_H9"] else 1
 
 
 # ------------------------------------------------------------------------------- V-1
@@ -756,12 +1214,16 @@ def _is_rerunnable(job: dict | None) -> bool:
 
 
 def pick_silent(shadow_lines: list[dict], count: int) -> list[dict]:
-    """``count`` silent rerunnable records with a command hash, rebuild-path records first
-    (rev1 R-6: the new path is the one to check), each group in file order."""
-    picked = [line for line in shadow_lines if line["status"] == SILENT
-              and _is_rerunnable(line.get("job")) and line.get("commands_sha256")]
-    picked.sort(key=lambda line: line.get("mode", MODE_STORED) == MODE_STORED)
-    return picked[:count]
+    """``count`` silent rerunnable records with a command hash: the first rule-H record (rev2
+    R-10: V-2 holds one or more), then rebuild-path records first (rev1 R-6: the new path is
+    the one to check), each group in file order."""
+    candidates = [line for line in shadow_lines if line["status"] == SILENT
+                  and _is_rerunnable(line.get("job")) and line.get("commands_sha256")]
+    head_only = [line for line in candidates if line.get("mode") == MODE_HEAD_ONLY][:1]
+    rest = [line for line in candidates if not any(line is first for first in head_only)]
+    priority = {MODE_HEAD_ONLY: 1, MODE_STORED: 2}  # rebuild-path modes (exact, band) = 0
+    rest.sort(key=lambda line: priority.get(line.get("mode", MODE_STORED), 0))
+    return (head_only + rest)[:count]
 
 
 def run_v2(args) -> int:
@@ -815,11 +1277,25 @@ def _parse_args(argv: list[str] | None):
     r2.add_argument("--t4h", type=Path, nargs="+", required=True)
     r2.add_argument("--out", type=Path, required=True)
     r2.add_argument("--workers", type=int, default=1)
+    r8 = sub.add_parser("r8", help="R-8: rule H against stored and rerun L-hat (R-9 mode)")
+    r8.add_argument("--stored", type=Path, nargs="*", default=[],
+                    help="(a) records with a stored L-hat (gate records, dirs or npz)")
+    r8.add_argument("--rerun", type=Path, nargs="*", default=[],
+                    help="(b) head-only T4h records to rerun in gate mode")
+    r8.add_argument("--v0-twin", action="store_true", help="(b) also the first main job as V0")
+    r8.add_argument("--workers", type=int, default=2)
+    r8.add_argument("--affinity", default=None, help="hex mask, set in every worker")
+    r8.add_argument("--reuse-runs", action="store_true",
+                    help=f"read the reruns from {R8_RUN_FILE} in --out-dir")
+    r8.add_argument("--out-dir", type=Path, required=True)
+    _add_candidate_args(r8)
     judge = sub.add_parser("judge", help="fires / silent / undecidable per record")
     judge.add_argument("--t4h", type=Path, nargs="*", default=[])
     judge.add_argument("--jsonl", type=Path, default=None)
     judge.add_argument("--t4h-dir", type=Path, default=None)
     judge.add_argument("--r2", type=Path, default=None, help="r2 output: rebuild L-hat")
+    judge.add_argument("--r8", type=Path, default=None,
+                       help="r8 output (r8.json): rule H on head-only records")
     judge.add_argument("--workers", type=int, default=1)
     judge.add_argument("--out", type=Path, required=True)
     _add_candidate_args(judge)
@@ -842,6 +1318,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "r2":
             return run_r2(args)
+        if args.command == "r8":
+            return run_r8(args)
         if args.command == "judge":
             if (args.jsonl is None) == (not args.t4h):
                 raise ValueError("give --t4h or --jsonl with --t4h-dir")
