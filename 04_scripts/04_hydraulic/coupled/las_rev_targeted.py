@@ -1,7 +1,8 @@
 """LAS-b revision targets on the reduced harness: P5 (beta 4.5), P3 (n_min 8), P53 (both).
 
 Rules: ``06_analysis/02_control/verif_matrix/las_rev_targeted_rules.md`` (control-expert,
-sealed; LF sha256 ``las_rev_judge.RULES_SHA256``). The rules text wins where this code differs;
+sealed; LF sha256 ``las_rev_judge.RULES_SHA256``) with addendum rev1 (``RULES_REV1_SHA256``,
+both checked). The rules text wins where this code differs;
 ``run`` and ``list`` stop with exit 2 when the rules or their ``.sha256`` are missing or differ.
 
 Candidates (rules 1.2, ``las`` = ``C2Config.with_10hz_d1().liftoff_approach_slow``, b0):
@@ -571,7 +572,8 @@ def job_dict_problems(jobs: list[dict], stored: dict) -> list[str]:
 # ------------------------------------------------------------------------------- worker
 def run_identity() -> dict:
     """``fb_targeted.run_identity`` with this tool's files and the rules sha256."""
-    return {**fb.run_identity(files=IDENTITY_FILES), "rules_sha256": judge.RULES_SHA256}
+    return {**fb.run_identity(files=IDENTITY_FILES), "rules_sha256": judge.RULES_SHA256,
+            "rules_rev1_sha256": judge.RULES_REV1_SHA256}
 
 
 def identity_problems(identity: dict) -> list[str]:
@@ -945,7 +947,7 @@ def _run_command(args) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
-    problems = judge.seal_problems()
+    problems = judge.sealed_rules_problems()
     if problems:
         print(f"input error (H-1): {problems}")
         print(json.dumps({"stop": "H-1", "reasons": problems}))

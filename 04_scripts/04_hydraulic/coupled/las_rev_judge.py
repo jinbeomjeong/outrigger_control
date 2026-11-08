@@ -50,6 +50,13 @@ RULES_PATH = ROOT / "06_analysis" / "02_control" / "verif_matrix" / "las_rev_tar
 RULES_SHA_PATH = RULES_PATH.with_suffix(".sha256")
 RULES_SHA256 = "bb235f27567240b205a544ed7cfd10237827e4627088e0eab1f62b318416ff60"
 """``las_rev_targeted_rules.sha256`` (LF digest, sealed 2026-11-08 21:44:50 +09:00)."""
+RULES_REV1_PATH = RULES_PATH.with_name("las_rev_targeted_rules_rev1.md")
+RULES_REV1_SHA_PATH = RULES_REV1_PATH.with_suffix(".sha256")
+RULES_REV1_SHA256 = "672bc8f81ba75419e5a201e05a94e2f9aead2de3c205f80c2661e7474cd9fd51"
+"""rev1 (LF digest, before any candidate line): ``d1.items`` over the key union (R1-1, R1-2),
+H-4 only without ``d1`` / items or with equal hash and other items (R1-3)."""
+SEALED_RULES = ((RULES_PATH, RULES_SHA_PATH, RULES_SHA256),
+                (RULES_REV1_PATH, RULES_REV1_SHA_PATH, RULES_REV1_SHA256))
 STORED_PATHS = {"T-1": V5_DIR / "las" / "las_T1.jsonl", "T-2": V5_DIR / "las" / "las_T2.jsonl",
                 "F-3": V5_DIR / "fb" / "fb_F3.jsonl", "F-4": V5_DIR / "fb" / "fb_F4.jsonl"}
 STORED_COUNTS = {"T-1": 8, "T-2": 184, "F-3": 16, "F-4": 14}
@@ -173,6 +180,14 @@ def seal_problems(rules_path: Path = RULES_PATH, sha_path: Path = RULES_SHA_PATH
     digest = lf_sha256(rules_path)
     if digest != expected:
         problems.append(f"{rules_path.name} LF sha256 {digest} != sealed {expected}")
+    return problems
+
+
+def sealed_rules_problems(sealed=SEALED_RULES) -> list[str]:
+    """H-1 over the original rules and every sealed addendum (rev1)."""
+    problems = []
+    for rules_path, sha_path, expected in sealed:
+        problems += seal_problems(rules_path, sha_path, expected)
     return problems
 
 
@@ -376,15 +391,33 @@ def k_problems(line: dict, stored: dict | None, k3_keys: dict | None = None) -> 
 
 # ------------------------------------------------------------------------------- C-2 type
 def _item_violations(cand_items: dict, l_items: dict) -> list[str]:
-    """Rules 5.0: L true and candidate not true; L None and candidate false."""
-    if set(cand_items) != set(l_items):
-        raise MissingField(f"d1.items keys differ: {sorted(set(cand_items) ^ set(l_items))}")
+    """Rules 5.0 over the key union (rev1 R1-1 / R1-2): a key on one side only reads None on
+    the other. Violations: L true and candidate not true; L None and candidate false."""
     out = []
-    for name, l_value in l_items.items():
-        value = cand_items[name]
+    for name in sorted(set(cand_items) | set(l_items)):
+        l_value, value = l_items.get(name), cand_items.get(name)
         if (l_value is True and value is not True) or (l_value is None and value is False):
             out.append(f"item {name} {l_value} -> {value}")
     return out
+
+
+def items_only(cand: dict, l_line: dict) -> dict[str, list[str]]:
+    """rev1 R1-2: the ``d1.items`` keys on one side only (reported per pair)."""
+    cand_keys = set(need(cand, "d1", "items"))
+    l_keys = set(need(l_line, "d1", "items"))
+    return {"items_only_L": sorted(l_keys - cand_keys),
+            "items_only_cand": sorted(cand_keys - l_keys)}
+
+
+def same_trajectory_drift(cand: dict, l_line: dict) -> None:
+    """rev1 R1-3: equal commands hash but other ``d1.items`` (keys or values) is judge drift.
+
+    Raises:
+        MissingField: Same hash, different items (undecidable, H-4).
+    """
+    cand_items, l_items = need(cand, "d1", "items"), need(l_line, "d1", "items")
+    if cand["commands_sha256"] == l_line["commands_sha256"] and cand_items != l_items:
+        raise MissingField("d1.items differ with an equal commands hash (rev1 R1-3)")
 
 
 def _verdict_violations(cand: dict, l_line: dict) -> list[str]:
@@ -399,6 +432,7 @@ def _verdict_violations(cand: dict, l_line: dict) -> list[str]:
     extra = set(need(cand_d1, "fail_items") or ()) - set(need(l_d1, "fail_items") or ())
     if extra:
         out.append(f"new fail items {sorted(extra)}")
+    same_trajectory_drift(cand, l_line)
     return out + _item_violations(need(cand_d1, "items"), need(l_d1, "items"))
 
 
@@ -609,6 +643,7 @@ def _pair_record(key: str, cand: dict, l_line: dict, rx: dict) -> dict:
               "is_case": is_case, "ready_cand_s": ready_time(cand),
               "ready_L_s": ready_time(l_line)}
     if not is_case:
+        record.update(items_only(cand, l_line))
         record.update(F_cand_N=need(cand, "d1", "F_judged_min_N"),
                       F_L_N=need(l_line, "d1", "F_judged_min_N"),
                       stroke_increase_m=stroke_increase_m(cand, l_line))
@@ -933,6 +968,10 @@ def report_markdown(result: dict, sources: list[Path]) -> str:
                       f"undecidable {item['undecidable'][:5]}, errors {item['errors']}",
                       f"- C-2 violating pairs {len(item['C-2_violations'])}: "
                       f"{dict(list(item['C-2_violations'].items())[:5])}"]
+            lines += [f"- items only (rev1 R1-2) {key}: L {pair['items_only_L']}, "
+                      f"cand {pair['items_only_cand']}"
+                      for key, pair in item["pairs"].items()
+                      if pair.get("items_only_L") or pair.get("items_only_cand")]
             if "ready" in item:
                 ready = item["ready"]
                 lines.append(f"- READY: changed {ready['changed']}, population "
@@ -956,7 +995,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("files", nargs="*", type=Path)
     parser.add_argument("--out", type=Path, default=None, help="new Markdown file")
     args = parser.parse_args(argv)
-    problems = seal_problems()
+    problems = sealed_rules_problems()
     if problems:
         print(f"input error (H-1): {problems}")
         print(json.dumps({"stop": "H-1", "reasons": problems}))

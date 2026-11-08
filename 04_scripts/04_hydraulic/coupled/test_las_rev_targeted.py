@@ -188,7 +188,7 @@ def _line(sha="a" * 64, d1=None, events=None, phase="ready", **extra):
 
 
 def test_pair_violations():
-    l_line = _line()
+    l_line = _line(sha="l" * 64)
     assert judge.pair_violations(_line(), l_line) == []
     worse = _line(d1=_d1("fail", {"READY": True, "G6-2_loc": False}, ["G6-2_loc"]),
                   events={"WARN_X:FL": 1, "INFO_Y": 2}, phase="fault")
@@ -197,15 +197,56 @@ def test_pair_violations():
     assert any("G6-2_loc" in text for text in found)
     assert any("WARN_X" in text for text in found)
     assert any("final_phase" in text for text in found)
-    none_l = _line(d1=_d1(items={"READY": None, "G6-2_loc": True}))
+    none_l = _line(sha="l" * 64, d1=_d1(items={"READY": None, "G6-2_loc": True}))
     assert judge.pair_violations(_line(d1=_d1(items={"READY": False, "G6-2_loc": True})),
                                  none_l)
-    with pytest.raises(judge.MissingField):
-        judge.pair_violations(_line(d1=_d1(items={"READY": True})), l_line)
     case = {"job": {"case": "R12"}, "commands_sha256": "b", "final_phase": "ready",
             "event_names": {}, "values": {"times": {"t_first_ready_s": 40.0}}}
     late = {**case, "values": {"times": {"t_first_ready_s": None}}}
     assert judge.pair_violations(late, case) == ["READY time -> None"]
+
+
+def test_items_key_union_rev1():
+    """rev1 R1-1 / R1-2: a key on one side only reads None on the other."""
+    l_line = _line(sha="l" * 64)
+    harness = _line(d1=_d1(items={"READY": True, "G6-2_loc": True,
+                                  "harness_stroke_limited_fail": False}))
+    assert judge.pair_violations(harness, l_line) == [
+        "item harness_stroke_limited_fail None -> False"]
+    assert judge.items_only(harness, l_line) == {
+        "items_only_L": [], "items_only_cand": ["harness_stroke_limited_fail"]}
+    l_p3 = _line(sha="l" * 64, d1=_d1(items={"READY": True, "P3-1": True}))
+    dropped = _line(d1=_d1(items={"READY": True}))
+    assert judge.pair_violations(dropped, l_p3) == ["item P3-1 True -> None"]
+    assert judge.items_only(dropped, l_p3)["items_only_L"] == ["P3-1"]
+    l_false = _line(sha="l" * 64, d1=_d1(items={"READY": True, "P3-1": False}))
+    assert judge.pair_violations(dropped, l_false) == []
+    extra_true = _line(d1=_d1(items={"READY": True, "P3-1": False, "X": True}))
+    assert judge.pair_violations(extra_true, l_false) == []
+
+
+def test_h4_only_without_items_or_with_equal_hash_drift():
+    """rev1 R1-3."""
+    l_line = _line(sha="s" * 64)
+    drift = _line(sha="s" * 64, d1=_d1(items={"READY": True}))
+    with pytest.raises(judge.MissingField):
+        judge.pair_violations(drift, l_line)
+    value_drift = _line(sha="s" * 64, d1=_d1(items={"READY": True, "G6-2_loc": None}))
+    with pytest.raises(judge.MissingField):
+        judge.pair_violations(value_drift, l_line)
+    assert judge.pair_violations(_line(sha="s" * 64), l_line) == []
+    no_items = _line(d1={k: v for k, v in _d1().items() if k != "items"})
+    with pytest.raises(judge.MissingField):
+        judge.pair_violations(no_items, l_line)
+    no_d1 = {k: v for k, v in _line().items() if k != "d1"}
+    with pytest.raises(judge.MissingField):
+        judge.pair_violations(no_d1, l_line)
+
+
+def test_sealed_rules_include_rev1():
+    names = [path.name for path, _, _ in judge.SEALED_RULES]
+    assert names == ["las_rev_targeted_rules.md", "las_rev_targeted_rules_rev1.md"]
+    assert judge.sealed_rules_problems() == []
 
 
 def _pairs(*deltas, exception_keys=()):
