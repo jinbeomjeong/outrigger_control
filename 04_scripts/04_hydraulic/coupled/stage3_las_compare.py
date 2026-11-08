@@ -27,12 +27,17 @@ more files, ``07_results/S9/batch_V5-STAGE3-LAS_<stamp>/batch.json``):
   ``p3_chrono_check`` (revision 10 1) and ``two_pressure.fallback_rod_estimate_Pa`` under
   revision 10 conditions A, B, C (``p3_chrono_check.fallback_estimate_conditions``). Other
   differing keys are recorded for a cause check (python-expert).
-* plant check (revision 12a 4, rows meeting the conditions): plant arrays compared byte for
-  byte (dtype and shape included) with their time array. S9: ``step_series.npz`` (time
-  ``t_s``); run_S8C: ``pads.npz`` (time ``t``); keys in ``PLANT_SOURCES``. t_p = time of the
-  first differing plant sample, t_c = time of the first differing command period (+inf when
-  equal). t_p < t_c - 1e-6 s -> ``not_comparable`` ("plant diverged first"); a plant array or
-  key absent -> ``not_comparable`` ("plant series missing"). Checks 1-3 stay recorded.
+* plant check (revision 12a 4, amended by revision 12b 2; rows meeting the conditions): plant
+  arrays compared byte for byte (dtype and shape included) with their time array. S9:
+  ``step_series.npz`` (time ``t_s``); run_S8C: ``pads.npz`` (time ``t``); core arrays in
+  ``CORE_PLANT_ARRAYS``, auxiliary (crawler normal force) in ``AUX_PLANT_ARRAYS``. t_p = time of
+  the first differing plant sample, t_c = time of the first differing command period (+inf
+  when equal). t_p < t_c - 1e-6 s -> ``not_comparable`` ("plant diverged first"). The file, a
+  core or the time array absent on either side -> ``not_comparable`` ("plant series
+  missing: <side>:<name>"); an auxiliary array absent on both sides is left out
+  (``plant_check.excluded_arrays``), absent on one side only -> ``not_comparable``
+  ("auxiliary plant array on one side only: <name> (<side without it>)"). Checks 1-3 stay
+  recorded.
 
 Row status: ``silent_confirmed`` (checks 1 and 2 equal: LAS-b and ③ not acting),
 ``differs`` (first differing control period index and time, the events of that period,
@@ -70,7 +75,8 @@ import p3_chrono_check as p3_check  # noqa: E402
 ROOT = HERE.parents[2]
 DEFAULT_EXPECTED_ROWS = 37
 """Criteria revision 12 2.1: 34 stage 3 rows + 3 pair rows."""
-RULE = "criteria revision 12a (rev. 12 2.2 amended), sha256 e171141dce180fbb"
+RULE = ("criteria revision 12a (rev. 12 2.2 amended), sha256 e171141dce180fbb; "
+        "revision 12b, sha256 0d17f87e9532d558")
 CONTROL_PERIOD_S = 0.1
 EVENT_TIME_TOL_S = 1e-6
 """Event times and control instants of one run share the engine clock (rounding only)."""
@@ -119,20 +125,27 @@ COMMAND_SOURCES = {
 
 @dataclass(frozen=True)
 class PlantSource:
-    """Plant series file of a row kind (revision 12a 4), first axis = sample."""
+    """Plant series file and its time array of a row kind (revision 12a 4), axis 0 = sample."""
 
     file_name: str
     time_key: str
-    array_keys: tuple[str, ...]
 
 
 PLANT_SOURCES = {
-    RowKind.S9: PlantSource("step_series.npz", "t_s",
-                            ("F_cyl_N", "s_motor_m", "roll_pitch_deg", "z_origin_m",
-                             "scm_pad_normal_N", "scm_crawler_normal_N")),
-    RowKind.S8C: PlantSource("pads.npz", "t",
-                             ("F_cyl", "s_motor", "body_quat_wxyz", "N", "crawler_normal_N")),
+    RowKind.S9: PlantSource("step_series.npz", "t_s"),
+    RowKind.S8C: PlantSource("pads.npz", "t"),
 }
+CORE_PLANT_ARRAYS = {
+    RowKind.S9: ("F_cyl_N", "s_motor_m", "roll_pitch_deg", "z_origin_m", "scm_pad_normal_N"),
+    RowKind.S8C: ("F_cyl", "s_motor", "body_quat_wxyz", "N"),
+}
+"""Revision 12b 2: may not be absent (the time array is core as well)."""
+AUX_PLANT_ARRAYS = {
+    RowKind.S9: ("scm_crawler_normal_N",),
+    RowKind.S8C: ("crawler_normal_N",),
+}
+"""Revision 12b 2: crawler normal force; left out when absent on both sides (V0 rows record
+no ``V5_RECORD_FIELDS``, revision 12b 1)."""
 
 
 @dataclass(frozen=True)
@@ -430,19 +443,43 @@ def compare_runs(stored: CaseRun, rerun: CaseRun, kind: RowKind) -> dict[str, An
     return record
 
 
-def load_plant_series(run: CaseRun, kind: RowKind,
-                      side: str) -> tuple[dict[str, np.ndarray] | None, list[str]]:
-    """Time and plant arrays of a run, or None with the absent file or keys."""
-    source = PLANT_SOURCES[kind]
-    path = run.folder / source.file_name
+def _plant_keys(kind: RowKind) -> tuple[str, ...]:
+    """Time, core and auxiliary keys in comparison order."""
+    return (PLANT_SOURCES[kind].time_key, *CORE_PLANT_ARRAYS[kind], *AUX_PLANT_ARRAYS[kind])
+
+
+def load_plant_series(run: CaseRun, kind: RowKind) -> dict[str, np.ndarray] | None:
+    """The plant keys present in a run's plant file (None = the file is absent)."""
+    path = run.folder / PLANT_SOURCES[kind].file_name
     if not path.is_file():
-        return None, [f"{side} {source.file_name}"]
-    keys = (source.time_key, *source.array_keys)
+        return None
     with np.load(path, allow_pickle=False) as data:
-        absent = [key for key in keys if key not in data.files]
-        if absent:
-            return None, [f"{side} {source.file_name} key {key}" for key in absent]
-        return {key: np.asarray(data[key]) for key in keys}, []
+        return {key: np.asarray(data[key]) for key in _plant_keys(kind) if key in data.files}
+
+
+def _absent_core(series: dict[str, dict[str, np.ndarray] | None], kind: RowKind) -> list[str]:
+    """``<side>:<name>`` of the absent plant file, time or core arrays."""
+    core_keys = (PLANT_SOURCES[kind].time_key, *CORE_PLANT_ARRAYS[kind])
+    absent = []
+    for side, arrays in series.items():
+        if arrays is None:
+            absent.append(f"{side}:{PLANT_SOURCES[kind].file_name}")
+            continue
+        absent += [f"{side}:{key}" for key in core_keys if key not in arrays]
+    return absent
+
+
+def _split_auxiliary(series: dict[str, dict[str, np.ndarray]],
+                     kind: RowKind) -> tuple[list[str], list[str]]:
+    """(auxiliary arrays absent on both sides, ``<name> (<side without it>)`` of one side)."""
+    excluded, one_side = [], []
+    for key in AUX_PLANT_ARRAYS[kind]:
+        sides_without = [side for side, arrays in series.items() if key not in arrays]
+        if len(sides_without) == len(series):
+            excluded.append(key)
+        elif sides_without:
+            one_side.append(f"{key} ({sides_without[0]})")
+    return excluded, one_side
 
 
 def _sample_time(times: dict[str, np.ndarray], index: int) -> float:
@@ -480,22 +517,34 @@ def command_divergence_time(comparison: dict[str, Any]) -> float:
 
 def plant_check(stored: CaseRun, rerun: CaseRun, kind: RowKind,
                 t_c_s: float) -> dict[str, Any]:
-    """Revision 12a 4: does the plant diverge before the commands do?"""
-    stored_series, stored_absent = load_plant_series(stored, kind, "stored")
-    rerun_series, rerun_absent = load_plant_series(rerun, kind, "rerun")
-    if stored_series is None or rerun_series is None:
-        return {"t_p_s": None, "t_c_s": t_c_s, "first_array": None, "plant_first": None,
-                "missing": stored_absent + rerun_absent}
-    t_p_s, first_array = first_plant_difference(stored_series, rerun_series,
+    """Revision 12a 4 / 12b 2: does the plant diverge before the commands do?"""
+    series = {"stored": load_plant_series(stored, kind),
+              "rerun": load_plant_series(rerun, kind)}
+    check: dict[str, Any] = {"t_p_s": None, "t_c_s": t_c_s, "first_array": None,
+                             "plant_first": None, "excluded_arrays": []}
+    absent_core = _absent_core(series, kind)
+    if absent_core:
+        return {**check, "missing": absent_core}
+    present = {side: arrays for side, arrays in series.items() if arrays is not None}
+    excluded, one_side = _split_auxiliary(present, kind)
+    check["excluded_arrays"] = excluded
+    if one_side:
+        return {**check, "auxiliary_one_side": one_side}
+    compared = {side: {key: value for key, value in arrays.items() if key not in excluded}
+                for side, arrays in present.items()}
+    t_p_s, first_array = first_plant_difference(compared["stored"], compared["rerun"],
                                                 PLANT_SOURCES[kind].time_key)
-    return {"t_p_s": t_p_s, "t_c_s": t_c_s, "first_array": first_array,
+    return {**check, "t_p_s": t_p_s, "first_array": first_array,
             "plant_first": t_p_s < t_c_s - PLANT_FIRST_TOL_S}
 
 
 def plant_check_reasons(check: dict[str, Any]) -> list[str]:
     """``not_comparable`` reasons of a plant check (empty = comparison stands)."""
     if check.get("missing"):
-        return [f"plant series missing: {'; '.join(check['missing'])}"]
+        return [f"plant series missing: {', '.join(check['missing'])}"]
+    if check.get("auxiliary_one_side"):
+        return [f"auxiliary plant array on one side only: {item}"
+                for item in check["auxiliary_one_side"]]
     if check["plant_first"]:
         return [f"plant diverged first (t_p={check['t_p_s']}, t_c={check['t_c_s']}, "
                 f"array={check['first_array']})"]

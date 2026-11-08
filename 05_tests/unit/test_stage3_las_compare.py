@@ -1,6 +1,7 @@
 """``stage3_las_compare`` (criteria revision 12a, amending 12 2.2): the four row results, the
 allowed meta keys, the empty set, the row count guard, ``OMP_WAIT_POLICY`` as a record only and
-the plant check. Synthetic case folders and batch files."""
+the plant check with its core and auxiliary arrays (revision 12b). Synthetic case folders and
+batch files."""
 
 from __future__ import annotations
 
@@ -38,9 +39,9 @@ PLANT_WIDTHS = {"roll_pitch_deg": 2, "z_origin_m": 0, "scm_crawler_normal_N": 2,
 def _plant(kind: las.RowKind, changes: dict[str, int] | None = None,
            drop: tuple[str, ...] = ()) -> dict[str, np.ndarray]:
     """Plant series of a row kind; ``changes`` = {array: first changed sample index}."""
-    source = las.PLANT_SOURCES[kind]
-    series = {source.time_key: PLANT_TIMES_S.copy()}
-    for number, key in enumerate(source.array_keys):
+    series = {las.PLANT_SOURCES[kind].time_key: PLANT_TIMES_S.copy()}
+    array_keys = (*las.CORE_PLANT_ARRAYS[kind], *las.AUX_PLANT_ARRAYS[kind])
+    for number, key in enumerate(array_keys):
         width = PLANT_WIDTHS.get(key, 4)
         shape = (PLANT_SAMPLES,) if width == 0 else (PLANT_SAMPLES, width)
         series[key] = np.full(shape, 1000.0 + number)
@@ -294,23 +295,62 @@ def test_plant_following_the_commands_differs(tmp_path: Path, rerun_batch: Path,
     assert report["summary"]["counts"]["plant_first"] == []
 
 
-def test_absent_plant_key_is_not_comparable(tmp_path: Path, rerun_batch: Path) -> None:
+def test_auxiliary_absent_on_both_sides_is_excluded(tmp_path: Path) -> None:
+    """V0 rows record no crawler normal force on either side (revision 12b 1)."""
+    no_crawler = ("crawler_normal_N",)
+    stored = _s8c_case(tmp_path / "S8" / "stored" / "B",
+                       plant=_plant(las.RowKind.S8C, drop=no_crawler))
+    rerun = _s8c_case(tmp_path / "S8" / "rerun" / "B",
+                      plant=_plant(las.RowKind.S8C, drop=no_crawler))
+    row = _only_row(_report(_batch(tmp_path / "batch", [_s8c_row("B", stored, rerun)]), 1))
+    assert row["status"] == las.RowStatus.SILENT_CONFIRMED
+    assert row["plant_check"]["excluded_arrays"] == ["crawler_normal_N"]
+    assert row["plant_check"]["plant_first"] is False
+
+
+def test_auxiliary_absent_with_early_core_difference_is_plant_first(
+        tmp_path: Path, rerun_batch: Path) -> None:
+    no_crawler = ("scm_crawler_normal_N",)
+    stored = _s9_case(tmp_path / "stored" / "A", plant=_plant(las.RowKind.S9, drop=no_crawler))
+    _s9_case(rerun_batch / "A", commands=_changed_commands(),
+             plant=_plant(las.RowKind.S9, {"roll_pitch_deg": 10}, drop=no_crawler))
+    row = _only_row(_report(_batch(rerun_batch, [_s9_row("A", stored)]), 1))
+    assert row["status"] == las.RowStatus.NOT_COMPARABLE
+    check = row["plant_check"]
+    assert check["excluded_arrays"] == ["scm_crawler_normal_N"]
+    assert check["plant_first"] is True and check["first_array"] == "roll_pitch_deg"
+    assert check["t_p_s"] == pytest.approx(10.11)
+    assert row["reasons"][0].startswith("plant diverged first")
+
+
+def test_auxiliary_absent_on_one_side_is_not_comparable(tmp_path: Path,
+                                                        rerun_batch: Path) -> None:
     stored = _s9_case(tmp_path / "stored" / "A",
                       plant=_plant(las.RowKind.S9, drop=("scm_crawler_normal_N",)))
     _s9_case(rerun_batch / "A")
     row = _only_row(_report(_batch(rerun_batch, [_s9_row("A", stored)]), 1))
     assert row["status"] == las.RowStatus.NOT_COMPARABLE
     assert row["reasons"] == [
-        "plant series missing: stored step_series.npz key scm_crawler_normal_N"]
+        "auxiliary plant array on one side only: scm_crawler_normal_N (stored)"]
     assert row["plant_check"]["plant_first"] is None
 
 
-def test_absent_plant_file_is_not_comparable(tmp_path: Path, rerun_batch: Path) -> None:
-    stored = _s9_case(tmp_path / "stored" / "A")
+def test_core_absent_on_one_side_is_not_comparable(tmp_path: Path) -> None:
+    stored = _s8c_case(tmp_path / "S8" / "stored" / "B")
+    rerun = _s8c_case(tmp_path / "S8" / "rerun" / "B",
+                      plant=_plant(las.RowKind.S8C, drop=("body_quat_wxyz",)))
+    row = _only_row(_report(_batch(tmp_path / "batch", [_s8c_row("B", stored, rerun)]), 1))
+    assert row["status"] == las.RowStatus.NOT_COMPARABLE
+    assert row["reasons"] == ["plant series missing: rerun:body_quat_wxyz"]
+
+
+def test_absent_time_array_and_file_are_not_comparable(tmp_path: Path,
+                                                       rerun_batch: Path) -> None:
+    stored = _s9_case(tmp_path / "stored" / "A", plant=_plant(las.RowKind.S9, drop=("t_s",)))
     (_s9_case(rerun_batch / "A") / "step_series.npz").unlink()
     row = _only_row(_report(_batch(rerun_batch, [_s9_row("A", stored)]), 1))
     assert row["status"] == las.RowStatus.NOT_COMPARABLE
-    assert row["reasons"] == ["plant series missing: rerun step_series.npz"]
+    assert row["reasons"] == ["plant series missing: stored:t_s, rerun:step_series.npz"]
 
 
 def test_plant_length_only_difference_is_the_next_sample() -> None:
