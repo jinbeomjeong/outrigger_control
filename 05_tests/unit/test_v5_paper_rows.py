@@ -46,6 +46,19 @@ def test_openloop_rows_are_the_stored_p3a_rows_plus_vb(sb, all_batches) -> None:
         assert r["source_expected_diffs"] is None
 
 
+def test_openloop_prop_row_changes_only_the_flow_law(sb, all_batches) -> None:
+    vb = {r["case"]: r for r in all_batches[sb.V5_OPENLOOP_BATCH]}
+    prop = all_batches[sb.V5_OPENLOOP_PROP_BATCH]
+    assert [r["case"] for r in prop] == ["P3a_J1_B_VB_prop"]
+    r, base = prop[0], vb["P3a_J1_B_VB"]
+    diff = [(a, b) for a, b in zip(r["argv"], base["argv"], strict=True) if a != b]
+    assert diff == [("proportional", "priority")]
+    assert r["argv"][r["argv"].index("--flow-law") + 1] == "proportional"
+    assert r["source_expected_diffs"] == {**sb.V5_VB_ARGS, "flow_law": "proportional"}
+    assert r["pair_case"] == "P3a_J1_B_VB" and r["source_run"] == base["source_run"]
+    assert base["argv"][base["argv"].index("--flow-law") + 1] == "priority"  # VB row unchanged
+
+
 def test_jp_rows_use_the_live_rigid_vb_arguments(sb, all_batches) -> None:
     vb = all_batches[sb.V5_JP_BATCH]
     v0 = all_batches[sb.V5_JP_V0_BATCH]

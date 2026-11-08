@@ -255,6 +255,8 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     # re-runs of the stored argv), 3.5.2 J_P run_S8C G4 / SS x F_s 0 / 4 / 8 on VB (+ optional V0 = final_C4G2)
     out[V5_OPENLOOP_BATCH] = v5_openloop_rows(out["P3a"])
     out[V5_OPENLOOP_V0_BATCH] = v5_openloop_rows(out["P3a"], setting="V0")
+    # user decision 2026-11-08 H-1: J1 B VB with the proportional (flow-sharing) law instead of priority
+    out[V5_OPENLOOP_PROP_BATCH] = v5_openloop_prop_rows(out[V5_OPENLOOP_BATCH])
     out[V5_JP_BATCH] = v5_jp_rows()
     out[V5_JP_V0_BATCH] = v5_jp_rows(setting="V0")
     # D-1 verification matrix Chrono rows (cad 2026-11-08, d1_chrono_rows.py): D1-CHRONO (16 required rows + roll /
@@ -622,6 +624,35 @@ def v5_openloop_rows(p3a: list[dict], *, setting: str = "VB") -> list[dict]:
                              + ("v5 VB plant (flow 0.85, valve 0.1 s, M2, LC; controller options not applied)"
                                 if vb else "stored argv re-run on the current code (V0, code-drift pair)")
                              + f"; stored 07_results/S9/{V5_OPENLOOP_SOURCE}/{case}"})
+    return rows
+
+
+V5_OPENLOOP_PROP_BATCH = "V5-OPENLOOP-VB-PROP"
+V5_OPENLOOP_PROP_CASES = ("P3a_J1_B_VB",)
+"""User decision 2026-11-08 H-1: the open-loop J1 B VB row with ``--flow-law proportional`` (flow sharing, same spool
+drop on every section) instead of the VB ``priority`` (pre-compensated); all other arguments unchanged (ASSUMPTION law,
+Q-M5 unanswered)."""
+
+
+def v5_openloop_prop_rows(vb_rows: list[dict]) -> list[dict]:
+    """:data:`V5_OPENLOOP_PROP_CASES` of ``V5-OPENLOOP-VB`` with the flow law value replaced by ``proportional``
+    (case ``<case>_prop``, pair = the VB row). ``check-sources`` accepts exactly the VB arguments with
+    ``flow_law = proportional`` as the difference from the stored P3a ``result.json``."""
+    by_case = {r["case"]: r for r in vb_rows}
+    rows = []
+    for case in V5_OPENLOOP_PROP_CASES:
+        base = by_case[case]
+        argv = list(base["argv"])
+        k = argv.index("--flow-law")
+        if argv[k + 1] != "priority":
+            raise RuntimeError(f"{case}: VB flow law {argv[k + 1]!r}, priority expected")
+        argv[k + 1] = "proportional"
+        rows.append({**base, "case": f"{case}_prop", "argv": argv,
+                     "source_expected_diffs": {**base["source_expected_diffs"], "flow_law": "proportional"},
+                     "v5_setting": "VB_prop", "group": V5_OPENLOOP_PROP_BATCH, "rep_bundle": V5_OPENLOOP_PROP_BATCH,
+                     "pair_case": case,
+                     "note": base["note"].replace(V5_OPENLOOP_BATCH, V5_OPENLOOP_PROP_BATCH)
+                     .replace("flow 0.85", "flow 0.85 proportional law") + f"; priority pair {case}"})
     return rows
 
 
