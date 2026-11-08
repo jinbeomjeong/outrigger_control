@@ -108,6 +108,9 @@ H-7 -> H-7')."""
 RULES_REV4A_SHA256 = "3cbbfb5d8afda9075bf9631accf1b8bee4c1ee02edafa34a7869091175a73b15"
 """``las_targeted_rules_rev4a.sha256`` (sealed correction 2026-11-08 19:56: G6-2_loc, key-list
 G6-2 void, stop attribution, dg3 off reproduction, H-7' field table)."""
+RULES_REV4B_SHA256 = "add921e4978ef16abcc22dfc88dc25e51a770dc98d2d540526f48cf6ea7a6f3f"
+"""``las_targeted_rules_rev4b.sha256`` (sealed correction 2026-11-08 20:12: dg3 v4_on option,
+J-3' events, J-7 ``las_events``, more format-absent cells)."""
 
 
 @dataclass(frozen=True)
@@ -133,6 +136,8 @@ SEALS: dict[str, Seal] = {
                  RULES_REV4_SHA256),
     "rev4a": Seal("las_targeted_rules_rev4a.md", "las_targeted_rules_rev4a.sha256",
                   RULES_REV4A_SHA256),
+    "rev4b": Seal("las_targeted_rules_rev4b.md", "las_targeted_rules_rev4b.sha256",
+                  RULES_REV4B_SHA256),
 }
 """Every sealed LAS rule file, in seal order."""
 TARGETED_REQUIRED_SEALS = ("original", "rev1", "rev2")

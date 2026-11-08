@@ -9,7 +9,7 @@ source of the key sets and counts; its ``G6-2`` field is void, its other baselin
 (verdict, fail items, P3-2, READY, stroke, FAULT names, hash) must equal ``d1.jsonl``
 (``key-list``, else H-T3-3).
 
-  K-0  seals (the seven sealed files) and every line's ``t3.identity`` = its file header's
+  K-0  seals (the eight sealed files) and every line's ``t3.identity`` = its file header's
   K-1  key set per bundle = the key list (R-0 7, T-3a 228, T-3b 4, T-3c 76); no error left
        after the one retry (H-T3-2)
   K-2  R-0: hash = baseline, controller tag without ``_LAS`` (V0 none, VB ``final_C4G2_P3``;

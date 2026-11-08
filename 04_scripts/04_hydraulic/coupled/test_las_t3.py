@@ -119,6 +119,14 @@ def test_dg3_run_condition_against_the_stored_record(tmp_path: Path) -> None:
              "controller_tag": tj.TAG_V0_LAS, "hydraulic_options": stored_options}
     problems = tj.condition_problems(off, wrong, True, tmp_path)
     assert any("③ rule tracked_bound != stored preset constant" in p for p in problems)
+    # rev4b 1: the off folder allows no option difference (③ as an option is a difference)
+    off_line = {**wrong, "extend_start_rule": "constant",
+                "controller_settings": {"soil.enable": True,
+                                        "two_pressure.extend_start_rule": "constant"}}
+    assert tj.condition_problems(off, off_line, True, tmp_path) == []
+    with_p3 = {**off_line, "hydraulic_options": {**stored_options, "extend_start_tracked": True}}
+    assert "hydraulic_options" in tj.condition_problems(off, with_p3, True, tmp_path)[0]
+    assert tj.DG3_OPTION_REPRESENTATION == {"v4_on": {"extend_start_tracked": True}}
 
 
 def test_k6_p32_none_fails_and_silent_hash_change_is_k5() -> None:
@@ -307,6 +315,33 @@ def test_las_record_reads_the_meta_and_events_only() -> None:
     assert record["fired"] and record["events"] == [[31.2, "INFO_LIFTOFF_SLOW:RR"],
                                                      [32.0, "INFO_LIFTOFF_SLOW_END:loc"]]
     assert record["active_periods"] == 7 and record["loc_minus_t_off_s"] == 0.8
+
+
+def test_v5_run_record_las_events_leave_the_hashes_alone(monkeypatch) -> None:
+    """rev4b 3: the record-only ``las_events`` field is built from the events after the run;
+    the record with it and the one without it carry the same command hashes."""
+    import v5_rerun
+
+    logged = {"t": np.array([0.0, 0.1]), "command": np.zeros((2, 4)), "phase": np.array(["a"] * 2)}
+    fake_verdict_runs = SimpleNamespace(period_arrays=lambda controller: logged,
+                                        _command_digest=lambda command: "d" * 64)
+    monkeypatch.setattr(v5_rerun, "setting_name", lambda: "V0")
+    monkeypatch.setattr(v5_rerun, "_coupled_modules", lambda: (None, fake_verdict_runs))
+    monkeypatch.setattr(v5_rerun, "installed_options", lambda: None)
+    monkeypatch.setattr(v5_rerun, "definition_sha256", lambda name, controller: "def")
+    monkeypatch.setattr(v5_rerun, "_worker_code_commit", lambda: {"head": "c"})
+    events = [SimpleNamespace(t_s=30.0, name="INFO_LIFTOFF_SLOW:RR"),
+              SimpleNamespace(t_s=40.0, name="FAULT_STROKE_END:FL")]
+    controller = SimpleNamespace(events=events, _v5_rod_seen=False)
+    with_field = v5_rerun.run_record(None, controller, harness_commands_sha256=HASH)
+    monkeypatch.setattr(v5_rerun, "las_events_of", lambda controller: None)
+    without_field = v5_rerun.run_record(None, controller, harness_commands_sha256=HASH)
+    del without_field[v5_rerun.LAS_EVENTS_KEY]
+    las_events = with_field.pop(v5_rerun.LAS_EVENTS_KEY)
+    assert with_field == without_field
+    assert with_field["commands_sha256"] == HASH
+    assert las_events["liftoff_slow"] == [[30.0, "INFO_LIFTOFF_SLOW:RR"]]
+    assert las_events["fault_names"] == ["FAULT_STROKE_END:FL"]
 
 
 # ------------------------------------------------------------------------------- audit fixes

@@ -5,6 +5,7 @@ Run (dynamics-dev): python -I -B -m pytest <this file> -p no:cacheprovider
 from __future__ import annotations
 
 import copy
+import json
 import sys
 from pathlib import Path
 
@@ -139,17 +140,90 @@ def _u3_record(verdict="pass", late="pass", ready=39.3, stroke_mm=407.2, warning
             "t_ready_s": ready, "max_stroke_mm": stroke_mm, "warnings": list(warnings)}
 
 
-def test_j3_and_j7_formats_read_the_stored_fields() -> None:
-    d1s, u3 = las_h7.BATCH_FORMATS["J-3'"], las_h7.BATCH_FORMATS["J-7-slope"]
-    assert d1s.status is las_h7.FormatStatus.DRAFT and u3.status is las_h7.FormatStatus.DRAFT
-    assert las_h7.h7_violations(_d1s_case(), _d1s_case(), d1s, allow_draft=True) == {}
-    found = las_h7.h7_violations(_d1s_case(p32="fail", stroke_mm=440.0), _d1s_case(), d1s,
-                                 allow_draft=True)
+def _counted(case: dict, count: int | None = None) -> dict:
+    """A J-3' row with ``result_events_count`` (the result.json count, default = its own)."""
+    result = {"events": [{"t_s": 0.0, "name": n} for n in case["events"]]}
+    row = las_h7.with_result_events_count(case, result)
+    return row if count is None else {**row, las_h7.RESULT_EVENTS_COUNT_KEY: count}
+
+
+def _rerun(record: dict, las_events: dict | None) -> dict:
+    """A J-7 rerun record: the stored fields plus the ``v5`` block's ``las_events``."""
+    return {**record, "v5": {} if las_events is None else {"las_events": las_events}}
+
+
+def test_j3_format_is_declared_and_checks_the_event_count() -> None:
+    d1s = las_h7.BATCH_FORMATS["J-3'"]
+    assert d1s.status is las_h7.FormatStatus.DECLARED and d1s.absent == []
+    assert las_h7.h7_violations(_counted(_d1s_case()), _counted(_d1s_case()), d1s) == {}
+    found = las_h7.h7_violations(_counted(_d1s_case(p32="fail", stroke_mm=440.0)),
+                                 _counted(_d1s_case()), d1s)
     assert sorted(found) == ["C5'-S", "P3-2"]
-    assert u3.absent == ["C4'"]
-    fault = _u3_record(warnings=("FAULT_STROKE_END:FL",))
-    assert list(las_h7.h7_violations(fault, _u3_record(), u3, allow_draft=True)) == ["C3"]
-    assert las_h7.h7_violations(_u3_record(late="flag"), _u3_record(), u3, allow_draft=True) == {}
+    with pytest.raises(las_h7.UndecidableLine, match="2 events != result.json 5"):
+        las_h7.h7_violations(_counted(_d1s_case(), 5), _counted(_d1s_case()), d1s)
+    with pytest.raises(las_h7.UndecidableLine, match="baseline: no result_events_count"):
+        las_h7.h7_violations(_counted(_d1s_case()), _d1s_case(), d1s)
+
+
+def test_j7_format_reads_las_events_of_the_rerun_and_warnings_of_the_baseline() -> None:
+    u3 = las_h7.BATCH_FORMATS["J-7-slope"]
+    assert u3.status is las_h7.FormatStatus.DECLARED and u3.absent == ["C4'"]
+    quiet = las_h7.las_events_record([])
+    assert las_h7.h7_violations(_rerun(_u3_record(), quiet), _u3_record(), u3) == {}
+    fault = las_h7.las_events_record([(40.0, "FAULT_STROKE_END:FL")])
+    assert list(las_h7.h7_violations(_rerun(_u3_record(), fault), _u3_record(), u3)) == ["C3"]
+    stored_fault = _u3_record(warnings=("FAULT_STROKE_END:FL",))  # baseline FAULT = warnings
+    assert las_h7.h7_violations(_rerun(stored_fault, fault), stored_fault, u3) == {}
+    assert las_h7.h7_violations(_rerun(_u3_record(late="flag"), quiet), _u3_record(), u3) == {}
+    with pytest.raises(las_h7.UndecidableLine, match="las_events"):
+        las_h7.h7_violations(_rerun(_u3_record(), None), _u3_record(), u3)
+    fired = las_h7.las_events_record([(30.0, "INFO_LIFTOFF_SLOW:RR")])
+    lines = [las_h7.TargetLine("fired", _rerun(_u3_record(ready=50.0), fired), _u3_record(),
+                               None),
+             las_h7.TargetLine("no record", _rerun(_u3_record(), None), _u3_record(), None),
+             las_h7.TargetLine("silent", _rerun(_u3_record(), quiet), _u3_record(), None)]
+    result = las_h7.judge_batch("J-7-slope", lines)
+    assert result["fired"] == ["fired"] and list(result["violations"]) == ["fired"]
+    assert list(result["undecidable"]) == ["no record"] and result["stop"]
+
+
+def test_las_events_record_reads_events_only() -> None:
+    class Event:
+        def __init__(self, t_s: float, name: str) -> None:
+            self.t_s, self.name = t_s, name
+
+    events = [Event(30.0, "INFO_LIFTOFF_SLOW:RR"), Event(31.0, "INFO_LIFTOFF_SLOW_END:loc"),
+              Event(40.0, "FAULT_STROKE_END:FL"), Event(41.0, "crawler_liftoff_confirmed")]
+    before = [(e.t_s, e.name) for e in events]
+    record = las_h7.las_events_record(events)
+    assert record == {"liftoff_slow": [[30.0, "INFO_LIFTOFF_SLOW:RR"],
+                                       [31.0, "INFO_LIFTOFF_SLOW_END:loc"]],
+                      "fault_names": ["FAULT_STROKE_END:FL"], "event_count": 4}
+    assert [(e.t_s, e.name) for e in events] == before
+    assert las_h7.las_events_record([(1.0, "INFO_X")])["event_count"] == 1
+
+
+def test_draft_formats_carry_the_rev4b_format_absent_cells() -> None:
+    assert las_h7.BATCH_FORMATS["J-5"].absent == ["C4'", "P3-2"]
+    assert las_h7.BATCH_FORMATS["J-13-grid_vb"].absent == ["C4'", "P3-2", "C5'-S"]
+    assert las_h7.BATCH_FORMATS["J-15"].absent == ["C4'"]
+    for name in ("J-5", "J-13-grid_vb", "J-15"):
+        assert las_h7.BATCH_FORMATS[name].status is las_h7.FormatStatus.DRAFT
+    grid = las_h7.BATCH_FORMATS["J-13-grid_vb"]
+    run = {"pass": True, "gates": {"fault0": True}, "fault_events": [], "warnings": [],
+           "t_ready_back_s": 22.6, "las_events": las_h7.las_events_record([])}
+    late = {**run, "t_ready_back_s": 30.0, "warnings": ["FAULT_X"]}
+    assert sorted(las_h7.h7_violations(late, run, grid, allow_draft=True)) == ["C3", "C5'-R"]
+    stage3 = las_h7.BATCH_FORMATS["J-15"]
+    result = {"events": [{"t_s": 1.0, "name": "crawler_liftoff_confirmed"}],
+              "judged": {"verdict": "pass", "fail_items": [],
+                         "judge": {"name": "rev12", "version": "12", "sha256": "e" * 64}},
+              "p3b": {"checks": {"P3-2_verdict": "pass"},
+                      "P3-6_ready": {"t_ready_after_loop_start_s": 70.2},
+                      "P3-5_clearance_stroke": {"s_motor_max_m": [0.40, 0.41, 0.39, 0.40]}}}
+    worse = json.loads(json.dumps(result))
+    worse["p3b"]["P3-5_clearance_stroke"]["s_motor_max_m"][1] = 0.412
+    assert list(las_h7.h7_violations(worse, result, stage3, allow_draft=True)) == ["C5'-S"]
 
 
 def test_a_draft_format_does_not_judge_without_confirmation() -> None:
