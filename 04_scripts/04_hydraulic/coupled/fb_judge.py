@@ -21,10 +21,17 @@ Readings of the rules text (fixed by rev1 2 I-1 .. I-8; stated in the draft too)
     counted per bundle in the details.
   * F-4 verdict case 1 is ``R2ra`` (decision ``reanchor_on``, rev1 1).
 
+Missing values never pass: a line without ``saturation_s`` breaks C-1 / C-5; a criterion is
+complete only when the paired keys equal the expected key set; C-4 without a judged pair is
+incomplete; the G-3 family must be the 8 keys. The lines of one bundle must carry one run
+identity (``fb.identity``: commit and tool sha256); the stored F-2 L lines are not ours and are
+listed apart. H-1 (``fb_targeted.sealed_check``) runs first; the draft records the measured
+sha256 of the rules, rev1 and the design copy.
+
 Usage (dynamics-dev python, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/fb_judge.py [--out-dir DIR] [--md PATH]
       [--json PATH]
-Exit codes: 0 adoption recommended, 1 not met or incomplete, 2 input error.
+Exit codes: 0 adoption recommended, 1 not met or incomplete, 2 input error (H-1 included).
 The last stdout line is JSON.
 """
 from __future__ import annotations
@@ -61,10 +68,21 @@ OPEN_LOOP_ATTITUDE_MARGIN_DEG = 0.05
 OPEN_LOOP_VB_COUNT = 3
 SCALE_REPORT_BELOW = 0.8947
 """Rules 4 last bullet: report the smallest s of a run whose budget a detection cut."""
+FAMILY_KEY_COUNT = 8
+"""Rules 4 C-3: the G-3 family of F-2 T-1."""
 NEW_EVENT_PREFIXES = ("FAULT", "WARN")
 FAILED_ITEM_PREFIXES = ("P3-2", "G6-2")
 REFERENCE = "L"
 CANDIDATE = "LF"
+LAS_PATH_NOTE = (
+    "LAS-b 경로: 규칙 3.1절(80행)에 따라 래퍼(`las_targeted.install`) 대신 병합된 03_src "
+    "LAS-b(bacb2d2, R8 프리셋 기본 켬, b0 값)를 썼다. 실행마다 프리셋·실행 제어기의 LAS-b "
+    "켬과 b0 값을 단언했고, FB 래퍼만 설치했다. F-0 C-7(L 해시 = 저장 `las_T1` b0 해시, "
+    "LF-off = L)로 재현 조건을 다시 확인했다. 이 대체는 사후 변경 공개 대상이 아니다. "
+    "`las` 블록은 제어기 meta `liftoff_approach_slow`에서 만들었다(`s7p_first`는 없음, "
+    "`start_rho`·`start_rho_prev`를 더함)."
+)
+"""Rules 3.1 line 80: the judgement states the replacement of the wrapper."""
 
 
 # ------------------------------------------------------------------------------- reading
@@ -216,15 +234,27 @@ class Data:
                 for key, lines in self.bundles.get(bundle, {}).items() if name in lines]
 
     def missing_pairs(self, bundles=JUDGED_BUNDLES) -> int:
-        expected = sum(len(self.expected_keys.get(bundle, [])) for bundle in bundles)
-        return expected - len(self.pairs(bundles))
+        """Keys whose pair is missing plus paired keys nobody expected; a bundle without
+        expected keys counts 1 (0 = the paired key set equals the expected one everywhere)."""
+        count = 0
+        for bundle in bundles:
+            expected = set(self.expected_keys.get(bundle, []))
+            paired = {key for _, key, _, _ in self.pairs((bundle,))}
+            count += len(expected ^ paired) + (0 if expected else 1)
+        return count
+
+
+def _exceeds(value: float | None, limit: float) -> bool:
+    """A missing value is a violation (never a pass)."""
+    return value is None or value > limit
 
 
 def c1(data: Data) -> Criterion:
     lines = [(b, k, line) for b, k, line in data.candidate_lines() if is_eta85_vb(line)]
     failures = [f"{b} {k}: {saturation_s(line)} s" for b, k, line in lines
-                if (saturation_s(line) or 0.0) > SATURATION_LIMIT_S]
-    worst = max((saturation_s(line) or 0.0 for _, _, line in lines), default=None)
+                if _exceeds(saturation_s(line), SATURATION_LIMIT_S)]
+    present = [saturation_s(line) for _, _, line in lines if saturation_s(line) is not None]
+    worst = max(present, default=None)
     return Criterion("C-1", "eta 0.85 포화 제거", _status(data.missing_pairs() == 0, failures),
                      f"VB eta 0.85 LF {len(lines)}줄, 최대 {worst} s, 초과 {len(failures)}",
                      failures)
@@ -252,7 +282,9 @@ def c3(data: Data) -> Criterion:
                 if line is not None and (line["d1"]["F_judged_min_N"] or 0.0) < FAMILY_F_MIN_N]
     present = [line for _, line in found if line is not None]
     smallest = min((line["d1"]["F_judged_min_N"] or 0.0 for line in present), default=None)
-    is_complete = len(present) == len(data.family_keys)
+    present_keys = {key for key, line in found if line is not None}
+    is_complete = (len(data.family_keys) == FAMILY_KEY_COUNT
+                   and present_keys == set(data.family_keys))
     return Criterion("C-3", "계열 최소 힘", _status(is_complete, failures),
                      f"{len(present)}/{len(data.family_keys)}키, 최소 "
                      f"{None if smallest is None else round(smallest / 1e3, 3)} kN", failures)
@@ -285,19 +317,20 @@ def c4(data: Data) -> Criterion:
                           f"{sum(text.startswith(f'{bundle} ') for text in different)}"
                           for bundle in JUDGED_BUNDLES]
     details += [f"집합 다름(READY 판정 제외) {text}" for text in different]
-    return Criterion("C-4", "READY", _status(data.missing_pairs() == 0, failures), summary,
-                     details)
+    # No judged pair is no evidence: incomplete, not a pass.
+    is_complete = data.missing_pairs() == 0 and bool(deltas)
+    return Criterion("C-4", "READY", _status(is_complete, failures), summary, details)
 
 
 def c5(data: Data) -> Criterion:
     lines = [(k, line) for _, k, line in data.candidate_lines(("F-1",)) if is_eta(line, 0.80)]
     failures = []
     for key, line in lines:
-        level, touch = level_ge3_longest_s(line), saturation_s(line, ft.PHASE_TOUCH) or 0.0
-        if level is None or level > ETA80_LEVEL_GE3_S:
+        level, touch = level_ge3_longest_s(line), saturation_s(line, ft.PHASE_TOUCH)
+        if _exceeds(level, ETA80_LEVEL_GE3_S):
             failures.append(f"{key}: LEVEL k>=3 최장 {level} s")
-        if touch > ETA80_TOUCH_SAT_S:
-            failures.append(f"{key}: TOUCH 포화 {touch:.3f} s")
+        if _exceeds(touch, ETA80_TOUCH_SAT_S):
+            failures.append(f"{key}: TOUCH 포화 {touch} s")
     return Criterion("C-5", "eta 0.80", _status(len(lines) == ETA80_COUNT, failures),
                      f"{len(lines)}/{ETA80_COUNT}줄, 위반 {len(failures)}", failures)
 
@@ -453,21 +486,85 @@ def detection_scale_report(data: Data) -> list[str]:
     return out
 
 
+# ------------------------------------------------------------------------------- identity
+def _identity_tuple(line: dict) -> tuple | None:
+    identity = (line.get("fb") or {}).get("identity")
+    if not identity:
+        return None
+    return (identity.get("git_head"), tuple(sorted((identity.get("sha256") or {}).items())))
+
+
+def bundle_identities(data: Data) -> dict[str, dict]:
+    """Bundle -> its commits, tool-hash sets and lines without an identity (our lines only;
+    the stored F-2 L lines are counted apart in ``stored_reference_lines``)."""
+    out = {}
+    for bundle in ft.BUNDLES:
+        lines = [line for by_candidate in data.bundles.get(bundle, {}).values()
+                 for line in by_candidate.values()]
+        if not lines:
+            continue
+        tuples = [_identity_tuple(line) for line in lines]
+        known = [value for value in tuples if value is not None]
+        out[bundle] = {"lines": len(lines), "without_identity": tuples.count(None),
+                       "commits": sorted({commit for commit, _ in known}),
+                       "tool_hash_sets": len({hashes for _, hashes in known}),
+                       "dirty_lines": sum(bool(((line.get("fb") or {}).get("identity") or {})
+                                               .get("git_dirty")) for line in lines)}
+    return out
+
+
+def identity_problems(identities: dict[str, dict]) -> list[str]:
+    """A bundle whose lines do not carry exactly one commit and one set of tool hashes."""
+    problems = []
+    for bundle, record in identities.items():
+        if record["without_identity"]:
+            problems.append(f"{bundle}: {record['without_identity']} lines without identity")
+        if len(record["commits"]) > 1:
+            problems.append(f"{bundle}: {len(record['commits'])} commits {record['commits']}")
+        if record["tool_hash_sets"] > 1:
+            problems.append(f"{bundle}: {record['tool_hash_sets']} tool sha256 sets")
+    return problems
+
+
+def identity_report(data: Data, identities: dict[str, dict]) -> list[str]:
+    lines = [f"{bundle}: 줄 {record['lines']}, 커밋 {record['commits']}, 도구 해시 묶음 "
+             f"{record['tool_hash_sets']}, dirty 줄 {record['dirty_lines']}, 정체성 없는 줄 "
+             f"{record['without_identity']}" for bundle, record in identities.items()]
+    used = sum(1 for key in data.bundles.get("F-2", {}) if key in data.stored)
+    lines.append(f"F-2 L = 저장 `las_T1`·`las_T2` b0 act 줄 {used}개(예외: 이 도구의 실행이 "
+                 "아니어서 커밋 검사에서 뺌, LAS-b 래퍼 시기 줄)")
+    return lines
+
+
 # ------------------------------------------------------------------------------- report
 def load_data(out_dir: Path, family_keys: list[str] | None = None,
               stored_paths=ft.LAS_STORED_PATHS) -> Data:
+    """All lines of ``out_dir`` and the stored F-2 references.
+
+    Raises:
+        ValueError: The G-3 family is not the 8 keys of rules 4 C-3.
+    """
     bundles = {bundle: lines_by_key(read_lines(out_dir / f"fb_{bundle.replace('-', '')}.jsonl"))
                for bundle in ft.BUNDLES}
     if family_keys is None:
         import las_targeted
 
         family_keys = las_targeted.stage_keys("T-1")
+    if len(set(family_keys)) != FAMILY_KEY_COUNT or len(family_keys) != FAMILY_KEY_COUNT:
+        raise ValueError(f"G-3 family has {len(family_keys)} keys "
+                         f"(unique {len(set(family_keys))}), rules 4 C-3 needs "
+                         f"{FAMILY_KEY_COUNT}")
     expected = {bundle: sorted({ft.fb_key(job) for job in ft.bundle_base_jobs(bundle)})
                 for bundle in JUDGED_BUNDLES}
     return Data(bundles, load_stored_reference(stored_paths), family_keys, expected)
 
 
-def verdict_of(criteria: list[Criterion]) -> str:
+IDENTITY_VERDICT = "판정 보류(실행 정체성)"
+
+
+def verdict_of(criteria: list[Criterion], identity_issues: list[str] | None = None) -> str:
+    if identity_issues:
+        return IDENTITY_VERDICT
     if any(c.passed is False for c in criteria):
         return "미달"
     if any(c.passed is None for c in criteria):
@@ -479,19 +576,34 @@ def _mark(passed: bool | None) -> str:
     return {True: "만족", False: "위반", None: "미완"}[passed]
 
 
-def render(data: Data, criteria: list[Criterion], out_dir: Path) -> str:
+def sealed_hashes() -> dict[str, str]:
+    """Measured sha256 of the sealed rules, the addendum rev1 and the design copy."""
+    return {path.name: ft.file_sha256(path)
+            for path in (ft.RULES_PATH, ft.RULES_REV1_PATH, ft.DESIGN_PATH)}
+
+
+def render(data: Data, criteria: list[Criterion], out_dir: Path,
+           seal: dict[str, str] | None = None) -> str:
     counts = {bundle: sum(len(v) for v in data.bundles[bundle].values()) for bundle in ft.BUNDLES}
+    identities = bundle_identities(data)
+    issues = identity_problems(identities)
+    seal_lines = [f"  - `{name}` 실측 sha256 `{digest}`" for name, digest in (seal or {}).items()]
     text = ["# FB 표적 판정서 (초안, fb_judge.py 생성)", "",
             f"- 규칙: `fb_targeted_rules.md`(sha256 `{ft.RULES_SHA256[:12]}…`) + 덧붙임 판 "
             f"`fb_targeted_rules_rev1.md`(sha256 `{ft.RULES_REV1_SHA256[:12]}…`), 후보 LF 대 L",
+            "- H-1 봉인 확인(판정 시작 때 `fb_targeted.sealed_check` 통과)", *seal_lines,
             f"- 실행 줄: `{out_dir}` " + ", ".join(f"{b} {n}/{ft.BUNDLE_COUNTS[b]}"
                                                   for b, n in counts.items()),
             "- F-2의 L: 저장 `v5/las/las_T1.jsonl`·`las_T2.jsonl` b0 act 줄",
+            f"- {LAS_PATH_NOTE}",
             "- 두 경로 판정(python-expert 도구, control-expert 재집계)이 같아야 확정이다"
             "(규칙 8절).",
-            "", f"## 판정: **{verdict_of(criteria)}**", "",
+            "", f"## 판정: **{verdict_of(criteria, issues)}**", "",
             "| # | 항목 | 결과 | 요약 |", "|---|---|---|---|"]
     text += [f"| {c.name} | {c.title} | {_mark(c.passed)} | {c.summary} |" for c in criteria]
+    text += ["", "## 실행 정체성", ""]
+    text += [f"- {line}" for line in identity_report(data, identities)]
+    text += [f"- 문제: {issue}" for issue in issues] or ["- 묶음별 커밋·도구 해시 하나씩"]
     text += ["", "## 멈춤 조건", ""] + [f"- {line}" for line in stop_report(data, out_dir)]
     scale = detection_scale_report(data)
     text += ["", "## 검출로 예산을 깎은 실행(규칙 4절 마지막 항목)", ""]
@@ -514,13 +626,16 @@ def render(data: Data, criteria: list[Criterion], out_dir: Path) -> str:
     return "\n".join(text)
 
 
-def judge(out_dir: Path, md_path: Path | None, family_keys: list[str] | None = None) -> dict:
+def judge(out_dir: Path, md_path: Path | None, family_keys: list[str] | None = None,
+          seal: dict[str, str] | None = None) -> dict:
     data = load_data(out_dir, family_keys)
     criteria = [criterion(data) for criterion in CRITERIA]
+    issues = identity_problems(bundle_identities(data))
     if md_path is not None:
-        md_path.write_text(render(data, criteria, out_dir), encoding="utf-8")
-    return {"verdict": verdict_of(criteria),
+        md_path.write_text(render(data, criteria, out_dir, seal), encoding="utf-8")
+    return {"verdict": verdict_of(criteria, issues),
             "criteria": {c.name: c.passed for c in criteria},
+            "identity_problems": issues, "sealed_sha256": seal or {},
             "lines": {b: sum(len(v) for v in data.bundles[b].values()) for b in ft.BUNDLES}}
 
 
@@ -530,10 +645,19 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--md", type=Path, default=JUDGEMENT_PATH)
     parser.add_argument("--json", type=Path, default=None)
     args = parser.parse_args(argv)
+    problems = ft.sealed_check()
+    if problems:
+        print("\n".join(f"H-1 {problem}" for problem in problems))
+        print(json.dumps({"stop": "H-1", "problems": problems}))
+        return 2
     if not args.out_dir.exists():
         print(json.dumps({"error": f"no {args.out_dir}"}))
         return 2
-    result = judge(args.out_dir, args.md)
+    try:
+        result = judge(args.out_dir, args.md, seal=sealed_hashes())
+    except ValueError as exc:
+        print(json.dumps({"error": str(exc)}))
+        return 2
     if args.json is not None:
         args.json.write_text(json.dumps(result, ensure_ascii=False, indent=1), encoding="utf-8")
     print(json.dumps(result, ensure_ascii=True))
