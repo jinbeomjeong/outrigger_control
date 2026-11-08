@@ -641,6 +641,124 @@ def stop_crawler_values(rows: np.ndarray, stop_t_s: float, weight_N: float) -> d
             "margin_vs_max_before_1s_kN": margin_kN(max_before_N)}
 
 
+# ------------------------------------------------------------------- U-9 targeted runs (U9)
+U9_LEG_COUNTS = (1, 2, 3, 4)
+U9_MIN_RUN_S = 0.1
+"""``ge3_runs``: LEVEL k >= 3 runs of at least this duration."""
+U9_MAX_RUNS = 50
+PHASE_LEVEL = "level"
+PRE_LEVEL_PHASES = ("idle", "check", PHASE_TOUCH)
+PERIOD_TIME_TOL_S = 1e-9
+
+
+def moving_limited_masks(rows: np.ndarray) -> np.ndarray:
+    """Per chunk: bit mask of the legs the flow limit cut that were moving (|u| > 1e-6 m/s)."""
+    limited = rows[:, COLUMN["limited_mask"]].astype(int)
+    moving = np.abs(rows[:, U]) > MOVING_SPEED_EPS_M_S
+    moving_bits = (moving.astype(int) << np.arange(len(LEGS))).sum(axis=1)
+    return limited & moving_bits
+
+
+def _bit_counts(masks: np.ndarray) -> np.ndarray:
+    return ((masks[:, None] >> np.arange(len(LEGS))) & 1).sum(axis=1)
+
+
+def _time_by_count(counts: np.ndarray, selected: np.ndarray) -> dict:
+    return {str(k): _rounded((selected & (counts == k)).sum() * CHUNK_S, 3)
+            for k in U9_LEG_COUNTS}
+
+
+def _post_touch_flags(phases: np.ndarray) -> np.ndarray:
+    """True from the first chunk after the first TOUCH end (the ``t_touch_end_s`` rule) on."""
+    after = np.zeros(len(phases), bool)
+    outside = np.flatnonzero(~np.isin(phases, PRE_LEVEL_PHASES))
+    if outside.size:
+        after[outside[0]:] = True
+    return after
+
+
+def _attitude_rate_deg_s(rows: np.ndarray, attitude_deg: np.ndarray) -> np.ndarray:
+    """True roll / pitch rate on the 1 ms rows (``np.gradient``: central differences inside,
+    one-sided at the ends; zero for fewer than two rows)."""
+    if len(rows) < 2:
+        return np.zeros_like(attitude_deg)
+    return np.gradient(attitude_deg, rows[:, COLUMN["t"]], axis=0)
+
+
+def _filtered_at(period_t: np.ndarray, filtered_deg: np.ndarray, t_s: float,
+                 is_before: bool) -> dict | None:
+    """10 Hz filtered attitude of the nearest period at or before (or at or after) ``t_s``."""
+    if is_before:
+        index = int(np.searchsorted(period_t, t_s + PERIOD_TIME_TOL_S, side="right")) - 1
+    else:
+        index = int(np.searchsorted(period_t, t_s - PERIOD_TIME_TOL_S, side="left"))
+    if index < 0 or index >= len(period_t):
+        return None
+    return {"t_s": _rounded(period_t[index], 3), **_leg_axes(filtered_deg[index])}
+
+
+def _ge3_run_record(rows: np.ndarray, first: int, last: int, masks: np.ndarray,
+                    attitude_deg: np.ndarray, rate_deg_s: np.ndarray, period: dict) -> dict:
+    t = rows[:, COLUMN["t"]]
+    start_deg = attitude_deg[first]
+    delta_deg = np.abs(attitude_deg[first: last + 1] - start_deg).max(axis=0)
+    rate_max = np.abs(rate_deg_s[first: last + 1]).max(axis=0)
+    return {"t_start_s": _rounded(t[first], 3), "dur_s": _rounded((last - first + 1) * CHUNK_S, 3),
+            "set_at_middle": mask_legs(masks[(first + last) // 2]),
+            "attitude_start_deg": _leg_axes(start_deg),
+            "max_abs_delta_deg": _leg_axes(delta_deg),
+            "filtered_start_deg": _filtered_at(period["t"], period["filtered_deg"], t[first],
+                                               is_before=True),
+            "filtered_end_deg": _filtered_at(period["t"], period["filtered_deg"], t[last],
+                                             is_before=False),
+            "max_abs_rate_deg_s": _leg_axes(rate_max)}
+
+
+def u9_values(rows: np.ndarray, phases: np.ndarray, period: dict, *,
+              is_flow_on: bool = True) -> dict:
+    """U-9 targeted-run values (``u9_targeted_rules_rev1.md`` 3.3); no verdict here.
+
+    k = number of legs the flow limit cut while they moved (:func:`moving_limited_masks`).
+
+    Args:
+        rows: The 1 ms chunk record of ``harness_flow``.
+        phases: Phase of each chunk (:func:`chunk_phases`).
+        period: Controller log arrays with ``t`` and ``filtered_deg`` (roll, pitch).
+        is_flow_on: False (a run without the flow limit) gives an empty dict.
+
+    Returns:
+        ``level_count_s`` and ``post_touch_count_s`` (time per k = 1 .. 4), ``longest_ge3_s``,
+        ``longest_eq4_s`` (LEVEL), ``ge3_runs`` (LEVEL k >= 3 runs of at least 0.1 s, the
+        first 50 in time; ``ge3_runs_count`` counts them all) and
+        ``level_sat_rate_max_deg_s`` (largest true attitude rate on LEVEL chunks with k >= 1,
+        None without such a chunk).
+    """
+    if not is_flow_on:
+        return {}
+    masks = moving_limited_masks(rows)
+    counts = _bit_counts(masks)
+    is_level = phases == PHASE_LEVEL
+    attitude_deg = _attitude_deg(rows)
+    rate_deg_s = _attitude_rate_deg_s(rows, attitude_deg)
+    min_chunks = round(U9_MIN_RUN_S / CHUNK_S)
+    long_runs = [(first, last) for first, last in contiguous_runs(is_level & (counts >= 3))
+                 if last - first + 1 >= min_chunks]
+    saturated_level = is_level & (counts >= 1)
+    level_sat_rate = None
+    if saturated_level.any():
+        level_sat_rate = _leg_axes(np.abs(rate_deg_s[saturated_level]).max(axis=0))
+    return {
+        "level_count_s": _time_by_count(counts, is_level),
+        "post_touch_count_s": _time_by_count(counts, _post_touch_flags(phases)),
+        "longest_ge3_s": _rounded(_longest_true_run(is_level & (counts >= 3)) * CHUNK_S, 3),
+        "longest_eq4_s": _rounded(_longest_true_run(is_level & (counts == 4)) * CHUNK_S, 3),
+        "ge3_runs_count": len(long_runs),
+        "ge3_runs": [_ge3_run_record(rows, first, last, masks, attitude_deg, rate_deg_s, period)
+                     for first, last in long_runs[:U9_MAX_RUNS]],
+        "level_sat_rate_max_deg_s": level_sat_rate,
+    }
+
+
 def run_values(rows: np.ndarray, period: dict, events: list[tuple[float, str]], limiter,
                twist_vector: np.ndarray, head_area_m2: np.ndarray, integral_limit: float) -> dict:
     """All values of one run. ``period``: arrays t, phase, integral, filtered_deg, guard."""

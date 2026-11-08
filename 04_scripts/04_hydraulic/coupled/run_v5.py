@@ -13,7 +13,11 @@ event output ``lower_bound_miss``; the combined pairs are the same rows of ``mai
 with the revision 8 VB definition, ③ on; ``p3_hash_check.py`` compares them with the stored
 lines), ``d1`` (D-1 verification matrix, ``d1_rows.py`` / ``d1_runs.py``: 217 rows x VB / V0
 x eps {0, 2e-3} = 868; ``--list`` also prints rows per group, missing settle-table keys and a
-cost estimate; lines carry the ``d1`` record of ``d1_selection_rules.md`` 3).
+cost estimate; lines carry the ``d1`` record of ``d1_selection_rules.md`` 3), ``u9_targeted``
+(U-9 targeted runs, ``u9_targeted_rules_rev1.md`` 2 / 3.2: 14 keys x V0, VB eta_v 0.85, VB eta_v
+0.80 = 42; lines carry ``values["U9"]``).
+A job may carry ``eta_v`` (pump volumetric efficiency of a flow-limited setting, default
+:data:`ETA_V`) and ``u9_metrics`` (add ``values["U9"]``); jobs without them are as before.
 One JSON line per run in ``06_analysis/03_hydraulic/coupled/v5/<batch>.jsonl`` (appended; runs
 already in the file are skipped). Each run has its own spawned worker (``maxtasksperchild=1``): the
 harness patches stay in the process. Deterministic (no noise). Values only; the verdict is
@@ -189,7 +193,24 @@ def batch_jobs(name: str) -> list[dict]:
         import d1_rows
 
         return d1_rows.jobs()
+    if name == U9_BATCH:
+        return u9_targeted_jobs()
     raise ValueError(f"unknown batch {name!r}")
+
+
+U9_BATCH = "u9_targeted"
+U9_PHASES = {"S2": EPS_ALL, "S3": EPS_TWO, "R3": EPS_ALL, "S5": EPS_ALL}
+"""``u9_targeted_rules_rev1.md`` 2: groups A (S2, S3), B (R3) and C (S5) with their eps."""
+U9_SETTINGS = ({"setting": "V0"}, {"setting": "VB", "eta_v": 0.85},
+               {"setting": "VB", "eta_v": 0.80})
+"""Rules 2 / 3.2 P-2: the J pair, the VB reference and VB with the supply cut to eta_v 0.80."""
+
+
+def u9_targeted_jobs() -> list[dict]:
+    """Rules 3.2 P-2: 14 (case, eps) keys x :data:`U9_SETTINGS` = 42 jobs, all with
+    ``u9_metrics`` (the metric is empty on the flow-off V0 runs)."""
+    return [{"case": case, "eps": eps, **setting, "u9_metrics": True}
+            for case, phases in U9_PHASES.items() for eps in phases for setting in U9_SETTINGS]
 
 
 D1_BATCH = "d1"
@@ -235,7 +256,8 @@ def job_key(job: dict) -> str:
 
 
 def t4h_file_name(job: dict) -> str:
-    """``<row>_<phase>_<setting>.npz`` of a job (phase as in ``aggregate_v5``, file-safe)."""
+    """``<row>_<phase>_<setting>.npz`` of a job (phase as in ``aggregate_v5``, file-safe); a job
+    with ``eta_v`` ends in ``<setting>-eta<eta_v>`` (the two VB supplies of ``u9_targeted``)."""
     row = "R2ra" if job.get("decision") == "reanchor_on" else job["case"]
     if job.get("twin"):
         twin = job["twin"]
@@ -246,7 +268,10 @@ def t4h_file_name(job: dict) -> str:
         phase = f"e{job.get('eps', 0.0)}"
     if job.get("timing"):
         phase += f"-{job['timing']}"
-    return f"{row}_{phase}_{job['setting']}.npz"
+    setting = job["setting"]
+    if job.get("eta_v") is not None:
+        setting += f"-eta{job['eta_v']:g}"
+    return f"{row}_{phase}_{setting}.npz"
 
 
 def _t4h_request(job: dict, flow, options) -> dict | None:
@@ -330,15 +355,28 @@ def write_overlap_reference() -> dict:
     return reference
 
 
-def options_of(setting: str):
-    """(``FlowSetting``, ``HydraulicOptions`` or None) of a setting name."""
+def options_of(setting: str, eta_v: float | None = None):
+    """(``FlowSetting``, ``HydraulicOptions`` or None) of a setting name.
+
+    Args:
+        setting: A :data:`SETTINGS` name.
+        eta_v: Pump volumetric efficiency of a flow-limited setting (job key ``eta_v``,
+            ``u9_targeted_rules_rev1.md`` 3.2 P-1); None = :data:`ETA_V`.
+
+    Raises:
+        ValueError: ``eta_v`` given for a setting without the flow limit.
+    """
     from harness_flow import FlowSetting
 
     from outrigger_sim.hydraulics.v5_options import HydraulicOptions
 
     is_flow_on, plant = SETTINGS[setting]
-    flow = FlowSetting(is_enabled=True, eta_v=ETA_V) if is_flow_on else FlowSetting(
-        is_enabled=False)
+    if eta_v is not None and not is_flow_on:
+        raise ValueError(f"setting {setting!r} has no flow limit: eta_v {eta_v} is meaningless")
+    if is_flow_on:
+        flow = FlowSetting(is_enabled=True, eta_v=ETA_V if eta_v is None else float(eta_v))
+    else:
+        flow = FlowSetting(is_enabled=False)
     return flow, (HydraulicOptions.from_dict(plant) if plant else None)
 
 
@@ -355,7 +393,7 @@ def run_one(job: dict) -> dict:
             slope.set_parent_affinity(int(job["mask"]))
         if job.get("eps"):
             _install_approach_scale(float(job["eps"]))
-        flow, options = options_of(job["setting"])
+        flow, options = options_of(job["setting"], job.get("eta_v"))
         contact = job.get("contact")
         if job.get("d1") is not None:  # D-1 row (no T4h record: criteria 9 is not its judge)
             import d1_runs
@@ -368,7 +406,8 @@ def run_one(job: dict) -> dict:
             case, decision = _case_of(job)
             t4h = _t4h_request(job, flow, options)
             result, series = verdict_runs.execute(case, flow, decision, hydraulics=options,
-                                                  contact=contact, t4h=t4h)
+                                                  contact=contact, t4h=t4h,
+                                                  u9_metrics=bool(job.get("u9_metrics")))
         if "error" in result:
             return {"job": job, "error": result["error"], "tb": result.get("tb"),
                     "wall_s": round(time.perf_counter() - t_start, 1)}
