@@ -314,6 +314,12 @@ V5_VB_ARGS = {**COUPLED_FLOW_ARGS, "valve_tau_s": 0.1, "rod_release_force": True
 ``final_C4G2_P3`` (③ start bound, criteria revision 8 3.1, user decision 2026-11-08)."""
 V5_P3_CONTROLLER = "final_C4G2_P3"
 """Controller tag of the VB / LS rows (run_S9 ``FINAL_P3_CONTROLLER``, ``v5_options.EXTEND_START_CONTROLLER_TAG``)."""
+V5_P3_LAS_CONTROLLER = "final_C4G2_P3_LAS"
+V5_LAS_CONTROLLER = "final_C4G2_LAS"
+"""Tags of a row re-run after the LAS-b switch (2026-11-08; run_S9 ``FINAL_P3_LAS_CONTROLLER`` /
+``FINAL_LAS_CONTROLLER``): the rows above keep the tags of their stored results, which the switched preset refuses
+(``--expect-controller``); a re-run row takes these through :func:`with_expected_controller`, a reproduction of the
+stored result runs through ``05_tests/unit/pre_las_preset_runner.py``."""
 
 
 def v5_vb_argv() -> list[str]:

@@ -26,6 +26,17 @@ EXTEND_START_TRACKED_RULE = "tracked_bound"
 EXTEND_START_CONTROLLER_TAG = "final_C4G2_P3"
 """Controller tag of a run with ``extend_start_tracked`` (criteria revision 8 3.1: ``final_C4G2``
 plus the ③ start bound, revision 4)."""
+FINAL_CONTROLLER_TAG = "final_C4G2"
+"""Tag of a run without the ③ start bound before the LAS-b switch (the runner's tag; the v5
+records carry no key for it)."""
+LIFTOFF_SLOW_TAG_SUFFIX = "_LAS"
+"""LAS-b switch (2026-11-08): a controller with ``liftoff_approach_slow.enable`` adds this."""
+LAS_CONTROLLER_TAG = FINAL_CONTROLLER_TAG + LIFTOFF_SLOW_TAG_SUFFIX
+"""``final_C4G2_LAS``: the preset since the LAS-b switch (V0 and the other settings without ③)."""
+EXTEND_START_LAS_CONTROLLER_TAG = EXTEND_START_CONTROLLER_TAG + LIFTOFF_SLOW_TAG_SUFFIX
+"""``final_C4G2_P3_LAS``: the VB / LS controller since the LAS-b switch."""
+EXTEND_START_TAGS = (EXTEND_START_CONTROLLER_TAG, EXTEND_START_LAS_CONTROLLER_TAG)
+"""Tags of a run with the ③ start bound."""
 LOCK_SPEED_EPS_M_S = 1.0e-6
 """``|u_c| <=`` this = a zero command; same value as YAML ``actuator.rod_side.lock_eps_m_s``."""
 DEFAULT_VOLUME_SCALE = 1.0
@@ -353,12 +364,37 @@ def apply_controller_options(config: Any, options: HydraulicOptions, v_max_m_s: 
     return replace(config, two_pressure=two_pressure)
 
 
-def controller_tag(options: HydraulicOptions | None) -> str | None:
-    """:data:`EXTEND_START_CONTROLLER_TAG` for a run with the ③ start bound, else None (the
-    run keeps the tag of its runner, ``final_C4G2``)."""
-    if options is None or not options.extend_start_tracked:
-        return None
-    return EXTEND_START_CONTROLLER_TAG
+def is_liftoff_slow_on(config: Any | None) -> bool:
+    """The C2 configuration has LAS-b on (``liftoff_approach_slow.enable``; False for ``None``,
+    a config from code before LAS-b and a controller config without the block)."""
+    settings = getattr(config, "liftoff_approach_slow", None)
+    return bool(getattr(settings, "enable", False))
+
+
+def with_liftoff_slow_tag(tag: str | None) -> str:
+    """The LAS-b tag of a run tag: ``None`` (the runner's ``final_C4G2``) -> ``final_C4G2_LAS``,
+    any other tag gets :data:`LIFTOFF_SLOW_TAG_SUFFIX` once (``ABL`` -> ``ABL_LAS``)."""
+    if tag is None:
+        return LAS_CONTROLLER_TAG
+    return tag if tag.endswith(LIFTOFF_SLOW_TAG_SUFFIX) else tag + LIFTOFF_SLOW_TAG_SUFFIX
+
+
+def is_liftoff_slow_tag(tag: str | None) -> bool:
+    """A recorded tag of a run with LAS-b on (records without a tag ran before the switch)."""
+    return tag is not None and tag.endswith(LIFTOFF_SLOW_TAG_SUFFIX)
+
+
+def controller_tag(options: HydraulicOptions | None, config: Any | None = None) -> str | None:
+    """Tag of a v5 run: :data:`EXTEND_START_CONTROLLER_TAG` with the ③ start bound, else None
+    (the run keeps the tag of its runner, ``final_C4G2``); with ``config`` having LAS-b on, the
+    ``_LAS`` tag of either (``final_C4G2_P3_LAS`` / ``final_C4G2_LAS``). Without ``config`` the
+    tag is the one before the LAS-b switch (callers that know the controller pass it)."""
+    tag = None
+    if options is not None and options.extend_start_tracked:
+        tag = EXTEND_START_CONTROLLER_TAG
+    if is_liftoff_slow_on(config):
+        return with_liftoff_slow_tag(tag)
+    return tag
 
 
 def check_lock_window_meta(two_pressure_meta: dict[str, Any], options: HydraulicOptions,
@@ -383,6 +419,13 @@ def check_lock_window_meta(two_pressure_meta: dict[str, Any], options: Hydraulic
 
 
 __all__ = [
+    "EXTEND_START_LAS_CONTROLLER_TAG",
+    "EXTEND_START_TAGS",
+    "LAS_CONTROLLER_TAG",
+    "LIFTOFF_SLOW_TAG_SUFFIX",
+    "is_liftoff_slow_on",
+    "is_liftoff_slow_tag",
+    "with_liftoff_slow_tag",
     "LOCK_SPEED_EPS_M_S",
     "apply_lock_window",
     "check_extend_start",

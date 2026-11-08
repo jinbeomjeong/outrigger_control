@@ -101,12 +101,18 @@ def run_config(meta: dict, extend_start: str | None = None):
         HydraulicOptions,
         apply_controller_options,
         check_extend_start,
+        is_liftoff_slow_tag,
     )
 
     closed_loop = soil._imports()[0]
     contact = (meta.get("job") or {}).get("contact") or "COMBINED"
     config = closed_loop.preset_config(c2.ContactJudge[contact], with_imu_samples=True,
                                        with_reapproach=True)
+    # LAS-b switch (2026-11-08): replay the controller the record ran; records before the switch
+    # carry no ``_LAS`` tag and replay with LAS-b off
+    config = replace(config, liftoff_approach_slow=replace(
+        config.liftoff_approach_slow,
+        enable=is_liftoff_slow_tag(meta.get("controller_tag"))))
     # read only: records of earlier M2 laws keep their lock window (the replay reruns no plant);
     # a record of the revision 8 VB / LS definition brings its ③ start bound
     options = HydraulicOptions.from_stored(meta["hydraulic_options"])

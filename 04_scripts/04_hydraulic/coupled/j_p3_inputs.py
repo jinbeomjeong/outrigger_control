@@ -26,14 +26,17 @@ for _path in (HERE, ROOT / "03_src"):
         sys.path.insert(0, str(_path))
 
 P3_CONTROLLER_TAG = "final_C4G2_P3"
+P3_CONTROLLER_TAGS = (P3_CONTROLLER_TAG, "final_C4G2_P3_LAS")
+"""③-on tags: before and after the LAS-b switch (``v5_options.EXTEND_START_TAGS``)."""
 P3_RULE = "tracked_bound"
 P3_SETTING_PREFIXES = ("VB", "LS")
 RULE_KEY = "run_extend_start_rule"
 
 
 def is_p3_expected(controller_tag: str | None, setting: str | None) -> bool:
-    """A VB / LS run (tag ``final_C4G2_P3`` or setting ``VB`` / ``LS<n>``)."""
-    if controller_tag == P3_CONTROLLER_TAG:
+    """A VB / LS run (tag ``final_C4G2_P3`` / ``final_C4G2_P3_LAS`` or setting ``VB`` /
+    ``LS<n>``)."""
+    if controller_tag in P3_CONTROLLER_TAGS:
         return True
     return setting is not None and setting.startswith(P3_SETTING_PREFIXES)
 

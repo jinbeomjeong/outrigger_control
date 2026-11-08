@@ -24,6 +24,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SOURCE_DIR = PROJECT_ROOT / "03_src"
 PRE_C4G2_TOUCH_TWIST_HOLD = False
+PRE_C4G2_LIFTOFF_APPROACH_SLOW = False
+"""LAS-b came after C4G2 (2026-11-08), so the pre-C4G2 preset has it off too."""
 
 if str(SOURCE_DIR) not in sys.path:
     sys.path.insert(0, str(SOURCE_DIR))
@@ -34,8 +36,19 @@ def _install_pre_c4g2_preset() -> None:
 
     switched_preset = c2.C2Config.with_10hz_d1
 
-    def pre_c4g2_preset(self, *, touch_twist_hold: bool = PRE_C4G2_TOUCH_TWIST_HOLD, **keywords):
-        return switched_preset(self, touch_twist_hold=touch_twist_hold, **keywords)
+    def pre_c4g2_preset(
+        self,
+        *,
+        touch_twist_hold: bool = PRE_C4G2_TOUCH_TWIST_HOLD,
+        liftoff_approach_slow: bool = PRE_C4G2_LIFTOFF_APPROACH_SLOW,
+        **keywords,
+    ):
+        return switched_preset(
+            self,
+            touch_twist_hold=touch_twist_hold,
+            liftoff_approach_slow=liftoff_approach_slow,
+            **keywords,
+        )
 
     c2.C2Config.with_10hz_d1 = pre_c4g2_preset
 
