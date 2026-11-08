@@ -230,7 +230,9 @@ once per run, before the LOC and the soil mode, a crawler-zone LEVEL period with
 sum, a light leg and a rising diagonal deficit scales the command to a mean of 0.16 ``v_max``
 for up to 1.5 s (:class:`LiftoffApproachSlowSettings`, events ``INFO_LIFTOFF_SLOW`` /
 ``INFO_LIFTOFF_SLOW_END``); off by default, on in the preset
-(``C2Config().with_10hz_d1(liftoff_approach_slow=False)`` turns it off).
+(``C2Config().with_10hz_d1(liftoff_approach_slow=False)`` turns it off). Its end ramp
+(``end_ramp_periods``, ``las_revA_targeted_rules.md`` 1.3, event
+``INFO_LIFTOFF_SLOW_RAMP_END``) is 0 = off in the class and the preset alike.
 P-S8-29 (user decision 2026-10-28, variant V2b): on a creeping pad DONE may accept a twist load
 up to 15 kN that has stopped rising once attitude and clearance have held for 10 s
 (:class:`TwistCompletionRelaxSettings`, event ``INFO_TWIST_UNSETTLED``); preset on, default off.
@@ -1979,6 +1981,30 @@ class LiftoffSlowEnd(StrEnum):
     """``max_s`` since the start."""
 
 
+LIFTOFF_SLOW_RAMP_END_EVENT = "INFO_LIFTOFF_SLOW_RAMP_END"
+"""``INFO_LIFTOFF_SLOW_RAMP_END:<reason>``: the LAS-b end ramp ended (:class:`LiftoffRampEnd`);
+only in a run whose ramp started (``end_ramp_periods`` >= 1)."""
+
+
+class LiftoffRampEnd(StrEnum):
+    """Why the LAS-b end ramp ended (las_revA_targeted_rules.md 1.3), cancels in their order."""
+
+    DONE = "done"
+    """All ``N_r`` ramp periods were applied."""
+    LOC = "loc"
+    PHASE = "phase"
+    """Not a LEVEL period (also a period without a LEVEL step)."""
+    SOIL = "soil"
+    REAPPROACH = "reapproach"
+    ZONE = "zone"
+    """The crawler zone was left with ``require_soil_response=False``."""
+
+
+def liftoff_ramp_factor(start_factor: float, step: int, ramp_periods: int) -> float:
+    """``lambda_m = lambda_0 + (1 - lambda_0) m / (N_r + 1)`` (las_revA_targeted_rules.md 1.3)."""
+    return start_factor + (1.0 - start_factor) * step / (ramp_periods + 1)
+
+
 @dataclass(frozen=True)
 class LiftoffApproachSlowSettings:
     """LAS-b lift-off approach slowdown (variant b0, ``las_targeted_rules.md`` 1.2 and rev1 2).
@@ -2025,11 +2051,23 @@ class LiftoffApproachSlowSettings:
     ``soil`` / ``reapproach`` / ``zone`` and ``time`` ends do not. 0 (and anything up to 4 with
     ``off_periods`` 5) changes nothing, so the b0 commands stay bit for bit; configs unpickled
     from older code read 0."""
+    end_ramp_periods: int = 0
+    """``N_r`` (las_revA_targeted_rules.md 1.3): after a ``sum`` / ``time`` end, scale the
+    command by lambda_m = lambda_0 + (1 - lambda_0) m / (N_r + 1), m = 1..N_r (m = 1 at the
+    end period), floored at the slow mean; 0 keeps the b0 / P5 commands bit for bit;
+    configs unpickled from older code read 0."""
 
     def __post_init__(self) -> None:
         if self.min_active_periods < 0:
             raise ValueError(
                 f"min_active_periods must be >= 0, got {self.min_active_periods!r}"
+            )
+        is_count = isinstance(self.end_ramp_periods, int) and not isinstance(
+            self.end_ramp_periods, bool
+        )
+        if not is_count or self.end_ramp_periods < 0:
+            raise ValueError(
+                f"end_ramp_periods must be an int >= 0, got {self.end_ramp_periods!r}"
             )
         for name in ("sum_on_fraction_W", "light_leg_fraction_of_F_min", "max_s"):
             if not getattr(self, name) > 0.0:
@@ -3840,6 +3878,19 @@ class _LiftoffSlowState:
     end_reason: LiftoffSlowEnd | None = None
     active_periods: int = 0
     scaled_periods: int = 0
+    last_scale_factor: float = 1.0
+    """Scale of the last acted period (1.0 when it was not scaled): ``lambda_0`` of the ramp."""
+    ramp_step: int = 0
+    """``m`` of the next ramp period; 0 = no ramp (las_revA_targeted_rules.md 1.3)."""
+    ramp_start_factor: float | None = None
+    ramp_periods_applied: int = 0
+    ramp_scaled_periods: int = 0
+    ramp_end_s: float | None = None
+    ramp_end_reason: LiftoffRampEnd | None = None
+
+    @property
+    def is_ramp_running(self) -> bool:
+        return self.ramp_step >= 1 and self.ramp_end_reason is None
 
 
 @dataclass
@@ -7495,7 +7546,9 @@ class C2Controller:
         scale to the slow mean.
 
         Every LEVEL step stores its ``rho`` as the next period's ``rho_{k-1}``, before and
-        after the start. An ending period keeps its command.
+        after the start. An ending period keeps its command, unless a ``sum`` / ``time`` end
+        starts the end ramp (``end_ramp_periods`` >= 1, las_revA_targeted_rules.md 1.3), which
+        acts from the end period on.
         """
         slow = self._liftoff_slow_state()
         slow.has_level_step_run = True
@@ -7516,14 +7569,88 @@ class C2Controller:
             slow.start_rho = float(rho)
             slow.start_rho_prev = rho_before
             self._add_event(reading.t_s, f"{LIFTOFF_SLOW_EVENT}:{LEG_ORDER[lightest_leg]}")
+        if slow.is_ramp_running:
+            return self._liftoff_ramp_period(reading.t_s, leg_speeds, is_reapproaching)
         if not slow.is_active:
             return leg_speeds
         reason = self._liftoff_slow_end_reason(loads_N, is_reapproaching, float(reading.t_s))
         if reason is not None:
             self._end_liftoff_slow(reading.t_s, reason)
+            if self._should_start_liftoff_ramp(reason):
+                slow.ramp_step = 1
+                slow.ramp_start_factor = slow.last_scale_factor
+                return self._ramped_liftoff_speeds(reading.t_s, leg_speeds)
             return leg_speeds
         slow.active_periods += 1
         return self._scaled_to_liftoff_slow_mean(leg_speeds)
+
+    def _should_start_liftoff_ramp(self, reason: LiftoffSlowEnd) -> bool:
+        """Rules 1.3: only a ``sum`` / ``time`` end whose last acted period was scaled."""
+        ramp_periods = self.config.liftoff_approach_slow.end_ramp_periods
+        is_quiet_end = reason in (LiftoffSlowEnd.SUM, LiftoffSlowEnd.TIME)
+        return (
+            ramp_periods >= 1
+            and is_quiet_end
+            and self._liftoff_slow_state().last_scale_factor < 1.0
+        )
+
+    def _liftoff_ramp_period(
+        self, t_s: float, leg_speeds: NDArray[np.float64], is_reapproaching: bool
+    ) -> NDArray[np.float64]:
+        """A LEVEL period of a running ramp: the cancels of rules 1.3 in their order, then
+        the ramp scale."""
+        cancel = self._liftoff_ramp_cancel_reason(is_reapproaching)
+        if cancel is not None:
+            self._end_liftoff_ramp(t_s, cancel)
+            return leg_speeds
+        return self._ramped_liftoff_speeds(t_s, leg_speeds)
+
+    def _liftoff_ramp_cancel_reason(self, is_reapproaching: bool) -> LiftoffRampEnd | None:
+        """``loc``, ``phase`` (the LEVEL step outside LEVEL), ``soil``, ``reapproach``,
+        ``zone``; the ``phase`` cancel of a period without a LEVEL step is in
+        :meth:`_finish_liftoff_slow_period`."""
+        slow = self._liftoff_slow_state()
+        if slow.has_loc_been_seen:
+            return LiftoffRampEnd.LOC
+        if self._state.phase is not C2Phase.LEVEL:
+            return LiftoffRampEnd.PHASE
+        if self._has_soil_mode_started():
+            return LiftoffRampEnd.SOIL
+        if is_reapproaching:
+            return LiftoffRampEnd.REAPPROACH
+        settings = self.config.liftoff_approach_slow
+        if not settings.require_soil_response and not self._state.in_crawler_zone:
+            return LiftoffRampEnd.ZONE
+        return None
+
+    def _ramped_liftoff_speeds(
+        self, t_s: float, leg_speeds: NDArray[np.float64]
+    ) -> NDArray[np.float64]:
+        """``u max(lambda_m, gamma v_max / mean(u))`` when the mean is above ``gamma v_max``,
+        else ``u``; the same scale on every leg, so the attitude / twist ratios stay."""
+        slow = self._liftoff_slow_state()
+        ramp_periods = self.config.liftoff_approach_slow.end_ramp_periods
+        assert slow.ramp_start_factor is not None  # set when the ramp started
+        ramp_factor = liftoff_ramp_factor(slow.ramp_start_factor, slow.ramp_step, ramp_periods)
+        slow_mean_m_s = (
+            self.config.liftoff_approach_slow.slow_mean_fraction * self.geometry.max_speed_m_s
+        )
+        mean_m_s = float(np.mean(leg_speeds))
+        output = leg_speeds
+        if mean_m_s > slow_mean_m_s:
+            output = leg_speeds * max(ramp_factor, slow_mean_m_s / mean_m_s)
+            slow.ramp_scaled_periods += 1
+        slow.ramp_periods_applied += 1
+        slow.ramp_step += 1
+        if slow.ramp_step > ramp_periods:
+            self._end_liftoff_ramp(t_s, LiftoffRampEnd.DONE)
+        return output
+
+    def _end_liftoff_ramp(self, t_s: float, reason: LiftoffRampEnd) -> None:
+        slow = self._liftoff_slow_state()
+        slow.ramp_end_s = float(t_s)
+        slow.ramp_end_reason = reason
+        self._add_event(t_s, f"{LIFTOFF_SLOW_RAMP_END_EVENT}:{reason}")
 
     def _liftoff_slow_start_gates_hold(
         self,
@@ -7597,15 +7724,20 @@ class C2Controller:
     def _scaled_to_liftoff_slow_mean(
         self, leg_speeds: NDArray[np.float64]
     ) -> NDArray[np.float64]:
-        """``u gamma v_max / mean(u)`` when the mean is above ``gamma v_max``, else ``u``."""
+        """``u gamma v_max / mean(u)`` when the mean is above ``gamma v_max``, else ``u``; the
+        scale used is kept as the ramp's ``lambda_0``."""
+        slow = self._liftoff_slow_state()
         slow_mean_m_s = (
             self.config.liftoff_approach_slow.slow_mean_fraction * self.geometry.max_speed_m_s
         )
         mean_m_s = float(np.mean(leg_speeds))
         if mean_m_s <= slow_mean_m_s:
+            slow.last_scale_factor = 1.0
             return leg_speeds
-        self._liftoff_slow_state().scaled_periods += 1
-        return leg_speeds * (slow_mean_m_s / mean_m_s)
+        slow.scaled_periods += 1
+        scale = slow_mean_m_s / mean_m_s
+        slow.last_scale_factor = scale
+        return leg_speeds * scale
 
     def _end_liftoff_slow(self, t_s: float, reason: LiftoffSlowEnd) -> None:
         slow = self._liftoff_slow_state()
@@ -7616,13 +7748,15 @@ class C2Controller:
 
     def _finish_liftoff_slow_period(self, t_s: float) -> None:
         """After the phase command: a period without a LEVEL step forgets ``rho_{k-1}`` and
-        ends a running slowdown (reason ``phase``)."""
+        ends a running slowdown, then a running end ramp (both reason ``phase``)."""
         slow = self._liftoff_slow_state()
         if slow.has_level_step_run:
             return
         slow.previous_rho = None
         if slow.is_active:
             self._end_liftoff_slow(t_s, LiftoffSlowEnd.PHASE)
+        if slow.is_ramp_running:
+            self._end_liftoff_ramp(t_s, LiftoffRampEnd.PHASE)
 
     def _liftoff_approach_slow_meta(self) -> dict[str, Any]:
         slow = self._state.liftoff_slow
@@ -7639,6 +7773,16 @@ class C2Controller:
                 "end_reason": None if slow.end_reason is None else str(slow.end_reason),
                 "active_periods": slow.active_periods,
                 "scaled_periods": slow.scaled_periods,
+                "ramp": {
+                    "n_r": self.config.liftoff_approach_slow.end_ramp_periods,
+                    "start_factor": slow.ramp_start_factor,
+                    "periods_applied": slow.ramp_periods_applied,
+                    "scaled_periods": slow.ramp_scaled_periods,
+                    "end_t_s": slow.ramp_end_s,
+                    "end_reason": (
+                        None if slow.ramp_end_reason is None else str(slow.ramp_end_reason)
+                    ),
+                },
             }
         )
         return meta

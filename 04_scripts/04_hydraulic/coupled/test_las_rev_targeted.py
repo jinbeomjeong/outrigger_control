@@ -296,6 +296,7 @@ def _rev_line(candidate, point, sha, start, f_rl=11.0, f_judged=11.0, active=9, 
               setting=None):
     beta, n_min = judge.CANDIDATE_VALUES[candidate]
     setting = setting or point[0]
+    tag = judge.CONTROLLER_TAG_BY_SETTING[setting]
     return {"job": {"setting": setting, "d1": {}}, "commands_sha256": sha,
             "las": {"start_t_s": start, "active_periods": active, "end_reason": end,
                     "params": {"beta": beta, "n_min": n_min}},
@@ -304,11 +305,11 @@ def _rev_line(candidate, point, sha, start, f_rl=11.0, f_judged=11.0, active=9, 
                     "settings": {"light_leg_fraction_of_F_min": beta,
                                  "min_active_periods": n_min},
                     "settings_match": True, "rules_sha256": judge.RULES_SHA256,
-                    "controller_tag": "final_C4G2_LAS",
+                    "controller_tag": tag,
                     "identity": {"git_head": "c0", "code_diff_sha256": judge.EMPTY_SHA256,
                                  "dirty_files": [".gitattributes"],
                                  "rules_rev1_sha256": judge.RULES_REV1_SHA256}},
-            "controller_tag": "final_C4G2_LAS",
+            "controller_tag": tag,
             "diag": {"summary": {"F_RL_kN": f_rl, "F_judged_min_kN": f_judged,
                                  "gate_consistent": True, "las_start_period": 6,
                                  "t_lift_s": 23.0, "min_leg_after_lift": "RL"},
@@ -437,6 +438,52 @@ def test_seal_problems(tmp_path):
     assert judge.seal_problems(rules, seal, digest) == []
     assert judge.seal_problems(rules, seal, "0" * 64)
     assert judge.seal_problems(tmp_path / "none.md", seal, digest)
+
+
+def test_audit_ga_candidate_without_grid_lines_is_not_run():
+    result = judge.judge(_grid("P5") + _grid("P3"), {})
+    assert result["candidates"]["P53"] == {"verdict": "incomplete", "at": judge.NOT_RUN,
+                                           "not_run": True}
+    assert judge.is_stop_result(result)
+    full = judge.judge(_grid("P5") + _grid("P3") + _grid("P53"), {})
+    assert not any(verdict.get("not_run") for verdict in full["candidates"].values())
+
+
+def test_audit_ga_runner_grid_gate(tmp_path):
+    def write(lines):
+        text = "".join(json.dumps(line) + "\n" for line in lines)
+        (tmp_path / "rev_RG.jsonl").write_text(text, encoding="utf-8")
+
+    write(_grid("P5")[1:])
+    problems = rev.grid_gate_problems(("P5", "P3"), tmp_path)
+    assert problems == ["P5: 29 R-G lines, expected 30", "P3: 0 R-G lines, expected 30"]
+    write(_grid("P5") + _grid("P3", f_rl=10.0))
+    assert rev.grid_gate_problems(("P5", "P3"), tmp_path) == ["P3: (ga) status fail, not pass"]
+
+
+def test_audit_na_missing_field_is_h4_undecidable():
+    stored = {"T-1": {KEY_T1: {"commands_sha256": "l" * 64}}}
+    line = _rev_line("P5", ("VB", "1", 0), "z" * 64, 22.4)
+    line["rev"] = {**line["rev"], "bundle": "R-T", "key": KEY_T1}
+    del line["las"]["params"]
+    problems = judge.pair_k_problems([line], stored, "P5")
+    assert problems and all(text.startswith("H-4") for text in problems)
+    assert judge.split_k_problems(problems) == ([], problems)
+    verdicts = judge._candidate_verdicts({
+        "grid": {"P5": {"status": judge.GRID_PASS}}, "R-T": {}, "R-S": {}, "identity": {},
+        "pair_k_problems": {"P5": problems}})
+    assert verdicts["P5"]["verdict"] == "undecidable"
+
+
+def test_audit_da_tag_follows_the_setting():
+    v0 = _rev_line("P5", ("V0", "1", 1), "z" * 64, 20.9)
+    assert judge.tag_problems(v0) == []
+    swapped = {**v0, "controller_tag": "final_C4G2_P3_LAS",
+               "rev": {**v0["rev"], "controller_tag": "final_C4G2_P3_LAS"}}
+    assert judge.tag_problems(swapped) == [
+        "controller_tag ['final_C4G2_P3_LAS'] != final_C4G2_LAS for setting V0"]
+    no_setting = {**v0, "job": {"d1": {}}}
+    assert judge.tag_problems(no_setting)
 
 
 def test_r0_table_and_rules_constants():

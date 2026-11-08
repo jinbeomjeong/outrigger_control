@@ -48,9 +48,12 @@ returning early before the LOC: ``loc_ok`` False, the rest None).
 
 During a batch (``las_rev_judge`` checks on each finished line):
   H-2 R-0 hash mismatch -> stop everything; H-3 a K-1 .. K-4 mismatch -> no more jobs of that
-  candidate; H-8 a candidate with 5 pairs with a C-2 type violation -> no more of its jobs;
-  H-7 an error line -> the job once more (R-G: stop, the 30 lines are re-run as a whole);
-  a run identity change -> stop.
+  candidate; H-4 a field the K checks read is missing -> stop (undecidable); H-8 a candidate
+  with 5 pairs with a C-2 type violation -> no more of its jobs; H-7 an error line -> the job
+  once more (R-G: stop, the 30 lines are re-run as a whole); a run identity change or a
+  ``controller_tag`` that is not its setting's -> stop.
+Before R-T / R-S every given candidate needs its 30 R-G lines and the (ga) status ``pass``
+(audit item (ga), 2026-11-09; exit 2 otherwise).
 Line = the ``run_v5`` line + ``las`` (``fb_targeted.las_block_from_meta`` with the candidate
 name and ``params.n_min``) + ``rev`` {bundle, candidate, label, key, grid_point, identity,
 rules_sha256, settings, expected_settings, settings_match, controller_tag, record flags}
@@ -705,8 +708,9 @@ def check_line(record: dict, bundle: str, state: BatchState, stored: dict, k3_ke
         return
     try:
         k_found = judge.k_problems(record, stored, k3_keys)
-    except judge.MissingField as exc:
-        k_found = [f"missing {exc}"]
+    except judge.MissingField as exc:  # rules 8 H-4: stop the bundle, undecidable
+        state.stop = f"H-4 {rev['key']}: missing {exc}"
+        return
     if k_found:
         print(f"K MISMATCH {candidate} {rev['key']}: {k_found}", flush=True)
         if bundle == "R-0" or any(text.startswith("H-2") for text in k_found):
@@ -744,28 +748,41 @@ def _print_line(state: BatchState, total: int, record: dict) -> None:
     print(f"{state.runs}/{total} {rev.get('label')} {rev.get('key')}: {text}", flush=True)
 
 
-def _handle_record(record, jobs_by_id, bundle, state, stored, k3_keys, identity, resubmit
-                   ) -> None:
+WHOLE_BUNDLE_RERUN = ("R-G",)
+"""Bundles whose error line stops the batch (H-7 / G-3: re-run as a whole)."""
+
+
+def _handle_record(record, jobs_by_id, bundle, state, stored, k3_keys, identity, resubmit,
+                   check=None, whole_bundle_rerun=WHOLE_BUNDLE_RERUN) -> None:
     job_id = (record.get("rev") or {}).get("id")
     if "error" in record:
         state.errors += 1
-        if bundle == "R-G":
-            state.stop = "H-7 / G-3: an R-G error line (re-run the 30 lines as a whole)"
+        if bundle in whole_bundle_rerun:
+            state.stop = f"H-7 / G-3: an {bundle} error line (re-run the bundle as a whole)"
         elif state.attempts.get(job_id, 1) >= 2:
             state.stop = f"H-7: second error of {record['rev'].get('key')}"
         else:
             state.attempts[job_id] = 2
             resubmit(jobs_by_id[job_id])
         return
-    check_line(record, bundle, state, stored, k3_keys, identity)
+    (check or check_line)(record, bundle, state, stored, k3_keys, identity)
 
 
 def run_batch(jobs: list[dict], path: Path, workers: int, bundle: str, stored: dict,
-              current_identity: dict) -> BatchState:
+              current_identity: dict, worker=None, check=None,
+              whole_bundle_rerun=WHOLE_BUNDLE_RERUN) -> BatchState:
     """Run the jobs in spawned workers (one run each, at most ``workers`` in flight) and
-    write every line to the new file; stopped candidates get no further jobs."""
+    write every line to the new file; stopped candidates get no further jobs.
+
+    Args:
+        worker: The pool function of one job (default :func:`run_rev_job`).
+        check: ``check(record, bundle, state, stored, k3_keys, identity)`` on each finished
+            line (default :func:`check_line`).
+        whole_bundle_rerun: Bundles whose error line stops the batch.
+    """
     import verdict_runs
 
+    worker = worker or run_rev_job
     verdict_runs.warm_numba_cache()
     path.parent.mkdir(parents=True, exist_ok=True)
     state = BatchState()
@@ -780,7 +797,7 @@ def run_batch(jobs: list[dict], path: Path, workers: int, bundle: str, stored: d
         def submit(job: dict) -> None:
             nonlocal in_flight
             in_flight += 1
-            pool.apply_async(run_rev_job, (dict(job),), callback=results.put,
+            pool.apply_async(worker, (dict(job),), callback=results.put,
                              error_callback=lambda exc, job=job: results.put(
                                  {"job": {k: v for k, v in job.items() if k != "rev"},
                                   "rev": job["rev"], "error": f"pool: {exc!r}", "wall_s": 0.0}))
@@ -802,7 +819,8 @@ def run_batch(jobs: list[dict], path: Path, workers: int, bundle: str, stored: d
             state.runs += 1
             _print_line(state, len(jobs), record)
             _handle_record(record, jobs_by_id, bundle, state, stored, k3_keys,
-                           current_identity, lambda job: pending.insert(0, job))
+                           current_identity, lambda job: pending.insert(0, job), check,
+                           whole_bundle_rerun)
         if state.stop is not None:
             pool.terminate()
     state.skipped += len(pending)
@@ -934,6 +952,28 @@ def earlier_identity_problems(bundle: str, current: dict, directory: Path = REV_
     return problems
 
 
+GRID_LINES_PER_CANDIDATE = 30
+
+
+def grid_gate_problems(candidates, directory: Path = REV_DIR) -> list[str]:
+    """Audit item (ga), before R-T / R-S: every candidate has its 30 R-G lines in
+    ``rev_RG*.jsonl`` and its (ga) status is ``pass`` (rules 3 order)."""
+    lines = [line for path in sorted(directory.glob("rev_RG*.jsonl"))
+             for line in judge.read_lines(path)]
+    results = judge._grid_lines(lines)
+    problems = []
+    for name in candidates:
+        result = results.get(name)
+        count = 0 if result is None else len(result.lines)
+        if count != GRID_LINES_PER_CANDIDATE:
+            problems.append(f"{name}: {count} R-G lines, expected {GRID_LINES_PER_CANDIDATE}")
+            continue
+        status = judge.judge_grid(result)["status"]
+        if status != judge.GRID_PASS:
+            problems.append(f"{name}: (ga) status {status}, not pass")
+    return problems
+
+
 def _prepare(args) -> tuple[list[dict], Path, dict, dict]:
     """Jobs, output path, stored lines and identity of a run (raises on input errors)."""
     candidates = resolve_candidates(args.bundle, args.candidates)
@@ -948,6 +988,10 @@ def _prepare(args) -> tuple[list[dict], Path, dict, dict]:
     problems = earlier_identity_problems(args.bundle, identity)
     if problems:
         raise ValueError(f"earlier bundle lines of another run identity: {problems[:5]}")
+    if args.bundle in ("R-T", "R-S"):
+        problems = grid_gate_problems(candidates)
+        if problems:
+            raise ValueError(f"(ga) gate before {args.bundle}: {problems}")
     stored = judge.load_stored()
     mask = None if args.affinity is None else int(args.affinity, 16)
     keys = _keys_of(args, stored)
