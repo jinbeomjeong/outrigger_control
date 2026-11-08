@@ -39,19 +39,26 @@ def _crawler_compression(plant) -> tuple[float, int]:
     return float(-heights[loaded].mean() * 1e3), int(loaded.sum())
 
 
+def _plant_class():
+    """The module's own ``Plant``: ``run_mast_flex_c2_check`` (imported by other tests of the
+    session) rebinds ``rcc.Plant`` to its ``FlexPlant``, whose signature has no keyword."""
+    return next(cls for cls in rcc.Plant.__mro__
+                if cls.__name__ == "Plant" and cls.__module__ == rcc.__name__)
+
+
 # ------------------------------------------------------------------------------------------ P-1
 def test_x1_is_the_module_default_and_leaves_the_arrays_alone() -> None:
     assert rcc.CRAWLER_K_SCALE == 1.0
-    default = rcc.Plant("top", 0.0, 0.0)
-    explicit = rcc.Plant("top", 0.0, 0.0, crawler_k_scale=1.0)
+    default = _plant_class()("top", 0.0, 0.0)
+    explicit = _plant_class()("top", 0.0, 0.0, crawler_k_scale=1.0)
     assert default.crawler_k_scale == 1.0
     for name in ("kcr", "ccr", "ktcr", "ctcr", "q", "r"):
         assert getattr(default, name).tobytes() == getattr(explicit, name).tobytes(), name
 
 
 def test_x3_scales_stiffness_and_damping_of_both_directions() -> None:
-    base = rcc.Plant("top", 0.0, 0.0)
-    stiff = rcc.Plant("top", 0.0, 0.0, crawler_k_scale=3.0)
+    base = _plant_class()("top", 0.0, 0.0)
+    stiff = _plant_class()("top", 0.0, 0.0, crawler_k_scale=3.0)
     np.testing.assert_allclose(stiff.kcr, 3.0 * base.kcr, rtol=1e-15)
     np.testing.assert_allclose(stiff.ktcr, 3.0 * base.ktcr, rtol=1e-15)
     np.testing.assert_allclose(stiff.ccr, math.sqrt(3.0) * base.ccr, rtol=1e-15)
@@ -61,7 +68,7 @@ def test_x3_scales_stiffness_and_damping_of_both_directions() -> None:
 def test_x3_settle_pose_is_the_stiffer_crawler_statics() -> None:
     """End condition of P-1: mean sphere compression 1.27 mm +- 5 %, flat settle pitch
     0.086 +- 0.01 deg, 12 loaded spheres (the pose is computed with the scaled springs)."""
-    plant = rcc.Plant("top", 0.0, 0.0, crawler_k_scale=3.0)
+    plant = _plant_class()("top", 0.0, 0.0, crawler_k_scale=3.0)
     compression_mm, n_loaded = _crawler_compression(plant)
     assert compression_mm == pytest.approx(X3_COMPRESSION_MM, rel=X3_COMPRESSION_REL_TOL)
     assert n_loaded == X3_ACTIVE_SPHERES
@@ -80,4 +87,4 @@ def test_module_factor_reaches_plants_built_without_the_keyword(monkeypatch) -> 
 @pytest.mark.parametrize("scale", [0.0, -1.0, float("nan")])
 def test_bad_factor(scale) -> None:
     with pytest.raises(ValueError):
-        rcc.Plant("top", 0.0, 0.0, crawler_k_scale=scale)
+        _plant_class()("top", 0.0, 0.0, crawler_k_scale=scale)
