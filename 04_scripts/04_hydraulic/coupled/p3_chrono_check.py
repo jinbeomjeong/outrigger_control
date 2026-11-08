@@ -1,5 +1,8 @@
 """Criteria revision 8 7.3: two stage 3 Chrono VB rows rerun with ③ on against the stored runs.
 
+For records before the LAS-b switch only (``EXPECTED_TAG`` stays ``final_C4G2_P3``; a LAS
+record fails check 5 loudly, ``u3_u6_rerun_rules_rev2.md`` 4).
+
 ``argv``: the run command of a row, from the stored stage 3 ``batch.json`` row with the ③ argument
 (``--extend-start-tracked``) added and the tag ``v5p3_VB_<case>``; printed as one JSON list.
 

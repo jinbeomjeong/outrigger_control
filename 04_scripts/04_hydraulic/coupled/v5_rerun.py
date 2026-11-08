@@ -13,6 +13,8 @@ Settings (``run_v5.SETTINGS``, the definition of ``run_v5.py`` and ``d1_runs``):
       value). Controller ``final_C4G2_P3`` (``extend_start_tracked``, ③ revision 4).
   U-6 ABL / IND under VB: the VB plant without the ③ bound (:func:`options_of`
   ``extend_start=False``); tags ``ABL`` / ``IND``.
+Since the LAS-b switch the built C2 config adds ``_LAS`` (:func:`controller_tag`); the judge
+expects the rules rev2 1 tags (:data:`SETTING_TAGS_LAS`, IND unchanged).
 
 The parent sets :data:`SETTING_ENV` (:func:`activate`); every spawned worker inherits it and
 installs the setting once (:func:`install_in_worker`). Each run record gets a ``v5`` block
@@ -45,6 +47,15 @@ TAG_V0 = "final_C4G2"
 TAG_VB = "final_C4G2_P3"
 TAG_ABL = "ABL"
 TAG_IND = "IND"
+TAG_V0_LAS = "final_C4G2_LAS"
+TAG_VB_LAS = "final_C4G2_P3_LAS"
+TAG_ABL_LAS = "ABL_LAS"
+"""Tags since the LAS-b switch (``u3_u6_rerun_rules_rev2.md`` 1): V0, VB / U-6 C2 and ABL
+with LAS-b; IND keeps ``IND`` (no LAS-b, user decision Q1 = I-2)."""
+SETTING_TAGS_LAS = {"V0": TAG_V0_LAS, "VB": TAG_VB_LAS}
+"""Rules rev2 1 #1 / #2: the U-3 (and D-1 reuse) tag of each setting."""
+PRE_SWITCH_TAGS = (TAG_V0, TAG_VB, TAG_ABL)
+"""Tags of runs before the LAS-b switch: rev2 1 #4 stops a bundle that has one (G-2)."""
 J_P3_NOT_APPLICABLE = "not_applicable"
 RULES_PATH = ROOT / "06_analysis" / "02_control" / "verif_matrix" / "u3_u6_rerun_rules.md"
 OUT_DIR = ROOT / "06_analysis" / "02_control" / "v5_rerun"
@@ -85,7 +96,8 @@ def add_arguments(parser: argparse.ArgumentParser, *, with_reuse: bool = False) 
                             "keys without a pad field count as pad B)")
     if with_reuse:
         group.add_argument(REUSE_OPTION, dest="reuse_d1", type=Path, default=None,
-                           help="reuse D-1 runs (run_v5 d1.jsonl) under rules 6 Q-1 .. Q-5")
+                           help="reuse D-1 runs (run_v5 v5/d1_las.jsonl, LAS tags only, "
+                                "rules rev2 1 #6) under rules 6 Q-1 .. Q-5")
 
 
 def options_from_args(args: argparse.Namespace) -> RerunOptions:
@@ -328,8 +340,12 @@ def observe_rod_readings(controller) -> None:
 def j_p3_status(tag: str, bound_check: dict | None, rod_reading: bool,
                 head_only_declared: bool) -> str:
     """J-P3 of one run (v5 criteria revision 8 / 9): ``pass`` / ``H-7`` / ``no_rod_reading`` /
-    ``setting_defect`` with the ③ bound (tag ``final_C4G2_P3``), else ``not_applicable``."""
-    if tag != TAG_VB:
+    ``setting_defect`` with the ③ bound (a tag of ``v5_options.EXTEND_START_TAGS``:
+    ``final_C4G2_P3`` or, since the LAS-b switch, ``final_C4G2_P3_LAS``), else
+    ``not_applicable``."""
+    from outrigger_sim.hydraulics.v5_options import EXTEND_START_TAGS
+
+    if tag not in EXTEND_START_TAGS:
         return J_P3_NOT_APPLICABLE
     from outrigger_sim.control.extend_start_bound import (
         J_P3_JUDGED,

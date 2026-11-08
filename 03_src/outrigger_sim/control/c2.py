@@ -2033,7 +2033,7 @@ class LiftoffApproachSlowSettings:
             raise ValueError(f"off_periods must be >= 1, got {self.off_periods!r}")
 
 
-SLOPE_MARGIN_EVENT ="INFO_LOC_CLEARANCE_MARGIN"
+SLOPE_MARGIN_EVENT = "INFO_LOC_CLEARANCE_MARGIN"
 """``INFO_LOC_CLEARANCE_MARGIN:<effective target mm, integer>``: P-S8-31 raised the clearance
 target at the LOC."""
 FLAT_SOIL_MARGIN_EVENT = "INFO_LOC_FLAT_SOIL_MARGIN"

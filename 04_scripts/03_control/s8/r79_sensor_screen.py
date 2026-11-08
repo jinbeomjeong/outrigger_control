@@ -1008,7 +1008,8 @@ def write_t4h(folder: Path, key: str, options, ctrl, plant) -> str:
     from outrigger_sim.hydraulics.v5_options import controller_tag
 
     name = t4h_file_name(key)
-    tag = controller_tag(options)
+    # The run's own config: a LAS-b controller gets the _LAS tag (t4h_replay reads it).
+    tag = controller_tag(options, getattr(ctrl, "config", None))
     meta = {"job": {"key": key, "setting": os.environ.get(V5_SETTING_ENV), "contact": None},
             **({} if tag is None else {"controller_tag": tag}),  # criteria revision 8
             "hydraulic_options": None if options is None else options.to_dict(),

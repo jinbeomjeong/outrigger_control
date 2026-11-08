@@ -13,6 +13,11 @@ Rules rev1 (``u3_u6_rerun_rules_rev1.md``, its SHA-256 read from the file into t
 G-4 asks a rod reading and J-P3 ``pass`` of the g8 VB runs (``ROD_READING_SUITES``) and
 ``no_rod_reading`` of the others; G-6 stops on a ``WARN_ROD_PRESSURE_FALLBACK`` event in a g8
 VB run; the previous-edition g6 grade is the stored verdict (``previous_g6_demotion``).
+Rules rev2 (``u3_u6_rerun_rules_rev2.md``, LAS-b switch): the expected tags are V0
+``final_C4G2_LAS``, VB and U-6 C2 ``final_C4G2_P3_LAS``, ABL ``ABL_LAS``, IND ``IND``; a
+pre-switch tag in a bundle fails G-2; G-4 / G-6 pick every VB C2 run (setting and controller
+name, not the tag) and stop when the picked count is not the bundle's key count; the run files
+are read from ``v5_rerun/las/``.
 Grade classes: ``pass``, ``flag`` (passed with a FLAG), ``safe_stop``
 (``stroke_limited_stop``) and ``fail``.
 
@@ -27,7 +32,7 @@ Exit code: 0 judged, 1 a gate stopped it, 2 an input missing.
 
 Usage (python-dev or dynamics-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/u3_judge.py judge <out_json>
-      [--u3-dir 06_analysis/02_control/v5_rerun] [--v4-dir 06_analysis/02_control/s9]
+      [--u3-dir 06_analysis/02_control/v5_rerun/las] [--v4-dir 06_analysis/02_control/s9]
       [--g3 <g3_json>] [--bundles slope,h6,...]
   python -I -B 04_scripts/04_hydraulic/coupled/u3_judge.py g3 <out_json> <before> <after> ...
       (G-3: pairs of output files of the same keys without options; equal command hashes)
@@ -58,13 +63,20 @@ QUANTITIES = ("t_ready_s", "min_force_kN", "max_stroke_mm", "rut_ready_mm", "att
 EXTEND_START_RULE = "tracked_bound"
 EXTEND_START_REVISION = 4
 J_P3_HEAD_ONLY = "no_rod_reading"
-DEFAULT_U3_DIR = v5_rerun.OUT_DIR
+DEFAULT_U3_DIR = v5_rerun.OUT_DIR / "las"
+"""Rules rev2 1 #9: the LAS-tag outputs; the judge reads this folder only."""
 DEFAULT_V4_DIR = ROOT / "06_analysis" / "02_control" / "s9"
 U6_CONTROLLERS = ("C2", "ABL", "IND")
-U6_TAGS = {"C2": v5_rerun.TAG_VB, "ABL": v5_rerun.TAG_ABL, "IND": v5_rerun.TAG_IND}
-RULES_REVISIONS = (v5_rerun.RULES_PATH.with_name("u3_u6_rerun_rules_rev1.md"),)
+EXPECTED_TAGS = v5_rerun.SETTING_TAGS_LAS
+"""Rules rev2 1 #1 / #2: the U-3 tag of each setting."""
+U6_TAGS = {"C2": v5_rerun.TAG_VB_LAS, "ABL": v5_rerun.TAG_ABL_LAS, "IND": v5_rerun.TAG_IND}
+"""Rules rev2 1 #3 (IND without LAS-b, user decision Q1 = I-2)."""
+VB_C2_NAME = "C2"
+RULES_REVISIONS = (v5_rerun.RULES_PATH.with_name("u3_u6_rerun_rules_rev1.md"),
+                   v5_rerun.RULES_PATH.with_name("u3_u6_rerun_rules_rev2.md"))
 """Sealed addenda (rev1 2026-11-08: g8 reads rod pressures, P3b = p3_lite_gates, G-6, the
-previous-edition g6 without the G6-7 demotion)."""
+previous-edition g6 without the G6-7 demotion; rev2 2026-11-08: the LAS-b tags, G-4 / G-6
+pick every VB C2 run and stop on a count other than the keys, output folder ``las/``)."""
 
 
 def revision_record(path: Path) -> dict:
@@ -276,8 +288,12 @@ def run_v5_problems(entry: dict, setting: str, expected_tag: str, *, needs_bound
     problems = []
     if v5.get("v5_setting") != setting:
         problems.append(f"v5_setting {v5.get('v5_setting')!r}")
-    if v5.get("controller_tag") != expected_tag:
-        problems.append(f"controller_tag {v5.get('controller_tag')!r} != {expected_tag!r}")
+    tag = v5.get("controller_tag")
+    if tag in v5_rerun.PRE_SWITCH_TAGS:  # rules rev2 1 #4: no pre-switch run in a bundle
+        problems.append(f"controller_tag {tag!r} is a tag before the LAS-b switch "
+                        f"(expected {expected_tag!r})")
+    elif tag != expected_tag:
+        problems.append(f"controller_tag {tag!r} != {expected_tag!r}")
     extend = v5.get("extend_start") or {}
     is_bound = (extend.get("rule") == EXTEND_START_RULE
                 and extend.get("revision") == EXTEND_START_REVISION)
@@ -324,15 +340,30 @@ def _rod_suite_stops(entries: list[dict]) -> list[dict]:
     return stops
 
 
-def gate_j_p3(entries: list[dict]) -> list[dict]:
-    """Rules 7 G-4 with rev1 4: VB C2 runs of a head-only suite are ``no_rod_reading``
-    (declared, no rod reading); those of a rod-reading suite (g8) have a rod reading and pass
-    J-P3. Anything else (setting defect, H-7, the wrong reading kind) stops."""
+def vb_c2_runs(entries: list[dict]) -> list[dict]:
+    """Rules rev2 1 #5: every VB C2 run, picked by setting and controller name (a U-3 record
+    has no ``controller``; a U-6 record names C2 / ABL / IND), not by tag."""
+    return [e for e in entries if (e.get("v5") or {}).get("v5_setting") == "VB"
+            and e.get("controller", VB_C2_NAME) == VB_C2_NAME]
+
+
+def _count_stops(runs: list[dict], expected_runs: int | None) -> list[dict]:
+    """Rules rev2 1 #5: a picked count other than the VB C2 keys stops (no empty pass)."""
+    if expected_runs is None or len(runs) == expected_runs:
+        return []
+    return [{"reason": f"picked {len(runs)} VB C2 runs, the bundle has {expected_runs} keys",
+             "picked": len(runs), "expected": expected_runs}]
+
+
+def gate_j_p3(entries: list[dict], expected_runs: int | None = None) -> list[dict]:
+    """Rules 7 G-4 with rev1 4 and rev2 1 #5: VB C2 runs of a head-only suite are
+    ``no_rod_reading`` (declared, no rod reading); those of a rod-reading suite (g8) have a
+    rod reading and pass J-P3. Anything else (setting defect, H-7, the wrong reading kind)
+    stops, and so does a picked run count other than ``expected_runs``."""
     rod_suites = rod_reading_suites()
-    vb_runs = [e for e in entries
-               if (e.get("v5") or {}).get("controller_tag") == v5_rerun.TAG_VB]
+    vb_runs = vb_c2_runs(entries)
     rod_runs = [e for e in vb_runs if e.get("suite") in rod_suites]
-    stops = _rod_suite_stops(rod_runs)
+    stops = _count_stops(vb_runs, expected_runs) + _rod_suite_stops(rod_runs)
     for entry in vb_runs:
         if entry.get("suite") in rod_suites:
             continue
@@ -344,14 +375,16 @@ def gate_j_p3(entries: list[dict]) -> list[dict]:
     return stops
 
 
-def gate_fallback(entries: list[dict]) -> list[dict]:
-    """Rules rev1 G-6: no ``WARN_ROD_PRESSURE_FALLBACK`` event in a g8 VB run (else the ③
-    bound reached the command on that key: stop and ask)."""
+def gate_fallback(entries: list[dict], expected_runs: int | None = None) -> list[dict]:
+    """Rules rev1 G-6 with rev2 1 #5: no ``WARN_ROD_PRESSURE_FALLBACK`` event in a g8 VB C2
+    run (else the ③ bound reached the command on that key: stop and ask); a picked VB C2
+    run count other than ``expected_runs`` stops too."""
     rod_suites = rod_reading_suites()
-    stops = []
-    for entry in entries:
-        v5 = entry.get("v5") or {}
-        if v5.get("controller_tag") != v5_rerun.TAG_VB or entry.get("suite") not in rod_suites:
+    vb_runs = vb_c2_runs(entries)
+    stops = _count_stops(vb_runs, expected_runs)
+    for entry in vb_runs:
+        v5 = entry["v5"]
+        if entry.get("suite") not in rod_suites:
             continue
         count = v5.get("rod_pressure_fallback_events")
         if count is None:  # a record before the count: the warnings name set
@@ -391,7 +424,7 @@ def judge_bundle(bundle: Bundle, u3_dir: Path, v4_dir: Path) -> dict:
         items = entries_of(payload, bundle.suite)
         keysets[setting] = [v5_rerun.entry_key(e) for e in items]
         errors[setting] = [k for k, e in zip(keysets[setting], items, strict=True) if "error" in e]
-        tag = v5_rerun.TAG_VB if setting == "VB" else v5_rerun.TAG_V0
+        tag = EXPECTED_TAGS[setting]
         graded[setting] = {k: grade(e, bundle, baseline)
                            for k, e in zip(keysets[setting], items, strict=True)}
         values[setting] = {k: quantities(e, bundle.kind)
@@ -400,8 +433,8 @@ def judge_bundle(bundle: Bundle, u3_dir: Path, v4_dir: Path) -> dict:
                   for k, e in zip(keysets[setting], items, strict=True)
                   if (p := run_v5_problems(e, setting, tag, needs_bound=setting == "VB"))]
         if setting == "VB":
-            j_p3_stops = gate_j_p3(items)
-            fallback_stops = gate_fallback(items)
+            j_p3_stops = gate_j_p3(items, bundle.expected)
+            fallback_stops = gate_fallback(items, bundle.expected)
             reused = sum(1 for e in items if e.get("reuse") == "d1")
     v4_items = {v5_rerun.entry_key(e): e for e in entries_of(v4_payload, bundle.suite)}
     v4_graded = {k: previous_grade(v4_items[k], bundle, baseline) for k in v4_keys}
@@ -498,6 +531,7 @@ def judge_u6(u3_dir: Path, v4_dir: Path) -> dict:
                     for e in items
                     if (p := run_v5_problems(e, "VB", U6_TAGS.get(e["controller"], "?"),
                                              needs_bound=e["controller"] == "C2"))]
+        j_p3_stops = gate_j_p3(items, cases)
         report[name] = {
             "VB": _u6_counts(items), "v4_same_keys_record": _u6_counts(v4_items),
             "gates": {
@@ -507,7 +541,7 @@ def judge_u6(u3_dir: Path, v4_dir: Path) -> dict:
                         "runs": len(items), "cases": len(keys), "expected_cases": cases},
                 "G-2": {"pass": not problems and bool(_file_commit(payload)),
                         "problems": problems[:20], "code_commit": _file_commit(payload)},
-                "G-4": {"pass": not gate_j_p3(items), "stops": gate_j_p3(items)[:20]}}}
+                "G-4": {"pass": not j_p3_stops, "stops": j_p3_stops[:20]}}}
     return report
 
 
