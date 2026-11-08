@@ -17,7 +17,9 @@ the crawler factor from ``run_control_comparison.CRAWLER_K_SCALE`` (P-1), both f
 Record ``d1`` of every run (``d1_selection_rules.md`` 3, the field names of that sealed text):
   key, verdict (``pass`` / ``fail`` / ``allowed_stop``), fail_items, F_judged_min_N,
   F_first_level_min_N, t_ready_s, t_ready_limit_s, att_judged_deg, stroke_max_m, imu_R_c,
-  dsb75_events, j_p3; and the records of the row definition: R_c_floor, R_c_settle_true,
+  dsb75_events, j_p3; ``ready_limit_rule`` (the rev1 READY rule with the SHA-256 of
+  ``d1_selection_rules_rev1.md`` read from the file); and the records of the row definition:
+  R_c_floor, R_c_settle_true,
   floor_estimate_error_deg (the x1 settle map against the true settle), crawler_k_scale_plant,
   F_first_level_after_liftoff_min_N, has_rod_reading, head_only_declared, expectation (H-R-A-stop).
 
@@ -27,7 +29,8 @@ Judgement per family (D-5: the existing criteria, ``d1_selection_rules.md`` 11):
        H-R-A also the r72 G6 gates; a soil-guard safe stop of a row that allows it is
        ``allowed_stop``.
   H-S  P3 rows of ``s9_soil_slope`` (H-S-0 / H-S-1) or the r72 G6 gates (H-S-A), READY with
-       the row's limit (100 / 120 s); ``stroke_limited_stop`` allowed.
+       the row's spec 421.1 limit (slope 120 s, flat uniform J1 / J2 / S1 100 s, other flat
+       90 s; ``d1_selection_rules_rev1.md`` 1); ``stroke_limited_stop`` allowed.
   PS-c 426.3 E-1 .. E-7 (slow / fast) with the run-maximum stroke <= 684.8 mm.
 """
 
@@ -60,6 +63,7 @@ from d1_rows import (  # noqa: E402
     TAG_STROKE_STOP_ALLOWED,
     TAG_STROKE_STOP_EXPECTED,
     D1Row,
+    ready_rule_record,
 )
 from harness_flow import COLUMN, TRUE_FORCE  # noqa: E402
 from verdict_metrics import chunk_phases  # noqa: E402
@@ -395,6 +399,7 @@ def d1_record(row: D1Row, setting_name: str, eps: float, result: dict, plant, co
         **{k: v for k, v in judged.items() if k != "items"}, "items": judged["items"],
         "F_first_level_min_N": first_level, "F_first_level_after_liftoff_min_N": after_lift,
         "t_ready_s": t_ready_s, "t_ready_limit_s": row.ready_limit_s,
+        "ready_limit_rule": ready_rule_record(),
         "stroke_max_m": float(plant.flow_limiter.max_stroke_reading_m),
         **settle_map_records(row, settle_rad),
         "crawler_k_scale_plant": float(getattr(plant, "crawler_k_scale", 1.0)),
