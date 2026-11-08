@@ -203,12 +203,12 @@ def test_las_events_record_reads_events_only() -> None:
     assert las_h7.las_events_record([(1.0, "INFO_X")])["event_count"] == 1
 
 
-def test_draft_formats_carry_the_rev4b_format_absent_cells() -> None:
+def test_rev4c_formats_are_declared_with_their_format_absent_cells() -> None:
     assert las_h7.BATCH_FORMATS["J-5"].absent == ["C4'", "P3-2"]
     assert las_h7.BATCH_FORMATS["J-13-grid_vb"].absent == ["C4'", "P3-2", "C5'-S"]
     assert las_h7.BATCH_FORMATS["J-15"].absent == ["C4'"]
-    for name in ("J-5", "J-13-grid_vb", "J-15"):
-        assert las_h7.BATCH_FORMATS[name].status is las_h7.FormatStatus.DRAFT
+    assert all(fmt.status is las_h7.FormatStatus.DECLARED
+               for fmt in las_h7.BATCH_FORMATS.values())
     grid = las_h7.BATCH_FORMATS["J-13-grid_vb"]
     run = {"pass": True, "gates": {"fault0": True}, "fault_events": [], "warnings": [],
            "t_ready_back_s": 22.6, "las_events": las_h7.las_events_record([])}
@@ -227,8 +227,9 @@ def test_draft_formats_carry_the_rev4b_format_absent_cells() -> None:
 
 
 def test_a_draft_format_does_not_judge_without_confirmation() -> None:
-    draft = las_h7.BATCH_FORMATS["J-13-grid_vb"]
-    assert draft.status is las_h7.FormatStatus.DRAFT
+    from dataclasses import replace
+
+    draft = replace(las_h7.BATCH_FORMATS["J-13-grid_vb"], status=las_h7.FormatStatus.DRAFT)
     with pytest.raises(ValueError, match="control-expert"):
         las_h7.h7_violations({}, {}, draft)
 
@@ -251,3 +252,69 @@ def test_batch_judgement_targets_and_first_runs() -> None:
     assert first["h7_applies"] is False and first["fired"] == ["a", "b"]
     with pytest.raises(KeyError):
         las_h7.judge_batch("J-99", lines)
+
+
+def test_silent_lines_keep_the_stored_hash() -> None:
+    """rev4c 4: per batch, a silent line with another (or no) hash stops; 0 silent is noted."""
+    same = las_h7.TargetLine("same", _d1(), _d1(), {}, new_hash="a" * 64, base_hash="a" * 64)
+    other = las_h7.TargetLine("other", _d1(), _d1(), {}, new_hash="b" * 64, base_hash="a" * 64)
+    result = las_h7.judge_batch("J-1", [same])
+    assert result["silent_hash"]["silent_equal"] == 1 and not result["stop"]
+    result = las_h7.judge_batch("J-1", [same, other])
+    assert list(result["silent_hash"]["silent_hash_differs"]) == ["other"] and result["stop"]
+    fired = las_h7.TargetLine("f", _d1(fired=True), _d1(), {"INFO_LIFTOFF_SLOW": 1})
+    none_silent = las_h7.judge_batch("J-1", [fired])["silent_hash"]
+    assert none_silent["silent_lines"] == 0 and none_silent["note"]
+
+
+def _jp_verify(*, passed=True, events=("floor_estimate_touch",), fault_row=None) -> dict:
+    """The shape of ``paper_runs/jp_verify/verify_v5jp_*.json`` (2026-11-08)."""
+    rows = [{"item": "run", "case": "N_G4_Fs0_pressure", "passed": True},
+            {"item": "3 F_min (1 ms)", "case": "N_G4_Fs0_pressure", "passed": passed}]
+    if fault_row is not None:
+        rows.append({"item": "fault rows", "case": "N_G4_Fs0_pressure", "passed": fault_row})
+    metrics = {"case": "N_G4_Fs0_pressure", "ready_s": 30.9,
+               "stroke": {"max_m": [0.403, 0.402, 0.392, 0.404]},
+               "events": [f"C2Event(t_s=26.9, name='{name}')" for name in events]}
+    return {"rows": rows, "metrics": [metrics]}
+
+
+def test_jp_format_reads_rows_metrics_and_las_events() -> None:
+    fmt = las_h7.BATCH_FORMATS["J-5"]
+    base = las_h7.jp_case_line(_jp_verify(), "N_G4_Fs0_pressure")
+    quiet = las_h7.las_events_record([])
+    new = las_h7.jp_case_line(_jp_verify(), "N_G4_Fs0_pressure", quiet)
+    assert las_h7.h7_violations(new, base, fmt) == {}
+    failed = las_h7.jp_case_line(_jp_verify(passed=False), "N_G4_Fs0_pressure", quiet)
+    assert "3 F_min (1 ms)" in las_h7.h7_violations(failed, base, fmt)["C2"]
+    fault = las_h7.las_events_record([(40.0, "FAULT_STROKE_END:FL")])
+    new_fault = las_h7.jp_case_line(_jp_verify(), "N_G4_Fs0_pressure", fault)
+    assert list(las_h7.h7_violations(new_fault, base, fmt)) == ["C3"]
+    stored_fault = las_h7.jp_case_line(_jp_verify(events=("FAULT_STROKE_END:FL",)),
+                                       "N_G4_Fs0_pressure")
+    assert las_h7.h7_violations(new_fault, stored_fault, fmt) == {}  # metrics.events FAULT
+    # a failed FAULT row joins the baseline set but names no event: a new FAULT stays new
+    row_fault = las_h7.jp_case_line(_jp_verify(fault_row=False), "N_G4_Fs0_pressure")
+    assert "C3" in las_h7.h7_violations(
+        las_h7.jp_case_line(_jp_verify(fault_row=False), "N_G4_Fs0_pressure", fault),
+        row_fault, fmt)
+    longer = json.loads(json.dumps(_jp_verify()))
+    longer["metrics"][0]["stroke"]["max_m"][3] = 0.4055
+    assert list(las_h7.h7_violations(las_h7.jp_case_line(longer, "N_G4_Fs0_pressure", quiet),
+                                     base, fmt)) == ["C5'-S"]
+
+
+def test_jp_without_las_events_or_fault_source_is_undecidable() -> None:
+    fmt = las_h7.BATCH_FORMATS["J-5"]
+    base = las_h7.jp_case_line(_jp_verify(), "N_G4_Fs0_pressure")
+    with pytest.raises(las_h7.UndecidableLine, match="las_events"):
+        las_h7.h7_violations(base, base, fmt)
+    bare = {"case": "x", "metrics": {"ready_s": 1.0}}
+    new = las_h7.jp_case_line(_jp_verify(), "N_G4_Fs0_pressure", las_h7.las_events_record([]))
+    with pytest.raises(las_h7.UndecidableLine, match="no FAULT source"):
+        las_h7.h7_violations(new, bare, fmt)
+    # the stored metrics.events never mark a line fired
+    stored_las = las_h7.jp_case_line(_jp_verify(events=("INFO_LIFTOFF_SLOW:FL",)),
+                                     "N_G4_Fs0_pressure")
+    result = las_h7.judge_batch("J-5", [las_h7.TargetLine("k", stored_las, base)])
+    assert result["fired"] == [] and "k" in result["undecidable"]

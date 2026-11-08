@@ -29,12 +29,16 @@ missing"), J-3' (``d1s_judge.json`` ``cases.<id>``; events = the unfiltered name
 ``result.json`` ``events``, whose count the caller adds as ``result_events_count`` and which
 must match, rev4b 2), J-7 slope (``u3_slope_V0.json`` ``records[i]``; fired and FAULT from the
 rerun's ``v5.las_events``, the baseline's FAULT from ``warnings``; a rerun without
-``las_events`` is undecidable, rev4b 3). Drafts until control-expert confirms the field names
-(rev4b 4, with their 형식 없음 cells fixed): J-5 / J-6 (no C4', P3-2), grid_vb (no C4', P3-2,
-C5'-S), J-15 (no C4').
+``las_events`` is undecidable, rev4b 3), and by rev4c 1 - 3 J-5 / J-6 (:func:`jp_case_line`:
+the case's ``rows`` + ``metrics``, fired and new FAULT from the rerun's ``las_events`` =
+``run_S8C`` ``las_events.json``, baseline FAULT = ``metrics.events`` FAULT names plus failed
+FAULT rows; no C4', P3-2), grid_vb (no C4', P3-2, C5'-S) and J-15 (``judged`` by revision 12,
+events of ``result.json``; no C4'). Every batch result carries the silent-line hash check
+(rev4c 4, :func:`silent_hash_check`); a difference stops the batch.
 """
 from __future__ import annotations
 
+import re
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from enum import StrEnum
@@ -97,6 +101,8 @@ class BatchFormat:
     """Why a line's event list may be cut (then the line is undecidable, rev4a 5), or None."""
     incomplete_new: Callable[[dict], str | None] | None = None
     """The same for the rerun line only (a field the stored baseline never had, rev4b 3)."""
+    incomplete_base: Callable[[dict], str | None] | None = None
+    """The same for the baseline line only (no FAULT source at all, rev4c 3)."""
     fired_events: Extractor | None = None
     """The events that mark the rerun line fired (None: ``event_names``)."""
 
@@ -367,20 +373,93 @@ U3_SLOPE_FORMAT = BatchFormat(
 )
 
 
-def _jp_stroke_m(metrics: dict) -> float | None:
-    values = _get(metrics, "stroke", "max_m")
+C2_EVENT_REPR = re.compile(r"C2Event\(t_s=[-0-9.eE+]+, name='(.*)'\)")
+"""``str(C2Event)`` as the jp ``metrics[i].events`` entries store it."""
+FAULT_ROW_TOKEN = "fault"
+"""A jp ``rows[]`` item about FAULTs (case-insensitive substring of ``item``, rev4c 3)."""
+
+
+def jp_case_line(verify: dict, case: str, las_events: dict | None = None) -> dict:
+    """One J-5 / J-6 line of a ``verify_v5jp_*.json``: the case's ``rows``, its ``metrics``
+    entry and (rerun only) the run's ``las_events`` (``run_S8C`` ``las_events.json``).
+
+    Raises:
+        KeyError: The file has no metrics entry for ``case``.
+    """
+    metrics = next((m for m in verify.get("metrics") or [] if m.get("case") == case), None)
+    if metrics is None:
+        raise KeyError(f"no metrics for case {case!r}")
+    rows = [row for row in verify.get("rows") or [] if row.get("case") in (case, None)]
+    line = {"case": case, "rows": rows, "metrics": metrics}
+    if las_events is not None:
+        line[LAS_EVENTS_KEY] = las_events
+    return line
+
+
+def _jp_verdict(line: dict) -> str | None:
+    rows = line.get("rows")
+    if not rows:
+        return None
+    return "pass" if all(row.get("passed") is True for row in rows) else VERDICT_FAIL
+
+
+def _jp_fail_items(line: dict) -> list[str] | None:
+    rows = line.get("rows")
+    return None if rows is None else sorted(str(row["item"]) for row in rows
+                                            if row.get("passed") is False)
+
+
+def _jp_metrics_event_names(line: dict) -> list[str] | None:
+    events = _get(line, "metrics", "events")
+    if events is None:
+        return None
+    names = []
+    for entry in events:
+        match = C2_EVENT_REPR.fullmatch(str(entry).strip())
+        names.append(match.group(1) if match else str(entry))
+    return names
+
+
+def _jp_events(line: dict) -> list[str] | None:
+    """C3 names: the rerun's ``las_events``; the baseline's FAULT names of ``metrics.events``
+    together with its failed FAULT rows (rev4c 3: the union of what the record holds)."""
+    if LAS_EVENTS_KEY in line:
+        return _las_events_names(line[LAS_EVENTS_KEY])
+    names = _jp_metrics_event_names(line)
+    rows = line.get("rows")
+    if names is None and rows is None:
+        return None
+    failed_fault_rows = [f"FAULT_ROW:{row['item']}" for row in rows or []
+                         if FAULT_ROW_TOKEN in str(row.get("item", "")).lower()
+                         and row.get("passed") is False]
+    return [*(names or []), *failed_fault_rows]
+
+
+def _jp_no_fault_source(line: dict) -> str | None:
+    if _jp_metrics_event_names(line) is None and line.get("rows") is None:
+        return "no FAULT source (metrics.events and rows both absent, rev4c 3)"
+    return None
+
+
+def _jp_stroke_m(line: dict) -> float | None:
+    values = _get(line, "metrics", "stroke", "max_m")
     return None if not values else max(float(v) for v in values)
 
 
 JP_FORMAT = BatchFormat(
-    name="J-5 / J-6 verify_v5jp metrics[i] (rigid L2b)", status=FormatStatus.DRAFT,
-    verdict=_judged("verdict"), fail_items=_judged("fail_items"),
-    event_names=lambda metrics: _las_events_names(metrics.get(LAS_EVENTS_KEY)),
+    name="J-5 / J-6 verify_v5jp case line (rows + metrics, rigid L2b)",
+    status=FormatStatus.DECLARED,  # rev4c 1
+    verdict=_jp_verdict, fail_items=_jp_fail_items, event_names=_jp_events,
     g62=None, p32=None,  # rev4b 4: 형식 없음
-    ready_s=lambda metrics: metrics.get("ready_s"), stroke_m=_jp_stroke_m,
+    ready_s=lambda line: _get(line, "metrics", "ready_s"), stroke_m=_jp_stroke_m,
+    incomplete_new=lambda line: None if line.get(LAS_EVENTS_KEY) is not None else (
+        f"rerun line without {LAS_EVENTS_KEY} (rev4c 2)"),
+    incomplete_base=_jp_no_fault_source,
+    fired_events=lambda line: _get(line, LAS_EVENTS_KEY, "liftoff_slow"),
 )
-"""Draft (rev4b 4): ``metrics[i].events`` holds 2 .. 3 entries (not the run's list), so the
-fired state needs a ``las_events`` record; the verdict is the batch judge's row table."""
+"""rev4c 1 - 3: the stored ``metrics[i].events`` (2 .. 3 entries) never mark a run fired; a
+baseline FAULT row counts as ``FAULT_ROW:<item>`` (no event name, so a new FAULT name is never
+covered by it: the safe side)."""
 
 
 def _grid_fault_names(run: dict) -> list[str] | None:
@@ -391,7 +470,7 @@ def _grid_fault_names(run: dict) -> list[str] | None:
 
 
 GRID_VB_FORMAT = BatchFormat(
-    name="J-13 grid_vb results[i].runs[j]", status=FormatStatus.DRAFT,
+    name="J-13 grid_vb results[i].runs[j]", status=FormatStatus.DECLARED,  # rev4c 1
     verdict=lambda run: None if run.get("pass") is None else (
         "pass" if run["pass"] else VERDICT_FAIL),
     fail_items=lambda run: None if run.get("gates") is None else sorted(
@@ -403,9 +482,9 @@ GRID_VB_FORMAT = BatchFormat(
         f"rerun run without {LAS_EVENTS_KEY}"),
     fired_events=lambda run: _get(run, LAS_EVENTS_KEY, "liftoff_slow"),
 )
-"""Draft (rev4b 4): verdict ``pass``, failed items the false ``gates``, READY
-``t_ready_back_s`` (after the event; the row's ``base.t_ready`` is the prefix run's), fired from
-the ``las_events`` that ``r67_g1_screen.screen_job`` now writes per run."""
+"""rev4c 1: verdict ``pass``, failed items the false ``gates``, READY ``t_ready_back_s`` (after
+the event; the row's ``base.t_ready`` is the prefix run's and is not used), fired from the
+``las_events`` that ``r67_g1_screen.screen_job`` writes per run."""
 
 
 def _p3b_stroke_m(result: dict) -> float | None:
@@ -426,7 +505,7 @@ def _result_events_names(result: dict) -> list[str] | None:
 
 
 STAGE3_FORMAT = BatchFormat(
-    name="J-15 stage-3 Chrono result.json (p3b)", status=FormatStatus.DRAFT,
+    name="J-15 stage-3 Chrono result.json (p3b)", status=FormatStatus.DECLARED,  # rev4c 1
     verdict=_judged("verdict"), fail_items=_judged("fail_items"),
     event_names=_result_events_names,
     g62=None,  # rev4b 4: 형식 없음
@@ -434,9 +513,10 @@ STAGE3_FORMAT = BatchFormat(
     ready_s=lambda result: _get(result, "p3b", "P3-6_ready", "t_ready_after_loop_start_s"),
     stroke_m=_p3b_stroke_m,
     incomplete=lambda result: None if result.get("events") is not None else "no events",
+    fired_events=_result_events_names,
 )
-"""Draft (rev4b 4): ``run_S9`` writes ``events`` from every ``c2.events`` entry (no cap,
-``run_S9.py`` 5850 / 5910), so the list is whole; the row verdict is revision 12's judge."""
+"""rev4c 1: ``run_S9`` writes ``events`` from every ``c2.events`` entry (no cap, ``run_S9.py``
+5850 / 5910), so the list is whole; the row verdict is revision 12's judge (``judged``)."""
 
 
 BATCH_FORMATS: dict[str, BatchFormat] = {
@@ -541,6 +621,10 @@ def incomplete_reason(new: dict, base: dict, fmt: BatchFormat) -> str | None:
         reason = fmt.incomplete_new(new)
         if reason is not None:
             return f"new: {reason}"
+    if fmt.incomplete_base is not None:
+        reason = fmt.incomplete_base(base)
+        if reason is not None:
+            return f"baseline: {reason}"
     if fmt.incomplete is None:
         return None
     for side, line in (("new", new), ("baseline", base)):
@@ -600,12 +684,29 @@ class TargetLine:
     key: str
     new: dict
     base: dict | None
-    event_names: object
+    event_names: object = None
+    new_hash: str | None = None
+    """The rerun's command hash (the batch's own hash field)."""
+    base_hash: str | None = None
+    """The stored baseline's command hash of the same key."""
+
+
+def silent_hash_check(lines: list[TargetLine], fired_ids: set[int]) -> dict:
+    """rev4c 4: every silent line with a baseline keeps the stored command hash (a missing hash
+    counts as different); 0 silent lines is recorded as such."""
+    silent = [line for line in lines if id(line) not in fired_ids and line.base is not None]
+    differing = {line.key: f"hash {str(line.new_hash)[:12]} != stored {str(line.base_hash)[:12]}"
+                 for line in silent
+                 if line.new_hash is None or line.new_hash != line.base_hash}
+    return {"silent_lines": len(silent), "silent_equal": len(silent) - len(differing),
+            "silent_hash_differs": differing,
+            "note": "no silent line with a baseline" if not silent else None}
 
 
 def judge_batch(batch: str, lines: list[TargetLine], *, allow_draft: bool = False) -> dict:
-    """H-7' of one batch: fired, target and violation counts, per-key problems and the "형식
-    없음" criteria of the batch.
+    """H-7' of one batch: fired, target and violation counts, per-key problems, the "형식
+    없음" criteria and the silent-line hash check (rev4c 4: a silent line with another hash
+    than the stored one is an implementation defect and stops the batch).
 
     Raises:
         KeyError: ``batch`` is neither a format nor a first-run batch.
@@ -633,6 +734,8 @@ def judge_batch(batch: str, lines: list[TargetLine], *, allow_draft: bool = Fals
         reason = None if id(line) in fired_ids else new_line_incomplete(line.new, fmt)
         if reason is not None:
             undecidable[line.key] = f"new: {reason} (fired state unknown)"
+    hashes = silent_hash_check([line for line in lines if line.key not in undecidable],
+                               fired_ids)
     return {"batch": batch, "h7_applies": True, "format": fmt.name, "status": str(fmt.status),
             "format_absent": fmt.absent, "lines": len(lines),
             "fired": sorted(line.key for line in fired),
@@ -640,4 +743,5 @@ def judge_batch(batch: str, lines: list[TargetLine], *, allow_draft: bool = Fals
             "targets": len(targets), "violations": violations, "undecidable": undecidable,
             "not_applicable": {line.key: not_applicable(line.base, fmt) for line in targets
                                if not_applicable(line.base, fmt)},
-            "stop": bool(violations or undecidable)}
+            "silent_hash": hashes,
+            "stop": bool(violations or undecidable or hashes["silent_hash_differs"])}

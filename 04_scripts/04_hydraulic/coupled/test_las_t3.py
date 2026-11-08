@@ -344,6 +344,24 @@ def test_v5_run_record_las_events_leave_the_hashes_alone(monkeypatch) -> None:
     assert las_events["fault_names"] == ["FAULT_STROKE_END:FL"]
 
 
+def test_run_s8c_las_events_file_is_written_after_the_run(tmp_path: Path) -> None:
+    """rev4c 2: ``run_S8C.write_las_events`` writes a separate file from the finished events;
+    it does not read or write ``result.json`` or the controller (Chrono-dev only)."""
+    pytest.importorskip("pychrono")
+    chrono_dir = lt.ROOT / "04_scripts" / "02_chrono"
+    sys.path.insert(0, str(chrono_dir))
+    import run_S8C
+
+    events = [SimpleNamespace(t_s=30.0, name="INFO_LIFTOFF_SLOW:RR"),
+              SimpleNamespace(t_s=40.0, name="FAULT_STROKE_END:FL")]
+    before = [(e.t_s, e.name) for e in events]
+    path = run_S8C.write_las_events(tmp_path, events)
+    assert path.name == "las_events.json" and sorted(p.name for p in tmp_path.iterdir()) == [
+        "las_events.json"]
+    assert json.loads(path.read_text(encoding="utf-8")) == las_h7.las_events_record(events)
+    assert [(e.t_s, e.name) for e in events] == before
+
+
 # ------------------------------------------------------------------------------- audit fixes
 def test_c3_and_c5_missing_values_fail() -> None:
     base = {"event_names": {}, "d1": {"t_ready_s": 60.0, "stroke_max_m": 0.4}}
