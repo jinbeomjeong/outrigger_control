@@ -596,10 +596,13 @@ class ScmForceReader:
     its own active domains; the moments are all about the body COM, so they add). With one
     terrain the values are those of that terrain unchanged (no extra addition)."""
 
-    def __init__(self, terrain: Any, pads: Sequence[ch.ChBody], superstructure: ch.ChBody) -> None:
+    def __init__(self, terrain: Any, pads: Sequence[ch.ChBody], superstructure: ch.ChBody, *,
+                 rigid: Any = None) -> None:
         self.terrains: tuple[Any, ...] = (tuple(terrain) if isinstance(terrain, (list, tuple))
                                           else (terrain,))
-        self.terrain = self.terrains[0]
+        self.terrain = self.terrains[0] if self.terrains else None
+        self.rigid = rigid
+        """``rigid_base.RigidContactReader`` (mixed ground): its contact forces are added to the SCM values."""
         self.pads = tuple(pads)
         self.superstructure = superstructure
         self.pad_force_N = np.zeros((len(pads), 3))
@@ -622,9 +625,31 @@ class ScmForceReader:
         return force, torque
 
     def refresh(self) -> None:
+        if self.rigid is not None:
+            self._refresh_mixed()
+            return
         for i, pad in enumerate(self.pads):
             self.pad_force_N[i], self.pad_torque_Nm[i] = self._body(pad)
         self.sup_force_N, self.sup_torque_Nm = self._body(self.superstructure)
+
+    def _refresh_mixed(self) -> None:
+        """SCM (when any terrain) + rigid contact; pad torques are the SCM ones only (the rigid pad sphere force
+        acts through the ball centre)."""
+        r = self.rigid
+        r.refresh()
+        for i, pad in enumerate(self.pads):
+            if self.terrains:
+                f, t = self._body(pad)
+            else:
+                f, t = np.zeros(3), np.zeros(3)
+            self.pad_force_N[i] = f + r.pad_force_N[i]
+            self.pad_torque_Nm[i] = t
+        if self.terrains:
+            f, t = self._body(self.superstructure)
+        else:
+            f, t = np.zeros(3), np.zeros(3)
+        self.sup_force_N = f + r.sup_force_N
+        self.sup_torque_Nm = t + r.sup_torque_Nm
 
 
 class PadNormals:
@@ -968,7 +993,15 @@ class S9Model:
                  actuator_ramp_s: float | None = None, num_threads: int = SCM_THREADS,
                  ray_shape: str = DEFAULT_RAY_SHAPE, crawler_grid_m: float | None = None,
                  soil_patch: tuple[str, SoilSet] | None = None,
-                 soil_patch_grid_m: float | None = None) -> None:
+                 soil_patch_grid_m: float | None = None, rigid_base: Any = None) -> None:
+        self.rigid_base = rigid_base
+        """``rigid_base.RigidBaseSpec`` (mixed ground: rigid SMC base + SCM under ``scm_legs``) or None (the model
+        unchanged, bit for bit)."""
+        self.rigid_contacts: Any = None
+        """``rigid_base.RigidContactReader`` with ``rigid_base``, else None."""
+        if rigid_base is not None and (soil_patch is not None or crawler_grid_m is not None):
+            raise ValueError("rigid_base replaces the dual terrain / soil patch: give neither crawler_grid_m nor "
+                             "soil_patch (the SCM legs use grid_m)")
         if soil_patch is not None:
             if crawler_grid_m is None:
                 raise ValueError("soil_patch needs the dual terrain (crawler_grid_m)")
@@ -996,6 +1029,8 @@ class S9Model:
         if self.num_threads > 0:  # SCM ray casting uses num_threads_chrono (OpenMP)
             self.system.SetNumThreads(self.num_threads, 1, 1)
         p_plane, r_plane = plane_frame(params, floor_normal)
+        if rigid_base is not None:  # rigid surface = crawler bottom (L1 floor); SCM legs' plane on the same surface
+            p_plane = p_plane - np.array([0.0, 0.0, BLOCK_BOTTOM_ABOVE_CRAWLER_BOTTOM_M])
         self.plane_point_world_m = p_plane
         self.plane_rot = r_plane
         self.normal_world = r_plane[:, 2].copy()
@@ -1028,7 +1063,22 @@ class S9Model:
         com_body = np.asarray(params.superstructure.mass_properties.com_m, dtype=float)
         sup.EnableCollision(True)
         self.crawler_boxes = crawler_box_specs(params)
-        if ray_shape == "mesh":
+        if rigid_base is not None:  # L1 layout-D crawler spheres instead of the SCM ray boxes (rigid_base.py)
+            from outrigger_sim.chrono.contact import crawler_layout as _crawler_layout
+            from outrigger_sim.chrono.rigid_base import rigid_crawler_values, rigid_pad_values
+            from outrigger_sim.chrono.system import make_smc_material
+
+            rb_pad_mass = [split_body_props(params, i, "pad_body")[0] for i in range(len(params.legs))]
+            self.rigid_pad_values = rigid_pad_values(params, rb_pad_mass)
+            self.rigid_crawler_values = rigid_crawler_values(params, rigid_base.crawler_kn_scale)
+            self.rigid_crawler_layout = _crawler_layout(params)
+            cmat = make_smc_material(self.rigid_crawler_values.kn_per_sphere_N_m,
+                                     self.rigid_crawler_values.gn_per_sphere_1_s)
+            z_floor = float(params.ground.crawler_bottom_z_m)
+            for centre in self.rigid_crawler_layout.centres_body_m(z_floor):
+                sup.AddCollisionShape(ch.ChCollisionShapeSphere(cmat, self.rigid_crawler_layout.sphere_radius_m),
+                                      ch.ChFramed(chvec(centre - com_body), ch.QUNIT))
+        elif ray_shape == "mesh":
             add_ray_mesh(sup, [box_triangles(np.asarray(b["centre"]) - com_body, float(b["angle_y_rad"]),
                                              b["size"]) for b in self.crawler_boxes],
                          ch.ChContactMaterialSMC())
@@ -1057,7 +1107,14 @@ class S9Model:
             self.rod_com_retracted_m.append(c_r)
             self.pad_com_retracted_m.append(c_p)
             pad.EnableCollision(True)
-            if ray_shape == "mesh":
+            if rigid_base is not None and leg.name not in rigid_base.scm_legs:  # rigid pad: L1-style SMC sphere
+                ball = pad_sphere_centre_body_m(params, i, float(ext[i])) - (c_p + ext[i] * direction)
+                pad.AddCollisionShape(
+                    ch.ChCollisionShapeSphere(make_smc_material(self.rigid_pad_values.kn_N_m[i],
+                                                                self.rigid_pad_values.gn_1_s[i]),
+                                              float(leg.pad.swivel_center_above_pad_bottom_m)),
+                    ch.ChFramed(chvec(ball), ch.QUNIT))
+            elif ray_shape == "mesh":
                 add_pad_ray_mesh(pad, i, ch.ChContactMaterialSMC(),
                                  pad_variant=self.pad_variant_meta["pad_variant"], offset_m=-c_p)
             else:
@@ -1094,66 +1151,70 @@ class S9Model:
             include_concrete=False, ramp_s=actuator_ramp_s)
         self.actuator.set_initial_force(f0)
 
-        # SCM terrain: one (pads + tracks) or two (pad terrain + crawler terrain, U-S9G-1 M14s;
-        # active domains of the two do not overlap, so no node is cast twice, 5.34.5)
-        self.dual_terrain = crawler_grid_m is not None
-        terrain, tmeta = make_terrain(self.system, soil, shear, p_plane, r_plane, grid_m=grid_m)
-        if self.dual_terrain:
-            c_terrain, c_meta = make_terrain(self.system, soil, shear, p_plane, r_plane,
-                                             grid_m=float(crawler_grid_m))
-        else:
-            c_terrain, c_meta = terrain, tmeta
-        self.terrain = terrain
-        """Pad terrain (the only terrain when single)."""
-        self.pad_terrain = terrain
-        self.crawler_terrain = c_terrain
-        self.terrains: tuple[Any, ...] = (terrain, c_terrain) if self.dual_terrain else (terrain,)
-        self.pad_grid_m = float(grid_m)
-        self.crawler_grid_m = float(crawler_grid_m) if self.dual_terrain else float(grid_m)
-        # G6 soil patch: third terrain carrying the one pad's domain (own soil, own grid)
-        self.soil_patch_leg: str | None = None if soil_patch is None else soil_patch[0]
-        self.soil_patch_set: SoilSet | None = None if soil_patch is None else soil_patch[1]
-        p_terrain = p_meta = None
-        self.soil_patch_grid_m: float | None = None
-        if soil_patch is not None:
-            self.soil_patch_grid_m = float(grid_m if soil_patch_grid_m is None else soil_patch_grid_m)
-            p_terrain, p_meta = make_terrain(self.system, soil_patch[1], shear, p_plane, r_plane,
-                                             grid_m=self.soil_patch_grid_m)
-            self.terrains = (*self.terrains, p_terrain)
-        self.pad_terrain_by_leg: tuple[Any, ...] = tuple(
-            p_terrain if name == self.soil_patch_leg else terrain for name in LEG_ORDER)
-        """SCM terrain under each pad (LEG_ORDER): the pad terrain, or the patch terrain (G6)."""
-        self.pad_grid_by_leg_m: tuple[float, ...] = tuple(
-            self.soil_patch_grid_m if name == self.soil_patch_leg else self.pad_grid_m
-            for name in LEG_ORDER)
-        for i, pad in enumerate(pads):
-            centre = np.asarray(self.pad_bottom_local_pad_m[i])
-            on_patch = LEG_ORDER[i] == self.soil_patch_leg
-            add_active_domain(p_terrain if on_patch else terrain, p_meta if on_patch else tmeta, pad,
-                              centre, (PAD_DOMAIN_XY_M, PAD_DOMAIN_XY_M, ACTIVE_DOMAIN_HEIGHT_M),
-                              f"pad_{LEG_ORDER[i]}")
         z_block = float(params.ground.crawler_bottom_z_m) + BLOCK_BOTTOM_ABOVE_CRAWLER_BOTTOM_M
-        x_mid = 0.5 * (REAR_RAMP_X_M[0] + FRONT_RAMP_X_M[1])
-        for side, sy in (("L", 1.0), ("R", -1.0)):
-            centre = np.array([x_mid, sy * TRACK_Y_M, z_block]) - com_body
-            add_active_domain(c_terrain, c_meta, sup, centre,
-                              (*TRACK_DOMAIN_XY_M, ACTIVE_DOMAIN_HEIGHT_M), f"track_{side}")
-        initialize_terrain(terrain, tmeta)
-        if self.dual_terrain:
-            initialize_terrain(c_terrain, c_meta)
-        if p_terrain is not None:
-            initialize_terrain(p_terrain, p_meta)
-        tmeta["layout"] = "dual (pad terrain + crawler terrain)" if self.dual_terrain else "single"
-        tmeta["crawler_terrain"] = c_meta if self.dual_terrain else None
-        if p_terrain is not None:  # key only with a patch: the earlier meta stays unchanged
-            tmeta["layout"] = "triple"
-            tmeta["layout_note"] = ("pad terrain (3 pads) + crawler terrain + soil-patch terrain "
-                                    f"({self.soil_patch_leg}, set {soil_patch[1].key}); G6")
-            tmeta["soil_patch"] = {"leg": self.soil_patch_leg, "set": soil_patch[1].key,
-                                   "grid_m": self.soil_patch_grid_m, "terrain": p_meta}
-        tmeta["ray_shape"] = ray_shape
-        self.terrain_meta = tmeta
-        self.forces = ScmForceReader(list(self.terrains), pads, sup)
+        if rigid_base is not None:  # mixed ground (rigid_base.py): rigid SMC floor + one SCM terrain for scm_legs
+            self._build_rigid_base(params, soil, shear, p_plane, r_plane, float(grid_m), pads, sup)
+        else:
+            # SCM terrain: one (pads + tracks) or two (pad terrain + crawler terrain, U-S9G-1 M14s;
+            # active domains of the two do not overlap, so no node is cast twice, 5.34.5)
+            self.dual_terrain = crawler_grid_m is not None
+            terrain, tmeta = make_terrain(self.system, soil, shear, p_plane, r_plane, grid_m=grid_m)
+            if self.dual_terrain:
+                c_terrain, c_meta = make_terrain(self.system, soil, shear, p_plane, r_plane,
+                                                 grid_m=float(crawler_grid_m))
+            else:
+                c_terrain, c_meta = terrain, tmeta
+            self.terrain = terrain
+            """Pad terrain (the only terrain when single)."""
+            self.pad_terrain = terrain
+            self.crawler_terrain = c_terrain
+            self.terrains: tuple[Any, ...] = (terrain, c_terrain) if self.dual_terrain else (terrain,)
+            self.pad_grid_m = float(grid_m)
+            self.crawler_grid_m = float(crawler_grid_m) if self.dual_terrain else float(grid_m)
+            # G6 soil patch: third terrain carrying the one pad's domain (own soil, own grid)
+            self.soil_patch_leg: str | None = None if soil_patch is None else soil_patch[0]
+            self.soil_patch_set: SoilSet | None = None if soil_patch is None else soil_patch[1]
+            p_terrain = p_meta = None
+            self.soil_patch_grid_m: float | None = None
+            if soil_patch is not None:
+                self.soil_patch_grid_m = float(grid_m if soil_patch_grid_m is None else soil_patch_grid_m)
+                p_terrain, p_meta = make_terrain(self.system, soil_patch[1], shear, p_plane, r_plane,
+                                                 grid_m=self.soil_patch_grid_m)
+                self.terrains = (*self.terrains, p_terrain)
+            self.pad_terrain_by_leg: tuple[Any, ...] = tuple(
+                p_terrain if name == self.soil_patch_leg else terrain for name in LEG_ORDER)
+            """SCM terrain under each pad (LEG_ORDER): the pad terrain, or the patch terrain (G6)."""
+            self.pad_grid_by_leg_m: tuple[float, ...] = tuple(
+                self.soil_patch_grid_m if name == self.soil_patch_leg else self.pad_grid_m
+                for name in LEG_ORDER)
+            for i, pad in enumerate(pads):
+                centre = np.asarray(self.pad_bottom_local_pad_m[i])
+                on_patch = LEG_ORDER[i] == self.soil_patch_leg
+                add_active_domain(p_terrain if on_patch else terrain, p_meta if on_patch else tmeta, pad,
+                                  centre, (PAD_DOMAIN_XY_M, PAD_DOMAIN_XY_M, ACTIVE_DOMAIN_HEIGHT_M),
+                                  f"pad_{LEG_ORDER[i]}")
+            z_block = float(params.ground.crawler_bottom_z_m) + BLOCK_BOTTOM_ABOVE_CRAWLER_BOTTOM_M
+            x_mid = 0.5 * (REAR_RAMP_X_M[0] + FRONT_RAMP_X_M[1])
+            for side, sy in (("L", 1.0), ("R", -1.0)):
+                centre = np.array([x_mid, sy * TRACK_Y_M, z_block]) - com_body
+                add_active_domain(c_terrain, c_meta, sup, centre,
+                                  (*TRACK_DOMAIN_XY_M, ACTIVE_DOMAIN_HEIGHT_M), f"track_{side}")
+            initialize_terrain(terrain, tmeta)
+            if self.dual_terrain:
+                initialize_terrain(c_terrain, c_meta)
+            if p_terrain is not None:
+                initialize_terrain(p_terrain, p_meta)
+            tmeta["layout"] = "dual (pad terrain + crawler terrain)" if self.dual_terrain else "single"
+            tmeta["crawler_terrain"] = c_meta if self.dual_terrain else None
+            if p_terrain is not None:  # key only with a patch: the earlier meta stays unchanged
+                tmeta["layout"] = "triple"
+                tmeta["layout_note"] = ("pad terrain (3 pads) + crawler terrain + soil-patch terrain "
+                                        f"({self.soil_patch_leg}, set {soil_patch[1].key}); G6")
+                tmeta["soil_patch"] = {"leg": self.soil_patch_leg, "set": soil_patch[1].key,
+                                       "grid_m": self.soil_patch_grid_m, "terrain": p_meta}
+            tmeta["ray_shape"] = ray_shape
+            self.terrain_meta = tmeta
+        self.forces = ScmForceReader(list(self.terrains), pads, sup, rigid=self.rigid_contacts)
         self.pad_outline_local_m = [
             pad_bottom_outline_local_m(self.pad_variant_meta["pad_variant"], i, -self.pad_com_retracted_m[i])
             for i in range(len(pads))]
@@ -1167,6 +1228,10 @@ class S9Model:
             self.patch_pad_values = pad_tangential_values(params, self.soil_patch_set, areas,
                                                           stiffness_mode=stiffness_mode, interface=interface)
         self.track_values = track_tangential_values(params, soil, interface=interface)
+        if rigid_base is not None:  # rigid tracks: 6 roller k_t, no soil in series, mu 0.5 (rigid_base.py)
+            rc = self.rigid_crawler_values
+            self.track_values = TrackTangentialValues(rc.track_k_N_m, rc.track_c_actual_N_s_m, rc.track_c_input_N_s_m,
+                                                      rc.friction, rc.track_k_N_m, math.inf, 0.0)
         surface_point = p_plane
         self.pad_bushing: GroundBushingCoulomb | None = None
         self.crawler_bushing: GroundBushingCoulomb | None = None
@@ -1191,6 +1256,13 @@ class S9Model:
                                     **({"friction": self.patch_pad_values.friction}
                                        if leg.name == self.soil_patch_leg else {}))
                      for i, leg in enumerate(params.legs)]
+            if rigid_base is not None:  # rigid pads: L1 anchor values, adhesion 0, concrete mu (rigid_base.py)
+                import dataclasses  # noqa: PLC0415
+
+                rv = self.rigid_pad_values
+                specs = [s if s.name in rigid_base.scm_legs else dataclasses.replace(
+                    s, stiffness_N_m=rv.kt_N_m[i], damping_input_N_s_m=rv.ct_input_N_s_m[i], adhesion_N=0.0,
+                    friction=rv.friction) for i, s in enumerate(specs)]
             self.pad_bushing = GroundBushingCoulomb(
                 self.system, self.floor, specs, friction=self.pad_values.friction,
                 slip_damping_reenable_speed_m_s=slip_v, dt_s=self.dt_s,
@@ -1220,6 +1292,51 @@ class S9Model:
         self.n_patches_last = 0
         self.settle_dashpot: SettleDashpot | None = None
         """Set by :class:`SettleDashpot` (runner settle, 5.35.4 (a)); None = no dashpot."""
+
+    def _build_rigid_base(self, params: Params, soil: SoilSet, shear: str, p_plane: NDArray[np.float64],
+                          r_plane: NDArray[np.float64], grid_m: float, pads: Sequence[ch.ChBody],
+                          sup: ch.ChBody) -> None:
+        """Mixed ground (``rigid_base.py``): rigid SMC floor boxes for the rigid pads and the crawler, one SCM
+        terrain (``soil``, ``grid_m``) with the active domains of ``rigid_base.scm_legs`` only."""
+        from outrigger_sim.chrono.rigid_base import RigidContactReader, RigidGroundStub, add_rigid_floor
+
+        rb = self.rigid_base
+        lay = self.rigid_crawler_layout
+        floor_patches_meta = add_rigid_floor(
+            self.floor, params, p_plane, r_plane, rb.rigid_legs, self.rigid_pad_values, self.rigid_crawler_values,
+            tuple(float(v) for v in lay.x_extent_m), float(lay.track_centre_y_m))
+        self.rigid_contacts = RigidContactReader(self.system, pads, sup)
+        self.dual_terrain = False
+        self.pad_grid_m = float(grid_m)
+        self.crawler_grid_m = float(grid_m)
+        scm_legs = tuple(rb.scm_legs)
+        terrain = tmeta = None
+        if scm_legs:
+            terrain, tmeta = make_terrain(self.system, soil, shear, p_plane, r_plane, grid_m=grid_m)
+            for i, pad in enumerate(pads):
+                if LEG_ORDER[i] in scm_legs:
+                    add_active_domain(terrain, tmeta, pad, np.asarray(self.pad_bottom_local_pad_m[i]),
+                                      (PAD_DOMAIN_XY_M, PAD_DOMAIN_XY_M, ACTIVE_DOMAIN_HEIGHT_M), f"pad_{LEG_ORDER[i]}")
+            initialize_terrain(terrain, tmeta)
+        self.terrain = terrain
+        self.pad_terrain = terrain
+        self.crawler_terrain = RigidGroundStub(self.rigid_contacts)
+        self.terrains = (terrain,) if terrain is not None else ()
+        # one SCM leg reads as the G6 patch leg downstream (records, virgin-branch window); else none
+        self.soil_patch_leg = scm_legs[0] if len(scm_legs) == 1 else None
+        self.soil_patch_set = soil if len(scm_legs) == 1 else None
+        self.soil_patch_grid_m = float(grid_m) if len(scm_legs) == 1 else None
+        self.pad_terrain_by_leg = tuple(terrain if n in scm_legs else None for n in LEG_ORDER)
+        self.pad_grid_by_leg_m = tuple(float(grid_m) for _ in LEG_ORDER)
+        meta: dict[str, Any] = dict(tmeta) if tmeta is not None else {"soil": soil.meta(), "active_domains": []}
+        meta.update(layout="rigid_base", crawler_terrain=None, ray_shape=self.ray_shape, rigid_base={
+            "scm_legs": list(scm_legs), "rigid_legs": list(rb.rigid_legs), "crawler_kn_scale": rb.crawler_kn_scale,
+            "plane_point_world_m": np.asarray(p_plane, float).tolist(), "floor_patches": floor_patches_meta,
+            "pad": self.rigid_pad_values.meta(), "crawler": self.rigid_crawler_values.meta(),
+            "crawler_layout": {"x_extent_m": list(lay.x_extent_m), "track_centre_y_m": float(lay.track_centre_y_m),
+                               "sphere_radius_m": float(lay.sphere_radius_m), "n_spheres": len(lay.centres_body_m(0.0))},
+            "rule": "rigid SMC floor (L1 path) + SCM under scm_legs only (cad 2026-11-08, rigid_base.py)"})
+        self.terrain_meta = meta
 
     # --- L2bModel-compatible members ---------------------------------------------------------
 
@@ -1348,6 +1465,13 @@ class S9Model:
         geo = self.pad_sinkage_m()
         out = []
         for i in range(len(self.pads)):
+            if self.pad_terrain_by_leg[i] is None:  # rigid pad (mixed ground): no SCM nodes
+                out.append({"rigid": True, "n_inside": 0, "n_contact": 0, "n_sigma_negative": 0,
+                            "sinkage_mean_inside_m": None, "sinkage_mean_contact_m": None,
+                            "sigma_mean_contact_Pa": None, "sigma_sum_area_N": 0.0, "contact_hull_area_m2": 0.0,
+                            "contact_hull_perimeter_m": 0.0, "sinkage_geometric_m": float(geo[i]),
+                            "node_minus_geometric_m": None})
+                continue
             st = node_stats_in_outline(self.pad_terrain_by_leg[i], self.plane_point_world_m, self.plane_rot,
                                        self.pad_grid_by_leg_m[i], self.pad_outline_world_m(i))
             st["sinkage_geometric_m"] = float(geo[i])
@@ -1478,6 +1602,21 @@ class S9Model:
             settle_dashpot=None if self.settle_dashpot is None else self.settle_dashpot.meta(),
             c2_soil=None,
         )
+        if self.rigid_base is not None:  # mixed ground only (earlier meta unchanged)
+            rb = self.rigid_base
+            meta["model"] = ("S9 mixed ground: rigid SMC base (L1 floor-patch path, concrete k on the pad spheres, "
+                             f"crawler spheres x{rb.crawler_kn_scale:g}) + SCM under {list(rb.scm_legs) or 'no pad'}; "
+                             "L2b force law, concrete dropped")
+            meta["terrain_layout"] = {"layout": "rigid_base", "scm_legs": list(rb.scm_legs),
+                                      "rigid_legs": list(rb.rigid_legs), "crawler_kn_scale": rb.crawler_kn_scale,
+                                      "pad_grid_m": self.pad_grid_m}
+            meta["rigid_base"] = self.terrain_meta["rigid_base"]
+            meta["crawler_shape"] = {"kind": "L1 layout-D spheres (24) on the rigid base; the C boxes are geometry only",
+                                     "boxes": self.crawler_boxes}
+            if self.soil_patch_leg is not None:
+                meta["soil_patch"] = {"leg": self.soil_patch_leg, "set": self.soil_patch_set.meta(),
+                                      "rule": "rigid_base: the one SCM leg on the model soil"}
+            return meta
         if self.soil_patch_leg is not None:  # G6 only (earlier meta unchanged)
             meta["terrain_layout"].update(layout="triple", soil_patch_leg=self.soil_patch_leg,
                                           soil_patch_set=self.soil_patch_set.key,

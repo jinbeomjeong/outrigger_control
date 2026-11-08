@@ -2837,6 +2837,14 @@ def build_machine(args, params, pv, soil):
     patch = load_soil_patch(args)
     extra = {} if patch is None else {"soil_patch": patch,
                                       "soil_patch_grid_m": getattr(args, "soil_patch_grid", None)}
+    if hasattr(args, "rigid_base"):  # mixed ground (rigid_base.py); absent = the former model
+        from outrigger_sim.chrono.rigid_base import RigidBaseSpec
+
+        if patch is not None or args.crawler_grid is not None:
+            raise SystemExit("--rigid-base replaces --crawler-grid / --soil-patch (SCM legs use --grid)")
+        extra["rigid_base"] = RigidBaseSpec.parse(args.rigid_base, getattr(args, "crawler_kn_scale", 1.0))
+    elif hasattr(args, "crawler_kn_scale"):
+        raise SystemExit("--crawler-kn-scale needs --rigid-base")
     return S9Model(params, soil, pv, shear=args.scm_shear, floor_normal=normal, dt_s=args.dt,
                    stiffness_mode=args.stiffness_mode, interface=args.interface,
                    swivel_stiffness_N_m_rad=args.k_sw, grid_m=args.grid, num_threads=args.threads,
@@ -5514,10 +5522,13 @@ class ScmNodeRecorder:
         self.period_s = float(period_s)
         terrains = list(model.terrains)
         names, grids = ["pad"], [float(model.pad_grid_m)]
-        if getattr(model, "dual_terrain", False):
+        if getattr(model, "rigid_base", None) is not None:  # mixed ground: the one SCM terrain of the scm_legs
+            names = [f"scm_{'+'.join(model.rigid_base.scm_legs)}"][:len(terrains)]
+            grids = grids[:len(terrains)]
+        elif getattr(model, "dual_terrain", False):
             names.append("crawler")
             grids.append(float(model.crawler_grid_m))
-        if getattr(model, "soil_patch_leg", None) is not None:
+        if getattr(model, "soil_patch_leg", None) is not None and getattr(model, "rigid_base", None) is None:
             names.append(f"patch_{model.soil_patch_leg}")
             grids.append(float(model.soil_patch_grid_m))
         if len(names) != len(terrains):
@@ -5982,6 +5993,14 @@ def _soil_patch_args(p: argparse.ArgumentParser) -> None:
                    help="G6: that pad on a third SCM terrain with soil SET (needs --crawler-grid), e.g. RR:J1")
     p.add_argument("--soil-patch-grid", type=float, default=None,
                    help="G6: grid of the soil-patch terrain [m] (default --grid)")
+    p.add_argument("--rigid-base", default=argparse.SUPPRESS, metavar="LEGS|rigid",
+                   help="mixed ground (outrigger_sim.chrono.rigid_base): rigid SMC base (L1 floor path, concrete k on "
+                        "the pads, crawler spheres) with --soil SCM under LEGS only (e.g. FR, FR+RL) on --grid; "
+                        "'rigid' = no SCM leg. Not with --crawler-grid / --soil-patch. Absent = no attribute, the run "
+                        "is unchanged")
+    p.add_argument("--crawler-kn-scale", type=float, default=argparse.SUPPRESS, choices=(1.0, 3.0),
+                   help="with --rigid-base: crawler sphere stiffness factor (K1 = 1 YAML, K3 = 3; dashpot x sqrt, same "
+                        "heave zeta). Default 1")
 
 
 def _gravity_ramp_args(p: argparse.ArgumentParser) -> None:
