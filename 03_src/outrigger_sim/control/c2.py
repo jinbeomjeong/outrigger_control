@@ -1970,6 +1970,9 @@ class LiftoffSlowEnd(StrEnum):
     """The soil mode has started."""
     REAPPROACH = "reapproach"
     """A leg is being re-approached."""
+    ZONE = "zone"
+    """The crawler zone was left (S5 false). Only with ``require_soil_response=False`` (U-6
+    ABL, spec 436.9.4), where there is no LOC or soil mode to end the slowdown."""
     SUM = "sum"
     """The load sum stayed at or above ``sum_off_fraction_W W_ref`` for ``off_periods``."""
     TIME = "time"
@@ -2014,7 +2017,8 @@ class LiftoffApproachSlowSettings:
     require_soil_response: bool = True
     """S1: start only with ``soil.enable``. ``False`` drops S1 for a baseline without the soil
     response (U-6 ABL, user decision 2026-11-08); without the soil response there is no LOC and
-    no soil mode, so S3 / S4 always hold and the ``loc`` / ``soil`` ends never come."""
+    no soil mode, so S3 / S4 always hold and the ``loc`` / ``soil`` ends never come. ``False``
+    also adds the end ``zone`` (the crawler zone left, spec 436.9.4) in their place."""
 
     def __post_init__(self) -> None:
         for name in ("sum_on_fraction_W", "light_leg_fraction_of_F_min", "max_s"):
@@ -3816,6 +3820,10 @@ class _LiftoffSlowState:
     """``rho`` of the last period's LEVEL step; ``None`` after a period without one."""
     start_s: float | None = None
     start_leg: int | None = None
+    start_rho: float | None = None
+    """``rho_k`` of the start period (meta only)."""
+    start_rho_prev: float | None = None
+    """``rho_{k-1}`` the start compared against (meta only)."""
     sum_periods: int = 0
     """Active periods in a row with ``sum L >= sum_off_fraction_W W_ref``."""
     end_s: float | None = None
@@ -7488,12 +7496,15 @@ class C2Controller:
         should_start = slow.is_armed and self._liftoff_slow_start_gates_hold(
             loads_N, rho, leg_speeds, is_reapproaching
         )
+        rho_before = slow.previous_rho
         slow.previous_rho = rho
         if should_start:
             slow.is_armed = False
             slow.is_active = True
             slow.start_s = float(reading.t_s)
             slow.start_leg = lightest_leg
+            slow.start_rho = float(rho)
+            slow.start_rho_prev = rho_before
             self._add_event(reading.t_s, f"{LIFTOFF_SLOW_EVENT}:{LEG_ORDER[lightest_leg]}")
         if not slow.is_active:
             return leg_speeds
@@ -7557,6 +7568,8 @@ class C2Controller:
             return LiftoffSlowEnd.SOIL
         if is_reapproaching:
             return LiftoffSlowEnd.REAPPROACH
+        if not settings.require_soil_response and not self._state.in_crawler_zone:
+            return LiftoffSlowEnd.ZONE  # spec 436.9.4: the ABL stand-in of loc / soil
         if float(np.sum(loads_N)) >= settings.sum_off_fraction_W * self._reference_weight_N():
             slow.sum_periods += 1
         else:
@@ -7607,6 +7620,8 @@ class C2Controller:
             {
                 "start_s": slow.start_s,
                 "start_leg": None if slow.start_leg is None else LEG_ORDER[slow.start_leg],
+                "start_rho": slow.start_rho,
+                "start_rho_prev": slow.start_rho_prev,
                 "end_s": slow.end_s,
                 "end_reason": None if slow.end_reason is None else str(slow.end_reason),
                 "active_periods": slow.active_periods,
