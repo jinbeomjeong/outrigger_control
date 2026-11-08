@@ -42,6 +42,80 @@ def test_split_argv_refuses_bad_options(argv) -> None:
         v5_rerun.split_argv(argv)
 
 
+def test_split_argv_and_argparse_take_overwrite() -> None:
+    rest, options = v5_rerun.split_argv(["r72.py", "root", "out.json", "--overwrite",
+                                         "--v5-setting", "V0"])
+    assert rest == ["r72.py", "root", "out.json"]
+    assert options == v5_rerun.RerunOptions("V0", overwrite=True)
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    v5_rerun.add_arguments(parser)
+    assert v5_rerun.options_from_args(parser.parse_args([])).overwrite is False
+    assert v5_rerun.options_from_args(parser.parse_args(
+        ["--v5-setting", "VB", "--overwrite"])).overwrite is True
+
+
+# ------------------------------------------------------------------------------ out paths
+def test_default_out_path_is_the_las_folder() -> None:
+    """Rules rev2 1 #9: LAS-tag outputs in ``v5_rerun/las/``, the folder the judge reads."""
+    path = v5_rerun.default_out_path("slope", "V0")
+    assert path == v5_rerun.LAS_OUT_DIR / "u3_slope_V0.json"
+    assert path.parent == u3_judge.DEFAULT_U3_DIR
+    assert v5_rerun.default_out_path("b5_wide", "VB", study="u6") == (
+        v5_rerun.LAS_OUT_DIR / "u6_b5_wide_VB.json")
+
+
+@pytest.fixture
+def out_folders(tmp_path, monkeypatch) -> tuple[Path, Path]:
+    """(pre-switch folder, its ``las`` folder) in ``tmp_path``."""
+    pre_switch = tmp_path / "v5_rerun"
+    las = pre_switch / "las"
+    las.mkdir(parents=True)
+    monkeypatch.setattr(v5_rerun, "PRE_SWITCH_OUT_DIR", pre_switch)
+    return pre_switch, las
+
+
+def test_rerun_refuses_an_existing_file_without_overwrite(out_folders) -> None:
+    _, las = out_folders
+    target = las / "u3_slope_V0.json"
+    rerun = v5_rerun.RerunOptions("V0")
+    v5_rerun.check_out_path(target, rerun)  # new file: fine
+    target.write_text("{}", encoding="utf-8")
+    with pytest.raises(SystemExit, match="--overwrite"):
+        v5_rerun.check_out_path(target, rerun)
+    v5_rerun.check_out_path(target, v5_rerun.RerunOptions("V0", overwrite=True))
+    v5_rerun.check_out_path(target, v5_rerun.RerunOptions())  # no setting: as before
+
+
+def test_pre_switch_files_are_never_written(out_folders) -> None:
+    pre_switch, _ = out_folders
+    old = pre_switch / "u3_slope_V0.json"
+    old.write_text("{}", encoding="utf-8")
+    for options in (v5_rerun.RerunOptions("V0", overwrite=True), v5_rerun.RerunOptions()):
+        with pytest.raises(SystemExit, match="pre-switch"):
+            v5_rerun.check_out_path(old, options)
+    with pytest.raises(SystemExit, match="pre-switch"):
+        v5_rerun.refuse_pre_switch_file(old)
+    new = pre_switch / "u3_D_VB.json"
+    with pytest.raises(SystemExit, match="LAS-tag run"):  # a rerun belongs in las/
+        v5_rerun.check_out_path(new, v5_rerun.RerunOptions("VB", overwrite=True))
+    v5_rerun.check_out_path(new, v5_rerun.RerunOptions())  # a new file without a setting
+
+
+def test_screens_use_the_las_default_and_check_before_the_runs() -> None:
+    """The three callers of the integrity finding take the las/ default (no harness run)."""
+    import s9_slope_fix_candidates as fix
+
+    args = fix.build_parser().parse_args(["run", "--suite", "slope", "--v5-setting", "V0"])
+    rerun = v5_rerun.options_from_args(args)
+    assert fix._out_path(args, rerun) == v5_rerun.LAS_OUT_DIR / "u3_slope_V0.json"
+    for script in ("s9_slope_fix_candidates.py", "s9_soil_slope.py",
+                   "b5_baseline_compare.py"):
+        text = (S9_DIR / script).read_text(encoding="utf-8")
+        assert "check_out_path(out_path, rerun)" in text, script
+
+
 def test_vb_and_u6_definitions() -> None:
     _, vb = v5_rerun.options_of("VB")
     _, plant_only = v5_rerun.options_of("VB", extend_start=False)

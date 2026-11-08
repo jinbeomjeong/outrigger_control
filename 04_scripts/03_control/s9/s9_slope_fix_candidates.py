@@ -170,7 +170,9 @@ Paper v5 U-3 (``u3_u6_rerun_rules.md``, ``04_hydraulic/coupled/v5_rerun.py``): `
 ``list`` take ``--v5-setting {V0,VB}`` (plant setting and controller tag per run, ``v5`` block),
 ``--ids-from <v4 json> [--pad B]`` (exactly the stored keys of the suite) and, for ``run``,
 ``--reuse-d1 <d1.jsonl>`` (rules 6, ``u3_reuse.py``); with one suite the default ``--out`` is
-``06_analysis/02_control/v5_rerun/u3_<suite>_<setting>.json``. Without them nothing changes.
+``06_analysis/02_control/v5_rerun/las/u3_<suite>_<setting>.json`` (LAS-tag runs, rules rev2 1
+#9). An existing output needs ``--overwrite``; a file directly in ``v5_rerun/`` (pre-switch) is
+never written (``v5_rerun.check_out_path``). Without them nothing changes.
 Units SI unless the key says otherwise (mm, kN, deg, s).
 """
 
@@ -3266,7 +3268,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--settle-hook", default="harness", choices=("harness", "p0"))
     run.add_argument("--out", type=Path, default=None,
                      help="default rev80/fix_candidates.json; with --v5-setting and one suite "
-                          "06_analysis/02_control/v5_rerun/u3_<suite>_<setting>.json")
+                          "06_analysis/02_control/v5_rerun/las/u3_<suite>_<setting>.json")
     merge = sub.add_parser("compare")
     merge.add_argument("--out", type=Path, required=True)
     merge.add_argument("inputs", nargs="+", type=Path)
@@ -3326,6 +3328,7 @@ def _run(args) -> None:
     _check_ids(args.suite, args.ids)
     rerun = _v5_rerun().options_from_args(args)
     out_path = _out_path(args, rerun)
+    _v5_rerun().check_out_path(out_path, rerun)  # before the runs (rules rev2 1 #9 / #10)
     _v5_rerun().activate(rerun.setting)  # paper v5 U-3: the pool workers inherit it
     placement = slope.set_parent_affinity(slope.parse_affinity(args.affinity))
     records, t0 = [], time.perf_counter()
@@ -3444,6 +3447,8 @@ def main() -> None:
                 print(suite, case_id)
             print(suite, len(cases), "cases")
         return
+    if args.command in ("rejudge-finloc", "compare"):
+        _v5_rerun().refuse_pre_switch_file(args.out)
     if args.command == "rejudge-finloc":
         _rejudge_file(args.input, args.out)
         return

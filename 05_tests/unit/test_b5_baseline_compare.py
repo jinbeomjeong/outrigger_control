@@ -16,6 +16,7 @@ import math
 import os
 import subprocess
 import sys
+from dataclasses import replace
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -202,6 +203,39 @@ def test_ablation_ignores_switched_on_settings_defaults(monkeypatch) -> None:
                                           flat_soil_margin_m=FINAL_FLAT_SOIL_MARGIN_M))
     config = b5.ablation_config(c2, c2.C2Config().with_10hz_d1())
     assert _switches(config) == (False, 0.0)
+
+
+class _PresetHarness:
+    """Stand-in for ``cl``: the R8 preset with LAS-b as asked (``is_las_on``)."""
+
+    is_las_on = True
+
+    @classmethod
+    def preset_config(cls, contact, with_imu_samples, with_reapproach=True):
+        del contact, with_imu_samples, with_reapproach
+        return c2.C2Config().with_10hz_d1(liftoff_approach_slow=cls.is_las_on)
+
+
+class _LasOffPresetHarness(_PresetHarness):
+    is_las_on = False
+
+
+def test_abl28_runs_las_b_as_c2_and_abl_drops_s1() -> None:
+    """Control-expert decision (가): ABL28 keeps the C2 LAS-b settings (S1 on); ABL drops S1."""
+    c2_slow = b5._c2_config(_PresetHarness, c2, "C2", {}).liftoff_approach_slow
+    abl28_slow = b5._c2_config(_PresetHarness, c2, "ABL28", {}).liftoff_approach_slow
+    abl_slow = b5._c2_config(_PresetHarness, c2, "ABL", {}).liftoff_approach_slow
+    assert c2_slow.enable
+    assert abl28_slow == c2_slow
+    assert abl28_slow.require_soil_response is True
+    assert abl_slow.enable and abl_slow.require_soil_response is False
+    assert abl_slow == replace(c2_slow, require_soil_response=False)
+
+
+def test_las_off_preset_keeps_las_b_off_in_abl_and_abl28() -> None:
+    for name in ("ABL", "ABL28"):
+        config = b5._c2_config(_LasOffPresetHarness, c2, name, {})
+        assert config.liftoff_approach_slow.enable is False, name
 
 
 def test_controller_settings_of_c2_abl_and_ind() -> None:

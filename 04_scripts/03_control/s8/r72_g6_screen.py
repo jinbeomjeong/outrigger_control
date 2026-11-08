@@ -62,7 +62,9 @@ D-1 verification matrix (2026-11-08, ``04_scripts/04_hydraulic/coupled/d1_runs.p
 Paper v5 U-3 study C (``u3_u6_rerun_rules.md``, ``04_hydraulic/coupled/v5_rerun.py``):
   ``--v5-setting {V0,VB}``, ``--ids-from <v4 json>`` and ``--pad B`` anywhere after the root
   (stripped before the positional arguments); each result then carries a ``v5`` block and the
-  meta a ``v5`` entry. Without them nothing changes.
+  meta a ``v5`` entry. With ``--v5-setting`` an existing output needs ``--overwrite``; a file
+  directly in ``v5_rerun/`` (pre-switch) is never written (``v5_rerun.check_out_path``). Without
+  them nothing changes.
 """
 from __future__ import annotations
 
@@ -644,6 +646,7 @@ def main():
         return
     set_parent_placement()
     out = Path(sys.argv[2])
+    _v5_rerun().check_out_path(out, rerun)  # before the runs (rules rev2 1 #9 / #10)
     workers = int(sys.argv[3]) if len(sys.argv) > 3 else 8
     _v5_rerun().activate(rerun.setting)  # the pool workers inherit it
     t0 = time.perf_counter()

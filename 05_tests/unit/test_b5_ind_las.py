@@ -260,3 +260,19 @@ def test_i10_u6_record_only_wiring(tmp_path) -> None:
     assert b5._out_path(args, v5_rerun.options_from_args(args)) == (
         v5_rerun.OUT_DIR / "las" / "u6_b5_wide_VB_IND_LAS.json")
     assert b5._parse_args(["run"]).controllers == "C2,ABL,IND,ABL28"
+
+
+def test_i11_ind_las_needs_the_v5_setting() -> None:
+    """Integrity Low: without ``--v5-setting`` the default file is ``rev84/b5_<label>.json``."""
+    with pytest.raises(SystemExit, match="needs --v5-setting"):
+        b5._rerun_case_ids(["A1-rigid"], ["IND_LAS"], v5_rerun.RerunOptions())
+    with pytest.raises(SystemExit, match="needs --v5-setting"):
+        b5.main(["run", "--cases", "A1-rigid", "--controllers", "IND_LAS"])
+    assert b5._rerun_case_ids(["A1-rigid"], ["C2", "IND"], v5_rerun.RerunOptions()) == [
+        "A1-rigid"]
+
+
+def test_i12_u6_default_file_is_in_las() -> None:
+    args = b5._parse_args(["run", "--cases", "wide", "--v5-setting", "VB"])
+    assert b5._out_path(args, v5_rerun.options_from_args(args)) == (
+        v5_rerun.LAS_OUT_DIR / "u6_b5_wide_VB.json")
