@@ -1310,6 +1310,17 @@ class S9Model:
         self.pad_grid_m = float(grid_m)
         self.crawler_grid_m = float(grid_m)
         scm_legs = tuple(rb.scm_legs)
+        # SCM casts rays from every node inside an active domain and loads whatever shape they hit: no rigid floor box
+        # may lie under an SCM pad's domain (start pose, body xy; the pads move < 1 cm sideways)
+        half = 0.5 * PAD_DOMAIN_XY_M
+        for i, leg in enumerate(params.legs):
+            if leg.name not in scm_legs:
+                continue
+            cx, cy = (float(v) for v in leg.pad_bottom_center_retracted_m[:2])
+            for b in floor_patches_meta:
+                (x0, x1), (y0, y1) = b["x_range_body_m"], b["y_range_body_m"]
+                if cx - half < x1 and x0 < cx + half and cy - half < y1 and y0 < cy + half:
+                    raise ValueError(f"rigid_base: SCM domain of pad {leg.name} overlaps the rigid box {b['name']}")
         terrain = tmeta = None
         if scm_legs:
             terrain, tmeta = make_terrain(self.system, soil, shear, p_plane, r_plane, grid_m=grid_m)
