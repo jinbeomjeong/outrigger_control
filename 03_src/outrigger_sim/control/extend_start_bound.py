@@ -634,49 +634,88 @@ J_P3_NAME = "extend_bound_check.ext_moving.breach_reads == 0"
 """Judgement J-P3 of criteria revision 8 3.2."""
 
 
+J_P3_JUDGED = "judged"
+J_P3_NO_ROD_READING = "no_rod_reading"
+J_P3_DEFECT_NO_RECORD = "defect_rod_reading_without_record"
+J_P3_DEFECT_UNDECLARED = "defect_no_rod_reading_not_declared"
+J_P3_DEFECT_RECORD_WITHOUT_READING = "defect_record_without_rod_reading"
+J_P3_DEFECT_CASES = (J_P3_DEFECT_NO_RECORD, J_P3_DEFECT_UNDECLARED,
+                     J_P3_DEFECT_RECORD_WITHOUT_READING)
+
+
+def j_p3_run_case(record: dict[str, object] | None, has_rod_reading: bool,
+                  head_only_declared: bool) -> str:
+    """Row of the criteria revision 9 3.2 table of one ③-on run.
+
+    Args:
+        record: ``hydraulics_record.extend_bound_check`` (None or empty = no record).
+        has_rod_reading: A rod-side pressure reached the controller at least once (3.1).
+        head_only_declared: The run was set up without rod readings (3.1 "헤드 전용 구성";
+            the harness steady path or readings ``head``).
+
+    Returns:
+        :data:`J_P3_JUDGED` (#1), :data:`J_P3_NO_ROD_READING` (#3) or one of
+        :data:`J_P3_DEFECT_CASES` (#2, #4, #5).
+    """
+    has_record = bool(record)
+    if has_rod_reading:
+        return J_P3_JUDGED if has_record else J_P3_DEFECT_NO_RECORD
+    if not head_only_declared:
+        return J_P3_DEFECT_UNDECLARED
+    return J_P3_DEFECT_RECORD_WITHOUT_READING if has_record else J_P3_NO_ROD_READING
+
+
 def j_p3_judgement(records: list[dict[str, object] | None],
-                   has_rod_reading: list[bool] | None = None) -> dict[str, object]:
-    """J-P3 over the ③-on runs (criteria revision 8 3.2): the ext_moving ``breach_reads`` of
-    every run summed over its legs.
+                   has_rod_reading: list[bool] | None = None,
+                   head_only_declared: list[bool] | None = None) -> dict[str, object]:
+    """J-P3 over the ③-on runs (criteria revision 8 3.2, applied by the revision 9 3.2 table):
+    the ext_moving ``breach_reads`` of every run with a rod reading summed over its legs.
 
     The monitor runs the ③ tracker only on reads with a rod-side pressure, so a run without
-    any rod reading (the head-only harness rows) has no record by construction; it is counted
-    as ``no_rod_reading_runs`` and not as a setting defect (the record docstring: "null record
-    = option off or no rod reading").
+    any rod reading has no record by construction. Revision 9: such a run is ``no_rod_reading``
+    (not applicable, counted) only when it is DECLARED head-only; undeclared, or with a record
+    after all, it is a setting defect (:func:`j_p3_run_case`).
 
     Args:
         records: ``hydraulics_record.extend_bound_check`` of each ③-on run (None = missing).
         has_rod_reading: Per run, whether it had a rod-side reading; None = all had one.
+        head_only_declared: Per run, the head-only declaration; None = no run declared.
 
     Returns:
-        ``status`` ``"pass"`` (all sums 0), ``"H-7"`` (a breach), ``"setting_defect"`` (a
-        run with rod readings but without the record: not judged, stop) or ``"no_p3_runs"``;
-        counts, ``margin_used_reads`` (FLAG) and ``locked_breach_over_tol_reads``
+        ``status`` ``"pass"`` (all judged sums 0), ``"H-7"`` (a breach), ``"setting_defect"``
+        (a #2 / #4 / #5 run: not judged, stop) or ``"no_p3_runs"``; ``runs_by_case`` (table
+        rows), counts, ``margin_used_reads`` (FLAG) and ``locked_breach_over_tol_reads``
         (cross-check FLAG).
     """
     rod = [True] * len(records) if has_rod_reading is None else list(has_rod_reading)
-    present = [record for record in records if record]
-    no_rod = sum(not record and not has_rod for record, has_rod in zip(records, rod,
-                                                                       strict=True))
-    missing = len(records) - len(present) - no_rod
+    declared = [False] * len(records) if head_only_declared is None else list(head_only_declared)
+    cases = [j_p3_run_case(record, has_rod, is_declared)
+             for record, has_rod, is_declared in zip(records, rod, declared, strict=True)]
+    judged = [record for record, case in zip(records, cases, strict=True)
+              if case == J_P3_JUDGED]
+    defects = sum(case in J_P3_DEFECT_CASES for case in cases)
 
     def total(key: str) -> int:
-        return int(sum(sum(record.get(key) or []) for record in present))
+        return int(sum(sum(record.get(key) or []) for record in judged))
 
     breach_reads = total("breach_reads")
     if not records:
         status = "no_p3_runs"
-    elif missing:
+    elif defects:
         status = "setting_defect"
     elif breach_reads:
         status = "H-7"
     else:
         status = "pass"
     return {"name": J_P3_NAME, "status": status, "runs": len(records),
-            "missing_records": missing, "no_rod_reading_runs": no_rod,
+            "runs_judged": len(judged),
+            "runs_by_case": {name: cases.count(name) for name in
+                             (J_P3_JUDGED, J_P3_NO_ROD_READING, *J_P3_DEFECT_CASES)},
+            "missing_records": cases.count(J_P3_DEFECT_NO_RECORD),
+            "no_rod_reading_runs": cases.count(J_P3_NO_ROD_READING),
             "breach_reads": breach_reads,
             "runs_with_breach": sum(bool(sum(record.get("breach_reads") or []))
-                                    for record in present),
+                                    for record in judged),
             "margin_used_reads_flag": total("margin_used_reads"),
             "locked_breach_over_tol_reads_flag": total("locked_breach_over_tol_reads")}
 

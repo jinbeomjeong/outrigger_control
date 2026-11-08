@@ -54,6 +54,8 @@ for _path in (HERE, ROOT / "03_src"):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
+from j_p3_inputs import is_p3_expected, j_p3_over_rows  # noqa: E402
+
 LEGS = ("FL", "FR", "RL", "RR")
 EXCESS_LIMIT_N = 600.0
 """Criteria rev. 6 4.3: lower bound <= truth + 0.6 kN."""
@@ -825,7 +827,9 @@ def replay_case(case_dir: Path, *, with_t5: bool = False,
            **({} if "extend_start_rule" not in stored_settings
               else {"run_extend_start_rule": stored_rule}),
            "extend_start_revision": (replay_settings.get("extend_start_bound") or {}).get(
-               "revision")}
+               "revision"),
+           # criteria revision 9 (j_p3_inputs): a VB / LS run must be in J-P3
+           "p3_expected": is_p3_expected(run_controller_tag(record.result), None)}
     if differences:
         return row
     row.update(t4_0(record))
@@ -887,12 +891,19 @@ def summary(rows: list[dict]) -> dict:
             "anchor_note": "앵커 위험 미관측" if risk == 0 else "앵커 위험 관측"}
 
 
-def j_p3_of(rows: list[dict]) -> dict:
-    """Criteria revision 8 3.2: J-P3 over the rows that ran with the ③ bound (rev7 reports)."""
-    from outrigger_sim.control.extend_start_bound import j_p3_judgement
+def run_controller_tag(result: dict) -> str | None:
+    """Controller tag a Chrono run recorded (``v5_hydraulics.controller_tag``, criteria
+    revision 8 3.1; a top-level ``controller_tag`` is read too)."""
+    return result.get("controller_tag") or (result.get("v5_hydraulics") or {}).get(
+        "controller_tag")
 
-    return j_p3_judgement([row.get("extend_bound_check") for row in rows
-                           if row.get("run_extend_start_rule") == "tracked_bound"])
+
+def j_p3_of(rows: list[dict]) -> dict:
+    """Criteria revision 8 3.2 with the revision 9 table (rev7 reports): every VB / LS row
+    (tag ``final_C4G2_P3``) or ``tracked_bound`` row; a VB / LS row without the own rule is a
+    setting defect. Chrono reads both pressures: every row counts as having rod readings, so
+    a null record is a defect (revision 9 3.2 #2 / #4)."""
+    return j_p3_over_rows(rows)
 
 
 def rev7_summary(rows: list[dict]) -> dict:

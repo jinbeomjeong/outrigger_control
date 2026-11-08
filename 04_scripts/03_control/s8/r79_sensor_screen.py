@@ -342,8 +342,17 @@ class SensorAdapter:
                 sample_t_s=np.asarray(sample_times, float),
                 sample_specific_force_m_s2=forces,
                 sample_angular_rate_rad_s=np.asarray(gyro_samples, float))
-            return self.suite.apply(ideal, samples)
-        return self._deliver_with_end_rate(ideal, forces, sample_times)
+            delivered = self.suite.apply(ideal, samples)
+        else:
+            delivered = self._deliver_with_end_rate(ideal, forces, sample_times)
+        self._count_rod_reading(delivered)
+        return delivered
+
+    def _count_rod_reading(self, delivered) -> None:
+        """Criteria revision 9 3.1: delivered periods with a finite rod reading (record only)."""
+        rod_Pa = delivered.rod_pressure_Pa
+        has_finite = rod_Pa is not None and bool(np.isfinite(np.asarray(rod_Pa, float)).any())
+        self.rod_reading_periods = getattr(self, "rod_reading_periods", 0) + int(has_finite)
 
     def _deliver_with_end_rate(self, ideal, forces, sample_times):
         """L0: the harness angular rate (end of the period) and no gyro samples."""
@@ -1034,7 +1043,25 @@ def _v5_record(options, run: ActiveRun, plant) -> dict:
            "review_record": verdict_runs.review_record_of(run.ctrl)}  # criteria rev. 6 14.5
     if getattr(plant, "lock_events", None) is not None:
         out["lock_window_alignment"] = verdict_runs.lock_window_record(plant, run.ctrl, period)
+    if is_p3_setting(record.get("v5_setting")):
+        out.update(j_p3_run_record(record, getattr(run.adapter, "rod_reading_periods", 0)))
     return out
+
+
+def is_p3_setting(setting: str | None) -> bool:
+    """A VB / LS setting (criteria revision 8 3.1: the ③-on controller)."""
+    return setting is not None and setting.startswith(("VB", "LS"))
+
+
+def j_p3_run_record(record: dict, rod_reading_periods: int) -> dict:
+    """Criteria revision 9 3.2 inputs of a VB / LS run, on the result row whether or not
+    ``R79_T4H_DIR`` writes a record: ``extend_bound_check`` (the plant record of the run),
+    ``has_rod_reading`` (a finite rod reading reached the controller in some period) and
+    ``head_only_declared`` False (the r79 adapter is a two-pressure configuration)."""
+    hydraulics = record.get("hydraulics_record") or {}
+    return {"extend_bound_check": hydraulics.get("extend_bound_check"),
+            "has_rod_reading": rod_reading_periods > 0,
+            "head_only_declared": False}
 
 
 RECONTACT_EVENT_KEYS = ("t_start_s", "t_end_s", "duration_s", "max_normal_N", "max_over_W",

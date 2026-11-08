@@ -67,6 +67,11 @@ T4H_TIME_TOL_S = 1e-9
 SLOW_EVENT_TAIL_S = 3.0
 """Slow event branch: at least to ramp end + 3 s (study A rule, ``s9_soil_event_screen``)."""
 
+HEAD_ONLY_DECLARED_KEY = "head_only_declared"
+"""Criteria revision 9 3.1 declaration (result line and T4h meta): True = the run was set up
+without rod-side readings (steady path, readings ``head``); record only, the commands do not
+change."""
+
 LOGGED_READINGS = ("applied_output_m_s", "head_pressure_Pa", "rod_pressure_Pa",
                    "motor_stroke_m", "seal_band_N")
 """Per-period arrays of ``LoggedController._logged_readings`` (v5 X-10), in that order."""
@@ -478,6 +483,10 @@ def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
     install_plant_options(setting, hydraulics)
     install_logged_controller()
     clip_record = install_harness_command_clip() if clip_command else None
+    # criteria revision 9 3.1: the steady path never gives the controller a rod reading
+    is_head_only = not is_event
+    if t4h is not None:
+        t4h = {**t4h, "meta": {**t4h["meta"], HEAD_ONLY_DECLARED_KEY: is_head_only}}
     if is_event:
         result, series = _run_event(case.twin, contact, t4h)
     else:
@@ -486,6 +495,7 @@ def execute(case: VerdictCase, setting: FlowSetting, decision: str | None,
         result["command_clip"] = asdict(clip_record)
     t_lift_s = ((result.get("values") or {}).get("forces") or {}).get("t_lift_s")
     result.update(plant_options_record(hydraulics, t_lift_s))
+    result[HEAD_ONLY_DECLARED_KEY] = is_head_only
     return result, series
 
 

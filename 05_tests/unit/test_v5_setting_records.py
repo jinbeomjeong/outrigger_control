@@ -131,7 +131,9 @@ def test_j_p3_judgement() -> None:
     breach = {**clean, "breach_reads": [0, 1, 0, 0]}
     assert j_p3_judgement([clean, breach])["status"] == "H-7"
     assert j_p3_judgement([clean, None])["status"] == "setting_defect"
-    assert j_p3_judgement([clean, None], [True, False])["status"] == "pass"
+    # criteria revision 9: no rod reading is "not applicable" only when declared head-only
+    assert j_p3_judgement([clean, None], [True, False], [False, True])["status"] == "pass"
+    assert j_p3_judgement([clean, None], [True, False])["status"] == "setting_defect"
     assert j_p3_judgement([])["status"] == "no_p3_runs"
 
 
@@ -245,7 +247,8 @@ def test_vb_with_the_p3_bound_keeps_the_stored_hash_and_judges_j_p3(tmp_path: Pa
     assert report["hydraulic_options"]["extend_start_tracked"] is True
     assert report["t4h"]["extend_start_rule"] == "tracked_bound"
     assert report["t4h"]["has_rod_reading"] is False and report["extend_bound_check"] is None
-    judgement = j_p3_judgement([None], [False])
+    assert report["head_only_declared"] is True  # criteria revision 9 3.1 (steady path)
+    judgement = j_p3_judgement([None], [False], [report["head_only_declared"]])
     assert judgement["status"] == "pass" and judgement["no_rod_reading_runs"] == 1
 
 
@@ -262,6 +265,8 @@ def test_vb_event_row_with_rod_readings_passes_j_p3(tmp_path: Path) -> None:
     report = run_job(VB_EVENT_JOB, tmp_path)
     assert report["hash"] == VB_EVENT_STORED_HASH
     assert report["t4h"]["has_rod_reading"] is True
+    assert report["head_only_declared"] is False  # event path: two pressures (revision 9)
+    assert report["t4h"]["head_only_declared"] is False
     check = report["extend_bound_check"]
     assert check is not None and sum(check["breach_reads"]) == 0
 

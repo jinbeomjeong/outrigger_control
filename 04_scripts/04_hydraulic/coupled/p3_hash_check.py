@@ -13,7 +13,12 @@ checks per job:
    has no record by construction and is reported as ``no_rod_reading`` (not judged; revision 8
    3.2 reads a missing record as a setting defect, which does not fit these rows: reported);
 5. the rerun has ``controller_tag`` ``final_C4G2_P3`` and its T4h record the two-pressure
-   rule ``tracked_bound`` with bound revision 4.
+   rule ``tracked_bound`` with bound revision 4;
+6. criteria revision 9 3.3: the run falls in the expected row of the revision 9 3.2 table
+   (``extend_start_bound.j_p3_run_case``): R12, R14 .. R16 judged (record, rod reading), the
+   18 steady rows ``no_rod_reading`` (no record, no rod reading, declared head-only: T4h meta
+   ``head_only_declared``, or for lines written before that field the steady path of the case).
+   A #2 / #4 / #5 run is ``setting_defect`` (check 4 fails too).
 
 Read only. Exit code 0 = all 22 pass, 1 = a check failed, 2 = input missing.
 
@@ -41,6 +46,20 @@ EXPECTED_RULE = "tracked_bound"
 EXPECTED_REVISION = 4
 EXPECTED_JOBS = 22
 RUNTIME_JOB_KEYS = ("mask", "t4h_dir")
+ROD_READING_CASES = ("R12", "R14", "R15", "R16")
+"""Criteria revision 9 3.3: the four event-path rows with rod readings (record, breach 0); the
+other 18 rows are head-only steady rows (record null, no rod reading)."""
+
+for _path in (HERE, ROOT / "03_src"):
+    if str(_path) not in sys.path:
+        sys.path.insert(0, str(_path))
+
+from outrigger_sim.control.extend_start_bound import (  # noqa: E402
+    J_P3_DEFECT_CASES,
+    J_P3_JUDGED,
+    J_P3_NO_ROD_READING,
+    j_p3_run_case,
+)
 
 
 def job_key(job: dict) -> str:
@@ -76,6 +95,24 @@ def differing_paths(before, after, path: str = "") -> list[str]:
     return [] if before == after else [path]
 
 
+def head_only_declared(rerun: dict, meta: dict) -> bool:
+    """Criteria revision 9 3.1 declaration of a rerun: the T4h meta ``head_only_declared`` when
+    the run wrote one, else the harness path of its case (steady = head-only, revision 9 3.1;
+    the event path reads both pressures)."""
+    if meta.get("head_only_declared") is not None:
+        return bool(meta["head_only_declared"])
+    if rerun.get("head_only_declared") is not None:
+        return bool(rerun["head_only_declared"])
+    import verdict_cases
+
+    return verdict_cases.CASES[rerun["job"]["case"]].path == verdict_cases.PATH_STEADY
+
+
+def expected_rev9_case(job: dict) -> str:
+    """Revision 9 3.3: R12, R14 .. R16 (event path) judged, the 18 steady rows no rod reading."""
+    return J_P3_JUDGED if job["case"] in ROD_READING_CASES else J_P3_NO_ROD_READING
+
+
 def _t4h_meta(t4h_dir: Path, file_name: str | None) -> tuple[dict | None, bool | None]:
     """(T4h meta, whether the run had a rod-side reading) of a rerun; (None, None) without it."""
     if file_name is None or not (t4h_dir / file_name).is_file():
@@ -106,6 +143,12 @@ def check_pair(stored: dict, rerun: dict, t4h_dir: Path) -> dict:
     else:
         j_p3 = "pass" if breach_reads == 0 else "H-7"
     revision = (settings.get("extend_start_bound") or {}).get("revision")
+    declared = head_only_declared(rerun, meta)
+    run_case = (None if has_rod is None
+                else j_p3_run_case(bound_check, has_rod, declared))
+    expected_case = expected_rev9_case(rerun["job"])
+    if run_case in J_P3_DEFECT_CASES:
+        j_p3 = "setting_defect"
     checks = {
         "1_commands_equal": stored["commands_sha256"] == rerun["commands_sha256"],
         "2_events_equal": (stored.get("event_names") == rerun.get("event_names")
@@ -114,10 +157,13 @@ def check_pair(stored: dict, rerun: dict, t4h_dir: Path) -> dict:
         "4_ext_moving_breach_zero": j_p3 in ("pass", "no_rod_reading"),
         "5_p3_on": (rerun.get("controller_tag") == EXPECTED_TAG
                     and settings.get("extend_start_rule") == EXPECTED_RULE
-                    and revision == EXPECTED_REVISION)}
+                    and revision == EXPECTED_REVISION),
+        "6_rev9_row_case": run_case == expected_case}
     return {"job": rerun["job"], "pass": all(checks.values()), "checks": checks,
             "record_differing_paths": record_paths,
             "ext_moving_breach_reads": breach_reads, "j_p3": j_p3, "has_rod_reading": has_rod,
+            "head_only_declared": declared, "rev9_case": run_case,
+            "rev9_expected_case": expected_case,
             "margin_used_reads": None if bound_check is None
             else sum(bound_check["margin_used_reads"]),
             "commands_sha256": rerun["commands_sha256"]}
@@ -147,7 +193,10 @@ def main() -> int:
               "failed_jobs": [row["job"] for row in rows if not row["pass"]],
               "run_errors": errors, "unmatched": unmatched,
               "j_p3_counts": {status: sum(row["j_p3"] == status for row in rows)
-                              for status in ("pass", "no_rod_reading", "H-7", "missing_record")},
+                              for status in ("pass", "no_rod_reading", "H-7", "missing_record",
+                                             "setting_defect")},
+              "rev9_case_mismatch": [row["job"] for row in rows
+                                     if not row["checks"]["6_rev9_row_case"]],
               "text_only_paths_seen": sorted({p for row in rows
                                               for p in row["record_differing_paths"]}),
               "rows": rows}

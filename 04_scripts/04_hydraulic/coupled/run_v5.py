@@ -371,7 +371,8 @@ def run_one(job: dict) -> dict:
                 "hydraulics_record": result.get("hydraulics_record"),
                 "review_record": result.get("review_record"),
                 **{key: result[key] for key in ("overlap_found", "soil_stop_crawler",
-                                                "lock_window_alignment", "controller_tag")
+                                                "lock_window_alignment", "controller_tag",
+                                                "head_only_declared")
                    if key in result},
                 **({} if t4h is None else {"t4h_file": t4h["path"].name})}
     except Exception as exc:  # the batch goes on; the line records the failure
