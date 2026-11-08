@@ -78,6 +78,34 @@ def test_openloop_fb_rows_change_only_the_lift_speed_and_time(sb, all_batches) -
     assert not fb[0].get("optional") and fb[1]["optional"]
 
 
+def test_openloop_r_rows_add_only_the_soil_damping_override(sb, all_batches) -> None:
+    r9 = _import("run_S9")
+    rows = all_batches[sb.V5_OPENLOOP_R_BATCH]
+    base = {r["case"]: r for r in all_batches[sb.V5_OPENLOOP_V0_BATCH]}["P3a_J1_B_V0"]
+    assert [r["case"] for r in rows] == ["P3a_J1_B_V0_R888k", "P3a_J1_B_V0_R600k", "P3a_J1_B_V0_R300k"]
+    for r, want_r, tok in zip(rows, (887600.0, 600000.0, 300000.0),
+                              ("damping_R=887600", "damping_R=600000", "damping_R=300000"), strict=True):
+        assert r["argv"] == base["argv"] + ["--soil-override", tok]
+        assert r["source_expected_diffs"] == {"soil_override": [tok]}
+        assert r["source_run"] == "batch_V5-OPENLOOP-V0_20261108_123517/P3a_J1_B_V0"
+        assert r["soil_damping_R_Pa_s_m"] == want_r and r["soil_damping_R_base_Pa_s_m"] == 992000.0
+        assert r["threads"] == 4 and r["run_env"] == {"OMP_WAIT_POLICY": "PASSIVE"} and r["planned_pool"] == "pcore"
+        assert "--expect-controller" not in r["argv"] and "--abort-on-limit" in r["argv"]
+        a = r9.build_parser().parse_args(r["argv"][len(sb.RUN):] + ["--case", "x", "--out-root", "x"])
+        assert r9._soil_overrides(a.soil_override) == {"damping_R": want_r}
+        assert (a.action, a.soil, a.threads, a.grid) == ("machine", "J1", 4, 0.01)
+    assert "--soil-override" not in base["argv"]  # V0 row unchanged
+
+
+def test_case_env_adds_row_env_only_when_given(sb) -> None:
+    plain = sb._case_env("pcore")
+    assert plain[sb.PLACEMENT_ENV] == "pcore"
+    env = sb._case_env("pcore", {"OMP_WAIT_POLICY": "PASSIVE"})
+    assert env["OMP_WAIT_POLICY"] == "PASSIVE"
+    assert {k: v for k, v in env.items() if k != "OMP_WAIT_POLICY"} == {
+        k: v for k, v in plain.items() if k != "OMP_WAIT_POLICY"}
+
+
 def test_jp_rows_use_the_live_rigid_vb_arguments(sb, all_batches) -> None:
     vb = all_batches[sb.V5_JP_BATCH]
     v0 = all_batches[sb.V5_JP_V0_BATCH]
