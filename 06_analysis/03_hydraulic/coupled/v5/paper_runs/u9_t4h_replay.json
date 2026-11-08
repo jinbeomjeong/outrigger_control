@@ -1,0 +1,2552 @@
+{
+ "rule": "criteria 9 T4h: zero acting command samples of a locked plant leg, lower - true_force_N > 0.6 kN count (0 = provisional pass); fallback forced on all legs; unlocked tail samples recorded only",
+ "record": "T4h",
+ "extend_start_rule": null,
+ "extend_start_revision": null,
+ "runs": 28,
+ "runs_over": 0,
+ "offset_allowance_runs": 0,
+ "J-P3": {
+  "name": "extend_bound_check.ext_moving.breach_reads == 0",
+  "status": "pass",
+  "runs": 28,
+  "runs_judged": 0,
+  "runs_by_case": {
+   "judged": 0,
+   "no_rod_reading": 28,
+   "defect_rod_reading_without_record": 0,
+   "defect_no_rod_reading_not_declared": 0,
+   "defect_record_without_rod_reading": 0
+  },
+  "missing_records": 0,
+  "no_rod_reading_runs": 28,
+  "breach_reads": 0,
+  "runs_with_breach": 0,
+  "margin_used_reads_flag": 0,
+  "locked_breach_over_tol_reads_flag": 0,
+  "runs_expected": 28,
+  "rule_missing_runs": 0
+ },
+ "rows": [
+  {
+   "file": "R3_e0.001_VB-eta0.8.npz",
+   "samples": 677,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 205,
+    "FR": 254,
+    "RL": 201,
+    "RR": 201
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.0704449999903,
+   "max_excess_vs_window_min_N": 4333.719587839485,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "35c0d3579e70f688ca2792743790853924cb5ccae415c7b5f3d4044824e39a33",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "R3_e0.001_VB-eta0.85.npz",
+   "samples": 666,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 204,
+    "FR": 253,
+    "RL": 202,
+    "RR": 202
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.0704449999903,
+   "max_excess_vs_window_min_N": 5418.893940528869,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999903,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "bf34d99102504fe0f547c2b60a41fca08a3af101ed05992545ec8973953f60af",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "R3_e0.002_VB-eta0.8.npz",
+   "samples": 676,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 209,
+    "FR": 248,
+    "RL": 201,
+    "RR": 201
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.0704449999976,
+   "max_excess_vs_window_min_N": 6334.001077403736,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "b5137ec0c1ce24ce933885572df9c9d639827c3faa20c16f8a5fd7894c43e2cd",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "R3_e0.002_VB-eta0.85.npz",
+   "samples": 665,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 204,
+    "FR": 252,
+    "RL": 201,
+    "RR": 201
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.0704449999903,
+   "max_excess_vs_window_min_N": 5066.551587371941,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999903,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "bc8302ee0e121add605d5cf61cbf158f77912cf8e0b50d20ab96ccf1b45405fe",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "R3_e0.003_VB-eta0.8.npz",
+   "samples": 677,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 204,
+    "FR": 253,
+    "RL": 202,
+    "RR": 202
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.0704449999903,
+   "max_excess_vs_window_min_N": 4958.318775043052,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999903,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "2e91dfc0463073d47f3caf3cde6d61b052d86b88562e935f1137a134c8569fcb",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "R3_e0.003_VB-eta0.85.npz",
+   "samples": 666,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 205,
+    "FR": 251,
+    "RL": 201,
+    "RR": 201
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.0704449999976,
+   "max_excess_vs_window_min_N": 5227.235927895017,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "566a6ed59d53db868f993a042e85dcefe0efb51b6c7f2c18bdd2a9ab6969ffc1",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "R3_e0.0_VB-eta0.8.npz",
+   "samples": 676,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 207,
+    "FR": 249,
+    "RL": 201,
+    "RR": 201
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.0704449999976,
+   "max_excess_vs_window_min_N": 6199.831276973098,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "230b428ddb4dbe2e3f97b5bdc870d48d6498685ba78200fadd188aeae2586418",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "R3_e0.0_VB-eta0.85.npz",
+   "samples": 665,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 204,
+    "FR": 252,
+    "RL": 201,
+    "RR": 201
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.0704449999903,
+   "max_excess_vs_window_min_N": 5174.632455095591,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "48a1645a5298225729c2d9bfe1850a307be31b83ff1ce854bd388e0410c11986",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S2_e0.001_VB-eta0.8.npz",
+   "samples": 754,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 202,
+    "FR": 201,
+    "RL": 202,
+    "RR": 202
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.0704449852637,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "14b9a75893b1dacffc73e6dfc064475816d95c9ddaacdc2a3f040c56352918e2",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S2_e0.001_VB-eta0.85.npz",
+   "samples": 742,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 202,
+    "FR": 201,
+    "RL": 202,
+    "RR": 202
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.070445000005,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.070445000001,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "bba762356b22967b62caef8604fb28e10122c39063ce1e61377ff07c71f28603",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S2_e0.002_VB-eta0.8.npz",
+   "samples": 754,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 202,
+    "FR": 201,
+    "RL": 201,
+    "RR": 201
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.0704449858167,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "ae69d817d862babac08d1ee22c566c71a72c80446f46490947111864b7453356",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S2_e0.002_VB-eta0.85.npz",
+   "samples": 743,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 202,
+    "FR": 201,
+    "RL": 202,
+    "RR": 202
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.070445000005,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.070445000001,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "8aa56d2a1136989692afb21d810d370ea8dd9ecb7e85b3d11b4904a542c5ec49",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S2_e0.003_VB-eta0.8.npz",
+   "samples": 755,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 202,
+    "FR": 201,
+    "RL": 202,
+    "RR": 202
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.0704449852055,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "7a86413c6231d277311911a99c6f19eec93c8b429e01c419cac7c181fa91acaf",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S2_e0.003_VB-eta0.85.npz",
+   "samples": 743,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 202,
+    "FR": 201,
+    "RL": 202,
+    "RR": 202
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.070445000005,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.070445000001,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "1d2f8c7ed40cd11e544b90db54b74c93eec031993e4d362da0d350a4b63452a7",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S2_e0.0_VB-eta0.8.npz",
+   "samples": 754,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 202,
+    "FR": 201,
+    "RL": 202,
+    "RR": 202
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.0704449855693,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.070445000001,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "06227338c0e9ea1f5a648cc925a1d4719c547778503ec873f91913a00c5eaa89",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S2_e0.0_VB-eta0.85.npz",
+   "samples": 743,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 202,
+    "FR": 201,
+    "RL": 202,
+    "RR": 202
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.070445000005,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.070445000001,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "a19bd5eda669177b6c0fec3b7a7d61df34a8c0a6d657f74551b8758820eae6a0",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S3_e0.002_VB-eta0.8.npz",
+   "samples": 757,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 202,
+    "FR": 201,
+    "RL": 201,
+    "RR": 201
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.070445000005,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "19b8be93c8f6682454e475c80f9ccf98f7d99682a4834be356d62cdeb8aed13e",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S3_e0.002_VB-eta0.85.npz",
+   "samples": 788,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 203,
+    "FR": 202,
+    "RL": 201,
+    "RR": 201
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.070445000005,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.070445000001,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "383d702d3a1a524e617d7debdabe93dcb1783cfc3b415e08d5bcab26051c0fea",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S3_e0.0_VB-eta0.8.npz",
+   "samples": 755,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 202,
+    "FR": 201,
+    "RL": 201,
+    "RR": 201
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.070445000005,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "62ac06ef7de31641e124452f1912727bafc5ac713bf4b40ceb2a0e6b98c84db0",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S3_e0.0_VB-eta0.85.npz",
+   "samples": 788,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 202,
+    "FR": 201,
+    "RL": 201,
+    "RR": 201
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.070445000005,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 9,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "c109a7edbba77f82f5e7331ceb89e28a79a28d166a0b4d7d4f9c45a541aeb91d",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S5_e0.001_VB-eta0.8.npz",
+   "samples": 1052,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 265,
+    "FR": 263,
+    "RL": 264,
+    "RR": 286
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.0704449959594,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 11,
+    "FR": 14,
+    "RL": 12,
+    "RR": 10
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.070445000001,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "67bd8d881980148364fc177071121dadc1dbabba855c6ed9540b99b5a8dbf9bb",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S5_e0.001_VB-eta0.85.npz",
+   "samples": 880,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 202,
+    "FR": 201,
+    "RL": 202,
+    "RR": 202
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.0704449999903,
+   "max_excess_vs_window_min_N": -4084.070444992758,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 10,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.070445000001,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "6fce79f0a285c5d641515db12033c93c013800820e89f6d2dfb00f63a403f68d",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S5_e0.002_VB-eta0.8.npz",
+   "samples": 1052,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 265,
+    "FR": 262,
+    "RL": 265,
+    "RR": 286
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.070444992729,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 11,
+    "FR": 14,
+    "RL": 11,
+    "RR": 10
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.070445000001,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "8414648575d1c4e07f1ba82195fe67f524ee24ee57d6ef509adb1a8194ee8262",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S5_e0.002_VB-eta0.85.npz",
+   "samples": 880,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 202,
+    "FR": 201,
+    "RL": 201,
+    "RR": 201
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.0704449899786,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 10,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.070445000001,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "706e2f8138b6690f6b1ab30500dd09ca62bf69abe8558edbe234506db74509ea",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S5_e0.003_VB-eta0.8.npz",
+   "samples": 1051,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 264,
+    "FR": 262,
+    "RL": 265,
+    "RR": 286
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.07044499318,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 11,
+    "FR": 14,
+    "RL": 11,
+    "RR": 10
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "408365a22f39a6957ae201cb47c3a986db22fd4f57826ac927450dcb7c00fd3d",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S5_e0.003_VB-eta0.85.npz",
+   "samples": 888,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 203,
+    "FR": 202,
+    "RL": 201,
+    "RR": 201
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.070444995552,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 10,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.070445000001,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "2d71360692ebadc9a1c937467ce409372396babc6813c2f9726da884635cd157",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S5_e0.0_VB-eta0.8.npz",
+   "samples": 1052,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 265,
+    "FR": 263,
+    "RL": 264,
+    "RR": 285
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.0704449913173,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 11,
+    "FR": 14,
+    "RL": 11,
+    "RR": 10
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.070445000001,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "4da6abb59e3fb9f102a36fb74607edda0883dff179d0549d50ef35d86c455c8c",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  },
+  {
+   "file": "S5_e0.0_VB-eta0.85.npz",
+   "samples": 888,
+   "offset_allowance_N": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "offset_allowance_from_s": null,
+   "offset_allowance_source": "recorded",
+   "judged_samples_by_leg": {
+    "FL": 203,
+    "FR": 202,
+    "RL": 201,
+    "RR": 201
+   },
+   "over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "over_0p6kN": 0,
+   "max_excess_N": -4084.070445000005,
+   "max_excess_vs_window_min_N": -4084.0704449954937,
+   "unlocked_tail_samples_by_leg": {
+    "FL": 8,
+    "FR": 10,
+    "RL": 9,
+    "RR": 9
+   },
+   "unlocked_tail_over_0p6kN_by_leg": {
+    "FL": 0,
+    "FR": 0,
+    "RL": 0,
+    "RR": 0
+   },
+   "unlocked_tail_max_excess_N": -4084.0704449999976,
+   "provisional_pass": true,
+   "settings_equal": true,
+   "commands_sha256": "63fe4c965a162fb7c78d57a748ef473d292671f158213ab8605a044d827d0ccc",
+   "extend_start_revision": 4,
+   "tension_truth": {
+    "rule": "plant p* > p_bB on an unlocked leg with valve > 0, per 1 ms; diagnostic; judged by extend_bound_check",
+    "substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "substeps_over_margin": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "active_substeps": [
+     0,
+     0,
+     0,
+     0
+    ],
+    "max_excess_bar": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "min_p_tr_minus_p_star_bar": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "first_t_s": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "back_pressure_bar": 5.0,
+    "margin_bar": 0.5
+   },
+   "extend_bound_check": null,
+   "p3_expected": true,
+   "has_rod_reading": false,
+   "head_only_declared": true,
+   "run_extend_start_rule": "tracked_bound"
+  }
+ ]
+}

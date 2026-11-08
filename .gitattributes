@@ -4,3 +4,6 @@
 06_analysis/02_control/verif_matrix/d1_selection_rules* -text
 06_analysis/02_control/verif_matrix/u3_u6_rerun_rules* -text
 06_analysis/02_control/verif_matrix/u9_targeted_rules* -text
+06_analysis/02_control/verif_matrix/las_targeted_rules* -text
+# Run records whose SHA-256 is quoted in a judgement document
+06_analysis/03_hydraulic/coupled/v5/las/*.jsonl -text
