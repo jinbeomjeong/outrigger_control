@@ -340,7 +340,8 @@ def _sealed_set(folder: Path, monkeypatch) -> dict[str, Path]:
     their hashes), as the keywords of ``sealed_check``."""
     paths = {}
     for stem, constant in (("fb_targeted_rules", "RULES_SHA256"),
-                           ("fb_targeted_rules_rev1", "RULES_REV1_SHA256")):
+                           ("fb_targeted_rules_rev1", "RULES_REV1_SHA256"),
+                           ("fb_targeted_rules_rev2", "RULES_REV2_SHA256")):
         text = folder / f"{stem}.md"
         text.write_text(f"sealed {stem}", encoding="utf-8")
         digest = ft.file_sha256(text)
@@ -353,7 +354,9 @@ def _sealed_set(folder: Path, monkeypatch) -> dict[str, Path]:
     design.write_text("d", encoding="utf-8")
     return {"rules_path": paths["fb_targeted_rules"], "sha_path": paths["fb_targeted_rules_sha"],
             "rev1_path": paths["fb_targeted_rules_rev1"],
-            "rev1_sha_path": paths["fb_targeted_rules_rev1_sha"], "design_path": design}
+            "rev1_sha_path": paths["fb_targeted_rules_rev1_sha"],
+            "rev2_path": paths["fb_targeted_rules_rev2"],
+            "rev2_sha_path": paths["fb_targeted_rules_rev2_sha"], "design_path": design}
 
 
 def test_sealed_check_passes_the_sealed_set(tmp_path, monkeypatch) -> None:
@@ -618,7 +621,7 @@ def test_main_stops_with_h1_on_an_empty_sha256_file(tmp_path, monkeypatch, capsy
     # sealed_check's defaults are bound at definition: point them at the test set
     monkeypatch.setattr(ft.sealed_check, "__defaults__", (
         paths["rules_path"], paths["sha_path"], paths["design_path"], paths["rev1_path"],
-        paths["rev1_sha_path"]))
+        paths["rev1_sha_path"], paths["rev2_path"], paths["rev2_sha_path"]))
     assert ft.main(["list", "--bundle", "F-0"]) == 2
     assert fj.main(["--out-dir", str(tmp_path)]) == 2
     assert "H-1" in capsys.readouterr().out
@@ -705,6 +708,143 @@ def test_identity_problems_per_bundle_and_f2_stored_lines_apart() -> None:
     assert fj.identity_problems(fj.bundle_identities(f2)) == []
     assert any("저장" in text for text in fj.identity_report(f2, fj.bundle_identities(f2)))
     assert fj.verdict_of([], ["F-1: 2 commits"]) == fj.IDENTITY_VERDICT
+
+
+# ------------------------------------------------------------------------------- rev2
+def test_sealed_check_stops_without_rev2_or_on_a_changed_rev2(tmp_path, monkeypatch) -> None:
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["rev2_sha_path"].unlink()
+    assert ft.sealed_check(**paths) == [f"missing {paths['rev2_sha_path']}"]
+    paths = _sealed_set(tmp_path, monkeypatch)
+    paths["rev2_path"].write_text("changed", encoding="utf-8")
+    problems = ft.sealed_check(**paths)
+    assert len(problems) == 1 and "fb_targeted_rules_rev2.md sha256" in problems[0]
+
+
+def test_rev2_seal_value_is_the_sealed_one() -> None:
+    assert ft.RULES_REV2_SHA256 == (
+        "12ed20ea215fab24b475bc0b05b36fa01afe50aa4ad300b5af1ede441bcaaba0")
+
+
+def _f0_lines(v0_hash: str) -> list[dict]:
+    vb_key, v0_key = ft.F0_KEYS
+    vb_hash = ft.S1_STORED_HASHES[vb_key]
+    return [_identified(_line(name, vb_key, sha=vb_hash)) for name in ("L", "LF-off")] + [
+        _identified(_line(name, v0_key, sha=v0_hash)) for name in ("L", "LF-off")]
+
+
+def test_s1_needs_both_f0_keys_at_the_stored_hash() -> None:
+    v0_key = ft.F0_KEYS[1]
+    assert fj.check_s1(_f0_lines(ft.S1_STORED_HASHES[v0_key]), {})["pass"]
+    result = fj.check_s1(_f0_lines("e" * 64), {})
+    assert not result["pass"] and v0_key in result["problems"][0]
+    stored = {v0_key: _line("b0", v0_key, sha="f" * 64)}
+    assert not fj.check_s1(_f0_lines(ft.S1_STORED_HASHES[v0_key]), stored)["pass"]
+
+
+def test_f0_gate_blocks_on_a_v0_s1_mismatch_that_c7_misses(tmp_path) -> None:
+    import json
+
+    lines = _f0_lines("e" * 64)  # LF-off = L on both keys, VB = stored: C-7 passes
+    stored_t1 = {ft.F0_KEYS[0]: _line("b0", ft.F0_KEYS[0],
+                                      sha=ft.S1_STORED_HASHES[ft.F0_KEYS[0]])}
+    assert fj.check_c7(lines, stored_t1)["pass"]
+    (tmp_path / "fb_F0.jsonl").write_text("".join(json.dumps(x) + "\n" for x in lines),
+                                          encoding="utf-8")
+    reason = ft._check_f0_gate(tmp_path, IDENTITY)
+    assert reason is not None and "S-1" in reason
+    data = _data({"F-0": lines})
+    assert fj.verdict_of([], [], fj.s1_result(data)) == fj.S1_VERDICT
+    assert fj.las_path_text(data, {})[0].startswith("S-1 멈춤")
+
+
+def test_las_path_text_fills_rev2_wording_after_s1_and_c7() -> None:
+    v0_key = ft.F0_KEYS[1]
+    lines = _f0_lines(ft.S1_STORED_HASHES[v0_key])
+    stored = {key: _line("b0", key, sha=digest) for key, digest in ft.S1_STORED_HASHES.items()}
+    data = _data({"F-0": lines}, stored=stored)
+    text = fj.las_path_text(data, fj.bundle_identities(data))
+    assert text[0] == fj.LAS_PATH_TITLE and len(text) == 4
+    assert text[1].startswith("①") and "aaaaaaaaaaaa" in text[1]
+    assert "같았다. C-7(LF-off = L 2/2)은 통과했다." in text[2] and text[3].startswith("③")
+
+
+def _real_geometry():
+    c2 = _c2_or_skip()
+    from outrigger_sim.params import load_params
+
+    return c2.C2Geometry.from_params(load_params(ft.YAML_PATH))
+
+
+def test_budget_without_a_cut_scales_four_full_legs_to_s_nom() -> None:
+    geometry = _real_geometry()
+    nominal = ft.nominal_budget_m3_s(ft.pump_flow_m3_s())
+    state = ft.FbState(nominal, nominal)
+    full = np.full(4, float(geometry.max_speed_m_s))
+    ft.budget_output(state, full, geometry, "touch")
+    # The YAML geometry gives Q(4 v_max) = 57.1900 L/min, so s_nom = 0.8768421; rev2 prints
+    # 0.876840 from the 57.1902 L/min of rules 1.1 (2.1e-6 apart, reported, not hidden).
+    assert state.min_scale == state.nominal_scale
+    assert state.min_scale == pytest.approx(0.8768421, abs=1e-6)
+    assert state.min_scale == pytest.approx(fj.SCALE_NOMINAL_REV2, abs=5e-6)
+    assert state.min_scale_by_phase == {"touch": state.min_scale}
+    state.budget_m3_s = ft.FLOOR_FRACTION * nominal  # a cut down to the floor
+    ft.budget_output(state, full, geometry, "level")
+    assert state.min_scale_by_phase["level"] == pytest.approx(0.5 * state.nominal_scale,
+                                                              abs=1e-12)
+    assert state.min_scale_by_phase["level"] == pytest.approx(0.438420, abs=2e-6)
+    meta = ft.budget_meta(state, ft.CANDIDATES["LF"])
+    assert set(meta["min_scale_by_phase"]) == set(meta["acted_periods"]) == {"touch", "level"}
+
+
+def _budget_line(key: str, by_phase: dict, *, cuts=(), nominal=0.876840,
+                 candidate="LF") -> dict:
+    line = _line(candidate, key)
+    line["fb"]["budget"] = {"cuts": list(cuts), "min_scale": min(by_phase.values(), default=1.0),
+                            "min_scale_by_phase": by_phase, "nominal_scale": nominal,
+                            "acted_periods": {phase: 3 for phase in by_phase},
+                            "Q_b_final_L_min": 50.15}
+    return line
+
+
+def test_scale_report_summary_cuts_and_defect_candidates() -> None:
+    cut = {"t_s": 21.3, "rule": "U", "budget_L_min": 30.0, "delivered_L_min": 31.0}
+    lines = [_budget_line("a", {"touch": 0.87684, "level": 0.9}),
+             _budget_line("b", {"touch": 0.80}),  # below s_nom without a cut
+             _budget_line("c", {"level": 0.5}, cuts=[cut]),
+             _budget_line("d", {"level": 0.43}, cuts=[cut]),  # below the floor
+             _budget_line("e", {"touch": 0.9}, nominal=0.88)]
+    data = _data({"F-1": lines})
+    summary = fj.scale_summary(data)
+    assert any(text.startswith("F-1 level: 실행 3") for text in summary)
+    assert [text.split(":")[0] for text in fj.cut_scale_report(data)] == ["F-1 c", "F-1 d"]
+    assert "U@21.3s" in fj.cut_scale_report(data)[0]
+    defects = fj.defect_report(data)
+    assert [text.split(":")[0] for text in defects] == ["F-1 LF b", "F-1 LF d", "F-1 LF e"]
+    reference = fj.reference_nominal_scale(data)
+    assert reference == 0.876840
+    assert fj.scale_defects(lines[0], reference) == []
+    assert fj.scale_defects(lines[2], reference) == []
+    assert "범위 밖" in fj.level_range_report(data)
+    assert "범위 안" in fj.level_range_report(_data({"F-1": lines[:1]}))
+    ol = _budget_line("o", {"level": 0.87684}, candidate="OL-LF")
+    assert [k for _, k, _ in fj.budget_lines(_data({"F-5": [ol]}))] == ["o"]
+    assert fj.scale_defects(_budget_line("n", {}, nominal=None), reference) == ["s_nom 없음"]
+
+
+def test_a97_counter_is_zero_in_the_period_touch_seen_first_holds() -> None:
+    """rev2 R2-2: touch_seen is read at the end of update k+1."""
+    state = ft.FbState(NOMINAL_M3_S, NOMINAL_M3_S)
+    stroke = np.full(4, 0.1)
+    command = np.full(4, V_MAX_M_S)
+    for k, touch_seen in enumerate((False, False, False, True)):
+        if state.previous is not None:
+            stroke = stroke + 0.95 * state.previous.mean_m_s * PERIOD_S
+        events = ft.detect_step(state, stroke, np.zeros(4), command, "touch", touch_seen,
+                                GEOMETRY, PERIOD_S, k * PERIOD_S)
+        if k == 2:
+            assert state.a97_count == 1
+    assert events == [] and state.a97_count == 0 and state.cuts == []
 
 
 def test_event_count_record_marks_truncation(monkeypatch) -> None:

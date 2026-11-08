@@ -69,9 +69,11 @@ of another identity (H-2) and a line of another identity arriving during the bat
 ``fb.events_total`` / ``events_truncated`` record how many events the run had against the
 first 400 that ``verdict_runs._finish`` stores in ``events``.
 
-Stops (rules 6, rev1 3): H-1 (rules, addendum rev1 or design missing, a ``.sha256`` without a
-value, or the sha256 of the rules or of rev1 is not the sealed one) before any run; H-2:
-F-1 .. F-5 run only after F-0 passed C-7 (``fb_judge.check_c7``); H-3: an error line is
+Stops (rules 6, rev1 3, rev2 R2-5): H-1 (rules, addendum rev1 or rev2 or design missing, a
+``.sha256`` without a value, or the sha256 of the rules, rev1 or rev2 is not the sealed one)
+before any run; H-2:
+F-1 .. F-5 run only after F-0 passed C-7 (``fb_judge.check_c7``) and S-1 of rev2 R2-1 (the L
+hash of both F-0 keys = the stored b0 act hash, ``fb_judge.check_s1``); H-3: an error line is
 retried once, a second error stops the bundle (a run whose plant or controller was not
 captured is an error line); H-4: 5 C-2 violations in a bundle stop it (finished lines stay,
 and the lines already in the file count).
@@ -125,6 +127,19 @@ RULES_SHA256 = "e517b0d08bc46100bb20ec3824de5066cdb8890715f03f3e9a1299437e5dcb89
 RULES_REV1_PATH = RULES_DIR / "fb_targeted_rules_rev1.md"
 RULES_REV1_SHA_PATH = RULES_DIR / "fb_targeted_rules_rev1.sha256"
 RULES_REV1_SHA256 = "0163b6c3f065bd18320c6857c605186112f411ff7c20e02f403bf82a26ba9d63"
+RULES_REV2_PATH = RULES_DIR / "fb_targeted_rules_rev2.md"
+RULES_REV2_SHA_PATH = RULES_DIR / "fb_targeted_rules_rev2.sha256"
+RULES_REV2_SHA256 = "12ed20ea215fab24b475bc0b05b36fa01afe50aa4ad300b5af1ede441bcaaba0"
+"""``fb_targeted_rules_rev2.sha256`` (sealed addendum 2 2026-11-08 19:00:42 +09:00, before any
+run: R2-1 03_src LAS-b and S-1, R2-2 A97 ``touch_seen`` timing, R2-3 s report, R2-5 H-1)."""
+S1_STORED_HASHES = {
+    "D1|H-R-A|rigid+J1@FR|T|diag-op|K1|VB|e0":
+        "aff9b0f10ac54cf8d65e1e220cd832334e29fdfd6b3d54a8a772141a84e4cc5b",
+    "D1|H-R-A|rigid+J1@FR|T|diag-op|K3|V0|e0":
+        "fc2ca22f285097be8ddb151389cebb9f7af26b0b52c6b4d3898c479712d61cc2",
+}
+"""rev2 R2-1 S-1: the stored ``las_T1.jsonl`` b0 act hash of each F-0 key; the 03_src L of
+both keys must reproduce it (a mismatch blocks F-1 .. F-5 as H-2 does)."""
 """``fb_targeted_rules_rev1.sha256`` (sealed addendum 2026-11-08 17:45:04 +09:00: F-4 R2 ->
 R2ra, readings I-1 .. I-8, H-1 extended to rev1)."""
 V5_DIR = ROOT / "06_analysis" / "03_hydraulic" / "coupled" / "v5"
@@ -327,6 +342,10 @@ class FbState:
     cuts: list[Cut] = field(default_factory=list)
     acted_periods: dict[str, int] = field(default_factory=dict)
     min_scale: float = 1.0
+    min_scale_by_phase: dict[str, float] = field(default_factory=dict)
+    """rev2 R2-3: phase (the ``acted_periods`` strings) -> smallest s = Q_b / Q(u) acted."""
+    nominal_scale: float | None = None
+    """rev2 R2-3: s_nom = Q_nom / Q(4 v_max) of the run's geometry (set on the first period)."""
     max_flow_over_budget: float = 0.0
     evaluated_periods: int = 0
     r_min: list[float] = field(default_factory=lambda: [math.inf] * 4)
@@ -460,6 +479,10 @@ def detect_step(state: FbState, stroke_m, force_N, command_m_s, phase: str,
 
 def budget_output(state: FbState, output_m_s: np.ndarray, geometry, phase: str) -> np.ndarray:
     """FB-a on the ramp output: the input object when the budget does not act."""
+    if state.nominal_scale is None:
+        full_flow = command_flow_m3_s(np.full(4, float(geometry.max_speed_m_s)),
+                                      geometry.head_area_m2, geometry.annulus_area_m2)
+        state.nominal_scale = state.nominal_m3_s / full_flow
     flow = command_flow_m3_s(output_m_s, geometry.head_area_m2, geometry.annulus_area_m2)
     state.max_flow_over_budget = max(state.max_flow_over_budget, flow / state.budget_m3_s)
     scale = budget_scale(flow, state.budget_m3_s)
@@ -467,6 +490,7 @@ def budget_output(state: FbState, output_m_s: np.ndarray, geometry, phase: str) 
         return output_m_s
     state.acted_periods[phase] = state.acted_periods.get(phase, 0) + 1
     state.min_scale = min(state.min_scale, scale)
+    state.min_scale_by_phase[phase] = min(state.min_scale_by_phase.get(phase, 1.0), scale)
     return output_m_s * scale
 
 
@@ -481,6 +505,8 @@ def budget_meta(state: FbState | None, params: FbParams) -> dict | None:
     return {"enable": params.enable, "Q_nom_L_min": state.nominal_m3_s * M3_S_TO_L_MIN,
             "Q_b_final_L_min": state.budget_m3_s * M3_S_TO_L_MIN,
             "acted_periods": dict(state.acted_periods), "min_scale": state.min_scale,
+            "min_scale_by_phase": dict(state.min_scale_by_phase),
+            "nominal_scale": state.nominal_scale,
             "max_Q_over_Qb": state.max_flow_over_budget,
             "cuts": [asdict(cut) for cut in state.cuts],
             "evaluated_periods": state.evaluated_periods,
@@ -672,16 +698,19 @@ def file_sha256(path: Path) -> str:
 
 def sealed_check(rules_path: Path = RULES_PATH, sha_path: Path = RULES_SHA_PATH,
                  design_path: Path = DESIGN_PATH, rev1_path: Path = RULES_REV1_PATH,
-                 rev1_sha_path: Path = RULES_REV1_SHA_PATH) -> list[str]:
-    """Problems of H-1 (empty = the sealed rules, the sealed addendum rev1 and the design copy
-    are there; rev1 3 adds the addendum to the original check)."""
-    problems = [f"missing {path}"
-                for path in (rules_path, sha_path, rev1_path, rev1_sha_path, design_path)
-                if not path.exists()]
+                 rev1_sha_path: Path = RULES_REV1_SHA_PATH,
+                 rev2_path: Path = RULES_REV2_PATH,
+                 rev2_sha_path: Path = RULES_REV2_SHA_PATH) -> list[str]:
+    """Problems of H-1 (empty = the sealed rules, the sealed addenda rev1 and rev2 and the
+    design copy are there; rev1 3 and rev2 R2-5 add the addenda to the original check)."""
+    paths = (rules_path, sha_path, rev1_path, rev1_sha_path, rev2_path, rev2_sha_path,
+             design_path)
+    problems = [f"missing {path}" for path in paths if not path.exists()]
     if problems:
         return problems
     problems += _seal_problems(rules_path, sha_path, RULES_SHA256)
     problems += _seal_problems(rev1_path, rev1_sha_path, RULES_REV1_SHA256)
+    problems += _seal_problems(rev2_path, rev2_sha_path, RULES_REV2_SHA256)
     return problems
 
 
@@ -1204,8 +1233,13 @@ def _check_f0_gate(out_dir: Path, current_identity: dict) -> str | None:
     stale = stale_lines(f0_lines, current_identity)
     if stale:
         return f"F-0 lines of another run identity (H-2): {stale[:3]}"
-    result = fb_judge.check_c7(f0_lines, fb_judge.load_stored_reference(LAS_STORED_PATHS[:1]))
-    return None if result["pass"] else f"F-0 C-7 not passed (H-2): {result['problems']}"
+    stored_t1 = fb_judge.load_stored_reference(LAS_STORED_PATHS[:1])
+    result = fb_judge.check_c7(f0_lines, stored_t1)
+    if not result["pass"]:
+        return f"F-0 C-7 not passed (H-2): {result['problems']}"
+    # rev2 R2-1 / R2-5: S-1 blocks like H-2; never fall back to the las_targeted wrapper.
+    s1 = fb_judge.check_s1(f0_lines, stored_t1)
+    return None if s1["pass"] else f"F-0 S-1 not passed (rev2 R2-1, as H-2): {s1['problems']}"
 
 
 def _existing_lines(path: Path) -> list[dict]:
