@@ -1251,8 +1251,12 @@ def test_sd_info_list_on_the_stored_files_is_the_sealed_one(stored_lines) -> Non
 def test_sd_info_gate_passes_on_the_stored_files(stored_lines) -> None:
     """The run gate on the main checkout files (read only): list, file sha256, controller."""
     directory = stored_lines[0]
+    identity = st.run_identity()
+    if identity["sha256"].get("c2.py") != sj.C2_SHA256:
+        pytest.skip("S2D 기각(2026-11-09), 저장 결과 재현 전용: c2.py가 S2D 실행 시점"
+                    "(18f52a60…)과 달라 게이트가 의도대로 거부함")
     inputs = st.Inputs(directory, *(directory for _ in range(7)))
-    assert st.info_gate_problems(inputs, st.run_identity()) == []
+    assert st.info_gate_problems(inputs, identity) == []
 
 
 def _write_stored(directory: Path, sc_lines: list[dict], sd_lines: list[dict],
