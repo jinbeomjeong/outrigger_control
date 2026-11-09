@@ -28,6 +28,8 @@ Inputs (read only):
   - 01_cad/07_faces/instance_faces.csv.gz      convexity of the jack cylinder faces (face_index.py)
   - 01_cad/02_legs/legs/*_10_1.brep            moving part B-rep (volume check)
   - 06_analysis/00_dynamics/pad_tangential_check.json  pad tangential force matrix (dynamics-expert, rev. 18)
+  - 06_analysis/00_dynamics/leg_extension_loads.json   dynamic peak pad reaction P_dyn
+        (A_Pdyn sensitivity; replaced the REXOME33 constant 141 kN on 2026-11-09)
 Outputs:
   - 01_cad/02_legs/leg_rod_lateral_check.json
   - 01_cad/02_legs/leg_rod_lateral_check.png
@@ -83,7 +85,8 @@ ASSUMPTIONS = {
                             "secant k_t = best estimate, YAML k_t = upper bound; between / beyond the simulated "
                             "angles: anchored-pad kinematics scaled per leg to the provisional-boundary vertex",
     "lock_pressure_Pa": 350e5,         # CLAUDE.md: locked cylinder max 350 bar
-    "dynamic_peak_axial_N": 141.0e3,   # dynamics_model.md 3.7: dynamic max pad reaction (levelling on flat floor)
+    # The dynamic peak axial force (was the REXOME33 constant 141 kN here) is read in main() from
+    # 06_analysis/00_dynamics/leg_extension_loads.json, see read_dynamic_peak_axial().
     "reanchor_residual_independent_of_slope": True,  # residual ~ mu * P_stop (3.10.7), used for the sustained phase
     "lock_check_SF": 1.0,              # 350 bar lock (364 kN) is an exceptional load: no yield required
     "criterion_B_peak_SF": 1.0,        # option B (with re-anchoring only): one-off levelling-end peak may reach yield
@@ -135,6 +138,27 @@ def static_cylinder_forces_kn(p: dict) -> np.ndarray:
     bw = dm.body_with_rods(p, geo, "top", e_op)
     Fc, _, _ = dm.static_loads(kn, geo.pad_xy, bw.mass * geo.g, bw.com[:2])
     return np.asarray(Fc, float) - geo.rod_mass * geo.g
+
+
+def read_dynamic_peak_axial() -> tuple[float, dict]:
+    """Dynamic peak axial force [N] for the A_Pdyn sensitivity, and its provenance record.
+
+    The value is the largest dynamic pad reaction of the open-loop lift (dynamics_model.md 3.7),
+    taken as the maximum over the legs of leg_extension_loads.json per-leg peak_pad_force_N.
+    The pad reaction (not the cylinder force F_cyl = F_pad - m_rod g) is chosen on purpose: the
+    static axial force of this script is Npad = Ncyl + W_rod, so the rod and barrel sections are
+    checked with the pad reaction throughout, and max(P_dyn, Npad) compares like with like.
+
+    Raises:
+        leg_extension_peaks.LegExtensionLoadsError: the file or a key is missing.
+    """
+    sys.path.insert(0, str(PROJECT_ROOT / "04_scripts" / "01_dynamics"))
+    from leg_extension_peaks import load_dynamic_peak_pad_force  # noqa: PLC0415
+
+    peak = load_dynamic_peak_pad_force()
+    source = dict(peak.source, max_leg=peak.max_leg, per_leg_N=list(peak.per_leg_N),
+                  replaces="REXOME33 constant 141.0 kN (dynamic_peak_axial_N, removed 2026-11-09)")
+    return peak.max_N, source
 
 
 # ---------------------------------------------------------------------------
@@ -658,7 +682,7 @@ def main():
     SF_req = ASSUMPTIONS["required_yield_safety_factor"]
     P_lock_leg = {leg: geo[leg]["P_lock_N"] for leg in LEG_NAMES}  # rev. 3: 350 bar x head area per leg
     P_lock = max(P_lock_leg.values())
-    P_dyn = ASSUMPTIONS["dynamic_peak_axial_N"]
+    P_dyn, P_dyn_source = read_dynamic_peak_axial()
     stroke = float(p["actuator"]["stroke_m"])
 
     # --- checks against the YAML and the dynamics document ---
@@ -965,8 +989,8 @@ def main():
                 for mat in sy_list:
                     # A: peak lateral (levelling end / dynamic max) with the static axial force, SF >= 1.5
                     row[f"A_{mat}"] = first_fail(direction, mode, lambda i, leg, e, F, m=mat: F <= F_allow(leg, e, float(Npad[i]), m, SF_req), capped)
-                    # A with the dynamic peak axial force 141 kN on every leg (sensitivity)
-                    row[f"A_Pdyn141_{mat}"] = first_fail(direction, mode, lambda i, leg, e, F, m=mat: F <= F_allow(leg, e, max(P_dyn, float(Npad[i])), m, SF_req), capped)
+                    # A with the dynamic peak axial force P_dyn on every leg (sensitivity)
+                    row[f"A_Pdyn_{mat}"] = first_fail(direction, mode, lambda i, leg, e, F, m=mat: F <= F_allow(leg, e, max(P_dyn, float(Npad[i])), m, SF_req), capped)
                     # L: the same lateral force sustained while the locked cylinder reaches 350 bar (364 kN), no yield
                     row[f"L_{mat}"] = first_fail(direction, mode, lambda i, leg, e, F, m=mat: F <= F_allow(leg, e, P_lock_leg[leg], m, SF_lock), capped)
                     row[f"AL_{mat}"] = first_fail(direction, mode, lambda i, leg, e, F, m=mat: F <= F_allow(leg, e, float(Npad[i]), m, SF_req) and F <= F_allow(leg, e, P_lock_leg[leg], m, SF_lock), capped)
@@ -1186,7 +1210,9 @@ def main():
                  "units": "SI unless a key says kN / MPa / deg", "runtime_s": None,
                  "limit_criteria": {
                      "A": "rod yield SF >= 1.5 at the levelling-end / dynamic-max lateral force with the static axial force",
-                     "A_Pdyn141": "as A with axial max(141 kN, static) on every leg (sensitivity)",
+                     "A_Pdyn": f"as A with axial max(P_dyn {P_dyn / 1e3:.2f} kN, static) "
+                               "on every leg (sensitivity; P_dyn from inputs.P_dyn_source, "
+                               "key renamed from A_Pdyn141)",
                      "L": "the same lateral force sustained with the 350 bar lock axial (350 bar x head area of the leg; key names *lock364kN* kept from rev. 2): SF >= 1.0 (no yield)",
                      "AL": "A and L together (no re-anchoring)",
                      "RA_A": "with re-anchoring (3.10.7): peak = levelling end x manoeuvre factor at the run max axial, "
@@ -1200,6 +1226,7 @@ def main():
                    "dynamics": str(PTC_JSON.relative_to(PROJECT_ROOT)), "mu_pad": mu,
                    "kt_yaml_N_m": kt_yaml.tolist(), "k_concrete_N_m": k_conc.tolist(),
                    "pad_force_static_N": Npad.tolist(), "rod_weight_N": W_rod, "P_lock_N": P_lock, "P_dyn_N": P_dyn,
+                   "P_dyn_source": P_dyn_source,
                    "stroke_m": stroke, "P_lock_per_leg_N": P_lock_leg, "cylinders_m": {leg: geo[leg]["dims"] for leg in LEG_NAMES},
                    "static_cylinder_force_basis": static_basis, "cylinder_force_static_N": Ncyl.tolist(),
                    "envelope_rescale": {"applied": rescale, "kt_ptc_N_m": kt_ptc.tolist(), "ptc_cylinders_m": PTC_CYLINDERS_M,

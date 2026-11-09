@@ -3,6 +3,8 @@
 00_docs/01_dynamics/dynamics_model.md revision 10 (section 3.9). Inputs (read only):
   01_cad/04_mast/mast_beam_properties.csv / .json (cad-expert extraction, 00_docs/00_cad/cad_mast_beam.md)
   02_params/rexome33.yaml (through dyn_model), 06_analysis/00_dynamics/reference.json (L1 stiffness / damping)
+  06_analysis/00_dynamics/leg_extension_loads.json (V4 reference peak pad force,
+    read by leg_extension_peaks.py)
 
 Model (all linear, small motion about the levelled static state, body level = world axes):
   * Mast = 3D Euler-Bernoulli frame along body z at the axis x 2.51408, y 0 (mast_axis_reference). Node DoF
@@ -48,6 +50,7 @@ from scipy.optimize import brentq
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import dyn_model as dm  # noqa: E402
+from leg_extension_peaks import load_dynamic_peak_pad_force  # noqa: E402
 
 ROOT = dm.PROJECT_ROOT
 MAST_CSV = ROOT / "01_cad" / "04_mast" / "mast_beam_properties.csv"
@@ -800,6 +803,7 @@ def main():
     p = dm.load_params(); geo = dm.geometry_from_params(p)
     with open(REF_JSON, encoding="utf-8") as f:
         ref = json.load(f)
+    peak = load_dynamic_peak_pad_force()  # read first: a missing file stops before the long run
     mast = load_mast()
     js = mast["json"]
     # boom point mass from the parts table (columns located by header)
@@ -813,7 +817,8 @@ def main():
         "doc": "00_docs/01_dynamics/dynamics_model.md section 3.9 (revision 10)",
         "inputs": ["01_cad/04_mast/mast_beam_properties.csv", "01_cad/04_mast/mast_beam_properties.json",
                    "02_params/rexome33.yaml", "06_analysis/00_dynamics/reference.json",
-                   "01_cad/01_parts/parts_classified.csv (BOOM:1 mass and CoM)"],
+                   "01_cad/01_parts/parts_classified.csv (BOOM:1 mass and CoM)",
+                   "06_analysis/00_dynamics/leg_extension_loads.json (V4 peak pad force)"],
         "frame": "body: x forward, y left, z up; origin = CAD origin; SI; level body = world axes",
         "gravity_m_s2": [0, 0, -geo.g],
         "angles": "roll about +x, pitch about +y (pitch > 0 nose down)",
@@ -1075,7 +1080,12 @@ def main():
                     f"{T_rel:.3f} s (first touch -> crawler off), legs locked; a proxy of the V4 hand-over kinks, not "
                     "the V4 model. IMU C1 accelerometer tilt phi + a_y/g, theta - a_x/g; filter 2 x first order tau 0.5 s")
     dyn["V4_reference_dynamic_deviation_kN"] = 23.2
-    dyn["V4_reference_peak_pad_force_kN"] = 141.0
+    # Peak pad reaction of the open-loop lift (the V4 hand-over the release proxy stands for).
+    # A pad reaction, not a cylinder force: it is set beside the pad force deviations above.
+    # Was the REXOME33 constant 141.0 kN; now from leg_extension_loads.json (source: next key).
+    dyn["V4_reference_peak_pad_force_kN"] = peak.max_N / 1e3
+    dyn["V4_reference_peak_pad_force_source"] = dict(peak.source, max_leg=peak.max_leg,
+                                                     per_leg_kN=[f / 1e3 for f in peak.per_leg_N])
     res["dynamic_top"] = dyn
 
     # ---------------------------------------------------------------- 5. control-band relations

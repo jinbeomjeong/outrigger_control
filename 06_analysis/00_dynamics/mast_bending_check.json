@@ -7,7 +7,8 @@
    "01_cad/04_mast/mast_beam_properties.json",
    "02_params/rexome33.yaml",
    "06_analysis/00_dynamics/reference.json",
-   "01_cad/01_parts/parts_classified.csv (BOOM:1 mass and CoM)"
+   "01_cad/01_parts/parts_classified.csv (BOOM:1 mass and CoM)",
+   "06_analysis/00_dynamics/leg_extension_loads.json (V4 peak pad force)"
   ],
   "frame": "body: x forward, y left, z up; origin = CAD origin; SI; level body = world axes",
   "gravity_m_s2": [
@@ -55,7 +56,7 @@
    "L1": "reference.json L1_rigid_motor_lumped_contact (k, c), beta 1.0 GPa; crawler-on: layout D, tangential 0",
    "flange_joints": "rigid (bolted), as in the extraction"
   },
-  "runtime_s": 404.288
+  "runtime_s": 398.932
  },
  "verification": {
   "hess_offset_vs_dyn_model_hz": 0.0,
@@ -6736,7 +6737,25 @@
   },
   "model": "linear L1 (lifted, top) with/without the flexible mast, modal (< 300 Hz), DOP853 rtol 1e-9 piecewise between kinks. leg_stop: legs extend at v_max and stop at e_op (rear 17.245 s, front 17.696 s from motor start), exact steady ramp state 3 s before the first stop (rigid case reproduces reference.json residual pitch 0.01847 deg). crawler_release_proxy: layout-D crawler floor load (static at legs 0, total = W) applied upward to the lifted body and ramped to 0 over 0.534 s (first touch -> crawler off), legs locked; a proxy of the V4 hand-over kinks, not the V4 model. IMU C1 accelerometer tilt phi + a_y/g, theta - a_x/g; filter 2 x first order tau 0.5 s",
   "V4_reference_dynamic_deviation_kN": 23.2,
-  "V4_reference_peak_pad_force_kN": 141.0
+  "V4_reference_peak_pad_force_kN": 139.12,
+  "V4_reference_peak_pad_force_source": {
+   "file": "06_analysis/00_dynamics/leg_extension_loads.json",
+   "sha256": "6df43a160cdf4ba7e12fd97d45dac7f8ba501a5502ce6326d0a8249ad6faac77",
+   "key": "validation / quasi_static_check (damped 3-DoF) / per_leg / <leg> / peak_pad_force_N",
+   "reduction": "max over FL, FR, RL, RR",
+   "quantity": "pad reaction incl. rod weight (F_pad = F_cyl + m_rod g)",
+   "producer": "04_scripts/01_dynamics/run_leg_extension_loads.py",
+   "producer_params": "02_params/rexome33.yaml",
+   "auger_level": "top",
+   "mass_case": "C",
+   "max_leg": "FL",
+   "per_leg_kN": [
+    139.12,
+    136.085,
+    89.4109,
+    88.0682
+   ]
+  }
  },
  "control_band": {
   "1.5 Hz": {
