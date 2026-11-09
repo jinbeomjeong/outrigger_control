@@ -3,8 +3,9 @@
 Rules: ``06_analysis/02_control/verif_matrix/s2_soil_defer_rules.md`` (control-expert, sealed;
 LF sha256 ``s2_defer_judge.RULES_S2D_SHA256``), its addenda ``s2_soil_defer_rules_rev1.md``
 (``RULES_S2D_REV1_SHA256``), ``s2_soil_defer_rules_rev2.md`` (``RULES_S2D_REV2_SHA256``),
-``s2_soil_defer_rules_rev3.md`` (``RULES_S2D_REV3_SHA256``) and the six A-plan rules files
-it inherits (all checked, SH-1; every line records all ten digests). The rules text wins
+``s2_soil_defer_rules_rev3.md`` (``RULES_S2D_REV3_SHA256``), ``s2_soil_defer_rules_rev4.md``
+(``RULES_S2D_REV4_SHA256``) and the six A-plan rules files it inherits (all checked, SH-1;
+every line records all eleven digests). The rules text wins
 where this code differs. The
 run machinery (LAS-b candidate wrapper, DONE record, diagnosis recorders, pool, job dicts) is
 ``las_revA_targeted``'s; this tool adds the S2D settings wrapper, the S2D trace and the
@@ -34,14 +35,17 @@ Gates before a run (exit 2): SH-1 seals; the run identity (one commit, empty cod
 allowed dirty files, one thread); the LAS-b b0 preset; S-0 passed (same commit and tool
 sha256) before every other bundle; S-C finished (456 lines) and SH-9 passed (rev1 RS1-9:
 the S-C P0 hashes of the 19 keys with a stored ``fb_F3`` / ``fb_F4`` L job dict = the
-stored L hashes) and SH-10 passed (rev3 RS3-4: every S-C hash = the pre-rev2 S-C hash of the
-key, ``--pre-rev2-sc``, default ``<out-dir>/history_pre_rev2/s2d_SC.jsonl``; its sha256 is
-printed) before S-D; the S judgement ``pass`` without an ask before A-S; A-S finished
-before A-P0; job dicts (S-C = ``d1.jsonl``, A-S R-T / R-S = the stored L lines).
+stored L hashes) and SH-10 passed (rev3 RS3-4 / rev4 RS4-3: every S-C hash = the pre-rev2
+S-C hash of the key, a key without a pre-rev2 pair stops; ``--pre-rev2-sc``, default
+``<out-dir>/history_pre_rev2/s2d_SC.jsonl``; its sha256 is printed) before S-D; the S
+judgement ``pass`` without an ask before A-S; A-S finished before A-P0; job dicts (S-C =
+``d1.jsonl``, A-S R-T / R-S = the stored L lines).
 During a batch: identity or controller tag change, a settings mismatch (SH-4) or an S-0
 hash mismatch (SH-2) stops everything; on S-D a K-S1 .. K-S6 problem (K-S3' and K-S6 of
-rev3), on A-S a K-S1 / K-S4 / K-S5 problem stops the bundle (SH-3; K-S4 checks the computed
-and the returned command of every deferral period, rev1 RS1-8); on S-D five pairs with an
+rev3), on A-S a K-S1 / K-S4 / K-S5 / K-S6(A) problem stops the bundle (SH-3; K-S4 checks
+the computed and the returned command of every deferral period, rev1 RS1-8; K-S6(A) of rev4
+RS4-1: no deferral needs the stored revA2 P5r4 hash, a missing stored line is printed as
+undecidable); on S-D five pairs with an
 SC-2 / SC-F / SC-S / pair-level SC-R violation stop it (SH-8, rev1 RS1-6); an error line
 runs once more (SH-5).
 
@@ -456,13 +460,13 @@ def line_problems(record: dict, bundle: str, context: CheckContext) -> tuple[lis
             return [f"S-D {sj.key_of(record)}: no S-C line"], "SH-4"
         return sj.pair_k_problems(record, base, sj.key_of(record) in context.random_keys), "SH-3"
     if bundle == "A-S":
-        rev_entry = rj.rev_of(record)
-        index = (rev_entry["bundle"], rev_entry["label"], rev_entry["key"])
+        index = sj.a_index(record)
         found = sj.k_s4_problems(record) + sj.k_s5_problems(record)
         stored = context.reva2_p5r4.get(index)
         if index in context.k_s1_targets and (
                 stored is None or stored["commands_sha256"] != record["commands_sha256"]):
             found.append(f"K-S1 {index}: hash changed")
+        found += sj.k_s6_a_problems(record, stored)  # rev4 RS4-1, apart from K-S1
         return found, "SH-3"
     return [], ""
 
@@ -487,6 +491,8 @@ def make_checker(context: CheckContext):
                 # rev2 RS2-4: undecidable in the judge, not a stop; shown as the batch runs
                 for text in sj.history_problems(record, is_candidate=True):
                     print(f"SH-4 undecidable (RS2-4) {text}", flush=True)
+            if s2d_entry["bundle"] == "A-S":
+                _note_k_s6_a_unpaired(record, context)
             if s2d_entry["bundle"] == "S-D" and not found:
                 _count_sc_pair(record, context, sc_pairs, state)
         except rj.MissingField as exc:
@@ -497,6 +503,15 @@ def make_checker(context: CheckContext):
             state.stop = f"{kind} {sj.key_of(record)}: {found[:3]}"
 
     return check
+
+
+def _note_k_s6_a_unpaired(record: dict, context: CheckContext) -> None:
+    """rev4 RS4-1: an A-S line without a deferral and without its stored revA2 P5r4 line is
+    undecidable in the judge (SH-4), not a stop; shown as the batch runs."""
+    index = sj.a_index(record)
+    if index not in context.reva2_p5r4 and not sj.need_history(record)[1]:
+        print(f"SH-4 undecidable (RS4-1) K-S6(A) {index}: no stored revA2 P5r4 line",
+              flush=True)
 
 
 def _count_sc_pair(record: dict, context: CheckContext, pairs: set[str], state) -> None:

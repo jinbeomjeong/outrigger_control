@@ -777,32 +777,42 @@ def test_k_s1_coverage_and_rules_fields() -> None:
     assert fields["rules_s2d_rev1_sha256"] == sj.RULES_S2D_REV1_SHA256
     assert fields["rules_s2d_rev2_sha256"] == sj.RULES_S2D_REV2_SHA256
     assert fields["rules_s2d_rev3_sha256"] == sj.RULES_S2D_REV3_SHA256
+    assert fields["rules_s2d_rev4_sha256"] == sj.RULES_S2D_REV4_SHA256
     assert sj.RULES_S2D_REV3_SHA256.startswith("81bb429d")
+    assert sj.RULES_S2D_REV4_SHA256.startswith("5eb3f2f3")
+    assert len(sj.RULES_FIELDS) == len(set(sj.RULES_FIELDS)) == 11
     assert st.rules_block() == fields
     sealed = [entry[0].name for entry in sj.sealed_files()]
-    assert sealed[:4] == ["s2_soil_defer_rules.md", "s2_soil_defer_rules_rev1.md",
-                          "s2_soil_defer_rules_rev2.md", "s2_soil_defer_rules_rev3.md"]
+    assert sealed[:5] == ["s2_soil_defer_rules.md", "s2_soil_defer_rules_rev1.md",
+                          "s2_soil_defer_rules_rev2.md", "s2_soil_defer_rules_rev3.md",
+                          "s2_soil_defer_rules_rev4.md"]
     assert sj.seal_problems() == []
     line = _identified(_line("k", "S-D"))
     assert sj.rules_problems(line) == []
-    for name in ("rules_s2d_rev1_sha256", "rules_s2d_rev2_sha256", "rules_s2d_rev3_sha256"):
+    for name in ("rules_s2d_rev1_sha256", "rules_s2d_rev2_sha256", "rules_s2d_rev3_sha256",
+                 "rules_s2d_rev4_sha256"):
         missing = copy.deepcopy(line)
         del missing["s2d"][name]
         assert sj.rules_problems(missing)
 
 
-def test_sh1_detects_a_changed_rev3(tmp_path) -> None:
-    """SH-1 over a copy of the four S2D rules files: a changed rev3 byte is a seal problem."""
-    for relative in (sj.RULES_RELATIVE, sj.RULES_REV1_RELATIVE, sj.RULES_REV2_RELATIVE,
-                     sj.RULES_REV3_RELATIVE):
+S2D_RULES_RELATIVES = (sj.RULES_RELATIVE, sj.RULES_REV1_RELATIVE, sj.RULES_REV2_RELATIVE,
+                       sj.RULES_REV3_RELATIVE, sj.RULES_REV4_RELATIVE)
+
+
+@pytest.mark.parametrize("changed", [sj.RULES_REV3_RELATIVE, sj.RULES_REV4_RELATIVE])
+def test_sh1_detects_a_changed_rev3_or_rev4(tmp_path, changed: Path) -> None:
+    """SH-1 over a copy of the five S2D rules files: a changed rev3 / rev4 byte is a seal
+    problem."""
+    for relative in S2D_RULES_RELATIVES:
         for suffix in (".md", ".sha256"):
             source = (ROOT / relative).with_suffix(suffix)
             target = (tmp_path / relative).with_suffix(suffix)
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(source.read_bytes())
     assert sj.seal_problems(tmp_path) == []
-    rev3 = tmp_path / sj.RULES_REV3_RELATIVE
-    rev3.write_bytes(rev3.read_bytes() + b"\n")
+    path = tmp_path / changed
+    path.write_bytes(path.read_bytes() + b"\n")
     assert sj.seal_problems(tmp_path)
 
 
@@ -1002,3 +1012,165 @@ def test_sh10_gate_before_s_d_and_judge_output(tmp_path, capsys) -> None:
     summary = json.loads(capsys.readouterr().out.strip().splitlines()[-1])
     assert summary["SH-10"] == sj.STATUS_STOP
     assert summary["pre_rev2_sc_sha256"] == hashlib.sha256(other.read_bytes()).hexdigest()
+
+
+# ------------------------------------------------------------------------------- rev4
+def _a_line(key: str, grid: str, sha: str, *, deferral=None) -> dict:
+    """An identified A-S (P5r4S) line of grid bundle ``grid``."""
+    line = _identified(_line(key, "A-S", sha=sha, deferral=deferral))
+    line["rev"].update(bundle=grid, label="P5r4", candidate=sj.ajudge.JUDGED_CANDIDATE)
+    line["controller_tag"] = line["rev"]["controller_tag"] = "final_C4G2_P3_LAS"
+    line["job"]["setting"] = "VB"
+    return line
+
+
+def _stored_p5r4(key: str, grid: str, sha: str, *, soil: bool = False) -> dict:
+    """A stored revA2 P5r4 line (``soil``: with a soil-mode start, not a K-S1 target)."""
+    return {"rev": {"bundle": grid, "label": "P5r4", "key": key,
+                    "candidate": sj.ajudge.JUDGED_CANDIDATE},
+            "commands_sha256": sha, "event_names": {sj.SOIL_MODE_EVENT: 1} if soil else {}}
+
+
+def test_k_s6_a_no_deferral_needs_the_stored_p5r4_hash_rs4_1() -> None:
+    sha = _sha_of("k")
+    stored_line = _stored_p5r4("k", "R-S", sha, soil=True)
+    same = _a_line("k", "R-S", sha)
+    assert sj.k_s6_a_problems(same, stored_line) == []
+    changed = _a_line("k", "R-S", _sha_of("other"))
+    assert sj.k_s6_a_problems(changed, stored_line) == [
+        "K-S6(A) ('R-S', 'P5r4', 'k'): no deferral but the hash differs from the stored "
+        "revA2 P5r4 line"]
+    short = _a_line("k", "R-S", "a")  # equal but not 64 characters
+    assert sj.k_s6_a_problems(short, {**stored_line, "commands_sha256": "a"})
+    deferred = _a_line("k", "R-S", _sha_of("other"),
+                       deferral=_deferral(20.0, periods=3, reason="loc"))
+    assert sj.k_s6_a_problems(deferred, stored_line) == []
+    assert sj.k_s6_a_problems(changed, None) == []  # undecidable, not a violation
+    unrecorded = copy.deepcopy(changed)
+    unrecorded["s2d"]["soil"]["deferrals"] = None
+    with pytest.raises(sj.rj.MissingField):
+        sj.k_s6_a_problems(unrecorded, stored_line)
+
+
+def test_k_s6_a_check_lists_violations_and_unpaired_lines_rs4_1() -> None:
+    stored = {("R-S", "P5r4", "k1"): _stored_p5r4("k1", "R-S", _sha_of("k1"), soil=True),
+              ("R-Q", "P5r4", "k2"): _stored_p5r4("k2", "R-Q", _sha_of("k2"))}
+    lines = [_a_line("k1", "R-S", _sha_of("changed")), _a_line("k2", "R-Q", _sha_of("k2")),
+             _a_line("k3", "R-T", _sha_of("k3"))]  # k3: no stored line
+    result = sj.k_s6_a_check(lines, stored)
+    assert result["lines"] == 3 and result["without_deferral"] == 3
+    assert result["compared"] == 2 and result["unpaired"] == 1
+    (violation,) = result["violations"]
+    assert violation.startswith("K-S6(A) ('R-S', 'P5r4', 'k1')")
+    assert "K-S6(A) ('R-T', 'P5r4', 'k3'): no stored revA2 P5r4 line (SH-4)" in result[
+        "undecidable"]
+    assert f"K-S6(A) saw 3 of {sj.A_S_LINES} A-S lines" in result["undecidable"]
+
+
+def _stub_a_plan_judge(monkeypatch) -> None:
+    """The A-plan rev2 judge passes (only the S2D part of ``judge_a`` is under test)."""
+    verdict = {sj.ajudge.JUDGED_CANDIDATE: {"verdict": "adopt_recommended"}}
+    monkeypatch.setattr(sj.ajudge, "judge", lambda *args: {
+        "identity": {}, "stops": [], "candidates": verdict, "asks": [],
+        "grid": {"status": sj.STATUS_PASS}})
+    monkeypatch.setattr(sj.ajudge, "identity_problems", lambda lines: {})
+
+
+def test_judge_a_k_s6_a_stops_apart_from_k_s1_rs4_1(monkeypatch) -> None:
+    _stub_a_plan_judge(monkeypatch)
+    reva2 = [_stored_p5r4("k1", "R-S", _sha_of("k1"), soil=True)]
+    lines = [_a_line("k1", "R-S", _sha_of("changed"))]  # R-S soil key: not a K-S1 target
+    result = sj.judge_a(lines, reva2, {}, None, None)
+    assert result["status"] == sj.STATUS_STOP
+    assert result["bits"]["K-S1"] == []
+    (violation,) = result["K-S6(A)"]["violations"]
+    assert violation in result["k_problems"]
+    unpaired = sj.judge_a([_a_line("k9", "R-S", _sha_of("k9"))], reva2, {}, None, None)
+    assert unpaired["status"] == sj.STATUS_UNDECIDABLE and unpaired["k_problems"] == []
+    assert any("no stored revA2 P5r4 line" in text for text in unpaired["undecidable"])
+
+
+def test_k_s6_a_stops_the_a_s_batch_sh3(capsys) -> None:
+    index = ("R-S", "P5r4", "k1")
+    context = st.CheckContext(reva2_p5r4={index: _stored_p5r4("k1", "R-S", _sha_of("k1"),
+                                                              soil=True)})
+    check = st.make_checker(context)
+    same = _a_line("k1", "R-S", _sha_of("k1"))
+    state = SimpleNamespace(stop=None)
+    check(same, "A-S", state, None, None, same["s2d"]["identity"])
+    assert state.stop is None
+    changed = _a_line("k1", "R-S", _sha_of("changed"))
+    check(changed, "A-S", state, None, None, changed["s2d"]["identity"])
+    assert state.stop.startswith("SH-3 k1") and "K-S6(A)" in state.stop
+    unpaired = _a_line("k9", "R-S", _sha_of("k9"))
+    state = SimpleNamespace(stop=None)
+    capsys.readouterr()
+    check(unpaired, "A-S", state, None, None, unpaired["s2d"]["identity"])
+    assert state.stop is None
+    assert "SH-4 undecidable (RS4-1) K-S6(A) ('R-S', 'P5r4', 'k9')" in capsys.readouterr().out
+
+
+def test_k_s3_prime_coverage_rs4_2() -> None:
+    entered = [{"t_s": 20.0, "entered": True}]
+    base = _line("k", "S-C", soil_start=20.0, sha="a", checks=entered,
+                 trace=_deferred_trace(periods=0))
+    full = _line("k", "S-D", sha="b", deferral=_deferral(20.0, periods=3, reason="loc"),
+                 trace=_deferred_trace(periods=3))
+    assert sj.k_s3_prime_coverage(full, base) == sj.COVERAGE_FULL
+    equal = copy.deepcopy(full)
+    equal["commands_sha256"] = "a"
+    assert sj.k_s3_prime_coverage(equal, base) == sj.COVERAGE_FULL
+    partial, partial_base = _rerelease_pair()  # first check 24.0 s, entry 27.5 s
+    assert sj.k_s3_prime_coverage(partial, partial_base) == sj.COVERAGE_PARTIAL
+    assert sj.pair_k_problems(partial, partial_base, is_random=False) == []
+    mismatch = copy.deepcopy(partial)
+    mismatch["s2d"]["trace"]["prefix_sha256"] = "q"  # the recorded part differs: SH-3
+    assert any("commands differ before the entry period" in text
+               for text in sj.pair_k_problems(mismatch, partial_base, is_random=False))
+    unrecorded = copy.deepcopy(full)
+    unrecorded["s2d"]["trace"]["prefix_sha256"] = None
+    assert sj.k_s3_prime_coverage(unrecorded, base) == sj.COVERAGE_UNRECORDED
+    no_deferral = _line("k", "S-D", sha="a")
+    assert sj.k_s3_prime_coverage(no_deferral, base) is None
+    summary = sj.k_s3_prime_summary({"k1": sj.COVERAGE_FULL, "k2": sj.COVERAGE_PARTIAL,
+                                     "k3": sj.COVERAGE_UNRECORDED})
+    assert summary == {"deferred_pairs": 3, "full": 1, "partial": 1, "partial_keys": ["k2"],
+                       "unrecorded": 1, "unrecorded_keys": ["k3"], "substituted": 2,
+                       "substituted_keys": ["k2", "k3"]}
+
+
+def test_judge_s_publishes_the_k_s3_prime_coverage_rs4_2() -> None:
+    sc_lines, sd_lines = _s_lines()
+    base = next(line for line in sc_lines if sj.key_of(line) == "k001")
+    _, partial_base = _rerelease_pair()
+    base["s2d"]["soil"].update(copy.deepcopy(partial_base["s2d"]["soil"]))
+    base["s2d"]["trace"] = copy.deepcopy(partial_base["s2d"]["trace"])
+    base["event_names"] = copy.deepcopy(partial_base["event_names"])
+    cand = sd_lines["k001"]
+    partial, _ = _rerelease_pair()
+    cand["commands_sha256"] = "b"
+    for name in ("soil", "trace"):
+        cand["s2d"][name] = copy.deepcopy(partial["s2d"][name])
+    cand["event_names"] = copy.deepcopy(partial["event_names"])
+    result = sj.judge_s(sc_lines + list(sd_lines.values()))
+    assert result["k_problems"] == []
+    coverage = result["K-S3'_2_coverage"]
+    assert coverage["partial"] == 1 and coverage["partial_keys"] == ["k001"]
+    assert coverage["substituted"] == 1 and coverage["substituted_keys"] == ["k001"]
+    assert coverage["full"] == 0 and coverage["deferred_pairs"] == 1
+    report = sj.report_markdown({"status": result["status"], "asks": [], "seal_problems": [],
+                                 "identity_across_bundles": [], "S-0": sj.judge_s0([]),
+                                 "S-C": sj.sc_census(sc_lines),
+                                 "SH-9": {"status": "incomplete"},
+                                 "SH-10": {"status": "incomplete"}, "S": result,
+                                 "A": {"status": "incomplete"}}, Path("x"))
+    assert "K-S3'_2_coverage" in report and '"partial_keys": ["k001"]' in report
+
+
+def test_sh10_unpaired_new_key_stops_before_s_c_finished_rs4_3() -> None:
+    """rev4 RS4-3: an S-C key without a pre-rev2 pair stops at once (no "paired only")."""
+    sc_lines, reference = _sh10_lines()
+    unpaired = [line for line in reference if sj.key_of(line) != "k002"]
+    result = sj.sh10_check(sc_lines[:150], unpaired)
+    assert result["status"] == sj.STATUS_STOP and result["new_only"] == 1
+    assert result["different"] == []
