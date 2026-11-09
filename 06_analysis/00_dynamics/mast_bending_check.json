@@ -8,7 +8,8 @@
    "02_params/rexome33.yaml",
    "06_analysis/00_dynamics/reference.json (L1 stiffness / damping; quasi_static_events_s cross-check)",
    "01_cad/01_parts/parts_classified.csv (BOOM:1 mass and CoM)",
-   "06_analysis/00_dynamics/leg_extension_loads.json (V4 peak pad force, dynamic deviation, crawler hand-over window)"
+   "06_analysis/00_dynamics/leg_extension_loads.json (V4 peak pad force, dynamic deviation, crawler hand-over window)",
+   "06_analysis/02_control/r8_10hz/d1/r8d1_final.json (R8 C2 levelling crossover)"
   ],
   "frame": "body: x forward, y left, z up; origin = CAD origin; SI; level body = world axes",
   "gravity_m_s2": [
@@ -54,9 +55,10 @@
    "attachments": "top sheave, winch, lower guide rigid on the nearest node; backstay eq. mass 180.9 kg at the upper pivot",
    "mast_damping": "stiffness-proportional, zeta 0.015 at the mast-only first bending mode (CLAUDE.md structure 0.015)",
    "L1": "reference.json L1_rigid_motor_lumped_contact (k, c), beta 1.0 GPa; crawler-on: layout D, tangential 0",
-   "flange_joints": "rigid (bolted), as in the extraction"
+   "flange_joints": "rigid (bolted), as in the extraction",
+   "imu_filter": "2 x first order, tau 0.8 s (R8 C2); tau 0.5 s (R7) kept as *_tau0.5"
   },
-  "runtime_s": 194.921
+  "runtime_s": 196.061
  },
  "verification": {
   "hess_offset_vs_dyn_model_hz": 0.0,
@@ -6338,18 +6340,34 @@
     "max_abs_pad_force_dev_from_quasi_static_N": 16469.1,
     "max_pad_force_N": 133685.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
+     0.000194064,
+     0.133211
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+     0.00010274,
+     0.0271197
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+     5.27603e-05,
+     0.00369144
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+     2.10644e-05,
+     0.000551382
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s_tau0.5 (roll, pitch)": [
      0.00047558,
      0.144922
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s_tau0.5 (roll, pitch)": [
      0.000257697,
      0.0195712
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s_tau0.5 (roll, pitch)": [
      0.000133046,
      0.00664388
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s_tau0.5 (roll, pitch)": [
      5.2577e-05,
      0.00141288
     ],
@@ -6367,18 +6385,34 @@
     "max_abs_pad_force_dev_from_quasi_static_N": 11239.7,
     "max_pad_force_N": 130722.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
+     0.000228263,
+     0.126372
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+     0.000116237,
+     0.0258083
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+     8.99333e-05,
+     0.00139324
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+     6.30675e-05,
+     0.000136422
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s_tau0.5 (roll, pitch)": [
      0.000632159,
      0.126583
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s_tau0.5 (roll, pitch)": [
      0.000292084,
      0.00620009
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s_tau0.5 (roll, pitch)": [
      0.000224028,
      0.000785354
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s_tau0.5 (roll, pitch)": [
      0.000156779,
      0.000349323
     ],
@@ -6401,18 +6435,34 @@
     "max_abs_pad_force_dev_from_quasi_static_N": 13222.5,
     "max_pad_force_N": 128648.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
+     0.000517925,
+     0.129492
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+     0.000189677,
+     0.0282837
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+     0.000121182,
+     0.00234126
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+     8.10473e-05,
+     0.000613723
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s_tau0.5 (roll, pitch)": [
      0.00123809,
      0.135031
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s_tau0.5 (roll, pitch)": [
      0.000454996,
      0.0123896
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s_tau0.5 (roll, pitch)": [
      0.000291472,
      0.00379537
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s_tau0.5 (roll, pitch)": [
      0.00019626,
      0.00155095
     ],
@@ -6435,18 +6485,34 @@
     "max_abs_pad_force_dev_from_quasi_static_N": 11472.2,
     "max_pad_force_N": 130899.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
+     0.000134834,
+     0.123752
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+     9.0184e-05,
+     0.0241191
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+     6.18469e-05,
+     0.00294387
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+     3.68679e-05,
+     0.000775498
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s_tau0.5 (roll, pitch)": [
      0.000312115,
      0.122007
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s_tau0.5 (roll, pitch)": [
      0.000227408,
      0.0128819
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s_tau0.5 (roll, pitch)": [
      0.000158009,
      0.00509297
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s_tau0.5 (roll, pitch)": [
      9.32227e-05,
      0.00196143
     ],
@@ -6469,18 +6535,34 @@
     "max_abs_pad_force_dev_from_quasi_static_N": 11566.5,
     "max_pad_force_N": 131049.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
+     0.000316434,
+     0.125465
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+     0.000129682,
+     0.0265311
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+     0.000103145,
+     0.00144615
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+     6.54056e-05,
+     0.000215684
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s_tau0.5 (roll, pitch)": [
      0.000789533,
      0.124408
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s_tau0.5 (roll, pitch)": [
      0.000329815,
      0.00797619
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s_tau0.5 (roll, pitch)": [
      0.000253224,
      0.00156234
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s_tau0.5 (roll, pitch)": [
      0.000162154,
      0.00054427
     ],
@@ -6503,18 +6585,34 @@
     "max_abs_pad_force_dev_from_quasi_static_N": 7166.7,
     "max_pad_force_N": 125763.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
+     0.000506974,
+     0.126767
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+     8.66957e-05,
+     0.0267435
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+     4.40542e-05,
+     0.00171834
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+     2.86449e-05,
+     0.000903967
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s_tau0.5 (roll, pitch)": [
      0.00133327,
      0.129047
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s_tau0.5 (roll, pitch)": [
      0.000233643,
      0.00858833
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s_tau0.5 (roll, pitch)": [
      9.75787e-05,
      0.00259118
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s_tau0.5 (roll, pitch)": [
      6.34726e-05,
      0.00199149
     ],
@@ -6539,18 +6637,34 @@
     "max_abs_pad_force_dev_from_quasi_static_N": 5316.88,
     "max_pad_force_N": 124553.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
+     0.00195035,
+     0.0112185
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+     0.000379895,
+     0.00234546
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+     2.21068e-05,
+     0.000331458
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+     3.14241e-06,
+     5.0433e-05
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s_tau0.5 (roll, pitch)": [
      0.0019083,
      0.0120431
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s_tau0.5 (roll, pitch)": [
      7.07948e-05,
      0.00175227
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s_tau0.5 (roll, pitch)": [
      1.61675e-05,
      0.000608252
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s_tau0.5 (roll, pitch)": [
      7.86792e-06,
      0.000129177
     ],
@@ -6568,18 +6682,34 @@
     "max_abs_pad_force_dev_from_quasi_static_N": 4114.6,
     "max_pad_force_N": 122928.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
+     0.0020531,
+     0.0106053
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+     0.000403345,
+     0.00223183
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+     4.32816e-05,
+     0.000260333
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+     2.52637e-05,
+     7.04672e-05
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s_tau0.5 (roll, pitch)": [
      0.00217588,
      0.0106636
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s_tau0.5 (roll, pitch)": [
      0.000182926,
      0.0011548
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s_tau0.5 (roll, pitch)": [
      9.52528e-05,
      0.00041218
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s_tau0.5 (roll, pitch)": [
      6.34541e-05,
      0.000178902
     ],
@@ -6602,18 +6732,34 @@
     "max_abs_pad_force_dev_from_quasi_static_N": 4431.47,
     "max_pad_force_N": 123703.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
+     0.00205522,
+     0.0108714
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+     0.000384398,
+     0.00232407
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+     1.63027e-05,
+     0.000170417
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+     6.48212e-06,
+     4.04904e-05
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s_tau0.5 (roll, pitch)": [
      0.0021897,
      0.0110031
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s_tau0.5 (roll, pitch)": [
      9.53314e-05,
      0.000928888
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s_tau0.5 (roll, pitch)": [
      2.1935e-05,
      0.00024785
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s_tau0.5 (roll, pitch)": [
      1.53457e-05,
      0.000102055
     ],
@@ -6636,18 +6782,34 @@
     "max_abs_pad_force_dev_from_quasi_static_N": 3950.73,
     "max_pad_force_N": 123126.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
+     0.00198508,
+     0.0111835
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+     0.000382256,
+     0.00236668
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+     3.95523e-05,
+     0.00041582
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+     1.8698e-05,
+     0.000130271
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s_tau0.5 (roll, pitch)": [
      0.00199333,
      0.012026
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s_tau0.5 (roll, pitch)": [
      0.000109484,
      0.00191841
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s_tau0.5 (roll, pitch)": [
      7.46601e-05,
      0.000854034
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s_tau0.5 (roll, pitch)": [
      4.6965e-05,
      0.000329851
     ],
@@ -6670,18 +6832,34 @@
     "max_abs_pad_force_dev_from_quasi_static_N": 4174.18,
     "max_pad_force_N": 122980.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
+     0.0020627,
+     0.0107912
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+     0.000356771,
+     0.00241438
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+     3.73383e-05,
+     0.000248635
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+     2.18517e-05,
+     6.62966e-05
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s_tau0.5 (roll, pitch)": [
      0.00220881,
      0.0111101
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s_tau0.5 (roll, pitch)": [
      0.000144773,
      0.00118316
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s_tau0.5 (roll, pitch)": [
      7.83968e-05,
      0.000467178
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s_tau0.5 (roll, pitch)": [
      5.43743e-05,
      0.000169162
     ],
@@ -6704,18 +6882,34 @@
     "max_abs_pad_force_dev_from_quasi_static_N": 4283.04,
     "max_pad_force_N": 123323.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
+     0.00205592,
+     0.0106269
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+     0.000377014,
+     0.00226302
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+     1.88079e-05,
+     0.000171396
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+     9.39218e-06,
+     9.85133e-05
+    ],
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s_tau0.5 (roll, pitch)": [
      0.00219314,
      0.0105512
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s_tau0.5 (roll, pitch)": [
      0.000105661,
      0.000785864
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s_tau0.5 (roll, pitch)": [
      3.08196e-05,
      0.000277697
     ],
-    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
+    "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s_tau0.5 (roll, pitch)": [
      2.0446e-05,
      0.000214324
     ],
@@ -6769,26 +6963,40 @@
      "scale": 0.95,
      "T_rel_s": 0.525122,
      "max_abs_pad_force_dev_from_quasi_static_N": 4730.06,
-     "filtered_IMU_pitch_dev_max_deg_after_last_stop+0s": 0.0122357,
+     "filtered_IMU_pitch_dev_max_deg_after_last_stop+0s": 0.0113177,
+     "filtered_IMU_pitch_dev_max_deg_after_last_stop+0s_tau0.5": 0.0122357,
      "raw_IMU_apparent_pitch_dev_max_deg_after_last_stop": 0.382555
     },
     {
      "scale": 1.0,
      "T_rel_s": 0.55276,
      "max_abs_pad_force_dev_from_quasi_static_N": 5316.88,
-     "filtered_IMU_pitch_dev_max_deg_after_last_stop+0s": 0.0120431,
+     "filtered_IMU_pitch_dev_max_deg_after_last_stop+0s": 0.0112185,
+     "filtered_IMU_pitch_dev_max_deg_after_last_stop+0s_tau0.5": 0.0120431,
      "raw_IMU_apparent_pitch_dev_max_deg_after_last_stop": 0.530047
     },
     {
      "scale": 1.05,
      "T_rel_s": 0.580398,
      "max_abs_pad_force_dev_from_quasi_static_N": 6110.59,
-     "filtered_IMU_pitch_dev_max_deg_after_last_stop+0s": 0.0119536,
+     "filtered_IMU_pitch_dev_max_deg_after_last_stop+0s": 0.0111748,
+     "filtered_IMU_pitch_dev_max_deg_after_last_stop+0s_tau0.5": 0.0119536,
      "raw_IMU_apparent_pitch_dev_max_deg_after_last_stop": 0.610187
     }
    ]
   },
-  "model": "linear L1 (lifted, top) with/without the flexible mast, modal (< 300 Hz), DOP853 rtol 1e-9 piecewise between kinks. leg_stop: legs extend at v_max and stop at e_op (rear 17.245 s, front 17.696 s from motor start), exact steady ramp state 3 s before the first stop (rigid case reproduces reference.json residual pitch 0.01847 deg). crawler_release_proxy: layout-D crawler floor load (static at legs 0, total = W) applied upward to the lifted body and ramped to 0 over 0.553 s (first touch -> crawler off), legs locked; a proxy of the V4 hand-over kinks, not the V4 model. IMU C1 accelerometer tilt phi + a_y/g, theta - a_x/g; filter 2 x first order tau 0.5 s",
+  "leg_stop_times_s (FL, FR, RL, RR)": [
+   19.1691,
+   19.1691,
+   18.6816,
+   18.6816
+  ],
+  "leg_stop_rigid_vs_reference_residual": {
+   "reference_key": "lift_V4_compliant_crawler / residual_after_last_stop_linear_L1 (deg, max |dev| over one 1st-rocking period) / roll_pitch_at_0s [1] (pitch, deg)",
+   "reference_pitch_deg": 0.01493,
+   "rigid_L1_true_pitch_dev_max_deg": 0.0149291
+  },
+  "model": "linear L1 (lifted, top) with/without the flexible mast, modal (< 300 Hz), DOP853 rtol 1e-9 piecewise between kinks. leg_stop: legs extend at v_max and stop at e_op (rear 18.682 s, front 19.169 s from motor start), exact steady ramp state 3 s before the first stop (rigid case true pitch deviation 0.01493 deg vs reference.json residual pitch 0.01493 deg). crawler_release_proxy: layout-D crawler floor load (static at legs 0, total = W) applied upward to the lifted body and ramped to 0 over 0.553 s (first touch -> crawler off), legs locked; a proxy of the V4 hand-over kinks, not the V4 model. IMU C1 accelerometer tilt phi + a_y/g, theta - a_x/g; filter 2 x first order tau 0.8 s (R8 C2), tau 0.5 s (R7) in the *_tau0.5 keys",
   "V4_reference_dynamic_deviation_kN": 26.01,
   "V4_reference_dynamic_deviation_source": {
    "file": "06_analysis/00_dynamics/leg_extension_loads.json",
@@ -6831,45 +7039,76 @@
  },
  "control_band": {
   "1.5 Hz": {
-   "filter_gain": 0.0430912,
-   "loop_gain_est (fc/f x filter)": 0.00183856,
-   "samples_per_period_at_20ms": 33.3333
+   "filter_gain": 0.0172864,
+   "loop_gain_est (fc/f x filter)": 0.000375847,
+   "filter_gain_tau0.5": 0.0430912,
+   "loop_gain_est (fc/f x filter)_tau0.5": 0.000936903,
+   "samples_per_period_at_100ms": 6.66667
   },
   "2 Hz": {
-   "filter_gain": 0.0247045,
-   "loop_gain_est (fc/f x filter)": 0.000790545,
-   "samples_per_period_at_20ms": 25.0
+   "filter_gain": 0.0097977,
+   "loop_gain_est (fc/f x filter)": 0.000159769,
+   "filter_gain_tau0.5": 0.0247045,
+   "loop_gain_est (fc/f x filter)_tau0.5": 0.000402851,
+   "samples_per_period_at_100ms": 5.0
   },
   "2.4 Hz": {
-   "filter_gain": 0.0172864,
-   "loop_gain_est (fc/f x filter)": 0.000460971,
-   "samples_per_period_at_20ms": 20.8333
+   "filter_gain": 0.00682439,
+   "loop_gain_est (fc/f x filter)": 9.27364e-05,
+   "filter_gain_tau0.5": 0.0172864,
+   "loop_gain_est (fc/f x filter)_tau0.5": 0.000234904,
+   "samples_per_period_at_100ms": 4.16667
   },
   "2.74 Hz": {
-   "filter_gain": 0.0133161,
-   "loop_gain_est (fc/f x filter)": 0.000311033,
-   "samples_per_period_at_20ms": 18.2482
+   "filter_gain": 0.00524416,
+   "loop_gain_est (fc/f x filter)": 6.24198e-05,
+   "filter_gain_tau0.5": 0.0133161,
+   "loop_gain_est (fc/f x filter)_tau0.5": 0.000158498,
+   "samples_per_period_at_100ms": 3.64964
   },
   "3 Hz": {
-   "filter_gain": 0.0111326,
-   "loop_gain_est (fc/f x filter)": 0.000237495,
-   "samples_per_period_at_20ms": 16.6667
+   "filter_gain": 0.00437837,
+   "loop_gain_est (fc/f x filter)": 4.7598e-05,
+   "filter_gain_tau0.5": 0.0111326,
+   "loop_gain_est (fc/f x filter)_tau0.5": 0.000121024,
+   "samples_per_period_at_100ms": 3.33333
   },
   "3.58 Hz": {
-   "filter_gain": 0.00784358,
-   "loop_gain_est (fc/f x filter)": 0.00014022,
-   "samples_per_period_at_20ms": 13.9665
+   "filter_gain": 0.00307861,
+   "loop_gain_est (fc/f x filter)": 2.80459e-05,
+   "filter_gain_tau0.5": 0.00784358,
+   "loop_gain_est (fc/f x filter)_tau0.5": 7.14544e-05,
+   "samples_per_period_at_100ms": 2.7933
   },
   "3.85 Hz": {
-   "filter_gain": 0.00678923,
-   "loop_gain_est (fc/f x filter)": 0.00011286,
-   "samples_per_period_at_20ms": 12.987
+   "filter_gain": 0.00266306,
+   "loop_gain_est (fc/f x filter)": 2.25589e-05,
+   "filter_gain_tau0.5": 0.00678923,
+   "loop_gain_est (fc/f x filter)_tau0.5": 5.75118e-05,
+   "samples_per_period_at_100ms": 2.5974
   },
   "5 Hz": {
-   "filter_gain": 0.00403649,
-   "loop_gain_est (fc/f x filter)": 5.1667e-05,
-   "samples_per_period_at_20ms": 10.0
+   "filter_gain": 0.00158064,
+   "loop_gain_est (fc/f x filter)": 1.031e-05,
+   "filter_gain_tau0.5": 0.00403649,
+   "loop_gain_est (fc/f x filter)_tau0.5": 2.63288e-05,
+   "samples_per_period_at_100ms": 2.0
   },
-  "note": "loop gain estimate = crossover 0.064 Hz / f (integrating plant) x filter gain; multiply by the resonant IMU participation 1/(2 zeta) x (IMU tilt share) for a mode. 20 ms loop: Nyquist 25 Hz"
+  "crossover_Hz": 0.0326135,
+  "crossover_rad_s": 0.204917,
+  "crossover_source": {
+   "file": "06_analysis/02_control/r8_10hz/d1/r8d1_final.json",
+   "sha256": "b05a9eef68e6a69845b0c090dc40ef9f67f1c9236559a7cf079ee0a74dd6ebdb",
+   "key": "rows[*][1] / C2_tv0.1 / wgc / {phi, theta} (rad/s)",
+   "reduction": "max over the pad-supported rows (support token 'pads') of wgc phi and theta, / 2 pi; crawler-supported rows ('crawler') excluded",
+   "max_row": "top_pads_b1_sup_lower_k0.5-1-1-0.5",
+   "max_axis": "phi",
+   "n_pad_rows": 40,
+   "n_crawler_rows_excluded": 40,
+   "crawler_rows_min_Hz": 0.0170648,
+   "doc": "00_docs/04_control/s6_control_spec.md 132.1 (C2 crossover 0.11 ~ 0.21 rad/s)",
+   "replaces": "R7 constant F_CROSSOVER_HZ 0.064 (Kp 0.4 s^-1 / 2 pi, 50 Hz loop)"
+  },
+  "note": "loop gain estimate = R8 C2 crossover 0.0326 Hz / f (integrating plant) x filter gain; multiply by the resonant IMU participation 1/(2 zeta) x (IMU tilt share) for a mode. R8 C2 100 ms loop: Nyquist 5 Hz (the filter runs on the 100 Hz IMU and is read at the control period)"
  }
 }
