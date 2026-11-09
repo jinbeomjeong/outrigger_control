@@ -4,7 +4,7 @@
 - 부품 표: `01_cad/01_parts/parts_classified.csv`, `01_cad/03_auger/auger_parts.csv`
 - 질량 특성: `01_cad/03_auger/auger_levels.json`
 - 제품 목록: `01_cad/00_step/step_products.csv`
-- 메시: `01_cad/05_meshes/parts_mesh.npz`(BRepMesh, 선형 편차 3 mm, 각 편차 0.5 rad), `render_mesh.npz`(그림용)
+- 메시: `01_cad/05_meshes/parts_mesh.npz`(BRepMesh, 선형 편차 3 mm, 각 편차 0.5 rad), `render_mesh_v5.npz`(그림용, 2026-11-09부터; 옛 `render_mesh.npz`는 `history/`)
 - 파라미터: `02_params/rexome33.yaml`
 
 좌표:
@@ -37,7 +37,7 @@
 - 재실행: `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I 04_scripts/00_cad/analyze_origin_mass_imu.py`
 - 재현성: 두 번 실행해 JSON이 `timings_s`를 빼고 같음을 확인했다.
 - 경우 A/B/C 독립 재합산: 부품 표에서 다시 더한 상부체 질량·무게중심을 `auger_levels.json`(CAD 자세)과 비교했다. 질량 상대차는 1×10⁻⁶(JSON 0.1 kg 반올림)이고, 무게중심 최대차는 0.048 mm(0.1 mm 반올림)다.
-- 주의: `parts_mesh.npz`(`index.json` 순서)는 `parts_classified.csv`와 **행 순서가 다르다.** 스크립트는 `instance_path`로 대응시킨다. `render_mesh.npz`는 표 순서다.
+- 주의: `parts_mesh.npz`(`index.json` 순서)는 `parts_classified.csv`와 **행 순서가 다르다.** 스크립트는 `instance_path`로 대응시킨다. `render_mesh_v5.npz`는 표 순서다.
 
 ## 2. 기체 좌표 원점 후보 (로드맵 S0)
 

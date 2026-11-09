@@ -100,9 +100,12 @@ CACHE_RULES: dict[str, dict] = {
         ],
     },
     "05_meshes": {
-        "description": "Render mesh archive of all parts (world placed), mast sweep files",
+        "description": "Tessellation archive of all parts (world placed), drawing mesh V5, mast sweep files",
         "rules": [
-            ("render_mesh.npz", "analyze_mast.py"),
+            ("render_mesh_v5.*", "build_render_mesh_v5.py"),
+            # Decimated drawing mesh used until 2026-11-08 (analyze_mast.render_meshes, torn faces),
+            # kept for comparison only; no generator any more.
+            ("history/*", ""),
             ("contact_sweep_records.csv", "analyze_mast.py"),
             ("*", "export_meshes.py"),
         ],

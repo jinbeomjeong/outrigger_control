@@ -8,7 +8,7 @@ are for review only.
 Reads (cached, no STEP):
     01_cad/01_parts/parts_classified.csv, origin_mass_imu.json
     01_cad/05_meshes/parts_mesh.npz   full tessellation (3 mm deflection) for the crops/sections
-    01_cad/05_meshes/render_mesh.npz  decimated meshes for the whole-machine views
+    01_cad/05_meshes/render_mesh_v5.npz  drawing mesh for the whole-machine views (build_render_mesh_v5.py)
 
 Writes:
     01_cad/01_parts/imu_c1_overview.png   where C1 is on the machine (side + top, cabin removed)

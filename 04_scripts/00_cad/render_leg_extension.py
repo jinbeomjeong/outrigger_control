@@ -13,7 +13,7 @@ Reads only cached data and the shared parameters (no STEP parsing, values not ha
         superstructure.auger_levels.<level>.{com_m, auger_travel_m}
         contact.rigid_floor.L1.operating_extension_m (only for the reference comparison)
     01_cad/01_parts/parts_classified.csv   part rows (leg, group; auger moving set)
-    01_cad/05_meshes/render_mesh.npz       decimated drawing meshes, same row order
+    01_cad/05_meshes/render_mesh_v5.npz    drawing mesh (build_render_mesh_v5.py), same row order
     compliant V4 reference with the same crawler layout (comparison only):
         06_analysis/00_dynamics/reference.json lift_V4_compliant_crawler, layout marked
         '(YAML contact.crawler.sphere_layout)' with the YAML sphere count; otherwise

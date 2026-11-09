@@ -59,7 +59,7 @@
 2. **기하로 독립 확인:** 바닥 최저점(Y −1050.9)을 가진 크롤러 조립품(`REX33-REX33 - 5J286105`)을 빼고 나면 가장 낮은 하위조립 4개가 정확히 잭 실린더 4개다(Y −712.0 ×2, −699.8 ×2). 그다음은 LOWER GUIDE(−654.7), MAST(−649.0)다.
 3. 네 개 모두 실린더 축이 CAD +Y(수직)이고 네 모서리에 놓였다. 위 보기는 `01_cad/01_parts/layout_views.png`.
    - 같은 3면 구성·축 범위·다리 색·무게중심 표식·지면선을 실제 메시 음영으로 그린 그림: [`01_cad/01_parts/layout_views_rendered.png`](../../01_cad/01_parts/layout_views_rendered.png). 오거는 CAD 위치(Δ 0)다. 다리 4개는 강조를 위해 다른 부품 위에 그렸다(가려져도 보이게).
-   - 재생성(캐시 `01_cad/05_meshes/render_mesh.npz`만 읽음, STEP 불필요, 약 85 s): `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I 04_scripts/00_cad/render_layout_views.py`
+   - 재생성(캐시 `01_cad/05_meshes/render_mesh_v5.npz`만 읽음, STEP 불필요, z-buffer 렌더러 약 20 s; 2026-11-09 전에는 단순화 메시 `render_mesh.npz` + 화가 정렬, 약 85~100 s): `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I 04_scripts/00_cad/render_layout_views.py`
    - 부품 구분용 검은 윤곽선(2026-10-20): 부품별 실루엣·경계 모서리와 인접면 각도 35° 초과 모서리만, 폭 0.4 px. 가려진 선은 면과 같은 깊이 정렬로 지운다. 화면 크기 6 px 미만 부품은 윤곽선을 생략한다. 옵션은 `--no-edges`, `--edge-angle`, `--edge-width-px`, `--edge-min-part-px`.
    - 다리 신장 애니메이션: [`01_cad/02_legs/leg_extension.gif`](../../01_cad/02_legs/leg_extension.gif). 네 다리를 동시에 0 → 680 mm(22.67 mm/s, 30 s) 펴서 패드 접지 → 크롤러 들림까지 보여 준다. 측면·정면 2개 보기, 3배속, 오거 상단. 사건 시각·자세는 `01_cad/02_legs/leg_extension_kinematics.json`에 있다.
      - 재생성(약 100 s): `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I 04_scripts/00_cad/render_leg_extension.py`

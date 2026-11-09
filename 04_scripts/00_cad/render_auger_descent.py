@@ -8,7 +8,7 @@ Reads only cached data (no STEP parsing):
     01_cad/01_parts/cad_summary.json       leg pad centres
     01_cad/03_auger/auger_levels.json      travel of the three levels, moving-part extents,
                                            CoG of case C
-    01_cad/05_meshes/render_mesh.npz       decimated drawing meshes (analyze_mast.render_meshes)
+    01_cad/05_meshes/render_mesh_v5.npz    drawing mesh (build_render_mesh_v5.py, via analyze_mast.render_meshes)
 
 Writes:
     01_cad/03_auger/auger_levels/auger_descent.gif
@@ -41,7 +41,6 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from matplotlib.collections import PolyCollection
 from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
 from PIL import Image
@@ -67,10 +66,10 @@ from analyze_auger_levels import (
     classify,
     project_side,
 )
-from analyze_mast import LEG_ORDER, RENDER_NPZ, render_meshes
+from analyze_mast import LEG_ORDER, RENDER_NPZ, mesh_artist, render_meshes
 from analyze_parts import CLASSIFIED_CSV
 from cad_common import SUMMARY_JSON
-from export_meshes import MESH_INDEX_JSON, load_meshes
+from export_meshes import MESH_INDEX_JSON
 
 GIF_PATH = FIGURE_DIR / "auger_descent.gif"
 LIMITS = ((-3.3, 6.0), (-1.5, 12.2))  # same as the level PNGs (analyze_auger_levels.main)
@@ -81,21 +80,19 @@ AXES_LEFT, AXES_BOTTOM, AXES_WIDTH = 0.105, 0.05, 0.875
 
 
 def load_render_meshes(instance_paths: list[str]):
-    """Decimated drawing meshes (render_mesh.npz) in parts_classified.csv row order.
+    """Drawing meshes (render_mesh_v5.npz, CAD mm) in parts_classified.csv row order.
 
-    The cache is written by analyze_mast / analyze_auger_levels in that row order; it is
-    rebuilt from the tessellation cache when it is older than the mesh index.
+    The cache is written by build_render_mesh_v5.py in that row order (undecimated
+    tessellation, slot-filled perforated plates); analyze_mast.render_meshes rebuilds it from
+    parts_mesh.npz when it is missing or older than the mesh index. Returns (meshes, whether
+    the cache was valid before the call).
     """
     cache_valid = (RENDER_NPZ.exists()
                    and RENDER_NPZ.stat().st_mtime > MESH_INDEX_JSON.stat().st_mtime)
-    meshes = None
-    if not cache_valid:
-        by_path = dict(zip(*load_meshes()))
-        meshes = [by_path[path] for path in instance_paths]
-    render = render_meshes(meshes)
+    render = render_meshes()
     if len(render) != len(instance_paths):
         raise SystemExit(f"render cache has {len(render)} parts, table {len(instance_paths)}; "
-                         "rerun analyze_mast.py")
+                         "rerun build_render_mesh_v5.py --force")
     return render, cache_valid
 
 
@@ -155,9 +152,8 @@ def render_layers(render, motions, pads_body, size, dpi):
     moving_render = [r if m in MOVING else e for r, e, m in zip(render, empty, motions)]
 
     figure, axes = new_axes(size, dpi, transparent=False)
-    polygons, colours = project_side(fixed_render, motions, 0.0)
-    axes.add_collection(PolyCollection(polygons, facecolors=colours, edgecolors="none",
-                                       antialiased=False))
+    polygons, colours, depths = project_side(fixed_render, motions, 0.0)
+    axes.add_collection(mesh_artist(polygons, colours, depths), autolim=False)
     axes.plot(pads_body[:, 0], pads_body[:, 2], ls="none", marker="s", ms=5, mfc=PAD_COLOR, mec=INK,
               zorder=7)
     axes.set_xlabel("x 전방 [m] (= CAD Z)", fontsize=8)
@@ -172,9 +168,8 @@ def render_layers(render, motions, pads_body, size, dpi):
     plt.close(figure)
 
     figure, axes = new_axes(size, dpi, transparent=True)
-    polygons, colours = project_side(moving_render, motions, 0.0)
-    axes.add_collection(PolyCollection(polygons, facecolors=colours, edgecolors="none",
-                                       antialiased=False))
+    polygons, colours, depths = project_side(moving_render, motions, 0.0)
+    axes.add_collection(mesh_artist(polygons, colours, depths), autolim=False)
     moving = to_image(figure)
     plt.close(figure)
     return background, moving, px_per_m

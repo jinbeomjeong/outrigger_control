@@ -40,7 +40,7 @@
 
 - 실행: `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I 04_scripts/00_cad/analyze_auger_levels.py`
 - GIF 재생성(`auger_levels.json`과 렌더 캐시만 읽음, 약 70 s): `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I 04_scripts/00_cad/render_auger_descent.py`. 옵션 `--fps`, `--descent-s`, `--hold-s`, `--width-px`, `--colors`. GIF 쓰기는 matplotlib 의존성인 Pillow를 쓴다(추가 설치 없음)
-- 선행 조건: `analyze_parts.py`, `inspect_mast.py`(BREP 캐시), `export_meshes.py`(메시 캐시), `analyze_mast.py`(렌더 캐시 `render_mesh.npz`)
+- 선행 조건: `analyze_parts.py`, `inspect_mast.py`(BREP 캐시), `export_meshes.py`(메시 캐시), `build_render_mesh_v5.py`(그림용 메시 `render_mesh_v5.npz`, 없으면 `analyze_mast.render_meshes`가 만든다)
 - 쓰는 패키지(trimesh, rtree, scipy, pythonocc, matplotlib)는 모두 `environment.yml`에 있다. `trimesh.ray`(광선 질의)가 쓰는 `rtree=1.4.1`은 이 작업 뒤 `environment.yml`에 추가했다(2026-10-19).
 - 새 산출물은 합계 약 1 MB로 모두 10 MB 미만이다. 새 대용량 캐시는 없다.
 
