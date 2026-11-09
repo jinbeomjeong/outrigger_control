@@ -16,7 +16,9 @@ from __future__ import annotations
 import hashlib
 import math
 import pickle
+import sys
 from dataclasses import replace
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -53,15 +55,25 @@ LOAD_SHAPES = {"defer_loc": (30e3, 0.008), "defer_periods": (60e3, 0.01),
                "rise_large": (80e3, 0.012)}
 """(amplitude N, length m): the release defers then LOC / defers then expires on ``periods`` /
 rises more than 8 kN (no deferral)."""
-PRE_S2D_DIGESTS = {
-    "defer_loc": "df7985a327cfbf2004a1e5d0587611ca216b17bc4239db52894d4fdd887a48f8",
-    "defer_periods": "4f14d08a7274214f74c43feeebaf95159223787814468c5cf032eb4113880260",
-    "rise_large": "cb702649ff52969e2c66c375eee19c7f605a4a5df087c1e8896c6e7dfc581e56",
-    "pinned": "3c710a353e6c952f2131e29a5001c33edcae930dab07399d3b3aabb405ab6f56",
+PRE_S2D_DIGESTS_BY_ENV = {
+    "dynamics-dev": {
+        "defer_loc": "df7985a327cfbf2004a1e5d0587611ca216b17bc4239db52894d4fdd887a48f8",
+        "defer_periods": "4f14d08a7274214f74c43feeebaf95159223787814468c5cf032eb4113880260",
+        "rise_large": "cb702649ff52969e2c66c375eee19c7f605a4a5df087c1e8896c6e7dfc581e56",
+        "pinned": "3c710a353e6c952f2131e29a5001c33edcae930dab07399d3b3aabb405ab6f56",
+    },
+    "Chrono-dev": {
+        "defer_loc": "454d6abfd8036906d96368bed17e3ce57a3c2b218ee39052c3a314e8fa0c908f",
+        "defer_periods": "1cd940325e29ae3d2654b01634fbd882ca136fb20a1a9ce5c32fcae941d699e0",
+        "rise_large": "b357d487e5f245e7fced62c628f94716d2978652f088c10ee3b41a921ac15da9",
+        "pinned": "8d25dc034f653f060cc5db2ffd50d8cb45d1be491b30f964cc18ce06dd3e10e4",
+    },
 }
 """sha256 of the applied commands (``float64`` bytes) and the ``(t_s, name)`` event list of each
 bench with ``soil_config()``, computed with ``git archive 765b9fb 03_src 02_params`` (c2 before
-S2D) in dynamics-dev on 2026-11-09."""
+S2D) on 2026-11-09. The digests depend on the env's BLAS (both envs run numpy 2.5.4 and still
+differ), so they are kept per conda env; other envs skip the comparison with the old code."""
+BENCH_NAMES = ("defer_loc", "defer_periods", "rise_large", "pinned")
 PINNED_START_FRACTION = 0.9
 PINNED_LOAD_RATE_N_M = 0.6e6
 BENCH_LIMIT_S = 60.0
@@ -106,18 +118,29 @@ def bench_digest(bench: SinkBench) -> str:
     return digest.hexdigest()
 
 
-@pytest.mark.parametrize("name", list(PRE_S2D_DIGESTS))
+def pre_s2d_digest(name: str) -> str:
+    """The stored pre-S2D digest of this conda env (skips in an env without stored digests)."""
+    env_name = Path(sys.prefix).name
+    digests = PRE_S2D_DIGESTS_BY_ENV.get(env_name)
+    if digests is None:
+        pytest.skip(f"no pre-S2D bench digests stored for env {env_name!r}")
+    return digests[name]
+
+
+@pytest.mark.parametrize("name", BENCH_NAMES)
 def test_defaults_are_bit_identical_to_the_code_before_s2d(geometry, name) -> None:
     bench, _ = run_bench(geometry, name)
-    assert bench_digest(bench) == PRE_S2D_DIGESTS[name]
+    assert bench_digest(bench) == pre_s2d_digest(name)
 
 
-@pytest.mark.parametrize("name", list(PRE_S2D_DIGESTS))
+@pytest.mark.parametrize("name", BENCH_NAMES)
 def test_explicit_zero_and_the_shadow_record_are_bit_identical(geometry, name) -> None:
+    """Env independent: N_d 0 given explicitly and the shadow record equal the defaults."""
+    default, _ = run_bench(geometry, name)
     zero, _ = run_bench(geometry, name, mode_defer_periods=0)
     shadow, _ = run_bench(geometry, name, mode_defer_shadow=True, **S2D_VALUES)
-    assert bench_digest(zero) == PRE_S2D_DIGESTS[name]
-    assert bench_digest(shadow) == PRE_S2D_DIGESTS[name]
+    assert bench_digest(zero) == bench_digest(default)
+    assert bench_digest(shadow) == bench_digest(default)
     assert event_names(shadow.controller, SOIL_EVENT_MODE_DEFER) == []
 
 
@@ -399,6 +422,7 @@ def test_bench_without_entry_is_unchanged_by_s2d(geometry) -> None:
     The pinned bench is not used here: its rise is constant up to rounding, so the strict
     "falling" condition can hold by a few ulp and the release may defer.
     """
+    default, _ = run_bench(geometry, "rise_large")
     bench, _ = run_bench(geometry, "rise_large", **S2D_VALUES)
     assert bench.controller.meta()["soil"]["defer"]["checks"][0]["entered"] is False
-    assert bench_digest(bench) == PRE_S2D_DIGESTS["rise_large"]
+    assert bench_digest(bench) == bench_digest(default)

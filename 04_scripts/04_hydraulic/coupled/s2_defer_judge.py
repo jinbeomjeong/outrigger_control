@@ -658,7 +658,10 @@ def judge_all(lines: list[dict], reva2_lines: list[dict] | None, stored: dict | 
     else:
         out["A"] = {"status": STATUS_INCOMPLETE, "reason": "revA2 inputs not loaded"}
     statuses = [out["S-0"]["status"], out["S"]["status"], out["A"]["status"]]
-    out["status"] = STATUS_STOP if seals else worst_status(statuses)
+    status = STATUS_STOP if seals else worst_status(statuses)
+    if status == STATUS_PASS and STATUS_INCOMPLETE in statuses:
+        status = STATUS_INCOMPLETE  # a passed part does not stand for a part not yet run
+    out["status"] = status
     out["asks"] = list(out["S"].get("asks") or []) + list(out["A"].get("asks") or [])
     if out["S-C"]["lines"] and not out["S-C"]["Q-S2_holds"]:
         out["asks"].append("SH-6 Q-S2 missed: ask before A-S")
