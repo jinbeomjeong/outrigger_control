@@ -69,7 +69,8 @@ def test_existing_101_case_hashes_and_sets_unchanged(run_s8c) -> None:
     # journal auger table (cad 2026-10-31) appends group JA last (test_c_s8_72.py excludes it too)
     # D-1 C2 (2026-11-08) appends group D1C2 last (excluded the same way)
     order = [c.case_id for c in run_s8c.s8_cases() if c.group not in ("G1", run_s8c.JAUG_GROUP,
-                                                                         run_s8c.S4CONV_GROUP, run_s8c.D1C2_GROUP)]
+                                                                         run_s8c.S4CONV_GROUP, run_s8c.D1C2_GROUP,
+                                                                         run_s8c.D8X_GROUP)]  # D8x 2026-11-10
     assert [c for c in order if c not in C68] == \
         [c for c in order if c in doc["cases"]]
     assert set(order) == set(doc["cases"]) | set(C68)

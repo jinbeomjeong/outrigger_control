@@ -65,12 +65,14 @@ def test_earlier_definitions_unchanged(s8c) -> None:
     new_s8 = set(G1_IDS) | set(s8c.C74_CASE_IDS) | {c.case_id for c in s8c.case_set("jaug")} \
         | {c.case_id for c in s8c.case_set("s4conv")} | set(s8c.V5REC_CASE_IDS)  # v5 stage 3 set v5rec
     new_s8 |= {c.case_id for c in s8c.case_set("d1c2")}  # D-1 C2 (2026-11-08)
+    new_s8 |= {c.case_id for c in s8c.d8x_cases()}  # D8x (2026-11-10, test_d8x_chrono_rows.py)
     g8_sets = (*g8_sets, "d1c1")  # D-1 C1 (2026-11-08): run_S6C set d1c1 came later; excluded the same way
+    g8_sets = (*g8_sets, "d8x_w1")  # D8x (2026-11-10): run_S6C set d8x_w1 came later; excluded the same way
     new_s6 = set(PS7_IDS) | {c.case_id for n in g8_sets for c in s8c.s6c.CASE_SETS[n]()}
     doc = {"s8": {c.case_id: _h(c.to_meta()) for c in s8c.s8_cases()
                   if c.case_id not in new_s8},
            "s8_sets": {n: [c.case_id for c in s8c.case_set(n)] for n in s8c.SET_NAMES
-                       if n not in ("g1", "c74", "c75", "jaug", "s4conv", "v5rec", "d1c2")},
+                       if n not in ("g1", "c74", "c75", "jaug", "s4conv", "v5rec", "d1c2", "d8x_w1", "d8x_w2")},
            "s8_events": {k: _h(v) for k, v in s8c.EVENTS.items()
                          if k not in s8c.G1_EVENT_NAMES},
            "s6": {}, "s6_sets": {},
