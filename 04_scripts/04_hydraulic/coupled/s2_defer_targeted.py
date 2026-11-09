@@ -1,9 +1,10 @@
 """S-2 soil-mode start deferral S2D on the reduced harness: bundles S-0, S-C, S-D, A-S, A-P0.
 
 Rules: ``06_analysis/02_control/verif_matrix/s2_soil_defer_rules.md`` (control-expert, sealed;
-LF sha256 ``s2_defer_judge.RULES_S2D_SHA256``), its addendum ``s2_soil_defer_rules_rev1.md``
-(``RULES_S2D_REV1_SHA256``) and the six A-plan rules files it inherits (all checked, SH-1;
-every line records all eight digests). The rules text wins where this code differs. The
+LF sha256 ``s2_defer_judge.RULES_S2D_SHA256``), its addenda ``s2_soil_defer_rules_rev1.md``
+(``RULES_S2D_REV1_SHA256``) and ``s2_soil_defer_rules_rev2.md`` (``RULES_S2D_REV2_SHA256``)
+and the six A-plan rules files it inherits (all checked, SH-1; every line records all nine
+digests). The rules text wins where this code differs. The
 run machinery (LAS-b candidate wrapper, DONE record, diagnosis recorders, pool, job dicts) is
 ``las_revA_targeted``'s; this tool adds the S2D settings wrapper, the S2D trace and the
 ``s2d`` block (``s2_defer_judge`` module docstring).
@@ -56,6 +57,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import subprocess
 import sys
 import time
@@ -88,9 +90,9 @@ DEFER_FIELDS = ("mode_defer_periods", "mode_defer_stroke_m", "mode_defer_rise_fa
                 "mode_defer_shadow")
 TRACE_ATTRIBUTE = "_s2d_trace"
 LOAD_TRACE_LEAD_S = 0.2
-LOAD_TRACE_SPAN_S = 2.7
-"""Load trace from the first entry evaluation - 0.2 s for 2.7 s: the deferral (<= 0.5 s)
-and the 1 s after it (SC-T (d)) with room on both sides."""
+"""Load trace from the first entry evaluation - 0.2 s to the end of the run: every deferral of
+the run (rev2 RS2-3: SC-T (d) per expired deferral, a later one after a LOC revocation too) and
+the 1 s after it, on the S2D line and on the P0 line of the same key."""
 
 
 # ------------------------------------------------------------------------------- S2D trace
@@ -180,7 +182,7 @@ def _note_period(controller, trace: _Trace, before: _SoilSnapshot, t_s: float, c
     deferral = None if soil is None else soil.defer
     if deferral is not None and (deferral.is_active or deferral.end_s == t_s):
         trace.defer_rows.append({
-            "t_s": t_s, "active": deferral.is_active,
+            "t_s": t_s, "deferral_start_s": deferral.start_s, "active": deferral.is_active,
             "in_zone": bool(controller._state.in_crawler_zone),
             "min_command_m_s": float(speeds.min()),
             "min_computed_m_s": float(computed_speeds(controller).min()),
@@ -340,7 +342,7 @@ def _install_all(entry: dict) -> None:
 
 def load_trace(plant, t_start_s: float | None) -> dict | None:
     """Smallest true leg force (1 ms plant rows) per control period ``(t - 0.1, t]`` from
-    ``t_start_s - LOAD_TRACE_LEAD_S`` for ``LOAD_TRACE_SPAN_S``."""
+    ``t_start_s - LOAD_TRACE_LEAD_S`` to the period holding the last plant row."""
     from harness_flow import COLUMN, TRUE_FORCE
 
     if t_start_s is None:
@@ -351,7 +353,7 @@ def load_trace(plant, t_start_s: float | None) -> dict | None:
     t = rows[:, COLUMN["t"]]
     smallest = rows[:, TRUE_FORCE].min(axis=1)
     t0_s = round(t_start_s - LOAD_TRACE_LEAD_S, 10)
-    periods = round(LOAD_TRACE_SPAN_S / sj.PERIOD_S)
+    periods = max(0, math.ceil((float(t[-1]) - t0_s) / sj.PERIOD_S - sj.TIME_TOLERANCE_S))
     out = []
     for index in range(periods + 1):
         t_end_s = round(t0_s + index * sj.PERIOD_S, 10)
@@ -379,6 +381,8 @@ def s2d_block(entry: dict, job: dict, controller, plant, identity: dict) -> dict
                      "soil_mode_start_stroke_m": soil_meta.get("soil_mode_start_stroke_m"),
                      "t_loc_s": soil_meta.get("t_loc_s"), "t_P_s": soil_meta.get("t_P_s"),
                      "push_m": soil_meta.get("push_m"), "defer": soil_meta.get("defer"),
+                     "mode_starts": soil_meta.get("mode_starts"),
+                     "deferrals": soil_meta.get("deferrals"),
                      "r4c30": bool(margin.get("flat_soil_margin_applied"))},
             "trace": trace.to_record(),
             "load_trace": load_trace(plant, trace.first_check_t_s or trace.t_rel_s)}
@@ -475,6 +479,10 @@ def make_checker(context: CheckContext):
             return
         try:
             found, kind = line_problems(record, s2d_entry["bundle"], context)
+            if s2d_entry["bundle"] in ("S-D", "A-S"):
+                # rev2 RS2-4: undecidable in the judge, not a stop; shown as the batch runs
+                for text in sj.history_problems(record, is_candidate=True):
+                    print(f"SH-4 undecidable (RS2-4) {text}", flush=True)
             if s2d_entry["bundle"] == "S-D" and not found:
                 _count_sc_pair(record, context, sc_pairs, state)
         except rj.MissingField as exc:

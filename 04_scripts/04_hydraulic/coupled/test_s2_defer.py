@@ -82,16 +82,35 @@ def test_trace_recorder_keeps_the_commands_and_records_the_deferral(geometry, in
     for earlier, later in zip(rows[:-1], rows[1:], strict=True):
         assert later["min_command_m_s"] == earlier["min_computed_m_s"]
     assert check["rise_delta_N"] == check["rise_N"] - check["prev_rise_N"]
-    assert sj.k_s4_problems(_trace_line(controller, trace)) == []
+    line = _trace_line(controller, trace)
+    assert {row["deferral_start_s"] for row in trace["defer_rows"]} == {check["t_s"]}
+    assert sj.history_problems(line, is_candidate=True) == []
+    assert sj.k_s4_problems(line) == [] and sj.k_s5_problems(line) == []
+    (deferral,) = line["s2d"]["soil"]["deferrals"]
+    assert deferral["rise_delta_N"] == check["rise_delta_N"]
+    (start,) = line["s2d"]["soil"]["mode_starts"]
+    assert start == {"t_s": deferral["end_s"], "push_base_stroke_m": deferral["start_stroke_m"],
+                     "source": "expiry"}
 
 
 def _trace_line(controller: c2.C2Controller, trace: dict) -> dict:
-    """A judge line around a bench controller's meta and trace record."""
+    """A judge line around a bench controller's meta, events and trace record."""
     soil = controller.meta()["soil"]
-    return {"rev": {"key": "bench"}, "event_names": {sj.DEFER_EVENT: 1},
+    return {"rev": {"key": "bench"}, "event_names": _event_counts(controller),
             "s2d": {"soil": {"t_S_s": soil["soil_mode_t_s"], "defer": soil["defer"],
-                             "soil_mode_start_stroke_m": soil["soil_mode_start_stroke_m"]},
+                             "soil_mode_start_stroke_m": soil["soil_mode_start_stroke_m"],
+                             "mode_starts": soil["mode_starts"],
+                             "deferrals": soil["deferrals"]},
                     "trace": trace}}
+
+
+def _event_counts(controller: c2.C2Controller) -> dict:
+    """``event_names`` as ``run_m1.event_names`` counts them (name before the first colon)."""
+    counts: dict = {}
+    for event in controller.events:
+        name = event.name.split(":")[0]
+        counts[name] = counts.get(name, 0) + 1
+    return counts
 
 
 def test_computed_speeds_reads_the_queue_without_changing_it() -> None:
@@ -161,6 +180,8 @@ def test_load_trace_takes_the_smallest_leg_force_per_period() -> None:
     assert trace["t0_s"] == pytest.approx(1.3)
     assert values[1.6] == 5e4
     assert values[1.5] == pytest.approx(1e5 + 1.401e3)  # first row of (1.4, 1.5]
+    assert max(values) == pytest.approx(3.0)  # to the last plant row (rev2: every deferral)
+    assert len(values) == round((3.0 - 1.3) / 0.1) + 1
     assert st.load_trace(plant, None) is None
 
 
@@ -180,18 +201,59 @@ def test_bundle_jobs_counts_and_entries() -> None:
 
 
 # ------------------------------------------------------------------------------- judge
+START_STROKE_M = 0.37
+
+
+def _start(t_s: float, push_base_stroke_m: float = START_STROKE_M,
+           source: str = "release") -> dict:
+    """One ``soil.mode_starts`` entry (rev2 RS2-1)."""
+    return {"t_s": t_s, "push_base_stroke_m": push_base_stroke_m, "source": source}
+
+
+def _deferral(start_s: float, periods: int = 5, reason: str | None = "periods",
+              start_stroke_m: float = START_STROKE_M) -> dict:
+    """One ``soil.deferrals`` entry; ``reason`` None = never ended."""
+    end_s = None if reason is None else round(start_s + 0.1 * periods, 10)
+    return {"start_s": start_s, "start_stroke_m": start_stroke_m, "periods": periods,
+            "end_s": end_s, "end_reason": reason, "rise_delta_N": -100.0}
+
+
+def _history(soil_start, deferrals: list[dict]) -> list[dict]:
+    """The start history the controller leaves: an ``expiry`` start per expired deferral, or
+    a ``release`` start at ``soil_start`` when no deferral expired."""
+    starts = [_start(deferral["end_s"], deferral["start_stroke_m"], "expiry")
+              for deferral in deferrals if sj.is_expired(deferral)]
+    if not starts and soil_start is not None:
+        starts = [_start(soil_start)]
+    return starts
+
+
 def _line(key: str, bundle: str, *, soil_start=None, sha="a", checks=(), deferral=None,
-          trace=None, d1=None, loc=None, group="H-S-0") -> dict:
+          trace=None, d1=None, loc=None, group="H-S-0", starts=None, deferrals=None) -> dict:
+    """A judge line; the histories (and their event counts) follow ``soil_start`` and
+    ``deferral`` unless ``starts`` / ``deferrals`` are given."""
+    if deferrals is None:
+        deferrals = [] if deferral is None else [deferral]
+    if starts is None:
+        starts = _history(soil_start, deferrals)
+    events = {}
+    if starts:
+        events[sj.SOIL_MODE_EVENT] = len(starts)
+    if deferrals:
+        events[sj.DEFER_EVENT] = len(deferrals)
+    last_deferral = deferrals[-1] if deferrals else None
     return {"commands_sha256": sha, "final_phase": "ready",
             "job": {"d1": {"group": group}},
             "rev": {"key": key, "bundle": bundle, "label": "P0"},
-            "event_names": {}, "d1": d1 or {"verdict": "pass", "fail_items": [],
-                                           "items": {}, "t_ready_s": 50.0,
-                                           "F_judged_min_N": 2e4, "stroke_max_m": 0.4},
+            "event_names": events, "d1": d1 or {"verdict": "pass", "fail_items": [],
+                                               "items": {}, "t_ready_s": 50.0,
+                                               "F_judged_min_N": 2e4, "stroke_max_m": 0.4},
             "s2d": {"bundle": bundle, "soil": {"t_S_s": soil_start, "t_loc_s": loc,
                                                "soil_mode_start_stroke_m": None,
+                                               "mode_starts": starts, "deferrals": deferrals,
                                                "defer": {"checks": list(checks),
-                                                         "deferral": deferral, "shadow": None}},
+                                                         "deferral": last_deferral,
+                                                         "shadow": None}},
                     "trace": trace or {"t_rel_s": None, "first_check_t_s": None,
                                        "prefix_sha256": None, "defer_rows": []},
                     "load_trace": None}}
@@ -244,111 +306,251 @@ def test_pair_k_problems() -> None:
     assert any(text.startswith("K-S1") for text in found)
 
 
+def test_k_s3_first_entry_at_the_p0_first_soil_start_rs2_3() -> None:
+    """rev2 RS2-3: the first deferral entry must be the P0 first soil-mode start."""
+    deferred = _line("k", "S-D", sha="b", deferral=_deferral(20.0, reason="loc"),
+                     trace=_deferred_trace(periods=5))
+    base = _line("k", "S-C", soil_start=20.0, checks=[{"t_s": 20.0, "entered": True}],
+                 trace=_deferred_trace(periods=0))
+    assert sj.k_s3_entry_problems(deferred, base) == []
+    later = _line("k", "S-C", starts=[_start(20.1)])
+    (problem,) = sj.k_s3_entry_problems(deferred, later)
+    assert problem.startswith("K-S3 k: first deferral entry 20.0 s != P0 first")
+    no_start = _line("k", "S-C")
+    assert sj.k_s3_entry_problems(deferred, no_start)  # P0 never started a soil mode
+    unrecorded = _line("k", "S-C", soil_start=20.0)
+    unrecorded["s2d"]["soil"]["mode_starts"] = None  # undecidable (RS2-4 1), not K-S3
+    assert sj.k_s3_entry_problems(deferred, unrecorded) == []
+
+
 def test_k_s4_and_k_s5() -> None:
-    rows = [{"t_s": 20.0, "active": True, "in_zone": True, "min_command_m_s": 0.0,
-             "min_computed_m_s": 0.0},
-            {"t_s": 20.1, "active": True, "in_zone": False, "min_command_m_s": -1e-3,
-             "min_computed_m_s": 0.0},
-            {"t_s": 20.2, "active": False, "in_zone": False, "min_command_m_s": -1.0,
-             "min_computed_m_s": -1.0}]
-    line = _line("k", "S-D", trace={"defer_rows": rows})
+    rows = [{"t_s": 20.0, "deferral_start_s": 20.0, "active": True, "in_zone": True,
+             "min_command_m_s": 0.0, "min_computed_m_s": 0.0},
+            {"t_s": 20.1, "deferral_start_s": 20.0, "active": True, "in_zone": False,
+             "min_command_m_s": -1e-3, "min_computed_m_s": 0.0},
+            {"t_s": 20.2, "deferral_start_s": 20.0, "active": False, "in_zone": False,
+             "min_command_m_s": -1.0, "min_computed_m_s": -1.0}]
+    line = _line("k", "S-D", deferral=_deferral(20.0, periods=2, reason="loc"),
+                 trace={"defer_rows": rows})
     assert len(sj.k_s4_problems(line)) == 2
-    deferral = {"start_s": 20.0, "end_s": 20.5, "end_reason": "periods", "periods": 5,
-                "start_stroke_m": 0.37}
-    expired = _line("k", "S-D", soil_start=20.5, deferral=deferral)
-    expired["s2d"]["soil"]["soil_mode_start_stroke_m"] = 0.37
+    expired = _line("k", "S-D", deferral=_deferral(20.0))
+    assert expired["s2d"]["soil"]["mode_starts"] == [_start(20.5, 0.37, "expiry")]
     assert sj.k_s5_problems(expired) == []
-    expired["s2d"]["soil"]["soil_mode_start_stroke_m"] = 0.376
-    assert len(sj.k_s5_problems(expired)) == 1
+    other_base = copy.deepcopy(expired)
+    other_base["s2d"]["soil"]["mode_starts"][0]["push_base_stroke_m"] = 0.376
+    (problem,) = sj.k_s5_problems(other_base)
+    assert "push base 0.376" in problem
+    other_time = copy.deepcopy(expired)
+    other_time["s2d"]["soil"]["mode_starts"][0]["t_s"] = 20.5 + 1e-6  # same period, K-S5 ②
+    (problem,) = sj.k_s5_problems(other_time)
+    assert "expiry start" in problem and "!= deferral end 20.5" in problem
+    unrecorded = copy.deepcopy(expired)
+    unrecorded["s2d"]["soil"]["deferrals"] = None
+    with pytest.raises(sj.rj.MissingField):
+        sj.k_s5_problems(unrecorded)
 
 
 def _defer_rows(start_s: float, periods: int, reason: str = "periods",
                 computed_m_s: float = 0.0) -> list[dict]:
     """Trace rows of a deferral: ``periods`` active rows, then the end row."""
-    rows = [{"t_s": round(start_s + 0.1 * index, 10), "active": True, "in_zone": True,
-             "min_command_m_s": 0.0, "min_computed_m_s": computed_m_s,
-             "end_reason": None} for index in range(periods)]
-    rows.append({"t_s": round(start_s + 0.1 * periods, 10), "active": False, "in_zone": True,
-                 "min_command_m_s": computed_m_s, "min_computed_m_s": 0.0,
-                 "end_reason": reason})
+    rows = [{"t_s": round(start_s + 0.1 * index, 10), "deferral_start_s": start_s,
+             "active": True, "in_zone": True, "min_command_m_s": 0.0,
+             "min_computed_m_s": computed_m_s, "end_reason": None} for index in range(periods)]
+    rows.append({"t_s": round(start_s + 0.1 * periods, 10), "deferral_start_s": start_s,
+                 "active": False, "in_zone": True, "min_command_m_s": computed_m_s,
+                 "min_computed_m_s": 0.0, "end_reason": reason})
     return rows
 
 
 def _deferred_trace(start_s: float = 20.0, periods: int = 5) -> dict:
     return {"t_rel_s": start_s, "first_check_t_s": start_s, "prefix_sha256": "p",
-            "defer_rows": _defer_rows(start_s, periods)}
+            "defer_rows": _defer_rows(start_s, periods) if periods else []}
+
+
+def _load_rows(start_s: float = 20.0, count: int = 27, value_N: float = 3e4) -> list:
+    return [[round(start_s - 0.2 + 0.1 * index, 10), value_N] for index in range(count)]
 
 
 def test_sc_t_record_checks() -> None:
-    deferral = {"start_s": 20.0, "end_s": 20.5, "end_reason": "periods", "periods": 5,
-                "start_stroke_m": 0.37}
-    rows = [[round(20.0 + 0.1 * index, 10), 3e4] for index in range(-2, 25)]
-    cand = _line("k", "S-D", soil_start=20.5, deferral=deferral, trace=_deferred_trace())
+    rows = _load_rows()
+    cand = _line("k", "S-D", deferral=_deferral(20.0), trace=_deferred_trace())
     cand["s2d"]["load_trace"] = {"rows": [[t_s, value - 900.0] for t_s, value in rows]}
     base = _line("k", "S-C", soil_start=20.0)
     base["s2d"]["load_trace"] = {"rows": rows}
-    record = sj.sc_t_record(cand, base)
+    (record,) = sj.sc_t_records(cand, base)
     assert record["checks"] == {"a": True, "b": True, "c": sj.NOT_APPLICABLE, "d": True}
+    assert record["deferral_index"] == 0 and record["delay_s"] == pytest.approx(0.5)
     cand["s2d"]["load_trace"]["rows"][10][1] = 3e4 - 1100.0
-    assert sj.sc_t_record(cand, base)["checks"]["d"] is False
-    late = _line("k", "S-D", soil_start=20.6, deferral=deferral, trace=_deferred_trace())
-    late["s2d"]["load_trace"] = {"rows": rows}
-    assert sj.sc_t_record(late, base)["checks"]["a"] is False
+    assert sj.sc_t_records(cand, base)[0]["checks"]["d"] is False
+    early_p0 = _line("k", "S-C", soil_start=19.9)  # delay 0.6 s
+    early_p0["s2d"]["load_trace"] = {"rows": _load_rows(19.9, 28)}
+    assert sj.sc_t_records(cand, early_p0)[0]["checks"]["a"] is False
     g6 = copy.deepcopy(cand)
     g6["d1"]["items"] = {"G6-3_Fmin": False}
-    g6_record = sj.sc_t_record(g6, base)
+    (g6_record,) = sj.sc_t_records(g6, base)
     assert g6_record["new_g6_failures"] == ["G6-3_Fmin"] and g6_record["checks"]["c"] is False
     with_items = copy.deepcopy(base)
     with_items["d1"]["items"] = {"G6-1_crawler": True}
-    assert sj.sc_t_record(cand, with_items)["checks"]["c"] is True
+    assert sj.sc_t_records(cand, with_items)[0]["checks"]["c"] is True
+    retracting = copy.deepcopy(cand)
+    retracting["s2d"]["trace"]["defer_rows"][1]["min_computed_m_s"] = -1e-6
+    assert sj.sc_t_records(retracting, base)[0]["checks"]["b"] is False
 
 
 def test_sc_t_undecidable_parts_rs1_2() -> None:
     """(a) without a P0 soil-mode start and (d) without a covered load window are None
     (undecidable), not violations; SC-T and Q-S3 then read None."""
-    deferral = {"start_s": 20.0, "end_s": 20.5, "end_reason": "periods", "periods": 5,
-                "start_stroke_m": 0.37}
-    rows = [[round(20.0 + 0.1 * index, 10), 3e4] for index in range(-2, 25)]
-    cand = _line("k", "S-D", soil_start=20.5, deferral=deferral, trace=_deferred_trace())
+    rows = _load_rows()
+    cand = _line("k", "S-D", deferral=_deferral(20.0), trace=_deferred_trace())
     cand["s2d"]["load_trace"] = {"rows": rows}
     no_soil_base = _line("k", "S-C")
     no_soil_base["s2d"]["load_trace"] = {"rows": rows}
-    record = sj.sc_t_record(cand, no_soil_base)
-    assert record["checks"]["a"] is None
+    (record,) = sj.sc_t_records(cand, no_soil_base)
+    assert record["checks"]["a"] is None  # RS2-4 5
     short = _line("k", "S-C", soil_start=20.0)
     short["s2d"]["load_trace"] = {"rows": rows[:12]}  # ends at 20.9 s < 21.5 s
-    record = sj.sc_t_record(cand, short)
+    (record,) = sj.sc_t_records(cand, short)
     assert record["checks"]["d"] is None and record["min_load_P0_N"] is None
     assert "P0: load trace misses" in record["window_problems"][0]
     gap = _line("k", "S-C", soil_start=20.0)
     gap["s2d"]["load_trace"] = {"rows": rows[:5] + rows[6:]}
-    assert sj.sc_t_record(cand, gap)["checks"]["d"] is None
+    assert sj.sc_t_records(cand, gap)[0]["checks"]["d"] is None
     none_trace = _line("k", "S-C", soil_start=20.0)
-    assert sj.sc_t_record(cand, none_trace)["window_problems"] == ["P0: no load trace"]
+    assert sj.sc_t_records(cand, none_trace)[0]["window_problems"] == ["P0: no load trace"]
     assert sj.check_outcome([True, None, sj.NOT_APPLICABLE]) is None
     assert sj.check_outcome([True, None, False]) is False
     assert sj.check_outcome([True, sj.NOT_APPLICABLE]) is True
     assert sj.sc_t_undecidable([record])[0].startswith("k: SC-T ['d']")
 
 
-def test_deferral_record_problems_rs1_4() -> None:
-    ended = {"start_s": 20.0, "end_s": 20.3, "end_reason": "loc", "periods": 3,
-             "start_stroke_m": 0.37}
-    line = _line("k", "S-D", deferral=ended, trace=_deferred_trace(periods=3))
-    line["event_names"] = {sj.DEFER_EVENT: 1}
-    assert sj.deferral_record_problems(line) == []
-    open_deferral = copy.deepcopy(line)
-    open_deferral["s2d"]["soil"]["defer"]["deferral"].update(end_s=None, end_reason=None)
-    assert "never ended" in sj.deferral_record_problems(open_deferral)[0]
-    reset = copy.deepcopy(line)
-    reset["s2d"]["soil"]["defer"]["deferral"] = None
-    assert "reset" in sj.deferral_record_problems(reset)[0]
-    events_only = _line("k", "S-D")
-    events_only["event_names"] = {sj.DEFER_EVENT: 1}
-    assert "reset" in sj.deferral_record_problems(events_only)[0]
-    twice = copy.deepcopy(line)
-    twice["event_names"] = {sj.DEFER_EVENT: 2}
-    assert "2 deferral entries" in sj.deferral_record_problems(twice)[0]
+# ------------------------------------------------------------------------------- rev2 history
+STALLED_KEY = "D1|H-S-0|J1|B|roll+rec|K1|V0|e0"
+"""The S-D line that stopped on the rev1 K-S5 (rev2 RS2-0): expiry at 24.5 s (base 0.39928 m),
+LOC 26.9 s, L1gs LOC revocation, release restart 27.5 s (base 0.44616 m), LOC 28.2 s."""
+
+
+def _stalled_pair(*, reentry: bool) -> tuple[dict, dict]:
+    """(S2D line, P0 line) of the stalled case; ``reentry`` makes the restart a second
+    deferral (27.5 s, 4 periods, ``rise``) that expires instead of a ``release`` start."""
+    first = _deferral(24.0, periods=5, reason="periods", start_stroke_m=0.39928)
+    deferrals = [first]
+    starts = [_start(24.5, 0.39928, "expiry")]
+    rows = _defer_rows(24.0, 5)
+    if reentry:
+        second = _deferral(27.5, periods=4, reason="rise", start_stroke_m=0.44616)
+        deferrals.append(second)
+        starts.append(_start(27.9, 0.44616, "expiry"))
+        rows += _defer_rows(27.5, 4, reason="rise")
+    else:
+        starts.append(_start(27.5, 0.44616, "release"))
+    trace = {"t_rel_s": 24.0, "first_check_t_s": 24.0, "prefix_sha256": "p", "defer_rows": rows}
+    cand = _line(STALLED_KEY, "S-D", sha="b", starts=starts, deferrals=deferrals, trace=trace,
+                 loc=28.2)
+    cand["s2d"]["soil"]["soil_mode_start_stroke_m"] = 0.44616  # the meta's last value
+    base_trace = {"t_rel_s": 24.0, "first_check_t_s": 24.0, "prefix_sha256": "p",
+                  "defer_rows": []}
+    base = _line(STALLED_KEY, "S-C", starts=[_start(24.0, 0.39928), _start(27.4, 0.446)],
+                 checks=[{"t_s": 24.0, "entered": True, "rise_delta_N": -100.0}],
+                 trace=base_trace, loc=28.1)
+    load = {"rows": _load_rows(24.0, 70)}
+    cand["s2d"]["load_trace"] = copy.deepcopy(load)
+    base["s2d"]["load_trace"] = copy.deepcopy(load)
+    return cand, base
+
+
+def test_expiry_revoke_release_restart_passes_k_s5_rs2_3() -> None:
+    """The stalled case: K-S5 reads the expiry start (not the release restart's base), SC-T
+    (a) pairs the expiry start with the P0 first start, nothing is undecidable."""
+    cand, base = _stalled_pair(reentry=False)
+    assert sj.history_problems(cand, is_candidate=True) == []
+    assert sj.history_problems(base, is_candidate=False) == []
+    assert sj.k_s5_problems(cand) == []
+    assert sj.k_s4_problems(cand) == []
+    assert sj.pair_k_problems(cand, base, is_random=False) == []
+    (record,) = sj.sc_t_records(cand, base)
+    assert record["delay_s"] == pytest.approx(0.5) and record["deferral_index"] == 0
+    assert record["checks"] == {"a": True, "b": True, "c": sj.NOT_APPLICABLE, "d": True}
+
+
+def test_expiry_revoke_reentry_expiry_per_deferral_rs2_3() -> None:
+    """Re-entry after a revocation: each expiry start is checked against its own deferral;
+    SC-T (a) of the second deferral is its own length."""
+    cand, base = _stalled_pair(reentry=True)
+    assert sj.history_problems(cand, is_candidate=True) == []
+    assert sj.pair_k_problems(cand, base, is_random=False) == []
+    first, second = sj.sc_t_records(cand, base)
+    assert first["delay_s"] == pytest.approx(0.5)
+    assert second["deferral_index"] == 1 and second["delay_s"] == pytest.approx(0.4)
+    assert second["delay_basis"].startswith("deferral end - start")
+    assert second["window_s"] == [27.5, pytest.approx(28.9)]
+    assert all(value in (True, sj.NOT_APPLICABLE) for value in second["checks"].values())
+    swapped = copy.deepcopy(cand)
+    swapped["s2d"]["soil"]["mode_starts"][1]["push_base_stroke_m"] = 0.39928
+    (problem,) = sj.k_s5_problems(swapped)
+    assert "at 27.9 s" in problem
+    long_second = copy.deepcopy(cand)
+    long_second["s2d"]["soil"]["deferrals"][1]["start_s"] = 27.3  # 0.6 s long
+    for row in long_second["s2d"]["trace"]["defer_rows"]:
+        if row["deferral_start_s"] == 27.5:
+            row["deferral_start_s"] = 27.3
+    assert sj.sc_t_records(long_second, base)[1]["checks"]["a"] is False
+    short_rows = copy.deepcopy(cand)
+    short_rows["s2d"]["trace"]["defer_rows"] = _defer_rows(24.0, 5) + _defer_rows(27.5, 3)
+    assert any("3 deferral rows for 4" in text for text in sj.k_s4_problems(short_rows))
+    assert sj.sc_t_records(short_rows, base)[1]["checks"]["b"] is False
+
+
+def test_expiry_then_revoke_without_restart_is_decidable_rs2_4() -> None:
+    """RS2-4 last line: an expiry, a revocation and no restart has no ``release`` entry and
+    is not undecidable."""
+    cand, _base = _stalled_pair(reentry=False)
+    cand["s2d"]["soil"]["mode_starts"] = cand["s2d"]["soil"]["mode_starts"][:1]
+    cand["event_names"][sj.SOIL_MODE_EVENT] = 1
+    assert sj.history_problems(cand, is_candidate=True) == []
+    assert sj.k_s5_problems(cand) == []
+
+
+def test_history_problems_rs2_4() -> None:
+    ended = _line("k", "S-D", deferral=_deferral(20.0, periods=3, reason="loc"))
+    assert sj.history_problems(ended, is_candidate=True) == []
+    open_deferral = _line("k", "S-D", deferral=_deferral(20.0, periods=2, reason=None))
+    assert "never ended (RS1-4)" in sj.history_problems(open_deferral, is_candidate=True)[0]
+    count = copy.deepcopy(ended)
+    count["event_names"][sj.DEFER_EVENT] = 2
+    assert "1 deferrals for 2" in sj.history_problems(count, is_candidate=True)[0]
+    starts = _line("k", "S-D", soil_start=20.0)
+    starts["event_names"][sj.SOIL_MODE_EVENT] = 2
+    assert "1 mode_starts for 2" in sj.history_problems(starts, is_candidate=True)[0]
+    missing_expiry = _line("k", "S-D", deferral=_deferral(20.0), starts=[])
+    (problem,) = sj.history_problems(missing_expiry, is_candidate=True)
+    assert "1 expired deferrals for 0 expiry starts (RS2-4 3)" in problem
+    orphan_expiry = _line("k", "S-D", starts=[_start(20.5, source="expiry")])
+    assert "0 expired deferrals for 1" in sj.history_problems(orphan_expiry,
+                                                               is_candidate=True)[0]
+    other_period = _line("k", "S-D", deferral=_deferral(20.0),
+                         starts=[_start(20.6, source="expiry")])
+    assert "no expiry start in that period" in sj.history_problems(other_period,
+                                                                   is_candidate=True)[0]
+    no_base = _line("k", "S-D", deferral=_deferral(20.0),
+                    starts=[_start(20.5, None, "expiry")])
+    assert "(RS2-4 4)" in sj.history_problems(no_base, is_candidate=True)[0]
+    other_source = _line("k", "S-D", starts=[_start(20.0, source="restart")])
+    assert "source 'restart'" in sj.history_problems(other_source, is_candidate=True)[0]
+    assert sj.k_s5_problems(no_base) == []  # undecidable, not a K-S5 problem
+
+
+def test_history_missing_fields_rs2_4_1() -> None:
+    plain = _line("k", "S-D")
+    plain["s2d"]["soil"]["mode_starts"] = None
+    assert "(RS2-4 1)" in sj.history_problems(plain, is_candidate=True)[0]
+    assert sj.history_problems(plain, is_candidate=False) == []  # P0 without a soil mode
+    p0_soil = _line("k", "S-C", soil_start=20.0)
+    p0_soil["s2d"]["soil"]["deferrals"] = None
+    assert "(RS2-4 1)" in sj.history_problems(p0_soil, is_candidate=False)[0]
+    assert sj.has_soil_mode(p0_soil)
+    old = _line("k", "S-C", soil_start=20.0)
+    del old["s2d"]["soil"]["mode_starts"]
+    assert sj.has_soil_mode(old) and sj.first_soil_start_s(old) is None
 
 
 def test_k_s4_checks_computed_and_returned_commands_rs1_8() -> None:
@@ -371,6 +573,13 @@ def test_k_s4_checks_computed_and_returned_commands_rs1_8() -> None:
     del unrecorded["s2d"]["trace"]["defer_rows"][0]["min_computed_m_s"]
     with pytest.raises(sj.rj.MissingField):
         sj.k_s4_problems(unrecorded)
+    no_owner = copy.deepcopy(line)
+    del no_owner["s2d"]["trace"]["defer_rows"][0]["deferral_start_s"]
+    with pytest.raises(sj.rj.MissingField):
+        sj.k_s4_problems(no_owner)
+    orphan = copy.deepcopy(line)
+    orphan["s2d"]["trace"]["defer_rows"] += _defer_rows(30.0, 1)
+    assert "2 deferral rows of no recorded deferral" in sj.k_s4_problems(orphan)[0]
 
 
 def test_sh8_counts_the_pair_level_sc_r_rs1_6() -> None:
@@ -450,9 +659,8 @@ def test_judge_s_passes_on_equal_pairs() -> None:
 def test_judge_s_unfinished_deferral_is_undecidable_and_keeps_other_violations() -> None:
     sc_lines, sd_lines = _s_lines()
     line = sd_lines["k000"]
-    line["s2d"]["soil"]["defer"]["deferral"] = {"start_s": 20.0, "end_s": None,
-                                                "end_reason": None, "periods": 2,
-                                                "start_stroke_m": 0.37}
+    line["s2d"]["soil"]["deferrals"] = [_deferral(20.0, periods=2, reason=None)]
+    line["event_names"][sj.DEFER_EVENT] = 1
     line["final_phase"] = "fault"
     result = sj.judge_s(sc_lines + list(sd_lines.values()))
     assert result["status"] == sj.STATUS_UNDECIDABLE
@@ -483,13 +691,12 @@ def test_judge_s_window_not_covered_is_undecidable_without_sh7() -> None:
     base["s2d"]["load_trace"] = {"rows": [[round(19.8 + 0.1 * i, 10), 3e4] for i in range(8)]}
     cand = sd_lines["k000"]
     cand["commands_sha256"] = "b"
-    cand["s2d"]["soil"].update(t_S_s=20.5, soil_mode_start_stroke_m=0.37)
-    cand["s2d"]["soil"]["defer"]["deferral"] = {"start_s": 20.0, "end_s": 20.5,
-                                                "end_reason": "periods", "periods": 5,
-                                                "start_stroke_m": 0.37}
+    cand["s2d"]["soil"].update(t_S_s=20.5, soil_mode_start_stroke_m=0.37,
+                               mode_starts=[_start(20.5, 0.37, "expiry")],
+                               deferrals=[_deferral(20.0)])
     cand["s2d"]["trace"] = _deferred_trace()
     cand["s2d"]["load_trace"] = {"rows": [[round(19.8 + 0.1 * i, 10), 3e4] for i in range(27)]}
-    cand["event_names"] = {sj.DEFER_EVENT: 1}
+    cand["event_names"] = {sj.DEFER_EVENT: 1, sj.SOIL_MODE_EVENT: 1}
     result = sj.judge_s(sc_lines + list(sd_lines.values()))
     assert result["k_problems"] == []
     assert result["checks"]["SC-T"] is None and result["status"] == sj.STATUS_UNDECIDABLE
@@ -565,11 +772,15 @@ def test_k_s1_coverage_and_rules_fields() -> None:
     assert sj.k_s1_coverage_problems({"targets": 312, "seen_targets": 312})
     fields = dict(zip(sj.RULES_FIELDS, sj.RULES_VALUES, strict=True))
     assert fields["rules_s2d_rev1_sha256"] == sj.RULES_S2D_REV1_SHA256
+    assert fields["rules_s2d_rev2_sha256"] == sj.RULES_S2D_REV2_SHA256
     assert st.rules_block() == fields
     sealed = [entry[0].name for entry in sj.sealed_files()]
-    assert sealed[:2] == ["s2_soil_defer_rules.md", "s2_soil_defer_rules_rev1.md"]
+    assert sealed[:3] == ["s2_soil_defer_rules.md", "s2_soil_defer_rules_rev1.md",
+                          "s2_soil_defer_rules_rev2.md"]
     assert sj.seal_problems() == []
     line = _identified(_line("k", "S-D"))
     assert sj.rules_problems(line) == []
-    del line["s2d"]["rules_s2d_rev1_sha256"]
-    assert sj.rules_problems(line)
+    for name in ("rules_s2d_rev1_sha256", "rules_s2d_rev2_sha256"):
+        missing = copy.deepcopy(line)
+        del missing["s2d"][name]
+        assert sj.rules_problems(missing)

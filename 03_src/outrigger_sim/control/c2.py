@@ -1682,6 +1682,10 @@ SOIL_EVENT_MODE_DEFER = "INFO_SOIL_MODE_DEFER"
 """S2D (``s2_soil_defer_rules.md`` 1.2): a latch release before the LOC deferred the soil mode."""
 SOIL_EVENT_MODE_DEFER_END = "INFO_SOIL_MODE_DEFER_END"
 """``INFO_SOIL_MODE_DEFER_END:<loc|periods|stroke|rise|window>``: the S2D deferral ended."""
+SOIL_MODE_SOURCE_RELEASE = "release"
+"""Start-history ``source`` (S2D rev2 RS2-1): the soil mode started at the latch release."""
+SOIL_MODE_SOURCE_EXPIRY = "expiry"
+"""Start-history ``source``: the soil mode started when an S2D deferral expired."""
 SOIL_DEFER_PREVIOUS_PERIOD_FACTOR = 1.5
 """The window values of the previous S-1 update count as "the previous period" only when that
 update was at most this many control periods ago (a LOC revocation or a phase change in
@@ -1763,7 +1767,11 @@ class SoilResponseSettings:
       no window tail start the soil mode, with the S-4 push measured from the deferral start.
       ``mode_defer_periods`` 0 (default) is the rule without the deferral, bit for bit.
       ``mode_defer_shadow`` evaluates the configured deferral and records it in the meta
-      without acting on it (commands and events stay those of the rule without it).
+      without acting on it (commands and events stay those of the rule without it). The meta
+      ``soil`` keeps the run's history (``s2_soil_defer_rules_rev2.md`` RS2-1, record only):
+      ``mode_starts`` (``t_s``, ``push_base_stroke_m``, ``source`` ``release`` / ``expiry``)
+      and ``deferrals`` (every acting deferral); a LOC revocation or a new lifting cycle does
+      not clear them, and a release after a revocation evaluates the deferral again.
 
     Every key has a class-level default (``enable`` False), so configs unpickled from older
     code read "off" and run revision 56 bit for bit.
@@ -3981,6 +3989,8 @@ class _SoilModeDefer:
     """Deferral periods so far, the start period included."""
     end_s: float | None = None
     end_reason: SoilDeferEnd | None = None
+    rise_delta_N: float | None = None
+    """``R_k - R_{k-1}`` of the entry period (rev1 RS1-3, record only)."""
 
     @property
     def is_active(self) -> bool:
@@ -3993,6 +4003,7 @@ class _SoilModeDefer:
             "periods": self.periods,
             "end_s": self.end_s,
             "end_reason": None if self.end_reason is None else str(self.end_reason),
+            "rise_delta_N": self.rise_delta_N,
         }
 
 
@@ -4356,6 +4367,13 @@ class _RunState:
     # LAS-b (immutable default: class attribute for run states pickled before it)
     liftoff_slow: _LiftoffSlowState | None = None
     """Created by the first update with the rule on."""
+    # S2D rev2 RS2-1 (record only; immutable defaults: class attributes for old pickles)
+    soil_mode_starts: tuple[dict[str, Any], ...] = ()
+    """``{t_s, push_base_stroke_m, source}`` of every soil-mode start of the run; neither a LOC
+    revocation nor a new lifting cycle (TOUCH entry) clears it."""
+    soil_deferrals: tuple[_SoilModeDefer, ...] = ()
+    """Every acting S2D deferral of the run in start order (the objects are updated as they
+    run, so the record holds their end too); kept like ``soil_mode_starts``."""
 
 
 @dataclass(frozen=True)
@@ -8769,7 +8787,7 @@ class C2Controller:
             if not soil.is_soil_mode:
                 if self._enter_soil_mode_defer(t_s, mean_stroke_m):
                     return
-                self._start_soil_mode(t_s, mean_stroke_m)
+                self._start_soil_mode(t_s, mean_stroke_m, SOIL_MODE_SOURCE_RELEASE)
             state.in_crawler_zone = True
         if not soil.is_soil_mode or soil.soil_mode_start_stroke_m is None:
             return
@@ -8779,13 +8797,17 @@ class C2Controller:
             self._add_event(reading.t_s, SOIL_EVENT_LIFTOFF_UNCONFIRMED, is_warning=True)
             state.phase = C2Phase.FAULT
 
-    def _start_soil_mode(self, t_s: float, push_base_stroke_m: float) -> None:
+    def _start_soil_mode(self, t_s: float, push_base_stroke_m: float, source: str) -> None:
         """S-2 soil mode from this period; the S-4 push is measured from ``push_base_stroke_m``
-        (this period's mean stroke, or the S2D deferral start)."""
+        (this period's mean stroke, or the S2D deferral start). ``source`` names the start
+        (``SOIL_MODE_SOURCE_*``) in the run's start history (S2D rev2 RS2-1, record only)."""
         soil = self._soil_state()
         soil.is_soil_mode = True
         soil.soil_mode_start_s = float(t_s)
         soil.soil_mode_start_stroke_m = push_base_stroke_m
+        state = self._state
+        start = {"t_s": float(t_s), "push_base_stroke_m": push_base_stroke_m, "source": source}
+        state.soil_mode_starts = (*state.soil_mode_starts, start)
         self._add_event(t_s, SOIL_EVENT_MODE_START)
 
     # --- S2D soil-mode deferral (s2_soil_defer_rules.md 1.2, appendix A.1) ---
@@ -8849,15 +8871,20 @@ class C2Controller:
             return False
         soil = self._soil_state()
         failures = self._soil_defer_entry_failures(t_s)
-        soil.defer_checks = (*soil.defer_checks, self._soil_defer_check_record(t_s, failures))
+        check = self._soil_defer_check_record(t_s, failures)
+        soil.defer_checks = (*soil.defer_checks, check)
         if failures:
             return False
-        deferral = _SoilModeDefer(start_s=float(t_s), start_stroke_m=mean_stroke_m)
+        deferral = _SoilModeDefer(
+            start_s=float(t_s), start_stroke_m=mean_stroke_m, rise_delta_N=check["rise_delta_N"]
+        )
         if self.config.soil.mode_defer_shadow:
             soil.shadow_defer = deferral  # record only: the soil mode starts as without S2D
             return False
         soil.defer = deferral
-        self._state.in_crawler_zone = True
+        state = self._state
+        state.soil_deferrals = (*state.soil_deferrals, deferral)
+        state.in_crawler_zone = True
         self._add_event(t_s, SOIL_EVENT_MODE_DEFER)
         return True
 
@@ -8895,7 +8922,7 @@ class C2Controller:
         reason = self._advance_soil_defer(deferral, t_s, mean_stroke_m)
         if reason is None:
             return True
-        self._start_soil_mode(t_s, deferral.start_stroke_m)
+        self._start_soil_mode(t_s, deferral.start_stroke_m, SOIL_MODE_SOURCE_EXPIRY)
         self._add_event(t_s, f"{SOIL_EVENT_MODE_DEFER_END}:{reason}")
         return False
 
@@ -8967,6 +8994,8 @@ class C2Controller:
                 "soil_mode_t_s": soil.soil_mode_start_s,
                 "soil_mode_start_stroke_m": soil.soil_mode_start_stroke_m,
                 "defer": self._soil_defer_meta(),
+                "mode_starts": [dict(start) for start in self._state.soil_mode_starts],
+                "deferrals": [deferral.to_meta() for deferral in self._state.soil_deferrals],
                 "push_m": soil.push_m,
                 "restored_from": soil.restored_from,
                 "loc_anchor_applied": soil.is_loc_anchor_applied,

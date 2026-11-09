@@ -1,21 +1,32 @@
 """S-2 soil-mode start deferral S2D: sealed values, bundle facts and the judge.
 
 Rules: ``06_analysis/02_control/verif_matrix/s2_soil_defer_rules.md`` (control-expert, sealed;
-LF sha256 :data:`RULES_S2D_SHA256`) with its addendum ``s2_soil_defer_rules_rev1.md``
-(:data:`RULES_S2D_REV1_SHA256`, RS1-1 .. RS1-9; rev1 wins over the original) on top of the
+LF sha256 :data:`RULES_S2D_SHA256`) with its addenda ``s2_soil_defer_rules_rev1.md``
+(:data:`RULES_S2D_REV1_SHA256`, RS1-1 .. RS1-9) and ``s2_soil_defer_rules_rev2.md``
+(:data:`RULES_S2D_REV2_SHA256`, RS2-0 .. RS2-6; the later addendum wins) on top of the
 LAS-b A-plan rules it inherits (six files, ``las_revA_diag.RULES_FIELDS``). The rules text
 wins where this code differs.
+
+rev2: the criteria read only the run's history ``soil.mode_starts`` (``{t_s,
+push_base_stroke_m, source}``) and ``soil.deferrals`` (one record per deferral), never the
+meta's last values. K-S4, SC-T (b) .. (d) and RS1-4 per deferral; K-S5 per ``expiry`` start
+(push base = its deferral's start stroke, start time = its deferral's end); SC-T (a) for the
+first deferral = expiry start - P0 ``mode_starts[0]``, for a later one its own length; K-S3
+also needs the first deferral entry at P0 ``mode_starts[0]``. RS2-4: a missing history or one
+that does not match the ``soil_mode_start`` / ``INFO_SOIL_MODE_DEFER`` events or the expired
+deferrals is undecidable. Expired deferrals and ``expiry`` starts are matched in run order;
+"same time" (RS2-4 3) is the same control period, K-S5 ② then needs equal times to 1e-9 s.
 
 Lines (``s2_defer_targeted.py``): the ``run_v5`` line with the ``las`` / ``rev`` blocks of
 ``las_revA_targeted`` (A-S lines are revA2 lines: bundle R-0A / R-Q / R-T / R-S, candidate
 P5r4) and an ``s2d`` block: bundle (S-0 / S-C / S-D / A-S / A-P0), candidate (``N0`` = N_d 0
 given explicitly, ``P0`` = the preset with the S2D values in shadow, ``S2D``, ``P5r4S``),
 the controller's deferral settings, the rules digests, the run identity, ``soil`` (soil-mode
-start, LOC, the meta ``defer`` record, R4c30), ``trace`` (latch release time ``t_rel_s``,
-the first S2D entry evaluation and the sha256 of the commands before it, the deferral
-periods with latch state and the smallest returned and computed command) and
-``load_trace`` (smallest true leg force per control period from the first entry
-evaluation - 0.2 s for 2.7 s).
+start, LOC, the meta ``defer`` record, the histories ``mode_starts`` / ``deferrals``,
+R4c30), ``trace`` (latch release time ``t_rel_s``, the first S2D entry evaluation and the
+sha256 of the commands before it, the deferral periods with their deferral's start time,
+latch state and the smallest returned and computed command) and ``load_trace`` (smallest
+true leg force per control period from the first entry evaluation - 0.2 s to the run end).
 
 Judged here (rules 4 / 5 / 6 / 7):
   S-0   9 hashes = the stored ones (K-S0, SH-2).
@@ -25,8 +36,9 @@ Judged here (rules 4 / 5 / 6 / 7):
   S     S-D pairs (S2D - P0 of S-C): SC-2, SC-F, SC-S, SC-R, SC-T (a) .. (d), K-S1 .. K-S5,
         Q-S3; SH-3 / SH-6 / SH-7 / SH-8 (with the pair-level SC-R, RS1-6). Undecidable:
         S-C not 456 keys in the group counts, S-D keys outside the selection, an unfinished
-        or reset deferral (RS1-4), SC-T (a) without a P0 soil mode or (d) without a covered
-        load window (RS1-2); SC-T (c) is n/a without G6 items (RS1-5, counts published).
+        deferral (RS1-4), a history RS2-4 rejects, SC-T (a) without a P0 soil mode or (d)
+        without a covered load window (RS1-2); SC-T (c) is n/a without G6 items (RS1-5,
+        counts published).
   A     A-S: K-S1 (all 311 lines seen), Q-S1, Q-S4 and the A-plan rev2 judge
         (``las_revA_judge.judge``) over the stored revA2 R-0 / R-0P5 / R-P0 / R-X lines, the
         A-S lines and the A-P0 lines (the P0 identity is judged per source: stored revA2
@@ -68,9 +80,16 @@ RULES_REV1_RELATIVE = RULES_RELATIVE.with_name("s2_soil_defer_rules_rev1.md")
 RULES_S2D_REV1_SHA256 = "bc95453d7caf1d32408451e6d192cd3467407470202f9ae45999e372058807bd"
 """``s2_soil_defer_rules_rev1.sha256`` (LF digest, sealed 2026-11-09 11:23:03 +09:00): the
 pre-result interpretations RS1-1 .. RS1-9."""
-RULES_FIELDS = ("rules_s2d_sha256", "rules_s2d_rev1_sha256", *diag.RULES_FIELDS)
-RULES_VALUES = (RULES_S2D_SHA256, RULES_S2D_REV1_SHA256, *diag.RULES_VALUES)
-"""Every line records the S2D rules, its rev1 and the six A-plan rules digests (rules A.2)."""
+RULES_REV2_RELATIVE = RULES_RELATIVE.with_name("s2_soil_defer_rules_rev2.md")
+RULES_S2D_REV2_SHA256 = "3768a892b6d34fabc93841d82cf36fbac111f34a8193e1c0ea6046b9ff4a2a04"
+"""``s2_soil_defer_rules_rev2.sha256`` (LF digest, sealed 2026-11-09 12:59:29 +09:00): the
+soil-mode start history and the per-deferral criteria RS2-0 .. RS2-6."""
+RULES_FIELDS = ("rules_s2d_sha256", "rules_s2d_rev1_sha256", "rules_s2d_rev2_sha256",
+                *diag.RULES_FIELDS)
+RULES_VALUES = (RULES_S2D_SHA256, RULES_S2D_REV1_SHA256, RULES_S2D_REV2_SHA256,
+                *diag.RULES_VALUES)
+"""Every line records the S2D rules, its rev1 and rev2 and the six A-plan rules digests
+(rules A.2, rev2 RS2-5)."""
 
 BUNDLES = ("S-0", "S-C", "S-D", "A-S", "A-P0")
 S2D_VALUES = {"mode_defer_periods": 5, "mode_defer_stroke_m": 0.006,
@@ -149,6 +168,12 @@ Q_S1_STROKE_LIMIT_M = 0.438764 + 0.001
 Q_S4_MAX_CHANGED = 4
 EXPIRY_REASONS = ("periods", "stroke", "rise", "window")
 LOC_REASON = "loc"
+SOURCE_EXPIRY, SOURCE_RELEASE = "expiry", "release"
+SOURCES = (SOURCE_EXPIRY, SOURCE_RELEASE)
+"""rev2 RS2-1 ``mode_starts[].source`` values."""
+SAME_PERIOD_S = PERIOD_S / 2
+"""rev2 RS2-4 3: an ``expiry`` start "at the same time" as a deferral end lies in its control
+period (closer than half a period); K-S5 ② then needs the times equal to 1e-9 s."""
 SOIL_MODE_EVENT = "soil_mode_start"
 DEFER_EVENT = "INFO_SOIL_MODE_DEFER"
 FLAT_SOIL_MARGIN_EVENT = diag.FLAT_SOIL_MARGIN_EVENT
@@ -164,11 +189,14 @@ def rules_path(rules_root: Path = ROOT) -> Path:
 
 
 def sealed_files(rules_root: Path = ROOT) -> tuple:
-    """SH-1: the S2D rules and their rev1 (from ``rules_root``) and the six A-plan rules."""
+    """SH-1: the S2D rules, their rev1 and rev2 (from ``rules_root``) and the six A-plan
+    rules."""
     path = rules_path(rules_root)
     rev1 = rules_root / RULES_REV1_RELATIVE
+    rev2 = rules_root / RULES_REV2_RELATIVE
     return ((path, path.with_suffix(".sha256"), RULES_S2D_SHA256),
-            (rev1, rev1.with_suffix(".sha256"), RULES_S2D_REV1_SHA256), *ajudge.SEALED_RULES,
+            (rev1, rev1.with_suffix(".sha256"), RULES_S2D_REV1_SHA256),
+            (rev2, rev2.with_suffix(".sha256"), RULES_S2D_REV2_SHA256), *ajudge.SEALED_RULES,
             (diag.RULES_REVA_REV3_PATH, diag.RULES_REVA_REV3_SHA_PATH,
              diag.RULES_REVA_REV3_SHA256))
 
@@ -219,20 +247,42 @@ def soil_block(line: dict) -> dict:
     return rj.need(line, "s2d", "soil")
 
 
-def soil_start_s(line: dict) -> float | None:
-    return soil_block(line)["t_S_s"]
+def mode_starts_of(line: dict) -> list[dict] | None:
+    """rev2 RS2-1 ``soil.mode_starts`` (``{t_s, push_base_stroke_m, source}`` per soil-mode
+    start of the run); None when the line does not hold it."""
+    return soil_block(line).get("mode_starts")
+
+
+def deferrals_of(line: dict) -> list[dict] | None:
+    """rev2 RS2-1 ``soil.deferrals`` (one record per acting deferral of the run); None when
+    the line does not hold it."""
+    return soil_block(line).get("deferrals")
+
+
+def need_history(line: dict) -> tuple[list[dict], list[dict]]:
+    """(mode_starts, deferrals); a line without them raises :class:`rj.MissingField`."""
+    starts, deferrals = mode_starts_of(line), deferrals_of(line)
+    if starts is None:
+        raise rj.MissingField("s2d.soil.mode_starts")
+    if deferrals is None:
+        raise rj.MissingField("s2d.soil.deferrals")
+    return starts, deferrals
 
 
 def has_soil_mode(line: dict) -> bool:
-    return soil_start_s(line) is not None
+    """A soil-mode start in the run (rev2: from the start history; lines before rev2 by the
+    meta ``soil_mode_t_s``)."""
+    starts = mode_starts_of(line)
+    if starts is not None:
+        return bool(starts)
+    return soil_block(line)["t_S_s"] is not None
 
 
-def deferral_of(line: dict) -> dict | None:
-    return (soil_block(line).get("defer") or {}).get("deferral")
-
-
-def shadow_of(line: dict) -> dict | None:
-    return (soil_block(line).get("defer") or {}).get("shadow")
+def first_soil_start_s(line: dict) -> float | None:
+    """rev2 RS2-3: the first soil-mode start of the run (``mode_starts[0]``); None without a
+    start or without the history."""
+    starts = mode_starts_of(line)
+    return starts[0]["t_s"] if starts else None
 
 
 def entry_checks(line: dict) -> list[dict]:
@@ -243,26 +293,80 @@ def is_expired(deferral: dict | None) -> bool:
     return deferral is not None and deferral.get("end_reason") in EXPIRY_REASONS
 
 
-def deferral_entry_count(line: dict) -> int:
-    return (line.get("event_names") or {}).get(DEFER_EVENT, 0)
+def event_count(line: dict, name: str) -> int:
+    return (line.get("event_names") or {}).get(name, 0)
 
 
-def deferral_record_problems(line: dict) -> list[str]:
-    """rev1 RS1-4 (undecidable, SH-4): a deferral that never ended, or deferral rows / entry
-    events the meta ``deferral`` does not hold (the soil state was reset at a TOUCH re-entry,
-    or a later deferral replaced an earlier one)."""
-    deferral = deferral_of(line)
-    rows = rj.need(line, "s2d", "trace", "defer_rows")
-    entries = deferral_entry_count(line)
+def expiry_starts(starts: list[dict]) -> list[dict]:
+    return [start for start in starts if start.get("source") == SOURCE_EXPIRY]
+
+
+def expired_deferrals(deferrals: list[dict]) -> list[dict]:
+    return [deferral for deferral in deferrals if is_expired(deferral)]
+
+
+def expiry_pairs(line: dict) -> list[tuple[int, dict, dict]]:
+    """(deferral index, expired deferral, its ``expiry`` start), matched in run order (the
+    k-th expired deferral started the k-th ``expiry`` soil mode). Meaningful only when
+    :func:`history_problems` finds nothing."""
+    starts, deferrals = need_history(line)
+    expired = [(index, deferral) for index, deferral in enumerate(deferrals)
+               if is_expired(deferral)]
+    return [(index, deferral, start)
+            for (index, deferral), start in zip(expired, expiry_starts(starts), strict=False)]
+
+
+def history_problems(line: dict, *, is_candidate: bool) -> list[str]:
+    """rev2 RS2-4 items 1 .. 4 and rev1 RS1-4 (undecidable, SH-4) of one line.
+
+    1. no ``mode_starts`` / ``deferrals`` (the S2D line always; the P0 line when it has a
+       soil-mode start);
+    2. ``mode_starts`` count != ``soil_mode_start`` events, ``deferrals`` count !=
+       ``INFO_SOIL_MODE_DEFER`` events;
+    3. an expired deferral without an ``expiry`` start in its end period, an ``expiry`` start
+       without an expired deferral, or a start of another ``source``;
+    4. an ``expiry`` start without ``push_base_stroke_m``;
+    RS1-4: a deferral that never ended. A revocation after an expiry without a restart is
+    none of these (RS2-4: no ``release`` entry, nothing missing).
+    """
     key = key_of(line)
+    starts, deferrals = mode_starts_of(line), deferrals_of(line)
+    soil_events = event_count(line, SOIL_MODE_EVENT)
+    if starts is None or deferrals is None:
+        needs_history = is_candidate or soil_events > 0 or soil_block(line)["t_S_s"] is not None
+        return [f"{key}: no soil.mode_starts / soil.deferrals (RS2-4 1)"] if needs_history else []
     problems = []
-    if deferral is not None and deferral.get("end_reason") is None:
-        problems.append(f"{key}: deferral from {deferral.get('start_s')} s never ended (RS1-4)")
-    if deferral is None and (rows or entries):
-        problems.append(f"{key}: {len(rows)} deferral rows, {entries} entry events and no meta "
-                        "deferral (reset, RS1-4)")
-    if entries > 1:
-        problems.append(f"{key}: {entries} deferral entries, the meta holds the last (RS1-4)")
+    if len(starts) != soil_events:
+        problems.append(f"{key}: {len(starts)} mode_starts for {soil_events} "
+                        f"{SOIL_MODE_EVENT} events (RS2-4 2)")
+    defer_events = event_count(line, DEFER_EVENT)
+    if len(deferrals) != defer_events:
+        problems.append(f"{key}: {len(deferrals)} deferrals for {defer_events} {DEFER_EVENT} "
+                        "events (RS2-4 2)")
+    problems += _expiry_match_problems(key, starts, deferrals)
+    for deferral in deferrals:
+        if deferral.get("end_reason") is None:
+            problems.append(f"{key}: deferral from {deferral.get('start_s')} s never ended "
+                            "(RS1-4)")
+    return problems
+
+
+def _expiry_match_problems(key: str, starts: list[dict], deferrals: list[dict]) -> list[str]:
+    """RS2-4 items 3 and 4: every expired deferral has its ``expiry`` start in its end period
+    and the other way round; every ``expiry`` start has a push base."""
+    problems = [f"{key}: soil-mode start at {start.get('t_s')} s with source "
+                f"{start.get('source')!r} (RS2-4 3)" for start in starts
+                if start.get("source") not in SOURCES]
+    expired, by_expiry = expired_deferrals(deferrals), expiry_starts(starts)
+    if len(expired) != len(by_expiry):
+        problems.append(f"{key}: {len(expired)} expired deferrals for {len(by_expiry)} "
+                        "expiry starts (RS2-4 3)")
+    for deferral, start in zip(expired, by_expiry, strict=False):
+        if abs(start["t_s"] - deferral["end_s"]) > SAME_PERIOD_S:
+            problems.append(f"{key}: deferral ending {deferral['end_s']} s has no expiry start "
+                            f"in that period (next at {start['t_s']} s, RS2-4 3)")
+    problems += [f"{key}: expiry start at {start.get('t_s')} s without push_base_stroke_m "
+                 "(RS2-4 4)" for start in by_expiry if start.get("push_base_stroke_m") is None]
     return problems
 
 
@@ -496,40 +600,88 @@ def prefix_matches(cand: dict, base: dict) -> bool:
             and cand_trace.get("prefix_sha256") == base_trace.get("prefix_sha256"))
 
 
-def k_s4_problems(line: dict) -> list[str]:
-    """K-S4 (rev1 RS1-8): every deferral period, the last active one included, has the latch
-    held, no retracting command computed in that period (before the output delay) and no
-    retracting command returned (applied) in it; one row per deferral period."""
+def _defer_row_problems(key: str, row: dict) -> list[str]:
+    """K-S4 (rev1 RS1-8) of one active deferral period: latch held, no retracting command
+    computed in it (before the output delay), none returned (applied) in it."""
+    problems = []
+    if not row["in_zone"]:
+        problems.append(f"K-S4 {key} t {row['t_s']}: latch released")
+    computed_m_s = rj.need(row, "min_computed_m_s")
+    if computed_m_s < 0.0:
+        problems.append(f"K-S4 {key} t {row['t_s']}: computed command {computed_m_s} < 0")
+    if row["min_command_m_s"] < 0.0:
+        problems.append(f"K-S4 {key} t {row['t_s']}: returned command "
+                        f"{row['min_command_m_s']} < 0")
+    return problems
+
+
+def _rows_of(rows: list[dict], deferral: dict) -> list[dict]:
+    """The trace rows of one deferral (``deferral_start_s`` = its ``start_s``)."""
+    return [row for row in rows
+            if rj.need(row, "deferral_start_s") == deferral["start_s"]]
+
+
+def k_s4_deferral_problems(line: dict, deferral: dict) -> list[str]:
+    """K-S4 of one deferral of the history (rev2 RS2-3): every active period, the last one
+    included, passes :func:`_defer_row_problems`; an ended deferral has one active row per
+    deferral period."""
     rows = rj.need(line, "s2d", "trace", "defer_rows")
     key = key_of(line)
-    problems = []
-    active = [row for row in rows if row["active"]]
-    for row in active:
-        if not row["in_zone"]:
-            problems.append(f"K-S4 {key} t {row['t_s']}: latch released")
-        computed_m_s = rj.need(row, "min_computed_m_s")
-        if computed_m_s < 0.0:
-            problems.append(f"K-S4 {key} t {row['t_s']}: computed command {computed_m_s} < 0")
-        if row["min_command_m_s"] < 0.0:
-            problems.append(f"K-S4 {key} t {row['t_s']}: returned command "
-                            f"{row['min_command_m_s']} < 0")
-    deferral = deferral_of(line)
-    is_ended = deferral is not None and deferral.get("end_reason") is not None
-    if is_ended and not deferral_record_problems(line) and len(active) != deferral["periods"]:
+    active = [row for row in _rows_of(rows, deferral) if row["active"]]
+    problems = [text for row in active for text in _defer_row_problems(key, row)]
+    if deferral.get("end_reason") is not None and len(active) != deferral["periods"]:
         problems.append(f"K-S4 {key}: {len(active)} deferral rows for {deferral['periods']} "
-                        "deferral periods")
+                        f"periods of the deferral from {deferral['start_s']} s")
+    return problems
+
+
+def k_s4_problems(line: dict) -> list[str]:
+    """K-S4 for every deferral of the history; a trace row of no recorded deferral is a
+    problem too (the history is never cleared, so every row has its deferral)."""
+    _starts, deferrals = need_history(line)
+    rows = rj.need(line, "s2d", "trace", "defer_rows")
+    problems = [text for deferral in deferrals
+                for text in k_s4_deferral_problems(line, deferral)]
+    recorded = {deferral["start_s"] for deferral in deferrals}
+    orphans = [row["t_s"] for row in rows if rj.need(row, "deferral_start_s") not in recorded]
+    if orphans:
+        problems.append(f"K-S4 {key_of(line)}: {len(orphans)} deferral rows of no recorded "
+                        f"deferral (first {orphans[0]} s)")
     return problems
 
 
 def k_s5_problems(line: dict) -> list[str]:
-    """K-S5: an expired deferral's S-4 push base is the deferral-start mean stroke."""
-    deferral = deferral_of(line)
-    if not is_expired(deferral):
+    """K-S5 (rev2 RS2-3) for every ``expiry`` start: ① its push base is the start stroke of
+    its deferral and ② it starts at that deferral's ``end_s``. ``release`` starts (a restart
+    after a LOC revocation) are not K-S5 cases. A history RS2-4 cannot match is undecidable
+    (:func:`history_problems`), not a K-S5 problem."""
+    need_history(line)
+    if history_problems(line, is_candidate=True):
         return []
-    base = soil_block(line).get("soil_mode_start_stroke_m")
-    if base != deferral["start_stroke_m"]:
-        return [f"K-S5 {key_of(line)}: push base {base} != deferral start "
-                f"{deferral['start_stroke_m']}"]
+    key = key_of(line)
+    problems = []
+    for _index, deferral, start in expiry_pairs(line):
+        if start["push_base_stroke_m"] != deferral["start_stroke_m"]:
+            problems.append(f"K-S5 {key}: push base {start['push_base_stroke_m']} at "
+                            f"{start['t_s']} s != deferral start {deferral['start_stroke_m']}")
+        if abs(start["t_s"] - deferral["end_s"]) > TIME_TOLERANCE_S:
+            problems.append(f"K-S5 {key}: expiry start {start['t_s']} s != deferral end "
+                            f"{deferral['end_s']} s")
+    return problems
+
+
+def k_s3_entry_problems(cand: dict, base: dict) -> list[str]:
+    """rev2 RS2-3: the first deferral entry of the S2D line is at the first soil-mode start of
+    the P0 line (a P0 line without the history is undecidable, not checked here)."""
+    _starts, deferrals = need_history(cand)
+    base_starts = mode_starts_of(base)
+    if not deferrals or base_starts is None:
+        return []
+    entry_s = deferrals[0]["start_s"]
+    p0_start_s = base_starts[0]["t_s"] if base_starts else None
+    if p0_start_s is None or abs(entry_s - p0_start_s) > TIME_TOLERANCE_S:
+        return [f"K-S3 {key_of(cand)}: first deferral entry {entry_s} s != P0 first soil-mode "
+                f"start {p0_start_s}"]
     return []
 
 
@@ -548,6 +700,7 @@ def pair_k_problems(cand: dict, base: dict, is_random: bool) -> list[str]:
             problems.append(f"K-S3 {key}: hash changed without a shadow entry")
         elif not prefix_matches(cand, base):
             problems.append(f"K-S3 {key}: commands differ before the entry period")
+    problems += k_s3_entry_problems(cand, base)
     return problems
 
 
@@ -607,24 +760,41 @@ def _load_drop_check(cand: dict, base: dict, t0_s: float, t1_s: float) -> tuple:
     return is_within, cand_min, base_min, []
 
 
-def sc_t_record(cand: dict, base: dict) -> dict:
-    """SC-T (a) .. (d) of one expired pair: True / False, None = undecidable (no P0 soil-mode
-    start for (a), a load window not covered for (d); rev1 RS1-2), ``n/a`` for (c) on a key
-    without G6 items (rev1 RS1-5)."""
-    deferral = deferral_of(cand)
-    delay_s = soil_start_s(cand) - soil_start_s(base) if has_soil_mode(base) else None
+def sc_t_delay(index: int, deferral: dict, start: dict, base: dict) -> tuple:
+    """rev2 RS2-3 SC-T (a): (delay s or None = undecidable, basis). The first deferral of the
+    run: its ``expiry`` start - the P0 first soil-mode start (RS2-4 5: None without one).
+    A later deferral: its own ``end_s - start_s`` (no P0 start to pair it with)."""
+    if index == 0:
+        p0_start_s = first_soil_start_s(base)
+        delay_s = None if p0_start_s is None else start["t_s"] - p0_start_s
+        return delay_s, "expiry start - P0 first soil-mode start"
+    return deferral["end_s"] - deferral["start_s"], "deferral end - start (not the first)"
+
+
+def sc_t_record(cand: dict, base: dict, index: int, deferral: dict, start: dict) -> dict:
+    """SC-T (a) .. (d) of one expired deferral (rev2 RS2-3): True / False, None = undecidable
+    (no P0 soil-mode start for (a), a load window not covered for (d); rev1 RS1-2), ``n/a``
+    for (c) on a key without G6 items (rev1 RS1-5)."""
+    delay_s, basis = sc_t_delay(index, deferral, start, base)
     new_items = new_g6_failures(cand, base)
     t0_s, t1_s = deferral["start_s"], deferral["end_s"] + LOAD_TAIL_S
     is_within, cand_min, base_min, window_problems = _load_drop_check(cand, base, t0_s, t1_s)
     checks = {
         "a": None if delay_s is None else delay_s <= DELAY_LIMIT_S + TIME_TOLERANCE_S,
-        "b": not k_s4_problems(cand),
+        "b": not k_s4_deferral_problems(cand, deferral),
         "c": not new_items if has_g6_items(cand, base) else NOT_APPLICABLE,
         "d": is_within,
     }
-    return {"key": key_of(cand), "reason": deferral["end_reason"], "delay_s": delay_s,
+    return {"key": key_of(cand), "deferral_index": index, "start_s": deferral["start_s"],
+            "reason": deferral["end_reason"], "delay_s": delay_s, "delay_basis": basis,
             "new_g6_failures": new_items, "min_load_S2D_N": cand_min, "min_load_P0_N": base_min,
             "window_s": [t0_s, t1_s], "window_problems": window_problems, "checks": checks}
+
+
+def sc_t_records(cand: dict, base: dict) -> list[dict]:
+    """SC-T records of every expired deferral of the S2D line (history order)."""
+    return [sc_t_record(cand, base, index, deferral, start)
+            for index, deferral, start in expiry_pairs(cand)]
 
 
 def check_outcome(values) -> bool | None:
@@ -709,20 +879,23 @@ def judge_s(lines: list[dict]) -> dict:
 
 
 def _judge_pair(out: dict, cand: dict, base: dict, is_random: bool) -> None:
-    """One S-D pair into ``out``: K problems, SC record, SC-T (expired), RS1-4 reasons. An
-    unfinished or reset deferral is undecidable and still judged on the other criteria."""
+    """One S-D pair into ``out``: K problems, SC record, SC-T per expired deferral, RS2-4 /
+    RS1-4 reasons. A history that is missing or does not match the events is undecidable;
+    the pair is still judged on the other criteria, SC-T only on a matching history."""
     key = key_of(cand)
     try:
-        out["undecidable"] += deferral_record_problems(cand)
+        cand_history = history_problems(cand, is_candidate=True)
+        out["undecidable"] += cand_history + history_problems(base, is_candidate=False)
         out["k_problems"] += pair_k_problems(cand, base, is_random)
         record = sc_pair_record(cand, base)
         record["has_g6_items"] = has_g6_items(cand, base)
         out["pairs"][key] = record
-        deferral = deferral_of(cand)
-        if is_expired(deferral):
-            out["sc_t"].append(sc_t_record(cand, base))
-        elif deferral is not None and deferral.get("end_reason") == LOC_REASON:
-            out["loc_avoided"].append(key)
+        if not cand_history:
+            out["sc_t"] += sc_t_records(cand, base)
+        _starts, deferrals = need_history(cand)
+        out["loc_avoided"] += [{"key": key, "start_s": deferral["start_s"]}
+                               for deferral in deferrals
+                               if deferral.get("end_reason") == LOC_REASON]
     except rj.MissingField as exc:
         out["undecidable"].append(f"{key}: missing {exc}")
 
@@ -837,7 +1010,10 @@ def k_s1_coverage_problems(bits: dict) -> list[str]:
 
 
 def q_s1_record(line: dict) -> dict:
-    deferral = deferral_of(line) or {}
+    """Q-S1 on the boundary key from the history (rev2 RS2-1): the first deferral of the run
+    took 3 periods and ended at the LOC, and the run has no soil-mode start."""
+    deferrals = deferrals_of(line) or []
+    deferral = deferrals[0] if deferrals else {}
     soil = soil_block(line)
     r4c30 = bool(soil.get("r4c30"))
     stroke_m = rj.need(line, "d1", "stroke_max_m")
@@ -845,7 +1021,7 @@ def q_s1_record(line: dict) -> dict:
              "end_loc": deferral.get("end_reason") == LOC_REASON,
              "loc_time": soil.get("t_loc_s") is not None
              and abs(soil["t_loc_s"] - Q_S1_LOC_S) <= 1e-6,
-             "no_soil_mode": soil.get("t_S_s") is None, "no_r4c30": not r4c30,
+             "no_soil_mode": mode_starts_of(line) == [], "no_r4c30": not r4c30,
              "stroke": stroke_m is not None and stroke_m <= Q_S1_STROKE_LIMIT_M + TIME_TOLERANCE_S}
     return {"parts": parts, "holds": all(parts.values()), "deferral": deferral,
             "t_loc_s": soil.get("t_loc_s"), "stroke_max_m": stroke_m}
@@ -885,7 +1061,7 @@ def judge_a(lines: list[dict], reva2_lines: list[dict], stored: dict, reference:
     k_problems, undecidable = list(bits["K-S1"]), k_s1_coverage_problems(bits)
     for line in as_lines:
         try:
-            undecidable += deferral_record_problems(line)
+            undecidable += history_problems(line, is_candidate=True)
             k_problems += k_s4_problems(line) + k_s5_problems(line)
         except rj.MissingField as exc:
             undecidable.append(f"{key_of(line)}: missing {exc}")
