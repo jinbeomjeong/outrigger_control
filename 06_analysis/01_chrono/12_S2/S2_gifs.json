@@ -92,7 +92,7 @@
    "ramp0.1_dt1e-05": 22.343854192416984
   }
  },
- "last_run_s": 27.9,
+ "last_run_s": 27.1,
  "v12_gif": {
   "path": "06_analysis/01_chrono/12_S2/S2a_v12_slope.gif",
   "frames": 63,
@@ -242,7 +242,7 @@
   "path": "06_analysis/01_chrono/12_S2/S2b_crawler_settle.gif",
   "frames": 28,
   "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
-  "size_bytes": 481780,
+  "size_bytes": 504652,
   "loop_s": 19.73,
   "resolution_px": [
    1400,
@@ -252,22 +252,34 @@
  },
  "crawler": {
   "top": {
-   "sphere_force_window_mean_minus_result_max_abs_N": 1.1440747822562116,
+   "sphere_force_window_mean_minus_result_max_abs_N": 1.144093417809927,
    "sum_spring_minus_F_crawler_z_max_abs_N": 39.558633019332774,
    "active_spheres_window": 14,
-   "weight_N": 380112.91206408397
+   "weight_N": 380112.91206408397,
+   "active_by_kind_window": {
+    "roller": 12,
+    "end_shoe": 2
+   }
   },
   "middle": {
-   "sphere_force_window_mean_minus_result_max_abs_N": 2.0142992962064454,
+   "sphere_force_window_mean_minus_result_max_abs_N": 2.014344870527566,
    "sum_spring_minus_F_crawler_z_max_abs_N": 26.915728025254793,
    "active_spheres_window": 14,
-   "weight_N": 380112.91206408397
+   "weight_N": 380112.91206408397,
+   "active_by_kind_window": {
+    "roller": 12,
+    "end_shoe": 2
+   }
   },
   "bottom": {
-   "sphere_force_window_mean_minus_result_max_abs_N": 1.638911836893385,
+   "sphere_force_window_mean_minus_result_max_abs_N": 1.6388760518493655,
    "sum_spring_minus_F_crawler_z_max_abs_N": 37.666201465413906,
    "active_spheres_window": 14,
-   "weight_N": 380112.91206408397
+   "weight_N": 380112.91206408397,
+   "active_by_kind_window": {
+    "roller": 12,
+    "end_shoe": 2
+   }
   }
  },
  "events_gif": {

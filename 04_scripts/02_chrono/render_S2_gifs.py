@@ -59,11 +59,16 @@ Drawing conventions (body / world frame: x forward, y left, z up; SI; roll / pit
     V7 modal coordinate: eta = Phi^T M q from result.json series (eta_judged, sqrt(kg) m); the
         envelope is refitted here with outrigger_sim.verify.metrics.fit_damped_sine (same fit
         as the judgement; deviation from result.json recorded in S2_gifs.json).
-    Crawler sphere forces: k_n max(delta, 0) of the recorded pose (k_n float32 8333333.5 N/m,
-        sphere radius and centres from YAML via scenarios.crawler_settle.crawler_layout); the
-        5 s window mean is checked against result.json sphere_force_chrono_mean_N. The weight W
-        of the ΣF - W panel is the run's result.json analytic_exact.weight_N (YAML composite
-        mass x g), checked against s2b_crawler_check.json <level>.W_N (rel. 1e-9).
+    Crawler sphere forces: k_n max(delta, 0) of the recorded pose (k_n = result.json
+        analytic_exact.kn_per_sphere_float32_N_m, equal to s2b_crawler_check.json
+        meta.kn_per_sphere_float32_N_m; sphere radius, centres and end-shoe gaps from YAML via
+        scenarios.crawler_settle.crawler_layout); the still-window mean (window t >= settle_s
+        of meta.json run.scenario.settings, length still_s) is checked against result.json
+        sphere_force_chrono_mean_N. Active spheres per kind = result.json
+        sphere_force_chrono_mean_N > 0 by sphere_labels (total = window.active_min/max). The
+        weight W of the ΣF - W panel is the run's result.json analytic_exact.weight_N (YAML
+        composite mass x g), checked against s2b_crawler_check.json <level>.W_N (rel. 1e-9).
+        Crawler panel axis ranges come from the data and reference lines. Missing keys stop.
     V12 frame plan: settling frames are log-spaced up to the verify mean window start and end
         at the window end (clipped to the record end), so no frame lies past the run.
 
@@ -237,7 +242,9 @@ ARROW_T_M_PER_N = 1.0 / 5e3  # tangential force arrow: 1 m per 5 kN (x20)
 GROUND_RECT_XY = s1.GROUND_RECT_XY
 LEVEL_LABEL = s1.LEVEL_LABEL
 CRAWLER_W_REL_TOL = 1e-9  # result.json analytic_exact.weight_N vs s2b_crawler_check W_N
-KN_CRAWLER_F32 = 8333333.5  # s2b_crawler_check.json meta.kn_per_sphere_float32_N_m
+# Crawler sphere k_n: no constant here; crawler_kn_N_m() reads result.json
+# analytic_exact.kn_per_sphere_float32_N_m and requires s2b_crawler_check.json
+# meta.kn_per_sphere_float32_N_m to be the same number.
 
 plt.rcParams["font.family"] = "Malgun Gothic"
 plt.rcParams["axes.unicode_minus"] = False
@@ -2041,6 +2048,105 @@ class CrawlerCase:
     check: dict
     result: dict
     weight_N: float  # result.json analytic_exact.weight_N (= s2b_crawler_check <level> W_N)
+    kn_N_m: float  # result.json analytic_exact.kn_per_sphere_float32_N_m (crawler_kn_N_m)
+    settle_s: float  # meta.json run.scenario.settings.settle_s (window start)
+    still_s: float  # meta.json run.scenario.settings.still_s (window length)
+    active_by_kind: dict  # {"roller": n, "end_shoe": n} from result.json sphere force means
+    shoe_spans: list  # crawler_shoe_spans(layout): rear / front x span and gap range
+
+
+def crawler_key(obj: dict, path: tuple, source: str):
+    """``obj[path[0]][path[1]]...``; stop with the file and key path when a key is missing."""
+    node = obj
+    for k in path:
+        if not isinstance(node, dict) or k not in node:
+            raise SystemExit(f"{source}: missing key {'.'.join(map(str, path))!r} "
+                             f"(at {k!r}); rerun the producer of this file")
+        node = node[k]
+    return node
+
+
+def crawler_kn_N_m(result: dict, check_all: dict, case: str) -> float:
+    """Per-sphere crawler k_n [N/m] used to rebuild the sphere forces from the Record.
+
+    Source: the run's result.json ``analytic_exact.kn_per_sphere_float32_N_m`` (the float32
+    value Chrono's SMC material actually holds); it must equal s2b_crawler_check.json
+    ``meta.kn_per_sphere_float32_N_m`` (independent dynamics-dev check) exactly.
+    """
+    kn = float(crawler_key(result, ("analytic_exact", "kn_per_sphere_float32_N_m"),
+                           f"{case}/result.json"))
+    kn_check = float(crawler_key(check_all, ("meta", "kn_per_sphere_float32_N_m"),
+                                 CRAWLER_CHECK.name))
+    if kn != kn_check:
+        raise SystemExit(f"{case}: result.json kn_per_sphere_float32_N_m {kn!r} != "
+                         f"s2b_crawler_check meta {kn_check!r}")
+    return kn
+
+
+def crawler_window_s(run_dir: Path) -> tuple[float, float]:
+    """(settle_s, still_s) of an S2b crawler run.
+
+    Source: the Record's meta.json ``run.scenario.settings.settle_s`` / ``still_s`` (run_S2b
+    writes them; its still window is t >= settle_s, length still_s).
+    """
+    meta = read_json(run_dir / "meta.json")
+    src = f"{run_dir.name}/meta.json"
+    settle = float(crawler_key(meta, ("run", "scenario", "settings", "settle_s"), src))
+    still = float(crawler_key(meta, ("run", "scenario", "settings", "still_s"), src))
+    return settle, still
+
+
+def crawler_active_by_kind(result: dict, labels: list, case: str) -> dict:
+    """Active sphere count per kind in the still window.
+
+    Source: the run's result.json ``sphere_force_chrono_mean_N`` (> 0 = active) with
+    ``sphere_labels`` (``<side>-<kind>-<k>``), which must match the YAML layout labels; the
+    total must equal result.json ``window.active_min`` = ``window.active_max``.
+    """
+    src = f"{case}/result.json"
+    mean = np.asarray(crawler_key(result, ("sphere_force_chrono_mean_N",), src), float)
+    names = list(crawler_key(result, ("sphere_labels",), src))
+    if names != labels:
+        raise SystemExit(f"{case}: result.json sphere_labels differ from the YAML layout labels")
+    out = {"roller": 0, "end_shoe": 0}
+    for name, f in zip(names, mean, strict=True):
+        kind = name.split("-")[1]
+        if kind not in out:
+            raise SystemExit(f"{case}: unknown sphere kind in label {name!r}")
+        out[kind] += int(f > 0.0)
+    lo = int(crawler_key(result, ("window", "active_min"), src))
+    hi = int(crawler_key(result, ("window", "active_max"), src))
+    if not lo == hi == sum(out.values()):
+        raise SystemExit(f"{case}: active spheres by kind {out} != window active_min/max "
+                         f"{lo}/{hi}")
+    return out
+
+
+def crawler_shoe_spans(layout) -> list:
+    """Rear / front end-shoe x spans and gap ranges from the YAML layout.
+
+    Source: YAML ``contact.crawler.sphere_layout`` (``roller_x_m``, ``end_shoe_x_m``,
+    ``end_shoe_gap_m`` via scenarios.crawler_settle.crawler_layout). Span inner edge = midpoint
+    to the nearest roller, outer edge = outermost shoe + half the shoe pitch.
+    """
+    x = layout.xy_m[:, 0]
+    left = layout.xy_m[:, 1] > 0.0
+    roller = layout.is_roller
+    rx = np.sort(x[roller & left])
+    spans = []
+    for end, sel in (("rear", ~roller & left & (x < 0.0)), ("front", ~roller & left & (x > 0.0))):
+        sx = np.sort(x[sel])
+        gaps = layout.gap_m[sel]
+        if sx.size == 0:
+            raise SystemExit(f"crawler layout: no {end} end shoes")
+        half_pitch = 0.5 * float(np.diff(sx).mean()) if sx.size > 1 else layout.sphere_radius_m
+        if end == "rear":
+            span = (float(sx[0]) - half_pitch, 0.5 * float(sx[-1] + rx[0]))
+        else:
+            span = (0.5 * float(sx[0] + rx[-1]), float(sx[-1]) + half_pitch)
+        spans.append({"end": end, "x_m": span, "gap_mm": (float(gaps.min()) * 1e3,
+                                                          float(gaps.max()) * 1e3)})
+    return spans
 
 
 def crawler_weight_N(result: dict, check_level: dict, case: str) -> float:
@@ -2065,9 +2171,14 @@ def load_crawler(level, check_all) -> CrawlerCase:
     centres = layout.centres_body_m(floor)
     world_z = np.einsum("nij,kj->nki", run.rot, centres)[..., 2] + run.pos[:, 2:3]
     delta = layout.sphere_radius_m - (world_z - floor)
-    forces = KN_CRAWLER_F32 * np.maximum(delta, 0.0)
     res = run.result
-    window = run.t >= run.t[-1] - 5.0 + 1e-9
+    kn = crawler_kn_N_m(res, check_all, run.name)
+    forces = kn * np.maximum(delta, 0.0)
+    settle_s, still_s = crawler_window_s(RES_B / f"crawler_{level}")
+    if abs(run.t[-1] - (settle_s + still_s)) > 1e-6:
+        raise SystemExit(f"{run.name}: Record ends at {run.t[-1]!r} s, meta settle + still = "
+                         f"{settle_s + still_s!r} s")
+    window = run.t >= settle_s - 1e-9  # same window rule as run_S2b (t >= SETTLE_S)
     mean = forces[window].mean(axis=0)
     chrono = np.array(res["sphere_force_chrono_mean_N"])
     check = {"sphere_force_window_mean_minus_result_max_abs_N": float(np.abs(mean - chrono).max()),
@@ -2076,8 +2187,12 @@ def load_crawler(level, check_all) -> CrawlerCase:
              "active_spheres_window": int((mean > 0).sum())}
     weight = crawler_weight_N(res, check_all[level], run.name)
     check["weight_N"] = weight
+    active = crawler_active_by_kind(res, layout.labels(), run.name)
+    check["active_by_kind_window"] = active
     return CrawlerCase(run, level, centres, layout.sphere_radius_m,
-                       np.array([k == "roller" for k in layout.kind]), forces, check, res, weight)
+                       np.array([k == "roller" for k in layout.kind]), forces, check, res, weight,
+                       kn, settle_s, still_s, active,
+                       crawler_shoe_spans(layout))
 
 
 def crawler_figure(case: CrawlerCase, limits, image, check_all):
@@ -2155,12 +2270,22 @@ def crawler_figure(case: CrawlerCase, limits, image, check_all):
     left = xy[:, 1] > 0
     pts_l, = ax3.plot([], [], "o", ms=6, color=ACCENT, mec="white", mew=0.6)
     pts_r, = ax3.plot([], [], "s", ms=5, color="#5f7fb3", mec="white", mew=0.6)
-    ax3.set_xlim(-1.45, 1.45)
-    ax3.set_ylim(-3, 56)
-    ax3.axvspan(-1.42, -0.92, color="#f4f3ef", lw=0, zorder=0)
-    ax3.axvspan(0.93, 1.42, color="#f4f3ef", lw=0, zorder=0)
-    ax3.text(-1.17, 52, "끝 슈 (틈 2~22 mm)", ha="center", fontsize=7.4, color=INK_SECONDARY)
-    ax3.text(1.17, 52, "끝 슈", ha="center", fontsize=7.4, color=INK_SECONDARY)
+    # x: end-shoe spans from the YAML layout; y: Record sphere forces (all frames) and the
+    # independent exact line, with headroom for the span labels (no fixed range)
+    spans = case.shoe_spans
+    x_lo = min(spans[0]["x_m"][0], xy[:, 0].min()) - 0.03
+    x_hi = max(spans[-1]["x_m"][1], xy[:, 0].max()) + 0.03
+    ax3.set_xlim(x_lo, x_hi)
+    f_hi = max(float(case.forces.max()) / 1e3, float(exact_f.max()))
+    f_lo = min(float(case.forces.min()) / 1e3, float(exact_f.min()), 0.0)
+    y_hi = f_hi / 0.85
+    ax3.set_ylim(f_lo - 0.05 * y_hi, y_hi)
+    for span in spans:
+        ax3.axvspan(*span["x_m"], color="#f4f3ef", lw=0, zorder=0)
+        g_lo, g_hi = span["gap_mm"]
+        ax3.text(0.5 * sum(span["x_m"]), 0.93, f"끝 슈 (틈 {g_lo:.1f}~{g_hi:.1f} mm)",
+                 transform=ax3.get_xaxis_transform(), ha="center", fontsize=7.4,
+                 color=INK_SECONDARY)
     del order
     ax4 = axes_box(fig, x0, 590, w, 130)
     s1.style_axes(ax4, title=f"ΣF 크롤러 - W [N] (W = {case.weight_N / 1e3:.2f} kN)",
@@ -2168,7 +2293,9 @@ def crawler_figure(case: CrawlerCase, limits, image, check_all):
     fz = run.a["F_crawler"][:, 2] - case.weight_N
     ax4.plot(t, fz, color=INK_PRIMARY, lw=0.8)
     ax4.set_xlim(0, t[-1])
-    ax4.set_ylim(-120, 120)
+    # symmetric about the reference line ΣF = W (0), from the Record data (no fixed range)
+    fz_lim = 1.15 * max(float(np.abs(fz).max()), 1.0)
+    ax4.set_ylim(-fz_lim, fz_lim)
     cursor.add_axes(ax4)
     ax5 = axes_box(fig, x0 + w + gx, 590, w, 130)
     s1.style_axes(ax5, title="pitch 변동 (평균 대비) [1e-6 °]", xlabel="t [s]")
@@ -2176,10 +2303,13 @@ def crawler_figure(case: CrawlerCase, limits, image, check_all):
     ax5.set_xlim(0, t[-1])
     cursor.add_axes(ax5)
     mc = {m["mode"]: m for m in case.result["modes_chrono"]}
+    # window from meta.json settings; active counts from result.json (crawler_active_by_kind)
+    win_txt = f"{case.settle_s:g}~{case.settle_s + case.still_s:g} s"
+    act = case.active_by_kind
     lines = [
-        f"정착(창 10~15 s): u_z {case.result['window']['u_z_mm']:.5f} mm, pitch "
-        f"{case.result['window']['pitch_deg']:.6f}°, 활성 구 {chk['chrono_window']['active_min']}개"
-        f" (롤러 12 + 끝 슈 2)",
+        f"정착(창 {win_txt}): u_z {case.result['window']['u_z_mm']:.5f} mm, pitch "
+        f"{case.result['window']['pitch_deg']:.6f}°, 활성 구 {sum(act.values())}개"
+        f" (롤러 {act['roller']} + 끝 슈 {act['end_shoe']})",
         f"Chrono - 독립 정확 해: u_z {chk['chrono_minus_exact']['u_z_mm'] * 1e3:+.2f} μm, pitch "
         f"{chk['chrono_minus_exact']['pitch_deg'] * 1e6:+.2f}e-6°   P-δ 증폭 "
         f"{chk['exact_minus_linear']['pitch_rel'] * 100:+.3f} % (예측 "
@@ -2190,8 +2320,8 @@ def crawler_figure(case: CrawlerCase, limits, image, check_all):
     ]
     text_block(fig, x0, 760, lines, size=8.3)
     text_block(fig, x0, 830, [
-        "구 접촉력 = k_n·max(δ, 0), δ = 기록 자세에서 계산한 구-바닥 겹침 (k_n 8.333e6 N/m "
-        "float32). "
+        "구 접촉력 = k_n·max(δ, 0), δ = 기록 자세에서 계산한 구-바닥 겹침 (k_n "
+        f"{case.kn_N_m / 1e6:.8g}e6 N/m float32). "
         "창 평균 - result.json 구 힘 ≤ "
         f"{case.check['sphere_force_window_mean_minus_result_max_abs_N']:.2f} N.",
         f"출처: 07_results/S2b/crawler_{case.level}/, verify_S2b_L1.json crawler, "
