@@ -188,7 +188,7 @@ def argv_check(row: dict[str, Any], sb: ModuleType) -> dict[str, Any]:
             "mass_scale": row["rem_mass_scale"],
             "floor_roll": 0.0, "floor_pitch": 0.0,
             "k1_order_gate": row["k1_order_gate"],
-            "k1_forced_block": row["k1_forced_block"] if row["k1_forced_block"] != "off" else None,
+            "k1_forced_block": row["k1_forced_block"],  # judge rows: the parser default off (rules 9.3, K-5)
             "expect_controller": row["controller"]}
     for k, v in want.items():
         got = _scalar(getattr(a, k, None))

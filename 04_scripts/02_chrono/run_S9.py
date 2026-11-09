@@ -3795,10 +3795,12 @@ K1_FORCED_BLOCK_CLASS = "K1ForcedBlockC2Controller"
 9.3; cad 2026-11-09): ``first`` builds the controller with ``04_scripts/02_chrono/k1_forced_block.py``
 ``K1ForcedBlockC2Controller.from_params`` (research subclass: the first ``_is_flat_soil_order_blocked`` call returns
 True; ``c2.py`` unchanged) instead of ``C2Controller.from_params``; the config is the same, so ``--expect-controller``
-is unchanged. Needs ``--k1-order-gate on`` (any value of this option without it: exit 2). Recorded as
-``c2_setup.k1_forced_block`` (``requested``, ``class``, ``module_sha256``); a row with ``--k1-order-gate`` and without
-this option records ``requested`` ``off`` and the class ``C2Controller`` (judge rows, rules K-6). Absent with no
-``--k1-order-gate`` = no attribute, no record, the run is unchanged."""
+is unchanged. Default ``off`` (rules 9.3: ``C2Controller``, every ``level`` run, so ``args.k1_forced_block`` is
+``"off"`` on every new result). ``first`` needs ``--k1-order-gate on`` (exit 2 otherwise). Every ``level`` run records
+``c2_setup.k1_forced_block`` (``requested``, ``class``, ``module_sha256``; ``off`` = the class
+``outrigger_sim.control.c2.C2Controller`` and ``module_sha256`` None). ``off`` builds the same config and the same
+class as before the option, so the run is bit-identical; only the record keys are added."""
+K1_FORCED_BLOCK_DEFAULT = "off"
 
 
 def _k1_forced_block_exit(msg: str) -> None:
@@ -3806,15 +3808,15 @@ def _k1_forced_block_exit(msg: str) -> None:
     raise SystemExit(2)
 
 
-def k1_forced_block_of_args(args: argparse.Namespace) -> str | None:
-    """The requested ``--k1-forced-block`` value (None without the option); exit 2 when it is given without
-    ``--k1-order-gate on`` or with a value outside :data:`K1_FORCED_BLOCK_CHOICES`."""
+def k1_forced_block_of_args(args: argparse.Namespace) -> str:
+    """The requested ``--k1-forced-block`` value (:data:`K1_FORCED_BLOCK_DEFAULT` when the namespace has none); exit 2
+    for ``first`` without ``--k1-order-gate on`` or a value outside :data:`K1_FORCED_BLOCK_CHOICES`."""
     v = getattr(args, "k1_forced_block", None)
     if v is None:
-        return None
+        return K1_FORCED_BLOCK_DEFAULT
     if v not in K1_FORCED_BLOCK_CHOICES:
         _k1_forced_block_exit(f"{K1_FORCED_BLOCK_OPTION} must be one of {K1_FORCED_BLOCK_CHOICES}, got {v!r}")
-    if getattr(args, "k1_order_gate", None) != "on":
+    if v == "first" and getattr(args, "k1_order_gate", None) != "on":
         _k1_forced_block_exit(f"{K1_FORCED_BLOCK_OPTION} {v} needs {K1_ORDER_GATE_OPTION} on (got "
                               f"{getattr(args, 'k1_order_gate', None)!r}): a forced block has no effect without the gate")
     return v
@@ -3848,25 +3850,22 @@ def _class_name(cls: type) -> str:
     return f"{cls.__module__}.{cls.__qualname__}"
 
 
-def level_controller_class(args: argparse.Namespace) -> tuple[type, dict[str, Any] | None]:
-    """The controller class of ``run_level`` and its ``c2_setup.k1_forced_block`` record: ``C2Controller`` without
-    ``--k1-forced-block first`` (record ``requested`` ``off`` when ``--k1-forced-block`` or ``--k1-order-gate`` is
-    given, else None = no key), :func:`k1_forced_block_class` with it."""
+def level_controller_class(args: argparse.Namespace) -> tuple[type, dict[str, Any]]:
+    """The controller class of ``run_level`` and its ``c2_setup.k1_forced_block`` record (always): ``C2Controller``
+    for ``off`` (``module_sha256`` None), :func:`k1_forced_block_class` for ``first``."""
     from outrigger_sim.control.c2 import C2Controller  # noqa: PLC0415
 
     forced = k1_forced_block_of_args(args)
     if forced == "first":
         cls, sha = k1_forced_block_class()
         return cls, {"requested": forced, "class": _class_name(cls), "module_sha256": sha}
-    if forced is None and getattr(args, "k1_order_gate", None) is None:
-        return C2Controller, None
     return C2Controller, {"requested": "off", "class": _class_name(C2Controller), "module_sha256": None}
 
 
 def level_c2_config_of_args(args: argparse.Namespace) -> tuple[Any, dict[str, Any]]:
     """:func:`level_c2_config` of the ``level`` arguments; ``--las-off`` gives it the LAS-off preset and records it;
     ``--k1-order-gate`` then sets the R4 order gate (LAS-b K1) and records it; ``--k1-forced-block`` is checked
-    (exit 2 without ``--k1-order-gate on``; it does not change the config)."""
+    (``first`` without ``--k1-order-gate on``: exit 2; it does not change the config)."""
     k1_forced_block_of_args(args)
     config, c2_meta = level_c2_config(args.allow_current_c2, las_off_config(args))
     if getattr(args, "las_off", False):
@@ -5825,10 +5824,8 @@ def run_level(args) -> Path:
                    if not r["ok"]]
             raise SystemExit(f"--expect-controller {expect}: the run-time C2 preset differs: {'; '.join(bad)}")
     # K1 re-measure F1 / F2 (las_k1_rules_adopt2.md 9.3): controller class before the model build (exit 2 on misuse);
-    # no --k1-forced-block / --k1-order-gate = C2Controller and no c2_setup key
-    controller_cls, k1_forced_meta = level_controller_class(args)
-    if k1_forced_meta is not None:
-        c2_meta["k1_forced_block"] = k1_forced_meta
+    # default off = C2Controller (recorded on every run, rules 9.3)
+    controller_cls, c2_meta["k1_forced_block"] = level_controller_class(args)
     from outrigger_sim.chrono.scm_model import gravity_ramp_factor
 
     tb = time.perf_counter()
@@ -6331,11 +6328,11 @@ def build_parser() -> argparse.ArgumentParser:
                          "True, off = False as the preset) before --expect-controller; checked on the built "
                          "controller, recorded as c2_setup.k1_order_gate. Absent = no attribute, the run is unchanged")
     lp.add_argument(K1_FORCED_BLOCK_OPTION, dest="k1_forced_block", choices=K1_FORCED_BLOCK_CHOICES,
-                    default=argparse.SUPPRESS,
-                    help="K1 re-measure diagnostic (las_k1_rules_adopt2.md 2.3): first = build the controller with "
-                         "k1_forced_block.K1ForcedBlockC2Controller (the first R4 order-gate call blocks), off = "
-                         "C2Controller; needs --k1-order-gate on (exit 2 otherwise). Recorded as "
-                         "c2_setup.k1_forced_block. Absent = no attribute, the run is unchanged")
+                    default=K1_FORCED_BLOCK_DEFAULT,
+                    help="K1 re-measure diagnostic (las_k1_rules_adopt2.md 2.3 / 9.3): first = build the controller "
+                         "with k1_forced_block.K1ForcedBlockC2Controller (the first R4 order-gate call blocks; needs "
+                         "--k1-order-gate on, exit 2 otherwise), off (default) = C2Controller as before. Recorded as "
+                         "c2_setup.k1_forced_block on every run")
     lp.add_argument("--creep-rule", choices=tuple(CREEP_RULES), default=argparse.SUPPRESS,
                     help="P3-4 creep rule (spec 433): current = sinkage rate over 1 s, a window_short row is not a "
                          "pass; legacy_0p2 = over 0.2 s, as the runs before 2026-11-05. Absent = current, no attribute")

@@ -104,17 +104,46 @@ def _exit_code(fn) -> int | None:
 
 
 # ------------------------------------------------------------------------------- run_S9 level
-def test_without_the_options_no_attribute_preset_bits_and_no_record(run_s9) -> None:
+OFF_RECORD = {"requested": "off", "class": "outrigger_sim.control.c2.C2Controller", "module_sha256": None}
+
+
+def test_without_the_options_default_off_preset_bits_and_off_record(run_s9) -> None:
+    """Rules 9.3: default ``off`` (args value ``"off"``), the preset config and ``C2Controller`` as before the option;
+    the off record is written on every run."""
     from outrigger_sim.control.c2 import C2Controller
 
     args = _level_args(run_s9, ["level", "--soil", "J2"])
-    assert not hasattr(args, "k1_forced_block") and not hasattr(args, "k1_order_gate")
-    assert run_s9.k1_forced_block_of_args(args) is None
+    assert args.k1_forced_block == "off" and not hasattr(args, "k1_order_gate")
+    assert run_s9.k1_forced_block_of_args(args) == "off"
     config, meta = run_s9.level_c2_config_of_args(args)
     assert _same_bits(config, _preset())
-    assert "k1_forced_block" not in meta and "k1_order_gate" not in meta
+    assert "k1_forced_block" not in meta and "k1_order_gate" not in meta  # run_level adds the record
     cls, rec = run_s9.level_controller_class(args)
-    assert cls is C2Controller and rec is None
+    assert cls is C2Controller and rec == OFF_RECORD
+    explicit = _level_args(run_s9, ["level", "--soil", "J2", "--k1-forced-block", "off"])
+    assert vars(explicit) == vars(args)  # off given = off by default (no gate needed)
+    assert _same_bits(run_s9.level_c2_config_of_args(explicit)[0], config)
+
+
+def test_namespace_without_the_attribute_is_off(run_s9) -> None:
+    """A namespace without the key (e.g. args rebuilt from a stored result.json before the option) reads as off."""
+    import argparse
+
+    assert run_s9.k1_forced_block_of_args(argparse.Namespace()) == "off"
+
+
+def test_source_args_check_accepts_the_new_default(run_s9, tmp_path) -> None:
+    """check-sources / stored-args reproduction: a former result.json without ``k1_forced_block`` still matches
+    (a key absent from the former args must keep its parser default)."""
+    import json
+
+    tokens = ["level", "--soil", "J2", "--k1-order-gate", "off"]
+    full = vars(_level_args(run_s9, tokens))
+    old = {k: v for k, v in full.items() if k != "k1_forced_block"}
+    (tmp_path / "result.json").write_text(json.dumps({"args": old}), "utf-8")
+    assert run_s9.source_args_check(tokens, tmp_path)["status"] == "ok"
+    chk = run_s9.source_args_check([*tokens[:3], "--k1-order-gate", "on", "--k1-forced-block", "first"], tmp_path)
+    assert {d["key"] for d in chk["diffs"]} == {"k1_order_gate", "k1_forced_block"}
 
 
 @pytest.mark.parametrize("gate", ["off", "on"])
@@ -131,16 +160,26 @@ def test_gate_rows_record_off_and_c2controller(run_s9, gate) -> None:
     assert _same_bits(config, want)
     cls, rec = run_s9.level_controller_class(args)
     assert cls is C2Controller
-    assert rec == {"requested": "off", "class": "outrigger_sim.control.c2.C2Controller", "module_sha256": None}
+    assert rec == OFF_RECORD
+    assert args.k1_forced_block == "off"  # judge rows: args.k1_forced_block "off" (K-5)
+
+
+@pytest.mark.parametrize("tokens", [["--k1-forced-block", "off"], ["--k1-forced-block", "off", "--k1-order-gate", "off"],
+                                    ["--k1-forced-block", "off", "--k1-order-gate", "on"]])
+def test_off_is_allowed_without_the_gate(run_s9, tokens) -> None:
+    from outrigger_sim.control.c2 import C2Controller
+
+    args = _level_args(run_s9, ["level", "--soil", "J2", *tokens])
+    assert run_s9.k1_forced_block_of_args(args) == "off"
+    run_s9.level_c2_config_of_args(args)
+    assert run_s9.level_controller_class(args) == (C2Controller, OFF_RECORD)
 
 
 @pytest.mark.parametrize("tokens", [
     ["--k1-forced-block", "first"],
     ["--k1-forced-block", "first", "--k1-order-gate", "off"],
-    ["--k1-forced-block", "off"],
-    ["--k1-forced-block", "off", "--k1-order-gate", "off"],
 ])
-def test_forced_block_without_gate_on_exits_2(run_s9, tokens) -> None:
+def test_forced_first_without_gate_on_exits_2(run_s9, tokens) -> None:
     args = _level_args(run_s9, ["level", "--soil", "J2", *tokens])
     assert _exit_code(lambda: run_s9.k1_forced_block_of_args(args)) == 2
     assert _exit_code(lambda: run_s9.level_c2_config_of_args(args)) == 2
@@ -184,7 +223,7 @@ def test_run_level_order_class_before_build_and_from_params(run_s9) -> None:
     src = Path(run_s9.__file__).read_text(encoding="utf-8")
     i_cfg = src.index("config, c2_meta = level_c2_config_of_args(args)")
     i_expect = src.index('expect = getattr(args, "expect_controller", None)')
-    i_cls = src.index("controller_cls, k1_forced_meta = level_controller_class(args)")
+    i_cls = src.index('controller_cls, c2_meta["k1_forced_block"] = level_controller_class(args)')
     i_build = src.index("model = build_machine(args, params, pv, soil)", i_expect)  # the run_level build
     i_from = src.index("c2 = controller_cls.from_params(params_ctrl, config)")
     i_gate = src.index("k1_gate = k1_order_gate_of_args(args)")
@@ -199,7 +238,14 @@ def test_real_module_resolves(run_s9) -> None:
     args = _level_args(run_s9, ["level", "--soil", "J2", "--k1-order-gate", "on", "--k1-forced-block", "first"])
     cls, rec = run_s9.level_controller_class(args)
     assert cls.__name__ == "K1ForcedBlockC2Controller"
-    assert rec["module_sha256"] == hashlib.sha256((CHRONO_SCRIPTS / "k1_forced_block.py").read_bytes()).hexdigest()
+    sha = hashlib.sha256((CHRONO_SCRIPTS / "k1_forced_block.py").read_bytes()).hexdigest()
+    assert rec == {"requested": "first", "class": "k1_forced_block.K1ForcedBlockC2Controller", "module_sha256": sha}
+    from outrigger_sim.params import load_params
+
+    config, _ = run_s9.level_c2_config_of_args(args)
+    meta = cls.from_params(load_params(level="top"), config).meta()["k1_forced_block"]
+    # the judge (rules 5 F-only items): controller_meta class == c2_setup class, module sha == K-2 sha
+    assert meta["class"] == rec["class"] and meta["module_sha256"] == sha and meta["mode"] == "first"
 
 
 # ------------------------------------------------------------------------------- batch rows
