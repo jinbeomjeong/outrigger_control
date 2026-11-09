@@ -61,7 +61,11 @@ Drawing conventions (body / world frame: x forward, y left, z up; SI; roll / pit
         as the judgement; deviation from result.json recorded in S2_gifs.json).
     Crawler sphere forces: k_n max(delta, 0) of the recorded pose (k_n float32 8333333.5 N/m,
         sphere radius and centres from YAML via scenarios.crawler_settle.crawler_layout); the
-        5 s window mean is checked against result.json sphere_force_chrono_mean_N.
+        5 s window mean is checked against result.json sphere_force_chrono_mean_N. The weight W
+        of the ΣF - W panel is the run's result.json analytic_exact.weight_N (YAML composite
+        mass x g), checked against s2b_crawler_check.json <level>.W_N (rel. 1e-9).
+    V12 frame plan: settling frames are log-spaced up to the verify mean window start and end
+        at the window end (clipped to the record end), so no frame lies past the run.
 
 CPU: the process (and the V7 workers) is pinned to the E-cores
 (outrigger_sim.hostcpu.place_process("ecore")) at below-normal priority (other agents run on
@@ -129,6 +133,10 @@ from render_layout_views import (  # noqa: E402
 )
 from run_S2a import dt_case_name  # noqa: E402  (dt-study folder naming rule)
 
+from outrigger_sim.chrono.ground_bushing import (  # noqa: E402  (R15 N_th, t_lift)
+    LIFT_TIME_S,
+    TOUCH_THRESHOLD_N,
+)
 from outrigger_sim.frames import quat_to_matrix, roll_pitch_from_quat  # noqa: E402
 from outrigger_sim.geometry import extension_direction, pad_sphere_centre_body_m  # noqa: E402
 from outrigger_sim.params import load_params  # noqa: E402
@@ -228,7 +236,7 @@ ARROW_N_M_PER_N = 1.0 / 100e3  # normal force arrow: 1 m per 100 kN (as S1)
 ARROW_T_M_PER_N = 1.0 / 5e3  # tangential force arrow: 1 m per 5 kN (x20)
 GROUND_RECT_XY = s1.GROUND_RECT_XY
 LEVEL_LABEL = s1.LEVEL_LABEL
-W_TOTAL_N = 382290.6605569856  # superstructure + 4 rods (s2a_slope_pdelta_check.json W_N)
+CRAWLER_W_REL_TOL = 1e-9  # result.json analytic_exact.weight_N vs s2b_crawler_check W_N
 KN_CRAWLER_F32 = 8333333.5  # s2b_crawler_check.json meta.kn_per_sphere_float32_N_m
 
 plt.rcParams["font.family"] = "Malgun Gothic"
@@ -1363,18 +1371,51 @@ def window_text(window: dict) -> str:
     return f"{t0:.0f}~{t1:.0f} s"
 
 
+def v12_release_normal_N(case: V12Case) -> np.ndarray:
+    """Recorded pad normal force per leg at its hold release time (verify ground_bushing)."""
+    release = case.verify["ground_bushing"]["hold_release_t_s"]
+    normal = case.run.a["F_contact_n"]
+    return np.array([normal[case.run.index(t), k] for k, t in enumerate(release)], float)
+
+
+V12_LATE_FRAMES = 5  # log-spaced settling frames from V12_LATE_START_S to the window start
+V12_LATE_START_S = 5.0
+
+
+def v12_late_times(ramp_s: float, window: dict, t_end: float) -> list[float]:
+    """Settling frame times after the gravity ramp, inside the recorded run.
+
+    Log-spaced from ``max(V12_LATE_START_S, ramp_s + 0.1)`` to the start of the verify mean
+    window (``window["mean_window_s"][0]``), then the window end clipped to the record end
+    ``t_end``. Every time is <= ``t_end``, so the last GIF frames never repeat the end sample.
+    """
+    w0, w1 = (float(v) for v in window["mean_window_s"])
+    t_last = min(w1, float(t_end))
+    t0 = max(V12_LATE_START_S, ramp_s + 0.1)
+    if not t0 < w0 < t_last - 1e-6:
+        raise SystemExit(f"V12 frame plan: need ramp end {t0:g} s < window start {w0:g} s "
+                         f"< record end {t_last:g} s")
+    return [float(t) for t in np.geomspace(t0, w0, V12_LATE_FRAMES)] + [t_last]
+
+
 def v12_plan(case: V12Case):
     release = case.verify["ground_bushing"]["hold_release_t_s"]
+    n_release = v12_release_normal_N(case)
     t_banner = max(release) + 0.004
     times = [(t, None) for t in np.arange(0.02, 0.0701, 0.025)]
     times.append((t_banner, "hold 해제: " + " / ".join(
         f"{leg} {t * 1e3:.1f}" for leg, t in zip(LEG_ORDER, release, strict=True))
-        + " ms (실제 하중 약 100 N)"))
+        + f" ms\n조건 N > N_th {TOUCH_THRESHOLD_N:g} N · 해제 시 기록 N "
+        + " / ".join(f"{n:.0f}" for n in n_release) + " N"))
     times += [(t, None) for t in (0.12, 0.2, 0.35, 0.55, 0.8, 1.1, 1.5, 2.0, 2.5, 3.0)]
     ramp_s = float(case.run.result["ramp_s"])
+    window = case.verify["window"]
     times.append((ramp_s + 0.05, f"중력 램프 끝({ramp_s:g} s): 이후 정착 → 판정 창 "
-                  f"{window_text(case.verify['window'])}"))
-    times += [(t, None) for t in (5.0, 9.0, 16.0, 28.0, 45.0, 61.0)]
+                  f"{window_text(window)}"))
+    late = v12_late_times(ramp_s, window, float(case.run.t[-1]))
+    times += [(t, None) for t in late[:-2]]
+    times.append((late[-2], f"판정 창 시작 {window_text(window)} (창 평균 = verify v12)"))
+    times.append((late[-1], None))
     return times
 
 
@@ -1545,9 +1586,11 @@ def render_v12(bank, args, summary):
             f"Δt {s1.dt_text(case.run.result['dt_s'])} · 중력 램프 "
             f"{case.run.result['ramp_s']:g} s + 정착 {case.run.result['settle_after_ramp_s']:g} s "
             "(시간축 로그)")
+        release_ms = np.array(case.verify["ground_bushing"]["hold_release_t_s"]) * 1e3
         pieces["note"].set_text(
             "다리 신장 = 구가 경사면에 정확히 닿는 길이(고정). 시작: 무중력·간극 0 → 중력 램프. "
-            "처음 약 75 ms는 hold(부싱 고정점 유지, 실제 하중이 침투 양자 아래).")
+            f"처음 {release_ms.min():.0f}~{release_ms.max():.0f} ms는 hold(부싱 고정점 유지, "
+            f"법선력 N ≤ N_th {TOUCH_THRESHOLD_N:g} N 동안).")
         plan = v12_plan(case)
         for j, (t_frame, banner) in enumerate(plan):
             i = run.index(t_frame)
@@ -1997,6 +2040,22 @@ class CrawlerCase:
     forces: np.ndarray  # (n, 24) k_n max(delta, 0)
     check: dict
     result: dict
+    weight_N: float  # result.json analytic_exact.weight_N (= s2b_crawler_check <level> W_N)
+
+
+def crawler_weight_N(result: dict, check_level: dict, case: str) -> float:
+    """Weight W carried by the crawler spheres in an S2b crawler run.
+
+    Source: the run's own result.json ``analytic_exact.weight_N`` (run_S2b: composite mass of
+    superstructure + 4 leg moving parts of the run's YAML x g, scenarios.crawler_settle), checked
+    against the independent dynamics-dev check s2b_crawler_check.json ``<level>.W_N``.
+    """
+    w = float(result["analytic_exact"]["weight_N"])
+    w_check = float(check_level["W_N"])
+    if abs(w - w_check) > CRAWLER_W_REL_TOL * abs(w_check):
+        raise SystemExit(f"{case}: result.json weight_N {w!r} != s2b_crawler_check W_N "
+                         f"{w_check!r} (stale check or run; rerun the one made with the old YAML)")
+    return w
 
 
 def load_crawler(level, check_all) -> CrawlerCase:
@@ -2015,8 +2074,10 @@ def load_crawler(level, check_all) -> CrawlerCase:
              "sum_spring_minus_F_crawler_z_max_abs_N": float(np.abs(
                  forces.sum(axis=1) - run.a["F_crawler"][:, 2]).max()),
              "active_spheres_window": int((mean > 0).sum())}
+    weight = crawler_weight_N(res, check_all[level], run.name)
+    check["weight_N"] = weight
     return CrawlerCase(run, level, centres, layout.sphere_radius_m,
-                       np.array([k == "roller" for k in layout.kind]), forces, check, res)
+                       np.array([k == "roller" for k in layout.kind]), forces, check, res, weight)
 
 
 def crawler_figure(case: CrawlerCase, limits, image, check_all):
@@ -2072,9 +2133,13 @@ def crawler_figure(case: CrawlerCase, limits, image, check_all):
     ax2.plot(t, uz, color=INK_PRIMARY, lw=1.2)
     ax2.axhline(chk["exact_pdelta"]["u_z_mm"], color=ACCENT, lw=1.2, ls=(0, (1, 1.5)))
     ax2.axhline(chk["linear_no_pdelta"]["u_z_mm"], color=LIN_COLOR, lw=1.2, ls=(0, (4, 2)))
-    ax2.set_ylim(-3.195, -3.178)
+    # limits from the data and the two reference lines (a fixed range went stale with the YAML)
+    uz_refs = (chk["exact_pdelta"]["u_z_mm"], chk["linear_no_pdelta"]["u_z_mm"])
+    uz_lo, uz_hi = min(*uz_refs, uz.min()), max(*uz_refs, uz.max())
+    uz_pad = 0.15 * max(uz_hi - uz_lo, 1e-3)
+    ax2.set_ylim(uz_lo - uz_pad, uz_hi + uz_pad)
     ax2.set_xlim(0, t[-1])
-    ax2.yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter("%.3f"))
+    ax2.yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter("%.4f"))
     cursor.add_axes(ax2)
     cursor.add_dot(ax2, t, uz, ACCENT)
     ax3 = axes_box(fig, x0, 335, 2 * w + gx, 200)
@@ -2098,8 +2163,9 @@ def crawler_figure(case: CrawlerCase, limits, image, check_all):
     ax3.text(1.17, 52, "끝 슈", ha="center", fontsize=7.4, color=INK_SECONDARY)
     del order
     ax4 = axes_box(fig, x0, 590, w, 130)
-    s1.style_axes(ax4, title="ΣF 크롤러 - W [N] (W = 382.29 kN)", xlabel="t [s]")
-    fz = run.a["F_crawler"][:, 2] - W_TOTAL_N
+    s1.style_axes(ax4, title=f"ΣF 크롤러 - W [N] (W = {case.weight_N / 1e3:.2f} kN)",
+                  xlabel="t [s]")
+    fz = run.a["F_crawler"][:, 2] - case.weight_N
     ax4.plot(t, fz, color=INK_PRIMARY, lw=0.8)
     ax4.set_xlim(0, t[-1])
     ax4.set_ylim(-120, 120)
@@ -2384,8 +2450,8 @@ def events_figure(case: EventCase, limits, image, verify_b):
     event_lines(ax)
     cursor.add_dot(ax, t, case.gap_mm, LEG_COLORS["FL"])
     ax = axes_box(fig, x0, 310, 2 * w + gx, 170)
-    s1.style_axes(ax, title="FL 패드 법선력 N [kN] (보라 선 = R15 부싱 사건, N_th 100 N, t_lift 1 "
-                            "ms)",
+    s1.style_axes(ax, title="FL 패드 법선력 N [kN] (보라 선 = R15 부싱 사건, "
+                            f"N_th {TOUCH_THRESHOLD_N:g} N, t_lift {LIFT_TIME_S * 1e3:g} ms)",
                   xlabel="t [s]")
     ax.plot(t, run.a["F_contact_n"][:, 0] / 1e3, color=LEG_COLORS["FL"], lw=1.4, label="Δt 1e-4 s")
     ax.plot(run2.t, run2.a["F_contact_n"][:, 0] / 1e3, color=DT2_COLOR, lw=0.8, ls=(0, (3, 2)),
@@ -2518,7 +2584,8 @@ def render_events(bank, summary):
     print(f"  events mesh {time.perf_counter() - t0:.1f} s", flush=True)
     frames, durations, plans = [], [], {}
     representative = None
-    kinds = {1: "접지 → 부싱 생성 (N > 100 N)", 2: "부상 → 부싱 소멸 (N ≤ 0이 1 ms 지속)"}
+    kinds = {1: f"접지 → 부싱 생성 (N > {TOUCH_THRESHOLD_N:g} N)",
+             2: f"부상 → 부싱 소멸 (N ≤ 0이 {LIFT_TIME_S * 1e3:g} ms 지속)"}
     for n, case in enumerate(cases):
         run = case.run
         ec = case.run.result["event_case"]

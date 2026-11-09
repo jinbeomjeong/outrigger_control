@@ -92,13 +92,13 @@
    "ramp0.1_dt1e-05": 22.343854192416984
   }
  },
- "last_run_s": 483.9,
+ "last_run_s": 27.9,
  "v12_gif": {
   "path": "06_analysis/01_chrono/12_S2/S2a_v12_slope.gif",
   "frames": 63,
   "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
-  "size_bytes": 842805,
-  "loop_s": 19.71,
+  "size_bytes": 850975,
+  "loop_s": 21.93,
   "resolution_px": [
    1400,
    900
@@ -124,11 +124,11 @@
     3.0,
     3.05,
     5.0,
-    9.0,
-    16.0,
-    28.0,
-    45.0,
-    61.0
+    8.8914,
+    15.8114,
+    28.1171,
+    50.0,
+    53.0
    ],
    "v12_roll2": [
     0.02,
@@ -147,11 +147,11 @@
     3.0,
     3.05,
     5.0,
-    9.0,
-    16.0,
-    28.0,
-    45.0,
-    61.0
+    8.8914,
+    15.8114,
+    28.1171,
+    50.0,
+    53.0
    ],
    "v12_rollm2_pitch1.5": [
     0.02,
@@ -170,36 +170,36 @@
     3.0,
     3.05,
     5.0,
-    9.0,
-    16.0,
-    28.0,
-    45.0,
-    61.0
+    8.8914,
+    15.8114,
+    28.1171,
+    50.0,
+    53.0
    ]
   },
   "before_source": {
-   "v12_pitch2": "rev-12 Chrono 실행 결과 백업 (S2a_v12_pitch2.json, 창 평균)",
-   "v12_roll2": "rev-12 Chrono 실행 결과 백업 (S2a_v12_roll2.json, 창 평균)",
-   "v12_rollm2_pitch1.5": "rev-12 Chrono 실행 결과 백업 (S2a_v12_rollm2_pitch1.5.json, 창 평균)"
+   "v12_pitch2": "reference.json slope_V12/<case>/L1_plan_A_expected_chrono_minus_reference_rev13/rev12_contact_point_bushing / chrono_model_minus_reference_vertical_N (독립 모델값; --before-dir 미사용: 백업 W 382.3 kN ≠ 현재 380.1 kN)",
+   "v12_roll2": "reference.json slope_V12/<case>/L1_plan_A_expected_chrono_minus_reference_rev13/rev12_contact_point_bushing / chrono_model_minus_reference_vertical_N (독립 모델값; --before-dir 미사용: 백업 W 382.3 kN ≠ 현재 380.1 kN)",
+   "v12_rollm2_pitch1.5": "reference.json slope_V12/<case>/L1_plan_A_expected_chrono_minus_reference_rev13/rev12_contact_point_bushing / chrono_model_minus_reference_vertical_N (독립 모델값; --before-dir 미사용: 백업 W 382.3 kN ≠ 현재 380.1 kN)"
   },
   "before_minus_reference_vertical_N": {
    "v12_pitch2": [
-    148.41,
-    135.19,
-    -135.17,
-    -148.77
+    113.0,
+    97.6,
+    -100.0,
+    -110.6
    ],
    "v12_roll2": [
-    -97.79,
-    216.57,
-    -205.03,
-    86.21
+    -154.6,
+    200.2,
+    -144.5,
+    98.79
    ],
    "v12_rollm2_pitch1.5": [
-    294.54,
-    -51.16,
-    36.66,
-    -280.55
+    279.3,
+    -109.7,
+    48.57,
+    -218.1
    ]
   },
   "after_minus_reference_vertical_N": {
@@ -242,7 +242,7 @@
   "path": "06_analysis/01_chrono/12_S2/S2b_crawler_settle.gif",
   "frames": 28,
   "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
-  "size_bytes": 451962,
+  "size_bytes": 481780,
   "loop_s": 19.73,
   "resolution_px": [
    1400,
@@ -254,17 +254,20 @@
   "top": {
    "sphere_force_window_mean_minus_result_max_abs_N": 1.1440747822562116,
    "sum_spring_minus_F_crawler_z_max_abs_N": 39.558633019332774,
-   "active_spheres_window": 14
+   "active_spheres_window": 14,
+   "weight_N": 380112.91206408397
   },
   "middle": {
    "sphere_force_window_mean_minus_result_max_abs_N": 2.0142992962064454,
    "sum_spring_minus_F_crawler_z_max_abs_N": 26.915728025254793,
-   "active_spheres_window": 14
+   "active_spheres_window": 14,
+   "weight_N": 380112.91206408397
   },
   "bottom": {
    "sphere_force_window_mean_minus_result_max_abs_N": 1.638911836893385,
    "sum_spring_minus_F_crawler_z_max_abs_N": 37.666201465413906,
-   "active_spheres_window": 14
+   "active_spheres_window": 14,
+   "weight_N": 380112.91206408397
   }
  },
  "events_gif": {
@@ -380,7 +383,7 @@
   "merged_identical_frames": 0
  },
  "v7": {
-  "mesh_render_s": 329.8,
+  "mesh_render_s": 302.2,
   "workers": 4,
   "exaggeration": {
    "v7_roll": 400.0,
