@@ -37,6 +37,8 @@ from outrigger_sim.control.c2 import (
     SOIL_EVENT_MODE_DEFER,
     SOIL_EVENT_MODE_DEFER_END,
     SOIL_EVENT_MODE_START,
+    SOIL_MODE_SOURCE_EXPIRY,
+    SOIL_MODE_SOURCE_RELEASE,
     C2Controller,
     C2Geometry,
     C2Phase,
@@ -73,6 +75,20 @@ PRE_S2D_DIGESTS_BY_ENV = {
 bench with ``soil_config()``, computed with ``git archive 765b9fb 03_src 02_params`` (c2 before
 S2D) on 2026-11-09. The digests depend on the env's BLAS (both envs run numpy 2.5.4 and still
 differ), so they are kept per conda env; other envs skip the comparison with the old code."""
+PRE_REV2_S2D_DIGESTS_BY_ENV = {
+    "dynamics-dev": {
+        "defer_loc": "ebdb7658bd24a02c384772b47647c141789b0ab67a4fd1885df92213e512b3c5",
+        "defer_periods": "5e13658c15619160435fded1c301ee92cdcba61141c9d17418739e1a9728ffeb",
+    },
+    "Chrono-dev": {
+        "defer_loc": "1ade85f3e3affc342ee980511f3711041ca1c656c94b2957322e23312f65bb36",
+        "defer_periods": "d325d2c36ea87735c73e663fbca081d367073737c06431271004a59516800cb0",
+    },
+}
+"""Digests (as :data:`PRE_S2D_DIGESTS_BY_ENV`) of the deferring benches with the S2D values,
+computed with ``git archive aa86073 03_src 02_params 05_tests/unit`` (c2 before the rev2 start
+history) on 2026-11-09, env ``python.exe`` called directly (``conda run -n dynamics-dev`` sets
+the MKL threading layer and gives other digests)."""
 BENCH_NAMES = ("defer_loc", "defer_periods", "rise_large", "pinned")
 PINNED_START_FRACTION = 0.9
 PINNED_LOAD_RATE_N_M = 0.6e6
@@ -118,12 +134,12 @@ def bench_digest(bench: SinkBench) -> str:
     return digest.hexdigest()
 
 
-def pre_s2d_digest(name: str) -> str:
-    """The stored pre-S2D digest of this conda env (skips in an env without stored digests)."""
+def pre_s2d_digest(name: str, stored: dict = PRE_S2D_DIGESTS_BY_ENV) -> str:
+    """The stored digest of this conda env (skips in an env without stored digests)."""
     env_name = Path(sys.prefix).name
-    digests = PRE_S2D_DIGESTS_BY_ENV.get(env_name)
+    digests = stored.get(env_name)
     if digests is None:
-        pytest.skip(f"no pre-S2D bench digests stored for env {env_name!r}")
+        pytest.skip(f"no stored bench digests for env {env_name!r}")
     return digests[name]
 
 
@@ -144,6 +160,16 @@ def test_explicit_zero_and_the_shadow_record_are_bit_identical(geometry, name) -
     assert event_names(shadow.controller, SOIL_EVENT_MODE_DEFER) == []
 
 
+@pytest.mark.parametrize("name", ("defer_loc", "defer_periods"))
+def test_the_start_history_keeps_the_s2d_commands(geometry, name) -> None:
+    """rev2 RS2-6: the start / deferral history is record only; with the deferral acting the
+    commands and events are those of the code before it."""
+    bench, _ = run_bench(geometry, name, **S2D_VALUES)
+    assert bench_digest(bench) == pre_s2d_digest(name, PRE_REV2_S2D_DIGESTS_BY_ENV)
+    meta = bench.controller.meta()["soil"]
+    assert len(meta["deferrals"]) == 1 and meta["deferrals"][0] == meta["defer"]["deferral"]
+
+
 def test_the_shadow_record_names_the_deferral_it_would_have_made(geometry) -> None:
     bench, _ = run_bench(geometry, "defer_periods", mode_defer_shadow=True, **S2D_VALUES)
     defer = bench.controller.meta()["soil"]["defer"]
@@ -155,6 +181,10 @@ def test_the_shadow_record_names_the_deferral_it_would_have_made(geometry) -> No
     (soil_start_s,) = [event.t_s for event in bench.controller.events
                        if event.name == SOIL_EVENT_MODE_START]
     assert soil_start_s == pytest.approx(check["t_s"])  # the soil mode itself is not deferred
+    meta = bench.controller.meta()["soil"]
+    assert meta["deferrals"] == []  # the history holds acting deferrals only
+    (start,) = meta["mode_starts"]
+    assert start["t_s"] == soil_start_s and start["source"] == SOIL_MODE_SOURCE_RELEASE
 
 
 # --- settings ---------------------------------------------------------------------------------
@@ -396,6 +426,121 @@ def test_window_record_keeps_the_previous_rise_only_for_the_previous_period(geom
     soil.last_tail_ok, soil.last_rise_N = True, 2500.0
     controller._start_window_record(1.5)  # four periods later
     assert soil.prev_rise_N is None
+
+
+# --- rev2 RS2-1: start and deferral history ---------------------------------------------------
+
+
+def history(controller: C2Controller) -> tuple[list[dict], list[dict]]:
+    meta = controller.meta()["soil"]
+    return meta["mode_starts"], meta["deferrals"]
+
+
+def count_named(controller: C2Controller, name: str) -> int:
+    """Events named exactly ``name`` (``event_names`` matches by prefix)."""
+    return sum(1 for event in controller.events if event.name == name)
+
+
+def expire_on_periods(controller: C2Controller) -> float:
+    """Enter at ``START_T_S`` and expire on ``periods``; returns the expiry time."""
+    enter(controller)
+    continue_falling(controller, 4, STROKE_STEP_M)
+    expiry_s = round(START_T_S + 5 * PERIOD_S, 10)
+    set_window(controller, expiry_s, FALLING_RISES_N[6], FALLING_RISES_N[5])
+    hold(controller, expiry_s, START_STROKE_M + 5 * STROKE_STEP_M)
+    return expiry_s
+
+
+def confirm_and_revoke(controller: C2Controller, t_s: float) -> None:
+    """A LOC, then the P-S8-33 revocation (soil state back to "no LOC", no soil mode)."""
+    controller._soil_state().is_liftoff_confirmed = True
+    controller._revoke_loc(t_s, 5e3)
+    controller._state.in_crawler_zone = False  # the latch releases again before a new LOC
+
+
+def test_a_release_start_is_recorded(geometry) -> None:
+    controller = released_controller(geometry)
+    set_window(controller, START_T_S, None, None)  # no tail: soil mode at the release
+    hold(controller, START_T_S, START_STROKE_M)
+    starts, deferrals = history(controller)
+    (start,) = starts
+    assert start["t_s"] == START_T_S and start["source"] == SOIL_MODE_SOURCE_RELEASE
+    assert start["push_base_stroke_m"] == controller._soil_state().soil_mode_start_stroke_m
+    assert deferrals == []
+
+
+def test_expiry_revoke_release_restart_keeps_the_history(geometry) -> None:
+    """The stalled S-D case (rev2 RS2-0): expiry, LOC revocation, release restart. The meta's
+    last push base is the restart's; the history keeps the expiry start with the deferral
+    start stroke (K-S5 reads it)."""
+    controller = released_controller(geometry)
+    expiry_s = expire_on_periods(controller)
+    revoke_s = expiry_s + 2.4
+    confirm_and_revoke(controller, revoke_s)
+    restart_s = round(revoke_s + 0.6, 10)
+    restart_stroke_m = START_STROKE_M + 0.047
+    set_window(controller, restart_s, None, None)  # window emptied by the revocation
+    hold(controller, restart_s, restart_stroke_m)
+    starts, deferrals = history(controller)
+    assert [start["source"] for start in starts] == [SOIL_MODE_SOURCE_EXPIRY,
+                                                    SOIL_MODE_SOURCE_RELEASE]
+    (deferral,) = deferrals
+    assert deferral["end_reason"] == "periods" and deferral["periods"] == 5
+    assert starts[0]["t_s"] == deferral["end_s"] == expiry_s
+    assert starts[0]["push_base_stroke_m"] == deferral["start_stroke_m"] == START_STROKE_M
+    assert starts[1]["t_s"] == restart_s
+    assert starts[1]["push_base_stroke_m"] == pytest.approx(restart_stroke_m)
+    meta = controller.meta()["soil"]
+    assert meta["soil_mode_start_stroke_m"] == starts[1]["push_base_stroke_m"]  # last value
+    assert len(event_names(controller, SOIL_EVENT_MODE_START)) == len(starts)
+    assert count_named(controller, SOIL_EVENT_MODE_DEFER) == len(deferrals)
+    entry_check = controller._soil_state().defer_checks[-1]
+    assert entry_check["failures"] == ["no_tail"]  # the restart re-evaluated the entry
+
+
+def test_expiry_revoke_reentry_expiry_records_both_deferrals(geometry) -> None:
+    """Re-entry after a revocation (rev2 RS2-2): a second deferral and a second expiry start,
+    each with its own deferral start stroke."""
+    controller = released_controller(geometry)
+    expiry_s = expire_on_periods(controller)
+    confirm_and_revoke(controller, expiry_s + 2.4)
+    reentry_s = round(expiry_s + 3.0, 10)
+    second_stroke_m = START_STROKE_M + 0.047
+    set_window(controller, reentry_s, FALLING_RISES_N[1], FALLING_RISES_N[0])
+    hold(controller, reentry_s, second_stroke_m)
+    soil = controller._soil_state()
+    assert soil.defer.is_active and not soil.is_soil_mode
+    end_s = round(reentry_s + PERIOD_S, 10)
+    set_window(controller, end_s, 4600.0, 4500.0)  # growing rise
+    hold(controller, end_s, second_stroke_m + STROKE_STEP_M)
+    starts, deferrals = history(controller)
+    assert [deferral["end_reason"] for deferral in deferrals] == ["periods", "rise"]
+    assert [start["source"] for start in starts] == [SOIL_MODE_SOURCE_EXPIRY] * 2
+    for start, deferral in zip(starts, deferrals, strict=True):
+        assert start["t_s"] == deferral["end_s"]
+        assert start["push_base_stroke_m"] == deferral["start_stroke_m"]
+    assert deferrals[1]["start_stroke_m"] == pytest.approx(second_stroke_m)
+    assert deferrals[1]["rise_delta_N"] == FALLING_RISES_N[1] - FALLING_RISES_N[0]
+    assert count_named(controller, SOIL_EVENT_MODE_DEFER) == 2
+
+
+def test_the_history_survives_a_new_lifting_cycle(geometry) -> None:
+    """The soil state is replaced at TOUCH entry (P-S9-6); the run history is not."""
+    controller = released_controller(geometry)
+    expire_on_periods(controller)
+    controller._state.soil = _SoilState()
+    starts, deferrals = history(controller)
+    assert len(starts) == 1 and len(deferrals) == 1
+    assert controller.meta()["soil"]["soil_mode_t_s"] is None
+
+
+def test_old_run_state_pickle_reads_an_empty_history(geometry) -> None:
+    controller = level_controller(geometry)
+    state = controller._state
+    for name in ("soil_mode_starts", "soil_deferrals"):
+        state.__dict__.pop(name, None)
+    restored = pickle.loads(pickle.dumps(state))
+    assert restored.soil_mode_starts == () and restored.soil_deferrals == ()
 
 
 # --- benches: the deferral acting -------------------------------------------------------------
