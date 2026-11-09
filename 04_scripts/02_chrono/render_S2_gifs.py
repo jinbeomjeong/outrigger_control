@@ -2,7 +2,10 @@
 
 Reads (nothing is simulated; the inputs are not modified):
     07_results/S2a/<case>/{record.npz, meta.json, result.json}
-        v7_roll, v7_pitch, v7_yaw, v7_yaw_dt2e-04, v7_yaw_dt5e-05,
+        v7_roll, v7_pitch, v7_yaw (judging runs at the YAML dt),
+        v7_yaw_dt5e-05, v7_yaw_dt1e-04, v7_yaw_dt2e-04 (dt study: the three suffixed folders only;
+        drawn only if v7_yaw_dt_study has three distinct dt that match the folder names, else
+        the reason goes to S2_gifs.json dt_study.skip_reason),
         v12_pitch2, v12_roll2, v12_rollm2_pitch1.5
     07_results/S2b/<case>/{record.npz, meta.json, result.json}
         air_short, v11, crawler_{top,middle,bottom}, event_{fast,slow}_FL_dt{1e-04,1e-05}
@@ -40,8 +43,9 @@ Drawing conventions (body / world frame: x forward, y left, z up; SI; roll / pit
         undecimated V5 mesh (render_mesh_v5.npz, 6.38 M faces) is drawn in every scene
         (--cluster-mm 0). Until then the old 1.22 M-face mesh was decimated by vertex
         clustering (12 mm; 0.33 M faces), which tore thin plates; --cluster-mm > 0 restores it.
-        Body displacements in S2 are millimetres (true scale shows nothing), so V7 draws the pose with displacement and rotation multiplied by a stated
-        factor; V12 / crawler / event scenes are drawn at true scale with magnified insets.
+        Body displacements in S2 are millimetres (true scale shows nothing), so V7 draws the
+        pose with displacement and rotation multiplied by a stated factor; V12 / crawler /
+        event scenes are drawn at true scale with magnified insets.
     Forces: ground reaction arrows at the pad contact point (sphere centre - r n), 1 m per
         100 kN (normal); tangential (bushing) force arrows 1 m per 5 kN (x20 against normal).
     V7 modal coordinate: eta = Phi^T M q from result.json series (eta_judged, sqrt(kg) m); the
@@ -81,7 +85,7 @@ import matplotlib.ticker
 import numpy as np
 import pandas as pd
 from matplotlib.lines import Line2D
-from matplotlib.patches import Circle, FancyArrowPatch, Polygon, Rectangle
+from matplotlib.patches import FancyArrowPatch, Polygon, Rectangle
 from PIL import Image
 from scipy.signal import find_peaks
 from scipy.spatial.transform import Rotation
@@ -109,14 +113,15 @@ from render_layout_views import (  # noqa: E402
     VIEWS,
     EdgeStyle,
     SceneItem,
-    build_topologies,
     body_vertices,
+    build_topologies,
     part_topology,
     scene_collection,
     shade_scene,
 )
+from run_S2a import dt_case_name  # noqa: E402  (dt-study folder naming rule)
 
-from outrigger_sim.frames import euler_zyx_from_quat, quat_to_matrix, roll_pitch_from_quat  # noqa: E402
+from outrigger_sim.frames import quat_to_matrix, roll_pitch_from_quat  # noqa: E402
 from outrigger_sim.geometry import extension_direction, pad_sphere_centre_body_m  # noqa: E402
 from outrigger_sim.params import load_params  # noqa: E402
 from outrigger_sim.record import load_record  # noqa: E402
@@ -129,7 +134,10 @@ from outrigger_sim.verify.metrics import fit_damped_sine  # noqa: E402
 
 
 def _stroke_time(times: dict, prefix: str) -> float:
-    """V11 stroke time by key prefix ("FL 0->"): the key carries the stroke (0.68 before, 0.7 since REXOME35)."""
+    """V11 stroke time by key prefix ("FL 0->").
+
+    The key carries the stroke (0.68 before, 0.7 since REXOME35).
+    """
     hits = [v for k, v in times.items() if k.startswith(prefix)]
     if len(hits) != 1:
         raise KeyError(f"V11 stroke time {prefix!r}: keys {list(times)}")
@@ -556,8 +564,11 @@ def floor_polygon(plane_point, plane_normal, rect=GROUND_RECT_XY):
     return np.array([[x, y, z(x, y)] for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1))]), z
 
 
+DEFAULT_EDGE_STYLE = EdgeStyle()
+
+
 def render_scene(below, above, limits, size_px, floor=None, transparent_bg=True,
-                 style=EdgeStyle(), view=None) -> Image.Image:
+                 style=DEFAULT_EDGE_STYLE, view=None) -> Image.Image:
     """render_S1_gifs.render_mesh_image with an optional tilted floor plane (point, normal)."""
     view = view or CURRENT_VIEW[0]
     w, h = size_px
@@ -878,7 +889,8 @@ def v7_figure(case: V7Case, limits, mast_top, image0):
     dev_z = (mode["zeta_corrected"] / mode["zeta_ref"] - 1) * 100
     lines = [
         f"판정 모드 {MODE_NAMES[mode['mode']]}   (V7: 진동수 ±3 %, ζ ±30 %)",
-        f"f_d {mode['f_damped_Hz']:.5f} Hz → f_n {f_n:.5f} Hz   기준 |λ|/2π {mode['f_ref_Hz']:.4f} Hz"
+        f"f_d {mode['f_damped_Hz']:.5f} Hz → f_n {f_n:.5f} Hz   기준 |λ|/2π {mode['f_ref_Hz']:.4f} "
+        "Hz"
         f"   차 {dev_f:+.3f} %",
         f"ζ 맞춤 {mode['zeta_fit']:.6f} - 수치 rωΔt/2 {mode['zeta_num_subtracted']:.3g} = "
         f"{mode['zeta_corrected']:.6f}   기준 {mode['zeta_ref']:.5f}   차 {dev_z:+.2f} %",
@@ -892,7 +904,8 @@ def v7_figure(case: V7Case, limits, mast_top, image0):
         "(η 시계열·모드 맞춤), verify_S2a_L1.json.",
         "포락선은 판정과 같은 맞춤 함수(verify.metrics.fit_damped_sine)로 다시 맞춘 값. "
         "t = 가진 뒤 시간(스냅숏 시각 15 s 뺌).",
-        f"가진: S1 상단 정착 상태(스냅숏)에서 초기 각속도만 줌. Δt {s1.dt_text(run.result['dt_s'])}, "
+        "가진: S1 상단 정착 상태(스냅숏)에서 초기 각속도만 줌. Δt "
+        f"{s1.dt_text(run.result['dt_s'])}, "
         "L1(강체 위치 모터 + "
         "지면 부싱, 작용점 볼 중심)."], size=7.6, colour=INK_SECONDARY)
     (trail,) = scene.ax.plot([], [], color=ACCENT, lw=1.2, alpha=0.8, zorder=6)
@@ -965,7 +978,8 @@ def render_v7(args, bank, mesh_pickle, summary):
             pieces["cursor"].update(run.t[i], i)
             angles = np.degrees(case.rotvec[i]) * 1e3
             speed = ("슬로모션 (실제의 약 0.2배, 주기당 12장)" if kind == "slow"
-                     else f"스트로보: {case.checks['strobe_every_cycles']}주기마다 같은 위상(봉우리)")
+                     else f"스트로보: {case.checks['strobe_every_cycles']}주기마다 같은 "
+                          "위상(봉우리)")
             pieces["status"].set_text(
                 f"t = {run.t[i]:6.3f} s   {speed}   roll {angles[0]:+.2f} · pitch {angles[1]:+.2f}"
                 f" · yaw {angles[2]:+.2f} [1e-3 °]   그림 ×{case.k:g} → "
@@ -994,87 +1008,183 @@ def render_v7(args, bank, mesh_pickle, summary):
 # =============================================================================================
 
 
+DT_STUDY_TONES = ("#a9bfe0", "#5f7fb3", "#24324f")
+"""Colours of the three dt-study runs, smallest dt first."""
+V7_JUDGED_CASES = ("v7_roll", "v7_pitch", "v7_yaw")
+"""Unsuffixed V7 judging runs (YAML dt); never part of the dt study."""
+
+
+def pass_word(ok: bool) -> str:
+    return "통과" if ok else "불통과"
+
+
+def dt_study_rows(study: dict) -> tuple[list[dict] | None, str | None]:
+    """Rows of ``verify_S2a_L1.json`` ``v7_yaw_dt_study`` sorted by dt, or ``(None, reason)``.
+
+    The study is drawn only when it is complete with three distinct dt values, each row's case is
+    the suffixed folder ``dt_case_name("v7_yaw", dt_s)`` listed in ``folders``, and that folder's
+    result.json stores the same ``dt_s`` and ``case`` (the run_S2a.py rule).
+    """
+    rows = sorted(study.get("rows", []), key=lambda r: r["dt_s"])
+    if study.get("status") != "complete":
+        return None, f"v7_yaw_dt_study status {study.get('status')!r} (not complete)"
+    dts = [float(r["dt_s"]) for r in rows]
+    if len(rows) != 3:
+        return None, f"{len(rows)} dt-study rows (need 3): {dts}"
+    if any(math.isclose(a, b, rel_tol=1e-9) for i, a in enumerate(dts) for b in dts[i + 1:]):
+        return None, f"dt values not distinct: {dts}"
+    folders = set(study.get("folders", []))
+    for r in rows:
+        expected = dt_case_name("v7_yaw", r["dt_s"])
+        if r["case"] != expected:
+            return None, (f"row dt_s {r['dt_s']!r} has case {r['case']!r}, "
+                          f"folder name gives {expected}")
+        if r["case"] not in folders:
+            return None, f"row case {r['case']} not in folders {sorted(folders)}"
+        res_path = RES_A / r["case"] / "result.json"
+        if not res_path.is_file():
+            return None, f"{rel(res_path)} missing"
+        res = read_json(res_path)
+        same_dt = math.isclose(float(res["dt_s"]), r["dt_s"], rel_tol=1e-9)
+        if not same_dt or res.get("case") != r["case"]:
+            return None, (f"{rel(res_path)}: stored dt_s {res['dt_s']!r} / case "
+                          f"{res.get('case')!r} does not match row dt_s {r['dt_s']!r} / case "
+                          f"{r['case']}")
+    return rows, None
+
+
+def judged_v7_dt() -> list[float]:
+    """Stored dt_s of the unsuffixed V7 judging runs (one value expected: the YAML dt)."""
+    return sorted({float(read_json(RES_A / c / "result.json")["dt_s"]) for c in V7_JUDGED_CASES})
+
+
 def render_dt_study(summary):
     verify = read_json(VERIFY_A)
     study = verify["v7_yaw_dt_study"]
-    rows = sorted(study["rows"], key=lambda r: r["dt_s"])
+    rows, skip_reason = dt_study_rows(study)
+    if rows is None:
+        print(f"dt study not drawn: {skip_reason}", flush=True)
+        summary["dt_study"] = {"png": None, "drawn": False, "skip_reason": skip_reason,
+                               "stale_png_left": OUT["dt"].exists()}
+        return None
     dt = np.array([r["dt_s"] for r in rows])
+    cases = [r["case"] for r in rows]
     z_fit = np.array([r["zeta_fit_raw"] for r in rows])
     z_env = np.array([r["zeta_log_decrement"] for r in rows])
-    slope, intercept = np.polyfit(dt, z_fit, 1)
-    slope_env, intercept_env = np.polyfit(dt, z_env, 1)
+    # Every number and sentence below comes from v7_yaw_dt_study (run_S2a.yaw_dt_study);
+    # the refit is only a cross-check recorded in S2_gifs.json.
+    slope = study["slope_dzeta_ddt_per_s"]
+    intercept = study["intercept_zeta"]
+    slope_refit, intercept_refit = (float(v) for v in np.polyfit(dt, z_fit, 1))
+    slope_env = study["envelope_slope_dzeta_ld_ddt_per_s"]
+    env_ratio = study["envelope_slope_ratio"]
     s_pred = study["slope_predicted_implicit_per_s"]
-    ratio_inc = (z_fit[2] - z_fit[1]) / (z_fit[1] - z_fit[0])
-    zeta_ref = 0.0372
+    ratio = study["slope_ratio_measured_over_implicit"]
+    ratio_inc = study["increment_ratio"]
+    zeta_ref = study["zeta_ref"]
+    intercept_rel = study["intercept_rel_diff"]
+    ct_scale = float(np.mean([r["prediction_ct_scale"] for r in rows]))  # equal on every row
+    ct_excess = ct_scale / zeta_ref - 1.0
+    crit = study["criteria"]
+    checks = study["checks"]
+    passed = all(checks.values())
+    band = crit["A1_slope_ratio_band"]
+    inc_exp, inc_tol = crit["A2_increment_ratio"]["expected"], crit["A2_increment_ratio"]["rel_tol"]
+    a3_max = crit["A3_intercept_rel_max"]
+    dt_judge = judged_v7_dt()
+    dt_label = " / ".join(f"{d:.0e}" for d in dt)
+    verdict_short = ("가설 A 확정, c_t 과대 없음" if passed
+                     else "A1~A3 실패: " + ", ".join(k for k, v in checks.items() if not v))
     fig = new_figure(1400, 760)
     W, H = 1400, 760
-    fig.text(8 / W, 1 - 10 / H, "S2a Δt 연구 · V7 yaw 가진 2 s, 3차 yaw-sway 모드의 식별 ζ3 대 Δt "
-             "(Δt 5e-5 / 1e-4 / 2e-4 s, 오거 상단, L1, 부싱 작용점 볼 중심)",
+    fig.text(8 / W, 1 - 10 / H, f"S2a Δt 연구 · V7 yaw 가진 2 s, 3차 yaw-sway 모드의 식별 ζ3 대 Δt "
+             f"(Δt {dt_label} s, 오거 상단, L1, 부싱 작용점 볼 중심) · 판정: {pass_word(passed)}",
              fontsize=13, fontweight="bold", va="top", color=INK_PRIMARY)
-    fig.text(8 / W, 1 - 38 / H, "가설 A(부싱만 암시 적분 → 수치 감쇠 ζ_num = r3·ω3·Δt/2, Δt에 비례) 대 "
-             "가설 B(명시 적분 + 실효 c_t 4.9 % 과대 → Δt와 무관). 실측 기울기가 A의 예측과 0.999배로 "
-             "맞고 절편이 물리 ζ(0.0372)와 같다 → A 확정, c_t 과대 없음.",
-             fontsize=9, va="top", color=INK_SECONDARY)
+    subtitle = (
+        "가설 A(부싱만 암시 적분 → 수치 감쇠 ζ_num = r3·ω3·Δt/2, Δt에 비례) 대 "
+        f"가설 B(명시 적분 + 실효 c_t {ct_excess * 100:.1f} % 과대 → Δt와 무관).\n"
+        f"실측 기울기 / A 예측 = {ratio:.3f}, 절편 {intercept:.6f}"
+        f"(기준 ζ3 {zeta_ref:.4f} 대비 {intercept_rel * 100:+.2f} %) → {verdict_short}."
+    )
+    fig.text(8 / W, 1 - 38 / H, subtitle, fontsize=9, va="top", color=INK_SECONDARY)
     ax = axes_box(fig, 70, 90, 640, 560, W, H)
     s1.style_axes(ax, title="ζ3 (식별) [-] 대 Δt", xlabel="Δt [1e-4 s]", ylabel="ζ3")
-    xs = np.linspace(0, 2.2e-4, 50)
+    x_max = 1.1 * dt[-1]
+    xs = np.linspace(0, x_max, 50)
     ax.plot(xs * 1e4, zeta_ref + s_pred * xs, color=ACCENT, lw=1.6,
-            label=f"가설 A 예측: 0.0372 + {s_pred:.2f}·Δt  (s_pred = r3ω3/2, r3 0.9903)")
+            label=f"가설 A 예측: {zeta_ref:.4f} + {s_pred:.2f}·Δt  (s_pred = r3ω3/2)")
     ax.plot(xs * 1e4, intercept + slope * xs, color=INK_PRIMARY, lw=1.0, ls=(0, (1, 1.5)),
             label=f"맞춤 3점 최소자승: {intercept:.6f} + {slope:.3f}·Δt")
-    ax.axhline(study["rows"][1]["prediction_ct_scale"], color=LIN_COLOR, lw=1.4, ls=(0, (5, 3)),
-               label="가설 B(c_t 배율): Δt와 무관 = 0.03901 (Δt 1e-4 값 고정)")
+    ax.axhline(ct_scale, color=LIN_COLOR, lw=1.4, ls=(0, (5, 3)),
+               label=f"가설 B(c_t 배율): Δt와 무관 = {ct_scale:.5f} (세 점 평균)")
     ax.axhline(zeta_ref, color="#5f7fb3", lw=0.9, ls=(0, (2, 2)),
-               label="기준 물리 ζ3 0.0372 (reference.json rev13)")
+               label=f"기준 물리 ζ3 {zeta_ref:.4f} (reference.json rev13)")
     ax.plot(dt * 1e4, z_fit, "o", ms=8, color=ACCENT, mec="white", mew=1, zorder=5,
             label="Chrono 식별 ζ3 (감쇠 정현 맞춤)")
     ax.plot(dt * 1e4, z_env, "s", ms=6, color="#5f7fb3", mec="white", mew=0.8, zorder=5,
-            label=f"봉우리 포락선 ζ3 (교차 추정기, 기울기 {slope_env:.2f}, 비 {slope_env / s_pred:.2f})")
+            label=f"봉우리 포락선 ζ3 (교차 추정기, 기울기 {slope_env:.2f}, 비 {env_ratio:.2f})")
     for x, y in zip(dt, z_fit, strict=True):
-        ax.annotate(f"{y:.5f}", (x * 1e4, y), textcoords="offset points", xytext=(8, -12), fontsize=8,
-                    color=ACCENT)
-    ax.set_xlim(0, 2.2)
-    ax.set_ylim(0.0365, 0.0425)
+        ax.annotate(f"{y:.5f}", (x * 1e4, y), textcoords="offset points", xytext=(8, -12),
+                    fontsize=8, color=ACCENT)
+    ax.set_xlim(0, x_max * 1e4)
+    y_all = np.concatenate([z_fit, z_env, [zeta_ref, ct_scale, intercept,
+                                           zeta_ref + s_pred * x_max, intercept + slope * x_max]])
+    y_pad = 0.12 * (y_all.max() - y_all.min())
+    # extra headroom above for the upper-left legend (7 entries)
+    ax.set_ylim(y_all.min() - y_pad, y_all.max() + 4.5 * y_pad)
     ax.legend(fontsize=8, loc="upper left", frameon=True, framealpha=0.92)
     # eta traces
     ax2 = axes_box(fig, 790, 90, 590, 300, W, H)
     s1.style_axes(ax2, title="η3 시계열 (2 s, result.json series) — 세 Δt", xlabel="t [s]",
                   ylabel="√kg·m")
-    tones = {5e-05: "#a9bfe0", 1e-04: "#5f7fb3", 2e-04: "#24324f"}
-    peaks_info = {}
-    for r in rows:
+    peaks_info = []
+    t_end = 0.0
+    for r, tone in zip(rows, DT_STUDY_TONES, strict=True):
         res = read_json(RES_A / r["case"] / "result.json")
         ts = np.asarray(res["series"]["t_s"])
         eta = np.asarray(res["series"]["eta_judged"])
-        ax2.plot(ts, eta, color=tones[r["dt_s"]], lw=0.8, label=f"Δt {r['dt_s']:g} s")
+        t_end = max(t_end, float(ts[-1]))
+        ax2.plot(ts, eta, color=tone, lw=0.8, label=f"Δt {r['dt_s']:g} s")
         pk, _ = find_peaks(np.abs(eta - eta[-200:].mean()))
-        peaks_info[r["dt_s"]] = (ts[pk], np.abs(eta - eta[-200:].mean())[pk])
+        peaks_info.append((r["dt_s"], tone, ts[pk], np.abs(eta - eta[-200:].mean())[pk]))
     ax2.legend(fontsize=8, loc="upper right", ncol=3, frameon=False)
-    ax2.set_xlim(0, 2)
+    ax2.set_xlim(0, t_end)
     ax3 = axes_box(fig, 790, 450, 590, 200, W, H)
     s1.style_axes(ax3, title="|η3| 봉우리 (로그) — Δt가 클수록 빨리 감쇠", xlabel="t [s]")
-    for d, (tp, ap) in peaks_info.items():
-        ax3.semilogy(tp, ap, "o-", ms=3, lw=0.8, color=tones[d], label=f"Δt {d:g} s")
+    for d, tone, tp, ap in peaks_info:
+        ax3.semilogy(tp, ap, "o-", ms=3, lw=0.8, color=tone, label=f"Δt {d:g} s")
     plain_log_formatter(ax3)
-    ax3.set_xlim(0, 2)
+    ax3.set_xlim(0, t_end)
     ax3.legend(fontsize=8, loc="lower left", ncol=3, frameon=False)
-    lines = [f"기울기 실측 {slope:.3f} 1/s, 예측 {s_pred:.2f} 1/s → 비 "
-             f"{study['slope_ratio_measured_over_implicit']:.4f}",
-             f"구간 증분비 (ζ(2e-4)-ζ(1e-4))/(ζ(1e-4)-ζ(5e-5)) = {ratio_inc:.4f} (선형이면 2)",
-             f"절편(Δt → 0) {intercept:.6f}  = 물리 ζ3 0.0372",
-             "판정(dynamics_model.md 5.5): 조건 ① 충족 → 사용자 결정: L1 일반 Δt 2e-4 s 전환",
-             "(YAML 반영은 S3 V9 통과 뒤, 그전까지 YAML 1e-4 s)"]
+    d1, d2, d3 = (f"{d:.0e}" for d in dt)
+    lines = [f"A1 기울기 실측 {slope:.3f} 1/s, 예측 {s_pred:.2f} 1/s → 비 {ratio:.4f} "
+             f"(허용 {band[0]:g}~{band[1]:g}): {pass_word(checks['A1'])}",
+             f"A2 증분비 (ζ({d3})-ζ({d2}))/(ζ({d2})-ζ({d1})) = {ratio_inc:.4f} "
+             f"(기대 {inc_exp:g} ± {inc_tol * 100:.0f} %): {pass_word(checks['A2'])}",
+             f"A3 절편(Δt → 0) {intercept:.6f}, 기준 ζ3 {zeta_ref:.4f} 대비 "
+             f"{intercept_rel * 100:+.3f} % "
+             f"(허용 ±{a3_max * 100:g} %): {pass_word(checks['A3'])}",
+             "판정 실행 v7_roll·v7_pitch·v7_yaw의 Δt = "
+             + " / ".join(f"{d:g}" for d in dt_judge) + " s(YAML). Δt 연구는 접미사 폴더 3개만 "
+                                                        "쓴다."]
+    if study.get("validity_warnings"):
+        lines.append("경고: " + "; ".join(study["validity_warnings"]))
     text_block(fig, 80, 685, lines, size=9, width=W, height=H)
     fig.text(790 / W, 1 - 690 / H, "출처: verify_S2a_L1.json v7_yaw_dt_study, 07_results/S2a/"
-             "{v7_yaw_dt5e-05, v7_yaw, v7_yaw_dt2e-04}/result.json", fontsize=7.8,
+             "{" + ", ".join(cases) + "}/result.json", fontsize=7.8,
              color=INK_SECONDARY, va="top")
     image = s1.figure_to_image(fig)
     plt.close(fig)
     s1.save_atomic(OUT["dt"], image.save)
-    summary["dt_study"] = {"png": rel(OUT["dt"]), "slope_fit_per_s": slope,
-                           "intercept": intercept, "slope_envelope_per_s": slope_env,
-                           "increment_ratio": ratio_inc,
-                           "slope_ratio": study["slope_ratio_measured_over_implicit"]}
+    summary["dt_study"] = {"png": rel(OUT["dt"]), "drawn": True, "cases": cases,
+                           "dt_s": dt.tolist(), "judged_v7_dt_s": dt_judge,
+                           "slope_fit_per_s": slope, "intercept": intercept,
+                           "refit_minus_json": {"slope_per_s": slope_refit - slope,
+                                                "intercept": intercept_refit - intercept},
+                           "slope_envelope_per_s": slope_env, "increment_ratio": ratio_inc,
+                           "slope_ratio": ratio, "zeta_ref": zeta_ref,
+                           "ct_scale_prediction": ct_scale, "checks": checks,
+                           "source": "verify_S2a_L1.json v7_yaw_dt_study"}
     return {"dt": dt, "z_fit": z_fit, "s_pred": s_pred, "slope": slope, "intercept": intercept}
 
 
@@ -1253,7 +1363,8 @@ def v12_figure(case: V12Case, limits, image):
     text_block(fig, x0, 712, lines, size=8.2)
     text_block(fig, x0, 805, [
         "3D: CAD 메시 실제 크기. 바닥은 실제 경사, 다리는 접면 신장으로 고정(정지).",
-        "다리 색 화살표 = 법선력(1 m = 100 kN), 보라 화살표 = 부싱 면내력(1 m = 5 kN, 법선 대비 ×20).",
+        "다리 색 화살표 = 법선력(1 m = 100 kN), 보라 화살표 = 부싱 면내력(1 m = 5 kN, 법선 대비 "
+        "×20).",
         f"출처: 07_results/S2a/{run.name}/(record.npz, result.json), verify_S2a_L1.json v12, "
         "s2a_slope_pdelta_check.json."], size=7.6, colour=INK_SECONDARY)
     arrows_n = [scene.arrow(LEG_COLORS[leg]) for leg in LEG_ORDER]
@@ -1336,8 +1447,10 @@ def render_v12(bank, args, summary):
             total = run.a["F_contact_n"][i].sum()
             pieces["status"].set_text(
                 f"t = {run.t[i]:7.3f} s   ΣN = {total / 1e3:7.2f} kN   "
-                f"자세 변화 roll {np.degrees(roll_pitch_from_quat(run.a['body_quat_wxyz'][i])[0]) * 1e3:+.2f}"
-                f" · pitch {np.degrees(roll_pitch_from_quat(run.a['body_quat_wxyz'][i])[1]) * 1e3:+.2f}"
+                "자세 변화 roll "
+                f"{np.degrees(roll_pitch_from_quat(run.a['body_quat_wxyz'][i])[0]) * 1e3:+.2f}"
+                " · pitch "
+                f"{np.degrees(roll_pitch_from_quat(run.a['body_quat_wxyz'][i])[1]) * 1e3:+.2f}"
                 " [1e-3 °] (수평 기체 = 0)")
             frames.append(s1.figure_to_image(pieces["fig"]))
             last = j == len(plan) - 1
@@ -1365,10 +1478,12 @@ def render_v12(bank, args, summary):
 def render_v12_summary(cases, summary):
     W, H = 1400, 820
     fig = new_figure(W, H)
-    fig.text(8 / W, 1 - 10 / H, "S2a V12 경사 바닥: 다리별 정착 수직력 Chrono - 기준 [N] · 부싱 작용점 "
+    fig.text(8 / W, 1 - 10 / H, "S2a V12 경사 바닥: 다리별 정착 수직력 Chrono - 기준 [N] · 부싱 "
+                                "작용점 "
              "구 접촉점(안 A 전) → 볼 중심(안 A 후)", fontsize=13, fontweight="bold", va="top",
              color=INK_PRIMARY)
-    fig.text(8 / W, 1 - 38 / H, "안 A 전 차 = P-δ(무게중심 이동) + 구 지렛대(부싱이 볼 아래 r = 0.06 m에 "
+    fig.text(8 / W, 1 - 38 / H, "안 A 전 차 = P-δ(무게중심 이동) + 구 지렛대(부싱이 볼 아래 r = "
+                                "0.06 m에 "
              "걸려 다리마다 r·T 모멘트). 안 A 후에는 P-δ만 남고 세 경사에서 다리별로 같다(±1 N). "
              "모두 허용 ±956 N(1 % W/4) 안.", fontsize=9, va="top", color=INK_SECONDARY)
     xs = np.arange(4)
@@ -1533,7 +1648,8 @@ def render_v11(bank, summary):
         ax = axes_box(fig, x0 + j * (w + gx), 520, w, 135)
         s1.style_axes(ax, title=title + " [mm/s]", xlabel="t [s]")
         m = (t >= za) & (t <= zb)
-        ax.plot(t[m], u_mm[m, 0], "o-", ms=2.5, lw=1.2, color=LEG_COLORS["FL"], label="FL (기록 10 ms)")
+        ax.plot(t[m], u_mm[m, 0], "o-", ms=2.5, lw=1.2, color=LEG_COLORS["FL"], label="FL (기록 10 "
+                                                                                      "ms)")
         if j == 0:
             tt = np.linspace(0, 0.3, 300)
             ax.plot(tt, np.minimum(tt / 0.1, 1) * vmax, color=INK_PRIMARY, lw=0.8,
@@ -1557,7 +1673,8 @@ def render_v11(bank, summary):
     labels = [scene.label(LEG_COLORS[leg], size=8.2, ha="center", va="top", fontweight="bold")
               for leg in LEG_ORDER]
     header.set_text("S2b V11 공중 다리 신장·수축 · 상부체 고정(원점 z 0.839 m) · L1 위치 모터 + "
-                    f"속도 한계 + 명령 램프 {caption.ramp_s:g} s · Δt {s1.dt_text(run.result['dt_s'])} · "
+                    f"속도 한계 + 명령 램프 {caption.ramp_s:g} s · Δt "
+                    f"{s1.dt_text(run.result['dt_s'])} · "
                     f"{caption.v11_end_s:g} s")
     note.set_text("3D: CAD 메시 실제 크기, 로드·패드를 기록된 모터 위치만큼 다리 축으로 옮겨 그림"
                   "(층 합성, 화면 이동 1 px 단위). 바닥과 접촉 없음.")
@@ -1591,7 +1708,8 @@ def render_v11(bank, summary):
         set_banner(banner, banner_now)
         status.set_text(f"t = {t[i]:5.1f} s   (재생 약 5배속, 1 s/프레임)   FL·FR·RL 명령 "
                         f"{a['u_cmd'][i, 0] * 1e3:+.1f} / {a['u_cmd'][i, 1] * 1e3:+.1f} / "
-                        f"{a['u_cmd'][i, 2] * 1e3:+.1f} mm/s, RR {a['u_cmd'][i, 3] * 1e3:+.1f} mm/s")
+                        f"{a['u_cmd'][i, 2] * 1e3:+.1f} mm/s, "
+                        f"RR {a['u_cmd'][i, 3] * 1e3:+.1f} mm/s")
         frames.append(s1.figure_to_image(fig))
         durations.append(800 if j == 0 else 1800 if j == len(times) - 1 else 1300 if banner_now
                          else 170)
@@ -1608,7 +1726,6 @@ def render_ramp_png(summary):
     run = load_run(RES_B, "air_short")
     spikes = {s["name"]: s for s in verify["ramp_spikes"]}
     rod_w = verify["v0_motor_sign_and_ramp"]["rod_weight_N"][0]
-    m_rod = rod_w / 9.80665
     caption = actuator_caption_values(run.params)
     vmax = run.params.actuator.max_speed_m_s
     W, H = 1400, 700
@@ -1617,7 +1734,8 @@ def render_ramp_png(summary):
              f"{caption.rod_mass_front_kg:.2f} kg / 후방 {caption.rod_mass_rear_kg:.2f} kg)에 "
              "+v_max 명령을 줄 때의 관성 반력 (최대 |실린더 힘 + 로드 무게|)",
              fontsize=13, fontweight="bold", va="top", color=INK_PRIMARY)
-    fig.text(8 / W, 1 - 38 / H, "램프 없음(계단 속도): 한 스텝에 0 → v_max → 반력 m·v_max/Δt, Δt를 줄이면 "
+    fig.text(8 / W, 1 - 38 / H, "램프 없음(계단 속도): 한 스텝에 0 → v_max → 반력 m·v_max/Δt, "
+             "Δt를 줄이면 "
              f"10배로 커진다(물리량이 아니라 수치 충격). 램프 {caption.ramp_s:g} s: m·a = 전방 "
              f"{caption.ramp_force_front_N:.2f} N / 후방 {caption.ramp_force_rear_N:.2f} N, "
              "Δt와 무관.",
@@ -1625,7 +1743,8 @@ def render_ramp_png(summary):
     ax = axes_box(fig, 80, 90, 640, 520, W, H)
     s1.style_axes(ax, title="최대 관성 반력 [N] (로그 축, 네 다리 중 최대 = 전방)", ylabel="N")
     names = [("ramp0_dt1e-04", "램프 없음\nΔt 1e-4 s"), ("ramp0_dt1e-05", "램프 없음\nΔt 1e-5 s"),
-             ("ramp0.1_dt1e-04", "램프 0.1 s\nΔt 1e-4 s"), ("ramp0.1_dt1e-05", "램프 0.1 s\nΔt 1e-5 s")]
+             ("ramp0.1_dt1e-04", "램프 0.1 s\nΔt 1e-4 s"), ("ramp0.1_dt1e-05", "램프 0.1 s\nΔt "
+                                                                             "1e-5 s")]
     values = [max(spikes[n]["max_force_dev_N"]) for n, _ in names]
     # expected_N is per leg since the REXOME35 YAML (one value before); the bar is the max leg
     expected = [float(np.max(spikes[n]["expected_N"])) for n, _ in names]
@@ -1648,9 +1767,11 @@ def render_ramp_png(summary):
               fontsize=8.4, loc="upper right", frameon=False)
     # speed profile of the V0 sign test (air_short record)
     ax = axes_box(fig, 800, 90, 570, 250, W, H)
-    s1.style_axes(ax, title="V0 부호 시험 (air_short 기록, 10 ms): 적용 속도 [mm/s]", xlabel="t [s]")
+    s1.style_axes(ax, title="V0 부호 시험 (air_short 기록, 10 ms): 적용 속도 [mm/s]",
+                  xlabel="t [s]")
     for k, leg in enumerate(LEG_ORDER):
-        ax.plot(run.t, run.a["u_applied"][:, k] * 1e3, color=LEG_COLORS[leg], lw=1.2 + 0.4 * (k == 0))
+        ax.plot(run.t, run.a["u_applied"][:, k] * 1e3, color=LEG_COLORS[leg],
+                lw=1.2 + 0.4 * (k == 0))
     ax.axhline(vmax * 1e3, color=ACCENT, lw=0.8, ls=(0, (4, 2)))
     ax.set_ylim(-2, 26)
     ax = axes_box(fig, 800, 390, 570, 220, W, H)
@@ -1670,7 +1791,8 @@ def render_ramp_png(summary):
     v0 = verify["v0_motor_sign_and_ramp"]
     fig.text(800 / W, 1 - 640 / H, f"V0: 패드 Δz = {v0['pad_dz_m'][0] * 1e3:.4f} mm = -모터 이동, "
              f"램프 기대 이동 {v0['expected_ds_ramp_m'] * 1e3:.4f} mm (차 = 이산 램프 v_max·Δt/2). "
-             "출처: verify_S2b_L1.json ramp_spikes, v0_motor_sign_and_ramp; 07_results/S2b/air_short.",
+             "출처: verify_S2b_L1.json ramp_spikes, v0_motor_sign_and_ramp; "
+             "07_results/S2b/air_short.",
              fontsize=7.8, va="top", color=INK_SECONDARY, wrap=True)
     image = s1.figure_to_image(fig)
     plt.close(fig)
@@ -1777,11 +1899,11 @@ def crawler_figure(case: CrawlerCase, limits, image, check_all):
     cursor.add_axes(ax2)
     cursor.add_dot(ax2, t, uz, ACCENT)
     ax3 = axes_box(fig, x0, 335, 2 * w + gx, 200)
-    s1.style_axes(ax3, title="구 접촉력 [kN] 대 구 x 위치 (● 좌 궤도, ■ 우 궤도, 선 = 독립 정확 해)",
-                  xlabel="구 중심 x (기체) [m]")
+    s1.style_axes(ax3, title="구 접촉력 [kN] 대 구 x 위치 (● 좌 궤도, ■ 우 궤도, "
+                  "선 = 독립 정확 해)", xlabel="구 중심 x (기체) [m]")
     exact_f = np.array(case.result["analytic_exact"]["sphere_force_N"]) / 1e3
     order = np.argsort(xy[:, 0])
-    for side, marker, sel in (("좌", "o", xy[:, 1] > 0), ("우", "s", xy[:, 1] < 0)):
+    for side, sel in (("좌", xy[:, 1] > 0), ("우", xy[:, 1] < 0)):
         idx = np.flatnonzero(sel)
         idx = idx[np.argsort(xy[idx, 0])]
         ax3.plot(xy[idx, 0], exact_f[idx], color=ACCENT if side == "좌" else "#5f7fb3", lw=0.9,
@@ -1823,9 +1945,12 @@ def crawler_figure(case: CrawlerCase, limits, image, check_all):
     ]
     text_block(fig, x0, 760, lines, size=8.3)
     text_block(fig, x0, 830, [
-        "구 접촉력 = k_n·max(δ, 0), δ = 기록 자세에서 계산한 구-바닥 겹침 (k_n 8.333e6 N/m float32). "
-        f"창 평균 - result.json 구 힘 ≤ {case.check['sphere_force_window_mean_minus_result_max_abs_N']:.2f} N.",
-        f"출처: 07_results/S2b/crawler_{case.level}/, verify_S2b_L1.json crawler, s2b_crawler_check.json."],
+        "구 접촉력 = k_n·max(δ, 0), δ = 기록 자세에서 계산한 구-바닥 겹침 (k_n 8.333e6 N/m "
+        "float32). "
+        "창 평균 - result.json 구 힘 ≤ "
+        f"{case.check['sphere_force_window_mean_minus_result_max_abs_N']:.2f} N.",
+        f"출처: 07_results/S2b/crawler_{case.level}/, verify_S2b_L1.json crawler, "
+        "s2b_crawler_check.json."],
         size=7.6, colour=INK_SECONDARY)
     bars = []
     for k in range(len(case.centres_body)):
@@ -1853,11 +1978,14 @@ def update_crawler(case: CrawlerCase, pieces, i):
 
 def crawler_compare_frame(cases, check_all):
     fig = new_figure()
-    fig.text(8 / FRAME_W, 1 - 10 / FRAME_H, "S2b 크롤러 위 정착 · 오거 3단계 비교 (다리 0 mm, 강체 평지, "
-             "크롤러 D안 구 24개)", fontsize=13, fontweight="bold", va="top", color=INK_PRIMARY)
-    fig.text(8 / FRAME_W, 1 - 38 / FRAME_H, "pitch는 Chrono와 독립 정확 해(P-δ 포함)가 6자리까지 같고, "
-             "선형 기준해(P-δ 없음)보다 무게중심 높이에 비례해 크다(상단 +2.47 %). roll 진동수 차 +0.31 %는 "
-             "기울어진 자세의 관성 축 차이(Chrono가 맞음).", fontsize=9, va="top", color=INK_SECONDARY)
+    fig.text(8 / FRAME_W, 1 - 10 / FRAME_H, "S2b 크롤러 위 정착 · 오거 3단계 비교 "
+             "(다리 0 mm, 강체 평지, 크롤러 D안 구 24개)", fontsize=13, fontweight="bold", va="top",
+             color=INK_PRIMARY)
+    fig.text(8 / FRAME_W, 1 - 38 / FRAME_H, "pitch는 Chrono와 독립 정확 해(P-δ 포함)가 "
+             "6자리까지 같고, 선형 기준해(P-δ 없음)보다 무게중심 높이에 비례해 크다"
+             "(상단 +2.47 %). roll 진동수 차 +0.31 %는 기울어진 자세의 관성 축 차이"
+             "(Chrono가 맞음).",
+             fontsize=9, va="top", color=INK_SECONDARY)
     ax = axes_box(fig, 60, 100, 600, 380)
     s1.style_axes(ax, title="정착 pitch [°]", ylabel="°")
     xs = np.arange(3)
@@ -1876,7 +2004,8 @@ def crawler_compare_frame(cases, check_all):
     ax.set_xticks(xs, [LEVEL_LABEL[c.level] for c in cases])
     ax.legend(fontsize=8, loc="upper right", frameon=True, framealpha=0.9)
     ax = axes_box(fig, 740, 100, 620, 380)
-    s1.style_axes(ax, title="크롤러 위 모드 f_n [Hz]: Chrono 맞춤 / 독립(세계 축 관성) / 독립(몸체 축)",
+    s1.style_axes(ax, title="크롤러 위 모드 f_n [Hz]: Chrono 맞춤 / 독립(세계 축 관성) / 독립(몸체 "
+                            "축)",
                   ylabel="Hz")
     names = ("pitch", "roll", "heave")
     tones = ("#24324f", "#5f7fb3", "#a9bfe0")
@@ -1887,7 +2016,8 @@ def crawler_compare_frame(cases, check_all):
         fit = [check_all[case.level]["modes"]["chrono_fit"][n]["f_n_Hz"] for n in names]
         for m in range(3):
             x = m + (j - 1) * 0.27
-            ax.bar(x, fit[m], 0.08, color=tones[j], label=LEVEL_LABEL[case.level] if m == 0 else None)
+            ax.bar(x, fit[m], 0.08, color=tones[j],
+                   label=LEVEL_LABEL[case.level] if m == 0 else None)
             ax.plot([x - 0.06, x + 0.06], [world[m]] * 2, color=ACCENT, lw=1.6)
             ax.plot([x - 0.06, x + 0.06], [body[m]] * 2, color=INK_PRIMARY, lw=1.0, ls=(0, (2, 1)))
     ax.set_xticks(range(3), names)
@@ -1924,9 +2054,12 @@ def crawler_compare_frame(cases, check_all):
     for (_, _), cell in table.get_celld().items():
         cell.set_edgecolor("#dcdbd6")
         cell.set_linewidth(0.5)
-    text_block(fig, 40, 800, ["판정(dynamics_model.md 5.6): 크롤러 정착 자세·모드 통과(참고 항목, V4에서 판정). "
-                              "V13 정지 창 자세 변동 ≤ 2.0e-5°, 크롤러 수직력 합 변동 ≤ 72 N(< 95.6 N).",
-                              "출처: s2b_crawler_check.json (독립 확인, dynamics-dev), verify_S2b_L1.json, "
+    text_block(fig, 40, 800, ["판정(dynamics_model.md 5.6): 크롤러 정착 자세·모드 통과(참고 항목, "
+                              "V4에서 판정). "
+                              "V13 정지 창 자세 변동 ≤ 2.0e-5°, 크롤러 수직력 합 변동 ≤ 72 N(< "
+                              "95.6 N).",
+                              "출처: s2b_crawler_check.json (독립 확인, dynamics-dev), "
+                              "verify_S2b_L1.json, "
                               "07_results/S2b/crawler_<단계>/result.json."], size=8.4)
     image = s1.figure_to_image(fig)
     plt.close(fig)
@@ -1953,18 +2086,23 @@ def render_crawler(bank, summary):
         print(f"  crawler {case.level}: mesh {time.perf_counter() - t0:.1f} s", flush=True)
         pieces = crawler_figure(case, limits, image, check_all)
         pieces["header"].set_text(
-            f"S2b 크롤러 위 정착 [{n + 1}/4] · 오거 {LEVEL_LABEL[case.level]} · 다리 0 mm(패드 약 0.34 m "
-            f"위) · 크롤러 D안 구 24개(SMC Hooke) · L1 · Δt {s1.dt_text(case.run.result['dt_s'])} · 15 s")
+            f"S2b 크롤러 위 정착 [{n + 1}/4] · 오거 {LEVEL_LABEL[case.level]} · 다리 0 mm(패드 약 "
+            "0.34 m "
+            f"위) · 크롤러 D안 구 24개(SMC Hooke) · L1 · Δt {s1.dt_text(case.run.result['dt_s'])} "
+            "· 15 s")
         pieces["note"].set_text(
-            "시작 = 독립 정확 정착 자세(P-δ 포함) → 15 s 동안 거의 움직이지 않음(자세 변동 ≤ 2e-5°). "
+            "시작 = 독립 정확 정착 자세(P-δ 포함) → 15 s 동안 거의 움직이지 않음(자세 변동 ≤ "
+            "2e-5°). "
             "3D 화살표 = 구 접촉력(1 m = 50 kN, 진한 = 앞쪽 우 궤도).")
         times = np.linspace(0, run.t[-1], 9)
         for j, t_frame in enumerate(times):
             i = run.index(t_frame)
             update_crawler(case, pieces, i)
             pieces["status"].set_text(
-                f"t = {run.t[i]:5.2f} s   pitch {np.degrees(roll_pitch_from_quat(run.a['body_quat_wxyz'][i])[1]):.6f}°"
-                f"   u_z {run.pos[i, 2] * 1e3:.5f} mm   ΣF 크롤러 {run.a['F_crawler'][i, 2] / 1e3:.3f} kN"
+                f"t = {run.t[i]:5.2f} s   pitch "
+                f"{np.degrees(roll_pitch_from_quat(run.a['body_quat_wxyz'][i])[1]):.6f}°"
+                f"   u_z {run.pos[i, 2] * 1e3:.5f} mm   ΣF 크롤러 "
+                f"{run.a['F_crawler'][i, 2] / 1e3:.3f} kN"
                 f"   활성 구 {(case.forces[i] > 0).sum()}")
             frames.append(s1.figure_to_image(pieces["fig"]))
             durations.append(1100 if j == 0 else 1500 if j == len(times) - 1 else 330)
@@ -2004,7 +2142,8 @@ def pad_gap_mm(run: Run):
     out = np.empty(len(run.t))
     pts = np.empty((len(run.t), 3))
     for i in range(len(run.t)):
-        c = run.rot[i] @ pad_sphere_centre_body_m(run.params, 0, run.a["s_motor"][i, 0]) + run.pos[i]
+        c = (run.rot[i] @ pad_sphere_centre_body_m(run.params, 0, run.a["s_motor"][i, 0])
+             + run.pos[i])
         out[i] = (c[2] - r - floor) * 1e3
         pts[i] = c - np.array([0, 0, r])
     return out, pts
@@ -2049,17 +2188,16 @@ def events_figure(case: EventCase, limits, image, verify_b):
     cursor = s1.Cursor()
     t = run.t
     ev1 = run.result["events"]
-    ev2 = run2.result["events"]
     x0, w, gx = 640, 345, 45
 
     def event_lines(ax):
-        for te, _, kind in ev1:
+        for te, _, _kind in ev1:
             ax.axvline(te, color=EVENT_COLOR, lw=0.8, alpha=0.7)
         cursor.add_axes(ax)
 
     ax = axes_box(fig, x0, 112, 2 * w + gx, 150)
-    s1.style_axes(ax, title="FL 패드 바닥 높이 (바닥 위 +, 침투 -) [mm] — 실선 Δt 1e-4, 점선 Δt 1e-5",
-                  xlabel="t [s]")
+    s1.style_axes(ax, title="FL 패드 바닥 높이 (바닥 위 +, 침투 -) [mm] — 실선 Δt 1e-4, "
+                  "점선 Δt 1e-5", xlabel="t [s]")
     ax.plot(t, case.gap_mm, color=LEG_COLORS["FL"], lw=1.4)
     ax.plot(run2.t, case.gap2_mm, color=DT2_COLOR, lw=0.8, ls=(0, (3, 2)))
     ax.axhline(0, color=INK_PRIMARY, lw=0.8)
@@ -2067,7 +2205,8 @@ def events_figure(case: EventCase, limits, image, verify_b):
     event_lines(ax)
     cursor.add_dot(ax, t, case.gap_mm, LEG_COLORS["FL"])
     ax = axes_box(fig, x0, 310, 2 * w + gx, 170)
-    s1.style_axes(ax, title="FL 패드 법선력 N [kN] (보라 선 = R15 부싱 사건, N_th 100 N, t_lift 1 ms)",
+    s1.style_axes(ax, title="FL 패드 법선력 N [kN] (보라 선 = R15 부싱 사건, N_th 100 N, t_lift 1 "
+                            "ms)",
                   xlabel="t [s]")
     ax.plot(t, run.a["F_contact_n"][:, 0] / 1e3, color=LEG_COLORS["FL"], lw=1.4, label="Δt 1e-4 s")
     ax.plot(run2.t, run2.a["F_contact_n"][:, 0] / 1e3, color=DT2_COLOR, lw=0.8, ls=(0, (3, 2)),
@@ -2116,7 +2255,8 @@ def events_figure(case: EventCase, limits, image, verify_b):
              "(R8: 크롤러 접선 0 → 실기에는 없음)"]
     text_block(fig, x0 + 385, 716, lines, size=8.0)
     text_block(fig, x0, 836, [
-        f"출처: 07_results/S2b/event_{case.name}_dt1e-04 · _dt1e-05 (record 1 ms 표본, result.json),",
+        f"출처: 07_results/S2b/event_{case.name}_dt1e-04 · _dt1e-05 (record 1 ms 표본, "
+        "result.json),",
         "verify_S2b_L1.json events·event_dt_pairs. 높이 = 볼 중심 - r - 바닥(수평 기체 근사)."],
         size=7.6, colour=INK_SECONDARY)
     # 3D overlays
@@ -2174,8 +2314,8 @@ def update_events(case: EventCase, pieces, i):
         pieces["anchor"].set_data([dx], [0.0])
     else:
         pieces["anchor"].set_data([], [])
-    pieces["itext"].set_text(f"높이 {case.gap_mm[i]:+.3f} mm\ns - s_touch "
-                             f"{(run.a['s_motor'][i, 0] - run.result['touch_extension_m']) * 1e3:+.3f} mm")
+    ds_mm = (run.a["s_motor"][i, 0] - run.result["touch_extension_m"]) * 1e3
+    pieces["itext"].set_text(f"높이 {case.gap_mm[i]:+.3f} mm\ns - s_touch {ds_mm:+.3f} mm")
     pieces["cursor"].update(run.t[i], i)
 
 
@@ -2204,13 +2344,16 @@ def render_events(bank, summary):
         run = case.run
         ec = case.run.result["event_case"]
         pieces = events_figure(case, limits, image, verify)
-        speed = (f"v_max {run.params.actuator.max_speed_m_s * 1e3:.2f} mm/s" if case.name == "fast_FL" else "1 mm/s")
+        speed = (f"v_max {run.params.actuator.max_speed_m_s * 1e3:.2f} mm/s"
+                 if case.name == "fast_FL" else "1 mm/s")
         pieces["header"].set_text(
             f"S2b 접지 사건 R15 [{n + 1}/2] · FL만 하강 → 접지 → 상승(부상) → 재하강(재접지) · "
             f"{speed} · 시작 간극 {ec['start_gap_m'] * 1e3:.1f} mm · 기체는 크롤러 위(상단) · L1")
         pieces["note"].set_text(
-            "3D: CAD 메시 실제 크기(FL 신장은 최대 힘 시각의 값). 화살표 = FL 법선력(1 m = 100 kN), "
-            "보라 = 부싱 접선력(1 m = 5 kN). 패드 움직임은 mm라 왼쪽 위 확대도(× = 부싱 고정점)로 본다.")
+            "3D: CAD 메시 실제 크기(FL 신장은 최대 힘 시각의 값). 화살표 = FL 법선력(1 m = 100 "
+            "kN), "
+            "보라 = 부싱 접선력(1 m = 5 kN). 패드 움직임은 mm라 왼쪽 위 확대도(× = 부싱 고정점)로 "
+            "본다.")
         times = list(np.linspace(0, run.t[-1], 34))
         banners = {}
         for te, _leg, kind in run.result["events"]:
@@ -2224,7 +2367,8 @@ def render_events(bank, summary):
             b = banners.get(round(t_frame, 4))
             set_banner(pieces["banner"], b)
             pieces["status"].set_text(
-                f"t = {run.t[i]:6.3f} s / {run.t[-1]:.1f} s   FL 명령 {run.a['u_cmd'][i, 0] * 1e3:+.2f} mm/s"
+                f"t = {run.t[i]:6.3f} s / {run.t[-1]:.1f} s   FL 명령 "
+                f"{run.a['u_cmd'][i, 0] * 1e3:+.2f} mm/s"
                 f"   적용 {run.a['u_applied'][i, 0] * 1e3:+.2f} mm/s   나머지 다리 0 mm(힘 0)")
             frames.append(s1.figure_to_image(pieces["fig"]))
             durations.append(700 if j == 0 else 1500 if j == len(times) - 1 else 1200 if b else 110)
@@ -2270,20 +2414,34 @@ def render_summary_a(summary):
     pdelta = read_json(PDELTA_A)
     W, H = 1400, 900
     fig = new_figure(W, H)
-    fig.text(8 / W, 1 - 10 / H, "S2a 종합 · L1 지면 부싱 동특성(V7)과 경사 바닥 정역학(V12) · 오거 상단 · "
-             "부싱 작용점 = 볼 중심(안 A) · 판정: 통과 (dynamics_model.md 5.5)", fontsize=13,
+    fig.text(8 / W, 1 - 10 / H, "S2a 종합 · L1 지면 부싱 동특성(V7)과 경사 바닥 정역학(V12) · "
+             "오거 상단 · "
+             f"부싱 작용점 = 볼 중심(안 A) · 판정: {pass_word(verify['all_passed'])} "
+             "(dynamics_model.md 5.5)", fontsize=13,
              fontweight="bold", va="top", color=INK_PRIMARY)
+    v0 = verify.get("v0", {})
+    v0_counts = sorted({c["n_checks"] for c in v0.values()})
+    v0_failed = sum(len(c["failed"]) for c in v0.values())
+    v0_text = (f"V0 {'/'.join(str(n) for n in v0_counts)}항목×{len(v0)}"
+               + (f" (실패 {v0_failed})" if v0_failed else ""))
+    dt_judge = judged_v7_dt()
     fig.text(8 / W, 1 - 38 / H, "자동 사전 판정 verify_S2a_L1.json all_passed = "
-             f"{verify['all_passed']} · V0 91항목×3 · Δt 1e-4 s(Δt 연구 제외) · pychrono 10.0.0, "
-             "EULER_IMPLICIT_LINEARIZED, SPARSE_LU", fontsize=9, va="top", color=INK_SECONDARY)
+             f"{verify['all_passed']} · {v0_text} · 판정 실행 Δt "
+             + " / ".join(f"{d:g}" for d in dt_judge) + " s(YAML; Δt 연구는 접미사 폴더 3개) · "
+             "pychrono 10.0.0, EULER_IMPLICIT_LINEARIZED, SPARSE_LU", fontsize=9, va="top",
+             color=INK_SECONDARY)
+    v7_ok = verify["verdict_by_check"]["V7"]
     cells = []
-    for case in ("v7_roll", "v7_pitch", "v7_yaw"):
+    f_diff, z_diff = [], []
+    for case in V7_JUDGED_CASES:
         res = read_json(RES_A / case / "result.json")
         m = res["modes"][res["judged_mode"] - 1]
+        f_diff.append((m["f_undamped_Hz"] / m["f_ref_Hz"] - 1) * 100)
+        z_diff.append((m["zeta_corrected"] / m["zeta_ref"] - 1) * 100)
         cells.append([MODE_NAMES[m["mode"]], f"{m['f_undamped_Hz']:.5f}", f"{m['f_ref_Hz']:.4f}",
-                      f"{(m['f_undamped_Hz'] / m['f_ref_Hz'] - 1) * 100:+.3f} %",
+                      f"{f_diff[-1]:+.3f} %",
                       f"{m['zeta_corrected']:.5f}", f"{m['zeta_ref']:.5f}",
-                      f"{(m['zeta_corrected'] / m['zeta_ref'] - 1) * 100:+.2f} %", "통과"])
+                      f"{z_diff[-1]:+.2f} %", pass_word(v7_ok)])
     ax = axes_box(fig, 20, 80, 760, 150, W, H)
     table_axes(ax, cells, ["V7 모드", "f_n Chrono [Hz]", "기준 [Hz]", "차 (±3 %)", "ζ 보정",
                            "기준 ζ", "차 (±30 %)", "판정"],
@@ -2305,25 +2463,39 @@ def render_summary_a(summary):
         ax.tick_params(labelsize=6.5)
     # dt mini
     study = verify["v7_yaw_dt_study"]
-    rows = sorted(study["rows"], key=lambda r: r["dt_s"])
+    rows, dt_skip = dt_study_rows(study)
+    study_ok = rows is not None and all(study["checks"].values())
     ax = axes_box(fig, 840, 90, 530, 330, W, H)
-    s1.style_axes(ax, title="Δt 연구: ζ3 (yaw 2 s) 대 Δt — 암시 수치 감쇠 확인", xlabel="Δt [1e-4 s]",
-                  ylabel="ζ3")
-    dts = np.array([r["dt_s"] for r in rows])
-    zf = np.array([r["zeta_fit_raw"] for r in rows])
-    xs = np.linspace(0, 2.2e-4, 20)
-    ax.plot(xs * 1e4, 0.0372 + study["slope_predicted_implicit_per_s"] * xs, color=ACCENT, lw=1.4,
-            label="예측 0.0372 + r3ω3Δt/2")
-    ax.axhline(rows[1]["prediction_ct_scale"], color=LIN_COLOR, lw=1.2, ls=(0, (5, 3)),
-               label="c_t 배율 가설 (Δt 무관)")
-    ax.plot(dts * 1e4, zf, "o", ms=8, color=INK_PRIMARY, mec="white", label="Chrono 식별")
-    ax.text(0.03, 0.06, f"기울기 비 {study['slope_ratio_measured_over_implicit']:.4f}, 절편 0.03720",
-            transform=ax.transAxes, fontsize=8.5, color=INK_PRIMARY)
-    ax.set_xlim(0, 2.2)
-    ax.legend(fontsize=7.6, loc="upper left", frameon=False)
+    s1.style_axes(ax, title="Δt 연구: ζ3 (yaw 2 s) 대 Δt — 암시 수치 감쇠 확인",
+                  xlabel="Δt [1e-4 s]", ylabel="ζ3")
+    if rows is None:
+        ax.text(0.5, 0.5, f"Δt 연구 그림 생략:\n{dt_skip}", transform=ax.transAxes, ha="center",
+                va="center", fontsize=8.5, color=INK_PRIMARY, wrap=True)
+        dt_line = f"Δt 연구: 그림 생략 ({dt_skip})."
+    else:
+        zeta_ref = study["zeta_ref"]
+        dts = np.array([r["dt_s"] for r in rows])
+        zf = np.array([r["zeta_fit_raw"] for r in rows])
+        xs = np.linspace(0, 1.1 * dts[-1], 20)
+        ax.plot(xs * 1e4, zeta_ref + study["slope_predicted_implicit_per_s"] * xs, color=ACCENT,
+                lw=1.4, label=f"예측 {zeta_ref:.4f} + r3ω3Δt/2")
+        ax.axhline(float(np.mean([r["prediction_ct_scale"] for r in rows])), color=LIN_COLOR,
+                   lw=1.2, ls=(0, (5, 3)), label="c_t 배율 가설 (Δt 무관)")
+        ax.plot(dts * 1e4, zf, "o", ms=8, color=INK_PRIMARY, mec="white", label="Chrono 식별")
+        ax.text(0.97, 0.06, f"기울기 비 {study['slope_ratio_measured_over_implicit']:.4f}, 절편 "
+                f"{study['intercept_zeta']:.5f} · A1~A3 {pass_word(study_ok)}",
+                transform=ax.transAxes, ha="right", fontsize=8.5, color=INK_PRIMARY)
+        ax.set_xlim(0, xs[-1] * 1e4)
+        ax.legend(fontsize=7.6, loc="upper left", frameon=False)
+        dt_line = ("Δt: ζ3이 Δt에 비례(기울기 비 "
+                   f"{study['slope_ratio_measured_over_implicit']:.3f}, "
+                   f"증분비 {study['increment_ratio']:.3f}) → 가설 A "
+                   f"{'확정' if study_ok else '미확정'}; L1 일반 Δt "
+                   + " / ".join(f"{d:g}" for d in dt_judge) + " s(YAML).")
     # V12 bars
     ax = axes_box(fig, 60, 485, 760, 300, W, H)
-    s1.style_axes(ax, title="V12 수직력 Chrono - 기준 [N] (허용 ±956 N): 회색 빗금 = 안 A 전(접촉점), "
+    s1.style_axes(ax, title="V12 수직력 Chrono - 기준 [N] (허용 ±956 N): 회색 빗금 = 안 A "
+                            "전(접촉점), "
                   "색 = 안 A 후(볼 중심), ◆ = 독립 P-δ 예측", ylabel="N")
     labels = []
     reference = read_json(REFERENCE_JSON)
@@ -2350,14 +2522,16 @@ def render_summary_a(summary):
     ax.axhline(0, color=INK_PRIMARY, lw=0.7)
     ax.set_ylim(-320, 360)
     lines = [
-        "V7: 판정 3개 모드 f_n 차 ≤ 0.004 %, ζ(보정) 차 ≤ 0.06 % (허용 ±3 %, ±30 %).",
-        "     3차 ζ 0.0372 → 부싱 감쇠 입력 c_t/2 재확인.",
+        f"V7: 판정 3개 모드 f_n 차 ≤ {max(abs(v) for v in f_diff):.3f} %, ζ(보정) 차 ≤ "
+        f"{max(abs(v) for v in z_diff):.2f} % (허용 ±3 %, ±30 %).",
+        f"     3차 ζ(보정) {verify['v7_diagnosis']['zeta3_corrected']:.5f} (기준 "
+        f"{study.get('zeta_ref', math.nan):.4f}) → 부싱 감쇠 입력 c_t/2 재확인.",
         "부싱 작용점 이동 확인: 1·2차 f_d가 새 기준과 -0.01 % (개정 12보다 +0.70 / +0.63 %).",
         "V12: 수직 차 = P-δ(+68 / +51 / -52 / -67 N)만 남음, 구 지렛대 제거(≤ 1.22 N 일치).",
         "     수평 차 ≤ 5.1 N, 미끄럼·항복·사건 0, hold 해제 74~76 ms, hold 중 접선력 ≤ 3.2 N.",
         "V13: NaN 없음, 구속 위반 ≤ 1.7e-11 m, 정지 창 자세 변동 ≤ 6.1e-6°,",
         "     수직력 변동 ≤ 17.5 N (접촉력 양자 2.5 N 계단).",
-        "Δt: ζ3이 Δt에 비례(기울기 비 0.999) → L1 일반 Δt 2e-4 s 전환 결정(YAML 반영은 S3 V9 뒤).",
+        dt_line,
     ]
     text_block(fig, 860, 470, lines, size=8.4, width=W, height=H)
     fig.text(860 / W, 1 - 640 / H, "그림: S2a_v7_free_vibration.gif, S2a_dt_study.png, "
@@ -2379,10 +2553,12 @@ def render_summary_b(summary):
     check = read_json(CRAWLER_CHECK)
     W, H = 1400, 900
     fig = new_figure(W, H)
-    fig.text(8 / W, 1 - 10 / H, "S2b 종합 · 구동기(V0·V11·명령 램프), 크롤러 접촉(D안), 접지 사건(R15) · "
+    fig.text(8 / W, 1 - 10 / H, "S2b 종합 · 구동기(V0·V11·명령 램프), 크롤러 접촉(D안), 접지 "
+                                "사건(R15) · "
              "L1 · 판정: 통과 (dynamics_model.md 5.6)", fontsize=13, fontweight="bold", va="top",
              color=INK_PRIMARY)
-    fig.text(8 / W, 1 - 38 / H, f"자동 사전 판정 verify_S2b_L1.json all_passed = {verify['all_passed']} "
+    fig.text(8 / W, 1 - 38 / H, "자동 사전 판정 verify_S2b_L1.json all_passed = "
+                                f"{verify['all_passed']} "
              f"({', '.join(k for k, v in verify['passed_by_id'].items() if v)}) · "
              f"Δt {s1.dt_text(read_json(RES_B / 'v11' / 'result.json')['dt_s'])}"
              "(이벤트는 1e-4 / 1e-5 s)",
@@ -2396,7 +2572,8 @@ def render_summary_b(summary):
     stroke_label = f"{caption.stroke_mm:.0f}"
     top = verify["crawler"]["top"]
     cells = [
-        ["V0 모터 부호", f"패드 Δz {v0['pad_dz_m'][0] * 1e3:+.4f} mm = -모터 이동", "부호 일치", "통과"],
+        ["V0 모터 부호", f"패드 Δz {v0['pad_dz_m'][0] * 1e3:+.4f} mm = -모터 이동", "부호 일치",
+         "통과"],
         ["V0 매달린 로드 반력", f"{v0['hanging_force_N'][0]:.4f} N", "-m_rod·g ±1 N", "통과"],
         ["램프 관성 반력", f"{max(spikes['ramp0.1_dt1e-04']['max_force_dev_N']):.4f} N",
          f"m_rod·a 전방 {caption.ramp_force_front_N:.4f} / "
@@ -2411,8 +2588,10 @@ def render_summary_b(summary):
         ["크롤러 정착 (상단)", f"pitch {top['chrono_window']['pitch_deg']:.6f}°",
          f"독립 정확 해 {top['analytic_exact']['pitch_deg']:.6f}°", "통과"],
         ["R15 사건 순서 (4실행)", "생성 → 소멸 → 생성, chatter 0", "사건 3건", "통과"],
-        ["R15 두 Δt 사건 시각 차", "빠름 " + " / ".join(f"{d * 1e3:.2f}" for d in pairs['fast_FL']['time_diff_s'])
-         + ", 느림 " + " / ".join(f"{abs(d) * 1e3:.2f}" for d in pairs['slow_FL']['time_diff_s']) + " ms",
+        ["R15 두 Δt 사건 시각 차",
+         "빠름 " + " / ".join(f"{d * 1e3:.2f}" for d in pairs["fast_FL"]["time_diff_s"])
+         + ", 느림 " + " / ".join(f"{abs(d) * 1e3:.2f}" for d in pairs["slow_FL"]["time_diff_s"])
+         + " ms",
          "≤ 1 ms", "통과"],
         ["R16 스냅숏 왕복", "≤ 8.9e-16 m", "≤ 1e-12 m", "통과"],
     ]
@@ -2428,7 +2607,8 @@ def render_summary_b(summary):
     ax.set_yscale("log")
     ax.set_ylim(5, 1e6)
     ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(s1._short_number))
-    ax.set_xticks(range(4), ["없음\n1e-4", "없음\n1e-5", "0.1 s\n1e-4", "0.1 s\n1e-5"], fontsize=7.6)
+    ax.set_xticks(range(4), ["없음\n1e-4", "없음\n1e-5", "0.1 s\n1e-4", "0.1 s\n1e-5"],
+                  fontsize=7.6)
     for x, v in enumerate(vals):
         ax.text(x, v * 1.3, f"{v / 1e3:.1f} kN" if v > 1e3 else f"{v:.1f} N", ha="center",
                 fontsize=8, color=INK_PRIMARY)
@@ -2461,23 +2641,31 @@ def render_summary_b(summary):
     s1.style_axes(ax, title="R15 FL 법선력 [kN] (v_max): Δt 1e-4 / 1e-5", xlabel="t [s]")
     ax.plot(ev.t, ev.a["F_contact_n"][:, 0] / 1e3, color=LEG_COLORS["FL"], lw=1.3)
     ax.plot(ev2.t, ev2.a["F_contact_n"][:, 0] / 1e3, color=DT2_COLOR, lw=0.8, ls=(0, (3, 2)))
-    for te, _, kind in ev.result["events"]:
+    for te, _, _kind in ev.result["events"]:
         ax.axvline(te, color=EVENT_COLOR, lw=0.8)
     ax.set_xlim(0, ev.t[-1])
     lines = [
-        "판단(dynamics-expert, 5.6절): ① ChFunctionConst → ChFunctionRamp 승인(구동기 훅은 매 스텝 호출 조건). "
+        "판단(dynamics-expert, 5.6절): ① ChFunctionConst → ChFunctionRamp 승인(구동기 훅은 매 스텝 "
+        "호출 조건). "
         f"② V11 기준을 stroke/v_max + T_r로 바꿈(당시 680 mm: 30.1 s, 지금 {stroke_label} mm: "
         f"{caption.full_stroke_time_s:.3f} s).",
-        "③ 스트로크 끝 제동 = 명령 램프: 조건부 수용(소프트 리밋 > 1.13 mm, 하중 받은 다리의 끝 도달은 기록·판정 제외).",
-        "④ 크롤러 접선 구속 없음(R8): 평지 S3 V4에는 문제없음, 경사 바닥 L1 들어 올림 전에 크롤러 접선 모델 필요(사용자 결정).",
-        "⑤ 크롤러 pitch 차는 P-δ 전부, roll +0.31 %는 관성 축 차(Chrono가 맞음). V4 시각 원점 = 모터 출발 + T_r/2.",
-        f"크롤러 위 모드(상단) f_n Chrono {check['top']['modes']['chrono_fit']['pitch']['f_n_Hz']:.4f} / "
+        "③ 스트로크 끝 제동 = 명령 램프: 조건부 수용(소프트 리밋 > 1.13 mm, 하중 받은 다리의 끝 "
+        "도달은 기록·판정 제외).",
+        "④ 크롤러 접선 구속 없음(R8): 평지 S3 V4에는 문제없음, 경사 바닥 L1 들어 올림 전에 크롤러 "
+        "접선 모델 필요(사용자 결정).",
+        "⑤ 크롤러 pitch 차는 P-δ 전부, roll +0.31 %는 관성 축 차(Chrono가 맞음). V4 시각 원점 = "
+        "모터 출발 + T_r/2.",
+        "크롤러 위 모드(상단) f_n Chrono "
+        f"{check['top']['modes']['chrono_fit']['pitch']['f_n_Hz']:.4f} / "
         f"{check['top']['modes']['chrono_fit']['roll']['f_n_Hz']:.4f} / "
-        f"{check['top']['modes']['chrono_fit']['heave']['f_n_Hz']:.4f} Hz vs 독립 1.32691 / 3.05532 / 8.73106 Hz.",
+        f"{check['top']['modes']['chrono_fit']['heave']['f_n_Hz']:.4f} Hz vs 독립 1.32691 / "
+        "3.05532 / 8.73106 Hz.",
     ]
     text_block(fig, 40, 680, lines, size=8.4, width=W, height=H)
-    fig.text(40 / W, 1 - 840 / H, "그림: S2b_v11_stroke.gif, S2b_ramp_effect.png, S2b_crawler_settle.gif, "
-             "S2b_contact_events.gif · 출처: verify_S2b_L1.json, 07_results/S2b/*, s2b_crawler_check.json",
+    fig.text(40 / W, 1 - 840 / H, "그림: S2b_v11_stroke.gif, S2b_ramp_effect.png, "
+                                  "S2b_crawler_settle.gif, "
+             "S2b_contact_events.gif · 출처: verify_S2b_L1.json, 07_results/S2b/*, "
+             "s2b_crawler_check.json",
              fontsize=7.8, va="top", color=INK_SECONDARY)
     image = s1.figure_to_image(fig)
     plt.close(fig)
@@ -2502,7 +2690,8 @@ def main() -> None:
     parser.add_argument("--frames-dir", type=Path, default=None)
     parser.add_argument("--cpu", choices=("ecore", "pcore", "os"), default="ecore")
     parser.add_argument("--params", type=Path, default=None,
-                        help="YAML the stored Records were run with (default 02_params/rexome33.yaml)")
+                        help="YAML the stored Records were run with (default "
+                             "02_params/rexome33.yaml)")
     args = parser.parse_args()
     s1.PARAMS_PATH[0] = args.params
     started = time.perf_counter()

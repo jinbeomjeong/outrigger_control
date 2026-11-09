@@ -20,7 +20,7 @@
    "drawing_mesh_sha256": "4521b9f715bb5e4414e28fb4cff4581d66b9c6d0cc61dd3bf48a7f5ad21565b9",
    "faces_drawn": 6378910
   },
-  "params_file": "02_params/history/rexome33_2026-10-25_before_bundle.yaml",
+  "params_file": "02_params/rexome33.yaml",
   "exaggeration_settle": 500.0,
   "exaggeration_cross": 300.0,
   "derivation": "penetration_i = r_i - (o_z + (R c_i)_z - z_floor); roll, pitch = roll_pitch_from_quat; pitch + = nose down"
@@ -29,22 +29,22 @@
   "top": {
    "penetration_vs_result_json_max_abs_mm": 1.4450662888521038e-12,
    "attitude_vs_result_json_max_abs_deg": 0.0,
-   "params_sha256": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5"
+   "params_sha256": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723"
   },
   "middle": {
    "penetration_vs_result_json_max_abs_mm": 6.926503814952412e-11,
    "attitude_vs_result_json_max_abs_deg": 0.0,
-   "params_sha256": "55686abc569501e11ce9c29e05978f6115cb84315c8436bf84118a960554b599"
+   "params_sha256": "9845dae7a6dd16261f450f643def036b85059b3d565ab6bf585cdd553121ae67"
   },
   "bottom": {
    "penetration_vs_result_json_max_abs_mm": 2.5631052835706214e-11,
    "attitude_vs_result_json_max_abs_deg": 0.0,
-   "params_sha256": "06f3ae97b9d372ca5ed99bff2f3e842c2d97a60722896244fad5e68c9b094550"
+   "params_sha256": "5888afd54dced301761d5b4a2d677e868a61e05266e760e5c3d931bf7bf304d2"
   },
   "cross_top": {
    "penetration_vs_result_json_max_abs_mm": 2.031350643250107e-09,
    "attitude_vs_result_json_max_abs_deg": 0.0,
-   "params_sha256": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5"
+   "params_sha256": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723"
   }
  },
  "settle_gif": {
@@ -157,5 +157,5 @@
   "path": "06_analysis/01_chrono/11_S1/S1_cross_top_frame.png",
   "t_s": 0.13000000000000167
  },
- "total_s": 88.1
+ "total_s": 177.4
 }

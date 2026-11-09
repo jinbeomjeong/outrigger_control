@@ -37,7 +37,7 @@
   "arrow_normal_m_per_kN": 0.01,
   "arrow_tangential_m_per_kN": 0.2,
   "before_dir": "06_analysis\\01_chrono\\12_S2\\history\\before_planA",
-  "params_file": "02_params/history/rexome33_2026-10-25_before_bundle.yaml",
+  "params_file": "02_params/rexome33.yaml",
   "meshes": {
    "faces_full": 6378910,
    "faces_drawn": 6378910,
@@ -46,23 +46,41 @@
    "renderer": "zbuffer",
    "drawing_mesh": "01_cad/05_meshes/render_mesh_v5.npz",
    "drawing_mesh_sha256": "4521b9f715bb5e4414e28fb4cff4581d66b9c6d0cc61dd3bf48a7f5ad21565b9"
-  },
-  "not_rerendered_2026-11-09": {
-   "files": [
-    "S2a_dt_study.png",
-    "S2a_summary.png"
-   ],
-   "dt_study_block": "kept from the 2026-10-21 render (history/pre_v5_mesh_2026-11-09/S2_gifs.json)",
-   "reason": "07_results/S2a/v7_yaw now has dt_s 2e-4 (YAML default), same as v7_yaw_dt2e-04; the dt study would plot it as the 1e-4 s point. No mesh in these figures."
   }
  },
  "dt_study": {
   "png": "06_analysis/01_chrono/12_S2/S2a_dt_study.png",
-  "slope_fit_per_s": 18.089700381838888,
-  "intercept": 0.03720264292205844,
-  "slope_envelope_per_s": 19.47949059331606,
-  "increment_ratio": 2.0007915907803295,
-  "slope_ratio": 0.9994309603225906
+  "drawn": true,
+  "cases": [
+   "v7_yaw_dt5e-05",
+   "v7_yaw_dt1e-04",
+   "v7_yaw_dt2e-04"
+  ],
+  "dt_s": [
+   5e-05,
+   0.0001,
+   0.0002
+  ],
+  "judged_v7_dt_s": [
+   0.0002
+  ],
+  "slope_fit_per_s": 12.614063166599964,
+  "intercept": 0.03727358159051646,
+  "refit_minus_json": {
+   "slope_per_s": 0.0,
+   "intercept": 0.0
+  },
+  "slope_envelope_per_s": 12.512000318664874,
+  "increment_ratio": 2.1353637494393234,
+  "slope_ratio": 1.0091250533279972,
+  "zeta_ref": 0.0373,
+  "ct_scale_prediction": 0.03874522229328647,
+  "checks": {
+   "A1": true,
+   "A2": true,
+   "A3": true
+  },
+  "source": "verify_S2a_L1.json v7_yaw_dt_study"
  },
  "v12_summary_png": "06_analysis/01_chrono/12_S2/S2a_v12_summary.png",
  "ramp_png": {
@@ -74,7 +92,7 @@
    "ramp0.1_dt1e-05": 22.343854192416984
   }
  },
- "last_run_s": 470.5,
+ "last_run_s": 483.9,
  "v12_gif": {
   "path": "06_analysis/01_chrono/12_S2/S2a_v12_slope.gif",
   "frames": 63,
@@ -362,7 +380,7 @@
   "merged_identical_frames": 0
  },
  "v7": {
-  "mesh_render_s": 338.4,
+  "mesh_render_s": 329.8,
   "workers": 4,
   "exaggeration": {
    "v7_roll": 400.0,

@@ -570,7 +570,8 @@ def yaw_dt_study(results: dict | None = None) -> dict:
         dt_s = float(r["dt_s"])
         if dt_case_name("v7_yaw", dt_s) != case or r.get("case") != case:
             raise DtStudyError(
-                f"{p}: stored dt_s {dt_s!r} / case {r.get('case')!r} does not match the folder {case}"
+                f"{p}: stored dt_s {dt_s!r} / case {r.get('case')!r} "
+                f"does not match the folder {case}"
             )
         if any(math.isclose(dt_s, d, rel_tol=1e-9) for d in seen):
             raise DtStudyError(f"{p}: dt_s {dt_s!r} duplicates {seen}")
