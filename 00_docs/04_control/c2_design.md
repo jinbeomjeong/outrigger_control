@@ -44,7 +44,7 @@ control-expert 작업이다. [control_candidates_comparison.md](control_candidat
 | $\phi_f,\theta_f$ | 자세 필터 출력(가속도계 기울기, 20 ms 평균) | rad |
 | $c_{lr}$ | 스트로크 기반 크롤러 여유 추정 | m |
 | $F_{min}$ | 9,452.55 N(실린더 힘 기준) | N |
-| $v_{max}$ | 0.022667 m/s | m/s |
+| $v_{max}$ | 0.022667 m/s(REXOME33 당시 값, 이 문서의 설계·검증 계산에 쓴 값; 현재 YAML `actuator.max_speed_m_s` 0.020924 m/s) | m/s |
 
 되먹임 부호: 분해 채널마다 **음되먹임** $v=-K(z)\,y$, $y=[c_{lr},\,\phi_{acc},\,\theta_{acc},\,n^TP]$(목표값 0, heave 목표 50 mm는 기준 입력). 개루프 $L=K\,G$. 여유는 "분해 채널 출력 $v$에서 끊은" 것이고, 다리 입력 $u$에서 끊은 값도 함께 냈다(5.2절). GM은 위상 교차에서 $1/|L|$(절대비와 dB), PM은 이득 교차에서 $180°+\angle L$이다. 교차가 여럿이면 모두 계산하고 최소로 판정했다.
 

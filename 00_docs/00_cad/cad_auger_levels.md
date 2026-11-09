@@ -317,8 +317,8 @@ CLAUDE.md의 기준 질량을 계산해 덧붙인 절이다. 1–6절은 바꾸�
 - 패드는 CAD 형상과 방향을 그대로 쓴다(CLAUDE.md "다리 기하"). 정사각형 변의 방향은 기체 x축에서 재었다.
   - 전방(FL, FR)은 47.13°(≈ 45° + 2.13°)다.
   - 후방(RL, RR)은 3.38°다.
-- 구동기 값은 CLAUDE.md "구동기"를 따른다.
-  - 스트로크 0.680 m, 0 → 최대까지 30 s, 최대 속도 0.680/30 = **0.022667 m/s**.
+- 구동기 값은 CLAUDE.md "현재 기준값"(행정·속도)과 YAML `actuator`를 따른다(작성 당시 CLAUDE.md "구동기" 절).
+  - 스트로크 **0.70 m**(YAML `actuator.stroke_m`, 도면 행정, Q-C1·Q-U4), 최대 속도 **0.020924 m/s**(`actuator.max_speed_m_s`, 펌프 60.2 L/min × 체적 효율 0.95 / 네 다리 헤드 면적 합), 0 → 최대 33.45 s(`actuator.full_stroke_time_s` = 행정 / 속도). 이 절 작성 당시(2026-10-19, REXOME33 당시 값)는 0.680 m, 30 s, 0.680/30 = 0.022667 m/s였다.
   - 신장 방향은 기체 −z(패드가 내려감)다.
 - 배럴과 브래킷은 상부체에 강결합된 것으로 상부체 질량에 들어 있다(전방 127.1 kg, 후방 125.5 kg).
 - 지면 기준: 크롤러 바닥 z = **−1.0509 m**(현재 CAD 자세, `cad_summary.json geometric_low_part_check.ground_y_cad_mm`에서 읽는다). 네 다리 완전 수축 때 가장 낮은 패드 바닥은 **−0.7100 m**(후방)다. CAD 자세로는 −0.712 m다.
@@ -339,7 +339,7 @@ CLAUDE.md의 기준 질량을 계산해 덧붙인 절이다. 1–6절은 바꾸�
 | `meta` | 생성 스크립트, 생성일, 출처 파일, 질량 기준(경우 C, provisional), 좌표계(축·원점·SI·CAD 축 대응·회전행렬), 관성 표기, g, 다리 순서 |
 | `ground` | `crawler_bottom_z_m` −1.0509, `lowest_pad_bottom_z_m` −0.710(완전 수축) |
 | `superstructure` | 정의, `default_auger_level: "top"`(CLAUDE.md "오거 위치"), `auger_level_order`, `auger_levels.{top,middle,bottom}`(이동량·질량·무게중심·관성 3×3·주관성·정적 다리 하중), `auger_moving_set_at_cad_pose`(이동 부품 질량·무게중심·관성·이동 범위), `fixed_part`(상부체 − 이동 부품) |
-| `actuator` | 스트로크, 30 s, 최대 속도, 신장 방향 |
+| `actuator` | 스트로크(`stroke_m` 0.70), 전 행정 시간(`full_stroke_time_s` 33.45 s; REXOME33 당시 30 s), 최대 속도(`max_speed_m_s` 0.020924), 신장 방향 |
 | `legs.{FL,FR,RL,RR}` | CAD 인스턴스, 실린더 축 xy, 축 방향, 부착점, 브래킷·배럴·보어 z 범위, `retracted_offset_from_cad_m`, `extension_range_m`, 패드 바닥 중심(수축), 패드(팔각, 두께, 옆면 높이, 면적, 꼭짓점), 이동부(질량·무게중심(수축)·관성) |
 | `meta` (동역학 추가) | `sources.dynamics*`(문서·식·기준해 경로), `dynamics_stages`(키별 단계: common / L1 / L2b / L2 / SCM. L2b = L2b-NSC, 운용안 B 재판정 모델) |
 | `actuator` (동역학 추가, 공통) | `model_default: "L1"`, 보어 0.115 / 로드 0.110 / 배럴 외경 0.160 m(CAD), `oil_bulk_modulus_eff_Pa` 1.0×10⁹(가정, 사용자 결정(CLAUDE.md)), `oil_bulk_modulus_sensitivity_range_Pa` [0.69, 1.6]×10⁹(사용자 결정, `dyn_model.ASSUMPTIONS`와 일치 점검), `oil_dead_length_m` 0.05(가정), `frame_stiffness_N_m` 1.0×10⁹(가정) |
@@ -391,7 +391,7 @@ CLAUDE.md의 기준 질량을 계산해 덧붙인 절이다. 1–6절은 바꾸�
 | 그 밖의 부품 밀도 | STEP 값(경우 A) | 운전실 shrinkwrap '일반' 1.0(501 kg), 유리 1.0이 그대로다. 엔진·작동유·연료는 모델에 없다 |
 | 다리 부착점 z | 브래킷 볼트 구멍 범위 중앙 | 약속. 배럴이 상부체에 강결합이므로 축 위 어느 점이든 같은 직선 관절이 된다 |
 | 다리 하중 | 4점 균등 강성, 강체 수평 바닥 | 부정정 문제의 한 해 |
-| 구동기 | 스트로크 0.680 m, 30 s, 22.67 mm/s | CLAUDE.md "구동기" |
+| 구동기 | 스트로크 0.70 m, 33.45 s, 20.924 mm/s(REXOME33 당시 값 0.680 m, 30 s, 22.67 mm/s) | CLAUDE.md "현재 기준값"(행정·속도), YAML `actuator.*` |
 | 후방 다리 수축 위치 | CAD 자세 + 0.002 m(기체 +z) | 사용자 결정(CLAUDE.md "다리 기하"). 피스톤이 보어 상단에 닿는 위치로 본다. 실제 유압 스토퍼 위치는 확인하지 않았다 |
 | 패드 방향 | CAD 그대로(전방 47.1°, 후방 3.4°) | 사용자 결정(CLAUDE.md "다리 기하"). 실물 패드가 로드 둘레로 돌 수 있는지는 확인하지 않았다 |
 
