@@ -1,8 +1,14 @@
 """LAS-b K1 S-Ch judge: the Chrono SCM patch pair ``gateon`` against ``gateoff``.
 
 Rules: the sealed supplementary plan ``las_k1_sch_plan.md`` (control-expert, sha256
-:data:`PLAN_SHA256`) on top of ``las_k1_rules.md`` and its addendum ``las_k1_rules_rev1.md``.
+:data:`PLAN_SHA256`) and its addendum ``las_k1_sch_plan_rev1.md`` (:data:`PLAN_REV1_SHA256`,
+wins where the two differ), on top of ``las_k1_rules.md`` and ``las_k1_rules_rev1.md``.
 The plan text wins where this code differs; section numbers in the comments are the plan's.
+
+rev1 in this code: code diff base 92d22e0 (R1-1, :data:`BASE_COMMIT`), empty dirty allow list
+(R1-2), K-0k tool sha256 equality prelaunch = postrun = judge (R1-3), a missing judged value
+(E-6b ``grid_end_m``, empty E-6a end window, ``s_motor_max_m``, ``F_min_after_N``) is
+``incomplete``, not a fail or a pass (R1-5); a K-0 / K-S / C-P stop still wins (T-9).
 
 Sub-commands
   prelaunch  plan 2.3 items (1)-(6) right before the batch launch -> ``sch_prelaunch.json``
@@ -52,22 +58,26 @@ JUDGE_NAME = "judge_SCh.json"
 # ---------------------------------------------------------------- sealed identity (plan 2)
 RULES_DIR_RELATIVE = Path("06_analysis/02_control/verif_matrix")
 PLAN_SHA256 = "b0fe744feca6fd2e2b792a0c000e08c18eb1005f30278d1d0eeaeb2f40d46d9d"
+PLAN_REV1_SHA256 = "d8f957cbedd39ffec5bc36127dc3a2ec91e1d71335a464ba370dd87643069295"
+PLAN_SHA256_BY_FILE = {
+    "las_k1_sch_plan.md": PLAN_SHA256,
+    "las_k1_sch_plan_rev1.md": PLAN_REV1_SHA256,
+}
+"""Both plan editions (rev1 R1-3 / T-3): every output records both."""
 SEALED_RULES = {
     "las_k1_rules.md": "2742c9760ad55a87eccbf73e84025aafe0171a3555e1f54ab19fab24d888e4a0",
     "las_k1_rules_rev1.md": "eeee4ab9661babff50117b8ff579aa41e27a98d083f1fc13f46fb5c733e0b4d3",
-    "las_k1_sch_plan.md": PLAN_SHA256,
+    **PLAN_SHA256_BY_FILE,
 }
-"""K-0j / 2.3 (6): raw-byte sha256 of the original, rev1 and the plan (``-text`` files)."""
+"""K-0j / 2.3 (6): raw-byte sha256 of the K1 rules, their rev1 and both plan editions
+(``-text`` files)."""
 
-BASE_COMMIT = "f25b043"
+BASE_COMMIT = "92d22e0ea5fe527ec87bdbc7ed08fa477329345f"
+"""Plan rev1 R1-1: code diff base (``f25b043`` in the original plan; the seven sealed blobs
+of plan 2.1 are the same in both commits)."""
 CODE_DIFF_PATHS = ("03_src", "02_params", "04_scripts")
-ALLOWED_DIRTY = frozenset(
-    {
-        "04_scripts/02_chrono/run_S2a.py",
-        "04_scripts/02_chrono/render_S2_gifs.py",
-    }
-)
-"""2.3 (3): the only paths ``git status --porcelain`` may list under the code paths."""
+ALLOWED_DIRTY: frozenset[str] = frozenset()
+"""Plan rev1 R1-2: ``git status --porcelain`` of the code paths must be empty."""
 
 
 @dataclass(frozen=True)
@@ -460,7 +470,7 @@ def identity_snapshot(root: Path, kind: str) -> dict[str, Any]:
         "tool": tool_record(),
         "taken_utc": utc_now(),
         "root": root.as_posix(),
-        "plan_sha256": PLAN_SHA256,
+        "plan_sha256": dict(PLAN_SHA256_BY_FILE),
         **items,
         "checks": checks,
         "argv_check": "not part of prelaunch: building the rows needs run_S9 (not imported); "
@@ -900,6 +910,19 @@ def check_k0j(root: Path) -> dict[str, Any]:
     return check("K-0j", record["ok"], files=record["files"])
 
 
+def check_k0k(prelaunch_path: Path, postrun_path: Path) -> dict[str, Any]:
+    """Plan rev1 R1-3: tool sha256 of prelaunch = postrun = this judging tool; a missing
+    record is false."""
+    recorded = {
+        "prelaunch": dig(read_json(prelaunch_path), "tool", "sha256"),
+        "postrun": dig(read_json(postrun_path), "tool", "sha256"),
+        "judge": sha256_file(TOOL_PATH),
+    }
+    values = set(recorded.values())
+    is_complete = all(isinstance(v, str) and v for v in recorded.values())
+    return check("K-0k", is_complete and len(values) == 1, tool_sha256=plain(recorded))
+
+
 def identity_checks(
     off: RowData,
     on: RowData,
@@ -920,6 +943,7 @@ def identity_checks(
         check_k0h(rows),
         check_k0i(rows, batch),
         check_k0j(root),
+        check_k0k(prelaunch_path, postrun_path),
     ]
 
 
@@ -1236,19 +1260,35 @@ def check_all_commands_equal(off_row: RowData, on_row: RowData) -> dict[str, Any
 
 # ================================================================ E-6 type (plan 4.2)
 def e6a_end_crawler(row: RowData) -> dict[str, Any]:
+    """E-6a; an empty end window is ``missing`` (rev1 R1-5 / T-6), neither fail nor pass."""
     t_s = np.asarray(row.step["t_s"], dtype=float)
     crawler_n = np.asarray(row.step["scm_crawler_normal_N"], dtype=float)
+    if t_s.size == 0 or crawler_n.size != t_s.size:
+        return {
+            "ok": False,
+            "failed": False,
+            "missing": "E-6a: empty step series",
+            "window_max_N": None,
+            "window_samples": 0,
+        }
     t_end = float(t_s[-1])
     window = t_s >= t_end - END_WINDOW_S - WINDOW_EDGE_TOLERANCE_S
-    window_max = float(crawler_n[window].max()) if window.any() else None
+    if not window.any():
+        return {
+            "ok": False,
+            "failed": False,
+            "missing": "E-6a: empty end window",
+            "window_max_N": None,
+            "window_samples": 0,
+        }
+    window_max = float(crawler_n[window].max())
     patches = row.step.get("scm_crawler_patches")
-    patches_max = (
-        float(np.asarray(patches)[window].max()) if patches is not None and window.any() else None
-    )
-    ok = window_max is not None and window_max <= END_CRAWLER_LIMIT_N
+    patches_max = float(np.asarray(patches)[window].max()) if patches is not None else None
+    ok = window_max <= END_CRAWLER_LIMIT_N
     return {
         "ok": ok,
         "failed": not ok,
+        "missing": None,
         "window_max_N": window_max,
         "end_N": float(crawler_n[-1]),
         "window_samples": int(window.sum()),
@@ -1261,9 +1301,11 @@ def e6b_end_gap(row: RowData, is_crawler_zero: bool) -> dict[str, Any]:
     gap = row.result["p3b_ext"]["crawler_gap"]
     grid_end = gap.get("grid_end_m")
     if not isinstance(grid_end, (int, float)) or not math.isfinite(float(grid_end)):
+        # rev1 R1-5 / T-5: a missing judged value is incomplete, not an E-6b fail
         return {
             "ok": False,
-            "failed": True,
+            "failed": False,
+            "missing": "E-6b: grid_end_m missing or not finite",
             "outcome": "no_value",
             "grid_end_m": plain(grid_end),
             "flag": None,
@@ -1272,6 +1314,7 @@ def e6b_end_gap(row: RowData, is_crawler_zero: bool) -> dict[str, Any]:
     if grid_end >= GAP_FLAG_LIMIT_M:
         outcome, flag = "ge_25mm", None
     elif grid_end > 0.0:
+        # rev1 R1-4.2 (I-8): with a crawler load the band is recorded only; E-6a carries the fail
         outcome = "flag" if is_crawler_zero else "below_25mm_with_crawler_load"
         flag = "E-6_post_event_clearance" if is_crawler_zero else None
     else:
@@ -1280,6 +1323,7 @@ def e6b_end_gap(row: RowData, is_crawler_zero: bool) -> dict[str, Any]:
     return {
         "ok": not failed,
         "failed": failed,
+        "missing": None,
         "outcome": outcome,
         "grid_end_m": grid_end,
         "flag": flag,
@@ -1464,15 +1508,17 @@ def stroke_comparison(off: RowData, on: RowData) -> dict[str, Any]:
     off_max, off_legs = stroke_max_m(off)
     on_max, on_legs = stroke_max_m(on)
     if off_max is None or on_max is None:
+        # rev1 R1-5 / T-7: ok None = not judged (incomplete), not a fail
         return {
-            "ok": False,
-            "reason": "s_motor_max_m missing",
+            "ok": None,
+            "missing": "C-S: s_motor_max_m missing or empty",
             "gateoff_m": off_max,
             "gateon_m": on_max,
         }
     increase = on_max - off_max
     return {
         "ok": increase <= STROKE_INCREASE_LIMIT_M,
+        "missing": None,
         "gateoff_m": off_max,
         "gateon_m": on_max,
         "increase_m": increase,
@@ -1492,7 +1538,9 @@ def force_min_n(row: RowData) -> tuple[float | None, Any]:
 
 
 def force_comparison(off: RowData, on: RowData) -> dict[str, Any]:
-    """C-F: a baseline at or above the floor needs a candidate at or above it."""
+    """C-F: a baseline at or above the floor needs a candidate at or above it. A missing
+    ``F_min_after_N`` in either row is ``missing`` (rev1 R1-5 / T-8); "not applicable" only
+    for a baseline value below the floor."""
     off_min, off_detail = force_min_n(off)
     on_min, on_detail = force_min_n(on)
     detail = {
@@ -1504,9 +1552,16 @@ def force_comparison(off: RowData, on: RowData) -> dict[str, Any]:
         "note": "Chrono F_min_after_N (true cylinder force after the departure), "
         "not the harness F_judged_min_N",
     }
-    if off_min is None or off_min < FORCE_FLOOR_N:
-        return {"ok": True, "applicable": False, **detail}
-    return {"ok": on_min is not None and on_min >= FORCE_FLOOR_N, "applicable": True, **detail}
+    if off_min is None or on_min is None:
+        return {
+            "ok": None,
+            "applicable": None,
+            "missing": "C-F: F_min_after_N missing or empty",
+            **detail,
+        }
+    if off_min < FORCE_FLOOR_N:
+        return {"ok": True, "applicable": False, "missing": None, **detail}
+    return {"ok": on_min >= FORCE_FLOOR_N, "applicable": True, "missing": None, **detail}
 
 
 def ready_delta(off: RowData, on: RowData) -> dict[str, Any]:
@@ -1789,18 +1844,35 @@ def fail_reasons_of(e6: dict[str, Any], pair: dict[str, Any]) -> list[str]:
     reasons = [f"E-6 gateon only: {item}" for item in e6["grade"]["gateon_only_failed"]]
     reasons += [f"C-2 {v['rule']}: {v['item']}" for v in pair["C-2"]["violations"]]
     reasons += [f"P3: {v['item']}" for v in pair["P3"]["violations"]]
-    if not pair["C-S"]["ok"]:
+    if pair["C-S"]["ok"] is False:
         reasons.append("C-S")
-    if not pair["C-F"]["ok"]:
+    if pair["C-F"]["ok"] is False:
         reasons.append("C-F")
     return reasons
 
 
-def final_status(is_active: bool, stop_reasons: list[str], fail_reasons: list[str]) -> str:
-    """4.4: fail wins over stop (stop reasons stay disclosed); an inactive K1 is info
-    unless something stops."""
+def missing_values_of(e6: dict[str, Any], pair: dict[str, Any]) -> list[str]:
+    """Rev1 R1-5: judged values that are absent in a row (E-6a window, E-6b, C-S, C-F)."""
+    reasons = []
+    for row_name in ("gateoff", "gateon"):
+        for item in ("E-6a", "E-6b"):
+            if e6[row_name][item].get("missing"):
+                reasons.append(f"{row_name} {e6[row_name][item]['missing']}")
+    reasons += [pair[item]["missing"] for item in ("C-S", "C-F") if pair[item].get("missing")]
+    return reasons
+
+
+def final_status(
+    is_active: bool, stop_reasons: list[str], fail_reasons: list[str], missing: list[str]
+) -> str:
+    """4.4 with rev1 T-9: a K-0 / K-S / C-P stop wins; then a missing judged value gives
+    incomplete (no fail can be issued without the value); then fail over the E-6 both-fail
+    stop; an inactive K1 is info unless something stops."""
     if not is_active:
         return STATUS_STOP if stop_reasons else STATUS_K1_INACTIVE
+    structural_stops = [r for r in stop_reasons if not r.startswith("E-6 both")]
+    if missing:
+        return STATUS_STOP if structural_stops else STATUS_INCOMPLETE
     if fail_reasons:
         return STATUS_FAIL
     return STATUS_STOP if stop_reasons else STATUS_PASS
@@ -1839,11 +1911,15 @@ def judge_rows(
         [f"E-6 both: {item}" for item in e6["grade"]["both_failed"]] if k1["active"] else []
     )
     fail_reasons = fail_reasons_of(e6, pair) if k1["active"] else []
-    status = final_status(k1["active"], stop_reasons, fail_reasons)
+    # rev1 R1-5 applies to judged values; with K1 inactive they are info only (I-6)
+    missing = missing_values_of(e6, pair)
+    status = final_status(k1["active"], stop_reasons, fail_reasons, missing if k1["active"] else [])
     return {
         "status": status,
         "stop_reasons": stop_reasons,
         "fail_reasons": fail_reasons,
+        "incomplete_reasons": missing if k1["active"] else [],
+        "missing_values_info": [] if k1["active"] else missing,
         "info_only": not k1["active"],
         "flags": {"gateon": e6_flags(e6["gateon"]), "gateoff": e6_flags(e6["gateoff"])},
         "k1": k1,
@@ -1865,7 +1941,7 @@ def judge_batch(
         "taken_utc": utc_now(),
         "batch": batch_dir.as_posix(),
         "root": root.as_posix(),
-        "plan_sha256": PLAN_SHA256,
+        "plan_sha256": dict(PLAN_SHA256_BY_FILE),
         "progress_log": progress_counts(batch_dir),
         "rerun": rerun_record(batch_dir),
         "files_read_sha256": files_read(batch_dir, [prelaunch_path, postrun_path]),

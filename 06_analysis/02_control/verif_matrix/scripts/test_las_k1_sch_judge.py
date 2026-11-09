@@ -194,6 +194,7 @@ def identity_record(kind: str) -> dict[str, Any]:
         "head": {"sha": HEAD},
         "code_diff": {"quiet": True, "changed_paths": None},
         "git_status": {"lines": []},
+        "tool": {"sha256": judge.sha256_file(judge.TOOL_PATH)},
         "code_files": [{"path": "x", "worktree_sha256": "1", "blob_sha256": "2"}],
         "dll": {"sha256": judge.DLL_SHA256},
     }
@@ -205,11 +206,14 @@ def no_git(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(judge, "sealed_rules_record", lambda root: {"files": {}, "ok": True})
 
 
-def run_judge(tmp_path: Path, synthetic: SyntheticBatch) -> dict[str, Any]:
+def run_judge(
+    tmp_path: Path, synthetic: SyntheticBatch, postrun_record: dict[str, Any] | None = None
+) -> dict[str, Any]:
     batch_dir = synthetic.write(tmp_path / "batch_V5-LAS-K1-CHRONO_test")
     prelaunch, postrun = tmp_path / "pre.json", tmp_path / "post.json"
     prelaunch.write_text(json.dumps(identity_record("prelaunch")), encoding="utf-8")
-    postrun.write_text(json.dumps(identity_record("postrun")), encoding="utf-8")
+    record = identity_record("postrun") if postrun_record is None else postrun_record
+    postrun.write_text(json.dumps(record), encoding="utf-8")
     return judge.judge_batch(batch_dir, tmp_path, prelaunch, postrun)
 
 
@@ -385,7 +389,11 @@ def test_postrun_difference_breaks_k0d(tmp_path: Path, no_git: None) -> None:
     assert doc["status"] == "stop" and "K-0d" in doc["stop_reasons"]
 
 
+GIT_CALLS: list[tuple[str, ...]] = []
+
+
 def fake_git(root: Path, *args: str) -> Any:
+    GIT_CALLS.append(args)
     replies = {
         "rev-parse": (0, f"{HEAD}\n".encode()),
         "diff": (1, b"") if "--quiet" in args else (0, b"04_scripts/02_chrono/run_S2a.py\n"),
@@ -404,8 +412,106 @@ def test_prelaunch_record(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsy
     assert code == 2 and doc["status"] == "stop"
     assert doc["checks"]["(2) code_diff_empty"] is False
     assert doc["code_diff"]["changed_paths"] == ["04_scripts/02_chrono/run_S2a.py"]
-    assert doc["git_status"]["unexpected"] == ["?? 04_scripts/new.py"]
+    # rev1 R1-2 (T-2): the former allow-list file is now unexpected as well
+    assert doc["git_status"]["unexpected"] == [
+        " M 04_scripts/02_chrono/run_S2a.py",
+        "?? 04_scripts/new.py",
+    ]
     assert json.loads(capsys.readouterr().out.strip().splitlines()[-1])["exit_code"] == 2
+
+
+# ---------------------------------------------------------------- plan rev1 (T-10)
+def test_rev1_base_commit_and_empty_allow_list(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    assert judge.BASE_COMMIT == "92d22e0ea5fe527ec87bdbc7ed08fa477329345f"
+    assert judge.ALLOWED_DIRTY == frozenset()
+    assert judge.SEALED_RULES["las_k1_sch_plan_rev1.md"] == judge.PLAN_REV1_SHA256
+    assert judge.SEALED_RULES["las_k1_sch_plan.md"] == judge.PLAN_SHA256
+    GIT_CALLS.clear()
+    monkeypatch.setattr(judge, "run_git", fake_git)
+    snapshot = judge.identity_snapshot(tmp_path, "prelaunch")
+    quiet_calls = [c for c in GIT_CALLS if c[:2] == ("diff", "--quiet")]
+    assert quiet_calls == [
+        ("diff", "--quiet", judge.BASE_COMMIT, HEAD, "--", *judge.CODE_DIFF_PATHS)
+    ]
+    assert set(snapshot["plan_sha256"]) == {"las_k1_sch_plan.md", "las_k1_sch_plan_rev1.md"}
+
+
+def test_k0k_tool_sha_mismatch_is_stop(tmp_path: Path, no_git: None) -> None:
+    record = identity_record("postrun")
+    record["tool"]["sha256"] = "f" * 64
+    doc = run_judge(tmp_path, SyntheticBatch(), postrun_record=record)
+    assert doc["status"] == "stop" and doc["stop_reasons"] == ["K-0k"]
+
+
+def test_k0k_missing_tool_record_is_stop(tmp_path: Path, no_git: None) -> None:
+    record = identity_record("postrun")
+    del record["tool"]
+    doc = run_judge(tmp_path, SyntheticBatch(), postrun_record=record)
+    assert doc["status"] == "stop" and "K-0k" in doc["stop_reasons"]
+
+
+def test_missing_grid_end_is_incomplete(tmp_path: Path, no_git: None) -> None:
+    synthetic = SyntheticBatch()
+    synthetic.on["p3b_ext"]["crawler_gap"]["grid_end_m"] = None
+    doc = run_judge(tmp_path, synthetic)
+    assert doc["status"] == "incomplete" and doc["fail_reasons"] == []
+    assert doc["e6"]["gateon"]["E-6b"]["failed"] is False
+
+
+def test_empty_end_window_is_incomplete(tmp_path: Path, no_git: None) -> None:
+    synthetic = SyntheticBatch()
+    synthetic.steps[judge.CASE_GATEON]["t_s"][-1] = np.nan  # t_end NaN -> no sample in the window
+    doc = run_judge(tmp_path, synthetic)
+    assert doc["status"] == "incomplete"
+    assert any("E-6a: empty end window" in r for r in doc["incomplete_reasons"])
+
+
+def test_missing_stroke_is_incomplete(tmp_path: Path, no_git: None) -> None:
+    synthetic = SyntheticBatch()
+    synthetic.off["p3b"]["P3-5_clearance_stroke"]["s_motor_max_m"] = []
+    doc = run_judge(tmp_path, synthetic)
+    assert doc["status"] == "incomplete" and "C-S" not in doc["fail_reasons"]
+
+
+def test_missing_baseline_force_is_incomplete_not_not_applicable(
+    tmp_path: Path, no_git: None
+) -> None:
+    synthetic = SyntheticBatch()
+    del synthetic.off["p3b"]["P3-3_leg_force"]["F_min_after_N"]
+    doc = run_judge(tmp_path, synthetic)
+    assert doc["status"] == "incomplete"
+    assert doc["pair"]["C-F"]["applicable"] is None
+
+
+def test_force_below_floor_is_not_applicable(tmp_path: Path, no_git: None) -> None:
+    synthetic = SyntheticBatch()
+    synthetic.off["p3b"]["P3-3_leg_force"]["F_min_after_N"] = [9000.0] * 4
+    synthetic.on["p3b"]["P3-3_leg_force"]["F_min_after_N"] = [8000.0] * 4
+    doc = run_judge(tmp_path, synthetic)
+    assert doc["status"] == "pass" and doc["pair"]["C-F"]["applicable"] is False
+
+
+def test_missing_value_with_structural_stop_is_stop(tmp_path: Path, no_git: None) -> None:
+    synthetic = SyntheticBatch()
+    synthetic.on["p3b_ext"]["crawler_gap"]["grid_end_m"] = None
+    synthetic.entries[judge.CASE_GATEON]["rc"] = 1  # K-0i
+    doc = run_judge(tmp_path, synthetic)
+    assert doc["status"] == "stop"
+    assert "K-0i" in doc["stop_reasons"] and doc["incomplete_reasons"]
+
+
+def test_i8_band_with_crawler_load_counts_only_e6a(tmp_path: Path, no_git: None) -> None:
+    synthetic = SyntheticBatch()
+    synthetic.on["p3b_ext"]["crawler_gap"]["grid_end_m"] = 0.010
+    synthetic.steps[judge.CASE_GATEON]["scm_crawler_normal_N"][-20:] = 500.0
+    doc = run_judge(tmp_path, synthetic)
+    e6b = doc["e6"]["gateon"]["E-6b"]
+    assert e6b["outcome"] == "below_25mm_with_crawler_load"
+    assert e6b["failed"] is False and e6b["flag"] is None
+    assert "E-6_post_event_clearance" not in doc["flags"]["gateon"]
+    assert doc["status"] == "fail" and doc["fail_reasons"] == ["E-6 gateon only: E-6a"]
 
 
 def test_main_exit_code_and_last_line_json(
