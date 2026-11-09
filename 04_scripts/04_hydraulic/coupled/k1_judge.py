@@ -1,8 +1,16 @@
 """LAS-b K1 judge: R4c30 order gate bundles Y-0, Y-P, Y-S, Y-T on the reduced harness.
 
 Rules: ``06_analysis/02_control/verif_matrix/las_k1_rules.md`` (control-expert, sealed; LF
-sha256 :data:`RULES_K1_SHA256`) and the six A-plan rules files it inherits (all checked before
-anything is judged). The rules text wins where this code differs.
+sha256 :data:`RULES_K1_SHA256`), its addendum ``las_k1_rules_rev1.md``
+(:data:`RULES_K1_REV1_SHA256`; it wins over the original where they differ) and the six A-plan
+rules files it inherits (all checked before anything is judged). The rules text wins where
+this code differs.
+
+rev1 in this code: P3 is a pair rule (R1-1, :func:`p3_comparison`) on every pair of rules 4.3
+whatever the hash; the C-2 type is ``las_rev_judge.pair_violations`` (R1-2,
+:data:`C2_DEFINITION`); the new pair C_SA = Y-Sa against Y-0c on the keys whose hash changed
+(R1-3); only test files may be dirty (R1-4); re-run keys per bundle from ``rev.attempt`` /
+``rev.resumed`` and event names counted by exact name (R1-5).
 
 What this module owns (``k1_targeted`` imports it):
   - the stored base files (raw sha256, rules 0.2 / appendices) and the key lists recomputed
@@ -12,8 +20,9 @@ What this module owns (``k1_targeted`` imports it):
   - the judgement of rules 4: K-0 .. K-4, H-1 .. H-4 (with SK-3 the shadow ``would_block``
     set of Q-0b), C-2 type, P3, C-S, C-F, the READY record and the rules 5 prediction table.
 
-Pairs are made on the full key (``row_key|setting|eps``); times are compared as control
-periods ``round(t / 0.1)`` (rules 5.0.2). Grades (rules 4.4 / 4.5): ``fail`` (a C-2 type,
+Pairs are made on the full key (``row_key|setting|eps``): Y-P against the stored S-C P0 line,
+Y-Sb against Y-Sa, C_SA (Y-Sa against Y-0c); times are compared as control periods
+``round(t / 0.1)`` (rules 5.0.2). Grades (rules 4.4 / 4.5): ``fail`` (a C-2 type,
 P3, C-S or C-F violation) wins over ``stop`` (a K or H problem, an unpaired, out-of-list or
 duplicate line), then ``incomplete`` (missing keys, error lines left after one re-run),
 ``not_run`` (an earlier bundle did not pass), ``pass``.
@@ -50,15 +59,23 @@ RULES_K1_SHA256 = "2742c9760ad55a87eccbf73e84025aafe0171a3555e1f54ab19fab24d888e
 RULES_REVA_REV3_PATH = ajudge.RULES_REVA_PATH.with_name("las_revA_targeted_rules_rev3.md")
 RULES_REVA_REV3_SHA256 = "98082a368da626f90ce3b0a41f5c74145b4095c155f14b2b2f63eb319352d709"
 """= ``las_revA_diag.RULES_REVA_REV3_SHA256`` (kept here so the judge needs no numpy)."""
+RULES_K1_REV1_PATH = RULES_K1_PATH.with_name("las_k1_rules_rev1.md")
+RULES_K1_REV1_SHA256 = "eeee4ab9661babff50117b8ff579aa41e27a98d083f1fc13f46fb5c733e0b4d3"
+"""``las_k1_rules_rev1.sha256`` (LF digest, sealed 2026-11-09 17:13:20 +09:00)."""
 SEALED_RULES = (
     *ajudge.SEALED_RULES,
     (RULES_REVA_REV3_PATH, RULES_REVA_REV3_PATH.with_suffix(".sha256"), RULES_REVA_REV3_SHA256),
     (RULES_K1_PATH, RULES_K1_SHA_PATH, RULES_K1_SHA256),
+    (RULES_K1_REV1_PATH, RULES_K1_REV1_PATH.with_suffix(".sha256"), RULES_K1_REV1_SHA256),
 )
-"""The six A-plan rules files and the K1 original (later K1 revisions are added here)."""
-RULES_FIELDS = (*ajudge.RULES_FIELDS, "rules_revA_rev3_sha256", "rules_k1_sha256")
-RULES_VALUES = (*ajudge.RULES_VALUES, RULES_REVA_REV3_SHA256, RULES_K1_SHA256)
-"""Rules 2: every line records all seven digests."""
+"""The six A-plan rules files, the K1 original and its rev1 (later K1 revisions go here)."""
+RULES_FIELDS = (*ajudge.RULES_FIELDS, "rules_revA_rev3_sha256", "rules_k1_sha256",
+                "rules_k1_rev1_sha256")
+RULES_VALUES = (*ajudge.RULES_VALUES, RULES_REVA_REV3_SHA256, RULES_K1_SHA256,
+                RULES_K1_REV1_SHA256)
+"""Rules 2 / rev1 R1-6: every line records all eight digests (one missing is K-0)."""
+C2_DEFINITION = "las_rev_judge.pair_violations (A rev1 R1-1)"
+"""rev1 R1-2: the C-2 type inherited as it is (plus the original (a) verdict wording)."""
 
 PERIOD_S = 0.1
 STROKE_LIMIT_M = rj.STROKE_INCREASE_LIMIT_M
@@ -185,8 +202,18 @@ def key_of(line: dict) -> str | None:
     return rj.rev_of(line).get("key")
 
 
+def event_count(line: dict, name: str) -> int:
+    """rev1 R1-5: events whose name (the part before ``:``) is exactly ``name``; never a
+    substring match (``INFO_LOC_FLAT_SOIL_MARGIN`` must not count ``..._SKIPPED``)."""
+    total = 0
+    for event, count in (line.get("event_names") or {}).items():
+        if str(event).split(":", 1)[0] == name:
+            total += int(count or 0)
+    return total
+
+
 def has_event(line: dict, name: str) -> bool:
-    return bool((line.get("event_names") or {}).get(name))
+    return event_count(line, name) > 0
 
 
 def seal_problems() -> list[str]:
@@ -333,6 +360,7 @@ class SubLines:
     finished: dict[str, dict] = field(default_factory=dict)
     error_keys: dict[str, int] = field(default_factory=dict)
     resumed: list[str] = field(default_factory=list)
+    reruns: list[str] = field(default_factory=list)
     duplicates: list[str] = field(default_factory=list)
     out_of_list: list[str] = field(default_factory=list)
     wrong_candidate: list[str] = field(default_factory=list)
@@ -350,6 +378,12 @@ def read_run_lines(k1_dir: Path) -> list[dict]:
     for path in sorted(k1_dir.glob("k1_*.jsonl")):
         lines += rj.read_lines(path)
     return lines
+
+
+def is_rerun(line: dict) -> bool:
+    """rev1 R1-5: a second attempt of its key (the batch's own SK-2 re-run or ``--resume``)."""
+    rev = rj.rev_of(line)
+    return (rev.get("attempt") or 1) >= 2 or bool(rev.get("resumed"))
 
 
 def split_lines(lines: list[dict], bases: Bases) -> dict[str, SubLines]:
@@ -370,6 +404,8 @@ def split_lines(lines: list[dict], bases: Bases) -> dict[str, SubLines]:
                                                                        sub.k1_candidate):
             part.wrong_candidate.append(str(key))
             continue
+        if is_rerun(line) and key not in part.reruns:
+            part.reruns.append(key)
         if rj.is_error(line):
             part.error_keys[key] = part.error_keys.get(key, 0) + 1
             continue
@@ -429,10 +465,10 @@ def k0_cross_problems(lines: list[dict]) -> list[str]:
 EMPTY_SHA256 = hashlib.sha256(b"").hexdigest()
 THREAD_VARIABLES = ("MKL_NUM_THREADS", "OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS",
                     "NUMBA_NUM_THREADS")
-ALLOWED_DIRTY = (".gitattributes", "00_docs/decision_log.md",
-                 "04_scripts/04_hydraulic/coupled/test_k1.py", "05_tests/unit/test_c2_k1.py")
-"""Rules 2: documents and this bundle's tests (never imported by a run); the code diff must
-be empty all the same, so a dirty test file under ``04_scripts`` still fails K-0."""
+ALLOWED_DIRTY = ("04_scripts/04_hydraulic/coupled/test_k1.py", "05_tests/unit/test_c2_k1.py")
+"""Rules 2 / rev1 R1-4: this bundle's tests only (never imported by a run; ``.gitattributes``
+and the decision log are not allowed). The harness gate uses this tuple too. The code diff
+must be empty all the same, so a dirty test file under ``04_scripts`` still fails K-0."""
 
 
 def identity_value_problems(block: dict) -> list[str]:
@@ -449,7 +485,7 @@ def identity_value_problems(block: dict) -> list[str]:
         problems.append(f"threads {threads}")
     rules = {name: block.get(name) for name in RULES_FIELDS}
     if rules != dict(zip(RULES_FIELDS, RULES_VALUES, strict=True)):
-        problems.append("rules sha256 are not the sealed seven")
+        problems.append("rules sha256 are not the sealed eight")
     return problems
 
 
@@ -496,10 +532,10 @@ def k1_problems(line: dict) -> list[str]:
     for decision in decisions:
         problems += _decision_problems(key, decision)
     applied = sum(1 for d in decisions if d.get("applied"))
-    events = (line.get("event_names") or {})
-    if applied != int(events.get(FLAT_SOIL_MARGIN_EVENT) or 0):
+    margin_events = event_count(line, FLAT_SOIL_MARGIN_EVENT)
+    if applied != margin_events:
         problems.append(f"K-1 {key}: {applied} applied decisions, "
-                        f"{events.get(FLAT_SOIL_MARGIN_EVENT)} {FLAT_SOIL_MARGIN_EVENT} events")
+                        f"{margin_events} {FLAT_SOIL_MARGIN_EVENT} events")
     if block["r4_applied"] is not (applied > 0):
         problems.append(f"K-1 {key}: r4_applied {block['r4_applied']}, {applied} applied")
     if block["would_block_any"] is not any(d.get("would_block") for d in decisions):
@@ -520,7 +556,7 @@ def k23_problems(line: dict) -> list[str]:
             label = "K-3" if is_on else "K-2"
             problems.append(f"{label} {key}: applied {decision.get('applied')} at "
                             f"{decision.get('t_loc_s')}, expected {expected}")
-    skips = int((line.get("event_names") or {}).get(SKIP_EVENT) or 0)
+    skips = event_count(line, SKIP_EVENT)
     blocked = sum(1 for d in block.get("decisions") or ()
                   if d.get("r4_due_without_gate") and d.get("would_block"))
     expected_skips = blocked if is_on else 0
@@ -617,63 +653,115 @@ def c2_violations(cand: dict, base: dict) -> list[str]:
     return found
 
 
-def p3_record(cand: dict) -> bool | None:
-    """P3: every ``d1.items`` entry named ``P3-1*`` / ``P3-5*`` is true; None = no such item."""
-    if rj.is_verdict_case(cand):
-        return None
-    items = rj.need(cand, "d1", "items")
-    values = [value for name, value in items.items() if name.startswith(P3_ITEM_PREFIXES)]
-    if not values:
-        return None
-    return all(value is True for value in values)
+def _is_p3_item(name: str) -> bool:
+    return name.startswith(P3_ITEM_PREFIXES)
+
+
+def p3_comparison(cand: dict, base: dict) -> dict:
+    """rev1 R1-1: P3 of one pair, item by item over the union of the ``P3-1*`` / ``P3-5*``
+    names of both lines.
+
+    A violation is baseline true -> candidate not true (false, None or missing), or baseline
+    None / missing -> candidate false (the items union rule of R1-2). A baseline-false item is
+    not applicable and listed (``baseline_false``); no such item on either side is not
+    applicable as a whole (``not_applicable``). Verdict cases have no ``d1.items``.
+
+    Raises:
+        rj.MissingField: ``d1.items`` missing on a D-1 line.
+    """
+    if rj.is_verdict_case(cand) or rj.is_verdict_case(base):
+        return {"violations": [], "baseline_false": [], "not_applicable": True}
+    cand_items = rj.need(cand, "d1", "items")
+    base_items = rj.need(base, "d1", "items")
+    names = sorted(name for name in set(cand_items) | set(base_items) if _is_p3_item(name))
+    violations, baseline_false = [], []
+    for name in names:
+        base_value, value = base_items.get(name), cand_items.get(name)
+        if base_value is False:
+            baseline_false.append(name)
+        elif (base_value is True and value is not True) or (base_value is None
+                                                             and value is False):
+            violations.append(f"{name} {base_value} -> {value}")
+    return {"violations": violations, "baseline_false": baseline_false,
+            "not_applicable": not names}
 
 
 def ready_s(line: dict) -> float | None:
     return ((line.get("values") or {}).get("times") or {}).get("t_first_ready_s")
 
 
-def pair_record(cand: dict, base: dict) -> dict:
-    """C-2 type, P3, C-S, C-F and the READY record of one pair (rules 4.3).
+NO_STROKE_FORCE = {"stroke_increase_m": None, "cs_fail": False, "cf_fail": False,
+                   "F_base_N": None, "F_cand_N": None}
+
+
+def _stroke_force_fields(cand: dict, base: dict) -> dict:
+    """C-S and C-F of one pair (verdict cases have neither)."""
+    if rj.is_verdict_case(base):
+        return dict(NO_STROKE_FORCE)
+    increase = rj.stroke_increase_m(cand, base)
+    if increase is None:
+        raise rj.MissingField("d1.stroke_max_m None on a D-1 pair")
+    f_base = rj.need(base, "d1", "F_judged_min_N")
+    f_cand = rj.need(cand, "d1", "F_judged_min_N")
+    return {"stroke_increase_m": increase, "cs_fail": increase > STROKE_LIMIT_M,
+            "F_base_N": f_base, "F_cand_N": f_cand,
+            "cf_fail": (f_base is not None and f_base >= F_FLOOR_N
+                        and (f_cand is None or f_cand < F_FLOOR_N))}
+
+
+def _ready_fields(cand: dict, base: dict) -> dict:
+    ready_cand, ready_base = ready_s(cand), ready_s(base)
+    if ready_cand is None or ready_base is None:
+        return {"ready_dt_s": None, "ready_dt_periods": None}
+    return {"ready_dt_s": ready_cand - ready_base,
+            "ready_dt_periods": period_of(ready_cand) - period_of(ready_base)}
+
+
+def pair_record(cand: dict, base: dict, *, is_full: bool = True) -> dict:
+    """C-2 type, P3, C-S, C-F and the READY record of one pair (rules 4.3, rev1 R1-1).
+
+    Args:
+        is_full: False for a Y-P pair with an equal hash: only P3 is judged there (rev1
+            R1-1 applies P3 to every pair; C-2 type, C-S and C-F stay on changed lines).
 
     Raises:
         rj.MissingField: A criteria field is missing (undecidable: a stop).
     """
+    p3 = p3_comparison(cand, base)
     record = {"key": key_of(cand), "changed": cand["commands_sha256"] != base["commands_sha256"],
-              "c2": c2_violations(cand, base), "P3": p3_record(cand)}
-    if rj.is_verdict_case(base):
-        record.update(stroke_increase_m=None, cs_fail=False, cf_fail=False, F_base_N=None,
-                      F_cand_N=None)
-    else:
-        increase = rj.stroke_increase_m(cand, base)
-        if increase is None:
-            raise rj.MissingField("d1.stroke_max_m None on a D-1 pair")
-        f_base = rj.need(base, "d1", "F_judged_min_N")
-        f_cand = rj.need(cand, "d1", "F_judged_min_N")
-        record.update(stroke_increase_m=increase, cs_fail=increase > STROKE_LIMIT_M,
-                      F_base_N=f_base, F_cand_N=f_cand,
-                      cf_fail=(f_base is not None and f_base >= F_FLOOR_N
-                               and (f_cand is None or f_cand < F_FLOOR_N)))
-    ready_cand, ready_base = ready_s(cand), ready_s(base)
-    both = ready_cand is not None and ready_base is not None
-    record["ready_dt_s"] = ready_cand - ready_base if both else None
-    record["ready_dt_periods"] = (period_of(ready_cand) - period_of(ready_base)) if both else None
-    record["fail"] = bool(record["c2"] or record["P3"] is False or record["cs_fail"]
+              "scope": "full" if is_full else "P3",
+              "c2": c2_violations(cand, base) if is_full else [],
+              "P3": p3["violations"], "P3_baseline_false": p3["baseline_false"],
+              "P3_not_applicable": p3["not_applicable"]}
+    record.update(_stroke_force_fields(cand, base) if is_full else NO_STROKE_FORCE)
+    record.update(_ready_fields(cand, base))
+    record["fail"] = bool(record["c2"] or record["P3"] or record["cs_fail"]
                           or record["cf_fail"])
     return record
 
 
+PAIR_NAMES = {"Y-Pa": "Y-Pa/S-C", "Y-Pb": "Y-Pb/S-C", "Y-Sb": "Y-Sb/Y-Sa", "Y-Sa": "C_SA"}
+"""The pairs of rules 4.3 and rev1 R1-3, by the sub-bundle whose lines are the candidates."""
+
+
 def pair_base(sub: SubBundle, key: str, parts, bases: Bases) -> dict | None:
-    """Rules 4.3 pairs: Y-P against the stored S-C P0 line, Y-Sb against Y-Sa."""
+    """Rules 4.3 / rev1 R1-3 pairs: Y-P against the stored S-C P0 line, Y-Sb against Y-Sa,
+    C_SA = Y-Sa against Y-0c."""
     if sub.bundle == "Y-P":
         return bases.by_file.get("SC", {}).get(key)
     if sub.name == "Y-Sb":
         return parts["Y-Sa"].finished.get(key)
+    if sub.name == "Y-Sa":
+        return parts["Y-0c"].finished.get(key)
     return None
 
 
 def judged_pairs(sub: SubBundle, parts, bases: Bases) -> tuple[list[dict], list[str], list[str]]:
-    """(pair records, unpaired keys, stop problems) of Y-P changed lines and every Y-S pair."""
-    if sub.bundle not in ("Y-P",) and sub.name != "Y-Sb":
+    """(pair records, unpaired keys, stop problems) of the sub-bundle's pairs.
+
+    Y-P: every pair, the full criteria on changed hashes and P3 alone on equal ones; Y-Sb:
+    every pair in full; C_SA (Y-Sa): only the keys whose hash differs from Y-0c (R1-3)."""
+    if sub.name not in PAIR_NAMES:
         return [], [], []
     records, unpaired, problems = [], [], []
     for key, cand in sorted(parts[sub.name].finished.items()):
@@ -681,12 +769,15 @@ def judged_pairs(sub: SubBundle, parts, bases: Bases) -> tuple[list[dict], list[
         if base is None:
             unpaired.append(key)
             continue
-        if sub.bundle == "Y-P" and cand["commands_sha256"] == base["commands_sha256"]:
-            continue  # rules 4.3: Y-P judges the lines whose hash changed
+        is_changed = cand["commands_sha256"] != base["commands_sha256"]
+        if sub.name == "Y-Sa" and not is_changed:
+            continue  # R1-3: an equal Y-Sa hash is the Y-0c result, no C_SA pair
         try:
-            records.append(pair_record(cand, base))
+            record = pair_record(cand, base, is_full=is_changed or sub.name == "Y-Sb")
         except rj.MissingField as exc:
             problems.append(f"{sub.name} {key}: missing {exc}")
+            continue
+        records.append({"pair": PAIR_NAMES[sub.name], **record})
     return records, unpaired, problems
 
 
@@ -703,7 +794,9 @@ class SubResult:
     pairs: list[dict] = field(default_factory=list)
     unpaired: list[str] = field(default_factory=list)
     resumed: list[str] = field(default_factory=list)
+    reruns: list[str] = field(default_factory=list)
     p3_not_applicable: int = 0
+    p3_baseline_false: list[dict] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {name: getattr(self, name) for name in self.__dataclass_fields__}
@@ -739,7 +832,8 @@ def _line_problems(sub: SubBundle, line: dict, parts, bases: Bases) -> list[str]
 
 def judge_sub(sub: SubBundle, parts: dict[str, SubLines], bases: Bases) -> SubResult:
     part = parts[sub.name]
-    result = SubResult(sub.name, lines=part.count, resumed=list(part.resumed))
+    result = SubResult(sub.name, lines=part.count, resumed=list(part.resumed),
+                       reruns=list(part.reruns))
     result.stops += _structure_problems(sub.name, part)
     for line in part.finished.values():
         result.stops += _line_problems(sub, line, parts, bases)
@@ -752,12 +846,14 @@ def judge_sub(sub: SubBundle, parts: dict[str, SubLines], bases: Bases) -> SubRe
     _hash_predictions(sub, parts, bases, result)
     records, unpaired, problems = judged_pairs(sub, parts, bases)
     result.pairs, result.stops = records, result.stops + problems
-    result.unpaired += unpaired
+    result.unpaired = sorted(set(result.unpaired + unpaired))
     if result.unpaired:
-        result.stops.append(f"{sub.name}: unpaired keys {sorted(set(result.unpaired))[:5]}")
+        result.stops.append(f"{sub.name}: unpaired keys {result.unpaired[:5]}")
     for record in records:
-        if record["P3"] is None:
+        if record["P3_not_applicable"]:
             result.p3_not_applicable += 1
+        result.p3_baseline_false += [{"pair": record["pair"], "key": record["key"],
+                                      "item": item} for item in record["P3_baseline_false"]]
         if record["fail"]:
             result.fails.append(_fail_text(record))
     return result
@@ -786,13 +882,13 @@ def _fail_text(record: dict) -> str:
     parts = []
     if record["c2"]:
         parts.append(f"C-2 {record['c2']}")
-    if record["P3"] is False:
-        parts.append("P3")
+    if record["P3"]:
+        parts.append(f"P3 {record['P3']}")
     if record["cs_fail"]:
         parts.append(f"C-S +{record['stroke_increase_m'] * 1e3:.3f} mm")
     if record["cf_fail"]:
         parts.append(f"C-F {record['F_cand_N']}")
-    return f"{record['key']}: {'; '.join(parts)}"
+    return f"{record['pair']} {record['key']}: {'; '.join(parts)}"
 
 
 def bundle_status(results: list[SubResult]) -> str:
@@ -822,7 +918,7 @@ def judge(lines: list[dict], bases: Bases, base_problems: list[str] | None = Non
     parts = split_lines(lines, bases)
     finished = [line for part in parts.values() for line in part.finished.values()]
     cross = k0_cross_problems(finished)
-    out = {"bundles": {}, "subs": {}, "k0_cross": cross,
+    out = {"bundles": {}, "subs": {}, "k0_cross": cross, "c2_definition": C2_DEFINITION,
            "unknown_lines": (parts.get("unknown") or SubLines()).out_of_list}
     earlier_passed = True
     for bundle in BUNDLES:
@@ -835,14 +931,18 @@ def judge(lines: list[dict], bases: Bases, base_problems: list[str] | None = Non
             status = bundle_status(results)
             if status == STATUS_PASS and cross:
                 status = STATUS_STOP
+        rerun_keys = [f"{result.name} {key}" for result in results for key in result.reruns]
         out["bundles"][bundle] = {"status": status, "lines": lines_seen,
-                                  "expected_lines": BUNDLE_COUNTS[bundle]}
+                                  "expected_lines": BUNDLE_COUNTS[bundle],
+                                  "reruns": {"count": len(rerun_keys), "keys": rerun_keys}}
         out["subs"].update({result.name: result.to_dict() for result in results})
         earlier_passed = earlier_passed and status == STATUS_PASS
     statuses = [entry["status"] for entry in out["bundles"].values()]
     if out["unknown_lines"]:
         statuses.append(STATUS_STOP)
     out["status"] = worst_status(statuses)
+    baseline_false = [entry for sub in out["subs"].values() for entry in sub["p3_baseline_false"]]
+    out["p3_baseline_false"] = {"count": len(baseline_false), "entries": baseline_false}
     out["predictions"] = prediction_table(parts, bases, out)
     return out
 
@@ -925,7 +1025,7 @@ def _yp_rows(parts, bases: Bases, subs: dict) -> list[dict]:
                      bool(drops) and all(value is not None and 25.0 <= value <= 35.0
                                          for value in drops.values())))
     clean = [key for key in changed if pairs.get(key) and not pairs[key]["c2"]
-             and pairs[key]["P3"] is not False]
+             and not pairs[key]["P3"]]
     rows.append(_row("Q-P3", "5 keys no C-2 / P3 / new FAULT-WARN", f"{len(clean)}/{len(changed)}",
                      bool(changed) and len(clean) == len(changed)))
     ready = {key: (pairs.get(key) or {}).get("ready_dt_s") for key in changed}
@@ -973,9 +1073,25 @@ def _json_value(value):
 
 
 def summary_of(result: dict) -> dict:
+    bundles = result.get("bundles", {})
     return {"status": result["status"],
-            "bundles": {name: entry["status"] for name, entry in result.get("bundles", {}).items()},
+            "bundles": {name: entry["status"] for name, entry in bundles.items()},
+            "reruns": {name: entry["reruns"]["count"] for name, entry in bundles.items()},
+            "p3_baseline_false": (result.get("p3_baseline_false") or {}).get("count", 0),
+            "c2_definition": C2_DEFINITION,
             "input_problems": len(result.get("input_problems") or ())}
+
+
+def _print_disclosures(result: dict) -> None:
+    """rev1 R1-5: the C-2 definition, re-run keys per bundle and the P3 baseline-false pairs."""
+    print(f"c2_definition: {C2_DEFINITION}")
+    for name, entry in result.get("bundles", {}).items():
+        reruns = entry["reruns"]
+        print(f"{name} re-run keys ({reruns['count']}): {reruns['keys']}")
+    baseline_false = result.get("p3_baseline_false") or {"count": 0, "entries": []}
+    print(f"P3 baseline false ({baseline_false['count']}):")
+    for entry in baseline_false["entries"]:
+        print(f"  {entry['pair']} {entry['key']} {entry['item']}")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -997,6 +1113,7 @@ def main(argv: list[str] | None = None) -> int:
         for kind in ("fails", "stops", "incomplete"):
             for text in sub[kind]:
                 print(f"  {name} {kind[:-1] if kind != 'incomplete' else kind}: {text}")
+    _print_disclosures(result)
     if args.json_out is not None:
         args.json_out.write_text(json.dumps(result, indent=1, default=_json_value) + "\n",
                                  encoding="utf-8")
