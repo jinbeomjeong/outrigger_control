@@ -68,7 +68,14 @@ Drawing conventions (body / world frame: x forward, y left, z up; SI; roll / pit
         sphere_force_chrono_mean_N > 0 by sphere_labels (total = window.active_min/max). The
         weight W of the ΣF - W panel is the run's result.json analytic_exact.weight_N (YAML
         composite mass x g), checked against s2b_crawler_check.json <level>.W_N (rel. 1e-9).
-        Crawler panel axis ranges come from the data and reference lines. Missing keys stop.
+        Crawler panel axis ranges come from the data and reference lines. Footprint
+        rectangles = CAD crawler_ground_sheet.json rectangles_body_m.<side>.
+        block_outline_all_contact_shoes (built from the crawler_summary.json the YAML cites,
+        SHA-256 checked; y centre checked against the YAML sphere y); leg
+        extension and pad clearance from the Record (s_motor, pose); V13 still-window spans
+        from result.json window, equal to the verify_S2b_L1.json V13 rows (tolerances from
+        those rows); P-δ share and roll frequency difference from s2b_crawler_check.json.
+        Missing keys stop.
     V12 frame plan: settling frames are log-spaced up to the verify mean window start and end
         at the window end (clipped to the record end), so no frame lies past the run.
 
@@ -85,6 +92,7 @@ Usage (Chrono-dev python):
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import pickle
@@ -209,6 +217,11 @@ VERIFY_A = OUT_DIR / "verify_S2a_L1.json"
 VERIFY_B = OUT_DIR / "verify_S2b_L1.json"
 CRAWLER_CHECK = ROOT / "06_analysis" / "00_dynamics" / "s2b_crawler_check.json"
 REFERENCE_JSON = ROOT / "06_analysis" / "00_dynamics" / "reference.json"
+# CAD crawler cache cited by YAML contact.crawler.sphere_layout (derive_crawler_cache.py) and
+# the ground sheet built from it (build_crawler_ground_sheet.py: track outline rectangles)
+CRAWLER_CAD_DIR = ROOT / "01_cad" / "06_brep" / "derived" / "crawler"
+CRAWLER_CAD_SUMMARY = CRAWLER_CAD_DIR / "crawler_summary.json"
+CRAWLER_GROUND_SHEET = CRAWLER_CAD_DIR / "crawler_ground_sheet.json"
 OUT = {
     "v7": OUT_DIR / "S2a_v7_free_vibration.gif",
     "dt": OUT_DIR / "S2a_dt_study.png",
@@ -242,6 +255,11 @@ ARROW_T_M_PER_N = 1.0 / 5e3  # tangential force arrow: 1 m per 5 kN (x20)
 GROUND_RECT_XY = s1.GROUND_RECT_XY
 LEVEL_LABEL = s1.LEVEL_LABEL
 CRAWLER_W_REL_TOL = 1e-9  # result.json analytic_exact.weight_N vs s2b_crawler_check W_N
+CRAWLER_ARROW_M_PER_N = 2.0 * ARROW_N_M_PER_N  # crawler sphere force arrows (x2 against S1)
+CRAWLER_TRACK_Y_TOL_M = 1e-3  # CAD footprint y centre vs YAML sphere y (YAML rounded 0.1 mm)
+# Footprint view: display margins beyond the CAD / sphere / COM extent (room for the COM label
+# and the equal-aspect box); layout only, not geometry.
+CRAWLER_FOOTPRINT_PAD_M = (0.5, 0.2)
 # Crawler sphere k_n: no constant here; crawler_kn_N_m() reads result.json
 # analytic_exact.kn_per_sphere_float32_N_m and requires s2b_crawler_check.json
 # meta.kn_per_sphere_float32_N_m to be the same number.
@@ -2053,6 +2071,9 @@ class CrawlerCase:
     still_s: float  # meta.json run.scenario.settings.still_s (window length)
     active_by_kind: dict  # {"roller": n, "end_shoe": n} from result.json sphere force means
     shoe_spans: list  # crawler_shoe_spans(layout): rear / front x span and gap range
+    footprint: list  # crawler_footprint_rects(): CAD track outline per side (x_m, y_m)
+    legs: dict  # crawler_leg_state(): leg extension and pad clearance from the Record
+    v13: dict  # crawler_v13(): still-window spans (result.json = verify rows) and tolerances
 
 
 def crawler_key(obj: dict, path: tuple, source: str):
@@ -2149,6 +2170,86 @@ def crawler_shoe_spans(layout) -> list:
     return spans
 
 
+def crawler_footprint_rects(centres_body: np.ndarray) -> list:
+    """Track outlines for the footprint view, one per side (left, right), body frame [m].
+
+    Source: CAD crawler_ground_sheet.json
+    ``rectangles_body_m.<side>.block_outline_all_contact_shoes`` (``x_m``, ``y_m``: bbox of the
+    10 flat + 6 end shoe blocks, 600 mm wide). Its ``provenance.inputs.summary.sha256`` must be
+    the SHA-256 of crawler_summary.json (the cache the YAML crawler layout cites), and the y
+    centre must equal the YAML sphere-layout track y (``contact.crawler.sphere_layout.
+    track_centre_y_m`` via crawler_layout, i.e. the sphere centres) within
+    CRAWLER_TRACK_Y_TOL_M.
+    """
+    cad = read_json(CRAWLER_GROUND_SHEET)
+    src = rel(CRAWLER_GROUND_SHEET)
+    want = str(crawler_key(cad, ("provenance", "inputs", "summary", "sha256"), src))
+    have = hashlib.sha256(CRAWLER_CAD_SUMMARY.read_bytes()).hexdigest()
+    if want != have:
+        raise SystemExit(f"{src}: built from crawler_summary.json {want[:16]}, the file is now "
+                         f"{have[:16]} (rerun build_crawler_ground_sheet.py)")
+    out = []
+    for side, sel in (("left", centres_body[:, 1] > 0.0), ("right", centres_body[:, 1] < 0.0)):
+        rect = crawler_key(cad, ("rectangles_body_m", side, "block_outline_all_contact_shoes"),
+                           src)
+        x = [float(v) for v in crawler_key(rect, ("x_m",), f"{src} {side}")]
+        y = [float(v) for v in crawler_key(rect, ("y_m",), f"{src} {side}")]
+        track_y = float(np.mean(centres_body[sel, 1]))
+        if abs(0.5 * (y[0] + y[1]) - track_y) > CRAWLER_TRACK_Y_TOL_M:
+            raise SystemExit(f"{src}: {side} outline y centre {0.5 * (y[0] + y[1])!r} m != YAML "
+                             f"sphere y {track_y!r} m (stale CAD cache or YAML)")
+        out.append({"side": side, "x_m": (min(x), max(x)), "y_m": (min(y), max(y))})
+    return out
+
+
+def crawler_leg_state(run: Run) -> dict:
+    """Leg extension and pad clearance of a crawler run, from its Record.
+
+    extension = max |s_motor| over legs and frames [m]; clearance = min over legs and frames of
+    the pad bottom (pad sphere centre - swivel radius, as pad_gap_mm) above
+    ground.crawler_bottom_z_m [m].
+    """
+    s = np.asarray(run.a["s_motor"], float)
+    r = swivel_radius(run.params)
+    floor = run.params.ground.crawler_bottom_z_m
+    clear = np.inf
+    for k in range(4):
+        for i in range(len(run.t)):
+            c = run.rot[i] @ pad_sphere_centre_body_m(run.params, k, s[i, k]) + run.pos[i]
+            clear = min(clear, float(c[2] - r[k] - floor))
+    return {"extension_max_m": float(np.abs(s).max()), "pad_clearance_min_m": clear}
+
+
+def crawler_v13(verify_b: dict, level: str, result: dict) -> dict:
+    """V13 still-window spans of one crawler run and their tolerances.
+
+    Values: the run's result.json ``window.roll_span_deg`` / ``pitch_span_deg`` /
+    ``crawler_fz_span_N`` (run_S2b). They must equal the verify_S2b_L1.json ``checks`` rows of
+    case ``crawler_<level>``, id V13, items 'attitude drift in the still window' and 'crawler
+    vertical force variation' (verify/s2b.py crawler_settle_checks); tolerances = those rows'
+    ``tol`` (V13_DRIFT_DEG, 0.1 % W/4).
+    """
+    src = f"crawler_{level}/result.json"
+    att = [float(crawler_key(result, ("window", k), src))
+           for k in ("roll_span_deg", "pitch_span_deg")]
+    fz = float(crawler_key(result, ("window", "crawler_fz_span_N"), src))
+    out = {}
+    for name, part, value in (("attitude", "attitude drift in the still window", att),
+                              ("fz", "crawler vertical force variation", fz)):
+        rows = [r for r in crawler_key(verify_b, ("checks",), VERIFY_B.name)
+                if r["id"] == "V13" and r["case"] == f"crawler_{level}" and part in r["item"]]
+        if len(rows) != 1:
+            raise SystemExit(f"{VERIFY_B.name}: {len(rows)} V13 rows '{part}' for "
+                             f"crawler_{level} (expected 1)")
+        if not np.array_equal(np.asarray(rows[0]["value"], float), np.asarray(value, float)):
+            raise SystemExit(f"{VERIFY_B.name}: V13 '{part}' crawler_{level} {rows[0]['value']!r}"
+                             f" != {src} {value!r} (verify and run differ)")
+        out[f"{name}_span"] = float(np.max(value))
+        out[f"{name}_tol"] = float(np.min(np.asarray(rows[0]["tol"], float)))
+        out[f"{name}_passed"] = bool(rows[0]["passed"])
+    return out
+
+
 def crawler_weight_N(result: dict, check_level: dict, case: str) -> float:
     """Weight W carried by the crawler spheres in an S2b crawler run.
 
@@ -2164,7 +2265,7 @@ def crawler_weight_N(result: dict, check_level: dict, case: str) -> float:
     return w
 
 
-def load_crawler(level, check_all) -> CrawlerCase:
+def load_crawler(level, check_all, verify_b) -> CrawlerCase:
     run = load_run(RES_B, f"crawler_{level}", level)
     layout = crawler_layout(run.params)
     floor = run.params.ground.crawler_bottom_z_m
@@ -2192,7 +2293,8 @@ def load_crawler(level, check_all) -> CrawlerCase:
     return CrawlerCase(run, level, centres, layout.sphere_radius_m,
                        np.array([k == "roller" for k in layout.kind]), forces, check, res, weight,
                        kn, settle_s, still_s, active,
-                       crawler_shoe_spans(layout))
+                       crawler_shoe_spans(layout), crawler_footprint_rects(centres),
+                       crawler_leg_state(run), crawler_v13(verify_b, level, res))
 
 
 def crawler_figure(case: CrawlerCase, limits, image, check_all):
@@ -2207,17 +2309,22 @@ def crawler_figure(case: CrawlerCase, limits, image, check_all):
     ax = axes_box(fig, 30, 712, 500, 170)
     s1.style_axes(ax, title="접지면 평면도 (x 전방, y 좌측): 원 면적 ∝ 구 힘, 빈 원 = 틈 열림")
     ax.set_aspect("equal")
-    ax.set_xlim(-1.9, 1.9)
-    ax.set_ylim(-1.55, 1.55)
-    for yc in (1.045, -1.045):
-        ax.add_patch(Rectangle((-1.42, yc - 0.3), 2.84, 0.6, fc="#ecebe7", ec="#b9b8b3", lw=0.6,
-                               zorder=0))
     xy = case.centres_body[:, :2]
+    com = np.array(run.params.superstructure.mass_properties.com_m)
+    # track outlines from the CAD cache; limits = CAD outline + spheres + COM + display margin
+    ext = [np.abs(xy).max(axis=0) + case.radius, np.abs(com[:2])]
+    for rect in case.footprint:
+        (x_lo, x_hi), (y_lo, y_hi) = rect["x_m"], rect["y_m"]
+        ext.append(np.array([max(abs(x_lo), abs(x_hi)), max(abs(y_lo), abs(y_hi))]))
+        ax.add_patch(Rectangle((x_lo, y_lo), x_hi - x_lo, y_hi - y_lo, fc="#ecebe7",
+                               ec="#b9b8b3", lw=0.6, zorder=0))
+    half = np.max(ext, axis=0) + np.array(CRAWLER_FOOTPRINT_PAD_M)
+    ax.set_xlim(-half[0], half[0])
+    ax.set_ylim(-half[1], half[1])
     dots = ax.scatter(xy[:, 0], xy[:, 1], s=np.zeros(len(xy)), c=ACCENT, edgecolors="white",
                       linewidths=0.5, zorder=3)
     ax.scatter(xy[:, 0], xy[:, 1], s=14, facecolors="none", edgecolors=INK_SECONDARY,
                linewidths=0.6, zorder=2)
-    com = np.array(run.params.superstructure.mass_properties.com_m)
     ax.plot(com[0], com[1], "X", ms=8, color=COM_COLOR, mec="white", mew=0.6, zorder=4)
     ax.text(com[0] + 0.08, com[1] + 0.12, "무게중심(상부체)", fontsize=7, color=COM_COLOR)
     ax.tick_params(labelsize=6.5)
@@ -2231,7 +2338,11 @@ def crawler_figure(case: CrawlerCase, limits, image, check_all):
     ax1.plot(t, pitch, color=INK_PRIMARY, lw=1.2)
     ax1.axhline(exact, color=ACCENT, lw=1.2, ls=(0, (1, 1.5)))
     ax1.axhline(lin, color=LIN_COLOR, lw=1.2, ls=(0, (4, 2)))
-    ax1.set_ylim(lin - 0.0012, exact + 0.0045)
+    # limits from the data and the two reference lines: 0.3 span below, 1.05 span above for
+    # the two line labels (the old fixed widths matched one YAML only)
+    p_lo, p_hi = min(lin, exact, float(pitch.min())), max(lin, exact, float(pitch.max()))
+    p_span = max(p_hi - p_lo, 1e-6)
+    ax1.set_ylim(p_lo - 0.3 * p_span, p_hi + 1.05 * p_span)
     ax1.set_xlim(0, t[-1])
     ax1.yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter("%.4f"))
     ax1.text(0.99, (exact - ax1.get_ylim()[0]) / np.ptp(ax1.get_ylim()) + 0.05,
@@ -2325,7 +2436,8 @@ def crawler_figure(case: CrawlerCase, limits, image, check_all):
         "창 평균 - result.json 구 힘 ≤ "
         f"{case.check['sphere_force_window_mean_minus_result_max_abs_N']:.2f} N.",
         f"출처: 07_results/S2b/crawler_{case.level}/, verify_S2b_L1.json crawler, "
-        "s2b_crawler_check.json."],
+        f"s2b_crawler_check.json, 궤도 윤곽 {CRAWLER_GROUND_SHEET.name} "
+        "(block_outline_all_contact_shoes)."],
         size=7.6, colour=INK_SECONDARY)
     bars = []
     for k in range(len(case.centres_body)):
@@ -2347,19 +2459,40 @@ def update_crawler(case: CrawlerCase, pieces, i):
     world = case.centres_body @ run.rot[i].T + run.pos[i]
     for k, arrow in enumerate(pieces["bars"]):
         bottom = world[k] - np.array([0, 0, case.radius])
-        set_arrow(arrow, bottom - np.array([0, 0, f[k] * ARROW_N_M_PER_N * 2]), bottom, f[k] > 1.0)
+        set_arrow(arrow, bottom - np.array([0, 0, f[k] * CRAWLER_ARROW_M_PER_N]), bottom,
+                  f[k] > 1.0)
     pieces["cursor"].update(run.t[i], i)
 
 
 def crawler_compare_frame(cases, check_all):
+    if [c.level for c in cases] != ["top", "middle", "bottom"]:
+        raise SystemExit(f"crawler compare: levels {[c.level for c in cases]} != top/middle/bottom")
+    names = ("pitch", "roll", "heave")  # order of the s2b_crawler_check modes f_undamped_Hz lists
+    top = check_all["top"]
+    # P-δ share and roll-frequency axis difference of the top level (s2b_crawler_check.json):
+    # exact_minus_linear.pitch_rel; Chrono fit roll f_n / independent body-axis (reference
+    # convention) roll f_n - 1
+    pdelta_top = float(crawler_key(top, ("exact_minus_linear", "pitch_rel"), CRAWLER_CHECK.name))
+    body_top = crawler_key(top, ("modes", "body_inertia_geo_floor (reference.json convention)",
+                                 "f_undamped_Hz"), CRAWLER_CHECK.name)
+    roll_fit_top = float(crawler_key(top, ("modes", "chrono_fit", "roll", "f_n_Hz"),
+                                     CRAWLER_CHECK.name))
+    roll_axis_rel = roll_fit_top / float(body_top[names.index("roll")]) - 1.0
+    pitch_err = max(abs(float(crawler_key(check_all[c.level], ("chrono_minus_exact", "pitch_deg"),
+                                          CRAWLER_CHECK.name))) for c in cases)
+    legs = {"ext_mm": max(c.legs["extension_max_m"] for c in cases) * 1e3,
+            "n_spheres": {len(c.centres_body) for c in cases}}
+    if len(legs["n_spheres"]) != 1:
+        raise SystemExit(f"crawler compare: sphere counts differ {legs['n_spheres']}")
     fig = new_figure()
     fig.text(8 / FRAME_W, 1 - 10 / FRAME_H, "S2b 크롤러 위 정착 · 오거 3단계 비교 "
-             "(다리 0 mm, 강체 평지, 크롤러 D안 구 24개)", fontsize=13, fontweight="bold", va="top",
+             f"(다리 {legs['ext_mm']:.0f} mm, 강체 평지, 크롤러 D안 구 "
+             f"{legs['n_spheres'].pop()}개)", fontsize=13, fontweight="bold", va="top",
              color=INK_PRIMARY)
-    fig.text(8 / FRAME_W, 1 - 38 / FRAME_H, "pitch는 Chrono와 독립 정확 해(P-δ 포함)가 "
-             "6자리까지 같고, 선형 기준해(P-δ 없음)보다 무게중심 높이에 비례해 크다"
-             "(상단 +2.47 %). roll 진동수 차 +0.31 %는 기울어진 자세의 관성 축 차이"
-             "(Chrono가 맞음).",
+    fig.text(8 / FRAME_W, 1 - 38 / FRAME_H, "pitch는 Chrono와 독립 정확 해(P-δ 포함)의 차가 "
+             f"{pitch_err:.1e}° 이하이고, 선형 기준해(P-δ 없음)보다 무게중심 높이에 비례해 크다"
+             f"({LEVEL_LABEL['top']} {pdelta_top * 100:+.2f} %). roll 진동수 차 "
+             f"{roll_axis_rel * 100:+.2f} %는 기울어진 자세의 관성 축 차이(Chrono가 맞음).",
              fontsize=9, va="top", color=INK_SECONDARY)
     ax = axes_box(fig, 60, 100, 600, 380)
     s1.style_axes(ax, title="정착 pitch [°]", ylabel="°")
@@ -2371,24 +2504,30 @@ def crawler_compare_frame(cases, check_all):
     ax.bar(xs - width, lin, width, color=BEFORE_COLOR, label="선형 기준해 (P-δ 없음)")
     ax.bar(xs, exact, width, color="none", edgecolor=ACCENT, lw=1.4, label="독립 정확 해 (P-δ)")
     ax.bar(xs + width, chrono, width, color="#24324f", label="Chrono (창 평균)")
-    for x, v, e in zip(xs, chrono, exact, strict=True):
-        ax.text(x + width, v + 0.0003, f"{v:.6f}", ha="center", fontsize=7.6, color=INK_PRIMARY)
-        ax.text(x, e + 0.0012, f"+{(e / lin[0] - 1) * 100:.2f} %", ha="center", fontsize=8,
+    # limits from the three series (the old fixed 0.165 ... 0.177 cut the top bars after the
+    # YAML update): 1.0 span below the lowest bar, 0.8 span above for the labels and legend
+    b_lo, b_hi = min(*lin, *exact, *chrono), max(*lin, *exact, *chrono)
+    b_span = max(b_hi - b_lo, 1e-6)
+    for x, v, e, li in zip(xs, chrono, exact, lin, strict=True):
+        ax.text(x + width, v + 0.07 * b_span, f"{v:.6f}", ha="center", fontsize=7.6,
+                color=INK_PRIMARY)
+        ax.text(x, e + 0.28 * b_span, f"{(e / li - 1) * 100:+.2f} %", ha="center", fontsize=8,
                 color=ACCENT)
-    ax.set_ylim(0.165, 0.177)
+    ax.set_ylim(b_lo - 1.0 * b_span, b_hi + 0.8 * b_span)
     ax.set_xticks(xs, [LEVEL_LABEL[c.level] for c in cases])
     ax.legend(fontsize=8, loc="upper right", frameon=True, framealpha=0.9)
     ax = axes_box(fig, 740, 100, 620, 380)
     s1.style_axes(ax, title="크롤러 위 모드 f_n [Hz]: Chrono 맞춤 / 독립(세계 축 관성) / 독립(몸체 "
                             "축)",
                   ylabel="Hz")
-    names = ("pitch", "roll", "heave")
     tones = ("#24324f", "#5f7fb3", "#a9bfe0")
+    f_max = 0.0
     for j, case in enumerate(cases):
         chk = check_all[case.level]["modes"]
         world = chk["world_inertia_geo_centre (Chrono model)"]["f_undamped_Hz"]
         body = chk["body_inertia_geo_floor (reference.json convention)"]["f_undamped_Hz"]
         fit = [check_all[case.level]["modes"]["chrono_fit"][n]["f_n_Hz"] for n in names]
+        f_max = max(f_max, *fit, *world, *body)
         for m in range(3):
             x = m + (j - 1) * 0.27
             ax.bar(x, fit[m], 0.08, color=tones[j],
@@ -2396,7 +2535,7 @@ def crawler_compare_frame(cases, check_all):
             ax.plot([x - 0.06, x + 0.06], [world[m]] * 2, color=ACCENT, lw=1.6)
             ax.plot([x - 0.06, x + 0.06], [body[m]] * 2, color=INK_PRIMARY, lw=1.0, ls=(0, (2, 1)))
     ax.set_xticks(range(3), names)
-    ax.set_ylim(0, 10)
+    ax.set_ylim(0, f_max / 0.88)  # highest bar / line at 88 % (headroom as the old 0 ... 10)
     handles, labels = ax.get_legend_handles_labels()
     handles += [Line2D([], [], color=ACCENT, lw=1.6), Line2D([], [], color=INK_PRIMARY, lw=1.0,
                                                               ls=(0, (2, 1)))]
@@ -2429,10 +2568,16 @@ def crawler_compare_frame(cases, check_all):
     for (_, _), cell in table.get_celld().items():
         cell.set_edgecolor("#dcdbd6")
         cell.set_linewidth(0.5)
+    # V13 maxima over the three levels (result.json window = verify rows, crawler_v13)
+    v13 = {k: max(c.v13[k] for c in cases) for k in ("attitude_span", "fz_span")}
+    v13_tol = {k: min(c.v13[k] for c in cases) for k in ("attitude_tol", "fz_tol")}
+    v13_ok = all(c.v13["attitude_passed"] and c.v13["fz_passed"] for c in cases)
     text_block(fig, 40, 800, ["판정(dynamics_model.md 5.6): 크롤러 정착 자세·모드 통과(참고 항목, "
                               "V4에서 판정). "
-                              "V13 정지 창 자세 변동 ≤ 2.0e-5°, 크롤러 수직력 합 변동 ≤ 72 N(< "
-                              "95.6 N).",
+                              f"V13 {pass_word(v13_ok)}: 정지 창 자세 변동 ≤ "
+                              f"{v13['attitude_span']:.1e}°(< {v13_tol['attitude_tol']:.0e}°), "
+                              f"크롤러 수직력 합 변동 ≤ {v13['fz_span']:.0f} N(< "
+                              f"{v13_tol['fz_tol']:.1f} N).",
                               "출처: s2b_crawler_check.json (독립 확인, dynamics-dev), "
                               "verify_S2b_L1.json, "
                               "07_results/S2b/crawler_<단계>/result.json."], size=8.4)
@@ -2443,7 +2588,8 @@ def crawler_compare_frame(cases, check_all):
 
 def render_crawler(bank, summary):
     check_all = read_json(CRAWLER_CHECK)
-    cases = [load_crawler(level, check_all) for level in ("top", "middle", "bottom")]
+    verify_b = read_json(VERIFY_B)
+    cases = [load_crawler(level, check_all, verify_b) for level in ("top", "middle", "bottom")]
     box = (CR_BOX[2], CR_BOX[3])
     params = cases[0].run.params
     floor_z = params.ground.crawler_bottom_z_m
@@ -2460,15 +2606,20 @@ def render_crawler(bank, summary):
         image = render_scene(below, above, limits, box, floor=((0, 0, floor_z), (0, 0, 1.0)))
         print(f"  crawler {case.level}: mesh {time.perf_counter() - t0:.1f} s", flush=True)
         pieces = crawler_figure(case, limits, image, check_all)
+        # leg extension / pad clearance from the Record, length = meta settle + still,
+        # attitude span = result.json window (= verify V13 row), arrow scale from the constant
+        legs = case.legs
+        dur_s = case.settle_s + case.still_s
         pieces["header"].set_text(
-            f"S2b 크롤러 위 정착 [{n + 1}/4] · 오거 {LEVEL_LABEL[case.level]} · 다리 0 mm(패드 약 "
-            "0.34 m "
-            f"위) · 크롤러 D안 구 24개(SMC Hooke) · L1 · Δt {s1.dt_text(case.run.result['dt_s'])} "
-            "· 15 s")
+            f"S2b 크롤러 위 정착 [{n + 1}/4] · 오거 {LEVEL_LABEL[case.level]} · 다리 "
+            f"{legs['extension_max_m'] * 1e3:.0f} mm(패드 약 {legs['pad_clearance_min_m']:.2f} m "
+            f"위) · 크롤러 D안 구 {len(case.centres_body)}개(SMC Hooke) · L1 · Δt "
+            f"{s1.dt_text(case.run.result['dt_s'])} · {dur_s:g} s")
         pieces["note"].set_text(
-            "시작 = 독립 정확 정착 자세(P-δ 포함) → 15 s 동안 거의 움직이지 않음(자세 변동 ≤ "
-            "2e-5°). "
-            "3D 화살표 = 구 접촉력(1 m = 50 kN, 진한 = 앞쪽 우 궤도).")
+            f"시작 = 독립 정확 정착 자세(P-δ 포함) → {dur_s:g} s 동안 거의 움직이지 않음(정지 창 "
+            f"자세 변동 ≤ {case.v13['attitude_span']:.1e}°). "
+            f"3D 화살표 = 구 접촉력(1 m = {1.0 / CRAWLER_ARROW_M_PER_N / 1e3:g} kN, 진한 = 앞쪽 "
+            "우 궤도).")
         times = np.linspace(0, run.t[-1], 9)
         for j, t_frame in enumerate(times):
             i = run.index(t_frame)
@@ -2486,7 +2637,8 @@ def render_crawler(bank, summary):
     frames.append(compare)
     durations.append(5000)
     summary["crawler_gif"] = write_gif(frames, durations, OUT["crawler"])
-    summary["crawler"] = {c.level: c.check for c in cases}
+    summary["crawler"] = {c.level: {**c.check, "v13": c.v13, "legs": c.legs,
+                                    "footprint_cad": c.footprint} for c in cases}
 
 
 # =============================================================================================
