@@ -29,6 +29,7 @@
 
 개정 11(2026-10-20, dynamics-expert 편집): **S2a 최종 재판정(안 A) 통과**와 Δt 2×10⁻⁴ s 조건 ① 판정(근거 `00_docs/01_dynamics/dynamics_model.md` 개정 14, 5.5절).
 - **S2a 통과(최종, 안 A)**: V7 1·2·3차 1.79818 / 3.00439 / 5.81472 Hz(rev13 기준 −0.007 / −0.010 / −0.075 %; 3차 차는 기준 `f_damped_Hz` = $\lvert\lambda\rvert/2\pi$와 맞춤 $f_d$의 정의 차 $\zeta^2/2$), ζ 보정 0.0078316 / 0.0139917 / 0.0372015 → 진단 ① 정상, $c_t/2$ 재확인, 부싱 이동 확인(개정 12 Chrono 대비 +0.70 / +0.63 %). V12 Chrono − 기준 = P-δ만(rev13 기대 차와 ≤ 0.63 N), 독립 비선형(볼 중심)과 ≤ 0.66 N. hold 해제 74.1~75.8 ms, hold 중 최대 접선력 ≤ 3.2 N. V13 통과.
+- **S2a 현재 YAML 재판정(2026-11-09, Params `61078f29…`, W 380,113 N): 통과.** V12 Chrono − 기준 수직 +31.9 / +14.3 / −17.2 / −29.4 N(pitch 2°, 세 경사 다리별 차 ≤ 2.1 N) = P-δ만, rev13 기대(현재 YAML)와 ≤ 1.13 N, 수평 ≤ 1.5 N. P-δ가 위 +68 N대의 0.39배인 것은 자중 정착 pitch 0.0267° → 0.0103° 때문이다. hold 해제 70.2~78.4 ms, hold 중 접선력 ≤ 2.3 N. V13 구속 위반 ≤ 1.3×10⁻¹¹ m, 자세 변동 ≤ 4.6×10⁻⁵°, 수직력 변동 ≤ 65.1 N(허용 95 N). `s2a_slope_pdelta_check.json`은 10-20 입력이라 쓰지 않는다(`dynamics_model.md` 5.5절 끝).
 - S1 재실행: 개정 8 판정 그대로 유효(변화 ≤ 0.16 N, cross_top 접선 예하중 +1.8~+7.7 %, 합 ≤ 2 N).
 - **Δt 2×10⁻⁴ s 조건 ① 충족**: V7 yaw Δt 연구의 ζ₃ 기울기 = 예측 $r_3\omega_3/2$의 0.999배, 2Δt/Δt 비 2.000, 절편 = 기준 물리 ζ. 조건 ②와 함께 **2×10⁻⁴ s 전환은 사용자 결정 대기**(문안 `dynamics_model.md` 5.5절, YAML 그대로). S3 V8(a)는 에너지 비증가·1~6차 상한 판정으로 줄이고 Δt 1×10⁻⁴·2×10⁻⁴ s 두 개로 돈다.
 - 스냅숏 작용점 방침(다르면 복원 거부, 변환 없음) 타당.
@@ -36,7 +37,7 @@
 
 개정 10(2026-10-20, dynamics-expert 편집): **사용자 결정 안 A — L1 지면 부싱 작용점을 볼 중심으로 이동**(근거 `00_docs/01_dynamics/dynamics_model.md` 개정 13, 5.3절 ④·5.4절). 기준값은 `reference.json`에 키를 **더하기만** 했다(기존 키는 이력, 비트 단위 불변).
 - **L1 V7 기준 키 변경**: `… / levels / <level> / V7_ball_centre_bushing_rev13` 아래 `f_undamped_Hz`, `f_damped_Hz`, `zeta`, `mode_shapes`, `zeta_num_r_omega_dt_half`, `V7_diagnostic / thresholds`. 상단 1~6차 1.7983 / 3.0047 / 5.8191 / 6.4218 / 7.6068 / 7.9995 Hz(이력 대비 +0.77 / +0.69 / −0.23 / −0.58 / −0.10 / −0.53 %), ζ 0.00783 / 0.0140 / 0.0372 / 0.0362 / 0.0323 / 0.0491. 진단 문턱은 ④만 0.0165 → 0.0162, 빼는 수치 감쇠 6.4×10⁻⁵ / 2.4×10⁻⁴ / 1.81×10⁻³.
-- **V12 기준값(`slope_V12 / <case> / L1`)은 그대로**. 안 A 뒤 기대 Chrono − 기준 = P-δ만(수직 +68 / +51 / −52 / −67 N, 수평 ≤ 5 N): `reference.json / slope_V12 / <case> / L1_plan_A_expected_chrono_minus_reference_rev13`. 재실행 진단: 다리별 ≤ 3 N이면 부싱 이동 + P-δ로 설명됨(판정 허용은 그대로). 반올림 없는 신장 `extension_exact_m`·`extension_sphere_touch_m` 추가.
+- **V12 기준값(`slope_V12 / <case> / L1`)은 그대로**. 안 A 뒤 기대 Chrono − 기준 = P-δ만(수직 +68 / +51 / −52 / −67 N, 수평 ≤ 5 N): `reference.json / slope_V12 / <case> / L1_plan_A_expected_chrono_minus_reference_rev13`. 재실행 진단: 다리별 ≤ 3 N이면 부싱 이동 + P-δ로 설명됨(판정 허용은 그대로). 반올림 없는 신장 `extension_exact_m`·`extension_sphere_touch_m` 추가. (2026-10-26 YAML 묶음 재생성 뒤 이 키의 값은 +32.3 / +14.0 / −16.9 / −29.4 N(pitch 2°)으로 바뀌었다. 위 +68 / +51 / −52 / −67 N은 W 382,290.66 N 모델 값이다.)
 - 고친 곳: S2a 입력 키·V7 진단 행·V12 행·체크리스트, S3 V8(a) 행, S4 V7 행·β 판정 값, S5 V10 행. 이 백틱 경로들의 상수는 `verify/reference.py`에 아직 없다(python-expert가 더함, R12 시험은 그때까지 실패).
 
 개정 9(2026-10-20, dynamics-expert 편집): **S2a 최종 판정(통과)** 과 판단 ①~⑥을 반영했다(근거 `00_docs/01_dynamics/dynamics_model.md` 개정 12, 5.3절).
