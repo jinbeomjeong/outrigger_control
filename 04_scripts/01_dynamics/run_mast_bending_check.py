@@ -7,6 +7,8 @@
     deviation and quasi-static crawler hand-over window, read by leg_extension_peaks.py;
     window cross-checked against reference.json lift_V4_compliant_crawler
     quasi_static_events_s)
+  06_analysis/02_control/r8_10hz/d1/r8d1_final.json (R8 C2 levelling crossover, pad-supported
+    maximum, read by control_crossover.py)
 
 Model (all linear, small motion about the levelled static state, body level = world axes):
   * Mast = 3D Euler-Bernoulli frame along body z at the axis x 2.51408, y 0 (mast_axis_reference). Node DoF
@@ -52,6 +54,7 @@ from scipy.optimize import brentq
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import dyn_model as dm  # noqa: E402
+from control_crossover import load_levelling_crossover  # noqa: E402
 from leg_extension_peaks import (  # noqa: E402
     load_crawler_handover_window,
     load_dynamic_deviation,
@@ -67,8 +70,16 @@ OUT_DIR = ROOT / "06_analysis" / "00_dynamics"
 OUT_JSON = OUT_DIR / "mast_bending_check.json"
 
 IMU_C1 = np.array([0.31, 0.88, 0.040])   # IMU point C1 (CLAUDE.md, user decision 2026-10-20)
-TAU_FILTER = 0.5                         # s, each of the two first-order stages (CLAUDE.md)
-F_CROSSOVER_HZ = 0.064                   # levelling loop crossover (imu_cabin_and_accuracy_review.md 2.3)
+# IMU attitude filter: time constant [s] of each of the two equal first-order stages. R8 C2 value of
+# 03_src/outrigger_sim/control/c2.py R8_D1_ATTITUDE_TIME_CONSTANT_S, copied as a constant
+# because this script does not import 03_src (05_tests/unit/test_mast_bending_inputs.py checks
+# that the two agree). The filter is post-processing, so the R7 value is evaluated on the same
+# response and written as the *_tau0.5 keys.
+TAU_FILTER = 0.8
+TAU_FILTER_R7 = 0.5
+TAU_FILTERS = (TAU_FILTER, TAU_FILTER_R7)
+# R8 C2 control period (c2.py R8_PERIOD_S, 10 Hz output; the filter itself runs on 100 Hz IMU)
+CONTROL_PERIOD_S = 0.1
 ZETA_MAST = 0.015                        # ASSUMPTION (CLAUDE.md damping decision): structure / mast modes
 K_PEN = 1.0e12                           # N/m, penalty for rigid joints (hinge pin, shoes, clamps)
 K_PEN_ROT = 1.0e13                       # N m/rad
@@ -90,8 +101,32 @@ DEG = 180.0 / math.pi
 
 # release proxy ramp-length sensitivity (rigid L1 only): T_rel x these scales
 RELEASE_RAMP_SCALES = (0.95, 1.00, 1.05)
-FILTERED_TILT_AT_STOP_KEY = "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)"
 RAW_TILT_KEY = "raw_IMU_apparent_tilt_dev_max_deg_after_last_stop (roll, pitch)"
+TRUE_TILT_KEY = "true_body_tilt_dev_max_deg_after_last_stop (roll, pitch)"
+# reference.json residual of the same linear L1 leg stop (roll, pitch at 0 s after the last stop)
+REF_RESIDUAL_PATH = ("lift_V4_compliant_crawler",
+                     "residual_after_last_stop_linear_L1 (deg, max |dev| over one 1st-rocking period)",
+                     "roll_pitch_at_0s")
+FILTERED_TILT_WINDOWS_S = (0.0, 2.0, 5.0, 10.0)
+
+
+def tau_key_suffix(tau):
+    """'' for the R8 C2 filter (default keys), '_tau<value>' for the other time constants."""
+    return "" if tau == TAU_FILTER else f"_tau{tau:g}"
+
+
+def filtered_tilt_key(window_s, tau):
+    return f"filtered_IMU_tilt_dev_max_deg_after_last_stop+{window_s:g}s{tau_key_suffix(tau)} (roll, pitch)"
+
+
+def reference_residual_roll_pitch_deg(ref):
+    """reference.json residual (roll, pitch) [deg] of the linear L1 leg stop at 0 s after the last stop."""
+    node = ref
+    for key in REF_RESIDUAL_PATH:
+        if not isinstance(node, dict) or key not in node:
+            raise KeyError(f"reference.json: key {' / '.join(REF_RESIDUAL_PATH)!r} not found at {key!r}")
+        node = node[key]
+    return node
 
 
 def r(x, n=6):
@@ -573,10 +608,10 @@ def mac_track(l1, Phi, M):
 
 
 # ------------------------------------------------------------------------------------------- time responses
-def lp2_filter(t, x):
-    """Two first-order stages tau 0.5 s (exact for piecewise-linear input on the grid)."""
+def lp2_filter(t, x, tau):
+    """Two first-order stages of time constant tau (exact for piecewise-linear input on the grid)."""
     from scipy.signal import lsim
-    num, den = [1.0], np.polymul([TAU_FILTER, 1.0], [TAU_FILTER, 1.0])
+    num, den = [1.0], np.polymul([tau, 1.0], [tau, 1.0])
     y0 = x[0]
     tt = t - t[0]
     dts = np.diff(tt)
@@ -597,7 +632,8 @@ def simulate_linear(sysm, l1, geo, s_fun, qext_fun, kinks, t_a, t_b, init, dt_ou
     (s = e - e_op); qext_fun(t) -> generalised external load on the body DoF (6). Both piecewise linear with kinks at
     `kinks`. init 'ramp' (exact steady state of a ramp before the first kink) or 'static' (constant load before).
     Pad force F = F0 + kv (s - AZ q) + cn (sdot - AZ qdot); quasi-static F_qs from K q = Q_spring(t).
-    IMU C1 apparent tilt: phi + a_y/g, theta - a_x/g (run_imu_accuracy_review); filter 2 x first order tau 0.5 s."""
+    IMU C1 apparent tilt: phi + a_y/g, theta - a_x/g (run_imu_accuracy_review); filter 2 x first order for each tau
+    of TAU_FILTERS on the same response (filt_by_tau; filt = the R8 C2 TAU_FILTER)."""
     M, K, C = sysm
     kv, cn, AZ, F0 = l1["kv"], l1["cn"], l1["AZ"], l1["F0"]
     n = M.shape[0]
@@ -654,9 +690,10 @@ def simulate_linear(sysm, l1, geo, s_fun, qext_fun, kinks, t_a, t_b, init, dt_ou
     g = geo.g
     app = np.vstack([q[3] + acc[1] / g, q[4] - acc[0] / g])
     app_qs = q_qs[3:5]
-    filt = np.vstack([lp2_filter(T, app[0]), lp2_filter(T, app[1])])
-    return dict(T=T, t_last=float(max(kinks)), dF=F - F_qs, F=F, app=app, app_qs=app_qs, filt=filt,
-                true=q[3:5], n_modes=nm)
+    filt_by_tau = {tau: np.vstack([lp2_filter(T, app[0], tau), lp2_filter(T, app[1], tau)])
+                   for tau in TAU_FILTERS}
+    return dict(T=T, t_last=float(max(kinks)), dF=F - F_qs, F=F, app=app, app_qs=app_qs,
+                filt=filt_by_tau[TAU_FILTER], filt_by_tau=filt_by_tau, true=q[3:5], n_modes=nm)
 
 
 def simulate_stop(sysm, l1, geo, t0_pre=3.0, t_after=15.0):
@@ -702,10 +739,11 @@ def release_ramp_sensitivity(sysm, l1, l1c, geo, T_rel):
             "scale": scale,
             "T_rel_s": scale * T_rel,
             "max_abs_pad_force_dev_from_quasi_static_N": pad_dev_N,
-            "filtered_IMU_pitch_dev_max_deg_after_last_stop+0s":
-                metrics[FILTERED_TILT_AT_STOP_KEY][1],
-            "raw_IMU_apparent_pitch_dev_max_deg_after_last_stop": metrics[RAW_TILT_KEY][1],
         })
+        for tau in TAU_FILTERS:
+            cases[-1][f"filtered_IMU_pitch_dev_max_deg_after_last_stop+0s{tau_key_suffix(tau)}"] = (
+                metrics[filtered_tilt_key(0.0, tau)][1])
+        cases[-1]["raw_IMU_apparent_pitch_dev_max_deg_after_last_stop"] = metrics[RAW_TILT_KEY][1]
     return {"system": "rigid L1 (lifted, top), legs locked", "cases": cases}
 
 
@@ -713,14 +751,16 @@ def stop_metrics(res):
     T, tl = res["T"], res["t_last"]
     out = {"max_abs_pad_force_dev_from_quasi_static_N": float(np.abs(res["dF"]).max()),
            "max_pad_force_N": float(res["F"].max())}
-    for tw in (0.0, 2.0, 5.0, 10.0):
-        m = T >= tl + tw
-        out[f"filtered_IMU_tilt_dev_max_deg_after_last_stop+{tw:g}s (roll, pitch)"] = (
-            np.degrees(np.abs(res["filt"][:, m] - res["app_qs"][:, m]).max(axis=1)).tolist())
+    for tau in TAU_FILTERS:
+        filt = res["filt_by_tau"][tau]
+        for tw in FILTERED_TILT_WINDOWS_S:
+            m = T >= tl + tw
+            out[filtered_tilt_key(tw, tau)] = (
+                np.degrees(np.abs(filt[:, m] - res["app_qs"][:, m]).max(axis=1)).tolist())
     m = T >= tl
     out["raw_IMU_apparent_tilt_dev_max_deg_after_last_stop (roll, pitch)"] = np.degrees(
         np.abs(res["app"][:, m] - res["app_qs"][:, m]).max(axis=1)).tolist()
-    out["true_body_tilt_dev_max_deg_after_last_stop (roll, pitch)"] = np.degrees(
+    out[TRUE_TILT_KEY] = np.degrees(
         np.abs(res["true"][:, m] - res["app_qs"][:, m]).max(axis=1)).tolist()
     return out
 
@@ -839,6 +879,8 @@ def main():
     peak = load_dynamic_peak_pad_force()
     handover = load_crawler_handover_window()
     dev = load_dynamic_deviation()
+    crossover = load_levelling_crossover()
+    ref_residual_pitch_deg = float(reference_residual_roll_pitch_deg(ref)[1])
     mast = load_mast()
     js = mast["json"]
     # boom point mass from the parts table (columns located by header)
@@ -856,7 +898,8 @@ def main():
                    "quasi_static_events_s cross-check)",
                    "01_cad/01_parts/parts_classified.csv (BOOM:1 mass and CoM)",
                    "06_analysis/00_dynamics/leg_extension_loads.json (V4 peak pad force, "
-                   "dynamic deviation, crawler hand-over window)"],
+                   "dynamic deviation, crawler hand-over window)",
+                   "06_analysis/02_control/r8_10hz/d1/r8d1_final.json (R8 C2 levelling crossover)"],
         "frame": "body: x forward, y left, z up; origin = CAD origin; SI; level body = world axes",
         "gravity_m_s2": [0, 0, -geo.g],
         "angles": "roll about +x, pitch about +y (pitch > 0 nose down)",
@@ -875,6 +918,8 @@ def main():
             "mast_damping": f"stiffness-proportional, zeta {ZETA_MAST} at the mast-only first bending mode (CLAUDE.md structure 0.015)",
             "L1": "reference.json L1_rigid_motor_lumped_contact (k, c), beta 1.0 GPa; crawler-on: layout D, tangential 0",
             "flange_joints": "rigid (bolted), as in the extraction",
+            "imu_filter": (f"2 x first order, tau {TAU_FILTER:g} s (R8 C2); "
+                           f"tau {TAU_FILTER_R7:g} s (R7) kept as *_tau{TAU_FILTER_R7:g}"),
         },
     }}
 
@@ -1121,13 +1166,26 @@ def main():
                                                   / r0["max_abs_pad_force_dev_from_quasi_static_N"])
             dyn[key][cname] = mt
             sims[(key, cname)] = rs
+    # same stop times as simulate_stop (e_op / v_max per leg, FL, FR, RL, RR)
+    t_stop_s = l1["e_op"] / geo.v_max
+    t_stop_front_s, t_stop_rear_s = float(t_stop_s[:2].max()), float(t_stop_s[2:].max())
+    rigid_true_pitch_deg = dyn["leg_stop"]["rigid_L1"][TRUE_TILT_KEY][1]
+    dyn["leg_stop_times_s (FL, FR, RL, RR)"] = t_stop_s.tolist()
+    dyn["leg_stop_rigid_vs_reference_residual"] = {
+        "reference_key": " / ".join(REF_RESIDUAL_PATH) + " [1] (pitch, deg)",
+        "reference_pitch_deg": ref_residual_pitch_deg,
+        "rigid_L1_true_pitch_dev_max_deg": rigid_true_pitch_deg,
+    }
     dyn["model"] = ("linear L1 (lifted, top) with/without the flexible mast, modal (< 300 Hz), DOP853 rtol 1e-9 "
-                    "piecewise between kinks. leg_stop: legs extend at v_max and stop at e_op (rear 17.245 s, front "
-                    "17.696 s from motor start), exact steady ramp state 3 s before the first stop (rigid case "
-                    "reproduces reference.json residual pitch 0.01847 deg). crawler_release_proxy: layout-D crawler "
+                    "piecewise between kinks. leg_stop: legs extend at v_max and stop at e_op (rear "
+                    f"{t_stop_rear_s:.3f} s, front {t_stop_front_s:.3f} s from motor start), exact steady ramp state "
+                    "3 s before the first stop (rigid case true pitch deviation "
+                    f"{rigid_true_pitch_deg:.5f} deg vs reference.json residual pitch {ref_residual_pitch_deg:.5f} "
+                    "deg). crawler_release_proxy: layout-D crawler "
                     "floor load (static at legs 0, total = W) applied upward to the lifted body and ramped to 0 over "
                     f"{T_rel:.3f} s (first touch -> crawler off), legs locked; a proxy of the V4 hand-over kinks, not "
-                    "the V4 model. IMU C1 accelerometer tilt phi + a_y/g, theta - a_x/g; filter 2 x first order tau 0.5 s")
+                    "the V4 model. IMU C1 accelerometer tilt phi + a_y/g, theta - a_x/g; filter 2 x first order "
+                    f"tau {TAU_FILTER:g} s (R8 C2), tau {TAU_FILTER_R7:g} s (R7) in the *_tau{TAU_FILTER_R7:g} keys")
     # Largest |damped 3-DoF - quasi-static| pad reaction of the open-loop lift (leg zeta 0.03,
     # crawler zeta 0.05), cross-checked against the zeta_leg_0.03 sensitivity case.
     # Was the REXOME33 constant 23.2 kN.
@@ -1143,14 +1201,27 @@ def main():
     res["dynamic_top"] = dyn
 
     # ---------------------------------------------------------------- 5. control-band relations
+    # Crossover = largest R8 C2 roll / pitch crossover of the pad-supported (crawler lifted) rows.
+    # The crawler-supported roll crossover is as low as ~0.017 Hz; the pad maximum is the
+    # conservative side of the coupling estimate (largest loop gain at the rocking modes).
+    f_crossover_hz = crossover.crossover_hz
     cb = {}
     for fz in (1.5, 2.0, 2.4, 2.74, 3.0, 3.58, 3.85, 5.0):
-        wt = 2 * np.pi * fz * TAU_FILTER
-        Hf = 1.0 / (1.0 + wt ** 2)
-        cb[f"{fz:g} Hz"] = {"filter_gain": Hf, "loop_gain_est (fc/f x filter)": F_CROSSOVER_HZ / fz * Hf,
-                            "samples_per_period_at_20ms": 1.0 / (fz * 0.02)}
-    cb["note"] = ("loop gain estimate = crossover 0.064 Hz / f (integrating plant) x filter gain; multiply by the "
-                  "resonant IMU participation 1/(2 zeta) x (IMU tilt share) for a mode. 20 ms loop: Nyquist 25 Hz")
+        entry = {}
+        for tau in TAU_FILTERS:
+            wt = 2 * np.pi * fz * tau
+            Hf = 1.0 / (1.0 + wt ** 2)
+            entry[f"filter_gain{tau_key_suffix(tau)}"] = Hf
+            entry[f"loop_gain_est (fc/f x filter){tau_key_suffix(tau)}"] = f_crossover_hz / fz * Hf
+        entry[f"samples_per_period_at_{CONTROL_PERIOD_S * 1e3:g}ms"] = 1.0 / (fz * CONTROL_PERIOD_S)
+        cb[f"{fz:g} Hz"] = entry
+    cb["crossover_Hz"] = f_crossover_hz
+    cb["crossover_rad_s"] = crossover.crossover_rad_s
+    cb["crossover_source"] = crossover.source
+    cb["note"] = (f"loop gain estimate = R8 C2 crossover {f_crossover_hz:.4f} Hz / f (integrating plant) x filter "
+                  "gain; multiply by the resonant IMU participation 1/(2 zeta) x (IMU tilt share) for a mode. "
+                  f"R8 C2 {CONTROL_PERIOD_S * 1e3:g} ms loop: Nyquist {0.5 / CONTROL_PERIOD_S:g} Hz (the filter "
+                  "runs on the 100 Hz IMU and is read at the control period)")
     res["control_band"] = cb
     res["meta"]["runtime_s"] = time.perf_counter() - t_start
 
@@ -1220,14 +1291,15 @@ def plots(res, sims):
             axs[2, c_].plot(t, np.degrees(rs["filt"][1] - rs["app_qs"][1]), color=col, lw=lw, label=lab)
         axs[0, c_].set_ylabel("pad force - quasi-static [kN]")
         axs[1, c_].set_ylabel("true body pitch dev [deg]")
-        axs[2, c_].set_ylabel("IMU C1 pitch, filtered (2 x tau 0.5 s) [deg]")
+        axs[2, c_].set_ylabel(f"IMU C1 pitch, filtered (2 x tau {TAU_FILTER:g} s) [deg]")
         axs[2, c_].set_xlabel("time from the last kink [s]" if key != "leg_stop" else "time from the last leg stop [s]")
         axs[2, c_].set_ylim(-0.03, 0.03)
         for ax in axs[:, c_]:
             ax.grid(True, alpha=0.3)
         axs[0, c_].legend(fontsize=7)
     axs[0, 0].set_title("Top, legs stop at e_op (V4 schedule)")
-    axs[0, 1].set_title("Top, crawler hand-over proxy (load ramp 0.534 s)")
+    T_rel = res["dynamic_top"]["crawler_release_proxy_T_rel_s"]
+    axs[0, 1].set_title(f"Top, crawler hand-over proxy (load ramp {T_rel:.3f} s)")
     fig.tight_layout()
     fig.savefig(OUT_DIR / "mast_bending_check_transients.png", dpi=130)
     plt.close(fig)

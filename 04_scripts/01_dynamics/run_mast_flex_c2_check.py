@@ -52,6 +52,7 @@ import dyn_model as dm  # noqa: E402
 import run_control_comparison as rcc  # noqa: E402
 import run_mast_bending_check as mbc  # noqa: E402
 import numba as nb  # noqa: E402
+from leg_extension_peaks import load_crawler_handover_window  # noqa: E402
 
 ROOT = dm.PROJECT_ROOT
 OUT_DIR = ROOT / "06_analysis" / "00_dynamics"
@@ -706,8 +707,14 @@ def calibration(p, geo, ref, mast, boom):
     # transients of 3.9.5 (top): detailed vs equivalent (zeta matched to the stiffness-proportional detailed model)
     l1 = mbc.l1_setup(p, geo, ref, "top")
     l1c = mbc.l1_setup(p, geo, ref, "top", lifted=False)
-    T_rel = 15.584 - 15.050
-    tr = {}
+    # same release ramp as run_mast_bending_check (quasi-static first touch -> crawler off);
+    # was the REXOME33 constant 15.584 - 15.050 = 0.534 s
+    handover = load_crawler_handover_window()
+    T_rel = handover.duration_s
+    tr = {"release_T_rel_s": T_rel,
+          "release_T_rel_source": dict(handover.source, first_touch_s=handover.first_touch_s,
+                                       first_touch_leg=handover.first_touch_leg,
+                                       crawler_off_s=handover.crawler_off_s)}
     rig = (l1["M6"], l1["K6"], l1["C6"])
     r_stop = mbc.stop_metrics(mbc.simulate_stop(rig, l1, geo))
     r_rel = mbc.stop_metrics(mbc.simulate_release(rig, l1, l1c, geo, T_rel))
