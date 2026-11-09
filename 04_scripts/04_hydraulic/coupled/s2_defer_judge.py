@@ -3,10 +3,21 @@
 Rules: ``06_analysis/02_control/verif_matrix/s2_soil_defer_rules.md`` (control-expert, sealed;
 LF sha256 :data:`RULES_S2D_SHA256`) with its addenda ``s2_soil_defer_rules_rev1.md``
 (:data:`RULES_S2D_REV1_SHA256`, RS1-1 .. RS1-9), ``s2_soil_defer_rules_rev2.md``
-(:data:`RULES_S2D_REV2_SHA256`, RS2-0 .. RS2-6) and ``s2_soil_defer_rules_rev3.md``
-(:data:`RULES_S2D_REV3_SHA256`, RS3-0 .. RS3-5; the later addendum wins) on top of the
+(:data:`RULES_S2D_REV2_SHA256`, RS2-0 .. RS2-6), ``s2_soil_defer_rules_rev3.md``
+(:data:`RULES_S2D_REV3_SHA256`, RS3-0 .. RS3-5) and ``s2_soil_defer_rules_rev4.md``
+(:data:`RULES_S2D_REV4_SHA256`, RS4-0 .. RS4-3; the later addendum wins) on top of the
 LAS-b A-plan rules it inherits (six files, ``las_revA_diag.RULES_FIELDS``). The rules text
 wins where this code differs.
+
+rev4: RS4-1 K-S6(A): every A-S P5r4S line (324) with an empty ``soil.deferrals`` has the
+hash of the stored revA2 P5r4 line of the same grid point and key (64 characters; SH-3, A
+``stop``); no stored line is undecidable (SH-4). Judged apart from K-S1, listed apart.
+RS4-2 K-S3' 2: the per-period command record of a line is the trace prefix up to the first
+entry evaluation. Where it reaches the first deferral entry the commands before it are
+compared in full; where it ends earlier the recorded part is compared (SH-3 on a mismatch)
+and the rest is replaced by K-S3' 1 and the hash checks; the counts and keys are published
+(:func:`k_s3_prime_coverage`). RS4-3 SH-10: an S-C key without a pre-rev2 pair stops (the
+rev3 "compare the paired keys only" reading is replaced).
 
 rev3: RS3-1 confirms the expiry pairing below (run order; delta <= 1e-9 s equal, <= 0.05 s a
 K-S5 ② violation (SH-3), > 0.05 s or unpaired undecidable). RS3-2 K-S3': the first deferral
@@ -42,14 +53,17 @@ Judged here (rules 4 / 5 / 6 / 7):
   S-C   census: soil-mode keys, shadow entries, latch release and LOC in one period or
         1 .. N_d periods apart (per group), Q-S2, shadow entries with |dR| < 1 N (RS1-3).
   SH-9  the S-C P0 hashes of the 19 keys with a stored FB L job dict = the stored L hashes.
-  SH-10 the S-C hashes of all 456 keys = the pre-rev2 S-C hashes (rev3 RS3-4).
+  SH-10 the S-C hashes of all 456 keys = the pre-rev2 S-C hashes; a key on one side only
+        stops (rev3 RS3-4, rev4 RS4-3).
   S     S-D pairs (S2D - P0 of S-C): SC-2, SC-F, SC-S, SC-R, SC-T (a) .. (d), K-S1 .. K-S6,
-        Q-S3; SH-3 / SH-6 / SH-7 / SH-8 (with the pair-level SC-R, RS1-6). Undecidable:
+        Q-S3, the K-S3' 2 coverage (RS4-2, published); SH-3 / SH-6 / SH-7 / SH-8 (with the
+        pair-level SC-R, RS1-6). Undecidable:
         S-C not 456 keys in the group counts, S-D keys outside the selection, an unfinished
         deferral (RS1-4), a history RS2-4 rejects, SC-T (a) without a P0 soil mode or (d)
         without a covered load window (RS1-2); SC-T (c) is n/a without G6 items (RS1-5,
         counts published).
-  A     A-S: K-S1 (all 311 lines seen), Q-S1, Q-S4 and the A-plan rev2 judge
+  A     A-S: K-S1 (all 311 lines seen), K-S6(A) (all 324 lines, RS4-1), Q-S1, Q-S4 and the
+        A-plan rev2 judge
         (``las_revA_judge.judge``) over the stored revA2 R-0 / R-0P5 / R-P0 / R-X lines, the
         A-S lines and the A-P0 lines (the P0 identity is judged per source: stored revA2
         lines, new A-P0 lines).
@@ -100,12 +114,16 @@ RULES_REV3_RELATIVE = RULES_RELATIVE.with_name("s2_soil_defer_rules_rev3.md")
 RULES_S2D_REV3_SHA256 = "81bb429dec0ca48de7b188a438b8278d9bb5d0354f18d5874ba3c5c2092b34e8"
 """``s2_soil_defer_rules_rev3.sha256`` (LF digest, sealed 2026-11-09 13:43:58 +09:00): the
 expiry pairing RS3-1, K-S3' RS3-2, K-S6 RS3-3 and SH-10 RS3-4."""
+RULES_REV4_RELATIVE = RULES_RELATIVE.with_name("s2_soil_defer_rules_rev4.md")
+RULES_S2D_REV4_SHA256 = "5eb3f2f3802a087f983b9ce65113becfbcf7c5dffa6540ea34aad1bcaa2967d4"
+"""``s2_soil_defer_rules_rev4.sha256`` (LF digest, sealed 2026-11-09 14:01:37 +09:00): K-S6(A)
+RS4-1, the K-S3' 2 reading RS4-2 and the unpaired SH-10 keys RS4-3."""
 RULES_FIELDS = ("rules_s2d_sha256", "rules_s2d_rev1_sha256", "rules_s2d_rev2_sha256",
-                "rules_s2d_rev3_sha256", *diag.RULES_FIELDS)
+                "rules_s2d_rev3_sha256", "rules_s2d_rev4_sha256", *diag.RULES_FIELDS)
 RULES_VALUES = (RULES_S2D_SHA256, RULES_S2D_REV1_SHA256, RULES_S2D_REV2_SHA256,
-                RULES_S2D_REV3_SHA256, *diag.RULES_VALUES)
-"""Every line records the S2D rules, its rev1, rev2 and rev3 and the six A-plan rules digests
-(rules A.2, rev2 RS2-5, rev3 RS3-5)."""
+                RULES_S2D_REV3_SHA256, RULES_S2D_REV4_SHA256, *diag.RULES_VALUES)
+"""Every line records the S2D rules, its rev1 .. rev4 and the six A-plan rules digests
+(rules A.2, rev2 RS2-5, rev3 RS3-5; eleven fields)."""
 PRE_REV2_SC_RELATIVE = Path("history_pre_rev2") / "s2d_SC.jsonl"
 """rev3 RS3-4: the pre-rev2 S-C file under a ``soil_defer`` folder (identity reference of
 SH-10 only, never judged)."""
@@ -202,6 +220,8 @@ FLAT_SOIL_MARGIN_EVENT = diag.FLAT_SOIL_MARGIN_EVENT
 STATUS_STOP, STATUS_UNDECIDABLE = "stop", "undecidable"
 STATUS_FAIL, STATUS_PASS, STATUS_INCOMPLETE = "fail", "pass", "incomplete"
 STATUS_ORDER = (STATUS_STOP, STATUS_UNDECIDABLE, STATUS_FAIL, STATUS_PASS)
+COVERAGE_FULL, COVERAGE_PARTIAL, COVERAGE_UNRECORDED = "full", "partial", "unrecorded"
+"""rev4 RS4-2: how much of K-S3' 2 the per-period command record compared on a pair."""
 
 
 # ------------------------------------------------------------------------------- seals
@@ -210,16 +230,18 @@ def rules_path(rules_root: Path = ROOT) -> Path:
 
 
 def sealed_files(rules_root: Path = ROOT) -> tuple:
-    """SH-1: the S2D rules, their rev1, rev2 and rev3 (from ``rules_root``) and the six
-    A-plan rules."""
+    """SH-1: the S2D rules, their rev1 .. rev4 (from ``rules_root``) and the six A-plan
+    rules."""
     path = rules_path(rules_root)
     rev1 = rules_root / RULES_REV1_RELATIVE
     rev2 = rules_root / RULES_REV2_RELATIVE
     rev3 = rules_root / RULES_REV3_RELATIVE
+    rev4 = rules_root / RULES_REV4_RELATIVE
     return ((path, path.with_suffix(".sha256"), RULES_S2D_SHA256),
             (rev1, rev1.with_suffix(".sha256"), RULES_S2D_REV1_SHA256),
             (rev2, rev2.with_suffix(".sha256"), RULES_S2D_REV2_SHA256),
-            (rev3, rev3.with_suffix(".sha256"), RULES_S2D_REV3_SHA256), *ajudge.SEALED_RULES,
+            (rev3, rev3.with_suffix(".sha256"), RULES_S2D_REV3_SHA256),
+            (rev4, rev4.with_suffix(".sha256"), RULES_S2D_REV4_SHA256), *ajudge.SEALED_RULES,
             (diag.RULES_REVA_REV3_PATH, diag.RULES_REVA_REV3_SHA_PATH,
              diag.RULES_REVA_REV3_SHA256))
 
@@ -617,13 +639,15 @@ def _is_sha256_hex(value) -> bool:
 
 def sh10_check(lines: list[dict], reference_lines: list[dict] | None,
                reference_sha256: str | None = None) -> dict:
-    """rev3 RS3-4 SH-10: every new S-C key's ``commands_sha256`` (64 characters) equals the
-    pre-rev2 S-C hash of the same key.
+    """rev3 RS3-4 / rev4 RS4-3 SH-10: every new S-C key's ``commands_sha256`` (64
+    characters) equals the pre-rev2 S-C hash of the same key.
 
     Status ``stop`` on a different hash, a hash that is not 64 characters, or a key on one
-    side only (the unpaired counts are published); ``incomplete`` before S-C finished (456
-    keys) with nothing different so far; ``undecidable`` without the pre-rev2 lines once S-C
-    finished."""
+    side only: rev4 RS4-3 replaces the rev3 "compare the paired keys only" reading, so an
+    unpaired key stops before S-D (a new S-C key at once, a pre-rev2 key once S-C finished;
+    the unpaired counts and the pre-rev2 sha256 / lines / keys are published).
+    ``incomplete`` before S-C finished (456 keys) with nothing different so far;
+    ``undecidable`` without the pre-rev2 lines once S-C finished."""
     sc_by_key = by_key(lines_of(lines, "S-C"))
     is_sc_finished = len(sc_by_key) == SC_LINES
     if not sc_by_key:
@@ -758,8 +782,8 @@ def k_s3_entry_problems(cand: dict, base: dict) -> list[str]:
     undecidable (RS2-4 1), not checked here.
 
     Item 2 (commands bit equal before the entry period) is :func:`prefix_matches` up to the
-    first entry evaluation, the only per-period command record of a line; past it RS3-2 2
-    takes item 1 and the hash checks instead."""
+    first entry evaluation, the only per-period command record of a line; past it item 1 and
+    the hash checks stand in (rev4 RS4-2, counted by :func:`k_s3_prime_coverage`)."""
     _starts, deferrals = need_history(cand)
     base_starts = mode_starts_of(base)
     if not deferrals or base_starts is None:
@@ -770,6 +794,44 @@ def k_s3_entry_problems(cand: dict, base: dict) -> list[str]:
     p0_times = [start["t_s"] for start in base_starts]
     return [f"K-S3' {key_of(cand)}: first deferral entry {entry_s} s matches no P0 soil-mode "
             f"start {p0_times}"]
+
+
+def k_s3_prime_coverage(cand: dict, base: dict) -> str | None:
+    """rev4 RS4-2: how far the per-period command record covers K-S3' 2 on one S-D pair.
+
+    ``full``: equal ``commands_sha256`` (the whole run is bit equal) or the recorded prefix
+    ends at the first deferral entry (first entry evaluation = first deferral start, 1e-9 s);
+    ``partial``: the prefix ends at an earlier entry evaluation (the recorded part is bit
+    compared by :func:`prefix_matches`, the rest is replaced by K-S3' 1 and the hash checks);
+    ``unrecorded``: no prefix record (replaced as a whole). None when the S2D line has no
+    deferral (K-S3' does not apply)."""
+    _starts, deferrals = need_history(cand)
+    if not deferrals:
+        return None
+    if cand["commands_sha256"] == base["commands_sha256"]:
+        return COVERAGE_FULL
+    trace = rj.need(cand, "s2d", "trace")
+    first_check_s = trace.get("first_check_t_s")
+    if first_check_s is None or trace.get("prefix_sha256") is None:
+        return COVERAGE_UNRECORDED
+    entry_s = deferrals[0]["start_s"]
+    if abs(first_check_s - entry_s) <= TIME_TOLERANCE_S:
+        return COVERAGE_FULL
+    return COVERAGE_PARTIAL if first_check_s < entry_s else COVERAGE_UNRECORDED
+
+
+def k_s3_prime_summary(coverage: dict[str, str]) -> dict:
+    """rev4 RS4-2 publication: (key -> coverage) as counts and keys. ``substituted`` are the
+    lines whose pre-entry commands are not all bit compared (partial + unrecorded),
+    ``partial`` the lines whose recorded part was compared."""
+    keys = {name: sorted(key for key, value in coverage.items() if value == name)
+            for name in (COVERAGE_FULL, COVERAGE_PARTIAL, COVERAGE_UNRECORDED)}
+    substituted = sorted(keys[COVERAGE_PARTIAL] + keys[COVERAGE_UNRECORDED])
+    return {"deferred_pairs": len(coverage), "full": len(keys[COVERAGE_FULL]),
+            "partial": len(keys[COVERAGE_PARTIAL]), "partial_keys": keys[COVERAGE_PARTIAL],
+            "unrecorded": len(keys[COVERAGE_UNRECORDED]),
+            "unrecorded_keys": keys[COVERAGE_UNRECORDED],
+            "substituted": len(substituted), "substituted_keys": substituted}
 
 
 def k_s6_problems(cand: dict, base: dict) -> list[str]:
@@ -961,6 +1023,7 @@ def judge_s(lines: list[dict]) -> dict:
            "errors": error_count(lines, "S-D"), "missing": sorted(selected - set(cand_by_key)),
            "extra": sorted(set(cand_by_key) - selected), "pairs": {},
            "undecidable": [], "k_problems": [], "sc_t": [], "loc_avoided": [],
+           "k_s3_prime_coverage": {},
            "flat_entries": flat_entries(list(cand_by_key.values()))}
     if not cand_by_key:
         return {**out, "status": STATUS_INCOMPLETE}
@@ -971,6 +1034,7 @@ def judge_s(lines: list[dict]) -> dict:
     for key in sorted(set(cand_by_key) & set(base_by_key) & selected):
         _judge_pair(out, cand_by_key[key], base_by_key[key], key in random_keys)
     out["sc_t_c_not_applicable"] = _not_applicable_counts(out)
+    out["K-S3'_2_coverage"] = k_s3_prime_summary(out.pop("k_s3_prime_coverage"))
     out["identity_problems"] = identity_problems(lines_of(lines, "S-D") + sc_lines)
     return _s_verdict(out)
 
@@ -989,6 +1053,9 @@ def _judge_pair(out: dict, cand: dict, base: dict, is_random: bool) -> None:
         out["pairs"][key] = record
         if not cand_history:
             out["sc_t"] += sc_t_records(cand, base)
+        coverage = k_s3_prime_coverage(cand, base)
+        if coverage is not None:
+            out["k_s3_prime_coverage"][key] = coverage
         _starts, deferrals = need_history(cand)
         out["loc_avoided"] += [{"key": key, "start_s": deferral["start_s"]}
                                for deferral in deferrals
@@ -1106,6 +1173,59 @@ def k_s1_coverage_problems(bits: dict) -> list[str]:
             f"{K_S1_A_TARGETS}"]
 
 
+def a_index(line: dict) -> tuple[str, str, str]:
+    """(grid bundle, label, key) of an A-S line: the index of its stored revA2 P5r4 line."""
+    rev = rj.rev_of(line)
+    return rev["bundle"], rev["label"], rev["key"]
+
+
+def k_s6_a_problems(line: dict, stored_line: dict | None) -> list[str]:
+    """rev4 RS4-1 K-S6(A) of one A-S line: an empty ``soil.deferrals`` needs the stored revA2
+    P5r4 hash of the same grid point and key (64 characters; SH-3 otherwise). A line with a
+    deferral, or without a stored line (undecidable, :func:`k_s6_a_check`), gives nothing; a
+    line without the history raises :class:`rj.MissingField`."""
+    _starts, deferrals = need_history(line)
+    if deferrals or stored_line is None:
+        return []
+    digest = line["commands_sha256"]
+    if _is_sha256_hex(digest) and digest == stored_line["commands_sha256"]:
+        return []
+    return [f"K-S6(A) {a_index(line)}: no deferral but the hash differs from the stored "
+            "revA2 P5r4 line"]
+
+
+def k_s6_a_check(as_lines: list[dict], stored: dict) -> dict:
+    """rev4 RS4-1 K-S6(A) over the A-S lines (all 324, judged apart from K-S1).
+
+    Returns the violations (SH-3, A ``stop``), the undecidable reasons (SH-4: no stored
+    revA2 P5r4 line for a line without a deferral, no history, fewer than 324 A-S lines) and
+    the counts."""
+    violations, undecidable, unpaired = [], [], []
+    seen, without_deferral = set(), 0
+    for line in as_lines:
+        index = a_index(line)
+        seen.add(index)
+        try:
+            _starts, deferrals = need_history(line)
+        except rj.MissingField as exc:
+            undecidable.append(f"K-S6(A) {index}: missing {exc}")
+            continue
+        if deferrals:
+            continue
+        without_deferral += 1
+        stored_line = stored.get(index)
+        if stored_line is None:
+            unpaired.append(index)
+            continue
+        violations += k_s6_a_problems(line, stored_line)
+    undecidable += [f"K-S6(A) {index}: no stored revA2 P5r4 line (SH-4)" for index in unpaired]
+    if len(seen) != A_S_LINES:
+        undecidable.append(f"K-S6(A) saw {len(seen)} of {A_S_LINES} A-S lines")
+    return {"lines": len(seen), "without_deferral": without_deferral,
+            "compared": without_deferral - len(unpaired), "unpaired": len(unpaired),
+            "violations": violations, "undecidable": undecidable}
+
+
 def q_s1_record(line: dict) -> dict:
     """Q-S1 on the boundary key from the history (rev2 RS2-1): the first deferral of the run
     took 3 periods and ended at the LOC, and the run has no soil-mode start."""
@@ -1136,7 +1256,9 @@ def _p0_identity_by_source(stored_p0: list[dict], new_p0: list[dict]) -> list[st
 
 def judge_a(lines: list[dict], reva2_lines: list[dict], stored: dict, reference: dict | None,
             stored_reva) -> dict:
-    """Rules 5.2: K-S1, Q-S1, Q-S4 and the A-plan rev2 judge over P5r4S."""
+    """Rules 5.2: K-S1, K-S6(A) (rev4 RS4-1, listed apart in ``bits["K-S1"]`` and
+    ``["K-S6(A)"]["violations"]``, both in ``k_problems``), Q-S1, Q-S4 and the A-plan rev2
+    judge over P5r4S."""
     as_lines = lines_of(lines, "A-S")
     if not as_lines:
         return {"status": STATUS_INCOMPLETE}
@@ -1156,6 +1278,9 @@ def judge_a(lines: list[dict], reva2_lines: list[dict], stored: dict, reference:
     verdict = result["candidates"][ajudge.JUDGED_CANDIDATE]["verdict"]
     s2d_problems = identity_problems(as_lines + ap0_lines)
     k_problems, undecidable = list(bits["K-S1"]), k_s1_coverage_problems(bits)
+    k_s6_a = k_s6_a_check(as_lines, stored_p5r4)
+    k_problems += k_s6_a["violations"]
+    undecidable += k_s6_a["undecidable"]
     for line in as_lines:
         try:
             undecidable += history_problems(line, is_candidate=True)
@@ -1175,7 +1300,7 @@ def judge_a(lines: list[dict], reva2_lines: list[dict], stored: dict, reference:
         status = STATUS_PASS
     else:
         status = STATUS_FAIL
-    return {"status": status, "bits": bits, "k_problems": k_problems,
+    return {"status": status, "bits": bits, "K-S6(A)": k_s6_a, "k_problems": k_problems,
             "undecidable": undecidable, "flat_entries": flat_entries(as_lines),
             "identity_problems": s2d_problems, "p0_identity_by_source": p0_problems,
             "revA_verdict": result["candidates"], "revA_stops": result["stops"],
@@ -1249,14 +1374,15 @@ def report_markdown(result: dict, source: Path) -> str:
     lines.append(f"- SH-9 shadow harmlessness (RS1-9): {sh9['status']} "
                  f"{json.dumps({k: v for k, v in sh9.items() if k not in ('status', 'rows')})}")
     sh10 = result["SH-10"]
-    lines.append(f"- SH-10 record-field harmlessness (RS3-4): {sh10['status']}, pre-rev2 S-C "
+    lines.append(f"- SH-10 record-field harmlessness (RS3-4, RS4-3): {sh10['status']}, "
+                 "pre-rev2 S-C "
                  f"sha256 {sh10.get('reference_sha256')}")
     lines.append(f"  - {json.dumps({k: v for k, v in sh10.items() if k != 'status'})[:2000]}")
     s_part = result["S"]
     lines.append(f"- S judgement: {s_part['status']}")
     for name in ("checks", "Q-S3", "stops", "asks", "missing", "extra", "undecidable",
                  "k_problems", "loc_avoided", "selection", "sh8_pairs", "sc_r_pair_violations",
-                 "sc_t_c_not_applicable", "flat_entries"):
+                 "sc_t_c_not_applicable", "K-S3'_2_coverage", "flat_entries"):
         if name in s_part:
             lines.append(f"  - {name}: {json.dumps(s_part[name], default=str)[:2000]}")
     for record in s_part.get("sc_t", []):
