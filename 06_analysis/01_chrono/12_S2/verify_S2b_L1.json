@@ -1,6 +1,6 @@
 {
  "meta": {
-  "generated": "2026-10-22T05:56:14",
+  "generated": "2026-11-09T17:04:36",
   "stage": "S2b (chrono_build_plan.md): actuator (V0 motor sign, V11, command ramp), crawler contact layout D (V0, settle, snapshots), R15 events",
   "script": "04_scripts/02_chrono/run_S2b.py",
   "model": "outrigger_sim.chrono.model.L1Model(actuator=True), L1SpeedActuator (position motor + ChFunctionConst.SetConstant(s_ref), rate limit), crawler 24 spheres, ground bushing GroundBushingCoulomb (ball centre)",
@@ -140,7 +140,7 @@
     0.02092430160050307,
     0.02092430160050307
    ],
-   "wall_s": 0.2904959000006784
+   "wall_s": 0.24740480002947152
   },
   {
    "name": "ramp0.1_dt1e-05",
@@ -164,7 +164,7 @@
     0.020924301605594484,
     0.020924301605594484
    ],
-   "wall_s": 2.9222443000035128
+   "wall_s": 2.7546069000381976
   },
   {
    "name": "ramp0_dt1e-04",
@@ -188,7 +188,7 @@
     0.02092430160055418,
     0.02092430160055418
    ],
-   "wall_s": 0.29022570000961423
+   "wall_s": 0.27459729998372495
   },
   {
    "name": "ramp0_dt1e-05",
@@ -212,7 +212,7 @@
     0.0209243016055728,
     0.0209243016055728
    ],
-   "wall_s": 2.6607252999965567
+   "wall_s": 2.7796480000251904
   }
  ],
  "v11": {
@@ -286,9 +286,9 @@
     ],
     "power_throttling_off_ok": true
    },
-   "wall_s": 38.23986219998915,
+   "wall_s": 33.8602398999501,
    "steps": 345000,
-   "us_per_step": 110.8401802898236
+   "us_per_step": 98.14562289840609
   }
  },
  "crawler": {
@@ -727,9 +727,9 @@
      ],
      "power_throttling_off_ok": true
     },
-    "wall_s": 10.680577100007213,
+    "wall_s": 6.233207599958405,
     "steps": 31000,
-    "us_per_step": 344.534745161523
+    "us_per_step": 201.07121290188402
    }
   },
   "event_fast_FL_dt1e-05": {
@@ -804,9 +804,9 @@
      ],
      "power_throttling_off_ok": true
     },
-    "wall_s": 87.83377329999348,
+    "wall_s": 49.9160710000433,
     "steps": 310000,
-    "us_per_step": 283.3347525806241
+    "us_per_step": 161.01958387110741
    }
   },
   "event_slow_FL_dt1e-04": {
@@ -881,9 +881,9 @@
      ],
      "power_throttling_off_ok": true
     },
-    "wall_s": 47.614234000007855,
+    "wall_s": 21.329556900076568,
     "steps": 111000,
-    "us_per_step": 428.95706306313383
+    "us_per_step": 192.15817027096006
    }
   },
   "event_slow_FL_dt1e-05": {
@@ -958,9 +958,9 @@
      ],
      "power_throttling_off_ok": true
     },
-    "wall_s": 322.0387536999915,
+    "wall_s": 165.7429056999972,
     "steps": 1110000,
-    "us_per_step": 290.12500333332565
+    "us_per_step": 149.31793306306054
    }
   }
  },
