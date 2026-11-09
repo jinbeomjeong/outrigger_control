@@ -2,14 +2,14 @@
  "meta": {
   "script": "04_scripts/00_cad/leg_rod_lateral_check.py",
   "revision": 3,
-  "date": "2026-10-22",
+  "date": "2026-11-09",
   "d8_boundary_scan_note": "rev. 3.1 compatibility key for run_pad_tangential_check.py figures(): CAD continuous model (anchored kinematics calibrated per leg at the P axis vertex, mu N capped), YAML k_t, axis vertices of V and P only; phi = roll, theta = pitch [deg]; F_design_kN per leg FL, FR, RL, RR",
   "frame": "body (x fwd, y left, z up), origin CAD origin, m; pitch > 0 nose down, roll > 0 right low",
   "units": "SI unless a key says kN / MPa / deg",
-  "runtime_s": 91.15,
+  "runtime_s": 179.0,
   "limit_criteria": {
    "A": "rod yield SF >= 1.5 at the levelling-end / dynamic-max lateral force with the static axial force",
-   "A_Pdyn141": "as A with axial max(141 kN, static) on every leg (sensitivity)",
+   "A_Pdyn": "as A with axial max(P_dyn 139.12 kN, static) on every leg (sensitivity; P_dyn from inputs.P_dyn_source, key renamed from A_Pdyn141)",
    "L": "the same lateral force sustained with the 350 bar lock axial (350 bar x head area of the leg; key names *lock364kN* kept from rev. 2): SF >= 1.0 (no yield)",
    "AL": "A and L together (no re-anchoring)",
    "RA_A": "with re-anchoring (3.10.7): peak = levelling end x manoeuvre factor at the run max axial, SF >= 1.5; residual after re-anchoring: SF >= 1.5 static and >= 1.0 at 364 kN",
@@ -37,7 +37,6 @@
   "piston_effective_bearing_length_m": 0.02,
   "lateral_force_source": "dynamics_model.md rev.18 3.10 matrix (pad_tangential_check.json), mu 0.5, secant k_t = best estimate, YAML k_t = upper bound; between / beyond the simulated angles: anchored-pad kinematics scaled per leg to the provisional-boundary vertex",
   "lock_pressure_Pa": 35000000.0,
-  "dynamic_peak_axial_N": 141000.0,
   "reanchor_residual_independent_of_slope": true,
   "lock_check_SF": 1.0,
   "criterion_B_peak_SF": 1.0
@@ -72,7 +71,26 @@
    717.483872168105
   ],
   "P_lock_N": 464563.0136495907,
-  "P_dyn_N": 141000.0,
+  "P_dyn_N": 139120.0,
+  "P_dyn_source": {
+   "file": "06_analysis/00_dynamics/leg_extension_loads.json",
+   "sha256": "6df43a160cdf4ba7e12fd97d45dac7f8ba501a5502ce6326d0a8249ad6faac77",
+   "key": "validation / quasi_static_check (damped 3-DoF) / per_leg / <leg> / peak_pad_force_N",
+   "reduction": "max over FL, FR, RL, RR",
+   "quantity": "pad reaction incl. rod weight (F_pad = F_cyl + m_rod g)",
+   "producer": "04_scripts/01_dynamics/run_leg_extension_loads.py",
+   "producer_params": "02_params/rexome33.yaml",
+   "auger_level": "top",
+   "mass_case": "C",
+   "max_leg": "FL",
+   "per_leg_N": [
+    139120.0,
+    136085.0,
+    89410.9,
+    88068.2
+   ],
+   "replaces": "REXOME33 constant 141.0 kN (dynamic_peak_axial_N, removed 2026-11-09)"
+  },
   "stroke_m": 0.7,
   "P_lock_per_leg_N": {
    "FL": 464563.0136495907,
@@ -8474,7 +8492,7 @@
     "deg": 4.02,
     "by": "criterion"
    },
-   "A_Pdyn141_C45_normalised": {
+   "A_Pdyn_C45_normalised": {
     "deg": 3.74,
     "by": "criterion"
    },
@@ -8498,7 +8516,7 @@
     "deg": 4.12,
     "by": "stroke"
    },
-   "A_Pdyn141_20MnV6": {
+   "A_Pdyn_20MnV6": {
     "deg": 4.12,
     "by": "stroke"
    },
@@ -8536,7 +8554,7 @@
     "deg": 3.42,
     "by": "criterion"
    },
-   "A_Pdyn141_C45_normalised": {
+   "A_Pdyn_C45_normalised": {
     "deg": 3.22,
     "by": "criterion"
    },
@@ -8560,7 +8578,7 @@
     "deg": 4.12,
     "by": "stroke"
    },
-   "A_Pdyn141_20MnV6": {
+   "A_Pdyn_20MnV6": {
     "deg": 4.04,
     "by": "criterion"
    },
@@ -8598,7 +8616,7 @@
     "deg": 3.42,
     "by": "criterion"
    },
-   "A_Pdyn141_C45_normalised": {
+   "A_Pdyn_C45_normalised": {
     "deg": 3.22,
     "by": "criterion"
    },
@@ -8622,7 +8640,7 @@
     "deg": 4.12,
     "by": "stroke"
    },
-   "A_Pdyn141_20MnV6": {
+   "A_Pdyn_20MnV6": {
     "deg": 4.04,
     "by": "criterion"
    },
@@ -8660,7 +8678,7 @@
     "deg": 3.62,
     "by": "criterion"
    },
-   "A_Pdyn141_C45_normalised": {
+   "A_Pdyn_C45_normalised": {
     "deg": 3.32,
     "by": "criterion"
    },
@@ -8684,7 +8702,7 @@
     "deg": 4.02,
     "by": "stroke"
    },
-   "A_Pdyn141_20MnV6": {
+   "A_Pdyn_20MnV6": {
     "deg": 4.02,
     "by": "stroke"
    },
@@ -8722,7 +8740,7 @@
     "deg": 2.82,
     "by": "criterion"
    },
-   "A_Pdyn141_C45_normalised": {
+   "A_Pdyn_C45_normalised": {
     "deg": 2.64,
     "by": "criterion"
    },
@@ -8746,7 +8764,7 @@
     "deg": 3.36,
     "by": "criterion"
    },
-   "A_Pdyn141_20MnV6": {
+   "A_Pdyn_20MnV6": {
     "deg": 3.18,
     "by": "criterion"
    },
@@ -8784,7 +8802,7 @@
     "deg": 2.82,
     "by": "criterion"
    },
-   "A_Pdyn141_C45_normalised": {
+   "A_Pdyn_C45_normalised": {
     "deg": 2.64,
     "by": "criterion"
    },
@@ -8808,7 +8826,7 @@
     "deg": 3.36,
     "by": "criterion"
    },
-   "A_Pdyn141_20MnV6": {
+   "A_Pdyn_20MnV6": {
     "deg": 3.18,
     "by": "criterion"
    },
@@ -8846,8 +8864,8 @@
     "deg": 5.16,
     "by": "criterion"
    },
-   "A_Pdyn141_C45_normalised": {
-    "deg": 5.08,
+   "A_Pdyn_C45_normalised": {
+    "deg": 5.1,
     "by": "criterion"
    },
    "L_C45_normalised": {
@@ -8862,7 +8880,7 @@
     "deg": 6.34,
     "by": "stroke"
    },
-   "A_Pdyn141_20MnV6": {
+   "A_Pdyn_20MnV6": {
     "deg": 6.34,
     "by": "stroke"
    },
@@ -8892,7 +8910,7 @@
     "deg": 4.3,
     "by": "criterion"
    },
-   "A_Pdyn141_C45_normalised": {
+   "A_Pdyn_C45_normalised": {
     "deg": 4.24,
     "by": "criterion"
    },
@@ -8908,7 +8926,7 @@
     "deg": 5.14,
     "by": "criterion"
    },
-   "A_Pdyn141_20MnV6": {
+   "A_Pdyn_20MnV6": {
     "deg": 5.08,
     "by": "criterion"
    },
@@ -8938,7 +8956,7 @@
     "deg": 4.3,
     "by": "criterion"
    },
-   "A_Pdyn141_C45_normalised": {
+   "A_Pdyn_C45_normalised": {
     "deg": 4.24,
     "by": "criterion"
    },
@@ -8954,7 +8972,7 @@
     "deg": 5.14,
     "by": "criterion"
    },
-   "A_Pdyn141_20MnV6": {
+   "A_Pdyn_20MnV6": {
     "deg": 5.08,
     "by": "criterion"
    },
@@ -8984,8 +9002,8 @@
     "deg": 5.1,
     "by": "criterion"
    },
-   "A_Pdyn141_C45_normalised": {
-    "deg": 5.02,
+   "A_Pdyn_C45_normalised": {
+    "deg": 5.04,
     "by": "criterion"
    },
    "L_C45_normalised": {
@@ -9000,7 +9018,7 @@
     "deg": 6.34,
     "by": "stroke"
    },
-   "A_Pdyn141_20MnV6": {
+   "A_Pdyn_20MnV6": {
     "deg": 6.28,
     "by": "criterion"
    },
@@ -9030,7 +9048,7 @@
     "deg": 4.24,
     "by": "criterion"
    },
-   "A_Pdyn141_C45_normalised": {
+   "A_Pdyn_C45_normalised": {
     "deg": 4.2,
     "by": "criterion"
    },
@@ -9046,7 +9064,7 @@
     "deg": 5.08,
     "by": "criterion"
    },
-   "A_Pdyn141_20MnV6": {
+   "A_Pdyn_20MnV6": {
     "deg": 5.04,
     "by": "criterion"
    },
@@ -9076,7 +9094,7 @@
     "deg": 4.24,
     "by": "criterion"
    },
-   "A_Pdyn141_C45_normalised": {
+   "A_Pdyn_C45_normalised": {
     "deg": 4.2,
     "by": "criterion"
    },
@@ -9092,7 +9110,7 @@
     "deg": 5.08,
     "by": "criterion"
    },
-   "A_Pdyn141_20MnV6": {
+   "A_Pdyn_20MnV6": {
     "deg": 5.04,
     "by": "criterion"
    },
@@ -22375,41 +22393,41 @@
     37042.8630406559
    ],
    "F_allow_rod_SF1.5_C45_Pdyn_N": [
-    105446.65634155822,
-    96589.3644720571,
-    89081.71296492754,
-    82635.92747974396,
-    77040.63870238079,
-    72137.06515073957,
-    67803.64023922538,
-    63945.700295432565,
-    60488.45881257233,
-    57372.013206581476,
-    54547.83759002782,
-    51976.191688755884,
-    49624.241356663464,
-    47464.58655166716,
-    45474.19977741173,
-    43633.57468783894,
-    41926.09795074675,
-    40337.49858180797,
-    38855.46492136359,
-    37469.3114236831,
-    36169.70855423628,
-    34948.48960240908,
-    33798.438791937944,
-    32713.166054042078,
-    31686.971049155014,
-    30714.75745122077,
-    29791.906277415575,
-    28914.211229181787,
-    28077.784844474707,
-    27278.991564002972,
-    26514.31495222073,
-    25780.243689659295,
-    25073.059435769814,
-    24388.514403912548,
-    23721.152517831637
+    105599.175832094,
+    96730.18932023126,
+    89212.77353649889,
+    82758.72778871417,
+    77156.37293400605,
+    72246.69739755872,
+    67907.9598776448,
+    64045.36180368731,
+    60584.01055808516,
+    57463.91936941221,
+    54636.49447433584,
+    52061.940416119476,
+    49707.37746384632,
+    47545.36798804534,
+    45552.85301933054,
+    43710.299806124895,
+    42001.072470414445,
+    40410.88105019613,
+    38927.39762574627,
+    37539.922737156085,
+    36239.11499743316,
+    35016.79737607114,
+    33865.745490477304,
+    32779.56196861737,
+    31752.540499807234,
+    30779.579835777644,
+    29856.05750679641,
+    28977.765023945867,
+    28140.814368081028,
+    27341.571223781782,
+    26576.523224942546,
+    25842.166898344574,
+    25134.797740679685,
+    24450.191509101536,
+    23782.93355722661
    ],
    "F_allow_piston_PTFE_bronze_dynamic_N": [
     129398.14814814813,
@@ -22748,41 +22766,41 @@
     19922.300924737967
    ],
    "F_allow_rod_SF1.5_C45_Pdyn_N": [
-    53951.94333231574,
-    49381.084749887064,
-    45500.22967147824,
-    42162.84304342056,
-    39261.16834798564,
-    36714.15888808923,
-    34459.709908970115,
-    32449.417897351464,
-    30645.02650723577,
-    29015.862984696658,
-    27537.06802320774,
-    26188.26778239902,
-    24952.629116342203,
-    23816.087310092913,
-    22766.817931277696,
-    21794.794975205597,
-    20891.482319664643,
-    20049.53262384618,
-    19262.603856087102,
-    18525.184997077886,
-    17832.454124327858,
-    17180.190218161093,
-    16564.645767670758,
-    15982.49262971502,
-    15430.744297077372,
-    14906.719537259054,
-    14407.956261589365,
-    13932.182475896025,
-    13477.252461770584,
-    13041.10682444479,
-    12621.663496810275,
-    12216.727429513545,
-    11823.80325182131,
-    11439.803704401618,
-    11060.416741354748
+    54082.205542859236,
+    49501.43432651366,
+    45612.32152439299,
+    42267.96516177659,
+    39360.34220163055,
+    36808.20810625944,
+    34549.30793196361,
+    32535.122236252686,
+    30727.303486918045,
+    29095.106612225198,
+    27613.614009064007,
+    26262.40445921123,
+    25024.605678265863,
+    23886.120703382487,
+    22835.098106661262,
+    21861.489248705675,
+    20956.73868022229,
+    20113.482812747712,
+    19325.365699954553,
+    18586.864425821972,
+    17893.146947923662,
+    17239.983439944444,
+    16623.619069086486,
+    16040.719494251838,
+    15488.293164831593,
+    14963.654715732926,
+    14464.339180100653,
+    13988.072822567608,
+    13532.709621678674,
+    13096.191478392928,
+    12676.44012512114,
+    12271.267675476209,
+    11878.191259147146,
+    11494.144788513515,
+    11114.853348397282
    ],
    "F_allow_piston_PTFE_bronze_dynamic_N": [
     109490.74074074066,
@@ -23166,15 +23184,15 @@
   "mode_token": "base",
   "sources": [
    {
-    "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
-    "mtime": "2026-10-22 07:22:40"
+    "path": "06_analysis\\02_control\\s6r17_partO.json",
+    "mtime": "2026-11-09 22:13:28"
    }
   ],
   "note": "pairs = per step (Ft at Fl max, Fl max), (Ft max, Fl at Ft max) [variant simul = RA_A_H4]; bound adds (Ft max, Fl max while Ft held) [not simultaneous]; *nofloor: recorded axial without the static floor; carry 'ratio': Ft x F_model(a)/F_start, floored at 1 above the run angle; carry 'hold' (suffix 'hold'): floored at 1 at every angle (no reduction below the run angle); all V/P runs of the set (S|* sensitivity runs included) are checked and the worst governs; axial unchanged (ASSUMPTION); SF 1.5 for every pair and the residual, residual also SF 1.0 at the 350 bar lock",
   "runs": {
    "O|base|V:pitch+3.5|rigid|yaml|Fs0|0": {
     "id": "O|base|V:pitch+3.5|rigid|yaml|Fs0|0",
-    "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
+    "source": "06_analysis\\02_control\\s6r17_partO.json",
     "angle_deg": 3.5,
     "Ft_start_kN": [
      22.85,
@@ -23485,7 +23503,7 @@
    },
    "O|base|V:pitch+3.5|rigid|ext|Fs0|0": {
     "id": "O|base|V:pitch+3.5|rigid|ext|Fs0|0",
-    "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
+    "source": "06_analysis\\02_control\\s6r17_partO.json",
     "angle_deg": 3.5,
     "Ft_start_kN": [
      15.61,
@@ -23826,7 +23844,7 @@
    },
    "O|base|V:pitch-3.5|rigid|yaml|Fs0|0": {
     "id": "O|base|V:pitch-3.5|rigid|yaml|Fs0|0",
-    "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
+    "source": "06_analysis\\02_control\\s6r17_partO.json",
     "angle_deg": 3.5,
     "Ft_start_kN": [
      22.08,
@@ -24097,7 +24115,7 @@
    },
    "O|base|V:pitch-3.5|rigid|ext|Fs0|0": {
     "id": "O|base|V:pitch-3.5|rigid|ext|Fs0|0",
-    "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
+    "source": "06_analysis\\02_control\\s6r17_partO.json",
     "angle_deg": 3.5,
     "Ft_start_kN": [
      10.31,
@@ -24438,7 +24456,7 @@
    },
    "O|base|P:pitch+3.2|rigid|yaml|Fs0|0": {
     "id": "O|base|P:pitch+3.2|rigid|yaml|Fs0|0",
-    "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
+    "source": "06_analysis\\02_control\\s6r17_partO.json",
     "angle_deg": 3.2,
     "Ft_start_kN": [
      19.35,
@@ -24779,7 +24797,7 @@
    },
    "O|base|P:pitch+3.2|rigid|ext|Fs0|0": {
     "id": "O|base|P:pitch+3.2|rigid|ext|Fs0|0",
-    "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
+    "source": "06_analysis\\02_control\\s6r17_partO.json",
     "angle_deg": 3.2,
     "Ft_start_kN": [
      13.61,
@@ -25120,7 +25138,7 @@
    },
    "O|base|P:pitch-3.2|rigid|yaml|Fs0|0": {
     "id": "O|base|P:pitch-3.2|rigid|yaml|Fs0|0",
-    "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
+    "source": "06_analysis\\02_control\\s6r17_partO.json",
     "angle_deg": 3.2,
     "Ft_start_kN": [
      18.41,
@@ -25406,7 +25424,7 @@
    },
    "O|base|P:pitch-3.2|rigid|ext|Fs0|0": {
     "id": "O|base|P:pitch-3.2|rigid|ext|Fs0|0",
-    "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
+    "source": "06_analysis\\02_control\\s6r17_partO.json",
     "angle_deg": 3.2,
     "Ft_start_kN": [
      9.1,
@@ -49246,15 +49264,15 @@
    "mode_token": "base",
    "sources": [
     {
-     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
-     "mtime": "2026-10-22 07:22:40"
+     "path": "06_analysis\\02_control\\s6r17_partO.json",
+     "mtime": "2026-11-09 22:13:28"
     }
    ],
    "note": "pairs = per step (Ft at Fl max, Fl max), (Ft max, Fl at Ft max) [variant simul = RA_A_H4]; bound adds (Ft max, Fl max while Ft held) [not simultaneous]; *nofloor: recorded axial without the static floor; carry 'ratio': Ft x F_model(a)/F_start, floored at 1 above the run angle; carry 'hold' (suffix 'hold'): floored at 1 at every angle (no reduction below the run angle); all V/P runs of the set (S|* sensitivity runs included) are checked and the worst governs; axial unchanged (ASSUMPTION); SF 1.5 for every pair and the residual, residual also SF 1.0 at the 350 bar lock",
    "runs": {
     "O|base|V:pitch+3.5|rigid|yaml|Fs0|0": {
      "id": "O|base|V:pitch+3.5|rigid|yaml|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
+     "source": "06_analysis\\02_control\\s6r17_partO.json",
      "angle_deg": 3.5,
      "Ft_start_kN": [
       22.85,
@@ -49565,7 +49583,7 @@
     },
     "O|base|V:pitch+3.5|rigid|ext|Fs0|0": {
      "id": "O|base|V:pitch+3.5|rigid|ext|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
+     "source": "06_analysis\\02_control\\s6r17_partO.json",
      "angle_deg": 3.5,
      "Ft_start_kN": [
       15.61,
@@ -49906,7 +49924,7 @@
     },
     "O|base|V:pitch-3.5|rigid|yaml|Fs0|0": {
      "id": "O|base|V:pitch-3.5|rigid|yaml|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
+     "source": "06_analysis\\02_control\\s6r17_partO.json",
      "angle_deg": 3.5,
      "Ft_start_kN": [
       22.08,
@@ -50177,7 +50195,7 @@
     },
     "O|base|V:pitch-3.5|rigid|ext|Fs0|0": {
      "id": "O|base|V:pitch-3.5|rigid|ext|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
+     "source": "06_analysis\\02_control\\s6r17_partO.json",
      "angle_deg": 3.5,
      "Ft_start_kN": [
       10.31,
@@ -50518,7 +50536,7 @@
     },
     "O|base|P:pitch+3.2|rigid|yaml|Fs0|0": {
      "id": "O|base|P:pitch+3.2|rigid|yaml|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
+     "source": "06_analysis\\02_control\\s6r17_partO.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.35,
@@ -50859,7 +50877,7 @@
     },
     "O|base|P:pitch+3.2|rigid|ext|Fs0|0": {
      "id": "O|base|P:pitch+3.2|rigid|ext|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
+     "source": "06_analysis\\02_control\\s6r17_partO.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.61,
@@ -51200,7 +51218,7 @@
     },
     "O|base|P:pitch-3.2|rigid|yaml|Fs0|0": {
      "id": "O|base|P:pitch-3.2|rigid|yaml|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
+     "source": "06_analysis\\02_control\\s6r17_partO.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.41,
@@ -51486,7 +51504,7 @@
     },
     "O|base|P:pitch-3.2|rigid|ext|Fs0|0": {
      "id": "O|base|P:pitch-3.2|rigid|ext|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\s6r17_partO.json",
+     "source": "06_analysis\\02_control\\s6r17_partO.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       9.1,
@@ -75325,23 +75343,23 @@
    "mode_token": "R6",
    "sources": [
     {
-     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
-     "mtime": "2026-10-22 07:42:54"
+     "path": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "mtime": "2026-11-09 22:13:27"
     },
     {
-     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
-     "mtime": "2026-10-22 07:45:03"
+     "path": "06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "mtime": "2026-11-09 22:13:27"
     },
     {
-     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
-     "mtime": "2026-10-22 09:25:53"
+     "path": "06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "mtime": "2026-11-09 22:13:27"
     }
    ],
    "note": "pairs = per step (Ft at Fl max, Fl max), (Ft max, Fl at Ft max) [variant simul = RA_A_H4]; bound adds (Ft max, Fl max while Ft held) [not simultaneous]; *nofloor: recorded axial without the static floor; carry 'ratio': Ft x F_model(a)/F_start, floored at 1 above the run angle; carry 'hold' (suffix 'hold'): floored at 1 at every angle (no reduction below the run angle); all V/P runs of the set (S|* sensitivity runs included) are checked and the worst governs; axial unchanged (ASSUMPTION); SF 1.5 for every pair and the residual, residual also SF 1.0 at the 350 bar lock",
    "runs": {
     "O|R6|V:pitch+3.5|rigid|yaml|Fs0|0": {
      "id": "O|R6|V:pitch+3.5|rigid|yaml|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
      "angle_deg": 3.5,
      "Ft_start_kN": [
       22.85,
@@ -75642,7 +75660,7 @@
     },
     "N|R6|nominal|V:pitch+3.5|rigid|yaml|Fs0|top": {
      "id": "N|R6|nominal|V:pitch+3.5|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.5,
      "Ft_start_kN": [
       22.85,
@@ -77378,7 +77396,7 @@
     },
     "O|R6|V:pitch+3.5|rigid|ext|Fs0|0": {
      "id": "O|R6|V:pitch+3.5|rigid|ext|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
      "angle_deg": 3.5,
      "Ft_start_kN": [
       15.61,
@@ -77724,7 +77742,7 @@
     },
     "N|R6|nominal|V:pitch+3.5|rigid|ext|Fs0|top": {
      "id": "N|R6|nominal|V:pitch+3.5|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.5,
      "Ft_start_kN": [
       15.61,
@@ -81085,7 +81103,7 @@
     },
     "O|R6|V:pitch-3.5|rigid|yaml|Fs0|0": {
      "id": "O|R6|V:pitch-3.5|rigid|yaml|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
      "angle_deg": 3.5,
      "Ft_start_kN": [
       22.08,
@@ -81361,7 +81379,7 @@
     },
     "O|R6|V:pitch-3.5|rigid|ext|Fs0|0": {
      "id": "O|R6|V:pitch-3.5|rigid|ext|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
      "angle_deg": 3.5,
      "Ft_start_kN": [
       10.31,
@@ -81677,7 +81695,7 @@
     },
     "O|R6|P:pitch+3.2|rigid|yaml|Fs0|0": {
      "id": "O|R6|P:pitch+3.2|rigid|yaml|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.35,
@@ -81998,7 +82016,7 @@
     },
     "N|R6|nominal|P:pitch+3.2|rigid|yaml|Fs0|top": {
      "id": "N|R6|nominal|P:pitch+3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.35,
@@ -83714,7 +83732,7 @@
     },
     "N|R6|seed12346|P:pitch+3.2|rigid|yaml|Fs0|top": {
      "id": "N|R6|seed12346|P:pitch+3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.33,
@@ -85440,7 +85458,7 @@
     },
     "N|R6|seed12347|P:pitch+3.2|rigid|yaml|Fs0|top": {
      "id": "N|R6|seed12347|P:pitch+3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.68,
@@ -87166,7 +87184,7 @@
     },
     "N|R6|mast_stiff|P:pitch+3.2|stiff|yaml|Fs0|top": {
      "id": "N|R6|mast_stiff|P:pitch+3.2|stiff|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.38,
@@ -88867,7 +88885,7 @@
     },
     "N|R6|mast_upper|P:pitch+3.2|upper|yaml|Fs0|top": {
      "id": "N|R6|mast_upper|P:pitch+3.2|upper|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.21,
@@ -90673,7 +90691,7 @@
     },
     "N|R6|mast_lower|P:pitch+3.2|lower|yaml|Fs0|top": {
      "id": "N|R6|mast_lower|P:pitch+3.2|lower|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.89,
@@ -92204,7 +92222,7 @@
     },
     "N|R6|beta6.9e+08|P:pitch+3.2|rigid|yaml|Fs0|top": {
      "id": "N|R6|beta6.9e+08|P:pitch+3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.52,
@@ -95030,7 +95048,7 @@
     },
     "N|R6|beta1.6e+09|P:pitch+3.2|rigid|yaml|Fs0|top": {
      "id": "N|R6|beta1.6e+09|P:pitch+3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       20.12,
@@ -96381,7 +96399,7 @@
     },
     "N|R6|Fs3.7|P:pitch+3.2|rigid|yaml|Fs3.7|top": {
      "id": "N|R6|Fs3.7|P:pitch+3.2|rigid|yaml|Fs3.7|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.23,
@@ -97912,7 +97930,7 @@
     },
     "N|R6|Fs12|P:pitch+3.2|rigid|yaml|Fs12|top": {
      "id": "N|R6|Fs12|P:pitch+3.2|rigid|yaml|Fs12|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.2,
@@ -99483,7 +99501,7 @@
     },
     "N|R6|level_middle|P:pitch+3.2|rigid|yaml|Fs0|middle": {
      "id": "N|R6|level_middle|P:pitch+3.2|rigid|yaml|Fs0|middle",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.26,
@@ -101684,7 +101702,7 @@
     },
     "N|R6|level_bottom|P:pitch+3.2|rigid|yaml|Fs0|bottom": {
      "id": "N|R6|level_bottom|P:pitch+3.2|rigid|yaml|Fs0|bottom",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.33,
@@ -103545,7 +103563,7 @@
     },
     "N|R6|delay0|P:pitch+3.2|rigid|yaml|Fs0|top": {
      "id": "N|R6|delay0|P:pitch+3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.33,
@@ -105566,7 +105584,7 @@
     },
     "O|R6|P:pitch+3.2|rigid|ext|Fs0|0": {
      "id": "O|R6|P:pitch+3.2|rigid|ext|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.61,
@@ -105912,7 +105930,7 @@
     },
     "N|R6|nominal|P:pitch+3.2|rigid|ext|Fs0|top": {
      "id": "N|R6|nominal|P:pitch+3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.61,
@@ -108948,7 +108966,7 @@
     },
     "N|R6|seed12346|P:pitch+3.2|rigid|ext|Fs0|top": {
      "id": "N|R6|seed12346|P:pitch+3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.62,
@@ -112094,7 +112112,7 @@
     },
     "N|R6|seed12347|P:pitch+3.2|rigid|ext|Fs0|top": {
      "id": "N|R6|seed12347|P:pitch+3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.9,
@@ -115080,7 +115098,7 @@
     },
     "N|R6|mast_stiff|P:pitch+3.2|stiff|ext|Fs0|top": {
      "id": "N|R6|mast_stiff|P:pitch+3.2|stiff|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.72,
@@ -117896,7 +117914,7 @@
     },
     "N|R6|mast_upper|P:pitch+3.2|upper|ext|Fs0|top": {
      "id": "N|R6|mast_upper|P:pitch+3.2|upper|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.53,
@@ -120547,7 +120565,7 @@
     },
     "N|R6|mast_lower|P:pitch+3.2|lower|ext|Fs0|top": {
      "id": "N|R6|mast_lower|P:pitch+3.2|lower|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.0,
@@ -122978,7 +122996,7 @@
     },
     "N|R6|beta6.9e+08|P:pitch+3.2|rigid|ext|Fs0|top": {
      "id": "N|R6|beta6.9e+08|P:pitch+3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.75,
@@ -126404,7 +126422,7 @@
     },
     "N|R6|beta1.6e+09|P:pitch+3.2|rigid|ext|Fs0|top": {
      "id": "N|R6|beta1.6e+09|P:pitch+3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       14.38,
@@ -128925,7 +128943,7 @@
     },
     "N|R6|Fs3.7|P:pitch+3.2|rigid|ext|Fs3.7|top": {
      "id": "N|R6|Fs3.7|P:pitch+3.2|rigid|ext|Fs3.7|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.53,
@@ -131786,7 +131804,7 @@
     },
     "N|R6|Fs12|P:pitch+3.2|rigid|ext|Fs12|top": {
      "id": "N|R6|Fs12|P:pitch+3.2|rigid|ext|Fs12|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.51,
@@ -134262,7 +134280,7 @@
     },
     "N|R6|level_middle|P:pitch+3.2|rigid|ext|Fs0|middle": {
      "id": "N|R6|level_middle|P:pitch+3.2|rigid|ext|Fs0|middle",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.5,
@@ -137308,7 +137326,7 @@
     },
     "N|R6|level_bottom|P:pitch+3.2|rigid|ext|Fs0|bottom": {
      "id": "N|R6|level_bottom|P:pitch+3.2|rigid|ext|Fs0|bottom",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.64,
@@ -140899,7 +140917,7 @@
     },
     "N|R6|delay0|P:pitch+3.2|rigid|ext|Fs0|top": {
      "id": "N|R6|delay0|P:pitch+3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.64,
@@ -144050,7 +144068,7 @@
     },
     "O|R6|P:pitch-3.2|rigid|yaml|Fs0|0": {
      "id": "O|R6|P:pitch-3.2|rigid|yaml|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.41,
@@ -144341,7 +144359,7 @@
     },
     "S|R6|nominal|P:pitch-3.2|rigid|yaml|Fs0|top": {
      "id": "S|R6|nominal|P:pitch-3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.41,
@@ -144632,7 +144650,7 @@
     },
     "S|R6|seed12346|P:pitch-3.2|rigid|yaml|Fs0|top": {
      "id": "S|R6|seed12346|P:pitch-3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.4,
@@ -144923,7 +144941,7 @@
     },
     "S|R6|seed12347|P:pitch-3.2|rigid|yaml|Fs0|top": {
      "id": "S|R6|seed12347|P:pitch-3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.43,
@@ -145214,7 +145232,7 @@
     },
     "S|R6|mast_stiff|P:pitch-3.2|stiff|yaml|Fs0|top": {
      "id": "S|R6|mast_stiff|P:pitch-3.2|stiff|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.28,
@@ -145505,7 +145523,7 @@
     },
     "S|R6|mast_upper|P:pitch-3.2|upper|yaml|Fs0|top": {
      "id": "S|R6|mast_upper|P:pitch-3.2|upper|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.36,
@@ -145796,7 +145814,7 @@
     },
     "S|R6|mast_lower|P:pitch-3.2|lower|yaml|Fs0|top": {
      "id": "S|R6|mast_lower|P:pitch-3.2|lower|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.26,
@@ -146087,7 +146105,7 @@
     },
     "S|R6|beta6.9e+08|P:pitch-3.2|rigid|yaml|Fs0|top": {
      "id": "S|R6|beta6.9e+08|P:pitch-3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.38,
@@ -146378,7 +146396,7 @@
     },
     "S|R6|beta1.6e+09|P:pitch-3.2|rigid|yaml|Fs0|top": {
      "id": "S|R6|beta1.6e+09|P:pitch-3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.4,
@@ -146664,7 +146682,7 @@
     },
     "S|R6|Fs3.7|P:pitch-3.2|rigid|yaml|Fs3.7|top": {
      "id": "S|R6|Fs3.7|P:pitch-3.2|rigid|yaml|Fs3.7|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.41,
@@ -146945,7 +146963,7 @@
     },
     "S|R6|Fs12|P:pitch-3.2|rigid|yaml|Fs12|top": {
      "id": "S|R6|Fs12|P:pitch-3.2|rigid|yaml|Fs12|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.36,
@@ -147221,7 +147239,7 @@
     },
     "S|R6|level_middle|P:pitch-3.2|rigid|yaml|Fs0|middle": {
      "id": "S|R6|level_middle|P:pitch-3.2|rigid|yaml|Fs0|middle",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.31,
@@ -147512,7 +147530,7 @@
     },
     "S|R6|level_bottom|P:pitch-3.2|rigid|yaml|Fs0|bottom": {
      "id": "S|R6|level_bottom|P:pitch-3.2|rigid|yaml|Fs0|bottom",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.38,
@@ -147803,7 +147821,7 @@
     },
     "S|R6|delay0|P:pitch-3.2|rigid|yaml|Fs0|top": {
      "id": "S|R6|delay0|P:pitch-3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.41,
@@ -148094,7 +148112,7 @@
     },
     "O|R6|P:pitch-3.2|rigid|ext|Fs0|0": {
      "id": "O|R6|P:pitch-3.2|rigid|ext|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       9.1,
@@ -148410,7 +148428,7 @@
     },
     "S|R6|nominal|P:pitch-3.2|rigid|ext|Fs0|top": {
      "id": "S|R6|nominal|P:pitch-3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       9.1,
@@ -148726,7 +148744,7 @@
     },
     "S|R6|seed12346|P:pitch-3.2|rigid|ext|Fs0|top": {
      "id": "S|R6|seed12346|P:pitch-3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       9.1,
@@ -149042,7 +149060,7 @@
     },
     "S|R6|seed12347|P:pitch-3.2|rigid|ext|Fs0|top": {
      "id": "S|R6|seed12347|P:pitch-3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       9.12,
@@ -149358,7 +149376,7 @@
     },
     "S|R6|mast_stiff|P:pitch-3.2|stiff|ext|Fs0|top": {
      "id": "S|R6|mast_stiff|P:pitch-3.2|stiff|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       9.06,
@@ -149674,7 +149692,7 @@
     },
     "S|R6|mast_upper|P:pitch-3.2|upper|ext|Fs0|top": {
      "id": "S|R6|mast_upper|P:pitch-3.2|upper|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       8.99,
@@ -149990,7 +150008,7 @@
     },
     "S|R6|mast_lower|P:pitch-3.2|lower|ext|Fs0|top": {
      "id": "S|R6|mast_lower|P:pitch-3.2|lower|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       8.95,
@@ -150306,7 +150324,7 @@
     },
     "S|R6|beta6.9e+08|P:pitch-3.2|rigid|ext|Fs0|top": {
      "id": "S|R6|beta6.9e+08|P:pitch-3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       9.09,
@@ -150622,7 +150640,7 @@
     },
     "S|R6|beta1.6e+09|P:pitch-3.2|rigid|ext|Fs0|top": {
      "id": "S|R6|beta1.6e+09|P:pitch-3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       9.1,
@@ -150938,7 +150956,7 @@
     },
     "S|R6|Fs3.7|P:pitch-3.2|rigid|ext|Fs3.7|top": {
      "id": "S|R6|Fs3.7|P:pitch-3.2|rigid|ext|Fs3.7|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       9.1,
@@ -151254,7 +151272,7 @@
     },
     "S|R6|Fs12|P:pitch-3.2|rigid|ext|Fs12|top": {
      "id": "S|R6|Fs12|P:pitch-3.2|rigid|ext|Fs12|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       9.06,
@@ -151600,7 +151618,7 @@
     },
     "S|R6|level_middle|P:pitch-3.2|rigid|ext|Fs0|middle": {
      "id": "S|R6|level_middle|P:pitch-3.2|rigid|ext|Fs0|middle",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       9.03,
@@ -151916,7 +151934,7 @@
     },
     "S|R6|level_bottom|P:pitch-3.2|rigid|ext|Fs0|bottom": {
      "id": "S|R6|level_bottom|P:pitch-3.2|rigid|ext|Fs0|bottom",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       9.06,
@@ -152232,7 +152250,7 @@
     },
     "S|R6|delay0|P:pitch-3.2|rigid|ext|Fs0|top": {
      "id": "S|R6|delay0|P:pitch-3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_S.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_S.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       9.1,
@@ -230532,15 +230550,15 @@
    "mode_token": "R6",
    "sources": [
     {
-     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
-     "mtime": "2026-10-22 07:42:54"
+     "path": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "mtime": "2026-11-09 22:13:27"
     }
    ],
    "note": "pairs = per step (Ft at Fl max, Fl max), (Ft max, Fl at Ft max) [variant simul = RA_A_H4]; bound adds (Ft max, Fl max while Ft held) [not simultaneous]; *nofloor: recorded axial without the static floor; carry 'ratio': Ft x F_model(a)/F_start, floored at 1 above the run angle; carry 'hold' (suffix 'hold'): floored at 1 at every angle (no reduction below the run angle); all V/P runs of the set (S|* sensitivity runs included) are checked and the worst governs; axial unchanged (ASSUMPTION); SF 1.5 for every pair and the residual, residual also SF 1.0 at the 350 bar lock",
    "runs": {
     "O|R6|V:pitch+3.5|rigid|yaml|Fs0|0": {
      "id": "O|R6|V:pitch+3.5|rigid|yaml|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
      "angle_deg": 3.5,
      "Ft_start_kN": [
       22.85,
@@ -230841,7 +230859,7 @@
     },
     "O|R6|V:pitch+3.5|rigid|ext|Fs0|0": {
      "id": "O|R6|V:pitch+3.5|rigid|ext|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
      "angle_deg": 3.5,
      "Ft_start_kN": [
       15.61,
@@ -231187,7 +231205,7 @@
     },
     "O|R6|V:pitch-3.5|rigid|yaml|Fs0|0": {
      "id": "O|R6|V:pitch-3.5|rigid|yaml|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
      "angle_deg": 3.5,
      "Ft_start_kN": [
       22.08,
@@ -231463,7 +231481,7 @@
     },
     "O|R6|V:pitch-3.5|rigid|ext|Fs0|0": {
      "id": "O|R6|V:pitch-3.5|rigid|ext|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
      "angle_deg": 3.5,
      "Ft_start_kN": [
       10.31,
@@ -231779,7 +231797,7 @@
     },
     "O|R6|P:pitch+3.2|rigid|yaml|Fs0|0": {
      "id": "O|R6|P:pitch+3.2|rigid|yaml|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.35,
@@ -232100,7 +232118,7 @@
     },
     "O|R6|P:pitch+3.2|rigid|ext|Fs0|0": {
      "id": "O|R6|P:pitch+3.2|rigid|ext|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.61,
@@ -232446,7 +232464,7 @@
     },
     "O|R6|P:pitch-3.2|rigid|yaml|Fs0|0": {
      "id": "O|R6|P:pitch-3.2|rigid|yaml|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.41,
@@ -232737,7 +232755,7 @@
     },
     "O|R6|P:pitch-3.2|rigid|ext|Fs0|0": {
      "id": "O|R6|P:pitch-3.2|rigid|ext|Fs0|0",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_O3.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_O3.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       9.1,
@@ -256551,15 +256569,15 @@
    "mode_token": "R6",
    "sources": [
     {
-     "path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
-     "mtime": "2026-10-22 09:25:53"
+     "path": "06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "mtime": "2026-11-09 22:13:27"
     }
    ],
    "note": "pairs = per step (Ft at Fl max, Fl max), (Ft max, Fl at Ft max) [variant simul = RA_A_H4]; bound adds (Ft max, Fl max while Ft held) [not simultaneous]; *nofloor: recorded axial without the static floor; carry 'ratio': Ft x F_model(a)/F_start, floored at 1 above the run angle; carry 'hold' (suffix 'hold'): floored at 1 at every angle (no reduction below the run angle); all V/P runs of the set (S|* sensitivity runs included) are checked and the worst governs; axial unchanged (ASSUMPTION); SF 1.5 for every pair and the residual, residual also SF 1.0 at the 350 bar lock",
    "runs": {
     "N|R6|nominal|P:pitch+3.2|rigid|yaml|Fs0|top": {
      "id": "N|R6|nominal|P:pitch+3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.35,
@@ -258275,7 +258293,7 @@
     },
     "N|R6|seed12346|P:pitch+3.2|rigid|yaml|Fs0|top": {
      "id": "N|R6|seed12346|P:pitch+3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.33,
@@ -260001,7 +260019,7 @@
     },
     "N|R6|seed12347|P:pitch+3.2|rigid|yaml|Fs0|top": {
      "id": "N|R6|seed12347|P:pitch+3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.68,
@@ -261727,7 +261745,7 @@
     },
     "N|R6|mast_stiff|P:pitch+3.2|stiff|yaml|Fs0|top": {
      "id": "N|R6|mast_stiff|P:pitch+3.2|stiff|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.38,
@@ -263428,7 +263446,7 @@
     },
     "N|R6|mast_upper|P:pitch+3.2|upper|yaml|Fs0|top": {
      "id": "N|R6|mast_upper|P:pitch+3.2|upper|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.21,
@@ -265234,7 +265252,7 @@
     },
     "N|R6|mast_lower|P:pitch+3.2|lower|yaml|Fs0|top": {
      "id": "N|R6|mast_lower|P:pitch+3.2|lower|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       18.89,
@@ -266765,7 +266783,7 @@
     },
     "N|R6|beta6.9e+08|P:pitch+3.2|rigid|yaml|Fs0|top": {
      "id": "N|R6|beta6.9e+08|P:pitch+3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.52,
@@ -269591,7 +269609,7 @@
     },
     "N|R6|beta1.6e+09|P:pitch+3.2|rigid|yaml|Fs0|top": {
      "id": "N|R6|beta1.6e+09|P:pitch+3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       20.12,
@@ -270942,7 +270960,7 @@
     },
     "N|R6|Fs3.7|P:pitch+3.2|rigid|yaml|Fs3.7|top": {
      "id": "N|R6|Fs3.7|P:pitch+3.2|rigid|yaml|Fs3.7|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.23,
@@ -272473,7 +272491,7 @@
     },
     "N|R6|Fs12|P:pitch+3.2|rigid|yaml|Fs12|top": {
      "id": "N|R6|Fs12|P:pitch+3.2|rigid|yaml|Fs12|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.2,
@@ -274044,7 +274062,7 @@
     },
     "N|R6|level_middle|P:pitch+3.2|rigid|yaml|Fs0|middle": {
      "id": "N|R6|level_middle|P:pitch+3.2|rigid|yaml|Fs0|middle",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.26,
@@ -276245,7 +276263,7 @@
     },
     "N|R6|level_bottom|P:pitch+3.2|rigid|yaml|Fs0|bottom": {
      "id": "N|R6|level_bottom|P:pitch+3.2|rigid|yaml|Fs0|bottom",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.33,
@@ -278106,7 +278124,7 @@
     },
     "N|R6|delay0|P:pitch+3.2|rigid|yaml|Fs0|top": {
      "id": "N|R6|delay0|P:pitch+3.2|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       19.33,
@@ -280127,7 +280145,7 @@
     },
     "N|R6|nominal|P:pitch+3.2|rigid|ext|Fs0|top": {
      "id": "N|R6|nominal|P:pitch+3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.61,
@@ -283163,7 +283181,7 @@
     },
     "N|R6|seed12346|P:pitch+3.2|rigid|ext|Fs0|top": {
      "id": "N|R6|seed12346|P:pitch+3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.62,
@@ -286309,7 +286327,7 @@
     },
     "N|R6|seed12347|P:pitch+3.2|rigid|ext|Fs0|top": {
      "id": "N|R6|seed12347|P:pitch+3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.9,
@@ -289295,7 +289313,7 @@
     },
     "N|R6|mast_stiff|P:pitch+3.2|stiff|ext|Fs0|top": {
      "id": "N|R6|mast_stiff|P:pitch+3.2|stiff|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.72,
@@ -292111,7 +292129,7 @@
     },
     "N|R6|mast_upper|P:pitch+3.2|upper|ext|Fs0|top": {
      "id": "N|R6|mast_upper|P:pitch+3.2|upper|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.53,
@@ -294762,7 +294780,7 @@
     },
     "N|R6|mast_lower|P:pitch+3.2|lower|ext|Fs0|top": {
      "id": "N|R6|mast_lower|P:pitch+3.2|lower|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.0,
@@ -297193,7 +297211,7 @@
     },
     "N|R6|beta6.9e+08|P:pitch+3.2|rigid|ext|Fs0|top": {
      "id": "N|R6|beta6.9e+08|P:pitch+3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.75,
@@ -300619,7 +300637,7 @@
     },
     "N|R6|beta1.6e+09|P:pitch+3.2|rigid|ext|Fs0|top": {
      "id": "N|R6|beta1.6e+09|P:pitch+3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       14.38,
@@ -303140,7 +303158,7 @@
     },
     "N|R6|Fs3.7|P:pitch+3.2|rigid|ext|Fs3.7|top": {
      "id": "N|R6|Fs3.7|P:pitch+3.2|rigid|ext|Fs3.7|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.53,
@@ -306001,7 +306019,7 @@
     },
     "N|R6|Fs12|P:pitch+3.2|rigid|ext|Fs12|top": {
      "id": "N|R6|Fs12|P:pitch+3.2|rigid|ext|Fs12|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.51,
@@ -308477,7 +308495,7 @@
     },
     "N|R6|level_middle|P:pitch+3.2|rigid|ext|Fs0|middle": {
      "id": "N|R6|level_middle|P:pitch+3.2|rigid|ext|Fs0|middle",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.5,
@@ -311523,7 +311541,7 @@
     },
     "N|R6|level_bottom|P:pitch+3.2|rigid|ext|Fs0|bottom": {
      "id": "N|R6|level_bottom|P:pitch+3.2|rigid|ext|Fs0|bottom",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.64,
@@ -315114,7 +315132,7 @@
     },
     "N|R6|delay0|P:pitch+3.2|rigid|ext|Fs0|top": {
      "id": "N|R6|delay0|P:pitch+3.2|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.2,
      "Ft_start_kN": [
       13.64,
@@ -318265,7 +318283,7 @@
     },
     "N|R6|nominal|V:pitch+3.5|rigid|yaml|Fs0|top": {
      "id": "N|R6|nominal|V:pitch+3.5|rigid|yaml|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.5,
      "Ft_start_kN": [
       22.85,
@@ -320001,7 +320019,7 @@
     },
     "N|R6|nominal|V:pitch+3.5|rigid|ext|Fs0|top": {
      "id": "N|R6|nominal|V:pitch+3.5|rigid|ext|Fs0|top",
-     "source": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\h4_fs_order_check_N.json",
+     "source": "06_analysis\\02_control\\h4_fs_order_check_N.json",
      "angle_deg": 3.5,
      "Ft_start_kN": [
       15.61,
