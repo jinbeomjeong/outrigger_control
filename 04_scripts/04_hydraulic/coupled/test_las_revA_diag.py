@@ -227,6 +227,7 @@ def _diag_line(candidate, *, sha=None, soil=None, stroke_max_m=0.43876, events=N
                              "end_ramp_periods": n_r},
                 "settings_match": True, "controller_tag": tag, **rules,
                 "diag_plan_sha256": diag.PLAN_SHA256,
+                "diag_plan_rev1_sha256": diag.PLAN_REV1_SHA256,
                 "identity": {"git_head": head, "code_diff_sha256": rj.EMPTY_SHA256,
                              "dirty_files": [".gitattributes"]}},
         "diag": {"summary": {"t_lift_s": T_LIFT_S},
@@ -263,23 +264,28 @@ def test_judge_w3_as_written_needs_a_decision_when_t_rel_equals_t_s():
     assert result["W3"]["status"] == diag.STATUS_FALSE
     assert result["W3"]["status_le"] == diag.STATUS_TRUE and not result["W3"]["rejected"]
     assert result["B1"]["status"] == diag.STATUS_TRUE
-    assert result["branches"] == []
+    assert result["branches_literal"] == []
     assert result["branches_alternative_reading"] == [diag.BRANCH_BETA]
-    assert result["verdict"] == diag.NEEDS_DECISION
+    assert result["verdict_literal"] == diag.NEEDS_DECISION
+    assert result["W3"]["status_rev1"] == diag.STATUS_TRUE
+    assert result["branch_rev1"] == diag.BRANCH_BETA and result["verdict"] == "branch"
+    assert result["asks"]
 
 
 def test_judge_beta_and_ramp_branches():
     lines = _lines(p5r4_soil=_soil_summary(t_rel=23.7, t_s=23.8, t_loc=24.1, s_rel=455.0,
                                            s_loc=460.0, steeps=(23.5,), raised=True))
     result = diag.judge_diag(lines, _stored())
-    assert result["branches"] == [diag.BRANCH_BETA] and result["verdict"] == "branch"
+    assert result["branches_literal"] == [diag.BRANCH_BETA] and result["verdict"] == "branch"
+    assert result["branch_rev1"] == diag.BRANCH_BETA and result["asks"] == []
     no_soil = _soil_summary(t_loc=23.5, s_rel=452.0, s_loc=450.0)
     lines = _lines(p5_soil=no_soil, p5_stroke=0.4400,
                    p5r4_soil=_soil_summary(t_rel=23.7, t_s=23.8, t_loc=24.1, s_rel=455.0,
                                            s_loc=460.0, steeps=(23.5,), raised=True))
     result = diag.judge_diag(lines, _stored())
     assert result["B1"]["status"] == diag.STATUS_FALSE
-    assert result["branches"] == [diag.BRANCH_RAMP]
+    assert result["branches_literal"] == [diag.BRANCH_RAMP]
+    assert result["branch_rev1"] == diag.BRANCH_RAMP
 
 
 def test_judge_boundary_and_rejected_branches():
@@ -288,14 +294,93 @@ def test_judge_boundary_and_rejected_branches():
                                            s_loc=460.0, raised=True))
     result = diag.judge_diag(lines, _stored())
     assert result["W1"]["boundary"] is True
-    assert diag.BRANCH_BOUNDARY in result["branches"]
-    assert diag.BRANCH_REJECTED in result["branches"] and result["W2"]["rejected"]
+    assert diag.BRANCH_BOUNDARY in result["branches_literal"]
+    assert diag.BRANCH_REJECTED in result["branches_literal"] and result["W2"]["rejected"]
     far = _lines(p0_soil=_soil_summary(s_rel=450.0, s_loc=440.0))  # 10 mm: W-1 false only
     result = diag.judge_diag(far, _stored())
     assert result["W1"]["status"] == diag.STATUS_FALSE and result["W1"]["boundary"] is False
-    assert diag.BRANCH_BOUNDARY in result["branches"]
+    assert diag.BRANCH_BOUNDARY in result["branches_literal"]
     assert diag.BRANCH_BOUNDARY not in result["branches_alternative_reading"]
-    assert result["verdict"] == diag.NEEDS_DECISION
+    assert result["verdict_literal"] == diag.NEEDS_DECISION
+
+
+# ------------------------------------------------------------------------------- rev1 branches
+def _branch_rev1_result(*, stored=None, **lines_args) -> dict:
+    return diag.judge_diag(_lines(**lines_args), stored or _stored())
+
+
+def test_rev1_a_d0d_false_with_boundary_stops():
+    stored = _stored()
+    stored.l_line["las"]["t_loc_s"] = 23.6  # D-0d: P0 LOC is not the stored L line's
+    result = _branch_rev1_result(stored=stored,
+                                 p0_soil=_soil_summary(s_rel=438.0, s_loc=440.0))
+    assert result["d0"]["D-0d"]["status"] == diag.STATUS_FALSE
+    assert result["W1"]["boundary"] is True
+    assert result["branch_rev1"] == diag.BRANCH_STOP
+    assert result["verdict"] == result["verdict_rev1"] == diag.VERDICT_STOP
+    assert result["stop"] == "H-D1" and result["asks"] == []
+
+
+def test_rev1_b_w3_rejected():
+    result = _branch_rev1_result(p5r4_soil=_soil_summary(
+        t_rel=23.8, t_s=23.8, t_loc=24.1, s_rel=455.0, s_loc=460.0, clears=(23.3,),
+        raised=True, latch=False))
+    assert result["W3"]["rejected"] and not result["W2"]["rejected"]
+    assert result["branch_rev1"] == diag.BRANCH_REJECTED
+    assert result["verdict_rev1"] == diag.VERDICT_BRANCH
+
+
+def test_rev1_c_p5_soil_mode_with_part_of_b1_false_is_beta():
+    result = _branch_rev1_result(p5_stroke=0.4400)  # stroke gain 1.2 mm < 25 mm
+    assert result["B1"]["parts"]["soil_mode"] is True
+    assert result["B1"]["parts"]["stroke_gain"] is False
+    assert result["B1"]["status"] == diag.STATUS_FALSE
+    assert result["branch_rev1"] == diag.BRANCH_BETA
+    assert result["verdict"] == diag.VERDICT_BRANCH
+
+
+def test_rev1_d_loc_far_before_release_is_beta_and_asks():
+    result = _branch_rev1_result(p0_soil=_soil_summary(s_rel=450.0, s_loc=440.0))
+    w1_out = result["W1"]
+    assert w1_out["s_LOC_minus_s_rel_mm"] == -10.0 and w1_out["s_rel_minus_s_LOC_mm"] == 10.0
+    assert w1_out["status_rev1"] == diag.STATUS_TRUE and w1_out["W1b"] == diag.STATUS_FALSE
+    assert result["branches_literal"] == [diag.BRANCH_BOUNDARY]
+    assert result["branch_rev1"] == diag.BRANCH_BETA
+    assert len(result["asks"]) == 1 and "boundary_key" in result["asks"][0]
+
+
+def test_rev1_e_loc_at_or_after_release_is_boundary_key():
+    result = _branch_rev1_result(p0_soil=_soil_summary(s_rel=438.0, s_loc=440.0))
+    w1_out = result["W1"]
+    assert w1_out["s_LOC_minus_s_rel_mm"] == 2.0 and w1_out["W1b"] == diag.STATUS_TRUE
+    assert w1_out["status_rev1"] == diag.STATUS_FALSE
+    assert result["branch_rev1"] == diag.BRANCH_BOUNDARY
+    assert result["branches_literal"] == [diag.BRANCH_BOUNDARY] and result["asks"] == []
+    assert result["verdict"] == diag.VERDICT_BRANCH
+
+
+def test_rev1_f_w2_rejected_wins_over_boundary():
+    result = _branch_rev1_result(
+        p0_soil=_soil_summary(s_rel=438.0, s_loc=440.0),
+        p5r4_soil=_soil_summary(t_rel=23.8, t_s=23.8, t_loc=24.1, s_rel=455.0, s_loc=460.0,
+                                raised=True))
+    assert result["W2"]["rejected"] and result["W1"]["boundary"] is True
+    assert result["branch_rev1"] == diag.BRANCH_REJECTED
+
+
+def test_rev1_g_w1_undecidable():
+    result = _branch_rev1_result(p0_soil=_soil_summary(s_rel=None, s_loc=440.0))
+    assert result["W1"]["status_rev1"] == diag.STATUS_UNDECIDABLE
+    assert result["W1"]["W1b"] == diag.STATUS_UNDECIDABLE
+    assert result["branch_rev1"] == diag.BRANCH_UNDECIDABLE
+    assert result["verdict"] == diag.VERDICT_UNDECIDABLE
+
+
+def test_rev1_report_marks_the_alternative_reading():
+    result = _branch_rev1_result()
+    report = diag.report_markdown(result, Path("diagA.jsonl"))
+    assert "branch_rev1: **beta**" in report and "not the rev1 reading" in report
+    assert result["alternative_reading_note"] == diag.ALTERNATIVE_READING_NOTE
 
 
 def test_judge_stops_on_h_d1_h_d3_and_h_d0():
@@ -375,7 +460,8 @@ def test_d_a_jobs_identity_and_rules():
     assert reva.resolve_candidates(diag.BUNDLE, None) == diag.CANDIDATE_NAMES
     block = reva.rules_block(diag.BUNDLE)
     assert block["rules_revA_rev3_sha256"] == diag.RULES_REVA_REV3_SHA256
-    assert block["diag_plan_sha256"] == diag.PLAN_SHA256 and len(block) == 7
+    assert block["diag_plan_sha256"] == diag.PLAN_SHA256 and len(block) == 8
+    assert block["diag_plan_rev1_sha256"] == diag.PLAN_REV1_SHA256
     assert reva.rules_block() == dict(zip(judge.RULES_FIELDS, judge.RULES_VALUES, strict=True))
     assert "las_revA_diag.py" in reva.DIAG_IDENTITY_FILES
     assert "las_revA_diag.py" not in reva.IDENTITY_FILES
