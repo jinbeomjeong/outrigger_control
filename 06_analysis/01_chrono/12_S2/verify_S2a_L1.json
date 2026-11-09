@@ -1,6 +1,6 @@
 {
  "meta": {
-  "generated": "2026-10-22T04:42:41",
+  "generated": "2026-11-09T17:19:17",
   "stage": "S2a (chrono_build_plan.md): ground bushing dynamics (V7 diagnosis from the S1 top state) and sloped-floor statics (V12, 3 cases), V13",
   "script": "04_scripts/02_chrono/run_S2a.py",
   "model": "outrigger_sim.chrono.model.L1Model (top, crawler spheres layout D present, not in contact), ground bushing GroundBushingCoulomb",
@@ -218,18 +218,18 @@
    {
     "mode": 4,
     "eta_max_abs": 0.11801290991115145,
-    "f_damped_Hz": 5.742234776965273,
-    "f_undamped_Hz": 5.746586739935556,
-    "zeta_fit": 0.03891081887438719,
+    "f_damped_Hz": 5.742234777083737,
+    "f_undamped_Hz": 5.746586740061967,
+    "zeta_fit": 0.038910818909469895,
     "zeta_num_subtracted": 0.00203,
-    "zeta_corrected": 0.03688081887438719,
+    "zeta_corrected": 0.0368808189094699,
     "zeta_log_decrement": null,
     "f_ref_Hz": 5.7467,
     "zeta_ref": 0.0367,
-    "residual_rms_rel": 0.019189076997639828,
-    "amplitude": 0.12495149896095734,
-    "sigma_1_s": 1.4049478542082066,
-    "n_cycles": 114.83895330426087,
+    "residual_rms_rel": 0.019189076997638003,
+    "amplitude": 0.12495149902008085,
+    "sigma_1_s": 1.4049478555058386,
+    "n_cycles": 114.83895330663005,
     "fit_success": true
    },
    {
@@ -3117,7 +3117,12 @@
   ]
  },
  "v7_yaw_dt_study": {
-  "purpose": "dynamics_model.md 5.3, dt 2e-4 s condition 1 pre-check (v7_yaw 2 s at three dt); final judgement by dynamics-expert (S3 V8(a))",
+  "purpose": "dynamics_model.md 5.3: numerical damping of the implicit integrator on the ground bushing at the adopted YAML dt 2e-4 s (v7_yaw 2 s at dt 5e-5, 1e-4, 2e-4 s); final judgement by dynamics-expert",
+  "folders": [
+   "v7_yaw_dt5e-05",
+   "v7_yaw_dt1e-04",
+   "v7_yaw_dt2e-04"
+  ],
   "rows": [
    {
     "dt_s": 5e-05,
@@ -3125,25 +3130,47 @@
     "f_damped_Hz": 4.023793870671309,
     "zeta_fit_raw": 0.03791591865204652,
     "zeta_num_subtracted": 0.000625,
+    "s_pred_per_s": 12.5,
     "zeta_corrected": 0.03729091865204652,
     "zeta_log_decrement": 0.03747107976997393,
+    "zeta_ref": 0.0373,
     "residual_rms_rel": 0.004478380342511783,
     "force_point": "ball_centre",
-    "prediction_implicit": 0.038552211175436474,
-    "prediction_ct_scale": 0.039802211175436475
+    "fingerprints": {
+     "params_sha256": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "bushing_sha256": "1ca02362183c61088634cc13521d640725acff9d6e7745f601c1018e292fcbe6",
+     "snapshot": "S1_L1_top",
+     "snapshot_npz_sha256": "e973fe8c20e14e920a44ef98df5109e2dc59d7388460f7725f59b8d484337125",
+     "record_npz_sha256": "bb2e17d61024d8c1ff9ae0d63f07b7fd8fd658ba57f7737ebaef8ee5925d8f77"
+    },
+    "prediction_implicit": 0.037925,
+    "prediction_implicit_from_intercept": 0.03789858159051646,
+    "prediction_ct_scale": 0.03874522229328647,
+    "fit_line": 0.03790428474884646
    },
    {
     "dt_s": 0.0001,
-    "case": "v7_yaw",
-    "f_damped_Hz": 4.023870152776018,
-    "zeta_fit_raw": 0.039802211175436475,
-    "zeta_num_subtracted": 0.0025,
-    "zeta_corrected": 0.03730221117543647,
-    "zeta_log_decrement": 0.03934408029021124,
-    "residual_rms_rel": 0.004788808079953795,
+    "case": "v7_yaw_dt1e-04",
+    "f_damped_Hz": 4.023910152056957,
+    "zeta_fit_raw": 0.03851753705237639,
+    "zeta_num_subtracted": 0.00125,
+    "s_pred_per_s": 12.5,
+    "zeta_corrected": 0.03726753705237639,
+    "zeta_log_decrement": 0.038077682148095114,
+    "zeta_ref": 0.0373,
+    "residual_rms_rel": 0.004716582640968175,
     "force_point": "ball_centre",
-    "prediction_implicit": 0.039802211175436475,
-    "prediction_ct_scale": 0.039802211175436475
+    "fingerprints": {
+     "params_sha256": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "bushing_sha256": "1ca02362183c61088634cc13521d640725acff9d6e7745f601c1018e292fcbe6",
+     "snapshot": "S1_L1_top",
+     "snapshot_npz_sha256": "e973fe8c20e14e920a44ef98df5109e2dc59d7388460f7725f59b8d484337125",
+     "record_npz_sha256": "2fad848c7fbc38daff7f14c7cf8955e8ca97f476e562b6f00fe3692dd2c5d8bb"
+    },
+    "prediction_implicit": 0.03855,
+    "prediction_implicit_from_intercept": 0.03852358159051646,
+    "prediction_ct_scale": 0.03874522229328647,
+    "fit_line": 0.03853498790717646
    },
    {
     "dt_s": 0.0002,
@@ -3151,25 +3178,66 @@
     "f_damped_Hz": 4.023870152776018,
     "zeta_fit_raw": 0.039802211175436475,
     "zeta_num_subtracted": 0.0025,
+    "s_pred_per_s": 12.5,
     "zeta_corrected": 0.03730221117543647,
     "zeta_log_decrement": 0.03934408029021124,
+    "zeta_ref": 0.0373,
     "residual_rms_rel": 0.004788808079953795,
     "force_point": "ball_centre",
-    "prediction_implicit": 0.04230221117543648,
-    "prediction_ct_scale": 0.039802211175436475
+    "fingerprints": {
+     "params_sha256": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+     "bushing_sha256": "1ca02362183c61088634cc13521d640725acff9d6e7745f601c1018e292fcbe6",
+     "snapshot": "S1_L1_top",
+     "snapshot_npz_sha256": "e973fe8c20e14e920a44ef98df5109e2dc59d7388460f7725f59b8d484337125",
+     "record_npz_sha256": "0f4071cb43d5327cd500113e94f9ed8d2e626997bb982b64048799cbc97bb370"
+    },
+    "prediction_implicit": 0.0398,
+    "prediction_implicit_from_intercept": 0.039773581590516464,
+    "prediction_ct_scale": 0.03874522229328647,
+    "fit_line": 0.039796394223836455
    }
   ],
-  "slope_dzeta_ddt_per_s": 10.778814419371216,
-  "slope_predicted_implicit_per_s": 25.0,
-  "slope_ratio_measured_over_implicit": 0.43115257677484864,
-  "bands": {
-   "implicit": [
+  "criteria": {
+   "A1_slope_ratio_band": [
     0.7,
     1.3
    ],
-   "ct_scale_abs_max": 0.3
+   "A2_increment_ratio": {
+    "expected": 2.0,
+    "rel_tol": 0.2
+   },
+   "A3_intercept_rel_max": 0.02,
+   "B_slope_ratio_abs_max": 0.3,
+   "residual_rms_rel_warn": 0.01
   },
-  "verdict_auto": "undetermined (slope ratio outside both bands)",
+  "status": "complete",
+  "n_points": 3,
+  "slope_dzeta_ddt_per_s": 12.614063166599964,
+  "intercept_zeta": 0.03727358159051646,
+  "zeta_ref": 0.0373,
+  "intercept_rel_diff": -0.0007082683507650839,
+  "slope_predicted_implicit_per_s": 12.5,
+  "slope_predicted_rows_per_s": [
+   12.5,
+   12.5,
+   12.5
+  ],
+  "slope_ratio_measured_over_implicit": 1.0091250533279972,
+  "increment_ratio": 2.1353637494393234,
+  "envelope_slope_dzeta_ld_ddt_per_s": 12.512000318664874,
+  "envelope_slope_ratio": 1.0009600254931899,
+  "checks": {
+   "A1": true,
+   "A2": true,
+   "A3": true
+  },
+  "fingerprints_consistent": {
+   "params_sha256": true,
+   "bushing_sha256": true,
+   "snapshot_npz_sha256": true
+  },
+  "validity_warnings": [],
+  "verdict_auto": "hypothesis A confirmed: zeta3 moves with dt as r omega dt / 2 (implicit numerical damping on the bushing), intercept = reference zeta3",
   "before_force_point_change": {
    "zeta_fit_dt1e-4": 0.0391121,
    "prediction_implicit_dt2e-4_dt5e-5": [
@@ -3298,9 +3366,9 @@
  },
  "timing": {
   "v7_roll": {
-   "build_and_restore_s": 0.02603389999421779,
-   "run_wall_s": 35.31206849998853,
-   "wall_us_per_step_incl_sampling": 353.12068499988527,
+   "build_and_restore_s": 0.014420900028198957,
+   "run_wall_s": 17.902307100011967,
+   "wall_us_per_step_incl_sampling": 179.02307100011967,
    "cpu_placement": {
     "mode": "pcore",
     "efficiency_classes": [
@@ -3330,9 +3398,9 @@
    }
   },
   "v7_pitch": {
-   "build_and_restore_s": 0.02337029999762308,
-   "run_wall_s": 33.6647013000038,
-   "wall_us_per_step_incl_sampling": 336.647013000038,
+   "build_and_restore_s": 0.01561930007301271,
+   "run_wall_s": 17.992740800022148,
+   "wall_us_per_step_incl_sampling": 179.92740800022148,
    "cpu_placement": {
     "mode": "pcore",
     "efficiency_classes": [
@@ -3362,9 +3430,9 @@
    }
   },
   "v7_yaw": {
-   "build_and_restore_s": 0.023218400005134754,
-   "run_wall_s": 3.3514555000001565,
-   "wall_us_per_step_incl_sampling": 335.14555000001565,
+   "build_and_restore_s": 0.014034499996341765,
+   "run_wall_s": 1.7671592000406235,
+   "wall_us_per_step_incl_sampling": 176.71592000406235,
    "cpu_placement": {
     "mode": "pcore",
     "efficiency_classes": [
@@ -3394,9 +3462,9 @@
    }
   },
   "v12_pitch2": {
-   "build_s": 0.006431400004657917,
-   "run_wall_s": 98.80792790000851,
-   "wall_us_per_step_incl_sampling": 372.860105283051,
+   "build_s": 0.004207700025290251,
+   "run_wall_s": 38.1785080000991,
+   "wall_us_per_step_incl_sampling": 144.0698415098079,
    "cpu_placement": {
     "mode": "pcore",
     "efficiency_classes": [
@@ -3426,9 +3494,9 @@
    }
   },
   "v12_roll2": {
-   "build_s": 0.01042750000488013,
-   "run_wall_s": 95.2526183000009,
-   "wall_us_per_step_incl_sampling": 359.44384264151284,
+   "build_s": 0.00401680008508265,
+   "run_wall_s": 37.90295969997533,
+   "wall_us_per_step_incl_sampling": 143.0300366036805,
    "cpu_placement": {
     "mode": "pcore",
     "efficiency_classes": [
@@ -3458,9 +3526,9 @@
    }
   },
   "v12_rollm2_pitch1.5": {
-   "build_s": 0.0064909000066109,
-   "run_wall_s": 86.30089329999464,
-   "wall_us_per_step_incl_sampling": 325.6637483018666,
+   "build_s": 0.004095899988897145,
+   "run_wall_s": 37.89907080004923,
+   "wall_us_per_step_incl_sampling": 143.01536150961974,
    "cpu_placement": {
     "mode": "pcore",
     "efficiency_classes": [

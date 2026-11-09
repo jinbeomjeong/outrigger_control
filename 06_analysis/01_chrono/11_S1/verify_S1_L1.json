@@ -1,6 +1,6 @@
 {
  "meta": {
-  "generated": "2026-10-22T04:38:51",
+  "generated": "2026-11-09T17:01:42",
   "stage": "S1 (chrono_build_plan.md): L1 superstructure + locked legs at e_op + ground bushing at t = 0, level rigid floor, static",
   "script": "04_scripts/02_chrono/run_S1.py",
   "model": "outrigger_sim.chrono.model.L1Model (crawler spheres layout D on, floor patches 4 pad + 2 crawler, families floor 0 / superstructure 1 / rod 2)",
@@ -4129,7 +4129,7 @@
    "snapshot": {
     "path": "07_results/states/S1_L1_top.npz",
     "time_s": 14.999999999991719,
-    "params_sha256": "de068f3b6548a33d6d15b83c7604124fbae965a6fcda448eff7d66409147d7f5",
+    "params_sha256": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
     "roundtrip_continue_s": 1.0,
     "roundtrip_restored_time_s": 14.999999999991719,
     "roundtrip_max_position_diff_m": 0.0,
@@ -4137,9 +4137,9 @@
    },
    "record": "07_results/S1/top",
    "timing": {
-    "build_s": 0.0074071999988518655,
-    "run_wall_s": 28.82069419999607,
-    "wall_us_per_step_incl_sampling": 384.27592266661424,
+    "build_s": 0.03984019998461008,
+    "run_wall_s": 11.420873200055212,
+    "wall_us_per_step_incl_sampling": 152.2783093340695,
     "cpu_placement": {
      "mode": "pcore",
      "efficiency_classes": [
@@ -7436,7 +7436,7 @@
    "snapshot": {
     "path": "07_results/states/S1_L1_middle.npz",
     "time_s": 14.999999999991719,
-    "params_sha256": "55686abc569501e11ce9c29e05978f6115cb84315c8436bf84118a960554b599",
+    "params_sha256": "9845dae7a6dd16261f450f643def036b85059b3d565ab6bf585cdd553121ae67",
     "roundtrip_continue_s": 1.0,
     "roundtrip_restored_time_s": 14.999999999991719,
     "roundtrip_max_position_diff_m": 1.1102230246251565e-15,
@@ -7444,9 +7444,9 @@
    },
    "record": "07_results/S1/middle",
    "timing": {
-    "build_s": 0.006249999991268851,
-    "run_wall_s": 28.791997499996796,
-    "wall_us_per_step_incl_sampling": 383.89329999995726,
+    "build_s": 0.0031014999840408564,
+    "run_wall_s": 11.404048700002022,
+    "wall_us_per_step_incl_sampling": 152.05398266669363,
     "cpu_placement": {
      "mode": "pcore",
      "efficiency_classes": [
@@ -10743,7 +10743,7 @@
    "snapshot": {
     "path": "07_results/states/S1_L1_bottom.npz",
     "time_s": 14.999999999991719,
-    "params_sha256": "06f3ae97b9d372ca5ed99bff2f3e842c2d97a60722896244fad5e68c9b094550",
+    "params_sha256": "5888afd54dced301761d5b4a2d677e868a61e05266e760e5c3d931bf7bf304d2",
     "roundtrip_continue_s": 1.0,
     "roundtrip_restored_time_s": 14.999999999991719,
     "roundtrip_max_position_diff_m": 5.551115123125783e-16,
@@ -10751,9 +10751,9 @@
    },
    "record": "07_results/S1/bottom",
    "timing": {
-    "build_s": 0.008041900000534952,
-    "run_wall_s": 28.743958000006387,
-    "wall_us_per_step_incl_sampling": 383.25277333341853,
+    "build_s": 0.0028907000087201595,
+    "run_wall_s": 11.349191499990411,
+    "wall_us_per_step_incl_sampling": 151.3225533332055,
     "cpu_placement": {
      "mode": "pcore",
      "efficiency_classes": [
@@ -14032,9 +14032,9 @@
    "snapshot": null,
    "record": "07_results/S1/cross_top",
    "timing": {
-    "build_s": 0.0066497999941930175,
-    "run_wall_s": 71.86184630000207,
-    "wall_us_per_step_incl_sampling": 287.4473852000083,
+    "build_s": 0.0027655999874696136,
+    "run_wall_s": 33.99389110004995,
+    "wall_us_per_step_incl_sampling": 135.9755644001998,
     "cpu_placement": {
      "mode": "pcore",
      "efficiency_classes": [

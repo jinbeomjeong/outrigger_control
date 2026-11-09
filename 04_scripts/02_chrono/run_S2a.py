@@ -4,8 +4,8 @@
 Usage (Chrono-dev python, from any folder)::
 
     python -I -u run_S2a.py all            # every case + the yaw dt study (P-core) + summary
-    python -I -u run_S2a.py case <name> [dt_s]   # one case (V7 cases accept another dt)
-    python -I -u run_S2a.py dt_study       # v7_yaw at dt 2e-4 s and 5e-5 s (own processes)
+    python -I -u run_S2a.py case <name> [dt_s]   # one case (V7 cases accept an explicit dt)
+    python -I -u run_S2a.py dt_study       # v7_yaw at dt 5e-5, 1e-4, 2e-4 s (own processes)
     python -I -u run_S2a.py summary        # rebuild the summary from stored case results
 
 Cases (top level, L1, dt from the YAML):
@@ -19,11 +19,14 @@ Cases (top level, L1, dt from the YAML):
   (``verify/metrics``); the numerical damping ``r_i omega_i dt / 2`` is subtracted before the
   diagnosis. ``v7_yaw`` is the diagnosis-5 test; it is always run (2 s, cheap) and only
   judged when diagnosis 4 / none applies.
-* ``dt_study`` (``dynamics_model.md`` 5.3, dt 2e-4 s condition 1, cheap pre-check): ``v7_yaw``
-  again at dt 2e-4 s and 5e-5 s (outputs ``07_results/S2a/v7_yaw_dt<dt>/``). If the excess
-  damping over the physical value is the implicit integrator's ``r omega dt / 2`` on the
-  bushing, the identified (raw) zeta3 moves in proportion to dt; if the effective ``c_t`` is
-  simply larger, it does not move. The numerical damping subtracted is the
+* ``dt_study`` (``dynamics_model.md`` 5.3, check of the numerical damping at the adopted
+  YAML dt 2e-4 s): ``v7_yaw`` at three explicit dt 5e-5, 1e-4 and 2e-4 s, each in its own
+  folder ``07_results/S2a/v7_yaw_dt<dt>/`` (always suffixed; the unsuffixed ``v7_yaw`` is
+  the judging run at the YAML dt and is not part of the study). If the excess damping over
+  the physical value is the implicit integrator's ``r omega dt / 2`` on the bushing, the
+  identified (raw) zeta3 is linear in dt with slope ``zeta_num / dt`` and intercept = the
+  reference zeta3 (hypothesis A); if the effective ``c_t`` is simply larger, it does not move
+  (hypothesis B). The numerical damping subtracted is the
   ``V7_ball_centre_bushing_rev13 / zeta_num_r_omega_dt_half`` entry of the run dt (1e-4,
   2e-4 s), else the 1e-4 s entry scaled by ``dt / 1e-4`` (``ModalReference.zeta_num_at``).
 * ``v12_pitch2``, ``v12_roll2``, ``v12_rollm2_pitch1.5``: tilted floor, level body at the
@@ -77,14 +80,17 @@ CASES = (*V7_CASES, *V12_CASES)
 PY = sys.executable
 V7_SAMPLE_S = 1.0e-3
 SERIES_POINTS = 1500
-DT_NOMINAL_S = 1.0e-4
-DT_STUDY_S = (2.0e-4, 5.0e-5)
+DT_STUDY_S = (5.0e-5, 1.0e-4, 2.0e-4)
 PDELTA_CHECK = ROOT / "06_analysis" / "00_dynamics" / "s2a_slope_pdelta_check.json"
 
 
 def dt_case_name(name: str, dt_s: float | None) -> str:
-    """Output folder of a V7 case run at a non-nominal dt (``v7_yaw_dt2e-04``)."""
-    if dt_s is None or math.isclose(dt_s, DT_NOMINAL_S, rel_tol=1e-12):
+    """Output folder of a V7 case: ``name`` at the YAML dt, ``name_dt<dt>`` for an explicit dt.
+
+    An explicit dt always gets the suffix (``v7_yaw_dt5e-05``, ``_dt1e-04``, ``_dt2e-04``),
+    even when it equals the YAML dt, so the dt study never reads the judging run.
+    """
+    if dt_s is None:
         return name
     return f"{name}_dt{dt_s:.0e}"
 
@@ -108,6 +114,39 @@ def _plain(value):
 def _thin(t, *arrays, n=SERIES_POINTS):
     step = max(1, len(t) // n)
     return [a[::step] for a in (t, *arrays)]
+
+
+def _v7_fingerprints(params, model) -> dict:
+    """Params, ground bushing and start snapshot fingerprints of a V7 run (dt study rows)."""
+    import hashlib
+
+    from outrigger_sim.record import snapshot_paths
+
+    b = model.bushing
+    bushing = {
+        "force_point": b.force_point,
+        "friction": b._mu,
+        "pads": [
+            {
+                "name": p.name,
+                "stiffness_N_m": p.stiffness_N_m,
+                "damping_input_N_s_m": p.damping_input_N_s_m,
+                "sphere_radius_m": p.sphere_radius_m,
+            }
+            for p in b._pads
+        ],
+    }
+    bushing_text = json.dumps(_plain(bushing), sort_keys=True, separators=(",", ":"))
+    _, snap_meta_path = snapshot_paths(SNAPSHOT, STATES)
+    snap_meta = json.loads(Path(snap_meta_path).read_text(encoding="utf-8"))
+    return {
+        "params_sha256": params.sha256,
+        "bushing_sha256": hashlib.sha256(bushing_text.encode("utf-8")).hexdigest(),
+        "bushing": bushing,
+        "snapshot": SNAPSHOT,
+        "snapshot_npz_sha256": snap_meta.get("npz_sha256"),
+        "snapshot_params_sha256": snap_meta.get("params_sha256"),
+    }
 
 
 def run_v7(name: str, dt_s: float | None = None) -> dict:
@@ -224,6 +263,7 @@ def run_v7(name: str, dt_s: float | None = None) -> dict:
         "dt_s": model.dt_s,
         "zeta_num_source": f"{modal.keys['zeta_num']} ({zeta_num_source})",
         "ground_bushing_force_point": model.bushing.force_point,
+        "fingerprints": _v7_fingerprints(params, model),
         "steps": run.steps,
         "judged_mode": excitation.mode_index + 1,
         "modes": [
@@ -495,65 +535,158 @@ YAW_ZETA_FIT_BEFORE_FORCE_POINT = 0.0391121
 ``dynamics_model.md`` 5.3 V7 table); predictions 0.04094 / 0.03821 for dt 2e-4 / 5e-5 s."""
 
 
-def yaw_dt_study(results: dict) -> dict | None:
-    """Raw zeta3 of v7_yaw against dt and the two hypotheses (``dynamics_model.md`` 5.3)."""
+DT_STUDY_INCREMENT_RATIO = (2.0, 0.2)
+"""Increment ratio (z(2e-4) - z(1e-4)) / (z(1e-4) - z(5e-5)): expected 2 under hypothesis A,
+accepted within +-20 % (A2)."""
+DT_STUDY_INTERCEPT_REL_MAX = 0.02
+"""|intercept - reference zeta3| / reference zeta3 at most this (A3)."""
+DT_STUDY_RESIDUAL_WARN = 0.01
+"""Fit residual ``residual_rms_rel`` above this on any row -> validity warning."""
+
+
+class DtStudyError(RuntimeError):
+    """A dt-study folder whose stored dt does not match its name, or a duplicated dt."""
+
+
+def yaw_dt_study(results: dict | None = None) -> dict:
+    """Raw zeta3 of v7_yaw against dt and the two hypotheses (``dynamics_model.md`` 5.3).
+
+    Only the three suffixed folders ``v7_yaw_dt<dt>`` of :data:`DT_STUDY_S` are read; the
+    unsuffixed judging run ``v7_yaw`` (YAML dt) is not part of the study. Each row's dt is the
+    stored ``dt_s`` of its result.json and must reproduce the folder name. ``results`` is not
+    used (kept for the call signature).
+    """
     import numpy as np
 
-    runs = {}
-    if "v7_yaw" in results:
-        runs[DT_NOMINAL_S] = results["v7_yaw"]
-    for dt_s in DT_STUDY_S:
-        p = RESULTS / dt_case_name("v7_yaw", dt_s) / "result.json"
-        if p.is_file():
-            runs[dt_s] = json.loads(p.read_text(encoding="utf-8"))
-    if DT_NOMINAL_S not in runs or len(runs) < 2:
-        return None
+    del results
     rows = []
-    for dt_s in sorted(runs):
-        r = runs[dt_s]
+    seen: dict[float, str] = {}
+    for dt_folder in DT_STUDY_S:
+        case = dt_case_name("v7_yaw", dt_folder)
+        p = RESULTS / case / "result.json"
+        if not p.is_file():
+            continue
+        r = json.loads(p.read_text(encoding="utf-8"))
+        dt_s = float(r["dt_s"])
+        if dt_case_name("v7_yaw", dt_s) != case or r.get("case") != case:
+            raise DtStudyError(
+                f"{p}: stored dt_s {dt_s!r} / case {r.get('case')!r} does not match the folder {case}"
+            )
+        if any(math.isclose(dt_s, d, rel_tol=1e-9) for d in seen):
+            raise DtStudyError(f"{p}: dt_s {dt_s!r} duplicates {seen}")
+        seen[dt_s] = case
         m = next(m for m in r["modes"] if m["mode"] == r["judged_mode"])
+        meta_path = RESULTS / case / "meta.json"
+        rec_meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.is_file() else {}
+        run_meta = rec_meta.get("run", {})
+        fp = r.get("fingerprints") or {}
         rows.append(
             {
                 "dt_s": dt_s,
-                "case": r["case"],
+                "case": case,
                 "f_damped_Hz": m["f_damped_Hz"],
                 "zeta_fit_raw": m["zeta_fit"],
                 "zeta_num_subtracted": m["zeta_num_subtracted"],
+                "s_pred_per_s": m["zeta_num_subtracted"] / dt_s,
                 "zeta_corrected": m["zeta_corrected"],
                 "zeta_log_decrement": m["zeta_log_decrement"],
+                "zeta_ref": m["zeta_ref"],
                 "residual_rms_rel": m["residual_rms_rel"],
                 "force_point": r.get("ground_bushing_force_point"),
+                "fingerprints": {
+                    "params_sha256": fp.get("params_sha256", run_meta.get("params_sha256")),
+                    "bushing_sha256": fp.get("bushing_sha256"),
+                    "snapshot": fp.get("snapshot", r.get("start_snapshot", {}).get("name")),
+                    "snapshot_npz_sha256": fp.get("snapshot_npz_sha256"),
+                    "record_npz_sha256": rec_meta.get("npz_sha256"),
+                },
             }
         )
-    nominal = next(r for r in rows if r["dt_s"] == DT_NOMINAL_S)
-    zeta_num_nominal = nominal["zeta_num_subtracted"]
+    rows.sort(key=lambda r: r["dt_s"])
+    purpose = (
+        "dynamics_model.md 5.3: numerical damping of the implicit integrator on the ground "
+        "bushing at the adopted YAML dt 2e-4 s (v7_yaw 2 s at dt 5e-5, 1e-4, 2e-4 s); final "
+        "judgement by dynamics-expert"
+    )
+    base = {
+        "purpose": purpose,
+        "folders": [dt_case_name("v7_yaw", d) for d in DT_STUDY_S],
+        "rows": rows,
+        "criteria": {
+            "A1_slope_ratio_band": list(DT_STUDY_RATIO_IMPLICIT),
+            "A2_increment_ratio": {"expected": DT_STUDY_INCREMENT_RATIO[0],
+                                   "rel_tol": DT_STUDY_INCREMENT_RATIO[1]},
+            "A3_intercept_rel_max": DT_STUDY_INTERCEPT_REL_MAX,
+            "B_slope_ratio_abs_max": DT_STUDY_RATIO_CONSTANT_MAX,
+            "residual_rms_rel_warn": DT_STUDY_RESIDUAL_WARN,
+        },
+    }
+    if len(rows) < 3:
+        return {**base, "status": "incomplete", "n_points": len(rows), "verdict_auto": "incomplete"}
+
     dts = np.array([r["dt_s"] for r in rows])
     zetas = np.array([r["zeta_fit_raw"] for r in rows])
-    slope = float(np.polyfit(dts, zetas, 1)[0])
-    slope_predicted = zeta_num_nominal / DT_NOMINAL_S
+    zetas_ld = np.array([r["zeta_log_decrement"] for r in rows], dtype=float)
+    slope, intercept = (float(v) for v in np.polyfit(dts, zetas, 1))
+    s_pred_rows = np.array([r["s_pred_per_s"] for r in rows])
+    slope_predicted = float(s_pred_rows.mean())
     ratio = slope / slope_predicted
+    envelope_slope = (
+        float(np.polyfit(dts, zetas_ld, 1)[0]) if np.all(np.isfinite(zetas_ld)) else None
+    )
+    envelope_ratio = None if envelope_slope is None else envelope_slope / slope_predicted
+    increment_ratio = float((zetas[2] - zetas[1]) / (zetas[1] - zetas[0]))
+    zeta_refs = {r["zeta_ref"] for r in rows}
+    if len(zeta_refs) != 1:
+        raise DtStudyError(f"rows disagree on the reference zeta3: {sorted(zeta_refs)}")
+    zeta_ref = zeta_refs.pop()
+    intercept_rel = (intercept - zeta_ref) / zeta_ref
     for r in rows:
-        r["prediction_implicit"] = nominal["zeta_fit_raw"] + zeta_num_nominal * (
-            r["dt_s"] / DT_NOMINAL_S - 1.0
+        r["prediction_implicit"] = zeta_ref + r["s_pred_per_s"] * r["dt_s"]
+        r["prediction_implicit_from_intercept"] = intercept + r["s_pred_per_s"] * r["dt_s"]
+        r["prediction_ct_scale"] = float(zetas.mean())
+        r["fit_line"] = intercept + slope * r["dt_s"]
+    a1 = DT_STUDY_RATIO_IMPLICIT[0] <= ratio <= DT_STUDY_RATIO_IMPLICIT[1]
+    exp, tol = DT_STUDY_INCREMENT_RATIO
+    a2 = abs(increment_ratio - exp) <= tol * exp
+    a3 = abs(intercept_rel) <= DT_STUDY_INTERCEPT_REL_MAX
+    if a1 and a2 and a3:
+        verdict = (
+            "hypothesis A confirmed: zeta3 moves with dt as r omega dt / 2 (implicit numerical "
+            "damping on the bushing), intercept = reference zeta3"
         )
-        r["prediction_ct_scale"] = nominal["zeta_fit_raw"]
-    if DT_STUDY_RATIO_IMPLICIT[0] <= ratio <= DT_STUDY_RATIO_IMPLICIT[1]:
-        verdict = "zeta3 moves with dt as r omega dt / 2: implicit numerical damping on the bushing"
     elif abs(ratio) <= DT_STUDY_RATIO_CONSTANT_MAX:
-        verdict = "zeta3 does not move with dt: effective c_t scale (bushing damping larger)"
+        verdict = "hypothesis B: zeta3 does not move with dt (effective c_t scale)"
     else:
-        verdict = "undetermined (slope ratio outside both bands)"
+        verdict = "undetermined"
+    warnings = [
+        f"{r['case']}: residual_rms_rel {r['residual_rms_rel']:.4g} > {DT_STUDY_RESIDUAL_WARN}"
+        for r in rows
+        if not (r["residual_rms_rel"] <= DT_STUDY_RESIDUAL_WARN)
+    ]
+    fp_keys = ("params_sha256", "bushing_sha256", "snapshot_npz_sha256")
+    fp_consistent = {
+        k: len({r["fingerprints"][k] for r in rows}) == 1 for k in fp_keys
+    }
+    if not all(fp_consistent.values()):
+        warnings.append(f"fingerprints differ between rows: {fp_consistent}")
     return {
-        "purpose": "dynamics_model.md 5.3, dt 2e-4 s condition 1 pre-check (v7_yaw 2 s at three "
-        "dt); final judgement by dynamics-expert (S3 V8(a))",
-        "rows": rows,
+        **base,
+        "status": "complete",
+        "n_points": len(rows),
         "slope_dzeta_ddt_per_s": slope,
+        "intercept_zeta": intercept,
+        "zeta_ref": zeta_ref,
+        "intercept_rel_diff": intercept_rel,
         "slope_predicted_implicit_per_s": slope_predicted,
+        "slope_predicted_rows_per_s": s_pred_rows.tolist(),
         "slope_ratio_measured_over_implicit": ratio,
-        "bands": {
-            "implicit": list(DT_STUDY_RATIO_IMPLICIT),
-            "ct_scale_abs_max": DT_STUDY_RATIO_CONSTANT_MAX,
-        },
+        "increment_ratio": increment_ratio,
+        "envelope_slope_dzeta_ld_ddt_per_s": envelope_slope,
+        "envelope_slope_ratio": envelope_ratio,
+        "checks": {"A1": bool(a1), "A2": bool(a2), "A3": bool(a3)},
+        "fingerprints_consistent": fp_consistent,
+        "validity_warnings": warnings,
         "verdict_auto": verdict,
         "before_force_point_change": {
             "zeta_fit_dt1e-4": YAW_ZETA_FIT_BEFORE_FORCE_POINT,
