@@ -713,6 +713,8 @@ def _prepare_diag(args) -> tuple[list[dict], Path, dict, dict, diag.StoredPairs]
     problems = diag.seal_problems()
     if problems:
         raise ValueError(f"H-D0 / H-1 seals: {problems}")
+    import run_v5  # noqa: F401  (puts 03_src on sys.path before the preset check)
+
     fb.check_preset_las()
     candidates = resolve_candidates(args.bundle, args.candidates)
     path = args.out or diag.DEFAULT_OUT
