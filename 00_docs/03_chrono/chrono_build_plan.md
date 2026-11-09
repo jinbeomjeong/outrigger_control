@@ -320,7 +320,7 @@ S0에서 단위 시험으로 만들고, 이후 모든 단계가 이 시험을 �
 - **위험**:
   - ① 크롤러 YAML 키(`contact.crawler.*` D안, `simulation.settle_on_crawler_min_s`)는 반영됐다(2026-10-20). 값을 코드에 적지 않고 YAML에서 읽는다.
   - ② L1 모터 반력과 실린더 힘의 관계(로드 관성 포함)를 정적에서 "접촉력 − 로드 무게"와 비교한다.
-  - ③ (개정 8) 강체 모터의 속도 계단은 1스텝 관성 반력 $m_{rod}\Delta v/\Delta t$를 만든다(107 kg, $\Delta v=v_{max}$: Δt 1×10⁻⁴ s 24 kN, 1×10⁻⁵ s 242 kN — 218 kN 포화 문턱을 넘을 수 있음). V11b 스텝별 포화·V17 압력을 이 스파이크로 판정하지 않는다. ~~권고: $u$ 가속 제한(밸브 램프, 예 0 → $v_{max}$ 0.1 s, 가정 — 사용자 확인 필요) 또는 판정 힘에서 $m_{rod}\ddot s$ 제외.~~ **결정됨(사용자 2026-10-20): 가속 제한 램프 0.1 s.** S2b 확인: 공중 다리에서 +$v_{max}$ 명령의 최대 $\lvert F_{motor}+m_{rod}g\rvert$ = 24.2 N(Δt 1×10⁻⁴·1×10⁻⁵ s 모두, $m_{rod}a$와 같음). 램프를 끄면 24.2 kN / 242.0 kN. V11 62 s 전 구간(스트로크 끝 제동 포함) 최대 24.21 N. 속도 모터에도 같은 크기라 구동기 방식과는 무관
+  - ③ (개정 8) 강체 모터의 속도 계단은 1스텝 관성 반력 $m_{rod}\Delta v/\Delta t$를 만든다(107 kg, $\Delta v=v_{max}$: Δt 1×10⁻⁴ s 24 kN, 1×10⁻⁵ s 242 kN — 218 kN(REXOME33 당시 공통 값; 현재 다리별 278.7 / 199.6 kN) 포화 문턱을 넘을 수 있음). V11b 스텝별 포화·V17 압력을 이 스파이크로 판정하지 않는다. ~~권고: $u$ 가속 제한(밸브 램프, 예 0 → $v_{max}$ 0.1 s, 가정 — 사용자 확인 필요) 또는 판정 힘에서 $m_{rod}\ddot s$ 제외.~~ **결정됨(사용자 2026-10-20): 가속 제한 램프 0.1 s.** S2b 확인: 공중 다리에서 +$v_{max}$ 명령의 최대 $\lvert F_{motor}+m_{rod}g\rvert$ = 24.2 N(Δt 1×10⁻⁴·1×10⁻⁵ s 모두, $m_{rod}a$와 같음). 램프를 끄면 24.2 kN / 242.0 kN. V11 62 s 전 구간(스트로크 끝 제동 포함) 최대 24.21 N. 속도 모터에도 같은 크기라 구동기 방식과는 무관
 - **담당·작업량**: cad 중, dyn 판정 소.
 - **체크리스트**
   - [x] 모터 축·부호(R4) (2026-10-20, cad: 공중 다리 +$v_{max}$ 1 s → 패드 구 중심 Δz = −모터 이동(차 0 m), 매달린 로드 반력 −$m_{rod}g$ = −1047.19 N(+ = 패드를 누름, S1과 같은 부호))
@@ -432,7 +432,7 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
 - **만드는 것**
   - cad:
     - `sensors/truth`: IMU 장착점 비력·각속도 진값(장착점 기본값 = 캐빈 바닥 아래 상부 프레임, 기체 좌표 (0.31, 0.88, 0.040) m, BASE DECK 좌측 폰툰 15 mm 가로판 윗면, 후보 C1, 2026-10-20 사용자 결정, `00_docs/00_cad/cad_origin_mass_imu.md` 4절, 그림 `01_cad/01_parts/imu_c1_*.png`. 인자로 바꿀 수 있게 둔다), 헤드 압력 $p=F_{cyl}/A_p$, 스트로크(모터 위치, 보정값 = 모터 위치 − $F_{cyl}/k_{oil}(e)$)
-    - 힘 포화: 구동기 모델 안에서 **물리 스텝마다** 판정한다. $F_{cyl}\ge$ `actuator.max_force_extend_N`이고 $u>0$이면 $u=0$. $F_{cyl}\le$ −`actuator.max_force_retract_N`이고 $u<0$이면 $u=0$. 제어 주기(20 ms)로만 판정하면 9.4 kN이 넘친다.
+    - 힘 포화: 구동기 모델 안에서 **물리 스텝마다** 판정한다. $F_{cyl}\ge$ `actuator.max_force_extend_N`이고 $u>0$이면 $u=0$. $F_{cyl}\le$ −`actuator.max_force_retract_N`이고 $u<0$이면 $u=0$(계획 당시 공통 키, REXOME33 218.1 / 18.6 kN; 현재 다리별 `legs.<leg>.cylinder.max_force_extend_N` / `max_force_retract_N` = 278.7 / 199.6 kN, 79.2 / 66.0 kN). 제어 주기(20 ms)로만 판정하면 9.4 kN이 넘친다.
     - 단일 다리 시험 모델: 패드를 바닥에 **$k_n$과 같은 강성의 양방향 스프링**(`ChLinkTSDA` 또는 부싱 축 방향, 감쇠 = $c_n$ 실제값)으로 묶는다. 강체로 묶으면 강체 모터와 직렬이라 힘이 부정이 된다. 접촉으로는 수축 시험의 인장을 낼 수 없다.
     - `runner`: 제어 주기 영차 유지(계획 당시 기본 20 ms = 200스텝, Δt 1×10⁻⁴ s; 현행 R8 C2는 10 Hz, d = 1, IMU 100 Hz)
   - py: IMU 오차 모델, `Controller` 프로토콜, 빈 제어기·재생 제어기
@@ -442,7 +442,7 @@ L1 기준값 경로 머리: `reference.json / chrono_test_references / L1_rigid_
     - 제어기 C2(잠정 확정): 기구학 분해 $u=A[\dot z,\dot\phi,\dot\theta]^T+n\dot\tau$, $n$ = (0.476, −0.476, −0.523, 0.523), 자세 PI, 압력 기반 비틀림 루프($n^TP\to0$) + $F_{min}$ 가드. 대안 C8(2상)도 같은 경계로 돌릴 수 있게 둔다.
     - 결합 접지 판정: 물리 기반 판정기(압력·스트로크·자세. 증분 강성 Δp/Δs, 자세 반응과 기구학 J의 일치, 마찰 이력 띠) + 레벨링 중·후 탐침(다리 수 mm, 자세 변화 ±0.1° 안). ML/DL 판정기는 비교 후보이고 Chrono 접촉력을 라벨로 쓴다(S7·S8 데이터, 3.5절).
 - **입력 키**:
-  - `actuator`: `bore_diameter_m`, `annulus_area_m2`, `max_force_extend_N`, `max_force_retract_N`, `relief_pressure_moving_Pa`, `locked_pressure_limit_Pa`, `lock_valve`, `oil_bulk_modulus_eff_Pa`, `oil_dead_length_m`
+  - `actuator`: `bore_diameter_m`, `annulus_area_m2`, `max_force_extend_N`, `max_force_retract_N`, `relief_pressure_moving_Pa`, `locked_pressure_limit_Pa`, `lock_valve`, `oil_bulk_modulus_eff_Pa`, `oil_dead_length_m`(계획 당시 키. `bore_diameter_m`·`annulus_area_m2`·`max_force_*`는 2026-10-25 YAML 재생성에서 다리별 `legs.<leg>.cylinder.*`로 옮겼다)
   - `sensors.cylinder_pressure.*`, `control.*`
 - **통과 기준**
 
