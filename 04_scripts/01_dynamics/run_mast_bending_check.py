@@ -3,8 +3,10 @@
 00_docs/01_dynamics/dynamics_model.md revision 10 (section 3.9). Inputs (read only):
   01_cad/04_mast/mast_beam_properties.csv / .json (cad-expert extraction, 00_docs/00_cad/cad_mast_beam.md)
   02_params/rexome33.yaml (through dyn_model), 06_analysis/00_dynamics/reference.json (L1 stiffness / damping)
-  06_analysis/00_dynamics/leg_extension_loads.json (V4 reference peak pad force,
-    read by leg_extension_peaks.py)
+  06_analysis/00_dynamics/leg_extension_loads.json (V4 reference peak pad force, dynamic
+    deviation and quasi-static crawler hand-over window, read by leg_extension_peaks.py;
+    window cross-checked against reference.json lift_V4_compliant_crawler
+    quasi_static_events_s)
 
 Model (all linear, small motion about the levelled static state, body level = world axes):
   * Mast = 3D Euler-Bernoulli frame along body z at the axis x 2.51408, y 0 (mast_axis_reference). Node DoF
@@ -50,7 +52,11 @@ from scipy.optimize import brentq
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import dyn_model as dm  # noqa: E402
-from leg_extension_peaks import load_dynamic_peak_pad_force  # noqa: E402
+from leg_extension_peaks import (  # noqa: E402
+    load_crawler_handover_window,
+    load_dynamic_deviation,
+    load_dynamic_peak_pad_force,
+)
 
 ROOT = dm.PROJECT_ROOT
 MAST_CSV = ROOT / "01_cad" / "04_mast" / "mast_beam_properties.csv"
@@ -81,6 +87,11 @@ K_CYL_NOM = 2.1e8     # ASSUMPTION: bore ~D200 (face R100), locked column ~0.15 
 K_CYL_LOW = 3.0e7     # ASSUMPTION: unlocked / long hoses (Q-B3 open)
 LEVELS = dm.LEVELS
 DEG = 180.0 / math.pi
+
+# release proxy ramp-length sensitivity (rigid L1 only): T_rel x these scales
+RELEASE_RAMP_SCALES = (0.95, 1.00, 1.05)
+FILTERED_TILT_AT_STOP_KEY = "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)"
+RAW_TILT_KEY = "raw_IMU_apparent_tilt_dev_max_deg_after_last_stop (roll, pitch)"
 
 
 def r(x, n=6):
@@ -677,6 +688,27 @@ def simulate_release(sysm, l1, l1c, geo, T_ramp, t_after=15.0):
                            -1.0, T_ramp + t_after, "static")
 
 
+def release_ramp_sensitivity(sysm, l1, l1c, geo, T_rel):
+    """Release proxy on the (rigid L1) system with the ramp length T_rel x 0.95, 1.00, 1.05.
+
+    The pad force deviation of the proxy depends strongly on the ramp length, so the record
+    shows how far the result moves for a +-5 % window.
+    """
+    cases = []
+    for scale in RELEASE_RAMP_SCALES:
+        metrics = stop_metrics(simulate_release(sysm, l1, l1c, geo, scale * T_rel))
+        pad_dev_N = metrics["max_abs_pad_force_dev_from_quasi_static_N"]
+        cases.append({
+            "scale": scale,
+            "T_rel_s": scale * T_rel,
+            "max_abs_pad_force_dev_from_quasi_static_N": pad_dev_N,
+            "filtered_IMU_pitch_dev_max_deg_after_last_stop+0s":
+                metrics[FILTERED_TILT_AT_STOP_KEY][1],
+            "raw_IMU_apparent_pitch_dev_max_deg_after_last_stop": metrics[RAW_TILT_KEY][1],
+        })
+    return {"system": "rigid L1 (lifted, top), legs locked", "cases": cases}
+
+
 def stop_metrics(res):
     T, tl = res["T"], res["t_last"]
     out = {"max_abs_pad_force_dev_from_quasi_static_N": float(np.abs(res["dF"]).max()),
@@ -803,7 +835,10 @@ def main():
     p = dm.load_params(); geo = dm.geometry_from_params(p)
     with open(REF_JSON, encoding="utf-8") as f:
         ref = json.load(f)
-    peak = load_dynamic_peak_pad_force()  # read first: a missing file stops before the long run
+    # read first: a missing file or key stops before the long run
+    peak = load_dynamic_peak_pad_force()
+    handover = load_crawler_handover_window()
+    dev = load_dynamic_deviation()
     mast = load_mast()
     js = mast["json"]
     # boom point mass from the parts table (columns located by header)
@@ -816,9 +851,12 @@ def main():
         "script": "04_scripts/01_dynamics/run_mast_bending_check.py",
         "doc": "00_docs/01_dynamics/dynamics_model.md section 3.9 (revision 10)",
         "inputs": ["01_cad/04_mast/mast_beam_properties.csv", "01_cad/04_mast/mast_beam_properties.json",
-                   "02_params/rexome33.yaml", "06_analysis/00_dynamics/reference.json",
+                   "02_params/rexome33.yaml",
+                   "06_analysis/00_dynamics/reference.json (L1 stiffness / damping; "
+                   "quasi_static_events_s cross-check)",
                    "01_cad/01_parts/parts_classified.csv (BOOM:1 mass and CoM)",
-                   "06_analysis/00_dynamics/leg_extension_loads.json (V4 peak pad force)"],
+                   "06_analysis/00_dynamics/leg_extension_loads.json (V4 peak pad force, "
+                   "dynamic deviation, crawler hand-over window)"],
         "frame": "body: x forward, y left, z up; origin = CAD origin; SI; level body = world axes",
         "gravity_m_s2": [0, 0, -geo.g],
         "angles": "roll about +x, pitch about +y (pitch > 0 nose down)",
@@ -1046,7 +1084,16 @@ def main():
     dyn = {"leg_stop": {}, "crawler_release_proxy": {}}
     l1 = l1_setup(p, geo, ref, "top")
     l1c = l1_setup(p, geo, ref, "top", lifted=False)
-    T_rel = 15.584 - 15.050   # s: first pad touch -> crawler fully off (dynamics_model.md 3.7, layout D, dynamic)
+    # Release ramp length = quasi-static first pad touch -> quasi-static crawler load 0
+    # (layout D, top, mass case C): leg_extension_loads.json key_values / events_s
+    # (min touch_<leg> -> crawler_off), cross-checked against reference.json
+    # quasi_static_events_s. Was the REXOME33 constant 15.584 - 15.050 = 0.534 s, which
+    # mixed the quasi-static crawler-off time with the dynamic FL touch.
+    T_rel = handover.duration_s
+    dyn["crawler_release_proxy_T_rel_s"] = T_rel
+    dyn["crawler_release_proxy_T_rel_source"] = dict(
+        handover.source, first_touch_s=handover.first_touch_s,
+        first_touch_leg=handover.first_touch_leg, crawler_off_s=handover.crawler_off_s)
     sims = {}
     rig = (l1["M6"], l1["K6"], l1["C6"])
     for key, fun in (("leg_stop", lambda s_: simulate_stop(s_, l1, geo)),
@@ -1054,6 +1101,8 @@ def main():
         rs = fun(rig)
         dyn[key]["rigid_L1"] = stop_metrics(rs); dyn[key]["rigid_L1"]["n_modes"] = rs["n_modes"]
         sims[(key, "rigid L1")] = rs
+    dyn["crawler_release_proxy_T_rel_sensitivity_rigid_L1"] = release_ramp_sensitivity(
+        rig, l1, l1c, geo, T_rel)
     worst = min(sw, key=lambda x: min(x["rock1_f_Hz"] / l1_band["top"][0], x["rock2_f_Hz"] / l1_band["top"][1]))
     dyn_cases = dict(cases)
     dyn_cases["tuned (mast-only FA f1 ~ rocking 2, LAT f1 ~ rocking 1: k_bs 6e8, k_cyl 1e8)"] = (6.0e8, 1.0e8)
@@ -1079,7 +1128,12 @@ def main():
                     "floor load (static at legs 0, total = W) applied upward to the lifted body and ramped to 0 over "
                     f"{T_rel:.3f} s (first touch -> crawler off), legs locked; a proxy of the V4 hand-over kinks, not "
                     "the V4 model. IMU C1 accelerometer tilt phi + a_y/g, theta - a_x/g; filter 2 x first order tau 0.5 s")
-    dyn["V4_reference_dynamic_deviation_kN"] = 23.2
+    # Largest |damped 3-DoF - quasi-static| pad reaction of the open-loop lift (leg zeta 0.03,
+    # crawler zeta 0.05), cross-checked against the zeta_leg_0.03 sensitivity case.
+    # Was the REXOME33 constant 23.2 kN.
+    dyn["V4_reference_dynamic_deviation_kN"] = dev.max_N / 1e3
+    dyn["V4_reference_dynamic_deviation_source"] = dict(
+        dev.source, max_leg=dev.max_leg, per_leg_kN=[f / 1e3 for f in dev.per_leg_N], at_s=dev.at_s)
     # Peak pad reaction of the open-loop lift (the V4 hand-over the release proxy stands for).
     # A pad reaction, not a cylinder force: it is set beside the pad force deviations above.
     # Was the REXOME33 constant 141.0 kN; now from leg_extension_loads.json (source: next key).

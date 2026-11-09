@@ -6,9 +6,9 @@
    "01_cad/04_mast/mast_beam_properties.csv",
    "01_cad/04_mast/mast_beam_properties.json",
    "02_params/rexome33.yaml",
-   "06_analysis/00_dynamics/reference.json",
+   "06_analysis/00_dynamics/reference.json (L1 stiffness / damping; quasi_static_events_s cross-check)",
    "01_cad/01_parts/parts_classified.csv (BOOM:1 mass and CoM)",
-   "06_analysis/00_dynamics/leg_extension_loads.json (V4 peak pad force)"
+   "06_analysis/00_dynamics/leg_extension_loads.json (V4 peak pad force, dynamic deviation, crawler hand-over window)"
   ],
   "frame": "body: x forward, y left, z up; origin = CAD origin; SI; level body = world axes",
   "gravity_m_s2": [
@@ -56,7 +56,7 @@
    "L1": "reference.json L1_rigid_motor_lumped_contact (k, c), beta 1.0 GPa; crawler-on: layout D, tangential 0",
    "flange_joints": "rigid (bolted), as in the extraction"
   },
-  "runtime_s": 398.932
+  "runtime_s": 194.921
  },
  "verification": {
   "hess_offset_vs_dyn_model_hz": 0.0,
@@ -6536,207 +6536,279 @@
   },
   "crawler_release_proxy": {
    "rigid_L1": {
-    "max_abs_pad_force_dev_from_quasi_static_N": 4651.42,
-    "max_pad_force_N": 123302.0,
+    "max_abs_pad_force_dev_from_quasi_static_N": 5316.88,
+    "max_pad_force_N": 124553.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
-     0.00192235,
-     0.0121411
+     0.0019083,
+     0.0120431
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
-     0.000103046,
-     0.00184029
+     7.07948e-05,
+     0.00175227
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
-     2.61992e-05,
-     0.000642106
+     1.61675e-05,
+     0.000608252
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
-     1.30692e-05,
-     0.000135401
+     7.86792e-06,
+     0.000129177
     ],
     "raw_IMU_apparent_tilt_dev_max_deg_after_last_stop (roll, pitch)": [
-     0.0325303,
-     0.427738
+     0.0397602,
+     0.530047
     ],
     "true_body_tilt_dev_max_deg_after_last_stop (roll, pitch)": [
-     8.34817e-05,
-     0.00153398
+     7.17143e-05,
+     0.00160845
     ],
     "n_modes": 6
    },
    "upper (k_bs 4.177e8, k_cyl 2.1e8)": {
-    "max_abs_pad_force_dev_from_quasi_static_N": 4259.25,
-    "max_pad_force_N": 121850.0,
+    "max_abs_pad_force_dev_from_quasi_static_N": 4114.6,
+    "max_pad_force_N": 122928.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
-     0.00220379,
-     0.0104505
+     0.00217588,
+     0.0106636
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
-     0.000202057,
-     0.00101051
+     0.000182926,
+     0.0011548
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
-     0.000106357,
-     0.000331071
+     9.52528e-05,
+     0.00041218
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
-     7.21524e-05,
-     0.000139053
+     6.34541e-05,
+     0.000178902
     ],
     "raw_IMU_apparent_tilt_dev_max_deg_after_last_stop (roll, pitch)": [
-     0.100339,
-     0.359426
+     0.102424,
+     0.428779
     ],
     "true_body_tilt_dev_max_deg_after_last_stop (roll, pitch)": [
-     0.000459153,
-     0.000527828
+     0.000549314,
+     0.000686653
     ],
     "n_modes": 26,
     "mast_only_f_Hz": [
      2.24821,
      2.76652
     ],
-    "ratio_pad_force_dev_vs_rigid": 0.915689
+    "ratio_pad_force_dev_vs_rigid": 0.773875
    },
    "low (k_bs 1e8, k_cyl 3e7)": {
-    "max_abs_pad_force_dev_from_quasi_static_N": 4428.55,
-    "max_pad_force_N": 122705.0,
+    "max_abs_pad_force_dev_from_quasi_static_N": 4431.47,
+    "max_pad_force_N": 123703.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
-     0.00226705,
-     0.0115325
+     0.0021897,
+     0.0110031
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
-     0.000103238,
-     0.00101229
+     9.53314e-05,
+     0.000928888
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
-     2.45326e-05,
-     0.000299716
+     2.1935e-05,
+     0.00024785
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
-     1.61279e-05,
-     0.000123186
+     1.53457e-05,
+     0.000102055
     ],
     "raw_IMU_apparent_tilt_dev_max_deg_after_last_stop (roll, pitch)": [
-     0.260281,
-     0.225309
+     0.296257,
+     0.271624
     ],
     "true_body_tilt_dev_max_deg_after_last_stop (roll, pitch)": [
-     0.000970041,
-     0.000627418
+     0.00114522,
+     0.00054919
     ],
     "n_modes": 26,
     "mast_only_f_Hz": [
      1.05595,
      1.73244
     ],
-    "ratio_pad_force_dev_vs_rigid": 0.952086
+    "ratio_pad_force_dev_vs_rigid": 0.833471
    },
    "rigid supports": {
-    "max_abs_pad_force_dev_from_quasi_static_N": 4043.91,
-    "max_pad_force_N": 122080.0,
+    "max_abs_pad_force_dev_from_quasi_static_N": 3950.73,
+    "max_pad_force_N": 123126.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
-     0.00204843,
-     0.0122017
+     0.00199333,
+     0.012026
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
-     0.000141233,
-     0.00185083
+     0.000109484,
+     0.00191841
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
-     9.81086e-05,
-     0.000801355
+     7.46601e-05,
+     0.000854034
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
-     6.26195e-05,
-     0.000309681
+     4.6965e-05,
+     0.000329851
     ],
     "raw_IMU_apparent_tilt_dev_max_deg_after_last_stop (roll, pitch)": [
-     0.017991,
-     0.55054
+     0.0153538,
+     0.537109
     ],
     "true_body_tilt_dev_max_deg_after_last_stop (roll, pitch)": [
-     0.000198211,
-     0.00113994
+     0.000154649,
+     0.00136323
     ],
     "n_modes": 25,
     "mast_only_f_Hz": [
      3.4125,
      3.83312
     ],
-    "ratio_pad_force_dev_vs_rigid": 0.869392
+    "ratio_pad_force_dev_vs_rigid": 0.743054
    },
    "tuned (mast-only FA f1 ~ rocking 2, LAT f1 ~ rocking 1: k_bs 6e8, k_cyl 1e8)": {
-    "max_abs_pad_force_dev_from_quasi_static_N": 4320.93,
-    "max_pad_force_N": 121895.0,
+    "max_abs_pad_force_dev_from_quasi_static_N": 4174.18,
+    "max_pad_force_N": 122980.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
-     0.00224643,
-     0.0109797
+     0.00220881,
+     0.0111101
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
-     0.000153968,
-     0.00103586
+     0.000144773,
+     0.00118316
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
-     8.39192e-05,
-     0.00039398
+     7.83968e-05,
+     0.000467178
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
-     5.88434e-05,
-     0.000143777
+     5.43743e-05,
+     0.000169162
     ],
     "raw_IMU_apparent_tilt_dev_max_deg_after_last_stop (roll, pitch)": [
-     0.165413,
-     0.41594
+     0.174655,
+     0.466577
     ],
     "true_body_tilt_dev_max_deg_after_last_stop (roll, pitch)": [
-     0.000636843,
-     0.000693844
+     0.000768254,
+     0.000817301
     ],
     "n_modes": 26,
     "mast_only_f_Hz": [
      1.75833,
      2.99444
     ],
-    "ratio_pad_force_dev_vs_rigid": 0.928949
+    "ratio_pad_force_dev_vs_rigid": 0.78508
    },
    "extreme sweep point (k_bs 1e+07, k_cyl 3e+07)": {
-    "max_abs_pad_force_dev_from_quasi_static_N": 4433.62,
-    "max_pad_force_N": 122277.0,
+    "max_abs_pad_force_dev_from_quasi_static_N": 4283.04,
+    "max_pad_force_N": 123323.0,
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+0s (roll, pitch)": [
-     0.00226398,
-     0.0108525
+     0.00219314,
+     0.0105512
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+2s (roll, pitch)": [
-     0.000115886,
-     0.000792868
+     0.000105661,
+     0.000785864
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+5s (roll, pitch)": [
-     3.2088e-05,
-     0.000280761
+     3.08196e-05,
+     0.000277697
     ],
     "filtered_IMU_tilt_dev_max_deg_after_last_stop+10s (roll, pitch)": [
-     2.15073e-05,
-     0.000218225
+     2.0446e-05,
+     0.000214324
     ],
     "raw_IMU_apparent_tilt_dev_max_deg_after_last_stop (roll, pitch)": [
-     0.253941,
-     0.196624
+     0.293264,
+     0.215079
     ],
     "true_body_tilt_dev_max_deg_after_last_stop (roll, pitch)": [
-     0.000970076,
-     0.000304515
+     0.00113597,
+     0.000302603
     ],
     "n_modes": 26,
     "mast_only_f_Hz": [
      0.579533,
      1.05602
     ],
-    "ratio_pad_force_dev_vs_rigid": 0.953175
+    "ratio_pad_force_dev_vs_rigid": 0.805555
    }
   },
-  "model": "linear L1 (lifted, top) with/without the flexible mast, modal (< 300 Hz), DOP853 rtol 1e-9 piecewise between kinks. leg_stop: legs extend at v_max and stop at e_op (rear 17.245 s, front 17.696 s from motor start), exact steady ramp state 3 s before the first stop (rigid case reproduces reference.json residual pitch 0.01847 deg). crawler_release_proxy: layout-D crawler floor load (static at legs 0, total = W) applied upward to the lifted body and ramped to 0 over 0.534 s (first touch -> crawler off), legs locked; a proxy of the V4 hand-over kinks, not the V4 model. IMU C1 accelerometer tilt phi + a_y/g, theta - a_x/g; filter 2 x first order tau 0.5 s",
-  "V4_reference_dynamic_deviation_kN": 23.2,
+  "crawler_release_proxy_T_rel_s": 0.55276,
+  "crawler_release_proxy_T_rel_source": {
+   "leg_extension_loads": {
+    "file": "06_analysis/00_dynamics/leg_extension_loads.json",
+    "sha256": "6df43a160cdf4ba7e12fd97d45dac7f8ba501a5502ce6326d0a8249ad6faac77",
+    "keys": [
+     "key_values / events_s / touch_<leg>",
+     "key_values / events_s / crawler_off"
+    ]
+   },
+   "reference": {
+    "file": "06_analysis/00_dynamics/reference.json",
+    "sha256": "fdeec71f8f6128cf5d71cf404afd85ff64e9f8a3a88b8341c6668e994af74700",
+    "key": "lift_V4_compliant_crawler / layouts / D rollers + gapped end shoes (YAML contact.crawler.sphere_layout) / quasi_static_events_s",
+    "fields": [
+     "first_touch_s",
+     "crawler_fully_off_s",
+     "first_touch_leg"
+    ]
+   },
+   "definition": "quasi-static first pad touch -> quasi-static crawler load 0, layout D, top, mass case C",
+   "reference_check_max_abs_diff_s": 0.0004,
+   "replaces": "REXOME33 constant 15.584 - 15.050 = 0.534 s (mixed: quasi-static off, dynamic FL touch)",
+   "first_touch_s": 16.2944,
+   "first_touch_leg": "FR",
+   "crawler_off_s": 16.8472
+  },
+  "crawler_release_proxy_T_rel_sensitivity_rigid_L1": {
+   "system": "rigid L1 (lifted, top), legs locked",
+   "cases": [
+    {
+     "scale": 0.95,
+     "T_rel_s": 0.525122,
+     "max_abs_pad_force_dev_from_quasi_static_N": 4730.06,
+     "filtered_IMU_pitch_dev_max_deg_after_last_stop+0s": 0.0122357,
+     "raw_IMU_apparent_pitch_dev_max_deg_after_last_stop": 0.382555
+    },
+    {
+     "scale": 1.0,
+     "T_rel_s": 0.55276,
+     "max_abs_pad_force_dev_from_quasi_static_N": 5316.88,
+     "filtered_IMU_pitch_dev_max_deg_after_last_stop+0s": 0.0120431,
+     "raw_IMU_apparent_pitch_dev_max_deg_after_last_stop": 0.530047
+    },
+    {
+     "scale": 1.05,
+     "T_rel_s": 0.580398,
+     "max_abs_pad_force_dev_from_quasi_static_N": 6110.59,
+     "filtered_IMU_pitch_dev_max_deg_after_last_stop+0s": 0.0119536,
+     "raw_IMU_apparent_pitch_dev_max_deg_after_last_stop": 0.610187
+    }
+   ]
+  },
+  "model": "linear L1 (lifted, top) with/without the flexible mast, modal (< 300 Hz), DOP853 rtol 1e-9 piecewise between kinks. leg_stop: legs extend at v_max and stop at e_op (rear 17.245 s, front 17.696 s from motor start), exact steady ramp state 3 s before the first stop (rigid case reproduces reference.json residual pitch 0.01847 deg). crawler_release_proxy: layout-D crawler floor load (static at legs 0, total = W) applied upward to the lifted body and ramped to 0 over 0.553 s (first touch -> crawler off), legs locked; a proxy of the V4 hand-over kinks, not the V4 model. IMU C1 accelerometer tilt phi + a_y/g, theta - a_x/g; filter 2 x first order tau 0.5 s",
+  "V4_reference_dynamic_deviation_kN": 26.01,
+  "V4_reference_dynamic_deviation_source": {
+   "file": "06_analysis/00_dynamics/leg_extension_loads.json",
+   "sha256": "6df43a160cdf4ba7e12fd97d45dac7f8ba501a5502ce6326d0a8249ad6faac77",
+   "key": "validation / quasi_static_check (damped 3-DoF) / max_abs_diff_pad_N (FL, FR, RL, RR)",
+   "at_key": "validation / quasi_static_check (damped 3-DoF) / max_abs_diff_pad_N_at_s",
+   "reduction": "max over FL, FR, RL, RR",
+   "quantity": "max |F_pad(damped 3-DoF, leg zeta 0.03, crawler zeta 0.05) - F_pad(quasi-static)| over legs and time",
+   "cross_check_key": "validation / quasi_static_check_leg_zeta_sensitivity / cases / zeta_leg_0.03 / max_abs_diff_vs_quasi_static_N",
+   "cross_check_rel_diff": 0.0,
+   "replaces": "REXOME33 constant 23.2 kN",
+   "max_leg": "FR",
+   "per_leg_kN": [
+    26.0,
+    26.01,
+    22.59,
+    23.07
+   ],
+   "at_s": 16.493
+  },
   "V4_reference_peak_pad_force_kN": 139.12,
   "V4_reference_peak_pad_force_source": {
    "file": "06_analysis/00_dynamics/leg_extension_loads.json",
