@@ -107,7 +107,7 @@ GIF 애니메이션과 큰 메시(`*.gif`, `*_lowres.obj`)는 git에 올리지 �
 
 | 파일 | 명령 |
 |---|---|
-| `01_cad/05_meshes/render_mesh_v5.npz`(그림용 메시 V5, 43.5 MB, sha256 `4521b9f7…`; 단순화하지 않은 CAD 테셀레이션 3 mm / 0.5 rad + 타공 그릴·덮개 7개는 슬롯을 메운 판. 모든 CAD 그림 스크립트가 쓴다. 옛 단순화 메시 `render_mesh.npz`는 `05_meshes/history/`) | `PY -I 04_scripts/00_cad/build_render_mesh_v5.py --force`(약 20 s, 입력 `parts_mesh.npz`·`index.json`·`parts_classified.csv`; 같은 입력이면 비트 동일) 뒤 `PY -I 04_scripts/00_cad/check_cache.py --write --cache 05_meshes`. 입력 `parts_mesh.npz`가 없으면 먼저 `PY -I 04_scripts/00_cad/export_meshes.py` |
+| `01_cad/05_meshes/render_mesh_v5.npz`(그림용 메시 V5, 43.5 MB, sha256 `4521b9f7…`; 단순화하지 않은 CAD 테셀레이션 3 mm / 0.5 rad + 타공 그릴·덮개 7개는 슬롯을 메운 판. 전체 기체 CAD 그림 스크립트가 쓴다(C8 형상을 쓰는 `render_cad_tracks_summary.py`, 크롤러 메시를 쓰는 `render_crawler_contact_parts.py`는 제외). 옛 단순화 메시 `render_mesh.npz`는 `05_meshes/history/`) | `PY -I 04_scripts/00_cad/build_render_mesh_v5.py --force`(약 20 s, 입력 `parts_mesh.npz`·`index.json`·`parts_classified.csv`; 같은 입력이면 비트 동일) 뒤 `PY -I 04_scripts/00_cad/check_cache.py --write --cache 05_meshes`. 입력 `parts_mesh.npz`가 없으면 먼저 `PY -I 04_scripts/00_cad/export_meshes.py` |
 | `01_cad/03_auger/auger_levels/auger_descent.gif` | `PY -I 04_scripts/00_cad/render_auger_descent.py` |
 | `01_cad/02_legs/leg_extension.gif` | `PY -I 04_scripts/00_cad/render_leg_extension.py` |
 | `01_cad/04_mast/mast_steps/fold_side.gif`(참고용) | `PY -I 04_scripts/00_cad/analyze_mast.py` |
