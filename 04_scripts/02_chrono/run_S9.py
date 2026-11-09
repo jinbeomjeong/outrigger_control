@@ -3787,9 +3787,86 @@ def k1_order_gate_of_args(args: argparse.Namespace) -> bool | None:
     return v == "on"
 
 
+K1_FORCED_BLOCK_OPTION = "--k1-forced-block"
+K1_FORCED_BLOCK_CHOICES = ("off", "first")
+K1_FORCED_BLOCK_MODULE = "k1_forced_block"
+K1_FORCED_BLOCK_CLASS = "K1ForcedBlockC2Controller"
+"""``level --k1-forced-block {off,first}`` (K1 re-measure diagnostic rows F1 / F2, ``las_k1_rules_adopt2.md`` 2.3 /
+9.3; cad 2026-11-09): ``first`` builds the controller with ``04_scripts/02_chrono/k1_forced_block.py``
+``K1ForcedBlockC2Controller.from_params`` (research subclass: the first ``_is_flat_soil_order_blocked`` call returns
+True; ``c2.py`` unchanged) instead of ``C2Controller.from_params``; the config is the same, so ``--expect-controller``
+is unchanged. Default ``off`` (rules 9.3: ``C2Controller``, every ``level`` run, so ``args.k1_forced_block`` is
+``"off"`` on every new result). ``first`` needs ``--k1-order-gate on`` (exit 2 otherwise). Every ``level`` run records
+``c2_setup.k1_forced_block`` (``requested``, ``class``, ``module_sha256``; ``off`` = the class
+``outrigger_sim.control.c2.C2Controller`` and ``module_sha256`` None). ``off`` builds the same config and the same
+class as before the option, so the run is bit-identical; only the record keys are added."""
+K1_FORCED_BLOCK_DEFAULT = "off"
+
+
+def _k1_forced_block_exit(msg: str) -> None:
+    print(f"run_S9 level: {msg}", file=sys.stderr, flush=True)
+    raise SystemExit(2)
+
+
+def k1_forced_block_of_args(args: argparse.Namespace) -> str:
+    """The requested ``--k1-forced-block`` value (:data:`K1_FORCED_BLOCK_DEFAULT` when the namespace has none); exit 2
+    for ``first`` without ``--k1-order-gate on`` or a value outside :data:`K1_FORCED_BLOCK_CHOICES`."""
+    v = getattr(args, "k1_forced_block", None)
+    if v is None:
+        return K1_FORCED_BLOCK_DEFAULT
+    if v not in K1_FORCED_BLOCK_CHOICES:
+        _k1_forced_block_exit(f"{K1_FORCED_BLOCK_OPTION} must be one of {K1_FORCED_BLOCK_CHOICES}, got {v!r}")
+    if v == "first" and getattr(args, "k1_order_gate", None) != "on":
+        _k1_forced_block_exit(f"{K1_FORCED_BLOCK_OPTION} {v} needs {K1_ORDER_GATE_OPTION} on (got "
+                              f"{getattr(args, 'k1_order_gate', None)!r}): a forced block has no effect without the gate")
+    return v
+
+
+def k1_forced_block_class() -> tuple[type, str]:
+    """``(K1ForcedBlockC2Controller, module file SHA-256)`` of ``04_scripts/02_chrono/k1_forced_block.py`` (raw bytes of
+    the work-tree file; checked against the module's own ``module_sha256()`` when it has one). Exit 2 when the module
+    or the class is missing or the two digests differ."""
+    import importlib  # noqa: PLC0415
+
+    sys.path.insert(0, str(HERE))
+    try:
+        mod = importlib.import_module(K1_FORCED_BLOCK_MODULE)
+    except ImportError as e:
+        _k1_forced_block_exit(f"{K1_FORCED_BLOCK_OPTION} first: cannot import {K1_FORCED_BLOCK_MODULE} ({e})")
+    finally:
+        sys.path.remove(str(HERE))
+    cls = getattr(mod, K1_FORCED_BLOCK_CLASS, None)
+    if cls is None:
+        _k1_forced_block_exit(f"{K1_FORCED_BLOCK_OPTION} first: {K1_FORCED_BLOCK_MODULE} has no {K1_FORCED_BLOCK_CLASS}")
+    sha = _file_sha256(Path(mod.__file__))
+    own = getattr(mod, "module_sha256", None)
+    if callable(own) and own() != sha:
+        _k1_forced_block_exit(f"{K1_FORCED_BLOCK_OPTION} first: {K1_FORCED_BLOCK_MODULE}.module_sha256() {own()} != "
+                              f"file SHA-256 {sha}")
+    return cls, sha
+
+
+def _class_name(cls: type) -> str:
+    return f"{cls.__module__}.{cls.__qualname__}"
+
+
+def level_controller_class(args: argparse.Namespace) -> tuple[type, dict[str, Any]]:
+    """The controller class of ``run_level`` and its ``c2_setup.k1_forced_block`` record (always): ``C2Controller``
+    for ``off`` (``module_sha256`` None), :func:`k1_forced_block_class` for ``first``."""
+    from outrigger_sim.control.c2 import C2Controller  # noqa: PLC0415
+
+    forced = k1_forced_block_of_args(args)
+    if forced == "first":
+        cls, sha = k1_forced_block_class()
+        return cls, {"requested": forced, "class": _class_name(cls), "module_sha256": sha}
+    return C2Controller, {"requested": "off", "class": _class_name(C2Controller), "module_sha256": None}
+
+
 def level_c2_config_of_args(args: argparse.Namespace) -> tuple[Any, dict[str, Any]]:
     """:func:`level_c2_config` of the ``level`` arguments; ``--las-off`` gives it the LAS-off preset and records it;
-    ``--k1-order-gate`` then sets the R4 order gate (LAS-b K1) and records it."""
+    ``--k1-order-gate`` then sets the R4 order gate (LAS-b K1) and records it; ``--k1-forced-block`` is checked
+    (``first`` without ``--k1-order-gate on``: exit 2; it does not change the config)."""
+    k1_forced_block_of_args(args)
     config, c2_meta = level_c2_config(args.allow_current_c2, las_off_config(args))
     if getattr(args, "las_off", False):
         c2_meta.update(preset=LAS_OFF_PRESET, las_off=True)
@@ -5704,7 +5781,7 @@ def run_level(args) -> Path:
             if not args.out_root:
                 raise SystemExit("--soil-event mid@<base>: needs --out-root (the base case folder is <out-root>/<base>)")
             soil_event_base = base_event_time(Path(args.out_root) / soil_event_spec["trigger"]["base_case"])
-    from outrigger_sim.control.c2 import C2Controller
+    from outrigger_sim.control.c2 import C2Controller  # noqa: F401 - imported before code_state_files (as before)
 
     # spec 420.4 (1): hashes of the controller files as imported by this process (record only)
     code_files = _record_or_error(code_state_files)
@@ -5746,6 +5823,9 @@ def run_level(args) -> Path:
             bad = [f"{r['path']}={r['got']!r} (want {r['want']!r})" for r in c2_meta["expect_controller"]["checks"]
                    if not r["ok"]]
             raise SystemExit(f"--expect-controller {expect}: the run-time C2 preset differs: {'; '.join(bad)}")
+    # K1 re-measure F1 / F2 (las_k1_rules_adopt2.md 9.3): controller class before the model build (exit 2 on misuse);
+    # default off = C2Controller (recorded on every run, rules 9.3)
+    controller_cls, c2_meta["k1_forced_block"] = level_controller_class(args)
     from outrigger_sim.chrono.scm_model import gravity_ramp_factor
 
     tb = time.perf_counter()
@@ -5817,7 +5897,7 @@ def run_level(args) -> Path:
     if flow is not None:
         model.actuator.set_flow_limit(flow)
     engine = S9Engine(model, imu_method="chrono_point")
-    c2 = C2Controller.from_params(params_ctrl, config)
+    c2 = controller_cls.from_params(params_ctrl, config)  # C2Controller unless --k1-forced-block first
     k1_gate = k1_order_gate_of_args(args)  # LAS-b K1 S-Ch: the built controller must hold the requested gate
     if k1_gate is not None and c2.config.slope_clearance_margin.flat_soil_margin_order_gate is not k1_gate:
         raise SystemExit(f"{K1_ORDER_GATE_OPTION} {args.k1_order_gate}: the built controller has "
@@ -6247,6 +6327,12 @@ def build_parser() -> argparse.ArgumentParser:
                     help="LAS-b K1 S-Ch: set slope_clearance_margin.flat_soil_margin_order_gate of the preset (on = "
                          "True, off = False as the preset) before --expect-controller; checked on the built "
                          "controller, recorded as c2_setup.k1_order_gate. Absent = no attribute, the run is unchanged")
+    lp.add_argument(K1_FORCED_BLOCK_OPTION, dest="k1_forced_block", choices=K1_FORCED_BLOCK_CHOICES,
+                    default=K1_FORCED_BLOCK_DEFAULT,
+                    help="K1 re-measure diagnostic (las_k1_rules_adopt2.md 2.3 / 9.3): first = build the controller "
+                         "with k1_forced_block.K1ForcedBlockC2Controller (the first R4 order-gate call blocks; needs "
+                         "--k1-order-gate on, exit 2 otherwise), off (default) = C2Controller as before. Recorded as "
+                         "c2_setup.k1_forced_block on every run")
     lp.add_argument("--creep-rule", choices=tuple(CREEP_RULES), default=argparse.SUPPRESS,
                     help="P3-4 creep rule (spec 433): current = sinkage rate over 1 s, a window_short row is not a "
                          "pass; legacy_0p2 = over 0.2 s, as the runs before 2026-11-05. Absent = current, no attribute")

@@ -273,6 +273,9 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     out.update(_las_module().las_batches(sys.modules[__name__]))
     # LAS-b K1 S-Ch (cad 2026-11-09, las_k1_chrono_rows.py): V5-LAS-K1-CHRONO, --k1-order-gate off / on pair
     out.update(_las_k1_module().k1_batches(sys.modules[__name__]))
+    # K1 re-measure (cad 2026-11-09, las_k1_rem_chrono_rows.py; rules las_k1_rules_adopt2.md 2.2 / 2.3): V5-LAS-K1-REM,
+    # 8 judge rows (gate off x 6, on x 2) + 2 forced-block diagnostic rows on uniform J2 / J1, P3b 120 s
+    out.update(_las_k1_rem_module().rem_batches(sys.modules[__name__]))
     return out
 
 
@@ -310,6 +313,15 @@ def _las_k1_module():
     finally:
         sys.path.remove(str(HERE))
     return las_k1_chrono_rows
+
+
+def _las_k1_rem_module():
+    sys.path.insert(0, str(HERE))
+    try:
+        import las_k1_rem_chrono_rows  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    return las_k1_rem_chrono_rows
 
 
 COUPLED_BATCH = "COUPLED_eta085"
@@ -1377,6 +1389,8 @@ ENTRY_META_KEYS = ("note", "priority", "controller", "source_run", "pair_case", 
                    "d1_id", "d1_role", "d1_select", "d1_tag", "d1_slope", "d1_flag", "d1_source",
                    "las", "las_family", "las_crawler", "las_ready", "start_env",
                    "las_candidate", "k1_candidate", "k1_order_gate",
+                   "rem_key", "role", "k1_forced_block", "pair_set", "argv_base_case", "argv_diff_option",
+                   "source_rows", "rem_mass_scale",
                    "stored_result", "stored_pool", "hash_comparable", "stored_argv_check", "stage3_controller")
 """Row keys copied into the batch.json case entries (when present)."""
 
@@ -1721,6 +1735,9 @@ def check_sources(name: str, rows: list[dict]) -> dict:
     for c in rows:
         if c.get("las_family"):  # V5-LAS-CHRONO: new rows, build check of the argv (las_chrono_rows.argv_check)
             res.append(_las_module().argv_check(c, sys.modules[__name__]))
+            continue
+        if c.get("rem_key"):  # V5-LAS-K1-REM: new rows, build check (las_k1_rem_chrono_rows.argv_check); before K1C
+            res.append(_las_k1_rem_module().argv_check(c, sys.modules[__name__]))
             continue
         if c.get("k1_candidate"):  # V5-LAS-K1-CHRONO: new rows, build check (las_k1_chrono_rows.argv_check)
             res.append(_las_k1_module().argv_check(c, sys.modules[__name__]))
