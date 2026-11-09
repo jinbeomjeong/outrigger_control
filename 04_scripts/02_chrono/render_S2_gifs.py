@@ -3271,6 +3271,9 @@ def render_summary_b(summary):
                 ls="-" if leg in ("FL", "RR") else (0, (3, 2)), label=leg)
     ax.legend(fontsize=7.2, ncol=4, loc="upper right", frameon=False)
     ax.set_xlim(0, caption.v11_end_s)
+    # headroom above the full stroke so the one-row legend clears the 700 mm plateaus
+    s_max_mm = float(np.nanmax(run.a["s_motor"])) * 1e3
+    ax.set_ylim(-0.03 * s_max_mm, 1.17 * s_max_mm)
     # crawler P-delta
     ax = axes_box(fig, 520, 430, 380, 190, W, H)
     s1.style_axes(ax, title="크롤러 정착 pitch [°]: 선형 / 정확(P-δ) / Chrono")
@@ -3361,7 +3364,7 @@ def main() -> None:
         "view_oblique_toward_viewer_body": VIEWS["oblique"][2].round(4).tolist(),
         "arrow_normal_m_per_kN": ARROW_N_M_PER_N * 1e3,
         "arrow_tangential_m_per_kN": ARROW_T_M_PER_N * 1e3,
-        "before_dir": str(args.before_dir) if args.before_dir else None,
+        "before_dir": rel(args.before_dir.resolve()) if args.before_dir else None,
         "params_file": (args.params.resolve().relative_to(ROOT).as_posix() if args.params
                         else "02_params/rexome33.yaml"),
     }

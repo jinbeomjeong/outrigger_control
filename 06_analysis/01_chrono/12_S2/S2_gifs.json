@@ -36,7 +36,7 @@
   ],
   "arrow_normal_m_per_kN": 0.01,
   "arrow_tangential_m_per_kN": 0.2,
-  "before_dir": "06_analysis\\01_chrono\\12_S2\\history\\before_planA",
+  "before_dir": "06_analysis/01_chrono/12_S2/history/before_planA",
   "params_file": "02_params/rexome33.yaml",
   "meshes": {
    "faces_full": 6378910,
@@ -92,7 +92,7 @@
    "ramp0.1_dt1e-05": 22.343854192416984
   }
  },
- "last_run_s": 27.1,
+ "last_run_s": 30.4,
  "v12_gif": {
   "path": "06_analysis/01_chrono/12_S2/S2a_v12_slope.gif",
   "frames": 63,
@@ -242,7 +242,7 @@
   "path": "06_analysis/01_chrono/12_S2/S2b_crawler_settle.gif",
   "frames": 28,
   "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
-  "size_bytes": 504652,
+  "size_bytes": 508034,
   "loop_s": 19.73,
   "resolution_px": [
    1400,
@@ -259,7 +259,43 @@
    "active_by_kind_window": {
     "roller": 12,
     "end_shoe": 2
-   }
+   },
+   "v13": {
+    "attitude_span": 1.0873562535651526e-05,
+    "attitude_tol": 0.0001,
+    "attitude_passed": true,
+    "fz_span": 46.004637768899556,
+    "fz_tol": 95.02825,
+    "fz_passed": true
+   },
+   "legs": {
+    "extension_max_m": 2.2814935436717697e-15,
+    "pad_clearance_min_m": 0.34078511700401526
+   },
+   "footprint_cad": [
+    {
+     "side": "left",
+     "x_m": [
+      -1.37516,
+      1.36042
+     ],
+     "y_m": [
+      0.745,
+      1.345
+     ]
+    },
+    {
+     "side": "right",
+     "x_m": [
+      -1.37516,
+      1.36042
+     ],
+     "y_m": [
+      -1.345,
+      -0.745
+     ]
+    }
+   ]
   },
   "middle": {
    "sphere_force_window_mean_minus_result_max_abs_N": 2.014344870527566,
@@ -269,7 +305,43 @@
    "active_by_kind_window": {
     "roller": 12,
     "end_shoe": 2
-   }
+   },
+   "v13": {
+    "attitude_span": 1.087318791609393e-05,
+    "attitude_tol": 0.0001,
+    "attitude_passed": true,
+    "fz_span": 44.91107681958238,
+    "fz_tol": 95.02825,
+    "fz_passed": true
+   },
+   "legs": {
+    "extension_max_m": 1.4391518055114412e-15,
+    "pad_clearance_min_m": 0.3408214321836227
+   },
+   "footprint_cad": [
+    {
+     "side": "left",
+     "x_m": [
+      -1.37516,
+      1.36042
+     ],
+     "y_m": [
+      0.745,
+      1.345
+     ]
+    },
+    {
+     "side": "right",
+     "x_m": [
+      -1.37516,
+      1.36042
+     ],
+     "y_m": [
+      -1.345,
+      -0.745
+     ]
+    }
+   ]
   },
   "bottom": {
    "sphere_force_window_mean_minus_result_max_abs_N": 1.6388760518493655,
@@ -279,7 +351,43 @@
    "active_by_kind_window": {
     "roller": 12,
     "end_shoe": 2
-   }
+   },
+   "v13": {
+    "attitude_span": 2.2481857140710382e-05,
+    "attitude_tol": 0.0001,
+    "attitude_passed": true,
+    "fz_span": 70.16591265797615,
+    "fz_tol": 95.02825,
+    "fz_passed": true
+   },
+   "legs": {
+    "extension_max_m": 1.0033040981947735e-15,
+    "pad_clearance_min_m": 0.3408570881858244
+   },
+   "footprint_cad": [
+    {
+     "side": "left",
+     "x_m": [
+      -1.37516,
+      1.36042
+     ],
+     "y_m": [
+      0.745,
+      1.345
+     ]
+    },
+    {
+     "side": "right",
+     "x_m": [
+      -1.37516,
+      1.36042
+     ],
+     "y_m": [
+      -1.345,
+      -0.745
+     ]
+    }
+   ]
   }
  },
  "events_gif": {

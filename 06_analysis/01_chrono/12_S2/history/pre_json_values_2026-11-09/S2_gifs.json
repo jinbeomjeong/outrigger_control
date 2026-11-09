@@ -1,0 +1,452 @@
+{
+ "meta": {
+  "script": "04_scripts/02_chrono/render_S2_gifs.py",
+  "cpu": {
+   "mode": "pcore",
+   "efficiency_classes": [
+    0,
+    1
+   ],
+   "affinity_ok": true,
+   "affinity_logical_processors": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+   ],
+   "power_throttling_off_ok": true,
+   "priority": "below_normal"
+  },
+  "view_oblique_toward_viewer_body": [
+   0.6006,
+   -0.6606,
+   0.4504
+  ],
+  "arrow_normal_m_per_kN": 0.01,
+  "arrow_tangential_m_per_kN": 0.2,
+  "before_dir": "06_analysis\\01_chrono\\12_S2\\history\\before_planA",
+  "params_file": "02_params/rexome33.yaml",
+  "meshes": {
+   "faces_full": 6378910,
+   "faces_drawn": 6378910,
+   "cluster_cell_mm": 0.0,
+   "parts": 1214,
+   "renderer": "zbuffer",
+   "drawing_mesh": "01_cad/05_meshes/render_mesh_v5.npz",
+   "drawing_mesh_sha256": "4521b9f715bb5e4414e28fb4cff4581d66b9c6d0cc61dd3bf48a7f5ad21565b9"
+  }
+ },
+ "dt_study": {
+  "png": "06_analysis/01_chrono/12_S2/S2a_dt_study.png",
+  "drawn": true,
+  "cases": [
+   "v7_yaw_dt5e-05",
+   "v7_yaw_dt1e-04",
+   "v7_yaw_dt2e-04"
+  ],
+  "dt_s": [
+   5e-05,
+   0.0001,
+   0.0002
+  ],
+  "judged_v7_dt_s": [
+   0.0002
+  ],
+  "slope_fit_per_s": 12.614063166599964,
+  "intercept": 0.03727358159051646,
+  "refit_minus_json": {
+   "slope_per_s": 0.0,
+   "intercept": 0.0
+  },
+  "slope_envelope_per_s": 12.512000318664874,
+  "increment_ratio": 2.1353637494393234,
+  "slope_ratio": 1.0091250533279972,
+  "zeta_ref": 0.0373,
+  "ct_scale_prediction": 0.03874522229328647,
+  "checks": {
+   "A1": true,
+   "A2": true,
+   "A3": true
+  },
+  "source": "verify_S2a_L1.json v7_yaw_dt_study"
+ },
+ "v12_summary_png": "06_analysis/01_chrono/12_S2/S2a_v12_summary.png",
+ "ramp_png": {
+  "png": "06_analysis/01_chrono/12_S2/S2b_ramp_effect.png",
+  "values_N": {
+   "ramp0_dt1e-04": 22343.73633366841,
+   "ramp0_dt1e-05": 223437.3633601633,
+   "ramp0.1_dt1e-04": 22.34373748982489,
+   "ramp0.1_dt1e-05": 22.343854192416984
+  }
+ },
+ "last_run_s": 27.1,
+ "v12_gif": {
+  "path": "06_analysis/01_chrono/12_S2/S2a_v12_slope.gif",
+  "frames": 63,
+  "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
+  "size_bytes": 850975,
+  "loop_s": 21.93,
+  "resolution_px": [
+   1400,
+   900
+  ],
+  "merged_identical_frames": 0
+ },
+ "v12": {
+  "frame_times_s": {
+   "v12_pitch2": [
+    0.02,
+    0.045,
+    0.07,
+    0.0818,
+    0.12,
+    0.2,
+    0.35,
+    0.55,
+    0.8,
+    1.1,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    3.05,
+    5.0,
+    8.8914,
+    15.8114,
+    28.1171,
+    50.0,
+    53.0
+   ],
+   "v12_roll2": [
+    0.02,
+    0.045,
+    0.07,
+    0.0824,
+    0.12,
+    0.2,
+    0.35,
+    0.55,
+    0.8,
+    1.1,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    3.05,
+    5.0,
+    8.8914,
+    15.8114,
+    28.1171,
+    50.0,
+    53.0
+   ],
+   "v12_rollm2_pitch1.5": [
+    0.02,
+    0.045,
+    0.07,
+    0.0814,
+    0.12,
+    0.2,
+    0.35,
+    0.55,
+    0.8,
+    1.1,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    3.05,
+    5.0,
+    8.8914,
+    15.8114,
+    28.1171,
+    50.0,
+    53.0
+   ]
+  },
+  "before_source": {
+   "v12_pitch2": "reference.json slope_V12/<case>/L1_plan_A_expected_chrono_minus_reference_rev13/rev12_contact_point_bushing / chrono_model_minus_reference_vertical_N (독립 모델값; --before-dir 미사용: 백업 W 382.3 kN ≠ 현재 380.1 kN)",
+   "v12_roll2": "reference.json slope_V12/<case>/L1_plan_A_expected_chrono_minus_reference_rev13/rev12_contact_point_bushing / chrono_model_minus_reference_vertical_N (독립 모델값; --before-dir 미사용: 백업 W 382.3 kN ≠ 현재 380.1 kN)",
+   "v12_rollm2_pitch1.5": "reference.json slope_V12/<case>/L1_plan_A_expected_chrono_minus_reference_rev13/rev12_contact_point_bushing / chrono_model_minus_reference_vertical_N (독립 모델값; --before-dir 미사용: 백업 W 382.3 kN ≠ 현재 380.1 kN)"
+  },
+  "before_minus_reference_vertical_N": {
+   "v12_pitch2": [
+    113.0,
+    97.6,
+    -100.0,
+    -110.6
+   ],
+   "v12_roll2": [
+    -154.6,
+    200.2,
+    -144.5,
+    98.79
+   ],
+   "v12_rollm2_pitch1.5": [
+    279.3,
+    -109.7,
+    48.57,
+    -218.1
+   ]
+  },
+  "after_minus_reference_vertical_N": {
+   "v12_pitch2": [
+    31.89,
+    14.34,
+    -17.18,
+    -29.42
+   ],
+   "v12_roll2": [
+    31.0,
+    14.11,
+    -16.1,
+    -29.48
+   ],
+   "v12_rollm2_pitch1.5": [
+    33.11,
+    12.97,
+    -17.96,
+    -28.51
+   ]
+  },
+  "checks": {
+   "v12_pitch2": {
+    "s_motor_spread_m": 4.773959005888173e-15,
+    "window_mean_normal_minus_verify_N": 2.0372681319713593e-10
+   },
+   "v12_roll2": {
+    "s_motor_spread_m": 4.440892098500626e-15,
+    "window_mean_normal_minus_verify_N": 3.7834979593753815e-10
+   },
+   "v12_rollm2_pitch1.5": {
+    "s_motor_spread_m": 4.6629367034256575e-15,
+    "window_mean_normal_minus_verify_N": 3.92901711165905e-10
+   }
+  },
+  "frame_png": "06_analysis/01_chrono/12_S2/S2a_v12_slope_frame.png"
+ },
+ "crawler_gif": {
+  "path": "06_analysis/01_chrono/12_S2/S2b_crawler_settle.gif",
+  "frames": 28,
+  "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
+  "size_bytes": 504652,
+  "loop_s": 19.73,
+  "resolution_px": [
+   1400,
+   900
+  ],
+  "merged_identical_frames": 0
+ },
+ "crawler": {
+  "top": {
+   "sphere_force_window_mean_minus_result_max_abs_N": 1.144093417809927,
+   "sum_spring_minus_F_crawler_z_max_abs_N": 39.558633019332774,
+   "active_spheres_window": 14,
+   "weight_N": 380112.91206408397,
+   "active_by_kind_window": {
+    "roller": 12,
+    "end_shoe": 2
+   }
+  },
+  "middle": {
+   "sphere_force_window_mean_minus_result_max_abs_N": 2.014344870527566,
+   "sum_spring_minus_F_crawler_z_max_abs_N": 26.915728025254793,
+   "active_spheres_window": 14,
+   "weight_N": 380112.91206408397,
+   "active_by_kind_window": {
+    "roller": 12,
+    "end_shoe": 2
+   }
+  },
+  "bottom": {
+   "sphere_force_window_mean_minus_result_max_abs_N": 1.6388760518493655,
+   "sum_spring_minus_F_crawler_z_max_abs_N": 37.666201465413906,
+   "active_spheres_window": 14,
+   "weight_N": 380112.91206408397,
+   "active_by_kind_window": {
+    "roller": 12,
+    "end_shoe": 2
+   }
+  }
+ },
+ "events_gif": {
+  "path": "06_analysis/01_chrono/12_S2/S2b_contact_events.gif",
+  "frames": 74,
+  "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
+  "size_bytes": 738196,
+  "loop_s": 18.64,
+  "resolution_px": [
+   1400,
+   900
+  ],
+  "merged_identical_frames": 0
+ },
+ "events": {
+  "fast_FL": {
+   "frames": 37,
+   "events": [
+    [
+     0.14590000000000025,
+     0,
+     1
+    ],
+    [
+     1.1830999999998861,
+     0,
+     2
+    ],
+    [
+     2.270100000000366,
+     0,
+     1
+    ]
+   ],
+   "checks": {
+    "min_gap_mm": -2.498717793959271,
+    "slip_end_mm": 3.6146878585477578,
+    "slip_result_mm": 3.614634475940916,
+    "slip_vector_minus_result_mm": 0.0029742728950210226
+   }
+  },
+  "slow_FL": {
+   "frames": 37,
+   "events": [
+    [
+     0.5047999999999607,
+     0,
+     1
+    ],
+    [
+     5.768199999999895,
+     0,
+     2
+    ],
+    [
+     9.047599999992253,
+     0,
+     1
+    ]
+   ],
+   "checks": {
+    "min_gap_mm": -0.623690845505287,
+    "slip_end_mm": 0.0460476637259601,
+    "slip_result_mm": 0.046060605985601105,
+    "slip_vector_minus_result_mm": 2.3407671993825495e-05
+   }
+  }
+ },
+ "events_frame_png": "06_analysis/01_chrono/12_S2/S2b_contact_events_frame.png",
+ "v11_gif": {
+  "path": "06_analysis/01_chrono/12_S2/S2b_v11_stroke.gif",
+  "frames": 72,
+  "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
+  "size_bytes": 687954,
+  "loop_s": 16.76,
+  "resolution_px": [
+   1400,
+   900
+  ],
+  "merged_identical_frames": 0
+ },
+ "v11": {
+  "body_fixed_max_dev_m": 0.0,
+  "rod_mass_kg": 106.783666,
+  "ramp_accel_m_s2": 0.209243016,
+  "stroke_times_s": {
+   "FL 0->0.70": 33.554094257293464,
+   "FL 0.70->0": 33.55409425735725,
+   "FR 0->0.70": 33.554094257293464,
+   "FR 0.70->0": 33.55409425735725,
+   "RL 0->0.70": 33.554094257293464,
+   "RL 0.70->0": 33.55409425735725,
+   "RR 0->0.70": 33.554094257356695
+  },
+  "inertial_reaction_max_abs_N": 345.01501208137415,
+  "screen_scale_px_per_m": 45.159532579207706
+ },
+ "events_view_toward_viewer_body": [
+  0.6006,
+  0.6606,
+  0.4504
+ ],
+ "v7_gif": {
+  "path": "06_analysis/01_chrono/12_S2/S2a_v7_free_vibration.gif",
+  "frames": 104,
+  "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
+  "size_bytes": 5016262,
+  "loop_s": 19.4,
+  "resolution_px": [
+   1400,
+   900
+  ],
+  "merged_identical_frames": 0
+ },
+ "v7": {
+  "mesh_render_s": 302.2,
+  "workers": 4,
+  "exaggeration": {
+   "v7_roll": 400.0,
+   "v7_pitch": 400.0,
+   "v7_yaw": 600.0
+  },
+  "limits_screen_m": [
+   [
+    -6.60426529308873,
+    7.196217351805485
+   ],
+   [
+    -6.889983724430036,
+    12.72641660652674
+   ]
+  ],
+  "checks": {
+   "v7_roll": {
+    "refit_minus_result_f_damped_Hz": 3.9611309010645357e-07,
+    "refit_minus_result_zeta": 5.016264431612072e-09,
+    "equilibrium_back_extrapolation_dt_s": 0.0009999999999976694,
+    "s_motor_spread_m": 1.1782241848834474e-12,
+    "slow_frames": 24,
+    "strobe_frames": 13,
+    "strobe_every_cycles": 3
+   },
+   "v7_pitch": {
+    "refit_minus_result_f_damped_Hz": 7.170432805736482e-06,
+    "refit_minus_result_zeta": 9.498757174916661e-08,
+    "equilibrium_back_extrapolation_dt_s": 0.0009999999999976694,
+    "s_motor_spread_m": 2.2762902673889585e-12,
+    "slow_frames": 24,
+    "strobe_frames": 12,
+    "strobe_every_cycles": 5
+   },
+   "v7_yaw": {
+    "refit_minus_result_f_damped_Hz": 0.0,
+    "refit_minus_result_zeta": 0.0,
+    "equilibrium_back_extrapolation_dt_s": 0.0009999999999976694,
+    "s_motor_spread_m": 2.625677453238495e-13,
+    "slow_frames": 24,
+    "strobe_frames": 7,
+    "strobe_every_cycles": 1
+   }
+  },
+  "mast_top_body_m": [
+   3.417,
+   0.0,
+   11.795
+  ]
+ },
+ "summary_a_png": "06_analysis/01_chrono/12_S2/S2a_summary.png",
+ "summary_b_png": "06_analysis/01_chrono/12_S2/S2b_summary.png"
+}
