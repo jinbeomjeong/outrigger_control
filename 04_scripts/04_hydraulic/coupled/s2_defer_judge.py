@@ -4,10 +4,19 @@ Rules: ``06_analysis/02_control/verif_matrix/s2_soil_defer_rules.md`` (control-e
 LF sha256 :data:`RULES_S2D_SHA256`) with its addenda ``s2_soil_defer_rules_rev1.md``
 (:data:`RULES_S2D_REV1_SHA256`, RS1-1 .. RS1-9), ``s2_soil_defer_rules_rev2.md``
 (:data:`RULES_S2D_REV2_SHA256`, RS2-0 .. RS2-6), ``s2_soil_defer_rules_rev3.md``
-(:data:`RULES_S2D_REV3_SHA256`, RS3-0 .. RS3-5) and ``s2_soil_defer_rules_rev4.md``
-(:data:`RULES_S2D_REV4_SHA256`, RS4-0 .. RS4-3; the later addendum wins) on top of the
+(:data:`RULES_S2D_REV3_SHA256`, RS3-0 .. RS3-5), ``s2_soil_defer_rules_rev4.md``
+(:data:`RULES_S2D_REV4_SHA256`, RS4-0 .. RS4-3) and ``s2_soil_defer_rules_rev5.md``
+(:data:`RULES_S2D_REV5_SHA256`, RS5-0 .. RS5-4; the later addendum wins) on top of the
 LAS-b A-plan rules it inherits (six files, ``las_revA_diag.RULES_FIELDS``). The rules text
 wins where this code differs.
+
+rev5: the S judgement is ``fail`` (SH-8 at the 106th S-D line) and S2D is rejected; A-S /
+A-P0 are not run. The information bundle S-D-info runs S2D on the 19 selection keys without
+an S-D line whose S-C line has a shadow deferral (:func:`sd_info_selection`, list sha256
+:data:`SD_INFO_LIST_SHA256`), on its own commit with the controller files of the S-C / S-D
+lines (:func:`controller_identity_problems`); SH-6 / SH-7 / SH-8 do not apply, K-S3' / K-S4
+/ K-S5 do (SH-3). ``judge --info`` adds the ``info`` block (:func:`judge_s_info`) without
+changing any status; S-D-info is left out of the identity across the judged bundles.
 
 rev4: RS4-1 K-S6(A): every A-S P5r4S line (324) with an empty ``soil.deferrals`` has the
 hash of the stored revA2 P5r4 line of the same grid point and key (64 characters; SH-3, A
@@ -74,7 +83,7 @@ Usage (dynamics-dev or python-dev python.exe, project root, PowerShell):
   python -I -B 04_scripts/04_hydraulic/coupled/s2_defer_judge.py judge [--dir <soil_defer>]
       [--d1 <d1.jsonl>] [--reva2-dir <revA2>] [--ref-rg ..] [--ref-reva-rg ..]
       [--ref-reva-rh ..] [--rules-root <checkout>] [--pre-rev2-sc <s2d_SC.jsonl>]
-      [--out <md>] [--json-out <json>]
+      [--info] [--out <md>] [--json-out <json>]
   (``--pre-rev2-sc`` defaults to ``<dir>/history_pre_rev2/s2d_SC.jsonl``.)
 Exit codes: 0 every judged part passed, 1 a stop / fail / undecidable / ask, 2 input error.
 """
@@ -118,18 +127,36 @@ RULES_REV4_RELATIVE = RULES_RELATIVE.with_name("s2_soil_defer_rules_rev4.md")
 RULES_S2D_REV4_SHA256 = "5eb3f2f3802a087f983b9ce65113becfbcf7c5dffa6540ea34aad1bcaa2967d4"
 """``s2_soil_defer_rules_rev4.sha256`` (LF digest, sealed 2026-11-09 14:01:37 +09:00): K-S6(A)
 RS4-1, the K-S3' 2 reading RS4-2 and the unpaired SH-10 keys RS4-3."""
+RULES_REV5_RELATIVE = RULES_RELATIVE.with_name("s2_soil_defer_rules_rev5.md")
+RULES_S2D_REV5_SHA256 = "0bed95a457e7b8b9c1eb12011b9e873155c455d25307c844a29636ea7b5ab137"
+"""``s2_soil_defer_rules_rev5.sha256`` (LF digest, sealed 2026-11-09): S judgement fail and
+S2D rejected (RS5-1), the information bundle S-D-info (RS5-2), the disclosures (RS5-3)."""
+REV5_RULES_FIELD = "rules_s2d_rev5_sha256"
 RULES_FIELDS = ("rules_s2d_sha256", "rules_s2d_rev1_sha256", "rules_s2d_rev2_sha256",
-                "rules_s2d_rev3_sha256", "rules_s2d_rev4_sha256", *diag.RULES_FIELDS)
+                "rules_s2d_rev3_sha256", "rules_s2d_rev4_sha256", REV5_RULES_FIELD,
+                *diag.RULES_FIELDS)
 RULES_VALUES = (RULES_S2D_SHA256, RULES_S2D_REV1_SHA256, RULES_S2D_REV2_SHA256,
-                RULES_S2D_REV3_SHA256, RULES_S2D_REV4_SHA256, *diag.RULES_VALUES)
-"""Every line records the S2D rules, its rev1 .. rev4 and the six A-plan rules digests
-(rules A.2, rev2 RS2-5, rev3 RS3-5; eleven fields)."""
+                RULES_S2D_REV3_SHA256, RULES_S2D_REV4_SHA256, RULES_S2D_REV5_SHA256,
+                *diag.RULES_VALUES)
+"""Every new line records the S2D rules, its rev1 .. rev5 and the six A-plan rules digests
+(rules A.2, rev2 RS2-5, rev3 RS3-5, rev5 RS5-2.3; twelve fields)."""
+PRE_REV5_RULES_FIELDS = tuple(name for name in RULES_FIELDS if name != REV5_RULES_FIELD)
+PRE_REV5_RULES_VALUES = tuple(value for name, value in zip(RULES_FIELDS, RULES_VALUES,
+                                                           strict=True)
+                              if name != REV5_RULES_FIELD)
+"""The eleven digests the lines of the bundles before rev5 (S-0 .. A-P0) are checked on:
+the stored S-C / S-D lines were run before rev5 was sealed."""
 PRE_REV2_SC_RELATIVE = Path("history_pre_rev2") / "s2d_SC.jsonl"
 """rev3 RS3-4: the pre-rev2 S-C file under a ``soil_defer`` folder (identity reference of
 SH-10 only, never judged)."""
 SHA256_HEX_LENGTH = 64
 
-BUNDLES = ("S-0", "S-C", "S-D", "A-S", "A-P0")
+SD_INFO_BUNDLE = "S-D-info"
+JUDGED_BUNDLES = ("S-0", "S-C", "S-D", "A-S", "A-P0")
+"""The bundles of the judgement (one run identity across them, SH-4)."""
+BUNDLES = (*JUDGED_BUNDLES, SD_INFO_BUNDLE)
+"""rev5 RS5-2: S-D-info is an information bundle of its own commit; it never changes the S
+judgement and is not part of the identity across the judged bundles."""
 S2D_VALUES = {"mode_defer_periods": 5, "mode_defer_stroke_m": 0.006,
               "mode_defer_rise_factor": 4.0}
 """Rules 1.3 / 2."""
@@ -143,7 +170,8 @@ SOIL_CANDIDATES = {
 }
 """``s2d.candidate`` -> the four ``SoilResponseSettings`` fields set with ``replace``. ``P0``
 of S-C is the preset whose S2D values are evaluated in shadow only (commands as P0)."""
-BUNDLE_SOIL_CANDIDATE = {"S-0": "N0", "S-C": "P0", "S-D": "S2D", "A-S": "P5r4S", "A-P0": "N0"}
+BUNDLE_SOIL_CANDIDATE = {"S-0": "N0", "S-C": "P0", "S-D": "S2D", "A-S": "P5r4S", "A-P0": "N0",
+                         SD_INFO_BUNDLE: "S2D"}
 
 # ------------------------------------------------------------------------------- stored facts
 DIAGA_PATH = fb.V5_DIR / "las" / "diagA" / "diagA.jsonl"
@@ -179,6 +207,24 @@ SH9_KEYS = 19
 SH9_SOIL_KEYS = 12
 """rev1 RS1-9: S-C keys whose job dict is a stored ``fb_F3`` / ``fb_F4`` L line's (12 of them
 with a soil-mode start in the stored L line)."""
+SC_FILE_SHA256 = "70e91ec1234d56a918af1b4fc053c3175f0f14ab41e2b5f334890f7dc6cb08aa"
+SD_FILE_SHA256 = "16ca4e4f0a30cfff5e5da8445b2d9ddb31299dc43510b80f8cad5d47dd5a5787"
+"""rev5 RS5-0: raw sha256 of the S-C file (456 lines, the P0 pairs) and of the S-D file (106
+lines, stopped by SH-8); both are checked before and after S-D-info (SH-4)."""
+SD_INFO_KEYS = 19
+SD_INFO_LIST_SHA256 = "56a7981738326e6ef37943e90277a220e70771f7683c045b0c6eb995a1102ca7"
+"""rev5 RS5-2.1: sha256 of the sorted S-D-info keys, each followed by one LF (UTF-8)."""
+SHADOW_ENTRY_KEYS = 68
+"""rev5 RS5-2.2: S-C shadow-entry keys of the S-D selection (49 in S-D + the 19 of S-D-info)."""
+C2_SHA256 = "18f52a6035c89e35e91733c0936972f66ac31e80f99ecf6285a7984f82548199"
+"""rev5 RS5-2.3: ``c2.py`` of the S-C / S-D lines; the S-D-info lines must have it too."""
+INFO_CHANGEABLE_TOOLS = ("s2_defer_targeted.py", "s2_defer_judge.py")
+"""rev5 RS5-2.3: the only recorded identity files that may differ from the S-C / S-D lines."""
+STROKE_BUDGET_M = 0.6828
+"""rev5 RS5-2.4: stroke budget guard (682.8 mm) of the P0 stroke margin table."""
+J2_FDOWN_STAGES = ("B", "M", "T")
+STROKE_FAULT_EVENT = "FAULT_LIFT_STROKE_LIMIT"
+LOC_REVOKED_EVENT = "INFO_LOC_REVOKED"
 
 # ------------------------------------------------------------------------------- thresholds
 PERIOD_S = 0.1
@@ -230,18 +276,20 @@ def rules_path(rules_root: Path = ROOT) -> Path:
 
 
 def sealed_files(rules_root: Path = ROOT) -> tuple:
-    """SH-1: the S2D rules, their rev1 .. rev4 (from ``rules_root``) and the six A-plan
+    """SH-1: the S2D rules, their rev1 .. rev5 (from ``rules_root``) and the six A-plan
     rules."""
     path = rules_path(rules_root)
     rev1 = rules_root / RULES_REV1_RELATIVE
     rev2 = rules_root / RULES_REV2_RELATIVE
     rev3 = rules_root / RULES_REV3_RELATIVE
     rev4 = rules_root / RULES_REV4_RELATIVE
+    rev5 = rules_root / RULES_REV5_RELATIVE
     return ((path, path.with_suffix(".sha256"), RULES_S2D_SHA256),
             (rev1, rev1.with_suffix(".sha256"), RULES_S2D_REV1_SHA256),
             (rev2, rev2.with_suffix(".sha256"), RULES_S2D_REV2_SHA256),
             (rev3, rev3.with_suffix(".sha256"), RULES_S2D_REV3_SHA256),
-            (rev4, rev4.with_suffix(".sha256"), RULES_S2D_REV4_SHA256), *ajudge.SEALED_RULES,
+            (rev4, rev4.with_suffix(".sha256"), RULES_S2D_REV4_SHA256),
+            (rev5, rev5.with_suffix(".sha256"), RULES_S2D_REV5_SHA256), *ajudge.SEALED_RULES,
             (diag.RULES_REVA_REV3_PATH, diag.RULES_REVA_REV3_SHA_PATH,
              diag.RULES_REVA_REV3_SHA256))
 
@@ -443,10 +491,19 @@ def settings_problems(line: dict) -> list[str]:
     return []
 
 
+def rules_fields_of(bundle: str | None) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """(fields, values) a line of ``bundle`` must record: S-D-info the twelve with rev5
+    (RS5-2.3), the bundles run before rev5 the eleven without it."""
+    if bundle == SD_INFO_BUNDLE:
+        return RULES_FIELDS, RULES_VALUES
+    return PRE_REV5_RULES_FIELDS, PRE_REV5_RULES_VALUES
+
+
 def rules_problems(line: dict) -> list[str]:
     block = s2d_of(line)
-    recorded = tuple(block.get(name) for name in RULES_FIELDS)
-    return [] if recorded == RULES_VALUES else [f"{key_of(line)}: rules digests {recorded}"]
+    fields, values = rules_fields_of(block.get("bundle"))
+    recorded = tuple(block.get(name) for name in fields)
+    return [] if recorded == values else [f"{key_of(line)}: rules digests {recorded}"]
 
 
 def identity_problems(lines: list[dict]) -> list[str]:
@@ -468,12 +525,13 @@ def identity_problems(lines: list[dict]) -> list[str]:
 
 
 def cross_bundle_identity_problems(lines: list[dict]) -> list[str]:
-    """SH-4: every finished line of every S2D bundle (S-0, S-C, S-D, A-S, A-P0) has one
-    ``git_head`` and one set of tool sha256."""
+    """SH-4: every finished line of every judged S2D bundle (S-0, S-C, S-D, A-S, A-P0) has
+    one ``git_head`` and one set of tool sha256 (S-D-info has its own commit, rev5 RS5-2.3:
+    :func:`info_identity_problems`)."""
     identities: dict[tuple[str, str], set[str]] = {}
     for line in lines:
         bundle = s2d_of(line).get("bundle")
-        if bundle not in BUNDLES or rj.is_error(line):
+        if bundle not in JUDGED_BUNDLES or rj.is_error(line):
             continue
         identity = s2d_of(line).get("identity") or {}
         found = (str(identity.get("git_head")),
@@ -1316,14 +1374,252 @@ def _short(part: dict | None) -> dict | None:
             "missing": part["missing"][:10], "C-2_violations": part["C-2_violations"]}
 
 
+# ------------------------------------------------------------------------------- S-D-info
+def has_shadow(line: dict) -> bool:
+    """rev5 RS5-2.1: the S-C (P0, shadow on) line recorded a shadow deferral."""
+    return bool((soil_block(line).get("defer") or {}).get("shadow"))
+
+
+def key_list_sha256(keys: list[str]) -> str:
+    """rev5 RS5-2.1: sha256 of the keys in the given order, each followed by one LF."""
+    return hashlib.sha256("".join(f"{key}\n" for key in keys).encode("utf-8")).hexdigest()
+
+
+def sd_info_selection(sc_lines: list[dict], sd_lines: list[dict]) -> list[str]:
+    """rev5 RS5-2.1: the S-D selection keys without an S-D line whose S-C line has a shadow
+    deferral, sorted (19 keys on the stored files)."""
+    sc_by_key = by_key(lines_of(sc_lines, "S-C"))
+    run_keys = {key_of(line) for line in sd_lines if s2d_of(line).get("bundle") == "S-D"}
+    return sorted(key for key in sd_selection(sc_lines)["keys"]
+                  if key not in run_keys and has_shadow(sc_by_key[key]))
+
+
+def sd_info_list_problems(keys: list[str]) -> list[str]:
+    """SH-4 (RS5-2.1): the recomputed list is the sealed 19 keys (count and list sha256)."""
+    digest = key_list_sha256(keys)
+    if len(keys) == SD_INFO_KEYS and digest == SD_INFO_LIST_SHA256:
+        return []
+    return [f"S-D-info list: {len(keys)} keys sha256 {digest}, expected {SD_INFO_KEYS} keys "
+            f"{SD_INFO_LIST_SHA256}"]
+
+
+def stored_sc_sd_problems(directory: Path) -> list[str]:
+    """SH-4 (RS5-0 / RS5-2.3): the S-C and S-D files are the ones rev5 was written on."""
+    problems = []
+    for name, expected in (("s2d_SC.jsonl", SC_FILE_SHA256), ("s2d_SD.jsonl", SD_FILE_SHA256)):
+        problem = file_problem(directory / name, expected)
+        if problem is not None:
+            problems.append(f"SH-4 {problem}")
+    return problems
+
+
+def _controller_files(identity: dict | None) -> dict:
+    """Recorded identity sha256 without the tools rev5 lets change."""
+    files = (identity or {}).get("sha256") or {}
+    return {name: sha for name, sha in files.items() if name not in INFO_CHANGEABLE_TOOLS}
+
+
+def controller_identity_problems(identity: dict | None, reference_lines: list[dict]) -> list[str]:
+    """SH-4 (RS5-2.3): ``identity``'s recorded files other than the two S2D tools have the
+    sha256 of the S-C / S-D lines (one set among them), ``c2.py`` the rev5 value."""
+    references = {json.dumps(_controller_files(s2d_of(line).get("identity")), sort_keys=True)
+                  for line in reference_lines if not rj.is_error(line)}
+    if len(references) != 1:
+        return [f"SH-4 controller identity: {len(references)} file sets in the S-C / S-D lines"]
+    reference = json.loads(references.pop())
+    current = _controller_files(identity)
+    problems = [f"SH-4 controller identity: {name} {current.get(name)} != {sha}"
+                for name, sha in reference.items() if current.get(name) != sha]
+    problems += [f"SH-4 controller identity: {name} not in the S-C / S-D record"
+                 for name in sorted(set(current) - set(reference))]
+    if current.get("c2.py") != C2_SHA256:
+        problems.append(f"SH-4 controller identity: c2.py {current.get('c2.py')} != {C2_SHA256}")
+    return problems
+
+
+def info_identity_problems(info_lines: list[dict], reference_lines: list[dict]) -> list[str]:
+    """SH-4 on the S-D-info lines: one commit, empty code diff, allowed dirty files, the twelve
+    rules digests, the settings, and the controller identity of the S-C / S-D lines."""
+    problems = identity_problems(info_lines)
+    for line in info_lines:
+        found = controller_identity_problems(s2d_of(line).get("identity"), reference_lines)
+        problems += [f"{key_of(line)}: {text}" for text in found]
+    return problems
+
+
+def info_k_problems(cand: dict, base: dict) -> list[str]:
+    """SH-3 on an S-D-info pair (RS5-2.3): K-S3' (item 1, and item 2 on the recorded command
+    prefix, rev3 RS3-2 / rev4 RS4-2), K-S4 and K-S5."""
+    problems = k_s4_problems(cand) + k_s5_problems(cand) + k_s3_entry_problems(cand, base)
+    if cand["commands_sha256"] != base["commands_sha256"] and not prefix_matches(cand, base):
+        problems.append(f"K-S3' {key_of(cand)}: commands differ before the entry period")
+    return problems
+
+
+def _is_ready(line: dict) -> bool:
+    return rj.need(line, "final_phase") == "ready" and rj.ready_time(line) is not None
+
+
+def _difference(value, base_value, scale: float = 1.0) -> float | None:
+    if value is None or base_value is None:
+        return None
+    return (float(value) - float(base_value)) * scale
+
+
+def info_pair_record(cand: dict, base: dict) -> dict:
+    """RS5-2.4 facts of one S-D-info pair (S2D line, S-C P0 line of the key)."""
+    pair = sc_pair_record(cand, base)
+    cand_d1, base_d1 = rj.need(cand, "d1"), rj.need(base, "d1")
+    deferrals = deferrals_of(cand) or []
+    is_improved = not _is_ready(base) and _is_ready(cand)
+    return {
+        "deferrals": [{"start_s": deferral.get("start_s"),
+                       "end_reason": deferral.get("end_reason"),
+                       "periods": deferral.get("periods")} for deferral in deferrals],
+        "changed": pair["changed"],
+        "SC-2": {"violations": pair["violations"],
+                 "verdict": [base_d1.get("verdict"), cand_d1.get("verdict")],
+                 "fail_items": [base_d1.get("fail_items"), cand_d1.get("fail_items")],
+                 "final_phase": [base.get("final_phase"), cand.get("final_phase")],
+                 "new_events": sorted(rj.event_name_set(cand) - rj.event_name_set(base))},
+        "SC-F_fail": pair["SC-F_fail"], "SC-S_fail": pair["SC-S_fail"],
+        "SC-R_fail": pair["SC-R_fail"],
+        "delta_stroke_max_mm": _difference(cand_d1.get("stroke_max_m"),
+                                           base_d1.get("stroke_max_m"), 1000.0),
+        "ready_dt_s": pair["dt_s"],
+        "loc_revoked": {"P0": event_count(base, LOC_REVOKED_EVENT),
+                        "S2D": event_count(cand, LOC_REVOKED_EVENT)},
+        "final_loc_dt_s": _difference(soil_block(cand).get("t_loc_s"),
+                                      soil_block(base).get("t_loc_s")),
+        "improved": is_improved, "worsened": is_sh8_pair(pair)}
+
+
+def is_j2_fdown_key(key: str) -> bool:
+    """RS5-2.4: a ``J2|{B,M,T}|fdown-rec`` key."""
+    parts = key.split("|")
+    return (len(parts) > 4 and parts[2] == "J2" and parts[3] in J2_FDOWN_STAGES
+            and parts[4] == "fdown-rec")
+
+
+def _stroke_faults(line: dict) -> list[str]:
+    """Full ``FAULT_LIFT_STROKE_LIMIT`` names of a line (``d1.u3.warnings``)."""
+    warnings = ((line.get("d1") or {}).get("u3") or {}).get("warnings") or []
+    return sorted(name for name in warnings if str(name).startswith(STROKE_FAULT_EVENT))
+
+
+def j2_fdown_row(source: str, cand: dict, base: dict) -> dict:
+    """RS5-2.4: new and lost ``FAULT_LIFT_STROKE_LIMIT`` of one J2 fdown pair."""
+    has_base = event_count(base, STROKE_FAULT_EVENT) > 0
+    has_cand = event_count(cand, STROKE_FAULT_EVENT) > 0
+    change = {(False, True): "new", (True, False): "lost", (True, True): "both",
+              (False, False): "none"}[(has_base, has_cand)]
+    return {"key": key_of(cand), "source": source, "fault": change,
+            "P0_faults": _stroke_faults(base), "S2D_faults": _stroke_faults(cand),
+            "final_phase": [base.get("final_phase"), cand.get("final_phase")],
+            "delta_stroke_max_mm": _difference(rj.need(cand, "d1", "stroke_max_m"),
+                                               rj.need(base, "d1", "stroke_max_m"), 1000.0)}
+
+
+def j2_fdown_table(sd_lines: list[dict], info_lines: list[dict], base_by_key: dict) -> dict:
+    """RS5-2.4: the J2 fdown pairs of the S-D 106 lines and of S-D-info, with counts."""
+    rows = []
+    for source, lines in (("S-D", sd_lines), (SD_INFO_BUNDLE, info_lines)):
+        for key, cand in sorted(by_key(lines).items()):
+            if is_j2_fdown_key(key) and key in base_by_key:
+                rows.append(j2_fdown_row(source, cand, base_by_key[key]))
+    counts: dict[str, int] = {}
+    for row in rows:
+        counts[row["fault"]] = counts.get(row["fault"], 0) + 1
+    return {"rows": rows, "counts": counts}
+
+
+def p0_margin_table(sc_lines: list[dict], sd_lines: list[dict], info_lines: list[dict]) -> dict:
+    """RS5-2.4: 682.8 mm - P0 ``d1.stroke_max_m`` of every shadow-entry key of the S-D
+    selection (49 run in S-D + the 19 of S-D-info)."""
+    base_by_key = by_key(lines_of(sc_lines, "S-C"))
+    sd_keys, info_keys = set(by_key(sd_lines)), set(by_key(info_lines))
+    rows = []
+    for key in sd_selection(sc_lines)["keys"]:
+        base = base_by_key[key]
+        if not has_shadow(base):
+            continue
+        stroke_m = rj.need(base, "d1", "stroke_max_m")
+        source = "S-D" if key in sd_keys else (SD_INFO_BUNDLE if key in info_keys else "not run")
+        margin_mm = None if stroke_m is None else (STROKE_BUDGET_M - float(stroke_m)) * 1000.0
+        rows.append({"key": key, "source": source, "P0_stroke_max_mm":
+                     None if stroke_m is None else float(stroke_m) * 1000.0,
+                     "margin_mm": margin_mm})
+    return {"keys": len(rows), "expected": SHADOW_ENTRY_KEYS, "rows": rows}
+
+
+def judge_s_info(lines: list[dict], file_problems: list[str] | None = None) -> dict:
+    """rev5 RS5-2.4 information block (the S judgement is not changed).
+
+    ``status``: ``stop`` on a K-S3' / K-S4 / K-S5 problem (SH-3) or an identity, list or
+    stored-file problem (SH-4); ``undecidable`` with missing keys, error lines or histories
+    RS2-4 rejects; ``incomplete`` without S-D-info lines; else ``complete``."""
+    sc_lines, sd_lines = lines_of(lines, "S-C"), lines_of(lines, "S-D")
+    info_lines = lines_of(lines, SD_INFO_BUNDLE)
+    base_by_key = by_key(sc_lines)
+    expected = sd_info_selection(lines, lines)
+    cand_by_key = by_key(info_lines)
+    out = {"selection": {"keys": len(expected), "sha256": key_list_sha256(expected)},
+           "list_problems": sd_info_list_problems(expected),
+           "file_problems": list(file_problems or []),
+           "errors": error_count(lines, SD_INFO_BUNDLE),
+           "unresolved_errors": sorted(
+               {key_of(line) for line in lines if rj.is_error(line)
+                and s2d_of(line).get("bundle") == SD_INFO_BUNDLE} - set(cand_by_key)),
+           "missing": sorted(set(expected) - set(cand_by_key)),
+           "extra": sorted(set(cand_by_key) - set(expected)),
+           "pairs": {}, "k_problems": [], "undecidable": [], "k_s3_prime_coverage": {}}
+    for key in sorted(set(cand_by_key) & set(base_by_key)):
+        _info_pair(out, cand_by_key[key], base_by_key[key])
+    out["K-S3'_2_coverage"] = k_s3_prime_summary(out.pop("k_s3_prime_coverage"))
+    out["improved"] = sorted(key for key, pair in out["pairs"].items() if pair["improved"])
+    out["worsened"] = sorted(key for key, pair in out["pairs"].items() if pair["worsened"])
+    out["identity_problems"] = info_identity_problems(info_lines, sc_lines + sd_lines)
+    out["J2_fdown"] = j2_fdown_table(sd_lines, info_lines, base_by_key)
+    out["P0_margin"] = p0_margin_table(sc_lines, sd_lines, info_lines)
+    return {**out, "status": _info_status(out, bool(info_lines))}
+
+
+def _info_pair(out: dict, cand: dict, base: dict) -> None:
+    key = key_of(cand)
+    try:
+        out["undecidable"] += (history_problems(cand, is_candidate=True)
+                               + history_problems(base, is_candidate=False))
+        out["k_problems"] += info_k_problems(cand, base)
+        out["pairs"][key] = info_pair_record(cand, base)
+        coverage = k_s3_prime_coverage(cand, base)
+        if coverage is not None:
+            out["k_s3_prime_coverage"][key] = coverage
+    except rj.MissingField as exc:
+        out["undecidable"].append(f"{key}: missing {exc}")
+
+
+def _info_status(out: dict, has_lines: bool) -> str:
+    if out["k_problems"] or out["identity_problems"] or out["list_problems"] or (
+            out["file_problems"]):
+        return STATUS_STOP
+    if not has_lines:
+        return STATUS_INCOMPLETE
+    if out["missing"] or out["extra"] or out["unresolved_errors"] or out["undecidable"]:
+        return STATUS_UNDECIDABLE
+    return "complete"
+
+
 # ------------------------------------------------------------------------------- whole
 def judge_all(lines: list[dict], reva2_lines: list[dict] | None, stored: dict | None,
               reference: dict | None, stored_reva, rules_root: Path = ROOT,
-              pre_rev2_sc: tuple[list[dict], str] | None = None) -> dict:
+              pre_rev2_sc: tuple[list[dict], str] | None = None,
+              info_file_problems: list[str] | None = None) -> dict:
     """Every part (S-0, S-C census, SH-9, SH-10, S, A) and the run identity across bundles.
 
     ``stored`` is ``las_rev_judge.load_stored()`` (the stored L lines: SH-9 and A), None when
-    not loaded; ``pre_rev2_sc`` is :func:`load_pre_rev2_sc` (SH-10), None when not loaded."""
+    not loaded; ``pre_rev2_sc`` is :func:`load_pre_rev2_sc` (SH-10), None when not loaded.
+    ``info_file_problems`` not None adds the rev5 ``info`` block (:func:`judge_s_info`, with
+    these stored-file problems); it changes neither ``status`` nor ``asks``."""
     seals = seal_problems(rules_root)
     identity = cross_bundle_identity_problems(lines)
     reference_lines, reference_sha256 = pre_rev2_sc if pre_rev2_sc is not None else (None, None)
@@ -1346,6 +1642,8 @@ def judge_all(lines: list[dict], reva2_lines: list[dict] | None, stored: dict | 
     out["asks"] = list(out["S"].get("asks") or []) + list(out["A"].get("asks") or [])
     if out["S-C"]["lines"] and not out["S-C"]["Q-S2_holds"]:
         out["asks"].append("SH-6 Q-S2 missed: ask before A-S")
+    if info_file_problems is not None:
+        out["info"] = judge_s_info(lines, info_file_problems)  # rev5 RS5-2.4, judged apart
     return out
 
 
@@ -1392,7 +1690,31 @@ def report_markdown(result: dict, source: Path) -> str:
     for name, value in a_part.items():
         if name != "status":
             lines.append(f"  - {name}: {json.dumps(value, default=str)[:2000]}")
+    if "info" in result:
+        lines += info_markdown(result["info"])
     return "\n".join(lines) + "\n"
+
+
+def info_markdown(info: dict) -> list[str]:
+    """rev5 RS5-2.4 section: summary, one row per pair, the J2 fdown and P0 margin tables."""
+    lines = [f"- S-D-info (rev5, information only, S judgement unchanged): {info['status']}"]
+    for name in ("selection", "list_problems", "file_problems", "errors", "unresolved_errors",
+                 "missing", "extra", "k_problems", "identity_problems", "undecidable",
+                 "K-S3'_2_coverage"):
+        lines.append(f"  - {name}: {json.dumps(info[name], default=str)[:2000]}")
+    lines.append(f"  - improved {len(info['improved'])}: {info['improved']}")
+    lines.append(f"  - worsened {len(info['worsened'])}: {info['worsened']}")
+    for key, pair in sorted(info["pairs"].items()):
+        lines.append(f"  - pair {key}: {json.dumps(pair, default=str)}")
+    table = info["J2_fdown"]
+    lines.append(f"  - J2 fdown FAULT_LIFT_STROKE_LIMIT counts: {table['counts']}")
+    lines += [f"    - {json.dumps(row, default=str)}" for row in table["rows"]]
+    margin = info["P0_margin"]
+    lines.append(f"  - P0 stroke margin (682.8 mm - P0 stroke_max): {margin['keys']} keys "
+                 f"(expected {margin['expected']})")
+    lines += [f"    - {row['key']} [{row['source']}]: {row['margin_mm']}"
+              for row in margin["rows"]]
+    return lines
 
 
 def _json_value(value):
@@ -1415,6 +1737,8 @@ def _parse_args(argv: list[str] | None):
     run.add_argument("--pre-rev2-sc", type=Path, default=None,
                      help="pre-rev2 S-C file of SH-10 (default <dir>/history_pre_rev2/"
                           "s2d_SC.jsonl)")
+    run.add_argument("--info", action="store_true",
+                     help="add the rev5 S-D-info block (the S judgement is not changed)")
     run.add_argument("--out", type=Path, default=None, help="new Markdown file")
     run.add_argument("--json-out", type=Path, default=None, help="new JSON file")
     return parser.parse_args(argv)
@@ -1451,11 +1775,12 @@ def main(argv: list[str] | None = None) -> int:
         reva2_lines, stored, reference, stored_reva = _load_a_inputs(args)
         pre_rev2_path = args.pre_rev2_sc or args.dir / PRE_REV2_SC_RELATIVE
         pre_rev2_sc = load_pre_rev2_sc(pre_rev2_path) if pre_rev2_path.exists() else None
+        info_files = stored_sc_sd_problems(args.dir) if args.info else None
     except (OSError, ValueError) as exc:
         print(f"input error: {exc!r}")
         return 2
     result = judge_all(lines, reva2_lines, stored, reference, stored_reva, args.rules_root,
-                       pre_rev2_sc)
+                       pre_rev2_sc, info_files)
     result["SH-10"]["reference_path"] = str(pre_rev2_path)
     report = report_markdown(result, args.dir)
     print(report)
@@ -1470,6 +1795,7 @@ def main(argv: list[str] | None = None) -> int:
                       "pre_rev2_sc_sha256": result["SH-10"].get("reference_sha256"),
                       "S": result["S"]["status"],
                       "A": result["A"]["status"],
+                      "info": (result.get("info") or {}).get("status"),
                       "asks": len(result["asks"])}))
     return 0 if result["status"] == STATUS_PASS and not result["asks"] else 1
 

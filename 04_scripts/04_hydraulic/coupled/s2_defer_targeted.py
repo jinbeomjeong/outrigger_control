@@ -4,8 +4,9 @@ Rules: ``06_analysis/02_control/verif_matrix/s2_soil_defer_rules.md`` (control-e
 LF sha256 ``s2_defer_judge.RULES_S2D_SHA256``), its addenda ``s2_soil_defer_rules_rev1.md``
 (``RULES_S2D_REV1_SHA256``), ``s2_soil_defer_rules_rev2.md`` (``RULES_S2D_REV2_SHA256``),
 ``s2_soil_defer_rules_rev3.md`` (``RULES_S2D_REV3_SHA256``), ``s2_soil_defer_rules_rev4.md``
-(``RULES_S2D_REV4_SHA256``) and the six A-plan rules files it inherits (all checked, SH-1;
-every line records all eleven digests). The rules text wins
+(``RULES_S2D_REV4_SHA256``), ``s2_soil_defer_rules_rev5.md`` (``RULES_S2D_REV5_SHA256``) and
+the six A-plan rules files it inherits (all checked, SH-1; every new line records all twelve
+digests, the lines run before rev5 eleven). The rules text wins
 where this code differs. The
 run machinery (LAS-b candidate wrapper, DONE record, diagnosis recorders, pool, job dicts) is
 ``las_revA_targeted``'s; this tool adds the S2D settings wrapper, the S2D trace and the
@@ -31,6 +32,13 @@ with ``"x"``, no resume):
         soil P5r4S (revA2 line format; the Q-S1 boundary key with the diag soil record).
   A-P0  P0 / N0 on ``--keys``: A-S R-T / R-S keys whose hash changed and that the stored
         revA2 R-P0 did not reproduce (rules 5.2).
+  S-D-info  19 (rev5 RS5-2, information only): S2D on the S-D selection keys without an S-D
+        line whose S-C line has a shadow deferral, into ``s2d_SD_info.jsonl`` (the S-D file
+        is never written). Gates (SH-4): the S-C / S-D file sha256 (before and after the
+        run), the recomputed key list sha256, the run's controller files = the S-C / S-D
+        lines' (only the two S2D tools differ; no other code file changed since their
+        commit); S-0 / SH-9 / SH-10 are not run again. In the batch K-S3' / K-S4 / K-S5 stop
+        it (SH-3), an error line runs once more (SH-5); SH-8 does not apply.
 Gates before a run (exit 2): SH-1 seals; the run identity (one commit, empty code diff,
 allowed dirty files, one thread); the LAS-b b0 preset; S-0 passed (same commit and tool
 sha256) before every other bundle; S-C finished (456 lines) and SH-9 passed (rev1 RS1-9:
@@ -91,9 +99,19 @@ IDENTITY_FILES = {**revA.DIAG_IDENTITY_FILES,
                   "s2_defer_targeted.py": HERE / "s2_defer_targeted.py",
                   "s2_defer_judge.py": HERE / "s2_defer_judge.py"}
 """c2.py, the A-plan tools, the diagnosis recorder and the two S2D tools."""
+INFO = sj.SD_INFO_BUNDLE
 OUT_NAMES = {"S-0": "s2d_S0.jsonl", "S-C": "s2d_SC.jsonl", "S-D": "s2d_SD.jsonl",
-             "A-S": "s2d_AS.jsonl", "A-P0": "s2d_AP0.jsonl"}
-BUNDLE_COUNTS = {"S-0": len(sj.S0_EXPECTED), "S-C": sj.SC_LINES, "A-S": sj.A_S_LINES}
+             "A-S": "s2d_AS.jsonl", "A-P0": "s2d_AP0.jsonl", INFO: "s2d_SD_info.jsonl"}
+"""rev5 RS5-2.3: S-D-info writes its own new file; the S-D file is never written again."""
+BUNDLE_COUNTS = {"S-0": len(sj.S0_EXPECTED), "S-C": sj.SC_LINES, "A-S": sj.A_S_LINES,
+                 INFO: sj.SD_INFO_KEYS}
+CODE_CHANGES_ALLOWED = (
+    "04_scripts/04_hydraulic/coupled/s2_defer_targeted.py",
+    "04_scripts/04_hydraulic/coupled/s2_defer_judge.py",
+    "04_scripts/04_hydraulic/coupled/test_s2_defer.py",
+)
+"""rev5 RS5-2.3: code files that may differ between the S-D lines' commit and the S-D-info
+commit: the two S2D tools and their unit tests (never imported by a run)."""
 DEFER_FIELDS = ("mode_defer_periods", "mode_defer_stroke_m", "mode_defer_rise_factor",
                 "mode_defer_shadow")
 TRACE_ATTRIBUTE = "_s2d_trace"
@@ -318,6 +336,19 @@ def sd_jobs(mask: int | None, sc_lines: list[dict], keys=None) -> list[dict]:
     return _attach(_d1_pair_jobs("S-D", [by_key[key] for key in selected], mask), "S-D")
 
 
+def sd_info_jobs(mask: int | None, sc_lines: list[dict], sd_lines: list[dict],
+                 keys=None) -> list[dict]:
+    """rev5 RS5-2: S2D on the 19 S-D-info keys (job dicts and settings as S-D)."""
+    selected = sj.sd_info_selection(sc_lines, sd_lines)
+    if keys is not None:
+        selected = [key for key in selected if key in set(keys)]
+    by_key = {fb.fb_key(job): job for job in soil_group_jobs()}
+    missing = [key for key in selected if key not in by_key]
+    if missing:
+        raise KeyError(f"S-D-info keys outside the soil groups: {missing[:5]}")
+    return _attach(_d1_pair_jobs(INFO, [by_key[key] for key in selected], mask), INFO)
+
+
 def as_jobs(mask: int | None) -> list[dict]:
     jobs = []
     for bundle in sj.A_S_COUNTS:
@@ -459,6 +490,11 @@ def line_problems(record: dict, bundle: str, context: CheckContext) -> tuple[lis
         if base is None:
             return [f"S-D {sj.key_of(record)}: no S-C line"], "SH-4"
         return sj.pair_k_problems(record, base, sj.key_of(record) in context.random_keys), "SH-3"
+    if bundle == INFO:
+        base = context.sc_by_key.get(sj.key_of(record))
+        if base is None:
+            return [f"{INFO} {sj.key_of(record)}: no S-C line"], "SH-4"
+        return sj.info_k_problems(record, base), "SH-3"  # RS5-2.3: K-S3', K-S4, K-S5
     if bundle == "A-S":
         index = sj.a_index(record)
         found = sj.k_s4_problems(record) + sj.k_s5_problems(record)
@@ -487,13 +523,13 @@ def make_checker(context: CheckContext):
             return
         try:
             found, kind = line_problems(record, s2d_entry["bundle"], context)
-            if s2d_entry["bundle"] in ("S-D", "A-S"):
+            if s2d_entry["bundle"] in ("S-D", "A-S", INFO):
                 # rev2 RS2-4: undecidable in the judge, not a stop; shown as the batch runs
                 for text in sj.history_problems(record, is_candidate=True):
                     print(f"SH-4 undecidable (RS2-4) {text}", flush=True)
             if s2d_entry["bundle"] == "A-S":
                 _note_k_s6_a_unpaired(record, context)
-            if s2d_entry["bundle"] == "S-D" and not found:
+            if s2d_entry["bundle"] == "S-D" and not found:  # never S-D-info (RS5-2.3)
                 _count_sc_pair(record, context, sc_pairs, state)
         except rj.MissingField as exc:
             state.stop = f"SH-4 {sj.key_of(record)}: missing {exc}"
@@ -616,13 +652,49 @@ def sh10_gate_problems(inputs: Inputs) -> list[str]:
     return [f"SH-10 {result['status']}: {result.get('problems') or result.get('reason')}"]
 
 
+def code_changes_since(git_head: str, root: Path = ROOT) -> list[str]:
+    """Tracked code files (``fb.CODE_DIFF_PATHS``) changed between ``git_head`` and HEAD.
+
+    Raises:
+        subprocess.CalledProcessError, OSError: git or the commit is not there.
+    """
+    names = fb._git(root, "diff", "--name-only", git_head, "HEAD", "--", *fb.CODE_DIFF_PATHS)
+    return [name for name in names.splitlines() if name]
+
+
+def info_gate_problems(inputs: Inputs, identity: dict,
+                       changes_since=code_changes_since) -> list[str]:
+    """rev5 RS5-2.3 / RS5-4 before (and the file sha256 after) S-D-info, all SH-4.
+
+    The S-C and S-D files are the rev5 ones (raw sha256), the recomputed key list is the
+    sealed one, the run's recorded controller files equal the S-C / S-D lines' (only the two
+    S2D tools may differ) and no other code file changed since their commit. S-0, SH-9 and
+    SH-10 are not run again (RS5-4)."""
+    problems = sj.stored_sc_sd_problems(inputs.out_dir)
+    if problems:
+        return problems  # order check: both files must be there, unchanged
+    sc_lines, sd_lines = bundle_lines(inputs, "S-C"), bundle_lines(inputs, "S-D")
+    problems += sj.sd_info_list_problems(sj.sd_info_selection(sc_lines, sd_lines))
+    reference = sj.lines_of(sc_lines, "S-C") + sj.lines_of(sd_lines, "S-D")
+    problems += sj.controller_identity_problems(identity, reference)
+    heads = {(sj.s2d_of(line).get("identity") or {}).get("git_head") for line in reference}
+    for head in sorted(map(str, heads)):
+        changed = [name for name in changes_since(head) if name not in CODE_CHANGES_ALLOWED]
+        if changed:
+            problems.append(f"SH-4 code changed since {head[:12]}: {changed[:5]}")
+    return problems
+
+
 def gate_problems(bundle: str, inputs: Inputs, identity: dict,
                   stored: dict | None = None) -> list[str]:
-    """Rules 3 order: S-0 -> S-C -> SH-9 -> SH-10 -> S-D -> S judgement -> A-S -> A-P0.
+    """Rules 3 order: S-0 -> S-C -> SH-9 -> SH-10 -> S-D -> S judgement -> A-S -> A-P0;
+    S-D-info (rev5) needs the stored S-C and S-D files only (:func:`info_gate_problems`).
 
     ``stored`` is ``las_rev_judge.load_stored()`` (loaded here when None and needed)."""
     if bundle == "S-0":
         return []
+    if bundle == INFO:
+        return info_gate_problems(inputs, identity)
     problems = s0_gate_problems(inputs, identity)
     if bundle in ("S-D", "A-S", "A-P0"):
         problems += sc_gate_problems(inputs, identity)
@@ -653,6 +725,8 @@ def d1_job_problems(jobs: list[dict], d1_path: Path) -> list[str]:
 
 def context_for(bundle: str, inputs: Inputs) -> CheckContext:
     context = CheckContext()
+    if bundle == INFO:
+        context.sc_by_key = sj.by_key(sj.lines_of(bundle_lines(inputs, "S-C"), "S-C"))
     if bundle == "S-D":
         sc_lines = bundle_lines(inputs, "S-C")
         context.sc_by_key = sj.by_key(sj.lines_of(sc_lines, "S-C"))
@@ -681,6 +755,8 @@ def bundle_jobs(bundle: str, inputs: Inputs, mask: int | None, keys=None,
         return sc_jobs(mask, keys)
     if bundle == "S-D":
         return sd_jobs(mask, bundle_lines(inputs, "S-C"), keys)
+    if bundle == INFO:
+        return sd_info_jobs(mask, bundle_lines(inputs, "S-C"), bundle_lines(inputs, "S-D"), keys)
     if bundle == "A-S":
         return as_jobs(mask)
     if bundle == "A-P0":
@@ -690,7 +766,7 @@ def bundle_jobs(bundle: str, inputs: Inputs, mask: int | None, keys=None,
 
 
 def job_problems(bundle: str, jobs: list[dict], inputs: Inputs, stored: dict) -> list[str]:
-    if bundle in ("S-C", "S-D"):
+    if bundle in ("S-C", "S-D", INFO):
         return d1_job_problems(jobs, inputs.d1)
     if bundle in ("A-S", "A-P0"):
         return rev.job_dict_problems(jobs, stored)
@@ -725,7 +801,8 @@ def _parse_args(argv: list[str] | None):
     _add_input_args(run)
     run.add_argument("--workers", type=int, default=4)
     run.add_argument("--affinity", default=None, help="hex mask, set in every worker")
-    run.add_argument("--keys", default=None, help="comma-separated keys (S-C / S-D / A-P0)")
+    run.add_argument("--keys", default=None,
+                     help="comma-separated keys (S-C / S-D / S-D-info / A-P0)")
     run.add_argument("--limit", type=int, default=None, help="first N runs only")
     return parser.parse_args(argv)
 
@@ -768,6 +845,12 @@ def list_bundles(bundles, inputs: Inputs) -> tuple[list[str], list[str]]:
         if bundle == "A-P0" and not bundle_lines(inputs, "A-S"):
             report.append("A-P0: keys from the A-S file (changed, not in revA2 R-P0)")
             continue
+        if bundle == INFO:
+            gate = info_gate_problems(inputs, run_identity())
+            problems += gate
+            if sj.stored_sc_sd_problems(inputs.out_dir):
+                report.append(f"{INFO}: needs the rev5 S-C and S-D files")
+                continue
         jobs = bundle_jobs(bundle, inputs, None, stored=stored)
         report.append(f"{bundle}: {len(jobs)} runs")
         expected = BUNDLE_COUNTS.get(bundle)
@@ -783,6 +866,12 @@ def list_bundles(bundles, inputs: Inputs) -> tuple[list[str], list[str]]:
                 problems.append(f"S-C groups {counts} != {sj.SOIL_GROUP_COUNTS}")
         if bundle == "S-0":
             problems += _s0_reference_problems(inputs)
+        if bundle == INFO:
+            keys = [fb.fb_key({k: v for k, v in job.items() if k not in ("mask", "rev")})
+                    for job in jobs]
+            report.append(f"  list sha256 {sj.key_list_sha256(keys)} (sealed "
+                          f"{sj.SD_INFO_LIST_SHA256[:12]})")
+            report += [f"  {key}" for key in keys]
     return report, problems
 
 
@@ -790,6 +879,8 @@ def _prepare(args) -> tuple[list[dict], Path, dict, dict, CheckContext]:
     """Jobs, output path, stored lines, identity and check context (raises on input errors)."""
     inputs = _inputs_of(args)
     path = inputs.out_dir / OUT_NAMES[args.bundle]
+    if args.bundle == INFO and path.resolve() == (inputs.out_dir / OUT_NAMES["S-D"]).resolve():
+        raise ValueError(f"{INFO} must never write the S-D file {path}")  # RS5-2.3
     problem = rev.out_path_problem(path, sj.SOIL_DEFER_DIR)
     if problem is not None:
         raise ValueError(problem)
@@ -846,8 +937,14 @@ def _run_command(args) -> int:
         summary["pre_rev2_sc_sha256"] = sh10["reference_sha256"]
     if args.bundle == "S-0":
         summary["S-0"] = sj.judge_s0(rj.read_lines(path))["status"]
+    after_problems = []
+    if args.bundle == INFO:
+        after_problems = sj.stored_sc_sd_problems(_inputs_of(args).out_dir)  # RS5-2.3 after
+        summary["stored_files_after"] = after_problems or "unchanged"
+        for problem in after_problems:
+            print(problem, flush=True)
     print(json.dumps(summary))
-    return 1 if state.stop or state.skipped else 0
+    return 1 if state.stop or state.skipped or after_problems else 0
 
 
 def main(argv: list[str] | None = None) -> int:
