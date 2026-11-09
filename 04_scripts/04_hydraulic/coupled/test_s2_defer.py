@@ -780,12 +780,15 @@ def test_k_s1_coverage_and_rules_fields() -> None:
     assert fields["rules_s2d_rev4_sha256"] == sj.RULES_S2D_REV4_SHA256
     assert sj.RULES_S2D_REV3_SHA256.startswith("81bb429d")
     assert sj.RULES_S2D_REV4_SHA256.startswith("5eb3f2f3")
-    assert len(sj.RULES_FIELDS) == len(set(sj.RULES_FIELDS)) == 11
+    assert fields["rules_s2d_rev5_sha256"] == sj.RULES_S2D_REV5_SHA256
+    assert sj.RULES_S2D_REV5_SHA256.startswith("0bed95a4")
+    assert len(sj.RULES_FIELDS) == len(set(sj.RULES_FIELDS)) == 12
+    assert len(sj.PRE_REV5_RULES_FIELDS) == 11
     assert st.rules_block() == fields
     sealed = [entry[0].name for entry in sj.sealed_files()]
-    assert sealed[:5] == ["s2_soil_defer_rules.md", "s2_soil_defer_rules_rev1.md",
+    assert sealed[:6] == ["s2_soil_defer_rules.md", "s2_soil_defer_rules_rev1.md",
                           "s2_soil_defer_rules_rev2.md", "s2_soil_defer_rules_rev3.md",
-                          "s2_soil_defer_rules_rev4.md"]
+                          "s2_soil_defer_rules_rev4.md", "s2_soil_defer_rules_rev5.md"]
     assert sj.seal_problems() == []
     line = _identified(_line("k", "S-D"))
     assert sj.rules_problems(line) == []
@@ -797,19 +800,24 @@ def test_k_s1_coverage_and_rules_fields() -> None:
 
 
 S2D_RULES_RELATIVES = (sj.RULES_RELATIVE, sj.RULES_REV1_RELATIVE, sj.RULES_REV2_RELATIVE,
-                       sj.RULES_REV3_RELATIVE, sj.RULES_REV4_RELATIVE)
+                       sj.RULES_REV3_RELATIVE, sj.RULES_REV4_RELATIVE, sj.RULES_REV5_RELATIVE)
 
 
-@pytest.mark.parametrize("changed", [sj.RULES_REV3_RELATIVE, sj.RULES_REV4_RELATIVE])
-def test_sh1_detects_a_changed_rev3_or_rev4(tmp_path, changed: Path) -> None:
-    """SH-1 over a copy of the five S2D rules files: a changed rev3 / rev4 byte is a seal
-    problem."""
+def _copy_s2d_rules(root: Path) -> None:
     for relative in S2D_RULES_RELATIVES:
         for suffix in (".md", ".sha256"):
             source = (ROOT / relative).with_suffix(suffix)
-            target = (tmp_path / relative).with_suffix(suffix)
+            target = (root / relative).with_suffix(suffix)
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(source.read_bytes())
+
+
+@pytest.mark.parametrize("changed", [sj.RULES_REV3_RELATIVE, sj.RULES_REV4_RELATIVE,
+                                     sj.RULES_REV5_RELATIVE])
+def test_sh1_detects_a_changed_rev3_rev4_or_rev5(tmp_path, changed: Path) -> None:
+    """SH-1 over a copy of the six S2D rules files: a changed rev3 / rev4 / rev5 byte is a
+    seal problem."""
+    _copy_s2d_rules(tmp_path)
     assert sj.seal_problems(tmp_path) == []
     path = tmp_path / changed
     path.write_bytes(path.read_bytes() + b"\n")
@@ -1174,3 +1182,266 @@ def test_sh10_unpaired_new_key_stops_before_s_c_finished_rs4_3() -> None:
     result = sj.sh10_check(sc_lines[:150], unpaired)
     assert result["status"] == sj.STATUS_STOP and result["new_only"] == 1
     assert result["different"] == []
+
+
+# ------------------------------------------------------------------------------- rev5
+INFO = sj.SD_INFO_BUNDLE
+CONTROLLER_FILES = {"c2.py": sj.C2_SHA256, "fb_targeted.py": "f1",
+                    "s2_defer_targeted.py": "old-tool", "s2_defer_judge.py": "old-judge"}
+
+
+def _main_soil_defer_dir() -> Path | None:
+    """The main checkout's ``soil_defer`` folder (read only), None when it is not there."""
+    import subprocess
+
+    completed = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--path-format=absolute",
+                                "--git-common-dir"], capture_output=True, text=True,
+                               check=True, timeout=60)
+    main_root = Path(completed.stdout.strip()).parent
+    directory = main_root / sj.SOIL_DEFER_DIR.relative_to(sj.ROOT)
+    return directory if (directory / st.OUT_NAMES["S-D"]).exists() else None
+
+
+@pytest.fixture(scope="module")
+def stored_lines() -> tuple[Path, list[dict], list[dict]]:
+    """(folder, S-C lines, S-D lines) of the main checkout's stored rev5 files."""
+    directory = _main_soil_defer_dir()
+    if directory is None or sj.stored_sc_sd_problems(directory):
+        pytest.skip("the rev5 S-C / S-D files are not in the main checkout")
+    return (directory, sj.rj.read_lines(directory / st.OUT_NAMES["S-C"]),
+            sj.rj.read_lines(directory / st.OUT_NAMES["S-D"]))
+
+
+def _with_shadow(line: dict) -> dict:
+    line["s2d"]["soil"]["defer"]["shadow"] = {"start_s": 20.0, "periods": 2,
+                                              "end_reason": "rise"}
+    return line
+
+
+def test_sd_info_selection_and_list_sha256_rs5_2_1() -> None:
+    sc_lines, sd_lines = _s_lines()
+    selection = sj.sd_selection(sc_lines)["keys"]
+    shadowed = selection[:3]
+    for line in sc_lines:
+        if sj.key_of(line) in shadowed:
+            _with_shadow(line)
+    keys = sj.sd_info_selection(sc_lines, [sd_lines[shadowed[0]]])
+    assert keys == sorted(shadowed[1:])
+    assert sj.key_list_sha256(["a", "b"]) == hashlib.sha256(b"a\nb\n").hexdigest()
+    (problem,) = sj.sd_info_list_problems(keys)
+    assert "2 keys" in problem and sj.SD_INFO_LIST_SHA256 in problem
+
+
+def test_sd_info_list_on_the_stored_files_is_the_sealed_one(stored_lines) -> None:
+    directory, sc_lines, sd_lines = stored_lines
+    keys = sj.sd_info_selection(sc_lines, sd_lines)
+    assert len(keys) == sj.SD_INFO_KEYS == 19
+    assert sj.key_list_sha256(keys) == sj.SD_INFO_LIST_SHA256
+    assert sj.sd_info_list_problems(keys) == []
+    assert keys[0] == "D1|H-S-0|J2|B|fdown-rec|K1|VB|e0"
+    jobs = st.sd_info_jobs(None, sc_lines, sd_lines)
+    assert [job["rev"]["s2d"]["bundle"] for job in jobs] == [INFO] * 19
+    assert {job["rev"]["s2d"]["candidate"] for job in jobs} == {"S2D"}
+    margins = sj.p0_margin_table(sc_lines, sj.lines_of(sd_lines, "S-D"), [])
+    sources = [row["source"] for row in margins["rows"]]
+    assert margins["keys"] == sj.SHADOW_ENTRY_KEYS
+    assert sources.count("S-D") == 49 and sources.count("not run") == 19
+
+
+def test_sd_info_gate_passes_on_the_stored_files(stored_lines) -> None:
+    """The run gate on the main checkout files (read only): list, file sha256, controller."""
+    directory = stored_lines[0]
+    inputs = st.Inputs(directory, *(directory for _ in range(7)))
+    assert st.info_gate_problems(inputs, st.run_identity()) == []
+
+
+def _write_stored(directory: Path, sc_lines: list[dict], sd_lines: list[dict],
+                  monkeypatch) -> None:
+    """Small S-C / S-D files whose sha256 the rev5 constants are patched to."""
+    for name, lines in (("S-C", sc_lines), ("S-D", sd_lines)):
+        _write_lines(directory / st.OUT_NAMES[name], lines)
+    monkeypatch.setattr(sj, "SC_FILE_SHA256", sj.raw_sha256(directory / "s2d_SC.jsonl"))
+    monkeypatch.setattr(sj, "SD_FILE_SHA256", sj.raw_sha256(directory / "s2d_SD.jsonl"))
+
+
+def _with_files(line: dict, files: dict) -> dict:
+    line["s2d"]["identity"] = {**line["s2d"]["identity"], "sha256": dict(files)}
+    return line
+
+
+def test_sd_info_rejects_a_changed_s_d_file_rs5_2_3(tmp_path, monkeypatch) -> None:
+    sc = [_with_files(_identified(_line("k1", "S-C")), CONTROLLER_FILES)]
+    sd = [_with_files(_identified(_line("k1", "S-D")), CONTROLLER_FILES)]
+    _write_stored(tmp_path, sc, sd, monkeypatch)
+    assert sj.stored_sc_sd_problems(tmp_path) == []
+    path = tmp_path / st.OUT_NAMES["S-D"]
+    path.write_bytes(path.read_bytes() + b"\n")
+    (problem,) = sj.stored_sc_sd_problems(tmp_path)
+    assert problem.startswith("SH-4 s2d_SD.jsonl sha256")
+    inputs = st.Inputs(tmp_path, *(tmp_path for _ in range(7)))
+    assert st.info_gate_problems(inputs, {"sha256": CONTROLLER_FILES}) == [problem]
+    (tmp_path / st.OUT_NAMES["S-C"]).unlink()
+    assert any("missing" in text for text in sj.stored_sc_sd_problems(tmp_path))
+
+
+def test_sd_info_rechecks_the_s_d_file_after_the_run(tmp_path, monkeypatch, capsys) -> None:
+    sd_line = _with_files(_identified(_line("k1", "S-D")), CONTROLLER_FILES)
+    _write_stored(tmp_path, [sd_line], [sd_line], monkeypatch)
+    args = st._parse_args(["run", "--bundle", INFO, "--out-dir", str(tmp_path)])
+    out_path = tmp_path / st.OUT_NAMES[INFO]
+    monkeypatch.setattr(st, "_prepare", lambda _args: ([], out_path, {}, {
+        "git_head": "h", "dirty": False, "git_dirty": False,
+        "code_diff_sha256": sj.fb.EMPTY_SHA256}, st.CheckContext()))
+
+    def touch_sd(*_args, **_kwargs):
+        sd_path = tmp_path / st.OUT_NAMES["S-D"]
+        sd_path.write_bytes(sd_path.read_bytes() + b"\n")
+        return SimpleNamespace(runs=1, errors=0, skipped=0, stop=None)
+
+    monkeypatch.setattr(st.rev, "run_batch", touch_sd)
+    assert st._run_command(args) == 1
+    assert "SH-4 s2d_SD.jsonl sha256" in capsys.readouterr().out
+
+
+def test_sd_info_rejects_a_changed_controller_rs5_2_3() -> None:
+    reference = [_with_files(_identified(_line(key, bundle)), CONTROLLER_FILES)
+                 for key, bundle in (("k1", "S-C"), ("k1", "S-D"))]
+    tools_changed = {**CONTROLLER_FILES, "s2_defer_targeted.py": "new-tool",
+                     "s2_defer_judge.py": "new-judge"}
+    assert sj.controller_identity_problems({"sha256": tools_changed}, reference) == []
+    c2_changed = {**CONTROLLER_FILES, "c2.py": "0" * 64}
+    problems = sj.controller_identity_problems({"sha256": c2_changed}, reference)
+    assert any("c2.py" in text for text in problems)
+    harness_changed = {**CONTROLLER_FILES, "fb_targeted.py": "f2"}
+    (problem,) = sj.controller_identity_problems({"sha256": harness_changed}, reference)
+    assert "fb_targeted.py" in problem
+    mixed = copy.deepcopy(reference)
+    mixed[1]["s2d"]["identity"]["sha256"]["fb_targeted.py"] = "f9"
+    (problem,) = sj.controller_identity_problems({"sha256": CONTROLLER_FILES}, mixed)
+    assert "2 file sets" in problem
+
+
+def test_sd_info_rejects_other_code_changes_since_the_s_d_commit(tmp_path, monkeypatch) -> None:
+    sc = [_with_files(_identified(_line("k1", "S-C")), CONTROLLER_FILES)]
+    _write_stored(tmp_path, sc, copy.deepcopy(sc), monkeypatch)
+    inputs = st.Inputs(tmp_path, *(tmp_path for _ in range(7)))
+    identity = {"sha256": CONTROLLER_FILES}
+    allowed = st.info_gate_problems(inputs, identity, changes_since=lambda _head: list(
+        st.CODE_CHANGES_ALLOWED))
+    assert not any("code changed" in text for text in allowed)
+    plant = "03_src/outrigger_sim/control/c2.py"
+    changed = st.info_gate_problems(inputs, identity, changes_since=lambda _head: [plant])
+    assert any("code changed since h1" in text and plant in text for text in changed)
+
+
+def _tagged(line: dict) -> dict:
+    line["controller_tag"] = line["rev"]["controller_tag"] = "final_C4G2_P3_LAS"
+    line["job"]["setting"] = "VB"
+    return line
+
+
+def _sh8_pairs(bundle: str) -> list[tuple[dict, dict]]:
+    """Five (record, S-C line) pairs whose record loses READY (an SC-2 violation each)."""
+    pairs = []
+    for index in range(5):
+        base = _tagged(_identified(_line(f"k{index}", "S-C", sha=_sha_of(f"k{index}"))))
+        record = copy.deepcopy(base)
+        record["rev"]["bundle"] = record["s2d"]["bundle"] = bundle
+        record["final_phase"] = "fault"
+        pairs.append((record, base))
+    return pairs
+
+
+@pytest.mark.parametrize(("bundle", "is_stopped"), [("S-D", True), (INFO, False)])
+def test_sh8_stops_s_d_but_not_s_d_info_rs5_2_3(bundle: str, is_stopped: bool) -> None:
+    pairs = _sh8_pairs(bundle)
+    context = st.CheckContext(sc_by_key={sj.key_of(base): base for _record, base in pairs})
+    check = st.make_checker(context)
+    state = SimpleNamespace(stop=None)
+    for record, base in pairs:
+        assert sj.is_sh8_pair(sj.sc_pair_record(record, base))
+        check(record, bundle, state, None, None, record["s2d"]["identity"])
+    assert (state.stop is not None and state.stop.startswith("SH-8")) is is_stopped
+    if not is_stopped:
+        assert state.stop is None
+
+
+def test_sd_info_k_problems_stop_the_batch_sh3() -> None:
+    (record, base), *_ = _sh8_pairs(INFO)
+    record["commands_sha256"] = _sha_of("changed")  # no shadow entry, no prefix record
+    check = st.make_checker(st.CheckContext(sc_by_key={sj.key_of(base): base}))
+    state = SimpleNamespace(stop=None)
+    check(record, INFO, state, None, None, record["s2d"]["identity"])
+    assert state.stop.startswith("SH-3 k0") and "K-S3'" in state.stop
+
+
+def test_missing_rev5_seal_or_digest_rs5_4(tmp_path, capsys) -> None:
+    _copy_s2d_rules(tmp_path)
+    (tmp_path / sj.RULES_REV5_RELATIVE).with_suffix(".sha256").unlink()
+    assert any("rev5.sha256" in text for text in sj.seal_problems(tmp_path))
+    assert st.main(["list", "--bundle", INFO, "--rules-root", str(tmp_path)]) == 2
+    assert '"stop": "SH-1"' in capsys.readouterr().out
+    info_line = _identified(_line("k", INFO))
+    assert sj.rules_problems(info_line) == []
+    del info_line["s2d"][sj.REV5_RULES_FIELD]
+    assert sj.rules_problems(info_line)  # SH-4 on an S-D-info line
+    old_line = _identified(_line("k", "S-D"))
+    del old_line["s2d"][sj.REV5_RULES_FIELD]
+    assert sj.rules_problems(old_line) == []  # run before rev5: eleven digests
+
+
+J2_KEY = "D1|H-S-0|J2|M|fdown-rec|K1|VB|e0"
+J2_IMPROVED_KEY = "D1|H-S-0|J2|B|fdown-rec|K1|V0|e0"
+
+
+def _faulted(line: dict) -> dict:
+    line["final_phase"] = "fault"
+    line["d1"].update(t_ready_s=None, stroke_max_m=0.6821)
+    line["d1"]["u3"] = {"warnings": ["FAULT_LIFT_STROKE_LIMIT:soil:FL"]}
+    line["event_names"][sj.STROKE_FAULT_EVENT] = 1
+    return line
+
+
+def test_info_pair_record_and_j2_fdown_table_rs5_2_4() -> None:
+    base = _line(J2_KEY, "S-C", sha="a", loc=31.5)
+    base["d1"]["stroke_max_m"] = 0.6698
+    cand = _faulted(_line(J2_KEY, INFO, sha="b", loc=33.8,
+                          deferral=_deferral(26.7, periods=5, reason="periods")))
+    cand["event_names"][sj.LOC_REVOKED_EVENT] = 1
+    record = sj.info_pair_record(cand, base)
+    assert record["worsened"] and not record["improved"]
+    assert record["delta_stroke_max_mm"] == pytest.approx(12.3)
+    assert record["final_loc_dt_s"] == pytest.approx(2.3)
+    assert record["loc_revoked"] == {"P0": 0, "S2D": 1}
+    assert record["SC-2"]["new_events"] == [sj.STROKE_FAULT_EVENT]
+    assert record["deferrals"] == [{"start_s": 26.7, "end_reason": "periods", "periods": 5}]
+    improved_base = _faulted(_line(J2_IMPROVED_KEY, "S-C", sha="c"))
+    improved = _line(J2_IMPROVED_KEY, "S-D", sha="d")
+    assert sj.info_pair_record(improved, improved_base)["improved"]
+    table = sj.j2_fdown_table([improved], [cand], {J2_KEY: base,
+                                                  J2_IMPROVED_KEY: improved_base})
+    assert table["counts"] == {"lost": 1, "new": 1}
+    assert [(row["source"], row["fault"]) for row in table["rows"]] == [("S-D", "lost"),
+                                                                      (INFO, "new")]
+    assert sj.is_j2_fdown_key(J2_KEY) and not sj.is_j2_fdown_key("D1|H-S-0|J2|B|roll-rec|K1")
+
+
+def test_judge_info_keeps_the_s_judgement_rs5_2_3() -> None:
+    sc_lines, sd_lines = _s_lines()
+    lines = sc_lines + list(sd_lines.values())
+    stored = {"F-3": {}, "F-4": {}}
+    plain = sj.judge_all(lines, None, stored, None, None)
+    info_line = copy.deepcopy(sd_lines["k000"])
+    info_line["rev"]["bundle"] = info_line["s2d"]["bundle"] = INFO
+    info_line["s2d"]["identity"]["git_head"] = "h-info"  # its own commit (RS5-2.3)
+    with_info = sj.judge_all(lines + [info_line], None, stored, None, None,
+                             info_file_problems=[])
+    for name in ("status", "asks", "identity_across_bundles"):
+        assert with_info[name] == plain[name]
+    assert with_info["S"]["status"] == plain["S"]["status"]
+    assert "info" not in plain
+    info = with_info["info"]
+    assert info["status"] == sj.STATUS_STOP and info["list_problems"]  # no 19-key list here
+    assert info["extra"] == ["k000"] and "k000" in info["pairs"]
+    report = sj.report_markdown(with_info, Path("x"))
+    assert "S-D-info (rev5, information only, S judgement unchanged): stop" in report
