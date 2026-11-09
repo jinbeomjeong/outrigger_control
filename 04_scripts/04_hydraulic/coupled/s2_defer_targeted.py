@@ -1,9 +1,10 @@
 """S-2 soil-mode start deferral S2D on the reduced harness: bundles S-0, S-C, S-D, A-S, A-P0.
 
 Rules: ``06_analysis/02_control/verif_matrix/s2_soil_defer_rules.md`` (control-expert, sealed;
-LF sha256 ``s2_defer_judge.RULES_S2D_SHA256``) and the six A-plan rules files it inherits
-(all checked, SH-1). The rules text wins where this code differs. The run machinery (LAS-b
-candidate wrapper, DONE record, diagnosis recorders, pool, job dicts) is
+LF sha256 ``s2_defer_judge.RULES_S2D_SHA256``), its addendum ``s2_soil_defer_rules_rev1.md``
+(``RULES_S2D_REV1_SHA256``) and the six A-plan rules files it inherits (all checked, SH-1;
+every line records all eight digests). The rules text wins where this code differs. The
+run machinery (LAS-b candidate wrapper, DONE record, diagnosis recorders, pool, job dicts) is
 ``las_revA_targeted``'s; this tool adds the S2D settings wrapper, the S2D trace and the
 ``s2d`` block (``s2_defer_judge`` module docstring).
 
@@ -29,12 +30,15 @@ with ``"x"``, no resume):
         revA2 R-P0 did not reproduce (rules 5.2).
 Gates before a run (exit 2): SH-1 seals; the run identity (one commit, empty code diff,
 allowed dirty files, one thread); the LAS-b b0 preset; S-0 passed (same commit and tool
-sha256) before every other bundle; S-C finished (456 lines) before S-D; the S judgement
-``pass`` without an ask before A-S; A-S finished before A-P0; job dicts (S-C = ``d1.jsonl``,
-A-S R-T / R-S = the stored L lines). During a batch: identity or controller tag change, a
-settings mismatch (SH-4) or an S-0 hash mismatch (SH-2) stops everything; on S-D / A-S a
-K-S1 .. K-S5 problem stops the bundle (SH-3); on S-D five pairs with an SC-2 / SC-F / SC-S
-violation stop it (SH-8); an error line runs once more (SH-5).
+sha256) before every other bundle; S-C finished (456 lines) and SH-9 passed (rev1 RS1-9:
+the S-C P0 hashes of the 19 keys with a stored ``fb_F3`` / ``fb_F4`` L job dict = the
+stored L hashes) before S-D; the S judgement ``pass`` without an ask before A-S; A-S
+finished before A-P0; job dicts (S-C = ``d1.jsonl``, A-S R-T / R-S = the stored L lines).
+During a batch: identity or controller tag change, a settings mismatch (SH-4) or an S-0
+hash mismatch (SH-2) stops everything; on S-D / A-S a K-S1 .. K-S5 problem stops the bundle
+(SH-3; K-S4 checks the computed and the returned command of every deferral period, rev1
+RS1-8); on S-D five pairs with an SC-2 / SC-F / SC-S / pair-level SC-R violation stop it
+(SH-8, rev1 RS1-6); an error line runs once more (SH-5).
 
 Usage (dynamics-dev python.exe, project root, PowerShell):
   python -I -B 04_scripts/04_hydraulic/coupled/s2_defer_targeted.py list
@@ -152,6 +156,15 @@ def _is_release(controller, before: _SoilSnapshot, checks_now: int) -> bool:
     return new_start or new_deferral
 
 
+def computed_speeds(controller) -> np.ndarray:
+    """The command computed in this update (before the output delay; rev1 RS1-8), read from
+    the controller's output queue without touching it. Without a delay the computed command
+    is the applied one (``_state.applied_output_m_s``, before the returned-command clip)."""
+    state = controller._state
+    latest = state.output_queue[-1] if state.output_queue else state.applied_output_m_s
+    return np.array(latest, dtype=float)  # a copy: the controller's array is never changed
+
+
 def _note_period(controller, trace: _Trace, before: _SoilSnapshot, t_s: float, command) -> None:
     prefix = trace.digest.hexdigest()  # the commands before this period
     speeds = np.asarray(command.leg_speed_m_s, dtype=float)
@@ -170,6 +183,7 @@ def _note_period(controller, trace: _Trace, before: _SoilSnapshot, t_s: float, c
             "t_s": t_s, "active": deferral.is_active,
             "in_zone": bool(controller._state.in_crawler_zone),
             "min_command_m_s": float(speeds.min()),
+            "min_computed_m_s": float(computed_speeds(controller).min()),
             "end_reason": None if deferral.end_reason is None else str(deferral.end_reason)})
 
 
@@ -474,12 +488,13 @@ def make_checker(context: CheckContext):
 
 
 def _count_sc_pair(record: dict, context: CheckContext, pairs: set[str], state) -> None:
-    """SH-8: five S-D pairs with an SC-2 / SC-F / SC-S violation stop the bundle."""
+    """SH-8: five S-D pairs with an SC-2 / SC-F / SC-S / pair-level SC-R violation (READY dt
+    > +5.0 s, rev1 RS1-6) stop the bundle."""
     pair = sj.sc_pair_record(record, context.sc_by_key[sj.key_of(record)])
-    if pair["violations"] or pair["SC-F_fail"] or pair["SC-S_fail"]:
+    if sj.is_sh8_pair(pair):
         pairs.add(sj.key_of(record))
         if len(pairs) >= sj.SH8_PAIRS:
-            state.stop = f"SH-8 {len(pairs)} pairs with SC-2 / SC-F / SC-S violations"
+            state.stop = f"SH-8 {len(pairs)} pairs with SC-2 / SC-F / SC-S / SC-R violations"
 
 
 # ------------------------------------------------------------------------------- gates
@@ -537,13 +552,26 @@ def s_gate_problems(inputs: Inputs, identity: dict) -> list[str]:
     return problems
 
 
-def gate_problems(bundle: str, inputs: Inputs, identity: dict) -> list[str]:
-    """Rules 3 order: S-0 -> S-C -> S-D -> S judgement -> A-S -> A-P0."""
+def sh9_gate_problems(inputs: Inputs, stored: dict) -> list[str]:
+    """rev1 RS1-9 SH-9 after S-C, before S-D: the S-C P0 hashes of the 19 keys with a stored
+    FB L job dict are the stored L hashes."""
+    result = sj.sh9_check(bundle_lines(inputs, "S-C"), stored)
+    if result["status"] == sj.STATUS_PASS:
+        return []
+    return [f"SH-9 {result['status']}: {result.get('problems') or result.get('reason')}"]
+
+
+def gate_problems(bundle: str, inputs: Inputs, identity: dict,
+                  stored: dict | None = None) -> list[str]:
+    """Rules 3 order: S-0 -> S-C -> SH-9 -> S-D -> S judgement -> A-S -> A-P0.
+
+    ``stored`` is ``las_rev_judge.load_stored()`` (loaded here when None and needed)."""
     if bundle == "S-0":
         return []
     problems = s0_gate_problems(inputs, identity)
     if bundle in ("S-D", "A-S", "A-P0"):
         problems += sc_gate_problems(inputs, identity)
+        problems += sh9_gate_problems(inputs, stored if stored is not None else rj.load_stored())
     if bundle in ("A-S", "A-P0"):
         problems += s_gate_problems(inputs, identity)
     if bundle == "A-P0" and not bundle_lines(inputs, "A-S"):
@@ -713,14 +741,14 @@ def _prepare(args) -> tuple[list[dict], Path, dict, dict, CheckContext]:
     problems = rev.identity_problems(identity)
     if problems:
         raise ValueError(f"run identity (SH-4): {problems}")
-    problems = gate_problems(args.bundle, inputs, identity)
+    stored = rj.load_stored()
+    problems = gate_problems(args.bundle, inputs, identity, stored)
     if problems:
         raise ValueError(f"gates before {args.bundle}: {problems[:5]}")
     if args.bundle == "S-0":
         problems = _s0_reference_problems(inputs)
         if problems:
             raise ValueError(f"S-0 references: {problems}")
-    stored = rj.load_stored()
     keys = args.keys.split(",") if args.keys else None
     mask = None if args.affinity is None else int(args.affinity, 16)
     jobs = bundle_jobs(args.bundle, inputs, mask, keys, stored)

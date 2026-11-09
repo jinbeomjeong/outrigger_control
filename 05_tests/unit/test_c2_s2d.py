@@ -257,6 +257,20 @@ def test_entry_conditions_at_their_limits_defer(geometry) -> None:
     assert soil.defer is not None and not soil.is_soil_mode
 
 
+def test_entry_record_keeps_the_rise_delta(geometry) -> None:
+    """rev1 RS1-3: ``rise_delta_N`` = R_k - R_{k-1} (None without R_{k-1}), record only."""
+    controller = released_controller(geometry)
+    set_window(controller, START_T_S, 8000.0, 8000.5, 0.85)
+    hold(controller, START_T_S, START_STROKE_M)
+    (check,) = controller._soil_state().defer_checks
+    assert check["rise_delta_N"] == pytest.approx(-0.5)
+    no_previous = released_controller(geometry)
+    set_window(no_previous, START_T_S, 3000.0, None)
+    hold(no_previous, START_T_S, START_STROKE_M)
+    (check,) = no_previous._soil_state().defer_checks
+    assert check["rise_delta_N"] is None
+
+
 def test_entry_holds_the_latch_without_soil_mode(geometry) -> None:
     controller = released_controller(geometry)
     enter(controller)

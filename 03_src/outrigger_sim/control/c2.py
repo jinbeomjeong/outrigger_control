@@ -8822,8 +8822,11 @@ class C2Controller:
         return failures
 
     def _soil_defer_check_record(self, t_s: float, failures: list[str]) -> dict[str, Any]:
+        """One entry evaluation (record only). ``rise_delta_N`` = ``R_k - R_{k-1}`` (rev1
+        RS1-3: nearly flat entries are counted in the judgement, not judged)."""
         soil = self._soil_state()
         mean_load_N = soil.last_tail_mean_load_N if self._has_window_tail_now(t_s) else None
+        has_both_rises = soil.last_rise_N is not None and soil.prev_rise_N is not None
         return {
             "t_s": float(t_s),
             "entered": not failures,
@@ -8832,6 +8835,7 @@ class C2Controller:
             "tail_ok": self._has_window_tail_now(t_s),
             "rise_N": soil.last_rise_N,
             "prev_rise_N": soil.prev_rise_N,
+            "rise_delta_N": soil.last_rise_N - soil.prev_rise_N if has_both_rises else None,
             "mean_load_N": mean_load_N,
             "mean_load_over_W": (
                 None if mean_load_N is None else mean_load_N / self._reference_weight_N()
