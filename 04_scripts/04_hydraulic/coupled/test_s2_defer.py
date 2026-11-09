@@ -288,13 +288,16 @@ def test_judge_s0_passes_only_with_every_stored_hash() -> None:
 
 def test_pair_k_problems() -> None:
     trace = {"t_rel_s": 20.0, "first_check_t_s": 20.0, "prefix_sha256": "p", "defer_rows": []}
+    deferred_trace = {**trace, "defer_rows": _defer_rows(20.0, 3, reason="loc")}
     entered = [{"t_s": 20.0, "entered": True}]
     base = _line("k", "S-C", soil_start=20.0, sha="a", checks=entered, trace=trace)
     same = _line("k", "S-D", sha="a", trace=trace)
     assert sj.pair_k_problems(same, base, is_random=False) == []
-    changed = _line("k", "S-D", sha="b", trace=trace)
+    changed = _line("k", "S-D", sha="b", deferral=_deferral(20.0, periods=3, reason="loc"),
+                    trace=deferred_trace)
     assert sj.pair_k_problems(changed, base, is_random=False) == []
-    other_prefix = _line("k", "S-D", sha="b", trace={**trace, "prefix_sha256": "q"})
+    other_prefix = _line("k", "S-D", sha="b", deferral=_deferral(20.0, periods=3, reason="loc"),
+                         trace={**deferred_trace, "prefix_sha256": "q"})
     assert any(text.startswith("K-S3") for text in
                sj.pair_k_problems(other_prefix, base, is_random=False))
     not_entered = _line("k", "S-C", soil_start=20.0, checks=[{"t_s": 20.0, "entered": False}],
@@ -306,8 +309,8 @@ def test_pair_k_problems() -> None:
     assert any(text.startswith("K-S1") for text in found)
 
 
-def test_k_s3_first_entry_at_the_p0_first_soil_start_rs2_3() -> None:
-    """rev2 RS2-3: the first deferral entry must be the P0 first soil-mode start."""
+def test_k_s3_first_entry_at_a_p0_soil_start_rs3_2() -> None:
+    """rev3 RS3-2 K-S3': the first deferral entry must be at some P0 soil-mode start."""
     deferred = _line("k", "S-D", sha="b", deferral=_deferral(20.0, reason="loc"),
                      trace=_deferred_trace(periods=5))
     base = _line("k", "S-C", soil_start=20.0, checks=[{"t_s": 20.0, "entered": True}],
@@ -315,7 +318,7 @@ def test_k_s3_first_entry_at_the_p0_first_soil_start_rs2_3() -> None:
     assert sj.k_s3_entry_problems(deferred, base) == []
     later = _line("k", "S-C", starts=[_start(20.1)])
     (problem,) = sj.k_s3_entry_problems(deferred, later)
-    assert problem.startswith("K-S3 k: first deferral entry 20.0 s != P0 first")
+    assert problem.startswith("K-S3' k: first deferral entry 20.0 s matches no P0")
     no_start = _line("k", "S-C")
     assert sj.k_s3_entry_problems(deferred, no_start)  # P0 never started a soil mode
     unrecorded = _line("k", "S-C", soil_start=20.0)
@@ -773,14 +776,229 @@ def test_k_s1_coverage_and_rules_fields() -> None:
     fields = dict(zip(sj.RULES_FIELDS, sj.RULES_VALUES, strict=True))
     assert fields["rules_s2d_rev1_sha256"] == sj.RULES_S2D_REV1_SHA256
     assert fields["rules_s2d_rev2_sha256"] == sj.RULES_S2D_REV2_SHA256
+    assert fields["rules_s2d_rev3_sha256"] == sj.RULES_S2D_REV3_SHA256
+    assert sj.RULES_S2D_REV3_SHA256.startswith("81bb429d")
     assert st.rules_block() == fields
     sealed = [entry[0].name for entry in sj.sealed_files()]
-    assert sealed[:3] == ["s2_soil_defer_rules.md", "s2_soil_defer_rules_rev1.md",
-                          "s2_soil_defer_rules_rev2.md"]
+    assert sealed[:4] == ["s2_soil_defer_rules.md", "s2_soil_defer_rules_rev1.md",
+                          "s2_soil_defer_rules_rev2.md", "s2_soil_defer_rules_rev3.md"]
     assert sj.seal_problems() == []
     line = _identified(_line("k", "S-D"))
     assert sj.rules_problems(line) == []
-    for name in ("rules_s2d_rev1_sha256", "rules_s2d_rev2_sha256"):
+    for name in ("rules_s2d_rev1_sha256", "rules_s2d_rev2_sha256", "rules_s2d_rev3_sha256"):
         missing = copy.deepcopy(line)
         del missing["s2d"][name]
         assert sj.rules_problems(missing)
+
+
+def test_sh1_detects_a_changed_rev3(tmp_path) -> None:
+    """SH-1 over a copy of the four S2D rules files: a changed rev3 byte is a seal problem."""
+    for relative in (sj.RULES_RELATIVE, sj.RULES_REV1_RELATIVE, sj.RULES_REV2_RELATIVE,
+                     sj.RULES_REV3_RELATIVE):
+        for suffix in (".md", ".sha256"):
+            source = (ROOT / relative).with_suffix(suffix)
+            target = (tmp_path / relative).with_suffix(suffix)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(source.read_bytes())
+    assert sj.seal_problems(tmp_path) == []
+    rev3 = tmp_path / sj.RULES_REV3_RELATIVE
+    rev3.write_bytes(rev3.read_bytes() + b"\n")
+    assert sj.seal_problems(tmp_path)
+
+
+# ------------------------------------------------------------------------------- rev3
+def _rerelease_pair(p0_restart_s: float = 27.5) -> tuple[dict, dict]:
+    """(S2D, P0) where the first latch release (24.0 s) did not enter and the first deferral
+    entry is at the re-release after a LOC revocation (27.5 s, ended by a LOC)."""
+    trace = {"t_rel_s": 24.0, "first_check_t_s": 24.0, "prefix_sha256": "p",
+             "defer_rows": _defer_rows(27.5, 3, reason="loc")}
+    cand = _line("k", "S-D", sha="b", starts=[_start(24.0)],
+                 deferrals=[_deferral(27.5, periods=3, reason="loc")], trace=trace)
+    base_trace = {**trace, "defer_rows": []}
+    checks = [{"t_s": 24.0, "entered": False}, {"t_s": 27.5, "entered": True}]
+    base = _line("k", "S-C", sha="a", starts=[_start(p0_restart_s), _start(24.0)],
+                 checks=checks, trace=base_trace)  # mode_starts out of time order
+    return cand, base
+
+
+def test_k_s3_prime_first_entry_at_a_re_release_rs3_2() -> None:
+    cand, base = _rerelease_pair()
+    assert base["s2d"]["soil"]["mode_starts"][-1]["t_s"] == 24.0  # rev2 K-S3 would stop
+    assert sj.k_s3_entry_problems(cand, base) == []
+    assert sj.pair_k_problems(cand, base, is_random=False) == []
+    _, within = _rerelease_pair(27.5 + 2**-30)  # 9.3e-10 s apart: the same time
+    assert sj.k_s3_entry_problems(cand, within) == []
+    _, shifted = _rerelease_pair(27.5 + 1e-6)
+    found = sj.pair_k_problems(cand, shifted, is_random=False)
+    assert [text for text in found if text.startswith("K-S3'")] == [
+        "K-S3' k: first deferral entry 27.5 s matches no P0 soil-mode start "
+        f"[{27.5 + 1e-6}, 24.0]"]
+    other_prefix = copy.deepcopy(cand)
+    other_prefix["s2d"]["trace"]["prefix_sha256"] = "q"  # item 2: commands before differ
+    assert any("commands differ before the entry period" in text
+               for text in sj.pair_k_problems(other_prefix, base, is_random=False))
+
+
+def test_k_s6_no_deferral_needs_the_p0_hash_rs3_3() -> None:
+    base = _line("k", "S-C", soil_start=20.0, sha="a",
+                 checks=[{"t_s": 20.0, "entered": True}])
+    same = _line("k", "S-D", soil_start=20.0, sha="a")
+    assert sj.k_s6_problems(same, base) == []
+    changed = _line("k", "S-D", soil_start=20.0, sha="b")
+    assert sj.k_s6_problems(changed, base) == ["K-S6 k: no deferral but the hash differs "
+                                               "from P0"]
+    assert "K-S6 k: no deferral but the hash differs from P0" in sj.pair_k_problems(
+        changed, base, is_random=False)
+    deferred = _line("k", "S-D", sha="b", deferral=_deferral(20.0, periods=3, reason="loc"))
+    assert sj.k_s6_problems(deferred, base) == []
+    unrecorded = copy.deepcopy(changed)
+    unrecorded["s2d"]["soil"]["deferrals"] = None
+    with pytest.raises(sj.rj.MissingField):
+        sj.k_s6_problems(unrecorded, base)
+
+
+def test_k_s6_stops_the_judge_and_the_batch_sh3() -> None:
+    sc_lines, sd_lines = _s_lines()
+    cand = sd_lines["k000"]
+    cand["commands_sha256"] = "b"  # no deferral recorded, hash changed
+    result = sj.judge_s(sc_lines + list(sd_lines.values()))
+    assert any(text.startswith("K-S6 k000") for text in result["k_problems"])
+    assert result["status"] == sj.STATUS_STOP
+    assert any(text.startswith("SH-3 K-S1 .. K-S6") for text in result["stops"])
+    for line in (cand, *sc_lines):
+        line["controller_tag"] = line["rev"]["controller_tag"] = "final_C4G2_P3_LAS"
+        line["job"]["setting"] = "VB"
+    context = st.CheckContext(sc_by_key=sj.by_key(sc_lines))
+    state = SimpleNamespace(stop=None)
+    check = st.make_checker(context)
+    check(cand, "S-D", state, None, None, cand["s2d"]["identity"])
+    assert state.stop.startswith("SH-3 k000") and "K-S6" in state.stop
+
+
+def _expiry_pair_with_delta(delta_s: float) -> tuple[list[dict], dict]:
+    """The rules-3 S lines with key k000 an expired deferral (20.0 .. 20.5 s) whose
+    ``expiry`` start is ``delta_s`` away from the deferral end."""
+    sc_lines, sd_lines = _s_lines()
+    base = next(line for line in sc_lines if sj.key_of(line) == "k000")
+    base["s2d"]["soil"]["defer"]["checks"] = [{"t_s": 20.0, "entered": True,
+                                               "rise_delta_N": -100.0}]
+    base["s2d"]["trace"] = {**_deferred_trace(), "defer_rows": []}
+    cand = sd_lines["k000"]
+    cand["commands_sha256"] = "b"
+    cand["s2d"]["soil"].update(mode_starts=[_start(20.5 + delta_s, 0.37, "expiry")],
+                               deferrals=[_deferral(20.0)])
+    cand["s2d"]["trace"] = _deferred_trace()
+    cand["event_names"] = {sj.DEFER_EVENT: 1, sj.SOIL_MODE_EVENT: 1}
+    return sc_lines + list(sd_lines.values()), cand
+
+
+@pytest.mark.parametrize(("delta_s", "expected"), [
+    (0.0, "equal"), (2**-30, "equal"), (-(2**-30), "equal"),
+    (2e-9, "K-S5"), (0.03, "K-S5"), (0.05 - 2**-30, "K-S5"), (-(0.05 - 2**-30), "K-S5"),
+    (0.05 + 1e-6, "undecidable"), (0.07, "undecidable"), (-0.07, "undecidable")])
+def test_expiry_pairing_boundaries_rs3_1(delta_s: float, expected: str) -> None:
+    """rev3 RS3-1: delta <= 1e-9 s equal, <= 0.05 s a K-S5 ② violation (SH-3 stop), above
+    that undecidable (RS2-4 3, SH-4); the current SAME_PERIOD_S / 1e-9 code is that rule."""
+    assert sj.SAME_PERIOD_S == 0.05 and sj.TIME_TOLERANCE_S == 1e-9
+    lines, cand = _expiry_pair_with_delta(delta_s)
+    history = sj.history_problems(cand, is_candidate=True)
+    k_s5 = sj.k_s5_problems(cand)
+    result = sj.judge_s(lines)
+    if expected == "equal":
+        assert history == [] and k_s5 == []
+        assert not any(text.startswith("K-S5") for text in result["k_problems"])
+    elif expected == "K-S5":
+        assert history == []
+        (problem,) = k_s5
+        assert "!= deferral end 20.5" in problem
+        assert result["status"] == sj.STATUS_STOP
+        assert any(text.startswith("SH-3") for text in result["stops"])
+    else:
+        (problem,) = history
+        assert "no expiry start in that period" in problem and "RS2-4 3)" in problem
+        assert k_s5 == [] and result["k_problems"] == []
+        assert result["status"] == sj.STATUS_UNDECIDABLE
+
+
+def test_expiry_without_a_paired_start_is_undecidable_rs3_1() -> None:
+    lines, cand = _expiry_pair_with_delta(0.0)
+    cand["s2d"]["soil"]["mode_starts"] = []
+    cand["event_names"].pop(sj.SOIL_MODE_EVENT)
+    assert "1 expired deferrals for 0 expiry starts" in sj.history_problems(
+        cand, is_candidate=True)[0]
+    result = sj.judge_s(lines)
+    assert result["k_problems"] == [] and result["status"] == sj.STATUS_UNDECIDABLE
+
+
+def _sha_of(key: str) -> str:
+    return hashlib.sha256(key.encode("utf-8")).hexdigest()
+
+
+def _sh10_lines() -> tuple[list[dict], list[dict]]:
+    """(new S-C lines, pre-rev2 S-C lines) with equal 64-character hashes for all 456 keys."""
+    sc_lines, _ = _s_lines()
+    for line in sc_lines:
+        line["commands_sha256"] = _sha_of(sj.key_of(line))
+    return sc_lines, copy.deepcopy(sc_lines)
+
+
+def test_sh10_check_rs3_4() -> None:
+    sc_lines, reference = _sh10_lines()
+    result = sj.sh10_check(sc_lines, reference, "r" * 64)
+    assert result["status"] == sj.STATUS_PASS and result["keys"] == sj.SC_LINES
+    assert result["equal"] == sj.SC_LINES and result["reference_sha256"] == "r" * 64
+    different = copy.deepcopy(reference)
+    different[7]["commands_sha256"] = _sha_of("other")
+    result = sj.sh10_check(sc_lines, different)
+    assert result["status"] == sj.STATUS_STOP and result["different"] == ["k007"]
+    unpaired = reference[:-1]  # the pre-rev2 file misses one key
+    result = sj.sh10_check(sc_lines, unpaired)
+    assert result["status"] == sj.STATUS_STOP and result["new_only"] == 1
+    assert result["keys"] == sj.SC_LINES - 1 and result["different"] == []
+    extra = copy.deepcopy(reference) + [_identified(_line("zzz", "S-C", sha=_sha_of("z")))]
+    result = sj.sh10_check(sc_lines, extra)
+    assert result["status"] == sj.STATUS_STOP and result["reference_only"] == 1
+    short_hashes = copy.deepcopy(sc_lines)
+    short_reference = copy.deepcopy(reference)
+    short_hashes[0]["commands_sha256"] = short_reference[0]["commands_sha256"] = "a"
+    assert sj.sh10_check(short_hashes, short_reference)["status"] == sj.STATUS_STOP
+    assert sj.sh10_check(sc_lines[:150], reference)["status"] == sj.STATUS_INCOMPLETE
+    assert sj.sh10_check(sc_lines[:150], different)["status"] == sj.STATUS_STOP
+    assert sj.sh10_check(sc_lines, None)["status"] == sj.STATUS_UNDECIDABLE
+    assert sj.sh10_check(sc_lines[:150], None)["status"] == sj.STATUS_INCOMPLETE
+    assert sj.sh10_check([], reference)["status"] == sj.STATUS_INCOMPLETE
+
+
+def _write_lines(path: Path, lines: list[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(json.dumps(line) for line in lines) + "\n", encoding="utf-8")
+
+
+def test_sh10_gate_before_s_d_and_judge_output(tmp_path, capsys) -> None:
+    sc_lines, reference = _sh10_lines()
+    _write_lines(tmp_path / st.OUT_NAMES["S-C"], sc_lines)
+    default_path = tmp_path / sj.PRE_REV2_SC_RELATIVE
+    _write_lines(default_path, reference)
+    reference_sha256 = hashlib.sha256(default_path.read_bytes()).hexdigest()
+    inputs = st.Inputs(tmp_path, *(tmp_path for _ in range(7)))
+    assert inputs.pre_rev2_sc_path() == default_path
+    assert st.sh10_gate_problems(inputs) == []
+    assert st.sh10_result(inputs)["reference_sha256"] == reference_sha256
+    other = tmp_path / "other" / "s2d_SC.jsonl"
+    changed = copy.deepcopy(reference)
+    changed[3]["commands_sha256"] = _sha_of("other")
+    _write_lines(other, changed)
+    (problem,) = st.sh10_gate_problems(st.Inputs(*(tmp_path for _ in range(8)), other))
+    assert problem.startswith("SH-10 stop") and "k003" in problem
+    missing = st.Inputs(*(tmp_path for _ in range(8)), tmp_path / "none.jsonl")
+    (problem,) = st.sh10_gate_problems(missing)
+    assert problem.startswith("SH-10 stop") and "missing" in problem
+    pre_rev2 = sj.load_pre_rev2_sc(default_path)
+    result = sj.judge_all(sc_lines, None, None, None, None, pre_rev2_sc=pre_rev2)
+    assert result["SH-10"]["status"] == sj.STATUS_PASS
+    assert reference_sha256 in sj.report_markdown(result, tmp_path)
+    capsys.readouterr()
+    sj.main(["judge", "--dir", str(tmp_path), "--pre-rev2-sc", str(other)])
+    summary = json.loads(capsys.readouterr().out.strip().splitlines()[-1])
+    assert summary["SH-10"] == sj.STATUS_STOP
+    assert summary["pre_rev2_sc_sha256"] == hashlib.sha256(other.read_bytes()).hexdigest()

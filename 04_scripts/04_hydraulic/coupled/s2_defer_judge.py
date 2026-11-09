@@ -2,10 +2,19 @@
 
 Rules: ``06_analysis/02_control/verif_matrix/s2_soil_defer_rules.md`` (control-expert, sealed;
 LF sha256 :data:`RULES_S2D_SHA256`) with its addenda ``s2_soil_defer_rules_rev1.md``
-(:data:`RULES_S2D_REV1_SHA256`, RS1-1 .. RS1-9) and ``s2_soil_defer_rules_rev2.md``
-(:data:`RULES_S2D_REV2_SHA256`, RS2-0 .. RS2-6; the later addendum wins) on top of the
+(:data:`RULES_S2D_REV1_SHA256`, RS1-1 .. RS1-9), ``s2_soil_defer_rules_rev2.md``
+(:data:`RULES_S2D_REV2_SHA256`, RS2-0 .. RS2-6) and ``s2_soil_defer_rules_rev3.md``
+(:data:`RULES_S2D_REV3_SHA256`, RS3-0 .. RS3-5; the later addendum wins) on top of the
 LAS-b A-plan rules it inherits (six files, ``las_revA_diag.RULES_FIELDS``). The rules text
 wins where this code differs.
+
+rev3: RS3-1 confirms the expiry pairing below (run order; delta <= 1e-9 s equal, <= 0.05 s a
+K-S5 ② violation (SH-3), > 0.05 s or unpaired undecidable). RS3-2 K-S3': the first deferral
+entry matches *some* P0 ``mode_starts`` time (any order, 1e-9 s), and the commands are bit
+equal before it (the trace prefix up to the first entry evaluation; past it RS3-2 2 is
+replaced by item 1 and the hash checks). RS3-3 K-S6: an S2D line without a deferral has
+the P0 hash (SH-3). RS3-4 SH-10: the S-C hashes equal the pre-rev2 S-C hashes key by key
+(64 characters) before S-D; the pre-rev2 file sha256 is published.
 
 rev2: the criteria read only the run's history ``soil.mode_starts`` (``{t_s,
 push_base_stroke_m, source}``) and ``soil.deferrals`` (one record per deferral), never the
@@ -33,7 +42,8 @@ Judged here (rules 4 / 5 / 6 / 7):
   S-C   census: soil-mode keys, shadow entries, latch release and LOC in one period or
         1 .. N_d periods apart (per group), Q-S2, shadow entries with |dR| < 1 N (RS1-3).
   SH-9  the S-C P0 hashes of the 19 keys with a stored FB L job dict = the stored L hashes.
-  S     S-D pairs (S2D - P0 of S-C): SC-2, SC-F, SC-S, SC-R, SC-T (a) .. (d), K-S1 .. K-S5,
+  SH-10 the S-C hashes of all 456 keys = the pre-rev2 S-C hashes (rev3 RS3-4).
+  S     S-D pairs (S2D - P0 of S-C): SC-2, SC-F, SC-S, SC-R, SC-T (a) .. (d), K-S1 .. K-S6,
         Q-S3; SH-3 / SH-6 / SH-7 / SH-8 (with the pair-level SC-R, RS1-6). Undecidable:
         S-C not 456 keys in the group counts, S-D keys outside the selection, an unfinished
         deferral (RS1-4), a history RS2-4 rejects, SC-T (a) without a P0 soil mode or (d)
@@ -49,7 +59,9 @@ Status order ``stop`` > ``undecidable`` > ``fail`` > ``pass``; nothing to judge 
 Usage (dynamics-dev or python-dev python.exe, project root, PowerShell):
   python -I -B 04_scripts/04_hydraulic/coupled/s2_defer_judge.py judge [--dir <soil_defer>]
       [--d1 <d1.jsonl>] [--reva2-dir <revA2>] [--ref-rg ..] [--ref-reva-rg ..]
-      [--ref-reva-rh ..] [--rules-root <checkout>] [--out <md>] [--json-out <json>]
+      [--ref-reva-rh ..] [--rules-root <checkout>] [--pre-rev2-sc <s2d_SC.jsonl>]
+      [--out <md>] [--json-out <json>]
+  (``--pre-rev2-sc`` defaults to ``<dir>/history_pre_rev2/s2d_SC.jsonl``.)
 Exit codes: 0 every judged part passed, 1 a stop / fail / undecidable / ask, 2 input error.
 """
 from __future__ import annotations
@@ -84,12 +96,20 @@ RULES_REV2_RELATIVE = RULES_RELATIVE.with_name("s2_soil_defer_rules_rev2.md")
 RULES_S2D_REV2_SHA256 = "3768a892b6d34fabc93841d82cf36fbac111f34a8193e1c0ea6046b9ff4a2a04"
 """``s2_soil_defer_rules_rev2.sha256`` (LF digest, sealed 2026-11-09 12:59:29 +09:00): the
 soil-mode start history and the per-deferral criteria RS2-0 .. RS2-6."""
+RULES_REV3_RELATIVE = RULES_RELATIVE.with_name("s2_soil_defer_rules_rev3.md")
+RULES_S2D_REV3_SHA256 = "81bb429dec0ca48de7b188a438b8278d9bb5d0354f18d5874ba3c5c2092b34e8"
+"""``s2_soil_defer_rules_rev3.sha256`` (LF digest, sealed 2026-11-09 13:43:58 +09:00): the
+expiry pairing RS3-1, K-S3' RS3-2, K-S6 RS3-3 and SH-10 RS3-4."""
 RULES_FIELDS = ("rules_s2d_sha256", "rules_s2d_rev1_sha256", "rules_s2d_rev2_sha256",
-                *diag.RULES_FIELDS)
+                "rules_s2d_rev3_sha256", *diag.RULES_FIELDS)
 RULES_VALUES = (RULES_S2D_SHA256, RULES_S2D_REV1_SHA256, RULES_S2D_REV2_SHA256,
-                *diag.RULES_VALUES)
-"""Every line records the S2D rules, its rev1 and rev2 and the six A-plan rules digests
-(rules A.2, rev2 RS2-5)."""
+                RULES_S2D_REV3_SHA256, *diag.RULES_VALUES)
+"""Every line records the S2D rules, its rev1, rev2 and rev3 and the six A-plan rules digests
+(rules A.2, rev2 RS2-5, rev3 RS3-5)."""
+PRE_REV2_SC_RELATIVE = Path("history_pre_rev2") / "s2d_SC.jsonl"
+"""rev3 RS3-4: the pre-rev2 S-C file under a ``soil_defer`` folder (identity reference of
+SH-10 only, never judged)."""
+SHA256_HEX_LENGTH = 64
 
 BUNDLES = ("S-0", "S-C", "S-D", "A-S", "A-P0")
 S2D_VALUES = {"mode_defer_periods": 5, "mode_defer_stroke_m": 0.006,
@@ -172,8 +192,9 @@ SOURCE_EXPIRY, SOURCE_RELEASE = "expiry", "release"
 SOURCES = (SOURCE_EXPIRY, SOURCE_RELEASE)
 """rev2 RS2-1 ``mode_starts[].source`` values."""
 SAME_PERIOD_S = PERIOD_S / 2
-"""rev2 RS2-4 3: an ``expiry`` start "at the same time" as a deferral end lies in its control
-period (closer than half a period); K-S5 ② then needs the times equal to 1e-9 s."""
+"""rev2 RS2-4 3 / rev3 RS3-1: an ``expiry`` start "at the same time" as a deferral end lies
+in its control period (at most half a period away); K-S5 ② then needs the times equal to
+1e-9 s (above that a K-S5 violation, SH-3). Further away, or unpaired: undecidable."""
 SOIL_MODE_EVENT = "soil_mode_start"
 DEFER_EVENT = "INFO_SOIL_MODE_DEFER"
 FLAT_SOIL_MARGIN_EVENT = diag.FLAT_SOIL_MARGIN_EVENT
@@ -189,14 +210,16 @@ def rules_path(rules_root: Path = ROOT) -> Path:
 
 
 def sealed_files(rules_root: Path = ROOT) -> tuple:
-    """SH-1: the S2D rules, their rev1 and rev2 (from ``rules_root``) and the six A-plan
-    rules."""
+    """SH-1: the S2D rules, their rev1, rev2 and rev3 (from ``rules_root``) and the six
+    A-plan rules."""
     path = rules_path(rules_root)
     rev1 = rules_root / RULES_REV1_RELATIVE
     rev2 = rules_root / RULES_REV2_RELATIVE
+    rev3 = rules_root / RULES_REV3_RELATIVE
     return ((path, path.with_suffix(".sha256"), RULES_S2D_SHA256),
             (rev1, rev1.with_suffix(".sha256"), RULES_S2D_REV1_SHA256),
-            (rev2, rev2.with_suffix(".sha256"), RULES_S2D_REV2_SHA256), *ajudge.SEALED_RULES,
+            (rev2, rev2.with_suffix(".sha256"), RULES_S2D_REV2_SHA256),
+            (rev3, rev3.with_suffix(".sha256"), RULES_S2D_REV3_SHA256), *ajudge.SEALED_RULES,
             (diag.RULES_REVA_REV3_PATH, diag.RULES_REVA_REV3_SHA_PATH,
              diag.RULES_REVA_REV3_SHA256))
 
@@ -578,6 +601,64 @@ def sh9_check(lines: list[dict], stored: dict | None) -> dict:
             "rows": rows}
 
 
+def load_pre_rev2_sc(path: Path) -> tuple[list[dict], str]:
+    """rev3 RS3-4: (lines, raw file sha256) of the pre-rev2 S-C file.
+
+    Raises:
+        OSError: The file cannot be read.
+        ValueError: A line that is not JSON.
+    """
+    return rj.read_lines(path), raw_sha256(path)
+
+
+def _is_sha256_hex(value) -> bool:
+    return isinstance(value, str) and len(value) == SHA256_HEX_LENGTH
+
+
+def sh10_check(lines: list[dict], reference_lines: list[dict] | None,
+               reference_sha256: str | None = None) -> dict:
+    """rev3 RS3-4 SH-10: every new S-C key's ``commands_sha256`` (64 characters) equals the
+    pre-rev2 S-C hash of the same key.
+
+    Status ``stop`` on a different hash, a hash that is not 64 characters, or a key on one
+    side only (the unpaired counts are published); ``incomplete`` before S-C finished (456
+    keys) with nothing different so far; ``undecidable`` without the pre-rev2 lines once S-C
+    finished."""
+    sc_by_key = by_key(lines_of(lines, "S-C"))
+    is_sc_finished = len(sc_by_key) == SC_LINES
+    if not sc_by_key:
+        return {"status": STATUS_INCOMPLETE, "reason": "no S-C line"}
+    if reference_lines is None:
+        status = STATUS_UNDECIDABLE if is_sc_finished else STATUS_INCOMPLETE
+        return {"status": status, "reason": "pre-rev2 S-C file not loaded"}
+    reference_by_key = by_key(lines_of(reference_lines, "S-C"))
+    paired = sorted(set(sc_by_key) & set(reference_by_key))
+    different = [key for key in paired
+                 if not (_is_sha256_hex(sc_by_key[key]["commands_sha256"])
+                         and sc_by_key[key]["commands_sha256"]
+                         == reference_by_key[key]["commands_sha256"])]
+    new_only = sorted(set(sc_by_key) - set(reference_by_key))
+    reference_only = sorted(set(reference_by_key) - set(sc_by_key))
+    problems = [f"SH-10 {key}: S-C hash != pre-rev2 S-C hash" for key in different[:20]]
+    if new_only:
+        problems.append(f"SH-10 {len(new_only)} S-C keys without a pre-rev2 line "
+                        f"(first {new_only[0]})")
+    if is_sc_finished and reference_only:
+        problems.append(f"SH-10 {len(reference_only)} pre-rev2 keys without an S-C line "
+                        f"(first {reference_only[0]})")
+    if problems:
+        status = STATUS_STOP
+    elif not is_sc_finished:
+        status = STATUS_INCOMPLETE
+    else:
+        status = STATUS_PASS
+    return {"status": status, "reference_sha256": reference_sha256,
+            "reference_lines": len(reference_lines), "reference_keys": len(reference_by_key),
+            "keys": len(paired), "equal": len(paired) - len(different),
+            "different": different, "new_only": len(new_only),
+            "reference_only": len(reference_only), "problems": problems}
+
+
 def sd_selection(sc_lines: list[dict]) -> dict:
     """Rules 3 S-D: every S-C key with a soil-mode start, and 40 of the others drawn with
     ``default_rng(20261109).choice(n, 40, replace=False)`` over the sorted key names."""
@@ -671,23 +752,39 @@ def k_s5_problems(line: dict) -> list[str]:
 
 
 def k_s3_entry_problems(cand: dict, base: dict) -> list[str]:
-    """rev2 RS2-3: the first deferral entry of the S2D line is at the first soil-mode start of
-    the P0 line (a P0 line without the history is undecidable, not checked here)."""
+    """rev3 RS3-2 K-S3' item 1: the first deferral entry of the S2D line is at the time of
+    *some* soil-mode start of the P0 line (``mode_starts`` in any order, 1e-9 s), so a first
+    entry at a re-release after a LOC revocation passes. A P0 line without the history is
+    undecidable (RS2-4 1), not checked here.
+
+    Item 2 (commands bit equal before the entry period) is :func:`prefix_matches` up to the
+    first entry evaluation, the only per-period command record of a line; past it RS3-2 2
+    takes item 1 and the hash checks instead."""
     _starts, deferrals = need_history(cand)
     base_starts = mode_starts_of(base)
     if not deferrals or base_starts is None:
         return []
     entry_s = deferrals[0]["start_s"]
-    p0_start_s = base_starts[0]["t_s"] if base_starts else None
-    if p0_start_s is None or abs(entry_s - p0_start_s) > TIME_TOLERANCE_S:
-        return [f"K-S3 {key_of(cand)}: first deferral entry {entry_s} s != P0 first soil-mode "
-                f"start {p0_start_s}"]
-    return []
+    if any(abs(entry_s - start["t_s"]) <= TIME_TOLERANCE_S for start in base_starts):
+        return []
+    p0_times = [start["t_s"] for start in base_starts]
+    return [f"K-S3' {key_of(cand)}: first deferral entry {entry_s} s matches no P0 soil-mode "
+            f"start {p0_times}"]
+
+
+def k_s6_problems(cand: dict, base: dict) -> list[str]:
+    """rev3 RS3-3 K-S6: an S2D line whose ``soil.deferrals`` is empty has the P0 hash of the
+    same key (SH-3 otherwise). A line without the history raises :class:`rj.MissingField`."""
+    _starts, deferrals = need_history(cand)
+    if deferrals or cand["commands_sha256"] == base["commands_sha256"]:
+        return []
+    return [f"K-S6 {key_of(cand)}: no deferral but the hash differs from P0"]
 
 
 def pair_k_problems(cand: dict, base: dict, is_random: bool) -> list[str]:
-    """K-S1 (random keys), K-S2, K-S3, K-S4, K-S5 of one S-D pair (S2D, S-C P0)."""
-    problems = k_s4_problems(cand) + k_s5_problems(cand)
+    """K-S1 (random keys), K-S2, K-S3 / K-S3', K-S4, K-S5, K-S6 of one S-D pair (S2D, S-C
+    P0)."""
+    problems = k_s4_problems(cand) + k_s5_problems(cand) + k_s6_problems(cand, base)
     same = cand["commands_sha256"] == base["commands_sha256"]
     shadow_entered = any(check.get("entered") for check in entry_checks(base))
     key = key_of(cand)
@@ -927,7 +1024,7 @@ def _s_verdict(out: dict) -> dict:
                                            if pair["SC-R_fail"]))
     stops, asks = [], []
     if out["k_problems"]:
-        stops.append(f"SH-3 K-S1 .. K-S5: {out['k_problems'][:5]}")
+        stops.append(f"SH-3 K-S1 .. K-S6: {out['k_problems'][:5]}")
     if out["identity_problems"]:
         stops.append(f"SH-4 identity: {out['identity_problems'][:5]}")
     if checks["SC-T"] is False:
@@ -1096,22 +1193,25 @@ def _short(part: dict | None) -> dict | None:
 
 # ------------------------------------------------------------------------------- whole
 def judge_all(lines: list[dict], reva2_lines: list[dict] | None, stored: dict | None,
-              reference: dict | None, stored_reva, rules_root: Path = ROOT) -> dict:
-    """Every part (S-0, S-C census, SH-9, S, A) and the run identity across bundles.
+              reference: dict | None, stored_reva, rules_root: Path = ROOT,
+              pre_rev2_sc: tuple[list[dict], str] | None = None) -> dict:
+    """Every part (S-0, S-C census, SH-9, SH-10, S, A) and the run identity across bundles.
 
     ``stored`` is ``las_rev_judge.load_stored()`` (the stored L lines: SH-9 and A), None when
-    not loaded."""
+    not loaded; ``pre_rev2_sc`` is :func:`load_pre_rev2_sc` (SH-10), None when not loaded."""
     seals = seal_problems(rules_root)
     identity = cross_bundle_identity_problems(lines)
+    reference_lines, reference_sha256 = pre_rev2_sc if pre_rev2_sc is not None else (None, None)
     out = {"seal_problems": seals, "identity_across_bundles": identity,
            "S-0": judge_s0(lines), "S-C": sc_census(lines), "SH-9": sh9_check(lines, stored),
+           "SH-10": sh10_check(lines, reference_lines, reference_sha256),
            "S": judge_s(lines)}
     if reva2_lines is not None and stored is not None:
         out["A"] = judge_a(lines, reva2_lines, stored, reference, stored_reva)
     else:
         out["A"] = {"status": STATUS_INCOMPLETE, "reason": "revA2 inputs not loaded"}
-    statuses = [out["S-0"]["status"], out["SH-9"]["status"], out["S"]["status"],
-                out["A"]["status"]]
+    statuses = [out["S-0"]["status"], out["SH-9"]["status"], out["SH-10"]["status"],
+                out["S"]["status"], out["A"]["status"]]
     if identity:
         statuses.append(STATUS_UNDECIDABLE)  # SH-4: one commit and one tool set for all
     status = STATUS_STOP if seals else worst_status(statuses)
@@ -1148,6 +1248,10 @@ def report_markdown(result: dict, source: Path) -> str:
     sh9 = result["SH-9"]
     lines.append(f"- SH-9 shadow harmlessness (RS1-9): {sh9['status']} "
                  f"{json.dumps({k: v for k, v in sh9.items() if k not in ('status', 'rows')})}")
+    sh10 = result["SH-10"]
+    lines.append(f"- SH-10 record-field harmlessness (RS3-4): {sh10['status']}, pre-rev2 S-C "
+                 f"sha256 {sh10.get('reference_sha256')}")
+    lines.append(f"  - {json.dumps({k: v for k, v in sh10.items() if k != 'status'})[:2000]}")
     s_part = result["S"]
     lines.append(f"- S judgement: {s_part['status']}")
     for name in ("checks", "Q-S3", "stops", "asks", "missing", "extra", "undecidable",
@@ -1182,6 +1286,9 @@ def _parse_args(argv: list[str] | None):
     run.add_argument("--ref-reva-rh", type=Path, default=ajudge.DEFAULT_STORED_REVA_RH)
     run.add_argument("--rules-root", type=Path, default=ROOT,
                      help="checkout whose verif_matrix holds the sealed S2D rules")
+    run.add_argument("--pre-rev2-sc", type=Path, default=None,
+                     help="pre-rev2 S-C file of SH-10 (default <dir>/history_pre_rev2/"
+                          "s2d_SC.jsonl)")
     run.add_argument("--out", type=Path, default=None, help="new Markdown file")
     run.add_argument("--json-out", type=Path, default=None, help="new JSON file")
     return parser.parse_args(argv)
@@ -1216,10 +1323,14 @@ def main(argv: list[str] | None = None) -> int:
         lines = [line for path in sorted(args.dir.glob("s2d_*.jsonl"))
                  for line in rj.read_lines(path)]
         reva2_lines, stored, reference, stored_reva = _load_a_inputs(args)
+        pre_rev2_path = args.pre_rev2_sc or args.dir / PRE_REV2_SC_RELATIVE
+        pre_rev2_sc = load_pre_rev2_sc(pre_rev2_path) if pre_rev2_path.exists() else None
     except (OSError, ValueError) as exc:
         print(f"input error: {exc!r}")
         return 2
-    result = judge_all(lines, reva2_lines, stored, reference, stored_reva, args.rules_root)
+    result = judge_all(lines, reva2_lines, stored, reference, stored_reva, args.rules_root,
+                       pre_rev2_sc)
+    result["SH-10"]["reference_path"] = str(pre_rev2_path)
     report = report_markdown(result, args.dir)
     print(report)
     if args.out is not None:
@@ -1229,7 +1340,9 @@ def main(argv: list[str] | None = None) -> int:
         with args.json_out.open("x", encoding="utf-8") as handle:
             json.dump(result, handle, indent=1, default=_json_value)
     print(json.dumps({"status": result["status"], "S-0": result["S-0"]["status"],
-                      "SH-9": result["SH-9"]["status"], "S": result["S"]["status"],
+                      "SH-9": result["SH-9"]["status"], "SH-10": result["SH-10"]["status"],
+                      "pre_rev2_sc_sha256": result["SH-10"].get("reference_sha256"),
+                      "S": result["S"]["status"],
                       "A": result["A"]["status"],
                       "asks": len(result["asks"])}))
     return 0 if result["status"] == STATUS_PASS and not result["asks"] else 1

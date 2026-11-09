@@ -2,9 +2,10 @@
 
 Rules: ``06_analysis/02_control/verif_matrix/s2_soil_defer_rules.md`` (control-expert, sealed;
 LF sha256 ``s2_defer_judge.RULES_S2D_SHA256``), its addenda ``s2_soil_defer_rules_rev1.md``
-(``RULES_S2D_REV1_SHA256``) and ``s2_soil_defer_rules_rev2.md`` (``RULES_S2D_REV2_SHA256``)
-and the six A-plan rules files it inherits (all checked, SH-1; every line records all nine
-digests). The rules text wins where this code differs. The
+(``RULES_S2D_REV1_SHA256``), ``s2_soil_defer_rules_rev2.md`` (``RULES_S2D_REV2_SHA256``),
+``s2_soil_defer_rules_rev3.md`` (``RULES_S2D_REV3_SHA256``) and the six A-plan rules files
+it inherits (all checked, SH-1; every line records all ten digests). The rules text wins
+where this code differs. The
 run machinery (LAS-b candidate wrapper, DONE record, diagnosis recorders, pool, job dicts) is
 ``las_revA_targeted``'s; this tool adds the S2D settings wrapper, the S2D trace and the
 ``s2d`` block (``s2_defer_judge`` module docstring).
@@ -33,13 +34,16 @@ Gates before a run (exit 2): SH-1 seals; the run identity (one commit, empty cod
 allowed dirty files, one thread); the LAS-b b0 preset; S-0 passed (same commit and tool
 sha256) before every other bundle; S-C finished (456 lines) and SH-9 passed (rev1 RS1-9:
 the S-C P0 hashes of the 19 keys with a stored ``fb_F3`` / ``fb_F4`` L job dict = the
-stored L hashes) before S-D; the S judgement ``pass`` without an ask before A-S; A-S
-finished before A-P0; job dicts (S-C = ``d1.jsonl``, A-S R-T / R-S = the stored L lines).
+stored L hashes) and SH-10 passed (rev3 RS3-4: every S-C hash = the pre-rev2 S-C hash of the
+key, ``--pre-rev2-sc``, default ``<out-dir>/history_pre_rev2/s2d_SC.jsonl``; its sha256 is
+printed) before S-D; the S judgement ``pass`` without an ask before A-S; A-S finished
+before A-P0; job dicts (S-C = ``d1.jsonl``, A-S R-T / R-S = the stored L lines).
 During a batch: identity or controller tag change, a settings mismatch (SH-4) or an S-0
-hash mismatch (SH-2) stops everything; on S-D / A-S a K-S1 .. K-S5 problem stops the bundle
-(SH-3; K-S4 checks the computed and the returned command of every deferral period, rev1
-RS1-8); on S-D five pairs with an SC-2 / SC-F / SC-S / pair-level SC-R violation stop it
-(SH-8, rev1 RS1-6); an error line runs once more (SH-5).
+hash mismatch (SH-2) stops everything; on S-D a K-S1 .. K-S6 problem (K-S3' and K-S6 of
+rev3), on A-S a K-S1 / K-S4 / K-S5 problem stops the bundle (SH-3; K-S4 checks the computed
+and the returned command of every deferral period, rev1 RS1-8); on S-D five pairs with an
+SC-2 / SC-F / SC-S / pair-level SC-R violation stop it (SH-8, rev1 RS1-6); an error line
+runs once more (SH-5).
 
 Usage (dynamics-dev python.exe, project root, PowerShell):
   python -I -B 04_scripts/04_hydraulic/coupled/s2_defer_targeted.py list
@@ -48,7 +52,7 @@ Usage (dynamics-dev python.exe, project root, PowerShell):
   python -I -B 04_scripts/04_hydraulic/coupled/s2_defer_targeted.py run --bundle S-0
       [--out-dir <dir>] [--workers 4] [--affinity HEX] [--keys K1,K2] [--limit N]
       [--d1 ..] [--reva2-dir ..] [--ref-rg ..] [--ref-reva-rg ..] [--ref-reva-rh ..]
-      [--rules-root <checkout>]
+      [--rules-root <checkout>] [--pre-rev2-sc <s2d_SC.jsonl>]
 Exit codes: 0 done, 1 a stop condition or run errors (run) / a count or reference mismatch
 (list), 2 input error (seals, gates, dirty code, existing output, job dicts).
 """
@@ -518,6 +522,13 @@ class Inputs:
     ref_reva_rg: Path
     ref_reva_rh: Path
     rules_root: Path
+    pre_rev2_sc: Path | None = None
+    """rev3 RS3-4 SH-10 reference; None = ``out_dir/history_pre_rev2/s2d_SC.jsonl``."""
+
+    def pre_rev2_sc_path(self) -> Path:
+        if self.pre_rev2_sc is not None:
+            return self.pre_rev2_sc
+        return self.out_dir / sj.PRE_REV2_SC_RELATIVE
 
 
 def bundle_lines(inputs: Inputs, bundle: str) -> list[dict]:
@@ -569,9 +580,30 @@ def sh9_gate_problems(inputs: Inputs, stored: dict) -> list[str]:
     return [f"SH-9 {result['status']}: {result.get('problems') or result.get('reason')}"]
 
 
+def sh10_result(inputs: Inputs) -> dict:
+    """rev3 RS3-4 SH-10 on the S-C file against the pre-rev2 S-C file (``reference_path``
+    and ``reference_sha256`` for the judgement record)."""
+    path = inputs.pre_rev2_sc_path()
+    if not path.exists():
+        return {"status": sj.STATUS_STOP, "reference_path": str(path),
+                "reference_sha256": None, "problems": [f"SH-10: {path} missing"]}
+    reference_lines, reference_sha256 = sj.load_pre_rev2_sc(path)
+    result = sj.sh10_check(bundle_lines(inputs, "S-C"), reference_lines, reference_sha256)
+    return {**result, "reference_path": str(path)}
+
+
+def sh10_gate_problems(inputs: Inputs) -> list[str]:
+    """rev3 RS3-4 SH-10 after S-C, before S-D: every S-C hash = the pre-rev2 S-C hash of the
+    key (a different or unpaired key stops)."""
+    result = sh10_result(inputs)
+    if result["status"] == sj.STATUS_PASS:
+        return []
+    return [f"SH-10 {result['status']}: {result.get('problems') or result.get('reason')}"]
+
+
 def gate_problems(bundle: str, inputs: Inputs, identity: dict,
                   stored: dict | None = None) -> list[str]:
-    """Rules 3 order: S-0 -> S-C -> SH-9 -> S-D -> S judgement -> A-S -> A-P0.
+    """Rules 3 order: S-0 -> S-C -> SH-9 -> SH-10 -> S-D -> S judgement -> A-S -> A-P0.
 
     ``stored`` is ``las_rev_judge.load_stored()`` (loaded here when None and needed)."""
     if bundle == "S-0":
@@ -580,6 +612,7 @@ def gate_problems(bundle: str, inputs: Inputs, identity: dict,
     if bundle in ("S-D", "A-S", "A-P0"):
         problems += sc_gate_problems(inputs, identity)
         problems += sh9_gate_problems(inputs, stored if stored is not None else rj.load_stored())
+        problems += sh10_gate_problems(inputs)
     if bundle in ("A-S", "A-P0"):
         problems += s_gate_problems(inputs, identity)
     if bundle == "A-P0" and not bundle_lines(inputs, "A-S"):
@@ -661,6 +694,9 @@ def _add_input_args(parser) -> None:
     parser.add_argument("--ref-reva-rh", type=Path, default=ajudge.DEFAULT_STORED_REVA_RH)
     parser.add_argument("--rules-root", type=Path, default=ROOT,
                         help="checkout whose verif_matrix holds the sealed S2D rules")
+    parser.add_argument("--pre-rev2-sc", type=Path, default=None,
+                        help="pre-rev2 S-C file of SH-10 (default <out-dir>/history_pre_rev2/"
+                             "s2d_SC.jsonl)")
 
 
 def _parse_args(argv: list[str] | None):
@@ -681,7 +717,7 @@ def _parse_args(argv: list[str] | None):
 
 def _inputs_of(args) -> Inputs:
     return Inputs(args.out_dir, args.d1, args.diaga, args.reva2_dir, args.ref_rg,
-                  args.ref_reva_rg, args.ref_reva_rh, args.rules_root)
+                  args.ref_reva_rg, args.ref_reva_rh, args.rules_root, args.pre_rev2_sc)
 
 
 def _s0_reference_problems(inputs: Inputs) -> list[str]:
@@ -779,12 +815,20 @@ def _run_command(args) -> int:
     print(f"run identity: {identity['git_head']} dirty {identity['git_dirty']} "
           f"code_diff {identity['code_diff_sha256'][:12]} rules {sj.RULES_S2D_SHA256[:12]}",
           flush=True)
+    sh10 = None
+    if args.bundle in ("S-D", "A-S", "A-P0"):
+        sh10 = sh10_result(_inputs_of(args))  # passed in the gates (rev3 RS3-4)
+        print(f"SH-10 {sh10['status']}: {sh10['equal']}/{sh10['keys']} S-C keys equal, "
+              f"pre-rev2 S-C {sh10['reference_path']} sha256 {sh10['reference_sha256']}",
+              flush=True)
     print(f"{args.bundle}: {len(jobs)} runs -> {path}", flush=True)
     state = rev.run_batch(jobs, path, args.workers, args.bundle, stored, identity,
                           worker=run_s2d_job, check=make_checker(context),
                           whole_bundle_rerun=())
     summary = {"bundle": args.bundle, "out": str(path), "runs": state.runs,
                "errors": state.errors, "skipped": state.skipped, "stop": state.stop}
+    if sh10 is not None:
+        summary["pre_rev2_sc_sha256"] = sh10["reference_sha256"]
     if args.bundle == "S-0":
         summary["S-0"] = sj.judge_s0(rj.read_lines(path))["status"]
     print(json.dumps(summary))
