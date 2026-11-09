@@ -143,6 +143,8 @@ CENTRE_SCALES = {"1": 1.0, "0.94": 0.94}
 GRID_STEPS = (0, 1, 2, 3, 4)
 HALF_GRID_STEPS = (0.5, 1.5, 2.5, 3.5)
 """R-H of ``las_revA_targeted_rules.md`` 3.2: the phases between the D-b points."""
+QUARTER_GRID_STEPS = (0.25, 0.75, 1.25, 1.75, 2.25, 2.75, 3.25, 3.75)
+"""R-Q of ``las_revA_targeted_rules_rev2.md`` R2-3: the phases between the R-G / R-H points."""
 GRID_DELAY_STEP_S = 0.025
 TOUCH_FREE_PERIODS = 165
 PERIOD_S = 0.1
@@ -435,7 +437,7 @@ class TouchBudget:
 
     centre: str
     j: int | float
-    """D-b integer step, or an R-H half step (a float, recorded as such)."""
+    """D-b integer step, or an R-H half / R-Q quarter step (a float, recorded as such)."""
     budget_m3_s: float
     full_m3_s: float
     nominal_m3_s: float
@@ -459,15 +461,17 @@ def touch_budget_for(centre: str, j: int | float, full_m3_s: float, nominal_m3_s
                      ) -> TouchBudget:
     """``Q_b = base T_c / (T_c + j delta)``; base = s_c Q(4 v_max), or ``Q_nom`` itself for the
     nominal centre (its j = 0 is then exactly the LF budget, anchor A-2). ``j`` is a D-b step
-    (int) or an R-H half step (float, ``las_revA_targeted_rules.md`` 3.2).
+    (int), an R-H half step (float, ``las_revA_targeted_rules.md`` 3.2) or an R-Q quarter step
+    (float, ``las_revA_targeted_rules_rev2.md`` R2-3).
 
     Raises:
         ValueError: Unknown centre or j.
     """
     is_integer_step = isinstance(j, int) and not isinstance(j, bool) and j in GRID_STEPS
-    is_half_step = isinstance(j, float) and j in HALF_GRID_STEPS
-    if not (is_integer_step or is_half_step):
-        raise ValueError(f"grid step j={j!r} not in {GRID_STEPS} or {HALF_GRID_STEPS}")
+    is_fraction_step = isinstance(j, float) and j in (*HALF_GRID_STEPS, *QUARTER_GRID_STEPS)
+    if not (is_integer_step or is_fraction_step):
+        raise ValueError(f"grid step j={j!r} not in {GRID_STEPS}, {HALF_GRID_STEPS} or "
+                         f"{QUARTER_GRID_STEPS}")
     if centre == CENTRE_NOMINAL:
         centre_scale = nominal_m3_s / full_m3_s
         base_m3_s = nominal_m3_s
