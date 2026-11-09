@@ -29,6 +29,14 @@ Bundles (rev2 R2-5), output ``06_analysis/03_hydraulic/coupled/v5/las/revA2/revA
   R-S    (da) F-3 16 + F-4 14 jobs x P5r4.
   R-P0   P0 on the keys whose hash changed in the revA2 R-T / R-S files.
   R-X    P0 with the DONE record on the keys of the C-4 exception claims, or --keys.
+  D-A    diagnosis diagA (``las_revA_diag_plan.md``, ``las_revA_diag.py``): the C-S key
+         ``D1|H-S-A|G1+J1@FL|T|flat|K1|VB|e0`` x P0 / P5 / P5r4, period record (with the
+         ``soil`` field of ``las_revA_diag``) and DONE record on; output
+         ``v5/las/diagA/diagA.jsonl``. Gates (exit 2): the six rules files and the plan
+         (H-D0), the b0 preset, the two stored files and their pair hashes, the job dict =
+         the stored L line's, the run identity (rules 4). During the batch H-D1 (D-0a / D-0b
+         per line, D-0c once P5 and P5r4 are in) stops everything; an error line runs once
+         more (H-D2). No revA2 bit-test gate applies (the plan has its own D-0).
 Gates before a run (exit 2): H-1 seals; H-10 the reference ``rev_RG.jsonl`` (``--ref-rg``,
 raw sha256 7e8c3b41..) for every bundle but R-0 and the stored ``revA_RG.jsonl`` /
 ``revA_RH.jsonl`` (``--ref-reva-rg`` / ``--ref-reva-rh``, ac389809.. / f934cbd9..) for R-0A
@@ -61,6 +69,8 @@ Usage (dynamics-dev python.exe, project root, PowerShell):
   python -I -B 04_scripts/04_hydraulic/coupled/las_revA_targeted.py run --bundle R-0A
       [--ref-rg ..] [--ref-reva-rg ..] [--ref-reva-rh ..] [--workers 4] [--affinity HEX]
       [--out <jsonl>] [--keys K1,K2] [--from <jsonl> ..] [--limit N] [--no-done-record]
+  python -I -B 04_scripts/04_hydraulic/coupled/las_revA_targeted.py run --bundle D-A
+      [--stored-p5r4 <revA2 revA_RS.jsonl>] [--workers 3] [--affinity HEX] [--out <jsonl>]
 Exit codes: 0 done, 1 a stop condition or run errors (run) / a count or reference mismatch
 (list), 2 input error (seals, references, gates, dirty code, existing --out, job dicts).
 """
@@ -80,6 +90,7 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
 import las_rev_targeted as rev  # noqa: E402  (imports fb_targeted: thread variables first)
+import las_revA_diag as diag  # noqa: E402
 import las_revA_judge as judge  # noqa: E402
 
 rj = judge.rj
@@ -91,14 +102,18 @@ IDENTITY_FILES = {**rev.IDENTITY_FILES,
                   "las_revA_judge.py": HERE / "las_revA_judge.py"}
 """Rules 4: c2.py, the revA tool and judge, the rev tool and judge, las_phase_diag,
 fb_targeted, las_targeted."""
+DIAG_IDENTITY_FILES = {**IDENTITY_FILES, "las_revA_diag.py": HERE / "las_revA_diag.py"}
+"""Plan diagA 6: the revA files and the diagnosis recorder / judge."""
 
 BUNDLES = judge.BUNDLES
+RUN_BUNDLES = (*BUNDLES, diag.BUNDLE)
+"""Bundles ``run`` / ``list`` accept: the revA2 bundles and the diagnosis D-A."""
 P5R4_ONLY = judge.JUDGED_CANDIDATES
 BUNDLE_CANDIDATES = {"R-0": ("P0",), "R-0P5": (judge.REFERENCE_CANDIDATE,), "R-0A": P5R4_ONLY,
                      "R-Q": P5R4_ONLY, "R-T": P5R4_ONLY, "R-S": P5R4_ONLY, "R-P0": ("P0",),
-                     "R-X": ("P0",)}
+                     "R-X": ("P0",), diag.BUNDLE: diag.CANDIDATE_NAMES}
 BUNDLE_COUNTS = {"R-0": 6, "R-0P5": judge.GRID_LINES, "R-0A": judge.R0A_LINES,
-                 "R-Q": judge.QUARTER_LINES}
+                 "R-Q": judge.QUARTER_LINES, diag.BUNDLE: len(diag.CANDIDATE_NAMES)}
 REFERENCE_BUNDLES = tuple(name for name in BUNDLES if name != "R-0")
 """H-10: R-0P5 / R-0A read the reference P5 lines; every later bundle judges with them."""
 STORED_REVA_BUNDLES = tuple(name for name in BUNDLES if name not in ("R-0", "R-0P5"))
@@ -163,6 +178,14 @@ def grid_jobs(bundle: str, candidates) -> tuple[list[dict], list[dict]]:
     return jobs, entries
 
 
+def diag_jobs(candidates) -> tuple[list[dict], list[dict]]:
+    """D-A: the F-3 job of the diagnosis key once per candidate (plan 1), period record on."""
+    job = diag.base_job()
+    entries = [rev._entry(diag.BUNDLE, candidate, candidate, record_diag=True)
+               for candidate in candidates]
+    return [job] * len(entries), entries
+
+
 def bundle_jobs(bundle: str, candidates, mask: int | None = None, keys=None,
                 record_done: bool = True) -> list[dict]:
     """The jobs of a bundle with their ``rev`` entries (``keys`` filters R-T / R-S and is
@@ -171,6 +194,8 @@ def bundle_jobs(bundle: str, candidates, mask: int | None = None, keys=None,
         base, entries = rev.r0_jobs()
     elif bundle in judge.GRID_BUNDLES:
         base, entries = grid_jobs(bundle, candidates)
+    elif bundle == diag.BUNDLE:
+        base, entries = diag_jobs(candidates)
     elif bundle in ("R-T", "R-S"):
         all_base = rev.t_base_jobs() if bundle == "R-T" else rev.s_base_jobs()
         if keys is not None:
@@ -194,14 +219,20 @@ def bundle_jobs(bundle: str, candidates, mask: int | None = None, keys=None,
 
 
 # ------------------------------------------------------------------------------- worker
-def rules_block() -> dict:
-    """The five rules sha256 every line records (rev2 B.1)."""
+def rules_block(bundle: str | None = None) -> dict:
+    """The five rules sha256 every line records (rev2 B.1); D-A lines record six (+ rev3) and
+    the diagnosis plan sha256 (plan 6)."""
+    if bundle == diag.BUNDLE:
+        return {**dict(zip(diag.RULES_FIELDS, diag.RULES_VALUES, strict=True)),
+                "diag_plan_sha256": diag.PLAN_SHA256}
     return dict(zip(judge.RULES_FIELDS, judge.RULES_VALUES, strict=True))
 
 
-def run_identity() -> dict:
-    """``fb_targeted.run_identity`` with this tool's files and the five rules sha256."""
-    return {**fb.run_identity(files=IDENTITY_FILES), **rules_block()}
+def run_identity(bundle: str | None = None) -> dict:
+    """``fb_targeted.run_identity`` with this tool's files and the rules sha256 (D-A: with
+    ``las_revA_diag.py``, six rules and the plan)."""
+    files = DIAG_IDENTITY_FILES if bundle == diag.BUNDLE else IDENTITY_FILES
+    return {**fb.run_identity(files=files), **rules_block(bundle)}
 
 
 _RUN: dict = {}
@@ -222,6 +253,8 @@ def _install_all(entry: dict) -> None:
         rev.install_candidate(candidate, preset_settings=_RUN["preset_settings"])
     if entry["record_done"]:
         rev.install_done_recorder()
+    if entry["bundle"] == diag.BUNDLE:
+        diag.install_soil_recorder()  # last: its ``update`` hook is the outermost
 
 
 def no_ramp(n_r: int) -> dict:
@@ -245,7 +278,7 @@ def rev_block(entry: dict, job: dict, controller, line: dict, identity: dict) ->
     expected = asdict(CANDIDATES[entry["candidate"]].settings_from(preset))
     return {**{name: entry[name] for name in ("bundle", "candidate", "label", "grid_point",
                                               "record_diag", "record_done")},
-            "key": fb.fb_key(job), "identity": identity, **rules_block(),
+            "key": fb.fb_key(job), "identity": identity, **rules_block(entry["bundle"]),
             "settings": settings, "expected_settings": expected,
             "settings_match": settings == expected,
             "controller_tag": line.get("controller_tag")}
@@ -260,7 +293,11 @@ def _add_blocks(line: dict, entry: dict, job: dict, identity: dict) -> None:
                            f"controller {controller is not None})")
     line["las"] = las_block(controller, fb._CAPTURE.get("harness"), entry["candidate"])
     line["rev"] = rev_block(entry, job, controller, line, identity)
-    if entry["record_diag"]:
+    if entry["bundle"] == diag.BUNDLE:
+        line["diag"] = {"key": fb.fb_key(job),
+                        **diag.diag_block(entry, line, line["las"], controller, plant,
+                                          identity)}
+    elif entry["record_diag"]:
         diag_entry = {"bundle": entry["bundle"], "label": entry["label"], "record": True}
         line["diag"] = {"key": fb.fb_key(job),
                         **las_phase_diag.diag_block(diag_entry, line, line["las"], controller,
@@ -277,7 +314,7 @@ def run_revA_job(job: dict) -> dict:
     try:
         import run_v5  # sys.path and thread variables first
 
-        identity = run_identity()
+        identity = run_identity(entry["bundle"])
         _install_all(entry)
     except Exception as exc:  # recorded as an error line; the batch decides (H-7)
         return {**head, "error": f"install: {exc!r}", "tb": traceback.format_exc()[-3000:],
@@ -569,7 +606,8 @@ def list_bundles(bundles, paths: ReferencePaths) -> tuple[list[str], list[str]]:
         expected = BUNDLE_COUNTS.get(bundle)
         if expected is not None and len(jobs) != expected:
             problems.append(f"{bundle}: {len(jobs)} runs, expected {expected}")
-        problems += rev.job_dict_problems(jobs, stored) if bundle in ("R-T", "R-S") else []
+        if bundle in ("R-T", "R-S", diag.BUNDLE):
+            problems += rev.job_dict_problems(jobs, stored)
     for (key, label), sha in rj.R0_EXPECTED.items():
         line = rj.stored_line(stored, key)
         if line is not None and label == "P0" and line["commands_sha256"] != sha:
@@ -590,11 +628,13 @@ def _parse_args(argv: list[str] | None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="command", required=True)
     listing = sub.add_parser("list", help="runs of the bundles and the reference checks")
-    listing.add_argument("--bundle", nargs="+", choices=BUNDLES, default=list(BUNDLES))
+    listing.add_argument("--bundle", nargs="+", choices=RUN_BUNDLES, default=list(BUNDLES))
     _add_reference_args(listing)
     run = sub.add_parser("run", help="run a bundle into a new file")
-    run.add_argument("--bundle", required=True, choices=BUNDLES)
+    run.add_argument("--bundle", required=True, choices=RUN_BUNDLES)
     _add_reference_args(run)
+    run.add_argument("--stored-p5r4", type=Path, default=diag.STORED_P5R4_PATH,
+                     help="D-A: revA2 revA_RS.jsonl with the P5r4 pair (main checkout)")
     run.add_argument("--candidates", default=None, help="only the bundle's own candidate")
     run.add_argument("--workers", type=int, default=4)
     run.add_argument("--affinity", default=None, help="hex mask, set in every worker")
@@ -665,7 +705,61 @@ def _prepare(args) -> tuple[list[dict], Path, dict, dict, dict | None, judge.Sto
     return jobs, path, stored, identity, reference, stored_reva
 
 
+def _prepare_diag(args) -> tuple[list[dict], Path, dict, dict, diag.StoredPairs]:
+    """D-A: jobs, output path, stored lines, identity and the stored pairs (raises on input
+    errors: H-D0 / H-1 seals, preset, stored files and hashes, job dict, run identity)."""
+    if args.keys or args.from_files or args.no_done_record:
+        raise ValueError("D-A takes no --keys / --from / --no-done-record (plan 1 / 6)")
+    problems = diag.seal_problems()
+    if problems:
+        raise ValueError(f"H-D0 / H-1 seals: {problems}")
+    import run_v5  # noqa: F401  (puts 03_src on sys.path before the preset check)
+
+    fb.check_preset_las()
+    candidates = resolve_candidates(args.bundle, args.candidates)
+    path = args.out or diag.DEFAULT_OUT
+    problem = rev.out_path_problem(path, diag.DIAGA_DIR)
+    if problem is not None:
+        raise ValueError(problem)
+    pairs = diag.load_stored_pairs(diag.STORED_L_PATH, args.stored_p5r4)
+    identity = run_identity(args.bundle)
+    problems = rev.identity_problems(identity)
+    if problems:
+        raise ValueError(f"run identity (rules 4, H-D3): {problems}")
+    stored = rj.load_stored()
+    mask = None if args.affinity is None else int(args.affinity, 16)
+    jobs = bundle_jobs(args.bundle, candidates, mask)
+    problems = diag.job_problems(jobs[0], pairs.l_line) + rev.job_dict_problems(jobs, stored)
+    if problems:
+        raise ValueError(f"job dict (plan 6): {problems}")
+    jobs = jobs if args.limit is None else jobs[: args.limit]
+    return jobs, path, stored, identity, pairs
+
+
+def _run_diag_command(args) -> int:
+    try:
+        jobs, path, stored, identity, pairs = _prepare_diag(args)
+    except (KeyError, OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
+        print(f"input error: {exc!r}")
+        print(json.dumps({"bundle": args.bundle, "stop": "input", "reason": str(exc)}))
+        return 2
+    print(f"run identity: {identity['git_head']} dirty {identity['git_dirty']} "
+          f"code_diff {identity['code_diff_sha256'][:12]} plan {diag.PLAN_SHA256[:12]}",
+          flush=True)
+    print(f"{args.bundle}: {len(jobs)} runs -> {path}", flush=True)
+    state = rev.run_batch(jobs, path, args.workers, args.bundle, stored, identity,
+                          worker=run_revA_job, check=diag.make_checker(), whole_bundle_rerun=())
+    result = diag.judge_diag(rj.read_lines(path), pairs, diag.seal_problems())
+    summary = {"bundle": args.bundle, "out": str(path), "runs": state.runs,
+               "errors": state.errors, "skipped": state.skipped, "stop": state.stop,
+               "verdict": result["verdict"], "branches": result.get("branches")}
+    print(json.dumps(summary))
+    return 1 if state.stop or state.skipped else 0
+
+
 def _run_command(args) -> int:
+    if args.bundle == diag.BUNDLE:
+        return _run_diag_command(args)
     try:
         jobs, path, stored, identity, reference, stored_reva = _prepare(args)
     except (KeyError, OSError, ValueError, subprocess.SubprocessError) as exc:
