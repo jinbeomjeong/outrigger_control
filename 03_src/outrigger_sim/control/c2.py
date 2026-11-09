@@ -213,6 +213,11 @@ P-S8-37 R4 (R4c30, spec 429.9, adopted 2026-10-30): a LOC after the soil mode on
 by ``SlopeClearanceMarginSettings.flat_soil_margin_m`` (event ``INFO_LOC_FLAT_SOIL_MARGIN``);
 off by default, 0.03 m in the preset since the spec 429.11 switch
 (``C2Config().with_10hz_d1(flat_soil_margin_m=0.0)`` turns it off).
+LAS-b K1 (``las_k1_rules.md``, candidate under test): with
+``SlopeClearanceMarginSettings.flat_soil_margin_order_gate`` R4 also needs the plateau start
+to follow the soil-mode start in whole periods (event
+``INFO_LOC_FLAT_SOIL_MARGIN_SKIPPED:order`` when it does not); off by default and in the
+preset, the decisions are recorded either way (meta ``slope_clearance_margin.order_gate``).
 User decision 2026-11-04: the command :meth:`C2Controller.update` returns is clipped to
 ``+-v_max`` (``C2Config.clip_returned_command``), the internal states keep the unclipped value;
 off by default, on in the preset (``C2Config().with_10hz_d1(clip_returned_command=False)``
@@ -2157,6 +2162,9 @@ target at the LOC."""
 FLAT_SOIL_MARGIN_EVENT = "INFO_LOC_FLAT_SOIL_MARGIN"
 """``INFO_LOC_FLAT_SOIL_MARGIN:<effective target mm, integer>``: P-S8-37 R4 raised the
 clearance target at a LOC on a level settle after the soil mode (spec 429.9)."""
+FLAT_SOIL_MARGIN_ORDER_SKIP_EVENT = "INFO_LOC_FLAT_SOIL_MARGIN_SKIPPED:order"
+"""LAS-b K1 (``las_k1_rules.md`` 1.2): the order gate kept R4 off at a LOC whose plateau start
+does not follow the soil-mode start (INFO, only with ``flat_soil_margin_order_gate``)."""
 
 
 @dataclass(frozen=True)
@@ -2190,6 +2198,12 @@ class SlopeClearanceMarginSettings:
     ``thresholds.clearance_target_m + flat_soil_margin_m`` (event
     ``INFO_LOC_FLAT_SOIL_MARGIN``). ``0`` = off (class default; the R8 preset uses 0.03 m); a
     positive value acts whether or not ``enable`` is set."""
+    flat_soil_margin_order_gate: bool = False
+    """LAS-b K1 (``las_k1_rules.md`` 1.1): R4 also needs the plateau start ``t_P`` of the LOC
+    to come after the latest soil-mode start ``t_S`` in whole control periods,
+    ``round(t_P / T_s) > round(t_S / T_s)``; otherwise R4 stays off (event
+    ``INFO_LOC_FLAT_SOIL_MARGIN_SKIPPED:order``). Off by default and in the R8 preset; the
+    decision record (meta ``order_gate``) is kept either way."""
 
     def __post_init__(self) -> None:
         for name in ("tilt_min_rad", "margin_m", "flat_soil_margin_m"):
@@ -3870,6 +3884,43 @@ class _PlateauSample:
     period-mean specific force)."""
 
 
+@dataclass(frozen=True)
+class _FlatSoilOrderDecision:
+    """LAS-b K1 record of one LOC at which R4 was evaluated (``las_k1_rules.md`` 1.2).
+
+    Times are compared as whole control periods ``round(t / T_s)``, never as floats.
+    """
+
+    t_loc_s: float
+    t_P_s: float | None
+    t_S_s: float | None
+    n_P: int | None
+    n_S: int | None
+    is_r4_due_without_gate: bool
+    would_block: bool
+    is_applied: bool
+
+    @property
+    def period_difference(self) -> int | None:
+        """``dP = n_P - n_S`` (``None`` without both)."""
+        if self.n_P is None or self.n_S is None:
+            return None
+        return self.n_P - self.n_S
+
+    def to_meta(self) -> dict[str, Any]:
+        return {
+            "t_loc_s": self.t_loc_s,
+            "t_P_s": self.t_P_s,
+            "t_S_s": self.t_S_s,
+            "n_P": self.n_P,
+            "n_S": self.n_S,
+            "dP": self.period_difference,
+            "r4_due_without_gate": self.is_r4_due_without_gate,
+            "would_block": self.would_block,
+            "applied": self.is_applied,
+        }
+
+
 @dataclass
 class _LocRevokeWatch:
     """P-S8-33 watch of one LOC."""
@@ -4337,6 +4388,9 @@ class _RunState:
     flat_soil_margin_applied_s: tuple[float, ...] = ()
     """LOC times at which the R4 flat-soil margin raised the run target (a revocation without
     ``keep_slope_margin_on_revoke`` lets the next LOC apply it again)."""
+    # LAS-b K1 (immutable default: class attribute for run states pickled before it)
+    flat_soil_order_decisions: tuple[_FlatSoilOrderDecision, ...] = ()
+    """One record per LOC at which R4 was evaluated (meta ``order_gate.decisions``)."""
     # P-S8-32 (immutable default: class attribute for run states pickled before it)
     loc_window_restart_count: int = 0
     """Non-empty S-1 windows cleared because of a re-approach (meta)."""
@@ -8715,8 +8769,55 @@ class C2Controller:
         settle_rad = self._settle_attitude_rad()
         if self._is_slope_margin_due(settle_rad):
             self._raise_target_for_slope(t_s, settle_rad)
-        elif self._is_flat_soil_margin_due(settle_rad):
+            return
+        is_r4_due = self._is_flat_soil_margin_due(settle_rad)
+        would_block = is_r4_due and self._is_flat_soil_order_blocked()
+        is_gate_on = self.config.slope_clearance_margin.flat_soil_margin_order_gate
+        is_applied = is_r4_due and not (is_gate_on and would_block)
+        if is_applied:
             self._raise_target_for_flat_soil(t_s)
+        elif is_r4_due:
+            self._add_event(t_s, FLAT_SOIL_MARGIN_ORDER_SKIP_EVENT)
+        self._note_flat_soil_order_decision(t_s, is_r4_due, would_block, is_applied)
+
+    def _flat_soil_order_periods(self) -> tuple[int | None, int | None]:
+        """(``n_P``, ``n_S``): plateau start of this LOC and latest soil-mode start in whole
+        control periods (``None`` when the time is unknown)."""
+        soil = self._soil_state()
+        period_s = self.config.period_s
+        n_P = None if soil.plateau_start_s is None else round(soil.plateau_start_s / period_s)
+        n_S = None if soil.soil_mode_start_s is None else round(soil.soil_mode_start_s / period_s)
+        return n_P, n_S
+
+    def _is_flat_soil_order_blocked(self) -> bool:
+        """LAS-b K1 1.1: blocked unless ``n_P > n_S`` with both known."""
+        n_P, n_S = self._flat_soil_order_periods()
+        return n_P is None or n_S is None or n_P <= n_S
+
+    def _note_flat_soil_order_decision(
+        self, t_s: float, is_r4_due: bool, would_block: bool, is_applied: bool
+    ) -> None:
+        """Record the K1 decision of a LOC at which R4 was evaluated: R4 on and the soil mode
+        used (rules 7: a LOC without a soil mode or with the slope margin is not evaluated).
+        Kept with the gate off too (shadow record)."""
+        soil = self._soil_state()
+        if self.config.slope_clearance_margin.flat_soil_margin_m <= 0.0:
+            return
+        if soil.soil_mode_start_s is None:
+            return
+        n_P, n_S = self._flat_soil_order_periods()
+        decision = _FlatSoilOrderDecision(
+            t_loc_s=float(t_s),
+            t_P_s=soil.plateau_start_s,
+            t_S_s=soil.soil_mode_start_s,
+            n_P=n_P,
+            n_S=n_S,
+            is_r4_due_without_gate=is_r4_due,
+            would_block=would_block,
+            is_applied=is_applied,
+        )
+        state = self._state
+        state.flat_soil_order_decisions = (*state.flat_soil_order_decisions, decision)
 
     def _raise_target_for_flat_soil(self, t_s: float) -> None:
         state = self._state
@@ -8752,6 +8853,10 @@ class C2Controller:
             ),
             "flat_soil_margin_applied": bool(state.flat_soil_margin_applied_s),
             "flat_soil_margin_t_s": list(state.flat_soil_margin_applied_s),
+            "order_gate": {
+                "enabled": self.config.slope_clearance_margin.flat_soil_margin_order_gate,
+                "decisions": [decision.to_meta() for decision in state.flat_soil_order_decisions],
+            },
         }
 
     def _loc_anchor_bias_m(
