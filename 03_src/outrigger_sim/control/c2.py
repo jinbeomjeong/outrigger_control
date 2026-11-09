@@ -1148,6 +1148,10 @@ def _is_positive_int(value: object) -> bool:
     return isinstance(value, int) and not isinstance(value, bool) and value >= 1
 
 
+def _is_non_negative_int(value: object) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and value >= 0
+
+
 def _normalized_free_air_cap(
     excess_N: Sequence[float] | None,
 ) -> tuple[float, float, float, float] | None:
@@ -1674,6 +1678,29 @@ SOIL_EVENT_STATE_RESTORED = "INFO_SOIL_STATE_RESTORED"
 SOIL_EVENT_LOC_ANCHOR = "INFO_LOC_CLEARANCE_ANCHOR"
 """``INFO_LOC_CLEARANCE_ANCHOR:<b_FL>,<b_FR>,<b_RL>,<b_RR>`` (applied bias, mm; spec rev. 70
 369.1)."""
+SOIL_EVENT_MODE_DEFER = "INFO_SOIL_MODE_DEFER"
+"""S2D (``s2_soil_defer_rules.md`` 1.2): a latch release before the LOC deferred the soil mode."""
+SOIL_EVENT_MODE_DEFER_END = "INFO_SOIL_MODE_DEFER_END"
+"""``INFO_SOIL_MODE_DEFER_END:<loc|periods|stroke|rise|window>``: the S2D deferral ended."""
+SOIL_DEFER_PREVIOUS_PERIOD_FACTOR = 1.5
+"""The window values of the previous S-1 update count as "the previous period" only when that
+update was at most this many control periods ago (a LOC revocation or a phase change in
+between leaves no previous rise)."""
+
+
+class SoilDeferEnd(StrEnum):
+    """Why an S2D deferral ended (``s2_soil_defer_rules.md`` 1.2)."""
+
+    LOC = "loc"
+    """The LOC came first: no soil mode."""
+    PERIODS = "periods"
+    """``mode_defer_periods`` deferral periods were used: soil mode starts."""
+    STROKE = "stroke"
+    """The mean motor stroke advanced ``mode_defer_stroke_m``: soil mode starts."""
+    RISE = "rise"
+    """The window rise grew above ``k_d R_0`` or stopped falling: soil mode starts."""
+    WINDOW = "window"
+    """The window had no 10 mm tail this period (cleared or too short): soil mode starts."""
 LIFT_GUARD_WARNING_EVENT = "WARN_LIFT_STROKE_LIMITED"
 """``WARN_LIFT_STROKE_LIMITED:<legs>``: first guard period of a LEVEL entry (369.2)."""
 LIFT_GUARD_FAULT_EVENT = "FAULT_LIFT_STROKE_LIMIT"
@@ -1727,6 +1754,16 @@ class SoilResponseSettings:
       loc_anchor_offset_m`` with its sign. On a pad floor that is not planar the stroke-plane
       fit reads too little clearance; ``c_k(t) - b_k`` then follows the stroke change since
       ``t_P`` and the last corner to rise reads ``-loc_anchor_offset_m`` at ``t_P``.
+    * S2D soil-mode deferral (``s2_soil_defer_rules.md`` 1.2, appendix A.1): at a latch
+      release before the LOC, while the S-1 window tail of this period rises by at most
+      ``mode_defer_rise_factor plateau_rise_max_N``, less than in the previous period, with a
+      mean load sum of at least ``plausibility_fraction W_ref``, the latch is held without the
+      soil mode for up to ``mode_defer_periods`` periods. The LOC ends the deferral without a
+      soil mode; ``periods``, ``mode_defer_stroke_m`` of mean motor stroke, a growing rise or
+      no window tail start the soil mode, with the S-4 push measured from the deferral start.
+      ``mode_defer_periods`` 0 (default) is the rule without the deferral, bit for bit.
+      ``mode_defer_shadow`` evaluates the configured deferral and records it in the meta
+      without acting on it (commands and events stay those of the rule without it).
 
     Every key has a class-level default (``enable`` False), so configs unpickled from older
     code read "off" and run revision 56 bit for bit.
@@ -1760,8 +1797,29 @@ class SoilResponseSettings:
     loc_anchor_offset_m: float = 0.005
     """``-c_hat_0``: the last corner to rise reads this much below zero at ``t_P`` (the crawler
     contact indentation the harness saw, -6 .. -7 mm; ASSUMPTION of spec rev. 70 370)."""
+    mode_defer_periods: int = 0
+    """S2D ``N_d``: most periods (the start period included) a latch release before the LOC
+    may defer the soil mode; 0 = no deferral (``s2_soil_defer_rules.md`` 1.2)."""
+    mode_defer_stroke_m: float = 0.0
+    """S2D ``Delta s_d``: mean motor-stroke progress since the deferral start that ends it."""
+    mode_defer_rise_factor: float = 4.0
+    """S2D ``k_d``: the window rise may be at most ``k_d plateau_rise_max_N`` to defer."""
+    mode_defer_shadow: bool = False
+    """Record only: evaluate the configured deferral in the meta, never act on it."""
 
     def __post_init__(self) -> None:
+        if not _is_non_negative_int(self.mode_defer_periods):
+            raise ValueError(
+                f"mode_defer_periods must be an int >= 0, got {self.mode_defer_periods!r}"
+            )
+        if not self.mode_defer_stroke_m >= 0.0:
+            raise ValueError(f"mode_defer_stroke_m must be >= 0, got {self.mode_defer_stroke_m!r}")
+        if not self.mode_defer_rise_factor > 0.0:
+            raise ValueError(
+                f"mode_defer_rise_factor must be > 0, got {self.mode_defer_rise_factor!r}"
+            )
+        if not isinstance(self.mode_defer_shadow, bool):
+            raise ValueError(f"mode_defer_shadow must be a bool, got {self.mode_defer_shadow!r}")
         for name in ("plateau_window_m", "max_push_m"):
             if not getattr(self, name) > 0.0:
                 raise ValueError(f"{name} must be > 0, got {getattr(self, name)!r}")
@@ -3913,8 +3971,38 @@ class _TouchTwistState:
 
 
 @dataclass
+class _SoilModeDefer:
+    """One S2D deferral (acting) or its shadow record (``mode_defer_shadow``)."""
+
+    start_s: float
+    start_stroke_m: float
+    """Mean motor stroke of the start period: the S-4 push base if the soil mode follows."""
+    periods: int = 1
+    """Deferral periods so far, the start period included."""
+    end_s: float | None = None
+    end_reason: SoilDeferEnd | None = None
+
+    @property
+    def is_active(self) -> bool:
+        return self.end_reason is None
+
+    def to_meta(self) -> dict[str, Any]:
+        return {
+            "start_s": self.start_s,
+            "start_stroke_m": self.start_stroke_m,
+            "periods": self.periods,
+            "end_s": self.end_s,
+            "end_reason": None if self.end_reason is None else str(self.end_reason),
+        }
+
+
+@dataclass
 class _SoilState:
-    """Soil response S-1 .. S-5 of one lifting cycle (cleared at TOUCH entry, P-S9-6)."""
+    """Soil response S-1 .. S-5 of one lifting cycle (cleared at TOUCH entry, P-S9-6).
+
+    The S2D fields below have plain class-level defaults, so soil states pickled before them
+    read "no window values, no deferral".
+    """
 
     is_liftoff_confirmed: bool = False
     is_soil_mode: bool = False
@@ -3951,6 +4039,22 @@ class _SoilState:
     is_loc_anchor_applied: bool = False
     """The LOC took the signed raw bias plus the anchor offset (spec rev. 70 369.1); a
     class-level default for soil states pickled before it."""
+    window_t_s: float | None = None
+    """Time of the last S-1 window update (S2D reads the values below only for that period)."""
+    last_tail_ok: bool = False
+    """The window had a ``plateau_window_m`` tail in the last update (``R_k`` exists)."""
+    last_rise_N: float | None = None
+    """``R_k``: the tail rise of the last update (``_plateau_rise_N``, not recomputed)."""
+    prev_rise_N: float | None = None
+    """``R_{k-1}``: the tail rise of the update one period before; None without a tail."""
+    last_tail_mean_load_N: float | None = None
+    """``L_bar_k``: mean load sum of the last update's tail."""
+    defer: _SoilModeDefer | None = None
+    """The acting S2D deferral of this lifting cycle (the latest one)."""
+    shadow_defer: _SoilModeDefer | None = None
+    """The deferral ``mode_defer_shadow`` recorded without acting."""
+    defer_checks: tuple[dict[str, Any], ...] = ()
+    """S2D entry evaluations at latch releases before the LOC (record only)."""
 
     @property
     def has_corner_bias(self) -> bool:
@@ -8122,6 +8226,7 @@ class C2Controller:
         soil = self._soil_state()
         if soil.is_liftoff_confirmed:
             return
+        self._start_window_record(float(reading.t_s))
         if self._is_window_held_by_reapproach(reading.t_s):
             return
         if not self._is_plateau_period():
@@ -8142,9 +8247,24 @@ class C2Controller:
         settings = self.config.soil
         rise_N = self._plateau_rise_N(tail)
         mean_load_N = float(np.array([sample.load_sum_N for sample in tail]).mean())
+        soil.last_tail_ok = True
+        soil.last_rise_N = float(rise_N)
+        soil.last_tail_mean_load_N = mean_load_N
         is_flat = rise_N <= settings.plateau_rise_max_N
         if is_flat and mean_load_N >= settings.plausibility_fraction * self._reference_weight_N():
             self._confirm_liftoff(reading.t_s, tail, mean_load_N)
+
+    def _start_window_record(self, t_s: float) -> None:
+        """S2D record (no command effect): the last update's rise becomes ``R_{k-1}`` when it
+        was the previous period; this update's values start empty."""
+        soil = self._soil_state()
+        max_gap_s = SOIL_DEFER_PREVIOUS_PERIOD_FACTOR * self.config.period_s
+        is_previous_period = soil.window_t_s is not None and t_s - soil.window_t_s <= max_gap_s
+        soil.prev_rise_N = soil.last_rise_N if soil.last_tail_ok and is_previous_period else None
+        soil.window_t_s = t_s
+        soil.last_tail_ok = False
+        soil.last_rise_N = None
+        soil.last_tail_mean_load_N = None
 
     def _is_window_held_by_reapproach(self, t_s: float) -> bool:
         """P-S8-32 LWa (spec 419.2): with a re-approach active this period the window takes
@@ -8634,18 +8754,22 @@ class C2Controller:
 
     def _hold_crawler_zone_until_liftoff(self, reading: _Reading) -> None:
         """S-2 / S-4: before the LOC a released crawler-zone latch is held on (soil mode);
-        ``max_push_m`` of mean motor stroke in soil mode raises the S-4 FAULT."""
+        ``max_push_m`` of mean motor stroke in soil mode raises the S-4 FAULT. S2D may defer
+        the soil mode at the release (latch held, no soil mode) until it expires or the LOC."""
         soil = self._soil_state()
+        t_s = reading.t_s
         if soil.is_liftoff_confirmed:
+            self._end_soil_mode_defers(t_s, SoilDeferEnd.LOC)
             return
         state = self._state
         mean_stroke_m = float(np.mean(reading.motor_stroke_m))
+        if self._continue_soil_mode_defer(t_s, mean_stroke_m):
+            return
         if not state.in_crawler_zone:
             if not soil.is_soil_mode:
-                soil.is_soil_mode = True
-                soil.soil_mode_start_s = float(reading.t_s)
-                soil.soil_mode_start_stroke_m = mean_stroke_m
-                self._add_event(reading.t_s, SOIL_EVENT_MODE_START)
+                if self._enter_soil_mode_defer(t_s, mean_stroke_m):
+                    return
+                self._start_soil_mode(t_s, mean_stroke_m)
             state.in_crawler_zone = True
         if not soil.is_soil_mode or soil.soil_mode_start_stroke_m is None:
             return
@@ -8654,6 +8778,163 @@ class C2Controller:
             # As the reference rules: this period's command still goes out, FAULT holds next.
             self._add_event(reading.t_s, SOIL_EVENT_LIFTOFF_UNCONFIRMED, is_warning=True)
             state.phase = C2Phase.FAULT
+
+    def _start_soil_mode(self, t_s: float, push_base_stroke_m: float) -> None:
+        """S-2 soil mode from this period; the S-4 push is measured from ``push_base_stroke_m``
+        (this period's mean stroke, or the S2D deferral start)."""
+        soil = self._soil_state()
+        soil.is_soil_mode = True
+        soil.soil_mode_start_s = float(t_s)
+        soil.soil_mode_start_stroke_m = push_base_stroke_m
+        self._add_event(t_s, SOIL_EVENT_MODE_START)
+
+    # --- S2D soil-mode deferral (s2_soil_defer_rules.md 1.2, appendix A.1) ---
+
+    def _is_soil_defer_evaluated(self) -> bool:
+        settings = self.config.soil
+        return settings.mode_defer_periods >= 1 or settings.mode_defer_shadow
+
+    def _has_window_tail_now(self, t_s: float) -> bool:
+        """The S-1 window had a 10 mm tail in this period's update."""
+        soil = self._soil_state()
+        return soil.last_tail_ok and soil.window_t_s == float(t_s)
+
+    def _soil_defer_rise_limit_N(self) -> float:
+        settings = self.config.soil
+        return settings.mode_defer_rise_factor * settings.plateau_rise_max_N
+
+    def _soil_defer_entry_failures(self, t_s: float) -> list[str]:
+        """The S2D entry conditions 1 .. 5 that fail this period (empty = defer)."""
+        settings = self.config.soil
+        soil = self._soil_state()
+        failures = []
+        if settings.mode_defer_periods < 1:
+            failures.append("periods_zero")
+        if not self._has_window_tail_now(t_s):
+            return [*failures, "no_tail"]
+        if soil.last_rise_N > self._soil_defer_rise_limit_N():
+            failures.append("rise_large")
+        if soil.prev_rise_N is None or not soil.last_rise_N < soil.prev_rise_N:
+            failures.append("rise_not_falling")
+        load_floor_N = settings.plausibility_fraction * self._reference_weight_N()
+        if soil.last_tail_mean_load_N < load_floor_N:
+            failures.append("load_low")
+        return failures
+
+    def _soil_defer_check_record(self, t_s: float, failures: list[str]) -> dict[str, Any]:
+        soil = self._soil_state()
+        mean_load_N = soil.last_tail_mean_load_N if self._has_window_tail_now(t_s) else None
+        return {
+            "t_s": float(t_s),
+            "entered": not failures,
+            "shadow": self.config.soil.mode_defer_shadow,
+            "failures": list(failures),
+            "tail_ok": self._has_window_tail_now(t_s),
+            "rise_N": soil.last_rise_N,
+            "prev_rise_N": soil.prev_rise_N,
+            "mean_load_N": mean_load_N,
+            "mean_load_over_W": (
+                None if mean_load_N is None else mean_load_N / self._reference_weight_N()
+            ),
+        }
+
+    def _enter_soil_mode_defer(self, t_s: float, mean_stroke_m: float) -> bool:
+        """At a latch release without soil mode: start a deferral when every entry condition
+        holds. Returns True when the deferral acts (latch held, no soil mode this period)."""
+        if not self._is_soil_defer_evaluated():
+            return False
+        soil = self._soil_state()
+        failures = self._soil_defer_entry_failures(t_s)
+        soil.defer_checks = (*soil.defer_checks, self._soil_defer_check_record(t_s, failures))
+        if failures:
+            return False
+        deferral = _SoilModeDefer(start_s=float(t_s), start_stroke_m=mean_stroke_m)
+        if self.config.soil.mode_defer_shadow:
+            soil.shadow_defer = deferral  # record only: the soil mode starts as without S2D
+            return False
+        soil.defer = deferral
+        self._state.in_crawler_zone = True
+        self._add_event(t_s, SOIL_EVENT_MODE_DEFER)
+        return True
+
+    def _soil_defer_end_reason(
+        self, deferral: _SoilModeDefer, t_s: float, mean_stroke_m: float
+    ) -> SoilDeferEnd | None:
+        """Expiry in the rules' order (periods, stroke, rise, window); None = keep deferring."""
+        settings = self.config.soil
+        if deferral.periods >= settings.mode_defer_periods:
+            return SoilDeferEnd.PERIODS
+        if mean_stroke_m - deferral.start_stroke_m >= settings.mode_defer_stroke_m:
+            return SoilDeferEnd.STROKE
+        if not self._has_window_tail_now(t_s):
+            return SoilDeferEnd.WINDOW
+        soil = self._soil_state()
+        if soil.prev_rise_N is None:
+            return SoilDeferEnd.WINDOW  # the previous period had no tail: the window was emptied
+        is_rising = soil.last_rise_N >= soil.prev_rise_N
+        if soil.last_rise_N > self._soil_defer_rise_limit_N() or is_rising:
+            return SoilDeferEnd.RISE
+        return None
+
+    def _continue_soil_mode_defer(self, t_s: float, mean_stroke_m: float) -> bool:
+        """One period of a running deferral (and of its shadow record). Returns True while the
+        deferral keeps acting; on expiry the soil mode starts with the deferral-start stroke as
+        the S-4 push base and False is returned (the S-4 check follows)."""
+        soil = self._soil_state()
+        shadow = soil.shadow_defer
+        if shadow is not None and shadow.is_active:
+            self._advance_soil_defer(shadow, t_s, mean_stroke_m)
+        deferral = soil.defer
+        if deferral is None or not deferral.is_active:
+            return False
+        self._state.in_crawler_zone = True
+        reason = self._advance_soil_defer(deferral, t_s, mean_stroke_m)
+        if reason is None:
+            return True
+        self._start_soil_mode(t_s, deferral.start_stroke_m)
+        self._add_event(t_s, f"{SOIL_EVENT_MODE_DEFER_END}:{reason}")
+        return False
+
+    def _advance_soil_defer(
+        self, deferral: _SoilModeDefer, t_s: float, mean_stroke_m: float
+    ) -> SoilDeferEnd | None:
+        """Count one more deferral period, or end the deferral with its expiry reason."""
+        reason = self._soil_defer_end_reason(deferral, t_s, mean_stroke_m)
+        if reason is None:
+            deferral.periods += 1
+        else:
+            deferral.end_s = float(t_s)
+            deferral.end_reason = reason
+        return reason
+
+    def _end_soil_mode_defers(self, t_s: float, reason: SoilDeferEnd) -> None:
+        """End a running deferral and its shadow record (the LOC came first)."""
+        soil = self._soil_state()
+        shadow = soil.shadow_defer
+        if shadow is not None and shadow.is_active:
+            shadow.end_s = float(t_s)
+            shadow.end_reason = reason
+        deferral = soil.defer
+        if deferral is None or not deferral.is_active:
+            return
+        deferral.end_s = float(t_s)
+        deferral.end_reason = reason
+        self._add_event(t_s, f"{SOIL_EVENT_MODE_DEFER_END}:{reason}")
+
+    def _soil_defer_meta(self) -> dict[str, Any]:
+        settings = self.config.soil
+        soil = self._soil_state()
+        return {
+            "settings": {
+                "mode_defer_periods": settings.mode_defer_periods,
+                "mode_defer_stroke_m": settings.mode_defer_stroke_m,
+                "mode_defer_rise_factor": settings.mode_defer_rise_factor,
+                "mode_defer_shadow": settings.mode_defer_shadow,
+            },
+            "deferral": None if soil.defer is None else soil.defer.to_meta(),
+            "shadow": None if soil.shadow_defer is None else soil.shadow_defer.to_meta(),
+            "checks": [dict(check) for check in soil.defer_checks],
+        }
 
     def _soil_meta(self) -> dict[str, Any]:
         """P-S9-7 meta ``soil`` (JSON-serialisable)."""
@@ -8680,6 +8961,8 @@ class C2Controller:
                 "clearance_at_loc_m": soil.clearance_at_liftoff_m,
                 "settle_attitude_rad": None if settle is None else [float(a) for a in settle],
                 "soil_mode_t_s": soil.soil_mode_start_s,
+                "soil_mode_start_stroke_m": soil.soil_mode_start_stroke_m,
+                "defer": self._soil_defer_meta(),
                 "push_m": soil.push_m,
                 "restored_from": soil.restored_from,
                 "loc_anchor_applied": soil.is_loc_anchor_applied,
