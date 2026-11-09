@@ -1,5 +1,9 @@
 """G5: C2 re-judgement with a one-mode-per-direction equivalent flexible mast (dynamics_model.md 3.9.7, revision 16).
 
+C2 here = the R7 it3 copy (50 Hz, run_c2_timedomain.C2D), kept as the record (mast_flex_c2_check.json). The R8 C2
+re-judgement (project C2Controller, C2Config.with_10hz_d1) is 04_scripts/03_control/r8d1/mast_flex_r8c2.py, which
+uses this module as the plant / equivalent-mast library.
+
 Why: the control-expert mast surrogate (c2_linear / run_c2_timedomain, roll / pitch inertia scaled to the coupled
 rocking frequencies) failed F_min at top diag 3 deg / pitch +3.7 deg. That surrogate puts all rocking energy into the
 rigid superstructure, opposite to the detailed flexible-mast result of 3.9.5 (pad dynamic deviation x0.49..0.82).
@@ -899,7 +903,9 @@ def summarise(runs):
     return out, lim
 
 
-def figures(series, runs, stem):
+def figures(series, runs, stem, ctrl_label="C2 proposal (delay 1, ramp 0.1 s)", xlim=(12, 45)):
+    """Time-series, slope-map and (with the rigid pitch +3.7 series) cause figures; ctrl_label / xlim = the
+    time-series panel title suffix and x range (defaults: the R7 figures)."""
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -923,12 +929,12 @@ def figures(series, runs, stem):
                 ax[2, j].plot(t, al[:, 1], color=cols[mast], lw=0.8, ls="--")
         ax[0, j].axhline(F_min, color="k", ls=":", lw=0.8)
         ax[0, j].set_ylim(0, 130); ax[0, j].set_ylabel("min true cylinder force [kN]")
-        ax[0, j].set_title(f"top auger, ground {tag}: C2 proposal (delay 1, ramp 0.1 s)", fontsize=9)
+        ax[0, j].set_title(f"top auger, ground {tag}: {ctrl_label}", fontsize=9)
         ax[0, j].legend(fontsize=8)
         ax[1, j].set_ylabel("true roll (solid) / pitch (dashed) [deg]")
         ax[2, j].set_ylabel("mast rel. rotation LAT (solid) / FA (dashed) [deg]")
         ax[2, j].set_xlabel("time from leg start [s]")
-        ax[2, j].set_xlim(12, 45)
+        ax[2, j].set_xlim(*xlim)
         for a in ax[:, j]:
             a.grid(alpha=0.3)
     fig.tight_layout()
