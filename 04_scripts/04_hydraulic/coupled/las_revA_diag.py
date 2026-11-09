@@ -38,20 +38,24 @@ n_steep / steep_times_s (crawler lift-off <= t < t_LOC), s_rel_mm, s_LOC_mm, and
 meta values (soil mode, LOC, R4c30).
 
 Judge (plan 3 / 4 / 5): D-0a .. D-0d, W-1 .. W-3, B-1, H-D1, H-D3 and the branch table. Two
-plan texts cannot be read mechanically in one way; both readings are reported and the branch
-is ``needs_decision`` when they disagree:
+plan texts cannot be read mechanically in one way:
   W-1  prediction "s_LOC < s_rel and within 5 mm"; branch column "P0 too has s_LOC >= s_rel".
   W-3  prediction "t_rel < t_S"; in c2 the soil mode starts in the call that releases the
        latch (``_update_crawler_zone`` -> ``_hold_crawler_zone_until_liftoff``), so t_S =
        t_rel whenever the soil mode follows a release; the rejection column is "t_S not tied
        to t_rel" (the soil-mode period has no latch release).
+The plan addendum ``las_revA_diag_plan_rev1.md`` (:data:`PLAN_REV1_SHA256`) fixes both
+readings (DR1-1, DR1-2) and the branch order (DR1-3); the verdict is its branch
+(``branch_rev1``). The literal reading (``branches_literal``, verdict ``verdict_literal``)
+and the earlier alternative reading (``branches_alternative_reading``, not the rev1 reading)
+are still reported; a literal branch other than the rev1 branch goes to ``asks`` (DR1-5).
 
 Usage (dynamics-dev or python-dev python.exe, project root, PowerShell):
   python -I -B 04_scripts/04_hydraulic/coupled/las_revA_diag.py judge [diagA.jsonl]
       [--stored-l <fb_F3.jsonl>] [--stored-p5r4 <revA_RS.jsonl>] [--out <md>]
       [--json-out <json>]
-Exit codes: 0 judged (one branch), 1 a stop (H-D0 / H-D1 / H-D3), missing runs, no branch or
-``needs_decision``, 2 input error.
+Exit codes: 0 judged (one rev1 branch; ``asks`` may still hold a question for the user),
+1 a stop (H-D0 / H-D1 / H-D3), missing runs or W-1 undecidable, 2 input error.
 """
 from __future__ import annotations
 
@@ -79,6 +83,10 @@ PLAN_PATH = ROOT / "06_analysis" / "02_control" / "verif_matrix" / "las_revA_dia
 PLAN_SHA_PATH = PLAN_PATH.with_suffix(".sha256")
 PLAN_SHA256 = "da74185b79b654d4cfcf7ef5cc29efd82dedb872a52204e472380aed02c69961"
 """``las_revA_diag_plan.sha256`` (LF digest, sealed 2026-11-09 09:40:26 +09:00)."""
+PLAN_REV1_PATH = PLAN_PATH.with_name("las_revA_diag_plan_rev1.md")
+PLAN_REV1_SHA_PATH = PLAN_REV1_PATH.with_suffix(".sha256")
+PLAN_REV1_SHA256 = "cbca7b4bd26408c5b27efbb1dada514db7f44664bd79325f56baa6096352d943"
+"""``las_revA_diag_plan_rev1.sha256`` (LF digest, sealed 2026-11-09 10:00:24 +09:00)."""
 RULES_REVA_REV3_PATH = judge.RULES_REVA_PATH.with_name("las_revA_targeted_rules_rev3.md")
 RULES_REVA_REV3_SHA_PATH = RULES_REVA_REV3_PATH.with_suffix(".sha256")
 RULES_REVA_REV3_SHA256 = "98082a368da626f90ce3b0a41f5c74145b4095c155f14b2b2f63eb319352d709"
@@ -87,8 +95,9 @@ RULES_FIELDS = (*judge.RULES_FIELDS, "rules_revA_rev3_sha256")
 RULES_VALUES = (*judge.RULES_VALUES, RULES_REVA_REV3_SHA256)
 SEALED_FILES = (*judge.SEALED_RULES,
                 (RULES_REVA_REV3_PATH, RULES_REVA_REV3_SHA_PATH, RULES_REVA_REV3_SHA256),
-                (PLAN_PATH, PLAN_SHA_PATH, PLAN_SHA256))
-"""H-1 files of the run and H-D0 (the plan): six rules files and the plan."""
+                (PLAN_PATH, PLAN_SHA_PATH, PLAN_SHA256),
+                (PLAN_REV1_PATH, PLAN_REV1_SHA_PATH, PLAN_REV1_SHA256))
+"""H-1 files of the run and H-D0 (the plan): six rules files, the plan and its rev1."""
 
 BUNDLE = "D-A"
 KEY = "D1|H-S-A|G1+J1@FL|T|flat|K1|VB|e0"
@@ -113,6 +122,9 @@ PLAN_T_LIFT_S = 22.868
 PLAN_P0_LOC_S = 23.5
 PLAN_P5R4_LOC_S = 24.1
 W1_MAX_GAP_MM = 5.0
+W1B_MAX_ABS_GAP_MM = 5.0
+"""W-1b (record only, DR1-2): |s_LOC - s_rel| <= this. Provisional definition of the main
+session, pending control-expert's confirmation."""
 W2_AFTER_RAMP_S = 0.5
 B1_LOC_RANGE_S = (23.7, 24.1)
 B1_MIN_STROKE_GAIN_MM = 25.0
@@ -135,7 +147,12 @@ BRANCH_BETA = "beta"
 BRANCH_RAMP = "ramp"
 BRANCH_BOUNDARY = "boundary_key"
 BRANCH_REJECTED = "rejected"
+BRANCH_STOP = "stop"
+BRANCH_UNDECIDABLE = "undecidable"
 NEEDS_DECISION = "needs_decision"
+VERDICT_BRANCH, VERDICT_STOP, VERDICT_UNDECIDABLE = "branch", "stop", "undecidable"
+ALTERNATIVE_READING_NOTE = ("branches_alternative_reading (W-1 boundary column, W-3 t_rel <= "
+                            "t_S) is not the rev1 reading; the verdict is branch_rev1")
 
 
 # ------------------------------------------------------------------------------- seals
@@ -611,17 +628,23 @@ def d0d(p0: dict, p5r4: dict, stored: StoredPairs | None) -> dict:
 
 
 def w1(p0: dict) -> dict:
-    """W-1 on P0: as written (s_LOC < s_rel, gap <= 5 mm) and the branch reading (s_LOC >=
-    s_rel = boundary key)."""
+    """W-1 on P0: as written (``status``: s_LOC < s_rel, gap <= 5 mm), the rev1 branch reading
+    (``status_rev1``: s_LOC < s_rel; false = ``boundary``, DR1-2) and the record W-1b
+    (|s_LOC - s_rel| <= :data:`W1B_MAX_ABS_GAP_MM`)."""
     soil = _soil(p0)
     s_rel, s_loc = soil["s_rel_mm"], soil["s_LOC_mm"]
     if s_rel is None or s_loc is None:
-        return {"status": STATUS_UNDECIDABLE, "boundary": None, "s_rel_mm": s_rel,
-                "s_LOC_mm": s_loc, "gap_mm": None}
-    gap_mm = s_rel - s_loc
+        return {"status": STATUS_UNDECIDABLE, "status_rev1": STATUS_UNDECIDABLE,
+                "boundary": None, "W1b": STATUS_UNDECIDABLE, "s_rel_mm": s_rel,
+                "s_LOC_mm": s_loc, "s_LOC_minus_s_rel_mm": None, "s_rel_minus_s_LOC_mm": None}
+    loc_minus_rel_mm = s_loc - s_rel
     is_before = s_loc < s_rel
-    return {"status": _status(is_before and gap_mm <= W1_MAX_GAP_MM), "boundary": not is_before,
-            "s_rel_mm": s_rel, "s_LOC_mm": s_loc, "gap_mm": gap_mm}
+    return {"status": _status(is_before and -loc_minus_rel_mm <= W1_MAX_GAP_MM),
+            "status_rev1": _status(is_before), "boundary": not is_before,
+            "W1b": _status(abs(loc_minus_rel_mm) <= W1B_MAX_ABS_GAP_MM),
+            "W1b_max_abs_gap_mm": W1B_MAX_ABS_GAP_MM, "s_rel_mm": s_rel, "s_LOC_mm": s_loc,
+            "s_LOC_minus_s_rel_mm": loc_minus_rel_mm,
+            "s_rel_minus_s_LOC_mm": -loc_minus_rel_mm}
 
 
 def w2(p5r4: dict) -> dict:
@@ -644,17 +667,23 @@ def w2(p5r4: dict) -> dict:
 
 def w3(p5r4: dict) -> dict:
     """W-3 on P5r4: as written (t_rel < t_S <= t_LOC = 24.1 s, s_rel < s_LOC), the reading
-    with t_rel <= t_S, and the rejection column (the soil-mode period has no latch release)."""
+    with t_rel <= t_S, the rev1 reading (DR1-1: the t_rel <= t_S reading and a latch release in
+    the soil-mode period) and the rejection column (the soil-mode period has no latch
+    release)."""
     soil = _soil(p5r4)
     t_rel, t_s, t_loc = soil["t_rel_s"], soil["t_S_s"], soil["t_LOC_s"]
     s_rel, s_loc = soil["s_rel_mm"], soil["s_LOC_mm"]
+    latch_release = soil["t_S_latch_release"] is True
     out = {"t_rel_s": t_rel, "t_S_s": t_s, "t_LOC_s": t_loc, "s_rel_mm": s_rel,
-           "s_LOC_mm": s_loc, "rejected": t_s is not None and soil["t_S_latch_release"] is not True}
+           "s_LOC_mm": s_loc, "t_S_latch_release": soil["t_S_latch_release"],
+           "rejected": t_s is not None and not latch_release}
     if None in (t_rel, t_s, t_loc, s_rel, s_loc):
-        return {**out, "status": STATUS_UNDECIDABLE, "status_le": STATUS_UNDECIDABLE}
+        return {**out, "status": STATUS_UNDECIDABLE, "status_le": STATUS_UNDECIDABLE,
+                "status_rev1": STATUS_UNDECIDABLE if t_s is not None else STATUS_FALSE}
     rest = t_s <= t_loc + TIME_TOLERANCE_S and _close(t_loc, PLAN_P5R4_LOC_S) and s_rel < s_loc
+    holds_le = t_rel <= t_s + TIME_TOLERANCE_S and rest
     return {**out, "status": _status(t_rel < t_s - TIME_TOLERANCE_S and rest),
-            "status_le": _status(t_rel <= t_s + TIME_TOLERANCE_S and rest)}
+            "status_le": _status(holds_le), "status_rev1": _status(holds_le and latch_release)}
 
 
 def b1(p0: dict, p5: dict) -> dict:
@@ -672,8 +701,8 @@ def b1(p0: dict, p5: dict) -> dict:
 
 
 def identity_problems(lines: list[dict]) -> list[str]:
-    """H-D3: one commit, empty code diff, allowed dirty files only, the plan and six rules
-    digests on every line."""
+    """H-D3: one commit, empty code diff, allowed dirty files only, the plan, its rev1 and six
+    rules digests on every line."""
     import las_rev_targeted as rev
 
     heads = {rj.rev_of(line).get("identity", {}).get("git_head") for line in lines}
@@ -690,6 +719,9 @@ def identity_problems(lines: list[dict]) -> list[str]:
             problems.append(f"H-D3 {name} dirty {dirty}")
         if rev_entry.get("diag_plan_sha256") != PLAN_SHA256:
             problems.append(f"H-D3 {name} plan sha256 {rev_entry.get('diag_plan_sha256')}")
+        if rev_entry.get("diag_plan_rev1_sha256") != PLAN_REV1_SHA256:
+            problems.append(f"H-D3 {name} plan rev1 sha256 "
+                            f"{rev_entry.get('diag_plan_rev1_sha256')}")
         wrong = [field for field, value in zip(RULES_FIELDS, RULES_VALUES, strict=True)
                  if rev_entry.get(field) != value]
         if wrong:
@@ -734,6 +766,58 @@ def _alternative_branches(d0_pass: bool, w1_out: dict, w2_out: dict, w3_out: dic
     return branches_of(d0_pass, w1_alt, w2_out, w3_alt, b1_out)
 
 
+def _d0_statuses(d0: dict) -> list[str]:
+    statuses = [d0[name] for name in ("D-0a", "D-0b", "D-0c")]
+    return [*statuses, d0["D-0d"]["status"]] if "D-0d" in d0 else statuses
+
+
+def branch_rev1(d0: dict, w1_out: dict, w2_out: dict, w3_out: dict, p5: dict) -> str:
+    """DR1-3: the first row that holds. B-1 as a whole is recorded only, not used here.
+
+    1. a D-0a .. D-0d not true -> stop (H-D1)
+    2. W-2 or W-3 rejected -> rejected
+    3. W-1 undecidable (no s_rel or s_LOC) -> undecidable
+    4. W-1 false (P0 s_LOC >= s_rel) -> boundary_key
+    5. P5 has a soil-mode start -> beta, else ramp
+    """
+    if any(status != STATUS_TRUE for status in _d0_statuses(d0)):
+        return BRANCH_STOP
+    if w2_out["rejected"] or w3_out["rejected"]:
+        return BRANCH_REJECTED
+    if w1_out["status_rev1"] == STATUS_UNDECIDABLE:
+        return BRANCH_UNDECIDABLE
+    if w1_out["boundary"]:
+        return BRANCH_BOUNDARY
+    return BRANCH_BETA if _soil(p5)["t_S_s"] is not None else BRANCH_RAMP
+
+
+def verdict_of_rev1(branch: str) -> str:
+    """``stop`` / ``undecidable`` / ``branch`` for a :func:`branch_rev1` result."""
+    if branch == BRANCH_STOP:
+        return VERDICT_STOP
+    if branch == BRANCH_UNDECIDABLE:
+        return VERDICT_UNDECIDABLE
+    return VERDICT_BRANCH
+
+
+def literal_verdict(branches: list[str], alternative: list[str]) -> str:
+    """The verdict of the readings before rev1 (``needs_decision`` when they disagree)."""
+    if branches != alternative:
+        return NEEDS_DECISION
+    if len(branches) == 1:
+        return VERDICT_BRANCH
+    return "no_branch" if not branches else NEEDS_DECISION
+
+
+def rev1_asks(branches_literal: list[str], branch: str) -> list[str]:
+    """DR1-5: ask the user when the literal reading's branches differ from the rev1 branch
+    (not after a stop, where no branch is read)."""
+    if branch == BRANCH_STOP or branches_literal == [branch]:
+        return []
+    return [f"DR1-5: literal reading branches {branches_literal} differ from the rev1 branch "
+            f"{branch!r}; the verdict uses the rev1 branch, ask the user about the difference"]
+
+
 def _by_candidate(lines: list[dict]) -> tuple[dict[str, dict], list[str]]:
     by_name, problems = {}, []
     for line in lines:
@@ -752,15 +836,21 @@ def _by_candidate(lines: list[dict]) -> tuple[dict[str, dict], list[str]]:
 
 def judge_diag(lines: list[dict], stored: StoredPairs | None,
                plan_problems: list[str] | None = None) -> dict:
-    """Plan 3 .. 5 on the D-A lines (verdict ``branch`` / ``stop`` / ``incomplete`` /
-    ``needs_decision`` / ``no_branch``)."""
+    """Plan 3 .. 5 with rev1 on the D-A lines.
+
+    ``verdict`` = ``verdict_rev1``: ``branch`` / ``stop`` / ``undecidable`` / ``incomplete``;
+    ``branch_rev1`` is the DR1-3 branch (``stop`` on H-D1, None before a branch is read).
+    ``verdict_literal`` (``branch`` / ``needs_decision`` / ``no_branch``) and ``asks``
+    (DR1-5) report the readings before rev1.
+    """
     out = {"plan_problems": list(plan_problems or []),
-           "errors": sum(1 for line in lines if rj.is_error(line))}
+           "errors": sum(1 for line in lines if rj.is_error(line)), "branch_rev1": None}
     by_name, missing = _by_candidate(lines)
     if out["plan_problems"]:
-        return {**out, "verdict": "stop", "stop": "H-D0"}
+        return {**out, "verdict": VERDICT_STOP, "verdict_rev1": VERDICT_STOP, "stop": "H-D0"}
     if missing:
-        return {**out, "verdict": "incomplete", "problems": missing}
+        return {**out, "verdict": "incomplete", "verdict_rev1": "incomplete",
+                "problems": missing}
     per_line = {name: line_problems(by_name[name]) for name in CANDIDATE_NAMES}
     d0c = d0c_problems(by_name["P5"], by_name["P5r4"])
     h_d1 = [text for name in CANDIDATE_NAMES for text in per_line[name]] + d0c
@@ -769,24 +859,28 @@ def judge_diag(lines: list[dict], stored: StoredPairs | None,
                d0={"D-0a": _status(hash_problem(by_name["P0"]) is None),
                    "D-0b": _status(hash_problem(by_name["P5r4"]) is None),
                    "D-0c": _status(not d0c), "D-0c_problems": d0c})
-    if h_d1 or h_d3:
-        return {**out, "verdict": "stop", "stop": "H-D1" if h_d1 else "H-D3"}
+    if h_d1:
+        return {**out, "verdict": VERDICT_STOP, "verdict_rev1": VERDICT_STOP, "stop": "H-D1",
+                "branch_rev1": BRANCH_STOP}
+    if h_d3:
+        return {**out, "verdict": VERDICT_STOP, "verdict_rev1": VERDICT_STOP, "stop": "H-D3"}
     out["d0"]["D-0d"] = d0d(by_name["P0"], by_name["P5r4"], stored)
     d0_pass = out["d0"]["D-0d"]["status"] == STATUS_TRUE
     w1_out, w2_out = w1(by_name["P0"]), w2(by_name["P5r4"])
     w3_out, b1_out = w3(by_name["P5r4"]), b1(by_name["P0"], by_name["P5"])
     branches = branches_of(d0_pass, w1_out, w2_out, w3_out, b1_out)
     alternative = _alternative_branches(d0_pass, w1_out, w2_out, w3_out, b1_out)
-    out.update(W1=w1_out, W2=w2_out, W3=w3_out, B1=b1_out, branches=branches,
+    branch = branch_rev1(out["d0"], w1_out, w2_out, w3_out, by_name["P5"])
+    verdict = verdict_of_rev1(branch)
+    out.update(W1=w1_out, W2=w2_out, W3=w3_out, B1=b1_out, branches_literal=branches,
                branches_alternative_reading=alternative,
+               alternative_reading_note=ALTERNATIVE_READING_NOTE,
+               verdict_literal=literal_verdict(branches, alternative), branch_rev1=branch,
+               asks=rev1_asks(branches, branch),
                summaries={name: _soil(by_name[name]) for name in CANDIDATE_NAMES})
-    if branches != alternative:
-        verdict = NEEDS_DECISION
-    elif len(branches) == 1:
-        verdict = "branch"
-    else:
-        verdict = "no_branch" if not branches else NEEDS_DECISION
-    return {**out, "verdict": verdict}
+    if branch == BRANCH_STOP:
+        out["stop"] = "H-D1"
+    return {**out, "verdict": verdict, "verdict_rev1": verdict}
 
 
 # ------------------------------------------------------------------------------- batch check
@@ -815,8 +909,10 @@ def make_checker():
 # ------------------------------------------------------------------------------- report / CLI
 def report_markdown(result: dict, source: Path) -> str:
     """A short Markdown report of :func:`judge_diag`."""
-    lines = [f"# diagA judge ({source})", "", f"- verdict: **{result['verdict']}**"]
-    for name in ("stop", "plan_problems", "problems", "h_d1", "h_d3"):
+    lines = [f"# diagA judge ({source})", "",
+             f"- verdict (rev1): **{result['verdict']}**, branch_rev1: "
+             f"**{result.get('branch_rev1')}**"]
+    for name in ("stop", "asks", "plan_problems", "problems", "h_d1", "h_d3"):
         if result.get(name):
             lines.append(f"- {name}: {result[name]}")
     if "d0" in result:
@@ -824,9 +920,10 @@ def report_markdown(result: dict, source: Path) -> str:
     for name in ("W1", "W2", "W3", "B1"):
         if name in result:
             lines.append(f"- {name}: {json.dumps(result[name], default=str)}")
-    if "branches" in result:
-        lines += [f"- branches (as written): {result['branches']}",
-                  f"- branches (W-1 boundary column, W-3 t_rel <= t_S): "
+    if "branches_literal" in result:
+        lines += [f"- branches (as written): {result['branches_literal']}, verdict_literal: "
+                  f"{result['verdict_literal']}",
+                  f"- branches (W-1 boundary column, W-3 t_rel <= t_S; not the rev1 reading): "
                   f"{result['branches_alternative_reading']}"]
     for name, summary in (result.get("summaries") or {}).items():
         lines.append(f"- {name} soil_summary: {json.dumps(summary, default=str)}")
@@ -873,9 +970,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.json_out is not None:
         with args.json_out.open("x", encoding="utf-8") as handle:
             json.dump(result, handle, indent=1, default=_json_value)
-    print(json.dumps({"verdict": result["verdict"], "branches": result.get("branches"),
-                      "stop": result.get("stop")}, default=_json_value))
-    return 0 if result["verdict"] == "branch" else 1
+    print(json.dumps({"verdict": result["verdict"], "branch_rev1": result.get("branch_rev1"),
+                      "branches_literal": result.get("branches_literal"),
+                      "asks": result.get("asks"), "stop": result.get("stop")},
+                     default=_json_value))
+    return 0 if result["verdict"] == VERDICT_BRANCH else 1
 
 
 if __name__ == "__main__":

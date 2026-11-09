@@ -221,10 +221,11 @@ def bundle_jobs(bundle: str, candidates, mask: int | None = None, keys=None,
 # ------------------------------------------------------------------------------- worker
 def rules_block(bundle: str | None = None) -> dict:
     """The five rules sha256 every line records (rev2 B.1); D-A lines record six (+ rev3) and
-    the diagnosis plan sha256 (plan 6)."""
+    the diagnosis plan and plan rev1 sha256 (plan 6)."""
     if bundle == diag.BUNDLE:
         return {**dict(zip(diag.RULES_FIELDS, diag.RULES_VALUES, strict=True)),
-                "diag_plan_sha256": diag.PLAN_SHA256}
+                "diag_plan_sha256": diag.PLAN_SHA256,
+                "diag_plan_rev1_sha256": diag.PLAN_REV1_SHA256}
     return dict(zip(judge.RULES_FIELDS, judge.RULES_VALUES, strict=True))
 
 
@@ -744,15 +745,16 @@ def _run_diag_command(args) -> int:
         print(json.dumps({"bundle": args.bundle, "stop": "input", "reason": str(exc)}))
         return 2
     print(f"run identity: {identity['git_head']} dirty {identity['git_dirty']} "
-          f"code_diff {identity['code_diff_sha256'][:12]} plan {diag.PLAN_SHA256[:12]}",
-          flush=True)
+          f"code_diff {identity['code_diff_sha256'][:12]} plan {diag.PLAN_SHA256[:12]} "
+          f"rev1 {diag.PLAN_REV1_SHA256[:12]}", flush=True)
     print(f"{args.bundle}: {len(jobs)} runs -> {path}", flush=True)
     state = rev.run_batch(jobs, path, args.workers, args.bundle, stored, identity,
                           worker=run_revA_job, check=diag.make_checker(), whole_bundle_rerun=())
     result = diag.judge_diag(rj.read_lines(path), pairs, diag.seal_problems())
     summary = {"bundle": args.bundle, "out": str(path), "runs": state.runs,
                "errors": state.errors, "skipped": state.skipped, "stop": state.stop,
-               "verdict": result["verdict"], "branches": result.get("branches")}
+               "verdict": result["verdict"], "branch_rev1": result.get("branch_rev1"),
+               "branches_literal": result.get("branches_literal"), "asks": result.get("asks")}
     print(json.dumps(summary))
     return 1 if state.stop or state.skipped else 0
 
