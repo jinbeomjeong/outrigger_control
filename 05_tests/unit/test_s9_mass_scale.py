@@ -70,7 +70,9 @@ def test_existing_batch_definitions_unchanged() -> None:
                                               "V5-OPENLOOP-VB-PROP", "V5-OPENLOOP-FB", "V5-OPENLOOP-R",
                                               # LAS-b Chrono rows (2026-11-08): test_las_chrono_rows.py,
                                               # test_v5_stage3_las_rows.py
-                                              "V5-LAS-CHRONO", "V5-STAGE3-LAS"}
+                                              "V5-LAS-CHRONO", "V5-STAGE3-LAS",
+                                              # LAS-b K1 S-Ch (2026-11-09): test_las_k1_chrono_rows.py
+                                              "V5-LAS-K1-CHRONO"}
     for name, want in BATCH_DEF_SHA256.items():
         rows = [{**r, "argv": _norm(s9_batch, r["argv"])} for r in b[name]]
         assert hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest() == want, name

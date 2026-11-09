@@ -271,6 +271,8 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     out.update(_d1_batches())
     # LAS-b Chrono check rows (cad 2026-11-08, las_chrono_rows.py): V5-LAS-CHRONO, LAS-b off / on pairs (spec 436)
     out.update(_las_module().las_batches(sys.modules[__name__]))
+    # LAS-b K1 S-Ch (cad 2026-11-09, las_k1_chrono_rows.py): V5-LAS-K1-CHRONO, --k1-order-gate off / on pair
+    out.update(_las_k1_module().k1_batches(sys.modules[__name__]))
     return out
 
 
@@ -299,6 +301,15 @@ def _las_module():
     finally:
         sys.path.remove(str(HERE))
     return las_chrono_rows
+
+
+def _las_k1_module():
+    sys.path.insert(0, str(HERE))
+    try:
+        import las_k1_chrono_rows  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    return las_k1_chrono_rows
 
 
 COUPLED_BATCH = "COUPLED_eta085"
@@ -1365,6 +1376,7 @@ ENTRY_META_KEYS = ("note", "priority", "controller", "source_run", "pair_case", 
                    "threads", "run_env", "soil_damping_R_Pa_s_m", "soil_damping_R_base_Pa_s_m", "soil_damping_R_ratio",
                    "d1_id", "d1_role", "d1_select", "d1_tag", "d1_slope", "d1_flag", "d1_source",
                    "las", "las_family", "las_crawler", "las_ready", "start_env",
+                   "las_candidate", "k1_candidate", "k1_order_gate",
                    "stored_result", "stored_pool", "hash_comparable", "stored_argv_check", "stage3_controller")
 """Row keys copied into the batch.json case entries (when present)."""
 
@@ -1709,6 +1721,9 @@ def check_sources(name: str, rows: list[dict]) -> dict:
     for c in rows:
         if c.get("las_family"):  # V5-LAS-CHRONO: new rows, build check of the argv (las_chrono_rows.argv_check)
             res.append(_las_module().argv_check(c, sys.modules[__name__]))
+            continue
+        if c.get("k1_candidate"):  # V5-LAS-K1-CHRONO: new rows, build check (las_k1_chrono_rows.argv_check)
+            res.append(_las_k1_module().argv_check(c, sys.modules[__name__]))
             continue
         if c.get("s6c") and c.get("source_run"):
             res.append({"case": c["case"], **s6c_source_check(c)})
