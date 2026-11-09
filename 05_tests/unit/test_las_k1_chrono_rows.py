@@ -117,7 +117,7 @@ def test_built_controller_holds_the_gate(run_s9, gate) -> None:
     assert c2.config.slope_clearance_margin.flat_soil_margin_order_gate is (gate == "on")
     assert run_s9.k1_order_gate_of_args(args) is (gate == "on")
     source = Path(run_s9.__file__).read_text(encoding="utf-8")
-    i_from = source.index("c2 = C2Controller.from_params(params_ctrl, config)")
+    i_from = source.index("c2 = controller_cls.from_params(params_ctrl, config)")  # K1 re-measure: class by option
     i_check = source.index("k1_gate = k1_order_gate_of_args(args)")
     i_expect = source.index('expect = getattr(args, "expect_controller", None)')
     i_cfg = source.index("config, c2_meta = level_c2_config_of_args(args)")
