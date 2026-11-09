@@ -1,13 +1,14 @@
 {
  "schema": 1,
- "updated_at": "2026-10-25T23:54:48",
+ "updated_at": "2026-11-09T12:29:37",
  "updated_by": {
   "script": "04_scripts/00_cad/check_cache.py",
   "exists": true,
-  "sha256": "a43c695ff4a26c4fc4806f5840fec89101b492ce59c1670298fb0f8cb64af8f6",
-  "git_blob": "774950d1c8bae57282e3f600ad6dd873b50387b6",
+  "sha256": "2bcc2b6f02ea4067162c66d822a4d6b7fc3e4ccfd546ea2b015ad1d37933d7b8",
+  "git_blob": "5a3309e6aa8e580dda5da958d2e921a36efe8941",
   "git_last_commit": "de88239700accad58ce0e440672df025952bf5f1",
-  "git_tracked": true
+  "git_tracked": true,
+  "note": "entries 01_parts, 05_meshes, 08_style refreshed with check_cache._cache_entry in a git worktree without the STEP file; step record kept from the previous write"
  },
  "environment": {
   "python": "3.12.15",
@@ -65,20 +66,20 @@
    "description": "Part table, classification, summary, mass audit, layout figures",
    "folder": "01_cad/01_parts",
    "derived_from_step": true,
-   "newest_file_mtime": "2026-10-20T18:03:48",
+   "newest_file_mtime": "2026-11-09T12:25:49",
    "generators": [
     {
      "script": "04_scripts/00_cad/analyze_origin_mass_imu.py",
      "exists": true,
-     "sha256": "fc975a60b361bebbb7042dd0f574d17afd6c63d523b9c9d145f1af2fa85e8ab4",
-     "git_blob": "a0c01fc14a34fb33c84dc351ebc61ad02a9d11e1",
+     "sha256": "a9630ddd28910632903b202551036a5b4d8d87f7158a609e27b84f063de3a2bc",
+     "git_blob": "4598482532500cf2ad7b83056c4d7ed7ea1bb4d6",
      "git_last_commit": "7148180773b05da707a09cdf756e28783c630257",
      "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/analyze_parts.py",
      "exists": true,
-     "sha256": "2346a1057863edbe5cb29314f1d5ad01ea62547544366a68ba362bb52a2ad51d",
+     "sha256": "6b3146a9f1951c9359fb41490004c29ec71757dd9552907fb12bf7a786271c2e",
      "git_blob": "408b9b69de4f07672d9544e83ef992aa5eb30747",
      "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
      "git_tracked": true
@@ -86,7 +87,7 @@
     {
      "script": "04_scripts/00_cad/extract_parts.py",
      "exists": true,
-     "sha256": "dc0fa5674c7b9f2c5ffda05a832a7719b439a340842b16a295b370c9aacec78f",
+     "sha256": "2897bf163a036ee57e2a63f1203555ceb418e952b26686271ce87afc7469ace6",
      "git_blob": "c903261e643f4a7f16a5b3d3734554b43ac0d147",
      "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
      "git_tracked": true
@@ -94,22 +95,22 @@
     {
      "script": "04_scripts/00_cad/render_imu_c1.py",
      "exists": true,
-     "sha256": "b2f7f87d2cedc36a4911bffe8822f42731af1fa3882cb9d7d9661283cdc9bc48",
-     "git_blob": "64ded28ea7e0297f9960fad1580f9f33d1bff206",
+     "sha256": "dde75ce2c728b2bc820179623191772af24cb5e64f9be5b052adec4d4d86cac9",
+     "git_blob": "de628c61572201aca05c53d2f2a1bc985fd7bd96",
      "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
      "git_tracked": true
     },
     {
      "script": "04_scripts/00_cad/render_layout_views.py",
      "exists": true,
-     "sha256": "fa049591f03a6016fb9c24ad8ea7ae9d104809b41dbc0c0d293b7eb974ac4c51",
-     "git_blob": "00f7ffff5fcf6b2457e4a0e0c91311b64e8d3f84",
+     "sha256": "48f3df3eea68b3dc5514730eed5b079b4ba304a57ee90405f1c9895a8879467d",
+     "git_blob": "68b0ea88d984a623ecc0b1d581a7d17090384ef2",
      "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
      "git_tracked": true
     }
    ],
    "file_count": 12,
-   "total_bytes": 4876670,
+   "total_bytes": 4816162,
    "git_ignored_file_count": 0,
    "files": [
     {
@@ -156,8 +157,8 @@
     },
     {
      "path": "layout_views_rendered.png",
-     "bytes": 317170,
-     "sha256": "5ab082707c089eadbd6f3e0e5164c952d0394a25784bfda53e113ec0450958a1",
+     "bytes": 256662,
+     "sha256": "5151d666741cabe1ae005133473274b74df9c3b8f8c8837963241afeea0a7992",
      "generator": "render_layout_views.py",
      "git_ignored": false
     },
@@ -6039,37 +6040,52 @@
    ]
   },
   "05_meshes": {
-   "description": "Render mesh archive of all parts (world placed), mast sweep files",
+   "description": "Tessellation archive of all parts (world placed), drawing mesh V5, mast sweep files",
    "folder": "01_cad/05_meshes",
    "derived_from_step": true,
-   "newest_file_mtime": "2026-10-19T20:16:05",
+   "newest_file_mtime": "2026-11-09T12:13:42",
    "generators": [
     {
      "script": "04_scripts/00_cad/analyze_mast.py",
      "exists": true,
-     "sha256": "f2dbe952b8d809b9d9cfa65504a6bd10f30329f471ee34eb9639b608d04c33e1",
-     "git_blob": "646bf41dc4ad0356f9a24b9902fdd6cd2cf96273",
+     "sha256": "583d505933d5dae0999073a06ea3dafb60cb2380d49adc24db5c42a5bed92eed",
+     "git_blob": "af79c3641965ac8b85ac48eaa47a32abd43164bf",
      "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
      "git_tracked": true
     },
     {
+     "script": "04_scripts/00_cad/build_render_mesh_v5.py",
+     "exists": true,
+     "sha256": "d912298e7636cc14ae8a5623c7a42516d864784505a691faf7274bc8f61cc830",
+     "git_blob": "e0420cbcdaefb82b32ab608e51f51b1e2e31d4a2",
+     "git_last_commit": null,
+     "git_tracked": false
+    },
+    {
      "script": "04_scripts/00_cad/export_meshes.py",
      "exists": true,
-     "sha256": "d0f081fb2882577bcf1cf6624ab8782089c928696615cfb7741ec54c68459c02",
+     "sha256": "212ca8f2aff140d8a7a8fd5450646b26f58c5c1ceadb6a98c669575a884424c8",
      "git_blob": "fc172db5f5b75862cfd56f36e9b51cb2c267ac5b",
      "git_last_commit": "2330558f767255f55df42f1adf8057e049d2b057",
      "git_tracked": true
     }
    ],
-   "file_count": 4,
-   "total_bytes": 52085979,
-   "git_ignored_file_count": 4,
+   "file_count": 6,
+   "total_bytes": 95617711,
+   "git_ignored_file_count": 6,
    "files": [
     {
      "path": "contact_sweep_records.csv",
      "bytes": 70346,
      "sha256": "8ca122c1b8a2f6ccc6168c946b0c150bb575233a1129daa3bc2bfeae74653316",
      "generator": "analyze_mast.py",
+     "git_ignored": true
+    },
+    {
+     "path": "history/render_mesh.npz",
+     "bytes": 7999318,
+     "sha256": "e07c551dcb6d55da7dfe88dce29dbfbb580acefc2c5a3b0e9c32cca9f8740e76",
+     "generator": "",
      "git_ignored": true
     },
     {
@@ -6087,10 +6103,17 @@
      "git_ignored": true
     },
     {
-     "path": "render_mesh.npz",
-     "bytes": 7999318,
-     "sha256": "e07c551dcb6d55da7dfe88dce29dbfbb580acefc2c5a3b0e9c32cca9f8740e76",
-     "generator": "analyze_mast.py",
+     "path": "render_mesh_v5.json",
+     "bytes": 6866,
+     "sha256": "f4d82ae6fe8a6430dbd05c42983ea51588a70107f2abb1b6e0b7dc9cf2a4dae3",
+     "generator": "build_render_mesh_v5.py",
+     "git_ignored": true
+    },
+    {
+     "path": "render_mesh_v5.npz",
+     "bytes": 43524866,
+     "sha256": "4521b9f715bb5e4414e28fb4cff4581d66b9c6d0cc61dd3bf48a7f5ad21565b9",
+     "generator": "build_render_mesh_v5.py",
      "git_ignored": true
     }
    ]
@@ -11518,7 +11541,7 @@
    "description": "STEP colours (C11): instance / prototype / face colours, palette, XCAF cross-check, colour renders",
    "folder": "01_cad/08_style",
    "derived_from_step": true,
-   "newest_file_mtime": "2026-10-21T12:24:35",
+   "newest_file_mtime": "2026-11-09T12:26:33",
    "generators": [
     {
      "script": "04_scripts/00_cad/build_style_index.py",
@@ -11531,14 +11554,14 @@
     {
      "script": "04_scripts/00_cad/render_style_views.py",
      "exists": true,
-     "sha256": "31db5e150accce7090de2140ff0ef5e15c4e43ed1e4daed2f9eced918ac68315",
-     "git_blob": "8f249f21f35f652ffc5401be9b0c7fc7a96e2b25",
+     "sha256": "15f1380e55b1dab6a047d383426fc68064d11daba2c5832fd2f1b5a63418a3b5",
+     "git_blob": "c95e4ee16e527c571d6df66d19204e952827f79a",
      "git_last_commit": "3d78183e0eee9e9f4164237d6187193ea882ffe9",
      "git_tracked": true
     }
    ],
    "file_count": 9,
-   "total_bytes": 3014094,
+   "total_bytes": 2902461,
    "git_ignored_file_count": 0,
    "files": [
     {
@@ -11571,22 +11594,22 @@
     },
     {
      "path": "render_style_views.json",
-     "bytes": 1585,
-     "sha256": "7164ec6d248cae9b8356f25ab5532bd0c4619b7fb4e74da830c6d09c2827d9b6",
+     "bytes": 1553,
+     "sha256": "a2b48190d334896a822ed31af4b508430a9a800dc9d647aa03411ce5bc546ad8",
      "generator": "render_style_views.py",
      "git_ignored": false
     },
     {
      "path": "style_iso.png",
-     "bytes": 918651,
-     "sha256": "ad99ecb23865c847523a5704898649e9a461446f1ee4ea4f972ff86c0abfef7d",
+     "bytes": 861009,
+     "sha256": "16661bc23ab817a4a98f0eed13b3d94679510d8416e49f0d17d62a232ed13ecf",
      "generator": "render_style_views.py",
      "git_ignored": false
     },
     {
      "path": "style_iso_rear.png",
-     "bytes": 569173,
-     "sha256": "6dc013dad7ab61b6a8e6d9d7fd40b4a3a1aaf66e85484a632b44eec5e557b138",
+     "bytes": 515214,
+     "sha256": "173e8e5682e5e53ca6eff9946766c6d6916f59d0e12fe7101983be005aa873d3",
      "generator": "render_style_views.py",
      "git_ignored": false
     },

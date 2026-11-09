@@ -9,7 +9,7 @@ Reads only cached data (no STEP parsing):
     01_cad/01_parts/parts_classified.csv   from analyze_parts.py
     01_cad/01_parts/cad_summary.json       leg pad positions, reference mass properties
     01_cad/05_meshes/*.npz|json            from export_meshes.py (tessellated parts, 3 mm)
-    01_cad/05_meshes/render_mesh.npz       from analyze_mast.py (decimated meshes for drawing)
+    01_cad/05_meshes/render_mesh_v5.npz    via analyze_mast.render_meshes (drawing mesh, build_render_mesh_v5.py)
     01_cad/04_mast/mast/*.brep             from inspect_mast.py (exact distance where cached)
 
 Writes:
@@ -58,7 +58,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import trimesh
-from matplotlib.collections import PolyCollection
 from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
 from OCC.Core.BRepExtrema import BRepExtrema_DistShapeShape
@@ -73,6 +72,7 @@ from analyze_mast import (
     LEG_ORDER,
     _load_brep,
     leg_loads,
+    mesh_artist,
     point_in_polygon,
     render_meshes,
     tensor_checks,
@@ -542,16 +542,17 @@ def project_side(render, motions, travel_mm: float):
         colours.append(np.clip(base[None] * shade[:, None] + 0.12 * (1 - shade[:, None]), 0, 1))
         polygons.append(np.stack([triangles @ SIDE_RIGHT, triangles @ SIDE_UP], axis=2))
         # Moving parts are drawn on top so the drive stays visible in front of the mast.
-        depths.append((triangles @ SIDE_TOWARD).mean(axis=1) + (100.0 if motion in MOVING else 0.0))
+        depths.append(triangles @ SIDE_TOWARD + (100.0 if motion in MOVING else 0.0))
     polygons = np.concatenate(polygons)
     colours = np.concatenate(colours)
-    order = np.argsort(np.concatenate(depths))
-    return polygons[order], colours[order]
+    depths = np.concatenate(depths)
+    order = np.argsort(depths.mean(axis=1))
+    return polygons[order], colours[order], depths[order]
 
 
 def draw_level_axes(axes, render, motions, level: dict, all_levels: dict, pads_body, limits, compact=False):
-    polygons, colours = project_side(render, motions, level["travel_mm"])
-    axes.add_collection(PolyCollection(polygons, facecolors=colours, edgecolors="none", antialiased=False))
+    polygons, colours, depths = project_side(render, motions, level["travel_mm"])
+    axes.add_collection(mesh_artist(polygons, colours, depths), autolim=False)
     axes.axhline(CRAWLER_GROUND_Y_MM / 1000, color=INK_SECONDARY, lw=0.8, ls=":")
     axes.text(limits[0][0] + 0.1, CRAWLER_GROUND_Y_MM / 1000 - 0.25, "지면(크롤러 바닥, CAD 자세)", fontsize=7,
               color=INK_SECONDARY)

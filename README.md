@@ -43,7 +43,7 @@ outrigger_control/
 │   ├── 02_legs/        다리 형상(brep)·면 정보
 │   ├── 03_auger/       오거 3단계 값·그림·하강 GIF
 │   ├── 04_mast/        마스트 힌지 검토(참고용, 대용량 캐시는 git 제외), 마스트 보 단면 특성(C9)
-│   ├── 05_meshes/      렌더용 메시 캐시 (git 제외)
+│   ├── 05_meshes/      테셀레이션·그림용 메시 캐시 (git 제외)
 │   ├── 06_brep/        전체 부품 B-rep 캐시(프로토타입 .bbrep는 git 제외)·배치 표·크롤러 파생 캐시, 목록은 01_cad/cache_manifest.json
 │   ├── 07_faces/       전체 면 색인(C5): 면 종류·면적·중심·법선·축·bbox, CAD/기체 좌표, 상부 롤러 면 표 (csv.gz는 git 제외)
 │   ├── 08_style/       STEP 색(C11): 인스턴스·프로토타입·면 색 표, 질의 04_scripts/00_cad/style_index.py
@@ -107,6 +107,7 @@ GIF 애니메이션과 큰 메시(`*.gif`, `*_lowres.obj`)는 git에 올리지 �
 
 | 파일 | 명령 |
 |---|---|
+| `01_cad/05_meshes/render_mesh_v5.npz`(그림용 메시 V5, 43.5 MB, sha256 `4521b9f7…`; 단순화하지 않은 CAD 테셀레이션 3 mm / 0.5 rad + 타공 그릴·덮개 7개는 슬롯을 메운 판. 모든 CAD 그림 스크립트가 쓴다. 옛 단순화 메시 `render_mesh.npz`는 `05_meshes/history/`) | `PY -I 04_scripts/00_cad/build_render_mesh_v5.py --force`(약 20 s, 입력 `parts_mesh.npz`·`index.json`·`parts_classified.csv`; 같은 입력이면 비트 동일) 뒤 `PY -I 04_scripts/00_cad/check_cache.py --write --cache 05_meshes`. 입력 `parts_mesh.npz`가 없으면 먼저 `PY -I 04_scripts/00_cad/export_meshes.py` |
 | `01_cad/03_auger/auger_levels/auger_descent.gif` | `PY -I 04_scripts/00_cad/render_auger_descent.py` |
 | `01_cad/02_legs/leg_extension.gif` | `PY -I 04_scripts/00_cad/render_leg_extension.py` |
 | `01_cad/04_mast/mast_steps/fold_side.gif`(참고용) | `PY -I 04_scripts/00_cad/analyze_mast.py` |

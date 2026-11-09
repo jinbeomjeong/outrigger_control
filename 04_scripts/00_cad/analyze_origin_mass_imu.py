@@ -8,7 +8,7 @@ Reads (cached):
     01_cad/03_auger/auger_levels.json      superstructure mass properties per auger level
     01_cad/00_step/step_products.csv       all STEP products (names, materials)
     01_cad/05_meshes/parts_mesh.npz        full tessellation (3 mm deflection), index.json order
-    01_cad/05_meshes/render_mesh.npz       decimated drawing meshes, parts_classified.csv order
+    01_cad/05_meshes/render_mesh_v5.npz    drawing mesh (build_render_mesh_v5.py), parts_classified.csv order
     02_params/rexome33.yaml                pad positions, crawler contact assumptions
 
 Writes:

@@ -14,7 +14,7 @@ Writes:
     01_cad/04_mast/mast_poses.png          side-view bbox layout of both poses
     01_cad/04_mast/mast_steps/*.png        tessellated side/isometric views per fold step
     01_cad/04_mast/mast_steps/steps.csv    per-step angle, CoG and leg load estimate
-    01_cad/05_meshes/render_mesh.npz       decimated meshes for drawing (cache)
+    01_cad/05_meshes/render_mesh_v5.npz    drawing mesh (cache, build_render_mesh_v5.py when stale)
     01_cad/05_meshes/contact_sweep_records.csv  raw sweep distances (cache, --reuse-sweep)
 
 Exact B-rep distances (BRepExtrema) for the closest pairs use 01_cad/04_mast/mast/*.brep.
@@ -38,7 +38,6 @@ from pathlib import Path
 import matplotlib
 
 matplotlib.use("Agg")
-import fast_simplification
 import trimesh
 import matplotlib.pyplot as plt
 import numpy as np
@@ -54,6 +53,8 @@ from OCC.Core.TopoDS import TopoDS_Shape
 from scipy.spatial import cKDTree
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import build_render_mesh_v5
+import mesh_zbuffer
 from analyze_parts import (
     BBOX_MAX_COLUMNS,
     BBOX_MIN_COLUMNS,
@@ -73,7 +74,9 @@ INTERFERENCE_CSV = MAST_DIR / "mast_interference.csv"
 POSES_PNG = MAST_DIR / "mast_poses.png"
 STEPS_DIR = MAST_DIR / "mast_steps"
 STEPS_CSV = STEPS_DIR / "steps.csv"
-RENDER_NPZ = MESH_DIR / "render_mesh.npz"
+# Drawing mesh of every CAD figure (2026-11-09: V5, undecimated; the decimated render_mesh.npz
+# is kept in 05_meshes/history/). Single path constant used by all render scripts.
+RENDER_NPZ = build_render_mesh_v5.RENDER_V5_NPZ
 SWEEP_RECORDS_CSV = MESH_DIR / "contact_sweep_records.csv"
 
 GRAVITY_M_S2 = 9.80665
@@ -119,7 +122,6 @@ SWEEP_MAX_DEG = 93.0
 EXACT_TOUCH_MM = 0.01
 EXACT_SCAN_HALF_DEG = 0.6
 EXACT_SCAN_STEP_DEG = 0.05
-RENDER_TRIANGLE_BUDGET = 300_000
 STEP_ANGLES_DEG = (0.0, 15.0, 30.0, 45.0, 60.0, 75.0)
 
 COLORS = {
@@ -753,36 +755,24 @@ def rest_gap(meshes, table: pd.DataFrame, transform: np.ndarray, rest_index: int
 # --------------------------------------------------------------------------
 # Rendering
 # --------------------------------------------------------------------------
-def render_meshes(meshes) -> list[tuple[np.ndarray, np.ndarray]]:
-    """Decimated copies for drawing, cached in 01_cad/05_meshes/render_mesh.npz."""
-    if RENDER_NPZ.exists() and RENDER_NPZ.stat().st_mtime > MESH_INDEX_JSON.stat().st_mtime:
-        data = np.load(RENDER_NPZ)
+def render_meshes(meshes=None) -> list[tuple[np.ndarray, np.ndarray]]:
+    """Drawing meshes (CAD mm, CAD frame) in parts_classified.csv row order.
+
+    Read from 01_cad/05_meshes/render_mesh_v5.npz (undecimated tessellation with slot-filled
+    perforated plates, build_render_mesh_v5.py); rebuilt from parts_mesh.npz when missing or
+    older than index.json. ``meshes`` is ignored (kept for the old call signature). Until
+    2026-11-08 this function decimated ``meshes`` with fast_simplification to a 300 000-triangle
+    budget (render_mesh.npz, now 05_meshes/history/), which tore holes into the drawings.
+    """
+    if not build_render_mesh_v5.cache_valid():
+        build_render_mesh_v5.build()
+    with np.load(RENDER_NPZ) as data:
+        vertices, faces = data["vertices"], data["faces"]
         vo, fo = data["vertex_offsets"], data["face_offsets"]
-        return [
-            (data["vertices"][vo[i] : vo[i + 1]].astype(np.float64), data["faces"][fo[i] : fo[i + 1]])
-            for i in range(len(vo) - 1)
-        ]
-    total = sum(len(m.faces) for m in meshes)
-    keep_ratio = RENDER_TRIANGLE_BUDGET / total
-    result = []
-    for mesh in meshes:
-        vertices, faces = np.asarray(mesh.vertices), np.asarray(mesh.faces)
-        if len(faces) > 400:
-            target = max(200, int(len(faces) * keep_ratio))
-            vertices, faces = fast_simplification.simplify(
-                vertices.astype(np.float32), faces.astype(np.int32), 1 - target / len(faces)
-            )
-        result.append((np.asarray(vertices, dtype=np.float64), np.asarray(faces)))
-    vertex_offsets = np.cumsum([0] + [len(v) for v, _ in result])
-    face_offsets = np.cumsum([0] + [len(f) for _, f in result])
-    np.savez_compressed(
-        RENDER_NPZ,
-        vertices=np.concatenate([v for v, _ in result]).astype(np.float32),
-        faces=np.concatenate([f for _, f in result]).astype(np.int32),
-        vertex_offsets=vertex_offsets,
-        face_offsets=face_offsets,
-    )
-    return result
+    return [
+        (vertices[vo[i] : vo[i + 1]].astype(np.float64), faces[fo[i] : fo[i + 1]])
+        for i in range(len(vo) - 1)
+    ]
 
 
 VIEWS = {
@@ -825,11 +815,19 @@ def project_scene(render, categories, transforms, view):
         base = np.array(matplotlib.colors.to_rgb(COLORS[category]))
         colours.append(np.clip(base[None] * shade[:, None] + 0.12 * (1 - shade[:, None]), 0, 1))
         polygons.append(np.stack([triangles @ right, triangles @ up], axis=2))
-        depths.append((triangles @ toward).mean(axis=1))
+        depths.append(triangles @ toward)
     polygons = np.concatenate(polygons)
     colours = np.concatenate(colours)
-    order = np.argsort(np.concatenate(depths))  # far (small toward) first
-    return polygons[order], colours[order]
+    depths = np.concatenate(depths)
+    order = np.argsort(depths.mean(axis=1))  # far (small toward) first
+    return polygons[order], colours[order], depths[order]
+
+
+def mesh_artist(polygons, colours, depths):
+    """Flat-shaded mesh fill: exact z-buffer raster (mesh_zbuffer), PolyCollection without numba."""
+    if mesh_zbuffer.available():
+        return mesh_zbuffer.ZBufferCollection(polygons, depths, colours, zorder=1)
+    return PolyCollection(polygons, facecolors=colours, edgecolors="none", antialiased=False)
 
 
 def project_points(points_body: np.ndarray, view: str) -> np.ndarray:
@@ -838,9 +836,9 @@ def project_points(points_body: np.ndarray, view: str) -> np.ndarray:
 
 
 def draw_step(render, categories, step: dict, view: str, limits, png_path: Path) -> None:
-    polygons, colours = project_scene(render, categories, step["transforms"], view)
+    polygons, colours, depths = project_scene(render, categories, step["transforms"], view)
     figure, axes = plt.subplots(figsize=(13, 8), dpi=110)
-    axes.add_collection(PolyCollection(polygons, facecolors=colours, edgecolors="none", antialiased=False))
+    axes.add_collection(mesh_artist(polygons, colours, depths), autolim=False)
     hinge = project_points(step["hinge_body_m"][None], view)[0]
     axes.plot(*hinge, marker="o", ms=11, mfc="white", mec=INK, mew=2, zorder=5)
     axes.annotate("힌지", hinge, xytext=(8, 8), textcoords="offset points", fontsize=10, color=INK)

@@ -6,7 +6,7 @@ Reads only stored results (no simulation is run):
     06_analysis/00_dynamics/s1_pdelta_check.json  independent nonlinear statics per level
     02_params/rexome33.yaml                       geometry (pad sphere centres, auger travel)
     01_cad/01_parts/parts_classified.csv          part rows (leg, group, auger moving set)
-    01_cad/05_meshes/render_mesh.npz              decimated drawing meshes, same row order
+    01_cad/05_meshes/render_mesh_v5.npz           drawing mesh (build_render_mesh_v5.py), same row order
 
 Writes (06_analysis/01_chrono/11_S1/):
     S1_settle_levels.gif   analytic-start cases top -> middle -> bottom (15 s each, compressed),
@@ -80,7 +80,7 @@ from analyze_parts import (  # noqa: E402
     OTHER_PART_COLOR,
     SURFACE,
 )
-from render_auger_descent import load_render_meshes  # noqa: E402
+from render_auger_descent import RENDER_NPZ, load_render_meshes  # noqa: E402
 from render_layout_views import (  # noqa: E402
     LEG_DEPTH_BIAS_M,
     VIEWS,
@@ -255,14 +255,19 @@ def load_case(name: str, pdelta: dict) -> CaseData:
 def load_meshes(cache: Path | None):
     parts = pd.read_csv(CLASSIFIED_CSV, encoding="utf-8-sig")
     parts["leg"] = parts["leg"].fillna("")
+    render = None
     if cache is not None and cache.exists():
         with open(cache, "rb") as handle:
-            render = pickle.load(handle)
-    else:
+            data = pickle.load(handle)
+        # Since 2026-11-09 the pickle records the drawing mesh it came from; a plain list is a
+        # cache of the old decimated render_mesh.npz and is rebuilt.
+        if isinstance(data, dict) and data.get("drawing_mesh") == RENDER_NPZ.name:
+            render = data["render"]
+    if render is None:
         render, _ = load_render_meshes(parts["instance_path"].tolist())
         if cache is not None:
             with open(cache, "wb") as handle:
-                pickle.dump(render, handle, protocol=5)
+                pickle.dump({"drawing_mesh": RENDER_NPZ.name, "render": render}, handle, protocol=5)
     if len(render) != len(parts):
         raise SystemExit("render mesh rows differ from parts_classified.csv")
     return parts, render, build_topologies(render)

@@ -101,7 +101,7 @@ from analyze_parts import (  # noqa: E402
     OTHER_PART_COLOR,
     SURFACE,
 )
-from render_auger_descent import load_render_meshes  # noqa: E402
+from render_auger_descent import RENDER_NPZ, load_render_meshes  # noqa: E402
 from render_layout_views import (  # noqa: E402
     LEG_DEPTH_BIAS_M,
     VIEWS,
@@ -445,12 +445,14 @@ def load_drawing_meshes(cache_dir: Path | None, cell_mm: float):
     """(parts table, decimated render meshes) in parts_classified.csv row order (+ stats)."""
     parts = pd.read_csv(CLASSIFIED_CSV, encoding="utf-8-sig")
     parts["leg"] = parts["leg"].fillna("")
-    cached = cache_dir / f"render_mesh_cluster{cell_mm:g}mm.pkl" if cache_dir else None
+    # cache names carry the drawing-mesh file stem (render_mesh_v5 since 2026-11-09), so a cache of
+    # the old decimated render_mesh.npz is not picked up
+    cached = cache_dir / f"{RENDER_NPZ.stem}_cluster{cell_mm:g}mm.pkl" if cache_dir else None
     if cached is not None and cached.exists():
         with open(cached, "rb") as handle:
             data = pickle.load(handle)
         return parts, data["render"], data["stats"], cached
-    full_cache = cache_dir / "render_mesh_full.pkl" if cache_dir else None
+    full_cache = cache_dir / f"{RENDER_NPZ.stem}_full.pkl" if cache_dir else None
     if full_cache is not None and full_cache.exists():
         with open(full_cache, "rb") as handle:
             render = pickle.load(handle)

@@ -9,12 +9,20 @@ Reads only cached data (no STEP parsing):
     01_cad/01_parts/parts_classified.csv   part rows, leg names, bounding boxes (analyze_parts.py)
     01_cad/01_parts/cad_summary.json       CoG of the superstructure and of the whole assembly
                                            (case A)
-    01_cad/05_meshes/render_mesh.npz       decimated drawing meshes (analyze_mast.render_meshes)
+    01_cad/05_meshes/render_mesh_v5.npz    drawing mesh, undecimated CAD tessellation
+                                           (build_render_mesh_v5.py, via analyze_mast.render_meshes)
 
 Writes:
     01_cad/01_parts/layout_views_rendered.png
 
-Method. Each view is an orthographic projection of the body-frame meshes (x = Z_cad,
+Renderer (2026-11-09). Default "zbuffer" (mesh_zbuffer.py): exact per-pixel visibility of the
+6.4 M V5 triangles, drawn as one raster; outlines come from the part-id / normal buffers
+(part changes and creases > --edge-angle), so hidden lines stay hidden. "painter" (environment
+variable OUTRIGGER_MESH_RENDERER=painter, or renderer="painter") is the method below with the
+edge segments; it needs about 10 GB per figure already for the old 1.2 M-triangle decimated
+mesh and is kept for the small part sets (render_crawler_contact_parts.py).
+
+Method (painter). Each view is an orthographic projection of the body-frame meshes (x = Z_cad,
 y = X_cad, z = Y_cad, metres, origin = CAD origin), painter-sorted by depth. Shading
 = Lambert term against a light from the viewer and above, plus depth cueing (far faces
 fade toward the background). The four jack cylinders (barrel + rod/pad) are drawn
@@ -39,6 +47,7 @@ Usage:
 
 import argparse
 import json
+import os
 import sys
 import time
 from dataclasses import asdict, dataclass
@@ -64,10 +73,18 @@ from analyze_parts import (
     SURFACE,
     _draw_view,
 )
+import mesh_zbuffer
 from cad_common import MM_PER_M, PARTS_DIR, SUMMARY_JSON
-from render_auger_descent import load_render_meshes
+from render_auger_descent import RENDER_NPZ, load_render_meshes
 
 OUTPUT_PNG = PARTS_DIR / "layout_views_rendered.png"
+RENDER_MESH_NAME = RENDER_NPZ.name  # drawing mesh (render_mesh_v5.npz, build_render_mesh_v5.py)
+# Hidden-surface method of shade_scene / scene_collection (module docstring).
+RENDERER = os.environ.get("OUTRIGGER_MESH_RENDERER", "zbuffer").strip().lower()
+if RENDERER not in ("zbuffer", "painter"):
+    raise SystemExit(f"OUTRIGGER_MESH_RENDERER={RENDERER!r}: use zbuffer or painter")
+if RENDERER == "zbuffer" and not mesh_zbuffer.available():  # pragma: no cover
+    RENDERER = "painter"
 # (screen right, screen up, toward viewer) in body axes; right x up = toward.
 VIEWS = {
     "top": (np.array([1.0, 0, 0]), np.array([0, 1.0, 0]), np.array([0, 0, 1.0])),
@@ -112,19 +129,20 @@ class SceneItem:
     fade: bool = True
 
 
-def part_topology(vertices: np.ndarray, faces: np.ndarray) -> Topology:
+def part_topology(vertices: np.ndarray, faces: np.ndarray, edges: bool = True) -> Topology:
     """Edges of a welded triangle mesh with their adjacent faces.
 
     Non-manifold edges (more than two faces) keep the first two faces; boundary edges
-    (one face) get -1 as the second face.
+    (one face) get -1 as the second face. ``edges=False`` keeps only the valid faces (the
+    z-buffer renderer finds outlines in pixel buffers and needs no edge table).
     """
     if len(faces):
         triangles = vertices[faces]
         cross = np.cross(triangles[:, 1] - triangles[:, 0], triangles[:, 2] - triangles[:, 0])
         faces = faces[np.linalg.norm(cross, axis=1) > 0]
-    if len(faces) == 0:
+    if len(faces) == 0 or not edges:
         empty = np.zeros((0, 2), dtype=np.int64)
-        return Topology(np.zeros((0, 3), dtype=np.int64), empty, empty, np.zeros(0))
+        return Topology(faces if len(faces) else np.zeros((0, 3), dtype=np.int64), empty, empty, np.zeros(0))
     directed = np.concatenate([faces[:, [0, 1]], faces[:, [1, 2]], faces[:, [2, 0]]])
     owner = np.tile(np.arange(len(faces)), 3)
     keys = np.sort(directed, axis=1)
@@ -143,8 +161,11 @@ def part_topology(vertices: np.ndarray, faces: np.ndarray) -> Topology:
     return Topology(faces, keys[first], edge_faces, winding)
 
 
-def build_topologies(render) -> list[Topology]:
-    return [part_topology(vertices, faces) for vertices, faces in render]
+def build_topologies(render, edges: bool | None = None) -> list[Topology]:
+    """Topologies of all parts; edge tables only for the painter renderer (default)."""
+    if edges is None:
+        edges = RENDERER == "painter"
+    return [part_topology(vertices, faces, edges) for vertices, faces in render]
 
 
 def body_vertices(vertices_cad_mm: np.ndarray) -> np.ndarray:
@@ -152,15 +173,96 @@ def body_vertices(vertices_cad_mm: np.ndarray) -> np.ndarray:
     return vertices_cad_mm @ CAD_TO_BODY.T / MM_PER_M
 
 
-def shade_scene(items: list[SceneItem], view: str, px_per_m: float, style: EdgeStyle,
-                dpi: float, depth_fade: bool = True):
-    """Painter-sorted faces and outline segments of all items for one view.
+class ZScene(tuple):
+    """shade_scene result of the z-buffer renderer.
 
-    Returns:
+    As a tuple it looks like the painter result (polygons (N, 3, 2) depth-sorted, face RGBA
+    (N, 4), None, None, edge flags (N,) all False) so callers that read ``scene[0]`` or
+    ``scene[4]`` keep working; the attributes carry what mesh_zbuffer.ZBufferCollection needs.
+    """
+
+    depths: np.ndarray        # (N, 3) per-vertex depth toward the viewer [m], incl. depth bias
+    part_ids: np.ndarray      # (N,) 1-based item index
+    normals: np.ndarray       # (N, 3) unit normals turned toward the viewer
+    outline_parts: np.ndarray  # (items + 1,) outline allowed per part id (0 = background)
+    edge_rgb: np.ndarray      # (N, 3) outline colour (depth-faded EDGE_COLOR)
+    width_pt: float
+    crease_angle_deg: float
+
+
+def _zbuffer_scene(items: list[SceneItem], view: str, px_per_m: float, style: EdgeStyle,
+                   dpi: float, depth_fade: bool) -> ZScene:
+    right, up, toward = VIEWS[view]
+    light = toward + 0.6 * up + 0.3 * right
+    light /= np.linalg.norm(light)
+    background = np.array(matplotlib.colors.to_rgb(SURFACE))
+    polygons, colours, depths, ids, normals_all, fadeable = [], [], [], [], [], []
+    outline = np.zeros(len(items) + 1, dtype=bool)
+    outline[0] = True
+    for part_id, item in enumerate(items, start=1):
+        faces = item.topology.faces
+        if len(faces) == 0:
+            continue
+        triangles = item.vertices_m[faces]
+        normals = np.cross(triangles[:, 1] - triangles[:, 0], triangles[:, 2] - triangles[:, 0])
+        normals /= np.linalg.norm(normals, axis=1)[:, None]
+        shade = 0.40 + 0.60 * np.abs(normals @ light)
+        base = np.array(matplotlib.colors.to_rgb(item.colour))
+        colours.append(np.clip(base[None] * shade[:, None] + 0.10 * (1 - shade[:, None]), 0, 1))
+        screen = np.stack([item.vertices_m @ right, item.vertices_m @ up], axis=1)
+        polygons.append(screen[faces])
+        depths.append(triangles @ toward + item.depth_bias_m)
+        ids.append(np.full(len(faces), part_id, dtype=np.int32))
+        normals_all.append(normals * np.where(normals @ toward < 0, -1.0, 1.0)[:, None])
+        fadeable.append(np.full(len(faces), item.fade))
+        extent_px = np.linalg.norm(screen.max(axis=0) - screen.min(axis=0)) * px_per_m
+        outline[part_id] = style.enabled and extent_px >= style.min_part_px
+    if not polygons:
+        empty = np.zeros((0, 3, 2))
+        scene = ZScene((empty, np.zeros((0, 4)), None, None, np.zeros(0, dtype=bool)))
+        scene.depths, scene.part_ids, scene.normals = np.zeros((0, 3)), np.zeros(0, np.int32), np.zeros((0, 3))
+        scene.outline_parts, scene.edge_rgb = outline, np.zeros((0, 3))
+        scene.width_pt, scene.crease_angle_deg = 0.0, style.angle_deg
+        return scene
+    depth = np.concatenate(depths)
+    rgb = np.concatenate(colours)
+    fade_mask = np.concatenate(fadeable)
+    edge_rgb = np.tile(np.array(EDGE_COLOR, dtype=float), (len(rgb), 1))
+    if depth_fade:
+        centre = depth.mean(axis=1)
+        unbiased = centre[fade_mask]
+        near, far = np.percentile(unbiased, [99.5, 0.5]) if len(unbiased) else (1.0, 0.0)
+        fade = DEPTH_FADE * np.clip((near - centre) / (near - far), 0, 1) * fade_mask
+        rgb = rgb * (1 - fade[:, None]) + background[None] * fade[:, None]
+        edge_rgb = edge_rgb * (1 - fade[:, None]) + background[None] * fade[:, None]
+    order = np.argsort(depth.mean(axis=1), kind="stable")
+    rgba = np.concatenate([rgb, np.ones((len(rgb), 1))], axis=1)[order].astype(np.float32)
+    scene = ZScene((np.concatenate(polygons)[order], rgba, None, None, np.zeros(len(rgba), dtype=bool)))
+    scene.depths = depth[order]
+    scene.part_ids = np.concatenate(ids)[order]
+    scene.normals = np.concatenate(normals_all)[order].astype(np.float32)
+    scene.outline_parts = outline
+    scene.edge_rgb = edge_rgb[order].astype(np.float32)
+    scene.width_pt = style.width_px * 72.0 / dpi if style.enabled else 0.0
+    scene.crease_angle_deg = style.angle_deg
+    return scene
+
+
+def shade_scene(items: list[SceneItem], view: str, px_per_m: float, style: EdgeStyle,
+                dpi: float, depth_fade: bool = True, renderer: str | None = None):
+    """Faces and outlines of all items for one view.
+
+    ``renderer`` (default RENDERER): "zbuffer" returns a :class:`ZScene` for
+    mesh_zbuffer.ZBufferCollection (outlines from pixel buffers); "painter" returns the
+    painter-sorted faces and outline segments (needs topologies with edge tables):
+
+    Returns (painter):
         polygons (N, 3, 2) in screen metres, face RGBA (N, 4), edge RGBA (N, 4),
         line widths in points (N,), antialiasing flags (N,); faces have no edge and
         outline segments (a, b, a) have no face.
     """
+    if (renderer or RENDERER) == "zbuffer":
+        return _zbuffer_scene(items, view, px_per_m, style, dpi, depth_fade)
     right, up, toward = VIEWS[view]
     light = toward + 0.6 * up + 0.3 * right
     light /= np.linalg.norm(light)
@@ -226,8 +328,14 @@ def shade_scene(items: list[SceneItem], view: str, px_per_m: float, style: EdgeS
     return np.concatenate(polygons)[order], face_rgba, edge_rgba, widths, edge
 
 
-def scene_collection(scene, zorder: float = 1.8) -> PolyCollection:
-    """PolyCollection of shade_scene output (faces aliased, outlines antialiased)."""
+def scene_collection(scene, zorder: float = 1.8):
+    """Artist of shade_scene output: z-buffer raster for a :class:`ZScene`, else a
+    PolyCollection (faces aliased, outlines antialiased)."""
+    if isinstance(scene, ZScene):
+        return mesh_zbuffer.ZBufferCollection(
+            scene[0], scene.depths, scene[1], part_ids=scene.part_ids, normals=scene.normals,
+            outline_parts=scene.outline_parts, edge_colours=scene.edge_rgb,
+            outline_width_pt=scene.width_pt, crease_angle_deg=scene.crease_angle_deg, zorder=zorder)
     polygons, face_rgba, edge_rgba, widths, edge = scene
     return PolyCollection(polygons, facecolors=face_rgba, edgecolors=edge_rgba,
                           linewidths=widths, antialiaseds=edge, zorder=zorder)
@@ -299,14 +407,20 @@ def draw(parts: pd.DataFrame, report: dict, render, dpi: float, style: EdgeStyle
     # Fix the layout first so that the pixel scale used by the outline filter is final.
     figure.tight_layout(rect=(0, 0.06, 1, 0.95))
     figure.set_dpi(dpi)
-    edge_counts = {}
+    edge_counts, artists = {}, {}
     for ax, view, _, _ in views:
         scene = shade_scene(items, view, px_per_metre(ax), style, dpi)
         edge_counts[view] = int(scene[4].sum())
-        ax.add_collection(scene_collection(scene), autolim=False)
+        artists[view] = ax.add_collection(scene_collection(scene), autolim=False)
+        del scene
     figure.savefig(OUTPUT_PNG, dpi=dpi, facecolor=SURFACE)
     plt.close(figure)
-    return {"axis_limits_body_m": limits, "outline_segments": edge_counts}
+    result = {"renderer": RENDERER, "axis_limits_body_m": limits}
+    if RENDERER == "zbuffer":
+        result["zbuffer"] = {view: getattr(artist, "stats", {}) for view, artist in artists.items()}
+    else:
+        result["outline_segments"] = edge_counts
+    return result
 
 
 def edge_style_arguments(parser: argparse.ArgumentParser) -> None:
@@ -341,6 +455,7 @@ def main() -> None:
     print(json.dumps({
         "output": str(OUTPUT_PNG),
         "size_bytes": OUTPUT_PNG.stat().st_size,
+        "render_mesh": RENDER_MESH_NAME,
         "render_cache_used": cache_valid,
         "triangles": int(sum(len(f) for _, f in render)),
         "edge_style": asdict(style),

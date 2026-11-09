@@ -1,6 +1,8 @@
 {
  "generator": "04_scripts/00_cad/render_style_views.py",
- "created_at": "2026-10-21T12:10:39",
+ "created_at": "2026-11-09T12:26:04",
+ "render_mesh": "render_mesh_v5.npz",
+ "renderer": "zbuffer",
  "render_mesh_cache_valid": true,
  "instances": 1214,
  "views_body_frame": {
@@ -72,19 +74,16 @@
  },
  "style_iso": {
   "STEP 표시색 (조립 외관 재정의 CDORSI 적용)": {
-   "polygons": 1676505,
-   "outline_segments": 462607
+   "polygons": 6372117
   },
   "부품 자체 색 (재정의 없음, OCCT XCAF가 붙이는 색)": {
-   "polygons": 1676505,
-   "outline_segments": 462607
+   "polygons": 6372117
   }
  },
  "style_iso_rear": {
   "STEP 표시색, 후방 좌측 위에서": {
-   "polygons": 1677924,
-   "outline_segments": 464026
+   "polygons": 6372117
   }
  },
- "elapsed_s": 82.3
+ "elapsed_s": 29.9
 }

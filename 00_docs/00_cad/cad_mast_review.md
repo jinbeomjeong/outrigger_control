@@ -31,7 +31,7 @@
 | `01_cad/04_mast/mast_steps/step_NN_<각도>deg.png`, `*_iso.png` | 단계별 테셀레이션 그림. 옆 보기와 등각 보기, 축 범위 고정 |
 | `01_cad/04_mast/mast_steps/contact_sheet.png`, `contact_sheet_iso.png`, `fold_side.gif` | 전 단계 모음(옆 / 등각)과 옆 보기 애니메이션 |
 | `01_cad/04_mast/mast_steps/steps.csv` | 단계별 각도, 백스테이 길이, 무게중심(A·B), 다리별 하중(kN, %), 간섭 |
-| `01_cad/05_meshes/render_mesh.npz`(8 MB), `contact_sweep_records.csv` | 렌더용 단순화 메시(약 30만 삼각형)와 스윕 원자료 캐시 |
+| `01_cad/05_meshes/render_mesh_v5.npz`(43.5 MB), `contact_sweep_records.csv` | 그림용 메시 V5(단순화하지 않은 테셀레이션 638만 삼각형, 타공판 7개 슬롯 메움, `build_render_mesh_v5.py`, 2026-11-09)와 스윕 원자료 캐시. 옛 단순화 메시(약 122만 삼각형, 면 찢어짐) `render_mesh.npz`는 `05_meshes/history/` |
 
 실행 순서: `inspect_mast.py` → `export_meshes.py` → `analyze_mast.py`. 인터프리터는 `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I`다. 앞의 두 스크립트는 STEP이 필요하고, 결과가 있으면 건너뛴다(`--force`로 다시 만든다).
 

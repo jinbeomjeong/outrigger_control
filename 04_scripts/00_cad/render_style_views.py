@@ -2,7 +2,7 @@
 
 Reads only cached data:
     01_cad/01_parts/parts_classified.csv   instance rows (render mesh order)
-    01_cad/05_meshes/render_mesh.npz       decimated drawing meshes (render_auger_descent)
+    01_cad/05_meshes/render_mesh_v5.npz    drawing mesh (build_render_mesh_v5.py, render_auger_descent)
     01_cad/08_style/instance_styles.csv    STEP colours (build_style_index.py, via style_index)
 
 Writes in 01_cad/08_style/:
@@ -93,7 +93,8 @@ def draw_panels(items_by_panel, view: str, titles, path: Path, width_px: int, dp
                            bottom=1.0 / height_in, wspace=0.02)
     for ax, items, title in zip(axes[0], items_by_panel, titles, strict=True):
         scene = rlv.shade_scene(items, view, rlv.px_per_metre(ax), style, dpi)
-        counts[title] = {"polygons": int(len(scene[0])), "outline_segments": int(scene[4].sum())}
+        counts[title] = ({"polygons": int(len(scene[0]))} if rlv.RENDERER == "zbuffer"
+                         else {"polygons": int(len(scene[0])), "outline_segments": int(scene[4].sum())})
         ax.add_collection(rlv.scene_collection(scene), autolim=False)
     handles = [Rectangle((0, 0), 1, 1, color=hex_value) for hex_value, _ in legend_colours]
     figure.legend(handles, [label for _, label in legend_colours], loc="lower center",
@@ -132,6 +133,7 @@ def main() -> None:
             "오거 CAD 자세. 출처 01_cad/08_style/instance_styles.csv")
     meta = {"generator": "04_scripts/00_cad/render_style_views.py",
             "created_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "render_mesh": rlv.RENDER_MESH_NAME, "renderer": rlv.RENDERER,
             "render_mesh_cache_valid": bool(cache_valid), "instances": len(paths),
             "views_body_frame": {k: {"right": v[0].round(4).tolist(), "up": v[1].round(4).tolist(),
                                      "toward_viewer": v[2].round(4).tolist()}
