@@ -45,6 +45,12 @@ refuses a snapshot of another force point).
 Outputs: ``07_results/S2a/<case>/record.npz`` + ``meta.json`` (Record),
 ``07_results/S2a/<case>/result.json``; summary ``06_analysis/01_chrono/12_S2/verify_S2a_L1.json``
 and ``verify_S2a_L1.png``. Units SI; angles in deg where named ``*_deg``.
+
+The summary's ``v12_vs_pdelta_prediction`` reads the independent statics
+``06_analysis/00_dynamics/s2a_slope_pdelta_check.json``, which itself reads the summary. After
+new runs: ``run_S2a.py all`` -> (dynamics-dev) ``04_scripts/01_dynamics/
+run_s2a_slope_pdelta_check.py`` -> ``run_S2a.py summary``; a pdelta file of another weight is
+reported as ``stale_source`` instead of compared.
 """
 
 from __future__ import annotations
@@ -82,6 +88,11 @@ V7_SAMPLE_S = 1.0e-3
 SERIES_POINTS = 1500
 DT_STUDY_S = (5.0e-5, 1.0e-4, 2.0e-4)
 PDELTA_CHECK = ROOT / "06_analysis" / "00_dynamics" / "s2a_slope_pdelta_check.json"
+"""Independent V12 statics (dynamics-dev ``04_scripts/01_dynamics/run_s2a_slope_pdelta_check.py``).
+It reads this script's summary and the summary reads it back, so after new runs the order is
+``run_S2a.py all`` -> pdelta check -> ``run_S2a.py summary``."""
+PDELTA_W_TOLERANCE_N = 1.0
+"""Largest |W_N of the pdelta file - current reference vertical sum| still compared (N)."""
 
 
 def dt_case_name(name: str, dt_s: float | None) -> str:
@@ -697,38 +708,126 @@ def yaw_dt_study(results: dict | None = None) -> dict:
     }
 
 
-def v12_vs_pdelta(results: dict) -> dict | None:
-    """Chrono - reference vertical vs the dynamics-expert ball-centre prediction (P-delta only).
+def run_params_sha256(name: str) -> str | None:
+    """``params_sha256`` of the stored run ``name`` (its Record ``meta.json``), None if absent."""
+    meta_path = RESULTS / name / "meta.json"
+    if not meta_path.is_file():
+        return None
+    meta = json.loads(meta_path.read_text(encoding="utf-8"))
+    return meta.get("run", {}).get("params_sha256")
 
-    ``s2a_slope_pdelta_check.json``: prediction = (ball-centre linear - reference) + (ball-centre
-    nonlinear - linear), i.e. the vertical difference expected once the sphere lever is gone.
+
+def _pdelta_stale_weight(check: dict, refs) -> dict | None:
+    """``stale_source`` entry if the pdelta file was made for another weight, else None.
+
+    The pdelta file stores the weight ``W_N`` it was solved with; the current reference
+    carries the weight as the sum of the four vertical reactions of each V12 case.
     """
     import numpy as np
 
-    if not PDELTA_CHECK.is_file():
+    from outrigger_sim.verify.reference import SLOPE_V12_L1
+
+    for name, case in V12_CASES.items():
+        if name not in check:
+            continue
+        w_source = check[name].get("W_N")
+        w_current = float(
+            np.sum(refs.get(SLOPE_V12_L1, case=case)["contact_vertical_N"], dtype=float)
+        )
+        if w_source is None or abs(float(w_source) - w_current) > PDELTA_W_TOLERANCE_N:
+            return {"status": "stale_source", "W_N_source": w_source, "W_N_current": w_current}
+    return None
+
+
+def _sphere_lever_source_matches(check: dict, name: str, result: dict, sha: str | None) -> bool:
+    """True if the pdelta file's Chrono run is a contact-point run with the params of ``name``.
+
+    Only then is (that run - the current ball-centre run) the sphere lever removed by option A.
+    """
+    source_force_point = check.get("meta", {}).get("chrono_ground_bushing_force_point")
+    source_sha = check[name].get("chrono_params_sha256")
+    current_force_point = result.get("ground_bushing", {}).get("force_point")
+    return (
+        source_force_point == ["contact_point"]
+        and current_force_point == "ball_centre"
+        and source_sha is not None
+        and source_sha == sha
+    )
+
+
+def v12_vs_pdelta(
+    results: dict,
+    refs,
+    params_sha256_by_case: dict[str, str | None],
+    check_path: Path = PDELTA_CHECK,
+) -> dict | None:
+    """Chrono - reference vertical vs the independent P-delta prediction (rev. 13).
+
+    The prediction is ``reference.json / slope_V12 / <case> /
+    L1_plan_A_expected_chrono_minus_reference_rev13 / P_delta_nonlinear_minus_linear_vertical_N``
+    (current YAML). The pdelta check file ``check_path`` only contributes the Chrono - reference
+    of the run it read and the sphere lever; it is refused (``stale_source``) when its weight
+    differs from the current reference by more than ``PDELTA_W_TOLERANCE_N``.
+
+    Args:
+        results: Stored case results (``result.json``) by case name.
+        refs: Loaded references (``load_references()``).
+        params_sha256_by_case: ``params_sha256`` of each stored run (``run_params_sha256``).
+        check_path: The pdelta check JSON (``run_s2a_slope_pdelta_check.py``).
+
+    Returns:
+        None without a pdelta file; ``{"status": "stale_source", ...}`` for a stale one; else
+        the source, status and one entry per V12 case present in both inputs.
+    """
+    import numpy as np
+
+    from outrigger_sim.verify.reference import SLOPE_V12_L1_PLAN_A_EXPECTED_DIFF_REV13
+
+    if not check_path.is_file():
         return None
-    check = json.loads(PDELTA_CHECK.read_text(encoding="utf-8"))
-    out = {"source": str(PDELTA_CHECK.relative_to(ROOT)).replace("\\", "/")}
-    for name in V12_CASES:
+    check = json.loads(check_path.read_text(encoding="utf-8"))
+    stale = _pdelta_stale_weight(check, refs)
+    if stale is not None:
+        return stale
+    out: dict = {
+        "source": _relative_or_absolute(check_path),
+        "status": "complete",
+        "prediction_key": f"{SLOPE_V12_L1_PLAN_A_EXPECTED_DIFF_REV13.notation()} / "
+        "P_delta_nonlinear_minus_linear_vertical_N",
+    }
+    for name, case in V12_CASES.items():
         if name not in results or name not in check:
             continue
         r = results[name]
         c = check[name]
         got = np.asarray(r["window"]["reaction_world_mean_N"], dtype=float)[:, 2]
         ref = np.asarray(r["reference"]["reaction_world_N"], dtype=float)[:, 2]
-        pred = np.asarray(c["ball_variant_linear_minus_reference_vertical_N"]) + np.asarray(
-            c["ball_variant_nonlinear_minus_linear_vertical_N"]
+        pred = np.asarray(
+            refs.get(SLOPE_V12_L1_PLAN_A_EXPECTED_DIFF_REV13, case=case)[
+                "P_delta_nonlinear_minus_linear_vertical_N"
+            ],
+            dtype=float,
         )
-        before = np.asarray(c["chrono_minus_reference_vertical_N"], dtype=float)
-        out[name] = {
+        # the Chrono run the pdelta check read (ball centre since option A, not a contact run)
+        check_run = np.asarray(c["chrono_minus_reference_vertical_N"], dtype=float)
+        entry = {
             "chrono_minus_reference_vertical_N": (got - ref).tolist(),
-            "prediction_ball_centre_N": pred.tolist(),
+            "prediction_pdelta_rev13_N": pred.tolist(),
             "chrono_minus_prediction_N": (got - ref - pred).tolist(),
-            "before_contact_point_chrono_minus_reference_N": before.tolist(),
-            "sphere_lever_removed_N": (before - (got - ref)).tolist(),
+            "pdelta_check_run_chrono_minus_reference_N": check_run.tolist(),
             "sphere_lever_predicted_N": c["contact_minus_ball_nonlinear_vertical_N"],
         }
+        if _sphere_lever_source_matches(check, name, r, params_sha256_by_case.get(name)):
+            entry["sphere_lever_removed_N"] = (check_run - (got - ref)).tolist()
+        out[name] = entry
     return out
+
+
+def _relative_or_absolute(path: Path) -> str:
+    try:
+        return str(path.relative_to(ROOT)).replace("\\", "/")
+    except ValueError:
+        return str(path)
 
 
 def _v7_checks_with_natural_frequency(name: str, result: dict) -> list[dict]:
@@ -824,6 +923,7 @@ def summarize() -> None:
         )
         by_id["V7 diagnosis"] = bool(ok)
     v0 = {name: r["v0"] for name, r in results.items() if "v0" in r}
+    v12_params_sha256 = {name: run_params_sha256(name) for name in results if name in V12_CASES}
     summary = {
         "meta": {
             "generated": _dt.datetime.now().isoformat(timespec="seconds"),
@@ -865,6 +965,8 @@ def summarize() -> None:
                 "reference": r["reference"],
                 "ground_bushing": r["ground_bushing"],
                 "info": r["info"],
+                # read by the pdelta check (run_s2a_slope_pdelta_check.py chrono_params_sha256)
+                "params_sha256": v12_params_sha256[name],
             }
             for name, r in results.items()
             if name in V12_CASES
@@ -879,7 +981,7 @@ def summarize() -> None:
             if name in V12_CASES
         },
         "v7_yaw_dt_study": yaw_dt_study(results),
-        "v12_vs_pdelta_prediction": v12_vs_pdelta(results),
+        "v12_vs_pdelta_prediction": v12_vs_pdelta(results, refs, v12_params_sha256),
         "timing": {name: r["timing"] for name, r in results.items()},
     }
     SUMMARY.parent.mkdir(parents=True, exist_ok=True)
