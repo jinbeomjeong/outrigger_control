@@ -36,7 +36,8 @@ scale (x1); the body is drawn at its recorded translation (attitude change <= 0.
 drawn), rods moved along the leg axis by the recorded motor position (layer composition, whole
 pixels, as render_S2_gifs.render_v11). Normal force arrows 1 m per 100 kN at the pad contact.
 
-CPU: E-cores at below-normal priority (render_S2_gifs.place_cpu); --cpu os disables this.
+CPU: --cpu ecore|pcore|os (default ecore; render_S2_gifs.place_cpu). ecore / pcore pin the
+process to the E- / P-cores at below-normal priority; os leaves affinity and priority alone.
 
 Usage (Chrono-dev python):
     python -I -u 04_scripts/02_chrono/render_S3_gifs.py [--only NAME ...] [--mesh-cache DIR]
@@ -1000,11 +1001,13 @@ def render_summary(summary, before_path: Path | None):
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--only", nargs="+", choices=ALL_PARTS, default=list(ALL_PARTS))
-    parser.add_argument("--cluster-mm", type=float, default=12.0)
+    parser.add_argument("--cluster-mm", type=float, default=0.0,
+                        help="vertex-clustering cell [CAD mm]; 0 (default since 2026-11-09) = "
+                             "undecimated V5 mesh, z-buffer (render_S2_gifs.load_drawing_meshes)")
     parser.add_argument("--mesh-cache", type=Path, default=None)
     parser.add_argument("--before", type=Path, default=DEFAULT_BEFORE_VERIFY,
                         help="verify_S3_L1.json written before the YAML regeneration")
-    parser.add_argument("--cpu", choices=("ecore", "os"), default="ecore")
+    parser.add_argument("--cpu", choices=("ecore", "pcore", "os"), default="ecore")
     args = parser.parse_args()
     started = time.perf_counter()
     cpu = s2.place_cpu(args.cpu)

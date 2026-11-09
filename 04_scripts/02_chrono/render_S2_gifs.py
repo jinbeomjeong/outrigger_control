@@ -36,10 +36,11 @@ Writes (06_analysis/01_chrono/12_S2/):
 Drawing conventions (body / world frame: x forward, y left, z up; SI; roll / pitch ZYX, pitch
 + = nose down; leg order FL, FR, RL, RR):
     3D: oblique orthographic view of the CAD drawing meshes (render_S1_gifs: shaded, black
-        outlines, painter sorted). For per-frame redraws (V7) the meshes are decimated by
-        vertex clustering (--cluster-mm, default 12 mm; 1.22 M -> 0.33 M faces); static
-        scenes use the same meshes. Body displacements in S2 are millimetres (true scale shows
-        nothing), so V7 draws the pose with displacement and rotation multiplied by a stated
+        outlines; z-buffer by default, render_layout_views.RENDERER). Since 2026-11-09 the
+        undecimated V5 mesh (render_mesh_v5.npz, 6.38 M faces) is drawn in every scene
+        (--cluster-mm 0). Until then the old 1.22 M-face mesh was decimated by vertex
+        clustering (12 mm; 0.33 M faces), which tore thin plates; --cluster-mm > 0 restores it.
+        Body displacements in S2 are millimetres (true scale shows nothing), so V7 draws the pose with displacement and rotation multiplied by a stated
         factor; V12 / crawler / event scenes are drawn at true scale with magnified insets.
     Forces: ground reaction arrows at the pad contact point (sphere centre - r n), 1 m per
         100 kN (normal); tangential (bushing) force arrows 1 m per 5 kN (x20 against normal).
@@ -50,8 +51,9 @@ Drawing conventions (body / world frame: x forward, y left, z up; SI; roll / pit
         sphere radius and centres from YAML via scenarios.crawler_settle.crawler_layout); the
         5 s window mean is checked against result.json sphere_force_chrono_mean_N.
 
-CPU: the process is pinned to the E-cores (outrigger_sim.hostcpu.place_process("ecore")) at
-below-normal priority (other agents run on the P-cores); --cpu os disables this.
+CPU: the process (and the V7 workers) is pinned to the E-cores
+(outrigger_sim.hostcpu.place_process("ecore")) at below-normal priority (other agents run on
+the P-cores); --cpu pcore pins to the P-cores instead, --cpu os disables placement.
 
 Usage (Chrono-dev python):
     python -I -u 04_scripts/02_chrono/render_S2_gifs.py [--only NAME ...] [--workers 4]
@@ -253,7 +255,7 @@ def place_cpu(mode: str) -> dict:
     try:
         from outrigger_sim.hostcpu import place_process
 
-        info.update(place_process("ecore"))
+        info.update(place_process(mode))
     except Exception as error:  # noqa: BLE001 - placement is optional
         info["error"] = repr(error)
     try:
@@ -448,7 +450,7 @@ def load_drawing_meshes(cache_dir: Path | None, cell_mm: float):
     # cache names carry the drawing-mesh file stem (render_mesh_v5 since 2026-11-09), so a cache of
     # the old decimated render_mesh.npz is not picked up
     cached = cache_dir / f"{RENDER_NPZ.stem}_cluster{cell_mm:g}mm.pkl" if cache_dir else None
-    if cached is not None and cached.exists():
+    if cell_mm > 0 and cached is not None and cached.exists():
         with open(cached, "rb") as handle:
             data = pickle.load(handle)
         return parts, data["render"], data["stats"], cached
@@ -464,10 +466,18 @@ def load_drawing_meshes(cache_dir: Path | None, cell_mm: float):
                 pickle.dump(render, handle, protocol=5)
     if len(render) != len(parts):
         raise SystemExit("render mesh rows differ from parts_classified.csv")
-    decimated = [cluster_mesh(v, f, cell_mm) if len(f) > 200 else (v, f) for v, f in render]
+    if cell_mm > 0:
+        decimated = [cluster_mesh(v, f, cell_mm) if len(f) > 200 else (v, f) for v, f in render]
+    else:
+        # cell 0 (default since 2026-11-09): the undecimated V5 mesh is drawn with the z-buffer;
+        # vertex clustering of it collapsed thin plates and tore grilles and drums
+        decimated = render
     stats = {"faces_full": int(sum(len(f) for _, f in render)),
              "faces_drawn": int(sum(len(f) for _, f in decimated)),
-             "cluster_cell_mm": cell_mm, "parts": len(render)}
+             "cluster_cell_mm": cell_mm, "parts": len(render),
+             **{k: v for k, v in s1.drawing_mesh_record().items()}}
+    if cell_mm <= 0 and full_cache is not None:
+        return parts, decimated, stats, full_cache
     if cached is not None:
         with open(cached, "wb") as handle:
             pickle.dump({"render": decimated, "stats": stats}, handle, protocol=5)
@@ -656,7 +666,7 @@ class Run:
 
 
 def load_run(stage_dir: Path, name: str, level: str = "top") -> Run:
-    params = load_params(level=level)
+    params = load_params(s1.PARAMS_PATH[0], level=level)  # --params (render_S1_gifs.PARAMS_PATH)
     record = load_record(stage_dir / name, params_sha256=params.sha256)
     result = read_json(stage_dir / name / "result.json")
     ev = record.bushing_events
@@ -694,14 +704,16 @@ V7_BOX = (8, 96, 560, 796)
 _WORKER: dict = {}
 
 
-def _v7_worker_init(mesh_pickle, s_motor, floor_z):
-    place_cpu("ecore")
+def _v7_worker_init(mesh_pickle, s_motor, floor_z, cpu_mode="ecore", params_path=None):
+    place_cpu(cpu_mode)
+    s1.PARAMS_PATH[0] = params_path
     with open(mesh_pickle, "rb") as handle:
         data = pickle.load(handle)
     parts = pd.read_csv(CLASSIFIED_CSV, encoding="utf-8-sig")
     parts["leg"] = parts["leg"].fillna("")
-    bank = MeshBank.build(parts, data["render"])
-    params = load_params(level="top")
+    # decimated cache: {"render", "stats"}; full-mesh cache (cluster 0): plain list
+    bank = MeshBank.build(parts, data["render"] if isinstance(data, dict) else data)
+    params = load_params(params_path, level="top")
     _WORKER["items"] = bank.items(params, np.asarray(s_motor))
     _WORKER["floor_z"] = floor_z
 
@@ -880,7 +892,8 @@ def v7_figure(case: V7Case, limits, mast_top, image0):
         "(η 시계열·모드 맞춤), verify_S2a_L1.json.",
         "포락선은 판정과 같은 맞춤 함수(verify.metrics.fit_damped_sine)로 다시 맞춘 값. "
         "t = 가진 뒤 시간(스냅숏 시각 15 s 뺌).",
-        "가진: S1 상단 정착 상태(스냅숏)에서 초기 각속도만 줌. Δt 1e-4 s, L1(강체 위치 모터 + "
+        f"가진: S1 상단 정착 상태(스냅숏)에서 초기 각속도만 줌. Δt {s1.dt_text(run.result['dt_s'])}, "
+        "L1(강체 위치 모터 + "
         "지면 부싱, 작용점 볼 중심)."], size=7.6, colour=INK_SECONDARY)
     (trail,) = scene.ax.plot([], [], color=ACCENT, lw=1.2, alpha=0.8, zorder=6)
     (top_now,) = scene.ax.plot([], [], "o", ms=6, color=ACCENT, mec="white", mew=0.8, zorder=7)
@@ -913,7 +926,9 @@ def render_v7(args, bank, mesh_pickle, summary):
             owners.append((n, i))
     t_start = time.perf_counter()
     with ProcessPoolExecutor(max_workers=args.workers, initializer=_v7_worker_init,
-                             initargs=(str(mesh_pickle), s_motor.tolist(), floor_z)) as pool:
+                             initargs=(str(mesh_pickle), s_motor.tolist(), floor_z,
+                                       args.cpu,
+                                       None if args.params is None else str(args.params))) as pool:
         images = [Image.frombytes("RGBA", size, data)
                   for data, size in pool.map(_v7_worker_render, tasks, chunksize=2)]
     render_s = time.perf_counter() - t_start
@@ -927,9 +942,11 @@ def render_v7(args, bank, mesh_pickle, summary):
         mode = case.mode
         pieces["header"].set_text(
             f"S2a V7 자유 진동 [{n + 1}/3] · {case.label} 가진 → {MODE_NAMES[mode['mode']]} 판정 · "
-            f"오거 상단 · L1 · Δt 1e-4 s · 창 {run.t[-1]:.0f} s")
+            f"오거 상단 · L1 · Δt {s1.dt_text(run.result['dt_s'])} · 창 {run.t[-1]:.0f} s")
         pieces["note"].set_text(
-            f"3D: CAD 메시(정점 군집 {args.cluster_mm:g} mm). 변위·회전을 ×{case.k:g}로 확대해 그렸다"
+            (f"3D: CAD 메시(정점 군집 {args.cluster_mm:g} mm). " if args.cluster_mm > 0
+             else "3D: CAD 메시(V5, 단순화 없음). ")
+            + f"변위·회전을 ×{case.k:g}로 확대해 그렸다"
             f"(실제 가진 진폭 {run.result['excitation']['amplitude_deg']:g}°). "
             "바닥 = 강체 평지. 빨간 선 = 마스트 끝의 확대 궤적."
             + (" 이 가진은 1차 roll-sway도 크게 가진함(3D = 모든 모드의 합, η = 판정 모드 투영)."
@@ -1307,7 +1324,7 @@ def render_v12(bank, args, summary):
         pieces = v12_figure(case, limits, image)
         pieces["header"].set_text(
             f"S2a V12 경사 바닥 정적 [{n_case + 1}/3] · 바닥 {case.label} · 오거 상단 · L1 · "
-            "Δt 1e-4 s · 중력 램프 3 s + 정착 58 s (시간축 로그)")
+            f"Δt {s1.dt_text(case.run.result['dt_s'])} · 중력 램프 3 s + 정착 58 s (시간축 로그)")
         pieces["note"].set_text(
             "다리 신장 = 구가 경사면에 정확히 닿는 길이(고정). 시작: 무중력·간극 0 → 중력 램프. "
             "처음 약 75 ms는 hold(부싱 고정점 유지, 실제 하중이 침투 양자 아래).")
@@ -1540,7 +1557,7 @@ def render_v11(bank, summary):
     labels = [scene.label(LEG_COLORS[leg], size=8.2, ha="center", va="top", fontweight="bold")
               for leg in LEG_ORDER]
     header.set_text("S2b V11 공중 다리 신장·수축 · 상부체 고정(원점 z 0.839 m) · L1 위치 모터 + "
-                    f"속도 한계 + 명령 램프 {caption.ramp_s:g} s · Δt 1e-4 s · "
+                    f"속도 한계 + 명령 램프 {caption.ramp_s:g} s · Δt {s1.dt_text(run.result['dt_s'])} · "
                     f"{caption.v11_end_s:g} s")
     note.set_text("3D: CAD 메시 실제 크기, 로드·패드를 기록된 모터 위치만큼 다리 축으로 옮겨 그림"
                   "(층 합성, 화면 이동 1 px 단위). 바닥과 접촉 없음.")
@@ -1937,7 +1954,7 @@ def render_crawler(bank, summary):
         pieces = crawler_figure(case, limits, image, check_all)
         pieces["header"].set_text(
             f"S2b 크롤러 위 정착 [{n + 1}/4] · 오거 {LEVEL_LABEL[case.level]} · 다리 0 mm(패드 약 0.34 m "
-            "위) · 크롤러 D안 구 24개(SMC Hooke) · L1 · Δt 1e-4 s · 15 s")
+            f"위) · 크롤러 D안 구 24개(SMC Hooke) · L1 · Δt {s1.dt_text(case.run.result['dt_s'])} · 15 s")
         pieces["note"].set_text(
             "시작 = 독립 정확 정착 자세(P-δ 포함) → 15 s 동안 거의 움직이지 않음(자세 변동 ≤ 2e-5°). "
             "3D 화살표 = 구 접촉력(1 m = 50 kN, 진한 = 앞쪽 우 궤도).")
@@ -2366,7 +2383,9 @@ def render_summary_b(summary):
              "L1 · 판정: 통과 (dynamics_model.md 5.6)", fontsize=13, fontweight="bold", va="top",
              color=INK_PRIMARY)
     fig.text(8 / W, 1 - 38 / H, f"자동 사전 판정 verify_S2b_L1.json all_passed = {verify['all_passed']} "
-             f"({', '.join(k for k, v in verify['passed_by_id'].items() if v)}) · Δt 1e-4 s(이벤트는 1e-5 s도)",
+             f"({', '.join(k for k, v in verify['passed_by_id'].items() if v)}) · "
+             f"Δt {s1.dt_text(read_json(RES_B / 'v11' / 'result.json')['dt_s'])}"
+             "(이벤트는 1e-4 / 1e-5 s)",
              fontsize=9, va="top", color=INK_SECONDARY)
     v0 = verify["v0_motor_sign_and_ramp"]
     v11 = verify["v11"]
@@ -2473,15 +2492,19 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--only", nargs="+", choices=ALL_PARTS, default=list(ALL_PARTS))
     parser.add_argument("--workers", type=int, default=4, help="V7 mesh render processes")
-    parser.add_argument("--cluster-mm", type=float, default=12.0,
-                        help="vertex-clustering cell of the drawing meshes [CAD mm]")
+    parser.add_argument("--cluster-mm", type=float, default=0.0,
+                        help="vertex-clustering cell of the drawing meshes [CAD mm]; 0 (default "
+                             "since 2026-11-09) = undecimated V5 mesh, z-buffer")
     parser.add_argument("--mesh-cache", type=Path, default=None,
                         help="folder for pickled meshes (full + decimated); speeds up reruns")
     parser.add_argument("--before-dir", type=Path, default=DEFAULT_BEFORE_DIR,
                         help="rev-12 S2a result.json backups (S2a_v12_<case>.json)")
     parser.add_argument("--frames-dir", type=Path, default=None)
-    parser.add_argument("--cpu", choices=("ecore", "os"), default="ecore")
+    parser.add_argument("--cpu", choices=("ecore", "pcore", "os"), default="ecore")
+    parser.add_argument("--params", type=Path, default=None,
+                        help="YAML the stored Records were run with (default 02_params/rexome33.yaml)")
     args = parser.parse_args()
+    s1.PARAMS_PATH[0] = args.params
     started = time.perf_counter()
     cpu = place_cpu(args.cpu)
     if args.frames_dir:
@@ -2494,6 +2517,8 @@ def main() -> None:
         "arrow_normal_m_per_kN": ARROW_N_M_PER_N * 1e3,
         "arrow_tangential_m_per_kN": ARROW_T_M_PER_N * 1e3,
         "before_dir": str(args.before_dir) if args.before_dir else None,
+        "params_file": (args.params.resolve().relative_to(ROOT).as_posix() if args.params
+                        else "02_params/rexome33.yaml"),
     }
     need_mesh = {"v7", "v12", "v11", "crawler", "events"} & set(args.only)
     bank = mesh_pickle = None

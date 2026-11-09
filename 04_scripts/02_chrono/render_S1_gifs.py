@@ -83,6 +83,7 @@ from analyze_parts import (  # noqa: E402
 from render_auger_descent import RENDER_NPZ, load_render_meshes  # noqa: E402
 from render_layout_views import (  # noqa: E402
     LEG_DEPTH_BIAS_M,
+    RENDERER,
     VIEWS,
     EdgeStyle,
     SceneItem,
@@ -193,9 +194,15 @@ def _check(result: dict, check_id: str, prefix: str) -> dict:
     raise KeyError(f"{check_id} '{prefix}' not in result.json")
 
 
+# Parameter file the stored Records were run with (--params; None = 02_params/rexome33.yaml).
+# load_record refuses a Record whose params_sha256 differs, so Records made before a YAML
+# regeneration are drawn with the history YAML they were made from (stated in S1_gifs.json).
+PARAMS_PATH: list = [None]
+
+
 def load_case(name: str, pdelta: dict) -> CaseData:
     level = name.removeprefix("cross_")
-    params = load_params(level=level)
+    params = load_params(PARAMS_PATH[0], level=level)
     run_dir = RESULTS / name
     record = load_record(run_dir, params_sha256=params.sha256)
     result = json.loads((run_dir / "result.json").read_text(encoding="utf-8"))
@@ -271,6 +278,27 @@ def load_meshes(cache: Path | None):
     if len(render) != len(parts):
         raise SystemExit("render mesh rows differ from parts_classified.csv")
     return parts, render, build_topologies(render)
+
+
+def dt_text(dt_s: float) -> str:
+    """Time step label from a result.json dt_s, e.g. 0.0002 -> '2e-4 s' (labels used to be
+    hard-coded 1e-4 s; the 2026-10-22 runs use the YAML default 2e-4 s)."""
+    mantissa, exponent = f"{float(dt_s):.0e}".split("e")
+    return f"{mantissa}e{int(exponent)} s"
+
+
+def drawing_mesh_record(render=None) -> dict:
+    """Renderer and drawing mesh identity for the *_gifs.json render metadata (2026-11-09):
+    hidden-surface method (render_layout_views.RENDERER), mesh file and its sha256, and the
+    face count actually drawn when ``render`` (list of (vertices, faces)) is given."""
+    import hashlib
+
+    record = {"renderer": RENDERER,
+              "drawing_mesh": RENDER_NPZ.relative_to(ROOT).as_posix(),
+              "drawing_mesh_sha256": hashlib.sha256(RENDER_NPZ.read_bytes()).hexdigest()}
+    if render is not None:
+        record["faces_drawn"] = int(sum(len(f) for _, f in render))
+    return record
 
 
 def body_items(parts, render, topologies, params, s_motor) -> list[tuple]:
@@ -658,7 +686,7 @@ def render_settle_segment(case: CaseData, parts_bundle, limits3d, k, n_frames, h
     level = LEVEL_LABEL[case.level]
     pieces["header"].set_text(
         f"S1 정착 · 오거 {level} · 해석 정적해 초기화 · L1 (강체 위치 모터 + 지면 부싱) · "
-        f"Δt 0.1 ms · 기록 10 ms / 정지 창 1 ms   {segment_label}")
+        f"Δt {dt_text(case.result['dt_s'])} · 기록 10 ms / 정지 창 1 ms   {segment_label}")
     pieces["note"].set_text(
         "3D: CAD 메시, 실제 크기(변위는 mm 수준). 화살표 = 지면 반력(패드 접촉력), "
         f"길이 1 m = 100 kN. × = 부싱 고정점.  확대도: 수직 변위 ×{k:g}(가로 실제), "
@@ -1133,11 +1161,14 @@ def main() -> None:
     parser.add_argument("--cross-exaggeration", type=float, default=300.0,
                         help="vertical displacement factor of the cross-case insets")
     parser.add_argument("--settle-frames", type=int, default=30, help="frames per level")
+    parser.add_argument("--params", type=Path, default=None,
+                        help="YAML the stored Records were run with (default 02_params/rexome33.yaml)")
     parser.add_argument("--mesh-cache", type=Path, default=None,
                         help="optional pickle of the render meshes (speeds up reruns)")
     parser.add_argument("--frames-dir", type=Path, default=None,
                         help="optional folder for PNG copies of selected frames")
     args = parser.parse_args()
+    PARAMS_PATH[0] = args.params
     started = time.perf_counter()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     pdelta = json.loads(PDELTA_JSON.read_text(encoding="utf-8"))
@@ -1152,6 +1183,9 @@ def main() -> None:
                   + ["06_analysis/00_dynamics/s1_pdelta_check.json"],
         "view_oblique_toward_viewer_body": _TOWARD.round(4).tolist(),
         "arrow_m_per_kN": ARROW_M_PER_N * 1e3,
+        "mesh": drawing_mesh_record(bundle[1]),
+        "params_file": (Path(args.params).resolve().relative_to(ROOT).as_posix() if args.params
+                        else "02_params/rexome33.yaml"),
         "exaggeration_settle": args.exaggeration,
         "exaggeration_cross": args.cross_exaggeration,
         "derivation": "penetration_i = r_i - (o_z + (R c_i)_z - z_floor); roll, pitch = "

@@ -1,0 +1,732 @@
+{
+ "meta": {
+  "script": "04_scripts/02_chrono/render_S3_gifs.py",
+  "cpu": {
+   "mode": "ecore",
+   "efficiency_classes": [
+    0,
+    1
+   ],
+   "affinity_ok": true,
+   "affinity_logical_processors": [
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+   ],
+   "power_throttling_off_ok": true,
+   "priority": "below_normal"
+  },
+  "params_sha256": "7391487c9c01ffa0",
+  "view_oblique_toward_viewer_body": [
+   0.6006,
+   -0.6606,
+   0.4504
+  ],
+  "arrow_normal_m_per_kN": 0.01,
+  "inputs": {
+   "index": "07_results/S3/index.json",
+   "verify": "06_analysis/01_chrono/verify_S3_L1.json",
+   "independent": "06_analysis/00_dynamics/s3_lift_check.json"
+  }
+ },
+ "v5v6_png": {
+  "path": "06_analysis/01_chrono/S3_v5_v6.png",
+  "resolution_px": [
+   1400,
+   820
+  ],
+  "size_bytes": 169463
+ },
+ "v5v6": {
+  "v5_default_minus_v5_dF_max_abs_N": 0.5914851449342677,
+  "v6": {
+   "FL+": {
+    "F_min_leg": "RL",
+    "F_min_mm": {
+     "RL": 11.984158222167487
+    },
+    "liftoff_mm": 13.975820664746768
+   },
+   "FL-": {
+    "F_min_leg": "RR",
+    "F_min_mm": {
+     "RR": 11.577772355623386
+    },
+    "liftoff_mm": 13.558851663107442
+   }
+  }
+ },
+ "v8a_png": {
+  "path": "06_analysis/01_chrono/S3_v8a_energy.png",
+  "resolution_px": [
+   1400,
+   860
+  ],
+  "size_bytes": 182244
+ },
+ "v8a": {
+  "v8a_crawler_dt1e-04": {
+   "trend_rel_over_60s_recomputed": 0.0035685847924828385,
+   "trend_rel_over_60s_result": 0.0035685847924828385,
+   "max_rise_rel": 0.011733984010804811,
+   "E_kin0_J": 3.2507293552054453
+  },
+  "v8a_crawler_dt2e-04": {
+   "trend_rel_over_60s_recomputed": 0.003381573151632127,
+   "trend_rel_over_60s_result": 0.0033815731516321254,
+   "max_rise_rel": 0.012648522489719689,
+   "E_kin0_J": 3.250974792307529
+  }
+ },
+ "v9_png": {
+  "path": "06_analysis/01_chrono/S3_v9_convergence.png",
+  "resolution_px": [
+   1400,
+   860
+  ],
+  "size_bytes": 166799
+ },
+ "v9": {
+  "order_ratios": {
+   "elastic": 1.9283243690148586,
+   "amplitude": 1.944492599717473,
+   "raw_recorded": 2.6095834053037867,
+   "phase_recorded": 1.8493844998356659
+  },
+  "checks_passed": "32/32"
+ },
+ "summary_png": {
+  "path": "06_analysis/01_chrono/S3_summary.png",
+  "resolution_px": [
+   1400,
+   900
+  ],
+  "size_bytes": 184255
+ },
+ "summary": {
+  "n_checks": 182,
+  "n_failed": 0,
+  "before": {
+   "n_checks": 166,
+   "n_failed": 4,
+   "failed": [
+    [
+     "v8a_crawler_dt1e-04",
+     "v8a_crawler_dt1e-04: energy rise max(E - E0) / E_kin0 (dt 0.0001 s)"
+    ],
+    [
+     "v8a_crawler_dt2e-04",
+     "v8a_crawler_dt2e-04: energy rise max(E - E0) / E_kin0 (dt 0.0002 s)"
+    ],
+    [
+     "V9",
+     "V4 uniform dt 0.0001 s: touch time vs reference dt 1e-05 s (FL, FR, RL, RR)"
+    ],
+    [
+     "V9",
+     "V4 uniform dt 0.0002 s: touch time vs reference dt 1e-05 s (FL, FR, RL, RR)"
+    ]
+   ]
+  }
+ },
+ "last_run_s": 8.2,
+ "lift_gif": {
+  "path": "06_analysis/01_chrono/S3_lift_v4.gif",
+  "frames": 106,
+  "roundtrip_max_abs_diff_rgb (decoded vs quantized, 6 frames)": 0,
+  "size_bytes": 902211,
+  "loop_s": 26.97,
+  "resolution_px": [
+   1400,
+   900
+  ],
+  "merged_identical_frames": 0
+ },
+ "lift_frame": "06_analysis/01_chrono/S3_lift_v4_frame.png",
+ "lift": {
+  "case": "v4_D_wdefault",
+  "dir": "07_results/S3/batch_20261021_082134/v4_D_wdefault",
+  "params_sha256": "7391487c9c01ffa0",
+  "frames_plan (t_eq, ms, banner)": [
+   [
+    -0.0481,
+    900,
+    null
+   ],
+   [
+    0.0509,
+    1500,
+    "모터 출발 명령 + 램프 0.1 s (등가 원점 = 출발 + 0.05 s)"
+   ],
+   [
+    1.0009,
+    160,
+    null
+   ],
+   [
+    2.0009,
+    160,
+    null
+   ],
+   [
+    3.0009,
+    160,
+    null
+   ],
+   [
+    4.0009,
+    160,
+    null
+   ],
+   [
+    5.0009,
+    160,
+    null
+   ],
+   [
+    6.0009,
+    160,
+    null
+   ],
+   [
+    7.0009,
+    160,
+    null
+   ],
+   [
+    8.0009,
+    160,
+    null
+   ],
+   [
+    9.0009,
+    160,
+    null
+   ],
+   [
+    10.0009,
+    160,
+    null
+   ],
+   [
+    11.0009,
+    160,
+    null
+   ],
+   [
+    12.0009,
+    160,
+    null
+   ],
+   [
+    13.0009,
+    160,
+    null
+   ],
+   [
+    14.0009,
+    160,
+    null
+   ],
+   [
+    14.6009,
+    160,
+    null
+   ],
+   [
+    14.7009,
+    160,
+    null
+   ],
+   [
+    14.8009,
+    160,
+    null
+   ],
+   [
+    14.9009,
+    110,
+    null
+   ],
+   [
+    14.9509,
+    110,
+    null
+   ],
+   [
+    14.9709,
+    110,
+    null
+   ],
+   [
+    14.9909,
+    110,
+    null
+   ],
+   [
+    15.0109,
+    110,
+    null
+   ],
+   [
+    15.0309,
+    110,
+    null
+   ],
+   [
+    15.0459,
+    1500,
+    "전방 FL·FR 접지 (기준 대비 FL -7.0 ms, FR -6.6 ms)"
+   ],
+   [
+    15.0509,
+    110,
+    null
+   ],
+   [
+    15.0709,
+    110,
+    null
+   ],
+   [
+    15.0909,
+    110,
+    null
+   ],
+   [
+    15.1109,
+    110,
+    null
+   ],
+   [
+    15.1309,
+    110,
+    null
+   ],
+   [
+    15.1509,
+    110,
+    null
+   ],
+   [
+    15.1709,
+    110,
+    null
+   ],
+   [
+    15.1879,
+    1500,
+    "후방 RL·RR 접지 (기준 대비 RL +7.7 ms, RR +7.6 ms)"
+   ],
+   [
+    15.1909,
+    110,
+    null
+   ],
+   [
+    15.2109,
+    110,
+    null
+   ],
+   [
+    15.2309,
+    110,
+    null
+   ],
+   [
+    15.2509,
+    110,
+    null
+   ],
+   [
+    15.2709,
+    110,
+    null
+   ],
+   [
+    15.2909,
+    110,
+    null
+   ],
+   [
+    15.3109,
+    110,
+    null
+   ],
+   [
+    15.3309,
+    110,
+    null
+   ],
+   [
+    15.3509,
+    110,
+    null
+   ],
+   [
+    15.3709,
+    110,
+    null
+   ],
+   [
+    15.3909,
+    110,
+    null
+   ],
+   [
+    15.4109,
+    110,
+    null
+   ],
+   [
+    15.4309,
+    110,
+    null
+   ],
+   [
+    15.4509,
+    110,
+    null
+   ],
+   [
+    15.4709,
+    110,
+    null
+   ],
+   [
+    15.4909,
+    110,
+    null
+   ],
+   [
+    15.5109,
+    110,
+    null
+   ],
+   [
+    15.5309,
+    110,
+    null
+   ],
+   [
+    15.5509,
+    110,
+    null
+   ],
+   [
+    15.5709,
+    110,
+    null
+   ],
+   [
+    15.5739,
+    1500,
+    "크롤러 이탈 15.571 s (기준 15.607 s, 6자유도+부싱 15.570 s)"
+   ],
+   [
+    15.5909,
+    110,
+    null
+   ],
+   [
+    15.6109,
+    110,
+    null
+   ],
+   [
+    15.6309,
+    110,
+    null
+   ],
+   [
+    15.6509,
+    110,
+    null
+   ],
+   [
+    15.6709,
+    110,
+    null
+   ],
+   [
+    15.6909,
+    110,
+    null
+   ],
+   [
+    15.7109,
+    110,
+    null
+   ],
+   [
+    15.7309,
+    110,
+    null
+   ],
+   [
+    15.7509,
+    110,
+    null
+   ],
+   [
+    15.8009,
+    110,
+    null
+   ],
+   [
+    15.9009,
+    160,
+    null
+   ],
+   [
+    16.0009,
+    160,
+    null
+   ],
+   [
+    16.1009,
+    160,
+    null
+   ],
+   [
+    16.2009,
+    160,
+    null
+   ],
+   [
+    16.3009,
+    160,
+    null
+   ],
+   [
+    16.4009,
+    160,
+    null
+   ],
+   [
+    16.5009,
+    160,
+    null
+   ],
+   [
+    16.6009,
+    160,
+    null
+   ],
+   [
+    16.7009,
+    160,
+    null
+   ],
+   [
+    16.8009,
+    160,
+    null
+   ],
+   [
+    16.9009,
+    160,
+    null
+   ],
+   [
+    17.0009,
+    160,
+    null
+   ],
+   [
+    17.1009,
+    160,
+    null
+   ],
+   [
+    17.2009,
+    160,
+    null
+   ],
+   [
+    17.3009,
+    160,
+    null
+   ],
+   [
+    17.3159,
+    1500,
+    "RL·RR 운용 신장 e_op 정지 (램프 0.1 s 제동)"
+   ],
+   [
+    17.4009,
+    160,
+    null
+   ],
+   [
+    17.5009,
+    160,
+    null
+   ],
+   [
+    17.6009,
+    160,
+    null
+   ],
+   [
+    17.7009,
+    160,
+    null
+   ],
+   [
+    17.7659,
+    1500,
+    "FL·FR 운용 신장 e_op 정지 (램프 0.1 s 제동)"
+   ],
+   [
+    17.8009,
+    160,
+    null
+   ],
+   [
+    17.9009,
+    160,
+    null
+   ],
+   [
+    18.5009,
+    160,
+    null
+   ],
+   [
+    19.5009,
+    160,
+    null
+   ],
+   [
+    20.5009,
+    160,
+    null
+   ],
+   [
+    21.5009,
+    160,
+    null
+   ],
+   [
+    22.5009,
+    160,
+    null
+   ],
+   [
+    23.5009,
+    160,
+    null
+   ],
+   [
+    24.5009,
+    160,
+    null
+   ],
+   [
+    25.5009,
+    160,
+    null
+   ],
+   [
+    26.5009,
+    160,
+    null
+   ],
+   [
+    27.5009,
+    160,
+    null
+   ],
+   [
+    28.5009,
+    160,
+    null
+   ],
+   [
+    29.5009,
+    160,
+    null
+   ],
+   [
+    30.5009,
+    160,
+    null
+   ],
+   [
+    31.5009,
+    160,
+    null
+   ],
+   [
+    32.5009,
+    160,
+    null
+   ],
+   [
+    32.7459,
+    1500,
+    "마지막 정지 + 15 s: 잔류 진동 판정 창"
+   ],
+   [
+    33.5009,
+    160,
+    null
+   ],
+   [
+    34.4199,
+    2200,
+    null
+   ]
+  ],
+  "screen_scale_px_per_m": 45.159532579207706,
+  "value_checks": {
+   "touch_eq_events_minus_result_s": [
+    1.7763568394002505e-15,
+    1.7763568394002505e-15,
+    1.7763568394002505e-15,
+    1.7763568394002505e-15
+   ],
+   "first_sample_N_gt_0_minus_touch_s (sample 1 ms)": [
+    0.000889999999968083,
+    0.00047999999998360465,
+    0.00017999999999496197,
+    0.0003199999999896619
+   ],
+   "final_N_mean_minus_result_N": [
+    0.045970509978360496,
+    -0.009709696169011295,
+    0.009645848607760854,
+    -0.04294740766636096
+   ],
+   "peak_pad_N_record_minus_result_N (1 ms samples)": [
+    -1.8150906543887686,
+    -1.4769583549641538,
+    -1.8646475925052073,
+    -2.1963836042268667
+   ],
+   "attitude_range_deg (roll, pitch)": [
+    0.003392989057897684,
+    0.15474803849569782
+   ],
+   "body_rise_m": 0.04856698110385782,
+   "pad_gap_end_mm": [
+    -5.731039965838791,
+    -5.639857399286408,
+    -3.4680182081352484,
+    -3.3849909640482068
+   ],
+   "crawler_min_gap_end_mm": 44.9269261727725,
+   "crawler_min_gap_end_result_mm": 44.926926166513724
+  }
+ }
+}
