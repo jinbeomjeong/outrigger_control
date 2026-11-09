@@ -3769,11 +3769,37 @@ def las_off_config(args: argparse.Namespace) -> Any:
     return C2Config().with_10hz_d1(liftoff_approach_slow=False)
 
 
+K1_ORDER_GATE_OPTION = "--k1-order-gate"
+K1_ORDER_GATE_CHOICES = ("off", "on")
+"""``level --k1-order-gate {off,on}`` (LAS-b K1 S-Ch, ``las_k1_rules.md``; cad 2026-11-09): sets
+``slope_clearance_margin.flat_soil_margin_order_gate`` of the preset to ``value == "on"`` (``off`` = the preset value
+False, written explicitly). Recorded as ``c2_setup.k1_order_gate``; ``run_level`` checks the built controller holds it.
+Absent = no attribute, the run is unchanged. Not the harness key token ``K1`` (crawler stiffness x1)."""
+
+
+def k1_order_gate_of_args(args: argparse.Namespace) -> bool | None:
+    """The requested ``flat_soil_margin_order_gate`` of ``--k1-order-gate`` (None without the option)."""
+    v = getattr(args, "k1_order_gate", None)
+    if v is None:
+        return None
+    if v not in K1_ORDER_GATE_CHOICES:
+        raise SystemExit(f"{K1_ORDER_GATE_OPTION} must be one of {K1_ORDER_GATE_CHOICES}, got {v!r}")
+    return v == "on"
+
+
 def level_c2_config_of_args(args: argparse.Namespace) -> tuple[Any, dict[str, Any]]:
-    """:func:`level_c2_config` of the ``level`` arguments; ``--las-off`` gives it the LAS-off preset and records it."""
+    """:func:`level_c2_config` of the ``level`` arguments; ``--las-off`` gives it the LAS-off preset and records it;
+    ``--k1-order-gate`` then sets the R4 order gate (LAS-b K1) and records it."""
     config, c2_meta = level_c2_config(args.allow_current_c2, las_off_config(args))
     if getattr(args, "las_off", False):
         c2_meta.update(preset=LAS_OFF_PRESET, las_off=True)
+    gate = k1_order_gate_of_args(args)
+    if gate is not None:
+        from dataclasses import replace as _replace
+
+        config = _replace(config, slope_clearance_margin=_replace(config.slope_clearance_margin,
+                                                                  flat_soil_margin_order_gate=gate))
+        c2_meta["k1_order_gate"] = args.k1_order_gate
     return config, c2_meta
 
 
@@ -5792,6 +5818,11 @@ def run_level(args) -> Path:
         model.actuator.set_flow_limit(flow)
     engine = S9Engine(model, imu_method="chrono_point")
     c2 = C2Controller.from_params(params_ctrl, config)
+    k1_gate = k1_order_gate_of_args(args)  # LAS-b K1 S-Ch: the built controller must hold the requested gate
+    if k1_gate is not None and c2.config.slope_clearance_margin.flat_soil_margin_order_gate is not k1_gate:
+        raise SystemExit(f"{K1_ORDER_GATE_OPTION} {args.k1_order_gate}: the built controller has "
+                         "slope_clearance_margin.flat_soil_margin_order_gate = "
+                         f"{c2.config.slope_clearance_margin.flat_soil_margin_order_gate!r}")
     if v5_options is not None:  # criteria P-4: the controller window is the one of the options
         from outrigger_sim.hydraulics.v5_options import check_lock_window_meta
 
@@ -6211,6 +6242,11 @@ def build_parser() -> argparse.ArgumentParser:
                     help=f"build the preset as {LAS_OFF_PRESET} (LAS-b off): reproduction of a result before the LAS-b "
                          "switch with its own --expect-controller tag, or the LAS-off pair of a LAS-b run. Recorded "
                          "in c2_setup (preset, las_off). Absent = no attribute, the run is unchanged")
+    lp.add_argument(K1_ORDER_GATE_OPTION, dest="k1_order_gate", choices=K1_ORDER_GATE_CHOICES,
+                    default=argparse.SUPPRESS,
+                    help="LAS-b K1 S-Ch: set slope_clearance_margin.flat_soil_margin_order_gate of the preset (on = "
+                         "True, off = False as the preset) before --expect-controller; checked on the built "
+                         "controller, recorded as c2_setup.k1_order_gate. Absent = no attribute, the run is unchanged")
     lp.add_argument("--creep-rule", choices=tuple(CREEP_RULES), default=argparse.SUPPRESS,
                     help="P3-4 creep rule (spec 433): current = sinkage rate over 1 s, a window_short row is not a "
                          "pass; legacy_0p2 = over 0.2 s, as the runs before 2026-11-05. Absent = current, no attribute")
