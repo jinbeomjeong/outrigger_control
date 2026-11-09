@@ -782,6 +782,8 @@ $F_{min}$ 경사각은 같은 수직 강성(L1)으로 구했다. 바람, 천공 
 
 ### 3.7 강체 평지에서 0 → 680 mm 신장 중 다리 반력 시계열 (2026-10-20, 개정 8: 크롤러 D안)
 
+> **(2026-11-09 단서)** 이 절 본문의 수치는 **REXOME33 당시 값**(행정 680 mm, $v_{max}$ 22.667 mm/s, 공통 실린더 치수, 218.1 kN 한계, $F_{min}$ 9.453 kN)이다. 현재 YAML(지문 61078f29: 행정 0.70 m, 20.924 mm/s, 다리별 치수)의 값은 `06_analysis/00_dynamics/leg_extension_loads.json`(2026-11-09 재실행)에 있다. 주요 값: 준정적 접지 FL / FR / RL / RR 16.296 / 16.294 / 16.410 / 16.410 s, 크롤러 하중 0 16.847 s, 강체 GIF 접지 16.640 / 16.640 / 16.292 / 16.292 s(`leg_extension_kinematics.json` 2026-11-09), 끝 $F_{pad}$ 119.27 / 117.03 / 72.68 / 71.14 kN(헤드 압력 89.1 / 87.4 / 75.7 / 74.1 bar), 실린더 힘 최대 / 신장 한계(다리별 210 bar × $A_p$) 0.424, 크롤러 위 정착 $u_z$ −3.16 mm·pitch +0.174°, 끝 $u_z$ 349.49 mm(강체 353.72)·pitch +0.131°(강체 +0.1205°)·크롤러 최저점 여유 347.40 mm(강체 351.83). 감쇠 3자유도 동적 확인(다리 ζ 0.03): 첫 접지 전방 16.295 s·후방 16.433 s, 최대 패드 반력 139.1 kN(FL, 16.836 s), **$F_{min}$에 한 번 도달한 뒤 최소 실린더 힘 6.27 kN(FR)으로 $F_{min}$ 9.415 kN 아래**(아래 본문의 "여유 +18 N"은 REXOME33 당시 값이다).
+
 ![다리 반력 시계열](../../06_analysis/00_dynamics/leg_extension_loads.gif)
 
 `06_analysis/00_dynamics/leg_extension_loads.gif`(1400×1036 px, 129 프레임, 3배속, 반복 14.2 s), 시계열·검증은 `leg_extension_loads.json`. 강체 기구학 GIF(`01_cad/02_legs/leg_extension.gif`)와 같은 배속·정지 규칙(처음 1.0 s, 끝 1.5 s, 사건 0.6 s)이다. 사건 정지 프레임은 3개(전방 접지, 후방 접지, 크롤러 하중 0)다. **개정 8(D안)으로 다시 만들었다.**
@@ -803,7 +805,7 @@ $F_{min}$ 경사각은 같은 수직 강성(L1)으로 구했다. 바람, 천공 
 | 접지 시각 [s] (유연, D안, 준정적 — 개정 9부터 참고) | 15.051 | 15.049 | 15.148 | 15.148 |
 | 접지 시각 [s] (유연, D안, 감쇠 3자유도 동적 — **개정 9 V4 기준**) | 15.050 | 15.049 | 15.177 | 15.177 |
 | (개정 7, 2×9) | 15.145 | 15.145 | 15.007 | 15.006 |
-| 접지 시각 [s] (강체 GIF, `leg_extension_kinematics.json` 현재 값) | 15.361 | 15.361 | 15.040 | 15.040 |
+| 접지 시각 [s] (강체 GIF, `leg_extension_kinematics.json` 2026-10-20 값, REXOME33 당시 값; 2026-11-09 현재 YAML 16.640 / 16.640 / 16.292 / 16.292) | 15.361 | 15.361 | 15.040 | 15.040 |
 | $F_{cyl}$ ≥ $F_{min}$ 9.453 kN 도달 [s] | 15.153 | 15.153 | 15.190 | 15.191 |
 | 끝 $F_{pad}$ [kN] (t 30 s) | 119.29 | 117.32 | 73.76 | 71.92 |
 | 끝 $F_{cyl}$ [kN] / 헤드 압력 [bar] | 118.25 / 113.8 | 116.27 / 111.9 | 72.71 / 70.0 | 70.88 / 68.2 |
@@ -811,7 +813,7 @@ $F_{min}$ 경사각은 같은 수직 강성(L1)으로 구했다. 바람, 천공 
 - 크롤러 하중 0: **15.584 s**(개정 7: 15.691 s). 이후 활성 집합이 바뀌지 않고, 네 다리 신장이 같아 증분이 순수 heave이므로 반력은 끝까지 일정하다.
 - 최대 패드 반력 FL 119.29 kN(15.585 s 이후 일정, 준정적). 실린더 힘 최대는 218.1 kN 한계의 54 %다. 끝 상태는 배치와 무관하다(개정 7과 같음).
 - $F_{min}$ 미만 구간(준정적): 각 다리가 접지한 뒤 전방 103 ms, 후방 42~43 ms 동안만(접지 직후 하중 상승 중), 크롤러가 떨어진 뒤로는 없다.
-- 강체 GIF와 차이: 유연 모델은 크롤러 위에서 3.19 mm 내려앉고 pitch +0.170°(앞 내림)로 기운 상태에서 시작한다(D안은 뒤 롤러열이 하중을 잃고 앞 끝 슈 1개씩이 닿는다, 3.8절). 그래서 전방 패드 틈이 341.1 mm, 후방이 345.3 mm이고 **전방이 0.1 s 먼저 닿는다**. 끝 상태 uz 328.9 mm(강체 333.7), pitch +0.147°(강체 +0.121°), 끝 크롤러 최저점 여유 326.5 mm(강체 331.8)다.
+- 강체 GIF와 차이(REXOME33 당시 값; 현재 값은 절 첫머리 단서): 유연 모델은 크롤러 위에서 3.19 mm 내려앉고 pitch +0.170°(앞 내림)로 기운 상태에서 시작한다(D안은 뒤 롤러열이 하중을 잃고 앞 끝 슈 1개씩이 닿는다, 3.8절). 그래서 전방 패드 틈이 341.1 mm, 후방이 345.3 mm이고 **전방이 0.1 s 먼저 닿는다**. 끝 상태 uz 328.9 mm(강체 333.7), pitch +0.147°(강체 +0.121°), 끝 크롤러 최저점 여유 326.5 mm(강체 331.8)다.
 
 검증(`leg_extension_loads.json` `validation`):
 
@@ -10408,7 +10410,7 @@ Set-Location C:\workspace\outrigger_control
 | `04_scripts/01_dynamics/run_drop_separation_check.py` | **개정 32 보완 1(5.15.1)**: RR 지반 30 mm Poly345 낙하(0.05 / 0.1 / 0.2 s, 3단계)에서 모서리 고정·자유(탄성 / $c_n$ 포함) 분리 속도와 닫힌 식 인장 추정 → `06_analysis/00_dynamics/drop_separation_check.json`(약 10 s) |
 | `04_scripts/01_dynamics/run_timedomain_check.py` | 7절 비선형 검증(L1, R1) → `06_analysis/00_dynamics/timedomain_check.json` |
 | `04_scripts/01_dynamics/run_actuator_L2_feasibility.py` | `actuator_L2_feasibility.md` 수치(V14 `A_extension_dependence.V14_rev5`, V15 `C_seal_friction.V15_rev5`) → `06_analysis/00_dynamics/actuator_L2_feasibility.json` |
-| `04_scripts/01_dynamics/run_leg_extension_loads.py` | 3.7절: 강체 평지 0 → 680 mm 신장 중 패드 반력·실린더 힘 시계열, 검증, 다리 ζ 감도(개정 7), **크롤러 ×3 감도(개정 8)**, GIF → `06_analysis/00_dynamics/leg_extension_loads.{json,gif}`(약 60 s) |
+| `04_scripts/01_dynamics/run_leg_extension_loads.py` | 3.7절: 강체 평지 0 → 행정(YAML `actuator.stroke_m`, 현재 0.70 m; 작성 당시 680 mm) 신장 중 패드 반력·실린더 힘 시계열, 검증, 다리 ζ 감도(개정 7), **크롤러 ×3 감도(개정 8)**, GIF → `06_analysis/00_dynamics/leg_extension_loads.{json,gif}`(약 60 s) |
 | `04_scripts/01_dynamics/run_numerical_damping_review.py` | 4.3절 "개정 8 검토": 명시(SMC·축 힘 법칙)·암시(부싱) 혼합 이산 사상으로 모드별 수치 감쇠, 10 % 규칙 Δt 상한, 명시 국부 모드 안정 한계. S0 실측(`smc_damping.json`) 재현 확인 → `06_analysis/00_dynamics/numerical_damping_review.json`(1 s 미만) |
 | `04_scripts/01_dynamics/run_control_comparison.py` | 제어 후보 비교(6절). 개정 8: 크롤러 D안(끝 슈 틈 = z 오프셋), 해석 정착 자세 초기화, 사전 정착 YAML 65.5 s. `--legacy --out-stem control_comparison_legacy_crawlerD`(약 2.5분), 기본 `--out-stem control_comparison_crawlerD`(약 2.5분), `--regress` |
 | `04_scripts/01_dynamics/run_v7_diagnostic.py` | 5절 V7 진단(개정 7 보완): 감쇠 입력 오류($c_t$ ×2·×0.5·0, $c_n$ ×2, $g_n$·바닥 질량)별 6개 모드 ζ, L1·L2b-NSC, 3단계 → `06_analysis/00_dynamics/v7_diagnostic.json`(1 s 미만) |

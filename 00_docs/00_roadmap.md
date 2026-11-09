@@ -70,7 +70,7 @@ flowchart LR
 | Chrono 규약 | SMC 정지 마찰 없음 → 부싱 + Coulomb | [03_chrono/chrono_stick_friction_test.md](03_chrono/chrono_stick_friction_test.md) |
 | 제어 구조 | C2 잠정 채택(대안 C8) | [04_control/](04_control/) |
 | 센서 | IMU 캐빈 바닥 아래, ±0.2°, 2차 필터 | [05_sensors/](05_sensors/) |
-| 반력 시계열 | 0→680 mm 신장 시 다리 반력, D안 동적 피크 141.0 kN(준정적 119.3 kN), 기준 파일 등록 | [01_dynamics/dynamics_model.md](01_dynamics/dynamics_model.md) 3.7절 |
+| 반력 시계열 | 0→700 mm 신장 시 다리 반력, D안 동적 피크 139.1 kN(준정적 119.3 kN), 기준 파일 등록(현재 YAML, `leg_extension_loads.json` 2026-11-09; REXOME33 당시 값 0→680 mm, 141.0 kN) | [01_dynamics/dynamics_model.md](01_dynamics/dynamics_model.md) 3.7절 |
 | V7 진단값 | c_t 2배 오입력 판별(1·2차 의심 → 3차 확정) | [../06_analysis/00_dynamics/v7_diagnostic.json](../06_analysis/00_dynamics/v7_diagnostic.json) |
 | 마스트 굽힘(C9) | 1차 굽힘이 L1 로킹 대역과 겹치나 정상상태 영향 무시, 동적은 강체가 보수적 → S1~S6 강체, D2·V17 전 1모드 유연 마스트. 레벨링 목표 = 데크 수평 | [01_dynamics/dynamics_model.md](01_dynamics/dynamics_model.md) 3.9절 |
 | 수치 감쇠 재검토 | SMC 접촉은 명시 적분 → 수치 감쇠는 부싱 몫 r·ωΔt/2. dt 1×10⁻⁴ s 유지, 2×10⁻⁴ s 조건부 | [01_dynamics/dynamics_model.md](01_dynamics/dynamics_model.md) 4.3절 |
@@ -145,7 +145,7 @@ flowchart LR
 ### S3 수치 감쇠 → 들어 올림 → 다리 단독 신장, Δt 확인 ✅
 - 결과(2026-10-21, `06_analysis/01_chrono/13_S3/verify_S3_L1.json` 182/182, 최종 판정 `dynamics_model.md` 개정 17 5.7절): V4 접지 −7.0/−6.6/+7.7/+7.6 ms(±50), 피크 138.9 kN(< 218), V5·V6 P-δ로 설명(독립 ≤ 1 N), V8(a) 크롤러는 판정 정의 변경(감쇠 0 모드 ζ + 60 s 추세), V9 기준 Δt 2×10⁻⁴ s 통과(오차비 1.93·1.94) → YAML 반영(지문 7391487c…). 그림 `S3_summary.png`, `S3_lift_v4.gif` 등. (아래 V4 기준 시각·218 kN 상한은 REXOME33 당시 값이다. REXOME35 재판정은 `dynamics_model.md` 5.12.12 보완 8, 힘 한계는 다리별 CLAUDE.md 기준값 표)
 - [x] V8(a) Δt·2Δt, 60 s(수치 감쇠 실측) ⏱ 30분(계산 약 3분)
-- [x] 들어 올림(V4): 크롤러 정착 상태에서 모터 출발, 다리별 운용 신장 정지, 다리별 접지 시각 ±0.05 s, 기준 = 감쇠 3자유도 동적 시각(D 15.050 / 15.049 / 15.177 / 15.177 s, `dynamic_events_s`), 준정적 시각(15.051 / 15.049 / 15.148 / 15.148 s)은 참고, 동적 피크 상한 판정, 정지 15 s 뒤 잔류 판정 ⏱ 1.5~2시간(계산 약 4분, 1×10⁻⁵ s 기준해 약 11분)
+- [x] 들어 올림(V4): 크롤러 정착 상태에서 모터 출발, 다리별 운용 신장 정지, 다리별 접지 시각 ±0.05 s, 기준 = 감쇠 3자유도 동적 시각(D 15.050 / 15.049 / 15.177 / 15.177 s, `dynamic_events_s`), 준정적 시각(15.051 / 15.049 / 15.148 / 15.148 s)은 참고(두 시각 모두 REXOME33 당시 값), 동적 피크 상한 판정, 정지 15 s 뒤 잔류 판정 ⏱ 1.5~2시간(계산 약 4분, 1×10⁻⁵ s 기준해 약 11분)
 - [x] V5, V6(FL+, FL−) ⏱ 1시간(계산 약 12분)
 - [x] V9(Δt, Δt/2, Δt/4 + 1×10⁻⁵ s 기준해) ⏱ 1~1.5시간(계산 약 28분)
 - [x] 병렬 실행기와 meta(`Params.sha256`·`file_sha256`·reference sha256, dt, 솔버, 버전) ⏱ 1~1.5시간
