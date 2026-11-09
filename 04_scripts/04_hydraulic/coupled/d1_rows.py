@@ -21,6 +21,12 @@ Row groups (``d1_rows_final.md`` 2 and 3):
 
 Slopes: ``s9_soil_slope._scaled_slope(direction, k)`` (rounded to 1e-4 deg); the settle-table key
 of a soil row is built from these floats (``settle_table_key``, ``{:g}``).
+
+D8x group ``H-R-X`` (``06_analysis/02_control/d8x/d8x_rules.md`` 3 R-c, 9.2 item 2), not part of
+:func:`all_rows` / the ``d1`` batch: rigid, pad B, F_s 4 kN, the eight R-c floors of the D8x point
+file (explicit angles, not ``_scaled_slope``) x T / M / B x crawler x1 / x3 = 48 rows.
+:func:`d8x_jobs` gives VB / V0 x eps {0, 2e-3} with K1 off (192) or VB / V0 x eps 0 with K1 on
+(96); every job carries ``k1``. Run by ``run_v5.py d1 --group H-R-X --k1 off|on``.
 """
 
 from __future__ import annotations
@@ -35,6 +41,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 S9_DIR = ROOT / "04_scripts" / "03_control" / "s9"
+D8X_DIR = ROOT / "04_scripts" / "03_control" / "d8x"
 
 D1_BATCH = "d1"
 D1_SOURCE = "dyn_d1/d1_rows_final.md 2-3 (2026-11-08, U1-U8) + H-S-C-g (user decision 2026-11-08)"
@@ -313,6 +320,45 @@ def jobs() -> list[dict]:
     """``run_v5`` jobs: every row x VB / V0 x eps {0, 2e-3} (setting outermost)."""
     return [{"d1": row.to_job(), "eps": eps, "setting": setting}
             for setting in D1_SETTINGS for row in all_rows() for eps in D1_EPS]
+
+
+# ------------------------------------------------------------------------------- D8x H-R-X
+D8X_GROUP = "H-R-X"
+D8X_EPS = {"off": D1_EPS, "on": (0.0,)}
+"""Rules 3 R-c: K1 off runs eps {0, 2e-3}, the K1-on pair runs eps 0 only."""
+
+
+def _d8x_record_module():
+    if str(D8X_DIR) not in sys.path:
+        sys.path.insert(0, str(D8X_DIR))
+    import d8x_record
+
+    return d8x_record
+
+
+def d8x_rows(points_path: Path | None = None) -> list[D1Row]:
+    """H-R-X (48): the R-c floors of the point file x T / M / B x crawler x1 / x3."""
+    record = _d8x_record_module()
+    floors = record.rc_floor_angles(record.load_points(points_path))
+    flat_s, slope_s = READY_LIMITS_S["H-R"]
+    return [D1Row(D8X_GROUP, RIGID, level, name, roll, pitch,
+                  ready_limit_s=flat_s if roll == 0.0 and pitch == 0.0 else slope_s,
+                  crawler_k_scale=scale)
+            for level in LEVELS for name, (roll, pitch) in floors.items()
+            for scale in CRAWLER_SCALES]
+
+
+def d8x_jobs(k1: str, points_path: Path | None = None) -> list[dict]:
+    """``run_v5`` jobs of H-R-X with K1 ``off`` (192) or ``on`` (96), setting outermost.
+
+    Raises:
+        ValueError: ``k1`` is not ``off`` / ``on``.
+    """
+    if k1 not in D8X_EPS:
+        raise ValueError(f"k1 must be one of {sorted(D8X_EPS)}, got {k1!r}")
+    rows = d8x_rows(points_path)
+    return [{"d1": row.to_job(), "eps": eps, "setting": setting, "k1": k1}
+            for setting in D1_SETTINGS for row in rows for eps in D8X_EPS[k1]]
 
 
 # ------------------------------------------------------------------------------------ listing

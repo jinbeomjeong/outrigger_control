@@ -401,7 +401,7 @@ def run_one(job: dict) -> dict:
             t4h = None
             result, series = d1_runs.execute(job["d1"], flow, options,
                                              setting_name=job["setting"],
-                                             eps=float(job.get("eps", 0.0)))
+                                             eps=float(job.get("eps", 0.0)), k1=job.get("k1"))
         else:
             case, decision = _case_of(job)
             t4h = _t4h_request(job, flow, options)
@@ -479,15 +479,55 @@ def _done_keys(path: Path) -> set[str]:
     return done
 
 
-def main() -> None:
+D8X_OUT_DIR = ROOT / "06_analysis" / "02_control" / "d8x" / "rc"
+"""D8x R-c output folder (``d8x_rules.md`` 9.2 item 2): ``hrx_<k1>.jsonl``."""
+
+
+def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("batch")
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--mask", default=None, help="hex affinity mask, inherited by the workers")
     parser.add_argument("--list", action="store_true")
+    parser.add_argument("--group", default=None, choices=("H-R-X",),
+                        help="d1 only: the D8x H-R-X rows (d8x_rules.md 3 R-c) instead of the d1 batch")
+    parser.add_argument("--k1", default=None, choices=("off", "on"),
+                        help="with --group H-R-X: R4c30 order gate (default off)")
+    parser.add_argument("--out", type=Path, default=None,
+                        help="with --group H-R-X: output jsonl (default d8x/rc/hrx_<k1>.jsonl)")
     args = parser.parse_args()
-    jobs = batch_jobs(args.batch)
-    path = OUT_DIR / f"{args.batch}.jsonl"
+    if args.group is None and (args.k1 is not None or args.out is not None):
+        parser.error("--k1 and --out belong to --group H-R-X")
+    if args.group is not None and args.batch != D1_BATCH:
+        parser.error("--group is a d1 option")
+    if args.group is not None:
+        args.k1 = args.k1 or "off"
+        args.out = args.out or D8X_OUT_DIR / f"hrx_{args.k1}.jsonl"
+    return args
+
+
+def _write_identity(path: Path, moment: str) -> None:
+    """D8x rules I-1: run identity at the start / end, next to the output."""
+    import d1_rows
+
+    record = d1_rows._d8x_record_module()
+    sidecar = path.with_name(path.stem + ".identity.json")
+    stored = json.loads(sidecar.read_text(encoding="utf-8")) if sidecar.exists() else {}
+    stored.setdefault(moment, []).append({"time": time.strftime("%Y-%m-%d %H:%M:%S %z"),
+                                          **record.run_identity(ROOT)})
+    sidecar.write_text(json.dumps(stored, indent=1), encoding="utf-8")
+
+
+def main() -> None:
+    args = _parse_args()
+    if args.group is not None:
+        import d1_rows
+
+        jobs = d1_rows.d8x_jobs(args.k1)
+        path = args.out
+    else:
+        jobs = batch_jobs(args.batch)
+        path = OUT_DIR / f"{args.batch}.jsonl"
     done = _done_keys(path)
     todo = [job for job in jobs if job_key(job) not in done]
     print(f"{args.batch}: {len(jobs)} runs, {len(todo)} to do", flush=True)
@@ -507,7 +547,15 @@ def main() -> None:
     if args.batch == "overlap" and not OVERLAP_REFERENCE_PATH.exists():
         reference = write_overlap_reference()
         print(f"overlap t_a {reference['t_a_s']} s ({reference['basis']})", flush=True)
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if args.group is not None:
+        _write_identity(path, "start")
+    _run_pool(args, todo, path)
+    if args.group is not None:
+        _write_identity(path, "end")
+
+
+def _run_pool(args: argparse.Namespace, todo: list[dict], path: Path) -> None:
     with get_context("spawn").Pool(args.workers, maxtasksperchild=1) as pool, \
             path.open("a", encoding="utf-8") as handle:
         for count, record in enumerate(pool.imap_unordered(run_one, todo), 1):
