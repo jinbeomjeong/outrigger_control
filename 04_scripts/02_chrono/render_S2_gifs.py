@@ -2220,6 +2220,59 @@ def crawler_leg_state(run: Run) -> dict:
     return {"extension_max_m": float(np.abs(s).max()), "pad_clearance_min_m": clear}
 
 
+def s2b_rows(verify_b: dict, check_id: str, item_part: str, case_prefix: str = "") -> list:
+    """verify_S2b_L1.json ``checks`` rows of ``check_id`` whose item contains ``item_part``
+    and whose case starts with ``case_prefix``; stops when there is none."""
+    rows = [r for r in crawler_key(verify_b, ("checks",), VERIFY_B.name)
+            if r["id"] == check_id and item_part in r["item"]
+            and r["case"].startswith(case_prefix)]
+    if not rows:
+        raise SystemExit(f"{VERIFY_B.name}: no {check_id} row with {item_part!r} "
+                         f"(case {case_prefix or '*'}); rerun run_S2b.py")
+    return rows
+
+
+def rows_passed(rows: list) -> bool:
+    return all(bool(r["passed"]) for r in rows)
+
+
+def rows_tol(rows: list) -> float:
+    """Smallest tolerance of the rows (they share one rule)."""
+    return float(min(np.min(np.asarray(r["tol"], float)) for r in rows))
+
+
+CRAWLER_MODE_NAMES = ("pitch", "roll", "heave")  # order of the s2b_crawler_check mode lists
+
+
+def crawler_mode_refs(check_all: dict) -> dict:
+    """Top-level P-δ share and crawler-mode references from s2b_crawler_check.json.
+
+    pdelta_rel = ``top.exact_minus_linear.pitch_rel``; body_Hz = independent body-axis
+    (reference.json convention) ``top.modes."body_inertia_geo_floor (reference.json
+    convention)".f_undamped_Hz``; fit_Hz = ``top.modes.chrono_fit.<mode>.f_n_Hz``;
+    roll_axis_rel = Chrono fit roll / body-axis roll - 1 (the tilted-pose inertia axis share).
+    """
+    src = CRAWLER_CHECK.name
+    top = crawler_key(check_all, ("top",), src)
+    body = [float(v) for v in crawler_key(top, (
+        "modes", "body_inertia_geo_floor (reference.json convention)", "f_undamped_Hz"), src)]
+    fit = [float(crawler_key(top, ("modes", "chrono_fit", n, "f_n_Hz"), src))
+           for n in CRAWLER_MODE_NAMES]
+    if len(body) != len(CRAWLER_MODE_NAMES):
+        raise SystemExit(f"{src}: top body-axis f_undamped_Hz has {len(body)} modes")
+    roll = CRAWLER_MODE_NAMES.index("roll")
+    return {"pdelta_rel": float(crawler_key(top, ("exact_minus_linear", "pitch_rel"), src)),
+            "body_Hz": body, "fit_Hz": fit, "roll_axis_rel": fit[roll] / body[roll] - 1.0}
+
+
+def crawler_pitch_bar_ylim(values) -> tuple[float, float, float]:
+    """(y_lo, y_hi, span) for settle-pitch bars: 1.0 span below the lowest value and 0.8 span
+    above the highest (labels, legend); span = max - min of the plotted values."""
+    lo, hi = float(np.min(values)), float(np.max(values))
+    span = max(hi - lo, 1e-6)
+    return lo - 1.0 * span, hi + 0.8 * span, span
+
+
 def crawler_v13(verify_b: dict, level: str, result: dict) -> dict:
     """V13 still-window spans of one crawler run and their tolerances.
 
@@ -2236,8 +2289,8 @@ def crawler_v13(verify_b: dict, level: str, result: dict) -> dict:
     out = {}
     for name, part, value in (("attitude", "attitude drift in the still window", att),
                               ("fz", "crawler vertical force variation", fz)):
-        rows = [r for r in crawler_key(verify_b, ("checks",), VERIFY_B.name)
-                if r["id"] == "V13" and r["case"] == f"crawler_{level}" and part in r["item"]]
+        rows = [r for r in s2b_rows(verify_b, "V13", part, f"crawler_{level}")
+                if r["case"] == f"crawler_{level}"]
         if len(rows) != 1:
             raise SystemExit(f"{VERIFY_B.name}: {len(rows)} V13 rows '{part}' for "
                              f"crawler_{level} (expected 1)")
@@ -2467,17 +2520,10 @@ def update_crawler(case: CrawlerCase, pieces, i):
 def crawler_compare_frame(cases, check_all):
     if [c.level for c in cases] != ["top", "middle", "bottom"]:
         raise SystemExit(f"crawler compare: levels {[c.level for c in cases]} != top/middle/bottom")
-    names = ("pitch", "roll", "heave")  # order of the s2b_crawler_check modes f_undamped_Hz lists
-    top = check_all["top"]
-    # P-δ share and roll-frequency axis difference of the top level (s2b_crawler_check.json):
-    # exact_minus_linear.pitch_rel; Chrono fit roll f_n / independent body-axis (reference
-    # convention) roll f_n - 1
-    pdelta_top = float(crawler_key(top, ("exact_minus_linear", "pitch_rel"), CRAWLER_CHECK.name))
-    body_top = crawler_key(top, ("modes", "body_inertia_geo_floor (reference.json convention)",
-                                 "f_undamped_Hz"), CRAWLER_CHECK.name)
-    roll_fit_top = float(crawler_key(top, ("modes", "chrono_fit", "roll", "f_n_Hz"),
-                                     CRAWLER_CHECK.name))
-    roll_axis_rel = roll_fit_top / float(body_top[names.index("roll")]) - 1.0
+    names = CRAWLER_MODE_NAMES
+    # P-δ share and roll-frequency axis difference of the top level (crawler_mode_refs)
+    refs = crawler_mode_refs(check_all)
+    pdelta_top, roll_axis_rel = refs["pdelta_rel"], refs["roll_axis_rel"]
     pitch_err = max(abs(float(crawler_key(check_all[c.level], ("chrono_minus_exact", "pitch_deg"),
                                           CRAWLER_CHECK.name))) for c in cases)
     legs = {"ext_mm": max(c.legs["extension_max_m"] for c in cases) * 1e3,
@@ -2505,15 +2551,14 @@ def crawler_compare_frame(cases, check_all):
     ax.bar(xs, exact, width, color="none", edgecolor=ACCENT, lw=1.4, label="독립 정확 해 (P-δ)")
     ax.bar(xs + width, chrono, width, color="#24324f", label="Chrono (창 평균)")
     # limits from the three series (the old fixed 0.165 ... 0.177 cut the top bars after the
-    # YAML update): 1.0 span below the lowest bar, 0.8 span above for the labels and legend
-    b_lo, b_hi = min(*lin, *exact, *chrono), max(*lin, *exact, *chrono)
-    b_span = max(b_hi - b_lo, 1e-6)
+    # YAML update): crawler_pitch_bar_ylim
+    y_lo, y_hi, b_span = crawler_pitch_bar_ylim([*lin, *exact, *chrono])
     for x, v, e, li in zip(xs, chrono, exact, lin, strict=True):
         ax.text(x + width, v + 0.07 * b_span, f"{v:.6f}", ha="center", fontsize=7.6,
                 color=INK_PRIMARY)
         ax.text(x, e + 0.28 * b_span, f"{(e / li - 1) * 100:+.2f} %", ha="center", fontsize=8,
                 color=ACCENT)
-    ax.set_ylim(b_lo - 1.0 * b_span, b_hi + 0.8 * b_span)
+    ax.set_ylim(y_lo, y_hi)
     ax.set_xticks(xs, [LEVEL_LABEL[c.level] for c in cases])
     ax.legend(fontsize=8, loc="upper right", frameon=True, framealpha=0.9)
     ax = axes_box(fig, 740, 100, 620, 380)
@@ -2932,7 +2977,8 @@ def table_axes(ax, cells, col_labels, col_widths=None, size=8.2, pass_col=None):
             cell.set_facecolor("#f1efe9")
             cell.get_text().set_fontweight("bold")
         if pass_col is not None and c == pass_col and r > 0:
-            cell.get_text().set_color("#1b7a4a")
+            ok = cell.get_text().get_text() == pass_word(True)
+            cell.get_text().set_color("#1b7a4a" if ok else "#c0392b")
             cell.get_text().set_fontweight("bold")
     return table
 
@@ -3134,8 +3180,8 @@ def render_summary_b(summary):
     fig = new_figure(W, H)
     fig.text(8 / W, 1 - 10 / H, "S2b 종합 · 구동기(V0·V11·명령 램프), 크롤러 접촉(D안), 접지 "
                                 "사건(R15) · "
-             "L1 · 판정: 통과 (dynamics_model.md 5.6)", fontsize=13, fontweight="bold", va="top",
-             color=INK_PRIMARY)
+             f"L1 · 판정: {pass_word(bool(verify['all_passed']))} (dynamics_model.md 5.6)",
+             fontsize=13, fontweight="bold", va="top", color=INK_PRIMARY)
     fig.text(8 / W, 1 - 38 / H, "자동 사전 판정 verify_S2b_L1.json all_passed = "
                                 f"{verify['all_passed']} "
              f"({', '.join(k for k, v in verify['passed_by_id'].items() if v)}) · "
@@ -3150,29 +3196,52 @@ def render_summary_b(summary):
     caption = actuator_caption_values(run.params)
     stroke_label = f"{caption.stroke_mm:.0f}"
     top = verify["crawler"]["top"]
+    # tolerances and pass words from the verify_S2b_L1.json checks rows (s2b_rows)
+    r_sign = (s2b_rows(verify, "V0", "motor +speed moves the pad down", "air")
+              + s2b_rows(verify, "V0", "pad dz = -motor travel", "air"))
+    r_hang = s2b_rows(verify, "V0", "motor reaction of a hanging rod", "air")
+    r_ramp = s2b_rows(verify, "ramp", "ramp0.1_dt1e-04", "air")
+    r_speed = s2b_rows(verify, "V11", "speed <= v_max", "v11")
+    r_stroke = s2b_rows(verify, "V11", "full stroke time", "v11")
+    r_axial = s2b_rows(verify, "V13", "axial motor constraint", "v11")
+    r_settle = s2b_rows(verify, "S2b", "settled pose = analytic exact pose (roll, pitch)",
+                        "crawler_top")
+    r_seq = s2b_rows(verify, "R15", "events = touch create", "event_")
+    r_dt = s2b_rows(verify, "R15", "|event time", "events dt pair")
+    r_snap = s2b_rows(verify, "R16", "snapshot round trip", "crawler_")
+    n_events = {len(r["value"]) for r in r_seq}
+    if len(n_events) != 1:
+        raise SystemExit(f"{VERIFY_B.name}: R15 event counts differ between runs {n_events}")
+    snap_max = max(abs_max(r["value"]) for r in r_snap)
     cells = [
         ["V0 모터 부호", f"패드 Δz {v0['pad_dz_m'][0] * 1e3:+.4f} mm = -모터 이동", "부호 일치",
-         "통과"],
-        ["V0 매달린 로드 반력", f"{v0['hanging_force_N'][0]:.4f} N", "-m_rod·g ±1 N", "통과"],
+         pass_word(rows_passed(r_sign))],
+        ["V0 매달린 로드 반력", f"{v0['hanging_force_N'][0]:.4f} N",
+         f"-m_rod·g ±{rows_tol(r_hang):g} N", pass_word(rows_passed(r_hang))],
         ["램프 관성 반력", f"{max(spikes['ramp0.1_dt1e-04']['max_force_dev_N']):.4f} N",
          f"m_rod·a 전방 {caption.ramp_force_front_N:.4f} / "
-         f"후방 {caption.ramp_force_rear_N:.4f} ±1 N",
-         "통과"],
-        ["V11 최대 속도", f"{max(v11['max_speed_m_s']) * 1e3:.7f} mm/s", "≤ v_max(1+1e-3)", "통과"],
+         f"후방 {caption.ramp_force_rear_N:.4f} ±{rows_tol(r_ramp):g} N",
+         pass_word(rows_passed(r_ramp))],
+        ["V11 최대 속도", f"{max(v11['max_speed_m_s']) * 1e3:.7f} mm/s",
+         f"≤ {rows_tol(r_speed) * 1e3:.7f} mm/s (v_max(1+1e-3))", pass_word(rows_passed(r_speed))],
         [f"V11 정지-정지 0↔{stroke_label} mm",
          f"{_stroke_time(v11['stroke_times_s'], 'FL 0->'):.5f} s",
-         f"{stroke_label}/v_max + {caption.ramp_s:g} = {caption.full_stroke_time_s:.3f} ±0.05 s",
-         "통과"],
-        ["V13 축 구속 위반", f"{v11['max_axial_violation_m']:.1e} m (V11)", "≤ 1e-6 m", "통과"],
+         f"{stroke_label}/v_max + {caption.ramp_s:g} = {caption.full_stroke_time_s:.3f} "
+         f"±{rows_tol(r_stroke):g} s", pass_word(rows_passed(r_stroke))],
+        ["V13 축 구속 위반", f"{v11['max_axial_violation_m']:.1e} m (V11)",
+         f"≤ {rows_tol(r_axial):.0e} m", pass_word(rows_passed(r_axial))],
         ["크롤러 정착 (상단)", f"pitch {top['chrono_window']['pitch_deg']:.6f}°",
-         f"독립 정확 해 {top['analytic_exact']['pitch_deg']:.6f}°", "통과"],
-        ["R15 사건 순서 (4실행)", "생성 → 소멸 → 생성, chatter 0", "사건 3건", "통과"],
+         f"독립 정확 해 {top['analytic_exact']['pitch_deg']:.6f}° ±{rows_tol(r_settle):.0e}°",
+         pass_word(rows_passed(r_settle))],
+        [f"R15 사건 순서 ({len(r_seq)}실행)", "생성 → 소멸 → 생성, chatter 0",
+         f"사건 {n_events.pop()}건", pass_word(rows_passed(r_seq))],
         ["R15 두 Δt 사건 시각 차",
          "빠름 " + " / ".join(f"{d * 1e3:.2f}" for d in pairs["fast_FL"]["time_diff_s"])
          + ", 느림 " + " / ".join(f"{abs(d) * 1e3:.2f}" for d in pairs["slow_FL"]["time_diff_s"])
          + " ms",
-         "≤ 1 ms", "통과"],
-        ["R16 스냅숏 왕복", "≤ 8.9e-16 m", "≤ 1e-12 m", "통과"],
+         f"≤ {rows_tol(r_dt) * 1e3:g} ms", pass_word(rows_passed(r_dt))],
+        [f"R16 스냅숏 왕복 ({len(r_snap)}건)", f"≤ {snap_max:.1e} m",
+         f"≤ {rows_tol(r_snap):.0e} m", pass_word(rows_passed(r_snap))],
     ]
     ax = axes_box(fig, 20, 75, 860, 300, W, H)
     table_axes(ax, cells, ["항목", "값 (Chrono)", "기준·허용", "판정"],
@@ -3184,7 +3253,10 @@ def render_summary_b(summary):
     vals = [max(spikes[n]["max_force_dev_N"]) for n in names]
     ax.bar(range(4), vals, color=[BEFORE_COLOR, BEFORE_COLOR, LEG_COLORS["FL"], LEG_COLORS["FL"]])
     ax.set_yscale("log")
-    ax.set_ylim(5, 1e6)
+    # decades around the data: below half the smallest bar, above 3x the largest (labels at
+    # 1.3 v); the old fixed 5 ... 1e6 matched one run only
+    ax.set_ylim(10.0 ** math.floor(math.log10(min(vals) / 2.0)),
+                10.0 ** math.ceil(math.log10(max(vals) * 3.0)))
     ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(s1._short_number))
     ax.set_xticks(range(4), ["없음\n1e-4", "없음\n1e-5", "0.1 s\n1e-4", "0.1 s\n1e-5"],
                   fontsize=7.6)
@@ -3202,8 +3274,11 @@ def render_summary_b(summary):
     # crawler P-delta
     ax = axes_box(fig, 520, 430, 380, 190, W, H)
     s1.style_axes(ax, title="크롤러 정착 pitch [°]: 선형 / 정확(P-δ) / Chrono")
+    bar_vals = []
     for j, level in enumerate(("top", "middle", "bottom")):
         c = check[level]
+        bar_vals += [float(crawler_key(c, (k, "pitch_deg"), f"{CRAWLER_CHECK.name} {level}"))
+                     for k in ("linear_no_pdelta", "exact_pdelta", "chrono_window")]
         ax.bar(j - 0.25, c["linear_no_pdelta"]["pitch_deg"], 0.24, color=BEFORE_COLOR,
                label="선형(P-δ 없음)" if j == 0 else None)
         ax.bar(j, c["exact_pdelta"]["pitch_deg"], 0.24, color="none", edgecolor=ACCENT, lw=1.3,
@@ -3211,7 +3286,9 @@ def render_summary_b(summary):
         ax.bar(j + 0.25, c["chrono_window"]["pitch_deg"], 0.24, color="#24324f",
                label="Chrono" if j == 0 else None)
     ax.legend(fontsize=7.4, ncol=3, loc="upper right", frameon=False)
-    ax.set_ylim(0.166, 0.1772)
+    # same axis rule as the crawler compare frame (old fixed 0.166 ... 0.1772 cut the top bars)
+    ax.set_ylim(*crawler_pitch_bar_ylim(bar_vals)[:2])
+    refs = crawler_mode_refs(check)
     ax.set_xticks(range(3), [LEVEL_LABEL[x] for x in ("top", "middle", "bottom")])
     # events
     ev = load_run(RES_B, "event_fast_FL_dt1e-04")
@@ -3232,13 +3309,13 @@ def render_summary_b(summary):
         "도달은 기록·판정 제외).",
         "④ 크롤러 접선 구속 없음(R8): 평지 S3 V4에는 문제없음, 경사 바닥 L1 들어 올림 전에 크롤러 "
         "접선 모델 필요(사용자 결정).",
-        "⑤ 크롤러 pitch 차는 P-δ 전부, roll +0.31 %는 관성 축 차(Chrono가 맞음). V4 시각 원점 = "
+        f"⑤ 크롤러 pitch 차는 P-δ 전부({LEVEL_LABEL['top']} {refs['pdelta_rel'] * 100:+.2f} %), "
+        f"roll {refs['roll_axis_rel'] * 100:+.2f} %는 관성 축 차(Chrono가 맞음). V4 시각 원점 = "
         "모터 출발 + T_r/2.",
-        "크롤러 위 모드(상단) f_n Chrono "
-        f"{check['top']['modes']['chrono_fit']['pitch']['f_n_Hz']:.4f} / "
-        f"{check['top']['modes']['chrono_fit']['roll']['f_n_Hz']:.4f} / "
-        f"{check['top']['modes']['chrono_fit']['heave']['f_n_Hz']:.4f} Hz vs 독립 1.32691 / "
-        "3.05532 / 8.73106 Hz.",
+        f"크롤러 위 모드({LEVEL_LABEL['top']}) f_n Chrono "
+        + " / ".join(f"{f:.4f}" for f in refs["fit_Hz"])
+        + " Hz vs 독립(몸체 축 관성, 기준 규약) "
+        + " / ".join(f"{f:.5f}" for f in refs["body_Hz"]) + " Hz.",
     ]
     text_block(fig, 40, 680, lines, size=8.4, width=W, height=H)
     fig.text(40 / W, 1 - 840 / H, "그림: S2b_v11_stroke.gif, S2b_ramp_effect.png, "
