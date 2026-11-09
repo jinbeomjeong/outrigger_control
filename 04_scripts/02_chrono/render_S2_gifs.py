@@ -11,15 +11,23 @@ Reads (nothing is simulated; the inputs are not modified):
         air_short, v11, crawler_{top,middle,bottom}, event_{fast,slow}_FL_dt{1e-04,1e-05}
     06_analysis/01_chrono/12_S2/verify_S2a_L1.json, verify_S2b_L1.json
                                                      automatic pre-check summaries
-    06_analysis/00_dynamics/s2a_slope_pdelta_check.json             independent V12 statics
     06_analysis/00_dynamics/s2b_crawler_check.json                  independent crawler checks
-    06_analysis/00_dynamics/reference.json   slope_V12 rev-12 model values (fallback below)
+    06_analysis/00_dynamics/reference.json   slope_V12 / <case> /
+                             L1_plan_A_expected_chrono_minus_reference_rev13 (independent V12
+                             statics of the current YAML: P-delta prediction, rev-12 sphere lever
+                             part, rev-12 contact-point model values) and chrono_test_references
+                             (V7 rev-5 / rev-13 frequencies). The V12 / V13 caption numbers are
+                             computed from these and verify_S2a_L1.json (v12, table,
+                             v12_plan_a_diagnosis); s2a_slope_pdelta_check.json (2026-10-20 YAML)
+                             is no longer read.
     --before-dir (default 06_analysis/01_chrono/12_S2/history/before_planA/)
                              result.json backups of the rev-12 S2a run (contact-point bushing,
-                             before plan A): S2a_v12_<case>.json. Without them the rev-12 values
-                             are the independent model values of reference.json
-                             (slope_V12 / <case> / L1_plan_A_expected_chrono_minus_reference_rev13
-                             / rev12_contact_point_bushing ...), which agree within 1.2 N.
+                             before plan A): S2a_v12_<case>.json. Used only if the backup was run
+                             with the current YAML (params sha when the backup records one, else
+                             total weight W = sum of the reference vertical reactions, rel. 1e-5).
+                             Otherwise the rev-12 values are the independent contact-point model
+                             values of reference.json (.../rev12_contact_point_bushing (S2a run
+                             before plan A) / chrono_model_minus_reference_vertical_N).
     02_params/rexome33.yaml, CAD drawing meshes (as render_S1_gifs.py)
 
 Writes (06_analysis/01_chrono/12_S2/):
@@ -186,7 +194,6 @@ RES_B = ROOT / "07_results" / "S2b"
 OUT_DIR = ROOT / "06_analysis" / "01_chrono" / "12_S2"
 VERIFY_A = OUT_DIR / "verify_S2a_L1.json"
 VERIFY_B = OUT_DIR / "verify_S2b_L1.json"
-PDELTA_A = ROOT / "06_analysis" / "00_dynamics" / "s2a_slope_pdelta_check.json"
 CRAWLER_CHECK = ROOT / "06_analysis" / "00_dynamics" / "s2b_crawler_check.json"
 REFERENCE_JSON = ROOT / "06_analysis" / "00_dynamics" / "reference.json"
 OUT = {
@@ -1205,9 +1212,11 @@ class V12Case:
     floor_point: np.ndarray
     s_motor: np.ndarray
     verify: dict
-    pdelta: dict
+    expected: dict  # reference.json slope_V12 / <case> / L1_plan_A_expected_..._rev13
+    diagnosis: list  # verify_S2a_L1.json v12_plan_a_diagnosis / <case>
     before_N: np.ndarray
     before_source: str
+    before_label: str
     after_N: np.ndarray
     reference_ft: np.ndarray
     contact: np.ndarray  # (n, 4, 3) contact point world
@@ -1215,8 +1224,110 @@ class V12Case:
     series: dict
     checks: dict
 
+    @property
+    def p_delta_N(self) -> np.ndarray:
+        return np.array(self.expected[PLAN_A_P_DELTA_KEY], float)
 
-def load_v12(name, label, verify_all, pdelta_all, reference, before_dir) -> V12Case:
+    @property
+    def lever_N(self) -> np.ndarray:
+        return np.array(self.expected[PLAN_A_REV12_KEY][PLAN_A_LEVER_KEY], float)
+
+    @property
+    def diag_vertical_deviation_N(self) -> np.ndarray:
+        return np.array(v12_diag_vertical(self.diagnosis)["deviation"], float)
+
+
+# reference.json slope_V12 / <case> / PLAN_A_EXPECTED_KEY (independent statics, current YAML)
+PLAN_A_EXPECTED_KEY = "L1_plan_A_expected_chrono_minus_reference_rev13"
+PLAN_A_P_DELTA_KEY = "P_delta_nonlinear_minus_linear_vertical_N"
+PLAN_A_REV12_KEY = "rev12_contact_point_bushing (S2a run before plan A)"
+PLAN_A_LEVER_KEY = "sphere_lever_part_vertical_N (contact - ball, nonlinear)"
+PLAN_A_REV12_MODEL_KEY = "chrono_model_minus_reference_vertical_N"
+BEFORE_LABEL_RUN = "안 A 전 Chrono (부싱 작용점 = 구 접촉점, 개정 12)"
+BEFORE_LABEL_MODEL = "안 A 전(접촉점 부싱) 독립 모델값"
+BACKUP_W_REL_TOL = 1e-5  # reference vertical reactions are stored to ~6 significant digits
+
+
+def plan_a_expected(reference: dict, verify_case: dict) -> dict:
+    return reference["slope_V12"][verify_case["start"]["case"]][PLAN_A_EXPECTED_KEY]
+
+
+def v12_diag_vertical(diagnosis: list) -> dict:
+    """The vertical row (D[0]) of verify v12_plan_a_diagnosis / <case>."""
+    rows = [r for r in diagnosis if "vertical" in r["item"]]
+    if len(rows) != 1:
+        raise SystemExit(f"v12_plan_a_diagnosis: expected one vertical row, got {len(rows)}")
+    return rows[0]
+
+
+def vertical_minus_reference(window: dict, reference: dict) -> np.ndarray:
+    return np.array([w[2] - r[2] for w, r in zip(window["reaction_world_mean_N"],
+                                                  reference["reaction_world_N"], strict=True)])
+
+
+def table_rows(verify: dict, check_id: str, item_part: str, cases=None) -> list[dict]:
+    """verify_S2a_L1.json table rows of ``check_id`` whose item contains ``item_part``."""
+    rows = [r for r in verify["table"] if r["id"] == check_id and item_part in r["item"]
+            and (cases is None or r["case"] in cases)]
+    if not rows:
+        raise SystemExit(f"verify table: no {check_id} row with {item_part!r}")
+    return rows
+
+
+def abs_max(values) -> float:
+    return float(np.max(np.abs(np.asarray(values, float))))
+
+
+def v12_vertical_tol_N(verify: dict) -> float:
+    """V12 vertical reaction tolerance per leg (+-1 % W/4) from the verify table (smallest)."""
+    rows = table_rows(verify, "V12", "vertical reaction per leg")
+    return float(min(np.min(np.asarray(r["tol"], float)) for r in rows))
+
+
+def _backup_params_sha(backup: dict):
+    for holder in (backup, backup.get("record") if isinstance(backup.get("record"), dict)
+                   else None, backup.get("start")):
+        if isinstance(holder, dict) and holder.get("params_sha256"):
+            return holder["params_sha256"]
+    return None
+
+
+def v12_before(name: str, verify_case: dict, reference: dict, before_dir, params_sha=None):
+    """Rev-12 (contact-point bushing) vertical Chrono - reference of one case.
+
+    The --before-dir backup (a rev-12 Chrono run) is used only if it was run with the current
+    YAML: same params sha when both are known, else the same total weight W (sum of the
+    reference vertical reactions, rel. BACKUP_W_REL_TOL). Otherwise the independent
+    contact-point model values of reference.json are used.
+    Returns (values [N], source text, legend label).
+    """
+    reason = "백업 없음"
+    backup = before_dir / f"S2a_{name}.json" if before_dir else None
+    if backup is not None and backup.exists():
+        b = read_json(backup)
+        if b["ground_bushing"].get("force_point", "contact_point") == "ball_centre":
+            raise SystemExit(f"{backup}: not a contact-point (rev 12) result")
+        sha_b = _backup_params_sha(b)
+        w_b = sum(r[2] for r in b["reference"]["reaction_world_N"])
+        w_now = sum(r[2] for r in verify_case["reference"]["reaction_world_N"])
+        if sha_b is not None and params_sha is not None:
+            same = sha_b == params_sha
+            reason = "백업 params sha 다름"
+        else:
+            same = abs(w_b / w_now - 1) <= BACKUP_W_REL_TOL
+            reason = f"백업 W {w_b / 1e3:.1f} kN ≠ 현재 {w_now / 1e3:.1f} kN"
+        if same:
+            return (vertical_minus_reference(b["window"], b["reference"]),
+                    f"rev-12 Chrono 실행 결과 백업 ({backup.name}, 창 평균, 현재 YAML)",
+                    BEFORE_LABEL_RUN)
+    rev = plan_a_expected(reference, verify_case)[PLAN_A_REV12_KEY]
+    return (np.array(rev[PLAN_A_REV12_MODEL_KEY], float),
+            f"reference.json slope_V12/<case>/{PLAN_A_EXPECTED_KEY}/rev12_contact_point_bushing "
+            f"/ {PLAN_A_REV12_MODEL_KEY} (독립 모델값; --before-dir 미사용: {reason})",
+            BEFORE_LABEL_MODEL)
+
+
+def load_v12(name, label, verify_all, reference, before_dir) -> V12Case:
     run = load_run(RES_A, name)
     res = run.result
     start = res["start"]
@@ -1226,23 +1337,9 @@ def load_v12(name, label, verify_all, pdelta_all, reference, before_dir) -> V12C
     verify = verify_all["v12"][name]
     window = verify["window"]
     ref = verify["reference"]
-    after = np.array([w[2] - r[2] for w, r in zip(window["reaction_world_mean_N"],
-                                                   ref["reaction_world_N"], strict=True)])
-    backup = before_dir / f"S2a_{name}.json" if before_dir else None
-    if backup is not None and backup.exists():
-        b = read_json(backup)
-        before = np.array([w[2] - r[2] for w, r in zip(b["window"]["reaction_world_mean_N"],
-                                                       b["reference"]["reaction_world_N"],
-                                                       strict=True)])
-        source = f"rev-12 Chrono 실행 결과 백업 ({backup.name}, 창 평균)"
-        if b["ground_bushing"].get("force_point", "contact_point") == "ball_centre":
-            raise SystemExit(f"{backup}: not a contact-point (rev 12) result")
-    else:
-        key = reference["slope_V12"][start["case"]]
-        rev = key["L1_plan_A_expected_chrono_minus_reference_rev13"][
-            "rev12_contact_point_bushing (S2a run before plan A)"]
-        before = np.array(rev["chrono_model_minus_reference_vertical_N"])
-        source = "reference.json rev12_contact_point_bushing (독립 모델 값, 실측과 1.2 N 안)"
+    after = vertical_minus_reference(window, ref)
+    before, source, before_label = v12_before(name, verify, reference, before_dir,
+                                              run.params.sha256)
     radius = swivel_radius(run.params)
     centres_body = np.array([pad_sphere_centre_body_m(run.params, k, s_motor[k])
                              for k in range(4)])
@@ -1255,8 +1352,15 @@ def load_v12(name, label, verify_all, pdelta_all, reference, before_dir) -> V12C
             run.a["F_contact_n"][run.t >= window["mean_window_s"][0] - 1e-9].mean(axis=0)
             - np.array(window["normal_mean_N"])).max()),
     }
-    return V12Case(run, label, normal, point, s_motor, verify, pdelta_all[name], before, source,
-                   after, np.array(ref["tangential_N"]), contact, T, res["series"], checks)
+    return V12Case(run, label, normal, point, s_motor, verify, plan_a_expected(reference, verify),
+                   verify_all["v12_plan_a_diagnosis"][name], before, source, before_label, after,
+                   np.array(ref["tangential_N"]), contact, T, res["series"], checks)
+
+
+def window_text(window: dict) -> str:
+    """Mean window of verify v12 / <case> / window as "50~53 s"."""
+    t0, t1 = window["mean_window_s"]
+    return f"{t0:.0f}~{t1:.0f} s"
 
 
 def v12_plan(case: V12Case):
@@ -1267,12 +1371,14 @@ def v12_plan(case: V12Case):
         f"{leg} {t * 1e3:.1f}" for leg, t in zip(LEG_ORDER, release, strict=True))
         + " ms (실제 하중 약 100 N)"))
     times += [(t, None) for t in (0.12, 0.2, 0.35, 0.55, 0.8, 1.1, 1.5, 2.0, 2.5, 3.0)]
-    times.append((3.05, "중력 램프 끝(3 s): 이후 정착 → 판정 창 58~61 s"))
+    ramp_s = float(case.run.result["ramp_s"])
+    times.append((ramp_s + 0.05, f"중력 램프 끝({ramp_s:g} s): 이후 정착 → 판정 창 "
+                  f"{window_text(case.verify['window'])}"))
     times += [(t, None) for t in (5.0, 9.0, 16.0, 28.0, 45.0, 61.0)]
     return times
 
 
-def v12_figure(case: V12Case, limits, image):
+def v12_figure(case: V12Case, limits, image, vertical_tol_N: float):
     fig = new_figure()
     scene = Scene(fig, V12_BOX, limits, image)
     header, status, note = header_texts(fig)
@@ -1328,17 +1434,17 @@ def v12_figure(case: V12Case, limits, image):
     ax.set_ylim(0, 0.08)
     # final vertical difference bars
     ax = axes_box(fig, x0, 500, 2 * w + gx, 190)
-    s1.style_axes(ax, title="정착 수직력 Chrono - 기준 [N] (창 58~61 s 평균, 허용 ±956 N)",
-                  ylabel="N")
+    s1.style_axes(ax, title="정착 수직력 Chrono - 기준 [N] (창 "
+                            f"{window_text(case.verify['window'])} 평균, "
+                            f"허용 ±{vertical_tol_N:.0f} N)", ylabel="N")
     xs = np.arange(4)
     width = 0.26
     ax.bar(xs - width, case.before_N, width, color=BEFORE_COLOR, hatch="///", edgecolor="white",
-           label="안 A 전 (부싱 작용점 = 구 접촉점, 개정 12)")
+           label=case.before_label)
     bars = ax.bar(xs, case.after_N, width, color=[LEG_COLORS[leg] for leg in LEG_ORDER],
                   label="안 A 후 (작용점 = 볼 중심, 이 실행)")
-    pdelta = np.array(case.pdelta["ball_nonlinear_minus_reference_vertical_N"])
-    ax.plot(xs + width, pdelta, "D", ms=6, color=ACCENT, mec="white", mew=0.6,
-            label="독립 비선형 예측 (P-δ, 볼 중심)")
+    ax.plot(xs + width, case.p_delta_N, "D", ms=6, color=ACCENT, mec="white", mew=0.6,
+            label="독립 비선형 예측 (P-δ, 볼 중심, rev13 현재 YAML)")
     for b, v in zip(bars, case.after_N, strict=True):
         ax.text(b.get_x() + b.get_width() / 2, v + (12 if v >= 0 else -12), f"{v:+.1f}",
                 ha="center", va="bottom" if v >= 0 else "top", fontsize=7.6, color=INK_PRIMARY)
@@ -1358,15 +1464,16 @@ def v12_figure(case: V12Case, limits, image):
         f"부싱 탄성 변위 {' / '.join(f'{v * 1e3:.4f}' for v in win['bushing_disp_mean_m'])} mm, "
         f"미끄럼 0, 항복 {sum(gb['yield_steps'])} 스텝, 부싱 사건 {len(gb['events'])}",
         f"hold 중 최대 접선력 {max(gb['hold_max_tangential_N']):.2f} N (≤ μ·N_th = 50 N)",
-        f"안 A 전 값 출처: {case.before_source}",
+        f"안 A 전 값: {case.before_label} (출처는 S2_gifs.json v12.before_source)",
     ]
     text_block(fig, x0, 712, lines, size=8.2)
     text_block(fig, x0, 805, [
         "3D: CAD 메시 실제 크기. 바닥은 실제 경사, 다리는 접면 신장으로 고정(정지).",
         "다리 색 화살표 = 법선력(1 m = 100 kN), 보라 화살표 = 부싱 면내력(1 m = 5 kN, 법선 대비 "
         "×20).",
-        f"출처: 07_results/S2a/{run.name}/(record.npz, result.json), verify_S2a_L1.json v12, "
-        "s2a_slope_pdelta_check.json."], size=7.6, colour=INK_SECONDARY)
+        f"출처: 07_results/S2a/{run.name}/(record.npz, result.json), verify_S2a_L1.json v12,",
+        f"reference.json slope_V12/<case>/{PLAN_A_EXPECTED_KEY}."], size=7.6,
+        colour=INK_SECONDARY)
     arrows_n = [scene.arrow(LEG_COLORS[leg]) for leg in LEG_ORDER]
     arrows_t = [scene.arrow(EVENT_COLOR, lw=1.8, head=(5, 3)) for _ in LEG_ORDER]
     labels = [scene.label(LEG_COLORS[leg], size=7.8, ha="center", va="top",
@@ -1411,9 +1518,9 @@ def update_v12(case: V12Case, pieces, i):
 
 def render_v12(bank, args, summary):
     verify = read_json(VERIFY_A)
-    pdelta = read_json(PDELTA_A)
     reference = read_json(REFERENCE_JSON)
-    cases = [load_v12(name, label, verify, pdelta, reference, args.before_dir)
+    vertical_tol_N = v12_vertical_tol_N(verify)
+    cases = [load_v12(name, label, verify, reference, args.before_dir)
              for name, label in V12_CASES]
     box = (V12_BOX[2], V12_BOX[3])
     params = cases[0].run.params
@@ -1432,10 +1539,12 @@ def render_v12(bank, args, summary):
         t0 = time.perf_counter()
         image = render_scene(below, above, limits, box, floor=(case.floor_point, case.normal))
         print(f"  v12 {run.name}: mesh {time.perf_counter() - t0:.1f} s", flush=True)
-        pieces = v12_figure(case, limits, image)
+        pieces = v12_figure(case, limits, image, vertical_tol_N)
         pieces["header"].set_text(
             f"S2a V12 경사 바닥 정적 [{n_case + 1}/3] · 바닥 {case.label} · 오거 상단 · L1 · "
-            f"Δt {s1.dt_text(case.run.result['dt_s'])} · 중력 램프 3 s + 정착 58 s (시간축 로그)")
+            f"Δt {s1.dt_text(case.run.result['dt_s'])} · 중력 램프 "
+            f"{case.run.result['ramp_s']:g} s + 정착 {case.run.result['settle_after_ramp_s']:g} s "
+            "(시간축 로그)")
         pieces["note"].set_text(
             "다리 신장 = 구가 경사면에 정확히 닿는 길이(고정). 시작: 무중력·간극 0 → 중력 램프. "
             "처음 약 75 ms는 hold(부싱 고정점 유지, 실제 하중이 침투 양자 아래).")
@@ -1475,27 +1584,88 @@ def render_v12(bank, args, summary):
     return cases
 
 
-def render_v12_summary(cases, summary):
+def v12_caption_values(verify: dict, reference: dict, names=None) -> dict:
+    """V12 caption numbers from verify_S2a_L1.json and reference.json (no literals).
+
+    names: V12 cases (verify v12 keys), default V12_CASES.
+    """
+    names = [n for n, _ in V12_CASES] if names is None else list(names)
+    vc = [verify["v12"][n] for n in names]
+    expected = [plan_a_expected(reference, v) for v in vc]
+    after = np.array([vertical_minus_reference(v["window"], v["reference"]) for v in vc])
+    horizontal = [np.asarray(v["window"]["reaction_world_mean_N"], float)[:, :2]
+                  - np.asarray(v["reference"]["reaction_world_N"], float)[:, :2] for v in vc]
+    elastic = [np.asarray(v["window"]["bushing_disp_mean_m"], float)
+               / (np.asarray(e["expected_bushing_in_plane_displacement_mm"], float) * 1e-3) - 1
+               for v, e in zip(vc, expected, strict=True)]
+    gb = [v["ground_bushing"] for v in vc]
+    lever = np.concatenate([np.abs(np.asarray(e[PLAN_A_REV12_KEY][PLAN_A_LEVER_KEY], float))
+                            for e in expected])
+    diag = [v12_diag_vertical(verify["v12_plan_a_diagnosis"][n]) for n in names]
+    return {
+        "tol_N": v12_vertical_tol_N(verify),
+        "horizontal_tol_N": float(min(np.min(np.asarray(r["tol"], float)) for r in table_rows(
+            verify, "V12", "horizontal reaction", names))),
+        "diag_max_N": max(abs_max(d["deviation"]) for d in diag),
+        "diag_tol_N": max(float(d["tol"]) for d in diag),
+        "spread_max_N": float(np.ptp(after, axis=0).max()),
+        "horizontal_max_N": max(abs_max(h) for h in horizontal),
+        "elastic_max_pct": max(abs_max(e) for e in elastic) * 100,
+        "lever_min_N": float(lever.min()),
+        "lever_max_N": float(lever.max()),
+        "slip_max_m": max(abs_max(g["slip_total_m"]) for g in gb),
+        "yield_steps": int(sum(sum(g["yield_steps"]) for g in gb)),
+        "events": int(sum(len(g["events"]) for g in gb)),
+        "hold_release_ms": [min(min(g["hold_release_t_s"]) for g in gb) * 1e3,
+                            max(max(g["hold_release_t_s"]) for g in gb) * 1e3],
+        "hold_max_tangential_N": max(abs_max(g["hold_max_tangential_N"]) for g in gb),
+        "pitch_deg": [v["window"]["pitch_mean_deg"] for v in vc],
+        "roll_deg": [v["window"]["roll_mean_deg"] for v in vc],
+    }
+
+
+def range_text(values, fmt: str) -> str:
+    """One number if all values print the same with ``fmt``, else "min~max"."""
+    texts = {format(v, fmt) for v in values}
+    if len(texts) == 1:
+        return texts.pop()
+    return f"{format(min(values), fmt)}~{format(max(values), fmt)}"
+
+
+def slip_yield_text(cv: dict, with_events: bool) -> str:
+    """ "미끄럼·항복(·사건) 0" only when all are zero, else the values."""
+    zero = cv["slip_max_m"] == 0 and cv["yield_steps"] == 0 and (
+        not with_events or cv["events"] == 0)
+    if zero:
+        return "미끄럼·항복·사건 0" if with_events else "미끄럼·항복 0"
+    text = f"미끄럼 최대 {cv['slip_max_m']:.2e} m, 항복 {cv['yield_steps']} 스텝"
+    return text + (f", 사건 {cv['events']}" if with_events else "")
+
+
+def render_v12_summary(cases, summary, verify):
+    cv = v12_caption_values(verify, read_json(REFERENCE_JSON), [c.run.name for c in cases])
+    tol = cv["tol_N"]
     W, H = 1400, 820
     fig = new_figure(W, H)
     fig.text(8 / W, 1 - 10 / H, "S2a V12 경사 바닥: 다리별 정착 수직력 Chrono - 기준 [N] · 부싱 "
                                 "작용점 "
              "구 접촉점(안 A 전) → 볼 중심(안 A 후)", fontsize=13, fontweight="bold", va="top",
              color=INK_PRIMARY)
-    fig.text(8 / W, 1 - 38 / H, "안 A 전 차 = P-δ(무게중심 이동) + 구 지렛대(부싱이 볼 아래 r = "
-                                "0.06 m에 "
-             "걸려 다리마다 r·T 모멘트). 안 A 후에는 P-δ만 남고 세 경사에서 다리별로 같다(±1 N). "
-             "모두 허용 ±956 N(1 % W/4) 안.", fontsize=9, va="top", color=INK_SECONDARY)
+    fig.text(8 / W, 1 - 38 / H, "안 A 전 차 = P-δ + 구 지렛대(부싱이 볼 아래 r = 0.06 m에 걸려 "
+             "다리마다 r·T 모멘트). 안 A 후에는 P-δ(자중 정착 회전의 무게중심 이동)만 남고,\n"
+             f"Chrono는 rev13 독립 예측과 다리별 ≤ {cv['diag_max_N']:.2f} N, "
+             f"세 경사 사이 다리별 차 ≤ {cv['spread_max_N']:.1f} N. "
+             f"모두 허용 ±{tol:.0f} N(1 % W/4) 안.", fontsize=9, va="top", color=INK_SECONDARY)
     xs = np.arange(4)
     width = 0.2
     for j, case in enumerate(cases):
         ax = axes_box(fig, 70 + j * 445, 100, 400, 430, W, H)
         s1.style_axes(ax, title=f"바닥 {case.label}", ylabel="N" if j == 0 else None)
-        lever = np.array(case.pdelta["contact_minus_ball_nonlinear_vertical_N"])
-        pd_ = np.array(case.pdelta["ball_nonlinear_minus_reference_vertical_N"])
-        ax.axhspan(-956, 956, color=BAND_COLOR, alpha=0.35, lw=0, zorder=0)
+        lever = case.lever_N
+        pd_ = case.p_delta_N
+        ax.axhspan(-tol, tol, color=BAND_COLOR, alpha=0.35, lw=0, zorder=0)
         ax.bar(xs - 1.5 * width, case.before_N, width, color=BEFORE_COLOR, hatch="///",
-               edgecolor="white", label="안 A 전 Chrono")
+               edgecolor="white", label=case.before_label)
         ax.bar(xs - 0.5 * width, case.after_N, width,
                color=[LEG_COLORS[leg] for leg in LEG_ORDER], label="안 A 후 Chrono")
         ax.bar(xs + 0.5 * width, pd_, width, color="none", edgecolor=ACCENT, lw=1.2,
@@ -1511,30 +1681,39 @@ def render_v12_summary(cases, summary):
         ax.axhline(0, color=INK_PRIMARY, lw=0.7)
         ax.set_ylim(-340, 340)
         leg_ticks(ax)
-        ax.text(0.02, 0.02, "음영 = 허용 ±956 N (축 밖까지)", transform=ax.transAxes, fontsize=7.4,
-                color=INK_SECONDARY)
+        ax.text(0.02, 0.02, f"음영 = 허용 ±{tol:.0f} N (축 밖까지)", transform=ax.transAxes,
+                fontsize=7.4, color=INK_SECONDARY)
         if j == 0:
             ax.legend(fontsize=7.4, loc="upper right", frameon=True, framealpha=0.92)
-    # residual panel
+    # residual panel: verify v12_plan_a_diagnosis / <case> / D[0] (vertical) deviation
+    diag_tol = cv["diag_tol_N"]
     ax = axes_box(fig, 70, 590, 700, 170, W, H)
-    s1.style_axes(ax, title="안 A 후 Chrono - 독립 비선형 예측 (볼 중심) [N]  (진단 ≤ 3 N, "
-                  "접촉력 양자 k_n·2^-23 m = 약 2.5 N)", ylabel="N")
+    s1.style_axes(ax, title="안 A 후 Chrono - 독립 비선형 예측(rev13, 현재 YAML) [N]", ylabel="N")
     for j, case in enumerate(cases):
-        resid = np.array(case.pdelta["chrono_minus_ball_nonlinear_vertical_N"])
-        ax.bar(xs + (j - 1) * 0.25, resid, 0.23, color=["#24324f", "#5f7fb3", "#a9bfe0"][j],
-               label=case.label)
-    ax.axhspan(-2.5, 2.5, color=BAND_COLOR, alpha=0.4, lw=0, zorder=0)
+        ax.bar(xs + (j - 1) * 0.25, case.diag_vertical_deviation_N, 0.23,
+               color=["#24324f", "#5f7fb3", "#a9bfe0"][j], label=case.label)
+    ax.axhspan(-diag_tol, diag_tol, color=BAND_COLOR, alpha=0.4, lw=0, zorder=0)
     ax.axhline(0, color=INK_PRIMARY, lw=0.7)
-    ax.set_ylim(-3, 3)
+    ax.set_ylim(-1.2 * diag_tol, 1.2 * diag_tol)
     leg_ticks(ax)
     ax.legend(fontsize=7.6, ncol=3, loc="upper right", frameon=False)
-    lines = ["독립 확인: s2a_slope_pdelta_check.json (dynamics-dev, YAML·바닥 평면만 입력)",
-             "· 안 A 전 Chrono - 안 A 후 Chrono = 구 지렛대 예측과 ≤ 1.22 N",
-             "· 안 A 후 Chrono - 비선형(볼 중심) ≤ 0.66 N (V13 양자 안)",
-             "· 수평력 차 ≤ 5.1 N (허용 200 N), 탄성 변위 차 ≤ 0.07 %, 미끄럼·항복 0",
-             "판정: V12 통과 (dynamics_model.md 5.5, 개정 14)",
-             "안 A 전 값 출처: " + cases[0].before_source]
+    ax.text(0.01, 0.03, f"음영 = 진단 허용 ±{diag_tol:g} N (verify v12_plan_a_diagnosis)",
+            transform=ax.transAxes, fontsize=7.4, color=INK_SECONDARY)
+    verdict = verify.get("verdict_by_check", {}).get("V12")
+    labels = sorted({c.before_label for c in cases})
+    lines = ["독립 확인: reference.json slope_V12/<case>/",
+             f"    {PLAN_A_EXPECTED_KEY} (현재 YAML)",
+             f"· 안 A 후 Chrono - 기대(P-δ만) ≤ {cv['diag_max_N']:.2f} N (V13 양자 2.5 N 안)",
+             f"· 구 지렛대 예측 몫 {cv['lever_min_N']:.0f}~{cv['lever_max_N']:.0f} N이 "
+             "Chrono에 없음",
+             f"· 수평력 차 ≤ {cv['horizontal_max_N']:.1f} N (허용 {cv['horizontal_tol_N']:.0f} N), "
+             f"탄성 변위 차 ≤ {cv['elastic_max_pct']:.2f} %, {slip_yield_text(cv, False)}",
+             ("판정: V12 " + (pass_word(verdict) if verdict is not None else "미기록")
+              + " (dynamics_model.md 5.5)"),
+             "안 A 전 값: " + " / ".join(labels)]
     text_block(fig, 820, 600, lines, size=8.6, width=W, height=H)
+    fig.text(820 / W, 1 - 790 / H, "\n".join(sorted({c.before_source for c in cases})),
+             fontsize=6.8, va="top", color=INK_SECONDARY, wrap=True)
     image = s1.figure_to_image(fig)
     plt.close(fig)
     s1.save_atomic(OUT["v12png"], image.save)
@@ -2409,9 +2588,51 @@ def table_axes(ax, cells, col_labels, col_widths=None, size=8.2, pass_col=None):
     return table
 
 
-def render_summary_a(summary):
+def v7_bushing_shift_text(verify_reference: dict) -> str:
+    """ "부싱 작용점 이동 확인" line: judged modes 1 (v7_roll) and 2 (v7_pitch).
+
+    d  = f_damped / f_ref - 1 (result.json, f_ref = rev-13 reference),
+    r5 = f_damped / rev-5 f_damped - 1 (springs at the pad bottom, chrono_test_references
+         L1_rigid_motor_lumped_contact / levels / top / f_damped_Hz),
+    p  = predicted change rev 13 vs rev 5 (V7_ball_centre_bushing_rev13 / change_vs_rev5 /
+         f_undamped_rel), all in %.
+    """
+    top = verify_reference["chrono_test_references"]["L1_rigid_motor_lumped_contact"]["levels"][
+        "top"]
+    rev5 = top["f_damped_Hz"]
+    predicted = top["V7_ball_centre_bushing_rev13"]["change_vs_rev5 (springs at the pad bottom)"][
+        "f_undamped_rel"]
+    d, r5, p = [], [], []
+    for case in ("v7_roll", "v7_pitch"):
+        res = read_json(RES_A / case / "result.json")
+        m = res["modes"][res["judged_mode"] - 1]
+        k = m["mode"] - 1
+        d.append((m["f_damped_Hz"] / m["f_ref_Hz"] - 1) * 100)
+        r5.append((m["f_damped_Hz"] / rev5[k] - 1) * 100)
+        p.append(predicted[k] * 100)
+    return [f"부싱 작용점 이동 확인: 1·2차 f_d가 rev13 기준과 {d[0]:+.3f} / {d[1]:+.3f} %,",
+            f"     패드 바닥 스프링 기준(rev5) 대비 {r5[0]:+.2f} / {r5[1]:+.2f} % "
+            f"(예측 {p[0]:+.2f} / {p[1]:+.2f} %)."]
+
+
+def v13_caption_values(verify: dict) -> dict:
+    """V13 maxima over every case of the verify table."""
+    nan_rows = table_rows(verify, "V13", "no NaN")
+    normal_rows = table_rows(verify, "V13", "normal force variation")
+    return {
+        "any_nan": any(bool(r["value"]) for r in nan_rows),
+        "motor_violation_m": max(abs_max(r["value"]) for r in table_rows(
+            verify, "V13", "motor constraint violation")),
+        "attitude_drift_deg": max(abs_max(r["value"]) for r in table_rows(
+            verify, "V13", "attitude drift")),
+        "normal_variation_N": max(abs_max(r["value"]) for r in normal_rows),
+        "normal_variation_tol_N": float(min(np.min(np.asarray(r["tol"], float))
+                                            for r in normal_rows)),
+    }
+
+
+def render_summary_a(summary, before_dir=DEFAULT_BEFORE_DIR):
     verify = read_json(VERIFY_A)
-    pdelta = read_json(PDELTA_A)
     W, H = 1400, 900
     fig = new_figure(W, H)
     fig.text(8 / W, 1 - 10 / H, "S2a 종합 · L1 지면 부싱 동특성(V7)과 경사 바닥 정역학(V12) · "
@@ -2493,24 +2714,22 @@ def render_summary_a(summary):
                    f"{'확정' if study_ok else '미확정'}; L1 일반 Δt "
                    + " / ".join(f"{d:g}" for d in dt_judge) + " s(YAML).")
     # V12 bars
-    ax = axes_box(fig, 60, 485, 760, 300, W, H)
-    s1.style_axes(ax, title="V12 수직력 Chrono - 기준 [N] (허용 ±956 N): 회색 빗금 = 안 A "
-                            "전(접촉점), "
-                  "색 = 안 A 후(볼 중심), ◆ = 독립 P-δ 예측", ylabel="N")
-    labels = []
     reference = read_json(REFERENCE_JSON)
+    vertical_tol = v12_vertical_tol_N(verify)
+    params_sha = load_params(s1.PARAMS_PATH[0], level="top").sha256
+    befores = {name: v12_before(name, verify["v12"][name], reference, before_dir, params_sha)
+               for name, _ in V12_CASES}
+    before_labels = sorted({b[2] for b in befores.values()})
+    ax = axes_box(fig, 60, 485, 760, 300, W, H)
+    s1.style_axes(ax, title=f"V12 수직력 Chrono - 기준 [N] (허용 ±{vertical_tol:.0f} N)\n"
+                  "회색 빗금 = " + " / ".join(before_labels)
+                  + ", 색 = 안 A 후(볼 중심), ◆ = 독립 P-δ 예측(rev13)", ylabel="N")
+    labels = []
     for j, (name, label) in enumerate(V12_CASES):
         v = verify["v12"][name]
-        after = np.array([w[2] - r[2] for w, r in zip(v["window"]["reaction_world_mean_N"],
-                                                       v["reference"]["reaction_world_N"],
-                                                       strict=True)])
-        key = reference["slope_V12"][v["start"]["case"]]
-        before = summary.get("v12", {}).get("before_minus_reference_vertical_N", {}).get(name)
-        if before is None:
-            before = key["L1_plan_A_expected_chrono_minus_reference_rev13"][
-                "rev12_contact_point_bushing (S2a run before plan A)"][
-                "chrono_model_minus_reference_vertical_N"]
-        pdv = pdelta[name]["ball_nonlinear_minus_reference_vertical_N"]
+        after = vertical_minus_reference(v["window"], v["reference"])
+        before = befores[name][0]
+        pdv = plan_a_expected(reference, v)[PLAN_A_P_DELTA_KEY]
         base = j * 5
         xs = base + np.arange(4)
         ax.bar(xs - 0.2, before, 0.38, color=BEFORE_COLOR, hatch="///", edgecolor="white")
@@ -2521,26 +2740,37 @@ def render_summary_a(summary):
     ax.set_xticks([x for x, _ in labels], [s for _, s in labels], fontsize=7)
     ax.axhline(0, color=INK_PRIMARY, lw=0.7)
     ax.set_ylim(-320, 360)
+    cv = v12_caption_values(verify, reference)
+    v13 = v13_caption_values(verify)
+    hold0, hold1 = cv["hold_release_ms"]
     lines = [
         f"V7: 판정 3개 모드 f_n 차 ≤ {max(abs(v) for v in f_diff):.3f} %, ζ(보정) 차 ≤ "
         f"{max(abs(v) for v in z_diff):.2f} % (허용 ±3 %, ±30 %).",
         f"     3차 ζ(보정) {verify['v7_diagnosis']['zeta3_corrected']:.5f} (기준 "
         f"{study.get('zeta_ref', math.nan):.4f}) → 부싱 감쇠 입력 c_t/2 재확인.",
-        "부싱 작용점 이동 확인: 1·2차 f_d가 새 기준과 -0.01 % (개정 12보다 +0.70 / +0.63 %).",
-        "V12: 수직 차 = P-δ(+68 / +51 / -52 / -67 N)만 남음, 구 지렛대 제거(≤ 1.22 N 일치).",
-        "     수평 차 ≤ 5.1 N, 미끄럼·항복·사건 0, hold 해제 74~76 ms, hold 중 접선력 ≤ 3.2 N.",
-        "V13: NaN 없음, 구속 위반 ≤ 1.7e-11 m, 정지 창 자세 변동 ≤ 6.1e-6°,",
-        "     수직력 변동 ≤ 17.5 N (접촉력 양자 2.5 N 계단).",
+        *v7_bushing_shift_text(reference),
+        "V12: 수직 차 = P-δ(자중 정착 회전 pitch "
+        f"{range_text(cv['pitch_deg'], '.4f')}°·roll {range_text(cv['roll_deg'], '.4f')}°의 "
+        "무게중심 이동)만 남음:",
+        f"     rev13 독립 비선형과 다리별 ≤ {cv['diag_max_N']:.2f} N, "
+        f"구 지렛대 몫(≥ {cv['lever_min_N']:.0f} N) 없음.",
+        f"     수평 차 ≤ {cv['horizontal_max_N']:.1f} N, {slip_yield_text(cv, True)}, hold 해제 "
+        f"{hold0:.1f}~{hold1:.1f} ms, hold 중 접선력 ≤ {cv['hold_max_tangential_N']:.1f} N.",
+        f"V13: {'NaN 있음' if v13['any_nan'] else 'NaN 없음'}, 구속 위반 ≤ "
+        f"{v13['motor_violation_m']:.1e} m, 정지 창 자세 변동 ≤ {v13['attitude_drift_deg']:.1e}°,",
+        f"     수직력 변동 ≤ {v13['normal_variation_N']:.1f} N "
+        f"(허용 {v13['normal_variation_tol_N']:.0f} N).",
         dt_line,
     ]
     text_block(fig, 860, 470, lines, size=8.4, width=W, height=H)
     fig.text(860 / W, 1 - 640 / H, "그림: S2a_v7_free_vibration.gif, S2a_dt_study.png, "
              "S2a_v12_slope.gif, S2a_v12_summary.png\n출처: verify_S2a_L1.json, "
-             "07_results/S2a/*/result.json, s2a_slope_pdelta_check.json, reference.json",
+             f"07_results/S2a/*/result.json, reference.json (slope_V12/<case>/\n"
+             f"{PLAN_A_EXPECTED_KEY}, chrono_test_references)",
              fontsize=7.8, va="top", color=INK_SECONDARY)
     fig.text(20 / W, 1 - 810 / H, "판정 기준과 해석: 00_docs/01_dynamics/dynamics_model.md 5.3~5.5 "
-             "(개정 12~14). 안 A 전 값: " + (summary.get("v12", {}).get("before_source", {})
-                                          .get("v12_pitch2", "reference.json rev12 모델 값")),
+             "(개정 12~14).\n안 A 전 값: "
+             + "\n".join(sorted({b[1] for b in befores.values()})),
              fontsize=7.8, va="top", color=INK_SECONDARY)
     image = s1.figure_to_image(fig)
     plt.close(fig)
@@ -2729,11 +2959,10 @@ def main() -> None:
             cases = render_v12(bank, args, summary)
             print(json.dumps(summary["v12_gif"]), flush=True)
         else:
-            verify = read_json(VERIFY_A)
-            cases = [load_v12(n, lab, verify, read_json(PDELTA_A), read_json(REFERENCE_JSON),
+            cases = [load_v12(n, lab, read_json(VERIFY_A), read_json(REFERENCE_JSON),
                               args.before_dir) for n, lab in V12_CASES]
         if "v12png" in args.only:
-            render_v12_summary(cases, summary)
+            render_v12_summary(cases, summary, read_json(VERIFY_A))
     if "v11" in args.only:
         render_v11(bank, summary)
         print(json.dumps(summary["v11_gif"]), flush=True)
@@ -2746,7 +2975,7 @@ def main() -> None:
         render_events(bank, summary)
         print(json.dumps(summary["events_gif"]), flush=True)
     if "summary" in args.only:
-        render_summary_a(summary)
+        render_summary_a(summary, args.before_dir)
         render_summary_b(summary)
     summary["last_run_s"] = round(time.perf_counter() - started, 1)
     OUT["json"].write_text(json.dumps(summary, ensure_ascii=False, indent=1, default=float),
