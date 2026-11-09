@@ -1,7 +1,8 @@
 """LAS-b K1 (R4c30 order gate) on the reduced harness: bundles Y-0, Y-P, Y-S, Y-T.
 
 Rules: ``06_analysis/02_control/verif_matrix/las_k1_rules.md`` (control-expert, sealed; LF
-sha256 ``k1_judge.RULES_K1_SHA256``) and the six A-plan rules files it inherits (all checked
+sha256 ``k1_judge.RULES_K1_SHA256``), its addendum ``las_k1_rules_rev1.md``
+(``k1_judge.RULES_K1_REV1_SHA256``) and the six A-plan rules files it inherits (all checked
 before anything runs). The rules text wins where this code differs. The run machinery (LAS-b
 candidate wrapper, DONE record, pool, job dicts) is ``las_revA_targeted``'s; the S-C job dicts
 come from ``s2_defer_targeted``; the key lists, sub-bundles and the judgement are
@@ -20,9 +21,10 @@ Sub-bundles (rules 3, ``k1_judge.SUB_BUNDLES``):
 ``run --bundle`` takes a bundle (all its sub-bundles) or one sub-bundle. Output
 ``<v5>/las/k1/k1_<name>.jsonl`` (opened with ``"x"``: new files only).
 
-Gates before a run (exit 2): the seven rules seals; the stored base files (raw sha256) and the
+Gates before a run (exit 2): the eight rules seals; the stored base files (raw sha256) and the
 recomputed key lists (= the appendix list sha256, rules 7); the LAS-b b0 preset; the run
-identity (empty code diff, allowed dirty files, one thread, ``MKL_THREADING_LAYER=TBB``); job
+identity (empty code diff, dirty files only ``k1_judge.ALLOWED_DIRTY`` = this bundle's tests
+(rev1 R1-4), one thread, ``MKL_THREADING_LAYER=TBB``); job
 dicts = the stored lines'; every earlier bundle judged ``pass`` (rules 3 order; after a
 ``stop`` only with ``--after-stop-decision``, recorded on every line); no line of the same
 sub-bundles in another file. ``--keys`` / ``--limit`` exist only for a trial into
@@ -32,11 +34,13 @@ an error line runs once more inside the batch, a second error stops it (SK-2); e
 else (a K, H or C finding) only prints: the bundle runs to its end and ``k1_judge`` grades it.
 ``--resume`` (SK-2, once): the keys of the bundle file with one error line and no finished
 line, into ``k1_<name>_resume.jsonl`` (``k1.resume`` true on its lines).
+Every line (error lines too) records ``rev.attempt`` (1, or 2 for the batch's own SK-2 re-run
+and for ``--resume``) and ``rev.resumed`` (true on ``--resume`` lines), rev1 R1-5.
 
 Line = the ``run_v5`` line + ``las`` / ``rev`` / ``done_trace`` (``las_revA_targeted``) + ``k1``
 {bundle, sub_bundle, las_candidate, k1_candidate, key, label, enabled, setting, decisions,
 r4_applied, would_block_any, loc_calls (witness of ``_apply_slope_clearance_margin``),
-identity, the seven rules sha256, controller_tag, base_file, base_file_sha256, s2d_settings,
+identity, the eight rules sha256, controller_tag, base_file, base_file_sha256, s2d_settings,
 resume, after_stop_decision, runner_mask}.
 
 Usage (dynamics-dev python.exe, project root, PowerShell):
@@ -83,6 +87,7 @@ LIST_SOURCE = {"A": "SC", "A5": "SC", "B": "SC", "C": "RS", "D": "RT"}
 """Where the job dicts of a key list come from (the file that made the stored hash)."""
 WITNESS_ATTRIBUTE = "_k1_loc_calls"
 RESUME_SUFFIX = "_resume"
+FIRST_ATTEMPT, RERUN_ATTEMPT = 1, 2
 
 
 # ------------------------------------------------------------------------------- installs
@@ -193,11 +198,14 @@ def sub_jobs(sub: kj.SubBundle, bases: kj.Bases, keys: list[str] | None = None,
     if missing:
         raise KeyError(f"{sub.name}: keys without a job: {missing[:5]}")
     ordered = sorted((by_key[key] for key in wanted), key=lambda job: job["setting"] != "VB")
+    is_resume = bool(options.get("resume", False))
     jobs = []
     for job in ordered:
         entry = rev._entry(sub.bundle, sub.las_candidate,
                            f"{sub.las_candidate}-{sub.k1_candidate}",
                            record_done=sub.record_done)
+        entry["attempt"] = RERUN_ATTEMPT if is_resume else FIRST_ATTEMPT
+        entry["resumed"] = is_resume
         entry["k1"] = _k1_entry(sub, fb.fb_key(job), bases, options)
         jobs.append(rev._with_entry(job, entry, options.get("mask")))
     return jobs
@@ -270,6 +278,7 @@ def _add_blocks(line: dict, entry: dict, job: dict, identity: dict) -> None:
     revA._add_blocks(line, entry, job, identity)
     _, controller = fb._run_objects(job)
     line["rev"].update(rules_block())
+    line["rev"].update(attempt=entry["attempt"], resumed=entry["resumed"])
     line["k1"] = k1_block(entry, job, controller, line, identity)
 
 
@@ -320,6 +329,36 @@ def make_checker():
               f"{' PROBLEMS ' + str(found) if found else ''}", flush=True)
 
     return check
+
+
+def _marking_reruns(handle_record):
+    """Wrap ``las_rev_targeted._handle_record`` so the job it re-submits after an error line
+    carries ``rev.attempt = 2`` (rev1 R1-5).
+
+    ``run_batch`` writes the error line before it calls the handler, and re-submits the very
+    job dict of ``jobs_by_id``; marking that dict here is the only hook that reaches the
+    second attempt without changing the shared batch runner.
+    """
+
+    def _handle_record(record, jobs_by_id, *args, **kwargs):
+        job_id = (record.get("rev") or {}).get("id")
+        if "error" in record and job_id in jobs_by_id:
+            jobs_by_id[job_id]["rev"]["attempt"] = RERUN_ATTEMPT
+        return handle_record(record, jobs_by_id, *args, **kwargs)
+
+    return _handle_record
+
+
+def run_k1_batch(jobs: list[dict], path: Path, workers: int, bundle: str, identity: dict):
+    """``las_rev_targeted.run_batch`` with the K1 worker and checker; an automatic SK-2
+    re-run is recorded as ``rev.attempt = 2`` on its line."""
+    original = rev._handle_record
+    rev._handle_record = _marking_reruns(original)
+    try:
+        return rev.run_batch(jobs, path, workers, bundle, {}, identity, worker=run_k1_job,
+                             check=make_checker(), whole_bundle_rerun=())
+    finally:
+        rev._handle_record = original
 
 
 # ------------------------------------------------------------------------------- gates
@@ -427,10 +466,9 @@ def _run_command(args) -> int:
         return 2
     print(f"run identity: {identity['git_head']} dirty {identity['git_dirty']} "
           f"code_diff {identity['code_diff_sha256'][:12]} rules K1 "
-          f"{kj.RULES_K1_SHA256[:12]}", flush=True)
+          f"{kj.RULES_K1_SHA256[:12]} rev1 {kj.RULES_K1_REV1_SHA256[:12]}", flush=True)
     print(f"{args.bundle}: {len(jobs)} runs -> {path}", flush=True)
-    state = rev.run_batch(jobs, path, args.workers, args.bundle, {}, identity,
-                          worker=run_k1_job, check=make_checker(), whole_bundle_rerun=())
+    state = run_k1_batch(jobs, path, args.workers, args.bundle, identity)
     summary = {"bundle": args.bundle, "out": str(path), "runs": state.runs,
                "errors": state.errors, "skipped": state.skipped, "stop": state.stop}
     print(json.dumps(summary))

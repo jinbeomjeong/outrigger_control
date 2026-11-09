@@ -33,8 +33,13 @@ KA2 = "D1|H-S-0|J1|T|flat|K1|VB|e0"
 KB1 = "D1|H-S-0|G1|T|flat|K1|VB|e0"
 KC3 = "D1|H-S-0|J2|T|flat|K1|VB|e0"
 KD1 = "D1|H-R-0|rigid|T|roll-op|K1|VB|e0"
+KDR = "D1|H-S-0|J2|T|diag-rec|K1|VB|e0"
+"""The R-S key whose stored P0 and P5r4 lines both have P3-1 / P3-5 false (SGS stop)."""
 PATCH, BOUNDARY = kj.J2_PATCH_KEY, kj.BOUNDARY_KEY
-C_KEYS = sorted([PATCH, BOUNDARY, KC3])
+C_KEYS = sorted([PATCH, BOUNDARY, KC3, KDR])
+SGS_STOP_ITEMS = {"P3-1": False, "P3-2": True, "P3-3": True, "P3-4": False, "P3-5": False,
+                  "P3-8": True, "SL-1": False, "fault_ready": False, "READY": False}
+"""``d1.items`` of the stored KDR lines (S-C F-3 L and ``revA_RS.jsonl``, equal on both)."""
 SHA_OF = {"SC": "a" * 64, "RS": "b" * 64, "RT": "c" * 64, "F-3": "d" * 64}
 IDENTITY = {"git_head": "f" * 40, "git_dirty": False, "dirty_files": [],
             "code_diff_sha256": kj.EMPTY_SHA256, "sha256": {"c2.py": "e" * 64},
@@ -116,7 +121,7 @@ def test_identity_files_cover_the_inherited_harness() -> None:
 # ------------------------------------------------------------------------------- synthetic set
 def synthetic_bases() -> kj.Bases:
     def stored(key: str, sha: str) -> dict:
-        return make_line(key, sha)
+        return make_line(key, sha, is_sgs_stop=key == KDR)
 
     bases = kj.Bases()
     bases.lists = {"A": sorted([KA1, KA2]), "A5": [KA1], "B": [KB1], "C": C_KEYS,
@@ -130,14 +135,25 @@ def synthetic_bases() -> kj.Bases:
     return bases
 
 
-def make_line(key: str, sha: str, *, stroke_m: float = 0.40, force_N: float = 60000.0) -> dict:
-    return {"job": {"setting": "VB", "d1": {}}, "commands_sha256": sha, "final_phase": "ready",
+def make_line(key: str, sha: str, *, stroke_m: float = 0.40, force_N: float = 60000.0,
+              is_sgs_stop: bool = False) -> dict:
+    """A D-1 line; ``is_sgs_stop`` gives it the shape of the stored KDR lines (SGS intended
+    stop: ``allowed_stop``, final ``fault``, no READY, P3-1 / P3-5 false)."""
+    line = {"job": {"setting": "VB", "d1": {}}, "commands_sha256": sha, "final_phase": "ready",
             "controller_tag": "final_C4G2_P3_LAS", "event_names": {},
             "values": {"times": {"t_first_ready_s": 40.0}},
             "d1": {"key": key, "verdict": "pass", "fail_items": [],
                    "items": {"P3-1_crawler": True, "P3-5_gap": True}, "stroke_max_m": stroke_m,
                    "F_judged_min_N": force_N, "t_ready_s": 40.0},
-            "rev": {"key": key, "controller_tag": "final_C4G2_P3_LAS"}}
+            "rev": {"key": key, "controller_tag": "final_C4G2_P3_LAS", "attempt": 1,
+                    "resumed": False}}
+    if is_sgs_stop:
+        line["final_phase"] = "fault"
+        line["event_names"].update({"WARN_LIFT_STROKE_LIMITED": 1, "FAULT_LIFT_STROKE_LIMIT": 1})
+        line["values"]["times"]["t_first_ready_s"] = None
+        line["d1"].update(verdict="allowed_stop", items=dict(SGS_STOP_ITEMS), t_ready_s=None,
+                          fail_items=["P3-1", "P3-4", "P3-5", "READY", "SL-1", "fault_ready"])
+    return line
 
 
 def decision(d_p: int, *, due: bool = True, is_on: bool) -> dict:
@@ -189,16 +205,17 @@ def passing_lines() -> list[dict]:
              run_line("Y-T", KD1, f"rt-{KD1}")]
     p5r4_blocked = {PATCH, BOUNDARY}
     for key in C_KEYS:
+        shape = {"is_sgs_stop": key == KDR}
         p0_d = [decision(-5 if key == PATCH else 30, is_on=False)]
         p5_d = [decision(-5 if key in p5r4_blocked else 30, is_on=False)]
-        lines.append(run_line("Y-0c", key, f"l-{key}", p0_d))
-        lines.append(run_line("Y-0b", key, f"rs-{key}", p5_d))
+        lines.append(run_line("Y-0c", key, f"l-{key}", p0_d, **shape))
+        lines.append(run_line("Y-0b", key, f"rs-{key}", p5_d, **shape))
         on_p0 = [decision(-5 if key == PATCH else 30, is_on=True)]
         on_p5 = [decision(-5 if key in p5r4_blocked else 30, is_on=True)]
         sa_sha = "sa-patch" if key == PATCH else f"l-{key}"
         sb_sha = f"sb-{key}" if key in p5r4_blocked else f"rs-{key}"
-        lines.append(run_line("Y-Sa", key, sa_sha, on_p0))
-        lines.append(run_line("Y-Sb", key, sb_sha, on_p5))
+        lines.append(run_line("Y-Sa", key, sa_sha, on_p0, **shape))
+        lines.append(run_line("Y-Sb", key, sb_sha, on_p5, **shape))
     return lines
 
 
@@ -254,7 +271,7 @@ def test_force_floor_and_p3_and_new_fault_fail() -> None:
     assert kj.pair_record(low, base)["cf_fail"]
     p3 = run_line("Y-Pa", KA1, "new")
     p3["d1"]["items"]["P3-5_gap"] = False
-    assert kj.pair_record(p3, base)["P3"] is False
+    assert kj.pair_record(p3, base)["P3"] == ["P3-5_gap True -> False"]  # rev1 R1-1 pairwise
     fault = run_line("Y-Pa", KA1, "new")
     fault["event_names"]["FAULT_STROKE_END"] = 1
     assert kj.pair_record(fault, base)["c2"]
@@ -369,6 +386,146 @@ def test_predictions_table_on_the_predicted_lines() -> None:
     rows = {row["id"]: row for row in judged(passing_lines())["predictions"]}
     assert rows["Q-0b"]["holds"] is True and rows["Q-P1"]["holds"] is True
     assert rows["Q-S2"]["holds"] is True  # both sides blocked, delta 0 mm
+
+
+# ------------------------------------------------------------------------------- rev1
+def test_rules_rev1_is_registered_and_required_on_every_line() -> None:
+    assert kj.RULES_FIELDS[-2:] == ("rules_k1_sha256", "rules_k1_rev1_sha256")
+    assert kj.RULES_VALUES[-1] == kj.RULES_K1_REV1_SHA256
+    assert kj.seal_problems() == []
+    line = run_line("Y-T", KD1, f"rt-{KD1}")
+    del line["k1"]["rules_k1_rev1_sha256"]
+    assert "rules sha256 are not the sealed eight" in kj.identity_value_problems(line["k1"])
+    result = judged(replace_line(passing_lines(), "Y-T", KD1, line))
+    assert any(text.startswith(f"K-0 {KD1}") for text in result["subs"]["Y-T"]["stops"])
+
+
+def test_stored_p3_false_pair_is_baseline_false_and_y_s_passes() -> None:
+    """R1-0 / R1-1: the KDR pair (P3-1 / P3-5 false on both sides) is listed, not a violation."""
+    result = judged(passing_lines())
+    assert result["bundles"]["Y-S"]["status"] == kj.STATUS_PASS
+    assert result["p3_baseline_false"] == {"count": 2, "entries": [
+        {"pair": "Y-Sb/Y-Sa", "key": KDR, "item": "P3-1"},
+        {"pair": "Y-Sb/Y-Sa", "key": KDR, "item": "P3-5"}]}
+    assert kj.summary_of(result)["p3_baseline_false"] == 2
+
+
+def test_p3_baseline_true_candidate_false_is_a_fail() -> None:
+    worse = run_line("Y-Sb", KC3, f"rs-{KC3}", [decision(30, is_on=True)])
+    worse["d1"]["items"]["P3-1_crawler"] = False
+    result = judged(replace_line(passing_lines(), "Y-Sb", KC3, worse))
+    assert result["bundles"]["Y-S"]["status"] == kj.STATUS_FAIL
+    assert any("P3" in text and "Y-Sb/Y-Sa" in text for text in result["subs"]["Y-Sb"]["fails"])
+
+
+def test_p3_baseline_none_candidate_false_is_a_violation() -> None:
+    base = make_line(KC3, "base")
+    cand = make_line(KC3, "cand")
+    base["d1"]["items"]["P3-1_crawler"] = None
+    cand["d1"]["items"]["P3-1_crawler"] = False
+    assert kj.pair_record(cand, base)["P3"] == ["P3-1_crawler None -> False"]
+    del base["d1"]["items"]["P3-1_crawler"]  # missing on the baseline: the same rule
+    assert kj.pair_record(cand, base)["fail"]
+    del cand["d1"]["items"]["P3-1_crawler"]
+    base["d1"]["items"]["P3-1_crawler"] = None  # None -> missing: no violation (R1-1 text)
+    assert kj.p3_comparison(cand, base)["violations"] == []
+    for items in (base["d1"]["items"], cand["d1"]["items"]):
+        items.clear()
+    assert kj.p3_comparison(cand, base)["not_applicable"] is True
+
+
+def test_c_sa_stroke_increase_of_1_5_mm_is_a_fail() -> None:
+    worse = run_line("Y-Sa", PATCH, "sa-patch", [decision(-5, is_on=True)],
+                     stroke_m=0.40 + 0.0015)
+    result = judged(replace_line(passing_lines(), "Y-Sa", PATCH, worse))
+    assert result["bundles"]["Y-S"]["status"] == kj.STATUS_FAIL
+    (text,) = result["subs"]["Y-Sa"]["fails"]
+    assert text.startswith(f"C_SA {PATCH}") and "C-S +1.500 mm" in text
+
+
+def test_c_sa_pairs_only_the_changed_y_sa_keys() -> None:
+    """R1-3: an equal Y-Sa hash makes no C_SA pair (a worse stroke there is not judged)."""
+    higher = run_line("Y-Sa", KC3, f"l-{KC3}", [decision(30, is_on=True)], stroke_m=0.45)
+    result = judged(replace_line(passing_lines(), "Y-Sa", KC3, higher))
+    pairs = result["subs"]["Y-Sa"]["pairs"]
+    assert [(pair["pair"], pair["key"]) for pair in pairs] == [("C_SA", PATCH)]
+    assert pairs[0]["ready_dt_s"] == 0.0
+    assert result["bundles"]["Y-S"]["status"] == kj.STATUS_PASS
+
+
+def test_y_p_equal_hash_pairs_are_judged_on_p3_only() -> None:
+    result = judged(passing_lines())
+    scopes = {pair["key"]: pair["scope"] for pair in result["subs"]["Y-Pa"]["pairs"]}
+    assert scopes == {KA1: "full", KA2: "P3"}
+    drift = run_line("Y-Pb", KB1, f"sc-{KB1}")
+    drift["d1"]["items"]["P3-5_gap"] = False
+    result = judged(replace_line(passing_lines(), "Y-Pb", KB1, drift))
+    assert result["bundles"]["Y-P"]["status"] == kj.STATUS_FAIL
+
+
+def test_c2_definition_is_in_the_output() -> None:
+    result = judged(passing_lines())
+    assert result["c2_definition"] == "las_rev_judge.pair_violations (A rev1 R1-1)"
+    assert kj.summary_of(result)["c2_definition"] == kj.C2_DEFINITION
+
+
+def test_reruns_are_listed_per_bundle(capsys) -> None:
+    error = {"job": {"setting": "VB"}, "error": "pool: x",
+             "rev": {"key": KB1, "attempt": 1, "resumed": False,
+                     "k1": {"bundle": "Y-0", "sub_bundle": "Y-0d", "las_candidate": "P0",
+                            "k1_candidate": kj.K1_OFF}}}
+    rerun = run_line("Y-0d", KB1, f"sc-{KB1}")
+    rerun["rev"]["attempt"] = 2
+    resumed = run_line("Y-T", KD1, f"rt-{KD1}")
+    resumed["rev"].update(attempt=2, resumed=True)
+    lines = replace_line(passing_lines(), "Y-0d", KB1, rerun)
+    lines = replace_line(lines, "Y-T", KD1, resumed)
+    result = judged([*lines, error])
+    assert result["bundles"]["Y-0"]["reruns"] == {"count": 1, "keys": [f"Y-0d {KB1}"]}
+    assert result["bundles"]["Y-T"]["reruns"] == {"count": 1, "keys": [f"Y-T {KD1}"]}
+    assert result["bundles"]["Y-P"]["reruns"]["count"] == 0
+    assert result["status"] == kj.STATUS_PASS
+    kj._print_disclosures(result)
+    out = capsys.readouterr().out
+    assert f"Y-0 re-run keys (1): ['Y-0d {KB1}']" in out
+    assert "P3 baseline false (2):" in out
+
+
+def test_event_names_are_counted_by_exact_name() -> None:
+    line = {"event_names": {kj.SKIP_EVENT: 1, f"{kj.SKIP_EVENT}:order": 2}}
+    assert kj.event_count(line, kj.FLAT_SOIL_MARGIN_EVENT) == 0
+    assert not kj.has_event(line, kj.FLAT_SOIL_MARGIN_EVENT)
+    assert kj.event_count(line, kj.SKIP_EVENT) == 3
+
+
+def test_dirty_documents_are_not_allowed_by_the_judge_or_the_harness() -> None:
+    for name in (".gitattributes", "00_docs/decision_log.md"):
+        identity = {**IDENTITY, "git_dirty": True, "dirty_files": [name]}
+        assert kj.identity_value_problems({"identity": identity, **kt.rules_block()}) == [
+            f"dirty {[name]}"]
+        assert kt.identity_gate_problems(identity) == [f"dirty {[name]}"]
+    tests_only = {**IDENTITY, "git_dirty": True, "dirty_files": list(kj.ALLOWED_DIRTY)}
+    assert kt.identity_gate_problems(tests_only) == []
+
+
+def test_rerun_wrapper_marks_the_resubmitted_job() -> None:
+    calls = []
+    jobs_by_id = {0: {"rev": {"id": 0, "attempt": 1}}, 1: {"rev": {"id": 1, "attempt": 1}}}
+    handle = kt._marking_reruns(lambda record, jobs, *args: calls.append(record["rev"]["id"]))
+    handle({"rev": {"id": 1}}, jobs_by_id, "Y-0")
+    assert jobs_by_id[1]["rev"]["attempt"] == 1
+    handle({"rev": {"id": 0}, "error": "pool: x"}, jobs_by_id, "Y-0")
+    assert jobs_by_id[0]["rev"]["attempt"] == kt.RERUN_ATTEMPT
+    assert calls == [1, 0]
+
+
+def test_jobs_record_the_attempt_and_resume(main_bases) -> None:
+    sub = kj.SUB_BUNDLES["Y-0d"]
+    key = kj.sub_keys(sub, main_bases)[0]
+    (first,) = kt.sub_jobs(sub, main_bases, [key])
+    (again,) = kt.sub_jobs(sub, main_bases, [key], {"resume": True})
+    assert (first["rev"]["attempt"], first["rev"]["resumed"]) == (1, False)
+    assert (again["rev"]["attempt"], again["rev"]["resumed"]) == (2, True)
 
 
 # ------------------------------------------------------------------------------- harness parts
