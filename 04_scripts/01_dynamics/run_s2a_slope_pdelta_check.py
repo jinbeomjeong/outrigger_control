@@ -1,9 +1,21 @@
 """Independent nonlinear static check of the S2a V12 sloped-floor equilibrium (6-DoF rigid body).
 
 Usage (project root, dynamics-dev):
-    conda run -n dynamics-dev python -I 04_scripts/01_dynamics/run_s2a_slope_pdelta_check.py
-Writes 06_analysis/00_dynamics/s2a_slope_pdelta_check.json. dynamics_model.md 5.3 (rev. 12),
-5.5 (rev. 14: Chrono bushing at the ball centre since option A -> compare with the "ball" variant).
+    conda run -n dynamics-dev python -I 04_scripts/01_dynamics/run_s2a_slope_pdelta_check.py \
+        [ROOT [OUT]]
+Writes 06_analysis/00_dynamics/s2a_slope_pdelta_check.json (or OUT). dynamics_model.md 5.3
+(rev. 12), 5.5 (rev. 14: Chrono bushing at the ball centre since option A -> compare with the
+"ball" variant).
+
+Run order (the two files read each other): this script reads the S2a summary
+06_analysis/01_chrono/12_S2/verify_S2a_L1.json (floor planes, start heights, Chrono means), and
+the summary's ``v12_vs_pdelta_prediction`` reads this script's output. After a new YAML or new
+Chrono runs:
+    1. Chrono-dev: python -I -u 04_scripts/02_chrono/run_S2a.py all      (cases + summary)
+    2. dynamics-dev: this script                                         (pdelta check)
+    3. Chrono-dev: python -I -u 04_scripts/02_chrono/run_S2a.py summary  (summary reads step 2)
+The summary refuses a pdelta file whose W_N differs from the current reference by > 1 N
+(``stale_source``).
 
 Extension of run_s1_pdelta_check.py to a tilted floor plane. Inputs: the YAML only, plus the
 three floor planes (point + unit normal) and the level-body start height of the Chrono runs
@@ -27,6 +39,8 @@ Variants per case:
   point, so the whole floor reaction passes through the swivel centre (real swivel pad). Its
   linearisation reproduces the reference (static_slope_10dof); the Chrono sphere-pad model
   carries the extra moment r x T about each ball ("sphere lever").
+- The nonlinear contact-point variant starts fsolve from the ball variant solution: from the
+  level start pose it does not converge on the current YAML (pitch 2 deg, residual 1.0).
 """
 import json
 import sys
@@ -86,7 +100,8 @@ def build(case):
                 Pt=Pt, m=m, com=com, W=m * G)
 
 
-def solve(M, gscale=1.0, kt_scale=1.0):
+def solve(M, gscale=1.0, kt_scale=1.0, s0=None):
+    """Equilibrium state (origin, roll, pitch, yaw); ``s0`` = fsolve start (default level start)."""
     n, p0, Pt = M["n"], M["p0"], M["Pt"]
     W = M["W"] * gscale
 
@@ -114,7 +129,8 @@ def solve(M, gscale=1.0, kt_scale=1.0):
         mo += np.cross(gpos - o, np.array([0, 0, -W]))
         return np.r_[f, mo] / M["W"]
 
-    s0 = np.r_[M["o0"], 0, 0, 0]
+    if s0 is None:
+        s0 = np.r_[M["o0"], 0, 0, 0]
     s = fsolve(resid, s0, xtol=1e-14)
     s = fsolve(resid, s, xtol=1e-15)
     cw, pa, pen, Rf, R = forces(s)
@@ -133,7 +149,12 @@ out = {"meta": {"script": "04_scripts/01_dynamics/run_s2a_slope_pdelta_check.py"
                 "chrono_ground_bushing_force_point": VER_FP}}
 for case, (ro, pi) in CASES.items():
     M = build(case)
-    nl = solve(M)
+    # variant "ball": bushing (tangential force) applied at the ball centre instead of the sphere
+    # contact point, i.e. the whole floor reaction passes through the swivel centre (real swivel pad)
+    Mb = dict(M, contact_b=M["centre_b"], anchor=M["o0"] + M["centre_b"])
+    nlb = solve(Mb)
+    # the contact-point variant starts from the ball solution (does not converge from level)
+    nl = solve(M, s0=nlb["s"])
     eps = 1e-7
     li = solve(M, gscale=eps)
     lin_R = li["R"] / eps
@@ -146,11 +167,6 @@ for case, (ro, pi) in CASES.items():
     ref = REF[key]["L1"]
     ref_z = np.array(ref["contact_vertical_N"])
     ref_xy = np.array(ref["contact_horizontal_xy_N"])
-    # P-delta estimate: body rotation (nonlinear pose) moves the CoM relative to the ball centres
-    # variant "ball": bushing (tangential force) applied at the ball centre instead of the sphere
-    # contact point, i.e. the whole floor reaction passes through the swivel centre (real swivel pad)
-    Mb = dict(M, contact_b=M["centre_b"], anchor=M["o0"] + M["centre_b"])
-    nlb = solve(Mb)
     lib = solve(Mb, gscale=eps)
     lin_b_R = lib["R"] / eps
     row = {
@@ -163,6 +179,9 @@ for case, (ro, pi) in CASES.items():
         "chrono_minus_ball_nonlinear_vertical_N": (ch_R[:, 2] - nlb["R"][:, 2]).tolist(),
         # rev. 14: Chrono runs since option A apply the bushing at the ball centre -> "ball" variant
         "chrono_force_point": VER_FP,
+        # params fingerprint of the Chrono run read here (None in summaries written before
+        # 2026-11-09); run_S2a.v12_vs_pdelta needs it to derive the sphere lever removed
+        "chrono_params_sha256": VER[case].get("params_sha256"),
         "chrono_minus_ball_nonlinear_horizontal_N": (ch_R[:, :2] - nlb["R"][:, :2]).tolist(),
         "chrono_minus_ball_nonlinear_cyl_N": (ch_cyl - nlb["Fcyl"]).tolist(),
         "chrono_minus_ball_nonlinear_bushing_disp_mm":
