@@ -1097,16 +1097,22 @@ def identity_problems(lines: list[dict]) -> dict[str, list[str]]:
 
 # ------------------------------------------------------------------------------- verdict
 def _pair_verdict(t_result: dict | None, s_result: dict | None, rp0: dict) -> dict:
-    """(na) / (da) part of a candidate that passed (ga)' (as ``las_rev_judge``)."""
+    """(na) / (da) part of a candidate that passed (ga)'.
+
+    Rules 5.4 order: incomplete (not run) > undecidable (missing pair, empty population with
+    changed hashes = R-1 / R-2 None) > fail (a check False) > H-9 ask > R-P0 > adopt. A
+    missing pair is undecidable even when another pair already failed a check (post-judgement
+    audit 2026-11-09; ``las_rev_judge`` let a definite failure win under its own rules).
+    """
     if t_result is None or s_result is None:
         return {"verdict": STATUS_INCOMPLETE, "at": "(na)/(da) not run"}
+    if not (t_result["complete"] and s_result["complete"]) or None in (
+            t_result["checks"]["R-1"], t_result["checks"]["R-2"]):
+        return {"verdict": STATUS_UNDECIDABLE, "at": "missing / empty population"}
     failed = [f"{label} {check}" for label, result in (("(na)", t_result), ("(da)", s_result))
               for check, value in result["checks"].items() if value is False]
     if failed:
         return {"verdict": STATUS_FAIL, "at": failed}
-    if not (t_result["complete"] and s_result["complete"]) or None in (
-            t_result["checks"]["R-1"], t_result["checks"]["R-2"]):
-        return {"verdict": STATUS_UNDECIDABLE, "at": "missing / empty population"}
     if t_result["exception_excess"]:
         return {"verdict": VERDICT_ASK, "at": "H-9 exception excess"}
     if not rp0["pass"]:

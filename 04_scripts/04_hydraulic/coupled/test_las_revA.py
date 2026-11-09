@@ -541,6 +541,35 @@ def test_status_order_stop_undecidable_fail():
         judge.STATUS_STOP)
 
 
+def _na_result(*, complete: bool = True, c_s: bool = True, r1: bool | None = True) -> dict:
+    return {"complete": complete, "exception_excess": False,
+            "checks": {"C-2": True, "C-1": True, "C-F": True, "C-S": c_s, "A-3": True,
+                       "R-1": r1, "R-2": r1}}
+
+
+def _da_result(*, complete: bool = True, c_s: bool = True) -> dict:
+    return {"complete": complete, "checks": {"C-2": True, "C-S": c_s}}
+
+
+def test_pair_verdict_undecidable_before_fail():
+    """Rules 5.4: a missing pair or an empty population beats a failed check."""
+    rp0_pass = {"pass": True}
+    missing_na = judge._pair_verdict(_na_result(complete=False), _da_result(c_s=False), rp0_pass)
+    assert missing_na["verdict"] == judge.STATUS_UNDECIDABLE
+    missing_da = judge._pair_verdict(_na_result(c_s=False), _da_result(complete=False), rp0_pass)
+    assert missing_da["verdict"] == judge.STATUS_UNDECIDABLE
+    empty = judge._pair_verdict(_na_result(r1=None), _da_result(c_s=False), rp0_pass)
+    assert empty["verdict"] == judge.STATUS_UNDECIDABLE
+    not_run = judge._pair_verdict(None, _da_result(c_s=False), rp0_pass)
+    assert not_run["verdict"] == judge.STATUS_INCOMPLETE
+    failed = judge._pair_verdict(_na_result(), _da_result(c_s=False), rp0_pass)
+    assert failed == {"verdict": judge.STATUS_FAIL, "at": ["(da) C-S"]}
+    adopt = judge._pair_verdict(_na_result(), _da_result(), rp0_pass)
+    assert adopt["verdict"] == "adopt_recommended"
+    assert judge._pair_verdict(_na_result(), _da_result(), {"pass": False})["verdict"] == (
+        judge.STATUS_INCOMPLETE)
+
+
 def test_k_a_checks_on_r0a():
     ref = reference()
     point = ("V0", "1", 2)
