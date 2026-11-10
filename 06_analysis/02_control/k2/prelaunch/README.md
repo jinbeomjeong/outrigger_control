@@ -15,7 +15,7 @@
 | 대상 | 값 | 확인 방법 |
 |---|---|---|
 | 원판 / rev1 / 명세 sha256 | `a3658197…7263` / `5ba081c6…4776` / `502b0bb7…27ff` | raw sha256 |
-| rev2 / rev3 / rev4 / rev5 / rev6 / rev7 / rev8 sha256 (결과 전) | `b3f1b41f…94ea` / `8bcdb0ed…6e61` / `82160ff5…00c5` / `73b87758…eccc` / `21268203…ea0e` / `52d7dba9…9840` / `e20ac116…f5fc` | raw sha256 |
+| rev2 / rev3 / rev4 / rev5 / rev6 / rev7 / rev8 / rev9 sha256 (결과 전) | `b3f1b41f…94ea` / `8bcdb0ed…6e61` / `82160ff5…00c5` / `73b87758…eccc` / `21268203…ea0e` / `52d7dba9…9840` / `e20ac116…f5fc` / `797b8397…f49d` | raw sha256 |
 | 경로 2 `k2_recount.py` **1.6** blob (판정 때 병합 뒤 main에서 실행. k2-run에는 1.2가 있다. J 항목은 `d8x_recount` 기반, rev8 2절) | `82299dd2d43fa8d39fa312a750b353f693f0c133`. 쓰지 않은 이전 blob: 1.2 `d2240795…`, 1.3 `78a3d2c7…`, 1.4 `1cde20d2…`, 1.5 `e1e16a9c…` | `git rev-parse <판정 커밋>:<path>` |
 | 경로 2가 J 항목에 쓰는 `d8x/path2/d8x_recount.py` 1.0 | blob `d47c10e97662eb18c47c2a22f5f56990e6f4f115`, LF 내용 sha256 `46010967…d9d1`(경로 2가 불러오기 전에 대조) | 같음 |
 | 경로 1 `k2_judge.py` (python-expert `k2-path1-rev6b` `5d28db4`, blob id만 전달받음) | `74d72d5e1747e11c8b89e0adb177e952d3b598a7`. `c285b8c9…`·`b41d2587…`·`9bbcc201…`·`7ee9ccc1…`은 쓰지 않음 | 같음 |
@@ -190,7 +190,13 @@ worker-초 추정이다.
   - 조치: 경로 2 **1.6**은 행 J1~J11·E-2·E-3·E-10(= D8x E-8)·1 ms J3를 `d8x_recount.py` 함수로 계산한다. 경로 1을 읽지 않은 새 작성자가 다시 썼다. 이 항목의 두 경로 일치는 G-F에서 **독립 확인**으로 센다.
   - 정렬된 정의(독립 확인 아님): SH-1·SH-2(`k2_record` 필드 이름), V-5 회귀·사건 행 처리(`_event_rows`·`_reg_verdicts` 등), 평탄화기 입력 형식, rev7 2절 항목, 1.6이 1.5에서 그대로 둔 행 판정 둘레의 처리(필드 지도, 판정 불가 규칙, E-4~E-7·I-9, SH 입력). 자세한 것은 rev8 2.2절.
   - 저장 D8x R-a 1,102행: 1.6 selftest 통과(68 + 6, 모두 J3). `d8x_recount.judge_ra`와 실패 J 항목 집합 차 0행, 1.5와 행 결과 차 0행(rev8 3절).
-- **봉인 대조**: rev7·rev8 봉인은 판정 전·후 감사가 `seal_check`로 대조한다(경로 1·2에는 상수 없음). 경로 2 1.6의 `--rules-dir` 대조 범위는 1.5와 같이 원판·rev1~rev6·명세다.
+- **rev9 보완(실행 전 다섯 번째 감사 뒤, 문구만, 메인 세션 결정 (가))**
+  - 누락 1건: 이전 경로 2 작성자가 15:50:22에 `d8x_spec.py`(경로 1 `d8x_judge`가 import)를 J 상수 이름으로 grep했다. rev8 검색어에 `d8x_spec`이 없어서 빠졌다.
+  - 반대 방향: 경로 1 작성자(python-expert)가 16:05~16:07에 경로 2 `d98b31b` 사본 1~680행 범위(J3 시계열 재계산, J3 판정 불가 규칙, `v5_bundle`·`recount`·`recount_v6`)를 읽었다. 16:09에 Chrono J3 1 ms를 포함한 경로 1 판정부를 썼고, 16:26에 `compat_check.py`로 두 경로를 행마다 맞댔다. rev6 5절·rev7 1절의 "docstring, `false_latches`"는 이보다 좁았다.
+  - 1.6 작성자도 21:41:21에 1.5를 읽은 뒤 `j3_series_count`를 같은 방식으로 다시 썼다.
+  - 재분류: G-F 독립 확인은 J1·J2·J4~J9·J11(하네스)·E-2·E-3·E-10만이다. J3 1 ms 재계산과 Chrono 어댑터(J6 잠김, J10, 필드 이름)는 정렬된 정의로 옮겼다.
+  - 판정 후 감사가 셀 것: E-2 TOUCH 시작 None 수(두 경로 모두 보지 않음), Chrono J6 잠김 None 수(경로 2 n/a, 경로 1 fail). 0이면 영향 없음, 0이 아니면 G-F 판정 불가.
+- **봉인 대조**: rev7·rev8·rev9 봉인은 판정 전·후 감사가 `seal_check`로 대조한다(경로 1·2에는 상수 없음). 경로 2 1.6의 `--rules-dir` 대조 범위는 1.5와 같이 원판·rev1~rev6·명세다.
 
 ## 7.3 이어 돌리기와 G-F 대조 단위 (rev7 4·5절)
 

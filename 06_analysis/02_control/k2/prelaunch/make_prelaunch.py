@@ -206,7 +206,20 @@ INDEPENDENCE_NOTE = (
     "SH-2 (k2_record field names), V-5 regression and event rows (_event_rows, _reg_verdicts, after acc_judge), the "
     "flattener input format, the rev7 2 items, and what 1.6 kept from 1.5 around the row items (field map names, "
     "missing key / J3 row-vs-series / no series / no J10 field = not judgeable, E-4 / E-5 / E-6 / E-7 / I-9, the SH "
-    "inputs).")
+    "inputs). "
+    "Rules rev9 1-2 (fifth pre-run audit, wording only): (a) the earlier path 2 author also grepped d8x_spec.py (imported "
+    "by path 1 d8x_judge) at 15:50:22 for STROKE_EVENTS|WARN_ALLOWED|READY_LIMIT_S|ATTITUDE_LIMIT_DEG|MOVING_LIMIT_BAR|"
+    "LIFT_WINDOW_MIN_S|LOCKED_LIMIT_BAR; missed in rev8 because the search terms lacked d8x_spec. (b) Reverse direction: "
+    "the path 1 author (python-expert, transcript agent-a8c7820f450c38187) saved git show d98b31b k2_recount.py at "
+    "16:05:01, grepped it and read lines 1-200 / 200-240 / 285-345 / 450-600 / 600-680 at 16:05:09-16:07:28 (J3 series "
+    "recount, judge_row J3 not-judgeable rule, v5_bundle / recount / recount_v6), wrote the path 1 judge incl. the "
+    "Chrono 1 ms J3 at 16:09:18 and compared path 1 / 2 verdicts, SH1, SH2, J3all4 and not-judgeable lists row by row "
+    "with compat_check.py at 16:26:34 / 16:26:46; rev6 5 / rev7 1 ('docstrings, false_latches') understated this. "
+    "The 1.6 author read 1.5 at 21:41:21 and then rewrote j3_series_count the same way. Reclassified: independent in "
+    "G-F only J1, J2, J4..J9, J11 (harness), E-2, E-3, E-10 (path 1 d8x_judge vs path 2 d8x_recount); the 1 ms J3 "
+    "recount and the Chrono adapter (J6 locked, J10, field-name adapter) are aligned definitions (both J3 1 ms codes "
+    "come from path 2 1.x). Post-judgement audit counts: E-2 TOUCH start None (read by neither path) and Chrono J6 "
+    "locked None (path 2 n/a, path 1 fail); 0 = no effect, otherwise G-F not judgeable.")
 V5_FLAT_MAIN_NOTE = (
     "P_post's flatten step runs the k2-run flattener (a83abd80, old) and writes runs/v5/<arm>/flat/: kept as a "
     "reference only (runner unchanged, plan sha kept). Before judging, rebuild the flat files with the flattener of "
@@ -589,7 +602,7 @@ def main() -> None:
                                "sha256": sha(k2 / "k2_touch_creep_rules.md")},
                   **{rv: {"path": f"06_analysis/02_control/k2/k2_touch_creep_rules_{rv}.md",
                           "sha256": sha(k2 / f"k2_touch_creep_rules_{rv}.md")}
-                     for rv in ("rev1", "rev2", "rev3", "rev4", "rev5", "rev6", "rev7", "rev8") if (k2 / f"k2_touch_creep_rules_{rv}.md").exists()},
+                     for rv in ("rev1", "rev2", "rev3", "rev4", "rev5", "rev6", "rev7", "rev8", "rev9") if (k2 / f"k2_touch_creep_rules_{rv}.md").exists()},
                   "dyn_spec": {"path": "06_analysis/02_control/k2/k2_dyn_spec.md", "sha256": sha(k2 / "k2_dyn_spec.md")}},
         "criteria_md": {"path": "06_analysis/02_control/touch_phase/acceptance/criteria.md",
                         "blob_at_run_head": "86aa624264b3add5f24866f8ad21d91cb2c855be",
@@ -602,14 +615,15 @@ def main() -> None:
                                              "1.3": "78a3d2c7c9d26523288f5f3ab05b9a3d6e63466c",
                                              "1.4": "1cde20d2ae54ec2aaef23f7d6c0d24a703904ea5",
                                              "1.5": "e1e16a9c5864e5a724f976eb6dda8456f14ff0a7"},
-                  "j_items_via": {"rule": "rules rev8 2.1 (J items rewritten by an author who has not read path 1)",
+                  "j_items_via": {"rule": "rules rev8 2.1 as reclassified by rev9 2 (J items rewritten by an author who "
+                                          "has not read path 1; independent: J1, J2, J4..J9, J11, E-2, E-3, E-10)",
                                   "path": "06_analysis/02_control/d8x/path2/d8x_recount.py", "version": "1.0",
                                   "blob": "d47c10e97662eb18c47c2a22f5f56990e6f4f115",
                                   "lf_content_sha256": "46010967729e190ab572775db9dd59b083a3856558c3f07a239bf601bed9d9d1"},
                   "run_from": "the main checkout after the merge (k2-run holds the older 1.2)",
                   "rules_check_scope": "path 2 1.6 checks the seals of the original, rev1..rev6 and the dyn spec (as 1.5). "
-                                       "The rev7 and rev8 seals are checked by the pre- and post-judgement audits with "
-                                       "seal_check; neither path 1 nor path 2 holds rev7 / rev8 constants"},
+                                       "The rev7, rev8 and rev9 seals are checked by the pre- and post-judgement audits "
+                                       "with seal_check; neither path 1 nor path 2 holds rev7 / rev8 / rev9 constants"},
         "g_f_units": "rules rev7 5 (gates, rows, SH FLAG / missing counts, V-5 common one value, V-5 bundle kind / "
                      "counts / pass->fail counts / noise k and CP / regression key sha equality, numbers rel 1e-9)",
         "gs_evidence": GS_EVIDENCE,
