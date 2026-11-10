@@ -772,6 +772,236 @@ def stage_touch():
     return {"static": stage_touch_static(), "runs": [r0] + rest, "wall_s": round(time.perf_counter() - t0, 1)}
 
 
+# ================================================================================================ D8x G0 (rules 4.3)
+# Sealed rules 06_analysis/02_control/d8x/d8x_rules.md (sha a377b9bb..., 2026-11-10), section 4.3 G0, points 1.2,
+# expected count 3 (20 points x 3 levels = 60). Writes only D8X_OUT; the default output JSON is not touched.
+D8X_OUT = ROOT / "06_analysis" / "00_dynamics" / "d8x_g0.json"
+D8X_RULES = "06_analysis/02_control/d8x/d8x_rules.md"
+D8X_SPAN_DEG = (5.7, 3.7)                 # verification_ext diamond (roll, pitch)
+D8X_POINTS = [                            # rules 1.2 (A) and (B), literal values [deg] (phi_g, theta_g)
+    ("pitch+", 0.0, 3.7), ("pitch-", 0.0, -3.7), ("roll+", 5.7, 0.0), ("roll-", -5.7, 0.0),
+    ("r+p+0.25", 1.425, 2.775), ("r+p+0.5", 2.85, 1.85), ("r+p+0.75", 4.275, 0.925),
+    ("r+p-0.25", 1.425, -2.775), ("r+p-0.5", 2.85, -1.85), ("r+p-0.75", 4.275, -0.925),
+    ("r-p+0.5", -2.85, 1.85), ("r-p-0.5", -2.85, -1.85),
+    ("d45++", 2.2627, 2.2627), ("d45+-", 2.2627, -2.2627), ("d45-+", -2.2627, 2.2627), ("d45--", -2.2627, -2.2627),
+    ("rpX", 2.8632, 1.8413), ("rpX+-", 2.8632, -1.8413), ("rpX-+", -2.8632, 1.8413), ("rpX--", -2.8632, -1.8413),
+]
+D8X_CHRONO_NAME = {"pitch+": "fdown3.7", "pitch-": "fup3.7", "roll+": "roll5.7", "roll-": "rollm5.7", "rpX": "rpX"}
+D8X_W_CANDIDATES = ("r+p+0.25", "r+p+0.75", "r+p-0.25", "r+p-0.5", "r+p-0.75", "r-p+0.5", "r-p-0.5",
+                    "d45++", "d45+-", "d45-+", "d45--")     # rules 5.1, judged at the top level
+D8X_G0 = {"stroke_guard_m": 0.6828, "probe_m": 0.002, "h4_m": 0.0029, "swivel_max_deg": 10.0,
+          "F_D8_N": F_MIN + 5000.0, "Rv_hat_max": 1.005, "inv_err_max_deg": 0.037, "clearance_m": 0.05}
+
+
+def d8x_load_points(path):
+    """Point file (d8x_judge.py points) -> [(tag, phi, theta)]; tolerant to list / dict layouts."""
+    raw = json.loads(Path(path).read_text(encoding="utf-8"))
+    items = raw.get("points", raw) if isinstance(raw, dict) else raw
+    if isinstance(items, dict):
+        items = [dict(v, tag=k) if isinstance(v, dict) else {"tag": k, "angles": v} for k, v in items.items()]
+    out = []
+    for it in items:
+        tag = it.get("tag") or it.get("name") or it.get("id")
+        if "angles" in it or "floor_deg" in it:
+            ph, th = (it.get("angles") or it.get("floor_deg"))[:2]
+        else:
+            kp = next(k for k in it if k.lower().startswith(("phi", "roll")))
+            kt = next(k for k in it if k.lower().startswith(("theta", "pitch")))
+            ph, th = it[kp], it[kt]
+        out.append((str(tag), float(ph), float(th)))
+    return out
+
+
+def _d8x_job(a):
+    import run_target_envelope as rte
+    lv, tag, rg, pg = a
+    o = {}
+    try:
+        o["env"] = rte.point(lv, rg, pg, 0.0, 0.0)
+    except Exception as e:  # noqa: BLE001  (recorded as not judgeable)
+        o["env_error"] = repr(e)
+    try:
+        cs = crawler_static(lv, rg, pg, "centre", "retracted")
+        o["crawler"] = {"body_deg": cs["body_deg"], "res": cs["res"], "active": int(cs["active"].sum())}
+        o["crawler_kn_x3_deg"] = crawler_static(lv, rg, pg, "centre", "retracted", kn_scale=3.0)["body_deg"]
+        o["crawler_floor_eop_deg"] = crawler_static(lv, rg, pg, "floor", "e_op")["body_deg"]
+    except Exception as e:  # noqa: BLE001
+        o["crawler_error"] = repr(e)
+    return a, o
+
+
+def _d8x_settle_inverse(lv, body_deg):
+    sys.path.insert(0, str(ROOT / "03_src"))
+    from outrigger_sim.control.target import CrawlerSettleMap
+    m = CrawlerSettleMap.for_level(lv)
+    ph, th = m.floor_from_crawler((math.radians(body_deg[0]), math.radians(body_deg[1])))
+    return math.degrees(ph), math.degrees(th), m.to_meta()
+
+
+def d8x_eval(lv, tag, rg, pg, o):
+    """G0-1..4 for one (level, point); margins > 0 (>= 0 for G0-2..4) pass."""
+    g = D8X_G0
+    row = {"level": lv, "tag": tag, "floor_deg": [rg, pg],
+           "Rv": abs(rg) / D8X_SPAN_DEG[0] + abs(pg) / D8X_SPAN_DEG[1],
+           "chrono_floor": D8X_CHRONO_NAME.get(tag) if (lv == "top" or tag == "rpX") else None,
+           "w_candidate_top": lv == "top" and tag in D8X_W_CANDIDATES}
+    row["g04_role"] = "chrono" if row["chrono_floor"] else ("w_candidate" if row["w_candidate_top"] else None)
+    J = {}
+    if "env" in o:
+        e = o["env"]
+        allow = g["probe_m"] + (g["h4_m"] if pg > 0 else 0.0)
+        s50 = e["s_max_at_clr"]["50"]
+        J["G0-1"] = {"s_max_m": s50, "allowance_m": allow, "lhs_m": s50 + allow, "limit_m": g["stroke_guard_m"],
+                     "margin_mm": (g["stroke_guard_m"] - s50 - allow) * 1e3,
+                     "pass": s50 + allow < g["stroke_guard_m"]}
+        fmin = min(e["F_cyl_min_N"], e["F_cyl_min_yaml_N"])
+        J["G0-2"] = {"F_static_min_N": fmin, "F_min_ext_N": e["F_cyl_min_N"], "F_min_yaml_kt_N": e["F_cyl_min_yaml_N"],
+                     "F_cyl_N": e["F_cyl_N"], "limit_N": g["F_D8_N"], "margin_kN": (fmin - g["F_D8_N"]) / 1e3,
+                     "pass": fmin >= g["F_D8_N"]}
+        J["G0-3"] = {"swivel_deg": e["beta_deg"], "limit_deg": g["swivel_max_deg"],
+                     "margin_deg": g["swivel_max_deg"] - e["beta_deg"], "pass": e["beta_deg"] <= g["swivel_max_deg"]}
+        row["record"] = {
+            "s_motor_m": e["s_motor_m"], "s_max_clr20_m": e["s_max_at_clr"]["20"],
+            "s_min_clr50_m": e["s_min_at_clr"]["50"],
+            "stroke_headroom_mm_vs_0.7_clr50": (ctx_stroke() - s50) * 1e3,
+            "stroke_margin_mm_clr20": (g["stroke_guard_m"] - e["s_max_at_clr"]["20"] - allow) * 1e3,
+            "rod_SF_min": e["rod_SF_min"],
+            "rod_pair_ok_1.5": e["rod_SF_min"]["ext_C45"] >= 1.5 and e["rod_SF_min"]["yaml_20MnV6"] >= 1.5,
+            "util_muN_ext_max": e["util_ext_max"], "util_muN_yaml_max": e["util_yaml_max"],
+            "slip_ext": e["slip_ext"], "slip_yaml": e["slip_yaml"], "N_min_N": e["N_min_N"],
+            "F_cyl_max_N": e["F_cyl_max_N"], "res_max_N": e["res_max_N"]}
+    else:
+        for k in ("G0-1", "G0-2", "G0-3"):
+            J[k] = {"pass": None, "error": o.get("env_error")}
+    if "crawler" in o:
+        b = o["crawler"]["body_deg"]
+        ph, th, meta = _d8x_settle_inverse(lv, b)
+        err = [ph - rg, th - pg]
+        rvh = abs(ph) / D8X_SPAN_DEG[0] + abs(th) / D8X_SPAN_DEG[1]
+        ok = rvh <= g["Rv_hat_max"] and max(abs(err[0]), abs(err[1])) <= g["inv_err_max_deg"]
+        J["G0-4"] = {"applies": row["g04_role"] is not None, "crawler_body_deg": b,
+                     "crawler_static_res": o["crawler"]["res"], "active_spheres": o["crawler"]["active"],
+                     "floor_hat_deg": [ph, th], "err_deg": err, "Rv_hat": rvh,
+                     "margin_Rv": g["Rv_hat_max"] - rvh, "margin_err_deg": g["inv_err_max_deg"] - max(map(abs, err)),
+                     "pass": ok, "settle_map": meta,
+                     "record_kn_x3_err_deg": [a - c for a, c in zip(_d8x_settle_inverse(lv, o["crawler_kn_x3_deg"])[:2],
+                                                                    (rg, pg), strict=True)],
+                     "record_floor_eop_err_deg": [a - c for a, c in
+                                                  zip(_d8x_settle_inverse(lv, o["crawler_floor_eop_deg"])[:2], (rg, pg), strict=True)]}
+    else:
+        J["G0-4"] = {"applies": row["g04_role"] is not None, "pass": None, "error": o.get("crawler_error")}
+    row["G0"] = J
+    req = ["G0-1", "G0-2", "G0-3"] + (["G0-4"] if row["g04_role"] == "chrono" else [])
+    vals = [J[k]["pass"] for k in req]
+    row["judged_items"] = req
+    row["verdict"] = "not_judgeable" if any(v is None for v in vals) else ("pass" if all(vals) else "fail")
+    return row
+
+
+def ctx_stroke():
+    import run_target_envelope as rte
+    return rte.ctx().stroke
+
+
+def _d8x_identity():
+    import ctypes
+    import platform
+    import subprocess
+    ident = {"python": sys.executable, "python_version": platform.python_version(),
+             "env": {k: os.environ.get(k) for k in ("MKL_NUM_THREADS", "OMP_NUM_THREADS", "NUMBA_NUM_THREADS",
+                                                     "OPENBLAS_NUM_THREADS", "MKL_THREADING_LAYER")}}
+    try:
+        pm = ctypes.c_size_t(); sm = ctypes.c_size_t()
+        k32 = ctypes.windll.kernel32
+        k32.GetCurrentProcess.restype = ctypes.c_void_p
+        k32.GetProcessAffinityMask.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_size_t),
+                                               ctypes.POINTER(ctypes.c_size_t)]
+        k32.GetProcessAffinityMask(k32.GetCurrentProcess(), ctypes.byref(pm), ctypes.byref(sm))
+        ident["affinity_mask"] = hex(pm.value)
+    except Exception:  # noqa: BLE001
+        ident["affinity_mask"] = None
+    try:
+        g = lambda *a: subprocess.run(["git", *a], cwd=ROOT, capture_output=True, text=True).stdout.strip()  # noqa: E731
+        ident["git_head"] = g("rev-parse", "HEAD")
+        ident["git_status_porcelain"] = g("status", "--porcelain", "--untracked-files=no")
+        ident["rules_blob"] = g("rev-parse", f"HEAD:{D8X_RULES}")
+        ident["script_blobs_HEAD"] = {p: g("rev-parse", f"HEAD:{p}") for p in (
+            "04_scripts/01_dynamics/run_s6_slope_boundary_check.py", "04_scripts/01_dynamics/run_target_envelope.py",
+            "04_scripts/01_dynamics/dyn_model.py", "03_src/outrigger_sim/control/target.py", "02_params/rexome33.yaml")}
+    except Exception as e:  # noqa: BLE001
+        ident["git_error"] = repr(e)
+    return ident
+
+
+def stage_d8x_g0(points_path=None, workers=WORKERS):
+    pts = D8X_POINTS
+    src = "rules 1.2 literal table (built-in)"
+    diff = None
+    if points_path:
+        pts = d8x_load_points(points_path)
+        src = str(points_path)
+        ref = {t: (a, b) for t, a, b in D8X_POINTS}
+        diff = {t: [a - ref[t][0], b - ref[t][1]] if t in ref else "unknown tag" for t, a, b in pts}
+    jobs = [(lv, t, a, b) for lv in dm.LEVELS for t, a, b in pts]
+    t0 = time.perf_counter()
+    first = _d8x_job(jobs[0])
+    from multiprocessing import Pool
+    with Pool(workers) as pool:
+        rest = pool.map(_d8x_job, jobs[1:], chunksize=1)
+    res = dict([first] + rest)
+    rows = [d8x_eval(lv, t, a, b, res[(lv, t, a, b)]) for (lv, t, a, b) in jobs]
+    n = len(rows)
+    cnt = {v: sum(r["verdict"] == v for r in rows) for v in ("pass", "fail", "not_judgeable")}
+    w_rows = [r for r in rows if r["g04_role"] == "w_candidate"]
+    item_fail = {k: [f"{r['level']}|{r['tag']}" for r in rows if r["G0"][k].get("pass") is False
+                     and (k != "G0-4" or r["g04_role"] == "chrono")] for k in ("G0-1", "G0-2", "G0-3", "G0-4")}
+
+    def worst(k, key):
+        cand = [r for r in rows if r["G0"][k].get(key) is not None and (k != "G0-4" or r["g04_role"] == "chrono")]
+        r = min(cand, key=lambda r: r["G0"][k][key])
+        return {"point": f"{r['level']}|{r['tag']}", key: r["G0"][k][key]}
+    gate = ("not_judgeable" if (n != 60 or cnt["not_judgeable"]) else ("pass" if cnt["pass"] == 60 else "fail"))
+    return {
+        "meta": {"rules": D8X_RULES, "rules_sha256": "a377b9bb028385bb7d7d97312a71816ba0ca758e2cb193e25b2d092fff064da8",
+                 "section": "4.3 G0 (points 1.2, expected 3: 60)", "points_source": src, "points_diff_vs_table": diff,
+                 "thresholds": D8X_G0, "span_deg": D8X_SPAN_DEG,
+                 "models": {"G0-1..3": "run_target_envelope.point (quasi-static levelling end, target 0/0, clearance "
+                                       "50 mm, YAML stroke 0.70 m, pads stick at settled touchdown, Coulomb cap)",
+                            "G0-4": "crawler_static (stage crawler B: centre force point, rods retracted = Chrono L1) "
+                                    "-> CrawlerSettleMap.for_level(level).floor_from_crawler"},
+                 "conventions": "body x fwd y left z up; roll + left up; pitch + nose down; floor z = -tan(theta) x "
+                                "+ tan(phi) y; angles ZYX; s_max = motor stroke (oil compression incl.); F = cylinder "
+                                "net force (F_ax - m_rod g a_z), min over k_t 'ext' and 'yaml'",
+                 "G0-4_scope": "judged (counts in verdict) for Chrono rows: top x {pitch+, pitch-, roll+, roll-, rpX}, "
+                               "middle/bottom x rpX; W candidates (top, 11) evaluated for selection (rules 5.1), "
+                               "reported separately, not in the 60-row verdict",
+                 "identity": _d8x_identity(), "wall_s": round(time.perf_counter() - t0, 1)},
+        "summary": {"expected": 60, "actual": n, **cnt, "gate_G0": gate, "fails_by_item": item_fail,
+                    "min_margin": {"G0-1_mm": worst("G0-1", "margin_mm"), "G0-2_kN": worst("G0-2", "margin_kN"),
+                                   "G0-3_deg": worst("G0-3", "margin_deg"), "G0-4_err_deg": worst("G0-4", "margin_err_deg"),
+                                   "G0-4_Rv": worst("G0-4", "margin_Rv")},
+                    "w_candidates_G0-4": {r["tag"]: {"pass": r["G0"]["G0-4"]["pass"],
+                                                    "Rv": r["Rv"], "Rv_hat": r["G0"]["G0-4"].get("Rv_hat"),
+                                                    "err_deg": r["G0"]["G0-4"].get("err_deg")} for r in w_rows}},
+        "rows": rows,
+    }
+
+
+def d8x_print(o):
+    s = o["summary"]
+    print(f"D8x G0: expected {s['expected']} actual {s['actual']} pass {s['pass']} fail {s['fail']} "
+          f"nj {s['not_judgeable']} gate {s['gate_G0']}")
+    for r in o["rows"]:
+        J = r["G0"]
+        g4 = J["G0-4"]
+        print(f"{r['level']:6s} {r['tag']:9s} ({r['floor_deg'][0]:+7.4f},{r['floor_deg'][1]:+7.4f}) "
+              f"s {J['G0-1'].get('s_max_m', float('nan'))*1e3:7.2f} m1 {J['G0-1'].get('margin_mm', float('nan')):+6.2f}mm "
+              f"F {J['G0-2'].get('F_static_min_N', float('nan'))/1e3:7.2f} m2 {J['G0-2'].get('margin_kN', float('nan')):+7.2f}kN "
+              f"sw {J['G0-3'].get('swivel_deg', float('nan')):5.2f} | inv err {g4.get('err_deg')} Rvh {g4.get('Rv_hat')} "
+              f"{g4.get('pass')} [{r['g04_role']}] -> {r['verdict']}")
+    print(json.dumps(s["min_margin"]))
+
+
 # ================================================================================================ report
 def _passes(r):
     f = r.get("fails") or []
@@ -884,8 +1114,21 @@ def save(d):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--stage", required=True,
-                    choices=["crawler", "budget", "touch", "envelope", "td_main", "td_robust", "td_kt", "td_ext", "report"])
+                    choices=["crawler", "budget", "touch", "envelope", "td_main", "td_robust", "td_kt", "td_ext", "report",
+                             "d8x_g0"])
+    ap.add_argument("--points", default=None, help="d8x_g0 only: point file (d8x_points.json); default rules 1.2 table")
+    ap.add_argument("--out", default=None, help="d8x_g0 only: output JSON (default 06_analysis/00_dynamics/d8x_g0.json)")
+    ap.add_argument("--workers", type=int, default=WORKERS, help="d8x_g0 only: pool size")
     a = ap.parse_args()
+    if a.stage == "d8x_g0":            # separate output; the stage JSON (OUT_JSON) is not read or written
+        o = stage_d8x_g0(a.points, a.workers)
+        o["meta"]["script"] = "04_scripts/01_dynamics/run_s6_slope_boundary_check.py --stage d8x_g0"
+        out = Path(a.out) if a.out else D8X_OUT
+        out.write_text(json.dumps(o, indent=1, default=lambda v: v.tolist() if hasattr(v, "tolist") else
+                                  (bool(v) if isinstance(v, np.bool_) else float(v))), encoding="utf-8")
+        d8x_print(o)
+        print(json.dumps({"gate_G0": o["summary"]["gate_G0"], "out": str(out)}))
+        return
     d = load()
     if a.stage == "crawler":
         d["crawler"] = stage_crawler()

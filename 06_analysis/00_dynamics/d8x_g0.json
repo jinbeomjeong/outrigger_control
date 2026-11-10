@@ -1,0 +1,6743 @@
+{
+ "meta": {
+  "rules": "06_analysis/02_control/d8x/d8x_rules.md",
+  "rules_sha256": "a377b9bb028385bb7d7d97312a71816ba0ca758e2cb193e25b2d092fff064da8",
+  "section": "4.3 G0 (points 1.2, expected 3: 60)",
+  "points_source": "rules 1.2 literal table (built-in)",
+  "points_diff_vs_table": null,
+  "thresholds": {
+   "stroke_guard_m": 0.6828,
+   "probe_m": 0.002,
+   "h4_m": 0.0029,
+   "swivel_max_deg": 10.0,
+   "F_D8_N": 14414.58911,
+   "Rv_hat_max": 1.005,
+   "inv_err_max_deg": 0.037,
+   "clearance_m": 0.05
+  },
+  "span_deg": [
+   5.7,
+   3.7
+  ],
+  "models": {
+   "G0-1..3": "run_target_envelope.point (quasi-static levelling end, target 0/0, clearance 50 mm, YAML stroke 0.70 m, pads stick at settled touchdown, Coulomb cap)",
+   "G0-4": "crawler_static (stage crawler B: centre force point, rods retracted = Chrono L1) -> CrawlerSettleMap.for_level(level).floor_from_crawler"
+  },
+  "conventions": "body x fwd y left z up; roll + left up; pitch + nose down; floor z = -tan(theta) x + tan(phi) y; angles ZYX; s_max = motor stroke (oil compression incl.); F = cylinder net force (F_ax - m_rod g a_z), min over k_t 'ext' and 'yaml'",
+  "G0-4_scope": "judged (counts in verdict) for Chrono rows: top x {pitch+, pitch-, roll+, roll-, rpX}, middle/bottom x rpX; W candidates (top, 11) evaluated for selection (rules 5.1), reported separately, not in the 60-row verdict",
+  "identity": {
+   "python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+   "python_version": "3.12.15",
+   "env": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_THREADING_LAYER": "TBB"
+   },
+   "affinity_mask": "0xfff0000",
+   "git_head": "5d19936a5c06ddfedce80edb85dc2675fd7d8ac9",
+   "git_status_porcelain": "",
+   "rules_blob": "ccea288ab7a39a08490f33216fd8a798c4cd710b",
+   "script_blobs_HEAD": {
+    "04_scripts/01_dynamics/run_s6_slope_boundary_check.py": "94d7017358ebdd52b81f0c1bd7a43945ae3c5349",
+    "04_scripts/01_dynamics/run_target_envelope.py": "7d168529b875aad6f88380caec6f425a1c811890",
+    "04_scripts/01_dynamics/dyn_model.py": "530a3bd324189f16749a1d2d1b56a22607184ee8",
+    "03_src/outrigger_sim/control/target.py": "a786935242eb1da35a095251e8adb7ab5db895e2",
+    "02_params/rexome33.yaml": "7db55937c80e96e8a3db1b1fa0d725be0829c76f"
+   }
+  },
+  "wall_s": 14.8,
+  "script": "04_scripts/01_dynamics/run_s6_slope_boundary_check.py --stage d8x_g0"
+ },
+ "summary": {
+  "expected": 60,
+  "actual": 60,
+  "pass": 57,
+  "fail": 3,
+  "not_judgeable": 0,
+  "gate_G0": "fail",
+  "fails_by_item": {
+   "G0-1": [
+    "top|pitch-",
+    "middle|pitch-",
+    "bottom|pitch-"
+   ],
+   "G0-2": [],
+   "G0-3": [],
+   "G0-4": []
+  },
+  "min_margin": {
+   "G0-1_mm": {
+    "point": "top|pitch-",
+    "margin_mm": -0.06158956223289817
+   },
+   "G0-2_kN": {
+    "point": "middle|roll-",
+    "margin_kN": 52.53223781570958
+   },
+   "G0-3_deg": {
+    "point": "top|roll+",
+    "margin_deg": 4.300000000000031
+   },
+   "G0-4_err_deg": {
+    "point": "top|pitch+",
+    "margin_err_deg": 0.01900096438385431
+   },
+   "G0-4_Rv": {
+    "point": "top|pitch+",
+    "margin_Rv": 8.326463153141006e-05
+   }
+  },
+  "w_candidates_G0-4": {
+   "r+p+0.25": {
+    "pass": true,
+    "Rv": 0.9999999999999999,
+    "Rv_hat": 0.9987715529447874,
+    "err_deg": [
+     0.002189299143446677,
+     -0.005966378109681703
+    ]
+   },
+   "r+p+0.75": {
+    "pass": true,
+    "Rv": 1.0,
+    "Rv_hat": 1.000036969391514,
+    "err_deg": [
+     0.002058298156878635,
+     -0.0011993015286700937
+    ]
+   },
+   "r+p-0.25": {
+    "pass": true,
+    "Rv": 0.9999999999999999,
+    "Rv_hat": 0.9982171377647346,
+    "err_deg": [
+     -0.00233728745334294,
+     0.005079403677961114
+    ]
+   },
+   "r+p-0.5": {
+    "pass": true,
+    "Rv": 1.0,
+    "Rv_hat": 0.9981676147736587,
+    "err_deg": [
+     -0.003010794019982832,
+     0.004825450271859877
+    ]
+   },
+   "r+p-0.75": {
+    "pass": true,
+    "Rv": 1.0,
+    "Rv_hat": 0.9983326945912033,
+    "err_deg": [
+     -0.0028464653046604838,
+     0.00432132446390876
+    ]
+   },
+   "r-p+0.5": {
+    "pass": true,
+    "Rv": 1.0,
+    "Rv_hat": 0.9972636589939076,
+    "err_deg": [
+     -0.0015718274303413438,
+     -0.011144770756272182
+    ]
+   },
+   "r-p-0.5": {
+    "pass": true,
+    "Rv": 1.0,
+    "Rv_hat": 0.9980783704503187,
+    "err_deg": [
+     0.003519519545918559,
+     0.004825428926821029
+    ]
+   },
+   "d45++": {
+    "pass": false,
+    "Rv": 1.0085054528212423,
+    "Rv_hat": 1.006340623830742,
+    "err_deg": [
+     0.001924156906809582,
+     -0.009258881397341767
+    ]
+   },
+   "d45+-": {
+    "pass": false,
+    "Rv": 1.0085054528212423,
+    "Rv_hat": 1.0066483854234036,
+    "err_deg": [
+     -0.002946961351142363,
+     0.004958209547577308
+    ]
+   },
+   "d45-+": {
+    "pass": false,
+    "Rv": 1.0085054528212423,
+    "Rv_hat": 1.0061570492589609,
+    "err_deg": [
+     -0.001248645590594677,
+     -0.009499617511178116
+    ]
+   },
+   "d45--": {
+    "pass": false,
+    "Rv": 1.0085054528212423,
+    "Rv_hat": 1.00655912217692,
+    "err_deg": [
+     0.003455793303710042,
+     0.0049581891342165285
+    ]
+   }
+  }
+ },
+ "rows": [
+  {
+   "level": "top",
+   "tag": "pitch+",
+   "floor_deg": [
+    0.0,
+    3.7
+   ],
+   "Rv": 1.0,
+   "chrono_floor": "fdown3.7",
+   "w_candidate_top": false,
+   "g04_role": "chrono",
+   "record": {
+    "s_motor_m": [
+     0.6751059913671807,
+     0.6749894805395902,
+     0.3481836168644436,
+     0.34809972780469195
+    ],
+    "s_max_clr20_m": 0.6450433293036859,
+    "s_min_clr50_m": 0.34809972780469195,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.894008632819208,
+    "stroke_margin_mm_clr20": 32.856670696314055,
+    "rod_SF_min": {
+     "ext_C45": 1.7604375561389924,
+     "ext_20MnV6": 2.59736688610671,
+     "yaml_C45": 1.3877081234068858,
+     "yaml_20MnV6": 2.0474382148626185
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.4569949019550173,
+    "util_muN_yaml_max": 0.5656130548183473,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70778.24537823249,
+    "F_cyl_max_N": 119400.79847809761,
+    "res_max_N": 5.642505129799246e-09
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6751059913671807,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6800059913671808,
+     "limit_m": 0.6828,
+     "margin_mm": 2.794008632819216,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 68709.1649153898,
+     "F_min_ext_N": 68979.72728862206,
+     "F_min_yaml_kt_N": 68709.1649153898,
+     "F_cyl_N": [
+      119400.79847809761,
+      117416.35865911706,
+      70786.67981755326,
+      68979.72728862206
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 54.294575805389805,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.6999999999999678,
+     "limit_deg": 10.0,
+     "margin_deg": 6.300000000000033,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      0.00030013981872266274,
+      4.051458634166927
+     ],
+     "crawler_static_res": 1.5238765627145767e-07,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      0.00029714754296500514,
+      3.717999035616146
+     ],
+     "err_deg": [
+      0.00029714754296500514,
+      0.017999035616145687
+     ],
+     "Rv_hat": 1.0049167353684685,
+     "margin_Rv": 8.326463153141006e-05,
+     "margin_err_deg": 0.01900096438385431,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      0.000118058427516838,
+      -0.16556567685303714
+     ],
+     "record_floor_eop_err_deg": [
+      0.00029714378732488236,
+      0.021147388031170333
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3",
+    "G0-4"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "pitch-",
+   "floor_deg": [
+    0.0,
+    -3.7
+   ],
+   "Rv": 1.0,
+   "chrono_floor": "fup3.7",
+   "w_candidate_top": false,
+   "g04_role": "chrono",
+   "record": {
+    "s_motor_m": [
+     0.3764086197877504,
+     0.37633567091581516,
+     0.6808615895622329,
+     0.6807135695159025
+    ],
+    "s_max_clr20_m": 0.650798927498738,
+    "s_min_clr50_m": 0.37633567091581516,
+    "stroke_headroom_mm_vs_0.7_clr50": 19.138410437767096,
+    "stroke_margin_mm_clr20": 30.001072501261937,
+    "rod_SF_min": {
+     "ext_C45": 1.5034075172006898,
+     "ext_20MnV6": 2.218142238492821,
+     "yaml_C45": 0.8524020266048403,
+     "yaml_20MnV6": 1.2576423343350103
+    },
+    "rod_pair_ok_1.5": false,
+    "util_muN_ext_max": 0.5109908499263669,
+    "util_muN_yaml_max": 0.8243120276598715,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70930.04809141398,
+    "F_cyl_max_N": 117147.17840561602,
+    "res_max_N": 0.00017111757188104093
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6808615895622329,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6828615895622329,
+     "limit_m": 0.6828,
+     "margin_mm": -0.06158956223289817,
+     "pass": false
+    },
+    "G0-2": {
+     "F_static_min_N": 71234.18437940777,
+     "F_min_ext_N": 71234.18437940777,
+     "F_min_yaml_kt_N": 71883.66591786894,
+     "F_cyl_N": [
+      117147.17840561602,
+      115144.02161313879,
+      73058.17984522741,
+      71234.18437940777
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.81959526940777,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.6999999999999678,
+     "limit_deg": 10.0,
+     "margin_deg": 6.300000000000033,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      0.00025684459154288526,
+      -3.6127672464338407
+     ],
+     "crawler_static_res": 2.588785719126463e-08,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      0.0002542839521447873,
+      -3.6948684073009233
+     ],
+     "err_deg": [
+      0.0002542839521447873,
+      0.005131592699076926
+     ],
+     "Rv_hat": 0.998657694273978,
+     "margin_Rv": 0.006342305726021902,
+     "margin_err_deg": 0.03186840730092307,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      9.830828350066055e-05,
+      -0.03268984221173632
+     ],
+     "record_floor_eop_err_deg": [
+      0.00025428112725590934,
+      0.0038228622304949944
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3",
+    "G0-4"
+   ],
+   "verdict": "fail"
+  },
+  {
+   "level": "top",
+   "tag": "roll+",
+   "floor_deg": [
+    5.7,
+    0.0
+   ],
+   "Rv": 1.0,
+   "chrono_floor": "roll5.7",
+   "w_candidate_top": false,
+   "g04_role": "chrono",
+   "record": {
+    "s_motor_m": [
+     0.41026456840645975,
+     0.675708443915491,
+     0.4147729695864988,
+     0.6562030995057521
+    ],
+    "s_max_clr20_m": 0.6455593739483042,
+    "s_min_clr50_m": 0.41026456840645975,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.291556084508947,
+    "stroke_margin_mm_clr20": 35.240626051695756,
+    "rod_SF_min": {
+     "ext_C45": 1.3016967933855395,
+     "ext_20MnV6": 1.9205362525360419,
+     "yaml_C45": 0.8573144088484241,
+     "yaml_20MnV6": 1.2648901114157076
+    },
+    "rod_pair_ok_1.5": false,
+    "util_muN_ext_max": 0.7129471072980068,
+    "util_muN_yaml_max": 0.9999999998648859,
+    "slip_ext": false,
+    "slip_yaml": true,
+    "N_min_N": 71535.10477552237,
+    "F_cyl_max_N": 118562.33948413609,
+    "res_max_N": 0.0006837364635430276
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.675708443915491,
+     "allowance_m": 0.002,
+     "lhs_m": 0.677708443915491,
+     "limit_m": 0.6828,
+     "margin_mm": 5.091556084508954,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 68822.22317645176,
+     "F_min_ext_N": 69861.81708263268,
+     "F_min_yaml_kt_N": 68822.22317645176,
+     "F_cyl_N": [
+      115602.25011946219,
+      118562.33948413609,
+      69861.81708263268,
+      72557.15755715901
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 54.40763406645176,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 5.699999999999969,
+     "limit_deg": 10.0,
+     "margin_deg": 4.300000000000031,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      5.758006201361845,
+      0.18627907177162628
+     ],
+     "crawler_static_res": 4.368412191979587e-07,
+     "active_spheres": 13,
+     "floor_hat_deg": [
+      5.700601147803464,
+      0.012099054412957366
+     ],
+     "err_deg": [
+      0.0006011478034642082,
+      0.012099054412957366
+     ],
+     "Rv_hat": 1.0033754792331282,
+     "margin_Rv": 0.0016245207668716954,
+     "margin_err_deg": 0.02490094558704263,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      -0.035812232792033605,
+      -0.08376943650891179
+     ],
+     "record_floor_eop_err_deg": [
+      0.0014698239517194622,
+      0.012298549149156034
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3",
+    "G0-4"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "roll-",
+   "floor_deg": [
+    -5.7,
+    0.0
+   ],
+   "Rv": 1.0,
+   "chrono_floor": "rollm5.7",
+   "w_candidate_top": false,
+   "g04_role": "chrono",
+   "record": {
+    "s_motor_m": [
+     0.675799449713059,
+     0.410158150083567,
+     0.6488100211149762,
+     0.4071428509168272
+    ],
+    "s_max_clr20_m": 0.6456503797458722,
+    "s_min_clr50_m": 0.4071428509168272,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.200550286940903,
+    "stroke_margin_mm_clr20": 35.14962025412771,
+    "rod_SF_min": {
+     "ext_C45": 1.295059457852891,
+     "ext_20MnV6": 1.9107434624059045,
+     "yaml_C45": 0.8419537456118127,
+     "yaml_20MnV6": 1.2422268377879204
+    },
+    "rod_pair_ok_1.5": false,
+    "util_muN_ext_max": 0.7057514762356629,
+    "util_muN_yaml_max": 0.9999999998995933,
+    "slip_ext": false,
+    "slip_yaml": true,
+    "N_min_N": 69775.13312876155,
+    "F_cyl_max_N": 120595.16550765074,
+    "res_max_N": 0.0005167717608856037
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.675799449713059,
+     "allowance_m": 0.002,
+     "lhs_m": 0.677799449713059,
+     "limit_m": 0.6828,
+     "margin_mm": 5.00055028694091,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 66946.8269352405,
+     "F_min_ext_N": 68009.44032738065,
+     "F_min_yaml_kt_N": 66946.8269352405,
+     "F_cyl_N": [
+      120595.16550765074,
+      113599.96226922545,
+      74378.99613913306,
+      68009.44032738065
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 52.5322378252405,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 5.699999999999969,
+     "limit_deg": 10.0,
+     "margin_deg": 4.300000000000031,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      -5.757439337882571,
+      0.18614036556329439
+     ],
+     "crawler_static_res": 4.0899612940847874e-07,
+     "active_spheres": 13,
+     "floor_hat_deg": [
+      -5.700039935729772,
+      0.011966064127111143
+     ],
+     "err_deg": [
+      -3.993572977201154e-05,
+      0.011966064127111143
+     ],
+     "Rv_hat": 1.0032410776540868,
+     "margin_Rv": 0.0017589223459131276,
+     "margin_err_deg": 0.025033935872888855,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      0.03605162788104632,
+      -0.08384441077672206
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0009086199403869344,
+      0.012165565430830206
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3",
+    "G0-4"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "r+p+0.25",
+   "floor_deg": [
+    1.425,
+    2.775
+   ],
+   "Rv": 0.9999999999999999,
+   "chrono_floor": null,
+   "w_candidate_top": true,
+   "g04_role": "w_candidate",
+   "record": {
+    "s_motor_m": [
+     0.6088648608045802,
+     0.6750587737012443,
+     0.36477596665299905,
+     0.42496976936774195
+    ],
+    "s_max_clr20_m": 0.6450142831414569,
+    "s_min_clr50_m": 0.36477596665299905,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.941226298755616,
+    "stroke_margin_mm_clr20": 32.885716858543034,
+    "rod_SF_min": {
+     "ext_C45": 2.0024100697980414,
+     "ext_20MnV6": 2.9543755128167826,
+     "yaml_C45": 1.629761071796946,
+     "yaml_20MnV6": 2.4045655157659858
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3560322955240704,
+    "util_muN_yaml_max": 0.5068119138920484,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70821.06968563286,
+    "F_cyl_max_N": 118414.46815597589,
+    "res_max_N": 8.98794096428901e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6750587737012443,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6799587737012444,
+     "limit_m": 0.6828,
+     "margin_mm": 2.8412262987556214,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 69890.66851647137,
+     "F_min_ext_N": 69941.68566408228,
+     "F_min_yaml_kt_N": 69890.66851647137,
+     "F_cyl_N": [
+      118414.46815597589,
+      116975.02129291555,
+      71252.38913041624,
+      69941.68566408228
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.47607940647137,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1184784727697195,
+     "limit_deg": 10.0,
+     "margin_deg": 6.88152152723028,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      1.4415610953858213,
+      3.0617066869591643
+     ],
+     "crawler_static_res": 4.497087502386421e-08,
+     "active_spheres": 11,
+     "floor_hat_deg": [
+      1.4271892991434467,
+      2.769033621890318
+     ],
+     "err_deg": [
+      0.002189299143446677,
+      -0.005966378109681703
+     ],
+     "Rv_hat": 0.9987715529447874,
+     "margin_Rv": 0.006228447055212527,
+     "margin_err_deg": 0.031033621890318296,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      -0.009356348361291289,
+      -0.15148787444429246
+     ],
+     "record_floor_eop_err_deg": [
+      0.0026384462812256704,
+      -0.0036667767617175606
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "r+p+0.5",
+   "floor_deg": [
+    2.85,
+    1.85
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.542622792436626,
+     0.6752497458749894,
+     0.3813862907808983,
+     0.501982560418427
+    ],
+    "s_max_clr20_m": 0.6451969679974728,
+    "s_min_clr50_m": 0.3813862907808983,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.750254125010528,
+    "stroke_margin_mm_clr20": 32.703032002527124,
+    "rod_SF_min": {
+     "ext_C45": 2.3784422226873976,
+     "ext_20MnV6": 3.5091770498666524,
+     "yaml_C45": 1.5959099727832375,
+     "yaml_20MnV6": 2.3546212713195307
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.34760110104274156,
+    "util_muN_yaml_max": 0.5250936919241205,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70883.43261709674,
+    "F_cyl_max_N": 117892.31102671566,
+    "res_max_N": 2.587315975688398e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6752497458749894,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6801497458749894,
+     "limit_m": 0.6828,
+     "margin_mm": 2.650254125010536,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70442.66439972674,
+     "F_min_ext_N": 70442.66439972674,
+     "F_min_yaml_kt_N": 70543.72026136362,
+     "F_cyl_N": [
+      117892.31102671566,
+      116926.44452629954,
+      71322.14429064801,
+      70442.66439972674
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.028075289726736,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.3961343186601365,
+     "limit_deg": 10.0,
+     "margin_deg": 6.6038656813398635,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      2.8808876128506733,
+      2.091549190526702
+     ],
+     "crawler_static_res": 5.184119800105691e-09,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      2.852166298227522,
+      1.8388551942766904
+     ],
+     "err_deg": [
+      0.002166298227522123,
+      -0.01114480572330967
+     ],
+     "Rv_hat": 0.9973679426656693,
+     "margin_Rv": 0.007632057334330589,
+     "margin_err_deg": 0.02585519427669033,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      -0.017995024286193928,
+      -0.1324668611973241
+     ],
+     "record_floor_eop_err_deg": [
+      0.0026272482670117725,
+      -0.010047509716659908
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "r+p+0.75",
+   "floor_deg": [
+    4.275,
+    0.925
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": true,
+   "g04_role": "w_candidate",
+   "record": {
+    "s_motor_m": [
+     0.4764234056592479,
+     0.6755050047889949,
+     0.39805770467047075,
+     0.5790897493624705
+    ],
+    "s_max_clr20_m": 0.645417405419895,
+    "s_min_clr50_m": 0.39805770467047075,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.494995211005065,
+    "stroke_margin_mm_clr20": 32.48259458010495,
+    "rod_SF_min": {
+     "ext_C45": 2.0425288827301906,
+     "ext_20MnV6": 3.01356720402815,
+     "yaml_C45": 1.2387328011077574,
+     "yaml_20MnV6": 1.8276385590114452
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.46453631116253075,
+    "util_muN_yaml_max": 0.6914992008439642,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71025.58687862472,
+    "F_cyl_max_N": 117407.54321061698,
+    "res_max_N": 0.00013406403741100803
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6755050047889949,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6804050047889949,
+     "limit_m": 0.6828,
+     "margin_mm": 2.394995211005073,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70333.75167095335,
+     "F_min_ext_N": 70894.78697467217,
+     "F_min_yaml_kt_N": 70333.75167095335,
+     "F_cyl_N": [
+      117171.6728290976,
+      117407.54321061698,
+      70894.78697467217,
+      71109.56122900324
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.91916256095335,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 4.373204403946744,
+     "limit_deg": 10.0,
+     "margin_deg": 5.626795596053256,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      4.320128275219319,
+      1.1371656524916278
+     ],
+     "crawler_static_res": 1.9383151084184647e-08,
+     "active_spheres": 13,
+     "floor_hat_deg": [
+      4.277058298156879,
+      0.92380069847133
+     ],
+     "err_deg": [
+      0.002058298156878635,
+      -0.0011993015286700937
+     ],
+     "Rv_hat": 1.000036969391514,
+     "margin_Rv": 0.004963030608485797,
+     "margin_err_deg": 0.03494170184312136,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      -0.026816627369449897,
+      -0.10872927661570908
+     ],
+     "record_floor_eop_err_deg": [
+      0.0027454236641331065,
+      -0.0006460587164974774
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "r+p-0.25",
+   "floor_deg": [
+    1.425,
+    -2.775
+   ],
+   "Rv": 0.9999999999999999,
+   "chrono_floor": null,
+   "w_candidate_top": true,
+   "g04_role": "w_candidate",
+   "record": {
+    "s_motor_m": [
+     0.38483424811348405,
+     0.45105041254404876,
+     0.6143369945727497,
+     0.6745099370635077
+    ],
+    "s_max_clr20_m": 0.6444654465037203,
+    "s_min_clr50_m": 0.38483424811348405,
+    "stroke_headroom_mm_vs_0.7_clr50": 25.49006293649225,
+    "stroke_margin_mm_clr20": 36.334553496279675,
+    "rod_SF_min": {
+     "ext_C45": 2.0565875686421164,
+     "ext_20MnV6": 3.034309527504762,
+     "yaml_C45": 1.127956226851147,
+     "yaml_20MnV6": 1.664197711747594
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.38251386651109925,
+    "util_muN_yaml_max": 0.6323692419947636,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71164.21621116519,
+    "F_cyl_max_N": 117274.78142388239,
+    "res_max_N": 1.8684513634070754e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6745099370635077,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6765099370635077,
+     "limit_m": 0.6828,
+     "margin_mm": 6.29006293649226,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 71077.30728438104,
+     "F_min_ext_N": 71077.30728438104,
+     "F_min_yaml_kt_N": 71403.37563618644,
+     "F_cyl_N": [
+      117274.78142388239,
+      115926.23650328605,
+      72305.2390318405,
+      71077.30728438104
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.662718174381034,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1184784727697195,
+     "limit_deg": 10.0,
+     "margin_deg": 6.88152152723028,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      1.4369889260620021,
+      -2.664899228698899
+     ],
+     "crawler_static_res": 8.179049473255873e-07,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      1.422662712546657,
+      -2.769920596322039
+     ],
+     "err_deg": [
+      -0.00233728745334294,
+      0.005079403677961114
+     ],
+     "Rv_hat": 0.9982171377647346,
+     "margin_Rv": 0.006782862235265252,
+     "margin_err_deg": 0.031920596322038884,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      -0.010650805565151522,
+      -0.045205134598713226
+     ],
+     "record_floor_eop_err_deg": [
+      -0.002139918044864908,
+      0.004096629552656772
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "r+p-0.5",
+   "floor_deg": [
+    2.85,
+    -1.85
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": true,
+   "g04_role": "w_candidate",
+   "record": {
+    "s_motor_m": [
+     0.39325206599239954,
+     0.5258908984994873,
+     0.5477905187264449,
+     0.6683908298227283
+    ],
+    "s_max_clr20_m": 0.6383380519452118,
+    "s_min_clr50_m": 0.39325206599239954,
+    "stroke_headroom_mm_vs_0.7_clr50": 31.609170177271608,
+    "stroke_margin_mm_clr20": 42.4619480547882,
+    "rod_SF_min": {
+     "ext_C45": 2.391649979917772,
+     "ext_20MnV6": 3.5286639047967125,
+     "yaml_C45": 1.3541656877468484,
+     "yaml_20MnV6": 1.9979493753642024
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.34990032934232734,
+    "util_muN_yaml_max": 0.5507445914187323,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71258.4367745399,
+    "F_cyl_max_N": 117182.66357334347,
+    "res_max_N": 1.4252640539780259e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6683908298227283,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6703908298227284,
+     "limit_m": 0.6828,
+     "margin_mm": 12.409170177271612,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 71144.66248476277,
+     "F_min_ext_N": 71144.66248476277,
+     "F_min_yaml_kt_N": 71399.72676771118,
+     "F_cyl_N": [
+      117182.66357334347,
+      116387.84831960694,
+      71868.3898656768,
+      71144.66248476277
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.73007337476277,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.3961343186601365,
+     "limit_deg": 10.0,
+     "margin_deg": 6.6038656813398635,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      2.875658387284236,
+      -1.7172379750704034
+     ],
+     "crawler_static_res": 1.1699739843606949e-08,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      2.8469892059800173,
+      -1.8451745497281402
+     ],
+     "err_deg": [
+      -0.003010794019982832,
+      0.004825450271859877
+     ],
+     "Rv_hat": 0.9981676147736587,
+     "margin_Rv": 0.00683238522634122,
+     "margin_err_deg": 0.03217454972814012,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      -0.020267059443976443,
+      -0.05980703789694375
+     ],
+     "record_floor_eop_err_deg": [
+      -0.002616991283030501,
+      0.004169098271897154
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "r+p-0.75",
+   "floor_deg": [
+    4.275,
+    -0.925
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": true,
+   "g04_role": "w_candidate",
+   "record": {
+    "s_motor_m": [
+     0.4017121989426012,
+     0.6007958156317871,
+     0.4812531018207536,
+     0.6623075616417663
+    ],
+    "s_max_clr20_m": 0.6322199622726664,
+    "s_min_clr50_m": 0.4017121989426012,
+    "stroke_headroom_mm_vs_0.7_clr50": 37.69243835823366,
+    "stroke_margin_mm_clr20": 48.58003772733355,
+    "rod_SF_min": {
+     "ext_C45": 2.1293253928084175,
+     "ext_20MnV6": 3.1416276287337306,
+     "yaml_C45": 1.254340557389959,
+     "yaml_20MnV6": 1.8506663961491199
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.4690418547504796,
+    "util_muN_yaml_max": 0.6272377546200988,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71392.38330386466,
+    "F_cyl_max_N": 117106.8915145289,
+    "res_max_N": 0.0001121703826356679
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6623075616417663,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6643075616417663,
+     "limit_m": 0.6828,
+     "margin_mm": 18.492438358233663,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70877.34686970209,
+     "F_min_ext_N": 71204.54704174919,
+     "F_min_yaml_kt_N": 70877.34686970209,
+     "F_cyl_N": [
+      116667.3444182262,
+      117106.8915145289,
+      71204.54704174919,
+      71604.7812688857
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.462757759702086,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 4.373204403946744,
+     "limit_deg": 10.0,
+     "margin_deg": 5.626795596053256,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      4.315174120789722,
+      -0.7698330931158757
+     ],
+     "crawler_static_res": 1.949956640601158e-08,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      4.27215353469534,
+      -0.9206786755360913
+     ],
+     "err_deg": [
+      -0.0028464653046604838,
+      0.00432132446390876
+     ],
+     "Rv_hat": 0.9983326945912033,
+     "margin_Rv": 0.006667305408796564,
+     "margin_err_deg": 0.03267867553609124,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      -0.028159139974972547,
+      -0.07224364691756213
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0022567864059857,
+      0.003991151516336444
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "r-p+0.5",
+   "floor_deg": [
+    -2.85,
+    1.85
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": true,
+   "g04_role": "w_candidate",
+   "record": {
+    "s_motor_m": [
+     0.6753634400634625,
+     0.5425212881090467,
+     0.4983371092167033,
+     0.37753749123740316
+    ],
+    "s_max_clr20_m": 0.6453106621859459,
+    "s_min_clr50_m": 0.37753749123740316,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.63655993653746,
+    "stroke_margin_mm_clr20": 32.589337814054055,
+    "rod_SF_min": {
+     "ext_C45": 2.3405541561445857,
+     "ext_20MnV6": 3.4532766238198804,
+     "yaml_C45": 1.573139875280197,
+     "yaml_20MnV6": 2.3210260454953726
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.347320940286306,
+    "util_muN_yaml_max": 0.5233392564232461,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70832.12599901968,
+    "F_cyl_max_N": 118939.69841823075,
+    "res_max_N": 3.0787865398451686e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6753634400634625,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6802634400634625,
+     "limit_m": 0.6828,
+     "margin_mm": 2.536559936537468,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 69177.68946054706,
+     "F_min_ext_N": 69487.72195332198,
+     "F_min_yaml_kt_N": 69177.68946054706,
+     "F_cyl_N": [
+      118939.69841823075,
+      115906.62552698595,
+      72249.51834485127,
+      69487.72195332198
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 54.763100350547056,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.3961343186601365,
+     "limit_deg": 10.0,
+     "margin_deg": 6.6038656813398635,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      -2.8802871557325647,
+      2.0915492269966234
+     ],
+     "crawler_static_res": 1.6065314412117004e-08,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      -2.8515718274303414,
+      1.838855229243728
+     ],
+     "err_deg": [
+      -0.0015718274303413438,
+      -0.011144770756272182
+     ],
+     "Rv_hat": 0.9972636589939076,
+     "margin_Rv": 0.007736341006092329,
+     "margin_err_deg": 0.025855229243727816,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      0.01821798679574904,
+      -0.1325434197719677
+     ],
+     "record_floor_eop_err_deg": [
+      -0.002032785358268452,
+      -0.010047474257849798
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "r-p-0.5",
+   "floor_deg": [
+    -2.85,
+    -1.85
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": true,
+   "g04_role": "w_candidate",
+   "record": {
+    "s_motor_m": [
+     0.5259846640178386,
+     0.3931756582229012,
+     0.6647798368878798,
+     0.5439134415343526
+    ],
+    "s_max_clr20_m": 0.6347270590103632,
+    "s_min_clr50_m": 0.3931756582229012,
+    "stroke_headroom_mm_vs_0.7_clr50": 35.220163112120176,
+    "stroke_margin_mm_clr20": 46.07294098963677,
+    "rod_SF_min": {
+     "ext_C45": 2.4107075556124014,
+     "ext_20MnV6": 3.556781639428133,
+     "yaml_C45": 1.3788090341849635,
+     "yaml_20MnV6": 2.034308411092569
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3421010554086277,
+    "util_muN_yaml_max": 0.5323649916652405,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70540.60263518483,
+    "F_cyl_max_N": 118389.59745002726,
+    "res_max_N": 1.2855540262535214e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6647798368878798,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6667798368878798,
+     "limit_m": 0.6828,
+     "margin_mm": 16.02016311212018,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70016.23948303828,
+     "F_min_ext_N": 70045.09555646154,
+     "F_min_yaml_kt_N": 70016.23948303828,
+     "F_cyl_N": [
+      118389.59745002726,
+      115193.89763093829,
+      72954.97360596285,
+      70045.09555646154
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.60165037303828,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.3961343186601365,
+     "limit_deg": 10.0,
+     "margin_deg": 6.6038656813398635,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      -2.8751445388922545,
+      -1.7172379969443723
+     ],
+     "crawler_static_res": 2.3515895009040833e-08,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      -2.8464804804540815,
+      -1.845174571073179
+     ],
+     "err_deg": [
+      0.003519519545918559,
+      0.004825428926821029
+     ],
+     "Rv_hat": 0.9980783704503187,
+     "margin_Rv": 0.00692162954968123,
+     "margin_err_deg": 0.03217457107317897,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      0.02045176559853834,
+      -0.05977546172498727
+     ],
+     "record_floor_eop_err_deg": [
+      0.0031257109842015574,
+      0.004169076619468193
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "d45++",
+   "floor_deg": [
+    2.2627,
+    2.2627
+   ],
+   "Rv": 1.0085054528212423,
+   "chrono_floor": null,
+   "w_candidate_top": true,
+   "g04_role": "w_candidate",
+   "record": {
+    "s_motor_m": [
+     0.5722133110366595,
+     0.677447782877213,
+     0.3741407775089732,
+     0.46983027323163434
+    ],
+    "s_max_clr20_m": 0.647400983180538,
+    "s_min_clr50_m": 0.3741407775089732,
+    "stroke_headroom_mm_vs_0.7_clr50": 22.55221712278699,
+    "stroke_margin_mm_clr20": 30.499016819462003,
+    "rod_SF_min": {
+     "ext_C45": 2.1989969902398143,
+     "ext_20MnV6": 3.244421788878414,
+     "yaml_C45": 1.6179157091203156,
+     "yaml_20MnV6": 2.387088751161121
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3412221482168936,
+    "util_muN_yaml_max": 0.510549568716015,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70852.45548870025,
+    "F_cyl_max_N": 118101.60389617148,
+    "res_max_N": 3.882890450768173e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.677447782877213,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.682347782877213,
+     "limit_m": 0.6828,
+     "margin_mm": 0.4522171227869954,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70243.53879945031,
+     "F_min_ext_N": 70243.53879945031,
+     "F_min_yaml_kt_N": 70276.61485705175,
+     "F_cyl_N": [
+      118101.60389617148,
+      116908.38214339667,
+      71330.03940437155,
+      70243.53879945031
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.82894968945031,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1982795748499977,
+     "limit_deg": 10.0,
+     "margin_deg": 6.801720425150002,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      2.2874289221668618,
+      2.5239540178802007
+     ],
+     "crawler_static_res": 1.507578417658806e-08,
+     "active_spheres": 11,
+     "floor_hat_deg": [
+      2.2646241569068097,
+      2.2534411186026584
+     ],
+     "err_deg": [
+      0.001924156906809582,
+      -0.009258881397341767
+     ],
+     "Rv_hat": 1.006340623830742,
+     "margin_Rv": -0.0013406238307420715,
+     "margin_err_deg": 0.02774111860265823,
+     "pass": false,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      -0.014232736089051734,
+      -0.14301152925354232
+     ],
+     "record_floor_eop_err_deg": [
+      0.002492490355140653,
+      -0.007314409536657518
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "d45+-",
+   "floor_deg": [
+    2.2627,
+    -2.2627
+   ],
+   "Rv": 1.0085054528212423,
+   "chrono_floor": null,
+   "w_candidate_top": true,
+   "g04_role": "w_candidate",
+   "record": {
+    "s_motor_m": [
+     0.38953188637333575,
+     0.4947823037245628,
+     0.5776526812824704,
+     0.6733366752597337
+    ],
+    "s_max_clr20_m": 0.6432898755630587,
+    "s_min_clr50_m": 0.38953188637333575,
+    "stroke_headroom_mm_vs_0.7_clr50": 26.663324740266226,
+    "stroke_margin_mm_clr20": 37.51012443694124,
+    "rod_SF_min": {
+     "ext_C45": 2.273951377757748,
+     "ext_20MnV6": 3.355010229478644,
+     "yaml_C45": 1.258940234690483,
+     "yaml_20MnV6": 1.8574528052810406
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.35531588317939444,
+    "util_muN_yaml_max": 0.5761609477574314,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71225.52422386735,
+    "F_cyl_max_N": 117244.5747586723,
+    "res_max_N": 1.0221527190878987e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6733366752597337,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6753366752597337,
+     "limit_m": 0.6828,
+     "margin_mm": 7.463324740266232,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 71094.23358254394,
+     "F_min_ext_N": 71094.23358254394,
+     "F_min_yaml_kt_N": 71357.32977070958,
+     "F_cyl_N": [
+      117244.5747586723,
+      116192.99858633746,
+      72051.75731583626,
+      71094.23358254394
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.679644472543934,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1982795748499977,
+     "limit_deg": 10.0,
+     "margin_deg": 6.801720425150002,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      2.2825087517480513,
+      -2.140028632019834
+     ],
+     "crawler_static_res": 3.976310836151242e-09,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      2.259753038648858,
+      -2.257741790452423
+     ],
+     "err_deg": [
+      -0.002946961351142363,
+      0.004958209547577308
+     ],
+     "Rv_hat": 1.0066483854234036,
+     "margin_Rv": -0.001648385423403731,
+     "margin_err_deg": 0.03204179045242269,
+     "pass": false,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      -0.01644638660848452,
+      -0.053177862132548714
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0026340060726295356,
+      0.004156235528609997
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "d45-+",
+   "floor_deg": [
+    -2.2627,
+    2.2627
+   ],
+   "Rv": 1.0085054528212423,
+   "chrono_floor": null,
+   "w_candidate_top": true,
+   "g04_role": "w_candidate",
+   "record": {
+    "s_motor_m": [
+     0.6775628646996795,
+     0.5721088105525023,
+     0.4669544199567893,
+     0.3710690537055823
+    ],
+    "s_max_clr20_m": 0.6475160650030045,
+    "s_min_clr50_m": 0.3710690537055823,
+    "stroke_headroom_mm_vs_0.7_clr50": 22.43713530032043,
+    "stroke_margin_mm_clr20": 30.383934996995446,
+    "rod_SF_min": {
+     "ext_C45": 2.171935311465419,
+     "ext_20MnV6": 3.2044947218342252,
+     "yaml_C45": 1.5975607225968824,
+     "yaml_20MnV6": 2.357056803831466
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3407836298700029,
+    "util_muN_yaml_max": 0.5082075718353305,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70882.11372522858,
+    "F_cyl_max_N": 118919.4552126628,
+    "res_max_N": 4.5858818339183927e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6775628646996795,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6824628646996795,
+     "limit_m": 0.6828,
+     "margin_mm": 0.3371353003204392,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 69224.26642628016,
+     "F_min_ext_N": 69497.52110578299,
+     "F_min_yaml_kt_N": 69224.26642628016,
+     "F_cyl_N": [
+      118919.4552126628,
+      116119.92687383345,
+      72046.66105111071,
+      69497.52110578299
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 54.80967731628015,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1982795748499977,
+     "limit_deg": 10.0,
+     "margin_deg": 6.801720425150002,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      -2.2867466084516916,
+      2.5237029349281914
+     ],
+     "crawler_static_res": 2.0954757928848267e-09,
+     "active_spheres": 11,
+     "floor_hat_deg": [
+      -2.263948645590595,
+      2.253200382488822
+     ],
+     "err_deg": [
+      -0.001248645590594677,
+      -0.009499617511178116
+     ],
+     "Rv_hat": 1.0061570492589609,
+     "margin_Rv": -0.0011570492589609849,
+     "margin_err_deg": 0.027500382488821883,
+     "pass": false,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      0.014455738860538858,
+      -0.14308813902099882
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0018169902455316134,
+      -0.007555124992407514
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "d45--",
+   "floor_deg": [
+    -2.2627,
+    -2.2627
+   ],
+   "Rv": 1.0085054528212423,
+   "chrono_floor": null,
+   "w_candidate_top": true,
+   "g04_role": "w_candidate",
+   "record": {
+    "s_motor_m": [
+     0.4948719858838493,
+     0.38945658144137935,
+     0.6705019407698104,
+     0.5745449015814885
+    ],
+    "s_max_clr20_m": 0.6404551410731354,
+    "s_min_clr50_m": 0.38945658144137935,
+    "stroke_headroom_mm_vs_0.7_clr50": 29.498059230189554,
+    "stroke_margin_mm_clr20": 40.34485892686457,
+    "rod_SF_min": {
+     "ext_C45": 2.288960881770542,
+     "ext_20MnV6": 3.3771553993335863,
+     "yaml_C45": 1.2777181659601256,
+     "yaml_20MnV6": 1.8851579497772344
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3471434562411355,
+    "util_muN_yaml_max": 0.5573847472343548,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70613.97931185937,
+    "F_cyl_max_N": 118194.63374184565,
+    "res_max_N": 8.660892490297556e-06
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6705019407698104,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6725019407698104,
+     "limit_m": 0.6828,
+     "margin_mm": 10.298059230189562,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70228.59662882918,
+     "F_min_ext_N": 70228.59662882918,
+     "F_min_yaml_kt_N": 70288.03975827448,
+     "F_cyl_N": [
+      118194.63374184565,
+      115255.25549861015,
+      72905.07837410494,
+      70228.59662882918
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.81400751882918,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1982795748499977,
+     "limit_deg": 10.0,
+     "margin_deg": 6.801720425150002,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      -2.2819947958577216,
+      -2.140028652939038
+     ],
+     "crawler_static_res": 1.507578417658806e-08,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      -2.25924420669629,
+      -2.2577418108657836
+     ],
+     "err_deg": [
+      0.003455793303710042,
+      0.0049581891342165285
+     ],
+     "Rv_hat": 1.00655912217692,
+     "margin_Rv": -0.0015591221769200025,
+     "margin_err_deg": 0.03204181086578347,
+     "pass": false,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      0.01663112889088625,
+      -0.05314626451740345
+     ],
+     "record_floor_eop_err_deg": [
+      0.0031428322609499126,
+      0.004156214821328774
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "rpX",
+   "floor_deg": [
+    2.8632,
+    1.8413
+   ],
+   "Rv": 0.9999644381223327,
+   "chrono_floor": "rpX",
+   "w_candidate_top": false,
+   "g04_role": "chrono",
+   "record": {
+    "s_motor_m": [
+     0.5419997601582857,
+     0.6752423795108904,
+     0.3815420666935003,
+     0.50269815241291
+    ],
+    "s_max_clr20_m": 0.645189403193153,
+    "s_min_clr50_m": 0.3815420666935003,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.757620489109566,
+    "stroke_margin_mm_clr20": 32.71059680684697,
+    "rod_SF_min": {
+     "ext_C45": 2.381162082073608,
+     "ext_20MnV6": 3.513189957157782,
+     "yaml_C45": 1.594088680652624,
+     "yaml_20MnV6": 2.3519341189956746
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3480642637310215,
+    "util_muN_yaml_max": 0.5258501040714703,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70884.1179001775,
+    "F_cyl_max_N": 117887.52191175647,
+    "res_max_N": 2.5803950848057866e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6752423795108904,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6801423795108904,
+     "limit_m": 0.6828,
+     "margin_mm": 2.6576204891095734,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70447.1610420184,
+     "F_min_ext_N": 70447.1610420184,
+     "F_min_yaml_kt_N": 70549.93676048987,
+     "F_cyl_N": [
+      117887.52191175647,
+      116928.19553494341,
+      71320.68575467171,
+      70447.1610420184
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.0325719320184,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.402503549819105,
+     "limit_deg": 10.0,
+     "margin_deg": 6.597496450180895,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      2.8942409654712464,
+      2.082474644621947
+     ],
+     "crawler_static_res": 7.1158865466713905e-09,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      2.8653865231827957,
+      1.830154599917493
+     ],
+     "err_deg": [
+      0.0021865231827957743,
+      -0.011145400082506862
+     ],
+     "Rv_hat": 0.9973357683881486,
+     "margin_Rv": 0.007664231611851258,
+     "margin_err_deg": 0.025854599917493136,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      -0.018078019375393772,
+      -0.13224362338938134
+     ],
+     "record_floor_eop_err_deg": [
+      0.002649592278531898,
+      -0.010053311348085847
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3",
+    "G0-4"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "rpX+-",
+   "floor_deg": [
+    2.8632,
+    -1.8413
+   ],
+   "Rv": 0.9999644381223327,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.39333122192230063,
+     0.5265856279407024,
+     0.5471639068474019,
+     0.6683242515833347
+    ],
+    "s_max_clr20_m": 0.6382712752655973,
+    "s_min_clr50_m": 0.39333122192230063,
+    "stroke_headroom_mm_vs_0.7_clr50": 31.675748416665208,
+    "stroke_margin_mm_clr20": 42.528724734402616,
+    "rod_SF_min": {
+     "ext_C45": 2.3924089959177888,
+     "ext_20MnV6": 3.5297837644688688,
+     "yaml_C45": 1.3551325171594146,
+     "yaml_20MnV6": 1.9993758449893004
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.350059706589748,
+    "util_muN_yaml_max": 0.5506813208333943,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71259.36559705742,
+    "F_cyl_max_N": 117180.14587652378,
+    "res_max_N": 1.416628947481513e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6683242515833347,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6703242515833348,
+     "limit_m": 0.6828,
+     "margin_mm": 12.475748416665212,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 71146.85771710731,
+     "F_min_ext_N": 71146.85771710731,
+     "F_min_yaml_kt_N": 71402.44074075308,
+     "F_cyl_N": [
+      117180.14587652378,
+      116392.54140779095,
+      71864.01924196794,
+      71146.85771710731
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.73226860710731,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.402503549819105,
+     "limit_deg": 10.0,
+     "margin_deg": 6.597496450180895,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      2.888990876357511,
+      -1.7083259279625718
+     ],
+     "crawler_static_res": 1.3329554349184036e-08,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      2.8601887753893402,
+      -1.8364780030470653
+     ],
+     "err_deg": [
+      -0.003011224610659724,
+      0.004821996952934615
+     ],
+     "Rv_hat": 0.9981329106832068,
+     "margin_Rv": 0.00686708931679314,
+     "margin_err_deg": 0.03217800304706538,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      -0.020351645467349577,
+      -0.05994756053540384
+     ],
+     "record_floor_eop_err_deg": [
+      -0.00261560556722662,
+      0.004168714924715156
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "rpX-+",
+   "floor_deg": [
+    -2.8632,
+    1.8413
+   ],
+   "Rv": 0.9999644381223327,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.6753560363674515,
+     0.5418983048107221,
+     0.4990353921935641,
+     0.37767579340662405
+    ],
+    "s_max_clr20_m": 0.645303060049714,
+    "s_min_clr50_m": 0.37767579340662405,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.643963632548505,
+    "stroke_margin_mm_clr20": 32.59693995028591,
+    "rod_SF_min": {
+     "ext_C45": 2.343116762035583,
+     "ext_20MnV6": 3.4570575177574177,
+     "yaml_C45": 1.571329987658482,
+     "yaml_20MnV6": 2.3183557194961213
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.34777892279730344,
+    "util_muN_yaml_max": 0.5240951088243962,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70830.6378498512,
+    "F_cyl_max_N": 118941.49633672282,
+    "res_max_N": 3.069482045248151e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6753560363674515,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6802560363674515,
+     "limit_m": 0.6828,
+     "margin_mm": 2.5439636325485115,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 69174.88579368764,
+     "F_min_ext_N": 69486.22264883449,
+     "F_min_yaml_kt_N": 69174.88579368764,
+     "F_cyl_N": [
+      118941.49633672282,
+      115901.74599245022,
+      72254.09926538244,
+      69486.22264883449
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 54.76029668368764,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.402503549819105,
+     "limit_deg": 10.0,
+     "margin_deg": 6.597496450180895,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      -2.893640512531116,
+      2.082474681072519
+     ],
+     "crawler_static_res": 9.567884262651205e-09,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      -2.86479205652194,
+      1.8301546348659798
+     ],
+     "err_deg": [
+      -0.001592056521940055,
+      -0.011145365134020091
+     ],
+     "Rv_hat": 0.9972314854370443,
+     "margin_Rv": 0.007768514562955575,
+     "margin_err_deg": 0.025854634865979907,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      0.018300980405029588,
+      -0.13232018055696493
+     ],
+     "record_floor_eop_err_deg": [
+      -0.002055133508509499,
+      -0.010053275908100678
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "top",
+   "tag": "rpX--",
+   "floor_deg": [
+    -2.8632,
+    -1.8413
+   ],
+   "Rv": 0.9999644381223327,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.5266794857478007,
+     0.3932547901082212,
+     0.6646958231789445,
+     0.5432695329561382
+    ],
+    "s_max_clr20_m": 0.6346428468612071,
+    "s_min_clr50_m": 0.3932547901082212,
+    "stroke_headroom_mm_vs_0.7_clr50": 35.304176821055464,
+    "stroke_margin_mm_clr20": 46.15715313879287,
+    "rod_SF_min": {
+     "ext_C45": 2.4114800663640685,
+     "ext_20MnV6": 3.557921409389609,
+     "yaml_C45": 1.379848493056276,
+     "yaml_20MnV6": 2.035842038935489
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3422696682468363,
+    "util_muN_yaml_max": 0.5323093404725091,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70538.53467431074,
+    "F_cyl_max_N": 118394.30498914511,
+    "res_max_N": 1.2900418369099498e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6646958231789445,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6666958231789445,
+     "limit_m": 0.6828,
+     "margin_mm": 16.10417682105547,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70009.93468504137,
+     "F_min_ext_N": 70040.71119757382,
+     "F_min_yaml_kt_N": 70009.93468504137,
+     "F_cyl_N": [
+      118394.30498914511,
+      115191.37837970756,
+      72957.16967696347,
+      70040.71119757382
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.59534557504137,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.402503549819105,
+     "limit_deg": 10.0,
+     "margin_deg": 6.597496450180895,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      -2.8884770314991317,
+      -1.7083259498429866
+     ],
+     "crawler_static_res": 5.995389074087143e-09,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      -2.8596800533617786,
+      -1.836478024398394
+     ],
+     "err_deg": [
+      0.003519946638221416,
+      0.00482197560160591
+     ],
+     "Rv_hat": 0.9980436669753165,
+     "margin_Rv": 0.006956333024683348,
+     "margin_err_deg": 0.03217802439839409,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17366,
+      "k_dn": 0.04298,
+      "k_up": 0.02478,
+      "k_phi": 0.01007
+     },
+     "record_kn_x3_err_deg": [
+      0.020536350374942725,
+      -0.05991598494957362
+     ],
+     "record_floor_eop_err_deg": [
+      0.00312432176852262,
+      0.0041686932659035225
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "pitch+",
+   "floor_deg": [
+    0.0,
+    3.7
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.6751059913656441,
+     0.6749894805380238,
+     0.34818361687063465,
+     0.34809972781086135
+    ],
+    "s_max_clr20_m": 0.6450433293021492,
+    "s_min_clr50_m": 0.34809972781086135,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.89400863435587,
+    "stroke_margin_mm_clr20": 32.85667069785071,
+    "rod_SF_min": {
+     "ext_C45": 1.7604375402773775,
+     "ext_20MnV6": 2.5973668627043276,
+     "yaml_C45": 1.3877081234068858,
+     "yaml_20MnV6": 2.0474382148626185
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.4569948996927346,
+    "util_muN_yaml_max": 0.5656130548183474,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70778.2454632617,
+    "F_cyl_max_N": 119400.7984047668,
+    "res_max_N": 0.000994200468994677
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6751059913656441,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6800059913656441,
+     "limit_m": 0.6828,
+     "margin_mm": 2.7940086343558757,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 68709.16491538979,
+     "F_min_ext_N": 68979.72736197518,
+     "F_min_yaml_kt_N": 68709.16491538979,
+     "F_cyl_N": [
+      119400.7984047668,
+      117416.3585852869,
+      70786.67989136107,
+      68979.72736197518
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 54.29457580538979,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.6999999999999678,
+     "limit_deg": 10.0,
+     "margin_deg": 6.300000000000033,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      0.0002994080722799741,
+      3.983396412110617
+     ],
+     "crawler_static_res": 1.4202669262886047e-08,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      0.0002971143495018201,
+      3.7100957172168685
+     ],
+     "err_deg": [
+      0.0002971143495018201,
+      0.010095717216868305
+     ],
+     "Rv_hat": 1.0027806975452493,
+     "margin_Rv": 0.002219302454750549,
+     "margin_err_deg": 0.026904282783131693,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      0.0001182191304749233,
+      -0.1322513608119542
+     ],
+     "record_floor_eop_err_deg": [
+      0.00035716172597298224,
+      0.012908751203717372
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "pitch-",
+   "floor_deg": [
+    0.0,
+    -3.7
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.3764086197877504,
+     0.37633567091581516,
+     0.6808615895622329,
+     0.6807135695159025
+    ],
+    "s_max_clr20_m": 0.650798927498738,
+    "s_min_clr50_m": 0.37633567091581516,
+    "stroke_headroom_mm_vs_0.7_clr50": 19.138410437767096,
+    "stroke_margin_mm_clr20": 30.001072501261937,
+    "rod_SF_min": {
+     "ext_C45": 1.5034075172006898,
+     "ext_20MnV6": 2.218142238492821,
+     "yaml_C45": 0.8524020266048403,
+     "yaml_20MnV6": 1.2576423343350103
+    },
+    "rod_pair_ok_1.5": false,
+    "util_muN_ext_max": 0.510990849926367,
+    "util_muN_yaml_max": 0.8243120276598715,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70930.04809141396,
+    "F_cyl_max_N": 117147.17840561604,
+    "res_max_N": 0.00010414162534289062
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6808615895622329,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6828615895622329,
+     "limit_m": 0.6828,
+     "margin_mm": -0.06158956223289817,
+     "pass": false
+    },
+    "G0-2": {
+     "F_static_min_N": 71234.18437940776,
+     "F_min_ext_N": 71234.18437940776,
+     "F_min_yaml_kt_N": 71883.66591786894,
+     "F_cyl_N": [
+      117147.17840561604,
+      115144.02161313879,
+      73058.17984522742,
+      71234.18437940776
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.819595269407756,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.6999999999999678,
+     "limit_deg": 10.0,
+     "margin_deg": 6.300000000000033,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      0.00025631004377899165,
+      -3.5932868335156143
+     ],
+     "crawler_static_res": 3.721033863257617e-07,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      0.00025434648888480104,
+      -3.6948078855608566
+     ],
+     "err_deg": [
+      0.00025434648888480104,
+      0.00519211443914358
+     ],
+     "Rv_hat": 0.9986413480182909,
+     "margin_Rv": 0.00635865198170904,
+     "margin_err_deg": 0.03180788556085642,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      9.845814714704429e-05,
+      -0.04340384814678
+     ],
+     "record_floor_eop_err_deg": [
+      0.0002543436671886116,
+      0.003882847385890731
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "fail"
+  },
+  {
+   "level": "middle",
+   "tag": "roll+",
+   "floor_deg": [
+    5.7,
+    0.0
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.4102645684191689,
+     0.6757084439083931,
+     0.41477296960100285,
+     0.6562030994958113
+    ],
+    "s_max_clr20_m": 0.6455593739412063,
+    "s_min_clr50_m": 0.4102645684191689,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.291556091606825,
+    "stroke_margin_mm_clr20": 35.24062605879364,
+    "rod_SF_min": {
+     "ext_C45": 1.3016968003268135,
+     "ext_20MnV6": 1.9205362627772657,
+     "yaml_C45": 0.8573144088484241,
+     "yaml_20MnV6": 1.2648901114157076
+    },
+    "rod_pair_ok_1.5": false,
+    "util_muN_ext_max": 0.7129471053057008,
+    "util_muN_yaml_max": 0.9999999998648862,
+    "slip_ext": false,
+    "slip_yaml": true,
+    "N_min_N": 71535.10459780679,
+    "F_cyl_max_N": 118562.33928280068,
+    "res_max_N": 0.0009744689450599253
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6757084439083931,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6777084439083931,
+     "limit_m": 0.6828,
+     "margin_mm": 5.091556091606832,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 68822.22317645181,
+     "F_min_ext_N": 69861.81726580516,
+     "F_min_yaml_kt_N": 68822.22317645181,
+     "F_cyl_N": [
+      115602.25032427747,
+      118562.33928280068,
+      69861.81726580516,
+      72557.15737050668
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 54.407634066451806,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 5.699999999999969,
+     "limit_deg": 10.0,
+     "margin_deg": 4.300000000000031,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      5.744633782042688,
+      0.18178875190996502
+     ],
+     "crawler_static_res": 4.3190084397792816e-08,
+     "active_spheres": 13,
+     "floor_hat_deg": [
+      5.700624957371778,
+      0.008829387222366666
+     ],
+     "err_deg": [
+      0.0006249573717775903,
+      0.008829387222366666
+     ],
+     "Rv_hat": 1.0024959625150813,
+     "margin_Rv": 0.0025040374849185643,
+     "margin_err_deg": 0.02817061277763333,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      -0.027658969711883863,
+      -0.08436775192979258
+     ],
+     "record_floor_eop_err_deg": [
+      0.0014937161269781285,
+      0.009030303531309002
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "roll-",
+   "floor_deg": [
+    -5.7,
+    0.0
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.675799449713059,
+     0.410158150083567,
+     0.6488100211149762,
+     0.4071428509168272
+    ],
+    "s_max_clr20_m": 0.6456503797458722,
+    "s_min_clr50_m": 0.4071428509168272,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.200550286940903,
+    "stroke_margin_mm_clr20": 35.14962025412771,
+    "rod_SF_min": {
+     "ext_C45": 1.295059457852891,
+     "ext_20MnV6": 1.9107434624059045,
+     "yaml_C45": 0.8419537456540852,
+     "yaml_20MnV6": 1.2422268378502896
+    },
+    "rod_pair_ok_1.5": false,
+    "util_muN_ext_max": 0.7057514762356629,
+    "util_muN_yaml_max": 0.9999999997768053,
+    "slip_ext": false,
+    "slip_yaml": true,
+    "N_min_N": 69775.13312876155,
+    "F_cyl_max_N": 120595.16550765074,
+    "res_max_N": 0.0009197038307320327
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.675799449713059,
+     "allowance_m": 0.002,
+     "lhs_m": 0.677799449713059,
+     "limit_m": 0.6828,
+     "margin_mm": 5.00055028694091,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 66946.82692570958,
+     "F_min_ext_N": 68009.44032738065,
+     "F_min_yaml_kt_N": 66946.82692570958,
+     "F_cyl_N": [
+      120595.16550765074,
+      113599.96226922545,
+      74378.99613913306,
+      68009.44032738065
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 52.53223781570958,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 5.699999999999969,
+     "limit_deg": 10.0,
+     "margin_deg": 4.300000000000031,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      -5.744068287037393,
+      0.1816513026669408
+     ],
+     "crawler_static_res": 3.305649443063885e-08,
+     "active_spheres": 13,
+     "floor_hat_deg": [
+      -5.700063794543517,
+      0.008695565876041308
+     ],
+     "err_deg": [
+      -6.37945435171261e-05,
+      0.008695565876041308
+     ],
+     "Rv_hat": 1.0023613449646491,
+     "margin_Rv": 0.0026386550353507676,
+     "margin_err_deg": 0.02830443412395869,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      0.027861216662686594,
+      -0.08438033861500761
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0009325613389021825,
+      0.008896488762368537
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "r+p+0.25",
+   "floor_deg": [
+    1.425,
+    2.775
+   ],
+   "Rv": 0.9999999999999999,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.6088648608045802,
+     0.6750587737012443,
+     0.36477596665299905,
+     0.42496976936774195
+    ],
+    "s_max_clr20_m": 0.6450142831414569,
+    "s_min_clr50_m": 0.36477596665299905,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.941226298755616,
+    "stroke_margin_mm_clr20": 32.885716858543034,
+    "rod_SF_min": {
+     "ext_C45": 2.0024100697980414,
+     "ext_20MnV6": 2.9543755128167826,
+     "yaml_C45": 1.6297610717969462,
+     "yaml_20MnV6": 2.404565515765986
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3560322955240705,
+    "util_muN_yaml_max": 0.5068119138920485,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70821.06968563286,
+    "F_cyl_max_N": 118414.46815597589,
+    "res_max_N": 6.143745849840343e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6750587737012443,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6799587737012444,
+     "limit_m": 0.6828,
+     "margin_mm": 2.8412262987556214,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 69890.66851647136,
+     "F_min_ext_N": 69941.68566408228,
+     "F_min_yaml_kt_N": 69890.66851647136,
+     "F_cyl_N": [
+      118414.46815597589,
+      116975.02129291557,
+      71252.38913041624,
+      69941.68566408228
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.47607940647136,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1184784727697195,
+     "limit_deg": 10.0,
+     "margin_deg": 6.88152152723028,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      1.436257931521317,
+      3.027893336361466
+     ],
+     "crawler_static_res": 1.3620592653751373e-08,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      1.4252549632053715,
+      2.779812616332687
+     ],
+     "err_deg": [
+      0.000254963205371439,
+      0.004812616332686925
+     ],
+     "Rv_hat": 1.0013454375038495,
+     "margin_Rv": 0.003654562496150371,
+     "margin_err_deg": 0.03218738366731307,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      -0.007471598882409447,
+      -0.1266633697202142
+     ],
+     "record_floor_eop_err_deg": [
+      0.0004864201141958624,
+      0.0064748762906807755
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "r+p+0.5",
+   "floor_deg": [
+    2.85,
+    1.85
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.542622792436626,
+     0.6752497458749894,
+     0.3813862907808983,
+     0.501982560418427
+    ],
+    "s_max_clr20_m": 0.6451969679974728,
+    "s_min_clr50_m": 0.3813862907808983,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.750254125010528,
+    "stroke_margin_mm_clr20": 32.703032002527124,
+    "rod_SF_min": {
+     "ext_C45": 2.3784422226873976,
+     "ext_20MnV6": 3.5091770498666524,
+     "yaml_C45": 1.5959099727832375,
+     "yaml_20MnV6": 2.3546212713195307
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3476011010427416,
+    "util_muN_yaml_max": 0.5250936919241205,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70883.43261709674,
+    "F_cyl_max_N": 117892.31102671569,
+    "res_max_N": 1.767268986441195e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6752497458749894,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6801497458749894,
+     "limit_m": 0.6828,
+     "margin_mm": 2.650254125010536,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70442.66439972674,
+     "F_min_ext_N": 70442.66439972674,
+     "F_min_yaml_kt_N": 70543.72026136362,
+     "F_cyl_N": [
+      117892.31102671569,
+      116926.44452629956,
+      71322.14429064801,
+      70442.66439972674
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.028075289726736,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.3961343186601365,
+     "limit_deg": 10.0,
+     "margin_deg": 6.6038656813398635,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      2.8738404774019224,
+      2.0721404987396266
+     ],
+     "crawler_static_res": 3.14321368932724e-09,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      2.851824393087289,
+      1.8492863459022177
+     ],
+     "err_deg": [
+      0.001824393087288989,
+      -0.0007136540977823458
+     ],
+     "Rv_hat": 1.0001271894767951,
+     "margin_Rv": 0.0048728105232047625,
+     "margin_err_deg": 0.03517560691271101,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      -0.014630386830602138,
+      -0.11356911283800786
+     ],
+     "record_floor_eop_err_deg": [
+      0.002285352893252046,
+      0.0003911879327906931
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "r+p+0.75",
+   "floor_deg": [
+    4.275,
+    0.925
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.4764234056592479,
+     0.6755050047889949,
+     0.39805770467047075,
+     0.5790897493624705
+    ],
+    "s_max_clr20_m": 0.645417405419895,
+    "s_min_clr50_m": 0.39805770467047075,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.494995211005065,
+    "stroke_margin_mm_clr20": 32.48259458010495,
+    "rod_SF_min": {
+     "ext_C45": 2.0425288827301906,
+     "ext_20MnV6": 3.01356720402815,
+     "yaml_C45": 1.2387328011077574,
+     "yaml_20MnV6": 1.8276385590114452
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.46453631116253075,
+    "util_muN_yaml_max": 0.6914992008439641,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71025.58687862472,
+    "F_cyl_max_N": 117407.54321061698,
+    "res_max_N": 8.918294042814523e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6755050047889949,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6804050047889949,
+     "limit_m": 0.6828,
+     "margin_mm": 2.394995211005073,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70333.75167095335,
+     "F_min_ext_N": 70894.78697467217,
+     "F_min_yaml_kt_N": 70333.75167095335,
+     "F_cyl_N": [
+      117171.67282909759,
+      117407.54321061698,
+      70894.78697467217,
+      71109.56122900324
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.91916256095335,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 4.373204403946744,
+     "limit_deg": 10.0,
+     "margin_deg": 5.626795596053256,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      4.3095137652848186,
+      1.1269975414233269
+     ],
+     "crawler_static_res": 1.125154085457325e-07,
+     "active_spheres": 13,
+     "floor_hat_deg": [
+      4.276499191526236,
+      0.9290899138586198
+     ],
+     "err_deg": [
+      0.001499191526235677,
+      0.004089913858619787
+     ],
+     "Rv_hat": 1.0013683981811856,
+     "margin_Rv": 0.0036316018188142785,
+     "margin_err_deg": 0.03291008614138021,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      -0.0209210716098438,
+      -0.09990048584026856
+     ],
+     "record_floor_eop_err_deg": [
+      0.002186159028319423,
+      0.004647887739946288
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "r+p-0.25",
+   "floor_deg": [
+    1.425,
+    -2.775
+   ],
+   "Rv": 0.9999999999999999,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.38483424811348405,
+     0.45105041254404876,
+     0.6143369945727497,
+     0.6745099370635077
+    ],
+    "s_max_clr20_m": 0.6444654465037203,
+    "s_min_clr50_m": 0.38483424811348405,
+    "stroke_headroom_mm_vs_0.7_clr50": 25.49006293649225,
+    "stroke_margin_mm_clr20": 36.334553496279675,
+    "rod_SF_min": {
+     "ext_C45": 2.0565875686421164,
+     "ext_20MnV6": 3.034309527504762,
+     "yaml_C45": 1.127956226851147,
+     "yaml_20MnV6": 1.664197711747594
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.38251386651109925,
+    "util_muN_yaml_max": 0.6323692419947636,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71164.21621116517,
+    "F_cyl_max_N": 117274.7814238824,
+    "res_max_N": 1.1460791938588955e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6745099370635077,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6765099370635077,
+     "limit_m": 0.6828,
+     "margin_mm": 6.29006293649226,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 71077.30728438102,
+     "F_min_ext_N": 71077.30728438102,
+     "F_min_yaml_kt_N": 71403.37563618644,
+     "F_cyl_N": [
+      117274.7814238824,
+      115926.23650328604,
+      72305.2390318405,
+      71077.30728438102
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.66271817438102,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1184784727697195,
+     "limit_deg": 10.0,
+     "margin_deg": 6.88152152723028,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      1.4339779302398992,
+      -2.6505303055672242
+     ],
+     "crawler_static_res": 1.414446160197258e-08,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      1.4229924286904092,
+      -2.769874817827685
+     ],
+     "err_deg": [
+      -0.0020075713095908387,
+      0.005125182172315057
+     ],
+     "Rv_hat": 0.9982626101361932,
+     "margin_Rv": 0.006737389863806675,
+     "margin_err_deg": 0.03187481782768494,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      -0.008673355922513837,
+      -0.053621133331852366
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0018101305477491447,
+      0.004142015096222806
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "r+p-0.5",
+   "floor_deg": [
+    2.85,
+    -1.85
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.39325206599239954,
+     0.5258908984994873,
+     0.5477905187264449,
+     0.6683908298227283
+    ],
+    "s_max_clr20_m": 0.6383380519452118,
+    "s_min_clr50_m": 0.39325206599239954,
+    "stroke_headroom_mm_vs_0.7_clr50": 31.609170177271608,
+    "stroke_margin_mm_clr20": 42.4619480547882,
+    "rod_SF_min": {
+     "ext_C45": 2.391649979917772,
+     "ext_20MnV6": 3.5286639047967125,
+     "yaml_C45": 1.3541656877468484,
+     "yaml_20MnV6": 1.9979493753642024
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.34990032934232734,
+    "util_muN_yaml_max": 0.5507445914187323,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71258.4367745399,
+    "F_cyl_max_N": 117182.66357334347,
+    "res_max_N": 9.060080628842115e-06
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6683908298227283,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6703908298227284,
+     "limit_m": 0.6828,
+     "margin_mm": 12.409170177271612,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 71144.66248476277,
+     "F_min_ext_N": 71144.66248476277,
+     "F_min_yaml_kt_N": 71399.72676771118,
+     "F_cyl_N": [
+      117182.66357334347,
+      116387.84831960694,
+      71868.3898656768,
+      71144.66248476277
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.73007337476277,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.3961343186601365,
+     "limit_deg": 10.0,
+     "margin_deg": 6.6038656813398635,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      2.8696506205787435,
+      -1.7079858328525155
+     ],
+     "crawler_static_res": 1.4479155652225018e-09,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      2.8476666341630055,
+      -1.8451497962782342
+     ],
+     "err_deg": [
+      -0.0023333658369946164,
+      0.004850203721765922
+     ],
+     "Rv_hat": 0.9982797717017096,
+     "margin_Rv": 0.006720228298290332,
+     "margin_err_deg": 0.032149796278234076,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      -0.016055428284984075,
+      -0.06528389554373248
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0019394093738713813,
+      0.00419359760840643
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "r+p-0.75",
+   "floor_deg": [
+    4.275,
+    -0.925
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.4017121989426012,
+     0.6007958156317871,
+     0.4812531018207536,
+     0.6623075616417663
+    ],
+    "s_max_clr20_m": 0.6322199622726664,
+    "s_min_clr50_m": 0.4017121989426012,
+    "stroke_headroom_mm_vs_0.7_clr50": 37.69243835823366,
+    "stroke_margin_mm_clr20": 48.58003772733355,
+    "rod_SF_min": {
+     "ext_C45": 2.1293253928084175,
+     "ext_20MnV6": 3.1416276287337306,
+     "yaml_C45": 1.254340557389959,
+     "yaml_20MnV6": 1.8506663961491199
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.46904185475047955,
+    "util_muN_yaml_max": 0.6272377546200988,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71392.38330386466,
+    "F_cyl_max_N": 117106.89151452889,
+    "res_max_N": 7.157337677199394e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6623075616417663,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6643075616417663,
+     "limit_m": 0.6828,
+     "margin_mm": 18.492438358233663,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70877.34686970209,
+     "F_min_ext_N": 71204.5470417492,
+     "F_min_yaml_kt_N": 70877.34686970209,
+     "F_cyl_N": [
+      116667.3444182262,
+      117106.89151452889,
+      71204.5470417492,
+      71604.7812688857
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.462757759702086,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 4.373204403946744,
+     "limit_deg": 10.0,
+     "margin_deg": 5.626795596053256,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      4.306177389675766,
+      -0.7656916238809623
+     ],
+     "crawler_static_res": 1.0302755981683731e-08,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      4.2731883754175435,
+      -0.9206703070638421
+     ],
+     "err_deg": [
+      -0.0018116245824568722,
+      0.004329692936157925
+     ],
+     "Rv_hat": 0.998511983845842,
+     "margin_Rv": 0.0064880161541578385,
+     "margin_err_deg": 0.03267030706384207,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      -0.021750313338969818,
+      -0.07486146231080515
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0012217043362827695,
+      0.00399940363012552
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "r-p+0.5",
+   "floor_deg": [
+    -2.85,
+    1.85
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.6753634400634625,
+     0.5425212881090467,
+     0.4983371092167033,
+     0.37753749123740316
+    ],
+    "s_max_clr20_m": 0.6453106621859459,
+    "s_min_clr50_m": 0.37753749123740316,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.63655993653746,
+    "stroke_margin_mm_clr20": 32.589337814054055,
+    "rod_SF_min": {
+     "ext_C45": 2.3405541561445857,
+     "ext_20MnV6": 3.4532766238198804,
+     "yaml_C45": 1.573139875280197,
+     "yaml_20MnV6": 2.3210260454953726
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.347320940286306,
+    "util_muN_yaml_max": 0.5233392564232461,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70832.1259990197,
+    "F_cyl_max_N": 118939.69841823075,
+    "res_max_N": 2.1157320588827133e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6753634400634625,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6802634400634625,
+     "limit_m": 0.6828,
+     "margin_mm": 2.536559936537468,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 69177.68946054706,
+     "F_min_ext_N": 69487.72195332199,
+     "F_min_yaml_kt_N": 69177.68946054706,
+     "F_cyl_N": [
+      118939.69841823075,
+      115906.62552698595,
+      72249.51834485125,
+      69487.72195332199
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 54.763100350547056,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.3961343186601365,
+     "limit_deg": 10.0,
+     "margin_deg": 6.6038656813398635,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      -2.873241478078216,
+      2.0721405271361464
+     ],
+     "crawler_static_res": 1.909211277961731e-08,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      -2.851229982612448,
+      1.849286373549227
+     ],
+     "err_deg": [
+      -0.0012299826124477775,
+      -0.0007136264507729972
+     ],
+     "Rv_hat": 1.000022914409514,
+     "margin_Rv": 0.004977085590485819,
+     "margin_err_deg": 0.03577001738755222,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      0.014853639168185495,
+      -0.11364647451011312
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0016909502919486563,
+      0.0003912160828969391
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "r-p-0.5",
+   "floor_deg": [
+    -2.85,
+    -1.85
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.5259846640178386,
+     0.3931756582229012,
+     0.6647798368878798,
+     0.5439134415343526
+    ],
+    "s_max_clr20_m": 0.6347270590103632,
+    "s_min_clr50_m": 0.3931756582229012,
+    "stroke_headroom_mm_vs_0.7_clr50": 35.220163112120176,
+    "stroke_margin_mm_clr20": 46.07294098963677,
+    "rod_SF_min": {
+     "ext_C45": 2.4107075556124014,
+     "ext_20MnV6": 3.556781639428133,
+     "yaml_C45": 1.3788090341849635,
+     "yaml_20MnV6": 2.034308411092569
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3421010554086276,
+    "util_muN_yaml_max": 0.5323649916652405,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70540.60263518483,
+    "F_cyl_max_N": 118389.59745002727,
+    "res_max_N": 8.197224815376103e-06
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6647798368878798,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6667798368878798,
+     "limit_m": 0.6828,
+     "margin_mm": 16.02016311212018,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70016.23948303828,
+     "F_min_ext_N": 70045.09555646154,
+     "F_min_yaml_kt_N": 70016.23948303828,
+     "F_cyl_N": [
+      118389.59745002727,
+      115193.8976309383,
+      72954.97360596286,
+      70045.09555646154
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.60165037303828,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.3961343186601365,
+     "limit_deg": 10.0,
+     "margin_deg": 6.6038656813398635,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      -2.8691378393901563,
+      -1.7079858498394929
+     ],
+     "crawler_static_res": 1.4202669262886047e-08,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      -2.847157781318378,
+      -1.845149812944061
+     ],
+     "err_deg": [
+      0.002842218681621933,
+      0.0048501870559389815
+     ],
+     "Rv_hat": 0.998190503777105,
+     "margin_Rv": 0.00680949622289484,
+     "margin_err_deg": 0.03214981294406102,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      0.01624042107011059,
+      -0.06525223642119893
+     ],
+     "record_floor_eop_err_deg": [
+      0.002448256403085658,
+      0.004193580633799154
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "d45++",
+   "floor_deg": [
+    2.2627,
+    2.2627
+   ],
+   "Rv": 1.0085054528212423,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.5722133110366595,
+     0.677447782877213,
+     0.3741407775089732,
+     0.46983027323163434
+    ],
+    "s_max_clr20_m": 0.647400983180538,
+    "s_min_clr50_m": 0.3741407775089732,
+    "stroke_headroom_mm_vs_0.7_clr50": 22.55221712278699,
+    "stroke_margin_mm_clr20": 30.499016819462003,
+    "rod_SF_min": {
+     "ext_C45": 2.1989969902398148,
+     "ext_20MnV6": 3.244421788878415,
+     "yaml_C45": 1.6179157091203156,
+     "yaml_20MnV6": 2.387088751161121
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3412221482168936,
+    "util_muN_yaml_max": 0.510549568716015,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70852.45548870025,
+    "F_cyl_max_N": 118101.60389617148,
+    "res_max_N": 2.679109456948936e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.677447782877213,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.682347782877213,
+     "limit_m": 0.6828,
+     "margin_mm": 0.4522171227869954,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70243.53879945031,
+     "F_min_ext_N": 70243.53879945031,
+     "F_min_yaml_kt_N": 70276.61485705175,
+     "F_cyl_N": [
+      118101.60389617148,
+      116908.38214339667,
+      71330.03940437154,
+      70243.53879945031
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.82894968945031,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1982795748499977,
+     "limit_deg": 10.0,
+     "margin_deg": 6.801720425150002,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      2.281183848040211,
+      2.498576118041723
+     ],
+     "crawler_static_res": 3.332388587296009e-09,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      2.263708022109525,
+      2.2644664330419557
+     ],
+     "err_deg": [
+      0.0010080221095249975,
+      0.0017664330419555618
+     ],
+     "Rv_hat": 1.0091597131410333,
+     "margin_Rv": -0.004159713141033361,
+     "margin_err_deg": 0.035233566958044436,
+     "pass": false,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      -0.011830693775147783,
+      -0.11935252455736434
+     ],
+     "record_floor_eop_err_deg": [
+      0.0013746212521708046,
+      0.003119954717711426
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "d45+-",
+   "floor_deg": [
+    2.2627,
+    -2.2627
+   ],
+   "Rv": 1.0085054528212423,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.38953188637333575,
+     0.4947823037245628,
+     0.5776526812824704,
+     0.6733366752597337
+    ],
+    "s_max_clr20_m": 0.6432898755630587,
+    "s_min_clr50_m": 0.38953188637333575,
+    "stroke_headroom_mm_vs_0.7_clr50": 26.663324740266226,
+    "stroke_margin_mm_clr20": 37.51012443694124,
+    "rod_SF_min": {
+     "ext_C45": 2.273951377757748,
+     "ext_20MnV6": 3.355010229478644,
+     "yaml_C45": 1.258940234690483,
+     "yaml_20MnV6": 1.8574528052810406
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.35531588317939444,
+    "util_muN_yaml_max": 0.5761609477574313,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71225.52422386735,
+    "F_cyl_max_N": 117244.57475867232,
+    "res_max_N": 6.21613253315445e-06
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6733366752597337,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6753366752597337,
+     "limit_m": 0.6828,
+     "margin_mm": 7.463324740266232,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 71094.23358254394,
+     "F_min_ext_N": 71094.23358254394,
+     "F_min_yaml_kt_N": 71357.32977070959,
+     "F_cyl_N": [
+      117244.57475867232,
+      116192.99858633749,
+      72051.75731583625,
+      71094.23358254394
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.679644472543934,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1982795748499977,
+     "limit_deg": 10.0,
+     "margin_deg": 6.801720425150002,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      2.2777344865139533,
+      -2.128493992354908
+     ],
+     "crawler_static_res": 4.511093720793724e-09,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      2.2602850856527144,
+      -2.257707959966357
+     ],
+     "err_deg": [
+      -0.0024149143472858015,
+      0.004992040033643175
+     ],
+     "Rv_hat": 1.0067325836284153,
+     "margin_Rv": -0.0017325836284154406,
+     "margin_err_deg": 0.03200795996635682,
+     "pass": false,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      -0.013207519054521999,
+      -0.06009393045597111
+     ],
+     "record_floor_eop_err_deg": [
+      -0.002101840528200949,
+      0.0041897501805006065
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "d45-+",
+   "floor_deg": [
+    -2.2627,
+    2.2627
+   ],
+   "Rv": 1.0085054528212423,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.6775628646996795,
+     0.5721088105525023,
+     0.4669544199567893,
+     0.3710690537055823
+    ],
+    "s_max_clr20_m": 0.6475160650030045,
+    "s_min_clr50_m": 0.3710690537055823,
+    "stroke_headroom_mm_vs_0.7_clr50": 22.43713530032043,
+    "stroke_margin_mm_clr20": 30.383934996995446,
+    "rod_SF_min": {
+     "ext_C45": 2.171935311465419,
+     "ext_20MnV6": 3.2044947218342252,
+     "yaml_C45": 1.5975607225968824,
+     "yaml_20MnV6": 2.357056803831466
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3407836298700028,
+    "util_muN_yaml_max": 0.5082075718353305,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70882.11372522858,
+    "F_cyl_max_N": 118919.45521266281,
+    "res_max_N": 3.18012316711247e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6775628646996795,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6824628646996795,
+     "limit_m": 0.6828,
+     "margin_mm": 0.3371353003204392,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 69224.26642628016,
+     "F_min_ext_N": 69497.52110578299,
+     "F_min_yaml_kt_N": 69224.26642628016,
+     "F_cyl_N": [
+      118919.45521266281,
+      116119.92687383346,
+      72046.66105111073,
+      69497.52110578299
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 54.80967731628015,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1982795748499977,
+     "limit_deg": 10.0,
+     "margin_deg": 6.801720425150002,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      -2.2805847232140875,
+      2.4985761460679647
+     ],
+     "crawler_static_res": 7.275957614183426e-10,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      -2.263113487093724,
+      2.2644664603284603
+     ],
+     "err_deg": [
+      -0.0004134870937240187,
+      0.0017664603284601732
+     ],
+     "Rv_hat": 1.009055416127027,
+     "margin_Rv": -0.0040554161270272004,
+     "margin_err_deg": 0.035233539671539825,
+     "pass": false,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      0.012053986248151904,
+      -0.11942993795739953
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0007800940121502897,
+      0.0031199825009493587
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "d45--",
+   "floor_deg": [
+    -2.2627,
+    -2.2627
+   ],
+   "Rv": 1.0085054528212423,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.4948719858838493,
+     0.38945658144137935,
+     0.6705019407698104,
+     0.5745449015814885
+    ],
+    "s_max_clr20_m": 0.6404551410731354,
+    "s_min_clr50_m": 0.38945658144137935,
+    "stroke_headroom_mm_vs_0.7_clr50": 29.498059230189554,
+    "stroke_margin_mm_clr20": 40.34485892686457,
+    "rod_SF_min": {
+     "ext_C45": 2.288960881770542,
+     "ext_20MnV6": 3.3771553993335863,
+     "yaml_C45": 1.2777181659601256,
+     "yaml_20MnV6": 1.8851579497772344
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.34714345624113546,
+    "util_muN_yaml_max": 0.5573847472343549,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70613.97931185937,
+    "F_cyl_max_N": 118194.63374184568,
+    "res_max_N": 5.457228780869627e-06
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6705019407698104,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6725019407698104,
+     "limit_m": 0.6828,
+     "margin_mm": 10.298059230189562,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70228.59662882918,
+     "F_min_ext_N": 70228.59662882918,
+     "F_min_yaml_kt_N": 70288.03975827449,
+     "F_cyl_N": [
+      118194.63374184568,
+      115255.25549861016,
+      72905.07837410495,
+      70228.59662882918
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.81400751882918,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1982795748499977,
+     "limit_deg": 10.0,
+     "margin_deg": 6.801720425150002,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      -2.2772215992167957,
+      -2.1284940086030404
+     ],
+     "crawler_static_res": 5.238689482212067e-09,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      -2.2597761275124,
+      -2.257707975907307
+     ],
+     "err_deg": [
+      0.0029238724875999544,
+      0.004992024092693281
+     ],
+     "Rv_hat": 1.0066432970349706,
+     "margin_Rv": -0.001643297034970681,
+     "margin_err_deg": 0.03200797590730672,
+     "pass": false,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      0.013392547875801686,
+      -0.06006224986243591
+     ],
+     "record_floor_eop_err_deg": [
+      0.0026107929131802265,
+      0.004189733944242491
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "rpX",
+   "floor_deg": [
+    2.8632,
+    1.8413
+   ],
+   "Rv": 0.9999644381223327,
+   "chrono_floor": "rpX",
+   "w_candidate_top": false,
+   "g04_role": "chrono",
+   "record": {
+    "s_motor_m": [
+     0.5419997601582857,
+     0.6752423795108904,
+     0.3815420666935003,
+     0.50269815241291
+    ],
+    "s_max_clr20_m": 0.645189403193153,
+    "s_min_clr50_m": 0.3815420666935003,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.757620489109566,
+    "stroke_margin_mm_clr20": 32.71059680684697,
+    "rod_SF_min": {
+     "ext_C45": 2.381162082073608,
+     "ext_20MnV6": 3.513189957157782,
+     "yaml_C45": 1.5940886806526242,
+     "yaml_20MnV6": 2.351934118995675
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3480642637310215,
+    "util_muN_yaml_max": 0.5258501040714703,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70884.1179001775,
+    "F_cyl_max_N": 117887.52191175646,
+    "res_max_N": 1.7623126041144133e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6752423795108904,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6801423795108904,
+     "limit_m": 0.6828,
+     "margin_mm": 2.6576204891095734,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70447.1610420184,
+     "F_min_ext_N": 70447.1610420184,
+     "F_min_yaml_kt_N": 70549.93676048987,
+     "F_cyl_N": [
+      117887.52191175646,
+      116928.19553494341,
+      71320.68575467168,
+      70447.1610420184
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.0325719320184,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.402503549819105,
+     "limit_deg": 10.0,
+     "margin_deg": 6.597496450180895,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      2.8871614563132035,
+      2.063150343781987
+     ],
+     "crawler_static_res": 5.311449058353901e-09,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      2.8650433218683795,
+      1.8405334811091194
+     ],
+     "err_deg": [
+      0.0018433218683795438,
+      -0.0007665188908805298
+     ],
+     "Rv_hat": 1.0000806606559973,
+     "margin_Rv": 0.004919339344002571,
+     "margin_err_deg": 0.035156678131620454,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      -0.014691921633568139,
+      -0.1134464866998377
+     ],
+     "record_floor_eop_err_deg": [
+      0.0023064010707378735,
+      0.0003330804650434338
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3",
+    "G0-4"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "rpX+-",
+   "floor_deg": [
+    2.8632,
+    -1.8413
+   ],
+   "Rv": 0.9999644381223327,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.39333122192230063,
+     0.5265856279407024,
+     0.5471639068474019,
+     0.6683242515833347
+    ],
+    "s_max_clr20_m": 0.6382712752655973,
+    "s_min_clr50_m": 0.39333122192230063,
+    "stroke_headroom_mm_vs_0.7_clr50": 31.675748416665208,
+    "stroke_margin_mm_clr20": 42.528724734402616,
+    "rod_SF_min": {
+     "ext_C45": 2.3924089959177888,
+     "ext_20MnV6": 3.5297837644688683,
+     "yaml_C45": 1.3551325171594146,
+     "yaml_20MnV6": 1.9993758449893004
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.35005970658974794,
+    "util_muN_yaml_max": 0.5506813208333944,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71259.36559705743,
+    "F_cyl_max_N": 117180.14587652375,
+    "res_max_N": 9.026873158290982e-06
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6683242515833347,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6703242515833348,
+     "limit_m": 0.6828,
+     "margin_mm": 12.475748416665212,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 71146.85771710733,
+     "F_min_ext_N": 71146.85771710733,
+     "F_min_yaml_kt_N": 71402.44074075307,
+     "F_cyl_N": [
+      117180.14587652375,
+      116392.54140779095,
+      71864.01924196794,
+      71146.85771710733
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.73226860710733,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.402503549819105,
+     "limit_deg": 10.0,
+     "margin_deg": 6.597496450180895,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      2.882955396970445,
+      -1.6991218986367045
+     ],
+     "crawler_static_res": 8.847564458847046e-09,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      2.860869484549721,
+      -1.8364534408318747
+     ],
+     "err_deg": [
+      -0.0023305154502790693,
+      0.004846559168125264
+     ],
+     "Rv_hat": 0.9982456949063847,
+     "margin_Rv": 0.006754305093615187,
+     "margin_err_deg": 0.032153440831874734,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      -0.01611821892013099,
+      -0.06539397746144249
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0019347418830388818,
+      0.004193024321962335
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "rpX-+",
+   "floor_deg": [
+    -2.8632,
+    1.8413
+   ],
+   "Rv": 0.9999644381223327,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.6753560363674515,
+     0.5418983048107221,
+     0.4990353921935641,
+     0.37767579340662405
+    ],
+    "s_max_clr20_m": 0.645303060049714,
+    "s_min_clr50_m": 0.37767579340662405,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.643963632548505,
+    "stroke_margin_mm_clr20": 32.59693995028591,
+    "rod_SF_min": {
+     "ext_C45": 2.343116762035583,
+     "ext_20MnV6": 3.4570575177574177,
+     "yaml_C45": 1.571329987658482,
+     "yaml_20MnV6": 2.3183557194961213
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.34777892279730344,
+    "util_muN_yaml_max": 0.5240951088243964,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70830.6378498512,
+    "F_cyl_max_N": 118941.49633672282,
+    "res_max_N": 2.109017805196345e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6753560363674515,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6802560363674515,
+     "limit_m": 0.6828,
+     "margin_mm": 2.5439636325485115,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 69174.88579368764,
+     "F_min_ext_N": 69486.22264883449,
+     "F_min_yaml_kt_N": 69174.88579368764,
+     "F_cyl_N": [
+      118941.49633672282,
+      115901.74599245022,
+      72254.09926538244,
+      69486.22264883449
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 54.76029668368764,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.402503549819105,
+     "limit_deg": 10.0,
+     "margin_deg": 6.597496450180895,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      -2.8865624611094054,
+      2.063150372163712
+     ],
+     "crawler_static_res": 1.0652001947164536e-08,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      -2.8644489154818857,
+      1.8405335087417238
+     ],
+     "err_deg": [
+      -0.0012489154818857706,
+      -0.000766491258276103
+     ],
+     "Rv_hat": 0.999976386302077,
+     "margin_Rv": 0.005023613697922924,
+     "margin_err_deg": 0.03575108451811423,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      0.014915172494855078,
+      -0.11352384695067541
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0017120025601453648,
+      0.0003331086004818573
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "middle",
+   "tag": "rpX--",
+   "floor_deg": [
+    -2.8632,
+    -1.8413
+   ],
+   "Rv": 0.9999644381223327,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.5266794857478007,
+     0.3932547901082212,
+     0.6646958231789445,
+     0.5432695329561382
+    ],
+    "s_max_clr20_m": 0.6346428468612071,
+    "s_min_clr50_m": 0.3932547901082212,
+    "stroke_headroom_mm_vs_0.7_clr50": 35.304176821055464,
+    "stroke_margin_mm_clr20": 46.15715313879287,
+    "rod_SF_min": {
+     "ext_C45": 2.4114800663640685,
+     "ext_20MnV6": 3.557921409389609,
+     "yaml_C45": 1.379848493056276,
+     "yaml_20MnV6": 2.035842038935489
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3422696682468363,
+    "util_muN_yaml_max": 0.5323093404725091,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70538.53467431074,
+    "F_cyl_max_N": 118394.30498914512,
+    "res_max_N": 8.214148692786694e-06
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6646958231789445,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6666958231789445,
+     "limit_m": 0.6828,
+     "margin_mm": 16.10417682105547,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70009.93468504137,
+     "F_min_ext_N": 70040.71119757382,
+     "F_min_yaml_kt_N": 70009.93468504137,
+     "F_cyl_N": [
+      118394.30498914512,
+      115191.37837970756,
+      72957.16967696349,
+      70040.71119757382
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.59534557504137,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.402503549819105,
+     "limit_deg": 10.0,
+     "margin_deg": 6.597496450180895,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      -2.8824426192770574,
+      -1.6991219156286261
+     ],
+     "crawler_static_res": 8.905772119760513e-09,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      -2.8603606351735182,
+      -1.8364534575025526
+     ],
+     "err_deg": [
+      0.0028393648264817273,
+      0.004846542497447315
+     ],
+     "Rv_hat": 0.9981564275915868,
+     "margin_Rv": 0.006843572408413046,
+     "margin_err_deg": 0.03215345750255268,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.17272,
+      "k_dn": 0.02711,
+      "k_up": 0.01927,
+      "k_phi": 0.00772
+     },
+     "record_kn_x3_err_deg": [
+      0.016303210460418605,
+      -0.06536231892600997
+     ],
+     "record_floor_eop_err_deg": [
+      0.002443585442339913,
+      0.004193007342416566
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "pitch+",
+   "floor_deg": [
+    0.0,
+    3.7
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.6751059913656441,
+     0.6749894805380238,
+     0.34818361687063465,
+     0.34809972781086135
+    ],
+    "s_max_clr20_m": 0.6450433293021492,
+    "s_min_clr50_m": 0.34809972781086135,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.89400863435587,
+    "stroke_margin_mm_clr20": 32.85667069785071,
+    "rod_SF_min": {
+     "ext_C45": 1.7604375402773775,
+     "ext_20MnV6": 2.5973668627043276,
+     "yaml_C45": 1.3877081234068858,
+     "yaml_20MnV6": 2.0474382148626185
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.4569948996927345,
+    "util_muN_yaml_max": 0.5656130548183473,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70778.24546326169,
+    "F_cyl_max_N": 119400.79840476681,
+    "res_max_N": 0.0006518463014799636
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6751059913656441,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6800059913656441,
+     "limit_m": 0.6828,
+     "margin_mm": 2.7940086343558757,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 68709.1649153898,
+     "F_min_ext_N": 68979.72736197516,
+     "F_min_yaml_kt_N": 68709.1649153898,
+     "F_cyl_N": [
+      119400.79840476681,
+      117416.35858528693,
+      70786.67989136105,
+      68979.72736197516
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 54.294575805389805,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.6999999999999678,
+     "limit_deg": 10.0,
+     "margin_deg": 6.300000000000033,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      0.00029868090887233596,
+      3.94675053101893
+     ],
+     "crawler_static_res": 5.340552888810635e-09,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      0.0002970796495612011,
+      3.7103168121512553
+     ],
+     "err_deg": [
+      0.0002970796495612011,
+      0.010316812151255128
+     ],
+     "Rv_hat": 1.0028404468452123,
+     "margin_Rv": 0.0021595531547875524,
+     "margin_err_deg": 0.02668318784874487,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      0.00011837847162855905,
+      -0.119527848189239
+     ],
+     "record_floor_eop_err_deg": [
+      0.0002970758702946305,
+      0.012537951605516628
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "pitch-",
+   "floor_deg": [
+    0.0,
+    -3.7
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.3764086197877504,
+     0.37633567091581516,
+     0.6808615895622329,
+     0.6807135695159025
+    ],
+    "s_max_clr20_m": 0.650798927498738,
+    "s_min_clr50_m": 0.37633567091581516,
+    "stroke_headroom_mm_vs_0.7_clr50": 19.138410437767096,
+    "stroke_margin_mm_clr20": 30.001072501261937,
+    "rod_SF_min": {
+     "ext_C45": 1.5034075172006898,
+     "ext_20MnV6": 2.218142238492821,
+     "yaml_C45": 0.8524020266048403,
+     "yaml_20MnV6": 1.2576423343350103
+    },
+    "rod_pair_ok_1.5": false,
+    "util_muN_ext_max": 0.510990849926367,
+    "util_muN_yaml_max": 0.8243120276598713,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70930.04809141396,
+    "F_cyl_max_N": 117147.17840561602,
+    "res_max_N": 9.651477193983739e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6808615895622329,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6828615895622329,
+     "limit_m": 0.6828,
+     "margin_mm": -0.06158956223289817,
+     "pass": false
+    },
+    "G0-2": {
+     "F_static_min_N": 71234.18437940776,
+     "F_min_ext_N": 71234.18437940776,
+     "F_min_yaml_kt_N": 71883.66591786896,
+     "F_cyl_N": [
+      117147.17840561602,
+      115144.02161313879,
+      73058.17984522741,
+      71234.18437940776
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.819595269407756,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.6999999999999678,
+     "limit_deg": 10.0,
+     "margin_deg": 6.300000000000033,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      0.0002557777430900192,
+      -3.5740150350065125
+     ],
+     "crawler_static_res": 1.3504177331924438e-08,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      0.0002544064920976131,
+      -3.6947899853093897
+     ],
+     "err_deg": [
+      0.0002544064920976131,
+      0.005210014690610443
+     ],
+     "Rv_hat": 0.9986365206393685,
+     "margin_Rv": 0.006363479360631419,
+     "margin_err_deg": 0.031789985309389555,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      9.860687992850996e-05,
+      -0.054109671373271606
+     ],
+     "record_floor_eop_err_deg": [
+      0.0002544036736522239,
+      0.0039002051396268556
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "fail"
+  },
+  {
+   "level": "bottom",
+   "tag": "roll+",
+   "floor_deg": [
+    5.7,
+    0.0
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.4102645684191689,
+     0.6757084439083931,
+     0.41477296960100285,
+     0.6562030994958113
+    ],
+    "s_max_clr20_m": 0.6455593739412063,
+    "s_min_clr50_m": 0.4102645684191689,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.291556091606825,
+    "stroke_margin_mm_clr20": 35.24062605879364,
+    "rod_SF_min": {
+     "ext_C45": 1.3016968003268135,
+     "ext_20MnV6": 1.9205362627772657,
+     "yaml_C45": 0.8573144089106577,
+     "yaml_20MnV6": 1.2648901115075277
+    },
+    "rod_pair_ok_1.5": false,
+    "util_muN_ext_max": 0.7129471053057008,
+    "util_muN_yaml_max": 0.9999999997011602,
+    "slip_ext": false,
+    "slip_yaml": true,
+    "N_min_N": 71535.10459780679,
+    "F_cyl_max_N": 118562.33928280068,
+    "res_max_N": 0.0009091125175473281
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6757084439083931,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6777084439083931,
+     "limit_m": 0.6828,
+     "margin_mm": 5.091556091606832,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 68822.22316398064,
+     "F_min_ext_N": 69861.81726580516,
+     "F_min_yaml_kt_N": 68822.22316398064,
+     "F_cyl_N": [
+      115602.25032427747,
+      118562.33928280068,
+      69861.81726580516,
+      72557.1573705067
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 54.407634053980644,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 5.699999999999969,
+     "limit_deg": 10.0,
+     "margin_deg": 4.300000000000031,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      5.731327672721994,
+      0.17737387528754453
+     ],
+     "crawler_static_res": 1.1699739843606949e-08,
+     "active_spheres": 13,
+     "floor_hat_deg": [
+      5.700601431008856,
+      0.005478440847972833
+     ],
+     "err_deg": [
+      0.0006014310088557906,
+      0.005478440847972833
+     ],
+     "Rv_hat": 1.0015861739007215,
+     "margin_Rv": 0.0034138260992784275,
+     "margin_err_deg": 0.031521559152027166,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      -0.019044868003571302,
+      -0.08478893889506287
+     ],
+     "record_floor_eop_err_deg": [
+      0.0014702653886748962,
+      0.005679616220871225
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "roll-",
+   "floor_deg": [
+    -5.7,
+    0.0
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.6757994497052867,
+     0.41015815009734197,
+     0.648810021104468,
+     0.40714285093252583
+    ],
+    "s_max_clr20_m": 0.6456503797380999,
+    "s_min_clr50_m": 0.40714285093252583,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.200550294713242,
+    "stroke_margin_mm_clr20": 35.14962026190005,
+    "rod_SF_min": {
+     "ext_C45": 1.2950594652352556,
+     "ext_20MnV6": 1.9107434732979183,
+     "yaml_C45": 0.8419537456540852,
+     "yaml_20MnV6": 1.2422268378502896
+    },
+    "rod_pair_ok_1.5": false,
+    "util_muN_ext_max": 0.7057514741420233,
+    "util_muN_yaml_max": 0.9999999997768053,
+    "slip_ext": false,
+    "slip_yaml": true,
+    "N_min_N": 69775.13334630986,
+    "F_cyl_max_N": 120595.16528746873,
+    "res_max_N": 0.000811298243206693
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6757994497052867,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6777994497052867,
+     "limit_m": 0.6828,
+     "margin_mm": 5.000550294713248,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 66946.82692570958,
+     "F_min_ext_N": 68009.44052782745,
+     "F_min_yaml_kt_N": 66946.82692570958,
+     "F_cyl_N": [
+      120595.16528746873,
+      113599.96249035318,
+      74378.99593774062,
+      68009.44052782745
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 52.53223781570958,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 5.699999999999969,
+     "limit_deg": 10.0,
+     "margin_deg": 4.300000000000031,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      -5.730763538499185,
+      0.1772376644326169
+     ],
+     "crawler_static_res": 6.752088665962219e-09,
+     "active_spheres": 13,
+     "floor_hat_deg": [
+      -5.700040321168089,
+      0.005344562159793292
+     ],
+     "err_deg": [
+      -4.032116808883046e-05,
+      0.005344562159793292
+     ],
+     "Rv_hat": 1.0014515501485421,
+     "margin_Rv": 0.0035484498514577467,
+     "margin_err_deg": 0.031655437840206704,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      0.019231111430906722,
+      -0.08483302466674997
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0009091635660212205,
+      0.005545744082019576
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "r+p+0.25",
+   "floor_deg": [
+    1.425,
+    2.775
+   ],
+   "Rv": 0.9999999999999999,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.6088648608045802,
+     0.6750587737012443,
+     0.36477596665299905,
+     0.42496976936774195
+    ],
+    "s_max_clr20_m": 0.6450142831414569,
+    "s_min_clr50_m": 0.36477596665299905,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.941226298755616,
+    "stroke_margin_mm_clr20": 32.885716858543034,
+    "rod_SF_min": {
+     "ext_C45": 2.0024100697980414,
+     "ext_20MnV6": 2.9543755128167826,
+     "yaml_C45": 1.6297610717969462,
+     "yaml_20MnV6": 2.404565515765986
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3560322955240705,
+    "util_muN_yaml_max": 0.5068119138920485,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70821.06968563286,
+    "F_cyl_max_N": 118414.46815597589,
+    "res_max_N": 4.098604131286266e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6750587737012443,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6799587737012444,
+     "limit_m": 0.6828,
+     "margin_mm": 2.8412262987556214,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 69890.66851647137,
+     "F_min_ext_N": 69941.68566408228,
+     "F_min_yaml_kt_N": 69890.66851647137,
+     "F_cyl_N": [
+      118414.46815597589,
+      116975.02129291557,
+      71252.38913041622,
+      69941.68566408228
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.47607940647137,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1184784727697195,
+     "limit_deg": 10.0,
+     "margin_deg": 6.88152152723028,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      1.4327356725168434,
+      3.000035687211195
+     ],
+     "crawler_static_res": 1.8090759112965316e-07,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      1.4250546280715377,
+      2.7798113730919334
+     ],
+     "err_deg": [
+      5.462807153766569e-05,
+      0.0048113730919334685
+     ],
+     "Rv_hat": 1.0013099549781275,
+     "margin_Rv": 0.0036900450218724234,
+     "margin_err_deg": 0.03218862690806653,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      -0.006158017639423585,
+      -0.11153941792082644
+     ],
+     "record_floor_eop_err_deg": [
+      0.0002860693805448733,
+      0.006475371874326896
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "r+p+0.5",
+   "floor_deg": [
+    2.85,
+    1.85
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.542622792436626,
+     0.6752497458749894,
+     0.3813862907808983,
+     0.501982560418427
+    ],
+    "s_max_clr20_m": 0.6451969679974728,
+    "s_min_clr50_m": 0.3813862907808983,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.750254125010528,
+    "stroke_margin_mm_clr20": 32.703032002527124,
+    "rod_SF_min": {
+     "ext_C45": 2.3784422226873976,
+     "ext_20MnV6": 3.5091770498666524,
+     "yaml_C45": 1.5959099727832375,
+     "yaml_20MnV6": 2.3546212713195307
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.34760110104274156,
+    "util_muN_yaml_max": 0.5250936919241205,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70883.43261709674,
+    "F_cyl_max_N": 117892.31102671566,
+    "res_max_N": 1.1817357062682277e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6752497458749894,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6801497458749894,
+     "limit_m": 0.6828,
+     "margin_mm": 2.650254125010536,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70442.66439972674,
+     "F_min_ext_N": 70442.66439972674,
+     "F_min_yaml_kt_N": 70543.72026136363,
+     "F_cyl_N": [
+      117892.31102671566,
+      116926.44452629954,
+      71322.14429064801,
+      70442.66439972674
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.028075289726736,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.3961343186601365,
+     "limit_deg": 10.0,
+     "margin_deg": 6.6038656813398635,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      2.8660681668294044,
+      2.0563923668095496
+     ],
+     "crawler_static_res": 8.731149137020111e-09,
+     "active_spheres": 13,
+     "floor_hat_deg": [
+      2.8507028783152846,
+      1.8523248676156845
+     ],
+     "err_deg": [
+      0.0007028783152844831,
+      0.0023248676156844006
+     ],
+     "Rv_hat": 1.0007516545839712,
+     "margin_Rv": 0.004248345416028698,
+     "margin_err_deg": 0.0346751323843156,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      -0.010658479958133071,
+      -0.10280949004692075
+     ],
+     "record_floor_eop_err_deg": [
+      0.0012072136576635195,
+      0.0032434054804570955
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "r+p+0.75",
+   "floor_deg": [
+    4.275,
+    0.925
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.4764234056592479,
+     0.6755050047889949,
+     0.39805770467047075,
+     0.5790897493624705
+    ],
+    "s_max_clr20_m": 0.645417405419895,
+    "s_min_clr50_m": 0.39805770467047075,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.494995211005065,
+    "stroke_margin_mm_clr20": 32.48259458010495,
+    "rod_SF_min": {
+     "ext_C45": 2.0425288827301906,
+     "ext_20MnV6": 3.01356720402815,
+     "yaml_C45": 1.2387328011077574,
+     "yaml_20MnV6": 1.8276385590114452
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.46453631116253086,
+    "util_muN_yaml_max": 0.6914992008439642,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71025.5868786247,
+    "F_cyl_max_N": 117407.54321061695,
+    "res_max_N": 6.467531693488127e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6755050047889949,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6804050047889949,
+     "limit_m": 0.6828,
+     "margin_mm": 2.394995211005073,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70333.75167095335,
+     "F_min_ext_N": 70894.78697467218,
+     "F_min_yaml_kt_N": 70333.75167095335,
+     "F_cyl_N": [
+      117171.67282909759,
+      117407.54321061695,
+      70894.78697467218,
+      71109.56122900323
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.91916256095335,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 4.373204403946744,
+     "limit_deg": 10.0,
+     "margin_deg": 5.626795596053256,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      4.298959604455042,
+      1.1169787300639713
+     ],
+     "crawler_static_res": 1.1990778148174286e-08,
+     "active_spheres": 13,
+     "floor_hat_deg": [
+      4.275912436422724,
+      0.928995626254616
+     ],
+     "err_deg": [
+      0.0009124364227233173,
+      0.003995626254615914
+     ],
+     "Rv_hat": 1.001239975553124,
+     "margin_Rv": 0.0037600244468758426,
+     "margin_err_deg": 0.033004373745384084,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      -0.014502903491055541,
+      -0.09415826107633818
+     ],
+     "record_floor_eop_err_deg": [
+      0.0015992430881333064,
+      0.004555109757871323
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "r+p-0.25",
+   "floor_deg": [
+    1.425,
+    -2.775
+   ],
+   "Rv": 0.9999999999999999,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.38483424811348405,
+     0.45105041254404876,
+     0.6143369945727497,
+     0.6745099370635077
+    ],
+    "s_max_clr20_m": 0.6444654465037203,
+    "s_min_clr50_m": 0.38483424811348405,
+    "stroke_headroom_mm_vs_0.7_clr50": 25.49006293649225,
+    "stroke_margin_mm_clr20": 36.334553496279675,
+    "rod_SF_min": {
+     "ext_C45": 2.0565875686421164,
+     "ext_20MnV6": 3.034309527504762,
+     "yaml_C45": 1.127956226851147,
+     "yaml_20MnV6": 1.664197711747594
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.38251386651109925,
+    "util_muN_yaml_max": 0.6323692419947636,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71164.21621116517,
+    "F_cyl_max_N": 117274.7814238824,
+    "res_max_N": 1.1460791938588955e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6745099370635077,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6765099370635077,
+     "limit_m": 0.6828,
+     "margin_mm": 6.29006293649226,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 71077.30728438102,
+     "F_min_ext_N": 71077.30728438102,
+     "F_min_yaml_kt_N": 71403.37563618644,
+     "F_cyl_N": [
+      117274.7814238824,
+      115926.23650328604,
+      72305.2390318405,
+      71077.30728438102
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.66271817438102,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1184784727697195,
+     "limit_deg": 10.0,
+     "margin_deg": 6.88152152723028,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      1.4309796462642304,
+      -2.636315344881281
+     ],
+     "crawler_static_res": 6.2282197177410126e-09,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      1.4233080160576794,
+      -2.7698635295383562
+     ],
+     "err_deg": [
+      -0.0016919839423206184,
+      0.005136470461643672
+     ],
+     "Rv_hat": 0.9983149254519699,
+     "margin_Rv": 0.006685074548030023,
+     "margin_err_deg": 0.031863529538356326,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      -0.006802567868111842,
+      -0.062379036590642034
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0014944738023467963,
+      0.004152905911905425
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "r+p-0.5",
+   "floor_deg": [
+    2.85,
+    -1.85
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.39325206599239954,
+     0.5258908984994873,
+     0.5477905187264449,
+     0.6683908298227283
+    ],
+    "s_max_clr20_m": 0.6383380519452118,
+    "s_min_clr50_m": 0.39325206599239954,
+    "stroke_headroom_mm_vs_0.7_clr50": 31.609170177271608,
+    "stroke_margin_mm_clr20": 42.4619480547882,
+    "rod_SF_min": {
+     "ext_C45": 2.391649979917772,
+     "ext_20MnV6": 3.5286639047967125,
+     "yaml_C45": 1.3541656877468484,
+     "yaml_20MnV6": 1.9979493753642024
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.34990032934232734,
+    "util_muN_yaml_max": 0.5507445914187323,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71258.4367745399,
+    "F_cyl_max_N": 117182.66357334347,
+    "res_max_N": 7.482676664949395e-06
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6683908298227283,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6703908298227284,
+     "limit_m": 0.6828,
+     "margin_mm": 12.409170177271612,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 71144.66248476277,
+     "F_min_ext_N": 71144.66248476277,
+     "F_min_yaml_kt_N": 71399.72676771118,
+     "F_cyl_N": [
+      117182.66357334347,
+      116387.84831960693,
+      71868.38986567681,
+      71144.66248476277
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.73007337476277,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.3961343186601365,
+     "limit_deg": 10.0,
+     "margin_deg": 6.6038656813398635,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      2.8636679780560903,
+      -1.6988327905753944
+     ],
+     "crawler_static_res": 5.0640664994716644e-09,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      2.8483155572027674,
+      -1.8451512517881996
+     ],
+     "err_deg": [
+      -0.001684442797232677,
+      0.00484874821180048
+     ],
+     "Rv_hat": 0.998394011230108,
+     "margin_Rv": 0.006605988769891935,
+     "margin_err_deg": 0.03215125178819952,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      -0.011752162742210803,
+      -0.0708474104169119
+     ],
+     "record_floor_eop_err_deg": [
+      -0.00129033669676204,
+      0.0041918848323212465
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "r+p-0.75",
+   "floor_deg": [
+    4.275,
+    -0.925
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.4017121989426012,
+     0.6007958156317871,
+     0.4812531018207536,
+     0.6623075616417663
+    ],
+    "s_max_clr20_m": 0.6322199622726664,
+    "s_min_clr50_m": 0.4017121989426012,
+    "stroke_headroom_mm_vs_0.7_clr50": 37.69243835823366,
+    "stroke_margin_mm_clr20": 48.58003772733355,
+    "rod_SF_min": {
+     "ext_C45": 2.1293253928084175,
+     "ext_20MnV6": 3.1416276287337306,
+     "yaml_C45": 1.254340557389959,
+     "yaml_20MnV6": 1.8506663961491199
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.46904185475047955,
+    "util_muN_yaml_max": 0.6272377546200988,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71392.38330386466,
+    "F_cyl_max_N": 117106.89151452889,
+    "res_max_N": 5.850178058608436e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6623075616417663,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6643075616417663,
+     "limit_m": 0.6828,
+     "margin_mm": 18.492438358233663,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70877.34686970209,
+     "F_min_ext_N": 71204.5470417492,
+     "F_min_yaml_kt_N": 70877.34686970209,
+     "F_cyl_N": [
+      116667.34441822619,
+      117106.89151452889,
+      71204.5470417492,
+      71604.7812688857
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.462757759702086,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 4.373204403946744,
+     "limit_deg": 10.0,
+     "margin_deg": 5.626795596053256,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      4.297218039484788,
+      -0.7615944457646687
+     ],
+     "crawler_static_res": 2.6775524020195007e-09,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      4.27418020816279,
+      -0.9206798569403228
+     ],
+     "err_deg": [
+      -0.0008197918372099267,
+      0.004320143059677206
+     ],
+     "Rv_hat": 0.9986885706383197,
+     "margin_Rv": 0.006311429361680165,
+     "margin_err_deg": 0.03267985694032279,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      -0.015247303150713876,
+      -0.07776419531577328
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0002296364936604789,
+      0.003989735639124414
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "r-p+0.5",
+   "floor_deg": [
+    -2.85,
+    1.85
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.6753634400634625,
+     0.5425212881090467,
+     0.4983371092167033,
+     0.37753749123740316
+    ],
+    "s_max_clr20_m": 0.6453106621859459,
+    "s_min_clr50_m": 0.37753749123740316,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.63655993653746,
+    "stroke_margin_mm_clr20": 32.589337814054055,
+    "rod_SF_min": {
+     "ext_C45": 2.3405541561445857,
+     "ext_20MnV6": 3.4532766238198804,
+     "yaml_C45": 1.573139875280197,
+     "yaml_20MnV6": 2.3210260454953726
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.347320940286306,
+    "util_muN_yaml_max": 0.5233392564232463,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70832.1259990197,
+    "F_cyl_max_N": 118939.69841823075,
+    "res_max_N": 1.3877985111321323e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6753634400634625,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6802634400634625,
+     "limit_m": 0.6828,
+     "margin_mm": 2.536559936537468,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 69177.68946054706,
+     "F_min_ext_N": 69487.72195332199,
+     "F_min_yaml_kt_N": 69177.68946054706,
+     "F_cyl_N": [
+      118939.69841823075,
+      115906.62552698595,
+      72249.51834485127,
+      69487.72195332199
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 54.763100350547056,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.3961343186601365,
+     "limit_deg": 10.0,
+     "margin_deg": 6.6038656813398635,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      -2.8655019907800594,
+      2.05625520797501
+     ],
+     "crawler_static_res": 1.234002411365509e-08,
+     "active_spheres": 13,
+     "floor_hat_deg": [
+      -2.850139737594426,
+      1.8521900571789525
+     ],
+     "err_deg": [
+      -0.00013973759442587053,
+      0.002190057178952376
+     ],
+     "Rv_hat": 1.000616422713106,
+     "margin_Rv": 0.004383577286893869,
+     "margin_err_deg": 0.03480994282104762,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      0.010855757849081105,
+      -0.10280948774155374
+     ],
+     "record_floor_eop_err_deg": [
+      -0.000644080362665278,
+      0.0031086020126944724
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "r-p-0.5",
+   "floor_deg": [
+    -2.85,
+    -1.85
+   ],
+   "Rv": 1.0,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.5259846640178386,
+     0.3931756582229012,
+     0.6647798368878798,
+     0.5439134415343526
+    ],
+    "s_max_clr20_m": 0.6347270590103632,
+    "s_min_clr50_m": 0.3931756582229012,
+    "stroke_headroom_mm_vs_0.7_clr50": 35.220163112120176,
+    "stroke_margin_mm_clr20": 46.07294098963677,
+    "rod_SF_min": {
+     "ext_C45": 2.4107075556124014,
+     "ext_20MnV6": 3.556781639428133,
+     "yaml_C45": 1.3788090341849635,
+     "yaml_20MnV6": 2.034308411092569
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3421010554086277,
+    "util_muN_yaml_max": 0.5323649916652405,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70540.60263518483,
+    "F_cyl_max_N": 118389.59745002727,
+    "res_max_N": 6.798927643103525e-06
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6647798368878798,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6667798368878798,
+     "limit_m": 0.6828,
+     "margin_mm": 16.02016311212018,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70016.23948303828,
+     "F_min_ext_N": 70045.09555646154,
+     "F_min_yaml_kt_N": 70016.23948303828,
+     "F_cyl_N": [
+      118389.59745002727,
+      115193.89763093829,
+      72954.97360596285,
+      70045.09555646154
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.60165037303828,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.3961343186601365,
+     "limit_deg": 10.0,
+     "margin_deg": 6.6038656813398635,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      -2.86315625963249,
+      -1.6988328027220416
+     ],
+     "crawler_static_res": 2.3457687348127365e-08,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      -2.8478065821546767,
+      -1.8451512637693863
+     ],
+     "err_deg": [
+      0.002193417845323342,
+      0.0048487362306137705
+     ],
+     "Rv_hat": 0.9983047206001805,
+     "margin_Rv": 0.006695279399819398,
+     "margin_err_deg": 0.03215126376938623,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      0.01193893117219691,
+      -0.07089180506607518
+     ],
+     "record_floor_eop_err_deg": [
+      0.0017993059388450305,
+      0.004191872541009722
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "d45++",
+   "floor_deg": [
+    2.2627,
+    2.2627
+   ],
+   "Rv": 1.0085054528212423,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.5722133110366595,
+     0.677447782877213,
+     0.3741407775089732,
+     0.46983027323163434
+    ],
+    "s_max_clr20_m": 0.647400983180538,
+    "s_min_clr50_m": 0.3741407775089732,
+    "stroke_headroom_mm_vs_0.7_clr50": 22.55221712278699,
+    "stroke_margin_mm_clr20": 30.499016819462003,
+    "rod_SF_min": {
+     "ext_C45": 2.1989969902398148,
+     "ext_20MnV6": 3.244421788878415,
+     "yaml_C45": 1.6179157091203156,
+     "yaml_20MnV6": 2.387088751161121
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3412221482168936,
+    "util_muN_yaml_max": 0.510549568716015,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70852.45548870026,
+    "F_cyl_max_N": 118101.60389617147,
+    "res_max_N": 1.7346888398606097e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.677447782877213,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.682347782877213,
+     "limit_m": 0.6828,
+     "margin_mm": 0.4522171227869954,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70243.53879945033,
+     "F_min_ext_N": 70243.53879945033,
+     "F_min_yaml_kt_N": 70276.61485705177,
+     "F_cyl_N": [
+      118101.60389617147,
+      116908.38214339668,
+      71330.03940437154,
+      70243.53879945033
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.828949689450326,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1982795748499977,
+     "limit_deg": 10.0,
+     "margin_deg": 6.801720425150002,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      2.2756063077876814,
+      2.475595418693759
+     ],
+     "crawler_static_res": 5.238689482212067e-09,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      2.2634065465020354,
+      2.2643504341311935
+     ],
+     "err_deg": [
+      0.0007065465020352768,
+      0.001650434131193368
+     ],
+     "Rv_hat": 1.0090754716266161,
+     "margin_Rv": -0.004075471626616256,
+     "margin_err_deg": 0.03534956586880663,
+     "pass": false,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      -0.008991907741495275,
+      -0.10669835084878931
+     ],
+     "record_floor_eop_err_deg": [
+      0.0010731386775164609,
+      0.0030053860822572
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "d45+-",
+   "floor_deg": [
+    2.2627,
+    -2.2627
+   ],
+   "Rv": 1.0085054528212423,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.38953188637333575,
+     0.4947823037245628,
+     0.5776526812824704,
+     0.6733366752597337
+    ],
+    "s_max_clr20_m": 0.6432898755630587,
+    "s_min_clr50_m": 0.38953188637333575,
+    "stroke_headroom_mm_vs_0.7_clr50": 26.663324740266226,
+    "stroke_margin_mm_clr20": 37.51012443694124,
+    "rod_SF_min": {
+     "ext_C45": 2.2739513777577485,
+     "ext_20MnV6": 3.355010229478645,
+     "yaml_C45": 1.258940234690483,
+     "yaml_20MnV6": 1.8574528052810406
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3553158831793945,
+    "util_muN_yaml_max": 0.5761609477574313,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71225.52422386734,
+    "F_cyl_max_N": 117244.57475867232,
+    "res_max_N": 6.21613253315445e-06
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6733366752597337,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6753366752597337,
+     "limit_m": 0.6828,
+     "margin_mm": 7.463324740266232,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 71094.23358254392,
+     "F_min_ext_N": 71094.23358254392,
+     "F_min_yaml_kt_N": 71357.32977070959,
+     "F_cyl_N": [
+      117244.57475867232,
+      116192.99858633747,
+      72051.75731583625,
+      71094.23358254392
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.67964447254392,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1982795748499977,
+     "limit_deg": 10.0,
+     "margin_deg": 6.801720425150002,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      2.2729802637261716,
+      -2.1170829314078676
+     ],
+     "crawler_static_res": 5.878973752260208e-09,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      2.2607945809349324,
+      -2.2577040386343277
+     ],
+     "err_deg": [
+      -0.0019054190650678038,
+      0.0049959613656724855
+     ],
+     "Rv_hat": 1.006820908946179,
+     "margin_Rv": -0.001820908946179145,
+     "margin_err_deg": 0.03200403863432751,
+     "pass": false,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      -0.009942467145957146,
+      -0.06711035848718216
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0015922299085380232,
+      0.004193351912497256
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "d45-+",
+   "floor_deg": [
+    -2.2627,
+    2.2627
+   ],
+   "Rv": 1.0085054528212423,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.6775628646996795,
+     0.5721088105525023,
+     0.4669544199567893,
+     0.3710690537055823
+    ],
+    "s_max_clr20_m": 0.6475160650030045,
+    "s_min_clr50_m": 0.3710690537055823,
+    "stroke_headroom_mm_vs_0.7_clr50": 22.43713530032043,
+    "stroke_margin_mm_clr20": 30.383934996995446,
+    "rod_SF_min": {
+     "ext_C45": 2.171935311465419,
+     "ext_20MnV6": 3.2044947218342252,
+     "yaml_C45": 1.5975607225968824,
+     "yaml_20MnV6": 2.357056803831466
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3407836298700029,
+    "util_muN_yaml_max": 0.5082075718353305,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70882.11372522858,
+    "F_cyl_max_N": 118919.4552126628,
+    "res_max_N": 2.025753929046914e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6775628646996795,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6824628646996795,
+     "limit_m": 0.6828,
+     "margin_mm": 0.3371353003204392,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 69224.26642628016,
+     "F_min_ext_N": 69497.52110578299,
+     "F_min_yaml_kt_N": 69224.26642628016,
+     "F_cyl_N": [
+      118919.4552126628,
+      116119.92687383345,
+      72046.66105111073,
+      69497.52110578299
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 54.80967731628015,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1982795748499977,
+     "limit_deg": 10.0,
+     "margin_deg": 6.801720425150002,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      -2.275008635727556,
+      2.475595438776174
+     ],
+     "crawler_static_res": 3.434251993894577e-09,
+     "active_spheres": 12,
+     "floor_hat_deg": [
+      -2.262812078623774,
+      2.2643504538697625
+     ],
+     "err_deg": [
+      -0.00011207862377382583,
+      0.0016504538697623694
+     ],
+     "Rv_hat": 1.008971184351143,
+     "margin_Rv": -0.003971184351143187,
+     "margin_err_deg": 0.03534954613023763,
+     "pass": false,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      0.009189225355258124,
+      -0.10669834859353777
+     ],
+     "record_floor_eop_err_deg": [
+      -0.00047867856194239167,
+      0.0030054063254305596
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "d45--",
+   "floor_deg": [
+    -2.2627,
+    -2.2627
+   ],
+   "Rv": 1.0085054528212423,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.4948719858838493,
+     0.38945658144137935,
+     0.6705019407698104,
+     0.5745449015814885
+    ],
+    "s_max_clr20_m": 0.6404551410731354,
+    "s_min_clr50_m": 0.38945658144137935,
+    "stroke_headroom_mm_vs_0.7_clr50": 29.498059230189554,
+    "stroke_margin_mm_clr20": 40.34485892686457,
+    "rod_SF_min": {
+     "ext_C45": 2.288960881770542,
+     "ext_20MnV6": 3.3771553993335863,
+     "yaml_C45": 1.2777181659601256,
+     "yaml_20MnV6": 1.8851579497772344
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3471434562411355,
+    "util_muN_yaml_max": 0.5573847472343549,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70613.97931185937,
+    "F_cyl_max_N": 118194.63374184567,
+    "res_max_N": 5.457228780869627e-06
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6705019407698104,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6725019407698104,
+     "limit_m": 0.6828,
+     "margin_mm": 10.298059230189562,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70228.59662882918,
+     "F_min_ext_N": 70228.59662882918,
+     "F_min_yaml_kt_N": 70288.03975827449,
+     "F_cyl_N": [
+      118194.63374184567,
+      115255.25549861016,
+      72905.07837410494,
+      70228.59662882918
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.81400751882918,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.1982795748499977,
+     "limit_deg": 10.0,
+     "margin_deg": 6.801720425150002,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      -2.2724684405683386,
+      -2.1170829430280227
+     ],
+     "crawler_static_res": 5.511537892743945e-09,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      -2.2602855017140993,
+      -2.257704050096194
+     ],
+     "err_deg": [
+      0.002414498285900901,
+      0.004995949903806363
+     ],
+     "Rv_hat": 1.0067315998999748,
+     "margin_Rv": -0.001731599899974956,
+     "margin_err_deg": 0.032004050096193636,
+     "pass": false,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      0.010111545369353436,
+      -0.06711035970183321
+     ],
+     "record_floor_eop_err_deg": [
+      0.002101303383001518,
+      0.00419334015397288
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "rpX",
+   "floor_deg": [
+    2.8632,
+    1.8413
+   ],
+   "Rv": 0.9999644381223327,
+   "chrono_floor": "rpX",
+   "w_candidate_top": false,
+   "g04_role": "chrono",
+   "record": {
+    "s_motor_m": [
+     0.5419997601582857,
+     0.6752423795108904,
+     0.3815420666935003,
+     0.50269815241291
+    ],
+    "s_max_clr20_m": 0.645189403193153,
+    "s_min_clr50_m": 0.3815420666935003,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.757620489109566,
+    "stroke_margin_mm_clr20": 32.71059680684697,
+    "rod_SF_min": {
+     "ext_C45": 2.381162082073608,
+     "ext_20MnV6": 3.513189957157782,
+     "yaml_C45": 1.5940886806526242,
+     "yaml_20MnV6": 2.351934118995675
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3480642637310215,
+    "util_muN_yaml_max": 0.5258501040714703,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70884.11790017749,
+    "F_cyl_max_N": 117887.52191175646,
+    "res_max_N": 1.1788983556471067e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6752423795108904,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6801423795108904,
+     "limit_m": 0.6828,
+     "margin_mm": 2.6576204891095734,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70447.16104201839,
+     "F_min_ext_N": 70447.16104201839,
+     "F_min_yaml_kt_N": 70549.93676048987,
+     "F_cyl_N": [
+      117887.52191175646,
+      116928.19553494341,
+      71320.68575467168,
+      70447.16104201839
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.032571932018385,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.402503549819105,
+     "limit_deg": 10.0,
+     "margin_deg": 6.597496450180895,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": true,
+     "crawler_body_deg": [
+      2.879340331512874,
+      2.0475575502397034
+     ],
+     "crawler_static_res": 8.263668860308826e-09,
+     "active_spheres": 13,
+     "floor_hat_deg": [
+      2.8639038895482094,
+      1.8436413184719227
+     ],
+     "err_deg": [
+      0.0007038895482094354,
+      0.0023413184719227598
+     ],
+     "Rv_hat": 1.0007207162929508,
+     "margin_Rv": 0.0042792837070491085,
+     "margin_err_deg": 0.03465868152807724,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      -0.010695205545646846,
+      -0.10272775540293333
+     ],
+     "record_floor_eop_err_deg": [
+      0.0012099134586081028,
+      0.0032564706690105805
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3",
+    "G0-4"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "rpX+-",
+   "floor_deg": [
+    2.8632,
+    -1.8413
+   ],
+   "Rv": 0.9999644381223327,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.39333122192230063,
+     0.5265856279407024,
+     0.5471639068474019,
+     0.6683242515833347
+    ],
+    "s_max_clr20_m": 0.6382712752655973,
+    "s_min_clr50_m": 0.39333122192230063,
+    "stroke_headroom_mm_vs_0.7_clr50": 31.675748416665208,
+    "stroke_margin_mm_clr20": 42.528724734402616,
+    "rod_SF_min": {
+     "ext_C45": 2.3924089959177888,
+     "ext_20MnV6": 3.5297837644688683,
+     "yaml_C45": 1.3551325171594146,
+     "yaml_20MnV6": 1.9993758449893004
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.35005970658974794,
+    "util_muN_yaml_max": 0.5506813208333943,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 71259.36559705743,
+    "F_cyl_max_N": 117180.14587652376,
+    "res_max_N": 7.455229933839291e-06
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6683242515833347,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6703242515833348,
+     "limit_m": 0.6828,
+     "margin_mm": 12.475748416665212,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 71146.85771710733,
+     "F_min_ext_N": 71146.85771710733,
+     "F_min_yaml_kt_N": 71402.4407407531,
+     "F_cyl_N": [
+      117180.14587652376,
+      116392.54140779095,
+      71864.01924196794,
+      71146.85771710733
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 56.73226860710733,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.402503549819105,
+     "limit_deg": 10.0,
+     "margin_deg": 6.597496450180895,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      2.8769451557680354,
+      -1.690016453121404
+     ],
+     "crawler_static_res": 1.3387762010097504e-08,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      2.861521554588802,
+      -1.8364550094410232
+     ],
+     "err_deg": [
+      -0.001678445411197771,
+      0.004844990558976692
+     ],
+     "Rv_hat": 0.9983605171072736,
+     "margin_Rv": 0.006639482892726312,
+     "margin_err_deg": 0.032155009441023306,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      -0.011786216099941793,
+      -0.07091207604471705
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0012825214289389208,
+      0.004191199755106512
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "rpX-+",
+   "floor_deg": [
+    -2.8632,
+    1.8413
+   ],
+   "Rv": 0.9999644381223327,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.6753560363674515,
+     0.5418983048107221,
+     0.4990353921935641,
+     0.37767579340662405
+    ],
+    "s_max_clr20_m": 0.645303060049714,
+    "s_min_clr50_m": 0.37767579340662405,
+    "stroke_headroom_mm_vs_0.7_clr50": 24.643963632548505,
+    "stroke_margin_mm_clr20": 32.59693995028591,
+    "rod_SF_min": {
+     "ext_C45": 2.3431167620355833,
+     "ext_20MnV6": 3.4570575177574177,
+     "yaml_C45": 1.571329987658482,
+     "yaml_20MnV6": 2.3183557194961213
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.34777892279730344,
+    "util_muN_yaml_max": 0.5240951088243964,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70830.63784985119,
+    "F_cyl_max_N": 118941.49633672282,
+    "res_max_N": 1.3840706742485054e-05
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6753560363674515,
+     "allowance_m": 0.0049,
+     "lhs_m": 0.6802560363674515,
+     "limit_m": 0.6828,
+     "margin_mm": 2.5439636325485115,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 69174.88579368762,
+     "F_min_ext_N": 69486.22264883447,
+     "F_min_yaml_kt_N": 69174.88579368762,
+     "F_cyl_N": [
+      118941.49633672282,
+      115901.74599245022,
+      72254.09926538244,
+      69486.22264883447
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 54.76029668368761,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.402503549819105,
+     "limit_deg": 10.0,
+     "margin_deg": 6.597496450180895,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      -2.8787741592145593,
+      2.0474203939233844
+     ],
+     "crawler_static_res": 9.66247171163559e-09,
+     "active_spheres": 13,
+     "floor_hat_deg": [
+      -2.86334075255827,
+      1.8435065105102948
+     ],
+     "err_deg": [
+      -0.00014075255826995203,
+      0.002206510510294857
+     ],
+     "Rv_hat": 1.0005854857455798,
+     "margin_Rv": 0.004414514254420077,
+     "margin_err_deg": 0.03479348948970514,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      0.010892482121522384,
+      -0.10272775309822846
+     ],
+     "record_floor_eop_err_deg": [
+      -0.0006467838963724049,
+      0.003121669675859362
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  },
+  {
+   "level": "bottom",
+   "tag": "rpX--",
+   "floor_deg": [
+    -2.8632,
+    -1.8413
+   ],
+   "Rv": 0.9999644381223327,
+   "chrono_floor": null,
+   "w_candidate_top": false,
+   "g04_role": null,
+   "record": {
+    "s_motor_m": [
+     0.5266794857478007,
+     0.3932547901082212,
+     0.6646958231789445,
+     0.5432695329561382
+    ],
+    "s_max_clr20_m": 0.6346428468612071,
+    "s_min_clr50_m": 0.3932547901082212,
+    "stroke_headroom_mm_vs_0.7_clr50": 35.304176821055464,
+    "stroke_margin_mm_clr20": 46.15715313879287,
+    "rod_SF_min": {
+     "ext_C45": 2.4114800663640685,
+     "ext_20MnV6": 3.557921409389609,
+     "yaml_C45": 1.379848493056276,
+     "yaml_20MnV6": 2.035842038935489
+    },
+    "rod_pair_ok_1.5": true,
+    "util_muN_ext_max": 0.3422696682468363,
+    "util_muN_yaml_max": 0.5323093404725091,
+    "slip_ext": false,
+    "slip_yaml": false,
+    "N_min_N": 70538.53467431074,
+    "F_cyl_max_N": 118394.30498914512,
+    "res_max_N": 6.795562740080641e-06
+   },
+   "G0": {
+    "G0-1": {
+     "s_max_m": 0.6646958231789445,
+     "allowance_m": 0.002,
+     "lhs_m": 0.6666958231789445,
+     "limit_m": 0.6828,
+     "margin_mm": 16.10417682105547,
+     "pass": true
+    },
+    "G0-2": {
+     "F_static_min_N": 70009.93468504139,
+     "F_min_ext_N": 70040.71119757382,
+     "F_min_yaml_kt_N": 70009.93468504139,
+     "F_cyl_N": [
+      118394.30498914512,
+      115191.37837970756,
+      72957.16967696349,
+      70040.71119757382
+     ],
+     "limit_N": 14414.58911,
+     "margin_kN": 55.595345575041385,
+     "pass": true
+    },
+    "G0-3": {
+     "swivel_deg": 3.402503549819105,
+     "limit_deg": 10.0,
+     "margin_deg": 6.597496450180895,
+     "pass": true
+    },
+    "G0-4": {
+     "applies": false,
+     "crawler_body_deg": [
+      -2.8764334408015912,
+      -1.6900164652715306
+     ],
+     "crawler_static_res": 5.4569682106375694e-09,
+     "active_spheres": 14,
+     "floor_hat_deg": [
+      -2.861012582979333,
+      -1.8364550214256423
+     ],
+     "err_deg": [
+      0.0021874170206670485,
+      0.004844978574357617
+     ],
+     "Rv_hat": 0.9982712270815407,
+     "margin_Rv": 0.0067287729184591916,
+     "margin_err_deg": 0.03215502142564238,
+     "pass": true,
+     "settle_map": {
+      "theta0_deg": 0.1718,
+      "k_dn": 0.01742,
+      "k_up": 0.01381,
+      "k_phi": 0.00539
+     },
+     "record_kn_x3_err_deg": [
+      0.011972983309425977,
+      -0.07095646989054893
+     ],
+     "record_floor_eop_err_deg": [
+      0.0017914872309097163,
+      0.004191187460266033
+     ]
+    }
+   },
+   "judged_items": [
+    "G0-1",
+    "G0-2",
+    "G0-3"
+   ],
+   "verdict": "pass"
+  }
+ ]
+}

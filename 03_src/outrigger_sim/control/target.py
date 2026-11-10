@@ -86,6 +86,20 @@ class SlopeLimitMode(StrEnum):
     """(4.4, 3.2) deg, the operating limit (CLAUDE.md '경사 운용 한계')."""
     VERIFICATION = "verification"
     """(5.5, 3.5) deg on the floor, the D8 verification range (simulation checks only)."""
+    VERIFICATION_EXT = "verification_ext"
+    """D8x extended verification range on the floor (simulation checks only,
+    ``06_analysis/02_control/d8x/d8x_rules.md`` 1.3): roll and pitch half-spans of
+    :data:`VERIFICATION_EXT_HALF_SPANS_DEG`, the nose-up side may differ. Like
+    :attr:`VERIFICATION` it uses the settle map and ``eps_u`` 0.01 and forbids the user nose-up
+    override (:class:`~outrigger_sim.control.c2.TargetSettings`)."""
+
+
+VERIFICATION_EXT_HALF_SPANS_DEG = {"roll": 5.7, "pitch_nose_down": 3.7, "pitch_nose_up": 3.6}
+"""D8x rules rev1 1.1 / 1.3 (``d8x_rules_rev1.md``, user decision 2026-11-10 after G0): floor
+half-spans of the extended diamond [deg]. The nose-up side is the floor pitch ``theta_g < 0``
+(relative pitch of rule A > 0) and goes through
+:attr:`TargetLimits.relative_pitch_span_nose_up_rad`
+(:meth:`TargetLimits.relative_pitch_span_for`)."""
 
 
 class TargetCode(StrEnum):
@@ -263,14 +277,30 @@ class TargetLimits:
 
     @classmethod
     def for_mode(cls, mode: SlopeLimitMode) -> TargetLimits:
-        """Limits of the operating or the verification mode."""
-        if SlopeLimitMode(mode) is SlopeLimitMode.VERIFICATION:
+        """Limits of the operating or a verification mode."""
+        mode = SlopeLimitMode(mode)
+        if mode is SlopeLimitMode.VERIFICATION:
             return cls(
                 relative_roll_span_rad=math.radians(5.5),
                 relative_pitch_span_rad=math.radians(3.5),
                 usage_tolerance=VERIFICATION_USAGE_TOLERANCE,
             )
+        if mode is SlopeLimitMode.VERIFICATION_EXT:
+            return cls._verification_ext()
         return cls()
+
+    @classmethod
+    def _verification_ext(cls) -> TargetLimits:
+        spans = VERIFICATION_EXT_HALF_SPANS_DEG
+        nose_down_rad = math.radians(spans["pitch_nose_down"])
+        nose_up_rad = math.radians(spans["pitch_nose_up"])
+        is_symmetric = nose_up_rad == nose_down_rad
+        return cls(
+            relative_roll_span_rad=math.radians(spans["roll"]),
+            relative_pitch_span_rad=nose_down_rad,
+            usage_tolerance=VERIFICATION_USAGE_TOLERANCE,
+            relative_pitch_span_nose_up_rad=None if is_symmetric else nose_up_rad,
+        )
 
 
 @dataclass(frozen=True)

@@ -1,0 +1,307 @@
+{
+ "schema": "d8x_points/1",
+ "rules_rev": "rev1",
+ "rules": {
+  "original": {
+   "path": "06_analysis/02_control/d8x/d8x_rules.md",
+   "sha256": "a377b9bb028385bb7d7d97312a71816ba0ca758e2cb193e25b2d092fff064da8"
+  },
+  "rev1": {
+   "path": "06_analysis/02_control/d8x/d8x_rules_rev1.md",
+   "sha256": "ad16f452fb4dce7395a059c73d7caf213f1a9a69f18af8d230bf03f4518e80d4"
+  },
+  "rev2": {
+   "path": "06_analysis/02_control/d8x/d8x_rules_rev2.md",
+   "sha256": "5f3fa620fe704834a9b6c0a65824b29b75e2a527ea8e97a17abb5e07987a8c27"
+  }
+ },
+ "table_sources": {
+  "A": "rev1",
+  "B": "rev1",
+  "C": "rev1",
+  "W": "original"
+ },
+ "half_spans_deg": {
+  "roll": 5.7,
+  "pitch_nose_down": 3.7,
+  "pitch_nose_up": 3.6
+ },
+ "levels": [
+  "top",
+  "middle",
+  "bottom"
+ ],
+ "ra_points": [
+  {
+   "tag": "pitch+",
+   "roll_deg": 0.0,
+   "pitch_deg": 3.7,
+   "R_v": 1.0,
+   "R_v_table": "1.000000",
+   "R_v_table_ok": true
+  },
+  {
+   "tag": "pitch-",
+   "roll_deg": 0.0,
+   "pitch_deg": -3.6,
+   "R_v": 1.0,
+   "R_v_table": "1.000000",
+   "R_v_table_ok": true
+  },
+  {
+   "tag": "roll+",
+   "roll_deg": 5.7,
+   "pitch_deg": 0.0,
+   "R_v": 1.0,
+   "R_v_table": "1.000000",
+   "R_v_table_ok": true
+  },
+  {
+   "tag": "roll-",
+   "roll_deg": -5.7,
+   "pitch_deg": 0.0,
+   "R_v": 1.0,
+   "R_v_table": "1.000000",
+   "R_v_table_ok": true
+  },
+  {
+   "tag": "r+p+0.25",
+   "roll_deg": 1.425,
+   "pitch_deg": 2.775,
+   "R_v": 0.9999999999999999,
+   "R_v_table": "1.000000",
+   "R_v_table_ok": true
+  },
+  {
+   "tag": "r+p+0.5",
+   "roll_deg": 2.85,
+   "pitch_deg": 1.85,
+   "R_v": 1.0,
+   "R_v_table": "1.000000",
+   "R_v_table_ok": true
+  },
+  {
+   "tag": "r+p+0.75",
+   "roll_deg": 4.275,
+   "pitch_deg": 0.925,
+   "R_v": 1.0,
+   "R_v_table": "1.000000",
+   "R_v_table_ok": true
+  },
+  {
+   "tag": "r+p-0.25",
+   "roll_deg": 1.425,
+   "pitch_deg": -2.7,
+   "R_v": 1.0,
+   "R_v_table": "1.000000",
+   "R_v_table_ok": true
+  },
+  {
+   "tag": "r+p-0.5",
+   "roll_deg": 2.85,
+   "pitch_deg": -1.8,
+   "R_v": 1.0,
+   "R_v_table": "1.000000",
+   "R_v_table_ok": true
+  },
+  {
+   "tag": "r+p-0.75",
+   "roll_deg": 4.275,
+   "pitch_deg": -0.9,
+   "R_v": 1.0,
+   "R_v_table": "1.000000",
+   "R_v_table_ok": true
+  },
+  {
+   "tag": "r-p+0.5",
+   "roll_deg": -2.85,
+   "pitch_deg": 1.85,
+   "R_v": 1.0,
+   "R_v_table": "1.000000",
+   "R_v_table_ok": true
+  },
+  {
+   "tag": "r-p-0.5",
+   "roll_deg": -2.85,
+   "pitch_deg": -1.8,
+   "R_v": 1.0,
+   "R_v_table": "1.000000",
+   "R_v_table_ok": true
+  },
+  {
+   "tag": "d45++",
+   "roll_deg": 2.2627,
+   "pitch_deg": 2.2627,
+   "R_v": 1.0085054528212423,
+   "R_v_table": "1.008505",
+   "R_v_table_ok": true
+  },
+  {
+   "tag": "d45-+",
+   "roll_deg": -2.2627,
+   "pitch_deg": 2.2627,
+   "R_v": 1.0085054528212423,
+   "R_v_table": "1.008505",
+   "R_v_table_ok": true
+  },
+  {
+   "tag": "d45+-",
+   "roll_deg": 2.2064,
+   "pitch_deg": -2.2064,
+   "R_v": 0.9999766081871344,
+   "R_v_table": "0.999977",
+   "R_v_table_ok": true
+  },
+  {
+   "tag": "d45--",
+   "roll_deg": -2.2064,
+   "pitch_deg": -2.2064,
+   "R_v": 0.9999766081871344,
+   "R_v_table": "0.999977",
+   "R_v_table_ok": true
+  }
+ ],
+ "rpx_points": [
+  {
+   "name": "rpX",
+   "roll_deg": 2.8632,
+   "pitch_deg": 1.8413,
+   "R_v": 0.9999644381223327,
+   "R_v_table": "0.999964",
+   "R_v_table_ok": true
+  },
+  {
+   "name": "rpX-+",
+   "roll_deg": -2.8632,
+   "pitch_deg": 1.8413,
+   "R_v": 0.9999644381223327,
+   "R_v_table": "0.999964",
+   "R_v_table_ok": true
+  },
+  {
+   "name": "rpX+-",
+   "roll_deg": 2.8242,
+   "pitch_deg": -1.8162,
+   "R_v": 0.9999736842105262,
+   "R_v_table": "0.999974",
+   "R_v_table_ok": true
+  },
+  {
+   "name": "rpX--",
+   "roll_deg": -2.8242,
+   "pitch_deg": -1.8162,
+   "R_v": 0.9999736842105262,
+   "R_v_table": "0.999974",
+   "R_v_table_ok": true
+  }
+ ],
+ "axis_vertices": [
+  {
+   "name": "fdown3.7",
+   "roll_deg": 0.0,
+   "pitch_deg": 3.7,
+   "R_v": 1.0
+  },
+  {
+   "name": "fup3.6",
+   "roll_deg": 0.0,
+   "pitch_deg": -3.6,
+   "R_v": 1.0
+  },
+  {
+   "name": "roll5.7",
+   "roll_deg": 5.7,
+   "pitch_deg": 0.0,
+   "R_v": 1.0
+  },
+  {
+   "name": "rollm5.7",
+   "roll_deg": -5.7,
+   "pitch_deg": 0.0,
+   "R_v": 1.0
+  }
+ ],
+ "g0_points": [
+  "pitch+",
+  "pitch-",
+  "roll+",
+  "roll-",
+  "r+p+0.25",
+  "r+p+0.5",
+  "r+p+0.75",
+  "r+p-0.25",
+  "r+p-0.5",
+  "r+p-0.75",
+  "r-p+0.5",
+  "r-p-0.5",
+  "d45++",
+  "d45-+",
+  "d45+-",
+  "d45--",
+  "rpX",
+  "rpX-+",
+  "rpX+-",
+  "rpX--"
+ ],
+ "rc_floors": [
+  "fdown3.7",
+  "fup3.6",
+  "roll5.7",
+  "rollm5.7",
+  "rpX",
+  "rpX-+",
+  "rpX+-",
+  "rpX--"
+ ],
+ "w_candidates": [
+  {
+   "ra_point": "r+p+0.25",
+   "floor": "dxpp025"
+  },
+  {
+   "ra_point": "r+p+0.75",
+   "floor": "dxpp075"
+  },
+  {
+   "ra_point": "r+p-0.25",
+   "floor": "dxpm025"
+  },
+  {
+   "ra_point": "r+p-0.5",
+   "floor": "dxpm050"
+  },
+  {
+   "ra_point": "r+p-0.75",
+   "floor": "dxpm075"
+  },
+  {
+   "ra_point": "r-p+0.5",
+   "floor": "dxmp050"
+  },
+  {
+   "ra_point": "r-p-0.5",
+   "floor": "dxmm050"
+  },
+  {
+   "ra_point": "d45++",
+   "floor": "d45pp"
+  },
+  {
+   "ra_point": "d45+-",
+   "floor": "d45pm"
+  },
+  {
+   "ra_point": "d45-+",
+   "floor": "d45mp"
+  },
+  {
+   "ra_point": "d45--",
+   "floor": "d45mm"
+  }
+ ],
+ "w_mirrors": {
+  "r+p-0.5": "rpX+-",
+  "r-p+0.5": "rpX-+",
+  "r-p-0.5": "rpX--"
+ }
+}
