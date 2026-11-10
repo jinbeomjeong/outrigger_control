@@ -443,6 +443,18 @@ def fallback_event_count(controller) -> int:
     return sum(1 for event in events if event.name.startswith(FALLBACK_EVENT_PREFIX))
 
 
+LAS_EVENTS_KEY = "las_events"
+"""LAS rules rev4b 3: record-only LAS-b events and FAULT names of the run (``las_h7``)."""
+
+
+def las_events_of(controller) -> dict:
+    """``las_h7.las_events_record`` of the run's controller events (read after the run; the
+    commands and their hash are the screen's, so this record cannot change them)."""
+    import las_h7
+
+    return las_h7.las_events_record(getattr(controller, "events", None) or [])
+
+
 def _lift_time_s(plant, period: dict) -> float | None:
     limiter = getattr(plant, "flow_limiter", None)
     if limiter is None or len(period["t"]) == 0:
@@ -489,7 +501,8 @@ def run_record(plant, controller, *, harness_commands_sha256: str | None,
                   None if not period or not len(period["t"])
                   else verdict_runs._command_digest(period["command"])),
               "t_lift_s": t_lift_s,
-              "rod_pressure_fallback_events": fallback_event_count(controller)}
+              "rod_pressure_fallback_events": fallback_event_count(controller),
+              LAS_EVENTS_KEY: las_events_of(controller)}
     if bound_check is not None:
         record["extend_bound_check"] = bound_check
     if hydraulics:

@@ -52,6 +52,10 @@ Usage (dynamics-dev python, project root):
       --candidate b0 b-a5 ... [--workers 4] [--affinity HEX] [--out <jsonl>]
       [--gate-only] [--gate-npz-dir DIR] [--keys K1,K2 | --from-t4h NPZ ...] [--limit N]
       [--rho-on 0.18]   (custom only; the named LAS-b variants keep the sealed 0.18)
+``run`` writes a new file only (an existing ``--out`` is refused: no resume, no append) and
+starts only when the sealed rules are the sealed texts (original, rev1, rev2; rev3 / rev4 /
+the rev3 key list when present). Every line carries ``las.identity``: the parent's commit,
+the sha256 of this file and of ``c2.py`` as the worker reads them, and the thread variables.
 ``--from-t4h`` runs the stored ``run_v5`` jobs of T4h records (V-1 rebuild-path runs of rev1
 R-6: D-1 rows and steady runs are head-only, only the event runs carry rod-side readings the
 replay needs); a non-D-1 job's controller is the one ``verdict_runs._finish`` recorded.
@@ -64,6 +68,7 @@ import hashlib
 import json
 import os
 import re
+import subprocess
 import sys
 import time
 from dataclasses import asdict, dataclass, field
@@ -91,6 +96,59 @@ RULES_SHA256 = "00b48fd834d81b9d499015f2d44380623e9fbcb2f1515913a8fd0589503eaf40
 RULES_REV1_PATH = RULES_PATH.with_name("las_targeted_rules_rev1.md")
 RULES_REV1_SHA256 = "0d5f59f8e4a09448b93e0cde42adb7d23c2f99f6b365809876efaa6212d27625"
 """``las_targeted_rules_rev1.sha256`` (sealed addendum 2026-11-08: S7', L-hat rebuild)."""
+RULES_REV2_SHA256 = "6be736cb98cea34e4a606606b4009668bbc1470c8a7db23b6a119ef033c97960"
+"""``las_targeted_rules_rev2.sha256`` (sealed addendum 2 2026-11-08 15:17: rule H, R-8 .. R-10)."""
+RULES_REV3_SHA256 = "956f65c74e36eb8fe921dc6399b0d5f2f04099b7852380362351f658c9791cd1"
+"""``las_targeted_rules_rev3.sha256`` (sealed addendum 3 2026-11-08 19:23: T-3, K-0 .. K-7)."""
+RULES_REV3_KEYS_SHA256 = "3602438d047b6a35829bda013921972411d10b0906153eba8bdc9760e7888553"
+"""Second line of ``las_targeted_rules_rev3.sha256``: the T-3 key list and baselines."""
+RULES_REV4_SHA256 = "05fbde22009c10b74ddf0df071452a99631bb319c2f482df83be59adfad1de6d"
+"""``las_targeted_rules_rev4.sha256`` (sealed addendum 4 2026-11-08 19:31: T-3c included,
+H-7 -> H-7')."""
+RULES_REV4A_SHA256 = "3cbbfb5d8afda9075bf9631accf1b8bee4c1ee02edafa34a7869091175a73b15"
+"""``las_targeted_rules_rev4a.sha256`` (sealed correction 2026-11-08 19:56: G6-2_loc, key-list
+G6-2 void, stop attribution, dg3 off reproduction, H-7' field table)."""
+RULES_REV4B_SHA256 = "add921e4978ef16abcc22dfc88dc25e51a770dc98d2d540526f48cf6ea7a6f3f"
+"""``las_targeted_rules_rev4b.sha256`` (sealed correction 2026-11-08 20:12: dg3 v4_on option,
+J-3' events, J-7 ``las_events``, more format-absent cells)."""
+RULES_REV4C_SHA256 = "7e45993f667382f56aeb1b72bb5e7023ecfe3048a3723ac050cefc3b2a721417"
+"""``las_targeted_rules_rev4c.sha256`` (sealed 2026-11-08: H-7' fields of J-5 / J-6, grid_vb,
+J-15, jp ``las_events``, silent-line hash check per batch)."""
+
+
+@dataclass(frozen=True)
+class Seal:
+    """One sealed file: its name, the ``.sha256`` file that holds its value, the tool's value."""
+
+    file_name: str
+    sha_file_name: str
+    sha256: str
+
+
+SEALS: dict[str, Seal] = {
+    "original": Seal("las_targeted_rules.md", "las_targeted_rules.sha256", RULES_SHA256),
+    "rev1": Seal("las_targeted_rules_rev1.md", "las_targeted_rules_rev1.sha256",
+                 RULES_REV1_SHA256),
+    "rev2": Seal("las_targeted_rules_rev2.md", "las_targeted_rules_rev2.sha256",
+                 RULES_REV2_SHA256),
+    "rev3": Seal("las_targeted_rules_rev3.md", "las_targeted_rules_rev3.sha256",
+                 RULES_REV3_SHA256),
+    "rev3_keys": Seal("las_targeted_rules_rev3_keys.json", "las_targeted_rules_rev3.sha256",
+                      RULES_REV3_KEYS_SHA256),
+    "rev4": Seal("las_targeted_rules_rev4.md", "las_targeted_rules_rev4.sha256",
+                 RULES_REV4_SHA256),
+    "rev4a": Seal("las_targeted_rules_rev4a.md", "las_targeted_rules_rev4a.sha256",
+                  RULES_REV4A_SHA256),
+    "rev4b": Seal("las_targeted_rules_rev4b.md", "las_targeted_rules_rev4b.sha256",
+                  RULES_REV4B_SHA256),
+    "rev4c": Seal("las_targeted_rules_rev4c.md", "las_targeted_rules_rev4c.sha256",
+                  RULES_REV4C_SHA256),
+}
+"""Every sealed LAS rule file, in seal order."""
+TARGETED_REQUIRED_SEALS = ("original", "rev1", "rev2")
+"""The texts a T-0 .. T-2 / V-1 run and its judge need; later addenda are checked when present
+(audit 2026-11-08)."""
+SHA256_HEX = re.compile(r"[0-9a-f]{64}")
 
 KIND_OFF = "off"
 KIND_LASB = "lasb"
@@ -689,6 +747,90 @@ def file_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def sealed_values(sha_path: Path) -> dict[str, str]:
+    """``file name -> sha256`` of a ``.sha256`` file (lines ``<sha256>  <file name>  ...``)."""
+    values = {}
+    for line in sha_path.read_text(encoding="utf-8").splitlines():
+        tokens = line.split()
+        if len(tokens) >= 2 and SHA256_HEX.fullmatch(tokens[0].lower()):
+            values[tokens[1]] = tokens[0].lower()
+    return values
+
+
+def seal_problems(rules_dir: Path, required: tuple[str, ...],
+                  optional: tuple[str, ...] = ()) -> list[str]:
+    """Why the sealed rule files in ``rules_dir`` are not the sealed ones (empty = they are).
+
+    A file of ``required`` must be there; one of ``optional`` is checked only when its text is
+    there. Each is checked twice: its ``.sha256`` file names the tool's value, and the text
+    hashes to it.
+    """
+    problems = []
+    for name in (*required, *optional):
+        seal = SEALS[name]
+        text_path = rules_dir / seal.file_name
+        sha_path = rules_dir / seal.sha_file_name
+        if not text_path.exists():
+            if name in required:
+                problems.append(f"{name}: missing {text_path}")
+            continue
+        if not sha_path.exists():
+            problems.append(f"{name}: missing {sha_path}")
+            continue
+        sealed = sealed_values(sha_path).get(seal.file_name)
+        if sealed != seal.sha256:
+            problems.append(f"{name}: {seal.sha_file_name} holds {sealed}, "
+                            f"the tool expects {seal.sha256}")
+        digest = file_sha256(text_path)
+        if digest != seal.sha256:
+            problems.append(f"{name}: {seal.file_name} sha256 {digest} != sealed {seal.sha256}")
+    return problems
+
+
+def targeted_seal_problems(rules_dir: Path = RULES_PATH.parent) -> list[str]:
+    """The seal check of a T-0 .. T-2 / V-1 run and judge: original, rev1, rev2, and the
+    later addenda that are there."""
+    later = tuple(name for name in SEALS if name not in TARGETED_REQUIRED_SEALS)
+    return seal_problems(rules_dir, TARGETED_REQUIRED_SEALS, later)
+
+
+THREAD_VARIABLES = ("MKL_NUM_THREADS", "OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS",
+                    "NUMBA_NUM_THREADS")
+C2_PATH = ROOT / "03_src" / "outrigger_sim" / "control" / "c2.py"
+GIT_TIMEOUT_S = 60
+
+
+def git_head(root: Path = ROOT) -> str:
+    """``git rev-parse HEAD`` of the project.
+
+    Raises:
+        subprocess.CalledProcessError, OSError: git is not there or fails.
+    """
+    completed = subprocess.run(["git", "-C", str(root), "rev-parse", "HEAD"],
+                               capture_output=True, text=True, encoding="utf-8", check=True,
+                               timeout=GIT_TIMEOUT_S)
+    return completed.stdout.strip()
+
+
+def thread_values() -> dict[str, str | None]:
+    """The thread variables (and the MKL threading layer) as this process sees them."""
+    return {name: os.environ.get(name) for name in (*THREAD_VARIABLES, "MKL_THREADING_LAYER")}
+
+
+def thread_problems(values: dict[str, str | None]) -> list[str]:
+    """Thread variables that are not 1 (such a run would not reproduce the command hash)."""
+    return [f"{name}={values.get(name)!r}" for name in THREAD_VARIABLES
+            if values.get(name) != "1"]
+
+
+def line_identity(commit: str | None, tool_files: dict[str, Path]) -> dict:
+    """What a result line carries of its run: commit (given by the parent), the sha256 of the
+    tool files and of ``c2.py`` as this process reads them, and the thread variables."""
+    return {"git_head": commit,
+            "sha256": {name: file_sha256(path) for name, path in tool_files.items()},
+            "c2_sha256": file_sha256(C2_PATH), "threads": thread_values()}
+
+
 def _unescape(cell: str) -> str:
     return cell.strip().strip("`").replace("\\|", "|")
 
@@ -921,13 +1063,16 @@ def run_las_job(job: dict) -> dict:
         _capture_d1_record()
         _capture_finish()
     except Exception as exc:  # recorded as an error line, the batch goes on
-        return {"job": job, "error": f"install: {exc!r}", "las": {"candidate": las["name"]},
+        return {"job": job, "error": f"install: {exc!r}",
+                "las": {"candidate": las["name"], "key": composite_key(job),
+                        "identity": line_identity(las.get("commit"), IDENTITY_FILES)},
                 "wall_s": round(time.perf_counter() - t_start, 1)}
     line = run_v5.run_one(job)
     controller = run_controller(job)
     run = None if controller is None else controller.__dict__.get("_las_run")
     line["las"] = las_block(las["name"], params, las["mode"], run, _CAPTURE.get("harness"))
     line["las"]["key"] = composite_key(job)
+    line["las"]["identity"] = line_identity(las.get("commit"), IDENTITY_FILES)
     if las.get("gate_npz_dir") and run is not None and "error" not in line:
         path = write_gate_record(Path(las["gate_npz_dir"]), composite_key(job), controller,
                                  line, run)
@@ -936,18 +1081,8 @@ def run_las_job(job: dict) -> dict:
 
 
 # ------------------------------------------------------------------------------- batch
-def done_labels(path: Path) -> set[tuple[str, str, str]]:
-    """(key, candidate label, mode) of the finished (error-free) lines of ``path``."""
-    if not path.exists():
-        return set()
-    done = set()
-    for text in path.read_text(encoding="utf-8").splitlines():
-        record = json.loads(text)
-        if "error" in record or "las" not in record:
-            continue
-        las = record["las"]
-        done.add((las.get("key") or composite_key(record["job"]), las["candidate"], las["mode"]))
-    return done
+IDENTITY_FILES = {"las_targeted.py": HERE / "las_targeted.py"}
+"""Tool files whose sha256 every line carries (``las.identity``, audit 2026-11-08)."""
 
 
 def jobs_from_t4h(paths: list[Path]) -> list[dict]:
@@ -968,22 +1103,25 @@ def jobs_from_t4h(paths: list[Path]) -> list[dict]:
 
 def build_jobs(keys: list[str], candidates: list[tuple[str, LasParams]], mode: str,
                mask: int | None, gate_npz_dir: str | None,
-               base: list[dict] | None = None) -> list[dict]:
+               base: list[dict] | None = None, commit: str | None = None) -> list[dict]:
     """One job per (candidate, key) of ``keys`` (or per job of ``base``); VB first (the
     longer runs start early)."""
     base = jobs_for_keys(keys) if base is None else base
     ordered = sorted(base, key=lambda job: job["setting"] != "VB")
     jobs = []
     for name, params in candidates:
-        jobs += with_las(ordered, name, params, mode, mask, gate_npz_dir)
+        jobs += with_las(ordered, name, params, mode, mask, gate_npz_dir, commit)
     return jobs
 
 
 def with_las(base_jobs: list[dict], name: str, params: LasParams, mode: str,
-             mask: int | None, gate_npz_dir: str | None = None) -> list[dict]:
-    """``run_v5`` jobs with the ``las`` entry :func:`run_las_job` reads."""
+             mask: int | None, gate_npz_dir: str | None = None,
+             commit: str | None = None) -> list[dict]:
+    """``run_v5`` jobs with the ``las`` entry :func:`run_las_job` reads; ``commit`` is the
+    parent's ``git rev-parse HEAD`` the worker writes into ``las.identity``."""
     return [{**job, "mask": mask, "las": {"name": name, "params": params.to_dict(),
-                                          "mode": mode, "gate_npz_dir": gate_npz_dir}}
+                                          "mode": mode, "gate_npz_dir": gate_npz_dir,
+                                          "commit": commit}}
             for job in base_jobs]
 
 
@@ -1025,14 +1163,19 @@ def default_out(stage: str) -> Path:
 
 
 def run_batch(jobs: list[dict], path: Path, workers: int) -> int:
-    """Run the jobs in spawned workers (one run each), append the lines; the error count."""
+    """Run the jobs in spawned workers (one run each) into the new file ``path``; the error
+    count.
+
+    Raises:
+        FileExistsError: ``path`` is there already (no resume, no append: audit 2026-11-08).
+    """
     import verdict_runs
 
-    verdict_runs.warm_numba_cache()
     path.parent.mkdir(parents=True, exist_ok=True)
+    handle = path.open("x", encoding="utf-8")  # before any run: an existing file stops here
+    verdict_runs.warm_numba_cache()
     errors = 0
-    with get_context("spawn").Pool(workers, maxtasksperchild=1) as pool, \
-            path.open("a", encoding="utf-8") as handle:
+    with get_context("spawn").Pool(workers, maxtasksperchild=1) as pool, handle:
         for count, record in enumerate(pool.imap_unordered(run_las_job, jobs), 1):
             record["job"].pop("mask", None)
             handle.write(json.dumps(record, default=lambda v: v.item() if hasattr(v, "item")
@@ -1095,7 +1238,13 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({"stage": args.stage, "count": len(stage_keys(args.stage)),
                           "equal_to_sealed": not problems, "problems": len(problems)}))
         return 1 if problems else 0
+    path = args.out or default_out(args.stage)
     try:
+        problems = targeted_seal_problems(args.rules.parent)
+        if problems:
+            raise ValueError(f"sealed rules: {problems}")
+        if path.exists():
+            raise ValueError(f"{path} exists (no resume or append: give a new --out)")
         candidates = resolve_candidates(args.candidate, args)
         keys = args.keys.split(",") if args.keys else stage_keys(args.stage)
         mode = MODE_GATE if args.gate_only else MODE_ACT
@@ -1104,16 +1253,11 @@ def main(argv: list[str] | None = None) -> int:
         mask = None if args.affinity is None else int(args.affinity, 16)
         gate_dir = None if args.gate_npz_dir is None else str(args.gate_npz_dir.resolve())
         base = None if args.from_t4h is None else jobs_from_t4h(args.from_t4h)
-        jobs = build_jobs(keys, candidates, mode, mask, gate_dir, base)
-    except (KeyError, OSError, ValueError) as exc:
+        jobs = build_jobs(keys, candidates, mode, mask, gate_dir, base, git_head())
+    except (KeyError, OSError, ValueError, subprocess.CalledProcessError) as exc:
         print(f"input error: {exc}")
         return 2
-    path = args.out or default_out(args.stage)
-    done = done_labels(path)
-    todo = [job for job in jobs
-            if (composite_key(job), job["las"]["name"], job["las"]["mode"]) not in done]
-    if args.limit is not None:
-        todo = todo[: args.limit]
+    todo = jobs if args.limit is None else jobs[: args.limit]
     print(f"{args.stage}: {len(jobs)} runs, {len(todo)} to do -> {path}", flush=True)
     errors = run_batch(todo, path, args.workers) if todo else 0
     print(json.dumps({"stage": args.stage, "out": str(path), "runs": len(todo),

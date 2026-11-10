@@ -141,6 +141,11 @@ Usage (dynamics-dev python, project root):
   python -I -B .../las_shadow.py v1 --instrumented <las_V1.jsonl> --npz-dir DIR [--r2 <json>]
   python -I -B .../las_shadow.py v2 --shadow <judge out jsonl> [--count 3] [--candidate b0]
       [--workers 3] [--affinity HEX] --out <jsonl>
+Every command first checks the sealed rules (``--rules-dir``, before the command: original, rev1,
+rev2 and the later addenda present). Audit fixes (2026-11-08): a record without a LEVEL step is
+``undecidable`` ("no LEVEL step"), not silent; every judge line carries ``params`` (the whole
+``LasParams``) and ``path`` (repository-relative); an R-2 / rule-H record without a pre-LOC
+LEVEL step is "not compared" (no 0 N without a row).
 The last stdout line is JSON. Exit codes: 0 done / check passed, 1 check failed (r2 rejected or
 a validation record could not be rebuilt, r8 H-9 or incomplete, judge over the R-5 undecidable
 limit, V-1, V-2) or run errors, 2 input error.
@@ -171,6 +176,8 @@ MODE_STORED = "stored"
 MODE_EXACT = "exact"
 MODE_BAND = "band"
 MODE_REJECT = "reject"
+NOT_COMPARED = "not compared"
+"""R-2 / R-8 status of a record without a pre-LOC LEVEL step (no row to compare)."""
 EXACT_LIMIT_N = 1.0
 """rev1 R-3: R-2 delta up to 1 N evaluates the rebuilt L-hat as it is."""
 BAND_LIMIT_N = 500.0
@@ -653,7 +660,7 @@ def shadow_judge(record: ShadowRecord, params: lt.LasParams) -> dict:
     out = {"file": record.name, "job": record.job, "commands_sha256": record.commands_sha256,
            "assumptions": assumptions, "mode": record.mode, "delta_N": record.delta_N,
            "s7p_first_t_s": float(record.t_s[s7_alone[0]]) if s7_alone.size else None,
-           "source": record.source}
+           "source": record.source, "params": params.to_dict()}
     if record.mode == MODE_HEAD_ONLY:
         out.update(head_only_basis=record.head_only_basis, rule_h_mode=record.rule_h_mode)
     if fired.size:
@@ -662,6 +669,8 @@ def shadow_judge(record: ShadowRecord, params: lt.LasParams) -> dict:
     if has_nan_where_needed:
         return {**out, "status": UNDECIDABLE, "reason": "lower_estimate_N NaN where S1 .. S6 hold"}
     level_rows = np.flatnonzero(gates["S2"])
+    if not level_rows.size:  # nothing was judged: "silent" would claim more than was seen
+        return {**out, "status": UNDECIDABLE, "reason": "no LEVEL step"}
     false_counts = {name: int((~gates[name][level_rows]).sum()) for name in names}
     closest = None
     if level_rows.size:
@@ -674,13 +683,27 @@ def shadow_judge(record: ShadowRecord, params: lt.LasParams) -> dict:
                         "closest": closest, "max_pre_loc_rho": _max_pre_loc_rho(record, gates)}}
 
 
+def repository_path(path: Path | None) -> str | None:
+    """``path`` relative to the project root in ``/`` form (absolute when outside it): the
+    file name alone does not tell the batch folders apart (audit 2026-11-08)."""
+    if path is None:
+        return None
+    resolved = path.resolve()
+    try:
+        return resolved.relative_to(ROOT).as_posix()
+    except ValueError:
+        return resolved.as_posix()
+
+
 def judge_file(path: Path, params: lt.LasParams, rebuild: RebuildSetting | None = None,
                rule_h: RebuildSetting | None = None) -> dict:
     record, why = read_record(path, rebuild, rule_h)
     if record is None:
-        return {"file": path.name, "status": UNDECIDABLE, "reason": why,
-                "source": record_source(path)}
-    return shadow_judge(record, params)
+        result = {"file": path.name, "status": UNDECIDABLE, "reason": why,
+                  "source": record_source(path), "params": params.to_dict()}
+    else:
+        result = shadow_judge(record, params)
+    return {**result, "path": repository_path(path)}
 
 
 # ------------------------------------------------------------------------------- inputs
@@ -760,7 +783,9 @@ def run_judge(args) -> int:
         judged = dict(zip(present, _map(judge, present, args.workers), strict=True))
         results = [judged[path] if path in judged else
                    {"file": None if path is None else path.name, "job": line["job"],
-                    "status": UNDECIDABLE, "reason": "no T4h record"} for line, path in pairs]
+                    "status": UNDECIDABLE, "reason": "no T4h record",
+                    "params": params.to_dict(), "path": repository_path(path)}
+                   for line, path in pairs]
     else:
         results = _map(judge, npz_files(args.t4h), args.workers)
     args.out.parent.mkdir(parents=True, exist_ok=True)
@@ -819,9 +844,11 @@ def r2_record(path: Path) -> dict:
     rows = _pre_loc_level_rows(np.asarray(arrays["phase"]).astype(str),
                                np.asarray(arrays["t_s"], float), events)
     difference = _abs_difference(rebuilt, stored)[rows]
+    if not difference.size:  # no pre-LOC LEVEL step: 0 N would be a claim without a row
+        return {"file": path.name, "status": NOT_COMPARED, "rows": 0,
+                "reason": "no pre-LOC LEVEL step", "transform": transform_name(config)}
     out = {"file": path.name, "status": "compared", "rows": int(rows.sum()),
-           "max_abs_N": float(difference.max()) if difference.size else 0.0,
-           "transform": transform_name(config)}
+           "max_abs_N": float(difference.max()), "transform": transform_name(config)}
     if "lower_reading_N" in arrays:
         own = load_estimate_transform(config, arrays["lower_reading_N"], arrays["seal_band_N"])
         out["transform_max_abs_N"] = float(_abs_difference(own, stored).max())
@@ -836,9 +863,11 @@ def r2_verdict(rows: list[dict]) -> dict:
                         if "transform_max_abs_N" in row]
     worst = max(compared, key=lambda row: row["max_abs_N"], default=None)
     not_replayable = sum(row["status"] == "not replayable" for row in rows)
+    not_compared = sum(row["status"] == NOT_COMPARED for row in rows)
     return {"command": "r2", "records": len(compared), "failed": len(failed),
-            "not_replayable": not_replayable,
-            "without_stored": len(rows) - len(compared) - len(failed) - not_replayable,
+            "not_replayable": not_replayable, "not_compared": not_compared,
+            "without_stored": (len(rows) - len(compared) - len(failed) - not_replayable
+                               - not_compared),
             "compared_rows": sum(row["rows"] for row in compared), "max_abs_N": delta_N,
             "mode": rebuild_mode(delta_N) if compared else MODE_REJECT,
             "worst_file": None if worst is None else worst["file"],
@@ -875,8 +904,9 @@ def rule_h_difference(arrays: dict, meta: dict, name: str, stored_N: np.ndarray)
                                np.asarray(arrays["t_s"], float), events)
     difference = _abs_difference(estimate, stored)
     pre_loc = difference[rows]
-    return {"rows": int(rows.sum()), "max_abs_N": float(pre_loc.max()) if pre_loc.size else 0.0,
-            "all_rows_max_abs_N": float(difference.max()) if difference.size else 0.0,
+    return {"rows": int(rows.sum()),
+            "max_abs_N": float(pre_loc.max()) if pre_loc.size else None,
+            "all_rows_max_abs_N": float(difference.max()) if difference.size else None,
             "transform": transform_name(config)}
 
 
@@ -897,6 +927,9 @@ def rule_h_check(arrays: dict, meta: dict | None, name: str, stored_N: np.ndarra
         values = rule_h_difference(arrays, meta, name, stored_N)
     except (KeyError, RuntimeError, ValueError) as exc:
         return {"status": "failed", "reason": repr(exc)}
+    if values["rows"] == 0:  # no pre-LOC LEVEL step: nothing was compared
+        return {"status": NOT_COMPARED, "basis": basis, "reason": "no pre-LOC LEVEL step",
+                **values}
     return {"status": "compared", "basis": basis, **values}
 
 
@@ -1272,6 +1305,8 @@ def _add_candidate_args(parser) -> None:
 
 def _parse_args(argv: list[str] | None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--rules-dir", type=Path, default=lt.RULES_PATH.parent,
+                        help="folder of the sealed rules (checked before any command)")
     sub = parser.add_subparsers(dest="command", required=True)
     r2 = sub.add_parser("r2", help="R-2: rebuilt against stored L-hat (sets the judge mode)")
     r2.add_argument("--t4h", type=Path, nargs="+", required=True)
@@ -1316,6 +1351,9 @@ def _parse_args(argv: list[str] | None):
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
     try:
+        problems = lt.targeted_seal_problems(args.rules_dir)
+        if problems:
+            raise ValueError(f"sealed rules: {problems}")
         if args.command == "r2":
             return run_r2(args)
         if args.command == "r8":
