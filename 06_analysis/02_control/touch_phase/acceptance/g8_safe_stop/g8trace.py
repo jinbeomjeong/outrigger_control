@@ -15,12 +15,17 @@ from dataclasses import replace
 from multiprocessing import Pool
 from pathlib import Path
 
-ACC_DIR = Path(__file__).resolve().parents[1] / "c4g2k1"  # scratch copy, identical to the committed acc_common.py
-sys.path.insert(0, str(ACC_DIR))
 os.environ.setdefault("ACC_COMBO", "off")
 os.environ.setdefault("ACC_WT", sys.argv[1] if len(sys.argv) > 1 else "")
 os.environ.setdefault("R72_PATH", "per_leg")
+REPO_ROOT = Path(__file__).resolve().parents[5]
+ACC_DIR = Path(os.environ["ACC_WT"] or REPO_ROOT) / "04_scripts" / "03_control" / "touch_phase" / "acceptance"
+"""The pinned checkout's own ``acc_common.py`` (ACC_K2 support). Until 2026-11-10 this was a scratch
+copy ``acceptance/c4g2k1`` that is not in the repository (K-2 pre-launch B-g8)."""
+sys.path.insert(0, str(ACC_DIR))
 import acc_common  # noqa: E402
+
+sys.path.remove(str(ACC_DIR))  # only acc_common from there (the other acceptance scripts stay hidden)
 
 acc_common.install()
 ROOT = acc_common.wt_root()
