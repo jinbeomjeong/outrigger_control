@@ -2,6 +2,10 @@
 
 Written by control-expert BEFORE any V-2 .. V-7 result; its blob sha is fixed in the pre-launch
 record (rules I-3). It does not import or read path 1 (``k2_judge.py``) or ``d8x_judge.py``.
+J items via d8x_recount (rewritten 2026-11-10 by an author who has not read path 1): the row J items
+import the D8x path 2 tool ``06_analysis/02_control/d8x/path2/d8x_recount.py`` (rules 8: allowed), pinned
+by its sha256 (``D8X_RECOUNT_SHA256``). Readings of path 1 by an earlier author are disclosed in rev7 1 /
+rev8 1; the parts written after those readings are "aligned definitions" (rev7 2, rev8 2).
 It reads the raw run outputs (harness json / jsonl, series npz, Chrono row json and pads npz)
 and recounts the row items J1 .. J11 (rules 5.1), the shadow FLAGs SH-1 .. SH-6 (5.2), the V-5
 regression criteria (3.4), the V-6 extra items (3.5), the gates G-A .. G-E (7), the grade (10)
@@ -47,7 +51,12 @@ from pathlib import Path
 import numpy as np
 
 TOOL = "k2_recount"
-VERSION = "1.5"
+VERSION = "1.6"
+"""1.6 (rev8, before any result): J items via d8x_recount (rewritten 2026-11-10 by an author who has not read
+path 1). The row items J1 .. J11, E-2 / E-3 and the lift-off window check (K-2 E-10 = D8x E-8) are computed by the
+D8x path 2 functions (``harness_items``, ``num_item``, ``list_item``, ``e8_check``, ``parse_events``,
+``_chrono_j6_locked``); ``_d8x_block`` / ``_j_items`` below only rename the K-2 fields to the D8x block names.
+The 1 ms J3 count (K-2 E-8) is re-derived from the rules text (``j3_series_count``). Everything else is 1.5."""
 """1.5 (rev6, before any result): V-5 result kinds (common items, K-2 evidence, unmatched keys and counts on both
 arms incl. grid 768 = not judgeable; bundle items = fail), harness SH missing = FLAG with counts, AUG_crc2 E-5 / I-9
 record only, rev6 seal."""
@@ -59,22 +68,18 @@ sidecars) with the criteria.md absolute items and pass->fail vs the off arm; V-6
 
 # ------------------------------------------------------------------ rule constants (rules 0, 5)
 F_MIN_N = 9414.589
-F_D8_N = F_MIN_N + 5000.0
+F_D8_N = F_MIN_N + 5000.0       # SH-6 line (rules 5.2); the J1 / J2 line itself is d8x_recount.F_D8_N
 SH6_MARGIN_N = 2000.0
 SH3_READY_S = 3.0
 SH4_EROSION_N = -3000.0
-ATTITUDE_LIMIT_DEG = 0.2
-READY_LIMIT_S = 120.0
-MOVING_LIMIT_BAR = 210.0
-LOCKED_LIMIT_BAR = 350.0
-LIFT_WINDOW_MIN_S = 1.0
+# J4 / J5 / J6 / J7 / J9 thresholds and the lift-off window (D8x E-8) are not repeated here: rules 5.1 says
+# "D8x 4.1 as it is", so they come from d8x_recount (J4_LIMIT_DEG, J5_LIMIT_S, J6_*_BAR, J7_*, J9_ALLOWED,
+# E8_MIN_WINDOW_S).
 SH2_WINDOW_S = 0.3
 LATCH_WINDOW_SAMPLES = 5
 CONTROL_PERIOD_S = 0.1
 CP_LEVEL = 0.95
 CP_LIMIT = 0.03
-STROKE_EVENTS = ("FAULT_STROKE_END", "WARN_LIFT_STROKE_LIMITED", "FAULT_LIFT_STROKE_LIMIT")
-WARN_ALLOWED = ("WARN_PROBE_STIFFNESS_OUT_OF_RANGE",)
 LATCH_EVENT = "INFO_TOUCH_CREEP_LATCH"
 CAP_EVENT = "INFO_TOUCH_CREEP_CAP"
 DIP_EVENT = "INFO_TOUCH_DIP_HELD"
@@ -228,13 +233,8 @@ def prefix(name: str) -> str:
 
 
 def event_families(names: list[str]) -> dict:
-    stroke = [n for n in names if n.startswith(STROKE_EVENTS)]
+    """K-2 event families (E-4 evidence, SH-5 cap count). J7 / J8 / J9 / E-3 are d8x_recount.classify_events."""
     return {
-        "J7": stroke,
-        "J8": [n for n in names if n.startswith("FAULT_") and n not in stroke],
-        "J9": [n for n in names if n.startswith("WARN_") and n not in stroke
-               and prefix(n) not in WARN_ALLOWED],
-        "E3": [n for n in names if n.startswith("REJ_")],
         "latch": [n for n in names if prefix(n) == LATCH_EVENT],
         "cap": [n for n in names if prefix(n) == CAP_EVENT],
         "dip": [n for n in names if prefix(n) == DIP_EVENT],
@@ -254,6 +254,24 @@ def latch_times(pairs) -> dict[int, float]:
 
 
 # ------------------------------------------------------------------ series metrics
+def j3_series_count(t, pad, t_touch: float) -> dict:
+    """J3 from the 1 ms pad normal series (rules header table, 5.1 J3, 11 E-8), written from the rules text.
+
+    J3 = number of 1 ms chunks after the TOUCH end (``adapter.t_touch``; window end = run end) in which a pad
+    normal force is <= 0 N (any of the four pads). The chunk stamped at t_touch counts (1e-9 s tolerance).
+    Also returned for the record (5.3): the minimum pad normal in that window and the count from the first
+    chunk with all four pads > 0 N (``J3_from_first_all4``, TOUCH included)."""
+    t = np.asarray(t, float)
+    pad = np.asarray(pad, float)
+    chunk_lift = np.any(pad <= 0.0, axis=1)          # one flag per 1 ms chunk
+    window = t >= float(t_touch) - 1e-9
+    count = int(np.count_nonzero(chunk_lift & window))
+    min_n = float(pad[window].min()) if np.any(window) else None
+    all4 = np.flatnonzero(np.all(pad > 0.0, axis=1))
+    from_all4 = int(np.count_nonzero(chunk_lift[all4[0]:])) if all4.size else None
+    return {"count": count, "min_N": min_n, "from_first_all4": from_all4}
+
+
 def series_metrics(t, pad, rate, t_touch: float, latches: dict[int, float]) -> dict:
     """J3 recount, SH-1 post-latch lift, SH-2 rocking amplitude, J3 from first four-pad contact."""
     t = np.asarray(t, float)
@@ -261,15 +279,10 @@ def series_metrics(t, pad, rate, t_touch: float, latches: dict[int, float]) -> d
     if pad.ndim != 2 or pad.shape[1] != 4 or pad.shape[0] != t.shape[0]:
         raise NotJudgeable(f"pad series shape {pad.shape} vs t {t.shape}")
     lifted = pad <= 0.0
-    after = t >= t_touch - 1e-9
-    j3 = int(np.sum(np.any(lifted, axis=1) & after))
-    j3_min = float(np.min(pad[after])) if after.any() else None
-    contact_all = np.all(pad > 0.0, axis=1)
-    if contact_all.any():
-        i4 = int(np.argmax(contact_all))
-        j3_all4 = int(np.sum(np.any(lifted[i4:], axis=1)))
-    else:
-        j3_all4 = None
+    j3 = j3_series_count(t, pad, t_touch)
+    j3_min = j3["min_N"]
+    j3_all4 = j3["from_first_all4"]
+    j3 = j3["count"]
     sh1 = {}
     for leg, t_l in latches.items():
         win = (t > t_l + 1e-9) & (t < t_touch - 1e-9)
@@ -497,10 +510,98 @@ def check_v6_row(row: dict, engine: str) -> list[str]:
     return out
 
 
+# ------------------------------------------------------------------ J items via d8x_recount (1.6, rev8 2)
+# J items via d8x_recount (rewritten 2026-11-10 by an author who has not read path 1).
+# Rules 8: the J item computation may use the functions of D8x path 2 (d8x_recount.py). Rules 5.1: J1 .. J11 = D8x 4.1 with the
+# same thresholds and scope. The functions below only rename K-2 fields to the D8x block names and call
+# d8x_recount; they hold no threshold of their own (the single exception is J10, see _j_items).
+D8X_RECOUNT_REL = "06_analysis/02_control/d8x/path2/d8x_recount.py"
+D8X_RECOUNT_SHA256 = "46010967729e190ab572775db9dd59b083a3856558c3f07a239bf601bed9d9d1"
+"""LF-content sha256 of d8x_recount.py 1.0 (commit dc2029b, blob d47c10e9, ``-text`` so the bytes are LF)."""
+_D8X_MODULE = None
+
+# (D8x block key, K-2 field-map key) -- harness and Chrono rows use the same K-2 field-map names
+D8X_BLOCK_FIELDS = (("t_touch_s", "t_touch"), ("t_lift_s", "t_lift"), ("t_ready_s", "t_ready"),
+                    ("J1_min_cyl_after_lift_N", "J1"), ("J1_window_s", "J1_window"),
+                    ("reanchor_intervals_s", "reanchor"), ("J4_att_max_after_ready_deg", "J4"),
+                    ("J6_max_moving_bar", "J6"))
+# D8x item name -> K-2 output item name (names only; rev7 5 compares the failed item names)
+D8X_ITEM_NAMES = {"J6_moving": "J6"}
+
+
+def d8x_path() -> Path:
+    return Path(__file__).resolve().parents[3] / D8X_RECOUNT_REL
+
+
+def d8x_module():
+    """Import d8x_recount once, after checking its LF-content sha256 against the pinned value."""
+    global _D8X_MODULE
+    if _D8X_MODULE is None:
+        import importlib.util
+        path = d8x_path()
+        if not path.is_file():
+            raise NotJudgeable(f"d8x_recount missing: {path}")
+        sha = hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+        if sha != D8X_RECOUNT_SHA256:
+            raise NotJudgeable(f"d8x_recount sha256 {sha} != pinned {D8X_RECOUNT_SHA256}")
+        spec = importlib.util.spec_from_file_location("d8x_recount_for_k2", path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        _D8X_MODULE = mod
+    return _D8X_MODULE
+
+
+def _d8x_block(row: dict, f: dict) -> dict:
+    """Field adapter: the K-2 row values under the D8x ``d8x`` block key names (rules 5.1 = D8x 4.1).
+    A key missing from the row is not judgeable (field map rule, module docstring); a None value is kept
+    and judged by d8x_recount (E-9 = D8x E-7: the item fails)."""
+    block = {d8x_key: get_path(row, f[k2_key]) for d8x_key, k2_key in D8X_BLOCK_FIELDS}
+    # J2 key required only with an H4 interval (1.5 rule, rev5 4); without it the value is None
+    block["J2_min_cyl_reanchor_N"] = get_path(row, f["J2"], required=bool(block["reanchor_intervals_s"]))
+    return block
+
+
+def _j_items(block: dict, kind: str, fails, raw_events, j3, locked=None, recontact=None) -> dict:
+    """J1 .. J11, E-2, E-3 and E-10 of one row through d8x_recount.
+
+    kind harness: J1 .. J9, J11 (rules 5.1 J11: harness). kind chrono: J1 .. J10 (J10: Chrono), J6_locked
+    when the field is present (D8x 4.1 J6 locked: Chrono, when the field exists). ``j3``: the J3 count (row field or the
+    1 ms recount); None = not available, then J3 is left out and the row is not judgeable by K-2 E-8."""
+    d8 = d8x_module()
+    try:
+        events = d8.parse_events(raw_events)
+    except d8.InputError as exc:
+        raise NotJudgeable(f"events: {exc}") from exc
+    names = [n for _, n in (events or [])]
+    block = dict(block, J3_pad_lift_samples=j3)
+    d8_items, fail, ev = d8.harness_items(block, fails if kind == "harness" else [], names)
+    if j3 is None:
+        d8_items.pop("J3")                  # rules 11 E-8: no 1 ms series -> not judgeable, not a J3 fail
+    if kind == "chrono":
+        d8_items.pop("J11")                 # rules 5.1 J11: harness only
+        d8_items["J6_locked"] = d8._chrono_j6_locked(
+            {} if locked is None else {"max_locked_pressure_bar": locked})
+        if isinstance(recontact, bool):     # field type only: True / False -> 1 / 0 contacts
+            recontact = int(recontact)
+        # rules 5.1 J10 = D8x 4.1 J10 "0": the comparison d8x_recount._judge_chrono_row uses for J10
+        # (that function reads verify-json metrics, not this row form, so it cannot be called here)
+        d8_items["J10"] = d8.num_item(recontact, lambda v: v == 0)
+    items = {D8X_ITEM_NAMES.get(k, k): v["result"] == "pass" for k, v in d8_items.items()
+             if v["result"] != "n/a"}       # n/a = not applied (J2 without H4, J6_locked without a field)
+    # E-2 / E-3 (rules 11 = D8x 6): d8x_recount returns them as row-fail strings
+    items["E-2"] = not any(s.startswith("E-2") for s in fail)
+    items["E-3"] = not any(s.startswith("E-3") for s in fail)
+    window = {"unjudgeable": []}
+    d8.e8_check(block["J1_window_s"], window)  # K-2 E-10 = D8x E-8 (lift-off window < 1 s)
+    return {"items": items, "fail_notes": fail,
+            "not_judgeable": [f"E-10 (D8x {p})" for p in window["unjudgeable"]],
+            "d8x_items": d8_items, "event_classes": {k: ev[k] for k in ("J7", "J8", "J9", "REJ")}}
+
+
 def judge_row(row: dict, fmap: dict, kind: str, series_root: Path | None, k2_profile: bool,
               chrono_files: dict | None = None, points: dict | None = None,
               floor_deg: tuple | None = None, check=None) -> dict:
-    """One row: J items, E items, K-2 evidence and series metrics. kind: harness | chrono.
+    """One row: J items (via d8x_recount), E items, K-2 evidence and series metrics. kind: harness | chrono.
 
     ``points``: tag -> (roll, pitch) [deg] of the point file (E-7, harness rows).
     ``floor_deg``: expected (roll, pitch) [deg] of a Chrono row (E-7, ``floor_true_deg``)."""
@@ -522,50 +623,27 @@ def judge_row(row: dict, fmap: dict, kind: str, series_root: Path | None, k2_pro
         tag = get_path(row, f["tag"])
         k1 = get_path(row, f["k1"])
         tcl = bool(get_path(row, f["tcl"])) if k2_profile else False
-        pairs = event_pairs(get_path(row, f["events"]))
-        names = [n for _, n in pairs]
-        fam = event_families(names)
-        t_touch = get_path(row, f["t_touch"])
-        t_lift = get_path(row, f["t_lift"])
-        t_ready = get_path(row, f["t_ready"])
-        j1 = get_path(row, f["J1"])
-        j1_win = get_path(row, f["J1_window"])
-        reanchor = get_path(row, f["reanchor"])
-        j2 = get_path(row, f["J2"], required=bool(reanchor))
-        j4 = get_path(row, f["J4"])
-        j6 = get_path(row, f["J6"])
+        raw_events = get_path(row, f["events"])
+        pairs = event_pairs(raw_events)     # K-2 latch times / E-4 (not a J item)
+        fam = event_families([n for _, n in pairs])
+        block = _d8x_block(row, f)
     except NotJudgeable as exc:
         out["not_judgeable"].append(str(exc))
         return out
-    items = {
-        "J1": is_num(j1) and j1 >= F_D8_N,
-        "J4": is_num(j4) and j4 <= ATTITUDE_LIMIT_DEG,
-        "J5": is_num(t_ready) and t_ready <= READY_LIMIT_S,
-        "J6": is_num(j6) and j6 <= MOVING_LIMIT_BAR,
-        "J7": not fam["J7"], "J8": not fam["J8"], "J9": not fam["J9"],
-        "E-2": all(v is not None for v in (t_touch, t_lift, t_ready)),
-        "E-3": not fam["E3"],
-    }
-    if reanchor:
-        items["J2"] = is_num(j2) and j2 >= F_D8_N
+    t_touch = block["t_touch_s"]
     if kind == "harness":
         fails = get_path(row, f["fails"], required=False)
-        items["J11"] = fails is not None and not fails
-        j3 = get_path(row, f["J3"], required=False)
+        j3_row = get_path(row, f["J3"], required=False)
+        locked = recontact = None
     else:
+        fails = None
+        j3_row = None                       # Chrono rows: J3 only from pads.npz (rules 3.5, E-8)
         locked = get_path(row, f["J6_locked"], required=False)
-        if locked is not None:
-            items["J6_locked"] = is_num(locked) and locked <= LOCKED_LIMIT_BAR
-        recon = get_path(row, f["J10"], required=False)
-        if recon is None:
+        recontact = get_path(row, f["J10"], required=False)
+        if recontact is None:
             out["not_judgeable"].append("J10 crawler recontact field missing")
-        else:
-            items["J10"] = recon == 0 or recon is False
-        j3 = None
-    if is_num(j1_win) and j1_win < LIFT_WINDOW_MIN_S:
-        out["not_judgeable"].append(f"E-10 lift-off window {j1_win:.3f} s < 1 s")
     latches = latch_times(pairs)
-    # series (J3 recount, SH-1, SH-2)
+    # series (J3 recount = K-2 E-8, SH-1, SH-2)
     metrics = None
     try:
         if kind == "harness":
@@ -587,16 +665,22 @@ def judge_row(row: dict, fmap: dict, kind: str, series_root: Path | None, k2_pro
             out["false_latch"] = false_latch(pads[pf["t"]], pads[pf["pad_normal"]], latches)
     except (OSError, KeyError, ValueError, NotJudgeable) as exc:
         out["not_judgeable"].append(f"E-8 series: {exc}")
+    j3 = j3_row
     if metrics is not None:
-        if j3 is not None and j3 != metrics["J3_series"]:
-            out["not_judgeable"].append(f"J3 row {j3} != series recount {metrics['J3_series']}")
-        j3 = metrics["J3_series"] if j3 is None else j3
+        if j3_row is not None and j3_row != metrics["J3_series"]:   # E-8: series is the J3 basis
+            out["not_judgeable"].append(f"J3 row {j3_row} != series recount {metrics['J3_series']}")
+        j3 = metrics["J3_series"] if j3_row is None else j3_row
     elif k2_profile:
         out["not_judgeable"].append("E-8 1 ms pad normal series missing")
     if j3 is None:
         out["not_judgeable"].append("J3 not available")
-    else:
-        items["J3"] = j3 == 0
+    try:
+        jr = _j_items(block, kind, fails, raw_events, j3, locked, recontact)
+    except NotJudgeable as exc:
+        out["not_judgeable"].append(str(exc))
+        return out
+    items = jr["items"]
+    out["not_judgeable"].extend(jr["not_judgeable"])
     # E-4 K-2 evidence, E-6 tag
     if k2_profile:
         if tcl:
@@ -612,13 +696,17 @@ def judge_row(row: dict, fmap: dict, kind: str, series_root: Path | None, k2_pro
                 out["not_judgeable"].append("E-4 INFO_TOUCH_CREEP_* in an off row")
             if str(tag).endswith(TCL_SUFFIX):
                 out["not_judgeable"].append(f"E-6 off row tag {tag}")
+    reanchor = block["reanchor_intervals_s"]
     out.update({
         "tag": tag, "k1": bool(k1), "tcl": tcl, "items": items,
         "fail_items": sorted(k for k, ok in items.items() if not ok),
-        "values": {"J1_N": j1, "J2_N": j2 if reanchor else None, "J3": j3, "t_ready_s": t_ready,
-                   "t_touch_s": t_touch, "J4_deg": j4, "J6_bar": j6},
+        # J2_N only with an H4 interval: SH-6 reads it (rev5 4, rev6 2)
+        "values": {"J1_N": block["J1_min_cyl_after_lift_N"],
+                   "J2_N": block["J2_min_cyl_reanchor_N"] if reanchor else None, "J3": j3,
+                   "t_ready_s": block["t_ready_s"], "t_touch_s": t_touch,
+                   "J4_deg": block["J4_att_max_after_ready_deg"], "J6_bar": block["J6_max_moving_bar"]},
         "cap_events": len(fam["cap"]), "latch_legs": sorted(LEGS[i] for i in latches),
-        "metrics": metrics,
+        "metrics": metrics, "j_fail_notes": jr["fail_notes"],
     })
     if kind == "harness":
         out["commands_sha256"] = get_path(row, fmap["harness_row"]["commands"], required=False)
@@ -1740,8 +1828,28 @@ def selftest_d8x(ra_off: Path, ra_on: Path, points_file: Path | None = None) -> 
                      "ok": s["fail"] == expected and only_j3 and s["not_judgeable"] == 0}
         total += s["fail"]
     res["total_fail"] = total
-    res["ok"] = res["off"]["ok"] and res["on"]["ok"] and total == 74
+    res["d8x_crosscheck"] = d8x_ra_crosscheck(ra_off, ra_on, fmap)
+    res["ok"] = res["off"]["ok"] and res["on"]["ok"] and total == 74 and res["d8x_crosscheck"]["ok"]
     return res
+
+
+def d8x_ra_crosscheck(ra_off: Path, ra_on: Path, fmap: dict) -> dict:
+    """1.6: the adapter must give, row by row, the failed J item names that d8x_recount.judge_ra itself gives
+    on the same stored R-a files (identity checks skipped; only the J item sets are compared)."""
+    d8 = d8x_module()
+    variants = [str(r.get("variant")) for p in (ra_off, ra_on) for r in load_rows(p) if r.get("variant")]
+    kt_map, _ = d8.kt_scale_map(variants)
+    diff, n = [], 0
+    for path, k1 in ((ra_off, "off"), (ra_on, "on")):
+        ref = {r["id"]: sorted(D8X_ITEM_NAMES.get(k, k) for k in r["failed_items"])
+               for r in d8.judge_ra(Path(path), k1, d8.DEFAULT_EXPECT, True, kt_map)["rows"]}
+        for row in load_rows(path):
+            got = judge_row(row, fmap, "harness", None, False)
+            mine = sorted(k for k in got["fail_items"] if k.startswith("J"))
+            n += 1
+            if ref.get(got["id"]) != mine:
+                diff.append((got["id"], mine, ref.get(got["id"])))
+    return {"rows": n, "n_differ": len(diff), "differ": diff[:10], "ok": n > 0 and not diff}
 
 
 STORED_V5 = {
@@ -1845,7 +1953,7 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--format", choices=("json", "md"), default="json")
     args = ap.parse_args(argv)
     head = {"tool": TOOL, "version": VERSION, "tool_sha256": sha256_file(Path(__file__)),
-            "cmd": args.cmd}
+            "cmd": args.cmd, "j_items_via": {"tool": D8X_RECOUNT_REL, "sha256_lf": D8X_RECOUNT_SHA256}}
     try:
         if args.cmd == "expect-template":
             obj, code = {**head, "expect": expect_template()}, 0
