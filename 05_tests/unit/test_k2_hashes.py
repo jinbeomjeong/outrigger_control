@@ -76,6 +76,9 @@ def test_t_k2_1_screen_vc_hashes(tmp_path) -> None:
         assert sorted(n for n in names if n.startswith("INFO_TOUCH_CREEP_LATCH")) == [
             f"INFO_TOUCH_CREEP_LATCH:{leg}" for leg in ("FL", "FR", "RL", "RR")]
         assert not [n for n in names if n.startswith("INFO_TOUCH_DIP_HELD")]
+        assert isinstance(run["k2"]["dhat_N"], float)  # rules rev1 4 record (no command effect)
+        assert isinstance(run["k2"]["dhat_window_open_legs"], list)
+        assert len(run["k2"]["dhat_window_stroke_mm"]) == 4
 
 
 def test_t_k2_2_off_arm_keeps_the_stored_hashes(tmp_path) -> None:

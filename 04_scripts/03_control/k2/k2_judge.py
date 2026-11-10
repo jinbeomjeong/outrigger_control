@@ -3,6 +3,7 @@ never runs a simulation.
 
 Sub-commands:
   points      write ``k2_points_5p5_3p5.json`` (rules 3.2, ``d8x_diag.diamond_points(5.5, 3.5)``), or ``--check`` it
+              (rev1 2: file == diamond_points <= 1e-12 deg; vs the rules table d45 <= 2e-5 deg, others exact)
   prelaunch   run-start record ``k2_prelaunch_<bundle>.json`` (I-2, I-3, I-7; V-3 key list, ``--write-keys``)
   judge-v2    V-2 D8x R-a, off + K-2 arms x K1 off / on (G-A, I-4, E-1 .. E-9, SH-1 .. SH-6)
   judge-v3    V-3 dissipation arms x {off, K-2} on the 273 keys (G-B, E-5, I-9)
@@ -56,6 +57,10 @@ HALF_SPANS_DEG = (5.5, 3.5)
 D45_TABLE_DEG = 19.25 / 9.0
 """Rules 3.2 table: ``d45 = 5.5 * 3.5 / 9``."""
 POINT_TOLERANCE_DEG = 1e-12
+"""Rules 3.2 / rev1 2: point file == ``diamond_points(5.5, 3.5)`` per component."""
+D45_TABLE_TOLERANCE_DEG = 2e-5
+"""Rules rev1 2: the four d45 points may differ from the rules 3.2 table (19.25 / 9 deg) by this much
+(``diamond_points`` rounds them to 2.1389 deg, the run key); the other twelve points must equal it."""
 V3_KEYS_SHA256 = "d4a030d71e4a365e328fbbf7caa212c378a8671fed8ba206d25b50666255cf95"
 V3_EXPECTED_KEYS = 273
 V3_NOSE_DOWN_TAGS = ("pitch+", "r+p+0.25", "r+p+0.5", "r+p+0.75", "d45++", "d45-+", "r-p+0.5")
@@ -113,6 +118,8 @@ FIELD_MAP_K2 = {
     "SH-4": "min J1(K-2 rows) - min J1(off rows) < -3 kN (per bundle)",
     "SH-5": "k2.event_counts.INFO_TOUCH_CREEP_CAP > 0 on a K-2 row",
     "SH-6": "J1 or J2 < F_D8 + 2 kN on a K-2 row",
+    "D_hat (rev1 4, record)": "k2.dhat_N, k2.dhat_window_open_legs, k2.dhat_window_stroke_mm; pairs by key, "
+    "quantiles 0 / 5 / 50 / 95 / 100 % of K-2 - off [kN], |difference| >= 5 kN listed",
 }
 
 
@@ -222,28 +229,52 @@ def build_points() -> dict:
             }
             for tag, (r, p) in points.items()
         ],
-        "table_check": {
-            "max_difference_deg": max(differences.values()),
-            "differences_above_tolerance": {
-                t: d for t, d in differences.items() if d > POINT_TOLERANCE_DEG
-            },
-        },
+        "table_check": table_check(differences),
     }
+
+
+def table_check(differences: dict[str, float]) -> dict:
+    """Rules rev1 2: d45 points within :data:`D45_TABLE_TOLERANCE_DEG` of the table, the others equal."""
+    d45 = {tag: d for tag, d in differences.items() if tag.startswith("d45")}
+    others = {tag: d for tag, d in differences.items() if not tag.startswith("d45")}
+    failing = {tag: d for tag, d in d45.items() if d > D45_TABLE_TOLERANCE_DEG}
+    failing.update({tag: d for tag, d in others.items() if d != 0.0})
+    return {
+        "rule": "rev1 2: d45 |file - table| <= 2e-5 deg, the other 12 points == table",
+        "d45_max_difference_deg": max(d45.values()),
+        "other_max_difference_deg": max(others.values()),
+        "failing": failing,
+        "ok": not failing and len(d45) == 4 and len(others) == 12,
+    }
+
+
+def point_file_problems(path: Path) -> list[str]:
+    """Rules 3.2 / rev1 2: the stored file's angles equal ``diamond_points(5.5, 3.5)`` within 1e-12 deg."""
+    stored = d8x_judge._load_json(path)
+    if stored.get("schema") != POINTS_SCHEMA:
+        return [f"{path}: schema {stored.get('schema')!r}, expected {POINTS_SCHEMA!r}"]
+    want = diamond_points(*HALF_SPANS_DEG)
+    got = {p["tag"]: (float(p["roll_deg"]), float(p["pitch_deg"])) for p in stored["ra_points"]}
+    if set(got) != set(want):
+        return [f"{path}: tags {sorted(got)} != diamond_points {sorted(want)}"]
+    differing = {
+        tag: got[tag]
+        for tag in want
+        if max(abs(got[tag][0] - want[tag][0]), abs(got[tag][1] - want[tag][1]))
+        > POINT_TOLERANCE_DEG
+    }
+    return [f"{path}: angles differ from diamond_points(5.5, 3.5): {differing}"] if differing else []
 
 
 def cmd_points(args) -> tuple[int, dict]:
     doc = build_points()
     path = Path(args.points_file)
     problems = []
-    above = doc["table_check"]["differences_above_tolerance"]
-    if above:  # rules 3.2: the file must equal diamond_points and the table; d45 cannot be both
-        problems.append(
-            f"3.2 rules table vs diamond_points differ above {POINT_TOLERANCE_DEG:g} deg: {above}"
-        )
+    check = doc["table_check"]
+    if not check["ok"]:
+        problems.append(f"rev1 2 rules table check failed: {check['failing']}")
     if args.check:
-        stored = d8x_judge._load_json(path)
-        if json.dumps(stored, sort_keys=True) != json.dumps(doc, sort_keys=True):
-            problems.append(f"{path} differs from diamond_points(5.5, 3.5) (3.2)")
+        problems += point_file_problems(path)
     else:
         path.write_bytes(
             (json.dumps(doc, indent=1) + "\n").encode("utf-8")
@@ -411,6 +442,9 @@ def judge_harness_row(row: dict, *, k2_on: bool, angles_by_point: dict | None, f
         "sh2": k2.get("SH2_rate_amp_deg_s"),
         "cap": (k2.get("event_counts") or {}).get(CAP_EVENT),
         "J3_margin_N": (row.get("d8x") or {}).get("J3_pad_normal_min_N"),
+        "dhat_N": k2.get("dhat_N"),
+        "dhat_window_open_legs": k2.get("dhat_window_open_legs"),
+        "dhat_window_stroke_mm": k2.get("dhat_window_stroke_mm"),
     }
 
 
@@ -589,7 +623,43 @@ def _off_tcl_bundle(
         "off": summarise(off, sum(expected_by_k1.values()), f"{label}.off"),
         "tcl": summarise(tcl, sum(expected_by_k1.values()), f"{label}.tcl"),
     }
-    return {"summaries": summaries, "sh": sh}, off, tcl, problems
+    dhat = dhat_record(
+        {(r["id"], r["k1_on"]): r.get("dhat_N") for r in tcl},
+        {(r["id"], r["k1_on"]): r.get("dhat_N") for r in off},
+        label,
+    )
+    return {"summaries": summaries, "sh": sh, "dhat": dhat}, off, tcl, problems
+
+
+DHAT_QUANTILES_PERCENT = (0, 5, 50, 95, 100)
+DHAT_LIST_ABOVE_N = 5.0e3
+"""Rules rev1 4 (b): rows with |D_hat(K-2) - D_hat(off)| >= 5 kN are listed."""
+
+
+def dhat_record(k2_by_key: dict, off_by_key: dict, label: str) -> dict:
+    """Rules rev1 4 (b), record only: quantiles 0 / 5 / 50 / 95 / 100 % of D_hat(K-2) - D_hat(off) of
+    the pairs with both values [kN] (``numpy.percentile``, linear), the pairs with |difference| >= 5 kN,
+    and the keys without a pair or a value."""
+    import numpy as np
+
+    differences, large, missing = [], [], []
+    for key in sorted(set(k2_by_key) | set(off_by_key), key=str):
+        a, b = k2_by_key.get(key), off_by_key.get(key)
+        if not (d8x_judge._is_number(a) and d8x_judge._is_number(b)):
+            missing.append(str(key))
+            continue
+        difference = a - b
+        differences.append(difference)
+        if abs(difference) >= DHAT_LIST_ABOVE_N:
+            large.append({"key": list(key) if isinstance(key, tuple) else key,
+                          "dhat_k2_kN": a / 1e3, "dhat_off_kN": b / 1e3,
+                          "difference_kN": difference / 1e3})
+    quantiles = None
+    if differences:
+        values = np.percentile(np.asarray(differences, float) / 1e3, DHAT_QUANTILES_PERCENT)
+        quantiles = {f"p{p}": float(v) for p, v in zip(DHAT_QUANTILES_PERCENT, values, strict=True)}
+    return {"bundle": label, "pairs": len(differences), "quantiles_kN": quantiles,
+            "abs_ge_5kN": large, "missing": missing[:50], "n_missing": len(missing)}
 
 
 def cmd_judge_v2(args) -> tuple[int, dict]:
@@ -722,6 +792,7 @@ def cmd_judge_v3(args) -> tuple[int, dict]:
             if result
             for block in result["sh"]
         ],
+        "dhat": [arms[a]["dhat"] for a in V3_JUDGED_ARMS if a in arms],
         "B-3": b3,
         "problems": problems,
         "failed_rows": _failed(rows_by_label),
@@ -952,6 +1023,7 @@ def judge_chrono_k2_row(name: str, spec: dict, f_d8: float) -> dict:
         "false_latch": false,
         "cap": cap,
         "values": judged["values"],
+        "dhat_N": row.get("dhat_N"),  # rules rev1 4, record only (optional runner key)
     }
 
 
@@ -967,10 +1039,17 @@ def cmd_judge_v6(args) -> tuple[int, dict]:
     summary = summarise(k2_rows, 4, "V-6 K-2 rows")
     problems += [p for row in rows for p in row["not_judgeable"]]
     status = _status(problems, [summary])
+    stem = {"off": "_off", "tcl": "_tcl"}
+    dhat = dhat_record(
+        {row["id"].removesuffix(stem["tcl"]): row["dhat_N"] for row in rows if row["k2_on"]},
+        {row["id"].removesuffix(stem["off"]): row["dhat_N"] for row in rows if not row["k2_on"]},
+        "V-6",
+    )
     return status, {
         "bundle": "V-6",
         "gate": {"G-E": _gate_value(status, [summary])},
         "summary": summary,
+        "dhat": dhat,
         "rows": rows,
         "problems": problems,
         "field_map": {
@@ -1008,7 +1087,7 @@ GATE_FILES = ("v2", "v3", "v4", "v5", "v6")
 
 def cmd_report(args) -> tuple[int, dict]:
     problems = seal_problems()
-    gates, flags = {}, []
+    gates, flags, dhat = {}, [], []
     for bundle in GATE_FILES:
         path = getattr(args, bundle)
         if path is None:
@@ -1016,6 +1095,8 @@ def cmd_report(args) -> tuple[int, dict]:
             continue
         doc = d8x_judge._load_json(Path(path))
         gates.update(doc.get("gate", {}))
+        blocks = doc.get("dhat")  # rules rev1 4: V-2, V-3 judged arms, V-4, V-6 (record only)
+        dhat += blocks if isinstance(blocks, list) else ([blocks] if blocks else [])
         for block in doc.get("sh", []):
             flags += block.get("flags", [])
             if block.get("not_judgeable"):
@@ -1025,7 +1106,8 @@ def cmd_report(args) -> tuple[int, dict]:
         problems.append("G-F two-path recount match not confirmed (--recount-match)")
     grade = _grade(gates, flags, problems)
     status = {"not_judgeable": EXIT_NOT_JUDGEABLE, "fail": EXIT_FAIL}.get(grade, EXIT_PASS)
-    return status, {"gates": gates, "flags": flags, "grade": grade, "problems": problems}
+    return status, {"gates": gates, "flags": flags, "grade": grade, "problems": problems,
+                    "dhat_record": dhat}
 
 
 def _grade(gates: dict, flags: list, problems: list) -> str:

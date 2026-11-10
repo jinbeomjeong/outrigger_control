@@ -24,8 +24,17 @@ field map ``k2_recount.DEFAULT_FIELDS["harness_row"]``):
 The series file (``<series dir>/<series_file>``) holds ``t_s``, ``pad_normal_min_N`` (the J3 pad normal
 per 1 ms chunk) and ``body_rate_rad_s`` (``FlexPlant.w`` after the chunk), the keys of
 ``k2_recount.DEFAULT_FIELDS["series"]``.
+
+More keys of the ``k2`` block:
+
     event_counts                 INFO_TOUCH_CREEP_LATCH / _CAP, INFO_TOUCH_DIP_HELD,
                                  INFO_TOUCH_TWIST_HOLD, INFO_LIFT_PAUSED, INFO_LIFTOFF_SLOW
+    dhat_N                       C4G2 D_hat (``controller_meta.touch_twist_hold.twist_load_estimate_N``,
+                                 the mean n^T F of the last 3 TOUCH samples); None without it
+    dhat_window_open_legs        legs whose valve output |u| > 1e-6 m/s on a 1 ms chunk of the D_hat
+                                 window (t_touch - 0.3 s, t_touch] (rules rev1 4 (a))
+    dhat_window_stroke_mm        per leg, motor stroke gained over that window [mm] for an open leg,
+                                 None for the others
     aug                          (with --aug) arm, preset, KPlant identity, options, the valve-open
                                  share per leg over [t_touch, t_lift] (I-9)
 """
@@ -62,8 +71,14 @@ COUNTED_EVENT_PREFIXES = (
 )
 LEG_NAMES = ("FL", "FR", "RL", "RR")
 TIME_TOLERANCE_S = 1e-9
+DHAT_WINDOW_S = 0.3
+"""C4G2 D_hat window: the last 3 TOUCH samples at 10 Hz (``TouchTwistHoldSettings.estimate_samples``)."""
+VALVE_OPEN_EPS_M_S = 1.0e-6
+"""Valve open above this output (YAML ``actuator.rod_side.lock_eps_m_s``, ``k2_dyn_spec.md`` 1)."""
 
 _RATES: list[np.ndarray] = []
+_VALVES: list[np.ndarray] = []
+_MOTOR_STROKES: list[np.ndarray] = []
 _TOUCH_START: dict = {}
 _INSTALLED: dict = {}
 
@@ -101,9 +116,14 @@ def install_recorders(plant_class, adapter_class) -> None:
     def step(self, u, nsteps):
         out = previous_step(self, u, nsteps)
         if nsteps > 1000:  # the crawler settle before the run: the plant drops its history too
-            _RATES.clear()
+            reset_chunk_records()
         else:
             _RATES.append(np.array(self.w, float))
+            # valve state after the chunk (r8d1_td tau_v lag); the command without a lag
+            valve = getattr(self, "_uf", None)
+            source = u if valve is None else valve
+            _VALVES.append(np.broadcast_to(np.asarray(source, float), (4,)).copy())
+            _MOTOR_STROKES.append(np.array(self.sref, float))
         return out
 
     def update(self, m, t):
@@ -117,12 +137,44 @@ def install_recorders(plant_class, adapter_class) -> None:
     _INSTALLED.update(step=previous_step, update=previous_update)
 
 
-def reset_recorders() -> None:
+def reset_chunk_records() -> None:
     _RATES.clear()
+    _VALVES.clear()
+    _MOTOR_STROKES.clear()
+
+
+def reset_recorders() -> None:
+    reset_chunk_records()
     _TOUCH_START.clear()
 
 
 # ------------------------------------------------------------------------------- metrics
+def dhat_window_record(
+    t_s: np.ndarray, valves_m_s: np.ndarray, motor_strokes_m: np.ndarray, t_touch_s: float | None
+) -> tuple[list[str] | None, list[float | None] | None]:
+    """Rules rev1 4 (a): legs with an open valve on a chunk of (t_touch - 0.3 s, t_touch] and, per
+    open leg, the motor stroke gained over that window [mm] (the last chunk at or before the window
+    start to the last chunk at or before ``t_touch``). ``(None, None)`` without ``t_touch``."""
+    if t_touch_s is None or len(t_s) == 0:
+        return None, None
+    window_start_s = t_touch_s - DHAT_WINDOW_S
+    inside = (t_s > window_start_s + TIME_TOLERANCE_S) & (t_s <= t_touch_s + TIME_TOLERANCE_S)
+    if not inside.any():
+        return None, None
+    is_open = np.any(np.abs(valves_m_s[inside]) > VALVE_OPEN_EPS_M_S, axis=0)
+    end = int(np.flatnonzero(inside)[-1])
+    before = np.flatnonzero(t_s <= window_start_s + TIME_TOLERANCE_S)
+    start_strokes_m = motor_strokes_m[int(before[-1])] if len(before) else motor_strokes_m[0]
+    gained_mm = (motor_strokes_m[end] - start_strokes_m) * 1e3
+    open_legs = [name for leg, name in enumerate(LEG_NAMES) if is_open[leg]]
+    strokes = [float(gained_mm[leg]) if is_open[leg] else None for leg in range(len(LEG_NAMES))]
+    return open_legs, strokes
+
+
+def dhat_N(controller) -> float | None:
+    """C4G2 D_hat of the run (None when no TOUCH -> LEVEL estimate was made)."""
+    value = (controller.meta().get("touch_twist_hold") or {}).get("twist_load_estimate_N")
+    return None if value is None else float(value)
 def _first_latch_times(events: Sequence[Sequence]) -> dict[str, float]:
     times: dict[str, float] = {}
     for t, name in events:
@@ -213,10 +265,13 @@ def k2_fields(
     t_s = np.asarray(plant.hist_t, float)
     pad_N = pad_normal_N(plant)
     rates = np.asarray(_RATES, float).reshape(-1, 3)
-    if len(rates) != len(t_s):
-        raise RuntimeError(f"K-2 rate recorder {len(rates)} rows, plant history {len(t_s)}")
+    valves = np.asarray(_VALVES, float).reshape(-1, 4)
+    motor_strokes = np.asarray(_MOTOR_STROKES, float).reshape(-1, 4)
+    if not len(rates) == len(valves) == len(motor_strokes) == len(t_s):
+        raise RuntimeError(f"K-2 chunk recorder {len(rates)} rows, plant history {len(t_s)}")
     events = d8x["events"]
     t_touch = d8x["t_touch_s"]
+    open_legs, window_strokes_mm = dhat_window_record(t_s, valves, motor_strokes, t_touch)
     j3_all4, t_all4 = j3_from_first_all4(t_s, pad_N)
     touch_start = _TOUCH_START.get("t")
     meta = controller.meta().get("touch_creep_latch") or {}
@@ -232,6 +287,9 @@ def k2_fields(
         "J3_from_first_all4": j3_all4,
         "t_first_all4_s": t_all4,
         "event_counts": event_counts(events),
+        "dhat_N": dhat_N(controller),
+        "dhat_window_open_legs": open_legs,
+        "dhat_window_stroke_mm": window_strokes_mm,
     }
     if aug_arm is not None:
         fields["aug"] = {

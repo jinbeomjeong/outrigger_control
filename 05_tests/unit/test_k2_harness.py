@@ -129,7 +129,52 @@ def test_points_follow_diamond_points_and_flag_the_d45_table() -> None:
     assert len(by_tag) == 16
     assert by_tag["r+p+0.25"] == (1.375, 2.625)
     assert by_tag["d45++"] == (2.1389, 2.1389)  # diamond_points rounds to 4 decimals
-    assert set(doc["table_check"]["differences_above_tolerance"]) == {"d45++", "d45+-", "d45-+", "d45--"}
+    check = doc["table_check"]  # rules rev1 2: d45 within 2e-5 deg of 19.25 / 9, the rest exact
+    assert check["ok"] is True and check["failing"] == {}
+    assert check["d45_max_difference_deg"] == pytest.approx(1.1111e-5, abs=1e-8)
+    assert check["other_max_difference_deg"] == 0.0
+
+
+def test_point_rule_rev1_rejects_a_far_d45_and_a_moved_point() -> None:
+    differences = {f"d45{s}": 1.1e-5 for s in ("++", "+-", "-+", "--")}
+    differences.update({f"p{i}": 0.0 for i in range(12)})
+    assert k2_judge.table_check(differences)["ok"] is True
+    assert k2_judge.table_check({**differences, "d45++": 3e-5})["ok"] is False
+    assert k2_judge.table_check({**differences, "p3": 1e-15})["ok"] is False
+
+
+def test_point_file_check_compares_the_angles(tmp_path) -> None:
+    doc = k2_judge.build_points()
+    path = tmp_path / "points.json"
+    path.write_text(json.dumps(doc), encoding="utf-8")
+    assert k2_judge.point_file_problems(path) == []
+    doc["ra_points"][0]["pitch_deg"] += 1e-9
+    path.write_text(json.dumps(doc), encoding="utf-8")
+    assert k2_judge.point_file_problems(path)
+
+
+def test_dhat_window_record() -> None:
+    t = (np.arange(1000) + 1) * 1e-3              # chunks end at 0.001 .. 1.000 s
+    valves = np.zeros((1000, 4))
+    strokes = np.zeros((1000, 4))
+    valves[750:760, 1] = 1e-3                      # FR open at 0.751 .. 0.760 s
+    valves[600:650, 2] = 1e-3                      # RL open before the window only
+    strokes[:, 1] = np.where(t > 0.75, 0.002, 0.0)  # FR gains 2 mm inside the window
+    open_legs, gained = k2_record.dhat_window_record(t, valves, strokes, 1.0)
+    assert open_legs == ["FR"]
+    assert gained == [None, pytest.approx(2.0), None, None]
+    assert k2_record.dhat_window_record(t, valves, strokes, None) == (None, None)
+
+
+def test_dhat_quantiles_and_the_large_rows() -> None:
+    k2 = {("a", False): 10e3, ("b", False): 2e3, ("c", False): None}
+    off = {("a", False): 4e3, ("b", False): 3e3, ("c", False): 1e3, ("d", False): 0.0}
+    record = k2_judge.dhat_record(k2, off, "t")
+    assert record["pairs"] == 2 and record["n_missing"] == 2
+    assert record["quantiles_kN"]["p0"] == pytest.approx(-1.0)
+    assert record["quantiles_kN"]["p100"] == pytest.approx(6.0)
+    assert record["quantiles_kN"]["p50"] == pytest.approx(2.5)
+    assert [row["key"] for row in record["abs_ge_5kN"]] == [["a", False]]
 
 
 def test_v3_key_rule() -> None:
@@ -213,5 +258,5 @@ def test_grade_order() -> None:
 def test_cli_contract_last_line_json(capsys) -> None:
     status = k2_judge.run(["points", "--check"])
     last = capsys.readouterr().out.strip().splitlines()[-1]
-    assert json.loads(last)["exit"] == status == k2_judge.EXIT_NOT_JUDGEABLE  # rules 3.2 d45 table vs file
+    assert json.loads(last)["exit"] == status == k2_judge.EXIT_PASS  # rules rev1 2
     assert isinstance(argparse.Namespace, type)

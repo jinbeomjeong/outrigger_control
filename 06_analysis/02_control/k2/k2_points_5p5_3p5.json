@@ -108,12 +108,10 @@
   }
  ],
  "table_check": {
-  "max_difference_deg": 1.1111111111183902e-05,
-  "differences_above_tolerance": {
-   "d45++": 1.1111111111183902e-05,
-   "d45-+": 1.1111111111183902e-05,
-   "d45+-": 1.1111111111183902e-05,
-   "d45--": 1.1111111111183902e-05
-  }
+  "rule": "rev1 2: d45 |file - table| <= 2e-5 deg, the other 12 points == table",
+  "d45_max_difference_deg": 1.1111111111183902e-05,
+  "other_max_difference_deg": 0.0,
+  "failing": {},
+  "ok": true
  }
 }
