@@ -2009,7 +2009,8 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
                        **({} if bcase.slope_limit_mode is None
                           else {"slope_limit_mode": bcase.slope_limit_mode})},
         **({} if bcase.d8x_row is None
-           else {"d8x": s6c.d8x_meta(bcase, c2.config, expect_controller, fs_kN=float(case.fs_kN))}),
+           else {"d8x": s6c.d8x_meta(bcase, c2.config, expect_controller, fs_kN=float(case.fs_kN),
+                                     controller_meta=ctl_meta)}),
         "h4": {"enabled": sc.h4, "outcome": None if reanchor is None else str(reanchor),
                "expected": expect, "direction": ctl_meta.get("reanchor_direction")},
         "c2": c2_meta,

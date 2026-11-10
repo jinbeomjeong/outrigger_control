@@ -355,3 +355,62 @@ def test_earlier_case_controller_mode_unchanged() -> None:
     c = s6.case_table()["C1_D8_top_rpB_b1.6"]
     assert s6.slope_limit_mode(c) is SlopeLimitMode.VERIFICATION
     assert "slope_limit_mode" not in c.to_meta() and "d8x_row" not in c.to_meta()
+
+
+@pytest.mark.skipif(not s6.d8x_mode_available(), reason="VERIFICATION_EXT not installed")
+def test_rev3_k1_gate_recorded_from_the_controller() -> None:
+    """Rev3 2 / E-6d (Chrono row): the ``d8x`` block records ``controller_tag`` (built from the controller's own
+    config), ``k1_order_gate`` (``controller.config.slope_clearance_margin.flat_soil_margin_order_gate``),
+    ``liftoff_slow_enabled``, and the gate read back from the run's controller meta; ``result.json``
+    ``controller_meta.slope_clearance_margin.settings.flat_soil_margin_order_gate`` survives ``_plain`` / JSON.
+    Chrono 19 rows run the preset as is (no install): expected tag ``final_C4G2_LAS_K1``."""
+    from dataclasses import replace
+
+    from outrigger_sim.control.c2 import C2Controller
+    from outrigger_sim.hydraulics.v5_options import LAS_K1_CONTROLLER_TAG
+    from outrigger_sim.params import load_params
+
+    assert st.D8X_EXPECTED_TAG == LAS_K1_CONTROLLER_TAG == "final_C4G2_LAS_K1"
+    c6 = s6.case_table()["D8X_C1_H4V_top_fdown3.7"]
+    params = load_params(level="top")
+    cfg = s6.controller_config(params, c6)
+    c2 = C2Controller.from_params(params, cfg)
+    ctl_meta = json.loads(json.dumps(s6._plain(c2.meta()), ensure_ascii=False))
+    assert ctl_meta["slope_clearance_margin"]["settings"]["flat_soil_margin_order_gate"] is True
+    meta = json.loads(json.dumps(s6._plain(s6.d8x_meta(c6, c2.config, None, controller_meta=ctl_meta))))
+    assert meta["controller_tag"] == "final_C4G2_LAS_K1" and meta["expected_tag"] == "final_C4G2_LAS_K1"
+    assert meta["k1_order_gate"] is True and meta["liftoff_slow_enabled"] is True
+    assert meta["controller_meta_order_gate"] is True and meta["k1_order_gate_matches_meta"] is True
+    assert meta["controller_tag_matches"] is True and meta["rev2_problems"] == []
+    # without the controller meta: the gate of the config is still recorded, the read-back is None
+    bare = s6.d8x_meta(c6, c2.config, None)
+    assert bare["k1_order_gate"] is True and bare["controller_meta_order_gate"] is None
+    assert bare["k1_order_gate_matches_meta"] is None
+    assert s6.controller_meta_order_gate({}) is None and s6.controller_meta_order_gate(None) is None
+    # gate off in the controller config: tag loses _K1, refused before any run (tag and E-6d)
+    off = replace(cfg, slope_clearance_margin=replace(cfg.slope_clearance_margin,
+                                                      flat_soil_margin_order_gate=False))
+    c2_off = C2Controller.from_params(params, off)
+    rec = s6.d8x_record(c6, c2_off.config, None)
+    assert rec["k1_order_gate"] is False and rec["controller_tag"] == "final_C4G2_LAS"
+    assert any("E-6d" in p for p in rec["problems"]) and any("controller tag" in p for p in rec["problems"])
+    with pytest.raises(SystemExit):
+        s6.d8x_refuse(c6.case_id, rec)
+    m_off = s6.d8x_meta(c6, c2_off.config, None, controller_meta=c2_off.meta())
+    assert m_off["controller_meta_order_gate"] is False and m_off["k1_order_gate_matches_meta"] is True
+    # a mismatch between the config passed and the run's meta is recorded, not hidden
+    mixed = s6.d8x_meta(c6, c2.config, None, controller_meta=c2_off.meta())
+    assert mixed["k1_order_gate_matches_meta"] is False
+    # preflight rows carry the gate too (run_S6C / run_S8C d8x_preflight copy the record)
+    pre = s6.d8x_preflight([c6], None)
+    assert pre["rows"][c6.case_id]["k1_order_gate"] is True
+    assert pre["expected_tag"] == "final_C4G2_LAS_K1"
+    # L2b row (run_S8C): same keys
+    import run_S7C as s7c  # noqa: PLC0415
+
+    c8 = s8.case_table()["D8X_K24_top_roll5.7_Fs4"]
+    cfg8, _ = s7c.apply_settle_map(s6.controller_config(params, c8.base), "L2b_NSC", "top")
+    c2_8 = C2Controller.from_params(params, cfg8)
+    m8 = s6.d8x_meta(c8.base, c2_8.config, None, fs_kN=c8.fs_kN, controller_meta=c2_8.meta())
+    assert m8["k1_order_gate"] is True and m8["controller_meta_order_gate"] is True
+    assert m8["controller_tag"] == "final_C4G2_LAS_K1" and m8["rev2_problems"] == []
