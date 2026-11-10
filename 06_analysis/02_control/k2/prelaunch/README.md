@@ -17,8 +17,8 @@
 | 원판 / rev1 / 명세 sha256 | `a3658197…7263` / `5ba081c6…4776` / `502b0bb7…27ff` | raw sha256 |
 | rev2 / rev3 / rev4 / rev5 / rev6 sha256 (결과 전) | `b3f1b41f…94ea` / `8bcdb0ed…6e61` / `82160ff5…00c5` / `73b87758…eccc` / `21268203…ea0e` | raw sha256 |
 | 경로 2 `k2_recount.py` **1.5** blob (판정 때 병합 뒤 main에서 실행. k2-run에는 1.2가 있다) | `e1e16a9c5864e5a724f976eb6dda8456f14ff0a7`. 쓰지 않은 이전 blob: 1.2 `d2240795…`, 1.3 `78a3d2c7…`, 1.4 `1cde20d2…` | `git rev-parse <판정 커밋>:<path>` |
-| 경로 1 `k2_judge.py` | **`{PATH1_BLOB}` 대기**(python-expert, rev6 반영판). `b41d2587…`·`9bbcc201…`·`7ee9ccc1…`은 쓰지 않음 | 같음 |
-| `k2_v5_flatten.py` (같은 커밋) | `654bc38c4e92a5bf6f4e039c935f64d60f122260`. `d9e3f2d9…`·`a83abd80…`은 쓰지 않음 | 같음 |
+| 경로 1 `k2_judge.py` (python-expert `k2-path1-rev6` `728ace5`, rev6) | `c285b8c9e04c30c289a29d0d7a620c00fb4ec906`. `b41d2587…`·`9bbcc201…`·`7ee9ccc1…`은 쓰지 않음 | 같음 |
+| `k2_v5_flatten.py` (같은 커밋. 행에 `verdict_missing` 추가 → `flat_main`은 이 판으로 만든다) | `b385119095b97568a4c8f82f685e3c920ee50d2b`. `654bc38c…`·`d9e3f2d9…`·`a83abd80…`은 쓰지 않음 | 같음 |
 | `run_with_identity.py` | `fab7664bd3ba16723e4202bf71dc7d87ab0cf7f0` | 같음 |
 | `run_ps7.py` | `248f5363cbdbaf1bc20eac3ef5e73bdfd6e05acd` | 같음 |
 | `g8trace.py` | `d8bfe68e4350195951ec58a6a69bc24c04d293cc` | 같음 |
@@ -189,7 +189,7 @@ P 쪽 `P_main` → `P_post`는 1~4와 무관하다(`P_post`는 `.done` 36개를 
 ### 9.1 V-5 평탄 파일 다시 만들기 (경로 1 입력, integrity 지적 High)
 
 - 러너 `P_post`의 평탄화 단계는 k2-run의 **옛 평탄화기(`a83abd80`)**를 부른다. 메인 세션 결정에 따라 러너는 바꾸지 않는다(배치표 sha 유지). 그 출력 `runs/v5/<arm>/flat/`은 **참고용**으로만 둔다.
-- 판정 전에 병합 뒤 main checkout의 평탄화기(blob `654bc38c…`, 실행 전 기록 `flatten.blob`. 판정 커밋에서 `git rev-parse <커밋>:04_scripts/03_control/k2/k2_v5_flatten.py`가 이 값인지 먼저 확인)로 두 팔을 다시 만든다. 출력 폴더는 **`runs/v5/<arm>/flat_main/`**이다(이미 있으면 평탄화기가 거부하므로 새로 만든다).
+- 판정 전에 병합 뒤 main checkout의 평탄화기(blob `b3851190…`, 실행 전 기록 `flatten.blob`. 판정 커밋에서 `git rev-parse <커밋>:04_scripts/03_control/k2/k2_v5_flatten.py`가 이 값인지 먼저 확인)로 두 팔을 다시 만든다. 출력 폴더는 **`runs/v5/<arm>/flat_main/`**이다(이미 있으면 평탄화기가 거부하므로 새로 만든다).
 
 ```powershell
 # E코어, dynamics-dev, main checkout 기준(경로는 k2-run의 결과 폴더)
@@ -202,5 +202,6 @@ foreach ($arm in 'off','tcl') {
 
 - `k2_manifest.json`의 V-5 칸(경로 1 입력)은 `flat_main`을 가리킨다.
 - 경로 2는 원 출력(`v5_raw`)을 직접 읽으므로 영향이 없다.
-- 다시 만들 때도 래퍼(`run_with_identity.py`)로 감싸 sidecar를 남기기를 권한다. 판정 후 감사가 이 단계의 rc·HEAD·평탄화기 blob을 확인한다.
+- 다시 만들 때도 래퍼(`run_with_identity.py`)로 감싸 sidecar를 남긴다.
+- **경로 1은 이 재생성 단계의 sidecar rc를 읽지 않는다**(경로 1 입력 검사가 아니다). 메인 세션 결정(2026-11-10)에 따라, 이 단계의 rc·HEAD·clean·평탄화기 blob은 **판정 후 정체성 감사**에서 60개 sidecar 목록과 함께 확인한다. rev6 4절과 같은 뜻이다.
 - V-5 regression 키는 두 팔 출력에서 `prelaunch/regression_keys.py keys`와 같은 정의로 다시 낸다. 경로 2가 내부에서 sha를 대조한다.

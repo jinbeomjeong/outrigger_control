@@ -76,17 +76,18 @@
   "rule": "G-S needs the 9.2 tests, I-4 reduced, I-5, I-8 passed (re-audit finding 3)"
  },
  "identity_list_post_judgement": "rules rev2 6 / rev6 4: the post-judgement identity list is 60 sidecars (the 62 of k2_commands.json without the reference flatten steps v5_flatten_off / v5_flatten_tcl), plus the flat_main rebuild sidecars (wrapper), V-5 provenance, V-6 batch_meta x4, V-7 batch.json / result.json. If P_post stops at a reference flatten step, the remaining tcl r79 judge steps run with the same wrapper argv of k2_commands_filled.json; record time, operator, stopped step and rc.",
+ "flat_main_sidecar": "Path 1 does not read the sidecar rc of the flat_main rebuild step (not a path 1 input check). That rc, HEAD / clean and the flattener blob are checked in the post-judgement identity audit together with the 60-sidecar list (same sense as rules rev6 4; main session decision 2026-11-10).",
  "independence_disclosure": "rules rev6 5 (user decision 2026-11-10): before any result the main session passed a definition summary of path 1 (not code) to the path 2 author to align the two paths (rev5 / rev6); path 1 (k2_judge.py) partly referred to path 2 code (docstrings, false_latches ~ false_latch; re-audit record d). Not a rule 8 violation (rule 8 restricts path 2), disclosed because a shared mistake can sit in both paths.",
  "path1": {
   "path": "04_scripts/03_control/k2/k2_judge.py",
-  "blob": "{PATH1_BLOB: python-expert rev6 version of k2_judge.py (pending); b41d2587 (rev5) superseded}",
-  "source": "python-expert branch k2-path1-rev2 f67854e (rev2..rev5)",
+  "blob": "c285b8c9e04c30c289a29d0d7a620c00fb4ec906",
+  "source": "python-expert branch k2-path1-rev6 728ace5 (rev2..rev6)",
   "previous_blob_not_used": "7ee9ccc109578da2bb0e8e25f3811d9c0f73664b"
  },
  "flatten": {
   "path": "04_scripts/03_control/k2/k2_v5_flatten.py",
-  "blob": "654bc38c4e92a5bf6f4e039c935f64d60f122260",
-  "source": "python-expert branch k2-path1-rev2 f67854e (output format: sidecar clean record, G8 meta checkout_c2)",
+  "blob": "b385119095b97568a4c8f82f685e3c920ee50d2b",
+  "source": "python-expert branch k2-path1-rev6 728ace5 (rows carry verdict_missing; flat_main must be built with this version)",
   "previous_blob_not_used": "a83abd803dd91e3855159e919770092e40a3cdb9"
  },
  "run_from": "both judge paths run from the main checkout after merging k2-prelaunch-record and k2-path1-rev2; k2-run (6a44ff8) holds older judge tools",
@@ -178,7 +179,7 @@
  },
  "chrono_identity": "V-6 batch_meta.json identity_start / identity_end (orig_argv, cwd, git HEAD and status, env, affinity, per-row exit_code, all_rc_zero) + batch.json exit_code (cad-expert 09f66c4); V-7 s9_batch batch.json argv / rc",
  "v5_regression_rows": "V-5 regression (rules rev2 2): judged rows 93 (acc_judge definition: clip_harness 13 + clip_p0 17 + clip_x426_C 2 + clip_x426_D 11 + clip_A 20 + r79 L1/L2 judgement 30; key sha 2900db88...) + record rows 49 (clip_r79_L1L2 entries that are not judgement rows 7 + clip_r79_L3L4 42; key sha d4f58334...). The 118 of the original 3.4 / criteria.md is the old rerun-list count, not reconstructable from the stored outputs. E-1 expects 93. The r79 L1 reference rows are not judged rows; the r79 judgement 'unmatched' is a record (rev4 1 (c)).",
- "v5_flat_rebuild": "P_post's flatten step runs the k2-run flattener (a83abd80, old) and writes runs/v5/<arm>/flat/: kept as a reference only (runner unchanged, plan sha kept). Before judging, rebuild the flat files with the flattener of the main checkout after the merge (blob 654bc38c, k2-path1-rev2 f67854e; d9e3f2d9 superseded): k2_v5_flatten.py --arm-dir <k2-run>\\06_analysis\\02_control\\k2\\runs\\v5\\<arm> --out-dir <same>\\flat_main --checkout <k2-run> (both arms, E cores). The manifest V-5 entries (path 1 input) point to flat_main. Path 2 reads the raw outputs (v5_raw) and is not affected.",
+ "v5_flat_rebuild": "P_post's flatten step runs the k2-run flattener (a83abd80, old) and writes runs/v5/<arm>/flat/: kept as a reference only (runner unchanged, plan sha kept). Before judging, rebuild the flat files with the flattener of the main checkout after the merge (blob b3851190, k2-path1-rev6 728ace5, rows carry verdict_missing; 654bc38c / d9e3f2d9 superseded): k2_v5_flatten.py --arm-dir <k2-run>\\06_analysis\\02_control\\k2\\runs\\v5\\<arm> --out-dir <same>\\flat_main --checkout <k2-run> (both arms, E cores). The manifest V-5 entries (path 1 input) point to flat_main. Path 2 reads the raw outputs (v5_raw) and is not affected.",
  "point_files": {
   "k2_points_5p5_3p5.json": "a15cbe95275be11c163028ca2113d896254d49a4554286c54bdbfa88680cccc3",
   "d8x_points.json": "050145f6a965c851a014563f6219e61c1081716eb5ad5f7e8469a098d426c817"
