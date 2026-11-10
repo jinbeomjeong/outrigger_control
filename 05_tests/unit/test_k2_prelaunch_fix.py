@@ -99,14 +99,18 @@ def test_ps7_and_g8_rows(flat) -> None:
 
 
 def test_v5_bundle_reads_the_flat_rows(flat) -> None:
+    """The stored outputs have no sidecar / provenance: only the common rc / c2_sha256 items fail, and the K-2
+    evidence makes the bundle not judgeable (rev2 1)."""
     for name, kind in (("grid", "pass_to_fail"), ("noise_L2", "noise_cp")):
         path = str(flat / f"{name}.json")
         result = k2_judge.v5_bundle({"kind": kind, "off": [path], "tcl": [path], "key": "key", "status": "pass"})
-        assert result["unpaired"] == [] and result["passed"] is True
+        failing = {item for item, value in result["absolute"]["tcl"]["items"].items() if not value["ok"]}
+        assert result["unpaired"] == [] and result["relative_passed"] is True
+        assert failing == {"rc", "c2_sha256"} and result["not_judgeable"].startswith("K-2 evidence")
     path = str(flat / "g8_safe_stop.json")
     result = k2_judge.v5_bundle({"kind": "g8", "off": [path], "tcl": [path], "key": "key", "status": "pass",
                                  "ready": "ready", "faults": "faults"})
-    assert result["passed"] is True and result["failures"] == []
+    assert result["relative_passed"] is True and result["failures"] == []
 
 
 def test_existing_output_is_refused(flat) -> None:

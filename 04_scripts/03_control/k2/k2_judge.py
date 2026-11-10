@@ -8,14 +8,17 @@ Sub-commands:
   judge-v2    V-2 D8x R-a, off + K-2 arms x K1 off / on (G-A, I-4, E-1 .. E-9, SH-1 .. SH-6)
   judge-v3    V-3 dissipation arms x {off, K-2} on the 273 keys (G-B, E-5, I-9)
   judge-v4    V-4 5.5 / 3.5 boundary, top, K1 off (G-C)
-  judge-v5    V-5 acceptance regression, K-2 arm vs the off arm of the same commit (G-D)
-  judge-v6    V-6 Chrono 8 rows (G-E: K-2 rows; off rows recorded; 5.4 prediction table)
+  judge-v5    V-5 acceptance regression (rev2 1 / rev4): criteria.md absolute items on the K-2 arm, K-2
+              evidence, pass -> fail vs the off arm of the same commit (G-D); input k2_v5_flatten.py files
+  judge-v6    V-6 Chrono 8 rows (G-E: K-2 rows; off rows recorded; 5.4 prediction table; SH-1 .. SH-6 rev2 3)
   record-v7   V-7 SCM 4 rows (record only)
+  selftest-v5-stored  the V-5 reader on the stored acceptance outputs as both arms (rev4 2 format check)
   report      gates G-S .. G-F and the grade (10) from the outputs above
 
 Common contract: ``--out <file>`` (the report JSON), ``--format json|md``; exit 0 pass, 1 fail, 2 not judgeable /
-input error (a missing result key is 2), 3 internal error; the last stdout line is JSON. The rules file must match
-its sealed sha256 (``k2_touch_creep_rules.sha256``) and the dynamics spec its rules 3.3 sha256 (exit 2 otherwise).
+input error (a missing result key is 2), 3 internal error; the last stdout line is JSON. The rules file and its
+addenda rev1 .. rev4 must match their sealed sha256 (``k2_touch_creep_rules[_revN].sha256``, the values this judge
+implements) and the dynamics spec its rules 3.3 sha256 (exit 2 otherwise).
 Every judging command prints its field map (rules item <-> raw result key).
 Interpreter: python-dev or dynamics-dev (numpy, PyYAML; no simulation imports).
 """
@@ -37,17 +40,34 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 D8X_DIR = HERE.parent / "d8x"
 ACCEPTANCE_DIR = HERE.parent / "touch_phase" / "acceptance"
-for _folder in (D8X_DIR, ACCEPTANCE_DIR, ROOT / "03_src"):
+for _folder in (HERE, D8X_DIR, ACCEPTANCE_DIR, ROOT / "03_src"):
     if str(_folder) not in sys.path:
         sys.path.insert(0, str(_folder))
 
 import d8x_judge  # noqa: E402  (row J items, loaders, NotJudgeable)
+import k2_record  # noqa: E402  (SH-1 / SH-2 definitions of the harness record, reused for the V-6 rows)
 
 from outrigger_sim.hydraulics import v5_options  # noqa: E402
 
 K2_DIR = ROOT / "06_analysis" / "02_control" / "k2"
 RULES_PATH = K2_DIR / "k2_touch_creep_rules.md"
 RULES_SEAL_PATH = K2_DIR / "k2_touch_creep_rules.sha256"
+RULES_REV1_SHA256 = "5ba081c62f8aef0edc5bb99119d7586b0d2914761582f2323c289f472f244776"
+RULES_SHA256 = "a3658197bdab02870a0b362144606f404021ebac90662a35efacfa8dbe477263"
+RULES_REV1_SHA256 = "5ba081c62f8aef0edc5bb99119d7586b0d2914761582f2323c289f472f244776"
+RULES_REV2_SHA256 = "b3f1b41f27030c75aec726d2a3feb5abc36697864e0d83766a8fe0c4460394ea"
+RULES_REV3_SHA256 = "8bcdb0ed1fdf6d730ac781929e93b233972d1e80566e1ae14ffb7ddf049d6e61"
+RULES_REV4_SHA256 = "82160ff54874e3d43bf7c5a1ae96d6e8612b1e7635aaccea39a4299352ce00c5"
+SEALED_RULES = (
+    (RULES_PATH, RULES_SEAL_PATH, RULES_SHA256),
+    *(
+        (K2_DIR / f"k2_touch_creep_rules_rev{n}.md", K2_DIR / f"k2_touch_creep_rules_rev{n}.sha256", sha)
+        for n, sha in ((1, RULES_REV1_SHA256), (2, RULES_REV2_SHA256), (3, RULES_REV3_SHA256),
+                       (4, RULES_REV4_SHA256))
+    ),
+)
+"""Rules file, seal file, sha256 this judge implements (rev2 8: path 1 checks the original and rev1 .. rev4
+seals; later revisions win: rev4 > rev3 > rev2 > rev1 > original)."""
 DYN_SPEC_PATH = K2_DIR / "k2_dyn_spec.md"
 DYN_SPEC_SHA256 = "502b0bb78558d40586cbcddb718b6c5d53529de4e78369f454762c9fe73727ff"
 """Rules 3.3: raw sha256 of the dynamics spec."""
@@ -111,7 +131,10 @@ FIELD_MAP_K2 = {
     "E-7": "angles_deg == point file (<= 1e-9 deg)",
     "E-8": "d8x.J3_pad_lift_samples (from the 1 ms pad series) is an int and series_file is named",
     "I-4": "commands_sha256 of the off arm == stored D8x ra_off.json / ra_on.json rows",
-    "I-9": "aug_arm, is_kplant (row) and k2.aug.{preset, case_id, plant_aug.options, valve_open_fraction_touch_to_lift}",
+    "I-9": "aug_arm, is_kplant (row) and k2.aug.{arm, is_kplant, preset, case_id, valve_open_fraction_touch_to_lift "
+    "(4 values in [0, 1])}",
+    "E-5 (rev3 1)": "k2.aug.plant_aug.{preset, options key set per arm, resolved values (relative 1e-9)}; V-2 / V-4 "
+    "aug_arm and k2.aug None",
     "SH-1": "k2.SH1_lift_chunks_after_latch (per leg) > 0 on a K-2 row",
     "SH-2": "median k2.SH2_rate_amp_deg_s of the K-2 rows > median of the off rows (per bundle)",
     "SH-3": "t_ready_s(K-2) - t_ready_s(off) > 3.0 s (per pair)",
@@ -128,15 +151,29 @@ def raw_sha256(path: Path) -> str:
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def seal_problems() -> list[str]:
-    """I-7: the rules file raw sha256 == its seal, the dynamics spec == rules 3.3."""
-    problems = []
+def _seal_problem(rules_path: Path, seal_path: Path, expected_sha256: str | None) -> str | None:
+    """One sealed rules file: raw sha256 == the first token of its ``.sha256`` (== the value this tool was built
+    for, when given)."""
     try:
-        sealed = RULES_SEAL_PATH.read_text(encoding="utf-8").split()[0]
+        sealed = seal_path.read_text(encoding="utf-8").split()[0]
+        actual = raw_sha256(rules_path)
     except (FileNotFoundError, IndexError):
-        return [f"I-7 no seal {RULES_SEAL_PATH}"]
-    if raw_sha256(RULES_PATH) != sealed:
-        problems.append(f"I-7 {RULES_PATH.name} sha256 {raw_sha256(RULES_PATH)} != sealed {sealed}")
+        return f"I-7 no seal or rules file {seal_path.name} / {rules_path.name}"
+    if actual != sealed:
+        return f"I-7 {rules_path.name} sha256 {actual} != sealed {sealed}"
+    if expected_sha256 is not None and sealed != expected_sha256:
+        return f"I-7 {seal_path.name} seal {sealed} != {expected_sha256} (this judge implements that revision)"
+    return None
+
+
+def seal_problems() -> list[str]:
+    """I-7: the original rules, rev1 and rev2 raw sha256 == their seals (rev1 / rev2: == the revisions this judge
+    implements), the dynamics spec == rules 3.3."""
+    problems = []
+    for rules_path, seal_path, expected in SEALED_RULES:
+        problem = _seal_problem(rules_path, seal_path, expected)
+        if problem:
+            problems.append(problem)
     if raw_sha256(DYN_SPEC_PATH) != DYN_SPEC_SHA256:
         problems.append(
             f"3.3 {DYN_SPEC_PATH.name} sha256 {raw_sha256(DYN_SPEC_PATH)} != {DYN_SPEC_SHA256}"
@@ -437,6 +474,7 @@ def judge_harness_row(row: dict, *, k2_on: bool, angles_by_point: dict | None, f
         "not_judgeable": problems,
         "values": judged["values"],
         "t_ready_s": (row.get("d8x") or {}).get("t_ready_s"),
+        "has_h4": bool((row.get("d8x") or {}).get("reanchor_intervals_s")),
         "commands_sha256": row.get("commands_sha256"),
         "sh1": k2.get("SH1_lift_chunks_after_latch"),
         "sh2": k2.get("SH2_rate_amp_deg_s"),
@@ -482,29 +520,55 @@ def count_problems(rows: list[dict], expected_by_k1: dict, label: str) -> list[s
     return problems
 
 
+def _row_j(row: dict, item: str):
+    return (row.get("values") or {}).get(item)
+
+
+def _sh_row_flags(k2_rows: list[dict], f_d8: float, label: str, missing: dict) -> list[dict]:
+    """SH-1, SH-5, SH-6 per K-2 row; a missing value is counted (E-9), J2 only on rows with an H4 interval."""
+    flags = []
+    for row in k2_rows:
+        sh1 = row.get("sh1")
+        if not isinstance(sh1, list) or len(sh1) != len(LEG_NAMES) or any(c is None for c in sh1):
+            missing["SH-1"] += 1
+        if any((count or 0) > 0 for count in sh1 or []):
+            flags.append({"flag": "SH-1", "bundle": label, "id": row["id"], "value": sh1})
+        if row.get("cap") is None:
+            missing["SH-5"] += 1
+        elif row["cap"] > 0:
+            flags.append({"flag": "SH-5", "bundle": label, "id": row["id"], "value": row["cap"]})
+        items = ("J1_N", "J2_N") if row.get("has_h4") else ("J1_N",)
+        for item in items:
+            value = _row_j(row, item)
+            if not d8x_judge._is_number(value):
+                missing["SH-6"] += 1
+            elif value < f_d8 + SH6_MARGIN_N:
+                flags.append({"flag": "SH-6", "bundle": label, "id": row["id"], item: value})
+    return flags
+
+
+def _sh_missing_flags(missing: dict, label: str) -> list[dict]:
+    """E-9 (rev2 1 / 3): a missing indicator value is a FLAG, with its count."""
+    return [{"flag": name, "bundle": label, "missing": count} for name, count in missing.items() if count]
+
+
 def sh_flags(k2_rows: list[dict], off_rows: list[dict], f_d8: float, label: str) -> dict:
-    """SH-1 .. SH-6 of one bundle (rules 5.2; E-11 pairs by (id, K1 arm))."""
+    """SH-1 .. SH-6 of one bundle (rules 5.2; E-11 pairs by (id, K1 arm)); missing values are counted and
+    flagged (E-9), never skipped."""
     off_by_key = {(row["id"], row["k1_on"]): row for row in off_rows}
     k2_by_key = {(row["id"], row["k1_on"]): row for row in k2_rows}
     unpaired = sorted(str(key) for key in set(off_by_key) ^ set(k2_by_key))
-    flags = []
-    for row in k2_rows:
-        sh1 = row.get("sh1") or []
-        if any((count or 0) > 0 for count in sh1):
-            flags.append({"flag": "SH-1", "bundle": label, "id": row["id"], "value": sh1})
-        if (row.get("cap") or 0) > 0:
-            flags.append({"flag": "SH-5", "bundle": label, "id": row["id"], "value": row["cap"]})
-        values = row.get("values") or {}
-        for item in ("J1_N", "J2_N"):
-            if d8x_judge._is_number(values.get(item)) and values[item] < f_d8 + SH6_MARGIN_N:
-                flags.append({"flag": "SH-6", "bundle": label, "id": row["id"], item: values[item]})
+    missing = dict.fromkeys(("SH-1", "SH-2", "SH-3", "SH-4", "SH-5", "SH-6"), 0)
+    flags = _sh_row_flags(k2_rows, f_d8, label, missing)
     if unpaired:
         return {
             "bundle": label,
             "not_judgeable": f"E-11 {len(unpaired)} unpaired keys",
             "unpaired": unpaired[:20],
-            "flags": flags,
+            "flags": flags + _sh_missing_flags(missing, label),
+            "missing": missing,
         }
+    missing["SH-2"] = sum(not d8x_judge._is_number(row.get("sh2")) for row in k2_rows + off_rows)
     k2_median = _median(row.get("sh2") for row in k2_rows)
     off_median = _median(row.get("sh2") for row in off_rows)
     if k2_median is not None and off_median is not None and k2_median > off_median:
@@ -514,26 +578,24 @@ def sh_flags(k2_rows: list[dict], off_rows: list[dict], f_d8: float, label: str)
     delays = []
     for key, row in k2_by_key.items():
         a, b = row.get("t_ready_s"), off_by_key[key].get("t_ready_s")
-        if d8x_judge._is_number(a) and d8x_judge._is_number(b):
-            delays.append((a - b, key[0]))
-            if a - b > SH3_READY_DELAY_S:
-                flags.append({"flag": "SH-3", "bundle": label, "id": key[0], "delay_s": a - b})
-    j1_k2 = [
-        r["values"]["J1_N"]
-        for r in k2_rows
-        if d8x_judge._is_number((r.get("values") or {}).get("J1_N"))
-    ]
-    j1_off = [
-        r["values"]["J1_N"]
-        for r in off_rows
-        if d8x_judge._is_number((r.get("values") or {}).get("J1_N"))
-    ]
-    erosion = (min(j1_k2) - min(j1_off)) if j1_k2 and j1_off else None
+        if not (d8x_judge._is_number(a) and d8x_judge._is_number(b)):
+            missing["SH-3"] += 1
+            continue
+        delays.append((a - b, key[0]))
+        if a - b > SH3_READY_DELAY_S:
+            flags.append({"flag": "SH-3", "bundle": label, "id": key[0], "delay_s": a - b})
+    j1_k2 = [_row_j(r, "J1_N") for r in k2_rows]
+    j1_off = [_row_j(r, "J1_N") for r in off_rows]
+    missing["SH-4"] = sum(not d8x_judge._is_number(v) for v in j1_k2 + j1_off)
+    numbers_k2 = [v for v in j1_k2 if d8x_judge._is_number(v)]
+    numbers_off = [v for v in j1_off if d8x_judge._is_number(v)]
+    erosion = (min(numbers_k2) - min(numbers_off)) if numbers_k2 and numbers_off else None
     if erosion is not None and erosion < SH4_J1_EROSION_N:
         flags.append({"flag": "SH-4", "bundle": label, "min_J1_difference_N": erosion})
     return {
         "bundle": label,
-        "flags": flags,
+        "flags": flags + _sh_missing_flags(missing, label),
+        "missing": missing,
         "sh2_medians": [k2_median, off_median],
         "sh4_min_J1_difference_N": erosion,
         "ready_delay_s_top5": sorted(delays)[-5:],
@@ -673,7 +735,7 @@ def cmd_judge_v2(args) -> tuple[int, dict]:
         expected_by_k1={False: EXPECTED_ROWS["v2"]["off"], True: EXPECTED_ROWS["v2"]["on"]},
         angles=_points_of(part.get("points")),
     )
-    problems += more
+    problems += more + options_off_problems(part["off"] + part["tcl"], "V-2")
     stored = part.get("stored_off") or []
     i4 = invariance_i4(off, stored) if stored else {"ok": None}
     if i4["ok"] is not True:
@@ -707,7 +769,7 @@ def cmd_judge_v4(args) -> tuple[int, dict]:
         expected_by_k1={False: EXPECTED_ROWS["v4"]},
         angles=_points_of(points_path),
     )
-    problems += more
+    problems += more + options_off_problems(part["off"] + part["tcl"], "V-4")
     levels = {
         row["id"].split("|")[2] for row in off + tcl if row.get("id") and row["id"].count("|") >= 2
     }
@@ -724,29 +786,130 @@ def cmd_judge_v4(args) -> tuple[int, dict]:
     }
 
 
-def _aug_problems(files: list[str], arm: str) -> list[str]:
-    """E-5 / I-9 of the V-3 rows of one arm (top-level ``aug_arm`` / ``is_kplant``, the ``k2.aug`` block)."""
+def options_off_problems(files: list[str], label: str) -> list[str]:
+    """Rev2 4 V-2 / V-4: no dissipation option on any row (``aug_arm`` and ``k2.aug`` absent or None)."""
     problems = []
     for path in files:
         for run in _runs_of(Path(path)):
-            aug = (run.get("k2") or {}).get("aug") or {}
-            if run.get("aug_arm") != arm or run.get("is_kplant") is not True:
-                problems.append(
-                    f"E-5 {run.get('id')}: aug_arm {run.get('aug_arm')} / is_kplant "
-                    f"{run.get('is_kplant')}"
-                )
-            elif (
-                aug.get("preset") != V3_DISS_PRESETS[arm]
-                or aug.get("case_id") != run.get("id")
-                or aug.get("valve_open_fraction_touch_to_lift") is None
-                or not (aug.get("plant_aug") or {}).get("options")
-                and arm != "H0"
-            ):
-                problems.append(
-                    f"I-9 {run.get('id')}: preset / case_id / valve-open share / options"
-                )
+            if run.get("aug_arm") is not None or (run.get("k2") or {}).get("aug") is not None:
+                problems.append(f"E-5 {label} {run.get('id')}: options on (aug_arm {run.get('aug_arm')!r})")
+                if len(problems) > 20:
+                    return problems
+    return problems
+
+
+# --- rev2 4 / rev3 1: V-3 arm values ------------------------------------------------------------------------
+AUG_OPTION_KEYS_BY_ARM = {
+    "H0": frozenset(),
+    "L1eq": frozenset({"crawler_kt_rel"}),
+    "L1eq_fs": frozenset({"crawler_kt_rel", "seal_fs_front_N"}),
+    "L1eq_zm": frozenset({"crawler_kt_rel", "pad_zeta_moving"}),
+    "AUG": frozenset({"crawler_kt_rel", "seal_fs_front_N", "pad_zeta_moving"}),
+    "AUG_crc2": frozenset({"crawler_kt_rel", "seal_fs_front_N", "pad_zeta_moving", "crawler_c_scale"}),
+    "AUG_eps": frozenset({"crawler_kt_rel", "seal_fs_front_N", "pad_zeta_moving", "valve_open_eps_m_s"}),
+}
+"""Rev3 1: ``k2.aug.plant_aug.options`` key set of each arm (equal sets; H0 ``options == {}``)."""
+AUG_RESOLVED_VALUES = {
+    "crawler_kt_rel": 0.23309250561413625,
+    "seal_fs_front_N": 4000.0,
+    "seal_fs_rear_scale": 0.8333,
+    "pad_zeta_moving": 0.10,
+    "crawler_c_scale": 2.0,
+}
+"""Rev3 1: ``resolved`` reference values (the run YAML computed values; rev2 4 printed them rounded)."""
+VALVE_OPEN_EPS_AUG_EPS_M_S = 0.00209243016
+VALVE_OPEN_EPS_LOCK_M_S = 1e-6
+"""Rev3 1: ``resolved.valve_open_eps_m_s`` (every arm): 0.1 v_max for AUG_eps, the YAML lock eps otherwise."""
+AUG_RELATIVE_TOLERANCE = 1e-9
+AUG_ZERO_TOLERANCE = 1e-12
+"""Rev3 1: relative difference <= 1e-9; for a zero reference the absolute difference <= 1e-12."""
+PAD_ZETA_MOVING = 0.10
+PAD_ZETA_LOCKED = 0.03
+
+
+def _close(value, expected: float) -> bool:
+    if not d8x_judge._is_number(value):
+        return False
+    if expected == 0.0:
+        return abs(value) <= AUG_ZERO_TOLERANCE
+    return abs(value - expected) <= AUG_RELATIVE_TOLERANCE * abs(expected)
+
+
+def _resolved_problems(arm: str, options: dict, resolved: dict) -> list[str]:
+    """Rev3 1: the ``resolved`` value of every quantity in ``options`` (and the valve-open threshold of every arm)."""
+    problems = []
+    names = set(options)
+    if "seal_fs_front_N" in names:
+        names.add("seal_fs_rear_scale")
+    names.discard("valve_open_eps_m_s")
+    for name in sorted(names):
+        if not _close(resolved.get(name), AUG_RESOLVED_VALUES[name]):
+            problems.append(f"resolved {name} {resolved.get(name)!r} != {AUG_RESOLVED_VALUES[name]}")
+    if "pad_zeta_moving" in options and not _cn_moving_ok(resolved):
+        problems.append("resolved cn_moving_N_s_m != cn_lock_N_s_m x 0.10 / 0.03")
+    eps = VALVE_OPEN_EPS_AUG_EPS_M_S if arm == "AUG_eps" else VALVE_OPEN_EPS_LOCK_M_S
+    if not _close(resolved.get("valve_open_eps_m_s"), eps):
+        problems.append(f"resolved valve_open_eps_m_s {resolved.get('valve_open_eps_m_s')!r} != {eps}")
+    return problems
+
+
+def aug_value_problems(arm: str, plant_aug: dict | None) -> list[str]:
+    """Rev3 1 E-5 of one V-3 row: ``k2.aug.plant_aug`` preset, option key set and resolved values."""
+    plant_aug = plant_aug or {}
+    options, resolved = plant_aug.get("options"), plant_aug.get("resolved")
+    if not isinstance(options, dict) or not isinstance(resolved, dict):
+        return ["plant_aug options / resolved missing"]
+    problems = []
+    if plant_aug.get("preset") != V3_DISS_PRESETS[arm]:
+        problems.append(f"plant_aug preset {plant_aug.get('preset')!r} != {V3_DISS_PRESETS[arm]}")
+    if set(options) != AUG_OPTION_KEYS_BY_ARM[arm]:
+        problems.append(f"options keys {sorted(options)} != {sorted(AUG_OPTION_KEYS_BY_ARM[arm])}")
+        return problems
+    return problems + _resolved_problems(arm, options, resolved)
+
+
+def _cn_moving_ok(resolved: dict) -> bool:
+    lock, moving = resolved.get("cn_lock_N_s_m"), resolved.get("cn_moving_N_s_m")
+    if not isinstance(lock, list) or not isinstance(moving, list) or len(lock) != len(moving) or not lock:
+        return False
+    return all(_close(b, a * PAD_ZETA_MOVING / PAD_ZETA_LOCKED) for a, b in zip(lock, moving, strict=True))
+
+
+def open_share_problem(shares) -> str | None:
+    """Rev2 4 I-9: four per-leg valve-open shares, each finite in [0, 1] (a dict by leg or a list)."""
+    values = list(shares.values()) if isinstance(shares, dict) else shares
+    if not isinstance(values, list) or len(values) != len(LEG_NAMES):
+        return f"valve-open shares {shares!r}"
+    if not all(d8x_judge._is_number(v) and math.isfinite(v) and 0.0 <= v <= 1.0 for v in values):
+        return f"valve-open shares {values!r} not finite in [0, 1]"
+    return None
+
+
+def _aug_problems(files: list[str], arm: str) -> list[str]:
+    """E-5 / I-9 of the V-3 rows of one arm (top-level ``aug_arm`` / ``is_kplant``, the ``k2.aug`` block with the
+    rev3 1 values, the open shares)."""
+    problems = []
+    for path in files:
+        for run in _runs_of(Path(path)):
+            problems += _aug_row_problems(run, arm)
             if len(problems) > 20:
                 return problems
+    return problems
+
+
+def _aug_row_problems(run: dict, arm: str) -> list[str]:
+    aug = (run.get("k2") or {}).get("aug") or {}
+    run_id = run.get("id")
+    if run.get("aug_arm") != arm or run.get("is_kplant") is not True:
+        return [f"E-5 {run_id}: aug_arm {run.get('aug_arm')} / is_kplant {run.get('is_kplant')}"]
+    if aug.get("arm") != arm or aug.get("is_kplant") is not True:
+        return [f"E-5 {run_id}: k2.aug.arm {aug.get('arm')!r} / is_kplant {aug.get('is_kplant')!r}"]
+    if aug.get("preset") != V3_DISS_PRESETS[arm] or aug.get("case_id") != run_id:
+        return [f"I-9 {run_id}: preset {aug.get('preset')!r} / case_id {aug.get('case_id')!r}"]
+    problems = [f"E-5 {run_id}: {p}" for p in aug_value_problems(arm, aug.get("plant_aug"))]
+    share = open_share_problem(aug.get("valve_open_fraction_touch_to_lift"))
+    if share:
+        problems.append(f"I-9 {run_id}: {share}")
     return problems
 
 
@@ -820,67 +983,410 @@ def _passed(row: dict, dotted: str) -> bool:
 
 
 def cp_upper_95(failures: int, n: int) -> float:
-    """One-sided Clopper-Pearson 95 % upper bound of a failure rate."""
+    """One-sided Clopper-Pearson 95 % upper bound of a failure rate (beta quantile)."""
     from scipy.stats import beta
 
     return 1.0 if failures >= n else float(beta.ppf(0.95, failures + 1, n - failures))
 
 
+def _binomial_cdf(k: int, n: int, p: float) -> float:
+    if p <= 0.0:
+        return 1.0
+    if p >= 1.0:
+        return 0.0 if k < n else 1.0
+    log_p, log_q = math.log(p), math.log1p(-p)
+    return sum(
+        math.exp(math.lgamma(n + 1) - math.lgamma(i + 1) - math.lgamma(n - i + 1) + i * log_p + (n - i) * log_q)
+        for i in range(k + 1)
+    )
+
+
+def cp_upper_95_bisection(failures: int, n: int) -> float:
+    """The same bound by bisection on the binomial sum ``P(X <= k; n, p) = 0.05`` (rev2 1: two paths)."""
+    if failures >= n:
+        return 1.0
+    low, high = 0.0, 1.0
+    for _ in range(200):
+        middle = 0.5 * (low + high)
+        if _binomial_cdf(failures, n, middle) > 0.05:
+            low = middle
+        else:
+            high = middle
+    return 0.5 * (low + high)
+
+
+# --- rev2 1: absolute items of criteria.md on the K-2 arm, K-2 evidence from the provenance -------------
+C2_SHA256_RUN = "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1"
+"""Rev2 1 common item: provenance ``c2_sha256`` = the k2-run working copy of ``c2.py`` (blob ``18c71876``)."""
+V5_EXPECTED_ROWS = {"soil": 60, "d8": 576, "noise_L2": 855, "regression": 93, "ps7": 20, "g8_safe_stop": 83}
+"""Rev2 1 row counts of the K-2 arm (grid: none in the table; E-1 takes the manifest count)."""
+REGRESSION_JUDGED_SHA256 = "2900db889efc73070c3a8fbe557b1a4ad9ee3392afc099ba00be1d0549174ec9"
+REGRESSION_RECORD_SHA256 = "d4f58334c6ca7c393c35072a798c09f4995d7fde274e0af6b21b99f977d503eb"
+"""Rev2 2: sha256 of the judged (93) and record (49) key lists (``prelaunch/regression_keys.py keys``)."""
+V5_RELATIVE_GATES = {"grid": True, "soil": True, "regression": True, "ps7": True, "g8_safe_stop": True,
+                     "d8": False, "noise_L2": False}
+"""Rev2 1 "off arm" column: pass -> fail against the off arm gates the bundle, or is only recorded (D8: READY
+mean and worst minimum force differences; noise: the pass -> fail list)."""
+SOIL_ABSOLUTE_MARKERS = ("|G1|", "|J2|")
+"""Rev2 1 soil: these rows must pass on the K-2 arm; the other (rigid) rows are compared with the off arm."""
+ARM_K2 = {"off": "off", "tcl": "on"}
+"""``ACC_K2`` / provenance ``k2`` of an arm."""
+V5_COMBO = {"g8_safe_stop": "off"}
+"""Rev2 1 evidence: ``combo`` of the G8 steps; every other bundle runs the preset."""
+V5_PRESET_COMBO = "preset"
+GUARD_KN_V5 = 14.41
+D8_ATTITUDE_LIMIT_DEG_V5 = 0.2
+D8_READY_LIMIT_S_V5 = 100.0
+"""Rev2 1 D8 row limits (criteria.md: F_min + 5 kN, 0.2 deg, READY <= 100 s)."""
+
+
+def _flat_docs(paths: list[str]) -> list[dict]:
+    docs = []
+    for path in paths:
+        doc = d8x_judge._load_json(Path(path))
+        if not isinstance(doc, dict) or "runs" not in doc:
+            raise NotJudgeable(f"V-5 {path}: not a flattener output")
+        docs.append(doc)
+    return docs
+
+
+def _flat_bundle(docs: list[dict]) -> str | None:
+    """The bundle named in the flattener meta of all docs (None when a doc has no meta or they differ)."""
+    names = {(doc.get("meta") or {}).get("bundle") for doc in docs}
+    return names.pop() if len(names) == 1 and None not in names else None
+
+
+class _Items:
+    """Absolute items of one arm: violations and missing values (E-9: a missing value is a failure)."""
+
+    def __init__(self) -> None:
+        self.items: dict[str, dict] = {}
+
+    def add(self, name: str, ok: bool | None, detail=None) -> None:
+        item = self.items.setdefault(name, {"ok": True, "violations": 0, "missing": 0, "detail": []})
+        if ok is None:
+            item["missing"] += 1
+        elif not ok:
+            item["violations"] += 1
+        item["ok"] = item["violations"] == 0 and item["missing"] == 0
+        if detail is not None and not ok and len(item["detail"]) < 20:
+            item["detail"].append(detail)
+
+    def require(self, name: str) -> None:
+        """An item that must appear even when nothing was counted (an empty input is not a pass)."""
+        self.items.setdefault(name, {"ok": True, "violations": 0, "missing": 0, "detail": []})
+
+    def result(self) -> dict:
+        return {"passed": all(item["ok"] for item in self.items.values()), "items": self.items,
+                "missing": {name: item["missing"] for name, item in self.items.items() if item["missing"]}}
+
+
+def _equal_or_missing(value, expected) -> bool | None:
+    return None if value is None else value == expected
+
+
+def _absolute_common(items: _Items, metas: list[dict]) -> None:
+    """Rev2 1 common: step sidecar rc 0, no error rows, provenance c2_sha256."""
+    items.require("rc")
+    items.require("error_rows")
+    items.require("c2_sha256")
+    for meta in metas:
+        for step in meta.get("steps") or []:
+            sidecar = step.get("sidecar") or {}
+            items.add("rc", _equal_or_missing(sidecar.get("rc"), 0), step["step"])
+            provenance = step.get("provenance")
+            if provenance is None:  # step without a provenance record (judge steps: none; G8: rows only)
+                if not str(step["step"]).endswith("_judgement"):
+                    items.add("c2_sha256", None, f"{step['step']}: no provenance record")
+                continue
+            items.add("c2_sha256", _equal_or_missing(provenance.get("c2_sha256"), C2_SHA256_RUN), step["step"])
+        for part, source in (meta.get("sources") or {}).items():
+            count = source.get("error_rows")
+            items.add("error_rows", None if count is None else count == 0, f"{part}: {count}")
+
+
+def _absolute_rows(items: _Items, bundle: str, rows: list[dict]) -> None:
+    expected = V5_EXPECTED_ROWS.get(bundle)
+    if expected is not None:
+        items.add("rows", len(rows) == expected, f"{len(rows)} != {expected}")
+    if bundle in ("grid", "soil"):
+        items.require("fault_periods")
+        for row in rows:
+            value = row.get("fault_periods")
+            items.add("fault_periods", None if value is None else not value, row["key"])
+    if bundle == "soil":
+        items.require("soil_G1_J2_pass")
+        for row in rows:
+            if any(marker in row["key"] for marker in SOIL_ABSOLUTE_MARKERS):
+                items.add("soil_G1_J2_pass", bool(row.get("pass")), row["key"])
+    if bundle == "d8":
+        _absolute_d8(items, rows)
+
+
+def _absolute_d8(items: _Items, rows: list[dict]) -> None:
+    """Rev2 1 D8 row conditions with the raw values (missing = failure)."""
+    def at_most(value, limit):
+        return None if not d8x_judge._is_number(value) else value <= limit
+
+    for name in ("error", "fails", "fault", "min_force", "attitude", "ready"):
+        items.require(f"d8_{name}")
+    for row in rows:
+        key = row["key"]
+        items.add("d8_error", not row.get("error"), key)
+        fails = row.get("fails")
+        items.add("d8_fails", None if fails is None else not fails, key)
+        items.add("d8_fault", None if row.get("fault") is None else not row["fault"], key)
+        force = row.get("min_true_cyl_force_kN")
+        items.add("d8_min_force", None if not d8x_judge._is_number(force) else force >= GUARD_KN_V5, key)
+        items.add("d8_attitude", at_most(row.get("ss_true_att_deg_maxabs"), D8_ATTITUDE_LIMIT_DEG_V5), key)
+        items.add("d8_ready", at_most(row.get("t_ready_s"), D8_READY_LIMIT_S_V5), key)
+
+
+def _absolute_bundle_meta(items: _Items, bundle: str, metas: list[dict], rows: list[dict]) -> dict:
+    """Noise and regression items from the flattener's bundle meta; returns the recorded values."""
+    record: dict = {}
+    if bundle == "noise_L2":
+        failures = sum(not row.get("pass") for row in rows)
+        upper = cp_upper_95(failures, len(rows)) if rows else None
+        upper_b = cp_upper_95_bisection(failures, len(rows)) if rows else None
+        record.update(failures=failures, n=len(rows), cp95_upper_beta=upper, cp95_upper_bisection=upper_b)
+        items.add("noise_cp_beta", None if upper is None else upper <= NOISE_CP_LIMIT, upper)
+        items.add("noise_cp_bisection", None if upper_b is None else upper_b <= NOISE_CP_LIMIT, upper_b)
+    for meta in metas:
+        judgement = meta.get("r79_judgement")
+        if bundle in ("noise_L2", "regression"):
+            judgement = judgement or {}
+            items.add("r79_errors", _equal_or_missing(judgement.get("errors"), 0))
+            record["r79_judgement"] = judgement
+        if bundle == "noise_L2":  # rev4 1 (c): unmatched judged for the noise bundle only (a record for regression)
+            items.add("r79_unmatched", _equal_or_missing(judgement.get("unmatched"), 0),
+                      judgement.get("unmatched_keys"))
+            items.add("reference_all_false_loc", _equal_or_missing(judgement.get("reference_all_false_loc"), 0))
+            settings = meta.get("settings") or {}
+            present = (settings.get("preset_settings") is True and bool(settings.get("preset_sgs_keys"))
+                       and not settings.get("missing") and not settings.get("rows_without_sgs_keys"))
+            items.add("sgs_settings", None if not present else settings.get("mismatch_sgs") == 0,
+                      settings.get("differing_keys"))
+            record["settings"] = settings
+        if bundle == "regression":
+            keys = meta.get("regression_keys") or {}
+            items.add("regression_judged_keys", _equal_or_missing(keys.get("judged_sha256"),
+                                                                  REGRESSION_JUDGED_SHA256), keys.get("judged_n"))
+            items.add("regression_record_keys", _equal_or_missing(keys.get("record_sha256"),
+                                                                  REGRESSION_RECORD_SHA256), keys.get("record_n"))
+            record["regression_keys"] = keys
+    return record
+
+
+def v5_absolute(bundle: str, docs: list[dict]) -> dict:
+    """Rev2 1 absolute items of one arm (judged on the K-2 arm, recorded on the off arm)."""
+    metas = [doc.get("meta") or {} for doc in docs]
+    rows = [row for doc in docs for row in doc["runs"]]
+    items = _Items()
+    _absolute_common(items, metas)
+    _absolute_rows(items, bundle, rows)
+    record = _absolute_bundle_meta(items, bundle, metas, rows)
+    return {**items.result(), "record": record}
+
+
+def _tag_has_tcl(tag) -> bool | None:
+    return None if not isinstance(tag, str) else tag.endswith(v5_options.TOUCH_CREEP_TAG_SUFFIX)
+
+
+def v5_evidence(bundle: str, arm: str, docs: list[dict]) -> list[str]:
+    """Rev2 1 K-2 evidence of one arm (every provenance record, the G8 sidecar env, row tags and event rows);
+    any problem makes the bundle not judgeable."""
+    k2_on = arm == "tcl"
+    combo = V5_COMBO.get(bundle, V5_PRESET_COMBO)
+    problems = []
+    for meta in (doc.get("meta") or {} for doc in docs):
+        for step in meta.get("steps") or []:
+            problems += _step_evidence(step, bundle, arm, combo)
+    for row in (row for doc in docs for row in doc["runs"]):
+        if "touch_creep_latch" not in row and "controller_tag" not in row:
+            continue
+        if row.get("touch_creep_latch") is not k2_on or _tag_has_tcl(row.get("controller_tag")) is not k2_on:
+            problems.append(f"{arm} row {row['key']}: touch_creep_latch {row.get('touch_creep_latch')!r} / "
+                            f"tag {row.get('controller_tag')!r}")
+            if len(problems) > 40:
+                break
+    return problems
+
+
+def _step_evidence(step: dict, bundle: str, arm: str, combo: str) -> list[str]:
+    k2_on = arm == "tcl"
+    name = f"{arm} {step['step']}"
+    problems = []
+    provenance = step.get("provenance")
+    if bundle == "g8_safe_stop":
+        sidecar = step.get("sidecar") or {}
+        if sidecar.get("ACC_COMBO") != combo or sidecar.get("ACC_K2") != ARM_K2[arm]:
+            problems.append(f"{name}: sidecar ACC_COMBO {sidecar.get('ACC_COMBO')!r} / ACC_K2 "
+                            f"{sidecar.get('ACC_K2')!r} != {combo} / {ARM_K2[arm]}")
+    elif provenance is not None:
+        if not provenance.get("exists"):
+            problems.append(f"{name}: no provenance {provenance.get('source')}")
+        else:
+            if provenance.get("combo") != combo:
+                problems.append(f"{name}: combo {provenance.get('combo')!r} != {combo}")
+            if provenance.get("k2") != ARM_K2[arm]:
+                problems.append(f"{name}: k2 {provenance.get('k2')!r} != {ARM_K2[arm]}")
+            if provenance.get("touch_creep_latch") is not k2_on:
+                problems.append(f"{name}: touch_creep_latch {provenance.get('touch_creep_latch')!r}")
+            if _tag_has_tcl(provenance.get("controller_tag")) is not k2_on:
+                problems.append(f"{name}: controller_tag {provenance.get('controller_tag')!r}")
+    events = step.get("events")
+    if events is not None:
+        if k2_on and not events.get("latch_rows"):
+            problems.append(f"{name}: no row with {LATCH_EVENT} in {events.get('source')}")
+        if not k2_on and events.get("creep_rows"):
+            problems.append(f"{name}: {events['creep_rows']} rows with INFO_TOUCH_CREEP_* in {events.get('source')}")
+    return problems
+
+
+def _relative_keys(bundle: str, keys: list[str]) -> list[str]:
+    if bundle == "soil":
+        return [key for key in keys if not any(marker in key for marker in SOIL_ABSOLUTE_MARKERS)]
+    return keys
+
+
+def _g8_failures(spec: dict, common: list[str], off_by_key: dict, tcl_by_key: dict) -> list:
+    failures = []
+    for key in common:
+        a, b = off_by_key[key], tcl_by_key[key]
+        if bool(_dotted(a, spec["ready"])) and not bool(_dotted(b, spec["ready"])):
+            failures.append([key, "ready lost"])
+        old = {str(n).split(":")[0] for n in _dotted(a, spec["faults"]) or [] if str(n).startswith("FAULT_")}
+        new = {str(n).split(":")[0] for n in _dotted(b, spec["faults"]) or [] if str(n).startswith("FAULT_")}
+        if new - old:
+            failures.append([key, f"new FAULT {sorted(new - old)}"])
+        if spec.get("status") and _passed(a, spec["status"]) and not _passed(b, spec["status"]):
+            failures.append([key, "status pass->fail"])
+    return failures
+
+
+def _d8_record(common: list[str], off_by_key: dict, tcl_by_key: dict) -> dict:
+    """Rev2 1 D8 off-arm column (record): READY mean difference and the worst minimum-force difference."""
+    ready, force = [], []
+    for key in common:
+        a, b = off_by_key[key], tcl_by_key[key]
+        if d8x_judge._is_number(a.get("t_ready_s")) and d8x_judge._is_number(b.get("t_ready_s")):
+            ready.append(b["t_ready_s"] - a["t_ready_s"])
+        if d8x_judge._is_number(a.get("min_true_cyl_force_kN")) and d8x_judge._is_number(
+            b.get("min_true_cyl_force_kN")
+        ):
+            force.append(b["min_true_cyl_force_kN"] - a["min_true_cyl_force_kN"])
+    return {"ready_mean_delta_s": statistics.fmean(ready) if ready else None,
+            "min_force_worst_delta_kN": min(force) if force else None,
+            "pairs_ready": len(ready), "pairs_force": len(force)}
+
+
+def _relative(spec: dict, bundle: str | None, off_by_key: dict, tcl_by_key: dict) -> dict:
+    """Pass -> fail against the off arm (rev2 1 "off arm" column)."""
+    common = _relative_keys(bundle or "", sorted(set(off_by_key) & set(tcl_by_key)))
+    out: dict = {}
+    if spec["kind"] == "g8":
+        out["failures"] = _g8_failures(spec, common, off_by_key, tcl_by_key)
+        out["relative_passed"] = not out["failures"]
+        return out
+    out["pass_to_fail"] = [
+        k for k in common
+        if _passed(off_by_key[k], spec["status"]) and not _passed(tcl_by_key[k], spec["status"])
+    ]
+    out["relative_passed"] = not out["pass_to_fail"]
+    if bundle == "d8":
+        out["record"] = _d8_record(common, off_by_key, tcl_by_key)
+    return out
+
+
+V5_KINDS = ("pass_to_fail", "noise_cp", "g8", "absolute")
+
+
 def v5_bundle(spec: dict) -> dict:
-    """One V-5 bundle of the manifest (``kind`` pass_to_fail | noise_cp | g8; ``off`` / ``tcl`` file lists;
-    ``key`` / ``status`` dotted paths; g8 ``ready`` / ``faults``)."""
-    off = [row for path in spec["off"] for row in _runs_of(Path(path))]
-    tcl = [row for path in spec["tcl"] for row in _runs_of(Path(path))]
+    """One V-5 bundle of the manifest (rev2 1): the absolute items on the K-2 arm (recorded on the off arm), the
+    K-2 evidence of both arms and pass -> fail against the off arm (gating per :data:`V5_RELATIVE_GATES`).
+
+    ``kind``: ``pass_to_fail`` | ``noise_cp`` | ``g8`` (the comparison form) or ``absolute`` (absolute items
+    only); ``off`` / ``tcl`` flattener files; ``key`` / ``status`` dotted paths; g8 ``ready`` / ``faults``.
+    """
+    if spec["kind"] not in V5_KINDS:
+        raise NotJudgeable(f"V-5 kind {spec['kind']!r}")
+    off_docs, tcl_docs = _flat_docs(spec["off"]), _flat_docs(spec["tcl"])
+    off = [row for doc in off_docs for row in doc["runs"]]
+    tcl = [row for doc in tcl_docs for row in doc["runs"]]
+    bundle = _flat_bundle(off_docs + tcl_docs)
     off_by_key = {str(_dotted(row, spec["key"])): row for row in off}
     tcl_by_key = {str(_dotted(row, spec["key"])): row for row in tcl}
-    result = {
-        "kind": spec["kind"],
-        "n_off": len(off),
-        "n_tcl": len(tcl),
-        "unpaired": sorted(set(off_by_key) ^ set(tcl_by_key)),
-    }
+    result: dict = {"kind": spec["kind"], "bundle": bundle, "n_off": len(off), "n_tcl": len(tcl),
+                    "unpaired": sorted(set(off_by_key) ^ set(tcl_by_key))}
     if len(off_by_key) != len(off) or len(tcl_by_key) != len(tcl):
         result.update(passed=False, not_judgeable="duplicate keys")
         return result
-    common = sorted(set(off_by_key) & set(tcl_by_key))
-    if spec["kind"] in ("pass_to_fail", "noise_cp"):
-        result["pass_to_fail"] = [
-            k
-            for k in common
-            if _passed(off_by_key[k], spec["status"]) and not _passed(tcl_by_key[k], spec["status"])
-        ]
-    if spec["kind"] == "pass_to_fail":
-        result["passed"] = not result["pass_to_fail"]
-    elif spec["kind"] == "noise_cp":
-        failures = sum(not _passed(row, spec["status"]) for row in tcl)
-        result.update(failures=failures, cp95_upper=cp_upper_95(failures, len(tcl)))
-        result["passed"] = result["cp95_upper"] <= NOISE_CP_LIMIT
-    elif spec["kind"] == "g8":
-        failures = []
-        for key in common:
-            a, b = off_by_key[key], tcl_by_key[key]
-            if bool(_dotted(a, spec["ready"])) and not bool(_dotted(b, spec["ready"])):
-                failures.append([key, "ready lost"])
-            old = {
-                str(n).split(":")[0]
-                for n in _dotted(a, spec["faults"]) or []
-                if str(n).startswith("FAULT_")
-            }
-            new = {
-                str(n).split(":")[0]
-                for n in _dotted(b, spec["faults"]) or []
-                if str(n).startswith("FAULT_")
-            }
-            if new - old:
-                failures.append([key, f"new FAULT {sorted(new - old)}"])
-            if spec.get("status") and _passed(a, spec["status"]) and not _passed(b, spec["status"]):
-                failures.append([key, "status pass->fail"])
-        result.update(failures=failures, passed=not failures)
-    else:
-        raise NotJudgeable(f"V-5 kind {spec['kind']!r}")
-    if result["unpaired"]:
+    if bundle is None:
+        result.update(passed=False, not_judgeable="no k2_v5_flatten meta (rev2 1 absolute items)")
+        return result
+    relative_gates = V5_RELATIVE_GATES[bundle] and spec["kind"] != "absolute"
+    if spec["kind"] != "absolute":
+        result.update(_relative(spec, bundle, off_by_key, tcl_by_key))
+    result["relative_gates"] = relative_gates
+    result["absolute"] = {"tcl": v5_absolute(bundle, tcl_docs), "off_record": v5_absolute(bundle, off_docs)}
+    result["evidence"] = {"off": v5_evidence(bundle, "off", off_docs), "tcl": v5_evidence(bundle, "tcl", tcl_docs)}
+    result["missing"] = result["absolute"]["tcl"]["missing"]
+    result["passed"] = result["absolute"]["tcl"]["passed"] and (
+        not relative_gates or result.get("relative_passed", True)
+    )
+    evidence = result["evidence"]["off"] + result["evidence"]["tcl"]
+    if evidence:
+        result.update(passed=False, not_judgeable=f"K-2 evidence: {evidence[:5]}")
+    if result["unpaired"] and spec["kind"] != "absolute":
         result.update(passed=False, not_judgeable=f"unpaired keys {len(result['unpaired'])}")
     return result
+
+
+STORED_ACCEPTANCE_DIR = ROOT / "06_analysis" / "02_control" / "touch_phase" / "acceptance"
+STORED_PS7 = ROOT / "06_analysis" / "02_control" / "touch_phase" / "ps7_E.json"
+SELFTEST_KINDS = {"grid": "pass_to_fail", "soil": "pass_to_fail", "regression": "pass_to_fail",
+                  "d8": "pass_to_fail", "noise_L2": "noise_cp", "ps7": "pass_to_fail", "g8_safe_stop": "g8"}
+SELFTEST_ROWS = {"grid": 768, **V5_EXPECTED_ROWS}
+SELFTEST_SKIPPED_ITEMS = ("rc", "c2_sha256")
+"""Common items the stored acceptance outputs have no record for (sidecars, provenance): not checked here."""
+
+
+def selftest_v5_stored(acceptance_dir: Path, ps7_path: Path, work_dir: Path) -> dict:
+    """The V-5 reader on the stored final-controller acceptance outputs, the same files as both arms (as path 2
+    ``selftest-v5-stored``, rev4 2): every bundle must give its row count, no pass -> fail and every absolute
+    item except :data:`SELFTEST_SKIPPED_ITEMS` passed. K-2 evidence is not checked (no provenance there)."""
+    import k2_v5_flatten
+
+    g8 = acceptance_dir / "g8_safe_stop"
+    overrides = {"ps7:ps7": ps7_path,
+                 **{f"g8_safe_stop:g8_jobs{n}": g8 / f"out{n}.jsonl" for n in (1, 3, 5)}}
+    k2_v5_flatten.flatten(acceptance_dir, work_dir, overrides, checkout=ROOT, bundles=list(SELFTEST_KINDS),
+                          run_judge=False)
+    bundles = {}
+    for bundle, kind in SELFTEST_KINDS.items():
+        path = str(work_dir / f"{bundle}.json")
+        spec = {"kind": kind, "off": [path], "tcl": [path], "key": "key", "status": "pass"}
+        if kind == "g8":
+            spec.update(ready="ready", faults="faults")
+        result = v5_bundle(spec)
+        items = result["absolute"]["tcl"]["items"]
+        failing = sorted(name for name, item in items.items()
+                         if not item["ok"] and name not in SELFTEST_SKIPPED_ITEMS)
+        bundles[bundle] = {"rows": result["n_tcl"], "expected_rows": SELFTEST_ROWS[bundle],
+                           "relative_passed": result.get("relative_passed"), "failing_items": failing,
+                           "ok": result["n_tcl"] == SELFTEST_ROWS[bundle] and not failing
+                           and result.get("relative_passed") is True and not result["unpaired"]}
+    return {"bundles": bundles, "ok": all(block["ok"] for block in bundles.values()),
+            "skipped_items": list(SELFTEST_SKIPPED_ITEMS)}
+
+
+def cmd_selftest_v5_stored(args) -> tuple[int, dict]:
+    import tempfile
+
+    with tempfile.TemporaryDirectory(prefix="k2_selftest_v5_") as work:
+        result = selftest_v5_stored(Path(args.acceptance), Path(args.ps7), Path(work))
+    return (EXIT_PASS if result["ok"] else EXIT_FAIL), result
 
 
 def cmd_judge_v5(args) -> tuple[int, dict]:
@@ -901,10 +1407,21 @@ def cmd_judge_v5(args) -> tuple[int, dict]:
         "gate": {"G-D": gate},
         "bundles": bundles,
         "failed": failed,
+        "missing": {name: result.get("missing", {}) for name, result in bundles.items()},
         "problems": problems,
         "field_map": {
-            "V-5": "manifest v5.<bundle>: kind, off / tcl files, key / status (/ ready, "
-            "faults) dotted paths of the driver rows (rules 3.4)"
+            "V-5": "manifest v5.<bundle>: kind, off / tcl k2_v5_flatten files, key / status (/ ready, faults) "
+            "dotted paths of the flat rows (rules 3.4, rev2 1)",
+            "absolute (rev2 1)": "K-2 arm: meta.steps[].sidecar.rc == 0, meta.sources[].error_rows == 0, "
+            "steps[].provenance.c2_sha256 == C2_SHA256_RUN; grid / soil rows fault_periods; soil |G1| / |J2| "
+            "pass; d8 rows error / fails / fault / min_true_cyl_force_kN / ss_true_att_deg_maxabs / t_ready_s; "
+            "noise CP (beta, bisection), meta.r79_judgement unmatched / errors / reference_all_false_loc, "
+            "meta.settings.mismatch_sgs (lift_stroke_guard.* keys, rev4 1 (b)); regression "
+            "meta.regression_keys sha256, meta.r79_judgement errors (unmatched recorded, rev4 1 (c)); error = "
+            "a non-empty error value (rev4 1 (a)); row counts V5_EXPECTED_ROWS",
+            "evidence (rev2 1)": "steps[].provenance combo / k2 / touch_creep_latch / controller_tag, G8 "
+            "steps[].sidecar ACC_COMBO / ACC_K2, rows touch_creep_latch / controller_tag, steps[].events "
+            "latch_rows (K-2 >= 1) / creep_rows (off 0)",
         },
     }
 
@@ -962,6 +1479,78 @@ def false_latches(t_s, pad_N, latch_times: dict[int, float]) -> list[str]:
     return bad
 
 
+def chrono_option_problems(row: dict, engine: str) -> list[str]:
+    """Rev2 4 V-6: L1 rows with the moving-leg pad damping on (zeta 0.10) and four valve-open shares (I-9), L2b
+    rows with it off."""
+    moving_on = engine == "L1"
+    problems = []
+    if row.get("moving_damping") is not moving_on:
+        problems.append(f"E-5 moving_damping {row.get('moving_damping')!r} (expected {moving_on})")
+    zeta = row.get("pad_zeta_moving")
+    if (moving_on and not _close(zeta, PAD_ZETA_MOVING)) or (not moving_on and zeta is not None):
+        problems.append(f"E-5 pad_zeta_moving {zeta!r}")
+    if moving_on:
+        share = open_share_problem(row.get("valve_open_fraction_touch_to_lift"))
+        if share:
+            problems.append(f"I-9 {share}")
+    return problems
+
+
+def _chrono_sh2(spec: dict, t_touch_s) -> float | None:
+    """SH-2 of a Chrono row (rev2 3): ``k2_rate.npz`` body roll / pitch rate over [t_touch - 0.3 s, t_touch)."""
+    import numpy as np
+
+    path = spec.get("rate_npz")
+    if not path or not Path(path).is_file():
+        return None
+    with np.load(path, allow_pickle=False) as rate:
+        t_s, omega = np.asarray(rate["t"], float), np.asarray(rate["body_omega"], float).reshape(-1, 3)
+    return k2_record.sh2_rate_amplitude_deg_s(t_s, omega, t_touch_s)
+
+
+def chrono_sh(rows: list[dict], f_d8: float) -> dict:
+    """Rev2 3: SH-1 .. SH-6 of the eight V-6 rows as one bundle (pairs ``<base>_off`` / ``<base>_tcl``);
+    missing values are FLAGs with their counts, SH-2 needs four values per arm."""
+    label = "V-6"
+    k2_rows = [row for row in rows if row["k2_on"]]
+    off_rows = [row for row in rows if not row["k2_on"]]
+    missing = dict.fromkeys(("SH-1", "SH-2", "SH-3", "SH-4", "SH-5", "SH-6"), 0)
+    flags = _sh_row_flags(k2_rows, f_d8, label, missing)
+    l1_false = sum(len(row["false_latch"]) for row in k2_rows if row["engine"] == "L1")
+    if l1_false:
+        flags.append({"flag": "SH-5", "bundle": label, "l1_false_latches": l1_false})
+    sh2_k2 = [row.get("sh2") for row in k2_rows]
+    sh2_off = [row.get("sh2") for row in off_rows]
+    missing["SH-2"] = sum(not d8x_judge._is_number(v) for v in sh2_k2 + sh2_off)
+    k2_median, off_median = _median(sh2_k2), _median(sh2_off)
+    enough = all(sum(d8x_judge._is_number(v) for v in values) >= 4 for values in (sh2_k2, sh2_off))
+    if not enough:
+        flags.append({"flag": "SH-2", "bundle": label, "fewer_than_4_values": True})
+    elif k2_median > off_median:
+        flags.append({"flag": "SH-2", "bundle": label, "k2_median": k2_median, "off_median": off_median})
+    off_by_base = {row["id"].removesuffix("_off"): row for row in off_rows}
+    delays = {}
+    for row in k2_rows:
+        base = row["id"].removesuffix("_tcl")
+        a, b = row.get("t_ready_s"), (off_by_base.get(base) or {}).get("t_ready_s")
+        if not (d8x_judge._is_number(a) and d8x_judge._is_number(b)):
+            missing["SH-3"] += 1
+            continue
+        delays[base] = a - b
+        if a - b > SH3_READY_DELAY_S:
+            flags.append({"flag": "SH-3", "bundle": label, "id": base, "delay_s": a - b})
+    j1_k2, j1_off = [_row_j(r, "J1_N") for r in k2_rows], [_row_j(r, "J1_N") for r in off_rows]
+    missing["SH-4"] = sum(not d8x_judge._is_number(v) for v in j1_k2 + j1_off)
+    erosion = None
+    if not missing["SH-4"] and j1_k2 and j1_off:
+        erosion = min(j1_k2) - min(j1_off)
+        if erosion < SH4_J1_EROSION_N:
+            flags.append({"flag": "SH-4", "bundle": label, "min_J1_difference_N": erosion})
+    return {"bundle": label, "flags": flags + _sh_missing_flags(missing, label), "missing": missing,
+            "sh2_medians": [k2_median, off_median], "sh4_min_J1_difference_N": erosion,
+            "ready_delay_s": delays, "l1_false_latches": l1_false}
+
+
 def judge_chrono_k2_row(name: str, spec: dict, f_d8: float) -> dict:
     import numpy as np
 
@@ -1009,6 +1598,7 @@ def judge_chrono_k2_row(name: str, spec: dict, f_d8: float) -> dict:
     if k2_on and spec["engine"] == "L2b":
         items["V6_false_latch"] = not false
         items["V6_cap_latch"] = cap == 0
+    problems += chrono_option_problems(row, spec["engine"])
     fail_items = sorted(k for k, ok in items.items() if not ok)
     return {
         "id": name,
@@ -1022,6 +1612,10 @@ def judge_chrono_k2_row(name: str, spec: dict, f_d8: float) -> dict:
         "J3_margin_N": float(np.min(pad_N[after_touch])) if after_touch.any() else None,
         "false_latch": false,
         "cap": cap,
+        "t_ready_s": row["t_ready_s"],
+        "has_h4": bool(row["reanchor_intervals_s"]),
+        "sh1": k2_record.sh1_lift_chunks_after_latch(t_s, pad_N, row["events"], row["t_touch_s"]),
+        "sh2": _chrono_sh2(spec, row["t_touch_s"]),
         "values": judged["values"],
         # rules rev1 4, record only: the cad runner writes k2_row.json k2.dhat_* (path 2 reads the same)
         "dhat_N": (row.get("k2") or {}).get("dhat_N"),
@@ -1048,10 +1642,12 @@ def cmd_judge_v6(args) -> tuple[int, dict]:
         {row["id"].removesuffix(stem["off"]): row["dhat_N"] for row in rows if not row["k2_on"]},
         "V-6",
     )
+    sh = chrono_sh(rows, f_d8)
     return status, {
         "bundle": "V-6",
         "gate": {"G-E": _gate_value(status, [summary])},
         "summary": summary,
+        "sh": [sh],
         "dhat": dhat,
         "rows": rows,
         "problems": problems,
@@ -1061,6 +1657,12 @@ def cmd_judge_v6(args) -> tuple[int, dict]:
             "J3": "pads N <= 0 after t_touch_s",
             "false latch": "rules 3.5 L2b",
             "D_hat (rev1 4, record)": "k2.dhat_N, k2.dhat_window_open_legs, k2.dhat_window_stroke_mm",
+            "SH (rev2 3)": "SH-1 pads_npz N <= 0 after each leg's latch and before t_touch_s; SH-2 rate_npz "
+            "body_omega[:, :2] over [t_touch_s - 0.3, t_touch_s), medians of 4 + 4 rows; SH-3 t_ready_s "
+            "pairs; SH-4 min J1_min_cyl_after_lift_N per arm; SH-5 events INFO_TOUCH_CREEP_CAP + L1 false "
+            "latches; SH-6 J1 / J2 (rows with reanchor_intervals_s) < F_D8 + 2 kN",
+            "E-5 / I-9 (rev2 4)": "moving_damping, pad_zeta_moving (L1 0.10, L2b None), "
+            "valve_open_fraction_touch_to_lift (L1: 4 legs in [0, 1])",
         },
     }
 
@@ -1151,6 +1753,9 @@ def _parser() -> argparse.ArgumentParser:
             "series_root, points, stored_off; v3: arms.<arm>.off / tcl; v5: bundles; "
             "v6 / v7: rows)",
         )
+    selftest = sub.add_parser("selftest-v5-stored")
+    selftest.add_argument("--acceptance", default=str(STORED_ACCEPTANCE_DIR))
+    selftest.add_argument("--ps7", default=str(STORED_PS7))
     report = sub.add_parser("report")
     for bundle in GATE_FILES:
         report.add_argument(f"--{bundle}", default=None, help=f"judge-{bundle} output JSON")
@@ -1169,6 +1774,7 @@ COMMANDS = {
     "judge-v5": cmd_judge_v5,
     "judge-v6": cmd_judge_v6,
     "record-v7": cmd_record_v7,
+    "selftest-v5-stored": cmd_selftest_v5_stored,
     "report": cmd_report,
 }
 

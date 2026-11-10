@@ -230,20 +230,31 @@ def test_shadow_flags() -> None:
 
 
 def test_v5_bundles(tmp_path) -> None:
+    """Relative part of ``v5_bundle``; flat files without the flattener meta are not judgeable (rev2 1)."""
+    meta = {"tool": "k2_v5_flatten", "bundle": "ps7", "sources": {}, "steps": []}
     off = tmp_path / "off.json"
     tcl = tmp_path / "tcl.json"
-    off.write_text(json.dumps({"runs": [{"key": "a", "pass": True}, {"key": "b", "pass": False}]}), "utf-8")
-    tcl.write_text(json.dumps({"runs": [{"key": "a", "pass": False}, {"key": "b", "pass": True}]}), "utf-8")
+    off.write_text(json.dumps({"meta": meta, "runs": [{"key": "a", "pass": True}, {"key": "b", "pass": False}]}),
+                   "utf-8")
+    tcl.write_text(json.dumps({"meta": meta, "runs": [{"key": "a", "pass": False}, {"key": "b", "pass": True}]}),
+                   "utf-8")
     spec = {"kind": "pass_to_fail", "off": [str(off)], "tcl": [str(tcl)], "key": "key", "status": "pass"}
     result = k2_judge.v5_bundle(spec)
     assert result["pass_to_fail"] == ["a"] and result["passed"] is False
-    g8_off = tmp_path / "g8_off.jsonl"
-    g8_tcl = tmp_path / "g8_tcl.jsonl"
-    g8_off.write_text(json.dumps({"key": "k", "final": "READY", "wf": ["FAULT_X:1"]}) + "\n", "utf-8")
-    g8_tcl.write_text(json.dumps({"key": "k", "final": "READY", "wf": ["FAULT_X:2"]}) + "\n", "utf-8")
+    bare = tmp_path / "bare.json"
+    bare.write_text(json.dumps({"runs": [{"key": "a", "pass": True}]}), "utf-8")
+    no_meta = k2_judge.v5_bundle({**spec, "off": [str(bare)], "tcl": [str(bare)]})
+    assert no_meta["passed"] is False and "meta" in no_meta["not_judgeable"]
+    g8_meta = {**meta, "bundle": "g8_safe_stop"}
+    g8_off = tmp_path / "g8_off.json"
+    g8_tcl = tmp_path / "g8_tcl.json"
+    g8_off.write_text(json.dumps({"meta": g8_meta, "runs": [{"key": "k", "final": "READY", "wf": ["FAULT_X:1"]}]}),
+                      "utf-8")
+    g8_tcl.write_text(json.dumps({"meta": g8_meta, "runs": [{"key": "k", "final": "READY", "wf": ["FAULT_Y:2"]}]}),
+                      "utf-8")
     g8 = {"kind": "g8", "off": [str(g8_off)], "tcl": [str(g8_tcl)], "key": "key", "ready": "final",
           "faults": "wf"}
-    assert k2_judge.v5_bundle(g8)["passed"] is True
+    assert k2_judge.v5_bundle(g8)["failures"] == [["k", "new FAULT ['FAULT_Y']"]]
 
 
 def test_grade_order() -> None:
