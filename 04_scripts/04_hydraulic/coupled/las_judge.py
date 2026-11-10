@@ -22,8 +22,9 @@ rev3 / rev4 / the rev3 key list when present) are the sealed texts; a T-1 varian
 with the key set of appendix A, T-2 only with appendix B (H-R-A 136 + H-R-0 48); C3 fails when
 either line has no ``event_names``; C5 fails when either stroke is None (READY: a baseline READY
 the run lost fails, both None pass).
-T-3 (sealed ``las_targeted_rules_rev3.md`` 3 / 4, rev4 1 #1) is judged by ``las_t3_judge.py``
-(``--stage T-3``).
+T-3 (sealed ``las_targeted_rules_rev3.md`` 3 / 4, rev4 1 #1; since 2026-11-10
+``las_targeted_rules_rev5.md``, ``--t3-rules rev5`` the default, ``rev4c`` the rev3 judge) is
+judged by ``las_t3_judge.py`` (``--stage T-3``).
 
 Usage (python-dev or dynamics-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/las_judge.py [--stage] T-0|T-1|T-2 <jsonl>
@@ -31,6 +32,7 @@ Usage (python-dev or dynamics-dev, project root):
       [--candidate NAME] [--out <md>]
   python -I -B 04_scripts/04_hydraulic/coupled/las_judge.py --stage T-3 <las_T3.jsonl>
       --r0 <las_T3_R0.jsonl> [--baseline <d1.jsonl>] [--keys <rev3 keys json>]
+      [--t3-rules rev5|rev4c] [--r0k <las_T3_R0K.jsonl>] [--r0k-keys <rev5 R-0K keys json>]
       [--out <md>] [--json-out <json>]   (outputs are new files only)
 The last stdout line is JSON. Exit codes T-0 .. T-2: 0 judged without a stop, 1 a stop
 (H-1 .. H-4), 2 input error (a seal mismatch included); T-3: ``las_t3_judge`` (0 / 1 / 2).
@@ -496,6 +498,12 @@ def _parse_args(argv: list[str] | None):
     parser.add_argument("--candidate", default=None)
     parser.add_argument("--r0", type=Path, default=None, help="T-3: the R-0 lines")
     parser.add_argument("--keys", type=Path, default=None, help="T-3: the rev3 key list")
+    parser.add_argument("--r0k", type=Path, default=None,
+                        help="T-3 rev5: the R-0K lines (default: next to the T-3 lines)")
+    parser.add_argument("--r0k-keys", type=Path, default=None,
+                        help="T-3 rev5: the sealed R-0K key list")
+    parser.add_argument("--t3-rules", choices=("rev5", "rev4c"), default="rev5",
+                        help="T-3: rules mode of las_t3_judge (rev5 default)")
     parser.add_argument("--out", type=Path, default=None, help="Markdown report")
     parser.add_argument("--json-out", type=Path, default=None, help="T-3: judge JSON")
     args = parser.parse_args(argv)

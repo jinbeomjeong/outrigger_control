@@ -1,0 +1,808 @@
+{
+ "schema": "las_targeted_rules_rev5_r0k_keys/1",
+ "rules": "las_targeted_rules_rev5.md 2, 3",
+ "selection": "T-3a, T-3c and R-0 D-1 keys of las_targeted_rules_rev3_keys.json whose v5/d1.jsonl line has event_names['INFO_LOC_FLAT_SOIL_MARGIN'] > 0, union the five R-0 D-1 keys",
+ "d1_baseline": {
+  "path": "06_analysis/03_hydraulic/coupled/v5/d1.jsonl",
+  "sha256": "9039b36a1a9c4ba5ed63528bb7384773018d4c7377dccbf76b18fbcfda86707f"
+ },
+ "rev3_keys": {
+  "path": "06_analysis/02_control/verif_matrix/las_targeted_rules_rev3_keys.json",
+  "sha256": "3602438d047b6a35829bda013921972411d10b0906153eba8bdc9760e7888553"
+ },
+ "list_sha256": {
+  "definition": "sha256 of the sorted keys, each followed by LF, UTF-8",
+  "value": "9399c4922828973fe5129c6c5964dc2cf6c53137a8858d1f92e69f9c85452e3c"
+ },
+ "count": 45,
+ "class_counts": {
+  "uniform_r4": 36,
+  "patch_r4": 5,
+  "r0_no_r4": 4
+ },
+ "bundle_counts": {
+  "R-0": 5,
+  "T-3a": 39,
+  "T-3c": 6
+ },
+ "run_condition": {
+  "las": "off",
+  "order_gate": "on",
+  "tags": {
+   "V0": "final_C4G2_K1",
+   "VB": "final_C4G2_P3_K1"
+  }
+ },
+ "R-0K": [
+  {
+   "key": "D1|H-S-0|G1|T|flat|K1|V0|e0",
+   "group": "H-S-0",
+   "setting": "V0",
+   "eps": 0.0,
+   "bundles": [
+    "R-0",
+    "T-3a"
+   ],
+   "class": "r0_no_r4",
+   "stored_commands_sha256": "f805759d470564978e6311430f265394c734e84ebdeb7712f8de5f2386e2036f",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 0,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J1|B|flat|K1|V0|e0",
+   "group": "H-S-0",
+   "setting": "V0",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "6a482cca8314279607a783d3603d59b1a072feda5614812fb9e164dacecbfc2b",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J1|B|flat|K1|V0|e0.002",
+   "group": "H-S-0",
+   "setting": "V0",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "e2f3d2a42e6cf68b72a4519d33e35063409eb055911227b97e09678df7b5292d",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J1|B|flat|K1|VB|e0",
+   "group": "H-S-0",
+   "setting": "VB",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "66111f54953e7cdab8d959a9f9a918b46cbc31f8789911a39aae480507a6aa43",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J1|B|flat|K1|VB|e0.002",
+   "group": "H-S-0",
+   "setting": "VB",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "240cfadd1bca9030ca43adbb26c72b0e5b20c0ba1c40f1893923d2ab17516591",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J1|M|flat|K1|V0|e0",
+   "group": "H-S-0",
+   "setting": "V0",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "525f9e5c7089a227baf8e8bce4b7ffa49e4577b512ae2a0c82d7ee153cfb71e2",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J1|M|flat|K1|V0|e0.002",
+   "group": "H-S-0",
+   "setting": "V0",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "c47dad3d21ac07f8e595e254b785e8c78bbacdf2cea5a7fd5940903d33e9b234",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J1|M|flat|K1|VB|e0",
+   "group": "H-S-0",
+   "setting": "VB",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "3378f09f4e978923641985397380713109ec86bc587e3a5a631db1c61a01206c",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J1|M|flat|K1|VB|e0.002",
+   "group": "H-S-0",
+   "setting": "VB",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "591c04892bd3ab4a344059ec89c9f278a4408c8dd07826fc64c166de4f7448fe",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J1|T|diag-rec|K1|VB|e0",
+   "group": "H-S-0",
+   "setting": "VB",
+   "eps": 0.0,
+   "bundles": [
+    "R-0",
+    "T-3a"
+   ],
+   "class": "r0_no_r4",
+   "stored_commands_sha256": "b222e3ec3ab2f53456f8a66ecb4cc565880a0df1ab2476841ecfde79392772dd",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 0,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J1|T|flat|K1|V0|e0",
+   "group": "H-S-0",
+   "setting": "V0",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "2a3b8618080698f7bd95258c100000b57d7de413f473be45a63989e0d1fe66c4",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J1|T|flat|K1|V0|e0.002",
+   "group": "H-S-0",
+   "setting": "V0",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "e7ed750bf95993f488dbea96873d552d4d02b70ca26d60e4bcc1dc12b4cd4f57",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J1|T|flat|K1|VB|e0",
+   "group": "H-S-0",
+   "setting": "VB",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "4cdb5661e644adc4fadff1092f9021b16ffb5d8f6e586164ea0973298c2054fa",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J1|T|flat|K1|VB|e0.002",
+   "group": "H-S-0",
+   "setting": "VB",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "4ad557185b80e60c0e3aa640017e5765734774597067843f7ac09b0a0c6d942e",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J2|B|flat|K1|V0|e0",
+   "group": "H-S-0",
+   "setting": "V0",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "60f3c58e5c48e0b5c0c7ae6529c5b6a4e2111c20ec9a59b11577c3748dd6bb0c",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J2|B|flat|K1|V0|e0.002",
+   "group": "H-S-0",
+   "setting": "V0",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "f89c43291d6149ed97e52c0ecb0af4a4bfc17aef939467f9bd585f3fe5712c2e",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J2|B|flat|K1|VB|e0",
+   "group": "H-S-0",
+   "setting": "VB",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "5fa3c7ec1f66340b6b437cd2e6888d951510c13e869e4d2b6575642dc0213455",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J2|B|flat|K1|VB|e0.002",
+   "group": "H-S-0",
+   "setting": "VB",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "54717e21dc73e6de69712d31f5285736d6fe1a76d1c907cf7d21da9352a96ac1",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J2|M|flat|K1|V0|e0",
+   "group": "H-S-0",
+   "setting": "V0",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "bfc9de8e6a2d58847a671f8879ccd895752f9224e2c030c70b640bfbe084f119",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J2|M|flat|K1|V0|e0.002",
+   "group": "H-S-0",
+   "setting": "V0",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "6a4fe5149768b52218981e2b255adb6d288babc2ccc56945423e41640ea3aa5b",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J2|M|flat|K1|VB|e0",
+   "group": "H-S-0",
+   "setting": "VB",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "beed3a19ed74dcaab05ada827c74bee59be91fe331a071ae894b2654ee832311",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J2|M|flat|K1|VB|e0.002",
+   "group": "H-S-0",
+   "setting": "VB",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "ba0fc1b1d47f80c924c1c53ce1152fea7f0a213ffde343a391f420ab03a65557",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J2|M|fup-rec|K1|V0|e0.002",
+   "group": "H-S-0",
+   "setting": "V0",
+   "eps": 0.002,
+   "bundles": [
+    "R-0",
+    "T-3a"
+   ],
+   "class": "r0_no_r4",
+   "stored_commands_sha256": "b69afe22474670b455955eaf38371e4545dc42da49305f6321a929fe440a3019",
+   "stored_controller_tag": null,
+   "stored_verdict": "allowed_stop",
+   "stored_r4c30_count": 0,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J2|T|flat|K1|V0|e0",
+   "group": "H-S-0",
+   "setting": "V0",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "a910b63b503d774a7e46c75a3d3a1d82ff3b35acb701385934cac3e989c6579b",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J2|T|flat|K1|V0|e0.002",
+   "group": "H-S-0",
+   "setting": "V0",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "a8597f4610a76e88922f42ed366e56315b5c4c33c38351e997c39f2c3808c43a",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J2|T|flat|K1|VB|e0",
+   "group": "H-S-0",
+   "setting": "VB",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "f28319bf5a8f43bb4ca014ab85bfb9763290259356e1b0d502ba9b78f367dc3f",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-0|J2|T|flat|K1|VB|e0.002",
+   "group": "H-S-0",
+   "setting": "VB",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "5567b0f350c07a23295537991713e0cca2da1932e33f837adc472d0b2b1ddbd7",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-1|S1|B|flat|K1|V0|e0",
+   "group": "H-S-1",
+   "setting": "V0",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "977dc20f93f0a889c828177d12ddda7fb64c35a909133ca682d2e2abe0ccb848",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-1|S1|B|flat|K1|V0|e0.002",
+   "group": "H-S-1",
+   "setting": "V0",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "dbdc810b56f8233eddfa17225df0204db5ff8ec39a267c56cfede3659f020e04",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-1|S1|B|flat|K1|VB|e0",
+   "group": "H-S-1",
+   "setting": "VB",
+   "eps": 0.0,
+   "bundles": [
+    "R-0",
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "a416584957909540d6ad40bfcb6d266649fa09ca7b75a4f374d922ab692deda1",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-1|S1|B|flat|K1|VB|e0.002",
+   "group": "H-S-1",
+   "setting": "VB",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "7ca89b4a949eeef173ff36ab9f0fc9e3e691a61675dc755c1d2b82430b54bdc5",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-1|S1|M|flat|K1|V0|e0",
+   "group": "H-S-1",
+   "setting": "V0",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "4c04dc45a4e55bdea7444d2a2199f4fc30982d2e914d04613b4cb5b9f4efe697",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-1|S1|M|flat|K1|V0|e0.002",
+   "group": "H-S-1",
+   "setting": "V0",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "7bdc61c8c3f16e77cd5bbcdd2d5270e237f11aa4d09cbf37f348ebed098b8eb5",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-1|S1|M|flat|K1|VB|e0",
+   "group": "H-S-1",
+   "setting": "VB",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "544bbf18449dbf6e75ae73b00f8bdf167ed23c7ac1a2047ded452116c60552c9",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-1|S1|M|flat|K1|VB|e0.002",
+   "group": "H-S-1",
+   "setting": "VB",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "cd94f90e8ed8a287d45b3d9e107c9c0f1fcbddd76f46744c802eadf57eb1cd98",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-1|S1|T|flat|K1|V0|e0",
+   "group": "H-S-1",
+   "setting": "V0",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "1cce0fb640bc6ed84b1ddaabb4800805bff808f83b7a853cbccf471783ee0dda",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-1|S1|T|flat|K1|V0|e0.002",
+   "group": "H-S-1",
+   "setting": "V0",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "247aa5ad16c0a24b26f381bfde240f78e52b657a48fc241b5c778d5e24d8a0bd",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-1|S1|T|flat|K1|VB|e0",
+   "group": "H-S-1",
+   "setting": "VB",
+   "eps": 0.0,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "47ead0c3a7de6242e1acd910a4a70b12ac794cedbca56b9d7eefff0a6aafba3f",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-1|S1|T|flat|K1|VB|e0.002",
+   "group": "H-S-1",
+   "setting": "VB",
+   "eps": 0.002,
+   "bundles": [
+    "T-3a"
+   ],
+   "class": "uniform_r4",
+   "stored_commands_sha256": "9aef943f98d90de493909802c484e43fc959fe1f83333e26f984e0260b51c7e5",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  },
+  {
+   "key": "D1|H-S-A-J2|G1+J2@FL|T|flat|K1|V0|e0",
+   "group": "H-S-A-J2",
+   "setting": "V0",
+   "eps": 0.0,
+   "bundles": [
+    "T-3c"
+   ],
+   "class": "patch_r4",
+   "stored_commands_sha256": "4761352bd10a9a548e19bb75866c8ea6f24708365062e9e58c8ad3355ca53a24",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": true,
+   "ypa_sc_b0_commands_sha256": "4761352bd10a9a548e19bb75866c8ea6f24708365062e9e58c8ad3355ca53a24",
+   "ypa_sc_b0_equals_stored": true
+  },
+  {
+   "key": "D1|H-S-A-J2|G1+J2@FL|T|flat|K1|V0|e0.002",
+   "group": "H-S-A-J2",
+   "setting": "V0",
+   "eps": 0.002,
+   "bundles": [
+    "T-3c"
+   ],
+   "class": "patch_r4",
+   "stored_commands_sha256": "5321ca45c2549dfc592a38b7d0c07457a4051895f32bb4ac7b58931906a5afc1",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": true,
+   "ypa_sc_b0_commands_sha256": "39278322f8775f25bf6c4e2c2f3f2ca8c4c9146f8f3b0e18365d3c8cbdc1d538",
+   "ypa_sc_b0_equals_stored": false
+  },
+  {
+   "key": "D1|H-S-A-J2|G1+J2@FL|T|flat|K1|VB|e0",
+   "group": "H-S-A-J2",
+   "setting": "VB",
+   "eps": 0.0,
+   "bundles": [
+    "T-3c"
+   ],
+   "class": "patch_r4",
+   "stored_commands_sha256": "ef9c697336e4fcace544016260afb84c927fda0d71d800bc7ff97765f14ecd4a",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": true,
+   "ypa_sc_b0_commands_sha256": "84e60b8d062a472df8271a80e839af923b824a512030a67c64ab082d35b2a7eb",
+   "ypa_sc_b0_equals_stored": false
+  },
+  {
+   "key": "D1|H-S-A-J2|G1+J2@FL|T|flat|K1|VB|e0.002",
+   "group": "H-S-A-J2",
+   "setting": "VB",
+   "eps": 0.002,
+   "bundles": [
+    "T-3c"
+   ],
+   "class": "patch_r4",
+   "stored_commands_sha256": "ac1f2662b3cdb342dde9a92fd877519193b9baa5e11d20be99086e2b7f44a56a",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": true,
+   "ypa_sc_b0_commands_sha256": "66c5e1b0f1341b8c70a579d9e72e6dfa754fcd638c73e8fad87364179a1ee81b",
+   "ypa_sc_b0_equals_stored": false
+  },
+  {
+   "key": "D1|H-S-A|G1+J1@FL|B|flat|K1|V0|e0.002",
+   "group": "H-S-A",
+   "setting": "V0",
+   "eps": 0.002,
+   "bundles": [
+    "T-3c"
+   ],
+   "class": "patch_r4",
+   "stored_commands_sha256": "ea32519dd82181468228be5c44a6e55bfb4a29e9f7fc801903f8de4e71d170fc",
+   "stored_controller_tag": null,
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 1,
+   "predicted_would_block": true,
+   "ypa_sc_b0_commands_sha256": "ea32519dd82181468228be5c44a6e55bfb4a29e9f7fc801903f8de4e71d170fc",
+   "ypa_sc_b0_equals_stored": true
+  },
+  {
+   "key": "D1|H-S-A|G1+J1@FL|T|flat|K1|VB|e0",
+   "group": "H-S-A",
+   "setting": "VB",
+   "eps": 0.0,
+   "bundles": [
+    "R-0",
+    "T-3c"
+   ],
+   "class": "r0_no_r4",
+   "stored_commands_sha256": "fae9b3900c9dc13dbe6fa3e9a8a38510da058f268af09684f8e51313ab35fe06",
+   "stored_controller_tag": "final_C4G2_P3",
+   "stored_verdict": "pass",
+   "stored_r4c30_count": 0,
+   "predicted_would_block": false,
+   "ypa_sc_b0_commands_sha256": null,
+   "ypa_sc_b0_equals_stored": null
+  }
+ ]
+}
