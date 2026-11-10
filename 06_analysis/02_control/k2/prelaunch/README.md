@@ -15,9 +15,9 @@
 | 대상 | 값 | 확인 방법 |
 |---|---|---|
 | 원판 / rev1 / 명세 sha256 | `a3658197…7263` / `5ba081c6…4776` / `502b0bb7…27ff` | raw sha256 |
-| rev2 / rev3 / rev4 / rev5 / rev6 sha256 (결과 전) | `b3f1b41f…94ea` / `8bcdb0ed…6e61` / `82160ff5…00c5` / `73b87758…eccc` / `21268203…ea0e` | raw sha256 |
+| rev2 / rev3 / rev4 / rev5 / rev6 / rev7 sha256 (결과 전) | `b3f1b41f…94ea` / `8bcdb0ed…6e61` / `82160ff5…00c5` / `73b87758…eccc` / `21268203…ea0e` / `52d7dba9…9840` | raw sha256 |
 | 경로 2 `k2_recount.py` **1.5** blob (판정 때 병합 뒤 main에서 실행. k2-run에는 1.2가 있다) | `e1e16a9c5864e5a724f976eb6dda8456f14ff0a7`. 쓰지 않은 이전 blob: 1.2 `d2240795…`, 1.3 `78a3d2c7…`, 1.4 `1cde20d2…` | `git rev-parse <판정 커밋>:<path>` |
-| 경로 1 `k2_judge.py` (python-expert `k2-path1-rev6` `728ace5`, rev6) | `c285b8c9e04c30c289a29d0d7a620c00fb4ec906`. `b41d2587…`·`9bbcc201…`·`7ee9ccc1…`은 쓰지 않음 | 같음 |
+| 경로 1 `k2_judge.py` (python-expert `k2-path1-rev6b` `5d28db4`, blob id만 전달받음) | `74d72d5e1747e11c8b89e0adb177e952d3b598a7`. `c285b8c9…`·`b41d2587…`·`9bbcc201…`·`7ee9ccc1…`은 쓰지 않음 | 같음 |
 | `k2_v5_flatten.py` (같은 커밋. 행에 `verdict_missing` 추가 → `flat_main`은 이 판으로 만든다) | `b385119095b97568a4c8f82f685e3c920ee50d2b`. `654bc38c…`·`d9e3f2d9…`·`a83abd80…`은 쓰지 않음 | 같음 |
 | `run_with_identity.py` | `fab7664bd3ba16723e4202bf71dc7d87ab0cf7f0` | 같음 |
 | `run_ps7.py` | `248f5363cbdbaf1bc20eac3ef5e73bdfd6e05acd` | 같음 |
@@ -168,11 +168,46 @@ worker-초 추정이다.
   - dynamics-dev의 skip 34건과 fail 1건(`test_open_fraction`)은 모두 그 env에 pychrono가 없어서 생겼다. 로그에서 `ModuleNotFoundError: pychrono`를 확인했다. 같은 파일을 Chrono-dev에서 다시 돌렸고 모두 통과했다(`test_open_fraction` 포함).
   - 메인 세션은 이와 별도로 master `6d11d13`, Chrono-dev에서 K-2 판정 시험 147건을 돌려 모두 통과했다. 이것은 실행 checkout이 아니라 판정 도구 기준의 확인이다.
 
-## 7.2 경로 독립성 공개 (rev6 5절, 사용자 결정)
+## 7.2 경로 독립성 공개 (rev7 1·2절, rev6 5절 정정, 사용자 결정)
 
-- 결과가 나오기 전에, 메인 세션이 경로 1의 **정의 요약**(코드가 아님)을 경로 2 작성자(control-expert)에게 전달해 두 경로를 정렬했다(rev5·rev6 작성 과정).
-- 경로 1(`k2_judge.py`)은 경로 2 코드를 일부 참조했다. docstring이 경로 2 내부를 가리키고, `false_latches`가 경로 2 `false_latch`와 거의 같다(재감사 기록 d).
-- 원판 8절은 경로 2만 제한하므로 규칙 위반은 아니다. 다만 같은 실수가 두 경로에 함께 들어갔을 가능성이 있다. 판정서에도 같은 문구를 적는다.
+모두 결과 0건 시점의 일이다.
+
+- 메인 세션은 경로 1의 **정의 요약**(코드가 아님)을 경로 2 작성자(control-expert)에게 전달했다(rev5·rev6 작성 과정).
+- **경로 2 작성자가 경로 1 코드를 직접 읽었다.** 원판 8절 위반이다. 세 번째 감사가 transcript로 확인한 시각(KST)과 한 일은 다음과 같다.
+  - 17:37:23~36: `k2_judge.py`에서 manifest 형식을 보려고 grep, Read offset 1110, sed 560-600, Read offset 884를 했다.
+  - 17:50:06: `series` grep
+  - 17:51:09: `dhat` grep
+  - 19:37:58~19:38:02: `git show 5f22957:…k2_judge.py`에서 kind·`V5_KINDS`·`pass_to_fail`·`_relative`·`V5_RELATIVE_GATES`를 봤다. rev5를 쓰기 직전이다.
+  - 그 밖에 경로 1 코드를 인용한 감사 원문 세 편을 읽었다.
+- 경로 1(`k2_judge.py`)도 경로 2 코드를 일부 참조했다. docstring과 `false_latches`다(재감사 기록 d).
+- **사용자 결정: 경로 2(1.5, `e1e16a9c…`)를 그대로 쓴다.**
+  - 판정서에는 정렬된 부분을 "공통 실수가 두 경로에 함께 들어갔을 가능성"으로 공개한다. 해당 부분은 V-5 결과 종류, SH 결측, kind·relative gate, manifest 형식과 D̂ 키, G8 c2와 L1 거짓 래치다.
+  - 이 부분에서 두 경로가 일치해도 독립된 확인으로 세지 않는다.
+- rev7부터 메인 세션은 경로 1의 blob id만 전달한다. 경로 2 작성자는 경로 1 코드와 diff를 열지 않는다(`k2-path1-rev6b` `5d28db4`, blob `74d72d5e…`).
+- 경로 2 1.5의 봉인 대조 범위는 원판·rev1~rev6·명세다. rev7은 경로 2가 고정된 뒤에 봉인됐다. 사용자 결정으로 경로 2를 바꾸지 않으므로, rev7 대조는 경로 1과 감사가 한다.
+
+## 7.3 이어 돌리기와 G-F 대조 단위 (rev7 4·5절)
+
+- P_post가 참고용 평탄화 단계에서 멈춰 남은 tcl r79 판정 단계를 이어 돌릴 때는 `k2_commands_filled.json`의 **argv, cwd, env, 마스크(P `0xFFFF`)를 모두 그대로** 쓴다.
+- G-F에서 두 경로가 맞대는 값은 다음과 같다(rev7 5절 표).
+  - 관문 값과 등급
+  - 행별 결과와 실패 항목 이름
+  - SH FLAG 여부와 결측 수
+  - V-5 공통: 판정 불가 있음/없음 한 값
+  - V-5 묶음별 종류, 두 팔 행 수, 통과→실패 행 수(D8·잡음 제외)
+  - 잡음 k와 CP 상계
+  - 회귀 키 sha 일치 여부
+  - 수치: 상대차 ≤ 1e-9
+- **T-K2-7**(기존 단위 시험 전부, 세 번째 감사 수정 3, 2026-11-10 채움)
+  - 실행 조건: k2-run, HEAD `6a44ff8`, 추적 파일 변경 0, Chrono-dev `-I -B -m pytest -q -rs -p no:cacheprovider -n 10 05_tests/unit`, E코어, TBB, `*_NUM_THREADS=1`, 21시경
+  - 결과: **6443 passed, 135 skipped, 3 failed**(745 s)
+  - 로그: `gs_evidence/unit_all.out`(`72b0484e…84a5`, 원본과 sha 같음)
+  - skip: 대부분은 k2-run에 저장 결과 폴더(07_results S8·S9, v5 jsonl)가 없어서다. 그 밖에 Chrono-dev에 torch가 없는 것, 설계·조건부 skip, YAML 재생성으로 기준이 안 맞는 1건이 있다.
+  - fail 3건(로그에서 원인을 확인함)
+    - `test_d8x_chrono_rows::test_earlier_rows_meta_argv_unchanged`: S9 저장 결과가 없다. K-2 이전 커밋 `ba3adcc`에서도 같은 이유로 실패한다.
+    - `test_d8x_diag::test_rerun_gives_the_stored_command_hash`: 저장 해시가 dynamics-dev에서 낸 값이다. dynamics-dev에서는 통과한다. D8x 진단 시험이다.
+    - `test_hydraulics_flow_limit_run::test_coupled_batch_rows_and_resume`: `07_results/S9/...result.json`이 없다. `ba3adcc`에서도 같다.
+  - 메인 세션 결론: 새로 깨진 기존 시험은 없다. 이것을 T-K2-7 충족으로 볼지는 감사가 판단한다.
 
 ## 8. 러너 띄우는 순서 (감사 6, rev2 5)
 
@@ -201,17 +236,35 @@ P 쪽 `P_main` → `P_post`는 1~4와 무관하다(`P_post`는 `.done` 36개를 
 - 러너 `P_post`의 평탄화 단계는 k2-run의 **옛 평탄화기(`a83abd80`)**를 부른다. 메인 세션 결정에 따라 러너는 바꾸지 않는다(배치표 sha 유지). 그 출력 `runs/v5/<arm>/flat/`은 **참고용**으로만 둔다.
 - 판정 전에 병합 뒤 main checkout의 평탄화기(blob `b3851190…`, 실행 전 기록 `flatten.blob`. 판정 커밋에서 `git rev-parse <커밋>:04_scripts/03_control/k2/k2_v5_flatten.py`가 이 값인지 먼저 확인)로 두 팔을 다시 만든다. 출력 폴더는 **`runs/v5/<arm>/flat_main/`**이다(이미 있으면 평탄화기가 거부하므로 새로 만든다).
 
+**기대값과 명령(rev7 3절, 봉인)**: 이 단계에는 rev2 6.1의 `6a44ff8` 조건 대신 아래 값을 쓴다.
+
+| 항목 | 기대값 |
+|---|---|
+| sidecar | `<k2-run>\06_analysis\02_control\k2\runs\v5\<arm>\flat_main.launch.json`(팔마다 1개). 옛 `flatten.launch.json`과는 다른 파일이다 |
+| `--git-dir` | main checkout `C:\workspace\outrigger_control` |
+| HEAD | 판정 커밋. 재생성 전에 기록한다. 그 커밋의 평탄화기 blob이 `b3851190…`이어야 한다 |
+| clean | 시작·끝 모두 `git status --porcelain --untracked-files=no`가 비어 있어야 한다 |
+| env | `MKL_THREADING_LAYER=TBB`, MKL·OMP·OPENBLAS·NUMBA `_NUM_THREADS=1`, dynamics-dev `CONDA_PREFIX`·`PATH`, `PYTHONDONTWRITEBYTECODE=1` |
+| 마스크 | E코어 `0x0FFF0000`. 래퍼를 띄우는 셸을 먼저 고정한다 |
+| rc | 0 |
+
 ```powershell
-# E코어, dynamics-dev, main checkout 기준(경로는 k2-run의 결과 폴더)
-$R='C:\workspace\outrigger_control\.claude\worktrees\k2-run'
+# cwd = main checkout. 셸을 E코어에 고정하고 env를 맞춘 뒤 실행한다(ACC_*·OUTRIGGER_* 없음)
+[System.Diagnostics.Process]::GetCurrentProcess().ProcessorAffinity = [IntPtr]0x0FFF0000
+$M='C:\workspace\outrigger_control'; $R="$M\.claude\worktrees\k2-run"; $PY='C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe'
+$env:MKL_THREADING_LAYER='TBB'; foreach ($v in 'MKL','OMP','OPENBLAS','NUMBA') { Set-Item "env:${v}_NUM_THREADS" '1' }
+$env:PYTHONDONTWRITEBYTECODE='1'; $env:CONDA_PREFIX='C:\ProgramData\miniforge3\envs\dynamics-dev'
+Set-Location $M
 foreach ($arm in 'off','tcl') {
-  & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B 04_scripts\03_control\k2\k2_v5_flatten.py `
-      --arm-dir "$R\06_analysis\02_control\k2\runs\v5\$arm" --out-dir "$R\06_analysis\02_control\k2\runs\v5\$arm\flat_main" --checkout $R
+  $A="$R\06_analysis\02_control\k2\runs\v5\$arm"
+  & $PY -I -B "$M\04_scripts\03_control\k2\run_with_identity.py" "$A\flat_main.launch.json" --git-dir $M -- `
+      $PY -I -B "$M\04_scripts\03_control\k2\k2_v5_flatten.py" --arm-dir $A --out-dir "$A\flat_main" --checkout $R
 }
 ```
 
+`PATH`는 `k2_commands.json` 하네스 env와 같은 dynamics-dev 경로 목록으로 맞춘다.
+
 - `k2_manifest.json`의 V-5 칸(경로 1 입력)은 `flat_main`을 가리킨다.
 - 경로 2는 원 출력(`v5_raw`)을 직접 읽으므로 영향이 없다.
-- 다시 만들 때도 래퍼(`run_with_identity.py`)로 감싸 sidecar를 남긴다.
-- **경로 1은 이 재생성 단계의 sidecar rc를 읽지 않는다**(경로 1 입력 검사가 아니다). 메인 세션 결정(2026-11-10)에 따라, 이 단계의 rc·HEAD·clean·평탄화기 blob은 **판정 후 정체성 감사**에서 60개 sidecar 목록과 함께 확인한다. rev6 4절과 같은 뜻이다.
+- **경로 1은 이 재생성 단계의 sidecar rc를 읽지 않는다**(경로 1 입력 검사가 아니다). 메인 세션 결정(2026-11-10)에 따라 이 단계의 rc·HEAD·clean·env·마스크·평탄화기 blob은 **판정 후 정체성 감사**에서 60개 sidecar 목록과 함께 위 기대값으로 확인한다(rev7 3절).
 - V-5 regression 키는 두 팔 출력에서 `prelaunch/regression_keys.py keys`와 같은 정의로 다시 낸다. 경로 2가 내부에서 sha를 대조한다.
