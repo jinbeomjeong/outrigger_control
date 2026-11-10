@@ -66,16 +66,15 @@ V5_NOTE_REGRESSION = (
     "entries that are not judgement rows 7 + clip_r79_L3L4 42; key sha d4f58334...). The 118 of the original 3.4 / "
     "criteria.md is the old rerun-list count, not reconstructable from the stored outputs. E-1 expects 93. The r79 "
     "L1 reference rows are not judged rows; the r79 judgement 'unmatched' is a record (rev4 1 (c)).")
-PATH1_BLOB_PENDING = ("{PATH1_BLOB: python-expert k2-path1-rev2 after 5f22957 (rev5 seal check, G8 events / c2, "
-                      "missing rows); 9bbcc201 superseded}")
+PATH1_BLOB_PENDING = "b41d2587d2abd4b6b530cff894a27a54419c6ab3"  # python-expert k2-path1-rev2 f67854e (rev5)
 V5_FLAT_MAIN_NOTE = (
     "P_post's flatten step runs the k2-run flattener (a83abd80, old) and writes runs/v5/<arm>/flat/: kept as a "
     "reference only (runner unchanged, plan sha kept). Before judging, rebuild the flat files with the flattener of "
-    "the main checkout after the merge (d9e3f2d9 or its successor): k2_v5_flatten.py --arm-dir <k2-run>\\06_analysis"
+    "the main checkout after the merge (blob 654bc38c, k2-path1-rev2 f67854e; d9e3f2d9 superseded): k2_v5_flatten.py --arm-dir <k2-run>\\06_analysis"
     "\\02_control\\k2\\runs\\v5\\<arm> --out-dir <same>\\flat_main --checkout <k2-run> (both arms, E cores). The "
     "manifest V-5 entries (path 1 input) point to flat_main. Path 2 reads the raw outputs (v5_raw) and is not "
     "affected.")
-FLATTEN_BLOB_PENDING = "d9e3f2d9b206047b654bfde5fdc92ccef688c73b"  # python-expert k2-path1-rev2 5f22957
+FLATTEN_BLOB_PENDING = "654bc38c4e92a5bf6f4e039c935f64d60f122260"  # python-expert k2-path1-rev2 f67854e
 L1_START_STATES = {
     "S6_crawler_top_fdown3.5.npz": "8f93d107fcd7ff8e4f22a0952dd35ca5bb409645737a0260ee354a7b6bedf9bd",
     "S6_crawler_top_fdown3.5.meta.json": "9bb73974458de347a65a3a151cd044e5b801676b7e8b38881b8e8f119c2d133a",
@@ -460,10 +459,10 @@ def main() -> None:
                   "blob": blob("04_scripts/03_control/k2/k2_recount.py"),
                   "run_from": "the record branch / main checkout after the merge (k2-run holds the older 1.2)"},
         "path1": {"path": "04_scripts/03_control/k2/k2_judge.py", "blob": PATH1_BLOB_PENDING,
-                  "source": "python-expert branch k2-path1-rev2 5f22957 (rev2..rev4; rev5 alignment by its 7 items)",
+                  "source": "python-expert branch k2-path1-rev2 f67854e (rev2..rev5)",
                   "previous_blob_not_used": FIX_BLOBS["04_scripts/03_control/k2/k2_judge.py"]},
         "flatten": {"path": "04_scripts/03_control/k2/k2_v5_flatten.py", "blob": FLATTEN_BLOB_PENDING,
-                    "source": "python-expert branch k2-path1-rev2 5f22957",
+                    "source": "python-expert branch k2-path1-rev2 f67854e (output format: sidecar clean record, G8 meta checkout_c2)",
                     "previous_blob_not_used": FIX_BLOBS["04_scripts/03_control/k2/k2_v5_flatten.py"]},
         "run_from": "both judge paths run from the main checkout after merging k2-prelaunch-record and k2-path1-rev2; "
                     "k2-run (6a44ff8) holds older judge tools",

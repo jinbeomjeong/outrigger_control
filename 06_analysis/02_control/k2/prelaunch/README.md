@@ -17,8 +17,8 @@
 | 원판 / rev1 / 명세 sha256 | `a3658197…7263` / `5ba081c6…4776` / `502b0bb7…27ff` | raw sha256 |
 | rev2 / rev3 / rev4 / rev5 sha256 (결과 전, 브랜치 `k2-prelaunch-record`) | `b3f1b41f…94ea` / `8bcdb0ed…6e61` / `82160ff5…00c5` / `73b87758…eccc` | raw sha256 |
 | 경로 2 `k2_recount.py` **1.4** blob (판정 때 병합 뒤 main에서 실행. k2-run에는 1.2가 있다) | `1cde20d2ae54ec2aaef23f7d6c0d24a703904ea5` | `git rev-parse <판정 커밋>:<path>` |
-| 경로 1 `k2_judge.py` | **`{PATH1_BLOB}` 대기**(python-expert `k2-path1-rev2`, rev5 봉인 대조·G8 규칙 반영판). `9bbcc201…`·`7ee9ccc1…`은 쓰지 않음 | 같음 |
-| `k2_v5_flatten.py` (같은 브랜치) | `d9e3f2d9b206047b654bfde5fdc92ccef688c73b`. 이전 `a83abd80…`은 쓰지 않음 | 같음 |
+| 경로 1 `k2_judge.py` (python-expert `k2-path1-rev2` `f67854e`, rev5) | `b41d2587d2abd4b6b530cff894a27a54419c6ab3`. `9bbcc201…`·`7ee9ccc1…`은 쓰지 않음 | 같음 |
+| `k2_v5_flatten.py` (같은 커밋) | `654bc38c4e92a5bf6f4e039c935f64d60f122260`. `d9e3f2d9…`·`a83abd80…`은 쓰지 않음 | 같음 |
 | `run_with_identity.py` | `fab7664bd3ba16723e4202bf71dc7d87ab0cf7f0` | 같음 |
 | `run_ps7.py` | `248f5363cbdbaf1bc20eac3ef5e73bdfd6e05acd` | 같음 |
 | `g8trace.py` | `d8bfe68e4350195951ec58a6a69bc24c04d293cc` | 같음 |
@@ -170,7 +170,7 @@ P 쪽 `P_main` → `P_post`는 1~4와 무관하다(`P_post`는 `.done` 36개를 
 ### 9.1 V-5 평탄 파일 다시 만들기 (경로 1 입력, integrity 지적 High)
 
 - 러너 `P_post`의 평탄화 단계는 k2-run의 **옛 평탄화기(`a83abd80`)**를 부른다. 메인 세션 결정에 따라 러너는 바꾸지 않는다(배치표 sha 유지). 그 출력 `runs/v5/<arm>/flat/`은 **참고용**으로만 둔다.
-- 판정 전에 병합 뒤 main checkout의 평탄화기(`d9e3f2d9` 또는 그 후속 blob, 실행 전 기록 `flatten.blob`)로 두 팔을 다시 만든다. 출력 폴더는 **`runs/v5/<arm>/flat_main/`**이다(이미 있으면 평탄화기가 거부하므로 새로 만든다).
+- 판정 전에 병합 뒤 main checkout의 평탄화기(blob `654bc38c…`, 실행 전 기록 `flatten.blob`. 판정 커밋에서 `git rev-parse <커밋>:04_scripts/03_control/k2/k2_v5_flatten.py`가 이 값인지 먼저 확인)로 두 팔을 다시 만든다. 출력 폴더는 **`runs/v5/<arm>/flat_main/`**이다(이미 있으면 평탄화기가 거부하므로 새로 만든다).
 
 ```powershell
 # E코어, dynamics-dev, main checkout 기준(경로는 k2-run의 결과 폴더)
