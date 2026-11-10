@@ -84,7 +84,7 @@
 
 | 지표 | SHD | IGA (= IGB) | IZ | S4 |
 |---|---|---|---|---|
-| 해시 같음 | — | 0/161 | 0/161 | 0/161 |
+| 해시 같음 | — | 0/161 | 10/161(H-R-0 10행: 순수 강체라 $z_i$ = 0이고 IZ 입력이 SHD와 같음, G-2) | 0/161 |
 | verdict(pass / allowed_stop / fail) | 131 / 22 / 8 | 118 / 30 / 13 | 136 / 19 / 6 | 132 / 21 / 8 |
 | 전이(바뀐 것) | — | pass→allowed_stop 8, pass→fail 8, fail→pass 3 | allowed_stop→pass 8, pass→allowed_stop 5, fail→pass 4, pass→fail 2 | allowed_stop→pass 3, pass→allowed_stop 2, pass→fail 1, fail→pass 1 |
 | SGS 정지 행 | 22 | 40 | 20 | 21 |
@@ -235,6 +235,7 @@
   - `04_scripts/04_hydraulic/coupled/ideal_stage1_path2_compare.py`는 경로 2의 `row_facts`로 원본을 다시 읽어 경로 1과 대조한다.
     - 첫 대조: 경로 1 `60418ad6…2081` 대상, 출력 sha256 `32ba7420…fae7`
     - 경로 1 수정(`27706ae`) 뒤 다시 대조: 경로 1 `905ec9ef…a1cf` 대상. 폴더의 `ideal_stage1_path_compare.json`(`ce938545…1add`)은 메인 세션이 옮긴 파일이다(2절).
+    - 그 json의 `script_sha256` `39a8d1fe…ede6d`는 대조 스크립트의 **CRLF 작업본** 해시다. 커밋된 LF 내용(`7781211e…2dc5`)의 줄 끝만 CRLF로 바꿔 해시하면 같은 값이 나온다(control-expert 확인). 스크립트 내용은 같다.
   - 스크립트 sha256: 1차 실행본 `48e234c7…ba8e`(P-H3 하나), 최종본 `24224a72…20be`(P-H3를 둘로 나눈 것만 다르다), 대조 `7781211e…2dc5`. 두 실행의 관문·지표 값은 같다.
   - 실행 env는 dynamics-dev Python(`python.exe -I`, 표준 라이브러리만 사용)이고, E코어 마스크 0x0FFF0000이다. 시뮬레이션은 다시 돌리지 않았다.
   - 공개: 경로 2는 결과 파일이 이미 있는 상태에서 작성했고, 메인 세션 지시문에 적힌 경로 1 요약 수치(G-1 ~ G-4, 예측 8/15/2)를 본 뒤 작성했다. 경로 1의 json과 코드는 경로 2를 고정하고 처음 실행할 때까지 열지 않았다. 계획 8.8의 "결과를 보기 전에 고정"은 지키지 못했다.
