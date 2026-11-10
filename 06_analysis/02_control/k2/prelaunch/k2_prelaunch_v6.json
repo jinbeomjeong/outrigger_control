@@ -35,6 +35,14 @@
    "path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev7.md",
    "sha256": "52d7dba9a058dd80555270b82452e145475822dbda6cf6e7542366a558e79840"
   },
+  "rev8": {
+   "path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev8.md",
+   "sha256": "e20ac11650b417160f3dcdd0c7eb536c932745fb11a91e5f7c9fc04f4506f5fc"
+  },
+  "rev9": {
+   "path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev9.md",
+   "sha256": "797b839743592f9b4bf2b472796f092bfaeac52686d604245edbe48c2906f49d"
+  },
   "dyn_spec": {
    "path": "06_analysis/02_control/k2/k2_dyn_spec.md",
    "sha256": "502b0bb78558d40586cbcddb718b6c5d53529de4e78369f454762c9fe73727ff"
@@ -49,15 +57,23 @@
  "c2_py_k2_run_working_copy_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
  "path2": {
   "path": "04_scripts/03_control/k2/k2_recount.py",
-  "version": "1.5",
-  "blob": "e1e16a9c5864e5a724f976eb6dda8456f14ff0a7",
+  "version": "1.6",
+  "blob": "82299dd2d43fa8d39fa312a750b353f693f0c133",
   "previous_blob_not_used": {
    "1.2": "d2240795f06893eb2d3eca6e61c55b6dd6c60eeb",
    "1.3": "78a3d2c7c9d26523288f5f3ab05b9a3d6e63466c",
-   "1.4": "1cde20d2ae54ec2aaef23f7d6c0d24a703904ea5"
+   "1.4": "1cde20d2ae54ec2aaef23f7d6c0d24a703904ea5",
+   "1.5": "e1e16a9c5864e5a724f976eb6dda8456f14ff0a7"
+  },
+  "j_items_via": {
+   "rule": "rules rev8 2.1 as reclassified by rev9 2 (J items rewritten by an author who has not read path 1; independent: J1, J2, J4..J9, J11, E-2, E-3, E-10)",
+   "path": "06_analysis/02_control/d8x/path2/d8x_recount.py",
+   "version": "1.0",
+   "blob": "d47c10e97662eb18c47c2a22f5f56990e6f4f115",
+   "lf_content_sha256": "46010967729e190ab572775db9dd59b083a3856558c3f07a239bf601bed9d9d1"
   },
   "run_from": "the main checkout after the merge (k2-run holds the older 1.2)",
-  "rules_check_scope": "path 2 1.5 checks the seals of the original, rev1..rev6 and the dyn spec; rev7 (sealed after 1.5, path 2 kept unchanged by user decision) is checked by path 1 and the audits"
+  "rules_check_scope": "path 2 1.6 checks the seals of the original, rev1..rev6 and the dyn spec (as 1.5). The rev7, rev8 and rev9 seals are checked by the pre- and post-judgement audits with seal_check; neither path 1 nor path 2 holds rev7 / rev8 / rev9 constants"
  },
  "g_f_units": "rules rev7 5 (gates, rows, SH FLAG / missing counts, V-5 common one value, V-5 bundle kind / counts / pass->fail counts / noise k and CP / regression key sha equality, numbers rel 1e-9)",
  "gs_evidence": {
@@ -122,7 +138,7 @@
     {
      "test": "test_d8x_chrono_rows::test_earlier_rows_meta_argv_unchanged",
      "log_cause": "AssertionError s9_rows changed V5-STAGE3-LAS#... (stored 07_results S9 results not in the worktree)",
-     "reported_basis": "known before (cad-expert); fails the same way at ba3adcc (before K-2)"
+     "reported_basis": "stored 07_results S9 results absent from k2-run (only states_L1R there); passes where the results exist (rerun below). Correction: ba3adcc is the K-2 implementation commit itself, not a commit before K-2"
     },
     {
      "test": "test_d8x_diag::test_rerun_gives_the_stored_command_hash",
@@ -132,12 +148,39 @@
     {
      "test": "test_hydraulics_flow_limit_run::test_coupled_batch_rows_and_resume",
      "log_cause": "AssertionError: 07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J1_B_top_Fs4/result.json is_file False in k2-run",
-     "reported_basis": "known before (cad-expert); fails the same way at ba3adcc (stored results absent)"
+     "reported_basis": "stored 07_results S9 result absent from k2-run; passes where the results exist (rerun below). Correction: ba3adcc is the K-2 implementation commit itself"
     }
    ],
-   "main_session_conclusion": "no existing unit test newly broken; the 3 failures are known env / stored-result dependent failures from before the run. Whether this meets T-K2-7 is the auditor's call (recorded as given)"
+   "rerun": {
+    "status": "filled 2026-11-10 (main session run; logs copied byte-identical into prelaunch/gs_evidence/)",
+    "checkout": "C:\\workspace\\outrigger_control (main checkout, master 5ab7ae3: the same code as k2-run, with 07_results)",
+    "affinity": "0x0FFF0000 (E cores)",
+    "runs": [
+     {
+      "env": "Chrono-dev",
+      "tests": [
+       "05_tests/unit/test_d8x_chrono_rows.py::test_earlier_rows_meta_argv_unchanged",
+       "05_tests/unit/test_hydraulics_flow_limit_run.py::test_coupled_batch_rows_and_resume"
+      ],
+      "result": "2 passed",
+      "log": "gs_evidence/t_k2_7_rerun_chrono.out",
+      "log_sha256": "950b7525424becc587883c90528a52fb6528e89bf9ea0f6ed7ea5580113c259a"
+     },
+     {
+      "env": "dynamics-dev",
+      "tests": [
+       "05_tests/unit/test_d8x_diag.py::test_rerun_gives_the_stored_command_hash"
+      ],
+      "result": "1 passed",
+      "log": "gs_evidence/t_k2_7_rerun_dyn.out",
+      "log_sha256": "8dcd409718c5da178a7efda76ffb6f1b813cbbc9405b5d8a916c7ba383d318fc"
+     }
+    ],
+    "log_note": "the logs are pytest -q output (pass counts only); the test ids above are as reported by the main session"
+   },
+   "main_session_conclusion": "3 failed in k2-run (unit_all.out 72b0484e); the causes are environment / data premises: k2-run 07_results holds only states_L1R, so the stored S9 results are not found, and the numba-dependent test runs only in dynamics-dev. Rerun where the premises hold, the three tests all passed. T-K2-7 is therefore met"
   },
-  "verdict": "T-K2-1 / T-K2-2 (I-4 reduced, I-5) and I-8 (G0, R-c) passed with 0 skips; the pychrono-dependent tests pass in Chrono-dev. T-K2-7: full unit run 6443 passed / 135 skipped / 3 failed (known env / stored-result failures, see T-K2-7_full_unit_tests; acceptance as T-K2-7 is for the audit)"
+  "verdict": "T-K2-1 / T-K2-2 (I-4 reduced, I-5) and I-8 (G0, R-c) passed with 0 skips; the pychrono-dependent tests pass in Chrono-dev. T-K2-7: full unit run 6443 passed / 135 skipped / 3 failed in k2-run (env / stored-result premises); the 3 rerun where the premises hold all passed (T-K2-7_full_unit_tests.rerun), so T-K2-7 is met"
  },
  "identity_list_post_judgement": "rules rev2 6 / rev6 4: the post-judgement identity list is 60 sidecars (the 62 of k2_commands.json without the reference flatten steps v5_flatten_off / v5_flatten_tcl), plus the flat_main rebuild sidecars (wrapper), V-5 provenance, V-6 batch_meta x4, V-7 batch.json / result.json. If P_post stops at a reference flatten step, the remaining tcl r79 judge steps run with the argv, cwd, env and mask of k2_commands_filled.json (rules rev7 4); record time, operator, stopped step and rc.",
  "flat_main_sidecar": {
@@ -151,7 +194,7 @@
   "rc": 0,
   "command": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\04_scripts\\03_control\\k2\\run_with_identity.py <run>\\06_analysis\\02_control\\k2\\runs\\v5\\<arm>\\flat_main.launch.json --git-dir C:\\workspace\\outrigger_control -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\04_scripts\\03_control\\k2\\k2_v5_flatten.py --arm-dir <run>\\06_analysis\\02_control\\k2\\runs\\v5\\<arm> --out-dir <run>\\06_analysis\\02_control\\k2\\runs\\v5\\<arm>\\flat_main --checkout <run>   (cwd = C:\\workspace\\outrigger_control, <run> = k2-run)"
  },
- "independence_disclosure": "rules rev7 1-2 (corrects rev6 5; user decision 2026-11-10): before any result (a) the main session sent path 1 definition summaries to the path 2 author; (b) the path 2 author (control-expert) READ PATH 1 CODE: 17:37:23-36 KST k2_judge.py grep / Read offset 1110 / sed 560-600 / Read offset 884 (manifest layout), 17:50:06 grep series, 17:51:09 grep dhat, 19:37:58-19:38:02 git show 5f22957 k2_judge.py (kind, V5_KINDS, pass_to_fail, _relative, V5_RELATIVE_GATES) before rev5, and read the audits quoting path 1 code (rule 8 violation); (c) path 1 referred to path 2 code (docstrings, false_latches ~ false_latch). Path 2 is kept by user decision; the judgement discloses that the aligned parts (V-5 result kinds, SH missing, kind / relative gate, manifest layout and D-hat key, G8 c2 and L1 false latch) may hold a common mistake and does not count their agreement as independent. From rev7 on the main session sends path 1 blob ids only.",
+ "independence_disclosure": "rules rev7 1-2 (corrects rev6 5; user decision 2026-11-10): before any result (a) the main session sent path 1 definition summaries to the path 2 author; (b) the path 2 author (control-expert) READ PATH 1 CODE: 17:37:23-36 KST k2_judge.py grep / Read offset 1110 / sed 560-600 / Read offset 884 (manifest layout), 17:50:06 grep series, 17:51:09 grep dhat, 19:37:58-19:38:02 git show 5f22957 k2_judge.py (kind, V5_KINDS, pass_to_fail, _relative, V5_RELATIVE_GATES) before rev5, and read the audits quoting path 1 code (rule 8 violation); (c) path 1 referred to path 2 code (docstrings, false_latches ~ false_latch). Path 2 is kept by user decision; the judgement discloses that the aligned parts (V-5 result kinds, SH missing, kind / relative gate, manifest layout and D-hat key, G8 c2 and L1 false latch) may hold a common mistake and does not count their agreement as independent. From rev7 on the main session sends path 1 blob ids only. Rules rev8 1-2 (user decision 2026-11-10, after the fourth pre-run audit): the rev7 1 list held only the third audit's search scope (k2_judge.py). The main session searched the earlier path 2 author's transcript for every path 1 module name; further readings before any result: 15:48:50 git ls-files | grep d8x_recount|d8x_judge|d8x_record; 15:49:17 grep d8x_judge.py (row_items / judge_row / J7 / STROKE / WARN_PROBE / REJ_ / J1_window / t_crawler_off); 15:49:22 Read d8x_judge.py lines 115-204 (J1..J11 / E-8 table, judge_metrics), first path 2 write 15:53:36; 17:37:07 sed 1-80 k2_record.py + key grep; 17:45:10 acc_judge.py sed 1-50 + def / add_argument grep; 18:10:58 git show c77ecf5 k2_v5_flatten.py sed 1-70; 18:11:16 k2_commands.json grep (with c77ecf5 git queries); 18:49:21 acc_judge.py sed 79-110 + regression / 118 / clip_ grep; 19:12:59 Read acc_judge.py 42-276; 19:38:02 git show 6a44ff8 run_with_identity.py grep; 20:50:30 sed 85-100 run_with_identity.py; besides, path 1 names in blob-hash commands and record sed edits (not content reads). Action: path 2 1.6 computes the row J items (J1..J11, E-2, E-3, E-10 = D8x E-8, the 1 ms J3 count) via d8x_recount 1.0, rewritten by a new author who has not read path 1 (one repository-wide grep -l listed the file names k2_record.py and k2_v5_flatten.py, no lines shown, not opened); their agreement counts as independent in G-F. Aligned definitions (not independent): SH-1 / SH-2 (k2_record field names), V-5 regression and event rows (_event_rows, _reg_verdicts, after acc_judge), the flattener input format, the rev7 2 items, and what 1.6 kept from 1.5 around the row items (field map names, missing key / J3 row-vs-series / no series / no J10 field = not judgeable, E-4 / E-5 / E-6 / E-7 / I-9, the SH inputs). Rules rev9 1-2 (fifth pre-run audit, wording only): (a) the earlier path 2 author also grepped d8x_spec.py (imported by path 1 d8x_judge) at 15:50:22 for STROKE_EVENTS|WARN_ALLOWED|READY_LIMIT_S|ATTITUDE_LIMIT_DEG|MOVING_LIMIT_BAR|LIFT_WINDOW_MIN_S|LOCKED_LIMIT_BAR; missed in rev8 because the search terms lacked d8x_spec. (b) Reverse direction: the path 1 author (python-expert, transcript agent-a8c7820f450c38187) saved git show d98b31b k2_recount.py at 16:05:01, grepped it and read lines 1-200 / 200-240 / 285-345 / 450-600 / 600-680 at 16:05:09-16:07:28 (J3 series recount, judge_row J3 not-judgeable rule, v5_bundle / recount / recount_v6), wrote the path 1 judge incl. the Chrono 1 ms J3 at 16:09:18 and compared path 1 / 2 verdicts, SH1, SH2, J3all4 and not-judgeable lists row by row with compat_check.py at 16:26:34 / 16:26:46; rev6 5 / rev7 1 ('docstrings, false_latches') understated this. The 1.6 author read 1.5 at 21:41:21 and then rewrote j3_series_count the same way. Reclassified: independent in G-F only J1, J2, J4..J9, J11 (harness), E-2, E-3, E-10 (path 1 d8x_judge vs path 2 d8x_recount); the 1 ms J3 recount and the Chrono adapter (J6 locked, J10, field-name adapter) are aligned definitions (both J3 1 ms codes come from path 2 1.x). Post-judgement audit counts: E-2 TOUCH start None (read by neither path) and Chrono J6 locked None (path 2 n/a, path 1 fail); 0 = no effect, otherwise G-F not judgeable.",
  "path1": {
   "path": "04_scripts/03_control/k2/k2_judge.py",
   "blob": "74d72d5e1747e11c8b89e0adb177e952d3b598a7",

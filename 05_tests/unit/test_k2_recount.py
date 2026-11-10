@@ -382,3 +382,137 @@ def test_screen_selftest():
         pytest.skip("screen folder not present")
     r = kr.selftest_screen(screen)
     assert r["ok"], r
+
+
+# ------------------------------------------------------------------ 1.6: J items via d8x_recount
+def test_j_items_come_from_d8x_recount():
+    d8 = kr.d8x_module()
+    assert Path(d8.__file__).resolve() == kr.d8x_path().resolve()
+    assert d8.TOOL == "d8x_recount" and d8.TOOL_VERSION == "1.0"
+    lf = kr.d8x_path().read_bytes().replace(b"\r\n", b"\n")
+    assert hashlib.sha256(lf).hexdigest() == kr.D8X_RECOUNT_SHA256
+    for name in ("ATTITUDE_LIMIT_DEG", "READY_LIMIT_S", "MOVING_LIMIT_BAR", "LOCKED_LIMIT_BAR",
+                 "LIFT_WINDOW_MIN_S", "STROKE_EVENTS", "WARN_ALLOWED"):
+        assert not hasattr(kr, name), name          # thresholds live in d8x_recount only
+
+
+def test_d8x_sha_pin(monkeypatch, tmp_path):
+    fake = tmp_path / "d8x_recount.py"
+    fake.write_text("TOOL = 'x'\n", encoding="utf-8")
+    monkeypatch.setattr(kr, "_D8X_MODULE", None)
+    monkeypatch.setattr(kr, "d8x_path", lambda: fake)
+    with pytest.raises(kr.NotJudgeable, match="sha256"):
+        kr.d8x_module()
+
+
+@pytest.mark.parametrize("field,value,item", [
+    ("J1_min_cyl_after_lift_N", 14414.0, "J1"),            # < F_D8 (D8x 9414.58911 + 5000)
+    ("J1_min_cyl_after_lift_N", None, "J1"),               # E-9: None fails
+    ("J4_att_max_after_ready_deg", 0.2000001, "J4"),
+    ("t_ready_s", 120.01, "J5"),
+    ("J6_max_moving_bar", 210.5, "J6"),
+])
+def test_threshold_items_fail(tmp_path, field, value, item):
+    s = _series(tmp_path, "f.npz")
+    row = _row("f", True, s)
+    row["d8x"][field] = value
+    r = kr.judge_row(row, kr.DEFAULT_FIELDS, "harness", tmp_path, True)
+    assert item in r["fail_items"], r
+
+
+@pytest.mark.parametrize("event,item", [
+    ("FAULT_STROKE_END:RL", "J7"), ("WARN_LIFT_STROKE_LIMITED", "J7"), ("FAULT_LIFT_STROKE_LIMIT:soil", "J7"),
+    ("FAULT_SENSOR_X", "J8"), ("WARN_SOMETHING", "J9"), ("REJ_TARGET", "E-3")])
+def test_event_items(tmp_path, event, item):
+    s = _series(tmp_path, "e.npz")
+    row = _row("e", True, s)
+    row["d8x"]["events"].append([25.0, event])
+    r = kr.judge_row(row, kr.DEFAULT_FIELDS, "harness", tmp_path, True)
+    assert r["fail_items"] == [item], r
+    ok = _row("o", True, s)
+    ok["d8x"]["events"].append([25.0, "WARN_PROBE_STIFFNESS_OUT_OF_RANGE:FL"])
+    assert kr.row_status(kr.judge_row(ok, kr.DEFAULT_FIELDS, "harness", tmp_path, True)) == "pass"
+
+
+def test_j2_scope_j11_e2_e10(tmp_path):
+    s = _series(tmp_path, "j.npz")
+    row = _row("a", True, s)
+    row["d8x"]["reanchor_intervals_s"] = [[30.0, 35.0]]
+    row["d8x"]["J2_min_cyl_reanchor_N"] = 14000.0
+    r = kr.judge_row(row, kr.DEFAULT_FIELDS, "harness", tmp_path, True)
+    assert r["fail_items"] == ["J2"] and r["values"]["J2_N"] == 14000.0
+    ev = _row("b", True, s)                              # D8x 4.1 scope: H4 ran by its event too
+    ev["d8x"]["events"].append([30.0, "reanchor_started"])
+    r = kr.judge_row(ev, kr.DEFAULT_FIELDS, "harness", tmp_path, True)
+    assert r["fail_items"] == ["J2"] and r["values"]["J2_N"] is None     # SH-6 J2 only with an interval
+    fl = _row("c", True, s)
+    fl["fails"] = ["d8 min force"]
+    assert kr.judge_row(fl, kr.DEFAULT_FIELDS, "harness", tmp_path, True)["fail_items"] == ["J11"]
+    e2 = _row("d", True, s)
+    e2["d8x"]["t_lift_s"] = None
+    assert "E-2" in kr.judge_row(e2, kr.DEFAULT_FIELDS, "harness", tmp_path, True)["fail_items"]
+    w = _row("e", True, s)
+    w["d8x"]["J1_window_s"] = 0.5
+    r = kr.judge_row(w, kr.DEFAULT_FIELDS, "harness", tmp_path, True)
+    assert any(p.startswith("E-10") for p in r["not_judgeable"])
+
+
+def test_j3_series_count_window():
+    t = np.arange(0.0, 1.0, 0.001)
+    pad = np.full((t.size, 4), 5e3)
+    pad[500, 3] = 0.0                                      # exactly at t_touch: counts
+    pad[499, 0] = -1.0                                     # before t_touch: not J3
+    pad[700:703, 1] = 0.0
+    r = kr.j3_series_count(t, pad, 0.5)
+    assert r["count"] == 4 and r["min_N"] == 0.0 and r["from_first_all4"] == 5
+
+
+def _chrono_row(tmp_path, **kw):
+    t = np.arange(10.0, 30.0, 0.001)
+    np.savez(tmp_path / "p.npz", t=t, N=np.full((t.size, 4), 45e3))
+    row = {"case_id": "K2_L1_top_k2pp025_Fs0_tcl", "touch_creep_latch": True,
+           "controller_tag": "final_C4G2_LAS_TCL", "k1_order_gate": False, "floor_true_deg": [1.375, 2.625],
+           "t_touch_s": 19.6, "t_lift_s": 20.6, "t_ready_s": 43.0, "J1_min_cyl_after_lift_N": 50e3,
+           "J1_window_s": 30.0, "reanchor_intervals_s": [], "J2_min_cyl_reanchor_N": None,
+           "J4_att_max_after_ready_deg": 0.02, "J6_max_moving_bar": 100.0, "crawler_recontact_after_loc": 0,
+           "events": [[18.0, f"INFO_TOUCH_CREEP_LATCH:{leg}"] for leg in kr.LEGS]}
+    row.update(kw)
+    return kr.judge_row(row, kr.DEFAULT_FIELDS, "chrono", None, True, {"pads": tmp_path / "p.npz"},
+                        floor_deg=(1.375, 2.625))
+
+
+def test_chrono_j6_locked_j10_no_j11(tmp_path):
+    r = _chrono_row(tmp_path)
+    assert kr.row_status(r) == "pass" and "J11" not in r["items"] and "J6_locked" not in r["items"]
+    assert r["items"]["J10"] and r["items"]["J3"]
+    assert _chrono_row(tmp_path, J6_max_locked_bar=351.0)["fail_items"] == ["J6_locked"]
+    assert _chrono_row(tmp_path, crawler_recontact_after_loc=2)["fail_items"] == ["J10"]
+    assert kr.row_status(_chrono_row(tmp_path, crawler_recontact_after_loc=False)) == "pass"
+    assert _chrono_row(tmp_path, crawler_recontact_after_loc=True)["fail_items"] == ["J10"]
+
+
+def test_chrono_no_series_is_not_judgeable_not_j3_fail(tmp_path):
+    t = np.arange(10.0, 30.0, 0.001)
+    np.savez(tmp_path / "p.npz", t=t, N=np.full((t.size, 4), 45e3))
+    row = {"case_id": "K2_L1_top_k2pp025_Fs0_tcl", "touch_creep_latch": True,
+           "controller_tag": "final_C4G2_LAS_TCL", "k1_order_gate": False, "floor_true_deg": [1.375, 2.625],
+           "t_touch_s": 19.6, "t_lift_s": 20.6, "t_ready_s": 43.0, "J1_min_cyl_after_lift_N": 50e3,
+           "J1_window_s": 30.0, "reanchor_intervals_s": [], "J2_min_cyl_reanchor_N": None,
+           "J4_att_max_after_ready_deg": 0.02, "J6_max_moving_bar": 100.0, "crawler_recontact_after_loc": 0,
+           "events": [[18.0, f"INFO_TOUCH_CREEP_LATCH:{leg}"] for leg in kr.LEGS]}
+    r = kr.judge_row(row, kr.DEFAULT_FIELDS, "chrono", None, True, None, floor_deg=(1.375, 2.625))
+    assert kr.row_status(r) == "not_judgeable" and "J3" not in r["items"]
+
+
+def test_selftest_d8x_stored_rows_and_crosscheck():
+    ra = None
+    for base in (ROOT, Path("C:/workspace/outrigger_control")):
+        if (base / "06_analysis/02_control/d8x/ra/ra_off.json").exists():
+            ra = base / "06_analysis/02_control/d8x/ra"
+            break
+    if ra is None:
+        pytest.skip("stored D8x R-a rows not present")
+    pts = ROOT / "06_analysis/02_control/d8x/d8x_points.json"
+    r = kr.selftest_d8x(ra / "ra_off.json", ra / "ra_on.json", pts if pts.exists() else None)
+    assert r["ok"], {k: r[k] for k in ("off", "on", "total_fail", "d8x_crosscheck")}
+    assert r["d8x_crosscheck"]["rows"] == 1102 and r["d8x_crosscheck"]["n_differ"] == 0
