@@ -478,25 +478,55 @@ def _slow_lift_scaled(original):
 _INSTALLED: dict = {}
 
 
-def _turn_preset_las_off(c2) -> None:
-    """Give ``C2Config.with_10hz_d1`` the pre-switch default ``liftoff_approach_slow=False``.
+PRE_LAS_LIFTOFF_APPROACH_SLOW = False
+PRE_LAS_FLAT_SOIL_MARGIN_ORDER_GATE = False
+"""The K1 order gate was adopted after LAS-b, so the preset before LAS-b has it off too
+(``05_tests/unit/pre_las_preset_runner.py`` uses the same two defaults)."""
 
-    Since the LAS-b switch (2026-11-08) the preset runs LAS-b b0 itself; the wrapper of this
-    module is LAS-b (or its reference ``current``) on top of the preset *before* the switch,
-    which is the condition of the stored lines (``las_T1`` / ``las_T2``, ``fb_F*``). Without
-    this the slowdown would act twice and its events would be logged twice
-    (``pre_las_preset_runner.py`` does the same for a whole script). A caller that passes the
-    keyword still gets what it asks for, and :func:`_refuse_preset_las` stops such a run.
+
+def _turn_preset_las_off(c2) -> None:
+    """Give ``C2Config.with_10hz_d1`` the pre-LAS-b defaults of the two later switches.
+
+    The wrapper of this module means "the preset before the LAS-b switch + the LAS-b of this
+    module" (or its reference ``current``), the condition of its stored lines (``las_T1`` /
+    ``las_T2``; ``fb_targeted`` / ``las_rev_targeted`` / ``las_revA_targeted`` never install
+    this wrapper, they run the preset's own LAS-b). Since the LAS-b switch (2026-11-08) the
+    preset runs LAS-b b0 itself, and since the K1 switch (``las_k1_rules_adopt.md`` 9.1) it
+    has the R4c30 order gate on; both came after those lines, so both keywords default to off
+    here:
+    ``liftoff_approach_slow=False`` (else the slowdown would act twice and its events would be
+    logged twice) and ``flat_soil_margin_order_gate=False`` (else a stored line run without
+    ``pre_las_preset_runner.py`` would get the gate; user decision 2026-11-10, post-switch
+    audit). ``pre_las_preset_runner.py`` sets the same defaults for a whole script, so running
+    under it gives the same preset. A caller that passes a keyword still gets what it asks for;
+    :func:`_refuse_preset_las` stops a run with LAS-b on.
+
+    Raises:
+        RuntimeError: The patched preset still has LAS-b or the order gate on.
     """
     switched_preset = c2.C2Config.with_10hz_d1
 
-    def pre_las_preset(self, *args, liftoff_approach_slow: bool = False, **keywords):
-        return switched_preset(self, *args, liftoff_approach_slow=liftoff_approach_slow,
-                               **keywords)
+    def pre_las_preset(
+        self,
+        *args,
+        liftoff_approach_slow: bool = PRE_LAS_LIFTOFF_APPROACH_SLOW,
+        flat_soil_margin_order_gate: bool = PRE_LAS_FLAT_SOIL_MARGIN_ORDER_GATE,
+        **keywords,
+    ):
+        return switched_preset(
+            self,
+            *args,
+            liftoff_approach_slow=liftoff_approach_slow,
+            flat_soil_margin_order_gate=flat_soil_margin_order_gate,
+            **keywords,
+        )
 
     c2.C2Config.with_10hz_d1 = pre_las_preset
-    if c2.C2Config().with_10hz_d1().liftoff_approach_slow.enable:
+    preset = c2.C2Config().with_10hz_d1()
+    if preset.liftoff_approach_slow.enable:
         raise RuntimeError("las_targeted.install: the preset still has LAS-b on")
+    if preset.slope_clearance_margin.flat_soil_margin_order_gate:
+        raise RuntimeError("las_targeted.install: the preset still has the K1 order gate on")
 
 
 def _refuse_preset_las(controller) -> None:
