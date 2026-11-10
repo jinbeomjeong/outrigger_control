@@ -15,10 +15,10 @@
 | 대상 | 값 | 확인 방법 |
 |---|---|---|
 | 원판 / rev1 / 명세 sha256 | `a3658197…7263` / `5ba081c6…4776` / `502b0bb7…27ff` | raw sha256 |
-| rev2 / rev3 / rev4 / rev5 sha256 (결과 전, 브랜치 `k2-prelaunch-record`) | `b3f1b41f…94ea` / `8bcdb0ed…6e61` / `82160ff5…00c5` / `73b87758…eccc` | raw sha256 |
-| 경로 2 `k2_recount.py` **1.4** blob (판정 때 병합 뒤 main에서 실행. k2-run에는 1.2가 있다) | `1cde20d2ae54ec2aaef23f7d6c0d24a703904ea5` | `git rev-parse <판정 커밋>:<path>` |
-| 경로 1 `k2_judge.py` (python-expert `k2-path1-rev2` `f67854e`, rev5) | `b41d2587d2abd4b6b530cff894a27a54419c6ab3`. `9bbcc201…`·`7ee9ccc1…`은 쓰지 않음 | 같음 |
-| `k2_v5_flatten.py` (같은 커밋) | `654bc38c4e92a5bf6f4e039c935f64d60f122260`. `d9e3f2d9…`·`a83abd80…`은 쓰지 않음 | 같음 |
+| rev2 / rev3 / rev4 / rev5 / rev6 sha256 (결과 전) | `b3f1b41f…94ea` / `8bcdb0ed…6e61` / `82160ff5…00c5` / `73b87758…eccc` / `21268203…ea0e` | raw sha256 |
+| 경로 2 `k2_recount.py` **1.5** blob (판정 때 병합 뒤 main에서 실행. k2-run에는 1.2가 있다) | `e1e16a9c5864e5a724f976eb6dda8456f14ff0a7`. 쓰지 않은 이전 blob: 1.2 `d2240795…`, 1.3 `78a3d2c7…`, 1.4 `1cde20d2…` | `git rev-parse <판정 커밋>:<path>` |
+| 경로 1 `k2_judge.py` (python-expert `k2-path1-rev6` `728ace5`, rev6) | `c285b8c9e04c30c289a29d0d7a620c00fb4ec906`. `b41d2587…`·`9bbcc201…`·`7ee9ccc1…`은 쓰지 않음 | 같음 |
+| `k2_v5_flatten.py` (같은 커밋. 행에 `verdict_missing` 추가 → `flat_main`은 이 판으로 만든다) | `b385119095b97568a4c8f82f685e3c920ee50d2b`. `654bc38c…`·`d9e3f2d9…`·`a83abd80…`은 쓰지 않음 | 같음 |
 | `run_with_identity.py` | `fab7664bd3ba16723e4202bf71dc7d87ab0cf7f0` | 같음 |
 | `run_ps7.py` | `248f5363cbdbaf1bc20eac3ef5e73bdfd6e05acd` | 같음 |
 | `g8trace.py` | `d8bfe68e4350195951ec58a6a69bc24c04d293cc` | 같음 |
@@ -145,6 +145,35 @@ worker-초 추정이다.
 - V-7은 경로 2 밖이다(기록 전용, 경로 1 `record-v7`만).
 - V-5 regression은 판정 93, 기록 49다(3절, rev2 2).
 
+## 7.1 rev6 정리 (2026-11-10, 재감사 뒤)
+
+- **V-5 결과 종류**(rev6 1절)
+  - 판정 불가: 공통 항목(두 팔의 sidecar rc, 오류 행, provenance, G8 c2), K-2 증거, 짝 없는 키, 건수(격자 768 포함, 두 팔)
+  - 실패: 묶음 절대 항목과 끔 팔 대비 통과→실패
+  - 회귀 verdict 결측은 실패다.
+- **하네스 SH 결측**(rev6 2절)은 그 SH의 FLAG로 세고, 결측 수를 출력한다.
+- AUG_crc2의 E-5·I-9 위반은 기록만 한다(rev6 3절).
+- **판정 후 정체성 확인 목록은 60개 sidecar**다(rev6 4절). 참고용 평탄화 단계 2개는 뺀다. 여기에 `flat_main` 재생성 sidecar, V-5 provenance, V-6 `batch_meta` 4개, V-7 `batch.json`·`result.json`을 더한다.
+  - P_post가 참고용 평탄화 단계에서 멈추면, 남은 tcl r79 판정 단계 2개를 `k2_commands_filled.json`의 같은 래퍼 argv로 이어 돌린다.
+  - 그때 시각, 실행자, 멈춘 단계와 rc를 기록한다.
+- **G-S 근거**(재감사 발견 3, 2026-11-10 채움): 실행 전 기록 `gs_evidence` 칸에 넣었다. 로그는 `gs_evidence/`에 원본과 바이트가 같게 복사했다.
+  - 공통 조건: k2-run, HEAD `6a44ff8`, 시험 전후 추적 파일 변경 0, E코어 `0x0FFF0000`, `MKL_THREADING_LAYER=TBB`, `*_NUM_THREADS=1`, 20:08~20:19.
+
+  | env | 대상 | 결과 | 로그 sha256 |
+  |---|---|---|---|
+  | dynamics-dev | test_k2_hashes, test_c2_touch_creep, test_k2_harness, test_k2_prelaunch_fix, test_k2_run_s9, test_k2_chrono_runner | 71 passed, 34 skipped, 1 failed (574 s) | `gs.out` `d397b00f…8791c` |
+  | Chrono-dev | test_k2_run_s9, test_k2_chrono_runner, test_c2_touch_creep | 66 passed, skip 0, fail 0 | `gs_chrono.out` `2fc2bfee…c8da` |
+
+  - `test_k2_hashes.py`는 4/4 통과했고 skip은 0이다. 통과한 시험은 T-K2-1 스크린 VC, T-K2-2 끔 팔, I-8 G0, I-8 R-c 표본이다.
+  - dynamics-dev의 skip 34건과 fail 1건(`test_open_fraction`)은 모두 그 env에 pychrono가 없어서 생겼다. 로그에서 `ModuleNotFoundError: pychrono`를 확인했다. 같은 파일을 Chrono-dev에서 다시 돌렸고 모두 통과했다(`test_open_fraction` 포함).
+  - 메인 세션은 이와 별도로 master `6d11d13`, Chrono-dev에서 K-2 판정 시험 147건을 돌려 모두 통과했다. 이것은 실행 checkout이 아니라 판정 도구 기준의 확인이다.
+
+## 7.2 경로 독립성 공개 (rev6 5절, 사용자 결정)
+
+- 결과가 나오기 전에, 메인 세션이 경로 1의 **정의 요약**(코드가 아님)을 경로 2 작성자(control-expert)에게 전달해 두 경로를 정렬했다(rev5·rev6 작성 과정).
+- 경로 1(`k2_judge.py`)은 경로 2 코드를 일부 참조했다. docstring이 경로 2 내부를 가리키고, `false_latches`가 경로 2 `false_latch`와 거의 같다(재감사 기록 d).
+- 원판 8절은 경로 2만 제한하므로 규칙 위반은 아니다. 다만 같은 실수가 두 경로에 함께 들어갔을 가능성이 있다. 판정서에도 같은 문구를 적는다.
+
 ## 8. 러너 띄우는 순서 (감사 6, rev2 5)
 
 러너(`sched/runners`)는 E 쪽 의존을 스스로 강제하지 않는다(E_V6 `$WaitArguments = $null`). 러너 파일은 배치표 sha로 고정돼 있으므로 고치지 않고, **메인 세션이 아래 순서로 띄운다.**
@@ -170,7 +199,7 @@ P 쪽 `P_main` → `P_post`는 1~4와 무관하다(`P_post`는 `.done` 36개를 
 ### 9.1 V-5 평탄 파일 다시 만들기 (경로 1 입력, integrity 지적 High)
 
 - 러너 `P_post`의 평탄화 단계는 k2-run의 **옛 평탄화기(`a83abd80`)**를 부른다. 메인 세션 결정에 따라 러너는 바꾸지 않는다(배치표 sha 유지). 그 출력 `runs/v5/<arm>/flat/`은 **참고용**으로만 둔다.
-- 판정 전에 병합 뒤 main checkout의 평탄화기(blob `654bc38c…`, 실행 전 기록 `flatten.blob`. 판정 커밋에서 `git rev-parse <커밋>:04_scripts/03_control/k2/k2_v5_flatten.py`가 이 값인지 먼저 확인)로 두 팔을 다시 만든다. 출력 폴더는 **`runs/v5/<arm>/flat_main/`**이다(이미 있으면 평탄화기가 거부하므로 새로 만든다).
+- 판정 전에 병합 뒤 main checkout의 평탄화기(blob `b3851190…`, 실행 전 기록 `flatten.blob`. 판정 커밋에서 `git rev-parse <커밋>:04_scripts/03_control/k2/k2_v5_flatten.py`가 이 값인지 먼저 확인)로 두 팔을 다시 만든다. 출력 폴더는 **`runs/v5/<arm>/flat_main/`**이다(이미 있으면 평탄화기가 거부하므로 새로 만든다).
 
 ```powershell
 # E코어, dynamics-dev, main checkout 기준(경로는 k2-run의 결과 폴더)
@@ -183,5 +212,6 @@ foreach ($arm in 'off','tcl') {
 
 - `k2_manifest.json`의 V-5 칸(경로 1 입력)은 `flat_main`을 가리킨다.
 - 경로 2는 원 출력(`v5_raw`)을 직접 읽으므로 영향이 없다.
-- 다시 만들 때도 래퍼(`run_with_identity.py`)로 감싸 sidecar를 남기기를 권한다. 판정 후 감사가 이 단계의 rc·HEAD·평탄화기 blob을 확인한다.
+- 다시 만들 때도 래퍼(`run_with_identity.py`)로 감싸 sidecar를 남긴다.
+- **경로 1은 이 재생성 단계의 sidecar rc를 읽지 않는다**(경로 1 입력 검사가 아니다). 메인 세션 결정(2026-11-10)에 따라, 이 단계의 rc·HEAD·clean·평탄화기 blob은 **판정 후 정체성 감사**에서 60개 sidecar 목록과 함께 확인한다. rev6 4절과 같은 뜻이다.
 - V-5 regression 키는 두 팔 출력에서 `prelaunch/regression_keys.py keys`와 같은 정의로 다시 낸다. 경로 2가 내부에서 sha를 대조한다.

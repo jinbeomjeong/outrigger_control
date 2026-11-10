@@ -47,7 +47,10 @@ from pathlib import Path
 import numpy as np
 
 TOOL = "k2_recount"
-VERSION = "1.4"
+VERSION = "1.5"
+"""1.5 (rev6, before any result): V-5 result kinds (common items, K-2 evidence, unmatched keys and counts on both
+arms incl. grid 768 = not judgeable; bundle items = fail), harness SH missing = FLAG with counts, AUG_crc2 E-5 / I-9
+record only, rev6 seal."""
 """1.4 (rev5, before any result): provenance per V-5 step (d8 from its meta), G8 c2.py via sidecar HEAD / clean and
 the k2-run c2.py sha, G8 K-2 evidence from the row fields, flatten sidecar not read, rev5 seal."""
 """1.3 (rev2 / rev3, before any result): V-5 from the raw outputs (``manifest["v5_raw"]``: off / tcl arm folders,
@@ -95,11 +98,12 @@ REV4_SHA256 = "82160ff54874e3d43bf7c5a1ae96d6e8612b1e7635aaccea39a4299352ce00c5"
 REV5_FILE = "k2_touch_creep_rules_rev5.md"
 REV5_SEAL = "k2_touch_creep_rules_rev5.sha256"
 REV5_SHA256 = "73b877580ec5dc94a46a38d2ed620372cddd17dd38eef06126d84843b485eccc"
+REV6_SHA256 = "21268203e0b55218f88fc2458fe21467871ae3b1bb7ab9cc760b3fbd5ff7ea0e"
 C2_SHA256_RUN = "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1"
 """rev2 1 common: sha256 of the k2-run working copy of 03_src/outrigger_sim/control/c2.py (provenance c2_sha256)."""
 REG_JUDGED_SHA256 = "2900db889efc73070c3a8fbe557b1a4ad9ee3392afc099ba00be1d0549174ec9"
 REG_RECORD_SHA256 = "d4f58334c6ca7c393c35072a798c09f4995d7fde274e0af6b21b99f977d503eb"
-V5_COUNTS = {"soil": 60, "d8": 576, "noise_L2": 855, "regression": 93, "ps7": 20, "g8_safe_stop": 83}
+V5_COUNTS = {"grid": 768, "soil": 60, "d8": 576, "noise_L2": 855, "regression": 93, "ps7": 20, "g8_safe_stop": 83}
 D8_GUARD_KN = 14.41
 D8_ATT_DEG = 0.2
 D8_READY_S = 100.0
@@ -657,25 +661,58 @@ def shadow(off: list[dict], tcl: list[dict], flag_enabled: bool = True) -> dict:
     if unpaired:
         res["not_judgeable"] = f"E-11 unpaired keys {len(unpaired)}"
         return res
-    sh1 = [k for k in keys if (tm[k].get("metrics") or {}).get("SH1_post_latch_lift")
-           and any(v > 0 for v in tm[k]["metrics"]["SH1_post_latch_lift"].values())]
-    amp_off = [om[k]["metrics"]["SH2_rate_amp_deg_s"] for k in keys
-               if om[k].get("metrics") and om[k]["metrics"]["SH2_rate_amp_deg_s"] is not None]
-    amp_tcl = [tm[k]["metrics"]["SH2_rate_amp_deg_s"] for k in keys
-               if tm[k].get("metrics") and tm[k]["metrics"]["SH2_rate_amp_deg_s"] is not None]
-    d_ready = {k: tm[k]["values"]["t_ready_s"] - om[k]["values"]["t_ready_s"] for k in keys
-               if is_num(tm[k]["values"].get("t_ready_s")) and is_num(om[k]["values"].get("t_ready_s"))}
-    j1_off = [om[k]["values"]["J1_N"] for k in keys if is_num(om[k]["values"].get("J1_N"))]
-    j1_tcl = [tm[k]["values"]["J1_N"] for k in keys if is_num(tm[k]["values"].get("J1_N"))]
-    d_j1 = sorted((tm[k]["values"]["J1_N"] - om[k]["values"]["J1_N"], k[0]) for k in keys
-                  if is_num(tm[k]["values"].get("J1_N")) and is_num(om[k]["values"].get("J1_N")))
-    caps = sum(tm[k].get("cap_events", 0) for k in keys)
+    def val(r, name):
+        return (r.get("values") or {}).get(name)
+
+    def met(r, name):
+        return (r.get("metrics") or {}).get(name)
+
+    missing = {}
+
+    def miss(item):
+        missing[item] = missing.get(item, 0) + 1
+
+    sh1 = []
+    for k in keys:  # rev6 2: SH-1 needs the K-2 row's post-latch lift record
+        rec = met(tm[k], "SH1_post_latch_lift")
+        if rec is None:
+            miss("SH-1")
+        elif any(v > 0 for v in rec.values()):
+            sh1.append(k)
+    amp_off, amp_tcl = [], []
+    for k in keys:  # SH-2: a pair counts only with both amplitudes
+        a, b = met(tm[k], "SH2_rate_amp_deg_s"), met(om[k], "SH2_rate_amp_deg_s")
+        if is_num(a) and is_num(b):
+            amp_tcl.append(a)
+            amp_off.append(b)
+        else:
+            miss("SH-2")
+    d_ready = {}
+    for k in keys:
+        a, b = val(tm[k], "t_ready_s"), val(om[k], "t_ready_s")
+        if is_num(a) and is_num(b):
+            d_ready[k] = a - b
+        else:
+            miss("SH-3")
+    j1_off = [val(om[k], "J1_N") for k in keys]
+    j1_tcl = [val(tm[k], "J1_N") for k in keys]
+    missing_j1 = sum(not is_num(v) for v in j1_off + j1_tcl)
+    if missing_j1:
+        missing["SH-4"] = missing_j1
+    j1_off = [v for v in j1_off if is_num(v)]
+    j1_tcl = [v for v in j1_tcl if is_num(v)]
+    d_j1 = sorted((val(tm[k], "J1_N") - val(om[k], "J1_N"), k[0]) for k in keys
+                  if is_num(val(tm[k], "J1_N")) and is_num(val(om[k], "J1_N")))
+    caps = sum(tm[k].get("cap_events", 0) or 0 for k in keys)
     near = []
     for k in keys:
-        v = tm[k]["values"]
-        for name in ("J1_N", "J2_N"):
-            if is_num(v.get(name)) and v[name] < F_D8_N + SH6_MARGIN_N:
-                near.append((k[0], name, v[name]))
+        if not is_num(val(tm[k], "J1_N")):
+            miss("SH-6")
+        for name in ("J1_N", "J2_N"):  # J2 only exists with an H4 interval (rev5 4)
+            v = val(tm[k], name)
+            if is_num(v) and v < F_D8_N + SH6_MARGIN_N:
+                near.append((k[0], name, v))
+    res["missing"] = missing
     res.update({
         "SH1_rows": [k[0] for k in sh1],
         "SH2_median_off": float(np.median(amp_off)) if amp_off else None,
@@ -708,6 +745,10 @@ def shadow(off: list[dict], tcl: list[dict], flag_enabled: bool = True) -> dict:
         res["flags"].append("SH-5")
     if near:
         res["flags"].append("SH-6")
+    for item in missing:  # rev6 2: a missing input is a FLAG of that SH
+        if item not in res["flags"]:
+            res["flags"].append(item)
+    res["flags"].sort()
     return res
 
 
@@ -881,12 +922,13 @@ def recount(manifest: dict, expect: dict, fmap: dict, rules_dir: Path | None) ->
                 ids = sorted({r["id"] for r in rows})
                 if hashlib.sha256("\n".join(ids).encode()).hexdigest() != V3_KEYS_SHA256:
                     problems.append(f"E-5 V-3 {arm}.{side}: key list sha differs")
-            v3_arm_check(a, fmap, arm, problems)
+            record_problems: list[str] = []
+            v3_arm_check(a, fmap, arm, problems if arm in V3_JUDGED else record_problems)  # rev6 3
             sh = shadow(off, tcl, flag_enabled=arm in V3_JUDGED)
             s_tcl = summarize(tcl)
             v3[arm] = {"off": summarize(off), "tcl": s_tcl, "shadow": sh,
                        "off_J3_rows": sum(1 for r in off if r.get("values", {}).get("J3")),
-                       "dhat_record": dhat_summary(off, tcl)}
+                       "dhat_record": dhat_summary(off, tcl), "record_problems": record_problems}
             if arm in V3_JUDGED:
                 if s_tcl["fail"]:
                     g_b = "fail"
@@ -945,15 +987,31 @@ def _count(x) -> int | None:
     return None
 
 
+NJ_ITEMS = {"error", "unmatched", "count", "sidecar", "sidecar_rc", "provenance", "c2_sha256", "combo", "k2",
+            "touch_creep_latch", "controller_tag", "k2_evidence", "g8_touch_creep_latch", "g8_controller_tag", "g8_git",
+            "g8_sidecar", "run_wt_c2", "run_wt_c2_sha256", "judged_keys_sha", "record_keys_sha"}
+"""rev6 1: items whose violation (or missing value) makes the bundle not judgeable: common items (rc, error rows,
+provenance, G8 c2), K-2 evidence, unmatched keys and counts. Every other item (bundle absolute items, pass -> fail,
+regression verdict missing) is a failure."""
+
+
+def _is_nj_item(item: str) -> bool:
+    return item in NJ_ITEMS or item.startswith("events:")
+
+
 class _Tally:
     """Absolute items of one bundle: failures and missing values (E-9: missing = fail)."""
 
     def __init__(self):
         self.fail: dict[str, list] = {}
+        self.nj: dict[str, list] = {}
         self.missing: dict[str, int] = {}
 
     def bad(self, item: str, what) -> None:
-        self.fail.setdefault(item, []).append(what)
+        if _is_nj_item(item):
+            self.nj.setdefault(item, []).append(what)
+        else:
+            self.fail.setdefault(item, []).append(what)
 
     def miss(self, item: str) -> None:
         self.missing[item] = self.missing.get(item, 0) + 1
@@ -961,8 +1019,10 @@ class _Tally:
 
     def result(self) -> dict:
         return {"failures": {k: v[:40] for k, v in self.fail.items()},
-                "failure_counts": {k: len(v) for k, v in self.fail.items()}, "missing": dict(self.missing),
-                "absolute_pass": not self.fail}
+                "failure_counts": {k: len(v) for k, v in self.fail.items()},
+                "not_judgeable_items": {k: v[:40] for k, v in self.nj.items()},
+                "not_judgeable_counts": {k: len(v) for k, v in self.nj.items()},
+                "missing": dict(self.missing), "absolute_pass": not self.fail, "judgeable": not self.nj}
 
 
 def _event_rows(doc: dict) -> tuple[dict, list]:
@@ -1005,6 +1065,10 @@ def _v5_grid(off_dir, tcl_dir) -> dict:
         for k in unm:
             t.bad("unmatched", f"{name}:{k}")
         parts[name] = {"n_tcl": len(a), "n_off": len(b), "errors_off": len(eb)}
+    for side in ("n_tcl", "n_off"):  # rev6 1: 768 on both arms
+        n = sum(p[side] for p in parts.values())
+        if n != V5_COUNTS["grid"]:
+            t.bad("count", f"{side} {n} != {V5_COUNTS['grid']}")
     return {"parts": parts, "n": sum(p["n_tcl"] for p in parts.values()), **t.result()}
 
 
@@ -1017,8 +1081,9 @@ def _v5_soil(off_dir, tcl_dir) -> dict:
     for e in ea:
         if e.endswith("|two"):
             t.bad("error", e)
-    if len(a) != V5_COUNTS["soil"]:
-        t.bad("count", f"{len(a)} != {V5_COUNTS['soil']}")
+    for side, rows in (("tcl", a), ("off", b)):
+        if len(rows) != V5_COUNTS["soil"]:
+            t.bad("count", f"{side} {len(rows)} != {V5_COUNTS['soil']}")
     soft = {k for k in a if "|G1|" in k or "|J2|" in k}
     for k, run in a.items():
         if "pass" not in run:
@@ -1065,7 +1130,12 @@ def _v5_d8(off_dir, tcl_dir) -> dict:
                 t.miss(key)
             elif not ok(v):
                 t.bad(key, rid)
-    off = {r["id"]: r for r in _doc(off_dir, "d8_both.json")["runs"] if not _err(r)}
+    off_runs = _doc(off_dir, "d8_both.json")["runs"]
+    if len(off_runs) != V5_COUNTS["d8"]:
+        t.bad("count", f"off {len(off_runs)} != {V5_COUNTS['d8']}")
+    for k in sorted({str(r.get("id")) for r in runs} ^ {str(r.get("id")) for r in off_runs}):
+        t.bad("unmatched", k)
+    off = {r["id"]: r for r in off_runs if not _err(r)}
     pairs = [(r, off[r["id"]]) for r in runs if not _err(r) and r.get("id") in off]
     rec = {}
     if pairs:
@@ -1096,12 +1166,16 @@ def _v5_noise(off_dir, tcl_dir) -> dict:
     cp = cp_upper(k, len(rows)) if rows else None
     if cp is None or not (cp["pass"] and cp["agree"]):
         t.bad("cp_upper", cp)
-    for key in ("unmatched", "errors"):
+    for key in ("unmatched", "errors"):  # criteria.md noise items: bundle absolute (fail), rev2 1 table
         c = _count(j.get(key))
         if c is None:
-            t.miss(key)
+            t.miss(f"judgement_{key}")
         elif c:
-            t.bad(key, c)
+            t.bad(f"judgement_{key}", c)
+    off_rows = [r for r in _doc(off_dir, "r79_L1L2_judgement.json").get("runs", []) if r.get("level") == "L2"
+                and not any(m in str(r.get("inner", "")) for m in S1_FRONT)]
+    if len(off_rows) != V5_COUNTS["noise_L2"]:
+        t.bad("count", f"off {len(off_rows)} != {V5_COUNTS['noise_L2']}")
     ref = [x for x in j.get("reference", []) if x.get("group") == "all"]
     if len(ref) != 1 or not is_num(ref[0].get("false_loc")):
         t.miss("L1_false_loc")
@@ -1196,8 +1270,9 @@ def _v5_regression(off_dir, tcl_dir) -> dict:
 def _v5_ps7(off_dir, tcl_dir) -> dict:
     t = _Tally()
     a, b = _doc(tcl_dir, "ps7.json"), _doc(off_dir, "ps7.json")
-    if len(a) != V5_COUNTS["ps7"]:
-        t.bad("count", f"{len(a)} != {V5_COUNTS['ps7']}")
+    for side, rows in (("tcl", a), ("off", b)):
+        if len(rows) != V5_COUNTS["ps7"]:
+            t.bad("count", f"{side} {len(rows)} != {V5_COUNTS['ps7']}")
     for r in a:
         if _err(r):
             t.bad("error", r.get("key"))
@@ -1227,8 +1302,9 @@ def _g8_faults(r) -> set:
 def _v5_g8(off_dir, tcl_dir) -> dict:
     t = _Tally()
     a, b = _g8_rows(tcl_dir), _g8_rows(off_dir)
-    if len(a) != V5_COUNTS["g8_safe_stop"]:
-        t.bad("count", f"{len(a)} != {V5_COUNTS['g8_safe_stop']}")
+    for side, rows in (("tcl", a), ("off", b)):
+        if len(rows) != V5_COUNTS["g8_safe_stop"]:
+            t.bad("count", f"{side} {len(rows)} != {V5_COUNTS['g8_safe_stop']}")
     for k, r in a.items():
         if _err(r):
             t.bad("error", k)
@@ -1356,24 +1432,33 @@ def recount_v5_raw(m: dict, problems: list[str]) -> tuple[dict, str]:
     arms = {"off": Path(m["off"]), "tcl": Path(m["tcl"])}
     out = {}
     g_d = "pass"
+    nj = False
     try:
         out["common"] = _v5_common(m, arms)
         if not out["common"]["absolute_pass"]:
             g_d = "fail"
+        if not out["common"]["judgeable"]:
+            nj = True
+            problems.append(f"V-5 common not judgeable (rev6 1): {out['common']['not_judgeable_counts']}")
     except (OSError, ValueError, KeyError, NotJudgeable) as exc:
         problems.append(f"V-5 common: {exc}")
+        nj = True
     for name, func in V5_BUNDLE_FUNCS.items():
         try:
             res = func(arms["off"], arms["tcl"])
         except (OSError, ValueError, KeyError, NotJudgeable) as exc:
             problems.append(f"V-5 {name} not judgeable: {exc}")
             out[name] = {"not_judgeable": str(exc)}
+            nj = True
             continue
         if not res["absolute_pass"]:
             g_d = "fail"
+        if not res["judgeable"]:
+            nj = True
+            problems.append(f"V-5 {name} not judgeable (rev6 1): {res['not_judgeable_counts']}")
         out[name] = res
     out["missing_total"] = sum(sum((v.get("missing") or {}).values()) for v in out.values() if isinstance(v, dict))
-    return out, g_d
+    return out, ("not_judgeable" if nj else g_d)
 
 
 def v3_arm_check(a: dict, fmap: dict, arm: str, problems: list[str]) -> None:
@@ -1604,7 +1689,9 @@ def rules_check(rules_dir: Path) -> dict:
     for tag, fname, sname, want in (("rev1", REV1_FILE, REV1_SEAL, REV1_SHA256), ("rev2", REV2_FILE, REV2_SEAL, REV2_SHA256),
                                     ("rev3", REV3_FILE, REV3_SEAL, REV3_SHA256),
                                     ("rev4", REV4_FILE, REV4_SEAL, REV4_SHA256),
-                                    ("rev5", REV5_FILE, REV5_SEAL, REV5_SHA256)):
+                                    ("rev5", REV5_FILE, REV5_SEAL, REV5_SHA256),
+                                    ("rev6", "k2_touch_creep_rules_rev6.md", "k2_touch_creep_rules_rev6.sha256",
+                                     REV6_SHA256)):
         f, s = Path(rules_dir) / fname, Path(rules_dir) / sname
         res[f"{tag}_sha256"] = sha256_file(f) if f.exists() else None
         res[f"{tag}_seal_first_token"] = s.read_text(encoding="utf-8").split()[0] if s.exists() else None
@@ -1682,10 +1769,11 @@ def selftest_v5_stored(acc: Path, ps7: Path) -> dict:
         res = {}
         for name, func in V5_BUNDLE_FUNCS.items():
             r = func(arm, arm)
-            res[name] = {"n": r.get("n"), "absolute_pass": r["absolute_pass"], "failure_counts": r["failure_counts"],
+            res[name] = {"n": r.get("n"), "absolute_pass": r["absolute_pass"], "judgeable": r["judgeable"],
+                         "failure_counts": r["failure_counts"], "not_judgeable_counts": r["not_judgeable_counts"],
                          "missing": r["missing"]}
-    want_n = {"grid": 768, **V5_COUNTS}
-    ok = all(v["absolute_pass"] and v["n"] == want_n[k] for k, v in res.items())
+    want_n = dict(V5_COUNTS)
+    ok = all(v["absolute_pass"] and v["judgeable"] and v["n"] == want_n[k] for k, v in res.items())
     return {"bundles": res, "ok": ok}
 
 
