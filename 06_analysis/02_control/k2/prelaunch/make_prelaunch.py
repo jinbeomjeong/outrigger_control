@@ -66,8 +66,8 @@ V5_NOTE_REGRESSION = (
     "entries that are not judgement rows 7 + clip_r79_L3L4 42; key sha d4f58334...). The 118 of the original 3.4 / "
     "criteria.md is the old rerun-list count, not reconstructable from the stored outputs. E-1 expects 93. The r79 "
     "L1 reference rows are not judged rows; the r79 judgement 'unmatched' is a record (rev4 1 (c)).")
-PATH1_BLOB_PENDING = "{PATH1_BLOB: python-expert k2_judge.py after rev2 / rev3 / rev4 (pending)}"
-FLATTEN_BLOB_PENDING = "{FLATTEN_BLOB: python-expert k2_v5_flatten.py after rev2 (pending)}"
+PATH1_BLOB_PENDING = "9bbcc201cf52e48baedd2edb4bb846003d8e8eb3"  # python-expert k2-path1-rev2 5f22957
+FLATTEN_BLOB_PENDING = "d9e3f2d9b206047b654bfde5fdc92ccef688c73b"  # python-expert k2-path1-rev2 5f22957
 L1_START_STATES = {
     "S6_crawler_top_fdown3.5.npz": "8f93d107fcd7ff8e4f22a0952dd35ca5bb409645737a0260ee354a7b6bedf9bd",
     "S6_crawler_top_fdown3.5.meta.json": "9bb73974458de347a65a3a151cd044e5b801676b7e8b38881b8e8f119c2d133a",
@@ -395,6 +395,7 @@ def manifest(run_wt: str) -> dict:
                    "sidecars": {arm: [s["identity_sidecar"] for s in v5_steps(run_wt) if s["arm"] == arm]
                                 for arm in ARMS},
                    "c2_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
+                   "run_wt": run_wt, "run_head": "6a44ff81d25aea1fa162daf9b14c23b99beb9db0",
                    "_note": "path 2 V-5 input (rules rev2 1 / rev4): the raw arm folders; the flat 'v5' entries are "
                             "path 1 input only"}
     m["v7"] = {"rows": {f"{r}_{a}": {"row_json": rf"{{BATCH_V7}}\{r}_{a}\k2_row.json",
@@ -440,20 +441,24 @@ def main() -> None:
                                "sha256": sha(k2 / "k2_touch_creep_rules.md")},
                   **{rv: {"path": f"06_analysis/02_control/k2/k2_touch_creep_rules_{rv}.md",
                           "sha256": sha(k2 / f"k2_touch_creep_rules_{rv}.md")}
-                     for rv in ("rev1", "rev2", "rev3", "rev4") if (k2 / f"k2_touch_creep_rules_{rv}.md").exists()},
+                     for rv in ("rev1", "rev2", "rev3", "rev4", "rev5") if (k2 / f"k2_touch_creep_rules_{rv}.md").exists()},
                   "dyn_spec": {"path": "06_analysis/02_control/k2/k2_dyn_spec.md", "sha256": sha(k2 / "k2_dyn_spec.md")}},
         "criteria_md": {"path": "06_analysis/02_control/touch_phase/acceptance/criteria.md",
                         "blob_at_run_head": "86aa624264b3add5f24866f8ad21d91cb2c855be",
                         "lf_content_sha256": "a7363e161fef616915bcafa4e1b7b182e9501b28326634f4540cc8fc5c80590d",
                         "k2_run_working_copy_sha256": "a392730fc2160faf5f6c2c327ec1c5b8ae251427e3b259ef3bb074e791ceb00c"},
         "c2_py_k2_run_working_copy_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
-        "path2": {"path": "04_scripts/03_control/k2/k2_recount.py", "version": "1.3",
+        "path2": {"path": "04_scripts/03_control/k2/k2_recount.py", "version": "1.4",
                   "blob": blob("04_scripts/03_control/k2/k2_recount.py"),
                   "run_from": "the record branch / main checkout after the merge (k2-run holds the older 1.2)"},
         "path1": {"path": "04_scripts/03_control/k2/k2_judge.py", "blob": PATH1_BLOB_PENDING,
+                  "source": "python-expert branch k2-path1-rev2 5f22957 (rev2..rev4; rev5 alignment by its 7 items)",
                   "previous_blob_not_used": FIX_BLOBS["04_scripts/03_control/k2/k2_judge.py"]},
         "flatten": {"path": "04_scripts/03_control/k2/k2_v5_flatten.py", "blob": FLATTEN_BLOB_PENDING,
+                    "source": "python-expert branch k2-path1-rev2 5f22957",
                     "previous_blob_not_used": FIX_BLOBS["04_scripts/03_control/k2/k2_v5_flatten.py"]},
+        "run_from": "both judge paths run from the main checkout after merging k2-prelaunch-record and k2-path1-rev2; "
+                    "k2-run (6a44ff8) holds older judge tools",
         "key_lists": key_lists(kr),
         "v6_start_states": {"L1R": {"folder": r"<k2-run>\07_results\states_L1R", "aggregate_sha256_prefix": "b24066a9",
                                     "files_sha256": L1_START_STATES},

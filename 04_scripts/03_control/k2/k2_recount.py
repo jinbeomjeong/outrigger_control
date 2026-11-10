@@ -47,7 +47,9 @@ from pathlib import Path
 import numpy as np
 
 TOOL = "k2_recount"
-VERSION = "1.3"
+VERSION = "1.4"
+"""1.4 (rev5, before any result): provenance per V-5 step (d8 from its meta), G8 c2.py via sidecar HEAD / clean and
+the k2-run c2.py sha, G8 K-2 evidence from the row fields, flatten sidecar not read, rev5 seal."""
 """1.3 (rev2 / rev3, before any result): V-5 from the raw outputs (``manifest["v5_raw"]``: off / tcl arm folders,
 sidecars) with the criteria.md absolute items and pass->fail vs the off arm; V-6 SH-1 .. SH-6; E-5 / I-9 checks
 (V-2 / V-4 options off, V-3 option values, V-6 moving damping / open shares); rev2 / rev3 seals."""
@@ -90,7 +92,10 @@ REV3_SHA256 = "8bcdb0ed1fdf6d730ac781929e93b233972d1e80566e1ae14ffb7ddf049d6e61"
 REV4_FILE = "k2_touch_creep_rules_rev4.md"
 REV4_SEAL = "k2_touch_creep_rules_rev4.sha256"
 REV4_SHA256 = "82160ff54874e3d43bf7c5a1ae96d6e8612b1e7635aaccea39a4299352ce00c5"
-C2_SHA256_RUN ="f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1"
+REV5_FILE = "k2_touch_creep_rules_rev5.md"
+REV5_SEAL = "k2_touch_creep_rules_rev5.sha256"
+REV5_SHA256 = "73b877580ec5dc94a46a38d2ed620372cddd17dd38eef06126d84843b485eccc"
+C2_SHA256_RUN = "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1"
 """rev2 1 common: sha256 of the k2-run working copy of 03_src/outrigger_sim/control/c2.py (provenance c2_sha256)."""
 REG_JUDGED_SHA256 = "2900db889efc73070c3a8fbe557b1a4ad9ee3392afc099ba00be1d0549174ec9"
 REG_RECORD_SHA256 = "d4f58334c6ca7c393c35072a798c09f4995d7fde274e0af6b21b99f977d503eb"
@@ -1252,24 +1257,60 @@ V5_EVENT_FILES = (("r79_L1L2.json", "results"), ("clip_r79_L1L2.json", "results"
                   ("ps7.json", None))
 
 
+V5_PROVENANCE_STEPS = ("reg1", "reg2", "reg3", "reg4", "reg5", "reg6", "reg7", "grid_r67_main", "grid_r67_top",
+                       "grid_r69_top", "grid_r69_bottom", "soil_A", "noise_L1L2", "ps7")
+"""rev5 1: one ``provenance/<step>.json`` per step; d8 takes ``d8_both.json`` meta, G8 the rev5 2 check."""
+RUN_HEAD_FULL = "6a44ff81d25aea1fa162daf9b14c23b99beb9db0"
+G8_SIDECARS = ("g8_jobs1.launch.json", "g8_jobs3.launch.json", "g8_jobs5.launch.json")
+
+
 def _v5_common(m: dict, arms: dict) -> dict:
-    """rev2 1 common items and the K-2 evidence: sidecar rc, provenance, event rows."""
+    """rev2 1 / rev5 common items and the K-2 evidence: sidecar rc (run + r79 judge steps, not flatten),
+    provenance per step (d8 from its meta), the G8 c2.py check (rev5 2), event rows, G8 row fields."""
     t = _Tally()
     c2 = m.get("c2_sha256", C2_SHA256_RUN)
+    run_head = m.get("run_head", RUN_HEAD_FULL)
+    run_wt = m.get("run_wt")
+    if not run_wt or not (Path(run_wt) / "03_src/outrigger_sim/control/c2.py").exists():
+        t.miss("run_wt_c2")
+    elif sha256_file(Path(run_wt) / "03_src/outrigger_sim/control/c2.py") != c2:
+        t.bad("run_wt_c2_sha256", "k2-run c2.py differs")
     for arm, folder in arms.items():
+        sidecars = {}
         for sc in m.get("sidecars", {}).get(arm, []):
             p = Path(sc)
+            if p.name.startswith("flatten"):  # rev5 3: not a path 2 input
+                continue
             if not p.exists():
                 t.miss("sidecar")
                 continue
-            rc = json.loads(p.read_text(encoding="utf-8")).get("rc")
-            if rc != 0:
-                t.bad("sidecar_rc", f"{arm}:{p.name}={rc}")
-        provs = sorted((Path(folder) / "provenance").glob("*.json"))
-        if not provs:
+            doc = json.loads(p.read_text(encoding="utf-8"))
+            sidecars[p.name] = doc
+            if doc.get("rc") != 0:
+                t.bad("sidecar_rc", f"{arm}:{p.name}={doc.get('rc')}")
+        for name in G8_SIDECARS:  # rev5 2: G8 c2.py = the RUN_HEAD file
+            doc = sidecars.get(name)
+            if doc is None:
+                t.miss("g8_sidecar")
+                continue
+            for side in ("git_start", "git_end"):
+                g = doc.get(side) or {}
+                if g.get("head") != run_head or g.get("is_clean") is not True:
+                    t.bad("g8_git", f"{arm}:{name}:{side}")
+        provs = {}
+        for step in V5_PROVENANCE_STEPS:
+            p = Path(folder) / "provenance" / f"{step}.json"
+            if not p.exists():
+                t.miss("provenance")
+                continue
+            provs[p.name] = json.loads(p.read_text(encoding="utf-8"))
+        d8 = Path(folder) / "d8_both.json"
+        if d8.exists():
+            provs["d8_both.json:meta"] = json.loads(d8.read_text(encoding="utf-8")).get("meta") or {}
+        else:
             t.miss("provenance")
-        for p in provs:
-            d = json.loads(p.read_text(encoding="utf-8"))
+        for pname, d in provs.items():
+            p = Path(pname)
             if d.get("c2_sha256") != c2:
                 t.bad("c2_sha256", f"{arm}:{p.name}")
             if d.get("combo") != "preset":
@@ -1301,10 +1342,11 @@ def _v5_common(m: dict, arms: dict) -> dict:
         except NotJudgeable:
             t.miss("events:g8")
             g8 = {}
-        for r in g8.values():
+        for r in g8.values():  # rev5 2: G8 K-2 evidence from the row fields, not events
             if r.get("touch_creep_latch") is not (arm == "tcl"):
                 t.bad("g8_touch_creep_latch", f"{arm}:{r.get('tag')}|{r.get('key')}")
-                break
+            if str(r.get("controller_tag", "")).endswith(TCL_SUFFIX) is not (arm == "tcl"):
+                t.bad("g8_controller_tag", f"{arm}:{r.get('tag')}|{r.get('key')}")
     return t.result()
 
 
@@ -1561,7 +1603,8 @@ def rules_check(rules_dir: Path) -> dict:
     ok = res["rules_sha256"] == RULES_SHA256 == res["seal_first_token"] and res["dyn_spec_sha256"] == DYN_SPEC_SHA256
     for tag, fname, sname, want in (("rev1", REV1_FILE, REV1_SEAL, REV1_SHA256), ("rev2", REV2_FILE, REV2_SEAL, REV2_SHA256),
                                     ("rev3", REV3_FILE, REV3_SEAL, REV3_SHA256),
-                                    ("rev4", REV4_FILE, REV4_SEAL, REV4_SHA256)):
+                                    ("rev4", REV4_FILE, REV4_SEAL, REV4_SHA256),
+                                    ("rev5", REV5_FILE, REV5_SEAL, REV5_SHA256)):
         f, s = Path(rules_dir) / fname, Path(rules_dir) / sname
         res[f"{tag}_sha256"] = sha256_file(f) if f.exists() else None
         res[f"{tag}_seal_first_token"] = s.read_text(encoding="utf-8").split()[0] if s.exists() else None

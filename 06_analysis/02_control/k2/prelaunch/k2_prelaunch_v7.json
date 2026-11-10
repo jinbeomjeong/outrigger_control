@@ -23,6 +23,10 @@
    "path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev4.md",
    "sha256": "82160ff54874e3d43bf7c5a1ae96d6e8612b1e7635aaccea39a4299352ce00c5"
   },
+  "rev5": {
+   "path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev5.md",
+   "sha256": "73b877580ec5dc94a46a38d2ed620372cddd17dd38eef06126d84843b485eccc"
+  },
   "dyn_spec": {
    "path": "06_analysis/02_control/k2/k2_dyn_spec.md",
    "sha256": "502b0bb78558d40586cbcddb718b6c5d53529de4e78369f454762c9fe73727ff"
@@ -37,20 +41,23 @@
  "c2_py_k2_run_working_copy_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
  "path2": {
   "path": "04_scripts/03_control/k2/k2_recount.py",
-  "version": "1.3",
-  "blob": "78a3d2c7c9d26523288f5f3ab05b9a3d6e63466c",
+  "version": "1.4",
+  "blob": "1cde20d2ae54ec2aaef23f7d6c0d24a703904ea5",
   "run_from": "the record branch / main checkout after the merge (k2-run holds the older 1.2)"
  },
  "path1": {
   "path": "04_scripts/03_control/k2/k2_judge.py",
-  "blob": "{PATH1_BLOB: python-expert k2_judge.py after rev2 / rev3 / rev4 (pending)}",
+  "blob": "9bbcc201cf52e48baedd2edb4bb846003d8e8eb3",
+  "source": "python-expert branch k2-path1-rev2 5f22957 (rev2..rev4; rev5 alignment by its 7 items)",
   "previous_blob_not_used": "7ee9ccc109578da2bb0e8e25f3811d9c0f73664b"
  },
  "flatten": {
   "path": "04_scripts/03_control/k2/k2_v5_flatten.py",
-  "blob": "{FLATTEN_BLOB: python-expert k2_v5_flatten.py after rev2 (pending)}",
+  "blob": "d9e3f2d9b206047b654bfde5fdc92ccef688c73b",
+  "source": "python-expert branch k2-path1-rev2 5f22957",
   "previous_blob_not_used": "a83abd803dd91e3855159e919770092e40a3cdb9"
  },
+ "run_from": "both judge paths run from the main checkout after merging k2-prelaunch-record and k2-path1-rev2; k2-run (6a44ff8) holds older judge tools",
  "key_lists": {
   "v2": {
    "n": 1102,
@@ -144,7 +151,7 @@
   "d8x_points.json": "050145f6a965c851a014563f6219e61c1081716eb5ad5f7e8469a098d426c817"
  },
  "inputs": {
-  "k2_manifest.json": "d21092b99209261cece8d02c2154dd5bb616a773d75fb15633e14705b744dc9c",
+  "k2_manifest.json": "93d4c55b1947d85c0db6256fcd8352da074779df4b35f5376a5270212639bb22",
   "k2_expect.json": "ecef70d274ebb9a572247f8859bafb02e5f5ddb0dd8268958ec6660893e4e1a6",
   "k2_fields.json": "0c5aafc4cd026680b81d12a43106ea0267d1519b21a9d6192e5ef96943e45b77",
   "k2_commands.json": "ce6e04a2c00aaafb2f73b3f88b78abb599ca3be134dad36352b4c7f08e8b97e5",

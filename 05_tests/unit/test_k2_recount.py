@@ -318,8 +318,23 @@ def test_v5_raw_d8_grid_common(tmp_path):
     d8 = kr._v5_d8(off, tcl)
     assert not d8["absolute_pass"] and d8["failure_counts"] == {"min_true_cyl_force_kN": 576}
     common = kr._v5_common({}, {"off": off, "tcl": tcl})
-    assert set(common["failure_counts"]) == {"events:r79_L1L2.json", "events:clip_r79_L1L2.json",
-                                             "events:clip_r79_L3L4.json", "events:ps7.json", "events:g8"}
+    assert not common["absolute_pass"]
+    assert {"run_wt_c2", "provenance", "g8_sidecar", "events:g8", "events:ps7.json"} <= set(common["missing"])
+    # rev5 2: G8 sidecars with the run HEAD and clean pass; a dirty end fails
+    sc = []
+    for name in kr.G8_SIDECARS:
+        p = tmp_path / name
+        git = {"head": kr.RUN_HEAD_FULL, "is_clean": True}
+        p.write_text(json.dumps({"rc": 0, "git_start": git, "git_end": git}), encoding="utf-8")
+        sc.append(str(p))
+    flat = tmp_path / "flatten.launch.json"
+    flat.write_text(json.dumps({"rc": 2}), encoding="utf-8")
+    c = kr._v5_common({"sidecars": {"tcl": sc + [str(flat)], "off": sc}}, {"off": off, "tcl": tcl})
+    assert "g8_git" not in c["failure_counts"] and "sidecar_rc" not in c["failure_counts"]
+    bad = json.loads(Path(sc[0]).read_text(encoding="utf-8"))
+    bad["git_end"]["is_clean"] = False
+    Path(sc[0]).write_text(json.dumps(bad), encoding="utf-8")
+    assert "g8_git" in kr._v5_common({"sidecars": {"tcl": sc}}, {"off": off, "tcl": tcl})["failure_counts"]
     problems = []
     out, g = kr.recount_v5_raw({"off": str(off), "tcl": str(tcl)}, problems)
     assert g == "fail" and any("soil" in p for p in problems)

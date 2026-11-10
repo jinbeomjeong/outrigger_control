@@ -15,10 +15,10 @@
 | 대상 | 값 | 확인 방법 |
 |---|---|---|
 | 원판 / rev1 / 명세 sha256 | `a3658197…7263` / `5ba081c6…4776` / `502b0bb7…27ff` | raw sha256 |
-| rev2 / rev3 / rev4 sha256 (결과 전, 브랜치 `k2-prelaunch-record`) | `b3f1b41f…94ea` / `8bcdb0ed…6e61` / `82160ff5…00c5` | raw sha256 |
-| 경로 2 `k2_recount.py` **1.3** blob (판정 때 이 브랜치·병합 뒤 main에서 실행. k2-run에는 1.2가 있다) | `78a3d2c7c9d26523288f5f3ab05b9a3d6e63466c` | `git rev-parse <판정 커밋>:<path>` |
-| 경로 1 `k2_judge.py` | **`{PATH1_BLOB}` 대기**(python-expert, rev2~rev4 반영판). 이전 `7ee9ccc1…`은 쓰지 않음 | 같음 |
-| `k2_v5_flatten.py` | **`{FLATTEN_BLOB}` 대기**(python-expert). 이전 `a83abd80…`은 쓰지 않음 | 같음 |
+| rev2 / rev3 / rev4 / rev5 sha256 (결과 전, 브랜치 `k2-prelaunch-record`) | `b3f1b41f…94ea` / `8bcdb0ed…6e61` / `82160ff5…00c5` / `73b87758…eccc` | raw sha256 |
+| 경로 2 `k2_recount.py` **1.4** blob (판정 때 병합 뒤 main에서 실행. k2-run에는 1.2가 있다) | `1cde20d2ae54ec2aaef23f7d6c0d24a703904ea5` | `git rev-parse <판정 커밋>:<path>` |
+| 경로 1 `k2_judge.py` (python-expert `k2-path1-rev2` `5f22957`) | `9bbcc201cf52e48baedd2edb4bb846003d8e8eb3`. 이전 `7ee9ccc1…`은 쓰지 않음 | 같음 |
+| `k2_v5_flatten.py` (같은 브랜치) | `d9e3f2d9b206047b654bfde5fdc92ccef688c73b`. 이전 `a83abd80…`은 쓰지 않음 | 같음 |
 | `run_with_identity.py` | `fab7664bd3ba16723e4202bf71dc7d87ab0cf7f0` | 같음 |
 | `run_ps7.py` | `248f5363cbdbaf1bc20eac3ef5e73bdfd6e05acd` | 같음 |
 | `g8trace.py` | `d8bfe68e4350195951ec58a6a69bc24c04d293cc` | 같음 |
