@@ -141,3 +141,14 @@
 - python-expert: 4절 구현(rev5 봉인 뒤).
 - verif-protocol-auditor: `[시점] 실행 전` 감사. 주의할 점은 태그 집합의 `_K1` 처리, 래퍼 허용 모듈, R-0K 키 목록 봉인, $B(k)$ 출처, `.gitattributes -text` 보호다.
 - compute-scheduler-expert: 배치표. R-0 7 + R-0K 45 + T-3K 308이고 약 15.1 CPU·h, 스레드 1이다.
+
+## 6. rev5 봉인 뒤 바뀐 구현 명세(2026-11-10, 사용자 결정 Q1~Q4 = 추천안)
+
+rev5(`las_targeted_rules_rev5.md` `879d0e4d…49b2`, R-0K 키 목록 `53b134a1…d764`, 봉인 2026-11-10 13:24:55 +09:00)가 4절보다 우선한다. 4절과 다른 점은 아래와 같다.
+
+- 봉인 등록: `lt.SEALS`에 `rev5`와 `rev5_r0k_keys` 두 항목을 넣고, 둘 다 같은 `las_targeted_rules_rev5.sha256`(두 줄, rev3 방식)을 쓴다. `T3_REQUIRED_SEALS`는 11개가 된다.
+- 6번: 생성기를 새로 만들지 않는다. 봉인 파일을 읽어 쓴다. 시험 T6-a는 봉인 파일과, `scripts/make_las_rev5_r0k_keys.py`(`54e6eff2…be24`) 규칙으로 `d1.jsonl`에서 다시 계산한 키 집합·`class`가 같은지 본다(45키, 목록 sha256 `9399c492…2e3c`).
+- 분류: Q3 멈춤은 JSON `class == "uniform_r4"` 36키에만 건다. `r0_no_r4` 4키(R-0의 균일 키 2개 포함)는 K-2K (iii)으로 H-T3-1K다.
+- 멈춤 이름과 종료 코드: K-2K (i) 실패는 H-T3-3(2), (ii)·(iii) 실패는 **H-T3-1K(종료 코드 1)**, (iv) 실패는 **H-T3-1Q(종료 코드 2)**. 4절 공통의 "K-2K (ii)(iii) → 2"는 1로 바꾼다. 멈춤 순서는 rev5 4절.
+- K-5 추가 검사는 R-0K 밖 키의 미작동 D-1 줄에만 건다(dg3는 저장 R4c30 0 확인으로 대신).
+- 출력 폴더: `06_analysis/03_hydraulic/coupled/v5/las/t3_k1/`.
