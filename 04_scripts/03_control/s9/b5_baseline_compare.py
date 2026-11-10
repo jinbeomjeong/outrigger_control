@@ -352,10 +352,16 @@ def ablation_config(c2, config):
     LAS-b stays as the preset has it (user decision 2026-11-08: ABL runs with LAS-b too); it
     starts without the soil response (``require_soil_response`` False), else it would never
     start in ABL. The pre-switch preset (``pre_las_preset_runner.py``) gives the ABL before it.
+    The K1 order gate flag also stays as the preset has it (``las_k1_rules_adopt.md`` 9.2: tag
+    ``ABL_LAS_K1``); with R4 off it never decides anything, so the commands do not change.
     """
     liftoff_slow = config.liftoff_approach_slow
     if liftoff_slow.enable:
         liftoff_slow = replace(liftoff_slow, require_soil_response=False)
+    slope_margin = c2.SlopeClearanceMarginSettings(
+        flat_soil_margin_m=0.0,
+        flat_soil_margin_order_gate=config.slope_clearance_margin.flat_soil_margin_order_gate,
+    )
     return replace(
         config,
         soil=c2.SoilResponseSettings(),
@@ -363,7 +369,7 @@ def ablation_config(c2, config):
         fault_reground=replace(config.fault_reground, stroke_end_entry=False),
         twist_completion_relax=c2.TwistCompletionRelaxSettings(),
         pre_loc_lift_pause=c2.PreLocLiftPauseSettings(),
-        slope_clearance_margin=c2.SlopeClearanceMarginSettings(flat_soil_margin_m=0.0),
+        slope_clearance_margin=slope_margin,
         liftoff_window_reapproach=c2.LiftoffWindowReapproachSettings(),
         loc_revoke=c2.LocRevokeSettings(),
         diff_sink=c2.DiffSinkSettings(),

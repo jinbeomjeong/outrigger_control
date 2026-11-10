@@ -137,7 +137,8 @@ def run_config(result: dict, extend_start: str | None = None):
     v5 = result.get("v5_hydraulics") or {}
     valve_tau_s = float(((v5.get("actuator") or {}).get("valve") or {}).get(
         "tau_v_s", HARNESS_VALVE_TAU_S))
-    config = C2Config().with_10hz_d1(liftoff_approach_slow=recorded_liftoff_slow(result))
+    config = C2Config().with_10hz_d1(liftoff_approach_slow=recorded_liftoff_slow(result),
+                                     flat_soil_margin_order_gate=recorded_order_gate(result))
     config, _ = with_engine_fallback_ratio(config, "L2b_NSC")
     if config.two_pressure.lock_window_valve_tau_s != valve_tau_s:
         config = replace(config, two_pressure=replace(config.two_pressure,
@@ -901,6 +902,19 @@ def recorded_liftoff_slow(result: dict) -> bool:
         return True
     expected = ((result.get("c2_setup") or {}).get("expect_controller") or {}).get("name")
     return is_liftoff_slow_tag(run_controller_tag(result)) or is_liftoff_slow_tag(expected)
+
+
+def recorded_order_gate(result: dict) -> bool:
+    """LAS-b K1 order gate of the recorded run (K1 switch, ``las_k1_rules_adopt.md`` 9.2): on
+    when its controller meta has ``slope_clearance_margin.settings.flat_soil_margin_order_gate``
+    on or its tag ends with ``_K1``; a run before the switch has neither and replays it off."""
+    from outrigger_sim.hydraulics.v5_options import is_order_gate_tag
+
+    margin = (result.get("controller_meta") or {}).get("slope_clearance_margin") or {}
+    if (margin.get("settings") or {}).get("flat_soil_margin_order_gate"):
+        return True
+    expected = ((result.get("c2_setup") or {}).get("expect_controller") or {}).get("name")
+    return is_order_gate_tag(run_controller_tag(result)) or is_order_gate_tag(expected)
 
 
 def run_controller_tag(result: dict) -> str | None:

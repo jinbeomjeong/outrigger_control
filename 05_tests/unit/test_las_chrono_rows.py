@@ -70,11 +70,22 @@ def test_merge_state(rows) -> None:
 
 
 def test_check_sources_ok(rows) -> None:
+    """Off rows (pre-LAS runner) pass; since the K1 switch (``las_k1_rules_adopt.md`` 9.2) the on rows' tag
+    ``final_C4G2_P3_LAS`` checks the order gate off, so the plain on rows are refused at that path only (a
+    reproduction runs through ``pre_k1_preset_runner.py``)."""
     doc = sb.check_sources(las.LAS_BATCH, rows)
-    assert doc["ok"]
     for res in doc["rows"]:
         r = next(x for x in rows if x["case"] == res["case"])
-        assert res["status"] == ("ok" if r["las_ready"] else "blocked_pre_merge")
+        if not r["las_ready"]:
+            assert res["status"] == "blocked_pre_merge"
+        elif r["las"] == "off":
+            assert res["status"] == "ok", res
+        else:
+            assert res["status"] == "differs", res
+            (diff,) = res["diffs"]
+            assert [c["path"] for c in diff["row"]] == [
+                "slope_clearance_margin.flat_soil_margin_order_gate"]
+    assert doc["ok"] is all(r["las"] == "off" or not r["las_ready"] for r in rows)
 
 
 def test_case_env_start_env() -> None:

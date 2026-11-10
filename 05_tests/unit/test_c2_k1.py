@@ -78,10 +78,20 @@ def loc_at(
 # --- settings ----------------------------------------------------------------------------------
 
 
-def test_gate_is_off_in_the_class_and_in_the_preset() -> None:
-    """Rules 1.1: the R8 preset is not switched by this candidate."""
+def test_gate_is_off_in_the_class_and_on_in_the_preset() -> None:
+    """``las_k1_rules_adopt.md`` 9.1: the class default stays off (the behaviour before K1), the
+    R8 preset has it on since the K1 switch, and the preset keyword gives the old preset back."""
     assert SlopeClearanceMarginSettings().flat_soil_margin_order_gate is False
-    assert C2Config().with_10hz_d1().slope_clearance_margin.flat_soil_margin_order_gate is False
+    assert C2Config().slope_clearance_margin.flat_soil_margin_order_gate is False
+    assert C2Config().with_10hz_d1().slope_clearance_margin.flat_soil_margin_order_gate is True
+    pre_k1 = C2Config().with_10hz_d1(flat_soil_margin_order_gate=False)
+    assert pre_k1.slope_clearance_margin.flat_soil_margin_order_gate is False
+    assert pre_k1 == replace(
+        C2Config().with_10hz_d1(),
+        slope_clearance_margin=replace(
+            C2Config().with_10hz_d1().slope_clearance_margin, flat_soil_margin_order_gate=False
+        ),
+    )  # the keyword changes the gate and nothing else
     assert _RunState.flat_soil_order_decisions == ()  # class attribute (old pickles)
 
 

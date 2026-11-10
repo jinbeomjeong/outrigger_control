@@ -102,6 +102,7 @@ def run_config(meta: dict, extend_start: str | None = None):
         apply_controller_options,
         check_extend_start,
         is_liftoff_slow_tag,
+        is_order_gate_tag,
     )
 
     closed_loop = soil._imports()[0]
@@ -113,6 +114,10 @@ def run_config(meta: dict, extend_start: str | None = None):
     config = replace(config, liftoff_approach_slow=replace(
         config.liftoff_approach_slow,
         enable=is_liftoff_slow_tag(meta.get("controller_tag"))))
+    # K1 switch (las_k1_rules_adopt.md 9.2): likewise the order gate only with a ``_K1`` tag
+    config = replace(config, slope_clearance_margin=replace(
+        config.slope_clearance_margin,
+        flat_soil_margin_order_gate=is_order_gate_tag(meta.get("controller_tag"))))
     # read only: records of earlier M2 laws keep their lock window (the replay reruns no plant);
     # a record of the revision 8 VB / LS definition brings its ③ start bound
     options = HydraulicOptions.from_stored(meta["hydraulic_options"])

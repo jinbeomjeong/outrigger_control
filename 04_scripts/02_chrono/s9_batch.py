@@ -371,7 +371,13 @@ V5_LAS_CONTROLLER = "final_C4G2_LAS"
 """Tags of a row re-run after the LAS-b switch (2026-11-08; run_S9 ``FINAL_P3_LAS_CONTROLLER`` /
 ``FINAL_LAS_CONTROLLER``): the rows above keep the tags of their stored results, which the switched preset refuses
 (``--expect-controller``); a re-run row takes these through :func:`with_expected_controller`, a reproduction of the
-stored result runs through ``05_tests/unit/pre_las_preset_runner.py``."""
+stored result runs through ``05_tests/unit/pre_las_preset_runner.py``. Since the K1 switch (``las_k1_rules_adopt.md``
+9.2) run_S9 checks the order gate off for these two tags, so their rows refuse the switched preset too; a reproduction
+runs through ``05_tests/unit/pre_k1_preset_runner.py``."""
+V5_P3_LAS_K1_CONTROLLER = "final_C4G2_P3_LAS_K1"
+V5_LAS_K1_CONTROLLER = "final_C4G2_LAS_K1"
+"""Tags of a row re-run after the K1 switch (run_S9 ``FINAL_P3_LAS_K1_CONTROLLER`` / ``FINAL_LAS_K1_CONTROLLER``):
+LAS-b + the K1 R4c30 order gate; a re-run row takes these through :func:`with_expected_controller`."""
 
 
 def v5_vb_argv() -> list[str]:
@@ -1434,7 +1440,8 @@ def strip_controller_check(argv: list[str]) -> list[str]:
 LAS_OFF_ARG = "--las-off"
 PRE_LAS_CONTROLLERS = ("final_C4G2", "final_C4G2_P3")
 """Row tags before the LAS-b switch (run_S9 ``FINAL_CONTROLLER`` / ``FINAL_P3_CONTROLLER``): the switched preset
-refuses them, ``run --las-off`` gives their rows back the LAS-b-off preset (spec 436.9)."""
+refuses them, ``run --las-off`` gives their rows back the LAS-b-off preset (spec 436.9; run_S9 ``LAS_OFF_PRESET`` has
+the K1 order gate off as well)."""
 
 
 def with_las_off(row: dict, argv: list[str]) -> list[str]:

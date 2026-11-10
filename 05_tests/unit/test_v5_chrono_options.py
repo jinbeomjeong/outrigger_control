@@ -113,11 +113,16 @@ def test_run_s9_extend_start_argument_sets_the_option_and_the_p3_tag(run_s9) -> 
     options = hydraulic_options_from_args(args)
     assert options.extend_start_tracked
     assert run_s9.FINAL_P3_CONTROLLER == EXTEND_START_CONTROLLER_TAG
-    preset = C2Config().with_10hz_d1(liftoff_approach_slow=False)  # the preset before LAS-b
+    # the preset before LAS-b (and before the K1 order gate)
+    preset = C2Config().with_10hz_d1(liftoff_approach_slow=False, flat_soil_margin_order_gate=False)
     tracked = apply_controller_options(preset, options, V_MAX, 0.1)
     assert run_s9.controller_expectation(tracked, run_s9.FINAL_P3_CONTROLLER)["ok"]
     assert not run_s9.controller_expectation(preset, run_s9.FINAL_P3_CONTROLLER)["ok"]
     assert run_s9.controller_expectation(preset, run_s9.FINAL_CONTROLLER)["ok"]
-    las_tracked = apply_controller_options(C2Config().with_10hz_d1(), options, V_MAX, 0.1)
+    las_tracked = apply_controller_options(
+        C2Config().with_10hz_d1(flat_soil_margin_order_gate=False), options, V_MAX, 0.1)
     assert run_s9.controller_expectation(las_tracked, run_s9.FINAL_P3_LAS_CONTROLLER)["ok"]
     assert not run_s9.controller_expectation(las_tracked, run_s9.FINAL_P3_CONTROLLER)["ok"]
+    k1_tracked = apply_controller_options(C2Config().with_10hz_d1(), options, V_MAX, 0.1)
+    assert run_s9.controller_expectation(k1_tracked, run_s9.FINAL_P3_LAS_K1_CONTROLLER)["ok"]
+    assert not run_s9.controller_expectation(k1_tracked, run_s9.FINAL_P3_LAS_CONTROLLER)["ok"]

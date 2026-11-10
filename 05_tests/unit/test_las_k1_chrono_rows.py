@@ -62,31 +62,43 @@ def _same_bits(a, b) -> bool:
 
 # ------------------------------------------------------------------------------- run_S9 level
 def test_without_the_option_no_attribute_and_the_preset_bits(run_s9) -> None:
+    """K1 switch (``las_k1_rules_adopt.md`` 9.1): absent = ``preset`` (no attribute, the preset value, gate on);
+    the request and the effective gate are recorded on every run."""
     args = _level_args(run_s9, ["level", "--soil", "G1"])
     assert not hasattr(args, "k1_order_gate")
     assert run_s9.k1_order_gate_of_args(args) is None
     config, meta = run_s9.level_c2_config_of_args(args)
     assert _same_bits(config, _preset())
-    assert "k1_order_gate" not in meta
+    assert config.slope_clearance_margin.flat_soil_margin_order_gate is True
+    assert meta["k1_order_gate"] == "preset" and meta["k1_order_gate_effective"] is True
 
 
-def test_off_keeps_the_preset_bits_and_records_it(run_s9) -> None:
-    args = _level_args(run_s9, ["level", "--soil", "G1", "--k1-order-gate", "off"])
+def test_explicit_preset_is_the_absent_option(run_s9) -> None:
+    args = _level_args(run_s9, ["level", "--soil", "G1", "--k1-order-gate", "preset"])
+    assert run_s9.k1_order_gate_of_args(args) is None
     config, meta = run_s9.level_c2_config_of_args(args)
     assert _same_bits(config, _preset())
-    assert config.slope_clearance_margin.flat_soil_margin_order_gate is False
-    assert meta["k1_order_gate"] == "off"
+    assert meta["k1_order_gate"] == "preset" and meta["k1_order_gate_effective"] is True
 
 
-def test_on_changes_only_the_order_gate(run_s9) -> None:
-    args = _level_args(run_s9, ["level", "--soil", "G1", "--k1-order-gate", "on"])
+def test_off_changes_only_the_order_gate_and_records_it(run_s9) -> None:
+    args = _level_args(run_s9, ["level", "--soil", "G1", "--k1-order-gate", "off"])
     config, meta = run_s9.level_c2_config_of_args(args)
     preset = _preset()
     assert config != preset
-    assert config.slope_clearance_margin.flat_soil_margin_order_gate is True
+    assert config.slope_clearance_margin.flat_soil_margin_order_gate is False
     assert _same_bits(replace(config, slope_clearance_margin=replace(
-        config.slope_clearance_margin, flat_soil_margin_order_gate=False)), preset)
-    assert meta["k1_order_gate"] == "on"
+        config.slope_clearance_margin, flat_soil_margin_order_gate=True)), preset)
+    assert meta["k1_order_gate"] == "off" and meta["k1_order_gate_effective"] is False
+
+
+def test_on_keeps_the_preset_bits_and_records_it(run_s9) -> None:
+    """The wrapper ``on`` over the switched preset is idempotent (applied twice = once)."""
+    args = _level_args(run_s9, ["level", "--soil", "G1", "--k1-order-gate", "on"])
+    config, meta = run_s9.level_c2_config_of_args(args)
+    assert _same_bits(config, _preset())
+    assert config.slope_clearance_margin.flat_soil_margin_order_gate is True
+    assert meta["k1_order_gate"] == "on" and meta["k1_order_gate_effective"] is True
 
 
 def test_bad_value_is_refused(run_s9) -> None:
@@ -99,10 +111,11 @@ def test_las_off_and_gate_compose(run_s9) -> None:
 
     args = _level_args(run_s9, ["level", "--soil", "G1", "--las-off", "--k1-order-gate", "on"])
     config, meta = run_s9.level_c2_config_of_args(args)
-    base = C2Config().with_10hz_d1(liftoff_approach_slow=False)
+    base = C2Config().with_10hz_d1(liftoff_approach_slow=False, flat_soil_margin_order_gate=False)
     assert config == replace(base, slope_clearance_margin=replace(base.slope_clearance_margin,
                                                                    flat_soil_margin_order_gate=True))
     assert meta["las_off"] is True and meta["k1_order_gate"] == "on"
+    assert meta["k1_order_gate_effective"] is True
 
 
 @pytest.mark.parametrize("gate", ["off", "on"])
@@ -159,10 +172,16 @@ def test_pair_differs_only_in_the_gate_and_the_case(rows) -> None:
 
 
 def test_argv_check_ok_and_check_sources(rows, s9_batch) -> None:
+    """Since the K1 switch (``las_k1_rules_adopt.md`` 9.2) ``final_C4G2_P3_LAS`` checks the order gate off: the
+    gate-off row still passes, the gate-on row (a result before the switch under the old tag) is refused loudly at
+    that path only."""
     res = s9_batch.check_sources(BATCH, rows)
-    assert res["ok"], res
-    assert [c["status"] for c in res["rows"]] == ["ok", "ok"]
+    assert not res["ok"], res
+    assert [c["status"] for c in res["rows"]] == ["ok", "differs"]
     assert [c["order_gate"] for c in res["rows"]] == [False, True]
+    (diff,) = res["rows"][1]["diffs"]
+    assert diff["key"] == "controller_expectation"
+    assert [c["path"] for c in diff["row"]] == ["slope_clearance_margin.flat_soil_margin_order_gate"]
 
 
 def test_harness_key_matches_the_d1_row() -> None:

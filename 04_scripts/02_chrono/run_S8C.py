@@ -1386,20 +1386,24 @@ def reapproach_settings_meta(controller) -> dict[str, Any] | None:
 
 
 LAS_OFF_OPTION = "--las-off"
-LAS_OFF_PRESET = "C2Config().with_10hz_d1(liftoff_approach_slow=False)"
+LAS_OFF_PRESET = "C2Config().with_10hz_d1(liftoff_approach_slow=False, flat_soil_margin_order_gate=False)"
 """``run / check --las-off`` (L2b cases): the controller's LAS-b block is the one of this preset call (LAS-b off,
-the keyword of the switch, spec 436.9): reproduction of a result before the switch, or the LAS-off pair of a LAS-b
+the keyword of the switch, spec 436.9) and its LAS-b K1 order gate is off too (adopted after LAS-b,
+``las_k1_rules_adopt.md`` 9.3): reproduction of a result before the switch, or the LAS-off pair of a LAS-b
 run. Recorded as ``las_off`` in the case bundle meta and the batch meta."""
 
 
 def with_las_off(config):
-    """``config`` with the LAS-b block of :data:`LAS_OFF_PRESET` (the preset keyword path, LAS-b off)."""
+    """``config`` with the LAS-b block and the K1 order gate of :data:`LAS_OFF_PRESET` (the preset keyword path,
+    both off)."""
     from dataclasses import replace
 
     from outrigger_sim.control.c2 import C2Config
 
-    off = C2Config().with_10hz_d1(liftoff_approach_slow=False).liftoff_approach_slow
-    return replace(config, liftoff_approach_slow=off)
+    preset = C2Config().with_10hz_d1(liftoff_approach_slow=False, flat_soil_margin_order_gate=False)
+    margin = replace(config.slope_clearance_margin,
+                     flat_soil_margin_order_gate=preset.slope_clearance_margin.flat_soil_margin_order_gate)
+    return replace(config, liftoff_approach_slow=preset.liftoff_approach_slow, slope_clearance_margin=margin)
 
 
 def _controller(case: S8Case, params_ctrl, params_plant, variant: str | None = None, *,

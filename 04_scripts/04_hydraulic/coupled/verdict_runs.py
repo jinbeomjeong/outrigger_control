@@ -206,13 +206,15 @@ _LAST_FINISHED_CONFIG: list = [None]
 
 
 def _meta_with_controller_tag(meta: dict, config) -> dict:
-    """T4h meta whose ``controller_tag`` names a LAS-b controller (the request meta is built
-    before the run, from the options only); unchanged with LAS-b off."""
-    from outrigger_sim.hydraulics.v5_options import is_liftoff_slow_on, with_liftoff_slow_tag
+    """T4h meta whose ``controller_tag`` names the switches of the run's controller (LAS-b
+    ``_LAS``, K1 order gate ``_K1``; the request meta is built before the run, from the options
+    only); unchanged with both off."""
+    from outrigger_sim.hydraulics.v5_options import with_switch_tags
 
-    if not is_liftoff_slow_on(config):
+    tag = with_switch_tags(meta.get("controller_tag"), config)
+    if tag == meta.get("controller_tag"):
         return meta
-    return {**meta, "controller_tag": with_liftoff_slow_tag(meta.get("controller_tag"))}
+    return {**meta, "controller_tag": tag}
 
 
 def review_record_of(controller) -> dict | None:
@@ -577,8 +579,9 @@ def plant_options_record(hydraulics=None, t_lift_s: float | None = None) -> dict
     clipped steps are split before / after it (criteria rev. 2 2.1; None = all after).
 
     The ``controller_tag`` follows the controller of the last :func:`_finish` of this process
-    (LAS-b switch 2026-11-08: ``final_C4G2_LAS`` / ``final_C4G2_P3_LAS``; a run without options
-    then gets only that key).
+    (LAS-b switch 2026-11-08: ``final_C4G2_LAS`` / ``final_C4G2_P3_LAS``; K1 switch:
+    ``final_C4G2_LAS_K1`` / ``final_C4G2_P3_LAS_K1``; a run without options then gets only that
+    key).
 
     Raises:
         RuntimeError: The lock window of the built preset differs from the options.

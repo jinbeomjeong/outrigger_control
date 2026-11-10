@@ -1519,6 +1519,14 @@ the switched preset (their results ran without LAS-b; ``05_tests/unit/pre_las_pr
 FINAL_P3_LAS_CONTROLLER = "final_C4G2_P3_LAS"
 """v5 VB / LS controller since the LAS-b switch: :data:`FINAL_P3_CONTROLLER` + LAS-b
 (``v5_options.EXTEND_START_LAS_CONTROLLER_TAG``)."""
+FINAL_LAS_K1_CONTROLLER = "final_C4G2_LAS_K1"
+"""Preset since the K1 switch (``las_k1_rules_adopt.md`` 9.2): :data:`FINAL_LAS_CONTROLLER` + the LAS-b K1 R4c30 order
+gate (``slope_clearance_margin.flat_soil_margin_order_gate``); ``v5_options.LAS_K1_CONTROLLER_TAG``. Every tag before it
+checks the gate off, so they refuse the switched preset (``05_tests/unit/pre_k1_preset_runner.py`` or
+``--k1-order-gate off`` reproduces them)."""
+FINAL_P3_LAS_K1_CONTROLLER = "final_C4G2_P3_LAS_K1"
+"""v5 VB / LS controller since the K1 switch: :data:`FINAL_P3_LAS_CONTROLLER` + the K1 order gate
+(``v5_options.EXTEND_START_LAS_K1_CONTROLLER_TAG``)."""
 _FINAL_EXPECTATIONS: tuple[tuple[str, Any], ...] = (
     *_SPEC_429_11_EXPECTATIONS, ("clip_returned_command", True),
     ("touch_twist_hold.enable", True), ("touch_twist_hold.vector_ramp", True),
@@ -1532,12 +1540,19 @@ _LAS_EXPECTATIONS: tuple[tuple[str, Any], ...] = (
     ("liftoff_approach_slow.max_s", 1.5), ("liftoff_approach_slow.rho_on", 0.18),
     ("liftoff_approach_slow.require_soil_response", True))
 """LAS-b variant b0 (``las_targeted_rules.md`` 1.3, rev1 1 #2)."""
+_ORDER_GATE_PATH = "slope_clearance_margin.flat_soil_margin_order_gate"
+_ORDER_GATE_ON: tuple[tuple[str, Any], ...] = ((_ORDER_GATE_PATH, True),)
+_ORDER_GATE_OFF: tuple[tuple[str, Any], ...] = ((_ORDER_GATE_PATH, False),)
+"""LAS-b K1 order gate (``las_k1_rules_adopt.md`` 9.2): on for the ``_K1`` tags, off for every tag before the switch
+(the old tags fail loudly on the switched preset instead of running it under their name)."""
 CONTROLLER_EXPECTATIONS: dict[str, tuple[tuple[str, Any], ...]] = {
-    FINAL_CONTROLLER: _FINAL_EXPECTATIONS,
-    FINAL_P3_CONTROLLER: (*_FINAL_EXPECTATIONS, *_P3_EXPECTATIONS),
-    BEFORE_C4G2_CONTROLLER: _SPEC_429_11_EXPECTATIONS,
-    FINAL_LAS_CONTROLLER: (*_FINAL_EXPECTATIONS, *_LAS_EXPECTATIONS),
-    FINAL_P3_LAS_CONTROLLER: (*_FINAL_EXPECTATIONS, *_P3_EXPECTATIONS, *_LAS_EXPECTATIONS),
+    FINAL_CONTROLLER: (*_FINAL_EXPECTATIONS, *_ORDER_GATE_OFF),
+    FINAL_P3_CONTROLLER: (*_FINAL_EXPECTATIONS, *_P3_EXPECTATIONS, *_ORDER_GATE_OFF),
+    BEFORE_C4G2_CONTROLLER: (*_SPEC_429_11_EXPECTATIONS, *_ORDER_GATE_OFF),
+    FINAL_LAS_CONTROLLER: (*_FINAL_EXPECTATIONS, *_LAS_EXPECTATIONS, *_ORDER_GATE_OFF),
+    FINAL_P3_LAS_CONTROLLER: (*_FINAL_EXPECTATIONS, *_P3_EXPECTATIONS, *_LAS_EXPECTATIONS, *_ORDER_GATE_OFF),
+    FINAL_LAS_K1_CONTROLLER: (*_FINAL_EXPECTATIONS, *_LAS_EXPECTATIONS, *_ORDER_GATE_ON),
+    FINAL_P3_LAS_K1_CONTROLLER: (*_FINAL_EXPECTATIONS, *_P3_EXPECTATIONS, *_LAS_EXPECTATIONS, *_ORDER_GATE_ON),
 }
 """``level --expect-controller``: (dotted C2Config attribute, required value) per controller tag. The paths are C2Config
 attributes; ``controller_meta`` keeps the same names under ``<block>.settings`` (e.g. ``lift_stroke_guard.settings.
@@ -1550,6 +1565,8 @@ CONTROLLER_ABSENT_OR_OFF: dict[str, tuple[str, ...]] = {
                              "liftoff_approach_slow"),
     FINAL_LAS_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
     FINAL_P3_LAS_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
+    FINAL_LAS_K1_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
+    FINAL_P3_LAS_K1_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
 }
 """C2Config blocks a controller tag must not have on (spec 429.11: P37t / ZIC rejected; the tags before the LAS-b
 switch: ``liftoff_approach_slow``): the block is absent, or its ``enable`` is False. A block without an ``enable``
@@ -3754,37 +3771,56 @@ def level_c2_config(allow_soil_off: bool, config: Any = None) -> tuple[Any, dict
 
 
 LAS_OFF_OPTION = "--las-off"
-LAS_OFF_PRESET = "C2Config().with_10hz_d1(liftoff_approach_slow=False)"
-"""``level --las-off``: the preset with LAS-b off (the keyword of the switch, spec 436.9), for the reproduction of a
-result before the LAS-b switch under its own tag (``--expect-controller final_C4G2`` / ``final_C4G2_P3``) and the
-LAS-off pair of a LAS-b run. Recorded in ``c2_setup`` (``preset``, ``las_off``)."""
+LAS_OFF_PRESET = "C2Config().with_10hz_d1(liftoff_approach_slow=False, flat_soil_margin_order_gate=False)"
+"""``level --las-off``: the preset before the LAS-b switch (the keyword of the switch, spec 436.9; the LAS-b K1 order
+gate, adopted after LAS-b, is off too, ``las_k1_rules_adopt.md`` 9.3), for the reproduction of a result before the
+LAS-b switch under its own tag (``--expect-controller final_C4G2`` / ``final_C4G2_P3``) and the LAS-off pair of a LAS-b
+run (``--k1-order-gate on`` still sets the gate explicitly). Recorded in ``c2_setup`` (``preset``, ``las_off``)."""
 
 
 def las_off_config(args: argparse.Namespace) -> Any:
-    """The C2 preset with LAS-b off for ``--las-off``, else None (``level_c2_config`` builds the preset)."""
+    """The C2 preset before the LAS-b switch for ``--las-off`` (:data:`LAS_OFF_PRESET`), else None
+    (``level_c2_config`` builds the preset)."""
     if not getattr(args, "las_off", False):
         return None
     from outrigger_sim.control.c2 import C2Config
 
-    return C2Config().with_10hz_d1(liftoff_approach_slow=False)
+    return C2Config().with_10hz_d1(liftoff_approach_slow=False, flat_soil_margin_order_gate=False)
 
 
 K1_ORDER_GATE_OPTION = "--k1-order-gate"
-K1_ORDER_GATE_CHOICES = ("off", "on")
-"""``level --k1-order-gate {off,on}`` (LAS-b K1 S-Ch, ``las_k1_rules.md``; cad 2026-11-09): sets
-``slope_clearance_margin.flat_soil_margin_order_gate`` of the preset to ``value == "on"`` (``off`` = the preset value
-False, written explicitly). Recorded as ``c2_setup.k1_order_gate``; ``run_level`` checks the built controller holds it.
-Absent = no attribute, the run is unchanged. Not the harness key token ``K1`` (crawler stiffness x1)."""
+K1_ORDER_GATE_PRESET = "preset"
+K1_ORDER_GATE_CHOICES = (K1_ORDER_GATE_PRESET, "off", "on")
+"""``level --k1-order-gate {preset,off,on}`` (LAS-b K1 S-Ch, ``las_k1_rules.md``; cad 2026-11-09; default ``preset``
+since the K1 switch, ``las_k1_rules_adopt.md`` 9.1): ``preset`` (or the option absent: no attribute, ``vars(args)`` as
+before) keeps the preset value (on since the switch, off with ``--las-off``); ``off`` / ``on`` set
+``slope_clearance_margin.flat_soil_margin_order_gate`` to ``value == "on"`` explicitly. Recorded on every ``level``
+run as ``c2_setup.k1_order_gate`` (the request, ``preset`` when absent) and ``c2_setup.k1_order_gate_effective`` (the
+value the config holds), so an audit sees a wrapper and the preset applied twice; ``run_level`` checks the built
+controller holds an explicit request. Not the harness key token ``K1`` (crawler stiffness x1)."""
+
+
+def k1_order_gate_request(args: argparse.Namespace) -> str:
+    """The ``--k1-order-gate`` request: :data:`K1_ORDER_GATE_PRESET` without the option.
+
+    Raises:
+        SystemExit: A value outside :data:`K1_ORDER_GATE_CHOICES`.
+    """
+    v = getattr(args, "k1_order_gate", None)
+    if v is None:
+        return K1_ORDER_GATE_PRESET
+    if v not in K1_ORDER_GATE_CHOICES:
+        raise SystemExit(f"{K1_ORDER_GATE_OPTION} must be one of {K1_ORDER_GATE_CHOICES}, got {v!r}")
+    return v
 
 
 def k1_order_gate_of_args(args: argparse.Namespace) -> bool | None:
-    """The requested ``flat_soil_margin_order_gate`` of ``--k1-order-gate`` (None without the option)."""
-    v = getattr(args, "k1_order_gate", None)
-    if v is None:
+    """The explicitly requested ``flat_soil_margin_order_gate`` of ``--k1-order-gate`` (None without the option or
+    for ``preset``: the preset value stays)."""
+    request = k1_order_gate_request(args)
+    if request == K1_ORDER_GATE_PRESET:
         return None
-    if v not in K1_ORDER_GATE_CHOICES:
-        raise SystemExit(f"{K1_ORDER_GATE_OPTION} must be one of {K1_ORDER_GATE_CHOICES}, got {v!r}")
-    return v == "on"
+    return request == "on"
 
 
 K1_FORCED_BLOCK_OPTION = "--k1-forced-block"
@@ -3864,8 +3900,9 @@ def level_controller_class(args: argparse.Namespace) -> tuple[type, dict[str, An
 
 def level_c2_config_of_args(args: argparse.Namespace) -> tuple[Any, dict[str, Any]]:
     """:func:`level_c2_config` of the ``level`` arguments; ``--las-off`` gives it the LAS-off preset and records it;
-    ``--k1-order-gate`` then sets the R4 order gate (LAS-b K1) and records it; ``--k1-forced-block`` is checked
-    (``first`` without ``--k1-order-gate on``: exit 2; it does not change the config)."""
+    an explicit ``--k1-order-gate off|on`` then sets the R4 order gate (LAS-b K1); the request and the effective gate
+    are recorded on every run; ``--k1-forced-block`` is checked (``first`` without ``--k1-order-gate on``: exit 2; it
+    does not change the config)."""
     k1_forced_block_of_args(args)
     config, c2_meta = level_c2_config(args.allow_current_c2, las_off_config(args))
     if getattr(args, "las_off", False):
@@ -3876,7 +3913,8 @@ def level_c2_config_of_args(args: argparse.Namespace) -> tuple[Any, dict[str, An
 
         config = _replace(config, slope_clearance_margin=_replace(config.slope_clearance_margin,
                                                                   flat_soil_margin_order_gate=gate))
-        c2_meta["k1_order_gate"] = args.k1_order_gate
+    c2_meta["k1_order_gate"] = k1_order_gate_request(args)
+    c2_meta["k1_order_gate_effective"] = bool(config.slope_clearance_margin.flat_soil_margin_order_gate)
     return config, c2_meta
 
 
@@ -6324,9 +6362,11 @@ def build_parser() -> argparse.ArgumentParser:
                          "in c2_setup (preset, las_off). Absent = no attribute, the run is unchanged")
     lp.add_argument(K1_ORDER_GATE_OPTION, dest="k1_order_gate", choices=K1_ORDER_GATE_CHOICES,
                     default=argparse.SUPPRESS,
-                    help="LAS-b K1 S-Ch: set slope_clearance_margin.flat_soil_margin_order_gate of the preset (on = "
-                         "True, off = False as the preset) before --expect-controller; checked on the built "
-                         "controller, recorded as c2_setup.k1_order_gate. Absent = no attribute, the run is unchanged")
+                    help="LAS-b K1 order gate (slope_clearance_margin.flat_soil_margin_order_gate): preset (default; "
+                         "on since the K1 switch, off with --las-off) keeps the preset value, on / off set it before "
+                         "--expect-controller and are checked on the built controller. Recorded as "
+                         "c2_setup.k1_order_gate (request) and c2_setup.k1_order_gate_effective on every run. Absent "
+                         "= preset, no attribute")
     lp.add_argument(K1_FORCED_BLOCK_OPTION, dest="k1_forced_block", choices=K1_FORCED_BLOCK_CHOICES,
                     default=K1_FORCED_BLOCK_DEFAULT,
                     help="K1 re-measure diagnostic (las_k1_rules_adopt2.md 2.3 / 9.3): first = build the controller "

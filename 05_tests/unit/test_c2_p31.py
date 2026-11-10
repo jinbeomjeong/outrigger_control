@@ -125,6 +125,7 @@ def test_2_r8_preset_values() -> None:
         require_soil_use=False,
         min_clearance_at_P_m=0.010,
         flat_soil_margin_m=0.030,  # P-S8-37 R4c30, preset since spec 429.11
+        flat_soil_margin_order_gate=True,  # LAS-b K1, preset since las_k1_rules_adopt.md 9.1
     )
     assert C2Config().with_soil_response().slope_clearance_margin == settings
 

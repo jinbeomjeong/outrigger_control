@@ -35,8 +35,17 @@ LAS_CONTROLLER_TAG = FINAL_CONTROLLER_TAG + LIFTOFF_SLOW_TAG_SUFFIX
 """``final_C4G2_LAS``: the preset since the LAS-b switch (V0 and the other settings without ③)."""
 EXTEND_START_LAS_CONTROLLER_TAG = EXTEND_START_CONTROLLER_TAG + LIFTOFF_SLOW_TAG_SUFFIX
 """``final_C4G2_P3_LAS``: the VB / LS controller since the LAS-b switch."""
-EXTEND_START_TAGS = (EXTEND_START_CONTROLLER_TAG, EXTEND_START_LAS_CONTROLLER_TAG)
-"""Tags of a run with the ③ start bound."""
+ORDER_GATE_TAG_SUFFIX = "_K1"
+"""LAS-b K1 switch (``las_k1_rules_adopt.md`` 9.2): a controller with
+``slope_clearance_margin.flat_soil_margin_order_gate`` adds this after ``_LAS``. Not the touch-phase
+K1 (rejected 2026-11-05) and not the harness key token ``K1`` (crawler stiffness x1)."""
+LAS_K1_CONTROLLER_TAG = LAS_CONTROLLER_TAG + ORDER_GATE_TAG_SUFFIX
+"""``final_C4G2_LAS_K1``: the preset since the K1 switch (V0 and the other settings without ③)."""
+EXTEND_START_LAS_K1_CONTROLLER_TAG = EXTEND_START_LAS_CONTROLLER_TAG + ORDER_GATE_TAG_SUFFIX
+"""``final_C4G2_P3_LAS_K1``: the VB / LS controller since the K1 switch."""
+EXTEND_START_TAGS = (EXTEND_START_CONTROLLER_TAG, EXTEND_START_LAS_CONTROLLER_TAG,
+                     EXTEND_START_LAS_K1_CONTROLLER_TAG)
+"""Tags of a run with the ③ start bound (before LAS-b, LAS-b, LAS-b + K1)."""
 LOCK_SPEED_EPS_M_S = 1.0e-6
 """``|u_c| <=`` this = a zero command; same value as YAML ``actuator.rod_side.lock_eps_m_s``."""
 DEFAULT_VOLUME_SCALE = 1.0
@@ -371,30 +380,76 @@ def is_liftoff_slow_on(config: Any | None) -> bool:
     return bool(getattr(settings, "enable", False))
 
 
+def is_order_gate_on(config: Any | None) -> bool:
+    """The C2 configuration has the LAS-b K1 R4c30 order gate on
+    (``slope_clearance_margin.flat_soil_margin_order_gate``; False for ``None``, a config from
+    code before K1 and a controller config without the block)."""
+    margin = getattr(config, "slope_clearance_margin", None)
+    return bool(getattr(margin, "flat_soil_margin_order_gate", False))
+
+
+def _split_order_gate_suffix(tag: str) -> tuple[str, bool]:
+    """``(tag without a trailing _K1, whether it had one)``."""
+    if tag.endswith(ORDER_GATE_TAG_SUFFIX):
+        return tag[: -len(ORDER_GATE_TAG_SUFFIX)], True
+    return tag, False
+
+
 def with_liftoff_slow_tag(tag: str | None) -> str:
     """The LAS-b tag of a run tag: ``None`` (the runner's ``final_C4G2``) -> ``final_C4G2_LAS``,
-    any other tag gets :data:`LIFTOFF_SLOW_TAG_SUFFIX` once (``ABL`` -> ``ABL_LAS``)."""
+    any other tag gets :data:`LIFTOFF_SLOW_TAG_SUFFIX` once (``ABL`` -> ``ABL_LAS``). A tag
+    with the K1 suffix keeps it last (``final_C4G2_K1`` -> ``final_C4G2_LAS_K1``;
+    ``final_C4G2_LAS_K1`` is returned as it is)."""
     if tag is None:
         return LAS_CONTROLLER_TAG
-    return tag if tag.endswith(LIFTOFF_SLOW_TAG_SUFFIX) else tag + LIFTOFF_SLOW_TAG_SUFFIX
+    base, has_order_gate = _split_order_gate_suffix(tag)
+    if not base.endswith(LIFTOFF_SLOW_TAG_SUFFIX):
+        base += LIFTOFF_SLOW_TAG_SUFFIX
+    return base + ORDER_GATE_TAG_SUFFIX if has_order_gate else base
+
+
+def with_order_gate_tag(tag: str | None) -> str:
+    """The K1 tag of a run tag: ``None`` (the runner's ``final_C4G2``) -> ``final_C4G2_K1``,
+    any other tag gets :data:`ORDER_GATE_TAG_SUFFIX` once (``ABL_LAS`` -> ``ABL_LAS_K1``)."""
+    base = FINAL_CONTROLLER_TAG if tag is None else tag
+    return base if base.endswith(ORDER_GATE_TAG_SUFFIX) else base + ORDER_GATE_TAG_SUFFIX
 
 
 def is_liftoff_slow_tag(tag: str | None) -> bool:
-    """A recorded tag of a run with LAS-b on (records without a tag ran before the switch)."""
-    return tag is not None and tag.endswith(LIFTOFF_SLOW_TAG_SUFFIX)
+    """A recorded tag of a run with LAS-b on (records without a tag ran before the switch);
+    true with or without the K1 suffix after ``_LAS`` (``final_C4G2_P3_LAS_K1``)."""
+    if tag is None:
+        return False
+    base, _ = _split_order_gate_suffix(tag)
+    return base.endswith(LIFTOFF_SLOW_TAG_SUFFIX)
+
+
+def is_order_gate_tag(tag: str | None) -> bool:
+    """A recorded tag of a run with the LAS-b K1 order gate on (suffix ``_K1``)."""
+    return tag is not None and tag.endswith(ORDER_GATE_TAG_SUFFIX)
+
+
+def with_switch_tags(tag: str | None, config: Any | None) -> str | None:
+    """``tag`` with the suffixes of the switches ``config`` has on: ``_LAS`` (LAS-b), then
+    ``_K1`` (order gate). Unchanged (possibly None) when both are off."""
+    if is_liftoff_slow_on(config):
+        tag = with_liftoff_slow_tag(tag)
+    if is_order_gate_on(config):
+        tag = with_order_gate_tag(tag)
+    return tag
 
 
 def controller_tag(options: HydraulicOptions | None, config: Any | None = None) -> str | None:
     """Tag of a v5 run: :data:`EXTEND_START_CONTROLLER_TAG` with the ③ start bound, else None
-    (the run keeps the tag of its runner, ``final_C4G2``); with ``config`` having LAS-b on, the
-    ``_LAS`` tag of either (``final_C4G2_P3_LAS`` / ``final_C4G2_LAS``). Without ``config`` the
-    tag is the one before the LAS-b switch (callers that know the controller pass it)."""
+    (the run keeps the tag of its runner, ``final_C4G2``); with ``config`` the suffixes of its
+    switches (:func:`with_switch_tags`): ``final_C4G2_P3_LAS_K1`` / ``final_C4G2_LAS_K1`` for the
+    preset since the K1 switch, ``_LAS`` alone for LAS-b without the order gate. Without
+    ``config`` the tag is the one before the LAS-b switch (callers that know the controller
+    pass it)."""
     tag = None
     if options is not None and options.extend_start_tracked:
         tag = EXTEND_START_CONTROLLER_TAG
-    if is_liftoff_slow_on(config):
-        return with_liftoff_slow_tag(tag)
-    return tag
+    return with_switch_tags(tag, config)
 
 
 def check_lock_window_meta(two_pressure_meta: dict[str, Any], options: HydraulicOptions,
@@ -420,12 +475,19 @@ def check_lock_window_meta(two_pressure_meta: dict[str, Any], options: Hydraulic
 
 __all__ = [
     "EXTEND_START_LAS_CONTROLLER_TAG",
+    "EXTEND_START_LAS_K1_CONTROLLER_TAG",
     "EXTEND_START_TAGS",
     "LAS_CONTROLLER_TAG",
+    "LAS_K1_CONTROLLER_TAG",
     "LIFTOFF_SLOW_TAG_SUFFIX",
+    "ORDER_GATE_TAG_SUFFIX",
     "is_liftoff_slow_on",
     "is_liftoff_slow_tag",
+    "is_order_gate_on",
+    "is_order_gate_tag",
     "with_liftoff_slow_tag",
+    "with_order_gate_tag",
+    "with_switch_tags",
     "LOCK_SPEED_EPS_M_S",
     "apply_lock_window",
     "check_extend_start",

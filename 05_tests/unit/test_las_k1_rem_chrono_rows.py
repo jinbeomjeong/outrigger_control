@@ -117,7 +117,8 @@ def test_without_the_options_default_off_preset_bits_and_off_record(run_s9) -> N
     assert run_s9.k1_forced_block_of_args(args) == "off"
     config, meta = run_s9.level_c2_config_of_args(args)
     assert _same_bits(config, _preset())
-    assert "k1_forced_block" not in meta and "k1_order_gate" not in meta  # run_level adds the record
+    assert "k1_forced_block" not in meta  # run_level adds the record
+    assert meta["k1_order_gate"] == "preset"  # K1 switch (las_k1_rules_adopt.md 9.1): on every run
     cls, rec = run_s9.level_controller_class(args)
     assert cls is C2Controller and rec == OFF_RECORD
     explicit = _level_args(run_s9, ["level", "--soil", "J2", "--k1-forced-block", "off"])
@@ -351,11 +352,21 @@ def test_r4_r5_are_not_a_pair_and_differ_in_plant_and_tag(rows, s9_batch) -> Non
     assert diff == vb | {"--expect-controller"}
 
 
+GATE_ON_KEYS = ("R7", "R8", "F1", "F2")
+"""Rows with ``--k1-order-gate on`` under ``final_C4G2_P3_LAS``: since the K1 switch that tag checks the gate off
+(``las_k1_rules_adopt.md`` 9.2), so these results before the switch are refused loudly under their old tag."""
+ORDER_GATE_PATH = "slope_clearance_margin.flat_soil_margin_order_gate"
+
+
 def test_argv_check_and_check_sources_dry(rows, s9_batch, stand_in) -> None:
     res = s9_batch.check_sources(BATCH, rows)
-    assert res["ok"], [c for c in res["rows"] if c["status"] != "ok"]
+    assert not res["ok"]
     by = {c["rem_key"]: c for c in res["rows"]}
-    assert [by[k]["status"] for k in KEYS] == ["ok"] * 10
+    assert [by[k]["status"] for k in KEYS] == ["ok"] * 6 + ["differs"] * 4
+    for key in GATE_ON_KEYS:
+        (diff,) = by[key]["diffs"]
+        assert diff["key"] == "controller_expectation", key
+        assert [c["path"] for c in diff["row"]] == [ORDER_GATE_PATH], key
     assert by["R5"]["expect_controller"] == {"name": "final_C4G2_LAS", "ok": True}
     assert by["R5"]["v5_options"] is False and by["R4"]["v5_options"] is True
     assert [by[k]["order_gate"] for k in KEYS] == [False] * 6 + [True] * 4
@@ -372,15 +383,20 @@ def test_argv_check_flags_a_wrong_tag_and_missing_module(rows, s9_batch, monkeyp
     monkeypatch.setitem(sys.modules, "k1_forced_block", None)  # import fails
     f1 = next(r for r in rows if r["rem_key"] == "F1")
     chk = rem.argv_check(f1, s9_batch)
-    assert chk["status"] == "differs" and [d["key"] for d in chk["diffs"]] == ["controller_class"]
+    # F1 is a gate-on row: since the K1 switch its old tag also refuses the gate (GATE_ON_KEYS)
+    assert chk["status"] == "differs"
+    assert [d["key"] for d in chk["diffs"]] == ["controller_expectation", "controller_class"]
 
 
 def test_list_and_check_sources_cli(s9_batch, stand_in, capsys) -> None:
     s9_batch.main(["list", BATCH])
     out = capsys.readouterr().out
     assert f"{BATCH} 10 rows" in out and all(n in out for n in NAMES.values())
-    s9_batch.main(["check-sources", BATCH])
-    assert capsys.readouterr().out.strip().splitlines()[-1] == "ok"
+    with pytest.raises(SystemExit) as stop:  # the four gate-on rows differ since the K1 switch
+        s9_batch.main(["check-sources", BATCH])
+    assert stop.value.code == 1
+    out = capsys.readouterr().out
+    assert all(NAMES[key] in out for key in GATE_ON_KEYS)
 
 
 def test_batch_meta_keys_carry_the_row_keys(s9_batch) -> None:

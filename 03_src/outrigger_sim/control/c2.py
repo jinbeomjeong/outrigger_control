@@ -213,11 +213,13 @@ P-S8-37 R4 (R4c30, spec 429.9, adopted 2026-10-30): a LOC after the soil mode on
 by ``SlopeClearanceMarginSettings.flat_soil_margin_m`` (event ``INFO_LOC_FLAT_SOIL_MARGIN``);
 off by default, 0.03 m in the preset since the spec 429.11 switch
 (``C2Config().with_10hz_d1(flat_soil_margin_m=0.0)`` turns it off).
-LAS-b K1 (``las_k1_rules.md``, candidate under test): with
+LAS-b K1 (``las_k1_rules.md``, adopted by ``las_k1_rules_adopt.md``): with
 ``SlopeClearanceMarginSettings.flat_soil_margin_order_gate`` R4 also needs the plateau start
 to follow the soil-mode start in whole periods (event
-``INFO_LOC_FLAT_SOIL_MARGIN_SKIPPED:order`` when it does not); off by default and in the
-preset, the decisions are recorded either way (meta ``slope_clearance_margin.order_gate``).
+``INFO_LOC_FLAT_SOIL_MARGIN_SKIPPED:order`` when it does not); off by default, on in the
+preset since the K1 switch (``C2Config().with_10hz_d1(flat_soil_margin_order_gate=False)``
+turns it off), the decisions are recorded either way (meta
+``slope_clearance_margin.order_gate``).
 User decision 2026-11-04: the command :meth:`C2Controller.update` returns is clipped to
 ``+-v_max`` (``C2Config.clip_returned_command``), the internal states keep the unclipped value;
 off by default, on in the preset (``C2Config().with_10hz_d1(clip_returned_command=False)``
@@ -2202,7 +2204,8 @@ class SlopeClearanceMarginSettings:
     """LAS-b K1 (``las_k1_rules.md`` 1.1): R4 also needs the plateau start ``t_P`` of the LOC
     to come after the latest soil-mode start ``t_S`` in whole control periods,
     ``round(t_P / T_s) > round(t_S / T_s)``; otherwise R4 stays off (event
-    ``INFO_LOC_FLAT_SOIL_MARGIN_SKIPPED:order``). Off by default and in the R8 preset; the
+    ``INFO_LOC_FLAT_SOIL_MARGIN_SKIPPED:order``). Off by default (class level, the behaviour
+    before K1); on in the R8 preset since its adoption (``las_k1_rules_adopt.md`` 9.1). The
     decision record (meta ``order_gate``) is kept either way."""
 
     def __post_init__(self) -> None:
@@ -2626,6 +2629,7 @@ class C2Config:
         reapproach_retrigger_two_samples: bool = False,
         extend_start_tracked: bool = False,
         liftoff_approach_slow: bool = True,
+        flat_soil_margin_order_gate: bool = True,
     ) -> C2Config:
         """Copy with the R8-D1 design C2 (spec rev. 30 136 / 139, user decisions 2026-10-24).
 
@@ -2714,6 +2718,12 @@ class C2Config:
                 ``las_targeted_rules.md`` 1.2 and rev1 2). On by default since its adoption of
                 2026-11-08; ``False`` gives the preset before that switch
                 (``05_tests/unit/pre_las_preset_runner.py`` runs a script that way).
+            flat_soil_margin_order_gate: LAS-b K1, the R4c30 order gate
+                (``SlopeClearanceMarginSettings.flat_soil_margin_order_gate``,
+                ``las_k1_rules_adopt.md`` 9.1). On by default since its adoption (K1 re-measure
+                judgement ``las_k1_rem_judgement.md``); ``False`` gives the preset before that
+                switch (``05_tests/unit/pre_k1_preset_runner.py`` runs a script that way). Not
+                the touch-phase K1 of ``reapproach_retrigger_two_samples``.
         """
         retrigger_samples = R8_RETRIGGER_CONFIRM_SAMPLES if reapproach_retrigger_two_samples else 1
         config = self.with_r8_diagnostics()
@@ -2784,6 +2794,7 @@ class C2Config:
             enable=True,
             min_clearance_at_P_m=R8_SLOPE_MARGIN_MIN_CLEARANCE_AT_P_M,
             flat_soil_margin_m=flat_soil_margin_m,
+            flat_soil_margin_order_gate=flat_soil_margin_order_gate,
         )
         return replace(
             config,

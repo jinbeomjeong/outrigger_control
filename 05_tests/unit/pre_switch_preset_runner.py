@@ -3,7 +3,9 @@
 The switch (2026-10-30) turned P-S8-36 SGS (``soil_stop``) and P-S8-37 R4
 (``flat_soil_margin_m`` 0.03 m) on in ``C2Config.with_10hz_d1``, the user decision of
 2026-11-04 turned ``clip_returned_command`` on and the one of 2026-11-05 ``touch_twist_hold``
-(``pre_c4g2_preset_runner.py`` undoes that last one alone). The subprocess hash tests compare
+(``pre_c4g2_preset_runner.py`` undoes that one with the later ones); LAS-b
+(``liftoff_approach_slow``, 2026-11-08) and the K1 order gate (``flat_soil_margin_order_gate``,
+``las_k1_rules_adopt.md`` 9) came later and are off here too. The subprocess hash tests compare
 the project preset with wrapper hashes stored before those changes, so they run their harness
 through this runner: it gives ``with_10hz_d1`` the old keyword defaults (all off) and then calls
 the script's ``main()``. The patch runs at import time, so spawned pool workers (which re-import this file as
@@ -29,6 +31,8 @@ PRE_SWITCH_TOUCH_TWIST_HOLD = False
 PRE_SWITCH_REAPPROACH_RETRIGGER_TWO_SAMPLES = False
 PRE_SWITCH_LIFTOFF_APPROACH_SLOW = False
 """LAS-b (2026-11-08) came after every switch above, so it is off here too."""
+PRE_SWITCH_FLAT_SOIL_MARGIN_ORDER_GATE = False
+"""The K1 order gate came after LAS-b, so it is off here too."""
 
 if str(SOURCE_DIR) not in sys.path:
     sys.path.insert(0, str(SOURCE_DIR))
@@ -48,6 +52,7 @@ def _install_pre_switch_preset() -> None:
         touch_twist_hold: bool = PRE_SWITCH_TOUCH_TWIST_HOLD,
         reapproach_retrigger_two_samples: bool = PRE_SWITCH_REAPPROACH_RETRIGGER_TWO_SAMPLES,
         liftoff_approach_slow: bool = PRE_SWITCH_LIFTOFF_APPROACH_SLOW,
+        flat_soil_margin_order_gate: bool = PRE_SWITCH_FLAT_SOIL_MARGIN_ORDER_GATE,
     ):
         return switched_preset(
             self,
@@ -57,6 +62,7 @@ def _install_pre_switch_preset() -> None:
             touch_twist_hold=touch_twist_hold,
             reapproach_retrigger_two_samples=reapproach_retrigger_two_samples,
             liftoff_approach_slow=liftoff_approach_slow,
+            flat_soil_margin_order_gate=flat_soil_margin_order_gate,
         )
 
     c2.C2Config.with_10hz_d1 = pre_switch_preset

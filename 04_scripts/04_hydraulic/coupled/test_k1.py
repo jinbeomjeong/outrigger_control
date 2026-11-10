@@ -551,6 +551,22 @@ def test_order_gate_wrapper_sets_only_the_gate(geometry, installed) -> None:
         kt.install_order_gate(False)
 
 
+def test_order_gate_token_on_the_switched_preset_is_idempotent(geometry, installed) -> None:
+    """``las_k1_rules_adopt.md`` 9.1: the token ``K1on`` (wrapper True) over the switched preset
+    (gate already on) builds the same config and the same commands as the preset alone; the
+    token ``K1off`` still turns the gate off explicitly."""
+    preset = k1_config(True)
+    assert c2.C2Config().with_10hz_d1().slope_clearance_margin.flat_soil_margin_order_gate
+    plain = bench_outputs(geometry, preset, soil_mode_offset_s=0.0)
+    kt.install_order_gate(True)
+    assert c2.C2Controller(geometry, preset).config == preset
+    np.testing.assert_array_equal(bench_outputs(geometry, preset, soil_mode_offset_s=0.0), plain)
+    kt.uninstall()
+    kt._INSTALLED.clear()
+    kt.install_order_gate(False)
+    assert c2.C2Controller(geometry, preset).config == k1_config(False)
+
+
 def test_witness_records_each_loc_and_keeps_the_commands(geometry, installed) -> None:
     plain = bench_outputs(geometry, k1_config(True), soil_mode_offset_s=0.0)
     kt.install_loc_witness()
