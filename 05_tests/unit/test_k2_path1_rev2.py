@@ -276,6 +276,16 @@ def test_aug_crc2_violations_stay_in_its_record(monkeypatch) -> None:
     assert result["arms"]["AUG_crc2"]["record_not_judgeable"] == ["E-5 bad", "E-5 bad"]
     monkeypatch.setattr(k2_judge, "_aug_problems", lambda files, arm: ["E-5 bad"] if arm == "AUG" else [])
     assert k2_judge.cmd_judge_v3(None)[1]["gate"]["G-B"] == "not_judgeable"
+    # audit 3 (c): the AUG_crc2 E-1 counts stay problems (the original E-1 total includes that arm)
+    monkeypatch.setattr(k2_judge, "_aug_problems", lambda files, arm: [])
+    monkeypatch.setattr(k2_judge, "_off_tcl_bundle", lambda cell, label, **kw: (
+        {"summaries": {"off": dict(summary), "tcl": dict(summary)}, "sh": [], "dhat": {}}, [], [],
+        ["E-1 V-3 AUG_crc2.tcl K1 off: 272 rows, expected 273", "E-11 1 unpaired keys"]
+        if label == "V-3 AUG_crc2" else []))
+    status, result = k2_judge.cmd_judge_v3(None)
+    assert result["problems"] == ["E-1 V-3 AUG_crc2.tcl K1 off: 272 rows, expected 273"]
+    assert result["arms"]["AUG_crc2"]["record_not_judgeable"] == ["E-11 1 unpaired keys"]
+    assert result["gate"]["G-B"] == "not_judgeable"
 
 
 def test_options_off_and_chrono_options(tmp_path) -> None:
@@ -334,6 +344,24 @@ def test_harness_sh_missing_counts() -> None:
     block = k2_judge.sh_flags(k2_rows, off_rows, F_D8, "t")
     assert block["missing"]["SH-1"] == 1 and block["missing"]["SH-3"] == 1
     assert {f["flag"] for f in block["flags"] if "missing" in f} == {"SH-1", "SH-3"}
+
+
+def test_sh6_missing_only_without_j1() -> None:
+    """Rev6 2 (audit 3): a missing J2 is not an SH-6 missing; J2 flags only as a number on an H4 row."""
+    def block(values: dict, has_h4: bool) -> dict:
+        k2_rows = [{"id": "a", "k1_on": False, "sh1": [0] * 4, "cap": 0, "sh2": 0.1, "t_ready_s": 50.0,
+                    "has_h4": has_h4, "values": values}]
+        off_rows = [{"id": "a", "k1_on": False, "sh2": 0.2, "t_ready_s": 50.0, "values": {"J1_N": 30e3}}]
+        return k2_judge.sh_flags(k2_rows, off_rows, F_D8, "t")
+
+    no_j2 = block({"J1_N": 30e3, "J2_N": None}, has_h4=True)
+    assert no_j2["missing"]["SH-6"] == 0 and not [f for f in no_j2["flags"] if f["flag"] == "SH-6"]
+    low_j2 = block({"J1_N": 30e3, "J2_N": 15e3}, has_h4=True)
+    assert [f for f in low_j2["flags"] if f["flag"] == "SH-6" and "J2_N" in f]
+    assert not [f for f in block({"J1_N": 30e3, "J2_N": 15e3}, has_h4=False)["flags"] if f["flag"] == "SH-6"]
+    assert block({"J1_N": None, "J2_N": 30e3}, has_h4=True)["missing"]["SH-6"] == 1
+    rows = _chrono_rows(has_h4=True, values={"J1_N": 40e3, "J2_N": None})
+    assert k2_judge.chrono_sh(rows, F_D8)["missing"]["SH-6"] == 0
 
 
 def test_harness_sh2_pairs_and_sh5_never_missing() -> None:

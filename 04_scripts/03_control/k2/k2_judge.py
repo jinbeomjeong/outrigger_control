@@ -537,13 +537,15 @@ def _sh_row_flags(k2_rows: list[dict], f_d8: float, label: str, missing: dict) -
             flags.append({"flag": "SH-1", "bundle": label, "id": row["id"], "value": sh1})
         if (row.get("cap") or 0) > 0:  # rev6 2: counted from the event list, never missing
             flags.append({"flag": "SH-5", "bundle": label, "id": row["id"], "value": row["cap"]})
-        items = ("J1_N", "J2_N") if row.get("has_h4") else ("J1_N",)
-        for item in items:
-            value = _row_j(row, item)
-            if not d8x_judge._is_number(value):
-                missing["SH-6"] += 1
-            elif value < f_d8 + SH6_MARGIN_N:
-                flags.append({"flag": "SH-6", "bundle": label, "id": row["id"], item: value})
+        # rev6 2: SH-6 is missing only without J1; J2 is used when it is a number on a row with an H4 interval
+        j1 = _row_j(row, "J1_N")
+        if not d8x_judge._is_number(j1):
+            missing["SH-6"] += 1
+        elif j1 < f_d8 + SH6_MARGIN_N:
+            flags.append({"flag": "SH-6", "bundle": label, "id": row["id"], "J1_N": j1})
+        j2 = _row_j(row, "J2_N")
+        if row.get("has_h4") and d8x_judge._is_number(j2) and j2 < f_d8 + SH6_MARGIN_N:
+            flags.append({"flag": "SH-6", "bundle": label, "id": row["id"], "J2_N": j2})
     return flags
 
 
@@ -942,8 +944,11 @@ def cmd_judge_v3(args) -> tuple[int, dict]:
         if arm in V3_JUDGED_ARMS:
             problems += arm_problems + more
             judged_summaries.append(result["summaries"]["tcl"])
-        else:  # rev6 3: the record arm (AUG_crc2) is marked not judgeable in its own record only
-            result["record_not_judgeable"] = arm_problems
+        else:  # rev6 3: E-5 / I-9 of the record arm (AUG_crc2) stay in its own record; its E-1 counts are in
+            # the original E-1 total (3,822), so they stay problems
+            counts = [problem for problem in more if problem.startswith("E-1 ")]  # not E-11 (SH pairs)
+            problems += counts
+            result["record_not_judgeable"] = arm_problems + [p for p in more if p not in counts]
         result["off_J3_rows"] = sum(1 for row in off if "J3" in row["fail_items"])
         arms[arm] = result
         rows_by_label[f"{arm}.off"], rows_by_label[f"{arm}.tcl"] = off, tcl
