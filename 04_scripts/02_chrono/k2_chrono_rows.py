@@ -20,9 +20,14 @@ a row outside the set is refused before any Chrono step (:func:`select_rows`). R
 normal force, t relative to the start state, the time base of the row), ``k2_rate.npz`` (``t``, ``body_omega``: deck
 angular velocity in body axes, record rate); ``batch_meta.json`` ``k2``.
 
-V-7 (``s9_batch.py run k2_v7``): FINAL-REP ``P3b_J1_B_top_Fs4`` / ``P3b_J2_B_top_Fs4`` rows x {off, K-2}, K1 off (the
-"Chrono K1 off" decision of rules 0 line 6; ASSUMPTION for V-7, the rules name it for V-6), ``--threads`` /
-``OMP_WAIT_POLICY`` / hull hook from the rows' start env (I-6).
+V-6 rows also record the C4G2 D_hat (rules rev1 4, record only, the harness ``k2_record.k2_fields`` definition):
+``k2_row.json`` ``k2.dhat_N`` / ``k2.dhat_window_open_legs`` / ``k2.dhat_window_stroke_mm`` from a read-only 1 ms
+valve / motor stroke recorder (:class:`DhatWindowRecorder`, ``k2_valve.npz``).
+
+V-7 (``s9_batch.py run k2_v7``): FINAL-REP ``P3b_J1_B_top_Fs4`` / ``P3b_J2_B_top_Fs4`` rows x {off, K-2}, K1 ON (the
+run-time preset; user decision 2026-11-10: V-7 checks the v5 candidate ``final_C4G2_LAS_K1_TCL`` on soil, paired with
+the FINAL-REP rows), tags ``final_C4G2_LAS_K1`` / ``final_C4G2_LAS_K1_TCL``, ``--k1-order-gate on`` given explicitly;
+``--threads`` / ``OMP_WAIT_POLICY`` / hull hook from the rows' start env (I-6). V-6 (rigid) stays K1 off.
 """
 
 from __future__ import annotations
@@ -171,6 +176,10 @@ def add_arguments(ap: Any, *, pad_zeta: bool) -> None:
                     help="--set k2_v6: the LAS-b K1 order gate (slope_clearance_margin.flat_soil_margin_order_gate), "
                          "must be given explicitly (off for V-6, rules I-10); refused with other sets. Absent = no "
                          "attribute")
+    ap.add_argument(BATCH_DIR_OPTION, dest="batch_dir", default=None,
+                    help="run / check --set k2_v6: the batch folder (must not exist; absolute or relative to the "
+                         "repository root) instead of the <tag>_<stamp> rule, so the output path is known before the "
+                         "start")
     if pad_zeta:
         ap.add_argument(PAD_ZETA_OPTION, dest="pad_zeta_moving", default="off",
                         help="--set k2_v6 L1-R rows: axial zeta of a moving leg (valve |u| > lock_eps) on the pad "
@@ -258,9 +267,77 @@ def select_rows(args: Any, engine: str, set_ids: Sequence[str]) -> tuple[list[st
     return ids, record
 
 
+IDENTITY_ENV_PREFIXES = ("OUTRIGGER_", "OMP_", "MKL_", "OPENBLAS_", "NUMBA_", "KMP_", "CONDA_PREFIX",
+                         "CONDA_DEFAULT_ENV", "PYTHONHASHSEED", "PYTHONDONTWRITEBYTECODE")
+E_WALL_S_PER_SIM_S = {"L1R": 6.5, "L2b": 8.8}
+"""E-core wall per simulated second, measured on the K-2 check runs 2026-11-10 (2-4 Chrono processes on the E cores
+at once; L1-R 1303 us/step at dt 2e-4 s, L2b 882 us/step at 1e-4 s). ASSUMPTION for a full batch, not a cost
+measurement."""
+E_START_S = 20.0
+BATCH_DIR_OPTION = "--batch-dir"
+
+
+def batch_identity(stage: str, outcomes: Sequence[Any] | None = None) -> dict[str, Any]:
+    """Run identity of a K-2 batch process for ``batch_meta.json`` (``identity_start`` / ``identity_end``): the raw
+    argv (interpreter + ``sys.argv``), cwd, pid, UTC time, ``git rev-parse HEAD`` and ``git status --porcelain
+    --untracked-files=no`` of the repository, the env subset :data:`IDENTITY_ENV_PREFIXES`, the CPU affinity mask
+    of the launcher (case processes: result.json runner.placement) and the pychrono conda package; at the end also every row's status / exit code (rc) / wall / case dir from the batch
+    outcomes. Read only (git and the process are only queried)."""
+    import datetime as _dt
+    import os
+
+    sys.path.insert(0, str(ROOT / "04_scripts" / "03_control" / "d8x"))
+    try:
+        import d8x_record  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(ROOT / "04_scripts" / "03_control" / "d8x"))
+    meta = sorted((Path(sys.prefix) / "conda-meta").glob("pychrono-*.json"))
+    chrono_version = meta[-1].stem if meta else None  # conda package record (pychrono has no __version__)
+    out: dict[str, Any] = {
+        "stage": stage, "utc": _dt.datetime.now(_dt.UTC).isoformat(),
+        "argv": [sys.executable, *getattr(sys, "orig_argv", sys.argv)[1:]],
+        "cwd": os.getcwd(), "pid": os.getpid(),
+        "git": d8x_record.git_state(ROOT), "repo_root": str(ROOT),
+        "env": {k: v for k, v in sorted(os.environ.items()) if k.startswith(IDENTITY_ENV_PREFIXES)},
+        "affinity_mask": d8x_record._affinity_mask(), "pychrono": chrono_version,
+    }
+    if outcomes is not None:
+        out["rows"] = {str(o.case_id): {"status": str(o.status), "exit_code": o.exit_code,
+                                        "wall_s": float(o.wall_s), "case_dir": str(o.case_dir)}
+                       for o in outcomes}
+        out["all_rc_zero"] = all(o.exit_code == 0 for o in outcomes)
+    return out
+
+
+def batch_dir_of_args(args: Any) -> Path | None:
+    """``--batch-dir``: an explicit batch folder (absolute, or relative to the repository root); it must not exist
+    yet (no mixing of two batches in one folder). None = the runner's ``<tag>_<stamp>`` rule."""
+    v = getattr(args, "batch_dir", None)
+    if v is None:
+        return None
+    p = Path(v)
+    p = p if p.is_absolute() else ROOT / p
+    if p.exists():
+        raise SystemExit(f"{BATCH_DIR_OPTION} {p} exists already")
+    return p
+
+
+def cost_rows(engine: str, cases: Sequence[Any], run_s_of, wall_p_of) -> list[dict[str, Any]]:
+    """Per row: simulated length (``run_s_of``), P estimate of the runner (``wall_p_of``) and the E estimate
+    ``E_START_S + E_WALL_S_PER_SIM_S x sim``."""
+    out = []
+    for c in cases:
+        sim = float(run_s_of(c))
+        out.append({"case": c.case_id, "sim_s": sim, "wall_p_s": float(wall_p_of(c)),
+                    "wall_e_s": E_START_S + E_WALL_S_PER_SIM_S[engine] * sim})
+    return out
+
+
 def refuse_outside(args: Any, case_set: str) -> None:
     """Explicit K-2 options with a set other than ``k2_v6``: refused (the other sets run their own definition)."""
     given = {k: v for k, v in explicit_options(args).items() if k != "expect_controller"}
+    if getattr(args, "batch_dir", None) is not None:
+        given["batch_dir"] = args.batch_dir
     if case_set != V6_SET and given:
         raise SystemExit(f"{sorted(given)} only with --set {V6_SET} (got --set {case_set})")
 
@@ -304,6 +381,100 @@ def preflight_record(name: str, config: Any, tag: str) -> dict[str, Any]:
         raise SystemExit(f"{name}: K-2 preflight refused: " + "; ".join(problems))
     return {"controller_tag": tag, "expected_tag": r.expected_tag, "k1_order_gate": gate,
             "touch_creep_latch": tcl, "las_b_enabled": las}
+
+
+# ------------------------------------------------------------------------------ D_hat window (rev1 4)
+DHAT_WINDOW_S = 0.3
+"""C4G2 D_hat window (t_touch - 0.3 s, t_touch] (``k2_record.DHAT_WINDOW_S``)."""
+VALVE_OPEN_EPS_M_S = 1.0e-6
+"""Valve open above this output (``k2_record.VALVE_OPEN_EPS_M_S``, YAML ``actuator.rod_side.lock_eps_m_s``)."""
+VALVE_FILE = "k2_valve.npz"
+CHUNK_S = 1.0e-3
+
+
+class DhatWindowRecorder:
+    """Read-only runner step hook: per 1 ms chunk (``round(1 ms / dt)`` steps) the largest ``|valve_state_m_s|``
+    per leg over the chunk's steps and the motor stroke (``GetMotorPos``) at the chunk's last step, with its Chrono
+    time (absolute s). Nothing of the model is set (bit-identical run)."""
+
+    def __init__(self, model: Any) -> None:
+        self.model = model
+        self.every = max(1, int(round(CHUNK_S / float(model.dt_s))))
+        self._k = 0
+        self._umax = None
+        self.t: list[float] = []
+        self.valve: list[Any] = []
+        self.stroke: list[Any] = []
+
+    def __call__(self, engine: Any) -> None:
+        import numpy as np
+
+        u = np.abs(np.asarray(self.model.actuator.valve_state_m_s, float))
+        self._umax = u if self._umax is None else np.maximum(self._umax, u)
+        self._k += 1
+        if self._k % self.every:
+            return
+        self.t.append(float(self.model.system.GetChTime()))
+        self.valve.append(self._umax)
+        self.stroke.append(np.array([float(m.GetMotorPos()) for m in self.model.motors]))
+        self._umax = None
+
+    def save(self, path: Path) -> dict[str, Any]:
+        import numpy as np
+
+        np.savez_compressed(path, t=np.asarray(self.t, float),
+                            valve_maxabs_m_s=np.asarray(self.valve, float).reshape(-1, 4),
+                            motor_stroke_m=np.asarray(self.stroke, float).reshape(-1, 4))
+        return {"file": Path(path).name, "chunks": len(self.t), "every_steps": self.every,
+                "columns": "t (absolute s, chunk end), valve_maxabs_m_s (max |valve_state| over the chunk), "
+                           "motor_stroke_m (GetMotorPos at the chunk end)"}
+
+
+def dhat_window_record(t_s, valves_m_s, motor_strokes_m, t_touch_s):
+    """Rules rev1 4 (a), the ``k2_record.dhat_window_record`` rule on the 1 ms chunks: legs with an open valve on a
+    chunk of (t_touch - 0.3 s, t_touch] and, per open leg, the motor stroke gained over the window [mm] (last chunk at
+    or before the window start to the last chunk at or before ``t_touch``). ``(None, None)`` without ``t_touch``."""
+    import numpy as np
+
+    from outrigger_sim.params import LEG_ORDER
+
+    t_s = np.asarray(t_s, float)
+    if t_touch_s is None or len(t_s) == 0:
+        return None, None
+    valves = np.asarray(valves_m_s, float).reshape(-1, 4)
+    strokes = np.asarray(motor_strokes_m, float).reshape(-1, 4)
+    start = t_touch_s - DHAT_WINDOW_S
+    inside = (t_s > start + TIME_TOL_S) & (t_s <= t_touch_s + TIME_TOL_S)
+    if not inside.any():
+        return None, None
+    is_open = np.any(np.abs(valves[inside]) > VALVE_OPEN_EPS_M_S, axis=0)
+    end = int(np.flatnonzero(inside)[-1])
+    before = np.flatnonzero(t_s <= start + TIME_TOL_S)
+    s0 = strokes[int(before[-1])] if len(before) else strokes[0]
+    gained_mm = (strokes[end] - s0) * 1e3
+    return ([n for i, n in enumerate(LEG_ORDER) if is_open[i]],
+            [float(gained_mm[i]) if is_open[i] else None for i in range(4)])
+
+
+def dhat_record(case_dir: Path, t0: float, t_touch_rel: float | None, controller_meta: Mapping[str, Any]) -> dict:
+    """``k2_row.json`` ``k2`` block: ``dhat_N`` (``controller_meta.touch_twist_hold.twist_load_estimate_N``, None
+    without the TOUCH -> LEVEL estimate) and the window record of :data:`VALVE_FILE` (times made relative)."""
+    import numpy as np
+
+    value = (controller_meta.get("touch_twist_hold") or {}).get("twist_load_estimate_N")
+    out: dict[str, Any] = {"dhat_N": None if value is None else float(value),
+                           "dhat_window_open_legs": None, "dhat_window_stroke_mm": None,
+                           "dhat_window_s": DHAT_WINDOW_S, "valve_open_eps_m_s": VALVE_OPEN_EPS_M_S,
+                           "dhat_source": "controller_meta.touch_twist_hold.twist_load_estimate_N",
+                           "window_source": f"{VALVE_FILE} (1 ms chunks, k2_record.dhat_window_record rule)"}
+    f = Path(case_dir) / VALVE_FILE
+    if f.exists():
+        with np.load(f) as d:
+            legs, mm = dhat_window_record(d["t"] - t0, d["valve_maxabs_m_s"], d["motor_stroke_m"], t_touch_rel)
+        out.update(dhat_window_open_legs=legs, dhat_window_stroke_mm=mm)
+    else:
+        out["window_source"] = f"missing {VALVE_FILE}"
+    return out
 
 
 # ------------------------------------------------------------------------------ row record
@@ -461,8 +632,9 @@ def k2_row(case_dir: Path, *, row: K2Row, params: Any) -> dict[str, Any]:
         "valve_open_fraction_touch_to_lift": None if window is None else dict(zip(
             ("FL", "FR", "RL", "RR"), window, strict=True)),
         "valve_open_window_s": None if window is None else [tm["touch"], t_lift],
+        "k2": dhat_record(case_dir, t0, tm["touch"], ctl),
         "events": events,
-        "files": {"pads": PADS_FILE, "rate": RATE_FILE},
+        "files": {"pads": PADS_FILE, "rate": RATE_FILE, "valve": VALVE_FILE},
         "time_base": "relative to settings.start_t_s (pads.npz / record / controller events minus t0)",
         "definitions": "k2_chrono_rows.k2_row docstring (D8x 4.1 names)",
         "row": row.to_meta(),
@@ -512,7 +684,9 @@ def finish_case(case_dir: Path, summary: dict[str, Any], *, row: K2Row, params: 
 
 # ------------------------------------------------------------------------------ V-7 (s9_batch)
 V7_SOURCE_CASES = ("P3b_J1_B_top_Fs4", "P3b_J2_B_top_Fs4")
-V7_TAG = {"off": "final_C4G2_LAS", "on": "final_C4G2_LAS_TCL"}
+V7_TAG = {"off": "final_C4G2_LAS_K1", "on": "final_C4G2_LAS_K1_TCL"}
+V7_K1_ORDER_GATE = "on"
+"""V-7 K1 order gate (user decision 2026-11-10: the run-time preset, explicit in the argv)."""
 V7_START_ENV = {"OMP_WAIT_POLICY": "PASSIVE", "OUTRIGGER_HULL_HOOK": "fast"}
 
 
@@ -525,19 +699,19 @@ def _with_controller(argv: list[str], tag: str) -> list[str]:
 
 def v7_rows(sb: ModuleType) -> list[dict[str, Any]]:
     """4 rows: the FINAL-REP rows of :data:`V7_SOURCE_CASES` with ``--expect-controller`` = the arm tag and
-    ``--k1-order-gate off --k2 off|on`` appended (argv otherwise unchanged)."""
+    ``--k1-order-gate on --k2 off|on`` appended (argv otherwise unchanged)."""
     src = {r["case"]: r for r in sb.level_rows("final_rep_cases")}
     out = []
     for case in V7_SOURCE_CASES:
         base = src[case]
         for arm in ARMS:
             name = f"K2V7_{case}_{ARM_NAME[arm]}"
-            argv = _with_controller(base["argv"], V7_TAG[arm]) + [K1_ORDER_GATE_OPTION, "off", "--k2", arm]
+            argv = _with_controller(base["argv"], V7_TAG[arm]) + [K1_ORDER_GATE_OPTION, V7_K1_ORDER_GATE, "--k2", arm]
             out.append({"case": name, "est_s": base["est_s"], "argv": argv, "controller": V7_TAG[arm],
                         "group": V7_BATCH, "planned_pool": "pcore", "start_env": dict(V7_START_ENV),
-                        "k2_arm": arm, "touch_creep_latch": arm == "on", "k1_order_gate": "off",
+                        "k2_arm": arm, "touch_creep_latch": arm == "on", "k1_order_gate": V7_K1_ORDER_GATE,
                         "source_case": case, "pair_case": f"K2V7_{case}_{ARM_NAME['on' if arm == 'off' else 'off']}",
-                        "note": f"{V7_BATCH} (rules 3.6, record only): FINAL-REP {case}, K-2 {arm}, K1 off, "
+                        "note": f"{V7_BATCH} (rules 3.6, record only): FINAL-REP {case}, K-2 {arm}, K1 on, "
                                 f"{V7_TAG[arm]}"})
     return out
 

@@ -1766,6 +1766,7 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
                                                                hydraulics=v5_options,
                                                                las_off=las_off)
     k2_block = None
+    dhat_rec = s6c.k2c.DhatWindowRecorder(model) if bcase.k2_row is not None else None  # rev1 4, read only
     if bcase.k2_row is not None:  # K-2 V-6: the built controller holds the row's arm / gate / tag (rules I-10)
         from outrigger_sim.control.touch_creep_option import (
             check_built_touch_creep,
@@ -2019,7 +2020,7 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
                               run_meta=run_meta, on_control=observe_end,
                               command_delay_periods=0,
                               command_offset_s=bcase.command_offset_s,
-                              step_hook=st._chain_hooks(pads, sat_rec),
+                              step_hook=st._chain_hooks(pads, sat_rec, dhat_rec),
                               dt_schedule=schedule,
                               placement=st.run_placement(),
                               stop_when=stop_now if use_rule else None)
@@ -2048,6 +2049,8 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
     bundle["saturation_steps"] = sat_rec.meta()
     save_record(res.record, case_dir / "record")
     pads.save(case_dir / "pads.npz")
+    if dhat_rec is not None:
+        bundle["k2_valve_record"] = dhat_rec.save(case_dir / s6c.k2c.VALVE_FILE)
     series_info = series.save(case_dir / S8_SERIES_NAME)
     head_delivered = None if head_fault is None \
         else head_fault.save_delivered(case_dir / HEAD_DELIVERED_FILE)  # C-S8-70 ⑥
@@ -3316,7 +3319,8 @@ def _batch_dir(tag: str) -> Path:
 def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, duration_s: float,
               flow_limit: dict[str, Any] | None = None,
               hydraulics: dict[str, Any] | None = None, las_off: bool = False,
-              d8x: dict[str, Any] | None = None, k2: dict[str, Any] | None = None):
+              d8x: dict[str, Any] | None = None, k2: dict[str, Any] | None = None,
+              batch_dir: Path | None = None):
     """``d8x``: :func:`d8x_preflight` record (D8x sets only): ``batch_meta.json d8x`` and the expected controller
     tag passed to every case. ``k2``: :func:`k2_preflight` record (K-2 V-6): ``batch_meta.json k2``, its expected
     tag passed to every case; rows of two arms in one batch are refused."""
@@ -3341,7 +3345,10 @@ def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, durati
     arms = {c.base.k2_arm for c in cases if c.base.k2_row is not None}
     if arms and (k2 is None or arms != {k2["k2"]} or any(c.base.k2_row is None for c in cases)):
         raise SystemExit(f"K-2 rows of mixed arms / without the --k2 record in one batch: {sorted(map(str, arms))}")
-    batch_dir = _batch_dir(f"{tag}_check" if check else tag)
+    if batch_dir is None:
+        batch_dir = _batch_dir(f"{tag}_check" if check else tag)
+    else:
+        batch_dir.mkdir(parents=True, exist_ok=False)
     from outrigger_sim.chrono import s8_plant_adapter as plant
 
     meta = {"mode": "check" if check else "run", "set": tag, "layout": layout,
@@ -3367,6 +3374,7 @@ def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, durati
             flow_settings["expect_controller"] = d8x["expect_controller"]
     if k2 is not None:  # key only on K-2 batches
         meta["k2"] = k2
+        meta["identity_start"] = s6c.k2c.batch_identity("start")
         flow_settings["expect_controller"] = k2["expect_controller"]
     (batch_dir / "batch_meta.json").write_text(json.dumps(s6c._plain(meta), indent=1), "utf-8")
     table = {c.case_id: c for c in cases}
@@ -3381,6 +3389,9 @@ def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, durati
         if o.status != "ok":
             msg += "\n" + (o.error or "")[-2500:]
         print(msg, flush=True)
+    if k2 is not None:  # end identity: HEAD / status again and every row's rc
+        meta["identity_end"] = {**s6c.k2c.batch_identity("end", outs), "wall_s": time.perf_counter() - t0}
+        (batch_dir / "batch_meta.json").write_text(json.dumps(s6c._plain(meta), indent=1), "utf-8")
     print(f"batch wall {time.perf_counter() - t0:.1f} s -> {batch_dir}", flush=True)
     return batch_dir
 
@@ -4468,9 +4479,29 @@ def main(argv):
         raise SystemExit("K-2 V-6 rows run the K24 plant and the run-time preset with the row's arm (rules 3.5): no "
                          "--flow-eta-v, v5 option or --las-off")
     k2 = None
+    k2_dir = None
     if is_k2 and args.action in ("run", "check"):  # one arm per batch, before any Chrono step
         k2_ids, k2 = k2_preflight(args, [c.case_id for c in case_set(args.case_set)])
         args.only = k2_ids
+        k2_dir = s6c.k2c.batch_dir_of_args(args)
+        if args.dry_run:  # rows, preflight, cost and the batch folder; nothing runs
+            tab = case_table()
+            tag = args.tag or args.case_set
+            rule = str(k2_dir) if k2_dir is not None else str(
+                RESULTS / (f"{tag}_check_<stamp>" if args.action == "check" else f"{tag}_<stamp>"))
+            print(json.dumps(s6c._plain({
+                "dry_run": args.action, "engine": "L2b", "k2": k2, "batch_dir": rule,
+                "stamp_rule": "datetime.now() %Y%m%d_%H%M%S at the batch start (unless --batch-dir)",
+                "case_dirs": [f"{rule}/{c}" for c in k2_ids], "workers": args.workers,
+                "cost": s6c.k2c.cost_rows(
+                    "L2b", [tab[c] for c in k2_ids],
+                    lambda c: expected_run_s(c) + s7c.CRAWLER_SETTLE_S, lambda c: c.wall_estimate_s("p")),
+                "cost_upper_sim_s": {c: end_rule(tab[c])["upper_s"] + s7c.CRAWLER_SETTLE_S for c in k2_ids},
+                "cost_basis": "P: S8Case.wall_estimate_s (p1r full P pool per-step cost, end rule READY + 10 s; a "
+                              "floor without a READY reference falls back to the scenario length); E: "
+                              "k2_chrono_rows.E_WALL_S_PER_SIM_S (K-2 check runs 2026-11-10)"}),
+                indent=1, ensure_ascii=False))
+            return
     if is_d8x and (flow_limit is not None or hydraulics is not None or args.las_off):
         raise SystemExit("D8x rows run the run-time preset and the K24 / A / K0V / K8 plant as they are "
                          "(rules 2.1 / 4.4): no --flow-eta-v, v5 option or --las-off")
@@ -4511,12 +4542,13 @@ def main(argv):
     if args.action == "check":
         run_batch(cases, tag=tag, layout=args.workers, check=True,
                   duration_s=args.duration, flow_limit=flow_limit, hydraulics=hydraulics,
-                  las_off=args.las_off, d8x=d8x, k2=k2)
+                  las_off=args.las_off, d8x=d8x, k2=k2, batch_dir=k2_dir)
         return
     if not args.approved:
         raise SystemExit("S8 main run needs the user's confirmation: add --approved")
     run_batch(cases, tag=tag, layout=args.workers, check=False, duration_s=0.0,
-              flow_limit=flow_limit, hydraulics=hydraulics, las_off=args.las_off, d8x=d8x, k2=k2)
+              flow_limit=flow_limit, hydraulics=hydraulics, las_off=args.las_off, d8x=d8x, k2=k2,
+              batch_dir=k2_dir)
 
 
 if __name__ == "__main__":

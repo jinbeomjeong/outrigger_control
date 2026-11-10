@@ -303,5 +303,86 @@ def test_v7_rows(s6c) -> None:
     for r in rows:
         argv = r["argv"]
         assert argv[argv.index("--expect-controller") + 1] == r["controller"]
-        assert argv[-4:] == ["--k1-order-gate", "off", "--k2", r["k2_arm"]]
+        assert argv[-4:] == ["--k1-order-gate", "on", "--k2", r["k2_arm"]]  # V-7 K1 on (2026-11-10)
+        assert r["controller"] == {"off": "final_C4G2_LAS_K1", "on": "final_C4G2_LAS_K1_TCL"}[r["k2_arm"]]
+        assert r["k1_order_gate"] == "on"
         assert r["start_env"]["OMP_WAIT_POLICY"] == "PASSIVE"
+
+
+def test_v7_configs_pass_their_tags(s6c) -> None:
+    """V-7 build check (no Chrono): the level config with K1 on and the arm's K-2 passes the row tag."""
+    sb = _import("s9_batch")
+    for r in s6c.k2c.v7_rows(sb):
+        chk = s6c.k2c.v7_argv_check(r)
+        assert chk["status"] == "ok", chk
+        assert chk["k1_order_gate"] is True and chk["touch_creep_latch"] is (r["k2_arm"] == "on")
+
+
+def test_v6_tags_stay_k1_off(k2c) -> None:
+    assert k2c.EXPECTED_TAG == {"off": "final_C4G2_LAS", "on": "final_C4G2_LAS_TCL"}
+    assert k2c.K1_ORDER_GATE is False
+
+
+def test_dhat_window_rule(k2c) -> None:
+    """The k2_record.dhat_window_record rule on 1 ms chunks: window (t_touch - 0.3, t_touch], open = |u| > 1e-6,
+    stroke gained from the last chunk at or before the window start."""
+    t = np.round(np.arange(0.0, 1.0001, 0.001), 9)
+    valves = np.zeros((t.size, 4))
+    strokes = np.zeros((t.size, 4))
+    valves[(t > 0.65) & (t <= 0.80), 1] = 2e-3  # FR open inside the window
+    valves[(t > 0.10) & (t <= 0.69), 2] = 2e-3  # RL open before the window only
+    valves[t > 0.70, 3] = 1e-6  # RR at the threshold = closed
+    strokes[:, 1] = t * 2e-3  # FR 2 mm/s
+    legs, mm = k2c.dhat_window_record(t, valves, strokes, 1.0)
+    assert legs == ["FR"]
+    assert mm[0] is None and mm[2] is None and mm[3] is None
+    assert mm[1] == pytest.approx(0.6, abs=1e-9)  # 0.3 s x 2 mm/s
+    assert k2c.dhat_window_record(t, valves, strokes, None) == (None, None)
+
+
+def test_dhat_recorder_reads_only(l1_model, k2c) -> None:
+    params, model = l1_model
+    rec = k2c.DhatWindowRecorder(model)
+    assert rec.every == 5  # 1 ms at dt 2e-4 s
+    gn = [float(m.GetGn()) for m, _ in __import__(
+        "outrigger_sim.chrono.moving_pad_damping", fromlist=["pad_materials"]).pad_materials(model)]
+    model.actuator._valve_u[:] = [0.0, 3e-3, 0.0, -1e-3]
+    for _ in range(5):
+        rec(None)
+    assert len(rec.t) == 1 and rec.valve[0].tolist() == [0.0, 3e-3, 0.0, 1e-3]
+    model.actuator._valve_u[:] = 0.0
+    assert [float(m.GetGn()) for m, _ in __import__(
+        "outrigger_sim.chrono.moving_pad_damping", fromlist=["pad_materials"]).pad_materials(model)] == gn
+
+
+def test_batch_identity_records(k2c, tmp_path) -> None:
+    """batch_meta.json identity_start / identity_end: raw argv, cwd, git HEAD / status, env subset, affinity, the
+    pychrono package and (end) every row's rc."""
+    from types import SimpleNamespace
+
+    start = k2c.batch_identity("start")
+    for key in ("argv", "cwd", "pid", "git", "env", "affinity_mask", "pychrono", "utc"):
+        assert key in start, key
+    assert start["git"]["head"] and "status_porcelain" in start["git"]
+    assert all(k.startswith(k2c.IDENTITY_ENV_PREFIXES) for k in start["env"])
+    assert start["pychrono"] and start["pychrono"].startswith("pychrono-")
+    outs = [SimpleNamespace(case_id="A", status="ok", exit_code=0, wall_s=1.0, case_dir=tmp_path / "A"),
+            SimpleNamespace(case_id="B", status="failed", exit_code=3, wall_s=2.0, case_dir=tmp_path / "B")]
+    end = k2c.batch_identity("end", outs)
+    assert end["rows"]["B"]["exit_code"] == 3 and end["all_rc_zero"] is False
+
+
+def test_batch_dir_option(k2c, tmp_path) -> None:
+    assert k2c.batch_dir_of_args(_ns()) is None
+    assert k2c.batch_dir_of_args(_ns(batch_dir=str(tmp_path / "new"))) == tmp_path / "new"
+    with pytest.raises(SystemExit):  # an existing folder is refused
+        k2c.batch_dir_of_args(_ns(batch_dir=str(tmp_path)))
+    with pytest.raises(SystemExit):  # only with --set k2_v6
+        k2c.refuse_outside(_ns(batch_dir=str(tmp_path / "x")), "bundleC")
+
+
+def test_cost_rows(k2c) -> None:
+    from types import SimpleNamespace
+
+    rows = k2c.cost_rows("L1R", [SimpleNamespace(case_id="x")], lambda c: 93.0, lambda c: 177.0)
+    assert rows == [{"case": "x", "sim_s": 93.0, "wall_p_s": 177.0, "wall_e_s": 20.0 + 6.5 * 93.0}]
