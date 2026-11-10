@@ -353,3 +353,36 @@ def test_dhat_recorder_reads_only(l1_model, k2c) -> None:
     model.actuator._valve_u[:] = 0.0
     assert [float(m.GetGn()) for m, _ in __import__(
         "outrigger_sim.chrono.moving_pad_damping", fromlist=["pad_materials"]).pad_materials(model)] == gn
+
+
+def test_batch_identity_records(k2c, tmp_path) -> None:
+    """batch_meta.json identity_start / identity_end: raw argv, cwd, git HEAD / status, env subset, affinity, the
+    pychrono package and (end) every row's rc."""
+    from types import SimpleNamespace
+
+    start = k2c.batch_identity("start")
+    for key in ("argv", "cwd", "pid", "git", "env", "affinity_mask", "pychrono", "utc"):
+        assert key in start, key
+    assert start["git"]["head"] and "status_porcelain" in start["git"]
+    assert all(k.startswith(k2c.IDENTITY_ENV_PREFIXES) for k in start["env"])
+    assert start["pychrono"] and start["pychrono"].startswith("pychrono-")
+    outs = [SimpleNamespace(case_id="A", status="ok", exit_code=0, wall_s=1.0, case_dir=tmp_path / "A"),
+            SimpleNamespace(case_id="B", status="failed", exit_code=3, wall_s=2.0, case_dir=tmp_path / "B")]
+    end = k2c.batch_identity("end", outs)
+    assert end["rows"]["B"]["exit_code"] == 3 and end["all_rc_zero"] is False
+
+
+def test_batch_dir_option(k2c, tmp_path) -> None:
+    assert k2c.batch_dir_of_args(_ns()) is None
+    assert k2c.batch_dir_of_args(_ns(batch_dir=str(tmp_path / "new"))) == tmp_path / "new"
+    with pytest.raises(SystemExit):  # an existing folder is refused
+        k2c.batch_dir_of_args(_ns(batch_dir=str(tmp_path)))
+    with pytest.raises(SystemExit):  # only with --set k2_v6
+        k2c.refuse_outside(_ns(batch_dir=str(tmp_path / "x")), "bundleC")
+
+
+def test_cost_rows(k2c) -> None:
+    from types import SimpleNamespace
+
+    rows = k2c.cost_rows("L1R", [SimpleNamespace(case_id="x")], lambda c: 93.0, lambda c: 177.0)
+    assert rows == [{"case": "x", "sim_s": 93.0, "wall_p_s": 177.0, "wall_e_s": 20.0 + 6.5 * 93.0}]

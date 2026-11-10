@@ -176,6 +176,10 @@ def add_arguments(ap: Any, *, pad_zeta: bool) -> None:
                     help="--set k2_v6: the LAS-b K1 order gate (slope_clearance_margin.flat_soil_margin_order_gate), "
                          "must be given explicitly (off for V-6, rules I-10); refused with other sets. Absent = no "
                          "attribute")
+    ap.add_argument(BATCH_DIR_OPTION, dest="batch_dir", default=None,
+                    help="run / check --set k2_v6: the batch folder (must not exist; absolute or relative to the "
+                         "repository root) instead of the <tag>_<stamp> rule, so the output path is known before the "
+                         "start")
     if pad_zeta:
         ap.add_argument(PAD_ZETA_OPTION, dest="pad_zeta_moving", default="off",
                         help="--set k2_v6 L1-R rows: axial zeta of a moving leg (valve |u| > lock_eps) on the pad "
@@ -263,9 +267,77 @@ def select_rows(args: Any, engine: str, set_ids: Sequence[str]) -> tuple[list[st
     return ids, record
 
 
+IDENTITY_ENV_PREFIXES = ("OUTRIGGER_", "OMP_", "MKL_", "OPENBLAS_", "NUMBA_", "KMP_", "CONDA_PREFIX",
+                         "CONDA_DEFAULT_ENV", "PYTHONHASHSEED", "PYTHONDONTWRITEBYTECODE")
+E_WALL_S_PER_SIM_S = {"L1R": 6.5, "L2b": 8.8}
+"""E-core wall per simulated second, measured on the K-2 check runs 2026-11-10 (2-4 Chrono processes on the E cores
+at once; L1-R 1303 us/step at dt 2e-4 s, L2b 882 us/step at 1e-4 s). ASSUMPTION for a full batch, not a cost
+measurement."""
+E_START_S = 20.0
+BATCH_DIR_OPTION = "--batch-dir"
+
+
+def batch_identity(stage: str, outcomes: Sequence[Any] | None = None) -> dict[str, Any]:
+    """Run identity of a K-2 batch process for ``batch_meta.json`` (``identity_start`` / ``identity_end``): the raw
+    argv (interpreter + ``sys.argv``), cwd, pid, UTC time, ``git rev-parse HEAD`` and ``git status --porcelain
+    --untracked-files=no`` of the repository, the env subset :data:`IDENTITY_ENV_PREFIXES`, the CPU affinity mask
+    of the launcher (case processes: result.json runner.placement) and the pychrono conda package; at the end also every row's status / exit code (rc) / wall / case dir from the batch
+    outcomes. Read only (git and the process are only queried)."""
+    import datetime as _dt
+    import os
+
+    sys.path.insert(0, str(ROOT / "04_scripts" / "03_control" / "d8x"))
+    try:
+        import d8x_record  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(ROOT / "04_scripts" / "03_control" / "d8x"))
+    meta = sorted((Path(sys.prefix) / "conda-meta").glob("pychrono-*.json"))
+    chrono_version = meta[-1].stem if meta else None  # conda package record (pychrono has no __version__)
+    out: dict[str, Any] = {
+        "stage": stage, "utc": _dt.datetime.now(_dt.UTC).isoformat(),
+        "argv": [sys.executable, *getattr(sys, "orig_argv", sys.argv)[1:]],
+        "cwd": os.getcwd(), "pid": os.getpid(),
+        "git": d8x_record.git_state(ROOT), "repo_root": str(ROOT),
+        "env": {k: v for k, v in sorted(os.environ.items()) if k.startswith(IDENTITY_ENV_PREFIXES)},
+        "affinity_mask": d8x_record._affinity_mask(), "pychrono": chrono_version,
+    }
+    if outcomes is not None:
+        out["rows"] = {str(o.case_id): {"status": str(o.status), "exit_code": o.exit_code,
+                                        "wall_s": float(o.wall_s), "case_dir": str(o.case_dir)}
+                       for o in outcomes}
+        out["all_rc_zero"] = all(o.exit_code == 0 for o in outcomes)
+    return out
+
+
+def batch_dir_of_args(args: Any) -> Path | None:
+    """``--batch-dir``: an explicit batch folder (absolute, or relative to the repository root); it must not exist
+    yet (no mixing of two batches in one folder). None = the runner's ``<tag>_<stamp>`` rule."""
+    v = getattr(args, "batch_dir", None)
+    if v is None:
+        return None
+    p = Path(v)
+    p = p if p.is_absolute() else ROOT / p
+    if p.exists():
+        raise SystemExit(f"{BATCH_DIR_OPTION} {p} exists already")
+    return p
+
+
+def cost_rows(engine: str, cases: Sequence[Any], run_s_of, wall_p_of) -> list[dict[str, Any]]:
+    """Per row: simulated length (``run_s_of``), P estimate of the runner (``wall_p_of``) and the E estimate
+    ``E_START_S + E_WALL_S_PER_SIM_S x sim``."""
+    out = []
+    for c in cases:
+        sim = float(run_s_of(c))
+        out.append({"case": c.case_id, "sim_s": sim, "wall_p_s": float(wall_p_of(c)),
+                    "wall_e_s": E_START_S + E_WALL_S_PER_SIM_S[engine] * sim})
+    return out
+
+
 def refuse_outside(args: Any, case_set: str) -> None:
     """Explicit K-2 options with a set other than ``k2_v6``: refused (the other sets run their own definition)."""
     given = {k: v for k, v in explicit_options(args).items() if k != "expect_controller"}
+    if getattr(args, "batch_dir", None) is not None:
+        given["batch_dir"] = args.batch_dir
     if case_set != V6_SET and given:
         raise SystemExit(f"{sorted(given)} only with --set {V6_SET} (got --set {case_set})")
 

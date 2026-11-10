@@ -2750,7 +2750,7 @@ def build_d8x_snapshots(jobs: int, *, dry_run: bool = False):
 def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DURATION_S,
               case_set: str = "bundleC", run_tag: str | None = None,
               d8x: dict[str, Any] | None = None, k2: dict[str, Any] | None = None,
-              placement: str = "pcore"):
+              placement: str = "pcore", batch_dir: Path | None = None):
     """``d8x``: the :func:`d8x_preflight` record (D8x sets only; written to ``batch_meta.json``
     and its ``expect_controller`` passed to every case). ``k2``: the K-2 V-6 record
     (``k2_chrono_rows.select_rows`` + :func:`k2_preflight`; ``batch_meta.json k2``, its ``expect_controller`` passed to
@@ -2773,8 +2773,9 @@ def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DU
     tag = "bundleC" if case_set == "bundleC" else f"bundleC_{case_set}"
     if run_tag:  # C-S8-73: e.g. bundleC_ps7r8_c73_L1R_<stamp>
         tag = f"{tag}_{run_tag}"
-    batch_dir = RESULTS / (f"{tag}_check_L1R_{stamp}" if check else f"{tag}_L1R_{stamp}")
-    batch_dir.mkdir(parents=True, exist_ok=True)
+    if batch_dir is None:
+        batch_dir = RESULTS / (f"{tag}_check_L1R_{stamp}" if check else f"{tag}_L1R_{stamp}")
+    batch_dir.mkdir(parents=True, exist_ok=batch_dir.parent == RESULTS)
     groups = ({g: [c.case_id for c in v] for g, v in GROUP_SETS[case_set]().items()}
               if case_set in GROUP_SETS else None)
     c11_roles = {c: table[c].c11_role for c in ids if table[c].c11_role is not None}
@@ -2794,6 +2795,7 @@ def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DU
         extra["expect_controller"] = d8x.get("expect_controller")
     if k2 is not None:  # key only on K-2 batches (earlier batch metas unchanged)
         meta["k2"] = k2
+        meta["identity_start"] = k2c.batch_identity("start")
         extra["expect_controller"] = k2["expect_controller"]
     if placement != "pcore":
         meta["placement"] = placement
@@ -2810,6 +2812,9 @@ def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DU
         if o.status != "ok":
             msg += "\n" + (o.error or "")[-2500:]
         print(msg, flush=True)
+    if k2 is not None:  # end identity: HEAD / status again and every row's rc
+        meta["identity_end"] = {**k2c.batch_identity("end", report.outcomes), "wall_s": wall}
+        (batch_dir / "batch_meta.json").write_text(json.dumps(_plain(meta), indent=1), "utf-8")
     print(f"batch wall {wall:.1f} s, jobs {jobs} -> {batch_dir}", flush=True)
     return report, batch_dir
 
@@ -2822,7 +2827,8 @@ def main(argv):
                     help="run / check --set d8x_w1: refuse unless the run-time preset tag is this one "
                          "(D8x rules 2.1 / I-5 expected_tag, e.g. final_C4G2_LAS_K1); recorded per row")
     ap.add_argument("--dry-run", dest="dry_run", action="store_true",
-                    help="snaps-d8x: print the missing D8x start states and the estimate only")
+                    help="snaps-d8x / snaps-k2: print the missing start states and the estimate only; run / check "
+                         "--set k2_v6: print the rows, preflight, cost and batch folder (nothing runs)")
     ap.add_argument("--leg", choices=st.PREGROUND_LEGS, default="FL",
                     help="snaps-pre (C-S8-72): leg of the pre-grounded PS-7a start snapshot")
     ap.add_argument("--overwrite", action="store_true",
@@ -2932,13 +2938,30 @@ def main(argv):
         table = case_table()
         d8x = d8x_preflight([table[c] for c in ids], args.expect_controller)
     k2 = None
+    k2_dir = None
     if args.case_set == k2c.V6_SET:  # rules 3.5 / I-10: one arm, explicit options, before any Chrono step
         k2_ids, k2 = k2_preflight(args, set_ids)
         args.only = k2_ids
+        k2_dir = k2c.batch_dir_of_args(args)
+        if args.dry_run:  # rows, preflight, cost and the batch folder; nothing runs
+            table = case_table()
+            tag = f"bundleC_{args.case_set}" + (f"_{args.tag}" if args.tag else "")
+            rule = (str(k2_dir) if k2_dir is not None else
+                    str(RESULTS / (f"{tag}_check_L1R_<stamp>" if args.action == "check" else f"{tag}_L1R_<stamp>")))
+            print(json.dumps(_plain({
+                "dry_run": args.action, "engine": "L1R", "k2": k2, "batch_dir": rule,
+                "stamp_rule": "datetime.now() %Y%m%d_%H%M%S at the batch start (unless --batch-dir)",
+                "case_dirs": [f"{rule}/{c}" for c in k2_ids], "placement": args.placement, "jobs": jobs,
+                "cost": k2c.cost_rows("L1R", [table[c] for c in k2_ids], lambda c: c.duration_s,
+                                      lambda c: c.wall_estimate_s()),
+                "cost_basis": "P: s6_stage2 7-worker fit (BundleCCase.wall_estimate_s); E: "
+                              "k2_chrono_rows.E_WALL_S_PER_SIM_S (K-2 check runs 2026-11-10); fixed length"}),
+                indent=1, ensure_ascii=False))
+            return
     if args.action == "check":
         ids = args.only or set_ids
         run_batch(ids, jobs, check=True, check_duration_s=args.duration, case_set=args.case_set,
-                  run_tag=args.tag, d8x=d8x, k2=k2, placement=args.placement)
+                  run_tag=args.tag, d8x=d8x, k2=k2, placement=args.placement, batch_dir=k2_dir)
         return
     if not args.approved:
         raise SystemExit("bundle C needs the user's approval: add --approved (spec 150; "
@@ -2967,7 +2990,7 @@ def main(argv):
         table = case_table()
         ids = args.only or [c for c in set_ids if args.with_c9 or not table[c].conditional]
     run_batch(ids, jobs, check=False, case_set=args.case_set, run_tag=args.tag, d8x=d8x, k2=k2,
-              placement=args.placement)
+              placement=args.placement, batch_dir=k2_dir)
 
 
 if __name__ == "__main__":
