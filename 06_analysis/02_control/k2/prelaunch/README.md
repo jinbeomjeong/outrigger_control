@@ -15,9 +15,9 @@
 | 대상 | 값 | 확인 방법 |
 |---|---|---|
 | 원판 / rev1 / 명세 sha256 | `a3658197…7263` / `5ba081c6…4776` / `502b0bb7…27ff` | raw sha256 |
-| rev2 / rev3 / rev4 / rev5 sha256 (결과 전, 브랜치 `k2-prelaunch-record`) | `b3f1b41f…94ea` / `8bcdb0ed…6e61` / `82160ff5…00c5` / `73b87758…eccc` | raw sha256 |
-| 경로 2 `k2_recount.py` **1.4** blob (판정 때 병합 뒤 main에서 실행. k2-run에는 1.2가 있다) | `1cde20d2ae54ec2aaef23f7d6c0d24a703904ea5` | `git rev-parse <판정 커밋>:<path>` |
-| 경로 1 `k2_judge.py` (python-expert `k2-path1-rev2` `f67854e`, rev5) | `b41d2587d2abd4b6b530cff894a27a54419c6ab3`. `9bbcc201…`·`7ee9ccc1…`은 쓰지 않음 | 같음 |
+| rev2 / rev3 / rev4 / rev5 / rev6 sha256 (결과 전) | `b3f1b41f…94ea` / `8bcdb0ed…6e61` / `82160ff5…00c5` / `73b87758…eccc` / `21268203…ea0e` | raw sha256 |
+| 경로 2 `k2_recount.py` **1.5** blob (판정 때 병합 뒤 main에서 실행. k2-run에는 1.2가 있다) | `e1e16a9c5864e5a724f976eb6dda8456f14ff0a7`. 쓰지 않은 이전 blob: 1.2 `d2240795…`, 1.3 `78a3d2c7…`, 1.4 `1cde20d2…` | `git rev-parse <판정 커밋>:<path>` |
+| 경로 1 `k2_judge.py` | **`{PATH1_BLOB}` 대기**(python-expert, rev6 반영판). `b41d2587…`·`9bbcc201…`·`7ee9ccc1…`은 쓰지 않음 | 같음 |
 | `k2_v5_flatten.py` (같은 커밋) | `654bc38c4e92a5bf6f4e039c935f64d60f122260`. `d9e3f2d9…`·`a83abd80…`은 쓰지 않음 | 같음 |
 | `run_with_identity.py` | `fab7664bd3ba16723e4202bf71dc7d87ab0cf7f0` | 같음 |
 | `run_ps7.py` | `248f5363cbdbaf1bc20eac3ef5e73bdfd6e05acd` | 같음 |
@@ -144,6 +144,25 @@ worker-초 추정이다.
 - 경로 1·2 모두 V-6 D̂를 `k2_row.json`의 `k2` 블록에서 읽는다. 경로 1은 `c77ecf5`, 경로 2는 1.2이고 시험 `test_chrono_row_dhat_from_k2_block`으로 확인했다.
 - V-7은 경로 2 밖이다(기록 전용, 경로 1 `record-v7`만).
 - V-5 regression은 판정 93, 기록 49다(3절, rev2 2).
+
+## 7.1 rev6 정리 (2026-11-10, 재감사 뒤)
+
+- **V-5 결과 종류**(rev6 1절)
+  - 판정 불가: 공통 항목(두 팔의 sidecar rc, 오류 행, provenance, G8 c2), K-2 증거, 짝 없는 키, 건수(격자 768 포함, 두 팔)
+  - 실패: 묶음 절대 항목과 끔 팔 대비 통과→실패
+  - 회귀 verdict 결측은 실패다.
+- **하네스 SH 결측**(rev6 2절)은 그 SH의 FLAG로 세고, 결측 수를 출력한다.
+- AUG_crc2의 E-5·I-9 위반은 기록만 한다(rev6 3절).
+- **판정 후 정체성 확인 목록은 60개 sidecar**다(rev6 4절). 참고용 평탄화 단계 2개는 뺀다. 여기에 `flat_main` 재생성 sidecar, V-5 provenance, V-6 `batch_meta` 4개, V-7 `batch.json`·`result.json`을 더한다.
+  - P_post가 참고용 평탄화 단계에서 멈추면, 남은 tcl r79 판정 단계 2개를 `k2_commands_filled.json`의 같은 래퍼 argv로 이어 돌린다.
+  - 그때 시각, 실행자, 멈춘 단계와 rc를 기록한다.
+- **G-S 근거**(재감사 발견 3): 실행 전 기록 `gs_evidence` 칸에 자리를 만들어 두었다. 메인 세션이 k2-run에서 돌리는 시험 결과를 받으면 채운다. 채울 내용은 명령, 인터프리터, checkout·HEAD, pass/skip/fail 수, `test_k2_hashes.py`의 T-K2-1·T-K2-2·I-8 G0·R-c와 skip 수, 로그 sha다.
+
+## 7.2 경로 독립성 공개 (rev6 5절, 사용자 결정)
+
+- 결과가 나오기 전에, 메인 세션이 경로 1의 **정의 요약**(코드가 아님)을 경로 2 작성자(control-expert)에게 전달해 두 경로를 정렬했다(rev5·rev6 작성 과정).
+- 경로 1(`k2_judge.py`)은 경로 2 코드를 일부 참조했다. docstring이 경로 2 내부를 가리키고, `false_latches`가 경로 2 `false_latch`와 거의 같다(재감사 기록 d).
+- 원판 8절은 경로 2만 제한하므로 규칙 위반은 아니다. 다만 같은 실수가 두 경로에 함께 들어갔을 가능성이 있다. 판정서에도 같은 문구를 적는다.
 
 ## 8. 러너 띄우는 순서 (감사 6, rev2 5)
 

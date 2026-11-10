@@ -66,7 +66,28 @@ V5_NOTE_REGRESSION = (
     "entries that are not judgement rows 7 + clip_r79_L3L4 42; key sha d4f58334...). The 118 of the original 3.4 / "
     "criteria.md is the old rerun-list count, not reconstructable from the stored outputs. E-1 expects 93. The r79 "
     "L1 reference rows are not judged rows; the r79 judgement 'unmatched' is a record (rev4 1 (c)).")
-PATH1_BLOB_PENDING = "b41d2587d2abd4b6b530cff894a27a54419c6ab3"  # python-expert k2-path1-rev2 f67854e (rev5)
+PATH1_BLOB_PENDING = ("{PATH1_BLOB: python-expert rev6 version of k2_judge.py (pending); "
+                      "b41d2587 (rev5) superseded}")
+GS_EVIDENCE = {
+    "status": "{GS_EVIDENCE: pending, the main session runs the G-S tests on k2-run and sends the result}",
+    "fields_to_fill": {"command": None, "interpreter": None, "checkout": None, "head": None,
+                       "passed": None, "skipped": None, "failed": None,
+                       "test_k2_hashes_py": {"T-K2-1": None, "T-K2-2": None, "I-8_G0": None, "I-8_R-c": None,
+                                             "skipped": None},
+                       "log_file_sha256": None},
+    "rule": "G-S needs the 9.2 tests, I-4 reduced, I-5, I-8 passed (re-audit finding 3)",
+}
+IDENTITY_LIST_NOTE = (
+    "rules rev2 6 / rev6 4: the post-judgement identity list is 60 sidecars (the 62 of k2_commands.json without the "
+    "reference flatten steps v5_flatten_off / v5_flatten_tcl), plus the flat_main rebuild sidecars (wrapper), V-5 "
+    "provenance, V-6 batch_meta x4, V-7 batch.json / result.json. If P_post stops at a reference flatten step, the "
+    "remaining tcl r79 judge steps run with the same wrapper argv of k2_commands_filled.json; record time, operator, "
+    "stopped step and rc.")
+INDEPENDENCE_NOTE = (
+    "rules rev6 5 (user decision 2026-11-10): before any result the main session passed a definition summary of path 1 "
+    "(not code) to the path 2 author to align the two paths (rev5 / rev6); path 1 (k2_judge.py) partly referred to path "
+    "2 code (docstrings, false_latches ~ false_latch; re-audit record d). Not a rule 8 violation (rule 8 restricts path "
+    "2), disclosed because a shared mistake can sit in both paths.")
 V5_FLAT_MAIN_NOTE = (
     "P_post's flatten step runs the k2-run flattener (a83abd80, old) and writes runs/v5/<arm>/flat/: kept as a "
     "reference only (runner unchanged, plan sha kept). Before judging, rebuild the flat files with the flattener of "
@@ -448,16 +469,22 @@ def main() -> None:
                                "sha256": sha(k2 / "k2_touch_creep_rules.md")},
                   **{rv: {"path": f"06_analysis/02_control/k2/k2_touch_creep_rules_{rv}.md",
                           "sha256": sha(k2 / f"k2_touch_creep_rules_{rv}.md")}
-                     for rv in ("rev1", "rev2", "rev3", "rev4", "rev5") if (k2 / f"k2_touch_creep_rules_{rv}.md").exists()},
+                     for rv in ("rev1", "rev2", "rev3", "rev4", "rev5", "rev6") if (k2 / f"k2_touch_creep_rules_{rv}.md").exists()},
                   "dyn_spec": {"path": "06_analysis/02_control/k2/k2_dyn_spec.md", "sha256": sha(k2 / "k2_dyn_spec.md")}},
         "criteria_md": {"path": "06_analysis/02_control/touch_phase/acceptance/criteria.md",
                         "blob_at_run_head": "86aa624264b3add5f24866f8ad21d91cb2c855be",
                         "lf_content_sha256": "a7363e161fef616915bcafa4e1b7b182e9501b28326634f4540cc8fc5c80590d",
                         "k2_run_working_copy_sha256": "a392730fc2160faf5f6c2c327ec1c5b8ae251427e3b259ef3bb074e791ceb00c"},
         "c2_py_k2_run_working_copy_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
-        "path2": {"path": "04_scripts/03_control/k2/k2_recount.py", "version": "1.4",
+        "path2": {"path": "04_scripts/03_control/k2/k2_recount.py", "version": "1.5",
                   "blob": blob("04_scripts/03_control/k2/k2_recount.py"),
-                  "run_from": "the record branch / main checkout after the merge (k2-run holds the older 1.2)"},
+                  "previous_blob_not_used": {"1.2": "d2240795f06893eb2d3eca6e61c55b6dd6c60eeb",
+                                             "1.3": "78a3d2c7c9d26523288f5f3ab05b9a3d6e63466c",
+                                             "1.4": "1cde20d2ae54ec2aaef23f7d6c0d24a703904ea5"},
+                  "run_from": "the main checkout after the merge (k2-run holds the older 1.2)"},
+        "gs_evidence": GS_EVIDENCE,
+        "identity_list_post_judgement": IDENTITY_LIST_NOTE,
+        "independence_disclosure": INDEPENDENCE_NOTE,
         "path1": {"path": "04_scripts/03_control/k2/k2_judge.py", "blob": PATH1_BLOB_PENDING,
                   "source": "python-expert branch k2-path1-rev2 f67854e (rev2..rev5)",
                   "previous_blob_not_used": FIX_BLOBS["04_scripts/03_control/k2/k2_judge.py"]},

@@ -27,6 +27,10 @@
    "path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev5.md",
    "sha256": "73b877580ec5dc94a46a38d2ed620372cddd17dd38eef06126d84843b485eccc"
   },
+  "rev6": {
+   "path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev6.md",
+   "sha256": "21268203e0b55218f88fc2458fe21467871ae3b1bb7ab9cc760b3fbd5ff7ea0e"
+  },
   "dyn_spec": {
    "path": "06_analysis/02_control/k2/k2_dyn_spec.md",
    "sha256": "502b0bb78558d40586cbcddb718b6c5d53529de4e78369f454762c9fe73727ff"
@@ -41,13 +45,41 @@
  "c2_py_k2_run_working_copy_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
  "path2": {
   "path": "04_scripts/03_control/k2/k2_recount.py",
-  "version": "1.4",
-  "blob": "1cde20d2ae54ec2aaef23f7d6c0d24a703904ea5",
-  "run_from": "the record branch / main checkout after the merge (k2-run holds the older 1.2)"
+  "version": "1.5",
+  "blob": "e1e16a9c5864e5a724f976eb6dda8456f14ff0a7",
+  "previous_blob_not_used": {
+   "1.2": "d2240795f06893eb2d3eca6e61c55b6dd6c60eeb",
+   "1.3": "78a3d2c7c9d26523288f5f3ab05b9a3d6e63466c",
+   "1.4": "1cde20d2ae54ec2aaef23f7d6c0d24a703904ea5"
+  },
+  "run_from": "the main checkout after the merge (k2-run holds the older 1.2)"
  },
+ "gs_evidence": {
+  "status": "{GS_EVIDENCE: pending, the main session runs the G-S tests on k2-run and sends the result}",
+  "fields_to_fill": {
+   "command": null,
+   "interpreter": null,
+   "checkout": null,
+   "head": null,
+   "passed": null,
+   "skipped": null,
+   "failed": null,
+   "test_k2_hashes_py": {
+    "T-K2-1": null,
+    "T-K2-2": null,
+    "I-8_G0": null,
+    "I-8_R-c": null,
+    "skipped": null
+   },
+   "log_file_sha256": null
+  },
+  "rule": "G-S needs the 9.2 tests, I-4 reduced, I-5, I-8 passed (re-audit finding 3)"
+ },
+ "identity_list_post_judgement": "rules rev2 6 / rev6 4: the post-judgement identity list is 60 sidecars (the 62 of k2_commands.json without the reference flatten steps v5_flatten_off / v5_flatten_tcl), plus the flat_main rebuild sidecars (wrapper), V-5 provenance, V-6 batch_meta x4, V-7 batch.json / result.json. If P_post stops at a reference flatten step, the remaining tcl r79 judge steps run with the same wrapper argv of k2_commands_filled.json; record time, operator, stopped step and rc.",
+ "independence_disclosure": "rules rev6 5 (user decision 2026-11-10): before any result the main session passed a definition summary of path 1 (not code) to the path 2 author to align the two paths (rev5 / rev6); path 1 (k2_judge.py) partly referred to path 2 code (docstrings, false_latches ~ false_latch; re-audit record d). Not a rule 8 violation (rule 8 restricts path 2), disclosed because a shared mistake can sit in both paths.",
  "path1": {
   "path": "04_scripts/03_control/k2/k2_judge.py",
-  "blob": "b41d2587d2abd4b6b530cff894a27a54419c6ab3",
+  "blob": "{PATH1_BLOB: python-expert rev6 version of k2_judge.py (pending); b41d2587 (rev5) superseded}",
   "source": "python-expert branch k2-path1-rev2 f67854e (rev2..rev5)",
   "previous_blob_not_used": "7ee9ccc109578da2bb0e8e25f3811d9c0f73664b"
  },
