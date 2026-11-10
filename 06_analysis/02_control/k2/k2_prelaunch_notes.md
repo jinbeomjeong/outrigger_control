@@ -5,7 +5,7 @@
 
 ## 1. V-4 점 파일 (`k2_prelaunch_v4.json`)
 
-> 점 파일 `06_analysis/02_control/k2/k2_points_5p5_3p5.json`(sha256 `<실행 전 기록 때의 값>`)은 rev1 1·2에 따라 `d8x_diag.diamond_points(5.5, 3.5)`(커밋 `6f2f7cb`) 값이다. 경로 2 `k2_recount.py points-check`로 rev1 2 조건을 확인했다(diamond 차 0, 표 차 d45 1.11e-5° ≤ 2e-5°, 그 밖 12점 0). 2026-11-10 python-expert 커밋 `f57bebc`의 파일(sha256 `98304b2395769faa6152df9642109b317df26a5e65b0a6723a3a7ed3b659198e`)은 이 조건을 통과한다.
+> 점 파일 `06_analysis/02_control/k2/k2_points_5p5_3p5.json`(sha256 `<실행 전 기록 때의 값>`)은 rev1 1·2에 따라 `d8x_diag.diamond_points(5.5, 3.5)`(커밋 `6f2f7cb`) 값이다. 경로 2 `k2_recount.py points-check`로 rev1 2 조건을 확인했다(diamond 차 0, 표 차 d45 1.11e-5° ≤ 2e-5°, 그 밖 12점 0). 병합본(master `dc2029b`)의 파일 sha256은 `a15cbe95275be11c163028ca2113d896254d49a4554286c54bdbfa88680cccc3`이다. 2026-11-10 python-expert 커밋 `f57bebc`의 구판(sha256 `98304b2395769faa6152df9642109b317df26a5e65b0a6723a3a7ed3b659198e`)과는 `table_check` 블록만 다르고 16점 각도는 같다(구판은 이 조건을 통과했다; 병합본도 실행 전 기록 때 `points-check`로 다시 확인한다).
 
 ## 2. d45 (`k2_prelaunch_v4.json`)
 

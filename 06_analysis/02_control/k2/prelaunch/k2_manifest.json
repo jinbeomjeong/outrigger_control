@@ -1,0 +1,272 @@
+{
+ "_note": "one manifest for both paths: 'points' (path 1) and 'points_file' (path 2) name the same file; each acc_d8 output keeps its series in <stem>_series next to it (no series_root: k2_recount 1.2 takes that folder per file)",
+ "v2": {
+  "off": [
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1off_off.json",
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1on_off.json"
+  ],
+  "tcl": [
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1off_tcl.json",
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1on_tcl.json"
+  ],
+  "points": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+  "points_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+  "stored_off": [
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\d8x\\ra\\ra_off.json",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\d8x\\ra\\ra_on.json"
+  ]
+ },
+ "v3": {
+  "arms": {
+   "H0": {
+    "off": [
+     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_H0_off.json"
+    ],
+    "tcl": [
+     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_H0_tcl.json"
+    ]
+   },
+   "L1eq": {
+    "off": [
+     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_off.json"
+    ],
+    "tcl": [
+     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_tcl.json"
+    ]
+   },
+   "L1eq_fs": {
+    "off": [
+     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_fs_off.json"
+    ],
+    "tcl": [
+     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_fs_tcl.json"
+    ]
+   },
+   "L1eq_zm": {
+    "off": [
+     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_zm_off.json"
+    ],
+    "tcl": [
+     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_zm_tcl.json"
+    ]
+   },
+   "AUG": {
+    "off": [
+     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_off.json"
+    ],
+    "tcl": [
+     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_tcl.json"
+    ]
+   },
+   "AUG_crc2": {
+    "off": [
+     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_crc2_off.json"
+    ],
+    "tcl": [
+     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_crc2_tcl.json"
+    ]
+   },
+   "AUG_eps": {
+    "off": [
+     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_eps_off.json"
+    ],
+    "tcl": [
+     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_eps_tcl.json"
+    ]
+   }
+  },
+  "points": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+  "points_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json"
+ },
+ "v4": {
+  "off": [
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v4\\v4_off.json"
+  ],
+  "tcl": [
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v4\\v4_tcl.json"
+  ],
+  "points": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\k2_points_5p5_3p5.json",
+  "points_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\k2_points_5p5_3p5.json"
+ },
+ "v5": {
+  "noise_L2": {
+   "kind": "noise_cp",
+   "count": 855,
+   "off": [
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat\\noise_L2.json"
+   ],
+   "tcl": [
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat\\noise_L2.json"
+   ],
+   "key": "key",
+   "status": "pass"
+  },
+  "grid": {
+   "kind": "pass_to_fail",
+   "count": 768,
+   "off": [
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat\\grid.json"
+   ],
+   "tcl": [
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat\\grid.json"
+   ],
+   "key": "key",
+   "status": "pass"
+  },
+  "d8": {
+   "kind": "pass_to_fail",
+   "count": 576,
+   "off": [
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat\\d8.json"
+   ],
+   "tcl": [
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat\\d8.json"
+   ],
+   "key": "key",
+   "status": "pass"
+  },
+  "soil": {
+   "kind": "pass_to_fail",
+   "count": 60,
+   "off": [
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat\\soil.json"
+   ],
+   "tcl": [
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat\\soil.json"
+   ],
+   "key": "key",
+   "status": "pass"
+  },
+  "regression": {
+   "kind": "pass_to_fail",
+   "count": 93,
+   "off": [
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat\\regression.json"
+   ],
+   "tcl": [
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat\\regression.json"
+   ],
+   "key": "key",
+   "status": "pass"
+  },
+  "ps7": {
+   "kind": "pass_to_fail",
+   "count": 20,
+   "off": [
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat\\ps7.json"
+   ],
+   "tcl": [
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat\\ps7.json"
+   ],
+   "key": "key",
+   "status": "pass"
+  },
+  "g8_safe_stop": {
+   "kind": "g8",
+   "count": 83,
+   "off": [
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat\\g8_safe_stop.json"
+   ],
+   "tcl": [
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat\\g8_safe_stop.json"
+   ],
+   "key": "key",
+   "status": "pass",
+   "ready": "ready",
+   "faults": "faults"
+  }
+ },
+ "v6": {
+  "rows": {
+   "K2_L1_top_fdown3.5_Fs0_off": {
+    "row_json": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_off\\K2_L1_top_fdown3.5_Fs0_off\\k2_row.json",
+    "pads_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_off\\K2_L1_top_fdown3.5_Fs0_off\\k2_pads.npz",
+    "rate_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_off\\K2_L1_top_fdown3.5_Fs0_off\\k2_rate.npz",
+    "engine": "L1",
+    "arm": "off"
+   },
+   "K2_L1_top_fdown3.5_Fs0_tcl": {
+    "row_json": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_tcl\\K2_L1_top_fdown3.5_Fs0_tcl\\k2_row.json",
+    "pads_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_tcl\\K2_L1_top_fdown3.5_Fs0_tcl\\k2_pads.npz",
+    "rate_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_tcl\\K2_L1_top_fdown3.5_Fs0_tcl\\k2_rate.npz",
+    "engine": "L1",
+    "arm": "tcl"
+   },
+   "K2_L1_top_k2pp025_Fs0_off": {
+    "row_json": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_off\\K2_L1_top_k2pp025_Fs0_off\\k2_row.json",
+    "pads_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_off\\K2_L1_top_k2pp025_Fs0_off\\k2_pads.npz",
+    "rate_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_off\\K2_L1_top_k2pp025_Fs0_off\\k2_rate.npz",
+    "engine": "L1",
+    "arm": "off"
+   },
+   "K2_L1_top_k2pp025_Fs0_tcl": {
+    "row_json": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_tcl\\K2_L1_top_k2pp025_Fs0_tcl\\k2_row.json",
+    "pads_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_tcl\\K2_L1_top_k2pp025_Fs0_tcl\\k2_pads.npz",
+    "rate_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_tcl\\K2_L1_top_k2pp025_Fs0_tcl\\k2_rate.npz",
+    "engine": "L1",
+    "arm": "tcl"
+   },
+   "K2_L2b_top_fdown3.5_Fs4_off": {
+    "row_json": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_off\\K2_L2b_top_fdown3.5_Fs4_off\\k2_row.json",
+    "pads_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_off\\K2_L2b_top_fdown3.5_Fs4_off\\k2_pads.npz",
+    "rate_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_off\\K2_L2b_top_fdown3.5_Fs4_off\\k2_rate.npz",
+    "engine": "L2b",
+    "arm": "off"
+   },
+   "K2_L2b_top_fdown3.5_Fs4_tcl": {
+    "row_json": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_tcl\\K2_L2b_top_fdown3.5_Fs4_tcl\\k2_row.json",
+    "pads_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_tcl\\K2_L2b_top_fdown3.5_Fs4_tcl\\k2_pads.npz",
+    "rate_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_tcl\\K2_L2b_top_fdown3.5_Fs4_tcl\\k2_rate.npz",
+    "engine": "L2b",
+    "arm": "tcl"
+   },
+   "K2_L2b_top_k2pp025_Fs4_off": {
+    "row_json": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_off\\K2_L2b_top_k2pp025_Fs4_off\\k2_row.json",
+    "pads_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_off\\K2_L2b_top_k2pp025_Fs4_off\\k2_pads.npz",
+    "rate_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_off\\K2_L2b_top_k2pp025_Fs4_off\\k2_rate.npz",
+    "engine": "L2b",
+    "arm": "off"
+   },
+   "K2_L2b_top_k2pp025_Fs4_tcl": {
+    "row_json": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_tcl\\K2_L2b_top_k2pp025_Fs4_tcl\\k2_row.json",
+    "pads_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_tcl\\K2_L2b_top_k2pp025_Fs4_tcl\\k2_pads.npz",
+    "rate_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_tcl\\K2_L2b_top_k2pp025_Fs4_tcl\\k2_rate.npz",
+    "engine": "L2b",
+    "arm": "tcl"
+   }
+  }
+ },
+ "v7": {
+  "rows": {
+   "K2V7_P3b_J1_B_top_Fs4_off": {
+    "row_json": "{BATCH_V7}\\K2V7_P3b_J1_B_top_Fs4_off\\k2_row.json",
+    "pads_npz": "{BATCH_V7}\\K2V7_P3b_J1_B_top_Fs4_off\\k2_pads.npz",
+    "engine": "SCM",
+    "arm": "off",
+    "expected_tag": "final_C4G2_LAS_K1"
+   },
+   "K2V7_P3b_J1_B_top_Fs4_tcl": {
+    "row_json": "{BATCH_V7}\\K2V7_P3b_J1_B_top_Fs4_tcl\\k2_row.json",
+    "pads_npz": "{BATCH_V7}\\K2V7_P3b_J1_B_top_Fs4_tcl\\k2_pads.npz",
+    "engine": "SCM",
+    "arm": "tcl",
+    "expected_tag": "final_C4G2_LAS_K1_TCL"
+   },
+   "K2V7_P3b_J2_B_top_Fs4_off": {
+    "row_json": "{BATCH_V7}\\K2V7_P3b_J2_B_top_Fs4_off\\k2_row.json",
+    "pads_npz": "{BATCH_V7}\\K2V7_P3b_J2_B_top_Fs4_off\\k2_pads.npz",
+    "engine": "SCM",
+    "arm": "off",
+    "expected_tag": "final_C4G2_LAS_K1"
+   },
+   "K2V7_P3b_J2_B_top_Fs4_tcl": {
+    "row_json": "{BATCH_V7}\\K2V7_P3b_J2_B_top_Fs4_tcl\\k2_row.json",
+    "pads_npz": "{BATCH_V7}\\K2V7_P3b_J2_B_top_Fs4_tcl\\k2_pads.npz",
+    "engine": "SCM",
+    "arm": "tcl",
+    "expected_tag": "final_C4G2_LAS_K1_TCL"
+   }
+  },
+  "_note": "record only (rules 3.6); path 2 k2_recount has no V-7 command (record-v7 is path 1 only)"
+ }
+}

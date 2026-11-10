@@ -218,6 +218,36 @@ def test_e7_and_dhat(tmp_path):
     assert d["abs_delta_ge_5kN"] == [(6000.0, "a")] and d["missing"] == 0
 
 
+def test_series_default_per_file_and_dhat_none(tmp_path):
+    sd = tmp_path / "v2_off_series"
+    sd.mkdir()
+    s = _series(sd, "r.npz")
+    row = _row("r", True, s)
+    row["k2"] = {"dhat_window_open_legs": [], "dhat_window_stroke_mm": [None, None, None, None], "dhat_N": 1.0}
+    p = tmp_path / "v2_off.json"
+    p.write_text(json.dumps({"runs": [row]}), encoding="utf-8")
+    rows = kr.judge_files([str(p)], kr.DEFAULT_FIELDS, None, True)
+    assert kr.row_status(rows[0]) == "pass", rows[0]
+    d = kr.dhat_summary([], rows)
+    assert d["stroke_max_mm"] is None and d["missing"] == 0
+
+
+def test_chrono_row_dhat_from_k2_block(tmp_path):
+    t = np.arange(10.0, 30.0, 0.001)
+    np.savez(tmp_path / "p.npz", t=t, N=np.full((t.size, 4), 45e3))
+    row = {"case_id": "K2_L1_top_k2pp025_Fs0_tcl", "touch_creep_latch": True, "controller_tag": "final_C4G2_LAS_TCL",
+           "k1_order_gate": False, "floor_true_deg": [1.375, 2.625], "t_touch_s": 19.6, "t_lift_s": 20.6,
+           "t_ready_s": 43.0, "J1_min_cyl_after_lift_N": 50e3, "J1_window_s": 30.0, "reanchor_intervals_s": [],
+           "J2_min_cyl_reanchor_N": None, "J4_att_max_after_ready_deg": 0.02, "J6_max_moving_bar": 100.0,
+           "crawler_recontact_after_loc": 0,
+           "events": [[18.0, f"INFO_TOUCH_CREEP_LATCH:{leg}"] for leg in kr.LEGS],
+           "k2": {"dhat_N": 7000.0, "dhat_window_open_legs": ["RL"], "dhat_window_stroke_mm": [None, None, 0.2, None]}}
+    r = kr.judge_row(row, kr.DEFAULT_FIELDS, "chrono", None, True, {"pads": tmp_path / "p.npz"},
+                     floor_deg=(1.375, 2.625))
+    assert kr.row_status(r) == "pass", r
+    assert r["dhat"] == {"open_legs": ["RL"], "stroke_mm": [None, None, 0.2, None], "dhat_N": 7000.0}
+
+
 def test_screen_selftest():
     screen = ROOT / "06_analysis/02_control/k2/screen"
     if not screen.exists():
