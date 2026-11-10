@@ -335,6 +335,9 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--run-wt", default=RUN_WT_DEFAULT)
     ap.add_argument("--ra-off", default=RA_OFF_DEFAULT)
+    ap.add_argument("--run-head", default=None, help="the run HEAD (fills {RUN_HEAD})")
+    ap.add_argument("--sched-dir", type=Path, default=None,
+                    help="repo copy of the compute-scheduler-expert plan (placement json, filled commands, runners)")
     args = ap.parse_args()
     keys = v3_keys(Path(args.ra_off))
     key_sha = hashlib.sha256("\n".join(keys).encode()).hexdigest()
@@ -384,8 +387,39 @@ def main() -> None:
                  "rule": "the off and K-2 steps of one bundle (and of one V-3 arm) run in the same pool"},
         "notes": (k2 / "k2_prelaunch_notes.md").read_text(encoding="utf-8"),
     }
+    plan = None
+    if args.run_head:
+        common["head"] = args.run_head
+        common["status"] = "launch record (filled; pre-run audit pending)"
+    if args.sched_dir is not None:
+        sd = args.sched_dir
+        plan = json.loads((sd / "k2_placement_20261110.json").read_text(encoding="utf-8"))
+        common["schedule"] = {
+            "plan_id": plan["plan_id"], "plan_run_head": plan.get("run_head"),
+            "files_sha256": {p.relative_to(sd).as_posix(): sha(p) for p in sorted(sd.rglob("*")) if p.is_file()},
+            "pools": plan["pools"], "note": "copied from the compute-scheduler-expert scratch folder; the runners "
+            "under runners/ are the launch scripts (k2_commands_filled.json = k2_commands.json with the slots filled)"}
+    common["stored_off"] = {
+        "note": "V-2 I-4 stored D8x rows: git-excluded, read from the MAIN checkout C:\\workspace\\outrigger_control"
+                "\\06_analysis\\02_control\\d8x\\ra\\ (not from k2-run)",
+        "ra_off.json": sha(Path(RA_OFF_DEFAULT)),
+        "ra_on.json": sha(Path(RA_OFF_DEFAULT).with_name("ra_on.json"))}
+    reg_keys = HERE / "k2_v5_regression_keys.json"
+    if reg_keys.exists():
+        rk = json.loads(reg_keys.read_text(encoding="utf-8"))
+        common["v5_regression_keys"] = {"file": "k2_v5_regression_keys.json", "sha256": sha(reg_keys),
+                                        **{k: rk[k] for k in ("judged_n", "judged_sha256", "record_n", "record_sha256")}}
     for b in ("v2", "v3", "v4", "v5", "v6", "v7"):
         doc = {**common, "bundle": b, "steps": [s["id"] for s in files["k2_commands.json"]["steps"] if s["bundle"] == b]}
+        if plan is not None:
+            slots = plan["slots"]
+            doc["pool"] = {"plan_id": plan["plan_id"], "pool": slots["{POOL}"].get(b),
+                           "mask": slots["{MASK}"].get(b, plan["pools"][slots["{POOL}"][b]]["mask"]),
+                           "workers": slots["{WORKERS}"].get(b),
+                           **({"placement_L1": slots["{PLACEMENT}"]["v6_L1"],
+                               "l2b_workers": slots["{L2B_WORKERS}"]["v6_L2b"]} if b == "v6" else {}),
+                           **({"P": slots["{P}"], "batch": slots["{BATCH_V7}"]} if b == "v7" else {}),
+                           "rule": common["pool"]["rule"]}
         (HERE / f"k2_prelaunch_{b}.json").write_bytes(json.dumps(doc, indent=1, ensure_ascii=False).encode("utf-8"))
     print(json.dumps({"keys": len(keys), "steps": len(files["k2_commands.json"]["steps"]),
                       "inputs": common["inputs"], "path2_blob": common["path2"]["blob"]}))

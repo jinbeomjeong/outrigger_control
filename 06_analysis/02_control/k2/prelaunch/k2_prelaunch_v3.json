@@ -1,6 +1,6 @@
 {
- "status": "draft (not a launch record until the pool fields and placeholders are filled)",
- "head": "{RUN_HEAD} = the master merge commit of k2-v7k1-dhat (cad-expert 09f66c4), k2-prelaunch-fix (python-expert c77ecf5) and k2-prelaunch (k2_recount 1.2) onto dc2029b",
+ "status": "launch record (filled; pre-run audit pending)",
+ "head": "6a44ff81d25aea1fa162daf9b14c23b99beb9db0",
  "run_wt": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
  "rules": {
   "original": {
@@ -61,13 +61,66 @@
   "PYTHONDONTWRITEBYTECODE": "1"
  },
  "pool": {
-  "plan_id": "{PLAN_ID}",
-  "mask": "{MASK}",
-  "workers": "{WORKERS}",
-  "pcore_or_ecore": "{POOL}",
+  "plan_id": "k2-sched-20261110a",
+  "pool": "pcore",
+  "mask": "0xFFFF",
+  "workers": 8,
   "rule": "the off and K-2 steps of one bundle (and of one V-3 arm) run in the same pool"
  },
  "notes": "# K-2 실행 전 기록에 넣을 문구 (control-expert, 2026-11-10, 결과 전)\n\n- 근거: `k2_touch_creep_rules.md`(sha256 `a3658197…7263`) + `k2_touch_creep_rules_rev1.md`(sha256 `5ba081c62f8aef0edc5bb99119d7586b0d2914761582f2323c289f472f244776`).\n- 아래 세 문구를 해당 `k2_prelaunch_<묶음>.json`의 `notes`에 그대로 넣는다. 이 파일은 판정 규칙이 아니라 기록 문구 모음이다.\n\n## 1. V-4 점 파일 (`k2_prelaunch_v4.json`)\n\n> 점 파일 `06_analysis/02_control/k2/k2_points_5p5_3p5.json`(sha256 `<실행 전 기록 때의 값>`)은 rev1 1·2에 따라 `d8x_diag.diamond_points(5.5, 3.5)`(커밋 `6f2f7cb`) 값이다. 경로 2 `k2_recount.py points-check`로 rev1 2 조건을 확인했다(diamond 차 0, 표 차 d45 1.11e-5° ≤ 2e-5°, 그 밖 12점 0). 병합본(master `dc2029b`)의 파일 sha256은 `a15cbe95275be11c163028ca2113d896254d49a4554286c54bdbfa88680cccc3`이다. 2026-11-10 python-expert 커밋 `f57bebc`의 구판(sha256 `98304b2395769faa6152df9642109b317df26a5e65b0a6723a3a7ed3b659198e`)과는 `table_check` 블록만 다르고 16점 각도는 같다(구판은 이 조건을 통과했다; 병합본도 실행 전 기록 때 `points-check`로 다시 확인한다).\n\n## 2. d45 (`k2_prelaunch_v4.json`)\n\n> d45 4점의 실행 값은 ±2.1389°(4자리 반올림)이고, 규칙 3.2 표의 정확값 19.25/9° = 2.138888…°와 1.11e-5° 차이다(rev1 1). $R_v$ = 1.0000052다. V-4 하네스는 `TargetAcceptance.OFF`이고 J1~J11에 각도 문턱이 없어 등급 영향이 없다. E-7(행 각도 = 점 파일, ≤ 1e-9°)의 기준은 점 파일이다(rev1 3).\n\n## 3. CAP 기준 행정 (`k2_prelaunch_v1.json`)\n\n> CAP(K2-4) 기준 행정은 규칙 글자대로 그 다리가 `touch_seen`이 된 표본의 모터 행정이다. 스크린 `screen/j3_variants.py.txt`는 그다음 표본을 기준으로 썼다. 두 기준의 차는 많아야 한 제어 주기의 행정(창 속도 0.5 v_max에서 약 1 mm, 크리프 중 약 0.1 mm)이고, 구현 쪽 CAP가 그만큼 일찍 걸린다(안전 쪽). 스크린 VC 8행은 CAP 0이므로 T-K2-1(I-5) 명령 해시에는 영향이 없을 것으로 본다(**추정**, 스크린에서 CAP까지 남은 여유는 재지 않음). T-K2-1이 불일치하면 이 차이를 먼저 확인한다.\n",
+ "schedule": {
+  "plan_id": "k2-sched-20261110a",
+  "plan_run_head": "6a44ff81d25aea1fa162daf9b14c23b99beb9db0",
+  "files_sha256": {
+   "aff.json": "68bb2fb13ffc25f9fc4575a82f6522abc404d33f14de08350cadb670ddf68fda",
+   "build_runners.py": "7182fb37e0b01272a7fb74cee659840242eb6b5daa07ed754a77d9eb0b01842f",
+   "k2_commands_filled.json": "402a1ef343d9364ceb7985169a06fd2639ba82a4f0fe47927992ab28e1a52cbe",
+   "k2_placement_20261110.json": "f349ce4eabbe081e39c44700a7d41a865c99cbaaaaa0ca372fe6d38208d1f000",
+   "k2_sched_lanes.json": "1b5fc7440bb07c8eb22faa192239dd9b9441c525cd5ce409e0c75ea2f3ccfe17",
+   "p_main_done_markers.txt": "ac277f800c05ba901c60667fc28c3896a9c86af5738ac45993ec7ed0487b0110",
+   "runners/k2run_E_pre.ps1": "5e8a85dbf1b5e67e7ea8cdea4d8a00e5ef15255cdaeff537c270a7bad752ef2e",
+   "runners/k2run_E_V6_off.ps1": "8c25c06ebcd6a31b9314da82385ee08b30631e2726c1e7057d520c70e17fed3c",
+   "runners/k2run_E_V6_tcl.ps1": "cff4c587344bb0e37691f53e1bb0493e785f6b1d45b3a6cbd7d6143cbbc7bf27",
+   "runners/k2run_E_V7.ps1": "e5c94ae7e53c2fed9b9ecaad47566f49e9ba812b92ae2d74bf3c3abd2ae2c163",
+   "runners/k2run_P_main.ps1": "1c4c4c58d1ff1d90202066553fff9c3f235d374c39dbf000cee103f9e5e598fa",
+   "runners/k2run_P_post.ps1": "434c109bf2f7c94b05d6616c73146f2bef65db4ffc2cdb0136801f70d15e600c",
+   "state.json": "257a8ab2336440877a40a9521d4e8bd6fc182a9603f6cafb259f04f045f4e0ce",
+   "steps_E_pre.json": "b725bdfe3fa081914faf345ea9d59baefe955e4726149a6fc9d0f5846b9cf013",
+   "steps_E_V6_off.json": "1ec165c45852c9cd832f229ec7432e3fabcc54831d5fa348f6d874efa65b1876",
+   "steps_E_V6_tcl.json": "d04502cfc1076894edf80584d991181ab0e3789b0016e355b9791bf6d1690e32",
+   "steps_E_V7.json": "0713920f538f727ee85f504e9f83c941ddc4ea66fc4d809ca3a33d3ba9b01508",
+   "steps_P_main.json": "033496df28e80960c7fdec6ba73faf2f018262ccd2a6dcca1322332e32c896b9",
+   "steps_P_post.json": "5dd80d493407d5f3fc0f1108c032a45a8c8f01889078e1f45743f51d2f607534"
+  },
+  "pools": {
+   "pcore": {
+    "mask": "0xFFFF",
+    "logical": "0-15",
+    "runner_priority": "Normal",
+    "physical_cores": 8
+   },
+   "ecore": {
+    "mask": "0x0FFF0000",
+    "logical": "16-27",
+    "runner_priority": "BelowNormal",
+    "physical_cores": 12
+   }
+  },
+  "note": "copied from the compute-scheduler-expert scratch folder; the runners under runners/ are the launch scripts (k2_commands_filled.json = k2_commands.json with the slots filled)"
+ },
+ "stored_off": {
+  "note": "V-2 I-4 stored D8x rows: git-excluded, read from the MAIN checkout C:\\workspace\\outrigger_control\\06_analysis\\02_control\\d8x\\ra\\ (not from k2-run)",
+  "ra_off.json": "100985bfe00fa02e4c1c5c938ad9e08e83b441c00d666403dc60526fed3dcb10",
+  "ra_on.json": "e3c8c95ffd6a34afc10d119c27a0b29bf5a6d892ac6a4b8c78bd6edafd7f247a"
+ },
+ "v5_regression_keys": {
+  "file": "k2_v5_regression_keys.json",
+  "sha256": "f2970048ba5e618b2f9d5c626250fbff0e1eac4cbe1650a02826cdee9df01ce2",
+  "judged_n": 93,
+  "judged_sha256": "2900db889efc73070c3a8fbe557b1a4ad9ee3392afc099ba00be1d0549174ec9",
+  "record_n": 49,
+  "record_sha256": "d4f58334c6ca7c393c35072a798c09f4995d7fde274e0af6b21b99f977d503eb"
+ },
  "bundle": "v3",
  "steps": [
   "v3_H0_off",

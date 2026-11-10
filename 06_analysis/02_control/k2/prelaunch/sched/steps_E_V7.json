@@ -1,0 +1,10 @@
+[
+ {
+  "id": "v7_k2_v7",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe -I -X utf8 -u C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\02_chrono\\s9_batch.py run k2_v7 --parallel 0 --parallel-e 4 --e-cases K2V7_P3b_J1_B_top_Fs4_off K2V7_P3b_J1_B_top_Fs4_tcl K2V7_P3b_J2_B_top_Fs4_off K2V7_P3b_J2_B_top_Fs4_tcl",
+  "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+  "env": {
+   "OMP_WAIT_POLICY": "PASSIVE"
+  }
+ }
+]

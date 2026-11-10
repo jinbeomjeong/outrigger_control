@@ -1,0 +1,98 @@
+[
+ {
+  "id": "v5_judge_r79_L1L2_off",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\r79_L1L2_judgement.launch.json --git-dir C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_sensor_judge.py judge C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\r79_L1L2_judgement.json C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\r79_L1L2.json",
+  "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+  "env": {
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "CONDA_DEFAULT_ENV": "dynamics-dev",
+   "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "PYTHONDONTWRITEBYTECODE": "1"
+  }
+ },
+ {
+  "id": "v5_judge_clip_r79_L1L2_off",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_r79_L1L2_judgement.launch.json --git-dir C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_sensor_judge.py judge C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_r79_L1L2_judgement.json C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_r79_L1L2.json",
+  "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+  "env": {
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "CONDA_DEFAULT_ENV": "dynamics-dev",
+   "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "PYTHONDONTWRITEBYTECODE": "1"
+  }
+ },
+ {
+  "id": "v5_flatten_off",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flatten.launch.json --git-dir C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\k2_v5_flatten.py --arm-dir C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off --out-dir C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat --checkout C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+  "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+  "env": {
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "CONDA_DEFAULT_ENV": "dynamics-dev",
+   "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "PYTHONDONTWRITEBYTECODE": "1"
+  }
+ },
+ {
+  "id": "v5_judge_r79_L1L2_tcl",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\r79_L1L2_judgement.launch.json --git-dir C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_sensor_judge.py judge C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\r79_L1L2_judgement.json C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\r79_L1L2.json",
+  "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+  "env": {
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "CONDA_DEFAULT_ENV": "dynamics-dev",
+   "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "PYTHONDONTWRITEBYTECODE": "1"
+  }
+ },
+ {
+  "id": "v5_judge_clip_r79_L1L2_tcl",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_r79_L1L2_judgement.launch.json --git-dir C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_sensor_judge.py judge C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_r79_L1L2_judgement.json C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_r79_L1L2.json",
+  "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+  "env": {
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "CONDA_DEFAULT_ENV": "dynamics-dev",
+   "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "PYTHONDONTWRITEBYTECODE": "1"
+  }
+ },
+ {
+  "id": "v5_flatten_tcl",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flatten.launch.json --git-dir C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run -- C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe -I -B C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\k2_v5_flatten.py --arm-dir C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl --out-dir C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat --checkout C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+  "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+  "env": {
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "CONDA_DEFAULT_ENV": "dynamics-dev",
+   "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+   "MKL_THREADING_LAYER": "TBB",
+   "MKL_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "NUMBA_NUM_THREADS": "1",
+   "PYTHONDONTWRITEBYTECODE": "1"
+  }
+ }
+]

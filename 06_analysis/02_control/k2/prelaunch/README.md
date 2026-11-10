@@ -25,6 +25,21 @@
 | V-3 키 | 273, 정렬 목록 sha `d4a030d7…` | `k2_v3_keys.txt` |
 | 입력 파일 | `k2_prelaunch_*.json`의 `inputs` | `make_prelaunch.py` 재실행 |
 
+### 0.1 실행 전 기록 채움 (2026-11-10)
+
+- `{RUN_HEAD}` = `6a44ff81d25aea1fa162daf9b14c23b99beb9db0`. 고정 checkout은 `C:\workspace\outrigger_control\.claude\worktrees\k2-run`이다.
+- 위 표의 blob 6개(경로 1·2, 평탄화기, 래퍼, run_ps7, g8trace)를 `git rev-parse 6a44ff8:<path>`로 대조했고 모두 같았다.
+- 배치표: `sched/k2_placement_20261110.json`(sha256 `f349ce4e…`, `k2-sched-20261110a`), `sched/k2_commands_filled.json`(`402a1ef3…`), `sched/build_runners.py`(`7182fb37…`), `sched/runners/k2run_*.ps1` 6개. compute-scheduler-expert scratch에서 복사했고, 파일별 sha는 `k2_prelaunch_*.json`의 `schedule.files_sha256`에 있다.
+- 자리 값
+  - V-2~V-5: pcore `0xFFFF`, worker 8
+  - V-6: ecore `0x0FFF0000`, L1 `--placement ecore`, L2b `--workers e6`
+  - V-7: ecore, `--parallel 0 --parallel-e 4 --e-cases <4행>`. `{BATCH_V7}`는 시작 뒤 채운다.
+- V-2 I-4의 저장 행은 git 제외 파일이다. **main checkout의 `06_analysis/02_control/d8x/ra/`를 쓴다**(`k2-run`에는 없다): `ra_off.json` `100985bf…cb10`, `ra_on.json` `e3c8c95f…247a`.
+- **실행 전 기록은 `k2-run`이 아니라 master 위 브랜치 `k2-prelaunch-record`에 있다.** 실행 중 도구가 읽는 입력(`k2_commands.json`, `k2_manifest.json`, `k2_expect.json`, `k2_fields.json`, `k2_v3_keys.txt`, 점 파일)은 `6a44ff8`의 것과 바이트가 같다(sha 대조 일치). 그래서 `k2-run`을 고칠 필요가 없다.
+  - 실행 중 `acc_d8`은 `k2-run` 안의 `k2_v3_keys.txt`와 점 파일을 읽는다.
+  - 판정 때 경로 1·2에는 `--manifest`/`--expect`/`--fields`로 이 브랜치(병합 뒤 main checkout)의 파일을 넘긴다. 내용이 같으니 `k2-run`의 사본을 넘겨도 된다.
+  - 다만 manifest의 V-7 `{BATCH_V7}`는 시작 뒤 이 브랜치의 manifest에만 채운다. `k2-run`의 사본은 바꾸지 않는다.
+
 ## 1. 파일
 
 | 파일 | 내용 |
@@ -62,6 +77,16 @@
 - 규칙 3.4와 `criteria.md`의 회귀 행은 "118 | L1·L2·토양·경사 행 통과→실패 0 (L3 행은 기록만)"이다. 봉인 문구가 이미 판정 대상을 L1·L2·토양·경사 행으로 한정한다.
 - 기존 판정기 `acc_judge`가 판정 행으로 세는 것은 **93**(13 + 17 + 2 + 11 + clip_A 20 + r79 L1/L2 30, python-expert 집계)이다. 나머지 25행은 판정하지 않는다(`clip_r79_L3L4`는 기록 전용, r79 L1 기준 행은 판정 행이 아님). 25행의 정확한 목록은 실행 전 기록 때 평탄화기 요약으로 고정한다.
 - 그래서 판정 행 93, 기록 25로 적고 expect와 manifest count를 93으로 둔다. 규칙 덧붙임(rev2)은 필요 없다. 판정 대상이 문구 그대로이고, 수는 판정기 정의를 옮긴 것이라 등급에 영향이 없다.
+
+### 3.1 키 목록 고정 (2026-11-10, 실행 전 기록 브랜치 `k2-prelaunch-record`)
+
+- `regression_keys.py`가 저장 인수 출력(`touch_phase/acceptance/regression/`)에서 두 키 목록을 만든다. K-2 V-5 회귀 단계는 같은 단계라 키가 같다. 결과는 `k2_v5_regression_keys.json`.
+  - **판정 93**: sha256 `2900db889efc73070c3a8fbe557b1a4ad9ee3392afc099ba00be1d0549174ec9`. 구성은 clip_harness 13, clip_p0 17, clip_x426_C 2, clip_x426_D 11, clip_A 20, r79 L1/L2 판정 30.
+  - **판정하지 않는 출력 항목 49**: sha256 `d4f58334c6ca7c393c35072a798c09f4995d7fde274e0af6b21b99f977d503eb`. 구성은 clip_r79_L1L2 가운데 판정 행이 아닌 7(L1 6 + L2 1), clip_r79_L3L4 42(L3·L4).
+- **"118 − 93 = 25"와 다르다.** 저장 출력에서 판정하지 않는 항목은 49개다. 판정 93 + 비판정 49 = 출력 항목 142다.
+  - criteria.md의 118은 옛 재실행 목록(py_c2clip `rerun_commands.ps1`)의 행 수다. 그 구성은 저장 출력만으로는 다시 만들 수 없다(그 목록 파일은 옛 scratch에 있었다).
+  - 판정 대상(93)은 `acc_judge` 정의와 같으므로 등급에는 영향이 없다. 그래도 봉인 문구의 118과 도구 93·출력 142의 대응은 **실행 전 감사의 '확인 필요'**로 올린다.
+- 실행 뒤 같은 함수를 K-2 두 팔 폴더(`runs/v5/<arm>`)에 돌린다. 판정·비판정 키 sha가 위 값과 같아야 한다(다르면 V-5는 판정 불가).
 
 ## 4. 배치표 입력 (compute-scheduler-expert)
 

@@ -1,0 +1,14 @@
+[
+ {
+  "id": "v6_L1_tcl",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe -I -X utf8 -u C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\02_chrono\\run_S6C.py run --set k2_v6 --approved --jobs 2 --k2 on --k1-order-gate off --expect-controller final_C4G2_LAS_TCL --pad-zeta-moving 0.1 --tag k2v6_tcl --placement ecore --batch-dir C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_tcl",
+  "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+  "env": {}
+ },
+ {
+  "id": "v6_L2b_tcl",
+  "cmd": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe -I -X utf8 -u C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\02_chrono\\run_S8C.py run --set k2_v6 --approved --workers e6 --k2 on --k1-order-gate off --expect-controller final_C4G2_LAS_TCL --tag k2v6_tcl --batch-dir C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_tcl",
+  "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+  "env": {}
+ }
+]
