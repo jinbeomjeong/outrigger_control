@@ -195,11 +195,12 @@ def judge_metrics(d8x: dict, fails: list | None, f_d8: float) -> dict:
 
 
 def _tag_problems(tag, expected_tag: str, is_las_on) -> list[str]:
-    """Rev2 4 / E-6: the tag is the expected one, a LAS-b tag, and LAS-b is recorded on."""
+    """Rev2 4 / E-6: the tag is the expected one, a LAS-b tag (``_LAS`` with or without the
+    K1 suffix ``_K1`` after it), and LAS-b is recorded on."""
     problems = []
     if tag != expected_tag:
         problems.append(f"E-6 tag {tag} != {expected_tag}")
-    if not str(tag).endswith(spec.LAS_TAG_SUFFIX):
+    if not spec.is_liftoff_slow_tag(tag):
         problems.append(f"E-6 tag {tag} is not a LAS-b tag (rev2 4)")
     if is_las_on is not True:
         problems.append(f"E-6 LAS-b record {is_las_on!r}, must be on (rev2 4)")
@@ -386,10 +387,14 @@ def cmd_prelaunch(args) -> tuple[int, dict]:
         "affinity_mask": args.mask, "k1": args.k1,
     }
     if args.bundle == "ra":
-        record.update(expected_tag=args.expected_tag or spec.DEFAULT_TAGS["ra"],
+        preset_tag = args.expected_tag or spec.DEFAULT_TAGS["ra"]
+        record.update(expected_tag=preset_tag,
+                      expected_arm_tag=spec.arm_tag(preset_tag, args.k1),
                       expected_count=spec.EXPECTED_COUNTS[f"ra_{args.k1}"])
     elif args.bundle == "rc":
         record.update(expected_tags={s: spec.DEFAULT_TAGS[s] for s in spec.RC_SETTINGS},
+                      expected_arm_tags={s: spec.arm_tag(spec.DEFAULT_TAGS[s], args.k1)
+                                         for s in spec.RC_SETTINGS},
                       expected_count=spec.EXPECTED_COUNTS[f"rc_{args.k1}"])
     else:
         record.update(_chrono_prelaunch(args))
@@ -550,8 +555,9 @@ def _judge_ra_run(run, k1, angles, f_d8, expected_tag, seen, problems) -> dict:
     if point not in angles or not _angles_match(run.get("angles_deg"), angles[point],
                                                 ANGLE_TOLERANCE_HARNESS_DEG):
         reasons.append("E-5 angles differ from the point file")
-    reasons += _tag_problems(run.get("controller_tag"), expected_tag,
+    reasons += _tag_problems(run.get("controller_tag"), spec.arm_tag(expected_tag, k1),
                              run.get("liftoff_slow_enabled"))
+    # E-6 effective gate: catches an off arm that ran the preset (gate on since the K1 switch)
     if run.get("k1_order_gate") is not (k1 == "on"):
         reasons.append(f"E-6 K1 flag {run.get('k1_order_gate')} != {k1}")
     try:
@@ -629,8 +635,10 @@ def _judge_rc_line(line, k1, angles, f_d8, seen, problems) -> dict:
     if floor not in angles or not _angles_match(row_angles, angles[floor],
                                                 ANGLE_TOLERANCE_HARNESS_DEG):
         reasons.append("E-5 angles differ from the point file")
-    reasons += _tag_problems(line.get("controller_tag"), spec.DEFAULT_TAGS[setting],
+    expected_tag = spec.arm_tag(spec.DEFAULT_TAGS[setting], k1)
+    reasons += _tag_problems(line.get("controller_tag"), expected_tag,
                              d8x.get("liftoff_slow_enabled"))
+    # E-6 effective gate: catches an off arm that ran the preset (gate on since the K1 switch)
     if job.get("k1") != k1 or d8x.get("k1_order_gate") is not (k1 == "on"):
         reasons.append(f"E-6 K1 job {job.get('k1')} / gate {d8x.get('k1_order_gate')} != {k1}")
     try:

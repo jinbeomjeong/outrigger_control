@@ -197,12 +197,121 @@ def test_k1_gate_wrapper() -> None:
         def __init__(self, geometry, config=None):
             self.config = config
 
+    original_init = Controller.__init__
     record._K1_INSTALLED.clear()
     try:
-        record.install_k1_order_gate(Controller)
+        record.install_k1_order_gate(True, Controller)
         assert record.effective_k1(Controller(None, Config()))
+        record.install_k1_order_gate(True, Controller)  # same value: no-op
+        with pytest.raises(RuntimeError, match="installed with True"):
+            record.install_k1_order_gate(False, Controller)
     finally:
         record._K1_INSTALLED.clear()
+        Controller.__init__ = original_init
+
+
+def test_k1_gate_off_arm_is_installed_against_a_gate_on_preset() -> None:
+    """Since the K1 switch the preset has the gate on: the off arm must turn it off explicitly
+    (before, installing nothing left the off arm running with the gate on)."""
+    from dataclasses import dataclass, field
+
+    @dataclass(frozen=True)
+    class Margin:
+        flat_soil_margin_order_gate: bool = True  # the R8 preset since the K1 switch
+
+    @dataclass(frozen=True)
+    class Config:
+        slope_clearance_margin: Margin = field(default_factory=Margin)
+
+    class Controller:
+        def __init__(self, geometry, config=None):
+            self.config = config
+
+    record._K1_INSTALLED.clear()
+    try:
+        record.install_k1_order_gate(record.k1_arm_is_on("off"), Controller)
+        assert record.effective_k1(Controller(None, Config())) is False
+    finally:
+        record._K1_INSTALLED.clear()
+
+
+def test_k1_arm_needs_off_or_on() -> None:
+    assert record.k1_arm_is_on("on") is True and record.k1_arm_is_on("off") is False
+    with pytest.raises(ValueError, match="K1 arm"):
+        record.k1_arm_is_on(None)
+
+
+def test_real_preset_off_arm_gives_the_las_tag_and_gate_off() -> None:
+    """The real C2 preset: off arm -> gate off, tag ``final_C4G2_LAS`` (= ``spec.arm_tag``);
+    on arm -> gate on, tag ``final_C4G2_LAS_K1`` (the preset tag, ``DEFAULT_TAGS['ra']``)."""
+    from dataclasses import replace
+
+    from outrigger_sim.control.c2 import C2Config
+    from outrigger_sim.hydraulics.v5_options import controller_tag
+
+    preset = C2Config().with_10hz_d1()
+    assert controller_tag(None, preset) == spec.DEFAULT_TAGS["ra"] == "final_C4G2_LAS_K1"
+    for k1 in ("off", "on"):
+        margin = replace(preset.slope_clearance_margin,
+                         flat_soil_margin_order_gate=record.k1_arm_is_on(k1))
+        config = replace(preset, slope_clearance_margin=margin)
+        assert controller_tag(None, config) == spec.arm_tag(spec.DEFAULT_TAGS["ra"], k1)
+
+
+def test_arm_tags() -> None:
+    assert spec.DEFAULT_TAGS == {"ra": "final_C4G2_LAS_K1", "VB": "final_C4G2_P3_LAS_K1",
+                                 "V0": "final_C4G2_LAS_K1"}
+    assert spec.arm_tag("final_C4G2_LAS_K1", "off") == "final_C4G2_LAS"
+    assert spec.arm_tag("final_C4G2_P3_LAS_K1", "on") == "final_C4G2_P3_LAS_K1"
+    assert spec.arm_tag("final_C4G2_LAS", "on") == "final_C4G2_LAS_K1"
+    with pytest.raises(ValueError):
+        spec.arm_tag("final_C4G2_LAS_K1", "preset")
+
+
+def _ra_run(k1_gate: bool, tag: str) -> dict:
+    return {"id": "x", "point": "pitch+", "angles_deg": None, "controller_tag": tag,
+            "liftoff_slow_enabled": True, "k1_order_gate": k1_gate, "d8x": {}}
+
+
+@pytest.mark.parametrize(("k1", "gate", "tag", "is_flagged"), [
+    ("off", True, "final_C4G2_LAS_K1", True),   # off arm that ran the preset: E-6
+    ("off", False, "final_C4G2_LAS", False),
+    ("on", True, "final_C4G2_LAS_K1", False),
+    ("on", False, "final_C4G2_LAS", True),
+])
+def test_ra_e6_checks_the_effective_gate_and_the_arm_tag(monkeypatch, k1, gate, tag,
+                                                         is_flagged) -> None:
+    def judged_clean(d8x, fails, f_d8):
+        return {"items": {}, "fail_items": [], "not_judgeable": [],
+                "counts": {"liftoff_slow_count": 0}, "values": {}}
+
+    monkeypatch.setattr(judge, "judge_metrics", judged_clean)
+    row = judge._judge_ra_run(_ra_run(gate, tag), k1, {}, F_D8, spec.DEFAULT_TAGS["ra"], set(),
+                              [])
+    e6 = [reason for reason in row["not_judgeable"] if reason.startswith("E-6")]
+    assert bool(e6) is is_flagged, e6
+
+
+@pytest.mark.parametrize(("setting", "k1", "gate", "tag", "is_flagged"), [
+    ("VB", "off", True, "final_C4G2_P3_LAS_K1", True),  # off arm that ran the preset: E-6
+    ("VB", "off", False, "final_C4G2_P3_LAS", False),
+    ("V0", "on", True, "final_C4G2_LAS_K1", False),
+    ("V0", "off", False, "final_C4G2_LAS_K1", True),  # tag of the other arm
+])
+def test_rc_e6_checks_the_effective_gate_and_the_arm_tag(monkeypatch, setting, k1, gate, tag,
+                                                         is_flagged) -> None:
+    def judged_clean(d8x, fails, f_d8):
+        return {"items": {}, "fail_items": [], "not_judgeable": [],
+                "counts": {"liftoff_slow_count": 0}, "values": {}}
+
+    monkeypatch.setattr(judge, "judge_metrics", judged_clean)
+    line = {"job": {"setting": setting, "eps": 0.0, "k1": k1,
+                    "d1": {"key": "k", "slope_name": "rpX", "roll_deg": 0.0, "pitch_deg": 0.0}},
+            "controller_tag": tag,
+            "d1": {"d8x": {"k1_order_gate": gate, "liftoff_slow_enabled": True}}}
+    row = judge._judge_rc_line(line, k1, {}, F_D8, set(), [])
+    e6 = [reason for reason in row["not_judgeable"] if reason.startswith("E-6")]
+    assert bool(e6) is is_flagged, e6
 
 
 # --- G0 and W ------------------------------------------------------------------------------------
@@ -290,10 +399,13 @@ def test_select_w_takes_the_worst_eligible_candidate(tmp_path) -> None:
 
 
 def test_tag_problems_need_the_expected_las_tag() -> None:
-    assert judge._tag_problems("final_C4G2_LAS", "final_C4G2_LAS", True) == []
+    assert judge._tag_problems("final_C4G2_LAS_K1", "final_C4G2_LAS_K1", True) == []
+    assert judge._tag_problems("final_C4G2_P3_LAS_K1", "final_C4G2_P3_LAS_K1", True) == []
+    assert judge._tag_problems("final_C4G2_LAS", "final_C4G2_LAS", True) == []  # off arm
     assert len(judge._tag_problems("final_C4G2", "final_C4G2", True)) == 1
-    assert len(judge._tag_problems("final_C4G2_LAS", "final_C4G2_LAS", None)) == 1
-    assert len(judge._tag_problems("final_C4G2_P3_LAS", "final_C4G2_LAS", True)) == 1
+    assert len(judge._tag_problems("final_C4G2_K1", "final_C4G2_K1", True)) == 1  # LAS-b off
+    assert len(judge._tag_problems("final_C4G2_LAS_K1", "final_C4G2_LAS_K1", None)) == 1
+    assert len(judge._tag_problems("final_C4G2_P3_LAS_K1", "final_C4G2_LAS_K1", True)) == 1
 
 
 def test_settle_map_by_engine() -> None:
@@ -330,7 +442,7 @@ def _chrono_case(batch: Path, name: str, *, ready_s: float | None, end_s: float)
                       "floor_true_deg": [0.0, -3.6], "half_spans_deg": dict(
                           spec.VERIFICATION_EXT_HALF_SPANS_DEG),
                       "level": "top", "beta_GPa": 1.0, "fs_kN": 4.0,
-                      "controller_tag": "final_C4G2_LAS", "liftoff_slow_enabled": True,
+                      "controller_tag": "final_C4G2_LAS_K1", "liftoff_slow_enabled": True,
                       "settle_map": {"kind": "identity",
                                      "coefficients": CrawlerSettleMap.identity().to_meta()},
                       "scenario_group": "D8"}}
@@ -353,7 +465,7 @@ def test_judge_chrono_row_and_the_e2_exception(tmp_path, ready_s, end_s, verdict
     row = next(r for r in spec.chrono_rows(None, None) if r["name"] == name)
     metrics = json.loads((tmp_path / "verify_S8C.json").read_text(encoding="utf-8"))["metrics"]
     judged = judge.judge_chrono_row(row, metrics[0], tmp_path / name, F_D8, (0.0, -3.6),
-                                    "final_C4G2_LAS")
+                                    "final_C4G2_LAS_K1")
     assert judged["verdict"] == verdict, judged
     if verdict == "fail":
         assert "J5" in judged["fail_items"]
@@ -365,7 +477,7 @@ def test_judge_chrono_missing_key_is_not_judgeable(tmp_path) -> None:
     row = next(r for r in spec.chrono_rows(None, None) if r["name"] == name)
     with pytest.raises(judge.NotJudgeable, match="J4_deg"):
         judge.judge_chrono_row(row, {"case": name}, tmp_path / name, F_D8, (0.0, -3.6),
-                               "final_C4G2_LAS")
+                               "final_C4G2_LAS_K1")
 
 
 # --- CLI contract --------------------------------------------------------------------------------

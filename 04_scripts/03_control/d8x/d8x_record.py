@@ -1,7 +1,8 @@
 """D8x run-side records: the point file, the K1 switch and the per-run ``d8x`` block.
 
 Rules ``06_analysis/02_control/d8x/d8x_rules.md`` (sealed, sha256 in ``d8x_rules.sha256``):
-1.2 (point file), 2.1 (K1 off = the preset as it is), 2.2 I-1 (run identity), 4.1 (the items
+1.2 (point file), 2.1 (K1 arms, both set the gate explicitly since the K1 switch), 2.2 I-1
+(run identity), 4.1 (the items
 the judge reads), 6 E-2 / E-8 (times). The R-a driver (``acc_d8.py --points``) and the R-c rows
 (``d1_runs.py``, group ``H-R-X``) import this module; the judge (``d8x_judge.py``) only reads
 what they wrote. Nothing here judges.
@@ -105,14 +106,23 @@ def rc_floor_angles(doc: dict) -> dict[str, tuple[float, float]]:
 _K1_INSTALLED: dict = {}
 
 
-def install_k1_order_gate(controller_class=None) -> None:
-    """Every controller of this process gets the K1 order gate on.
+def install_k1_order_gate(is_on: bool, controller_class=None) -> None:
+    """Every controller of this process gets the K1 order gate set to ``is_on``.
 
     K1 is ``slope_clearance_margin.flat_soil_margin_order_gate`` (rules 2.1, the R4c30 order
-    gate); nothing else changes (the ``k1_targeted.install_order_gate`` way). K1 off installs
-    nothing: the preset is used as it is. A second call in one process is a no-op.
+    gate); nothing else changes (the ``k1_targeted.install_order_gate`` way). Both arms install
+    explicitly: since the K1 switch (``las_k1_rules_adopt.md`` 9.1) the R8 preset has the gate
+    on, so an off arm that installed nothing would silently run with the gate on. A second call
+    with the same value in one process is a no-op.
+
+    Raises:
+        RuntimeError: Already installed in this process with the other value.
     """
+    is_on = bool(is_on)
     if _K1_INSTALLED:
+        if _K1_INSTALLED["is_on"] is not is_on:
+            raise RuntimeError(f"d8x_record.install_k1_order_gate: installed with "
+                               f"{_K1_INSTALLED['is_on']}, asked for {is_on}")
         return
     if controller_class is None:
         from outrigger_sim.control import c2
@@ -122,12 +132,23 @@ def install_k1_order_gate(controller_class=None) -> None:
 
     def __init__(self, geometry, config=None, *args, **kwargs):
         if config is not None:
-            margin = replace(config.slope_clearance_margin, flat_soil_margin_order_gate=True)
+            margin = replace(config.slope_clearance_margin, flat_soil_margin_order_gate=is_on)
             config = replace(config, slope_clearance_margin=margin)
         original_init(self, geometry, config, *args, **kwargs)
 
     controller_class.__init__ = __init__
-    _K1_INSTALLED["class"] = controller_class
+    _K1_INSTALLED.update({"class": controller_class, "is_on": is_on})
+
+
+def k1_arm_is_on(k1: str | None) -> bool:
+    """``on`` / ``off`` of a D8x K1 arm as the gate value.
+
+    Raises:
+        ValueError: Anything else (a D8x run always names its arm; no silent preset fallback).
+    """
+    if k1 not in K1_CHOICES:
+        raise ValueError(f"D8x K1 arm {k1!r}: expected one of {K1_CHOICES}")
+    return k1 == "on"
 
 
 def effective_k1(controller) -> bool:
@@ -142,7 +163,8 @@ def liftoff_slow_enabled(controller) -> bool:
 
 
 def preset_controller_tag(controller) -> str | None:
-    """The v5 tag of a controller without hydraulic options (``final_C4G2_LAS`` with LAS-b)."""
+    """The v5 tag of a controller without hydraulic options (``final_C4G2_LAS_K1`` with LAS-b
+    and the K1 gate, ``final_C4G2_LAS`` with the gate off)."""
     from outrigger_sim.hydraulics.v5_options import controller_tag
 
     return controller_tag(None, controller.config)

@@ -475,8 +475,9 @@ def execute(entry: dict, setting, hydraulics, *, setting_name: str,
         hydraulics: ``HydraulicOptions`` or None (V0).
         setting_name: ``VB`` / ``V0`` (record and J-P3).
         eps: Phase offset of the run (the caller installs it; record only here).
-        k1: D8x H-R-X jobs only: ``on`` turns the R4c30 order gate on in this worker, ``off``
-            (and None) keeps the preset as it is.
+        k1: D8x H-R-X jobs only: ``on`` / ``off`` sets the R4c30 order gate explicitly in
+            this worker (the preset has it on since the K1 switch, so ``off`` is installed too);
+            None (every other row) keeps the preset as it is.
 
     Returns:
         The result dict (``verdict_runs._finish`` keys, the plant options record,
@@ -487,8 +488,9 @@ def execute(entry: dict, setting, hydraulics, *, setting_name: str,
     row = D1Row.from_job(entry)
     vr.install_plant_options(setting, hydraulics)
     c2 = vr.install_logged_controller()
-    if k1 == "on":
-        _d8x_record_module().install_k1_order_gate(c2.C2Controller)
+    if k1 is not None:
+        record = _d8x_record_module()
+        record.install_k1_order_gate(record.k1_arm_is_on(k1), c2.C2Controller)
     rcc.CRAWLER_K_SCALE = float(row.crawler_k_scale)
     result, series, plant, controller, harness = PATH_RUNNERS[row.path](row)
     t_lift_s = ((result.get("values") or {}).get("forces") or {}).get("t_lift_s")

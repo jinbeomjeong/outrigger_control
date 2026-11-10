@@ -4150,7 +4150,7 @@ def main(argv):
                          "d8x_judge.py select-v); a W floor needs --w too")
     ap.add_argument("--expect-controller", dest="expect_controller", default=None,
                     help="run / check --set d8x_*: refuse unless the run-time preset tag is this one (D8x rules "
-                         "2.1 / I-5 expected_tag, e.g. final_C4G2_LAS); recorded per row")
+                         "2.1 / I-5 expected_tag, e.g. final_C4G2_LAS_K1); recorded per row")
     ap.add_argument("--rerun-from", dest="rerun_from", default=str(C36_SOURCE),
                     help="c36: source ML batch (bases / branch.pkl / plan, read only)")
     ap.add_argument("--affected", default=str(C36_AFFECTED),

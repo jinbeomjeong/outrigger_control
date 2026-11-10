@@ -9,8 +9,9 @@ D8x mode (``06_analysis/02_control/d8x/d8x_rules.md`` 3 R-a, 9.2 item 3), with `
       [--stages main,robust,kt] [--k1 off|on] [--workers N] [out.json]
   Points = rules 1.2 (A) from the point file, the same floor at every auger level; variants as
   ``run_s6_slope_boundary_check.td_cases`` with the rules 3 point sets (:func:`d8x_cases`). The preset
-  ``with_10hz_d1`` is used as it is (ACC_COMBO ``preset``; ACC_WT defaults to this checkout); ``--k1 on``
-  turns the R4c30 order gate on in every worker. Output ``06_analysis/02_control/d8x/ra/ra_<k1>.json``
+  ``with_10hz_d1`` is used as it is (ACC_COMBO ``preset``; ACC_WT defaults to this checkout) except the R4c30 order
+  gate, which every worker sets explicitly from ``--k1`` (off / on; the preset has it on since the K1
+  switch, so off must be installed, not left to the preset). Output ``06_analysis/02_control/d8x/ra/ra_<k1>.json``
   unless ``out`` is given; every run adds ``point``, ``level``, ``mast``, ``stage``, ``variant``,
   ``angles_deg``, ``k1_order_gate``, ``controller_tag``, ``module_files_sha256`` and the ``d8x`` block
   (``d8x_record.run_metrics``); the meta adds the run identity at the start and the end (rules I-1).
@@ -187,8 +188,9 @@ def run_one(case: dict) -> dict:
         import c2py_r8d1_closed_loop as c2py
 
         if IS_D8X:
-            if os.environ.get(D8X_K1_ENV) == "on":
-                _record_module().install_k1_order_gate()
+            # Both arms explicitly: the preset has the gate on since the K1 switch.
+            record = _record_module()
+            record.install_k1_order_gate(record.k1_arm_is_on(os.environ.get(D8X_K1_ENV)))
             _install_series_capture(c2py)
         c2py.rcr.SensorsS = c2py.traces.RecordingSensors
         c2py.rpt.C2RA = c2py.HarnessAdapter

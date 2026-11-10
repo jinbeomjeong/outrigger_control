@@ -24,6 +24,13 @@ if str(ROOT / "03_src") not in sys.path:
     sys.path.insert(0, str(ROOT / "03_src"))
 
 from outrigger_sim.control.target import VERIFICATION_EXT_HALF_SPANS_DEG  # noqa: E402
+from outrigger_sim.hydraulics.v5_options import (  # noqa: E402
+    EXTEND_START_LAS_K1_CONTROLLER_TAG,
+    LAS_K1_CONTROLLER_TAG,
+    LIFTOFF_SLOW_TAG_SUFFIX,
+    ORDER_GATE_TAG_SUFFIX,
+    is_liftoff_slow_tag,  # noqa: F401  (re-exported: d8x_judge E-6 LAS-b tag test)
+)
 
 D8X_DIR = ROOT / "06_analysis" / "02_control" / "d8x"
 RULES_FILES = (
@@ -96,8 +103,10 @@ SETTLE_MAP_BY_ENGINE = {"L2b": "identity", "L1-R": "level"}
 SCENARIO_GROUPS = {1: "G2-R", 7: "D8", 11: "G2-R", 14: "G2-R"}
 """Rev2 6: rows whose scenario group the rules name (L2b fdown3.7 = H4V ``G2-R``); the other
 rows must record a group (E-5) that is reported."""
-LAS_TAG_SUFFIX = "_LAS"
-"""Rev2 4: a D8x row runs with LAS-b on; its tag carries this suffix (``final_C4G2`` = off)."""
+LAS_TAG_SUFFIX = LIFTOFF_SLOW_TAG_SUFFIX
+"""Rev2 4: a D8x row runs with LAS-b on; its tag carries this suffix (``final_C4G2`` = off),
+possibly followed by the K1 suffix (``final_C4G2_LAS_K1``): test it with
+``v5_options.is_liftoff_slow_tag``, not ``str.endswith``."""
 W_MIRRORS = {"r+p-0.5": "rpX+-", "r-p+0.5": "rpX-+", "r-p-0.5": "rpX--"}
 """Rules 5.1: mirrored diagonals whose R-c top J1 joins m(p)."""
 
@@ -114,8 +123,27 @@ RC_EPS = {"off": (0.0, 2e-3), "on": (0.0,)}
 RC_CRAWLER_SCALES = (1.0, 3.0)
 EXPECTED_COUNTS = {"G0": 60, "ra_off": 910, "ra_on": 192, "rc_off": 192, "rc_on": 96, "C": 19}
 """Rules 3 / E-1: R-a 1,102 = 910 + 192 K1 pairs, R-c 288 = 192 + 96, Chrono 18 + 1."""
-DEFAULT_TAGS = {"ra": "final_C4G2_LAS", "VB": "final_C4G2_P3_LAS", "V0": "final_C4G2_LAS"}
-"""Rules 2.1: tags at sealing (V0 / the harness preset, VB with the ③ bound)."""
+DEFAULT_TAGS = {"ra": LAS_K1_CONTROLLER_TAG, "VB": EXTEND_START_LAS_K1_CONTROLLER_TAG,
+                "V0": LAS_K1_CONTROLLER_TAG}
+"""Preset tags since the K1 switch (``final_C4G2_LAS_K1`` for V0 / the harness preset,
+``final_C4G2_P3_LAS_K1`` for VB with the ③ bound; rules 2.1 had the ``_LAS`` tags at sealing).
+These are the K1-on arm's tags; the off arm's are :func:`arm_tag`."""
+
+
+def arm_tag(preset_tag: str, k1: str) -> str:
+    """Expected controller tag of a harness K1 arm (R-a / R-c) for ``preset_tag``.
+
+    The recorded tag names the effective switches (``v5_options.controller_tag``): the on arm
+    records the preset tag with ``_K1``, the off arm (gate installed off) the same tag without
+    it (``final_C4G2_LAS_K1`` -> ``final_C4G2_LAS``).
+
+    Raises:
+        ValueError: ``k1`` is not ``off`` / ``on``.
+    """
+    if k1 not in ("off", "on"):
+        raise ValueError(f"K1 arm {k1!r}: expected off / on")
+    base = preset_tag.removesuffix(ORDER_GATE_TAG_SUFFIX)
+    return base + ORDER_GATE_TAG_SUFFIX if k1 == "on" else base
 
 
 # ------------------------------------------------------------------------------------ seals

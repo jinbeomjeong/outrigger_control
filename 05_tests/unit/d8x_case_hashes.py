@@ -7,12 +7,20 @@ earlier row. :func:`current_hashes` hashes
 * ``s8c``: every ``run_S8C.case_table()`` case: ``to_meta()`` and ``repr``;
 * ``s6c_sets`` / ``s8c_sets``: the case ids of every case set (order kept);
 * ``floors``: ``s6_stage2.FLOORS`` after importing both runners (name -> (roll, pitch) deg);
-* ``s9_rows``: every ``s9_batch.batches()`` row: its ``argv`` and the whole row (JSON), with the
-  interpreter path and the repository root replaced by placeholders (worktree independent).
+* ``s9_rows``: every ``s9_batch.batches()`` row: its ``argv`` and the row (JSON) without the
+  keys read from stored results (:data:`STORED_RESULT_ROW_KEYS`), with the interpreter path and
+  the repository root replaced by placeholders (worktree independent).
 
 The D8x rows / sets / floors themselves (:data:`D8X_PREFIX`, ``d8x_*`` sets, the floors of
 ``s6_stage2.D8X_FLOORS``) are left out, so the same function gives the baseline before the change
 (``05_tests/data/d8x_existing_case_hashes.json``) and the check after it.
+
+The hashes cover row definitions only (case meta / repr, set ids, floors, S9 argv); no C2 preset
+value enters them, so the K1 switch (R4c30 order gate on in ``with_10hz_d1``, 2026-11-10) leaves
+the baseline valid (checked: the diff is empty on the K1-switched master b53d890 with D8x
+merged). A preset switch shows up in the run-time tags, not here. The ``s9_rows`` section was
+regenerated once (2026-11-10) only to drop :data:`STORED_RESULT_ROW_KEYS`; every other section
+and the row set are the 2026-11-10 D8x baseline as committed in 4014710.
 """
 
 from __future__ import annotations
@@ -28,6 +36,10 @@ CHRONO = ROOT / "04_scripts" / "02_chrono"
 BASELINE = ROOT / "05_tests" / "data" / "d8x_existing_case_hashes.json"
 D8X_PREFIX = "D8X_"
 D8X_SETS = ("d8x_w1", "d8x_w2")
+STORED_RESULT_ROW_KEYS = ("est_s", "stored_result", "stored_wall_s", "note")
+"""``s9_batch`` row keys filled from the stored results in ``07_results/`` (git-ignored): a
+checkout with the results (main tree) and one without (worktree) give different values, so they
+are left out of the row hash. The definition is the argv and the other keys."""
 
 
 def _sha(obj: Any) -> str:
@@ -84,7 +96,9 @@ def current_hashes() -> dict[str, dict[str, str]]:
     for batch, rows in sb.batches().items():
         for i, row in enumerate(rows):
             key = f"{batch}#{i}:{row.get('case')}"
-            out["s9_rows"][key] = _sha({"argv": _sha(_norm(row.get("argv"))), "row": _sha(_norm(row))})
+            definition = {k: v for k, v in row.items() if k not in STORED_RESULT_ROW_KEYS}
+            out["s9_rows"][key] = _sha({"argv": _sha(_norm(row.get("argv"))),
+                                        "row": _sha(_norm(definition))})
     return out
 
 

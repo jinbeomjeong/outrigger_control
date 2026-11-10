@@ -83,13 +83,13 @@ ad16f452..., 4.4 rows 7-11, 2026-11-10): set
 ``SlopeLimitMode.VERIFICATION_EXT``; ``run`` / ``check`` refuse without it), the floors of
 ``s6_stage2.D8X_FLOORS``; the rows 1-6 / 12-18 / 19 are run_S8C (``--set d8x_w1 --w`` / ``d8x_w2 --v``).
 Rev2 (``d8x_rules_rev2.md`` sha256 5f3fa620...): the L1-R rows use the ``level`` settle map, the L2b rows
-``identity`` (E-4b, recorded and checked); scenario group / id (rev2 6); expected tag ``final_C4G2_LAS`` with LAS-b
+``identity`` (E-4b, recorded and checked); scenario group / id (rev2 6); expected tag ``final_C4G2_LAS_K1`` (since the K1 switch; ``_LAS`` at sealing) with LAS-b
 on, refused otherwise before any Chrono step (rev2 4); run length T_run = max(family length + 8 s, T^_R + 20 s)
 (rev2 5, :func:`d8x_with_length`)::
 
     python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py snaps-d8x --jobs 4 [--dry-run]
     python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py run --set d8x_w1 --approved --jobs 5
-        --expect-controller final_C4G2_LAS --tag d8x
+        --expect-controller final_C4G2_LAS_K1 --tag d8x
 
 ``run`` refuses to start without ``--approved`` (the user approves the bundle separately).
 C-9 cases (R-5 on) are conditional: ``run`` leaves them out unless ``--with-c9`` (spec 150:
@@ -1222,7 +1222,7 @@ def check_half_spans(case_id: str, spans: dict[str, float]) -> None:
 
 def controller_tag_of(config) -> str:
     """Tag of the run-time controller ``config`` (no v5 option): ``v5_options.controller_tag``
-    (``final_C4G2_LAS`` with LAS-b on), else the runner tag ``final_C4G2`` (its docstring). D8x
+    (``final_C4G2_LAS_K1`` with LAS-b and the K1 gate on), else the runner tag ``final_C4G2`` (its docstring). D8x
     rules 2.1 / E-6: recorded per row, compared with ``--expect-controller``."""
     from outrigger_sim.hydraulics.v5_options import controller_tag
 
@@ -2608,7 +2608,7 @@ def main(argv):
                                        "check", "run", "judge", "judge-ps7", "judge-g8"))
     ap.add_argument("--expect-controller", dest="expect_controller", default=None,
                     help="run / check --set d8x_w1: refuse unless the run-time preset tag is this one "
-                         "(D8x rules 2.1 / I-5 expected_tag, e.g. final_C4G2_LAS); recorded per row")
+                         "(D8x rules 2.1 / I-5 expected_tag, e.g. final_C4G2_LAS_K1); recorded per row")
     ap.add_argument("--dry-run", dest="dry_run", action="store_true",
                     help="snaps-d8x: print the missing D8x start states and the estimate only")
     ap.add_argument("--leg", choices=st.PREGROUND_LEGS, default="FL",

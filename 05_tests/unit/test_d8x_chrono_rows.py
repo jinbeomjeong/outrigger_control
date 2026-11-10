@@ -231,7 +231,7 @@ def test_controller_config_uses_verification_ext() -> None:
     rec6 = s6.d8x_preflight(s6.CASE_SETS["d8x_w1"](), None)
     assert len(rec6["rows"]) == 5
     assert {(r["settle_map"]["kind"], r["settle_map"]["level"]) for r in rec6["rows"].values()} == {("level", "top")}
-    assert all(r["las_b_enabled"] and r["expected_tag"] == "final_C4G2_LAS" for r in rec6["rows"].values())
+    assert all(r["las_b_enabled"] and r["expected_tag"] == "final_C4G2_LAS_K1" for r in rec6["rows"].values())
 
 
 @pytest.mark.skipif(s6.d8x_mode_available(), reason="VERIFICATION_EXT installed")
@@ -253,7 +253,7 @@ T_RUN_W1 = {  # rev2 5 (W = dxpm050 / r+p-0.5, V = rpX): row -> (T^_R, T_run) s
 
 def test_rev2_run_length_table() -> None:
     doc = s8.d8x_plan("r+p-0.5", "rpX")
-    assert doc["expected_tag"] == "final_C4G2_LAS" and doc["rules_rev"] == "rev2"
+    assert doc["expected_tag"] == "final_C4G2_LAS_K1" and doc["rules_rev"] == "rev2"
     got = {r["row"]: (r["ready_hat_s"], r["T_run_s"]) for r in doc["rows"]}
     assert set(got) == set(T_RUN_W1)
     for k, v in T_RUN_W1.items():
@@ -261,7 +261,7 @@ def test_rev2_run_length_table() -> None:
     for r in doc["rows"]:
         assert r["T_run_s"] >= r["family_run_s"] - 1e-9
         assert r["T_run_s"] >= r["ready_hat_s"] + 20.0 - 1e-9
-        assert r["expected_tag"] == "final_C4G2_LAS"
+        assert r["expected_tag"] == "final_C4G2_LAS_K1"
     # rev2 5 table: roll 5.7 = 59.2 x 5.7 / 5.5 -> 61.4 s, T_run >= 81.4 s (no 40 s levelling assumption)
     assert got[3] == pytest.approx((61.4, 81.4))
     # K24 references are the rev2 table values
@@ -309,6 +309,8 @@ def test_rev2_meta_keys_and_refusals() -> None:
         s6.d8x_refuse(c6.case_id, s6.d8x_record(c6, off, None))
     with pytest.raises(SystemExit):
         s6.d8x_refuse(c6.case_id, s6.d8x_record(c6, cfg, "final_C4G2"))
+    with pytest.raises(SystemExit):  # the tag before the K1 switch
+        s6.d8x_refuse(c6.case_id, s6.d8x_record(c6, cfg, "final_C4G2_LAS"))
     ident = replace(cfg, target=replace(cfg.target, crawler_settle_map=None))
     rec = s6.d8x_record(c6, ident, None)
     assert any("E-4b" in p for p in rec["problems"])

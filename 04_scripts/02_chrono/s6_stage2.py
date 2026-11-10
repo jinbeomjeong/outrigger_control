@@ -111,9 +111,10 @@ D8X_RULES_REV = "rev2"
 """The rules in force: the original + rev1 (rev1 replaces 1.1-1.3, the 4.4 floor name ``fup3.7`` -> ``fup3.6``,
 5.1 coordinates and 9.3; user decision 2026-11-10 after G0: nose-up half axis 3.6 deg) + rev2 (interpretation:
 per-engine settle map 1 / E-4b, tag and LAS-b 4, run length 5, scenario group 6, cad part 7)."""
-D8X_EXPECTED_TAG = "final_C4G2_LAS"
-"""Rev2 4: the Chrono tag expected at sealing (V0 with LAS-b on); ``--expect-controller`` replaces it only for an
-adopted tag (original 7 V-1b). A row with another tag or LAS-b off is refused before the run."""
+D8X_EXPECTED_TAG = "final_C4G2_LAS_K1"
+"""The Chrono tag expected since the K1 switch (V0 preset: LAS-b + the R4c30 order gate, ``v5_options.
+LAS_K1_CONTROLLER_TAG``; rev2 4 had ``final_C4G2_LAS`` at sealing). ``--expect-controller`` replaces it only for
+an adopted tag (original 7 V-1b). A row with another tag or LAS-b off is refused before the run."""
 D8X_SETTLE_KIND_BY_ENGINE = {"L2b": "identity", "L1R": "level"}
 """Rev2 1 (replaces original 2.1 third item): controller crawler settle map per engine (``run_S7C.
 SETTLE_MAP_BY_ENGINE``, C-R17 / U-S7-1): L2b-NSC rows 1-6 / 12-19 ``identity``, L1-R rows 7-11 ``level`` =
