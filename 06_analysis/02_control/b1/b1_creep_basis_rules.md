@@ -68,6 +68,21 @@ $$\hat s_{i,\max} = s_i(k_L) + \Delta s^{geo}_i + \left(c^\ast + m - \hat c(k_L)
   - $\delta^{os}$는 J1 앞내림 FL 24.2 mm, J1 대각 FR 7.0 mm, J2 평지 2.1~9.9 mm다.
   - 같은 양 Chrono − 하네스는 −0.25 mm(J1 앞내림), −2.0 / −5.4 mm(J2 평지)다.
 
+### 0.3 terramechanics-expert 검토 요약 (2026-11-10, 결과 전, 공개)
+
+검토 원문은 메인 세션이 전달한 요약이다. 이 판은 그 요약을 인용하며, 원문 리포트의 파라미터 표(출처 유형별)가 근거 원본이다.
+
+| 항목 | 검토 값·내용 | 출처 유형 | 이 판에서 반영한 곳 |
+|---|---|---|---|
+| SCM 패드 침하 기구 | 지나간 최대 하중의 Bekker 침하 + 점성 지연 $\tau = R/(n\,p/z)$ ≈ 0.4~0.5 s(J2). 시간 의존 크리프(압밀·2차 압축)와 전단 유발 침하는 없다 | Chrono 소스(`SCMTerrain.cpp` `SCMLoader::ComputeInternalForces`: σ를 τ보다 먼저 정하고 되먹임 없음) | 13절 모형 범위 |
+| J2 민감도 | $k_{eq}$ 4 %, $n$ 0.02 차로 침하가 20 mm 이상 바뀐다 | 세트 파라미터 감도(유도식) | 13절 D-e 해석 제한 |
+| 지지력 이용률 | $p/q_{ult}$ 약 0.82~0.87. 파괴 근처라 Bekker 침하는 하한이다 | 유도식(지지력 계산) | 13절 |
+| 격자 절점 침하 양자 | $\delta z_{node} = z\,\Delta^2/(nA)$. J2, 격자 $\Delta$ 0.02 m에서 앞 패드 약 1.6 mm, 뒤 패드 약 3.8 mm | 유도식(격자·패드 면적·$n$) | 3.3 D-c 표시 |
+| 패드 접선 유연도 | 앞 3.6 / 뒤 7.9 mm/kN(2.2배) | 유도식(Bekker 접선) | 6.3 $\kappa_z$ 패드 종류별 |
+| ×1.1 침하 배율 | 접선 유연도 ∝ $F^{1/n-1} = F^4$, ×1.1이면 $z$ 1.61배. 저장 REM 1.57~1.74 | 유도식 + 저장 Chrono(REM ×1.1 대 ×1.0) | 7절 P-9 |
+| 시작 조건 | `--start-limit record_only` 권고(T-6) | 운용 판단 | 12절 R-2 |
+| 문턱 | 3 / 5 / 10 / 20 / +5 mm 그대로(사용자 결정, R-6 닫힘) | — | 3.3 |
+
 ## 1. 파라미터 (P5r4+K1 결과로 정함, 봉인 전에 채움)
 
 | 이름 | 정하는 규칙 | 채울 값 |
@@ -160,7 +175,7 @@ $\mathcal{R}$ = 핵심 4행 + C3(VALID일 때) = ×1.0 행 집합이다. 행정�
 |---|---|---|---|
 | **D-a 크리프 허용** | $Z_{ch} = \max_{r\in\mathcal R} \Delta z^{post}_{b^\ast}(r)$(LOC 마지막 → $t_{\max}$), $Z_{hn}$ = 같은 양 하네스 H-P VB·V0 e0 최대 | `ZA-1`: $Z_{ch} \le Z_{hn} + 3$ mm / `ZA-2`: 그 밖 | 크리프 허용값 $Z_{B1} = \max(Z_{ch}, Z_{hn}) + Z_{soil}$. $Z_{soil}$은 terramechanics T-2 답이다. 답이 오기 전이면 B1 설계 문서에서 `Z_soil 미정`으로 막는다. `ZA-2`이면 B1 하네스 스윕의 침하 항을 Chrono 쪽으로 보정해야 한다 |
 | **D-b 과도 초과** | $O = \max_{r\in\mathcal R} \max(\delta^{os}_{b^\ast,ch}, \delta^{os}_{b^\ast,hn})$ | `OS-MAX`: $O$ > 5 mm / `OS-FINAL`: $O$ ≤ 5 mm | `OS-MAX`면 B1은 "예상 최대 행정"을 쓰고 허용값 $O$를 더한다. `OS-FINAL`이면 "예상 최종 행정"을 써도 된다. READY가 없는 행(SGS)은 $\delta^{os}$ = `NA`이고, 행 수에서 뺀 것을 적는다 |
-| **D-c 하네스 대응** | $\Delta_r = s_{b^\ast,\max}^{ch} - s_{b^\ast,\max}^{hn,\text{VB e0}}$, $r \in \mathcal R$ | `H-OK`: 모든 $|\Delta_r| \le 3$ mm / `H-CONS`: $\Delta_r < -3$인 행 ≥ 1이고 $\Delta_r > 3$인 행 0 / `H-OPT`: $\Delta_r > 3$인 행 ≥ 1 | `H-OK`·`H-CONS`: 하네스 스윕을 그대로 B1 근거로 쓴다(`H-CONS`는 차를 여유로 기록). `H-OPT`: 하네스 스윕에 방향별(fdown·diag·fup) 최대 $\Delta_r$을 더하고, 그 방향은 B1 채택 전에 Chrono 확인 행을 둔다(B1 규칙에서 정함) |
+| **D-c 하네스 대응** | $\Delta_r = s_{b^\ast,\max}^{ch} - s_{b^\ast,\max}^{hn,\text{VB e0}}$, $r \in \mathcal R$ | `H-OK`: 모든 $|\Delta_r| \le 3$ mm / `H-CONS`: $\Delta_r < -3$인 행 ≥ 1이고 $\Delta_r > 3$인 행 0 / `H-OPT`: $\Delta_r > 3$인 행 ≥ 1 | `H-OK`·`H-CONS`: 하네스 스윕을 그대로 B1 근거로 쓴다(`H-CONS`는 차를 여유로 기록). `H-OPT`: 하네스 스윕에 방향별(fdown·diag·fup) 최대 $\Delta_r$을 더하고, 그 방향은 B1 채택 전에 Chrono 확인 행을 둔다(B1 규칙에서 정함). **격자 양자 표시**: 판정서에 행마다 $b^\ast$의 $\delta z_{node} = z_{b^\ast}(t_{\max})\,\Delta^2/(n A_{b^\ast})$($\Delta$ 0.02 m, $n$ = J2 세트 값, $A$ = 패드 면적; 참고값 앞 약 1.6 mm·뒤 약 3.8 mm)를 적는다. `H-OPT`·`H-CONS`를 만든 행 가운데 $|\Delta_r| \le \delta z_{node}$인 행에는 "격자 양자 수준"을 붙인다. **등급은 바꾸지 않는다** |
 | **D-d 예측자** | 후보 $q \in$ {P-A, P-B, P-C}(6.2)의 $E_q = \max_{r\in\mathcal R}|e_{b^\ast}(r, q)|$. SGS 행은 $s_{\max}$를 가드 도달 값으로 둔다(하한, 6.4) | `PRED-q`: $E_q$ 최소인 $q$(같으면 P-A → P-B → P-C 순으로 단순한 쪽) / `PRED-FAIL`: 최소 $E_q$ > 10 mm | `PRED-q`면 B1은 그 형식을 쓴다. `PRED-FAIL`이면 B1 설계 전에 새 예측 형식을 재등록한다(개정판). 후보 밖 형식은 쓰지 않는다 |
 | **D-e B1 필요성** | C1·C2·C4의 Chrono 가드 여유 $g_r = s_{guard} - \max_i s_{i,\max}$, SGS 사건 | `NEED-RECHECK`: 세 행 모두 $g_r \ge$ 20 mm이고 SGS 0 / `B1-OPEN`: 그 밖 | `NEED-RECHECK`면 사용자에게 B1 필요성과 J2 경사 운용 권고(Q6)를 다시 묻는다. B1 설계는 그 답 뒤에 한다 |
 | **D-f fup 범위** | C5 Chrono SGS 여부, H-M0 C5 짝 VB·V0($m$ = 0)의 SGS 여부 | `FUP-OUT`: C5 Chrono SGS이고 H-M0 C5 두 짝 모두 SGS / `FUP-IN`: C5 SGS이고 H-M0 짝 중 하나라도 READY / `FUP-NA`: C5 SGS 없음 | `FUP-OUT`: B1 범위(0~30 mm)로 풀 수 없다. 운용 권고 문제로 분리해 사용자에게 묻는다(Q6). `FUP-IN`: B1 대상 방향에 fup를 넣는다 |
@@ -207,6 +222,7 @@ $\mathcal{R}$ = 핵심 4행 + C3(VALID일 때) = ×1.0 행 집합이다. 행정�
 | M-4 | 침하 | $\Delta z^{post}_i = z_i(t_{\max}) - z_i(t_L)$. 기록용으로 $z_i(t_R) - z_i(t_L)$, $z_i(t_{end}) - z_i(t_R)$, LOC 뒤 최대 침하율(1.0 s 후진 차분), $\Delta z_i / \Delta F_i$(할선, $t_L \to t_R$)도 낸다. 1 ms 계열은 10 Hz 시각과 같은 시각 이하 마지막 표본을 쓴다(`searchsorted(t, τ − 1e-9)`) |
 | M-5 | 과도 초과 | $\delta^{os}_i = s_{i,\max} - s_i(t_R)$($t_R$ 없으면 `NA`), $t_{\max} - t_L$ |
 | M-6 | 예측자 오차 | $e_i(q) = s_{i,\max} - \hat s^{(q)}_{i,\max}$(+ = 예측 부족). 6절 식으로 낸다 |
+| M-4h | 패드 수평 변위(기록, 권고) | 패드 $i$ 수평 변위 $\lVert \Delta \mathbf{r}_{i,xy} \rVert$($t_L \to t_{\max}$, 지면 고정 좌표). Chrono는 패드 바디 위치(cad-expert가 기록 필드를 정함), 하네스는 패드 요소 접선 변위. 등급에 쓰지 않는다 |
 | M-7 | 크롤러 | $t_L$·$t_R$·$t_{end}$의 격자 참 틈(P3-5), 제어기 틈 추정, 이탈 뒤 최대 크롤러 하중 |
 | M-8 | 규칙 작동 | E3c10(`INFO_LOC_CLEARANCE_MARGIN:<mm>`), `INFO_LOC_REVOKED`, `order_gate.decisions` 수, DSb75 HOLD·RELEASE 사유, SGS, P30fz·LWa |
 | M-9 | P3 행(기록) | `p3b` P3-1~P3-8, SL 분류 |
@@ -235,7 +251,9 @@ $\mathcal{R}$ = 핵심 4행 + C3(VALID일 때) = ×1.0 행 집합이다. 행정�
 
 ### 6.3 상수 (하네스에서만, Chrono 결과 전에 고정)
 
-- $\kappa_z$: H-P 20실행의 $b^\ast$ 다리 $\Delta z^{post}/\max(\hat W, 1\,\text{N})$ 최대 [m/N]
+- $\kappa_z$: **패드 종류별로 따로 정한다.** $\kappa_{z,F}$(전방 330, FL·FR)와 $\kappa_{z,R}$(후방 250, RL·RR)는 H-P 20실행의 해당 종류 다리 전부(예산 다리만이 아님)의 $\Delta z^{post}_i/\max(\hat W_i, 1\,\text{N})$ 최대 [m/N]다. P-B는 다리 $i$의 패드 종류 값을 쓴다.
+  - 근거: terramechanics 검토의 접선 유연도는 앞 3.6 / 뒤 7.9 mm/kN(2.2배)이다(0.3).
+  - **결과 전 후보 정의 변경(공개)**: 2026-11-10 후보판 첫 작성 때는 예산 다리 단일 $\kappa_z$였다. 하네스·Chrono B1 결과를 보기 전, 검토를 받고 바꿨다.
 - $\delta_{allow}$: H-P 20실행의 $b^\ast$ 다리 $\delta^{os}$ 최대 [m]
 - 기록: `b1_harness_constants.json`(값, 쓴 실행 목록, 도구 sha)
 - 고정 시점: 그 sha를 실행 전 감사 보고와 prelaunch에 적은 뒤에만 Chrono를 시작한다(T 순서).
@@ -258,7 +276,7 @@ $\mathcal{R}$ = 핵심 4행 + C3(VALID일 때) = ×1.0 행 집합이다. 행정�
 | P-6 | C5 SGS(RL), Chrono 가드 시각 ≤ 하네스 VB e0 가드 시각 |
 | P-7 | `P7_REF`가 있으면 `K-SAME`. Chrono E3c10 LOC의 `order_gate.decisions` 0 |
 | P-8 | P-A의 $e$ > 0이 모든 VALID 행에서 성립, $E_{\text{P-C}}$ ≤ 10 mm |
-| P-9 | C6: C1보다 $g$가 작거나 SGS가 이르다. $|e(\text{C6})| \le E_{q^\ast}$ + 5 mm(`W-OK`) |
+| P-9 | C6: C1보다 $g$가 작거나 SGS가 이르다. **`W-EXT` 예상**: ×1.0 하네스에서 정한 선형 $\kappa_z$로는 ×1.1의 침하 증가를 못 따라간다. 근거는 접선 유연도 ∝ $F^{1/n-1} = F^4$라 ×1.1이면 $z$가 1.61배이고, 저장 REM ×1.1 대 ×1.0이 1.57~1.74배라는 것이다(0.3). 결과 전 변경(첫 후보판은 `W-OK`), 공개 |
 
 ## 8. 두 경로 재집계
 
@@ -312,16 +330,25 @@ $\mathcal{R}$ = 핵심 4행 + C3(VALID일 때) = ×1.0 행 집합이다. 행정�
 | # | 내용 | 누가 |
 |---|---|---|
 | R-1 | 1절 파라미터 전부(P5r4+K1 판정·채택 결정 뒤) | 사용자 결정 → 메인 세션이 채움 |
-| R-2 | `--start-limit` 값(`record_only` 또는 프리셋)과 `--expect-controller` 정합, J2 경사 SCM 지형 크기 | cad-expert |
+| R-2 | `--start-limit` 값과 `--expect-controller` 정합, J2 경사 SCM 지형 크기, M-4h 패드 수평 변위 기록 필드. **권고(terramechanics T-6): `--start-limit record_only`로 정한다**(J2 경사 크롤러 정착 기울기 증가로 $R_c$ > 1이 되어 시작 거부 결측이 날 위험) | cad-expert |
 | R-3 | 6.1 기하 부호 확인(X4-nd 저장 기록) | dynamics-expert |
 | R-4 | 하네스 질량 배율·$m$ 교체 지원 여부(H-W·H-M0) | python-expert |
 | R-5 | $Z_{soil}$(T-2 실토양 크리프 허용). 이 규칙의 등급에는 쓰지 않고 B1 설계 문서에서 쓴다 | terramechanics-expert |
-| R-6 | 문턱 3 / 5 / 10 / 20 / +5 mm는 0.2 자료를 본 뒤 정한 설계 문턱이다. 이대로 봉인할지 | 사용자 확인(봉인 전) |
+| R-6 | **닫힘(2026-11-10)**: 문턱 3 / 5 / 10 / 20 / +5 mm 그대로 봉인(terramechanics 검토 뒤 사용자 결정) | — |
 
 ## 13. 가정
 
 - `--duration` 160 s(C6 180 s), 비용, 7절 예측 범위, 3.3 문턱(3 / 5 / 10 / 20 / +5 mm), 6.4 SGS 하한 처리, 5절 침하 기준 시각($t_{\max}$)은 원본에 없어서 정한 값이다.
 - 압력 `normal`·IMU `ideal`은 판정 실행 관례다.
+
+### 13.1 모형 범위 (terramechanics 검토, 0.3)
+
+- SCM의 패드 침하는 지나간 최대 하중의 Bekker 침하와 점성 지연($\tau = R/(n\,p/z)$ ≈ 0.4~0.5 s, J2)으로 정해진다.
+  - 압밀·2차 압축 같은 시간 의존 크리프와 전단 유발 침하(slip sinkage)는 없다(SCMTerrain.cpp `SCMLoader::ComputeInternalForces`, σ를 τ보다 먼저 정하고 되먹임 없음).
+  - 이 규칙의 $\Delta z^{post}$와 D-a는 이 모형 안의 양이고, 실토양 몫 $Z_{soil}$은 B1 설계 문서에서 따로 더한다.
+- D-e의 가드 여유는 SCM 명목 세트의 값이다.
+  - J2 침하는 $k_{eq}$ 4 %, $n$ 0.02 차로 20 mm 이상 바뀌므로 실토양 여유로 읽지 않는다.
+  - $p/q_{ult}$가 약 0.82~0.87로 파괴 근처라 Bekker 침하는 하한이다.
 
 ## 14. 변경 기록 (봉인 전)
 
@@ -332,3 +359,12 @@ $\mathcal{R}$ = 핵심 4행 + C3(VALID일 때) = ×1.0 행 집합이다. 행정�
   - D-a~D-f를 등급으로 바꾸고 D-g(×1.1)·D-h(P-7 기준 정합)를 더함
   - 파라미터 절(Q5)
   - 예측자 SGS 하한 처리
+- 2026-11-10 terramechanics 검토 반영(결과 전)
+  - 0.3 검토 요약을 공개했다
+  - 13.1 모형 범위를 더했다(SCM 침하 기구, D-e 해석 제한)
+  - D-c에 격자 양자 표시를 더했다(등급 불변)
+  - M-4h 패드 수평 변위를 기록 항목으로 더했다
+  - 6.3 $\kappa_z$를 패드 종류별로 바꿨다(후보 정의 변경)
+  - P-9 예측을 `W-OK`에서 `W-EXT` 예상으로 바꿨다
+  - R-2에 `record_only` 권고를 적었다
+  - R-6을 닫았다(문턱 그대로)
