@@ -776,3 +776,79 @@ def test_v2_row_without_an_event_list_is_not_judgeable_and_empty_list_is_zero() 
     assert v2["judgeable"] is False and v2["missing_events"] == ["on:x"]
     assert v2["record_only_rows"] == ["off:e"]
     assert v2["counts"]["ra|pitch+|top"] == 0 and "ra|pitch+|top" in v2["LAS_INACTIVE"]
+
+
+# --- rev6 seal audit R-1 / R-2 / R-3 ---------------------------------------------------------
+def _rc_error_line(k1: str) -> dict:
+    return {"job": {"setting": "VB", "eps": 0.002, "k1": k1,
+                    "d1": {"key": "D1|H-R-X|rigid|T|rpX|K3", "slope_name": "rpX",
+                           "level": "top", "crawler_k_scale": 3.0}},
+            "error": "boom"}
+
+
+def test_error_rows_carry_the_arm_and_the_join_key() -> None:
+    """R-2 / R-1: error and not-judgeable rows keep k1 and the rev6 1 join fields."""
+    ra_row = judge._judge_ra_run({"id": "main|x", "point": "pitch+", "level": "top",
+                                  "error": "boom"}, "on", {}, F_D8, "t", set(), [])
+    assert ra_row["k1"] == "on" and ra_row["id"] == "main|x"
+    assert ra_row["verdict"] == "not_judgeable"
+    rc_row = judge._judge_rc_line(_rc_error_line("on"), "on", {}, F_D8, set(), [])
+    assert rc_row["k1"] == "on" and rc_row["verdict"] == "not_judgeable"
+    assert {f: rc_row[f] for f in judge.RC_JOIN_FIELDS} == {
+        "slope_name": "rpX", "level": "top", "crawler_k_scale": 3.0, "setting": "VB",
+        "eps": 0.002}
+
+
+def test_not_judgeable_rows_carry_the_arm(monkeypatch) -> None:
+    def missing(d8x, fails, f_d8):
+        raise judge.NotJudgeable("J1 key missing")
+
+    monkeypatch.setattr(judge, "judge_metrics", missing)
+    line = {**_rc_error_line("on"), "d1": {"d8x": {}}}
+    line.pop("error")
+    row = judge._judge_rc_line(line, "on", {}, F_D8, set(), [])
+    assert row["verdict"] == "not_judgeable" and row["k1"] == "on"
+    assert row["slope_name"] == "rpX" and row["eps"] == 0.002
+
+
+def test_bundle_rows_split_by_arm() -> None:
+    _, result = judge._bundle_result({"off": _part("rc", "off", ["pass"]),
+                                      "on": _part("rc", "on", ["not_judgeable"])}, "rc")
+    assert [r["k1"] for r in result["rows_off"]] == ["off"]
+    assert [r["k1"] for r in result["rows_on"]] == ["on"]
+    assert result["rows"] == result["rows_off"] + result["rows_on"]
+
+
+def test_seal_record_problems() -> None:
+    assert judge._seal_record_problems("x", spec.seal_report()) == []
+    assert judge._seal_record_problems("x", None)
+    partial = {rev: entry for rev, entry in spec.seal_report().items() if rev != "rev6"}
+    assert "rev6" in judge._seal_record_problems("x", partial)[0]
+
+
+def test_run_identity_records_the_seals() -> None:
+    """R-3: d8x_record.run_identity (R-a meta identity, R-c identity sidecar) carries the
+    seal report original .. rev6."""
+    seals = record.rules_seals()
+    assert set(seals) == {rev for rev, _, _ in spec.RULES_FILES}
+    assert all(entry["ok"] for entry in seals.values())
+
+
+def test_rc_identity_sidecar_seals_are_checked(tmp_path) -> None:
+    out = tmp_path / "hrx_on.jsonl"
+    assert "missing" in judge._rc_identity_seal_problems(out)[0]
+    sidecar = tmp_path / "hrx_on.identity.json"
+    sidecar.write_text(json.dumps({"start": [{"rules_seals": spec.seal_report()}],
+                                   "end": [{"rules_seals": spec.seal_report()}]}),
+                       encoding="utf-8")
+    assert judge._rc_identity_seal_problems(out) == []
+    sidecar.write_text(json.dumps({"start": [{}]}), encoding="utf-8")
+    assert judge._rc_identity_seal_problems(out)
+
+
+def test_ra_file_without_seals_is_a_problem(tmp_path) -> None:
+    path = tmp_path / "ra_on.json"
+    path.write_text(json.dumps({"meta": {"d8x": {"stages": ["main"], "k1": "on"}}, "runs": []}),
+                    encoding="utf-8")
+    part = judge.judge_ra_file(path, "on", spec.build_points(), F_D8, spec.DEFAULT_TAGS["ra"])
+    assert any("rules_seals" in p for p in part["problems"])

@@ -312,11 +312,23 @@ def _affinity_mask() -> str | None:
     return hex(sum(1 << cpu for cpu in cpus))
 
 
+def rules_seals() -> dict:
+    """``d8x_spec.seal_report()``: every sealed rules file (original .. newest addendum) with
+    its raw sha256, sealed value, sidecar and ``ok`` (rev6 4: run records carry the seals)."""
+    if str(HERE) not in sys.path:
+        sys.path.insert(0, str(HERE))
+    import d8x_spec
+
+    return d8x_spec.seal_report()
+
+
 def run_identity(root: Path = ROOT) -> dict:
-    """Interpreter, thread variables, affinity and git state of this process (rules I-1)."""
+    """Interpreter, thread variables, affinity, git state of this process (rules I-1) and the
+    rules seals (rev6 4)."""
     return {"python": sys.executable, "python_version": platform.python_version(),
             "threads": {name: os.environ.get(name) for name in THREAD_VARIABLES},
-            "affinity_mask": _affinity_mask(), "git": git_state(root)}
+            "affinity_mask": _affinity_mask(), "git": git_state(root),
+            "rules_seals": rules_seals()}
 
 
 # ---------------------------------------------------------------------------- import closure

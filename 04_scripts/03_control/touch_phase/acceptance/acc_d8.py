@@ -263,6 +263,7 @@ def _d8x_meta(args: argparse.Namespace, identity_start: dict) -> dict:
     return {"d8x": {"rules": "06_analysis/02_control/d8x/d8x_rules.md 3 R-a",
                     "points_file": str(args.points), "points_sha256": record.text_sha256(args.points),
                     "stages": list(args.stages), "k1": args.k1, "limit": args.limit,
+                    "rules_seals": record.rules_seals(),  # rev6 4
                     "identity_start": identity_start, "identity_end": record.run_identity(REPO_ROOT)}}
 
 

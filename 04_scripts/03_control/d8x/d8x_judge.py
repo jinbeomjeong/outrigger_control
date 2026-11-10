@@ -581,6 +581,7 @@ def judge_ra_file(path: Path, k1: str, points: dict, f_d8: float, expected_tag: 
     problems = [] if stages == wanted else [f"{path.name}: stages {stages} != {wanted}"]
     if run_meta.get("k1") != k1:  # rev3 E-6d: the request recorded = the arm
         problems.append(f"{path.name}: meta.d8x.k1 {run_meta.get('k1')!r} != {k1!r} (E-6d)")
+    problems += _seal_record_problems(f"{path.name} meta.d8x", run_meta.get("rules_seals"))
     arm_tag = spec.arm_tag(expected_tag, k1)
     problems += _tag_histogram_problems(path.name, [r.get("controller_tag")
                                                     for r in doc.get("runs", [])], {arm_tag})
@@ -595,6 +596,33 @@ def judge_ra_file(path: Path, k1: str, points: dict, f_d8: float, expected_tag: 
         problems.append(f"{path.name}: ids outside the set {extra[:5]}, absent {absent[:5]} (E-5)")
     summary = _summarise(rows, spec.EXPECTED_COUNTS[f"ra_{k1}"], f"ra_{k1}")
     return {"summary": summary, "rows": rows, "problems": problems}
+
+
+def _seal_record_problems(label: str, seals) -> list[str]:
+    """Rev6 4: a run record carries the seal of every rules file in force, each matching."""
+    if not isinstance(seals, dict):
+        return [f"{label}: no rules_seals record (rev6 4)"]
+    wrong = [rev for rev, _, sealed in spec.RULES_FILES
+             if (seals.get(rev) or {}).get("sha256") != sealed
+             or (seals.get(rev) or {}).get("ok") is not True]
+    return [f"{label}: rules_seals missing / not ok for {wrong} (rev6 4)"] if wrong else []
+
+
+def _rc_identity_seal_problems(path: Path) -> list[str]:
+    """R-c: the seals of every start / end record in ``<out>.identity.json`` (run_v5)."""
+    sidecar = path.with_name(path.stem + ".identity.json")
+    if not sidecar.is_file():
+        return [f"{sidecar.name} missing (I-1 / rev6 4)"]
+    stored = _load_json(sidecar)
+    entries = [(moment, i, entry) for moment in ("start", "end")
+               for i, entry in enumerate(stored.get(moment) or [])]
+    if not entries:
+        return [f"{sidecar.name}: no start / end identity records"]
+    problems = []
+    for moment, i, entry in entries:
+        problems += _seal_record_problems(f"{sidecar.name} {moment}[{i}]",
+                                          entry.get("rules_seals"))
+    return problems
 
 
 def _tag_histogram_problems(label: str, tags: list, allowed: set[str]) -> list[str]:
@@ -615,8 +643,11 @@ def _judge_ra_run(run, k1, angles, f_d8, expected_tag, seen, problems) -> dict:
     if run_id in seen:
         problems.append(f"duplicate id {run_id} (E-5)")
     seen.add(run_id)
+    # every returned row carries the join key of rev6 1 (R-a: id + K1 arm), errors too
+    identity = {"id": run_id, "k1": k1,
+                **{key: run.get(key) for key in ("point", "level", "mast", "stage", "variant")}}
     if "error" in run:
-        return {"id": run_id, "verdict": "not_judgeable", "reason": run["error"][:200]}
+        return {**identity, "verdict": "not_judgeable", "reason": str(run["error"])[:200]}
     reasons = []
     point = run.get("point")
     if point not in angles or not _angles_match(run.get("angles_deg"), angles[point],
@@ -630,11 +661,9 @@ def _judge_ra_run(run, k1, angles, f_d8, expected_tag, seen, problems) -> dict:
     try:
         judged = judge_metrics(run.get("d8x") or {}, run.get("fails"), f_d8)
     except NotJudgeable as exc:
-        return {"id": run_id, "verdict": "not_judgeable", "reason": str(exc)}
+        return {**identity, "verdict": "not_judgeable", "reason": str(exc)}
     judged["not_judgeable"] += reasons
-    return {"id": run_id, "point": point, "level": run.get("level"), "mast": run.get("mast"),
-            "stage": run.get("stage"), "variant": run.get("variant"), "k1": k1,
-            "commands_sha256": run.get("commands_sha256"), "verdict": _verdict(judged),
+    return {**identity, "commands_sha256": run.get("commands_sha256"), "verdict": _verdict(judged),
             **{k: judged[k] for k in ("fail_items", "not_judgeable", "values")},
             "liftoff_slow_count": judged["counts"]["liftoff_slow_count"]}
 
@@ -663,7 +692,8 @@ def _bundle_result(parts: dict, label: str) -> tuple[int, dict]:
                     "k1_rows_failed": [r[id_key] for r in parts["on"]["rows"]
                                        if r["verdict"] == "fail"],
                     "problems": problems,
-                    "rows": [r for part in parts.values() for r in part["rows"]]}
+                    "rows": [r for part in parts.values() for r in part["rows"]],
+                    "rows_off": parts["off"]["rows"], "rows_on": parts["on"]["rows"]}
 
 
 def judge_rc_file(path: Path, k1: str, points: dict, f_d8: float) -> dict:
@@ -674,6 +704,7 @@ def judge_rc_file(path: Path, k1: str, points: dict, f_d8: float) -> dict:
     allowed = {spec.EXPECTED_TAGS[setting][k1] for setting in spec.RC_SETTINGS}
     problems = _tag_histogram_problems(path.name, [line.get("controller_tag") for line in lines
                                                    if "error" not in line], allowed)
+    problems += _rc_identity_seal_problems(path)
     for line in lines:
         rows.append(_judge_rc_line(line, k1, angles, f_d8, seen, problems))
     extra = sorted(seen - set(expected))
@@ -690,13 +721,30 @@ def _rc_key(line: dict) -> str:
     return f"{row.get('key')}|{job.get('setting')}|e{float(job.get('eps', 0.0)):g}"
 
 
+RC_JOIN_FIELDS = ("slope_name", "level", "crawler_k_scale", "setting", "eps")
+"""Rev6 1 R-c join key (with the K1 arm): ``job.d1.slope_name / level / crawler_k_scale``,
+``job.setting``, ``job.eps``."""
+
+
+def _rc_identity(line: dict, key: str, k1: str) -> dict:
+    """The rev6 1 join fields of an R-c line, on every returned row (errors too); ``floor``
+    is the same value as ``slope_name`` (older output name)."""
+    job = line.get("job") or {}
+    row = job.get("d1") or {}
+    return {"key": key, "k1": k1, "slope_name": row.get("slope_name"),
+            "floor": row.get("slope_name"), "level": row.get("level"),
+            "crawler_k_scale": row.get("crawler_k_scale"), "setting": job.get("setting"),
+            "eps": job.get("eps")}
+
+
 def _judge_rc_line(line, k1, angles, f_d8, seen, problems) -> dict:
     key = _rc_key(line)
     if key in seen:
         problems.append(f"duplicate key {key} (E-5)")
     seen.add(key)
+    identity = _rc_identity(line, key, k1)
     if "error" in line:
-        return {"key": key, "verdict": "not_judgeable", "reason": str(line["error"])[:200]}
+        return {**identity, "verdict": "not_judgeable", "reason": str(line["error"])[:200]}
     job = line["job"]
     setting = job["setting"]
     d1 = line.get("d1") or {}
@@ -716,11 +764,9 @@ def _judge_rc_line(line, k1, angles, f_d8, seen, problems) -> dict:
     try:
         judged = judge_metrics(d8x, d1.get("fail_items"), f_d8)
     except NotJudgeable as exc:
-        return {"key": key, "verdict": "not_judgeable", "reason": str(exc)}
+        return {**identity, "verdict": "not_judgeable", "reason": str(exc)}
     judged["not_judgeable"] += reasons
-    return {"key": key, "floor": floor, "level": job["d1"].get("level"),
-            "crawler_k_scale": job["d1"].get("crawler_k_scale"), "setting": setting,
-            "eps": job.get("eps"), "k1": k1, "commands_sha256": line.get("commands_sha256"),
+    return {**identity, "commands_sha256": line.get("commands_sha256"),
             "verdict": _verdict(judged),
             **{k: judged[k] for k in ("fail_items", "not_judgeable", "values")},
             "liftoff_slow_count": judged["counts"]["liftoff_slow_count"]}
