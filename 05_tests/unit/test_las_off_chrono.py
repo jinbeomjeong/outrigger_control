@@ -23,6 +23,8 @@ VB_STAGE3_RECORD = (PROJECT_ROOT / "07_results" / "S8" / "v5s3_VB_E_G4_Fs4_20261
                     / "E_G4_Fs4")
 """Stage 3 VB event row (``final_C4G2_P3``), stored (as ``test_chrono_t45_replay``)."""
 LAS_TAG_OF = {"final_C4G2": "final_C4G2_LAS", "final_C4G2_P3": "final_C4G2_P3_LAS"}
+CURRENT_TAG_OF = {"final_C4G2": "final_C4G2_LAS_K1", "final_C4G2_P3": "final_C4G2_P3_LAS_K1"}
+"""Tags of the run-time preset since the K1 switch (``las_k1_rules_adopt.md`` 9.2)."""
 
 
 def _import(name: str, folder: Path):
@@ -83,8 +85,10 @@ def test_las_off_builds_the_pre_switch_preset_and_records_it(run_s9) -> None:
 
     args = _level_args(run_s9, ["level", "--soil", "J1", "--las-off"])
     config, meta = run_s9.level_c2_config_of_args(args)
-    assert config == C2Config().with_10hz_d1(liftoff_approach_slow=False)
+    assert config == C2Config().with_10hz_d1(liftoff_approach_slow=False,
+                                             flat_soil_margin_order_gate=False)
     assert meta["preset"] == run_s9.LAS_OFF_PRESET and meta["las_off"] is True
+    assert meta["k1_order_gate"] == "preset" and meta["k1_order_gate_effective"] is False
     assert run_s9.controller_expectation(config, run_s9.FINAL_CONTROLLER)["ok"]
     assert not run_s9.controller_expectation(config, run_s9.FINAL_LAS_CONTROLLER)["ok"]
     assert "las_off" in run_s9.SOURCE_ARGS_IGNORE
@@ -98,19 +102,21 @@ def _level_tokens(row: dict) -> list[str]:
 @pytest.mark.parametrize("batch_name", ["V5_V0V_BATCH", "V5_S6_SEED_BATCH"])
 def test_las_tags_pass_the_controller_check_of_the_v0v_and_s6seed_rows(
         run_s9, s9_batch, batch_name) -> None:
-    """W-4: ``level --expect-controller final_C4G2_LAS`` / ``final_C4G2_P3_LAS`` is accepted
-    on the run-time (switched) preset; the stored tag needs ``--las-off``."""
+    """W-4: ``level --expect-controller final_C4G2_LAS_K1`` / ``final_C4G2_P3_LAS_K1`` is
+    accepted on the run-time (switched) preset, the LAS-b tags before the K1 switch are not; the
+    stored tag needs ``--las-off``."""
     rows = [row for row in s9_batch.batches()[getattr(s9_batch, batch_name)]
             if "--expect-controller" in row["argv"]]
     assert rows
     for row in rows:
         tokens = _level_tokens(row)
         stored_tag = tokens[tokens.index("--expect-controller") + 1]
-        las_tag = LAS_TAG_OF[stored_tag]
-        las_args = _level_args(run_s9, _with_tag(tokens, las_tag))
-        assert las_args.expect_controller == las_tag
-        config, _ = _runtime_config(run_s9, las_args)
-        assert run_s9.controller_expectation(config, las_tag)["ok"], row["case"]
+        current_tag = CURRENT_TAG_OF[stored_tag]
+        current_args = _level_args(run_s9, _with_tag(tokens, current_tag))
+        assert current_args.expect_controller == current_tag
+        config, _ = _runtime_config(run_s9, current_args)
+        assert run_s9.controller_expectation(config, current_tag)["ok"], row["case"]
+        assert not run_s9.controller_expectation(config, LAS_TAG_OF[stored_tag])["ok"], row["case"]
         assert not run_s9.controller_expectation(config, stored_tag)["ok"], row["case"]
         old_args = _level_args(run_s9, s9_batch.with_las_off(row, tokens))
         old_config, _ = _runtime_config(run_s9, old_args)
@@ -161,7 +167,8 @@ def test_run_s8c_las_off_gives_the_preset_keyword_block() -> None:
     run_s8c = _import("run_S8C", CHRONO_SCRIPTS)
     switched = C2Config().with_10hz_d1()
     assert switched.liftoff_approach_slow.enable
-    assert run_s8c.with_las_off(switched) == C2Config().with_10hz_d1(liftoff_approach_slow=False)
+    assert run_s8c.with_las_off(switched) == C2Config().with_10hz_d1(
+        liftoff_approach_slow=False, flat_soil_margin_order_gate=False)
 
 
 # ------------------------------------------------------------------------------- replay

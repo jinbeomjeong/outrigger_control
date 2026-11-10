@@ -370,10 +370,12 @@ def controller_tag(options, controller_name: str = "C2", config=None) -> str:
     """Rules 1 / 7 G-2 tag: V0 ``final_C4G2``, VB C2 ``final_C4G2_P3``, U-6 ``ABL`` / ``IND``.
 
     ``config`` = the C2 config the run built: with LAS-b on (switch 2026-11-08) the tag gets
-    ``_LAS`` (``final_C4G2_LAS``, ``final_C4G2_P3_LAS``, ``ABL_LAS``). The setting definition
-    (:func:`definition`, its sealed digest) is built without it and keeps the tag before it.
+    ``_LAS`` (``final_C4G2_LAS``, ``final_C4G2_P3_LAS``, ``ABL_LAS``), with the K1 order gate on
+    (K1 switch, ``las_k1_rules_adopt.md`` 9.2) then ``_K1`` (``final_C4G2_P3_LAS_K1``,
+    ``ABL_LAS_K1``). The setting definition (:func:`definition`, its sealed digest) is built
+    without it and keeps the tag before them.
     """
-    from outrigger_sim.hydraulics.v5_options import is_liftoff_slow_on, with_liftoff_slow_tag
+    from outrigger_sim.hydraulics.v5_options import with_switch_tags
 
     if controller_name in (TAG_ABL, *INDUSTRY_NAMES):
         tag = controller_name
@@ -381,7 +383,7 @@ def controller_tag(options, controller_name: str = "C2", config=None) -> str:
         tag = TAG_VB
     else:
         tag = TAG_V0
-    return with_liftoff_slow_tag(tag) if is_liftoff_slow_on(config) else tag
+    return with_switch_tags(tag, config)
 
 
 def has_rod_reading(controller) -> bool:

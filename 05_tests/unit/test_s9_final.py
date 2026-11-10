@@ -210,13 +210,16 @@ def test_controller_expectation_on_the_preset() -> None:
         assert not rec["ok"]
         bad = {c["path"] for c in rec["checks"] if not c["ok"]}
         assert bad <= {"lift_stroke_guard.soil_stop", "slope_clearance_margin.flat_soil_margin_m"} and bad
-    # the final configuration (both switches on, LAS-b off as before 2026-11-08) passes; P37t / ZIC blocks absent = ok
-    on = C2Config().with_10hz_d1(soil_stop=True, flat_soil_margin_m=0.03, liftoff_approach_slow=False)
+    # the final configuration (both switches on, LAS-b and the K1 gate off as before 2026-11-08) passes; P37t / ZIC
+    # blocks absent = ok
+    on = C2Config().with_10hz_d1(soil_stop=True, flat_soil_margin_m=0.03, liftoff_approach_slow=False,
+                                 flat_soil_margin_order_gate=False)
     rec = run_S9.controller_expectation(on, run_S9.FINAL_CONTROLLER)
     assert rec["ok"], [c for c in rec["checks"] if not c["ok"]]
     assert on.slope_clearance_margin.flat_soil_margin_m == 0.03 and on.lift_stroke_guard.soil_stop_scope == "any_loc"
     # one rule off at a time -> refused at that path only
-    no_r4 = C2Config().with_10hz_d1(soil_stop=True, flat_soil_margin_m=0.0, liftoff_approach_slow=False)
+    no_r4 = C2Config().with_10hz_d1(soil_stop=True, flat_soil_margin_m=0.0, liftoff_approach_slow=False,
+                                    flat_soil_margin_order_gate=False)
     rec = run_S9.controller_expectation(no_r4, run_S9.FINAL_CONTROLLER)
     assert [c["path"] for c in rec["checks"] if not c["ok"]] == ["slope_clearance_margin.flat_soil_margin_m"]
     off = replace(on, lift_stroke_guard=replace(on.lift_stroke_guard, soil_stop=False))
@@ -264,14 +267,17 @@ def test_before_c4g2_tag_needs_the_old_preset() -> None:
 
     assert run_S9.BEFORE_C4G2_CONTROLLER == "final_SGS_R4"
     switched = run_S9.controller_expectation(C2Config().with_10hz_d1(), run_S9.BEFORE_C4G2_CONTROLLER)
-    assert [c["path"] for c in switched["checks"] if not c["ok"]] == ["touch_twist_hold.enable",
-                                                                      "liftoff_approach_slow.enable"]
-    old = C2Config().with_10hz_d1(touch_twist_hold=False, liftoff_approach_slow=False)
+    assert [c["path"] for c in switched["checks"] if not c["ok"]] == [
+        "slope_clearance_margin.flat_soil_margin_order_gate", "touch_twist_hold.enable",
+        "liftoff_approach_slow.enable"]
+    old = C2Config().with_10hz_d1(touch_twist_hold=False, liftoff_approach_slow=False,
+                                  flat_soil_margin_order_gate=False)
     assert run_S9.controller_expectation(old, run_S9.BEFORE_C4G2_CONTROLLER)["ok"]
     rec = run_S9.controller_expectation(old, run_S9.FINAL_CONTROLLER)
     assert {c["path"] for c in rec["checks"] if not c["ok"]} == {"touch_twist_hold.enable",
                                                                  "touch_twist_hold.vector_ramp"}
-    k1 = C2Config().with_10hz_d1(reapproach_retrigger_two_samples=True, liftoff_approach_slow=False)
+    k1 = C2Config().with_10hz_d1(reapproach_retrigger_two_samples=True, liftoff_approach_slow=False,
+                                 flat_soil_margin_order_gate=False)
     rec = run_S9.controller_expectation(k1, run_S9.FINAL_CONTROLLER)
     assert [c["path"] for c in rec["checks"] if not c["ok"]] == ["r8.lifted_reapproach.retrigger_samples"]
 
@@ -286,19 +292,48 @@ def test_las_tags_take_the_switched_preset_and_the_old_tags_refuse_it() -> None:
 
     assert run_S9.FINAL_LAS_CONTROLLER == LAS_CONTROLLER_TAG == "final_C4G2_LAS"
     assert run_S9.FINAL_P3_LAS_CONTROLLER == EXTEND_START_LAS_CONTROLLER_TAG == "final_C4G2_P3_LAS"
-    preset = C2Config().with_10hz_d1()
-    assert run_S9.controller_expectation(preset, run_S9.FINAL_LAS_CONTROLLER)["ok"]
-    rec = run_S9.controller_expectation(preset, run_S9.FINAL_CONTROLLER)
+    pre_k1 = C2Config().with_10hz_d1(flat_soil_margin_order_gate=False)  # the LAS-b preset before the K1 switch
+    assert run_S9.controller_expectation(pre_k1, run_S9.FINAL_LAS_CONTROLLER)["ok"]
+    rec = run_S9.controller_expectation(pre_k1, run_S9.FINAL_CONTROLLER)
     assert [c["path"] for c in rec["checks"] if not c["ok"]] == ["liftoff_approach_slow.enable"]
-    before = C2Config().with_10hz_d1(liftoff_approach_slow=False)
+    before = C2Config().with_10hz_d1(liftoff_approach_slow=False, flat_soil_margin_order_gate=False)
     assert run_S9.controller_expectation(before, run_S9.FINAL_CONTROLLER)["ok"]
     rec = run_S9.controller_expectation(before, run_S9.FINAL_LAS_CONTROLLER)
     assert [c["path"] for c in rec["checks"] if not c["ok"]] == ["liftoff_approach_slow.enable"]
-    other_rho = replace(preset, liftoff_approach_slow=replace(preset.liftoff_approach_slow, rho_on=0.2))
+    other_rho = replace(pre_k1, liftoff_approach_slow=replace(pre_k1.liftoff_approach_slow, rho_on=0.2))
     rec = run_S9.controller_expectation(other_rho, run_S9.FINAL_LAS_CONTROLLER)
     assert [c["path"] for c in rec["checks"] if not c["ok"]] == ["liftoff_approach_slow.rho_on"]
     a = run_S9.build_parser().parse_args(["level", "--soil", "J1", "--expect-controller", "final_C4G2_P3_LAS"])
     assert a.expect_controller == run_S9.FINAL_P3_LAS_CONTROLLER
+
+
+def test_k1_tags_take_the_switched_preset_and_the_las_tags_refuse_it() -> None:
+    """K1 switch (``las_k1_rules_adopt.md`` 9.2): the preset is final_C4G2_LAS_K1 / final_C4G2_P3_LAS_K1; every tag
+    before it checks the order gate off and refuses the switched preset loudly."""
+    from outrigger_sim.control.c2 import C2Config
+    from outrigger_sim.hydraulics.v5_options import (
+        EXTEND_START_LAS_K1_CONTROLLER_TAG,
+        LAS_K1_CONTROLLER_TAG,
+    )
+
+    gate = "slope_clearance_margin.flat_soil_margin_order_gate"
+    assert run_S9.FINAL_LAS_K1_CONTROLLER == LAS_K1_CONTROLLER_TAG == "final_C4G2_LAS_K1"
+    assert run_S9.FINAL_P3_LAS_K1_CONTROLLER == EXTEND_START_LAS_K1_CONTROLLER_TAG == "final_C4G2_P3_LAS_K1"
+    preset = C2Config().with_10hz_d1()
+    assert run_S9.controller_expectation(preset, run_S9.FINAL_LAS_K1_CONTROLLER)["ok"]
+    assert dict(run_S9.CONTROLLER_EXPECTATIONS[run_S9.FINAL_P3_LAS_K1_CONTROLLER])[gate] is True
+    for old_tag in (run_S9.FINAL_LAS_CONTROLLER, run_S9.FINAL_P3_LAS_CONTROLLER, run_S9.FINAL_CONTROLLER,
+                    run_S9.FINAL_P3_CONTROLLER, run_S9.BEFORE_C4G2_CONTROLLER):
+        assert dict(run_S9.CONTROLLER_EXPECTATIONS[old_tag])[gate] is False, old_tag
+    rec = run_S9.controller_expectation(preset, run_S9.FINAL_LAS_CONTROLLER)
+    assert [c["path"] for c in rec["checks"] if not c["ok"]] == [gate]
+    pre_k1 = C2Config().with_10hz_d1(flat_soil_margin_order_gate=False)
+    rec = run_S9.controller_expectation(pre_k1, run_S9.FINAL_LAS_K1_CONTROLLER)
+    assert [c["path"] for c in rec["checks"] if not c["ok"]] == [gate]
+    assert run_S9.CONTROLLER_ABSENT_OR_OFF[run_S9.FINAL_LAS_K1_CONTROLLER] == ("floor_twist_ledger",
+                                                                                "attitude_integral_clamp")
+    a = run_S9.build_parser().parse_args(["level", "--soil", "J1", "--expect-controller", "final_C4G2_P3_LAS_K1"])
+    assert a.expect_controller == run_S9.FINAL_P3_LAS_K1_CONTROLLER
 
 
 def test_old_controller_name_is_refused() -> None:

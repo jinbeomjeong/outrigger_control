@@ -60,7 +60,11 @@ def geometry() -> C2Geometry:
 
 
 def r4_config(flat_soil_margin_m: float = FLAT_MARGIN_M, **loc_revoke_changes) -> C2Config:
-    config = margin_config(flat_soil_margin_m=flat_soil_margin_m)
+    # R4 alone: the K1 order gate (on in the preset since the K1 switch) is pinned off here and
+    # has its own benches in test_c2_k1.py
+    config = margin_config(
+        flat_soil_margin_m=flat_soil_margin_m, flat_soil_margin_order_gate=False
+    )
     if loc_revoke_changes:
         config = replace(config, loc_revoke=replace(config.loc_revoke, **loc_revoke_changes))
     return config
