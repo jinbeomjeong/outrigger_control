@@ -111,11 +111,14 @@ D8X_RULES_REV3 = "06_analysis/02_control/d8x/d8x_rules_rev3.md"
 D8X_RULES_REV3_SHA256 = "2318fb5cf75b64b525c515566776ed1ec6cbb10743621edc04c092d6774c7301"
 D8X_RULES_REV4 = "06_analysis/02_control/d8x/d8x_rules_rev4.md"
 D8X_RULES_REV4_SHA256 = "5233c517e6c0d17b0e26e902673e0d6990532ed1c54c82ae0801e688d50702a5"
-D8X_RULES_REV = "rev4"
+D8X_RULES_REV5 = "06_analysis/02_control/d8x/d8x_rules_rev5.md"
+D8X_RULES_REV5_SHA256 = "63437019eaee2340fbbfc45efdcf78bfc5ba314f83085d55f19e323c6f5ffabe"
+D8X_RULES_REV = "rev5"
 """The rules in force: the original + rev1 (rev1 replaces 1.1-1.3, the 4.4 floor name ``fup3.7`` -> ``fup3.6``,
 5.1 coordinates and 9.3; user decision 2026-11-10 after G0: nose-up half axis 3.6 deg) + rev2 (interpretation:
 per-engine settle map 1 / E-4b, tag and LAS-b 4, run length 5, scenario group 6, cad part 7) + rev3 (K1 switch:
-tags ``_LAS_K1``, K1 off arms install False, E-6a..f, G0 60 recomputed) + rev4 (F-1: K1-on arm rows join G1)."""
+tags ``_LAS_K1``, K1 off arms install False, E-6a..f, G0 60 recomputed) + rev4 (F-1: K1-on arm rows join G1) +
+rev5 (probe disclosure, V-2 both arms, manual-application order, Chrono E-6d keys)."""
 D8X_EXPECTED_TAG = "final_C4G2_LAS_K1"
 """The Chrono tag expected since the K1 switch (V0 preset: LAS-b + the R4c30 order gate, ``v5_options.
 LAS_K1_CONTROLLER_TAG``; rev2 4 had ``final_C4G2_LAS`` at sealing). ``--expect-controller`` replaces it only for

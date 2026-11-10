@@ -29,10 +29,11 @@ F_D8 = judge.f_d8_N()
 # --- seals and points -----------------------------------------------------------------------
 def test_all_rules_files_match_their_seals() -> None:
     report = spec.seal_report()
-    assert set(report) == {"original", "rev1", "rev2", "rev3", "rev4"}
+    assert set(report) == {"original", "rev1", "rev2", "rev3", "rev4", "rev5"}
     assert report["rev2"]["sealed"].startswith("5f3fa620")
     assert report["rev3"]["sealed"].startswith("2318fb5c")
     assert report["rev4"]["sealed"].startswith("5233c517")
+    assert report["rev5"]["sealed"].startswith("63437019")
     assert all(entry["ok"] for entry in report.values()), report
 
 
@@ -41,9 +42,10 @@ def test_stage2_rules_constants_match_the_spec() -> None:
     import s6_stage2 as st  # noqa: PLC0415
 
     sealed = {rev: sha for rev, _, sha in spec.RULES_FILES}
-    assert st.D8X_RULES_REV == spec.LATEST_RULES_REV == "rev4"
+    assert st.D8X_RULES_REV == spec.LATEST_RULES_REV == "rev5"
     assert st.D8X_RULES_REV3_SHA256 == sealed["rev3"]
     assert st.D8X_RULES_REV4_SHA256 == sealed["rev4"]
+    assert st.D8X_RULES_REV5_SHA256 == sealed["rev5"]
 
 
 def test_rev3_rev4_have_no_point_tables_and_keep_the_point_file() -> None:
@@ -515,8 +517,15 @@ def test_scenario_groups() -> None:
 
 
 # --- judge-chrono ------------------------------------------------------------------------------
+GATES_ALL_TRUE = {"k1_order_gate": True, "controller_meta_order_gate": True,
+                  "k1_order_gate_matches_meta": True, "settings": True}
+"""The four run records of rev5 5 (``settings`` = controller_meta ... flat_soil_margin_order_gate);
+``_MISSING`` drops a key."""
+_MISSING = object()
+
+
 def _chrono_case(batch: Path, name: str, *, ready_s: float | None, end_s: float,
-                 k1_gate=True, meta_gate=True) -> None:
+                 gates: dict | None = None) -> None:
     from outrigger_sim.control.target import CrawlerSettleMap
 
     case_dir = batch / name
@@ -531,9 +540,16 @@ def _chrono_case(batch: Path, name: str, *, ready_s: float | None, end_s: float,
                       "controller_tag": "final_C4G2_LAS_K1", "liftoff_slow_enabled": True,
                       "settle_map": {"kind": "identity",
                                      "coefficients": CrawlerSettleMap.identity().to_meta()},
-                      "scenario_group": "D8", "k1_order_gate": k1_gate},
-              "controller_meta": {"slope_clearance_margin": {"settings": {
-                  "flat_soil_margin_order_gate": meta_gate}}}}
+                      "scenario_group": "D8"},
+              "controller_meta": {"slope_clearance_margin": {"settings": {}}}}
+    for key, value in {**GATES_ALL_TRUE, **(gates or {})}.items():
+        if value is _MISSING:
+            continue
+        if key == "settings":
+            result["controller_meta"]["slope_clearance_margin"]["settings"][
+                "flat_soil_margin_order_gate"] = value
+        else:
+            result["d8x"][key] = value
     (case_dir / "result.json").write_text(json.dumps(result), encoding="utf-8")
     metrics = {"case": name, "times_s": {"touch": 20.0, "liftoff": 22.0, "ready": ready_s,
                                          "end": end_s},
@@ -553,27 +569,56 @@ def test_judge_chrono_row_and_the_e2_exception(tmp_path, ready_s, end_s, verdict
     row = next(r for r in spec.chrono_rows(None, None) if r["name"] == name)
     metrics = json.loads((tmp_path / "verify_S8C.json").read_text(encoding="utf-8"))["metrics"]
     judged = judge.judge_chrono_row(row, metrics[0], tmp_path / name, F_D8, (0.0, -3.6),
-                                    "final_C4G2_LAS_K1")
+                                    "final_C4G2_LAS_K1", prelaunch_k1=True)
     assert judged["verdict"] == verdict, judged
     if verdict == "fail":
         assert "J5" in judged["fail_items"]
 
 
-@pytest.mark.parametrize(("k1_gate", "meta_gate", "verdict"),
-                         [(True, True, "pass"), (False, True, "not_judgeable"),
-                          (True, False, "not_judgeable"), (True, None, "not_judgeable")])
-def test_judge_chrono_e6d_needs_both_gate_records_true(tmp_path, k1_gate, meta_gate,
-                                                       verdict) -> None:
-    """Rev3 E-6d: d8x ``k1_order_gate`` and the controller_meta gate both True."""
+def _judge_gate_case(tmp_path, gates: dict, prelaunch_k1=True) -> dict:
     name = "D8X_K24_top_fup3.6_Fs4"
-    _chrono_case(tmp_path, name, ready_s=60.0, end_s=80.0, k1_gate=k1_gate, meta_gate=meta_gate)
+    _chrono_case(tmp_path, name, ready_s=60.0, end_s=80.0, gates=gates)
     row = next(r for r in spec.chrono_rows(None, None) if r["name"] == name)
     metrics = json.loads((tmp_path / "verify_S8C.json").read_text(encoding="utf-8"))["metrics"]
-    judged = judge.judge_chrono_row(row, metrics[0], tmp_path / name, F_D8, (0.0, -3.6),
-                                    spec.EXPECTED_TAGS["chrono"])
-    assert judged["verdict"] == verdict, judged
-    if verdict == "not_judgeable":
-        assert any(r.startswith("E-6d") for r in judged["not_judgeable"])
+    return judge.judge_chrono_row(row, metrics[0], tmp_path / name, F_D8, (0.0, -3.6),
+                                  spec.EXPECTED_TAGS["chrono"], prelaunch_k1=prelaunch_k1)
+
+
+def test_judge_chrono_e6d_all_five_true_passes(tmp_path) -> None:
+    assert _judge_gate_case(tmp_path, {})["verdict"] == "pass"
+
+
+@pytest.mark.parametrize("key", sorted(GATES_ALL_TRUE))
+@pytest.mark.parametrize("value", [False, None])
+def test_judge_chrono_e6d_each_record_on_its_own(tmp_path, key, value) -> None:
+    """Rev5 5: each of the five gate records is read on its own; one not True = not judgeable
+    (the other four true do not stand in for it)."""
+    judged = _judge_gate_case(tmp_path, {key: value})
+    assert judged["verdict"] == "not_judgeable"
+    assert any(r.startswith("E-6d") for r in judged["not_judgeable"])
+
+
+@pytest.mark.parametrize("key", sorted(GATES_ALL_TRUE))
+def test_judge_chrono_e6d_missing_record_is_not_judgeable(tmp_path, key) -> None:
+    with pytest.raises(judge.NotJudgeable, match="verify keys missing"):
+        _judge_gate_case(tmp_path, {key: _MISSING})
+
+
+@pytest.mark.parametrize("prelaunch_k1", [None, False])
+def test_judge_chrono_e6d_needs_the_prelaunch_row_k1(tmp_path, prelaunch_k1) -> None:
+    judged = _judge_gate_case(tmp_path, {}, prelaunch_k1=prelaunch_k1)
+    assert judged["verdict"] == "not_judgeable"
+    assert any("prelaunch.rows[case].k1_order_gate" in r for r in judged["not_judgeable"])
+
+
+def test_chrono_prelaunch_records_k1_per_case(tmp_path) -> None:
+    states = tmp_path / "states.json"
+    states.write_text("{}", encoding="utf-8")
+    record = judge._chrono_prelaunch(_Args(expected_tag=spec.EXPECTED_TAGS["chrono"],
+                                           start_states=str(states), threads=1, selection=None))
+    assert isinstance(record["rows"], dict) and record["rows"]
+    assert {row["k1_order_gate"] for row in record["rows"].values()} == {True}
+    assert all(name == row["name"] for name, row in record["rows"].items())
 
 
 def test_judge_chrono_missing_key_is_not_judgeable(tmp_path) -> None:
@@ -652,6 +697,28 @@ def _judgement(off: list[str], on: list[str] | None) -> dict:
     if on is None:  # a judgement written without the K1-on arm summary
         result.pop("gate_rows_on")
     return result
+
+
+def _report(tmp_path, ra: dict, rc: dict) -> tuple[int, dict]:
+    files = {}
+    for name, doc in (("g0", {"gate_G0": "pass"}), ("ra", ra), ("rc", rc)):
+        files[name] = tmp_path / f"{name}.json"
+        files[name].write_text(json.dumps(doc), encoding="utf-8")
+    return judge.run(["--out", str(tmp_path / "report.json"), "report",
+                      "--g0-judgement", str(files["g0"]), "--ra-judgement", str(files["ra"]),
+                      "--rc-judgement", str(files["rc"])]), json.loads(
+        (tmp_path / "report.json").read_text(encoding="utf-8"))
+
+
+@pytest.mark.parametrize("bundle", ["ra", "rc"])
+def test_report_without_k1_rows_failed_is_exit_2(tmp_path, bundle) -> None:
+    """Rev5 3.1-3 (B-4): a judgement without ``k1_rows_failed`` is a defective input, not 0."""
+    docs = {"ra": _judgement(["pass"], ["pass"]), "rc": _judgement(["pass"], ["pass"])}
+    docs[bundle].pop("k1_rows_failed")
+    status, report = _report(tmp_path, docs["ra"], docs["rc"])
+    assert status == judge.EXIT_NOT_JUDGEABLE
+    assert report["k1_rows_failed"][{"ra": "R-a", "rc": "R-c"}[bundle]] is None
+    assert report["gates"]["G1"] == "not_judgeable"
 
 
 def test_report_g1_takes_both_arms_and_a_missing_on_summary_is_not_judgeable(tmp_path) -> None:

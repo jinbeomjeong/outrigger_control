@@ -427,7 +427,10 @@ def _chrono_prelaunch(args) -> dict:
     selection = _load_json(Path(args.selection)) if args.selection else {}
     rows = spec.chrono_rows(selection.get("W", {}).get("chrono_floor"),
                             selection.get("V", {}).get("floor"))
-    return {"expected_tag": args.expected_tag, "rows": rows,
+    # rev5 5: per case the K1 gate the run must have (the expected tag's _K1)
+    is_k1_on = spec.is_order_gate_tag(args.expected_tag)
+    return {"expected_tag": args.expected_tag,
+            "rows": {row["name"]: {**row, "k1_order_gate": is_k1_on} for row in rows},
             "expected_count": spec.EXPECTED_COUNTS["C"],
             "start_states": _load_json(Path(args.start_states)), "threads": args.threads,
             "pool": "P", "selection": selection}
@@ -741,11 +744,13 @@ CHRONO_FIELDS = {
     "half_spans_deg": ("result.d8x.half_spans_deg",),
     "row_number": ("result.d8x.row",),
     "controller_tag": ("result.d8x.controller_tag",),
-    # rev3 2 / E-6d (cad-expert adds the d8x key; missing = not judgeable)
+    # rev3 2 / E-6d, rev5 5: four separate records (each read on its own, none stands in for
+    # another; missing = not judgeable). The fifth is the pre-launch row (judge_chrono_row).
     "k1_order_gate": ("result.d8x.k1_order_gate",),
-    "controller_meta_order_gate": (
-        "result.controller_meta.slope_clearance_margin.settings.flat_soil_margin_order_gate",
-        "result.d8x.controller_meta_order_gate"),
+    "controller_meta_order_gate": ("result.d8x.controller_meta_order_gate",),
+    "k1_order_gate_matches_meta": ("result.d8x.k1_order_gate_matches_meta",),
+    "controller_meta_settings_gate": (
+        "result.controller_meta.slope_clearance_margin.settings.flat_soil_margin_order_gate",),
     "liftoff_slow": ("result.d8x.liftoff_slow_enabled", "result.d8x.las_b",
                      "result.d8x.liftoff_approach_slow"),
     "settle_map": ("result.d8x.settle_map", "result.acceptance.controller_settle_map",
@@ -814,7 +819,10 @@ def _locked_bar(value) -> float | None:
 
 
 def judge_chrono_row(row: dict, entry: dict, case_dir: Path, f_d8: float,
-                     angles: tuple[float, float], expected_tag: str) -> dict:
+                     angles: tuple[float, float], expected_tag: str, *,
+                     prelaunch_k1=None) -> dict:
+    """One Chrono row. ``prelaunch_k1``: ``rows[<case>].k1_order_gate`` of the pre-launch
+    record (rev5 5); None (absent) makes the row not judgeable."""
     result_path = case_dir / "result.json"
     if not result_path.is_file():
         raise NotJudgeable(f"{row['name']}: {result_path} missing")
@@ -828,7 +836,7 @@ def judge_chrono_row(row: dict, entry: dict, case_dir: Path, f_d8: float,
     names = _event_names(values["events"])
     counts = event_counts(names)
     has_h4 = series["has_reanchor_phase"] or any(n.startswith("reanchor_started") for n in names)
-    reasons = _chrono_identity(row, values, angles, expected_tag, series, times)
+    reasons = _chrono_identity(row, values, angles, expected_tag, series, times, prelaunch_k1)
     items = {
         "J1": _at_least(values["J1_kN"] * 1e3 if _is_number(values["J1_kN"]) else None, f_d8),
         "J3": _is_number(values["J3_pad_min_kN"]) and values["J3_pad_min_kN"] > 0.0,
@@ -866,7 +874,7 @@ def judge_chrono_row(row: dict, entry: dict, case_dir: Path, f_d8: float,
                          "controller_tag": values["controller_tag"]}}
 
 
-def _chrono_identity(row, values, angles, expected_tag, series, times) -> list[str]:
+def _chrono_identity(row, values, angles, expected_tag, series, times, prelaunch_k1) -> list[str]:
     reasons = []
     if values["slope_limit_mode"] != "verification_ext":
         reasons.append(f"E-4 slope_limit_mode {values['slope_limit_mode']!r}")
@@ -889,10 +897,7 @@ def _chrono_identity(row, values, angles, expected_tag, series, times) -> list[s
     las = values["liftoff_slow"]
     las_on = las.get("enable") if isinstance(las, dict) else las
     reasons += _tag_problems(values["controller_tag"], expected_tag, las_on, True)
-    # rev3 E-6d: Chrono runs the preset (K1 on): the d8x record and the controller meta agree
-    if values["k1_order_gate"] is not True or values["controller_meta_order_gate"] is not True:
-        reasons.append(f"E-6d K1 gate d8x {values['k1_order_gate']!r} / controller_meta "
-                       f"{values['controller_meta_order_gate']!r}, both must be true")
+    reasons += _chrono_gate_problems(values, prelaunch_k1)
     reasons += _settle_map_problems(row, values["settle_map"])
     reasons += _scenario_problems(row, values["scenario_group"])
     ready = series["first_ready_s"]
@@ -905,6 +910,21 @@ def _chrono_identity(row, values, angles, expected_tag, series, times) -> list[s
             ready - times["ready"]) > READY_CROSS_CHECK_S:
         reasons.append(f"r8_series first READY {ready} vs verify {times.get('ready')}")
     return reasons
+
+
+CHRONO_GATE_KEYS = ("k1_order_gate", "controller_meta_order_gate", "k1_order_gate_matches_meta",
+                    "controller_meta_settings_gate")
+
+
+def _chrono_gate_problems(values: dict, prelaunch_k1) -> list[str]:
+    """Rev3 E-6d / rev5 5: Chrono runs the preset (K1 on): the four run records and the
+    pre-launch row value ``rows[<case>].k1_order_gate`` are each True."""
+    gates = {key: values.get(key) for key in CHRONO_GATE_KEYS}
+    gates["prelaunch.rows[case].k1_order_gate"] = prelaunch_k1
+    wrong = {key: value for key, value in gates.items() if value is not True}
+    if not wrong:
+        return []
+    return [f"E-6d K1 gate records not all true (rev5 5): {wrong}"]
 
 
 def _settle_map_problems(row: dict, settle_map) -> list[str]:
@@ -964,8 +984,13 @@ def cmd_judge_chrono(args) -> tuple[int, dict]:
         if angles is None:
             problems.append(f"{row['name']}: floor {row['floor']} has no point")
             continue
+        prelaunch_rows = prelaunch.get("rows")  # rev5 5: by case (a list = an older record)
+        prelaunch_row = (prelaunch_rows.get(row["name"]) if isinstance(prelaunch_rows, dict)
+                         else None)
+        prelaunch_k1 = None if prelaunch_row is None else prelaunch_row.get("k1_order_gate")
         try:
-            judged.append(judge_chrono_row(row, entry, case_dir, f_d8, angles, expected_tag))
+            judged.append(judge_chrono_row(row, entry, case_dir, f_d8, angles, expected_tag,
+                                           prelaunch_k1=prelaunch_k1))
         except NotJudgeable as exc:
             problems.append(str(exc))
     extra = sorted(set(entries) - {r["name"] for r in rows})
@@ -1163,16 +1188,24 @@ def cmd_report(args) -> tuple[int, dict]:
         "G3": {"recount_agrees": args.recount_agrees, "audit_post_clear": args.audit_post_clear,
                "carry_over_confirmed": args.carry_over_confirmed},
     }
+    # rev5 3.1-3: a missing k1_rows_failed is a defective input (None, not judgeable), never 0
+    k1_rows_failed = {"R-a": ra.get("k1_rows_failed"), "R-c": rc.get("k1_rows_failed")}
+    missing = sorted(name for name, value in k1_rows_failed.items() if value is None)
+    if missing:
+        gates["G1"] = "not_judgeable"
     flags = _flags(ra, rc, chrono, g0, invariance, f_d8)
     grade = _grade(gates, flags, len(chrono))
-    return {"pass": EXIT_PASS, "conditional": EXIT_PASS, "fail": EXIT_FAIL}.get(
-        grade, EXIT_NOT_JUDGEABLE), {
-            "grade": grade, "gates": gates, "flags": flags,
-            # rev4 1.3: K1-on arm (i) / (ii) hits are records, not grade flags
-            "flag_records_k1_on": _value_flags(_k1_on_rows(ra, rc), f_d8),
-            # rev4 1.4: set these against path 2 bundles[...].k1_rows_fail by hand
-            "k1_rows_failed": {"R-a": ra.get("k1_rows_failed", []),
-                               "R-c": rc.get("k1_rows_failed", [])}}
+    status = {"pass": EXIT_PASS, "conditional": EXIT_PASS, "fail": EXIT_FAIL}.get(
+        grade, EXIT_NOT_JUDGEABLE)
+    if missing:
+        status = EXIT_NOT_JUDGEABLE
+    return status, {
+        "grade": grade, "gates": gates, "flags": flags,
+        # rev4 1.3: K1-on arm (i) / (ii) hits are records, not grade flags
+        "flag_records_k1_on": _value_flags(_k1_on_rows(ra, rc), f_d8),
+        # rev4 1.4 / rev5 3.1-4: set these against path 2 bundles[...].k1_rows_fail by hand
+        "k1_rows_failed": k1_rows_failed,
+        "problems": [f"{name} judgement has no k1_rows_failed (rev5 3.1-3)" for name in missing]}
 
 
 def _gate_of(summaries: list, problems: list) -> str:

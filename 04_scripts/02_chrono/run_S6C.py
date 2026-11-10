@@ -1801,7 +1801,8 @@ def d8x_rules_meta() -> dict[str, Any]:
             "rules_rev1_sha256": st.D8X_RULES_REV1_SHA256, "rules_rev2": st.D8X_RULES_REV2,
             "rules_rev2_sha256": st.D8X_RULES_REV2_SHA256, "rules_rev3": st.D8X_RULES_REV3,
             "rules_rev3_sha256": st.D8X_RULES_REV3_SHA256, "rules_rev4": st.D8X_RULES_REV4,
-            "rules_rev4_sha256": st.D8X_RULES_REV4_SHA256}
+            "rules_rev4_sha256": st.D8X_RULES_REV4_SHA256, "rules_rev5": st.D8X_RULES_REV5,
+            "rules_rev5_sha256": st.D8X_RULES_REV5_SHA256}
 
 
 def settle_map_record(config) -> dict[str, Any]:
