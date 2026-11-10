@@ -1821,6 +1821,23 @@ def las_b_enabled(config) -> bool:
     return bool(getattr(getattr(config, "liftoff_approach_slow", None), "enable", False))
 
 
+def k1_order_gate_of(config) -> bool:
+    """The LAS-b K1 order gate of the built controller ``config``
+    (``slope_clearance_margin.flat_soil_margin_order_gate``; rev3 2 ``k1_order_gate``, the value
+    ``d8x_record.effective_k1`` reads from ``controller.config``)."""
+    return bool(config.slope_clearance_margin.flat_soil_margin_order_gate)
+
+
+def controller_meta_order_gate(controller_meta: Mapping[str, Any] | None) -> bool | None:
+    """``controller_meta.slope_clearance_margin.settings.flat_soil_margin_order_gate`` of a run (rev3 2 /
+    E-6d, the ``C2Controller.meta()`` record of the same gate); None without the meta or the key."""
+    if controller_meta is None:
+        return None
+    settings = (controller_meta.get("slope_clearance_margin") or {}).get("settings") or {}
+    value = settings.get("flat_soil_margin_order_gate")
+    return None if value is None else bool(value)
+
+
 def d8x_row_of(case: BundleCCase):
     """The rules 4.4 row of a D8x case with its floor resolved (rows 6 / 19: W / V = the case floor)."""
     row = next(r for r in st.D8X_ROWS if r.number == case.d8x_row)
@@ -1841,13 +1858,17 @@ def d8x_length_record(case: BundleCCase) -> dict[str, Any]:
 
 def d8x_record(case: BundleCCase, config, expect_controller: str | None) -> dict[str, Any]:
     """Rev2 1 / 4 / 5 / 6 per-row record from the built controller ``config``: settle map (got / expected),
-    scenario group and id, controller tag / expected tag / LAS-b, T^_R / T_run. ``problems`` lists every rev2
-    mismatch (E-4b settle map, E-6 tag or LAS-b off, scenario group, run length); empty = the row may run."""
+    scenario group and id, controller tag / expected tag / LAS-b, the K1 order gate (rev3 2), T^_R / T_run.
+    ``problems`` lists every rev2 / rev3 mismatch (E-4b settle map, E-6 tag, LAS-b off or K1 gate != the
+    expected tag's ``_K1``, scenario group, run length); empty = the row may run."""
+    from outrigger_sim.hydraulics.v5_options import is_order_gate_tag
+
     row = d8x_row_of(case)
     engine = row.engine
     tag = controller_tag_of(config)
     expected_tag = expect_controller or st.D8X_EXPECTED_TAG
     las = las_b_enabled(config)
+    k1 = k1_order_gate_of(config)
     settle = settle_map_record(config)
     settle_want = st.d8x_expected_settle(engine, case.scenario.level)
     scen_want = st.d8x_scenario(row)
@@ -1859,6 +1880,9 @@ def d8x_record(case: BundleCCase, config, expect_controller: str | None) -> dict
         problems.append("LAS-b (liftoff_approach_slow.enable) off (rev2 4, E-6)")
     if tag != expected_tag:
         problems.append(f"controller tag {tag} != expected_tag {expected_tag} (rev2 4, E-6)")
+    if k1 is not is_order_gate_tag(expected_tag):
+        problems.append(f"K1 order gate {k1} != expected_tag {expected_tag} K1 "
+                        f"{is_order_gate_tag(expected_tag)} (rev3 2, E-6d)")
     if case.scenario.group != scen_want["group"] or case.d8x_scenario_id != scen_want["id"]:
         problems.append(f"scenario {case.scenario.group} / {case.d8x_scenario_id} != rev2 6 {scen_want}")
     if not length["run_s_matches"]:
@@ -1867,6 +1891,7 @@ def d8x_record(case: BundleCCase, config, expect_controller: str | None) -> dict
             "settle_map_matches": not any(p.startswith("settle map") for p in problems),
             "scenario_group": case.scenario.group, "scenario_id": case.d8x_scenario_id,
             "controller_tag": tag, "expected_tag": expected_tag, "las_b_enabled": las,
+            "k1_order_gate": k1,
             "ready_hat_s": length["ready_hat_s"], "run_s": length["run_s"], "length": length,
             "problems": problems}
 
@@ -1878,14 +1903,18 @@ def d8x_refuse(case_id: str, rec: dict[str, Any]) -> None:
 
 
 def d8x_meta(case: BundleCCase, config, expect_controller: str | None,
-             fs_kN: float | None = None) -> dict[str, Any]:
-    """``result.json`` block ``d8x`` of a D8x row (rules 2.1, I-4, E-6, rev2 1 / 4 / 5 / 6): row number / name, the
-    rules files and seals, the slope-limit mode of the built controller config, the true floor, the settle map
-    (``{kind, level, coefficients}``), the scenario group / id, the controller tag, the expected tag
-    (``--expect-controller``, else :data:`s6_stage2.D8X_EXPECTED_TAG`), LAS-b (``liftoff_slow_enabled``), T^_R
-    and T_run, and ``fs_kN`` of the plant (L2b rows; None on L1-R). Key names as ``d8x_judge.CHRONO_FIELDS``."""
+             fs_kN: float | None = None, controller_meta: Mapping[str, Any] | None = None) -> dict[str, Any]:
+    """``result.json`` block ``d8x`` of a D8x row (rules 2.1, I-4, E-6, rev2 1 / 4 / 5 / 6, rev3 2): row number /
+    name, the rules files and seals, the slope-limit mode of the built controller config, the true floor, the
+    settle map (``{kind, level, coefficients}``), the scenario group / id, the controller tag (from the controller's
+    own config, ``v5_options.controller_tag(None, config)``), the expected tag (``--expect-controller``, else
+    :data:`s6_stage2.D8X_EXPECTED_TAG`), LAS-b (``liftoff_slow_enabled``), the K1 order gate of the controller
+    config (``k1_order_gate``), the same gate read back from ``controller_meta`` (the run's ``C2Controller.meta()``,
+    ``controller_meta_order_gate``; None when not given) and their agreement, T^_R and T_run, and ``fs_kN`` of the
+    plant (L2b rows; None on L1-R). Key names as ``d8x_judge.CHRONO_FIELDS``."""
     row = next(r for r in st.D8X_ROWS if r.number == case.d8x_row)
     rec = d8x_record(case, config, expect_controller)
+    meta_gate = controller_meta_order_gate(controller_meta)
     return {"row": case.d8x_row, "row_template": row.name, "family": row.family,
             "order": row.order, **d8x_rules_meta(),
             "slope_limit_mode": str(getattr(config.target.slope_limit_mode, "value",
@@ -1897,6 +1926,9 @@ def d8x_meta(case: BundleCCase, config, expect_controller: str | None,
                                    "scenario_group", "scenario_id", "las_b_enabled", "ready_hat_s",
                                    "run_s", "length", "expected_tag")},
             "liftoff_slow_enabled": rec["las_b_enabled"], "fs_kN": fs_kN,
+            "k1_order_gate": rec["k1_order_gate"],
+            "controller_meta_order_gate": meta_gate,
+            "k1_order_gate_matches_meta": None if meta_gate is None else meta_gate is rec["k1_order_gate"],
             "rev2_problems": rec["problems"],
             "controller_tag": rec["controller_tag"], "expected_controller": expect_controller,
             "controller_tag_matches": rec["controller_tag"] == rec["expected_tag"]}
@@ -2320,7 +2352,8 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
             "rule": "C-S8-72 / spec 92: READY + 5 s, the case length only as the upper "
                     "bound"}}),
         **({} if g8 is None else {"g8": g8}),
-        **({} if case.d8x_row is None else {"d8x": d8x_meta(case, c2.config, expect_controller)}),
+        **({} if case.d8x_row is None else {"d8x": d8x_meta(case, c2.config, expect_controller,
+                                                                controller_meta=ctl_meta)}),
         "ready_t_s": None if state["ready_t"] is None else state["ready_t"] - t0,
         "probe_intervals": probe_intervals,
         "first_probe_t_s": None if state["probe_t"] is None else state["probe_t"] - t0,
