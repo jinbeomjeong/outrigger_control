@@ -19415,7 +19415,7 @@ $$u_k\leftarrow u_k\cdot\min\!\left(1,\ \frac{\gamma\,v_{max}}{\bar u_k}\right)$
 
 ### 436.6 켜는 법·태그
 - 클래스 기본은 끔이다. `C2Config.with_10hz_d1()`에서 켠다(사용자 결정). 따라서 V0(`final_C4G2` 계열)와 VB(`final_C4G2_P3` 계열)가 모두 바뀐다.
-- 태그 가칭은 VB `final_C4G2_P3_LAS`, V0 `final_C4G2_LAS`다(python-expert가 정한다).
+- 태그 가칭은 VB `final_C4G2_P3_LAS`, V0 `final_C4G2_LAS`다(python-expert가 정한다). 확정 이름은 436.9.1이다. **2026-11-10 K1 전환(437절) 뒤 현행 태그는 V0 `final_C4G2_LAS_K1`, VB `final_C4G2_P3_LAS_K1`, ABL `ABL_LAS_K1`이고, `_LAS` 태그는 K1 전환 전 결과다**(덧붙임 2026-11-10).
 - 끄는 법: `config.liftoff_approach_slow.enable = False`(가칭). 옛 피클은 "끔"으로 읽힌다.
 - 전환 전 재현: `pre_las_preset_runner.py`(가칭, 스위치 하나만 끔). 433.3 관례를 따른다. v4 원고 값(`final_SGS_R4`·`final_C4G2`)과 v5 기존 기록은 전환 전 제어기 값이다.
 - **명령 불변 조건**: 시작 관문이 처음 서기 전까지 명령은 비트 단위로 같다. 미작동 실행은 해시가 전환 전과 같다(T-2 130/130, V-2 6/6).
@@ -19492,29 +19492,39 @@ python-expert 구현(worktree `worktree-agent-acb3257c41a47bbbe`, 커밋 `11d28c
 
 #### 436.9.1 제어기 태그
 
-| 실행 | 전환 전 태그 | LAS-b 태그(새 기준) | 원본 |
-|---|---|---|---|
-| V0, 그 밖 ③ 없는 실행 | `final_C4G2`(v5 기록에는 키 없음) | `final_C4G2_LAS` | `v5_options.LAS_CONTROLLER_TAG` |
-| VB·LS(③ 켬) | `final_C4G2_P3` | `final_C4G2_P3_LAS` | `v5_options.EXTEND_START_LAS_CONTROLLER_TAG` |
-| U-6 ABL | `ABL` | `ABL_LAS` | `v5_rerun.controller_tag` |
-| U-6 IND | `IND` | `IND`(LAS-b 없음, 사용자 결정 Q1 = I-2, 436.9.4) | `v5_rerun.TAG_IND` |
-| U-6 기록 열(IND + 헤드 힘 어댑터) | – | `IND_LAS`(기록 전용) | 436.9.4, 구현 대기 → master 병합 완료(해소, `4bd2f3b`) |
+> 2026-11-10 덧붙임: K1 전환(437절, `b0979d1`·`b7c4cc9`) 뒤 현행 기준은 아래 표의 **K1 태그** 열이다. "LAS-b 태그" 열은 2026-11-08 당시의 새 기준이었고, 지금은 **K1 전환 전 결과**의 태그다(재현은 `05_tests/unit/pre_k1_preset_runner.py`, 437.4). 그보다 앞 열은 LAS-b 전환 전 결과다.
+
+| 실행 | LAS-b 전환 전 태그 | LAS-b 태그(K1 전환 전 결과) | K1 태그(현행 기준, 437) | 원본 |
+|---|---|---|---|---|
+| V0, 그 밖 ③ 없는 실행 | `final_C4G2`(v5 기록에는 키 없음) | `final_C4G2_LAS` | `final_C4G2_LAS_K1` | `v5_options.LAS_CONTROLLER_TAG` → `LAS_K1_CONTROLLER_TAG` |
+| VB·LS(③ 켬) | `final_C4G2_P3` | `final_C4G2_P3_LAS` | `final_C4G2_P3_LAS_K1` | `v5_options.EXTEND_START_LAS_CONTROLLER_TAG` → `EXTEND_START_LAS_K1_CONTROLLER_TAG` |
+| U-6 ABL | `ABL` | `ABL_LAS` | `ABL_LAS_K1`(R4c30이 꺼져 있어 명령은 `ABL_LAS`와 같음, 437.3) | `v5_rerun.controller_tag` |
+| U-6 IND | `IND` | `IND`(LAS-b 없음, 사용자 결정 Q1 = I-2, 436.9.4) | `IND`(R4c30 없음, `_K1` 없음) | `v5_rerun.TAG_IND` |
+| U-6 기록 열(IND + 헤드 힘 어댑터) | – | `IND_LAS`(기록 전용) | `IND_LAS`(`_K1` 없음) | 436.9.4, 구현 대기 → master 병합 완료(해소, `4bd2f3b`) |
+| LAS-b 단일 변수 짝의 꺼짐 팔(`--las-off --k1-order-gate on`) | – | – | `final_C4G2_K1` / `final_C4G2_P3_K1` | run_S9 `FINAL_K1_CONTROLLER`·`FINAL_P3_K1_CONTROLLER`(437.4) |
 
 - 태그는 **만든 제어기 설정**에서 정한다. `v5_options.controller_tag(options, config)`가 `config.liftoff_approach_slow.enable`이면 접미사 `_LAS`를 한 번 붙인다. `config` 없이 부르면 전환 전 태그가 나온다. 그래서 제어기 설정을 넘기지 않는 호출부는 결함이다(436.9.5).
-- ③ 켬 판별은 태그 집합 `EXTEND_START_TAGS = (final_C4G2_P3, final_C4G2_P3_LAS)`로 한다. 태그 문자열 하나와 같은지로 판별하면 안 된다.
+  - K1 전환 뒤(2026-11-10): `v5_options.with_switch_tags(tag, config)`가 `_LAS`(LAS-b 켬), 이어서 `_K1`(`slope_clearance_margin.flat_soil_margin_order_gate` 켬)을 한 번씩 붙인다. `controller_tag(options, config)`와 `v5_rerun.controller_tag`가 이것을 쓴다.
+- ③ 켬 판별은 (당시) 태그 집합 `EXTEND_START_TAGS = (final_C4G2_P3, final_C4G2_P3_LAS)`로 한다. 태그 문자열 하나와 같은지로 판별하면 안 된다.
+  - **현행(2026-11-10, `b7c4cc9`)**: ③ 판별에 태그 집합을 쓰지 않는다. 기준 태그로 판별한다: `v5_options.is_extend_start_tag(tag)` = `switch_base_tag(tag)`(뒤의 `_K1`, 이어서 `_LAS`를 벗김) == `final_C4G2_P3`. 집합은 `final_C4G2_P3_K1`(LAS-b 끔 + 관문 켬) 같은 접미사 조합을 놓쳐 J-P3가 조용히 빠진다(전환 뒤 감사 W-1, 사용자 결정 (a)). `EXTEND_START_TAGS`는 목록(`final_C4G2_P3`, `_P3_LAS`, `_P3_LAS_K1`)으로만 남고 판정에 쓰지 않는다. 사용처는 `j_p3_inputs.is_p3_expected`, `v5_rerun.j_p3_status`, `u3_reuse.reused_record`다(437.4).
 - `v5_rerun.definition()`과 `definition_sha256`은 LAS-b를 넣지 않는다(봉인 다이제스트 유지). 설정 정의 해시는 플랜트 설정과 ③만 가리킨다. 제어기 판은 태그와 코드 커밋으로 구별한다.
 
 #### 436.9.2 `--expect-controller`(run_S9 `level`)
 
-| 태그 | 요구 값(`CONTROLLER_EXPECTATIONS`) | 꺼져 있어야 하는 블록(`CONTROLLER_ABSENT_OR_OFF`) |
-|---|---|---|
-| `final_C4G2` | 433 최종 규칙 | P37t, ZIC, **LAS-b** |
-| `final_C4G2_P3` | 위 + ③ `tracked_bound` revision 4 | P37t, ZIC, **LAS-b** |
-| `final_C4G2_LAS` | 433 최종 규칙 + LAS-b 9값(위 표, `require_soil_response` True 포함) | P37t, ZIC |
-| `final_C4G2_P3_LAS` | 위 + ③ revision 4 | P37t, ZIC |
-| 전환 전 C4G2 이전 태그 | 429.11 규칙 | P37t, ZIC, C4, **LAS-b** |
+| 태그 | 요구 값(`CONTROLLER_EXPECTATIONS`) | K1 관문 `flat_soil_margin_order_gate`(2026-11-10 덧붙임) | 꺼져 있어야 하는 블록(`CONTROLLER_ABSENT_OR_OFF`) |
+|---|---|---|---|
+| `final_C4G2` | 433 최종 규칙 | `False` | P37t, ZIC, **LAS-b** |
+| `final_C4G2_P3` | 위 + ③ `tracked_bound` revision 4 | `False` | P37t, ZIC, **LAS-b** |
+| `final_C4G2_LAS` | 433 최종 규칙 + LAS-b 9값(위 표, `require_soil_response` True 포함) | `False` | P37t, ZIC |
+| `final_C4G2_P3_LAS` | 위 + ③ revision 4 | `False` | P37t, ZIC |
+| 전환 전 C4G2 이전 태그 | 429.11 규칙 | `False` | P37t, ZIC, C4, **LAS-b** |
+| **`final_C4G2_LAS_K1`**(현행 V0, 437) | `final_C4G2_LAS`와 같음 | **`True`** | P37t, ZIC |
+| **`final_C4G2_P3_LAS_K1`**(현행 VB·LS, 437) | `final_C4G2_P3_LAS`와 같음 | **`True`** | P37t, ZIC |
+| `final_C4G2_K1`(LAS-b 단일 변수 짝 꺼짐 팔) | 433 최종 규칙 | `True` | P37t, ZIC, **LAS-b** |
+| `final_C4G2_P3_K1`(위 + ③) | 위 + ③ revision 4 | `True` | P37t, ZIC, **LAS-b** |
 
 - 전환 전 태그를 단 행을 새 프리셋으로 돌리면 run_S9가 **멈춘다**(LAS-b가 켜져 있음). 의도된 동작이다. 저장 결과를 재현할 때는 LAS-b를 끈 프리셋으로 돌리고(436.9.3), 새로 돌리는 행은 `_LAS` 태그를 단다(`s9_batch.with_expected_controller`, `V5_LAS_CONTROLLER`, `V5_P3_LAS_CONTROLLER`).
+  - K1 전환 뒤(2026-11-10): `_K1`이 없는 모든 태그는 관문 `False`를 요구하므로, `_LAS` 태그 행도 새 프리셋에서 **멈춘다**. 새로 돌리는 행은 `_LAS_K1` 태그를 단다(s9_batch `V5_LAS_K1_CONTROLLER`·`V5_P3_LAS_K1_CONTROLLER`). `_LAS` 결과의 재현은 `pre_k1_preset_runner.py`(하네스) 또는 `--k1-order-gate off`, gate-on 진단 행은 `git_at_start` checkout뿐이다(437.4). 행 생성기의 `_LAS` 기대 태그 갱신은 감사 W-3로 남아 있다(437.6).
 - `--no-controller-check`(s9_batch)로 검사를 빼는 방법은 재개 배치에 쓰지 않는다.
 
 #### 436.9.3 전환 전 재현
@@ -19576,12 +19586,14 @@ python-expert 구현(worktree `worktree-agent-acb3257c41a47bbbe`, 커밋 `11d28c
 #### 436.9.5 병합 전에 고칠 구현 결함(control-expert 검토, 2026-11-08) — master 병합 완료(해소, `32b8585`)
 
 > 2026-11-08 확인: D-1·D-2의 태그 단일 비교(`tag != TAG_VB`, `controller_tag == TAG_VB`)는 04_scripts에 남아 있지 않다. D-5는 `r79_sensor_screen.py` 1012행에서 `controller_tag(options, ctrl.config)`로 고쳐졌다. D-6은 `d1_chrono_rows.py` 101행이 LAS 태그로 바꾼다. 아래 표는 당시 기록이다.
+>
+> 2026-11-10 덧붙임(K1 전환, 437절): D-1(`v5_rerun.j_p3_status`)·D-4(`u3_reuse.reused_record`)의 ③ 판별은 지금 기준 태그(`v5_options.is_extend_start_tag`)로 한다(`b7c4cc9`). D-2·D-3의 `u3_judge`(봉인 판정 도구)는 기대 태그가 `_LAS`(`SETTING_TAGS_LAS`, `U6_TAGS`)라 `_K1` 태그 실행에서 G-2로 크게 실패한다(조용한 통과 아님, W-3). D-6의 `d1_chrono_rows.py`는 아직 `_LAS` 태그(`V5_P3_LAS_CONTROLLER`)를 기대값으로 써서 K1 프리셋에서 크게 실패한다(전환 뒤 감사 W-3, 437.6).
 
 태그 문자열을 `final_C4G2_P3` 하나와 비교하는 곳이 남아 있다. LAS 태그 실행에서는 판정 대상에서 **조용히 빠지거나**(관문이 빈 집합으로 통과) 잘못된 태그가 남는다.
 
 | # | 위치(worktree `11d28c6`) | 현상 | 영향 |
 |---|---|---|---|
-| D-1 | `04_scripts/04_hydraulic/coupled/v5_rerun.py` `j_p3_status`: `if tag != TAG_VB: return not_applicable` | `final_C4G2_P3_LAS` 실행의 J-P3가 `not_applicable` | U-3·U-6 VB C2 실행의 J-P3 판정이 사라진다 |
+| D-1 | `04_scripts/04_hydraulic/coupled/v5_rerun.py` `j_p3_status`: `if tag != TAG_VB: return not_applicable` | `final_C4G2_P3_LAS` 실행의 J-P3가 `not_applicable` | U-3·U-6 VB C2 실행의 J-P3 판정이 사라진다. (2026-11-10 덧붙임) 수정 뒤 `if tag not in EXTEND_START_TAGS`였던 이 줄은 K1 전환 뒤 `if not is_extend_start_tag(tag)`(기준 태그 `final_C4G2_P3`, `b7c4cc9`)다. 그래서 `final_C4G2_P3_LAS_K1`·`final_C4G2_P3_K1`도 J-P3 대상이다(436.9.1, 437.4) |
 | D-2 | `04_scripts/04_hydraulic/coupled/u3_judge.py` `gate_j_p3`·`gate_fallback`: `controller_tag == TAG_VB`로 고름 | LAS 실행이 하나도 골라지지 않아 G-4·G-6이 **빈 집합으로 통과** | 봉인 관문 무력화(조용한 통과) |
 | D-3 | `u3_judge.py` `U6_TAGS`, `judge_bundle`의 기대 태그(`TAG_VB`/`TAG_V0`) | LAS 실행이 모두 G-2 불일치 | 소리 나는 실패(덧붙임 판 2로 고침) |
 | D-4 | `04_scripts/04_hydraulic/coupled/u3_reuse.py` `reused_record`: `controller_tag == TAG_VB`일 때만 `extend_start` 기록, 태그 없음 → `TAG_V0` | `d1_las.jsonl` VB 줄을 재사용하면 ③ 기록이 빠져 G-2 실패. 태그 없는 옛 줄은 V0 전환 전 태그가 된다 | 재사용 행 G-2 |
@@ -19615,3 +19627,113 @@ python-expert 구현(worktree `worktree-agent-acb3257c41a47bbbe`, 커밋 `11d28c
   - 다르면 새 결과가 판정이다.
   - 같은 `--threads`·P코어 조건이어야 비트 비교가 성립한다(SCM 실행 규칙). 조건이 다르면 해시 비교 없이 새 결과로 판정한다.
 - 재실행 비용은 2 × 약 12,600 s(가정)다. 도구 개발(재생 경로의 SCM 측정값 재구성)보다 확실하고, 작동하면 어차피 재실행해야 한다.
+
+## 437. LAS-b K1: R4c30 평탄 시작 순서 관문 `flat_soil_margin_order_gate`, 프리셋 기본 켬, 태그 `_LAS_K1` (2026-11-10)
+
+436절(LAS-b) 다음의 제어기 수정이다. 전환 구현은 python-expert `b0979d1`(병합 `b53d890`)이고, 전환 뒤 감사 수정은 `b7c4cc9`(병합 `e67dae8`)다. 전환 절차는 `las_k1_rules_adopt.md` 9절과 그 덧붙임판 1(`las_k1_rules_adopt_rev1.md`)을 따른다. 이 절은 그 9.6 "명세 새 절"이다. 기존 절(429.9 R4c30, 436)은 고치지 않았다. 436.9의 태그 표는 이 절에 맞춰 덧붙였다.
+
+- 규약
+  - 이산 $T_s$ = 0.1 s(10 Hz), 출력 지연 $d$ = 1, C2 음되먹임($u$ = 다리 행정 속도 명령 [m/s], + = 신장).
+  - 시각은 정수 주기 $n=\mathrm{round}(t/T_s)$로 비교한다(부동소수 비교 금지).
+  - 행정은 모터 행정 [m](표에서는 mm), 힘은 실린더 순 힘 [N].
+- **이름 구분(꼭 지킨다).** 이 절의 K1은 **LAS-b K1 = R4c30 순서 관문**이다. 다음 둘과 다르다.
+  - **touch-phase K1**: 2026-11-05에 탈락한 TOUCH 재발동 후보(433.1, 코드 유지, 기본 끔, `retrigger_samples` 1).
+  - **하네스 키 토큰 `K1`**: 크롤러 강성 ×1(예: 키 `D1|H-S-A|G1+J1@FL|T|flat|K1|VB|e0`의 `K1`).
+  - 순서 관문은 설정 `flat_soil_margin_order_gate`, run_S9 `--k1-order-gate`, 하네스 후보 토큰 `K1off`·`K1on`, 태그 접미사 `_K1`으로만 부른다.
+
+### 437.1 동작
+
+| 기호 | 뜻 | 출처 | 단위 |
+|---|---|---|---|
+| $t_P$, $n_P$ | 이번 LOC를 확정한 S-1 평탄 창 꼬리의 첫 표본 시각, 그 주기 | `soil.plateau_start_s` | s, 주기 |
+| $t_S$, $n_S$ | LOC 시점의 가장 최근 토양 모드 시작 시각, 그 주기(LOC 취소 뒤 재시작하면 새 값) | `soil.soil_mode_start_s` | s, 주기 |
+| dP | $n_P-n_S$ | – | 주기 |
+
+- 관문이 켜지면 R4c30 조건(`_is_flat_soil_margin_due`, 429.9·429.11: 토양 모드를 쓴 LOC, 정착 기울기 ≤ 1°, run 틈 목표 없음)에 **AND로 더한다**: $t_P$·$t_S$가 모두 있고 $n_P>n_S$(평탄 창 시작 주기 > 토양 모드 시작 주기).
+- $n_P\le n_S$이거나 $t_P$·$t_S$ 중 하나가 없으면 R4c30(+30 mm 틈 목표)을 적용하지 않는다(관문 막음). 사건 `INFO_LOC_FLAT_SOIL_MARGIN_SKIPPED:order`(INFO)를 낸다. 관문 꺼짐에서는 이 사건을 내지 않는다.
+- 바꾸는 것은 R4c30 적용 여부뿐이다. 같은 LOC의 E3c10(P-S8-31) 판단, L1gs 토양 관문, SGS, DSb75, S-3 편향, LOC 앵커, S-4, 토양 모드 밀어 올림 하한은 그대로다. LOC 전 명령은 비트 단위로 같고, LOC 뒤 틈 목표만 달라진다.
+- 뜻: 래치 해제가 LOC보다 먼저 와서 토양 모드가 "평탄 창이 이미 선 뒤에" 시작된 LOC(패치형: 한 패드만 연약)는 진짜 연약 지면 LOC가 아니다. 이런 LOC에 R4c30을 걸면 행정을 30 mm 더 쓴다(LAS-b 경계 키 P5r4의 C-S 미달 +30.10 mm, `las_k1_rules.md` 0.1절).
+- 기록(관문 꺼짐에서도 그림자로 남는다): `controller_meta.slope_clearance_margin.order_gate` = `enabled`, `decisions`(R4c30 조건을 평가한 LOC마다 `t_loc_s`, `t_P_s`, `t_S_s`, `n_P`, `n_S`, `dP`, `r4_due_without_gate`, `would_block`, `applied`).
+- 문턱(dP > 0)은 저장 하네스 S-C 분포를 본 뒤 정했다(진짜 연약 지면 R4 행 160줄 dP ≥ +31주기, 패치 5줄 dP ≤ −4주기). 원판 0.2절에 과적합으로 공개돼 있다.
+
+### 437.2 근거
+
+모두 `06_analysis/02_control/verif_matrix/` 아래 봉인 규칙·판정서다(고치지 않는다).
+
+| 단계 | 파일(sha256 앞 8자리) | 결과 | 이 절에서의 지위 |
+|---|---|---|---|
+| K1 원판·rev1 | `las_k1_rules.md`(`2742c976`, 봉인 2026-11-09 16:24:49), `las_k1_rules_rev1.md`(`eeee4ab9`, 결과 전) | K1 정의(원판 1.1). 판정서 `las_k1_judgement.md`: Y-0·Y-P·Y-S·Y-T 모두 `통과`, 경계 키 C-S −0.116 mm(P5r4 +30.10 mm 해소) | 정의 |
+| S-Ch(Chrono SCM 패치 1키) | 계획 `las_k1_sch_plan.md`·rev1, 판정서 `las_k1_sch_judgement.md` | `통과`. `G1+J2@FL` 패치 키 dP −20(예측 [−12, −1] 밖, 부호 같음), gateon이 R4c30을 막아 $s_{max}$ 503.034 → 473.136 mm(Δ −29.898), 끝 크롤러 틈 88.3 → 58.3 mm, 첫 READY 95.8 s 같음, $F_{min}$ 같음 | **K1 정의 동작(패치에서 막음)의 기록.** 전환 근거가 아니다(adopt rev1 1.1) |
+| adopt 원판 | `las_k1_rules_adopt.md`(`864836d8`), 판정서 `las_k1_adopt_judgement.md` | `판정 불가`: 저장 Chrono MUST 31 LOC 중 셀 수 있는 13건은 모두 dP > 0(+49 ~ +209), 18건은 취소 뒤 재LOC로 $t_P$가 남지 않아 `UNRECOVERABLE` | **전환 절차(9절)만.** 판정 근거가 아니다 |
+| adopt2(새 원판) | `las_k1_rules_adopt2.md`(`fb3a5696`, 봉인 2026-11-09 23:03:15) | Chrono 관문 꺼짐/켬 직접 재측정 규칙 | **채택 근거** |
+| REM 판정서 | `las_k1_rem_judgement.md`(`4c509d15`, 커밋 `15777d1`) | `통과`, K-10 522항목 불일치 0. 관문 꺼짐 6행 R1~R6(J2 상단·중단·하단 ×1.0 VB, J2 상단 ×1.1 VB·V0, J1 상단 ×1.1 VB) 모두 `POS`, 첫 R4 LOC dP +99 ~ +206주기(9.9~20.6 s), `THIN_MARGIN`(≤ 12) 0 | **채택 근거** |
+| adopt 덧붙임판 1 | `las_k1_rules_adopt_rev1.md`(`730dbb3d`, 봉인 2026-11-10 11:36:17, 커밋 `589ff43`; 이 절을 쓸 때 master `e67dae8`에 아직 병합되지 않음) | 판정·문턱 불변. 9.4 G-7 근거와 9.6 인용을 대체하고, 감사 기록 항목(R-4·R-6·R-8·R-9·W-2)을 규칙 문구로 넣음. **결과를 본 뒤의 개정**(공개) | 근거 인용 규칙 |
+
+- **G-7(Chrono) 근거 = adopt2 + REM R7·R8·F2**(adopt rev1 1.1)
+  - R7(`REM_J2_B_top_Fs4_VB_gateon`, J2 상단 ×1.0 VB)·R8(`REM_J2_B_top_Fs4_m1p1_VB_gateon`, J2 상단 ×1.1 VB): 관문 켬에서 $L_1$(행의 첫 LOC)에 R4c30 적용(dP +99 / +198주기). `controller_commands.npz` sha256이 짝 gateoff R1 / R4와 같다(`ebf86d1d…b559`, `97aace61…c8aa`). 균일 연약 지면에서 K1은 동작을 바꾸지 않았다.
+  - 이 행들의 태그는 옛 이름 `final_C4G2_P3_LAS` + `--k1-order-gate on`이다.
+  - F2(정보용 강제 막힘): 437.5 알려진 한계.
+- 전환 회귀 G-1~G-6(전환 뒤 감사 재집계표): G-1 단위 6,298 통과·실패 0(skipped 8, coupled 437), G-3 하네스 K1on 저장 줄 457/457 해시 같음(관문이 막은 줄 8), G-4 `pre_k1_preset_runner.py` K1off 70/70, G-5a `d1.jsonl` 189/189, G-5b `revA_RP0.jsonl` 21/21. G-2(클래스 기본 해시)는 별도 실행 없이 구조로 합격(adopt rev1 2.3). G-5 완료 시각은 2026-11-10 10:51:14 +09:00(전환 커밋 10:50:42보다 32 s 뒤, adopt rev1 2.4).
+- 전환 뒤 감사: `las_k1_switch_post_audit.md`(verif-protocol-auditor `[시점] 전환 후`, 대상 `b0979d1`, sha256 `2c02dc9e…94e7`). **차단 0 / 실행 전 수정 3(W-1~W-3) / 기록 11.** 사용자 결정(감사 끝 "메인 세션 덧붙임"): W-1 (a) 기준 태그로 ③ 판단, R-1 adopt 개정판 봉인 → adopt rev1. adopt rev1의 `[시점] 전환 후` 재감사(D8x rev3 봉인 점검과 함께, 대상 `589ff43`)는 `las_k1_adopt_rev1_d8x_rev3_audit.md`이고 adopt rev1 부분은 "규칙 범위 안, 확정해도 된다"다(전체 차단 0 / 실행 전 수정 3 / 기록 9). 실행 전 수정 가운데 adopt rev1 쪽은 F-2(인용한 감사 원문의 `-text` 보호)뿐이고, master `.gitattributes` 37행(`las_k1_switch_post_audit.md -text`)으로 지금 보호돼 있다. F-1·F-3은 D8x 쪽이다.
+
+### 437.3 기본값 전환
+
+| 위치 | 값 |
+|---|---|
+| 클래스 기본 `SlopeClearanceMarginSettings.flat_soil_margin_order_gate` | **`False`**(옛 동작, `c2.py` 2203행) |
+| R8 프리셋 `C2Config.with_10hz_d1(flat_soil_margin_order_gate=True)` | **`True`**(기본 켬, `c2.py` 2632행 → 2797행에서 넘김) |
+| run_S9 `level --k1-order-gate {preset,off,on}` | 기본 `preset`(덮어쓰지 않음). `off`·`on`은 명시할 때만 덮는다. 모든 실행이 `c2_setup.k1_order_gate`(요청)·`k1_order_gate_effective`를 남긴다. 최종 값의 원본은 `controller_meta.slope_clearance_margin.settings` |
+| 하네스 후보 토큰 `K1on`·`K1off` | 토큰이 없으면 프리셋 값(켬). `K1on`과 프리셋은 겹쳐도 멱등(시험 고정) |
+| ABL(`b5_baseline_compare.ablation_config`) | 프리셋 관문 플래그를 그대로 둔다(태그 `ABL_LAS_K1`). ABL은 R4c30이 꺼져 있어(`flat_soil_margin_m` 0) 관문이 판단할 LOC가 없고 명령은 바뀌지 않는다(감사 R-7, `b7c4cc9` 시험: A1-J1·A3-G1+J1@RR 해시 같음) |
+| IND·IND_LAS | C8 골격이라 R4c30이 없다. `_K1`이 붙지 않는다(태그 그대로, 코드 읽기) |
+
+- 끄는 법: `C2Config().with_10hz_d1(flat_soil_margin_order_gate=False)` 또는 run_S9 `--k1-order-gate off`.
+- 옛 피클은 클래스 기본값 때문에 "관문 꺼짐"으로 읽힌다.
+
+### 437.4 태그와 재현
+
+**태그**(`v5_options.with_switch_tags`: LAS-b가 켜져 있으면 `_LAS`, 이어서 관문이 켜져 있으면 `_K1`을 한 번씩 붙인다)
+
+| 실행 | K1 전환 뒤(현행 기준) | 전환 전 결과(LAS-b만) | 원본 상수 |
+|---|---|---|---|
+| V0, 그 밖 ③ 없는 실행 | **`final_C4G2_LAS_K1`** | `final_C4G2_LAS` | `v5_options.LAS_K1_CONTROLLER_TAG`, run_S9 `FINAL_LAS_K1_CONTROLLER`, s9_batch `V5_LAS_K1_CONTROLLER` |
+| VB·LS(③ 켬) | **`final_C4G2_P3_LAS_K1`** | `final_C4G2_P3_LAS` | `v5_options.EXTEND_START_LAS_K1_CONTROLLER_TAG`, run_S9 `FINAL_P3_LAS_K1_CONTROLLER`, s9_batch `V5_P3_LAS_K1_CONTROLLER` |
+| U-6 ABL | **`ABL_LAS_K1`** | `ABL_LAS` | `v5_rerun.controller_tag` |
+| LAS-b 단일 변수 짝의 꺼짐 팔(`--las-off --k1-order-gate on`) | `final_C4G2_K1`(③ 없음) / `final_C4G2_P3_K1`(③) | – | run_S9 `FINAL_K1_CONTROLLER`·`FINAL_P3_K1_CONTROLLER` |
+
+- `_LAS` 태그 결과는 **K1 전환 전 결과**다. 전환 뒤 프리셋 결과로 승계하지 않는다(승계는 그 묶음 규칙이 명령 해시 재생 검사로 정할 때만, adopt rev1 2.5). 그림자 근거가 있는 집합은 하네스 `v5/las/k1/k1_Y*.jsonl` 넷(K1 꺼짐에서 전환 뒤 해시가 바뀔 행은 `k1_Y0` 8행)과 Chrono `V5-LAS-K1-CHRONO` 1행뿐이다. 그 밖 저장 결과를 다시 돌릴 때는 새 태그로 한다.
+- run_S9 `--expect-controller`: `_K1` 네 태그는 관문 `True`를, 그 밖 모든 태그(`final_C4G2`, `final_C4G2_P3`, C4G2 이전, `_LAS` 둘)는 관문 `False`를 요구한다(436.9.2 표). 그래서 옛 태그 행을 새 프리셋으로 돌리면 모델을 만들기 전에 멈춘다.
+- ③ 판별은 **기준 태그**로 한다: `v5_options.is_extend_start_tag(tag)` = `switch_base_tag(tag)`(뒤의 `_K1`, 이어서 `_LAS`를 벗김) == `final_C4G2_P3`(감사 W-1, 사용자 결정 (a), `b7c4cc9`). 사용처는 `j_p3_inputs.is_p3_expected`(따라서 `chrono_t45_replay`), `v5_rerun.j_p3_status`, `u3_reuse.reused_record`다. `EXTEND_START_TAGS`는 목록으로만 남고 판정에 쓰지 않는다. LAS-b × 관문 × ③ 8조합은 매개변수 시험으로 고정됐다.
+
+**전환 전 재현**
+
+| 재현할 결과 | 방법 |
+|---|---|
+| LAS-b 켬·관문 꺼짐 결과(`_LAS` 태그, 예: `v5/las/k1/`의 K1off 줄) | `05_tests/unit/pre_k1_preset_runner.py <script.py> [인자 …]`(`with_10hz_d1`의 `flat_soil_margin_order_gate` 기본값만 `False`로 되돌림, 스레드 env 선설정·import 때 패치는 `pre_las_preset_runner.py`와 같다) |
+| LAS-b 이전 결과 | `pre_las_preset_runner.py`, 더 옛 결과는 `pre_c4g2_preset_runner.py`·`pre_switch_preset_runner.py`. 네 러너 모두 관문도 끈다(하위 프로세스 시험 `test_preset_runners_gate_off.py`) |
+| **gate-on 진단 행**(S-Ch gateon, REM R7·R8·F1·F2: 옛 태그 + `--k1-order-gate on`) | **그 결과의 `git_at_start` 커밋 checkout으로만.** 어떤 키워드 러너로도 재현할 수 없다(옛 태그가 관문 꺼짐을 점검해 크게 실패, 감사 R-2) |
+| Chrono 행 | 러너가 아니라 run_S9·run_S8C·s9_batch `--las-off`(436.9.3) |
+
+- 키워드 러너는 뒤 커밋의 다른 변경을 그대로 둔다. 저장 결과를 비트 단위로 재현하려면 `git_at_start` 커밋을 고정한다.
+
+**`--las-off`의 뜻(전환 뒤, adopt rev1 2.1, 감사 R-4)**
+- `run_S9 --las-off`·`run_S8C --las-off`는 이제 **LAS-b 끔 + K1 끔**이다(`run_S8C.LAS_OFF_PRESET` = `C2Config().with_10hz_d1(liftoff_approach_slow=False, flat_soil_margin_order_gate=False)`). 옛 태그 `final_C4G2`·`final_C4G2_P3`의 재현에 관문 꺼짐이 필요하므로 맞는 처리다.
+- 그래서 K1 프리셋 위에서 `--las-off`만 바꾼 짝은 **두 변수가 함께 바뀐 짝**이다. LAS-b **단일 변수 짝**의 꺼짐 팔은 `--las-off --k1-order-gate on`이고 태그는 `final_C4G2_K1`/`final_C4G2_P3_K1`이다.
+- adopt rev1 2.1의 사용 제한(W-1 수정이 master에 병합되기 전에는 이 조합을 VB·LS 판정 행에 쓰지 않음)은 `e67dae8` 병합으로 풀렸다. 다만 이 조합을 쓰는 규칙은 기대 태그(`final_C4G2_K1` 또는 `final_C4G2_P3_K1`)를 명시해야 한다.
+
+**태그 소비자**: 전환 뒤 감사 원문 `las_k1_switch_post_audit.md`의 "태그 소비자 표 (감사가 만든 분류, W-2 대체 근거)"가 adopt 9.2·9.5가 요구한 산출물을 대신한다(adopt rev1 2.2). 그 표에서 조용한 실패는 `EXTEND_START_TAGS`의 `_P3_K1`(W-1, `b7c4cc9`로 해소)뿐이다. 나머지 미갱신 소비자는 크게 실패한다(W-3).
+
+### 437.5 알려진 한계
+
+- **F2: K1이 첫 R4 LOC를 막으면 R4c30이 끝까지 없다.** REM F2(R8 + `--k1-forced-block first`, 정보용)가 `FORCED_R4_NEVER`였다. $L_1$을 막자 취소(601주기) → 토양 모드 재시작(602) → 재LOC(610)에서 $t_P=t_S$(구조적 0, dP 0)라 원래 규칙으로 다시 막혔고 120 s 끝까지 R4c30이 없었다. 짝 R4 대비 $s_{max}$ −30.86 mm, 끝 크롤러 틈 −31.16 mm(35.54 mm 남음), `ready`로 끝남, FAULT·WARN 없음.
+  - 판정 행 R1~R8에서는 $L_1$ dP ≥ +99라 이 경로가 **관측되지 않았다**(0건을 통과로 세지 않는다). 균일 연약 지면에서 $L_1$ dP ≤ 0인 행이 생기면 R4c30을 잃을 수 있다.
+- **VB 이동(REM 7.1)**: VB 행의 LOC·토양 모드 시각이 옛 V0 저장값보다 늦다(×1.0 +17 / +19~+20주기, ×1.1 R4 +35 / +42, J1 ×1.1 R6 +22 / +18). V0 + LAS-b R5는 옛 ×1.1 값과 주기까지 같다. ×1.0의 이동이 VB 효과인지 LAS-b 효과인지는 나누지 않았다(추정: VB). 주기 예측을 저장 Chrono로 정할 때는 플랜트 설정(V0/VB)을 맞춘다.
+- REM 대상 밖: 경사, 오거 중·하단 ×1.1, J1 ×1.0 + LAS-b, S1, 잡음 시드, t180, 운용 중량 +20 %. Chrono는 1회 실행(시드 20261026, 압력 normal, IMU ideal, `--threads` 4, P코어)이다.
+- 패치 키에서 "막힘 → 취소 → 재평가" 경로는 보지 않았다(S-Ch 2행은 봉인 전 기지 행). 패치 키에서 R4c30을 막는 것은 의도된 동작이고, 대가는 끝 크롤러 틈 약 −30 mm다(S-Ch 88.3 → 58.3 mm, E-6b 기준 25 mm 위 33 mm 여유).
+- 하네스 근거로 정한 주기 예측은 Chrono에서 벗어났다(S-Ch dP −20 대 [−12, −1], REM P-2·P-5 밖). 예측은 판정 기준이 아니다.
+
+### 437.6 남은 일
+
+- 감사 W-3(실행 전 수정, 다음 단계 LAS-b P5r4+K1 재판정 규칙의 본 실행 전 조건): 행 생성기 `d1_chrono_rows.py`, `v5_stage3_las_rows.py`, `las_chrono_rows.py`, `las_k1_chrono_rows.py`, `las_k1_rem_chrono_rows.py`가 아직 `_LAS` 태그를 `--expect-controller`로 쓴다(새 프리셋으로 띄우면 크게 실패). 묶음마다 "새 `_K1` 태그로 재실행"인지 "`pre_k1_preset_runner.py`로 재현"인지 정하고 반영한다(python-expert). 봉인 판정 도구(`u3_judge`, `fb_judge`, `las_rev_judge`, `p3_*_check`, `las_k1_*_judge`)의 태그 상수는 고치지 않는다. 새 태그 결과에 써야 하면 개정판이 필요하다.
+- 다음 단계: LAS-b P5r4 + K1 재판정 규칙(사용자 결정 2026-11-09, adopt 원판 9절 범위 밖).
+- 문서: decision_log 한 줄(메인 세션), CLAUDE.md 제어기 행(메인 세션).
