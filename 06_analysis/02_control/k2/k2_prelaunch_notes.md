@@ -1,0 +1,16 @@
+# K-2 실행 전 기록에 넣을 문구 (control-expert, 2026-11-10, 결과 전)
+
+- 근거: `k2_touch_creep_rules.md`(sha256 `a3658197…7263`) + `k2_touch_creep_rules_rev1.md`(sha256 `5ba081c62f8aef0edc5bb99119d7586b0d2914761582f2323c289f472f244776`).
+- 아래 세 문구를 해당 `k2_prelaunch_<묶음>.json`의 `notes`에 그대로 넣는다. 이 파일은 판정 규칙이 아니라 기록 문구 모음이다.
+
+## 1. V-4 점 파일 (`k2_prelaunch_v4.json`)
+
+> 점 파일 `06_analysis/02_control/k2/k2_points_5p5_3p5.json`(sha256 `<실행 전 기록 때의 값>`)은 rev1 1·2에 따라 `d8x_diag.diamond_points(5.5, 3.5)`(커밋 `6f2f7cb`) 값이다. 경로 2 `k2_recount.py points-check`로 rev1 2 조건을 확인했다(diamond 차 0, 표 차 d45 1.11e-5° ≤ 2e-5°, 그 밖 12점 0). 2026-11-10 python-expert 커밋 `f57bebc`의 파일(sha256 `98304b2395769faa6152df9642109b317df26a5e65b0a6723a3a7ed3b659198e`)은 이 조건을 통과한다.
+
+## 2. d45 (`k2_prelaunch_v4.json`)
+
+> d45 4점의 실행 값은 ±2.1389°(4자리 반올림)이고, 규칙 3.2 표의 정확값 19.25/9° = 2.138888…°와 1.11e-5° 차이다(rev1 1). $R_v$ = 1.0000052다. V-4 하네스는 `TargetAcceptance.OFF`이고 J1~J11에 각도 문턱이 없어 등급 영향이 없다. E-7(행 각도 = 점 파일, ≤ 1e-9°)의 기준은 점 파일이다(rev1 3).
+
+## 3. CAP 기준 행정 (`k2_prelaunch_v1.json`)
+
+> CAP(K2-4) 기준 행정은 규칙 글자대로 그 다리가 `touch_seen`이 된 표본의 모터 행정이다. 스크린 `screen/j3_variants.py.txt`는 그다음 표본을 기준으로 썼다. 두 기준의 차는 많아야 한 제어 주기의 행정(창 속도 0.5 v_max에서 약 1 mm, 크리프 중 약 0.1 mm)이고, 구현 쪽 CAP가 그만큼 일찍 걸린다(안전 쪽). 스크린 VC 8행은 CAP 0이므로 T-K2-1(I-5) 명령 해시에는 영향이 없을 것으로 본다(**추정**, 스크린에서 CAP까지 남은 여유는 재지 않음). T-K2-1이 불일치하면 이 차이를 먼저 확인한다.

@@ -177,6 +177,47 @@ def test_recount_end_to_end_runs(tmp_path):
     assert out["bundles"]["v6"]["rows"]["K2_L2b_top_fdown3.5_Fs4_tcl"]["items"]["V6_false_latch"]
 
 
+def _point_file(tmp: Path, pts: dict) -> Path:
+    p = tmp / "pts.json"
+    p.write_text(json.dumps({"ra_points": [{"tag": t, "roll_deg": r, "pitch_deg": q}
+                                           for t, (r, q) in pts.items()]}), encoding="utf-8")
+    return p
+
+
+def test_points_check_rev1(tmp_path):
+    dia = kr.v4_diamond_points()
+    assert dia["d45-+"] == (-2.1389, 2.1389) and dia["r+p+0.25"] == (1.375, 2.625)
+    assert kr.points_check(_point_file(tmp_path, dia))["ok"]
+    exact = kr.v4_table_points()
+    chk = kr.points_check(_point_file(tmp_path, exact))       # fails (i) on d45 only
+    assert not chk["ok"] and all(p.startswith("d45") for p in chk["problems"])
+    bad = dict(dia)
+    bad["pitch+"] = (0.0, 3.5 + 1e-9)
+    assert not kr.points_check(_point_file(tmp_path, bad))["ok"]
+
+
+def test_e7_and_dhat(tmp_path):
+    s = _series(tmp_path, "d.npz")
+    pts = {"pitch+": (0.0, 3.5)}
+    row = _row("a", True, s)
+    row.update({"point": "pitch+", "angles_deg": [0.0, 3.5],
+                "k2": {"dhat_window_open_legs": ["RR"], "dhat_window_stroke_mm": [0, 0, 0, 0.31],
+                       "dhat_N": 9000.0}})
+    r = kr.judge_row(row, kr.DEFAULT_FIELDS, "harness", tmp_path, True, points=pts)
+    assert kr.row_status(r) == "pass", r
+    moved = json.loads(json.dumps(row))
+    moved["angles_deg"] = [0.0, 3.5001]
+    assert any(p.startswith("E-7") for p in
+               kr.judge_row(moved, kr.DEFAULT_FIELDS, "harness", tmp_path, True, points=pts)["not_judgeable"])
+    off = _row("a", False, s)
+    off.update({"point": "pitch+", "angles_deg": [0.0, 3.5],
+                "k2": {"dhat_window_open_legs": [], "dhat_window_stroke_mm": [0, 0, 0, 0], "dhat_N": 3000.0}})
+    ro = kr.judge_row(off, kr.DEFAULT_FIELDS, "harness", tmp_path, True, points=pts)
+    d = kr.dhat_summary([ro], [r])
+    assert d["open_leg_rows"] == 1 and d["stroke_max_mm"] == pytest.approx(0.31)
+    assert d["abs_delta_ge_5kN"] == [(6000.0, "a")] and d["missing"] == 0
+
+
 def test_screen_selftest():
     screen = ROOT / "06_analysis/02_control/k2/screen"
     if not screen.exists():
