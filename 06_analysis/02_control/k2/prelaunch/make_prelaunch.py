@@ -66,11 +66,25 @@ V5_NOTE_REGRESSION = (
     "entries that are not judgement rows 7 + clip_r79_L3L4 42; key sha d4f58334...). The 118 of the original 3.4 / "
     "criteria.md is the old rerun-list count, not reconstructable from the stored outputs. E-1 expects 93. The r79 "
     "L1 reference rows are not judged rows; the r79 judgement 'unmatched' is a record (rev4 1 (c)).")
-PATH1_BLOB_PENDING = "c285b8c9e04c30c289a29d0d7a620c00fb4ec906"  # python-expert k2-path1-rev6 728ace5 (rev6)
-FLAT_MAIN_SIDECAR_NOTE = (
-    "Path 1 does not read the sidecar rc of the flat_main rebuild step (not a path 1 input check). That rc, HEAD / "
-    "clean and the flattener blob are checked in the post-judgement identity audit together with the 60-sidecar list "
-    "(same sense as rules rev6 4; main session decision 2026-11-10).")
+PATH1_BLOB_PENDING = "74d72d5e1747e11c8b89e0adb177e952d3b598a7"  # python-expert k2-path1-rev6b 5d28db4 (blob id only)
+FLAT_MAIN_SIDECAR_NOTE = {
+    "rule": "rules rev7 3 (replaces the rev2 6.1 HEAD 6a44ff8 condition for this step); path 1 does not read this "
+            "sidecar (not a path 1 input check); it is checked in the post-judgement identity audit with the 60 sidecars",
+    "sidecar": r"<k2-run>\06_analysis\02_control\k2\runs\v5\<arm>\flat_main.launch.json (one per arm; not flatten.launch.json)",
+    "git_dir": r"C:\workspace\outrigger_control (main checkout)",
+    "head": "{JUDGE_COMMIT}: the judge commit recorded before the rebuild; its k2_v5_flatten.py blob = "
+            "b385119095b97568a4c8f82f685e3c920ee50d2b",
+    "clean": "git status --porcelain --untracked-files=no empty at start and end",
+    "env": "MKL_THREADING_LAYER=TBB, MKL / OMP / OPENBLAS / NUMBA_NUM_THREADS=1, dynamics-dev CONDA_PREFIX / PATH, "
+           "PYTHONDONTWRITEBYTECODE=1",
+    "mask": "0x0FFF0000 (E cores, the launching shell pinned first)", "rc": 0,
+    "command": r"C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe -I -B C:\workspace\outrigger_control\04_scripts"
+               r"\03_control\k2\run_with_identity.py <run>\06_analysis\02_control\k2\runs\v5\<arm>\flat_main.launch.json "
+               r"--git-dir C:\workspace\outrigger_control -- C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe -I -B "
+               r"C:\workspace\outrigger_control\04_scripts\03_control\k2\k2_v5_flatten.py --arm-dir "
+               r"<run>\06_analysis\02_control\k2\runs\v5\<arm> --out-dir <run>\06_analysis\02_control\k2\runs\v5\<arm>"
+               r"\flat_main --checkout <run>   (cwd = C:\workspace\outrigger_control, <run> = k2-run)",
+}
 GS_EVIDENCE = {
     "status": "filled 2026-11-10 (main session run, logs copied byte-identical into prelaunch/gs_evidence/)",
     "rule": "G-S needs the 9.2 tests, I-4 reduced, I-5, I-8 passed (re-audit finding 3)",
@@ -101,25 +115,33 @@ GS_EVIDENCE = {
     ],
     "judge_tools_check": "main session: master 6d11d13, Chrono-dev, the K-2 judge tests 147 passed (judge-tool basis, "
                          "not the run checkout)",
-    "verdict": "G-S test condition met: T-K2-1 / T-K2-2 (I-4 reduced, I-5) and I-8 (G0, R-c) passed with 0 skips; "
-               "the pychrono-dependent tests pass in Chrono-dev",
+    "T-K2-7_full_unit_tests": "{T-K2-7: pending, the main session runs 05_tests/unit in full on k2-run (E cores); "
+                              "fill command, env, pass / skip / fail with skip causes, log sha}",
+    "verdict": "T-K2-1 / T-K2-2 (I-4 reduced, I-5) and I-8 (G0, R-c) passed with 0 skips; the pychrono-dependent tests "
+               "pass in Chrono-dev. T-K2-7 (all existing unit tests) pending (third audit fix 3)",
 }
 IDENTITY_LIST_NOTE = (
     "rules rev2 6 / rev6 4: the post-judgement identity list is 60 sidecars (the 62 of k2_commands.json without the "
     "reference flatten steps v5_flatten_off / v5_flatten_tcl), plus the flat_main rebuild sidecars (wrapper), V-5 "
     "provenance, V-6 batch_meta x4, V-7 batch.json / result.json. If P_post stops at a reference flatten step, the "
-    "remaining tcl r79 judge steps run with the same wrapper argv of k2_commands_filled.json; record time, operator, "
-    "stopped step and rc.")
+    "remaining tcl r79 judge steps run with the argv, cwd, env and mask of k2_commands_filled.json (rules rev7 4); "
+    "record time, operator, stopped step and rc.")
 INDEPENDENCE_NOTE = (
-    "rules rev6 5 (user decision 2026-11-10): before any result the main session passed a definition summary of path 1 "
-    "(not code) to the path 2 author to align the two paths (rev5 / rev6); path 1 (k2_judge.py) partly referred to path "
-    "2 code (docstrings, false_latches ~ false_latch; re-audit record d). Not a rule 8 violation (rule 8 restricts path "
-    "2), disclosed because a shared mistake can sit in both paths.")
+    "rules rev7 1-2 (corrects rev6 5; user decision 2026-11-10): before any result (a) the main session sent path 1 "
+    "definition summaries to the path 2 author; (b) the path 2 author (control-expert) READ PATH 1 CODE: 17:37:23-36 KST "
+    "k2_judge.py grep / Read offset 1110 / sed 560-600 / Read offset 884 (manifest layout), 17:50:06 grep series, "
+    "17:51:09 grep dhat, 19:37:58-19:38:02 git show 5f22957 k2_judge.py (kind, V5_KINDS, pass_to_fail, _relative, "
+    "V5_RELATIVE_GATES) before rev5, and read the audits quoting path 1 code (rule 8 violation); (c) path 1 referred to "
+    "path 2 code (docstrings, false_latches ~ false_latch). Path 2 is kept by user decision; the judgement discloses that "
+    "the aligned parts (V-5 result kinds, SH missing, kind / relative gate, manifest layout and D-hat key, G8 c2 and L1 "
+    "false latch) may hold a common mistake and does not count their agreement as independent. From rev7 on the main "
+    "session sends path 1 blob ids only.")
 V5_FLAT_MAIN_NOTE = (
     "P_post's flatten step runs the k2-run flattener (a83abd80, old) and writes runs/v5/<arm>/flat/: kept as a "
     "reference only (runner unchanged, plan sha kept). Before judging, rebuild the flat files with the flattener of "
-    "the main checkout after the merge (blob b3851190, k2-path1-rev6 728ace5, rows carry verdict_missing; 654bc38c / d9e3f2d9 superseded): k2_v5_flatten.py --arm-dir <k2-run>\\06_analysis"
-    "\\02_control\\k2\\runs\\v5\\<arm> --out-dir <same>\\flat_main --checkout <k2-run> (both arms, E cores). The "
+    "the main checkout at the judge commit (blob b3851190, rows carry verdict_missing; 654bc38c / d9e3f2d9 "
+    "superseded), wrapped by run_with_identity.py with the rules rev7 3 expectations (see flat_main_sidecar: sidecar "
+    "runs/v5/<arm>/flat_main.launch.json, --git-dir main checkout, judge-commit HEAD, clean, env, E mask). The "
     "manifest V-5 entries (path 1 input) point to flat_main. Path 2 reads the raw outputs (v5_raw) and is not "
     "affected.")
 FLATTEN_BLOB_PENDING = "b385119095b97568a4c8f82f685e3c920ee50d2b"  # python-expert k2-path1-rev6 728ace5
@@ -496,7 +518,7 @@ def main() -> None:
                                "sha256": sha(k2 / "k2_touch_creep_rules.md")},
                   **{rv: {"path": f"06_analysis/02_control/k2/k2_touch_creep_rules_{rv}.md",
                           "sha256": sha(k2 / f"k2_touch_creep_rules_{rv}.md")}
-                     for rv in ("rev1", "rev2", "rev3", "rev4", "rev5", "rev6") if (k2 / f"k2_touch_creep_rules_{rv}.md").exists()},
+                     for rv in ("rev1", "rev2", "rev3", "rev4", "rev5", "rev6", "rev7") if (k2 / f"k2_touch_creep_rules_{rv}.md").exists()},
                   "dyn_spec": {"path": "06_analysis/02_control/k2/k2_dyn_spec.md", "sha256": sha(k2 / "k2_dyn_spec.md")}},
         "criteria_md": {"path": "06_analysis/02_control/touch_phase/acceptance/criteria.md",
                         "blob_at_run_head": "86aa624264b3add5f24866f8ad21d91cb2c855be",
@@ -508,18 +530,26 @@ def main() -> None:
                   "previous_blob_not_used": {"1.2": "d2240795f06893eb2d3eca6e61c55b6dd6c60eeb",
                                              "1.3": "78a3d2c7c9d26523288f5f3ab05b9a3d6e63466c",
                                              "1.4": "1cde20d2ae54ec2aaef23f7d6c0d24a703904ea5"},
-                  "run_from": "the main checkout after the merge (k2-run holds the older 1.2)"},
+                  "run_from": "the main checkout after the merge (k2-run holds the older 1.2)",
+                  "rules_check_scope": "path 2 1.5 checks the seals of the original, rev1..rev6 and the dyn spec; rev7 "
+                                       "(sealed after 1.5, path 2 kept unchanged by user decision) is checked by path 1 "
+                                       "and the audits"},
+        "g_f_units": "rules rev7 5 (gates, rows, SH FLAG / missing counts, V-5 common one value, V-5 bundle kind / "
+                     "counts / pass->fail counts / noise k and CP / regression key sha equality, numbers rel 1e-9)",
         "gs_evidence": GS_EVIDENCE,
         "identity_list_post_judgement": IDENTITY_LIST_NOTE,
         "flat_main_sidecar": FLAT_MAIN_SIDECAR_NOTE,
         "independence_disclosure": INDEPENDENCE_NOTE,
         "path1": {"path": "04_scripts/03_control/k2/k2_judge.py", "blob": PATH1_BLOB_PENDING,
-                  "source": "python-expert branch k2-path1-rev6 728ace5 (rev2..rev6)",
-                  "previous_blob_not_used": FIX_BLOBS["04_scripts/03_control/k2/k2_judge.py"]},
+                  "source": "python-expert branch k2-path1-rev6b 5d28db4 (rev2..rev7 SH-6 J2; blob id only, code not read)",
+                  "previous_blob_not_used": [FIX_BLOBS["04_scripts/03_control/k2/k2_judge.py"],
+                                             "9bbcc201cf52e48baedd2edb4bb846003d8e8eb3",
+                                             "b41d2587d2abd4b6b530cff894a27a54419c6ab3",
+                                             "c285b8c9e04c30c289a29d0d7a620c00fb4ec906"]},
         "flatten": {"path": "04_scripts/03_control/k2/k2_v5_flatten.py", "blob": FLATTEN_BLOB_PENDING,
                     "source": "python-expert branch k2-path1-rev6 728ace5 (rows carry verdict_missing; flat_main must be built with this version)",
                     "previous_blob_not_used": FIX_BLOBS["04_scripts/03_control/k2/k2_v5_flatten.py"]},
-        "run_from": "both judge paths run from the main checkout after merging k2-prelaunch-record and k2-path1-rev2; "
+        "run_from": "both judge paths run from the main checkout at the judge commit (after merging k2-rev7 and k2-path1-rev6b); "
                     "k2-run (6a44ff8) holds older judge tools",
         "key_lists": key_lists(kr),
         "v6_start_states": {"L1R": {"folder": r"<k2-run>\07_results\states_L1R", "aggregate_sha256_prefix": "b24066a9",
