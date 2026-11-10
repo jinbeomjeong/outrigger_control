@@ -1,0 +1,432 @@
+{
+ "path": "B",
+ "tool": {
+  "file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\6f3ebc4d-a5fb-4d9f-b214-d0ae5c515ee1\\scratchpad\\terra\\gc\\gridconv_path_b.py",
+  "sha256": "14350b883b8f1773422cbec90f7d393cd9ef89030478fee987b23ffdfaa74946"
+ },
+ "inputs": {
+  "batch_json_sha256": "54083f97328926856f38d905fc0f34e8bf157f2482fe82aa9f08ca1eeec0e579",
+  "pad_variants_sha256": "00cf734bddc2877be1365da2cf995689b38ccb2736156ba6d307823cfab443ee",
+  "results": {
+   "GC1_J2_B_RL_1cm": "efd5a827c40eabce67109a898cf31f9ca653d9de7057c1c070ed5e8c67a5dc71",
+   "GC2_J2_B_RL_0p5cm": "ae737f52ff1b1068f21801e8891b1d68eb1d387944003ad9c77beaa27adc8950",
+   "GC3_J2_B_FL_1cm": "564997bf42a677d59dfca982666f89c509bd50ddf1fcf2fe5f6dada25e31e7cc",
+   "GC4_J2_B_FL_0p5cm": "bf822d3698347b024fc90d295372f4e30251d9a5b1597a12fa249096fedb778d"
+  }
+ },
+ "thresholds": {
+  "G1": 0.005,
+  "G2": 0.001,
+  "G3": 0.002,
+  "G5": 0.05
+ },
+ "bundle": "COMPLETE",
+ "rows": {
+  "GC-1": {
+   "case": "GC1_J2_B_RL_1cm",
+   "checks": {
+    "V1_rc0": true,
+    "V1_result_json": true,
+    "V1_two_levels": true,
+    "V1_t_end": true,
+    "V2_argv_tokens": true,
+    "V2_out_root_is_batch": true,
+    "V2_threads4": true,
+    "V2_omp_passive": true,
+    "V2_grid": true,
+    "V2_soil_J2": true,
+    "V2_plane_origin": true,
+    "V2_no_pad_start_arg": true,
+    "V2_share_xy0": true,
+    "V2_hull_fast": true,
+    "V2_dll_sha": true,
+    "V3_nodes_hull": true,
+    "V3_hold_end_times": true
+   },
+   "status": "VALID",
+   "t_end_s": 21.0,
+   "settle_end_xy_mm": [
+    0.0,
+    0.0
+   ],
+   "share_xy0_m": [
+    0.0,
+    0.0
+   ],
+   "grid_m": 0.01,
+   "A_m2": 0.0607,
+   "b_poly_m": 0.130578967,
+   "dz_m": 0.01724631339149635,
+   "dz_over_z2": 0.12664555112060766,
+   "levels": [
+    {
+     "t_s": 11.0,
+     "load_N": 72849.9997665,
+     "Fz_scm_N": 72850.0318382765,
+     "N_h": 601,
+     "hull_area_m2": 0.05619999999999999,
+     "hull_perimeter_m": 0.8959338255067266,
+     "z_node_m": 0.11893149548382212,
+     "z_geo_m": 0.1189314933999342,
+     "b_hull_m": 0.1254556941595862,
+     "A_eff_m2": 0.0601,
+     "z_ref_m": 0.11893044217367027,
+     "f": 1.0364537396713362,
+     "eps1": 1.7712888374346314e-06,
+     "z_corr_m": 0.11474848210557652,
+     "z_node_over_ref_m1": 8.85652262438974e-06
+    },
+    {
+     "t_s": 21.0,
+     "load_N": 74850.0,
+     "Fz_scm_N": 74850.06036246778,
+     "N_h": 601,
+     "hull_area_m2": 0.05619999999999999,
+     "hull_perimeter_m": 0.8959338255067266,
+     "z_node_m": 0.13617781248445718,
+     "z_geo_m": 0.13617780679143054,
+     "b_hull_m": 0.1254556941595862,
+     "A_eff_m2": 0.0601,
+     "z_ref_m": 0.13617741270882686,
+     "f": 1.0364537396713362,
+     "eps1": 5.871376886269734e-07,
+     "z_corr_m": 0.1313882150057301,
+     "z_node_over_ref_m1": 2.9356970614458078e-06
+    }
+   ]
+  },
+  "GC-2": {
+   "case": "GC2_J2_B_RL_0p5cm",
+   "checks": {
+    "V1_rc0": true,
+    "V1_result_json": true,
+    "V1_two_levels": true,
+    "V1_t_end": true,
+    "V2_argv_tokens": true,
+    "V2_out_root_is_batch": true,
+    "V2_threads4": true,
+    "V2_omp_passive": true,
+    "V2_grid": true,
+    "V2_soil_J2": true,
+    "V2_plane_origin": true,
+    "V2_no_pad_start_arg": true,
+    "V2_share_xy0": true,
+    "V2_hull_fast": true,
+    "V2_dll_sha": true,
+    "V3_nodes_hull": true,
+    "V3_hold_end_times": true
+   },
+   "status": "VALID",
+   "t_end_s": 21.0,
+   "settle_end_xy_mm": [
+    0.0,
+    0.0
+   ],
+   "share_xy0_m": [
+    0.0,
+    0.0
+   ],
+   "grid_m": 0.005,
+   "A_m2": 0.0607,
+   "b_poly_m": 0.130578967,
+   "dz_m": 0.016899444159458293,
+   "dz_over_z2": 0.12664659307033874,
+   "levels": [
+    {
+     "t_s": 11.0,
+     "load_N": 72849.9997665,
+     "Fz_scm_N": 72850.02584726275,
+     "N_h": 2421,
+     "hull_area_m2": 0.06025,
+     "hull_perimeter_m": 0.9199843231455281,
+     "z_node_m": 0.11653836897179294,
+     "z_geo_m": 0.11653836691590516,
+     "b_hull_m": 0.13098049278491744,
+     "A_eff_m2": 0.060525,
+     "z_ref_m": 0.11653732990890081,
+     "f": 1.0155986882198855,
+     "eps1": 1.7832116603275774e-06,
+     "z_corr_m": 0.11474844174933951,
+     "z_node_over_ref_m1": 8.916137798520296e-06
+    },
+    {
+     "t_s": 21.0,
+     "load_N": 74850.0,
+     "Fz_scm_N": 74849.95203831336,
+     "N_h": 2421,
+     "hull_area_m2": 0.06025,
+     "hull_perimeter_m": 0.9199843231455281,
+     "z_node_m": 0.1334378151411559,
+     "z_geo_m": 0.13343781107536345,
+     "b_hull_m": 0.13098049278491744,
+     "A_eff_m2": 0.060525,
+     "z_ref_m": 0.13343634709449512,
+     "f": 1.0155986882198855,
+     "eps1": 2.200345770406766e-06,
+     "z_corr_m": 0.13138832554938576,
+     "z_node_over_ref_m1": 1.1001849891334459e-05
+    }
+   ]
+  },
+  "GC-3": {
+   "case": "GC3_J2_B_FL_1cm",
+   "checks": {
+    "V1_rc0": true,
+    "V1_result_json": true,
+    "V1_two_levels": true,
+    "V1_t_end": true,
+    "V2_argv_tokens": true,
+    "V2_out_root_is_batch": true,
+    "V2_threads4": true,
+    "V2_omp_passive": true,
+    "V2_grid": true,
+    "V2_soil_J2": true,
+    "V2_plane_origin": true,
+    "V2_no_pad_start_arg": true,
+    "V2_share_xy0": true,
+    "V2_hull_fast": true,
+    "V2_dll_sha": true,
+    "V3_nodes_hull": true,
+    "V3_hold_end_times": true
+   },
+   "status": "VALID",
+   "t_end_s": 21.0,
+   "settle_end_xy_mm": [
+    2.20227394263898e-19,
+    -9.383426763455297e-20
+   ],
+   "share_xy0_m": [
+    0.0,
+    0.0
+   ],
+   "grid_m": 0.01,
+   "A_m2": 0.1071,
+   "b_poly_m": 0.171400364,
+   "dz_m": 0.00906065105726167,
+   "dz_over_z2": 0.09531524950340473,
+   "levels": [
+    {
+     "t_s": 11.0,
+     "load_N": 119589.9999756,
+     "Fz_scm_N": 119590.18558726134,
+     "N_h": 1073,
+     "hull_area_m2": 0.10599999999999998,
+     "hull_perimeter_m": 1.2366089140179781,
+     "z_node_m": 0.08599919313347906,
+     "z_geo_m": 0.08599917519790663,
+     "b_hull_m": 0.17143657756046052,
+     "A_eff_m2": 0.1073,
+     "z_ref_m": 0.0859989681406771,
+     "f": 0.9907701098693397,
+     "eps1": 5.232439834860916e-07,
+     "z_corr_m": 0.0868003327323308,
+     "z_node_over_ref_m1": 2.616226762119922e-06
+    },
+    {
+     "t_s": 21.0,
+     "load_N": 122010.0,
+     "Fz_scm_N": 122009.86701411828,
+     "N_h": 1073,
+     "hull_area_m2": 0.10599999999999998,
+     "hull_perimeter_m": 1.2366089140179781,
+     "z_node_m": 0.0950598293934486,
+     "z_geo_m": 0.0950598262551683,
+     "b_hull_m": 0.17143657756046052,
+     "A_eff_m2": 0.1073,
+     "z_ref_m": 0.09505835838113583,
+     "f": 0.9907701098693397,
+     "eps1": 3.094918899318088e-06,
+     "z_corr_m": 0.0959453916789078,
+     "z_node_over_ref_m1": 1.5474833963358137e-05
+    }
+   ]
+  },
+  "GC-4": {
+   "case": "GC4_J2_B_FL_0p5cm",
+   "checks": {
+    "V1_rc0": true,
+    "V1_result_json": true,
+    "V1_two_levels": true,
+    "V1_t_end": true,
+    "V2_argv_tokens": true,
+    "V2_out_root_is_batch": true,
+    "V2_threads4": true,
+    "V2_omp_passive": true,
+    "V2_grid": true,
+    "V2_soil_J2": true,
+    "V2_plane_origin": true,
+    "V2_no_pad_start_arg": true,
+    "V2_share_xy0": true,
+    "V2_hull_fast": true,
+    "V2_dll_sha": true,
+    "V3_nodes_hull": true,
+    "V3_hold_end_times": true
+   },
+   "status": "VALID",
+   "t_end_s": 21.0,
+   "settle_end_xy_mm": [
+    2.775768325325696e-19,
+    -5.310950186353504e-19
+   ],
+   "share_xy0_m": [
+    0.0,
+    0.0
+   ],
+   "grid_m": 0.005,
+   "A_m2": 0.1071,
+   "b_poly_m": 0.171400364,
+   "dz_m": 0.009136646998123513,
+   "dz_over_z2": 0.0953149037567711,
+   "levels": [
+    {
+     "t_s": 11.0,
+     "load_N": 119589.9999756,
+     "Fz_scm_N": 119589.91901956263,
+     "N_h": 4285,
+     "hull_area_m2": 0.10649999999999998,
+     "hull_perimeter_m": 1.241520301928082,
+     "z_node_m": 0.08672084717064783,
+     "z_geo_m": 0.08672083843184475,
+     "b_hull_m": 0.1715638477028614,
+     "A_eff_m2": 0.10712500000000001,
+     "z_ref_m": 0.08671967392843381,
+     "f": 0.9990842948969582,
+     "eps1": 2.7057904812925416e-06,
+     "z_corr_m": 0.08680032192958134,
+     "z_node_over_ref_m1": 1.352913544150347e-05
+    },
+    {
+     "t_s": 21.0,
+     "load_N": 122010.0,
+     "Fz_scm_N": 122009.86994034074,
+     "N_h": 4285,
+     "hull_area_m2": 0.10649999999999998,
+     "hull_perimeter_m": 1.241520301928082,
+     "z_node_m": 0.09585749245962713,
+     "z_geo_m": 0.09585748542996826,
+     "b_hull_m": 0.1715638477028614,
+     "A_eff_m2": 0.10712500000000001,
+     "z_ref_m": 0.09585606529704696,
+     "f": 0.9990842948969582,
+     "eps1": 2.9776755964504812e-06,
+     "z_corr_m": 0.09594534307023077,
+     "z_node_over_ref_m1": 1.4888599649376388e-05
+    }
+   ]
+  }
+ },
+ "pairs": {
+  "RL": {
+   "rows": [
+    "GC-1",
+    "GC-2"
+   ],
+   "G2_m": [
+    4.035623700493485e-08,
+    1.1054365564588942e-07
+   ],
+   "G2_max_m": 1.1054365564588942e-07,
+   "G3": 1.0419497310787396e-06,
+   "dz_over_z2": [
+    0.12664555112060766,
+    0.12664659307033874
+   ],
+   "G4": {
+    "z2_diff_m": 0.0027399957160670896,
+    "dz_diff_m": 0.0003468692320380551,
+    "z1_diff_m": 0.0023931264840290345
+   },
+   "G5_max": 0.004589812796839676,
+   "G5_t_s": 12.8,
+   "G5_n_samples": 101
+  },
+  "FL": {
+   "rows": [
+    "GC-3",
+    "GC-4"
+   ],
+   "G2_m": [
+    1.0802749458860283e-08,
+    4.860867702793925e-08
+   ],
+   "G2_max_m": 4.860867702793925e-08,
+   "G3": 3.457466336287407e-07,
+   "dz_over_z2": [
+    0.09531524950340473,
+    0.0953149037567711
+   ],
+   "G4": {
+    "z2_diff_m": -0.0007976591747999584,
+    "dz_diff_m": -7.599594086184214e-05,
+    "z1_diff_m": -0.0007216632339381163
+   },
+   "G5_max": 0.0020853609830273623,
+   "G5_t_s": 12.7,
+   "G5_n_samples": 101
+  }
+ },
+ "gates": {
+  "G1_max": 3.094918899318088e-06,
+  "G1_n": 8,
+  "G1_pass": true,
+  "G2_max_m": 1.1054365564588942e-07,
+  "G2_n": 4,
+  "G2_pass": true,
+  "G3_max": 1.0419497310787396e-06,
+  "G3_n": 2,
+  "G3_pass": true,
+  "G5_max": 0.004589812796839676,
+  "G5_flag": false
+ },
+ "predictions": {
+  "E1": {
+   "value": 3.094918899318088e-06,
+   "prediction": 0.001,
+   "rule": "<=",
+   "result": "예측 확인"
+  },
+  "E2": {
+   "value": 1.1054365564588942e-07,
+   "prediction": 0.0003,
+   "rule": "<=",
+   "result": "예측 확인"
+  },
+  "E3": {
+   "value": 1.0419497310787396e-06,
+   "prediction": 0.0005,
+   "rule": "<=",
+   "result": "예측 확인"
+  },
+  "E4": {
+   "value": 0.004589812796839676,
+   "prediction": 0.02,
+   "rule": "<=",
+   "result": "예측 확인"
+  },
+  "E5": {
+   "value": 0.0027399957160670896,
+   "prediction": 0.0027,
+   "rule": "+-0.5 mm",
+   "result": "예측 확인"
+  },
+  "E6": {
+   "value": 0.0003468692320380551,
+   "prediction": 0.00035,
+   "rule": "+-0.5 mm",
+   "result": "예측 확인"
+  },
+  "E7": {
+   "value": -0.0007976591747999584,
+   "prediction": -0.0008,
+   "rule": "+-0.5 mm",
+   "result": "예측 확인"
+  },
+  "E8": {
+   "value": -7.599594086184214e-05,
+   "prediction": -8e-05,
+   "rule": "+-0.5 mm",
+   "result": "예측 확인"
+  }
+ },
+ "verdict": "PASS"
+}

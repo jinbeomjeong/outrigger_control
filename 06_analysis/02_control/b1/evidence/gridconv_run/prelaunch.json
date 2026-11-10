@@ -1,0 +1,29 @@
+{
+  "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_B1-GRIDCONV_20261110_174640",
+  "head_g": "dc2029b",
+  "head_full": "dc2029be9512f40bf849e17fd3bdaa5c61a89a5e",
+  "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\gc-run-dc2029b (detached, tracked dirty 0)",
+  "dll_src_sha": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+  "dll_copy_sha": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+  "placement_table": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\6f3ebc4d-a5fb-4d9f-b214-d0ae5c515ee1\\scratchpad\\gc_sched\\gc_placement_table.md",
+  "placement_table_sha": "dd4930486897d8e186196a82dd6e6889411f395ca3a426ece780ea61acecabd5",
+  "lane_script_sha": "03d8ce9b2f96564ec4c67c819bf2e6f1c353f47248d8e7bf345e56d0f0fc48fb",
+  "env_removed": [
+    "OUTRIGGER_HULL_HOOK",
+    "OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED",
+    "OUTRIGGER_HULL_HOOK_DLL",
+    "OPENBLAS_NUM_THREADS"
+  ],
+  "env_set": {
+    "OMP_WAIT_POLICY": "PASSIVE",
+    "OUTRIGGER_PLACEMENT": "ecore"
+  },
+  "interp_flags": "-I -X utf8 -u",
+  "lanes": {
+    "1": "GC4",
+    "2": "GC2",
+    "3": "GC3 then GC1"
+  },
+  "audit": "06_analysis/02_control/b1/b1_gridconv_prerun_audit.md",
+  "launched": "2026-11-10T17:46:40.5267899+09:00"
+}
