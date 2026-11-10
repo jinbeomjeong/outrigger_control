@@ -412,24 +412,34 @@ def test_shadow_paths_are_repository_relative() -> None:
     assert ls.repository_path(None) is None
 
 
-def test_t4h_request_tag_is_corrected_to_the_run_controller() -> None:
+@pytest.mark.parametrize(
+    ("switches", "expected_tag"),
+    [
+        ({}, f"{tj.TAG_P3_LAS}_K1"),  # preset since the K1 switch (LAS-b + order gate)
+        ({"flat_soil_margin_order_gate": False}, tj.TAG_P3_LAS),  # before the K1 switch
+        ({"liftoff_approach_slow": False, "flat_soil_margin_order_gate": False},
+         tj.TAG_P3),  # before the LAS-b switch
+    ],
+    ids=["preset_LAS_K1", "gate_off_LAS", "both_off"],
+)
+def test_t4h_request_tag_is_corrected_to_the_run_controller(
+        switches: dict, expected_tag: str) -> None:
     """``run_v5._t4h_request`` builds its meta before the controller exists (options only);
     ``verdict_runs._finish`` writes the record with the tag of the run's controller config."""
     import run_v5
     import verdict_runs
 
     from outrigger_sim.control import c2
+    from outrigger_sim.hydraulics.v5_options import with_switch_tags
 
     flow, options = run_v5.options_of("VB")
     job = {"case": "R12", "setting": "VB", "eps": 0.0, "t4h_dir": "unused"}
     request = run_v5._t4h_request(job, flow, options)["meta"]
     assert request["controller_tag"] == tj.TAG_P3  # request time: no config yet
-    las_on = c2.C2Config().with_10hz_d1()
-    las_off = c2.C2Config().with_10hz_d1(liftoff_approach_slow=False)
-    assert verdict_runs._meta_with_controller_tag(request, las_on)["controller_tag"] == \
-        tj.TAG_P3_LAS
-    assert verdict_runs._meta_with_controller_tag(request, las_off)["controller_tag"] == \
-        tj.TAG_P3
+    config = c2.C2Config().with_10hz_d1(**switches)
+    corrected = verdict_runs._meta_with_controller_tag(request, config)["controller_tag"]
+    assert corrected == expected_tag
+    assert corrected == with_switch_tags(tj.TAG_P3, config)
 
 
 def test_h7_and_k6_share_one_function() -> None:
