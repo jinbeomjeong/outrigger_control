@@ -1,0 +1,41 @@
+{
+ "plan_id": "k2-sched-20261110a",
+ "author": "compute-scheduler-expert",
+ "date": "2026-11-10",
+ "run_head": "6a44ff81d25aea1fa162daf9b14c23b99beb9db0",
+ "run_wt": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+ "commands_source": "06_analysis/02_control/k2/prelaunch/k2_commands.json",
+ "commands_source_sha256": "SEE manifest (computed by build_runners.py)",
+ "basis_clock": "2026-11-10 19:00 start",
+ "pools": {
+  "pcore": {"mask": "0xFFFF", "logical": "0-15", "runner_priority": "Normal", "physical_cores": 8},
+  "ecore": {"mask": "0x0FFF0000", "logical": "16-27", "runner_priority": "BelowNormal", "physical_cores": 12}
+ },
+ "slots": {
+  "{POOL}": {"v2": "pcore", "v3": "pcore", "v4": "pcore", "v5": "pcore", "v6": "ecore", "v7": "ecore"},
+  "{MASK}": {"v2": "0xFFFF", "v3": "0xFFFF", "v4": "0xFFFF", "v5": "0xFFFF"},
+  "{WORKERS}": {"v2": 8, "v3": 8, "v4": 8, "v5": 8},
+  "{PLACEMENT}": {"v6_L1": "ecore"},
+  "{L2B_WORKERS}": {"v6_L2b": "e6"},
+  "{P}": {"v7": 0, "note": "P-pool slots = 0; the 4 rows go to the E pool by appended '--parallel-e 4 --e-cases <4 row names>'"},
+  "{BATCH_V7}": {"v7": "runtime: <RUN_WT>\\07_results\\S9\\batch_k2_v7_<yyyymmdd_HHMMSS> (s9_batch names it at start; read it from the first line of the V-7 log or the newest folder)"},
+  "{PLAN_ID}": "k2-sched-20261110a"
+ },
+ "pair_rule": "off and tcl steps of one step id (V-5 / V-2 / V-4) and of one V-3 aug arm run in the same pool with the same --workers; here a whole bundle shares one pool, so the rule holds at bundle level too",
+ "v7_appended_args": ["--parallel-e", "4", "--e-cases", "K2V7_P3b_J1_B_top_Fs4_off", "K2V7_P3b_J1_B_top_Fs4_tcl", "K2V7_P3b_J2_B_top_Fs4_off", "K2V7_P3b_J2_B_top_Fs4_tcl"],
+ "lanes": [
+  {"runner": "E_pre", "pool": "ecore", "steps": ["v6_snaps_k2_check"], "start": "19:00, foreground, read the log before anything else on E"},
+  {"runner": "E_V6_off", "pool": "ecore", "steps": ["v6_L1_off", "v6_L2b_off"], "start": "after E_pre is OK and states_L1R is copied"},
+  {"runner": "E_V6_tcl", "pool": "ecore", "steps": ["v6_L1_tcl", "v6_L2b_tcl"], "start": "same minute as E_V6_off (mirrored)"},
+  {"runner": "E_V7", "pool": "ecore", "steps": ["v7_k2_v7"], "start": "start the runner right after the two V-6 runners; it waits until both runner scripts are gone (proc-absent)"},
+  {"runner": "P_main", "pool": "pcore", "steps": "V-2 (2 pairs), V-4 (1 pair), V-3 (7 pairs), V-5 reg1..g8_jobs5 (15 pairs), off/tcl alternating", "start": "19:00 after the pre-flight checks"},
+  {"runner": "P_post", "pool": "pcore", "steps": "V-5 post: judge x2 + flatten for off, then for tcl", "start": "start with P_main; waits for all 30 V-5 .done markers"}
+ ],
+ "estimates": {
+  "P_main_worker_s": {"v2": 22000, "v4": 17000, "v3": 54600, "v5": 78000, "total": 171600},
+  "P_main_wall_h_at_8_workers": 5.96,
+  "P_main_wall_h_with_overhead": "6.3 (range 6.0-7.0)",
+  "E_V6_wall_min": "35-45 (both arms mirrored)",
+  "E_V7_row_s_on_E": "13700-15000 (stored E walls of the same row types), 4 rows at once"
+ }
+}

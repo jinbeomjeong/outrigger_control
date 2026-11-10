@@ -1,6 +1,6 @@
 {
- "status": "draft (not a launch record until the pool fields and placeholders are filled)",
- "head": "{RUN_HEAD} = the master merge commit of k2-v7k1-dhat (cad-expert 09f66c4), k2-prelaunch-fix (python-expert c77ecf5) and k2-prelaunch (k2_recount 1.2) onto dc2029b",
+ "status": "launch record (filled; pre-run audit pending)",
+ "head": "6a44ff81d25aea1fa162daf9b14c23b99beb9db0",
  "run_wt": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
  "rules": {
   "original": {
@@ -11,19 +11,132 @@
    "path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev1.md",
    "sha256": "5ba081c62f8aef0edc5bb99119d7586b0d2914761582f2323c289f472f244776"
   },
+  "rev2": {
+   "path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev2.md",
+   "sha256": "b3f1b41f27030c75aec726d2a3feb5abc36697864e0d83766a8fe0c4460394ea"
+  },
+  "rev3": {
+   "path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev3.md",
+   "sha256": "8bcdb0ed1fdf6d730ac781929e93b233972d1e80566e1ae14ffb7ddf049d6e61"
+  },
+  "rev4": {
+   "path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev4.md",
+   "sha256": "82160ff54874e3d43bf7c5a1ae96d6e8612b1e7635aaccea39a4299352ce00c5"
+  },
+  "rev5": {
+   "path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev5.md",
+   "sha256": "73b877580ec5dc94a46a38d2ed620372cddd17dd38eef06126d84843b485eccc"
+  },
   "dyn_spec": {
    "path": "06_analysis/02_control/k2/k2_dyn_spec.md",
    "sha256": "502b0bb78558d40586cbcddb718b6c5d53529de4e78369f454762c9fe73727ff"
   }
  },
+ "criteria_md": {
+  "path": "06_analysis/02_control/touch_phase/acceptance/criteria.md",
+  "blob_at_run_head": "86aa624264b3add5f24866f8ad21d91cb2c855be",
+  "lf_content_sha256": "a7363e161fef616915bcafa4e1b7b182e9501b28326634f4540cc8fc5c80590d",
+  "k2_run_working_copy_sha256": "a392730fc2160faf5f6c2c327ec1c5b8ae251427e3b259ef3bb074e791ceb00c"
+ },
+ "c2_py_k2_run_working_copy_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
  "path2": {
   "path": "04_scripts/03_control/k2/k2_recount.py",
-  "blob": "d2240795f06893eb2d3eca6e61c55b6dd6c60eeb"
+  "version": "1.4",
+  "blob": "1cde20d2ae54ec2aaef23f7d6c0d24a703904ea5",
+  "run_from": "the record branch / main checkout after the merge (k2-run holds the older 1.2)"
  },
  "path1": {
   "path": "04_scripts/03_control/k2/k2_judge.py",
-  "blob": "7ee9ccc109578da2bb0e8e25f3811d9c0f73664b"
+  "blob": "b41d2587d2abd4b6b530cff894a27a54419c6ab3",
+  "source": "python-expert branch k2-path1-rev2 f67854e (rev2..rev5)",
+  "previous_blob_not_used": "7ee9ccc109578da2bb0e8e25f3811d9c0f73664b"
  },
+ "flatten": {
+  "path": "04_scripts/03_control/k2/k2_v5_flatten.py",
+  "blob": "654bc38c4e92a5bf6f4e039c935f64d60f122260",
+  "source": "python-expert branch k2-path1-rev2 f67854e (output format: sidecar clean record, G8 meta checkout_c2)",
+  "previous_blob_not_used": "a83abd803dd91e3855159e919770092e40a3cdb9"
+ },
+ "run_from": "both judge paths run from the main checkout after merging k2-prelaunch-record and k2-path1-rev2; k2-run (6a44ff8) holds older judge tools",
+ "key_lists": {
+  "v2": {
+   "n": 1102,
+   "sha256_sorted_joined": "1bc5076dfd022e427a893c1e1c80b6677326965b408c838b55a03c63af537415"
+  },
+  "v3": {
+   "n": 273,
+   "sha256_sorted_joined": "d4a030d71e4a365e328fbbf7caa212c378a8671fed8ba206d25b50666255cf95"
+  },
+  "v4": {
+   "n": 596,
+   "sha256_sorted_joined": "f243dc300a55feca6cc8ca2a8da061d0d7529e3bdcb55a8bf4c3fc1d397c8b72"
+  },
+  "v5": {
+   "grid": {
+    "n": 768,
+    "sha256_sorted_joined": "27b4bd8ca5c0ddff824e9733478f55a259fbef93a4efd59a3b2a1e191b7d3529"
+   },
+   "soil": {
+    "n": 60,
+    "sha256_sorted_joined": "6992adeae3e7e95ab8bea4931c796e5094eb9a18c7f1731821194c8ef7f2c179"
+   },
+   "d8": {
+    "n": 576,
+    "sha256_sorted_joined": "c46ea6cb163cf12e7fd43432954955828315485797da09f8bc5469b50cc9b4db"
+   },
+   "noise_L2": {
+    "n": 855,
+    "sha256_sorted_joined": "c9878b6d5da1ff8befc937de2eb18cb09628d80d185d2287f407e590afeb6705"
+   },
+   "regression_judged": {
+    "n": 93,
+    "sha256_sorted_joined": "2900db889efc73070c3a8fbe557b1a4ad9ee3392afc099ba00be1d0549174ec9"
+   },
+   "regression_record": {
+    "n": 49,
+    "sha256_sorted_joined": "d4f58334c6ca7c393c35072a798c09f4995d7fde274e0af6b21b99f977d503eb"
+   },
+   "ps7": {
+    "n": 20,
+    "sha256_sorted_joined": "4ffc2cb94f63a2f223fbc8c38d78778802936b9906a32fdcc527591e3c3d1f4f"
+   },
+   "g8_safe_stop": {
+    "n": 83,
+    "sha256_sorted_joined": "bce9b6d2b1edaca9118db3d703d15d79fb4ce254ee274cfcc89fcc41578d4739"
+   }
+  },
+  "source_note": "V-5 keys of the stored final-controller acceptance outputs (same steps); after the run both arms must give the same lists (unmatched 0, rules rev2 1)"
+ },
+ "v6_start_states": {
+  "L1R": {
+   "folder": "<k2-run>\\07_results\\states_L1R",
+   "aggregate_sha256_prefix": "b24066a9",
+   "files_sha256": {
+    "S6_crawler_top_fdown3.5.npz": "8f93d107fcd7ff8e4f22a0952dd35ca5bb409645737a0260ee354a7b6bedf9bd",
+    "S6_crawler_top_fdown3.5.meta.json": "9bb73974458de347a65a3a151cd044e5b801676b7e8b38881b8e8f119c2d133a",
+    "S6_crawler_top_k2pp025.npz": "be765f360d4319e499768d6d5364a2cca6f34a540955d6210886e9cc10587014",
+    "S6_crawler_top_k2pp025.meta.json": "c49fbfcf508bab2fda07b780353077110cc2cfb49ed37a5195aaea5290f5a07a"
+   }
+  },
+  "L2b": {
+   "kind": "in_run_settle",
+   "snapshot": null,
+   "path": "run_S8C.build_l2b -> run_S7C.l2b_crawler_start (stroke 0, hanging) -> run_S7C.settle_l2b (CRAWLER_SETTLE_S 3.0 s ASSUMPTION, dt 1e-4, 30,000 steps, command 0) -> run_S8C.check_settle (crawler normal < 0.5 W_n refused)",
+   "code_blobs": {
+    "run_S7C.py": "b2b4458b29ea8fd50786827c958551ef0a55d5f9",
+    "run_S8C.py": "cec2c696befad75530588d07426a907e9d620821"
+   },
+   "env": "OUTRIGGER_S8_CRAWLER unset (YAML rigid NSC)",
+   "record": "result.json settings.l2b_start (start_t_s 3.0); batch_meta k2.start_states"
+  }
+ },
+ "launch_order": [
+  "1. E_pre (k2run_E_pre.ps1): snaps-k2 --dry-run; its log (sched logs E_pre) must show S6_crawler_top_k2pp025 under 'existing' and 'missing' empty, exit 0. Otherwise stop and ask.",
+  "2. E_V6_off and E_V6_tcl (k2run_E_V6_off.ps1, k2run_E_V6_tcl.ps1), only after 1 (the runners do not wait on E_pre: WaitArguments null).",
+  "3. Confirm both V-6 runner processes are alive (and their batch folders created).",
+  "4. E_V7 (k2run_E_V7.ps1), only after 3 (its --proc-absent wait would otherwise pass at once).",
+  "P_main and then P_post on the P pool are independent of 1-4."
+ ],
  "fix_blobs_c77ecf5": {
   "04_scripts/03_control/k2/k2_judge.py": "7ee9ccc109578da2bb0e8e25f3811d9c0f73664b",
   "04_scripts/03_control/k2/k2_v5_flatten.py": "a83abd803dd91e3855159e919770092e40a3cdb9",
@@ -32,14 +145,15 @@
   "06_analysis/02_control/touch_phase/acceptance/g8_safe_stop/g8trace.py": "d8bfe68e4350195951ec58a6a69bc24c04d293cc"
  },
  "chrono_identity": "V-6 batch_meta.json identity_start / identity_end (orig_argv, cwd, git HEAD and status, env, affinity, per-row exit_code, all_rc_zero) + batch.json exit_code (cad-expert 09f66c4); V-7 s9_batch batch.json argv / rc",
- "v5_regression_rows": "V-5 regression: the rules 3.4 / criteria.md row is '118 | L1 / L2 / soil / slope rows pass->fail 0 (L3 rows record only)'. The judged rows are 93 (acc_judge: 13 + 17 + 2 + 11 + clip_A 20 + r79 L1/L2 30, python-expert count). The other 25 of the 118 are rows acc_judge does not judge (clip_r79_L3L4 is record only; the r79 L1 reference rows are not judged rows); their exact list is fixed from the flattener summary at the launch record. The flat file of k2_v5_flatten.py holds the 93 judged rows; E-1 expects 93. Record-level correction (a): the sealed text already restricts the criterion to those rows; no grade effect.",
+ "v5_regression_rows": "V-5 regression (rules rev2 2): judged rows 93 (acc_judge definition: clip_harness 13 + clip_p0 17 + clip_x426_C 2 + clip_x426_D 11 + clip_A 20 + r79 L1/L2 judgement 30; key sha 2900db88...) + record rows 49 (clip_r79_L1L2 entries that are not judgement rows 7 + clip_r79_L3L4 42; key sha d4f58334...). The 118 of the original 3.4 / criteria.md is the old rerun-list count, not reconstructable from the stored outputs. E-1 expects 93. The r79 L1 reference rows are not judged rows; the r79 judgement 'unmatched' is a record (rev4 1 (c)).",
+ "v5_flat_rebuild": "P_post's flatten step runs the k2-run flattener (a83abd80, old) and writes runs/v5/<arm>/flat/: kept as a reference only (runner unchanged, plan sha kept). Before judging, rebuild the flat files with the flattener of the main checkout after the merge (blob 654bc38c, k2-path1-rev2 f67854e; d9e3f2d9 superseded): k2_v5_flatten.py --arm-dir <k2-run>\\06_analysis\\02_control\\k2\\runs\\v5\\<arm> --out-dir <same>\\flat_main --checkout <k2-run> (both arms, E cores). The manifest V-5 entries (path 1 input) point to flat_main. Path 2 reads the raw outputs (v5_raw) and is not affected.",
  "point_files": {
   "k2_points_5p5_3p5.json": "a15cbe95275be11c163028ca2113d896254d49a4554286c54bdbfa88680cccc3",
   "d8x_points.json": "050145f6a965c851a014563f6219e61c1081716eb5ad5f7e8469a098d426c817"
  },
  "inputs": {
-  "k2_manifest.json": "d54752c641e0f934852c0d4e68646ab2e19544ab8e9418060c99cd92f8950fac",
-  "k2_expect.json": "e19cef826bdc96e0bf84250807a6b32c07568e6951d628460ea632c96134ccba",
+  "k2_manifest.json": "807e3690e2eeba584d9c07fc8b61e3c9e507ec14e2a67c8b362ceded0ca6828d",
+  "k2_expect.json": "ecef70d274ebb9a572247f8859bafb02e5f5ddb0dd8268958ec6660893e4e1a6",
   "k2_fields.json": "0c5aafc4cd026680b81d12a43106ea0267d1519b21a9d6192e5ef96943e45b77",
   "k2_commands.json": "ce6e04a2c00aaafb2f73b3f88b78abb599ca3be134dad36352b4c7f08e8b97e5",
   "k2_v3_keys.txt": "506b93a4d9f4b25bcddbe1a10709a5be5e833c1e6d98b03113e1ed1373cfd5ec"
@@ -61,13 +175,66 @@
   "PYTHONDONTWRITEBYTECODE": "1"
  },
  "pool": {
-  "plan_id": "{PLAN_ID}",
-  "mask": "{MASK}",
-  "workers": "{WORKERS}",
-  "pcore_or_ecore": "{POOL}",
+  "plan_id": "k2-sched-20261110a",
+  "pool": "pcore",
+  "mask": "0xFFFF",
+  "workers": 8,
   "rule": "the off and K-2 steps of one bundle (and of one V-3 arm) run in the same pool"
  },
  "notes": "# K-2 실행 전 기록에 넣을 문구 (control-expert, 2026-11-10, 결과 전)\n\n- 근거: `k2_touch_creep_rules.md`(sha256 `a3658197…7263`) + `k2_touch_creep_rules_rev1.md`(sha256 `5ba081c62f8aef0edc5bb99119d7586b0d2914761582f2323c289f472f244776`).\n- 아래 세 문구를 해당 `k2_prelaunch_<묶음>.json`의 `notes`에 그대로 넣는다. 이 파일은 판정 규칙이 아니라 기록 문구 모음이다.\n\n## 1. V-4 점 파일 (`k2_prelaunch_v4.json`)\n\n> 점 파일 `06_analysis/02_control/k2/k2_points_5p5_3p5.json`(sha256 `<실행 전 기록 때의 값>`)은 rev1 1·2에 따라 `d8x_diag.diamond_points(5.5, 3.5)`(커밋 `6f2f7cb`) 값이다. 경로 2 `k2_recount.py points-check`로 rev1 2 조건을 확인했다(diamond 차 0, 표 차 d45 1.11e-5° ≤ 2e-5°, 그 밖 12점 0). 병합본(master `dc2029b`)의 파일 sha256은 `a15cbe95275be11c163028ca2113d896254d49a4554286c54bdbfa88680cccc3`이다. 2026-11-10 python-expert 커밋 `f57bebc`의 구판(sha256 `98304b2395769faa6152df9642109b317df26a5e65b0a6723a3a7ed3b659198e`)과는 `table_check` 블록만 다르고 16점 각도는 같다(구판은 이 조건을 통과했다; 병합본도 실행 전 기록 때 `points-check`로 다시 확인한다).\n\n## 2. d45 (`k2_prelaunch_v4.json`)\n\n> d45 4점의 실행 값은 ±2.1389°(4자리 반올림)이고, 규칙 3.2 표의 정확값 19.25/9° = 2.138888…°와 1.11e-5° 차이다(rev1 1). $R_v$ = 1.0000052다. V-4 하네스는 `TargetAcceptance.OFF`이고 J1~J11에 각도 문턱이 없어 등급 영향이 없다. E-7(행 각도 = 점 파일, ≤ 1e-9°)의 기준은 점 파일이다(rev1 3).\n\n## 3. CAP 기준 행정 (`k2_prelaunch_v1.json`)\n\n> CAP(K2-4) 기준 행정은 규칙 글자대로 그 다리가 `touch_seen`이 된 표본의 모터 행정이다. 스크린 `screen/j3_variants.py.txt`는 그다음 표본을 기준으로 썼다. 두 기준의 차는 많아야 한 제어 주기의 행정(창 속도 0.5 v_max에서 약 1 mm, 크리프 중 약 0.1 mm)이고, 구현 쪽 CAP가 그만큼 일찍 걸린다(안전 쪽). 스크린 VC 8행은 CAP 0이므로 T-K2-1(I-5) 명령 해시에는 영향이 없을 것으로 본다(**추정**, 스크린에서 CAP까지 남은 여유는 재지 않음). T-K2-1이 불일치하면 이 차이를 먼저 확인한다.\n",
+ "schedule": {
+  "plan_id": "k2-sched-20261110a",
+  "plan_run_head": "6a44ff81d25aea1fa162daf9b14c23b99beb9db0",
+  "files_sha256": {
+   "aff.json": "68bb2fb13ffc25f9fc4575a82f6522abc404d33f14de08350cadb670ddf68fda",
+   "build_runners.py": "7182fb37e0b01272a7fb74cee659840242eb6b5daa07ed754a77d9eb0b01842f",
+   "k2_commands_filled.json": "402a1ef343d9364ceb7985169a06fd2639ba82a4f0fe47927992ab28e1a52cbe",
+   "k2_placement_20261110.json": "f349ce4eabbe081e39c44700a7d41a865c99cbaaaaa0ca372fe6d38208d1f000",
+   "k2_sched_lanes.json": "1b5fc7440bb07c8eb22faa192239dd9b9441c525cd5ce409e0c75ea2f3ccfe17",
+   "p_main_done_markers.txt": "ac277f800c05ba901c60667fc28c3896a9c86af5738ac45993ec7ed0487b0110",
+   "runners/k2run_E_pre.ps1": "5e8a85dbf1b5e67e7ea8cdea4d8a00e5ef15255cdaeff537c270a7bad752ef2e",
+   "runners/k2run_E_V6_off.ps1": "8c25c06ebcd6a31b9314da82385ee08b30631e2726c1e7057d520c70e17fed3c",
+   "runners/k2run_E_V6_tcl.ps1": "cff4c587344bb0e37691f53e1bb0493e785f6b1d45b3a6cbd7d6143cbbc7bf27",
+   "runners/k2run_E_V7.ps1": "e5c94ae7e53c2fed9b9ecaad47566f49e9ba812b92ae2d74bf3c3abd2ae2c163",
+   "runners/k2run_P_main.ps1": "1c4c4c58d1ff1d90202066553fff9c3f235d374c39dbf000cee103f9e5e598fa",
+   "runners/k2run_P_post.ps1": "434c109bf2f7c94b05d6616c73146f2bef65db4ffc2cdb0136801f70d15e600c",
+   "state.json": "257a8ab2336440877a40a9521d4e8bd6fc182a9603f6cafb259f04f045f4e0ce",
+   "steps_E_pre.json": "b725bdfe3fa081914faf345ea9d59baefe955e4726149a6fc9d0f5846b9cf013",
+   "steps_E_V6_off.json": "1ec165c45852c9cd832f229ec7432e3fabcc54831d5fa348f6d874efa65b1876",
+   "steps_E_V6_tcl.json": "d04502cfc1076894edf80584d991181ab0e3789b0016e355b9791bf6d1690e32",
+   "steps_E_V7.json": "0713920f538f727ee85f504e9f83c941ddc4ea66fc4d809ca3a33d3ba9b01508",
+   "steps_P_main.json": "033496df28e80960c7fdec6ba73faf2f018262ccd2a6dcca1322332e32c896b9",
+   "steps_P_post.json": "5dd80d493407d5f3fc0f1108c032a45a8c8f01889078e1f45743f51d2f607534"
+  },
+  "pools": {
+   "pcore": {
+    "mask": "0xFFFF",
+    "logical": "0-15",
+    "runner_priority": "Normal",
+    "physical_cores": 8
+   },
+   "ecore": {
+    "mask": "0x0FFF0000",
+    "logical": "16-27",
+    "runner_priority": "BelowNormal",
+    "physical_cores": 12
+   }
+  },
+  "note": "copied from the compute-scheduler-expert scratch folder; the runners under runners/ are the launch scripts (k2_commands_filled.json = k2_commands.json with the slots filled)"
+ },
+ "stored_off": {
+  "note": "V-2 I-4 stored D8x rows: git-excluded, read from the MAIN checkout C:\\workspace\\outrigger_control\\06_analysis\\02_control\\d8x\\ra\\ (not from k2-run)",
+  "ra_off.json": "100985bfe00fa02e4c1c5c938ad9e08e83b441c00d666403dc60526fed3dcb10",
+  "ra_on.json": "e3c8c95ffd6a34afc10d119c27a0b29bf5a6d892ac6a4b8c78bd6edafd7f247a"
+ },
+ "v5_regression_keys": {
+  "file": "k2_v5_regression_keys.json",
+  "sha256": "f2970048ba5e618b2f9d5c626250fbff0e1eac4cbe1650a02826cdee9df01ce2",
+  "judged_n": 93,
+  "judged_sha256": "2900db889efc73070c3a8fbe557b1a4ad9ee3392afc099ba00be1d0549174ec9",
+  "record_n": 49,
+  "record_sha256": "d4f58334c6ca7c393c35072a798c09f4995d7fde274e0af6b21b99f977d503eb"
+ },
  "bundle": "v3",
  "steps": [
   "v3_H0_off",

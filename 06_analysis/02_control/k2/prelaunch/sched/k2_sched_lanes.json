@@ -1,0 +1,111 @@
+{
+ "plan_id": "k2-sched-20261110a",
+ "lanes": {
+  "P_main": {
+   "steps_file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\6f3ebc4d-a5fb-4d9f-b214-d0ae5c515ee1\\scratchpad\\sched\\steps_P_main.json",
+   "n": 56,
+   "ids": [
+    "v2_k1off_off",
+    "v2_k1off_tcl",
+    "v2_k1on_off",
+    "v2_k1on_tcl",
+    "v4_off",
+    "v4_tcl",
+    "v3_H0_off",
+    "v3_H0_tcl",
+    "v3_L1eq_off",
+    "v3_L1eq_tcl",
+    "v3_L1eq_fs_off",
+    "v3_L1eq_fs_tcl",
+    "v3_L1eq_zm_off",
+    "v3_L1eq_zm_tcl",
+    "v3_AUG_off",
+    "v3_AUG_tcl",
+    "v3_AUG_crc2_off",
+    "v3_AUG_crc2_tcl",
+    "v3_AUG_eps_off",
+    "v3_AUG_eps_tcl",
+    "v5_reg1_off",
+    "v5_reg1_tcl",
+    "v5_reg2_off",
+    "v5_reg2_tcl",
+    "v5_reg3_off",
+    "v5_reg3_tcl",
+    "v5_reg4_off",
+    "v5_reg4_tcl",
+    "v5_reg5_off",
+    "v5_reg5_tcl",
+    "v5_reg6_off",
+    "v5_reg6_tcl",
+    "v5_reg7_off",
+    "v5_reg7_tcl",
+    "v5_grid_r67_main_off",
+    "v5_grid_r67_main_tcl",
+    "v5_grid_r67_top_off",
+    "v5_grid_r67_top_tcl",
+    "v5_grid_r69_top_off",
+    "v5_grid_r69_top_tcl",
+    "v5_grid_r69_bottom_off",
+    "v5_grid_r69_bottom_tcl",
+    "v5_soil_A_off",
+    "v5_soil_A_tcl",
+    "v5_d8_off",
+    "v5_d8_tcl",
+    "v5_noise_L1L2_off",
+    "v5_noise_L1L2_tcl",
+    "v5_ps7_off",
+    "v5_ps7_tcl",
+    "v5_g8_jobs1_off",
+    "v5_g8_jobs1_tcl",
+    "v5_g8_jobs3_off",
+    "v5_g8_jobs3_tcl",
+    "v5_g8_jobs5_off",
+    "v5_g8_jobs5_tcl"
+   ]
+  },
+  "P_post": {
+   "steps_file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\6f3ebc4d-a5fb-4d9f-b214-d0ae5c515ee1\\scratchpad\\sched\\steps_P_post.json",
+   "n": 6,
+   "ids": [
+    "v5_judge_r79_L1L2_off",
+    "v5_judge_clip_r79_L1L2_off",
+    "v5_flatten_off",
+    "v5_judge_r79_L1L2_tcl",
+    "v5_judge_clip_r79_L1L2_tcl",
+    "v5_flatten_tcl"
+   ]
+  },
+  "E_pre": {
+   "steps_file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\6f3ebc4d-a5fb-4d9f-b214-d0ae5c515ee1\\scratchpad\\sched\\steps_E_pre.json",
+   "n": 1,
+   "ids": [
+    "v6_snaps_k2_check"
+   ]
+  },
+  "E_V6_off": {
+   "steps_file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\6f3ebc4d-a5fb-4d9f-b214-d0ae5c515ee1\\scratchpad\\sched\\steps_E_V6_off.json",
+   "n": 2,
+   "ids": [
+    "v6_L1_off",
+    "v6_L2b_off"
+   ]
+  },
+  "E_V6_tcl": {
+   "steps_file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\6f3ebc4d-a5fb-4d9f-b214-d0ae5c515ee1\\scratchpad\\sched\\steps_E_V6_tcl.json",
+   "n": 2,
+   "ids": [
+    "v6_L1_tcl",
+    "v6_L2b_tcl"
+   ]
+  },
+  "E_V7": {
+   "steps_file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\6f3ebc4d-a5fb-4d9f-b214-d0ae5c515ee1\\scratchpad\\sched\\steps_E_V7.json",
+   "n": 1,
+   "ids": [
+    "v7_k2_v7"
+   ]
+  }
+ },
+ "p_main_done_markers_file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\6f3ebc4d-a5fb-4d9f-b214-d0ae5c515ee1\\scratchpad\\sched\\p_main_done_markers.txt",
+ "p_main_v5_step_count": 36
+}
