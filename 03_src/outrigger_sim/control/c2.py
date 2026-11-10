@@ -240,6 +240,11 @@ for up to 1.5 s (:class:`LiftoffApproachSlowSettings`, events ``INFO_LIFTOFF_SLO
 (``C2Config().with_10hz_d1(liftoff_approach_slow=False)`` turns it off). Its end ramp
 (``end_ramp_periods``, ``las_revA_targeted_rules.md`` 1.3, event
 ``INFO_LIFTOFF_SLOW_RAMP_END``) is 0 = off in the class and the preset alike.
+K-2 (TOUCH phase measure, control-expert design 2026-11-10, not adopted): a ``touch_seen`` leg
+does not stop on its first touchdown sample; it creeps on at ``creep_frac`` ``v_max`` and latches
+on a window of touchdown loads (mean and minimum) or after ``cap_m`` of motor stroke (event
+``INFO_TOUCH_CREEP_CAP``), instead of the 0.5 s hold and the P-S8-27 dip allowance
+(:class:`TouchCreepLatchSettings`); off by default and in the preset.
 P-S8-29 (user decision 2026-10-28, variant V2b): on a creeping pad DONE may accept a twist load
 up to 15 kN that has stopped rising once attitude and clearance have held for 10 s
 (:class:`TwistCompletionRelaxSettings`, event ``INFO_TWIST_UNSETTLED``); preset on, default off.
@@ -2422,6 +2427,67 @@ class TouchTwistHoldSettings:
                 raise ValueError(f"{name} must be >= 0, got {getattr(self, name)!r}")
 
 
+TOUCH_CREEP_LATCH_EVENT = "INFO_TOUCH_CREEP_LATCH"
+"""``INFO_TOUCH_CREEP_LATCH:<leg>``: K-2 latched a leg (load window or stroke cap, K2-7)."""
+TOUCH_CREEP_CAP_EVENT = "INFO_TOUCH_CREEP_CAP"
+"""``INFO_TOUCH_CREEP_CAP:<leg>``: K-2 latched a leg on the stroke cap, not on its loads; comes
+after its ``INFO_TOUCH_CREEP_LATCH``."""
+TOUCH_CREEP_CAP_SLACK_M = 1e-12
+"""Rounding allowance of the K-2 stroke cap comparison."""
+
+
+class TouchCreepLatchReason(StrEnum):
+    """Why K-2 latched a leg (meta ``touch_creep_latch.latches[].reason``)."""
+
+    LOAD_WINDOW = "load_window"
+    STROKE_CAP = "stroke_cap"
+
+
+@dataclass(frozen=True)
+class TouchCreepLatchSettings:
+    """K-2: touchdown latch on a load window with a slow creep (control-expert, 2026-11-10).
+
+    With ``enable`` a TOUCH leg whose ``touch_seen`` is set extends at ``creep_frac`` ``v_max``
+    instead of stopping on its first touchdown sample. It latches (stops, touched) once the last
+    ``latch_window`` touchdown loads of the TOUCH judge have a mean of at least
+    ``latch_mean_factor`` ``F_min`` and a minimum of at least ``latch_min_factor`` ``F_min``, so a
+    dip below the touchdown level inside the window does not restart it. A leg whose motor stroke
+    has grown ``cap_m`` since its ``touch_seen`` sample latches anyway (event
+    ``INFO_TOUCH_CREEP_CAP``). The ``touch_hold_s`` hold and the P-S8-27 dip allowance
+    (``R8Settings.touch_hold_dip_samples``) are not used on this path; a leg before
+    ``touch_seen`` approaches as before (free speed or the R-2 window) and does not stop.
+
+    Off by default and in :meth:`C2Config.with_10hz_d1` (adoption after verification is the
+    user's decision); a plain class-level default, so configs unpickled from older code read
+    "off".
+    """
+
+    enable: bool = False
+    creep_frac: float = 0.05
+    """Creep speed as a fraction of ``v_max`` (1.05 mm/s at 20.924 mm/s)."""
+    latch_window: int = 5
+    """Touchdown-load samples of the latch window (0.5 s at 10 Hz)."""
+    latch_mean_factor: float = 1.5
+    """Window mean needed, in ``F_min``."""
+    latch_min_factor: float = 1.0
+    """Window minimum needed, in ``F_min``."""
+    cap_m: float = 0.015
+    """Motor stroke after the ``touch_seen`` sample at which the leg latches regardless."""
+
+    def __post_init__(self) -> None:
+        if not 0.0 < self.creep_frac <= 1.0:
+            raise ValueError(f"creep_frac must be in (0, 1], got {self.creep_frac!r}")
+        if isinstance(self.latch_window, bool) or not isinstance(self.latch_window, int):
+            raise ValueError(f"latch_window must be an int >= 1, got {self.latch_window!r}")
+        if self.latch_window < 1:
+            raise ValueError(f"latch_window must be an int >= 1, got {self.latch_window!r}")
+        for name in ("latch_mean_factor", "latch_min_factor"):
+            if getattr(self, name) < 0.0:
+                raise ValueError(f"{name} must be >= 0, got {getattr(self, name)!r}")
+        if not self.cap_m > 0.0:
+            raise ValueError(f"cap_m must be > 0, got {self.cap_m!r}")
+
+
 @dataclass(frozen=True)
 class RestoredLiftoff:
     """S-1 lift-off confirmation handed to :meth:`C2Controller.restore_liftoff_confirmation`.
@@ -2523,6 +2589,9 @@ class C2Config:
     ``soil``."""
     touch_twist_hold: TouchTwistHoldSettings = TouchTwistHoldSettings()
     """C4G1 at the LEVEL entry; off by default, a plain class-level default as ``soil``."""
+    touch_creep_latch: TouchCreepLatchSettings = TouchCreepLatchSettings()
+    """K-2 TOUCH latch with a slow creep; off by default and in the preset, a plain class-level
+    default as ``soil``."""
 
     def __post_init__(self) -> None:
         if not self.period_s > 0.0:
@@ -2630,6 +2699,7 @@ class C2Config:
         extend_start_tracked: bool = False,
         liftoff_approach_slow: bool = True,
         flat_soil_margin_order_gate: bool = True,
+        touch_creep_latch: bool = False,
     ) -> C2Config:
         """Copy with the R8-D1 design C2 (spec rev. 30 136 / 139, user decisions 2026-10-24).
 
@@ -2724,6 +2794,9 @@ class C2Config:
                 judgement ``las_k1_rem_judgement.md``); ``False`` gives the preset before that
                 switch (``05_tests/unit/pre_k1_preset_runner.py`` runs a script that way). Not
                 the touch-phase K1 of ``reapproach_retrigger_two_samples``.
+            touch_creep_latch: K-2 TOUCH creep latch (:class:`TouchCreepLatchSettings`,
+                ``k2_touch_creep_rules.md`` K2-8). Off by default (not adopted); ``True`` gives
+                the K-2 arm of its verification.
         """
         retrigger_samples = R8_RETRIGGER_CONFIRM_SAMPLES if reapproach_retrigger_two_samples else 1
         config = self.with_r8_diagnostics()
@@ -2802,6 +2875,7 @@ class C2Config:
             touch_twist_hold=replace(
                 config.touch_twist_hold, enable=touch_twist_hold, vector_ramp=touch_twist_hold
             ),
+            touch_creep_latch=replace(config.touch_creep_latch, enable=touch_creep_latch),
             slope_clearance_margin=slope_clearance_margin,
             liftoff_window_reapproach=LiftoffWindowReapproachSettings(
                 mode=LiftoffWindowReapproach.RESTART
@@ -4040,6 +4114,34 @@ class _TouchTwistState:
     """``tau* - n^T (s - s_te)`` at the end of the hold."""
 
 
+@dataclass(frozen=True)
+class _TouchCreepLatch:
+    """K-2 latch of one leg (meta ``touch_creep_latch.latches``)."""
+
+    leg: int
+    t_s: float
+    reason: TouchCreepLatchReason
+    window_mean_N: float
+    """Mean of the touchdown-load window at the latch (``-inf`` while not full)."""
+    window_min_N: float
+    creep_travel_m: float
+    """Motor stroke gained since the leg's ``touch_seen`` sample."""
+
+    def to_meta(self) -> dict[str, Any]:
+        return {
+            "leg": LEG_ORDER[self.leg],
+            "t_s": self.t_s,
+            "reason": str(self.reason),
+            "window_mean_N": _finite_or_none(self.window_mean_N),
+            "window_min_N": _finite_or_none(self.window_min_N),
+            "creep_travel_m": self.creep_travel_m,
+        }
+
+
+def _finite_or_none(value: float) -> float | None:
+    return value if math.isfinite(value) else None
+
+
 @dataclass
 class _SoilModeDefer:
     """One S2D deferral (acting) or its shadow record (``mode_defer_shadow``)."""
@@ -4349,6 +4451,13 @@ class _RunState:
     """Samples below the touchdown level in a row each TOUCH latch candidate waited over."""
     touch_dip_held_samples: tuple[int, ...] = (0, 0, 0, 0)
     """All dip samples held per leg (meta ``touch.dip_held_samples``)."""
+    # K-2 (immutable defaults: class attributes for run states pickled before them)
+    touch_creep_loads_N: tuple[tuple[float, ...], ...] = ((), (), (), ())
+    """Last ``TouchCreepLatchSettings.latch_window`` TOUCH touchdown loads per leg."""
+    touch_creep_seen_strokes_m: tuple[float | None, ...] = (None, None, None, None)
+    """Motor stroke of each leg at its ``touch_seen`` sample (reference of the stroke cap)."""
+    touch_creep_latches: tuple[_TouchCreepLatch, ...] = ()
+    """One record per leg K-2 latched (meta ``touch_creep_latch.latches``)."""
     # P-S8-28 (immutable defaults: class attributes for run states pickled before them)
     lift_stroke_limited: bool = False
     """The stroke-budget guard acted since the last LEVEL entry (DONE on the lifted level)."""
@@ -4722,6 +4831,7 @@ class C2Controller:
             "loc_revoke": self._loc_revoke_meta(),
             "diff_sink": self._diff_sink_meta(),
             "touch_twist_hold": self._touch_twist_hold_meta(),
+            "touch_creep_latch": self._touch_creep_meta(),
             "locked_pressure_warning_note": (
                 QUASI_STATIC_PRESSURE_NOTE if r8.is_instant_sampling else None
             ),
@@ -5434,31 +5544,22 @@ class C2Controller:
         A leg latches as touched once the load condition has held without a break for
         ``touch_hold_s``; a break drops the candidate. Touched and candidate legs stop, a leg
         that has seen the load once approaches at ``touch_approach_speed_fraction`` of ``v_max``
-        and the others extend at ``v_max``. All legs touched -> LEVEL.
+        and the others extend at ``v_max``. With K-2 (``touch_creep_latch.enable``) the latch and
+        the speeds of :meth:`_touch_creep_speeds` replace these. All legs touched -> LEVEL.
         """
         state = self._state
         thresholds = self.config.thresholds
         if self.config.touch_twist_hold.enable:
             self._record_touch_twist_load(reading)
         touch_level = thresholds.touch_load_factor * self.geometry.F_min_N
-        bears_touch_load = self._touchdown_load_N(reading) >= touch_level
+        touchdown_load_N = self._touchdown_load_N(reading)
+        bears_touch_load = touchdown_load_N >= touch_level
         was_touched = state.touched.copy()
-        is_waiting = self._update_touch_latches(bears_touch_load, reading.t_s)
-        for leg in np.flatnonzero(state.touched & ~was_touched):
-            self._floor_estimator.record_latch(
-                int(leg),
-                reading.t_s,
-                float(reading.rod_stroke_m[leg]),
-                (state.roll_rad, state.pitch_rad),
-            )
-        self._update_touch_seen(bears_touch_load)
-        max_speed = self.geometry.max_speed_m_s
-        approach_speed = np.where(
-            state.touch_seen,
-            thresholds.touch_approach_speed_fraction * max_speed,
-            self._free_extension_speeds(reading),
-        )
-        leg_speeds = np.where(state.touched | is_waiting, 0.0, approach_speed)
+        if self.config.touch_creep_latch.enable:
+            leg_speeds = self._touch_creep_speeds(reading, touchdown_load_N, bears_touch_load)
+            self._record_touch_latches(reading, was_touched)
+        else:
+            leg_speeds = self._touch_hold_speeds(reading, bears_touch_load, was_touched)
         if state.touched.all():
             state.phase = C2Phase.LEVEL
             self._clear_lift_guard_latch()
@@ -5471,6 +5572,125 @@ class C2Controller:
             if self.config.touch_twist_hold.enable:
                 self._start_touch_twist_hold(reading)
         return leg_speeds
+
+    def _touch_hold_speeds(
+        self,
+        reading: _Reading,
+        bears_touch_load: NDArray[np.bool_],
+        was_touched: NDArray[np.bool_],
+    ) -> NDArray[np.float64]:
+        """The TOUCH latch with the ``touch_hold_s`` hold (R1, P-S8-27) and its leg speeds."""
+        state = self._state
+        is_waiting = self._update_touch_latches(bears_touch_load, reading.t_s)
+        self._record_touch_latches(reading, was_touched)
+        self._update_touch_seen(bears_touch_load)
+        max_speed = self.geometry.max_speed_m_s
+        approach_speed = np.where(
+            state.touch_seen,
+            self.config.thresholds.touch_approach_speed_fraction * max_speed,
+            self._free_extension_speeds(reading),
+        )
+        return np.where(state.touched | is_waiting, 0.0, approach_speed)
+
+    def _record_touch_latches(self, reading: _Reading, was_touched: NDArray[np.bool_]) -> None:
+        """X9: the floor estimator records every leg latched in this period."""
+        state = self._state
+        for leg in np.flatnonzero(state.touched & ~was_touched):
+            self._floor_estimator.record_latch(
+                int(leg),
+                reading.t_s,
+                float(reading.rod_stroke_m[leg]),
+                (state.roll_rad, state.pitch_rad),
+            )
+
+    def _touch_creep_speeds(
+        self,
+        reading: _Reading,
+        touchdown_load_N: NDArray[np.float64],
+        bears_touch_load: NDArray[np.bool_],
+    ) -> NDArray[np.float64]:
+        """K-2: latch on the load window or the stroke cap; creep after ``touch_seen``.
+
+        The order of the hold path: the latch looks at the legs ``touch_seen`` held before this
+        sample, then ``touch_seen`` takes this sample, and the speeds use the updated
+        ``touch_seen`` (so the sample that sets it already commands the creep; the first
+        touchdown sample of the combined judge, which needs two in a row, keeps the approach
+        speed and does not stop). Touched legs stop.
+        """
+        state = self._state
+        self._record_touch_creep_loads(touchdown_load_N)
+        for leg in np.flatnonzero(state.touch_seen & ~state.touched):
+            self._latch_touch_creep_leg_if_due(int(leg), reading)
+        self._update_touch_seen(bears_touch_load)
+        self._record_touch_creep_seen_strokes(reading)
+        creep_speed = self.config.touch_creep_latch.creep_frac * self.geometry.max_speed_m_s
+        approach_speed = np.where(
+            state.touch_seen, creep_speed, self._free_extension_speeds(reading)
+        )
+        return np.where(state.touched, 0.0, approach_speed)
+
+    def _record_touch_creep_loads(self, touchdown_load_N: NDArray[np.float64]) -> None:
+        """K-2: keep the last ``latch_window`` touchdown loads per leg (this sample included;
+        samples before ``touch_seen`` too)."""
+        state = self._state
+        window = self.config.touch_creep_latch.latch_window
+        loads_N = []
+        for leg, leg_loads_N in enumerate(state.touch_creep_loads_N):
+            loads_N.append((*leg_loads_N, float(touchdown_load_N[leg]))[-window:])
+        state.touch_creep_loads_N = tuple(loads_N)
+
+    def _record_touch_creep_seen_strokes(self, reading: _Reading) -> None:
+        """K-2: the motor stroke of each leg on the sample its ``touch_seen`` was set (K2-4)."""
+        state = self._state
+        seen_strokes_m = list(state.touch_creep_seen_strokes_m)
+        for leg in range(LEG_COUNT):
+            if state.touch_seen[leg] and seen_strokes_m[leg] is None:
+                seen_strokes_m[leg] = float(reading.motor_stroke_m[leg])
+        state.touch_creep_seen_strokes_m = tuple(seen_strokes_m)
+
+    def _latch_touch_creep_leg_if_due(self, leg: int, reading: _Reading) -> None:
+        """K-2: latch ``leg`` when its load window holds or its creep reached the stroke cap."""
+        state = self._state
+        settings = self.config.touch_creep_latch
+        F_min_N = self.geometry.F_min_N
+        window_mean_N, window_min_N = self._touch_creep_window_stats(leg)
+        is_load_held = (
+            window_mean_N >= settings.latch_mean_factor * F_min_N
+            and window_min_N >= settings.latch_min_factor * F_min_N
+        )
+        seen_stroke_m = state.touch_creep_seen_strokes_m[leg]
+        assert seen_stroke_m is not None  # recorded on the touch_seen sample
+        creep_travel_m = float(reading.motor_stroke_m[leg]) - seen_stroke_m
+        is_capped = creep_travel_m >= settings.cap_m - TOUCH_CREEP_CAP_SLACK_M
+        if not (is_load_held or is_capped):
+            return
+        reason = (
+            TouchCreepLatchReason.LOAD_WINDOW if is_load_held
+            else TouchCreepLatchReason.STROKE_CAP
+        )
+        self._add_event(reading.t_s, f"{TOUCH_CREEP_LATCH_EVENT}:{LEG_ORDER[leg]}")
+        if reason is TouchCreepLatchReason.STROKE_CAP:
+            self._add_event(reading.t_s, f"{TOUCH_CREEP_CAP_EVENT}:{LEG_ORDER[leg]}")
+        state.touched[leg] = True
+        latch = _TouchCreepLatch(
+            leg, reading.t_s, reason, window_mean_N, window_min_N, creep_travel_m
+        )
+        state.touch_creep_latches = (*state.touch_creep_latches, latch)
+
+    def _touch_creep_window_stats(self, leg: int) -> tuple[float, float]:
+        """``(mean, min)`` of the leg's touchdown-load window; ``-inf`` both while not full."""
+        loads_N = self._state.touch_creep_loads_N[leg]
+        if len(loads_N) < self.config.touch_creep_latch.latch_window:
+            return -math.inf, -math.inf
+        return float(np.mean(loads_N)), float(min(loads_N))
+
+    def _touch_creep_meta(self) -> dict[str, Any]:
+        state = self._state
+        return {
+            "settings": asdict(self.config.touch_creep_latch),
+            "seen_strokes_m": list(state.touch_creep_seen_strokes_m),
+            "latches": [latch.to_meta() for latch in state.touch_creep_latches],
+        }
 
     def _free_extension_speeds(self, reading: _Reading) -> NDArray[np.float64] | float:
         """Speed of a leg that has not seen its touch load: ``v_max``, or (R-2) the touch-window

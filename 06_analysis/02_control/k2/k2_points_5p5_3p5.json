@@ -1,0 +1,117 @@
+{
+ "schema": "k2_points/1",
+ "rules": {
+  "path": "06_analysis/02_control/k2/k2_touch_creep_rules.md",
+  "sha256": "a3658197bdab02870a0b362144606f404021ebac90662a35efacfa8dbe477263"
+ },
+ "source": "d8x_diag.diamond_points(5.5, 3.5) (commit 6f2f7cb)",
+ "half_spans_deg": [
+  5.5,
+  3.5
+ ],
+ "ra_points": [
+  {
+   "tag": "pitch+",
+   "roll_deg": 0.0,
+   "pitch_deg": 3.5,
+   "R_v": 1.0
+  },
+  {
+   "tag": "pitch-",
+   "roll_deg": 0.0,
+   "pitch_deg": -3.5,
+   "R_v": 1.0
+  },
+  {
+   "tag": "roll+",
+   "roll_deg": 5.5,
+   "pitch_deg": 0.0,
+   "R_v": 1.0
+  },
+  {
+   "tag": "roll-",
+   "roll_deg": -5.5,
+   "pitch_deg": 0.0,
+   "R_v": 1.0
+  },
+  {
+   "tag": "r+p+0.25",
+   "roll_deg": 1.375,
+   "pitch_deg": 2.625,
+   "R_v": 1.0
+  },
+  {
+   "tag": "r+p+0.5",
+   "roll_deg": 2.75,
+   "pitch_deg": 1.75,
+   "R_v": 1.0
+  },
+  {
+   "tag": "r+p+0.75",
+   "roll_deg": 4.125,
+   "pitch_deg": 0.875,
+   "R_v": 1.0
+  },
+  {
+   "tag": "r+p-0.25",
+   "roll_deg": 1.375,
+   "pitch_deg": -2.625,
+   "R_v": 1.0
+  },
+  {
+   "tag": "r+p-0.5",
+   "roll_deg": 2.75,
+   "pitch_deg": -1.75,
+   "R_v": 1.0
+  },
+  {
+   "tag": "r+p-0.75",
+   "roll_deg": 4.125,
+   "pitch_deg": -0.875,
+   "R_v": 1.0
+  },
+  {
+   "tag": "r-p+0.5",
+   "roll_deg": -2.75,
+   "pitch_deg": 1.75,
+   "R_v": 1.0
+  },
+  {
+   "tag": "r-p-0.5",
+   "roll_deg": -2.75,
+   "pitch_deg": -1.75,
+   "R_v": 1.0
+  },
+  {
+   "tag": "d45++",
+   "roll_deg": 2.1389,
+   "pitch_deg": 2.1389,
+   "R_v": 1.000005194805195
+  },
+  {
+   "tag": "d45-+",
+   "roll_deg": -2.1389,
+   "pitch_deg": 2.1389,
+   "R_v": 1.000005194805195
+  },
+  {
+   "tag": "d45+-",
+   "roll_deg": 2.1389,
+   "pitch_deg": -2.1389,
+   "R_v": 1.000005194805195
+  },
+  {
+   "tag": "d45--",
+   "roll_deg": -2.1389,
+   "pitch_deg": -2.1389,
+   "R_v": 1.000005194805195
+  }
+ ],
+ "table_check": {
+  "rule": "rev1 2: d45 |file - table| <= 2e-5 deg, the other 12 points == table",
+  "d45_max_difference_deg": 1.1111111111183902e-05,
+  "other_max_difference_deg": 0.0,
+  "failing": {},
+  "ok": true
+ }
+}

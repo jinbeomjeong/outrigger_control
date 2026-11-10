@@ -1,5 +1,8 @@
 """D8x run-side records: the point file, the K1 switch and the per-run ``d8x`` block.
 
+K-2 (:func:`install_touch_creep`) is a research switch outside the D8x rules arms: only
+``acc_d8.py --touch-creep`` installs it.
+
 Rules ``06_analysis/02_control/d8x/d8x_rules.md`` (sealed, sha256 in ``d8x_rules.sha256``):
 1.2 (point file), 2.1 (K1 arms, both set the gate explicitly since the K1 switch), 2.2 I-1
 (run identity), 4.1 (the items
@@ -47,6 +50,9 @@ POINTS_SCHEMA = "d8x_points/1"
 POINTS_RULES_REV = "rev1"
 """Rev1 1.2: runs read only a point file built from the rev1 tables (``d8x_spec`` checks the
 same value against the sealed files when it writes the file)."""
+K2_POINTS_SCHEMA = "k2_points/1"
+"""``06_analysis/02_control/k2/k2_points_5p5_3p5.json`` (``k2_touch_creep_rules.md`` 3.2), written by
+``04_scripts/03_control/k2/k2_judge.py points``; it has ``ra_points`` only."""
 LEVELS = ("top", "middle", "bottom")
 K1_CHOICES = ("off", "on")
 LOC_EVENT = "crawler_liftoff_confirmed"
@@ -74,6 +80,8 @@ def load_points(path: Path | str | None = None) -> dict:
     if not path.is_file():
         raise FileNotFoundError(f"no D8x point file {path} (d8x_judge.py points writes it)")
     doc = json.loads(path.read_text(encoding="utf-8"))
+    if doc.get("schema") == K2_POINTS_SCHEMA:  # K-2 V-4 (k2_judge.py points): R-a tags only
+        return doc
     if doc.get("schema") != POINTS_SCHEMA:
         raise ValueError(f"{path}: schema {doc.get('schema')!r}, expected {POINTS_SCHEMA!r}")
     if doc.get("rules_rev") != POINTS_RULES_REV:
@@ -138,6 +146,47 @@ def install_k1_order_gate(is_on: bool, controller_class=None) -> None:
 
     controller_class.__init__ = __init__
     _K1_INSTALLED.update({"class": controller_class, "is_on": is_on})
+
+
+_TOUCH_CREEP_INSTALLED: dict = {}
+
+
+def install_touch_creep(is_on: bool, controller_class=None) -> None:
+    """Every controller of this process gets the K-2 TOUCH creep latch set to ``is_on``.
+
+    K-2 is ``touch_creep_latch.enable`` (off in the class and the preset; research arm, not a D8x
+    rules arm). Only installed when a run asks for it (``acc_d8.py --touch-creep``); a run
+    without the option installs nothing and stays as before. A second call with the same value
+    in one process is a no-op.
+
+    Raises:
+        RuntimeError: Already installed in this process with the other value.
+    """
+    is_on = bool(is_on)
+    if _TOUCH_CREEP_INSTALLED:
+        if _TOUCH_CREEP_INSTALLED["is_on"] is not is_on:
+            raise RuntimeError(f"d8x_record.install_touch_creep: installed with "
+                               f"{_TOUCH_CREEP_INSTALLED['is_on']}, asked for {is_on}")
+        return
+    if controller_class is None:
+        from outrigger_sim.control import c2
+
+        controller_class = c2.C2Controller
+    original_init = controller_class.__init__
+
+    def __init__(self, geometry, config=None, *args, **kwargs):
+        if config is not None:
+            latch = replace(config.touch_creep_latch, enable=is_on)
+            config = replace(config, touch_creep_latch=latch)
+        original_init(self, geometry, config, *args, **kwargs)
+
+    controller_class.__init__ = __init__
+    _TOUCH_CREEP_INSTALLED.update({"class": controller_class, "is_on": is_on})
+
+
+def effective_touch_creep(controller) -> bool:
+    """K-2 (``touch_creep_latch.enable``) of a controller's configuration."""
+    return bool(getattr(getattr(controller.config, "touch_creep_latch", None), "enable", False))
 
 
 def k1_arm_is_on(k1: str | None) -> bool:

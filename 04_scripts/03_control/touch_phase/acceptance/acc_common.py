@@ -7,6 +7,9 @@ Env: ACC_WT (pinned checkout, required), ACC_COMBO both | c4g2 | k1 | off | pres
 main checkout outside the pinned tree: a pinned git worktree under ``.claude/worktrees`` and the
 main checkout itself (ACC_WT = main) keep their own folders (before 2026-11-10 such a run removed
 its own 03_src and stopped at ``import outrigger_sim``).
+ACC_K2 off | on (``k2_touch_creep_rules.md`` 9.1-4, V-5): the ``touch_creep_latch`` keyword default of
+``with_10hz_d1`` in this process and its workers (both arms explicit, also with ``ACC_COMBO=preset``); the provenance
+then records ``k2``, ``touch_creep_latch`` and ``controller_tag``. Unset = as before.
 """
 from __future__ import annotations
 
@@ -21,6 +24,8 @@ MAIN_TREE = Path(r"C:\workspace\outrigger_control").resolve()
 COMBOS = {"both": (True, True), "c4g2": (True, False), "k1": (False, True), "off": (False, False)}
 PRESET_COMBO = "preset"
 """D8x: the preset as it is (no keyword default replaced)."""
+K2_ENV = "ACC_K2"
+K2_CHOICES = ("off", "on")
 
 
 def wt_root() -> Path:
@@ -81,6 +86,7 @@ def install() -> None:
 
     if root not in Path(c2.__file__).resolve().parents:
         raise SystemExit(f"c2 comes from {c2.__file__}, not from {root}")
+    _install_k2(c2)
     if getattr(c2.C2Config, "_acc_patched", False) or combo() == PRESET_COMBO:
         return
     hold, retrigger = COMBOS[combo()]
@@ -92,6 +98,30 @@ def install() -> None:
 
     c2.C2Config.with_10hz_d1 = with_10hz_d1
     c2.C2Config._acc_patched = True
+
+
+def k2_arm() -> str | None:
+    """``ACC_K2`` (``off`` / ``on``), None when unset."""
+    value = os.environ.get(K2_ENV)
+    if value in (None, ""):
+        return None
+    if value not in K2_CHOICES:
+        raise SystemExit(f"{K2_ENV} {value!r}: expected one of {K2_CHOICES}")
+    return value
+
+
+def _install_k2(c2) -> None:
+    """``ACC_K2``: the ``touch_creep_latch`` default of ``with_10hz_d1`` (once per process)."""
+    arm = k2_arm()
+    if arm is None or getattr(c2.C2Config, "_acc_k2_patched", False):
+        return
+    original = c2.C2Config.with_10hz_d1
+
+    def with_10hz_d1(self, *args, touch_creep_latch=arm == "on", **kwargs):
+        return original(self, *args, touch_creep_latch=touch_creep_latch, **kwargs)
+
+    c2.C2Config.with_10hz_d1 = with_10hz_d1
+    c2.C2Config._acc_k2_patched = True
 
 
 def main_tree_modules() -> list[str]:
@@ -113,7 +143,13 @@ def provenance() -> dict:
 
     config = c2.C2Config().with_10hz_d1()
     head = subprocess.run(["git", "-C", str(root), "rev-parse", "HEAD"], capture_output=True, text=True, timeout=30).stdout.strip()
-    return {"wt": str(root), "git_head": head, "combo": combo(),
+    k2 = {}
+    if k2_arm() is not None:  # keys only with ACC_K2
+        from outrigger_sim.hydraulics.v5_options import controller_tag
+
+        k2 = {"k2": k2_arm(), "touch_creep_latch": config.touch_creep_latch.enable,
+              "controller_tag": controller_tag(None, config)}
+    return {"wt": str(root), "git_head": head, "combo": combo(), **k2,
             "c2_sha256": hashlib.sha256(Path(c2.__file__).read_bytes()).hexdigest(),
             "touch_twist_hold": config.touch_twist_hold.enable, "vector_ramp": config.touch_twist_hold.vector_ramp,
             "ramp_twist_tol_m_s": config.touch_twist_hold.ramp_twist_tol_m_s,

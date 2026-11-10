@@ -197,10 +197,11 @@ def test_controller_expectation_on_the_preset() -> None:
     assert want["touch_twist_hold.enable"] is True and want["touch_twist_hold.vector_ramp"] is True
     assert want["clip_returned_command"] is True and want["r8.lifted_reapproach.retrigger_samples"] == 1
     assert run_S9.CONTROLLER_ABSENT_OR_OFF[run_S9.FINAL_CONTROLLER] == ("floor_twist_ledger", "attitude_integral_clamp",
-                                                                        "liftoff_approach_slow")
+                                                                        "liftoff_approach_slow",
+                                                                        "touch_creep_latch")  # K-2 refused
     assert run_S9.CONTROLLER_PENDING_CHECKS == {}
     paths_all = list(want) + ["floor_twist_ledger.enable", "attitude_integral_clamp.enable",
-                              "liftoff_approach_slow.enable"]
+                              "liftoff_approach_slow.enable", "touch_creep_latch.enable"]
 
     # the current R8 preset (soil_stop False / flat_soil_margin_m 0.0 until the switch after B1) is refused
     cfg = C2Config().with_10hz_d1()
@@ -331,7 +332,8 @@ def test_k1_tags_take_the_switched_preset_and_the_las_tags_refuse_it() -> None:
     rec = run_S9.controller_expectation(pre_k1, run_S9.FINAL_LAS_K1_CONTROLLER)
     assert [c["path"] for c in rec["checks"] if not c["ok"]] == [gate]
     assert run_S9.CONTROLLER_ABSENT_OR_OFF[run_S9.FINAL_LAS_K1_CONTROLLER] == ("floor_twist_ledger",
-                                                                                "attitude_integral_clamp")
+                                                                                "attitude_integral_clamp",
+                                                                                "touch_creep_latch")  # K-2 refused
     a = run_S9.build_parser().parse_args(["level", "--soil", "J1", "--expect-controller", "final_C4G2_P3_LAS_K1"])
     assert a.expect_controller == run_S9.FINAL_P3_LAS_K1_CONTROLLER
 

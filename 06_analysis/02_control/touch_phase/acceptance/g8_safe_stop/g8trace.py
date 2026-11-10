@@ -46,8 +46,23 @@ def _set_dotted(config, dotted, value):
     return replace(config, **{head: value})
 
 
+K2_ENV = "ACC_K2"
+"""K-2 arm of every job (``k2_touch_creep_rules.md`` 9.1-4, V-5 G8): ``off`` / ``on`` sets the ``touch_creep_latch``
+preset keyword (a job ``kwargs`` entry wins); unset = as before. Rows then carry ``touch_creep_latch`` and
+``controller_tag``."""
+
+
+def _k2_kwargs() -> dict:
+    arm = os.environ.get(K2_ENV)
+    if not arm:
+        return {}
+    if arm not in ("off", "on"):
+        raise SystemExit(f"{K2_ENV} {arm!r}: expected off or on")
+    return {"touch_creep_latch": arm == "on"}
+
+
 def preset(self, *args, **kwargs):
-    merged = {**CURRENT["kwargs"], **kwargs}
+    merged = {**_k2_kwargs(), **CURRENT["kwargs"], **kwargs}
     config = _base_preset(self, *args, **merged)
     for dotted, value in CURRENT["over"].items():
         config = _set_dotted(config, dotted, value)
@@ -171,6 +186,12 @@ def run(job: dict) -> dict:
            "loc": dict(LOC), "wall": round(time.perf_counter() - t0, 1)}
     if job.get("trace"):
         out["trace"] = list(TRACE)
+    if os.environ.get(K2_ENV):  # keys only with ACC_K2
+        from outrigger_sim.hydraulics.v5_options import controller_tag
+
+        config = c2.C2Config().with_10hz_d1()
+        out.update(touch_creep_latch=config.touch_creep_latch.enable,
+                   controller_tag=controller_tag(None, config))
     return out
 
 
