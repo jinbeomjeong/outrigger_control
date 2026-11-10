@@ -36,7 +36,8 @@ FLOORS_BEFORE = {
     "fdown3.2": (0.0, 3.2), "roll4.4": (4.4, 0.0),
 }
 NEW_SETS = ("g8c76", "g8c76_p28", "g8c76_p28acc", "d1c1",  # d1c1: D-1 C1 (2026-11-08) came later
-            "d8x_w1")  # D8x (2026-11-10) came later
+            "d8x_w1",  # D8x (2026-11-10) came later
+            "k2_v6")  # K-2 V-6 (2026-11-10) came later
 RUN_IDS = ["G8C1_top_edge_FL_g200", "G8C1_top_edge_FL_g170", "G8C2_top_flat_FL_g55",
            "G8C2_top_flat_RR_g200"]
 P28_IDS = ["G8C3_top_edge_RL_g230", "G8C3_top_edge_FL_g20", "G8C4_top_edge_RR_g230"]
@@ -72,10 +73,10 @@ def test_earlier_definitions_unchanged(s8c) -> None:
     # journal auger table (cad 2026-10-31): group JA / set ``jaug`` came later; excluded
     doc["s8"] = {c.case_id: _h(c.to_meta()) for c in s8c.s8_cases()
                  if c.group not in (s8c.JAUG_GROUP, s8c.S4CONV_GROUP, s8c.D1C2_GROUP,  # D1C2: D-1 C2 later
-                                    s8c.D8X_GROUP)  # D8x (2026-11-10) later
+                                    s8c.D8X_GROUP, s8c.K2_GROUP)  # D8x / K-2 V-6 (2026-11-10) later
                  and c.case_id not in s8c.V5REC_CASE_IDS}  # v5 stage 3 set v5rec came later
     doc["s8_sets"] = {n: [c.case_id for c in s8c.case_set(n)] for n in s8c.SET_NAMES
-                      if n not in ("jaug", "s4conv", "v5rec", "d1c2", "d8x_w1", "d8x_w2")}
+                      if n not in ("jaug", "s4conv", "v5rec", "d1c2", "d8x_w1", "d8x_w2", "k2_v6")}
     for key, want in BEFORE.items():
         assert _agg(doc[key]) == want, key
     for name, rp in FLOORS_BEFORE.items():

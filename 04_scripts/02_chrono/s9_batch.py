@@ -276,6 +276,9 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     # K1 re-measure (cad 2026-11-09, las_k1_rem_chrono_rows.py; rules las_k1_rules_adopt2.md 2.2 / 2.3): V5-LAS-K1-REM,
     # 8 judge rows (gate off x 6, on x 2) + 2 forced-block diagnostic rows on uniform J2 / J1, P3b 120 s
     out.update(_las_k1_rem_module().rem_batches(sys.modules[__name__]))
+    # K-2 V-7 (cad 2026-11-10, k2_chrono_rows.py; k2_touch_creep_rules.md 3.6, record only): FINAL-REP J1 / J2 B top
+    # F_s 4 x {--k2 off, on}, --k1-order-gate off, tags final_C4G2_LAS / final_C4G2_LAS_TCL
+    out.update(_k2_module().k2_batches(sys.modules[__name__]))
     return out
 
 
@@ -304,6 +307,15 @@ def _las_module():
     finally:
         sys.path.remove(str(HERE))
     return las_chrono_rows
+
+
+def _k2_module():
+    sys.path.insert(0, str(HERE))
+    try:
+        import k2_chrono_rows  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    return k2_chrono_rows
 
 
 def _las_k1_module():
@@ -1745,6 +1757,9 @@ def check_sources(name: str, rows: list[dict]) -> dict:
             continue
         if c.get("rem_key"):  # V5-LAS-K1-REM: new rows, build check (las_k1_rem_chrono_rows.argv_check); before K1C
             res.append(_las_k1_rem_module().argv_check(c, sys.modules[__name__]))
+            continue
+        if c.get("k2_arm"):  # K-2 V-7: new rows, build check (k2_chrono_rows.v7_argv_check)
+            res.append(_k2_module().v7_argv_check(c))
             continue
         if c.get("k1_candidate"):  # V5-LAS-K1-CHRONO: new rows, build check (las_k1_chrono_rows.argv_check)
             res.append(_las_k1_module().argv_check(c, sys.modules[__name__]))

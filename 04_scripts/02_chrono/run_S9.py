@@ -1532,6 +1532,15 @@ FINAL_K1_CONTROLLER = "final_C4G2_K1"
 ``_LAS_K1`` run; post-switch audit W-1): :data:`FINAL_CONTROLLER` + the gate (``v5_options.with_switch_tags``)."""
 FINAL_P3_K1_CONTROLLER = "final_C4G2_P3_K1"
 """:data:`FINAL_K1_CONTROLLER` with the ③ start bound (VB / LS)."""
+FINAL_LAS_TCL_CONTROLLER = "final_C4G2_LAS_TCL"
+"""K-2 arm of the V0 LAS-b tag with the K1 order gate off (``k2_touch_creep_rules.md`` 1.2, V-7 ``level --k1-order-gate
+off --k2 on``): :data:`FINAL_LAS_CONTROLLER` + the TOUCH creep latch (``touch_creep_latch``, rules 1.1 values); not
+adopted. Every other tag refuses a config with the latch on."""
+_TCL_EXPECTATIONS: tuple[tuple[str, Any], ...] = (
+    ("touch_creep_latch.enable", True), ("touch_creep_latch.creep_frac", 0.05),
+    ("touch_creep_latch.latch_window", 5), ("touch_creep_latch.latch_mean_factor", 1.5),
+    ("touch_creep_latch.latch_min_factor", 1.0), ("touch_creep_latch.cap_m", 0.015))
+"""K-2 rules 1.1 K2-2 ... K2-4 (v_cr 0.05 v_max, window 5, mean >= 1.5 F_min, min >= 1.0 F_min, cap 15 mm)."""
 _FINAL_EXPECTATIONS: tuple[tuple[str, Any], ...] = (
     *_SPEC_429_11_EXPECTATIONS, ("clip_returned_command", True),
     ("touch_twist_hold.enable", True), ("touch_twist_hold.vector_ramp", True),
@@ -1560,6 +1569,7 @@ CONTROLLER_EXPECTATIONS: dict[str, tuple[tuple[str, Any], ...]] = {
     FINAL_P3_LAS_K1_CONTROLLER: (*_FINAL_EXPECTATIONS, *_P3_EXPECTATIONS, *_LAS_EXPECTATIONS, *_ORDER_GATE_ON),
     FINAL_K1_CONTROLLER: (*_FINAL_EXPECTATIONS, *_ORDER_GATE_ON),
     FINAL_P3_K1_CONTROLLER: (*_FINAL_EXPECTATIONS, *_P3_EXPECTATIONS, *_ORDER_GATE_ON),
+    FINAL_LAS_TCL_CONTROLLER: (*_FINAL_EXPECTATIONS, *_LAS_EXPECTATIONS, *_ORDER_GATE_OFF, *_TCL_EXPECTATIONS),
 }
 """``level --expect-controller``: (dotted C2Config attribute, required value) per controller tag. The paths are C2Config
 attributes; ``controller_meta`` keeps the same names under ``<block>.settings`` (e.g. ``lift_stroke_guard.settings.
@@ -1583,6 +1593,7 @@ CONTROLLER_ABSENT_OR_OFF: dict[str, tuple[str, ...]] = {
                           _TOUCH_CREEP_BLOCK),
     FINAL_P3_K1_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "liftoff_approach_slow",
                              _TOUCH_CREEP_BLOCK),
+    FINAL_LAS_TCL_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
 }
 """C2Config blocks a controller tag must not have on (spec 429.11: P37t / ZIC rejected; the tags before the LAS-b
 switch: ``liftoff_approach_slow``; every tag: the K-2 ``touch_creep_latch``): the block is absent, or its ``enable`` is
