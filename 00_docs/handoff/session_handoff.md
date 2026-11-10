@@ -21,8 +21,10 @@
 ### 2.1 K1 채택 전환 (사용자 결정: 통과면 자동 채택)
 
 - 명세: `06_analysis/02_control/verif_matrix/las_k1_rules_adopt.md` 9.1~9.4(프리셋 기본 켬, 태그 `final_C4G2_LAS_K1` / `final_C4G2_P3_LAS_K1` / `ABL_LAS_K1`, `is_liftoff_slow_tag` 조용한 실패, 전환 전 재현 러너 `pre_k1_preset_runner.py` + 기존 세 러너 수정, 회귀 G-1~G-6). **G-7 근거는 S-Ch가 아니라 adopt2 규칙 + REM 판정서(R7·R8, F2)** (메인 세션 결정).
-- 상태: python-expert가 worktree `.claude/worktrees/agent-a48e2e723452f1db0`(브랜치 `worktree-agent-a48e2e723452f1db0`, 15777d1에서 시작)에서 구현 중이었다. 세션 종료로 중단되면 그 worktree의 커밋·미커밋 상태를 먼저 확인하고 이어서 맡긴다.
-- 다음: 구현 끝 → integrity → `[시점] 전환 후` verif-protocol-auditor(차단 0) → 병합 → 9.6 문서(decision_log, 명세 새 절, CLAUDE.md 제어기 행 문구는 adopt 9.6절의 제안 문구를 근거 adopt2·REM으로 바꿔서) → 커밋.
+- 상태: **구현 끝, 미병합.** 커밋 `b0979d1`(브랜치 `worktree-agent-a48e2e723452f1db0`, 기준 15777d1, worktree `.claude/worktrees/agent-a48e2e723452f1db0`, 미커밋 0). 회귀 G-1 단위 6298 통과·실패 0(+ coupled 437), G-3 457/457, G-4 70/70, G-5a 189/189·G-5b 21/21 해시 일치, G-6 영향 목록(전체 표 `.local_archive/session_9d4aec18_20261110/k1sw/g6.txt`, 증거 jsonl도 같은 폴더).
+  - **명세와 다르게 처리한 5곳(전환 후 감사에서 볼 것)**: ① `--k1-order-gate` 기본은 SUPPRESS(없음 = preset, args 비교 보존), `c2_setup.k1_order_gate`·`_effective`는 늘 기록 ② `--las-off`도 관문 끔 ③ 관문 False 점검을 옛 태그 전부에(`final_C4G2`·`_P3`·`final_SGS_R4` 포함) ④ G-5를 G-5a(pre_las로 d1.jsonl)·G-5b(pre_k1로 revA_RP0)로 대체 ⑤ ABL이 프리셋 관문 플래그 유지(`ABL_LAS_K1`, 명령 불변).
+  - 결과: 끝난 연구의 옛 태그 켬 행(S-Ch gateon, REM R7/R8/F1/F2, V5-LAS-CHRONO on, D-1·stage3 LAS)은 이제 옛 태그로 거부된다(의도). 다시 돌리려면 새 태그 행 정의.
+- 다음: integrity → `[시점] 전환 후` verif-protocol-auditor(차단 0) → 병합 → 9.6 문서(decision_log, 명세 새 절, CLAUDE.md 제어기 행 문구는 adopt 9.6절의 제안 문구를 근거 adopt2·REM으로 바꿔서) → 커밋.
 - 그 뒤 준비 순서(사용자 결정, 각 실행 시작은 승인): **P5r4+K1 재판정 → B1 크리프 근거 → 436.8·v5 검증 묶음 → 이상적 센서 1단계**.
 
 ### 2.2 D8x 검증 범위 확장 (사용자 결정 11-10)
@@ -33,7 +35,12 @@
 - 구현: 브랜치 `d8x-impl` 35df06c = python-expert 7b923f3(`verification_ext`, H-R-X, acc_d8 인자, `d8x_judge.py`) + cad-expert 01f4a9e(Chrono 19행, rev2 기록·길이·preflight). 미병합.
 - 경로 2: `d8x_recount.py` sha 46010967…(결과 전 고정). 원본은 지난 scratchpad `d8x_path2\`, 사본 `.local_archive/session_9d4aec18_20261110/d8x_path2/`. **고치지 않는다.**
 - 다음(사용자 결정: 관문 통과면 Chrono 자동 시작, 판정·감사·커밋까지, 미달이면 분석까지만, CLAUDE.md 검증 범위 값 변경은 따로 질문):
-  1. K1 전환 병합 뒤 `d8x-rules`·`d8x-impl`·G0 브랜치를 새 master에 맞춘다. `expected_tag`·E-6 `_LAS` 접미사 검사를 `_LAS_K1`로(전환 작업이 고칠 곳 목록을 낸다).
+  1. K1 전환 병합 뒤 `d8x-rules`·`d8x-impl`·G0 브랜치를 새 master에 맞춘다. 전환 작업이 낸 d8x-impl 수정 목록(python-expert):
+     - **[높음, 조용한 실패]** `d8x_record.install_k1_order_gate`는 K1 off일 때 아무것도 설치하지 않아, 전환 뒤 **off 팔(R-a 910, R-c 192)이 관문 켬으로 돈다.** off에서 False를 명시 설치(`k1_targeted` K1off 방식). `acc_d8.py` 191행, `d1_runs.py` 491행도 같음. `d8x_judge`가 off 행 `k1_order_gate` effective를 점검하는지 확인.
+     - `d8x_spec.DEFAULT_TAGS`, `s6_stage2.D8X_EXPECTED_TAG`를 `_LAS_K1`로. rev2 2.1에 봉인 때 태그가 적혀 있어 **규칙 addendum(rev3) + 감사 필요**.
+     - `d8x_judge._tag_problems`(202행)가 `spec.LAS_TAG_SUFFIX`(`d8x_spec.py` 99행 `"_LAS"`)로 `endswith` 검사하는 것은 `_LAS_K1`에서 E-6 거짓 실패 → `v5_options.is_liftoff_slow_tag` 사용. 경로 2 `d8x_recount.py`(고정)의 E-6 태그 판정도 같은 문제가 있는지 확인(고치지 않고 `--expect`로 넘기는 값으로 처리 가능한지).
+     - 시험 `test_d8x_judge`·`test_d8x_chrono_rows`의 태그 고정값, `05_tests/data/d8x_existing_case_hashes.json`(관문 끈 프리셋 기준 해시) 재생성 여부.
+     - `run_S8C.py`를 두 브랜치가 모두 고침(영역 다름) → 병합 때 확인.
   2. G0 60평가 재실행(`target.py`가 바뀌어 rev1 재사용 조건이 깨짐 → 전체 재실행 규칙).
   3. 실행 전 감사(원판·rev1·rev2 세 sha). 공개할 것: python-expert의 파이프라인 확인 짧은 실행 4건(판정 미사용, 삭제).
   4. compute-scheduler-expert 배치 → E코어 R-a(1,102) + R-c(288), 약 3 h → 관문 G1 → W 선정 → L1-R 스냅숏 4개 → Chrono 19행(P코어, 약 1.5~2 h) → 두 경로 → 판정서 → 감사 → 커밋.
@@ -46,6 +53,7 @@
 - `run_mast_flex_c2_check.py` 주석의 CLAUDE.md 출처 2곳(`IMU_C1`, `ZETA_MAST`), `mast_flex_c2_check_r8.json` `calibration.*.coupled_rocking_rel_err`의 옛 3.9.3 기준 상수, slope_map 그림 점선(F_min 대신 D8 선).
 - `timeline.py` `--rules`·`--results` last-wins 결함(verif 도구, python-expert).
 - 논문 v5: 2단계 착수 전 제어기 기준(K1 채택) 확정 필요. 일정은 K1 채택 뒤 검증 묶음 비용으로 다시 추정.
+- K1 전환 G-6 영향: 그림자 근거가 있는 집합에서 전환 뒤 해시가 바뀌는 행은 하네스 `k1_Y0` 8행, Chrono S-Ch gateoff 1행(REM은 0행). 근거 없는 집합(d1 169/868, main 205/1200 등, Chrono V5-STAGE3 9/11·FINAL-C4G2 5/7 등)은 다시 돌릴 때 새 태그로.
 - 정리 대상 worktree: `agent-a449af82565bf19a1`(d8x-impl-cad, 멈춘 에이전트, 변경 없음), `agent-a6cdf6f4f2446f373`(멈춘 에이전트, rev2 병합만), 병합 끝난 마스트·K1 worktree들. 지우기 전에 브랜치 병합 여부를 확인한다.
 
 ## 4. 규칙 요약 (자세한 것은 CLAUDE.md·메모리)
