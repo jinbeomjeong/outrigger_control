@@ -15,8 +15,9 @@
 | 대상 | 값 | 확인 방법 |
 |---|---|---|
 | 원판 / rev1 / 명세 sha256 | `a3658197…7263` / `5ba081c6…4776` / `502b0bb7…27ff` | raw sha256 |
-| rev2 / rev3 / rev4 / rev5 / rev6 / rev7 sha256 (결과 전) | `b3f1b41f…94ea` / `8bcdb0ed…6e61` / `82160ff5…00c5` / `73b87758…eccc` / `21268203…ea0e` / `52d7dba9…9840` | raw sha256 |
-| 경로 2 `k2_recount.py` **1.5** blob (판정 때 병합 뒤 main에서 실행. k2-run에는 1.2가 있다) | `e1e16a9c5864e5a724f976eb6dda8456f14ff0a7`. 쓰지 않은 이전 blob: 1.2 `d2240795…`, 1.3 `78a3d2c7…`, 1.4 `1cde20d2…` | `git rev-parse <판정 커밋>:<path>` |
+| rev2 / rev3 / rev4 / rev5 / rev6 / rev7 / rev8 sha256 (결과 전) | `b3f1b41f…94ea` / `8bcdb0ed…6e61` / `82160ff5…00c5` / `73b87758…eccc` / `21268203…ea0e` / `52d7dba9…9840` / `e20ac116…f5fc` | raw sha256 |
+| 경로 2 `k2_recount.py` **1.6** blob (판정 때 병합 뒤 main에서 실행. k2-run에는 1.2가 있다. J 항목은 `d8x_recount` 기반, rev8 2절) | `82299dd2d43fa8d39fa312a750b353f693f0c133`. 쓰지 않은 이전 blob: 1.2 `d2240795…`, 1.3 `78a3d2c7…`, 1.4 `1cde20d2…`, 1.5 `e1e16a9c…` | `git rev-parse <판정 커밋>:<path>` |
+| 경로 2가 J 항목에 쓰는 `d8x/path2/d8x_recount.py` 1.0 | blob `d47c10e97662eb18c47c2a22f5f56990e6f4f115`, LF 내용 sha256 `46010967…d9d1`(경로 2가 불러오기 전에 대조) | 같음 |
 | 경로 1 `k2_judge.py` (python-expert `k2-path1-rev6b` `5d28db4`, blob id만 전달받음) | `74d72d5e1747e11c8b89e0adb177e952d3b598a7`. `c285b8c9…`·`b41d2587…`·`9bbcc201…`·`7ee9ccc1…`은 쓰지 않음 | 같음 |
 | `k2_v5_flatten.py` (같은 커밋. 행에 `verdict_missing` 추가 → `flat_main`은 이 판으로 만든다) | `b385119095b97568a4c8f82f685e3c920ee50d2b`. `654bc38c…`·`d9e3f2d9…`·`a83abd80…`은 쓰지 않음 | 같음 |
 | `run_with_identity.py` | `fab7664bd3ba16723e4202bf71dc7d87ab0cf7f0` | 같음 |
@@ -180,11 +181,16 @@ worker-초 추정이다.
   - 19:37:58~19:38:02: `git show 5f22957:…k2_judge.py`에서 kind·`V5_KINDS`·`pass_to_fail`·`_relative`·`V5_RELATIVE_GATES`를 봤다. rev5를 쓰기 직전이다.
   - 그 밖에 경로 1 코드를 인용한 감사 원문 세 편을 읽었다.
 - 경로 1(`k2_judge.py`)도 경로 2 코드를 일부 참조했다. docstring과 `false_latches`다(재감사 기록 d).
-- **사용자 결정: 경로 2(1.5, `e1e16a9c…`)를 그대로 쓴다.**
+- **사용자 결정(rev7): 경로 2(1.5, `e1e16a9c…`)를 그대로 쓴다.** rev8에서 J 항목만 다시 썼다(아래).
   - 판정서에는 정렬된 부분을 "공통 실수가 두 경로에 함께 들어갔을 가능성"으로 공개한다. 해당 부분은 V-5 결과 종류, SH 결측, kind·relative gate, manifest 형식과 D̂ 키, G8 c2와 L1 거짓 래치다.
   - 이 부분에서 두 경로가 일치해도 독립된 확인으로 세지 않는다.
 - rev7부터 메인 세션은 경로 1의 blob id만 전달한다. 경로 2 작성자는 경로 1 코드와 diff를 열지 않는다(`k2-path1-rev6b` `5d28db4`, blob `74d72d5e…`).
-- 경로 2 1.5의 봉인 대조 범위는 원판·rev1~rev6·명세다. rev7은 경로 2가 고정된 뒤에 봉인됐다. 사용자 결정으로 경로 2를 바꾸지 않으므로, rev7 대조는 경로 1과 감사가 한다.
+- **rev8 보완(실행 전 네 번째 감사 뒤, 사용자 결정 2026-11-10)**
+  - rev7 1절 목록은 세 번째 감사의 검색 범위(`k2_judge.py`)만 옮긴 것이어서 빠짐이 있었다. 메인 세션이 이전 작성자의 transcript를 경로 1 모듈 이름 전체로 다시 검색했다. 더 나온 읽기는 `d8x_judge.py`(15:49 J1~J11·E-8 정의표, 4분 뒤 경로 2 첫 판), `k2_record.py`(17:37), `acc_judge.py`(17:45, 18:49, 19:12), `k2_v5_flatten.py`(18:10, `c77ecf5`), `k2_commands.json`·`c77ecf5` 조회(18:11), `run_with_identity.py`(19:38, 20:50)다. 표는 rev8 1절에 있다.
+  - 조치: 경로 2 **1.6**은 행 J1~J11·E-2·E-3·E-10(= D8x E-8)·1 ms J3를 `d8x_recount.py` 함수로 계산한다. 경로 1을 읽지 않은 새 작성자가 다시 썼다. 이 항목의 두 경로 일치는 G-F에서 **독립 확인**으로 센다.
+  - 정렬된 정의(독립 확인 아님): SH-1·SH-2(`k2_record` 필드 이름), V-5 회귀·사건 행 처리(`_event_rows`·`_reg_verdicts` 등), 평탄화기 입력 형식, rev7 2절 항목, 1.6이 1.5에서 그대로 둔 행 판정 둘레의 처리(필드 지도, 판정 불가 규칙, E-4~E-7·I-9, SH 입력). 자세한 것은 rev8 2.2절.
+  - 저장 D8x R-a 1,102행: 1.6 selftest 통과(68 + 6, 모두 J3). `d8x_recount.judge_ra`와 실패 J 항목 집합 차 0행, 1.5와 행 결과 차 0행(rev8 3절).
+- **봉인 대조**: rev7·rev8 봉인은 판정 전·후 감사가 `seal_check`로 대조한다(경로 1·2에는 상수 없음). 경로 2 1.6의 `--rules-dir` 대조 범위는 1.5와 같이 원판·rev1~rev6·명세다.
 
 ## 7.3 이어 돌리기와 G-F 대조 단위 (rev7 4·5절)
 
@@ -204,10 +210,19 @@ worker-초 추정이다.
   - 로그: `gs_evidence/unit_all.out`(`72b0484e…84a5`, 원본과 sha 같음)
   - skip: 대부분은 k2-run에 저장 결과 폴더(07_results S8·S9, v5 jsonl)가 없어서다. 그 밖에 Chrono-dev에 torch가 없는 것, 설계·조건부 skip, YAML 재생성으로 기준이 안 맞는 1건이 있다.
   - fail 3건(로그에서 원인을 확인함)
-    - `test_d8x_chrono_rows::test_earlier_rows_meta_argv_unchanged`: S9 저장 결과가 없다. K-2 이전 커밋 `ba3adcc`에서도 같은 이유로 실패한다.
-    - `test_d8x_diag::test_rerun_gives_the_stored_command_hash`: 저장 해시가 dynamics-dev에서 낸 값이다. dynamics-dev에서는 통과한다. D8x 진단 시험이다.
-    - `test_hydraulics_flow_limit_run::test_coupled_batch_rows_and_resume`: `07_results/S9/...result.json`이 없다. `ba3adcc`에서도 같다.
-  - 메인 세션 결론: 새로 깨진 기존 시험은 없다. 이것을 T-K2-7 충족으로 볼지는 감사가 판단한다.
+    - `test_d8x_chrono_rows::test_earlier_rows_meta_argv_unchanged`: S9 저장 결과가 없다(k2-run `07_results`에는 `states_L1R`만 있다).
+    - `test_d8x_diag::test_rerun_gives_the_stored_command_hash`: 저장 해시가 dynamics-dev에서 낸 값이다(numba가 필요해 dynamics-dev에서만 돈다). D8x 진단 시험이다.
+    - `test_hydraulics_flow_limit_run::test_coupled_batch_rows_and_resume`: `07_results/S9/...result.json`이 없다.
+    - **정정**: 앞 판의 "K-2 이전 커밋 `ba3adcc`에서도 같다"는 틀렸다. `ba3adcc`는 K-2 구현 커밋 자체다. 아래 재실행으로 바꾼다.
+  - **재실행**(메인 세션, 2026-11-10, main checkout master `5ab7ae3`. k2-run과 같은 코드이고 `07_results`가 있다. E코어 `0x0FFF0000`)
+
+    | env | 시험 | 결과 | 로그 sha256 |
+    |---|---|---|---|
+    | Chrono-dev | `test_d8x_chrono_rows.py::test_earlier_rows_meta_argv_unchanged`, `test_hydraulics_flow_limit_run.py::test_coupled_batch_rows_and_resume` | **2 passed** | `gs_evidence/t_k2_7_rerun_chrono.out` `950b7525…259a` |
+    | dynamics-dev | `test_d8x_diag.py::test_rerun_gives_the_stored_command_hash` | **1 passed** | `gs_evidence/t_k2_7_rerun_dyn.out` `8dcd4097…18fc` |
+
+    - 로그는 `pytest -q` 출력이라 통과 수만 있다. 시험 이름은 메인 세션이 알려 준 것이다.
+  - 결론: k2-run에서 3 failed(`unit_all.out` `72b0484e`)였다. 원인은 환경·데이터 전제다. k2-run에는 `07_results`에 `states_L1R`만 있어 저장 S9 결과를 찾지 못했고, numba가 필요한 시험은 dynamics-dev에서만 돈다. 전제가 맞는 곳에서 세 시험을 다시 돌려 모두 통과했다. 따라서 **T-K2-7은 충족**이다.
 
 ## 8. 러너 띄우는 순서 (감사 6, rev2 5)
 
@@ -230,6 +245,7 @@ P 쪽 `P_main` → `P_post`는 1~4와 무관하다(`P_post`는 `.done` 36개를 
 ```
 
 - 실행 전에 `selftest-v5-stored --acc 06_analysis\02_control\touch_phase\acceptance --ps7 06_analysis\02_control\touch_phase\ps7_E.json`(rev4 2 형식 점검, 2026-11-10 통과)를 다시 돌려 통과를 확인한다.
+- 같이 `selftest-d8x --ra-off C:\workspace\outrigger_control\06_analysis\02_control\d8x\ra\ra_off.json --ra-on <같은 폴더>\ra_on.json --points 06_analysis\02_control\d8x\d8x_points.json`(1.6 J 항목 경로, 2026-11-10 통과: 68 + 6 J3, `d8x_crosscheck` 차 0)을 다시 돌린다.
 
 ### 9.1 V-5 평탄 파일 다시 만들기 (경로 1 입력, integrity 지적 High)
 
