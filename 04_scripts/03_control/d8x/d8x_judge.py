@@ -479,6 +479,12 @@ def _g0_source_problems(doc: dict, at_commit: str) -> tuple[list[str], dict]:
         problems.append("G0 meta.run_commit missing (rev3 4)")
     if meta.get("clean") is not True:
         problems.append("G0 run not from a clean checkout (I-1: status at start / end)")
+    recorded_seals = meta.get("rules_seals") or {}
+    for rev, path, sealed in spec.RULES_FILES:  # rev6 4: the record carries every seal
+        entry = recorded_seals.get(path.name) or {}
+        if entry.get("sha256") != sealed:
+            problems.append(f"G0 meta.rules_seals {path.name} {entry.get('sha256')} != {rev} "
+                            f"{sealed[:8]} (rev6 4)")
     recorded = ((meta.get("closure") or {}).get("files")) or {}
     if not recorded:
         problems.append("G0 meta.closure.files missing (rev3 4)")
@@ -1017,6 +1023,9 @@ def cmd_invariance(args) -> tuple[int, dict]:
     v2 = _las_activity(ra_off, rc_off, ra_on, rc_on)
     v3 = _vb_v0_differences(rc_off)
     problems = v1.pop("problems")
+    if v2["missing_events"]:
+        problems.append(f"V-2: {len(v2['missing_events'])} rows without an event list "
+                        f"(rev6 2 (iii)): {v2['missing_events'][:5]}")
     status = EXIT_NOT_JUDGEABLE if problems else EXIT_PASS
     return status, {"V-1": v1, "V-2": v2, "V-3": v3, "problems": problems}
 
@@ -1055,22 +1064,33 @@ def _las_activity(ra_off, rc_off, ra_on=(), rc_on=()) -> dict:
     decision 2026-11-10, rev4 check A-2 (b)): a point whose LAS-b acted only in K1-on rows is
     LAS_DEPENDENT too. ``counts_by_arm`` keeps the split."""
     by_arm: dict[str, dict[str, int]] = {"off": {}, "on": {}}
+    missing_events: list[str] = []  # rev6 2 (iii): not judgeable, never counted as 0
+    record_only: list[str] = []  # rev6 2 (iv) / (v): G1 already stops these rows
     for arm, runs, lines in (("off", ra_off, rc_off), ("on", ra_on, rc_on)):
-        counts = by_arm[arm]
-        for run in runs:
-            key = f"ra|{run.get('point')}|{run.get('level')}"
-            counts[key] = counts.get(key, 0) + _liftoff_slow(run.get("d8x"))
+        entries = [(f"ra|{run.get('point')}|{run.get('level')}", run.get("id"), run,
+                    run.get("d8x")) for run in runs]
         for line in lines:
             row = line["job"]["d1"]
-            key = f"rc|{row['slope_name']}|{row['level']}"
-            counts[key] = counts.get(key, 0) + _liftoff_slow((line.get("d1") or {}).get("d8x"))
+            entries.append((f"rc|{row['slope_name']}|{row['level']}", _rc_key(line), line,
+                            (line.get("d1") or {}).get("d8x")))
+        counts = by_arm[arm]
+        for key, name, raw, d8x in entries:
+            counts.setdefault(key, 0)
+            if "error" in raw or not isinstance(d8x, dict):
+                record_only.append(f"{arm}:{name}")
+            elif "events" not in d8x:
+                missing_events.append(f"{arm}:{name}")
+            else:
+                counts[key] += _liftoff_slow(d8x)
     total: dict[str, int] = {}
     for counts in by_arm.values():
         for key, count in counts.items():
             total[key] = total.get(key, 0) + count
-    return {"counts": total, "counts_by_arm": by_arm, "scope": "both K1 arms (rev4 A-2 (b))",
+    return {"counts": total, "counts_by_arm": by_arm, "scope": "both K1 arms (rev5 2)",
             "LAS_DEPENDENT": sorted(k for k, v in total.items() if v),
-            "LAS_INACTIVE": sorted(k for k, v in total.items() if not v)}
+            "LAS_INACTIVE": sorted(k for k, v in total.items() if not v),
+            "missing_events": missing_events, "record_only_rows": record_only,
+            "judgeable": not missing_events}
 
 
 def _liftoff_slow(d8x: dict | None) -> int:

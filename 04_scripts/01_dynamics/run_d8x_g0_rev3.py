@@ -44,8 +44,9 @@ ROOT = sb.ROOT
 OUT = ROOT / "06_analysis" / "00_dynamics" / "d8x_g0_rev3.json"
 RULES_REV = "rev3"
 RULES_DIR = "06_analysis/02_control/d8x"
-RULES_FILES = ("d8x_rules.md", "d8x_rules_rev1.md", "d8x_rules_rev2.md", "d8x_rules_rev3.md",
-               "d8x_rules_rev4.md")
+RULES_GLOB = "d8x_rules*.md"
+"""Every sealed rules file present at the run commit is recorded (rev6 4: the run record must
+carry the seals up to the newest addendum)."""
 REV1_REF = "e37f42c:06_analysis/00_dynamics/d8x_g0_rev1.json"
 GATE_G04_TOP = ("pitch+", "pitch-", "roll+", "rpX")
 """Rev2 3: G0-4 gate = the floors of the L1-R rows #7 .. #11 at the top; the rest is a record."""
@@ -57,8 +58,8 @@ EXPECTED_EVALUATIONS = 60
 def rules_seals() -> dict:
     """Raw sha256 of each rules file and the value of its ``.sha256`` file."""
     out = {}
-    for name in RULES_FILES:
-        path = ROOT / RULES_DIR / name
+    for path in sorted((ROOT / RULES_DIR).glob(RULES_GLOB)):
+        name = path.name
         sidecar = path.with_suffix(".sha256")
         out[name] = {"sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
                      "sidecar": sidecar.read_text(encoding="utf-8").split()[0]}

@@ -29,11 +29,12 @@ F_D8 = judge.f_d8_N()
 # --- seals and points -----------------------------------------------------------------------
 def test_all_rules_files_match_their_seals() -> None:
     report = spec.seal_report()
-    assert set(report) == {"original", "rev1", "rev2", "rev3", "rev4", "rev5"}
+    assert set(report) == {"original", "rev1", "rev2", "rev3", "rev4", "rev5", "rev6"}
     assert report["rev2"]["sealed"].startswith("5f3fa620")
     assert report["rev3"]["sealed"].startswith("2318fb5c")
     assert report["rev4"]["sealed"].startswith("5233c517")
     assert report["rev5"]["sealed"].startswith("63437019")
+    assert report["rev6"]["sealed"].startswith("d584c8da")
     assert all(entry["ok"] for entry in report.values()), report
 
 
@@ -42,10 +43,11 @@ def test_stage2_rules_constants_match_the_spec() -> None:
     import s6_stage2 as st  # noqa: PLC0415
 
     sealed = {rev: sha for rev, _, sha in spec.RULES_FILES}
-    assert st.D8X_RULES_REV == spec.LATEST_RULES_REV == "rev5"
+    assert st.D8X_RULES_REV == spec.LATEST_RULES_REV == "rev6"
     assert st.D8X_RULES_REV3_SHA256 == sealed["rev3"]
     assert st.D8X_RULES_REV4_SHA256 == sealed["rev4"]
     assert st.D8X_RULES_REV5_SHA256 == sealed["rev5"]
+    assert st.D8X_RULES_REV6_SHA256 == sealed["rev6"]
 
 
 def test_rev3_rev4_have_no_point_tables_and_keep_the_point_file() -> None:
@@ -372,7 +374,8 @@ G0_CLOSURE = ("04_scripts/01_dynamics/run_s6_slope_boundary_check.py",
 def _rev3_meta(**overrides) -> dict:
     blobs = judge.tree_blobs("HEAD")
     meta = {"rules_rev": "rev3", "reuse": 0, "recompute": 60, "run_commit": "abc", "clean": True,
-            "closure": {"files": {name: blobs[name] for name in G0_CLOSURE}}}
+            "closure": {"files": {name: blobs[name] for name in G0_CLOSURE}},
+            "rules_seals": {path.name: {"sha256": sha} for _, path, sha in spec.RULES_FILES}}
     return {**meta, **overrides}
 
 
@@ -406,6 +409,7 @@ def test_judge_g0_rev3_recompute_passes(tmp_path) -> None:
     ({"clean": False}, "clean"),
     ({"run_commit": None}, "run_commit"),
     ({"closure": {"files": {G0_CLOSURE[1]: "0" * 40}}}, "closure blobs differ"),
+    ({"rules_seals": {"d8x_rules.md": {"sha256": spec.RULES_FILES[0][2]}}}, "rev6 4"),
 ])
 def test_judge_g0_rev3_source_problems_are_not_judgeable(tmp_path, override, message) -> None:
     path = tmp_path / "d8x_g0_rev3.json"
@@ -761,3 +765,14 @@ def test_v2_las_only_in_the_k1_on_arm_is_las_dependent() -> None:
     assert v2["LAS_DEPENDENT"] == ["ra|pitch+|top"]
     assert v2["counts_by_arm"]["off"]["ra|pitch+|top"] == 0
     assert v2["counts_by_arm"]["on"]["ra|pitch+|top"] == 1
+
+
+def test_v2_row_without_an_event_list_is_not_judgeable_and_empty_list_is_zero() -> None:
+    """Rev6 2: (iii) no event key = not judgeable (never 0); [] = 0; (iv) driver error rows
+    are recorded only."""
+    no_key = {"id": "x", "point": "roll+", "level": "top", "d8x": {}}
+    error_row = {"id": "e", "point": "roll-", "level": "top", "error": "boom"}
+    v2 = judge._las_activity([_ra_las_run("pitch+", False), error_row], [], [no_key], [])
+    assert v2["judgeable"] is False and v2["missing_events"] == ["on:x"]
+    assert v2["record_only_rows"] == ["off:e"]
+    assert v2["counts"]["ra|pitch+|top"] == 0 and "ra|pitch+|top" in v2["LAS_INACTIVE"]

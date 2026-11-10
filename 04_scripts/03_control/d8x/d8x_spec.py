@@ -7,7 +7,9 @@ Sources (all sealed; the judge refuses to run when any sha256 differs, :data:`RU
   ``d8x_rules_rev2.md`` 5f3fa620... (interpretation), ``d8x_rules_rev3.md`` 2318fb5c... (K1 switch
   tags, K1 off arms install False, G0 60 recomputed), ``d8x_rules_rev4.md`` 5233c517... (F-1:
   K1-on arm rows join G1; W and FLAG stay on the K1-off arm), ``d8x_rules_rev5.md`` 63437019...
-  (V-2 over both arms, missing k1_rows_failed = not judgeable, Chrono E-6d five keys)
+  (V-2 over both arms, missing k1_rows_failed = not judgeable, Chrono E-6d five keys),
+  ``d8x_rules_rev6.md`` d584c8da... (two-path basis, V-2 rows without an event list = not
+  judgeable)
 The points are not typed in here: :func:`rules_point_tables` reads the (A) / (B) / (C) tables of
 section 1.2 and the W name table of section 5.1 from the rules files, a later file replacing a
 whole table it repeats (rev1 replaces 1.2 (A) (B) (C); 5.1 names stay the original's). The floor
@@ -50,12 +52,15 @@ RULES_FILES = (
      "5233c517e6c0d17b0e26e902673e0d6990532ed1c54c82ae0801e688d50702a5"),
     ("rev5", D8X_DIR / "d8x_rules_rev5.md",
      "63437019eaee2340fbbfc45efdcf78bfc5ba314f83085d55f19e323c6f5ffabe"),
+    ("rev6", D8X_DIR / "d8x_rules_rev6.md",
+     "d584c8dafcb1aea9f289a4ffaf9f27cbcc9aa9d22da504a764fb44f041624697"),
 )
 """(revision, path, sealed sha256 of the raw bytes; the files are ``-text`` in git). rev2
 (interpretation), rev3 (K1 switch tags, explicit K1 off, G0 full recompute), rev4 (K1-on arm
-rows in G1) and rev5 (probe disclosure, V-2 both arms, manual-application order, Chrono E-6d
-keys) have no point tables."""
-LATEST_RULES_REV = "rev5"
+rows in G1), rev5 (probe disclosure, V-2 both arms, manual-application order, Chrono E-6d
+keys) and rev6 (two-path comparison basis, V-2 missing-record boundary, path-1 outputs) have no
+point tables."""
+LATEST_RULES_REV = "rev6"
 """Newest sealed addendum (the seal check covers every file above up to it)."""
 POINT_FILE_RULES = ("original", "rev1", "rev2")
 """Rules files the point file lists (it was written under rev2). rev3 and rev4 keep the point

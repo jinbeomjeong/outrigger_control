@@ -226,10 +226,11 @@ def test_controller_config_uses_verification_ext() -> None:
     assert spans["pitch_nose_up"] == pytest.approx(3.6, abs=1e-12)
     rec = s8.d8x_preflight(s8.case_set("d8x_w1", w="d45++"), None)
     assert {r["slope_limit_mode"] for r in rec["rows"].values()} == {"verification_ext"}
-    assert rec["rules_rev"] == "rev5" and rec["expected_tag"] == st.D8X_EXPECTED_TAG
+    assert rec["rules_rev"] == "rev6" and rec["expected_tag"] == st.D8X_EXPECTED_TAG
     assert rec["rules_rev4_sha256"].startswith("5233c517")
     assert rec["rules_rev3_sha256"].startswith("2318fb5c")
     assert rec["rules_rev5_sha256"].startswith("63437019")
+    assert rec["rules_rev6_sha256"].startswith("d584c8da")
     assert {r["settle_map"]["kind"] for r in rec["rows"].values()} == {"identity"}
     rec6 = s6.d8x_preflight(s6.CASE_SETS["d8x_w1"](), None)
     assert len(rec6["rows"]) == 5
@@ -256,7 +257,7 @@ T_RUN_W1 = {  # rev2 5 (W = dxpm050 / r+p-0.5, V = rpX): row -> (T^_R, T_run) s
 
 def test_rev2_run_length_table() -> None:
     doc = s8.d8x_plan("r+p-0.5", "rpX")
-    assert doc["expected_tag"] == "final_C4G2_LAS_K1" and doc["rules_rev"] == "rev5"
+    assert doc["expected_tag"] == "final_C4G2_LAS_K1" and doc["rules_rev"] == "rev6"
     got = {r["row"]: (r["ready_hat_s"], r["T_run_s"]) for r in doc["rows"]}
     assert set(got) == set(T_RUN_W1)
     for k, v in T_RUN_W1.items():
