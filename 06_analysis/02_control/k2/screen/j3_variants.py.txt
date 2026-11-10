@@ -1,0 +1,229 @@
+"""Design screen (NOT a judgement): D8x J3 rows with TOUCH-phase controller variants.
+
+Runs d8x_diag.diag_run (acc_d8.run_one, D8x path, K1 off) with in-process patches of the
+harness controller config / C2Controller TOUCH methods. Nothing in the project changes.
+
+Variants (env-free, per task):
+  V0   : preset as is (must reproduce the stored commands_sha256)
+  VA   : first-contact window speed 0.5 -> 0.25 v_max (r8.touch_window_speed_fraction)
+  VB   : touch_seen approach / re-approach 0.25 -> 0.10 v_max (thresholds.touch_approach_speed_fraction)
+  VAB  : VA + VB
+  VD   : settle gate at TOUCH end: all four loads >= touch level over the last N samples and
+         per-leg spread (max-min) <= S; legs held at 0 while waiting; timeout T_max
+  VABD : VA + VB + VD
+
+Usage: python -I -B j3_variants.py <out_dir> <workers> <variant,...> <id;id;...>
+"""
+from __future__ import annotations
+
+import json
+import os
+import sys
+import time
+from collections import deque
+from dataclasses import replace
+from multiprocessing import Pool
+from pathlib import Path
+
+WT = Path(r"C:\workspace\outrigger_control\.claude\worktrees\agent-ad2ceee664cca21d8")
+sys.path.insert(0, str(WT / "04_scripts" / "03_control" / "touch_phase" / "acceptance"))
+os.environ.setdefault("ACC_D8X_K1", "off")
+import d8x_diag  # noqa: E402
+import numpy as np  # noqa: E402
+
+SETTLE_N = 5
+SETTLE_SPREAD_N = 10e3
+SETTLE_TMAX_S = 4.0
+_STATE = {"variant": "V0", "patched": False}
+
+
+CREEP_FRACTION = 0.05
+"""VC: touch_seen legs creep at this fraction of v_max and never stop on a single dip."""
+CREEP_FLOOR_FACTOR = 1.0
+"""VC: latch needs min over the last SETTLE_N samples >= this x F_min (pad seated in troughs)."""
+CREEP_MAX_EXTRA_M = 0.015
+"""VC: latch anyway after this much motor stroke since the leg's first touch_seen sample."""
+
+
+def _flags():
+    v = _STATE["variant"]
+    return {"A": "A" in v[1:], "B": "B" in v[1:], "D": "D" in v[1:], "C": "C" in v[1:]}
+
+
+def _install():
+    if _STATE["patched"]:
+        return
+    c2py = d8x_diag._c2py()
+    original_preset = c2py.preset_config
+
+    def preset_config(*args, **kwargs):
+        config = original_preset(*args, **kwargs)
+        f = _flags()
+        if f["A"]:
+            config = replace(config, r8=replace(config.r8, touch_window_speed_fraction=0.25))
+        if f["B"]:
+            config = replace(config, thresholds=replace(config.thresholds,
+                                                        touch_approach_speed_fraction=0.10))
+        if f["C"]:
+            config = replace(config, thresholds=replace(config.thresholds,
+                                                        touch_approach_speed_fraction=CREEP_FRACTION))
+        return config
+
+    c2py.preset_config = preset_config
+    ctl = c2py.C2Controller
+    orig_touch = ctl._touch
+    orig_latch = ctl._update_touch_latches
+
+    def _touch(self, reading):
+        f = _flags()
+        if f["D"] or f["C"]:
+            hist = self.__dict__.setdefault("_j3_hist", deque(maxlen=SETTLE_N))
+            hist.append(np.array(self._touchdown_load_N(reading), float))
+            self.__dict__["_j3_reading_t"] = float(reading.t_s)
+            self.__dict__["_j3_motor"] = np.array(reading.motor_stroke_m, float)
+        return orig_touch(self, reading)
+
+    def _creep_latches(self, bears, t_s):
+        """VC: seen legs creep; latch on 0.5 s mean >= level and min >= floor (or stroke cap)."""
+        state = self._state
+        level = self.config.thresholds.touch_load_factor * self.geometry.F_min_N
+        floor = CREEP_FLOOR_FACTOR * self.geometry.F_min_N
+        hist = np.array(self.__dict__["_j3_hist"])
+        motor = self.__dict__["_j3_motor"]
+        seen_at = self.__dict__.setdefault("_j3_seen_stroke", [None] * 4)
+        caps = self.__dict__.setdefault("_j3_cap_latch", [False] * 4)
+        for leg in range(4):
+            if state.touched[leg] or not state.touch_seen[leg]:
+                continue
+            if seen_at[leg] is None:
+                seen_at[leg] = float(motor[leg])
+            window = hist[:, leg]
+            ok = len(window) >= SETTLE_N and window.mean() >= level and window.min() >= floor
+            if ok:
+                state.touched[leg] = True
+            elif motor[leg] - seen_at[leg] >= CREEP_MAX_EXTRA_M:
+                state.touched[leg] = True
+                caps[leg] = True
+        return np.zeros(4, dtype=bool)
+
+    def _settled(self):
+        hist = self.__dict__.get("_j3_hist")
+        if hist is None or len(hist) < SETTLE_N:
+            return False
+        level = self.config.thresholds.touch_load_factor * self.geometry.F_min_N
+        h = np.array(hist)
+        return bool(np.all(h.min(axis=0) >= level) and np.all(h.max(axis=0) - h.min(axis=0)
+                                                                <= SETTLE_SPREAD_N))
+
+    def _update_touch_latches(self, bears, t_s):
+        if _flags()["C"]:
+            return _creep_latches(self, bears, t_s)
+        if not _flags()["D"]:
+            return orig_latch(self, bears, t_s)
+        state = self._state
+        pend = self.__dict__.get("_j3_pending")
+        if pend is not None:
+            sentinel, t0 = pend
+            if _settled(self) or t_s - t0 >= SETTLE_TMAX_S - 1e-9:
+                self.__dict__["_j3_pending"] = None
+                self.__dict__["_j3_wait_s"] = t_s - t0
+                self.__dict__["_j3_timeout"] = not _settled(self)
+                state.touched[:] = True
+                return np.zeros(4, dtype=bool)
+            return np.ones(4, dtype=bool)
+        was = state.touched.copy()
+        waiting = orig_latch(self, bears, t_s)
+        if state.touched.all() and not _settled(self):
+            old = np.flatnonzero(was)
+            sentinel = int(old[0]) if len(old) else 0
+            state.touched[sentinel] = False
+            self.__dict__["_j3_pending"] = (sentinel, t_s)
+            return np.ones(4, dtype=bool)
+        if state.touched.all():
+            self.__dict__.setdefault("_j3_wait_s", 0.0)
+            self.__dict__.setdefault("_j3_timeout", False)
+        return waiting
+
+    ctl._touch = _touch
+    ctl._update_touch_latches = _update_touch_latches
+    _STATE["patched"] = True
+
+
+def extra_metrics(series_path: Path) -> dict:
+    d = np.load(series_path, allow_pickle=True)
+    t = d["t_s"]
+    pad = d["pad_normal_min_N"]
+    contact_all = np.all(d["pad_normal_last_N"] > 0.0, axis=1)
+    i4 = int(np.argmax(contact_all)) if contact_all.any() else None
+    t_touch = float(d["t_touch_s"])
+    t_lift = float(d["t_lift_s"])
+    lifted = np.any(pad <= 0.0, axis=1)
+    j3 = int(np.sum(lifted & (t >= t_touch - 1e-9)))
+    j3_all4 = int(np.sum(lifted[i4:])) if i4 is not None else None
+    m_win = (t >= t_touch) & (t <= t_lift)
+    minpad = float(pad[m_win].min() / 1e3) if m_win.any() else None
+    q = d["body_rate_rad_s"]
+    k = int(np.searchsorted(t, t_touch))
+    seg = slice(max(0, k - 300), k)
+    rate_amp = float(np.degrees(np.max(np.abs(q[seg, :2] - q[seg, :2].mean(axis=0)))))
+    return {"t_first_all4_s": float(t[i4]) if i4 is not None else None, "J3": j3,
+            "J3_from_first_all4": j3_all4, "min_pad_touch_to_lift_kN": minpad,
+            "rate_amp_0p3s_before_touch_deg_s": rate_amp}
+
+
+def worker(task):
+    _STATE["variant"] = task["variant"]
+    _install()
+    t0 = time.perf_counter()
+    row = d8x_diag.diag_run(task)
+    if "error" in row:
+        return {"variant": task["variant"], "id": task["case"]["id"], "error": row["error"],
+                "tb": row.get("tb")}
+    from_c = d8x_diag.acc_d8.c2py_module if hasattr(d8x_diag.acc_d8, "c2py_module") else None
+    del from_c
+    adapter = d8x_diag._c2py().rmf.LAST["ctrl"]
+    ctl = adapter.controller
+    out = {"variant": task["variant"], "id": row["id"], "commands_sha256": row["commands_sha256"],
+           "t_touch_s": row["d8x"]["t_touch_s"], "t_lift_s": row["d8x"]["t_lift_s"],
+           "t_ready_s": row["d8x"].get("t_ready_s"), "J3_stored_def": row["d8x"]["J3_pad_lift_samples"],
+           "J3_min_N": row["d8x"]["J3_pad_normal_min_N"], "phase": row.get("phase"),
+           "warnings": row.get("warnings"), "fails": row.get("fails"),
+           "min_true_cyl_force_kN": row.get("min_true_cyl_force_kN"),
+           "settle_wait_s": ctl.__dict__.get("_j3_wait_s"),
+           "settle_timeout": ctl.__dict__.get("_j3_timeout"),
+           "creep_cap_latch": ctl.__dict__.get("_j3_cap_latch"),
+           "lift_paused": sum(e.name.startswith("INFO_LIFT_PAUSED") for e in ctl.events),
+           "dip_held": sum(e.name.startswith("INFO_TOUCH_DIP_HELD") for e in ctl.events),
+           "wall_s": round(time.perf_counter() - t0, 1)}
+    sf = row.get("diag", {}).get("series_file")
+    if sf:
+        out.update(extra_metrics(Path(task["series_dir"]) / sf))
+    return out
+
+
+def main():
+    out_dir = Path(sys.argv[1])
+    workers = int(sys.argv[2])
+    variants = sys.argv[3].split(",")
+    ids = sys.argv[4].split(";")
+    record = d8x_diag.acc_d8._record_module()
+    points = record.ra_point_angles(record.load_points(None))
+    by_id = {c["id"]: c for c in d8x_diag.acc_d8.d8x_cases(points, d8x_diag.acc_d8.D8X_STAGES)}
+    tasks = []
+    for v in variants:
+        for run_id in ids:
+            sd = out_dir / v
+            sd.mkdir(parents=True, exist_ok=True)
+            tasks.append({"case": by_id[run_id], "series_dir": str(sd), "save": "all", "variant": v})
+    rows = []
+    t0 = time.perf_counter()
+    with Pool(min(workers, len(tasks))) as pool:
+        for n, r in enumerate(pool.imap_unordered(worker, tasks, chunksize=1), 1):
+            rows.append(r)
+            print(f"[{n}/{len(tasks)} {time.perf_counter() - t0:.0f} s] {r.get('variant')} {r.get('id')} "
+                  f"J3 {r.get('J3_stored_def')} {r.get('error', '')}", flush=True)
+    (out_dir / "variants.json").write_text(json.dumps(rows, indent=1, default=float), encoding="utf-8")
+
+
+if __name__ == "__main__":
+    main()
