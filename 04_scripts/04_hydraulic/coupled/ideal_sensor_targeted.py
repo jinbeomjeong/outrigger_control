@@ -336,6 +336,15 @@ _GEOMETRY_FUNCTIONS: dict = {}
 """``rotation`` (quaternion -> matrix) and ``node_heights`` (plant -> heights) of the harness."""
 
 
+def underlying_plant(plant):
+    """The harness plant behind a step-only view: the VB / LS settings wrap ``_lagged_step``
+    with ``harness_hydraulics.install_overlap_cut``, which passes a ``_CutPlant`` (only
+    ``step`` and ``dt``, the plant in ``_plant``) to the functions it wraps."""
+    while hasattr(plant, "_plant"):
+        plant = plant._plant
+    return plant
+
+
 def install_chunk_hook(closed_loop) -> None:
     """Wrap ``closed_loop._lagged_step`` once (read only: the chunk result is returned as is)."""
     import functools
@@ -347,7 +356,7 @@ def install_chunk_hook(closed_loop) -> None:
     @functools.wraps(inner)
     def lagged_step(plant, command, valve, steps):
         accumulated = inner(plant, command, valve, steps)
-        ACCUMULATOR.on_chunk(plant, accumulated)
+        ACCUMULATOR.on_chunk(underlying_plant(plant), accumulated)
         return accumulated
 
     lagged_step.is_ideal_chunk_hook = True
