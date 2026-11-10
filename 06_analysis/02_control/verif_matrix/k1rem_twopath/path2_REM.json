@@ -1,0 +1,6679 @@
+{
+ "tool": "recount_rem.py",
+ "tool_version": "1",
+ "path": 2,
+ "provisional": true,
+ "note": "path-2 recount; grade is provisional; K-10 is decided in the judgement document",
+ "k10": null,
+ "rules_path": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\las_k1_rules_adopt2.md",
+ "rules_sha256": "fb3a5696f24385e81acc9c564500b5e5a0547db45a5335272e7d18400f1e68e8",
+ "batch": "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-LAS-K1-REM_20261109_235554",
+ "batch_name": "V5-LAS-K1-REM",
+ "taken_utc": "2026-11-09T23:50:41+00:00",
+ "files_read_sha256": {
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\las_k1_rules_adopt2.md": "fb3a5696f24385e81acc9c564500b5e5a0547db45a5335272e7d18400f1e68e8",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\verif_matrix\\las_k1_rules_adopt2.sha256": "eb9c1417710a3b4bfe626ef0c6dd7c057cc6e982fef1e90a506a1801ab765679",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-LAS-K1-REM_20261109_235554\\batch.json": "35a1d613125d642f27bd6435bae10735958f5a7aa13f87b24f81f600006007d8",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-LAS-K1-REM_20261109_235554\\REM_J2_B_top_Fs4_VB_gateoff\\result.json": "3bb27cd308e0f507397bc5aad051d5a9657177be5d92a18c834d1b945c4cc0db",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-LAS-K1-REM_20261109_235554\\REM_J2_B_middle_Fs4_VB_gateoff\\result.json": "42aafc5028881ba68b589c86d0fb7f26469ff81b119318ce740a4dac6023b44c",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-LAS-K1-REM_20261109_235554\\REM_J2_B_bottom_Fs4_VB_gateoff\\result.json": "0c9fda1550fe0a6d87d857b76ea4687132809ac989252f9812ca07483a7599e4",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-LAS-K1-REM_20261109_235554\\REM_J2_B_top_Fs4_m1p1_VB_gateoff\\result.json": "2f5cb250b2319544612c91a6d30e2ee405b798ef526e0e7b71856b0aa02439b2",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-LAS-K1-REM_20261109_235554\\REM_J2_B_top_Fs4_m1p1_V0_gateoff\\result.json": "8f6e8ac6573fbe851081fe41fc89db0fd87cafd67ee68b3fc557e378ce8e2518",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-LAS-K1-REM_20261109_235554\\REM_J1_B_top_Fs4_m1p1_VB_gateoff\\result.json": "50f8c400f619061b683f71617f53a9964fdd9c72405249a1582ac3dbb206e0af",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-LAS-K1-REM_20261109_235554\\REM_J2_B_top_Fs4_VB_gateon\\result.json": "a237b50b22176018e3db995209bc9b55780445855999412621a4d7c2788ddc5a",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-LAS-K1-REM_20261109_235554\\REM_J2_B_top_Fs4_m1p1_VB_gateon\\result.json": "fd5c22f4942c7254cc953a235ddd03affcb169618cf03a8d0f170685a08faccf",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-LAS-K1-REM_20261109_235554\\REM_J2_B_top_Fs4_VB_gateon_forced1\\result.json": "bac8a552c29f24bb913aff6867b48686ece5bdb55e33ba54a28497ad3d728e8e",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-LAS-K1-REM_20261109_235554\\REM_J2_B_top_Fs4_m1p1_VB_gateon_forced1\\result.json": "3151d96803df5f1d0a101401f5f89f82673478c082358dd3b7f09cc1c2b1f917",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-LAS-K1-REM_20261109_235554\\REM_J2_B_top_Fs4_VB_gateoff\\controller_commands.npz": "ebf86d1d40af464e2e4e23d4ea79ad56721829e65d70cb4efb1d2cc072e4b559",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-LAS-K1-REM_20261109_235554\\REM_J2_B_top_Fs4_VB_gateon\\controller_commands.npz": "ebf86d1d40af464e2e4e23d4ea79ad56721829e65d70cb4efb1d2cc072e4b559",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-LAS-K1-REM_20261109_235554\\REM_J2_B_top_Fs4_m1p1_VB_gateoff\\controller_commands.npz": "97aace614a534a6aa95f67857947dcd541f9ecca1e9974eb5105fc017bf7c8aa",
+  "C:\\workspace\\outrigger_control\\07_results\\S9\\batch_V5-LAS-K1-REM_20261109_235554\\REM_J2_B_top_Fs4_m1p1_VB_gateon\\controller_commands.npz": "97aace614a534a6aa95f67857947dcd541f9ecca1e9974eb5105fc017bf7c8aa"
+ },
+ "k_checks": {
+  "K-0": {
+   "ok": true,
+   "scope": "partial: rules sha vs .sha256 file and expected constant (tool/audit sha chain is path-1/judgement doc)",
+   "n_items": 2,
+   "failures_judge_scope": [],
+   "failures_all": [],
+   "items": [
+    {
+     "row": null,
+     "item": "rules_sha_eq_sha256_file",
+     "ok": true,
+     "got": "fb3a5696f24385e81acc9c564500b5e5a0547db45a5335272e7d18400f1e68e8",
+     "want": "fb3a5696f24385e81acc9c564500b5e5a0547db45a5335272e7d18400f1e68e8"
+    },
+    {
+     "row": null,
+     "item": "rules_sha_eq_expected",
+     "ok": true,
+     "got": "fb3a5696f24385e81acc9c564500b5e5a0547db45a5335272e7d18400f1e68e8",
+     "want": "fb3a5696f24385e81acc9c564500b5e5a0547db45a5335272e7d18400f1e68e8"
+    }
+   ]
+  },
+  "K-1": {
+   "ok": true,
+   "scope": "partial: git_at_start.head equal over rows, dirty empty, batch code_at_launch head equal (prelaunch/postrun HEAD not available to path 2)",
+   "n_items": 33,
+   "failures_judge_scope": [],
+   "failures_all": [],
+   "items": [
+    {
+     "row": "R1",
+     "item": "dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "R1",
+     "item": "batch_head_eq_result_head",
+     "ok": true,
+     "got": "88e2880c2bb1a98e8758fc8f6a766e8770572621",
+     "want": "88e2880c2bb1a98e8758fc8f6a766e8770572621"
+    },
+    {
+     "row": "R1",
+     "item": "batch_dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "R2",
+     "item": "dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "R2",
+     "item": "batch_head_eq_result_head",
+     "ok": true,
+     "got": "88e2880c2bb1a98e8758fc8f6a766e8770572621",
+     "want": "88e2880c2bb1a98e8758fc8f6a766e8770572621"
+    },
+    {
+     "row": "R2",
+     "item": "batch_dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "R3",
+     "item": "dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "R3",
+     "item": "batch_head_eq_result_head",
+     "ok": true,
+     "got": "88e2880c2bb1a98e8758fc8f6a766e8770572621",
+     "want": "88e2880c2bb1a98e8758fc8f6a766e8770572621"
+    },
+    {
+     "row": "R3",
+     "item": "batch_dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "R4",
+     "item": "dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "R4",
+     "item": "batch_head_eq_result_head",
+     "ok": true,
+     "got": "88e2880c2bb1a98e8758fc8f6a766e8770572621",
+     "want": "88e2880c2bb1a98e8758fc8f6a766e8770572621"
+    },
+    {
+     "row": "R4",
+     "item": "batch_dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "R5",
+     "item": "dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "R5",
+     "item": "batch_head_eq_result_head",
+     "ok": true,
+     "got": "88e2880c2bb1a98e8758fc8f6a766e8770572621",
+     "want": "88e2880c2bb1a98e8758fc8f6a766e8770572621"
+    },
+    {
+     "row": "R5",
+     "item": "batch_dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "R6",
+     "item": "dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "R6",
+     "item": "batch_head_eq_result_head",
+     "ok": true,
+     "got": "88e2880c2bb1a98e8758fc8f6a766e8770572621",
+     "want": "88e2880c2bb1a98e8758fc8f6a766e8770572621"
+    },
+    {
+     "row": "R6",
+     "item": "batch_dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "R7",
+     "item": "dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "R7",
+     "item": "batch_head_eq_result_head",
+     "ok": true,
+     "got": "88e2880c2bb1a98e8758fc8f6a766e8770572621",
+     "want": "88e2880c2bb1a98e8758fc8f6a766e8770572621"
+    },
+    {
+     "row": "R7",
+     "item": "batch_dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "R8",
+     "item": "dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "R8",
+     "item": "batch_head_eq_result_head",
+     "ok": true,
+     "got": "88e2880c2bb1a98e8758fc8f6a766e8770572621",
+     "want": "88e2880c2bb1a98e8758fc8f6a766e8770572621"
+    },
+    {
+     "row": "R8",
+     "item": "batch_dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "F1",
+     "item": "dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "F1",
+     "item": "batch_head_eq_result_head",
+     "ok": true,
+     "got": "88e2880c2bb1a98e8758fc8f6a766e8770572621",
+     "want": "88e2880c2bb1a98e8758fc8f6a766e8770572621"
+    },
+    {
+     "row": "F1",
+     "item": "batch_dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "F2",
+     "item": "dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "F2",
+     "item": "batch_head_eq_result_head",
+     "ok": true,
+     "got": "88e2880c2bb1a98e8758fc8f6a766e8770572621",
+     "want": "88e2880c2bb1a98e8758fc8f6a766e8770572621"
+    },
+    {
+     "row": "F2",
+     "item": "batch_dirty_empty",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": null,
+     "item": "single_head_judge_rows",
+     "ok": true,
+     "got": [
+      "88e2880c2bb1a98e8758fc8f6a766e8770572621"
+     ],
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "head_eq_judge_rows",
+     "ok": true,
+     "got": "88e2880c2bb1a98e8758fc8f6a766e8770572621",
+     "want": [
+      "88e2880c2bb1a98e8758fc8f6a766e8770572621"
+     ]
+    },
+    {
+     "row": "F2",
+     "item": "head_eq_judge_rows",
+     "ok": true,
+     "got": "88e2880c2bb1a98e8758fc8f6a766e8770572621",
+     "want": [
+      "88e2880c2bb1a98e8758fc8f6a766e8770572621"
+     ]
+    }
+   ]
+  },
+  "K-2": {
+   "ok": true,
+   "scope": "partial: recorded c2/zero_calibration sha equal batch vs result and over rows; F module sha consistency (file-vs-blob is path 1)",
+   "n_items": 26,
+   "failures_judge_scope": [],
+   "failures_all": [],
+   "items": [
+    {
+     "row": "R1",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/c2.py",
+     "ok": true,
+     "got": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed",
+     "want": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed"
+    },
+    {
+     "row": "R1",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/zero_calibration.py",
+     "ok": true,
+     "got": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+     "want": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1"
+    },
+    {
+     "row": "R2",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/c2.py",
+     "ok": true,
+     "got": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed",
+     "want": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed"
+    },
+    {
+     "row": "R2",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/zero_calibration.py",
+     "ok": true,
+     "got": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+     "want": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1"
+    },
+    {
+     "row": "R3",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/c2.py",
+     "ok": true,
+     "got": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed",
+     "want": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed"
+    },
+    {
+     "row": "R3",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/zero_calibration.py",
+     "ok": true,
+     "got": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+     "want": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1"
+    },
+    {
+     "row": "R4",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/c2.py",
+     "ok": true,
+     "got": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed",
+     "want": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed"
+    },
+    {
+     "row": "R4",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/zero_calibration.py",
+     "ok": true,
+     "got": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+     "want": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1"
+    },
+    {
+     "row": "R5",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/c2.py",
+     "ok": true,
+     "got": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed",
+     "want": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed"
+    },
+    {
+     "row": "R5",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/zero_calibration.py",
+     "ok": true,
+     "got": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+     "want": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1"
+    },
+    {
+     "row": "R6",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/c2.py",
+     "ok": true,
+     "got": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed",
+     "want": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed"
+    },
+    {
+     "row": "R6",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/zero_calibration.py",
+     "ok": true,
+     "got": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+     "want": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1"
+    },
+    {
+     "row": "R7",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/c2.py",
+     "ok": true,
+     "got": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed",
+     "want": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed"
+    },
+    {
+     "row": "R7",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/zero_calibration.py",
+     "ok": true,
+     "got": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+     "want": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1"
+    },
+    {
+     "row": "R8",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/c2.py",
+     "ok": true,
+     "got": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed",
+     "want": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed"
+    },
+    {
+     "row": "R8",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/zero_calibration.py",
+     "ok": true,
+     "got": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+     "want": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1"
+    },
+    {
+     "row": "F1",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/c2.py",
+     "ok": true,
+     "got": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed",
+     "want": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed"
+    },
+    {
+     "row": "F1",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/zero_calibration.py",
+     "ok": true,
+     "got": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+     "want": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1"
+    },
+    {
+     "row": "F2",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/c2.py",
+     "ok": true,
+     "got": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed",
+     "want": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed"
+    },
+    {
+     "row": "F2",
+     "item": "sha_batch_eq_result:03_src/outrigger_sim/control/zero_calibration.py",
+     "ok": true,
+     "got": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1",
+     "want": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1"
+    },
+    {
+     "row": null,
+     "item": "single_c2_sha_judge_rows",
+     "ok": true,
+     "got": [
+      "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed"
+     ],
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "c2_sha_eq_judge_rows",
+     "ok": true,
+     "got": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed",
+     "want": [
+      "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed"
+     ]
+    },
+    {
+     "row": "F1",
+     "item": "forced_module_sha_meta_eq_setup",
+     "ok": true,
+     "got": "f70f6786975cc015ee699b249051884d675afa1b0b49998c3fc988c0145a2cc3",
+     "want": "f70f6786975cc015ee699b249051884d675afa1b0b49998c3fc988c0145a2cc3"
+    },
+    {
+     "row": "F2",
+     "item": "c2_sha_eq_judge_rows",
+     "ok": true,
+     "got": "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed",
+     "want": [
+      "a75d278030fffdeba3d3d88376a9d26eca80b79cb87c48fbb5b0ede3857fe0ed"
+     ]
+    },
+    {
+     "row": "F2",
+     "item": "forced_module_sha_meta_eq_setup",
+     "ok": true,
+     "got": "f70f6786975cc015ee699b249051884d675afa1b0b49998c3fc988c0145a2cc3",
+     "want": "f70f6786975cc015ee699b249051884d675afa1b0b49998c3fc988c0145a2cc3"
+    },
+    {
+     "row": "F1/F2",
+     "item": "forced_module_sha_equal",
+     "ok": true,
+     "got": {
+      "F1": "f70f6786975cc015ee699b249051884d675afa1b0b49998c3fc988c0145a2cc3",
+      "F2": "f70f6786975cc015ee699b249051884d675afa1b0b49998c3fc988c0145a2cc3"
+     },
+     "want": null
+    }
+   ]
+  },
+  "K-3": {
+   "ok": true,
+   "scope": "full from records",
+   "n_items": 51,
+   "failures_judge_scope": [],
+   "failures_all": [],
+   "items": [
+    {
+     "row": null,
+     "item": "batch_mixed_hull_mode_false",
+     "ok": true,
+     "got": false,
+     "want": null
+    },
+    {
+     "row": "R1",
+     "item": "mode_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "R1",
+     "item": "requested_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "R1",
+     "item": "fallback_none",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R1",
+     "item": "dll_sha",
+     "ok": true,
+     "got": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+     "want": null
+    },
+    {
+     "row": "R1",
+     "item": "batch_hull_effective_fast",
+     "ok": true,
+     "got": {
+      "mode": "fast",
+      "fallback_reason": null
+     },
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "mode_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "requested_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "fallback_none",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "dll_sha",
+     "ok": true,
+     "got": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "batch_hull_effective_fast",
+     "ok": true,
+     "got": {
+      "mode": "fast",
+      "fallback_reason": null
+     },
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "mode_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "requested_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "fallback_none",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "dll_sha",
+     "ok": true,
+     "got": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "batch_hull_effective_fast",
+     "ok": true,
+     "got": {
+      "mode": "fast",
+      "fallback_reason": null
+     },
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "mode_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "requested_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "fallback_none",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "dll_sha",
+     "ok": true,
+     "got": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "batch_hull_effective_fast",
+     "ok": true,
+     "got": {
+      "mode": "fast",
+      "fallback_reason": null
+     },
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "mode_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "requested_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "fallback_none",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "dll_sha",
+     "ok": true,
+     "got": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "batch_hull_effective_fast",
+     "ok": true,
+     "got": {
+      "mode": "fast",
+      "fallback_reason": null
+     },
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "mode_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "requested_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "fallback_none",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "dll_sha",
+     "ok": true,
+     "got": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "batch_hull_effective_fast",
+     "ok": true,
+     "got": {
+      "mode": "fast",
+      "fallback_reason": null
+     },
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "mode_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "requested_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "fallback_none",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "dll_sha",
+     "ok": true,
+     "got": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "batch_hull_effective_fast",
+     "ok": true,
+     "got": {
+      "mode": "fast",
+      "fallback_reason": null
+     },
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "mode_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "requested_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "fallback_none",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "dll_sha",
+     "ok": true,
+     "got": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "batch_hull_effective_fast",
+     "ok": true,
+     "got": {
+      "mode": "fast",
+      "fallback_reason": null
+     },
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "mode_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "requested_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "fallback_none",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "dll_sha",
+     "ok": true,
+     "got": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "batch_hull_effective_fast",
+     "ok": true,
+     "got": {
+      "mode": "fast",
+      "fallback_reason": null
+     },
+     "want": null
+    },
+    {
+     "row": "F2",
+     "item": "mode_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "F2",
+     "item": "requested_fast",
+     "ok": true,
+     "got": "fast",
+     "want": null
+    },
+    {
+     "row": "F2",
+     "item": "fallback_none",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "F2",
+     "item": "dll_sha",
+     "ok": true,
+     "got": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+     "want": null
+    },
+    {
+     "row": "F2",
+     "item": "batch_hull_effective_fast",
+     "ok": true,
+     "got": {
+      "mode": "fast",
+      "fallback_reason": null
+     },
+     "want": null
+    }
+   ]
+  },
+  "K-4": {
+   "ok": true,
+   "scope": "full from records",
+   "n_items": 54,
+   "failures_judge_scope": [],
+   "failures_all": [],
+   "items": [
+    {
+     "row": "R1",
+     "item": "threads_4",
+     "ok": true,
+     "got": [
+      4,
+      4,
+      4
+     ],
+     "want": 4
+    },
+    {
+     "row": "R1",
+     "item": "omp_passive",
+     "ok": true,
+     "got": [
+      "PASSIVE",
+      "PASSIVE"
+     ],
+     "want": null
+    },
+    {
+     "row": "R1",
+     "item": "placement_eq_plan",
+     "ok": true,
+     "got": [
+      "pcore",
+      "pcore",
+      "pcore"
+     ],
+     "want": "pcore"
+    },
+    {
+     "row": "R1",
+     "item": "affinity_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R1",
+     "item": "power_throttling_off_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "threads_4",
+     "ok": true,
+     "got": [
+      4,
+      4,
+      4
+     ],
+     "want": 4
+    },
+    {
+     "row": "R2",
+     "item": "omp_passive",
+     "ok": true,
+     "got": [
+      "PASSIVE",
+      "PASSIVE"
+     ],
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "placement_eq_plan",
+     "ok": true,
+     "got": [
+      "pcore",
+      "pcore",
+      "pcore"
+     ],
+     "want": "pcore"
+    },
+    {
+     "row": "R2",
+     "item": "affinity_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "power_throttling_off_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "threads_4",
+     "ok": true,
+     "got": [
+      4,
+      4,
+      4
+     ],
+     "want": 4
+    },
+    {
+     "row": "R3",
+     "item": "omp_passive",
+     "ok": true,
+     "got": [
+      "PASSIVE",
+      "PASSIVE"
+     ],
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "placement_eq_plan",
+     "ok": true,
+     "got": [
+      "pcore",
+      "pcore",
+      "pcore"
+     ],
+     "want": "pcore"
+    },
+    {
+     "row": "R3",
+     "item": "affinity_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "power_throttling_off_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "threads_4",
+     "ok": true,
+     "got": [
+      4,
+      4,
+      4
+     ],
+     "want": 4
+    },
+    {
+     "row": "R4",
+     "item": "omp_passive",
+     "ok": true,
+     "got": [
+      "PASSIVE",
+      "PASSIVE"
+     ],
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "placement_eq_plan",
+     "ok": true,
+     "got": [
+      "pcore",
+      "pcore",
+      "pcore"
+     ],
+     "want": "pcore"
+    },
+    {
+     "row": "R4",
+     "item": "affinity_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "power_throttling_off_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "threads_4",
+     "ok": true,
+     "got": [
+      4,
+      4,
+      4
+     ],
+     "want": 4
+    },
+    {
+     "row": "R5",
+     "item": "omp_passive",
+     "ok": true,
+     "got": [
+      "PASSIVE",
+      "PASSIVE"
+     ],
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "placement_eq_plan",
+     "ok": true,
+     "got": [
+      "pcore",
+      "pcore",
+      "pcore"
+     ],
+     "want": "pcore"
+    },
+    {
+     "row": "R5",
+     "item": "affinity_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "power_throttling_off_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "threads_4",
+     "ok": true,
+     "got": [
+      4,
+      4,
+      4
+     ],
+     "want": 4
+    },
+    {
+     "row": "R6",
+     "item": "omp_passive",
+     "ok": true,
+     "got": [
+      "PASSIVE",
+      "PASSIVE"
+     ],
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "placement_eq_plan",
+     "ok": true,
+     "got": [
+      "pcore",
+      "pcore",
+      "pcore"
+     ],
+     "want": "pcore"
+    },
+    {
+     "row": "R6",
+     "item": "affinity_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "power_throttling_off_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "threads_4",
+     "ok": true,
+     "got": [
+      4,
+      4,
+      4
+     ],
+     "want": 4
+    },
+    {
+     "row": "R7",
+     "item": "omp_passive",
+     "ok": true,
+     "got": [
+      "PASSIVE",
+      "PASSIVE"
+     ],
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "placement_eq_plan",
+     "ok": true,
+     "got": [
+      "pcore",
+      "pcore",
+      "pcore"
+     ],
+     "want": "pcore"
+    },
+    {
+     "row": "R7",
+     "item": "affinity_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "power_throttling_off_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "threads_4",
+     "ok": true,
+     "got": [
+      4,
+      4,
+      4
+     ],
+     "want": 4
+    },
+    {
+     "row": "R8",
+     "item": "omp_passive",
+     "ok": true,
+     "got": [
+      "PASSIVE",
+      "PASSIVE"
+     ],
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "placement_eq_plan",
+     "ok": true,
+     "got": [
+      "pcore",
+      "pcore",
+      "pcore"
+     ],
+     "want": "pcore"
+    },
+    {
+     "row": "R8",
+     "item": "affinity_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "power_throttling_off_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "threads_4",
+     "ok": true,
+     "got": [
+      4,
+      4,
+      4
+     ],
+     "want": 4
+    },
+    {
+     "row": "F1",
+     "item": "omp_passive",
+     "ok": true,
+     "got": [
+      "PASSIVE",
+      "PASSIVE"
+     ],
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "placement_eq_plan",
+     "ok": true,
+     "got": [
+      "pcore",
+      "pcore",
+      "pcore"
+     ],
+     "want": "pcore"
+    },
+    {
+     "row": "F1",
+     "item": "affinity_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "power_throttling_off_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "F2",
+     "item": "threads_4",
+     "ok": true,
+     "got": [
+      4,
+      4,
+      4
+     ],
+     "want": 4
+    },
+    {
+     "row": "F2",
+     "item": "omp_passive",
+     "ok": true,
+     "got": [
+      "PASSIVE",
+      "PASSIVE"
+     ],
+     "want": null
+    },
+    {
+     "row": "F2",
+     "item": "placement_eq_plan",
+     "ok": true,
+     "got": [
+      "pcore",
+      "pcore",
+      "pcore"
+     ],
+     "want": "pcore"
+    },
+    {
+     "row": "F2",
+     "item": "affinity_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "F2",
+     "item": "power_throttling_off_ok",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R1/R7",
+     "item": "pair_same_pool",
+     "ok": true,
+     "got": [
+      "pcore",
+      "pcore"
+     ],
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "diag_same_pool_as_pair",
+     "ok": true,
+     "got": "pcore",
+     "want": [
+      "pcore",
+      "pcore"
+     ]
+    },
+    {
+     "row": "R4/R8",
+     "item": "pair_same_pool",
+     "ok": true,
+     "got": [
+      "pcore",
+      "pcore"
+     ],
+     "want": null
+    },
+    {
+     "row": "F2",
+     "item": "diag_same_pool_as_pair",
+     "ok": true,
+     "got": "pcore",
+     "want": [
+      "pcore",
+      "pcore"
+     ]
+    }
+   ]
+  },
+  "K-5": {
+   "ok": true,
+   "scope": "full from records",
+   "n_items": 235,
+   "failures_judge_scope": [],
+   "failures_all": [],
+   "items": [
+    {
+     "row": "R1",
+     "item": "argv_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "R1",
+     "item": "argv_level",
+     "ok": true,
+     "got": "top",
+     "want": "top"
+    },
+    {
+     "row": "R1",
+     "item": "argv_mass_scale",
+     "ok": true,
+     "got": null,
+     "want": 1.0
+    },
+    {
+     "row": "R1",
+     "item": "argv_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R1",
+     "item": "argv_forced",
+     "ok": true,
+     "got": null,
+     "want": "off"
+    },
+    {
+     "row": "R1",
+     "item": "argv_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R1",
+     "item": "args_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "R1",
+     "item": "args_level",
+     "ok": true,
+     "got": "top",
+     "want": "top"
+    },
+    {
+     "row": "R1",
+     "item": "args_mass_scale",
+     "ok": true,
+     "got": 1.0,
+     "want": 1.0
+    },
+    {
+     "row": "R1",
+     "item": "args_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R1",
+     "item": "args_forced",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R1",
+     "item": "args_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R1",
+     "item": "args_case",
+     "ok": true,
+     "got": "REM_J2_B_top_Fs4_VB_gateoff",
+     "want": "REM_J2_B_top_Fs4_VB_gateoff"
+    },
+    {
+     "row": "R1",
+     "item": "args_pad_variant",
+     "ok": true,
+     "got": "dwg_rear250",
+     "want": "dwg_rear250"
+    },
+    {
+     "row": "R1",
+     "item": "args_fs_kN",
+     "ok": true,
+     "got": 4.0,
+     "want": 4.0
+    },
+    {
+     "row": "R1",
+     "item": "args_seed",
+     "ok": true,
+     "got": 20261026,
+     "want": 20261026
+    },
+    {
+     "row": "R1",
+     "item": "args_pressure_grade",
+     "ok": true,
+     "got": "normal",
+     "want": "normal"
+    },
+    {
+     "row": "R1",
+     "item": "args_imu_grade",
+     "ok": true,
+     "got": "ideal",
+     "want": "ideal"
+    },
+    {
+     "row": "R1",
+     "item": "args_duration",
+     "ok": true,
+     "got": 120.0,
+     "want": 120.0
+    },
+    {
+     "row": "R1",
+     "item": "args_floor_roll",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "R1",
+     "item": "args_floor_pitch",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "R1",
+     "item": "args_soil_patch",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "argv_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "R2",
+     "item": "argv_level",
+     "ok": true,
+     "got": "middle",
+     "want": "middle"
+    },
+    {
+     "row": "R2",
+     "item": "argv_mass_scale",
+     "ok": true,
+     "got": null,
+     "want": 1.0
+    },
+    {
+     "row": "R2",
+     "item": "argv_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R2",
+     "item": "argv_forced",
+     "ok": true,
+     "got": null,
+     "want": "off"
+    },
+    {
+     "row": "R2",
+     "item": "argv_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R2",
+     "item": "args_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "R2",
+     "item": "args_level",
+     "ok": true,
+     "got": "middle",
+     "want": "middle"
+    },
+    {
+     "row": "R2",
+     "item": "args_mass_scale",
+     "ok": true,
+     "got": 1.0,
+     "want": 1.0
+    },
+    {
+     "row": "R2",
+     "item": "args_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R2",
+     "item": "args_forced",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R2",
+     "item": "args_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R2",
+     "item": "args_case",
+     "ok": true,
+     "got": "REM_J2_B_middle_Fs4_VB_gateoff",
+     "want": "REM_J2_B_middle_Fs4_VB_gateoff"
+    },
+    {
+     "row": "R2",
+     "item": "args_pad_variant",
+     "ok": true,
+     "got": "dwg_rear250",
+     "want": "dwg_rear250"
+    },
+    {
+     "row": "R2",
+     "item": "args_fs_kN",
+     "ok": true,
+     "got": 4.0,
+     "want": 4.0
+    },
+    {
+     "row": "R2",
+     "item": "args_seed",
+     "ok": true,
+     "got": 20261026,
+     "want": 20261026
+    },
+    {
+     "row": "R2",
+     "item": "args_pressure_grade",
+     "ok": true,
+     "got": "normal",
+     "want": "normal"
+    },
+    {
+     "row": "R2",
+     "item": "args_imu_grade",
+     "ok": true,
+     "got": "ideal",
+     "want": "ideal"
+    },
+    {
+     "row": "R2",
+     "item": "args_duration",
+     "ok": true,
+     "got": 120.0,
+     "want": 120.0
+    },
+    {
+     "row": "R2",
+     "item": "args_floor_roll",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "R2",
+     "item": "args_floor_pitch",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "R2",
+     "item": "args_soil_patch",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "argv_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "R3",
+     "item": "argv_level",
+     "ok": true,
+     "got": "bottom",
+     "want": "bottom"
+    },
+    {
+     "row": "R3",
+     "item": "argv_mass_scale",
+     "ok": true,
+     "got": null,
+     "want": 1.0
+    },
+    {
+     "row": "R3",
+     "item": "argv_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R3",
+     "item": "argv_forced",
+     "ok": true,
+     "got": null,
+     "want": "off"
+    },
+    {
+     "row": "R3",
+     "item": "argv_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R3",
+     "item": "args_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "R3",
+     "item": "args_level",
+     "ok": true,
+     "got": "bottom",
+     "want": "bottom"
+    },
+    {
+     "row": "R3",
+     "item": "args_mass_scale",
+     "ok": true,
+     "got": 1.0,
+     "want": 1.0
+    },
+    {
+     "row": "R3",
+     "item": "args_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R3",
+     "item": "args_forced",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R3",
+     "item": "args_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R3",
+     "item": "args_case",
+     "ok": true,
+     "got": "REM_J2_B_bottom_Fs4_VB_gateoff",
+     "want": "REM_J2_B_bottom_Fs4_VB_gateoff"
+    },
+    {
+     "row": "R3",
+     "item": "args_pad_variant",
+     "ok": true,
+     "got": "dwg_rear250",
+     "want": "dwg_rear250"
+    },
+    {
+     "row": "R3",
+     "item": "args_fs_kN",
+     "ok": true,
+     "got": 4.0,
+     "want": 4.0
+    },
+    {
+     "row": "R3",
+     "item": "args_seed",
+     "ok": true,
+     "got": 20261026,
+     "want": 20261026
+    },
+    {
+     "row": "R3",
+     "item": "args_pressure_grade",
+     "ok": true,
+     "got": "normal",
+     "want": "normal"
+    },
+    {
+     "row": "R3",
+     "item": "args_imu_grade",
+     "ok": true,
+     "got": "ideal",
+     "want": "ideal"
+    },
+    {
+     "row": "R3",
+     "item": "args_duration",
+     "ok": true,
+     "got": 120.0,
+     "want": 120.0
+    },
+    {
+     "row": "R3",
+     "item": "args_floor_roll",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "R3",
+     "item": "args_floor_pitch",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "R3",
+     "item": "args_soil_patch",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "argv_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "R4",
+     "item": "argv_level",
+     "ok": true,
+     "got": "top",
+     "want": "top"
+    },
+    {
+     "row": "R4",
+     "item": "argv_mass_scale",
+     "ok": true,
+     "got": "1.1",
+     "want": 1.1
+    },
+    {
+     "row": "R4",
+     "item": "argv_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R4",
+     "item": "argv_forced",
+     "ok": true,
+     "got": null,
+     "want": "off"
+    },
+    {
+     "row": "R4",
+     "item": "argv_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R4",
+     "item": "args_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "R4",
+     "item": "args_level",
+     "ok": true,
+     "got": "top",
+     "want": "top"
+    },
+    {
+     "row": "R4",
+     "item": "args_mass_scale",
+     "ok": true,
+     "got": 1.1,
+     "want": 1.1
+    },
+    {
+     "row": "R4",
+     "item": "args_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R4",
+     "item": "args_forced",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R4",
+     "item": "args_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R4",
+     "item": "args_case",
+     "ok": true,
+     "got": "REM_J2_B_top_Fs4_m1p1_VB_gateoff",
+     "want": "REM_J2_B_top_Fs4_m1p1_VB_gateoff"
+    },
+    {
+     "row": "R4",
+     "item": "args_pad_variant",
+     "ok": true,
+     "got": "dwg_rear250",
+     "want": "dwg_rear250"
+    },
+    {
+     "row": "R4",
+     "item": "args_fs_kN",
+     "ok": true,
+     "got": 4.0,
+     "want": 4.0
+    },
+    {
+     "row": "R4",
+     "item": "args_seed",
+     "ok": true,
+     "got": 20261026,
+     "want": 20261026
+    },
+    {
+     "row": "R4",
+     "item": "args_pressure_grade",
+     "ok": true,
+     "got": "normal",
+     "want": "normal"
+    },
+    {
+     "row": "R4",
+     "item": "args_imu_grade",
+     "ok": true,
+     "got": "ideal",
+     "want": "ideal"
+    },
+    {
+     "row": "R4",
+     "item": "args_duration",
+     "ok": true,
+     "got": 120.0,
+     "want": 120.0
+    },
+    {
+     "row": "R4",
+     "item": "args_floor_roll",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "R4",
+     "item": "args_floor_pitch",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "R4",
+     "item": "args_soil_patch",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "argv_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "R5",
+     "item": "argv_level",
+     "ok": true,
+     "got": "top",
+     "want": "top"
+    },
+    {
+     "row": "R5",
+     "item": "argv_mass_scale",
+     "ok": true,
+     "got": "1.1",
+     "want": 1.1
+    },
+    {
+     "row": "R5",
+     "item": "argv_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R5",
+     "item": "argv_forced",
+     "ok": true,
+     "got": null,
+     "want": "off"
+    },
+    {
+     "row": "R5",
+     "item": "argv_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_LAS",
+     "want": "final_C4G2_LAS"
+    },
+    {
+     "row": "R5",
+     "item": "v0_no_v5_options",
+     "ok": true,
+     "got": [],
+     "want": []
+    },
+    {
+     "row": "R5",
+     "item": "args_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "R5",
+     "item": "args_level",
+     "ok": true,
+     "got": "top",
+     "want": "top"
+    },
+    {
+     "row": "R5",
+     "item": "args_mass_scale",
+     "ok": true,
+     "got": 1.1,
+     "want": 1.1
+    },
+    {
+     "row": "R5",
+     "item": "args_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R5",
+     "item": "args_forced",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R5",
+     "item": "args_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_LAS",
+     "want": "final_C4G2_LAS"
+    },
+    {
+     "row": "R5",
+     "item": "args_case",
+     "ok": true,
+     "got": "REM_J2_B_top_Fs4_m1p1_V0_gateoff",
+     "want": "REM_J2_B_top_Fs4_m1p1_V0_gateoff"
+    },
+    {
+     "row": "R5",
+     "item": "args_pad_variant",
+     "ok": true,
+     "got": "dwg_rear250",
+     "want": "dwg_rear250"
+    },
+    {
+     "row": "R5",
+     "item": "args_fs_kN",
+     "ok": true,
+     "got": 4.0,
+     "want": 4.0
+    },
+    {
+     "row": "R5",
+     "item": "args_seed",
+     "ok": true,
+     "got": 20261026,
+     "want": 20261026
+    },
+    {
+     "row": "R5",
+     "item": "args_pressure_grade",
+     "ok": true,
+     "got": "normal",
+     "want": "normal"
+    },
+    {
+     "row": "R5",
+     "item": "args_imu_grade",
+     "ok": true,
+     "got": "ideal",
+     "want": "ideal"
+    },
+    {
+     "row": "R5",
+     "item": "args_duration",
+     "ok": true,
+     "got": 120.0,
+     "want": 120.0
+    },
+    {
+     "row": "R5",
+     "item": "args_floor_roll",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "R5",
+     "item": "args_floor_pitch",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "R5",
+     "item": "args_soil_patch",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "argv_soil",
+     "ok": true,
+     "got": "J1",
+     "want": "J1"
+    },
+    {
+     "row": "R6",
+     "item": "argv_level",
+     "ok": true,
+     "got": "top",
+     "want": "top"
+    },
+    {
+     "row": "R6",
+     "item": "argv_mass_scale",
+     "ok": true,
+     "got": "1.1",
+     "want": 1.1
+    },
+    {
+     "row": "R6",
+     "item": "argv_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R6",
+     "item": "argv_forced",
+     "ok": true,
+     "got": null,
+     "want": "off"
+    },
+    {
+     "row": "R6",
+     "item": "argv_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R6",
+     "item": "args_soil",
+     "ok": true,
+     "got": "J1",
+     "want": "J1"
+    },
+    {
+     "row": "R6",
+     "item": "args_level",
+     "ok": true,
+     "got": "top",
+     "want": "top"
+    },
+    {
+     "row": "R6",
+     "item": "args_mass_scale",
+     "ok": true,
+     "got": 1.1,
+     "want": 1.1
+    },
+    {
+     "row": "R6",
+     "item": "args_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R6",
+     "item": "args_forced",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R6",
+     "item": "args_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R6",
+     "item": "args_case",
+     "ok": true,
+     "got": "REM_J1_B_top_Fs4_m1p1_VB_gateoff",
+     "want": "REM_J1_B_top_Fs4_m1p1_VB_gateoff"
+    },
+    {
+     "row": "R6",
+     "item": "args_pad_variant",
+     "ok": true,
+     "got": "dwg_rear250",
+     "want": "dwg_rear250"
+    },
+    {
+     "row": "R6",
+     "item": "args_fs_kN",
+     "ok": true,
+     "got": 4.0,
+     "want": 4.0
+    },
+    {
+     "row": "R6",
+     "item": "args_seed",
+     "ok": true,
+     "got": 20261026,
+     "want": 20261026
+    },
+    {
+     "row": "R6",
+     "item": "args_pressure_grade",
+     "ok": true,
+     "got": "normal",
+     "want": "normal"
+    },
+    {
+     "row": "R6",
+     "item": "args_imu_grade",
+     "ok": true,
+     "got": "ideal",
+     "want": "ideal"
+    },
+    {
+     "row": "R6",
+     "item": "args_duration",
+     "ok": true,
+     "got": 120.0,
+     "want": 120.0
+    },
+    {
+     "row": "R6",
+     "item": "args_floor_roll",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "R6",
+     "item": "args_floor_pitch",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "R6",
+     "item": "args_soil_patch",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "argv_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "R7",
+     "item": "argv_level",
+     "ok": true,
+     "got": "top",
+     "want": "top"
+    },
+    {
+     "row": "R7",
+     "item": "argv_mass_scale",
+     "ok": true,
+     "got": null,
+     "want": 1.0
+    },
+    {
+     "row": "R7",
+     "item": "argv_gate",
+     "ok": true,
+     "got": "on",
+     "want": "on"
+    },
+    {
+     "row": "R7",
+     "item": "argv_forced",
+     "ok": true,
+     "got": null,
+     "want": "off"
+    },
+    {
+     "row": "R7",
+     "item": "argv_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R7",
+     "item": "args_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "R7",
+     "item": "args_level",
+     "ok": true,
+     "got": "top",
+     "want": "top"
+    },
+    {
+     "row": "R7",
+     "item": "args_mass_scale",
+     "ok": true,
+     "got": 1.0,
+     "want": 1.0
+    },
+    {
+     "row": "R7",
+     "item": "args_gate",
+     "ok": true,
+     "got": "on",
+     "want": "on"
+    },
+    {
+     "row": "R7",
+     "item": "args_forced",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R7",
+     "item": "args_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R7",
+     "item": "args_case",
+     "ok": true,
+     "got": "REM_J2_B_top_Fs4_VB_gateon",
+     "want": "REM_J2_B_top_Fs4_VB_gateon"
+    },
+    {
+     "row": "R7",
+     "item": "args_pad_variant",
+     "ok": true,
+     "got": "dwg_rear250",
+     "want": "dwg_rear250"
+    },
+    {
+     "row": "R7",
+     "item": "args_fs_kN",
+     "ok": true,
+     "got": 4.0,
+     "want": 4.0
+    },
+    {
+     "row": "R7",
+     "item": "args_seed",
+     "ok": true,
+     "got": 20261026,
+     "want": 20261026
+    },
+    {
+     "row": "R7",
+     "item": "args_pressure_grade",
+     "ok": true,
+     "got": "normal",
+     "want": "normal"
+    },
+    {
+     "row": "R7",
+     "item": "args_imu_grade",
+     "ok": true,
+     "got": "ideal",
+     "want": "ideal"
+    },
+    {
+     "row": "R7",
+     "item": "args_duration",
+     "ok": true,
+     "got": 120.0,
+     "want": 120.0
+    },
+    {
+     "row": "R7",
+     "item": "args_floor_roll",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "R7",
+     "item": "args_floor_pitch",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "R7",
+     "item": "args_soil_patch",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "argv_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "R8",
+     "item": "argv_level",
+     "ok": true,
+     "got": "top",
+     "want": "top"
+    },
+    {
+     "row": "R8",
+     "item": "argv_mass_scale",
+     "ok": true,
+     "got": "1.1",
+     "want": 1.1
+    },
+    {
+     "row": "R8",
+     "item": "argv_gate",
+     "ok": true,
+     "got": "on",
+     "want": "on"
+    },
+    {
+     "row": "R8",
+     "item": "argv_forced",
+     "ok": true,
+     "got": null,
+     "want": "off"
+    },
+    {
+     "row": "R8",
+     "item": "argv_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R8",
+     "item": "args_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "R8",
+     "item": "args_level",
+     "ok": true,
+     "got": "top",
+     "want": "top"
+    },
+    {
+     "row": "R8",
+     "item": "args_mass_scale",
+     "ok": true,
+     "got": 1.1,
+     "want": 1.1
+    },
+    {
+     "row": "R8",
+     "item": "args_gate",
+     "ok": true,
+     "got": "on",
+     "want": "on"
+    },
+    {
+     "row": "R8",
+     "item": "args_forced",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R8",
+     "item": "args_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R8",
+     "item": "args_case",
+     "ok": true,
+     "got": "REM_J2_B_top_Fs4_m1p1_VB_gateon",
+     "want": "REM_J2_B_top_Fs4_m1p1_VB_gateon"
+    },
+    {
+     "row": "R8",
+     "item": "args_pad_variant",
+     "ok": true,
+     "got": "dwg_rear250",
+     "want": "dwg_rear250"
+    },
+    {
+     "row": "R8",
+     "item": "args_fs_kN",
+     "ok": true,
+     "got": 4.0,
+     "want": 4.0
+    },
+    {
+     "row": "R8",
+     "item": "args_seed",
+     "ok": true,
+     "got": 20261026,
+     "want": 20261026
+    },
+    {
+     "row": "R8",
+     "item": "args_pressure_grade",
+     "ok": true,
+     "got": "normal",
+     "want": "normal"
+    },
+    {
+     "row": "R8",
+     "item": "args_imu_grade",
+     "ok": true,
+     "got": "ideal",
+     "want": "ideal"
+    },
+    {
+     "row": "R8",
+     "item": "args_duration",
+     "ok": true,
+     "got": 120.0,
+     "want": 120.0
+    },
+    {
+     "row": "R8",
+     "item": "args_floor_roll",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "R8",
+     "item": "args_floor_pitch",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "R8",
+     "item": "args_soil_patch",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "argv_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "F1",
+     "item": "argv_level",
+     "ok": true,
+     "got": "top",
+     "want": "top"
+    },
+    {
+     "row": "F1",
+     "item": "argv_mass_scale",
+     "ok": true,
+     "got": null,
+     "want": 1.0
+    },
+    {
+     "row": "F1",
+     "item": "argv_gate",
+     "ok": true,
+     "got": "on",
+     "want": "on"
+    },
+    {
+     "row": "F1",
+     "item": "argv_forced",
+     "ok": true,
+     "got": "first",
+     "want": "first"
+    },
+    {
+     "row": "F1",
+     "item": "argv_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "F1",
+     "item": "args_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "F1",
+     "item": "args_level",
+     "ok": true,
+     "got": "top",
+     "want": "top"
+    },
+    {
+     "row": "F1",
+     "item": "args_mass_scale",
+     "ok": true,
+     "got": 1.0,
+     "want": 1.0
+    },
+    {
+     "row": "F1",
+     "item": "args_gate",
+     "ok": true,
+     "got": "on",
+     "want": "on"
+    },
+    {
+     "row": "F1",
+     "item": "args_forced",
+     "ok": true,
+     "got": "first",
+     "want": "first"
+    },
+    {
+     "row": "F1",
+     "item": "args_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "F1",
+     "item": "args_case",
+     "ok": true,
+     "got": "REM_J2_B_top_Fs4_VB_gateon_forced1",
+     "want": "REM_J2_B_top_Fs4_VB_gateon_forced1"
+    },
+    {
+     "row": "F1",
+     "item": "args_pad_variant",
+     "ok": true,
+     "got": "dwg_rear250",
+     "want": "dwg_rear250"
+    },
+    {
+     "row": "F1",
+     "item": "args_fs_kN",
+     "ok": true,
+     "got": 4.0,
+     "want": 4.0
+    },
+    {
+     "row": "F1",
+     "item": "args_seed",
+     "ok": true,
+     "got": 20261026,
+     "want": 20261026
+    },
+    {
+     "row": "F1",
+     "item": "args_pressure_grade",
+     "ok": true,
+     "got": "normal",
+     "want": "normal"
+    },
+    {
+     "row": "F1",
+     "item": "args_imu_grade",
+     "ok": true,
+     "got": "ideal",
+     "want": "ideal"
+    },
+    {
+     "row": "F1",
+     "item": "args_duration",
+     "ok": true,
+     "got": 120.0,
+     "want": 120.0
+    },
+    {
+     "row": "F1",
+     "item": "args_floor_roll",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "F1",
+     "item": "args_floor_pitch",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "F1",
+     "item": "args_soil_patch",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "F2",
+     "item": "argv_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "F2",
+     "item": "argv_level",
+     "ok": true,
+     "got": "top",
+     "want": "top"
+    },
+    {
+     "row": "F2",
+     "item": "argv_mass_scale",
+     "ok": true,
+     "got": "1.1",
+     "want": 1.1
+    },
+    {
+     "row": "F2",
+     "item": "argv_gate",
+     "ok": true,
+     "got": "on",
+     "want": "on"
+    },
+    {
+     "row": "F2",
+     "item": "argv_forced",
+     "ok": true,
+     "got": "first",
+     "want": "first"
+    },
+    {
+     "row": "F2",
+     "item": "argv_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "F2",
+     "item": "args_soil",
+     "ok": true,
+     "got": "J2",
+     "want": "J2"
+    },
+    {
+     "row": "F2",
+     "item": "args_level",
+     "ok": true,
+     "got": "top",
+     "want": "top"
+    },
+    {
+     "row": "F2",
+     "item": "args_mass_scale",
+     "ok": true,
+     "got": 1.1,
+     "want": 1.1
+    },
+    {
+     "row": "F2",
+     "item": "args_gate",
+     "ok": true,
+     "got": "on",
+     "want": "on"
+    },
+    {
+     "row": "F2",
+     "item": "args_forced",
+     "ok": true,
+     "got": "first",
+     "want": "first"
+    },
+    {
+     "row": "F2",
+     "item": "args_expect_controller",
+     "ok": true,
+     "got": "final_C4G2_P3_LAS",
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "F2",
+     "item": "args_case",
+     "ok": true,
+     "got": "REM_J2_B_top_Fs4_m1p1_VB_gateon_forced1",
+     "want": "REM_J2_B_top_Fs4_m1p1_VB_gateon_forced1"
+    },
+    {
+     "row": "F2",
+     "item": "args_pad_variant",
+     "ok": true,
+     "got": "dwg_rear250",
+     "want": "dwg_rear250"
+    },
+    {
+     "row": "F2",
+     "item": "args_fs_kN",
+     "ok": true,
+     "got": 4.0,
+     "want": 4.0
+    },
+    {
+     "row": "F2",
+     "item": "args_seed",
+     "ok": true,
+     "got": 20261026,
+     "want": 20261026
+    },
+    {
+     "row": "F2",
+     "item": "args_pressure_grade",
+     "ok": true,
+     "got": "normal",
+     "want": "normal"
+    },
+    {
+     "row": "F2",
+     "item": "args_imu_grade",
+     "ok": true,
+     "got": "ideal",
+     "want": "ideal"
+    },
+    {
+     "row": "F2",
+     "item": "args_duration",
+     "ok": true,
+     "got": 120.0,
+     "want": 120.0
+    },
+    {
+     "row": "F2",
+     "item": "args_floor_roll",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "F2",
+     "item": "args_floor_pitch",
+     "ok": true,
+     "got": 0.0,
+     "want": 0.0
+    },
+    {
+     "row": "F2",
+     "item": "args_soil_patch",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "argv_common_eq_R1",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "argv_common_eq_R1",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "argv_common_eq_R1",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "argv_common_eq_R1",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "argv_common_eq_R1",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "argv_common_eq_R1",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "argv_common_eq_R1",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "F2",
+     "item": "argv_common_eq_R1",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "v0_argv_is_vb_minus_v5",
+     "ok": true,
+     "got": {
+      "extra_in_R5": [],
+      "only_in_R4": [
+       "--extend-start-tracked",
+       "--flow-dp-comp-bar",
+       "--flow-dp-unload-bar",
+       "--flow-eta-v",
+       "--flow-law",
+       "--flow-width-bar",
+       "--lock-closing-delay-s",
+       "--lock-overlap-ratio",
+       "--lock-window-follows-plant",
+       "--rod-release-force",
+       "--valve-tau-s"
+      ]
+     },
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "v0_argv_rest_eq_R4",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R1/R7",
+     "item": "pair_argv_diff_gate_only",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R4/R8",
+     "item": "pair_argv_diff_gate_only",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R7/F1",
+     "item": "pair_argv_diff_forced_only",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R8/F2",
+     "item": "pair_argv_diff_forced_only",
+     "ok": true,
+     "got": null,
+     "want": null
+    }
+   ]
+  },
+  "K-6": {
+   "ok": true,
+   "scope": "full from records",
+   "n_items": 106,
+   "failures_judge_scope": [],
+   "failures_all": [],
+   "items": [
+    {
+     "row": "R1",
+     "item": "expect_controller_ok",
+     "ok": true,
+     "got": [
+      true,
+      "final_C4G2_P3_LAS"
+     ],
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R1",
+     "item": "c2_setup_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R1",
+     "item": "order_gate_decisions_key",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R1",
+     "item": "order_gate_enabled",
+     "ok": true,
+     "got": false,
+     "want": false
+    },
+    {
+     "row": "R1",
+     "item": "keep_slope_margin_on_revoke",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R1",
+     "item": "max_revokes_2",
+     "ok": true,
+     "got": 2,
+     "want": null
+    },
+    {
+     "row": "R1",
+     "item": "period_0p1",
+     "ok": true,
+     "got": 0.1,
+     "want": null
+    },
+    {
+     "row": "R1",
+     "item": "no_meta_k1_forced_block",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R1",
+     "item": "c2_setup_forced_off",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R1",
+     "item": "controller_class_C2Controller",
+     "ok": true,
+     "got": "outrigger_sim.control.c2.C2Controller",
+     "want": null
+    },
+    {
+     "row": "R1",
+     "item": "gateoff_r4_le_1",
+     "ok": true,
+     "got": 1,
+     "want": "<=1"
+    },
+    {
+     "row": "R1",
+     "item": "gateoff_skipped_order_0",
+     "ok": true,
+     "got": {},
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "expect_controller_ok",
+     "ok": true,
+     "got": [
+      true,
+      "final_C4G2_P3_LAS"
+     ],
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R2",
+     "item": "c2_setup_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R2",
+     "item": "order_gate_decisions_key",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "order_gate_enabled",
+     "ok": true,
+     "got": false,
+     "want": false
+    },
+    {
+     "row": "R2",
+     "item": "keep_slope_margin_on_revoke",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "max_revokes_2",
+     "ok": true,
+     "got": 2,
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "period_0p1",
+     "ok": true,
+     "got": 0.1,
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "no_meta_k1_forced_block",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "c2_setup_forced_off",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R2",
+     "item": "controller_class_C2Controller",
+     "ok": true,
+     "got": "outrigger_sim.control.c2.C2Controller",
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "gateoff_r4_le_1",
+     "ok": true,
+     "got": 1,
+     "want": "<=1"
+    },
+    {
+     "row": "R2",
+     "item": "gateoff_skipped_order_0",
+     "ok": true,
+     "got": {},
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "expect_controller_ok",
+     "ok": true,
+     "got": [
+      true,
+      "final_C4G2_P3_LAS"
+     ],
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R3",
+     "item": "c2_setup_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R3",
+     "item": "order_gate_decisions_key",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "order_gate_enabled",
+     "ok": true,
+     "got": false,
+     "want": false
+    },
+    {
+     "row": "R3",
+     "item": "keep_slope_margin_on_revoke",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "max_revokes_2",
+     "ok": true,
+     "got": 2,
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "period_0p1",
+     "ok": true,
+     "got": 0.1,
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "no_meta_k1_forced_block",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "c2_setup_forced_off",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R3",
+     "item": "controller_class_C2Controller",
+     "ok": true,
+     "got": "outrigger_sim.control.c2.C2Controller",
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "gateoff_r4_le_1",
+     "ok": true,
+     "got": 1,
+     "want": "<=1"
+    },
+    {
+     "row": "R3",
+     "item": "gateoff_skipped_order_0",
+     "ok": true,
+     "got": {},
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "expect_controller_ok",
+     "ok": true,
+     "got": [
+      true,
+      "final_C4G2_P3_LAS"
+     ],
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R4",
+     "item": "c2_setup_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R4",
+     "item": "order_gate_decisions_key",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "order_gate_enabled",
+     "ok": true,
+     "got": false,
+     "want": false
+    },
+    {
+     "row": "R4",
+     "item": "keep_slope_margin_on_revoke",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "max_revokes_2",
+     "ok": true,
+     "got": 2,
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "period_0p1",
+     "ok": true,
+     "got": 0.1,
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "no_meta_k1_forced_block",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "c2_setup_forced_off",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R4",
+     "item": "controller_class_C2Controller",
+     "ok": true,
+     "got": "outrigger_sim.control.c2.C2Controller",
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "gateoff_r4_le_1",
+     "ok": true,
+     "got": 1,
+     "want": "<=1"
+    },
+    {
+     "row": "R4",
+     "item": "gateoff_skipped_order_0",
+     "ok": true,
+     "got": {},
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "expect_controller_ok",
+     "ok": true,
+     "got": [
+      true,
+      "final_C4G2_LAS"
+     ],
+     "want": "final_C4G2_LAS"
+    },
+    {
+     "row": "R5",
+     "item": "c2_setup_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R5",
+     "item": "order_gate_decisions_key",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "order_gate_enabled",
+     "ok": true,
+     "got": false,
+     "want": false
+    },
+    {
+     "row": "R5",
+     "item": "keep_slope_margin_on_revoke",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "max_revokes_2",
+     "ok": true,
+     "got": 2,
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "period_0p1",
+     "ok": true,
+     "got": 0.1,
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "no_meta_k1_forced_block",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "c2_setup_forced_off",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R5",
+     "item": "controller_class_C2Controller",
+     "ok": true,
+     "got": "outrigger_sim.control.c2.C2Controller",
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "gateoff_r4_le_1",
+     "ok": true,
+     "got": 1,
+     "want": "<=1"
+    },
+    {
+     "row": "R5",
+     "item": "gateoff_skipped_order_0",
+     "ok": true,
+     "got": {},
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "expect_controller_ok",
+     "ok": true,
+     "got": [
+      true,
+      "final_C4G2_P3_LAS"
+     ],
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R6",
+     "item": "c2_setup_gate",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R6",
+     "item": "order_gate_decisions_key",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "order_gate_enabled",
+     "ok": true,
+     "got": false,
+     "want": false
+    },
+    {
+     "row": "R6",
+     "item": "keep_slope_margin_on_revoke",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "max_revokes_2",
+     "ok": true,
+     "got": 2,
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "period_0p1",
+     "ok": true,
+     "got": 0.1,
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "no_meta_k1_forced_block",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "c2_setup_forced_off",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R6",
+     "item": "controller_class_C2Controller",
+     "ok": true,
+     "got": "outrigger_sim.control.c2.C2Controller",
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "gateoff_r4_le_1",
+     "ok": true,
+     "got": 1,
+     "want": "<=1"
+    },
+    {
+     "row": "R6",
+     "item": "gateoff_skipped_order_0",
+     "ok": true,
+     "got": {},
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "expect_controller_ok",
+     "ok": true,
+     "got": [
+      true,
+      "final_C4G2_P3_LAS"
+     ],
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R7",
+     "item": "c2_setup_gate",
+     "ok": true,
+     "got": "on",
+     "want": "on"
+    },
+    {
+     "row": "R7",
+     "item": "order_gate_decisions_key",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "order_gate_enabled",
+     "ok": true,
+     "got": true,
+     "want": true
+    },
+    {
+     "row": "R7",
+     "item": "keep_slope_margin_on_revoke",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "max_revokes_2",
+     "ok": true,
+     "got": 2,
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "period_0p1",
+     "ok": true,
+     "got": 0.1,
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "no_meta_k1_forced_block",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "c2_setup_forced_off",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R7",
+     "item": "controller_class_C2Controller",
+     "ok": true,
+     "got": "outrigger_sim.control.c2.C2Controller",
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "expect_controller_ok",
+     "ok": true,
+     "got": [
+      true,
+      "final_C4G2_P3_LAS"
+     ],
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "R8",
+     "item": "c2_setup_gate",
+     "ok": true,
+     "got": "on",
+     "want": "on"
+    },
+    {
+     "row": "R8",
+     "item": "order_gate_decisions_key",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "order_gate_enabled",
+     "ok": true,
+     "got": true,
+     "want": true
+    },
+    {
+     "row": "R8",
+     "item": "keep_slope_margin_on_revoke",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "max_revokes_2",
+     "ok": true,
+     "got": 2,
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "period_0p1",
+     "ok": true,
+     "got": 0.1,
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "no_meta_k1_forced_block",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "c2_setup_forced_off",
+     "ok": true,
+     "got": "off",
+     "want": "off"
+    },
+    {
+     "row": "R8",
+     "item": "controller_class_C2Controller",
+     "ok": true,
+     "got": "outrigger_sim.control.c2.C2Controller",
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "expect_controller_ok",
+     "ok": true,
+     "got": [
+      true,
+      "final_C4G2_P3_LAS"
+     ],
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "F1",
+     "item": "c2_setup_gate",
+     "ok": true,
+     "got": "on",
+     "want": "on"
+    },
+    {
+     "row": "F1",
+     "item": "order_gate_decisions_key",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "order_gate_enabled",
+     "ok": true,
+     "got": true,
+     "want": true
+    },
+    {
+     "row": "F1",
+     "item": "keep_slope_margin_on_revoke",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "max_revokes_2",
+     "ok": true,
+     "got": 2,
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "period_0p1",
+     "ok": true,
+     "got": 0.1,
+     "want": null
+    },
+    {
+     "row": "F2",
+     "item": "expect_controller_ok",
+     "ok": true,
+     "got": [
+      true,
+      "final_C4G2_P3_LAS"
+     ],
+     "want": "final_C4G2_P3_LAS"
+    },
+    {
+     "row": "F2",
+     "item": "c2_setup_gate",
+     "ok": true,
+     "got": "on",
+     "want": "on"
+    },
+    {
+     "row": "F2",
+     "item": "order_gate_decisions_key",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "F2",
+     "item": "order_gate_enabled",
+     "ok": true,
+     "got": true,
+     "want": true
+    },
+    {
+     "row": "F2",
+     "item": "keep_slope_margin_on_revoke",
+     "ok": true,
+     "got": true,
+     "want": null
+    },
+    {
+     "row": "F2",
+     "item": "max_revokes_2",
+     "ok": true,
+     "got": 2,
+     "want": null
+    },
+    {
+     "row": "F2",
+     "item": "period_0p1",
+     "ok": true,
+     "got": 0.1,
+     "want": null
+    }
+   ]
+  },
+  "K-7": {
+   "ok": true,
+   "scope": "full",
+   "n_items": 2,
+   "failures_judge_scope": [],
+   "failures_all": [],
+   "items": [
+    {
+     "row": "R1/R7",
+     "item": "pair_L1",
+     "ok": true,
+     "got": "L1 tuple equal",
+     "want": null
+    },
+    {
+     "row": "R4/R8",
+     "item": "pair_L1",
+     "ok": true,
+     "got": "L1 tuple equal",
+     "want": null
+    }
+   ]
+  },
+  "K-8": {
+   "ok": true,
+   "scope": "full",
+   "n_items": 68,
+   "failures_judge_scope": [],
+   "failures_all": [],
+   "items": [
+    {
+     "row": "R1",
+     "item": "a_decisions_eq_nonE3c10_locs_after_soil_start",
+     "ok": true,
+     "got": 1,
+     "want": 1
+    },
+    {
+     "row": "R1",
+     "item": "b_decision0_at_loc_event",
+     "ok": true,
+     "got": 468,
+     "want": null
+    },
+    {
+     "row": "R1",
+     "item": "c_decision0_t_S_eq_last_prior_start",
+     "ok": true,
+     "got": 35.20000000004499,
+     "want": 35.20000000004499
+    },
+    {
+     "row": "R1",
+     "item": "d_revoke_meta_eq_events",
+     "ok": true,
+     "got": {
+      "events": [],
+      "meta": [],
+      "meta_count": 0
+     },
+     "want": null
+    },
+    {
+     "row": "R1",
+     "item": "e_applied_events",
+     "ok": true,
+     "got": {
+      "468": 1
+     },
+     "want": {
+      "468": 1
+     }
+    },
+    {
+     "row": "R1",
+     "item": "e_skipped_order_events",
+     "ok": true,
+     "got": {},
+     "want": {}
+    },
+    {
+     "row": "R1",
+     "item": "e_skipped_other_suffix_0",
+     "ok": true,
+     "got": 0,
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "a_decisions_eq_nonE3c10_locs_after_soil_start",
+     "ok": true,
+     "got": 1,
+     "want": 1
+    },
+    {
+     "row": "R2",
+     "item": "b_decision0_at_loc_event",
+     "ok": true,
+     "got": 468,
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "c_decision0_t_S_eq_last_prior_start",
+     "ok": true,
+     "got": 35.10000000004167,
+     "want": 35.10000000004167
+    },
+    {
+     "row": "R2",
+     "item": "d_revoke_meta_eq_events",
+     "ok": true,
+     "got": {
+      "events": [],
+      "meta": [],
+      "meta_count": 0
+     },
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "e_applied_events",
+     "ok": true,
+     "got": {
+      "468": 1
+     },
+     "want": {
+      "468": 1
+     }
+    },
+    {
+     "row": "R2",
+     "item": "e_skipped_order_events",
+     "ok": true,
+     "got": {},
+     "want": {}
+    },
+    {
+     "row": "R2",
+     "item": "e_skipped_other_suffix_0",
+     "ok": true,
+     "got": 0,
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "a_decisions_eq_nonE3c10_locs_after_soil_start",
+     "ok": true,
+     "got": 1,
+     "want": 1
+    },
+    {
+     "row": "R3",
+     "item": "b_decision0_at_loc_event",
+     "ok": true,
+     "got": 468,
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "c_decision0_t_S_eq_last_prior_start",
+     "ok": true,
+     "got": 35.10000000004167,
+     "want": 35.10000000004167
+    },
+    {
+     "row": "R3",
+     "item": "d_revoke_meta_eq_events",
+     "ok": true,
+     "got": {
+      "events": [],
+      "meta": [],
+      "meta_count": 0
+     },
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "e_applied_events",
+     "ok": true,
+     "got": {
+      "468": 1
+     },
+     "want": {
+      "468": 1
+     }
+    },
+    {
+     "row": "R3",
+     "item": "e_skipped_order_events",
+     "ok": true,
+     "got": {},
+     "want": {}
+    },
+    {
+     "row": "R3",
+     "item": "e_skipped_other_suffix_0",
+     "ok": true,
+     "got": 0,
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "a_decisions_eq_nonE3c10_locs_after_soil_start",
+     "ok": true,
+     "got": 2,
+     "want": 2
+    },
+    {
+     "row": "R4",
+     "item": "b_decision0_at_loc_event",
+     "ok": true,
+     "got": 588,
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "c_decision0_t_S_eq_last_prior_start",
+     "ok": true,
+     "got": 37.50000000012134,
+     "want": 37.50000000012134
+    },
+    {
+     "row": "R4",
+     "item": "b_decision1_at_loc_event",
+     "ok": true,
+     "got": 607,
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "c_decision1_t_S_eq_last_prior_start",
+     "ok": true,
+     "got": 60.00000000086826,
+     "want": 60.00000000086826
+    },
+    {
+     "row": "R4",
+     "item": "d_revoke_meta_eq_events",
+     "ok": true,
+     "got": {
+      "events": [
+       599
+      ],
+      "meta": [
+       599
+      ],
+      "meta_count": 1
+     },
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "e_applied_events",
+     "ok": true,
+     "got": {
+      "588": 1
+     },
+     "want": {
+      "588": 1
+     }
+    },
+    {
+     "row": "R4",
+     "item": "e_skipped_order_events",
+     "ok": true,
+     "got": {},
+     "want": {}
+    },
+    {
+     "row": "R4",
+     "item": "e_skipped_other_suffix_0",
+     "ok": true,
+     "got": 0,
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "a_decisions_eq_nonE3c10_locs_after_soil_start",
+     "ok": true,
+     "got": 2,
+     "want": 2
+    },
+    {
+     "row": "R5",
+     "item": "b_decision0_at_loc_event",
+     "ok": true,
+     "got": 553,
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "c_decision0_t_S_eq_last_prior_start",
+     "ok": true,
+     "got": 33.299999999981914,
+     "want": 33.299999999981914
+    },
+    {
+     "row": "R5",
+     "item": "b_decision1_at_loc_event",
+     "ok": true,
+     "got": 574,
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "c_decision1_t_S_eq_last_prior_start",
+     "ok": true,
+     "got": 56.70000000075871,
+     "want": 56.70000000075871
+    },
+    {
+     "row": "R5",
+     "item": "d_revoke_meta_eq_events",
+     "ok": true,
+     "got": {
+      "events": [
+       566
+      ],
+      "meta": [
+       566
+      ],
+      "meta_count": 1
+     },
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "e_applied_events",
+     "ok": true,
+     "got": {
+      "553": 1
+     },
+     "want": {
+      "553": 1
+     }
+    },
+    {
+     "row": "R5",
+     "item": "e_skipped_order_events",
+     "ok": true,
+     "got": {},
+     "want": {}
+    },
+    {
+     "row": "R5",
+     "item": "e_skipped_other_suffix_0",
+     "ok": true,
+     "got": 0,
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "a_decisions_eq_nonE3c10_locs_after_soil_start",
+     "ok": true,
+     "got": 2,
+     "want": 2
+    },
+    {
+     "row": "R6",
+     "item": "b_decision0_at_loc_event",
+     "ok": true,
+     "got": 514,
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "c_decision0_t_S_eq_last_prior_start",
+     "ok": true,
+     "got": 35.10000000004167,
+     "want": 35.10000000004167
+    },
+    {
+     "row": "R6",
+     "item": "b_decision1_at_loc_event",
+     "ok": true,
+     "got": 530,
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "c_decision1_t_S_eq_last_prior_start",
+     "ok": true,
+     "got": 52.10000000060601,
+     "want": 52.10000000060601
+    },
+    {
+     "row": "R6",
+     "item": "d_revoke_meta_eq_events",
+     "ok": true,
+     "got": {
+      "events": [
+       520
+      ],
+      "meta": [
+       520
+      ],
+      "meta_count": 1
+     },
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "e_applied_events",
+     "ok": true,
+     "got": {
+      "514": 1
+     },
+     "want": {
+      "514": 1
+     }
+    },
+    {
+     "row": "R6",
+     "item": "e_skipped_order_events",
+     "ok": true,
+     "got": {},
+     "want": {}
+    },
+    {
+     "row": "R6",
+     "item": "e_skipped_other_suffix_0",
+     "ok": true,
+     "got": 0,
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "a_decisions_eq_nonE3c10_locs_after_soil_start",
+     "ok": true,
+     "got": 1,
+     "want": 1
+    },
+    {
+     "row": "R7",
+     "item": "b_decision0_at_loc_event",
+     "ok": true,
+     "got": 468,
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "c_decision0_t_S_eq_last_prior_start",
+     "ok": true,
+     "got": 35.20000000004499,
+     "want": 35.20000000004499
+    },
+    {
+     "row": "R7",
+     "item": "d_revoke_meta_eq_events",
+     "ok": true,
+     "got": {
+      "events": [],
+      "meta": [],
+      "meta_count": 0
+     },
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "e_applied_events",
+     "ok": true,
+     "got": {
+      "468": 1
+     },
+     "want": {
+      "468": 1
+     }
+    },
+    {
+     "row": "R7",
+     "item": "e_skipped_order_events",
+     "ok": true,
+     "got": {},
+     "want": {}
+    },
+    {
+     "row": "R7",
+     "item": "e_skipped_other_suffix_0",
+     "ok": true,
+     "got": 0,
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "f_after_applied_L1_no_r4",
+     "ok": true,
+     "got": [],
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "f_after_applied_L1_no_skipped_order",
+     "ok": true,
+     "got": {},
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "a_decisions_eq_nonE3c10_locs_after_soil_start",
+     "ok": true,
+     "got": 2,
+     "want": 2
+    },
+    {
+     "row": "R8",
+     "item": "b_decision0_at_loc_event",
+     "ok": true,
+     "got": 588,
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "c_decision0_t_S_eq_last_prior_start",
+     "ok": true,
+     "got": 37.50000000012134,
+     "want": 37.50000000012134
+    },
+    {
+     "row": "R8",
+     "item": "b_decision1_at_loc_event",
+     "ok": true,
+     "got": 607,
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "c_decision1_t_S_eq_last_prior_start",
+     "ok": true,
+     "got": 60.00000000086826,
+     "want": 60.00000000086826
+    },
+    {
+     "row": "R8",
+     "item": "d_revoke_meta_eq_events",
+     "ok": true,
+     "got": {
+      "events": [
+       599
+      ],
+      "meta": [
+       599
+      ],
+      "meta_count": 1
+     },
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "e_applied_events",
+     "ok": true,
+     "got": {
+      "588": 1
+     },
+     "want": {
+      "588": 1
+     }
+    },
+    {
+     "row": "R8",
+     "item": "e_skipped_order_events",
+     "ok": true,
+     "got": {},
+     "want": {}
+    },
+    {
+     "row": "R8",
+     "item": "e_skipped_other_suffix_0",
+     "ok": true,
+     "got": 0,
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "f_after_applied_L1_no_r4",
+     "ok": true,
+     "got": [],
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "f_after_applied_L1_no_skipped_order",
+     "ok": true,
+     "got": {},
+     "want": null
+    }
+   ]
+  },
+  "K-9": {
+   "ok": true,
+   "scope": "MISSING assignment by rules 7 (always consistent in path 2 by construction)",
+   "n_items": 10,
+   "failures_judge_scope": [],
+   "failures_all": [],
+   "items": [
+    {
+     "row": "R1",
+     "item": "present",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R2",
+     "item": "present",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R3",
+     "item": "present",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R4",
+     "item": "present",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R5",
+     "item": "present",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R6",
+     "item": "present",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R7",
+     "item": "present",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "R8",
+     "item": "present",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "F1",
+     "item": "present",
+     "ok": true,
+     "got": null,
+     "want": null
+    },
+    {
+     "row": "F2",
+     "item": "present",
+     "ok": true,
+     "got": null,
+     "want": null
+    }
+   ]
+  }
+ },
+ "k8_diag_info": {
+  "ok": null,
+  "scope": "F rows (info)",
+  "n_items": 16,
+  "failures_judge_scope": [],
+  "failures_all": [],
+  "items": [
+   {
+    "row": "F1",
+    "item": "a_decisions_eq_nonE3c10_locs_after_soil_start",
+    "ok": true,
+    "got": 1,
+    "want": 1
+   },
+   {
+    "row": "F1",
+    "item": "b_decision0_at_loc_event",
+    "ok": true,
+    "got": 468,
+    "want": null
+   },
+   {
+    "row": "F1",
+    "item": "c_decision0_t_S_eq_last_prior_start",
+    "ok": true,
+    "got": 35.20000000004499,
+    "want": 35.20000000004499
+   },
+   {
+    "row": "F1",
+    "item": "d_revoke_meta_eq_events",
+    "ok": true,
+    "got": {
+     "events": [],
+     "meta": [],
+     "meta_count": 0
+    },
+    "want": null
+   },
+   {
+    "row": "F1",
+    "item": "e_applied_events",
+    "ok": true,
+    "got": {},
+    "want": {}
+   },
+   {
+    "row": "F1",
+    "item": "e_skipped_order_events",
+    "ok": true,
+    "got": {
+     "468": 1
+    },
+    "want": {
+     "468": 1
+    }
+   },
+   {
+    "row": "F1",
+    "item": "e_skipped_other_suffix_0",
+    "ok": true,
+    "got": 1,
+    "want": null
+   },
+   {
+    "row": "F2",
+    "item": "a_decisions_eq_nonE3c10_locs_after_soil_start",
+    "ok": true,
+    "got": 2,
+    "want": 2
+   },
+   {
+    "row": "F2",
+    "item": "b_decision0_at_loc_event",
+    "ok": true,
+    "got": 588,
+    "want": null
+   },
+   {
+    "row": "F2",
+    "item": "c_decision0_t_S_eq_last_prior_start",
+    "ok": true,
+    "got": 37.50000000012134,
+    "want": 37.50000000012134
+   },
+   {
+    "row": "F2",
+    "item": "b_decision1_at_loc_event",
+    "ok": true,
+    "got": 610,
+    "want": null
+   },
+   {
+    "row": "F2",
+    "item": "c_decision1_t_S_eq_last_prior_start",
+    "ok": true,
+    "got": 60.2000000008749,
+    "want": 60.2000000008749
+   },
+   {
+    "row": "F2",
+    "item": "d_revoke_meta_eq_events",
+    "ok": true,
+    "got": {
+     "events": [
+      601
+     ],
+     "meta": [
+      601
+     ],
+     "meta_count": 1
+    },
+    "want": null
+   },
+   {
+    "row": "F2",
+    "item": "e_applied_events",
+    "ok": true,
+    "got": {},
+    "want": {}
+   },
+   {
+    "row": "F2",
+    "item": "e_skipped_order_events",
+    "ok": true,
+    "got": {
+     "588": 1,
+     "610": 1
+    },
+    "want": {
+     "588": 1,
+     "610": 1
+    }
+   },
+   {
+    "row": "F2",
+    "item": "e_skipped_other_suffix_0",
+    "ok": true,
+    "got": 2,
+    "want": null
+   }
+  ]
+ },
+ "stop_keys": [],
+ "rows": {
+  "R1": {
+   "rem_key": "R1",
+   "case": "REM_J2_B_top_Fs4_VB_gateoff",
+   "role": "judge",
+   "gate": "off",
+   "forced": "off",
+   "entries_in_batch": 1,
+   "rerun_of": null,
+   "status": "POS",
+   "L1": {
+    "n_loc": 468,
+    "n_P": 451,
+    "n_S": 352,
+    "dP": 99,
+    "t_P_s": 45.10000000037363,
+    "t_S_s": 35.20000000004499
+   },
+   "L1_index": 0,
+   "L1_post_revoke": false,
+   "L1_loc_minus_P": 17,
+   "decisions": [
+    {
+     "i": 0,
+     "t_loc_s": 46.80000000043007,
+     "n_loc": 468,
+     "t_P_s": 45.10000000037363,
+     "t_S_s": 35.20000000004499,
+     "n_P": 451,
+     "n_S": 352,
+     "dP": 99,
+     "rec_n_P": 451,
+     "rec_n_S": 352,
+     "rec_dP": 99,
+     "rec_match": true,
+     "r4": true,
+     "would_block": false,
+     "applied": true,
+     "post_revoke": false,
+     "last_revoke_n": null,
+     "restart_n": null,
+     "struct_zero": false,
+     "ev_applied": 1,
+     "ev_skipped_order": 0
+    }
+   ],
+   "has_decisions_key": true,
+   "n_decisions": 1,
+   "n_r4": 1,
+   "order_gate_enabled": false,
+   "mode_starts": [
+    {
+     "t_s": 35.20000000004499,
+     "n": 352,
+     "source": "release"
+    }
+   ],
+   "mode_starts_source": "controller_meta.soil.mode_starts",
+   "mode_starts_events_match": true,
+   "revokes_n": [],
+   "revokes_source": "events INFO_LOC_REVOKED",
+   "revokes_events_n": [],
+   "revokes_meta_n": [],
+   "revokes_meta_count": 0,
+   "loc_meta_periods": [
+    468
+   ],
+   "loc_event_periods": [
+    468
+   ],
+   "soil_t_loc_n": 468,
+   "soil_t_loc_is_last_event_loc": true,
+   "first_loc_n": 468,
+   "e3c10_loc_periods": [],
+   "n_e3c10_loc": 0,
+   "applied_event_periods": {
+    "468": 1
+   },
+   "skipped_order_event_periods": {},
+   "skipped_any_count": 0,
+   "faults": [],
+   "warn_names": [],
+   "first_done_t_s": 57.20000000077531,
+   "first_ready_t_s": 81.90000000159526,
+   "final_phase": "ready",
+   "s_motor_max_m": 0.5332188558950343,
+   "crawler_gap_end_grid_m": 0.06322114174842408,
+   "crawler_gap_end_all_m": 0.06322114174842408,
+   "missing_reasons": [],
+   "shadow_reloc": [],
+   "revokes_after_L1": [],
+   "r4_path": "APPLIED_AT_L1",
+   "r4_sequence": [
+    {
+     "n_loc": 468,
+     "dP": 99,
+     "applied": true,
+     "would_block": false,
+     "struct_zero": false,
+     "post_revoke": false
+    }
+   ],
+   "old_ctrl_shift": {
+    "d_n_loc": 17,
+    "d_n_S": 20
+   }
+  },
+  "R2": {
+   "rem_key": "R2",
+   "case": "REM_J2_B_middle_Fs4_VB_gateoff",
+   "role": "judge",
+   "gate": "off",
+   "forced": "off",
+   "entries_in_batch": 1,
+   "rerun_of": null,
+   "status": "POS",
+   "L1": {
+    "n_loc": 468,
+    "n_P": 451,
+    "n_S": 351,
+    "dP": 100,
+    "t_P_s": 45.10000000037363,
+    "t_S_s": 35.10000000004167
+   },
+   "L1_index": 0,
+   "L1_post_revoke": false,
+   "L1_loc_minus_P": 17,
+   "decisions": [
+    {
+     "i": 0,
+     "t_loc_s": 46.80000000043007,
+     "n_loc": 468,
+     "t_P_s": 45.10000000037363,
+     "t_S_s": 35.10000000004167,
+     "n_P": 451,
+     "n_S": 351,
+     "dP": 100,
+     "rec_n_P": 451,
+     "rec_n_S": 351,
+     "rec_dP": 100,
+     "rec_match": true,
+     "r4": true,
+     "would_block": false,
+     "applied": true,
+     "post_revoke": false,
+     "last_revoke_n": null,
+     "restart_n": null,
+     "struct_zero": false,
+     "ev_applied": 1,
+     "ev_skipped_order": 0
+    }
+   ],
+   "has_decisions_key": true,
+   "n_decisions": 1,
+   "n_r4": 1,
+   "order_gate_enabled": false,
+   "mode_starts": [
+    {
+     "t_s": 35.10000000004167,
+     "n": 351,
+     "source": "release"
+    }
+   ],
+   "mode_starts_source": "controller_meta.soil.mode_starts",
+   "mode_starts_events_match": true,
+   "revokes_n": [],
+   "revokes_source": "events INFO_LOC_REVOKED",
+   "revokes_events_n": [],
+   "revokes_meta_n": [],
+   "revokes_meta_count": 0,
+   "loc_meta_periods": [
+    468
+   ],
+   "loc_event_periods": [
+    468
+   ],
+   "soil_t_loc_n": 468,
+   "soil_t_loc_is_last_event_loc": true,
+   "first_loc_n": 468,
+   "e3c10_loc_periods": [],
+   "n_e3c10_loc": 0,
+   "applied_event_periods": {
+    "468": 1
+   },
+   "skipped_order_event_periods": {},
+   "skipped_any_count": 0,
+   "faults": [],
+   "warn_names": [],
+   "first_done_t_s": 58.20000000080851,
+   "first_ready_t_s": 87.50000000178116,
+   "final_phase": "ready",
+   "s_motor_max_m": 0.532905923225258,
+   "crawler_gap_end_grid_m": 0.06712553590662562,
+   "crawler_gap_end_all_m": 0.06712553590662562,
+   "missing_reasons": [],
+   "shadow_reloc": [],
+   "revokes_after_L1": [],
+   "r4_path": "APPLIED_AT_L1",
+   "r4_sequence": [
+    {
+     "n_loc": 468,
+     "dP": 100,
+     "applied": true,
+     "would_block": false,
+     "struct_zero": false,
+     "post_revoke": false
+    }
+   ],
+   "old_ctrl_shift": {
+    "d_n_loc": 17,
+    "d_n_S": 19
+   }
+  },
+  "R3": {
+   "rem_key": "R3",
+   "case": "REM_J2_B_bottom_Fs4_VB_gateoff",
+   "role": "judge",
+   "gate": "off",
+   "forced": "off",
+   "entries_in_batch": 1,
+   "rerun_of": null,
+   "status": "POS",
+   "L1": {
+    "n_loc": 468,
+    "n_P": 451,
+    "n_S": 351,
+    "dP": 100,
+    "t_P_s": 45.10000000037363,
+    "t_S_s": 35.10000000004167
+   },
+   "L1_index": 0,
+   "L1_post_revoke": false,
+   "L1_loc_minus_P": 17,
+   "decisions": [
+    {
+     "i": 0,
+     "t_loc_s": 46.80000000043007,
+     "n_loc": 468,
+     "t_P_s": 45.10000000037363,
+     "t_S_s": 35.10000000004167,
+     "n_P": 451,
+     "n_S": 351,
+     "dP": 100,
+     "rec_n_P": 451,
+     "rec_n_S": 351,
+     "rec_dP": 100,
+     "rec_match": true,
+     "r4": true,
+     "would_block": false,
+     "applied": true,
+     "post_revoke": false,
+     "last_revoke_n": null,
+     "restart_n": null,
+     "struct_zero": false,
+     "ev_applied": 1,
+     "ev_skipped_order": 0
+    }
+   ],
+   "has_decisions_key": true,
+   "n_decisions": 1,
+   "n_r4": 1,
+   "order_gate_enabled": false,
+   "mode_starts": [
+    {
+     "t_s": 35.10000000004167,
+     "n": 351,
+     "source": "release"
+    }
+   ],
+   "mode_starts_source": "controller_meta.soil.mode_starts",
+   "mode_starts_events_match": true,
+   "revokes_n": [],
+   "revokes_source": "events INFO_LOC_REVOKED",
+   "revokes_events_n": [],
+   "revokes_meta_n": [],
+   "revokes_meta_count": 0,
+   "loc_meta_periods": [
+    468
+   ],
+   "loc_event_periods": [
+    468
+   ],
+   "soil_t_loc_n": 468,
+   "soil_t_loc_is_last_event_loc": true,
+   "first_loc_n": 468,
+   "e3c10_loc_periods": [],
+   "n_e3c10_loc": 0,
+   "applied_event_periods": {
+    "468": 1
+   },
+   "skipped_order_event_periods": {},
+   "skipped_any_count": 0,
+   "faults": [],
+   "warn_names": [],
+   "first_done_t_s": 65.3000000010442,
+   "first_ready_t_s": 77.30000000144256,
+   "final_phase": "ready",
+   "s_motor_max_m": 0.5405104363884325,
+   "crawler_gap_end_grid_m": 0.069234570702561,
+   "crawler_gap_end_all_m": 0.069234570702561,
+   "missing_reasons": [],
+   "shadow_reloc": [],
+   "revokes_after_L1": [],
+   "r4_path": "APPLIED_AT_L1",
+   "r4_sequence": [
+    {
+     "n_loc": 468,
+     "dP": 100,
+     "applied": true,
+     "would_block": false,
+     "struct_zero": false,
+     "post_revoke": false
+    }
+   ],
+   "old_ctrl_shift": {
+    "d_n_loc": 17,
+    "d_n_S": 19
+   }
+  },
+  "R4": {
+   "rem_key": "R4",
+   "case": "REM_J2_B_top_Fs4_m1p1_VB_gateoff",
+   "role": "judge",
+   "gate": "off",
+   "forced": "off",
+   "entries_in_batch": 1,
+   "rerun_of": null,
+   "status": "POS",
+   "L1": {
+    "n_loc": 588,
+    "n_P": 573,
+    "n_S": 375,
+    "dP": 198,
+    "t_P_s": 57.30000000077863,
+    "t_S_s": 37.50000000012134
+   },
+   "L1_index": 0,
+   "L1_post_revoke": false,
+   "L1_loc_minus_P": 15,
+   "decisions": [
+    {
+     "i": 0,
+     "t_loc_s": 58.800000000828426,
+     "n_loc": 588,
+     "t_P_s": 57.30000000077863,
+     "t_S_s": 37.50000000012134,
+     "n_P": 573,
+     "n_S": 375,
+     "dP": 198,
+     "rec_n_P": 573,
+     "rec_n_S": 375,
+     "rec_dP": 198,
+     "rec_match": true,
+     "r4": true,
+     "would_block": false,
+     "applied": true,
+     "post_revoke": false,
+     "last_revoke_n": null,
+     "restart_n": null,
+     "struct_zero": false,
+     "ev_applied": 1,
+     "ev_skipped_order": 0
+    },
+    {
+     "i": 1,
+     "t_loc_s": 60.7000000008915,
+     "n_loc": 607,
+     "t_P_s": 60.00000000086826,
+     "t_S_s": 60.00000000086826,
+     "n_P": 600,
+     "n_S": 600,
+     "dP": 0,
+     "rec_n_P": 600,
+     "rec_n_S": 600,
+     "rec_dP": 0,
+     "rec_match": true,
+     "r4": false,
+     "would_block": false,
+     "applied": false,
+     "post_revoke": true,
+     "last_revoke_n": 599,
+     "restart_n": 600,
+     "struct_zero": true,
+     "ev_applied": 0,
+     "ev_skipped_order": 0
+    }
+   ],
+   "has_decisions_key": true,
+   "n_decisions": 2,
+   "n_r4": 1,
+   "order_gate_enabled": false,
+   "mode_starts": [
+    {
+     "t_s": 37.50000000012134,
+     "n": 375,
+     "source": "release"
+    },
+    {
+     "t_s": 60.00000000086826,
+     "n": 600,
+     "source": "release"
+    }
+   ],
+   "mode_starts_source": "controller_meta.soil.mode_starts",
+   "mode_starts_events_match": true,
+   "revokes_n": [
+    599
+   ],
+   "revokes_source": "events INFO_LOC_REVOKED",
+   "revokes_events_n": [
+    599
+   ],
+   "revokes_meta_n": [
+    599
+   ],
+   "revokes_meta_count": 1,
+   "loc_meta_periods": [
+    588,
+    607
+   ],
+   "loc_event_periods": [
+    588,
+    607
+   ],
+   "soil_t_loc_n": 607,
+   "soil_t_loc_is_last_event_loc": true,
+   "first_loc_n": 588,
+   "e3c10_loc_periods": [],
+   "n_e3c10_loc": 0,
+   "applied_event_periods": {
+    "588": 1
+   },
+   "skipped_order_event_periods": {},
+   "skipped_any_count": 0,
+   "faults": [],
+   "warn_names": [],
+   "first_done_t_s": 71.20000000124006,
+   "first_ready_t_s": 117.60000000278038,
+   "final_phase": "ready",
+   "s_motor_max_m": 0.6153783264809978,
+   "crawler_gap_end_grid_m": 0.06670725962852853,
+   "crawler_gap_end_all_m": 0.06670725962852853,
+   "missing_reasons": [],
+   "shadow_reloc": [
+    {
+     "n_loc": 607,
+     "dP": 0,
+     "struct_zero": true
+    }
+   ],
+   "revokes_after_L1": [
+    599
+   ],
+   "r4_path": "APPLIED_AT_L1",
+   "r4_sequence": [
+    {
+     "n_loc": 588,
+     "dP": 198,
+     "applied": true,
+     "would_block": false,
+     "struct_zero": false,
+     "post_revoke": false
+    }
+   ],
+   "old_ctrl_shift": {
+    "d_n_loc": 35,
+    "d_n_S": 42
+   }
+  },
+  "R5": {
+   "rem_key": "R5",
+   "case": "REM_J2_B_top_Fs4_m1p1_V0_gateoff",
+   "role": "judge",
+   "gate": "off",
+   "forced": "off",
+   "entries_in_batch": 1,
+   "rerun_of": null,
+   "status": "POS",
+   "L1": {
+    "n_loc": 553,
+    "n_P": 539,
+    "n_S": 333,
+    "dP": 206,
+    "t_P_s": 53.90000000066576,
+    "t_S_s": 33.299999999981914
+   },
+   "L1_index": 0,
+   "L1_post_revoke": false,
+   "L1_loc_minus_P": 14,
+   "decisions": [
+    {
+     "i": 0,
+     "t_loc_s": 55.30000000071224,
+     "n_loc": 553,
+     "t_P_s": 53.90000000066576,
+     "t_S_s": 33.299999999981914,
+     "n_P": 539,
+     "n_S": 333,
+     "dP": 206,
+     "rec_n_P": 539,
+     "rec_n_S": 333,
+     "rec_dP": 206,
+     "rec_match": true,
+     "r4": true,
+     "would_block": false,
+     "applied": true,
+     "post_revoke": false,
+     "last_revoke_n": null,
+     "restart_n": null,
+     "struct_zero": false,
+     "ev_applied": 1,
+     "ev_skipped_order": 0
+    },
+    {
+     "i": 1,
+     "t_loc_s": 57.40000000078195,
+     "n_loc": 574,
+     "t_P_s": 56.70000000075871,
+     "t_S_s": 56.70000000075871,
+     "n_P": 567,
+     "n_S": 567,
+     "dP": 0,
+     "rec_n_P": 567,
+     "rec_n_S": 567,
+     "rec_dP": 0,
+     "rec_match": true,
+     "r4": false,
+     "would_block": false,
+     "applied": false,
+     "post_revoke": true,
+     "last_revoke_n": 566,
+     "restart_n": 567,
+     "struct_zero": true,
+     "ev_applied": 0,
+     "ev_skipped_order": 0
+    }
+   ],
+   "has_decisions_key": true,
+   "n_decisions": 2,
+   "n_r4": 1,
+   "order_gate_enabled": false,
+   "mode_starts": [
+    {
+     "t_s": 33.299999999981914,
+     "n": 333,
+     "source": "release"
+    },
+    {
+     "t_s": 56.70000000075871,
+     "n": 567,
+     "source": "release"
+    }
+   ],
+   "mode_starts_source": "controller_meta.soil.mode_starts",
+   "mode_starts_events_match": true,
+   "revokes_n": [
+    566
+   ],
+   "revokes_source": "events INFO_LOC_REVOKED",
+   "revokes_events_n": [
+    566
+   ],
+   "revokes_meta_n": [
+    566
+   ],
+   "revokes_meta_count": 1,
+   "loc_meta_periods": [
+    553,
+    574
+   ],
+   "loc_event_periods": [
+    553,
+    574
+   ],
+   "soil_t_loc_n": 574,
+   "soil_t_loc_is_last_event_loc": true,
+   "first_loc_n": 553,
+   "e3c10_loc_periods": [],
+   "n_e3c10_loc": 0,
+   "applied_event_periods": {
+    "553": 1
+   },
+   "skipped_order_event_periods": {},
+   "skipped_any_count": 0,
+   "faults": [],
+   "warn_names": [],
+   "first_done_t_s": 83.1000000016351,
+   "first_ready_t_s": 106.90000000242517,
+   "final_phase": "ready",
+   "s_motor_max_m": 0.6228547782603159,
+   "crawler_gap_end_grid_m": 0.07186794655144224,
+   "crawler_gap_end_all_m": 0.07186794655144224,
+   "missing_reasons": [],
+   "shadow_reloc": [
+    {
+     "n_loc": 574,
+     "dP": 0,
+     "struct_zero": true
+    }
+   ],
+   "revokes_after_L1": [
+    566
+   ],
+   "r4_path": "APPLIED_AT_L1",
+   "r4_sequence": [
+    {
+     "n_loc": 553,
+     "dP": 206,
+     "applied": true,
+     "would_block": false,
+     "struct_zero": false,
+     "post_revoke": false
+    }
+   ],
+   "old_ctrl_shift": {
+    "d_n_loc": 0,
+    "d_n_S": 0
+   }
+  },
+  "R6": {
+   "rem_key": "R6",
+   "case": "REM_J1_B_top_Fs4_m1p1_VB_gateoff",
+   "role": "judge",
+   "gate": "off",
+   "forced": "off",
+   "entries_in_batch": 1,
+   "rerun_of": null,
+   "status": "POS",
+   "L1": {
+    "n_loc": 514,
+    "n_P": 499,
+    "n_S": 351,
+    "dP": 148,
+    "t_P_s": 49.90000000053298,
+    "t_S_s": 35.10000000004167
+   },
+   "L1_index": 0,
+   "L1_post_revoke": false,
+   "L1_loc_minus_P": 15,
+   "decisions": [
+    {
+     "i": 0,
+     "t_loc_s": 51.40000000058277,
+     "n_loc": 514,
+     "t_P_s": 49.90000000053298,
+     "t_S_s": 35.10000000004167,
+     "n_P": 499,
+     "n_S": 351,
+     "dP": 148,
+     "rec_n_P": 499,
+     "rec_n_S": 351,
+     "rec_dP": 148,
+     "rec_match": true,
+     "r4": true,
+     "would_block": false,
+     "applied": true,
+     "post_revoke": false,
+     "last_revoke_n": null,
+     "restart_n": null,
+     "struct_zero": false,
+     "ev_applied": 1,
+     "ev_skipped_order": 0
+    },
+    {
+     "i": 1,
+     "t_loc_s": 53.000000000635886,
+     "n_loc": 530,
+     "t_P_s": 52.10000000060601,
+     "t_S_s": 52.10000000060601,
+     "n_P": 521,
+     "n_S": 521,
+     "dP": 0,
+     "rec_n_P": 521,
+     "rec_n_S": 521,
+     "rec_dP": 0,
+     "rec_match": true,
+     "r4": false,
+     "would_block": false,
+     "applied": false,
+     "post_revoke": true,
+     "last_revoke_n": 520,
+     "restart_n": 521,
+     "struct_zero": true,
+     "ev_applied": 0,
+     "ev_skipped_order": 0
+    }
+   ],
+   "has_decisions_key": true,
+   "n_decisions": 2,
+   "n_r4": 1,
+   "order_gate_enabled": false,
+   "mode_starts": [
+    {
+     "t_s": 35.10000000004167,
+     "n": 351,
+     "source": "release"
+    },
+    {
+     "t_s": 52.10000000060601,
+     "n": 521,
+     "source": "release"
+    }
+   ],
+   "mode_starts_source": "controller_meta.soil.mode_starts",
+   "mode_starts_events_match": true,
+   "revokes_n": [
+    520
+   ],
+   "revokes_source": "events INFO_LOC_REVOKED",
+   "revokes_events_n": [
+    520
+   ],
+   "revokes_meta_n": [
+    520
+   ],
+   "revokes_meta_count": 1,
+   "loc_meta_periods": [
+    514,
+    530
+   ],
+   "loc_event_periods": [
+    514,
+    530
+   ],
+   "soil_t_loc_n": 530,
+   "soil_t_loc_is_last_event_loc": true,
+   "first_loc_n": 514,
+   "e3c10_loc_periods": [],
+   "n_e3c10_loc": 0,
+   "applied_event_periods": {
+    "514": 1
+   },
+   "skipped_order_event_periods": {},
+   "skipped_any_count": 0,
+   "faults": [],
+   "warn_names": [],
+   "first_done_t_s": 64.60000000102096,
+   "first_ready_t_s": 113.60000000264759,
+   "final_phase": "ready",
+   "s_motor_max_m": 0.605288473801508,
+   "crawler_gap_end_grid_m": 0.05857405315019015,
+   "crawler_gap_end_all_m": 0.05857405315019015,
+   "missing_reasons": [],
+   "shadow_reloc": [
+    {
+     "n_loc": 530,
+     "dP": 0,
+     "struct_zero": true
+    }
+   ],
+   "revokes_after_L1": [
+    520
+   ],
+   "r4_path": "APPLIED_AT_L1",
+   "r4_sequence": [
+    {
+     "n_loc": 514,
+     "dP": 148,
+     "applied": true,
+     "would_block": false,
+     "struct_zero": false,
+     "post_revoke": false
+    }
+   ],
+   "old_ctrl_shift": {
+    "d_n_loc": 22,
+    "d_n_S": 18
+   }
+  },
+  "R7": {
+   "rem_key": "R7",
+   "case": "REM_J2_B_top_Fs4_VB_gateon",
+   "role": "judge",
+   "gate": "on",
+   "forced": "off",
+   "entries_in_batch": 1,
+   "rerun_of": null,
+   "status": "POS",
+   "L1": {
+    "n_loc": 468,
+    "n_P": 451,
+    "n_S": 352,
+    "dP": 99,
+    "t_P_s": 45.10000000037363,
+    "t_S_s": 35.20000000004499
+   },
+   "L1_index": 0,
+   "L1_post_revoke": false,
+   "L1_loc_minus_P": 17,
+   "decisions": [
+    {
+     "i": 0,
+     "t_loc_s": 46.80000000043007,
+     "n_loc": 468,
+     "t_P_s": 45.10000000037363,
+     "t_S_s": 35.20000000004499,
+     "n_P": 451,
+     "n_S": 352,
+     "dP": 99,
+     "rec_n_P": 451,
+     "rec_n_S": 352,
+     "rec_dP": 99,
+     "rec_match": true,
+     "r4": true,
+     "would_block": false,
+     "applied": true,
+     "post_revoke": false,
+     "last_revoke_n": null,
+     "restart_n": null,
+     "struct_zero": false,
+     "ev_applied": 1,
+     "ev_skipped_order": 0
+    }
+   ],
+   "has_decisions_key": true,
+   "n_decisions": 1,
+   "n_r4": 1,
+   "order_gate_enabled": true,
+   "mode_starts": [
+    {
+     "t_s": 35.20000000004499,
+     "n": 352,
+     "source": "release"
+    }
+   ],
+   "mode_starts_source": "controller_meta.soil.mode_starts",
+   "mode_starts_events_match": true,
+   "revokes_n": [],
+   "revokes_source": "events INFO_LOC_REVOKED",
+   "revokes_events_n": [],
+   "revokes_meta_n": [],
+   "revokes_meta_count": 0,
+   "loc_meta_periods": [
+    468
+   ],
+   "loc_event_periods": [
+    468
+   ],
+   "soil_t_loc_n": 468,
+   "soil_t_loc_is_last_event_loc": true,
+   "first_loc_n": 468,
+   "e3c10_loc_periods": [],
+   "n_e3c10_loc": 0,
+   "applied_event_periods": {
+    "468": 1
+   },
+   "skipped_order_event_periods": {},
+   "skipped_any_count": 0,
+   "faults": [],
+   "warn_names": [],
+   "first_done_t_s": 57.20000000077531,
+   "first_ready_t_s": 81.90000000159526,
+   "final_phase": "ready",
+   "s_motor_max_m": 0.5332188558950343,
+   "crawler_gap_end_grid_m": 0.06322114174842408,
+   "crawler_gap_end_all_m": 0.06322114174842408,
+   "missing_reasons": [],
+   "shadow_reloc": [],
+   "revokes_after_L1": [],
+   "r4_path": "APPLIED_AT_L1",
+   "r4_sequence": [
+    {
+     "n_loc": 468,
+     "dP": 99,
+     "applied": true,
+     "would_block": false,
+     "struct_zero": false,
+     "post_revoke": false
+    }
+   ],
+   "old_ctrl_shift": {
+    "d_n_loc": 17,
+    "d_n_S": 20
+   }
+  },
+  "R8": {
+   "rem_key": "R8",
+   "case": "REM_J2_B_top_Fs4_m1p1_VB_gateon",
+   "role": "judge",
+   "gate": "on",
+   "forced": "off",
+   "entries_in_batch": 1,
+   "rerun_of": null,
+   "status": "POS",
+   "L1": {
+    "n_loc": 588,
+    "n_P": 573,
+    "n_S": 375,
+    "dP": 198,
+    "t_P_s": 57.30000000077863,
+    "t_S_s": 37.50000000012134
+   },
+   "L1_index": 0,
+   "L1_post_revoke": false,
+   "L1_loc_minus_P": 15,
+   "decisions": [
+    {
+     "i": 0,
+     "t_loc_s": 58.800000000828426,
+     "n_loc": 588,
+     "t_P_s": 57.30000000077863,
+     "t_S_s": 37.50000000012134,
+     "n_P": 573,
+     "n_S": 375,
+     "dP": 198,
+     "rec_n_P": 573,
+     "rec_n_S": 375,
+     "rec_dP": 198,
+     "rec_match": true,
+     "r4": true,
+     "would_block": false,
+     "applied": true,
+     "post_revoke": false,
+     "last_revoke_n": null,
+     "restart_n": null,
+     "struct_zero": false,
+     "ev_applied": 1,
+     "ev_skipped_order": 0
+    },
+    {
+     "i": 1,
+     "t_loc_s": 60.7000000008915,
+     "n_loc": 607,
+     "t_P_s": 60.00000000086826,
+     "t_S_s": 60.00000000086826,
+     "n_P": 600,
+     "n_S": 600,
+     "dP": 0,
+     "rec_n_P": 600,
+     "rec_n_S": 600,
+     "rec_dP": 0,
+     "rec_match": true,
+     "r4": false,
+     "would_block": false,
+     "applied": false,
+     "post_revoke": true,
+     "last_revoke_n": 599,
+     "restart_n": 600,
+     "struct_zero": true,
+     "ev_applied": 0,
+     "ev_skipped_order": 0
+    }
+   ],
+   "has_decisions_key": true,
+   "n_decisions": 2,
+   "n_r4": 1,
+   "order_gate_enabled": true,
+   "mode_starts": [
+    {
+     "t_s": 37.50000000012134,
+     "n": 375,
+     "source": "release"
+    },
+    {
+     "t_s": 60.00000000086826,
+     "n": 600,
+     "source": "release"
+    }
+   ],
+   "mode_starts_source": "controller_meta.soil.mode_starts",
+   "mode_starts_events_match": true,
+   "revokes_n": [
+    599
+   ],
+   "revokes_source": "events INFO_LOC_REVOKED",
+   "revokes_events_n": [
+    599
+   ],
+   "revokes_meta_n": [
+    599
+   ],
+   "revokes_meta_count": 1,
+   "loc_meta_periods": [
+    588,
+    607
+   ],
+   "loc_event_periods": [
+    588,
+    607
+   ],
+   "soil_t_loc_n": 607,
+   "soil_t_loc_is_last_event_loc": true,
+   "first_loc_n": 588,
+   "e3c10_loc_periods": [],
+   "n_e3c10_loc": 0,
+   "applied_event_periods": {
+    "588": 1
+   },
+   "skipped_order_event_periods": {},
+   "skipped_any_count": 0,
+   "faults": [],
+   "warn_names": [],
+   "first_done_t_s": 71.20000000124006,
+   "first_ready_t_s": 117.60000000278038,
+   "final_phase": "ready",
+   "s_motor_max_m": 0.6153783264809978,
+   "crawler_gap_end_grid_m": 0.06670725962852853,
+   "crawler_gap_end_all_m": 0.06670725962852853,
+   "missing_reasons": [],
+   "shadow_reloc": [
+    {
+     "n_loc": 607,
+     "dP": 0,
+     "struct_zero": true
+    }
+   ],
+   "revokes_after_L1": [
+    599
+   ],
+   "r4_path": "APPLIED_AT_L1",
+   "r4_sequence": [
+    {
+     "n_loc": 588,
+     "dP": 198,
+     "applied": true,
+     "would_block": false,
+     "struct_zero": false,
+     "post_revoke": false
+    }
+   ],
+   "old_ctrl_shift": {
+    "d_n_loc": 35,
+    "d_n_S": 42
+   }
+  },
+  "F1": {
+   "rem_key": "F1",
+   "case": "REM_J2_B_top_Fs4_VB_gateon_forced1",
+   "role": "diag",
+   "gate": "on",
+   "forced": "first",
+   "entries_in_batch": 1,
+   "rerun_of": null,
+   "status": "POS",
+   "L1": {
+    "n_loc": 468,
+    "n_P": 451,
+    "n_S": 352,
+    "dP": 99,
+    "t_P_s": 45.10000000037363,
+    "t_S_s": 35.20000000004499
+   },
+   "L1_index": 0,
+   "L1_post_revoke": false,
+   "L1_loc_minus_P": 17,
+   "decisions": [
+    {
+     "i": 0,
+     "t_loc_s": 46.80000000043007,
+     "n_loc": 468,
+     "t_P_s": 45.10000000037363,
+     "t_S_s": 35.20000000004499,
+     "n_P": 451,
+     "n_S": 352,
+     "dP": 99,
+     "rec_n_P": 451,
+     "rec_n_S": 352,
+     "rec_dP": 99,
+     "rec_match": true,
+     "r4": true,
+     "would_block": true,
+     "applied": false,
+     "post_revoke": false,
+     "last_revoke_n": null,
+     "restart_n": null,
+     "struct_zero": false,
+     "ev_applied": 0,
+     "ev_skipped_order": 1
+    }
+   ],
+   "has_decisions_key": true,
+   "n_decisions": 1,
+   "n_r4": 1,
+   "order_gate_enabled": true,
+   "mode_starts": [
+    {
+     "t_s": 35.20000000004499,
+     "n": 352,
+     "source": "release"
+    }
+   ],
+   "mode_starts_source": "controller_meta.soil.mode_starts",
+   "mode_starts_events_match": true,
+   "revokes_n": [],
+   "revokes_source": "events INFO_LOC_REVOKED",
+   "revokes_events_n": [],
+   "revokes_meta_n": [],
+   "revokes_meta_count": 0,
+   "loc_meta_periods": [
+    468
+   ],
+   "loc_event_periods": [
+    468
+   ],
+   "soil_t_loc_n": 468,
+   "soil_t_loc_is_last_event_loc": true,
+   "first_loc_n": 468,
+   "e3c10_loc_periods": [],
+   "n_e3c10_loc": 0,
+   "applied_event_periods": {},
+   "skipped_order_event_periods": {
+    "468": 1
+   },
+   "skipped_any_count": 1,
+   "faults": [],
+   "warn_names": [],
+   "first_done_t_s": 69.50000000118362,
+   "first_ready_t_s": 81.50000000158198,
+   "final_phase": "ready",
+   "s_motor_max_m": 0.501855379959535,
+   "crawler_gap_end_grid_m": 0.0356916989160001,
+   "crawler_gap_end_all_m": 0.0356916989160001,
+   "missing_reasons": [],
+   "shadow_reloc": [],
+   "revokes_after_L1": [],
+   "r4_path": "R4_NEVER",
+   "r4_sequence": [
+    {
+     "n_loc": 468,
+     "dP": 99,
+     "applied": false,
+     "would_block": true,
+     "struct_zero": false,
+     "post_revoke": false
+    }
+   ],
+   "old_ctrl_shift": {
+    "d_n_loc": 17,
+    "d_n_S": 20
+   }
+  },
+  "F2": {
+   "rem_key": "F2",
+   "case": "REM_J2_B_top_Fs4_m1p1_VB_gateon_forced1",
+   "role": "diag",
+   "gate": "on",
+   "forced": "first",
+   "entries_in_batch": 1,
+   "rerun_of": null,
+   "status": "POS",
+   "L1": {
+    "n_loc": 588,
+    "n_P": 573,
+    "n_S": 375,
+    "dP": 198,
+    "t_P_s": 57.30000000077863,
+    "t_S_s": 37.50000000012134
+   },
+   "L1_index": 0,
+   "L1_post_revoke": false,
+   "L1_loc_minus_P": 15,
+   "decisions": [
+    {
+     "i": 0,
+     "t_loc_s": 58.800000000828426,
+     "n_loc": 588,
+     "t_P_s": 57.30000000077863,
+     "t_S_s": 37.50000000012134,
+     "n_P": 573,
+     "n_S": 375,
+     "dP": 198,
+     "rec_n_P": 573,
+     "rec_n_S": 375,
+     "rec_dP": 198,
+     "rec_match": true,
+     "r4": true,
+     "would_block": true,
+     "applied": false,
+     "post_revoke": false,
+     "last_revoke_n": null,
+     "restart_n": null,
+     "struct_zero": false,
+     "ev_applied": 0,
+     "ev_skipped_order": 1
+    },
+    {
+     "i": 1,
+     "t_loc_s": 61.00000000090146,
+     "n_loc": 610,
+     "t_P_s": 60.2000000008749,
+     "t_S_s": 60.2000000008749,
+     "n_P": 602,
+     "n_S": 602,
+     "dP": 0,
+     "rec_n_P": 602,
+     "rec_n_S": 602,
+     "rec_dP": 0,
+     "rec_match": true,
+     "r4": true,
+     "would_block": true,
+     "applied": false,
+     "post_revoke": true,
+     "last_revoke_n": 601,
+     "restart_n": 602,
+     "struct_zero": true,
+     "ev_applied": 0,
+     "ev_skipped_order": 1
+    }
+   ],
+   "has_decisions_key": true,
+   "n_decisions": 2,
+   "n_r4": 2,
+   "order_gate_enabled": true,
+   "mode_starts": [
+    {
+     "t_s": 37.50000000012134,
+     "n": 375,
+     "source": "release"
+    },
+    {
+     "t_s": 60.2000000008749,
+     "n": 602,
+     "source": "release"
+    }
+   ],
+   "mode_starts_source": "controller_meta.soil.mode_starts",
+   "mode_starts_events_match": true,
+   "revokes_n": [
+    601
+   ],
+   "revokes_source": "events INFO_LOC_REVOKED",
+   "revokes_events_n": [
+    601
+   ],
+   "revokes_meta_n": [
+    601
+   ],
+   "revokes_meta_count": 1,
+   "loc_meta_periods": [
+    588,
+    610
+   ],
+   "loc_event_periods": [
+    588,
+    610
+   ],
+   "soil_t_loc_n": 610,
+   "soil_t_loc_is_last_event_loc": true,
+   "first_loc_n": 588,
+   "e3c10_loc_periods": [],
+   "n_e3c10_loc": 0,
+   "applied_event_periods": {},
+   "skipped_order_event_periods": {
+    "588": 1,
+    "610": 1
+   },
+   "skipped_any_count": 2,
+   "faults": [],
+   "warn_names": [],
+   "first_done_t_s": 72.70000000128985,
+   "first_ready_t_s": 115.10000000269739,
+   "final_phase": "ready",
+   "s_motor_max_m": 0.5845159250491532,
+   "crawler_gap_end_grid_m": 0.0355432121157877,
+   "crawler_gap_end_all_m": 0.0355432121157877,
+   "missing_reasons": [],
+   "shadow_reloc": [],
+   "revokes_after_L1": [
+    601
+   ],
+   "r4_path": "R4_NEVER",
+   "r4_sequence": [
+    {
+     "n_loc": 588,
+     "dP": 198,
+     "applied": false,
+     "would_block": true,
+     "struct_zero": false,
+     "post_revoke": false
+    },
+    {
+     "n_loc": 610,
+     "dP": 0,
+     "applied": false,
+     "would_block": true,
+     "struct_zero": true,
+     "post_revoke": true
+    }
+   ],
+   "old_ctrl_shift": {
+    "d_n_loc": 35,
+    "d_n_S": 42
+   }
+  }
+ },
+ "pairs": {
+  "R7": {
+   "gateoff": "R1",
+   "gateon": "R7",
+   "k7": true,
+   "k7_reason": "L1 tuple equal",
+   "cond3": true,
+   "cond3_reason": "gate-on L1 applied, event present, no later R4 / SKIPPED:order",
+   "L1_off": {
+    "n_loc": 468,
+    "n_P": 451,
+    "n_S": 352,
+    "dP": 99,
+    "t_P_s": 45.10000000037363,
+    "t_S_s": 35.20000000004499
+   },
+   "L1_on": {
+    "n_loc": 468,
+    "n_P": 451,
+    "n_S": 352,
+    "dP": 99,
+    "t_P_s": 45.10000000037363,
+    "t_S_s": 35.20000000004499
+   },
+   "gateon_path": "APPLIED_AT_L1",
+   "gateon_r4_sequence": [
+    {
+     "n_loc": 468,
+     "dP": 99,
+     "applied": true,
+     "would_block": false,
+     "struct_zero": false,
+     "post_revoke": false
+    }
+   ],
+   "cmd": {
+    "sha_a": "ebf86d1d40af464e2e4e23d4ea79ad56721829e65d70cb4efb1d2cc072e4b559",
+    "sha_b": "ebf86d1d40af464e2e4e23d4ea79ad56721829e65d70cb4efb1d2cc072e4b559",
+    "sha_equal": true,
+    "first_diff_n": null
+   }
+  },
+  "R8": {
+   "gateoff": "R4",
+   "gateon": "R8",
+   "k7": true,
+   "k7_reason": "L1 tuple equal",
+   "cond3": true,
+   "cond3_reason": "gate-on L1 applied, event present, no later R4 / SKIPPED:order",
+   "L1_off": {
+    "n_loc": 588,
+    "n_P": 573,
+    "n_S": 375,
+    "dP": 198,
+    "t_P_s": 57.30000000077863,
+    "t_S_s": 37.50000000012134
+   },
+   "L1_on": {
+    "n_loc": 588,
+    "n_P": 573,
+    "n_S": 375,
+    "dP": 198,
+    "t_P_s": 57.30000000077863,
+    "t_S_s": 37.50000000012134
+   },
+   "gateon_path": "APPLIED_AT_L1",
+   "gateon_r4_sequence": [
+    {
+     "n_loc": 588,
+     "dP": 198,
+     "applied": true,
+     "would_block": false,
+     "struct_zero": false,
+     "post_revoke": false
+    }
+   ],
+   "cmd": {
+    "sha_a": "97aace614a534a6aa95f67857947dcd541f9ecca1e9974eb5105fc017bf7c8aa",
+    "sha_b": "97aace614a534a6aa95f67857947dcd541f9ecca1e9974eb5105fc017bf7c8aa",
+    "sha_equal": true,
+    "first_diff_n": null
+   }
+  }
+ },
+ "diag": {
+  "F1": {
+   "rem_key": "F1",
+   "status": "POS",
+   "valid": true,
+   "invalid_reasons": [],
+   "path_class": "FORCED_NO_REVOKE",
+   "module_sha256": "f70f6786975cc015ee699b249051884d675afa1b0b49998c3fc988c0145a2cc3",
+   "L1": {
+    "n_loc": 468,
+    "n_P": 451,
+    "n_S": 352,
+    "dP": 99,
+    "t_P_s": 45.10000000037363,
+    "t_S_s": 35.20000000004499
+   },
+   "forced_n_loc": 468,
+   "forced_t_loc_n": 468,
+   "natural_blocked": false,
+   "forced_record_dP": 99,
+   "FORCED_AT_L1": true,
+   "FORCED_PAIR_L1": true,
+   "pair_row": "R1",
+   "revokes_after_L1": [],
+   "reeval": [],
+   "late_applied": null,
+   "r4_after_L1_without_revoke": [],
+   "any_applied_decision": false,
+   "row_end": {
+    "s_motor_max_m": 0.501855379959535,
+    "crawler_gap_end_grid_m": 0.0356916989160001,
+    "crawler_gap_end_all_m": 0.0356916989160001,
+    "first_done_t_s": 69.50000000118362,
+    "first_ready_t_s": 81.50000000158198,
+    "final_phase": "ready",
+    "faults": [],
+    "warns": []
+   }
+  },
+  "F2": {
+   "rem_key": "F2",
+   "status": "POS",
+   "valid": true,
+   "invalid_reasons": [],
+   "path_class": "FORCED_R4_NEVER",
+   "module_sha256": "f70f6786975cc015ee699b249051884d675afa1b0b49998c3fc988c0145a2cc3",
+   "L1": {
+    "n_loc": 588,
+    "n_P": 573,
+    "n_S": 375,
+    "dP": 198,
+    "t_P_s": 57.30000000077863,
+    "t_S_s": 37.50000000012134
+   },
+   "forced_n_loc": 588,
+   "forced_t_loc_n": 588,
+   "natural_blocked": false,
+   "forced_record_dP": 198,
+   "FORCED_AT_L1": true,
+   "FORCED_PAIR_L1": true,
+   "pair_row": "R4",
+   "revokes_after_L1": [
+    601
+   ],
+   "reeval": [
+    {
+     "n_loc": 610,
+     "dP": 0,
+     "struct_zero": true,
+     "applied": false,
+     "would_block": true
+    }
+   ],
+   "late_applied": null,
+   "r4_after_L1_without_revoke": [],
+   "any_applied_decision": false,
+   "row_end": {
+    "s_motor_max_m": 0.5845159250491532,
+    "crawler_gap_end_grid_m": 0.0355432121157877,
+    "crawler_gap_end_all_m": 0.0355432121157877,
+    "first_done_t_s": 72.70000000128985,
+    "first_ready_t_s": 115.10000000269739,
+    "final_phase": "ready",
+    "faults": [],
+    "warns": []
+   }
+  }
+ },
+ "flags": {
+  "THIN_MARGIN": [],
+  "LATE_R4": [],
+  "SHADOW_RELOC": {
+   "count": 3,
+   "struct_zero": 3,
+   "zero_ratio": 1.0,
+   "items": [
+    {
+     "row": "R4",
+     "n_loc": 607,
+     "dP": 0,
+     "struct_zero": true
+    },
+    {
+     "row": "R5",
+     "n_loc": 574,
+     "dP": 0,
+     "struct_zero": true
+    },
+    {
+     "row": "R6",
+     "n_loc": 530,
+     "dP": 0,
+     "struct_zero": true
+    }
+   ]
+  },
+  "PAIR_DIVERGE": [],
+  "GATEON_PATH": {
+   "R7": "APPLIED_AT_L1",
+   "R8": "APPLIED_AT_L1"
+  },
+  "OLD_CTRL_SHIFT": {
+   "R1": {
+    "d_n_loc": 17,
+    "d_n_S": 20
+   },
+   "R2": {
+    "d_n_loc": 17,
+    "d_n_S": 19
+   },
+   "R3": {
+    "d_n_loc": 17,
+    "d_n_S": 19
+   },
+   "R4": {
+    "d_n_loc": 35,
+    "d_n_S": 42
+   },
+   "R5": {
+    "d_n_loc": 0,
+    "d_n_S": 0
+   },
+   "R6": {
+    "d_n_loc": 22,
+    "d_n_S": 18
+   },
+   "R7": {
+    "d_n_loc": 17,
+    "d_n_S": 20
+   },
+   "R8": {
+    "d_n_loc": 35,
+    "d_n_S": 42
+   }
+  }
+ },
+ "flag_counts": {
+  "THIN_MARGIN": 0,
+  "LATE_R4": 0,
+  "SHADOW_RELOC": 3,
+  "SHADOW_RELOC_struct_zero": 3,
+  "PAIR_DIVERGE": 0,
+  "GATEON_PATH": 0,
+  "OLD_CTRL_SHIFT": 8
+ },
+ "harness_compare": {
+  "R1": {
+   "harness_range": [
+    92,
+    93
+   ],
+   "harness_key": "J2 T x1.0",
+   "chrono_dP": 99,
+   "diff_to_range": 6
+  },
+  "R2": {
+   "harness_range": [
+    94,
+    94
+   ],
+   "harness_key": "J2 M x1.0",
+   "chrono_dP": 100,
+   "diff_to_range": 6
+  },
+  "R3": {
+   "harness_range": [
+    94,
+    95
+   ],
+   "harness_key": "J2 B x1.0",
+   "chrono_dP": 100,
+   "diff_to_range": 5
+  },
+  "R6": {
+   "harness_range": [
+    36,
+    38
+   ],
+   "harness_key": "J1 T x1.0 (R6 is x1.1)",
+   "chrono_dP": 148,
+   "diff_to_range": 110
+  }
+ },
+ "conditions": {
+  "1_MUST": true,
+  "1_status": {
+   "R1": "POS",
+   "R2": "POS",
+   "R3": "POS",
+   "R4": "POS",
+   "R5": "POS",
+   "R6": "POS"
+  },
+  "1_pos_count": 6,
+  "2_PATCH": "adopt cond 2 carried over (known S-Ch rows, dP -20), not recounted here",
+  "3_PAIR": {
+   "R7": {
+    "cond3": true,
+    "reason": "gate-on L1 applied, event present, no later R4 / SKIPPED:order"
+   },
+   "R8": {
+    "cond3": true,
+    "reason": "gate-on L1 applied, event present, no later R4 / SKIPPED:order"
+   }
+  }
+ },
+ "grade_provisional": "통과",
+ "grade_reasons": [
+  "cond1, cond2 (known rows), cond3 true"
+ ],
+ "predictions": {
+  "P-1": {
+   "values": {
+    "R1": 99,
+    "R2": 100,
+    "R3": 100
+   },
+   "inside": true
+  },
+  "P-2": {
+   "values": {
+    "R4": 198,
+    "R5": 206
+   },
+   "inside": false
+  },
+  "P-3": {
+   "value": 148,
+   "inside": true
+  },
+  "P-4": {
+   "statuses": {
+    "R1": "POS",
+    "R2": "POS",
+    "R3": "POS",
+    "R4": "POS",
+    "R5": "POS",
+    "R6": "POS"
+   },
+   "inside": true
+  },
+  "P-5": {
+   "rows_with_revoke_after_L1": 3,
+   "inside": false
+  },
+  "P-6": {
+   "zero_ratio": 1.0,
+   "inside": true
+  },
+  "P-7": {
+   "inside": true
+  },
+  "P-8": {
+   "inside": true,
+   "paths": {
+    "R7": "APPLIED_AT_L1",
+    "R8": "APPLIED_AT_L1"
+   },
+   "cmd_sha_equal": {
+    "R7": true,
+    "R8": true
+   }
+  },
+  "P-9": {
+   "count": 0,
+   "inside": true
+  },
+  "P-10": {
+   "grade": "통과",
+   "inside": true
+  },
+  "P-11": {
+   "inside": true,
+   "classes": {
+    "F1": "FORCED_NO_REVOKE",
+    "F2": "FORCED_R4_NEVER"
+   }
+  }
+ },
+ "k10_compare": {
+  "rows": {
+   "R1": {
+    "status": "POS",
+    "L1": {
+     "n_loc": 468,
+     "n_P": 451,
+     "n_S": 352,
+     "dP": 99,
+     "t_P_s": 45.10000000037363,
+     "t_S_s": 35.20000000004499
+    },
+    "decisions": [
+     {
+      "n_loc": 468,
+      "n_P": 451,
+      "n_S": 352,
+      "dP": 99,
+      "r4": true,
+      "would_block": false,
+      "applied": true,
+      "post_revoke": false,
+      "restart_n": null,
+      "struct_zero": false
+     }
+    ]
+   },
+   "R2": {
+    "status": "POS",
+    "L1": {
+     "n_loc": 468,
+     "n_P": 451,
+     "n_S": 351,
+     "dP": 100,
+     "t_P_s": 45.10000000037363,
+     "t_S_s": 35.10000000004167
+    },
+    "decisions": [
+     {
+      "n_loc": 468,
+      "n_P": 451,
+      "n_S": 351,
+      "dP": 100,
+      "r4": true,
+      "would_block": false,
+      "applied": true,
+      "post_revoke": false,
+      "restart_n": null,
+      "struct_zero": false
+     }
+    ]
+   },
+   "R3": {
+    "status": "POS",
+    "L1": {
+     "n_loc": 468,
+     "n_P": 451,
+     "n_S": 351,
+     "dP": 100,
+     "t_P_s": 45.10000000037363,
+     "t_S_s": 35.10000000004167
+    },
+    "decisions": [
+     {
+      "n_loc": 468,
+      "n_P": 451,
+      "n_S": 351,
+      "dP": 100,
+      "r4": true,
+      "would_block": false,
+      "applied": true,
+      "post_revoke": false,
+      "restart_n": null,
+      "struct_zero": false
+     }
+    ]
+   },
+   "R4": {
+    "status": "POS",
+    "L1": {
+     "n_loc": 588,
+     "n_P": 573,
+     "n_S": 375,
+     "dP": 198,
+     "t_P_s": 57.30000000077863,
+     "t_S_s": 37.50000000012134
+    },
+    "decisions": [
+     {
+      "n_loc": 588,
+      "n_P": 573,
+      "n_S": 375,
+      "dP": 198,
+      "r4": true,
+      "would_block": false,
+      "applied": true,
+      "post_revoke": false,
+      "restart_n": null,
+      "struct_zero": false
+     },
+     {
+      "n_loc": 607,
+      "n_P": 600,
+      "n_S": 600,
+      "dP": 0,
+      "r4": false,
+      "would_block": false,
+      "applied": false,
+      "post_revoke": true,
+      "restart_n": 600,
+      "struct_zero": true
+     }
+    ]
+   },
+   "R5": {
+    "status": "POS",
+    "L1": {
+     "n_loc": 553,
+     "n_P": 539,
+     "n_S": 333,
+     "dP": 206,
+     "t_P_s": 53.90000000066576,
+     "t_S_s": 33.299999999981914
+    },
+    "decisions": [
+     {
+      "n_loc": 553,
+      "n_P": 539,
+      "n_S": 333,
+      "dP": 206,
+      "r4": true,
+      "would_block": false,
+      "applied": true,
+      "post_revoke": false,
+      "restart_n": null,
+      "struct_zero": false
+     },
+     {
+      "n_loc": 574,
+      "n_P": 567,
+      "n_S": 567,
+      "dP": 0,
+      "r4": false,
+      "would_block": false,
+      "applied": false,
+      "post_revoke": true,
+      "restart_n": 567,
+      "struct_zero": true
+     }
+    ]
+   },
+   "R6": {
+    "status": "POS",
+    "L1": {
+     "n_loc": 514,
+     "n_P": 499,
+     "n_S": 351,
+     "dP": 148,
+     "t_P_s": 49.90000000053298,
+     "t_S_s": 35.10000000004167
+    },
+    "decisions": [
+     {
+      "n_loc": 514,
+      "n_P": 499,
+      "n_S": 351,
+      "dP": 148,
+      "r4": true,
+      "would_block": false,
+      "applied": true,
+      "post_revoke": false,
+      "restart_n": null,
+      "struct_zero": false
+     },
+     {
+      "n_loc": 530,
+      "n_P": 521,
+      "n_S": 521,
+      "dP": 0,
+      "r4": false,
+      "would_block": false,
+      "applied": false,
+      "post_revoke": true,
+      "restart_n": 521,
+      "struct_zero": true
+     }
+    ]
+   },
+   "R7": {
+    "status": "POS",
+    "L1": {
+     "n_loc": 468,
+     "n_P": 451,
+     "n_S": 352,
+     "dP": 99,
+     "t_P_s": 45.10000000037363,
+     "t_S_s": 35.20000000004499
+    },
+    "decisions": [
+     {
+      "n_loc": 468,
+      "n_P": 451,
+      "n_S": 352,
+      "dP": 99,
+      "r4": true,
+      "would_block": false,
+      "applied": true,
+      "post_revoke": false,
+      "restart_n": null,
+      "struct_zero": false
+     }
+    ]
+   },
+   "R8": {
+    "status": "POS",
+    "L1": {
+     "n_loc": 588,
+     "n_P": 573,
+     "n_S": 375,
+     "dP": 198,
+     "t_P_s": 57.30000000077863,
+     "t_S_s": 37.50000000012134
+    },
+    "decisions": [
+     {
+      "n_loc": 588,
+      "n_P": 573,
+      "n_S": 375,
+      "dP": 198,
+      "r4": true,
+      "would_block": false,
+      "applied": true,
+      "post_revoke": false,
+      "restart_n": null,
+      "struct_zero": false
+     },
+     {
+      "n_loc": 607,
+      "n_P": 600,
+      "n_S": 600,
+      "dP": 0,
+      "r4": false,
+      "would_block": false,
+      "applied": false,
+      "post_revoke": true,
+      "restart_n": 600,
+      "struct_zero": true
+     }
+    ]
+   },
+   "F1": {
+    "status": "POS",
+    "L1": {
+     "n_loc": 468,
+     "n_P": 451,
+     "n_S": 352,
+     "dP": 99,
+     "t_P_s": 45.10000000037363,
+     "t_S_s": 35.20000000004499
+    },
+    "decisions": [
+     {
+      "n_loc": 468,
+      "n_P": 451,
+      "n_S": 352,
+      "dP": 99,
+      "r4": true,
+      "would_block": true,
+      "applied": false,
+      "post_revoke": false,
+      "restart_n": null,
+      "struct_zero": false
+     }
+    ]
+   },
+   "F2": {
+    "status": "POS",
+    "L1": {
+     "n_loc": 588,
+     "n_P": 573,
+     "n_S": 375,
+     "dP": 198,
+     "t_P_s": 57.30000000077863,
+     "t_S_s": 37.50000000012134
+    },
+    "decisions": [
+     {
+      "n_loc": 588,
+      "n_P": 573,
+      "n_S": 375,
+      "dP": 198,
+      "r4": true,
+      "would_block": true,
+      "applied": false,
+      "post_revoke": false,
+      "restart_n": null,
+      "struct_zero": false
+     },
+     {
+      "n_loc": 610,
+      "n_P": 602,
+      "n_S": 602,
+      "dP": 0,
+      "r4": true,
+      "would_block": true,
+      "applied": false,
+      "post_revoke": true,
+      "restart_n": 602,
+      "struct_zero": true
+     }
+    ]
+   }
+  },
+  "pairs": {
+   "R7": {
+    "k7": true,
+    "cond3": true,
+    "gateon_path": "APPLIED_AT_L1"
+   },
+   "R8": {
+    "k7": true,
+    "cond3": true,
+    "gateon_path": "APPLIED_AT_L1"
+   }
+  },
+  "flag_counts": {
+   "THIN_MARGIN": 0,
+   "LATE_R4": 0,
+   "SHADOW_RELOC": 3,
+   "SHADOW_RELOC_struct_zero": 3,
+   "PAIR_DIVERGE": 0,
+   "GATEON_PATH": 0,
+   "OLD_CTRL_SHIFT": 8
+  },
+  "grade_provisional": "통과",
+  "f_path_class": {
+   "F1": "FORCED_NO_REVOKE",
+   "F2": "FORCED_R4_NEVER"
+  },
+  "f_path_class_note": "F classes are info only; a K-10 mismatch here = info-only invalid (user decision 3)"
+ },
+ "tool_sha256": "dfe1826f6da38f6ceef1b61bd9c40c5fa91941bc70de081254b2a89b5f309d61"
+}

@@ -1,0 +1,4659 @@
+{
+ "summary": {
+  "n_items": 522,
+  "n_equal": 522,
+  "mismatches": [],
+  "by_group": {
+   "meta": [
+    2,
+    2
+   ],
+   "files_read": [
+    16,
+    16
+   ],
+   "state": [
+    10,
+    10
+   ],
+   "L1": [
+    80,
+    80
+   ],
+   "decisions": [
+    235,
+    235
+   ],
+   "record": [
+    120,
+    120
+   ],
+   "pairs": [
+    10,
+    10
+   ],
+   "flags": [
+    20,
+    20
+   ],
+   "conditions": [
+    3,
+    3
+   ],
+   "grade": [
+    1,
+    1
+   ],
+   "F_diag": [
+    14,
+    14
+   ],
+   "predictions": [
+    11,
+    11
+   ]
+  },
+  "gateon_label_map": {
+   "L1_APPLIED": "APPLIED_AT_L1"
+  },
+  "p2_sha": "5ecde300426afbb7b30a33931ae315a305a0fb7962024ea79a1cf9e83de1785f"
+ },
+ "items": [
+  {
+   "group": "meta",
+   "item": "path2_output_sha_fixed",
+   "p1": "5ecde300426afbb7b30a33931ae315a305a0fb7962024ea79a1cf9e83de1785f",
+   "p2": "5ecde300426afbb7b30a33931ae315a305a0fb7962024ea79a1cf9e83de1785f",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "meta",
+   "item": "rules_sha",
+   "p1": "fb3a5696f24385e81acc9c564500b5e5a0547db45a5335272e7d18400f1e68e8",
+   "p2": "fb3a5696f24385e81acc9c564500b5e5a0547db45a5335272e7d18400f1e68e8",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "files_read",
+   "item": "verif_matrix/las_k1_rules_adopt2.md",
+   "p1": "fb3a5696f24385e81acc9c564500b5e5a0547db45a5335272e7d18400f1e68e8",
+   "p2": "fb3a5696f24385e81acc9c564500b5e5a0547db45a5335272e7d18400f1e68e8",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "files_read",
+   "item": "batch_v5-las-k1-rem_20261109_235554/batch.json",
+   "p1": "35a1d613125d642f27bd6435bae10735958f5a7aa13f87b24f81f600006007d8",
+   "p2": "35a1d613125d642f27bd6435bae10735958f5a7aa13f87b24f81f600006007d8",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "files_read",
+   "item": "rem_j1_b_top_fs4_m1p1_vb_gateoff/result.json",
+   "p1": "50f8c400f619061b683f71617f53a9964fdd9c72405249a1582ac3dbb206e0af",
+   "p2": "50f8c400f619061b683f71617f53a9964fdd9c72405249a1582ac3dbb206e0af",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "files_read",
+   "item": "rem_j2_b_bottom_fs4_vb_gateoff/result.json",
+   "p1": "0c9fda1550fe0a6d87d857b76ea4687132809ac989252f9812ca07483a7599e4",
+   "p2": "0c9fda1550fe0a6d87d857b76ea4687132809ac989252f9812ca07483a7599e4",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "files_read",
+   "item": "rem_j2_b_middle_fs4_vb_gateoff/result.json",
+   "p1": "42aafc5028881ba68b589c86d0fb7f26469ff81b119318ce740a4dac6023b44c",
+   "p2": "42aafc5028881ba68b589c86d0fb7f26469ff81b119318ce740a4dac6023b44c",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "files_read",
+   "item": "rem_j2_b_top_fs4_m1p1_v0_gateoff/result.json",
+   "p1": "8f6e8ac6573fbe851081fe41fc89db0fd87cafd67ee68b3fc557e378ce8e2518",
+   "p2": "8f6e8ac6573fbe851081fe41fc89db0fd87cafd67ee68b3fc557e378ce8e2518",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "files_read",
+   "item": "rem_j2_b_top_fs4_m1p1_vb_gateoff/controller_commands.npz",
+   "p1": "97aace614a534a6aa95f67857947dcd541f9ecca1e9974eb5105fc017bf7c8aa",
+   "p2": "97aace614a534a6aa95f67857947dcd541f9ecca1e9974eb5105fc017bf7c8aa",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "files_read",
+   "item": "rem_j2_b_top_fs4_m1p1_vb_gateoff/result.json",
+   "p1": "2f5cb250b2319544612c91a6d30e2ee405b798ef526e0e7b71856b0aa02439b2",
+   "p2": "2f5cb250b2319544612c91a6d30e2ee405b798ef526e0e7b71856b0aa02439b2",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "files_read",
+   "item": "rem_j2_b_top_fs4_m1p1_vb_gateon/controller_commands.npz",
+   "p1": "97aace614a534a6aa95f67857947dcd541f9ecca1e9974eb5105fc017bf7c8aa",
+   "p2": "97aace614a534a6aa95f67857947dcd541f9ecca1e9974eb5105fc017bf7c8aa",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "files_read",
+   "item": "rem_j2_b_top_fs4_m1p1_vb_gateon/result.json",
+   "p1": "fd5c22f4942c7254cc953a235ddd03affcb169618cf03a8d0f170685a08faccf",
+   "p2": "fd5c22f4942c7254cc953a235ddd03affcb169618cf03a8d0f170685a08faccf",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "files_read",
+   "item": "rem_j2_b_top_fs4_m1p1_vb_gateon_forced1/result.json",
+   "p1": "3151d96803df5f1d0a101401f5f89f82673478c082358dd3b7f09cc1c2b1f917",
+   "p2": "3151d96803df5f1d0a101401f5f89f82673478c082358dd3b7f09cc1c2b1f917",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "files_read",
+   "item": "rem_j2_b_top_fs4_vb_gateoff/controller_commands.npz",
+   "p1": "ebf86d1d40af464e2e4e23d4ea79ad56721829e65d70cb4efb1d2cc072e4b559",
+   "p2": "ebf86d1d40af464e2e4e23d4ea79ad56721829e65d70cb4efb1d2cc072e4b559",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "files_read",
+   "item": "rem_j2_b_top_fs4_vb_gateoff/result.json",
+   "p1": "3bb27cd308e0f507397bc5aad051d5a9657177be5d92a18c834d1b945c4cc0db",
+   "p2": "3bb27cd308e0f507397bc5aad051d5a9657177be5d92a18c834d1b945c4cc0db",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "files_read",
+   "item": "rem_j2_b_top_fs4_vb_gateon/controller_commands.npz",
+   "p1": "ebf86d1d40af464e2e4e23d4ea79ad56721829e65d70cb4efb1d2cc072e4b559",
+   "p2": "ebf86d1d40af464e2e4e23d4ea79ad56721829e65d70cb4efb1d2cc072e4b559",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "files_read",
+   "item": "rem_j2_b_top_fs4_vb_gateon/result.json",
+   "p1": "a237b50b22176018e3db995209bc9b55780445855999412621a4d7c2788ddc5a",
+   "p2": "a237b50b22176018e3db995209bc9b55780445855999412621a4d7c2788ddc5a",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "files_read",
+   "item": "rem_j2_b_top_fs4_vb_gateon_forced1/result.json",
+   "p1": "bac8a552c29f24bb913aff6867b48686ece5bdb55e33ba54a28497ad3d728e8e",
+   "p2": "bac8a552c29f24bb913aff6867b48686ece5bdb55e33ba54a28497ad3d728e8e",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "state",
+   "item": "R1",
+   "p1": "POS",
+   "p2": "POS",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R1.n_loc",
+   "p1": 468,
+   "p2": 468,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R1.n_P",
+   "p1": 451,
+   "p2": 451,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R1.n_S",
+   "p1": 352,
+   "p2": 352,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R1.dP",
+   "p1": 99,
+   "p2": 99,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R1.t_P_s",
+   "p1": 45.10000000037363,
+   "p2": 45.10000000037363,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R1.t_S_s",
+   "p1": 35.20000000004499,
+   "p2": 35.20000000004499,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R1.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R1.n_loc_minus_n_P",
+   "p1": 17,
+   "p2": 17,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R1.count",
+   "p1": 1,
+   "p2": 1,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R1.d0.t_loc_s",
+   "p1": 46.80000000043007,
+   "p2": 46.80000000043007,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R1.d0.n_loc",
+   "p1": 468,
+   "p2": 468,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R1.d0.t_P_s",
+   "p1": 45.10000000037363,
+   "p2": 45.10000000037363,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R1.d0.t_S_s",
+   "p1": 35.20000000004499,
+   "p2": 35.20000000004499,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R1.d0.n_P",
+   "p1": 451,
+   "p2": 451,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R1.d0.n_S",
+   "p1": 352,
+   "p2": 352,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R1.d0.dP",
+   "p1": 99,
+   "p2": 99,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R1.d0.would_block",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R1.d0.applied",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R1.d0.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R1.d0.last_revoke_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R1.d0.restart_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R1.d0.struct_zero",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R1.d0.r4",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R1.d0.rec_match",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R1.revokes",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R1.mode_starts",
+   "p1": [
+    [
+     352,
+     35.20000000004499,
+     "release"
+    ]
+   ],
+   "p2": [
+    [
+     352,
+     35.20000000004499,
+     "release"
+    ]
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R1.loc_periods",
+   "p1": [
+    468
+   ],
+   "p2": [
+    468
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R1.e3c10",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R1.s_motor_max_m",
+   "p1": 0.5332188558950343,
+   "p2": 0.5332188558950343,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R1.crawler_gap_end",
+   "p1": 0.06322114174842408,
+   "p2": 0.06322114174842408,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R1.first_done",
+   "p1": 57.20000000077531,
+   "p2": 57.20000000077531,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R1.first_ready",
+   "p1": 81.90000000159526,
+   "p2": 81.90000000159526,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R1.last_phase",
+   "p1": "ready",
+   "p2": "ready",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R1.fault_warn",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R1.missing_reasons",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R1.rerun_of(normalized)",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "state",
+   "item": "R2",
+   "p1": "POS",
+   "p2": "POS",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R2.n_loc",
+   "p1": 468,
+   "p2": 468,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R2.n_P",
+   "p1": 451,
+   "p2": 451,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R2.n_S",
+   "p1": 351,
+   "p2": 351,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R2.dP",
+   "p1": 100,
+   "p2": 100,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R2.t_P_s",
+   "p1": 45.10000000037363,
+   "p2": 45.10000000037363,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R2.t_S_s",
+   "p1": 35.10000000004167,
+   "p2": 35.10000000004167,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R2.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R2.n_loc_minus_n_P",
+   "p1": 17,
+   "p2": 17,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R2.count",
+   "p1": 1,
+   "p2": 1,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R2.d0.t_loc_s",
+   "p1": 46.80000000043007,
+   "p2": 46.80000000043007,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R2.d0.n_loc",
+   "p1": 468,
+   "p2": 468,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R2.d0.t_P_s",
+   "p1": 45.10000000037363,
+   "p2": 45.10000000037363,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R2.d0.t_S_s",
+   "p1": 35.10000000004167,
+   "p2": 35.10000000004167,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R2.d0.n_P",
+   "p1": 451,
+   "p2": 451,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R2.d0.n_S",
+   "p1": 351,
+   "p2": 351,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R2.d0.dP",
+   "p1": 100,
+   "p2": 100,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R2.d0.would_block",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R2.d0.applied",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R2.d0.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R2.d0.last_revoke_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R2.d0.restart_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R2.d0.struct_zero",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R2.d0.r4",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R2.d0.rec_match",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R2.revokes",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R2.mode_starts",
+   "p1": [
+    [
+     351,
+     35.10000000004167,
+     "release"
+    ]
+   ],
+   "p2": [
+    [
+     351,
+     35.10000000004167,
+     "release"
+    ]
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R2.loc_periods",
+   "p1": [
+    468
+   ],
+   "p2": [
+    468
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R2.e3c10",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R2.s_motor_max_m",
+   "p1": 0.532905923225258,
+   "p2": 0.532905923225258,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R2.crawler_gap_end",
+   "p1": 0.06712553590662562,
+   "p2": 0.06712553590662562,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R2.first_done",
+   "p1": 58.20000000080851,
+   "p2": 58.20000000080851,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R2.first_ready",
+   "p1": 87.50000000178116,
+   "p2": 87.50000000178116,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R2.last_phase",
+   "p1": "ready",
+   "p2": "ready",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R2.fault_warn",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R2.missing_reasons",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R2.rerun_of(normalized)",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "state",
+   "item": "R3",
+   "p1": "POS",
+   "p2": "POS",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R3.n_loc",
+   "p1": 468,
+   "p2": 468,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R3.n_P",
+   "p1": 451,
+   "p2": 451,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R3.n_S",
+   "p1": 351,
+   "p2": 351,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R3.dP",
+   "p1": 100,
+   "p2": 100,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R3.t_P_s",
+   "p1": 45.10000000037363,
+   "p2": 45.10000000037363,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R3.t_S_s",
+   "p1": 35.10000000004167,
+   "p2": 35.10000000004167,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R3.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R3.n_loc_minus_n_P",
+   "p1": 17,
+   "p2": 17,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R3.count",
+   "p1": 1,
+   "p2": 1,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R3.d0.t_loc_s",
+   "p1": 46.80000000043007,
+   "p2": 46.80000000043007,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R3.d0.n_loc",
+   "p1": 468,
+   "p2": 468,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R3.d0.t_P_s",
+   "p1": 45.10000000037363,
+   "p2": 45.10000000037363,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R3.d0.t_S_s",
+   "p1": 35.10000000004167,
+   "p2": 35.10000000004167,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R3.d0.n_P",
+   "p1": 451,
+   "p2": 451,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R3.d0.n_S",
+   "p1": 351,
+   "p2": 351,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R3.d0.dP",
+   "p1": 100,
+   "p2": 100,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R3.d0.would_block",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R3.d0.applied",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R3.d0.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R3.d0.last_revoke_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R3.d0.restart_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R3.d0.struct_zero",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R3.d0.r4",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R3.d0.rec_match",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R3.revokes",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R3.mode_starts",
+   "p1": [
+    [
+     351,
+     35.10000000004167,
+     "release"
+    ]
+   ],
+   "p2": [
+    [
+     351,
+     35.10000000004167,
+     "release"
+    ]
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R3.loc_periods",
+   "p1": [
+    468
+   ],
+   "p2": [
+    468
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R3.e3c10",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R3.s_motor_max_m",
+   "p1": 0.5405104363884325,
+   "p2": 0.5405104363884325,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R3.crawler_gap_end",
+   "p1": 0.069234570702561,
+   "p2": 0.069234570702561,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R3.first_done",
+   "p1": 65.3000000010442,
+   "p2": 65.3000000010442,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R3.first_ready",
+   "p1": 77.30000000144256,
+   "p2": 77.30000000144256,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R3.last_phase",
+   "p1": "ready",
+   "p2": "ready",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R3.fault_warn",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R3.missing_reasons",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R3.rerun_of(normalized)",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "state",
+   "item": "R4",
+   "p1": "POS",
+   "p2": "POS",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R4.n_loc",
+   "p1": 588,
+   "p2": 588,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R4.n_P",
+   "p1": 573,
+   "p2": 573,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R4.n_S",
+   "p1": 375,
+   "p2": 375,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R4.dP",
+   "p1": 198,
+   "p2": 198,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R4.t_P_s",
+   "p1": 57.30000000077863,
+   "p2": 57.30000000077863,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R4.t_S_s",
+   "p1": 37.50000000012134,
+   "p2": 37.50000000012134,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R4.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R4.n_loc_minus_n_P",
+   "p1": 15,
+   "p2": 15,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.count",
+   "p1": 2,
+   "p2": 2,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d0.t_loc_s",
+   "p1": 58.800000000828426,
+   "p2": 58.800000000828426,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d0.n_loc",
+   "p1": 588,
+   "p2": 588,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d0.t_P_s",
+   "p1": 57.30000000077863,
+   "p2": 57.30000000077863,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d0.t_S_s",
+   "p1": 37.50000000012134,
+   "p2": 37.50000000012134,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d0.n_P",
+   "p1": 573,
+   "p2": 573,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d0.n_S",
+   "p1": 375,
+   "p2": 375,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d0.dP",
+   "p1": 198,
+   "p2": 198,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d0.would_block",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d0.applied",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d0.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d0.last_revoke_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d0.restart_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d0.struct_zero",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d0.r4",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d0.rec_match",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d1.t_loc_s",
+   "p1": 60.7000000008915,
+   "p2": 60.7000000008915,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d1.n_loc",
+   "p1": 607,
+   "p2": 607,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d1.t_P_s",
+   "p1": 60.00000000086826,
+   "p2": 60.00000000086826,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d1.t_S_s",
+   "p1": 60.00000000086826,
+   "p2": 60.00000000086826,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d1.n_P",
+   "p1": 600,
+   "p2": 600,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d1.n_S",
+   "p1": 600,
+   "p2": 600,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d1.dP",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d1.would_block",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d1.applied",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d1.post_revoke",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d1.last_revoke_n",
+   "p1": 599,
+   "p2": 599,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d1.restart_n",
+   "p1": 600,
+   "p2": 600,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d1.struct_zero",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d1.r4",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R4.d1.rec_match",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R4.revokes",
+   "p1": [
+    599
+   ],
+   "p2": [
+    599
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R4.mode_starts",
+   "p1": [
+    [
+     375,
+     37.50000000012134,
+     "release"
+    ],
+    [
+     600,
+     60.00000000086826,
+     "release"
+    ]
+   ],
+   "p2": [
+    [
+     375,
+     37.50000000012134,
+     "release"
+    ],
+    [
+     600,
+     60.00000000086826,
+     "release"
+    ]
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R4.loc_periods",
+   "p1": [
+    588,
+    607
+   ],
+   "p2": [
+    588,
+    607
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R4.e3c10",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R4.s_motor_max_m",
+   "p1": 0.6153783264809978,
+   "p2": 0.6153783264809978,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R4.crawler_gap_end",
+   "p1": 0.06670725962852853,
+   "p2": 0.06670725962852853,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R4.first_done",
+   "p1": 71.20000000124006,
+   "p2": 71.20000000124006,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R4.first_ready",
+   "p1": 117.60000000278038,
+   "p2": 117.60000000278038,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R4.last_phase",
+   "p1": "ready",
+   "p2": "ready",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R4.fault_warn",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R4.missing_reasons",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R4.rerun_of(normalized)",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "state",
+   "item": "R5",
+   "p1": "POS",
+   "p2": "POS",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R5.n_loc",
+   "p1": 553,
+   "p2": 553,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R5.n_P",
+   "p1": 539,
+   "p2": 539,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R5.n_S",
+   "p1": 333,
+   "p2": 333,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R5.dP",
+   "p1": 206,
+   "p2": 206,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R5.t_P_s",
+   "p1": 53.90000000066576,
+   "p2": 53.90000000066576,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R5.t_S_s",
+   "p1": 33.299999999981914,
+   "p2": 33.299999999981914,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R5.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R5.n_loc_minus_n_P",
+   "p1": 14,
+   "p2": 14,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.count",
+   "p1": 2,
+   "p2": 2,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d0.t_loc_s",
+   "p1": 55.30000000071224,
+   "p2": 55.30000000071224,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d0.n_loc",
+   "p1": 553,
+   "p2": 553,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d0.t_P_s",
+   "p1": 53.90000000066576,
+   "p2": 53.90000000066576,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d0.t_S_s",
+   "p1": 33.299999999981914,
+   "p2": 33.299999999981914,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d0.n_P",
+   "p1": 539,
+   "p2": 539,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d0.n_S",
+   "p1": 333,
+   "p2": 333,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d0.dP",
+   "p1": 206,
+   "p2": 206,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d0.would_block",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d0.applied",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d0.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d0.last_revoke_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d0.restart_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d0.struct_zero",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d0.r4",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d0.rec_match",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d1.t_loc_s",
+   "p1": 57.40000000078195,
+   "p2": 57.40000000078195,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d1.n_loc",
+   "p1": 574,
+   "p2": 574,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d1.t_P_s",
+   "p1": 56.70000000075871,
+   "p2": 56.70000000075871,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d1.t_S_s",
+   "p1": 56.70000000075871,
+   "p2": 56.70000000075871,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d1.n_P",
+   "p1": 567,
+   "p2": 567,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d1.n_S",
+   "p1": 567,
+   "p2": 567,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d1.dP",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d1.would_block",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d1.applied",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d1.post_revoke",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d1.last_revoke_n",
+   "p1": 566,
+   "p2": 566,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d1.restart_n",
+   "p1": 567,
+   "p2": 567,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d1.struct_zero",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d1.r4",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R5.d1.rec_match",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R5.revokes",
+   "p1": [
+    566
+   ],
+   "p2": [
+    566
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R5.mode_starts",
+   "p1": [
+    [
+     333,
+     33.299999999981914,
+     "release"
+    ],
+    [
+     567,
+     56.70000000075871,
+     "release"
+    ]
+   ],
+   "p2": [
+    [
+     333,
+     33.299999999981914,
+     "release"
+    ],
+    [
+     567,
+     56.70000000075871,
+     "release"
+    ]
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R5.loc_periods",
+   "p1": [
+    553,
+    574
+   ],
+   "p2": [
+    553,
+    574
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R5.e3c10",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R5.s_motor_max_m",
+   "p1": 0.6228547782603159,
+   "p2": 0.6228547782603159,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R5.crawler_gap_end",
+   "p1": 0.07186794655144224,
+   "p2": 0.07186794655144224,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R5.first_done",
+   "p1": 83.1000000016351,
+   "p2": 83.1000000016351,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R5.first_ready",
+   "p1": 106.90000000242517,
+   "p2": 106.90000000242517,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R5.last_phase",
+   "p1": "ready",
+   "p2": "ready",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R5.fault_warn",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R5.missing_reasons",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R5.rerun_of(normalized)",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "state",
+   "item": "R6",
+   "p1": "POS",
+   "p2": "POS",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R6.n_loc",
+   "p1": 514,
+   "p2": 514,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R6.n_P",
+   "p1": 499,
+   "p2": 499,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R6.n_S",
+   "p1": 351,
+   "p2": 351,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R6.dP",
+   "p1": 148,
+   "p2": 148,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R6.t_P_s",
+   "p1": 49.90000000053298,
+   "p2": 49.90000000053298,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R6.t_S_s",
+   "p1": 35.10000000004167,
+   "p2": 35.10000000004167,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R6.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R6.n_loc_minus_n_P",
+   "p1": 15,
+   "p2": 15,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.count",
+   "p1": 2,
+   "p2": 2,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d0.t_loc_s",
+   "p1": 51.40000000058277,
+   "p2": 51.40000000058277,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d0.n_loc",
+   "p1": 514,
+   "p2": 514,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d0.t_P_s",
+   "p1": 49.90000000053298,
+   "p2": 49.90000000053298,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d0.t_S_s",
+   "p1": 35.10000000004167,
+   "p2": 35.10000000004167,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d0.n_P",
+   "p1": 499,
+   "p2": 499,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d0.n_S",
+   "p1": 351,
+   "p2": 351,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d0.dP",
+   "p1": 148,
+   "p2": 148,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d0.would_block",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d0.applied",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d0.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d0.last_revoke_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d0.restart_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d0.struct_zero",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d0.r4",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d0.rec_match",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d1.t_loc_s",
+   "p1": 53.000000000635886,
+   "p2": 53.000000000635886,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d1.n_loc",
+   "p1": 530,
+   "p2": 530,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d1.t_P_s",
+   "p1": 52.10000000060601,
+   "p2": 52.10000000060601,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d1.t_S_s",
+   "p1": 52.10000000060601,
+   "p2": 52.10000000060601,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d1.n_P",
+   "p1": 521,
+   "p2": 521,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d1.n_S",
+   "p1": 521,
+   "p2": 521,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d1.dP",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d1.would_block",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d1.applied",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d1.post_revoke",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d1.last_revoke_n",
+   "p1": 520,
+   "p2": 520,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d1.restart_n",
+   "p1": 521,
+   "p2": 521,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d1.struct_zero",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d1.r4",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R6.d1.rec_match",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R6.revokes",
+   "p1": [
+    520
+   ],
+   "p2": [
+    520
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R6.mode_starts",
+   "p1": [
+    [
+     351,
+     35.10000000004167,
+     "release"
+    ],
+    [
+     521,
+     52.10000000060601,
+     "release"
+    ]
+   ],
+   "p2": [
+    [
+     351,
+     35.10000000004167,
+     "release"
+    ],
+    [
+     521,
+     52.10000000060601,
+     "release"
+    ]
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R6.loc_periods",
+   "p1": [
+    514,
+    530
+   ],
+   "p2": [
+    514,
+    530
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R6.e3c10",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R6.s_motor_max_m",
+   "p1": 0.605288473801508,
+   "p2": 0.605288473801508,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R6.crawler_gap_end",
+   "p1": 0.05857405315019015,
+   "p2": 0.05857405315019015,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R6.first_done",
+   "p1": 64.60000000102096,
+   "p2": 64.60000000102096,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R6.first_ready",
+   "p1": 113.60000000264759,
+   "p2": 113.60000000264759,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R6.last_phase",
+   "p1": "ready",
+   "p2": "ready",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R6.fault_warn",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R6.missing_reasons",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R6.rerun_of(normalized)",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "state",
+   "item": "R7",
+   "p1": "POS",
+   "p2": "POS",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R7.n_loc",
+   "p1": 468,
+   "p2": 468,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R7.n_P",
+   "p1": 451,
+   "p2": 451,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R7.n_S",
+   "p1": 352,
+   "p2": 352,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R7.dP",
+   "p1": 99,
+   "p2": 99,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R7.t_P_s",
+   "p1": 45.10000000037363,
+   "p2": 45.10000000037363,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R7.t_S_s",
+   "p1": 35.20000000004499,
+   "p2": 35.20000000004499,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R7.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R7.n_loc_minus_n_P",
+   "p1": 17,
+   "p2": 17,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R7.count",
+   "p1": 1,
+   "p2": 1,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R7.d0.t_loc_s",
+   "p1": 46.80000000043007,
+   "p2": 46.80000000043007,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R7.d0.n_loc",
+   "p1": 468,
+   "p2": 468,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R7.d0.t_P_s",
+   "p1": 45.10000000037363,
+   "p2": 45.10000000037363,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R7.d0.t_S_s",
+   "p1": 35.20000000004499,
+   "p2": 35.20000000004499,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R7.d0.n_P",
+   "p1": 451,
+   "p2": 451,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R7.d0.n_S",
+   "p1": 352,
+   "p2": 352,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R7.d0.dP",
+   "p1": 99,
+   "p2": 99,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R7.d0.would_block",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R7.d0.applied",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R7.d0.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R7.d0.last_revoke_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R7.d0.restart_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R7.d0.struct_zero",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R7.d0.r4",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R7.d0.rec_match",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R7.revokes",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R7.mode_starts",
+   "p1": [
+    [
+     352,
+     35.20000000004499,
+     "release"
+    ]
+   ],
+   "p2": [
+    [
+     352,
+     35.20000000004499,
+     "release"
+    ]
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R7.loc_periods",
+   "p1": [
+    468
+   ],
+   "p2": [
+    468
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R7.e3c10",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R7.s_motor_max_m",
+   "p1": 0.5332188558950343,
+   "p2": 0.5332188558950343,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R7.crawler_gap_end",
+   "p1": 0.06322114174842408,
+   "p2": 0.06322114174842408,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R7.first_done",
+   "p1": 57.20000000077531,
+   "p2": 57.20000000077531,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R7.first_ready",
+   "p1": 81.90000000159526,
+   "p2": 81.90000000159526,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R7.last_phase",
+   "p1": "ready",
+   "p2": "ready",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R7.fault_warn",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R7.missing_reasons",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R7.rerun_of(normalized)",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "state",
+   "item": "R8",
+   "p1": "POS",
+   "p2": "POS",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R8.n_loc",
+   "p1": 588,
+   "p2": 588,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R8.n_P",
+   "p1": 573,
+   "p2": 573,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R8.n_S",
+   "p1": 375,
+   "p2": 375,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R8.dP",
+   "p1": 198,
+   "p2": 198,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R8.t_P_s",
+   "p1": 57.30000000077863,
+   "p2": 57.30000000077863,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R8.t_S_s",
+   "p1": 37.50000000012134,
+   "p2": 37.50000000012134,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R8.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "L1",
+   "item": "R8.n_loc_minus_n_P",
+   "p1": 15,
+   "p2": 15,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.count",
+   "p1": 2,
+   "p2": 2,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d0.t_loc_s",
+   "p1": 58.800000000828426,
+   "p2": 58.800000000828426,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d0.n_loc",
+   "p1": 588,
+   "p2": 588,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d0.t_P_s",
+   "p1": 57.30000000077863,
+   "p2": 57.30000000077863,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d0.t_S_s",
+   "p1": 37.50000000012134,
+   "p2": 37.50000000012134,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d0.n_P",
+   "p1": 573,
+   "p2": 573,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d0.n_S",
+   "p1": 375,
+   "p2": 375,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d0.dP",
+   "p1": 198,
+   "p2": 198,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d0.would_block",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d0.applied",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d0.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d0.last_revoke_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d0.restart_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d0.struct_zero",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d0.r4",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d0.rec_match",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d1.t_loc_s",
+   "p1": 60.7000000008915,
+   "p2": 60.7000000008915,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d1.n_loc",
+   "p1": 607,
+   "p2": 607,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d1.t_P_s",
+   "p1": 60.00000000086826,
+   "p2": 60.00000000086826,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d1.t_S_s",
+   "p1": 60.00000000086826,
+   "p2": 60.00000000086826,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d1.n_P",
+   "p1": 600,
+   "p2": 600,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d1.n_S",
+   "p1": 600,
+   "p2": 600,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d1.dP",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d1.would_block",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d1.applied",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d1.post_revoke",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d1.last_revoke_n",
+   "p1": 599,
+   "p2": 599,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d1.restart_n",
+   "p1": 600,
+   "p2": 600,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d1.struct_zero",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d1.r4",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "decisions",
+   "item": "R8.d1.rec_match",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R8.revokes",
+   "p1": [
+    599
+   ],
+   "p2": [
+    599
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R8.mode_starts",
+   "p1": [
+    [
+     375,
+     37.50000000012134,
+     "release"
+    ],
+    [
+     600,
+     60.00000000086826,
+     "release"
+    ]
+   ],
+   "p2": [
+    [
+     375,
+     37.50000000012134,
+     "release"
+    ],
+    [
+     600,
+     60.00000000086826,
+     "release"
+    ]
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R8.loc_periods",
+   "p1": [
+    588,
+    607
+   ],
+   "p2": [
+    588,
+    607
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R8.e3c10",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R8.s_motor_max_m",
+   "p1": 0.6153783264809978,
+   "p2": 0.6153783264809978,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R8.crawler_gap_end",
+   "p1": 0.06670725962852853,
+   "p2": 0.06670725962852853,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R8.first_done",
+   "p1": 71.20000000124006,
+   "p2": 71.20000000124006,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R8.first_ready",
+   "p1": 117.60000000278038,
+   "p2": 117.60000000278038,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R8.last_phase",
+   "p1": "ready",
+   "p2": "ready",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R8.fault_warn",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R8.missing_reasons",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "record",
+   "item": "R8.rerun_of(normalized)",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "state",
+   "item": "F1",
+   "p1": "POS",
+   "p2": "POS",
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "L1",
+   "item": "F1.n_loc",
+   "p1": 468,
+   "p2": 468,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "L1",
+   "item": "F1.n_P",
+   "p1": 451,
+   "p2": 451,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "L1",
+   "item": "F1.n_S",
+   "p1": 352,
+   "p2": 352,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "L1",
+   "item": "F1.dP",
+   "p1": 99,
+   "p2": 99,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "L1",
+   "item": "F1.t_P_s",
+   "p1": 45.10000000037363,
+   "p2": 45.10000000037363,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "L1",
+   "item": "F1.t_S_s",
+   "p1": 35.20000000004499,
+   "p2": 35.20000000004499,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "L1",
+   "item": "F1.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "L1",
+   "item": "F1.n_loc_minus_n_P",
+   "p1": 17,
+   "p2": 17,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F1.count",
+   "p1": 1,
+   "p2": 1,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F1.d0.t_loc_s",
+   "p1": 46.80000000043007,
+   "p2": 46.80000000043007,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F1.d0.n_loc",
+   "p1": 468,
+   "p2": 468,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F1.d0.t_P_s",
+   "p1": 45.10000000037363,
+   "p2": 45.10000000037363,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F1.d0.t_S_s",
+   "p1": 35.20000000004499,
+   "p2": 35.20000000004499,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F1.d0.n_P",
+   "p1": 451,
+   "p2": 451,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F1.d0.n_S",
+   "p1": 352,
+   "p2": 352,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F1.d0.dP",
+   "p1": 99,
+   "p2": 99,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F1.d0.would_block",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F1.d0.applied",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F1.d0.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F1.d0.last_revoke_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F1.d0.restart_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F1.d0.struct_zero",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F1.d0.r4",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F1.d0.rec_match",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F1.revokes",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F1.mode_starts",
+   "p1": [
+    [
+     352,
+     35.20000000004499,
+     "release"
+    ]
+   ],
+   "p2": [
+    [
+     352,
+     35.20000000004499,
+     "release"
+    ]
+   ],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F1.loc_periods",
+   "p1": [
+    468
+   ],
+   "p2": [
+    468
+   ],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F1.e3c10",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F1.s_motor_max_m",
+   "p1": 0.501855379959535,
+   "p2": 0.501855379959535,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F1.crawler_gap_end",
+   "p1": 0.0356916989160001,
+   "p2": 0.0356916989160001,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F1.first_done",
+   "p1": 69.50000000118362,
+   "p2": 69.50000000118362,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F1.first_ready",
+   "p1": 81.50000000158198,
+   "p2": 81.50000000158198,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F1.last_phase",
+   "p1": "ready",
+   "p2": "ready",
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F1.fault_warn",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F1.missing_reasons",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F1.rerun_of(normalized)",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "state",
+   "item": "F2",
+   "p1": "POS",
+   "p2": "POS",
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "L1",
+   "item": "F2.n_loc",
+   "p1": 588,
+   "p2": 588,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "L1",
+   "item": "F2.n_P",
+   "p1": 573,
+   "p2": 573,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "L1",
+   "item": "F2.n_S",
+   "p1": 375,
+   "p2": 375,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "L1",
+   "item": "F2.dP",
+   "p1": 198,
+   "p2": 198,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "L1",
+   "item": "F2.t_P_s",
+   "p1": 57.30000000077863,
+   "p2": 57.30000000077863,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "L1",
+   "item": "F2.t_S_s",
+   "p1": 37.50000000012134,
+   "p2": 37.50000000012134,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "L1",
+   "item": "F2.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "L1",
+   "item": "F2.n_loc_minus_n_P",
+   "p1": 15,
+   "p2": 15,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.count",
+   "p1": 2,
+   "p2": 2,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d0.t_loc_s",
+   "p1": 58.800000000828426,
+   "p2": 58.800000000828426,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d0.n_loc",
+   "p1": 588,
+   "p2": 588,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d0.t_P_s",
+   "p1": 57.30000000077863,
+   "p2": 57.30000000077863,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d0.t_S_s",
+   "p1": 37.50000000012134,
+   "p2": 37.50000000012134,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d0.n_P",
+   "p1": 573,
+   "p2": 573,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d0.n_S",
+   "p1": 375,
+   "p2": 375,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d0.dP",
+   "p1": 198,
+   "p2": 198,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d0.would_block",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d0.applied",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d0.post_revoke",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d0.last_revoke_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d0.restart_n",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d0.struct_zero",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d0.r4",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d0.rec_match",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d1.t_loc_s",
+   "p1": 61.00000000090146,
+   "p2": 61.00000000090146,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d1.n_loc",
+   "p1": 610,
+   "p2": 610,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d1.t_P_s",
+   "p1": 60.2000000008749,
+   "p2": 60.2000000008749,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d1.t_S_s",
+   "p1": 60.2000000008749,
+   "p2": 60.2000000008749,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d1.n_P",
+   "p1": 602,
+   "p2": 602,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d1.n_S",
+   "p1": 602,
+   "p2": 602,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d1.dP",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d1.would_block",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d1.applied",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d1.post_revoke",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d1.last_revoke_n",
+   "p1": 601,
+   "p2": 601,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d1.restart_n",
+   "p1": 602,
+   "p2": 602,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d1.struct_zero",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d1.r4",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "decisions",
+   "item": "F2.d1.rec_match",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F2.revokes",
+   "p1": [
+    601
+   ],
+   "p2": [
+    601
+   ],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F2.mode_starts",
+   "p1": [
+    [
+     375,
+     37.50000000012134,
+     "release"
+    ],
+    [
+     602,
+     60.2000000008749,
+     "release"
+    ]
+   ],
+   "p2": [
+    [
+     375,
+     37.50000000012134,
+     "release"
+    ],
+    [
+     602,
+     60.2000000008749,
+     "release"
+    ]
+   ],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F2.loc_periods",
+   "p1": [
+    588,
+    610
+   ],
+   "p2": [
+    588,
+    610
+   ],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F2.e3c10",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F2.s_motor_max_m",
+   "p1": 0.5845159250491532,
+   "p2": 0.5845159250491532,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F2.crawler_gap_end",
+   "p1": 0.0355432121157877,
+   "p2": 0.0355432121157877,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F2.first_done",
+   "p1": 72.70000000128985,
+   "p2": 72.70000000128985,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F2.first_ready",
+   "p1": 115.10000000269739,
+   "p2": 115.10000000269739,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F2.last_phase",
+   "p1": "ready",
+   "p2": "ready",
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F2.fault_warn",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F2.missing_reasons",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "record",
+   "item": "F2.rerun_of(normalized)",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "pairs",
+   "item": "R7.K-7",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "pairs",
+   "item": "R7.cond3",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "pairs",
+   "item": "R7.gateon_path(mapped)",
+   "p1": "APPLIED_AT_L1",
+   "p2": "APPLIED_AT_L1",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "pairs",
+   "item": "R7.gateon_r4_sequence",
+   "p1": [
+    [
+     468,
+     99,
+     true,
+     false
+    ]
+   ],
+   "p2": [
+    [
+     468,
+     99,
+     true,
+     false
+    ]
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "pairs",
+   "item": "R8.K-7",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "pairs",
+   "item": "R8.cond3",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "pairs",
+   "item": "R8.gateon_path(mapped)",
+   "p1": "APPLIED_AT_L1",
+   "p2": "APPLIED_AT_L1",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "pairs",
+   "item": "R8.gateon_r4_sequence",
+   "p1": [
+    [
+     588,
+     198,
+     true,
+     false
+    ]
+   ],
+   "p2": [
+    [
+     588,
+     198,
+     true,
+     false
+    ]
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "pairs",
+   "item": "R1/R7.cmd_same",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "pairs",
+   "item": "R4/R8.cmd_same",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "THIN_MARGIN",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "LATE_R4",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "SHADOW_RELOC",
+   "p1": 3,
+   "p2": 3,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "SHADOW_RELOC_struct_zero",
+   "p1": 3,
+   "p2": 3,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "SHADOW_RELOC_items",
+   "p1": [
+    [
+     "R4",
+     607,
+     0,
+     true
+    ],
+    [
+     "R5",
+     574,
+     0,
+     true
+    ],
+    [
+     "R6",
+     530,
+     0,
+     true
+    ]
+   ],
+   "p2": [
+    [
+     "R4",
+     607,
+     0,
+     true
+    ],
+    [
+     "R5",
+     574,
+     0,
+     true
+    ],
+    [
+     "R6",
+     530,
+     0,
+     true
+    ]
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "PAIR_DIVERGE",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "GATEON_PATH(late/never count)",
+   "p1": 0,
+   "p2": 0,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "OLD_CTRL_SHIFT_count",
+   "p1": 8,
+   "p2": 8,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "OLD_CTRL_SHIFT.R1",
+   "p1": [
+    17,
+    20
+   ],
+   "p2": [
+    17,
+    20
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "OLD_CTRL_SHIFT.R2",
+   "p1": [
+    17,
+    19
+   ],
+   "p2": [
+    17,
+    19
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "OLD_CTRL_SHIFT.R3",
+   "p1": [
+    17,
+    19
+   ],
+   "p2": [
+    17,
+    19
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "OLD_CTRL_SHIFT.R4",
+   "p1": [
+    35,
+    42
+   ],
+   "p2": [
+    35,
+    42
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "OLD_CTRL_SHIFT.R5",
+   "p1": [
+    0,
+    0
+   ],
+   "p2": [
+    0,
+    0
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "OLD_CTRL_SHIFT.R6",
+   "p1": [
+    22,
+    18
+   ],
+   "p2": [
+    22,
+    18
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "OLD_CTRL_SHIFT.R7",
+   "p1": [
+    17,
+    20
+   ],
+   "p2": [
+    17,
+    20
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "OLD_CTRL_SHIFT.R8",
+   "p1": [
+    35,
+    42
+   ],
+   "p2": [
+    35,
+    42
+   ],
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "flags",
+   "item": "harness.R1",
+   "p1": [
+    [
+     92,
+     93
+    ],
+    99
+   ],
+   "p2": [
+    [
+     92,
+     93
+    ],
+    99
+   ],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "flags",
+   "item": "harness.R2",
+   "p1": [
+    [
+     94,
+     94
+    ],
+    100
+   ],
+   "p2": [
+    [
+     94,
+     94
+    ],
+    100
+   ],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "flags",
+   "item": "harness.R3",
+   "p1": [
+    [
+     94,
+     95
+    ],
+    100
+   ],
+   "p2": [
+    [
+     94,
+     95
+    ],
+    100
+   ],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "flags",
+   "item": "harness.R6",
+   "p1": [
+    [
+     36,
+     38
+    ],
+    148
+   ],
+   "p2": [
+    [
+     36,
+     38
+    ],
+    148
+   ],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "conditions",
+   "item": "1_MUST",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "conditions",
+   "item": "3_PAIR",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "conditions",
+   "item": "K0-K9 all ok / no stop",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "grade",
+   "item": "grade_provisional",
+   "p1": "통과",
+   "p2": "통과",
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "F_diag",
+   "item": "F1.path",
+   "p1": "FORCED_NO_REVOKE",
+   "p2": "FORCED_NO_REVOKE",
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "F_diag",
+   "item": "F1.valid",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "F_diag",
+   "item": "F1.FORCED_AT_L1",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "F_diag",
+   "item": "F1.FORCED_PAIR_L1",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "F_diag",
+   "item": "F1.revokes_after_L1",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "F_diag",
+   "item": "F1.reeval",
+   "p1": [],
+   "p2": [],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "F_diag",
+   "item": "F1.late_applied",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "F_diag",
+   "item": "F2.path",
+   "p1": "FORCED_R4_NEVER",
+   "p2": "FORCED_R4_NEVER",
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "F_diag",
+   "item": "F2.valid",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "F_diag",
+   "item": "F2.FORCED_AT_L1",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "F_diag",
+   "item": "F2.FORCED_PAIR_L1",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "F_diag",
+   "item": "F2.revokes_after_L1",
+   "p1": [
+    601
+   ],
+   "p2": [
+    601
+   ],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "F_diag",
+   "item": "F2.reeval",
+   "p1": [
+    [
+     610,
+     0,
+     false,
+     true
+    ]
+   ],
+   "p2": [
+    [
+     610,
+     0,
+     false,
+     true
+    ]
+   ],
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "F_diag",
+   "item": "F2.late_applied",
+   "p1": null,
+   "p2": null,
+   "equal": true,
+   "info_only": true
+  },
+  {
+   "group": "predictions",
+   "item": "P-1",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "predictions",
+   "item": "P-2",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "predictions",
+   "item": "P-3",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "predictions",
+   "item": "P-4",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "predictions",
+   "item": "P-5",
+   "p1": false,
+   "p2": false,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "predictions",
+   "item": "P-6",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "predictions",
+   "item": "P-7",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "predictions",
+   "item": "P-8",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "predictions",
+   "item": "P-9",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "predictions",
+   "item": "P-10",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  },
+  {
+   "group": "predictions",
+   "item": "P-11",
+   "p1": true,
+   "p2": true,
+   "equal": true,
+   "info_only": false
+  }
+ ]
+}
