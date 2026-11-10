@@ -1,57 +1,56 @@
 # 세션 인계
 
-새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.**
+새 세션은 이 문서와 아래 파일로 상태를 파악한다. 이전 대화 맥락은 없다. **아직 아무것도 실행하지 말고, 먼저 상태 확인 결과와 다음 단계 계획을 보고한 뒤 사용자 확인을 받는다.** (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력)
 
-- 갱신: 2026-11-08 오전, v5 **3단계 판정 확정**(`v5/stage3_judgement.md`: 개정 6 기준 H-7 `불일치` + H-14·H-18 한계, 개정 7 참고 재판정 T4·T5 초과 0). 기준 **개정 7 봉인**(`v5_criteria_rev7.md`, `9ccde7a5…`, CHECK 공중 수축 꼬리 제외 E1~E5 + B1, 다음 Chrono T4부터 전향 적용). X-00 정정은 명세 432.6.3·432.7만(논문 불변). (커밋할 때마다 이 파일을 덮어쓴다. 옛 판은 git 이력)
-- 갱신(11-08 오전 후반): **③ revision 4를 v5 VB에서 채택**(태그 `final_C4G2_P3`, 프리셋·클래스 기본 꺼짐, 명세 435절), 조건 4는 Dg-3 v4 폐루프 근거로 면제. 기준 개정 8(VB 정의·J-P3) → 개정 9(로드 판독 없는 행 = `no_rod_reading`) → 개정 10(Chrono 대조 `fallback_rod_estimate_Pa` 조건부 허용, 결과를 본 뒤). 해시 대조 확정(하네스 22·Chrono 2 통과) → 저장 VB·LS 결과 재사용. D-1 선별 규칙 봉인(`06_analysis/02_control/verif_matrix/d1_selection_rules.md`), 정착 표 314행, D-1 Chrono 행(`s9_batch list D1-CHRONO`, ×3 스냅숏 생성됨). 유압 명세 개정 4·그림 2·3. 논문 v5 구조(`09_paper/v5/STRUCTURE.md`, 커밋 안 함; U-1 v4 대체 다음 판, U-3·U-6 VB 재실행, 2.8 SCM VB 2·3.5.2 Chrono VB J_P 6 실행 결정).
-- 직전 코드: master 3d848a7까지(2105ef7 rev7 재생, ec2c08c D-1 Chrono 행, 0fdffb4·fa55755·f2eff83·39bdfa1·3d848a7). 진행 중: python-expert worktree D-1 하네스 지원(P-1~P-6, 선별 스크립트, 개정 9 J-P3 보강, `p3_chrono_check` 개정 10 조건), control-expert U-9 포화 운전점 루프 여유. 결정 경과 원본은 `decision_log.md` 4절 끝(395행 이후는 주제순).
-- **다음**: D-1 하네스 지원 병합 → 배치(D-1 하네스 844 + Chrono 16, v4 하네스 묶음·기준선 비교 VB 재실행, SCM VB 2, Chrono VB J_P 6) 비용·예상 종료를 보이고 사용자 승인 뒤 실행 → 선별 → 판정 → 논문 v5 2단계. 큰 결과(seedext·dg3)는 로컬 보관.
+- 갱신: 2026-11-10 오전(세션 9d4aec18 종료 준비). master `15777d1`.
+- 결정 경과 원본: 메모리 `k1-sch-overnight-20261109.md`(11-09~11-10 사용자 결정 전부), `decision_log.md`.
+- 지난 세션 scratchpad의 핵심 파일은 `.local_archive/session_9d4aec18_20261110/`(git 제외, 로컬 전용)에 복사해 두었다. 원래 경로는 `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace-outrigger-control\9d4aec18-3b7f-4f45-ae19-6d57127a6418\scratchpad\`이다.
 
-## 현재 위치
+## 1. 최근 끝난 것 (11-09 ~ 11-10)
 
-- 최종 제어기는 `final_C4G2`(명세 433절, 프리셋 기본 켬). 논문 v4 값은 전환 전 제어기(`final_SGS_R4`)다.
-- **병합 뒤 Chrono 판정(`06_analysis/02_control/touch_phase/chrono/final_c4g2/final_judgement.md`):** 대표 7행 중 5행 통과(P3-2 FLAG 3, P3-4 FLAG 1), 2행 사전 분류대로 SA-4 안전 정지, 강체 16/16 통과, v4 값보다 나빠진 행 0, 투고 차단 없음. C4G2 이득은 대각·비평면 시작 7행 +8.69~+11.37 kN, 그 밖은 ≤ +0.41 kN, 연약 ±0.23 kN. 이번 행에 SCM 사건 행이 없어 G1 RL 약점의 새 근거는 없다.
-- **논문 v4(`09_paper/v4/`, 커밋 안 함):** 44쪽(본문 41쪽), 빌드 오류·경고 0, MANIFEST 84항목 불일치 0, 정합 점검 차단 없음, 범위 문구 수정 끝(CHANGES 22절), `09_paper` 루트를 v4에 맞춤(수정 전 `09_paper/history/20261106_pre_v4_scope_sync/`). **투고처 미정**(사용자). 정해지면 저자·소속·이메일·사사 입력(`main.tex`, `draft/00_front_abstract.md`, `draft/05_conclusion.md`), Word 확인, 재빌드. LaTeX 원본 제출이면 주석의 scratchpad 경로 제거. 정합 점검에서 보지 않은 것: 4절 표 전체 칸 재대조, 그림 내부 글자, Word 표 숫자, 서지 DOI.
+| 항목 | 결과 | 근거 |
+|---|---|---|
+| K1 재측정 `V5-LAS-K1-REM` Chrono 10행 | **통과** 확정. K-10 두 경로 522/522 일치. R1~R6 POS(dP +99~+206), R7·R8 L1에서 R4c30 적용, PAIR_DIVERGE 0 | `06_analysis/02_control/verif_matrix/las_k1_rem_judgement.md`(커밋 15777d1), 두 경로 산출물 `verif_matrix/k1rem_twopath/` |
+| 알려진 한계(규칙 4.2 의무 문구) | **K1이 첫 R4 LOC를 막으면 R4c30이 끝까지 없다는 경로가 Chrono에서 확인됨**(진단 행 F2). 판정 행에서는 나오지 않음 | 판정서 머리·6절 |
+| 마스트 유연 C2 R8 재판정 | 890건 모두 통과(최소 힘 45.8 kN 행렬, 40.9 kN 강건, H4 켬 18.9 kN). `dynamics_model.md` 3.9.7.8 | 커밋 00c9770 |
+| 마스트 3.9.5 상수·τ 0.8·교차 0.0326 Hz | T_rel·V4 편차 JSON 읽기, 필터 τ 0.8 기본, 교차 0.0326 Hz(control-expert 확인) | 커밋 d32502c, 88e2880 |
+| S2 그림 값 JSON 읽기·재렌더 | 크롤러·요약 그림 | 커밋 248fad1, a92db02 |
 
-## 진행 중: v5 유압 구현 (v4와 병행, 사용자 결정 11-06)
+## 2. 진행 중 (세션 종료 때 미완)
 
-**현재(11-07 오후)**: **1·2단계 통과(r5)**. 11-07 오전 사용자 결정: L2b·하네스 신장 뒤 잠금 앵커 B안 `p_r0 = max(min(p_tr, p_ext + max(p_tr − p*, 0)), p_floor)`(`flow_limited_r5`, ff650c9…c4ca6bb), 기준 개정 6 봉인 11:13:35(`fd511703…`, Chrono T4·T5, t_lift, V0v, 앵커 계수기 `ext_lock_*`, 14.5 기록). r5 재실행 11:29~14:51(관문 + 1단계 1,030 + t_a + 위상 32 + 격자 768 + 잡음 1,503, 오류 0). 판정: 1단계 통과(T4h 잠긴 초과 0, 최대 −2.04 kN), 위상 분포 FR 3→6·FL 9→7, 격자 계열 밖 통과→실패 0(앵커 위험 잠금 79건, 최대 30.95 bar), 잡음 L2 5/835 CP 1.255 %·L3 10/501(r4와 행 단위 동일), 대체 다리 위 위험 잠금 18건 미판정(Dg-3 대상). 판정서 `stage1_judgement.md` R5절, `stage2_judgement.md` 14~17절. **③ 대체 시작값 보강**(`extend_start_rule = tracked_bound`, 명세 `v5/p3_extend_start_spec.md`): v1은 Dg-2에서 과보수 → v2(명령 0일 때만 u_cut, 소단계 평균 밸브, 포화 시작·끝, revision 2) → Dg-2 v2 잠긴 초과 0·과보수 p90 +3.6~8.7 kN(조건 ≤ 2 kN 미충족) → **사용자 결정: 기본 꺼짐 유지, 채택 판단은 3단계 뒤**(개정 7 불필요). 14.5 기록은 옵션과 무관하게 늘 남김(`two_pressure.review_record`, 판독 영점 보정 + 3σ; 진값 `hydraulics_record.tension_truth`는 진단). 판정 기준은 상계 직접 대조 `extend_bound_check.breach_reads == 0`(구현 중). **다음**: extend_bound_check 병합 → Dg-3(135키 ③ 꺼짐·켬 짝, `R79_T4H_DIR`, scratchpad `ctrl_v5s3\dg3_*.py`) → 조용한 비용 측정 P-A·P-B → 결과·배치표를 메시지 박스로 보이고 승인 뒤 3단계 Chrono(③ 꺼짐 VB, T4·T5는 `T4-P3` 오프라인 재생 병행) → 3단계 판정. 유압 명세 본문·그림 3의 r4·r5 반영은 3단계 판정 뒤(사용자 결정).
+### 2.1 K1 채택 전환 (사용자 결정: 통과면 자동 채택)
 
-**이전 경과(11-07 아침)**: **1·2단계 통과(r4)**. 2단계 H-10(격자 통과→실패 5행)의 주원인은 M2 r3의 이중 계산(기본 L1-R 해제 킥 1.06 mm에 M2가 같은 몫을 더함)이었고, FS24 F_s 0 READY 계열의 위상 산포는 V0 기준선 약점. 사용자 결정(11-07): P-1 물리 수정 채택(`flow_limited_r4`, ec5eaf8·a8feb1d·1686d56·f8c08cc) + 그 계열 H-10은 위상 분포 규칙. 기준 개정 5 봉인 01:27:42(`945f7146…`, 결과를 본 뒤 바꾼 두 가지를 밝힘). 재실행 01:30~05:06(위상 32 + 격자 768 + 1단계 1,030 + 잡음 1,503). 판정: 위상 분포 FR 3→1·FL 9→11, 격자 VB 실패 87(V0 100)·통과→실패 3행 모두 계열 𝓕·계열 밖 0, 잡음 L2 5/835(CP 1.255 %)·L3 10/501 기록, J8 G4 26~30·R15 44~48, 대체 경로 잠정. r3 결과는 `*_m2r3*`·`m2r3_archive_manifest.json`. **다음**: 3단계 전 사용자 결정 D-3(Chrono 행·시점, 토양 밸브 켬 기준 행, W-6 T4·T5 기록, 권고 기록 행 계열 𝓕 FL δ 0.05/0.075와 잡음 `g8|22`·`g6|56`), L2b는 r4로, 새 규칙은 실행 전 개정 6. 명세 본문의 M2 서술은 개정 4 반영 전(머리 주의 문단). 큰 결과(`main*.jsonl`, `noise_v0/`, `noise_vb*/`)는 로컬 보관.
+- 명세: `06_analysis/02_control/verif_matrix/las_k1_rules_adopt.md` 9.1~9.4(프리셋 기본 켬, 태그 `final_C4G2_LAS_K1` / `final_C4G2_P3_LAS_K1` / `ABL_LAS_K1`, `is_liftoff_slow_tag` 조용한 실패, 전환 전 재현 러너 `pre_k1_preset_runner.py` + 기존 세 러너 수정, 회귀 G-1~G-6). **G-7 근거는 S-Ch가 아니라 adopt2 규칙 + REM 판정서(R7·R8, F2)** (메인 세션 결정).
+- 상태: python-expert가 worktree `.claude/worktrees/agent-a48e2e723452f1db0`(브랜치 `worktree-agent-a48e2e723452f1db0`, 15777d1에서 시작)에서 구현 중이었다. 세션 종료로 중단되면 그 worktree의 커밋·미커밋 상태를 먼저 확인하고 이어서 맡긴다.
+- 다음: 구현 끝 → integrity → `[시점] 전환 후` verif-protocol-auditor(차단 0) → 병합 → 9.6 문서(decision_log, 명세 새 절, CLAUDE.md 제어기 행 문구는 adopt 9.6절의 제안 문구를 근거 adopt2·REM으로 바꿔서) → 커밋.
+- 그 뒤 준비 순서(사용자 결정, 각 실행 시작은 승인): **P5r4+K1 재판정 → B1 크리프 근거 → 436.8·v5 검증 묶음 → 이상적 센서 1단계**.
 
-**이전 경과(11-06)**: **1단계 통과**(`v5/stage1_judgement.md` R절). 첫 판정은 J8 리밋 사이클로 멈춤 → 원인은 M2의 즉시 이동(유량 무관) → M2 개정 3(유량 제한 `flow_limited_r3`, 사용자 결정) → M2 켠 1,030건 재실행(옛 행은 `*_m2r2*`, `m2r2_archive_manifest.json`) → 통과. B-7 5,629 통과·실패 0. 기준: `v5_criteria.md`(봉인) + rev1(M2-6 2.43 ± 0.25, C-1~10) + rev2(M2 잘림 이륙 뒤만, 잡음 기준 쌍 = master 끔 V0, n_late·T4h 정의) + rev3(잡음 1,503건, L2 문턱 16) + rev4(M2 개정 3 사실·M2-1~13·재실행 범위). 잡음 V0 1,503 완료(`v5/noise_v0/`, 커밋 안 함). Chrono B-4·B-5 비트 동일, 비용 probe 6건은 동시 실행으로 오염된 참고값. **진행**: 2단계 실행 종료 19:46(오류 0, cea162f 기준, r79·r67 러너 이륙 시각·n_late 연결 7a2898f·cea162f). 격자 V0 표본 8작업 해시 일치 → V0 768 생략. 잡음 L1 게이트 통과, L2 9/835(CP 1.873 %, 허용 16) 통과, L3 12/501 기록(V0 12/501), 대체 L3 133건 잠정. 격자는 VB 실패 61(V0 100), 통과→실패 5행(실행 3건, 모두 강체 상단 F_s 0 READY FS24, 관문 Fmin_after_W만, FAULT 0). 사용자 결정(11-06): H-10은 조건부 수용이 아니라 멈추고 원인 분리 중(control-expert: M2·LC·유량·τ_v·F_s·촘촘한 위상, 기준·코드 변경 없음). 3단계(Chrono 25건, D-3) 보류. 판정서 `v5/stage2_judgement.md`. **다음**: H-10 원인 분리 결과 확인 → 대응 결정 → 3단계 D-3. 큰 결과 파일(`main*.jsonl`, `noise_v0/`, `noise_vb/`)은 로컬 보관(`.git/info/exclude`).
+### 2.2 D8x 검증 범위 확장 (사용자 결정 11-10)
 
-명세 `00_docs/02_hydraulic/v5_hydraulic_impl_spec.md`(개정 3). 유압 그림 `00_docs/02_hydraulic/figures/`(1 범위, 2 목적, 3 블록, 4 ISO 1219 회로도; 명세 `hydraulic_model_figspec.md`). 범위는 유량 포화(기본 끔 유지, D-5 전환 안 함) + 밸브 지연 + M2 + M1c(기본 끔, VN·BL, 식 변경 없이 이식) + 오버랩·닫힘 항 LC(제어기 잠금 창 동반).
+- 경계: 비대칭 마름모 |φ_g|/5.7 + |θ_g|/Θ ≤ 1, Θ = 3.7(앞내림) / 3.6(앞들림, G0 행정 −0.06 mm 실패 뒤 축소). 운용 한계 3.2°/4.4°(로드 굽힘)는 별개로 그대로.
+- 규칙(브랜치 `d8x-rules`, 미병합): 원판 `d8x_rules.md` a377b9bb(02:19:14), rev1 ad16f452(02:53:21, G0 결과 뒤 개정 공개), rev2 5f3fa620(03:10:48, 해석판: 엔진별 정착 사상, W 자격 참 R_v ≤ 1.01, 실행 길이, 태그).
+- G0: 60/60 통과(rev1, `d8x_g0_rev1.json`, 브랜치 `worktree-agent-a237987a3ad0eb520` e37f42c). 앞내림 쪽 여유 작음(d45 +0.34 mm 등).
+- 구현: 브랜치 `d8x-impl` 35df06c = python-expert 7b923f3(`verification_ext`, H-R-X, acc_d8 인자, `d8x_judge.py`) + cad-expert 01f4a9e(Chrono 19행, rev2 기록·길이·preflight). 미병합.
+- 경로 2: `d8x_recount.py` sha 46010967…(결과 전 고정). 원본은 지난 scratchpad `d8x_path2\`, 사본 `.local_archive/session_9d4aec18_20261110/d8x_path2/`. **고치지 않는다.**
+- 다음(사용자 결정: 관문 통과면 Chrono 자동 시작, 판정·감사·커밋까지, 미달이면 분석까지만, CLAUDE.md 검증 범위 값 변경은 따로 질문):
+  1. K1 전환 병합 뒤 `d8x-rules`·`d8x-impl`·G0 브랜치를 새 master에 맞춘다. `expected_tag`·E-6 `_LAS` 접미사 검사를 `_LAS_K1`로(전환 작업이 고칠 곳 목록을 낸다).
+  2. G0 60평가 재실행(`target.py`가 바뀌어 rev1 재사용 조건이 깨짐 → 전체 재실행 규칙).
+  3. 실행 전 감사(원판·rev1·rev2 세 sha). 공개할 것: python-expert의 파이프라인 확인 짧은 실행 4건(판정 미사용, 삭제).
+  4. compute-scheduler-expert 배치 → E코어 R-a(1,102) + R-c(288), 약 3 h → 관문 G1 → W 선정 → L1-R 스냅숏 4개 → Chrono 19행(P코어, 약 1.5~2 h) → 두 경로 → 판정서 → 감사 → 커밋.
+- integrity 경고: `dynamics_model.md`·`c2_design.md`·roadmap·decision_log에 있는 "재검토 대상, (사용자) 결정 대기" 류 문구(마스트 R8 integrity 점검이 7곳으로 셈)를 D8x 판정 문서 반영 때 "D8x 결정(11-10)"으로 갱신.
 
-- 결정: D-1 LC 넣음(권고와 다름, 제어기 변경 동반), D-2 M1c $p_r$ 그대로·한계 기록, D-3 Chrono는 하네스 판정 뒤, D-4 M2 양방향, D-5 기준 구성 $\eta_v$ 0.85, D-6 BL + LC 거부.
-- 조합: 모두 끔 = `final_C4G2` 비트 동일 대상, 플랜트만 = 비교용, 제어기만 = 금지, 둘 다 = v5 기준 구성(VB).
-- 순서: control-expert Q-1~Q-6 답·기준 초안(`06_analysis/03_hydraulic/coupled/v5/v5_criteria_draft.md`, 진행 중) → 미룬 판정 항목 8개 사용자 결정 → python-expert 커밋 13개(커밋 7만 Q-1 답 필요, 커밋 12·13은 커밋 7 뒤에 끝남; 첫 커밋에서 scratchpad `hyd_review/{common,four_leg,m2_check}.py`를 저장소로 옮김) → 기준 봉인 → compute-scheduler-expert 배치 → 하네스 약 1,200건 → Chrono 행 결정.
-- 그 뒤: G1 RL 약점 대응 설계, 앵커 도약·과상승 조사, 논문 v5.
-- 제조사 답 뒤: M1c 기본 켬, G4·불감대 대응, BL + LC 재검토. 질문지 1차 28건·2차 37건은 발송 시점 미정(사용자가 직접). 포스터·GIF 보류.
+## 3. 열린 작은 항목
 
-scratchpad: `C:\Users\jinbeom\AppData\Local\Temp\claude\C--workspace-outrigger-control\9d4aec18-3b7f-4f45-ae19-6d57127a6418\scratchpad`.
+- PAIR_DIVERGE 정의가 adopt2 규칙 3.4(조건부)와 6절(무조건) 사이에서 미확정(이번 결과 영향 없음). 다음 규칙 판에서 정한다.
+- touch-phase 재실행 스크립트 4개(`touch_phase/chrono_runners/...`)는 `args.k1_forced_block` 추가로 옛 결과 엄격 재생이 멈춘다. 다시 쓸 때 비교에서 그 키를 빼는 한 줄 수정(python-expert).
+- `run_mast_flex_c2_check.py` 주석의 CLAUDE.md 출처 2곳(`IMU_C1`, `ZETA_MAST`), `mast_flex_c2_check_r8.json` `calibration.*.coupled_rocking_rel_err`의 옛 3.9.3 기준 상수, slope_map 그림 점선(F_min 대신 D8 선).
+- `timeline.py` `--rules`·`--results` last-wins 결함(verif 도구, python-expert).
+- 논문 v5: 2단계 착수 전 제어기 기준(K1 채택) 확정 필요. 일정은 K1 채택 뒤 검증 묶음 비용으로 다시 추정.
+- 정리 대상 worktree: `agent-a449af82565bf19a1`(d8x-impl-cad, 멈춘 에이전트, 변경 없음), `agent-a6cdf6f4f2446f373`(멈춘 에이전트, rev2 병합만), 병합 끝난 마스트·K1 worktree들. 지우기 전에 브랜치 병합 여부를 확인한다.
 
-## 미병합 브랜치
+## 4. 규칙 요약 (자세한 것은 CLAUDE.md·메모리)
 
-코드는 모두 master에 병합됨. 남은 것은 `worktree-agent-ae9039e69988d5282`의 코드 뒤 커밋 `02efc57`(R16 asym 보고서·원자료, master에 없는 파일 21개)뿐이다.
-
-## 정리
-
-compute-scheduler-expert 기록 모드(하네스·S8·K1 토양·비평면·대표·강체 실측, `batch.json`), worktree `.claude/worktrees/merge-c4g2`·scratchpad `cad_finalC4/wt` 제거(`git -c core.longpaths=true worktree remove --force`), `r8d1_td.py:24` 경로, `candidates.py:21` 주석·`_limited_increment`, `extract_g8c.py` L2b FR 필드(`s_motor` 대 가드 좌표), 명세 433.7(`final_judgement.md` 7절)·434.9(`phase_judgement.md`) 제안 반영 여부.
-
-## 논문·포스터 (커밋 안 함)
-
-- `09_paper/`는 커밋하지 않는다(`.git/info/exclude`). GIF·MP4·시계열 CSV도 커밋하지 않는다. 근거 스크립트 사본은 `04_scripts/05_paper/v4_evidence/`, `06_analysis/02_control/paper/ml_jc/`.
-- 논문 작성·교정·빌드는 paper-writing-expert, 리뷰는 paper-reviewer, 데이터 그림은 graph-expert(메인 세션 직접 수정 금지).
-
-## 주의
-
-- 에이전트 지시문에 매번: 셸 heredoc·`python -` 금지, Write로 쓴 파일을 `python -I`로 실행, Bash `find /` 금지, 커밋 메시지는 `git commit -F <파일>`.
-- Python·pytest·긴 명령은 **PowerShell 도구**로 실행한다(Bash 도구 자식 Suspended 멈춤 회피).
-- 모든 서브 프로세스는 **compute-scheduler-expert 배치**를 받은 뒤 띄운다(비용 측정만 단독).
-- 15분 이상 작업은 long-running-task-monitor 주기 점검.
-- 주요 작업 중간마다 커밋한다. **커밋 전 integrity-checker를 먼저** 돌리고, 이상 없을 때만 커밋·푸시한다. 커밋마다 이 문서를 갱신해 같은 커밋에 넣는다. `git add -A`와 `touch_phase/` 통째 추가 금지(partial, 0바이트 `*_C4.jsonl` 포함).
-- 장시간 배치는 WMI로 세션과 분리하고 창마다 제목·안내 문구를 붙인다(`pwsh`는 `(Get-Process -Id $PID).Path` 실경로로). Suspended 프로세스는 ResumeThread 자동 조치 뒤 사후 보고, 시뮬레이션·실행기는 자동 종료 금지.
-- S단계 본 판정 실행 전에는 사용자에게 알리고 확인받는다. 사용자 결정 사항은 그때마다 메시지 박스(AskUserQuestion)로 묻는다.
-- Windows Update는 11-09 13:44 KST까지 일시 중지(사용자 설정, 11-07 확인).
-- 알려진 경미 항목: `04_scripts/04_hydraulic/coupled/test_harness_flow.py:40` `=[` 공백(스타일, 미수정), `ml_jc/ml_jc_miss2.py`·`ml_jc_final.py`·`ml_jc_pads.py`의 scratchpad 경로 상수(README에 적음).
+- 다음 단계 실행은 알리고 승인 뒤. 서브에이전트가 낸 결정 사항은 AskUserQuestion으로 묻는다.
+- 봉인 규칙 실행: 실행 전 감사 차단 0 → prelaunch → 실행 중 master 커밋·병합 금지 → postrun → 경로 2 먼저(출력 sha 기록) → 경로 1 → K-10 → 판정서 → 판정 후 감사 → integrity → 커밋.
+- 실행 전 감사 리포트는 **원문 그대로** 저장한다(이번에 요약 편집해 판정서에 공개함).
+- 커밋 전 integrity-checker. 09_paper와 큰 결과 jsonl은 커밋하지 않는다.
