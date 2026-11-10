@@ -1,0 +1,269 @@
+bringing up nodes...
+bringing up nodes...
+
+s........s....................................s.s....................... [  1%]
+...............................................................sssss.s.s [  2%]
+.........sss............................................................ [  3%]
+........................................................................ [  4%]
+........................................................................ [  5%]
+........................................................................ [  6%]
+........................................................................ [  7%]
+........................................................................ [  8%]
+........................................................................ [  9%]
+........................................................................ [ 10%]
+........................................................................ [ 12%]
+........................................................................ [ 13%]
+........................................................................ [ 14%]
+.....................................s.................................. [ 15%]
+........................................................................ [ 16%]
+........................................................................ [ 17%]
+........................................................................ [ 18%]
+........................................................................ [ 19%]
+........................................................................ [ 20%]
+...................................sssssss..................ssss..ssssss [ 21%]
+sss..................................................................... [ 22%]
+........................................................................ [ 24%]
+..................................................................F..... [ 25%]
+...........................s............................................ [ 26%]
+........................................................................ [ 27%]
+........................................................................ [ 28%]
+........................................................................ [ 29%]
+........................................................................ [ 30%]
+..................................s..................................... [ 31%]
+........................................................................ [ 32%]
+........................................................................ [ 33%]
+........................................................................ [ 35%]
+........................................................................ [ 36%]
+........................................................................ [ 37%]
+...............................................................s........ [ 38%]
+............ss.................ssssss......ssss.......s................. [ 39%]
+.........................................................s.......s...... [ 40%]
+..s...........s......................................................... [ 41%]
+...........s......ss......................ss...........................s [ 42%]
+........s.........s..................................................... [ 43%]
+.....................ssss............................................... [ 44%]
+........................................................................ [ 45%]
+........................................s............................... [ 47%]
+..............ssss...................................................... [ 48%]
+.......................s................................................ [ 49%]
+........................................................................ [ 50%]
+........................................................................ [ 51%]
+........................................................................ [ 52%]
+........................................................................ [ 53%]
+........................................................................ [ 54%]
+........................................................................ [ 55%]
+........................................................................ [ 56%]
+........................................................................ [ 57%]
+........................................................................ [ 59%]
+........................................................................ [ 60%]
+........................................................................ [ 61%]
+........................................................................ [ 62%]
+........................................................................ [ 63%]
+........................................................................ [ 64%]
+........................................................................ [ 65%]
+........................................................................ [ 66%]
+........................................................................ [ 67%]
+........................................................................ [ 68%]
+........................................................................ [ 70%]
+........................................................................ [ 71%]
+........................................................................ [ 72%]
+........................................................................ [ 73%]
+........................................................................ [ 74%]
+........................................................................ [ 75%]
+..............F......................................................... [ 76%]
+........................................................................ [ 77%]
+........................................................................ [ 78%]
+.....................................................................s.s [ 79%]
+sss.........................s........................sssssssss.......... [ 80%]
+..........................sssssss.ssssssssssssss..................ssss.s [ 82%]
+..................................................................s..... [ 83%]
+..........................sssssss............sssss...................... [ 84%]
+........................................................................ [ 85%]
+........................................s............................... [ 86%]
+........................................................................ [ 87%]
+...............s....ss.................................................. [ 88%]
+...........s............................................................ [ 89%]
+........................................................................ [ 90%]
+........................................................................ [ 91%]
+................................................................sss..... [ 92%]
+........................................................................ [ 94%]
+........................................................................ [ 95%]
+................F....................................................... [ 96%]
+........................................................................ [ 97%]
+........................................................................ [ 98%]
+........................................................................ [ 99%]
+.............................                                            [100%]
+================================== FAILURES ===================================
+____________________ test_earlier_rows_meta_argv_unchanged ____________________
+[gw9] win32 -- Python 3.12.15 C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe
+
+    def test_earlier_rows_meta_argv_unchanged() -> None:
+        base = json.loads(hashes.BASELINE.read_text(encoding="utf-8"))
+        d = hashes.diff(base, hashes.current_hashes())
+        for sec, res in d.items():
+>           assert not res["missing"] and not res["changed"], (sec, res["missing"][:5], res["changed"][:5])
+E           AssertionError: ('s9_rows', [], ['V5-STAGE3-LAS#0:K0V_top_fup3.5_Fs0', 'V5-STAGE3-LAS#10:S_top_fdown3.5_wika_Fs8', 'V5-STAGE3-LAS#11:K8_top_fdown3.5_Fs8', 'V5-STAGE3-LAS#12:K0V_top_fup3.5_Fs0_LS1', 'V5-STAGE3-LAS#13:E_G4_Fs8_LS1'])
+E           assert (not [] and not ['V5-STAGE3-LAS#0:K0V_top_fup3.5_Fs0', 'V5-STAGE3-LAS#10:S_top_fdown3.5_wika_Fs8', 'V5-STAGE3-LAS#11:K8_top_fdown3.5_Fs8', 'V5-STAGE3-LAS#12:K0V_top_fup3.5_Fs0_LS1', 'V5-STAGE3-LAS#13:E_G4_Fs8_LS1', 'V5-STAGE3-LAS#14:E_RE1bF_Fs8_LS1', ...])
+
+05_tests\unit\test_d8x_chrono_rows.py:208: AssertionError
+__________________ test_rerun_gives_the_stored_command_hash ___________________
+[gw9] win32 -- Python 3.12.15 C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe
+
+rerun = {'plain': {'id': 'main|C2_tv0.1|top|rigid|r+p+0.5', 'cfg': 'C2_tv0.1', 'min_true_cyl_force_kN': 56.93, 'min_true_cyl_f...body_rate_rad_s', 'command_m_s', 'crawler_clearance_m', 'crawler_contact', 'crawler_normal_N', ...], 'n_chunks': 52900}
+
+    def test_rerun_gives_the_stored_command_hash(rerun) -> None:
+        if not STORED_RA_OFF.is_file():
+            pytest.skip(f"no stored R-a file {STORED_RA_OFF}")
+        stored = next(row for row in json.loads(STORED_RA_OFF.read_text(encoding="utf-8"))["runs"]
+                      if row["id"] == RERUN_ID)
+        diag = rerun["diag"]
+>       assert diag["commands_sha256"] == stored["commands_sha256"]
+E       AssertionError: assert 'c0b626b9d8ed...4ad4093a8c758' == '4700d690fb09...c802b1e591729'
+E         
+E         - 4700d690fb098a3760f40dde032feb49461c081aa97453156d5c802b1e591729
+E         + c0b626b9d8ed1fabcc647701e802a567fcae0b697840f881c9c4ad4093a8c758
+
+05_tests\unit\test_d8x_diag.py:109: AssertionError
+_____________________ test_coupled_batch_rows_and_resume ______________________
+[gw8] win32 -- Python 3.12.15 C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe
+
+tmp_path = WindowsPath('C:/Users/jinbeom/AppData/Local/Temp/pytest-of-jinbeom/pytest-2193/popen-gw8/test_coupled_batch_rows_and_re0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001A9B2C885C0>
+
+    def test_coupled_batch_rows_and_resume(tmp_path, monkeypatch) -> None:
+        """COUPLED_eta085: ten rows = the stored argv + the flow arguments; --resume skips finished rows."""
+        source = Path(__file__).resolve().parents[2] / "04_scripts" / "02_chrono"
+        monkeypatch.syspath_prepend(str(source))
+        import s9_batch  # noqa: PLC0415
+    
+        batches = s9_batch.batches()
+        rows = batches[s9_batch.COUPLED_BATCH]
+        flow = s9_batch.coupled_flow_argv()
+        assert len(rows) == 10
+        stored = {c["case"]: c["argv"] for name in ("FINAL-REP", "FINAL-REP-X", "FINAL-R-REP") for c in batches[name]}
+        for row in rows:
+            assert row["argv"][-len(flow):] == flow
+            former = stored[row["case"]]
+            kept = row["argv"][: -len(flow)]
+            if row.get("s8c"):
+                tag = kept.index("--tag") + 1
+                assert kept[tag] == f"coupled_eta085_{row['case']}"
+                assert kept[:tag] + kept[tag + 1:] == former[:tag] + former[tag + 1:]
+            else:
+                assert kept == former
+>               assert (Path(s9_batch.ROOT) / "07_results" / "S9" / row["source_run"] / "result.json").is_file()
+E               AssertionError: assert False
+E                +  where False = is_file()
+E                +    where is_file = ((((WindowsPath('C:/workspace/outrigger_control/.claude/worktrees/k2-run') / '07_results') / 'S9') / 'batch_FINAL-REP_20261030_223359/P3b_J1_B_top_Fs4') / 'result.json').is_file
+E                +      where WindowsPath('C:/workspace/outrigger_control/.claude/worktrees/k2-run') = Path(WindowsPath('C:/workspace/outrigger_control/.claude/worktrees/k2-run'))
+E                +        where WindowsPath('C:/workspace/outrigger_control/.claude/worktrees/k2-run') = <module 's9_batch' from 'C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\02_chrono\\s9_batch.py'>.ROOT
+
+05_tests\unit\test_hydraulics_flow_limit_run.py:199: AssertionError
+=========================== short test summary info ===========================
+SKIPPED [1] 05_tests\unit\test_chrono_t45_replay.py:207: stored VB Chrono record not present
+SKIPPED [1] 05_tests\unit\test_chrono_t45_replay.py:262: stored stage 3 records not present
+SKIPPED [1] 05_tests\unit\test_contact_episode.py:107: record not present: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_G4_combined_ph0.075
+SKIPPED [1] 05_tests\unit\test_contact_episode.py:130: record not present: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S8\p1r_20261024_222013\E_G4_Fs0
+SKIPPED [1] 05_tests\unit\test_contact_replay.py:189: record not present: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_G4_combined_ph0.075
+SKIPPED [1] 05_tests\unit\test_contact_replay.py:189: record not present: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_RE1bF_top_flat_dropRR30
+SKIPPED [1] 05_tests\unit\test_contact_replay.py:189: record not present: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_RE1bP_top_flat_dropRR30_probe
+SKIPPED [1] 05_tests\unit\test_contact_replay.py:189: record not present: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_RE1b_top_flat_settleRR30
+SKIPPED [1] 05_tests\unit\test_contact_replay.py:189: record not present: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S6\bundleC_rerun34_L1R_20261024_141040\C1_D8_top_rpB_b0.69
+SKIPPED [1] 05_tests\unit\test_contact_replay.py:189: record not present: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S6\bundleC_rerun33_L1R_20261024_125604\C1_RE1bF_top_flat_dropRR30
+SKIPPED [1] 05_tests\unit\test_contact_replay.py:189: record not present: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S6\bundleC_rerun33_L1R_20261024_125604\C1_RE1bP_top_flat_dropRR30_probe
+SKIPPED [1] 05_tests\unit\test_contact_replay_fallback_slope.py:144: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIPPED [2] 05_tests\unit\test_contact_replay_fallback_slope.py:152: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIPPED [1] 05_tests\unit\test_las_off_chrono.py:185: stored stage 3 VB record not present
+SKIPPED [1] 05_tests\unit\test_r5_fallback_replay.py:183: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIPPED [1] 05_tests\unit\test_r5_fallback_replay.py:191: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIPPED [2] 05_tests\unit\test_r5_fallback_replay.py:201: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIPPED [2] 05_tests\unit\test_r5_fallback_replay.py:214: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIPPED [1] 05_tests\unit\test_r5_fallback_replay.py:235: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\R3_PS2_fdown_diag_20261026\current_dur125 not present
+SKIPPED [1] 05_tests\unit\test_r5_fallback_replay.py:523: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S8\v4_c29_Fs0_20261027_011211\MLJ_K0V_fdown3.5_G4RF_Fs0 not present
+SKIPPED [1] 05_tests\unit\test_r5_fallback_replay.py:535: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S8\v4_c29_Fs0_20261027_011211\MLJ_K0V_fdown3.5_G4RF_Fs0 not present
+SKIPPED [1] 05_tests\unit\test_r5_fallback_replay.py:556: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S8\v4_c29_Fs0_20261027_011211\MLJ_K0V_fdown3.5_G4RF_Fs0 not present
+SKIPPED [1] 05_tests\unit\test_r5_fallback_replay.py:523: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S8\v4_c29_Fs8_20261027_011151\MLJ_K0V_fdown3.5_G4RF_Fs8 not present
+SKIPPED [1] 05_tests\unit\test_r5_fallback_replay.py:535: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S8\v4_c29_Fs8_20261027_011151\MLJ_K0V_fdown3.5_G4RF_Fs8 not present
+SKIPPED [1] 05_tests\unit\test_r5_fallback_replay.py:556: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S8\v4_c29_Fs8_20261027_011151\MLJ_K0V_fdown3.5_G4RF_Fs8 not present
+SKIPPED [1] 05_tests\unit\test_r5_fallback_replay.py:523: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S7\ctrl3_check_20261027_010709\L1_PS2_fdown3.5_old_worst_nocal not present
+SKIPPED [1] 05_tests\unit\test_r5_fallback_replay.py:535: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S7\ctrl3_check_20261027_010709\L1_PS2_fdown3.5_old_worst_nocal not present
+SKIPPED [1] 05_tests\unit\test_r5_fallback_replay.py:556: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S7\ctrl3_check_20261027_010709\L1_PS2_fdown3.5_old_worst_nocal not present
+SKIPPED [1] 05_tests\unit\test_r5_fallback_replay.py:523: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S7\ctrl3_check_20261027_010707\L2b_PS2_fdown3.5_old_worst_nocal not present
+SKIPPED [1] 05_tests\unit\test_r5_fallback_replay.py:535: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S7\ctrl3_check_20261027_010707\L2b_PS2_fdown3.5_old_worst_nocal not present
+SKIPPED [1] 05_tests\unit\test_r5_fallback_replay.py:556: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S7\ctrl3_check_20261027_010707\L2b_PS2_fdown3.5_old_worst_nocal not present
+SKIPPED [1] 05_tests\unit\test_r5_fallback_replay.py:549: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S7\ctrl3_check_20261027_010709\L1_PS2_fdown3.5_old_worst_nocal not present
+SKIPPED [1] 05_tests\unit\test_d8x_chrono_rows.py:241: VERIFICATION_EXT installed
+SKIPPED [1] 05_tests\unit\test_rod_chamber.py:441: gas separation after FLOOR (14.3 optional) is not implemented
+SKIPPED [1] 05_tests\unit\test_s8_control.py:98: S7 ctrl3 record not present
+SKIPPED [1] 05_tests\unit\test_s8_control.py:418: S8 p1 batch not present
+SKIPPED [1] 05_tests\unit\test_s8_control.py:437: S8 p1 verdict not present
+SKIPPED [2] 05_tests\unit\test_s8_control_rev45.py:236: p1r not present
+SKIPPED [1] 05_tests\unit\test_s8_control_rev45.py:253: p1r not present
+SKIPPED [1] 05_tests\unit\test_s8_control_rev45.py:273: p1r not present
+SKIPPED [1] 05_tests\unit\test_s8_control_rev45.py:293: p1r verdict not present
+SKIPPED [1] 05_tests\unit\test_s8_control_rev45.py:311: p1r verdict not present
+SKIPPED [1] 05_tests\unit\test_s8_control_rev46.py:116: rest not present
+SKIPPED [1] 05_tests\unit\test_s8_control_rev46.py:130: p1r not present
+SKIPPED [1] 05_tests\unit\test_s8_control_rev46.py:139: CB not present
+SKIPPED [1] 05_tests\unit\test_s8_control_rev46.py:147: ML pilot not judged
+SKIPPED [1] 05_tests\unit\test_s8_ml_main.py:142: ML pilot batch not present
+SKIPPED [1] 05_tests\unit\test_s7_control_rev37.py:211: ctrl3 batch not present
+SKIPPED [1] 05_tests\unit\test_s8_c_s8_33.py:144: MLJ batch not present
+SKIPPED [1] 05_tests\unit\test_s8_c_s8_34.py:189: main ML batch not present
+SKIPPED [1] 05_tests\unit\test_s8_soil_restore.py:432: S8 ML plan not present (07_results is not tracked): C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S8\ml_main_20261025_090131\ml_plan.json
+SKIPPED [1] 05_tests\unit\test_s8_rev54_cad.py:160: 768 batch records not present
+SKIPPED [1] 05_tests\unit\test_s8_rev55_cad.py:141: C-S8-36 bundle A records not present
+SKIPPED [1] 05_tests\unit\test_s8_rev55_cad.py:152: C-S8-36 bundle D records not present
+SKIPPED [1] 05_tests\unit\test_s8_rev56_cad.py:258: C-S8-36 bundle A / 768 records not present
+SKIPPED [1] 05_tests\unit\test_s8_rev56_cad.py:294: C-S8-36 bundle D / original MLJ records not present
+SKIPPED [1] 05_tests\unit\test_s9_final.py:163: no former run folders under 07_results/S9
+SKIPPED [1] 05_tests\unit\test_s9_final.py:383: former S6 batch not here
+SKIPPED [1] 05_tests\unit\test_s9_final.py:556: source run folder absent (07_results is not in git)
+SKIPPED [1] 05_tests\unit\test_s9_mass_scale.py:273: batch_p3b_aug_20261029_002839/P3b_J2_B_bottom_Fs4 not on disk
+SKIPPED [1] 05_tests\unit\test_s9_mass_scale.py:273: batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ1FL not on disk
+SKIPPED [1] 05_tests\unit\test_s9_mass_scale.py:273: batch_S9SL_20261028_194403/S9SL_C2_J1_A_top_Fs4_r4p4_p0 not on disk
+SKIPPED [1] 05_tests\unit\test_s9_mass_scale.py:273: batch_P3b_20261027_174330/P3b_J1_B_top_Fs4 not on disk
+SKIPPED [1] 05_tests\unit\test_s9_p3b_rev60.py:301: P3b batch 20261026_122444 or control p3b_loc_detail.json not on disk
+SKIPPED [1] 05_tests\unit\test_s9_rev420_records.py:409: batch_p3b_aug_20261029_002839/P3b_J2_B_bottom_Fs4 not on disk
+SKIPPED [1] 05_tests\unit\test_s9_rev420_records.py:409: batch_G6P_20261028_154030/G6_G1_B_top_Fs4_spJ1FL not on disk
+SKIPPED [1] 05_tests\unit\test_s9_rev420_records.py:409: batch_S9SL_20261028_194403/S9SL_C2_J1_A_top_Fs4_r4p4_p0 not on disk
+SKIPPED [1] 05_tests\unit\test_s9_rev420_records.py:432: G6P batch 20261028 not on disk
+SKIPPED [1] 05_tests\unit\test_las_chrono_rows.py:98: LAS-b merged: no blocked row
+SKIPPED [1] 05_tests\unit\test_ml_pipeline.py:276: could not import 'torch': No module named 'torch'
+SKIPPED [1] 05_tests\unit\test_ml_pipeline.py:286: could not import 'torch': No module named 'torch'
+SKIPPED [1] 05_tests\unit\test_ml_pipeline.py:299: could not import 'torch': No module named 'torch'
+SKIPPED [1] 05_tests\unit\test_ml_pipeline.py:308: could not import 'torch': No module named 'torch'
+SKIPPED [1] 05_tests\unit\test_ml_pipeline.py:329: could not import 'torch': No module named 'torch'
+SKIPPED [1] 05_tests\unit\test_two_pressure_cb_moving.py:334: 07_results/S8 CB batches not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_d1_drain.py:346: c36 A records absent
+SKIPPED [1] 05_tests\unit\test_two_pressure_d1_drain.py:375: c36 A records absent
+SKIPPED [3] 05_tests\unit\test_two_pressure_d1_drain.py:400: c36 records absent
+SKIPPED [4] 05_tests\unit\test_two_pressure_d1_drain.py:415: 07_results/S8 records absent
+SKIPPED [7] 05_tests\unit\test_two_pressure_d1_imu.py:592: 07_results/S8 D1' ML records not present
+SKIPPED [7] 05_tests\unit\test_two_pressure_d1_imu.py:604: 07_results/S8 ML pilot not present
+SKIPPED [4] 05_tests\unit\test_two_pressure_d1_imu.py:617: 07_results/S8 old ML episodes not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_d1_imu.py:636: 07_results/S8 ML pilot not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_d1_imu.py:685: got empty parameter set for (base)
+SKIPPED [1] 05_tests\unit\test_two_pressure_d1_imu.py:720: 07_results/S8 ML pilot not present
+SKIPPED [4] 05_tests\unit\test_two_pressure_d1_steps.py:318: 07_results/S8 old ML episodes absent
+SKIPPED [1] 05_tests\unit\test_two_pressure_d1_steps.py:339: 07_results/S8 ML pilot bases not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_bound.py:371: 07_results/S8 ML pilot bases not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_bound.py:553: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S8\ml_pilot_20261025_002044\episodes\missing\ML00_ep5 not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_bound.py:553: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S8\ml_pilot_20261025_002044\episodes\ML17_ep4 not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_bound.py:553: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S8\p1r_20261024_222013\K0V_top_fdown3.5_Fs0 not present
+SKIPPED [2] 05_tests\unit\test_two_pressure_lock_bound.py:553: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S8\cb_20261025_000840\CB_H4V_fdown3.5_Fs0 not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_bound.py:553: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S8\p1r_20261024_222013\E_G4_Fs8 not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_bound.py:553: C:\workspace\outrigger_control\.claude\worktrees\k2-run\07_results\S8\p1r_20261024_222013\K0_top_rpBop_Fs0 not present
+SKIPPED [2] 05_tests\unit\test_two_pressure_lock_valve.py:286: 07_results/S8 CB batch not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_valve.py:293: 07_results/S8 p1r batch not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_valve.py:304: 07_results/S8 p1r batch not present
+SKIPPED [1] 05_tests\unit\test_two_pressure_lock_valve.py:315: 07_results/S8 ML pilot bases not present
+SKIPPED [1] 05_tests\unit\test_params_l2b.py:37: YAML regenerated since S7; L1 fingerprint baseline no longer applies
+SKIPPED [1] 05_tests\unit\test_v5_setting_records.py:140: stored main.jsonl not present
+SKIPPED [1] 05_tests\unit\test_v5_setting_records.py:194: Dg-3 records not present
+SKIPPED [1] 05_tests\unit\test_v5_setting_records.py:210: Dg-3 v4 records not present
+SKIPPED [1] 05_tests\unit\test_v5_stage3_las_rows.py:83: stored batches not reachable
+SKIPPED [1] 05_tests\unit\test_chrono_t45_replay.py:168: stored stage 3 VB record not present
+SKIPPED [1] 05_tests\unit\test_chrono_t45_replay.py:185: stored V0 Chrono record not present
+SKIPPED [1] 05_tests\unit\test_chrono_t45_replay.py:197: stored VB Chrono record not present
+3 failed, 6443 passed, 135 skipped in 745.11s (0:12:25)

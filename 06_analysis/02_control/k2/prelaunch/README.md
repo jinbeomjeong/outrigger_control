@@ -198,7 +198,16 @@ worker-초 추정이다.
   - 잡음 k와 CP 상계
   - 회귀 키 sha 일치 여부
   - 수치: 상대차 ≤ 1e-9
-- **T-K2-7**(기존 단위 시험 전부, 세 번째 감사 수정 3): 메인 세션이 k2-run에서 `05_tests/unit` 전체를 돌리는 중이다. 결과를 받으면 `gs_evidence.T-K2-7_full_unit_tests`를 채운다.
+- **T-K2-7**(기존 단위 시험 전부, 세 번째 감사 수정 3, 2026-11-10 채움)
+  - 실행 조건: k2-run, HEAD `6a44ff8`, 추적 파일 변경 0, Chrono-dev `-I -B -m pytest -q -rs -p no:cacheprovider -n 10 05_tests/unit`, E코어, TBB, `*_NUM_THREADS=1`, 21시경
+  - 결과: **6443 passed, 135 skipped, 3 failed**(745 s)
+  - 로그: `gs_evidence/unit_all.out`(`72b0484e…84a5`, 원본과 sha 같음)
+  - skip: 대부분은 k2-run에 저장 결과 폴더(07_results S8·S9, v5 jsonl)가 없어서다. 그 밖에 Chrono-dev에 torch가 없는 것, 설계·조건부 skip, YAML 재생성으로 기준이 안 맞는 1건이 있다.
+  - fail 3건(로그에서 원인을 확인함)
+    - `test_d8x_chrono_rows::test_earlier_rows_meta_argv_unchanged`: S9 저장 결과가 없다. K-2 이전 커밋 `ba3adcc`에서도 같은 이유로 실패한다.
+    - `test_d8x_diag::test_rerun_gives_the_stored_command_hash`: 저장 해시가 dynamics-dev에서 낸 값이다. dynamics-dev에서는 통과한다. D8x 진단 시험이다.
+    - `test_hydraulics_flow_limit_run::test_coupled_batch_rows_and_resume`: `07_results/S9/...result.json`이 없다. `ba3adcc`에서도 같다.
+  - 메인 세션 결론: 새로 깨진 기존 시험은 없다. 이것을 T-K2-7 충족으로 볼지는 감사가 판단한다.
 
 ## 8. 러너 띄우는 순서 (감사 6, rev2 5)
 

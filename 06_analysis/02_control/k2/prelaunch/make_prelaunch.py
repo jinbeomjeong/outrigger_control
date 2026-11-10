@@ -115,10 +115,42 @@ GS_EVIDENCE = {
     ],
     "judge_tools_check": "main session: master 6d11d13, Chrono-dev, the K-2 judge tests 147 passed (judge-tool basis, "
                          "not the run checkout)",
-    "T-K2-7_full_unit_tests": "{T-K2-7: pending, the main session runs 05_tests/unit in full on k2-run (E cores); "
-                              "fill command, env, pass / skip / fail with skip causes, log sha}",
+    "T-K2-7_full_unit_tests": {
+        "checkout": r"C:\workspace\outrigger_control\.claude\worktrees\k2-run", "head": "6a44ff8 (6a44ff81d25a...)",
+        "tracked_changes_before_after": 0, "time": "2026-11-10 ~21:00 +09:00",
+        "command": r"C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I -B -m pytest -q -rs -p no:cacheprovider "
+                   "-n 10 05_tests/unit",
+        "affinity": "0x0FFF0000 (E cores)", "env": "MKL_THREADING_LAYER=TBB, *_NUM_THREADS=1",
+        "passed": 6443, "skipped": 135, "failed": 3, "wall_s": 745.11,
+        "log": "gs_evidence/unit_all.out",
+        "log_sha256": "72b0484e2d991982291cf880397d69db2df836cdc16f05e14b6bd1d173de84a5",
+        "skip_causes": "106 SKIPPED lines (135 tests). Most: stored result folders absent from the k2-run worktree "
+                       "('not present' / 'not on disk' / 'absent' / 'not in git': 07_results S8 / S9, v5 jsonl). Others "
+                       "seen in the log: torch not in Chrono-dev (test_ml_pipeline x5), design / conditional skips "
+                       "(VERIFICATION_EXT installed, gas separation not implemented, ML pilot not judged, LAS-b merged, "
+                       "empty parameter set), 'YAML regenerated since S7; L1 fingerprint baseline no longer applies' "
+                       "(test_params_l2b).",
+        "failures": [
+            {"test": "test_d8x_chrono_rows::test_earlier_rows_meta_argv_unchanged",
+             "log_cause": "AssertionError s9_rows changed V5-STAGE3-LAS#... (stored 07_results S9 results not in the "
+                          "worktree)",
+             "reported_basis": "known before (cad-expert); fails the same way at ba3adcc (before K-2)"},
+            {"test": "test_d8x_diag::test_rerun_gives_the_stored_command_hash",
+             "log_cause": "commands_sha256 c0b626b9... != stored 4700d690... (stored hash is a dynamics-dev value; "
+                          "this run is Chrono-dev)",
+             "reported_basis": "known env difference (python-expert); passes in dynamics-dev; D8x diagnosis test of "
+                               "6f2f7cb, not K-2 code"},
+            {"test": "test_hydraulics_flow_limit_run::test_coupled_batch_rows_and_resume",
+             "log_cause": "AssertionError: 07_results/S9/batch_FINAL-REP_20261030_223359/P3b_J1_B_top_Fs4/result.json "
+                          "is_file False in k2-run",
+             "reported_basis": "known before (cad-expert); fails the same way at ba3adcc (stored results absent)"},
+        ],
+        "main_session_conclusion": "no existing unit test newly broken; the 3 failures are known env / stored-result "
+                                   "dependent failures from before the run. Whether this meets T-K2-7 is the auditor's "
+                                   "call (recorded as given)",
+    },
     "verdict": "T-K2-1 / T-K2-2 (I-4 reduced, I-5) and I-8 (G0, R-c) passed with 0 skips; the pychrono-dependent tests "
-               "pass in Chrono-dev. T-K2-7 (all existing unit tests) pending (third audit fix 3)",
+               "pass in Chrono-dev. T-K2-7: full unit run 6443 passed / 135 skipped / 3 failed (known env / stored-result failures, see T-K2-7_full_unit_tests; acceptance as T-K2-7 is for the audit)",
 }
 IDENTITY_LIST_NOTE = (
     "rules rev2 6 / rev6 4: the post-judgement identity list is 60 sidecars (the 62 of k2_commands.json without the "
