@@ -15,8 +15,14 @@ Sub-commands
   recount         --manifest <inputs.json> --expect <expect.json> [--fields <map.json>]
                   [--rules-dir <k2 folder>] --out <file> [--format json|md]
   expect-template --out <file>                     (the rule counts and tags, to review / edit)
-  selftest-d8x    --ra-off <ra_off.json> --ra-on <ra_on.json> --out <file>
-                  (J items on the stored D8x R-a rows: must give 68 / 6 J3 fails, J3 only)
+  selftest-d8x    --ra-off <ra_off.json> --ra-on <ra_on.json> [--points <d8x_points.json>]
+                  --out <file>  (J items on the stored D8x R-a rows: must give 68 / 6 J3 fails,
+                  J3 only; with --points also E-7 on every row)
+  points-check    --points <k2_points_5p5_3p5.json> --out <file>   (rev1 2 condition; exit 2 on fail)
+
+Rev1 (``k2_touch_creep_rules_rev1.md``): d45 execution value = 4-decimal rounding, the point-file
+condition (rev1 2), E-7 on every row (rev1 3), the D-hat record items (a)(b) (rev1 4; keys
+``k2.dhat_window_open_legs``, ``k2.dhat_window_stroke_mm``, ``k2.dhat_N``, record only).
   selftest-screen --screen-dir <k2/screen> --out <file>   (format check on the 44 screen rows)
 
 Exit codes: 0 pass, 1 fail (a gate failed / selftest mismatch), 2 not judgeable or input error,
@@ -36,7 +42,7 @@ from pathlib import Path
 import numpy as np
 
 TOOL = "k2_recount"
-VERSION = "1.0"
+VERSION = "1.1"
 
 # ------------------------------------------------------------------ rule constants (rules 0, 5)
 F_MIN_N = 9414.589
@@ -64,6 +70,15 @@ TCL_SUFFIX = "_TCL"
 RULES_FILE = "k2_touch_creep_rules.md"
 RULES_SEAL = "k2_touch_creep_rules.sha256"
 RULES_SHA256 = "a3658197bdab02870a0b362144606f404021ebac90662a35efacfa8dbe477263"
+REV1_FILE = "k2_touch_creep_rules_rev1.md"
+REV1_SEAL = "k2_touch_creep_rules_rev1.sha256"
+REV1_SHA256 = "5ba081c62f8aef0edc5bb99119d7586b0d2914761582f2323c289f472f244776"
+E7_TOL_DEG = 1e-9
+E7_CHRONO_TOL_DEG = 1e-4
+POINT_DIAMOND_TOL_DEG = 1e-12
+POINT_TABLE_D45_TOL_DEG = 2e-5
+DHAT_FLAG_N = 5000.0
+V6_FLOORS_DEG = {"fdown3.5": (0.0, 3.5), "k2pp025": (1.375, 2.625)}
 DYN_SPEC_FILE = "k2_dyn_spec.md"
 DYN_SPEC_SHA256 = "502b0bb78558d40586cbcddb718b6c5d53529de4e78369f454762c9fe73727ff"
 V3_KEYS_SHA256 = "d4a030d71e4a365e328fbbf7caa212c378a8671fed8ba206d25b50666255cf95"
@@ -78,7 +93,9 @@ DEFAULT_FIELDS = {
         "id": "id", "tag": "controller_tag", "k1": "k1_order_gate",
         "tcl": "touch_creep_latch", "commands": "commands_sha256", "fails": "fails",
         "aug_arm": "aug_arm", "is_kplant": "is_kplant", "angles": "angles_deg",
-        "series": "series_file",
+        "point": "point", "series": "series_file",
+        "dhat_open": "k2.dhat_window_open_legs", "dhat_stroke": "k2.dhat_window_stroke_mm",
+        "dhat": "k2.dhat_N",
         "t_touch": "d8x.t_touch_s", "t_lift": "d8x.t_lift_s", "t_ready": "d8x.t_ready_s",
         "J1": "d8x.J1_min_cyl_after_lift_N", "J1_window": "d8x.J1_window_s",
         "reanchor": "d8x.reanchor_intervals_s", "J2": "d8x.J2_min_cyl_reanchor_N",
@@ -95,6 +112,8 @@ DEFAULT_FIELDS = {
         "J4": "J4_att_max_after_ready_deg", "J6": "J6_max_moving_bar",
         "J6_locked": "J6_max_locked_bar", "J10": "crawler_recontact_after_loc",
         "events": "events",
+        "dhat_open": "k2.dhat_window_open_legs", "dhat_stroke": "k2.dhat_window_stroke_mm",
+        "dhat": "k2.dhat_N",
     },
     "chrono_pads": {"t": "t", "pad_normal": "N"},
     "chrono_rate": {"t": "t", "body_rate": "body_omega"},
@@ -233,13 +252,140 @@ def false_latch(t, pad, latches: dict[int, float]) -> list[str]:
     return bad
 
 
+# ------------------------------------------------------------------ points (rules 3.2, rev1 1-3)
+V4_TAGS = ("pitch+", "pitch-", "roll+", "roll-", "r+p+0.25", "r+p+0.5", "r+p+0.75", "r+p-0.25",
+           "r+p-0.5", "r+p-0.75", "r-p+0.5", "r-p-0.5", "d45++", "d45+-", "d45-+", "d45--")
+
+
+def v4_table_points(roll_half: float = 5.5, pitch_half: float = 3.5) -> dict:
+    """Rules 3.2 table (exact values; d45 = roll_half * pitch_half / (roll_half + pitch_half))."""
+    pts = {"pitch+": (0.0, pitch_half), "pitch-": (0.0, -pitch_half),
+           "roll+": (roll_half, 0.0), "roll-": (-roll_half, 0.0)}
+    for tag in V4_TAGS:
+        if tag.startswith("r") and "p" in tag and not tag.startswith("roll"):
+            sr = 1.0 if tag[1] == "+" else -1.0
+            sp = 1.0 if tag[3] == "+" else -1.0
+            frac = float(tag[4:])
+            pts[tag] = (sr * frac * roll_half, sp * (1.0 - frac) * pitch_half)
+    d = roll_half * pitch_half / (roll_half + pitch_half)
+    for tag in ("d45++", "d45+-", "d45-+", "d45--"):
+        pts[tag] = ((1.0 if tag[3] == "+" else -1.0) * d, (1.0 if tag[4] == "+" else -1.0) * d)
+    return pts
+
+
+def v4_diamond_points(roll_half: float = 5.5, pitch_half: float = 3.5) -> dict:
+    """Rev1 1: the execution values = the table with the edge and d45 points rounded to 4 decimals
+    (the same construction as ``d8x_diag.diamond_points``, re-implemented here)."""
+    exact = v4_table_points(roll_half, pitch_half)
+    out = {}
+    for tag, (r, p) in exact.items():
+        if tag in ("pitch+", "pitch-", "roll+", "roll-"):
+            out[tag] = (r, p)
+        elif tag.startswith("d45"):
+            d = round(roll_half * pitch_half / (roll_half + pitch_half), 4)
+            out[tag] = (math.copysign(d, r), math.copysign(d, p))
+        else:
+            out[tag] = (round(r, 4), round(p, 4))
+    return out
+
+
+def load_point_file(path: Path) -> dict:
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    pts = data.get("ra_points")
+    if not isinstance(pts, list):
+        raise NotJudgeable(f"{path}: no ra_points list")
+    return {p["tag"]: (float(p["roll_deg"]), float(p["pitch_deg"])) for p in pts}
+
+
+def points_check(path: Path) -> dict:
+    """Rev1 2: (i) = diamond construction (<= 1e-12 deg), (ii) table within 2e-5 deg (d45) /
+    1e-12 deg (the other 12 points)."""
+    got = load_point_file(path)
+    dia, tab = v4_diamond_points(), v4_table_points()
+    problems = []
+    if sorted(got) != sorted(V4_TAGS):
+        problems.append(f"tags {sorted(got)}")
+    worst = {"diamond": 0.0, "table_d45": 0.0, "table_other": 0.0}
+    for tag in V4_TAGS:
+        if tag not in got:
+            continue
+        dd = max(abs(a - b) for a, b in zip(got[tag], dia[tag]))
+        dt = max(abs(a - b) for a, b in zip(got[tag], tab[tag]))
+        worst["diamond"] = max(worst["diamond"], dd)
+        key = "table_d45" if tag.startswith("d45") else "table_other"
+        worst[key] = max(worst[key], dt)
+        tol = POINT_TABLE_D45_TOL_DEG if tag.startswith("d45") else POINT_DIAMOND_TOL_DEG
+        if dd > POINT_DIAMOND_TOL_DEG:
+            problems.append(f"{tag}: diamond diff {dd:.3g} deg")
+        if dt > tol:
+            problems.append(f"{tag}: table diff {dt:.3g} deg > {tol:g}")
+    return {"path": str(path), "sha256": sha256_file(path), "worst_diff_deg": worst,
+            "problems": problems, "ok": not problems}
+
+
+def e7_check(row: dict, f: dict, kind: str, points: dict | None, floor_deg) -> str | None:
+    """E-7: harness angles = point file (<= 1e-9 deg); Chrono floor_true_deg = 3.5 table (1e-4)."""
+    if kind == "harness":
+        if points is None:
+            return None
+        tag = get_path(row, f["point"])
+        ang = get_path(row, f["angles"])
+        if tag not in points:
+            return f"point {tag} not in the point file"
+        d = max(abs(float(a) - b) for a, b in zip(ang, points[tag]))
+        return None if d <= E7_TOL_DEG else f"{tag} angles {ang} vs {points[tag]} ({d:.3g} deg)"
+    if floor_deg is None:
+        return None
+    ang = get_path(row, f["floor_true_deg"])
+    d = max(abs(float(a) - b) for a, b in zip(ang, floor_deg))
+    return None if d <= E7_CHRONO_TOL_DEG else f"floor {ang} vs {floor_deg} ({d:.3g} deg)"
+
+
+def dhat_summary(off: list[dict], tcl: list[dict]) -> dict:
+    """Rev1 4 (a)(b), record only: D-hat window open legs / stroke and the K-2 minus off D-hat."""
+    om = {pair_key(r): r for r in off}
+    missing = 0
+    open_rows, stroke_max, deltas = 0, None, []
+    for r in tcl:
+        d = r.get("dhat") or {}
+        if d.get("open_legs") is None or d.get("stroke_mm") is None or d.get("dhat_N") is None:
+            missing += 1
+            continue
+        if d["open_legs"]:
+            open_rows += 1
+        s = [float(x) for x in d["stroke_mm"]]
+        stroke_max = max(s) if stroke_max is None else max(stroke_max, max(s))
+        o = (om.get(pair_key(r)) or {}).get("dhat") or {}
+        if is_num(o.get("dhat_N")) and is_num(d["dhat_N"]):
+            deltas.append((d["dhat_N"] - o["dhat_N"], r["id"]))
+    vals = [v for v, _ in deltas]
+    return {"tcl_rows": len(tcl), "missing": missing, "open_leg_rows": open_rows,
+            "stroke_max_mm": stroke_max, "pairs": len(deltas),
+            "delta_quantiles_N": (np.quantile(vals, [0, .05, .5, .95, 1]).tolist() if vals else None),
+            "abs_delta_ge_5kN": sorted(((round(v, 1), i) for v, i in deltas if abs(v) >= DHAT_FLAG_N),
+                                       key=lambda x: -abs(x[0]))}
+
+
 # ------------------------------------------------------------------ row judgement (rules 5.1)
 def judge_row(row: dict, fmap: dict, kind: str, series_root: Path | None, k2_profile: bool,
-              chrono_files: dict | None = None) -> dict:
-    """One row: J items, E items, K-2 evidence and series metrics. kind: harness | chrono."""
+              chrono_files: dict | None = None, points: dict | None = None,
+              floor_deg: tuple | None = None) -> dict:
+    """One row: J items, E items, K-2 evidence and series metrics. kind: harness | chrono.
+
+    ``points``: tag -> (roll, pitch) [deg] of the point file (E-7, harness rows).
+    ``floor_deg``: expected (roll, pitch) [deg] of a Chrono row (E-7, ``floor_true_deg``)."""
     f = fmap["harness_row"] if kind == "harness" else fmap["chrono_row"]
     rid = get_path(row, f["id"])
     out = {"id": rid, "not_judgeable": [], "fail_items": []}
+    try:
+        e7 = e7_check(row, f, kind, points, floor_deg)
+    except NotJudgeable as exc:
+        e7 = str(exc)
+    if e7:
+        out["not_judgeable"].append(f"E-7 {e7}")
+    out["dhat"] = {"open_legs": get_path(row, f["dhat_open"], required=False),
+                   "stroke_mm": get_path(row, f["dhat_stroke"], required=False),
+                   "dhat_N": get_path(row, f["dhat"], required=False)}
     try:
         tag = get_path(row, f["tag"])
         k1 = get_path(row, f["k1"])
@@ -514,12 +660,29 @@ def v5_bundle(spec: dict) -> dict:
 
 
 # ------------------------------------------------------------------ recount
-def judge_files(files: list[str], fmap: dict, series_root, k2: bool) -> list[dict]:
+def judge_files(files: list[str], fmap: dict, series_root, k2: bool,
+                points: dict | None = None) -> list[dict]:
     rows = []
     for p in files:
         for row in load_rows(Path(p)):
-            rows.append(judge_row(row, fmap, "harness", series_root, k2))
+            rows.append(judge_row(row, fmap, "harness", series_root, k2, points=points))
     return rows
+
+
+def bundle_points(m: dict, name: str, problems: list[str], out: dict) -> dict | None:
+    """Point file of a harness bundle (E-7); V-4 also runs the rev1 2 point-file check."""
+    path = m.get("points_file")
+    if not path:
+        problems.append(f"E-7 {name}: points_file missing in the manifest")
+        return None
+    if name == "v4":
+        chk = points_check(Path(path))
+        out["points_check"] = chk
+        if not chk["ok"]:
+            problems.append(f"rev1 2 point file check failed: {chk['problems']}")
+    else:
+        out["points_file_sha256"] = sha256_file(Path(path))
+    return load_point_file(Path(path))
 
 
 def check_count(name: str, rows: list[dict], expect: dict, problems: list[str]) -> None:
@@ -548,13 +711,16 @@ def recount(manifest: dict, expect: dict, fmap: dict, rules_dir: Path | None) ->
             problems.append(f"E-1 bundle {b} missing")
             continue
         m = manifest[b]
-        off = judge_files(m["off"], fmap, m.get("series_root"), True)
-        tcl = judge_files(m["tcl"], fmap, m.get("series_root"), True)
+        info: dict = {}
+        pts = bundle_points(m, b, problems, info)
+        off = judge_files(m["off"], fmap, m.get("series_root"), True, pts)
+        tcl = judge_files(m["tcl"], fmap, m.get("series_root"), True, pts)
         check_count(f"{b}.off", off, expect.get(b, {}).get("off", {}), problems)
         check_count(f"{b}.tcl", tcl, expect.get(b, {}).get("tcl", {}), problems)
         s_tcl = summarize(tcl)
         sh = shadow(off, tcl)
-        out["bundles"][b] = {"off": summarize(off), "tcl": s_tcl, "shadow": sh}
+        out["bundles"][b] = {"off": summarize(off), "tcl": s_tcl, "shadow": sh,
+                             "dhat_record": dhat_summary(off, tcl), **info}
         if b == "v2" and m.get("stored_off"):
             out["bundles"][b]["I4"] = off_invariance(off, m["stored_off"], fmap)
             if not out["bundles"][b]["I4"]["ok"]:
@@ -566,15 +732,16 @@ def recount(manifest: dict, expect: dict, fmap: dict, rules_dir: Path | None) ->
     # V-3
     if "v3" in manifest:
         m = manifest["v3"]
-        v3 = {}
+        v3: dict = {}
+        pts = bundle_points(m, "v3", problems, v3)
         g_b = "pass"
         for arm in V3_ARMS:
             if arm not in m["arms"]:
                 problems.append(f"E-1 V-3 arm {arm} missing")
                 continue
             a = m["arms"][arm]
-            off = judge_files(a["off"], fmap, m.get("series_root"), True)
-            tcl = judge_files(a["tcl"], fmap, m.get("series_root"), True)
+            off = judge_files(a["off"], fmap, m.get("series_root"), True, pts)
+            tcl = judge_files(a["tcl"], fmap, m.get("series_root"), True, pts)
             for side, rows in (("off", off), ("tcl", tcl)):
                 if len(rows) != V3_PER_CELL:
                     problems.append(f"E-1 V-3 {arm}.{side}: {len(rows)} != {V3_PER_CELL}")
@@ -585,7 +752,8 @@ def recount(manifest: dict, expect: dict, fmap: dict, rules_dir: Path | None) ->
             sh = shadow(off, tcl, flag_enabled=arm in V3_JUDGED)
             s_tcl = summarize(tcl)
             v3[arm] = {"off": summarize(off), "tcl": s_tcl, "shadow": sh,
-                       "off_J3_rows": sum(1 for r in off if r.get("values", {}).get("J3"))}
+                       "off_J3_rows": sum(1 for r in off if r.get("values", {}).get("J3")),
+                       "dhat_record": dhat_summary(off, tcl)}
             if arm in V3_JUDGED:
                 if s_tcl["fail"]:
                     g_b = "fail"
@@ -665,8 +833,13 @@ def recount_v6(m: dict, expect: dict, fmap: dict, problems: list[str]):
         if "path" in spec:
             row = get_path(row, spec["path"])
         files = {"pads": spec["pads_npz"], "rate": spec.get("rate_npz")}
-        r = judge_row(row, fmap, "chrono", None, True, files)
+        floors = [v for k, v in V6_FLOORS_DEG.items() if f"_{k}_" in name]
+        if len(floors) != 1:
+            problems.append(f"E-7 V-6 {name}: floor not identified from the row name")
+        r = judge_row(row, fmap, "chrono", None, True, files,
+                      floor_deg=floors[0] if len(floors) == 1 else None)
         r["engine"], r["arm"] = spec["engine"], spec["arm"]
+        r["base"] = name.rsplit("_", 1)[0]
         exp = expect.get("rows", {}).get(name)
         if exp is None:
             problems.append(f"E-1 V-6 row {name} not expected")
@@ -700,7 +873,10 @@ def recount_v6(m: dict, expect: dict, fmap: dict, problems: list[str]):
     j3_off = [r["values"].get("J3") for r in l1_off]
     branch = ("no_gain_shown" if l1_off and all(v == 0 for v in j3_off)
               else "paired_evidence" if any(is_num(v) and v > 0 for v in j3_off) else "unknown")
-    return {"rows": rows, "chrono_branch": branch, "predictions": predictions(rows)}, g_e, flags
+    off6 = [{**r, "id": r["base"], "k1": None} for r in rows.values() if r["arm"] == "off"]
+    tcl6 = [{**r, "id": r["base"], "k1": None} for r in rows.values() if r["arm"] == "tcl"]
+    return {"rows": rows, "chrono_branch": branch, "predictions": predictions(rows),
+            "dhat_record": dhat_summary(off6, tcl6)}, g_e, flags
 
 
 def predictions(rows: dict) -> list[dict]:
@@ -780,10 +956,15 @@ def rules_check(rules_dir: Path) -> dict:
     rules = Path(rules_dir) / RULES_FILE
     seal = Path(rules_dir) / RULES_SEAL
     dyn = Path(rules_dir) / DYN_SPEC_FILE
+    rev1 = Path(rules_dir) / REV1_FILE
+    seal1 = Path(rules_dir) / REV1_SEAL
     res = {"rules_sha256": sha256_file(rules) if rules.exists() else None,
            "seal_first_token": seal.read_text(encoding="utf-8").split()[0] if seal.exists() else None,
+           "rev1_sha256": sha256_file(rev1) if rev1.exists() else None,
+           "rev1_seal_first_token": seal1.read_text(encoding="utf-8").split()[0] if seal1.exists() else None,
            "dyn_spec_sha256": sha256_file(dyn) if dyn.exists() else None}
     res["ok"] = (res["rules_sha256"] == RULES_SHA256 == res["seal_first_token"]
+                 and res["rev1_sha256"] == REV1_SHA256 == res["rev1_seal_first_token"]
                  and res["dyn_spec_sha256"] == DYN_SPEC_SHA256)
     return res
 
@@ -812,13 +993,15 @@ def expect_template() -> dict:
 
 
 # ------------------------------------------------------------------ selftests
-def selftest_d8x(ra_off: Path, ra_on: Path) -> dict:
-    """Stored D8x R-a rows (no K-2 fields): J items must give 68 (K1 off) + 6 (K1 on), J3 only."""
+def selftest_d8x(ra_off: Path, ra_on: Path, points_file: Path | None = None) -> dict:
+    """Stored D8x R-a rows (no K-2 fields): J items must give 68 (K1 off) + 6 (K1 on), J3 only.
+    With ``points_file`` (``d8x_points.json``) E-7 is checked on every row as well."""
     fmap = copy.deepcopy(DEFAULT_FIELDS)
-    res = {}
+    pts = load_point_file(points_file) if points_file else None
+    res = {"E7_checked": pts is not None}
     total = 0
     for name, path, expected in (("off", ra_off, 68), ("on", ra_on, 6)):
-        rows = [judge_row(r, fmap, "harness", None, False) for r in load_rows(path)]
+        rows = [judge_row(r, fmap, "harness", None, False, points=pts) for r in load_rows(path)]
         s = summarize(rows)
         only_j3 = all(r["fail_items"] == ["J3"] for r in rows if row_status(r) == "fail")
         res[name] = {"n": s["n"], "fail": s["fail"], "not_judgeable": s["not_judgeable"],
@@ -885,9 +1068,12 @@ def main(argv: list[str] | None = None) -> int:
     sd = sub.add_parser("selftest-d8x")
     sd.add_argument("--ra-off", required=True)
     sd.add_argument("--ra-on", required=True)
+    sd.add_argument("--points")
     ss = sub.add_parser("selftest-screen")
     ss.add_argument("--screen-dir", required=True)
-    for p in (rc, et, sd, ss):
+    pc = sub.add_parser("points-check")
+    pc.add_argument("--points", required=True)
+    for p in (rc, et, sd, ss, pc):
         p.add_argument("--out", required=True)
         p.add_argument("--format", choices=("json", "md"), default="json")
     args = ap.parse_args(argv)
@@ -897,10 +1083,14 @@ def main(argv: list[str] | None = None) -> int:
         if args.cmd == "expect-template":
             obj, code = {**head, "expect": expect_template()}, 0
         elif args.cmd == "selftest-d8x":
-            r = selftest_d8x(Path(args.ra_off), Path(args.ra_on))
+            r = selftest_d8x(Path(args.ra_off), Path(args.ra_on),
+                             Path(args.points) if args.points else None)
             obj = {**head, "inputs": {"ra_off": sha256_file(Path(args.ra_off)),
                                       "ra_on": sha256_file(Path(args.ra_on))}, **r}
             code = 0 if r["ok"] else 1
+        elif args.cmd == "points-check":
+            r = points_check(Path(args.points))
+            obj, code = {**head, **r}, 0 if r["ok"] else 2
         elif args.cmd == "selftest-screen":
             r = selftest_screen(Path(args.screen_dir))
             obj, code = {**head, **r}, 0 if r["ok"] else 1
