@@ -98,12 +98,39 @@ def test_k2_evidence_makes_the_bundle_not_judgeable(tmp_path) -> None:
     assert k2_judge.v5_evidence("g8_safe_stop", "tcl", [_doc("g8_safe_stop", [row], [])])
 
 
-def test_g8_without_provenance_misses_c2(tmp_path) -> None:
-    """G8 steps have no provenance record: the c2_sha256 item is missing (E-9), see the report."""
-    g8 = {"step": "g8_jobs1", "sidecar": {"exists": True, "rc": 0, "ACC_COMBO": "off", "ACC_K2": "on"},
-          "provenance": None, "events": None}
-    result = k2_judge.v5_absolute("g8_safe_stop", [_doc("g8_safe_stop", [], [g8])])
-    assert result["missing"]["c2_sha256"] == 1
+def _g8_sidecar(**changes) -> dict:
+    sidecar = {"exists": True, "rc": 0, "ACC_COMBO": "off", "ACC_K2": "on", "git_start_head": k2_judge.RUN_HEAD,
+               "git_end_head": k2_judge.RUN_HEAD, "git_start_clean": True, "git_end_clean": True}
+    sidecar.update(changes)
+    return sidecar
+
+
+def test_g8_c2_from_the_sidecar_and_checkout() -> None:
+    """Rev5 2: G8 c2.py = sidecar HEAD 6a44ff8 at start and end, clean, rc 0, checkout c2.py sha f58ee42b."""
+    checkout = {"sha256": k2_judge.C2_SHA256_RUN}
+
+    def c2_item(sidecar: dict, checkout_c2=checkout) -> dict:
+        steps = [{"step": "g8_jobs1", "sidecar": sidecar, "provenance": None, "events": None}]
+        doc = _doc("g8_safe_stop", [], steps, checkout_c2=checkout_c2)
+        return k2_judge.v5_absolute("g8_safe_stop", [doc])["items"]["c2_sha256"]
+
+    assert c2_item(_g8_sidecar())["ok"] is True
+    assert c2_item(_g8_sidecar(git_end_head="0" * 40))["violations"] == 1
+    assert c2_item(_g8_sidecar(git_start_clean=False))["violations"] == 1
+    assert c2_item(_g8_sidecar(rc=1))["violations"] == 1
+    assert c2_item(_g8_sidecar(), {"sha256": "0" * 64})["violations"] == 1
+    assert c2_item(_g8_sidecar(git_end_clean=None))["missing"] == 1
+    assert c2_item(_g8_sidecar(), None)["missing"] == 1
+
+
+def test_g8_rows_without_switch_fields_are_missing() -> None:
+    steps = [{"step": "g8_jobs1", "sidecar": _g8_sidecar(), "provenance": None, "events": None}]
+    good = {"key": "g", "pass": True, "touch_creep_latch": True, "controller_tag": TCL_TAG}
+    assert k2_judge.v5_evidence("g8_safe_stop", "tcl", [_doc("g8_safe_stop", [good], steps)]) == []
+    bare = {"key": "h", "pass": True}
+    assert k2_judge.v5_evidence("g8_safe_stop", "tcl", [_doc("g8_safe_stop", [good, bare], steps)])
+    assert k2_judge.v5_evidence("grid", "tcl", [_doc("grid", [bare], [])]) == []
+    assert all(step.events_part is None for step in k2_v5_flatten.STEPS["g8_safe_stop"])
 
 
 def test_soil_markers_and_rigid_relative(tmp_path) -> None:
@@ -282,7 +309,7 @@ def test_seal_check(tmp_path, monkeypatch) -> None:
     rules.write_bytes(b"changed\n")
     assert k2_judge._seal_problem(rules, seal, sha)
     assert k2_judge._seal_problem(tmp_path / "missing.md", seal, sha)
-    assert len(k2_judge.SEALED_RULES) == 5
+    assert len(k2_judge.SEALED_RULES) == 6 and k2_judge.SEALED_RULES[-1][2] == k2_judge.RULES_REV5_SHA256
 
 
 def test_selftest_v5_stored(tmp_path) -> None:

@@ -17,7 +17,7 @@ Sub-commands:
 
 Common contract: ``--out <file>`` (the report JSON), ``--format json|md``; exit 0 pass, 1 fail, 2 not judgeable /
 input error (a missing result key is 2), 3 internal error; the last stdout line is JSON. The rules file and its
-addenda rev1 .. rev4 must match their sealed sha256 (``k2_touch_creep_rules[_revN].sha256``, the values this judge
+addenda rev1 .. rev5 must match their sealed sha256 (``k2_touch_creep_rules[_revN].sha256``, the values this judge
 implements) and the dynamics spec its rules 3.3 sha256 (exit 2 otherwise).
 Every judging command prints its field map (rules item <-> raw result key).
 Interpreter: python-dev or dynamics-dev (numpy, PyYAML; no simulation imports).
@@ -58,16 +58,17 @@ RULES_REV1_SHA256 = "5ba081c62f8aef0edc5bb99119d7586b0d2914761582f2323c289f472f2
 RULES_REV2_SHA256 = "b3f1b41f27030c75aec726d2a3feb5abc36697864e0d83766a8fe0c4460394ea"
 RULES_REV3_SHA256 = "8bcdb0ed1fdf6d730ac781929e93b233972d1e80566e1ae14ffb7ddf049d6e61"
 RULES_REV4_SHA256 = "82160ff54874e3d43bf7c5a1ae96d6e8612b1e7635aaccea39a4299352ce00c5"
+RULES_REV5_SHA256 = "73b877580ec5dc94a46a38d2ed620372cddd17dd38eef06126d84843b485eccc"
 SEALED_RULES = (
     (RULES_PATH, RULES_SEAL_PATH, RULES_SHA256),
     *(
         (K2_DIR / f"k2_touch_creep_rules_rev{n}.md", K2_DIR / f"k2_touch_creep_rules_rev{n}.sha256", sha)
         for n, sha in ((1, RULES_REV1_SHA256), (2, RULES_REV2_SHA256), (3, RULES_REV3_SHA256),
-                       (4, RULES_REV4_SHA256))
+                       (4, RULES_REV4_SHA256), (5, RULES_REV5_SHA256))
     ),
 )
-"""Rules file, seal file, sha256 this judge implements (rev2 8: path 1 checks the original and rev1 .. rev4
-seals; later revisions win: rev4 > rev3 > rev2 > rev1 > original)."""
+"""Rules file, seal file, sha256 this judge implements (rev2 8: path 1 checks the original and rev1 .. rev5
+seals; later revisions win: rev5 > rev4 > rev3 > rev2 > rev1 > original)."""
 DYN_SPEC_PATH = K2_DIR / "k2_dyn_spec.md"
 DYN_SPEC_SHA256 = "502b0bb78558d40586cbcddb718b6c5d53529de4e78369f454762c9fe73727ff"
 """Rules 3.3: raw sha256 of the dynamics spec."""
@@ -1034,6 +1035,10 @@ ARM_K2 = {"off": "off", "tcl": "on"}
 V5_COMBO = {"g8_safe_stop": "off"}
 """Rev2 1 evidence: ``combo`` of the G8 steps; every other bundle runs the preset."""
 V5_PRESET_COMBO = "preset"
+ROW_EVIDENCE_BUNDLES = ("g8_safe_stop",)
+"""Rev5 2: bundles whose K-2 evidence is the rows' ``touch_creep_latch`` / ``controller_tag`` (a row without them
+is missing, E-9); other rows carrying them are checked too. G8 events are not evidence (its steps have no events
+part)."""
 GUARD_KN_V5 = 14.41
 D8_ATTITUDE_LIMIT_DEG_V5 = 0.2
 D8_READY_LIMIT_S_V5 = 100.0
@@ -1085,6 +1090,22 @@ def _equal_or_missing(value, expected) -> bool | None:
     return None if value is None else value == expected
 
 
+RUN_HEAD = "6a44ff81d25aea1fa162daf9b14c23b99beb9db0"
+"""Rev2 7 / rev5 2: the commit every V-5 step runs at."""
+
+
+def g8_c2_ok(sidecar: dict, checkout_c2: dict | None) -> bool | None:
+    """Rev5 2: a G8 step used the run commit's ``c2.py`` when its sidecar has start and end HEAD = RUN_HEAD, both
+    clean, rc 0, and the fixed checkout's working copy sha256 = :data:`C2_SHA256_RUN`; a missing value is None."""
+    values = (sidecar.get("git_start_head"), sidecar.get("git_end_head"), sidecar.get("git_start_clean"),
+              sidecar.get("git_end_clean"), sidecar.get("rc"), (checkout_c2 or {}).get("sha256"))
+    if not sidecar.get("exists") or any(value is None for value in values):
+        return None
+    start, end, start_clean, end_clean, rc, c2_sha = values
+    return (start == end == RUN_HEAD and start_clean is True and end_clean is True and rc == 0
+            and c2_sha == C2_SHA256_RUN)
+
+
 def _absolute_common(items: _Items, metas: list[dict]) -> None:
     """Rev2 1 common: step sidecar rc 0, no error rows, provenance c2_sha256."""
     items.require("rc")
@@ -1095,9 +1116,9 @@ def _absolute_common(items: _Items, metas: list[dict]) -> None:
             sidecar = step.get("sidecar") or {}
             items.add("rc", _equal_or_missing(sidecar.get("rc"), 0), step["step"])
             provenance = step.get("provenance")
-            if provenance is None:  # step without a provenance record (judge steps: none; G8: rows only)
+            if provenance is None:  # judge steps: no c2 item; G8: rev5 2 (sidecar HEAD + clean + checkout c2)
                 if not str(step["step"]).endswith("_judgement"):
-                    items.add("c2_sha256", None, f"{step['step']}: no provenance record")
+                    items.add("c2_sha256", g8_c2_ok(sidecar, meta.get("checkout_c2")), step["step"])
                 continue
             items.add("c2_sha256", _equal_or_missing(provenance.get("c2_sha256"), C2_SHA256_RUN), step["step"])
         for part, source in (meta.get("sources") or {}).items():
@@ -1202,9 +1223,11 @@ def v5_evidence(bundle: str, arm: str, docs: list[dict]) -> list[str]:
     for meta in (doc.get("meta") or {} for doc in docs):
         for step in meta.get("steps") or []:
             problems += _step_evidence(step, bundle, arm, combo)
+    rows_must_carry = bundle in ROW_EVIDENCE_BUNDLES
     for row in (row for doc in docs for row in doc["runs"]):
-        if "touch_creep_latch" not in row and "controller_tag" not in row:
-            continue
+        carries = "touch_creep_latch" in row or "controller_tag" in row
+        if not carries and not rows_must_carry:
+            continue  # bundles whose rows carry no switch record (their evidence is the provenance)
         if row.get("touch_creep_latch") is not k2_on or _tag_has_tcl(row.get("controller_tag")) is not k2_on:
             problems.append(f"{arm} row {row['key']}: touch_creep_latch {row.get('touch_creep_latch')!r} / "
                             f"tag {row.get('controller_tag')!r}")

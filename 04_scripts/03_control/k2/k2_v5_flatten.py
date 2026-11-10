@@ -381,7 +381,9 @@ def _sidecar_record(path: Path) -> dict:
     return {"path": str(path), "exists": True, "rc": doc.get("rc"),
             **{name: env.get(name) for name in SIDECAR_ENV_KEYS},
             "git_start_head": (doc.get("git_start") or {}).get("head"),
-            "git_end_head": (doc.get("git_end") or {}).get("head")}
+            "git_end_head": (doc.get("git_end") or {}).get("head"),
+            "git_start_clean": (doc.get("git_start") or {}).get("is_clean"),
+            "git_end_clean": (doc.get("git_end") or {}).get("is_clean")}
 
 
 def _provenance_record(arm_dir: Path, step: Step, outputs: dict[str, object]) -> dict | None:
@@ -398,6 +400,12 @@ def _provenance_record(arm_dir: Path, step: Step, outputs: dict[str, object]) ->
         return {"source": source, "exists": False}
     return {"source": source, "exists": True, **{key: doc.get(key) for key in PROVENANCE_KEYS},
             "missing_keys": [key for key in PROVENANCE_KEYS if key not in doc]}
+
+
+def checkout_c2_record(checkout: Path) -> dict:
+    """Rev5 2: sha256 of the fixed checkout's working copy of ``03_src/outrigger_sim/control/c2.py``."""
+    path = checkout / "03_src" / "outrigger_sim" / "control" / "c2.py"
+    return {"path": str(path), "sha256": _sha256(path) if path.is_file() else None}
 
 
 def step_records(arm_dir: Path, bundle: str, outputs: dict[str, object]) -> list[dict]:
@@ -496,6 +504,8 @@ def flatten(arm_dir: Path, out_dir: Path, overrides: dict[str, Path], *, checkou
         meta = {"tool": "k2_v5_flatten", "bundle": bundle, "arm_dir": str(arm_dir), "sources": sources,
                 "rows": len(rows), "failed": sum(not row["pass"] for row in rows),
                 "steps": step_records(arm_dir, bundle, outputs), **bundle_meta_extra(bundle, outputs)}
+        if bundle == "g8_safe_stop":  # rev5 2: G8 leaves no c2 record; the checkout's working copy is compared
+            meta["checkout_c2"] = checkout_c2_record(checkout)
         target.write_text(json.dumps({"meta": meta, "runs": rows}, indent=1), encoding="utf-8")
         summary["bundles"][bundle] = {"file": str(target), "rows": len(rows), "failed": meta["failed"]}
     (out_dir / "flatten_summary.json").write_text(json.dumps(summary, indent=1), encoding="utf-8")
