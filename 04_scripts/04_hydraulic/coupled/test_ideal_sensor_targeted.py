@@ -206,6 +206,31 @@ def test_s4_mean_constant_and_step_split() -> None:
     assert means[1] - means[0] == pytest.approx(phase_ms / 100 * jump)
 
 
+class _StepPlant(_PressurePlant):
+    dt = 1e-3
+
+    def step(self, mean_speed, nsteps):
+        return np.zeros(24)
+
+
+def test_chunk_hook_sees_the_plant_behind_the_overlap_cut() -> None:
+    """VB / LS: ``install_overlap_cut`` wraps the hook and passes a ``_CutPlant`` view; the
+    hook must record the plant itself (I-0 attempt 1, 2026-11-10)."""
+    import harness_hydraulics
+
+    closed_loop = SimpleNamespace(_lagged_step=lambda plant, command, valve, steps:
+                                  plant.step(command, steps))
+    ideal.install_chunk_hook(closed_loop)
+    setting = SimpleNamespace(overlap_speed_m_s=lambda v_max: 0.0)
+    harness_hydraulics.install_overlap_cut(closed_loop, setting, 0.02, 1e-9)
+    plant = _StepPlant()
+    ideal.ACCUMULATOR.take()
+    closed_loop._lagged_step(plant, np.zeros(4), np.zeros(4), 1)
+    assert ideal.ACCUMULATOR.plant is plant
+    count, _, chunks = ideal.ACCUMULATOR.take()
+    assert count == 1 and np.array_equal(chunks[0].net_N, plant.value)
+    ideal.ACCUMULATOR.plant = None
+
 @pytest.mark.parametrize("phase_ms", hf.PHASES_MS)
 def test_hf_chunk_jump_splits_over_two_periods(phase_ms) -> None:
     t_ev = 40.0
@@ -353,31 +378,50 @@ def test_list_on_the_stored_lines() -> None:
 # ------------------------------------------------------------------------------- harness rows
 @pytest.fixture(scope="module")
 def harness_lines(tmp_path_factory) -> dict[str, list[dict]]:
-    """SHD on the three keys and IZ on the rigid key, two runner trials in parallel."""
+    """Runner trials in parallel: SHD on the three V0 keys, the whole I-0 bundle (VB rows, the
+    overlap-cut plant view included) and IZ on the rigid key."""
     root = main_checkout_root()
     if root is None or not DYNAMICS_PYTHON.exists():
         pytest.skip("stored lines or dynamics-dev not found")
     env = {**os.environ, "MKL_THREADING_LAYER": "TBB", "MKL_NUM_THREADS": "1",
            "OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1", "NUMBA_NUM_THREADS": "1"}
-    folders = {name: tmp_path_factory.mktemp(name) for name in ("shd", "iz")}
-    requests = {"shd": ("SHD", ",".join(SHD_KEYS), 3), "iz": ("IZ", IZ_RIGID_KEY, 1)}
+    requests = {"shd": ("I-1", "SHD", ",".join(SHD_KEYS), 3),
+                "i0": ("I-0", "SHD", None, 8),
+                "iz": ("I-1", "IZ", IZ_RIGID_KEY, 1)}
+    folders = {name: tmp_path_factory.mktemp(name) for name in requests}
     processes = {}
-    for name, (variant, keys, workers) in requests.items():
+    for name, (bundle, variant, keys, workers) in requests.items():
+        command = [str(DYNAMICS_PYTHON), "-I", "-B", str(HERE / "ideal_sensor_targeted.py"),
+                   "run", "--bundle", bundle, "--variant", variant, "--stored-root", str(root),
+                   "--trial-out", str(folders[name]), "--workers", str(workers),
+                   "--affinity", E_CORE_MASK, "--pool", "E"]
+        if keys is not None:
+            command += ["--keys", keys]
         processes[name] = subprocess.Popen(
-            [str(DYNAMICS_PYTHON), "-I", "-B", str(HERE / "ideal_sensor_targeted.py"), "run",
-             "--bundle", "I-1", "--variant", variant, "--stored-root", str(root),
-             "--trial-out", str(folders[name]), "--keys", keys, "--workers", str(workers),
-             "--affinity", E_CORE_MASK], cwd=ROOT, env=env, stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT, text=True, encoding="utf-8", errors="replace")
+            command, cwd=ROOT, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            text=True, encoding="utf-8", errors="replace")
     out = {}
     for name, process in processes.items():
         text, _ = process.communicate(timeout=1800)
         assert process.returncode == 0, text[-3000:]
-        variant = requests[name][0]
-        path = folders[name] / ideal.out_name("I-1", variant)
+        bundle, variant = requests[name][:2]
+        path = folders[name] / ideal.out_name(bundle, variant)
         out[name] = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
     return out
 
+
+@pytest.mark.sim
+def test_i0_shd_reproduces_every_stored_hash(harness_lines) -> None:
+    """All 14 I-0 rows (A_P0 V0 / VB, the boundary key, F rigid VB, E soil VB)."""
+    lines = harness_lines["i0"]
+    assert len(lines) == ideal.BUNDLE_COUNTS["I-0"]
+    assert all("error" not in line for line in lines)
+    assert {line["job"]["setting"] for line in lines} == {"V0", "VB"}
+    for line in lines:
+        assert line["ideal"]["matches_stored"], line["ideal"]["key"]
+        assert line["ideal"]["last_chunk_mismatches"] == 0
+        assert line["ideal"]["chunk_anomaly_count"] == 0
+        assert line["controller_tag"] == f"{line['ideal']['base_tag']}_IDEAL-SHD"
 
 @pytest.mark.sim
 def test_shd_reproduces_the_stored_hashes(harness_lines) -> None:
