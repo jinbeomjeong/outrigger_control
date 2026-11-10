@@ -31,7 +31,6 @@ F_MIN_KN = 9.415
 FALSE_SOIL_MODE_DELAY_S = 0.05
 """Plan 1.1 / M-8: a soil mode later than the true lift-off by more than this is false."""
 SGS_EVENT = "FAULT_LIFT_STROKE_LIMIT"
-FAULT_PHASE_PREFIX = "fault"
 READY_DELTA_LIMIT_S = 2.0
 PRESSURE_EVENTS = ("FAULT_HEAD_PRESSURE", "WARN_ROD_PRESSURE_FALLBACK",
                    "WARN_CRAWLER_RECONTACT_SUSPECTED")
@@ -73,10 +72,20 @@ def _get(mapping: dict | None, *names):
 
 
 def verdict(line: dict) -> str:
-    """M-1: ``d1.verdict``, ``fault`` for a run ending in a fault phase."""
-    if str(line.get("final_phase", "")).startswith(FAULT_PHASE_PREFIX):
-        return "fault"
+    """M-1: ``d1.verdict`` as it is (plan 7.1). The final phase is not used: a run ending in a
+    fault phase keeps its ``d1`` grade (an SGS safe stop is ``allowed_stop``)."""
     return _get(line, "d1", "verdict")
+
+
+def end_attitude_deg(line: dict) -> list[float | None]:
+    """M-12: end |roll|, |pitch| [deg] from the result line ``values.attitude.end_abs_deg``.
+
+    Plan 7.1 gives no rounding; plan 8 computes the metrics from the result line fields
+    (``values``, ``d1``). This is the field the runner writes (rounded there to 1e-5 deg) and the
+    one path 2 reads; the unrounded ``ideal.final_attitude_deg`` used before differed from it by
+    up to 5e-6 deg (M-12 mismatch of the path comparison, 2026-11-10)."""
+    end = _get(line, "values", "attitude", "end_abs_deg") or {}
+    return [end.get("roll"), end.get("pitch")]
 
 
 def fault_names(line: dict) -> dict[str, int]:
@@ -139,7 +148,6 @@ def metrics(line: dict) -> dict:
     stroke = _get(line, "d1", "stroke_max_m")
     items = _get(line, "d1", "items") or {}
     counts = dict(ideal.get("pressure_event_counts") or {})
-    attitude = ideal.get("final_attitude_deg") or [None, None]
     return {
         "M-1": verdict(line), "M-2": _get(line, "d1", "t_ready_s"), "M-3": fault_names(line),
         "M-4_mm": None if stroke is None else (STROKE_GUARD_M - stroke) * 1e3,
@@ -156,7 +164,7 @@ def metrics(line: dict) -> dict:
         "M-10": {"loc": clearance_errors_mm(ideal, t_loc),
                  "ready": clearance_errors_mm(ideal, _get(line, "d1", "t_ready_s"))},
         "M-11": counts,
-        "M-12_deg": [None if value is None else abs(value) for value in attitude],
+        "M-12_deg": end_attitude_deg(line),
         "r4_decisions": len(ideal.get("order_gate_decisions") or []),
         "sgs_stop": is_sgs_stop(line), "commands_sha256": line.get("commands_sha256"),
         "matches_stored": ideal.get("matches_stored"), "set": ideal.get("set")}
