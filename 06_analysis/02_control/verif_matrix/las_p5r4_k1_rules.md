@@ -1,15 +1,14 @@
-# [DRAFT, 봉인 전] LAS-b P5r4 + K1 재판정 규칙 (새 원판 초안)
-
-> **DRAFT, 봉인 전.** 이 파일은 초안이다. 판정에 쓰지 않는다. 이 파일의 sha256은 봉인 값이 아니다.
-> - 봉인 때 파일 이름: `06_analysis/02_control/verif_matrix/las_p5r4_k1_rules.md` + `las_p5r4_k1_rules.sha256`(LF, BOM 없음으로 계산).
-> - 봉인 때 이 인용 블록과 15절(확인 필요)을 지우고, 15절 답을 본문에 반영한다. 봉인·실행 전 감사·실행 시작은 메인 세션이 사용자 승인을 받아 한다.
-> - 봉인 전에 `.gitattributes`에 `06_analysis/02_control/verif_matrix/las_p5r4_k1_rules* -text`와 `06_analysis/03_hydraulic/coupled/v5/las/p5r4k1/*.jsonl -text`를 더한다(지금 `las_k1_rules*` 줄은 이 이름을 덮지 않는다).
+# LAS-b P5r4 + K1 재판정 규칙 (새 원판)
 
 - 작성: control-expert, 2026-11-10. 기준 master `b53d890`(K1 전환 병합).
+- 상태: **새 원판.** 봉인 값(LF 줄 끝, BOM 없음으로 계산한 sha256)과 봉인 시각은 같은 폴더 `las_p5r4_k1_rules.sha256`에 둔다. **`.sha256`이 없거나 값이 다르면 이 파일은 봉인 전이며 실행·판정에 쓰지 않는다**(8.2 S-1). 봉인 뒤에는 고치지 않는다. 바꿀 일이 생기면 덧붙임 판 `las_p5r4_k1_rules_rev<n>.md`로 봉인하고, 결과를 보기 전인지 본 뒤인지를 첫머리에 적는다.
+- 봉인 전 조건: `.gitattributes`에 `06_analysis/02_control/verif_matrix/las_p5r4_k1_rules* -text`와 `06_analysis/03_hydraulic/coupled/v5/las/p5r4k1/*.jsonl -text`가 있어야 한다(`las_k1_rules*` 줄은 이 이름을 덮지 않는다).
+- 이 판의 이력: 초안 `las_p5r4_k1_rules_draft.md`(커밋 `4df3d9b`)에 사용자 답(15절)과 재감사 `las_k1_adopt_rev1_d8x_rev3_audit.md`의 F-5·F-6·F-7을 반영했다. 초안 작성부터 이 판까지 이 규칙의 대상 행은 0행 실행됐다.
 - 판의 성격: **새 원판**이다. A안 규칙(`las_revA_targeted_rules*`)의 rev가 아니다. 이유는 0.1절.
 - 사용자 결정
   - 2026-11-09: "LAS-b P5r4는 K1 채택 뒤 P5r4+K1을 다시 판정한다(새 봉인 규칙 + Chrono)."
   - 2026-11-10: 판정 묶음은 **새 `_K1` 태그로 재실행**한다. `pre_k1_preset_runner.py`는 옛 결과 재현에만 쓴다.
+  - 2026-11-10(초안 15절 답, 모두 추천안 A): Z-C 912줄, Chrono 12행, C-S 모든 짝 1 mm, G-2′C 절대 11.414589 kN, 하네스 `통과` 뒤 Chrono, D8x Chrono 먼저, C3·C4 180 s(BT-C는 앞 120 s), 조건부 PAIR_DIVERGE. 기록은 15절.
 - 이어받는 규칙(바꾸지 않는다. 이 판과 다르면 이 판이 맞다)
 
 | 파일 | sha256 | 이어받는 것 |
@@ -71,9 +70,9 @@
 - **표본 밖 근거**는 다음뿐이다.
   - 하네스 Z-C의 S-C 456 전체 키 중 R-S와 겹치지 않는 **437키**(P5r4로 돈 적 없음)
   - Chrono 12행 전부(P5r4 Chrono 0행, 혼합 지형 행 0행, G1+J1@FL Chrono 0행)
-- S-C P0 값: control-expert가 K1 원판 작성 때(2026-11-09) S-C P0 456줄의 $t_P$·$t_S$·LOC·R4·최대 행정을 봤다(K1 원판 0.2). 이번 초안 작성 중에는 값을 읽지 않았다(1.2).
+- S-C P0 값: control-expert가 K1 원판 작성 때(2026-11-09) S-C P0 456줄의 $t_P$·$t_S$·LOC·R4·최대 행정을 봤다(K1 원판 0.2). 이 규칙(초안·봉인 후보판)을 쓰는 동안에는 값을 읽지 않았다(1.2).
 
-### 1.2 이 초안을 쓰려고 이번에 읽은 것
+### 1.2 이 규칙을 쓰려고 읽은 것 (초안·봉인 후보판)
 
 - 문서: 위 표의 규칙·판정서 전부, 명세 436절(436.7·436.8), 전환 후 감사 원문(main checkout 미추적 파일 `las_k1_switch_post_audit.md`), `session_handoff.md`, decision_log 640~703행.
 - 코드(읽기만): `run_S9.py` 1505~1575행(`CONTROLLER_EXPECTATIONS`, `_LAS_EXPECTATIONS`의 β 3.5 고정), `c2.py` `_liftoff_approach_slow_meta`(7948~7975), `LiftoffApproachSlowSettings` 필드(2121~2143), `las_chrono_rows.py`·`las_k1_chrono_rows.py`·`las_k1_rem_chrono_rows.py` 머리말·상수, `s9_batch.py` 369~378행.
@@ -82,6 +81,8 @@
   - `key_lists.py`: `rev.key` 목록과 목록 sha256(부록 A), S-C ∩ R-S = 19키.
   - `chrono_fields.py`: REM R1 `result.json`의 필드 이름만(`controller_meta.liftoff_approach_slow` 키, `p3b` 하위 키, `c2_setup` 키).
   - PowerShell `Get-FileHash`: REM R1·R4·R7·R8 `controller_commands.npz` sha256(4.4 BT-C 기준값).
+  - (봉인 후보판 때 추가) `yp_blank.py`: `k1_YP.jsonl`에서 후보 필드가 없는 줄의 줄 번호·최상위 키·`rev.key`·`error`만 출력. `Select-String`으로 같은 키의 줄 번호만 찾음(부록 A).
+  - (봉인 후보판 때 추가) 재감사 `las_k1_adopt_rev1_d8x_rev3_audit.md` F-5~F-7, `las_rev_targeted.py` 30~36행 docstring.
 - 판정 값(힘·행정·READY·사건)은 이번에 저장 파일에서 새로 읽지 않았다. 판정서에 이미 적힌 값만 인용했다.
 
 ## 2. 후보와 기준 정의
@@ -96,6 +97,7 @@
   - K1: 프리셋만 쓴다. 하네스 토큰 `K1on`, Chrono `--k1-order-gate`를 **주지 않는다**. 실효 값은 실행된 제어기의 `controller_meta.slope_clearance_margin.settings.flat_soil_margin_order_gate`와 `order_gate.enabled`로 확인한다(따로 만든 제어기 값으로 확인하지 않는다, 전환 후 감사 R-5).
   - LAS-b: 덮어쓰기는 한 번이다. 덮어쓰기 전 프리셋이 b0인지(β 3.5, $n_{min}$ 0, $N_r$ 0)와 관문 True를 먼저 확인한다. P0 팔은 덮어쓰지 않는다.
   - `--las-off`, `--k1-forced-block first`, `pre_*_preset_runner.py`는 이 규칙의 행에 쓰지 않는다. 섞이면 K 위반(stop).
+  - **"LAS-b 꺼짐 + 관문 켬" 조합(`--las-off --k1-order-gate on`, 하네스 `pre_las_preset_runner.py` + `K1on`, 태그 `final_C4G2_K1`·`final_C4G2_P3_K1`)은 이 규칙에서 쓰지 않는다**(재감사 F-6). 이 규칙에는 LAS-b 단일 변수 짝(LAS 끔 대 켬)이 없다. 짝의 변수는 LAS-b 후보(P0 대 P5r4) 하나다. 그래서 그 조합 태그를 run_S9 `--expect-controller` choices에 더할 필요가 없다. 이 조합 행이 묶음에 하나라도 있으면 K-3 위반(stop)이고, 실행 전 감사가 행 목록에서 0건을 확인한다(9절 K-3, 11.5).
 - 프리셋 기본값은 바꾸지 않는다.
 
 ## 3. PAIR_DIVERGE 정의 (이 판에서 확정)
@@ -307,7 +309,7 @@
 | K-0 | 이 규칙 sha256 = `.sha256` 기록. 두 판정 도구 sha256 = 실행 전 감사 기록 = prelaunch = postrun = judge. 실행 전 감사 리포트 파일(원문 그대로 저장) sha256 = prelaunch 기록 |
 | K-1 | 하네스: 한 묶음·한 팔의 모든 줄이 한 `git_head`, dirty 허용 밖 0, `code_diff_sha256` 빈 해시. Chrono: 12행 `git_at_start.head` = prelaunch HEAD, `git diff --quiet <prelaunch> <postrun> -- 03_src 02_params 04_scripts` 참, `git status --porcelain --untracked-files=no` 허용 목록 밖 0줄 |
 | K-2 | 코드 sha(5.1·5.2 목록) = 기록. `c2.py`·`v5_options.py` blob이 prelaunch HEAD blob과 같다 |
-| K-3 | 태그: 모든 줄·행 `controller_tag`(Chrono `expect_controller`) = 설정별 새 태그 정확 일치. 옛 태그(`_LAS`로 끝나는 것 포함) 0 |
+| K-3 | 태그: 모든 줄·행 `controller_tag`(Chrono `expect_controller`) = 설정별 새 태그 정확 일치. 옛 태그(`_LAS`로 끝나는 것 포함) 0. LAS 꺼짐 + 관문 켬 조합 태그(`final_C4G2_K1`, `final_C4G2_P3_K1`)와 `--las-off` 인자 0(2절, F-6) |
 | K-4 | 관문: 모든 줄·행 실행된 제어기의 `flat_soil_margin_order_gate` 참, `order_gate.enabled` 참, `decisions` 키 있음. 하네스 줄에 K1 토큰 흔적 없음, Chrono `c2_setup.k1_order_gate` = `preset` |
 | K-5 | LAS-b 설정: ref 줄·행 `settings`가 b0(β 3.5, $n_{min}$ 0, $N_r$ 0, 나머지 436.3 값), cand 줄·행이 P5r4(β 4.5, $N_r$ 4, 나머지 b0). `las_candidate` 필드와 맞음(K-A8) |
 | K-6 | Chrono 실행 조건: threads 4 = `num_threads_chrono`, PASSIVE, hull `fast`·DLL sha·`fallback_reason` None·`mixed_hull_mode` 거짓, 풀 = 계획, 짝 같은 풀 종류, `affinity_ok`·`power_throttling_off_ok` 참 |
@@ -348,9 +350,10 @@
 | `d1_chrono_rows.py:101,160,164`, `v5_stage3_las_rows.py:108` | 쓰지 않는다 | 이 규칙 밖(436.8·D-1 Chrono 재개 규칙에서 "새 태그 재실행"으로 정함) |
 | `u3_judge.py:70,72`, `u3_reuse.py:122,235` | 쓰지 않는다 | 이 규칙 밖(U-3·U-6는 436.8). 쓰려면 그 규칙 개정판 |
 | `fb_judge.py`, `las_rev_judge.py`, `las_revA_judge.py`, `k1_judge.py`, `las_k1_*_judge.py`, `p3_hash_check.py`, `p3_chrono_check.py` | **판정에 쓰지 않는다** | 봉인·옛 결과 전용, 고치지 않는다. 필요한 함수(`pair_violations`, 정체성 검사)는 **복사**하고 원본 파일 sha를 새 도구 docstring·출력에 적는다 |
-| `v5_options.EXTEND_START_TAGS`·`j_p3_inputs.is_p3_expected` | 하네스 d1 항목 계산이 쓴다 | 바꾸지 않는다. 실행 전 시험: VB 새 태그 줄에서 `p3_expected` 참 |
-| W-1(LAS 끔 + 관문 켬 조합 태그) | 조합을 쓰지 않는다 | 이 규칙의 전제는 아니다. run_S9는 `--las-off`와 `--las-candidate`를 함께 주면 종료 2 |
-| `las_targeted._turn_preset_las_off`(무결성 Medium) | 쓰지 않는다 | — |
+| `las_rev_targeted.py:33-34`(`controller_tag`가 `final_C4G2_LAS`/`final_C4G2_P3_LAS`가 아니면 묶음을 멈춤, 재감사 F-5) | 쓰지 않는다 | 크게 실패(새 태그 줄을 만들면 즉시 멈춤). 고치지 않는다(A안 원판의 원판 실행 도구, 옛 결과 전용). 새 실행 도구는 이 파일을 import해도 그 묶음 실행 경로는 부르지 않는다 |
+| `v5_options.EXTEND_START_TAGS`·`j_p3_inputs.is_p3_expected`·`v5_rerun:423`·`u3_reuse:235`·`chrono_t45_replay:833` | 하네스 d1 항목 계산이 앞의 둘을 쓴다 | W-1 수정(사용자 결정 (a): ③ 판정을 `_K1`·`_LAS`를 벗긴 기준 태그로)이 **실행 전 조건**이다(11.5). 실행 전 시험: VB 새 태그 줄에서 `p3_expected` 참, V0 새 태그 줄에서 거짓 |
+| `las_targeted._turn_preset_las_off`(재감사 F-7, 관문도 끄도록 python-expert 구현 중) | 쓰지 않는다 | 이 규칙의 행은 이 함수를 부르지 않는다. 그래도 같은 모듈을 import하는 도구가 있고 코드 sha가 기록되므로 **실행 전 조건**으로 둔다(11.5) |
+| 조합 태그 `final_C4G2_K1`·`final_C4G2_P3_K1`(재감사 F-6) | 쓰지 않는다(2절) | run_S9 choices에 더하지 않아도 된다. run_S9는 `--las-off`와 `--las-candidate`를 함께 주면 종료 2 |
 
 ### 11.2 cad-expert (Chrono)
 
@@ -374,9 +377,23 @@
 ### 11.4 control-expert
 
 - 경로 2 두 스크립트를 합성 줄로 맞춘 뒤 sha를 넘긴다(10.2).
-- 봉인 전: 15절 답 반영, 부록 A 목록 sha 재계산 확인.
+- 봉인 전: 부록 A 목록 sha 재계산 확인.
 
-### 11.5 메인 세션
+### 11.5 실행 전 조건 (모두 참이어야 Z-0을 시작한다. 실행 전 감사가 하나씩 확인한다)
+
+| # | 조건 | 담당 | 근거 |
+|---|---|---|---|
+| E-1 | 이 규칙 봉인(`.sha256`), `.gitattributes` 두 줄 | 메인 세션 | 머리, S-1 |
+| E-2 | **W-1 수정 병합**: ③ 판정(`EXTEND_START_TAGS` 소비자 4곳)을 기준 태그로 바꾸고, LAS on/off × 관문 on/off × ③ on/off 매개변수 시험으로 고정 | python-expert | 전환 후 감사 W-1, 사용자 결정 (a) |
+| E-3 | **F-7 수정 병합**: `las_targeted._turn_preset_las_off`가 관문도 끈다(gate False 되돌림), 해시 재현 시험 통과 | python-expert(구현 중) | 재감사 F-7, 전환 후 감사 메인 세션 덧붙임 |
+| E-4 | 11.2·11.3 구현과 단위 시험 병합, 실행 HEAD에서 단위 시험 통과 | cad-expert, python-expert | 11.2·11.3 |
+| E-5 | 행 목록(하네스 묶음 계획·Chrono `s9_batch list V5-LAS-P5R4-K1`)에 `--las-off`, `--k1-order-gate`, `--k1-forced-block`, 조합 태그 0건. Chrono `check-sources`에서 12행 모두 `--expect-controller`가 `_LAS_K1` 태그 | 메인 세션, 감사 | 2절, K-3, K-7, 재감사 F-6 |
+| E-6 | 경로 2 두 스크립트 sha를 메인 세션이 받음 | control-expert | 10.2 |
+| E-7 | 실행 전 감사(verif-protocol-auditor `[시점] 실행 전`) 차단 0, 리포트 원문 저장 | 메인 세션 | K-0 |
+
+- E-2·E-3이 늦어지면 이 규칙의 실행을 기다린다. 이 규칙만을 위해 두 조건을 빼려면 새 판이 필요하다.
+
+### 11.6 메인 세션
 
 - `.gitattributes` 두 줄(머리 인용 블록), 봉인(`.sha256`), 실행 전 감사(verif-protocol-auditor `[시점] 실행 전`, 리포트 원문 저장 → K-0), compute-scheduler-expert 배치표·예약, long-running-task-monitor 점검, prelaunch~postrun 동안 main checkout 커밋·병합 금지.
 
@@ -395,7 +412,7 @@
 | 합 | ≤ 1,474 | — | 약 165,800(약 46 CPU-h) |
 
 - 벽시계: 기계 전체(P 8 + E 12, 단일 스레드 작업) 동시 배율을 앞 묶음 실측처럼 약 11배로 보면 **약 4.2 h**, E만 쓰면 약 6~7 h(가정). Z-C가 68 %다.
-- 줄이는 안(15절 Q-1): Z-C를 ε 0만(456줄) → 합 약 109,000 s(약 30 CPU-h, 기계 전체 약 2.8 h).
+- Z-C는 912줄 전부 돈다(사용자 결정 Q-1 A). ε 0만으로 줄이는 안(약 30 CPU-h)은 고르지 않았다.
 
 ### 12.2 Chrono (가정)
 
@@ -406,14 +423,14 @@
 | C1·C2(J2 ×1.0 120 s) | REM R1·R7 6,230~6,560 s(P 4행 동시) | 6,500 |
 | C3·C4(J2 ×1.1 180 s) | REM R4·R8 6,083~6,668 s × 180/120 | 9,700 |
 
-- 12행 직렬 합 약 79,600 s(22 h). **P만 4행씩**: 3묶음(가장 긴 C3·C4·B를 먼저) 약 6 h. **P 4 + E 3**(E 약 1.5배, 짝은 같은 풀 종류): 약 4.5 h. 최소 8행안(15절 Q-2, A3~A6 뺌): P만 약 4.5 h.
+- 12행 직렬 합 약 79,600 s(22 h). **P만 4행씩**: 3묶음(가장 긴 C3·C4·B를 먼저) 약 6 h. **P 4 + E 3**(E 약 1.5배, 짝은 같은 풀 종류): 약 4.5 h. 12행 전부 돈다(사용자 결정 Q-2 A).
 - 15분 넘게 걸리므로 compute-scheduler-expert 배치표·`reserve.py` 예약, long-running-task-monitor 점검이 필요하다.
 
-### 12.3 D8x와의 순서 (제안)
+### 12.3 D8x와의 순서 (사용자 결정 Q-6 A: D8x Chrono 먼저)
 
 D8x는 E코어 하네스 R-a·R-c(약 3 h) → 관문 G1 → Chrono 19행(P, 약 1.5~2 h)이 이미 사용자 결정으로 정해져 있다. P코어를 다투는 것은 두 Chrono 묶음이다.
 
-1. 지금(계산 없음): 이 규칙 봉인, 구현(11절), 경로 2 고정, 실행 전 감사. D8x는 그대로 진행.
+1. 지금(계산 없음): 이 규칙 봉인, 구현(11절), 실행 전 조건(11.5), 경로 2 고정, 실행 전 감사. D8x는 그대로 진행.
 2. D8x E 하네스(약 3 h) 동안: P에서 이 규칙의 Z-0·Z-A(108줄, 약 15분)를 먼저 돌려 비트 시험을 끝낸다. 이어서 Z-T·Z-S(444줄)를 P에서.
 3. D8x Chrono 19행이 P를 쓰는 동안(약 2 h): Z-C를 E에서(D8x E 하네스가 끝난 뒤).
 4. D8x Chrono가 끝나고 하네스 판정이 `통과`면: 이 규칙의 Chrono 12행을 P(+E)에서 약 4.5~6 h.
@@ -432,18 +449,22 @@ D8x는 E코어 하네스 R-a·R-c(약 3 h) → 관문 G1 → Chrono 19행(P, 약
 - 혼합 지형 Chrono 비용은 미측정 가정이다.
 - K1의 알려진 한계(REM F2)는 판정 행 C1~C4에서 `R4_LOST`가 0이면 여전히 판정 행에서 관측되지 않은 경로로 남는다.
 
-## 15. 확인 필요 (봉인 전에 사용자 결정, 봉인 때 지움)
+## 15. 결과 전 사용자 결정 기록 (2026-11-10, 초안 15절 답)
 
-| # | 질문 | 선택지 | 추천 |
+모두 결과 전이다(이 규칙의 대상 행 0행). 고른 안은 본문에 반영했다.
+
+| # | 질문 | 고른 안 | 반영한 곳 |
 |---|---|---|---|
-| Q-1 | 하네스 표본 밖 묶음 Z-C(S-C 456 전체 키 × 두 팔)를 넣는가 | (A) 912줄 전부 / (B) ε 0만 456줄 / (C) 넣지 않음(하네스는 재현만) | **A**. ε 0.002는 TOUCH 위상을 옮기고 K1은 같은 주기 순서에 민감해 표본 가치가 크다. C이면 하네스 표본 밖 근거가 0이다 |
-| Q-2 | Chrono 행 범위 | (A) 12행 / (B) 8행(A3~A6 뺌: Kc3·V0 혼합 지형 없음) | **A**. 하네스에서 V0 칸 최소가 가장 낮았다(V0 1 칸 $M_c$ 13.41 kN). B는 P만 약 4.5 h로 1.5 h 줄어든다 |
-| Q-3 | Chrono C-S 문턱 | (A) 1 mm(LAS-b 원판 C5·K1 결정 3 그대로) / (B) B 짝만 1 mm, A·C 짝은 기록 + 끝 크롤러 틈 P3-5·행정 가드(642.8 mm) 판정 | **A**(이전 사용자 결정과 일관). 다만 P-12 확신이 낮아 C 짝에서 수 mm 차로 미달할 수 있음을 미리 알린다 |
-| Q-4 | Chrono 하한 G-2′C | (A) 절대 11.414589 kN(A안 rev2 R2-1 그대로) / (B) 상대: cand ≥ ref − 0.3 kN | **A**. B는 ref가 낮으면 같이 낮아도 통과한다 |
-| Q-5 | Chrono 시작 조건 | (A) 하네스 `통과` 뒤 / (B) 하네스와 병행(하네스 미달이면 Chrono는 정보용) | **A**. Chrono 4.5~6 h를 아낀다 |
-| Q-6 | D8x와의 순서 | (A) 12.3 제안(D8x Chrono 먼저) / (B) 이 규칙 Chrono 먼저 | **A**. D8x는 이미 자동 시작 결정이 있다 |
-| Q-7 | C3·C4 폐루프 | (A) 180 s(BT-C는 앞 120 s) / (B) 120 s(REM과 완전히 같음) | **A**. REM R8 READY 117.6 s라 B는 루프 끝 때문에 거짓 미달이 날 수 있다 |
-| Q-8 | PAIR_DIVERGE 정의 | (A) 조건부(3절, stop) / (B) 무조건(명령이 다르면 FLAG) | **A** |
+| Q-1 | Z-C 범위 | A: 912줄(S-C 456 전체 키 × 두 팔). 버린 안: ε 0만, 넣지 않음 | 4.2, 12.1 |
+| Q-2 | Chrono 범위 | A: 12행. 버린 안: 8행(Kc3·V0 혼합 지형 뺌) | 4.3, 12.2 |
+| Q-3 | Chrono C-S | A: 모든 짝 1 mm. 버린 안: B 짝만 1 mm. **알려진 위험**: C 짝은 연약 지면 침하로 수 mm 차가 날 수 있다(P-12, 확신 50 %) | 6.3 CC-S |
+| Q-4 | G-2′C | A: 절대 11.414589 kN. 버린 안: 상대 ref − 0.3 kN | 6.3 |
+| Q-5 | Chrono 시작 | A: 하네스 `통과` 뒤 | 4.3, 8.2 S-6 |
+| Q-6 | D8x와의 순서 | A: D8x Chrono 먼저 | 12.3 |
+| Q-7 | C3·C4 폐루프 | A: 180 s, BT-C는 앞 120 s(t ≤ 128 s) | 4.3, 4.4 |
+| Q-8 | PAIR_DIVERGE | A: 조건부(stop) | 3절 |
+
+- 재감사(`las_k1_adopt_rev1_d8x_rev3_audit.md`) 반영: F-5 → 11.1 표 `las_rev_targeted.py` 행, F-6 → 2절·K-3·11.5 E-5, F-7 → 11.1 표·11.5 E-3, W-1 → 11.1 표·11.5 E-2.
 
 ## 부록 A. 키 목록과 기준 파일 (봉인 때 다시 계산해 대조)
 
@@ -464,5 +485,8 @@ D8x는 E코어 하네스 R-a·R-c(약 3 h) → 관문 G1 → Chrono 19행(P, 약
 | Z-C 중 R-S와 겹치지 않는 키(표본 밖) | — | — | 437 | `f20bb9e0b1b570660fd15c2a33a2abd66308efce10e1aeb3185cc178956edea7` |
 | Z-X 참고(옛 R-X) | `las/revA2/revA_RX.jsonl`(4줄) | `04f7a4dcf435b66934a811af6cee4cb5fa657f8e897f4a503321dd126f4b0d78` | 4 | `bdad17c7c77abae2eb47c8b366d09d1882fe934fecd112b759040b894f79adfd` |
 
-- `k1_YP.jsonl`은 206줄이다(Y-Pa 165 + Y-Pb 40 + 후보 필드가 빈 1줄). 도구는 K1on·`las_candidate` P0 줄만 비트 기준으로 쓰고, 나머지 줄 수와 이름을 출력한다. 빈 1줄의 정체는 봉인 전에 확인한다(초안 작성 때 내용은 보지 않았다).
+- `k1_YP.jsonl`은 206줄이다(Y-Pa 165 + Y-Pb 40 + 오류 줄 1).
+  - 오류 줄은 100번째 줄이다. 최상위 키는 `error`, `job`, `rev`, `tb`, `wall_s`뿐이고 `rev.key`는 `D1|H-S-1|S1|M|flat|K1|V0|e0.002`다. `error`는 `install: TimeoutExpired(['git', '-C', 'C:\\workspace\\outrigger_control', 'rev-parse', 'HEAD'], 60)`(설치 단계 git 조회 시간 초과, 인프라 원인)이다.
+  - 같은 키의 줄이 105번째에 하나 더 있다(재실행 줄로 본다. 그 줄의 값은 읽지 않았다).
+  - 도구 규칙: 비트 기준은 `error` 키가 없고 K1on·`las_candidate` P0인 줄만 쓴다. 같은 전체 키에 정상 줄이 정확히 1개여야 한다(아니면 S-3 stop). 오류 줄 수와 키를 출력한다.
 - Chrono BT-C 기준: main checkout `07_results/S9/batch_V5-LAS-K1-REM_20261109_235554/`의 `REM_J2_B_top_Fs4_VB_gateon/controller_commands.npz`(`ebf86d1d…b559`), `REM_J2_B_top_Fs4_m1p1_VB_gateon/controller_commands.npz`(`97aace61…c8aa`). gateoff R1·R4 파일 sha도 각각 같다.
