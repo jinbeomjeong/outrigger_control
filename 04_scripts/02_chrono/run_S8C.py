@@ -1766,6 +1766,7 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
                                                                hydraulics=v5_options,
                                                                las_off=las_off)
     k2_block = None
+    dhat_rec = s6c.k2c.DhatWindowRecorder(model) if bcase.k2_row is not None else None  # rev1 4, read only
     if bcase.k2_row is not None:  # K-2 V-6: the built controller holds the row's arm / gate / tag (rules I-10)
         from outrigger_sim.control.touch_creep_option import (
             check_built_touch_creep,
@@ -2019,7 +2020,7 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
                               run_meta=run_meta, on_control=observe_end,
                               command_delay_periods=0,
                               command_offset_s=bcase.command_offset_s,
-                              step_hook=st._chain_hooks(pads, sat_rec),
+                              step_hook=st._chain_hooks(pads, sat_rec, dhat_rec),
                               dt_schedule=schedule,
                               placement=st.run_placement(),
                               stop_when=stop_now if use_rule else None)
@@ -2048,6 +2049,8 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
     bundle["saturation_steps"] = sat_rec.meta()
     save_record(res.record, case_dir / "record")
     pads.save(case_dir / "pads.npz")
+    if dhat_rec is not None:
+        bundle["k2_valve_record"] = dhat_rec.save(case_dir / s6c.k2c.VALVE_FILE)
     series_info = series.save(case_dir / S8_SERIES_NAME)
     head_delivered = None if head_fault is None \
         else head_fault.save_delivered(case_dir / HEAD_DELIVERED_FILE)  # C-S8-70 ⑥

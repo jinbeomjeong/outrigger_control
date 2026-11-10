@@ -2104,6 +2104,7 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
         if expect_controller is not None and expect_controller != k2_block["controller_tag"]:
             raise SystemExit(f"{case.case_id}: controller tag {k2_block['controller_tag']} != "
                              f"--expect-controller {expect_controller}")
+    dhat_rec = k2c.DhatWindowRecorder(model) if case.k2_row is not None else None  # rev1 4, read only
     pad_damp = None
     if case.pad_zeta_moving is not None:  # K-2 V-6 L1-R: moving-leg pad dashpot (k2_dyn_spec.md 3)
         from outrigger_sim.chrono.moving_pad_damping import (
@@ -2314,7 +2315,7 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
         res = run_closed_loop(engine, controller, suite, duration_s or case.duration_s,
                               run_meta=run_meta, on_control=observe, command_delay_periods=0,
                               command_offset_s=case.command_offset_s,
-                              step_hook=st._chain_hooks(pads, settle_vel, sat_rec, gap_rec, pad_damp),
+                              step_hook=st._chain_hooks(pads, settle_vel, sat_rec, gap_rec, pad_damp, dhat_rec),
                               capture_every_steps=5 if pads and schedule is None else None,
                               dt_schedule=schedule,
                               capture_every_s=1.0e-3 if pads and schedule is not None else None,
@@ -2335,6 +2336,8 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
     save_record(res.record, case_dir / "record")
     if pads is not None:
         pads.save(case_dir / "pads.npz")
+    if dhat_rec is not None:
+        bundle["k2_valve_record"] = dhat_rec.save(case_dir / k2c.VALVE_FILE)
     if pad_damp is not None:
         from outrigger_sim.chrono.moving_pad_damping import SERIES_NAME as _PAD_DAMP_NAME
 

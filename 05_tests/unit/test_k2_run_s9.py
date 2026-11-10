@@ -64,3 +64,18 @@ def test_registered_tags_refuse_a_k2_config(run_s9) -> None:
         record = run_s9.controller_expectation(on, tag)
         assert "touch_creep_latch.enable" in {c["path"] for c in record["checks"] if not c["ok"]}, tag
     assert run_s9.controller_expectation(C2Config().with_10hz_d1(), run_s9.FINAL_LAS_K1_CONTROLLER)["ok"]
+
+
+def test_k2_tags_pass_their_configs(run_s9) -> None:
+    """V-6 / V-7 K-2 tags (cad 2026-11-10): K1 off + K-2 and K1 on (preset) + K-2."""
+    from dataclasses import replace as _replace
+
+    from outrigger_sim.control.c2 import C2Config
+
+    on = C2Config().with_10hz_d1(touch_creep_latch=True)
+    assert run_s9.controller_expectation(on, run_s9.FINAL_LAS_K1_TCL_CONTROLLER)["ok"]
+    off_gate = _replace(on, slope_clearance_margin=_replace(on.slope_clearance_margin,
+                                                            flat_soil_margin_order_gate=False))
+    assert run_s9.controller_expectation(off_gate, run_s9.FINAL_LAS_TCL_CONTROLLER)["ok"]
+    assert not run_s9.controller_expectation(off_gate, run_s9.FINAL_LAS_K1_TCL_CONTROLLER)["ok"]
+    assert not run_s9.controller_expectation(C2Config().with_10hz_d1(), run_s9.FINAL_LAS_K1_TCL_CONTROLLER)["ok"]
