@@ -99,6 +99,294 @@ SNAPSHOTS = (
     + [(lv, f) for lv in ("middle", "bottom") for f in ("flat", "roll5.5", "fdown3.5", "fup3.5")]
 )
 """14 settled crawler snapshots (spec 4)."""
+
+# --- D8x verification-range expansion (roll 5.7 / nose down 3.7 / nose up 3.6 deg, rules + rev1) ----
+D8X_RULES = "06_analysis/02_control/d8x/d8x_rules.md"
+D8X_RULES_SHA256 = "a377b9bb028385bb7d7d97312a71816ba0ca758e2cb193e25b2d092fff064da8"
+D8X_RULES_REV1 = "06_analysis/02_control/d8x/d8x_rules_rev1.md"
+D8X_RULES_REV1_SHA256 = "ad16f452fb4dce7395a059c73d7caf213f1a9a69f18af8d230bf03f4518e80d4"
+D8X_RULES_REV2 = "06_analysis/02_control/d8x/d8x_rules_rev2.md"
+D8X_RULES_REV2_SHA256 = "5f3fa620fe704834a9b6c0a65824b29b75e2a527ea8e97a17abb5e07987a8c27"
+D8X_RULES_REV = "rev2"
+"""The rules in force: the original + rev1 (rev1 replaces 1.1-1.3, the 4.4 floor name ``fup3.7`` -> ``fup3.6``,
+5.1 coordinates and 9.3; user decision 2026-11-10 after G0: nose-up half axis 3.6 deg) + rev2 (interpretation:
+per-engine settle map 1 / E-4b, tag and LAS-b 4, run length 5, scenario group 6, cad part 7)."""
+D8X_EXPECTED_TAG = "final_C4G2_LAS"
+"""Rev2 4: the Chrono tag expected at sealing (V0 with LAS-b on); ``--expect-controller`` replaces it only for an
+adopted tag (original 7 V-1b). A row with another tag or LAS-b off is refused before the run."""
+D8X_SETTLE_KIND_BY_ENGINE = {"L2b": "identity", "L1R": "level"}
+"""Rev2 1 (replaces original 2.1 third item): controller crawler settle map per engine (``run_S7C.
+SETTLE_MAP_BY_ENGINE``, C-R17 / U-S7-1): L2b-NSC rows 1-6 / 12-19 ``identity``, L1-R rows 7-11 ``level`` =
+``CrawlerSettleMap.for_level(level)``."""
+D8X_READY_MARGIN_S = 20.0
+"""Rev2 5 rule 2: T_run >= T^_R + 20 s."""
+D8X_RPX_READY_SCALE = 1.0467
+"""Rev2 5 table: the rpX / W floors take the rpB READY x 1.0467."""
+D8X_READY_REFS: dict[tuple[str, str, str], tuple[float, str]] = {
+    # (family, level, reference floor): (first READY s after the run start, where it is stored)
+    ("K24", "top", "fdown3.5"): (77.5, "FINAL-R-REP K24_top_fdown3.5_Fs4 new (rev2 5 table; final_c4g2/"
+                                       "final_r_rep_table.md)"),
+    ("K24", "top", "fup3.5"): (59.0, "FINAL-R-REP K24_top_fup3.5_Fs4 new (rev2 5 table)"),
+    ("K24", "top", "roll5.5"): (59.2, "FINAL-R-REP K24_top_roll5.5_Fs4 new (rev2 5 table)"),
+    ("K24", "top", "rpB"): (57.8, "FINAL-R-REP K24_top_rpB_Fs4 new (rev2 5 table)"),
+    ("K0V", "top", "fdown3.5"): (78.9, "07_results/S8/final_v4recheck_20261104_202815 K0V_top_fdown3.5_Fs0"),
+    ("K0V", "top", "fup3.5"): (59.1, "07_results/S8/p1r_20261024_222013 K0V_top_fup3.5_Fs0"),
+    ("K0V", "top", "roll5.5"): (59.2, "07_results/S8/c75_4790e2b_20261027_174330 K0V_top_roll5.5_Fs0"),
+    ("K0V", "top", "rpB"): (57.8, "FINAL-R-REP K0V_top_rpB_Fs0 new"),
+    ("A", "middle", "rpB"): (57.8, "FINAL-R-REP A_middle_rpB_Fs0 new"),
+    ("A", "bottom", "rpB"): (57.9, "FINAL-R-REP A_bottom_rpB_Fs0 new"),
+    ("K8", "top", "fdown3.5"): (76.5, "07_results/S8/final_v4recheck_20261104_202815 K8_top_fdown3.5_Fs8"),
+    ("K8", "top", "fup3.5"): (59.0, "07_results/S8/p1r_20261024_222013 K8_top_fup3.5_Fs8"),
+    ("K8", "top", "roll5.5"): (59.2, "07_results/S8/p1r_20261024_222013 K8_top_roll5.5_Fs8"),
+    ("K8", "top", "rpB"): (57.8, "FINAL-R-REP K8_top_rpB_Fs8 new"),
+    ("C1_D8", "top", "fdown3.5"): (81.7, "07_results/S6/bundleC_rerun35_L1R_20261024_150108 "
+                                         "C1_D8_top_fdown3.5_b1.6"),
+    ("C1_D8", "top", "fup3.5"): (58.6, "07_results/S6/bundleC_rerun35_L1R_20261024_150108 C1_D8_top_fup3.5_b1.6"),
+    ("C1_D8", "top", "roll5.5"): (59.7, "07_results/S6/bundleC_rerun34_L1R_20261024_141040 "
+                                        "C1_D8_top_roll5.5_b1.6"),
+    ("C1_D8", "top", "rpB"): (58.6, "07_results/S6/bundleC_rerun34_L1R_20261024_141040 C1_D8_top_rpB_b1.6"),
+    ("C1_H4V", "top", "fdown3.5"): (84.7, "07_results/S6/bundleC_rerun34_L1R_20261024_141040 C1_H4V_top_fdown3.5"),
+}
+"""Rev2 5: the stored first READY of each family on the old verification floor (``result.json ready_t_s`` of the
+latest plain run of that family case, read 2026-11-10; K24 = the rev2 table). ASSUMPTION of the source choice for
+the families other than K24 (rev2 5 'the stored old READY of that family')."""
+D8X_SLOPE_LIMIT_MODE = "verification_ext"
+"""``SlopeLimitMode.VERIFICATION_EXT`` (rules 1.3, python-expert ``control/target.py``)."""
+D8X_HALF_SPANS_DEG = {"roll": 5.7, "pitch_nose_down": 3.7, "pitch_nose_up": 3.6}
+"""Rev1 1.1 / 1.3: half axes of the asymmetric verification diamond (``TargetLimits.for_mode(VERIFICATION_EXT)``
+``relative_roll_span_rad`` / ``relative_pitch_span_rad`` / ``relative_pitch_span_nose_up_rad``); checked before a
+D8x run and recorded per row (rev1 9.3)."""
+D8X_POINTS: dict[str, tuple[str, tuple[float, float]]] = {
+    # role: (Chrono floor name, (roll, pitch) deg) -- the ONLY place of the (B) / (C) names and angles
+    "rpX": ("rpX", (2.8632, 1.8413)),
+    "rpX+-": ("rpX+-", (2.8242, -1.8162)),
+    "rpX-+": ("rpX-+", (-2.8632, 1.8413)),
+    "rpX--": ("rpX--", (-2.8242, -1.8162)),
+    "fdown": ("fdown3.7", (0.0, 3.7)),
+    "fup": ("fup3.6", (0.0, -3.6)),
+    "roll+": ("roll5.7", (5.7, 0.0)),
+    "roll-": ("rollm5.7", (-5.7, 0.0)),
+}
+"""Rules rev1 1.2 (B) rpB-direction diagonal point + mirrors (nose-up mirrors fitted to the 3.6 deg side) and (C)
+axis vertices (``fup3.6`` replaces the original ``fup3.7``), keyed by role. A rules revision changes names / angles
+here only (and :data:`D8X_W_FLOORS` for the W candidates); rows, snapshots and start states use the roles."""
+D8X_NAME = {role: name for role, (name, _) in D8X_POINTS.items()}
+D8X_RPX_FLOORS: dict[str, tuple[float, float]] = {
+    D8X_NAME[k]: D8X_POINTS[k][1] for k in ("rpX", "rpX+-", "rpX-+", "rpX--")}
+D8X_AXIS_FLOORS: dict[str, tuple[float, float]] = {
+    D8X_NAME[k]: D8X_POINTS[k][1] for k in ("fdown", "fup", "roll+", "roll-")}
+D8X_W_FLOOR_OF_POINT: dict[str, str] = {
+    "r+p+0.25": "dxpp025", "r+p+0.75": "dxpp075", "r+p-0.25": "dxpm025", "r+p-0.5": "dxpm050",
+    "r+p-0.75": "dxpm075", "r-p+0.5": "dxmp050", "r-p-0.5": "dxmm050",
+    "d45++": "d45pp", "d45+-": "d45pm", "d45-+": "d45mp", "d45--": "d45mm",
+}
+"""Rules 5.1: the 11 W candidates (R-a point tag -> Chrono floor name) in the tie-break order."""
+D8X_W_FLOORS: dict[str, tuple[float, float]] = {
+    "dxpp025": (1.425, 2.775), "dxpp075": (4.275, 0.925), "dxpm025": (1.425, -2.7),
+    "dxpm050": (2.85, -1.8), "dxpm075": (4.275, -0.9), "dxmp050": (-2.85, 1.85),
+    "dxmm050": (-2.85, -1.8),
+    "d45pp": (2.2627, 2.2627), "d45pm": (2.2064, -2.2064), "d45mp": (-2.2627, 2.2627),
+    "d45mm": (-2.2064, -2.2064),
+}
+"""Rules rev1 1.2 (A) coordinates of the W candidates (rev1 5.1: the R-a point, also when a mirror wins; the
+nose-up side re-computed with Theta 3.6 deg, the nose-up d45 moved onto the boundary 2.2064 deg)."""
+D8X_FLOORS: dict[str, tuple[float, float]] = {**D8X_RPX_FLOORS, **D8X_AXIS_FLOORS, **D8X_W_FLOORS}
+"""Every D8x floor (19): 4 rpX + 4 axis vertices + 11 W candidates (roll, pitch deg; theta > 0 =
+nose down; the ``scenarios/slope`` / ``floor_normal`` convention of :data:`FLOORS`)."""
+FLOORS.update(D8X_FLOORS)
+# Rev2 5: the D8x floors take the plain family length rule of :func:`_length` (the roll 5.5 deg levelling time is
+# no longer assumed for roll 5.7 deg); the run length T_run is :func:`d8x_run_length`.
+
+
+@dataclass(frozen=True)
+class D8xRow:
+    """One Chrono row of the D8x rules table 4.4."""
+
+    number: int
+    name: str
+    """Row name; ``<W>`` / ``<V>`` = the floor chosen by rules 5.1 / 5.2."""
+    family: str  # K24 C1_D8 C1_H4V A K0V K8
+    engine: str  # "L2b" (run_S8C) | "L1R" (run_S6C)
+    beta_GPa: float
+    fs_kN: float | None
+    """Seal friction of the L2b plant; None on L1-R (no seal friction)."""
+    level: str
+    floor: str
+    """Chrono floor name, ``"<W>"`` / ``"<V>"`` until chosen."""
+    order: int
+    """1 = first batch (``d8x_w1``), 2 = second (``d8x_w2``)."""
+
+    def resolved(self, w: str | None = None, v: str | None = None) -> D8xRow:
+        floor = {"<W>": w, "<V>": v}.get(self.floor, self.floor)
+        if floor is None:
+            raise ValueError(f"D8x row {self.number}: {self.floor} not chosen")
+        return replace(self, floor=floor, name=self.name.replace(self.floor, floor))
+
+
+_D8X_ROW_SPECS: tuple[tuple[int, str, str, float, float | None, str, str, str, int], ...] = (
+    # (number, family, engine, beta GPa, F_s kN, level, floor role (or <W>/<V>), name suffix, order)
+    (1, "K24", "L2b", 1.0, 4.0, "top", "fdown", "_Fs4", 1),
+    (2, "K24", "L2b", 1.0, 4.0, "top", "fup", "_Fs4", 1),
+    (3, "K24", "L2b", 1.0, 4.0, "top", "roll+", "_Fs4", 1),
+    (4, "K24", "L2b", 1.0, 4.0, "top", "roll-", "_Fs4", 1),
+    (5, "K24", "L2b", 1.0, 4.0, "top", "rpX", "_Fs4", 1),
+    (6, "K24", "L2b", 1.0, 4.0, "top", "<W>", "_Fs4", 1),
+    (7, "C1_D8", "L1R", 1.6, None, "top", "fdown", "_b1.6", 1),
+    (8, "C1_D8", "L1R", 1.6, None, "top", "fup", "_b1.6", 1),
+    (9, "C1_D8", "L1R", 1.6, None, "top", "roll+", "_b1.6", 1),
+    (10, "C1_D8", "L1R", 1.6, None, "top", "rpX", "_b1.6", 1),
+    (11, "C1_H4V", "L1R", 1.0, None, "top", "fdown", "", 1),
+    (12, "A", "L2b", 1.0, 0.0, "middle", "rpX", "_Fs0", 1),
+    (13, "A", "L2b", 1.0, 0.0, "bottom", "rpX", "_Fs0", 1),
+    (14, "K0V", "L2b", 1.0, 0.0, "top", "fdown", "_Fs0", 1),
+    (15, "K0V", "L2b", 1.0, 0.0, "top", "fup", "_Fs0", 1),
+    (16, "K0V", "L2b", 1.0, 0.0, "top", "roll+", "_Fs0", 1),
+    (17, "K0V", "L2b", 1.0, 0.0, "top", "roll-", "_Fs0", 1),
+    (18, "K0V", "L2b", 1.0, 0.0, "top", "rpX", "_Fs0", 1),
+    (19, "K8", "L2b", 1.0, 8.0, "top", "<V>", "_Fs8", 2),
+)
+"""Rules 4.4 (row name rule ``D8X_<family>_<level>_<floor>_<setting>``), floors by role."""
+
+
+def _d8x_row(spec) -> D8xRow:
+    n, fam, eng, beta, fs, lv, role, suffix, order = spec
+    floor = role if role.startswith("<") else D8X_NAME[role]
+    return D8xRow(n, f"D8X_{fam}_{lv}_{floor}{suffix}", fam, eng, beta, fs, lv, floor, order)
+
+
+D8X_ROWS: tuple[D8xRow, ...] = tuple(_d8x_row(s) for s in _D8X_ROW_SPECS)
+"""Rules 4.4 (19 rows: first batch 18 = 13 L2b + 5 L1-R, second batch 1)."""
+D8X_SETS = {"d8x_w1": 1, "d8x_w2": 2}
+"""Case set name -> rules 4.4 order. ``d8x_w1`` = the 18 first-batch rows (13 in run_S8C, 5 in
+run_S6C), ``d8x_w2`` = row 19 (run_S8C)."""
+D8X_EXPECTED_COUNTS = {("d8x_w1", "L2b"): 13, ("d8x_w1", "L1R"): 5, ("d8x_w2", "L2b"): 1,
+                       ("d8x_w2", "L1R"): 0}
+D8X_L1R_SNAPSHOTS = tuple(dict.fromkeys((r.level, r.floor) for r in D8X_ROWS if r.engine == "L1R"))
+"""Settled crawler start states the L1-R rows 7-11 need (``run_S6C.py snaps-d8x``, P cores)."""
+
+
+def d8x_floor(name: str) -> str:
+    """Chrono floor name of ``name`` (a D8x floor name or an R-a point tag of rules 5.1)."""
+    name = D8X_W_FLOOR_OF_POINT.get(name, name)
+    if name not in D8X_FLOORS:
+        raise ValueError(f"not a D8x floor / W candidate: {name!r}")
+    return name
+
+
+def d8x_w_floor(w: str) -> str:
+    """Rules 5.1: W must be one of the 11 candidates (floor name or R-a tag)."""
+    floor = d8x_floor(w)
+    if floor not in D8X_W_FLOORS:
+        raise ValueError(f"W {w!r} is not one of the 11 candidates of rules 5.1 "
+                         f"{tuple(D8X_W_FLOOR_OF_POINT)}")
+    return floor
+
+
+def d8x_v_floor(v: str, w: str | None) -> str:
+    """Rules 5.2: V is the floor of one of the rows 1-6: one of the five fixed L2b F_s 4 floors,
+    or W (then ``w`` must be given and equal, so row 19 repeats the row-6 floor)."""
+    floor = d8x_floor(v)
+    fixed = [r.floor for r in D8X_ROWS if r.number <= 6 and r.floor != "<W>"]
+    if floor in fixed:
+        return floor
+    if w is None or d8x_w_floor(w) != floor:
+        raise ValueError(f"V {v!r} is not a floor of rows 1-6: fixed {tuple(fixed)} or W "
+                         f"(given W: {w!r})")
+    return floor
+
+
+def d8x_rows(case_set: str, *, w: str | None = None, v: str | None = None,
+             engine: str | None = None) -> list[D8xRow]:
+    """Resolved rows of ``case_set`` (``d8x_w1`` needs ``w``, ``d8x_w2`` needs ``v``)."""
+    order = D8X_SETS[case_set]
+    wf = None if w is None else d8x_w_floor(w)
+    vf = None if v is None else d8x_v_floor(v, w)
+    rows = [r.resolved(wf, vf) for r in D8X_ROWS if r.order == order
+            and (engine is None or r.engine == engine)]
+    return rows
+
+
+def d8x_start_states(w: str | None = None) -> list[dict[str, Any]]:
+    """Rules 4.4 end / 9.3 / I-5: start state of every (level, floor, engine) a D8x row needs.
+
+    L1-R (run_S6C): the settled crawler snapshot ``07_results/states_L1R/S6_crawler_<level>_<floor>
+    .npz`` (:func:`job_snapshot`: analytic ``crawler_slope`` pose, anchor bushings, gravity ramp
+    :data:`SNAP_RAMP_S` + settle :data:`SNAP_SETTLE_S`), built by ``run_S6C.py snaps-d8x`` on the P
+    cores before the batch. L2b (run_S8C): no file; every case settles its rigid NSC crawler in the
+    run (``run_S7C.settle_l2b``, ``CRAWLER_SETTLE_S`` 3 s) as the K24 / A / K0V / K8 families do.
+    ``w`` None leaves the W pair as ``<W>`` (the L2b side only; it needs no file)."""
+    wf = "<W>" if w is None else d8x_w_floor(w)
+    out: list[dict[str, Any]] = []
+    for lv, f in D8X_L1R_SNAPSHOTS:
+        out.append({"engine": "L1R", "level": lv, "floor": f, "kind": "snapshot",
+                    "snapshot": snapshot_name(lv, f), "dir": "07_results/states_L1R",
+                    "rows": [r.number for r in D8X_ROWS if r.engine == "L1R" and r.floor == f
+                             and r.level == lv],
+                    "build": "run_S6C.py snaps-d8x"})
+    pairs = list(dict.fromkeys((r.level, wf if r.floor == "<W>" else r.floor) for r in D8X_ROWS
+                               if r.engine == "L2b" and r.floor != "<V>"))
+    for lv, f in pairs:
+        out.append({"engine": "L2b", "level": lv, "floor": f, "kind": "in_run_settle",
+                    "snapshot": None, "settle": "run_S7C.settle_l2b (CRAWLER_SETTLE_S, rigid NSC "
+                                                "crawler)",
+                    "rows": [r.number for r in D8X_ROWS if r.engine == "L2b" and r.level == lv
+                             and (r.floor == f or (r.floor == "<W>" and f == wf))]})
+    out.append({"engine": "L2b", "level": "top", "floor": "<V>", "kind": "in_run_settle",
+                "snapshot": None, "settle": "as the row-1..6 floor V (rules 5.2)", "rows": [19]})
+    return out
+
+
+def d8x_expected_settle(engine: str, level: str) -> dict[str, Any]:
+    """Rev2 1 table / E-4b: the settle map a row of ``engine`` must use (``kind``, and the level for ``level``)."""
+    kind = D8X_SETTLE_KIND_BY_ENGINE[engine]
+    return {"kind": kind, "level": level if kind == "level" else None}
+
+
+def d8x_scenario(row: D8xRow, floor: str | None = None) -> dict[str, str]:
+    """Rev2 6: the family scenario of a row (``group`` = ``scenario.group``, ``id`` = the family scenario id of the
+    floor). L2b: the nose-down vertex takes H4V (``G2-R``, as ``run_S8C.S7_FS0_REFS["fdown3.5"]`` =
+    ``L2b_H4V_top_fdown3.5``), every other floor D8; L1-R: ``C1_D8`` = D8 (#7-#10), ``C1_H4V`` = H4V (#11)."""
+    f = row.floor if floor is None else floor
+    if row.engine == "L2b":
+        kind = "H4V" if f == D8X_NAME["fdown"] else "D8"
+    else:
+        kind = {"C1_D8": "D8", "C1_H4V": "H4V"}[row.family]
+    return {"group": {"H4V": "G2-R", "D8": "D8"}[kind], "id": f"{kind}_{row.level}_{f}"}
+
+
+def _ceil_tenth(x: float) -> float:
+    return math.ceil(round(x * 10.0, 9)) / 10.0
+
+
+def d8x_ready_hat(family: str, level: str, floor: str) -> dict[str, Any]:
+    """Rev2 5: expected first READY T^_R of a D8x floor = the family's stored old-floor READY x the slope ratio
+    (fdown3.7 <- fdown3.5 x 3.7 / 3.5, fup3.6 <- fup3.5 x 3.6 / 3.5, roll +-5.7 <- roll5.5 x 5.7 / 5.5, rpX and the
+    W floors <- rpB x 1.0467), rounded up to 0.1 s (rev2 example: 59.2 x 5.7 / 5.5 = 61.35 -> 61.4 s)."""
+    if floor == D8X_NAME["fdown"]:
+        ref, ratio = "fdown3.5", abs(D8X_FLOORS[floor][1]) / 3.5
+    elif floor == D8X_NAME["fup"]:
+        ref, ratio = "fup3.5", abs(D8X_FLOORS[floor][1]) / 3.5
+    elif floor in (D8X_NAME["roll+"], D8X_NAME["roll-"]):
+        ref, ratio = "roll5.5", abs(D8X_FLOORS[floor][0]) / 5.5
+    elif floor == D8X_NAME["rpX"] or floor in D8X_W_FLOORS:
+        ref, ratio = "rpB", D8X_RPX_READY_SCALE
+    else:
+        raise ValueError(f"no rev2 5 READY scaling for floor {floor!r}")
+    ready, source = D8X_READY_REFS[(family, level, ref)]
+    return {"ref_floor": ref, "ref_ready_s": ready, "ref_source": source, "ratio": ratio,
+            "ready_hat_s": _ceil_tenth(ready * ratio)}
+
+
+def d8x_run_length(family: str, level: str, floor: str, family_s: float) -> dict[str, Any]:
+    """Rev2 5 length rule: T_run = max(family length + R8 extra (``family_s``), T^_R + 20 s)."""
+    hat = d8x_ready_hat(family, level, floor)
+    need = hat["ready_hat_s"] + D8X_READY_MARGIN_S
+    run_s = round(max(family_s, need), 6)
+    return {**hat, "family_run_s": family_s, "ready_hat_plus_margin_s": round(need, 6), "run_s": run_s,
+            "binding": "family" if family_s >= need else "ready_hat",
+            "rule": "D8x rules rev2 5: T_run >= max(family length + R8_EXTRA_S, T^_R + 20 s)"}
+
+
 PREREQUISITES = {
     "NO_SNAPSHOT": "settled crawler snapshot missing: run `run_S6.py snaps2`",
 }

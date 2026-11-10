@@ -2,7 +2,11 @@
 
 The project is not changed. ``C2Config.with_10hz_d1`` gets other keyword defaults in this process and in its
 spawned workers, as ``05_tests/unit/pre_switch_preset_runner.py`` does; a caller that passes a keyword keeps it.
-Env: ACC_WT (pinned checkout, required), ACC_COMBO both | c4g2 | k1 | off (default both).
+Env: ACC_WT (pinned checkout, required), ACC_COMBO both | c4g2 | k1 | off | preset (default both).
+``preset`` (D8x, ``d8x_rules.md`` 2.1) leaves ``with_10hz_d1`` untouched. "Main tree" means the
+main checkout outside the pinned tree: a pinned git worktree under ``.claude/worktrees`` and the
+main checkout itself (ACC_WT = main) keep their own folders (before 2026-11-10 such a run removed
+its own 03_src and stopped at ``import outrigger_sim``).
 """
 from __future__ import annotations
 
@@ -15,16 +19,28 @@ from pathlib import Path
 
 MAIN_TREE = Path(r"C:\workspace\outrigger_control").resolve()
 COMBOS = {"both": (True, True), "c4g2": (True, False), "k1": (False, True), "off": (False, False)}
+PRESET_COMBO = "preset"
+"""D8x: the preset as it is (no keyword default replaced)."""
 
 
 def wt_root() -> Path:
     return Path(os.environ["ACC_WT"]).resolve()
 
 
+def _is_within(path: Path, folder: Path) -> bool:
+    return path == folder or folder in path.parents
+
+
+def is_main_tree_path(path: str | Path) -> bool:
+    """A path in the main checkout but not in the pinned tree ACC_WT."""
+    resolved = Path(path).resolve()
+    return _is_within(resolved, MAIN_TREE) and not _is_within(resolved, wt_root())
+
+
 def combo() -> str:
     name = os.environ.get("ACC_COMBO", "both")
-    if name not in COMBOS:
-        raise SystemExit(f"ACC_COMBO {name!r}: expected one of {sorted(COMBOS)}")
+    if name not in COMBOS and name != PRESET_COMBO:
+        raise SystemExit(f"ACC_COMBO {name!r}: expected one of {sorted([*COMBOS, PRESET_COMBO])}")
     return name
 
 
@@ -39,7 +55,7 @@ class MainTreeGuard:
     def find_spec(name, path=None, target=None):
         for entry in list(sys.path):
             try:
-                inside = entry and (Path(entry).resolve() == MAIN_TREE or MAIN_TREE in Path(entry).resolve().parents)
+                inside = entry and is_main_tree_path(entry)
             except OSError:
                 inside = False
             if inside:
@@ -65,7 +81,7 @@ def install() -> None:
 
     if root not in Path(c2.__file__).resolve().parents:
         raise SystemExit(f"c2 comes from {c2.__file__}, not from {root}")
-    if getattr(c2.C2Config, "_acc_patched", False):
+    if getattr(c2.C2Config, "_acc_patched", False) or combo() == PRESET_COMBO:
         return
     hold, retrigger = COMBOS[combo()]
     original = c2.C2Config.with_10hz_d1
@@ -84,7 +100,7 @@ def main_tree_modules() -> list[str]:
         path = getattr(module, "__file__", None)
         if path:
             try:
-                if MAIN_TREE in Path(path).resolve().parents:
+                if is_main_tree_path(path):
                     bad.append(f"{name}: {path}")
             except OSError:
                 pass

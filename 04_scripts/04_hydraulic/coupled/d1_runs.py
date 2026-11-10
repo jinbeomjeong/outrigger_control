@@ -56,6 +56,7 @@ for _path in (HERE, S9_DIR, ROOT / "04_scripts" / "01_dynamics", ROOT / "03_src"
 
 import verdict_runs as vr  # noqa: E402
 from d1_rows import (  # noqa: E402
+    D8X_GROUP,
     FS_KN,
     PAD,
     RIGID,
@@ -423,12 +424,49 @@ def d1_record(row: D1Row, setting_name: str, eps: float, result: dict, plant, co
         record["expectation"] = expectation
     if row.role == ROLE_RECORD:
         record["record_only"] = True
+    if row.group == D8X_GROUP:
+        record["d8x"] = d8x_block(row, values, plant, controller, rows)
     return record
+
+
+def d8x_block(row: D1Row, values: dict, plant, controller, rows: np.ndarray) -> dict:
+    """D8x R-c record of an H-R-X run (``d8x_record.run_metrics`` on the 1 ms chunks, the
+    effective K1 gate, the angles and the repository files this worker imported)."""
+    record = _d8x_record_module()
+    times = values.get("times") or {}
+    rod_weight = getattr(plant, "Wr", None)
+    if rod_weight is None:
+        raise RuntimeError(f"{row.key}: the plant has no rod weight Wr (D8x J3)")
+    metrics = record.run_metrics(
+        t_s=rows[:, COLUMN["t"]], cyl_force_N=rows[:, TRUE_FORCE], rod_weight_N=rod_weight,
+        t_att_s=rows[:, COLUMN["t"]],
+        att_deg=np.degrees(rows[:, [COLUMN["roll"], COLUMN["pitch"]]]),
+        t_touch_s=times.get("t_touch_end_s"),
+        t_crawler_off_s=(values.get("forces") or {}).get("t_lift_s"),
+        t_ready_s=times.get("t_first_ready_s"), events=record.controller_events(controller),
+        max_moving_bar=(values.get("pressure") or {}).get("max_moving_bar"),
+        stroke_max_m=float(plant.flow_limiter.max_stroke_reading_m))
+    files = record.repo_module_files(ROOT)
+    return {"k1_order_gate": record.effective_k1(controller),
+            "liftoff_slow_enabled": record.liftoff_slow_enabled(controller),
+            "angles_deg": [row.roll_deg, row.pitch_deg], "level": row.level,
+            "floor": row.slope_name, "crawler_k_scale": row.crawler_k_scale,
+            "module_files": files, "module_files_sha256": record.files_digest(files),
+            **metrics}
+
+
+def _d8x_record_module():
+    d8x_dir = ROOT / "04_scripts" / "03_control" / "d8x"
+    if str(d8x_dir) not in sys.path:
+        sys.path.insert(0, str(d8x_dir))
+    import d8x_record
+
+    return d8x_record
 
 
 # ---------------------------------------------------------------------------------- public API
 def execute(entry: dict, setting, hydraulics, *, setting_name: str,
-            eps: float) -> tuple[dict, dict]:
+            eps: float, k1: str | None = None) -> tuple[dict, dict]:
     """Run one D-1 row in this worker (patches stay for the rest of the process).
 
     Args:
@@ -437,6 +475,8 @@ def execute(entry: dict, setting, hydraulics, *, setting_name: str,
         hydraulics: ``HydraulicOptions`` or None (V0).
         setting_name: ``VB`` / ``V0`` (record and J-P3).
         eps: Phase offset of the run (the caller installs it; record only here).
+        k1: D8x H-R-X jobs only: ``on`` turns the R4c30 order gate on in this worker, ``off``
+            (and None) keeps the preset as it is.
 
     Returns:
         The result dict (``verdict_runs._finish`` keys, the plant options record,
@@ -446,7 +486,9 @@ def execute(entry: dict, setting, hydraulics, *, setting_name: str,
 
     row = D1Row.from_job(entry)
     vr.install_plant_options(setting, hydraulics)
-    vr.install_logged_controller()
+    c2 = vr.install_logged_controller()
+    if k1 == "on":
+        _d8x_record_module().install_k1_order_gate(c2.C2Controller)
     rcc.CRAWLER_K_SCALE = float(row.crawler_k_scale)
     result, series, plant, controller, harness = PATH_RUNNERS[row.path](row)
     t_lift_s = ((result.get("values") or {}).get("forces") or {}).get("t_lift_s")
