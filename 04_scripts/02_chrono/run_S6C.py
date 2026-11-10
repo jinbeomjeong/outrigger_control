@@ -76,6 +76,21 @@ from the x3 settled snapshots (``S6_crawler_<level>_<floor>_crx3``, built first)
     python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py snaps-crx --jobs 4
     python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py run --set d1c1 --approved --jobs 4 --tag d1
 
+D8x (``06_analysis/02_control/d8x/d8x_rules.md`` sha256 a377b9bb... + ``d8x_rules_rev1.md`` sha256
+ad16f452..., 4.4 rows 7-11, 2026-11-10): set
+``d8x_w1`` = the L1-R part of the first batch (``D8X_C1_D8_top_<fdown3.7|fup3.6|roll5.7|rpX>_b1.6``,
+``D8X_C1_H4V_top_fdown3.7``) with ``slope_limit_mode`` ``verification_ext`` (needs python-expert's
+``SlopeLimitMode.VERIFICATION_EXT``; ``run`` / ``check`` refuse without it), the floors of
+``s6_stage2.D8X_FLOORS``; the rows 1-6 / 12-18 / 19 are run_S8C (``--set d8x_w1 --w`` / ``d8x_w2 --v``).
+Rev2 (``d8x_rules_rev2.md`` sha256 5f3fa620...): the L1-R rows use the ``level`` settle map, the L2b rows
+``identity`` (E-4b, recorded and checked); scenario group / id (rev2 6); expected tag ``final_C4G2_LAS`` with LAS-b
+on, refused otherwise before any Chrono step (rev2 4); run length T_run = max(family length + 8 s, T^_R + 20 s)
+(rev2 5, :func:`d8x_with_length`)::
+
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py snaps-d8x --jobs 4 [--dry-run]
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py run --set d8x_w1 --approved --jobs 5
+        --expect-controller final_C4G2_LAS --tag d8x
+
 ``run`` refuses to start without ``--approved`` (the user approves the bundle separately).
 C-9 cases (R-5 on) are conditional: ``run`` leaves them out unless ``--with-c9`` (spec 150:
 only when the C-1 G4 cases miss F_min).
@@ -251,8 +266,19 @@ class BundleCCase:
     the crawler bushing ``k_t`` x s and ``c_t`` x sqrt s follow, same zeta); the start snapshot is
     the settle of the analytic pose of that crawler (:func:`crawler_k_snapshot_name`). The
     controller keeps the YAML crawler and the x1 settle map. None = YAML crawler."""
+    slope_limit_mode: str | None = field(default=None, repr=False)
+    """D8x (``d8x_rules.md`` 1.3 / 2.1): the A1 slope-limit mode of the case (``"verification_ext"``);
+    None = ``SlopeLimitMode.VERIFICATION`` as every earlier case."""
+    d8x_row: int | None = field(default=None, repr=False)
+    """D8x rules 4.4 row number (1-19); None = not a D8x row."""
+    d8x_scenario_id: str | None = field(default=None, repr=False)
+    """D8x rev2 6: the family scenario id (``H4V_top_fdown3.7``, ``D8_top_rpX``); the group is
+    ``scenario.group``."""
+    d8x_family_run_s: float | None = field(default=None, repr=False)
+    """D8x rev2 5 rule 1: the family run length + ``R8_EXTRA_S`` before the T^_R rule (:func:`d8x_with_length`)."""
 
-    OPTIONAL_META = ("preground_leg", "end_after_ready_s", "pad_block", "crawler_k_factor")
+    OPTIONAL_META = ("preground_leg", "end_after_ready_s", "pad_block", "crawler_k_factor",
+                     "slope_limit_mode", "d8x_row", "d8x_scenario_id", "d8x_family_run_s")
     """Fields left out of :meth:`to_meta` while None and out of ``repr`` (``repr=False``), so
     the earlier cases' definitions (meta and repr hashes) stay as they were."""
 
@@ -779,10 +805,60 @@ def d1c1_cases() -> list[BundleCCase]:
 
 D1C1_IDS = {rid: f"D1C1_{lv}_{fl}_crx{D1C1_FACTOR:g}" for rid, lv, fl in D1C1_ROWS}
 
+D8X_SNAPSHOTS = st.D8X_L1R_SNAPSHOTS
+"""D8x L1-R start states (``snaps-d8x``; rules 4.4 end, 9.3)."""
+
+
+def d8x_note(row) -> str:
+    return (f"D8x rules 4.4 #{row.number} ({st.D8X_RULES} sha256 {st.D8X_RULES_SHA256[:8]} + rev1 "
+            f"{st.D8X_RULES_REV1_SHA256[:8]} + rev2 {st.D8X_RULES_REV2_SHA256[:8]}): family "
+            f"{row.family} with the floor {row.floor} {st.FLOORS[row.floor]} deg and the slope-limit mode "
+            f"{st.D8X_SLOPE_LIMIT_MODE}; H4 / probe / sensors as the family, run length by rev2 5")
+
+
+def d8x_with_length(sc: st.Stage2Case, row) -> tuple[st.Stage2Case, float]:
+    """D8x rev2 5: the family scenario ``sc`` (length by the family rule, :func:`_sc`) with its length set so that
+    the run length (``BundleCCase.duration_s`` = scenario + :data:`R8_EXTRA_S`) is T_run = max(family length +
+    8 s, T^_R + 20 s) (:func:`s6_stage2.d8x_run_length`). Returns (scenario, family run length)."""
+    family_s = sc.duration_s + R8_EXTRA_S
+    info = st.d8x_run_length(row.family, row.level, row.floor, family_s)
+    return replace(sc, duration_s=info["run_s"] - R8_EXTRA_S), family_s
+
+
+def d8x_l1r_cases() -> list[BundleCCase]:
+    """D8x rows 7-11 (rules 4.4, L1-R): ``C1_D8_top_<floor>_b1.6`` = :func:`_d8` (as the bundle-C
+    ``C1_D8_*``, scenario group ``D8``), ``C1_H4V_top_fdown3.7`` = the ``C1_H4V_top_fdown3.5`` scenario
+    (``H4V`` / ``G2-R``, items R 2 3 8; rev2 6); config ``C-1`` as the family; ideal leg sensors; start from the
+    :data:`D8X_SNAPSHOTS`; ``slope_limit_mode`` ``verification_ext``; settle map ``level`` (rev2 1); length rev2 5."""
+    out = []
+    for row in st.d8x_rows("d8x_w1", engine="L1R"):
+        if row.family == "C1_D8":
+            sc = _d8(row.level, row.floor)
+        elif row.family == "C1_H4V":
+            sc = _sc("H4V", "G2-R", row.level, row.floor, items=("R", "2", "3", "8"))
+        else:
+            raise ValueError(f"D8x row {row.number}: family {row.family} is not an L1-R family")
+        scen = st.d8x_scenario(row)
+        if sc.group != scen["group"]:
+            raise RuntimeError(f"D8x row {row.number}: scenario group {sc.group} != rev2 6 {scen['group']}")
+        sc, family_s = d8x_with_length(sc, row)
+        note = d8x_note(row)
+        out.append(BundleCCase(row.name, "C-1", replace(sc, case_id=row.name, notes=(note,)),
+                               beta_GPa=row.beta_GPa, notes=(note,),
+                               slope_limit_mode=st.D8X_SLOPE_LIMIT_MODE, d8x_row=row.number,
+                               d8x_scenario_id=scen["id"], d8x_family_run_s=family_s))
+    if len(out) != st.D8X_EXPECTED_COUNTS[("d8x_w1", "L1R")]:
+        raise RuntimeError(f"D8x L1-R rows: {len(out)}")
+    return out
+
+
 CASE_SETS = {"bundleC": bundle_c_cases, "rerun32": rerun32_cases, "rerun33": rerun33_cases,
              "rerun34": rerun34_cases, "rerun35": rerun35_cases, "ps7r8": ps7r8_cases,
              "g8c76": g8c76_run_cases, "g8c76_p28": g8c76_def_cases,
-             "g8c76_p28acc": g8c76_p28_acceptance_cases, "d1c1": d1c1_cases}
+             "g8c76_p28acc": g8c76_p28_acceptance_cases, "d1c1": d1c1_cases,
+             "d8x_w1": d8x_l1r_cases}
+D8X_CASE_SETS = ("d8x_w1",)
+"""run_S6C side of the D8x first batch (rows 7-11; rows 1-6 / 12-18 / 19 are run_S8C)."""
 GROUP_SETS = {"rerun32": rerun32_groups, "rerun33": rerun33_groups, "rerun34": rerun34_groups,
               "rerun35": rerun35_groups}
 ROLE_SETS = {"rerun34": RERUN34_ROLES, "rerun35": RERUN35_ROLES}
@@ -1099,11 +1175,65 @@ class SaturationRecorder:
                         "static window ASSUMPTION; t relative to the start state"}
 
 
+def slope_limit_mode(case: BundleCCase):
+    """``SlopeLimitMode`` of ``case``: VERIFICATION (every case before D8x) or the case's
+    ``slope_limit_mode`` (D8x: ``verification_ext``, rules 1.3).
+
+    Raises:
+        RuntimeError: The installed ``control/target.py`` has no such mode (python-expert's
+            ``VERIFICATION_EXT`` not merged yet)."""
+    from outrigger_sim.control.target import SlopeLimitMode
+
+    if case.slope_limit_mode is None:
+        return SlopeLimitMode.VERIFICATION
+    try:
+        return SlopeLimitMode(case.slope_limit_mode)
+    except ValueError as error:
+        raise RuntimeError(f"{case.case_id}: control/target.py has no SlopeLimitMode "
+                           f"{case.slope_limit_mode!r} (D8x rules 1.3 / 9.2, python-expert)") from error
+
+
+def d8x_mode_available() -> bool:
+    """``SlopeLimitMode.VERIFICATION_EXT`` is installed (D8x rules 9.2 item 1)."""
+    from outrigger_sim.control.target import SlopeLimitMode
+
+    return st.D8X_SLOPE_LIMIT_MODE in {m.value for m in SlopeLimitMode}
+
+
+def half_spans_deg(config) -> dict[str, float]:
+    """Half axes [deg] of the A1 / A4 relative diamond of ``config``'s slope-limit mode
+    (``TargetLimits.for_mode``): roll, nose-down pitch, nose-up pitch (``relative_pitch_span_for`` on
+    the relative nose-up side), and the usage tolerance. D8x rev1 9.3: recorded per row."""
+    from outrigger_sim.control.target import TargetLimits
+
+    lim = TargetLimits.for_mode(config.target.slope_limit_mode)
+    return {"roll": math.degrees(lim.relative_roll_span_rad),
+            "pitch_nose_down": math.degrees(lim.relative_pitch_span_for(-1.0)),
+            "pitch_nose_up": math.degrees(lim.relative_pitch_span_for(+1.0)),
+            "usage_tolerance": float(lim.usage_tolerance)}
+
+
+def check_half_spans(case_id: str, spans: dict[str, float]) -> None:
+    """D8x rev1 1.1 / 1.3: the mode gives 5.7 / 3.7 / 3.6 deg (SystemExit otherwise)."""
+    bad = {k: (spans[k], v) for k, v in st.D8X_HALF_SPANS_DEG.items() if abs(spans[k] - v) > 1e-9}
+    if bad:
+        raise SystemExit(f"{case_id}: verification_ext half axes differ from rev1 1.3 (got, want): {bad}")
+
+
+def controller_tag_of(config) -> str:
+    """Tag of the run-time controller ``config`` (no v5 option): ``v5_options.controller_tag``
+    (``final_C4G2_LAS`` with LAS-b on), else the runner tag ``final_C4G2`` (its docstring). D8x
+    rules 2.1 / E-6: recorded per row, compared with ``--expect-controller``."""
+    from outrigger_sim.hydraulics.v5_options import controller_tag
+
+    return controller_tag(None, config) or "final_C4G2"
+
+
 def controller_config(params, case: BundleCCase):
     """``C2Config().with_10hz_d1()`` + the scenario settings of ``s6_stage2._controller`` +
     the R8 variant."""
     from outrigger_sim.control.c2 import C2Config, ContactJudge, IncrementLimit, TwistGainReference
-    from outrigger_sim.control.target import AttitudeTarget, SlopeLimitMode, TargetAcceptance
+    from outrigger_sim.control.target import AttitudeTarget, TargetAcceptance
     from outrigger_sim.control.zero_calibration import ZeroCalibrationMode
     from outrigger_sim.sensors.imu import imu_config_for_grade
 
@@ -1147,7 +1277,7 @@ def controller_config(params, case: BundleCCase):
         target=replace(
             base.target,
             target=AttitudeTarget(roll_rad=roll, pitch_rad=pitch),
-            slope_limit_mode=SlopeLimitMode.VERIFICATION,
+            slope_limit_mode=slope_limit_mode(case),
             acceptance=TargetAcceptance(sc.acceptance),
             check_time_s=sc.check_time_s,
             crawler_settle_map=st._settle_map(sc.level),
@@ -1665,11 +1795,120 @@ def _snapshot_dir(name: str, batch_states: Path | None) -> Path:
     return STATES
 
 
+def d8x_rules_meta() -> dict[str, Any]:
+    return {"rules": st.D8X_RULES, "rules_sha256": st.D8X_RULES_SHA256,
+            "rules_rev": st.D8X_RULES_REV, "rules_rev1": st.D8X_RULES_REV1,
+            "rules_rev1_sha256": st.D8X_RULES_REV1_SHA256, "rules_rev2": st.D8X_RULES_REV2,
+            "rules_rev2_sha256": st.D8X_RULES_REV2_SHA256}
+
+
+def settle_map_record(config) -> dict[str, Any]:
+    """Settle map of the built controller ``config`` (rev2 1 / E-4b): ``identity`` (None or the identity map),
+    ``level`` with the auger level whose ``CrawlerSettleMap.for_level`` it equals, else ``other``."""
+    from outrigger_sim.control.target import CrawlerSettleMap
+
+    smap = config.target.crawler_settle_map
+    if smap is None or smap.is_identity:
+        return {"kind": "identity", "level": None, "coefficients": CrawlerSettleMap.identity().to_meta()}
+    for lv in st.LEVELS:
+        if smap == CrawlerSettleMap.for_level(lv):
+            return {"kind": "level", "level": lv, "coefficients": smap.to_meta()}
+    return {"kind": "other", "level": None, "coefficients": smap.to_meta()}
+
+
+def las_b_enabled(config) -> bool:
+    """LAS-b (``liftoff_approach_slow.enable``) of the built controller ``config`` (rev2 4)."""
+    return bool(getattr(getattr(config, "liftoff_approach_slow", None), "enable", False))
+
+
+def d8x_row_of(case: BundleCCase):
+    """The rules 4.4 row of a D8x case with its floor resolved (rows 6 / 19: W / V = the case floor)."""
+    row = next(r for r in st.D8X_ROWS if r.number == case.d8x_row)
+    if row.floor.startswith("<"):
+        row = row.resolved(case.scenario.floor, case.scenario.floor)
+    return row
+
+
+def d8x_length_record(case: BundleCCase) -> dict[str, Any]:
+    """Rev2 5 / I-5: T^_R, its source and T_run of a D8x case (``run_s`` = ``case.duration_s``)."""
+    row = d8x_row_of(case)
+    family_s = case.d8x_family_run_s if case.d8x_family_run_s is not None else case.duration_s
+    rec = st.d8x_run_length(row.family, row.level, row.floor, family_s)
+    rec["run_s_case"] = case.duration_s
+    rec["run_s_matches"] = abs(case.duration_s - rec["run_s"]) <= 1e-6
+    return rec
+
+
+def d8x_record(case: BundleCCase, config, expect_controller: str | None) -> dict[str, Any]:
+    """Rev2 1 / 4 / 5 / 6 per-row record from the built controller ``config``: settle map (got / expected),
+    scenario group and id, controller tag / expected tag / LAS-b, T^_R / T_run. ``problems`` lists every rev2
+    mismatch (E-4b settle map, E-6 tag or LAS-b off, scenario group, run length); empty = the row may run."""
+    row = d8x_row_of(case)
+    engine = row.engine
+    tag = controller_tag_of(config)
+    expected_tag = expect_controller or st.D8X_EXPECTED_TAG
+    las = las_b_enabled(config)
+    settle = settle_map_record(config)
+    settle_want = st.d8x_expected_settle(engine, case.scenario.level)
+    scen_want = st.d8x_scenario(row)
+    length = d8x_length_record(case)
+    problems = []
+    if {k: settle.get(k) for k in ("kind", "level")} != settle_want:
+        problems.append(f"settle map {settle} != rev2 1 {settle_want} (E-4b)")
+    if not las:
+        problems.append("LAS-b (liftoff_approach_slow.enable) off (rev2 4, E-6)")
+    if tag != expected_tag:
+        problems.append(f"controller tag {tag} != expected_tag {expected_tag} (rev2 4, E-6)")
+    if case.scenario.group != scen_want["group"] or case.d8x_scenario_id != scen_want["id"]:
+        problems.append(f"scenario {case.scenario.group} / {case.d8x_scenario_id} != rev2 6 {scen_want}")
+    if not length["run_s_matches"]:
+        problems.append(f"run length {case.duration_s} s != rev2 5 T_run {length['run_s']} s")
+    return {"engine": engine, "settle_map": settle, "settle_map_expected": settle_want,
+            "settle_map_matches": not any(p.startswith("settle map") for p in problems),
+            "scenario_group": case.scenario.group, "scenario_id": case.d8x_scenario_id,
+            "controller_tag": tag, "expected_tag": expected_tag, "las_b_enabled": las,
+            "ready_hat_s": length["ready_hat_s"], "run_s": length["run_s"], "length": length,
+            "problems": problems}
+
+
+def d8x_refuse(case_id: str, rec: dict[str, Any]) -> None:
+    """Preflight: SystemExit when :func:`d8x_record` found a rev2 mismatch (nothing has run)."""
+    if rec["problems"]:
+        raise SystemExit(f"{case_id}: D8x rev2 preflight refused: " + "; ".join(rec["problems"]))
+
+
+def d8x_meta(case: BundleCCase, config, expect_controller: str | None,
+             fs_kN: float | None = None) -> dict[str, Any]:
+    """``result.json`` block ``d8x`` of a D8x row (rules 2.1, I-4, E-6, rev2 1 / 4 / 5 / 6): row number / name, the
+    rules files and seals, the slope-limit mode of the built controller config, the true floor, the settle map
+    (``{kind, level, coefficients}``), the scenario group / id, the controller tag, the expected tag
+    (``--expect-controller``, else :data:`s6_stage2.D8X_EXPECTED_TAG`), LAS-b (``liftoff_slow_enabled``), T^_R
+    and T_run, and ``fs_kN`` of the plant (L2b rows; None on L1-R). Key names as ``d8x_judge.CHRONO_FIELDS``."""
+    row = next(r for r in st.D8X_ROWS if r.number == case.d8x_row)
+    rec = d8x_record(case, config, expect_controller)
+    return {"row": case.d8x_row, "row_template": row.name, "family": row.family,
+            "order": row.order, **d8x_rules_meta(),
+            "slope_limit_mode": str(getattr(config.target.slope_limit_mode, "value",
+                                            config.target.slope_limit_mode)),
+            "half_spans_deg": half_spans_deg(config),
+            "floor": case.scenario.floor, "floor_true_deg": list(st.FLOORS[case.scenario.floor]),
+            "level": case.scenario.level, "beta_GPa": case.beta_GPa,
+            **{k: rec[k] for k in ("engine", "settle_map", "settle_map_expected", "settle_map_matches",
+                                   "scenario_group", "scenario_id", "las_b_enabled", "ready_hat_s",
+                                   "run_s", "length", "expected_tag")},
+            "liftoff_slow_enabled": rec["las_b_enabled"], "fs_kN": fs_kN,
+            "rev2_problems": rec["problems"],
+            "controller_tag": rec["controller_tag"], "expected_controller": expect_controller,
+            "controller_tag_matches": rec["controller_tag"] == rec["expected_tag"]}
+
+
 def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None = None,
-                 states_dir: Path | None = None, fallback_ratio_source: str | None = None):
+                 states_dir: Path | None = None, fallback_ratio_source: str | None = None,
+                 expect_controller: str | None = None):
     """Run one bundle-C case. Returns (summary, run_meta). ``fallback_ratio_source``: B(iii)
     single-run override of the L1 R-5 ratio source (:func:`l1_fallback_ratio`; None = the
-    environment variable, else ``plant_meta``)."""
+    environment variable, else ``plant_meta``). ``expect_controller`` (D8x rows only): the batch's
+    ``--expect-controller``, recorded in the ``d8x`` block."""
     import numpy as np
 
     from outrigger_sim.chrono.l1_engine import L1Engine
@@ -2045,7 +2284,7 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
         "floor_estimate_rad": ctl_meta.get("target", {}).get("floor_estimate_rad"),
         "floor_estimate_touch": ctl_meta.get("floor_estimate_touch"),
         "floor_true_deg": st.FLOORS[sc.floor],
-        "slope_limit_mode": "verification",
+        "slope_limit_mode": case.slope_limit_mode or "verification",
     }
     nose_up_skips = sum(1 for e in events if "reanchor_skipped:nose_up" in e)
     reanchor_starts = sum(1 for e in events if "reanchor_started" in e)
@@ -2081,6 +2320,7 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
             "rule": "C-S8-72 / spec 92: READY + 5 s, the case length only as the upper "
                     "bound"}}),
         **({} if g8 is None else {"g8": g8}),
+        **({} if case.d8x_row is None else {"d8x": d8x_meta(case, c2.config, expect_controller)}),
         "ready_t_s": None if state["ready_t"] is None else state["ready_t"] - t0,
         "probe_intervals": probe_intervals,
         "first_probe_t_s": None if state["probe_t"] is None else state["probe_t"] - t0,
@@ -2129,7 +2369,8 @@ def job_case(case, case_dir):
     c = case_table()[case.case_id]
     states = None if s.get("batch_states") is None else Path(s["batch_states"])
     summary, run_meta = job_bundle_c(c, Path(case_dir), duration_s=s.get("duration_s"),
-                                     states_dir=states)
+                                     states_dir=states,
+                                     expect_controller=s.get("expect_controller"))
     (Path(case_dir) / "result.json").write_text(
         json.dumps(_plain(summary), indent=1, ensure_ascii=False), encoding="utf-8")
     return CaseResult(summary=_plain({k: summary[k] for k in ("case", "phases", "runner")}),
@@ -2252,8 +2493,67 @@ def build_preground_snapshot(leg: str, *, overwrite: bool = False,
     return summary
 
 
+def d8x_preflight(cases: list[BundleCCase], expect_controller: str | None) -> dict[str, Any]:
+    """Before a D8x run / check (rules 2.1, I-4, E-6): the installed ``target.py`` has the
+    ``verification_ext`` mode, every case builds its controller config with that mode, and the
+    run-time preset tag equals ``expect_controller`` (when given). Builds configs only (no
+    Chrono). Returns the record for ``batch_meta.json``; raises SystemExit on a mismatch."""
+    from outrigger_sim.params import load_params
+
+    if not d8x_mode_available():
+        raise SystemExit(f"D8x needs SlopeLimitMode {st.D8X_SLOPE_LIMIT_MODE!r} in control/target.py "
+                         "(rules 9.2 item 1, python-expert); not installed")
+    rows = {}
+    for c in cases:
+        cfg = controller_config(load_params(level=c.scenario.level), c)
+        mode = str(cfg.target.slope_limit_mode.value)
+        tag = controller_tag_of(cfg)
+        rec = d8x_record(c, cfg, expect_controller)
+        rows[c.case_id] = {"d8x_row": c.d8x_row, "slope_limit_mode": mode, "controller_tag": tag,
+                           "half_spans_deg": half_spans_deg(cfg),
+                           "floor_true_deg": list(st.FLOORS[c.scenario.floor]),
+                           **{k: v for k, v in rec.items() if k not in ("controller_tag", "problems")}}
+        if mode != st.D8X_SLOPE_LIMIT_MODE:
+            raise SystemExit(f"{c.case_id}: slope-limit mode {mode} (D8x needs {st.D8X_SLOPE_LIMIT_MODE})")
+        check_half_spans(c.case_id, rows[c.case_id]["half_spans_deg"])
+        d8x_refuse(c.case_id, rec)  # rev2: E-4b settle map, E-6 tag / LAS-b, scenario group, run length
+    return {**d8x_rules_meta(), "expect_controller": expect_controller,
+            "expected_tag": expect_controller or st.D8X_EXPECTED_TAG, "rows": rows}
+
+
+def build_d8x_snapshots(jobs: int, *, dry_run: bool = False):
+    """``snaps-d8x``: the missing :data:`D8X_SNAPSHOTS` (rules 4.4 end / 9.3), same job as
+    ``snaps`` (:func:`s6_stage2.job_snapshot`), on the P cores. ``dry_run`` prints the plan."""
+    from outrigger_sim.batch import Case, run_cases
+
+    todo = [(lv, f) for lv, f in D8X_SNAPSHOTS
+            if not (STATES / f"{st.snapshot_name(lv, f)}.npz").exists()]
+    wall = st.WALL_START_S + (st.SNAP_RAMP_S + st.SNAP_SETTLE_S) * st.WALL_CRAWLER_S_PER_S
+    plan_doc = {"missing": [st.snapshot_name(lv, f) for lv, f in todo],
+                "existing": [st.snapshot_name(lv, f) for lv, f in D8X_SNAPSHOTS if (lv, f) not in todo],
+                "states_dir": str(STATES), "wall_estimate_s_each": wall,
+                "makespan_estimate_s": st.lpt_makespan_s([wall] * len(todo), min(jobs, MAX_WORKERS)),
+                "estimate_basis": "s6_stage2.plan_document snapshot estimate (stage-2 fit)"}
+    if dry_run or not todo:
+        print(json.dumps(plan_doc, indent=1))
+        return None
+    stamp = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+    out = RESULTS / f"snapshots_d8x_L1R_{stamp}"
+    cases = [Case(st.snapshot_name(lv, f), {"level": lv, "floor": f}) for lv, f in todo]
+    report = run_cases(cases, job_snapshot_case, out, max_workers=min(jobs, MAX_WORKERS),
+                       placement="pcore", timeout_s=1800.0)
+    for o in report.outcomes:
+        print(f"{o.case_id}: {o.status} {o.wall_s:.1f}s" + ("" if o.status == "ok"
+              else "\n" + (o.error or "")[-2000:]), flush=True)
+    print(f"-> {out}")
+    return report
+
+
 def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DURATION_S,
-              case_set: str = "bundleC", run_tag: str | None = None):
+              case_set: str = "bundleC", run_tag: str | None = None,
+              d8x: dict[str, Any] | None = None):
+    """``d8x``: the :func:`d8x_preflight` record (D8x sets only; written to ``batch_meta.json``
+    and its ``expect_controller`` passed to every case)."""
     from outrigger_sim.batch import Case, run_cases
 
     table = case_table()
@@ -2282,9 +2582,13 @@ def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DU
             "env": {k: os.environ.get(k) for k in ("OUTRIGGER_ROD_SIDE_MECHANICS",
                                                     "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS")},
             "plan": plan(set(ids))}
+    extra: dict[str, Any] = {}
+    if d8x is not None:  # key only on D8x batches (earlier batch metas unchanged)
+        meta["d8x"] = d8x
+        extra["expect_controller"] = d8x.get("expect_controller")
     (batch_dir / "batch_meta.json").write_text(json.dumps(_plain(meta), indent=1), "utf-8")
     order = sorted(ids, key=lambda c: -table[c].wall_estimate_s())  # longest first
-    cases = [Case(c, {"duration_s": check_duration_s if check else None}) for c in order]
+    cases = [Case(c, {"duration_s": check_duration_s if check else None, **extra}) for c in order]
     t0 = time.perf_counter()
     report = run_cases(cases, job_case, batch_dir, max_workers=jobs, placement="pcore",
                        timeout_s=CHECK_TIMEOUT_S if check else CASE_TIMEOUT_S)
@@ -2300,8 +2604,13 @@ def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DU
 
 def main(argv):
     ap = argparse.ArgumentParser()
-    ap.add_argument("action", choices=("list", "plan", "snaps", "snaps-pre", "snaps-crx", "check",
-                                       "run", "judge", "judge-ps7", "judge-g8"))
+    ap.add_argument("action", choices=("list", "plan", "snaps", "snaps-pre", "snaps-crx", "snaps-d8x",
+                                       "check", "run", "judge", "judge-ps7", "judge-g8"))
+    ap.add_argument("--expect-controller", dest="expect_controller", default=None,
+                    help="run / check --set d8x_w1: refuse unless the run-time preset tag is this one "
+                         "(D8x rules 2.1 / I-5 expected_tag, e.g. final_C4G2_LAS); recorded per row")
+    ap.add_argument("--dry-run", dest="dry_run", action="store_true",
+                    help="snaps-d8x: print the missing D8x start states and the estimate only")
     ap.add_argument("--leg", choices=st.PREGROUND_LEGS, default="FL",
                     help="snaps-pre (C-S8-72): leg of the pre-grounded PS-7a start snapshot")
     ap.add_argument("--overwrite", action="store_true",
@@ -2365,6 +2674,11 @@ def main(argv):
     if args.action == "snaps-crx":  # D-1 C1: crawler x3 start snapshots
         build_crawler_k_snapshots(jobs)
         return
+    if args.action == "snaps-d8x":  # D8x rows 7-11: L1-R start states (rules 4.4 end / 9.3)
+        build_d8x_snapshots(jobs, dry_run=args.dry_run)
+        return
+    if args.expect_controller is not None and args.case_set not in D8X_CASE_SETS:
+        raise SystemExit("--expect-controller only with --set d8x_w1")
     if args.action == "snaps-pre":  # C-S8-72: FLpre (spec rev. 67 345.3)
         build_preground_snapshot(args.leg, overwrite=args.overwrite, placement=args.placement)
         return
@@ -2390,10 +2704,18 @@ def main(argv):
         print(f"-> {out}")
         return
     set_ids = [c.case_id for c in CASE_SETS[args.case_set]()]
+    d8x = None
+    if args.case_set in D8X_CASE_SETS:  # rules 2.1 / I-4 / E-6 before any Chrono step
+        ids = args.only or set_ids
+        outside = sorted(set(ids) - set(set_ids))
+        if outside:
+            raise SystemExit(f"--set {args.case_set} --only: not D8x rows of this set: {outside}")
+        table = case_table()
+        d8x = d8x_preflight([table[c] for c in ids], args.expect_controller)
     if args.action == "check":
         ids = args.only or set_ids
         run_batch(ids, jobs, check=True, check_duration_s=args.duration, case_set=args.case_set,
-                  run_tag=args.tag)
+                  run_tag=args.tag, d8x=d8x)
         return
     if not args.approved:
         raise SystemExit("bundle C needs the user's approval: add --approved (spec 150; "
@@ -2421,7 +2743,7 @@ def main(argv):
     else:
         table = case_table()
         ids = args.only or [c for c in set_ids if args.with_c9 or not table[c].conditional]
-    run_batch(ids, jobs, check=False, case_set=args.case_set, run_tag=args.tag)
+    run_batch(ids, jobs, check=False, case_set=args.case_set, run_tag=args.tag, d8x=d8x)
 
 
 if __name__ == "__main__":

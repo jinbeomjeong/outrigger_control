@@ -912,11 +912,168 @@ def s8_cases() -> list[S8Case]:
         for f in D1C2_FLOORS:
             add(f"D1C2_{lv}_{f}_Fs4", D1C2_GROUP, 9, _d8_scenario(lv, f), fs_kN=4.0,
                 notes=(f"D-1 C2 ({lv}, {f} {st.FLOORS[f]} deg, F_s 4 kN): {D1C2_TAG}",))
+    # D8x (d8x_rules.md 4.4, 2026-11-10): rows 1-5 / 12-18 + the K24 row of every W candidate (row 6) + the K8
+    # row of every V candidate (row 19); appended last (earlier order and definitions unchanged); group D8X (not in
+    # MAIN_GROUPS), sets d8x_w1 (--w) / d8x_w2 (--v)
+    out.extend(d8x_cases())
     ids = [c.case_id for c in out]
     if len(ids) != len(set(ids)):
         dup = sorted({i for i in ids if ids.count(i) > 1})
         raise RuntimeError(f"duplicate S8 case ids {dup}")
     return out
+
+
+D8X_GROUP = "D8X"
+D8X_PRIORITY = 10
+D8X_FS_TAG = {"K24": 4.0, "A": 0.0, "K0V": 0.0, "K8": 8.0}
+
+
+def _d8x_scenario(level: str, floor: str):
+    """D8x rules 4.4 'the family definitions as they are': the nose-down vertex (role ``fdown``, fdown3.7) takes the
+    H4V scenario of fdown3.5 (:func:`_d8_scenario`), every other floor the D8 scenario (``s6c._d8``)."""
+    if floor == st.D8X_NAME["fdown"]:
+        return s6c._sc("H4V", "G2-R", level, floor, items=("R", "2", "3", "8"))
+    return s6c._d8(level, floor)
+
+
+def d8x_cases() -> list[S8Case]:
+    """Every L2b D8x case: the 12 fixed rows, row 6 for each of the 11 W candidates, row 19 for each of the 16 V
+    candidates (5 fixed floors + 11 W). Same plant / controller path as the K24 / A / K0V / K8 families (beta 1.0,
+    pilot check, ideal leg sensors, combined judge, end rule D8 READY + 10 s), only the floor and
+    ``slope_limit_mode`` ``verification_ext`` differ. ``pair_fs0`` = the D8x K0V row of the same floor when there
+    is one (no S7 reference, no N pressure twin)."""
+    out: list[S8Case] = []
+    k0v = {r.floor: r.name for r in st.D8X_ROWS if r.family == "K0V"}
+    rows: list[Any] = []
+    for r in st.D8X_ROWS:
+        if r.engine != "L2b":
+            continue
+        if r.floor == "<W>":
+            rows.extend(r.resolved(w=f) for f in st.D8X_W_FLOORS)
+        elif r.floor == "<V>":
+            fixed = [x.floor for x in st.D8X_ROWS if x.number <= 6 and x.floor != "<W>"]
+            rows.extend(r.resolved(v=f) for f in (*fixed, *st.D8X_W_FLOORS))
+        else:
+            rows.append(r)
+    for r in rows:
+        if r.fs_kN != D8X_FS_TAG[r.family] or r.beta_GPa != 1.0:
+            raise RuntimeError(f"D8x row {r.number}: F_s / beta differ from the family ({r})")
+        note = s6c.d8x_note(r)
+        pair = k0v.get(r.floor) if r.fs_kN > 0.0 else None
+        sc = _d8x_scenario(r.level, r.floor)
+        scen = st.d8x_scenario(r)
+        if sc.group != scen["group"]:
+            raise RuntimeError(f"D8x row {r.number}: scenario group {sc.group} != rev2 6 {scen['group']}")
+        sc, family_s = s6c.d8x_with_length(sc, r)  # rev2 5: T_run = max(family + 8 s, T^_R + 20 s)
+        base = s6c.BundleCCase(r.name, "S8", replace(sc, case_id=r.name),
+                               slope_limit_mode=st.D8X_SLOPE_LIMIT_MODE, d8x_row=r.number,
+                               d8x_scenario_id=scen["id"], d8x_family_run_s=family_s)
+        out.append(S8Case(r.name, D8X_GROUP, D8X_PRIORITY, "L2b_NSC", base, fs_kN=float(r.fs_kN),
+                          pair_fs0=pair, notes=(note,)))
+    return out
+
+
+def d8x_set_cases(name: str, *, w: str | None, v: str | None) -> list[S8Case]:
+    """Cases of the run_S8C part of D8x set ``name`` (``d8x_w1`` 13 rows with ``w``, ``d8x_w2`` 1 row with ``v``;
+    rules 4.4 / 5.1 / 5.2), in the table order."""
+    if name == "d8x_w1" and w is None:
+        raise SystemExit("--set d8x_w1 needs --w <W> (rules 5.1: d8x_judge.py select-w)")
+    if name == "d8x_w2" and v is None:
+        raise SystemExit("--set d8x_w2 needs --v <V> (rules 5.2: d8x_judge.py select-v)")
+    if name == "d8x_w1" and v is not None:
+        raise SystemExit("--v belongs to --set d8x_w2")
+    want = [r.name for r in st.d8x_rows(name, w=w, v=v, engine="L2b")]
+    table = {c.case_id: c for c in d8x_cases()}
+    cases = [table[n] for n in want]
+    if len(cases) != st.D8X_EXPECTED_COUNTS[(name, "L2b")]:
+        raise RuntimeError(f"{name}: {len(cases)} L2b rows")
+    return cases
+
+
+def d8x_preflight(cases: list[S8Case], expect_controller: str | None) -> dict[str, Any]:
+    """Before a D8x run / check (rules 2.1, I-4, E-6), configs only (no Chrono): the installed ``target.py`` has
+    ``verification_ext``, every case's controller config (``s6c.controller_config`` + the L2b settle map, the path of
+    :func:`_controller`) has that mode, and the preset tag equals ``expect_controller`` when given."""
+    from outrigger_sim.params import load_params
+
+    if not s6c.d8x_mode_available():
+        raise SystemExit(f"D8x needs SlopeLimitMode {st.D8X_SLOPE_LIMIT_MODE!r} in control/target.py "
+                         "(rules 9.2 item 1, python-expert); not installed")
+    rows = {}
+    for c in cases:
+        if c.group != D8X_GROUP:
+            raise SystemExit(f"{c.case_id} is not a D8x row")
+        lv = c.scenario.level
+        cfg, _ = s7c.apply_settle_map(s6c.controller_config(load_params(level=lv), c.base), "L2b_NSC", lv)
+        mode = str(cfg.target.slope_limit_mode.value)
+        tag = s6c.controller_tag_of(cfg)
+        rec = s6c.d8x_record(c.base, cfg, expect_controller)
+        rows[c.case_id] = {"d8x_row": c.base.d8x_row, "slope_limit_mode": mode, "controller_tag": tag,
+                           "half_spans_deg": s6c.half_spans_deg(cfg),
+                           "floor_true_deg": list(st.FLOORS[c.floor]), "fs_kN": c.fs_kN,
+                           **{k: v for k, v in rec.items() if k not in ("controller_tag", "problems")},
+                           "end_rule": end_rule(c)}
+        if mode != st.D8X_SLOPE_LIMIT_MODE:
+            raise SystemExit(f"{c.case_id}: slope-limit mode {mode} (D8x needs {st.D8X_SLOPE_LIMIT_MODE})")
+        s6c.check_half_spans(c.case_id, rows[c.case_id]["half_spans_deg"])
+        s6c.d8x_refuse(c.case_id, rec)  # rev2: E-4b settle map, E-6 tag / LAS-b, scenario group, run length
+    return {**s6c.d8x_rules_meta(), "expect_controller": expect_controller,
+            "expected_tag": expect_controller or st.D8X_EXPECTED_TAG, "rows": rows}
+
+
+def d8x_plan(w: str | None = None, v: str | None = None, expect_controller: str | None = None) -> dict[str, Any]:
+    """``d8x-plan``: the 19 rows of rules 4.4 (W / V resolved when given), the script / set of each, the start
+    states (cad declaration for I-5) with the L1-R snapshot files present or missing, the P-pool estimates and the
+    rev2 I-5 entries per row: T^_R (with its stored reference), T_run, ``expected_tag``, settle map, scenario."""
+    rows = []
+    l2b = {c.case_id: c for c in d8x_cases()}
+    l1r = {c.case_id: c for c in s6c.d8x_l1r_cases()}
+    wf = None if w is None else st.d8x_w_floor(w)
+    vf = None if v is None else st.d8x_v_floor(v, w)
+    for r in st.D8X_ROWS:
+        open_slot = (r.floor == "<W>" and wf is None) or (r.floor == "<V>" and vf is None)
+        rr = r if open_slot else r.resolved(wf, vf)
+        case = (l2b if r.engine == "L2b" else l1r).get(rr.name)
+        bc = None if case is None else (case.base if r.engine == "L2b" else case)
+        length = None if bc is None else s6c.d8x_length_record(bc)
+        scen = None if open_slot else st.d8x_scenario(rr)
+        rows.append({"row": r.number, "name": rr.name, "family": r.family, "engine": r.engine,
+                     "script": "run_S8C.py" if r.engine == "L2b" else "run_S6C.py",
+                     "set": "d8x_w1" if r.order == 1 else "d8x_w2", "beta_GPa": r.beta_GPa, "fs_kN": r.fs_kN,
+                     "level": r.level, "floor": rr.floor,
+                     "floor_deg": None if rr.floor[0] == "<" else list(st.FLOORS[rr.floor]),
+                     # rev2 1 / 4 / 5 / 6 (I-5): settle map, expected tag, T^_R and T_run, scenario group / id
+                     "settle_map_expected": st.d8x_expected_settle(r.engine, r.level),
+                     "expected_tag": expect_controller or st.D8X_EXPECTED_TAG,
+                     "scenario_group": None if scen is None else scen["group"],
+                     "scenario_id": None if scen is None else scen["id"],
+                     "ready_hat_s": None if length is None else length["ready_hat_s"],
+                     "ready_ref": None if length is None else {k: length[k] for k in (
+                         "ref_floor", "ref_ready_s", "ref_source", "ratio")},
+                     "family_run_s": None if length is None else length["family_run_s"],
+                     "T_run_s": None if case is None else case.duration_s,
+                     "T_run_binding": None if length is None else length["binding"],
+                     "end_rule": (end_rule(case) if case is not None and r.engine == "L2b" else
+                                  None if case is None else "fixed length T_run (L1-R bundle-C job)"),
+                     "duration_s": None if case is None else case.duration_s,
+                     "wall_estimate_p_s": None if case is None else case.wall_estimate_s(),
+                     "snapshot": None if r.engine == "L2b" else case.snapshot})
+    states = st.d8x_start_states(w)
+    for s in states:
+        if s["kind"] == "snapshot":
+            s["exists"] = (s6c.STATES / f"{s['snapshot']}.npz").exists()
+    snap_wall = st.WALL_START_S + (st.SNAP_RAMP_S + st.SNAP_SETTLE_S) * st.WALL_CRAWLER_S_PER_S
+    return {**s6c.d8x_rules_meta(), "half_spans_deg": st.D8X_HALF_SPANS_DEG, "w": w, "v": v,
+            "expected_tag": expect_controller or st.D8X_EXPECTED_TAG,
+            "length_rule": "rev2 5: T_run = max(family length + R8_EXTRA_S 8 s, T^_R + 20 s); L2b runs end at READY "
+                           "+ 10 s (C-S8-17) with the upper bound T_run + 60 s, L1-R runs the fixed T_run",
+            "rows": rows,
+            "counts": {k: sum(1 for r in rows if r["set"] == k) for k in st.D8X_SETS},
+            "start_states": states,
+            "snapshot_wall_estimate_s_each": snap_wall,
+            "estimate_basis": "L2b: S8Case.wall_estimate_s (p1r full P pool per-step cost, end rule; floors without "
+                              "a READY reference fall back to the scenario length); L1-R: stage-2 7-worker fit; "
+                              "ASSUMPTION, not a cost measurement"}
 
 
 def case_table() -> dict[str, S8Case]:
@@ -926,7 +1083,10 @@ def case_table() -> dict[str, S8Case]:
 MAIN_GROUPS = ("K0", "K0V", "K8", "K24", "A", "B", "S", "E", "N", "L")
 
 
-def case_set(name: str) -> list[S8Case]:
+def case_set(name: str, *, w: str | None = None, v: str | None = None) -> list[S8Case]:
+    """Cases of set ``name``; the D8x sets take ``w`` / ``v`` (:func:`d8x_set_cases`)."""
+    if name in st.D8X_SETS:
+        return d8x_set_cases(name, w=w, v=v)
     cases = s8_cases()
     main = [c for c in cases if c.group in MAIN_GROUPS]
     p1 = [c for c in main if c.priority == 1]
@@ -969,7 +1129,7 @@ def case_set(name: str) -> list[S8Case]:
 
 
 SET_NAMES = ("p1", "p1r", "p2", "p3", "rest", "all", "cb", "smoke", "mlj", "mlj_c29",
-             "mlj_c67", "mlj_c68", "g1", "c74", "c75", "jaug", "s4conv", "v5rec", "d1c2")
+             "mlj_c67", "mlj_c68", "g1", "c74", "c75", "jaug", "s4conv", "v5rec", "d1c2", "d8x_w1", "d8x_w2")
 G1_CASE_IDS = frozenset(c[0] for c in G1_CASES)
 V5REC_CASE_IDS = frozenset(c[0] for c in V5REC_CASES)
 C74_CASE_IDS = frozenset(c[0] for c in C74_CASES)
@@ -1495,10 +1655,12 @@ def g1_event_state(ev: dict[str, Any] | None, state: dict[str, Any], t0: float,
 
 def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
                flow_limit: dict[str, Any] | None = None,
-               hydraulics: dict[str, Any] | None = None, las_off: bool = False):
+               hydraulics: dict[str, Any] | None = None, las_off: bool = False,
+               expect_controller: str | None = None):
     """Run one L2b S8 case (module docstring). ``flow_limit``: settings of the shared-pump flow limit
     (``FlowLimitSetting.to_dict``), on from the end of the crawler settle; None = off, nothing below
     runs differently. ``las_off``: the controller with LAS-b off (``--las-off``, :data:`LAS_OFF_PRESET`).
+    ``expect_controller`` (D8x rows): the batch's ``--expect-controller``, recorded in ``result.json d8x``.
     Returns (summary, run_meta)."""
     import numpy as np
 
@@ -1838,7 +2000,12 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
                        "crawler_attitude_deg": None if c2.crawler_attitude_rad is None
                        else [math.degrees(a) for a in c2.crawler_attitude_rad],
                        "floor_true_deg": st.FLOORS[sc.floor],
-                       "controller_settle_map": settle_meta},
+                       "controller_settle_map": settle_meta,
+                       # D8x (rules I-4 / E-4): key only on D8x rows (earlier results unchanged)
+                       **({} if bcase.slope_limit_mode is None
+                          else {"slope_limit_mode": bcase.slope_limit_mode})},
+        **({} if bcase.d8x_row is None
+           else {"d8x": s6c.d8x_meta(bcase, c2.config, expect_controller, fs_kN=float(case.fs_kN))}),
         "h4": {"enabled": sc.h4, "outcome": None if reanchor is None else str(reanchor),
                "expected": expect, "direction": ctl_meta.get("reanchor_direction")},
         "c2": c2_meta,
@@ -2745,6 +2912,8 @@ def job_case(case, case_dir):
                 flow_kw["hydraulics"] = s["hydraulics"]
             if s.get("las_off"):
                 flow_kw["las_off"] = True
+            if s.get("expect_controller"):  # D8x batches only
+                flow_kw["expect_controller"] = s["expect_controller"]
             summary, run_meta = job_l2b_s8(c, d, duration_s=s.get("duration_s"), **flow_kw)
         else:
             summary, run_meta = s6c.job_bundle_c(c.base, d, duration_s=s.get("duration_s"))
@@ -3050,7 +3219,10 @@ def _batch_dir(tag: str) -> Path:
 
 def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, duration_s: float,
               flow_limit: dict[str, Any] | None = None,
-              hydraulics: dict[str, Any] | None = None, las_off: bool = False):
+              hydraulics: dict[str, Any] | None = None, las_off: bool = False,
+              d8x: dict[str, Any] | None = None):
+    """``d8x``: :func:`d8x_preflight` record (D8x sets only): ``batch_meta.json d8x`` and the expected controller
+    tag passed to every case."""
     from outrigger_sim.batch import Case
 
     if las_off:  # the controller block of L2b cases only (job_l2b_s8); L1 twins would run LAS-b on
@@ -3089,6 +3261,10 @@ def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, durati
     if las_off:  # key only with --las-off
         meta["las_off"] = {"preset": LAS_OFF_PRESET}
         flow_settings["las_off"] = True
+    if d8x is not None:  # key only on D8x batches
+        meta["d8x"] = d8x
+        if d8x.get("expect_controller"):
+            flow_settings["expect_controller"] = d8x["expect_controller"]
     (batch_dir / "batch_meta.json").write_text(json.dumps(s6c._plain(meta), indent=1), "utf-8")
     table = {c.case_id: c for c in cases}
     jobs = [Case(c.case_id, {"duration_s": duration_s if check else None, **flow_settings})
@@ -3961,7 +4137,16 @@ def build_snapshots(jobs: int) -> None:
 def main(argv):
     ap = argparse.ArgumentParser()
     ap.add_argument("action", choices=("list", "plan", "check", "run", "ml", "ml-plan", "judge",
-                                       "snaps", "smoke-branch", "c36"))
+                                       "snaps", "smoke-branch", "c36", "d8x-plan"))
+    ap.add_argument("--w", dest="d8x_w", default=None,
+                    help="--set d8x_w1 / d8x-plan: the worst point W of D8x rules 5.1 (floor name, e.g. dxpm050, "
+                         "or the R-a tag, e.g. r+p-0.5; d8x_judge.py select-w)")
+    ap.add_argument("--v", dest="d8x_v", default=None,
+                    help="--set d8x_w2 / d8x-plan: the F_s 8 floor V of D8x rules 5.2 (a row 1-6 floor; "
+                         "d8x_judge.py select-v); a W floor needs --w too")
+    ap.add_argument("--expect-controller", dest="expect_controller", default=None,
+                    help="run / check --set d8x_*: refuse unless the run-time preset tag is this one (D8x rules "
+                         "2.1 / I-5 expected_tag, e.g. final_C4G2_LAS); recorded per row")
     ap.add_argument("--rerun-from", dest="rerun_from", default=str(C36_SOURCE),
                     help="c36: source ML batch (bases / branch.pkl / plan, read only)")
     ap.add_argument("--affected", default=str(C36_AFFECTED),
@@ -4165,9 +4350,22 @@ def main(argv):
             raise SystemExit(f"ML {args.stage} batch needs the user's confirmation: --approved")
         run_ml(args.workers, args.stage, mlj_from=mlj_from, skip_judged=args.skip_judged)
         return
-    cases = case_set(args.case_set)
+    if args.action == "d8x-plan":  # D8x rules 4.4 / 9.3 / I-5: rows, start states, estimates (nothing runs)
+        print(json.dumps(s6c._plain(d8x_plan(args.d8x_w, args.d8x_v, args.expect_controller)), indent=1,
+                         ensure_ascii=False))
+        return
+    is_d8x = args.case_set in st.D8X_SETS
+    if not is_d8x and (args.d8x_w or args.d8x_v or args.expect_controller):
+        raise SystemExit("--w / --v / --expect-controller only with --set d8x_w1 / d8x_w2")
+    if is_d8x and (flow_limit is not None or hydraulics is not None or args.las_off):
+        raise SystemExit("D8x rows run the run-time preset and the K24 / A / K0V / K8 plant as they are "
+                         "(rules 2.1 / 4.4): no --flow-eta-v, v5 option or --las-off")
+    cases = case_set(args.case_set, w=args.d8x_w, v=args.d8x_v)
     if args.only:
         table = case_table()
+        if is_d8x and set(args.only) - {c.case_id for c in cases}:
+            raise SystemExit(f"--only outside --set {args.case_set}: "
+                             f"{sorted(set(args.only) - {c.case_id for c in cases})}")
         cases = [table[c] for c in args.only]
     if args.action == "list":
         for c in cases:
@@ -4193,15 +4391,18 @@ def main(argv):
         return
     tag = args.tag or args.case_set
     require_fault_reground(cases)  # C-S8-68: head-fault cases only after P-S8-24
+    d8x = d8x_preflight(cases, args.expect_controller) if is_d8x else None
+    if d8x is not None:
+        d8x.update(set=args.case_set, w=args.d8x_w, v=args.d8x_v)
     if args.action == "check":
         run_batch(cases, tag=tag, layout=args.workers, check=True,
                   duration_s=args.duration, flow_limit=flow_limit, hydraulics=hydraulics,
-                  las_off=args.las_off)
+                  las_off=args.las_off, d8x=d8x)
         return
     if not args.approved:
         raise SystemExit("S8 main run needs the user's confirmation: add --approved")
     run_batch(cases, tag=tag, layout=args.workers, check=False, duration_s=0.0,
-              flow_limit=flow_limit, hydraulics=hydraulics, las_off=args.las_off)
+              flow_limit=flow_limit, hydraulics=hydraulics, las_off=args.las_off, d8x=d8x)
 
 
 if __name__ == "__main__":

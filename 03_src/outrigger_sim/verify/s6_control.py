@@ -648,6 +648,8 @@ def case_metrics(
         m["event_transient_settings"] = event_settings.to_meta()
     if reduced is not None:
         m["reduced"] = reduced
+    if res.get("d8x") is not None:  # D8x rows only (earlier cases' metrics unchanged)
+        m.update(d8x_metrics(case, t, err, tm))
     # spec rev. 28 (111, 112.1, 110.1, 109.2): condition, judge kind, diagnosis, source
     m["contact"] = s.get("contact")
     condition, reasons = case_condition(s)
@@ -666,6 +668,47 @@ def case_metrics(
         )
     ][:40]
     return m
+
+
+D8X_LOC_EVENT = "crawler_liftoff_confirmed"
+"""Controller event of the crawler lift-off confirmation (LOC, ``control.c2.SOIL_EVENT_LIFTOFF_CONFIRMED``)."""
+
+
+def d8x_metrics(case: Mapping[str, Any], t: NDArray[np.float64], err: NDArray[np.float64],
+                tm: Mapping[str, Any]) -> dict[str, Any]:
+    """D8x rules J4 / J10 (``d8x_rules.md`` 4.1, keys of ``d8x_judge.CHRONO_FIELDS``), D8x rows only.
+
+    * ``att_err_after_ready_maxabs_deg`` (J4): max |true deck attitude - target| over roll and pitch from the first
+      READY to the run end (record body quaternion, record rate); None without READY.
+    * ``crawler_recontact_after_loc_count`` (J10): crawler contacts after LOC by the engine contact flag
+      (``F_crawler`` z > 0, the flag of :func:`_times`): one for a contact at the first sample at or after LOC
+      plus one per off -> on edge after it. LOC = the first ``crawler_liftoff_confirmed`` controller event; when
+      the run has none, the first crawler off edge of the record (recorded as ``..._anchor``)."""
+    out: dict[str, Any] = {}
+    if tm["ready"] is not None:
+        after = t >= tm["ready"] - 1e-9
+        out["att_err_after_ready_maxabs_deg"] = (float(np.max(np.abs(err[after]))) if after.any()
+                                                 else None)
+    else:
+        out["att_err_after_ready_maxabs_deg"] = None
+    on = np.asarray(case["rec"]["F_crawler"], dtype=float)[:, 2] > 0.0
+    t0 = float(tm["t0"])
+    loc = next((te - t0 for te, name in _events(case) if name == D8X_LOC_EVENT), None)
+    anchor = "loc_event"
+    if loc is None:
+        off = np.flatnonzero(on[:-1] & ~on[1:])
+        loc = float(t[off[0] + 1]) if off.size else None
+        anchor = "first_crawler_off_edge"
+    if loc is None:
+        out.update(crawler_recontact_after_loc_count=None, crawler_recontact_anchor="none",
+                   crawler_recontact_t_s=[])
+        return out
+    sel = t >= loc - 1e-9
+    seg, ts = on[sel], t[sel]
+    starts = ([0] if seg.size and seg[0] else []) + [int(i) + 1 for i in np.flatnonzero(~seg[:-1] & seg[1:])]
+    out.update(crawler_recontact_after_loc_count=len(starts), crawler_recontact_anchor=anchor,
+               crawler_recontact_loc_t_s=float(loc), crawler_recontact_t_s=[float(ts[i]) for i in starts][:20])
+    return out
 
 
 REAR_LEG_INDICES = (2, 3)
