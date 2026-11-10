@@ -829,7 +829,8 @@ def replay_case(case_dir: Path, *, with_t5: bool = False,
               else {"run_extend_start_rule": stored_rule}),
            "extend_start_revision": (replay_settings.get("extend_start_bound") or {}).get(
                "revision"),
-           # criteria revision 9 (j_p3_inputs): a VB / LS run must be in J-P3
+           # criteria revision 9 (j_p3_inputs): a VB / LS run must be in J-P3; judged by the
+           # base tag, so every LAS-b / K1 suffix combination of ③ counts (audit W-1)
            "p3_expected": is_p3_expected(run_controller_tag(record.result), None)}
     if differences:
         return row
@@ -894,7 +895,9 @@ def summary(rows: list[dict]) -> dict:
 
 def recorded_liftoff_slow(result: dict) -> bool:
     """LAS-b of the recorded run (switch 2026-11-08): on when its controller meta has the block
-    on or its tag ends with ``_LAS``; a run before the switch has neither and replays it off."""
+    on, or its run tag or ``c2_setup.expect_controller`` tag carries ``_LAS`` (last, or before
+    a trailing ``_K1``: ``v5_options.is_liftoff_slow_tag``); a run before the switch has none of
+    these and replays it off."""
     from outrigger_sim.hydraulics.v5_options import is_liftoff_slow_tag
 
     block = ((result.get("controller_meta") or {}).get("liftoff_approach_slow") or {})

@@ -1527,6 +1527,11 @@ checks the gate off, so they refuse the switched preset (``05_tests/unit/pre_k1_
 FINAL_P3_LAS_K1_CONTROLLER = "final_C4G2_P3_LAS_K1"
 """v5 VB / LS controller since the K1 switch: :data:`FINAL_P3_LAS_CONTROLLER` + the K1 order gate
 (``v5_options.EXTEND_START_LAS_K1_CONTROLLER_TAG``)."""
+FINAL_K1_CONTROLLER = "final_C4G2_K1"
+"""LAS-b off + the K1 order gate on (``level --las-off --k1-order-gate on``, the single-variable LAS-off pair of a
+``_LAS_K1`` run; post-switch audit W-1): :data:`FINAL_CONTROLLER` + the gate (``v5_options.with_switch_tags``)."""
+FINAL_P3_K1_CONTROLLER = "final_C4G2_P3_K1"
+""":data:`FINAL_K1_CONTROLLER` with the ③ start bound (VB / LS)."""
 _FINAL_EXPECTATIONS: tuple[tuple[str, Any], ...] = (
     *_SPEC_429_11_EXPECTATIONS, ("clip_returned_command", True),
     ("touch_twist_hold.enable", True), ("touch_twist_hold.vector_ramp", True),
@@ -1553,6 +1558,8 @@ CONTROLLER_EXPECTATIONS: dict[str, tuple[tuple[str, Any], ...]] = {
     FINAL_P3_LAS_CONTROLLER: (*_FINAL_EXPECTATIONS, *_P3_EXPECTATIONS, *_LAS_EXPECTATIONS, *_ORDER_GATE_OFF),
     FINAL_LAS_K1_CONTROLLER: (*_FINAL_EXPECTATIONS, *_LAS_EXPECTATIONS, *_ORDER_GATE_ON),
     FINAL_P3_LAS_K1_CONTROLLER: (*_FINAL_EXPECTATIONS, *_P3_EXPECTATIONS, *_LAS_EXPECTATIONS, *_ORDER_GATE_ON),
+    FINAL_K1_CONTROLLER: (*_FINAL_EXPECTATIONS, *_ORDER_GATE_ON),
+    FINAL_P3_K1_CONTROLLER: (*_FINAL_EXPECTATIONS, *_P3_EXPECTATIONS, *_ORDER_GATE_ON),
 }
 """``level --expect-controller``: (dotted C2Config attribute, required value) per controller tag. The paths are C2Config
 attributes; ``controller_meta`` keeps the same names under ``<block>.settings`` (e.g. ``lift_stroke_guard.settings.
@@ -1567,6 +1574,8 @@ CONTROLLER_ABSENT_OR_OFF: dict[str, tuple[str, ...]] = {
     FINAL_P3_LAS_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
     FINAL_LAS_K1_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
     FINAL_P3_LAS_K1_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
+    FINAL_K1_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "liftoff_approach_slow"),
+    FINAL_P3_K1_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "liftoff_approach_slow"),
 }
 """C2Config blocks a controller tag must not have on (spec 429.11: P37t / ZIC rejected; the tags before the LAS-b
 switch: ``liftoff_approach_slow``): the block is absent, or its ``enable`` is False. A block without an ``enable``

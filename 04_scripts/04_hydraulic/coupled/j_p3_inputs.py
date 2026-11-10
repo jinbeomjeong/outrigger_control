@@ -25,20 +25,24 @@ for _path in (HERE, ROOT / "03_src"):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
-from outrigger_sim.hydraulics.v5_options import EXTEND_START_TAGS  # noqa: E402
+from outrigger_sim.hydraulics.v5_options import (  # noqa: E402
+    EXTEND_START_TAGS,
+    is_extend_start_tag,
+)
 
 P3_CONTROLLER_TAG = "final_C4G2_P3"
 P3_CONTROLLER_TAGS = EXTEND_START_TAGS
-"""③-on tags: before and after the LAS-b switch (``v5_options.EXTEND_START_TAGS``)."""
+"""③-on tags before and after the LAS-b / K1 switches (``v5_options.EXTEND_START_TAGS``), a
+list for records; :func:`is_p3_expected` judges by the base tag instead."""
 P3_RULE = "tracked_bound"
 P3_SETTING_PREFIXES = ("VB", "LS")
 RULE_KEY = "run_extend_start_rule"
 
 
 def is_p3_expected(controller_tag: str | None, setting: str | None) -> bool:
-    """A VB / LS run (tag ``final_C4G2_P3`` / ``final_C4G2_P3_LAS`` or setting ``VB`` /
-    ``LS<n>``)."""
-    if controller_tag in P3_CONTROLLER_TAGS:
+    """A VB / LS run: a tag whose base is ``final_C4G2_P3`` with any LAS-b / K1 suffixes
+    (``v5_options.is_extend_start_tag``), or setting ``VB`` / ``LS<n>``."""
+    if is_extend_start_tag(controller_tag):
         return True
     return setting is not None and setting.startswith(P3_SETTING_PREFIXES)
 

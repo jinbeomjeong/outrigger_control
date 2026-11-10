@@ -347,17 +347,26 @@ class _LasSwitch:
     enable: bool
 
 
+@dataclass(frozen=True)
+class _MarginSwitch:
+    flat_soil_margin_order_gate: bool
+
+
 def _stand_in_c2():
-    """A ``c2`` with a fresh ``C2Config`` whose preset turns LAS-b on (as after the switch)."""
+    """A ``c2`` with a fresh ``C2Config`` whose preset turns LAS-b and the K1 order gate on (as
+    after the K1 switch)."""
 
     @dataclass(frozen=True)
     class StandInConfig:
         liftoff_approach_slow: _LasSwitch = _LasSwitch(False)
+        slope_clearance_margin: _MarginSwitch = _MarginSwitch(False)
         soil_stop: bool = False
 
-        def with_10hz_d1(self, *, soil_stop: bool = True, liftoff_approach_slow: bool = True):
+        def with_10hz_d1(self, *, soil_stop: bool = True, liftoff_approach_slow: bool = True,
+                         flat_soil_margin_order_gate: bool = True):
             return replace(self, soil_stop=soil_stop,
-                           liftoff_approach_slow=_LasSwitch(liftoff_approach_slow))
+                           liftoff_approach_slow=_LasSwitch(liftoff_approach_slow),
+                           slope_clearance_margin=_MarginSwitch(flat_soil_margin_order_gate))
 
     return SimpleNamespace(C2Config=StandInConfig)
 
@@ -367,9 +376,24 @@ def test_wrapper_turns_the_preset_las_off_and_keeps_the_other_keywords() -> None
     lt._turn_preset_las_off(c2)
     preset = c2.C2Config().with_10hz_d1(soil_stop=False)
     assert preset.liftoff_approach_slow.enable is False
+    assert preset.slope_clearance_margin.flat_soil_margin_order_gate is False
     assert preset.soil_stop is False
     asked = c2.C2Config().with_10hz_d1(liftoff_approach_slow=True)
     assert asked.liftoff_approach_slow.enable is True
+    gate_asked = c2.C2Config().with_10hz_d1(flat_soil_margin_order_gate=True)
+    assert gate_asked.slope_clearance_margin.flat_soil_margin_order_gate is True
+
+
+def test_wrapper_gives_the_real_preset_the_pre_las_defaults(monkeypatch) -> None:
+    """On the real ``c2``: the wrapped preset equals the preset with both later switches off
+    (the ``pre_las_preset_runner.py`` preset; user decision 2026-11-10, post-switch audit)."""
+    from outrigger_sim.control import c2
+
+    monkeypatch.setattr(c2.C2Config, "with_10hz_d1", c2.C2Config.with_10hz_d1)  # restored after
+    pre_las = c2.C2Config().with_10hz_d1(liftoff_approach_slow=False,
+                                         flat_soil_margin_order_gate=False)
+    lt._turn_preset_las_off(c2)
+    assert c2.C2Config().with_10hz_d1() == pre_las
 
 
 def test_a_controller_with_the_preset_las_on_is_refused() -> None:
