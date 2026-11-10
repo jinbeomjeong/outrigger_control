@@ -1023,7 +1023,10 @@ def judge_chrono_k2_row(name: str, spec: dict, f_d8: float) -> dict:
         "false_latch": false,
         "cap": cap,
         "values": judged["values"],
-        "dhat_N": row.get("dhat_N"),  # rules rev1 4, record only (optional runner key)
+        # rules rev1 4, record only: the cad runner writes k2_row.json k2.dhat_* (path 2 reads the same)
+        "dhat_N": (row.get("k2") or {}).get("dhat_N"),
+        "dhat_window_open_legs": (row.get("k2") or {}).get("dhat_window_open_legs"),
+        "dhat_window_stroke_mm": (row.get("k2") or {}).get("dhat_window_stroke_mm"),
     }
 
 
@@ -1057,6 +1060,7 @@ def cmd_judge_v6(args) -> tuple[int, dict]:
             "pads_npz": list(CHRONO_PADS_KEYS),
             "J3": "pads N <= 0 after t_touch_s",
             "false latch": "rules 3.5 L2b",
+            "D_hat (rev1 4, record)": "k2.dhat_N, k2.dhat_window_open_legs, k2.dhat_window_stroke_mm",
         },
     }
 
