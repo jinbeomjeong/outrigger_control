@@ -43,6 +43,11 @@ LAS_K1_CONTROLLER_TAG = LAS_CONTROLLER_TAG + ORDER_GATE_TAG_SUFFIX
 """``final_C4G2_LAS_K1``: the preset since the K1 switch (V0 and the other settings without ③)."""
 EXTEND_START_LAS_K1_CONTROLLER_TAG = EXTEND_START_LAS_CONTROLLER_TAG + ORDER_GATE_TAG_SUFFIX
 """``final_C4G2_P3_LAS_K1``: the VB / LS controller since the K1 switch."""
+TOUCH_CREEP_TAG_SUFFIX = "_TCL"
+"""K-2 TOUCH creep latch (``C2Config.touch_creep_latch.enable``, not adopted; user decision
+2026-11-10, ``k2_touch_creep_rules.md`` 1.2 Q-3): Touch CreeP Latch, always last after ``_LAS`` /
+``_K1`` (``final_C4G2_LAS_TCL``, ``final_C4G2_LAS_K1_TCL``). :data:`EXTEND_START_TAGS` keeps its
+three entries; :func:`is_extend_start_tag` recognises the ``_TCL`` forms."""
 EXTEND_START_TAGS = (EXTEND_START_CONTROLLER_TAG, EXTEND_START_LAS_CONTROLLER_TAG,
                      EXTEND_START_LAS_K1_CONTROLLER_TAG)
 """Tags of a run with the ③ start bound (before LAS-b, LAS-b, LAS-b + K1). A list only: the ③
@@ -390,6 +395,14 @@ def is_order_gate_on(config: Any | None) -> bool:
     return bool(getattr(margin, "flat_soil_margin_order_gate", False))
 
 
+def is_touch_creep_on(config: Any | None) -> bool:
+    """The C2 configuration has the K-2 TOUCH creep latch on (``touch_creep_latch.enable``;
+    False for ``None``, a config from code before K-2 and a controller config without the
+    block)."""
+    settings = getattr(config, "touch_creep_latch", None)
+    return bool(getattr(settings, "enable", False))
+
+
 def _split_order_gate_suffix(tag: str) -> tuple[str, bool]:
     """``(tag without a trailing _K1, whether it had one)``."""
     if tag.endswith(ORDER_GATE_TAG_SUFFIX):
@@ -397,44 +410,80 @@ def _split_order_gate_suffix(tag: str) -> tuple[str, bool]:
     return tag, False
 
 
+def _split_touch_creep_suffix(tag: str) -> tuple[str, bool]:
+    """``(tag without a trailing _TCL, whether it had one)``."""
+    if tag.endswith(TOUCH_CREEP_TAG_SUFFIX):
+        return tag[: -len(TOUCH_CREEP_TAG_SUFFIX)], True
+    return tag, False
+
+
+def _with_touch_creep_suffix(tag: str, has_touch_creep: bool) -> str:
+    return tag + TOUCH_CREEP_TAG_SUFFIX if has_touch_creep else tag
+
+
 def with_liftoff_slow_tag(tag: str | None) -> str:
     """The LAS-b tag of a run tag: ``None`` (the runner's ``final_C4G2``) -> ``final_C4G2_LAS``,
     any other tag gets :data:`LIFTOFF_SLOW_TAG_SUFFIX` once (``ABL`` -> ``ABL_LAS``). A tag
     with the K1 suffix keeps it last (``final_C4G2_K1`` -> ``final_C4G2_LAS_K1``;
-    ``final_C4G2_LAS_K1`` is returned as it is)."""
+    ``final_C4G2_LAS_K1`` is returned as it is); a K-2 suffix stays after both."""
     if tag is None:
         return LAS_CONTROLLER_TAG
+    tag, has_touch_creep = _split_touch_creep_suffix(tag)
     base, has_order_gate = _split_order_gate_suffix(tag)
     if not base.endswith(LIFTOFF_SLOW_TAG_SUFFIX):
         base += LIFTOFF_SLOW_TAG_SUFFIX
-    return base + ORDER_GATE_TAG_SUFFIX if has_order_gate else base
+    tag = base + ORDER_GATE_TAG_SUFFIX if has_order_gate else base
+    return _with_touch_creep_suffix(tag, has_touch_creep)
 
 
 def with_order_gate_tag(tag: str | None) -> str:
     """The K1 tag of a run tag: ``None`` (the runner's ``final_C4G2``) -> ``final_C4G2_K1``,
-    any other tag gets :data:`ORDER_GATE_TAG_SUFFIX` once (``ABL_LAS`` -> ``ABL_LAS_K1``)."""
+    any other tag gets :data:`ORDER_GATE_TAG_SUFFIX` once (``ABL_LAS`` -> ``ABL_LAS_K1``); a
+    K-2 suffix stays last."""
     base = FINAL_CONTROLLER_TAG if tag is None else tag
-    return base if base.endswith(ORDER_GATE_TAG_SUFFIX) else base + ORDER_GATE_TAG_SUFFIX
+    base, has_touch_creep = _split_touch_creep_suffix(base)
+    tag = base if base.endswith(ORDER_GATE_TAG_SUFFIX) else base + ORDER_GATE_TAG_SUFFIX
+    return _with_touch_creep_suffix(tag, has_touch_creep)
+
+
+def with_touch_creep_tag(tag: str | None) -> str:
+    """The K-2 tag of a run tag: ``None`` (the runner's ``final_C4G2``) -> ``final_C4G2_TCL``,
+    any other tag gets :data:`TOUCH_CREEP_TAG_SUFFIX` once (``final_C4G2_LAS_K1`` ->
+    ``final_C4G2_LAS_K1_TCL``)."""
+    base = FINAL_CONTROLLER_TAG if tag is None else tag
+    return base if base.endswith(TOUCH_CREEP_TAG_SUFFIX) else base + TOUCH_CREEP_TAG_SUFFIX
 
 
 def is_liftoff_slow_tag(tag: str | None) -> bool:
     """A recorded tag of a run with LAS-b on (records without a tag ran before the switch);
-    true with or without the K1 suffix after ``_LAS`` (``final_C4G2_P3_LAS_K1``)."""
+    true with or without the K1 suffix after ``_LAS`` (``final_C4G2_P3_LAS_K1``) and a K-2
+    suffix after that."""
     if tag is None:
         return False
+    tag, _ = _split_touch_creep_suffix(tag)
     base, _ = _split_order_gate_suffix(tag)
     return base.endswith(LIFTOFF_SLOW_TAG_SUFFIX)
 
 
 def is_order_gate_tag(tag: str | None) -> bool:
-    """A recorded tag of a run with the LAS-b K1 order gate on (suffix ``_K1``)."""
-    return tag is not None and tag.endswith(ORDER_GATE_TAG_SUFFIX)
+    """A recorded tag of a run with the LAS-b K1 order gate on (suffix ``_K1``, before a K-2
+    suffix when there is one)."""
+    if tag is None:
+        return False
+    tag, _ = _split_touch_creep_suffix(tag)
+    return tag.endswith(ORDER_GATE_TAG_SUFFIX)
+
+
+def is_touch_creep_tag(tag: str | None) -> bool:
+    """A recorded tag of a run with the K-2 TOUCH creep latch on (suffix ``_TCL``)."""
+    return tag is not None and tag.endswith(TOUCH_CREEP_TAG_SUFFIX)
 
 
 def switch_base_tag(tag: str) -> str:
-    """``tag`` without the switch suffixes :func:`with_switch_tags` adds (a trailing ``_K1``,
-    then a trailing ``_LAS``): ``final_C4G2_P3_LAS_K1`` / ``final_C4G2_P3_K1`` ->
+    """``tag`` without the switch suffixes :func:`with_switch_tags` adds (a trailing ``_TCL``,
+    then ``_K1``, then ``_LAS``): ``final_C4G2_P3_LAS_K1`` / ``final_C4G2_P3_K1`` ->
     ``final_C4G2_P3``, ``ABL_LAS`` -> ``ABL``."""
+    tag, _ = _split_touch_creep_suffix(tag)
     base, _ = _split_order_gate_suffix(tag)
     if base.endswith(LIFTOFF_SLOW_TAG_SUFFIX):
         base = base[: -len(LIFTOFF_SLOW_TAG_SUFFIX)]
@@ -450,11 +499,14 @@ def is_extend_start_tag(tag: str | None) -> bool:
 
 def with_switch_tags(tag: str | None, config: Any | None) -> str | None:
     """``tag`` with the suffixes of the switches ``config`` has on: ``_LAS`` (LAS-b), then
-    ``_K1`` (order gate). Unchanged (possibly None) when both are off."""
+    ``_K1`` (order gate), then the K-2 ``_TCL`` (TOUCH creep latch). Unchanged
+    (possibly None) when all are off."""
     if is_liftoff_slow_on(config):
         tag = with_liftoff_slow_tag(tag)
     if is_order_gate_on(config):
         tag = with_order_gate_tag(tag)
+    if is_touch_creep_on(config):
+        tag = with_touch_creep_tag(tag)
     return tag
 
 
@@ -500,13 +552,17 @@ __all__ = [
     "LAS_K1_CONTROLLER_TAG",
     "LIFTOFF_SLOW_TAG_SUFFIX",
     "ORDER_GATE_TAG_SUFFIX",
+    "TOUCH_CREEP_TAG_SUFFIX",
     "is_extend_start_tag",
     "is_liftoff_slow_on",
     "is_liftoff_slow_tag",
     "is_order_gate_on",
     "is_order_gate_tag",
+    "is_touch_creep_on",
+    "is_touch_creep_tag",
     "with_liftoff_slow_tag",
     "with_order_gate_tag",
+    "with_touch_creep_tag",
     "switch_base_tag",
     "with_switch_tags",
     "LOCK_SPEED_EPS_M_S",
