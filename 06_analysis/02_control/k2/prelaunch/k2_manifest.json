@@ -93,10 +93,10 @@
    "kind": "noise_cp",
    "count": 855,
    "off": [
-    "<noise_L2 flat rows, off arm (B-V5 adaptor)>"
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat\\noise_L2.json"
    ],
    "tcl": [
-    "<noise_L2 flat rows, K-2 arm (B-V5 adaptor)>"
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat\\noise_L2.json"
    ],
    "key": "key",
    "status": "pass"
@@ -105,10 +105,10 @@
    "kind": "pass_to_fail",
    "count": 768,
    "off": [
-    "<grid flat rows, off arm (B-V5 adaptor)>"
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat\\grid.json"
    ],
    "tcl": [
-    "<grid flat rows, K-2 arm (B-V5 adaptor)>"
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat\\grid.json"
    ],
    "key": "key",
    "status": "pass"
@@ -117,10 +117,10 @@
    "kind": "pass_to_fail",
    "count": 576,
    "off": [
-    "<d8 flat rows, off arm (B-V5 adaptor)>"
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat\\d8.json"
    ],
    "tcl": [
-    "<d8 flat rows, K-2 arm (B-V5 adaptor)>"
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat\\d8.json"
    ],
    "key": "key",
    "status": "pass"
@@ -129,22 +129,22 @@
    "kind": "pass_to_fail",
    "count": 60,
    "off": [
-    "<soil flat rows, off arm (B-V5 adaptor)>"
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat\\soil.json"
    ],
    "tcl": [
-    "<soil flat rows, K-2 arm (B-V5 adaptor)>"
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat\\soil.json"
    ],
    "key": "key",
    "status": "pass"
   },
   "regression": {
    "kind": "pass_to_fail",
-   "count": 118,
+   "count": 93,
    "off": [
-    "<regression flat rows, off arm (B-V5 adaptor)>"
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat\\regression.json"
    ],
    "tcl": [
-    "<regression flat rows, K-2 arm (B-V5 adaptor)>"
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat\\regression.json"
    ],
    "key": "key",
    "status": "pass"
@@ -153,10 +153,10 @@
    "kind": "pass_to_fail",
    "count": 20,
    "off": [
-    "<ps7 flat rows, off arm (B-V5 adaptor)>"
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat\\ps7.json"
    ],
    "tcl": [
-    "<ps7 flat rows, K-2 arm (B-V5 adaptor)>"
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat\\ps7.json"
    ],
    "key": "key",
    "status": "pass"
@@ -165,10 +165,10 @@
    "kind": "g8",
    "count": 83,
    "off": [
-    "<g8_safe_stop flat rows, off arm (B-V5 adaptor)>"
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat\\g8_safe_stop.json"
    ],
    "tcl": [
-    "<g8_safe_stop flat rows, K-2 arm (B-V5 adaptor)>"
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat\\g8_safe_stop.json"
    ],
    "key": "key",
    "status": "pass",
@@ -179,58 +179,58 @@
  "v6": {
   "rows": {
    "K2_L1_top_fdown3.5_Fs0_off": {
-    "row_json": "{BATCH_L1_OFF}\\K2_L1_top_fdown3.5_Fs0_off\\k2_row.json",
-    "pads_npz": "{BATCH_L1_OFF}\\K2_L1_top_fdown3.5_Fs0_off\\k2_pads.npz",
-    "rate_npz": "{BATCH_L1_OFF}\\K2_L1_top_fdown3.5_Fs0_off\\k2_rate.npz",
+    "row_json": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_off\\K2_L1_top_fdown3.5_Fs0_off\\k2_row.json",
+    "pads_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_off\\K2_L1_top_fdown3.5_Fs0_off\\k2_pads.npz",
+    "rate_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_off\\K2_L1_top_fdown3.5_Fs0_off\\k2_rate.npz",
     "engine": "L1",
     "arm": "off"
    },
    "K2_L1_top_fdown3.5_Fs0_tcl": {
-    "row_json": "{BATCH_L1_TCL}\\K2_L1_top_fdown3.5_Fs0_tcl\\k2_row.json",
-    "pads_npz": "{BATCH_L1_TCL}\\K2_L1_top_fdown3.5_Fs0_tcl\\k2_pads.npz",
-    "rate_npz": "{BATCH_L1_TCL}\\K2_L1_top_fdown3.5_Fs0_tcl\\k2_rate.npz",
+    "row_json": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_tcl\\K2_L1_top_fdown3.5_Fs0_tcl\\k2_row.json",
+    "pads_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_tcl\\K2_L1_top_fdown3.5_Fs0_tcl\\k2_pads.npz",
+    "rate_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_tcl\\K2_L1_top_fdown3.5_Fs0_tcl\\k2_rate.npz",
     "engine": "L1",
     "arm": "tcl"
    },
    "K2_L1_top_k2pp025_Fs0_off": {
-    "row_json": "{BATCH_L1_OFF}\\K2_L1_top_k2pp025_Fs0_off\\k2_row.json",
-    "pads_npz": "{BATCH_L1_OFF}\\K2_L1_top_k2pp025_Fs0_off\\k2_pads.npz",
-    "rate_npz": "{BATCH_L1_OFF}\\K2_L1_top_k2pp025_Fs0_off\\k2_rate.npz",
+    "row_json": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_off\\K2_L1_top_k2pp025_Fs0_off\\k2_row.json",
+    "pads_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_off\\K2_L1_top_k2pp025_Fs0_off\\k2_pads.npz",
+    "rate_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_off\\K2_L1_top_k2pp025_Fs0_off\\k2_rate.npz",
     "engine": "L1",
     "arm": "off"
    },
    "K2_L1_top_k2pp025_Fs0_tcl": {
-    "row_json": "{BATCH_L1_TCL}\\K2_L1_top_k2pp025_Fs0_tcl\\k2_row.json",
-    "pads_npz": "{BATCH_L1_TCL}\\K2_L1_top_k2pp025_Fs0_tcl\\k2_pads.npz",
-    "rate_npz": "{BATCH_L1_TCL}\\K2_L1_top_k2pp025_Fs0_tcl\\k2_rate.npz",
+    "row_json": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_tcl\\K2_L1_top_k2pp025_Fs0_tcl\\k2_row.json",
+    "pads_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_tcl\\K2_L1_top_k2pp025_Fs0_tcl\\k2_pads.npz",
+    "rate_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_tcl\\K2_L1_top_k2pp025_Fs0_tcl\\k2_rate.npz",
     "engine": "L1",
     "arm": "tcl"
    },
    "K2_L2b_top_fdown3.5_Fs4_off": {
-    "row_json": "{BATCH_L2B_OFF}\\K2_L2b_top_fdown3.5_Fs4_off\\k2_row.json",
-    "pads_npz": "{BATCH_L2B_OFF}\\K2_L2b_top_fdown3.5_Fs4_off\\k2_pads.npz",
-    "rate_npz": "{BATCH_L2B_OFF}\\K2_L2b_top_fdown3.5_Fs4_off\\k2_rate.npz",
+    "row_json": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_off\\K2_L2b_top_fdown3.5_Fs4_off\\k2_row.json",
+    "pads_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_off\\K2_L2b_top_fdown3.5_Fs4_off\\k2_pads.npz",
+    "rate_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_off\\K2_L2b_top_fdown3.5_Fs4_off\\k2_rate.npz",
     "engine": "L2b",
     "arm": "off"
    },
    "K2_L2b_top_fdown3.5_Fs4_tcl": {
-    "row_json": "{BATCH_L2B_TCL}\\K2_L2b_top_fdown3.5_Fs4_tcl\\k2_row.json",
-    "pads_npz": "{BATCH_L2B_TCL}\\K2_L2b_top_fdown3.5_Fs4_tcl\\k2_pads.npz",
-    "rate_npz": "{BATCH_L2B_TCL}\\K2_L2b_top_fdown3.5_Fs4_tcl\\k2_rate.npz",
+    "row_json": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_tcl\\K2_L2b_top_fdown3.5_Fs4_tcl\\k2_row.json",
+    "pads_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_tcl\\K2_L2b_top_fdown3.5_Fs4_tcl\\k2_pads.npz",
+    "rate_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_tcl\\K2_L2b_top_fdown3.5_Fs4_tcl\\k2_rate.npz",
     "engine": "L2b",
     "arm": "tcl"
    },
    "K2_L2b_top_k2pp025_Fs4_off": {
-    "row_json": "{BATCH_L2B_OFF}\\K2_L2b_top_k2pp025_Fs4_off\\k2_row.json",
-    "pads_npz": "{BATCH_L2B_OFF}\\K2_L2b_top_k2pp025_Fs4_off\\k2_pads.npz",
-    "rate_npz": "{BATCH_L2B_OFF}\\K2_L2b_top_k2pp025_Fs4_off\\k2_rate.npz",
+    "row_json": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_off\\K2_L2b_top_k2pp025_Fs4_off\\k2_row.json",
+    "pads_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_off\\K2_L2b_top_k2pp025_Fs4_off\\k2_pads.npz",
+    "rate_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_off\\K2_L2b_top_k2pp025_Fs4_off\\k2_rate.npz",
     "engine": "L2b",
     "arm": "off"
    },
    "K2_L2b_top_k2pp025_Fs4_tcl": {
-    "row_json": "{BATCH_L2B_TCL}\\K2_L2b_top_k2pp025_Fs4_tcl\\k2_row.json",
-    "pads_npz": "{BATCH_L2B_TCL}\\K2_L2b_top_k2pp025_Fs4_tcl\\k2_pads.npz",
-    "rate_npz": "{BATCH_L2B_TCL}\\K2_L2b_top_k2pp025_Fs4_tcl\\k2_rate.npz",
+    "row_json": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_tcl\\K2_L2b_top_k2pp025_Fs4_tcl\\k2_row.json",
+    "pads_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_tcl\\K2_L2b_top_k2pp025_Fs4_tcl\\k2_pads.npz",
+    "rate_npz": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_tcl\\K2_L2b_top_k2pp025_Fs4_tcl\\k2_rate.npz",
     "engine": "L2b",
     "arm": "tcl"
    }

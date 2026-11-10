@@ -1,5 +1,5 @@
 {
- "head": "{RUN_HEAD} = the master merge commit of k2-v7k1-dhat (cad-expert bf3f475) and k2-prelaunch (k2_recount 1.2) onto dc2029b",
+ "head": "{RUN_HEAD} = the master merge commit of k2-v7k1-dhat (cad-expert 09f66c4), k2-prelaunch-fix (python-expert c77ecf5) and k2-prelaunch (k2_recount 1.2) onto dc2029b",
  "run_wt": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
  "steps": [
   {
@@ -10,6 +10,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1off_off.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -39,7 +47,25 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1off_off.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1off_off.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1off_off.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1off_off.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main,robust,kt",
+    "--k1",
+    "off",
+    "--k2",
+    "off",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v2_k1on_off",
@@ -49,6 +75,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1on_off.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -78,7 +112,25 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1on_off.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1on_off.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1on_off.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1on_off.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main",
+    "--k1",
+    "on",
+    "--k2",
+    "off",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v3_H0_off",
@@ -88,6 +140,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_H0_off.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -121,7 +181,29 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_H0_off.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_H0_off.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_H0_off.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_H0_off.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main,robust,kt",
+    "--k1",
+    "off",
+    "--k2",
+    "off",
+    "--aug",
+    "H0",
+    "--keys-file",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\prelaunch\\k2_v3_keys.txt",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v3_L1eq_off",
@@ -131,6 +213,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_off.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -164,7 +254,29 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_off.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_off.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_off.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_off.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main,robust,kt",
+    "--k1",
+    "off",
+    "--k2",
+    "off",
+    "--aug",
+    "L1eq",
+    "--keys-file",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\prelaunch\\k2_v3_keys.txt",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v3_L1eq_fs_off",
@@ -174,6 +286,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_fs_off.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -207,7 +327,29 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_fs_off.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_fs_off.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_fs_off.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_fs_off.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main,robust,kt",
+    "--k1",
+    "off",
+    "--k2",
+    "off",
+    "--aug",
+    "L1eq_fs",
+    "--keys-file",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\prelaunch\\k2_v3_keys.txt",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v3_L1eq_zm_off",
@@ -217,6 +359,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_zm_off.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -250,7 +400,29 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_zm_off.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_zm_off.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_zm_off.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_zm_off.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main,robust,kt",
+    "--k1",
+    "off",
+    "--k2",
+    "off",
+    "--aug",
+    "L1eq_zm",
+    "--keys-file",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\prelaunch\\k2_v3_keys.txt",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v3_AUG_off",
@@ -260,6 +432,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_off.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -293,7 +473,29 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_off.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_off.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_off.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_off.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main,robust,kt",
+    "--k1",
+    "off",
+    "--k2",
+    "off",
+    "--aug",
+    "AUG",
+    "--keys-file",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\prelaunch\\k2_v3_keys.txt",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v3_AUG_crc2_off",
@@ -303,6 +505,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_crc2_off.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -336,7 +546,29 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_crc2_off.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_crc2_off.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_crc2_off.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_crc2_off.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main,robust,kt",
+    "--k1",
+    "off",
+    "--k2",
+    "off",
+    "--aug",
+    "AUG_crc2",
+    "--keys-file",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\prelaunch\\k2_v3_keys.txt",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v3_AUG_eps_off",
@@ -346,6 +578,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_eps_off.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -379,7 +619,29 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_eps_off.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_eps_off.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_eps_off.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_eps_off.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main,robust,kt",
+    "--k1",
+    "off",
+    "--k2",
+    "off",
+    "--aug",
+    "AUG_eps",
+    "--keys-file",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\prelaunch\\k2_v3_keys.txt",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v4_off",
@@ -389,6 +651,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v4\\v4_off.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -420,7 +690,27 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v4\\v4_off.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v4\\v4_off.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v4\\v4_off.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v4\\v4_off.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\k2_points_5p5_3p5.json",
+    "--stages",
+    "main,robust,kt",
+    "--levels",
+    "top",
+    "--k1",
+    "off",
+    "--k2",
+    "off",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v2_k1off_tcl",
@@ -430,6 +720,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1off_tcl.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -459,7 +757,25 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1off_tcl.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1off_tcl.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1off_tcl.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1off_tcl.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main,robust,kt",
+    "--k1",
+    "off",
+    "--k2",
+    "on",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v2_k1on_tcl",
@@ -469,6 +785,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1on_tcl.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -498,7 +822,25 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1on_tcl.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1on_tcl.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1on_tcl.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v2\\v2_k1on_tcl.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main",
+    "--k1",
+    "on",
+    "--k2",
+    "on",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v3_H0_tcl",
@@ -508,6 +850,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_H0_tcl.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -541,7 +891,29 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_H0_tcl.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_H0_tcl.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_H0_tcl.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_H0_tcl.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main,robust,kt",
+    "--k1",
+    "off",
+    "--k2",
+    "on",
+    "--aug",
+    "H0",
+    "--keys-file",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\prelaunch\\k2_v3_keys.txt",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v3_L1eq_tcl",
@@ -551,6 +923,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_tcl.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -584,7 +964,29 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_tcl.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_tcl.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_tcl.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_tcl.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main,robust,kt",
+    "--k1",
+    "off",
+    "--k2",
+    "on",
+    "--aug",
+    "L1eq",
+    "--keys-file",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\prelaunch\\k2_v3_keys.txt",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v3_L1eq_fs_tcl",
@@ -594,6 +996,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_fs_tcl.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -627,7 +1037,29 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_fs_tcl.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_fs_tcl.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_fs_tcl.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_fs_tcl.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main,robust,kt",
+    "--k1",
+    "off",
+    "--k2",
+    "on",
+    "--aug",
+    "L1eq_fs",
+    "--keys-file",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\prelaunch\\k2_v3_keys.txt",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v3_L1eq_zm_tcl",
@@ -637,6 +1069,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_zm_tcl.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -670,7 +1110,29 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_zm_tcl.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_zm_tcl.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_zm_tcl.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_L1eq_zm_tcl.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main,robust,kt",
+    "--k1",
+    "off",
+    "--k2",
+    "on",
+    "--aug",
+    "L1eq_zm",
+    "--keys-file",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\prelaunch\\k2_v3_keys.txt",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v3_AUG_tcl",
@@ -680,6 +1142,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_tcl.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -713,7 +1183,29 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_tcl.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_tcl.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_tcl.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_tcl.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main,robust,kt",
+    "--k1",
+    "off",
+    "--k2",
+    "on",
+    "--aug",
+    "AUG",
+    "--keys-file",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\prelaunch\\k2_v3_keys.txt",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v3_AUG_crc2_tcl",
@@ -723,6 +1215,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_crc2_tcl.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -756,7 +1256,29 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_crc2_tcl.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_crc2_tcl.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_crc2_tcl.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_crc2_tcl.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main,robust,kt",
+    "--k1",
+    "off",
+    "--k2",
+    "on",
+    "--aug",
+    "AUG_crc2",
+    "--keys-file",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\prelaunch\\k2_v3_keys.txt",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v3_AUG_eps_tcl",
@@ -766,6 +1288,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_eps_tcl.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -799,7 +1329,29 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_eps_tcl.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_eps_tcl.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_eps_tcl.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v3\\v3_AUG_eps_tcl.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\d8x\\d8x_points.json",
+    "--stages",
+    "main,robust,kt",
+    "--k1",
+    "off",
+    "--k2",
+    "on",
+    "--aug",
+    "AUG_eps",
+    "--keys-file",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\prelaunch\\k2_v3_keys.txt",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v4_tcl",
@@ -809,6 +1361,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v4\\v4_tcl.json.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -840,7 +1400,27 @@
     "PYTHONDONTWRITEBYTECODE": "1"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v4\\v4_tcl.json",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v4\\v4_tcl.json.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v4\\v4_tcl.json.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v4\\v4_tcl.json",
+    "--points",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\k2_points_5p5_3p5.json",
+    "--stages",
+    "main,robust,kt",
+    "--levels",
+    "top",
+    "--k1",
+    "off",
+    "--k2",
+    "on",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_reg1_off",
@@ -850,6 +1430,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\reg1.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -890,7 +1478,30 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_harness.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\reg1.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s9\\s9_slope_fix_candidates.py",
+    "run",
+    "--suite",
+    "slope,h6",
+    "--candidates",
+    "current",
+    "--settle-hook",
+    "harness",
+    "--ids",
+    "H1|J1|B|top|flat;H1|J2|B|top|flat;H6|J1|B|top|flat|Fs0;H6|J1|B|top|flat|Fs0|m1.1;H6|J1|B|top|flat;H6|J1|B|top|flat|m1.1;H6|J1|B|middle|flat|Fs0|m1.1;H6|J1|B|middle|flat|m1.1;H6|J1|B|bottom|flat|Fs0|m1.1;H6|J1|B|bottom|flat|m1.1;H6|J2|B|top|flat;H6|J2|B|top|flat|m1.1;H6|J2|B|bottom|flat|m1.1",
+    "--workers",
+    "{WORKERS}",
+    "--affinity",
+    "{MASK}",
+    "--out",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_harness.json"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_reg2_off",
@@ -900,6 +1511,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\reg2.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -940,7 +1559,30 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_p0.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\reg2.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s9\\s9_slope_fix_candidates.py",
+    "run",
+    "--suite",
+    "g6,g8,p3b,v3s",
+    "--candidates",
+    "current",
+    "--settle-hook",
+    "p0",
+    "--ids",
+    "ref|J1|top|Fs0;ref|J1|top|Fs4;ref|J2|top|Fs0;ref|J2|top|Fs4;base|J1|B|top|Fs0;base|J1|B|top|Fs4;base|J1|B|top|Fs8;base|J2|B|top|Fs0;base|J2|B|top|Fs4;base|J2|B|top|Fs8;loc_sens0|J1|B|top|Fs4;loc_sens1|J1|B|top|Fs4;loc_sens1|J2|B|top|Fs4;loc_sens2|J1|B|top|Fs4;loc_b0.69|J1|B|top|Fs4;loc_b0.69|J2|B|top|Fs4;loc_b1.6|J1|B|top|Fs4",
+    "--workers",
+    "{WORKERS}",
+    "--affinity",
+    "{MASK}",
+    "--out",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_p0.json"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_reg3_off",
@@ -950,6 +1592,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\reg3.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -982,7 +1632,18 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_A.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\reg3.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s9\\s9_soil_event_screen.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_A.json",
+    "8"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_reg4_off",
@@ -992,6 +1653,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\reg4.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1025,7 +1694,18 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_r79_L1L2.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\reg4.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_sensor_screen.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_r79_L1L2.json",
+    "8"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_reg5_off",
@@ -1035,6 +1715,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\reg5.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1072,7 +1760,26 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_r79_L3L4.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\reg5.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_L3L4_final.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_r79_L3L4.json",
+    "--levels",
+    "L3,L4",
+    "--keys",
+    "L3|s0|g6|52|ref|J1|top|Fs0;L3|s0|g6|53|ref|J1|top|Fs4;L3|s0|g6|56|ref|J2|top|Fs0;L3|s0|g6|57|ref|J2|top|Fs4;L3|s0|ref|16|J1|B|0,0;L3|s0|ref|18|J2|B|0,0;L3|s1|g6|52|ref|J1|top|Fs0;L3|s1|g6|53|ref|J1|top|Fs4;L3|s1|g6|56|ref|J2|top|Fs0;L3|s1|g6|57|ref|J2|top|Fs4;L3|s1|ref|16|J1|B|0,0;L3|s1|ref|18|J2|B|0,0;L3|s2|g6|52|ref|J1|top|Fs0;L3|s2|g6|53|ref|J1|top|Fs4;L3|s2|g6|55|ref|J1|bottom|Fs4;L3|s2|g6|56|ref|J2|top|Fs0;L3|s2|g6|57|ref|J2|top|Fs4;L3|s2|ref|16|J1|B|0,0;L3|s2|ref|18|J2|B|0,0;L4|s0|g6|41|g6|G1+S1@RL|top|Fs4;L4|s0|g6|42|g6|G1+S1@RL|bottom|Fs0;L4|s0|g6|45|g6|G1+S1@RR|top|Fs4;L4|s0|g6|52|ref|J1|top|Fs0;L4|s0|g6|53|ref|J1|top|Fs4;L4|s0|g6|56|ref|J2|top|Fs0;L4|s0|g6|57|ref|J2|top|Fs4;L4|s0|ref|16|J1|B|0,0;L4|s0|ref|18|J2|B|0,0;L4|s1|g6|42|g6|G1+S1@RL|bottom|Fs0;L4|s1|g6|52|ref|J1|top|Fs0;L4|s1|g6|53|ref|J1|top|Fs4;L4|s1|g6|56|ref|J2|top|Fs0;L4|s1|g6|57|ref|J2|top|Fs4;L4|s1|ref|16|J1|B|0,0;L4|s1|ref|18|J2|B|0,0;L4|s2|g6|52|ref|J1|top|Fs0;L4|s2|g6|53|ref|J1|top|Fs4;L4|s2|g6|55|ref|J1|bottom|Fs4;L4|s2|g6|56|ref|J2|top|Fs0;L4|s2|g6|57|ref|J2|top|Fs4;L4|s2|ref|16|J1|B|0,0;L4|s2|ref|18|J2|B|0,0",
+    "--workers",
+    "{WORKERS}",
+    "--affinity",
+    "{MASK}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_reg6_off",
@@ -1082,6 +1789,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\reg6.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1115,7 +1830,18 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_x426_C.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\reg6.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r72_g6_screen.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_x426_C.json",
+    "8"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_reg7_off",
@@ -1125,6 +1851,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\reg7.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1160,7 +1894,25 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_x426_D.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\reg7.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s9\\s9_soil_slope.py",
+    "--groups",
+    "H8",
+    "--filter",
+    "H8|J2|B|top|flat,H8|J2|B|top|flat|FL:d60,H8|J2|B|top|flat|FL:d150",
+    "--workers",
+    "{WORKERS}",
+    "--affinity",
+    "{MASK}",
+    "--out",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_x426_D.json"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_grid_r67_main_off",
@@ -1170,6 +1922,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\grid_r67_main.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1200,7 +1960,18 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\grid_r67_main.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\grid_r67_main.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r67_g1_screen.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\grid_r67_main.json",
+    "8"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_grid_r67_top_off",
@@ -1210,6 +1981,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\grid_r67_top.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1241,7 +2020,18 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\grid_r67_top.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\grid_r67_top.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r67_g1_screen.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\grid_r67_top.json",
+    "8"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_grid_r69_top_off",
@@ -1251,6 +2041,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\grid_r69_top.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1280,7 +2078,18 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\grid_r69_top.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\grid_r69_top.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r69_g5_screen.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\grid_r69_top.json",
+    "8"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_grid_r69_bottom_off",
@@ -1290,6 +2099,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\grid_r69_bottom.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1319,7 +2136,18 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\grid_r69_bottom.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\grid_r69_bottom.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r69_g5_screen.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\grid_r69_bottom.json",
+    "8"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_soil_A_off",
@@ -1329,6 +2157,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\soil_A.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1358,7 +2194,18 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\soil_A.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\soil_A.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s9\\s9_soil_event_screen.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\soil_A.json",
+    "8"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_d8_off",
@@ -1368,6 +2215,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\d8.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1395,7 +2250,17 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\d8_both.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\d8.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\d8_both.json",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_noise_L1L2_off",
@@ -1405,6 +2270,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\noise_L1L2.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1439,7 +2312,22 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\r79_L1L2.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\noise_L1L2.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_L3L4_final.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\r79_L1L2.json",
+    "--workers",
+    "{WORKERS}",
+    "--levels",
+    "L1,L2"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_ps7_off",
@@ -1452,13 +2340,23 @@
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\ps7.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\run_ps7.py",
     "E",
     "--workers",
     "{WORKERS}",
     "--mask",
-    "{MASK}"
+    "{MASK}",
+    "--out",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\ps7.json"
    ],
    "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
    "env": {
@@ -1477,9 +2375,23 @@
     "OUTRIGGER_ACC": "k2",
     "ACC_PROVENANCE": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\provenance\\ps7.json"
    },
-   "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\touch_phase\\ps7_E.json",
-   "post": "move to C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\ps7_E.json before the other arm runs (fixed output name)",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\ps7.launch.json"
+   "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\ps7.json",
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\ps7.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\run_ps7.py",
+    "E",
+    "--workers",
+    "{WORKERS}",
+    "--mask",
+    "{MASK}",
+    "--out",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\ps7.json"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_g8_jobs1_off",
@@ -1489,6 +2401,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\g8_jobs1.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1517,7 +2437,19 @@
     "R79_AFFINITY": "{MASK}"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\g8_jobs1.jsonl",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\g8_jobs1.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\g8_jobs1.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\touch_phase\\acceptance\\g8_safe_stop\\g8trace.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\touch_phase\\acceptance\\g8_safe_stop\\jobs1.json",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\g8_jobs1.jsonl",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_g8_jobs3_off",
@@ -1527,6 +2459,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\g8_jobs3.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1555,7 +2495,19 @@
     "R79_AFFINITY": "{MASK}"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\g8_jobs3.jsonl",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\g8_jobs3.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\g8_jobs3.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\touch_phase\\acceptance\\g8_safe_stop\\g8trace.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\touch_phase\\acceptance\\g8_safe_stop\\jobs3.json",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\g8_jobs3.jsonl",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_g8_jobs5_off",
@@ -1565,6 +2517,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\g8_jobs5.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1593,7 +2553,184 @@
     "R79_AFFINITY": "{MASK}"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\g8_jobs5.jsonl",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\g8_jobs5.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\g8_jobs5.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\touch_phase\\acceptance\\g8_safe_stop\\g8trace.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\touch_phase\\acceptance\\g8_safe_stop\\jobs5.json",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\g8_jobs5.jsonl",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
+  },
+  {
+   "id": "v5_judge_r79_L1L2_off",
+   "bundle": "v5",
+   "v5_bundle": "post",
+   "arm": "off",
+   "after": [
+    "v5_noise_L1L2_off"
+   ],
+   "pool": "{POOL}",
+   "mask": "{MASK}",
+   "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\r79_L1L2_judgement.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+    "judge",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\r79_L1L2_judgement.json",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\r79_L1L2.json"
+   ],
+   "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+   "env": {
+    "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+    "CONDA_DEFAULT_ENV": "dynamics-dev",
+    "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+    "MKL_THREADING_LAYER": "TBB",
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "PYTHONDONTWRITEBYTECODE": "1"
+   },
+   "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\r79_L1L2_judgement.json",
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\r79_L1L2_judgement.launch.json",
+   "note": "the existing r79 judgement (acc_judge.r79_judge), needed by the flattener",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+    "judge",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\r79_L1L2_judgement.json",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\r79_L1L2.json"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
+  },
+  {
+   "id": "v5_judge_clip_r79_L1L2_off",
+   "bundle": "v5",
+   "v5_bundle": "post",
+   "arm": "off",
+   "after": [
+    "v5_reg4_off"
+   ],
+   "pool": "{POOL}",
+   "mask": "{MASK}",
+   "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_r79_L1L2_judgement.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+    "judge",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_r79_L1L2_judgement.json",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_r79_L1L2.json"
+   ],
+   "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+   "env": {
+    "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+    "CONDA_DEFAULT_ENV": "dynamics-dev",
+    "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+    "MKL_THREADING_LAYER": "TBB",
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "PYTHONDONTWRITEBYTECODE": "1"
+   },
+   "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_r79_L1L2_judgement.json",
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_r79_L1L2_judgement.launch.json",
+   "note": "the existing r79 judgement (acc_judge.r79_judge), needed by the flattener",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+    "judge",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_r79_L1L2_judgement.json",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\clip_r79_L1L2.json"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
+  },
+  {
+   "id": "v5_flatten_off",
+   "bundle": "v5",
+   "v5_bundle": "post",
+   "arm": "off",
+   "after": [
+    "v5_*_off"
+   ],
+   "pool": "{POOL}",
+   "mask": "{MASK}",
+   "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flatten.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\k2_v5_flatten.py",
+    "--arm-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off",
+    "--out-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat",
+    "--checkout",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run"
+   ],
+   "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+   "env": {
+    "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+    "CONDA_DEFAULT_ENV": "dynamics-dev",
+    "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+    "MKL_THREADING_LAYER": "TBB",
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "PYTHONDONTWRITEBYTECODE": "1"
+   },
+   "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat",
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flatten.launch.json",
+   "note": "last V-5 step of the arm; writes <bundle>.json per V-5 bundle and flatten_summary.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\k2_v5_flatten.py",
+    "--arm-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off",
+    "--out-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\off\\flat",
+    "--checkout",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_reg1_tcl",
@@ -1603,6 +2740,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\reg1.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1643,7 +2788,30 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_harness.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\reg1.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s9\\s9_slope_fix_candidates.py",
+    "run",
+    "--suite",
+    "slope,h6",
+    "--candidates",
+    "current",
+    "--settle-hook",
+    "harness",
+    "--ids",
+    "H1|J1|B|top|flat;H1|J2|B|top|flat;H6|J1|B|top|flat|Fs0;H6|J1|B|top|flat|Fs0|m1.1;H6|J1|B|top|flat;H6|J1|B|top|flat|m1.1;H6|J1|B|middle|flat|Fs0|m1.1;H6|J1|B|middle|flat|m1.1;H6|J1|B|bottom|flat|Fs0|m1.1;H6|J1|B|bottom|flat|m1.1;H6|J2|B|top|flat;H6|J2|B|top|flat|m1.1;H6|J2|B|bottom|flat|m1.1",
+    "--workers",
+    "{WORKERS}",
+    "--affinity",
+    "{MASK}",
+    "--out",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_harness.json"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_reg2_tcl",
@@ -1653,6 +2821,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\reg2.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1693,7 +2869,30 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_p0.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\reg2.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s9\\s9_slope_fix_candidates.py",
+    "run",
+    "--suite",
+    "g6,g8,p3b,v3s",
+    "--candidates",
+    "current",
+    "--settle-hook",
+    "p0",
+    "--ids",
+    "ref|J1|top|Fs0;ref|J1|top|Fs4;ref|J2|top|Fs0;ref|J2|top|Fs4;base|J1|B|top|Fs0;base|J1|B|top|Fs4;base|J1|B|top|Fs8;base|J2|B|top|Fs0;base|J2|B|top|Fs4;base|J2|B|top|Fs8;loc_sens0|J1|B|top|Fs4;loc_sens1|J1|B|top|Fs4;loc_sens1|J2|B|top|Fs4;loc_sens2|J1|B|top|Fs4;loc_b0.69|J1|B|top|Fs4;loc_b0.69|J2|B|top|Fs4;loc_b1.6|J1|B|top|Fs4",
+    "--workers",
+    "{WORKERS}",
+    "--affinity",
+    "{MASK}",
+    "--out",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_p0.json"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_reg3_tcl",
@@ -1703,6 +2902,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\reg3.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1735,7 +2942,18 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_A.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\reg3.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s9\\s9_soil_event_screen.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_A.json",
+    "8"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_reg4_tcl",
@@ -1745,6 +2963,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\reg4.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1778,7 +3004,18 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_r79_L1L2.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\reg4.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_sensor_screen.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_r79_L1L2.json",
+    "8"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_reg5_tcl",
@@ -1788,6 +3025,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\reg5.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1825,7 +3070,26 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_r79_L3L4.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\reg5.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_L3L4_final.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_r79_L3L4.json",
+    "--levels",
+    "L3,L4",
+    "--keys",
+    "L3|s0|g6|52|ref|J1|top|Fs0;L3|s0|g6|53|ref|J1|top|Fs4;L3|s0|g6|56|ref|J2|top|Fs0;L3|s0|g6|57|ref|J2|top|Fs4;L3|s0|ref|16|J1|B|0,0;L3|s0|ref|18|J2|B|0,0;L3|s1|g6|52|ref|J1|top|Fs0;L3|s1|g6|53|ref|J1|top|Fs4;L3|s1|g6|56|ref|J2|top|Fs0;L3|s1|g6|57|ref|J2|top|Fs4;L3|s1|ref|16|J1|B|0,0;L3|s1|ref|18|J2|B|0,0;L3|s2|g6|52|ref|J1|top|Fs0;L3|s2|g6|53|ref|J1|top|Fs4;L3|s2|g6|55|ref|J1|bottom|Fs4;L3|s2|g6|56|ref|J2|top|Fs0;L3|s2|g6|57|ref|J2|top|Fs4;L3|s2|ref|16|J1|B|0,0;L3|s2|ref|18|J2|B|0,0;L4|s0|g6|41|g6|G1+S1@RL|top|Fs4;L4|s0|g6|42|g6|G1+S1@RL|bottom|Fs0;L4|s0|g6|45|g6|G1+S1@RR|top|Fs4;L4|s0|g6|52|ref|J1|top|Fs0;L4|s0|g6|53|ref|J1|top|Fs4;L4|s0|g6|56|ref|J2|top|Fs0;L4|s0|g6|57|ref|J2|top|Fs4;L4|s0|ref|16|J1|B|0,0;L4|s0|ref|18|J2|B|0,0;L4|s1|g6|42|g6|G1+S1@RL|bottom|Fs0;L4|s1|g6|52|ref|J1|top|Fs0;L4|s1|g6|53|ref|J1|top|Fs4;L4|s1|g6|56|ref|J2|top|Fs0;L4|s1|g6|57|ref|J2|top|Fs4;L4|s1|ref|16|J1|B|0,0;L4|s1|ref|18|J2|B|0,0;L4|s2|g6|52|ref|J1|top|Fs0;L4|s2|g6|53|ref|J1|top|Fs4;L4|s2|g6|55|ref|J1|bottom|Fs4;L4|s2|g6|56|ref|J2|top|Fs0;L4|s2|g6|57|ref|J2|top|Fs4;L4|s2|ref|16|J1|B|0,0;L4|s2|ref|18|J2|B|0,0",
+    "--workers",
+    "{WORKERS}",
+    "--affinity",
+    "{MASK}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_reg6_tcl",
@@ -1835,6 +3099,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\reg6.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1868,7 +3140,18 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_x426_C.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\reg6.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r72_g6_screen.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_x426_C.json",
+    "8"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_reg7_tcl",
@@ -1878,6 +3161,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\reg7.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1913,7 +3204,25 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_x426_D.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\reg7.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s9\\s9_soil_slope.py",
+    "--groups",
+    "H8",
+    "--filter",
+    "H8|J2|B|top|flat,H8|J2|B|top|flat|FL:d60,H8|J2|B|top|flat|FL:d150",
+    "--workers",
+    "{WORKERS}",
+    "--affinity",
+    "{MASK}",
+    "--out",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_x426_D.json"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_grid_r67_main_tcl",
@@ -1923,6 +3232,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\grid_r67_main.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1953,7 +3270,18 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\grid_r67_main.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\grid_r67_main.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r67_g1_screen.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\grid_r67_main.json",
+    "8"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_grid_r67_top_tcl",
@@ -1963,6 +3291,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\grid_r67_top.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -1994,7 +3330,18 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\grid_r67_top.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\grid_r67_top.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r67_g1_screen.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\grid_r67_top.json",
+    "8"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_grid_r69_top_tcl",
@@ -2004,6 +3351,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\grid_r69_top.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -2033,7 +3388,18 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\grid_r69_top.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\grid_r69_top.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r69_g5_screen.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\grid_r69_top.json",
+    "8"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_grid_r69_bottom_tcl",
@@ -2043,6 +3409,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\grid_r69_bottom.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -2072,7 +3446,18 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\grid_r69_bottom.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\grid_r69_bottom.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r69_g5_screen.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\grid_r69_bottom.json",
+    "8"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_soil_A_tcl",
@@ -2082,6 +3467,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\soil_A.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -2111,7 +3504,18 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\soil_A.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\soil_A.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s9\\s9_soil_event_screen.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\soil_A.json",
+    "8"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_d8_tcl",
@@ -2121,6 +3525,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\d8.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -2148,7 +3560,17 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\d8_both.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\d8.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_d8.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\d8_both.json",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_noise_L1L2_tcl",
@@ -2158,6 +3580,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\noise_L1L2.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -2192,7 +3622,22 @@
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\r79_L1L2.json",
    "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\noise_L1L2.launch.json",
-   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)"
+   "note": "output file named by the script env/args (r67/r69/r72/r79/r426a write under their own default names when no --out is given; the provenance file is the step record)",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_L3L4_final.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\r79_L1L2.json",
+    "--workers",
+    "{WORKERS}",
+    "--levels",
+    "L1,L2"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_ps7_tcl",
@@ -2205,13 +3650,23 @@
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\ps7.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\run_ps7.py",
     "E",
     "--workers",
     "{WORKERS}",
     "--mask",
-    "{MASK}"
+    "{MASK}",
+    "--out",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\ps7.json"
    ],
    "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
    "env": {
@@ -2230,9 +3685,23 @@
     "OUTRIGGER_ACC": "k2",
     "ACC_PROVENANCE": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\provenance\\ps7.json"
    },
-   "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\touch_phase\\ps7_E.json",
-   "post": "move to C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\ps7_E.json before the other arm runs (fixed output name)",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\ps7.launch.json"
+   "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\ps7.json",
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\ps7.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\acceptance\\acc_launch.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\touch_phase\\run_ps7.py",
+    "E",
+    "--workers",
+    "{WORKERS}",
+    "--mask",
+    "{MASK}",
+    "--out",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\ps7.json"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_g8_jobs1_tcl",
@@ -2242,6 +3711,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\g8_jobs1.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -2270,7 +3747,19 @@
     "R79_AFFINITY": "{MASK}"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\g8_jobs1.jsonl",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\g8_jobs1.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\g8_jobs1.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\touch_phase\\acceptance\\g8_safe_stop\\g8trace.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\touch_phase\\acceptance\\g8_safe_stop\\jobs1.json",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\g8_jobs1.jsonl",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_g8_jobs3_tcl",
@@ -2280,6 +3769,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\g8_jobs3.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -2308,7 +3805,19 @@
     "R79_AFFINITY": "{MASK}"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\g8_jobs3.jsonl",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\g8_jobs3.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\g8_jobs3.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\touch_phase\\acceptance\\g8_safe_stop\\g8trace.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\touch_phase\\acceptance\\g8_safe_stop\\jobs3.json",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\g8_jobs3.jsonl",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
    "id": "v5_g8_jobs5_tcl",
@@ -2318,6 +3827,14 @@
    "pool": "{POOL}",
    "mask": "{MASK}",
    "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\g8_jobs5.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
     "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
     "-I",
     "-B",
@@ -2346,13 +3863,190 @@
     "R79_AFFINITY": "{MASK}"
    },
    "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\g8_jobs5.jsonl",
-   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\g8_jobs5.launch.json"
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\g8_jobs5.launch.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\touch_phase\\acceptance\\g8_safe_stop\\g8trace.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\touch_phase\\acceptance\\g8_safe_stop\\jobs5.json",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\g8_jobs5.jsonl",
+    "--workers",
+    "{WORKERS}"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
   },
   {
-   "id": "v6_snaps_k2",
+   "id": "v5_judge_r79_L1L2_tcl",
+   "bundle": "v5",
+   "v5_bundle": "post",
+   "arm": "tcl",
+   "after": [
+    "v5_noise_L1L2_tcl"
+   ],
+   "pool": "{POOL}",
+   "mask": "{MASK}",
+   "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\r79_L1L2_judgement.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+    "judge",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\r79_L1L2_judgement.json",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\r79_L1L2.json"
+   ],
+   "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+   "env": {
+    "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+    "CONDA_DEFAULT_ENV": "dynamics-dev",
+    "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+    "MKL_THREADING_LAYER": "TBB",
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "PYTHONDONTWRITEBYTECODE": "1"
+   },
+   "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\r79_L1L2_judgement.json",
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\r79_L1L2_judgement.launch.json",
+   "note": "the existing r79 judgement (acc_judge.r79_judge), needed by the flattener",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+    "judge",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\r79_L1L2_judgement.json",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\r79_L1L2.json"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
+  },
+  {
+   "id": "v5_judge_clip_r79_L1L2_tcl",
+   "bundle": "v5",
+   "v5_bundle": "post",
+   "arm": "tcl",
+   "after": [
+    "v5_reg4_tcl"
+   ],
+   "pool": "{POOL}",
+   "mask": "{MASK}",
+   "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_r79_L1L2_judgement.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+    "judge",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_r79_L1L2_judgement.json",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_r79_L1L2.json"
+   ],
+   "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+   "env": {
+    "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+    "CONDA_DEFAULT_ENV": "dynamics-dev",
+    "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+    "MKL_THREADING_LAYER": "TBB",
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "PYTHONDONTWRITEBYTECODE": "1"
+   },
+   "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_r79_L1L2_judgement.json",
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_r79_L1L2_judgement.launch.json",
+   "note": "the existing r79 judgement (acc_judge.r79_judge), needed by the flattener",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s8\\r79_sensor_judge.py",
+    "judge",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_r79_L1L2_judgement.json",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\clip_r79_L1L2.json"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
+  },
+  {
+   "id": "v5_flatten_tcl",
+   "bundle": "v5",
+   "v5_bundle": "post",
+   "arm": "tcl",
+   "after": [
+    "v5_*_tcl"
+   ],
+   "pool": "{POOL}",
+   "mask": "{MASK}",
+   "argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\run_with_identity.py",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flatten.launch.json",
+    "--git-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+    "--",
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\k2_v5_flatten.py",
+    "--arm-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl",
+    "--out-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat",
+    "--checkout",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run"
+   ],
+   "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+   "env": {
+    "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+    "CONDA_DEFAULT_ENV": "dynamics-dev",
+    "PATH": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\mingw-w64\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\usr\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Library\\bin;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\Scripts;C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\bin;C:\\Windows\\System32;C:\\Windows;C:\\Program Files\\Git\\cmd",
+    "MKL_THREADING_LAYER": "TBB",
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "PYTHONDONTWRITEBYTECODE": "1"
+   },
+   "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat",
+   "identity_sidecar": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flatten.launch.json",
+   "note": "last V-5 step of the arm; writes <bundle>.json per V-5 bundle and flatten_summary.json",
+   "inner_argv": [
+    "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+    "-I",
+    "-B",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\k2\\k2_v5_flatten.py",
+    "--arm-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl",
+    "--out-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\k2\\runs\\v5\\tcl\\flat",
+    "--checkout",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run"
+   ],
+   "affinity_note": "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
+  },
+  {
+   "id": "v6_snaps_k2_check",
    "bundle": "v6",
    "arm": "both",
-   "pool": "{POOL}",
+   "pool": "any",
    "argv": [
     "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe",
     "-I",
@@ -2362,10 +4056,11 @@
     "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\02_chrono\\run_S6C.py",
     "snaps-k2",
     "--jobs",
-    "1"
+    "1",
+    "--dry-run"
    ],
    "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
-   "note": "L1-R start state S6_crawler_top_k2pp025 (dry run first: snaps-k2 --dry-run)"
+   "note": "check only: the shared start state 07_results\\states_L1R\\S6_crawler_top_k2pp025 exists; the dry run must list it under 'existing' and 'missing' empty (else stop and ask)"
   },
   {
    "id": "v6_L1_off",
@@ -2395,11 +4090,23 @@
     "--pad-zeta-moving",
     "0.1",
     "--tag",
-    "k2v6_off"
+    "k2v6_off",
+    "--placement",
+    "{PLACEMENT}",
+    "--batch-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_off"
    ],
    "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
-   "output": "{BATCH_L1_OFF}",
-   "identity_sidecar": "{BATCH_L1_OFF}.launch.json"
+   "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_off",
+   "identity": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_off\\batch_meta.json identity_start / identity_end (orig_argv, cwd, git HEAD and status, env, affinity, per-row exit_code, all_rc_zero); batch.json exit_code",
+   "placement_rule": "{PLACEMENT} = ecore on the E pool, pcore on the P pool (the runner default is pcore); both arms the same",
+   "est_s_per_row": {
+    "E": 624,
+    "P": [
+     177,
+     270
+    ]
+   }
   },
   {
    "id": "v6_L2b_off",
@@ -2419,7 +4126,7 @@
     "k2_v6",
     "--approved",
     "--workers",
-    "{WORKERS}",
+    "{L2B_WORKERS}",
     "--k2",
     "off",
     "--k1-order-gate",
@@ -2427,11 +4134,25 @@
     "--expect-controller",
     "final_C4G2_LAS",
     "--tag",
-    "k2v6_off"
+    "k2v6_off",
+    "--batch-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_off"
    ],
    "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
-   "output": "{BATCH_L2B_OFF}",
-   "identity_sidecar": "{BATCH_L2B_OFF}.launch.json"
+   "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_off",
+   "identity": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_off\\batch_meta.json identity_start / identity_end; batch.json exit_code",
+   "placement_rule": "{L2B_WORKERS} = e6 on the E pool, p7 on the P pool; both arms the same",
+   "est_s_per_row": {
+    "E": [
+     829,
+     865
+    ],
+    "E_upper": 1400,
+    "P": [
+     507,
+     529
+    ]
+   }
   },
   {
    "id": "v6_L1_tcl",
@@ -2461,11 +4182,23 @@
     "--pad-zeta-moving",
     "0.1",
     "--tag",
-    "k2v6_tcl"
+    "k2v6_tcl",
+    "--placement",
+    "{PLACEMENT}",
+    "--batch-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_tcl"
    ],
    "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
-   "output": "{BATCH_L1_TCL}",
-   "identity_sidecar": "{BATCH_L1_TCL}.launch.json"
+   "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_tcl",
+   "identity": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S6\\k2v6_L1_tcl\\batch_meta.json identity_start / identity_end (orig_argv, cwd, git HEAD and status, env, affinity, per-row exit_code, all_rc_zero); batch.json exit_code",
+   "placement_rule": "{PLACEMENT} = ecore on the E pool, pcore on the P pool (the runner default is pcore); both arms the same",
+   "est_s_per_row": {
+    "E": 624,
+    "P": [
+     177,
+     270
+    ]
+   }
   },
   {
    "id": "v6_L2b_tcl",
@@ -2485,7 +4218,7 @@
     "k2_v6",
     "--approved",
     "--workers",
-    "{WORKERS}",
+    "{L2B_WORKERS}",
     "--k2",
     "on",
     "--k1-order-gate",
@@ -2493,11 +4226,25 @@
     "--expect-controller",
     "final_C4G2_LAS_TCL",
     "--tag",
-    "k2v6_tcl"
+    "k2v6_tcl",
+    "--batch-dir",
+    "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_tcl"
    ],
    "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
-   "output": "{BATCH_L2B_TCL}",
-   "identity_sidecar": "{BATCH_L2B_TCL}.launch.json"
+   "output": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_tcl",
+   "identity": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S8\\k2v6_L2b_tcl\\batch_meta.json identity_start / identity_end; batch.json exit_code",
+   "placement_rule": "{L2B_WORKERS} = e6 on the E pool, p7 on the P pool; both arms the same",
+   "est_s_per_row": {
+    "E": [
+     829,
+     865
+    ],
+    "E_upper": 1400,
+    "P": [
+     507,
+     529
+    ]
+   }
   },
   {
    "id": "v7_k2_v7",

@@ -56,7 +56,7 @@
    "count": 60
   },
   "regression": {
-   "count": 118
+   "count": 93
   },
   "ps7": {
    "count": 20
@@ -109,5 +109,5 @@
    }
   }
  },
- "note": "expect-template of k2_recount 1.1; g8_safe_stop = 83 jobs (jobs1 12 + jobs3 37 + jobs5 34)"
+ "note": "expect-template of k2_recount; g8_safe_stop = 83 jobs (jobs1 12 + jobs3 37 + jobs5 34); regression = 93 judged rows of the 118 (V-5 regression: the rules 3.4 / criteria.md row is '118 | L1 / L2 / soil / slope rows pass->fail 0 (L3 rows record only)'. The judged rows are 93 (acc_judge: 13 + 17 + 2 + 11 + clip_A 20 + r79 L1/L2 30, python-expert count). The other 25 of the 118 are rows acc_judge does not judge (clip_r79_L3L4 is record only; the r79 L1 reference rows are not judged rows); their exact list is fixed from the flattener summary at the launch record. The flat file of k2_v5_flatten.py holds the 93 judged rows; E-1 expects 93. Record-level correction (a): the sealed text already restricts the criterion to those rows; no grade effect.)"
 }

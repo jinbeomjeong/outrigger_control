@@ -2,100 +2,118 @@
 
 - 작성: control-expert, 2026-11-10. 브랜치 `k2-prelaunch`(master `dc2029b` 위).
 - 규칙: `k2_touch_creep_rules.md`(봉인 `a3658197…7263`) + `k2_touch_creep_rules_rev1.md`(봉인 `5ba081c6…4776`). dynamics 명세 `k2_dyn_spec.md`(`502b0bb7…27ff`).
-- **이 폴더는 실행 전 기록의 초안이다.** `{RUN_HEAD}`, `{POOL}`, `{MASK}`, `{WORKERS}`, `{P}`, `{PLAN_ID}`, `{BATCH_*}` 자리는 배치표와 실행 시작 때 채운다. 채운 뒤 `make_prelaunch.py`를 다시 돌리면 입력 sha가 다시 계산된다.
+- **이 폴더는 실행 전 기록의 초안이다.** `{RUN_HEAD}`, `{POOL}`, `{MASK}`, `{WORKERS}`, `{PLACEMENT}`, `{L2B_WORKERS}`, `{P}`, `{PLAN_ID}`, `{BATCH_V7}` 자리는 배치표와 실행 시작 때 채운다. 채운 뒤 `make_prelaunch.py`를 다시 돌리면 입력 sha가 다시 계산된다.
 
-## 0. 묶음 HEAD
+## 0. 묶음 HEAD와 고정 값
 
-- `{RUN_HEAD}`는 master에 다음 두 브랜치를 병합한 커밋이다.
-  - `k2-v7k1-dhat`(cad-expert `bf3f475`: V-7 K1 켬, V-6 `k2_row.json`에 D̂ 기록)
-  - `k2-prelaunch`(이 브랜치: `k2_recount.py` 1.2, 이 폴더)
-- 실행은 그 커밋의 고정 checkout(`git worktree add C:\workspace\outrigger_control\.claude\worktrees\k2-run {RUN_HEAD}`)에서만 한다. 결과는 그 checkout의 `06_analysis/02_control/k2/runs/` 아래에 쓴다(추적 안 함).
-- `k2_recount.py` 1.2의 blob은 `d2240795f06893eb2d3eca6e61c55b6dd6c60eeb`(`git hash-object`)다. 1.1(`9ada2f2`)에서 바뀐 것은 두 가지다.
-  - 시계열 폴더를 파일마다 `<stem>_series`로 찾는다(acc_d8 기본값과 같다). off·K-2 파일이 같은 행 이름의 시계열을 따로 가지기 때문이다.
-  - `k2.dhat_window_stroke_mm`의 `None`(닫힌 다리)을 건너뛴다(k2_record 형식).
-  - 어느 결과에도 1.1은 쓰이지 않았다.
+- `{RUN_HEAD}`는 master `dc2029b`에 다음 세 브랜치를 병합한 커밋이다.
+  - `k2-v7k1-dhat`(cad-expert `09f66c4`)
+  - `k2-prelaunch-fix`(python-expert `c77ecf5`)
+  - `k2-prelaunch`(이 브랜치)
+- 실행은 그 커밋의 고정 checkout(`git worktree add C:\workspace\outrigger_control\.claude\worktrees\k2-run {RUN_HEAD}`)에서만 한다.
+
+| 대상 | 값 | 확인 방법 |
+|---|---|---|
+| 원판 / rev1 / 명세 sha256 | `a3658197…7263` / `5ba081c6…4776` / `502b0bb7…27ff` | raw sha256 |
+| 경로 2 `k2_recount.py` 1.2 blob | `d2240795f06893eb2d3eca6e61c55b6dd6c60eeb` | `git rev-parse {RUN_HEAD}:<path>` |
+| 경로 1 `k2_judge.py` | `7ee9ccc109578da2bb0e8e25f3811d9c0f73664b` | 같음 |
+| `k2_v5_flatten.py` | `a83abd803dd91e3855159e919770092e40a3cdb9` | 같음 |
+| `run_with_identity.py` | `fab7664bd3ba16723e4202bf71dc7d87ab0cf7f0` | 같음 |
+| `run_ps7.py` | `248f5363cbdbaf1bc20eac3ef5e73bdfd6e05acd` | 같음 |
+| `g8trace.py` | `d8bfe68e4350195951ec58a6a69bc24c04d293cc` | 같음 |
+| 점 파일 `k2_points_5p5_3p5.json` | sha256 `a15cbe95275be11c163028ca2113d896254d49a4554286c54bdbfa88680cccc3` | `k2_recount points-check` 통과 |
+| V-3 키 | 273, 정렬 목록 sha `d4a030d7…` | `k2_v3_keys.txt` |
+| 입력 파일 | `k2_prelaunch_*.json`의 `inputs` | `make_prelaunch.py` 재실행 |
 
 ## 1. 파일
 
 | 파일 | 내용 |
 |---|---|
-| `make_prelaunch.py` | 아래 파일을 모두 만든다(읽기만, 실행 없음). `--run-wt`, `--ra-off` |
-| `k2_commands.json` | 62단계: argv(인터프리터 절대경로), cwd, env, 출력, 신원 sidecar 경로, 풀 자리 |
-| `k2_manifest.json` | 경로 1(`k2_judge.py`)·경로 2(`k2_recount.py`) 공용 입력. `points`(경로 1)와 `points_file`(경로 2)가 같은 파일 |
-| `k2_expect.json` | `k2_recount expect-template` + g8 83 |
-| `k2_fields.json` | 경로 2 필드 지도(= `DEFAULT_FIELDS`), sha 고정용 |
-| `k2_v3_keys.txt` | V-3 273키(규칙 3.3 선정, 정렬 목록 sha `d4a030d7…`) |
-| `k2_prelaunch_v2.json` … `v7.json` | 실행 전 기록 초안: HEAD, 원판·rev1·명세 sha, 경로 1·2 blob, 점 파일 sha(`a15cbe95…` / D8x `d8x_points.json`), 입력 sha, 스레드, 풀 자리, notes 세 문구 |
+| `make_prelaunch.py` | 아래 파일을 모두 만든다(읽기만, 실행 없음) |
+| `k2_commands.json` | 68단계. 하네스 단계는 `run_with_identity.py`로 감쌌다(`argv`, 원래 명령은 `inner_argv`) |
+| `k2_manifest.json` | 경로 1·2 공용 입력. V-5 칸은 평탄화 출력 `runs/v5/<arm>/flat/<bundle>.json` |
+| `k2_expect.json` | `expect-template` + g8 83 + regression 93 |
+| `k2_fields.json` | 경로 2 필드 지도 |
+| `k2_v3_keys.txt` | V-3 273키 |
+| `k2_prelaunch_v2.json` … `v7.json` | 실행 전 기록 초안 |
 
 ## 2. 실행 명령 (요지, 정확한 argv는 `k2_commands.json`)
 
-공통 env(하네스): `CONDA_PREFIX`·`PATH` = dynamics-dev, `MKL_THREADING_LAYER=TBB`, `MKL/OMP/OPENBLAS/NUMBA_NUM_THREADS=1`, `PYTHONDONTWRITEBYTECODE=1`. 인터프리터 `C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe -I -B`. Chrono는 `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I -X utf8 -u`.
+공통 env(하네스): `CONDA_PREFIX`·`PATH` = dynamics-dev, `MKL_THREADING_LAYER=TBB`, `MKL/OMP/OPENBLAS/NUMBA_NUM_THREADS=1`, `PYTHONDONTWRITEBYTECODE=1`. 하네스 인터프리터 `C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe -I -B`, Chrono는 `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I -X utf8 -u`.
+
+**래퍼**: 하네스 단계는 모두 `python.exe -I -B run_with_identity.py <sidecar> --git-dir <k2-run> -- <원래 argv>`로 띄운다. 래퍼는 affinity를 바꾸지 않는다. 그래서 **부모(러너 셸, `make_runner` 러너, 또는 `start /affinity`)를 먼저 `{MASK}`에 고정**한다.
 
 | 묶음 | 단계 | 명령 핵심 |
 |---|---|---|
 | V-2 | 4 | `acc_d8.py <out> --points d8x_points.json --stages main,robust,kt --k1 off --k2 off\|on` (910) / `--stages main --k1 on` (192). 시계열은 `<out stem>_series` |
-| V-3 | 14 | `acc_d8.py <out> --points d8x_points.json --stages main,robust,kt --k1 off --k2 off\|on --aug <H0\|L1eq\|L1eq_fs\|L1eq_zm\|AUG\|AUG_crc2\|AUG_eps> --keys-file k2_v3_keys.txt` |
+| V-3 | 14 | `acc_d8.py <out> --points d8x_points.json --stages main,robust,kt --k1 off --k2 off\|on --aug <팔> --keys-file k2_v3_keys.txt` |
 | V-4 | 2 | `acc_d8.py <out> --points k2_points_5p5_3p5.json --stages main,robust,kt --levels top --k1 off --k2 off\|on` |
-| V-5 | 36 | 저장 인수 단계(`steps_E1/E2.json`의 reg1~7, grid_r67_main·top, grid_r69_top·bottom, soil_A, d8, noise_L1L2)를 고정 checkout으로 옮김. `acc_launch.py <script> …`, env `ACC_WT=<k2-run>`, `ACC_COMBO=preset`, **`ACC_K2=off\|on`**, `ACC_PROVENANCE=<runs/v5/<arm>/provenance/<id>.json>`. 출력은 `runs/v5/<off\|tcl>/`. 추가: PS-7 `acc_launch.py run_ps7.py E --workers {W} --mask {MASK}`, G8 `g8trace.py <k2-run> g8_safe_stop/jobs{1,3,5}.json <out.jsonl> --workers {W}`(env `ACC_COMBO=off`, `ACC_K2`) |
-| V-6 | 5 | 먼저 `run_S6C.py snaps-k2 --jobs 1`(`--dry-run`로 먼저 확인). L1: `run_S6C.py run --set k2_v6 --approved --jobs 2 --k2 off\|on --k1-order-gate off --expect-controller final_C4G2_LAS(_TCL) --pad-zeta-moving 0.1 --tag k2v6_<arm>`. L2b: `run_S8C.py run --set k2_v6 --approved --workers {W} --k2 off\|on --k1-order-gate off --expect-controller final_C4G2_LAS(_TCL) --tag k2v6_<arm>` |
-| V-7 | 1 | `s9_batch.py run k2_v7 --parallel {P} [--parallel-e …]`, env `OMP_WAIT_POLICY=PASSIVE`. 행 `K2V7_P3b_J1_B_top_Fs4_off\|tcl`, `K2V7_P3b_J2_B_top_Fs4_off\|tcl`, 태그 `final_C4G2_LAS_K1` / `final_C4G2_LAS_K1_TCL`(K1 켬, 사용자 결정), 기록 전용 |
+| V-5 실행 | 36 | 저장 인수 단계 14개(reg1~7, grid 4, soil_A, d8, noise_L1L2)를 고정 checkout으로 옮겼다. `acc_launch.py`, env `ACC_COMBO=preset`, **`ACC_K2=off\|on`**, `ACC_PROVENANCE`. 출력 `runs/v5/<off\|tcl>/`. PS-7 `acc_launch.py run_ps7.py E … --out runs/v5/<arm>/ps7.json`. G8 `g8trace.py <k2-run> jobs{1,3,5}.json <out.jsonl>`(env `ACC_COMBO=off`, `ACC_K2`) |
+| V-5 후처리 | 6 | 팔마다 `r79_sensor_judge.py judge <out>_judgement.json <run>.json` 두 번(`r79_L1L2`, `clip_r79_L1L2`), 그다음 `k2_v5_flatten.py --arm-dir runs/v5/<arm> --out-dir runs/v5/<arm>/flat --checkout <k2-run>` |
+| V-6 | 5 | `run_S6C.py snaps-k2 --jobs 1 --dry-run`. **확인만**: `existing`에 `S6_crawler_top_k2pp025`가 있고 `missing`이 비어야 한다. 아니면 멈추고 묻는다. L1은 `run_S6C.py run --set k2_v6 --approved --jobs 2 --k2 off\|on --k1-order-gate off --expect-controller final_C4G2_LAS(_TCL) --pad-zeta-moving 0.1 --tag k2v6_<arm> --placement {ecore\|pcore} --batch-dir <k2-run>\07_results\S6\k2v6_L1_<arm>`. L2b는 `run_S8C.py run --set k2_v6 --approved --workers {e6\|p7} --k2 off\|on --k1-order-gate off --expect-controller … --tag k2v6_<arm> --batch-dir <k2-run>\07_results\S8\k2v6_L2b_<arm>` |
+| V-7 | 1 | `s9_batch.py run k2_v7 --parallel {P} [--parallel-e …]`, env `OMP_WAIT_POLICY=PASSIVE`. 행 `K2V7_P3b_J1/J2_B_top_Fs4_off\|tcl`, 태그 `final_C4G2_LAS_K1(_TCL)`, 기록 전용 |
 
-- acc_d8 D8x 모드는 `ACC_K2`가 env에 있으면 멈춘다. V-2~V-4 단계 env에는 `ACC_K2`를 넣지 않았다.
-- V-5 d8 단계는 acc_d8의 옛 모드(`--points` 없음)라 `ACC_K2`로 팔을 정한다.
+- acc_d8 D8x 모드는 `ACC_K2`가 env에 있으면 멈춘다. V-2~V-4 env에는 `ACC_K2`를 넣지 않았다.
+- `--batch-dir`는 이미 있는 폴더를 거부한다. 다시 돌릴 때는 새 이름을 쓰고 실행 전 기록에 적는다.
+- V-6 manifest의 행 파일 경로는 `<batch-dir>\<행 이름>\k2_row.json` 등으로 적었다. 실제 행 폴더 이름이 다르면 실행 전 기록 때 고친다(cad-expert 확인).
 
-## 3. 배치표 입력 (compute-scheduler-expert)
+## 3. V-5 regression 행 수 결정 (기록 수준 정정 (a))
 
-CPU 시간은 worker-초다. **추정 근거**:
-- R-a 910행 992 s × P 8 = 8.7 s/행(P).
-- 진단 상단 596행 923 s × P 8 = 12.4 s/행(P).
-- K-2 기록·시계열 부담 ×1.15(**가정**).
-- V-5는 저장 인수 실행의 행별 wall 합(E코어, 2026-11-04~05)이고, P 환산은 E/1.7(**가정**)이다.
-- PS-7·G8은 행당 60 s·50 s로 **가정**했다.
+- 규칙 3.4와 `criteria.md`의 회귀 행은 "118 | L1·L2·토양·경사 행 통과→실패 0 (L3 행은 기록만)"이다. 봉인 문구가 이미 판정 대상을 L1·L2·토양·경사 행으로 한정한다.
+- 기존 판정기 `acc_judge`가 판정 행으로 세는 것은 **93**(13 + 17 + 2 + 11 + clip_A 20 + r79 L1/L2 30, python-expert 집계)이다. 나머지 25행은 판정하지 않는다(`clip_r79_L3L4`는 기록 전용, r79 L1 기준 행은 판정 행이 아님). 25행의 정확한 목록은 실행 전 기록 때 평탄화기 요약으로 고정한다.
+- 그래서 판정 행 93, 기록 25로 적고 expect와 manifest count를 93으로 둔다. 규칙 덧붙임(rev2)은 필요 없다. 판정 대상이 문구 그대로이고, 수는 판정기 정의를 옮긴 것이라 등급에 영향이 없다.
 
-| 묶음 | 단계 | 행(팔당) | 팔 | P worker-s (합) | 짝 규칙 |
+## 4. 배치표 입력 (compute-scheduler-expert)
+
+worker-초 추정이다.
+- 하네스 근거는 실측이다: R-a 8.7 s/행(P), 진단 상단 12.4 s/행(P).
+- 가정은 다음 셋이다: K-2 기록 부담 ×1.15, V-5의 E→P 환산 ÷1.7, PS-7·G8 행당 60·50 s.
+- V-6은 cad-expert의 `--dry-run` 값이다.
+
+| 묶음 | 단계 | 행(팔당) | P worker-s (합) | E 대안 | 같은 풀로 둘 짝 |
 |---|---|---|---|---|---|
-| V-2 | 4 | 1,102 (910 + 192) | 2 | 약 22,000 | 같은 K1 칸의 off·tcl은 같은 풀 |
-| V-3 | 14 | 273 | 7 × 2 | 약 54,600 | 같은 aug 팔의 off·tcl은 같은 풀 |
-| V-4 | 2 | 596 | 2 | 약 17,000 | off·tcl 같은 풀 |
-| V-5 | 36 | 잡음 1,026, 격자 80결과(768), D8 576, 토양 16결과(60), 회귀 7단계(118), PS-7 20, G8 83 | 2 | 약 78,000 (E 약 133,000) | 같은 단계 id의 off·tcl은 같은 풀 |
-| V-6 | 5 | snaps 1 + L1 2배치(행 2) + L2b 2배치(행 2) | 2 | cad-expert `--dry-run`의 추정 필요(**미정**) | L1 off·tcl 같은 풀, L2b off·tcl 같은 풀 |
-| V-7 | 1 | 4행 | 2 | 약 44,000 (행당 11,000 s, P) | 같은 토양 행의 off·tcl 같은 풀 |
+| V-2 | 4 | 1,102 | 약 22,000 | – | 같은 K1 칸의 off·tcl |
+| V-3 | 14 | 273 | 약 54,600 | – | 같은 aug 팔의 off·tcl |
+| V-4 | 2 | 596 | 약 17,000 | – | off·tcl |
+| V-5 | 36 + 후처리 6 | 잡음 1,026 / 격자 768 / D8 576 / 토양 60 / 회귀 118(판정 93) / PS-7 20 / G8 83 | 약 78,000 | 약 133,000 | 같은 단계 id의 off·tcl. 후처리는 그 팔 실행이 끝난 뒤 |
+| V-6 | 1(확인) + 4 | L1 4행, L2b 4행 | L1 177~270 s/행, L2b 507~529 s/행. 8행 동시 약 9~10분 | L1 624 s/행, L2b 829~865 s/행(상한 약 1,400). 8행 동시 약 15~18분 | 엔진별 off·tcl 같은 풀(L1 `--placement`, L2b `--workers`가 두 팔 같게) |
+| V-7 | 1 | 4행 | 약 44,000(행당 11,000 s) | – | 같은 토양 행의 off·tcl |
 
-- 하네스(V-2~V-5)는 합해 약 172,000 P worker-s다. P 8 worker로 약 6.0 h 걸린다.
+- 하네스(V-2~V-5)만 합해 약 172,000 P worker-s이고, P 8 worker로 약 6.0 h다.
 - 풀 상황: P코어 `0xFFFF`는 비어 있다. E코어는 격자 시험 GC 4행이 20~25분 쓴다.
-- 이 표는 판정과 무관하다.
 
-## 4. 행 신원 기록 점검표 (argv·rc·HEAD·env 어디에, 누가 읽나)
+## 5. 행 신원 기록 점검표
 
-격자 시험 감사의 함정(직접 실행기가 batch.json의 argv·rc를 남기지 않아 argv 조항이 검사 없이 지나감)을 K-2 실행기마다 확인했다.
-
-| 실행기 | argv | rc | HEAD·clean | env(스레드·마스크) | 경로 1 | 경로 2 |
+| 실행기 | argv | rc | HEAD·clean | env·마스크 | 경로 1 | 경로 2 |
 |---|---|---|---|---|---|---|
-| `acc_d8.py`(V-2~V-4, D8x 모드) | **원시 argv 없음.** `meta.d8x`에 k1·k2·aug·levels·keys_file(sha)·points sha·stages·series_dir | **없음** | `meta.d8x.identity_start/end.git`(HEAD·clean), `meta`(acc_common provenance: git_head·combo) | identity_start(스레드·affinity) | 확인 필요(prelaunch가 봉인·git 상태를 봄) | **읽지 않음**(행 수준 tag·k1·tcl·aug만) |
-| `acc_launch.py`(V-5 대부분, PS-7) | `ACC_PROVENANCE` 파일에 script·argv | **없음** | provenance git_head(clean 없음) | provenance threads(마스크는 스크립트 인자에만) | 읽지 않음 | 읽지 않음 |
-| `run_ps7.py` | 위 provenance | 없음 | 위 | 위 | 읽지 않음 | 읽지 않음. 출력에 태그·`touch_creep_latch` 없음 |
-| `g8trace.py`(G8) | **없음** | **없음** | **없음** | 없음(행에 `touch_creep_latch`·`controller_tag`만) | 읽지 않음 | 읽지 않음 |
-| `run_S6C.py`·`run_S8C.py`(V-6) | `batch_meta.json k2`(행·팔·기대 태그·게이트), `result.json touch_creep_requested/effective` | 확인 필요(cad-expert) | 확인 필요 | 확인 필요 | 확인 필요 | `k2_row.json`의 tag·k1·tcl·floor만 |
-| `s9_batch.py`(V-7) | batch.json argv(행마다) | batch.json rc | 확인 필요 | `--threads`·`OMP_WAIT_POLICY`·hull hook | record-v7 | 해당 없음(V-7은 경로 2 밖) |
+| 하네스 단계 전부(V-2~V-5, 후처리) | **sidecar**(`run_with_identity.py`: argv, cwd, env 부분집합, 상속 마스크와 자식 마스크, 시각, pid, rc) | sidecar | sidecar(시작·끝 HEAD와 `git status`) | sidecar | 읽지 않음 | 읽지 않음 |
+| `acc_d8.py` 자체 | `meta.d8x`(인자 값) | – | `meta.d8x.identity_start/end` | identity_start | 확인 필요 | 읽지 않음 |
+| `acc_launch.py` 자체 | `ACC_PROVENANCE`(script·argv) | – | provenance git_head | provenance threads | 읽지 않음 | 읽지 않음 |
+| `run_ps7.py` | provenance | – | provenance | provenance | 행 태그·`touch_creep_latch`를 평탄화가 옮김 | 평탄 행만 |
+| `g8trace.py` | sidecar만 | sidecar | sidecar | sidecar | 평탄 행 | 평탄 행 |
+| `run_S6C`·`run_S8C`(V-6) | `batch_meta.json identity_start/end.orig_argv` | 행별 `exit_code`, `all_rc_zero`, batch.json exit_code | identity(git HEAD·status) | identity(env, affinity) | 확인 필요 | `k2_row.json`의 tag·k1·tcl·floor만 |
+| `s9_batch`(V-7) | batch.json argv | batch.json rc | 확인 필요 | `--threads`·`OMP_WAIT_POLICY`·hull hook | record-v7 | 해당 없음 |
 
-**대책(제안)**
-1. 모든 단계를 신원 sidecar(`k2_commands.json`의 `identity_sidecar`)를 쓰는 래퍼로 띄운다. sidecar에는 정확한 argv, cwd, env 부분집합, affinity 마스크, 시작·끝 시각, **종료 코드**를 담는다. 시작·끝의 `git rev-parse HEAD`와 `git status --porcelain --untracked-files=no`도 넣는다.
-   - compute-scheduler-expert `make_runner` 로그가 이 항목을 다 남기면 그것으로 대신한다.
-2. 경로 1·2 모두 지금은 sidecar를 읽지 않는다.
-   - 실행 전 감사와 판정 후 감사(verif-protocol-auditor `record_check identity`)에서 sidecar 전수를 확인하는 것을 관문 G-S·G-F의 조건으로 둘 것을 제안한다.
-   - 경로 도구가 직접 읽게 하려면 결과 전에 도구를 바꿔야 한다(경로 2는 control-expert, 경로 1은 python-expert).
+- 경로 1·2 모두 sidecar와 batch_meta 신원을 읽지 않는다.
+- 제안: 실행 전 감사와 판정 후 감사(verif-protocol-auditor `record_check identity`)에서 다음 둘을 전수 확인하는 것을 G-S·G-F 조건으로 둔다.
+  - sidecar 68 − 6(Chrono·V-7) = 62개
+  - V-6 `batch_meta` 4개와 V-7 `batch.json`
+- 내용: 모든 rc = 0, HEAD = `{RUN_HEAD}`, 시작·끝 clean, 마스크 = 배치표 값.
 
-## 5. 막힌 것 (실행 전에 고쳐야 함)
+## 6. 남은 막힌 것
 
 | # | 내용 | 담당 |
 |---|---|---|
-| B-g8 | `g8trace.py` 18행이 `acc_common`을 `acceptance/c4g2k1`(옛 scratch 폴더, 저장소에 없음)에서 import한다. `-I` 실행이라 시작하자마자 ImportError가 날 것이다(**추정**, 코드 읽기로 확인). G8 단계 6개가 돌지 못한다 | python-expert |
-| B-ps7 | `run_ps7.py`는 출력이 `touch_phase/ps7_<cand>.json`으로 고정이다. 저장소에 추적되는 `ps7_E.json`을 덮어쓴다(작업 사본 dirty, 두 팔 충돌). `--out` 인자를 추가하거나 단계 뒤 옮기고 되돌려야 한다. 또 출력에 `controller_tag`·`touch_creep_latch`가 없어 E-4·E-6을 볼 수 없다 | python-expert |
-| B-V5 | V-5 판정 입력 형식: 두 경로의 `v5_bundle`은 평탄한 행(`key`, `pass`, g8은 `ready`·`faults`)을 읽는다. 저장 구동기 출력(r67/r69 `results[].runs[]`, 토양, 회귀 clip, r79 판정, D8 `fails`)은 중첩 형식이다. **기존 스크립트 판정을 평탄 행으로 옮기는 변환기**(`k2_v5_flatten.py`, criteria.md의 "각 스크립트의 기존 판정 그대로")가 결과 전에 있어야 한다. 실행은 할 수 있고 판정만 막힌다. 변환기는 두 경로가 공유하는 입력이 되므로 결과 전 blob 고정이 필요하다 | python-expert(작성), control-expert(검토) |
-| B-V6-dhat | 경로 1 `k2_judge.py` V-6은 D̂를 `row.get("dhat_N")`(최상위, 1026행)에서 읽는다. cad-expert는 `k2_row.json`의 `k2` 블록에 넣었다. 경로 2는 `k2.dhat_N`을 읽는다. 이대로면 경로 1의 V-6 D̂ 기록이 비어 두 경로 기록 수치가 다르다(규칙 8 일치 기준). 경로 1이 `k2.dhat_*`를 읽도록 맞춘다 | python-expert |
-| B-V6-cost | V-6 Chrono 행당 비용과 결과 폴더 이름(`{BATCH_*}`) | cad-expert |
+| R-1 | 묶음 HEAD 병합과 고정 checkout 생성. 생성 뒤 위 0절 blob을 `git rev-parse`로 대조 | 메인 세션 |
+| R-2 | 배치표: `{POOL}`·`{MASK}`·`{WORKERS}`·`{PLACEMENT}`·`{L2B_WORKERS}`·`{P}`·`{PLAN_ID}` | compute-scheduler-expert |
+| R-3 | V-6 행 폴더 이름이 `<batch-dir>\<행 이름>`인지 | cad-expert(확인) |
+| R-4 | 실행 전 감사 | verif-protocol-auditor |
 
-## 6. 판정서 주석으로 남길 것
+(앞 판의 B-g8·B-ps7·B-V5·B-V6-dhat·B-V6-cost는 `c77ecf5`·`09f66c4`로 처리됐다. 각 수정은 실행 전 감사에서 blob으로 확인한다.)
 
-- **D̂ 행정 기준 차이(rev1 4 (a), 기록 전용)**: 하네스 `k2.dhat_window_stroke_mm`는 `sref`(모터 명령 적분) 기준이고, Chrono V-6은 `GetMotorPos` 기준이다(cad-expert, 1 ms `k2_valve.npz`). 하네스와 Chrono 사이 수치 비교에는 쓰지 않는다. 묶음 안의 off·K-2 짝 비교는 같은 기준이다.
-- V-7은 경로 2 밖(기록 전용, 경로 1 `record-v7`만)이다. 규칙 8의 두 경로 일치 대상이 아니다.
+## 7. 판정서 주석으로 남길 것
+
+- **D̂ 행정 기준 차이(rev1 4 (a), 기록 전용)**: 하네스 `k2.dhat_window_stroke_mm`는 `sref` 기준이고, Chrono V-6은 `GetMotorPos` 기준이다(1 ms `k2_valve.npz`). 하네스와 Chrono 사이 수치 비교에는 쓰지 않는다. 묶음 안의 off·K-2 짝 비교는 같은 기준이다.
+- 경로 1·2 모두 V-6 D̂를 `k2_row.json`의 `k2` 블록에서 읽는다. 경로 1은 `c77ecf5`, 경로 2는 1.2이고 시험 `test_chrono_row_dhat_from_k2_block`으로 확인했다.
+- V-7은 경로 2 밖이다(기록 전용, 경로 1 `record-v7`만).
+- V-5 regression은 판정 93, 기록 25다(3절).

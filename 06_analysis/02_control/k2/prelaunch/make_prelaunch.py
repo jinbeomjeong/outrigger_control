@@ -29,8 +29,8 @@ PY = r"C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe"
 CHRONO_PY = r"C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe"
 RUN_WT_DEFAULT = r"C:\workspace\outrigger_control\.claude\worktrees\k2-run"
 RA_OFF_DEFAULT = r"C:\workspace\outrigger_control\06_analysis\02_control\d8x\ra\ra_off.json"
-HEAD = ("{RUN_HEAD} = the master merge commit of k2-v7k1-dhat (cad-expert bf3f475) and k2-prelaunch "
-        "(k2_recount 1.2) onto dc2029b")
+HEAD = ("{RUN_HEAD} = the master merge commit of k2-v7k1-dhat (cad-expert 09f66c4), k2-prelaunch-fix "
+        "(python-expert c77ecf5) and k2-prelaunch (k2_recount 1.2) onto dc2029b")
 ENV_DIR = Path(PY).parent
 THREAD_ENV = {"MKL_THREADING_LAYER": "TBB", "MKL_NUM_THREADS": "1", "OMP_NUM_THREADS": "1",
               "OPENBLAS_NUM_THREADS": "1", "NUMBA_NUM_THREADS": "1", "PYTHONDONTWRITEBYTECODE": "1"}
@@ -46,6 +46,27 @@ V5_BUNDLE_OF = {**{f"reg{i}": "regression" for i in range(1, 8)},
                 **{s: "grid" for s in ("grid_r67_main", "grid_r67_top", "grid_r69_top", "grid_r69_bottom")},
                 "soil_A": "soil", "d8": "d8", "noise_L1L2": "noise_L2"}
 G8_JOBS = ("jobs1.json", "jobs3.json", "jobs5.json")
+V5_BUNDLES = (("noise_L2", "noise_cp", 855), ("grid", "pass_to_fail", 768), ("d8", "pass_to_fail", 576),
+              ("soil", "pass_to_fail", 60), ("regression", "pass_to_fail", 93),
+              ("ps7", "pass_to_fail", 20), ("g8_safe_stop", "g8", 83))
+"""V-5 judged rows per arm. regression 93 = judged rows of the 118 (criteria.md: L1 / L2 / soil / slope rows
+judged, L3 rows record only; acc_judge counts 13 + 17 + 2 + 11 + clip_A 20 + r79 L1/L2 30), record-level
+correction (a) of the pre-launch record, 2026-11-10."""
+WRAP_REL = r"04_scripts\03_control\k2\run_with_identity.py"
+FIX_BLOBS = {  # python-expert k2-prelaunch-fix c77ecf5 (given; re-check at RUN_HEAD with git rev-parse)
+    "04_scripts/03_control/k2/k2_judge.py": "7ee9ccc109578da2bb0e8e25f3811d9c0f73664b",
+    "04_scripts/03_control/k2/k2_v5_flatten.py": "a83abd803dd91e3855159e919770092e40a3cdb9",
+    "04_scripts/03_control/k2/run_with_identity.py": "fab7664bd3ba16723e4202bf71dc7d87ab0cf7f0",
+    "04_scripts/03_control/touch_phase/run_ps7.py": "248f5363cbdbaf1bc20eac3ef5e73bdfd6e05acd",
+    "06_analysis/02_control/touch_phase/acceptance/g8_safe_stop/g8trace.py": "d8bfe68e4350195951ec58a6a69bc24c04d293cc",
+}
+V5_NOTE_REGRESSION = (
+    "V-5 regression: the rules 3.4 / criteria.md row is '118 | L1 / L2 / soil / slope rows pass->fail 0 (L3 rows "
+    "record only)'. The judged rows are 93 (acc_judge: 13 + 17 + 2 + 11 + clip_A 20 + r79 L1/L2 30, python-expert "
+    "count). The other 25 of the 118 are rows acc_judge does not judge (clip_r79_L3L4 is record only; the r79 L1 "
+    "reference rows are not judged rows); their exact list is fixed from the flattener summary at the launch "
+    "record. The flat file of k2_v5_flatten.py holds the 93 judged rows; E-1 expects 93. Record-level correction "
+    "(a): the sealed text already restricts the criterion to those rows; no grade effect.")
 
 
 def sha(path: Path) -> str:
@@ -148,12 +169,12 @@ def v5_steps(run_wt: str) -> list[dict]:
         ps7 = rf"{run_wt}\04_scripts\03_control\touch_phase\run_ps7.py"
         steps.append({"id": f"v5_ps7_{arm}", "bundle": "v5", "v5_bundle": "ps7", "arm": arm, "pool": "{POOL}",
                       "mask": "{MASK}",
-                      "argv": [PY, "-I", "-B", launch, ps7, "E", "--workers", "{WORKERS}", "--mask", "{MASK}"],
+                      "argv": [PY, "-I", "-B", launch, ps7, "E", "--workers", "{WORKERS}", "--mask", "{MASK}",
+                               "--out", rf"{out_dir}\ps7.json"],
                       "cwd": run_wt,
                       "env": {**HARNESS_ENV, "ACC_WT": run_wt, "ACC_COMBO": "preset", "ACC_K2": k2,
                               "OUTRIGGER_ACC": "k2", "ACC_PROVENANCE": rf"{out_dir}\provenance\ps7.json"},
-                      "output": rf"{run_wt}\06_analysis\02_control\touch_phase\ps7_E.json",
-                      "post": rf"move to {out_dir}\ps7_E.json before the other arm runs (fixed output name)",
+                      "output": rf"{out_dir}\ps7.json",
                       "identity_sidecar": rf"{out_dir}\ps7.launch.json"})
         g8 = rf"{run_wt}\06_analysis\02_control\touch_phase\acceptance\g8_safe_stop"
         for job in G8_JOBS:
@@ -167,7 +188,38 @@ def v5_steps(run_wt: str) -> list[dict]:
                                   "R72_PATH": "per_leg", "R79_AFFINITY": "{MASK}"},
                           "output": rf"{out_dir}\g8_{stem}.jsonl",
                           "identity_sidecar": rf"{out_dir}\g8_{stem}.launch.json"})
+        judge = rf"{run_wt}\04_scripts\03_control\s8\r79_sensor_judge.py"
+        for name, run_file in (("r79_L1L2", "r79_L1L2.json"), ("clip_r79_L1L2", "clip_r79_L1L2.json")):
+            out = rf"{out_dir}\{name}_judgement.json"
+            steps.append({"id": f"v5_judge_{name}_{arm}", "bundle": "v5", "v5_bundle": "post", "arm": arm,
+                          "after": [f"v5_{'noise_L1L2' if name == 'r79_L1L2' else 'reg4'}_{arm}"],
+                          "pool": "{POOL}", "mask": "{MASK}",
+                          "argv": [PY, "-I", "-B", judge, "judge", out, rf"{out_dir}\{run_file}"],
+                          "cwd": run_wt, "env": {**HARNESS_ENV}, "output": out,
+                          "identity_sidecar": rf"{out_dir}\{name}_judgement.launch.json",
+                          "note": "the existing r79 judgement (acc_judge.r79_judge), needed by the flattener"})
+        flat = rf"{out_dir}\flat"
+        steps.append({"id": f"v5_flatten_{arm}", "bundle": "v5", "v5_bundle": "post", "arm": arm,
+                      "after": [f"v5_*_{arm}"], "pool": "{POOL}", "mask": "{MASK}",
+                      "argv": [PY, "-I", "-B", rf"{run_wt}\04_scripts\03_control\k2\k2_v5_flatten.py",
+                               "--arm-dir", out_dir, "--out-dir", flat, "--checkout", run_wt],
+                      "cwd": run_wt, "env": {**HARNESS_ENV}, "output": flat,
+                      "identity_sidecar": rf"{out_dir}\flatten.launch.json",
+                      "note": "last V-5 step of the arm; writes <bundle>.json per V-5 bundle and flatten_summary.json"})
     return steps
+
+
+def wrap(step: dict, run_wt: str) -> dict:
+    """Harness steps run under run_with_identity.py (python-expert c77ecf5); the parent shell is pinned first."""
+    if "identity_sidecar" not in step or step["argv"][0] != PY:
+        return step
+    inner = step["argv"]
+    step = dict(step)
+    step["inner_argv"] = inner
+    step["argv"] = [PY, "-I", "-B", rf"{run_wt}\{WRAP_REL}", step["identity_sidecar"], "--git-dir", run_wt, "--",
+                    *inner]
+    step["affinity_note"] = "the wrapper never sets affinity: start it from a shell / runner already pinned to {MASK}"
+    return step
 
 
 def _split(text: str) -> list[str]:
@@ -190,23 +242,34 @@ def _split(text: str) -> list[str]:
 def v6_steps(run_wt: str) -> list[dict]:
     s6c = rf"{run_wt}\04_scripts\02_chrono\run_S6C.py"
     s8c = rf"{run_wt}\04_scripts\02_chrono\run_S8C.py"
-    steps = [{"id": "v6_snaps_k2", "bundle": "v6", "arm": "both", "pool": "{POOL}",
-              "argv": [CHRONO_PY, "-I", "-X", "utf8", "-u", s6c, "snaps-k2", "--jobs", "1"], "cwd": run_wt,
-              "note": "L1-R start state S6_crawler_top_k2pp025 (dry run first: snaps-k2 --dry-run)"}]
+    steps = [{"id": "v6_snaps_k2_check", "bundle": "v6", "arm": "both", "pool": "any",
+              "argv": [CHRONO_PY, "-I", "-X", "utf8", "-u", s6c, "snaps-k2", "--jobs", "1", "--dry-run"],
+              "cwd": run_wt,
+              "note": "check only: the shared start state 07_results\\states_L1R\\S6_crawler_top_k2pp025 exists; "
+                      "the dry run must list it under 'existing' and 'missing' empty (else stop and ask)"}]
     for arm, k2 in ARMS.items():
         tag = "final_C4G2_LAS" + ("_TCL" if arm == "tcl" else "")
+        l1_dir = rf"{run_wt}\07_results\S6\k2v6_L1_{arm}"
+        l2_dir = rf"{run_wt}\07_results\S8\k2v6_L2b_{arm}"
         steps.append({"id": f"v6_L1_{arm}", "bundle": "v6", "engine": "L1", "arm": arm, "pool": "{POOL}",
                       "argv": [CHRONO_PY, "-I", "-X", "utf8", "-u", s6c, "run", "--set", "k2_v6", "--approved",
                                "--jobs", "2", "--k2", k2, "--k1-order-gate", "off", "--expect-controller", tag,
-                               "--pad-zeta-moving", "0.1", "--tag", f"k2v6_{arm}"],
-                      "cwd": run_wt, "output": f"{{BATCH_L1_{arm.upper()}}}",
-                      "identity_sidecar": f"{{BATCH_L1_{arm.upper()}}}.launch.json"})
+                               "--pad-zeta-moving", "0.1", "--tag", f"k2v6_{arm}", "--placement", "{PLACEMENT}",
+                               "--batch-dir", l1_dir],
+                      "cwd": run_wt, "output": l1_dir,
+                      "identity": rf"{l1_dir}\batch_meta.json identity_start / identity_end (orig_argv, cwd, git HEAD "
+                                  r"and status, env, affinity, per-row exit_code, all_rc_zero); batch.json exit_code",
+                      "placement_rule": "{PLACEMENT} = ecore on the E pool, pcore on the P pool (the runner default "
+                                        "is pcore); both arms the same",
+                      "est_s_per_row": {"E": 624, "P": [177, 270]}})
         steps.append({"id": f"v6_L2b_{arm}", "bundle": "v6", "engine": "L2b", "arm": arm, "pool": "{POOL}",
                       "argv": [CHRONO_PY, "-I", "-X", "utf8", "-u", s8c, "run", "--set", "k2_v6", "--approved",
-                               "--workers", "{WORKERS}", "--k2", k2, "--k1-order-gate", "off",
-                               "--expect-controller", tag, "--tag", f"k2v6_{arm}"],
-                      "cwd": run_wt, "output": f"{{BATCH_L2B_{arm.upper()}}}",
-                      "identity_sidecar": f"{{BATCH_L2B_{arm.upper()}}}.launch.json"})
+                               "--workers", "{L2B_WORKERS}", "--k2", k2, "--k1-order-gate", "off",
+                               "--expect-controller", tag, "--tag", f"k2v6_{arm}", "--batch-dir", l2_dir],
+                      "cwd": run_wt, "output": l2_dir,
+                      "identity": rf"{l2_dir}\batch_meta.json identity_start / identity_end; batch.json exit_code",
+                      "placement_rule": "{L2B_WORKERS} = e6 on the E pool, p7 on the P pool; both arms the same",
+                      "est_s_per_row": {"E": [829, 865], "E_upper": 1400, "P": [507, 529]}})
     return steps
 
 
@@ -246,19 +309,17 @@ def manifest(run_wt: str) -> dict:
                 "points": d8x_pts, "points_file": d8x_pts},
          "v4": {"off": [rf"{runs}\v4\v4_off.json"], "tcl": [rf"{runs}\v4\v4_tcl.json"],
                 "points": k2_pts, "points_file": k2_pts},
-         "v5": {b: {"kind": k, "count": n, "off": [f"<{b} flat rows, off arm (B-V5 adaptor)>"],
-                    "tcl": [f"<{b} flat rows, K-2 arm (B-V5 adaptor)>"], "key": "key", "status": "pass",
+         "v5": {b: {"kind": k, "count": n, "off": [rf"{runs}\v5\off\flat\{b}.json"],
+                    "tcl": [rf"{runs}\v5\tcl\flat\{b}.json"], "key": "key", "status": "pass",
                     **({"ready": "ready", "faults": "faults"} if k == "g8" else {})}
-                for b, k, n in (("noise_L2", "noise_cp", 855), ("grid", "pass_to_fail", 768), ("d8", "pass_to_fail", 576),
-                                ("soil", "pass_to_fail", 60), ("regression", "pass_to_fail", 118),
-                                ("ps7", "pass_to_fail", 20), ("g8_safe_stop", "g8", 83))},
+                for b, k, n in V5_BUNDLES},
          "v6": {"rows": {}}}
-    for eng, batch in (("L1", "BATCH_L1"), ("L2b", "BATCH_L2B")):
+    for eng, sub in (("L1", "S6"), ("L2b", "S8")):
         for floor in ("fdown3.5", "k2pp025"):
             fs = "Fs0" if eng == "L1" else "Fs4"
             for arm in ARMS:
                 name = f"K2_{eng}_top_{floor}_{fs}_{arm}"
-                b = f"{{{batch}_{arm.upper()}}}"
+                b = rf"{run_wt}\07_results\{sub}\k2v6_{eng}_{arm}"
                 m["v6"]["rows"][name] = {"row_json": rf"{b}\{name}\k2_row.json",
                                          "pads_npz": rf"{b}\{name}\k2_pads.npz",
                                          "rate_npz": rf"{b}\{name}\k2_rate.npz", "engine": eng, "arm": arm}
@@ -284,10 +345,12 @@ def main() -> None:
     spec.loader.exec_module(kr)
     expect = kr.expect_template()
     expect["v5"]["g8_safe_stop"]["count"] = 83
-    expect["note"] = "expect-template of k2_recount 1.1; g8_safe_stop = 83 jobs (jobs1 12 + jobs3 37 + jobs5 34)"
+    expect["v5"]["regression"]["count"] = 93
+    expect["note"] = ("expect-template of k2_recount; g8_safe_stop = 83 jobs (jobs1 12 + jobs3 37 + jobs5 34); "
+                      "regression = 93 judged rows of the 118 (" + V5_NOTE_REGRESSION + ")")
     files = {"k2_commands.json": {"head": HEAD, "run_wt": args.run_wt,
-                                  "steps": d8x_steps(args.run_wt) + v5_steps(args.run_wt) + v6_steps(args.run_wt)
-                                  + v7_steps(args.run_wt)},
+                                  "steps": [wrap(s, args.run_wt) for s in d8x_steps(args.run_wt) + v5_steps(args.run_wt)]
+                                  + v6_steps(args.run_wt) + v7_steps(args.run_wt)},
              "k2_manifest.json": manifest(args.run_wt), "k2_expect.json": expect,
              "k2_fields.json": kr.DEFAULT_FIELDS}
     for name, doc in files.items():
@@ -303,7 +366,13 @@ def main() -> None:
                   "dyn_spec": {"path": "06_analysis/02_control/k2/k2_dyn_spec.md", "sha256": sha(k2 / "k2_dyn_spec.md")}},
         "path2": {"path": "04_scripts/03_control/k2/k2_recount.py",
                   "blob": blob("04_scripts/03_control/k2/k2_recount.py")},
-        "path1": {"path": "04_scripts/03_control/k2/k2_judge.py", "blob": blob("04_scripts/03_control/k2/k2_judge.py")},
+        "path1": {"path": "04_scripts/03_control/k2/k2_judge.py",
+                  "blob": FIX_BLOBS["04_scripts/03_control/k2/k2_judge.py"]},
+        "fix_blobs_c77ecf5": FIX_BLOBS,
+        "chrono_identity": "V-6 batch_meta.json identity_start / identity_end (orig_argv, cwd, git HEAD and status, "
+                           "env, affinity, per-row exit_code, all_rc_zero) + batch.json exit_code (cad-expert "
+                           "09f66c4); V-7 s9_batch batch.json argv / rc",
+        "v5_regression_rows": V5_NOTE_REGRESSION,
         "point_files": {"k2_points_5p5_3p5.json": sha(k2 / "k2_points_5p5_3p5.json"),
                         "d8x_points.json": sha(REPO / "06_analysis/02_control/d8x/d8x_points.json")},
         "inputs": {n: sha(HERE / n) for n in ("k2_manifest.json", "k2_expect.json", "k2_fields.json",

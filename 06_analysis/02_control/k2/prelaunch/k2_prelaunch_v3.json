@@ -1,6 +1,6 @@
 {
  "status": "draft (not a launch record until the pool fields and placeholders are filled)",
- "head": "{RUN_HEAD} = the master merge commit of k2-v7k1-dhat (cad-expert bf3f475) and k2-prelaunch (k2_recount 1.2) onto dc2029b",
+ "head": "{RUN_HEAD} = the master merge commit of k2-v7k1-dhat (cad-expert 09f66c4), k2-prelaunch-fix (python-expert c77ecf5) and k2-prelaunch (k2_recount 1.2) onto dc2029b",
  "run_wt": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
  "rules": {
   "original": {
@@ -22,17 +22,26 @@
  },
  "path1": {
   "path": "04_scripts/03_control/k2/k2_judge.py",
-  "blob": "36d871537740639dd9c22d6df2ddb3d7910b62f2"
+  "blob": "7ee9ccc109578da2bb0e8e25f3811d9c0f73664b"
  },
+ "fix_blobs_c77ecf5": {
+  "04_scripts/03_control/k2/k2_judge.py": "7ee9ccc109578da2bb0e8e25f3811d9c0f73664b",
+  "04_scripts/03_control/k2/k2_v5_flatten.py": "a83abd803dd91e3855159e919770092e40a3cdb9",
+  "04_scripts/03_control/k2/run_with_identity.py": "fab7664bd3ba16723e4202bf71dc7d87ab0cf7f0",
+  "04_scripts/03_control/touch_phase/run_ps7.py": "248f5363cbdbaf1bc20eac3ef5e73bdfd6e05acd",
+  "06_analysis/02_control/touch_phase/acceptance/g8_safe_stop/g8trace.py": "d8bfe68e4350195951ec58a6a69bc24c04d293cc"
+ },
+ "chrono_identity": "V-6 batch_meta.json identity_start / identity_end (orig_argv, cwd, git HEAD and status, env, affinity, per-row exit_code, all_rc_zero) + batch.json exit_code (cad-expert 09f66c4); V-7 s9_batch batch.json argv / rc",
+ "v5_regression_rows": "V-5 regression: the rules 3.4 / criteria.md row is '118 | L1 / L2 / soil / slope rows pass->fail 0 (L3 rows record only)'. The judged rows are 93 (acc_judge: 13 + 17 + 2 + 11 + clip_A 20 + r79 L1/L2 30, python-expert count). The other 25 of the 118 are rows acc_judge does not judge (clip_r79_L3L4 is record only; the r79 L1 reference rows are not judged rows); their exact list is fixed from the flattener summary at the launch record. The flat file of k2_v5_flatten.py holds the 93 judged rows; E-1 expects 93. Record-level correction (a): the sealed text already restricts the criterion to those rows; no grade effect.",
  "point_files": {
   "k2_points_5p5_3p5.json": "a15cbe95275be11c163028ca2113d896254d49a4554286c54bdbfa88680cccc3",
   "d8x_points.json": "050145f6a965c851a014563f6219e61c1081716eb5ad5f7e8469a098d426c817"
  },
  "inputs": {
-  "k2_manifest.json": "119bc6fab60167355326a8205825207ecd4b70a39890bed5cec039c6740ff4e9",
-  "k2_expect.json": "83e583d0ac4aa581cd94f5048545b405f3391c97f6d88ff0ba10ee5d4ca63775",
+  "k2_manifest.json": "d54752c641e0f934852c0d4e68646ab2e19544ab8e9418060c99cd92f8950fac",
+  "k2_expect.json": "e19cef826bdc96e0bf84250807a6b32c07568e6951d628460ea632c96134ccba",
   "k2_fields.json": "0c5aafc4cd026680b81d12a43106ea0267d1519b21a9d6192e5ef96943e45b77",
-  "k2_commands.json": "ccd1576146f7d68b5aa985f23f25e492d0477f8bf32b5ce3c0d96dfb39ad2e48",
+  "k2_commands.json": "ce6e04a2c00aaafb2f73b3f88b78abb599ca3be134dad36352b4c7f08e8b97e5",
   "k2_v3_keys.txt": "506b93a4d9f4b25bcddbe1a10709a5be5e833c1e6d98b03113e1ed1373cfd5ec"
  },
  "v3_keys": {
