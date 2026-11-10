@@ -226,15 +226,18 @@ def _event_rows(doc: dict, prefix: str, keep=lambda key: True) -> list[dict]:
                          "fault_periods": None})
             continue
         rows.append({"key": f"{prefix}|" + "|".join(str(item) for item in key), "pass": bool(run.get("pass")),
+                     "verdict_missing": run.get("pass") is None,
                      "error": has_error(run), "fault_periods": run.get("fault_periods"),
                      "commands_sha256": run.get("commands_sha256")})
     return rows
 
 
 def _flat_rows(doc: dict, prefix: str) -> list[dict]:
-    """``acc_judge.flat_verdicts`` + ``is_good`` (wrapper, H8 and x426 formats)."""
+    """``acc_judge.flat_verdicts`` + ``is_good`` (wrapper, H8 and x426 formats); a None verdict is marked
+    ``verdict_missing`` (rev6 1: a missing regression verdict is a failure, counted)."""
     acc_judge = _acc_judge()
-    return [{"key": f"{prefix}|{key}", "pass": bool(acc_judge.is_good(verdict)), "verdict": verdict}
+    return [{"key": f"{prefix}|{key}", "pass": bool(acc_judge.is_good(verdict)), "verdict": verdict,
+             "verdict_missing": verdict is None}
             for key, verdict in acc_judge.flat_verdicts(doc).items()]
 
 
@@ -244,7 +247,9 @@ def _r79_rows(doc: dict, prefix: str, *, l2_without_s1_front: bool) -> list[dict
     for run in doc["runs"]:
         if l2_without_s1_front and (run["level"] != "L2" or any(m in run["inner"] for m in S1_FRONT)):
             continue
-        rows.append({"key": f"{prefix}|{run['key']}", "pass": bool(run["pass"]), "level": run.get("level")})
+        verdict = run.get("pass")
+        rows.append({"key": f"{prefix}|{run['key']}", "pass": bool(verdict), "level": run.get("level"),
+                     "verdict_missing": not isinstance(verdict, bool)})
     return rows
 
 

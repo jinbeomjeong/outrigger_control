@@ -106,7 +106,8 @@ def test_v5_bundle_reads_the_flat_rows(flat) -> None:
         result = k2_judge.v5_bundle({"kind": kind, "off": [path], "tcl": [path], "key": "key", "status": "pass"})
         failing = {item for item, value in result["absolute"]["tcl"]["items"].items() if not value["ok"]}
         assert result["unpaired"] == [] and result["relative_passed"] is True
-        assert failing == {"rc", "c2_sha256"} and result["not_judgeable"].startswith("K-2 evidence")
+        assert failing == {"rc", "c2_sha256"} and "K-2 evidence" in result["not_judgeable"]
+        assert result["result_kind"] == "not_judgeable"  # rev6 1: common items are not judgeable
     path = str(flat / "g8_safe_stop.json")
     result = k2_judge.v5_bundle({"kind": "g8", "off": [path], "tcl": [path], "key": "key", "status": "pass",
                                  "ready": "ready", "faults": "faults"})
