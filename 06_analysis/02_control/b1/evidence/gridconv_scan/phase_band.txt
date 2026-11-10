@@ -1,0 +1,40 @@
+FL d=0.02: N 261..272 (offset0 261), A_eff/A 0.9748..1.0159 (o0 0.9748), b_hull 0.1616..0.1692 (o0 0.1616; poly 0.1714); one-node dA/A 0.0037
+    J1 (n=0.13): f-1 phase min -0.1202 max +0.1915 mean -0.0068 sd 0.0604; offset0 +0.1915; one-node dz/z 0.0287
+    J2 (n=0.2): f-1 phase min -0.0806 max +0.1182 mean -0.0058 sd 0.0391; offset0 +0.1182; one-node dz/z 0.0187
+    S1 (n=0.79): f-1 phase min -0.0222 max +0.0249 mean -0.0032 sd 0.0096; offset0 +0.0249; one-node dz/z 0.0047
+    G1 (n=1.0): f-1 phase min -0.0156 max +0.0259 mean +0.0001 sd 0.0081; offset0 +0.0259; one-node dz/z 0.0037
+FL d=0.01: N 1060..1077 (offset0 1073), A_eff/A 0.9897..1.0056 (o0 1.0019), b_hull 0.1694..0.1717 (o0 0.1714; poly 0.1714); one-node dA/A 0.0009
+    J1 (n=0.13): f-1 phase min -0.0421 max +0.0782 mean -0.0003 sd 0.0264; offset0 -0.0142; one-node dz/z 0.0072
+    J2 (n=0.2): f-1 phase min -0.0276 max +0.0497 mean -0.0004 sd 0.0171; offset0 -0.0092; one-node dz/z 0.0047
+    S1 (n=0.79): f-1 phase min -0.0071 max +0.0116 mean -0.0002 sd 0.0043; offset0 -0.0023; one-node dz/z 0.0012
+    G1 (n=1.0): f-1 phase min -0.0056 max +0.0104 mean +0.0000 sd 0.0034; offset0 -0.0019; one-node dz/z 0.0009
+FL d=0.005: N 4273..4289 (offset0 4285), A_eff/A 0.9974..1.0012 (o0 1.0002), b_hull 0.1714..0.1721 (o0 0.1716; poly 0.1714); one-node dA/A 0.0002
+    J1 (n=0.13): f-1 phase min -0.0084 max +0.0203 mean +0.0009 sd 0.0062; offset0 -0.0015; one-node dz/z 0.0018
+    J2 (n=0.2): f-1 phase min -0.0054 max +0.0132 mean +0.0007 sd 0.0040; offset0 -0.0009; one-node dz/z 0.0012
+    S1 (n=0.79): f-1 phase min -0.0013 max +0.0034 mean +0.0003 sd 0.0010; offset0 -0.0002; one-node dz/z 0.0003
+    G1 (n=1.0): f-1 phase min -0.0012 max +0.0026 mean +0.0000 sd 0.0008; offset0 -0.0002; one-node dz/z 0.0002
+RL d=0.02: N 143..159 (offset0 157), A_eff/A 0.9423..1.0478 (o0 1.0346), b_hull 0.1100..0.1256 (o0 0.1256; poly 0.1306); one-node dA/A 0.0066
+    J1 (n=0.13): f-1 phase min -0.3153 max +0.4948 mean -0.0135 sd 0.1723; offset0 -0.2439; one-node dz/z 0.0507
+    J2 (n=0.2): f-1 phase min -0.2198 max +0.2915 mean -0.0152 sd 0.1104; offset0 -0.1677; one-node dz/z 0.0329
+    S1 (n=0.79): f-1 phase min -0.0640 max +0.0571 mean -0.0101 sd 0.0269; offset0 -0.0483; one-node dz/z 0.0083
+    G1 (n=1.0): f-1 phase min -0.0456 max +0.0612 mean +0.0005 sd 0.0231; offset0 -0.0334; one-node dz/z 0.0066
+RL d=0.01: N 601..608 (offset0 601), A_eff/A 0.9901..1.0016 (o0 0.9901), b_hull 0.1255..0.1300 (o0 0.1255; poly 0.1306); one-node dA/A 0.0016
+    J1 (n=0.13): f-1 phase min -0.0192 max +0.0669 mean -0.0061 sd 0.0139; offset0 +0.0597; one-node dz/z 0.0127
+    J2 (n=0.2): f-1 phase min -0.0132 max +0.0418 mean -0.0046 sd 0.0089; offset0 +0.0365; one-node dz/z 0.0082
+    S1 (n=0.79): f-1 phase min -0.0045 max +0.0084 mean -0.0022 sd 0.0022; offset0 +0.0060; one-node dz/z 0.0021
+    G1 (n=1.0): f-1 phase min -0.0016 max +0.0100 mean +0.0000 sd 0.0019; offset0 +0.0100; one-node dz/z 0.0016
+RL d=0.005: N 2421..2432 (offset0 2421), A_eff/A 0.9971..1.0016 (o0 0.9971), b_hull 0.1305..0.1311 (o0 0.1310; poly 0.1306); one-node dA/A 0.0004
+    J1 (n=0.13): f-1 phase min -0.0125 max +0.0239 mean +0.0005 sd 0.0067; offset0 +0.0239; one-node dz/z 0.0032
+    J2 (n=0.2): f-1 phase min -0.0081 max +0.0156 mean +0.0004 sd 0.0044; offset0 +0.0156; one-node dz/z 0.0021
+    S1 (n=0.79): f-1 phase min -0.0020 max +0.0042 mean +0.0002 sd 0.0011; offset0 +0.0042; one-node dz/z 0.0005
+    G1 (n=1.0): f-1 phase min -0.0016 max +0.0029 mean +0.0000 sd 0.0009; offset0 +0.0029; one-node dz/z 0.0004
+
+Single-pad test (offset 0, J2), loads RL 72.85->74.85 kN, FL 119.59->122.01 kN [mm]:
+  RL continuum z1 114.75 z2 131.39 dz 16.64  dz/z2 0.1266
+    d=0.02: offset0 z2  109.36 dz  13.85; phase z2 102.5..169.7 dz 12.98..21.49
+    d=0.01: offset0 z2  136.18 dz  17.25; phase z2 129.7..136.9 dz 16.42..17.33
+    d=0.005: offset0 z2  133.44 dz  16.90; phase z2 130.3..133.4 dz 16.50..16.90
+  FL continuum z1 86.80 z2 95.94 dz 9.14  dz/z2 0.0953
+    d=0.02: offset0 z2  107.29 dz  10.23; phase z2 88.2..107.3 dz 8.41..10.23
+    d=0.01: offset0 z2   95.06 dz   9.06; phase z2 93.3..100.7 dz 8.89..9.60
+    d=0.005: offset0 z2   95.86 dz   9.14; phase z2 95.4..97.2 dz 9.10..9.27
