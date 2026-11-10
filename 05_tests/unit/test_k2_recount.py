@@ -218,6 +218,20 @@ def test_e7_and_dhat(tmp_path):
     assert d["abs_delta_ge_5kN"] == [(6000.0, "a")] and d["missing"] == 0
 
 
+def test_series_default_per_file_and_dhat_none(tmp_path):
+    sd = tmp_path / "v2_off_series"
+    sd.mkdir()
+    s = _series(sd, "r.npz")
+    row = _row("r", True, s)
+    row["k2"] = {"dhat_window_open_legs": [], "dhat_window_stroke_mm": [None, None, None, None], "dhat_N": 1.0}
+    p = tmp_path / "v2_off.json"
+    p.write_text(json.dumps({"runs": [row]}), encoding="utf-8")
+    rows = kr.judge_files([str(p)], kr.DEFAULT_FIELDS, None, True)
+    assert kr.row_status(rows[0]) == "pass", rows[0]
+    d = kr.dhat_summary([], rows)
+    assert d["stroke_max_mm"] is None and d["missing"] == 0
+
+
 def test_screen_selftest():
     screen = ROOT / "06_analysis/02_control/k2/screen"
     if not screen.exists():

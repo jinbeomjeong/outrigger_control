@@ -1,0 +1,113 @@
+{
+ "v2": {
+  "off": {
+   "count": 1102,
+   "tags": {
+    "final_C4G2_LAS": 910,
+    "final_C4G2_LAS_K1": 192
+   }
+  },
+  "tcl": {
+   "count": 1102,
+   "tags": {
+    "final_C4G2_LAS_TCL": 910,
+    "final_C4G2_LAS_K1_TCL": 192
+   }
+  }
+ },
+ "v3": {
+  "keys_sha256": "d4a030d71e4a365e328fbbf7caa212c378a8671fed8ba206d25b50666255cf95",
+  "arms": [
+   "H0",
+   "L1eq",
+   "L1eq_fs",
+   "L1eq_zm",
+   "AUG",
+   "AUG_crc2",
+   "AUG_eps"
+  ],
+  "per_cell": 273
+ },
+ "v4": {
+  "off": {
+   "count": 596,
+   "tags": {
+    "final_C4G2_LAS": 596
+   }
+  },
+  "tcl": {
+   "count": 596,
+   "tags": {
+    "final_C4G2_LAS_TCL": 596
+   }
+  }
+ },
+ "v5": {
+  "noise_L2": {
+   "count": 855
+  },
+  "grid": {
+   "count": 768
+  },
+  "d8": {
+   "count": 576
+  },
+  "soil": {
+   "count": 60
+  },
+  "regression": {
+   "count": 118
+  },
+  "ps7": {
+   "count": 20
+  },
+  "g8_safe_stop": {
+   "count": 83
+  }
+ },
+ "v6": {
+  "rows": {
+   "K2_L1_top_fdown3.5_Fs0_off": {
+    "engine": "L1",
+    "arm": "off",
+    "tag": "final_C4G2_LAS"
+   },
+   "K2_L2b_top_fdown3.5_Fs4_off": {
+    "engine": "L2b",
+    "arm": "off",
+    "tag": "final_C4G2_LAS"
+   },
+   "K2_L1_top_fdown3.5_Fs0_tcl": {
+    "engine": "L1",
+    "arm": "tcl",
+    "tag": "final_C4G2_LAS_TCL"
+   },
+   "K2_L2b_top_fdown3.5_Fs4_tcl": {
+    "engine": "L2b",
+    "arm": "tcl",
+    "tag": "final_C4G2_LAS_TCL"
+   },
+   "K2_L1_top_k2pp025_Fs0_off": {
+    "engine": "L1",
+    "arm": "off",
+    "tag": "final_C4G2_LAS"
+   },
+   "K2_L2b_top_k2pp025_Fs4_off": {
+    "engine": "L2b",
+    "arm": "off",
+    "tag": "final_C4G2_LAS"
+   },
+   "K2_L1_top_k2pp025_Fs0_tcl": {
+    "engine": "L1",
+    "arm": "tcl",
+    "tag": "final_C4G2_LAS_TCL"
+   },
+   "K2_L2b_top_k2pp025_Fs4_tcl": {
+    "engine": "L2b",
+    "arm": "tcl",
+    "tag": "final_C4G2_LAS_TCL"
+   }
+  }
+ },
+ "note": "expect-template of k2_recount 1.1; g8_safe_stop = 83 jobs (jobs1 12 + jobs3 37 + jobs5 34)"
+}

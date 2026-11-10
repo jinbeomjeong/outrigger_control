@@ -1,0 +1,65 @@
+{
+ "harness_row": {
+  "id": "id",
+  "tag": "controller_tag",
+  "k1": "k1_order_gate",
+  "tcl": "touch_creep_latch",
+  "commands": "commands_sha256",
+  "fails": "fails",
+  "aug_arm": "aug_arm",
+  "is_kplant": "is_kplant",
+  "angles": "angles_deg",
+  "point": "point",
+  "series": "series_file",
+  "dhat_open": "k2.dhat_window_open_legs",
+  "dhat_stroke": "k2.dhat_window_stroke_mm",
+  "dhat": "k2.dhat_N",
+  "t_touch": "d8x.t_touch_s",
+  "t_lift": "d8x.t_lift_s",
+  "t_ready": "d8x.t_ready_s",
+  "J1": "d8x.J1_min_cyl_after_lift_N",
+  "J1_window": "d8x.J1_window_s",
+  "reanchor": "d8x.reanchor_intervals_s",
+  "J2": "d8x.J2_min_cyl_reanchor_N",
+  "J3": "d8x.J3_pad_lift_samples",
+  "J4": "d8x.J4_att_max_after_ready_deg",
+  "J6": "d8x.J6_max_moving_bar",
+  "events": "d8x.events"
+ },
+ "series": {
+  "t": "t_s",
+  "pad_normal": "pad_normal_min_N",
+  "body_rate": "body_rate_rad_s"
+ },
+ "chrono_row": {
+  "id": "case_id",
+  "tag": "controller_tag",
+  "k1": "k1_order_gate",
+  "tcl": "touch_creep_latch",
+  "engine": "engine",
+  "floor_true_deg": "floor_true_deg",
+  "t_touch": "t_touch_s",
+  "t_lift": "t_lift_s",
+  "t_ready": "t_ready_s",
+  "J1": "J1_min_cyl_after_lift_N",
+  "J1_window": "J1_window_s",
+  "reanchor": "reanchor_intervals_s",
+  "J2": "J2_min_cyl_reanchor_N",
+  "J4": "J4_att_max_after_ready_deg",
+  "J6": "J6_max_moving_bar",
+  "J6_locked": "J6_max_locked_bar",
+  "J10": "crawler_recontact_after_loc",
+  "events": "events",
+  "dhat_open": "k2.dhat_window_open_legs",
+  "dhat_stroke": "k2.dhat_window_stroke_mm",
+  "dhat": "k2.dhat_N"
+ },
+ "chrono_pads": {
+  "t": "t",
+  "pad_normal": "N"
+ },
+ "chrono_rate": {
+  "t": "t",
+  "body_rate": "body_omega"
+ }
+}

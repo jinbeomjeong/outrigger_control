@@ -42,7 +42,7 @@ from pathlib import Path
 import numpy as np
 
 TOOL = "k2_recount"
-VERSION = "1.1"
+VERSION = "1.2"
 
 # ------------------------------------------------------------------ rule constants (rules 0, 5)
 F_MIN_N = 9414.589
@@ -353,8 +353,9 @@ def dhat_summary(off: list[dict], tcl: list[dict]) -> dict:
             continue
         if d["open_legs"]:
             open_rows += 1
-        s = [float(x) for x in d["stroke_mm"]]
-        stroke_max = max(s) if stroke_max is None else max(stroke_max, max(s))
+        s = [float(x) for x in d["stroke_mm"] if x is not None]  # None = leg not open (k2_record)
+        if s:
+            stroke_max = max(s) if stroke_max is None else max(stroke_max, max(s))
         o = (om.get(pair_key(r)) or {}).get("dhat") or {}
         if is_num(o.get("dhat_N")) and is_num(d["dhat_N"]):
             deltas.append((d["dhat_N"] - o["dhat_N"], r["id"]))
@@ -662,10 +663,13 @@ def v5_bundle(spec: dict) -> dict:
 # ------------------------------------------------------------------ recount
 def judge_files(files: list[str], fmap: dict, series_root, k2: bool,
                 points: dict | None = None) -> list[dict]:
+    """``series_root`` None: each file's series folder is ``<file stem>_series`` next to it (the
+    ``acc_d8.py --k2 / --aug`` default), so the off and K-2 files of one bundle keep their own series."""
     rows = []
     for p in files:
+        root = series_root if series_root is not None else Path(p).with_name(Path(p).stem + "_series")
         for row in load_rows(Path(p)):
-            rows.append(judge_row(row, fmap, "harness", series_root, k2, points=points))
+            rows.append(judge_row(row, fmap, "harness", root, k2, points=points))
     return rows
 
 
