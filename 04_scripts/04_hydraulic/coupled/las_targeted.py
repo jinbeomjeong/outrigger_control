@@ -114,6 +114,11 @@ J-3' events, J-7 ``las_events``, more format-absent cells)."""
 RULES_REV4C_SHA256 = "7e45993f667382f56aeb1b72bb5e7023ecfe3048a3723ac050cefc3b2a721417"
 """``las_targeted_rules_rev4c.sha256`` (sealed 2026-11-08: H-7' fields of J-5 / J-6, grid_vb,
 J-15, jp ``las_events``, silent-line hash check per batch)."""
+RULES_REV5_SHA256 = "879d0e4d715b2e9f4e51257863fc259ccfe48105ca019299547d58dca24949b2"
+"""``las_targeted_rules_rev5.sha256`` (sealed addendum 5 2026-11-10 13:24: T-3 under the K1
+preset, R-0 kept, R-0K 45-key baseline, H-T3-1K / H-T3-1Q)."""
+RULES_REV5_R0K_KEYS_SHA256 = "53b134a135e55d7677834b537cd313fd76391862d41093a2591052591373d764"
+"""Second line of ``las_targeted_rules_rev5.sha256``: the R-0K key list of rev5."""
 
 
 @dataclass(frozen=True)
@@ -143,6 +148,10 @@ SEALS: dict[str, Seal] = {
                   RULES_REV4B_SHA256),
     "rev4c": Seal("las_targeted_rules_rev4c.md", "las_targeted_rules_rev4c.sha256",
                   RULES_REV4C_SHA256),
+    "rev5": Seal("las_targeted_rules_rev5.md", "las_targeted_rules_rev5.sha256",
+                 RULES_REV5_SHA256),
+    "rev5_r0k_keys": Seal("las_targeted_rules_rev5_r0k_keys.json",
+                          "las_targeted_rules_rev5.sha256", RULES_REV5_R0K_KEYS_SHA256),
 }
 """Every sealed LAS rule file, in seal order."""
 TARGETED_REQUIRED_SEALS = ("original", "rev1", "rev2")

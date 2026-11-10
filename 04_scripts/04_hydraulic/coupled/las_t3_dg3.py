@@ -10,7 +10,12 @@ pool workers, which re-import this file as ``__mp_main__``, get the same conditi
                   ``off``: ``VB`` without ``extend_start_tracked`` (the ``off`` folder: the stored
                   run was made at d1ec93f, when ``VB`` had no ③ option and the preset kept the
                   constant start rule; ``hydraulic_options`` of that record has no ③ key either).
-Every run records ``two_pressure.extend_start_rule`` and ``liftoff_approach_slow.enable`` in its
+  LAS_T3_DG3_K1   required (rev5 2.5): ``on`` / ``off``, the K1 order gate the bundle expects of
+                  the preset (R-0 ``off``: ``pre_las_preset_runner`` turns both switches off;
+                  T-3K ``on``: the preset as it is). Not a switch: the parent prints the state and
+                  refuses to run when the preset's gate is another one.
+Every run records ``two_pressure.extend_start_rule``, ``liftoff_approach_slow.enable`` and
+``slope_clearance_margin.flat_soil_margin_order_gate`` in its
 ``controller_settings``, plus the whole controller config (``full_config`` and its sha256, rev4a
 4 #2); the record's ``hydraulic_options`` are the options the plant used. ``las_t3.py`` compares
 both with the stored record and checks the ③ rule (rev4a 4). One job = one new process
@@ -34,6 +39,8 @@ COUPLED_DIR = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
 PRE_LAS_RUNNER = ROOT / "05_tests" / "unit" / "pre_las_preset_runner.py"
 LAS_ENV = "LAS_T3_DG3_LAS"
 P3_ENV = "LAS_T3_DG3_P3"
+K1_ENV = "LAS_T3_DG3_K1"
+GATE_SETTING_KEY = "slope_clearance_margin.flat_soil_margin_order_gate"
 SWITCH_VALUES = ("on", "off")
 P3_OPTION = "extend_start_tracked"
 VB_SETTING = "VB"
@@ -79,7 +86,7 @@ LAS_STATE, P3_STATE = apply_run_condition()
 import r79_L3L4_final as final  # noqa: E402  (after the condition: it reads the preset)
 
 final.RECORDED_SETTINGS = (*final.RECORDED_SETTINGS, "two_pressure.extend_start_rule",
-                           "liftoff_approach_slow.enable")
+                           "liftoff_approach_slow.enable", GATE_SETTING_KEY)
 FULL_CONFIG_KEY = "full_config"
 FULL_CONFIG_SHA_KEY = "full_config_sha256"
 _recorded_settings = final.controller_settings
@@ -100,14 +107,30 @@ def controller_settings_with_full_config(config) -> dict:
 final.controller_settings = controller_settings_with_full_config
 
 
+def condition_problems(config, las_state: str, gate_state: str) -> list[str]:
+    """Why the preset ``config`` is not the asked LAS-b / K1 gate condition."""
+    is_las_on = bool(config.liftoff_approach_slow.enable)
+    is_gate_on = bool(config.slope_clearance_margin.flat_soil_margin_order_gate)
+    problems = []
+    if is_las_on != (las_state == "on"):
+        problems.append(f"the preset has LAS-b {is_las_on}, {LAS_ENV}={las_state}")
+    if is_gate_on != (gate_state == "on"):
+        problems.append(f"the preset has the K1 gate {is_gate_on}, {K1_ENV}={gate_state}")
+    return problems
+
+
 def main() -> None:
     from outrigger_sim.control import c2
 
-    is_las_on = bool(c2.C2Config().with_10hz_d1().liftoff_approach_slow.enable)
-    print(f"T-3 Dg-3 condition: LAS-b {LAS_STATE} (preset {is_las_on}), ③ {P3_STATE}",
-          flush=True)
-    if is_las_on != (LAS_STATE == "on"):
-        raise SystemExit(f"the preset has LAS-b {is_las_on}, {LAS_ENV}={LAS_STATE}")
+    gate_state = _switch(K1_ENV)
+    config = c2.C2Config().with_10hz_d1()
+    print(f"T-3 Dg-3 condition: LAS-b {LAS_STATE} "
+          f"(preset {bool(config.liftoff_approach_slow.enable)}), K1 gate {gate_state} "
+          f"(preset {bool(config.slope_clearance_margin.flat_soil_margin_order_gate)}), "
+          f"③ {P3_STATE}", flush=True)
+    problems = condition_problems(config, LAS_STATE, gate_state)
+    if problems:
+        raise SystemExit("; ".join(problems))
     final.main()
 
 
