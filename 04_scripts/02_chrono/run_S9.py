@@ -1565,21 +1565,28 @@ CONTROLLER_EXPECTATIONS: dict[str, tuple[tuple[str, Any], ...]] = {
 attributes; ``controller_meta`` keeps the same names under ``<block>.settings`` (e.g. ``lift_stroke_guard.settings.
 soil_stop``, ``slope_clearance_margin.settings.flat_soil_margin_m``). The rows do not pin the controller themselves:
 they run the run-time preset ``C2Config().with_10hz_d1()`` and this check refuses a preset without the final rules."""
+_TOUCH_CREEP_BLOCK = "touch_creep_latch"
+"""K-2 TOUCH creep latch (not adopted): every registered tag ran without it, so each refuses a config with it on
+(a K-2 run needs its own tag, ``v5_options.TOUCH_CREEP_TAG_SUFFIX`` ``_TCL``; no such tag is registered here yet)."""
 CONTROLLER_ABSENT_OR_OFF: dict[str, tuple[str, ...]] = {
-    FINAL_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "liftoff_approach_slow"),
-    FINAL_P3_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "liftoff_approach_slow"),
+    FINAL_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "liftoff_approach_slow",
+                       _TOUCH_CREEP_BLOCK),
+    FINAL_P3_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "liftoff_approach_slow",
+                          _TOUCH_CREEP_BLOCK),
     BEFORE_C4G2_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "touch_twist_hold",
-                             "liftoff_approach_slow"),
-    FINAL_LAS_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
-    FINAL_P3_LAS_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
-    FINAL_LAS_K1_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
-    FINAL_P3_LAS_K1_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp"),
-    FINAL_K1_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "liftoff_approach_slow"),
-    FINAL_P3_K1_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "liftoff_approach_slow"),
+                             "liftoff_approach_slow", _TOUCH_CREEP_BLOCK),
+    FINAL_LAS_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", _TOUCH_CREEP_BLOCK),
+    FINAL_P3_LAS_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", _TOUCH_CREEP_BLOCK),
+    FINAL_LAS_K1_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", _TOUCH_CREEP_BLOCK),
+    FINAL_P3_LAS_K1_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", _TOUCH_CREEP_BLOCK),
+    FINAL_K1_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "liftoff_approach_slow",
+                          _TOUCH_CREEP_BLOCK),
+    FINAL_P3_K1_CONTROLLER: ("floor_twist_ledger", "attitude_integral_clamp", "liftoff_approach_slow",
+                             _TOUCH_CREEP_BLOCK),
 }
 """C2Config blocks a controller tag must not have on (spec 429.11: P37t / ZIC rejected; the tags before the LAS-b
-switch: ``liftoff_approach_slow``): the block is absent, or its ``enable`` is False. A block without an ``enable``
-attribute fails."""
+switch: ``liftoff_approach_slow``; every tag: the K-2 ``touch_creep_latch``): the block is absent, or its ``enable`` is
+False. A block without an ``enable`` attribute fails."""
 CONTROLLER_PENDING_CHECKS: dict[str, tuple[tuple[str, Any], ...]] = {}
 """Recorded, not checked (placeholders). Empty since 429.11: R4 moved to :data:`CONTROLLER_EXPECTATIONS`, P37t / ZIC
 to :data:`CONTROLLER_ABSENT_OR_OFF`."""
@@ -3924,6 +3931,11 @@ def level_c2_config_of_args(args: argparse.Namespace) -> tuple[Any, dict[str, An
                                                                   flat_soil_margin_order_gate=gate))
     c2_meta["k1_order_gate"] = k1_order_gate_request(args)
     c2_meta["k1_order_gate_effective"] = bool(config.slope_clearance_margin.flat_soil_margin_order_gate)
+    from outrigger_sim.control import touch_creep_option  # noqa: PLC0415
+
+    touch_creep = touch_creep_option.touch_creep_request(args)  # K-2, as the K1 gate above
+    config = touch_creep_option.with_touch_creep(config, touch_creep)
+    c2_meta.update(touch_creep_option.touch_creep_record(touch_creep, config))
     return config, c2_meta
 
 
@@ -5950,6 +5962,9 @@ def run_level(args) -> Path:
         raise SystemExit(f"{K1_ORDER_GATE_OPTION} {args.k1_order_gate}: the built controller has "
                          "slope_clearance_margin.flat_soil_margin_order_gate = "
                          f"{c2.config.slope_clearance_margin.flat_soil_margin_order_gate!r}")
+    from outrigger_sim.control import touch_creep_option  # noqa: PLC0415
+
+    touch_creep_option.check_built_touch_creep(touch_creep_option.touch_creep_request(args), c2.config)
     if v5_options is not None:  # criteria P-4: the controller window is the one of the options
         from outrigger_sim.hydraulics.v5_options import check_lock_window_meta
 
@@ -6382,6 +6397,9 @@ def build_parser() -> argparse.ArgumentParser:
                          "with k1_forced_block.K1ForcedBlockC2Controller (the first R4 order-gate call blocks; needs "
                          "--k1-order-gate on, exit 2 otherwise), off (default) = C2Controller as before. Recorded as "
                          "c2_setup.k1_forced_block on every run")
+    from outrigger_sim.control.touch_creep_option import add_touch_creep_argument  # noqa: PLC0415
+
+    add_touch_creep_argument(lp)  # K-2: c2_setup.touch_creep / touch_creep_effective on every run
     lp.add_argument("--creep-rule", choices=tuple(CREEP_RULES), default=argparse.SUPPRESS,
                     help="P3-4 creep rule (spec 433): current = sinkage rate over 1 s, a window_short row is not a "
                          "pass; legacy_0p2 = over 0.2 s, as the runs before 2026-11-05. Absent = current, no attribute")
