@@ -1,4 +1,7 @@
-"""B1-GRIDCONV path A judge (b1_gridconv_plan.md, sealed 0e909bf1...).
+"""B1-GRIDCONV path A judge (b1_gridconv_plan.md sealed 0e909bf1... + b1_gridconv_plan_rev1.md).
+
+rev1 (before results): V-2 pad xy offset = first share-body x, y of series.npz within 1e-9 m (C-1);
+V-2 hull_hook dll_sha256 = the validated build and dll_sha_validated true (C-2).
 
 Reads the four single-pad rows GC-1..GC-4 of one batch folder and writes the metrics, row / bundle
 states, the gates G-1..G-5, the verdict (PASS / REJECT / HOLD / UNDETERMINED) and the prediction
@@ -29,6 +32,9 @@ from pathlib import Path
 import numpy as np
 
 PLAN_SHA256 = "0e909bf1186a4cc90e40353d25244ee4a76a04cdabe48235e7051f9a111e9b24"
+PLAN_REV = "rev1"  # b1_gridconv_plan_rev1.md (before results): C-1 xy offset from series.npz, C-2 hull DLL sha
+XY0_MAX_M = 1e-9
+HULL_DLL_SHA256 = "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
 J2 = {"Kc": 16430.0, "Kphi": 1724690.0, "n": 0.2}
 T_HOLD_END = (11.0, 21.0)  # [s] ends of the two holds (3 s ramp + 8 s, 2 s ramp + 8 s)
 T_END_MIN = 21.0 - 1e-6
@@ -219,16 +225,35 @@ def judge_row(rid: str, batch: Path, pads: dict, rc_cli: dict[str, int]) -> dict
             v2.append(f"V-2 SetSoilParameters.{key} {ssp.get(key)}")
     if not same(scm.get("plane_point_world_m"), [0.0, 0.0, 0.0]):
         v2.append(f"V-2 plane_point_world_m {scm.get('plane_point_world_m')}")
+    # rev1 C-1: pad xy offset 0 = first recorded share-body x, y in series.npz (the pad is locked to the
+    # share body by --joint fixed; the level rows hold no pad xy). settle_end x / y is recorded only.
+    sp = batch / case / "series.npz"
+    row["xy0_m"] = None
+    if not sp.is_file():
+        v2.append("V-2 series.npz absent (pad xy offset not checkable, rev1 C-1)")
+    else:
+        try:
+            with np.load(sp, allow_pickle=False) as z:
+                xy0 = (float(z["x"][0]), float(z["y"][0]))
+        except (OSError, KeyError, ValueError, IndexError) as exc:
+            xy0 = None
+            v2.append(f"V-2 series.npz x / y unreadable: {exc}")
+        if xy0 is not None:
+            row["xy0_m"] = list(xy0)
+            row["series_npz_sha256"] = sha256_file(sp)
+            if max(abs(xy0[0]), abs(xy0[1])) > XY0_MAX_M:
+                v2.append(f"V-2 first share xy {xy0} m beyond {XY0_MAX_M:g} m (rev1 C-1)")
     se = res.get("settle_end") or {}
-    for key in ("x_mm", "y_mm"):
-        if not isinstance(se.get(key), (int, float)) or abs(se[key]) > 1e-3:
-            v2.append(f"V-2 settle_end.{key} {se.get(key)}")
+    row["settle_end_xy_mm"] = [se.get("x_mm"), se.get("y_mm")]
     hh = res.get("hull_hook") or {}
     requested = hh.get("requested")
     if requested is None and hh.get("source") == "default":
         requested = hh.get("default_mode")  # unset env: requested = resolved default (plan 3.1)
     if hh.get("mode") != "fast" or requested != "fast":
         v2.append(f"V-2 hull_hook mode {hh.get('mode')!r} requested {hh.get('requested')!r}")
+    if hh.get("dll_sha256") != HULL_DLL_SHA256 or hh.get("dll_sha_validated") is not True:
+        v2.append(f"V-2 hull_hook dll_sha256 {hh.get('dll_sha256')!r} validated {hh.get('dll_sha_validated')!r} "
+                  "(rev1 C-2)")
     area, b_poly = pads[leg]
     if not same(meta.get("pad_area_m2"), area):
         v2.append(f"V-2 meta.pad_area_m2 {meta.get('pad_area_m2')} != YAML {area}")
@@ -353,7 +378,7 @@ def main(argv: list[str] | None = None) -> int:
     for r in rows.values():
         if "series" in r:
             r["series_samples"] = len(r.pop("series"))
-    out = {"schema": "b1-gridconv-metrics/1", "path": "A", "plan_sha256": PLAN_SHA256,
+    out = {"schema": "b1-gridconv-metrics/1", "path": "A", "plan_sha256": PLAN_SHA256, "plan_rev": PLAN_REV,
            "tool_sha256": sha256_file(Path(__file__)), "batch": str(batch.resolve()),
            "yaml": str(yaml_path), "yaml_sha256": sha256_file(yaml_path), "bundle": bundle,
            "rows": rows, "pairs": pairs, "gates": gates, "verdict": verdict, "verdict_reason": why,

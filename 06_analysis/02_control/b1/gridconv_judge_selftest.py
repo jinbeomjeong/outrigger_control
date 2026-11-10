@@ -1,11 +1,14 @@
 """Synthetic self-test of gridconv_judge.py (no Chrono result is read).
 
 Usage: python -I gridconv_judge_selftest.py <gridconv_judge.py> <rexome33.yaml>
-Cases: pass -> PASS, G-1 node sinkage +3 % -> REJECT, first-hold z1 -0.5 mm -> HOLD, missing row and wrong
---grid -> UNDETERMINED. Last line {"status": "ok"} when every case gives the expected verdict.
+Cases: pass -> PASS, G-1 node sinkage +3 % -> REJECT, first-hold z1 -0.5 mm -> HOLD; missing row, wrong
+--grid, share xy0 2e-9 m, no series.npz, unvalidated hull DLL (rev1) -> UNDETERMINED. Last line
+{"status": "ok"} when every case gives the expected verdict.
 """
 import copy
 import json
+
+import numpy as np
 import math
 import shutil
 import subprocess
@@ -17,6 +20,7 @@ HERE = Path(tempfile.mkdtemp(prefix="gc_selftest_"))  # synthetic batches only, 
 JUDGE = Path(sys.argv[1])
 YAML = Path(sys.argv[2])
 KC, KPHI, N = 16430.0, 1724690.0, 0.2
+DLL_SHA = "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
 CENSUS = {"GC-1": (601, 0.1255), "GC-2": (2421, 0.1310), "GC-3": (1073, 0.1714), "GC-4": (4285, 0.1716)}
 ROWS = {"GC-1": ("GC1_J2_B_RL_1cm", "RL", 0.01, 74850.0, "0.97327989,1.0", 0.97327989, 0.0607),
         "GC-2": ("GC2_J2_B_RL_0p5cm", "RL", 0.005, 74850.0, "0.97327989,1.0", 0.97327989, 0.0607),
@@ -60,7 +64,9 @@ def make_row(rid):
                            "scm": {"grid_m": d, "SetSoilParameters": {"Kc": KC, "Kphi": KPHI, "n": N},
                                    "plane_point_world_m": [0.0, 0.0, 0.0]}},
                   "settle_end": {"x_mm": 0.0, "y_mm": 0.0},
-                  "hull_hook": {"mode": "fast", "requested": None, "source": "default", "default_mode": "fast"},
+                  "hull_hook": {"mode": "fast", "requested": None, "source": "default", "default_mode": "fast",
+                                "dll_sha256": DLL_SHA, "dll_sha_validated": True},
+                  "_xy0": [0.0, 0.0],
                   "load_steps": {"levels": levels}, "node_series": series}
 
 
@@ -78,6 +84,10 @@ def write_batch(name, mutate=None, drop=None):
         if rid == drop:
             continue
         (root / case).mkdir()
+        xy0 = res.pop("_xy0")
+        if xy0 is not None:  # rev1 C-1: share-body x, y series (1 ms rows in the real run)
+            np.savez(root / case / "series.npz", t=np.array([1e-3, 2e-3]), x=np.array([xy0[0], xy0[0]]),
+                     y=np.array([xy0[1], xy0[1]]))
         (root / case / "result.json").write_text(json.dumps(res), encoding="utf-8")
     (root / "batch.json").write_text(json.dumps({"cases": cases}), encoding="utf-8")
     return root
@@ -109,10 +119,29 @@ def bad_arg(rid, res):
         res["args"]["grid"] = 0.02
 
 
+def xy_off(rid, res):
+    if rid == "GC-1":
+        res["_xy0"] = [2e-9, 0.0]  # beyond 1e-9 m (rev1 C-1)
+
+
+def no_series(rid, res):
+    if rid == "GC-3":
+        res["_xy0"] = None  # series.npz absent
+
+
+def dll_bad(rid, res):
+    if rid == "GC-2":
+        res["hull_hook"]["dll_sha256"] = "0" * 64
+        res["hull_hook"]["dll_sha_validated"] = False
+
+
 results = {}
 for name, mut, drop, expect in (("pass", None, None, (0, "PASS")), ("g1", g1_bad, None, (1, "REJECT")),
                                 ("g3", g3_bad, None, (1, "HOLD")), ("missing", None, "GC-4", (1, "UNDETERMINED")),
-                                ("badarg", bad_arg, None, (1, "UNDETERMINED"))):
+                                ("badarg", bad_arg, None, (1, "UNDETERMINED")),
+                                ("xy_off", xy_off, None, (1, "UNDETERMINED")),
+                                ("no_series", no_series, None, (1, "UNDETERMINED")),
+                                ("dll_bad", dll_bad, None, (1, "UNDETERMINED"))):
     rc, last, m = run(write_batch(name, mut, drop))
     ok = (rc, m["verdict"] if m else None) == expect
     results[name] = {"rc": rc, "verdict": m["verdict"] if m else None, "ok": ok, "last": last}
@@ -121,7 +150,7 @@ for name, mut, drop, expect in (("pass", None, None, (0, "PASS")), ("g1", g1_bad
                                     for k, v in m["pairs"].items()},
                              g1=m["gates"]["G-1"]["max"], g2=m["gates"]["G-2"]["max"],
                              pred=m["prediction_state"])
-    if name == "badarg":
-        results[name]["reasons"] = m["rows"]["GC-3"]["reasons"]
+    if name in ("badarg", "xy_off", "no_series", "dll_bad"):
+        results[name]["reasons"] = [r for row in m["rows"].values() for r in row["reasons"]]
 print(json.dumps(results, indent=1, ensure_ascii=False))
 print(json.dumps({"status": "ok" if all(r["ok"] for r in results.values()) else "fail"}))
