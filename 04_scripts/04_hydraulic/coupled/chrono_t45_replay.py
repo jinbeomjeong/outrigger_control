@@ -87,6 +87,23 @@ DEFAULT_CRITERIA = CRITERIA_REV7
 """Criteria revision used unless ``rev6`` is asked for explicitly (user decision 2026-11-08)."""
 GUARD_LIMIT_N = 0.0
 """Criteria rev. 7 3.2: an E sample leaves the judged samples only below this forced lower."""
+IDEAL_TAG_INFIX = "_IDEAL-"
+"""Ideal-sensor diagnosis records (``ideal_stage1_plan.md`` 8.7): their tag names no real
+controller, so the gate and LAS-b settings cannot be rebuilt from it; they are refused."""
+
+
+class IdealRecordError(ValueError):
+    """A record of an ideal-sensor run (exit 2, nothing replayed)."""
+
+
+def reject_ideal_record(result: dict, name: str) -> None:
+    """Raise :class:`IdealRecordError` when the run tag or the ``c2_setup.expect_controller``
+    name has ``_IDEAL-``."""
+    expected = ((result.get("c2_setup") or {}).get("expect_controller") or {}).get("name")
+    for tag in (run_controller_tag(result), expected):
+        if tag is not None and IDEAL_TAG_INFIX in str(tag):
+            raise IdealRecordError(f"{name}: ideal-sensor record (controller_tag {tag!r}) is "
+                                   "not replayed")
 
 
 # ------------------------------------------------------------------------------- inputs
@@ -134,6 +151,7 @@ def run_config(result: dict, extend_start: str | None = None):
     )
     from outrigger_sim.params import load_params
 
+    reject_ideal_record(result, "run_config")
     v5 = result.get("v5_hydraulics") or {}
     valve_tau_s = float(((v5.get("actuator") or {}).get("valve") or {}).get(
         "tau_v_s", HARNESS_VALVE_TAU_S))
@@ -171,6 +189,7 @@ def load_case(case_dir: Path, extend_start: str | None = None) -> CaseRecord:
 
     case_dir = Path(case_dir)
     result = json.loads((case_dir / "result.json").read_text(encoding="utf-8"))
+    reject_ideal_record(result, case_dir.name)
     events = read_controller_events(case_dir / "controller_events.json")
     level = (result.get("settings") or {}).get("level") or "top"
     geometry = C2Geometry.from_params(load_params(level=level))
@@ -1000,9 +1019,14 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    rows = [replay_case(folder, with_t5=args.t5, extend_start=args.extend_start,
-                        criteria=args.criteria)
-            for folder in case_folders(args.cases)]
+    try:
+        rows = [replay_case(folder, with_t5=args.t5, extend_start=args.extend_start,
+                            criteria=args.criteria)
+                for folder in case_folders(args.cases)]
+    except IdealRecordError as exc:
+        print(f"input error: {exc}")
+        print(json.dumps({"stop": "ideal_record", "reason": str(exc)}))
+        return 2
     report = report_of(rows, args.criteria, args.extend_start)
     Path(args.out_json).write_text(json.dumps(report, indent=1, default=str), encoding="utf-8")
     print(json.dumps(report["summary"]))

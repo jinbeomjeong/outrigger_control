@@ -62,6 +62,21 @@ ZERO_FAILED_EVENTS = ("WARN_PRESSURE_ZERO_SKIPPED", "WARN_PRESSURE_ZERO_IMPLAUSI
 """Per-leg outcome events of the zero calibration (``zero_calibration.ZeroCalibration.events``);
 ``WARN_PRESSURE_ZERO_SKIPPED:all:<reason>`` covers every leg."""
 ALL_LEGS_TOKEN = "all"
+IDEAL_TAG_INFIX = "_IDEAL-"
+"""Ideal-sensor diagnosis records (``ideal_stage1_plan.md`` 8.7): their tag names no real
+controller, so the gate and LAS-b settings cannot be rebuilt from it; they are refused."""
+
+
+class IdealRecordError(ValueError):
+    """A record of an ideal-sensor run (exit 2, nothing replayed)."""
+
+
+def reject_ideal_record(meta: dict, name: str) -> None:
+    """Raise :class:`IdealRecordError` when the record's ``controller_tag`` has ``_IDEAL-``."""
+    tag = meta.get("controller_tag")
+    if tag is not None and IDEAL_TAG_INFIX in str(tag):
+        raise IdealRecordError(f"{name}: ideal-sensor record (controller_tag {tag!r}) is not "
+                               "replayed")
 
 
 class _Record:
@@ -105,6 +120,7 @@ def run_config(meta: dict, extend_start: str | None = None):
         is_order_gate_tag,
     )
 
+    reject_ideal_record(meta, "run_config")
     closed_loop = soil._imports()[0]
     contact = (meta.get("job") or {}).get("contact") or "COMBINED"
     config = closed_loop.preset_config(c2.ContactJudge[contact], with_imu_samples=True,
@@ -268,6 +284,7 @@ def replay_values(path: Path, extend_start: str | None = None,
     from outrigger_sim.control.contact_replay import replay_fallback_monitor
 
     arrays, meta = load_record(path)
+    reject_ideal_record(meta, path.name)
     stored = meta["two_pressure_settings"]
     closed_loop, config, rebuilt = checked_run_config(path.name, meta, extend_start)
     t_s = arrays["t_s"]
@@ -361,8 +378,13 @@ def main() -> int:
         print(__doc__)
         return 2
     args = _parse_arguments()
-    rows = [replay_values(path, args.extend_start, args.check_recorded)
-            for path in record_files(args.records)]
+    try:
+        rows = [replay_values(path, args.extend_start, args.check_recorded)
+                for path in record_files(args.records)]
+    except IdealRecordError as exc:
+        print(f"input error: {exc}")
+        print(json.dumps({"stop": "ideal_record", "reason": str(exc)}))
+        return 2
     report = {"rule": "criteria 9 T4h: zero acting command samples of a locked plant leg, "
                       "lower - true_force_N > 0.6 kN count (0 = provisional pass); fallback "
                       "forced on all legs; unlocked tail samples recorded only",
