@@ -1,0 +1,40 @@
+{
+ "seals": {
+  "original": true,
+  "rev1": true,
+  "rev2": true,
+  "rev3": true,
+  "rev4": true,
+  "rev5": true,
+  "rev6": true
+ },
+ "grade": "not_judgeable",
+ "gates": {
+  "G-S": {
+   "seals": true,
+   "audit_pre_run_clear": true
+  },
+  "G0": "pass",
+  "G1": "fail",
+  "G2": [],
+  "G3": {
+   "recount_agrees": false,
+   "audit_post_clear": false,
+   "carry_over_confirmed": false
+  }
+ },
+ "flags": [],
+ "flag_records_k1_on": [],
+ "k1_rows_failed": {
+  "R-a": [
+   "main|C2_tv0.1|top|stiff|pitch+",
+   "main|C2_tv0.1|top|upper|pitch+",
+   "main|C2_tv0.1|top|upper|r+p+0.25",
+   "main|C2_tv0.1|top|rigid|r+p+0.5",
+   "main|C2_tv0.1|top|stiff|r+p+0.5",
+   "main|C2_tv0.1|top|upper|d45-+"
+  ],
+  "R-c": []
+ },
+ "problems": []
+}

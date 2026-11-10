@@ -1,0 +1,224 @@
+{
+ "seals": {
+  "original": true,
+  "rev1": true,
+  "rev2": true,
+  "rev3": true,
+  "rev4": true,
+  "rev5": true,
+  "rev6": true
+ },
+ "W": {
+  "ra_point": "r+p+0.25",
+  "chrono_floor": "dxpp025",
+  "order": 0,
+  "m_N": 43127.913484061806,
+  "ra_min_N": 43127.913484061806,
+  "mirror": null,
+  "mirror_min_N": null,
+  "R_v_true": 0.9999999999999999,
+  "eligible": true,
+  "for_level_record": {
+   "Rv_hat_rev1": 0.9987715529447874,
+   "max_err_deg": 0.005966378109681703,
+   "threshold": 1.005,
+   "pass": true
+  },
+  "angles_deg": [
+   1.425,
+   2.775
+  ]
+ },
+ "skipped_ineligible": [],
+ "ranking": [
+  {
+   "ra_point": "r+p+0.25",
+   "chrono_floor": "dxpp025",
+   "order": 0,
+   "m_N": 43127.913484061806,
+   "ra_min_N": 43127.913484061806,
+   "mirror": null,
+   "mirror_min_N": null,
+   "R_v_true": 0.9999999999999999,
+   "eligible": true,
+   "for_level_record": {
+    "Rv_hat_rev1": 0.9987715529447874,
+    "max_err_deg": 0.005966378109681703,
+    "threshold": 1.005,
+    "pass": true
+   }
+  },
+  {
+   "ra_point": "r+p+0.75",
+   "chrono_floor": "dxpp075",
+   "order": 1,
+   "m_N": 45873.741677599566,
+   "ra_min_N": 45873.741677599566,
+   "mirror": null,
+   "mirror_min_N": null,
+   "R_v_true": 1.0,
+   "eligible": true,
+   "for_level_record": {
+    "Rv_hat_rev1": 1.000036969391514,
+    "max_err_deg": 0.002058298156878635,
+    "threshold": 1.005,
+    "pass": true
+   }
+  },
+  {
+   "ra_point": "d45++",
+   "chrono_floor": "d45pp",
+   "order": 7,
+   "m_N": 46368.79563452362,
+   "ra_min_N": 46368.79563452362,
+   "mirror": null,
+   "mirror_min_N": null,
+   "R_v_true": 1.0085054528212423,
+   "eligible": true,
+   "for_level_record": {
+    "Rv_hat_rev1": 1.006340623830742,
+    "max_err_deg": 0.009258881397341767,
+    "threshold": 1.01,
+    "pass": true
+   }
+  },
+  {
+   "ra_point": "r-p+0.5",
+   "chrono_floor": "dxmp050",
+   "order": 5,
+   "m_N": 47764.26735283325,
+   "ra_min_N": 47764.26735283325,
+   "mirror": "rpX-+",
+   "mirror_min_N": 48108.667546779085,
+   "R_v_true": 1.0,
+   "eligible": true,
+   "for_level_record": {
+    "Rv_hat_rev1": 0.9972636589939076,
+    "max_err_deg": 0.011144770756272182,
+    "threshold": 1.005,
+    "pass": true
+   }
+  },
+  {
+   "ra_point": "d45-+",
+   "chrono_floor": "d45mp",
+   "order": 9,
+   "m_N": 48022.71548832175,
+   "ra_min_N": 48022.71548832175,
+   "mirror": null,
+   "mirror_min_N": null,
+   "R_v_true": 1.0085054528212423,
+   "eligible": true,
+   "for_level_record": {
+    "Rv_hat_rev1": 1.0061570492589609,
+    "max_err_deg": 0.009499617511178116,
+    "threshold": 1.01,
+    "pass": true
+   }
+  },
+  {
+   "ra_point": "r+p-0.5",
+   "chrono_floor": "dxpm050",
+   "order": 3,
+   "m_N": 53331.06610608594,
+   "ra_min_N": 62101.724506571016,
+   "mirror": "rpX+-",
+   "mirror_min_N": 53331.06610608594,
+   "R_v_true": 1.0,
+   "eligible": true,
+   "for_level_record": {
+    "Rv_hat_rev1": 0.9981466277406306,
+    "max_err_deg": 0.004823428481642189,
+    "threshold": 1.005,
+    "pass": true
+   }
+  },
+  {
+   "ra_point": "r-p-0.5",
+   "chrono_floor": "dxmm050",
+   "order": 6,
+   "m_N": 53469.06228084689,
+   "ra_min_N": 60434.54170403451,
+   "mirror": "rpX--",
+   "mirror_min_N": 53469.06228084689,
+   "R_v_true": 1.0,
+   "eligible": true,
+   "for_level_record": {
+    "Rv_hat_rev1": 0.9980573809273545,
+    "max_err_deg": 0.004823407664064527,
+    "threshold": 1.005,
+    "pass": true
+   }
+  },
+  {
+   "ra_point": "r+p-0.75",
+   "chrono_floor": "dxpm075",
+   "order": 4,
+   "m_N": 54526.33387470738,
+   "ra_min_N": 54526.33387470738,
+   "mirror": null,
+   "mirror_min_N": null,
+   "R_v_true": 1.0,
+   "eligible": true,
+   "for_level_record": {
+    "Rv_hat_rev1": 0.9983070248029366,
+    "max_err_deg": 0.004318566063161611,
+    "threshold": 1.005,
+    "pass": true
+   }
+  },
+  {
+   "ra_point": "r+p-0.25",
+   "chrono_floor": "dxpm025",
+   "order": 2,
+   "m_N": 58831.63014458765,
+   "ra_min_N": 58831.63014458765,
+   "mirror": null,
+   "mirror_min_N": null,
+   "R_v_true": 1.0,
+   "eligible": true,
+   "for_level_record": {
+    "Rv_hat_rev1": 0.9981948579608416,
+    "max_err_deg": 0.005079991707023446,
+    "threshold": 1.005,
+    "pass": true
+   }
+  },
+  {
+   "ra_point": "d45--",
+   "chrono_floor": "d45mm",
+   "order": 10,
+   "m_N": 62743.54039944873,
+   "ra_min_N": 62743.54039944873,
+   "mirror": null,
+   "mirror_min_N": null,
+   "R_v_true": 0.9999766081871344,
+   "eligible": true,
+   "for_level_record": {
+    "Rv_hat_rev1": 0.9980199435551046,
+    "max_err_deg": 0.0049672565083636044,
+    "threshold": 1.01,
+    "pass": true
+   }
+  },
+  {
+   "ra_point": "d45+-",
+   "chrono_floor": "d45pm",
+   "order": 8,
+   "m_N": 64456.024317633324,
+   "ra_min_N": 64456.024317633324,
+   "mirror": null,
+   "mirror_min_N": null,
+   "R_v_true": 0.9999766081871344,
+   "eligible": true,
+   "for_level_record": {
+    "Rv_hat_rev1": 0.9981092138873189,
+    "max_err_deg": 0.004967275955661599,
+    "threshold": 1.01,
+    "pass": true
+   }
+  }
+ ],
+ "rule": "d8x_rules.md 5.1 with d8x_rules_rev1.md 5.1 / 4.3 eligibility",
+ "selection_file": "C:\\Users\\jinbeom\\AppData\\Local\\Temp\\claude\\63917d480778c1ba\\6f3ebc4d-a5fb-4d9f-b214-d0ae5c515ee1\\scratchpad\\d8xjudge\\selection_p1.json"
+}
