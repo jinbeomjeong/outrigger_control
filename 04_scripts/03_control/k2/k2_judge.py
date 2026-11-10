@@ -17,7 +17,7 @@ Sub-commands:
 
 Common contract: ``--out <file>`` (the report JSON), ``--format json|md``; exit 0 pass, 1 fail, 2 not judgeable /
 input error (a missing result key is 2), 3 internal error; the last stdout line is JSON. The rules file and its
-addenda rev1 .. rev5 must match their sealed sha256 (``k2_touch_creep_rules[_revN].sha256``, the values this judge
+addenda rev1 .. rev6 must match their sealed sha256 (``k2_touch_creep_rules[_revN].sha256``, the values this judge
 implements) and the dynamics spec its rules 3.3 sha256 (exit 2 otherwise).
 Every judging command prints its field map (rules item <-> raw result key).
 Interpreter: python-dev or dynamics-dev (numpy, PyYAML; no simulation imports).
@@ -59,16 +59,17 @@ RULES_REV2_SHA256 = "b3f1b41f27030c75aec726d2a3feb5abc36697864e0d83766a8fe0c4460
 RULES_REV3_SHA256 = "8bcdb0ed1fdf6d730ac781929e93b233972d1e80566e1ae14ffb7ddf049d6e61"
 RULES_REV4_SHA256 = "82160ff54874e3d43bf7c5a1ae96d6e8612b1e7635aaccea39a4299352ce00c5"
 RULES_REV5_SHA256 = "73b877580ec5dc94a46a38d2ed620372cddd17dd38eef06126d84843b485eccc"
+RULES_REV6_SHA256 = "21268203e0b55218f88fc2458fe21467871ae3b1bb7ab9cc760b3fbd5ff7ea0e"
 SEALED_RULES = (
     (RULES_PATH, RULES_SEAL_PATH, RULES_SHA256),
     *(
         (K2_DIR / f"k2_touch_creep_rules_rev{n}.md", K2_DIR / f"k2_touch_creep_rules_rev{n}.sha256", sha)
         for n, sha in ((1, RULES_REV1_SHA256), (2, RULES_REV2_SHA256), (3, RULES_REV3_SHA256),
-                       (4, RULES_REV4_SHA256), (5, RULES_REV5_SHA256))
+                       (4, RULES_REV4_SHA256), (5, RULES_REV5_SHA256), (6, RULES_REV6_SHA256))
     ),
 )
-"""Rules file, seal file, sha256 this judge implements (rev2 8: path 1 checks the original and rev1 .. rev5
-seals; later revisions win: rev5 > rev4 > rev3 > rev2 > rev1 > original)."""
+"""Rules file, seal file, sha256 this judge implements (rev2 8: path 1 checks the original and rev1 .. rev6
+seals; later revisions win: rev6 > rev5 > rev4 > rev3 > rev2 > rev1 > original)."""
 DYN_SPEC_PATH = K2_DIR / "k2_dyn_spec.md"
 DYN_SPEC_SHA256 = "502b0bb78558d40586cbcddb718b6c5d53529de4e78369f454762c9fe73727ff"
 """Rules 3.3: raw sha256 of the dynamics spec."""
@@ -534,9 +535,7 @@ def _sh_row_flags(k2_rows: list[dict], f_d8: float, label: str, missing: dict) -
             missing["SH-1"] += 1
         if any((count or 0) > 0 for count in sh1 or []):
             flags.append({"flag": "SH-1", "bundle": label, "id": row["id"], "value": sh1})
-        if row.get("cap") is None:
-            missing["SH-5"] += 1
-        elif row["cap"] > 0:
+        if (row.get("cap") or 0) > 0:  # rev6 2: counted from the event list, never missing
             flags.append({"flag": "SH-5", "bundle": label, "id": row["id"], "value": row["cap"]})
         items = ("J1_N", "J2_N") if row.get("has_h4") else ("J1_N",)
         for item in items:
@@ -569,9 +568,12 @@ def sh_flags(k2_rows: list[dict], off_rows: list[dict], f_d8: float, label: str)
             "flags": flags + _sh_missing_flags(missing, label),
             "missing": missing,
         }
-    missing["SH-2"] = sum(not d8x_judge._is_number(row.get("sh2")) for row in k2_rows + off_rows)
-    k2_median = _median(row.get("sh2") for row in k2_rows)
-    off_median = _median(row.get("sh2") for row in off_rows)
+    # rev6 2: a pair with one SH-2 value missing is one missing; the medians use the complete pairs only
+    complete = [key for key in k2_by_key
+                if d8x_judge._is_number(k2_by_key[key].get("sh2")) and d8x_judge._is_number(off_by_key[key].get("sh2"))]
+    missing["SH-2"] = len(k2_by_key) - len(complete)
+    k2_median = _median(k2_by_key[key]["sh2"] for key in complete)
+    off_median = _median(off_by_key[key]["sh2"] for key in complete)
     if k2_median is not None and off_median is not None and k2_median > off_median:
         flags.append(
             {"flag": "SH-2", "bundle": label, "k2_median": k2_median, "off_median": off_median}
@@ -932,13 +934,16 @@ def cmd_judge_v3(args) -> tuple[int, dict]:
             expected_by_k1={False: V3_EXPECTED_KEYS},
             angles=angles,
         )
+        arm_problems = []
         for side, rows in (("off", off), ("tcl", tcl)):
             if keys_sha256({row["id"] for row in rows}) != V3_KEYS_SHA256:
-                problems.append(f"E-5 V-3 {arm}.{side}: key list sha differs")
-            problems += _aug_problems(cell[side], arm)
+                arm_problems.append(f"E-5 V-3 {arm}.{side}: key list sha differs")
+            arm_problems += _aug_problems(cell[side], arm)
         if arm in V3_JUDGED_ARMS:
-            problems += more
+            problems += arm_problems + more
             judged_summaries.append(result["summaries"]["tcl"])
+        else:  # rev6 3: the record arm (AUG_crc2) is marked not judgeable in its own record only
+            result["record_not_judgeable"] = arm_problems
         result["off_J3_rows"] = sum(1 for row in off if "J3" in row["fail_items"])
         arms[arm] = result
         rows_by_label[f"{arm}.off"], rows_by_label[f"{arm}.tcl"] = off, tcl
@@ -1019,8 +1024,14 @@ def cp_upper_95_bisection(failures: int, n: int) -> float:
 # --- rev2 1: absolute items of criteria.md on the K-2 arm, K-2 evidence from the provenance -------------
 C2_SHA256_RUN = "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1"
 """Rev2 1 common item: provenance ``c2_sha256`` = the k2-run working copy of ``c2.py`` (blob ``18c71876``)."""
-V5_EXPECTED_ROWS = {"soil": 60, "d8": 576, "noise_L2": 855, "regression": 93, "ps7": 20, "g8_safe_stop": 83}
-"""Rev2 1 row counts of the K-2 arm (grid: none in the table; E-1 takes the manifest count)."""
+V5_EXPECTED_ROWS = {"grid": 768, "soil": 60, "d8": 576, "noise_L2": 855, "regression": 93, "ps7": 20,
+                    "g8_safe_stop": 83}
+"""Rev2 1 / rev6 1 row counts, checked on both arms (E-1)."""
+V5_NOT_JUDGEABLE_ITEMS = ("rc", "error_rows", "c2_sha256", "rows", "regression_judged_keys",
+                          "regression_record_keys")
+"""Rev6 1: common items (sidecar rc of both arms, error rows, provenance c2 / G8 c2 check), the counts and the
+rev2 2 key lists make a bundle not judgeable (re-run), on either arm; every other absolute item of the K-2 arm and
+pass -> fail make it fail. A missing value takes the kind of its item (E-9)."""
 REGRESSION_JUDGED_SHA256 = "2900db889efc73070c3a8fbe557b1a4ad9ee3392afc099ba00be1d0549174ec9"
 REGRESSION_RECORD_SHA256 = "d4f58334c6ca7c393c35072a798c09f4995d7fde274e0af6b21b99f977d503eb"
 """Rev2 2: sha256 of the judged (93) and record (49) key lists (``prelaunch/regression_keys.py keys``)."""
@@ -1142,6 +1153,10 @@ def _absolute_rows(items: _Items, bundle: str, rows: list[dict]) -> None:
                 items.add("soil_G1_J2_pass", bool(row.get("pass")), row["key"])
     if bundle == "d8":
         _absolute_d8(items, rows)
+    if bundle == "regression":  # rev6 1: a missing verdict of a judged key is a failure, counted
+        items.require("regression_verdict")
+        for row in rows:
+            items.add("regression_verdict", None if row.get("verdict_missing") else True, row["key"])
 
 
 def _absolute_d8(items: _Items, rows: list[dict]) -> None:
@@ -1200,7 +1215,8 @@ def _absolute_bundle_meta(items: _Items, bundle: str, metas: list[dict], rows: l
 
 
 def v5_absolute(bundle: str, docs: list[dict]) -> dict:
-    """Rev2 1 absolute items of one arm (judged on the K-2 arm, recorded on the off arm)."""
+    """Rev2 1 absolute items of one arm. The common items, counts and key lists (:data:`V5_NOT_JUDGEABLE_ITEMS`)
+    count on both arms; the bundle items are judged on the K-2 arm and recorded on the off arm (rev6 1)."""
     metas = [doc.get("meta") or {} for doc in docs]
     rows = [row for doc in docs for row in doc["runs"]]
     items = _Items()
@@ -1352,25 +1368,42 @@ def v5_bundle(spec: dict) -> dict:
     if spec["kind"] != "absolute":
         result.update(_relative(spec, bundle, off_by_key, tcl_by_key))
     result["relative_gates"] = relative_gates
-    result["absolute"] = {"tcl": v5_absolute(bundle, tcl_docs), "off_record": v5_absolute(bundle, off_docs)}
+    absolute = {"off": v5_absolute(bundle, off_docs), "tcl": v5_absolute(bundle, tcl_docs)}
+    result["absolute"] = absolute
     result["evidence"] = {"off": v5_evidence(bundle, "off", off_docs), "tcl": v5_evidence(bundle, "tcl", tcl_docs)}
-    result["missing"] = result["absolute"]["tcl"]["missing"]
-    result["passed"] = result["absolute"]["tcl"]["passed"] and (
-        not relative_gates or result.get("relative_passed", True)
-    )
+    result["missing"] = {arm: block["missing"] for arm, block in absolute.items()}
+    failed_items = [name for name, item in absolute["tcl"]["items"].items()
+                    if not item["ok"] and name not in V5_NOT_JUDGEABLE_ITEMS]
+    result["failed_items"] = failed_items
+    result["passed"] = not failed_items and (not relative_gates or result.get("relative_passed", True))
+    reasons = _not_judgeable_reasons(result, absolute, spec["kind"])
+    if reasons:
+        result.update(passed=False, not_judgeable="; ".join(reasons))
+    result["result_kind"] = "not_judgeable" if reasons else ("pass" if result["passed"] else "fail")
+    return result
+
+
+def _not_judgeable_reasons(result: dict, absolute: dict, kind: str) -> list[str]:
+    """Rev6 1: common items and counts on both arms, K-2 evidence, unpaired keys."""
+    reasons = []
+    for arm, block in absolute.items():
+        for name in V5_NOT_JUDGEABLE_ITEMS:
+            item = block["items"].get(name)
+            if item is not None and not item["ok"]:
+                reasons.append(f"{arm} {name} (violations {item['violations']}, missing {item['missing']})")
     evidence = result["evidence"]["off"] + result["evidence"]["tcl"]
     if evidence:
-        result.update(passed=False, not_judgeable=f"K-2 evidence: {evidence[:5]}")
-    if result["unpaired"] and spec["kind"] != "absolute":
-        result.update(passed=False, not_judgeable=f"unpaired keys {len(result['unpaired'])}")
-    return result
+        reasons.append(f"K-2 evidence: {evidence[:5]}")
+    if result["unpaired"] and kind != "absolute":
+        reasons.append(f"unpaired keys {len(result['unpaired'])}")
+    return reasons
 
 
 STORED_ACCEPTANCE_DIR = ROOT / "06_analysis" / "02_control" / "touch_phase" / "acceptance"
 STORED_PS7 = ROOT / "06_analysis" / "02_control" / "touch_phase" / "ps7_E.json"
 SELFTEST_KINDS = {"grid": "pass_to_fail", "soil": "pass_to_fail", "regression": "pass_to_fail",
                   "d8": "pass_to_fail", "noise_L2": "noise_cp", "ps7": "pass_to_fail", "g8_safe_stop": "g8"}
-SELFTEST_ROWS = {"grid": 768, **V5_EXPECTED_ROWS}
+SELFTEST_ROWS = dict(V5_EXPECTED_ROWS)
 SELFTEST_SKIPPED_ITEMS = ("rc", "c2_sha256")
 """Common items the stored acceptance outputs have no record for (sidecars, provenance): not checked here."""
 

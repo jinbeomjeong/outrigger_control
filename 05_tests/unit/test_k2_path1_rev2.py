@@ -70,16 +70,37 @@ def test_d8_absolute_items_pass_and_count_missing(tmp_path) -> None:
     rows = [*good[:574], _d8_row(574, t_ready_s=None), _d8_row(575, min_true_cyl_force_kN=14.0)]
     result = k2_judge.v5_bundle(_d8_spec(tmp_path, rows))
     items = result["absolute"]["tcl"]["items"]
-    assert result["passed"] is False and result["missing"] == {"d8_ready": 1}
+    assert result["passed"] is False and result["missing"]["tcl"] == {"d8_ready": 1}
     assert items["d8_min_force"]["violations"] == 1 and result["relative_gates"] is False
+    assert result["result_kind"] == "fail"  # rev6 1: a bundle item (missing included) is a failure
 
 
-def test_common_items_rc_and_c2(tmp_path) -> None:
+def test_common_items_and_counts_are_not_judgeable(tmp_path) -> None:
+    """Rev6 1: common items (both arms) and counts make the bundle not judgeable, not failed."""
     rows = [_d8_row(i) for i in range(576)]
     bad_rc = k2_judge.v5_bundle(_d8_spec(tmp_path, rows, [_step("tcl", rc=1)]))
-    assert bad_rc["absolute"]["tcl"]["items"]["rc"]["violations"] == 1 and bad_rc["passed"] is False
+    assert bad_rc["absolute"]["tcl"]["items"]["rc"]["violations"] == 1
+    assert bad_rc["result_kind"] == "not_judgeable" and bad_rc["passed"] is False
     other_c2 = _step("tcl", provenance=_provenance("tcl", c2_sha256="0" * 64))
-    assert k2_judge.v5_bundle(_d8_spec(tmp_path, rows, [other_c2]))["passed"] is False
+    assert k2_judge.v5_bundle(_d8_spec(tmp_path, rows, [other_c2]))["result_kind"] == "not_judgeable"
+    assert k2_judge.v5_bundle(_d8_spec(tmp_path, rows[:575]))["result_kind"] == "not_judgeable"
+    off = _doc("d8", rows, [_step("off", rc=2)])
+    spec = {"kind": "pass_to_fail", "off": [_write(tmp_path, "off_rc.json", off)],
+            "tcl": [_write(tmp_path, "tcl_ok.json", _doc("d8", rows, [_step("tcl")]))], "key": "key",
+            "status": "pass"}
+    result = k2_judge.v5_bundle(spec)
+    assert result["result_kind"] == "not_judgeable" and "off rc" in result["not_judgeable"]
+
+
+def test_regression_missing_verdict_is_a_counted_failure() -> None:
+    keys = {"judged_sha256": k2_judge.REGRESSION_JUDGED_SHA256, "record_sha256": k2_judge.REGRESSION_RECORD_SHA256}
+    meta = {"r79_judgement": {"unmatched": 0, "errors": 0}, "regression_keys": keys}
+    rows = [{"key": f"r|{i}", "pass": True, "verdict_missing": i < 2} for i in range(93)]
+    result = k2_judge.v5_absolute("regression", [_doc("regression", rows, [], **meta)])
+    assert result["missing"] == {"regression_verdict": 2} and result["passed"] is False
+    flat = k2_v5_flatten._r79_rows({"runs": [{"key": "a", "pass": None, "level": "L2", "inner": "x"}]}, "p",
+                                   l2_without_s1_front=False)
+    assert flat[0]["verdict_missing"] is True
 
 
 def test_k2_evidence_makes_the_bundle_not_judgeable(tmp_path) -> None:
@@ -239,6 +260,24 @@ def test_aug_row_identity() -> None:
     assert any("I-9" in p for p in k2_judge._aug_row_problems(run, "AUG"))
 
 
+def test_aug_crc2_violations_stay_in_its_record(monkeypatch) -> None:
+    """Rev6 3: E-5 / I-9 of the record arm AUG_crc2 do not reach the V-3 problems (G-B, grade)."""
+    summary = {"bundle": "x", "expected": 273, "actual": 273, "pass": 273, "fail": 0, "not_judgeable": 0}
+    monkeypatch.setattr(k2_judge, "seal_problems", lambda: [])
+    monkeypatch.setattr(k2_judge, "f_d8_N", lambda: F_D8)
+    monkeypatch.setattr(k2_judge, "_manifest_part",
+                        lambda args, bundle: {"arms": {arm: {"off": [], "tcl": []} for arm in k2_judge.V3_ARMS}})
+    monkeypatch.setattr(k2_judge, "_off_tcl_bundle", lambda cell, **kw: (
+        {"summaries": {"off": dict(summary), "tcl": dict(summary)}, "sh": [], "dhat": {}}, [], [], []))
+    monkeypatch.setattr(k2_judge, "keys_sha256", lambda keys: k2_judge.V3_KEYS_SHA256)
+    monkeypatch.setattr(k2_judge, "_aug_problems", lambda files, arm: ["E-5 bad"] if arm == "AUG_crc2" else [])
+    status, result = k2_judge.cmd_judge_v3(None)
+    assert result["problems"] == [] and result["gate"]["G-B"] == "pass"
+    assert result["arms"]["AUG_crc2"]["record_not_judgeable"] == ["E-5 bad", "E-5 bad"]
+    monkeypatch.setattr(k2_judge, "_aug_problems", lambda files, arm: ["E-5 bad"] if arm == "AUG" else [])
+    assert k2_judge.cmd_judge_v3(None)[1]["gate"]["G-B"] == "not_judgeable"
+
+
 def test_options_off_and_chrono_options(tmp_path) -> None:
     path = _write(tmp_path, "v2.json", {"runs": [{"id": "a"}, {"id": "b", "aug_arm": "AUG"}]})
     assert len(k2_judge.options_off_problems([path], "V-2")) == 1
@@ -297,6 +336,17 @@ def test_harness_sh_missing_counts() -> None:
     assert {f["flag"] for f in block["flags"] if "missing" in f} == {"SH-1", "SH-3"}
 
 
+def test_harness_sh2_pairs_and_sh5_never_missing() -> None:
+    """Rev6 2: SH-2 missing per pair, medians from complete pairs only; SH-5 has no missing."""
+    k2_rows = [{"id": i, "k1_on": False, "sh1": [0] * 4, "cap": None, "sh2": value, "t_ready_s": 50.0,
+                "values": {"J1_N": 30e3}} for i, value in enumerate((0.1, None, 5.0))]
+    off_rows = [{"id": i, "k1_on": False, "sh2": value, "t_ready_s": 50.0, "values": {"J1_N": 30e3}}
+                for i, value in enumerate((0.2, 0.3, None))]
+    block = k2_judge.sh_flags(k2_rows, off_rows, F_D8, "t")
+    assert block["missing"]["SH-2"] == 2 and block["missing"]["SH-5"] == 0
+    assert block["sh2_medians"] == [0.1, 0.2]
+
+
 # --- seals and self test --------------------------------------------------------------------------------------
 def test_seal_check(tmp_path, monkeypatch) -> None:
     rules = tmp_path / "r.md"
@@ -309,7 +359,7 @@ def test_seal_check(tmp_path, monkeypatch) -> None:
     rules.write_bytes(b"changed\n")
     assert k2_judge._seal_problem(rules, seal, sha)
     assert k2_judge._seal_problem(tmp_path / "missing.md", seal, sha)
-    assert len(k2_judge.SEALED_RULES) == 6 and k2_judge.SEALED_RULES[-1][2] == k2_judge.RULES_REV5_SHA256
+    assert len(k2_judge.SEALED_RULES) == 7 and k2_judge.SEALED_RULES[-1][2] == k2_judge.RULES_REV6_SHA256
 
 
 def test_selftest_v5_stored(tmp_path) -> None:
