@@ -68,8 +68,13 @@ F_MIN = float(dm.load_params()["control"]["F_min_cylinder_N"])  # YAML (rev. 30;
 GUARD = F_MIN + 5e3
 WORKERS = 12
 
-# Chrono Q12 crawler bushing (snapshot meta 'crawler_bushing'), ASSUMPTION of cad: kt = (kt/kn)_pad mean x kn_sphere
-KT_REL_CHRONO = 0.4021968558889507
+# Crawler kt/kn of the Chrono Q12 bushing as computed from the YAML before the REXOME35 pad update (snapshot meta
+# 'crawler_bushing' of 2026-10-21, kt = (kt/kn)_pad mean x kn_sphere). The current YAML gives 0.233093
+# (KPlant crawler_kt_rel "chrono_l1"). The value stays: the td_kt variants and the sealed D8x keys
+# ("kt|...|0.4022") are defined by it (k2_dyn_spec.md 1, name corrected only).
+KT_REL_PRE_REXOME35_YAML = 0.4021968558889507
+KT_REL_CHRONO = KT_REL_PRE_REXOME35_YAML
+"""Old name of :data:`KT_REL_PRE_REXOME35_YAML` (kept for the callers and the stored case ids)."""
 SPHERE_R = 0.05                     # YAML contact.crawler.sphere_layout.sphere_radius_m
 
 # Proposed verification boundary (crawler attitude basis, offset form, see stage crawler D):
@@ -489,8 +494,93 @@ def stage_envelope(d):
 
 
 # ================================================================================================ time domain
+DISS_PRESET_KEY = "diss_preset"
+SEAL_FS_FRONT_KEY = "seal_fs_front_N"
+SEAL_FS_REAR_SCALE_KEY = "seal_fs_rear_scale"
+PAD_ZETA_MOVING_KEY = "pad_zeta_moving"
+VALVE_OPEN_EPS_KEY = "valve_open_eps_m_s"
+CRAWLER_KT_REL_KEY = "crawler_kt_rel"
+CRAWLER_C_SCALE_KEY = "crawler_c_scale"
+AUG_OPTION_KEYS = (SEAL_FS_FRONT_KEY, SEAL_FS_REAR_SCALE_KEY, PAD_ZETA_MOVING_KEY, VALVE_OPEN_EPS_KEY,
+                   CRAWLER_KT_REL_KEY, CRAWLER_C_SCALE_KEY)
+"""Dissipation options of :class:`KPlant` (``k2_dyn_spec.md`` 1), read from ``case["rcfg"]``."""
+CRAWLER_KT_REL_CHRONO_L1 = "chrono_l1"
+"""``crawler_kt_rel`` value: kt/kn of the Chrono L1 crawler bushing from the current YAML (0.233093)."""
+PAD_ZETA_LOCKED = 0.03
+"""Locked-leg damping ratio the YAML pad dashpot ``cn`` is sized on (CLAUDE.md damping row)."""
+SEAL_FS_NOMINAL_FRONT_N = 4.0e3
+"""Nominal front seal friction (CLAUDE.md 'seal friction'); rear = front x YAML rear_scale."""
+PAD_ZETA_MOVING = 0.10
+AUG_EPS_FRACTION_OF_V_MAX = 0.1
+"""AUG_eps: valve open above 0.1 v_max (the K-2 creep at 0.05 v_max counts as locked)."""
+
+
+def _aug_eps_m_s() -> float:
+    return AUG_EPS_FRACTION_OF_V_MAX * float(dm.load_params()["actuator"]["max_speed_m_s"])
+
+
+def _diss_presets() -> dict[str, dict]:
+    """``diss_preset`` name -> options (``k2_dyn_spec.md`` 2; the acc_d8 arm H0 is ``none``)."""
+    l1eq = {CRAWLER_KT_REL_KEY: CRAWLER_KT_REL_CHRONO_L1}
+    seal = {SEAL_FS_FRONT_KEY: SEAL_FS_NOMINAL_FRONT_N}
+    moving = {PAD_ZETA_MOVING_KEY: PAD_ZETA_MOVING}
+    aug = {**l1eq, **seal, **moving}
+    return {"none": {}, "l1eq": l1eq, "l1eq_fs": {**l1eq, **seal}, "l1eq_zm": {**l1eq, **moving},
+            "aug": aug, "aug_crc2": {**aug, CRAWLER_C_SCALE_KEY: 2.0},
+            "aug_eps": {**aug, VALVE_OPEN_EPS_KEY: _aug_eps_m_s()}}
+
+
+DISS_PRESET_NAMES = ("none", "l1eq", "l1eq_fs", "l1eq_zm", "aug", "aug_crc2", "aug_eps")
+
+
+def expand_diss_options(rcfg: dict) -> tuple[dict, dict]:
+    """``(options, source)`` of a case: the ``diss_preset`` expanded, or the explicit option keys.
+
+    Raises:
+        ValueError: An unknown preset, a preset together with explicit option keys, or an unknown
+            ``crawler_kt_rel`` word.
+    """
+    explicit = {key: rcfg[key] for key in AUG_OPTION_KEYS if key in rcfg}
+    preset = rcfg.get(DISS_PRESET_KEY)
+    if preset is None:
+        return explicit, {key: "rcfg" for key in explicit}
+    if preset not in DISS_PRESET_NAMES:
+        raise ValueError(f"{DISS_PRESET_KEY} {preset!r}: expected one of {DISS_PRESET_NAMES}")
+    if explicit:
+        raise ValueError(f"{DISS_PRESET_KEY} {preset!r} with explicit options {sorted(explicit)}")
+    options = _diss_presets()[preset]
+    return dict(options), {key: f"{DISS_PRESET_KEY}:{preset}" for key in options}
+
+
+def crawler_kt_rel_chrono_l1(p: dict) -> float:
+    """Mean pad kt/kn of the YAML L1 pads (``crawler_bushing.crawler_bushing_values`` ratio)."""
+    L1 = p["contact"]["rigid_floor"]["L1"]
+    kn, kt = L1["kn_per_pad_N_m"], L1["kt_per_pad_N_m"]
+    return float(np.mean([float(kt[k]) / float(kn[k]) for k in kn]))
+
+
+def _yaml_sha256() -> str:
+    import hashlib
+
+    return hashlib.sha256((ROOT / "02_params" / "rexome33.yaml").read_bytes()).hexdigest()
+
+
 class KPlant(rpt.TPlant):
-    """TPlant + crawler tangential override (RCFG['ktcr_rel_kn']: kt = s kn, ct = c_n sqrt(s); Chrono Q12 rule)."""
+    """TPlant + crawler tangential override (RCFG['ktcr_rel_kn']: kt = s kn, ct = c_n sqrt(s); Chrono Q12 rule) + the
+    K-2 dissipation options (``k2_dyn_spec.md`` 1, :data:`AUG_OPTION_KEYS` or ``diss_preset``):
+
+    * ``seal_fs_front_N`` F: seal friction ``Fs = [F, F, s F, s F]``, ``s = seal_fs_rear_scale`` (default YAML
+      ``actuator.seal_friction.rear_scale``); refused together with a case ``Fs`` != 0;
+    * ``pad_zeta_moving`` z: every ``step`` sets the pad normal dashpot ``cn = cn_lock z / 0.03`` on the legs whose
+      valve is open (``|u| > valve_open_eps_m_s``, default YAML ``actuator.rod_side.lock_eps_m_s``), ``cn_lock``
+      on the others; the tangential ``ct`` stays;
+    * ``crawler_kt_rel`` s (``"chrono_l1"`` = :func:`crawler_kt_rel_chrono_l1`): crawler ``kt = s kn``,
+      ``ct = c_n sqrt(s)``; refused together with ``ktcr_rel_kn``;
+    * ``crawler_c_scale`` c: crawler normal and tangential dashpots x c (after the kt override).
+
+    Without any option key the arithmetic is the one before them (no assignment at all). With any K-2 key (a
+    ``diss_preset`` of ``none`` included) the plant records the valve-open time per leg for the I-9 row record.
+    """
 
     def __init__(self, *a, **k):
         super().__init__(*a, **k)
@@ -501,6 +591,127 @@ class KPlant(rpt.TPlant):
             self.ktcr = self.kcr * s
             self.ctcr = self.ccr * math.sqrt(s)
             self.ktcr_rel = s
+        self._init_dissipation(a, k)
+
+    # --- K-2 dissipation options ------------------------------------------------------------------------------
+    def _init_dissipation(self, args, kwargs) -> None:
+        rcfg = rpt.RCFG
+        self.aug_requested = DISS_PRESET_KEY in rcfg or any(key in rcfg for key in AUG_OPTION_KEYS)
+        self.aug = None
+        self.open_history = None
+        if not self.aug_requested:
+            return
+        options, source = expand_diss_options(rcfg)
+        p = dm.load_params()
+        resolved = {}
+        if SEAL_FS_FRONT_KEY in options:
+            self._apply_seal_friction(options, p, resolved, args, kwargs)
+        elif SEAL_FS_REAR_SCALE_KEY in options:
+            raise ValueError(f"{SEAL_FS_REAR_SCALE_KEY} without {SEAL_FS_FRONT_KEY}")
+        if CRAWLER_KT_REL_KEY in options:
+            self._apply_crawler_kt(options[CRAWLER_KT_REL_KEY], p, resolved)
+        if CRAWLER_C_SCALE_KEY in options:
+            scale = float(options[CRAWLER_C_SCALE_KEY])
+            self.ccr = self.ccr * scale
+            self.ctcr = self.ctcr * scale
+            resolved[CRAWLER_C_SCALE_KEY] = scale
+        self.cn_lock = np.array(self.cn, float)
+        self.pad_zeta_moving = options.get(PAD_ZETA_MOVING_KEY)
+        self.valve_open_eps = float(options.get(VALVE_OPEN_EPS_KEY,
+                                                p["actuator"]["rod_side"]["lock_eps_m_s"]))
+        if self.pad_zeta_moving is not None:
+            resolved[PAD_ZETA_MOVING_KEY] = float(self.pad_zeta_moving)
+            resolved["cn_lock_N_s_m"] = self.cn_lock.tolist()
+            resolved["cn_moving_N_s_m"] = (self.cn_lock * self._moving_factor()).tolist()
+        resolved[VALVE_OPEN_EPS_KEY] = self.valve_open_eps
+        self.open_history = {"t_s": [], "dt_s": [], "open": []}
+        self.aug = {"preset": rcfg.get(DISS_PRESET_KEY), "options": options, "source": source,
+                    "resolved": resolved, "yaml_sha256": _yaml_sha256()}
+
+    def _apply_seal_friction(self, options, p, resolved, args, kwargs) -> None:
+        case_fs = kwargs.get("Fs", args[4] if len(args) > 4 else 0.0)
+        if float(case_fs) != 0.0:
+            raise ValueError(f"{SEAL_FS_FRONT_KEY} with the case Fs {case_fs!r} != 0")
+        front = float(options[SEAL_FS_FRONT_KEY])
+        rear_scale = float(options.get(SEAL_FS_REAR_SCALE_KEY,
+                                       p["actuator"]["seal_friction"]["rear_scale"]))
+        self.Fs = np.array([front, front, rear_scale * front, rear_scale * front], float)
+        resolved.update({SEAL_FS_FRONT_KEY: front, SEAL_FS_REAR_SCALE_KEY: rear_scale,
+                         "Fs_N": self.Fs.tolist()})
+
+    def _apply_crawler_kt(self, value, p, resolved) -> None:
+        if self.ktcr_rel is not None:
+            raise ValueError(f"{CRAWLER_KT_REL_KEY} together with ktcr_rel_kn")
+        if value == CRAWLER_KT_REL_CHRONO_L1:
+            rel = crawler_kt_rel_chrono_l1(p)
+        elif isinstance(value, (int, float)) and not isinstance(value, bool):
+            rel = float(value)
+        else:
+            raise ValueError(f"{CRAWLER_KT_REL_KEY} {value!r}: a number or {CRAWLER_KT_REL_CHRONO_L1!r}")
+        self.ktcr = self.kcr * rel
+        self.ctcr = self.ccr * math.sqrt(rel)
+        resolved[CRAWLER_KT_REL_KEY] = rel
+
+    def _moving_factor(self) -> float:
+        return float(self.pad_zeta_moving) / PAD_ZETA_LOCKED
+
+    def step(self, u, nsteps):
+        if self.open_history is None or nsteps > 1000:  # options off, or the crawler settle before the run
+            return super().step(u, nsteps)
+        is_open = np.abs(self._valve_output(u, nsteps)) > self.valve_open_eps
+        if self.pad_zeta_moving is not None:
+            self.cn = np.where(is_open, self.cn_lock * self._moving_factor(), self.cn_lock)
+        history = self.open_history
+        history["t_s"].append(self.t)
+        history["dt_s"].append(nsteps * self.dt)
+        history["open"].append(is_open)
+        return super().step(u, nsteps)
+
+    def _valve_output(self, u, nsteps) -> np.ndarray:
+        """Mean valve output of the coming chunk: the command through the ``tau_v`` lag the harness applies below
+        this class (``r8d1_td._step_lag``, same formula, its state not touched); the command without a lag."""
+        u = np.broadcast_to(np.asarray(u, float), (4,))
+        tau_v = float(rpt.RCFG.get("tau_v", 0.0) or 0.0)
+        if tau_v <= 0.0:
+            return u
+        uf = getattr(self, "_uf", None)
+        uf = np.zeros(4) if uf is None else uf
+        h = nsteps * self.dt
+        return u + (uf - u) * (tau_v / h) * (1.0 - math.exp(-h / tau_v))
+
+    def valve_open_fraction(self, t_from_s, t_to_s) -> list[float] | None:
+        """Per-leg share of [t_from, t_to] with the valve open (chunk start times inside); None without the record
+        or an empty window."""
+        if self.open_history is None or t_from_s is None or t_to_s is None or not self.open_history["t_s"]:
+            return None
+        t = np.asarray(self.open_history["t_s"], float)
+        dt = np.asarray(self.open_history["dt_s"], float)
+        is_open = np.asarray(self.open_history["open"], bool)
+        inside = (t >= float(t_from_s) - 1e-12) & (t < float(t_to_s) - 1e-12)
+        total = float(dt[inside].sum())
+        if total <= 0.0:
+            return None
+        return [float((dt[inside] * is_open[inside, leg]).sum() / total) for leg in range(4)]
+
+    def aug_record(self) -> dict | None:
+        """``plant_aug`` of a row (expanded options, their source, the resolved values, the YAML sha)."""
+        return None if self.aug is None else dict(self.aug)
+
+
+def check_kplant_aug(plant, case) -> None:
+    """Row identity of the dissipation options (I-9): the plant holds what the case asked for.
+
+    Raises:
+        RuntimeError: The plant options differ from the case request.
+    """
+    rcfg = case.get("rcfg", {})
+    asked = DISS_PRESET_KEY in rcfg or any(key in rcfg for key in AUG_OPTION_KEYS)
+    if asked is not plant.aug_requested:
+        raise RuntimeError("KPlant dissipation request mismatch")
+    if asked:
+        options, _ = expand_diss_options(rcfg)
+        if plant.aug["options"] != options or plant.aug["preset"] != rcfg.get(DISS_PRESET_KEY):
+            raise RuntimeError("KPlant dissipation options differ from the request")
 
 
 def td_one(case):
@@ -514,6 +725,11 @@ def td_one(case):
         want = case.get("rcfg", {}).get("ktcr_rel_kn")
         if (want is None) != (pl.ktcr_rel is None) or (want is not None and abs(pl.ktcr_rel - want) > 1e-12):
             raise RuntimeError("crawler kt override mismatch")
+        check_kplant_aug(pl, case)
+        if pl.aug_requested:  # keys only with a K-2 dissipation request (I-9)
+            out["plant_aug"] = pl.aug_record()
+            out["valve_open_fraction_touch_to_lift"] = pl.valve_open_fraction(
+                out.get("t_touch_s"), out.get("t_crawler_liftoff_s"))
         S = out["_series"]["S"]
         smot = np.asarray(S["x"]) + np.asarray(S["Ftrue"]) / pl.ko[None, :]
         out["s_motor_max_mm"] = (smot.max(axis=0) * 1e3).round(2).tolist()

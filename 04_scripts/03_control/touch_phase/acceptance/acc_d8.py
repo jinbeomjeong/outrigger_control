@@ -16,6 +16,17 @@ D8x mode (``06_analysis/02_control/d8x/d8x_rules.md`` 3 R-a, 9.2 item 3), with `
   ``angles_deg``, ``k1_order_gate``, ``controller_tag``, ``module_files_sha256`` and the ``d8x`` block
   (``d8x_record.run_metrics``); the meta adds the run identity at the start and the end (rules I-1).
   Without ``--points`` nothing of this applies (the run is as before).
+
+K-2 (``06_analysis/02_control/k2/k2_touch_creep_rules.md`` 9.1-3), D8x mode only, each option absent = as before:
+  --k2 off|on        every worker sets the K-2 TOUCH creep latch (``d8x_record.install_touch_creep``, both arms
+                     explicitly)
+  --aug <arm>        KPlant dissipation arm H0 | L1eq | L1eq_fs | L1eq_zm | AUG | AUG_crc2 | AUG_eps
+                     (``case["rcfg"]["diss_preset"]``, ``k2_dyn_spec.md``)
+  --keys-file <txt>  run only these case ids (one per line; V-3 273 keys)
+  --levels top       run only these auger levels (V-4)
+  With ``--k2`` or ``--aug`` every run adds the ``k2`` block (``04_scripts/03_control/k2/k2_record.py``:
+  ``touch_creep_latch``, latches, SH-1, SH-2, 5.3 values, I-9 ``aug`` identity and valve-open shares) and the meta
+  ``d8x.k2`` / ``d8x.aug``; the default output is ``ra_<k1>[_k2<k2>][_aug<arm>].json``.
 """
 from __future__ import annotations
 
@@ -32,6 +43,12 @@ REPO_ROOT = HERE.parents[3]
 D8X_DIR = REPO_ROOT / "04_scripts" / "03_control" / "d8x"
 D8X_ENV = "ACC_D8X"
 D8X_K1_ENV = "ACC_D8X_K1"
+D8X_K2_ENV = "ACC_D8X_K2"
+D8X_AUG_ENV = "ACC_D8X_AUG"
+"""K-2 arm (``off`` / ``on``) and dissipation arm of the workers; unset = not installed."""
+D8X_SERIES_ENV = "ACC_D8X_SERIES_DIR"
+"""K-2 runs: folder of the per-row 1 ms series (``--series-dir``, default ``<out stem>_series``)."""
+K2_DIR = REPO_ROOT / "04_scripts" / "03_control" / "k2"
 IS_D8X = "--points" in sys.argv[1:] or os.environ.get(D8X_ENV) == "1"
 if IS_D8X:  # before acc_common.install(): the preset as it is, this checkout by default
     os.environ[D8X_ENV] = "1"
@@ -57,8 +74,21 @@ _SERIES: dict = {}
 
 
 # ------------------------------------------------------------------------------------- D8x
-def _d8x_default_out(k1: str) -> Path:
-    return REPO_ROOT / "06_analysis" / "02_control" / "d8x" / "ra" / f"ra_{k1}.json"
+def _d8x_default_out(k1: str, k2: str | None = None, aug: str | None = None) -> Path:
+    name = f"ra_{k1}" + ("" if k2 is None else f"_k2{k2}") + ("" if aug is None else f"_aug{aug}")
+    return REPO_ROOT / "06_analysis" / "02_control" / "d8x" / "ra" / f"{name}.json"
+
+
+def _k2_module():
+    if str(K2_DIR) not in sys.path:
+        sys.path.insert(0, str(K2_DIR))
+    import k2_record
+
+    return k2_record
+
+
+def _is_k2_run() -> bool:
+    return bool(os.environ.get(D8X_K2_ENV) or os.environ.get(D8X_AUG_ENV))
 
 
 def _record_module():
@@ -175,10 +205,42 @@ def _d8x_fields(run: dict, adapter, c2py) -> dict:
         t_ready_s=adapter.t_ready_first, events=record.controller_events(adapter.controller),
         max_moving_bar=run.get("max_pressure_bar"), stroke_max_m=float(stroke.max()))
     files = record.repo_module_files(REPO_ROOT)
-    return {"k1_order_gate": record.effective_k1(adapter.controller),
-            "liftoff_slow_enabled": record.liftoff_slow_enabled(adapter.controller),
-            "controller_tag": record.preset_controller_tag(adapter.controller),
-            "module_files_sha256": record.files_digest(files), "module_files": files, "d8x": metrics}
+    fields = {"k1_order_gate": record.effective_k1(adapter.controller),
+              "liftoff_slow_enabled": record.liftoff_slow_enabled(adapter.controller),
+              "controller_tag": record.preset_controller_tag(adapter.controller),
+              "module_files_sha256": record.files_digest(files), "module_files": files, "d8x": metrics}
+    if _is_k2_run():  # keys only with --k2 / --aug (names: k2_recount DEFAULT_FIELDS harness_row)
+        k2_record = _k2_module()
+        aug = os.environ.get(D8X_AUG_ENV) or None
+        series_dir = Path(os.environ[D8X_SERIES_ENV])
+        series_dir.mkdir(parents=True, exist_ok=True)
+        series_file = k2_record.series_file_name(run["id"])
+        fields["touch_creep_latch"] = record.effective_touch_creep(adapter.controller)
+        fields["series_file"] = series_file
+        fields["k2"] = k2_record.k2_fields(plant, adapter.controller, metrics, aug_arm=aug,
+                                           kplant_class=c2py.td2.rsb.KPlant,
+                                           series_path=series_dir / series_file)
+        if aug is not None:
+            fields["aug_arm"] = aug
+            fields["is_kplant"] = fields["k2"]["aug"]["is_kplant"]
+    return fields
+
+
+def _with_k2_arms(case: dict, c2py) -> dict:
+    """Install the K-2 arm and the recorders in this worker; the case with the dissipation arm."""
+    record = _record_module()
+    k2_record = _k2_module()
+    k2 = os.environ.get(D8X_K2_ENV)
+    if k2:
+        record.install_touch_creep(k2_record.k2_arm_is_on(k2))
+    k2_record.install_recorders(c2py.rmf.FlexPlant, c2py.HarnessAdapter)
+    k2_record.reset_recorders()
+    aug = os.environ.get(D8X_AUG_ENV)
+    if not aug:
+        return case
+    case = dict(case)
+    case["rcfg"] = dict(case["rcfg"], diss_preset=k2_record.aug_preset(aug))
+    return case
 
 
 # ------------------------------------------------------------------------------------- runs
@@ -192,6 +254,8 @@ def run_one(case: dict) -> dict:
             record = _record_module()
             record.install_k1_order_gate(record.k1_arm_is_on(os.environ.get(D8X_K1_ENV)))
             _install_series_capture(c2py)
+            if _is_k2_run():
+                case = _with_k2_arms(case, c2py)
         c2py.rcr.SensorsS = c2py.traces.RecordingSensors
         c2py.rpt.C2RA = c2py.HarnessAdapter
         case["rcfg"]["ca_over"] = dict(case["rcfg"]["ca_over"], **c2py.HARNESS_LOOP_OFF)
@@ -229,9 +293,19 @@ def _parse_args() -> argparse.Namespace:
     ap.add_argument("--points", type=Path, default=None, help="D8x point file (rules 1.2); D8x mode")
     ap.add_argument("--stages", default=None, help="D8x: comma list of main, robust, kt (default all three)")
     ap.add_argument("--k1", default=None, choices=("off", "on"), help="D8x: R4c30 order gate of this arm, required (rev3 2)")
+    ap.add_argument("--k2", default=None, choices=("off", "on"),
+                    help="D8x: K-2 TOUCH creep latch of this arm (k2 rules 9.1-3); absent = not installed")
+    ap.add_argument("--aug", default=None, choices=("H0", "L1eq", "L1eq_fs", "L1eq_zm", "AUG", "AUG_crc2", "AUG_eps"),
+                    help="D8x: KPlant dissipation arm (k2_dyn_spec.md); absent = KPlant as before")
+    ap.add_argument("--keys-file", dest="keys_file", type=Path, default=None,
+                    help="D8x: run only the case ids of this file (one per line)")
+    ap.add_argument("--levels", default=None, help="D8x: comma list of auger levels to run (V-4: top)")
+    ap.add_argument("--series-dir", dest="series_dir", type=Path, default=None,
+                    help="D8x with --k2 / --aug: folder of the per-row 1 ms series (default <out stem>_series)")
     args = ap.parse_args()
-    if args.points is None and (args.stages is not None or args.k1 is not None):
-        ap.error("--stages and --k1 belong to the D8x mode (--points)")
+    d8x_only = (args.stages, args.k1, args.k2, args.aug, args.keys_file, args.levels, args.series_dir)
+    if args.points is None and any(value is not None for value in d8x_only):
+        ap.error("--stages, --k1, --k2, --aug, --keys-file and --levels belong to the D8x mode (--points)")
     if args.points is not None:
         args.stages = tuple(s for s in (args.stages or ",".join(D8X_STAGES)).split(",") if s)
         unknown = sorted(set(args.stages) - set(D8X_STAGES))
@@ -239,8 +313,36 @@ def _parse_args() -> argparse.Namespace:
             ap.error(f"--stages: unknown {unknown}, choose from {D8X_STAGES}")
         if args.k1 is None:  # rev3 2: the K1 request is explicit on every D8x run
             ap.error("D8x mode needs --k1 off|on (d8x_rules_rev3.md 2)")
-        args.out = args.out or _d8x_default_out(args.k1)
+        if os.environ.get(acc_common.K2_ENV):
+            ap.error(f"D8x mode takes the K-2 arm from --k2, not from {acc_common.K2_ENV}")
+        if args.levels is not None:
+            args.levels = tuple(level for level in args.levels.split(",") if level)
+            unknown = sorted(set(args.levels) - set(_record_module().LEVELS))
+            if unknown or not args.levels:
+                ap.error(f"--levels: unknown {unknown}, choose from {_record_module().LEVELS}")
+        args.out = args.out or _d8x_default_out(args.k1, args.k2, args.aug)
+        if args.series_dir is None and (args.k2 is not None or args.aug is not None):
+            args.series_dir = args.out.with_name(args.out.stem + "_series")
     return args
+
+
+def _read_keys(path: Path) -> list[str]:
+    return [line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def _select_cases(cases: list[dict], args: argparse.Namespace) -> list[dict]:
+    """``--levels`` and ``--keys-file`` (every listed key must be a case of the stages)."""
+    if args.levels is not None:
+        cases = [case for case in cases if case["d8x"]["level"] in args.levels]
+    if args.keys_file is not None:
+        keys = _read_keys(args.keys_file)
+        unknown = sorted(set(keys) - {case["id"] for case in cases})
+        if unknown:
+            raise SystemExit(f"--keys-file: {len(unknown)} keys are not cases of these stages / levels, "
+                             f"e.g. {unknown[:3]}")
+        wanted = set(keys)
+        cases = [case for case in cases if case["id"] in wanted]
+    return cases
 
 
 def _load_cases(args: argparse.Namespace) -> list[dict]:
@@ -253,6 +355,7 @@ def _load_cases(args: argparse.Namespace) -> list[dict]:
     else:
         record = _record_module()
         cases = d8x_cases(record.ra_point_angles(record.load_points(args.points)), args.stages)
+        cases = _select_cases(cases, args)
     if args.limit:
         cases = cases[:: max(1, len(cases) // args.limit)][:args.limit]
     return cases
@@ -263,8 +366,29 @@ def _d8x_meta(args: argparse.Namespace, identity_start: dict) -> dict:
     return {"d8x": {"rules": "06_analysis/02_control/d8x/d8x_rules.md 3 R-a",
                     "points_file": str(args.points), "points_sha256": record.text_sha256(args.points),
                     "stages": list(args.stages), "k1": args.k1, "limit": args.limit,
+                    **_k2_meta(args),
                     "rules_seals": record.rules_seals(),  # rev6 4
                     "identity_start": identity_start, "identity_end": record.run_identity(REPO_ROOT)}}
+
+
+def _k2_meta(args: argparse.Namespace) -> dict:
+    """Meta keys of the K-2 options, each only when given (an old run keeps its meta)."""
+    meta = {}
+    if args.k2 is not None:
+        meta["k2"] = args.k2
+    if args.aug is not None:
+        meta["aug"] = {"arm": args.aug, "diss_preset": _k2_module().aug_preset(args.aug)}
+    if args.levels is not None:
+        meta["levels"] = list(args.levels)
+    if args.series_dir is not None:
+        meta["series_dir"] = str(args.series_dir)
+    if args.keys_file is not None:
+        import hashlib
+
+        keys = _read_keys(args.keys_file)
+        meta["keys_file"] = {"path": str(args.keys_file), "n": len(keys),
+                             "sha256_sorted": hashlib.sha256("\n".join(sorted(keys)).encode("utf-8")).hexdigest()}
+    return meta
 
 
 def _pop_module_lists(runs: list[dict]) -> dict[str, list[str]]:
@@ -281,6 +405,9 @@ def main() -> None:
     args = _parse_args()
     if args.points is not None:
         os.environ[D8X_K1_ENV] = args.k1  # inherited by the spawned workers
+        for name, value in ((D8X_K2_ENV, args.k2), (D8X_AUG_ENV, args.aug), (D8X_SERIES_ENV, args.series_dir)):
+            if value is not None:
+                os.environ[name] = str(value)
     identity_start = _record_module().run_identity(REPO_ROOT) if IS_D8X else None
     cases = _load_cases(args)
     partial = args.out.with_name(args.out.name + ".partial.jsonl")
