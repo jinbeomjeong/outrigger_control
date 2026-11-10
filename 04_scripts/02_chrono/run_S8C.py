@@ -1992,6 +1992,7 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
     (case_dir / "probe_history.json").write_text(json.dumps(probes, indent=1, default=str),
                                                  "utf-8")
     (case_dir / "controller_events.json").write_text(json.dumps(events, indent=1), "utf-8")
+    write_las_events(case_dir, c2.events)
     s_motor = np.asarray(res.record.arrays["s_motor"])
     stroke_hi = float(params.legs[0].extension_range_m[1])
     ctl_meta = c2.meta()
@@ -2254,6 +2255,23 @@ def ml_meta(base: MLBase, model, *, event: str | None, branch_seal_f_N=None,
     if episode_id is not None:
         out["episode_id"] = episode_id
     return out
+
+
+LAS_EVENTS_FILE = "las_events.json"
+"""LAS rules rev4c 2: the record-only LAS-b events and FAULT names of the run (``las_h7``)."""
+
+
+def write_las_events(case_dir: Path, events) -> Path:
+    """``las_events.json`` of a finished run (``las_h7.las_events_record`` of the controller
+    events; read after the run, so the commands and the result do not change)."""
+    coupled_dir = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+    if str(coupled_dir) not in sys.path:
+        sys.path.insert(0, str(coupled_dir))
+    import las_h7
+
+    path = case_dir / LAS_EVENTS_FILE
+    path.write_text(json.dumps(las_h7.las_events_record(events), indent=1), "utf-8")
+    return path
 
 
 def _write_controller_files(case_dir: Path, c2) -> None:

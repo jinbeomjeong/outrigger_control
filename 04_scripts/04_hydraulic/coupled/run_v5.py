@@ -283,6 +283,9 @@ def _t4h_request(job: dict, flow, options) -> dict | None:
     meta = {"job": {k: v for k, v in job.items() if k not in RUNTIME_JOB_KEYS},
             "flow_setting": flow.to_dict(),
             "hydraulic_options": None if options is None else options.to_dict()}
+    # No controller exists yet: the request carries the options' tag only. The record is
+    # written by verdict_runs._finish, which adds _LAS from the run's own config
+    # (_meta_with_controller_tag), so a LAS-b run's T4h never keeps the pre-switch tag.
     tag = controller_tag(options)
     if tag is not None:  # criteria revision 8 (key only with ③ on)
         meta["controller_tag"] = tag

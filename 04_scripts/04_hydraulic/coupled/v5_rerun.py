@@ -415,12 +415,11 @@ def observe_rod_readings(controller) -> None:
 def j_p3_status(tag: str, bound_check: dict | None, rod_reading: bool,
                 head_only_declared: bool) -> str:
     """J-P3 of one run (v5 criteria revision 8 / 9): ``pass`` / ``H-7`` / ``no_rod_reading`` /
-    ``setting_defect`` with the ③ bound (a tag of ``v5_options.EXTEND_START_TAGS``:
-    ``final_C4G2_P3`` or, since the LAS-b switch, ``final_C4G2_P3_LAS``), else
-    ``not_applicable``."""
-    from outrigger_sim.hydraulics.v5_options import EXTEND_START_TAGS
+    ``setting_defect`` with the ③ bound (``v5_options.is_extend_start_tag``: base tag
+    ``final_C4G2_P3`` with any LAS-b / K1 suffixes), else ``not_applicable``."""
+    from outrigger_sim.hydraulics.v5_options import is_extend_start_tag
 
-    if tag not in EXTEND_START_TAGS:
+    if not is_extend_start_tag(tag):
         return J_P3_NOT_APPLICABLE
     from outrigger_sim.control.extend_start_bound import (
         J_P3_JUDGED,
@@ -442,6 +441,18 @@ def fallback_event_count(controller) -> int:
     """Number of ``WARN_ROD_PRESSURE_FALLBACK:<leg>`` events of the run's controller."""
     events = getattr(controller, "events", None) or []
     return sum(1 for event in events if event.name.startswith(FALLBACK_EVENT_PREFIX))
+
+
+LAS_EVENTS_KEY = "las_events"
+"""LAS rules rev4b 3: record-only LAS-b events and FAULT names of the run (``las_h7``)."""
+
+
+def las_events_of(controller) -> dict:
+    """``las_h7.las_events_record`` of the run's controller events (read after the run; the
+    commands and their hash are the screen's, so this record cannot change them)."""
+    import las_h7
+
+    return las_h7.las_events_record(getattr(controller, "events", None) or [])
 
 
 def _lift_time_s(plant, period: dict) -> float | None:
@@ -490,7 +501,8 @@ def run_record(plant, controller, *, harness_commands_sha256: str | None,
                   None if not period or not len(period["t"])
                   else verdict_runs._command_digest(period["command"])),
               "t_lift_s": t_lift_s,
-              "rod_pressure_fallback_events": fallback_event_count(controller)}
+              "rod_pressure_fallback_events": fallback_event_count(controller),
+              LAS_EVENTS_KEY: las_events_of(controller)}
     if bound_check is not None:
         record["extend_bound_check"] = bound_check
     if hydraulics:

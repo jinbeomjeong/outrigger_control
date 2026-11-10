@@ -17,12 +17,23 @@ LOC - t_off, then the smaller largest READY increase, then closeness to b0
 (tie members first, then the others by worst-key F).
 Stops (rules 5): H-1 T-0 hash differs, H-2 error lines (retry the key once), H-3 no T-1
 candidate (LAS-a C1 / C4 / C5 reported with it), H-4 the variant fails T-2 (or C6).
+Audit fixes (2026-11-08): the judge starts only when the sealed original, rev1 and rev2 (and
+rev3 / rev4 / the rev3 key list when present) are the sealed texts; a T-1 variant counts only
+with the key set of appendix A, T-2 only with appendix B (H-R-A 136 + H-R-0 48); C3 fails when
+either line has no ``event_names``; C5 fails when either stroke is None (READY: a baseline READY
+the run lost fails, both None pass).
+T-3 (sealed ``las_targeted_rules_rev3.md`` 3 / 4, rev4 1 #1) is judged by ``las_t3_judge.py``
+(``--stage T-3``).
 
 Usage (python-dev or dynamics-dev, project root):
-  python -I -B 04_scripts/04_hydraulic/coupled/las_judge.py T-0|T-1|T-2 <jsonl>
-      [--baseline <d1.jsonl>] [--t1 <las_T1.jsonl>] [--candidate NAME] [--out <md>]
-The last stdout line is JSON. Exit codes: 0 judged without a stop, 1 a stop (H-1 .. H-4),
-2 input error.
+  python -I -B 04_scripts/04_hydraulic/coupled/las_judge.py [--stage] T-0|T-1|T-2 <jsonl>
+      [--baseline <d1.jsonl>] [--rules <las_targeted_rules.md>] [--t1 <las_T1.jsonl>]
+      [--candidate NAME] [--out <md>]
+  python -I -B 04_scripts/04_hydraulic/coupled/las_judge.py --stage T-3 <las_T3.jsonl>
+      --r0 <las_T3_R0.jsonl> [--baseline <d1.jsonl>] [--keys <rev3 keys json>]
+      [--out <md>] [--json-out <json>]   (outputs are new files only)
+The last stdout line is JSON. Exit codes T-0 .. T-2: 0 judged without a stop, 1 a stop
+(H-1 .. H-4), 2 input error (a seal mismatch included); T-3: ``las_t3_judge`` (0 / 1 / 2).
 """
 from __future__ import annotations
 
@@ -33,6 +44,8 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
+if str(HERE) not in sys.path:  # python -I leaves the script folder out (las_targeted, T-3)
+    sys.path.insert(0, str(HERE))
 BASELINE_PATH = ROOT / "06_analysis" / "03_hydraulic" / "coupled" / "v5" / "d1.jsonl"
 
 F_MIN_N = 9414.589
@@ -49,6 +62,7 @@ LASA = "LASa"
 CURRENT = "current"
 T1_KEY_COUNT = 8
 T0_KEY_COUNT = 2
+T2_KEY_COUNT = 184
 
 
 # ------------------------------------------------------------------------------- input
@@ -98,8 +112,12 @@ def error_keys(lines: list[dict]) -> list[str]:
 
 
 # ------------------------------------------------------------------------------- criteria
-def _fault_names(record: dict) -> set[str]:
-    return {name for name in (record.get("event_names") or {}) if name.startswith("FAULT")}
+def _fault_names(record: dict) -> set[str] | None:
+    """``FAULT*`` event names of a line; None when the line has no event record."""
+    names = record.get("event_names")
+    if names is None:
+        return None
+    return {name for name in names if name.startswith("FAULT")}
 
 
 def c2_problem(new: dict, base: dict) -> str | None:
@@ -114,7 +132,12 @@ def c2_problem(new: dict, base: dict) -> str | None:
 
 
 def c3_problem(new: dict, base: dict) -> str | None:
-    extra = _fault_names(new) - _fault_names(base)
+    """C3; a line without ``event_names`` fails (nothing shows the FAULT set kept)."""
+    new_faults, base_faults = _fault_names(new), _fault_names(base)
+    if new_faults is None or base_faults is None:
+        return (f"event_names missing (new {new_faults is not None}, "
+                f"baseline {base_faults is not None})")
+    extra = new_faults - base_faults
     return f"new FAULT {sorted(extra)}" if extra else None
 
 
@@ -133,18 +156,24 @@ def increase(new_value, base_value) -> float | None:
 
 
 def c5_problem(new: dict, base: dict) -> str | None:
+    """C5 of a key where the rule started. READY: a baseline READY the run lost fails, both
+    None pass; stroke: None on either side fails (audit 2026-11-08)."""
     if (new.get("las") or {}).get("start_t_s") is None:
         return None
     ready_new, ready_base = new["d1"]["t_ready_s"], base["d1"]["t_ready_s"]
-    if ready_new is None and ready_base is not None:
-        return "READY lost"
-    ready_up = increase(ready_new, ready_base)
-    stroke_up = increase(new["d1"]["stroke_max_m"], base["d1"]["stroke_max_m"])
+    stroke_new, stroke_base = new["d1"]["stroke_max_m"], base["d1"]["stroke_max_m"]
     problems = []
+    if ready_new is None and ready_base is not None:
+        problems.append("READY lost")
+    ready_up = increase(ready_new, ready_base)
     if ready_up is not None and ready_up > READY_INCREASE_LIMIT_S:
         problems.append(f"READY +{ready_up:.2f} s")
-    if stroke_up is not None and stroke_up > STROKE_INCREASE_LIMIT_M:
-        problems.append(f"stroke +{stroke_up * 1e3:.2f} mm")
+    if stroke_new is None or stroke_base is None:
+        problems.append(f"stroke missing (new {stroke_new}, baseline {stroke_base})")
+    else:
+        stroke_up = float(stroke_new) - float(stroke_base)
+        if stroke_up > STROKE_INCREASE_LIMIT_M:
+            problems.append(f"stroke +{stroke_up * 1e3:.2f} mm")
     return "; ".join(problems) or None
 
 
@@ -207,13 +236,29 @@ def _max_or_none(values) -> float | None:
     return max(finite) if finite else None
 
 
-def variant_summary(lines: dict[str, dict], baseline: dict[str, dict]) -> dict:
+def key_set_problem(lines: dict[str, dict], expected: set[str] | None,
+                    count: int) -> str | None:
+    """The keys of a variant against the sealed appendix (``expected``; without it, the count
+    only, as the synthetic tests)."""
+    if expected is None:
+        return None if len(lines) == count else f"{len(lines)} keys != {count}"
+    missing, extra = sorted(expected - set(lines)), sorted(set(lines) - expected)
+    if not missing and not extra:
+        return None
+    return f"key set != sealed appendix: missing {missing[:3]} ({len(missing)}), " \
+           f"extra {extra[:3]} ({len(extra)})"
+
+
+def variant_summary(lines: dict[str, dict], baseline: dict[str, dict],
+                    expected_keys: set[str] | None = None) -> dict:
     """C1 .. C5 of one T-1 variant and the ranking numbers."""
     table = key_table(lines, baseline)
     problems = {"C1": c1_problems(lines),
                 **keywise_problems(lines, baseline, ("C2", "C3", "C4", "C5"))}
     f_values = [row["F_N"] for row in table]
-    return {"keys": len(lines), "criteria": {name: not found for name, found in problems.items()},
+    return {"keys": len(lines),
+            "key_set_problem": key_set_problem(lines, expected_keys, T1_KEY_COUNT),
+            "criteria": {name: not found for name, found in problems.items()},
             "problems": problems,
             "worst_F_N": None if None in f_values or not f_values else min(f_values),
             "max_loc_minus_t_off_s": _max_or_none(row["loc_minus_t_off_s"] for row in table),
@@ -232,8 +277,8 @@ def _tie_order(name: str, summary: dict) -> tuple:
 def rank_variants(summaries: dict[str, dict]) -> list[str]:
     """Rules 3.2 order of the variants that meet C1 .. C5 (first = selected)."""
     passing = {name: s for name, s in summaries.items()
-               if name in LASB_VARIANTS and s["keys"] == T1_KEY_COUNT
-               and all(s["criteria"].values())}
+               if name in LASB_VARIANTS and s.get("key_set_problem") is None
+               and s["keys"] == T1_KEY_COUNT and all(s["criteria"].values())}
     if not passing:
         return []
     best_F = max(s["worst_F_N"] for s in passing.values())
@@ -259,16 +304,19 @@ def judge_t0(lines: list[dict], baseline: dict[str, dict]) -> dict:
                  f"(2 expected)"}
 
 
-def judge_t1(lines: list[dict], baseline: dict[str, dict]) -> dict:
+def judge_t1(lines: list[dict], baseline: dict[str, dict],
+             expected_keys: set[str] | None = None) -> dict:
+    """T-1; ``expected_keys`` = the keys of the sealed appendix A (audit 2026-11-08)."""
     groups = by_candidate(lines)
-    summaries = {name: variant_summary(group, baseline) for name, group in groups.items()
-                 if name != CURRENT}
+    summaries = {name: variant_summary(group, baseline, expected_keys)
+                 for name, group in groups.items() if name != CURRENT}
     ranking = rank_variants(summaries)
     out = {"stage": "T-1", "summaries": summaries, "ranking": ranking,
            "selected": ranking[0] if ranking else None,
            "runner_up": ranking[1] if len(ranking) > 1 else None}
     incomplete = [name for name in LASB_VARIANTS
-                  if summaries.get(name, {}).get("keys") != T1_KEY_COUNT]
+                  if name not in summaries or summaries[name]["keys"] != T1_KEY_COUNT
+                  or summaries[name]["key_set_problem"] is not None]
     if not ranking:
         lasa = summaries.get(LASA)
         out["stop"] = "H-3"
@@ -285,8 +333,10 @@ def judge_t1(lines: list[dict], baseline: dict[str, dict]) -> dict:
 
 
 def judge_t2(lines: list[dict], baseline: dict[str, dict], t1_lines: list[dict] | None,
-             candidate: str | None) -> dict:
-    """C2 .. C6 of one variant on T-2 (and on its T-1 lines when given)."""
+             candidate: str | None, expected_keys: set[str] | None = None,
+             t1_expected_keys: set[str] | None = None) -> dict:
+    """C2 .. C6 of one variant on T-2 (and on its T-1 lines when given); ``expected_keys`` =
+    the keys of the sealed appendix B (H-R-A 136 + H-R-0 48), ``t1_expected_keys`` of A."""
     groups = by_candidate(lines)
     name = candidate or (next(iter(groups)) if len(groups) == 1 else None)
     if name is None or name not in groups:
@@ -298,7 +348,7 @@ def judge_t2(lines: list[dict], baseline: dict[str, dict], t1_lines: list[dict] 
     if t1_lines is not None:
         t1 = by_candidate(t1_lines).get(name, {})
         t1_problems = keywise_problems(t1, baseline, ("C2", "C3", "C4", "C5"))
-        t1_judgement = judge_t1(t1_lines, baseline)
+        t1_judgement = judge_t1(t1_lines, baseline, t1_expected_keys)
         ranking = t1_judgement["ranking"]
     merged = {crit: {**problems.get(crit, {}), **t1_problems.get(crit, {})}
               for crit in ("C2", "C3", "C4", "C5", "C6")}
@@ -306,8 +356,10 @@ def judge_t2(lines: list[dict], baseline: dict[str, dict], t1_lines: list[dict] 
     rigid = [key for key, record in t2.items() if record["d1"].get("group") == RIGID_GROUP]
     started = sorted(key for key, record in t2.items()
                      if (record.get("las") or {}).get("start_t_s") is not None)
-    is_adopted = not failed and len(t2) == 184
+    key_problem = key_set_problem(t2, expected_keys, T2_KEY_COUNT)
+    is_adopted = not failed and key_problem is None
     out = {"stage": "T-2", "candidate": name, "keys": len(t2), "rigid_keys": len(rigid),
+           "key_set_problem": key_problem,
            "started_keys": started, "criteria": {crit: not merged[crit] for crit in merged},
            "failed_keys": failed, "adopted": name if is_adopted else None}
     if is_adopted:
@@ -321,7 +373,7 @@ def judge_t2(lines: list[dict], baseline: dict[str, dict], t1_lines: list[dict] 
                else None,
                reason=("H-4: " + ", ".join(f"{crit} {len(keys)} keys"
                                           for crit, keys in failed.items())
-                       if failed else f"H-4: {len(t2)} of 184 keys"))
+                       if failed else f"H-4: {key_problem}"))
     return out
 
 
@@ -343,6 +395,8 @@ def report_lines(result: dict) -> list[str]:
             lines.append(f"## {name}: worst F {_fmt(summary['worst_F_N'], 1e-3)} kN, "
                          f"max LOC-t_off {_fmt(summary['max_loc_minus_t_off_s'], 1, 2)} s, "
                          f"max READY+ {_fmt(summary['max_ready_up_s'], 1, 2)} s; {marks}")
+            if summary.get("key_set_problem"):
+                lines.append(f"- keys: {summary['key_set_problem']}")
             lines.append("| key | verdict (base) | F kN (base) | LOC-t_off s | READY+ s | "
                          "stroke+ mm | start s | end |")
             lines.append("|---|---|---|---|---|---|---|---|")
@@ -385,8 +439,28 @@ def final_json(result: dict) -> dict:
     return out
 
 
+def sealed_key_sets(rules_path: Path) -> dict[str, set[str]]:
+    """``T-1`` / ``T-2`` -> the keys of the sealed appendix A / B (``T-0``: the rules table)."""
+    import las_targeted
+
+    return {stage: {entry["key"] for entry in entries}
+            for stage, entries in las_targeted.sealed_appendix(rules_path).items()}
+
+
 def judge(stage: str, path: Path, baseline_path: Path, t1_path: Path | None,
-          candidate: str | None) -> dict:
+          candidate: str | None, rules_path: Path | None = None) -> dict:
+    """T-0 .. T-2 after the seal check (original, rev1, rev2 and the later addenda present).
+
+    Raises:
+        ValueError: A sealed file is not its sealed text, or a key without a baseline line.
+    """
+    import las_targeted
+
+    rules_path = las_targeted.RULES_PATH if rules_path is None else rules_path
+    problems = las_targeted.targeted_seal_problems(rules_path.parent)
+    if problems:
+        raise ValueError(f"sealed rules: {problems}")
+    sealed = sealed_key_sets(rules_path)
     lines = read_lines(path)
     baseline = load_baseline(baseline_path)
     unknown = sorted({line_key(r) for r in lines if "error" not in r} - set(baseline))
@@ -395,10 +469,10 @@ def judge(stage: str, path: Path, baseline_path: Path, t1_path: Path | None,
     if stage == "T-0":
         result = judge_t0(lines, baseline)
     elif stage == "T-1":
-        result = judge_t1(lines, baseline)
+        result = judge_t1(lines, baseline, sealed["T-1"])
     else:
         result = judge_t2(lines, baseline, None if t1_path is None else read_lines(t1_path),
-                          candidate)
+                          candidate, sealed["T-2"], sealed["T-1"])
     errors = error_keys(lines)
     result["errors"] = errors
     if errors and result.get("stop") is None:
@@ -407,17 +481,41 @@ def judge(stage: str, path: Path, baseline_path: Path, t1_path: Path | None,
     return result
 
 
-def main(argv: list[str] | None = None) -> int:
+STAGES = ("T-0", "T-1", "T-2", "T-3")
+
+
+def _parse_args(argv: list[str] | None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("stage", choices=("T-0", "T-1", "T-2"))
+    parser.add_argument("stage", nargs="?", choices=STAGES, default=None)
     parser.add_argument("jsonl", type=Path)
+    parser.add_argument("--stage", dest="stage_option", choices=STAGES, default=None,
+                        help="the same as the positional stage")
     parser.add_argument("--baseline", type=Path, default=BASELINE_PATH)
+    parser.add_argument("--rules", type=Path, default=None, help="sealed original rules")
     parser.add_argument("--t1", type=Path, default=None, help="T-1 lines (T-2: C2 .. C5 too)")
     parser.add_argument("--candidate", default=None)
+    parser.add_argument("--r0", type=Path, default=None, help="T-3: the R-0 lines")
+    parser.add_argument("--keys", type=Path, default=None, help="T-3: the rev3 key list")
     parser.add_argument("--out", type=Path, default=None, help="Markdown report")
+    parser.add_argument("--json-out", type=Path, default=None, help="T-3: judge JSON")
     args = parser.parse_args(argv)
+    if None not in (args.stage, args.stage_option) and args.stage != args.stage_option:
+        parser.error(f"two stages given: {args.stage} and --stage {args.stage_option}")
+    args.stage = args.stage or args.stage_option
+    if args.stage is None:
+        parser.error("the stage is required")
+    return args
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = _parse_args(argv)
+    if args.stage == "T-3":
+        import las_t3_judge
+
+        return las_t3_judge.main_t3(args)
     try:
-        result = judge(args.stage, args.jsonl, args.baseline, args.t1, args.candidate)
+        result = judge(args.stage, args.jsonl, args.baseline, args.t1, args.candidate,
+                       args.rules)
     except (OSError, KeyError, ValueError, json.JSONDecodeError) as exc:
         print(json.dumps({"stage": args.stage, "error": repr(exc)}))
         return 2

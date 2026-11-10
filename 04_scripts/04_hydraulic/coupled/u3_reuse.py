@@ -211,7 +211,7 @@ def reused_record(plan_: Plan, job: dict, decision: Decision) -> dict:
     """The U-3 record of a key that reuses its D-1 run (the D-1 ``u3`` block and its v5 keys)."""
     import v5_rerun
 
-    from outrigger_sim.hydraulics.v5_options import EXTEND_START_TAGS
+    from outrigger_sim.hydraulics.v5_options import is_extend_start_tag
 
     line = plan_.lines[job["id"]]
     d1 = line["d1"]
@@ -232,7 +232,7 @@ def reused_record(plan_: Plan, job: dict, decision: Decision) -> dict:
     bound = (line.get("hydraulics_record") or {}).get("extend_bound_check")
     if bound is not None:
         v5["extend_bound_check"] = bound
-    if v5["controller_tag"] in EXTEND_START_TAGS:
+    if is_extend_start_tag(v5["controller_tag"]):
         # the D-1 worker refused a VB run whose preset rule was not the bound
         # (harness_hydraulics.check_last_extend_start); this code runs revision 4 only
         from outrigger_sim.control.extend_start_bound import EXTEND_START_REVISION

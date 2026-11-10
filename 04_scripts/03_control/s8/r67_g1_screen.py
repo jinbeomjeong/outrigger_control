@@ -382,6 +382,21 @@ def judge_event(rec, phases, events, crawler, t_ev, t_ready_back, ev, leg, ctrl,
 
 # --- jobs ----------------------------------------------------------------------------------------------------------
 
+LAS_EVENTS_KEY = "las_events"
+"""LAS rules rev4b 4: every screen run records its LAS-b events and FAULT names (``las_h7``)."""
+
+
+def las_events_of(ctrl) -> dict:
+    """``las_h7.las_events_record`` of a branch controller's events (prefix and branch: the
+    branch copy carries the prefix events). Read after the run; the commands are unchanged."""
+    coupled_dir = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+    if str(coupled_dir) not in sys.path:
+        sys.path.insert(0, str(coupled_dir))
+    import las_h7
+
+    return las_h7.las_events_record(getattr(ctrl, "events", None) or [])
+
+
 def screen_job(key):
     _, level, fs, timing, leg_name = key.split("|")
     fs = float(fs)
@@ -423,6 +438,7 @@ def screen_job(key):
             if candidate_record is not None:  # spec 427.11: only with R67_CANDIDATE
                 j["candidate_record"] = candidate_record
             j.update(v5_branch_record(pl, ct))
+            j[LAS_EVENTS_KEY] = las_events_of(ct)  # record only, after the run (rules rev4b 4)
             res["runs"].append(j)
     res["wall_s"] = round(time.perf_counter() - t0, 1)
     return res

@@ -45,7 +45,9 @@ EXTEND_START_LAS_K1_CONTROLLER_TAG = EXTEND_START_LAS_CONTROLLER_TAG + ORDER_GAT
 """``final_C4G2_P3_LAS_K1``: the VB / LS controller since the K1 switch."""
 EXTEND_START_TAGS = (EXTEND_START_CONTROLLER_TAG, EXTEND_START_LAS_CONTROLLER_TAG,
                      EXTEND_START_LAS_K1_CONTROLLER_TAG)
-"""Tags of a run with the ③ start bound (before LAS-b, LAS-b, LAS-b + K1)."""
+"""Tags of a run with the ③ start bound (before LAS-b, LAS-b, LAS-b + K1). A list only: the ③
+judgement uses :func:`is_extend_start_tag` (a set misses suffix combinations such as
+``final_C4G2_P3_K1``, post-switch audit W-1)."""
 LOCK_SPEED_EPS_M_S = 1.0e-6
 """``|u_c| <=`` this = a zero command; same value as YAML ``actuator.rod_side.lock_eps_m_s``."""
 DEFAULT_VOLUME_SCALE = 1.0
@@ -429,6 +431,23 @@ def is_order_gate_tag(tag: str | None) -> bool:
     return tag is not None and tag.endswith(ORDER_GATE_TAG_SUFFIX)
 
 
+def switch_base_tag(tag: str) -> str:
+    """``tag`` without the switch suffixes :func:`with_switch_tags` adds (a trailing ``_K1``,
+    then a trailing ``_LAS``): ``final_C4G2_P3_LAS_K1`` / ``final_C4G2_P3_K1`` ->
+    ``final_C4G2_P3``, ``ABL_LAS`` -> ``ABL``."""
+    base, _ = _split_order_gate_suffix(tag)
+    if base.endswith(LIFTOFF_SLOW_TAG_SUFFIX):
+        base = base[: -len(LIFTOFF_SLOW_TAG_SUFFIX)]
+    return base
+
+
+def is_extend_start_tag(tag: str | None) -> bool:
+    """A recorded tag of a run with the ③ start bound: its base tag (:func:`switch_base_tag`)
+    is :data:`EXTEND_START_CONTROLLER_TAG`, whatever the LAS-b and K1 switches were
+    (post-switch audit W-1, user decision (a) 2026-11-10). False for ``None``."""
+    return tag is not None and switch_base_tag(tag) == EXTEND_START_CONTROLLER_TAG
+
+
 def with_switch_tags(tag: str | None, config: Any | None) -> str | None:
     """``tag`` with the suffixes of the switches ``config`` has on: ``_LAS`` (LAS-b), then
     ``_K1`` (order gate). Unchanged (possibly None) when both are off."""
@@ -481,12 +500,14 @@ __all__ = [
     "LAS_K1_CONTROLLER_TAG",
     "LIFTOFF_SLOW_TAG_SUFFIX",
     "ORDER_GATE_TAG_SUFFIX",
+    "is_extend_start_tag",
     "is_liftoff_slow_on",
     "is_liftoff_slow_tag",
     "is_order_gate_on",
     "is_order_gate_tag",
     "with_liftoff_slow_tag",
     "with_order_gate_tag",
+    "switch_base_tag",
     "with_switch_tags",
     "LOCK_SPEED_EPS_M_S",
     "apply_lock_window",

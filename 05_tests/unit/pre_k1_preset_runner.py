@@ -4,8 +4,11 @@ The switch (``las_k1_rules_adopt.md`` 9.1, after the K1 re-measure judgement
 ``las_k1_rem_judgement.md``) turned ``flat_soil_margin_order_gate`` (the R4c30 order gate) on in
 ``C2Config.with_10hz_d1``. This runner gives the preset the old default for that keyword only
 and then calls the script's ``main()``, so every other preset keyword stays as it is now: it
-reproduces the LAS-b results before the switch (tags ``final_C4G2_LAS`` /
-``final_C4G2_P3_LAS`` / ``ABL_LAS``, e.g. the K1off lines of ``v5/las/k1/``). Results older than
+reproduces only the gate-off LAS-b results before the switch (tags ``final_C4G2_LAS`` /
+``final_C4G2_P3_LAS`` / ``ABL_LAS``, e.g. the K1off lines of ``v5/las/k1/``). The gate-on
+diagnostic rows run before the switch under those tags (S-Ch gateon, REM R7 / R8 / F1 / F2) are
+reproduced only by a checkout of their result's ``git_at_start`` commit: since the switch the
+old tags check the gate off (post-switch audit R-2). Results older than
 the LAS-b switch need ``pre_las_preset_runner.py``, older ones ``pre_c4g2_preset_runner.py`` or
 ``pre_switch_preset_runner.py`` (all keep the K1 gate off as well).
 

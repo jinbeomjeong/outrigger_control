@@ -238,6 +238,62 @@ def test_las_off_preset_keeps_las_b_off_in_abl_and_abl28() -> None:
         assert config.liftoff_approach_slow.enable is False, name
 
 
+# ------------------------------------------------- ABL and the K1 order gate (audit R-7)
+PRE_K1_RUNNER = Path(__file__).with_name("pre_k1_preset_runner.py")
+
+
+class _GateOffPresetHarness:
+    """Stand-in for ``cl``: the R8 preset before the K1 switch (gate off, LAS-b on)."""
+
+    @staticmethod
+    def preset_config(contact, with_imu_samples, with_reapproach=True):
+        del contact, with_imu_samples, with_reapproach
+        return c2.C2Config().with_10hz_d1(flat_soil_margin_order_gate=False)
+
+
+@pytest.mark.parametrize("name", ["ABL", "ABL28"])
+def test_ablation_keeps_the_gate_flag_with_r4_off(name: str) -> None:
+    """The ABL configs differ in the gate flag only, and R4 is off in both (so the gate never
+    decides anything, ``c2.py`` R4 target check)."""
+    gate_on = b5._c2_config(_PresetHarness, c2, name, {})
+    gate_off = b5._c2_config(_GateOffPresetHarness, c2, name, {})
+    assert gate_on.slope_clearance_margin.flat_soil_margin_order_gate is True
+    assert gate_off.slope_clearance_margin.flat_soil_margin_order_gate is False
+    assert gate_on.slope_clearance_margin.flat_soil_margin_m == 0.0
+    margin_off = replace(gate_on.slope_clearance_margin, flat_soil_margin_order_gate=False)
+    assert replace(gate_on, slope_clearance_margin=margin_off) == gate_off
+
+
+def _run_b5_abl(case_id: str, out_path: Path, runner: Path | None) -> dict:
+    """One ABL run of ``case_id`` with the current preset (gate on) or through ``runner``."""
+    environment = dict(os.environ, MKL_THREADING_LAYER="TBB", PYTHONDONTWRITEBYTECODE="1")
+    prefix = [] if runner is None else [str(runner)]
+    completed = subprocess.run(
+        [str(HARNESS_PYTHON), "-I", *prefix, str(SCRIPT), "run", "--cases", case_id,
+         "--controllers", "ABL", "--workers", "1", "--out", str(out_path)],
+        cwd=ROOT, env=environment, capture_output=True, text=True, encoding="utf-8",
+        errors="replace", timeout=SCRIPT_TIMEOUT_S, check=False)
+    assert completed.returncode == 0, completed.stderr[-3000:]
+    (record,) = json.loads(out_path.read_text(encoding="utf-8"))["records"]
+    assert "error" not in record, record.get("tb")
+    return record
+
+
+@pytest.mark.parametrize("case_id", [
+    "A1-J1",
+    pytest.param("A3-G1+J1@RR", marks=pytest.mark.slow),
+])
+def test_abl_commands_do_not_depend_on_the_order_gate(case_id: str, tmp_path: Path) -> None:
+    """ABL with the K1 gate on (the preset, tag ``ABL_LAS_K1``) and off
+    (``pre_k1_preset_runner.py``, ``ABL_LAS``) gives the same command hash on a soil case."""
+    if not HARNESS_PYTHON.exists():
+        pytest.skip(f"dynamics-dev missing ({HARNESS_PYTHON})")
+    gate_on = _run_b5_abl(case_id, tmp_path / "gate_on.json", None)
+    gate_off = _run_b5_abl(case_id, tmp_path / "gate_off.json", PRE_K1_RUNNER)
+    assert gate_on["controller_settings"] == gate_off["controller_settings"]
+    assert gate_on["commands_sha256"] == gate_off["commands_sha256"]
+
+
 def test_controller_settings_of_c2_abl_and_ind() -> None:
     params = load_params()
     final = _FinalPresetHarness.preset_config(None, True)
