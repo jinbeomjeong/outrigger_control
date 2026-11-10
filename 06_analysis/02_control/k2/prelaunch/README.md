@@ -15,9 +15,10 @@
 | 대상 | 값 | 확인 방법 |
 |---|---|---|
 | 원판 / rev1 / 명세 sha256 | `a3658197…7263` / `5ba081c6…4776` / `502b0bb7…27ff` | raw sha256 |
-| 경로 2 `k2_recount.py` 1.2 blob | `d2240795f06893eb2d3eca6e61c55b6dd6c60eeb` | `git rev-parse {RUN_HEAD}:<path>` |
-| 경로 1 `k2_judge.py` | `7ee9ccc109578da2bb0e8e25f3811d9c0f73664b` | 같음 |
-| `k2_v5_flatten.py` | `a83abd803dd91e3855159e919770092e40a3cdb9` | 같음 |
+| rev2 / rev3 / rev4 sha256 (결과 전, 브랜치 `k2-prelaunch-record`) | `b3f1b41f…94ea` / `8bcdb0ed…6e61` / `82160ff5…00c5` | raw sha256 |
+| 경로 2 `k2_recount.py` **1.3** blob (판정 때 이 브랜치·병합 뒤 main에서 실행. k2-run에는 1.2가 있다) | `78a3d2c7c9d26523288f5f3ab05b9a3d6e63466c` | `git rev-parse <판정 커밋>:<path>` |
+| 경로 1 `k2_judge.py` | **`{PATH1_BLOB}` 대기**(python-expert, rev2~rev4 반영판). 이전 `7ee9ccc1…`은 쓰지 않음 | 같음 |
+| `k2_v5_flatten.py` | **`{FLATTEN_BLOB}` 대기**(python-expert). 이전 `a83abd80…`은 쓰지 않음 | 같음 |
 | `run_with_identity.py` | `fab7664bd3ba16723e4202bf71dc7d87ab0cf7f0` | 같음 |
 | `run_ps7.py` | `248f5363cbdbaf1bc20eac3ef5e73bdfd6e05acd` | 같음 |
 | `g8trace.py` | `d8bfe68e4350195951ec58a6a69bc24c04d293cc` | 같음 |
@@ -35,7 +36,8 @@
   - V-6: ecore `0x0FFF0000`, L1 `--placement ecore`, L2b `--workers e6`
   - V-7: ecore, `--parallel 0 --parallel-e 4 --e-cases <4행>`. `{BATCH_V7}`는 시작 뒤 채운다.
 - V-2 I-4의 저장 행은 git 제외 파일이다. **main checkout의 `06_analysis/02_control/d8x/ra/`를 쓴다**(`k2-run`에는 없다): `ra_off.json` `100985bf…cb10`, `ra_on.json` `e3c8c95f…247a`.
-- **실행 전 기록은 `k2-run`이 아니라 master 위 브랜치 `k2-prelaunch-record`에 있다.** 실행 중 도구가 읽는 입력(`k2_commands.json`, `k2_manifest.json`, `k2_expect.json`, `k2_fields.json`, `k2_v3_keys.txt`, 점 파일)은 `6a44ff8`의 것과 바이트가 같다(sha 대조 일치). 그래서 `k2-run`을 고칠 필요가 없다.
+- **실행 전 기록은 `k2-run`이 아니라 master 위 브랜치 `k2-prelaunch-record`에 있다.** 실행 중 도구가 읽는 입력(`k2_commands.json`, `k2_v3_keys.txt`, 점 파일)은 `6a44ff8`의 것과 바이트가 같다. 그래서 `k2-run`을 고칠 필요가 없다.
+- **(rev2~rev4 뒤 갱신)** `k2_manifest.json`(`v5_raw` 추가)과 `k2_expect.json`(note)은 이 브랜치에서 바뀌었다. 둘 다 **판정 때만** 읽는 입력이다. 판정 때는 반드시 이 브랜치(병합 뒤 main)의 사본과 `--rules-dir 06_analysis/02_control/k2`(원판·rev1~rev4 봉인 포함)를 쓴다. k2-run의 사본은 구판이다.
   - 실행 중 `acc_d8`은 `k2-run` 안의 `k2_v3_keys.txt`와 점 파일을 읽는다.
   - 판정 때 경로 1·2에는 `--manifest`/`--expect`/`--fields`로 이 브랜치(병합 뒤 main checkout)의 파일을 넘긴다. 내용이 같으니 `k2-run`의 사본을 넘겨도 된다.
   - 다만 manifest의 V-7 `{BATCH_V7}`는 시작 뒤 이 브랜치의 manifest에만 채운다. `k2-run`의 사본은 바꾸지 않는다.
@@ -75,8 +77,8 @@
 ## 3. V-5 regression 행 수 결정 (기록 수준 정정 (a))
 
 - 규칙 3.4와 `criteria.md`의 회귀 행은 "118 | L1·L2·토양·경사 행 통과→실패 0 (L3 행은 기록만)"이다. 봉인 문구가 이미 판정 대상을 L1·L2·토양·경사 행으로 한정한다.
-- 기존 판정기 `acc_judge`가 판정 행으로 세는 것은 **93**(13 + 17 + 2 + 11 + clip_A 20 + r79 L1/L2 30, python-expert 집계)이다. 나머지 25행은 판정하지 않는다(`clip_r79_L3L4`는 기록 전용, r79 L1 기준 행은 판정 행이 아님). 25행의 정확한 목록은 실행 전 기록 때 평탄화기 요약으로 고정한다.
-- 그래서 판정 행 93, 기록 25로 적고 expect와 manifest count를 93으로 둔다. 규칙 덧붙임(rev2)은 필요 없다. 판정 대상이 문구 그대로이고, 수는 판정기 정의를 옮긴 것이라 등급에 영향이 없다.
+- 기존 판정기 `acc_judge`가 판정 행으로 세는 것은 **93**(13 + 17 + 2 + 11 + clip_A 20 + r79 L1/L2 30)이다. **기록 행은 49**다(3.1절, 키 sha로 고정).
+- **rev2 2절이 이를 규칙으로 정했다**: 판정 93 + 기록 49이고, 118은 다시 만들 수 없는 옛 목록 수다. rev4 1 (c)에 따라 r79 판정 파일의 `unmatched`는 기록이다. (앞 판의 "기록 25"는 118 − 93 산술이었고 폐기했다.)
 
 ### 3.1 키 목록 고정 (2026-11-10, 실행 전 기록 브랜치 `k2-prelaunch-record`)
 
@@ -141,4 +143,27 @@ worker-초 추정이다.
 - **D̂ 행정 기준 차이(rev1 4 (a), 기록 전용)**: 하네스 `k2.dhat_window_stroke_mm`는 `sref` 기준이고, Chrono V-6은 `GetMotorPos` 기준이다(1 ms `k2_valve.npz`). 하네스와 Chrono 사이 수치 비교에는 쓰지 않는다. 묶음 안의 off·K-2 짝 비교는 같은 기준이다.
 - 경로 1·2 모두 V-6 D̂를 `k2_row.json`의 `k2` 블록에서 읽는다. 경로 1은 `c77ecf5`, 경로 2는 1.2이고 시험 `test_chrono_row_dhat_from_k2_block`으로 확인했다.
 - V-7은 경로 2 밖이다(기록 전용, 경로 1 `record-v7`만).
-- V-5 regression은 판정 93, 기록 25다(3절).
+- V-5 regression은 판정 93, 기록 49다(3절, rev2 2).
+
+## 8. 러너 띄우는 순서 (감사 6, rev2 5)
+
+러너(`sched/runners`)는 E 쪽 의존을 스스로 강제하지 않는다(E_V6 `$WaitArguments = $null`). 러너 파일은 배치표 sha로 고정돼 있으므로 고치지 않고, **메인 세션이 아래 순서로 띄운다.**
+
+1. **E_pre** (`k2run_E_pre.ps1`): `snaps-k2 --dry-run`을 돌린다. 로그(`sched\logs\E_pre`)의 JSON에서 `existing`에 `S6_crawler_top_k2pp025`가 있고 `missing`이 비어 있으며 exit 0이어야 한다. 아니면 멈추고 묻는다.
+2. **E_V6_off·E_V6_tcl** (`k2run_E_V6_off.ps1`, `k2run_E_V6_tcl.ps1`): 1이 끝난 뒤에만 띄운다.
+3. 두 V-6 러너 프로세스가 살아 있고 배치 폴더(`07_results\S6\k2v6_L1_*`, `07_results\S8\k2v6_L2b_*`)가 생겼는지 확인한다.
+4. **E_V7** (`k2run_E_V7.ps1`): 3을 확인한 뒤에만 띄운다. 먼저 띄우면 `--proc-absent` 대기가 바로 통과한다.
+
+P 쪽 `P_main` → `P_post`는 1~4와 무관하다(`P_post`는 `.done` 36개를 기다린다).
+
+## 9. 판정 명령 (경로 2, 결과가 모두 들어온 뒤)
+
+```powershell
+# E코어, dynamics-dev, 이 브랜치(병합 뒤 main) 기준
+& C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B 04_scripts\03_control\k2\k2_recount.py recount `
+    --manifest 06_analysis\02_control\k2\prelaunch\k2_manifest.json --expect 06_analysis\02_control\k2\prelaunch\k2_expect.json `
+    --fields 06_analysis\02_control\k2\prelaunch\k2_fields.json --rules-dir 06_analysis\02_control\k2 --out <판정 폴더>\k2_path2.json
+```
+
+- 실행 전에 `selftest-v5-stored --acc 06_analysis\02_control\touch_phase\acceptance --ps7 06_analysis\02_control\touch_phase\ps7_E.json`(rev4 2 형식 점검, 2026-11-10 통과)를 다시 돌려 통과를 확인한다.
+- V-5 regression 키는 두 팔 출력에서 `prelaunch/regression_keys.py keys`와 같은 정의로 다시 낸다. 경로 2가 내부에서 sha를 대조한다.

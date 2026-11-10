@@ -11,19 +11,125 @@
    "path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev1.md",
    "sha256": "5ba081c62f8aef0edc5bb99119d7586b0d2914761582f2323c289f472f244776"
   },
+  "rev2": {
+   "path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev2.md",
+   "sha256": "b3f1b41f27030c75aec726d2a3feb5abc36697864e0d83766a8fe0c4460394ea"
+  },
+  "rev3": {
+   "path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev3.md",
+   "sha256": "8bcdb0ed1fdf6d730ac781929e93b233972d1e80566e1ae14ffb7ddf049d6e61"
+  },
+  "rev4": {
+   "path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev4.md",
+   "sha256": "82160ff54874e3d43bf7c5a1ae96d6e8612b1e7635aaccea39a4299352ce00c5"
+  },
   "dyn_spec": {
    "path": "06_analysis/02_control/k2/k2_dyn_spec.md",
    "sha256": "502b0bb78558d40586cbcddb718b6c5d53529de4e78369f454762c9fe73727ff"
   }
  },
+ "criteria_md": {
+  "path": "06_analysis/02_control/touch_phase/acceptance/criteria.md",
+  "blob_at_run_head": "86aa624264b3add5f24866f8ad21d91cb2c855be",
+  "lf_content_sha256": "a7363e161fef616915bcafa4e1b7b182e9501b28326634f4540cc8fc5c80590d",
+  "k2_run_working_copy_sha256": "a392730fc2160faf5f6c2c327ec1c5b8ae251427e3b259ef3bb074e791ceb00c"
+ },
+ "c2_py_k2_run_working_copy_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
  "path2": {
   "path": "04_scripts/03_control/k2/k2_recount.py",
-  "blob": "d2240795f06893eb2d3eca6e61c55b6dd6c60eeb"
+  "version": "1.3",
+  "blob": "78a3d2c7c9d26523288f5f3ab05b9a3d6e63466c",
+  "run_from": "the record branch / main checkout after the merge (k2-run holds the older 1.2)"
  },
  "path1": {
   "path": "04_scripts/03_control/k2/k2_judge.py",
-  "blob": "7ee9ccc109578da2bb0e8e25f3811d9c0f73664b"
+  "blob": "{PATH1_BLOB: python-expert k2_judge.py after rev2 / rev3 / rev4 (pending)}",
+  "previous_blob_not_used": "7ee9ccc109578da2bb0e8e25f3811d9c0f73664b"
  },
+ "flatten": {
+  "path": "04_scripts/03_control/k2/k2_v5_flatten.py",
+  "blob": "{FLATTEN_BLOB: python-expert k2_v5_flatten.py after rev2 (pending)}",
+  "previous_blob_not_used": "a83abd803dd91e3855159e919770092e40a3cdb9"
+ },
+ "key_lists": {
+  "v2": {
+   "n": 1102,
+   "sha256_sorted_joined": "1bc5076dfd022e427a893c1e1c80b6677326965b408c838b55a03c63af537415"
+  },
+  "v3": {
+   "n": 273,
+   "sha256_sorted_joined": "d4a030d71e4a365e328fbbf7caa212c378a8671fed8ba206d25b50666255cf95"
+  },
+  "v4": {
+   "n": 596,
+   "sha256_sorted_joined": "f243dc300a55feca6cc8ca2a8da061d0d7529e3bdcb55a8bf4c3fc1d397c8b72"
+  },
+  "v5": {
+   "grid": {
+    "n": 768,
+    "sha256_sorted_joined": "27b4bd8ca5c0ddff824e9733478f55a259fbef93a4efd59a3b2a1e191b7d3529"
+   },
+   "soil": {
+    "n": 60,
+    "sha256_sorted_joined": "6992adeae3e7e95ab8bea4931c796e5094eb9a18c7f1731821194c8ef7f2c179"
+   },
+   "d8": {
+    "n": 576,
+    "sha256_sorted_joined": "c46ea6cb163cf12e7fd43432954955828315485797da09f8bc5469b50cc9b4db"
+   },
+   "noise_L2": {
+    "n": 855,
+    "sha256_sorted_joined": "c9878b6d5da1ff8befc937de2eb18cb09628d80d185d2287f407e590afeb6705"
+   },
+   "regression_judged": {
+    "n": 93,
+    "sha256_sorted_joined": "2900db889efc73070c3a8fbe557b1a4ad9ee3392afc099ba00be1d0549174ec9"
+   },
+   "regression_record": {
+    "n": 49,
+    "sha256_sorted_joined": "d4f58334c6ca7c393c35072a798c09f4995d7fde274e0af6b21b99f977d503eb"
+   },
+   "ps7": {
+    "n": 20,
+    "sha256_sorted_joined": "4ffc2cb94f63a2f223fbc8c38d78778802936b9906a32fdcc527591e3c3d1f4f"
+   },
+   "g8_safe_stop": {
+    "n": 83,
+    "sha256_sorted_joined": "bce9b6d2b1edaca9118db3d703d15d79fb4ce254ee274cfcc89fcc41578d4739"
+   }
+  },
+  "source_note": "V-5 keys of the stored final-controller acceptance outputs (same steps); after the run both arms must give the same lists (unmatched 0, rules rev2 1)"
+ },
+ "v6_start_states": {
+  "L1R": {
+   "folder": "<k2-run>\\07_results\\states_L1R",
+   "aggregate_sha256_prefix": "b24066a9",
+   "files_sha256": {
+    "S6_crawler_top_fdown3.5.npz": "8f93d107fcd7ff8e4f22a0952dd35ca5bb409645737a0260ee354a7b6bedf9bd",
+    "S6_crawler_top_fdown3.5.meta.json": "9bb73974458de347a65a3a151cd044e5b801676b7e8b38881b8e8f119c2d133a",
+    "S6_crawler_top_k2pp025.npz": "be765f360d4319e499768d6d5364a2cca6f34a540955d6210886e9cc10587014",
+    "S6_crawler_top_k2pp025.meta.json": "c49fbfcf508bab2fda07b780353077110cc2cfb49ed37a5195aaea5290f5a07a"
+   }
+  },
+  "L2b": {
+   "kind": "in_run_settle",
+   "snapshot": null,
+   "path": "run_S8C.build_l2b -> run_S7C.l2b_crawler_start (stroke 0, hanging) -> run_S7C.settle_l2b (CRAWLER_SETTLE_S 3.0 s ASSUMPTION, dt 1e-4, 30,000 steps, command 0) -> run_S8C.check_settle (crawler normal < 0.5 W_n refused)",
+   "code_blobs": {
+    "run_S7C.py": "b2b4458b29ea8fd50786827c958551ef0a55d5f9",
+    "run_S8C.py": "cec2c696befad75530588d07426a907e9d620821"
+   },
+   "env": "OUTRIGGER_S8_CRAWLER unset (YAML rigid NSC)",
+   "record": "result.json settings.l2b_start (start_t_s 3.0); batch_meta k2.start_states"
+  }
+ },
+ "launch_order": [
+  "1. E_pre (k2run_E_pre.ps1): snaps-k2 --dry-run; its log (sched logs E_pre) must show S6_crawler_top_k2pp025 under 'existing' and 'missing' empty, exit 0. Otherwise stop and ask.",
+  "2. E_V6_off and E_V6_tcl (k2run_E_V6_off.ps1, k2run_E_V6_tcl.ps1), only after 1 (the runners do not wait on E_pre: WaitArguments null).",
+  "3. Confirm both V-6 runner processes are alive (and their batch folders created).",
+  "4. E_V7 (k2run_E_V7.ps1), only after 3 (its --proc-absent wait would otherwise pass at once).",
+  "P_main and then P_post on the P pool are independent of 1-4."
+ ],
  "fix_blobs_c77ecf5": {
   "04_scripts/03_control/k2/k2_judge.py": "7ee9ccc109578da2bb0e8e25f3811d9c0f73664b",
   "04_scripts/03_control/k2/k2_v5_flatten.py": "a83abd803dd91e3855159e919770092e40a3cdb9",
@@ -32,14 +138,14 @@
   "06_analysis/02_control/touch_phase/acceptance/g8_safe_stop/g8trace.py": "d8bfe68e4350195951ec58a6a69bc24c04d293cc"
  },
  "chrono_identity": "V-6 batch_meta.json identity_start / identity_end (orig_argv, cwd, git HEAD and status, env, affinity, per-row exit_code, all_rc_zero) + batch.json exit_code (cad-expert 09f66c4); V-7 s9_batch batch.json argv / rc",
- "v5_regression_rows": "V-5 regression: the rules 3.4 / criteria.md row is '118 | L1 / L2 / soil / slope rows pass->fail 0 (L3 rows record only)'. The judged rows are 93 (acc_judge: 13 + 17 + 2 + 11 + clip_A 20 + r79 L1/L2 30, python-expert count). The other 25 of the 118 are rows acc_judge does not judge (clip_r79_L3L4 is record only; the r79 L1 reference rows are not judged rows); their exact list is fixed from the flattener summary at the launch record. The flat file of k2_v5_flatten.py holds the 93 judged rows; E-1 expects 93. Record-level correction (a): the sealed text already restricts the criterion to those rows; no grade effect.",
+ "v5_regression_rows": "V-5 regression (rules rev2 2): judged rows 93 (acc_judge definition: clip_harness 13 + clip_p0 17 + clip_x426_C 2 + clip_x426_D 11 + clip_A 20 + r79 L1/L2 judgement 30; key sha 2900db88...) + record rows 49 (clip_r79_L1L2 entries that are not judgement rows 7 + clip_r79_L3L4 42; key sha d4f58334...). The 118 of the original 3.4 / criteria.md is the old rerun-list count, not reconstructable from the stored outputs. E-1 expects 93. The r79 L1 reference rows are not judged rows; the r79 judgement 'unmatched' is a record (rev4 1 (c)).",
  "point_files": {
   "k2_points_5p5_3p5.json": "a15cbe95275be11c163028ca2113d896254d49a4554286c54bdbfa88680cccc3",
   "d8x_points.json": "050145f6a965c851a014563f6219e61c1081716eb5ad5f7e8469a098d426c817"
  },
  "inputs": {
-  "k2_manifest.json": "d54752c641e0f934852c0d4e68646ab2e19544ab8e9418060c99cd92f8950fac",
-  "k2_expect.json": "e19cef826bdc96e0bf84250807a6b32c07568e6951d628460ea632c96134ccba",
+  "k2_manifest.json": "d21092b99209261cece8d02c2154dd5bb616a773d75fb15633e14705b744dc9c",
+  "k2_expect.json": "ecef70d274ebb9a572247f8859bafb02e5f5ddb0dd8268958ec6660893e4e1a6",
   "k2_fields.json": "0c5aafc4cd026680b81d12a43106ea0267d1519b21a9d6192e5ef96943e45b77",
   "k2_commands.json": "ce6e04a2c00aaafb2f73b3f88b78abb599ca3be134dad36352b4c7f08e8b97e5",
   "k2_v3_keys.txt": "506b93a4d9f4b25bcddbe1a10709a5be5e833c1e6d98b03113e1ed1373cfd5ec"

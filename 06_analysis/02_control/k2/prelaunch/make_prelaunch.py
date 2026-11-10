@@ -61,12 +61,79 @@ FIX_BLOBS = {  # python-expert k2-prelaunch-fix c77ecf5 (given; re-check at RUN_
     "06_analysis/02_control/touch_phase/acceptance/g8_safe_stop/g8trace.py": "d8bfe68e4350195951ec58a6a69bc24c04d293cc",
 }
 V5_NOTE_REGRESSION = (
-    "V-5 regression: the rules 3.4 / criteria.md row is '118 | L1 / L2 / soil / slope rows pass->fail 0 (L3 rows "
-    "record only)'. The judged rows are 93 (acc_judge: 13 + 17 + 2 + 11 + clip_A 20 + r79 L1/L2 30, python-expert "
-    "count). The other 25 of the 118 are rows acc_judge does not judge (clip_r79_L3L4 is record only; the r79 L1 "
-    "reference rows are not judged rows); their exact list is fixed from the flattener summary at the launch "
-    "record. The flat file of k2_v5_flatten.py holds the 93 judged rows; E-1 expects 93. Record-level correction "
-    "(a): the sealed text already restricts the criterion to those rows; no grade effect.")
+    "V-5 regression (rules rev2 2): judged rows 93 (acc_judge definition: clip_harness 13 + clip_p0 17 + clip_x426_C 2 "
+    "+ clip_x426_D 11 + clip_A 20 + r79 L1/L2 judgement 30; key sha 2900db88...) + record rows 49 (clip_r79_L1L2 "
+    "entries that are not judgement rows 7 + clip_r79_L3L4 42; key sha d4f58334...). The 118 of the original 3.4 / "
+    "criteria.md is the old rerun-list count, not reconstructable from the stored outputs. E-1 expects 93. The r79 "
+    "L1 reference rows are not judged rows; the r79 judgement 'unmatched' is a record (rev4 1 (c)).")
+PATH1_BLOB_PENDING = "{PATH1_BLOB: python-expert k2_judge.py after rev2 / rev3 / rev4 (pending)}"
+FLATTEN_BLOB_PENDING = "{FLATTEN_BLOB: python-expert k2_v5_flatten.py after rev2 (pending)}"
+L1_START_STATES = {
+    "S6_crawler_top_fdown3.5.npz": "8f93d107fcd7ff8e4f22a0952dd35ca5bb409645737a0260ee354a7b6bedf9bd",
+    "S6_crawler_top_fdown3.5.meta.json": "9bb73974458de347a65a3a151cd044e5b801676b7e8b38881b8e8f119c2d133a",
+    "S6_crawler_top_k2pp025.npz": "be765f360d4319e499768d6d5364a2cca6f34a540955d6210886e9cc10587014",
+    "S6_crawler_top_k2pp025.meta.json": "c49fbfcf508bab2fda07b780353077110cc2cfb49ed37a5195aaea5290f5a07a",
+}
+LAUNCH_ORDER = [
+    "1. E_pre (k2run_E_pre.ps1): snaps-k2 --dry-run; its log (sched logs E_pre) must show S6_crawler_top_k2pp025 "
+    "under 'existing' and 'missing' empty, exit 0. Otherwise stop and ask.",
+    "2. E_V6_off and E_V6_tcl (k2run_E_V6_off.ps1, k2run_E_V6_tcl.ps1), only after 1 (the runners do not wait on E_pre: "
+    "WaitArguments null).",
+    "3. Confirm both V-6 runner processes are alive (and their batch folders created).",
+    "4. E_V7 (k2run_E_V7.ps1), only after 3 (its --proc-absent wait would otherwise pass at once).",
+    "P_main and then P_post on the P pool are independent of 1-4.",
+]
+
+
+def _sha_keys(keys) -> dict:
+    keys = sorted(keys)
+    return {"n": len(keys), "sha256_sorted_joined": hashlib.sha256("\n".join(keys).encode("utf-8")).hexdigest()}
+
+
+def key_lists(kr) -> dict:
+    """Row key lists of V-2, V-4 and the V-5 bundles (I-3, rules 3.4). V-2 from the stored D8x R-a rows (same case
+    ids), V-4 from the D8x diagnosis 5.5 / 3.5 boundary rows (6f2f7cb, same d8x_cases top definition), V-5 from the
+    stored acceptance outputs of the same steps, with the k2_recount 1.3 key formats."""
+    import csv
+
+    acc = REPO / "06_analysis/02_control/touch_phase/acceptance"
+    ra = Path(RA_OFF_DEFAULT)
+    v2 = [f"k1off:{r['id']}" for r in json.loads(ra.read_text(encoding="utf-8"))["runs"]]
+    v2 += [f"k1on:{r['id']}" for r in json.loads(ra.with_name("ra_on.json").read_text(encoding="utf-8"))["runs"]]
+    with open(REPO / "06_analysis/02_control/d8x/diag/boundary_5p5_3p5_top_off_rows.csv", encoding="utf-8") as fh:
+        v4 = [row["id"] for row in csv.DictReader(fh)]
+
+    def load(rel):
+        return json.loads((acc / rel).read_text(encoding="utf-8"))
+
+    grid = []
+    for name in ("grid_r67_main", "grid_r67_top", "grid_r69_top", "grid_r69_bottom"):
+        rows, _ = kr._event_rows(load(f"grid/{name}.json"))
+        grid += [f"{name}.json:{k}" for k in rows]
+    soil_rows, _ = kr._event_rows(load("soil/soil_A.json"))
+    soil = [k for k in soil_rows if k.split("|")[4] == "two"]
+    d8 = [r["id"] for r in load("d8/d8_both.json")["runs"]]
+    noise = [r["key"] for r in load("noise/r79_L1L2_judgement.json")["runs"]
+             if r.get("level") == "L2" and not any(m in str(r.get("inner", "")) for m in kr.S1_FRONT)]
+    ps7 = [r["key"] for r in json.loads((REPO / "06_analysis/02_control/touch_phase/ps7_E.json").read_text(encoding="utf-8"))]
+    g8 = []
+    for n in (1, 3, 5):
+        for line in (acc / f"g8_safe_stop/out{n}.jsonl").read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                r = json.loads(line)
+                g8.append(f"{r.get('tag')}|{r.get('key')}")
+    reg = json.loads((HERE / "k2_v5_regression_keys.json").read_text(encoding="utf-8"))
+    return {"v2": _sha_keys(v2), "v3": {"n": 273, "sha256_sorted_joined": V3_KEYS_SHA},
+            "v4": _sha_keys(v4),
+            "v5": {"grid": _sha_keys(grid), "soil": _sha_keys(soil), "d8": _sha_keys(d8), "noise_L2": _sha_keys(noise),
+                   "regression_judged": {"n": reg["judged_n"], "sha256_sorted_joined": reg["judged_sha256"]},
+                   "regression_record": {"n": reg["record_n"], "sha256_sorted_joined": reg["record_sha256"]},
+                   "ps7": _sha_keys(ps7), "g8_safe_stop": _sha_keys(g8)},
+            "source_note": "V-5 keys of the stored final-controller acceptance outputs (same steps); after the run "
+                           "both arms must give the same lists (unmatched 0, rules rev2 1)"}
+
+
+V3_KEYS_SHA = "d4a030d71e4a365e328fbbf7caa212c378a8671fed8ba206d25b50666255cf95"
 
 
 def sha(path: Path) -> str:
@@ -323,6 +390,13 @@ def manifest(run_wt: str) -> dict:
                 m["v6"]["rows"][name] = {"row_json": rf"{b}\{name}\k2_row.json",
                                          "pads_npz": rf"{b}\{name}\k2_pads.npz",
                                          "rate_npz": rf"{b}\{name}\k2_rate.npz", "engine": eng, "arm": arm}
+    v5_dir = rf"{runs}\v5"
+    m["v5_raw"] = {"off": rf"{v5_dir}\off", "tcl": rf"{v5_dir}\tcl",
+                   "sidecars": {arm: [s["identity_sidecar"] for s in v5_steps(run_wt) if s["arm"] == arm]
+                                for arm in ARMS},
+                   "c2_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
+                   "_note": "path 2 V-5 input (rules rev2 1 / rev4): the raw arm folders; the flat 'v5' entries are "
+                            "path 1 input only"}
     m["v7"] = {"rows": {f"{r}_{a}": {"row_json": rf"{{BATCH_V7}}\{r}_{a}\k2_row.json",
                                      "pads_npz": rf"{{BATCH_V7}}\{r}_{a}\k2_pads.npz", "engine": "SCM", "arm": a,
                                      "expected_tag": V7_TAG[a]}
@@ -364,13 +438,34 @@ def main() -> None:
         "head": HEAD, "run_wt": args.run_wt,
         "rules": {"original": {"path": "06_analysis/02_control/k2/k2_touch_creep_rules.md",
                                "sha256": sha(k2 / "k2_touch_creep_rules.md")},
-                  "rev1": {"path": "06_analysis/02_control/k2/k2_touch_creep_rules_rev1.md",
-                           "sha256": sha(k2 / "k2_touch_creep_rules_rev1.md")},
+                  **{rv: {"path": f"06_analysis/02_control/k2/k2_touch_creep_rules_{rv}.md",
+                          "sha256": sha(k2 / f"k2_touch_creep_rules_{rv}.md")}
+                     for rv in ("rev1", "rev2", "rev3", "rev4") if (k2 / f"k2_touch_creep_rules_{rv}.md").exists()},
                   "dyn_spec": {"path": "06_analysis/02_control/k2/k2_dyn_spec.md", "sha256": sha(k2 / "k2_dyn_spec.md")}},
-        "path2": {"path": "04_scripts/03_control/k2/k2_recount.py",
-                  "blob": blob("04_scripts/03_control/k2/k2_recount.py")},
-        "path1": {"path": "04_scripts/03_control/k2/k2_judge.py",
-                  "blob": FIX_BLOBS["04_scripts/03_control/k2/k2_judge.py"]},
+        "criteria_md": {"path": "06_analysis/02_control/touch_phase/acceptance/criteria.md",
+                        "blob_at_run_head": "86aa624264b3add5f24866f8ad21d91cb2c855be",
+                        "lf_content_sha256": "a7363e161fef616915bcafa4e1b7b182e9501b28326634f4540cc8fc5c80590d",
+                        "k2_run_working_copy_sha256": "a392730fc2160faf5f6c2c327ec1c5b8ae251427e3b259ef3bb074e791ceb00c"},
+        "c2_py_k2_run_working_copy_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
+        "path2": {"path": "04_scripts/03_control/k2/k2_recount.py", "version": "1.3",
+                  "blob": blob("04_scripts/03_control/k2/k2_recount.py"),
+                  "run_from": "the record branch / main checkout after the merge (k2-run holds the older 1.2)"},
+        "path1": {"path": "04_scripts/03_control/k2/k2_judge.py", "blob": PATH1_BLOB_PENDING,
+                  "previous_blob_not_used": FIX_BLOBS["04_scripts/03_control/k2/k2_judge.py"]},
+        "flatten": {"path": "04_scripts/03_control/k2/k2_v5_flatten.py", "blob": FLATTEN_BLOB_PENDING,
+                    "previous_blob_not_used": FIX_BLOBS["04_scripts/03_control/k2/k2_v5_flatten.py"]},
+        "key_lists": key_lists(kr),
+        "v6_start_states": {"L1R": {"folder": r"<k2-run>\07_results\states_L1R", "aggregate_sha256_prefix": "b24066a9",
+                                    "files_sha256": L1_START_STATES},
+                            "L2b": {"kind": "in_run_settle", "snapshot": None,
+                                    "path": "run_S8C.build_l2b -> run_S7C.l2b_crawler_start (stroke 0, hanging) -> "
+                                            "run_S7C.settle_l2b (CRAWLER_SETTLE_S 3.0 s ASSUMPTION, dt 1e-4, 30,000 steps, "
+                                            "command 0) -> run_S8C.check_settle (crawler normal < 0.5 W_n refused)",
+                                    "code_blobs": {"run_S7C.py": "b2b4458b29ea8fd50786827c958551ef0a55d5f9",
+                                                   "run_S8C.py": "cec2c696befad75530588d07426a907e9d620821"},
+                                    "env": "OUTRIGGER_S8_CRAWLER unset (YAML rigid NSC)",
+                                    "record": "result.json settings.l2b_start (start_t_s 3.0); batch_meta k2.start_states"}},
+        "launch_order": LAUNCH_ORDER,
         "fix_blobs_c77ecf5": FIX_BLOBS,
         "chrono_identity": "V-6 batch_meta.json identity_start / identity_end (orig_argv, cwd, git HEAD and status, "
                            "env, affinity, per-row exit_code, all_rc_zero) + batch.json exit_code (cad-expert "
