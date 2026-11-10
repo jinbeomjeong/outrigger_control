@@ -1,0 +1,37 @@
+id | base: J3/min kN/READY | padc3.33: J3/min kN/READY | crc2: J3/min kN/READY | crc4: J3/min kN/READY | fs4: J3/min kN/READY
+top|rigid|r+p+0.25 58/0.0/42.2 | 0/3.226/42.2 | 0/13.537/42.1 | 0/15.812/42.1 | 0/20.042/43.0
+top|rigid|pitch+ 141/0.0/43.0 | 22/0.0/43.0 | 0/16.432/42.7 | 0/17.949/42.7 | 0/13.361/43.0
+top|rigid|r-p+0.5 30/0.0/42.5 | 0/4.129/42.5 | 0/4.431/42.4 | 0/6.917/42.2 | 0/11.084/42.4
+top|stiff|d45-+ 144/0.0/41.8 | 0/11.288/42.4 | 141/0.0/41.8 | 0/9.704/42.4 | 0/2.417/41.8
+top|upper|d45++ 104/0.0/41.6 | 75/0.0/41.6 | 0/2.489/41.7 | 0/2.835/41.7 | 0/13.163/41.6
+top|upper|r+p+0.25 132/0.0/42.1 | 0/7.11/42.1 | 0/6.109/42.1 | 0/6.435/42.1 | 0/5.758/42.1
+  check top|rigid|r+p+0.25 base {'pad_c': 1.0, 'cr_c': 1.0} Fs 0.0 fails []
+  check top|rigid|r+p+0.25 padc3.33 {'pad_c': 3.3333333333333335, 'cr_c': 1.0} Fs 0.0 fails []
+  check top|rigid|r+p+0.25 crc2 {'pad_c': 1.0, 'cr_c': 2.0} Fs 0.0 fails []
+  check top|rigid|r+p+0.25 crc4 {'pad_c': 1.0, 'cr_c': 4.0} Fs 0.0 fails []
+  check top|rigid|r+p+0.25 fs4 {'pad_c': 1.0, 'cr_c': 1.0} Fs 4000.0 fails []
+  check top|rigid|pitch+ base {'pad_c': 1.0, 'cr_c': 1.0} Fs 0.0 fails []
+  check top|rigid|pitch+ padc3.33 {'pad_c': 3.3333333333333335, 'cr_c': 1.0} Fs 0.0 fails []
+  check top|rigid|pitch+ crc2 {'pad_c': 1.0, 'cr_c': 2.0} Fs 0.0 fails []
+  check top|rigid|pitch+ crc4 {'pad_c': 1.0, 'cr_c': 4.0} Fs 0.0 fails []
+  check top|rigid|pitch+ fs4 {'pad_c': 1.0, 'cr_c': 1.0} Fs 4000.0 fails []
+  check top|rigid|r-p+0.5 base {'pad_c': 1.0, 'cr_c': 1.0} Fs 0.0 fails []
+  check top|rigid|r-p+0.5 padc3.33 {'pad_c': 3.3333333333333335, 'cr_c': 1.0} Fs 0.0 fails []
+  check top|rigid|r-p+0.5 crc2 {'pad_c': 1.0, 'cr_c': 2.0} Fs 0.0 fails []
+  check top|rigid|r-p+0.5 crc4 {'pad_c': 1.0, 'cr_c': 4.0} Fs 0.0 fails []
+  check top|rigid|r-p+0.5 fs4 {'pad_c': 1.0, 'cr_c': 1.0} Fs 4000.0 fails []
+  check top|stiff|d45-+ base {'pad_c': 1.0, 'cr_c': 1.0} Fs 0.0 fails []
+  check top|stiff|d45-+ padc3.33 {'pad_c': 3.3333333333333335, 'cr_c': 1.0} Fs 0.0 fails []
+  check top|stiff|d45-+ crc2 {'pad_c': 1.0, 'cr_c': 2.0} Fs 0.0 fails []
+  check top|stiff|d45-+ crc4 {'pad_c': 1.0, 'cr_c': 4.0} Fs 0.0 fails []
+  check top|stiff|d45-+ fs4 {'pad_c': 1.0, 'cr_c': 1.0} Fs 4000.0 fails []
+  check top|upper|d45++ base {'pad_c': 1.0, 'cr_c': 1.0} Fs 0.0 fails []
+  check top|upper|d45++ padc3.33 {'pad_c': 3.3333333333333335, 'cr_c': 1.0} Fs 0.0 fails []
+  check top|upper|d45++ crc2 {'pad_c': 1.0, 'cr_c': 2.0} Fs 0.0 fails []
+  check top|upper|d45++ crc4 {'pad_c': 1.0, 'cr_c': 4.0} Fs 0.0 fails []
+  check top|upper|d45++ fs4 {'pad_c': 1.0, 'cr_c': 1.0} Fs 4000.0 fails []
+  check top|upper|r+p+0.25 base {'pad_c': 1.0, 'cr_c': 1.0} Fs 0.0 fails []
+  check top|upper|r+p+0.25 padc3.33 {'pad_c': 3.3333333333333335, 'cr_c': 1.0} Fs 0.0 fails []
+  check top|upper|r+p+0.25 crc2 {'pad_c': 1.0, 'cr_c': 2.0} Fs 0.0 fails []
+  check top|upper|r+p+0.25 crc4 {'pad_c': 1.0, 'cr_c': 4.0} Fs 0.0 fails []
+  check top|upper|r+p+0.25 fs4 {'pad_c': 1.0, 'cr_c': 1.0} Fs 4000.0 fails []

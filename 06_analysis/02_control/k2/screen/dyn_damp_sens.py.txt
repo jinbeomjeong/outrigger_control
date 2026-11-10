@@ -1,0 +1,88 @@
+"""Diagnostic damping / seal-friction sensitivity of the D8x J3 metric (NOT a D8x record, scratch only).
+
+Runs acc_d8.run_one (via d8x_diag.diag_run, D8x path, K1 off) on the 6 main-stage J3 fail rows of the 5.5/3.5 boundary
+with plant variants applied by wrapping the base Plant.__init__ in every worker:
+  base        : as stored
+  padc3.33    : pad axial / tangential dashpots x 0.10/0.03 (moving-leg zeta 0.10 basis, also while locked)
+  crc2, crc4  : crawler normal / tangential dashpots x2, x4 (crawler heave zeta 0.10 / 0.20)
+  fs4         : seal friction F_s 4 kN on all legs (case 'Fs')
+usage: damp_sens.py <worktree> <out.jsonl> [workers]
+"""
+import copy
+import json
+import os
+import sys
+import time
+from multiprocessing import get_context
+from pathlib import Path
+
+VARIANTS = {"base": {}, "padc3.33": {"pad_c": 0.10 / 0.03}, "crc2": {"cr_c": 2.0}, "crc4": {"cr_c": 4.0},
+            "fs4": {"Fs": 4000.0}}
+IDS = ["main|C2_tv0.1|top|rigid|pitch+", "main|C2_tv0.1|top|rigid|r+p+0.25", "main|C2_tv0.1|top|rigid|r-p+0.5",
+       "main|C2_tv0.1|top|stiff|d45-+", "main|C2_tv0.1|top|upper|d45++", "main|C2_tv0.1|top|upper|r+p+0.25"]
+_SCALE = {"pad_c": 1.0, "cr_c": 1.0}
+_PATCHED = {}
+
+
+def _setup(wt):
+    os.environ["D8X_K1"] = os.environ.get("D8X_K1", "off")
+    sys.path.insert(0, str(Path(wt) / "04_scripts" / "03_control" / "touch_phase" / "acceptance"))
+    import d8x_diag  # noqa: F401
+    os.environ[d8x_diag.D8X_K1_ENV] = "off"
+    c2py = d8x_diag._c2py()
+    base = c2py.rmf.ORIG_PLANT
+    if not _PATCHED:
+        orig = base.__init__
+
+        def init(self, *a, **k):
+            orig(self, *a, **k)
+            self.cn = self.cn * _SCALE["pad_c"]; self.ct = self.ct * _SCALE["pad_c"]
+            self.ccr = self.ccr * _SCALE["cr_c"]; self.ctcr = self.ctcr * _SCALE["cr_c"]
+            self._diag_scale = dict(_SCALE)
+
+        base.__init__ = init
+        _PATCHED["ok"] = True
+    return d8x_diag, c2py
+
+
+def work(task):
+    d8x_diag, c2py = _setup(task["wt"])
+    _SCALE["pad_c"] = task["v"].get("pad_c", 1.0)
+    _SCALE["cr_c"] = task["v"].get("cr_c", 1.0)
+    case = copy.deepcopy(task["case"])
+    if "Fs" in task["v"]:
+        case["Fs"] = task["v"]["Fs"]
+    t0 = time.perf_counter()
+    row = d8x_diag.diag_run({"case": case, "series_dir": None, "save": "none"})
+    pl = c2py.rmf.LAST.get("plant")
+    out = {"variant": task["name"], "id": row.get("id"), "error": row.get("error"),
+           "wall_s": round(time.perf_counter() - t0, 1)}
+    if pl is not None:
+        out["plant_check"] = {"scale": getattr(pl, "_diag_scale", None), "cn0": float(pl.cn[0]),
+                              "ccr0": float(pl.ccr[0]), "Fs": [float(x) for x in pl.Fs]}
+    dg = row.get("diag") or {}
+    out["J3_recount"] = dg.get("J3_recount")
+    for k in ("J3_pad_lift_samples", "J3_pad_normal_min_N", "t_touch_s", "t_lift_s", "t_ready_s", "fails"):
+        if k in row:
+            out[k] = row[k]
+    out["diag_keys"] = {k: dg[k] for k in dg if k not in ("intervals",)} if dg else None
+    return out
+
+
+def main():
+    wt, outp = sys.argv[1], Path(sys.argv[2])
+    workers = int(sys.argv[3]) if len(sys.argv) > 3 else 8
+    d8x_diag, _ = _setup(wt)
+    cases = {c["id"]: c for c in d8x_diag._all_cases(d8x_diag.diamond_points(5.5, 3.5), ("main",), ("top",))}
+    tasks = [{"wt": wt, "name": n, "v": v, "case": cases[i]} for i in IDS for n, v in VARIANTS.items()]
+    # warm the numba cache in the parent (memory: compile before the spawn pool)
+    t0 = time.perf_counter()
+    with get_context("spawn").Pool(workers) as pool, outp.open("w", encoding="utf-8") as f:
+        for n, r in enumerate(pool.imap_unordered(work, tasks), 1):
+            f.write(json.dumps(r, default=float) + "\n"); f.flush()
+            print(f"[{n}/{len(tasks)} {time.perf_counter() - t0:.0f}s] {r['variant']:9s} {r['id']} J3 {r.get('J3_recount')}"
+                  f" min {r.get('J3_pad_normal_min_N')} err {str(r.get('error'))[:120]}", flush=True)
+
+
+if __name__ == "__main__":
+    main()
