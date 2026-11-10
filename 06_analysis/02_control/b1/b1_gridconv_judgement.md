@@ -37,7 +37,12 @@ $k$ = 1, 2는 유지 끝 $t$ = 11.0, 21.0 s다. 침하 + = 깊어짐이다.
 
 - $N_h$·$b_{hull}$는 두 유지 끝에서 같았다(하중 증분으로 접촉 절점이 바뀌지 않았다).
 - $z = $ `sinkage_geometric_m`(G-2~G-5), $z^{node}$ = `sinkage_mean_contact_m`(G-1). 두 값의 차는 행마다 ≤ 2×10⁻⁸ m다.
-- 연속 Bekker $z_{cont}$(YAML $b_{poly}$, 기록된 $F$)는 RL 114.747 / 131.388 mm, FL 86.800 / 95.944 mm다. $z/f$는 두 격자 모두 이 값과 0.001 mm 안에서 같다(control-expert 확인 계산, `python -c` 한 줄, dynamics-dev).
+- 연속 Bekker $z_{cont}$는 YAML $b_{poly}$와 그 행에 기록된 $F$(`Fz_scm_N`)로 행마다 따로 계산한다. 행마다 $F$가 조금씩 달라서 $z_{cont}$도 행마다 조금 다르다.
+  - GC-1·GC-3의 $F$로 계산하면 RL 114.747 / 131.388 mm, FL 86.800 / 95.944 mm다.
+  - GC-2 유지 2는 131.387 mm, GC-4 유지 1은 86.799 mm다.
+  - $z/f - z_{cont}$는 8개 값 모두 +0.0002 ~ +0.0015 mm이고, 최대는 GC-3 유지 2의 0.00148 mm다. 즉 ≤ 1.5×10⁻³ mm이고, G-1 잔차 수준이다($n\varepsilon$ ≈ 3×10⁻⁶ → $z$ 상대 1.5×10⁻⁵).
+  - 이 비교는 control-expert 확인 계산(`python -c` 한 줄, dynamics-dev)과 판정 후 재집계 감사(`b1_gridconv_post_audit.md`)의 값이다. 계획서 지표가 아니라 등급에 쓰지 않는다.
+  - 2026-11-10 판정 후 감사에서 고쳤다. 첫 판은 "0.001 mm 안"이라 적어 실제 값과 맞지 않았다.
 - 실행 전 위상 0 오프셋 절점 조사(`evidence/gridconv_scan/phase_band.txt`, `gc_pred.json`)와 비교했다. $N_h$는 601 / 2421 / 1073 / 4285로 같다. $f$는 예측 1.0365 / 1.0156 / 0.9907 / 0.9991, 실측 1.03645 / 1.01560 / 0.99077 / 0.99908이다.
 
 ### 2.2 원시값 (G-4)과 사전 예측
@@ -65,14 +70,14 @@ $k$ = 1, 2는 유지 끝 $t$ = 11.0, 21.0 s다. 침하 + = 깊어짐이다.
 
 - 대조 항목: 묶음 상태, 판정, 행 상태, 행마다 xy0, 유지 끝별 $N_h$·$F$·$z^{node}$·$z$·$b_{hull}$·$z_{ref}$·G-1·$f$·$z/f$, $\Delta z$, $\Delta z/z_2$, 짝 지표, E-1~E-8. 원판 7절 허용(이산 완전 일치, 실수 ≤ 1×10⁻⁹)을 만족한다.
 - 시간 순서: 경로 A는 결과 전에 sha를 고정했다(rev1, 커밋 `01dd321`). 경로 B는 자기 계산을 끝낸 뒤에 경로 A 출력을 읽었다(메인 세션 기록). 원판 7절은 경로 A 다음에 경로 B 순서였다. B가 A와 독립으로 계산됐다는 조건은 지켰다.
-- 재현: control-expert가 같은 경로 A 도구(sha 동일)로 결과 폴더를 다시 읽었다. 위치 필드(`yaml`, `batch`)를 뺀 모든 키가 저장 `metrics_A.json`과 같았다(차 0개). 두 실행의 YAML sha는 `4f85d2d2…` 하나다.
+- 재현: control-expert가 같은 경로 A 도구(sha 동일)로 결과 폴더를 다시 읽었다. 위치 필드(`yaml`, `batch`)를 뺀 모든 키가 저장 `metrics_A.json`과 같았다(차 0개). 두 실행의 YAML sha는 `4f85d2d2…` 하나다. 이 sha는 CRLF 작업본 바이트 기준이다(`02_params/rexome33.yaml`은 `-text`가 아니다). git blob은 `7db55937…` 하나로 같고, 다른 checkout에서 재면 파일 sha가 달라질 수 있다(예: main checkout `ef2880f9…`).
 
 ## 4. 실행 기록
 
 | 항목 | 값 |
 |---|---|
 | 결과 폴더 | `C:\workspace\outrigger_control\07_results\S9\batch_B1-GRIDCONV_20261110_174640\`(git 밖) |
-| 실행 checkout | worktree `.claude/worktrees/gc-run-dc2029b`, detached HEAD `dc2029be9512f40bf849e17fd3bdaa5c61a89a5e`. 행마다 시작·끝 HEAD 같음, 추적 파일 변경 0 |
+| 실행 checkout | worktree `.claude/worktrees/gc-run-dc2029b`, detached HEAD `dc2029be9512f40bf849e17fd3bdaa5c61a89a5e`. 행마다 시작·끝 HEAD 같음. 추적 파일 변경 0은 시작 때만 기록했고(`tracked_dirty_start` 빈 값), 끝에는 HEAD만 기록했다 |
 | hull DLL | 복사본 sha256 = 원본 `cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15`(rev1 C-2). 행마다 `hull_hook` mode·requested `fast`, `dll_sha_validated` 참 |
 | env | 설정 `OMP_WAIT_POLICY=PASSIVE`, `OUTRIGGER_PLACEMENT=ecore`. 제거 `OUTRIGGER_HULL_HOOK`, `OUTRIGGER_HULL_HOOK_ALLOW_UNVALIDATED`, `OUTRIGGER_HULL_HOOK_DLL`, `OPENBLAS_NUM_THREADS`. 인터프리터 Chrono-dev `python.exe -I -X utf8 -u` |
 | 배치 | E코어 3줄(줄 1 GC-4, 줄 2 GC-2, 줄 3 GC-3 → GC-1), `--threads 4`. 배치표 `gc_placement_table.md` sha256 `dd4930486897d8e186196a82dd6e6889411f395ca3a426ece780ea61acecabd5` |
@@ -96,7 +101,7 @@ $k$ = 1, 2는 유지 끝 $t$ = 11.0, 21.0 s다. 침하 + = 깊어짐이다.
 |---|---|
 | [차단] 1. single-pad가 `batch.json`을 만들지 않아 rc·argv가 남지 않는다 | 실행 래퍼가 행마다 argv·rc·HEAD·env를 `batch.json`에 썼다. 경로 A는 `--rc` 없이 batch.json에서 읽었다(`argv_checked` 참) |
 | [차단] 2. 인자 순서 | 래퍼가 원판 3.2 argv 예의 순서로 띄웠다. 경로 A V-2 argv 대조 4행 통과 |
-| [수정] 3. 결과에 커밋 없음, main checkout | `dc2029b` 전용 worktree에서 돌렸다. 시작·끝 HEAD와 추적 파일 변경 0을 기록했다 |
+| [수정] 3. 결과에 커밋 없음, main checkout | `dc2029b` 전용 worktree에서 돌렸다. 시작·끝 HEAD를 기록했다. 추적 파일 변경 0은 시작 때만 기록했고, 끝 시점은 기록하지 않았다(판정 후 감사 때 gc-run worktree의 추적 파일 변경은 0) |
 | [수정] 4. 배치표 | compute-scheduler-expert 배치표(E 3줄)를 썼고, 경로와 sha를 prelaunch에 적었다 |
 | [수정] 5. env 정리 | hull hook 관련 env 3개와 `OPENBLAS_NUM_THREADS`를 지우고 그 목록을 prelaunch에 적었다 |
 | [기록] 6. 비정상 입력 예외 | 해당 없음(4행 모두 정상 입력) |
@@ -105,6 +110,10 @@ $k$ = 1, 2는 유지 끝 $t$ = 11.0, 21.0 s다. 침하 + = 깊어짐이다.
 | [기록] 9. 동시 실행이 비트를 바꾸지 않는다는 확인 없음 | 짝 비교는 같은 묶음 안이다. G-1 잔차가 3×10⁻⁶ 수준이라 판정 영향이 없다 |
 | [기록] 10. 패드 시작 위치 인자가 parser에 없음 | 아래 6절 해석 2 |
 | [기록] 11. 07_results는 git 밖 | 증거 사본을 `evidence/gridconv_run/`에 두었다(7절) |
+| [확인 필요] 1. V-2 "INVALID(다시 돌리지 않는다)"와 6절 "빠진 행만 1회 다시" 문구 충돌 | 해당 없음. 4행 모두 VALID라 재실행 여부를 정할 일이 생기지 않았다. 문구는 개정하지 않았다 |
+| [확인 필요] 2. 경로 B가 G-2·G-3과 판정까지 내는지 | 해결됨. 경로 B가 G-1~G-5, 판정, E-1~E-8까지 냈고, 그 값이 대조 127항목에 들어갔다(3절) |
+
+- 판정 후 재집계 감사 원문은 `06_analysis/02_control/b1/b1_gridconv_post_audit.md`(verif-protocol-auditor, 대상 커밋 `af2f89c`)다. 차단 1건(2.1절 $z/f$ ↔ $z_{cont}$ 문구)과 기록 3건(4절 추적 파일 변경 기록 범위, 위 확인 필요 2건, 3절 YAML sha의 CRLF 기준)을 이 판에 반영했다. 판정 수치와 `PASS`는 감사의 독립 재집계와 같아서 바꾸지 않았다.
 
 ## 6. 정의 해석 (경로 A·B 같게 처리)
 
