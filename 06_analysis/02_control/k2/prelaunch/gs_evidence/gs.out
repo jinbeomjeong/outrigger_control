@@ -1,0 +1,194 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.15, pytest-9.1.1, pluggy-1.7.0 -- C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe
+rootdir: C:\workspace\outrigger_control\.claude\worktrees\k2-run
+configfile: pyproject.toml
+plugins: anyio-4.15.1, jaxtyping-0.3.11, platformdirs-4.13.4
+collecting ... collected 106 items
+
+05_tests/unit/test_k2_hashes.py::test_t_k2_1_screen_vc_hashes PASSED     [  0%]
+05_tests/unit/test_k2_hashes.py::test_t_k2_2_off_arm_keeps_the_stored_hashes PASSED [  1%]
+05_tests/unit/test_k2_hashes.py::test_i8_g0_values_unchanged PASSED      [  2%]
+05_tests/unit/test_k2_hashes.py::test_i8_rc_sample_hashes PASSED         [  3%]
+05_tests/unit/test_c2_touch_creep.py::test_off_by_default_and_in_the_preset PASSED [  4%]
+05_tests/unit/test_c2_touch_creep.py::test_preset_keyword_turns_only_the_latch_on PASSED [  5%]
+05_tests/unit/test_c2_touch_creep.py::test_config_pickled_before_k2_reads_off PASSED [  6%]
+05_tests/unit/test_c2_touch_creep.py::test_bad_settings_are_refused[bad0] PASSED [  7%]
+05_tests/unit/test_c2_touch_creep.py::test_bad_settings_are_refused[bad1] PASSED [  8%]
+05_tests/unit/test_c2_touch_creep.py::test_bad_settings_are_refused[bad2] PASSED [  9%]
+05_tests/unit/test_c2_touch_creep.py::test_bad_settings_are_refused[bad3] PASSED [ 10%]
+05_tests/unit/test_c2_touch_creep.py::test_bad_settings_are_refused[bad4] PASSED [ 11%]
+05_tests/unit/test_c2_touch_creep.py::test_bad_settings_are_refused[bad5] PASSED [ 12%]
+05_tests/unit/test_c2_touch_creep.py::test_bad_settings_are_refused[bad6] PASSED [ 13%]
+05_tests/unit/test_c2_touch_creep.py::test_bad_settings_are_refused[bad7] PASSED [ 14%]
+05_tests/unit/test_c2_touch_creep.py::test_meta_has_the_block_with_the_rule_off PASSED [ 15%]
+05_tests/unit/test_c2_touch_creep.py::test_first_contact_sample_creeps_instead_of_stopping PASSED [ 16%]
+05_tests/unit/test_c2_touch_creep.py::test_window_latch_and_level_entry PASSED [ 16%]
+05_tests/unit/test_c2_touch_creep.py::test_four_samples_do_not_latch PASSED [ 17%]
+05_tests/unit/test_c2_touch_creep.py::test_window_mean_boundary[1.0-True] PASSED [ 18%]
+05_tests/unit/test_c2_touch_creep.py::test_window_mean_boundary[-1.0-False] PASSED [ 19%]
+05_tests/unit/test_c2_touch_creep.py::test_window_minimum_boundary[0.0-True] PASSED [ 20%]
+05_tests/unit/test_c2_touch_creep.py::test_window_minimum_boundary[-1.0-False] PASSED [ 21%]
+05_tests/unit/test_c2_touch_creep.py::test_creep_speed_holds_in_a_dip PASSED [ 22%]
+05_tests/unit/test_c2_touch_creep.py::test_latch_needs_the_window_minimum PASSED [ 23%]
+05_tests/unit/test_c2_touch_creep.py::test_latch_needs_the_window_mean PASSED [ 24%]
+05_tests/unit/test_c2_touch_creep.py::test_leg_latches_inside_a_dip PASSED [ 25%]
+05_tests/unit/test_c2_touch_creep.py::test_latched_leg_stops_and_the_others_creep PASSED [ 26%]
+05_tests/unit/test_c2_touch_creep.py::test_stroke_cap_latches_with_an_event PASSED [ 27%]
+05_tests/unit/test_c2_touch_creep.py::test_leg_before_touch_seen_keeps_its_approach_speed PASSED [ 28%]
+05_tests/unit/test_c2_touch_creep.py::test_tcl_tag_suffix_is_last PASSED [ 29%]
+05_tests/unit/test_c2_touch_creep.py::test_option_absent_is_the_preset_without_an_attribute PASSED [ 30%]
+05_tests/unit/test_c2_touch_creep.py::test_explicit_request_sets_only_the_switch[off] PASSED [ 31%]
+05_tests/unit/test_c2_touch_creep.py::test_explicit_request_sets_only_the_switch[on] PASSED [ 32%]
+05_tests/unit/test_c2_touch_creep.py::test_bad_option_value_is_refused PASSED [ 33%]
+05_tests/unit/test_k2_harness.py::test_presets_expand_to_the_dynamics_spec PASSED [ 33%]
+05_tests/unit/test_k2_harness.py::test_chrono_l1_ratio_is_the_yaml_value PASSED [ 34%]
+05_tests/unit/test_k2_harness.py::test_preset_conflicts_are_refused[rcfg0] PASSED [ 35%]
+05_tests/unit/test_k2_harness.py::test_preset_conflicts_are_refused[rcfg1] PASSED [ 36%]
+05_tests/unit/test_k2_harness.py::test_explicit_options_keep_their_source PASSED [ 37%]
+05_tests/unit/test_k2_harness.py::test_aug_arm_names_map_to_presets PASSED [ 38%]
+05_tests/unit/test_k2_harness.py::test_sh1_counts_lift_after_the_own_latch_only PASSED [ 39%]
+05_tests/unit/test_k2_harness.py::test_sh2_window_is_the_03_s_before_touch PASSED [ 40%]
+05_tests/unit/test_k2_harness.py::test_j3_from_the_first_four_pad_contact PASSED [ 41%]
+05_tests/unit/test_k2_harness.py::test_series_file_name_is_the_diag_slug PASSED [ 42%]
+05_tests/unit/test_k2_harness.py::test_tags_of_the_arms PASSED           [ 43%]
+05_tests/unit/test_k2_harness.py::test_points_follow_diamond_points_and_flag_the_d45_table PASSED [ 44%]
+05_tests/unit/test_k2_harness.py::test_point_rule_rev1_rejects_a_far_d45_and_a_moved_point PASSED [ 45%]
+05_tests/unit/test_k2_harness.py::test_point_file_check_compares_the_angles PASSED [ 46%]
+05_tests/unit/test_k2_harness.py::test_dhat_window_record PASSED         [ 47%]
+05_tests/unit/test_k2_harness.py::test_dhat_quantiles_and_the_large_rows PASSED [ 48%]
+05_tests/unit/test_k2_harness.py::test_v3_key_rule PASSED                [ 49%]
+05_tests/unit/test_k2_harness.py::test_judge_row_pass_and_the_k2_evidence PASSED [ 50%]
+05_tests/unit/test_k2_harness.py::test_shadow_flags PASSED               [ 50%]
+05_tests/unit/test_k2_harness.py::test_v5_bundles PASSED                 [ 51%]
+05_tests/unit/test_k2_harness.py::test_grade_order PASSED                [ 52%]
+05_tests/unit/test_k2_harness.py::test_cli_contract_last_line_json PASSED [ 53%]
+05_tests/unit/test_k2_prelaunch_fix.py::test_grid_parts_match_the_stored_judgement PASSED [ 54%]
+05_tests/unit/test_k2_prelaunch_fix.py::test_soil_d8_noise_match_the_stored_judgement PASSED [ 55%]
+05_tests/unit/test_k2_prelaunch_fix.py::test_regression_parts_match_the_stored_judgement PASSED [ 56%]
+05_tests/unit/test_k2_prelaunch_fix.py::test_ps7_and_g8_rows PASSED      [ 57%]
+05_tests/unit/test_k2_prelaunch_fix.py::test_v5_bundle_reads_the_flat_rows PASSED [ 58%]
+05_tests/unit/test_k2_prelaunch_fix.py::test_existing_output_is_refused PASSED [ 59%]
+05_tests/unit/test_k2_prelaunch_fix.py::test_missing_r79_judgement_names_the_judge_command PASSED [ 60%]
+05_tests/unit/test_k2_prelaunch_fix.py::test_d8_row_conditions PASSED    [ 61%]
+05_tests/unit/test_k2_prelaunch_fix.py::test_wrapper_passes_rc_and_records_identity PASSED [ 62%]
+05_tests/unit/test_k2_prelaunch_fix.py::test_wrapper_refuses_an_existing_sidecar PASSED [ 63%]
+05_tests/unit/test_k2_prelaunch_fix.py::test_env_subset_names PASSED     [ 64%]
+05_tests/unit/test_k2_prelaunch_fix.py::test_ps7_existing_out_is_not_overwritten PASSED [ 65%]
+05_tests/unit/test_k2_prelaunch_fix.py::test_ps7_preset_record PASSED    [ 66%]
+05_tests/unit/test_k2_prelaunch_fix.py::test_v6_reads_dhat_from_the_k2_block PASSED [ 66%]
+05_tests/unit/test_k2_run_s9.py::test_absent_option_keeps_the_preset_bits SKIPPED [ 67%]
+05_tests/unit/test_k2_run_s9.py::test_explicit_request_sets_only_the_latch[off] SKIPPED [ 68%]
+05_tests/unit/test_k2_run_s9.py::test_explicit_request_sets_only_the_latch[on] SKIPPED [ 69%]
+05_tests/unit/test_k2_run_s9.py::test_registered_tags_refuse_a_k2_config SKIPPED [ 70%]
+05_tests/unit/test_k2_run_s9.py::test_k2_tags_pass_their_configs SKIPPED [ 71%]
+05_tests/unit/test_k2_chrono_runner.py::test_rows_match_the_rules_table SKIPPED [ 72%]
+05_tests/unit/test_k2_chrono_runner.py::test_runner_sets SKIPPED (co...) [ 73%]
+05_tests/unit/test_k2_chrono_runner.py::test_earlier_cases_keep_their_meta_and_repr SKIPPED [ 74%]
+05_tests/unit/test_k2_chrono_runner.py::test_select_rows_one_arm[off] SKIPPED [ 75%]
+05_tests/unit/test_k2_chrono_runner.py::test_select_rows_one_arm[on] SKIPPED [ 76%]
+05_tests/unit/test_k2_chrono_runner.py::test_select_rows_refusals[bad0] SKIPPED [ 77%]
+05_tests/unit/test_k2_chrono_runner.py::test_select_rows_refusals[bad1] SKIPPED [ 78%]
+05_tests/unit/test_k2_chrono_runner.py::test_select_rows_refusals[bad2] SKIPPED [ 79%]
+05_tests/unit/test_k2_chrono_runner.py::test_select_rows_refusals[bad3] SKIPPED [ 80%]
+05_tests/unit/test_k2_chrono_runner.py::test_select_rows_refusals[bad4] SKIPPED [ 81%]
+05_tests/unit/test_k2_chrono_runner.py::test_select_rows_refusals[bad5] SKIPPED [ 82%]
+05_tests/unit/test_k2_chrono_runner.py::test_select_rows_refusals[bad6] SKIPPED [ 83%]
+05_tests/unit/test_k2_chrono_runner.py::test_select_rows_refusals[bad7] SKIPPED [ 83%]
+05_tests/unit/test_k2_chrono_runner.py::test_options_refused_outside_the_set SKIPPED [ 84%]
+05_tests/unit/test_k2_chrono_runner.py::test_cli_parsers_accept_the_options SKIPPED [ 85%]
+05_tests/unit/test_k2_chrono_runner.py::test_preflight_tags[off] SKIPPED [ 86%]
+05_tests/unit/test_k2_chrono_runner.py::test_preflight_tags[on] SKIPPED  [ 87%]
+05_tests/unit/test_k2_chrono_runner.py::test_preflight_refuses_a_wrong_config SKIPPED [ 88%]
+05_tests/unit/test_k2_chrono_runner.py::test_earlier_case_config_unchanged SKIPPED [ 89%]
+05_tests/unit/test_k2_chrono_runner.py::test_mixed_batch_refused SKIPPED [ 90%]
+05_tests/unit/test_k2_chrono_runner.py::test_open_fraction FAILED        [ 91%]
+05_tests/unit/test_k2_chrono_runner.py::test_hook_sets_cn_only_from_the_valve SKIPPED [ 92%]
+05_tests/unit/test_k2_chrono_runner.py::test_v7_rows SKIPPED (could ...) [ 93%]
+05_tests/unit/test_k2_chrono_runner.py::test_v7_configs_pass_their_tags SKIPPED [ 94%]
+05_tests/unit/test_k2_chrono_runner.py::test_v6_tags_stay_k1_off SKIPPED [ 95%]
+05_tests/unit/test_k2_chrono_runner.py::test_dhat_window_rule SKIPPED    [ 96%]
+05_tests/unit/test_k2_chrono_runner.py::test_dhat_recorder_reads_only SKIPPED [ 97%]
+05_tests/unit/test_k2_chrono_runner.py::test_batch_identity_records SKIPPED [ 98%]
+05_tests/unit/test_k2_chrono_runner.py::test_batch_dir_option SKIPPED    [ 99%]
+05_tests/unit/test_k2_chrono_runner.py::test_cost_rows SKIPPED (coul...) [100%]
+
+================================== FAILURES ===================================
+_____________________________ test_open_fraction ______________________________
+
+    def test_open_fraction() -> None:
+>       from outrigger_sim.chrono.moving_pad_damping import open_fraction
+
+05_tests\unit\test_k2_chrono_runner.py:230: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    """L1-R moving-leg pad damping (K-2 V-6, ``k2_touch_creep_rules.md`` 3.5, ``k2_dyn_spec.md`` 3).
+    
+    The L1 pad contact is SMC Hooke with one LOCK-based dashpot ``g_n`` per leg
+    (``contact.rigid_floor.L1.gn_per_pad_1_s``, leg axial ``zeta`` 0.03,
+    ``derivation.damping_ratio``). The dynamics specification gives a moving leg (valve open) the
+    axial ``zeta`` 0.10: only the **normal** dashpot changes,
+    ``c_n,move = c_n,LOCK x zeta_move / zeta_LOCK``; the tangential path (ground bushing, not the
+    SMC material) keeps its LOCK values.
+    
+    Mechanism (chrono-rag, PyChrono 10.0.0 sources):
+    
+    * ``ChContactContainerSMC::AddContact`` (``src/chrono/physics/ChContactContainerSMC.cpp:94``)
+      builds a new ``ChContactMaterialCompositeSMC`` from the two shape materials at every collision
+      detection, i.e. every step; a material changed in a step hook acts from the next step (the
+      1-step hook-lag convention).
+    * ``ChContactMaterialCompositeSMC`` (``ChContactMaterialSMC.cpp:124``):
+      ``gn = CombineDampingCoefficient(gn_1, gn_2)``; the default strategy
+      (``ChContactMaterial.h:157``) is the mean ``(a1 + a2) / 2``. The pad sphere and its floor
+      patch carry the same material values (``chrono/contact`` R13), so both are set to the moving
+      value and the composite equals it. ``m_eff`` does not change, so ``c_n`` scales with ``g_n``.
+    
+    Valve open (the dynamics definition): ``|u| > lock_eps`` with ``u`` the spool state that drives
+    the step (``L1SpeedActuator.valve_state_m_s`` read in the runner step hook) and ``lock_eps`` =
+    ``actuator.rod_side.lock_eps_m_s`` (1e-6 m/s). Decided per physics step (dt 2e-4 s, finer than
+    the harness 1 ms chunks); the valve lag tail follows the same ``|u|`` rule.
+    
+    The L1-R machine's one-sided clamp (``chrono/rod_chamber_link.one_sided_extra_force_N``) uses its
+    own ``c_n`` copy; the hook scales it by the same factor in the same call. The machine step of a
+    step runs before the step hook, so the clamp sees the new value one step after Chrono (the clamp
+    acts only near zero contact force; ASSUMPTION that this one-step offset is negligible).
+    
+    Not installed = no material or machine value is touched (bit-identical runs).
+    """
+    
+    from __future__ import annotations
+    
+    from dataclasses import dataclass
+    from pathlib import Path
+    from typing import Any
+    
+    import numpy as np
+>   import pychrono as ch
+E   ModuleNotFoundError: No module named 'pychrono'
+
+03_src\outrigger_sim\chrono\moving_pad_damping.py:42: ModuleNotFoundError
+=========================== short test summary info ===========================
+SKIPPED [1] 05_tests\unit\test_k2_run_s9.py:40: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [2] 05_tests\unit\test_k2_run_s9.py:47: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_run_s9.py:57: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_run_s9.py:69: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:62: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:72: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:90: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [2] 05_tests\unit\test_k2_chrono_runner.py:117: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [8] 05_tests\unit\test_k2_chrono_runner.py:127: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:145: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:158: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [2] 05_tests\unit\test_k2_chrono_runner.py:171: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:180: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:194: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:215: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:247: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:294: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:312: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:321: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:326: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:343: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:358: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:375: could not import 'pychrono': No module named 'pychrono'
+SKIPPED [1] 05_tests\unit\test_k2_chrono_runner.py:384: could not import 'pychrono': No module named 'pychrono'
+============ 1 failed, 71 passed, 34 skipped in 574.01s (0:09:34) =============

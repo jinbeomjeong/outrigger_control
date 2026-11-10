@@ -72,13 +72,37 @@ FLAT_MAIN_SIDECAR_NOTE = (
     "clean and the flattener blob are checked in the post-judgement identity audit together with the 60-sidecar list "
     "(same sense as rules rev6 4; main session decision 2026-11-10).")
 GS_EVIDENCE = {
-    "status": "{GS_EVIDENCE: pending, the main session runs the G-S tests on k2-run and sends the result}",
-    "fields_to_fill": {"command": None, "interpreter": None, "checkout": None, "head": None,
-                       "passed": None, "skipped": None, "failed": None,
-                       "test_k2_hashes_py": {"T-K2-1": None, "T-K2-2": None, "I-8_G0": None, "I-8_R-c": None,
-                                             "skipped": None},
-                       "log_file_sha256": None},
+    "status": "filled 2026-11-10 (main session run, logs copied byte-identical into prelaunch/gs_evidence/)",
     "rule": "G-S needs the 9.2 tests, I-4 reduced, I-5, I-8 passed (re-audit finding 3)",
+    "common": {"checkout": r"C:\workspace\outrigger_control\.claude\worktrees\k2-run",
+               "head": "6a44ff81d25aea1fa162daf9b14c23b99beb9db0", "tracked_changes_before_after": 0,
+               "affinity": "0x0FFF0000 (E cores)", "env": "MKL_THREADING_LAYER=TBB, *_NUM_THREADS=1",
+               "time": "2026-11-10 20:08 .. 20:19 +09:00"},
+    "runs": [
+        {"env": "dynamics-dev",
+         "command": r"C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe -I -B -m pytest -v -rs -p no:cacheprovider "
+                    "05_tests/unit/test_k2_hashes.py 05_tests/unit/test_c2_touch_creep.py 05_tests/unit/test_k2_harness.py "
+                    "05_tests/unit/test_k2_prelaunch_fix.py 05_tests/unit/test_k2_run_s9.py "
+                    "05_tests/unit/test_k2_chrono_runner.py",
+         "passed": 71, "skipped": 34, "failed": 1, "wall_s": 574.01,
+         "test_k2_hashes_py": {"T-K2-1 screen VC": "PASSED", "T-K2-2 off arm": "PASSED", "I-8 G0": "PASSED",
+                               "I-8 R-c sample": "PASSED", "skipped": 0},
+         "skip_and_fail_cause": "all 34 skips and the 1 failure (test_k2_chrono_runner.py::test_open_fraction, "
+                                "ModuleNotFoundError pychrono) are 'no pychrono in dynamics-dev' (checked in the log); "
+                                "the same files run in Chrono-dev below",
+         "log": "gs_evidence/gs.out", "log_sha256": "d397b00f53012f41ad7391b0af82ae07f610cda4cac2e5b4553bf1a14aa8791c"},
+        {"env": "Chrono-dev",
+         "command": r"C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I -B -m pytest -v -rs -p no:cacheprovider "
+                    "05_tests/unit/test_k2_run_s9.py 05_tests/unit/test_k2_chrono_runner.py 05_tests/unit/test_c2_touch_creep.py",
+         "passed": 66, "skipped": 0, "failed": 0, "wall_s": 5.77,
+         "note": "includes test_open_fraction PASSED",
+         "log": "gs_evidence/gs_chrono.out",
+         "log_sha256": "2fc2bfee4216f3eef99398f973433482f197108d3a1534d13ba6b449d898c8da"},
+    ],
+    "judge_tools_check": "main session: master 6d11d13, Chrono-dev, the K-2 judge tests 147 passed (judge-tool basis, "
+                         "not the run checkout)",
+    "verdict": "G-S test condition met: T-K2-1 / T-K2-2 (I-4 reduced, I-5) and I-8 (G0, R-c) passed with 0 skips; "
+               "the pychrono-dependent tests pass in Chrono-dev",
 }
 IDENTITY_LIST_NOTE = (
     "rules rev2 6 / rev6 4: the post-judgement identity list is 60 sidecars (the 62 of k2_commands.json without the "

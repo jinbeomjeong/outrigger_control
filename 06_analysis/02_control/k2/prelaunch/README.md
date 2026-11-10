@@ -156,7 +156,17 @@ worker-초 추정이다.
 - **판정 후 정체성 확인 목록은 60개 sidecar**다(rev6 4절). 참고용 평탄화 단계 2개는 뺀다. 여기에 `flat_main` 재생성 sidecar, V-5 provenance, V-6 `batch_meta` 4개, V-7 `batch.json`·`result.json`을 더한다.
   - P_post가 참고용 평탄화 단계에서 멈추면, 남은 tcl r79 판정 단계 2개를 `k2_commands_filled.json`의 같은 래퍼 argv로 이어 돌린다.
   - 그때 시각, 실행자, 멈춘 단계와 rc를 기록한다.
-- **G-S 근거**(재감사 발견 3): 실행 전 기록 `gs_evidence` 칸에 자리를 만들어 두었다. 메인 세션이 k2-run에서 돌리는 시험 결과를 받으면 채운다. 채울 내용은 명령, 인터프리터, checkout·HEAD, pass/skip/fail 수, `test_k2_hashes.py`의 T-K2-1·T-K2-2·I-8 G0·R-c와 skip 수, 로그 sha다.
+- **G-S 근거**(재감사 발견 3, 2026-11-10 채움): 실행 전 기록 `gs_evidence` 칸에 넣었다. 로그는 `gs_evidence/`에 원본과 바이트가 같게 복사했다.
+  - 공통 조건: k2-run, HEAD `6a44ff8`, 시험 전후 추적 파일 변경 0, E코어 `0x0FFF0000`, `MKL_THREADING_LAYER=TBB`, `*_NUM_THREADS=1`, 20:08~20:19.
+
+  | env | 대상 | 결과 | 로그 sha256 |
+  |---|---|---|---|
+  | dynamics-dev | test_k2_hashes, test_c2_touch_creep, test_k2_harness, test_k2_prelaunch_fix, test_k2_run_s9, test_k2_chrono_runner | 71 passed, 34 skipped, 1 failed (574 s) | `gs.out` `d397b00f…8791c` |
+  | Chrono-dev | test_k2_run_s9, test_k2_chrono_runner, test_c2_touch_creep | 66 passed, skip 0, fail 0 | `gs_chrono.out` `2fc2bfee…c8da` |
+
+  - `test_k2_hashes.py`는 4/4 통과했고 skip은 0이다. 통과한 시험은 T-K2-1 스크린 VC, T-K2-2 끔 팔, I-8 G0, I-8 R-c 표본이다.
+  - dynamics-dev의 skip 34건과 fail 1건(`test_open_fraction`)은 모두 그 env에 pychrono가 없어서 생겼다. 로그에서 `ModuleNotFoundError: pychrono`를 확인했다. 같은 파일을 Chrono-dev에서 다시 돌렸고 모두 통과했다(`test_open_fraction` 포함).
+  - 메인 세션은 이와 별도로 master `6d11d13`, Chrono-dev에서 K-2 판정 시험 147건을 돌려 모두 통과했다. 이것은 실행 checkout이 아니라 판정 도구 기준의 확인이다.
 
 ## 7.2 경로 독립성 공개 (rev6 5절, 사용자 결정)
 
