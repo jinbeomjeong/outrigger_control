@@ -314,11 +314,12 @@ def test_v5_raw_d8_grid_common(tmp_path):
         return d
     off = arm("off", "final_C4G2_LAS_K1", False, 30.0)
     tcl = arm("tcl", "final_C4G2_LAS_K1_TCL", True, 14.0)
-    assert kr._v5_grid(off, tcl)["absolute_pass"]
+    grid = kr._v5_grid(off, tcl)
+    assert grid["absolute_pass"] and not grid["judgeable"] and grid["not_judgeable_counts"] == {"count": 2}  # rev6: 4 != 768
     d8 = kr._v5_d8(off, tcl)
-    assert not d8["absolute_pass"] and d8["failure_counts"] == {"min_true_cyl_force_kN": 576}
+    assert not d8["absolute_pass"] and d8["failure_counts"] == {"min_true_cyl_force_kN": 576} and d8["judgeable"]
     common = kr._v5_common({}, {"off": off, "tcl": tcl})
-    assert not common["absolute_pass"]
+    assert common["absolute_pass"] and not common["judgeable"]  # rev6 1: common items are not judgeable
     assert {"run_wt_c2", "provenance", "g8_sidecar", "events:g8", "events:ps7.json"} <= set(common["missing"])
     # rev5 2: G8 sidecars with the run HEAD and clean pass; a dirty end fails
     sc = []
@@ -330,14 +331,36 @@ def test_v5_raw_d8_grid_common(tmp_path):
     flat = tmp_path / "flatten.launch.json"
     flat.write_text(json.dumps({"rc": 2}), encoding="utf-8")
     c = kr._v5_common({"sidecars": {"tcl": sc + [str(flat)], "off": sc}}, {"off": off, "tcl": tcl})
-    assert "g8_git" not in c["failure_counts"] and "sidecar_rc" not in c["failure_counts"]
+    assert "g8_git" not in c["not_judgeable_counts"] and "sidecar_rc" not in c["not_judgeable_counts"]
     bad = json.loads(Path(sc[0]).read_text(encoding="utf-8"))
     bad["git_end"]["is_clean"] = False
     Path(sc[0]).write_text(json.dumps(bad), encoding="utf-8")
-    assert "g8_git" in kr._v5_common({"sidecars": {"tcl": sc}}, {"off": off, "tcl": tcl})["failure_counts"]
+    assert "g8_git" in kr._v5_common({"sidecars": {"tcl": sc}}, {"off": off, "tcl": tcl})["not_judgeable_counts"]
     problems = []
     out, g = kr.recount_v5_raw({"off": str(off), "tcl": str(tcl)}, problems)
-    assert g == "fail" and any("soil" in p for p in problems)
+    assert g == "not_judgeable" and any("soil" in p for p in problems)
+    assert not out["d8"]["absolute_pass"]
+
+
+def test_p2f_unmatched_is_not_judgeable(tmp_path):
+    def arm(name, n):
+        d = tmp_path / name
+        d.mkdir()
+        rows = [{"key": f"k{i}", "pass": True} for i in range(n)]
+        (d / "ps7.json").write_text(json.dumps(rows), encoding="utf-8")
+        return d
+    r = kr._v5_ps7(arm("off", 20), arm("tcl", 19))
+    assert r["absolute_pass"] and not r["judgeable"] and set(r["not_judgeable_counts"]) == {"count", "unmatched"}
+
+
+def test_harness_shadow_missing_is_flag(tmp_path):
+    s = _series(tmp_path, "m.npz")
+    off = [kr.judge_row(_row("x", False, s), kr.DEFAULT_FIELDS, "harness", tmp_path, True)]
+    t = _row("x", True, s)
+    t["d8x"]["t_ready_s"] = None
+    tcl = [kr.judge_row(t, kr.DEFAULT_FIELDS, "harness", tmp_path, True)]
+    sh = kr.shadow(off, tcl)
+    assert "SH-3" in sh["flags"] and sh["missing"] == {"SH-3": 1}
 
 
 def test_v5_stored_acceptance_outputs():
