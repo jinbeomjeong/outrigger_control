@@ -29,9 +29,28 @@ F_D8 = judge.f_d8_N()
 # --- seals and points -----------------------------------------------------------------------
 def test_all_rules_files_match_their_seals() -> None:
     report = spec.seal_report()
-    assert set(report) == {"original", "rev1", "rev2"}
+    assert set(report) == {"original", "rev1", "rev2", "rev3", "rev4"}
     assert report["rev2"]["sealed"].startswith("5f3fa620")
+    assert report["rev3"]["sealed"].startswith("2318fb5c")
+    assert report["rev4"]["sealed"].startswith("5233c517")
     assert all(entry["ok"] for entry in report.values()), report
+
+
+def test_stage2_rules_constants_match_the_spec() -> None:
+    sys.path.insert(0, str(ROOT / "04_scripts" / "02_chrono"))
+    import s6_stage2 as st  # noqa: PLC0415
+
+    sealed = {rev: sha for rev, _, sha in spec.RULES_FILES}
+    assert st.D8X_RULES_REV == spec.LATEST_RULES_REV == "rev4"
+    assert st.D8X_RULES_REV3_SHA256 == sealed["rev3"]
+    assert st.D8X_RULES_REV4_SHA256 == sealed["rev4"]
+
+
+def test_rev3_rev4_have_no_point_tables_and_keep_the_point_file() -> None:
+    tables = spec.rules_point_tables()
+    assert set(tables["sources"].values()) <= {"original", "rev1"}
+    stored = json.loads(spec.POINTS_PATH.read_text(encoding="utf-8"))
+    assert set(stored["rules"]) == set(spec.POINT_FILE_RULES)
 
 
 def test_committed_point_file_equals_the_rev1_tables() -> None:
@@ -286,8 +305,8 @@ def test_ra_e6_checks_the_effective_gate_and_the_arm_tag(monkeypatch, k1, gate, 
                 "counts": {"liftoff_slow_count": 0}, "values": {}}
 
     monkeypatch.setattr(judge, "judge_metrics", judged_clean)
-    row = judge._judge_ra_run(_ra_run(gate, tag), k1, {}, F_D8, spec.DEFAULT_TAGS["ra"], set(),
-                              [])
+    row = judge._judge_ra_run(_ra_run(gate, tag), k1, {}, F_D8, spec.EXPECTED_TAGS["ra"][k1],
+                              set(), [])
     e6 = [reason for reason in row["not_judgeable"] if reason.startswith("E-6")]
     assert bool(e6) is is_flagged, e6
 
@@ -332,7 +351,7 @@ def test_w_eligibility_is_the_true_usage_and_for_level_is_a_record() -> None:
     """Rev2 3: true R_v <= 1.01, all 11 candidates eligible; for_level R_v hat recorded."""
     d45 = (2.2627 * 1.02, 2.2627 * 1.02)  # a for_level estimate beyond 1.01
     rows = {("top", "d45++"): _g0_row("top", "d45++", d45)}
-    eligibility = judge._w_eligibility(spec.build_points(), rows, rows)
+    eligibility = judge._w_eligibility(spec.build_points(), rows)
     assert all(entry["pass"] for entry in eligibility.values())
     assert eligibility["d45++"]["R_v_true"] == pytest.approx(1.008505, abs=1e-6)
     assert eligibility["d45++"]["for_level_record"]["pass"] is False
@@ -344,24 +363,61 @@ def test_g0_4_gate_scope_is_the_four_l1r_floors() -> None:
                                 "bottom": ()}
 
 
-def _write_g0(path: Path, rows: list[dict], blobs: dict) -> None:
-    path.write_text(json.dumps({"meta": {"identity": {"script_blobs_HEAD": blobs}},
-                                "rows": rows}), encoding="utf-8")
+G0_CLOSURE = ("04_scripts/01_dynamics/run_s6_slope_boundary_check.py",
+              "03_src/outrigger_sim/control/target.py", "02_params/rexome33.yaml")
 
 
-def test_judge_g0_counts_and_sources(tmp_path) -> None:
+def _rev3_meta(**overrides) -> dict:
+    blobs = judge.tree_blobs("HEAD")
+    meta = {"rules_rev": "rev3", "reuse": 0, "recompute": 60, "run_commit": "abc", "clean": True,
+            "closure": {"files": {name: blobs[name] for name in G0_CLOSURE}}}
+    return {**meta, **overrides}
+
+
+def _write_g0(path: Path, rows: list[dict], meta: dict) -> None:
+    summary = {"reused": meta.get("reuse"), "recomputed": meta.get("recompute")}
+    path.write_text(json.dumps({"meta": meta, "summary": summary, "rows": rows}),
+                    encoding="utf-8")
+
+
+def _g0_rows_all(ok=True) -> list[dict]:
     points = spec.build_points()
-    rows = [_g0_row(level, tag, spec.points_by_name(points)[tag])
+    return [{**_g0_row(level, tag, spec.points_by_name(points)[tag], ok=ok),
+             "source": "recomputed (rev3)"}
             for level in spec.LEVELS for tag in points["g0_points"]]
-    rerun = tmp_path / "rerun.json"
-    _write_g0(rerun, rows, {})
-    status, result = judge.cmd_judge_g0(_Args(reuse=str(rerun), rerun=str(rerun)))
-    assert result["count"] == 60
-    # the reused file here is not the 3da8daa blob and the path blobs are not recorded
+
+
+def test_judge_g0_rev3_recompute_passes(tmp_path) -> None:
+    """Rev3 4 / 5: 60 recomputed evaluations, reuse 0, clean run, closure blobs at HEAD."""
+    path = tmp_path / "d8x_g0_rev3.json"
+    _write_g0(path, _g0_rows_all(), _rev3_meta())
+    status, result = judge.cmd_judge_g0(_Args(g0=str(path), at_commit="HEAD"))
+    assert status == judge.EXIT_PASS, result["problems"]
+    assert result["count"] == 60 and result["closure"]["ok"] is True
+    assert {e["source"] for e in result["evaluations"]} == {"recomputed (rev3)"}
+    assert len(result["w_eligibility"]) == 11
+
+
+@pytest.mark.parametrize(("override", "message"), [
+    ({"rules_rev": "rev1"}, "rules_rev"),
+    ({"reuse": 33}, "reuse"),
+    ({"clean": False}, "clean"),
+    ({"run_commit": None}, "run_commit"),
+    ({"closure": {"files": {G0_CLOSURE[1]: "0" * 40}}}, "closure blobs differ"),
+])
+def test_judge_g0_rev3_source_problems_are_not_judgeable(tmp_path, override, message) -> None:
+    path = tmp_path / "d8x_g0_rev3.json"
+    _write_g0(path, _g0_rows_all(), _rev3_meta(**override))
+    status, result = judge.cmd_judge_g0(_Args(g0=str(path), at_commit="HEAD"))
     assert status == judge.EXIT_NOT_JUDGEABLE
-    assert any("reused G0 blob" in p for p in result["problems"])
-    assert result["reuse_condition"]["ok"] is False
-    assert {e["source"] for e in result["evaluations"]} == {"rerun"}
+    assert any(message in p for p in result["problems"]), result["problems"]
+
+
+def test_judge_g0_rev3_item_failure_is_a_fail(tmp_path) -> None:
+    path = tmp_path / "d8x_g0_rev3.json"
+    _write_g0(path, _g0_rows_all(ok=False), _rev3_meta())
+    status, result = judge.cmd_judge_g0(_Args(g0=str(path), at_commit="HEAD"))
+    assert status == judge.EXIT_FAIL and len(result["failed"]) == 60
 
 
 class _Args:
@@ -398,14 +454,43 @@ def test_select_w_takes_the_worst_eligible_candidate(tmp_path) -> None:
     assert json.loads(out.read_text(encoding="utf-8"))["W"]["chrono_floor"] == "d45pp"
 
 
-def test_tag_problems_need_the_expected_las_tag() -> None:
-    assert judge._tag_problems("final_C4G2_LAS_K1", "final_C4G2_LAS_K1", True) == []
-    assert judge._tag_problems("final_C4G2_P3_LAS_K1", "final_C4G2_P3_LAS_K1", True) == []
-    assert judge._tag_problems("final_C4G2_LAS", "final_C4G2_LAS", True) == []  # off arm
-    assert len(judge._tag_problems("final_C4G2", "final_C4G2", True)) == 1
-    assert len(judge._tag_problems("final_C4G2_K1", "final_C4G2_K1", True)) == 1  # LAS-b off
-    assert len(judge._tag_problems("final_C4G2_LAS_K1", "final_C4G2_LAS_K1", None)) == 1
-    assert len(judge._tag_problems("final_C4G2_P3_LAS_K1", "final_C4G2_LAS_K1", True)) == 1
+def _e6_codes(problems: list[str]) -> list[str]:
+    return sorted(p.split()[0] for p in problems)
+
+
+def test_tag_problems_e6_a_to_f() -> None:
+    """Rev3 3.1: E-6a exact tag, b LAS-b tag (is_liftoff_slow_tag, accepts _LAS_K1), c K1
+    suffix = arm, e LAS-b record, f not a LAS-b off tag."""
+    tp = judge._tag_problems
+    assert tp("final_C4G2_LAS_K1", "final_C4G2_LAS_K1", True, True) == []
+    assert tp("final_C4G2_P3_LAS_K1", "final_C4G2_P3_LAS_K1", True, True) == []
+    assert tp("final_C4G2_LAS", "final_C4G2_LAS", True, False) == []  # off arm
+    assert _e6_codes(tp("final_C4G2", "final_C4G2", True, False)) == ["E-6b", "E-6f"]
+    assert _e6_codes(tp("final_C4G2_K1", "final_C4G2_K1", True, True)) == ["E-6b", "E-6f"]
+    assert _e6_codes(tp("final_C4G2_LAS_K1", "final_C4G2_LAS_K1", None, True)) == ["E-6e"]
+    assert _e6_codes(tp("final_C4G2_P3_LAS_K1", "final_C4G2_LAS_K1", True, True)) == ["E-6a"]
+    # the off arm's tag on an on-arm row: wrong tag and wrong K1 suffix
+    assert _e6_codes(tp("final_C4G2_LAS", "final_C4G2_LAS_K1", True, True)) == ["E-6a", "E-6c"]
+
+
+def test_expected_tags_are_the_rev3_table() -> None:
+    from outrigger_sim.hydraulics import v5_options as v5
+
+    assert spec.EXPECTED_TAGS["chrono"] == v5.LAS_K1_CONTROLLER_TAG
+    for bundle, preset in (("ra", "ra"), ("VB", "VB"), ("V0", "V0")):
+        for k1 in ("off", "on"):
+            assert spec.EXPECTED_TAGS[bundle][k1] == spec.arm_tag(spec.DEFAULT_TAGS[preset], k1)
+    doc = spec.path2_expect_doc()  # rev3 3.3 --expect content
+    assert doc == {"ra": {"off": "final_C4G2_LAS", "on": "final_C4G2_LAS_K1"},
+                   "rc": {"VB": {"off": "final_C4G2_P3_LAS", "on": "final_C4G2_P3_LAS_K1"},
+                          "V0": {"off": "final_C4G2_LAS", "on": "final_C4G2_LAS_K1"}},
+                   "chrono": "final_C4G2_LAS_K1"}
+    assert not hasattr(spec, "LAS_TAG_SUFFIX")  # rev3 5: no suffix test left
+
+
+def test_tag_histogram_outside_the_arm_is_a_problem() -> None:
+    assert judge._tag_histogram_problems("f", ["final_C4G2_LAS", None], {"final_C4G2_LAS"}) == []
+    assert judge._tag_histogram_problems("f", ["final_C4G2_LAS_K1"], {"final_C4G2_LAS"})
 
 
 def test_settle_map_by_engine() -> None:
@@ -430,7 +515,8 @@ def test_scenario_groups() -> None:
 
 
 # --- judge-chrono ------------------------------------------------------------------------------
-def _chrono_case(batch: Path, name: str, *, ready_s: float | None, end_s: float) -> None:
+def _chrono_case(batch: Path, name: str, *, ready_s: float | None, end_s: float,
+                 k1_gate=True, meta_gate=True) -> None:
     from outrigger_sim.control.target import CrawlerSettleMap
 
     case_dir = batch / name
@@ -445,7 +531,9 @@ def _chrono_case(batch: Path, name: str, *, ready_s: float | None, end_s: float)
                       "controller_tag": "final_C4G2_LAS_K1", "liftoff_slow_enabled": True,
                       "settle_map": {"kind": "identity",
                                      "coefficients": CrawlerSettleMap.identity().to_meta()},
-                      "scenario_group": "D8"}}
+                      "scenario_group": "D8", "k1_order_gate": k1_gate},
+              "controller_meta": {"slope_clearance_margin": {"settings": {
+                  "flat_soil_margin_order_gate": meta_gate}}}}
     (case_dir / "result.json").write_text(json.dumps(result), encoding="utf-8")
     metrics = {"case": name, "times_s": {"touch": 20.0, "liftoff": 22.0, "ready": ready_s,
                                          "end": end_s},
@@ -469,6 +557,23 @@ def test_judge_chrono_row_and_the_e2_exception(tmp_path, ready_s, end_s, verdict
     assert judged["verdict"] == verdict, judged
     if verdict == "fail":
         assert "J5" in judged["fail_items"]
+
+
+@pytest.mark.parametrize(("k1_gate", "meta_gate", "verdict"),
+                         [(True, True, "pass"), (False, True, "not_judgeable"),
+                          (True, False, "not_judgeable"), (True, None, "not_judgeable")])
+def test_judge_chrono_e6d_needs_both_gate_records_true(tmp_path, k1_gate, meta_gate,
+                                                       verdict) -> None:
+    """Rev3 E-6d: d8x ``k1_order_gate`` and the controller_meta gate both True."""
+    name = "D8X_K24_top_fup3.6_Fs4"
+    _chrono_case(tmp_path, name, ready_s=60.0, end_s=80.0, k1_gate=k1_gate, meta_gate=meta_gate)
+    row = next(r for r in spec.chrono_rows(None, None) if r["name"] == name)
+    metrics = json.loads((tmp_path / "verify_S8C.json").read_text(encoding="utf-8"))["metrics"]
+    judged = judge.judge_chrono_row(row, metrics[0], tmp_path / name, F_D8, (0.0, -3.6),
+                                    spec.EXPECTED_TAGS["chrono"])
+    assert judged["verdict"] == verdict, judged
+    if verdict == "not_judgeable":
+        assert any(r.startswith("E-6d") for r in judged["not_judgeable"])
 
 
 def test_judge_chrono_missing_key_is_not_judgeable(tmp_path) -> None:
@@ -502,3 +607,90 @@ def test_cli_internal_error_is_exit_3(monkeypatch, capsys) -> None:
 
 def test_f_d8_is_the_yaml_f_min_plus_5_kn() -> None:
     assert math.isclose(F_D8, 9414.58911 + 5000.0)
+
+
+# --- rev4 F-1: G1 over both K1 arms ----------------------------------------------------------
+def _part(label: str, arm: str, verdicts: list[str], expected: int | None = None,
+          problems: list[str] | None = None) -> dict:
+    rows = [{"id": f"{arm}{i}", "key": f"{arm}{i}", "k1": arm, "verdict": v, "values": {}}
+            for i, v in enumerate(verdicts)]
+    summary = judge._summarise(rows, len(rows) if expected is None else expected,
+                               f"{label}_{arm}")
+    return {"summary": summary, "rows": rows, "problems": problems or []}
+
+
+def test_g1_k1_on_fail_with_k1_off_pass_fails_the_bundle() -> None:
+    status, result = judge._bundle_result({"off": _part("ra", "off", ["pass"] * 3),
+                                           "on": _part("ra", "on", ["pass", "fail"])}, "ra")
+    assert status == judge.EXIT_FAIL
+    assert result["k1_rows_failed"] == ["on1"]  # kept for the rev4 1.4 manual check
+    assert result["gate_rows_on"]["fail"] == 1
+
+
+def test_g1_k1_on_count_mismatch_with_a_fail_is_not_judgeable() -> None:
+    """A-3 provisional (rev5 pending): not judgeable wins over a K1-on fail."""
+    status, result = judge._bundle_result(
+        {"off": _part("rc", "off", ["pass"] * 2), "on": _part("rc", "on", ["fail"], expected=96)},
+        "rc")
+    assert status == judge.EXIT_NOT_JUDGEABLE
+    assert result["k1_rows_failed"] == ["on0"]
+
+
+def test_g1_k1_on_file_missing_is_exit_2(tmp_path, capsys) -> None:
+    off = tmp_path / "ra_off.json"
+    off.write_text(json.dumps({"meta": {"d8x": {"stages": ["main", "robust", "kt"], "k1": "off"}},
+                               "runs": []}), encoding="utf-8")
+    status = judge.run(["judge-ra", "--off", str(off), "--on", str(tmp_path / "ra_on.json")])
+    assert status == judge.EXIT_NOT_JUDGEABLE
+    assert "file not found" in json.loads(capsys.readouterr().out.strip().splitlines()[-1])[
+        "error"]
+
+
+def _judgement(off: list[str], on: list[str] | None) -> dict:
+    status, result = judge._bundle_result({"off": _part("ra", "off", off),
+                                           "on": _part("ra", "on", on or [])}, "ra")
+    if on is None:  # a judgement written without the K1-on arm summary
+        result.pop("gate_rows_on")
+    return result
+
+
+def test_report_g1_takes_both_arms_and_a_missing_on_summary_is_not_judgeable(tmp_path) -> None:
+    def gate(ra_on):
+        files = {}
+        for name, doc in (("g0", {"gate_G0": "pass"}), ("ra", _judgement(["pass"], ra_on)),
+                          ("rc", _judgement(["pass"], ["pass"]))):
+            files[name] = tmp_path / f"{name}.json"
+            files[name].write_text(json.dumps(doc), encoding="utf-8")
+        args = _Args(g0_judgement=str(files["g0"]), ra_judgement=str(files["ra"]),
+                     rc_judgement=str(files["rc"]), chrono_judgement=[], invariance=None,
+                     audit_pre_clear=True, recount_agrees=True, audit_post_clear=True,
+                     carry_over_confirmed=True)
+        return judge.cmd_report(args)[1]
+
+    assert gate(["pass"])["gates"]["G1"] == "pass"
+    assert gate(["fail"])["gates"]["G1"] == "fail"
+    assert gate(["fail"])["k1_rows_failed"]["R-a"] == ["on0"]
+    assert gate(None)["gates"]["G1"] == "not_judgeable"
+
+
+def test_flags_i_ii_stay_on_the_k1_off_arm() -> None:
+    """Rev4 1.3: a K1-on row below F_D8 + 2 kN is a record, not a grade flag."""
+    low = {"J1_N": F_D8 + 100.0}
+    ra = {"rows": [{"id": "off0", "k1": "off", "values": {"J1_N": 50e3}},
+                   {"id": "on0", "k1": "on", "values": low}]}
+    assert judge._flags(ra, {"rows": []}, [], {}, None, F_D8) == []
+    assert [f["row"] for f in judge._value_flags(judge._k1_on_rows(ra, {}), F_D8)] == ["on0"]
+
+
+def _ra_las_run(point: str, slow: bool) -> dict:
+    events = [[1.0, "INFO_LIFTOFF_SLOW:RR"]] if slow else []
+    return {"id": point, "point": point, "level": "top", "d8x": {"events": events}}
+
+
+def test_v2_las_only_in_the_k1_on_arm_is_las_dependent() -> None:
+    """User decision 2026-11-10 (rev4 check A-2 (b)): V-2 counts both K1 arms."""
+    v2 = judge._las_activity([_ra_las_run("pitch+", False)], [],
+                             [_ra_las_run("pitch+", True)], [])
+    assert v2["LAS_DEPENDENT"] == ["ra|pitch+|top"]
+    assert v2["counts_by_arm"]["off"]["ra|pitch+|top"] == 0
+    assert v2["counts_by_arm"]["on"]["ra|pitch+|top"] == 1

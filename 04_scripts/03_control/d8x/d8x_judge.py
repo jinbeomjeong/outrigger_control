@@ -7,7 +7,11 @@ Sub-commands:
                 ``--check`` an existing file against them (I-3)
   manifest      run-path files F of a bundle and their git blob ids at a commit (2.2)
   prelaunch     run-start record ``d8x_prelaunch_<bundle>.json`` (I-1, I-3, I-5)
-  judge-g0      G0 gate: 33 reused + 27 re-run evaluations, rev1 3 / 4.3 / 5.0
+  expect-file   path 2's ``--expect`` file ``d8x_expect_k1.json`` from the rev3 1 tag table
+  judge-g0      G0 gate: the 60 evaluations recomputed in ``d8x_g0_rev3.json`` (rev3 4, reuse 0;
+                closure blobs vs ``--at-commit``), rev1 4.3 / 5.0, rev2 3 scope
+  (G1, rev4 1.1: both K1 arms are judged rows; W and FLAG (i) / (ii) stay on the K1-off arm;
+  V-2 counts LAS-b over both arms, user decision 2026-11-10)
   judge-ra      R-a rows (J1 .. J11, E-1 .. E-8), files ``ra_off.json`` + ``ra_on.json``
   judge-rc      R-c rows, files ``hrx_off.jsonl`` + ``hrx_on.jsonl``
   judge-chrono  Chrono rows from ``verify_*.json`` + ``r8_series.npz`` (4.4)
@@ -194,16 +198,24 @@ def judge_metrics(d8x: dict, fails: list | None, f_d8: float) -> dict:
                        "J6_bar": d8x["J6_max_moving_bar"], "stroke_max_m": d8x.get("stroke_max_m")}}
 
 
-def _tag_problems(tag, expected_tag: str, is_las_on) -> list[str]:
-    """Rev2 4 / E-6: the tag is the expected one, a LAS-b tag (``_LAS`` with or without the
-    K1 suffix ``_K1`` after it), and LAS-b is recorded on."""
+def _tag_problems(tag, expected_tag: str, is_las_on, is_k1_on: bool) -> list[str]:
+    """Rev3 3.1 E-6a / b / c / e / f for one row (E-6d, the gate record, is the caller's).
+
+    ``is_k1_on``: the row's K1 arm is on (Chrono rows: True, they run the preset).
+    """
     problems = []
     if tag != expected_tag:
-        problems.append(f"E-6 tag {tag} != {expected_tag}")
-    if not spec.is_liftoff_slow_tag(tag):
-        problems.append(f"E-6 tag {tag} is not a LAS-b tag (rev2 4)")
+        problems.append(f"E-6a tag {tag} != {expected_tag}")
+    is_las_tag = spec.is_liftoff_slow_tag(tag)
+    if not is_las_tag:
+        problems.append(f"E-6b tag {tag} is not a LAS-b tag")
+    if spec.is_order_gate_tag(tag) is not is_k1_on:
+        problems.append(f"E-6c tag {tag}: K1 suffix {spec.is_order_gate_tag(tag)} != arm "
+                        f"{'on' if is_k1_on else 'off'}")
     if is_las_on is not True:
-        problems.append(f"E-6 LAS-b record {is_las_on!r}, must be on (rev2 4)")
+        problems.append(f"E-6e LAS-b record {is_las_on!r}, must be on")
+    if tag in spec.LAS_OFF_TAGS:
+        problems.append(f"E-6f tag {tag} is a LAS-b off tag")
     return problems
 
 
@@ -386,14 +398,17 @@ def cmd_prelaunch(args) -> tuple[int, dict]:
                              "MKL_THREADING_LAYER": "TBB"},
         "affinity_mask": args.mask, "k1": args.k1,
     }
+    if args.bundle in ("ra", "rc") and args.k1 is None:
+        raise NotJudgeable("prelaunch --bundle ra / rc needs --k1 off|on (rev3 2)")
     if args.bundle == "ra":
         preset_tag = args.expected_tag or spec.DEFAULT_TAGS["ra"]
         record.update(expected_tag=preset_tag,
+                      expected_tags={"ra": dict(spec.EXPECTED_TAGS["ra"])},  # rev3 1
                       expected_arm_tag=spec.arm_tag(preset_tag, args.k1),
                       expected_count=spec.EXPECTED_COUNTS[f"ra_{args.k1}"])
     elif args.bundle == "rc":
-        record.update(expected_tags={s: spec.DEFAULT_TAGS[s] for s in spec.RC_SETTINGS},
-                      expected_arm_tags={s: spec.arm_tag(spec.DEFAULT_TAGS[s], args.k1)
+        record.update(expected_tags={s: dict(spec.EXPECTED_TAGS[s]) for s in spec.RC_SETTINGS},
+                      expected_arm_tags={s: spec.EXPECTED_TAGS[s][args.k1]
                                          for s in spec.RC_SETTINGS},
                       expected_count=spec.EXPECTED_COUNTS[f"rc_{args.k1}"])
     else:
@@ -418,6 +433,18 @@ def _chrono_prelaunch(args) -> dict:
             "pool": "P", "selection": selection}
 
 
+# ------------------------------------------------------------------------------ expect-file
+def cmd_expect_file(args) -> tuple[int, dict]:
+    """Rev3 3.3: write path 2's ``--expect`` file from the rev3 1 table (before any result)."""
+    import hashlib
+
+    doc = spec.path2_expect_doc()
+    out = Path(args.expect_out)
+    out.write_bytes((json.dumps(doc, indent=1) + "\n").encode("utf-8"))
+    return EXIT_PASS, {"expect_file": str(out), "sha256": hashlib.sha256(
+        out.read_bytes()).hexdigest(), "content": doc}
+
+
 # --------------------------------------------------------------------------------- judge-g0
 def _git_object(ref: str) -> tuple[dict, str]:
     """JSON content and blob id of ``<commit>:<path>`` or of a working file."""
@@ -432,14 +459,35 @@ def _g0_rows(doc: dict) -> dict[tuple[str, str], dict]:
     return {(row["level"], row["tag"]): row for row in doc.get("rows", [])}
 
 
-def _path_blobs_ok(rerun_meta: dict) -> dict:
-    """Rev1 3: the re-run's G0 path blob ids equal those at 3da8daa."""
-    recorded = ((rerun_meta.get("identity") or {}).get("script_blobs_HEAD") or {})
-    reference = tree_blobs(spec.G0_REUSE_COMMIT)
-    keys = sorted(set(recorded) | set(spec.G0_PATH_FILES))
-    differences = {key: [reference.get(key), recorded.get(key)] for key in keys
-                   if reference.get(key) != recorded.get(key)}
-    return {"compared": keys, "differences": differences, "ok": not differences}
+def _g0_source_problems(doc: dict, at_commit: str) -> tuple[list[str], dict]:
+    """Rev3 4: a recompute of all 60 (reuse 0) from a clean checkout, and the closure blobs it
+    recorded equal those at ``at_commit`` (H_impl or M; a difference = recompute at M)."""
+    meta = doc.get("meta") or {}
+    summary = doc.get("summary") or {}
+    problems = []
+    if meta.get("rules_rev") != spec.G0_REV3_RULES_REV:
+        problems.append(f"G0 meta.rules_rev {meta.get('rules_rev')!r} != "
+                        f"{spec.G0_REV3_RULES_REV!r} (rev3 4)")
+    if meta.get("reuse") != 0 or summary.get("reused") != 0:
+        problems.append(f"G0 reuse {meta.get('reuse')} / {summary.get('reused')} != 0 (rev3 4)")
+    if meta.get("recompute") != spec.EXPECTED_COUNTS["G0"]:
+        problems.append(f"G0 recompute {meta.get('recompute')} != 60 (rev3 4)")
+    if not meta.get("run_commit"):
+        problems.append("G0 meta.run_commit missing (rev3 4)")
+    if meta.get("clean") is not True:
+        problems.append("G0 run not from a clean checkout (I-1: status at start / end)")
+    recorded = ((meta.get("closure") or {}).get("files")) or {}
+    if not recorded:
+        problems.append("G0 meta.closure.files missing (rev3 4)")
+    reference = tree_blobs(at_commit) if recorded else {}
+    differences = {name: [blob, reference.get(name)] for name, blob in recorded.items()
+                   if reference.get(name) != blob}
+    if differences:
+        problems.append(f"G0 closure blobs differ at {at_commit} ({len(differences)} files): "
+                        "recompute the 60 at that commit (rev3 4)")
+    closure = {"at_commit": at_commit, "run_commit": meta.get("run_commit"),
+               "compared": len(recorded), "differences": differences, "ok": not differences}
+    return problems, closure
 
 
 def _g0_4(row: dict, threshold: float) -> dict:
@@ -455,41 +503,33 @@ def _g0_4(row: dict, threshold: float) -> dict:
 
 
 def cmd_judge_g0(args) -> tuple[int, dict]:
+    """Rev3 4 / 5: the 60 evaluations of one recompute file (``d8x_g0_rev3.json``, reuse 0)."""
     points = _points(args)
-    reuse, reuse_blob = _git_object(args.reuse)
-    rerun, rerun_blob = _git_object(args.rerun)
-    problems = []
-    if reuse_blob != spec.G0_REUSE_BLOB:
-        problems.append(f"reused G0 blob {reuse_blob} != {spec.G0_REUSE_BLOB}")
-    blobs = _path_blobs_ok(rerun.get("meta") or {})
-    reuse_rows, rerun_rows = _g0_rows(reuse), _g0_rows(rerun)
+    doc, blob = _git_object(args.g0)
+    problems, closure = _g0_source_problems(doc, args.at_commit)
+    rows = _g0_rows(doc)
     angles = spec.points_by_name(points)
     evaluations = []
     for level in spec.LEVELS:
         for tag in points["g0_points"]:
-            is_reused = tag in spec.G0_REUSED_POINTS and blobs["ok"]
-            source_rows = reuse_rows if is_reused else rerun_rows
-            row = source_rows.get((level, tag))
+            row = rows.get((level, tag))
             if row is None:
-                problems.append(f"G0 row {level}|{tag} missing in the "
-                                f"{'reused' if is_reused else 're-run'} file")
+                problems.append(f"G0 row {level}|{tag} missing in {args.g0}")
                 continue
-            evaluations.append(_g0_evaluation(row, level, tag, angles[tag], is_reused, problems))
-    w_eligibility = _w_eligibility(points, reuse_rows if blobs["ok"] else rerun_rows,
-                                   rerun_rows)
+            evaluations.append(_g0_evaluation(row, level, tag, angles[tag], problems))
     failed = [e["key"] for e in evaluations if not e["pass"]]
     if len(evaluations) != spec.EXPECTED_COUNTS["G0"]:
         problems.append(f"G0 evaluations {len(evaluations)} != 60")
     status = EXIT_NOT_JUDGEABLE if problems else (EXIT_FAIL if failed else EXIT_PASS)
     return status, {"gate_G0": {0: "pass", 1: "fail", 2: "not_judgeable"}[status],
-                    "reuse": {"ref": args.reuse, "blob": reuse_blob},
-                    "rerun": {"ref": args.rerun, "blob": rerun_blob},
-                    "reuse_condition": blobs, "evaluations": evaluations, "failed": failed,
-                    "w_eligibility": w_eligibility, "problems": problems,
+                    "g0": {"ref": args.g0, "blob": blob}, "closure": closure,
+                    "compare_rev1": (doc.get("meta") or {}).get("compare_rev1"),
+                    "evaluations": evaluations, "failed": failed,
+                    "w_eligibility": _w_eligibility(points, rows), "problems": problems,
                     "count": len(evaluations)}
 
 
-def _g0_evaluation(row, level, tag, angles, is_reused, problems) -> dict:
+def _g0_evaluation(row, level, tag, angles, problems) -> dict:
     floor = row.get("floor_deg")
     if not _angles_match(floor, angles, ANGLE_TOLERANCE_HARNESS_DEG):
         problems.append(f"G0 {level}|{tag}: floor {floor} != point {list(angles)}")
@@ -499,19 +539,18 @@ def _g0_evaluation(row, level, tag, angles, is_reused, problems) -> dict:
     g04 = _g0_4(row, spec.G0_4_RV_HAT_MAX)
     if judged_g04:
         items["G0-4"] = bool(g04["pass"])
-    return {"key": f"{level}|{tag}", "source": "reused" if is_reused else "rerun",
+    return {"key": f"{level}|{tag}", "source": row.get("source", "recomputed"),
             "items": items, "pass": all(items.values()), "G0-4": g04, "G0-4_judged": judged_g04,
             "G0-1_margin_mm": (g0.get("G0-1") or {}).get("margin_mm")}
 
 
-def _w_eligibility(points: dict, reuse_rows: dict, rerun_rows: dict) -> dict:
+def _w_eligibility(points: dict, rows: dict) -> dict:
     """Rev2 3: W eligibility by the true R_v (point file) <= 1.01; the rev1 for_level R_v hat
-    (d45 1.01, others 1.005) of the top G0 row is kept as a record."""
+    (d45 1.01, others 1.005) of the top G0 row of the rev3 file is kept as a record."""
     true_usage = {entry["tag"]: entry["R_v"] for entry in points["ra_points"]}
     out = {}
     for candidate in points["w_candidates"]:
         tag = candidate["ra_point"]
-        rows = reuse_rows if tag in spec.G0_REUSED_POINTS else rerun_rows
         row = rows.get(("top", tag))
         threshold = spec.G0_4_RV_HAT_MAX_D45 if tag.startswith("d45") else spec.G0_4_RV_HAT_MAX
         record = None if row is None else _g0_4(row, threshold)
@@ -527,14 +566,20 @@ def _expected_tag(prelaunch: Path | None, fallback: str) -> str:
 
 def judge_ra_file(path: Path, k1: str, points: dict, f_d8: float, expected_tag: str) -> dict:
     doc = _load_json(path)
-    stages = tuple(((doc.get("meta") or {}).get("d8x") or {}).get("stages") or ())
+    run_meta = (doc.get("meta") or {}).get("d8x") or {}
+    stages = tuple(run_meta.get("stages") or ())
     wanted = ("main", "robust", "kt") if k1 == "off" else ("main",)
     problems = [] if stages == wanted else [f"{path.name}: stages {stages} != {wanted}"]
+    if run_meta.get("k1") != k1:  # rev3 E-6d: the request recorded = the arm
+        problems.append(f"{path.name}: meta.d8x.k1 {run_meta.get('k1')!r} != {k1!r} (E-6d)")
+    arm_tag = spec.arm_tag(expected_tag, k1)
+    problems += _tag_histogram_problems(path.name, [r.get("controller_tag")
+                                                    for r in doc.get("runs", [])], {arm_tag})
     expected_ids = spec.expected_ra_ids(points, wanted)
     angles = spec.points_by_name(points)
     rows, seen = [], set()
     for run in doc.get("runs", []):
-        rows.append(_judge_ra_run(run, k1, angles, f_d8, expected_tag, seen, problems))
+        rows.append(_judge_ra_run(run, k1, angles, f_d8, arm_tag, seen, problems))
     extra = sorted(seen - set(expected_ids))
     absent = sorted(set(expected_ids) - seen)
     if extra or absent:
@@ -543,7 +588,20 @@ def judge_ra_file(path: Path, k1: str, points: dict, f_d8: float, expected_tag: 
     return {"summary": summary, "rows": rows, "problems": problems}
 
 
+def _tag_histogram_problems(label: str, tags: list, allowed: set[str]) -> list[str]:
+    """Rev3 3.2: a bundle file holds only the rev3 1 tags of its arm (errors carry no tag)."""
+    histogram: dict[str, int] = {}
+    for tag in tags:
+        if tag is not None:
+            histogram[str(tag)] = histogram.get(str(tag), 0) + 1
+    other = {tag: n for tag, n in histogram.items() if tag not in allowed}
+    if not other:
+        return []
+    return [f"{label}: tags outside rev3 1 {sorted(allowed)}: {other} (rev3 3.2)"]
+
+
 def _judge_ra_run(run, k1, angles, f_d8, expected_tag, seen, problems) -> dict:
+    """One R-a run; ``expected_tag`` is the arm's tag (rev3 1)."""
     run_id = run.get("id")
     if run_id in seen:
         problems.append(f"duplicate id {run_id} (E-5)")
@@ -555,11 +613,11 @@ def _judge_ra_run(run, k1, angles, f_d8, expected_tag, seen, problems) -> dict:
     if point not in angles or not _angles_match(run.get("angles_deg"), angles[point],
                                                 ANGLE_TOLERANCE_HARNESS_DEG):
         reasons.append("E-5 angles differ from the point file")
-    reasons += _tag_problems(run.get("controller_tag"), spec.arm_tag(expected_tag, k1),
-                             run.get("liftoff_slow_enabled"))
-    # E-6 effective gate: catches an off arm that ran the preset (gate on since the K1 switch)
+    reasons += _tag_problems(run.get("controller_tag"), expected_tag,
+                             run.get("liftoff_slow_enabled"), k1 == "on")
+    # E-6d effective gate: catches an off arm that ran the preset (gate on since the K1 switch)
     if run.get("k1_order_gate") is not (k1 == "on"):
-        reasons.append(f"E-6 K1 flag {run.get('k1_order_gate')} != {k1}")
+        reasons.append(f"E-6d K1 gate record {run.get('k1_order_gate')} != {k1}")
     try:
         judged = judge_metrics(run.get("d8x") or {}, run.get("fails"), f_d8)
     except NotJudgeable as exc:
@@ -582,17 +640,19 @@ def cmd_judge_ra(args) -> tuple[int, dict]:
 
 
 def _bundle_result(parts: dict, label: str) -> tuple[int, dict]:
+    """Rev4 1.1 (F-1): G1 judges both K1 arms (R-a 910 + 192, R-c 192 + 96); a ``fail`` in the
+    K1-on arm fails the bundle like one in the off arm. ``k1_rows_failed`` stays a separate list
+    so the judgement can set it against path 2 ``k1_rows_fail`` (rev4 1.4, manual check)."""
     summaries = [part["summary"] for part in parts.values()]
     problems = [p for part in parts.values() for p in part["problems"]]
-    status = _status_of([parts["off"]["summary"]], problems=problems)
-    if status == EXIT_PASS and (parts["on"]["summary"]["not_judgeable"]
-                                or parts["on"]["summary"]["expected"]
-                                != parts["on"]["summary"]["actual"]):
-        status = EXIT_NOT_JUDGEABLE
+    status = _status_of([parts["off"]["summary"], parts["on"]["summary"]], problems=problems)
+    id_key = "id" if label == "ra" else "key"
     return status, {"bundle": label, "field_map": FIELD_MAP_HARNESS, "summaries": summaries,
                     "gate_rows_off": parts["off"]["summary"],
-                    "k1_rows_failed": [r["id" if label == "ra" else "key"]
-                                       for r in parts["on"]["rows"] if r["verdict"] == "fail"],
+                    "gate_rows_on": parts["on"]["summary"],
+                    "g1_scope": "rev4 1.1: both K1 arms",
+                    "k1_rows_failed": [r[id_key] for r in parts["on"]["rows"]
+                                       if r["verdict"] == "fail"],
                     "problems": problems,
                     "rows": [r for part in parts.values() for r in part["rows"]]}
 
@@ -601,7 +661,10 @@ def judge_rc_file(path: Path, k1: str, points: dict, f_d8: float) -> dict:
     lines = _load_jsonl(path)
     expected = spec.expected_rc_keys(points, k1)
     angles = spec.points_by_name(points)
-    rows, seen, problems = [], set(), []
+    rows, seen = [], set()
+    allowed = {spec.EXPECTED_TAGS[setting][k1] for setting in spec.RC_SETTINGS}
+    problems = _tag_histogram_problems(path.name, [line.get("controller_tag") for line in lines
+                                                   if "error" not in line], allowed)
     for line in lines:
         rows.append(_judge_rc_line(line, k1, angles, f_d8, seen, problems))
     extra = sorted(seen - set(expected))
@@ -635,12 +698,12 @@ def _judge_rc_line(line, k1, angles, f_d8, seen, problems) -> dict:
     if floor not in angles or not _angles_match(row_angles, angles[floor],
                                                 ANGLE_TOLERANCE_HARNESS_DEG):
         reasons.append("E-5 angles differ from the point file")
-    expected_tag = spec.arm_tag(spec.DEFAULT_TAGS[setting], k1)
-    reasons += _tag_problems(line.get("controller_tag"), expected_tag,
-                             d8x.get("liftoff_slow_enabled"))
-    # E-6 effective gate: catches an off arm that ran the preset (gate on since the K1 switch)
+    reasons += _tag_problems(line.get("controller_tag"), spec.EXPECTED_TAGS[setting][k1],
+                             d8x.get("liftoff_slow_enabled"), k1 == "on")
+    # E-6d request and effective gate: catches an off arm that ran the preset (gate on since
+    # the K1 switch)
     if job.get("k1") != k1 or d8x.get("k1_order_gate") is not (k1 == "on"):
-        reasons.append(f"E-6 K1 job {job.get('k1')} / gate {d8x.get('k1_order_gate')} != {k1}")
+        reasons.append(f"E-6d K1 job {job.get('k1')} / gate {d8x.get('k1_order_gate')} != {k1}")
     try:
         judged = judge_metrics(d8x, d1.get("fail_items"), f_d8)
     except NotJudgeable as exc:
@@ -678,6 +741,11 @@ CHRONO_FIELDS = {
     "half_spans_deg": ("result.d8x.half_spans_deg",),
     "row_number": ("result.d8x.row",),
     "controller_tag": ("result.d8x.controller_tag",),
+    # rev3 2 / E-6d (cad-expert adds the d8x key; missing = not judgeable)
+    "k1_order_gate": ("result.d8x.k1_order_gate",),
+    "controller_meta_order_gate": (
+        "result.controller_meta.slope_clearance_margin.settings.flat_soil_margin_order_gate",
+        "result.d8x.controller_meta_order_gate"),
     "liftoff_slow": ("result.d8x.liftoff_slow_enabled", "result.d8x.las_b",
                      "result.d8x.liftoff_approach_slow"),
     "settle_map": ("result.d8x.settle_map", "result.acceptance.controller_settle_map",
@@ -820,7 +888,11 @@ def _chrono_identity(row, values, angles, expected_tag, series, times) -> list[s
         reasons.append(f"I-4 F_s {values.get('fs_kN')} != {row['fs_kN']}")
     las = values["liftoff_slow"]
     las_on = las.get("enable") if isinstance(las, dict) else las
-    reasons += _tag_problems(values["controller_tag"], expected_tag, las_on)
+    reasons += _tag_problems(values["controller_tag"], expected_tag, las_on, True)
+    # rev3 E-6d: Chrono runs the preset (K1 on): the d8x record and the controller meta agree
+    if values["k1_order_gate"] is not True or values["controller_meta_order_gate"] is not True:
+        reasons.append(f"E-6d K1 gate d8x {values['k1_order_gate']!r} / controller_meta "
+                       f"{values['controller_meta_order_gate']!r}, both must be true")
     reasons += _settle_map_problems(row, values["settle_map"])
     reasons += _scenario_problems(row, values["scenario_group"])
     ready = series["first_ready_s"]
@@ -917,7 +989,7 @@ def cmd_invariance(args) -> tuple[int, dict]:
     rc_off = _load_jsonl(Path(args.rc_off))
     rc_on = _load_jsonl(Path(args.rc_on))
     v1 = _k1_pairs(ra_off, ra_on, rc_off, rc_on)
-    v2 = _las_activity(ra_off, rc_off)
+    v2 = _las_activity(ra_off, rc_off, ra_on, rc_on)
     v3 = _vb_v0_differences(rc_off)
     problems = v1.pop("problems")
     status = EXIT_NOT_JUDGEABLE if problems else EXIT_PASS
@@ -953,17 +1025,27 @@ def _k1_pairs(ra_off, ra_on, rc_off, rc_on) -> dict:
             "K1_DEPENDENT": sorted([list(d) for d in dependent]), "problems": problems}
 
 
-def _las_activity(ra_off, rc_off) -> dict:
-    counts: dict[str, int] = {}
-    for run in ra_off:
-        key = f"ra|{run.get('point')}|{run.get('level')}"
-        counts[key] = counts.get(key, 0) + _liftoff_slow(run.get("d8x"))
-    for line in rc_off:
-        row = line["job"]["d1"]
-        key = f"rc|{row['slope_name']}|{row['level']}"
-        counts[key] = counts.get(key, 0) + _liftoff_slow((line.get("d1") or {}).get("d8x"))
-    return {"counts": counts, "LAS_DEPENDENT": sorted(k for k, v in counts.items() if v),
-            "LAS_INACTIVE": sorted(k for k, v in counts.items() if not v)}
+def _las_activity(ra_off, rc_off, ra_on=(), rc_on=()) -> dict:
+    """V-2: ``INFO_LIFTOFF_SLOW`` count per (bundle, point, level) over both K1 arms (user
+    decision 2026-11-10, rev4 check A-2 (b)): a point whose LAS-b acted only in K1-on rows is
+    LAS_DEPENDENT too. ``counts_by_arm`` keeps the split."""
+    by_arm: dict[str, dict[str, int]] = {"off": {}, "on": {}}
+    for arm, runs, lines in (("off", ra_off, rc_off), ("on", ra_on, rc_on)):
+        counts = by_arm[arm]
+        for run in runs:
+            key = f"ra|{run.get('point')}|{run.get('level')}"
+            counts[key] = counts.get(key, 0) + _liftoff_slow(run.get("d8x"))
+        for line in lines:
+            row = line["job"]["d1"]
+            key = f"rc|{row['slope_name']}|{row['level']}"
+            counts[key] = counts.get(key, 0) + _liftoff_slow((line.get("d1") or {}).get("d8x"))
+    total: dict[str, int] = {}
+    for counts in by_arm.values():
+        for key, count in counts.items():
+            total[key] = total.get(key, 0) + count
+    return {"counts": total, "counts_by_arm": by_arm, "scope": "both K1 arms (rev4 A-2 (b))",
+            "LAS_DEPENDENT": sorted(k for k, v in total.items() if v),
+            "LAS_INACTIVE": sorted(k for k, v in total.items() if not v)}
 
 
 def _liftoff_slow(d8x: dict | None) -> int:
@@ -1073,7 +1155,9 @@ def cmd_report(args) -> tuple[int, dict]:
     gates = {
         "G-S": {"seals": spec.seals_ok(), "audit_pre_run_clear": args.audit_pre_clear},
         "G0": g0.get("gate_G0"),
-        "G1": _gate_of([ra.get("gate_rows_off"), rc.get("gate_rows_off")],
+        # rev4 1.1 (F-1): both K1 arms are judged rows
+        "G1": _gate_of([ra.get("gate_rows_off"), ra.get("gate_rows_on"),
+                        rc.get("gate_rows_off"), rc.get("gate_rows_on")],
                        [*ra.get("problems", []), *rc.get("problems", [])]),
         "G2": [_gate_of([c.get("summary")], c.get("problems", [])) for c in chrono],
         "G3": {"recount_agrees": args.recount_agrees, "audit_post_clear": args.audit_post_clear,
@@ -1082,7 +1166,13 @@ def cmd_report(args) -> tuple[int, dict]:
     flags = _flags(ra, rc, chrono, g0, invariance, f_d8)
     grade = _grade(gates, flags, len(chrono))
     return {"pass": EXIT_PASS, "conditional": EXIT_PASS, "fail": EXIT_FAIL}.get(
-        grade, EXIT_NOT_JUDGEABLE), {"grade": grade, "gates": gates, "flags": flags}
+        grade, EXIT_NOT_JUDGEABLE), {
+            "grade": grade, "gates": gates, "flags": flags,
+            # rev4 1.3: K1-on arm (i) / (ii) hits are records, not grade flags
+            "flag_records_k1_on": _value_flags(_k1_on_rows(ra, rc), f_d8),
+            # rev4 1.4: set these against path 2 bundles[...].k1_rows_fail by hand
+            "k1_rows_failed": {"R-a": ra.get("k1_rows_failed", []),
+                               "R-c": rc.get("k1_rows_failed", [])}}
 
 
 def _gate_of(summaries: list, problems: list) -> str:
@@ -1092,9 +1182,29 @@ def _gate_of(summaries: list, problems: list) -> str:
     return "fail" if any(s["fail"] for s in summaries) else "pass"
 
 
+def _k1_on_rows(ra: dict, rc: dict) -> list[dict]:
+    return [r for r in (*ra.get("rows", []), *rc.get("rows", [])) if r.get("k1") == "on"]
+
+
 def _flags(ra, rc, chrono, g0, invariance, f_d8) -> list[dict]:
+    """Original 10 FLAG. (i) / (ii) from the K1-off arm and the Chrono rows (rev4 1.3)."""
+    harness_off = [r for r in (*ra.get("rows", []), *rc.get("rows", [])) if r.get("k1") != "on"]
+    flags = _value_flags([*harness_off, *[r for c in chrono for r in c["rows"]]], f_d8)
+    if invariance:
+        for point in invariance["V-1"].get("K1_DEPENDENT", []):
+            flags.append({"flag": "(iii)", "K1_DEPENDENT": point})
+        for point in invariance["V-2"].get("LAS_DEPENDENT", []):
+            flags.append({"flag": "(iii)", "LAS_DEPENDENT": point})
+    for evaluation in g0.get("evaluations", []):
+        error = (evaluation.get("G0-4") or {}).get("max_err_deg")
+        if evaluation.get("G0-4_judged") and _is_number(error) and error > spec.G0_4_ERROR_FLAG_DEG:
+            flags.append({"flag": "(iv)", "point": evaluation["key"], "err_deg": error})
+    return flags
+
+
+def _value_flags(rows: list[dict], f_d8: float) -> list[dict]:
+    """FLAG (i) J1 / J2 < F_D8 + 2 kN and (ii) stroke margin < 5 mm of ``rows``."""
     flags = []
-    rows = [*ra.get("rows", []), *rc.get("rows", []), *[r for c in chrono for r in c["rows"]]]
     for row in rows:
         values = row.get("values") or {}
         name = row.get("id") or row.get("key") or row.get("name")
@@ -1105,15 +1215,6 @@ def _flags(ra, rc, chrono, g0, invariance, f_d8) -> list[dict]:
         if _is_number(stroke) and (spec.STROKE_GUARD_M - stroke) * 1e3 < spec.STROKE_FLAG_MARGIN_MM:
             flags.append({"flag": "(ii)", "row": name, "margin_mm": (spec.STROKE_GUARD_M - stroke)
                           * 1e3})
-    if invariance:
-        for point in invariance["V-1"].get("K1_DEPENDENT", []):
-            flags.append({"flag": "(iii)", "K1_DEPENDENT": point})
-        for point in invariance["V-2"].get("LAS_DEPENDENT", []):
-            flags.append({"flag": "(iii)", "LAS_DEPENDENT": point})
-    for evaluation in g0.get("evaluations", []):
-        error = (evaluation.get("G0-4") or {}).get("max_err_deg")
-        if evaluation.get("G0-4_judged") and _is_number(error) and error > spec.G0_4_ERROR_FLAG_DEG:
-            flags.append({"flag": "(iv)", "point": evaluation["key"], "err_deg": error})
     return flags
 
 
@@ -1149,15 +1250,20 @@ def _parser() -> argparse.ArgumentParser:
     prelaunch.add_argument("--bundle", required=True, choices=("ra", "rc", "C"))
     prelaunch.add_argument("--python", required=True)
     prelaunch.add_argument("--mask", required=True, help="affinity mask of the run (0x0FFF0000)")
-    prelaunch.add_argument("--k1", choices=("off", "on"), default="off")
+    prelaunch.add_argument("--k1", choices=("off", "on"), default=None,
+                           help="ra / rc: the K1 arm of this run, required (rev3 2)")
     prelaunch.add_argument("--expected-tag", default=None)
     prelaunch.add_argument("--start-states", default=None)
     prelaunch.add_argument("--threads", type=int, default=None)
     prelaunch.add_argument("--selection", default=None)
     prelaunch.add_argument("--record-out", default=None)
+    expect = sub.add_parser("expect-file")
+    expect.add_argument("--expect-out", default=str(spec.D8X_DIR / "d8x_expect_k1.json"))
     g0 = sub.add_parser("judge-g0")
-    g0.add_argument("--reuse", default=spec.G0_REUSE_REF)
-    g0.add_argument("--rerun", required=True, help="<commit>:<path> or file of d8x_g0_rev1.json")
+    g0.add_argument("--g0", default=str(spec.G0_REV3_PATH),
+                    help="rev3 4 recompute file (d8x_g0_rev3.json, or <commit>:<path>)")
+    g0.add_argument("--at-commit", default="HEAD",
+                    help="commit whose closure blobs the G0 run must match (H_impl or M)")
     for name in ("judge-ra", "judge-rc"):
         bundle = sub.add_parser(name)
         bundle.add_argument("--off", required=True)
@@ -1194,7 +1300,8 @@ def _parser() -> argparse.ArgumentParser:
 
 COMMANDS: dict[str, Callable] = {
     "points": cmd_points, "manifest": cmd_manifest, "prelaunch": cmd_prelaunch,
-    "judge-g0": cmd_judge_g0, "judge-ra": cmd_judge_ra, "judge-rc": cmd_judge_rc,
+    "expect-file": cmd_expect_file, "judge-g0": cmd_judge_g0, "judge-ra": cmd_judge_ra,
+    "judge-rc": cmd_judge_rc,
     "judge-chrono": cmd_judge_chrono, "invariance": cmd_invariance, "select-w": cmd_select_w,
     "select-v": cmd_select_v, "report": cmd_report,
 }

@@ -486,6 +486,8 @@ def execute(entry: dict, setting, hydraulics, *, setting_name: str,
     import run_control_comparison as rcc
 
     row = D1Row.from_job(entry)
+    if row.group == D8X_GROUP and k1 is None:  # D8x rev3 2: no silent preset fallback
+        raise ValueError(f"{row.key}: a D8x H-R-X row needs k1 off|on")
     vr.install_plant_options(setting, hydraulics)
     c2 = vr.install_logged_controller()
     if k1 is not None:

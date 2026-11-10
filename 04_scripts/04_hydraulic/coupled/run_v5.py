@@ -492,7 +492,7 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--group", default=None, choices=("H-R-X",),
                         help="d1 only: the D8x H-R-X rows (d8x_rules.md 3 R-c) instead of the d1 batch")
     parser.add_argument("--k1", default=None, choices=("off", "on"),
-                        help="with --group H-R-X: R4c30 order gate (default off)")
+                        help="with --group H-R-X: R4c30 order gate of this arm, required")
     parser.add_argument("--out", type=Path, default=None,
                         help="with --group H-R-X: output jsonl (default d8x/rc/hrx_<k1>.jsonl)")
     args = parser.parse_args()
@@ -501,7 +501,8 @@ def _parse_args() -> argparse.Namespace:
     if args.group is not None and args.batch != D1_BATCH:
         parser.error("--group is a d1 option")
     if args.group is not None:
-        args.k1 = args.k1 or "off"
+        if args.k1 is None:  # D8x rev3 2: the K1 request is explicit on every H-R-X run
+            parser.error("--group H-R-X needs --k1 off|on (d8x_rules_rev3.md 2)")
         args.out = args.out or D8X_OUT_DIR / f"hrx_{args.k1}.jsonl"
     return args
 

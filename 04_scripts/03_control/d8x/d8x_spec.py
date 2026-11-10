@@ -1,9 +1,12 @@
 """D8x rules as data: seals, the point tables read from the rules text, thresholds, expected keys.
 
-Sources (both sealed; the judge refuses to run when either sha256 differs):
+Sources (all sealed; the judge refuses to run when any sha256 differs, :data:`RULES_FILES`):
   ``06_analysis/02_control/d8x/d8x_rules.md``       original, sha256 a377b9bb...
   ``06_analysis/02_control/d8x/d8x_rules_rev1.md``  rev1 (nose-up 3.6 deg, d45 W threshold 1.01),
                                                     sha256 ad16f452...
+  ``d8x_rules_rev2.md`` 5f3fa620... (interpretation), ``d8x_rules_rev3.md`` 2318fb5c... (K1 switch
+  tags, K1 off arms install False, G0 60 recomputed), ``d8x_rules_rev4.md`` 5233c517... (F-1:
+  K1-on arm rows join G1; W and FLAG stay on the K1-off arm)
 The points are not typed in here: :func:`rules_point_tables` reads the (A) / (B) / (C) tables of
 section 1.2 and the W name table of section 5.1 from the rules files, a later file replacing a
 whole table it repeats (rev1 replaces 1.2 (A) (B) (C); 5.1 names stay the original's). The floor
@@ -27,9 +30,9 @@ from outrigger_sim.control.target import VERIFICATION_EXT_HALF_SPANS_DEG  # noqa
 from outrigger_sim.hydraulics.v5_options import (  # noqa: E402
     EXTEND_START_LAS_K1_CONTROLLER_TAG,
     LAS_K1_CONTROLLER_TAG,
-    LIFTOFF_SLOW_TAG_SUFFIX,
     ORDER_GATE_TAG_SUFFIX,
-    is_liftoff_slow_tag,  # noqa: F401  (re-exported: d8x_judge E-6 LAS-b tag test)
+    is_liftoff_slow_tag,  # noqa: F401  (re-exported: d8x_judge E-6b)
+    is_order_gate_tag,  # noqa: F401  (re-exported: d8x_judge E-6c)
 )
 
 D8X_DIR = ROOT / "06_analysis" / "02_control" / "d8x"
@@ -40,9 +43,20 @@ RULES_FILES = (
      "ad16f452fb4dce7395a059c73d7caf213f1a9a69f18af8d230bf03f4518e80d4"),
     ("rev2", D8X_DIR / "d8x_rules_rev2.md",
      "5f3fa620fe704834a9b6c0a65824b29b75e2a527ea8e97a17abb5e07987a8c27"),
+    ("rev3", D8X_DIR / "d8x_rules_rev3.md",
+     "2318fb5cf75b64b525c515566776ed1ec6cbb10743621edc04c092d6774c7301"),
+    ("rev4", D8X_DIR / "d8x_rules_rev4.md",
+     "5233c517e6c0d17b0e26e902673e0d6990532ed1c54c82ae0801e688d50702a5"),
 )
-"""(revision, path, sealed sha256 of the raw bytes; the files are ``-text`` in git). rev2 is an
-interpretation supplement without point tables."""
+"""(revision, path, sealed sha256 of the raw bytes; the files are ``-text`` in git). rev2
+(interpretation), rev3 (K1 switch tags, explicit K1 off, G0 full recompute) and rev4 (K1-on arm
+rows in G1) have no point tables."""
+LATEST_RULES_REV = "rev4"
+"""Newest sealed addendum (the seal check covers every file above up to it)."""
+POINT_FILE_RULES = ("original", "rev1", "rev2")
+"""Rules files the point file lists (it was written under rev2). rev3 and rev4 keep the point
+coordinates (rev3 head, rev4 head) and have no tables, so the point file stays byte-identical;
+``points --check`` (I-3) still re-reads the tables of every file in :data:`RULES_FILES`."""
 CURRENT_RULES_REV = "rev1"
 """Revision of the point tables in force (rev1 1.2; rev2 has no tables); the point file's
 ``rules_rev``."""
@@ -86,12 +100,21 @@ G0_REUSE_COMMIT = "3da8daa"
 G0_PATH_FILES = ("04_scripts/01_dynamics/run_target_envelope.py",
                  "04_scripts/01_dynamics/run_s6_slope_boundary_check.py",
                  "04_scripts/01_dynamics/dyn_model.py", "02_params/rexome33.yaml")
-"""Rev1 3: G0 path files whose blob ids must equal 3da8daa for the 33 reused evaluations
-(plus the import targets the G0 records list)."""
+"""Rev1 3 (history; replaced by rev3 4, the judge no longer reuses): G0 path files whose blob
+ids had to equal 3da8daa for the 33 reused evaluations."""
 G0_REUSED_POINTS = ("pitch+", "roll+", "roll-", "r+p+0.25", "r+p+0.5", "r+p+0.75", "r-p+0.5",
                     "d45++", "d45-+", "rpX", "rpX-+")
 G0_RERUN_POINTS = ("pitch-", "r+p-0.25", "r+p-0.5", "r+p-0.75", "r-p-0.5", "d45+-", "d45--",
                    "rpX+-", "rpX--")
+G0_REV3_PATH = ROOT / "06_analysis" / "00_dynamics" / "d8x_g0_rev3.json"
+"""Rev3 4: the G0 60 evaluations recomputed (reuse 0); ``d8x_g0.json`` / ``d8x_g0_rev1.json``
+stay as they are."""
+G0_REV3_RULES_REV = "rev3"
+G0_REV1_REF = "e37f42c:06_analysis/00_dynamics/d8x_g0_rev1.json"
+"""Rev3 4 record: the rev1 60 evaluations the rev3 recompute is compared with (not a grade)."""
+G0_COMPARE_KEYS = {"G0-1": "s_max_m", "G0-2": "F_static_min_N", "G0-3": "swivel_deg",
+                   "G0-4": "floor_hat_deg"}
+"""Rev3 4 record: item -> value compared between rev3 and rev1."""
 G0_4_JUDGED = {"top": ("pitch+", "pitch-", "roll+", "rpX"), "middle": (), "bottom": ()}
 """Rev2 3 gate scope: the L1-R rows #7 .. #11 floors at the top, fdown3.7 / fup3.6 / roll5.7 /
 rpX (= the (A) tags pitch+ / pitch- / roll+ and rpX); #12 / #13 (middle / bottom rpX) and
@@ -103,10 +126,9 @@ SETTLE_MAP_BY_ENGINE = {"L2b": "identity", "L1-R": "level"}
 SCENARIO_GROUPS = {1: "G2-R", 7: "D8", 11: "G2-R", 14: "G2-R"}
 """Rev2 6: rows whose scenario group the rules name (L2b fdown3.7 = H4V ``G2-R``); the other
 rows must record a group (E-5) that is reported."""
-LAS_TAG_SUFFIX = LIFTOFF_SLOW_TAG_SUFFIX
-"""Rev2 4: a D8x row runs with LAS-b on; its tag carries this suffix (``final_C4G2`` = off),
-possibly followed by the K1 suffix (``final_C4G2_LAS_K1``): test it with
-``v5_options.is_liftoff_slow_tag``, not ``str.endswith``."""
+LAS_OFF_TAGS = ("final_C4G2", "final_C4G2_P3", "final_C4G2_K1", "final_C4G2_P3_K1")
+"""Rev3 3.1 E-6f: LAS-b off tags, never a D8x row tag. The LAS-b test itself is
+``v5_options.is_liftoff_slow_tag`` (rev3 E-6b), never a suffix string comparison."""
 W_MIRRORS = {"r+p-0.5": "rpX+-", "r-p+0.5": "rpX-+", "r-p-0.5": "rpX--"}
 """Rules 5.1: mirrored diagonals whose R-c top J1 joins m(p)."""
 
@@ -128,6 +150,14 @@ DEFAULT_TAGS = {"ra": LAS_K1_CONTROLLER_TAG, "VB": EXTEND_START_LAS_K1_CONTROLLE
 """Preset tags since the K1 switch (``final_C4G2_LAS_K1`` for V0 / the harness preset,
 ``final_C4G2_P3_LAS_K1`` for VB with the ③ bound; rules 2.1 had the ``_LAS`` tags at sealing).
 These are the K1-on arm's tags; the off arm's are :func:`arm_tag`."""
+EXPECTED_TAGS = {
+    "ra": {"off": "final_C4G2_LAS", "on": "final_C4G2_LAS_K1"},
+    "VB": {"off": "final_C4G2_P3_LAS", "on": "final_C4G2_P3_LAS_K1"},
+    "V0": {"off": "final_C4G2_LAS", "on": "final_C4G2_LAS_K1"},
+    "chrono": "final_C4G2_LAS_K1",
+}
+"""Rev3 1 table: expected tag per bundle x K1 arm x setting (exact strings). Chrono runs the
+preset (K1 on, no install)."""
 
 
 def arm_tag(preset_tag: str, k1: str) -> str:
@@ -144,6 +174,16 @@ def arm_tag(preset_tag: str, k1: str) -> str:
         raise ValueError(f"K1 arm {k1!r}: expected off / on")
     base = preset_tag.removesuffix(ORDER_GATE_TAG_SUFFIX)
     return base + ORDER_GATE_TAG_SUFFIX if k1 == "on" else base
+
+
+def path2_expect_doc() -> dict:
+    """Rev3 3.3: the ``--expect`` file of path 2 (``d8x_recount.py``), from :data:`EXPECTED_TAGS`.
+
+    ``_load_expect`` replaces each top key whole, so every arm and setting is written.
+    """
+    return {"ra": dict(EXPECTED_TAGS["ra"]),
+            "rc": {setting: dict(EXPECTED_TAGS[setting]) for setting in RC_SETTINGS},
+            "chrono": EXPECTED_TAGS["chrono"]}
 
 
 # ------------------------------------------------------------------------------------ seals
@@ -270,7 +310,7 @@ def build_points() -> dict:
     return {
         "schema": POINTS_SCHEMA, "rules_rev": CURRENT_RULES_REV,
         "rules": {rev: {"path": entry["path"], "sha256": entry["sha256"]}
-                  for rev, entry in seals.items()},
+                  for rev, entry in seals.items() if rev in POINT_FILE_RULES},
         "table_sources": read["sources"], "half_spans_deg": dict(VERIFICATION_EXT_HALF_SPANS_DEG),
         "levels": list(LEVELS), "ra_points": ra, "rpx_points": rpx, "axis_vertices": axis,
         "g0_points": [entry["tag"] for entry in ra] + [entry["name"] for entry in rpx],

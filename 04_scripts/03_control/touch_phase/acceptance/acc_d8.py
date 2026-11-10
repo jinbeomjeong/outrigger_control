@@ -228,7 +228,7 @@ def _parse_args() -> argparse.Namespace:
     ap.add_argument("--stage", default="all", choices=("main", "all"))
     ap.add_argument("--points", type=Path, default=None, help="D8x point file (rules 1.2); D8x mode")
     ap.add_argument("--stages", default=None, help="D8x: comma list of main, robust, kt (default all three)")
-    ap.add_argument("--k1", default=None, choices=("off", "on"), help="D8x: R4c30 order gate (default off)")
+    ap.add_argument("--k1", default=None, choices=("off", "on"), help="D8x: R4c30 order gate of this arm, required (rev3 2)")
     args = ap.parse_args()
     if args.points is None and (args.stages is not None or args.k1 is not None):
         ap.error("--stages and --k1 belong to the D8x mode (--points)")
@@ -237,7 +237,8 @@ def _parse_args() -> argparse.Namespace:
         unknown = sorted(set(args.stages) - set(D8X_STAGES))
         if unknown or not args.stages:
             ap.error(f"--stages: unknown {unknown}, choose from {D8X_STAGES}")
-        args.k1 = args.k1 or "off"
+        if args.k1 is None:  # rev3 2: the K1 request is explicit on every D8x run
+            ap.error("D8x mode needs --k1 off|on (d8x_rules_rev3.md 2)")
         args.out = args.out or _d8x_default_out(args.k1)
     return args
 

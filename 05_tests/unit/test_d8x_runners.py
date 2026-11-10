@@ -56,6 +56,32 @@ def test_hrx_rows_stay_out_of_the_d1_batch() -> None:
         d1_rows.d8x_jobs("maybe")
 
 
+def _run(argv: list[str]) -> subprocess.CompletedProcess:
+    env = dict(os.environ, ACC_WT=str(ROOT), PYTHONDONTWRITEBYTECODE="1")
+    return subprocess.run([sys.executable, "-I", *argv], capture_output=True, text=True,
+                          env=env, cwd=str(ROOT), timeout=600, check=False)
+
+
+@pytest.mark.parametrize("argv", [
+    [str(ACC_D8), "--points", str(spec.POINTS_PATH), "--limit", "1"],
+    [str(COUPLED / "run_v5.py"), "d1", "--group", "H-R-X", "--list"],
+])
+def test_d8x_runs_refuse_without_an_explicit_k1(argv) -> None:
+    """Rev3 2: no K1 request = no run (no silent preset fallback, the preset has K1 on)."""
+    completed = _run(argv)
+    assert completed.returncode == 2, completed.stderr[-2000:]
+    assert "--k1" in completed.stderr
+
+
+def test_hrx_execute_refuses_k1_none() -> None:
+    code = ("import sys; sys.path.insert(0, sys.argv[1]); import d1_rows, d1_runs; "
+            "job = d1_rows.d8x_jobs('off')[0]\n"
+            "try:\n    d1_runs.execute(job['d1'], None, None, setting_name='VB', eps=0.0)\n"
+            "except ValueError as exc:\n    print('refused', exc)")
+    completed = _run(["-c", code, str(COUPLED)])
+    assert "refused" in completed.stdout and "k1" in completed.stdout, completed.stderr[-2000:]
+
+
 def test_acc_d8_cases_are_the_expected_ids() -> None:
     code = ("import json, sys; points, folder = sys.argv[1], sys.argv[2]; "
             "sys.argv = ['acc_d8.py', '--points', points]; "
