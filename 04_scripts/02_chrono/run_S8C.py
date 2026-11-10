@@ -960,8 +960,14 @@ def d8x_cases() -> list[S8Case]:
             raise RuntimeError(f"D8x row {r.number}: F_s / beta differ from the family ({r})")
         note = s6c.d8x_note(r)
         pair = k0v.get(r.floor) if r.fs_kN > 0.0 else None
-        base = s6c.BundleCCase(r.name, "S8", replace(_d8x_scenario(r.level, r.floor), case_id=r.name),
-                               slope_limit_mode=st.D8X_SLOPE_LIMIT_MODE, d8x_row=r.number)
+        sc = _d8x_scenario(r.level, r.floor)
+        scen = st.d8x_scenario(r)
+        if sc.group != scen["group"]:
+            raise RuntimeError(f"D8x row {r.number}: scenario group {sc.group} != rev2 6 {scen['group']}")
+        sc, family_s = s6c.d8x_with_length(sc, r)  # rev2 5: T_run = max(family + 8 s, T^_R + 20 s)
+        base = s6c.BundleCCase(r.name, "S8", replace(sc, case_id=r.name),
+                               slope_limit_mode=st.D8X_SLOPE_LIMIT_MODE, d8x_row=r.number,
+                               d8x_scenario_id=scen["id"], d8x_family_run_s=family_s)
         out.append(S8Case(r.name, D8X_GROUP, D8X_PRIORITY, "L2b_NSC", base, fs_kN=float(r.fs_kN),
                           pair_fs0=pair, notes=(note,)))
     return out
@@ -1001,21 +1007,24 @@ def d8x_preflight(cases: list[S8Case], expect_controller: str | None) -> dict[st
         cfg, _ = s7c.apply_settle_map(s6c.controller_config(load_params(level=lv), c.base), "L2b_NSC", lv)
         mode = str(cfg.target.slope_limit_mode.value)
         tag = s6c.controller_tag_of(cfg)
+        rec = s6c.d8x_record(c.base, cfg, expect_controller)
         rows[c.case_id] = {"d8x_row": c.base.d8x_row, "slope_limit_mode": mode, "controller_tag": tag,
                            "half_spans_deg": s6c.half_spans_deg(cfg),
-                           "floor_true_deg": list(st.FLOORS[c.floor]), "fs_kN": c.fs_kN}
+                           "floor_true_deg": list(st.FLOORS[c.floor]), "fs_kN": c.fs_kN,
+                           **{k: v for k, v in rec.items() if k not in ("controller_tag", "problems")},
+                           "end_rule": end_rule(c)}
         if mode != st.D8X_SLOPE_LIMIT_MODE:
             raise SystemExit(f"{c.case_id}: slope-limit mode {mode} (D8x needs {st.D8X_SLOPE_LIMIT_MODE})")
         s6c.check_half_spans(c.case_id, rows[c.case_id]["half_spans_deg"])
-        if expect_controller is not None and tag != expect_controller:
-            raise SystemExit(f"{c.case_id}: run-time preset tag {tag} != --expect-controller {expect_controller} "
-                             "(rules 2.1 / E-6)")
-    return {**s6c.d8x_rules_meta(), "expect_controller": expect_controller, "rows": rows}
+        s6c.d8x_refuse(c.case_id, rec)  # rev2: E-4b settle map, E-6 tag / LAS-b, scenario group, run length
+    return {**s6c.d8x_rules_meta(), "expect_controller": expect_controller,
+            "expected_tag": expect_controller or st.D8X_EXPECTED_TAG, "rows": rows}
 
 
-def d8x_plan(w: str | None = None, v: str | None = None) -> dict[str, Any]:
+def d8x_plan(w: str | None = None, v: str | None = None, expect_controller: str | None = None) -> dict[str, Any]:
     """``d8x-plan``: the 19 rows of rules 4.4 (W / V resolved when given), the script / set of each, the start
-    states (cad declaration for I-5) with the L1-R snapshot files present or missing, and the P-pool estimates."""
+    states (cad declaration for I-5) with the L1-R snapshot files present or missing, the P-pool estimates and the
+    rev2 I-5 entries per row: T^_R (with its stored reference), T_run, ``expected_tag``, settle map, scenario."""
     rows = []
     l2b = {c.case_id: c for c in d8x_cases()}
     l1r = {c.case_id: c for c in s6c.d8x_l1r_cases()}
@@ -1025,11 +1034,27 @@ def d8x_plan(w: str | None = None, v: str | None = None) -> dict[str, Any]:
         open_slot = (r.floor == "<W>" and wf is None) or (r.floor == "<V>" and vf is None)
         rr = r if open_slot else r.resolved(wf, vf)
         case = (l2b if r.engine == "L2b" else l1r).get(rr.name)
+        bc = None if case is None else (case.base if r.engine == "L2b" else case)
+        length = None if bc is None else s6c.d8x_length_record(bc)
+        scen = None if open_slot else st.d8x_scenario(rr)
         rows.append({"row": r.number, "name": rr.name, "family": r.family, "engine": r.engine,
                      "script": "run_S8C.py" if r.engine == "L2b" else "run_S6C.py",
                      "set": "d8x_w1" if r.order == 1 else "d8x_w2", "beta_GPa": r.beta_GPa, "fs_kN": r.fs_kN,
                      "level": r.level, "floor": rr.floor,
                      "floor_deg": None if rr.floor[0] == "<" else list(st.FLOORS[rr.floor]),
+                     # rev2 1 / 4 / 5 / 6 (I-5): settle map, expected tag, T^_R and T_run, scenario group / id
+                     "settle_map_expected": st.d8x_expected_settle(r.engine, r.level),
+                     "expected_tag": expect_controller or st.D8X_EXPECTED_TAG,
+                     "scenario_group": None if scen is None else scen["group"],
+                     "scenario_id": None if scen is None else scen["id"],
+                     "ready_hat_s": None if length is None else length["ready_hat_s"],
+                     "ready_ref": None if length is None else {k: length[k] for k in (
+                         "ref_floor", "ref_ready_s", "ref_source", "ratio")},
+                     "family_run_s": None if length is None else length["family_run_s"],
+                     "T_run_s": None if case is None else case.duration_s,
+                     "T_run_binding": None if length is None else length["binding"],
+                     "end_rule": (end_rule(case) if case is not None and r.engine == "L2b" else
+                                  None if case is None else "fixed length T_run (L1-R bundle-C job)"),
                      "duration_s": None if case is None else case.duration_s,
                      "wall_estimate_p_s": None if case is None else case.wall_estimate_s(),
                      "snapshot": None if r.engine == "L2b" else case.snapshot})
@@ -1038,7 +1063,11 @@ def d8x_plan(w: str | None = None, v: str | None = None) -> dict[str, Any]:
         if s["kind"] == "snapshot":
             s["exists"] = (s6c.STATES / f"{s['snapshot']}.npz").exists()
     snap_wall = st.WALL_START_S + (st.SNAP_RAMP_S + st.SNAP_SETTLE_S) * st.WALL_CRAWLER_S_PER_S
-    return {**s6c.d8x_rules_meta(), "half_spans_deg": st.D8X_HALF_SPANS_DEG, "w": w, "v": v, "rows": rows,
+    return {**s6c.d8x_rules_meta(), "half_spans_deg": st.D8X_HALF_SPANS_DEG, "w": w, "v": v,
+            "expected_tag": expect_controller or st.D8X_EXPECTED_TAG,
+            "length_rule": "rev2 5: T_run = max(family length + R8_EXTRA_S 8 s, T^_R + 20 s); L2b runs end at READY "
+                           "+ 10 s (C-S8-17) with the upper bound T_run + 60 s, L1-R runs the fixed T_run",
+            "rows": rows,
             "counts": {k: sum(1 for r in rows if r["set"] == k) for k in st.D8X_SETS},
             "start_states": states,
             "snapshot_wall_estimate_s_each": snap_wall,
@@ -1975,7 +2004,8 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
                        # D8x (rules I-4 / E-4): key only on D8x rows (earlier results unchanged)
                        **({} if bcase.slope_limit_mode is None
                           else {"slope_limit_mode": bcase.slope_limit_mode})},
-        **({} if bcase.d8x_row is None else {"d8x": s6c.d8x_meta(bcase, c2.config, expect_controller)}),
+        **({} if bcase.d8x_row is None
+           else {"d8x": s6c.d8x_meta(bcase, c2.config, expect_controller, fs_kN=float(case.fs_kN))}),
         "h4": {"enabled": sc.h4, "outcome": None if reanchor is None else str(reanchor),
                "expected": expect, "direction": ctl_meta.get("reanchor_direction")},
         "c2": c2_meta,
@@ -4321,7 +4351,8 @@ def main(argv):
         run_ml(args.workers, args.stage, mlj_from=mlj_from, skip_judged=args.skip_judged)
         return
     if args.action == "d8x-plan":  # D8x rules 4.4 / 9.3 / I-5: rows, start states, estimates (nothing runs)
-        print(json.dumps(s6c._plain(d8x_plan(args.d8x_w, args.d8x_v)), indent=1, ensure_ascii=False))
+        print(json.dumps(s6c._plain(d8x_plan(args.d8x_w, args.d8x_v, args.expect_controller)), indent=1,
+                         ensure_ascii=False))
         return
     is_d8x = args.case_set in st.D8X_SETS
     if not is_d8x and (args.d8x_w or args.d8x_v or args.expect_controller):

@@ -81,7 +81,11 @@ ad16f452..., 4.4 rows 7-11, 2026-11-10): set
 ``d8x_w1`` = the L1-R part of the first batch (``D8X_C1_D8_top_<fdown3.7|fup3.6|roll5.7|rpX>_b1.6``,
 ``D8X_C1_H4V_top_fdown3.7``) with ``slope_limit_mode`` ``verification_ext`` (needs python-expert's
 ``SlopeLimitMode.VERIFICATION_EXT``; ``run`` / ``check`` refuse without it), the floors of
-``s6_stage2.D8X_FLOORS``; the rows 1-6 / 12-18 / 19 are run_S8C (``--set d8x_w1 --w`` / ``d8x_w2 --v``)::
+``s6_stage2.D8X_FLOORS``; the rows 1-6 / 12-18 / 19 are run_S8C (``--set d8x_w1 --w`` / ``d8x_w2 --v``).
+Rev2 (``d8x_rules_rev2.md`` sha256 5f3fa620...): the L1-R rows use the ``level`` settle map, the L2b rows
+``identity`` (E-4b, recorded and checked); scenario group / id (rev2 6); expected tag ``final_C4G2_LAS`` with LAS-b
+on, refused otherwise before any Chrono step (rev2 4); run length T_run = max(family length + 8 s, T^_R + 20 s)
+(rev2 5, :func:`d8x_with_length`)::
 
     python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py snaps-d8x --jobs 4 [--dry-run]
     python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py run --set d8x_w1 --approved --jobs 5
@@ -267,9 +271,14 @@ class BundleCCase:
     None = ``SlopeLimitMode.VERIFICATION`` as every earlier case."""
     d8x_row: int | None = field(default=None, repr=False)
     """D8x rules 4.4 row number (1-19); None = not a D8x row."""
+    d8x_scenario_id: str | None = field(default=None, repr=False)
+    """D8x rev2 6: the family scenario id (``H4V_top_fdown3.7``, ``D8_top_rpX``); the group is
+    ``scenario.group``."""
+    d8x_family_run_s: float | None = field(default=None, repr=False)
+    """D8x rev2 5 rule 1: the family run length + ``R8_EXTRA_S`` before the T^_R rule (:func:`d8x_with_length`)."""
 
     OPTIONAL_META = ("preground_leg", "end_after_ready_s", "pad_block", "crawler_k_factor",
-                     "slope_limit_mode", "d8x_row")
+                     "slope_limit_mode", "d8x_row", "d8x_scenario_id", "d8x_family_run_s")
     """Fields left out of :meth:`to_meta` while None and out of ``repr`` (``repr=False``), so
     the earlier cases' definitions (meta and repr hashes) stay as they were."""
 
@@ -802,16 +811,25 @@ D8X_SNAPSHOTS = st.D8X_L1R_SNAPSHOTS
 
 def d8x_note(row) -> str:
     return (f"D8x rules 4.4 #{row.number} ({st.D8X_RULES} sha256 {st.D8X_RULES_SHA256[:8]} + rev1 "
-            f"{st.D8X_RULES_REV1_SHA256[:8]}): family "
+            f"{st.D8X_RULES_REV1_SHA256[:8]} + rev2 {st.D8X_RULES_REV2_SHA256[:8]}): family "
             f"{row.family} with the floor {row.floor} {st.FLOORS[row.floor]} deg and the slope-limit mode "
-            f"{st.D8X_SLOPE_LIMIT_MODE}; scenario length / H4 / probe / sensors as the family")
+            f"{st.D8X_SLOPE_LIMIT_MODE}; H4 / probe / sensors as the family, run length by rev2 5")
+
+
+def d8x_with_length(sc: st.Stage2Case, row) -> tuple[st.Stage2Case, float]:
+    """D8x rev2 5: the family scenario ``sc`` (length by the family rule, :func:`_sc`) with its length set so that
+    the run length (``BundleCCase.duration_s`` = scenario + :data:`R8_EXTRA_S`) is T_run = max(family length +
+    8 s, T^_R + 20 s) (:func:`s6_stage2.d8x_run_length`). Returns (scenario, family run length)."""
+    family_s = sc.duration_s + R8_EXTRA_S
+    info = st.d8x_run_length(row.family, row.level, row.floor, family_s)
+    return replace(sc, duration_s=info["run_s"] - R8_EXTRA_S), family_s
 
 
 def d8x_l1r_cases() -> list[BundleCCase]:
     """D8x rows 7-11 (rules 4.4, L1-R): ``C1_D8_top_<floor>_b1.6`` = :func:`_d8` (as the bundle-C
-    ``C1_D8_*``), ``C1_H4V_top_fdown3.7`` = the ``C1_H4V_top_fdown3.5`` scenario (``H4V`` / ``G2-R``,
-    items R 2 3 8); config ``C-1`` as the family; ideal leg sensors; start from the
-    :data:`D8X_SNAPSHOTS`; ``slope_limit_mode`` ``verification_ext``."""
+    ``C1_D8_*``, scenario group ``D8``), ``C1_H4V_top_fdown3.7`` = the ``C1_H4V_top_fdown3.5`` scenario
+    (``H4V`` / ``G2-R``, items R 2 3 8; rev2 6); config ``C-1`` as the family; ideal leg sensors; start from the
+    :data:`D8X_SNAPSHOTS`; ``slope_limit_mode`` ``verification_ext``; settle map ``level`` (rev2 1); length rev2 5."""
     out = []
     for row in st.d8x_rows("d8x_w1", engine="L1R"):
         if row.family == "C1_D8":
@@ -820,10 +838,15 @@ def d8x_l1r_cases() -> list[BundleCCase]:
             sc = _sc("H4V", "G2-R", row.level, row.floor, items=("R", "2", "3", "8"))
         else:
             raise ValueError(f"D8x row {row.number}: family {row.family} is not an L1-R family")
+        scen = st.d8x_scenario(row)
+        if sc.group != scen["group"]:
+            raise RuntimeError(f"D8x row {row.number}: scenario group {sc.group} != rev2 6 {scen['group']}")
+        sc, family_s = d8x_with_length(sc, row)
         note = d8x_note(row)
         out.append(BundleCCase(row.name, "C-1", replace(sc, case_id=row.name, notes=(note,)),
                                beta_GPa=row.beta_GPa, notes=(note,),
-                               slope_limit_mode=st.D8X_SLOPE_LIMIT_MODE, d8x_row=row.number))
+                               slope_limit_mode=st.D8X_SLOPE_LIMIT_MODE, d8x_row=row.number,
+                               d8x_scenario_id=scen["id"], d8x_family_run_s=family_s))
     if len(out) != st.D8X_EXPECTED_COUNTS[("d8x_w1", "L1R")]:
         raise RuntimeError(f"D8x L1-R rows: {len(out)}")
     return out
@@ -1775,15 +1798,94 @@ def _snapshot_dir(name: str, batch_states: Path | None) -> Path:
 def d8x_rules_meta() -> dict[str, Any]:
     return {"rules": st.D8X_RULES, "rules_sha256": st.D8X_RULES_SHA256,
             "rules_rev": st.D8X_RULES_REV, "rules_rev1": st.D8X_RULES_REV1,
-            "rules_rev1_sha256": st.D8X_RULES_REV1_SHA256}
+            "rules_rev1_sha256": st.D8X_RULES_REV1_SHA256, "rules_rev2": st.D8X_RULES_REV2,
+            "rules_rev2_sha256": st.D8X_RULES_REV2_SHA256}
 
 
-def d8x_meta(case: BundleCCase, config, expect_controller: str | None) -> dict[str, Any]:
-    """``result.json`` block ``d8x`` of a D8x row (rules 2.1, I-4, E-6): row number / name, the
-    rules file and seal, the slope-limit mode of the built controller config, the true floor,
-    the controller tag of the built config and the expected tag of the batch (None = not given)."""
+def settle_map_record(config) -> dict[str, Any]:
+    """Settle map of the built controller ``config`` (rev2 1 / E-4b): ``identity`` (None or the identity map),
+    ``level`` with the auger level whose ``CrawlerSettleMap.for_level`` it equals, else ``other``."""
+    from outrigger_sim.control.target import CrawlerSettleMap
+
+    smap = config.target.crawler_settle_map
+    if smap is None or smap.is_identity:
+        return {"kind": "identity", "level": None, "coefficients": CrawlerSettleMap.identity().to_meta()}
+    for lv in st.LEVELS:
+        if smap == CrawlerSettleMap.for_level(lv):
+            return {"kind": "level", "level": lv, "coefficients": smap.to_meta()}
+    return {"kind": "other", "level": None, "coefficients": smap.to_meta()}
+
+
+def las_b_enabled(config) -> bool:
+    """LAS-b (``liftoff_approach_slow.enable``) of the built controller ``config`` (rev2 4)."""
+    return bool(getattr(getattr(config, "liftoff_approach_slow", None), "enable", False))
+
+
+def d8x_row_of(case: BundleCCase):
+    """The rules 4.4 row of a D8x case with its floor resolved (rows 6 / 19: W / V = the case floor)."""
     row = next(r for r in st.D8X_ROWS if r.number == case.d8x_row)
+    if row.floor.startswith("<"):
+        row = row.resolved(case.scenario.floor, case.scenario.floor)
+    return row
+
+
+def d8x_length_record(case: BundleCCase) -> dict[str, Any]:
+    """Rev2 5 / I-5: T^_R, its source and T_run of a D8x case (``run_s`` = ``case.duration_s``)."""
+    row = d8x_row_of(case)
+    family_s = case.d8x_family_run_s if case.d8x_family_run_s is not None else case.duration_s
+    rec = st.d8x_run_length(row.family, row.level, row.floor, family_s)
+    rec["run_s_case"] = case.duration_s
+    rec["run_s_matches"] = abs(case.duration_s - rec["run_s"]) <= 1e-6
+    return rec
+
+
+def d8x_record(case: BundleCCase, config, expect_controller: str | None) -> dict[str, Any]:
+    """Rev2 1 / 4 / 5 / 6 per-row record from the built controller ``config``: settle map (got / expected),
+    scenario group and id, controller tag / expected tag / LAS-b, T^_R / T_run. ``problems`` lists every rev2
+    mismatch (E-4b settle map, E-6 tag or LAS-b off, scenario group, run length); empty = the row may run."""
+    row = d8x_row_of(case)
+    engine = row.engine
     tag = controller_tag_of(config)
+    expected_tag = expect_controller or st.D8X_EXPECTED_TAG
+    las = las_b_enabled(config)
+    settle = settle_map_record(config)
+    settle_want = st.d8x_expected_settle(engine, case.scenario.level)
+    scen_want = st.d8x_scenario(row)
+    length = d8x_length_record(case)
+    problems = []
+    if {k: settle.get(k) for k in ("kind", "level")} != settle_want:
+        problems.append(f"settle map {settle} != rev2 1 {settle_want} (E-4b)")
+    if not las:
+        problems.append("LAS-b (liftoff_approach_slow.enable) off (rev2 4, E-6)")
+    if tag != expected_tag:
+        problems.append(f"controller tag {tag} != expected_tag {expected_tag} (rev2 4, E-6)")
+    if case.scenario.group != scen_want["group"] or case.d8x_scenario_id != scen_want["id"]:
+        problems.append(f"scenario {case.scenario.group} / {case.d8x_scenario_id} != rev2 6 {scen_want}")
+    if not length["run_s_matches"]:
+        problems.append(f"run length {case.duration_s} s != rev2 5 T_run {length['run_s']} s")
+    return {"engine": engine, "settle_map": settle, "settle_map_expected": settle_want,
+            "settle_map_matches": not any(p.startswith("settle map") for p in problems),
+            "scenario_group": case.scenario.group, "scenario_id": case.d8x_scenario_id,
+            "controller_tag": tag, "expected_tag": expected_tag, "las_b_enabled": las,
+            "ready_hat_s": length["ready_hat_s"], "run_s": length["run_s"], "length": length,
+            "problems": problems}
+
+
+def d8x_refuse(case_id: str, rec: dict[str, Any]) -> None:
+    """Preflight: SystemExit when :func:`d8x_record` found a rev2 mismatch (nothing has run)."""
+    if rec["problems"]:
+        raise SystemExit(f"{case_id}: D8x rev2 preflight refused: " + "; ".join(rec["problems"]))
+
+
+def d8x_meta(case: BundleCCase, config, expect_controller: str | None,
+             fs_kN: float | None = None) -> dict[str, Any]:
+    """``result.json`` block ``d8x`` of a D8x row (rules 2.1, I-4, E-6, rev2 1 / 4 / 5 / 6): row number / name, the
+    rules files and seals, the slope-limit mode of the built controller config, the true floor, the settle map
+    (``{kind, level, coefficients}``), the scenario group / id, the controller tag, the expected tag
+    (``--expect-controller``, else :data:`s6_stage2.D8X_EXPECTED_TAG`), LAS-b (``liftoff_slow_enabled``), T^_R
+    and T_run, and ``fs_kN`` of the plant (L2b rows; None on L1-R). Key names as ``d8x_judge.CHRONO_FIELDS``."""
+    row = next(r for r in st.D8X_ROWS if r.number == case.d8x_row)
+    rec = d8x_record(case, config, expect_controller)
     return {"row": case.d8x_row, "row_template": row.name, "family": row.family,
             "order": row.order, **d8x_rules_meta(),
             "slope_limit_mode": str(getattr(config.target.slope_limit_mode, "value",
@@ -1791,8 +1893,13 @@ def d8x_meta(case: BundleCCase, config, expect_controller: str | None) -> dict[s
             "half_spans_deg": half_spans_deg(config),
             "floor": case.scenario.floor, "floor_true_deg": list(st.FLOORS[case.scenario.floor]),
             "level": case.scenario.level, "beta_GPa": case.beta_GPa,
-            "controller_tag": tag, "expected_controller": expect_controller,
-            "controller_tag_matches": None if expect_controller is None else tag == expect_controller}
+            **{k: rec[k] for k in ("engine", "settle_map", "settle_map_expected", "settle_map_matches",
+                                   "scenario_group", "scenario_id", "las_b_enabled", "ready_hat_s",
+                                   "run_s", "length", "expected_tag")},
+            "liftoff_slow_enabled": rec["las_b_enabled"], "fs_kN": fs_kN,
+            "rev2_problems": rec["problems"],
+            "controller_tag": rec["controller_tag"], "expected_controller": expect_controller,
+            "controller_tag_matches": rec["controller_tag"] == rec["expected_tag"]}
 
 
 def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None = None,
@@ -2401,16 +2508,17 @@ def d8x_preflight(cases: list[BundleCCase], expect_controller: str | None) -> di
         cfg = controller_config(load_params(level=c.scenario.level), c)
         mode = str(cfg.target.slope_limit_mode.value)
         tag = controller_tag_of(cfg)
+        rec = d8x_record(c, cfg, expect_controller)
         rows[c.case_id] = {"d8x_row": c.d8x_row, "slope_limit_mode": mode, "controller_tag": tag,
                            "half_spans_deg": half_spans_deg(cfg),
-                           "floor_true_deg": list(st.FLOORS[c.scenario.floor])}
+                           "floor_true_deg": list(st.FLOORS[c.scenario.floor]),
+                           **{k: v for k, v in rec.items() if k not in ("controller_tag", "problems")}}
         if mode != st.D8X_SLOPE_LIMIT_MODE:
             raise SystemExit(f"{c.case_id}: slope-limit mode {mode} (D8x needs {st.D8X_SLOPE_LIMIT_MODE})")
         check_half_spans(c.case_id, rows[c.case_id]["half_spans_deg"])
-        if expect_controller is not None and tag != expect_controller:
-            raise SystemExit(f"{c.case_id}: run-time preset tag {tag} != --expect-controller "
-                             f"{expect_controller} (rules 2.1 / E-6)")
-    return {**d8x_rules_meta(), "expect_controller": expect_controller, "rows": rows}
+        d8x_refuse(c.case_id, rec)  # rev2: E-4b settle map, E-6 tag / LAS-b, scenario group, run length
+    return {**d8x_rules_meta(), "expect_controller": expect_controller,
+            "expected_tag": expect_controller or st.D8X_EXPECTED_TAG, "rows": rows}
 
 
 def build_d8x_snapshots(jobs: int, *, dry_run: bool = False):
