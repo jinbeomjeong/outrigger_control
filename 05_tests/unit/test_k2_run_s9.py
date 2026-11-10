@@ -59,6 +59,8 @@ def test_registered_tags_refuse_a_k2_config(run_s9) -> None:
 
     on = C2Config().with_10hz_d1(touch_creep_latch=True)
     for tag in run_s9.CONTROLLER_EXPECTATIONS:
+        if tag.endswith("_TCL"):  # the K-2 tag itself (V-7, cad 2026-11-10)
+            continue
         record = run_s9.controller_expectation(on, tag)
         assert "touch_creep_latch.enable" in {c["path"] for c in record["checks"] if not c["ok"]}, tag
     assert run_s9.controller_expectation(C2Config().with_10hz_d1(), run_s9.FINAL_LAS_K1_CONTROLLER)["ok"]

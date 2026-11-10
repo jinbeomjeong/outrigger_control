@@ -91,6 +91,18 @@ on, refused otherwise before any Chrono step (rev2 4); run length T_run = max(fa
     python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py run --set d8x_w1 --approved --jobs 5
         --expect-controller final_C4G2_LAS_K1 --tag d8x
 
+K-2 V-6 (``06_analysis/02_control/k2/k2_touch_creep_rules.md`` sha256 a3658197... 3.5 / 9.3, ``k2_chrono_rows.py``):
+set ``k2_v6`` = the 4 L1-R rows (``K2_L1_top_<fdown3.5|k2pp025>_Fs0_<off|tcl>``), one arm per batch, every option
+explicit (``--k2``, ``--k1-order-gate off``, ``--expect-controller``, ``--pad-zeta-moving 0.1`` = the moving-leg pad
+dashpot of ``chrono/moving_pad_damping``); start state ``S6_crawler_top_k2pp025`` from ``snaps-k2``. Outputs add
+``k2_row.json`` / ``k2_pads.npz`` / ``k2_rate.npz`` / ``pad_damping.npz``. ``--placement ecore`` puts the case processes
+on the E cores (default pcore as before)::
+
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py snaps-k2 --jobs 1 [--placement ecore] [--dry-run]
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S6C.py run --set k2_v6 --approved --jobs 2 --k2 off
+        --k1-order-gate off --expect-controller final_C4G2_LAS --pad-zeta-moving 0.1 --tag k2v6
+    (K-2 arm: --k2 on --expect-controller final_C4G2_LAS_TCL)
+
 ``run`` refuses to start without ``--approved`` (the user approves the bundle separately).
 C-9 cases (R-5 on) are conditional: ``run`` leaves them out unless ``--with-c9`` (spec 150:
 only when the C-1 G4 cases miss F_min).
@@ -163,6 +175,7 @@ ROOT = HERE.parents[1]
 sys.path.insert(0, str(ROOT / "03_src"))
 sys.path.insert(0, str(HERE))
 
+import k2_chrono_rows as k2c  # noqa: E402
 import s6_stage2 as st  # noqa: E402
 from outrigger_sim.verify.s6_bundle_c import (  # noqa: E402
     SATURATION_MECHANISM_SHARE_N as _SAT_SHARE_N,
@@ -277,8 +290,19 @@ class BundleCCase:
     d8x_family_run_s: float | None = field(default=None, repr=False)
     """D8x rev2 5 rule 1: the family run length + ``R8_EXTRA_S`` before the T^_R rule (:func:`d8x_with_length`)."""
 
+    k2_arm: str | None = field(default=None, repr=False)
+    """K-2 V-6 (``k2_touch_creep_rules.md`` 3.5): ``touch_creep_latch.enable`` of the row (``off`` / ``on``, set
+    explicitly on the built config); None = the preset value (every earlier case)."""
+    k1_order_gate: bool | None = field(default=None, repr=False)
+    """K-2 V-6: the LAS-b K1 order gate of the row (False, rules I-10); None = the preset value."""
+    pad_zeta_moving: float | None = field(default=None, repr=False)
+    """K-2 V-6 L1-R: axial zeta of a moving leg on the pad SMC dashpot (``chrono/moving_pad_damping``); None = off."""
+    k2_row: int | None = field(default=None, repr=False)
+    """K-2 V-6 row number (rules 3.5 #1-8); None = not a K-2 row."""
+
     OPTIONAL_META = ("preground_leg", "end_after_ready_s", "pad_block", "crawler_k_factor",
-                     "slope_limit_mode", "d8x_row", "d8x_scenario_id", "d8x_family_run_s")
+                     "slope_limit_mode", "d8x_row", "d8x_scenario_id", "d8x_family_run_s",
+                     "k2_arm", "k1_order_gate", "pad_zeta_moving", "k2_row")
     """Fields left out of :meth:`to_meta` while None and out of ``repr`` (``repr=False``), so
     the earlier cases' definitions (meta and repr hashes) stay as they were."""
 
@@ -852,11 +876,39 @@ def d8x_l1r_cases() -> list[BundleCCase]:
     return out
 
 
+k2c.register_floors(st.FLOORS)  # K-2 V-6 floor k2pp025 (rules 3.5 / 9.3)
+K2_SNAPSHOTS = tuple(("top", f) for f in k2c.V6_FLOORS)
+"""L1-R start states of the V-6 rows (``snaps-k2`` builds the missing ``S6_crawler_top_k2pp025``)."""
+
+
+def k2_scenario(level: str, floor: str) -> st.Stage2Case:
+    """The family scenario of a V-6 floor (rules 3.5: L1-R ``C1_*``): the nose-down floor ``fdown3.5`` = the
+    ``C1_H4V_top_fdown3.5`` scenario (H4V / G2-R, items R 2 3 8; the L2b ``_d8_scenario`` rule), else D8."""
+    if floor == "fdown3.5":
+        return _sc("H4V", "G2-R", level, floor, items=("R", "2", "3", "8"))
+    return _d8(level, floor)
+
+
+def k2_v6_cases() -> list[BundleCCase]:
+    """K-2 V-6 L1-R rows #1-4 (``k2_chrono_rows.V6_ROWS``): the family scenario at beta 1.0, ideal leg sensors, config
+    ``C-1``, length scenario + :data:`R8_EXTRA_S`, the row's K-2 arm / K1 gate off / moving pad damping zeta 0.1."""
+    out = []
+    for r in k2c.rows("L1R"):
+        note = (f"K-2 V-6 #{r.number} ({k2c.RULES} sha256 {k2c.RULES_SHA256[:8]}): L1-R top {r.floor} "
+                f"{k2c.floor_deg(r.floor)} deg, F_s 0, moving pad zeta {r.pad_zeta_moving}, K-2 {r.arm}, K1 off, "
+                f"expected {r.expected_tag}")
+        sc = replace(k2_scenario("top", r.floor), case_id=r.name, notes=(note,))
+        out.append(BundleCCase(r.name, "C-1", sc, notes=(note,), k2_arm=r.arm,
+                               k1_order_gate=k2c.K1_ORDER_GATE, pad_zeta_moving=r.pad_zeta_moving,
+                               k2_row=r.number))
+    return out
+
+
 CASE_SETS = {"bundleC": bundle_c_cases, "rerun32": rerun32_cases, "rerun33": rerun33_cases,
              "rerun34": rerun34_cases, "rerun35": rerun35_cases, "ps7r8": ps7r8_cases,
              "g8c76": g8c76_run_cases, "g8c76_p28": g8c76_def_cases,
              "g8c76_p28acc": g8c76_p28_acceptance_cases, "d1c1": d1c1_cases,
-             "d8x_w1": d8x_l1r_cases}
+             "d8x_w1": d8x_l1r_cases, k2c.V6_SET: k2_v6_cases}
 D8X_CASE_SETS = ("d8x_w1",)
 """run_S6C side of the D8x first batch (rows 7-11; rows 1-6 / 12-18 / 19 are run_S8C)."""
 GROUP_SETS = {"rerun32": rerun32_groups, "rerun33": rerun33_groups, "rerun34": rerun34_groups,
@@ -1285,6 +1337,8 @@ def controller_config(params, case: BundleCCase):
         ),
         r8=r8,
     )
+    if case.k2_arm is not None or case.k1_order_gate is not None:  # K-2 V-6 rows only
+        config = k2c.apply_to_config(config, k2_arm=case.k2_arm, k1_order_gate=case.k1_order_gate)
     return config
 
 
@@ -2035,6 +2089,29 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
     # U-S8-61 (spec 304 1): L1 / L1-R runs take the R-5 fallback ratio from the plant meta
     config, fallback_ratio_meta = l1_fallback_ratio(config, model, fallback_ratio_source)
     c2 = C2Controller.from_params(params_ctrl, config)
+    k2_block = None
+    if case.k2_row is not None:  # K-2 V-6: the built controller holds the row's arm / gate / tag (rules I-10)
+        from outrigger_sim.control.touch_creep_option import (
+            check_built_touch_creep,
+            touch_creep_run_record,
+        )
+
+        check_built_touch_creep(case.k2_arm, c2.config)
+        k2_block = {**k2c.row_by_name(case.case_id).to_meta(),
+                    **k2c.preflight_record(case.case_id, c2.config, controller_tag_of(c2.config)),
+                    **touch_creep_run_record(case.k2_arm, c2.config),
+                    "expect_controller": expect_controller}
+        if expect_controller is not None and expect_controller != k2_block["controller_tag"]:
+            raise SystemExit(f"{case.case_id}: controller tag {k2_block['controller_tag']} != "
+                             f"--expect-controller {expect_controller}")
+    pad_damp = None
+    if case.pad_zeta_moving is not None:  # K-2 V-6 L1-R: moving-leg pad dashpot (k2_dyn_spec.md 3)
+        from outrigger_sim.chrono.moving_pad_damping import (
+            MovingPadDamping,
+            MovingPadDampingSettings,
+        )
+
+        pad_damp = MovingPadDamping(model, MovingPadDampingSettings.from_params(params, case.pad_zeta_moving))
     controller = c2
     pre, pre_info = None, None
     if sc.pre_extend_leg is not None:  # C-S8-72: PS-7b / 7c in-run pre-extension (stage 2)
@@ -2237,7 +2314,7 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
         res = run_closed_loop(engine, controller, suite, duration_s or case.duration_s,
                               run_meta=run_meta, on_control=observe, command_delay_periods=0,
                               command_offset_s=case.command_offset_s,
-                              step_hook=st._chain_hooks(pads, settle_vel, sat_rec, gap_rec),
+                              step_hook=st._chain_hooks(pads, settle_vel, sat_rec, gap_rec, pad_damp),
                               capture_every_steps=5 if pads and schedule is None else None,
                               dt_schedule=schedule,
                               capture_every_s=1.0e-3 if pads and schedule is not None else None,
@@ -2258,6 +2335,11 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
     save_record(res.record, case_dir / "record")
     if pads is not None:
         pads.save(case_dir / "pads.npz")
+    if pad_damp is not None:
+        from outrigger_sim.chrono.moving_pad_damping import SERIES_NAME as _PAD_DAMP_NAME
+
+        bundle["pad_damping"] = {**pad_damp.meta(), "series": pad_damp.save(case_dir / _PAD_DAMP_NAME)}
+        pad_damp.restore_lock()
     if settle_vel is not None:
         settle_vel.save(case_dir / st.SETTLE_VELOCITY_NAME)
     series_info = series.save(case_dir / R8_SERIES_NAME)
@@ -2358,6 +2440,9 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
         **({} if g8 is None else {"g8": g8}),
         **({} if case.d8x_row is None else {"d8x": d8x_meta(case, c2.config, expect_controller,
                                                                 controller_meta=ctl_meta)}),
+        **({} if k2_block is None else {  # K-2 V-6 rows only (earlier results unchanged)
+            "k2": k2_block, "touch_creep_requested": k2_block["touch_creep_requested"],
+            "touch_creep_effective": k2_block["touch_creep_effective"]}),
         "ready_t_s": None if state["ready_t"] is None else state["ready_t"] - t0,
         "probe_intervals": probe_intervals,
         "first_probe_t_s": None if state["probe_t"] is None else state["probe_t"] - t0,
@@ -2410,8 +2495,63 @@ def job_case(case, case_dir):
                                      expect_controller=s.get("expect_controller"))
     (Path(case_dir) / "result.json").write_text(
         json.dumps(_plain(summary), indent=1, ensure_ascii=False), encoding="utf-8")
+    if c.k2_row is not None:  # K-2 V-6: k2_row.json / k2_pads.npz / k2_rate.npz (rules 3.5, E-8)
+        from outrigger_sim.params import load_params
+
+        k2c.finish_case(Path(case_dir), summary, row=k2c.row_by_name(c.case_id),
+                        params=load_params(level=c.scenario.level))
     return CaseResult(summary=_plain({k: summary[k] for k in ("case", "phases", "runner")}),
                       run_meta=run_meta)
+
+
+def build_k2_snapshots(jobs: int, *, dry_run: bool = False, placement: str = "pcore"):
+    """``snaps-k2``: the missing :data:`K2_SNAPSHOTS` (K-2 V-6 L1-R start states, rules 9.3), the ``snaps`` job
+    (:func:`s6_stage2.job_snapshot`); ``placement`` of the snapshot processes. ``dry_run`` prints the plan."""
+    from outrigger_sim.batch import Case, run_cases
+
+    todo = [(lv, f) for lv, f in K2_SNAPSHOTS if not (STATES / f"{st.snapshot_name(lv, f)}.npz").exists()]
+    wall = st.WALL_START_S + (st.SNAP_RAMP_S + st.SNAP_SETTLE_S) * st.WALL_CRAWLER_S_PER_S
+    doc = {"missing": [st.snapshot_name(lv, f) for lv, f in todo],
+           "existing": [st.snapshot_name(lv, f) for lv, f in K2_SNAPSHOTS if (lv, f) not in todo],
+           "states_dir": str(STATES), "wall_estimate_p_s_each": wall, "start_states": k2c.start_states(),
+           "estimate_basis": "s6_stage2.plan_document snapshot estimate (stage-2 fit, P cores)"}
+    if dry_run or not todo:
+        print(json.dumps(doc, indent=1))
+        return None
+    stamp = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+    out = RESULTS / f"snapshots_k2_L1R_{stamp}"
+    cases = [Case(st.snapshot_name(lv, f), {"level": lv, "floor": f}) for lv, f in todo]
+    with _run_placement_env(placement):
+        report = run_cases(cases, job_snapshot_case, out, max_workers=min(jobs, MAX_WORKERS),
+                           placement=placement, timeout_s=1800.0)
+    for o in report.outcomes:
+        print(f"{o.case_id}: {o.status} {o.wall_s:.1f}s" + ("" if o.status == "ok"
+              else "\n" + (o.error or "")[-2000:]), flush=True)
+    print(f"-> {out}")
+    return report
+
+
+class _run_placement_env:  # noqa: N801 - context manager
+    """``OUTRIGGER_RUN_PLACEMENT`` = ``placement`` for the spawned case processes (``s6_stage2.run_placement``
+    re-pins every run to P otherwise); nothing changes for ``pcore`` (the default of every earlier batch)."""
+
+    def __init__(self, placement: str) -> None:
+        self.placement = placement
+        self.prev: str | None = None
+
+    def __enter__(self):
+        if self.placement != "pcore":
+            self.prev = os.environ.get(st.RUN_PLACEMENT_ENV)
+            os.environ[st.RUN_PLACEMENT_ENV] = self.placement
+        return self
+
+    def __exit__(self, *exc):
+        if self.placement != "pcore":
+            if self.prev is None:
+                os.environ.pop(st.RUN_PLACEMENT_ENV, None)
+            else:
+                os.environ[st.RUN_PLACEMENT_ENV] = self.prev
+        return False
 
 
 def job_snapshot_case(case, case_dir):
@@ -2558,6 +2698,24 @@ def d8x_preflight(cases: list[BundleCCase], expect_controller: str | None) -> di
             "expected_tag": expect_controller or st.D8X_EXPECTED_TAG, "rows": rows}
 
 
+def k2_preflight(args, set_ids: list[str]) -> tuple[list[str], dict[str, Any]]:
+    """K-2 V-6 (rules 3.5 / I-10 / E-6) before any Chrono step: :func:`k2_chrono_rows.select_rows` (one arm, explicit
+    ``--k2`` / ``--k1-order-gate off`` / ``--expect-controller`` / ``--pad-zeta-moving 0.1``) and every row's built
+    controller config (``controller_config``, configs only) holding the arm, the gate off and the expected tag."""
+    from outrigger_sim.params import load_params
+
+    ids, rec = k2c.select_rows(args, "L1R", set_ids)
+    table = case_table()
+    rec["preflight"] = {}
+    for cid in ids:
+        c = table[cid]
+        if c.pad_zeta_moving != rec["pad_zeta_moving"]:
+            raise SystemExit(f"{cid}: row pad_zeta_moving {c.pad_zeta_moving} != {rec['pad_zeta_moving']}")
+        cfg = controller_config(load_params(level=c.scenario.level), c)
+        rec["preflight"][cid] = k2c.preflight_record(cid, cfg, controller_tag_of(cfg))
+    return ids, rec
+
+
 def build_d8x_snapshots(jobs: int, *, dry_run: bool = False):
     """``snaps-d8x``: the missing :data:`D8X_SNAPSHOTS` (rules 4.4 end / 9.3), same job as
     ``snaps`` (:func:`s6_stage2.job_snapshot`), on the P cores. ``dry_run`` prints the plan."""
@@ -2588,15 +2746,23 @@ def build_d8x_snapshots(jobs: int, *, dry_run: bool = False):
 
 def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DURATION_S,
               case_set: str = "bundleC", run_tag: str | None = None,
-              d8x: dict[str, Any] | None = None):
+              d8x: dict[str, Any] | None = None, k2: dict[str, Any] | None = None,
+              placement: str = "pcore"):
     """``d8x``: the :func:`d8x_preflight` record (D8x sets only; written to ``batch_meta.json``
-    and its ``expect_controller`` passed to every case)."""
+    and its ``expect_controller`` passed to every case). ``k2``: the K-2 V-6 record
+    (``k2_chrono_rows.select_rows`` + :func:`k2_preflight`; ``batch_meta.json k2``, its ``expect_controller`` passed to
+    every case). ``placement``: core pool of the case processes (default ``pcore`` as every earlier batch; another
+    pool also sets ``OUTRIGGER_RUN_PLACEMENT`` for the spawned runs, :class:`_run_placement_env`)."""
     from outrigger_sim.batch import Case, run_cases
 
     table = case_table()
     bad = [c for c in ids if c not in table]
     if bad:
         raise SystemExit(f"unknown cases: {bad}")
+    arms = {table[c].k2_arm for c in ids if table[c].k2_row is not None}
+    if arms and (k2 is None or len(arms) != 1 or arms != {k2["k2"]}
+                 or any(table[c].k2_row is None for c in ids)):
+        raise SystemExit(f"K-2 rows of mixed arms / without the --k2 record in one batch: arms {sorted(map(str, arms))}")
     blocked = [c for c in ids if table[c].blocked_in(STATES)]
     if blocked:
         raise SystemExit(f"cases without a start snapshot (run `snaps`): {blocked}")
@@ -2623,12 +2789,18 @@ def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DU
     if d8x is not None:  # key only on D8x batches (earlier batch metas unchanged)
         meta["d8x"] = d8x
         extra["expect_controller"] = d8x.get("expect_controller")
+    if k2 is not None:  # key only on K-2 batches (earlier batch metas unchanged)
+        meta["k2"] = k2
+        extra["expect_controller"] = k2["expect_controller"]
+    if placement != "pcore":
+        meta["placement"] = placement
     (batch_dir / "batch_meta.json").write_text(json.dumps(_plain(meta), indent=1), "utf-8")
     order = sorted(ids, key=lambda c: -table[c].wall_estimate_s())  # longest first
     cases = [Case(c, {"duration_s": check_duration_s if check else None, **extra}) for c in order]
     t0 = time.perf_counter()
-    report = run_cases(cases, job_case, batch_dir, max_workers=jobs, placement="pcore",
-                       timeout_s=CHECK_TIMEOUT_S if check else CASE_TIMEOUT_S)
+    with _run_placement_env(placement):
+        report = run_cases(cases, job_case, batch_dir, max_workers=jobs, placement=placement,
+                           timeout_s=CHECK_TIMEOUT_S if check else CASE_TIMEOUT_S)
     wall = time.perf_counter() - t0
     for o in report.outcomes:
         msg = f"{o.case_id}: {o.status} {o.wall_s:.1f}s"
@@ -2642,7 +2814,7 @@ def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DU
 def main(argv):
     ap = argparse.ArgumentParser()
     ap.add_argument("action", choices=("list", "plan", "snaps", "snaps-pre", "snaps-crx", "snaps-d8x",
-                                       "check", "run", "judge", "judge-ps7", "judge-g8"))
+                                       "snaps-k2", "check", "run", "judge", "judge-ps7", "judge-g8"))
     ap.add_argument("--expect-controller", dest="expect_controller", default=None,
                     help="run / check --set d8x_w1: refuse unless the run-time preset tag is this one "
                          "(D8x rules 2.1 / I-5 expected_tag, e.g. final_C4G2_LAS_K1); recorded per row")
@@ -2653,7 +2825,9 @@ def main(argv):
     ap.add_argument("--overwrite", action="store_true",
                     help="snaps-pre: replace an existing snapshot of that leg")
     ap.add_argument("--placement", choices=("pcore", "ecore", "os"), default="pcore",
-                    help="snaps-pre: CPU placement of the snapshot process")
+                    help="snaps-pre: CPU placement of the snapshot process; snaps-k2 / run / check: core pool "
+                         "of the case processes (default pcore, as before; ecore also sets "
+                         "OUTRIGGER_RUN_PLACEMENT for the spawned runs)")
     ap.add_argument("--touch-ref", dest="touch_ref",
                     help="judge-ps7: case folder of the TOUCH-length reference (T-1)")
     ap.add_argument("--jobs", type=int, default=MAX_WORKERS)
@@ -2681,6 +2855,7 @@ def main(argv):
     ap.add_argument("--allow-env-override", action="store_true",
                     help="run / check: start even with OUTRIGGER_L1_FALLBACK_RATIO_SOURCE set "
                          "(B(iii) comparison batch; every L1 case takes the override)")
+    k2c.add_arguments(ap, pad_zeta=True)  # K-2 V-6: --k2, --k1-order-gate, --pad-zeta-moving (--set k2_v6 only)
     args = ap.parse_args(argv)
     jobs = max(1, min(args.jobs, MAX_WORKERS))
     if args.action in ("run", "check"):
@@ -2714,8 +2889,12 @@ def main(argv):
     if args.action == "snaps-d8x":  # D8x rows 7-11: L1-R start states (rules 4.4 end / 9.3)
         build_d8x_snapshots(jobs, dry_run=args.dry_run)
         return
-    if args.expect_controller is not None and args.case_set not in D8X_CASE_SETS:
-        raise SystemExit("--expect-controller only with --set d8x_w1")
+    if args.action == "snaps-k2":  # K-2 V-6 L1-R start states (rules 9.3)
+        build_k2_snapshots(jobs, dry_run=args.dry_run, placement=args.placement)
+        return
+    k2c.refuse_outside(args, args.case_set)
+    if args.expect_controller is not None and args.case_set not in (*D8X_CASE_SETS, k2c.V6_SET):
+        raise SystemExit(f"--expect-controller only with --set d8x_w1 / {k2c.V6_SET}")
     if args.action == "snaps-pre":  # C-S8-72: FLpre (spec rev. 67 345.3)
         build_preground_snapshot(args.leg, overwrite=args.overwrite, placement=args.placement)
         return
@@ -2749,10 +2928,14 @@ def main(argv):
             raise SystemExit(f"--set {args.case_set} --only: not D8x rows of this set: {outside}")
         table = case_table()
         d8x = d8x_preflight([table[c] for c in ids], args.expect_controller)
+    k2 = None
+    if args.case_set == k2c.V6_SET:  # rules 3.5 / I-10: one arm, explicit options, before any Chrono step
+        k2_ids, k2 = k2_preflight(args, set_ids)
+        args.only = k2_ids
     if args.action == "check":
         ids = args.only or set_ids
         run_batch(ids, jobs, check=True, check_duration_s=args.duration, case_set=args.case_set,
-                  run_tag=args.tag, d8x=d8x)
+                  run_tag=args.tag, d8x=d8x, k2=k2, placement=args.placement)
         return
     if not args.approved:
         raise SystemExit("bundle C needs the user's approval: add --approved (spec 150; "
@@ -2780,7 +2963,8 @@ def main(argv):
     else:
         table = case_table()
         ids = args.only or [c for c in set_ids if args.with_c9 or not table[c].conditional]
-    run_batch(ids, jobs, check=False, case_set=args.case_set, run_tag=args.tag, d8x=d8x)
+    run_batch(ids, jobs, check=False, case_set=args.case_set, run_tag=args.tag, d8x=d8x, k2=k2,
+              placement=args.placement)
 
 
 if __name__ == "__main__":

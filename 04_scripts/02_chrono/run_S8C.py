@@ -62,6 +62,12 @@ Usage (Chrono-dev python, project root)::
         --lookup-batch 07_results/S8/p1r_20261024_222013
         --deferred-ref 07_results/S8/mlj_20261025_080212
 
+    # K-2 V-6 (k2_touch_creep_rules.md 3.5, k2_chrono_rows.py): the 4 L2b rows, one arm per batch, options explicit;
+    # result.json k2 / touch_creep_*, k2_row.json (latch window true pad normals), k2_pads.npz, k2_rate.npz
+    python -I -X utf8 -u 04_scripts/02_chrono/run_S8C.py run --set k2_v6 --approved --workers e6 --k2 off
+        --k1-order-gate off --expect-controller final_C4G2_LAS --tag k2v6_off
+    (K-2 arm: --k2 on --expect-controller final_C4G2_LAS_TCL --tag k2v6_tcl)
+
 Soil response merge rule (user decision 2026-10-26, control options (다) / (가)): an episode
 restored from a ``branch.pkl`` pickled without the C2 soil response (older code:
 ``_RunState.soil`` None; or a soil-off config) gets the LOC of the offline judge on its base record (``s9_merge/m4_offline.py``; loc True,
@@ -916,6 +922,9 @@ def s8_cases() -> list[S8Case]:
     # row of every V candidate (row 19); appended last (earlier order and definitions unchanged); group D8X (not in
     # MAIN_GROUPS), sets d8x_w1 (--w) / d8x_w2 (--v)
     out.extend(d8x_cases())
+    # K-2 V-6 L2b rows #5-8 (k2_touch_creep_rules.md 3.5, 2026-11-10): appended last (earlier order and definitions
+    # unchanged); group K2V6 (not in MAIN_GROUPS), set k2_v6
+    out.extend(k2_v6_cases())
     ids = [c.case_id for c in out]
     if len(ids) != len(set(ids)):
         dup = sorted({i for i in ids if ids.count(i) > 1})
@@ -971,6 +980,45 @@ def d8x_cases() -> list[S8Case]:
         out.append(S8Case(r.name, D8X_GROUP, D8X_PRIORITY, "L2b_NSC", base, fs_kN=float(r.fs_kN),
                           pair_fs0=pair, notes=(note,)))
     return out
+
+
+K2_GROUP = "K2V6"
+K2_PRIORITY = 11
+
+
+def k2_v6_cases() -> list[S8Case]:
+    """K-2 V-6 L2b rows #5-8 (``k2_chrono_rows.V6_ROWS``): the K24 family (``_d8_scenario``: fdown3.5 = H4V, else D8;
+    beta 1.0, pilot check, ideal leg sensors, combined judge, end rule D8 READY + 10 s), F_s 4 kN front (rear x 0.8333
+    in the plant), no moving pad damping (rigid NSC contact), the row's K-2 arm and K1 gate off."""
+    out = []
+    for r in s6c.k2c.rows("L2b"):
+        note = (f"K-2 V-6 #{r.number} ({s6c.k2c.RULES} sha256 {s6c.k2c.RULES_SHA256[:8]}): L2b-NSC top {r.floor} "
+                f"{s6c.k2c.floor_deg(r.floor)} deg, F_s {r.fs_kN:g} kN (rear x 0.8333), K-2 {r.arm}, K1 off, "
+                f"expected {r.expected_tag}")
+        sc = replace(_d8_scenario("top", r.floor), case_id=r.name, notes=(note,))
+        base = s6c.BundleCCase(r.name, "S8", sc, notes=(note,), k2_arm=r.arm,
+                               k1_order_gate=s6c.k2c.K1_ORDER_GATE, k2_row=r.number)
+        out.append(S8Case(r.name, K2_GROUP, K2_PRIORITY, "L2b_NSC", base, fs_kN=float(r.fs_kN), notes=(note,)))
+    return out
+
+
+def k2_preflight(args, set_ids: list[str]) -> tuple[list[str], dict[str, Any]]:
+    """K-2 V-6 (rules 3.5 / I-10 / E-6) before any Chrono step: ``k2_chrono_rows.select_rows`` (one arm, explicit
+    ``--k2`` / ``--k1-order-gate off`` / ``--expect-controller``) and every row's controller config (the
+    :func:`_controller` path without Chrono: ``s6c.controller_config`` + the L2b settle map) holding the arm, the gate
+    off and the expected tag."""
+    from outrigger_sim.params import load_params
+
+    ids, rec = s6c.k2c.select_rows(args, "L2b", set_ids)
+    table = case_table()
+    rec["preflight"] = {}
+    for cid in ids:
+        c = table[cid]
+        cfg, _ = s7c.apply_settle_map(s6c.controller_config(load_params(level=c.scenario.level), c.base),
+                                      "L2b_NSC", c.scenario.level)
+        rec["preflight"][cid] = {**s6c.k2c.preflight_record(cid, cfg, s6c.controller_tag_of(cfg)),
+                                 "fs_kN": c.fs_kN, "end_rule": end_rule(c)}
+    return ids, rec
 
 
 def d8x_set_cases(name: str, *, w: str | None, v: str | None) -> list[S8Case]:
@@ -1122,6 +1170,8 @@ def case_set(name: str, *, w: str | None = None, v: str | None = None) -> list[S
         "v5rec": [c for c in cases if c.case_id in V5REC_CASE_IDS],
         # D-1 C2 (2026-11-08): middle / bottom x 5 operating directions, F_s 4 kN (10; 8 run after the roll selection)
         "d1c2": [c for c in cases if c.group == D1C2_GROUP],
+        # K-2 V-6 (2026-11-10): the 4 L2b rows (one arm per batch, --k2)
+        s6c.k2c.V6_SET: [c for c in cases if c.group == K2_GROUP],
     }
     if name not in sets:
         raise KeyError(f"unknown set {name!r}; sets {tuple(sets)}")
@@ -1129,7 +1179,8 @@ def case_set(name: str, *, w: str | None = None, v: str | None = None) -> list[S
 
 
 SET_NAMES = ("p1", "p1r", "p2", "p3", "rest", "all", "cb", "smoke", "mlj", "mlj_c29",
-             "mlj_c67", "mlj_c68", "g1", "c74", "c75", "jaug", "s4conv", "v5rec", "d1c2", "d8x_w1", "d8x_w2")
+             "mlj_c67", "mlj_c68", "g1", "c74", "c75", "jaug", "s4conv", "v5rec", "d1c2", "d8x_w1", "d8x_w2",
+             "k2_v6")
 G1_CASE_IDS = frozenset(c[0] for c in G1_CASES)
 V5REC_CASE_IDS = frozenset(c[0] for c in V5REC_CASES)
 C74_CASE_IDS = frozenset(c[0] for c in C74_CASES)
@@ -1714,6 +1765,20 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
     c2, config, settle_meta, fallback_ratio_meta = _controller(case, params_ctrl, params,
                                                                hydraulics=v5_options,
                                                                las_off=las_off)
+    k2_block = None
+    if bcase.k2_row is not None:  # K-2 V-6: the built controller holds the row's arm / gate / tag (rules I-10)
+        from outrigger_sim.control.touch_creep_option import (
+            check_built_touch_creep,
+            touch_creep_run_record,
+        )
+
+        check_built_touch_creep(bcase.k2_arm, c2.config)
+        k2_block = {**s6c.k2c.row_by_name(case.case_id).to_meta(),
+                    **s6c.k2c.preflight_record(case.case_id, c2.config, s6c.controller_tag_of(c2.config)),
+                    **touch_creep_run_record(bcase.k2_arm, c2.config), "expect_controller": expect_controller}
+        if expect_controller is not None and expect_controller != k2_block["controller_tag"]:
+            raise SystemExit(f"{case.case_id}: controller tag {k2_block['controller_tag']} != "
+                             f"--expect-controller {expect_controller}")
     if v5_options is not None:  # criteria P-4: the controller window is the one of the options
         from outrigger_sim.hydraulics.v5_options import check_lock_window_meta, controller_tag
 
@@ -2012,6 +2077,9 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
         **({} if bcase.d8x_row is None
            else {"d8x": s6c.d8x_meta(bcase, c2.config, expect_controller, fs_kN=float(case.fs_kN),
                                      controller_meta=ctl_meta)}),
+        **({} if k2_block is None else {  # K-2 V-6 rows only (earlier results unchanged)
+            "k2": k2_block, "touch_creep_requested": k2_block["touch_creep_requested"],
+            "touch_creep_effective": k2_block["touch_creep_effective"]}),
         "h4": {"enabled": sc.h4, "outcome": None if reanchor is None else str(reanchor),
                "expected": expect, "direction": ctl_meta.get("reanchor_direction")},
         "c2": c2_meta,
@@ -2945,6 +3013,11 @@ def job_case(case, case_dir):
             summary["settings"]["s7c"] = {"engine": "L1R", "case_id": c.case_id}
     (d / "result.json").write_text(json.dumps(s6c._plain(summary), indent=1, ensure_ascii=False),
                                    encoding="utf-8")
+    if kind == "case" and c.base.k2_row is not None:  # K-2 V-6: k2_row.json / k2_pads.npz / k2_rate.npz
+        from outrigger_sim.params import load_params
+
+        s6c.k2c.finish_case(d, summary, row=s6c.k2c.row_by_name(c.case_id),
+                            params=load_params(level=c.scenario.level))
     keep = {k: summary[k] for k in ("case", "phases", "runner") if k in summary}
     return CaseResult(summary=s6c._plain(keep or {"done": True}),
                       run_meta=None if run_meta is None else s6c._plain(run_meta))
@@ -3243,9 +3316,10 @@ def _batch_dir(tag: str) -> Path:
 def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, duration_s: float,
               flow_limit: dict[str, Any] | None = None,
               hydraulics: dict[str, Any] | None = None, las_off: bool = False,
-              d8x: dict[str, Any] | None = None):
+              d8x: dict[str, Any] | None = None, k2: dict[str, Any] | None = None):
     """``d8x``: :func:`d8x_preflight` record (D8x sets only): ``batch_meta.json d8x`` and the expected controller
-    tag passed to every case."""
+    tag passed to every case. ``k2``: :func:`k2_preflight` record (K-2 V-6): ``batch_meta.json k2``, its expected
+    tag passed to every case; rows of two arms in one batch are refused."""
     from outrigger_sim.batch import Case
 
     if las_off:  # the controller block of L2b cases only (job_l2b_s8); L1 twins would run LAS-b on
@@ -3264,6 +3338,9 @@ def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, durati
         off_l2b = [c.case_id for c in cases if c.engine != "L2b_NSC"]
         if off_l2b:
             raise SystemExit(f"v5 hydraulic options on L2b cases only: {off_l2b}")
+    arms = {c.base.k2_arm for c in cases if c.base.k2_row is not None}
+    if arms and (k2 is None or arms != {k2["k2"]} or any(c.base.k2_row is None for c in cases)):
+        raise SystemExit(f"K-2 rows of mixed arms / without the --k2 record in one batch: {sorted(map(str, arms))}")
     batch_dir = _batch_dir(f"{tag}_check" if check else tag)
     from outrigger_sim.chrono import s8_plant_adapter as plant
 
@@ -3288,6 +3365,9 @@ def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, durati
         meta["d8x"] = d8x
         if d8x.get("expect_controller"):
             flow_settings["expect_controller"] = d8x["expect_controller"]
+    if k2 is not None:  # key only on K-2 batches
+        meta["k2"] = k2
+        flow_settings["expect_controller"] = k2["expect_controller"]
     (batch_dir / "batch_meta.json").write_text(json.dumps(s6c._plain(meta), indent=1), "utf-8")
     table = {c.case_id: c for c in cases}
     jobs = [Case(c.case_id, {"duration_s": duration_s if check else None, **flow_settings})
@@ -4255,6 +4335,7 @@ def main(argv):
                     help=f"run / check, L2b cases: the controller with LAS-b off ({LAS_OFF_PRESET}); "
                          "reproduction of a result before the LAS-b switch or the LAS-off pair of a LAS-b "
                          "run (spec 436.9). Recorded as las_off in the batch and case meta")
+    s6c.k2c.add_arguments(ap, pad_zeta=False)  # K-2 V-6: --k2, --k1-order-gate (--set k2_v6 only)
     args = ap.parse_args(argv)
     if args.las_off and args.action not in ("run", "check"):
         raise SystemExit(f"{LAS_OFF_OPTION} only with run / check")
@@ -4378,8 +4459,18 @@ def main(argv):
                          ensure_ascii=False))
         return
     is_d8x = args.case_set in st.D8X_SETS
-    if not is_d8x and (args.d8x_w or args.d8x_v or args.expect_controller):
-        raise SystemExit("--w / --v / --expect-controller only with --set d8x_w1 / d8x_w2")
+    is_k2 = args.case_set == s6c.k2c.V6_SET
+    s6c.k2c.refuse_outside(args, args.case_set)
+    if not is_d8x and (args.d8x_w or args.d8x_v or (args.expect_controller and not is_k2)):
+        raise SystemExit("--w / --v / --expect-controller only with --set d8x_w1 / d8x_w2 (--expect-controller "
+                         "also with --set k2_v6)")
+    if is_k2 and (flow_limit is not None or hydraulics is not None or args.las_off):
+        raise SystemExit("K-2 V-6 rows run the K24 plant and the run-time preset with the row's arm (rules 3.5): no "
+                         "--flow-eta-v, v5 option or --las-off")
+    k2 = None
+    if is_k2 and args.action in ("run", "check"):  # one arm per batch, before any Chrono step
+        k2_ids, k2 = k2_preflight(args, [c.case_id for c in case_set(args.case_set)])
+        args.only = k2_ids
     if is_d8x and (flow_limit is not None or hydraulics is not None or args.las_off):
         raise SystemExit("D8x rows run the run-time preset and the K24 / A / K0V / K8 plant as they are "
                          "(rules 2.1 / 4.4): no --flow-eta-v, v5 option or --las-off")
@@ -4420,12 +4511,12 @@ def main(argv):
     if args.action == "check":
         run_batch(cases, tag=tag, layout=args.workers, check=True,
                   duration_s=args.duration, flow_limit=flow_limit, hydraulics=hydraulics,
-                  las_off=args.las_off, d8x=d8x)
+                  las_off=args.las_off, d8x=d8x, k2=k2)
         return
     if not args.approved:
         raise SystemExit("S8 main run needs the user's confirmation: add --approved")
     run_batch(cases, tag=tag, layout=args.workers, check=False, duration_s=0.0,
-              flow_limit=flow_limit, hydraulics=hydraulics, las_off=args.las_off, d8x=d8x)
+              flow_limit=flow_limit, hydraulics=hydraulics, las_off=args.las_off, d8x=d8x, k2=k2)
 
 
 if __name__ == "__main__":

@@ -36,6 +36,11 @@ CHRONO = ROOT / "04_scripts" / "02_chrono"
 BASELINE = ROOT / "05_tests" / "data" / "d8x_existing_case_hashes.json"
 D8X_PREFIX = "D8X_"
 D8X_SETS = ("d8x_w1", "d8x_w2")
+K2_PREFIXES = ("K2_", "K2V7_")
+K2_SETS = ("k2_v6", "k2_v7")
+"""K-2 V-6 / V-7 rows, sets / batch and the floor ``k2pp025`` (cad 2026-11-10, ``k2_chrono_rows.py``) came after the
+baseline; left out the same way as the D8x entries."""
+K2_FLOORS = ("k2pp025",)
 STORED_RESULT_ROW_KEYS = ("est_s", "stored_result", "stored_wall_s", "note")
 """``s9_batch`` row keys filled from the stored results in ``07_results/`` (git-ignored): a
 checkout with the results (main tree) and one without (worktree) give different values, so they
@@ -74,26 +79,28 @@ def current_hashes() -> dict[str, dict[str, str]]:
     out: dict[str, dict[str, str]] = {"s6c": {}, "s8c": {}, "s6c_sets": {}, "s8c_sets": {},
                                       "floors": {}, "s9_rows": {}}
     for cid, c in s6c.case_table().items():
-        if cid.startswith(D8X_PREFIX):
+        if cid.startswith((D8X_PREFIX, *K2_PREFIXES)):
             continue
         out["s6c"][cid] = _sha({"meta": _sha(c.to_meta()), "repr": _sha(repr(c))})
     for cid, c in s8c.case_table().items():
-        if cid.startswith(D8X_PREFIX):
+        if cid.startswith((D8X_PREFIX, *K2_PREFIXES)):
             continue
         out["s8c"][cid] = _sha({"meta": _sha(c.to_meta()), "repr": _sha(repr(c))})
     for name, make in s6c.CASE_SETS.items():
-        if name in D8X_SETS:
+        if name in (*D8X_SETS, *K2_SETS):
             continue
         out["s6c_sets"][name] = _sha([c.case_id for c in make()])
     for name in s8c.SET_NAMES:
-        if name in D8X_SETS:
+        if name in (*D8X_SETS, *K2_SETS):
             continue
         out["s8c_sets"][name] = _sha([c.case_id for c in s8c.case_set(name)])
     for name, value in st.FLOORS.items():
-        if name in d8x_floors:
+        if name in d8x_floors or name in K2_FLOORS:
             continue
         out["floors"][name] = _sha([float(v) for v in value])
     for batch, rows in sb.batches().items():
+        if batch in K2_SETS:
+            continue
         for i, row in enumerate(rows):
             key = f"{batch}#{i}:{row.get('case')}"
             definition = {k: v for k, v in row.items() if k not in STORED_RESULT_ROW_KEYS}
