@@ -17,7 +17,7 @@
 | 원판 / rev1 / 명세 sha256 | `a3658197…7263` / `5ba081c6…4776` / `502b0bb7…27ff` | raw sha256 |
 | rev2 / rev3 / rev4 / rev5 sha256 (결과 전, 브랜치 `k2-prelaunch-record`) | `b3f1b41f…94ea` / `8bcdb0ed…6e61` / `82160ff5…00c5` / `73b87758…eccc` | raw sha256 |
 | 경로 2 `k2_recount.py` **1.4** blob (판정 때 병합 뒤 main에서 실행. k2-run에는 1.2가 있다) | `1cde20d2ae54ec2aaef23f7d6c0d24a703904ea5` | `git rev-parse <판정 커밋>:<path>` |
-| 경로 1 `k2_judge.py` (python-expert `k2-path1-rev2` `5f22957`) | `9bbcc201cf52e48baedd2edb4bb846003d8e8eb3`. 이전 `7ee9ccc1…`은 쓰지 않음 | 같음 |
+| 경로 1 `k2_judge.py` | **`{PATH1_BLOB}` 대기**(python-expert `k2-path1-rev2`, rev5 봉인 대조·G8 규칙 반영판). `9bbcc201…`·`7ee9ccc1…`은 쓰지 않음 | 같음 |
 | `k2_v5_flatten.py` (같은 브랜치) | `d9e3f2d9b206047b654bfde5fdc92ccef688c73b`. 이전 `a83abd80…`은 쓰지 않음 | 같음 |
 | `run_with_identity.py` | `fab7664bd3ba16723e4202bf71dc7d87ab0cf7f0` | 같음 |
 | `run_ps7.py` | `248f5363cbdbaf1bc20eac3ef5e73bdfd6e05acd` | 같음 |
@@ -166,4 +166,22 @@ P 쪽 `P_main` → `P_post`는 1~4와 무관하다(`P_post`는 `.done` 36개를 
 ```
 
 - 실행 전에 `selftest-v5-stored --acc 06_analysis\02_control\touch_phase\acceptance --ps7 06_analysis\02_control\touch_phase\ps7_E.json`(rev4 2 형식 점검, 2026-11-10 통과)를 다시 돌려 통과를 확인한다.
+
+### 9.1 V-5 평탄 파일 다시 만들기 (경로 1 입력, integrity 지적 High)
+
+- 러너 `P_post`의 평탄화 단계는 k2-run의 **옛 평탄화기(`a83abd80`)**를 부른다. 메인 세션 결정에 따라 러너는 바꾸지 않는다(배치표 sha 유지). 그 출력 `runs/v5/<arm>/flat/`은 **참고용**으로만 둔다.
+- 판정 전에 병합 뒤 main checkout의 평탄화기(`d9e3f2d9` 또는 그 후속 blob, 실행 전 기록 `flatten.blob`)로 두 팔을 다시 만든다. 출력 폴더는 **`runs/v5/<arm>/flat_main/`**이다(이미 있으면 평탄화기가 거부하므로 새로 만든다).
+
+```powershell
+# E코어, dynamics-dev, main checkout 기준(경로는 k2-run의 결과 폴더)
+$R='C:\workspace\outrigger_control\.claude\worktrees\k2-run'
+foreach ($arm in 'off','tcl') {
+  & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B 04_scripts\03_control\k2\k2_v5_flatten.py `
+      --arm-dir "$R\06_analysis\02_control\k2\runs\v5\$arm" --out-dir "$R\06_analysis\02_control\k2\runs\v5\$arm\flat_main" --checkout $R
+}
+```
+
+- `k2_manifest.json`의 V-5 칸(경로 1 입력)은 `flat_main`을 가리킨다.
+- 경로 2는 원 출력(`v5_raw`)을 직접 읽으므로 영향이 없다.
+- 다시 만들 때도 래퍼(`run_with_identity.py`)로 감싸 sidecar를 남기기를 권한다. 판정 후 감사가 이 단계의 rc·HEAD·평탄화기 blob을 확인한다.
 - V-5 regression 키는 두 팔 출력에서 `prelaunch/regression_keys.py keys`와 같은 정의로 다시 낸다. 경로 2가 내부에서 sha를 대조한다.

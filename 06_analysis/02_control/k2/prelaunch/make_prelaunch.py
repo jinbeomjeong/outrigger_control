@@ -66,7 +66,15 @@ V5_NOTE_REGRESSION = (
     "entries that are not judgement rows 7 + clip_r79_L3L4 42; key sha d4f58334...). The 118 of the original 3.4 / "
     "criteria.md is the old rerun-list count, not reconstructable from the stored outputs. E-1 expects 93. The r79 "
     "L1 reference rows are not judged rows; the r79 judgement 'unmatched' is a record (rev4 1 (c)).")
-PATH1_BLOB_PENDING = "9bbcc201cf52e48baedd2edb4bb846003d8e8eb3"  # python-expert k2-path1-rev2 5f22957
+PATH1_BLOB_PENDING = ("{PATH1_BLOB: python-expert k2-path1-rev2 after 5f22957 (rev5 seal check, G8 events / c2, "
+                      "missing rows); 9bbcc201 superseded}")
+V5_FLAT_MAIN_NOTE = (
+    "P_post's flatten step runs the k2-run flattener (a83abd80, old) and writes runs/v5/<arm>/flat/: kept as a "
+    "reference only (runner unchanged, plan sha kept). Before judging, rebuild the flat files with the flattener of "
+    "the main checkout after the merge (d9e3f2d9 or its successor): k2_v5_flatten.py --arm-dir <k2-run>\\06_analysis"
+    "\\02_control\\k2\\runs\\v5\\<arm> --out-dir <same>\\flat_main --checkout <k2-run> (both arms, E cores). The "
+    "manifest V-5 entries (path 1 input) point to flat_main. Path 2 reads the raw outputs (v5_raw) and is not "
+    "affected.")
 FLATTEN_BLOB_PENDING = "d9e3f2d9b206047b654bfde5fdc92ccef688c73b"  # python-expert k2-path1-rev2 5f22957
 L1_START_STATES = {
     "S6_crawler_top_fdown3.5.npz": "8f93d107fcd7ff8e4f22a0952dd35ca5bb409645737a0260ee354a7b6bedf9bd",
@@ -376,8 +384,8 @@ def manifest(run_wt: str) -> dict:
                 "points": d8x_pts, "points_file": d8x_pts},
          "v4": {"off": [rf"{runs}\v4\v4_off.json"], "tcl": [rf"{runs}\v4\v4_tcl.json"],
                 "points": k2_pts, "points_file": k2_pts},
-         "v5": {b: {"kind": k, "count": n, "off": [rf"{runs}\v5\off\flat\{b}.json"],
-                    "tcl": [rf"{runs}\v5\tcl\flat\{b}.json"], "key": "key", "status": "pass",
+         "v5": {b: {"kind": k, "count": n, "off": [rf"{runs}\v5\off\flat_main\{b}.json"],
+                    "tcl": [rf"{runs}\v5\tcl\flat_main\{b}.json"], "key": "key", "status": "pass",
                     **({"ready": "ready", "faults": "faults"} if k == "g8" else {})}
                 for b, k, n in V5_BUNDLES},
          "v6": {"rows": {}}}
@@ -476,6 +484,7 @@ def main() -> None:
                            "env, affinity, per-row exit_code, all_rc_zero) + batch.json exit_code (cad-expert "
                            "09f66c4); V-7 s9_batch batch.json argv / rc",
         "v5_regression_rows": V5_NOTE_REGRESSION,
+        "v5_flat_rebuild": V5_FLAT_MAIN_NOTE,
         "point_files": {"k2_points_5p5_3p5.json": sha(k2 / "k2_points_5p5_3p5.json"),
                         "d8x_points.json": sha(REPO / "06_analysis/02_control/d8x/d8x_points.json")},
         "inputs": {n: sha(HERE / n) for n in ("k2_manifest.json", "k2_expect.json", "k2_fields.json",

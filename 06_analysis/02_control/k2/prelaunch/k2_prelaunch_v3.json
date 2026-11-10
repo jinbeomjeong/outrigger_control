@@ -47,7 +47,7 @@
  },
  "path1": {
   "path": "04_scripts/03_control/k2/k2_judge.py",
-  "blob": "9bbcc201cf52e48baedd2edb4bb846003d8e8eb3",
+  "blob": "{PATH1_BLOB: python-expert k2-path1-rev2 after 5f22957 (rev5 seal check, G8 events / c2, missing rows); 9bbcc201 superseded}",
   "source": "python-expert branch k2-path1-rev2 5f22957 (rev2..rev4; rev5 alignment by its 7 items)",
   "previous_blob_not_used": "7ee9ccc109578da2bb0e8e25f3811d9c0f73664b"
  },
@@ -146,12 +146,13 @@
  },
  "chrono_identity": "V-6 batch_meta.json identity_start / identity_end (orig_argv, cwd, git HEAD and status, env, affinity, per-row exit_code, all_rc_zero) + batch.json exit_code (cad-expert 09f66c4); V-7 s9_batch batch.json argv / rc",
  "v5_regression_rows": "V-5 regression (rules rev2 2): judged rows 93 (acc_judge definition: clip_harness 13 + clip_p0 17 + clip_x426_C 2 + clip_x426_D 11 + clip_A 20 + r79 L1/L2 judgement 30; key sha 2900db88...) + record rows 49 (clip_r79_L1L2 entries that are not judgement rows 7 + clip_r79_L3L4 42; key sha d4f58334...). The 118 of the original 3.4 / criteria.md is the old rerun-list count, not reconstructable from the stored outputs. E-1 expects 93. The r79 L1 reference rows are not judged rows; the r79 judgement 'unmatched' is a record (rev4 1 (c)).",
+ "v5_flat_rebuild": "P_post's flatten step runs the k2-run flattener (a83abd80, old) and writes runs/v5/<arm>/flat/: kept as a reference only (runner unchanged, plan sha kept). Before judging, rebuild the flat files with the flattener of the main checkout after the merge (d9e3f2d9 or its successor): k2_v5_flatten.py --arm-dir <k2-run>\\06_analysis\\02_control\\k2\\runs\\v5\\<arm> --out-dir <same>\\flat_main --checkout <k2-run> (both arms, E cores). The manifest V-5 entries (path 1 input) point to flat_main. Path 2 reads the raw outputs (v5_raw) and is not affected.",
  "point_files": {
   "k2_points_5p5_3p5.json": "a15cbe95275be11c163028ca2113d896254d49a4554286c54bdbfa88680cccc3",
   "d8x_points.json": "050145f6a965c851a014563f6219e61c1081716eb5ad5f7e8469a098d426c817"
  },
  "inputs": {
-  "k2_manifest.json": "93d4c55b1947d85c0db6256fcd8352da074779df4b35f5376a5270212639bb22",
+  "k2_manifest.json": "807e3690e2eeba584d9c07fc8b61e3c9e507ec14e2a67c8b362ceded0ca6828d",
   "k2_expect.json": "ecef70d274ebb9a572247f8859bafb02e5f5ddb0dd8268958ec6660893e4e1a6",
   "k2_fields.json": "0c5aafc4cd026680b81d12a43106ea0267d1519b21a9d6192e5ef96943e45b77",
   "k2_commands.json": "ce6e04a2c00aaafb2f73b3f88b78abb599ca3be134dad36352b4c7f08e8b97e5",
