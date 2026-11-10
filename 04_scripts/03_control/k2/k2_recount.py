@@ -19,6 +19,11 @@ Sub-commands
                   --out <file>  (J items on the stored D8x R-a rows: must give 68 / 6 J3 fails,
                   J3 only; with --points also E-7 on every row)
   points-check    --points <k2_points_5p5_3p5.json> --out <file>   (rev1 2 condition; exit 2 on fail)
+  selftest-v5-stored --acc <touch_phase/acceptance> --ps7 <touch_phase/ps7_E.json> --out <file>
+                  (rev4 2 format check of the V-5 raw readers on the stored acceptance outputs)
+
+Manifest V-5 for this path is ``v5_raw``: ``{"off": <arm folder>, "tcl": <arm folder>, "sidecars": {"off": [...],
+"tcl": [...]}, "c2_sha256": <optional>}`` (rev2 1 / rev4); the flat ``v5`` entries are path 1 input only.
 
 Rev1 (``k2_touch_creep_rules_rev1.md``): d45 execution value = 4-decimal rounding, the point-file
 condition (rev1 2), E-7 on every row (rev1 3), the D-hat record items (a)(b) (rev1 4; keys
@@ -42,7 +47,10 @@ from pathlib import Path
 import numpy as np
 
 TOOL = "k2_recount"
-VERSION = "1.2"
+VERSION = "1.3"
+"""1.3 (rev2 / rev3, before any result): V-5 from the raw outputs (``manifest["v5_raw"]``: off / tcl arm folders,
+sidecars) with the criteria.md absolute items and pass->fail vs the off arm; V-6 SH-1 .. SH-6; E-5 / I-9 checks
+(V-2 / V-4 options off, V-3 option values, V-6 moving damping / open shares); rev2 / rev3 seals."""
 
 # ------------------------------------------------------------------ rule constants (rules 0, 5)
 F_MIN_N = 9414.589
@@ -73,6 +81,39 @@ RULES_SHA256 = "a3658197bdab02870a0b362144606f404021ebac90662a35efacfa8dbe477263
 REV1_FILE = "k2_touch_creep_rules_rev1.md"
 REV1_SEAL = "k2_touch_creep_rules_rev1.sha256"
 REV1_SHA256 = "5ba081c62f8aef0edc5bb99119d7586b0d2914761582f2323c289f472f244776"
+REV2_FILE = "k2_touch_creep_rules_rev2.md"
+REV2_SEAL = "k2_touch_creep_rules_rev2.sha256"
+REV2_SHA256 = "b3f1b41f27030c75aec726d2a3feb5abc36697864e0d83766a8fe0c4460394ea"
+REV3_FILE = "k2_touch_creep_rules_rev3.md"
+REV3_SEAL = "k2_touch_creep_rules_rev3.sha256"
+REV3_SHA256 = "8bcdb0ed1fdf6d730ac781929e93b233972d1e80566e1ae14ffb7ddf049d6e61"
+REV4_FILE = "k2_touch_creep_rules_rev4.md"
+REV4_SEAL = "k2_touch_creep_rules_rev4.sha256"
+REV4_SHA256 = "82160ff54874e3d43bf7c5a1ae96d6e8612b1e7635aaccea39a4299352ce00c5"
+C2_SHA256_RUN ="f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1"
+"""rev2 1 common: sha256 of the k2-run working copy of 03_src/outrigger_sim/control/c2.py (provenance c2_sha256)."""
+REG_JUDGED_SHA256 = "2900db889efc73070c3a8fbe557b1a4ad9ee3392afc099ba00be1d0549174ec9"
+REG_RECORD_SHA256 = "d4f58334c6ca7c393c35072a798c09f4995d7fde274e0af6b21b99f977d503eb"
+V5_COUNTS = {"soil": 60, "d8": 576, "noise_L2": 855, "regression": 93, "ps7": 20, "g8_safe_stop": 83}
+D8_GUARD_KN = 14.41
+D8_ATT_DEG = 0.2
+D8_READY_S = 100.0
+S1_FRONT = ("S1@FL", "S1@FR")
+GOOD_VERDICTS = (True, "pass", "stroke_limited_pass")
+# rev3 1: V-3 E-5 references (run YAML computed values) and the option key set per arm
+KT_REL_YAML = 0.23309250561413625
+EPS_AUG_M_S = 0.00209243016
+LOCK_EPS_M_S = 1e-6
+FS_FRONT_N = 4000.0
+FS_REAR_SCALE = 0.8333
+PAD_ZETA_MOVING = 0.10
+CRAWLER_C_SCALE = 2.0
+ARM_PRESET = {"H0": "none", "L1eq": "l1eq", "L1eq_fs": "l1eq_fs", "L1eq_zm": "l1eq_zm", "AUG": "aug",
+              "AUG_crc2": "aug_crc2", "AUG_eps": "aug_eps"}
+_KT, _FS, _ZM = "crawler_kt_rel", "seal_fs_front_N", "pad_zeta_moving"
+ARM_OPTION_KEYS = {"H0": set(), "L1eq": {_KT}, "L1eq_fs": {_KT, _FS}, "L1eq_zm": {_KT, _ZM},
+                   "AUG": {_KT, _FS, _ZM}, "AUG_crc2": {_KT, _FS, _ZM, "crawler_c_scale"},
+                   "AUG_eps": {_KT, _FS, _ZM, "valve_open_eps_m_s"}}
 E7_TOL_DEG = 1e-9
 E7_CHRONO_TOL_DEG = 1e-4
 POINT_DIAMOND_TOL_DEG = 1e-12
@@ -368,9 +409,88 @@ def dhat_summary(off: list[dict], tcl: list[dict]) -> dict:
 
 
 # ------------------------------------------------------------------ row judgement (rules 5.1)
+def _close(value, ref) -> bool:
+    if not is_num(value):
+        return False
+    if ref == 0:
+        return abs(value) <= 1e-12
+    return abs(value - ref) <= 1e-9 * abs(ref)
+
+
+def check_options_off(row: dict) -> list[str]:
+    """rev2 4 V-2 / V-4: no dissipation arm (aug_arm None, k2.aug None)."""
+    out = []
+    if row.get("aug_arm") is not None:
+        out.append(f"E-5 aug_arm {row.get('aug_arm')!r} on a V-2 / V-4 row")
+    if (row.get("k2") or {}).get("aug") is not None:
+        out.append("E-5 k2.aug present on a V-2 / V-4 row")
+    return out
+
+
+def _fractions_ok(values) -> bool:
+    if isinstance(values, dict):
+        values = [values.get(leg) for leg in LEGS]
+    return (isinstance(values, (list, tuple)) and len(values) == 4
+            and all(is_num(v) and 0.0 <= v <= 1.0 for v in values))
+
+
+def check_v3_arm(row: dict, arm: str) -> list[str]:
+    """rev2 4 / rev3 1: E-5 options and values of a V-3 row, I-9 open shares."""
+    out = []
+    aug = (row.get("k2") or {}).get("aug")
+    if not isinstance(aug, dict):
+        return ["E-5 k2.aug missing"]
+    if aug.get("arm") != arm or row.get("aug_arm") != arm:
+        out.append(f"E-5 arm {aug.get('arm')!r} / {row.get('aug_arm')!r} != {arm}")
+    if aug.get("is_kplant") is not True:
+        out.append("I-9 is_kplant not true")
+    plant = aug.get("plant_aug") or {}
+    if plant.get("preset") != ARM_PRESET[arm]:
+        out.append(f"E-5 preset {plant.get('preset')!r} != {ARM_PRESET[arm]}")
+    options = plant.get("options")
+    if not isinstance(options, dict) or set(options) != ARM_OPTION_KEYS[arm]:
+        out.append(f"E-5 option keys {sorted(options) if isinstance(options, dict) else options} "
+                   f"!= {sorted(ARM_OPTION_KEYS[arm])}")
+    res = plant.get("resolved") or {}
+    want = {}
+    if _KT in ARM_OPTION_KEYS[arm]:
+        want[_KT] = KT_REL_YAML
+    if _FS in ARM_OPTION_KEYS[arm]:
+        want.update({_FS: FS_FRONT_N, "seal_fs_rear_scale": FS_REAR_SCALE})
+    if _ZM in ARM_OPTION_KEYS[arm]:
+        want[_ZM] = PAD_ZETA_MOVING
+    if arm == "AUG_crc2":
+        want["crawler_c_scale"] = CRAWLER_C_SCALE
+    want["valve_open_eps_m_s"] = EPS_AUG_M_S if arm == "AUG_eps" else LOCK_EPS_M_S
+    for key, ref in want.items():
+        if not _close(res.get(key), ref):
+            out.append(f"E-5 resolved {key} {res.get(key)!r} != {ref!r}")
+    if _ZM in ARM_OPTION_KEYS[arm]:
+        lock, mov = res.get("cn_lock_N_s_m"), res.get("cn_moving_N_s_m")
+        if not (isinstance(lock, list) and isinstance(mov, list) and len(lock) == len(mov) == 4
+                and all(_close(m, c * PAD_ZETA_MOVING / 0.03) for c, m in zip(lock, mov))):
+            out.append("E-5 cn_moving != cn_lock x 0.10 / 0.03")
+    if not _fractions_ok(aug.get("valve_open_fraction_touch_to_lift")):
+        out.append("I-9 valve_open_fraction_touch_to_lift missing / out of [0, 1]")
+    return out
+
+
+def check_v6_row(row: dict, engine: str) -> list[str]:
+    """rev2 4 / rev3 2: V-6 moving damping (L1 on, L2b off) and the L1 I-9 open shares."""
+    out = []
+    if engine == "L1":
+        if row.get("moving_damping") is not True or not _close(row.get("pad_zeta_moving"), PAD_ZETA_MOVING):
+            out.append("E-5 L1 moving damping not on at 0.10")
+        if not _fractions_ok(row.get("valve_open_fraction_touch_to_lift")):
+            out.append("I-9 L1 valve_open_fraction_touch_to_lift missing / out of [0, 1]")
+    elif row.get("moving_damping") is not False or row.get("pad_zeta_moving") is not None:
+        out.append("E-5 L2b moving damping not off")
+    return out
+
+
 def judge_row(row: dict, fmap: dict, kind: str, series_root: Path | None, k2_profile: bool,
               chrono_files: dict | None = None, points: dict | None = None,
-              floor_deg: tuple | None = None) -> dict:
+              floor_deg: tuple | None = None, check=None) -> dict:
     """One row: J items, E items, K-2 evidence and series metrics. kind: harness | chrono.
 
     ``points``: tag -> (roll, pitch) [deg] of the point file (E-7, harness rows).
@@ -384,6 +504,8 @@ def judge_row(row: dict, fmap: dict, kind: str, series_root: Path | None, k2_pro
         e7 = str(exc)
     if e7:
         out["not_judgeable"].append(f"E-7 {e7}")
+    if check is not None:
+        out["not_judgeable"].extend(check(row))
     out["dhat"] = {"open_legs": get_path(row, f["dhat_open"], required=False),
                    "stroke_mm": get_path(row, f["dhat_stroke"], required=False),
                    "dhat_N": get_path(row, f["dhat"], required=False)}
@@ -662,14 +784,15 @@ def v5_bundle(spec: dict) -> dict:
 
 # ------------------------------------------------------------------ recount
 def judge_files(files: list[str], fmap: dict, series_root, k2: bool,
-                points: dict | None = None) -> list[dict]:
+                points: dict | None = None, check=None) -> list[dict]:
     """``series_root`` None: each file's series folder is ``<file stem>_series`` next to it (the
-    ``acc_d8.py --k2 / --aug`` default), so the off and K-2 files of one bundle keep their own series."""
+    ``acc_d8.py --k2 / --aug`` default), so the off and K-2 files of one bundle keep their own series.
+    ``check(row)``: extra row identity problems (rev2 4 E-5 / I-9), not judgeable when any."""
     rows = []
     for p in files:
         root = series_root if series_root is not None else Path(p).with_name(Path(p).stem + "_series")
         for row in load_rows(Path(p)):
-            rows.append(judge_row(row, fmap, "harness", root, k2, points=points))
+            rows.append(judge_row(row, fmap, "harness", root, k2, points=points, check=check))
     return rows
 
 
@@ -717,8 +840,8 @@ def recount(manifest: dict, expect: dict, fmap: dict, rules_dir: Path | None) ->
         m = manifest[b]
         info: dict = {}
         pts = bundle_points(m, b, problems, info)
-        off = judge_files(m["off"], fmap, m.get("series_root"), True, pts)
-        tcl = judge_files(m["tcl"], fmap, m.get("series_root"), True, pts)
+        off = judge_files(m["off"], fmap, m.get("series_root"), True, pts, check=check_options_off)
+        tcl = judge_files(m["tcl"], fmap, m.get("series_root"), True, pts, check=check_options_off)
         check_count(f"{b}.off", off, expect.get(b, {}).get("off", {}), problems)
         check_count(f"{b}.tcl", tcl, expect.get(b, {}).get("tcl", {}), problems)
         s_tcl = summarize(tcl)
@@ -744,8 +867,9 @@ def recount(manifest: dict, expect: dict, fmap: dict, rules_dir: Path | None) ->
                 problems.append(f"E-1 V-3 arm {arm} missing")
                 continue
             a = m["arms"][arm]
-            off = judge_files(a["off"], fmap, m.get("series_root"), True, pts)
-            tcl = judge_files(a["tcl"], fmap, m.get("series_root"), True, pts)
+            chk = (lambda row, arm=arm: check_v3_arm(row, arm))
+            off = judge_files(a["off"], fmap, m.get("series_root"), True, pts, check=chk)
+            tcl = judge_files(a["tcl"], fmap, m.get("series_root"), True, pts, check=chk)
             for side, rows in (("off", off), ("tcl", tcl)):
                 if len(rows) != V3_PER_CELL:
                     problems.append(f"E-1 V-3 {arm}.{side}: {len(rows)} != {V3_PER_CELL}")
@@ -768,27 +892,11 @@ def recount(manifest: dict, expect: dict, fmap: dict, rules_dir: Path | None) ->
         gates["G-B"] = g_b
     else:
         problems.append("E-1 bundle v3 missing")
-    # V-5
-    if "v5" in manifest:
-        v5 = {}
-        g_d = "pass"
-        for name, spec in manifest["v5"].items():
-            res = v5_bundle(spec)
-            n_exp = expect.get("v5", {}).get(name, {}).get("count")
-            if n_exp is not None and (res["n_off"] != n_exp or res["n_tcl"] != n_exp):
-                problems.append(f"E-1 V-5 {name}: {res['n_off']}/{res['n_tcl']} != {n_exp}")
-            if res.get("not_judgeable"):
-                problems.append(f"V-5 {name}: {res['not_judgeable']}")
-            if not res["pass"]:
-                g_d = "fail"
-            v5[name] = res
-        missing = sorted(set(expect.get("v5", {})) - set(manifest["v5"]))
-        if missing:
-            problems.append(f"E-1 V-5 bundles missing {missing}")
-        out["bundles"]["v5"] = v5
-        gates["G-D"] = g_d
+    # V-5 (rev2 1: raw outputs, absolute items on the K-2 arm, pass->fail vs the off arm)
+    if "v5_raw" in manifest:
+        out["bundles"]["v5"], gates["G-D"] = recount_v5_raw(manifest["v5_raw"], problems)
     else:
-        problems.append("E-1 bundle v5 missing")
+        problems.append("E-1 bundle v5_raw missing (path 2 reads the V-5 raw outputs, rev2 1)")
     # V-6
     if "v6" in manifest:
         out["bundles"]["v6"], g_e, f6 = recount_v6(manifest["v6"], expect.get("v6", {}), fmap, problems)
@@ -802,6 +910,428 @@ def recount(manifest: dict, expect: dict, fmap: dict, rules_dir: Path | None) ->
     out["problems"] = problems
     out["grade"] = grade(gates, flags, problems)
     return out
+
+
+# ------------------------------------------------------------------ V-5 raw outputs (rev2 1 / 2)
+def _doc(folder: Path, name: str):
+    p = Path(folder) / name
+    if not p.exists():
+        raise NotJudgeable(f"V-5 output missing: {p}")
+    if name.endswith(".jsonl"):
+        return [json.loads(x) for x in p.read_text(encoding="utf-8").splitlines() if x.strip()]
+    return json.loads(p.read_text(encoding="utf-8"))
+
+
+def _err(r) -> bool:
+    """rev4 1 (a): an error row has an ``error`` key with a non-empty value (``None`` = no error)."""
+    return isinstance(r, dict) and r.get("error") not in (None, "", [], {}, False)
+
+
+SGS_PREFIX = "lift_stroke_guard."
+"""rev4 1 (b): the SGS settings compared on every noise row (other keys, e.g. the gyro noise of the level, differ
+by design)."""
+
+
+def _count(x) -> int | None:
+    if isinstance(x, list):
+        return len(x)
+    if isinstance(x, (int, float)) and not isinstance(x, bool):
+        return int(x)
+    return None
+
+
+class _Tally:
+    """Absolute items of one bundle: failures and missing values (E-9: missing = fail)."""
+
+    def __init__(self):
+        self.fail: dict[str, list] = {}
+        self.missing: dict[str, int] = {}
+
+    def bad(self, item: str, what) -> None:
+        self.fail.setdefault(item, []).append(what)
+
+    def miss(self, item: str) -> None:
+        self.missing[item] = self.missing.get(item, 0) + 1
+        self.bad(item, "missing")
+
+    def result(self) -> dict:
+        return {"failures": {k: v[:40] for k, v in self.fail.items()},
+                "failure_counts": {k: len(v) for k, v in self.fail.items()}, "missing": dict(self.missing),
+                "absolute_pass": not self.fail}
+
+
+def _event_rows(doc: dict) -> tuple[dict, list]:
+    """``results[].runs[]`` rows keyed key|timing|event|offset|index (acc_judge.event_runs); errored results."""
+    rows, errors = {}, []
+    for res in doc.get("results", []):
+        if _err(res):
+            errors.append(str(res.get("key")))
+            continue
+        for i, run in enumerate(res.get("runs", [])):
+            timing = res.get("timing", run.get("timing"))
+            rows[f"{res['key']}|{timing}|{run.get('event')}|{run.get('offset_s')}|{i}"] = run
+    return rows, errors
+
+
+def _p2f(off: dict, tcl: dict, good=lambda v: v is True) -> tuple[list, list]:
+    keys = set(off) & set(tcl)
+    p2f = sorted(k for k in keys if good(off[k]) and not good(tcl[k]))
+    return p2f, sorted(set(off) ^ set(tcl))
+
+
+def _v5_grid(off_dir, tcl_dir) -> dict:
+    t = _Tally()
+    parts = {}
+    for name in ("grid_r67_main.json", "grid_r67_top.json", "grid_r69_top.json", "grid_r69_bottom.json"):
+        a, ea = _event_rows(_doc(tcl_dir, name))
+        b, eb = _event_rows(_doc(off_dir, name))
+        for e in ea:
+            t.bad("error", f"{name}:{e}")
+        for k, run in a.items():
+            if "fault_periods" not in run:
+                t.miss("fault_periods")
+            elif run["fault_periods"]:
+                t.bad("fault", f"{name}:{k}")
+            if "pass" not in run:
+                t.miss("pass")
+        p2f, unm = _p2f({k: r.get("pass") for k, r in b.items()}, {k: r.get("pass") for k, r in a.items()})
+        for k in p2f:
+            t.bad("pass_to_fail", f"{name}:{k}")
+        for k in unm:
+            t.bad("unmatched", f"{name}:{k}")
+        parts[name] = {"n_tcl": len(a), "n_off": len(b), "errors_off": len(eb)}
+    return {"parts": parts, "n": sum(p["n_tcl"] for p in parts.values()), **t.result()}
+
+
+def _v5_soil(off_dir, tcl_dir) -> dict:
+    t = _Tally()
+    a, ea = _event_rows(_doc(tcl_dir, "soil_A.json"))
+    b, _ = _event_rows(_doc(off_dir, "soil_A.json"))
+    a = {k: v for k, v in a.items() if k.split("|")[4] == "two" or "|two|" in k}
+    b = {k: v for k, v in b.items() if k.split("|")[4] == "two" or "|two|" in k}
+    for e in ea:
+        if e.endswith("|two"):
+            t.bad("error", e)
+    if len(a) != V5_COUNTS["soil"]:
+        t.bad("count", f"{len(a)} != {V5_COUNTS['soil']}")
+    soft = {k for k in a if "|G1|" in k or "|J2|" in k}
+    for k, run in a.items():
+        if "pass" not in run:
+            t.miss("pass")
+        elif k in soft and not run["pass"]:
+            t.bad("soft_failed", k)
+        if "fault_periods" not in run:
+            t.miss("fault_periods")
+        elif run["fault_periods"]:
+            t.bad("fault", k)
+    rigid_a = {k: a[k].get("pass") for k in a if k not in soft}
+    rigid_b = {k: b[k].get("pass") for k in b if not ("|G1|" in k or "|J2|" in k)}
+    p2f, unm = _p2f(rigid_b, rigid_a)
+    for k in p2f:
+        t.bad("pass_to_fail", k)
+    for k in sorted(set(a) ^ set(b)):
+        t.bad("unmatched", k)
+    return {"n": len(a), "soft_rows": len(soft), **t.result()}
+
+
+def _v5_d8(off_dir, tcl_dir) -> dict:
+    t = _Tally()
+    runs = _doc(tcl_dir, "d8_both.json")["runs"]
+    if len(runs) != V5_COUNTS["d8"]:
+        t.bad("count", f"{len(runs)} != {V5_COUNTS['d8']}")
+    for r in runs:
+        rid = r.get("id")
+        if _err(r):
+            t.bad("error", rid)
+            continue
+        if "fails" not in r:
+            t.miss("fails")
+        elif r["fails"]:
+            t.bad("fails", rid)
+        if r.get("fault") is None:
+            t.miss("fault")
+        elif r["fault"]:
+            t.bad("fault", rid)
+        for key, ok in (("min_true_cyl_force_kN", lambda v: v >= D8_GUARD_KN),
+                        ("ss_true_att_deg_maxabs", lambda v: v <= D8_ATT_DEG),
+                        ("t_ready_s", lambda v: v <= D8_READY_S)):
+            v = r.get(key)
+            if not is_num(v):
+                t.miss(key)
+            elif not ok(v):
+                t.bad(key, rid)
+    off = {r["id"]: r for r in _doc(off_dir, "d8_both.json")["runs"] if not _err(r)}
+    pairs = [(r, off[r["id"]]) for r in runs if not _err(r) and r.get("id") in off]
+    rec = {}
+    if pairs:
+        d_ready = [a["t_ready_s"] - b["t_ready_s"] for a, b in pairs
+                   if is_num(a.get("t_ready_s")) and is_num(b.get("t_ready_s"))]
+        d_min = [a["min_true_cyl_force_kN"] - b["min_true_cyl_force_kN"] for a, b in pairs
+                 if is_num(a.get("min_true_cyl_force_kN")) and is_num(b.get("min_true_cyl_force_kN"))]
+        rec = {"ready_mean_delta_s": float(np.mean(d_ready)) if d_ready else None,
+               "min_true_delta_kN_worst": min(d_min) if d_min else None}
+    return {"n": len(runs), "record_vs_off": rec, **t.result()}
+
+
+def _v5_noise(off_dir, tcl_dir) -> dict:
+    t = _Tally()
+    j = _doc(tcl_dir, "r79_L1L2_judgement.json")
+    raw = _doc(tcl_dir, "r79_L1L2.json")
+    rows = [r for r in j.get("runs", []) if r.get("level") == "L2"
+            and not any(m in str(r.get("inner", "")) for m in S1_FRONT)]
+    if len(rows) != V5_COUNTS["noise_L2"]:
+        t.bad("count", f"{len(rows)} != {V5_COUNTS['noise_L2']}")
+    k = 0
+    for r in rows:
+        if "pass" not in r:
+            t.miss("pass")
+            k += 1
+        elif not r["pass"]:
+            k += 1
+    cp = cp_upper(k, len(rows)) if rows else None
+    if cp is None or not (cp["pass"] and cp["agree"]):
+        t.bad("cp_upper", cp)
+    for key in ("unmatched", "errors"):
+        c = _count(j.get(key))
+        if c is None:
+            t.miss(key)
+        elif c:
+            t.bad(key, c)
+    ref = [x for x in j.get("reference", []) if x.get("group") == "all"]
+    if len(ref) != 1 or not is_num(ref[0].get("false_loc")):
+        t.miss("L1_false_loc")
+    elif ref[0]["false_loc"]:
+        t.bad("L1_false_loc", ref[0]["false_loc"])
+    preset = (raw.get("meta") or {}).get("preset_settings")
+    for res in raw.get("results", []):
+        if _err(res):
+            t.bad("error", res.get("key"))
+            continue
+        if preset is None or "controller_settings" not in res:
+            t.miss("controller_settings")
+        else:
+            cs = res["controller_settings"]
+            keys = {k for k in set(cs) | set(preset) if k.startswith(SGS_PREFIX)}
+            if not keys:
+                t.miss("sgs_settings")
+            elif any(cs.get(k) != preset.get(k) for k in keys):
+                t.bad("sgs_settings", f"{res.get('key')}|{res.get('level')}")
+    old = {r["key"]: r.get("pass") for r in _doc(off_dir, "r79_L1L2_judgement.json").get("runs", [])}
+    p2f = sorted(r["key"] for r in rows if old.get(r["key"]) is True and r.get("pass") is not True)
+    return {"n": len(rows), "failures": k, "cp": cp, "record_pass_to_fail": p2f, **t.result()}
+
+
+def _reg_verdicts(folder) -> tuple[dict, list, dict]:
+    """Judged regression rows (key -> verdict) with the regression_keys.py key format, record keys, errors."""
+    judged, errors = {}, []
+    for name in ("clip_harness.json", "clip_p0.json"):
+        for r in _doc(folder, name).get("records", []):
+            if _err(r):
+                errors.append(f"{name}:{r.get('id')}")
+            judged[f"{name}:{r['id']}"] = r.get("verdict", r.get("pass"))
+    for name in ("clip_x426_C.json", "clip_x426_D.json"):
+        for r in _doc(folder, name).get("results", []):
+            key = r.get("key", r.get("id", r.get("case_id")))
+            if _err(r):
+                errors.append(f"{name}:{key}")
+            if isinstance(r.get("base"), dict) and "pass" in r["base"]:
+                v = r["base"]["pass"]
+            else:
+                v = r.get("verdict", r.get("pass"))
+            judged[f"{name}:{key}"] = v
+    for res in _doc(folder, "clip_A.json").get("results", []):
+        if _err(res):
+            errors.append(f"clip_A.json:{res.get('key')}")
+            continue
+        for i, run in enumerate(res.get("runs", [])):
+            judged[f"clip_A.json:{res['key']}#{i}"] = run.get("pass")
+    jdoc = _doc(folder, "clip_r79_L1L2_judgement.json")
+    jk = set()
+    for r in jdoc.get("runs", []):
+        judged[f"clip_r79_L1L2_judgement.json:{r['key']}"] = r.get("pass")
+        jk.add(r["key"])
+    record = [f"clip_r79_L1L2.json:{r['key']}|{r.get('level')}" for r in _doc(folder, "clip_r79_L1L2.json")["results"]
+              if r["key"] not in jk]
+    record += [f"clip_r79_L3L4.json:{r['key']}|{r.get('level')}" for r in _doc(folder, "clip_r79_L3L4.json")["results"]]
+    return judged, errors, {"record": sorted(set(record)), "unmatched": _count(jdoc.get("unmatched")),
+                            "errors": _count(jdoc.get("errors"))}
+
+
+def _sha_list(xs) -> str:
+    return hashlib.sha256("\n".join(sorted(xs)).encode("utf-8")).hexdigest()
+
+
+def _v5_regression(off_dir, tcl_dir) -> dict:
+    t = _Tally()
+    a, ea, xa = _reg_verdicts(tcl_dir)
+    b, _, xb = _reg_verdicts(off_dir)
+    for side, verd, extra in (("tcl", a, xa), ("off", b, xb)):
+        if _sha_list(verd) != REG_JUDGED_SHA256:
+            t.bad("judged_keys_sha", side)
+        if _sha_list(extra["record"]) != REG_RECORD_SHA256:
+            t.bad("record_keys_sha", side)
+    for e in ea:
+        t.bad("error", e)
+    if xa["errors"] is None:
+        t.miss("r79_errors")
+    elif xa["errors"]:
+        t.bad("r79_errors", xa["errors"])
+    # rev4 1 (c): the r79 judgement 'unmatched' is a record here (criteria.md regression row: pass->fail only)
+    for k, v in a.items():
+        if v is None:
+            t.miss("verdict")
+    p2f, unm = _p2f(b, a, good=lambda v: v in GOOD_VERDICTS)
+    for k in p2f:
+        t.bad("pass_to_fail", k)
+    for k in unm:
+        t.bad("unmatched", k)
+    return {"n": len(a), "record_n": len(xa["record"]), "record_r79_unmatched": xa["unmatched"], **t.result()}
+
+
+def _v5_ps7(off_dir, tcl_dir) -> dict:
+    t = _Tally()
+    a, b = _doc(tcl_dir, "ps7.json"), _doc(off_dir, "ps7.json")
+    if len(a) != V5_COUNTS["ps7"]:
+        t.bad("count", f"{len(a)} != {V5_COUNTS['ps7']}")
+    for r in a:
+        if _err(r):
+            t.bad("error", r.get("key"))
+        if "pass" not in r:
+            t.miss("pass")
+    p2f, unm = _p2f({r["key"]: r.get("pass") for r in b}, {r["key"]: r.get("pass") for r in a})
+    for k in p2f:
+        t.bad("pass_to_fail", k)
+    for k in unm:
+        t.bad("unmatched", k)
+    return {"n": len(a), **t.result()}
+
+
+def _g8_rows(folder) -> dict:
+    rows = {}
+    for name in ("g8_jobs1.jsonl", "g8_jobs3.jsonl", "g8_jobs5.jsonl"):
+        for r in _doc(folder, name):
+            rows[f"{r.get('tag')}|{r.get('key')}"] = r
+    return rows
+
+
+def _g8_faults(r) -> set:
+    names = r.get("warn_fault") or []
+    return {prefix(str(n)) for n in names if str(n).startswith("FAULT_")}
+
+
+def _v5_g8(off_dir, tcl_dir) -> dict:
+    t = _Tally()
+    a, b = _g8_rows(tcl_dir), _g8_rows(off_dir)
+    if len(a) != V5_COUNTS["g8_safe_stop"]:
+        t.bad("count", f"{len(a)} != {V5_COUNTS['g8_safe_stop']}")
+    for k, r in a.items():
+        if _err(r):
+            t.bad("error", k)
+            continue
+        if k not in b:
+            t.bad("unmatched", k)
+            continue
+        o = b[k]
+        if "final" not in r or "final" not in o:
+            t.miss("final")
+        elif o["final"] == "ready" and r["final"] != "ready":
+            t.bad("ready_lost", k)
+        new = _g8_faults(r) - _g8_faults(o)
+        if new:
+            t.bad("new_fault", f"{k}:{sorted(new)}")
+        if "pass" in r and "pass" in o and o["pass"] is True and r["pass"] is not True:
+            t.bad("pass_to_fail", k)
+    for k in sorted(set(b) - set(a)):
+        t.bad("unmatched", k)
+    return {"n": len(a), **t.result()}
+
+
+V5_BUNDLE_FUNCS = {"grid": _v5_grid, "soil": _v5_soil, "d8": _v5_d8, "noise_L2": _v5_noise,
+                   "regression": _v5_regression, "ps7": _v5_ps7, "g8_safe_stop": _v5_g8}
+V5_EVENT_FILES = (("r79_L1L2.json", "results"), ("clip_r79_L1L2.json", "results"), ("clip_r79_L3L4.json", "results"),
+                  ("ps7.json", None))
+
+
+def _v5_common(m: dict, arms: dict) -> dict:
+    """rev2 1 common items and the K-2 evidence: sidecar rc, provenance, event rows."""
+    t = _Tally()
+    c2 = m.get("c2_sha256", C2_SHA256_RUN)
+    for arm, folder in arms.items():
+        for sc in m.get("sidecars", {}).get(arm, []):
+            p = Path(sc)
+            if not p.exists():
+                t.miss("sidecar")
+                continue
+            rc = json.loads(p.read_text(encoding="utf-8")).get("rc")
+            if rc != 0:
+                t.bad("sidecar_rc", f"{arm}:{p.name}={rc}")
+        provs = sorted((Path(folder) / "provenance").glob("*.json"))
+        if not provs:
+            t.miss("provenance")
+        for p in provs:
+            d = json.loads(p.read_text(encoding="utf-8"))
+            if d.get("c2_sha256") != c2:
+                t.bad("c2_sha256", f"{arm}:{p.name}")
+            if d.get("combo") != "preset":
+                t.bad("combo", f"{arm}:{p.name}={d.get('combo')}")
+            if d.get("k2") != ("on" if arm == "tcl" else "off"):
+                t.bad("k2", f"{arm}:{p.name}={d.get('k2')}")
+            if d.get("touch_creep_latch") is not (arm == "tcl"):
+                t.bad("touch_creep_latch", f"{arm}:{p.name}")
+            if str(d.get("controller_tag", "")).endswith(TCL_SUFFIX) is not (arm == "tcl"):
+                t.bad("controller_tag", f"{arm}:{p.name}={d.get('controller_tag')}")
+        for name, key in V5_EVENT_FILES:
+            p = Path(folder) / name
+            if not p.exists():
+                t.miss(f"events:{name}")
+                continue
+            doc = json.loads(p.read_text(encoding="utf-8"))
+            rows = doc if key is None else doc.get(key, [])
+            latch = creep = 0
+            for r in rows:
+                names = [n for _, n in event_pairs(r.get("events") or [])]
+                latch += any(prefix(n) == LATCH_EVENT for n in names)
+                creep += any(n.startswith("INFO_TOUCH_CREEP_") for n in names)
+            if arm == "tcl" and latch == 0:
+                t.bad("k2_evidence", f"tcl:{name} no INFO_TOUCH_CREEP_LATCH row")
+            if arm == "off" and creep:
+                t.bad("k2_evidence", f"off:{name} {creep} INFO_TOUCH_CREEP_* rows")
+        try:
+            g8 = _g8_rows(folder)
+        except NotJudgeable:
+            t.miss("events:g8")
+            g8 = {}
+        for r in g8.values():
+            if r.get("touch_creep_latch") is not (arm == "tcl"):
+                t.bad("g8_touch_creep_latch", f"{arm}:{r.get('tag')}|{r.get('key')}")
+                break
+    return t.result()
+
+
+def recount_v5_raw(m: dict, problems: list[str]) -> tuple[dict, str]:
+    """V-5 from the raw step outputs of the two arm folders (rev2 1): absolute items on the K-2 arm, pass->fail
+    vs the off arm; G-D fails when any bundle fails; missing inputs make the bundle not judgeable."""
+    arms = {"off": Path(m["off"]), "tcl": Path(m["tcl"])}
+    out = {}
+    g_d = "pass"
+    try:
+        out["common"] = _v5_common(m, arms)
+        if not out["common"]["absolute_pass"]:
+            g_d = "fail"
+    except (OSError, ValueError, KeyError, NotJudgeable) as exc:
+        problems.append(f"V-5 common: {exc}")
+    for name, func in V5_BUNDLE_FUNCS.items():
+        try:
+            res = func(arms["off"], arms["tcl"])
+        except (OSError, ValueError, KeyError, NotJudgeable) as exc:
+            problems.append(f"V-5 {name} not judgeable: {exc}")
+            out[name] = {"not_judgeable": str(exc)}
+            continue
+        if not res["absolute_pass"]:
+            g_d = "fail"
+        out[name] = res
+    out["missing_total"] = sum(sum((v.get("missing") or {}).values()) for v in out.values() if isinstance(v, dict))
+    return out, g_d
 
 
 def v3_arm_check(a: dict, fmap: dict, arm: str, problems: list[str]) -> None:
@@ -841,7 +1371,8 @@ def recount_v6(m: dict, expect: dict, fmap: dict, problems: list[str]):
         if len(floors) != 1:
             problems.append(f"E-7 V-6 {name}: floor not identified from the row name")
         r = judge_row(row, fmap, "chrono", None, True, files,
-                      floor_deg=floors[0] if len(floors) == 1 else None)
+                      floor_deg=floors[0] if len(floors) == 1 else None,
+                      check=lambda rw, eng=spec["engine"]: check_v6_row(rw, eng))
         r["engine"], r["arm"] = spec["engine"], spec["arm"]
         r["base"] = name.rsplit("_", 1)[0]
         exp = expect.get("rows", {}).get(name)
@@ -864,23 +1395,87 @@ def recount_v6(m: dict, expect: dict, fmap: dict, problems: list[str]):
     if any(row_status(r) == "not_judgeable" for r in judged):
         problems.append("V-6 K-2 row not judgeable")
     g_e = "pass" if all(row_status(r) == "pass" for r in judged) and len(judged) == 4 else "fail"
-    flags = []
-    for r in judged:
-        if r.get("cap_events", 0):
-            flags.append(("v6", "SH-5"))
-        sh1 = (r.get("metrics") or {}).get("SH1_post_latch_lift") or {}
-        if any(v > 0 for v in sh1.values()):
-            flags.append(("v6", "SH-1"))
-        if is_num(r["values"].get("J1_N")) and r["values"]["J1_N"] < F_D8_N + SH6_MARGIN_N:
-            flags.append(("v6", "SH-6"))
+    sh6 = v6_shadow(rows)
+    flags = [("v6", f) for f in sh6["flags"]]
     l1_off = [r for r in rows.values() if r["engine"] == "L1" and r["arm"] == "off"]
     j3_off = [r["values"].get("J3") for r in l1_off]
     branch = ("no_gain_shown" if l1_off and all(v == 0 for v in j3_off)
               else "paired_evidence" if any(is_num(v) and v > 0 for v in j3_off) else "unknown")
     off6 = [{**r, "id": r["base"], "k1": None} for r in rows.values() if r["arm"] == "off"]
     tcl6 = [{**r, "id": r["base"], "k1": None} for r in rows.values() if r["arm"] == "tcl"]
-    return {"rows": rows, "chrono_branch": branch, "predictions": predictions(rows),
+    return {"rows": rows, "chrono_branch": branch, "predictions": predictions(rows), "shadow": sh6,
             "dhat_record": dhat_summary(off6, tcl6)}, g_e, flags
+
+
+def v6_shadow(rows: dict) -> dict:
+    """rev2 3: SH-1 .. SH-6 of the V-6 bundle (4 pairs by base name); a missing value is a FLAG and counted."""
+    tcl = [r for r in rows.values() if r["arm"] == "tcl"]
+    off = [r for r in rows.values() if r["arm"] == "off"]
+    pairs = {r["base"]: [None, None] for r in rows.values()}
+    for r in rows.values():
+        pairs[r["base"]][0 if r["arm"] == "off" else 1] = r
+    flags, missing = set(), {}
+
+    def miss(item):
+        missing[item] = missing.get(item, 0) + 1
+        flags.add(item)
+
+    sh1_rows = []
+    for r in tcl:
+        sh1 = (r.get("metrics") or {}).get("SH1_post_latch_lift")
+        if sh1 is None:
+            miss("SH-1")
+        elif any(v > 0 for v in sh1.values()):
+            sh1_rows.append(r["id"])
+            flags.add("SH-1")
+
+    def amps(side):
+        vals = [(r.get("metrics") or {}).get("SH2_rate_amp_deg_s") for r in side]
+        return [v for v in vals if is_num(v)]
+    a_off, a_tcl = amps(off), amps(tcl)
+    med_off = float(np.median(a_off)) if len(a_off) == 4 else None
+    med_tcl = float(np.median(a_tcl)) if len(a_tcl) == 4 else None
+    if med_off is None or med_tcl is None:
+        miss("SH-2")
+    elif med_tcl > med_off:
+        flags.add("SH-2")
+    d_ready = {}
+    for base, (o, k) in pairs.items():
+        a = None if k is None else k["values"].get("t_ready_s")
+        b = None if o is None else o["values"].get("t_ready_s")
+        if not (is_num(a) and is_num(b)):
+            miss("SH-3")
+            continue
+        d_ready[base] = a - b
+        if a - b > SH3_READY_S:
+            flags.add("SH-3")
+    j_off = [r["values"].get("J1_N") for r in off]
+    j_tcl = [r["values"].get("J1_N") for r in tcl]
+    sh4 = None
+    if len(j_off) != 4 or len(j_tcl) != 4 or not all(is_num(v) for v in j_off + j_tcl):
+        miss("SH-4")
+    else:
+        sh4 = min(j_tcl) - min(j_off)
+        if sh4 < SH4_EROSION_N:
+            flags.add("SH-4")
+    caps = sum(int(r.get("cap_events") or 0) for r in tcl)
+    l1_false = sum(len(r.get("false_latch") or []) for r in tcl if r["engine"] == "L1")
+    if any(r["engine"] == "L1" and r.get("false_latch") is None for r in tcl):
+        miss("SH-5")
+    if caps + l1_false > 0:
+        flags.add("SH-5")
+    near = []
+    for r in tcl:
+        v = r["values"]
+        if not is_num(v.get("J1_N")):
+            miss("SH-6")
+        for name in ("J1_N", "J2_N"):
+            if is_num(v.get(name)) and v[name] < F_D8_N + SH6_MARGIN_N:
+                near.append((r["id"], name, v[name]))
+                flags.add("SH-6")
+    return {"flags": sorted(flags), "missing": missing, "SH1_rows": sh1_rows, "SH2_median_off": med_off,
+            "SH2_median_tcl": med_tcl, "SH3_delta_s": d_ready, "SH4_delta_N": sh4, "SH5_caps": caps,
+            "SH5_l1_false_latch": l1_false, "SH6_rows": near}
 
 
 def predictions(rows: dict) -> list[dict]:
@@ -960,16 +1555,18 @@ def rules_check(rules_dir: Path) -> dict:
     rules = Path(rules_dir) / RULES_FILE
     seal = Path(rules_dir) / RULES_SEAL
     dyn = Path(rules_dir) / DYN_SPEC_FILE
-    rev1 = Path(rules_dir) / REV1_FILE
-    seal1 = Path(rules_dir) / REV1_SEAL
     res = {"rules_sha256": sha256_file(rules) if rules.exists() else None,
            "seal_first_token": seal.read_text(encoding="utf-8").split()[0] if seal.exists() else None,
-           "rev1_sha256": sha256_file(rev1) if rev1.exists() else None,
-           "rev1_seal_first_token": seal1.read_text(encoding="utf-8").split()[0] if seal1.exists() else None,
            "dyn_spec_sha256": sha256_file(dyn) if dyn.exists() else None}
-    res["ok"] = (res["rules_sha256"] == RULES_SHA256 == res["seal_first_token"]
-                 and res["rev1_sha256"] == REV1_SHA256 == res["rev1_seal_first_token"]
-                 and res["dyn_spec_sha256"] == DYN_SPEC_SHA256)
+    ok = res["rules_sha256"] == RULES_SHA256 == res["seal_first_token"] and res["dyn_spec_sha256"] == DYN_SPEC_SHA256
+    for tag, fname, sname, want in (("rev1", REV1_FILE, REV1_SEAL, REV1_SHA256), ("rev2", REV2_FILE, REV2_SEAL, REV2_SHA256),
+                                    ("rev3", REV3_FILE, REV3_SEAL, REV3_SHA256),
+                                    ("rev4", REV4_FILE, REV4_SEAL, REV4_SHA256)):
+        f, s = Path(rules_dir) / fname, Path(rules_dir) / sname
+        res[f"{tag}_sha256"] = sha256_file(f) if f.exists() else None
+        res[f"{tag}_seal_first_token"] = s.read_text(encoding="utf-8").split()[0] if s.exists() else None
+        ok = ok and res[f"{tag}_sha256"] == want == res[f"{tag}_seal_first_token"]
+    res["ok"] = ok
     return res
 
 
@@ -1015,6 +1612,38 @@ def selftest_d8x(ra_off: Path, ra_on: Path, points_file: Path | None = None) -> 
     res["total_fail"] = total
     res["ok"] = res["off"]["ok"] and res["on"]["ok"] and total == 74
     return res
+
+
+STORED_V5 = {
+    "grid_r67_main.json": "grid/grid_r67_main.json", "grid_r67_top.json": "grid/grid_r67_top.json",
+    "grid_r69_top.json": "grid/grid_r69_top.json", "grid_r69_bottom.json": "grid/grid_r69_bottom.json",
+    "soil_A.json": "soil/soil_A.json", "d8_both.json": "d8/d8_both.json", "r79_L1L2.json": "noise/r79_L1L2.json",
+    "r79_L1L2_judgement.json": "noise/r79_L1L2_judgement.json", "g8_jobs1.jsonl": "g8_safe_stop/out1.jsonl",
+    "g8_jobs3.jsonl": "g8_safe_stop/out3.jsonl", "g8_jobs5.jsonl": "g8_safe_stop/out5.jsonl",
+    **{n: f"regression/{n}" for n in ("clip_harness.json", "clip_p0.json", "clip_x426_C.json", "clip_x426_D.json",
+                                     "clip_A.json", "clip_r79_L1L2.json", "clip_r79_L1L2_judgement.json",
+                                     "clip_r79_L3L4.json")}}
+
+
+def selftest_v5_stored(acc: Path, ps7: Path) -> dict:
+    """rev4 2: the V-5 bundle functions on the stored final-controller acceptance outputs, the same files as both
+    arms (format check; every bundle must pass its absolute items, as in the accepted judgement)."""
+    import shutil
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as tmp:
+        arm = Path(tmp)
+        for name, rel in STORED_V5.items():
+            shutil.copyfile(Path(acc) / rel, arm / name)
+        shutil.copyfile(ps7, arm / "ps7.json")
+        res = {}
+        for name, func in V5_BUNDLE_FUNCS.items():
+            r = func(arm, arm)
+            res[name] = {"n": r.get("n"), "absolute_pass": r["absolute_pass"], "failure_counts": r["failure_counts"],
+                         "missing": r["missing"]}
+    want_n = {"grid": 768, **V5_COUNTS}
+    ok = all(v["absolute_pass"] and v["n"] == want_n[k] for k, v in res.items())
+    return {"bundles": res, "ok": ok}
 
 
 def selftest_screen(screen_dir: Path) -> dict:
@@ -1077,7 +1706,10 @@ def main(argv: list[str] | None = None) -> int:
     ss.add_argument("--screen-dir", required=True)
     pc = sub.add_parser("points-check")
     pc.add_argument("--points", required=True)
-    for p in (rc, et, sd, ss, pc):
+    sv = sub.add_parser("selftest-v5-stored")
+    sv.add_argument("--acc", required=True, help="touch_phase/acceptance folder")
+    sv.add_argument("--ps7", required=True, help="stored touch_phase/ps7_E.json")
+    for p in (rc, et, sd, ss, pc, sv):
         p.add_argument("--out", required=True)
         p.add_argument("--format", choices=("json", "md"), default="json")
     args = ap.parse_args(argv)
@@ -1092,6 +1724,9 @@ def main(argv: list[str] | None = None) -> int:
             obj = {**head, "inputs": {"ra_off": sha256_file(Path(args.ra_off)),
                                       "ra_on": sha256_file(Path(args.ra_on))}, **r}
             code = 0 if r["ok"] else 1
+        elif args.cmd == "selftest-v5-stored":
+            r = selftest_v5_stored(Path(args.acc), Path(args.ps7))
+            obj, code = {**head, **r}, 0 if r["ok"] else 1
         elif args.cmd == "points-check":
             r = points_check(Path(args.points))
             obj, code = {**head, **r}, 0 if r["ok"] else 2

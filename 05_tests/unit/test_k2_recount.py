@@ -248,6 +248,96 @@ def test_chrono_row_dhat_from_k2_block(tmp_path):
     assert r["dhat"] == {"open_legs": ["RL"], "stroke_mm": [None, None, 0.2, None], "dhat_N": 7000.0}
 
 
+def _aug_row(arm: str) -> dict:
+    opts = {k: None for k in kr.ARM_OPTION_KEYS[arm]}
+    res = {"valve_open_eps_m_s": kr.EPS_AUG_M_S if arm == "AUG_eps" else 1e-6}
+    if "crawler_kt_rel" in opts:
+        res["crawler_kt_rel"] = 0.23309250561413625
+    if "seal_fs_front_N" in opts:
+        res.update(seal_fs_front_N=4000.0, seal_fs_rear_scale=0.8333)
+    if "pad_zeta_moving" in opts:
+        res.update(pad_zeta_moving=0.10, cn_lock_N_s_m=[3.0, 3.0, 3.0, 3.0], cn_moving_N_s_m=[10.0] * 4)
+    if arm == "AUG_crc2":
+        res["crawler_c_scale"] = 2.0
+    return {"aug_arm": arm, "k2": {"aug": {"arm": arm, "is_kplant": True,
+                                           "plant_aug": {"preset": kr.ARM_PRESET[arm], "options": opts, "resolved": res},
+                                           "valve_open_fraction_touch_to_lift": [0.1, 0.2, 0.0, 1.0]}}}
+
+
+def test_e5_v3_values_and_options_off():
+    for arm in kr.V3_ARMS:
+        assert kr.check_v3_arm(_aug_row(arm), arm) == [], arm
+    bad = _aug_row("AUG")
+    bad["k2"]["aug"]["plant_aug"]["resolved"]["crawler_kt_rel"] = 0.233093   # the rounded label (rev3 1)
+    assert any("crawler_kt_rel" in p for p in kr.check_v3_arm(bad, "AUG"))
+    wrong = _aug_row("L1eq")
+    assert any("option keys" in p for p in kr.check_v3_arm(wrong, "AUG"))
+    assert kr.check_options_off({"k2": {}}) == []
+    assert kr.check_options_off(_aug_row("H0"))
+    assert kr.check_v6_row({"moving_damping": True, "pad_zeta_moving": 0.1,
+                            "valve_open_fraction_touch_to_lift": dict(zip(kr.LEGS, [0.1] * 4))}, "L1") == []
+    assert kr.check_v6_row({"moving_damping": True, "pad_zeta_moving": 0.1}, "L2b")
+
+
+def test_v6_shadow_flags_and_missing():
+    def row(base, arm, eng, j1, ready, amp, cap=0, fl=None):
+        return {"id": f"{base}_{arm}", "base": base, "arm": arm, "engine": eng, "cap_events": cap,
+                "false_latch": [] if fl is None else fl,
+                "values": {"J1_N": j1, "J2_N": None, "t_ready_s": ready},
+                "metrics": {"SH1_post_latch_lift": {"FL": 0}, "SH2_rate_amp_deg_s": amp}}
+    rows = {}
+    for i, eng in enumerate(("L1", "L1", "L2b", "L2b")):
+        b = f"b{i}"
+        rows[b + "_off"] = row(b, "off", eng, 50e3, 43.0, 0.2)
+        rows[b + "_tcl"] = row(b, "tcl", eng, 46e3, 44.0, 0.1)
+    assert kr.v6_shadow(rows)["flags"] == ["SH-4"]
+    rows["b0_tcl"]["values"]["t_ready_s"] = 47.0
+    rows["b1_tcl"]["false_latch"] = ["FR@1.0"]
+    rows["b2_tcl"]["metrics"]["SH2_rate_amp_deg_s"] = None
+    sh = kr.v6_shadow(rows)
+    assert set(sh["flags"]) == {"SH-2", "SH-3", "SH-4", "SH-5"} and sh["missing"] == {"SH-2": 1}
+
+
+def test_v5_raw_d8_grid_common(tmp_path):
+    def arm(name, tag, latch, d8_force):
+        d = tmp_path / name
+        (d / "provenance").mkdir(parents=True)
+        (d / "provenance" / "d8.json").write_text(json.dumps(
+            {"c2_sha256": kr.C2_SHA256_RUN, "combo": "preset", "k2": "on" if latch else "off",
+             "touch_creep_latch": latch, "controller_tag": tag}), encoding="utf-8")
+        runs = [{"id": f"r{i}", "fails": [], "fault": False, "min_true_cyl_force_kN": d8_force,
+                 "ss_true_att_deg_maxabs": 0.05, "t_ready_s": 50.0} for i in range(576)]
+        (d / "d8_both.json").write_text(json.dumps({"runs": runs}), encoding="utf-8")
+        grid = {"results": [{"key": "k", "runs": [{"pass": True, "fault_periods": [], "event": "e", "offset_s": 0}]}]}
+        for g in ("grid_r67_main.json", "grid_r67_top.json", "grid_r69_top.json", "grid_r69_bottom.json"):
+            (d / g).write_text(json.dumps(grid), encoding="utf-8")
+        return d
+    off = arm("off", "final_C4G2_LAS_K1", False, 30.0)
+    tcl = arm("tcl", "final_C4G2_LAS_K1_TCL", True, 14.0)
+    assert kr._v5_grid(off, tcl)["absolute_pass"]
+    d8 = kr._v5_d8(off, tcl)
+    assert not d8["absolute_pass"] and d8["failure_counts"] == {"min_true_cyl_force_kN": 576}
+    common = kr._v5_common({}, {"off": off, "tcl": tcl})
+    assert set(common["failure_counts"]) == {"events:r79_L1L2.json", "events:clip_r79_L1L2.json",
+                                             "events:clip_r79_L3L4.json", "events:ps7.json", "events:g8"}
+    problems = []
+    out, g = kr.recount_v5_raw({"off": str(off), "tcl": str(tcl)}, problems)
+    assert g == "fail" and any("soil" in p for p in problems)
+
+
+def test_v5_stored_acceptance_outputs():
+    acc = ROOT / "06_analysis/02_control/touch_phase/acceptance"
+    ps7 = ROOT / "06_analysis/02_control/touch_phase/ps7_E.json"
+    if not (acc / "noise/r79_L1L2.json").exists() or not ps7.exists():
+        pytest.skip("stored acceptance outputs not present")
+    r = kr.selftest_v5_stored(acc, ps7)
+    assert r["ok"], r
+
+
+def test_error_value_rule():
+    assert not kr._err({"error": None}) and not kr._err({"x": 1}) and kr._err({"error": "boom"})
+
+
 def test_screen_selftest():
     screen = ROOT / "06_analysis/02_control/k2/screen"
     if not screen.exists():
