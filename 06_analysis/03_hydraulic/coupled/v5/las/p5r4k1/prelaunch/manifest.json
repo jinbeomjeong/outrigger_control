@@ -308,11 +308,6 @@
    "owner": "main session"
   }
  ],
- "template_slots": {
-  "{POOL}": "pcore / ecore per row (compute-scheduler-expert plan)",
-  "{MASK}": "affinity hex mask (compute-scheduler-expert plan)",
-  "{WORKERS}": "harness workers / s9_batch parallel slots (plan)"
- },
  "gs_pass_conditions": {
   "harness": [
    "line count = G-S list (117), no duplicate, no line outside the list",
@@ -328,5 +323,62 @@
    "result.json, controller_commands.npz (t_s, issued_u_m_s), batch.json row entry with p5k_id",
    "las_p5r4_k1_chrono_rows.py gs-check and las_p5r4k1_chrono_judge.py fields: every key path present (values not printed)"
   ]
+ },
+ "placement": {
+  "source": "compute-scheduler-expert plan, relayed by the main session 2026-11-11",
+  "gs_harness": {
+   "pool": "ecore",
+   "affinity": "0x0FFF0000",
+   "workers": 12
+  },
+  "gs_chrono": {
+   "pool": "pcore (12 rows)",
+   "parallel_p": 4,
+   "parallel_e": 0,
+   "schedule": "prelaunch/sched_gs.json"
+  },
+  "main_harness": {
+   "pool": "P+E by mask",
+   "affinity": "0x0FFF5555 (P physical 8 + E 12)",
+   "workers": 20
+  },
+  "main_chrono": {
+   "pcore": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2",
+    "C1",
+    "C2"
+   ],
+   "ecore": [
+    "A5",
+    "A6",
+    "C3",
+    "C4"
+   ],
+   "parallel_p": 4,
+   "parallel_e": 3,
+   "schedule": "prelaunch/sched_main.json",
+   "pairs_same_pool": true
+  }
+ },
+ "schedules": {
+  "sched_gs.json": {
+   "raw_sha256": "8450a86281bdd2edfeea85c3f46ac62e77b925e3c544c211d9347cd7be9aeb1f"
+  },
+  "sched_main.json": {
+   "raw_sha256": "7e499ba82b8e3c718b8de95133b7464a9ee738150e18775481ac99cc91f9e2ac"
+  }
+ },
+ "chrono_batch_plan": {
+  "raw_sha256": "2d1363c1043b0e7b108b9d35516777a6ad9e8ebc5c3a9c248a05d242f329f5a6"
+ },
+ "path2_commands": {
+  "file": "prelaunch/commands_path2.md",
+  "raw_sha256": "e61fa81dd59f057122df6545286fb2e0d397da56456c6bb0e51c5e6b2347f5a6",
+  "note": "written by the main session for path 2; not opened by path 1"
  }
 }

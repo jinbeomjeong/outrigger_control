@@ -3,7 +3,16 @@
 - 규칙: `las_p5r4_k1_rules.md`(`5ee2bac0…`) + rev1(`f39846d6…`) + rev2(`e0a7d1e5…`)와 0절 표의 이어받는 규칙 10개. sha 전체 값은 `manifest.json` `rules`에 있다.
 - 작성: python-expert(경로 1), 2026-11-11. **이 문서의 명령은 하나도 실행하지 않았다.** 다만 `gs_list.json`·`chrono_rows_main.json`은 행 목록만 생성했다(시뮬레이션 0건).
 - 실행 HEAD: `{RUN_HEAD}`. 실행 checkout은 main checkout `C:\workspace\outrigger_control`이고 cwd도 그 루트다.
-- 배치(코어 배정)는 비워 두었다. `{POOL}`(pcore/ecore), `{MASK}`(affinity hex), `{WORKERS}`(동시 실행 수)는 compute-scheduler-expert 배치표로 메인 세션이 채운다.
+- 배치(코어 배정)는 compute-scheduler-expert 배치표(2026-11-11, 메인 세션 전달)로 채웠다.
+
+| 단계 | 풀 | affinity | 동시 실행·옵션 |
+|---|---|---|---|
+| G-S 하네스 117줄 | ecore | `0x0FFF0000` | `--workers 12` |
+| G-S Chrono 12행 | 12행 모두 pcore | s9_batch가 풀로 정함 | `--parallel 4 --schedule prelaunch/sched_gs.json` |
+| 본 하네스 6묶음 | P+E 혼합(마스크) | `0x0FFF5555`(P 물리 8 + E 12) | `--workers 20` |
+| 본 Chrono 12행 | A1~A4·B1·B2·C1·C2 pcore, A5·A6·C3·C4 ecore(짝 6쌍 같은 풀, K-6) | 풀로 정함 | `--parallel 4 --parallel-e 3 --schedule prelaunch/sched_main.json` |
+
+- 스케줄 파일 sha256(복사 시점 raw): `sched_gs.json` `8450a86281bdd2edfeea85c3f46ac62e77b925e3c544c211d9347cd7be9aeb1f`, `sched_main.json` `7e499ba82b8e3c718b8de95133b7464a9ee738150e18775481ac99cc91f9e2ac`(`manifest.json` `schedules`).
 - 셸: PowerShell. Python은 아래 인터프리터 절대경로로 직접 부른다(`conda run` 쓰지 않음: dynamics-dev는 `conda run`과 직접 실행의 해시가 다를 수 있다).
 
 ## 0. 인터프리터·공통 env
@@ -26,7 +35,7 @@ $py = "C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe"
 $gs = "06_analysis\03_hydraulic\coupled\v5\las\p5r4k1\prelaunch\gs_list.json"
 foreach ($b in "Z-0","Z-A","Z-T","Z-S","Z-C","Z-X") {
   & $py -I -B 04_scripts/04_hydraulic/coupled/las_p5r4k1_targeted.py run --bundle $b `
-      --gs-list $gs --workers {WORKERS} --affinity {MASK} 2>&1 |
+      --gs-list $gs --workers 12 --affinity 0x0FFF0000 2>&1 |
       Tee-Object -FilePath "06_analysis\03_hydraulic\coupled\v5\las\p5r4k1\gs\run_GS_$b.log"
 }
 ```
@@ -47,7 +56,7 @@ foreach ($b in "Z-0","Z-A","Z-T","Z-S","Z-C","Z-X") {
 행 목록은 `gs_list.json` `chrono`(argv 포함, 목록 sha256 `9d3a5f200daa6559e0e5abbbe1b421df9d1972be987428bc32f27391b7083602`, main checkout 행 모듈 + Chrono-dev로 생성). 출력 폴더 `07_results/S9/batch_V5-LAS-P5R4-K1-GS_<시각>/` = `{BATCH_GS}`(시작 직후 채움).
 
 ```powershell
-& "C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe" -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run V5-LAS-P5R4-K1-GS --parallel {WORKERS}
+& "C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe" -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run V5-LAS-P5R4-K1-GS --parallel 4 --schedule 06_analysis/03_hydraulic/coupled/v5/las/p5r4k1/prelaunch/sched_gs.json
 & "C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe" -I -X utf8 -u 04_scripts/02_chrono/las_p5r4_k1_chrono_rows.py gs-check {BATCH_GS}
 & "C:\ProgramData\miniforge3\envs\python-dev\python.exe" -I -B 06_analysis/02_control/verif_matrix/scripts/las_p5r4k1_chrono_judge.py `
     --out 06_analysis/03_hydraulic/coupled/v5/las/p5r4k1/prelaunch/gs_fields_chrono.json fields --batch {BATCH_GS}
@@ -55,7 +64,7 @@ foreach ($b in "Z-0","Z-A","Z-T","Z-S","Z-C","Z-X") {
     {BATCH_GS}\progress.log --pattern "\brc=(\d+)" --require-line
 ```
 
-- `--parallel`·`--parallel-e`·`--e-cases`의 실제 값(또는 `--schedule <json>`)은 배치표가 정한다. 짝은 같은 풀 종류(K-6).
+- G-S Chrono는 12행 모두 P 풀(`sched_gs.json`: `e_cases` 없음, `parallel_p` 4). 짝은 같은 풀 종류(K-6).
 
 ## 3. 실행 전 기록과 감사 (11.5 E-6·E-7·E-10)
 
@@ -81,7 +90,7 @@ Z-0 → Z-A → Z-T·Z-S·Z-C → Z-X. 도구가 앞 묶음 비트 예측(BT-0·
 $py = "C:\ProgramData\miniforge3\envs\dynamics-dev\python.exe"
 foreach ($b in "Z-0","Z-A","Z-T","Z-S","Z-C","Z-X") {
   & $py -I -B 04_scripts/04_hydraulic/coupled/las_p5r4k1_targeted.py run --bundle $b `
-      --workers {WORKERS} --affinity {MASK} 2>&1 |
+      --workers 20 --affinity 0x0FFF5555 2>&1 |
       Tee-Object -FilePath "06_analysis\03_hydraulic\coupled\v5\las\p5r4k1\run_$b.log"
   # 각 묶음 뒤: log_errors.py <로그> --require-line 결과 errors 0 확인(S-9). 0이 아니면 다음 묶음을 띄우지 않는다.
 }
@@ -106,7 +115,7 @@ foreach ($b in "Z-0","Z-A","Z-T","Z-S","Z-C","Z-X") {
 행 목록 `chrono_rows_main.json`(목록 sha256 `3fdbf80ee426cb9ef4eeab13d5943d08fbef9b89d9a2ef230f13ce45c4f8de3c`). 출력 폴더 `{BATCH_CHRONO}`(시작 직후 15분 안에 채움).
 
 ```powershell
-& "C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe" -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run V5-LAS-P5R4-K1 --parallel {WORKERS}
+& "C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe" -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run V5-LAS-P5R4-K1 --parallel 4 --parallel-e 3 --schedule 06_analysis/03_hydraulic/coupled/v5/las/p5r4k1/prelaunch/sched_main.json
 & "C:\ProgramData\miniforge3\envs\python-dev\python.exe" -I -B C:\Users\jinbeom\.claude\tools\verif\log_errors.py `
     {BATCH_CHRONO}\progress.log --pattern "\brc=(\d+)" --require-line
 ```
