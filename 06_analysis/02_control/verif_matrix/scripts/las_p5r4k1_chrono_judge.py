@@ -1037,6 +1037,9 @@ def k3_row_problems(row: RowInput) -> list[str]:
     _, values = option_values(argv, ("--expect-controller",))
     if values.get("--expect-controller", spec.tag) != spec.tag:
         problems.append(f"argv --expect-controller {values.get('--expect-controller')!r}")
+    entry_tag = dig(row.entry, "controller")
+    if entry_tag is not MISSING and entry_tag != spec.tag:
+        problems.append(f"batch controller {plain(entry_tag)!r} != {spec.tag!r}")
     return problems
 
 
@@ -1071,13 +1074,8 @@ def k4_row_problems(row: RowInput, analysis: RowAnalysis) -> list[str]:
 
 
 def controller_class(row: RowInput) -> Any:
-    """The controller class name: batch entry ``controller`` (a name or ``{"class": ..}``),
-    else ``c2_setup.k1_forced_block.class``."""
-    value = dig(row.entry, "controller")
-    if isinstance(value, dict):
-        value = value.get("class", MISSING)
-    if isinstance(value, str):
-        return value
+    """The controller class name: ``c2_setup.k1_forced_block.class`` (run_S9 4d165c2; the batch
+    entry ``controller`` is the controller tag, checked in K-3)."""
     return first_found(row.result, (("c2_setup", "k1_forced_block", "class"),
                                     ("c2_setup", "controller_class")))
 

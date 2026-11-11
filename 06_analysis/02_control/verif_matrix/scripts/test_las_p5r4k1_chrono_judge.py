@@ -152,6 +152,35 @@ def test_bt_c_prefix_compares_contents_up_to_the_span_end():
     assert long_run.prefix_sha256(None) != short.prefix_sha256(None)
 
 
+def test_k4_reads_forced_block_dict_and_class():
+    result = make_result(cj.ARM_REF)
+    result["controller_meta"]["slope_clearance_margin"]["settings"] = {
+        "flat_soil_margin_order_gate": True}
+    result["controller_meta"]["touch_creep_latch"] = {"settings": {"enable": False}}
+    result["c2_setup"] = {"k1_order_gate": "preset", "k1_order_gate_effective": True,
+                          "touch_creep_effective": False,
+                          "k1_forced_block": {"requested": "off",
+                                              "class": "outrigger_sim.control.c2.C2Controller",
+                                              "module_sha256": None}}
+    row = cj.RowInput(cj.SPEC_BY_ID["A1"], "A1", result,
+                      {"rc": 0, "controller": "final_C4G2_P3_LAS_K1"})
+    assert cj.k4_row_problems(row, cj.analyze_row(row)) == []
+    result["c2_setup"]["k1_forced_block"]["class"] = "x.K1ForcedBlockC2Controller"
+    assert cj.k4_row_problems(row, cj.analyze_row(row))
+
+
+def test_k3_batch_controller_tag_and_k7_mass_scale():
+    result = make_result(cj.ARM_CAND)
+    result["args"] = {**cj.FIXED_ARGS, "duration": 180.0, "las_candidate": "P5r4",
+                      "mass_scale": 1.1, "expect_controller": "final_C4G2_P3_LAS_K1"}
+    result["mass_scale"] = {"mass_scale": 1.1}
+    entry = {"rc": 0, "controller": "final_C4G2_LAS_K1",
+             "argv": ["python", "run_S9.py", "--las-candidate", "P5r4"]}
+    row = cj.RowInput(cj.SPEC_BY_ID["C4"], "C4", result, entry)
+    assert cj.k7_row_problems(row) == []
+    assert any("batch controller" in text for text in cj.k3_row_problems(row))
+
+
 @pytest.mark.parametrize(("statuses", "expected"), [
     ([cj.STATUS_FAIL], cj.STATUS_FAIL), ([cj.STATUS_UNDECIDABLE], cj.STATUS_UNDECIDABLE),
     ([cj.STATUS_FAIL, cj.STATUS_UNDECIDABLE], cj.STATUS_UNDECIDABLE)])

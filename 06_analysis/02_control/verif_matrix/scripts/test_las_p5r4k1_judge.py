@@ -228,6 +228,23 @@ def test_gs_stage_and_check_report_only_names():
     assert result["ok"] is False
 
 
+def test_chrono_gs_rows_come_from_rows_gs_true(tmp_path):
+    module = tmp_path / "las_p5r4_k1_chrono_rows.py"
+    module.write_text(
+        "ROWS = ()\n"
+        "def rows(gs=False):\n"
+        "    ids = ['A1','A2','A3','A4','A5','A6','B1','B2','C1','C2','C3','C4']\n"
+        "    duration = '10' if gs else '160'\n"
+        "    return [{'p5k_id': i, 'case': 'GS_' + i if gs else i, 'las_candidate': 'P0',\n"
+        "             'argv': ['py', 'run_S9.py', '--duration', duration]} for i in ids]\n",
+        encoding="utf-8")
+    rows, source = gs.chrono_rows(10.0, module)
+    assert "rows(gs=True)" in source and len(rows) == 12
+    assert rows[0]["case"] == "GS_A1" and rows[0]["argv"][-2:] == ["--duration", "10"]
+    rows, _ = gs.chrono_rows(5.0, module)
+    assert rows[0]["argv"][-2:] == ["--duration", "5"]
+
+
 def test_with_duration_replaces_only_duration():
     assert gs.with_duration(["--case", "x", "--duration", "160"], 10.0) == [
         "--case", "x", "--duration", "10"]

@@ -11,8 +11,9 @@ judged values.
           that are R-S keys (in sample) when there is one, else the first unit (sorted).
           Z-X is the ref line of the first Z-T key with the DONE record. The Chrono G-S rows
           are the 6 stages x 2 arms of 16.2 (나) with a short ``--duration``; their argv come
-          from cad-expert's ``04_scripts/02_chrono/las_p5r4_k1_chrono_rows.py`` (``rows()`` or
-          ``ROWS``: dicts with ``p5k_id`` and ``argv``) when that module is there.
+          from cad-expert's ``04_scripts/02_chrono/las_p5r4_k1_chrono_rows.py``
+          ``rows(gs=True)`` (dicts with ``p5k_id``, ``case``, ``argv`` (full list with the
+          interpreter, ``--duration 10``), ``las_candidate``) when that module is there.
           Prints counts, the list sha256 values and the out-of-sample units (keys only).
 ``check`` (16.2 (가) pass conditions) the G-S lines against the list: line count = list
           count, no ``error`` line, every field the harness judge reads present as a key
@@ -141,15 +142,28 @@ def harness_rows(bases: pj.Bases) -> list[dict]:
     return rows
 
 
-def _module_rows(path: Path) -> list[dict] | None:
-    """cad-expert's Chrono row module rows (``rows()`` or ``ROWS``), None when absent."""
+def _module_rows(path: Path) -> tuple[list[dict] | None, str | None]:
+    """cad-expert's G-S rows ``rows(gs=True)`` (12 dicts A1 .. C4, ``--duration 10``) and
+    a problem text (None when they were read; ``ROWS`` has no argv and is not used)."""
     if not path.is_file():
-        return None
+        return None, "pending: cad-expert module las_p5r4_k1_chrono_rows.py"
     spec = importlib.util.spec_from_file_location("las_p5r4_k1_chrono_rows", path)
     module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    rows = module.rows() if callable(getattr(module, "rows", None)) else module.ROWS
-    return [dict(row) for row in rows]
+    try:
+        spec.loader.exec_module(module)
+        rows = module.rows(gs=True)
+    except Exception as exc:  # noqa: BLE001  (reported in the list document, argv left None)
+        return None, f"import or rows(gs=True) failed: {exc!r}"
+    return [dict(row) for row in rows], None
+
+
+def duration_of(argv: list[str]) -> float | None:
+    for i, token in enumerate(argv):
+        if token == DURATION_OPTION and i + 1 < len(argv):
+            return float(argv[i + 1])
+        if token.startswith(f"{DURATION_OPTION}="):
+            return float(token.split("=", 1)[1])
+    return None
 
 
 def with_duration(argv: list[str], duration_s: float) -> list[str]:
@@ -170,18 +184,20 @@ def with_duration(argv: list[str], duration_s: float) -> list[str]:
 
 def chrono_rows(duration_s: float, rows_path: Path = CHRONO_ROWS_PATH) -> tuple[list[dict], str]:
     """16.2 (나): the 12 G-S rows (argv from the row module when it exists)."""
-    module_rows = _module_rows(rows_path)
+    module_rows, problem = _module_rows(rows_path)
     by_id = {str(row.get("p5k_id")): row for row in module_rows or []}
-    source = "pending: cad-expert module las_p5r4_k1_chrono_rows.py" if module_rows is None \
-        else rows_path.as_posix()
+    source = problem or f"{rows_path.as_posix()} rows(gs=True)"
     rows = []
     for stage, ref_id, cand_id in CHRONO_STAGES:
         for arm, row_id in ((pj.ARM_REF, ref_id), (pj.ARM_CAND, cand_id)):
             module_row = by_id.get(row_id)
-            argv = None if module_row is None else with_duration(
-                [str(t) for t in module_row["argv"]], duration_s)
+            argv = None if module_row is None else [str(t) for t in module_row["argv"]]
+            if argv is not None and duration_s != duration_of(argv):
+                argv = with_duration(argv, duration_s)
             rows.append({"stage": stage, "p5k_id": row_id, "arm": arm,
-                         "case": None if module_row is None else f"GS_{module_row.get('case')}",
+                         "case": None if module_row is None else module_row.get("case"),
+                         "las_candidate": None if module_row is None
+                         else module_row.get("las_candidate"),
                          "duration_s": duration_s, "argv": argv})
     return rows, source
 
