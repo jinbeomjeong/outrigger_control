@@ -1,0 +1,830 @@
+{
+ "lk_mode": "l1r",
+ "lk_l0r": null,
+ "lk_match": "1",
+ "lock_records": [
+  {
+   "mode": "l1r",
+   "beta_Pa": 1000000000.0,
+   "rod_dead_length_m": 0.05,
+   "rod_dead_length_source": "yaml",
+   "stroke_m": 0.7,
+   "e_op_m": [
+    0.40109999999999996,
+    0.40109999999999996,
+    0.39089999999999997,
+    0.39089999999999997
+   ],
+   "column_length_m": [
+    0.3489,
+    0.3489,
+    0.3591,
+    0.3591
+   ],
+   "annulus_area_m2": [
+    0.0037699111843077534,
+    0.0037699111843077534,
+    0.0031415926535897933,
+    0.0031415926535897933
+   ],
+   "k_rs_N_m": [
+    10805133.804264126,
+    10805133.804264126,
+    8748517.553856289,
+    8748517.553856289
+   ],
+   "k_oil_N_m": [
+    29424138.68635974,
+    29424138.68635974,
+    21554361.027691368,
+    21554361.027691368
+   ],
+   "k_lock_N_m": [
+    33929017.01324895,
+    33929017.01324895,
+    26402110.96610948,
+    26402110.96610948
+   ],
+   "p_r0_after_extend_Pa": [
+    200000.0,
+    200000.0,
+    200000.0,
+    200000.0
+   ],
+   "p_floor_abs_Pa": 10000.0,
+   "lock_eps_m_s": 1e-06,
+   "release_tau_s": 0.05,
+   "poc": {
+    "poc_pilot_ratio": 3.5,
+    "poc_cracking_Pa": 300000.0,
+    "p_head_back_retract_Pa": 500000.0,
+    "atmosphere_Pa": 101325.0
+   }
+  }
+ ],
+ "rmf_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-aeb1f64260f1bd2d7\\04_scripts\\01_dynamics\\run_mast_flex_c2_check.py",
+ "combo": {
+  "beta_Pa": 1000000000.0,
+  "crawler_kn_scale": 1.0,
+  "k_oil_N_m": [
+   29424139.0,
+   29424139.0,
+   21554361.0,
+   21554361.0
+  ],
+  "k_s_N_m": [
+   216648305.0,
+   216648305.0,
+   205103211.0,
+   205103211.0
+  ],
+  "crawler_kn_per_sphere_N_m": 8333333.333333333,
+  "states": {
+   "on_crawler": {
+    "preparation": {
+     "preload_s": 64.845,
+     "settle_s": 20.0
+    },
+    "state": {
+     "pad_force_kN": [
+      28.774,
+      28.513,
+      21.441,
+      21.414
+     ],
+     "crawler_force_kN": 279.971,
+     "crawler_spheres_active": 12,
+     "crawler_spheres_active_flags": [
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      1,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+     ],
+     "crawler_clearance_mm": -8.077,
+     "motor_stroke_mm": [
+      342.663,
+      342.669,
+      347.915,
+      347.929
+     ],
+     "attitude_deg": [
+      -0.00035,
+      0.1826
+     ],
+     "t_plant_s": 84.845
+    },
+    "measured": {
+     "S_hold2s_kN_per_mm": [
+      [
+       13.1355,
+       -4.503,
+       -1.4653,
+       6.6425
+      ],
+      [
+       -4.4966,
+       13.0215,
+       6.6244,
+       -1.5583
+      ],
+      [
+       -1.1721,
+       6.283,
+       10.702,
+       -6.2144
+      ],
+      [
+       6.2972,
+       -1.2606,
+       -6.2036,
+       10.6531
+      ]
+     ],
+     "S_late_kN_per_mm": [
+      [
+       13.1763,
+       -4.5339,
+       -1.4051,
+       6.6326
+      ],
+      [
+       -4.5275,
+       13.0635,
+       6.6122,
+       -1.4973
+      ],
+      [
+       -1.1549,
+       6.2582,
+       10.7025,
+       -6.2655
+      ],
+      [
+       6.2727,
+       -1.2429,
+       -6.2542,
+       10.6522
+      ]
+     ],
+     "late_window_peak_to_peak_kN_per_mm": [
+      [
+       0.6299,
+       0.5241,
+       0.4305,
+       0.405
+      ],
+      [
+       0.5261,
+       0.6503,
+       0.4173,
+       0.4377
+      ],
+      [
+       0.3375,
+       0.3849,
+       0.3058,
+       0.3243
+      ],
+      [
+       0.3787,
+       0.3343,
+       0.3224,
+       0.3008
+      ]
+     ],
+     "baseline_drift_kN": [
+      0.0003,
+      -0.0002,
+      0.0001,
+      -0.0002
+     ],
+     "crawler_spheres_active_min_per_step": [
+      12,
+      12,
+      12,
+      12
+     ],
+     "pad_force_min_kN_per_step": [
+      [
+       28.894,
+       22.828,
+       19.548,
+       21.315
+      ],
+      [
+       23.106,
+       28.633,
+       21.339,
+       19.444
+      ],
+      [
+       26.489,
+       28.41,
+       21.541,
+       14.443
+      ],
+      [
+       28.675,
+       26.119,
+       14.454,
+       21.514
+      ]
+     ],
+     "crawler_force_change_kN_per_step": [
+      -13.7665,
+      -13.5448,
+      -9.6553,
+      -9.5219
+     ]
+    },
+    "linear_kN_per_mm": {
+     "linear_report_all_rollers": [
+      [
+       12.1421,
+       -4.6522,
+       -0.51,
+       5.7365
+      ],
+      [
+       -4.6522,
+       12.0385,
+       5.7125,
+       -0.605
+      ],
+      [
+       -0.51,
+       5.7125,
+       10.6106,
+       -4.6281
+      ],
+      [
+       5.7365,
+       -0.605,
+       -4.6281,
+       10.5289
+      ]
+     ],
+     "linear_active_set": [
+      [
+       12.8659,
+       -3.9282,
+       -0.5217,
+       5.725
+      ],
+      [
+       -3.9282,
+       12.7625,
+       5.7146,
+       -0.6029
+      ],
+      [
+       -0.5217,
+       5.7146,
+       9.917,
+       -5.3122
+      ],
+      [
+       5.725,
+       -0.6029,
+       -5.3122,
+       9.8542
+      ]
+     ]
+    },
+    "coupling": {
+     "measured_late": {
+      "diag_pair_FR_RL_on_FL_RR": [
+       -5.939,
+       -7.4971
+      ],
+      "diag_pair_FL_RR_on_FR_RL": [
+       -6.0248,
+       -7.4204
+      ],
+      "rear_axle_pair_on_FL_FR": [
+       5.2275,
+       5.1149
+      ],
+      "front_axle_pair_on_RL_RR": [
+       5.1033,
+       5.0298
+      ],
+      "right_side_pair_on_FL_RL": [
+       2.0987,
+       -0.0073
+      ],
+      "all_four_row_sum": [
+       13.8699,
+       13.6509,
+       9.5403,
+       9.4278
+      ],
+      "alpha_adj_rear_RR_from_RL": 0.5844,
+      "alpha_adj_rear_RL_from_RR": 0.5882,
+      "alpha_adj_front_FL_from_FR": 0.3471,
+      "alpha_side_RR_from_FR": 0.0951,
+      "alpha_diag_RR_from_FL": -0.4761,
+      "reciprocity_max_abs_S_minus_ST": 0.3599
+     },
+     "measured_hold2s": {
+      "diag_pair_FR_RL_on_FL_RR": [
+       -5.9683,
+       -7.4642
+      ],
+      "diag_pair_FL_RR_on_FR_RL": [
+       -6.0549,
+       -7.3865
+      ],
+      "rear_axle_pair_on_FL_FR": [
+       5.1772,
+       5.0661
+      ],
+      "front_axle_pair_on_RL_RR": [
+       5.1109,
+       5.0366
+      ],
+      "right_side_pair_on_FL_RL": [
+       2.1395,
+       0.0686
+      ],
+      "all_four_row_sum": [
+       13.8097,
+       13.591,
+       9.5985,
+       9.4861
+      ],
+      "alpha_adj_rear_RR_from_RL": 0.5797,
+      "alpha_adj_rear_RL_from_RR": 0.5833,
+      "alpha_adj_front_FL_from_FR": 0.3458,
+      "alpha_side_RR_from_FR": 0.0968,
+      "alpha_diag_RR_from_FL": -0.4794,
+      "reciprocity_max_abs_S_minus_ST": 0.3453
+     },
+     "linear_report_all_rollers": {
+      "diag_pair_FR_RL_on_FL_RR": [
+       -5.1622,
+       -5.2332
+      ],
+      "diag_pair_FL_RR_on_FR_RL": [
+       -5.2572,
+       -5.1381
+      ],
+      "rear_axle_pair_on_FL_FR": [
+       5.2265,
+       5.1075
+      ],
+      "front_axle_pair_on_RL_RR": [
+       5.2025,
+       5.1315
+      ],
+      "right_side_pair_on_FL_RL": [
+       1.0843,
+       1.0843
+      ],
+      "all_four_row_sum": [
+       12.7164,
+       12.4938,
+       11.1849,
+       11.0323
+      ],
+      "alpha_adj_rear_RR_from_RL": 0.4362,
+      "alpha_adj_rear_RL_from_RR": 0.4396,
+      "alpha_adj_front_FL_from_FR": 0.3864,
+      "alpha_side_RR_from_FR": 0.0503,
+      "alpha_diag_RR_from_FL": -0.4724,
+      "reciprocity_max_abs_S_minus_ST": 0.0
+     },
+     "linear_active_set": {
+      "diag_pair_FR_RL_on_FL_RR": [
+       -4.4499,
+       -5.9151
+      ],
+      "diag_pair_FL_RR_on_FR_RL": [
+       -4.5311,
+       -5.8339
+      ],
+      "rear_axle_pair_on_FL_FR": [
+       5.2033,
+       5.1116
+      ],
+      "front_axle_pair_on_RL_RR": [
+       5.1929,
+       5.122
+      ],
+      "right_side_pair_on_FL_RL": [
+       1.7968,
+       0.4024
+      ],
+      "all_four_row_sum": [
+       14.141,
+       13.946,
+       9.7978,
+       9.6641
+      ],
+      "alpha_adj_rear_RR_from_RL": 0.5357,
+      "alpha_adj_rear_RL_from_RR": 0.5391,
+      "alpha_adj_front_FL_from_FR": 0.3078,
+      "alpha_side_RR_from_FR": 0.0472,
+      "alpha_diag_RR_from_FL": -0.445,
+      "reciprocity_max_abs_S_minus_ST": 0.0
+     }
+    }
+   },
+   "pads_only": {
+    "preparation": {
+     "lift_s": 3.97,
+     "settle_s": 20.0
+    },
+    "state": {
+     "pad_force_kN": [
+      119.754,
+      117.404,
+      72.201,
+      70.756
+     ],
+     "crawler_force_kN": 0.0,
+     "crawler_spheres_active": 0,
+     "crawler_spheres_active_flags": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     "crawler_clearance_mm": 30.027,
+     "motor_stroke_mm": [
+      384.198,
+      384.204,
+      389.45,
+      389.464
+     ],
+     "attitude_deg": [
+      -0.00209,
+      0.19332
+     ],
+     "t_plant_s": 108.815
+    },
+    "measured": {
+     "S_hold2s_kN_per_mm": [
+      [
+       5.9585,
+       -5.947,
+       -6.5006,
+       6.4923
+      ],
+      [
+       -5.9435,
+       5.9594,
+       6.4943,
+       -6.5012
+      ],
+      [
+       -6.5845,
+       6.5689,
+       7.0826,
+       -7.0795
+      ],
+      [
+       6.5685,
+       -6.5829,
+       -7.0805,
+       7.0836
+      ]
+     ],
+     "S_late_kN_per_mm": [
+      [
+       5.8906,
+       -5.9185,
+       -6.4967,
+       6.5223
+      ],
+      [
+       -5.9181,
+       5.8901,
+       6.5233,
+       -6.4962
+      ],
+      [
+       -6.5875,
+       6.6162,
+       7.0562,
+       -7.0822
+      ],
+      [
+       6.6149,
+       -6.5879,
+       -7.0826,
+       7.0564
+      ]
+     ],
+     "late_window_peak_to_peak_kN_per_mm": [
+      [
+       0.3819,
+       0.3601,
+       0.2933,
+       0.2368
+      ],
+      [
+       0.3472,
+       0.396,
+       0.2368,
+       0.2941
+      ],
+      [
+       0.2666,
+       0.2722,
+       0.2206,
+       0.2448
+      ],
+      [
+       0.2632,
+       0.2714,
+       0.2438,
+       0.2203
+      ]
+     ],
+     "baseline_drift_kN": [
+      -0.0041,
+      0.0041,
+      -0.0029,
+      0.0029
+     ],
+     "crawler_spheres_active_min_per_step": [
+      0,
+      0,
+      0,
+      0
+     ],
+     "pad_force_min_kN_per_step": [
+      [
+       119.874,
+       110.643,
+       64.883,
+       70.516
+      ],
+      [
+       112.985,
+       117.525,
+       71.952,
+       63.443
+      ],
+      [
+       112.487,
+       117.162,
+       72.3,
+       62.967
+      ],
+      [
+       119.517,
+       110.138,
+       64.408,
+       70.856
+      ]
+     ],
+     "crawler_force_change_kN_per_step": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "linear_kN_per_mm": {
+     "linear_report_pads_only_6dof": [
+      [
+       4.9782,
+       -4.9782,
+       -5.4672,
+       5.4672
+      ],
+      [
+       -4.9782,
+       4.9782,
+       5.4672,
+       -5.4672
+      ],
+      [
+       -5.4672,
+       5.4672,
+       6.0042,
+       -6.0042
+      ],
+      [
+       5.4672,
+       -5.4672,
+       -6.0042,
+       6.0042
+      ]
+     ],
+     "linear_pads_only_3dof": [
+      [
+       4.9782,
+       -4.9782,
+       -5.4672,
+       5.4672
+      ],
+      [
+       -4.9782,
+       4.9782,
+       5.4672,
+       -5.4672
+      ],
+      [
+       -5.4672,
+       5.4672,
+       6.0042,
+       -6.0042
+      ],
+      [
+       5.4672,
+       -5.4672,
+       -6.0042,
+       6.0042
+      ]
+     ]
+    },
+    "coupling": {
+     "measured_late": {
+      "diag_pair_FR_RL_on_FL_RR": [
+       -12.4152,
+       -13.6705
+      ],
+      "diag_pair_FL_RR_on_FR_RL": [
+       -12.4143,
+       -13.6697
+      ],
+      "rear_axle_pair_on_FL_FR": [
+       0.0256,
+       0.0271
+      ],
+      "front_axle_pair_on_RL_RR": [
+       0.0287,
+       0.027
+      ],
+      "right_side_pair_on_FL_RL": [
+       0.6038,
+       -0.466
+      ],
+      "all_four_row_sum": [
+       -0.0023,
+       -0.0009,
+       0.0027,
+       0.0008
+      ],
+      "alpha_adj_rear_RR_from_RL": 1.0037,
+      "alpha_adj_rear_RL_from_RR": 1.0037,
+      "alpha_adj_front_FL_from_FR": 1.0048,
+      "alpha_side_RR_from_FR": 1.1185,
+      "alpha_diag_RR_from_FL": -1.123,
+      "reciprocity_max_abs_S_minus_ST": 0.0929
+     },
+     "measured_hold2s": {
+      "diag_pair_FR_RL_on_FL_RR": [
+       -12.4476,
+       -13.6634
+      ],
+      "diag_pair_FL_RR_on_FR_RL": [
+       -12.4447,
+       -13.664
+      ],
+      "rear_axle_pair_on_FL_FR": [
+       -0.0083,
+       -0.0069
+      ],
+      "front_axle_pair_on_RL_RR": [
+       -0.0156,
+       -0.0144
+      ],
+      "right_side_pair_on_FL_RL": [
+       0.5453,
+       -0.5106
+      ],
+      "all_four_row_sum": [
+       0.0032,
+       0.009,
+       -0.0125,
+       -0.0113
+      ],
+      "alpha_adj_rear_RR_from_RL": 0.9997,
+      "alpha_adj_rear_RL_from_RR": 0.9994,
+      "alpha_adj_front_FL_from_FR": 0.9979,
+      "alpha_side_RR_from_FR": 1.1046,
+      "alpha_diag_RR_from_FL": -1.1024,
+      "reciprocity_max_abs_S_minus_ST": 0.0839
+     },
+     "linear_report_pads_only_6dof": {
+      "diag_pair_FR_RL_on_FL_RR": [
+       -10.4454,
+       -11.4714
+      ],
+      "diag_pair_FL_RR_on_FR_RL": [
+       -10.4454,
+       -11.4714
+      ],
+      "rear_axle_pair_on_FL_FR": [
+       -0.0,
+       -0.0
+      ],
+      "front_axle_pair_on_RL_RR": [
+       -0.0,
+       -0.0
+      ],
+      "right_side_pair_on_FL_RL": [
+       0.489,
+       -0.537
+      ],
+      "all_four_row_sum": [
+       -0.0,
+       -0.0,
+       -0.0,
+       -0.0
+      ],
+      "alpha_adj_rear_RR_from_RL": 1.0,
+      "alpha_adj_rear_RL_from_RR": 1.0,
+      "alpha_adj_front_FL_from_FR": 1.0,
+      "alpha_side_RR_from_FR": 1.0982,
+      "alpha_diag_RR_from_FL": -1.0982,
+      "reciprocity_max_abs_S_minus_ST": 0.0
+     },
+     "linear_pads_only_3dof": {
+      "diag_pair_FR_RL_on_FL_RR": [
+       -10.4454,
+       -11.4714
+      ],
+      "diag_pair_FL_RR_on_FR_RL": [
+       -10.4454,
+       -11.4714
+      ],
+      "rear_axle_pair_on_FL_FR": [
+       -0.0,
+       -0.0
+      ],
+      "front_axle_pair_on_RL_RR": [
+       -0.0,
+       -0.0
+      ],
+      "right_side_pair_on_FL_RL": [
+       0.489,
+       -0.537
+      ],
+      "all_four_row_sum": [
+       -0.0,
+       0.0,
+       -0.0,
+       -0.0
+      ],
+      "alpha_adj_rear_RR_from_RL": 1.0,
+      "alpha_adj_rear_RL_from_RR": 1.0,
+      "alpha_adj_front_FL_from_FR": 1.0,
+      "alpha_side_RR_from_FR": 1.0982,
+      "alpha_diag_RR_from_FL": -1.0982,
+      "reciprocity_max_abs_S_minus_ST": 0.0
+     }
+    }
+   }
+  },
+  "wall_s": 18.55
+ },
+ "rms_vs_E2_S_hold2s_kN_per_mm": 0.4370896141427816,
+ "maxabs_vs_E2_S_hold2s_kN_per_mm": 0.9078987648135728,
+ "rms_vs_E2_S_late_kN_per_mm": 0.4320064322862229,
+ "maxabs_vs_E2_S_late_kN_per_mm": 0.8956987648135728
+}

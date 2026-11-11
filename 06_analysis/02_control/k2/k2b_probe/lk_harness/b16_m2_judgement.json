@@ -1,0 +1,165 @@
+{
+ "window": "S_hold2s_kN_per_mm (E1/E2 specification); late window reported",
+ "criteria": "rel err <= 0.10 (S_RR_RL, diag pair on RR, loss per kN), abs err <= 0.03 (alpha_adj); discrimination err_on <= 0.5 err_off per item",
+ "chrono": {
+  "S_RR_RL": -9.2691965733625,
+  "diag_pair_FRRL_on_RR": -12.462979601340106,
+  "loss_per_received_kN": 0.25323765582340596,
+  "alpha_adj_rear_RR_from_RL": 0.648828741047812
+ },
+ "items": {
+  "S_RR_RL": {
+   "on": -9.5913,
+   "off": -8.2226,
+   "err_on": 0.03474987547066922,
+   "err_off": 0.11291125019078495,
+   "tolerance": 0.1,
+   "on_pass": true,
+   "off_pass": false,
+   "discrimination_pass": true
+  },
+  "diag_pair_FRRL_on_RR": {
+   "on": -12.9137,
+   "off": -10.6001,
+   "err_on": 0.03616473853583378,
+   "err_off": 0.14947305226591212,
+   "tolerance": 0.1,
+   "on_pass": true,
+   "off_pass": false,
+   "discrimination_pass": true
+  },
+  "loss_per_received_kN": {
+   "on": 0.2507996682857481,
+   "off": 0.22207952467049785,
+   "err_on": 0.009627270990685352,
+   "err_off": 0.12303909168483253,
+   "tolerance": 0.1,
+   "on_pass": true,
+   "off_pass": false,
+   "discrimination_pass": true
+  },
+  "alpha_adj_rear_RR_from_RL": {
+   "on": 0.6441437206178643,
+   "off": 0.5999533030776191,
+   "err_on": 0.004685020429947673,
+   "err_off": 0.04887543797019289,
+   "tolerance": 0.03,
+   "on_pass": true,
+   "off_pass": false,
+   "discrimination_pass": true
+  }
+ },
+ "rms_hold2s": {
+  "on": 0.5646071034512783,
+  "off": 0.6562991915409228
+ },
+ "state": {
+  "on": [
+   {
+    "pad_force_kN": [
+     28.964,
+     28.029,
+     21.071,
+     22.066
+    ],
+    "crawler_force_kN": 279.984,
+    "crawler_spheres_active": 12,
+    "crawler_spheres_active_flags": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1,
+     0,
+     1,
+     1,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0
+    ],
+    "crawler_clearance_mm": -8.157,
+    "motor_stroke_mm": [
+     342.211,
+     342.213,
+     347.683,
+     347.739
+    ],
+    "attitude_deg": [
+     -0.00054,
+     0.18543
+    ],
+    "t_plant_s": 88.925
+   },
+   [
+    "LOCK",
+    "LOCK",
+    "LOCK",
+    "LOCK"
+   ]
+  ],
+  "off": [
+   {
+    "pad_force_kN": [
+     29.293,
+     28.419,
+     20.892,
+     21.825
+    ],
+    "crawler_force_kN": 279.683,
+    "crawler_spheres_active": 12,
+    "crawler_spheres_active_flags": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1,
+     0,
+     1,
+     1,
+     1,
+     1,
+     1,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0
+    ],
+    "crawler_clearance_mm": -8.011,
+    "motor_stroke_mm": [
+     342.411,
+     342.413,
+     347.407,
+     347.461
+    ],
+    "attitude_deg": [
+     -0.00053,
+     0.18008
+    ],
+    "t_plant_s": 82.326
+   },
+   null
+  ]
+ }
+}
