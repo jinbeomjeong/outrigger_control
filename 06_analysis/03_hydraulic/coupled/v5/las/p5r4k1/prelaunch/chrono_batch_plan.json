@@ -1,6 +1,6 @@
 {
  "batch": "V5-LAS-P5R4-K1",
- "note": "las_p5r4k1_chrono_judge.py prelaunch --batch-plan 입력. pool은 compute-scheduler-expert 배치표(2026-11-11): A5·A6·C3·C4 ecore, 그 밖 pcore(짝 6쌍 같은 풀, K-6).",
+ "note": "las_p5r4k1_chrono_judge.py prelaunch --batch-plan 입력. pool은 12행 모두 pcore (사용자 결정 2026-11-11: 규칙 원판 4.3 계획 풀 P, E 행 0; 짝 6쌍 같은 풀, K-6).",
  "rows": [
   {
    "p5k_id": "A1",
@@ -25,12 +25,12 @@
   {
    "p5k_id": "A5",
    "case": "P5K_A5_rigidJ1FR_Kc1_B_top_Fs4_V0_P0",
-   "pool": "ecore"
+   "pool": "pcore"
   },
   {
    "p5k_id": "A6",
    "case": "P5K_A6_rigidJ1FR_Kc1_B_top_Fs4_V0_P5r4",
-   "pool": "ecore"
+   "pool": "pcore"
   },
   {
    "p5k_id": "B1",
@@ -55,12 +55,12 @@
   {
    "p5k_id": "C3",
    "case": "P5K_C3_J2_m1p1_t180_B_top_Fs4_VB_P0",
-   "pool": "ecore"
+   "pool": "pcore"
   },
   {
    "p5k_id": "C4",
    "case": "P5K_C4_J2_m1p1_t180_B_top_Fs4_VB_P5r4",
-   "pool": "ecore"
+   "pool": "pcore"
   }
  ]
 }

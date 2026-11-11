@@ -15,12 +15,14 @@
   "las_k1_rules.md": "2742c9760ad55a87eccbf73e84025aafe0171a3555e1f54ab19fab24d888e4a0",
   "las_k1_rules_rev1.md": "eeee4ab9661babff50117b8ff579aa41e27a98d083f1fc13f46fb5c733e0b4d3",
   "las_k1_rules_adopt.md": "864836d852b4a783a577f01f738536b7c30c574bf4bebb3b0219e68e59b07ea8",
-  "las_k1_rules_adopt2.md": "fb3a5696f24385e81acc9c564500b5e5a0547db45a5335272e7d18400f1e68e8"
+  "las_k1_rules_adopt2.md": "fb3a5696f24385e81acc9c564500b5e5a0547db45a5335272e7d18400f1e68e8",
+  "las_p5r4_k1_rules_rev3.md": "31ba01dff9defb4b7274b27b9df1a427c460fa9ccc5efd84f5a3145e0d3ef8f6"
  },
  "rules_order": [
   "original",
   "rev1",
   "rev2",
+  "rev3 (judges only, RV3-5: run lines do not record it)",
   "+ 10 inherited (rules section 0 table)"
  ],
  "path1_tools": {
@@ -30,25 +32,25 @@
    "crlf_sha256": "16f3562510ab23dc957e52f650bf4db2e2d3f6beb1ea88ef4a3b3fb720449d76"
   },
   "06_analysis/02_control/verif_matrix/scripts/las_p5r4k1_judge.py": {
-   "git_blob": "25ecf6dea7376c47263c41dbbd452df2aedb4fc3",
-   "lf_sha256": "4c07bfef331078fc329bd065e4a78bb73dec1c9bd8e6b8ce1bd1561ce3f1ee3a",
-   "crlf_sha256": "f4ef93d5157df0fcfb03f2af57df73aefb30685b12e2bc130740fd7060d0b44d"
+   "git_blob": "3c43801342bf1505b5ef06130a2f14f626bde44d",
+   "lf_sha256": "d07888ba3993b90978d3e3481ec76753920aa720f5643dca3cefef4f259e5aab",
+   "crlf_sha256": "55f67d3861d8b9a7205bbf6f33967cbf5c36b890b9c8a17bc798503f2459a122"
   },
   "06_analysis/02_control/verif_matrix/scripts/las_p5r4k1_chrono_judge.py": {
-   "git_blob": "3b177d09d4917d2d11257c68433e17ad27a9670f",
-   "lf_sha256": "2b7dcb7b54ed8b8c27fc0ebbeab3aadd47e2f11341fa3d92be1fd3844c1371c4",
-   "crlf_sha256": "8d869e53c47c8d512fdb60cc818930eabb683b30a5c67e711928c1ca59e50756"
+   "git_blob": "ed8f07ddca750de8d7b389b2286c6604c483e637",
+   "lf_sha256": "0b357e386db2de8e3a1e95a254ddbc3ba462c6d509a4abc1e7d3cebee4ac1e73",
+   "crlf_sha256": "00f3613cc069af0b861f248a1c505ae3e745afb41373e19e7fcecdf0e1cfd051"
   },
   "06_analysis/02_control/verif_matrix/scripts/las_p5r4k1_gs.py": {
-   "git_blob": "edbe1d58ee09f36b232f96185f86f4211f036b4b",
-   "lf_sha256": "34ce26f846cecb30c4a1230d2e4680dcbe6066af4c0d8b0da7534b81e1e4c250",
-   "crlf_sha256": "65a833f7c149119947294fc073134d9eab6129d990b44474904622326f843dee"
+   "git_blob": "3f3ff7ab5aca42773d7a4eab78710b680505484e",
+   "lf_sha256": "03d1d0bb06fdf0bb8146c238bcbb315c571930e99508b76f79a0e4b6d33416db",
+   "crlf_sha256": "3d56e63c7c8eede34882f242b0b6788abe5466196a0f44e053b4fdcdcf555aa2"
   }
  },
  "path2_tools_git_blob": {
-  "06_analysis/02_control/verif_matrix/p5k_path2/p5k_recount.py": "41a2bf0dc81e1eaa28bb9365df6b7ae0928d47da",
-  "06_analysis/02_control/verif_matrix/p5k_path2/p5k_chrono_recount.py": "d73ad2b5606e152283bf5ef3bf8cedab95f6939e",
-  "06_analysis/02_control/verif_matrix/p5k_path2/test_p5k_recount.py": "9a189c7312db6388f6c5bd77b653bc3e62d4d990"
+  "06_analysis/02_control/verif_matrix/p5k_path2/p5k_recount.py": "1b85aacca3b74e01cf5223c7f45b8962edbcbba7",
+  "06_analysis/02_control/verif_matrix/p5k_path2/p5k_chrono_recount.py": "8888336ec58a736b9b637583d69636f98e897232",
+  "06_analysis/02_control/verif_matrix/p5k_path2/test_p5k_recount.py": "1f00d1eddabaff85189d7139e0b602d664eb2db3"
  },
  "chrono_code": {
   "04_scripts/02_chrono/las_p5r4_k1_chrono_rows.py": {
@@ -146,14 +148,14 @@
    "crlf_sha256": "1a6270db76339e95de2d41c05b4d4476cf743d53007709e8665928e00b25ec9f"
   },
   "06_analysis/02_control/verif_matrix/scripts/test_las_p5r4k1_judge.py": {
-   "git_blob": "57f772a539469906559ae83ba5969829615ec354",
-   "lf_sha256": "27c2b8de11a7eac1a06c4c0462eb09e276ed82e737465b02f8d9918c77c889cf",
-   "crlf_sha256": "2bb7e27f00a3ff960fb593ffdbe4d427983bdeb8553076f9eead9b51ebd34efe"
+   "git_blob": "5b72ef36c4a6b2b1ab38dab05c4fad1e12a108d0",
+   "lf_sha256": "375fed48c50b532524b44495fb732cbc29b666be09ba5b63ff7a4fc196e67b2d",
+   "crlf_sha256": "07f0740fe9064d3646d29233104bd366b033289a16e4fdcad398719b9be2638d"
   },
   "06_analysis/02_control/verif_matrix/scripts/test_las_p5r4k1_chrono_judge.py": {
-   "git_blob": "bc4bd6fdf8a51c43a93dd313a6300555790d1c46",
-   "lf_sha256": "9f65a65e22e718e1c74d76a190e1c080cdb626d113e1b4e567c4414755968590",
-   "crlf_sha256": "82c8d93b9382a0562ae94d9fb44b6760275fada93983424ccc6361043d14a909"
+   "git_blob": "7a971037184f3c24eedba41ea3e9dd9e06f1dc75",
+   "lf_sha256": "f10a087e8d5c2e789b96f4157549bc94e7d704bf37c003fc5c2498fe831537e1",
+   "crlf_sha256": "dbf863139d3a9b7cc070d945bd495ceccc1b8fbdc7e7eb1d2d71daba1e521a1e"
   }
  },
  "dll": {
@@ -348,37 +350,50 @@
     "A2",
     "A3",
     "A4",
+    "A5",
+    "A6",
     "B1",
     "B2",
     "C1",
-    "C2"
-   ],
-   "ecore": [
-    "A5",
-    "A6",
+    "C2",
     "C3",
     "C4"
    ],
+   "ecore": [],
    "parallel_p": 4,
-   "parallel_e": 3,
+   "parallel_e": 0,
    "schedule": "prelaunch/sched_main.json",
-   "pairs_same_pool": true
+   "pairs_same_pool": true,
+   "estimate_h": "7 - 7.5",
+   "rule": "rules 4.3 pool P (rev3 RV3-4)"
   }
  },
  "schedules": {
   "sched_gs.json": {
-   "raw_sha256": "8450a86281bdd2edfeea85c3f46ac62e77b925e3c544c211d9347cd7be9aeb1f"
+   "lf_sha256": "8450a86281bdd2edfeea85c3f46ac62e77b925e3c544c211d9347cd7be9aeb1f"
   },
   "sched_main.json": {
-   "raw_sha256": "7e499ba82b8e3c718b8de95133b7464a9ee738150e18775481ac99cc91f9e2ac"
+   "lf_sha256": "1b086744406b6413555acf7fc839a684da4958a364a71fd5ccf0247a9d33f5c8"
   }
  },
  "chrono_batch_plan": {
-  "raw_sha256": "2d1363c1043b0e7b108b9d35516777a6ad9e8ebc5c3a9c248a05d242f329f5a6"
+  "lf_sha256": "ae1cd38f7187366a1ac3268aadd7e6e50eec8dd377d791e0235b33eb393bb6be"
  },
  "path2_commands": {
   "file": "prelaunch/commands_path2.md",
-  "raw_sha256": "e61fa81dd59f057122df6545286fb2e0d397da56456c6bb0e51c5e6b2347f5a6",
-  "note": "written by the main session for path 2; not opened by path 1"
- }
+  "lf_sha256": "ea4faef6b415a27620cb888f7897c3a0d2a900704be9125dfda8835c658739fd",
+  "note": "LF sha256 after the main session's rev3 update (2026-11-11, path 2 blobs 0ec945b, --rules-rev3); earlier raw e61fa81d... is superseded"
+ },
+ "updated_for": "master a916e04 (rev3 judges + path 2 rev3 merged), python-expert 2026-11-11; run_head is still the slot for the run HEAD commit",
+ "sha_conventions": {
+  "path1_tools / chrono_code / harness_imported_tools / tests_allowed_dirty": "git_blob = git blob id of the LF content; lf_sha256 = sha256 of the LF content (= the main checkout file, -text, LF); crlf_sha256 = the same content with CRLF (reference only, not used by any expectation)",
+  "path2_tools_git_blob": "git blob ids (git rev-parse HEAD:<path>, contents not opened)",
+  "schedules / chrono_batch_plan": "lf_sha256 = sha256 of the LF content",
+  "path2_commands": "see its note (filled by the main session)",
+  "rules": "LF sha256 = the .sha256 seal values",
+  "stored_files_raw_sha256": "raw bytes of the stored v5 files (rules appendix A convention)",
+  "appendix_lists / grid_label_lists / gs / chrono_main list sha256": "list digests of their own rules (sorted keys or compact JSON rows, LF after each)",
+  "expect_shas": "--expect-judge-sha / --expect-tool-sha are the LF sha256 of the judges"
+ },
+ "prelaunch_tracking": "rev3 RV3-3: the prelaunch folder is untracked in the run HEAD commit (git rm --cached + .git/info/exclude); the 16.4 slots are filled in the untracked files"
 }
