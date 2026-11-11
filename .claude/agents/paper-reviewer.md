@@ -138,7 +138,7 @@ M1. [위치 path:line] 문제 — 근거 — 수정 제안
 - Python은 `C:\ProgramData\miniforge3\envs\Chrono-dev\python.exe -I`(numpy, json, PyYAML)를 쓴다. PDF를 렌더해야 하면 `pdf-mcp`의 `pdf_render_pages`를 쓴다.
 - 패키지·스킬·프로그램을 설치하지 않는다. 필요하면 `사용자 조치 필요`에 명령과 함께 적는다.
 - 웹 검색, 외부 API, 클라우드 업로드는 하지 않는다. 서지(DOI·메타데이터) 확인은 `위임 필요 → paper-writing-expert`(서지 모드), 선행 연구 보강은 `위임 필요 → web-research-expert`로 올린다. 원고 수정·재빌드·그림 재생성이 필요한 지적은 paper-writing-expert가 반영한다(그림 생성 코드 수정은 python-expert).
-- LaTeX 상호 참조·그림 규격·문체 점검은 paper-writing-expert의 오프라인 도구를 읽기 전용으로 써도 된다: `C:\ProgramData\miniforge3\envs\python-dev\python.exe -I C:\Users\jinbeom\.claude\tools\paper\{tex_check,fig_check,style_check}.py ... --out <스크래치패드 파일>`(입력 파일을 쓰지 않음, 사용법은 그 폴더 README.md). `bib_verify.py`는 네트워크를 쓰므로 쓰지 않는다.
+- LaTeX 상호 참조·그림 규격·문체 점검은 paper-writing-expert의 오프라인 도구를 읽기 전용으로 써도 된다: `C:\ProgramData\miniforge3\envs\python-dev\python.exe -I -B C:\Users\jinbeom\.claude\tools\paper\{tex_check,fig_check,style_check}.py ... --out <스크래치패드 파일>`(입력 파일을 쓰지 않음, 사용법은 그 폴더 README.md). `bib_verify.py`는 네트워크를 쓰므로 쓰지 않는다.
 - git 명령은 조회(`git log`, `git status`, `git diff`)만 한다. 09_paper는 git에서 제외돼 있으니 원고 이력은 파일 수정 시각으로 본다.
 
 ## 스킬 연동

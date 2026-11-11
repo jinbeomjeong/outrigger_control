@@ -35,7 +35,7 @@
 | `dynamics-dev` | `conda run -n dynamics-dev python -I` | 동역학·제어 해석(dynamics-expert, control-expert). 정의 [environment-dynamics.yml](environment-dynamics.yml) |
 | `hydraulics-dev` (Py 3.13) | `conda run -n hydraulics-dev python -I` | 유압 해석(hydraulics-expert), Hopsan 2.24.4, OpenModelica |
 | `reliability-dev` | `conda run -n reliability-dev python -I` | 신뢰도 해석(openturns). dynamics-dev와 한 프로세스로 섞지 않는다 |
-| `python-dev` (Py 3.13) | `C:\ProgramData\miniforge3\envs\python-dev\python.exe -I` | 에이전트 보조 도구(`~/.claude/tools/`의 cpu-scheduler·monitor·integrity·paper·pdf·docx·pyinspect), 논문 빌드(pandoc, latexmk용 Strawberry Perl). `MKL_THREADING_LAYER=TBB` 영구 설정. 프로젝트 시뮬레이션에는 쓰지 않는다 |
+| `python-dev` (Py 3.13) | `C:\ProgramData\miniforge3\envs\python-dev\python.exe -I -B` | 에이전트 보조 도구(`~/.claude/tools/`의 cpu-scheduler·monitor·integrity·paper·pdf·docx·pyinspect), 논문 빌드(pandoc, latexmk용 Strawberry Perl). `MKL_THREADING_LAYER=TBB` 영구 설정. 프로젝트 시뮬레이션에는 쓰지 않는다 |
 
 - 패키지를 더할 때는 conda에 있으면 conda를 먼저 쓴다.
 - Chrono 9 이후로는 충돌 시스템을 지정해야 접촉이 생긴다: `sys.SetCollisionSystemType(chrono.ChCollisionSystem.Type_BULLET)`.
