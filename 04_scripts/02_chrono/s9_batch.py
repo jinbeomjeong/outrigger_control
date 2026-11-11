@@ -279,6 +279,9 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     # K-2 V-7 (cad 2026-11-10, k2_chrono_rows.py; k2_touch_creep_rules.md 3.6, record only): FINAL-REP J1 / J2 B top
     # F_s 4 x {--k2 off, on}, --k1-order-gate off, tags final_C4G2_LAS / final_C4G2_LAS_TCL
     out.update(_k2_module().k2_batches(sys.modules[__name__]))
+    # LAS-b P5r4 + K1 (cad 2026-11-11, las_p5r4_k1_chrono_rows.py; las_p5r4_k1_rules.md 4.3 / 16.2): V5-LAS-P5R4-K1
+    # (12 judge rows, --las-candidate P0 / P5r4 pairs on the _LAS_K1 tags) + V5-LAS-P5R4-K1-GS (the G-S dry run)
+    out.update(_p5k_module().p5k_batches(sys.modules[__name__]))
     return out
 
 
@@ -316,6 +319,15 @@ def _k2_module():
     finally:
         sys.path.remove(str(HERE))
     return k2_chrono_rows
+
+
+def _p5k_module():
+    sys.path.insert(0, str(HERE))
+    try:
+        import las_p5r4_k1_chrono_rows  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    return las_p5r4_k1_chrono_rows
 
 
 def _las_k1_module():
@@ -1409,6 +1421,8 @@ ENTRY_META_KEYS = ("note", "priority", "controller", "source_run", "pair_case", 
                    "las_candidate", "k1_candidate", "k1_order_gate",
                    "rem_key", "role", "k1_forced_block", "pair_set", "argv_base_case", "argv_diff_option",
                    "source_rows", "rem_mass_scale",
+                   "p5k_id", "p5k_stage", "p5k_gs", "p5k_family", "p5k_crawler", "p5k_mass_scale", "p5k_duration_s",
+                   "p5k_judge_duration_s", "p5k_rules",
                    "stored_result", "stored_pool", "hash_comparable", "stored_argv_check", "stage3_controller")
 """Row keys copied into the batch.json case entries (when present)."""
 
@@ -1540,7 +1554,8 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
               e_cases: list[str] | None = None, order: str = "given",
               order_cases: list[str] | None = None, rv6_k: float | None = None, rv6_dir: str | None = None,
               row_filter: dict[str, set[str]] | None = None, controller_check: bool = True,
-              resume: str | None = None, las_off: bool = False, allow_mixed_hull: bool = False) -> Path:
+              resume: str | None = None, las_off: bool = False, allow_mixed_hull: bool = False,
+              rerun_of: str | None = None) -> Path:
     """Run the batch ``name`` with ``parallel`` P-pool slots and ``parallel_e`` E-pool slots
     (:func:`schedule_cases`). Each case process gets ``OUTRIGGER_PLACEMENT`` of its pool. ``rv6_k``: X6-rb ratio of
     RV6; ``row_filter`` / ``only``: :func:`select_rows`; ``controller_check`` False drops ``--expect-controller``.
@@ -1637,6 +1652,8 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
             entry = {"case": c["case"], "argv": c["argv"], "rc": rc, "wall_s": wall, "est_s": c["est_s"], "pool": pool}
             entry.update({k: c[k] for k in ENTRY_META_KEYS if c.get(k) is not None})  # note: G6P rows (2026-10-28)
             entry.update(launch_env.get(c["case"], {}))  # criteria rev. 12a: the child env value actually set
+            if rerun_of is not None or c.get("p5k_id"):  # P5r4+K1 rules 10.1 / rev1: the key on every P5K row
+                entry["rerun_of"] = rerun_of
             if code_at_launch.get(c["case"]) is not None:  # RV6 / FINAL (2026-10-30)
                 entry["code_at_launch"] = code_at_launch[c["case"]]
                 entry["controller_check"] = bool(controller_check)
@@ -1752,6 +1769,9 @@ def check_sources(name: str, rows: list[dict]) -> dict:
         sys.path.remove(str(HERE))
     res = []
     for c in rows:
+        if c.get("p5k_id"):  # V5-LAS-P5R4-K1 / -GS: new rows, build check (las_p5r4_k1_chrono_rows.argv_check)
+            res.append(_p5k_module().argv_check(c, sys.modules[__name__]))
+            continue
         if c.get("las_family"):  # V5-LAS-CHRONO: new rows, build check of the argv (las_chrono_rows.argv_check)
             res.append(_las_module().argv_check(c, sys.modules[__name__]))
             continue
@@ -1777,6 +1797,9 @@ def check_sources(name: str, rows: list[dict]) -> dict:
         chk = r9.source_args_check(c["argv"][len(RUN):], ROOT / "07_results" / "S9" / c["source_run"])
         chk = expected_diff_check(chk, c.get("source_expected_diffs"))
         res.append({"case": c["case"], **chk})
+    p5k = _p5k_module()
+    if name in (p5k.P5K_BATCH, p5k.P5K_GS_BATCH):  # rules 4.3 / K-7: 12 rows, pairs differ in --las-candidate only
+        res.append(p5k.batch_check(rows))
     ok = not any(r["status"] == "differs" for r in res)
     if name == V5_STAGE3_BATCH:  # stage3_impl_spec.md 4: 34 rows, no duplicate name
         names = [c["case"] for c in rows]
@@ -1877,7 +1900,8 @@ def main(argv) -> None:
         only = (a.only or []) + (read_only_file(a.only_file) or [])
         run_batch(a.batch, only=only or None, rv6_k=a.rv6_k, rv6_dir=a.rv6_dir,
                   row_filter=parse_row_filter(a.row_filter), controller_check=not a.no_controller_check,
-                  resume=a.resume, las_off=a.las_off, allow_mixed_hull=a.allow_mixed_hull, **schedule_args(a, argv))
+                  resume=a.resume, las_off=a.las_off, allow_mixed_hull=a.allow_mixed_hull, rerun_of=a.rerun_of,
+                  **schedule_args(a, argv))
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -1926,6 +1950,9 @@ def build_parser() -> argparse.ArgumentParser:
                         "stops when a finished row's batch.json hull_hook_requested ('pre-switch' when missing; "
                         "progress.log START line when the row has no entry) differs from this launch's request, "
                         "warns when its code_at_launch commit differs or nothing recorded its request")
+    r.add_argument("--rerun-of", default=None, metavar="BATCH_FOLDER",
+                   help="record only: batch.json cases[].rerun_of = this folder (a one-time rerun of failed rows in a "
+                        "new batch, P5r4+K1 rules 10.1); every V5-LAS-P5R4-K1 row gets the key (None without it)")
     r.add_argument(MIXED_HULL_ARG, dest="allow_mixed_hull", action="store_true",
                    help="--resume: continue despite a different hull hook request (recorded in batch.json "
                         "resume_check and progress.log RESUME_MIXED_HULL)")
