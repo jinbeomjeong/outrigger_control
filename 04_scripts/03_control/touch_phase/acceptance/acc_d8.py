@@ -27,6 +27,11 @@ K-2 (``06_analysis/02_control/k2/k2_touch_creep_rules.md`` 9.1-3), D8x mode only
   With ``--k2`` or ``--aug`` every run adds the ``k2`` block (``04_scripts/03_control/k2/k2_record.py``:
   ``touch_creep_latch``, latches, SH-1, SH-2, 5.3 values, I-9 ``aug`` identity and valve-open shares) and the meta
   ``d8x.k2`` / ``d8x.aug``; the default output is ``ra_<k1>[_k2<k2>][_aug<arm>].json``.
+
+Exit code (both modes, K-2 post-run audit 2026-11-11 "acc_d8.py:284,441"): a case that raises is kept as an
+``{"id", "error", "tb"}`` row and the batch goes on; the output file and the last ``done ... errors N`` line are
+written as before. Then the process ends with 0 when no row has ``error`` and with ``EXIT_ROW_ERRORS`` (2) when
+one or more do, so a runner sees the failure in the return code. ``--allow-errors`` keeps the old exit 0.
 """
 from __future__ import annotations
 
@@ -70,6 +75,8 @@ D8X_BETAS_PA = (0.69e9, 1.6e9)
 D8X_RUN_KEYS = ("id", "cfg", "min_true_cyl_force_kN", "min_true_cyl_force_substep_kN", "t_ready_s",
                 "t_touch_s", "t_crawler_liftoff_s", "ss_true_att_deg_maxabs", "max_pressure_bar", "fails",
                 "guard_active_s", "s_motor_max_mm")
+EXIT_ROW_ERRORS = 2
+"""Exit code when one or more rows carry ``error`` (unless ``--allow-errors``)."""
 _SERIES: dict = {}
 
 
@@ -302,6 +309,8 @@ def _parse_args() -> argparse.Namespace:
     ap.add_argument("--levels", default=None, help="D8x: comma list of auger levels to run (V-4: top)")
     ap.add_argument("--series-dir", dest="series_dir", type=Path, default=None,
                     help="D8x with --k2 / --aug: folder of the per-row 1 ms series (default <out stem>_series)")
+    ap.add_argument("--allow-errors", dest="allow_errors", action="store_true",
+                    help=f"exit 0 even when rows carry 'error' (default: exit {EXIT_ROW_ERRORS})")
     args = ap.parse_args()
     d8x_only = (args.stages, args.k1, args.k2, args.aug, args.keys_file, args.levels, args.series_dir)
     if args.points is None and any(value is not None for value in d8x_only):
@@ -401,7 +410,19 @@ def _pop_module_lists(runs: list[dict]) -> dict[str, list[str]]:
     return lists
 
 
-def main() -> None:
+def count_error_rows(runs: list[dict]) -> int:
+    """Number of rows that hold an ``error`` (a case that raised or a harness run that failed)."""
+    return sum("error" in run for run in runs)
+
+
+def exit_code_for(error_rows: int, allow_errors: bool) -> int:
+    """0 when no row failed or failures are allowed, else ``EXIT_ROW_ERRORS``."""
+    if error_rows == 0 or allow_errors:
+        return 0
+    return EXIT_ROW_ERRORS
+
+
+def main() -> int:
     args = _parse_args()
     if args.points is not None:
         os.environ[D8X_K1_ENV] = args.k1  # inherited by the spawned workers
@@ -438,8 +459,10 @@ def main() -> None:
         meta["d8x"]["module_files_by_sha256"] = _pop_module_lists(runs)
     doc = {"meta": meta, "runs": runs}
     args.out.write_text(json.dumps(doc, indent=1, default=float), encoding="utf-8")
-    print("done", args.out, "errors", sum("error" in r for r in doc["runs"]), flush=True)
+    error_rows = count_error_rows(doc["runs"])
+    print("done", args.out, "errors", error_rows, flush=True)
+    return exit_code_for(error_rows, args.allow_errors)
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
