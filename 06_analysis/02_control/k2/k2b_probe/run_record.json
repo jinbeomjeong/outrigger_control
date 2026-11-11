@@ -1,0 +1,56 @@
+{
+ "what": "K-2b probes E2 (Chrono L1-R influence matrix S) and E4 (fdown3.5 L1-R start snapshot rebuild); record / diagnosis only, no sealed judgement",
+ "spec": "06_analysis/02_control/k2/judgement/k2_dyn_sensitivity.md (main checkout, untracked) 'meta session recommendations' E2 / E4",
+ "date": "2026-11-11",
+ "agent": "cad-expert",
+ "git_head_at_start": "da5e01bedc8e840b604f18ce1dc491ab6b17b210",
+ "branch": "worktree-agent-af9c9e76e46c73149",
+ "interpreter": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe -I (Python 3.12.15, pychrono 10.0.0)",
+ "env": {"OUTRIGGER_ROD_SIDE_MECHANICS": "one_sided_parallel (set by the scripts)", "OMP_WAIT_POLICY": "PASSIVE", "OPENBLAS_NUM_THREADS": "1", "MKL_NUM_THREADS": "1", "chrono_threads": 1},
+ "placement": {"mask": "0x0FFF0000", "cores": "E-cores 16-27", "how": "Start-Process ProcessorAffinity + psutil cpu_affinity in the script", "concurrency": "10 processes in the first wave (6 E2 + 2 E4 build + 2 E4 check), 6 in the E2 rerun", "reservation": "reserve.py r-20261111100512-271faa (owner cad-E2E4, 10:05-10:21), released"},
+ "scripts": {
+  "04_scripts/02_chrono/k2b_probe/e2_influence_step.py": "d43f328603e7cd6a49515e264c72daf7a96cec4b0c7450832d2ba0c72e133234",
+  "04_scripts/02_chrono/k2b_probe/e2_summary.py": "6b097d1101229513beb3ea42b92440a048e3293d07ab2b2532d2397da2a0899c",
+  "04_scripts/02_chrono/k2b_probe/e2_linear_check.py": "a2bf878062bd274af7f3dd7e0af3a32bd4bb781ee0a480964427c98235adf5f0",
+  "04_scripts/02_chrono/k2b_probe/e4_fdown_snapshot.py": "e09cbcac5cc5efb84d9698ab9e85d9a8ce38ea5a2945dba47c530ab11f8ff40c"
+ },
+ "script_version_note": "E2/<case> results were produced by e2_influence_step.py sha a3eb0805... (the committed d43f3286... only adds the record fields base_crawler_normals_N / end_crawler_normals_N). E2_geom/RR (committed version) reproduces E2/RR: same base_state_sha256 and the same RR column to all printed digits.",
+ "first_wave_failure": "E2 first wave 10:05-10:09 failed after the simulation in post-processing (base window mask on a shorter array, IndexError; logs/E2_*.err); fixed and rerun as E2r2 10:12-10:16",
+ "commands": {
+  "E2": "python -I 04_scripts/02_chrono/k2b_probe/e2_influence_step.py <FL|FR|RL|RR|diagFRRL|common> --out 06_analysis/02_control/k2/k2b_probe/E2",
+  "E2_geom": "python -I 04_scripts/02_chrono/k2b_probe/e2_influence_step.py RR --out 06_analysis/02_control/k2/k2b_probe/E2_geom",
+  "E2_summary": "python -I 04_scripts/02_chrono/k2b_probe/e2_summary.py 06_analysis/02_control/k2/k2b_probe/E2",
+  "E2_linear": "python -I 04_scripts/02_chrono/k2b_probe/e2_linear_check.py",
+  "E4_build_p8": "python -I 04_scripts/02_chrono/k2b_probe/e4_fdown_snapshot.py build --name S6_crawler_top_fdown3.5_k2bE4p8 --ramp-shape poly345 --ramp-s 8.0 --settle-s 125.5 --states 06_analysis/02_control/k2/k2b_probe/E4/states --out 06_analysis/02_control/k2/k2b_probe/E4/build_p8",
+  "E4_build_hc4": "python -I 04_scripts/02_chrono/k2b_probe/e4_fdown_snapshot.py build --name S6_crawler_top_fdown3.5_k2bE4hc4 --ramp-shape halfcos --ramp-s 4.0 --settle-s 125.5 --states 06_analysis/02_control/k2/k2b_probe/E4/states --out 06_analysis/02_control/k2/k2b_probe/E4/build_hc4",
+  "E4_check": "python -I 04_scripts/02_chrono/k2b_probe/e4_fdown_snapshot.py check --name <snapshot> --floor <fdown3.5|k2pp025> --hold <10|20> --states <dir> --out 06_analysis/02_control/k2/k2b_probe/E4/check"
+ },
+ "E4_new_snapshot": {
+  "name": "S6_crawler_top_fdown3.5_k2bE4p8",
+  "installed_in": "07_results/states_L1R (main checkout; copied, existing files untouched)",
+  "npz_sha256": "9d5a90ad5c3c326be3085da35342185dcffb3c72005f85143690adfc9bac206c",
+  "meta_sha256": "8aeecb7317d259dabd1c546ef5e0b6c0f8430552df683c620eeec5eeb8600a0c",
+  "procedure": "analytic crawler_slope_pose, crawler anchor bushings (Q12) at zero deformation, in-plane gravity ramp poly345 8.0 s, settle 125.5 s (t = 133.5 s at save)",
+  "params_sha256": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+  "use": "new bundles only; the old S6_crawler_top_fdown3.5 (npz 8f93d107...) stays for earlier results and reproductions",
+  "not_installed": "S6_crawler_top_fdown3.5_k2bE4hc4 (npz 77cd7485...) kept only in E4/states as the comparison"
+ },
+ "wall_s": {"E2_each": "196-210 s for 29.5 s simulated", "E4_build_p8": 794.5, "E4_build_hc4": 768.9, "E4_check_10s": "66-67 s", "E4_check_20s": "111-113 s"},
+ "E2_b16": {
+  "what": "E2 repeated at beta 1.6 GPa (user-approved addition 2026-11-11): evidence whether the harness option lock_stiffness='l1r' can be a judgement arm",
+  "git_head_at_start": "7636e0b00c09dfb30bb0417cb3c7b3c029f7fc09",
+  "script_sha256": {"e2_influence_step.py": "37988be53f928a769fee9c84f65608e71176f5fb6825142216f8f6db49b87722",
+                    "e2_summary.py": "e4c6ef2d426126f98210b0f3a79e724b95491dc2aa7c4e65630cb51fe691d56e",
+                    "e2_linear_check.py": "6b229eb558572a71c9cbd167e0f95445a3a0d23f68940be8ec8a26fef18f45ca"},
+  "beta_path": "run_S6C bundle-C plant path: pad kn from reference L1_beta_sensitivity_top/beta_1.6e+09/k_L1_N_m (FL/FR 3.86745e7, RL/RR 2.95229e7 N/m), actuator.oil_bulk_modulus_eff_Pa 1.6e9 (L1-R machine k_h / k_r recomputed; k_lock FL/FR 4.9624e7, RL/RR 3.9215e7 N/m), crawler bushing kt held at the beta 1.0 value (crawler_bushing_kt_scale 1.50128, C-R11), snapshot S6_crawler_top_flat re-tagged after the dyn rev. 37 5.24.3 legs-unloaded check (passed)",
+  "commands": {"run": "python -I 04_scripts/02_chrono/k2b_probe/e2_influence_step.py <case> --beta 1.6 --out 06_analysis/02_control/k2/k2b_probe/E2_b16",
+               "summary": "python -I 04_scripts/02_chrono/k2b_probe/e2_summary.py 06_analysis/02_control/k2/k2b_probe/E2_b16",
+               "linear": "python -I 04_scripts/02_chrono/k2b_probe/e2_linear_check.py E2_b16"},
+  "placement": {"mask": "0x0FFF0000", "concurrency": "2 waves (RR, RL, FR, diagFRRL / FL, common) while the HSH harness batch (python-expert, reservation r-20261111103548-4fdc69) used the same E-cores; no own reservation (481.8 s total, < 30 min)"},
+  "env": {"OMP_WAIT_POLICY": "PASSIVE", "OPENBLAS_NUM_THREADS": "1", "MKL_NUM_THREADS": "1", "chrono_threads": 1, "dt_s": 2e-4},
+  "time": "11:07:46-11:15:48 (+09:00)",
+  "wall_s_each": "224-253 s for 29.0 s simulated",
+  "warnings": "RuntimeWarning saturation stop time 0.002 s outside 10 dt .. 2 c_n / k_n (FL/FR 1.78 ms): the expected beta 1.6 warning of bundle C (verify.s6_bundle_c EXPECTED_SATURATION_WARNING)",
+  "base_identical": true
+ }
+}

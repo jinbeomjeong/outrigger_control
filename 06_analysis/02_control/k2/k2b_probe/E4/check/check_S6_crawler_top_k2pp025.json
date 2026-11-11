@@ -1,0 +1,70 @@
+{
+ "experiment": "K-2b E4 check",
+ "snapshot": "S6_crawler_top_k2pp025",
+ "states": "C:\\workspace\\outrigger_control\\07_results\\states_L1R",
+ "npz_sha256": "be765f360d4319e499768d6d5364a2cca6f34a540955d6210886e9cc10587014",
+ "snapshot_time_s": 68.5000000000269,
+ "hold_s": 10.0,
+ "identity": {
+  "git_head": "da5e01bedc8e840b604f18ce1dc491ab6b17b210",
+  "script": "04_scripts/02_chrono/k2b_probe/e4_fdown_snapshot.py",
+  "script_sha256": "e09cbcac5cc5efb84d9698ab9e85d9a8ce38ea5a2945dba47c530ab11f8ff40c",
+  "python": "3.12.15",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "pychrono": "10.0.0",
+  "params_sha256": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+  "rod_side_mechanics": "one_sided_parallel",
+  "threads": {
+   "OPENBLAS_NUM_THREADS": "1",
+   "MKL_NUM_THREADS": "1",
+   "OMP_WAIT_POLICY": "PASSIVE",
+   "chrono": 1
+  },
+  "placement": {
+   "mask": "0xfff0000",
+   "cpus": [
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+   ]
+  },
+  "dt_s": 0.0002
+ },
+ "rates": {
+  "first_window_rms_deg_s": [
+   0.0005483979795973828,
+   0.0055020551320995445
+  ],
+  "first_window_pass": true,
+  "max_window_rms_deg_s": [
+   0.0005680269820507588,
+   0.005610950821552023
+  ],
+  "min_window_rms_deg_s": [
+   0.0004715114717358106,
+   0.004678893983142792
+  ],
+  "first_quiet_window_start_s": 0.0,
+  "pitch_peak_hz": 0.6999999999767624,
+  "pitch_amp_first_half_deg_s": 0.00808699009659491,
+  "pitch_amp_second_half_deg_s": 0.007284843849588364,
+  "mean_rate_deg_s": [
+   6.252376055438567e-06,
+   5.839909764582759e-05
+  ],
+  "limit_deg_s": 0.01,
+  "window_s": 2.0
+ },
+ "timing": {
+  "wall_s": 66.76817879998998
+ }
+}

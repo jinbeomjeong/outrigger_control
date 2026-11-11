@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\workspace\outrigger_control\.claude\worktrees\agent-af9c9e76e46c73149\04_scripts\02_chrono\k2b_probe\e2_influence_step.py", line 276, in <module>
+    main()
+  File "C:\workspace\outrigger_control\.claude\worktrees\agent-af9c9e76e46c73149\04_scripts\02_chrono\k2b_probe\e2_influence_step.py", line 271, in main
+    res = run(a.case, a.out / a.case, int(a.mask, 16))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\workspace\outrigger_control\.claude\worktrees\agent-af9c9e76e46c73149\04_scripts\02_chrono\k2b_probe\e2_influence_step.py", line 256, in run
+    "cr_n_pos_base": int(a["cr_n_pos"][base_win].min()),
+                         ~~~~~~~~~~~~~^^^^^^^^^^
+IndexError: boolean index did not match indexed array along axis 0; size of axis is 29525 but size of corresponding boolean axis is 27025
