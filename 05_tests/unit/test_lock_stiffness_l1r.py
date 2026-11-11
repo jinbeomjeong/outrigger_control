@@ -202,6 +202,77 @@ def test_lock_release_and_relock_follow_the_l1r_rules() -> None:
     assert state["fcap"][0] == pytest.approx(expected_cap, rel=1e-12)
 
 
+def _harness_locked_pad_forces(params, sref: float, deflections: np.ndarray,
+                               p_r0: float) -> np.ndarray:
+    """Pad force of the harness locked leg over a deflection sweep (rod weight 0, no friction)."""
+    ko, ks = params.head_stiffness_N_m, params.outer_stiffness_N_m
+    lkp = np.array([1e-6, 0.05, params.floor_gauge_Pa, params.poc_pilot_ratio,
+                    params.poc_cracking_Pa, params.p_head_back_retract_Pa])
+    state = _lock_state()
+    krs = np.array([params.rod_stiffness_N_m])
+    gax0 = sref - deflections[0]
+    x0 = rmf._rod_position(ks, 0.0, gax0, ko, sref, 0.0, False, 0.0, 0.0, 0.0)
+    rmf._update_rod_lock(0, 0.0, DT_S, x0, ko * (sref - x0), lkp,
+                         np.array([params.head_area_m2]), np.array([params.annulus_area_m2]),
+                         np.array([p_r0]), krs, state["rlock"], state["xlk"], state["fcap"],
+                         state["frod"], state["frel"], state["tdec"], state["rdir"])
+    forces = []
+    for deflection in deflections:
+        gax = sref - deflection
+        x = rmf._rod_position(ks, 0.0, gax, ko, sref, 0.0, True, krs[0], state["xlk"][0],
+                              state["fcap"][0])
+        forces.append(ks * max(x - gax, 0.0))
+    return np.asarray(forces)
+
+
+def _l1r_locked_pad_forces(params, deflections: np.ndarray) -> np.ndarray:
+    """Normal force of ``rod_chamber.RodChamberLeg`` (mechanics on, no predictor) over the sweep."""
+    from outrigger_sim.hydraulics.rod_chamber import (
+        RodChamberLeg,
+        RodChamberLegInput,
+        RodChamberOptions,
+    )
+
+    leg = RodChamberLeg(params, RodChamberOptions(predictor=False))
+    forces = []
+    for k, deflection in enumerate(deflections):
+        signals = RodChamberLegInput(time_s=k * DT_S, step_s=DT_S, applied_speed_m_s=0.0,
+                                     pad_deflection_m=float(deflection),
+                                     pad_deflection_rate_m_s=0.0, motor_position_m=0.40,
+                                     cylinder_force_N=0.0)
+        forces.append(leg.step(signals).normal_force_N)
+    return np.asarray(forces)
+
+
+def test_locked_law_is_the_l1r_one_sided_law() -> None:
+    """Harness locked leg = L1-R ``Phi(delta)``: k_n' on unloading and up to the knee, k_n after
+    (rod side at its floor), lift at N = 0. Rear-leg YAML values, lock at 20 kN after extension."""
+    rod_side = _yaml_rod_side()
+    plant = _plant("l1r")
+    k_head, k_rod, k_out = float(plant.ko[3]), float(plant.krs[3]), float(plant.ks[3])
+    params = RodChamberLegParams(
+        head_area_m2=float(plant.lock_head_area[3]),
+        annulus_area_m2=float(plant.lock_annulus_area[3]),
+        head_stiffness_N_m=k_head, rod_stiffness_N_m=k_rod, outer_stiffness_N_m=k_out,
+        rod_weight_N=0.0,
+        p_rod_locked_after_extend_Pa=float(rod_side["p_r0_after_extend_Pa"]["RR"]),
+        cavitation_floor_abs_Pa=float(rod_side["p_floor_Pa"]))
+    lock_deflection = 20.0e3 / params.pad_stiffness_head_only_N_m
+    knee_N = params.knee_force_increment_N(params.p_rod_locked_after_extend_Pa)
+    sweep = lock_deflection + np.linspace(-1.5e-3, 2.0 * knee_N / params.pad_stiffness_locked_N_m,
+                                          401)
+    sweep[0] = lock_deflection  # the lock instant
+    harness = _harness_locked_pad_forces(params, 0.40, sweep,
+                                         params.p_rod_locked_after_extend_Pa)
+    reference = _l1r_locked_pad_forces(params, sweep)
+    assert reference[0] == pytest.approx(20.0e3, rel=1e-12)
+    assert harness == pytest.approx(reference, rel=1e-9, abs=1e-6)
+    assert (harness == 0.0).any() and (harness > 20.0e3 + 1.5 * knee_N).any()  # both ends reached
+    above_knee = sweep > lock_deflection + 1.2 * knee_N / params.pad_stiffness_locked_N_m
+    slope = np.diff(harness[above_knee]) / np.diff(sweep[above_knee])
+    assert slope == pytest.approx(params.pad_stiffness_head_only_N_m, rel=1e-6)  # = option off
+
+
 def test_plant_pressure_includes_the_rod_force_when_on() -> None:
     rmf.CONFIG.clear()
     plant = rmf.FlexPlant("top", 0.0, 0.0, BETA_PA, 0.0, init_ext=[0.40] * 4)  # on the pads
