@@ -157,6 +157,16 @@ def provenance() -> dict:
             "threads": {k: os.environ.get(k) for k in ("MKL_THREADING_LAYER", "MKL_NUM_THREADS", "OMP_NUM_THREADS", "NUMBA_NUM_THREADS", "OPENBLAS_NUM_THREADS")}}
 
 
+def interpreter_record() -> dict:
+    """``sys.executable`` and ``sys.version`` of this process (K-2 post-run audit 2026-11-11, rev2 6 item 5)."""
+    return {"python_executable": sys.executable, "python_version": sys.version}
+
+
 def write_provenance(path: Path, extra: dict | None = None) -> None:
+    """The ACC_PROVENANCE step record: :func:`provenance`, the interpreter and ``extra``.
+
+    The interpreter keys are only in this file, not in :func:`provenance` (the run output meta keeps its keys).
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps({**provenance(), **(extra or {})}, indent=1), encoding="utf-8")
+    record = {**provenance(), **interpreter_record(), **(extra or {})}
+    path.write_text(json.dumps(record, indent=1), encoding="utf-8")

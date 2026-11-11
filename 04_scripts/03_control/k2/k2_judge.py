@@ -20,6 +20,8 @@ input error (a missing result key is 2), 3 internal error; the last stdout line 
 addenda rev1 .. rev6 must match their sealed sha256 (``k2_touch_creep_rules[_revN].sha256``, the values this judge
 implements) and the dynamics spec its rules 3.3 sha256 (exit 2 otherwise).
 Every judging command prints its field map (rules item <-> raw result key).
+``problems`` and ``failed_rows`` are full lists (since 2026-11-11; before, ``failed_rows`` stopped at 300 rows
+and the E-5 / I-9 / evidence problem lists after 21 or 41 items, K-2 post-run audit).
 Interpreter: python-dev or dynamics-dev (numpy, PyYAML; no simulation imports).
 """
 
@@ -654,6 +656,7 @@ def _status(problems: list[str], summaries: list[dict]) -> int:
 
 
 def _failed(rows_by_label: dict) -> list[dict]:
+    """Every row that is not ``pass`` (full list; before 2026-11-11 the list stopped at 300 rows)."""
     return [
         {
             "bundle": label,
@@ -665,7 +668,7 @@ def _failed(rows_by_label: dict) -> list[dict]:
         for label, rows in rows_by_label.items()
         for row in rows
         if row["verdict"] != "pass"
-    ][:300]
+    ]
 
 
 def _off_tcl_bundle(
@@ -792,14 +795,15 @@ def cmd_judge_v4(args) -> tuple[int, dict]:
 
 
 def options_off_problems(files: list[str], label: str) -> list[str]:
-    """Rev2 4 V-2 / V-4: no dissipation option on any row (``aug_arm`` and ``k2.aug`` absent or None)."""
+    """Rev2 4 V-2 / V-4: no dissipation option on any row (``aug_arm`` and ``k2.aug`` absent or None).
+
+    Every offending row is listed (before 2026-11-11 the list stopped after 21 problems).
+    """
     problems = []
     for path in files:
         for run in _runs_of(Path(path)):
             if run.get("aug_arm") is not None or (run.get("k2") or {}).get("aug") is not None:
                 problems.append(f"E-5 {label} {run.get('id')}: options on (aug_arm {run.get('aug_arm')!r})")
-                if len(problems) > 20:
-                    return problems
     return problems
 
 
@@ -892,13 +896,12 @@ def open_share_problem(shares) -> str | None:
 
 def _aug_problems(files: list[str], arm: str) -> list[str]:
     """E-5 / I-9 of the V-3 rows of one arm (top-level ``aug_arm`` / ``is_kplant``, the ``k2.aug`` block with the
-    rev3 1 values, the open shares)."""
+    rev3 1 values, the open shares). Every row is checked and listed (before 2026-11-11 the list stopped after
+    21 problems per arm and side)."""
     problems = []
     for path in files:
         for run in _runs_of(Path(path)):
             problems += _aug_row_problems(run, arm)
-            if len(problems) > 20:
-                return problems
     return problems
 
 
@@ -1252,8 +1255,6 @@ def v5_evidence(bundle: str, arm: str, docs: list[dict]) -> list[str]:
         if row.get("touch_creep_latch") is not k2_on or _tag_has_tcl(row.get("controller_tag")) is not k2_on:
             problems.append(f"{arm} row {row['key']}: touch_creep_latch {row.get('touch_creep_latch')!r} / "
                             f"tag {row.get('controller_tag')!r}")
-            if len(problems) > 40:
-                break
     return problems
 
 
@@ -1840,11 +1841,25 @@ COMMANDS = {
 }
 
 
+MARKDOWN_VALUE_CHARS = 2000
+"""``--format md`` shows at most this many characters per key; the JSON output is never shortened."""
+
+
+def _markdown_value(value) -> str:
+    """One md value, marked when it is cut (with the full length and, for a list, the item count)."""
+    text = json.dumps(value, default=float)
+    if len(text) <= MARKDOWN_VALUE_CHARS:
+        return text
+    count = f", {len(value)} items" if isinstance(value, list) else ""
+    return (f"{text[:MARKDOWN_VALUE_CHARS]} ... (truncated: true, {len(text)} chars{count}; "
+            "the full value is in --format json)")
+
+
 def _markdown(command: str, status: int, result: dict) -> str:
     lines = [f"# k2_judge {command}", "", f"exit {status}", ""]
     for key in ("gate", "grade", "summaries", "summary", "problems"):
         if key in result:
-            lines.append(f"- {key}: {json.dumps(result[key], default=float)[:2000]}")
+            lines.append(f"- {key}: {_markdown_value(result[key])}")
     return "\n".join(lines) + "\n"
 
 
