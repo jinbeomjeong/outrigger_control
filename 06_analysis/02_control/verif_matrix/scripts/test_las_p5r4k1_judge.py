@@ -330,6 +330,97 @@ def test_chrono_gs_rows_come_from_rows_gs_true(tmp_path):
     assert rows[0]["argv"][-2:] == ["--duration", "5"]
 
 
+# ------------------------------------------------------------------------------- rev3
+IN, OUT = 0.5e-9, 2e-9
+"""rev3 test offsets: inside the 1e-9 tolerance (equal to the threshold) and outside it."""
+
+
+def test_rv3_1_comparison_helpers_at_the_threshold():
+    assert pj.is_at_least(10.4 - IN, 10.4) and not pj.is_at_least(10.4 - OUT, 10.4)
+    assert pj.is_below(10.4 - OUT, 10.4) and not pj.is_below(10.4 - IN, 10.4)
+    assert pj.is_at_most(1.0 + IN, 1.0) and not pj.is_at_most(1.0 + OUT, 1.0)
+    assert pj.is_above(1.0 + OUT, 1.0) and not pj.is_above(1.0 + IN, 1.0)
+
+
+@pytest.mark.parametrize(("offset", "violation"), [(IN, False), (OUT, True)])
+def test_rv3_t5_c_s_increase_at_1_mm(offset, violation):
+    assert pj.cs_state(0.5, 0.501 + offset)[1] is violation
+
+
+@pytest.mark.parametrize(("offset", "scope", "violation"), [
+    (-IN, pj.RANGE_IN, False), (-OUT, pj.RANGE_OUT, False)])
+def test_rv3_t4_c_f_scope_and_cand_at_the_line(offset, scope, violation):
+    line = pj.C_FLOOR_N + offset
+    assert pj.cf_state(line, line) == (scope, violation)
+    assert pj.cf_state(pj.C_FLOOR_N, pj.C_FLOOR_N - OUT) == (pj.RANGE_IN, True)
+
+
+def _grid_line(f_rl: float, f_judged: float) -> dict:
+    return {"diag": {"summary": {"F_RL_kN": f_rl, "F_judged_min_kN": f_judged}}}
+
+
+def test_rv3_t1_t2_floors_with_tolerance():
+    lines = {("VB", "1", 0): _grid_line(10.4 - IN, 12.0), ("VB", "1", 1): _grid_line(12.0,
+                                                                                    10.4 - OUT)}
+    failures, _ = pj.force_failures(pj.PART_RG, lines, pj.GRID_FORCE_FLOOR_KN)
+    assert [f["point"] for f in failures] == [["VB", "1", 1]]
+    g2p, _ = pj.force_failures(pj.PART_RG, {("V0", "1", 0): _grid_line(
+        pj.G2P_FLOOR_KN - IN, pj.G2P_FLOOR_KN - IN)}, pj.G2P_FLOOR_KN)
+    assert g2p == []
+
+
+def test_rv3_t15_band_counts_each_value():
+    lines = {("VB", "1", 0): _grid_line(10.41, 10.4 - IN),
+             ("VB", "1", 1): _grid_line(pj.BAND_TOP_KN - IN, 10.4 - OUT)}
+    _, between = pj.force_failures(pj.PART_RG, lines, pj.GRID_FORCE_FLOOR_KN)
+    assert len(between) == 2 and all("('VB', '1', 0)" in text for text in between)
+
+
+def test_rv3_t7_claim_needs_more_than_1_s_plus_tolerance():
+    ref = make_line(pj.ARM_REF, ready=60.0)
+    for ready, expected in ((61.0 + IN, False), (61.0 + OUT, True)):
+        pair = pj.pair_record(KEY, make_line(pj.ARM_CAND, "b" * 64, ready=ready), ref, None)
+        assert ("exception" in pair) is expected
+
+
+def _periods_line(times):
+    return {"diag": {"periods": [{"t_s": t, "cmd_mm_s": [1.0]} for t in times]}}
+
+
+def test_rv3_w1_k_a2_window_in_whole_periods():
+    rows = pj._commands_before(_periods_line([12.199999999999999, 12.299999999999999, 12.3]),
+                               12.3)
+    assert [t for t, _ in rows] == [12.199999999999999]
+
+
+def test_rv3_t19_k_a4_float_window_end_with_tolerance():
+    table = [[30.0, 1], [30.1 - IN, 2], [30.1 - OUT, 3], [30.05, 4]]
+    rows = pj.ka4_window_rows(table, 30.0, 30.1, 30.0)
+    assert [row[1] for row in rows] == [1, 3, 4]
+
+
+def test_rv3_w3_restart_window_in_whole_periods():
+    ref = make_line(pj.ARM_REF, ready=60.0)
+    rx = {**ref, "done_clock": {"loss_s": 0.0}}
+    cand = make_line(pj.ARM_CAND, "b" * 64, ready=63.0)
+    cand["las"]["ramp"]["end_t_s"] = 30.0
+    cand["done_clock"] = _clock([25.000000000000004, 35.0], [24.999999999999996])
+    assert pj.exception_record(cand, ref, rx)["is_exception"] is False
+    cand["done_clock"] = _clock([25.0, 35.0], [24.9])
+    assert pj.exception_record(cand, ref, rx)["is_exception"] is True
+
+
+def test_rv3_5_rev3_is_checked_but_not_recorded_on_lines():
+    assert pj.RULES_REV3_NAME in pj.judge_rules()
+    assert pj.RULES_REV3_NAME not in pj.sealed_rules()
+    assert pj.judge_rules()[pj.RULES_REV3_NAME] == (
+        "31ba01dff9defb4b7274b27b9df1a427c460fa9ccc5efd84f5a3145e0d3ef8f6")
+
+
+def test_audit13_d1_ready_field_is_required_in_g_s():
+    assert "values.times.t_first_ready_s" in gs.D1_FIELDS
+
+
 def test_with_duration_replaces_only_duration():
     assert gs.with_duration(["--case", "x", "--duration", "160"], 10.0) == [
         "--case", "x", "--duration", "10"]

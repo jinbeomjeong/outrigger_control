@@ -36,7 +36,10 @@ The grade is PROVISIONAL: ``k10`` is null until the path 2 recount agrees (10.2)
 Usage (python-dev or dynamics-dev, project root, PowerShell):
   python -I -B 06_analysis/02_control/verif_matrix/scripts/las_p5r4k1_judge.py
       [--run-dir <v5/las/p5r4k1>] [--v5-dir <v5>] [--gs-dir <v5/las/p5r4k1/gs>]
-      [--expect-judge-sha <sha>] [--out <json>]
+      [--expect-judge-sha <sha>] [--rules-rev3 <rev3 md>] [--out <json>]
+Thresholds (rev3 RV3-1): a value within 1e-9 of a threshold (field unit) equals it; time
+windows (rev3 RV3-6) compare whole periods round(t / 0.1), K-A4 keeps its float window end
+with the 1e-9 tolerance (T-19).
 Exit codes: 0 provisional 통과, 1 미달 / 판정 불가 / an ask (S-8), 2 stop or an input error
 (seals, stored files, lists), 3 tool error. The first stdout line says the grade is
 provisional; the last stdout line is JSON.
@@ -92,13 +95,24 @@ RULES_ADDENDA = {
     "las_p5r4_k1_rules_rev2.md":
         "e0a7d1e56b57df5336fc2fd40835624d93585fb224063f6c8068c2b1ba7b10fc",
 }
-"""Sealed addenda (rev1: sealed 2026-11-11 10:40:10 +09:00, before any result; record items
-RV1-1 .. RV1-5, identity RV1-6)."""
+"""Sealed addenda the run lines record (rev1 RV1-6, rev2; before any result)."""
+RULES_REV3_NAME = "las_p5r4_k1_rules_rev3.md"
+JUDGE_ONLY_RULES = {
+    RULES_REV3_NAME: "31ba01dff9defb4b7274b27b9df1a427c460fa9ccc5efd84f5a3145e0d3ef8f6",
+}
+"""rev3 (sealed before any result: RV3-1 threshold tolerance, RV3-6 whole-period windows).
+RV3-5: the judge checks it in K-0 / S-1; the run lines do not record it (the run tool is
+not changed by rev3, RV3-5 3)."""
 
 
 def sealed_rules() -> dict[str, str]:
-    """Every rules file a line records and S-1 checks: this rules, its addenda, the table."""
+    """Every rules file a run line records (5.1, RV1-6): this rules, rev1, rev2, the table."""
     return {RULES_NAME: RULES_SHA256, **RULES_ADDENDA, **INHERITED_RULES}
+
+
+def judge_rules() -> dict[str, str]:
+    """Every rules file the judge checks in S-1 / K-0: :func:`sealed_rules` and rev3."""
+    return {**sealed_rules(), **JUDGE_ONLY_RULES}
 
 
 COPIED_FROM = {
@@ -218,6 +232,8 @@ C_FLOOR_N = F_MIN_N + 1000.0
 GRID_FORCE_FLOOR_KN = 10.400
 GRID_RANGE_LIMIT_KN = 0.500
 G2P_FLOOR_KN = 11.414589
+BAND_TOP_KN = 10.414589
+"""rev3 T-15: the upper end of the 6.4 FLAG band (the C-F line F_min + 1 kN in kN)."""
 STROKE_LIMIT_M = 0.001
 READY_MEDIAN_LIMIT_S = 1.0
 READY_MAX_LIMIT_S = 5.0
@@ -227,7 +243,8 @@ EXCEPTION_COUNT_LIMIT = 5
 EXCEPTION_DT_LIMIT_S = 15.0
 C2_STOP_PAIRS = 5
 THIN_MARGIN_PERIODS = 12
-TOLERANCE = 1e-9
+THRESHOLD_TOLERANCE = 1e-9
+"""rev3 RV3-1: a value within 1e-9 (in the field's own unit) of a threshold equals it."""
 PERIOD_S = 0.1
 OUTPUT_DELAY_S = 0.1
 LAMBDA0_TOLERANCE = 1e-4
@@ -341,6 +358,27 @@ def period_of(t_s: float | None) -> int | None:
     return None if t_s is None else round(float(t_s) / PERIOD_S)
 
 
+# rev3 RV3-1.1: threshold comparisons with the 1e-9 tolerance (values that are numbers).
+def is_at_least(value: float, limit: float) -> bool:
+    """``value >= limit`` with the tolerance: ``value >= limit - 1e-9``."""
+    return value >= limit - THRESHOLD_TOLERANCE
+
+
+def is_below(value: float, limit: float) -> bool:
+    """``value < limit`` (the negation of :func:`is_at_least`): ``value < limit - 1e-9``."""
+    return value < limit - THRESHOLD_TOLERANCE
+
+
+def is_at_most(value: float, limit: float) -> bool:
+    """``value <= limit`` with the tolerance: ``value <= limit + 1e-9``."""
+    return value <= limit + THRESHOLD_TOLERANCE
+
+
+def is_above(value: float, limit: float) -> bool:
+    """``value > limit`` (the negation of :func:`is_at_most`): ``value > limit + 1e-9``."""
+    return value > limit + THRESHOLD_TOLERANCE
+
+
 def key_list_sha256(keys) -> str:
     """Appendix rule: sorted keys, LF after each, UTF-8."""
     return hashlib.sha256("".join(f"{key}\n" for key in sorted(keys)).encode("utf-8")).hexdigest()
@@ -406,11 +444,16 @@ def worst_status(statuses) -> str:
 
 
 # =============================================================================== seals, bases
-def seal_problems(rules_dir: Path = RULES_DIR) -> list[str]:
-    """S-1: every rules file and its ``.sha256`` give the sealed LF digest."""
+def seal_problems(rules_dir: Path = RULES_DIR, paths: dict[str, Path] | None = None
+                  ) -> list[str]:
+    """S-1 / K-0: every rules file and its ``.sha256`` give the sealed LF digest.
+
+    Args:
+        paths: Rules file name -> path that replaces ``rules_dir / name`` (``--rules-rev3``).
+    """
     problems = []
-    for name, expected in sealed_rules().items():
-        path = rules_dir / name
+    for name, expected in judge_rules().items():
+        path = (paths or {}).get(name, rules_dir / name)
         sha_path = path.with_suffix(".sha256")
         if not path.is_file() or not sha_path.is_file():
             problems.append(f"missing {path.name} or its .sha256")
@@ -981,8 +1024,10 @@ def _ka1(cand: dict, pair: dict) -> list[str]:
 
 
 def _commands_before(line: dict, t_end_s: float) -> list[tuple]:
+    """K-A2 window (rev3 RV3-6 W-1): periods with ``n(t_s) < n(t_e)`` (whole periods)."""
+    end_period = period_of(t_end_s)
     return [(period["t_s"], period["cmd_mm_s"]) for period in need(line, "diag", "periods")
-            if period["t_s"] < t_end_s - TOLERANCE]
+            if period_of(period["t_s"]) < end_period]
 
 
 def _ka2(cand: dict, pair: dict, t_end_s: float) -> list[str]:
@@ -991,19 +1036,25 @@ def _ka2(cand: dict, pair: dict, t_end_s: float) -> list[str]:
     return []
 
 
+def ka4_window_rows(table: list, t_from: float, t_last: float, t_end_s: float) -> list:
+    """K-A4 rows: inside the overlap of both windows (exact time match, rev3 RV3-6.1 6) and
+    before the window end ``t < (t_e + 0.1) - 1e-9`` (float window, rev3 RV3-1.2 T-19)."""
+    window_end_s = t_end_s + OUTPUT_DELAY_S
+    return [row for row in table
+            if t_from <= row[0] <= t_last and row[0] < window_end_s - THRESHOLD_TOLERANCE]
+
+
 def _ka4(cand: dict, pair: dict, t_end_s: float) -> list[str]:
     rows = need(cand, "diag", "force_window", "rows")
     pair_rows = need(pair, "diag", "force_window", "rows")
     if not rows or not pair_rows:
         return []
     t_from = max(rows[0][0], pair_rows[0][0])
-    t_to = min(rows[-1][0], pair_rows[-1][0], t_end_s + OUTPUT_DELAY_S - TOLERANCE)
-
-    def inside(table):
-        return [row for row in table if t_from - TOLERANCE <= row[0] < t_to]
-
-    if inside(rows) != inside(pair_rows):
-        return [f"K-A4 force_window rows in [{t_from}, {t_to}) differ from P5"]
+    t_last = min(rows[-1][0], pair_rows[-1][0])
+    if (ka4_window_rows(rows, t_from, t_last, t_end_s)
+            != ka4_window_rows(pair_rows, t_from, t_last, t_end_s)):
+        return [f"K-A4 force_window rows in [{t_from}, {t_last}] before t_e + 0.1 differ "
+                "from P5"]
     return []
 
 
@@ -1132,17 +1183,25 @@ def _forces(line: dict) -> tuple:
 
 def force_failures(part: str, lines: dict[tuple, dict], floor_kN: float
                    ) -> tuple[list[dict], list[str]]:
-    """(lines below ``floor_kN``, values between 10.400 and 10.4146 kN). Copied."""
+    """(lines with a force below ``floor_kN``, band values): G-1 / G-2' fail when a value is
+    None or ``v < floor - 1e-9`` (rev3 T-1 / T-2); the band of rev3 T-15 is
+    ``v >= 10.400 - 1e-9 and v < 10.414589 - 1e-9`` kN, one entry per value."""
     failures, between = [], []
     for point in sorted(lines, key=str):
         f_rl, f_judged = _forces(lines[point])
-        if f_rl is None or f_judged is None or min(f_rl, f_judged) < floor_kN:
+        if f_rl is None or f_judged is None or is_below(min(f_rl, f_judged), floor_kN):
             failures.append({"part": part, "point": list(point), "F_RL_kN": f_rl,
                              "F_judged_min_kN": f_judged})
-        for value in (f_rl, f_judged):
-            if value is not None and GRID_FORCE_FLOOR_KN <= value < C_FLOOR_N / 1e3:
-                between.append(f"{part} {point}: {value!r} kN")
+        for name, value in (("F_RL_kN", f_rl), ("F_judged_min_kN", f_judged)):
+            if is_in_band(value):
+                between.append(f"{part} {point} {name}: {value!r} kN")
     return failures, between
+
+
+def is_in_band(value: float | None) -> bool:
+    """rev3 RV3-1.2 T-15: ``10.400 <= v < 10.414589`` kN with the 1e-9 tolerance."""
+    return value is not None and is_at_least(value, GRID_FORCE_FLOOR_KN) and is_below(
+        value, BAND_TOP_KN)
 
 
 def range_cells(by_point: dict[tuple, dict], steps) -> list[dict]:
@@ -1157,8 +1216,8 @@ def range_cells(by_point: dict[tuple, dict], steps) -> list[dict]:
                 continue
             cells.append({"setting": setting, "centre": centre,
                           "R_c": max(values) - min(values),
-                          "ok_original_0p5": max(values) - min(values)
-                          <= GRID_RANGE_LIMIT_KN + TOLERANCE})
+                          "ok_original_0p5": is_at_most(max(values) - min(values),
+                                                        GRID_RANGE_LIMIT_KN)})
     return cells
 
 
@@ -1169,7 +1228,7 @@ def trough_kind(line: dict) -> str | None:
     if t_min is None or t_end is None:
         return None
     gap = t_min - (t_end + OUTPUT_DELAY_S)
-    return "liftoff_first" if gap <= CLUSTER_GAP_S else "after_reacceleration"
+    return "liftoff_first" if is_at_most(gap, CLUSTER_GAP_S) else "after_reacceleration"
 
 
 # =============================================================================== identity (9)
@@ -1478,15 +1537,17 @@ def exception_record(cand: dict, ref: dict, rx_line: dict | None) -> dict:
         return {**out, "reason": "loss_s None"}
     excess_s = loss_s - ref_loss_s
     out["E_over_dt"] = excess_s / delta_s if delta_s else None
-    if excess_s < EXCEPTION_SHARE * delta_s - TOLERANCE:
+    if is_below(excess_s, EXCEPTION_SHARE * delta_s):  # rev3 T-8: E >= 0.8 dt - 1e-9
         return {**out, "reason": "E < 0.8 dt"}
     t_end_s = out["t_las_end_s"]
     if t_end_s is None:
         return {**out, "reason": "no LAS-b / ramp end time (rev2 RV2-11)"}
     starts = clock.get("clock_starts_s") or []
-    # rev2 RV2-11: restarts inside l are c_1 <= t <= c_m; "after" is a larger whole period.
+    # rev2 RV2-11 / rev3 RV3-6 W-3: restarts inside l are n(c_1) <= n(t) <= n(c_m) in whole
+    # periods; "after" is a larger whole period than the end (W-5).
     counted = [reset for reset in clock.get("resets") or []
-               if starts and starts[0] <= reset["t_s"] <= starts[-1]]
+               if starts and period_of(starts[0]) <= period_of(reset["t_s"])
+               <= period_of(starts[-1])]
     end_period = period_of(t_end_s)
     if any(period_of(reset["t_s"]) <= end_period for reset in counted):
         return {**out, "reason": "a restart not after the LAS-b / ramp end period"}
@@ -1607,9 +1668,9 @@ def cf_state(f_ref: float | None, f_cand: float | None) -> tuple[str, bool]:
     """rev2 RV2-2 1: (scope, violation) of C-F."""
     if f_ref is None:
         return RANGE_OUT_REF_NONE, False
-    if f_ref < C_FLOOR_N:
+    if is_below(f_ref, C_FLOOR_N):
         return RANGE_OUT, False
-    return RANGE_IN, f_cand is None or f_cand < C_FLOOR_N
+    return RANGE_IN, f_cand is None or is_below(f_cand, C_FLOOR_N)
 
 
 def cs_state(s_ref: float | None, s_cand: float | None) -> tuple[str, bool]:
@@ -1619,7 +1680,7 @@ def cs_state(s_ref: float | None, s_cand: float | None) -> tuple[str, bool]:
         return RANGE_OUT_REF_NONE, False
     if s_cand is None:
         return RANGE_IN, True
-    return RANGE_IN, float(s_cand) - float(s_ref) > STROKE_LIMIT_M + TOLERANCE
+    return RANGE_IN, is_above(float(s_cand) - float(s_ref), STROKE_LIMIT_M)
 
 
 def _decide(record: dict, name: str, evaluate):
@@ -1659,7 +1720,7 @@ def pair_record(key: str, cand: dict, ref: dict, rx_line: dict | None) -> dict:
         _d1_fields(record, cand, ref)
     both = record["ready_cand_s"] is not None and record["ready_ref_s"] is not None
     record["dt_s"] = record["ready_cand_s"] - record["ready_ref_s"] if both else None
-    if is_changed and both and record["dt_s"] > EXCEPTION_DT_FLOOR_S:
+    if is_changed and both and is_above(record["dt_s"], EXCEPTION_DT_FLOOR_S):
         record["exception"] = exception_record(cand, ref, rx_line)
     record["record"] = pair_note(cand, ref)
     return record
@@ -1737,8 +1798,8 @@ def ready_population(pairs: dict[str, dict]) -> dict:
         return {**out, "R-1": None, "R-2": None, "basis": "changed pairs but empty population"}
     values = list(population.values())
     out.update(median_s=statistics.median(values), max_s=max(values))
-    out["R-1"] = out["median_s"] <= READY_MEDIAN_LIMIT_S + TOLERANCE
-    out["R-2"] = out["max_s"] <= READY_MAX_LIMIT_S + TOLERANCE
+    out["R-1"] = is_at_most(out["median_s"], READY_MEDIAN_LIMIT_S)
+    out["R-2"] = is_at_most(out["max_s"], READY_MAX_LIMIT_S)
     out["basis"] = "population"
     return out
 
@@ -1802,7 +1863,7 @@ def _pair_criteria(bundle: str, pairs: dict[str, dict], whole_pair_open: bool,
                                             if is_b0_t_line(line)}
         c1 = [f"{k}: {p['F_cand_N']}" for k, p in d1.items() if k in t1
               and "C-F" not in p["undecided"]
-              and (p["F_cand_N"] is None or p["F_cand_N"] < C_FLOOR_N)]
+              and (p["F_cand_N"] is None or is_below(p["F_cand_N"], C_FLOOR_N))]
         out["C-1"] = make(c1, "C-F")
         h_r_0 = [key for key in bases.lists["Z-T"] if H_R_0_MARK in key]
         a3 = [key for key in h_r_0 if key in pairs and pairs[key]["changed"]]
@@ -1828,7 +1889,7 @@ def judge_pair_bundle(bundle: str, ctx: Context) -> dict:
     c2_pairs = [k for k, p in pairs.items() if p["c2"]]
     exceptions = ready["exceptions"]
     s8_ask = len(exceptions) > EXCEPTION_COUNT_LIMIT or any(
-        pairs[k]["dt_s"] > EXCEPTION_DT_LIMIT_S for k in exceptions)
+        is_above(pairs[k]["dt_s"], EXCEPTION_DT_LIMIT_S) for k in exceptions)
     out = {"bits": bit_predictions(bundle, ctx), "criteria": criteria, "ready": ready,
            "pairs_decided": len(pairs), "undecidable_pairs": undecidable,
            "unpaired": unpaired, "PAIR_DIVERGE": diverge, "PAIR_CMD_DIFF": len(cmd_diff),
@@ -1855,10 +1916,8 @@ def anchor_effect(pairs: dict[str, dict]) -> dict:
 
 
 def pair_flags(pairs: dict[str, dict]) -> dict:
-    """6.4 FLAG lists (record only)."""
-    between = [f"{k}: {p.get('F_cand_N')}" for k, p in pairs.items()
-               if p.get("F_cand_N") is not None
-               and GRID_FORCE_FLOOR_KN * 1e3 <= p["F_cand_N"] < C_FLOOR_N]
+    """6.4 FLAG lists (record only). The 10.400 .. 10.414589 kN band FLAG is a Z-A line FLAG
+    (rev3 T-15, ``between_thresholds`` of Z-A); pair bundles do not count it."""
     return {"R4_GAINED": sorted(k for k, p in pairs.items() if (p["CK1"] or {}).get("R4_GAINED")),
             "THIN_MARGIN": sorted(k for k, p in pairs.items()
                                   if (p["CK1"] or {}).get("thin_margin")),
@@ -1868,7 +1927,6 @@ def pair_flags(pairs: dict[str, dict]) -> dict:
                                                if p["anchor"][FLAG_ANCHOR_SAMPLE_SHIFT] is None),
             "ANCHOR_RECORD_MISSING": sorted(k for k, p in pairs.items()
                                             if p["anchor"]["ANCHOR_RECORD_MISSING"]),
-            "between_10p400_10p4146_kN": between,
             "P3_baseline_false": sorted(k for k, p in pairs.items() if p["P3_baseline_false"])}
 
 
@@ -1903,7 +1961,8 @@ def claim_keys(ctx: Context) -> list[str]:
                 cand_s, ref_s = ready_time(cand), ready_time(ref)
             except MissingField:
                 continue
-            if cand_s is not None and ref_s is not None and cand_s - ref_s > EXCEPTION_DT_FLOOR_S:
+            if cand_s is not None and ref_s is not None and is_above(cand_s - ref_s,
+                                                                     EXCEPTION_DT_FLOOR_S):
                 out.add(key)
     return sorted(out)
 
@@ -2089,6 +2148,9 @@ def _parse_args(argv: list[str] | None):
                         help="G-S folder (16.2 hash equality; default <run-dir>/gs if present)")
     parser.add_argument("--expect-judge-sha", default=None,
                         help="this tool's sha256 recorded by the pre-run audit (K-0)")
+    parser.add_argument("--rules-rev3", type=Path, default=None,
+                        help="las_p5r4_k1_rules_rev3.md to check (K-0 / S-1, next to its "
+                             ".sha256; default the rules folder copy)")
     parser.add_argument("--out", type=Path, default=None, help="judgement JSON")
     return parser.parse_args(argv)
 
@@ -2097,7 +2159,8 @@ def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
     print("PROVISIONAL grade (k10 null until the path 2 recount agrees, rules 10.2)")
     try:
-        problems = seal_problems()
+        rules_paths = {} if args.rules_rev3 is None else {RULES_REV3_NAME: args.rules_rev3}
+        problems = seal_problems(paths=rules_paths)
         if problems:
             raise InputError(problems)
         tool = tool_record()
@@ -2118,7 +2181,7 @@ def main(argv: list[str] | None = None) -> int:
         return 3
     doc = judge(ctx)
     doc["tool"] = tool
-    doc["rules"] = sealed_rules()
+    doc["rules"] = judge_rules()
     if args.out is not None:
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(json.dumps(doc, ensure_ascii=False, indent=1, default=str),
