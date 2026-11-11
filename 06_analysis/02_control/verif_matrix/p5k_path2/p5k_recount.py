@@ -1,7 +1,8 @@
 """Path-2 independent recount, harness bundles of las_p5r4_k1_rules.md (+ rev1).
 
 Rules: 06_analysis/02_control/verif_matrix/las_p5r4_k1_rules.md (sha256 5ee2bac0...) and the
-record-only addendum las_p5r4_k1_rules_rev1.md. Author: control-expert (path 2).
+record-only addendum las_p5r4_k1_rules_rev1.md and the reading-rule addendum las_p5r4_k1_rules_rev2.md
+(RV2-1..RV2-14). Author: control-expert (path 2).
 
 Independence contract (rules 10.2):
   * Reads only the run jsonl files, the stored baseline jsonl files named in rules appendix A
@@ -36,6 +37,8 @@ TOOL_VERSION = "1"
 
 RULES_SHA = "5ee2bac0451f0ca00139a5a2d238c38d13a6b0f430efc5b44fe0e8b929c2f979"
 RULES_REV1_SHA = "f39846d6067a7bd409b4ac930d73ebde58a721728ec7d93703ff4627bf21e4b6"
+RULES_REV2_SHA = "e0a7d1e56b57df5336fc2fd40835624d93585fb224063f6c8068c2b1ba7b10fc"
+K1_TOKEN_JOB_KEYS = {"k1", "k1_candidate", "k1_order_gate", "las_off"}   # rev2 RV2-14
 
 PERIOD_S = 0.1
 F_MIN_N = 9414.589
@@ -494,16 +497,20 @@ def eval_pair(ref, cand, bundle):
     out["cs"] = None
     if kind == "d1":
         Fr, Fc = val(ref, "d1.F_judged_min_N"), val(cand, "d1.F_judged_min_N")
+        # rev2 RV2-2: ref None -> out of scope (ref_none); cand None with ref in scope -> violation
         if num(Fr) and Fr >= F_LINE_N:
-            out["cf"] = dict(in_scope=True, ref_N=Fr, cand_N=Fc, violation=not (num(Fc) and Fc >= F_LINE_N))
+            out["cf"] = dict(in_scope=True, ref_N=Fr, cand_N=Fc, violation=not (num(Fc) and Fc >= F_LINE_N),
+                             ref_none=False)
         else:
-            out["cf"] = dict(in_scope=False, ref_N=Fr, cand_N=Fc, violation=False)
+            out["cf"] = dict(in_scope=False, ref_N=Fr, cand_N=Fc, violation=False, ref_none=not num(Fr))
         sr, sc = val(ref, "d1.stroke_max_m"), val(cand, "d1.stroke_max_m")
         if num(sr) and num(sc):
-            out["cs"] = dict(ref_m=sr, cand_m=sc, delta_m=sc - sr, violation=(sc - sr) > CS_LIMIT_M)
+            out["cs"] = dict(ref_m=sr, cand_m=sc, delta_m=sc - sr, violation=(sc - sr) > CS_LIMIT_M, ref_none=False)
+        elif not num(sc) and num(sr):
+            out["cs"] = dict(ref_m=sr, cand_m=sc, delta_m=None, violation=True, ref_none=False)
         else:
-            out["cs"] = dict(ref_m=sr, cand_m=sc, delta_m=None, violation=None)
-            und["C-S"].append("stroke_max_m_not_numeric")
+            # ref None (cand value or None): out of scope, recorded as ref_none (RV2-2 2)
+            out["cs"] = dict(ref_m=sr, cand_m=sc, delta_m=None, violation=False, ref_none=True)
 
     # ---- CK-1
     dr, dc = decisions_of(ref), decisions_of(cand)
@@ -596,7 +603,7 @@ def k_line_checks(line, arm, sink, row_id):
     else:
         add("K-4", "touch_creep_latch_off", None, got="absent")
     job = line.get("job") if isinstance(line.get("job"), dict) else {}
-    jk = [k for k in job if "k1" in str(k).lower() or "las_off" in str(k).lower()]
+    jk = sorted(k for k in job if k in K1_TOKEN_JOB_KEYS)
     add("K-4", "no_k1_or_las_off_token_in_job", jk == [], got=jk)
     # K-5
     s = val(line, "las.settings")
@@ -830,7 +837,7 @@ def find_bundle_file(run_dir, bundle, explicit):
     return cands[0] if cands else None
 
 
-def recount(run_dir, v5_dir, rules_path, rules_rev1_path, explicit=None, gs_dir=None):
+def recount(run_dir, v5_dir, rules_path, rules_rev1_path, rules_rev2_path, explicit=None, gs_dir=None):
     explicit = explicit or {}
     files_read = {}
     K = {}
@@ -839,7 +846,8 @@ def recount(run_dir, v5_dir, rules_path, rules_rev1_path, explicit=None, gs_dir=
         K.setdefault(kname, []).append(dict(row=row, item=item, ok=ok, got=got, want=want))
 
     # ---- K-0 rules
-    for path, want, label in ((rules_path, RULES_SHA, "rules"), (rules_rev1_path, RULES_REV1_SHA, "rules_rev1")):
+    for path, want, label in ((rules_path, RULES_SHA, "rules"), (rules_rev1_path, RULES_REV1_SHA, "rules_rev1"),
+                              (rules_rev2_path, RULES_REV2_SHA, "rules_rev2")):
         got = sha256_file(path) if path and os.path.isfile(path) else None
         if got:
             files_read[os.path.abspath(path)] = got
@@ -964,6 +972,14 @@ def recount(run_dir, v5_dir, rules_path, rules_rev1_path, explicit=None, gs_dir=
         if outside:
             stop_r.append(f"K-9 keys outside list: {outside}")
         bd["missing_keys"] = missing_keys
+        # rev2 RV2-8: errors_total = every error line (first attempts included); errors_left = (arm, key) without
+        # any normal line (list bundles: the incomplete keys; Z-X: error-line keys with no normal line)
+        bd["errors_total"] = bd["n_error_lines"]
+        if b == "Z-X":
+            err_keys = {e["key"] for e in bd["error_lines"]}
+            bd["errors_left"] = sum(1 for k in err_keys if ("ref", k) not in groups)
+        else:
+            bd["errors_left"] = len(missing_keys)
         if missing_keys:
             und_r.append(f"incomplete: {len(missing_keys)} (arm,key) without a normal line")
         bd["key_list_sha_Z-A_labels"] = za_label_sha if b == "Z-A" else None
@@ -1042,20 +1058,22 @@ def recount(run_dir, v5_dir, rules_path, rules_rev1_path, explicit=None, gs_dir=
         if bundles[b]["present"]:
             for (a, k), ls in lines_by_bundle[b].items():
                 if a == "ref" and len(ls) == 1:
-                    ref_hash_any.setdefault(k, (b, ls[0].get("commands_sha256")))
+                    ref_hash_any.setdefault(k, []).append((b, ls[0].get("commands_sha256")))
     if bundles["Z-X"]["present"]:
+        # rev2 RV2-6: Z-X ref hash = the new ref hash of every bundle the key belongs to (Z-C overlaps Z-S on 19 keys)
         bx = []
         for k, ln in zx_ref.items():
-            src = ref_hash_any.get(k)
-            bx.append(dict(key=k, ok=(src is not None and ln.get("commands_sha256") == src[1]),
-                           got=ln.get("commands_sha256"), want=None if src is None else src[1],
-                           ref_bundle=None if src is None else src[0]))
+            srcs = ref_hash_any.get(k) or []
+            bx.append(dict(key=k, ok=(bool(srcs) and all(ln.get("commands_sha256") == h for (_b, h) in srcs)),
+                           got=ln.get("commands_sha256"), want=[h for (_b, h) in srcs],
+                           ref_bundles=[b for (b, _h) in srcs]))
         bundles["Z-X"]["bit_prediction"] = dict(n=len(bx), n_equal=sum(1 for x in bx if x["ok"]),
                                                 mismatches=[x for x in bx if not x["ok"]], rule="BT-X")
         if bundles["Z-X"]["bit_prediction"]["mismatches"]:
             bundles["Z-X"]["stop_reasons"].append("BT-X mismatch")
 
     criteria_per_bundle = {}
+    zx_candidates = []   # rev2 RV2-6: hash changed and READY dt > +1.0 s, over Z-T, Z-S, Z-C
     for b in ("Z-T", "Z-S", "Z-C"):
         bd = bundles[b]
         if not bd["present"]:
@@ -1092,12 +1110,14 @@ def recount(run_dir, v5_dir, rules_path, rules_rev1_path, explicit=None, gs_dir=
         cf_list = {k: p["cf"] for k, p in pairs.items() if p["cf"] and p["cf"]["violation"]}
         u = und_for("C-F")
         crit["C-F"] = dict(status=cstat(cf_list, u), violations=cf_list, undecidable=u,
-                           n_in_scope=sum(1 for p in pairs.values() if p["cf"] and p["cf"]["in_scope"]))
+                           n_in_scope=sum(1 for p in pairs.values() if p["cf"] and p["cf"]["in_scope"]),
+                           ref_none=sorted(k for k, p in pairs.items() if p["cf"] and p["cf"].get("ref_none")))
         cs_vals = {k: p["cs"] for k, p in pairs.items() if p["cs"] is not None}
         cs_viol = {k: v for k, v in cs_vals.items() if v["violation"]}
         deltas = [v["delta_m"] for v in cs_vals.values() if num(v["delta_m"])]
         u = und_for("C-S")
         crit["C-S"] = dict(status=cstat(cs_viol, u), violations=cs_viol, undecidable=u, n=len(cs_vals),
+                           ref_none=sorted(k for k, v in cs_vals.items() if v.get("ref_none")),
                            max_delta_m=max(deltas) if deltas else None, min_delta_m=min(deltas) if deltas else None)
         ck_viol = {k: p["ck1"] for k, p in pairs.items() if p["ck1"] and p["ck1"]["violation"]}
         u = und_for("CK-1")
@@ -1137,6 +1157,7 @@ def recount(run_dir, v5_dir, rules_path, rules_rev1_path, explicit=None, gs_dir=
             is_exc = False
             det = None
             if dt > R1_MEDIAN_S:
+                zx_candidates.append(dict(bundle=b, key=k, dt_s=dt))
                 det = c4_exception(groups[("cand", k)][0], zx_ref.get(k), groups[("ref", k)][0], dt)
                 is_exc = det["exception"]
                 exc_detail[k] = det
@@ -1259,6 +1280,13 @@ def recount(run_dir, v5_dir, rules_path, rules_rev1_path, explicit=None, gs_dir=
         global_k=global_k,
         error_lines_total=sum(len(v) for v in error_lines.values()),
         error_lines_by_bundle={b: len(v) for b, v in error_lines.items()},
+        errors_total=sum(bundles[b].get("errors_total", 0) for b in BUNDLES),
+        errors_left=sum(bundles[b].get("errors_left", 0) for b in BUNDLES),
+        errors_by_bundle={b: dict(errors_total=bundles[b].get("errors_total"), errors_left=bundles[b].get("errors_left"))
+                          for b in BUNDLES},
+        zx_candidates=dict(keys=zx_candidates, n_unique_keys=len({c["key"] for c in zx_candidates}),
+                           ask_more_than_10=len({c["key"] for c in zx_candidates}) > 10),
+        rules_rev2_sha256=RULES_REV2_SHA,
         bundles={b: {kk: vv for kk, vv in bundles[b].items()} for b in bundles},
         lists=dict(Z_A_label_list_sha=za_label_sha, Z_C_out_of_sample_n=len(zc_out), Y_P_error_lines=yp_errors,
                    Z_C_ref_source_counts={s: sum(1 for v in zc_ref_src.values() if v == s) for s in set(zc_ref_src.values())}),
@@ -1323,6 +1351,7 @@ def main(argv=None):
     ap.add_argument("--v5-dir", required=True, help="06_analysis/03_hydraulic/coupled/v5 (baselines)")
     ap.add_argument("--rules", required=True)
     ap.add_argument("--rules-rev1", required=True)
+    ap.add_argument("--rules-rev2", required=True)
     ap.add_argument("--gs-dir", default=None)
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
@@ -1331,7 +1360,7 @@ def main(argv=None):
         for s in a.bundle:
             k, v = s.split("=", 1)
             explicit[k] = v
-        res = recount(a.run_dir, a.v5_dir, a.rules, a.rules_rev1, explicit, a.gs_dir)
+        res = recount(a.run_dir, a.v5_dir, a.rules, a.rules_rev1, a.rules_rev2, explicit, a.gs_dir)
     except Exception:
         traceback.print_exc()
         print(json.dumps(dict(status="tool_error")))
@@ -1340,7 +1369,7 @@ def main(argv=None):
         json.dump(res, f, indent=1, ensure_ascii=False, sort_keys=True, default=str)
     g = res["grade_provisional"]
     print("PROVISIONAL grade (K-10 decided outside):", g)
-    print(json.dumps(dict(status=g, error_lines_total=res["error_lines_total"],
+    print(json.dumps(dict(status=g, errors_total=res["errors_total"], errors_left=res["errors_left"],
                           bundles={b: res["bundles"][b].get("status") for b in BUNDLES}, out=a.out)))
     return EXIT.get(g, 1)
 

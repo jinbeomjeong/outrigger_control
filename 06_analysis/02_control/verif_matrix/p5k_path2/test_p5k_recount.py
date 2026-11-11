@@ -32,7 +32,7 @@ def sha_text(s):
 
 def write_rules(tmp):
     paths = []
-    for nm in ("rules.md", "rules_rev1.md"):
+    for nm in ("rules.md", "rules_rev1.md", "rules_rev2.md"):
         p = os.path.join(tmp, nm)
         with open(p, "w", encoding="utf-8", newline="\n") as f:
             f.write(f"# synthetic {nm}\n")
@@ -88,9 +88,10 @@ def write_jsonl(path, lines):
 def hworld(tmp_path, monkeypatch):
     """Patch baseline/rules constants to a synthetic world; returns a runner for bundle Z-C."""
     tmp = str(tmp_path)
-    (r_path, r_sha), (r1_path, r1_sha) = write_rules(tmp)
+    (r_path, r_sha), (r1_path, r1_sha), (r2_path, r2_sha) = write_rules(tmp)
     monkeypatch.setattr(H, "RULES_SHA", r_sha)
     monkeypatch.setattr(H, "RULES_REV1_SHA", r1_sha)
+    monkeypatch.setattr(H, "RULES_REV2_SHA", r2_sha)
     v5 = os.path.join(tmp, "v5")
 
     def run(pairs_spec, zc_ref_hash=None):
@@ -123,7 +124,7 @@ def hworld(tmp_path, monkeypatch):
                 run_lines.append(ln)
         zc = os.path.join(tmp, "p5k_Z-C.jsonl")
         write_jsonl(zc, run_lines)
-        return H.recount(None, v5, r_path, r1_path, explicit={"Z-C": zc})
+        return H.recount(None, v5, r_path, r1_path, r2_path, explicit={"Z-C": zc})
     return run
 
 
@@ -336,6 +337,58 @@ def test_ka5_ka6():
     assert r["G2p"]["ok"] is False and r["G1"]["LQ"]["ok"] is True
 
 
+def test_rev2_cs_cf_none_rules(hworld):
+    # RV2-2: cand None -> violation (fail, not undecidable); ref None -> out of scope (ref_none)
+    out = hworld({K1: (hline(K1, "ref", "h1"), hline(K1, "cand", "h1x", start=1.0, stroke=None, t_ready=50.1))})
+    cs = out["bundles"]["Z-C"]["criteria"]["C-S"]
+    assert cs["status"] == "fail" and K1 in cs["violations"]
+    assert out["bundles"]["Z-C"]["status"] == "fail"
+    out = hworld({K1: (hline(K1, "ref", "h1", stroke=None, F=None), hline(K1, "cand", "h1x", start=1.0, t_ready=50.1))})
+    crit = out["bundles"]["Z-C"]["criteria"]
+    assert crit["C-S"]["status"] == "pass" and crit["C-S"]["ref_none"] == [K1]
+    assert crit["C-F"]["status"] == "pass" and crit["C-F"]["ref_none"] == [K1]
+    out = hworld({K1: (hline(K1, "ref", "h1"), hline(K1, "cand", "h1x", start=1.0, F=None, t_ready=50.1))})
+    assert out["bundles"]["Z-C"]["criteria"]["C-F"]["status"] == "fail"
+    # key absent stays undecidable
+    out = hworld({K1: (hline(K1, "ref", "h1"), hline(K1, "cand", "h1", drop=("d1.stroke_max_m",)))})
+    assert out["bundles"]["Z-C"]["criteria"]["C-S"]["status"] == "undecidable"
+
+
+def test_rev2_errors_left(hworld, tmp_path):
+    out = hworld({K1: (hline(K1, "ref", "h1"), hline(K1, "cand", "h1")),
+                  K2: (hline(K2, "ref", "h2"), hline(K2, "cand", "h2"))})
+    assert out["errors_total"] == 0 and out["errors_left"] == 0
+    assert out["bundles"]["Z-C"]["errors_left"] == 0
+
+
+def test_rev2_errors_left_counts_keys_without_normal_line(hworld, monkeypatch):
+    orig = H.group_lines
+
+    def drop_cand_k2(lines, arms, keyfun):
+        keep = []
+        for ln in lines:
+            if H.line_key(ln) == K2 and H.line_arm(ln) == "cand":
+                ln = dict(error="boom", rev=ln["rev"], __lineno__=ln.get("__lineno__"))
+            keep.append(ln)
+        return orig(keep, arms, keyfun)
+    monkeypatch.setattr(H, "group_lines", drop_cand_k2)
+    out = hworld({K1: (hline(K1, "ref", "h1"), hline(K1, "cand", "h1")),
+                  K2: (hline(K2, "ref", "h2"), hline(K2, "cand", "h2"))})
+    bz = out["bundles"]["Z-C"]
+    assert bz["errors_total"] == 1 and bz["errors_left"] == 1 and bz["status"] == "undecidable"
+
+
+def test_rev2_k1_token_job_keys(hworld):
+    c = hline(K1, "cand", "h1")
+    c["job"]["k1_order_gate"] = "on"
+    out = hworld({K1: (hline(K1, "ref", "h1"), c)})
+    assert out["bundles"]["Z-C"]["status"] == "stop"
+    c = hline(K1, "cand", "h1")
+    c["job"]["k1_note"] = "x"                       # not in the RV2-14 key set -> no stop
+    out = hworld({K1: (hline(K1, "ref", "h1"), c)})
+    assert out["bundles"]["Z-C"]["status"] == "pass"
+
+
 def test_periods_round():
     assert H.per(34.95) == 350 and H.per(34.85) == 348 and C.per(29.999999999975) == 300
 
@@ -417,9 +470,10 @@ def argv_for(pid):
 @pytest.fixture()
 def cworld(tmp_path, monkeypatch):
     tmp = str(tmp_path)
-    (r_path, r_sha), (r1_path, r1_sha) = write_rules(tmp)
+    (r_path, r_sha), (r1_path, r1_sha), (r2_path, r2_sha) = write_rules(tmp)
     monkeypatch.setattr(C, "RULES_SHA", r_sha)
     monkeypatch.setattr(C, "RULES_REV1_SHA", r1_sha)
+    monkeypatch.setattr(C, "RULES_REV2_SHA", r2_sha)
     rem = os.path.join(tmp, "rem")
     for case, _s in (C.REM_R7, C.REM_R8):
         os.makedirs(os.path.join(rem, case), exist_ok=True)
@@ -449,7 +503,7 @@ def cworld(tmp_path, monkeypatch):
                               omp_wait_policy="PASSIVE", planned_pool="pcore", pool="pcore"))
         with open(os.path.join(bdir, "batch.json"), "w", encoding="utf-8") as f:
             json.dump(dict(cases=cases, mixed_hull_mode=False), f)
-        return C.recount(bdir, r_path, r1_path, rem)
+        return C.recount(bdir, r_path, r1_path, r2_path, rem)
     return run
 
 
@@ -542,6 +596,22 @@ def test_chrono_force_keys_missing_with_departure_undecidable(cworld):
     assert out["criteria"]["CC-F"]["status"] == "undecidable"
     assert out["criteria"]["CC-S"]["status"] == "pass"   # other criteria of the pair stay decidable
     assert out["grade_provisional"] == "undecidable"
+
+
+def test_chrono_rev2_ccs_none(cworld, monkeypatch):
+    orig = C.recount_row
+
+    def none_smax(res):
+        r = orig(res)
+        if res["args"]["expect_controller"] and res["c2_setup"]["las_candidate"]["requested"] == "P5r4" \
+                and res["args"]["duration"] == 120.0:
+            r["s_max_m"] = None                      # cand C2 stroke value None
+        return r
+    monkeypatch.setattr(C, "recount_row", none_smax)
+    out = cworld()
+    assert out["criteria"]["CC-S"]["violations"] == {"C1/C2": ["cand value None"]}
+    assert out["grade_provisional"] == "fail"
+    assert out["errors_total"] == 0 and out["errors_left"] == 0
 
 
 def test_chrono_loc_corrections_cross_check(cworld):

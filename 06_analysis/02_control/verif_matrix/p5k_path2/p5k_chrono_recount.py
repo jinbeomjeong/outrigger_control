@@ -1,7 +1,8 @@
 """Path-2 independent recount, Chrono batch V5-LAS-P5R4-K1 of las_p5r4_k1_rules.md (+ rev1).
 
 Rules: las_p5r4_k1_rules.md (sha256 5ee2bac0...) 4.3 / 4.4 BT-C / 5.2 / 6.3 / 9 / 10 / 16, and the
-record-only addendum las_p5r4_k1_rules_rev1.md. Author: control-expert (path 2).
+record-only addendum las_p5r4_k1_rules_rev1.md and the reading-rule addendum las_p5r4_k1_rules_rev2.md
+(RV2-1..RV2-14). Author: control-expert (path 2).
 
 Independence contract (rules 10.2):
   * Reads only batch.json, <case>/result.json, <case>/controller_commands.npz of the batch, the two
@@ -32,6 +33,7 @@ TOOL_NAME = "p5k_chrono_recount.py"
 TOOL_VERSION = "1"
 RULES_SHA = "5ee2bac0451f0ca00139a5a2d238c38d13a6b0f430efc5b44fe0e8b929c2f979"
 RULES_REV1_SHA = "f39846d6067a7bd409b4ac930d73ebde58a721728ec7d93703ff4627bf21e4b6"
+RULES_REV2_SHA = "e0a7d1e56b57df5336fc2fd40835624d93585fb224063f6c8068c2b1ba7b10fc"
 DLL_SHA = "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
 PERIOD_S = 0.1
 SCM_THREADS = 4
@@ -346,14 +348,15 @@ def recount_row(res):
 
 # ----------------------------------------------------------------------------- recount
 
-def recount(batch_dir, rules_path, rules_rev1_path, rem_batch_dir):
+def recount(batch_dir, rules_path, rules_rev1_path, rules_rev2_path, rem_batch_dir):
     files_read = {}
     K = {f"K-{i}": [] for i in range(10)}
 
     def kadd(k, row, item, ok, got=None, want=None):
         K[k].append(dict(row=row, item=item, ok=ok, got=got, want=want))
 
-    for path, want, label in ((rules_path, RULES_SHA, "rules"), (rules_rev1_path, RULES_REV1_SHA, "rules_rev1")):
+    for path, want, label in ((rules_path, RULES_SHA, "rules"), (rules_rev1_path, RULES_REV1_SHA, "rules_rev1"),
+                              (rules_rev2_path, RULES_REV2_SHA, "rules_rev2")):
         got = sha256_file(path) if os.path.isfile(path) else None
         if got:
             files_read[os.path.abspath(path)] = got
@@ -677,10 +680,17 @@ def recount(batch_dir, rules_path, rules_rev1_path, rem_batch_dir):
                               ramp_periods_applied=ramp.get("periods_applied"),
                               observed=bool(started and num(ramp.get("periods_applied")) and ramp.get("periods_applied") >= 1)))
         # CC-S
-        if not (ra["has_s"] and rb["has_s"]) or not (num(ra["s_max_m"]) and num(rb["s_max_m"])):
-            p["undecidable_by"].setdefault("CC-S", []).append("s_motor_max_m missing")
+        # rev2 RV2-2: key absent -> undecidable; cand None -> violation; ref None -> out of scope (ref_none)
+        if not (ra["has_s"] and rb["has_s"]):
+            p["undecidable_by"].setdefault("CC-S", []).append("s_motor_max_m key missing")
             p["CC-S"] = None
             p["violations"]["CC-S"] = []
+        elif not num(ra["s_max_m"]):
+            p["CC-S"] = dict(ref_m=ra["s_max_m"], cand_m=rb["s_max_m"], delta_m=None, ref_none=True)
+            p["violations"]["CC-S"] = []
+        elif not num(rb["s_max_m"]):
+            p["CC-S"] = dict(ref_m=ra["s_max_m"], cand_m=rb["s_max_m"], delta_m=None, ref_none=False)
+            p["violations"]["CC-S"] = ["cand value None"]
         else:
             dlt = rb["s_max_m"] - ra["s_max_m"]
             p["CC-S"] = dict(ref_m=ra["s_max_m"], cand_m=rb["s_max_m"], delta_m=dlt)
@@ -789,9 +799,11 @@ def recount(batch_dir, rules_path, rules_rev1_path, rem_batch_dir):
     return dict(
         tool=TOOL_NAME, tool_version=TOOL_VERSION, tool_sha256=sha256_file(os.path.abspath(__file__)),
         taken_utc=_dt.datetime.now(_dt.timezone.utc).isoformat(), rules_sha256=RULES_SHA,
-        rules_rev1_sha256=RULES_REV1_SHA, grade_provisional=status, k10=None,
+        rules_rev1_sha256=RULES_REV1_SHA, rules_rev2_sha256=RULES_REV2_SHA, grade_provisional=status, k10=None,
         stop_reasons=stop_r, undecidable_reasons=und_reasons, fail_reasons=fail_reasons,
-        error_rows=error_rows, n_error_rows=len(error_rows),
+        error_rows=error_rows, n_error_rows=len(error_rows), errors_total=len(error_rows),
+        errors_left=sum(1 for r in rows.values() if r.get("status") == "MISSING"),
+        missing_rows=sorted(pid for pid, r in rows.items() if r.get("status") == "MISSING"),
         k_checks={k: dict(ok=k_ok[k], items=v) for k, v in K.items()},
         bt_c=btc, rows=rows, pairs=pairs, criteria=crit, observation=observation, flags=flags,
         files_read_sha256=files_read, truncated=False)
@@ -806,10 +818,11 @@ def main(argv=None):
     ap.add_argument("--rem-batch", default=None, help="07_results/S9/batch_V5-LAS-K1-REM_20261109_235554")
     ap.add_argument("--rules", required=True)
     ap.add_argument("--rules-rev1", required=True)
+    ap.add_argument("--rules-rev2", required=True)
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     try:
-        res = recount(a.batch, a.rules, a.rules_rev1, a.rem_batch)
+        res = recount(a.batch, a.rules, a.rules_rev1, a.rules_rev2, a.rem_batch)
     except Exception:
         traceback.print_exc()
         print(json.dumps(dict(status="tool_error")))
@@ -818,7 +831,7 @@ def main(argv=None):
         json.dump(res, f, indent=1, ensure_ascii=False, sort_keys=True, default=lambda o: None if o is MISSING else str(o))
     g = res["grade_provisional"]
     print("PROVISIONAL grade (K-10 decided outside):", g)
-    print(json.dumps(dict(status=g, n_error_rows=res["n_error_rows"], out=a.out)))
+    print(json.dumps(dict(status=g, errors_total=res["errors_total"], errors_left=res["errors_left"], out=a.out)))
     return EXIT.get(g, 1)
 
 
