@@ -327,6 +327,9 @@ def p3b_level_argv(c: dict[str, Any]) -> list[str]:
     # case-GIF rows only (cad 2026-10-30): SCM node record period [s]
     if c.get("record_scm_nodes"):
         out[-1:-1] = ["--record-scm-nodes", f"{float(c['record_scm_nodes']):g}"]
+    # B1 creep-basis rows only (cad 2026-11-12): grid record mode (full / window)
+    if c.get("b1_grid_record"):
+        out[-1:-1] = ["--b1-grid-record", str(c["b1_grid_record"])]
     # RV6 / FINAL rows only (spec 430.5 / 431.3, 2026-10-30): refuse the run unless the run-time preset is that controller
     if c.get("controller"):
         out[-1:-1] = ["--expect-controller", str(c["controller"])]
@@ -6240,6 +6243,12 @@ def run_level(args) -> Path:
     if getattr(args, "record_scm_nodes", None) is not None:
         scm_nodes = ScmNodeRecorder(model, float(args.record_scm_nodes))
         scm_nodes.snapshot(t_loop0)
+    # B1 creep basis (rules seal candidate 6, cad 2026-11-12): option absent (argparse SUPPRESS) = no attribute, None
+    b1_grid = None
+    if getattr(args, "b1_grid_record", None) is not None:
+        from outrigger_sim.chrono.b1_grid_record import B1GridRecorder  # noqa: PLC0415
+
+        b1_grid = B1GridRecorder(model, c2, str(args.b1_grid_record))
 
     def observe(meas, command):  # 10 Hz S9 keys (287: crawler patch force sum, pad node sinkage, rut clearance)
         from outrigger_sim.frames import roll_pitch_from_quat
@@ -6267,7 +6276,9 @@ def run_level(args) -> Path:
             soil_event_driver.set_event_time(float(meas.t_s) + soil_event_spec["trigger"]["delay_s"])
         q = model.superstructure.GetRot()
         row["roll_pitch_deg"] = [math.degrees(a) for a in roll_pitch_from_quat(np.array([q.e0, q.e1, q.e2, q.e3]))]
-        row["pad_nodes"] = model.pad_node_stats()
+        # B1 creep basis (cad 2026-11-12): with --b1-grid-record the recorder makes the same call (full) and keeps
+        # R-G1 / R-G2 / R-G4; window may skip it (pad_nodes None); option absent = the former line
+        row["pad_nodes"] = model.pad_node_stats() if b1_grid is None else b1_grid.pad_nodes(meas)
         row["scm_crawler_patches"] = int(model.crawler_terrain.GetNumContactPatches())
         if start_gap_spec is not None:  # D2 TOUCH record inputs (read-only; rows of other runs unchanged)
             row["c2_touched"] = [bool(v) for v in c2._state.touched]
@@ -6385,6 +6396,11 @@ def run_level(args) -> Path:
         summary["code_files_at_start"] = code_files_p5k
     if scm_nodes_info is not None:  # case GIFs: key only with --record-scm-nodes
         summary["scm_nodes"] = scm_nodes_info
+    if b1_grid is not None:  # B1 creep basis: key only with --b1-grid-record
+        from outrigger_sim.chrono.b1_grid_record import B1_GRID_RECORD_NAME  # noqa: PLC0415
+
+        summary["b1_grid_record"] = {**_record_or_error(lambda: b1_grid.save(d / B1_GRID_RECORD_NAME)),
+                                     "loop_wall_s": loop_wall}
     if v5_meta is not None:  # the block only with a v5 option
         from outrigger_sim.chrono.v5_plant import plant_records
 
@@ -6626,6 +6642,12 @@ def build_parser() -> argparse.ArgumentParser:
                     help="case GIFs: every PERIOD_S (at the 10 Hz control instants) append the SCM node levels that "
                          "are new or moved > 0.01 mm (GetModifiedNodes(True), all terrains) to scm_nodes.npz and add "
                          "result.json scm_nodes; read-only. Absent = no attribute, the run is unchanged")
+    lp.add_argument("--b1-grid-record", choices=("full", "window"), default=argparse.SUPPRESS,
+                    help="B1 creep basis (rules seal candidate 6): write b1_grid_record.npz (R-G1 pad node stats at "
+                         "every 10 Hz instant, R-G2 pad xy / yaw, R-G3 grid / plane / pad polygons, R-G4 controller raw "
+                         "IMU tilt 100 Hz) and result.json b1_grid_record; read-only. window = the rules 6 fallback "
+                         "window (pad_node_stats skipped after READY + 1 s and the last stroke rise + 2 s, off the 1 s "
+                         "grid). Absent = no attribute, the run is unchanged")
     from outrigger_sim.hydraulics.flow_limit_run import add_flow_limit_arguments
 
     add_flow_limit_arguments(lp)  # shared-pump flow limit (criteria 9); absent = no attribute, the run is unchanged

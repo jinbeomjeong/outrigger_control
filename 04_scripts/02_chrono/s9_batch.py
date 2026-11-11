@@ -282,7 +282,19 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     # LAS-b P5r4 + K1 (cad 2026-11-11, las_p5r4_k1_chrono_rows.py; las_p5r4_k1_rules.md 4.3 / 16.2): V5-LAS-P5R4-K1
     # (12 judge rows, --las-candidate P0 / P5r4 pairs on the _LAS_K1 tags) + V5-LAS-P5R4-K1-GS (the G-S dry run)
     out.update(_p5k_module().p5k_batches(sys.modules[__name__]))
+    # B1 creep basis (cad 2026-11-12, b1_creep_chrono_rows.py; rules b1_creep_basis seal candidate 2.1 / 2.3 / 6):
+    # V5-B1-CREEP (6 rows, grid record full), V5-B1-CREEP-WIN (window fallback), V5-B1-CREEP-GS (C1 / C6 forms 10 s)
+    out.update(_b1_module().b1_batches(sys.modules[__name__]))
     return out
+
+
+def _b1_module():
+    sys.path.insert(0, str(HERE))
+    try:
+        import b1_creep_chrono_rows  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    return b1_creep_chrono_rows
 
 
 def _d1_batches() -> dict[str, list[dict]]:
@@ -1419,6 +1431,7 @@ ENTRY_META_KEYS = ("note", "priority", "controller", "source_run", "pair_case", 
                    "d1_id", "d1_role", "d1_select", "d1_tag", "d1_slope", "d1_flag", "d1_source",
                    "las", "las_family", "las_crawler", "las_ready", "start_env",
                    "las_candidate", "k1_candidate", "k1_order_gate",
+                   "b1_id", "b1_role", "b1_budget_leg", "b1_grid_record",
                    "rem_key", "role", "k1_forced_block", "pair_set", "argv_base_case", "argv_diff_option",
                    "source_rows", "rem_mass_scale",
                    "p5k_id", "p5k_stage", "p5k_gs", "p5k_family", "p5k_crawler", "p5k_mass_scale", "p5k_duration_s",
