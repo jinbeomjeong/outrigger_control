@@ -1,0 +1,221 @@
+{
+ "lk_mode": null,
+ "beta_Pa": 1600000000.0,
+ "lock_records": [],
+ "rmf_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-aeb1f64260f1bd2d7\\04_scripts\\01_dynamics\\run_mast_flex_c2_check.py",
+ "k_n_N_m": [
+  38674487.11679574,
+  38674487.11679574,
+  29522869.41323361,
+  29522869.41323361
+ ],
+ "preparation": {
+  "preload_s": 62.326,
+  "settle_s": 20.0
+ },
+ "state": {
+  "pad_force_kN": [
+   29.293,
+   28.419,
+   20.892,
+   21.825
+  ],
+  "crawler_force_kN": 279.683,
+  "crawler_spheres_active": 12,
+  "crawler_spheres_active_flags": [
+   0,
+   1,
+   1,
+   1,
+   1,
+   1,
+   0,
+   1,
+   1,
+   1,
+   1,
+   1,
+   0,
+   0,
+   0,
+   1,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1,
+   0,
+   0
+  ],
+  "crawler_clearance_mm": -8.011,
+  "motor_stroke_mm": [
+   342.411,
+   342.413,
+   347.407,
+   347.461
+  ],
+  "attitude_deg": [
+   -0.00053,
+   0.18008
+  ],
+  "t_plant_s": 82.326
+ },
+ "lock_modes": null,
+ "measured": {
+  "S_hold2s_kN_per_mm": [
+   [
+    16.8454,
+    -6.0911,
+    -2.2632,
+    8.6757
+   ],
+   [
+    -6.0911,
+    16.6987,
+    8.6635,
+    -2.3774
+   ],
+   [
+    -2.2633,
+    8.6635,
+    13.7054,
+    -8.2226
+   ],
+   [
+    8.6757,
+    -2.3775,
+    -8.2226,
+    13.6175
+   ]
+  ],
+  "S_late_kN_per_mm": [
+   [
+    16.759,
+    -6.0414,
+    -2.2914,
+    8.7425
+   ],
+   [
+    -6.0414,
+    16.6092,
+    8.7318,
+    -2.4062
+   ],
+   [
+    -2.2914,
+    8.7318,
+    13.6517,
+    -8.209
+   ],
+   [
+    8.7425,
+    -2.4063,
+    -8.209,
+    13.5645
+   ]
+  ],
+  "late_window_peak_to_peak_kN_per_mm": [
+   [
+    0.7737,
+    0.7307,
+    0.5155,
+    0.553
+   ],
+   [
+    0.7307,
+    0.8113,
+    0.5729,
+    0.521
+   ],
+   [
+    0.5155,
+    0.5729,
+    0.4087,
+    0.371
+   ],
+   [
+    0.5531,
+    0.5209,
+    0.371,
+    0.3993
+   ]
+  ],
+  "baseline_drift_kN": [
+   -0.0,
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "crawler_spheres_active_min_per_step": [
+   12,
+   12,
+   12,
+   12
+  ],
+  "pad_force_min_kN_per_step": [
+   [
+    29.439,
+    20.945,
+    17.504,
+    21.682
+   ],
+   [
+    21.819,
+    28.565,
+    20.745,
+    18.313
+   ],
+   [
+    25.905,
+    28.271,
+    21.012,
+    12.902
+   ],
+   [
+    29.15,
+    24.907,
+    11.969,
+    21.945
+   ]
+  ],
+  "crawler_force_change_kN_per_step": [
+   -17.1686,
+   -16.8932,
+   -11.8831,
+   -11.6917
+  ]
+ },
+ "diag_pair_run": {
+  "dF_kN": [
+   -8.3543,
+   25.3622,
+   22.3689,
+   -10.6001
+  ],
+  "diag_pair_FRRL_on_RR": -10.600062050089146,
+  "loss_per_received_kN": 0.2220784526065205
+ },
+ "rms_vs_chrono_S_hold2s_kN_per_mm": 0.6562991915409228,
+ "m2_S_hold2s_kN_per_mm": {
+  "S_RR_RL": -8.2226,
+  "diag_pair_FRRL_on_RR": -10.6001,
+  "loss_per_received_kN": 0.22207952467049785,
+  "alpha_adj_rear_RR_from_RL": 0.5999533030776191
+ },
+ "rms_vs_chrono_S_late_kN_per_mm": 0.6494202323190797,
+ "m2_S_late_kN_per_mm": {
+  "S_RR_RL": -8.209,
+  "diag_pair_FRRL_on_RR": -10.6153,
+  "loss_per_received_kN": 0.22242873157392953,
+  "alpha_adj_rear_RR_from_RL": 0.6013170520887509
+ },
+ "chrono_m2": {
+  "S_RR_RL": -9.2691965733625,
+  "diag_pair_FRRL_on_RR": -12.462979601340106,
+  "diag_pair_FRRL_on_FL": -9.616622873307218,
+  "loss_per_received_kN": 0.25323765582340596,
+  "alpha_adj_rear_RR_from_RL": 0.648828741047812,
+  "S_FL_RR": 9.017764923437419
+ }
+}
