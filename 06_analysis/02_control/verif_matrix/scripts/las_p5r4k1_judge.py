@@ -89,6 +89,8 @@ INHERITED_RULES = {
 RULES_ADDENDA = {
     "las_p5r4_k1_rules_rev1.md":
         "f39846d6067a7bd409b4ac930d73ebde58a721728ec7d93703ff4627bf21e4b6",
+    "las_p5r4_k1_rules_rev2.md":
+        "e0a7d1e56b57df5336fc2fd40835624d93585fb224063f6c8068c2b1ba7b10fc",
 }
 """Sealed addenda (rev1: sealed 2026-11-11 10:40:10 +09:00, before any result; record items
 RV1-1 .. RV1-5, identity RV1-6)."""
@@ -198,6 +200,8 @@ YS_REF_SUB, YS_CAND_SUB = "Y-Sa", "Y-Sb"
 # ------------------------------------------------------------------------------- tags (K-3)
 TAG_BY_SETTING = {"VB": "final_C4G2_P3_LAS_K1", "V0": "final_C4G2_LAS_K1"}
 COMBINATION_TAGS = ("final_C4G2_K1", "final_C4G2_P3_K1")
+TOKEN_JOB_KEYS = ("k1", "k1_candidate", "k1_order_gate", "las_off")
+"""rev2 RV2-14: ``job`` key names that are a K1 / LAS-off token trace (K-4 stop)."""
 OLD_TAG_SUFFIX = "_LAS"
 TOUCH_CREEP_SUFFIX = "_TCL"
 
@@ -936,11 +940,12 @@ def settings_problems(line: dict) -> list[str]:
 
 
 def ramp_end_s(line: dict) -> float | None:
-    """A-plan 6: restarts must follow the end ramp, or the LAS-b end without a ramp. Copied."""
+    """rev2 RV2-11: the end the restarts must follow is ``las.ramp.end_t_s``, else (None or
+    absent) ``las.end_t_s``."""
     las = line.get("las") or {}
     ramp = las.get("ramp") or {}
-    if ramp.get("periods_applied"):
-        return ramp.get("end_t_s")
+    if ramp.get("end_t_s") is not None:
+        return ramp["end_t_s"]
     return las.get("end_t_s")
 
 
@@ -1202,9 +1207,9 @@ def gate_problems(line: dict) -> list[str]:
     if (effective.get("flat_soil_margin_order_gate") is not True
             or effective.get("touch_creep_latch_enable") is not False):
         problems.append(f"K-4 effective gate / touch creep {effective!r}")
-    job_keys = [key for key in line.get("job") or {} if "k1" in key or "las_off" in key]
+    job_keys = sorted(key for key in line.get("job") or {} if key in TOKEN_JOB_KEYS)
     if job_keys:
-        problems.append(f"K-4 job keys {job_keys} (output contract 8)")
+        problems.append(f"K-4 job keys {job_keys} (rev2 RV2-14 token trace)")
     return problems
 
 
@@ -1306,7 +1311,8 @@ def arm_completeness(bundle: str, arm: str, ctx: Context, claim_keys: list[str])
     missing = [unit for unit in wanted if unit not in part.finished]
     errors_left = [unit for unit in missing if unit in part.error_units]
     return {"expected": len(wanted), "finished": len(part.finished),
-            "error_lines": part.error_lines, "errors_left": errors_left,
+            "error_lines": part.error_lines, "errors_total": part.error_lines,
+            "errors_left": errors_left,
             "missing": [unit for unit in missing if unit not in part.error_units],
             "duplicates": list(part.duplicates),
             "out_of_list": sorted(unit for unit in part.finished if unit not in wanted_set),
@@ -1325,20 +1331,28 @@ def bit_predictions(bundle: str, ctx: Context) -> dict:
             continue
         part = ctx.parts[(bundle, arm)]
         different = sorted(unit for unit, line in part.finished.items()
-                           if unit in expected and line["commands_sha256"] != expected[unit])
+                           if unit in expected and not _hash_matches(line, expected[unit]))
         equal = sum(1 for unit, line in part.finished.items()
-                    if unit in expected and line["commands_sha256"] == expected[unit])
+                    if unit in expected and _hash_matches(line, expected[unit]))
         out[arm] = {"predicted": True, "expected": len(expected), "equal": equal,
                     "different": different, "ok": not different}
     return out
 
 
-def z_x_expected(ctx: Context) -> dict[str, str]:
-    """BT-X: a Z-X ref hash = the same key's ref hash in Z-T / Z-S / Z-C."""
-    out = {}
+def _hash_matches(line: dict, expected) -> bool:
+    """One expected hash, or (BT-X) the ref hashes of every bundle the key belongs to."""
+    if isinstance(expected, (list, tuple)):
+        return all(line["commands_sha256"] == sha for sha in expected)
+    return line["commands_sha256"] == expected
+
+
+def z_x_expected(ctx: Context) -> dict[str, list[str]]:
+    """BT-X (rev2 RV2-6): a Z-X ref hash = the new ref hash of every bundle (Z-T / Z-S /
+    Z-C) the key belongs to; a key of Z-S and Z-C must equal both."""
+    out: dict[str, list[str]] = {}
     for bundle in PAIR_BUNDLES:
         for key, line in ctx.parts[(bundle, ARM_REF)].finished.items():
-            out[key] = line["commands_sha256"]
+            out.setdefault(key, []).append(line["commands_sha256"])
     return out
 
 
@@ -1467,11 +1481,15 @@ def exception_record(cand: dict, ref: dict, rx_line: dict | None) -> dict:
     if excess_s < EXCEPTION_SHARE * delta_s - TOLERANCE:
         return {**out, "reason": "E < 0.8 dt"}
     t_end_s = out["t_las_end_s"]
+    if t_end_s is None:
+        return {**out, "reason": "no LAS-b / ramp end time (rev2 RV2-11)"}
     starts = clock.get("clock_starts_s") or []
+    # rev2 RV2-11: restarts inside l are c_1 <= t <= c_m; "after" is a larger whole period.
     counted = [reset for reset in clock.get("resets") or []
-               if starts and starts[0] - TOLERANCE <= reset["t_s"] <= starts[-1] + TOLERANCE]
-    if t_end_s is None or any(reset["t_s"] < t_end_s - TOLERANCE for reset in counted):
-        return {**out, "reason": "a restart before the LAS-b end"}
+               if starts and starts[0] <= reset["t_s"] <= starts[-1]]
+    end_period = period_of(t_end_s)
+    if any(period_of(reset["t_s"]) <= end_period for reset in counted):
+        return {**out, "reason": "a restart not after the LAS-b / ramp end period"}
     return {**out, "is_exception": True, "reason": "gate timing branch"}
 
 
@@ -1580,34 +1598,92 @@ def las_start_s(line: dict) -> float | None:
     raise MissingField("las.start_t_s")
 
 
-def pair_record(key: str, cand: dict, ref: dict, rx_line: dict | None) -> dict:
-    """Every 6.2 quantity of one pair (cand - ref).
+RANGE_IN, RANGE_OUT_REF_NONE, RANGE_OUT = "in", "ref_none", "out"
+"""rev2 RV2-2 scope of a C-F / C-S pair: judged, outside because the ref value is None, or
+outside the C-F scope (ref below the margin line)."""
 
-    Raises:
-        MissingField: A criteria field is missing (the pair is undecidable).
-    """
+
+def cf_state(f_ref: float | None, f_cand: float | None) -> tuple[str, bool]:
+    """rev2 RV2-2 1: (scope, violation) of C-F."""
+    if f_ref is None:
+        return RANGE_OUT_REF_NONE, False
+    if f_ref < C_FLOOR_N:
+        return RANGE_OUT, False
+    return RANGE_IN, f_cand is None or f_cand < C_FLOOR_N
+
+
+def cs_state(s_ref: float | None, s_cand: float | None) -> tuple[str, bool]:
+    """rev2 RV2-2 2: (scope, violation) of C-S (ref None: outside, both None included;
+    cand None with a ref value: violation)."""
+    if s_ref is None:
+        return RANGE_OUT_REF_NONE, False
+    if s_cand is None:
+        return RANGE_IN, True
+    return RANGE_IN, float(s_cand) - float(s_ref) > STROKE_LIMIT_M + TOLERANCE
+
+
+def _decide(record: dict, name: str, evaluate):
+    """rev2 RV2-4: a missing field makes only the criterion ``name`` undecidable."""
+    try:
+        return evaluate()
+    except MissingField as exc:
+        record["undecided"][name] = str(exc)
+        return None
+
+
+def _p3_of(cand: dict, ref: dict) -> dict:
+    if not is_verdict_case(ref):
+        same_trajectory_drift(cand, ref)
+    return p3_comparison(cand, ref)
+
+
+def pair_record(key: str, cand: dict, ref: dict, rx_line: dict | None) -> dict:
+    """Every 6.2 quantity of one pair (cand - ref); a missing field is recorded in
+    ``undecided`` under the criterion that reads it (rev2 RV2-4)."""
     is_case = is_verdict_case(ref)
-    start_t_s = las_start_s(cand)
     is_changed = cand["commands_sha256"] != ref["commands_sha256"]
-    record = {"key": key, "changed": is_changed, "is_case": is_case,
-              "c2": c2_violations(cand, ref), "cand_las_started": start_t_s is not None,
-              "PAIR_DIVERGE": start_t_s is None and is_changed,
-              "PAIR_CMD_DIFF": start_t_s is not None and is_changed}
-    p3 = p3_comparison(cand, ref)
-    record.update(P3=p3["violations"], P3_baseline_false=p3["baseline_false"],
-                  ready_cand_s=ready_time(cand), ready_ref_s=ready_time(ref),
-                  CK1=ck1_record(cand, ref), anchor=anchor_record(cand, ref))
+    record = {"key": key, "changed": is_changed, "is_case": is_case, "undecided": {}}
+    start_t_s = _decide(record, "PAIR_DIVERGE", lambda: las_start_s(cand))
+    is_premise_known = "PAIR_DIVERGE" not in record["undecided"]
+    record.update(c2=_decide(record, "C-2", lambda: c2_violations(cand, ref)),
+                  cand_las_started=start_t_s is not None,
+                  PAIR_DIVERGE=is_premise_known and start_t_s is None and is_changed,
+                  PAIR_CMD_DIFF=is_premise_known and start_t_s is not None and is_changed)
+    p3 = _decide(record, "P3", lambda: _p3_of(cand, ref)) or {}
+    record.update(P3=p3.get("violations"), P3_baseline_false=p3.get("baseline_false", []),
+                  CK1=_decide(record, "CK-1", lambda: ck1_record(cand, ref)),
+                  anchor=anchor_record(cand, ref))
+    record["ready_cand_s"] = _decide(record, "R", lambda: ready_time(cand))
+    record["ready_ref_s"] = _decide(record, "R", lambda: ready_time(ref))
     if not is_case:
-        record.update(items_only(cand, ref))
-        record.update(F_cand_N=need(cand, "d1", "F_judged_min_N"),
-                      F_ref_N=need(ref, "d1", "F_judged_min_N"),
-                      stroke_increase_m=stroke_increase_m(cand, ref))
+        _d1_fields(record, cand, ref)
     both = record["ready_cand_s"] is not None and record["ready_ref_s"] is not None
     record["dt_s"] = record["ready_cand_s"] - record["ready_ref_s"] if both else None
     if is_changed and both and record["dt_s"] > EXCEPTION_DT_FLOOR_S:
         record["exception"] = exception_record(cand, ref, rx_line)
     record["record"] = pair_note(cand, ref)
     return record
+
+
+def _d1_fields(record: dict, cand: dict, ref: dict) -> None:
+    """C-F / C-S values of a D-1 pair with their rev2 RV2-2 scope."""
+    forces = _decide(record, "C-F", lambda: (need(ref, "d1", "F_judged_min_N"),
+                                             need(cand, "d1", "F_judged_min_N")))
+    strokes = _decide(record, "C-S", lambda: (need(ref, "d1", "stroke_max_m"),
+                                              need(cand, "d1", "stroke_max_m")))
+    f_ref, f_cand = forces or (None, None)
+    s_ref, s_cand = strokes or (None, None)
+    record.update(F_ref_N=f_ref, F_cand_N=f_cand, stroke_ref_m=s_ref, stroke_cand_m=s_cand,
+                  stroke_increase_m=None if s_ref is None or s_cand is None
+                  else float(s_cand) - float(s_ref))
+    record["C-F_scope"], record["C-F_violation"] = cf_state(f_ref, f_cand) if forces \
+        else (None, False)
+    record["C-S_scope"], record["C-S_violation"] = cs_state(s_ref, s_cand) if strokes \
+        else (None, False)
+    try:
+        record.update(items_only(cand, ref))
+    except MissingField:
+        pass
 
 
 def pair_note(cand: dict, ref: dict) -> dict:
@@ -1636,6 +1712,7 @@ def ready_population(pairs: dict[str, dict]) -> dict:
     (copied from ``las_rev_judge.ready_population``)."""
     changed = [key for key, pair in pairs.items() if pair["changed"]]
     exceptions, population, h5 = [], {}, []
+    open_keys = sorted(key for key, pair in pairs.items() if "R" in pair.get("undecided", {}))
     for key in changed:
         pair = pairs[key]
         if pair["dt_s"] is None:
@@ -1648,7 +1725,12 @@ def ready_population(pairs: dict[str, dict]) -> dict:
             continue
         population[key] = pair["dt_s"]
     out = {"changed": len(changed), "population": len(population), "exceptions": exceptions,
-           "BT-X_mismatch": h5, "median_s": None, "max_s": None}
+           "BT-X_mismatch": h5, "median_s": None, "max_s": None, "undecided_pairs": open_keys}
+    if open_keys:
+        values = list(population.values())
+        return {**out, "R-1": None, "R-2": None, "basis": "READY field missing (rev2 RV2-4)",
+                "median_s": statistics.median(values) if values else None,
+                "max_s": max(values) if values else None}
     if not changed:
         return {**out, "R-1": True, "R-2": True, "basis": f"{len(pairs)}/{len(pairs)} hash equal"}
     if not population:
@@ -1672,42 +1754,60 @@ def judged_pairs(bundle: str, ctx: Context) -> tuple[dict[str, dict], list[str],
         try:
             pairs[key] = pair_record(key, cand_part.finished[key], ref_part.finished[key],
                                      rx.get(key))
-        except MissingField as exc:
+        except MissingField as exc:  # a field no single criterion owns (``commands_sha256``)
             undecidable.append(f"{key}: missing {exc}")
+    for key, pair in pairs.items():
+        undecidable += [f"{key} {name}: missing {field_name}"
+                        for name, field_name in sorted(pair["undecided"].items())]
     return pairs, undecidable, unpaired
 
 
-def _pair_criteria(bundle: str, pairs: dict[str, dict], undecidable: list[str],
-                   bases: Bases) -> dict:
-    """6.2 criteria over the decided pairs; an undecidable pair makes each criterion
-    undecidable (16.6 layer 1) while its violations are still listed."""
-    is_open = bool(undecidable)
+def _open_keys(pairs: dict[str, dict], name: str) -> list[str]:
+    return sorted(k for k, p in pairs.items() if name in p["undecided"])
 
-    def make(items):
-        return criterion(None if is_open else not items, items,
-                         undecidable_pairs=len(undecidable))
+
+def _pair_criteria(bundle: str, pairs: dict[str, dict], whole_pair_open: bool,
+                   bases: Bases) -> dict:
+    """6.2 criteria; a pair whose field a criterion reads is missing makes that criterion
+    undecidable (rev2 RV2-4, 16.6 layer 1) while the violations are still listed.
+
+    Args:
+        whole_pair_open: A pair could not be built at all (every criterion undecidable).
+    """
+
+    def make(items, name, **extra):
+        open_keys = _open_keys(pairs, name)
+        is_open = whole_pair_open or bool(open_keys)
+        return criterion(None if is_open else not items, items, undecidable_pairs=open_keys,
+                         **extra)
 
     c2 = [f"{k}: {p['c2']}" for k, p in pairs.items() if p["c2"]]
     p3 = [f"{k}: {p['P3']}" for k, p in pairs.items() if p["P3"]]
     d1 = {k: p for k, p in pairs.items() if not p["is_case"]}
     cf = [f"{k}: ref {p['F_ref_N']} -> {p['F_cand_N']}" for k, p in d1.items()
-          if p["F_ref_N"] is not None and p["F_ref_N"] >= C_FLOOR_N
-          and (p["F_cand_N"] is None or p["F_cand_N"] < C_FLOOR_N)]
-    cs = [f"{k}: {p['stroke_increase_m']}" for k, p in d1.items()
-          if p["stroke_increase_m"] is None
-          or p["stroke_increase_m"] > STROKE_LIMIT_M + TOLERANCE]
-    ck1 = [f"{k}: R4_LOST" for k, p in pairs.items() if p["CK1"]["R4_LOST"]]
-    out = {"C-2": make(c2), "P3": make(p3), "C-F": make(cf), "C-S": make(cs),
-           "CK-1": make(ck1)}
+          if p["C-F_violation"]]
+    cs = [f"{k}: {p['stroke_ref_m']} -> {p['stroke_cand_m']}" for k, p in d1.items()
+          if p["C-S_violation"]]
+    ck1 = [f"{k}: R4_LOST" for k, p in pairs.items() if p["CK1"] and p["CK1"]["R4_LOST"]]
+
+    def ref_none(name):
+        return sorted(k for k, p in d1.items() if p[f"{name}_scope"] == RANGE_OUT_REF_NONE)
+
+    out = {"C-2": make(c2, "C-2"), "P3": make(p3, "P3"),
+           "C-F": make(cf, "C-F", ref_none=ref_none("C-F")),
+           "C-S": make(cs, "C-S", ref_none=ref_none("C-S")), "CK-1": make(ck1, "CK-1"),
+           "PAIR_DIVERGE_premise": make([], "PAIR_DIVERGE")}
     if bundle == "Z-T":
         t1 = set(bases.lists["Z-T-ref"]) & {line["las"]["key"] for line in bases.lines["T1"]
                                             if is_b0_t_line(line)}
-        c1 = [f"{k}: {p['F_cand_N']}" for k, p in d1.items()
-              if k in t1 and (p["F_cand_N"] is None or p["F_cand_N"] < C_FLOOR_N)]
-        out["C-1"] = make(c1)
+        c1 = [f"{k}: {p['F_cand_N']}" for k, p in d1.items() if k in t1
+              and "C-F" not in p["undecided"]
+              and (p["F_cand_N"] is None or p["F_cand_N"] < C_FLOOR_N)]
+        out["C-1"] = make(c1, "C-F")
         h_r_0 = [key for key in bases.lists["Z-T"] if H_R_0_MARK in key]
         a3 = [key for key in h_r_0 if key in pairs and pairs[key]["changed"]]
-        a3_open = is_open or len(h_r_0) != H_R_0_COUNT or any(k not in pairs for k in h_r_0)
+        a3_open = (whole_pair_open or len(h_r_0) != H_R_0_COUNT
+                   or any(k not in pairs for k in h_r_0))
         out["A-3"] = criterion(None if a3_open else not a3, a3, h_r_0_keys=len(h_r_0))
     return out
 
@@ -1715,12 +1815,13 @@ def _pair_criteria(bundle: str, pairs: dict[str, dict], undecidable: list[str],
 def judge_pair_bundle(bundle: str, ctx: Context) -> dict:
     """6.2 of Z-T / Z-S / Z-C with ``PAIR_DIVERGE`` (stop) and the records."""
     pairs, undecidable, unpaired = judged_pairs(bundle, ctx)
-    criteria = _pair_criteria(bundle, pairs, undecidable, ctx.bases)
+    whole_pair_open = len(undecidable) > sum(len(p["undecided"]) for p in pairs.values())
+    criteria = _pair_criteria(bundle, pairs, whole_pair_open, ctx.bases)
     ready = ready_population(pairs)
     if bundle in ("Z-T", "Z-C"):
-        ok = None if (undecidable or ready["R-1"] is None) else ready["R-1"]
+        ok = None if (whole_pair_open or ready["R-1"] is None) else ready["R-1"]
         criteria["R-1"] = criterion(ok, [] if ok in (True, None) else [ready["median_s"]])
-        ok = None if (undecidable or ready["R-2"] is None) else ready["R-2"]
+        ok = None if (whole_pair_open or ready["R-2"] is None) else ready["R-2"]
         criteria["R-2"] = criterion(ok, [] if ok in (True, None) else [ready["max_s"]])
     diverge = sorted(k for k, p in pairs.items() if p["PAIR_DIVERGE"])
     cmd_diff = sorted(k for k, p in pairs.items() if p["PAIR_CMD_DIFF"])
@@ -1740,8 +1841,7 @@ def judge_pair_bundle(bundle: str, ctx: Context) -> dict:
 
 
 def is_cs_violation(pair: dict) -> bool:
-    return not pair["is_case"] and (pair["stroke_increase_m"] is None
-                                    or pair["stroke_increase_m"] > STROKE_LIMIT_M + TOLERANCE)
+    return not pair["is_case"] and bool(pair.get("C-S_violation"))
 
 
 def anchor_effect(pairs: dict[str, dict]) -> dict:
@@ -1759,8 +1859,9 @@ def pair_flags(pairs: dict[str, dict]) -> dict:
     between = [f"{k}: {p.get('F_cand_N')}" for k, p in pairs.items()
                if p.get("F_cand_N") is not None
                and GRID_FORCE_FLOOR_KN * 1e3 <= p["F_cand_N"] < C_FLOOR_N]
-    return {"R4_GAINED": sorted(k for k, p in pairs.items() if p["CK1"]["R4_GAINED"]),
-            "THIN_MARGIN": sorted(k for k, p in pairs.items() if p["CK1"]["thin_margin"]),
+    return {"R4_GAINED": sorted(k for k, p in pairs.items() if (p["CK1"] or {}).get("R4_GAINED")),
+            "THIN_MARGIN": sorted(k for k, p in pairs.items()
+                                  if (p["CK1"] or {}).get("thin_margin")),
             FLAG_ANCHOR_SAMPLE_SHIFT: sorted(k for k, p in pairs.items()
                                              if p["anchor"][FLAG_ANCHOR_SAMPLE_SHIFT] is True),
             "ANCHOR_SAMPLE_SHIFT_none": sorted(k for k, p in pairs.items()
@@ -1780,11 +1881,9 @@ def sample_split(pairs: dict[str, dict], bases: Bases) -> dict:
         return {"pairs": len(selected),
                 "changed": sum(1 for p in selected.values() if p["changed"]),
                 "c2_pairs": sorted(k for k, p in selected.items() if p["c2"]),
-                "cs_over": sorted(k for k, p in selected.items()
-                                  if not p["is_case"] and (p["stroke_increase_m"] is None
-                                                           or p["stroke_increase_m"]
-                                                           > STROKE_LIMIT_M + TOLERANCE)),
-                "R4_LOST": sorted(k for k, p in selected.items() if p["CK1"]["R4_LOST"]),
+                "cs_over": sorted(k for k, p in selected.items() if is_cs_violation(p)),
+                "R4_LOST": sorted(k for k, p in selected.items()
+                                  if (p["CK1"] or {}).get("R4_LOST")),
                 "las_started": sum(1 for p in selected.values() if p["cand_las_started"])}
 
     return {"in_sample": summary(sorted(in_sample)),
@@ -1962,16 +2061,20 @@ def tool_record() -> dict:
             "lf_sha256": lf_sha256(TOOL_PATH), "copied_from": COPIED_FROM}
 
 
-def error_line_counts(doc: dict) -> dict[str, int]:
-    """16.3: run error lines per bundle (first attempts included), counted before judging."""
-    return {name: sum(c["error_lines"] for c in bundle["completeness"].values())
+def error_line_counts(doc: dict) -> dict[str, dict[str, int]]:
+    """16.3 / rev2 RV2-8 per bundle: ``errors_total`` (every error line, first attempts
+    included) and ``errors_left`` ((arm, key) with error lines and no finished line)."""
+    return {name: {"errors_total": sum(c["errors_total"]
+                                       for c in bundle["completeness"].values()),
+                   "errors_left": sum(len(c["errors_left"])
+                                      for c in bundle["completeness"].values())}
             for name, bundle in (doc.get("bundles") or {}).items()}
 
 
 def summary_of(doc: dict) -> dict:
     return {"tool": "las_p5r4k1_judge", "provisional": True, "k10": None,
             "final_status": doc.get("final_status"), "final_grade": doc.get("final_grade"),
-            "asks": len(doc.get("asks") or []), "error_lines": error_line_counts(doc),
+            "asks": len(doc.get("asks") or []), "errors": error_line_counts(doc),
             "bundles": {name: b["status"] for name, b in (doc.get("bundles") or {}).items()},
             "out": doc.get("out")}
 

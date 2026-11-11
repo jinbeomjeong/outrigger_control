@@ -131,11 +131,96 @@ def test_ck1_missing_decisions_is_undecidable():
 
 
 # ------------------------------------------------------------------------------- C-2 / P3 / C-S
-def test_missing_d1_items_makes_the_pair_undecidable():
+def test_missing_d1_items_opens_only_the_criteria_that_read_it():
     cand = make_line(pj.ARM_CAND)
     del cand["d1"]["items"]
-    with pytest.raises(pj.MissingField):
-        pj.pair_record(KEY, cand, make_line(pj.ARM_REF), None)
+    pair = pj.pair_record(KEY, cand, make_line(pj.ARM_REF), None)
+    assert set(pair["undecided"]) == {"C-2", "P3"}
+    criteria = pj._pair_criteria("Z-C", {KEY: pair}, False,
+                                 pj.Bases(lists={"Z-C": [KEY], "Z-S": []}))
+    assert criteria["C-2"]["ok"] is None and criteria["P3"]["ok"] is None
+    assert criteria["C-S"]["ok"] is True and criteria["CK-1"]["ok"] is True
+
+
+def test_missing_stroke_key_opens_only_c_s():
+    cand = make_line(pj.ARM_CAND)
+    del cand["d1"]["stroke_max_m"]
+    pair = pj.pair_record(KEY, cand, make_line(pj.ARM_REF), None)
+    assert set(pair["undecided"]) == {"C-S"}
+
+
+@pytest.mark.parametrize(("ref", "cand", "scope", "violation"), [
+    (None, 12000.0, pj.RANGE_OUT_REF_NONE, False),
+    (None, None, pj.RANGE_OUT_REF_NONE, False),
+    (10000.0, None, pj.RANGE_OUT, False),
+    (12000.0, None, pj.RANGE_IN, True),
+    (12000.0, 10000.0, pj.RANGE_IN, True),
+    (12000.0, 11000.0, pj.RANGE_IN, False),
+])
+def test_rv2_2_c_f_none_rules(ref, cand, scope, violation):
+    assert pj.cf_state(ref, cand) == (scope, violation)
+
+
+@pytest.mark.parametrize(("ref", "cand", "scope", "violation"), [
+    (None, 0.5, pj.RANGE_OUT_REF_NONE, False),
+    (None, None, pj.RANGE_OUT_REF_NONE, False),
+    (0.5, None, pj.RANGE_IN, True),
+    (0.5, 0.5015, pj.RANGE_IN, True),
+    (0.5, 0.501, pj.RANGE_IN, False),
+])
+def test_rv2_2_c_s_none_rules(ref, cand, scope, violation):
+    assert pj.cs_state(ref, cand) == (scope, violation)
+
+
+def test_ref_none_stroke_is_listed_not_failed():
+    ref = make_line(pj.ARM_REF)
+    ref["d1"]["stroke_max_m"] = None
+    pairs = {KEY: pj.pair_record(KEY, make_line(pj.ARM_CAND), ref, None)}
+    criteria = pj._pair_criteria("Z-C", pairs, False, pj.Bases(lists={"Z-C": [KEY], "Z-S": []}))
+    assert criteria["C-S"]["ok"] is True and criteria["C-S"]["ref_none"] == [KEY]
+
+
+def _clock(starts, resets):
+    return {"loss_s": 5.0, "clock_starts_s": starts,
+            "resets": [{"t_s": t, "names": []} for t in resets]}
+
+
+def test_rv2_11_restart_must_be_in_a_later_period_than_the_end():
+    ref = make_line(pj.ARM_REF, ready=60.0)
+    rx = {**ref, "done_clock": {"loss_s": 0.0}}
+    cand = make_line(pj.ARM_CAND, "b" * 64, ready=63.0)
+    cand["las"]["ramp"]["end_t_s"] = 30.0
+    cand["done_clock"] = _clock([25.0, 35.0], [30.04])
+    assert pj.exception_record(cand, ref, rx)["is_exception"] is False
+    cand["done_clock"] = _clock([25.0, 35.0], [30.2])
+    assert pj.exception_record(cand, ref, rx)["is_exception"] is True
+    cand["las"]["ramp"]["end_t_s"] = None
+    cand["las"]["end_t_s"] = None
+    assert pj.exception_record(cand, ref, rx)["is_exception"] is False
+
+
+def test_rv2_6_bt_x_must_match_every_bundle_of_the_key():
+    assert pj._hash_matches({"commands_sha256": "a"}, ["a", "a"]) is True
+    assert pj._hash_matches({"commands_sha256": "a"}, ["a", "b"]) is False
+
+
+def test_rv2_14_exact_job_key_names():
+    line = make_line(pj.ARM_REF)
+    line["job"]["k1_scale_note"] = 1
+    assert pj.gate_problems(line) == []
+    line["job"]["k1_candidate"] = "K1on"
+    assert any("RV2-14" in text for text in pj.gate_problems(line))
+
+
+def test_rv2_8_errors_total_and_left():
+    error = {"error": "y", "rev": {"key": "other"},
+             "p5k": {"bundle": "Z-C", "arm": pj.ARM_REF, "attempt": 1}}
+    lines = [make_line(pj.ARM_REF), error,
+             {**error, "p5k": {**error["p5k"], "attempt": 2}}]
+    parts, _ = pj.split_lines(lines)
+    ctx = pj.Context(pj.Bases(lists={"Z-C": [KEY, "other"]}), pj.References(), parts, [])
+    completeness = pj.arm_completeness("Z-C", pj.ARM_REF, ctx, [])
+    assert completeness["errors_total"] == 2 and completeness["errors_left"] == ["other"]
 
 
 def test_criteria_list_violations_and_stay_undecidable_with_an_open_pair():
@@ -189,11 +274,11 @@ def test_anchor_sample_shift_flag_true_false_none():
 
 
 def test_anchor_effect_lists_only_violating_pairs():
-    pairs = {"a": {"is_case": False, "stroke_increase_m": 0.002, "P3": [],
+    pairs = {"a": {"is_case": False, "C-S_violation": True, "P3": [],
                    "anchor": {pj.FLAG_ANCHOR_SAMPLE_SHIFT: True}},
-             "b": {"is_case": False, "stroke_increase_m": 0.0, "P3": ["x"],
+             "b": {"is_case": False, "C-S_violation": False, "P3": ["x"],
                    "anchor": {pj.FLAG_ANCHOR_SAMPLE_SHIFT: None}},
-             "c": {"is_case": False, "stroke_increase_m": 0.0, "P3": [],
+             "c": {"is_case": False, "C-S_violation": False, "P3": [],
                    "anchor": {pj.FLAG_ANCHOR_SAMPLE_SHIFT: True}}}
     effect = pj.anchor_effect(pairs)
     assert effect == {"anchor_effect_possible": ["a"], "anchor_effect_unknown": ["b"]}

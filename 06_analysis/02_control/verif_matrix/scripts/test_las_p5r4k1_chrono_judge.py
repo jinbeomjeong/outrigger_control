@@ -181,6 +181,58 @@ def test_k3_batch_controller_tag_and_k7_mass_scale():
     assert any("batch controller" in text for text in cj.k3_row_problems(row))
 
 
+def test_rv2_3_no_departure_cand_fails_cc_f_and_g2pc():
+    cand = make_result(cj.ARM_CAND)
+    del cand["p3b"]["P3-3_leg_force"]
+    cand["p3b"]["departure"] = {"departed": False}
+    out = criteria_of(make_inputs({"A2": cand}))
+    assert out["criteria"]["CC-F"]["ok"] is False and out["criteria"]["G-2'C"]["ok"] is False
+    assert out["no_departure"] == ["A1/A2"]
+
+
+def test_rv2_3_no_departure_ref_is_outside_cc_f():
+    ref = make_result(cj.ARM_REF)
+    del ref["p3b"]["P3-3_leg_force"]
+    ref["p3b"]["departure"] = {"departed": False}
+    out = criteria_of(make_inputs({"A1": ref}))
+    assert out["criteria"]["CC-F"]["ok"] is True
+    assert out["criteria"]["CC-F"]["ref_none"] == ["A1/A2"]
+
+
+def test_rv2_3_departed_with_a_missing_key_opens_only_cc_f_and_g2pc():
+    cand = make_result(cj.ARM_CAND)
+    del cand["p3b"]["P3-3_leg_force"]["F_min_transient_N"]
+    cand["p3b"]["departure"] = {"departed": True}
+    out = criteria_of(make_inputs({"A2": cand}))
+    assert out["criteria"]["CC-F"]["status"] == cj.STATUS_UNDECIDABLE
+    assert out["criteria"]["G-2'C"]["status"] == cj.STATUS_UNDECIDABLE
+    assert out["criteria"]["CC-S"]["ok"] is True and out["criteria"]["CC-2"]["ok"] is True
+
+
+def test_rv2_2_one_none_leg_makes_the_value_none():
+    result = make_result(cj.ARM_CAND)
+    result["p3b"]["P3-5_clearance_stroke"]["s_motor_max_m"] = [0.5, None]
+    assert cj.stroke_max_m(result) is None
+    out = criteria_of(make_inputs({"C2": result}))
+    assert out["criteria"]["CC-S"]["ok"] is False
+
+
+def test_rv2_4_missing_phases_opens_the_whole_pair_and_leaves_cc_r_population():
+    cand = make_result(cj.ARM_CAND, ready=80.0)
+    del cand["phases"]
+    out = criteria_of(make_inputs({"C2": cand}, {"C2": commands([1.0, 3.0])}))
+    assert all(c["status"] == cj.STATUS_UNDECIDABLE for name, c in out["criteria"].items()
+               if name != "observation")
+    assert out["criteria"]["CC-R"]["population"] == 0
+
+
+def test_rv2_13_boundary_row_is_included():
+    digest = commands([1.0, 2.0, 3.0])
+    shorter = commands([1.0, 2.0])
+    assert digest.prefix_sha256(0.1) == shorter.prefix_sha256(0.1)
+    assert digest.prefix_sha256(0.2) != shorter.prefix_sha256(0.2)
+
+
 @pytest.mark.parametrize(("statuses", "expected"), [
     ([cj.STATUS_FAIL], cj.STATUS_FAIL), ([cj.STATUS_UNDECIDABLE], cj.STATUS_UNDECIDABLE),
     ([cj.STATUS_FAIL, cj.STATUS_UNDECIDABLE], cj.STATUS_UNDECIDABLE)])

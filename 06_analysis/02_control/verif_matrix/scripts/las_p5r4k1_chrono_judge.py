@@ -86,6 +86,8 @@ INHERITED_RULES = {
 RULES_ADDENDA = {
     "las_p5r4_k1_rules_rev1.md":
         "f39846d6067a7bd409b4ac930d73ebde58a721728ec7d93703ff4627bf21e4b6",
+    "las_p5r4_k1_rules_rev2.md":
+        "e0a7d1e56b57df5336fc2fd40835624d93585fb224063f6c8068c2b1ba7b10fc",
 }
 """Sealed addenda (rev1, before any result: RV1-1 .. RV1-4 records, RV1-6 identity)."""
 CODE_DIFF_PATHS = ("03_src", "02_params", "04_scripts")
@@ -181,6 +183,8 @@ READY_MEDIAN_LIMIT_S = 1.0
 READY_MAX_LIMIT_S = 5.0
 TOLERANCE = 1e-9
 THIN_MARGIN_PERIODS = 12
+RANGE_IN, RANGE_OUT_REF_NONE, RANGE_OUT = "in", "ref_none", "out"
+"""rev2 RV2-2 scope of a CC-F / CC-S pair (judged / outside: ref None / outside: ref below)."""
 PATH_CORNER_BIAS, PATH_ANCHOR, PATH_BOTH, PATH_NONE = "1", "2", "1+2", "3"
 ANCHOR_PATHS = (PATH_CORNER_BIAS, PATH_ANCHOR, PATH_BOTH)
 BIAS_EVENT = "INFO_CLEARANCE_BIAS"
@@ -436,17 +440,16 @@ class CommandDigest:
     sha256: str
     t_s: tuple[float, ...]
     rows: tuple[bytes, ...]
+    width: int = 4
+    """``issued_u_m_s`` columns (both arrays are ``<f8``: other dtypes are not read)."""
 
     def prefix_sha256(self, t_end_s: float | None) -> str:
-        """Content digest of the rows whose period ``round(t / 0.1)`` is at most the period of
-        ``t_end_s`` (rules 0 time comparison; the stored last time is 128.0000000031 s), None:
-        the whole array."""
-        if t_end_s is None:
-            return self.sha256
-        last_period = period_of(t_end_s)
-        count = sum(1 for t in self.t_s if period_of(t) <= last_period)
+        """rev2 RV2-13: digest of the shape, dtype and values of the rows with
+        ``t_s <= t_end_s`` (boundary included, compared as it is); None: the whole arrays."""
+        count = len(self.t_s) if t_end_s is None else sum(1 for t in self.t_s if t <= t_end_s)
         t_bytes = struct.pack(f"<{count}d", *self.t_s[:count])
-        return sha256_bytes(t_bytes + b"".join(self.rows[:count]))
+        shape = f"<f8 t_s ({count},) issued_u_m_s ({count}, {self.width})".encode("ascii")
+        return sha256_bytes(shape + t_bytes + b"".join(self.rows[:count]))
 
 
 def read_npy_f8(data: bytes) -> tuple[tuple[int, ...], bytes]:
@@ -486,7 +489,7 @@ def read_commands(path: Path) -> CommandDigest | None:
     width = 8 * u_shape[1]
     t_values = struct.unpack(f"<{n_rows}d", t_bytes)
     rows = tuple(u_bytes[i * width: (i + 1) * width] for i in range(n_rows))
-    return CommandDigest(sha256_bytes(t_bytes + u_bytes), t_values, rows)
+    return CommandDigest(sha256_bytes(t_bytes + u_bytes), t_values, rows, u_shape[1])
 
 
 # ================================================================ prelaunch / postrun
@@ -1261,19 +1264,48 @@ def numbers(value: Any) -> list[float]:
     return [float(v) for v in value if is_number(v)] if isinstance(value, list) else []
 
 
+FORCE_AFTER_PATH = ("p3b", "P3-3_leg_force", "F_min_after_N")
+FORCE_TRANSIENT_PATH = ("p3b", "P3-3_leg_force", "F_min_transient_N")
+STROKE_PATH = ("p3b", "P3-5_clearance_stroke", "s_motor_max_m")
+
+
+def leg_extreme(result: dict[str, Any], path: tuple, pick) -> tuple[float | None, bool]:
+    """rev2 RV2-2 5: (min / max over the legs, key present); a non-list value or one leg that
+    is not a number makes the value None."""
+    value = dig(result, *path)
+    if value is MISSING:
+        return None, False
+    if not isinstance(value, list) or not value or not all(is_number(v) for v in value):
+        return None, True
+    return float(pick(value)), True
+
+
 def force_after_N(result: dict[str, Any]) -> float | None:
-    values = numbers(dig(result, "p3b", "P3-3_leg_force", "F_min_after_N"))
-    return min(values) if values else None
+    return leg_extreme(result, FORCE_AFTER_PATH, min)[0]
 
 
 def force_transient_N(result: dict[str, Any]) -> float | None:
-    values = numbers(dig(result, "p3b", "P3-3_leg_force", "F_min_transient_N"))
-    return min(values) if values else None
+    return leg_extreme(result, FORCE_TRANSIENT_PATH, min)[0]
 
 
 def stroke_max_m(result: dict[str, Any]) -> float | None:
-    values = numbers(dig(result, "p3b", "P3-5_clearance_stroke", "s_motor_max_m"))
-    return max(values) if values else None
+    return leg_extreme(result, STROKE_PATH, max)[0]
+
+
+def force_record(result: dict[str, Any]) -> dict[str, Any]:
+    """rev2 RV2-3: the two force minima, ``no_departure`` (departed false and both keys
+    absent: values None, judged) or ``undecidable`` (a key absent otherwise: CC-F and
+    G-2'C only)."""
+    after, has_after = leg_extreme(result, FORCE_AFTER_PATH, min)
+    transient, has_transient = leg_extreme(result, FORCE_TRANSIENT_PATH, min)
+    departed = dig(result, "p3b", "departure", "departed")
+    out = {"after_N": after, "transient_N": transient, "no_departure": False,
+           "undecidable": False}
+    if has_after and has_transient:
+        return out
+    if departed is False and not has_after and not has_transient:
+        return {**out, "no_departure": True}
+    return {**out, "undecidable": True}
 
 
 def ready_after_loop_s(result: dict[str, Any]) -> float | None:
@@ -1430,28 +1462,80 @@ def ck1c(ref_analysis: RowAnalysis, cand_analysis: RowAnalysis) -> dict[str, Any
             and cand_l1.dP <= THIN_MARGIN_PERIODS}
 
 
+def whole_pair_missing(ref: dict[str, Any], cand: dict[str, Any]) -> list[str]:
+    """rev2 RV2-4: absences that make the whole pair undecidable (an I key, ``phases``,
+    ``p3b.P3-6_ready``) in either row."""
+    missing = item_violations(ref, cand)[2]
+    for side, result in (("ref", ref), ("cand", cand)):
+        if not isinstance(result.get("phases"), list):
+            missing.append(f"{side} phases")
+        if dig(result, "p3b", "P3-6_ready") is MISSING:
+            missing.append(f"{side} p3b.P3-6_ready")
+    return missing
+
+
+def ccf_state(f_ref: float | None, f_cand: float | None) -> tuple[str, bool]:
+    """rev2 RV2-2 1: (scope, violation) of CC-F; a ref None is outside (``ref_none``)."""
+    if f_ref is None:
+        return RANGE_OUT_REF_NONE, False
+    if f_ref < CC_FLOOR_N:
+        return RANGE_OUT, False
+    return RANGE_IN, f_cand is None or f_cand < CC_FLOOR_N
+
+
+def ccs_state(s_ref: float | None, s_cand: float | None) -> tuple[str, bool]:
+    """rev2 RV2-2 2: (scope, violation) of CC-S; ref None (both None included) is outside,
+    cand None with a ref value is a violation."""
+    if s_ref is None:
+        return RANGE_OUT_REF_NONE, False
+    if s_cand is None:
+        return RANGE_IN, True
+    return RANGE_IN, s_cand - s_ref > STROKE_LIMIT_M + TOLERANCE
+
+
 def pair_record(ref_row: RowInput, cand_row: RowInput, analyses: dict[str, RowAnalysis]
                 ) -> dict[str, Any]:
+    """Every 6.3 quantity of one pair; ``whole_missing`` makes the pair undecidable for every
+    criterion, ``undecided`` names the criteria a missing field blocks (rev2 RV2-3 / RV2-4)."""
     ref, cand = ref_row.result or {}, cand_row.result or {}
-    violations, late_flags, missing = item_violations(ref, cand)
+    violations, late_flags, _ = item_violations(ref, cand)
     cand_las = las_meta(cand)
     ramp = cand_las.get("ramp") if isinstance(cand_las.get("ramp"), dict) else {}
     is_started = cand_las.get("start_s") is not None
     has_commands = ref_row.commands is not None and cand_row.commands is not None
     is_changed = has_commands and ref_row.commands.sha256 != cand_row.commands.sha256
     extra = sorted(fault_warn_names(cand) - fault_warn_names(ref))
-    f_ref, f_cand = force_after_N(ref), force_after_N(cand)
-    s_ref, s_cand = stroke_max_m(ref), stroke_max_m(cand)
+    ref_force, cand_force = force_record(ref), force_record(cand)
+    s_ref, has_s_ref = leg_extreme(ref, STROKE_PATH, max)
+    s_cand, has_s_cand = leg_extreme(cand, STROKE_PATH, max)
+    undecided = []
+    if ref_force["undecidable"] or cand_force["undecidable"]:
+        undecided.append("CC-F")
+    if cand_force["undecidable"]:
+        undecided.append("G-2'C")
+    if not (has_s_ref and has_s_cand):
+        undecided.append("CC-S")
+    f_ref, f_cand = ref_force["after_N"], cand_force["after_N"]
+    ccf_scope, ccf_violation = ccf_state(f_ref, f_cand)
+    ccs_scope, ccs_violation = ccs_state(s_ref, s_cand)
+    g2pc_violation = (f_cand is None or f_cand < G2PC_FLOOR_N
+                      or cand_force["transient_N"] is None
+                      or cand_force["transient_N"] < G2PC_FLOOR_N)
     r_ref, r_cand = ready_after_loop_s(ref), ready_after_loop_s(cand)
     return {
         "ref": ref_row.spec.p5k_id, "cand": cand_row.spec.p5k_id,
-        "missing_items": missing, "items": violations, "LATE_LOC_P32": late_flags,
+        "whole_missing": whole_pair_missing(ref, cand), "undecided": undecided,
+        "items": violations, "LATE_LOC_P32": late_flags,
         "phases": phase_violations(ref, cand),
         "events": [f"new events {extra}"] if extra else [],
         "F_after_ref_N": f_ref, "F_after_cand_N": f_cand,
-        "F_transient_cand_N": force_transient_N(cand),
+        "F_transient_cand_N": cand_force["transient_N"],
+        "no_departure": {"ref": ref_force["no_departure"], "cand": cand_force["no_departure"]},
+        "CC-F_scope": ccf_scope, "CC-F_violation": ccf_violation,
+        "G-2'C_violation": g2pc_violation,
         "s_max_ref_m": s_ref, "s_max_cand_m": s_cand,
         "stroke_increase_m": None if s_ref is None or s_cand is None else s_cand - s_ref,
+        "CC-S_scope": ccs_scope, "CC-S_violation": ccs_violation,
         "ready_ref_s": r_ref, "ready_cand_s": r_cand,
         "dt_s": None if r_ref is None or r_cand is None else r_cand - r_ref,
         "commands_present": has_commands, "changed": is_changed,
@@ -1482,7 +1566,9 @@ def first_difference(ref_row: RowInput, cand_row: RowInput) -> int | None:
 
 
 def criteria_6_3(inputs: JudgeInputs, analyses: dict[str, RowAnalysis]) -> dict[str, Any]:
-    """CC-2, CC-F, G-2'C, CC-S, CK-1C, CC-R and the observation requirement (16.6 layer 1)."""
+    """CC-2, CC-F, G-2'C, CC-S, CK-1C, CC-R and the observation requirement; a missing row or
+    a whole-pair absence opens every criterion, a field absence only its criterion (rev2
+    RV2-3 / RV2-4, 16.6 layer 1)."""
     rows = inputs.rows
     pairs, undecidable = {}, []
     for ref_id, cand_id in PAIRS:
@@ -1490,43 +1576,51 @@ def criteria_6_3(inputs: JudgeInputs, analyses: dict[str, RowAnalysis]) -> dict[
             undecidable.append(f"{ref_id}/{cand_id}: row missing")
             continue
         pair = pair_record(rows[ref_id], rows[cand_id], analyses)
-        if pair["missing_items"]:
-            undecidable.append(f"{ref_id}/{cand_id}: I keys missing {pair['missing_items']}")
+        if pair["whole_missing"]:
+            undecidable.append(f"{ref_id}/{cand_id}: whole pair, missing {pair['whole_missing']}")
+        undecidable += [f"{ref_id}/{cand_id} {name}: field missing" for name in pair["undecided"]]
         pair["ANCHOR_SAMPLE_SHIFT"] = pair["record"]["anchor"]["ANCHOR_SAMPLE_SHIFT"]
         pairs[f"{ref_id}/{cand_id}"] = pair
-    is_open = bool(undecidable)
+    is_open = any(text.endswith("row missing") or "whole pair" in text for text in undecidable)
 
-    def make(items, open_override=None):
-        is_unknown = is_open if open_override is None else open_override
-        ok = None if is_unknown else not items
-        return {"ok": ok, "status": status_of(ok), "items": items, "count": len(items)}
+    def make(items, name, **extra):
+        open_pairs = sorted(k for k, p in pairs.items() if name in p["undecided"])
+        ok = None if (is_open or open_pairs) else not items
+        return {"ok": ok, "status": status_of(ok), "items": items, "count": len(items),
+                "undecidable_pairs": open_pairs, **extra}
+
+    def ref_none(name):
+        return sorted(k for k, p in pairs.items() if p[f"{name}_scope"] == RANGE_OUT_REF_NONE)
 
     cc2 = [f"{k}: {p['items'] + p['phases'] + p['events']}" for k, p in pairs.items()
            if p["items"] or p["phases"] or p["events"]]
     ccf = [f"{k}: ref {p['F_after_ref_N']} -> {p['F_after_cand_N']}" for k, p in pairs.items()
-           if p["F_after_ref_N"] is not None and p["F_after_ref_N"] >= CC_FLOOR_N
-           and (p["F_after_cand_N"] is None or p["F_after_cand_N"] < CC_FLOOR_N)]
+           if "CC-F" not in p["undecided"] and p["CC-F_violation"]]
     g2pc = [f"{k}: after {p['F_after_cand_N']} transient {p['F_transient_cand_N']}"
             for k, p in pairs.items() if p["cand"] in G2PC_ROWS
-            and (p["F_after_cand_N"] is None or p["F_after_cand_N"] < G2PC_FLOOR_N
-                 or p["F_transient_cand_N"] is None or p["F_transient_cand_N"] < G2PC_FLOOR_N)]
-    ccs = [f"{k}: {p['stroke_increase_m']}" for k, p in pairs.items()
-           if p["stroke_increase_m"] is None
-           or p["stroke_increase_m"] > STROKE_LIMIT_M + TOLERANCE]
+            and "G-2'C" not in p["undecided"] and p["G-2'C_violation"]]
+    g2pc_open = sorted(k for k, p in pairs.items()
+                       if p["cand"] in G2PC_ROWS and "G-2'C" in p["undecided"])
+    ccs = [f"{k}: {p['s_max_ref_m']} -> {p['s_max_cand_m']}" for k, p in pairs.items()
+           if "CC-S" not in p["undecided"] and p["CC-S_violation"]]
     ck1 = [f"{k}: R4_LOST" for k, p in pairs.items()
            if (p["ref"], p["cand"]) in CK1C_PAIRS and p["CK1"]["R4_LOST"]]
-    out = {"CC-2": make(cc2), "CC-F": make(ccf), "G-2'C": make(g2pc), "CC-S": make(ccs),
-           "CK-1C": make(ck1)}
-    out["CC-R"] = ready_criterion(pairs, is_open)
+    g2pc_ok = None if (is_open or g2pc_open) else not g2pc
+    out = {"CC-2": make(cc2, "CC-2"), "CC-F": make(ccf, "CC-F", ref_none=ref_none("CC-F")),
+           "G-2'C": {"ok": g2pc_ok, "status": status_of(g2pc_ok), "items": g2pc,
+                     "count": len(g2pc), "undecidable_pairs": g2pc_open},
+           "CC-S": make(ccs, "CC-S", ref_none=ref_none("CC-S")), "CK-1C": make(ck1, "CK-1C")}
+    population_pairs = {k: p for k, p in pairs.items() if not p["whole_missing"]}
+    out["CC-R"] = ready_criterion(population_pairs, is_open)
     out["observation"] = observation_requirement(pairs, is_open)
-    violating = {k: p for k, p in pairs.items()
-                 if p["items"] or p["stroke_increase_m"] is None
-                 or p["stroke_increase_m"] > STROKE_LIMIT_M + TOLERANCE}
+    violating = {k: p for k, p in pairs.items() if p["items"] or p["CC-S_violation"]}
     return {"criteria": out, "pairs": pairs, "undecidable": undecidable,
             "anchor_effect_possible": sorted(k for k, p in violating.items()
                                              if p["ANCHOR_SAMPLE_SHIFT"] is True),
             "anchor_effect_unknown": sorted(k for k, p in violating.items()
                                             if p["ANCHOR_SAMPLE_SHIFT"] is None),
+            "no_departure": sorted(k for k, p in pairs.items()
+                                   if True in p["no_departure"].values()),
             "PAIR_DIVERGE": sorted(k for k, p in pairs.items() if p["PAIR_DIVERGE"]),
             "PAIR_CMD_DIFF": sorted(k for k, p in pairs.items() if p["PAIR_CMD_DIFF"]),
             "flags": {"R4_GAINED": sorted(k for k, p in pairs.items() if p["CK1"]["R4_GAINED"]),

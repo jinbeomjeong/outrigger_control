@@ -553,6 +553,12 @@ class BatchState:
     finished: dict[tuple[str, str], dict] = field(default_factory=dict)
     c2_pairs: set[str] = field(default_factory=set)
     k8_lines: int = 0
+    error_units: set[tuple] = field(default_factory=set)
+
+    @property
+    def errors_left(self) -> int:
+        """rev2 RV2-8: (arm, key) with error lines and no finished line."""
+        return len({unit for unit in self.error_units if unit not in self.finished})
 
 
 def batch_stop_reason(record: dict, current: dict) -> str | None:
@@ -591,6 +597,7 @@ def handle_record(record: dict, jobs_by_id: dict, state: BatchState, bundle: str
     job_id = pj.p5k_of(record).get("id")
     if "error" in record:
         state.error_lines += 1
+        state.error_units.add((pj.unit_of(record), pj.p5k_of(record).get("arm")))
         if state.attempts.get(job_id, FIRST_ATTEMPT) < RERUN_ATTEMPT and job_id in jobs_by_id:
             state.attempts[job_id] = RERUN_ATTEMPT
             job = jobs_by_id[job_id]
@@ -840,7 +847,8 @@ def run_command(args) -> int:
     state = run_batch(plan.jobs, plan.path, args.workers, args.bundle, plan.identity)
     print(f"errors {state.error_lines}", flush=True)
     summary = {"bundle": args.bundle, "out": str(plan.path), "runs": state.runs,
-               "error_lines": state.error_lines, "skipped": state.skipped,
+               "error_lines": state.error_lines, "errors_total": state.error_lines,
+               "errors_left": state.errors_left, "skipped": state.skipped,
                "stop": state.stop, "c2_pairs": len(state.c2_pairs),
                "k8_problem_lines": state.k8_lines}
     print(json.dumps(summary))
