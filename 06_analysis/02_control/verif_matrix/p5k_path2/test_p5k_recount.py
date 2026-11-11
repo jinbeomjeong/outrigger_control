@@ -32,7 +32,7 @@ def sha_text(s):
 
 def write_rules(tmp):
     paths = []
-    for nm in ("rules.md", "rules_rev1.md", "rules_rev2.md"):
+    for nm in ("rules.md", "rules_rev1.md", "rules_rev2.md", "rules_rev3.md"):
         p = os.path.join(tmp, nm)
         with open(p, "w", encoding="utf-8", newline="\n") as f:
             f.write(f"# synthetic {nm}\n")
@@ -88,10 +88,11 @@ def write_jsonl(path, lines):
 def hworld(tmp_path, monkeypatch):
     """Patch baseline/rules constants to a synthetic world; returns a runner for bundle Z-C."""
     tmp = str(tmp_path)
-    (r_path, r_sha), (r1_path, r1_sha), (r2_path, r2_sha) = write_rules(tmp)
+    (r_path, r_sha), (r1_path, r1_sha), (r2_path, r2_sha), (r3_path, r3_sha) = write_rules(tmp)
     monkeypatch.setattr(H, "RULES_SHA", r_sha)
     monkeypatch.setattr(H, "RULES_REV1_SHA", r1_sha)
     monkeypatch.setattr(H, "RULES_REV2_SHA", r2_sha)
+    monkeypatch.setattr(H, "RULES_REV3_SHA", r3_sha)
     v5 = os.path.join(tmp, "v5")
 
     def run(pairs_spec, zc_ref_hash=None):
@@ -124,7 +125,7 @@ def hworld(tmp_path, monkeypatch):
                 run_lines.append(ln)
         zc = os.path.join(tmp, "p5k_Z-C.jsonl")
         write_jsonl(zc, run_lines)
-        return H.recount(None, v5, r_path, r1_path, r2_path, explicit={"Z-C": zc})
+        return H.recount(None, v5, r_path, r1_path, r2_path, r3_path, explicit={"Z-C": zc})
     return run
 
 
@@ -389,6 +390,158 @@ def test_rev2_k1_token_job_keys(hworld):
     assert out["bundles"]["Z-C"]["status"] == "pass"
 
 
+# ---------------------------------------------------------------------------- rev3 RV3-1 / RV3-6
+
+IN, OUT = 0.5e-9, 2e-9
+
+
+@pytest.mark.parametrize("mod", [H, C])
+def test_rev3_tolerance_helpers(mod):
+    for L in (10.400, 11.414589, 10414.589, 11414.589, 0.001, 1.0, 5.0, 15.0):
+        assert mod.t_ge(L - IN, L) and not mod.t_ge(L - OUT, L)
+        assert not mod.t_lt(L - IN, L) and mod.t_lt(L - OUT, L)
+        assert mod.t_le(L + IN, L) and not mod.t_le(L + OUT, L)
+        assert not mod.t_gt(L + IN, L) and mod.t_gt(L + OUT, L)
+    assert mod.t_in(12.2 - IN, 12.2, 13.5) and mod.t_in(13.5 + IN, 12.2, 13.5)
+    assert not mod.t_in(12.2 - OUT, 12.2, 13.5) and not mod.t_in(13.5 + OUT, 12.2, 13.5)
+
+
+def _za_line(frl, fj, label="P5r4-LQ-c1-j0p25"):
+    ln = hline("D1|H-R-A|x|T|diag-op|K3|VB|e0.002", "cand", "n")
+    ln["rev"]["label"] = label
+    ln["las"].update(end_reason="loc", ramp=dict(start_factor=None, periods_applied=0))
+    ln["diag"] = dict(summary=dict(F_RL_kN=frl, F_judged_min_kN=fj, gate_consistent=True),
+                      touch_budget=dict(level_budget_periods=0, centre="1", j=0.25))
+    return {(ln["rev"]["key"], label): ln}
+
+
+def test_rev3_g1_g2p_boundaries():
+    r = H.za_criteria(_za_line(10.400 - IN, 10.400 - IN), {}, {})
+    assert r["G1"]["LQ"]["ok"] is True
+    r = H.za_criteria(_za_line(10.400 - OUT, 12.0), {}, {})
+    assert r["G1"]["LQ"]["ok"] is False
+    assert H.za_criteria(_za_line(11.414589 - IN, 11.414589 - IN), {}, {})["G2p"]["ok"] is True
+    assert H.za_criteria(_za_line(11.414589 - OUT, 12.0), {}, {})["G2p"]["ok"] is False
+
+
+def test_rev3_flag_band_t15_per_value():
+    band = lambda frl, fj: H.za_criteria(_za_line(frl, fj), {}, {})["records"]["between_10p400_and_10p4146"]
+    assert [b["field"] for b in band(10.400 - IN, 12.0)] == ["F_RL_kN"]                 # lower end included
+    assert band(10.400 - OUT, 12.0) == []                                               # below the band
+    assert band(10.414589 - IN, 12.0) == []                                             # equal to upper end: excluded
+    assert len(band(10.414589 - OUT, 12.0)) == 1
+    assert [b["field"] for b in band(10.405, 10.41)] == ["F_RL_kN", "F_judged_min_kN"]  # two values -> twice
+
+
+def test_rev3_cf_cs_boundaries():
+    def pair(**kw):
+        return H.eval_pair(hline(K1, "ref", "a", F=kw.get("Fr", 12000.0), stroke=0.600),
+                           hline(K1, "cand", "b", start=1.0, F=kw.get("Fc", 12000.0), stroke=kw.get("sc", 0.600)), "Z-C")
+    L = 10414.589
+    assert pair(Fr=L - IN, Fc=L - IN)["cf"] == dict(in_scope=True, ref_N=L - IN, cand_N=L - IN, violation=False, ref_none=False)
+    assert pair(Fr=L - IN, Fc=L - OUT)["cf"]["violation"] is True
+    assert pair(Fr=L - OUT, Fc=1.0)["cf"]["in_scope"] is False
+    assert pair(sc=0.600 + 0.001 + IN)["cs"]["violation"] is False
+    assert pair(sc=0.600 + 0.001 + OUT)["cs"]["violation"] is True
+
+
+def test_rev3_ready_median_t6_t7(hworld):
+    out = hworld({K1: (hline(K1, "ref", "h1", t_ready=50.0), hline(K1, "cand", "h1x", start=1.0, t_ready=51.0 + IN))})
+    r = out["bundles"]["Z-C"]["criteria"]["R-1/R-2"]
+    assert r["status"] == "pass" and out["zx_candidates"]["keys"] == []
+    out = hworld({K1: (hline(K1, "ref", "h1", t_ready=50.0), hline(K1, "cand", "h1x", start=1.0, t_ready=51.0 + OUT))})
+    r = out["bundles"]["Z-C"]["criteria"]["R-1/R-2"]
+    assert r["status"] == "fail" and [c["key"] for c in out["zx_candidates"]["keys"]] == [K1]
+
+
+def _c4(loss_cand, reset_t, las_end=11.0, dt=3.0):
+    cand = hline(K1, "cand", "x", start=10.0)
+    cand["las"]["end_t_s"] = las_end
+    cand["done_clock"] = dict(loss_s=loss_cand, clock_starts_s=[20.0, 23.0], resets=[dict(t_s=reset_t, names=["x"])])
+    ref = hline(K1, "ref", "r")
+    zx = copy.deepcopy(ref)
+    zx["done_clock"] = dict(loss_s=0.0, clock_starts_s=[20.0], resets=[])
+    return H.c4_exception(cand, zx, ref, dt)
+
+
+def test_rev3_c4_condition2_t8():
+    assert _c4(2.4 - IN, 22.0)["exception"] is True
+    assert _c4(2.4 - OUT, 22.0)["exception"] is False
+
+
+def test_rev3_c4_window_w3_integer_periods():
+    # LAS-b end after the window: a reset inside the loss window is not "after the end" -> no exception
+    assert _c4(3.0, 22.999999999999996, las_end=25.0)["exception"] is False   # n = 230 = n(c_m): inside
+    assert _c4(3.0, 23.1, las_end=25.0)["exception"] is True                  # n = 231: outside (empty window)
+    assert _c4(3.0, 19.999999999999996, las_end=25.0)["exception"] is False   # n = 200 = n(c_1): inside
+    assert _c4(3.0, 19.9, las_end=25.0)["exception"] is True                  # n = 199: outside
+
+
+def _ka_pair(te, p_cand, p_p5, fw_cand, fw_p5):
+    key, lab = "D1|H-R-A|x|T|diag-op|K3|VB|e0.002", "P5r4-LT-c1-j0"
+    ln = hline(key, "cand", "n")
+    ln["rev"]["label"] = lab
+    p5 = copy.deepcopy(ln)
+    p5["rev"]["label"] = "P5-LT-c1-j0"
+    for x, per_list, fw in ((ln, p_cand, fw_cand), (p5, p_p5, fw_p5)):
+        x["las"].update(end_reason="loc", end_t_s=te, ramp=dict(start_factor=None, periods_applied=0))
+        x["diag"] = dict(summary=dict(F_RL_kN=12.0, F_judged_min_kN=12.0, gate_consistent=True, t_lift_s=5.0),
+                         touch_budget=dict(level_budget_periods=0, centre="1", j=0), periods=per_list,
+                         force_window=dict(rows=fw))
+    p5["commands_sha256"] = "p5"
+    return H.za_criteria({(key, lab): ln}, {(key, "P5-LT-c1-j0"): p5}, {})["KA"]
+
+
+def test_rev3_ka2_window_w1():
+    same = [dict(t_s=12.1, cmd_mm_s=[1, 1, 1, 1])]
+    # period at t_s = 12.299999999999999 (n = 123 = n(t_e)) is outside the window -> difference ignored
+    ka = _ka_pair(12.3, same + [dict(t_s=12.299999999999999, cmd_mm_s=[9, 9, 9, 9])],
+                  same + [dict(t_s=12.3, cmd_mm_s=[1, 1, 1, 1])], [], [])
+    assert ka["K-A2"]["ok"] is True
+    ka = _ka_pair(12.3, same + [dict(t_s=12.2, cmd_mm_s=[9, 9, 9, 9])], same + [dict(t_s=12.2, cmd_mm_s=[1, 1, 1, 1])], [], [])
+    assert ka["K-A2"]["ok"] is False
+
+
+def test_rev3_ka4_window_t19():
+    te = 12.2
+    L = te + 0.1
+    t_in_tol, t_out_tol = L - IN, L - OUT
+    ka = _ka_pair(te, [], [], [[t_in_tol, 1.0]], [[t_in_tol, 2.0]])    # equal to the end: not compared
+    assert ka["K-A4"]["ok"] is True
+    ka = _ka_pair(te, [], [], [[t_out_tol, 1.0]], [[t_out_tol, 2.0]])  # inside: compared, differs
+    assert ka["K-A4"]["ok"] is False
+
+
+def test_rev3_btc_cut_w4(tmp_path):
+    p = os.path.join(str(tmp_path), "c.npz")
+    t = np.array([127.9, 127.99999999999999, 128.0, 128.1])
+    np.savez(p, t_s=t, issued_u_m_s=np.zeros((4, 4)))
+    h, n = C.command_content_hash(p, C.BTC_CUT_S)
+    assert n == 3 and C.BTC_CUT_N == 1280
+    p2 = os.path.join(str(tmp_path), "d.npz")
+    np.savez(p2, t_s=t[:3], issued_u_m_s=np.zeros((3, 4)))
+    assert C.command_content_hash(p2)[0] == h
+
+
+def test_rev3_chrono_cc_boundaries(cworld):
+    assert cworld({"A2": dict(F=11414.589 - IN, Ftr=11414.589 - IN)})["criteria"]["G-2'C"]["status"] == "pass"
+    assert cworld({"A2": dict(F=11414.589 - OUT)})["criteria"]["G-2'C"]["status"] == "fail"
+    assert cworld({"A2": dict(Ftr=11414.589 - OUT)})["criteria"]["G-2'C"]["status"] == "fail"
+    assert cworld({"C2": dict(smax=0.62 + 0.001 + IN)})["criteria"]["CC-S"]["status"] == "pass"
+    assert cworld({"C2": dict(smax=0.62 + 0.001 + OUT)})["criteria"]["CC-S"]["status"] == "fail"
+    out = cworld({"C1": dict(F=10414.589 - IN), "C2": dict(F=10414.589 - IN)})
+    assert out["pairs"]["C1/C2"]["CC-F"]["in_scope"] is True and out["criteria"]["CC-F"]["status"] == "pass"
+    out = cworld({"C1": dict(F=10414.589 - IN), "C2": dict(F=10414.589 - OUT)})
+    assert out["criteria"]["CC-F"]["status"] == "fail"
+
+
+def test_rev3_chrono_ccr_boundary(cworld):
+    out = cworld({"A2": dict(t_ready=61.0 + IN), "A4": dict(t_ready=61.0 + IN), "A6": dict(t_ready=61.0 + IN)})
+    assert out["criteria"]["CC-R"]["status"] == "pass"            # median = max = 1.0 + 0.5e-9 s
+    out = cworld({"A2": dict(t_ready=61.0 + OUT), "A4": dict(t_ready=61.0 + OUT), "A6": dict(t_ready=61.0 + OUT)})
+    assert out["criteria"]["CC-R"]["status"] == "fail"
+
+
 def test_periods_round():
     assert H.per(34.95) == 350 and H.per(34.85) == 348 and C.per(29.999999999975) == 300
 
@@ -470,10 +623,11 @@ def argv_for(pid):
 @pytest.fixture()
 def cworld(tmp_path, monkeypatch):
     tmp = str(tmp_path)
-    (r_path, r_sha), (r1_path, r1_sha), (r2_path, r2_sha) = write_rules(tmp)
+    (r_path, r_sha), (r1_path, r1_sha), (r2_path, r2_sha), (r3_path, r3_sha) = write_rules(tmp)
     monkeypatch.setattr(C, "RULES_SHA", r_sha)
     monkeypatch.setattr(C, "RULES_REV1_SHA", r1_sha)
     monkeypatch.setattr(C, "RULES_REV2_SHA", r2_sha)
+    monkeypatch.setattr(C, "RULES_REV3_SHA", r3_sha)
     rem = os.path.join(tmp, "rem")
     for case, _s in (C.REM_R7, C.REM_R8):
         os.makedirs(os.path.join(rem, case), exist_ok=True)
@@ -503,7 +657,7 @@ def cworld(tmp_path, monkeypatch):
                               omp_wait_policy="PASSIVE", planned_pool="pcore", pool="pcore"))
         with open(os.path.join(bdir, "batch.json"), "w", encoding="utf-8") as f:
             json.dump(dict(cases=cases, mixed_hull_mode=False), f)
-        return C.recount(bdir, r_path, r1_path, r2_path, rem)
+        return C.recount(bdir, r_path, r1_path, r2_path, r3_path, rem)
     return run
 
 
