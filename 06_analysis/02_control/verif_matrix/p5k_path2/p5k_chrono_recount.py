@@ -534,7 +534,9 @@ def recount(batch_dir, rules_path, rules_rev1_path, rem_batch_dir):
             prior = [s for s in starts if s["n"] is not None and d["n_loc"] is not None and s["n"] < d["n_loc"]]
             kadd("K-8", pid, f"c_decision{d['i']}_t_S_eq_last_prior_start", bool(prior) and same_float(d["t_S_s"], prior[-1]["t_s"]),
                  got=d["t_S_s"], want=prior[-1]["t_s"] if prior else None)
-            kadd("K-8", pid, f"x_decision{d['i']}_recorded_dP", d["rec_dP"] == d["dP"], got=d["rec_dP"], want=d["dP"])
+            if d["rec_dP"] != d["dP"]:
+                # record only (not an adopt2 K-8 item): recorded dP differs from round(t_P/0.1) - round(t_S/0.1)
+                r.setdefault("recorded_dP_mismatch", []).append(dict(i=d["i"], recorded=d["rec_dP"], recount=d["dP"]))
         kadd("K-8", pid, "d_revoke_meta_eq_events", r["revokes_events"] == r["revokes_meta"] and
              (r["revokes_meta_count"] is None or r["revokes_meta_count"] == len(r["revokes_events"])),
              got=dict(events=r["revokes_events"], meta=r["revokes_meta"], count=r["revokes_meta_count"]))
