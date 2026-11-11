@@ -206,6 +206,15 @@ def p5k_rows(sb: ModuleType, gs: bool = False) -> list[dict[str, Any]]:
     return rows
 
 
+def rows(gs: bool = False) -> list[dict[str, Any]]:
+    """The 12 row dicts (``p5k_id``, ``case``, ``argv`` (full, interpreter + run_S9 + ``level ...``), ``las_candidate``,
+    ``pair_case``, ...) of :data:`P5K_BATCH` (``gs`` True: :data:`P5K_GS_BATCH`, ``--duration``
+    :data:`GS_DURATION_S`) in rules 4.3 order, built with this checkout's ``s9_batch`` (= ``s9_batch.batches()[name]``).
+    For a G-S list generator: change only the value after ``--duration`` (rules 16.2 (b)); ``--case`` / ``--out-root``
+    are added at launch by ``s9_batch.run_batch``."""
+    return p5k_rows(_import("s9_batch"), gs=gs)
+
+
 def p5k_batches(sb: ModuleType) -> dict[str, list[dict[str, Any]]]:
     out = {P5K_BATCH: p5k_rows(sb), P5K_GS_BATCH: p5k_rows(sb, gs=True)}
     for name, rows in out.items():

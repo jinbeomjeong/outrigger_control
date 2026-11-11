@@ -266,6 +266,12 @@ def test_loc_probe_paths_and_revocation(run_s9) -> None:
     json.dumps(meta)
 
 
+def test_rows_function_matches_the_batches(rows, gs_rows, p5k) -> None:
+    for gs, want in ((False, rows), (True, gs_rows)):
+        got = p5k.rows(gs=gs)
+        assert [(r["p5k_id"], r["case"], r["argv"]) for r in got] == [(r["p5k_id"], r["case"], r["argv"]) for r in want]
+
+
 def test_rerun_of_on_every_p5k_entry(s9_batch) -> None:
     src = Path(s9_batch.__file__).read_text(encoding="utf-8")
     assert 'if rerun_of is not None or c.get("p5k_id"):' in src and 'entry["rerun_of"] = rerun_of' in src
