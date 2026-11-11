@@ -1,0 +1,86 @@
+{
+ "start": {
+  "time": "2026-11-11T10:32:56+09:00",
+  "root": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-ad8565b34cde410d8",
+  "head": "c6bb55bd1520c5cac0914f8632bd345a41f52ad6",
+  "status_porcelain": "",
+  "is_clean": true,
+  "code_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "c2_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
+  "c2_blob": "18c718767090cf68ce1d80d504ec2684af426fc1",
+  "tools_sha256": {
+   "g8_shadow.py": "e03ffc0de5249186730e0551aa4c95ec529040625c1c5a793c2eaee0791bb280",
+   "g8trace.py": "8a49739ade311750541b9ab50bbf9b899438a7368b6161fc1ae327651f993a10",
+   "loc_anchor_shadow.py": "fd0f357a31e9f923c8fa7058325e805cf20177aa1b051f0540821db71d50112c"
+  },
+  "python_executable": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+  "python_version": "3.12.15 | packaged by conda-forge | (main, Oct 13 2026, 16:44:09) [MSC v.1944 64 bit (AMD64)]",
+  "argv": [
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-ad8565b34cde410d8\\04_scripts\\03_control\\k2\\loc_shadow\\g8_shadow.py",
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-ad8565b34cde410d8",
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-ad8565b34cde410d8\\06_analysis\\02_control\\k2\\judgement\\b6\\g8_b6_jobs.json",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\k2\\loc_shadow\\e5a\\tcl\\g8_shadow.jsonl",
+   "--workers",
+   "4"
+  ],
+  "env": {
+   "ACC_COMBO": "off",
+   "ACC_K2": "on",
+   "ACC_WT": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-ad8565b34cde410d8",
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "MKL_NUM_THREADS": "1",
+   "MKL_THREADING_LAYER": "TBB",
+   "NUMBA_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "OUTRIGGER_LOC_SHADOW": "1",
+   "PYTHONDONTWRITEBYTECODE": "1",
+   "R72_PATH": "per_leg",
+   "R79_AFFINITY": "0x0FFF0000"
+  },
+  "affinity_mask": "0xfff0000",
+  "pid": 44560
+ },
+ "end": {
+  "time": "2026-11-11T10:34:41+09:00",
+  "root": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-ad8565b34cde410d8",
+  "head": "c6bb55bd1520c5cac0914f8632bd345a41f52ad6",
+  "status_porcelain": "",
+  "is_clean": true,
+  "code_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "c2_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
+  "c2_blob": "18c718767090cf68ce1d80d504ec2684af426fc1",
+  "tools_sha256": {
+   "g8_shadow.py": "e03ffc0de5249186730e0551aa4c95ec529040625c1c5a793c2eaee0791bb280",
+   "g8trace.py": "8a49739ade311750541b9ab50bbf9b899438a7368b6161fc1ae327651f993a10",
+   "loc_anchor_shadow.py": "fd0f357a31e9f923c8fa7058325e805cf20177aa1b051f0540821db71d50112c"
+  },
+  "python_executable": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+  "python_version": "3.12.15 | packaged by conda-forge | (main, Oct 13 2026, 16:44:09) [MSC v.1944 64 bit (AMD64)]",
+  "argv": [
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-ad8565b34cde410d8\\04_scripts\\03_control\\k2\\loc_shadow\\g8_shadow.py",
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-ad8565b34cde410d8",
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-ad8565b34cde410d8\\06_analysis\\02_control\\k2\\judgement\\b6\\g8_b6_jobs.json",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\k2\\loc_shadow\\e5a\\tcl\\g8_shadow.jsonl",
+   "--workers",
+   "4"
+  ],
+  "env": {
+   "ACC_COMBO": "off",
+   "ACC_K2": "on",
+   "ACC_WT": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-ad8565b34cde410d8",
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "MKL_NUM_THREADS": "1",
+   "MKL_THREADING_LAYER": "TBB",
+   "NUMBA_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "OUTRIGGER_LOC_SHADOW": "1",
+   "PYTHONDONTWRITEBYTECODE": "1",
+   "R72_PATH": "per_leg",
+   "R79_AFFINITY": "0x0FFF0000"
+  },
+  "affinity_mask": "0xfff0000",
+  "pid": 44560
+ }
+}
