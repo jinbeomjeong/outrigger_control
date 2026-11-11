@@ -1,0 +1,384 @@
+{
+ "kind": "las_p5r4_k1 prelaunch manifest (path 1 draft by python-expert; nothing run)",
+ "prepared_from_branch_head": "0a52fb03c50e1518928049e185e220d591d3adca",
+ "run_head": "{RUN_HEAD}",
+ "rules": {
+  "las_p5r4_k1_rules.md": "5ee2bac0451f0ca00139a5a2d238c38d13a6b0f430efc5b44fe0e8b929c2f979",
+  "las_p5r4_k1_rules_rev1.md": "f39846d6067a7bd409b4ac930d73ebde58a721728ec7d93703ff4627bf21e4b6",
+  "las_p5r4_k1_rules_rev2.md": "e0a7d1e56b57df5336fc2fd40835624d93585fb224063f6c8068c2b1ba7b10fc",
+  "las_rev_targeted_rules.md": "bb235f27567240b205a544ed7cfd10237827e4627088e0eab1f62b318416ff60",
+  "las_rev_targeted_rules_rev1.md": "672bc8f81ba75419e5a201e05a94e2f9aead2de3c205f80c2661e7474cd9fd51",
+  "las_revA_targeted_rules.md": "b09d004bb2f641db40cdd139a6fb2b1645651e4a3e45a9b16e81a5c938d5778f",
+  "las_revA_targeted_rules_rev1.md": "c02518021c00b69a9d02ec6bceddbea18b9686ef6de96bafe5e55b716b023960",
+  "las_revA_targeted_rules_rev2.md": "9f478b7fbc5aa0bd8859716b056bf2d531ac02057dc36d218bada7d7f13e4565",
+  "las_revA_targeted_rules_rev3.md": "98082a368da626f90ce3b0a41f5c74145b4095c155f14b2b2f63eb319352d709",
+  "las_k1_rules.md": "2742c9760ad55a87eccbf73e84025aafe0171a3555e1f54ab19fab24d888e4a0",
+  "las_k1_rules_rev1.md": "eeee4ab9661babff50117b8ff579aa41e27a98d083f1fc13f46fb5c733e0b4d3",
+  "las_k1_rules_adopt.md": "864836d852b4a783a577f01f738536b7c30c574bf4bebb3b0219e68e59b07ea8",
+  "las_k1_rules_adopt2.md": "fb3a5696f24385e81acc9c564500b5e5a0547db45a5335272e7d18400f1e68e8"
+ },
+ "rules_order": [
+  "original",
+  "rev1",
+  "rev2",
+  "+ 10 inherited (rules section 0 table)"
+ ],
+ "path1_tools": {
+  "04_scripts/04_hydraulic/coupled/las_p5r4k1_targeted.py": {
+   "git_blob": "187dd34e4d9072de95e5ea2a8c6cc04568612875",
+   "lf_sha256": "6997bf5ebe86b6eb062c447429e4bca215104e3127cf1398464fded0a515d02a",
+   "crlf_sha256": "16f3562510ab23dc957e52f650bf4db2e2d3f6beb1ea88ef4a3b3fb720449d76"
+  },
+  "06_analysis/02_control/verif_matrix/scripts/las_p5r4k1_judge.py": {
+   "git_blob": "25ecf6dea7376c47263c41dbbd452df2aedb4fc3",
+   "lf_sha256": "4c07bfef331078fc329bd065e4a78bb73dec1c9bd8e6b8ce1bd1561ce3f1ee3a",
+   "crlf_sha256": "f4ef93d5157df0fcfb03f2af57df73aefb30685b12e2bc130740fd7060d0b44d"
+  },
+  "06_analysis/02_control/verif_matrix/scripts/las_p5r4k1_chrono_judge.py": {
+   "git_blob": "3b177d09d4917d2d11257c68433e17ad27a9670f",
+   "lf_sha256": "2b7dcb7b54ed8b8c27fc0ebbeab3aadd47e2f11341fa3d92be1fd3844c1371c4",
+   "crlf_sha256": "8d869e53c47c8d512fdb60cc818930eabb683b30a5c67e711928c1ca59e50756"
+  },
+  "06_analysis/02_control/verif_matrix/scripts/las_p5r4k1_gs.py": {
+   "git_blob": "edbe1d58ee09f36b232f96185f86f4211f036b4b",
+   "lf_sha256": "34ce26f846cecb30c4a1230d2e4680dcbe6066af4c0d8b0da7534b81e1e4c250",
+   "crlf_sha256": "65a833f7c149119947294fc073134d9eab6129d990b44474904622326f843dee"
+  }
+ },
+ "path2_tools_git_blob": {
+  "06_analysis/02_control/verif_matrix/p5k_path2/p5k_recount.py": "41a2bf0dc81e1eaa28bb9365df6b7ae0928d47da",
+  "06_analysis/02_control/verif_matrix/p5k_path2/p5k_chrono_recount.py": "d73ad2b5606e152283bf5ef3bf8cedab95f6939e",
+  "06_analysis/02_control/verif_matrix/p5k_path2/test_p5k_recount.py": "9a189c7312db6388f6c5bd77b653bc3e62d4d990"
+ },
+ "chrono_code": {
+  "04_scripts/02_chrono/las_p5r4_k1_chrono_rows.py": {
+   "git_blob": "c1d011c80ec0e97f47235b1299199dbdf0534002",
+   "lf_sha256": "9238b7900bee7278f2841718ead7c9ef7a6714cfaec1439189c1926162ba557b",
+   "crlf_sha256": "517ffb74f9136baef14fb0db455e589f47286dcbf2b150488902a9d59dd764af"
+  },
+  "04_scripts/02_chrono/run_S9.py": {
+   "git_blob": "4d0ca1c9d334cc929dbc8c0b07fb64c4696a6ed4",
+   "lf_sha256": "fe06be0fe92606440928229ecdee275065f48418483e8983736df68b57ab711d",
+   "crlf_sha256": "b94cb959e6563231be714555ee528b9b991639762540c7531e48a1954ba038b8"
+  },
+  "04_scripts/02_chrono/s9_batch.py": {
+   "git_blob": "f5281e1fd874369692d9d0e0108249d4191076df",
+   "lf_sha256": "6ab55c8eacc7c4f707624f7f0393d6b378742966abdeef532d2586b65a9d6ea0",
+   "crlf_sha256": "06320e49f21c05c19e24ac00c5318e566ac125d8da2ce9227a0a8720f0f6428d"
+  },
+  "03_src/outrigger_sim/control/c2.py": {
+   "git_blob": "18c718767090cf68ce1d80d504ec2684af426fc1",
+   "lf_sha256": "b323bf8a26691c3e857acccdd674e7945199289409e7cd57493c9b5c2632b6fd",
+   "crlf_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1"
+  },
+  "03_src/outrigger_sim/control/zero_calibration.py": {
+   "git_blob": "08a5d87354c58d76ea0c81b126795c44be8533c6",
+   "lf_sha256": "e55d3dd646db62bfe7409857b8467ab09713df9feedfe599b97047246e038132",
+   "crlf_sha256": "b63a7a4713bc5be53098c08a375c348aca5769c11ac9fe5e6b085f39bcc0ffb1"
+  },
+  "03_src/outrigger_sim/chrono/hull_hook.py": {
+   "git_blob": "1c3eb1e3ad725951161d3dcf599adbe02112cea2",
+   "lf_sha256": "aae8495824089e7932ec5f677f85d313ecc81a23db21e4747aedfb472be65ece",
+   "crlf_sha256": "afef13ec8f75d42d95ddaf3342273c2ec476ae35450c665055f40100a5e3bdc3"
+  },
+  "04_scripts/03_control/s9/late_loc_rule.py": {
+   "git_blob": "f4ea12b58df5233de3722df7846f3ed0debe0734",
+   "lf_sha256": "76b549108ca39b9970e4906c5f4fe2de4ff71a6abc25989765ed552400075ee4",
+   "crlf_sha256": "27ff32e73814da47c49698f7b3ed1663d550ff79cf7d9ea66cf93a5a4a7c9369"
+  },
+  "03_src/outrigger_sim/hydraulics/v5_options.py": {
+   "git_blob": "89751018c5260b854e088f6d57e3643e6b5d5b75",
+   "lf_sha256": "a88ad603596650fb41d7a87f37bd424c9dec33c328c6ff57751a4f7ac0098ec4",
+   "crlf_sha256": "d2b903a2a666c97859a4a73b908ebdabe2cef28ae1dd5f47b728527f5762b28e"
+  },
+  "03_src/outrigger_sim/chrono/rigid_base.py": {
+   "git_blob": "ca3f82c08a3af27c4fdba880a0ee10bff7c5e8a7",
+   "lf_sha256": "b7c721e535f4afbc2ee6f81c97bc79ef3f8352739d27d3e4b4e82121453850ea",
+   "crlf_sha256": "0cf7f71610062a6c628dc8454b414e5eac8b7455bb9e067f658d2579097d1134"
+  }
+ },
+ "harness_imported_tools": {
+  "04_scripts/04_hydraulic/coupled/las_revA_targeted.py": {
+   "git_blob": "465c9aae0626c4f1f18e177bb54eeab4ee50d0a1",
+   "lf_sha256": "f609bfd735babd8570e46f5adee0e5e9fc317c5fa0c4fe99be0a44153ef59d81",
+   "crlf_sha256": "03b3008b634cd3e5d16f052e347948fb54cc94b2f62fef3c31a6b4c609290080"
+  },
+  "04_scripts/04_hydraulic/coupled/las_rev_targeted.py": {
+   "git_blob": "6269acb8d7a60d179acc82ab519def17bd21e172",
+   "lf_sha256": "99ad0c3ed8e0a1e968c48f17d3822d35c4df5e1c07e1a89a3e80688f0ef79599",
+   "crlf_sha256": "d6e0952131c3bfafec941a95958be75c6c26bc830f5bccc6f0cb9f325ad2caf8"
+  },
+  "04_scripts/04_hydraulic/coupled/fb_targeted.py": {
+   "git_blob": "f0bf014b1184acd6006522e86bc4a97badfbae75",
+   "lf_sha256": "ddafd282d0bbf03fdd970b5088f800a5ab48cd2a4eba4ab5bdba73bcb029b43c",
+   "crlf_sha256": "27a8a5c7e772b0320889be8d56c6af5f4b04cc9801fe892abf735fbd88143a54"
+  },
+  "04_scripts/04_hydraulic/coupled/las_targeted.py": {
+   "git_blob": "ac4d0fced1effdeef922ddff44754438b67fb37c",
+   "lf_sha256": "efdf0b69085fa2dafe75d2a7cf60ab80a532966109a605672ed3911938914865",
+   "crlf_sha256": "66b1895f85930cb5d2fc2cb817ca20c77a2865001a3809e7429534a7a56fa1e1"
+  },
+  "04_scripts/04_hydraulic/coupled/k1_targeted.py": {
+   "git_blob": "5fb16d3f41f2d745378bdb68bfcfaf98258136d0",
+   "lf_sha256": "0c7bc44dcae1e268df9e4eccdb184ba571d3a7a88981dd9b6eabf4e80fbb7fe0",
+   "crlf_sha256": "0d2f8a8eb99d7b40df2b5c1661e3eab3ffbb4acff2d6e05bbd6ad7537ff9d611"
+  },
+  "04_scripts/04_hydraulic/coupled/las_phase_diag.py": {
+   "git_blob": "e7f198a92dd13b0d851ba25c5c5d027a152c15bf",
+   "lf_sha256": "68b7af24e042ae5e06efa6f9a7458601d512ca8504edf13b1d02e1a7d2d31d58",
+   "crlf_sha256": "65311a8f7eccda8529b9aed8dcc3865da4c68b23f932941c59183d963c0aab20"
+  },
+  "04_scripts/04_hydraulic/coupled/s2_defer_targeted.py": {
+   "git_blob": "e1d474edc149be7adebd7c361c5d8775a80081f1",
+   "lf_sha256": "ff6e19c8202c824978e3b8f4829c071e2d3066a6e49d57efddd44d0e50e5b294",
+   "crlf_sha256": "d493c7ba6a92ddc0532c047672b099c33b8a1061fc0b17fe4a6b1a087434b654"
+  },
+  "04_scripts/04_hydraulic/coupled/run_v5.py": {
+   "git_blob": "8f89f252f90940e7ce7e82571b3f79ddee21faec",
+   "lf_sha256": "e9934cfe979080686ff90a33aecca9291804abc19898b88a68f6ed9182ca673e",
+   "crlf_sha256": "bd7b4a5159a6184d7eb4e0d36535ae604bd40b46441a2de1695e34eb264eef66"
+  }
+ },
+ "tests_allowed_dirty": {
+  "04_scripts/04_hydraulic/coupled/test_las_p5r4k1_targeted.py": {
+   "git_blob": "83d0775dcfd21fc82642e091e076480f5471fdeb",
+   "lf_sha256": "b0d2c1ecfaffb537855d8a431b2d4daf47da63d88bea2d0f077ce8ca49043ba3",
+   "crlf_sha256": "1a6270db76339e95de2d41c05b4d4476cf743d53007709e8665928e00b25ec9f"
+  },
+  "06_analysis/02_control/verif_matrix/scripts/test_las_p5r4k1_judge.py": {
+   "git_blob": "57f772a539469906559ae83ba5969829615ec354",
+   "lf_sha256": "27c2b8de11a7eac1a06c4c0462eb09e276ed82e737465b02f8d9918c77c889cf",
+   "crlf_sha256": "2bb7e27f00a3ff960fb593ffdbe4d427983bdeb8553076f9eead9b51ebd34efe"
+  },
+  "06_analysis/02_control/verif_matrix/scripts/test_las_p5r4k1_chrono_judge.py": {
+   "git_blob": "bc4bd6fdf8a51c43a93dd313a6300555790d1c46",
+   "lf_sha256": "9f65a65e22e718e1c74d76a190e1c080cdb626d113e1b4e567c4414755968590",
+   "crlf_sha256": "82c8d93b9382a0562ae94d9fb44b6760275fada93983424ccc6361043d14a909"
+  }
+ },
+ "dll": {
+  "path": "03_src/outrigger_sim/native/chrono_hull/bin/chrono_hull_hook.dll",
+  "sha256": "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15",
+  "note": "git-excluded: check in the launching checkout (Chrono judge prelaunch dll record)"
+ },
+ "appendix_lists_recomputed": {
+  "Z-0": "4d1591ba30b686bb6484072c1e63df51130791c2d0cee7106d9ae7d1bc4b6c9e",
+  "Z-A": "14f89f1f9209114d7e5a2c84f5b45a7d6c650e44ac3de41dd4c93c8733451577",
+  "Z-C": "fe6c9c46f2c799ee440d8a2a5d99d88099c51586297afd01d7201a52d26389d9",
+  "Z-C-R4": "dc1e65d49bc0ea34fd04fdb7ba4eeceb7fc576ee15de9658dbe26927598b753b",
+  "Z-C-out": "f20bb9e0b1b570660fd15c2a33a2abd66308efce10e1aeb3185cc178956edea7",
+  "Z-S": "19c78b49197ac53da5ae50808555c5879aabc90765589ea220830d5588a23950",
+  "Z-T": "4160bddfff318f8c13b36652c3203e89a02159b5fd5a624499aa6ef0940fe933",
+  "Z-T-ref": "4160bddfff318f8c13b36652c3203e89a02159b5fd5a624499aa6ef0940fe933",
+  "Z-X-old": "bdad17c7c77abae2eb47c8b366d09d1882fe934fecd112b759040b894f79adfd"
+ },
+ "appendix_lists_expected": {
+  "Z-0": "4d1591ba30b686bb6484072c1e63df51130791c2d0cee7106d9ae7d1bc4b6c9e",
+  "Z-A": "14f89f1f9209114d7e5a2c84f5b45a7d6c650e44ac3de41dd4c93c8733451577",
+  "Z-T": "4160bddfff318f8c13b36652c3203e89a02159b5fd5a624499aa6ef0940fe933",
+  "Z-T-ref": "4160bddfff318f8c13b36652c3203e89a02159b5fd5a624499aa6ef0940fe933",
+  "Z-S": "19c78b49197ac53da5ae50808555c5879aabc90765589ea220830d5588a23950",
+  "Z-C": "fe6c9c46f2c799ee440d8a2a5d99d88099c51586297afd01d7201a52d26389d9",
+  "Z-C-R4": "dc1e65d49bc0ea34fd04fdb7ba4eeceb7fc576ee15de9658dbe26927598b753b",
+  "Z-C-out": "f20bb9e0b1b570660fd15c2a33a2abd66308efce10e1aeb3185cc178956edea7",
+  "Z-X-old": "bdad17c7c77abae2eb47c8b366d09d1882fe934fecd112b759040b894f79adfd"
+ },
+ "grid_label_lists": {
+  "R-0A": "e58a2842b92f449a152c829bcf0b0f0d307d5e646e9032c7e6b430d2c11e8c9d",
+  "R-Q": "21c1129a18c7d303ed9914b217ac0298d4ac1bfe8e6b110e5ad3b1cd2b311b60"
+ },
+ "stored_files_raw_sha256": {
+  "P5_RG": "7e8c3b4173f1fc682e665ad173589dbbe335ba914a06d5ef2984c5807bb8cca6",
+  "P5_RH": "f934cbd945353fe236e5313ed5b0b147c39a7e30f6b1b02cfc5557739422b0c9",
+  "R0": "04cadd3cdd63372518ee8fcf3620bfef43695f08583a99b7458a0c53b7f777f3",
+  "R0A": "28df99076cc309718e9dcfc270fed5d390a111f5ace8ce77ddbc3a3c8b0f14f8",
+  "RQ": "93ced32cedb57888c37ea06dfbbe966c12c35d858f5b92a543e816f86cf953ca",
+  "RS": "7c407b6ee07b001f5504186fa013193ba6a2992516021f263b2bb537de43875d",
+  "RT": "c72f7e0882c50d86e565366866526ed55073d8bfef5c9f959b82c0e2885afd54",
+  "RX": "04f7a4dcf435b66934a811af6cee4cb5fa657f8e897f4a503321dd126f4b0d78",
+  "SC": "70e91ec1234d56a918af1b4fc053c3175f0f14ab41e2b5f334890f7dc6cb08aa",
+  "T1": "3dee4f6b88e71654debd68b3ef5c5f1a9b01f1dba8fcd731d1355ec219d9a85b",
+  "T2": "2fe6a54aafdc0c3ffbf1991907ee4e1af85761e1bef2e25bef07dd52ab199efb",
+  "YP": "0d985d5624f0fbb0219ca50d1c839b7db639011d6c2ab14fa9d84cfd197fc2c3",
+  "YS": "a31153a64ed9cbdf7410082e8dbda81b79e6d607c0a238d510ac34c0c9333ac6"
+ },
+ "gs": {
+  "harness_lines": 117,
+  "harness_list_sha256": "41157880063e171fb35b1fb664d22b59923325b4602da0a92edda8e107851dc3",
+  "chrono_rows": 12,
+  "chrono_list_sha256": "9d3a5f200daa6559e0e5abbbe1b421df9d1972be987428bc32f27391b7083602",
+  "chrono_interpreter": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe",
+  "chrono_argv_source": "C:/workspace/outrigger_control/04_scripts/02_chrono/las_p5r4_k1_chrono_rows.py rows(gs=True)",
+  "out_of_sample_units": 23,
+  "batch": "V5-LAS-P5R4-K1-GS",
+  "batch_folder": "{BATCH_GS}"
+ },
+ "chrono_main": {
+  "batch": "V5-LAS-P5R4-K1",
+  "rows": 12,
+  "rows_list_sha256": "3fdbf80ee426cb9ef4eeab13d5943d08fbef9b89d9a2ef230f13ce45c4f8de3c",
+  "interpreter": "C:\\ProgramData\\miniforge3\\envs\\Chrono-dev\\python.exe",
+  "batch_folder": "{BATCH_CHRONO}"
+ },
+ "harness_bundles": {
+  "Z-0": {
+   "file": "p5k_Z0.jsonl",
+   "arms": [
+    "ref"
+   ],
+   "lines": 6
+  },
+  "Z-A": {
+   "file": "p5k_ZA.jsonl",
+   "arms": [
+    "cand"
+   ],
+   "lines": 102
+  },
+  "Z-T": {
+   "file": "p5k_ZT.jsonl",
+   "arms": [
+    "ref",
+    "cand"
+   ],
+   "lines": 384
+  },
+  "Z-S": {
+   "file": "p5k_ZS.jsonl",
+   "arms": [
+    "ref",
+    "cand"
+   ],
+   "lines": 60
+  },
+  "Z-C": {
+   "file": "p5k_ZC.jsonl",
+   "arms": [
+    "ref",
+    "cand"
+   ],
+   "lines": 912
+  },
+  "Z-X": {
+   "file": "p5k_ZX.jsonl",
+   "arms": [
+    "ref"
+   ],
+   "lines": "<= 10 (C-4 claims, RV2-6)"
+  }
+ },
+ "bit_predictions": {
+  "BT-0": "Z-0 ref 6/6 = revA_R0.jsonl",
+  "BT-A": "Z-A cand 102/102 = revA_R0A + revA_RQ",
+  "BT-T": "Z-T ref 192/192 = las_T1/T2 b0, cand 192/192 = revA_RT",
+  "BT-S": "Z-S ref 30/30 = k1_YS Y-Sa, cand 30/30 = k1_YS Y-Sb",
+  "BT-CR": "Z-C ref 456/456 = 165 k1_YP Y-Pa + 291 s2d_SC",
+  "BT-X": "Z-X ref = the new ref hash of every bundle of the key (rev2 RV2-6)",
+  "BT-C": "C1 = REM R7 (whole), C3 t_s <= 128.0 s = REM R8 (rev2 RV2-13)"
+ },
+ "placeholders": [
+  {
+   "slot": "{RUN_HEAD}",
+   "where": "manifest run_head, commands",
+   "fill_when": "prelaunch, before the pre-run audit",
+   "owner": "main session"
+  },
+  {
+   "slot": "{BATCH_GS}",
+   "where": "manifest gs.batch_folder, commands",
+   "fill_when": "right after the G-S Chrono batch starts, before the first check",
+   "owner": "main session"
+  },
+  {
+   "slot": "{BATCH_CHRONO}",
+   "where": "manifest chrono_main.batch_folder, commands",
+   "fill_when": "right after the Chrono main batch starts (within 15 min)",
+   "owner": "main session"
+  },
+  {
+   "slot": "{POSTRUN_HEAD}",
+   "where": "postrun record",
+   "fill_when": "postrun",
+   "owner": "main session"
+  },
+  {
+   "slot": "{JUDGE_COMMIT}",
+   "where": "judgement section, judgement head",
+   "fill_when": "right before the judge tools run (the commit whose tool sha was checked)",
+   "owner": "main session"
+  }
+ ],
+ "gs_pass_conditions": {
+  "harness": [
+   "line count = G-S list (117), no duplicate, no line outside the list",
+   "no error line; runner log 'errors 0' (log_errors.py --require-line)",
+   "runner exit code 0",
+   "every judge field present as a key (las_p5r4k1_gs.py check)",
+   "K-3 / K-4 / K-5 true, p5k.gs true",
+   "main-run lines of the same unit: commands_sha256 equal (judge gs_equality, same / different only; different = S-3 stop)",
+   "out-of-sample Z-C cand G-S lines: no value read or printed (23 units)"
+  ],
+  "chrono": [
+   "12 rows: progress.log END rc=0",
+   "result.json, controller_commands.npz (t_s, issued_u_m_s), batch.json row entry with p5k_id",
+   "las_p5r4_k1_chrono_rows.py gs-check and las_p5r4k1_chrono_judge.py fields: every key path present (values not printed)"
+  ]
+ },
+ "placement": {
+  "source": "compute-scheduler-expert plan, relayed by the main session 2026-11-11",
+  "gs_harness": {
+   "pool": "ecore",
+   "affinity": "0x0FFF0000",
+   "workers": 12
+  },
+  "gs_chrono": {
+   "pool": "pcore (12 rows)",
+   "parallel_p": 4,
+   "parallel_e": 0,
+   "schedule": "prelaunch/sched_gs.json"
+  },
+  "main_harness": {
+   "pool": "P+E by mask",
+   "affinity": "0x0FFF5555 (P physical 8 + E 12)",
+   "workers": 20
+  },
+  "main_chrono": {
+   "pcore": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2",
+    "C1",
+    "C2"
+   ],
+   "ecore": [
+    "A5",
+    "A6",
+    "C3",
+    "C4"
+   ],
+   "parallel_p": 4,
+   "parallel_e": 3,
+   "schedule": "prelaunch/sched_main.json",
+   "pairs_same_pool": true
+  }
+ },
+ "schedules": {
+  "sched_gs.json": {
+   "raw_sha256": "8450a86281bdd2edfeea85c3f46ac62e77b925e3c544c211d9347cd7be9aeb1f"
+  },
+  "sched_main.json": {
+   "raw_sha256": "7e499ba82b8e3c718b8de95133b7464a9ee738150e18775481ac99cc91f9e2ac"
+  }
+ },
+ "chrono_batch_plan": {
+  "raw_sha256": "2d1363c1043b0e7b108b9d35516777a6ad9e8ebc5c3a9c248a05d242f329f5a6"
+ },
+ "path2_commands": {
+  "file": "prelaunch/commands_path2.md",
+  "raw_sha256": "e61fa81dd59f057122df6545286fb2e0d397da56456c6bb0e51c5e6b2347f5a6",
+  "note": "written by the main session for path 2; not opened by path 1"
+ }
+}
