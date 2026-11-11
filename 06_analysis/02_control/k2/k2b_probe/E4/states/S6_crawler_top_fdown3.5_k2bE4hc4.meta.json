@@ -1,0 +1,620 @@
+{
+  "format": "outrigger_sim.snapshot",
+  "format_version": 1,
+  "saved_utc": "2026-11-11T01:17:56+00:00",
+  "engine": {
+    "name": "pychrono",
+    "version": "10.0.0",
+    "model": "L1"
+  },
+  "params_sha256": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+  "time_s": 129.50000000205188,
+  "held_command_t_s": 129.50000000205188,
+  "leg_order": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+  ],
+  "payload": {
+    "bodies.pos_m": {
+      "shape": [
+        5,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "bodies.quat_wxyz": {
+      "shape": [
+        5,
+        4
+      ],
+      "dtype": "float64"
+    },
+    "bodies.vel_m_s": {
+      "shape": [
+        5,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "bodies.omega_local_rad_s": {
+      "shape": [
+        5,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "bodies.acc_m_s2": {
+      "shape": [
+        5,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "bodies.angacc_local_rad_s2": {
+      "shape": [
+        5,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "bodies.layout_sha256": {
+      "shape": [
+        32
+      ],
+      "dtype": "uint8"
+    },
+    "motors.pos_m": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "motors.vel_m_s": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "actuator.s_ref_m": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "ground_bushing.in_contact": {
+      "shape": [
+        4
+      ],
+      "dtype": "bool"
+    },
+    "ground_bushing.sliding": {
+      "shape": [
+        4
+      ],
+      "dtype": "bool"
+    },
+    "ground_bushing.zero_time_s": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "ground_bushing.anchor_floor_local_m": {
+      "shape": [
+        4,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "ground_bushing.frame_a_pos_body_local_m": {
+      "shape": [
+        4,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "ground_bushing.frame_a_quat_body_local_wxyz": {
+      "shape": [
+        4,
+        4
+      ],
+      "dtype": "float64"
+    },
+    "ground_bushing.slip_total_m": {
+      "shape": [
+        4,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "ground_bushing.yield_steps": {
+      "shape": [
+        4
+      ],
+      "dtype": "int64"
+    },
+    "ground_bushing.event_t_s": {
+      "shape": [
+        0
+      ],
+      "dtype": "float64"
+    },
+    "ground_bushing.event_leg": {
+      "shape": [
+        0
+      ],
+      "dtype": "int64"
+    },
+    "ground_bushing.event_kind": {
+      "shape": [
+        0
+      ],
+      "dtype": "int64"
+    },
+    "ground_bushing.loaded_anchor_floor_local_m": {
+      "shape": [
+        4,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "ground_bushing.loaded_sliding": {
+      "shape": [
+        4
+      ],
+      "dtype": "bool"
+    },
+    "ground_bushing.normal_force_raw_N": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "ground_bushing.structure_changed": {
+      "shape": [
+        1
+      ],
+      "dtype": "bool"
+    },
+    "ground_bushing.hold": {
+      "shape": [
+        4
+      ],
+      "dtype": "bool"
+    },
+    "ground_bushing.hold_release_t_s": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "ground_bushing.hold_max_tangential_N": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "ground_bushing.force_point_code": {
+      "shape": [
+        1
+      ],
+      "dtype": "int64"
+    },
+    "crawler_bushing.in_contact": {
+      "shape": [
+        24
+      ],
+      "dtype": "bool"
+    },
+    "crawler_bushing.sliding": {
+      "shape": [
+        24
+      ],
+      "dtype": "bool"
+    },
+    "crawler_bushing.zero_time_s": {
+      "shape": [
+        24
+      ],
+      "dtype": "float64"
+    },
+    "crawler_bushing.anchor_floor_local_m": {
+      "shape": [
+        24,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "crawler_bushing.frame_a_pos_body_local_m": {
+      "shape": [
+        24,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "crawler_bushing.frame_a_quat_body_local_wxyz": {
+      "shape": [
+        24,
+        4
+      ],
+      "dtype": "float64"
+    },
+    "crawler_bushing.slip_total_m": {
+      "shape": [
+        24,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "crawler_bushing.yield_steps": {
+      "shape": [
+        24
+      ],
+      "dtype": "int64"
+    },
+    "crawler_bushing.event_t_s": {
+      "shape": [
+        320
+      ],
+      "dtype": "float64"
+    },
+    "crawler_bushing.event_leg": {
+      "shape": [
+        320
+      ],
+      "dtype": "int64"
+    },
+    "crawler_bushing.event_kind": {
+      "shape": [
+        320
+      ],
+      "dtype": "int64"
+    },
+    "crawler_bushing.loaded_anchor_floor_local_m": {
+      "shape": [
+        24,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "crawler_bushing.loaded_sliding": {
+      "shape": [
+        24
+      ],
+      "dtype": "bool"
+    },
+    "crawler_bushing.normal_force_raw_N": {
+      "shape": [
+        24
+      ],
+      "dtype": "float64"
+    },
+    "crawler_bushing.structure_changed": {
+      "shape": [
+        1
+      ],
+      "dtype": "bool"
+    },
+    "crawler_bushing.hold": {
+      "shape": [
+        24
+      ],
+      "dtype": "bool"
+    },
+    "crawler_bushing.hold_release_t_s": {
+      "shape": [
+        24
+      ],
+      "dtype": "float64"
+    },
+    "crawler_bushing.hold_max_tangential_N": {
+      "shape": [
+        24
+      ],
+      "dtype": "float64"
+    },
+    "crawler_bushing.force_point_code": {
+      "shape": [
+        1
+      ],
+      "dtype": "int64"
+    },
+    "l1_actuator.s_ref_m": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "l1_actuator.u_applied_m_s": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "l1_actuator.ramp_start_m": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "l1_actuator.ramp_slope_m_s": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "l1_actuator.loaded_ramp_start_m": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "l1_actuator.loaded_ramp_slope_m_s": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "l1_actuator.acting_s_ref_m": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "l1_actuator.acting_u_m_s": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "l1_actuator.next_step_full_update": {
+      "shape": [
+        1
+      ],
+      "dtype": "bool"
+    },
+    "l1_actuator.ramp_s": {
+      "shape": [
+        1
+      ],
+      "dtype": "float64"
+    },
+    "l1_actuator.soft_lo_m": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "l1_actuator.soft_hi_m": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "l1_actuator.prev_applied_u_m_s": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.l1r_state": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.l1r_delta_lock_m": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.l1r_F_lock_N": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.l1r_p_r0_Pa": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.l1r_Fx_prev_N": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.l1r_release_Fx0_N": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.l1r_release_t_s": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.l1r_F_cyl_lock_N": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.l1r_T_lock_K": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.l1r_last_direction": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.l1r_lock_pending_since_s": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.l1r_p_r_tracked_Pa": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.l1r_t_s": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.l1r_delta_m": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.l1r_temperature_K": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.engine_last_t_s": {
+      "shape": [
+        1
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.engine_last_mode": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.engine_last_extra_force_N": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.engine_last_normal_force_N": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.engine_last_pad_stiffness_N_m": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.engine_last_head_pressure_Pa": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.engine_last_rod_pressure_Pa": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.engine_last_stroke_true_m": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.engine_last_cylinder_force_N": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.engine_last_piston_travel_m": {
+      "shape": [
+        4
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.engine_pending_force_world_N": {
+      "shape": [
+        4,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.engine_pending_torque_local_N_m": {
+      "shape": [
+        4,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.engine_loaded_force_world_N": {
+      "shape": [
+        4,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.engine_loaded_torque_local_N_m": {
+      "shape": [
+        4,
+        3
+      ],
+      "dtype": "float64"
+    },
+    "rod_chamber.engine_next_step_full_update": {
+      "shape": [
+        1
+      ],
+      "dtype": "bool"
+    },
+    "rod_chamber.engine_mechanics_on": {
+      "shape": [
+        1
+      ],
+      "dtype": "bool"
+    }
+  },
+  "npz_sha256": "77cd748595fa39e5c01b7df707cbac795f8d2f8be68908de7d18a461982d9cfe",
+  "note": {
+    "stage": "S6 stage 2 start (K-2b E4 rebuild)",
+    "level": "top",
+    "floor": "fdown3.5",
+    "floor_slope_deg": [
+      0.0,
+      3.5
+    ],
+    "procedure": "analytic crawler_slope_pose, crawler anchor bushings (Q12) at zero deformation, in-plane gravity ramp halfcos 4.0 s, settle 125.5 s",
+    "ramp_shape": "halfcos",
+    "ramp_s": 4.0,
+    "settle_s": 125.5,
+    "replaces_for_new_bundles": "S6_crawler_top_fdown3.5",
+    "generator": "04_scripts/02_chrono/k2b_probe/e4_fdown_snapshot.py",
+    "crawler_bushing": {
+      "kt_N_m": 1942437.5460074937,
+      "ct_N_s_m": 7920.979376872223,
+      "damping_input_N_s_m": 3960.4896884361115,
+      "kt_over_kn_pad": 0.23309250561413625,
+      "kn_sphere_N_m": 8333333.33,
+      "cn_sphere_N_s_m": 16406.454083333334,
+      "kt_scale": 1.0,
+      "mu": 0.5,
+      "basis": "kt = (kt/kn)_pad mean x kn_sphere x kt_scale; ct = cn_sphere sqrt(kt/kn_sphere); input ct/2 (ASSUMPTION)"
+    }
+  }
+}

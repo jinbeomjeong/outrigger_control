@@ -1,0 +1,86 @@
+{
+ "experiment": "K-2b E4 build",
+ "name": "S6_crawler_top_fdown3.5_k2bE4p8",
+ "snapshot_path": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-af9c9e76e46c73149\\06_analysis\\02_control\\k2\\k2b_probe\\E4\\states\\S6_crawler_top_fdown3.5_k2bE4p8.npz",
+ "npz_sha256": "9d5a90ad5c3c326be3085da35342185dcffb3c72005f85143690adfc9bac206c",
+ "meta_sha256": "8aeecb7317d259dabd1c546ef5e0b6c0f8430552df683c620eeec5eeb8600a0c",
+ "identity": {
+  "git_head": "da5e01bedc8e840b604f18ce1dc491ab6b17b210",
+  "script": "04_scripts/02_chrono/k2b_probe/e4_fdown_snapshot.py",
+  "script_sha256": "e09cbcac5cc5efb84d9698ab9e85d9a8ce38ea5a2945dba47c530ab11f8ff40c",
+  "python": "3.12.15",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "pychrono": "10.0.0",
+  "params_sha256": "61078f29621d336c7c43d259498afc51d572dc6b78d966db84c0253eff0b9723",
+  "rod_side_mechanics": "one_sided_parallel",
+  "threads": {
+   "OPENBLAS_NUM_THREADS": "1",
+   "MKL_NUM_THREADS": "1",
+   "OMP_WAIT_POLICY": "PASSIVE",
+   "chrono": 1
+  },
+  "placement": {
+   "mask": "0xfff0000",
+   "cpus": [
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+   ]
+  },
+  "dt_s": 0.0002
+ },
+ "procedure": "analytic crawler_slope_pose, crawler anchor bushings (Q12) at zero deformation, in-plane gravity ramp poly345 8.0 s, settle 125.5 s",
+ "end_roll_pitch_deg": [
+  0.0002919850907310435,
+  3.8394654157801513
+ ],
+ "analytic_roll_pitch_deg": [
+  0.0003001534036166379,
+  3.838916862813142
+ ],
+ "start_roll_pitch_deg": [
+  0.0002568637830385959,
+  3.678527248439063
+ ],
+ "crawler_normal_sum_N": 379399.2578512684,
+ "last10s_build_rates": {
+  "first_window_rms_deg_s": [
+   0.0003079174998118214,
+   0.0027927577337801246
+  ],
+  "first_window_pass": true,
+  "max_window_rms_deg_s": [
+   0.0003079174998118214,
+   0.0030122227427512027
+  ],
+  "min_window_rms_deg_s": [
+   0.0002191435994893164,
+   0.002417909452392834
+  ],
+  "first_quiet_window_start_s": 0.0,
+  "pitch_peak_hz": 0.6999999999767624,
+  "pitch_amp_first_half_deg_s": 0.004225071711550286,
+  "pitch_amp_second_half_deg_s": 0.003889729507020716,
+  "mean_rate_deg_s": [
+   -1.6601653391203616e-06,
+   0.00010924763343553126
+  ],
+  "limit_deg_s": 0.01,
+  "window_s": 2.0
+ },
+ "yield_steps_total": 10417,
+ "timing": {
+  "wall_s": 794.518876800008,
+  "steps": 667500,
+  "sim_s": 133.5
+ }
+}
