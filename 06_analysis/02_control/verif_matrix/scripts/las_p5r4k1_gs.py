@@ -70,7 +70,9 @@ COMMON_FIELDS = ("commands_sha256", "final_phase", "event_names", "controller_ta
                  "anchor.soil_meta", "anchor.loc_calls", "values.events.t_loc_first_s",
                  "values.events.t_loc_last_s", "values.forces.after_liftoff")
 D1_FIELDS = ("d1.verdict", "d1.items", "d1.fail_items", "d1.t_ready_s", "d1.stroke_max_m",
-             "d1.F_judged_min_N")
+             "d1.F_judged_min_N", "values.times.t_first_ready_s")
+"""D-1 line fields; ``values.times.t_first_ready_s`` is the path 2 READY source (rev2 RV2-10,
+pre-run audit 1 item 13: presence only)."""
 CASE_FIELDS = ("values.times.t_first_ready_s",)
 DONE_FIELDS = ("done_trace", "done_clock.loss_s", "done_clock.resets",
                "done_clock.clock_starts_s", "done_clock.t_loc_last_before_done_s")

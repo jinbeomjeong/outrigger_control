@@ -27,7 +27,9 @@ Usage (python-dev or dynamics-dev, PowerShell, project root):
       judge --batch <folder> --expect-tool-sha <sha> [--prelaunch F] [--postrun F]
           [--rem-batch <REM batch folder>]
       fields --batch <folder>
-      [--root R] [--out F]
+      [--root R] [--out F] [--rules-rev3 <rev3 md>]   (global options, before the sub-command)
+Thresholds (rev3 RV3-1): within 1e-9 of a threshold (field unit) equals it; BT-C keeps the
+rows with n(t_s) <= 1280 (rev3 RV3-6 W-4).
 Exit codes: 0 pass (prelaunch / postrun / fields: every item true; judge: provisional 통과),
 1 judge 미달 / 판정 불가 or a fields item false, 2 stop or input error, 3 tool error. The last
 stdout line is JSON.
@@ -88,6 +90,8 @@ RULES_ADDENDA = {
         "f39846d6067a7bd409b4ac930d73ebde58a721728ec7d93703ff4627bf21e4b6",
     "las_p5r4_k1_rules_rev2.md":
         "e0a7d1e56b57df5336fc2fd40835624d93585fb224063f6c8068c2b1ba7b10fc",
+    "las_p5r4_k1_rules_rev3.md":
+        "31ba01dff9defb4b7274b27b9df1a427c460fa9ccc5efd84f5a3145e0d3ef8f6",
 }
 """Sealed addenda (rev1, before any result: RV1-1 .. RV1-4 records, RV1-6 identity)."""
 CODE_DIFF_PATHS = ("03_src", "02_params", "04_scripts")
@@ -181,7 +185,11 @@ G2PC_FLOOR_N = F_MIN_N + 2000.0
 STROKE_LIMIT_M = 0.001
 READY_MEDIAN_LIMIT_S = 1.0
 READY_MAX_LIMIT_S = 5.0
-TOLERANCE = 1e-9
+THRESHOLD_TOLERANCE = 1e-9
+"""rev3 RV3-1: a value within 1e-9 (field unit) of a threshold equals it."""
+RULES_PATH_OVERRIDES: dict[str, Path] = {}
+"""Rules file name -> path that replaces the rules folder copy (``--rules-rev3``; set by
+:func:`main` before anything is read)."""
 THIN_MARGIN_PERIODS = 12
 RANGE_IN, RANGE_OUT_REF_NONE, RANGE_OUT = "in", "ref_none", "out"
 """rev2 RV2-2 scope of a CC-F / CC-S pair (judged / outside: ref None / outside: ref below)."""
@@ -279,6 +287,16 @@ def sha256_file(path: Path) -> str | None:
 
 def lf_sha256_file(path: Path) -> str | None:
     return sha256_bytes(path.read_bytes().replace(b"\r\n", b"\n")) if path.is_file() else None
+
+
+def is_below(value: float, limit: float) -> bool:
+    """rev3 RV3-1.1: ``value < limit`` with the tolerance, ``value < limit - 1e-9``."""
+    return value < limit - THRESHOLD_TOLERANCE
+
+
+def is_above(value: float, limit: float) -> bool:
+    """rev3 RV3-1.1: ``value > limit`` with the tolerance, ``value > limit + 1e-9``."""
+    return value > limit + THRESHOLD_TOLERANCE
 
 
 def period_of(t_s: float | None) -> int | None:
@@ -444,9 +462,14 @@ class CommandDigest:
     """``issued_u_m_s`` columns (both arrays are ``<f8``: other dtypes are not read)."""
 
     def prefix_sha256(self, t_end_s: float | None) -> str:
-        """rev2 RV2-13: digest of the shape, dtype and values of the rows with
-        ``t_s <= t_end_s`` (boundary included, compared as it is); None: the whole arrays."""
-        count = len(self.t_s) if t_end_s is None else sum(1 for t in self.t_s if t <= t_end_s)
+        """rev2 RV2-13 with rev3 RV3-6 W-4: digest of the shape, dtype and values of the rows
+        with ``n(t_s) <= n(t_end_s)`` (whole periods, 128 s = 1280, no tolerance); None: the
+        whole arrays."""
+        if t_end_s is None:
+            count = len(self.t_s)
+        else:
+            last_period = period_of(t_end_s)
+            count = sum(1 for t in self.t_s if period_of(t) <= last_period)
         t_bytes = struct.pack(f"<{count}d", *self.t_s[:count])
         shape = f"<f8 t_s ({count},) issued_u_m_s ({count}, {self.width})".encode("ascii")
         return sha256_bytes(shape + t_bytes + b"".join(self.rows[:count]))
@@ -501,7 +524,7 @@ def rules_record(root: Path) -> dict[str, Any]:
     """K-0 / S-1: every rules file's LF sha256 and ``.sha256`` record against the seal."""
     files = {}
     for name, sealed in sealed_rules().items():
-        path = root / RULES_DIR_RELATIVE / name
+        path = RULES_PATH_OVERRIDES.get(name, root / RULES_DIR_RELATIVE / name)
         record_path = path.with_suffix(".sha256")
         tokens = record_path.read_text(encoding="utf-8", errors="replace").split() \
             if record_path.is_file() else []
@@ -1478,9 +1501,9 @@ def ccf_state(f_ref: float | None, f_cand: float | None) -> tuple[str, bool]:
     """rev2 RV2-2 1: (scope, violation) of CC-F; a ref None is outside (``ref_none``)."""
     if f_ref is None:
         return RANGE_OUT_REF_NONE, False
-    if f_ref < CC_FLOOR_N:
+    if is_below(f_ref, CC_FLOOR_N):
         return RANGE_OUT, False
-    return RANGE_IN, f_cand is None or f_cand < CC_FLOOR_N
+    return RANGE_IN, f_cand is None or is_below(f_cand, CC_FLOOR_N)
 
 
 def ccs_state(s_ref: float | None, s_cand: float | None) -> tuple[str, bool]:
@@ -1490,7 +1513,7 @@ def ccs_state(s_ref: float | None, s_cand: float | None) -> tuple[str, bool]:
         return RANGE_OUT_REF_NONE, False
     if s_cand is None:
         return RANGE_IN, True
-    return RANGE_IN, s_cand - s_ref > STROKE_LIMIT_M + TOLERANCE
+    return RANGE_IN, is_above(s_cand - s_ref, STROKE_LIMIT_M)
 
 
 def pair_record(ref_row: RowInput, cand_row: RowInput, analyses: dict[str, RowAnalysis]
@@ -1518,9 +1541,9 @@ def pair_record(ref_row: RowInput, cand_row: RowInput, analyses: dict[str, RowAn
     f_ref, f_cand = ref_force["after_N"], cand_force["after_N"]
     ccf_scope, ccf_violation = ccf_state(f_ref, f_cand)
     ccs_scope, ccs_violation = ccs_state(s_ref, s_cand)
-    g2pc_violation = (f_cand is None or f_cand < G2PC_FLOOR_N
+    g2pc_violation = (f_cand is None or is_below(f_cand, G2PC_FLOOR_N)
                       or cand_force["transient_N"] is None
-                      or cand_force["transient_N"] < G2PC_FLOOR_N)
+                      or is_below(cand_force["transient_N"], G2PC_FLOOR_N))
     r_ref, r_cand = ready_after_loop_s(ref), ready_after_loop_s(cand)
     return {
         "ref": ref_row.spec.p5k_id, "cand": cand_row.spec.p5k_id,
@@ -1654,9 +1677,9 @@ def ready_criterion(pairs: dict[str, dict], is_open: bool) -> dict[str, Any]:
                 "basis": "changed pairs but empty population", "items": [], "count": 0}
     median, maximum = statistics.median(values), max(values)
     items = []
-    if median > READY_MEDIAN_LIMIT_S + TOLERANCE:
+    if is_above(median, READY_MEDIAN_LIMIT_S):
         items.append(f"median {median}")
-    if maximum > READY_MAX_LIMIT_S + TOLERANCE:
+    if is_above(maximum, READY_MAX_LIMIT_S):
         items.append(f"max {maximum}")
     ok = None if is_open else not items
     return {**out, "median_s": median, "max_s": maximum, "ok": ok, "status": status_of(ok),
@@ -1785,6 +1808,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--root", type=Path, default=DEFAULT_ROOT)
     parser.add_argument("--out", type=Path, default=None)
+    parser.add_argument("--rules-rev3", type=Path, default=None,
+                        help="las_p5r4_k1_rules_rev3.md to check (next to its .sha256)")
     sub = parser.add_subparsers(dest="command", required=True)
     pre = sub.add_parser("prelaunch")
     pre.add_argument("--batch-plan", type=Path, required=True)
@@ -1855,6 +1880,9 @@ def exit_code(doc: dict[str, Any]) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    RULES_PATH_OVERRIDES.clear()
+    if args.rules_rev3 is not None:
+        RULES_PATH_OVERRIDES["las_p5r4_k1_rules_rev3.md"] = args.rules_rev3
     print("PROVISIONAL (k10 null until the path 2 recount agrees, rules 10.2)")
     try:
         doc, out_path = run_command(args)

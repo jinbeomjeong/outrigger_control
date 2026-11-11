@@ -233,6 +233,38 @@ def test_rv2_13_boundary_row_is_included():
     assert digest.prefix_sha256(0.2) != shorter.prefix_sha256(0.2)
 
 
+def test_rv3_t9_t10_force_lines_with_tolerance():
+    assert cj.ccf_state(cj.CC_FLOOR_N - 0.5e-9, cj.CC_FLOOR_N - 0.5e-9) == (cj.RANGE_IN, False)
+    assert cj.ccf_state(cj.CC_FLOOR_N, cj.CC_FLOOR_N - 2e-9) == (cj.RANGE_IN, True)
+    assert cj.ccf_state(cj.CC_FLOOR_N - 2e-9, None) == (cj.RANGE_OUT, False)
+    edge = make_result(cj.ARM_CAND, f_after=cj.G2PC_FLOOR_N - 0.5e-9)
+    assert criteria_of(make_inputs({"A2": edge}))["criteria"]["G-2'C"]["ok"] is True
+    low = make_result(cj.ARM_CAND, f_after=cj.G2PC_FLOOR_N - 2e-9)
+    assert criteria_of(make_inputs({"A2": low}))["criteria"]["G-2'C"]["ok"] is False
+
+
+def test_rv3_t11_cc_s_increase_with_tolerance():
+    assert cj.ccs_state(0.5, 0.501 + 0.5e-9) == (cj.RANGE_IN, False)
+    assert cj.ccs_state(0.5, 0.501 + 2e-9) == (cj.RANGE_IN, True)
+
+
+def test_rv3_w4_bt_c_keeps_rows_up_to_period_1280():
+    times = (127.9, 128.00000000312562, 128.1)
+
+    def digest(count):
+        t = times[:count]
+        rows = tuple(struct.pack("<4d", 1.0, 1.0, 1.0, 1.0) for _ in t)
+        return cj.CommandDigest("x", t, rows)
+
+    assert digest(3).prefix_sha256(128.0) == digest(2).prefix_sha256(128.0)
+    assert digest(3).prefix_sha256(128.0) != digest(1).prefix_sha256(128.0)
+
+
+def test_rv3_5_rev3_in_the_sealed_rules():
+    assert cj.sealed_rules()["las_p5r4_k1_rules_rev3.md"] == (
+        "31ba01dff9defb4b7274b27b9df1a427c460fa9ccc5efd84f5a3145e0d3ef8f6")
+
+
 @pytest.mark.parametrize(("statuses", "expected"), [
     ([cj.STATUS_FAIL], cj.STATUS_FAIL), ([cj.STATUS_UNDECIDABLE], cj.STATUS_UNDECIDABLE),
     ([cj.STATUS_FAIL, cj.STATUS_UNDECIDABLE], cj.STATUS_UNDECIDABLE)])
