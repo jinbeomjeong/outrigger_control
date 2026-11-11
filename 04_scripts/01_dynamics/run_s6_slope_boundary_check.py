@@ -515,6 +515,13 @@ AUG_EPS_FRACTION_OF_V_MAX = 0.1
 """AUG_eps: valve open above 0.1 v_max (the K-2 creep at 0.05 v_max counts as locked)."""
 
 
+LOCK_STIFFNESS_KEY = "lock_stiffness"
+"""``case["rcfg"]`` key of the locked-leg rod-side spring: absent = off (no call), ``"off"`` / ``"l1r"`` recorded
+(``run_mast_flex_c2_check.FlexPlant.set_lock_stiffness``, ``k2_dyn_sensitivity.md`` A.3-2)."""
+LOCK_ROD_DEAD_LENGTH_KEY = "lock_rod_dead_length_m"
+"""Optional ``L_0r`` override of the ``l1r`` spring (sensitivity 0.02 ... 0.1 m)."""
+
+
 def _aug_eps_m_s() -> float:
     return AUG_EPS_FRACTION_OF_V_MAX * float(dm.load_params()["actuator"]["max_speed_m_s"])
 
@@ -592,6 +599,20 @@ class KPlant(rpt.TPlant):
             self.ctcr = self.ccr * math.sqrt(s)
             self.ktcr_rel = s
         self._init_dissipation(a, k)
+        self._init_lock_stiffness()
+
+    # --- lock_stiffness option (k2_dyn_sensitivity.md A.3-2) ------------------------------------------------------
+    def _init_lock_stiffness(self) -> None:
+        """``case["rcfg"]["lock_stiffness"]`` (and ``lock_rod_dead_length_m``) -> ``FlexPlant.set_lock_stiffness``.
+
+        Without the key nothing is called (the kernel keeps lockm 0, every stored run bit for bit)."""
+        rcfg = rpt.RCFG
+        self.lock_stiffness_requested = LOCK_STIFFNESS_KEY in rcfg
+        if not self.lock_stiffness_requested:
+            if LOCK_ROD_DEAD_LENGTH_KEY in rcfg:
+                raise ValueError(f"{LOCK_ROD_DEAD_LENGTH_KEY} without {LOCK_STIFFNESS_KEY}")
+            return
+        self.set_lock_stiffness(rcfg[LOCK_STIFFNESS_KEY], rcfg.get(LOCK_ROD_DEAD_LENGTH_KEY))
 
     # --- K-2 dissipation options ------------------------------------------------------------------------------
     def _init_dissipation(self, args, kwargs) -> None:
@@ -714,6 +735,21 @@ def check_kplant_aug(plant, case) -> None:
             raise RuntimeError("KPlant dissipation options differ from the request")
 
 
+def check_kplant_lock_stiffness(plant, case) -> None:
+    """Row identity of the lock_stiffness option: the plant holds the mode the case asked for.
+
+    Raises:
+        RuntimeError: The plant mode differs from the case request.
+    """
+    rcfg = case.get("rcfg", {})
+    asked = rcfg.get(LOCK_STIFFNESS_KEY)
+    if (asked is not None) is not plant.lock_stiffness_requested:
+        raise RuntimeError("KPlant lock_stiffness request mismatch")
+    held = plant.lock_stiffness
+    if (asked or rmf.LOCK_STIFFNESS_OFF) != held or (held == rmf.LOCK_STIFFNESS_OFF) is not (plant.lockm == 0):
+        raise RuntimeError(f"KPlant lock_stiffness {held!r} differs from the request {asked!r}")
+
+
 def td_one(case):
     rpt.TPlant = KPlant                     # re-assert in this (possibly spawned) process before every run
     case = dict(case); case["keep_series"] = True
@@ -726,6 +762,9 @@ def td_one(case):
         if (want is None) != (pl.ktcr_rel is None) or (want is not None and abs(pl.ktcr_rel - want) > 1e-12):
             raise RuntimeError("crawler kt override mismatch")
         check_kplant_aug(pl, case)
+        check_kplant_lock_stiffness(pl, case)
+        if pl.lock_stiffness_requested:  # key only with a request (s_motor_* below assume head-only oil)
+            out["plant_lock_stiffness"] = dict(pl.lock_record)
         if pl.aug_requested:  # keys only with a K-2 dissipation request (I-9)
             out["plant_aug"] = pl.aug_record()
             out["valve_open_fraction_touch_to_lift"] = pl.valve_open_fraction(

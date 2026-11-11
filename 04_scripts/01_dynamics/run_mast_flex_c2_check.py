@@ -76,6 +76,25 @@ FLEX = tuple(SUPPORTS)
 ORIG_PLANT = rcc.Plant
 CONFIG: dict = {}
 LAST = {}
+LOCK_STIFFNESS_OFF = "off"
+LOCK_STIFFNESS_L1R = "l1r"
+LOCK_STIFFNESS_MODES = (LOCK_STIFFNESS_OFF, LOCK_STIFFNESS_L1R)
+"""FlexPlant.set_lock_stiffness modes (k2_dyn_sensitivity.md A.3-2); not set = off."""
+
+
+def _rod_chamber_defaults() -> dict:
+    """POC constants of the L1-R retract lock pressure and the atmosphere, from the project module (one source)."""
+    src = str(ROOT / "03_src")
+    if src not in sys.path:
+        sys.path.insert(0, src)
+    import dataclasses
+
+    from outrigger_sim.hydraulics import rod_chamber
+
+    fields = {field.name: field.default for field in dataclasses.fields(rod_chamber.RodChamberLegParams)}
+    return {"poc_pilot_ratio": float(fields["poc_pilot_ratio"]), "poc_cracking_Pa": float(fields["poc_cracking_Pa"]),
+            "p_head_back_retract_Pa": float(fields["p_head_back_retract_Pa"]),
+            "atmosphere_Pa": float(rod_chamber.ATMOSPHERE_PA)}
 
 # --------------------------------------------------------------------------------------------- numba kernel
 
@@ -87,11 +106,118 @@ def _skew(d):
     return S
 
 
+# --- lock_stiffness "l1r" (k2_dyn_sensitivity.md A.3-2): rod-side oil column of a locked leg ---------------------
+# lkp slots (FlexPlant.set_lock_stiffness): valve lock eps [m/s], release decay tau [s], rod-side floor gauge [Pa],
+# POC pilot ratio psi [-], POC cracking pressure [Pa], head back pressure on retract p_bA [Pa]
+LK_EPS, LK_TAU, LK_FLOOR, LK_PSI, LK_PCR, LK_PBA = range(6)
+
+
+@nb.njit(cache=True)
+def _rod_force(i, x_i, rlock, krs, xlk, fcap):
+    """Rod-side force of leg i at rod position x_i [N, + = pushing the pad down].
+
+    Locked: min(k_rs (x_lock - x), F_cap) (the rod side at its floor above F_cap); moving: the decaying release
+    residual held in fcap."""
+    if rlock[i] == 1:
+        return min(krs[i] * (xlk[i] - x_i), fcap[i])
+    return fcap[i]
+
+
+@nb.njit(cache=True)
+def _retract_lock_rod_pressure(cyl_force, head_area, annulus_area, lkp):
+    """p_r0 of a lock after a retraction: rod pressure at the head POC pilot threshold
+    (outrigger_sim.hydraulics.rod_chamber.RodChamberLegParams.retract_threshold_rod_pressure_Pa)."""
+    area_ratio = head_area / annulus_area
+    inverse_pilot = 1.0 / lkp[LK_PSI]
+    head_threshold = (cyl_force / annulus_area + lkp[LK_PCR] + lkp[LK_PBA] * (1.0 - inverse_pilot)) / (
+        area_ratio - inverse_pilot)
+    head = max(lkp[LK_PBA], head_threshold)
+    return (head * head_area - cyl_force) / annulus_area
+
+
+@nb.njit(cache=True)
+def _update_rod_lock(i, u_valve, dt, x_i, head_force, lkp, Ap4, Aan4, pr0e, krs, rlock, xlk, fcap, frod, frel,
+                     tdec, rdir):
+    """Valve state of leg i before its rod solve (L1-R rules, outrigger_sim.hydraulics.rod_chamber).
+
+    |u| <= eps locks at the present force (no step: a release residual is absorbed into the anchor), the knee cap
+    from p_r0 (after an extension: YAML p_r0_after_extend; after a retraction: the pilot threshold); |u| > eps
+    releases and the last rod force decays as exp(-t / tau)."""
+    is_moving = abs(u_valve) > lkp[LK_EPS]
+    if rlock[i] == 1:
+        if is_moving:
+            rlock[i] = 0
+            rdir[i] = 1 if u_valve > 0 else -1
+            frel[i] = frod[i]
+            tdec[i] = 0.0
+            fcap[i] = frel[i]
+        return
+    if is_moving:
+        rdir[i] = 1 if u_valve > 0 else -1
+        tdec[i] += dt
+        fcap[i] = frel[i] * math.exp(-tdec[i] / lkp[LK_TAU]) if lkp[LK_TAU] > 0 else 0.0
+        return
+    cyl_force = head_force + frod[i]
+    if rdir[i] > 0:
+        rod_pressure = pr0e[i]
+    else:
+        rod_pressure = _retract_lock_rod_pressure(cyl_force, Ap4[i], Aan4[i], lkp)
+    rod_pressure = max(rod_pressure, lkp[LK_FLOOR])
+    fcap[i] = frod[i] + (rod_pressure - lkp[LK_FLOOR]) * Aan4[i]
+    xlk[i] = x_i + frod[i] / krs[i]
+    rlock[i] = 1
+
+
+@nb.njit(cache=True)
+def _rod_position(kc, te, gax, ko_i, sref_i, c0, is_locked, krs_i, xlk_i, fcap_i):
+    """Massless-rod position with the rod-side force: cylinder force ko (sref - x) + F_rod(x) = contact - c0.
+
+    Same order as the head-only solve: the free (no contact) root first, the contact root (stiffness kc, offset te)
+    when the free root is below the floor. F_rod is piecewise linear (locked: k_rs below the knee position
+    x_k = x_lock - F_cap / k_rs, constant F_cap beyond it); the total is monotone, so one region is consistent."""
+    base = ko_i * sref_i + c0
+    x_knee = xlk_i - fcap_i / krs_i if is_locked else 0.0
+    x_free = (base + fcap_i) / ko_i
+    if is_locked:
+        x_spring = (base + krs_i * xlk_i) / (ko_i + krs_i)
+        if x_spring >= x_knee:
+            x_free = x_spring
+    if x_free <= gax:
+        return x_free
+    rhs = base - te + kc * gax
+    if is_locked:
+        x_spring = (rhs + krs_i * xlk_i) / (kc + ko_i + krs_i)
+        if x_spring >= x_knee:
+            return x_spring
+    return (rhs + fcap_i) / (kc + ko_i)
+
+
+@nb.njit(cache=True)
+def _solve_leg_l1r(i, fmode, x, f, sref, gax, a_n, ko, ks, Wr, Fs, tez, rlock, krs, xlk, fcap):
+    """Rod position and seal friction of leg i with the rod-side force (both pad friction modes)."""
+    if fmode == 0:
+        kc = ks[i]
+        te = 0.0
+    else:
+        kc = ks[i] * a_n
+        te = tez[i] if x[i] > gax else 0.0
+    Fel = kc * max(x[i] - gax, 0.0) + te
+    cyl = ko[i] * (sref[i] - x[i]) + _rod_force(i, x[i], rlock, krs, xlk, fcap)
+    ftr = Fel - cyl - Wr[i]
+    if abs(ftr) <= Fs[i] and Fs[i] > 0:
+        f[i] = ftr
+        return
+    fs = Fs[i] * (1.0 if ftr > 0 else -1.0)
+    x[i] = _rod_position(kc, te, gax, ko[i], sref[i], Wr[i] + fs, rlock[i] == 1, krs[i], xlk[i], fcap[i])
+    f[i] = fs
+
+
 @nb.njit(cache=True)
 def physics_flex(nsteps, dt, u_cmd, r, v, q, w, al, ald, sref, x, f, panc, pflag, canc, cflag,
                  m, Ib, Ibinv, pad_rel, cr_rel, imu_rel, nrm, g,
                  ko, ks, cn, kt, ct, Wr, Fs, kcr, ccr, ktcr, ctcr, mu, mu_cr, smax, Fext, Fret, goff,
-                 flex, mr, dr, Ir, mm, dm0, Gm, Im, Ka, Ca, hgt, M0, acc, fmode, tez):
+                 flex, mr, dr, Ir, mm, dm0, Gm, Im, Ka, Ca, hgt, M0, acc, fmode, tez,
+                 lockm, krs, lkp, Ap4, Aan4, pr0e, rlock, xlk, fcap, frod, frel, tdec, rdir):
     """run_control_comparison.physics + 2-DoF equivalent mast (flex = 1). flex = 0 reproduces physics exactly.
     Extra slots: acc[24:28] min pad contact force over the call, acc[28:32] / acc[32:36] pad tangential force along
     body x / y (last step), acc[36] crawler tangential force along body x (last step), acc[37:39] alpha (last),
@@ -99,7 +225,11 @@ def physics_flex(nsteps, dt, u_cmd, r, v, q, w, al, ald, sref, x, f, panc, pflag
     fmode 0 (default) = original pad decomposition; fmode 1 = Chrono L1 decomposition (see
     run_control_comparison.physics): acc[11+i] = rod axial load N (a . n) + T . e_z, acc[28:36] = body x / y of the whole
     pad force N n + T (= rod lateral load L, perpendicular to the leg axis), acc[45:49] = |T| (floor plane),
-    acc[49:53] = N (dynamics_model.md 3.15, rev. 26)."""
+    acc[49:53] = N (dynamics_model.md 3.15, rev. 26).
+    lockm 0 (default) = head-side k_oil only, the arithmetic of every stored run; lockm 1 = lock_stiffness "l1r"
+    (k2_dyn_sensitivity.md A.3-2): a locked leg (|u| <= lkp[LK_EPS]) gets the rod-side column k_rs in parallel
+    with k_oil while its rod side is above the floor (state rlock, xlk, fcap, frod, frel, tdec, rdir; frod = last
+    rod-side force, added to the cylinder force used for saturation and acc[16:24])."""
     gv = np.array([0.0, 0.0, -g])
     E = np.zeros((3, 2)); E[0, 0] = 1.0; E[1, 1] = 1.0
     for _ in range(nsteps):
@@ -112,6 +242,8 @@ def physics_flex(nsteps, dt, u_cmd, r, v, q, w, al, ald, sref, x, f, panc, pflag
         ctx = 0.0
         for i in range(4):
             P = ko[i] * (sref[i] - x[i])
+            if lockm != 0:
+                P = P + frod[i]
             ui = u_cmd[i]
             if ui > 0 and P >= Fext[i]:   # per-leg limits (4,) (rev. 30)
                 ui = 0.0
@@ -127,7 +259,12 @@ def physics_flex(nsteps, dt, u_cmd, r, v, q, w, al, ald, sref, x, f, panc, pflag
             d0 = R @ pad_rel[i]
             p0 = r + d0
             gax = (nrm[0] * p0[0] + nrm[1] * p0[1] + nrm[2] * p0[2] + goff[i]) / a_n
-            if fmode == 0:
+            if lockm != 0:
+                _update_rod_lock(i, u_cmd[i], dt, x[i], ko[i] * (sref[i] - x[i]), lkp, Ap4, Aan4, pr0e, krs,
+                                 rlock, xlk, fcap, frod, frel, tdec, rdir)
+                _solve_leg_l1r(i, fmode, x, f, sref, gax, a_n, ko, ks, Wr, Fs, tez, rlock, krs, xlk, fcap)
+                frod[i] = _rod_force(i, x[i], rlock, krs, xlk, fcap)
+            elif fmode == 0:
                 Fel = ks[i] * max(x[i] - gax, 0.0)
                 ftr = Fel - ko[i] * (sref[i] - x[i]) - Wr[i]
                 if abs(ftr) <= Fs[i] and Fs[i] > 0:
@@ -159,6 +296,8 @@ def physics_flex(nsteps, dt, u_cmd, r, v, q, w, al, ald, sref, x, f, panc, pflag
                     f[i] = fs
             c = x[i] - gax
             Pn = ko[i] * (sref[i] - x[i])
+            if lockm != 0:
+                Pn = Pn + frod[i]
             if Pn > acc[16 + i]:
                 acc[16 + i] = Pn
             if Pn < acc[20 + i]:
@@ -442,7 +581,95 @@ class FlexPlant(ORIG_PLANT):
         self.fmode = int(cfg.get("fric_mode", getattr(self, "fmode", 0)))   # rev. 26 option, default 0
         self.tez = np.zeros(4)
         self.rec_hi = 45 if self.fmode == 0 else 53
+        self.beta_Pa = float(beta)
+        self._init_lock_state()
         LAST["plant"] = self
+
+    # --- lock_stiffness option (k2_dyn_sensitivity.md A.3-2) ------------------------------------------------------
+    def _init_lock_state(self) -> None:
+        """Option off: lockm 0 and zero arrays (the kernel takes the head-only path, bit for bit)."""
+        self.lock_stiffness = LOCK_STIFFNESS_OFF
+        self.lockm = 0
+        self.lock_record = None
+        self.krs = np.zeros(4)
+        self.lkp = np.zeros(6)
+        self.lock_head_area = np.zeros(4)
+        self.lock_annulus_area = np.zeros(4)
+        self.lock_p_r0_extend = np.zeros(4)
+        self.rlock = np.zeros(4, np.int64)
+        self.xlk = np.zeros(4)
+        self.fcap = np.zeros(4)
+        self.frod = np.zeros(4)
+        self.frel = np.zeros(4)
+        self.tdec = np.zeros(4)
+        self.rdir = np.ones(4, np.int64)  # a fresh leg counts as locked after an extension (rod_chamber Q-D6)
+
+    def set_lock_stiffness(self, mode: str, rod_dead_length_m: float | None = None) -> dict:
+        """Switch the locked-leg rod-side spring on (``"l1r"``) or keep it off (``"off"``); returns the record.
+
+        Call before the first step. ``l1r`` derives, per leg, ``k_rs = beta A_ann / (s_max - e_op + L_0r)``
+        (frozen at the harness operating extension like ``k_oil``, L1-R Q-D7; YAML
+        ``actuator.rod_side.k_rod_side_N_m`` at the YAML beta), ``p_r0`` after an extension, the rod-side floor
+        (``p_floor_Pa`` absolute), the lock ``eps`` and the release ``tau`` from ``actuator.rod_side``, and the POC
+        constants of the retract threshold from ``outrigger_sim.hydraulics.rod_chamber.RodChamberLegParams``.
+
+        Args:
+            mode: ``"off"`` or ``"l1r"``.
+            rod_dead_length_m: ``L_0r`` override (sensitivity 0.02 ... 0.1 m); None = YAML
+                ``actuator.rod_dead_length_m``.
+
+        Raises:
+            ValueError: An unknown mode, a non-positive ``L_0r``, or an ``L_0r`` with mode off.
+            RuntimeError: The plant has already stepped or the option is already set.
+        """
+        if mode not in LOCK_STIFFNESS_MODES:
+            raise ValueError(f"lock_stiffness {mode!r}: expected one of {LOCK_STIFFNESS_MODES}")
+        if self.t != 0.0 or self.lock_record is not None:
+            raise RuntimeError("set_lock_stiffness: call once, before the first step")
+        if mode == LOCK_STIFFNESS_OFF:
+            if rod_dead_length_m is not None:
+                raise ValueError("rod_dead_length_m given with lock_stiffness 'off'")
+            self.lock_record = {"mode": LOCK_STIFFNESS_OFF}
+            return dict(self.lock_record)
+        self.lock_record = self._enable_l1r(rod_dead_length_m)
+        return dict(self.lock_record)
+
+    def _enable_l1r(self, rod_dead_length_m: float | None) -> dict:
+        p = dm.load_params()
+        rod_side = p["actuator"]["rod_side"]
+        dead_length_m = float(p["actuator"]["rod_dead_length_m"] if rod_dead_length_m is None else rod_dead_length_m)
+        if not dead_length_m > 0.0:
+            raise ValueError(f"rod_dead_length_m must be > 0, got {dead_length_m!r}")
+        poc = _rod_chamber_defaults()
+        stroke_m = float(p["actuator"]["stroke_m"])
+        e_op = np.broadcast_to(np.asarray(self.e_op, float), (4,))
+        column_m = stroke_m - e_op + dead_length_m
+        annulus = np.broadcast_to(np.asarray(dm.annulus_area(), float), (4,)).copy()
+        self.krs = self.beta_Pa * annulus / column_m
+        self.lock_head_area = np.broadcast_to(np.asarray(self.Ap, float), (4,)).copy()
+        self.lock_annulus_area = annulus
+        self.lock_p_r0_extend = np.array([float(rod_side["p_r0_after_extend_Pa"][nm]) for nm in dm.LEG_NAMES])
+        floor_gauge_Pa = float(rod_side["p_floor_Pa"]) - poc["atmosphere_Pa"]
+        self.lkp = np.array([float(rod_side["lock_eps_m_s"]), float(rod_side["release_tau_s"]), floor_gauge_Pa,
+                             poc["poc_pilot_ratio"], poc["poc_cracking_Pa"], poc["p_head_back_retract_Pa"]])
+        self.lockm = 1
+        self.lock_stiffness = LOCK_STIFFNESS_L1R
+        k_lock = 1.0 / (1.0 / (np.asarray(self.ko, float) + self.krs) + 1.0 / self.ks)
+        return {"mode": LOCK_STIFFNESS_L1R, "beta_Pa": self.beta_Pa, "rod_dead_length_m": dead_length_m,
+                "rod_dead_length_source": "yaml" if rod_dead_length_m is None else "override",
+                "stroke_m": stroke_m, "e_op_m": e_op.tolist(), "column_length_m": column_m.tolist(),
+                "annulus_area_m2": annulus.tolist(), "k_rs_N_m": self.krs.tolist(),
+                "k_oil_N_m": np.broadcast_to(np.asarray(self.ko, float), (4,)).tolist(),
+                "k_lock_N_m": k_lock.tolist(), "p_r0_after_extend_Pa": self.lock_p_r0_extend.tolist(),
+                "p_floor_abs_Pa": float(rod_side["p_floor_Pa"]), "lock_eps_m_s": float(self.lkp[LK_EPS]),
+                "release_tau_s": float(self.lkp[LK_TAU]), "poc": poc}
+
+    def pressure(self):
+        """Cylinder force reading ``k_oil (s_ref - x)``, plus the rod-side force when ``lock_stiffness`` is on."""
+        head_force = super().pressure()
+        if self.lockm == 0:
+            return head_force
+        return head_force + self.frod
 
     def step(self, u, nsteps):
         a = self.acc
@@ -455,7 +682,9 @@ class FlexPlant(ORIG_PLANT):
                      self.kt, self.ct, self.Wr, self.Fs, self.kcr, self.ccr, self.ktcr, self.ctcr, self.mu_pad,
                      self.mu_cr, self.geo.stroke, self.Fext, self.Fret, self.goff, self.flex, self.mr, self.dr,
                      self.Ir, self.mm, self.dm0, self.Gm, self.Im, self.Ka, self.Ca, self.hgt, self.M0, a,
-                     self.fmode, self.tez)
+                     self.fmode, self.tez, self.lockm, self.krs, self.lkp, self.lock_head_area,
+                     self.lock_annulus_area, self.lock_p_r0_extend, self.rlock, self.xlk, self.fcap, self.frod,
+                     self.frel, self.tdec, self.rdir)
         self.t += nsteps * self.dt
         if nsteps > 1000:          # crawler settle before the run (run_case resets t afterwards)
             self.hist_t = []; self.hist = []

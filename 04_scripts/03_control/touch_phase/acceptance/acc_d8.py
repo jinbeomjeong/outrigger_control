@@ -24,6 +24,11 @@ K-2 (``06_analysis/02_control/k2/k2_touch_creep_rules.md`` 9.1-3), D8x mode only
                      (``case["rcfg"]["diss_preset"]``, ``k2_dyn_spec.md``)
   --keys-file <txt>  run only these case ids (one per line; V-3 273 keys)
   --levels top       run only these auger levels (V-4)
+  --lock-stiffness off|l1r
+                     KPlant locked-leg rod-side spring (``case["rcfg"]["lock_stiffness"]``,
+                     ``k2_dyn_sensitivity.md`` A.3-2, K-2b record arm); absent = not set (every stored run bit for
+                     bit). Given: every row adds ``lock_stiffness`` and ``plant_lock_stiffness`` (the derived
+                     ``k_rs`` etc.), the meta ``d8x.lock_stiffness``, the default output ``..._lk<mode>.json``
   With ``--k2`` or ``--aug`` every run adds the ``k2`` block (``04_scripts/03_control/k2/k2_record.py``:
   ``touch_creep_latch``, latches, SH-1, SH-2, 5.3 values, I-9 ``aug`` identity and valve-open shares) and the meta
   ``d8x.k2`` / ``d8x.aug``; the default output is ``ra_<k1>[_k2<k2>][_aug<arm>].json``.
@@ -51,6 +56,9 @@ D8X_K1_ENV = "ACC_D8X_K1"
 D8X_K2_ENV = "ACC_D8X_K2"
 D8X_AUG_ENV = "ACC_D8X_AUG"
 """K-2 arm (``off`` / ``on``) and dissipation arm of the workers; unset = not installed."""
+D8X_LOCK_STIFFNESS_ENV = "ACC_D8X_LOCK_STIFFNESS"
+"""``--lock-stiffness`` of the workers (``off`` / ``l1r``); unset = the case rcfg has no ``lock_stiffness`` key."""
+LOCK_STIFFNESS_CHOICES = ("off", "l1r")
 D8X_SERIES_ENV = "ACC_D8X_SERIES_DIR"
 """K-2 runs: folder of the per-row 1 ms series (``--series-dir``, default ``<out stem>_series``)."""
 K2_DIR = REPO_ROOT / "04_scripts" / "03_control" / "k2"
@@ -81,8 +89,10 @@ _SERIES: dict = {}
 
 
 # ------------------------------------------------------------------------------------- D8x
-def _d8x_default_out(k1: str, k2: str | None = None, aug: str | None = None) -> Path:
+def _d8x_default_out(k1: str, k2: str | None = None, aug: str | None = None,
+                     lock_stiffness: str | None = None) -> Path:
     name = f"ra_{k1}" + ("" if k2 is None else f"_k2{k2}") + ("" if aug is None else f"_aug{aug}")
+    name += "" if lock_stiffness is None else f"_lk{lock_stiffness}"
     return REPO_ROOT / "06_analysis" / "02_control" / "d8x" / "ra" / f"{name}.json"
 
 
@@ -250,6 +260,18 @@ def _with_k2_arms(case: dict, c2py) -> dict:
     return case
 
 
+def _with_lock_stiffness(case: dict) -> dict:
+    """The case with ``rcfg["lock_stiffness"]`` from :data:`D8X_LOCK_STIFFNESS_ENV`; unchanged when unset."""
+    mode = os.environ.get(D8X_LOCK_STIFFNESS_ENV)
+    if not mode:
+        return case
+    if mode not in LOCK_STIFFNESS_CHOICES:
+        raise ValueError(f"{D8X_LOCK_STIFFNESS_ENV} {mode!r}: expected one of {LOCK_STIFFNESS_CHOICES}")
+    case = dict(case)
+    case["rcfg"] = dict(case["rcfg"], lock_stiffness=mode)
+    return case
+
+
 # ------------------------------------------------------------------------------------- runs
 def run_one(case: dict) -> dict:
     t0 = time.perf_counter()
@@ -263,6 +285,7 @@ def run_one(case: dict) -> dict:
             _install_series_capture(c2py)
             if _is_k2_run():
                 case = _with_k2_arms(case, c2py)
+            case = _with_lock_stiffness(case)
         c2py.rcr.SensorsS = c2py.traces.RecordingSensors
         c2py.rpt.C2RA = c2py.HarnessAdapter
         case["rcfg"]["ca_over"] = dict(case["rcfg"]["ca_over"], **c2py.HARNESS_LOOP_OFF)
@@ -284,6 +307,9 @@ def run_one(case: dict) -> dict:
                    wall_s=round(time.perf_counter() - t0, 1))
         if IS_D8X:
             out.update(case["d8x"], **_d8x_fields(run, adapter, c2py))
+            if "lock_stiffness" in case["rcfg"]:  # keys only with --lock-stiffness (an old run keeps its rows)
+                out["lock_stiffness"] = case["rcfg"]["lock_stiffness"]
+                out["plant_lock_stiffness"] = run["plant_lock_stiffness"]
         return out
     except Exception as exc:  # the batch goes on, the record says what failed
         import traceback
@@ -309,12 +335,16 @@ def _parse_args() -> argparse.Namespace:
     ap.add_argument("--levels", default=None, help="D8x: comma list of auger levels to run (V-4: top)")
     ap.add_argument("--series-dir", dest="series_dir", type=Path, default=None,
                     help="D8x with --k2 / --aug: folder of the per-row 1 ms series (default <out stem>_series)")
+    ap.add_argument("--lock-stiffness", dest="lock_stiffness", default=None, choices=LOCK_STIFFNESS_CHOICES,
+                    help="D8x: KPlant locked-leg rod-side spring (k2_dyn_sensitivity.md A.3-2); absent = not set")
     ap.add_argument("--allow-errors", dest="allow_errors", action="store_true",
                     help=f"exit 0 even when rows carry 'error' (default: exit {EXIT_ROW_ERRORS})")
     args = ap.parse_args()
-    d8x_only = (args.stages, args.k1, args.k2, args.aug, args.keys_file, args.levels, args.series_dir)
+    d8x_only = (args.stages, args.k1, args.k2, args.aug, args.keys_file, args.levels, args.series_dir,
+                args.lock_stiffness)
     if args.points is None and any(value is not None for value in d8x_only):
-        ap.error("--stages, --k1, --k2, --aug, --keys-file and --levels belong to the D8x mode (--points)")
+        ap.error("--stages, --k1, --k2, --aug, --keys-file, --levels and --lock-stiffness belong to the D8x mode "
+                 "(--points)")
     if args.points is not None:
         args.stages = tuple(s for s in (args.stages or ",".join(D8X_STAGES)).split(",") if s)
         unknown = sorted(set(args.stages) - set(D8X_STAGES))
@@ -329,7 +359,7 @@ def _parse_args() -> argparse.Namespace:
             unknown = sorted(set(args.levels) - set(_record_module().LEVELS))
             if unknown or not args.levels:
                 ap.error(f"--levels: unknown {unknown}, choose from {_record_module().LEVELS}")
-        args.out = args.out or _d8x_default_out(args.k1, args.k2, args.aug)
+        args.out = args.out or _d8x_default_out(args.k1, args.k2, args.aug, args.lock_stiffness)
         if args.series_dir is None and (args.k2 is not None or args.aug is not None):
             args.series_dir = args.out.with_name(args.out.stem + "_series")
     return args
@@ -389,6 +419,8 @@ def _k2_meta(args: argparse.Namespace) -> dict:
         meta["aug"] = {"arm": args.aug, "diss_preset": _k2_module().aug_preset(args.aug)}
     if args.levels is not None:
         meta["levels"] = list(args.levels)
+    if args.lock_stiffness is not None:
+        meta["lock_stiffness"] = args.lock_stiffness
     if args.series_dir is not None:
         meta["series_dir"] = str(args.series_dir)
     if args.keys_file is not None:
@@ -426,7 +458,8 @@ def main() -> int:
     args = _parse_args()
     if args.points is not None:
         os.environ[D8X_K1_ENV] = args.k1  # inherited by the spawned workers
-        for name, value in ((D8X_K2_ENV, args.k2), (D8X_AUG_ENV, args.aug), (D8X_SERIES_ENV, args.series_dir)):
+        for name, value in ((D8X_K2_ENV, args.k2), (D8X_AUG_ENV, args.aug), (D8X_SERIES_ENV, args.series_dir),
+                            (D8X_LOCK_STIFFNESS_ENV, args.lock_stiffness)):
             if value is not None:
                 os.environ[name] = str(value)
     identity_start = _record_module().run_identity(REPO_ROOT) if IS_D8X else None
