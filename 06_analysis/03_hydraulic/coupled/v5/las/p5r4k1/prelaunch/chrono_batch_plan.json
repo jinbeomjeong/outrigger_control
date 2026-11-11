@@ -1,0 +1,18 @@
+{
+ "batch": "V5-LAS-P5R4-K1",
+ "note": "las_p5r4k1_chrono_judge.py prelaunch --batch-plan 입력. pool은 compute-scheduler-expert 배치표로 메인 세션이 채운다(짝은 같은 풀 종류, K-6).",
+ "rows": [
+  {"p5k_id": "A1", "case": "P5K_A1_rigidJ1FR_Kc1_B_top_Fs4_VB_P0", "pool": "{POOL}"},
+  {"p5k_id": "A2", "case": "P5K_A2_rigidJ1FR_Kc1_B_top_Fs4_VB_P5r4", "pool": "{POOL}"},
+  {"p5k_id": "A3", "case": "P5K_A3_rigidJ1FR_Kc3_B_top_Fs4_VB_P0", "pool": "{POOL}"},
+  {"p5k_id": "A4", "case": "P5K_A4_rigidJ1FR_Kc3_B_top_Fs4_VB_P5r4", "pool": "{POOL}"},
+  {"p5k_id": "A5", "case": "P5K_A5_rigidJ1FR_Kc1_B_top_Fs4_V0_P0", "pool": "{POOL}"},
+  {"p5k_id": "A6", "case": "P5K_A6_rigidJ1FR_Kc1_B_top_Fs4_V0_P5r4", "pool": "{POOL}"},
+  {"p5k_id": "B1", "case": "P5K_B1_G1_J1FL_B_top_Fs4_VB_P0", "pool": "{POOL}"},
+  {"p5k_id": "B2", "case": "P5K_B2_G1_J1FL_B_top_Fs4_VB_P5r4", "pool": "{POOL}"},
+  {"p5k_id": "C1", "case": "P5K_C1_J2_B_top_Fs4_VB_P0", "pool": "{POOL}"},
+  {"p5k_id": "C2", "case": "P5K_C2_J2_B_top_Fs4_VB_P5r4", "pool": "{POOL}"},
+  {"p5k_id": "C3", "case": "P5K_C3_J2_m1p1_t180_B_top_Fs4_VB_P0", "pool": "{POOL}"},
+  {"p5k_id": "C4", "case": "P5K_C4_J2_m1p1_t180_B_top_Fs4_VB_P5r4", "pool": "{POOL}"}
+ ]
+}
