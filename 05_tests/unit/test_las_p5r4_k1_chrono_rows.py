@@ -392,14 +392,16 @@ def test_entry_meta_keys(s9_batch) -> None:
 
 
 # ------------------------------------------------------------------------------------------- G-S field check
-def _write_folder(tmp: Path, rows, p5k, drop: str | None = None, rc_case: str | None = None) -> Path:
+def _write_folder(tmp: Path, rows, p5k, drop: str | tuple[str, ...] | None = None, rc_case: str | None = None,
+                  departed: bool | None = None) -> Path:
     folder = tmp / "batch_V5-LAS-P5R4-K1-GS_x"
     folder.mkdir()
     entries, lines = [], []
+    drops = (drop,) if isinstance(drop, str) else tuple(drop or ())
     for r in rows:
         doc: dict = {}
         for path in p5k.RESULT_KEY_PATHS:
-            if path == drop:
+            if path in drops:
                 continue
             node = doc
             parts = path.split(".")
@@ -407,7 +409,8 @@ def _write_folder(tmp: Path, rows, p5k, drop: str | None = None, rc_case: str | 
                 if not isinstance(node.get(part), dict):
                     node[part] = {}
                 node = node[part]
-            node.setdefault(parts[-1], 123456.789 if "F_min" in path else None)
+            node.setdefault(parts[-1], 123456.789 if "F_min" in path else
+                            (departed if path == "p3b.departure.departed" else None))
         d = folder / r["case"]
         d.mkdir()
         (d / "result.json").write_text(json.dumps(doc), "utf-8")
@@ -436,6 +439,18 @@ def test_field_check_missing_key_and_rc(tmp_path, gs_rows, p5k) -> None:
     assert all(c["result_missing"] == ["p3b.P3-3_leg_force.F_min_transient_N"] for c in doc["cases"])
     bad = next(c for c in doc["cases"] if c["case"] == gs_rows[3]["case"])
     assert bad["progress_end_rc0"] is False and bad["batch_entry_rc0"] is False
+
+
+@pytest.mark.parametrize("departed,ok", [(False, True), (True, False), (None, False)])
+def test_field_check_departure_conditional_keys(tmp_path, gs_rows, p5k, departed, ok) -> None:
+    """run_S9 writes P3-3 F_min_after_N / F_min_transient_N only after a departure (10 s G-S smoke: none)."""
+    cond = ("p3b.P3-3_leg_force.F_min_after_N", "p3b.P3-3_leg_force.F_min_transient_N")
+    folder = _write_folder(tmp_path, gs_rows, p5k, drop=cond, departed=departed)
+    doc = p5k.field_check(folder)
+    assert doc["ok"] is ok
+    c = doc["cases"][0]
+    assert c["conditional_absent"] == (list(cond) if departed is False else [])
+    assert c["result_missing"] == ([] if departed is False else list(cond))
 
 
 def test_field_check_missing_files(tmp_path, gs_rows, p5k) -> None:

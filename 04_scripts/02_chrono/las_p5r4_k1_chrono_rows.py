@@ -65,8 +65,10 @@ PLANNED_POOL = "pcore"
 E_POOL_FACTOR = 1.5
 """ASSUMPTION: E-pool wall / P-pool wall of an S9 row (project SCM rules 2026-11-08, about 1.5)."""
 GS_DURATION_S = 10.0
-"""G-S closed loop [s] (rules 16.2 (b) default 10 s). A 10 s smoke row of the GS batch (cad 2026-11-11, see the report)
-ran the run_S9 post-analysis without an error, so the default stands."""
+"""G-S closed loop [s] (rules 16.2 (b) default 10 s). Smoke 2026-11-11 (cad, worktree commit 132db9e, GS row A4 alone,
+E pool, 4 threads): rc 0, wall 644 s (639 s run, 3549 us/step), the run_S9 post-analysis ran without an error and
+every key of :data:`RESULT_KEY_PATHS` was written except the two departure-conditional P3-3 keys
+(:data:`CONDITIONAL_KEY_PATHS`; no crawler departure in 10 s), so the default stands."""
 KC3_FACTOR = 3.0
 B_BASE, B_PATCH_SET, B_PATCH_LEG, B_DURATION_S = "G1", "J1", "FL", 200.0
 B_HARNESS_KEY = "D1|H-S-A|G1+J1@FL|T|flat|K1|VB|e0"
@@ -393,9 +395,17 @@ RESULT_KEY_PATHS: tuple[str, ...] = (
     "code_state.git_at_start.head", "code_state.git_at_start.dirty", "code_state.files_at_start",
     "code_files_at_start.files", "code_files_at_start.head",
     "loc_corrections.locs", "loc_corrections.settings",
-    "events", "phases", "t_loop_start_s", "mass_scale")
+    "events", "phases", "t_loop_start_s", "mass_scale", "p3b.departure.departed")
 """Key paths the judge tools read (rules 5.2 / 6.3 / 9 and the 16.2 (b) list) + the LOC-correction record; a key must
-exist (its value may be None, e.g. no LOC in a 10 s G-S loop)."""
+exist (its value may be None, e.g. no LOC in a 10 s G-S loop), except :data:`CONDITIONAL_KEY_PATHS`."""
+CONDITIONAL_KEY_PATHS: dict[str, str] = {
+    "p3b.P3-3_leg_force.F_min_after_N": "p3b.departure.departed",
+    "p3b.P3-3_leg_force.F_min_transient_N": "p3b.departure.departed",
+}
+"""Keys run_S9 writes only when its condition key is true (``run_S9.p3b_records``: the P3-3 block gets
+``F_min_after_N`` / ``F_min_transient_N`` only after a crawler departure; a 10 s G-S loop has none). Absent with the
+condition False = ``conditional_absent`` (not a failure); absent with the condition true or missing = missing. The
+judge tools must handle the no-departure row (e.g. a FAULT before the lift) themselves."""
 BATCH_TOP_KEYS = ("batch", "cases", "mixed_hull_mode", "failed")
 BATCH_ENTRY_KEYS = ("case", "argv", "rc", "pool", "planned_pool", "omp_wait_policy", "hull_hook_requested",
                     "hull_hook_effective", "p5k_id", "las_candidate", "pair_case", "start_env", "code_at_launch",
@@ -453,10 +463,14 @@ def field_check(folder: Path, batch_name: str | None = None) -> dict[str, Any]:
         res = folder / case / "result.json"
         c["result_json"] = res.is_file()
         c["result_missing"] = list(RESULT_KEY_PATHS)
+        c["conditional_absent"] = []
         if res.is_file():
             try:
                 doc = json.loads(res.read_text("utf-8"))
-                c["result_missing"] = [p for p in RESULT_KEY_PATHS if _get(doc, p) is _MISSING]
+                absent = [p for p in RESULT_KEY_PATHS if _get(doc, p) is _MISSING]
+                c["conditional_absent"] = [p for p in absent if p in CONDITIONAL_KEY_PATHS
+                                           and _get(doc, CONDITIONAL_KEY_PATHS[p]) is False]
+                c["result_missing"] = [p for p in absent if p not in c["conditional_absent"]]
             except (OSError, json.JSONDecodeError) as ex:
                 c["result_error"] = type(ex).__name__
         npz = folder / case / "controller_commands.npz"
