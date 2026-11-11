@@ -1,0 +1,251 @@
+{
+ "lock": null,
+ "beta_Pa": 1600000000.0,
+ "lock_record": null,
+ "probe_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-aeb1f64260f1bd2d7\\04_scripts\\03_control\\k2\\k2b_probe\\e1_smatrix_probe.py",
+ "rmf_file": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-aeb1f64260f1bd2d7\\04_scripts\\01_dynamics\\run_mast_flex_c2_check.py",
+ "chrono_base_kN": [
+  28.907,
+  28.032,
+  21.278,
+  22.2
+ ],
+ "preparation": {
+  "stage_a": {
+   "preload_s": 13.606,
+   "settle_s": 20.0
+  },
+  "state_after_a": {
+   "pad_force_kN": [
+    22.246,
+    21.259,
+    16.648,
+    17.584
+   ],
+   "crawler_force_kN": 302.376,
+   "crawler_spheres_active": 12,
+   "crawler_spheres_active_flags": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0
+   ],
+   "crawler_clearance_mm": -8.437,
+   "motor_stroke_mm": [
+    341.742,
+    341.73,
+    347.426,
+    347.47
+   ],
+   "attitude_deg": [
+    -0.00029,
+    0.18776
+   ],
+   "t_plant_s": 33.606
+  },
+  "modes_after_a": null,
+  "stage_b_s": 5.25,
+  "modes_after_b": null,
+  "rear_trim_s": 1.1
+ },
+ "state": {
+  "pad_force_kN": [
+   29.018,
+   27.903,
+   22.361,
+   23.208
+  ],
+  "crawler_force_kN": 277.623,
+  "crawler_spheres_active": 12,
+  "crawler_spheres_active_flags": [
+   0,
+   1,
+   1,
+   1,
+   1,
+   1,
+   0,
+   1,
+   1,
+   1,
+   1,
+   1,
+   0,
+   0,
+   0,
+   1,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1,
+   0,
+   0
+  ],
+  "crawler_clearance_mm": -8.517,
+  "motor_stroke_mm": [
+   341.742,
+   341.73,
+   348.476,
+   348.52
+  ],
+  "attitude_deg": [
+   -0.00036,
+   0.19995
+  ],
+  "t_plant_s": 79.956
+ },
+ "modes": null,
+ "rod_state": null,
+ "measured": {
+  "S_hold2s_kN_per_mm": [
+   [
+    16.7742,
+    -6.0281,
+    -2.4746,
+    8.7637
+   ],
+   [
+    -6.0387,
+    16.6023,
+    8.7534,
+    -2.6079
+   ],
+   [
+    -2.332,
+    8.6766,
+    13.4634,
+    -8.2703
+   ],
+   [
+    8.6928,
+    -2.4753,
+    -8.2552,
+    13.3485
+   ]
+  ],
+  "S_late_kN_per_mm": [
+   [
+    16.7452,
+    -6.0412,
+    -2.4531,
+    8.7882
+   ],
+   [
+    -6.0469,
+    16.5741,
+    8.7723,
+    -2.5925
+   ],
+   [
+    -2.3168,
+    8.703,
+    13.443,
+    -8.2882
+   ],
+   [
+    8.723,
+    -2.4596,
+    -8.2771,
+    13.324
+   ]
+  ],
+  "late_window_peak_to_peak_kN_per_mm": [
+   [
+    0.8462,
+    0.8041,
+    0.6068,
+    0.6412
+   ],
+   [
+    0.7953,
+    0.8924,
+    0.6647,
+    0.6128
+   ],
+   [
+    0.6002,
+    0.5858,
+    0.507,
+    0.4028
+   ],
+   [
+    0.5599,
+    0.6099,
+    0.4041,
+    0.4937
+   ]
+  ],
+  "baseline_drift_kN": [
+   -0.0,
+   0.0,
+   -0.0,
+   0.0
+  ],
+  "crawler_spheres_active_min_per_step": [
+   11,
+   11,
+   11,
+   11
+  ],
+  "pad_force_min_kN_per_step": [
+   [
+    29.164,
+    20.361,
+    18.861,
+    23.065
+   ],
+   [
+    21.484,
+    28.05,
+    22.214,
+    19.536
+   ],
+   [
+    25.372,
+    27.755,
+    22.481,
+    14.194
+   ],
+   [
+    28.875,
+    24.109,
+    13.336,
+    23.327
+   ]
+  ],
+  "crawler_force_change_kN_per_step": [
+   -17.1044,
+   -16.7762,
+   -11.4851,
+   -11.2315
+  ]
+ },
+ "diag_pair_FR_RL_dF_kN": [
+  -8.2674,
+  25.0848,
+  22.2821,
+  -10.94
+ ]
+}
