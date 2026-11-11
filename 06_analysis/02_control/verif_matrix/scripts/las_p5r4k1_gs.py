@@ -209,9 +209,13 @@ def rows_sha256(rows: list[dict]) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def list_document(bases: pj.Bases, duration_s: float) -> dict:
+def list_document(bases: pj.Bases, duration_s: float,
+                  rows_path: Path = CHRONO_ROWS_PATH) -> dict:
+    """The G-S list; the Chrono argv carry the interpreter that runs this tool and the
+    checkout of ``rows_path`` (``s9_batch.PY`` / ``HERE``): generate it with the Chrono
+    interpreter on the checkout that launches the batch."""
     harness = harness_rows(bases)
-    chrono, source = chrono_rows(duration_s)
+    chrono, source = chrono_rows(duration_s, rows_path)
     out_of_sample = sorted(row["unit"] for row in harness if not row["in_sample"])
     return {"rules_sha256": pj.RULES_SHA256, "harness": harness,
             "harness_list_sha256": rows_sha256(harness), "chrono_batch": GS_BATCH_NAME,
@@ -305,6 +309,8 @@ def _parse_args(argv: list[str] | None):
     listing = sub.add_parser("list", help="write the G-S list (harness lines, Chrono rows)")
     listing.add_argument("--v5-dir", type=Path, default=pj.V5_DIR)
     listing.add_argument("--duration-s", type=float, default=DEFAULT_DURATION_S)
+    listing.add_argument("--rows-module", type=Path, default=CHRONO_ROWS_PATH,
+                         help="las_p5r4_k1_chrono_rows.py of the checkout that launches the batch")
     listing.add_argument("--out", type=Path, required=True)
     checking = sub.add_parser("check", help="check the harness G-S lines (no values)")
     checking.add_argument("--list", type=Path, required=True)
@@ -325,7 +331,8 @@ def _write(path: Path | None, document: dict) -> None:
 
 
 def run_list(args) -> int:
-    document = list_document(pj.load_bases(args.v5_dir), args.duration_s)
+    document = list_document(pj.load_bases(args.v5_dir), args.duration_s, args.rows_module)
+    document["chrono_interpreter"] = sys.executable
     _write(args.out, document)
     print(f"harness G-S lines {len(document['harness'])} sha256 "
           f"{document['harness_list_sha256']}")

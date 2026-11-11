@@ -1814,8 +1814,9 @@ def parse_path2(items: list[str]) -> dict[str, str]:
     out = {}
     for item in items:
         name, separator, sha = item.partition("=")
-        if not separator or not name or len(sha) != 64:
-            raise InputError(f"--path2-sha {item!r} is not NAME=<64 hex>")
+        is_hex = all(c in "0123456789abcdefABCDEF" for c in sha)
+        if not separator or not name or not is_hex or len(sha) not in (40, 64):
+            raise InputError(f"--path2-sha {item!r} is not NAME=<40 hex git blob | 64 hex sha256>")
         out[name] = sha.lower()
     return out
 
