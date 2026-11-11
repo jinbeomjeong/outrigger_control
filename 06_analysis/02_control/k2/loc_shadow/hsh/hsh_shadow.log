@@ -1,0 +1,458 @@
+keys 456 (k1_YP 165), done 0, to run 456, workers 8
+[1/456 65 s] D1|H-S-0|G1|T|flat|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[2/456 66 s] D1|H-S-0|G1|T|flat|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[3/456 71 s] D1|H-S-0|G1|T|fdown-rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[4/456 72 s] D1|H-S-0|G1|T|fdown-rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[5/456 74 s] D1|H-R-A-S1|rigid+S1@FL|T|flat|K1|VB|e0.002 ready hash same paths ['1'] d [-5.277122747315066, 0.0] err None
+[6/456 81 s] D1|H-R-A-S1|rigid+S1@FL|T|flat|K1|VB|e0 ready hash same paths ['1'] d [-17.01110361625545, -4.523854211582634] err None
+[7/456 93 s] D1|H-R-A-J2|rigid+J2@FL|T|flat|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[8/456 95 s] D1|H-R-A-J2|rigid+J2@FL|T|flat|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[9/456 138 s] D1|H-S-0|G1|T|fup-rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[10/456 139 s] D1|H-S-0|G1|T|fup-rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[11/456 141 s] D1|H-S-0|G1|T|roll-rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[12/456 143 s] D1|H-S-0|G1|T|roll-rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[13/456 144 s] D1|H-S-0|G1|T|roll+rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[14/456 151 s] D1|H-S-0|G1|T|roll+rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[15/456 165 s] D1|H-S-0|G1|T|diag-rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[16/456 167 s] D1|H-S-0|G1|T|diag-rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[17/456 204 s] D1|H-S-0|J1|T|fup-rec|K1|VB|e0 fault hash same paths ['3'] d [0.0, 0.0] err None
+[18/456 213 s] D1|H-S-0|J1|T|fup-rec|K1|VB|e0.002 fault hash same paths ['3'] d [0.0, 0.0] err None
+[19/456 221 s] D1|H-S-0|J1|T|fdown-rec|K1|VB|e0 probe hash same paths ['1'] d [-0.0508828053448207, 0.0] err None
+[20/456 223 s] D1|H-S-0|J1|T|flat|K1|VB|e0 ready hash same paths ['1'] d [-0.291222149918155, 0.0] err None
+[21/456 224 s] D1|H-S-0|J1|T|fdown-rec|K1|VB|e0.002 probe hash same paths ['1'] d [-0.2703261956104319, 0.0] err None
+[22/456 224 s] D1|H-S-0|J1|T|flat|K1|VB|e0.002 ready hash same paths ['1'] d [-0.2795374601547579, 0.0] err None
+[23/456 255 s] D1|H-S-0|J1|T|roll-rec|K1|VB|e0 ready hash same paths ['3', '1'] d [-0.091891254496268, 0.0] err None
+[24/456 258 s] D1|H-S-0|J1|T|roll-rec|K1|VB|e0.002 ready hash same paths ['3', '1'] d [-0.09159599002039887, 0.0] err None
+[25/456 287 s] D1|H-S-0|J1|T|roll+rec|K1|VB|e0 probe hash same paths ['1'] d [-0.020996777248719067, 0.0] err None
+[26/456 297 s] D1|H-S-0|J1|T|roll+rec|K1|VB|e0.002 probe hash same paths ['1'] d [-0.12378111139127457, 0.0] err None
+[27/456 304 s] D1|H-S-0|J1|T|diag-rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[28/456 307 s] D1|H-S-0|J1|T|diag-rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[29/456 317 s] D1|H-S-0|J2|T|flat|K1|VB|e0 ready hash same paths ['1'] d [-0.230159015147946, 0.0] err None
+[30/456 319 s] D1|H-S-0|J2|T|flat|K1|VB|e0.002 ready hash same paths ['1'] d [-0.2975956393026641, 0.0] err None
+[31/456 336 s] D1|H-S-0|J2|T|fdown-rec|K1|VB|e0 ready hash same paths ['1'] d [-0.09680604429199158, 0.0] err None
+[32/456 340 s] D1|H-S-0|J2|T|fdown-rec|K1|VB|e0.002 ready hash same paths ['1'] d [-0.11367964197314673, 0.0] err None
+[33/456 345 s] D1|H-S-0|J2|T|fup-rec|K1|VB|e0 fault hash same paths ['1'] d [-0.2240611781809121, 0.0] err None
+[34/456 355 s] D1|H-S-0|J2|T|fup-rec|K1|VB|e0.002 fault hash same paths ['1'] d [-0.25574489264257316, 0.0] err None
+[35/456 389 s] D1|H-S-0|J2|T|roll-rec|K1|VB|e0 ready hash same paths ['1', '1'] d [0.0, 0.0] err None
+[36/456 393 s] D1|H-S-0|J2|T|roll-rec|K1|VB|e0.002 ready hash same paths ['1', '1'] d [0.0, 0.0] err None
+[37/456 393 s] D1|H-S-0|J2|T|diag-rec|K1|VB|e0 fault hash same paths ['3', '1'] d [0.0, 0.0] err None
+[38/456 394 s] D1|H-S-0|J2|T|roll+rec|K1|VB|e0 ready hash same paths ['1', '1', '1'] d [0.0, 0.0] err None
+[39/456 396 s] D1|H-S-0|J2|T|roll+rec|K1|VB|e0.002 ready hash same paths ['1', '1', '1'] d [0.0, 0.0] err None
+[40/456 398 s] D1|H-S-0|J2|T|diag-rec|K1|VB|e0.002 fault hash same paths ['3', '1'] d [0.0, 0.0] err None
+[41/456 409 s] D1|H-S-0|G1|M|flat|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[42/456 420 s] D1|H-S-0|G1|M|flat|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[43/456 458 s] D1|H-S-0|G1|M|fdown-rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[44/456 462 s] D1|H-S-0|G1|M|fdown-rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[45/456 462 s] D1|H-S-0|G1|M|fup-rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[46/456 463 s] D1|H-S-0|G1|M|roll-rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[47/456 464 s] D1|H-S-0|G1|M|fup-rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[48/456 466 s] D1|H-S-0|G1|M|roll-rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[49/456 475 s] D1|H-S-0|G1|M|roll+rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[50/456 486 s] D1|H-S-0|G1|M|roll+rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[51/456 525 s] D1|H-S-0|G1|M|diag-rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[52/456 529 s] D1|H-S-0|G1|M|diag-rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[53/456 530 s] D1|H-S-0|J1|M|fup-rec|K1|VB|e0 fault hash same paths ['3'] d [0.0, 0.0] err None
+[54/456 536 s] D1|H-S-0|J1|M|fdown-rec|K1|VB|e0 probe hash same paths ['1'] d [-0.0378519811435607, 0.0] err None
+[55/456 538 s] D1|H-S-0|J1|M|flat|K1|VB|e0 ready hash same paths ['1'] d [-0.3898077338681111, 0.0] err None
+[56/456 539 s] D1|H-S-0|J1|M|fdown-rec|K1|VB|e0.002 probe hash same paths ['1'] d [-0.055213523894218075, 0.0] err None
+[57/456 540 s] D1|H-S-0|J1|M|flat|K1|VB|e0.002 ready hash same paths ['1'] d [-0.37984285042987065, 0.0] err None
+[58/456 543 s] D1|H-S-0|J1|M|fup-rec|K1|VB|e0.002 fault hash same paths ['3'] d [0.0, 0.0] err None
+[59/456 607 s] D1|H-S-0|J1|M|roll+rec|K1|VB|e0 ready hash same paths ['1', '1'] d [0.0, 0.33288153190524916] err None
+[60/456 613 s] D1|H-S-0|J1|M|roll-rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[61/456 615 s] D1|H-S-0|J1|M|roll+rec|K1|VB|e0.002 ready hash same paths ['1', '1'] d [0.0, 0.05609589635890977] err None
+[62/456 618 s] D1|H-S-0|J1|M|roll-rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[63/456 620 s] D1|H-S-0|J1|M|diag-rec|K1|VB|e0 level hash same paths ['3', '3'] d [0.0, 0.0] err None
+[64/456 622 s] D1|H-S-0|J1|M|diag-rec|K1|VB|e0.002 level hash same paths ['3', '3'] d [0.0, 0.0] err None
+[65/456 630 s] D1|H-S-0|J2|M|flat|K1|VB|e0 ready hash same paths ['1'] d [-0.08395265876132152, 0.0] err None
+[66/456 634 s] D1|H-S-0|J2|M|flat|K1|VB|e0.002 ready hash same paths ['1'] d [-0.09491988446966304, 0.0] err None
+[67/456 683 s] D1|H-S-0|J2|M|fup-rec|K1|VB|e0 fault hash same paths ['1'] d [-0.18330690927226279, 0.0] err None
+[68/456 686 s] D1|H-S-0|J2|M|fdown-rec|K1|VB|e0.002 fault hash same paths ['1', '1'] d [0.0, 0.0] err None
+[69/456 686 s] D1|H-S-0|J2|M|fup-rec|K1|VB|e0.002 fault hash same paths ['1'] d [-0.7487954445369593, 0.0] err None
+[70/456 697 s] D1|H-S-0|J2|M|fdown-rec|K1|VB|e0 ready hash same paths ['1'] d [0.0, 0.01052677623922249] err None
+[71/456 710 s] D1|H-S-0|J2|M|roll-rec|K1|VB|e0 ready hash same paths ['1', '1'] d [0.0, 0.0] err None
+[72/456 712 s] D1|H-S-0|J2|M|roll-rec|K1|VB|e0.002 ready hash same paths ['1', '1'] d [0.0, 0.0] err None
+[73/456 723 s] D1|H-S-0|J2|M|roll+rec|K1|VB|e0 level hash same paths ['1', '1', '1'] d [-0.5191410691023218, 0.0] err None
+[74/456 728 s] D1|H-S-0|J2|M|roll+rec|K1|VB|e0.002 level hash same paths ['1', '1', '1'] d [-0.4995526478290546, 0.0] err None
+[75/456 752 s] D1|H-S-0|J2|M|diag-rec|K1|VB|e0 fault hash same paths ['3', '1'] d [0.0, 0.0] err None
+[76/456 754 s] D1|H-S-0|J2|M|diag-rec|K1|VB|e0.002 fault hash same paths ['3', '1'] d [0.0, 0.0] err None
+[77/456 761 s] D1|H-S-0|G1|B|flat|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[78/456 772 s] D1|H-S-0|G1|B|flat|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[79/456 790 s] D1|H-S-0|G1|B|fdown-rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[80/456 793 s] D1|H-S-0|G1|B|fdown-rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[81/456 801 s] D1|H-S-0|G1|B|fup-rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[82/456 806 s] D1|H-S-0|G1|B|fup-rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[83/456 827 s] D1|H-S-0|G1|B|roll-rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[84/456 830 s] D1|H-S-0|G1|B|roll-rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[85/456 835 s] D1|H-S-0|G1|B|roll+rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[86/456 847 s] D1|H-S-0|G1|B|roll+rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[87/456 868 s] D1|H-S-0|G1|B|diag-rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[88/456 871 s] D1|H-S-0|G1|B|diag-rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[89/456 896 s] D1|H-S-0|J1|B|flat|K1|VB|e0 ready hash same paths ['1'] d [-0.21376016844004697, 0.0] err None
+[90/456 903 s] D1|H-S-0|J1|B|flat|K1|VB|e0.002 ready hash same paths ['1'] d [-0.2191011412753796, 0.0] err None
+[91/456 923 s] D1|H-S-0|J1|B|fdown-rec|K1|VB|e0 ready hash same paths ['1'] d [-0.7821748888049013, 0.01568185898226382] err None
+[92/456 927 s] D1|H-S-0|J1|B|fdown-rec|K1|VB|e0.002 ready hash same paths ['1'] d [-1.112564752770537, 0.0] err None
+[93/456 938 s] D1|H-S-0|J1|B|fup-rec|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[94/456 952 s] D1|H-S-0|J1|B|fup-rec|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[95/456 965 s] D1|H-S-0|J1|B|roll-rec|K1|VB|e0 ready hash same paths ['1'] d [-0.3342539499925634, 0.0] err None
+[96/456 973 s] D1|H-S-0|J1|B|roll-rec|K1|VB|e0.002 ready hash same paths ['1'] d [0.0, 0.0] err None
+[97/456 1000 s] D1|H-S-0|J1|B|roll+rec|K1|VB|e0 ready hash same paths ['1', '1'] d [0.0, 0.09855962645802241] err None
+[98/456 1007 s] D1|H-S-0|J1|B|roll+rec|K1|VB|e0.002 ready hash same paths ['1', '1'] d [0.0, 0.06856722407586058] err None
+[99/456 1025 s] D1|H-S-0|J1|B|diag-rec|K1|VB|e0 probe hash same paths ['3', '1'] d [0.0, 0.0] err None
+[100/456 1030 s] D1|H-S-0|J1|B|diag-rec|K1|VB|e0.002 probe hash same paths ['3', '1'] d [0.0, 0.0] err None
+[101/456 1042 s] D1|H-S-0|J2|B|fdown-rec|K1|VB|e0 fault hash same paths ['1', '1'] d [0.0, 0.0] err None
+[102/456 1048 s] D1|H-S-0|J2|B|fdown-rec|K1|VB|e0.002 fault hash same paths ['1', '1'] d [0.0, 0.0] err None
+[103/456 1053 s] D1|H-S-0|J2|B|flat|K1|VB|e0 ready hash same paths ['1'] d [-0.2991376973278531, 0.0] err None
+[104/456 1066 s] D1|H-S-0|J2|B|flat|K1|VB|e0.002 ready hash same paths ['1'] d [-0.3337303163953309, 0.0] err None
+[105/456 1068 s] D1|H-S-0|J2|B|fup-rec|K1|VB|e0 fault hash same paths ['1'] d [-0.4678844928766579, 0.0] err None
+[106/456 1076 s] D1|H-S-0|J2|B|fup-rec|K1|VB|e0.002 fault hash same paths ['1'] d [-0.4724017700388494, 0.0] err None
+[107/456 1125 s] D1|H-S-0|J2|B|roll-rec|K1|VB|e0 probe hash same paths ['1'] d [0.0, 0.0032587947403073247] err None
+[108/456 1131 s] D1|H-S-0|J2|B|roll-rec|K1|VB|e0.002 probe hash same paths ['1'] d [0.0, 0.0029241272224839188] err None
+[109/456 1132 s] D1|H-S-0|J2|B|diag-rec|K1|VB|e0 fault hash same paths ['1', '1'] d [0.0, 0.0] err None
+[110/456 1140 s] D1|H-S-0|J2|B|roll+rec|K1|VB|e0 probe hash same paths ['1'] d [0.0, 0.004395459268446977] err None
+[111/456 1144 s] D1|H-S-0|J2|B|diag-rec|K1|VB|e0.002 fault hash same paths ['1', '1'] d [0.0, 0.0] err None
+[112/456 1147 s] D1|H-S-0|J2|B|roll+rec|K1|VB|e0.002 probe hash same paths ['1'] d [0.0, 0.0034322733225566893] err None
+[113/456 1162 s] D1|H-S-1|S1|T|flat|K1|VB|e0 ready hash same paths ['1'] d [-0.5274107892800362, -0.08551826008132424] err None
+[114/456 1170 s] D1|H-S-1|S1|T|flat|K1|VB|e0.002 ready hash same paths ['1'] d [-0.5764823281244336, -0.11445052378644682] err None
+[115/456 1224 s] D1|H-S-1|S1|M|flat|K1|VB|e0 ready hash same paths ['1'] d [-0.6467036701483797, -0.13979299388733324] err None
+[116/456 1231 s] D1|H-S-1|S1|B|flat|K1|VB|e0 ready hash same paths ['1'] d [-0.7912796520781334, -0.1543575555751353] err None
+[117/456 1231 s] D1|H-S-1|S1|M|flat|K1|VB|e0.002 ready hash same paths ['1'] d [-0.6928976570811651, -0.1445436254292609] err None
+[118/456 1243 s] D1|H-S-1|S1|B|flat|K1|VB|e0.002 ready hash same paths ['1'] d [-0.8332622510126286, -0.15822178894153716] err None
+[119/456 1244 s] D1|H-S-A|G1+J1@FL|T|flat|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[120/456 1252 s] D1|H-S-A|G1+J1@FL|T|flat|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[121/456 1286 s] D1|H-S-A|G1+J1@RL|T|flat|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[122/456 1299 s] D1|H-S-A|G1+J1@RL|T|flat|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[123/456 1334 s] D1|H-S-A|G1+J1@FL|T|fdown-psa|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[124/456 1342 s] D1|H-S-A|G1+J1@FL|T|fdown-psa|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[125/456 1347 s] D1|H-S-A|G1+J1@RL|T|fup-psa|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[126/456 1354 s] D1|H-S-A|G1+J1@RL|T|roll-op|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[127/456 1357 s] D1|H-S-A|G1+J1@RL|T|fup-psa|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[128/456 1363 s] D1|H-S-A|G1+J1@RL|T|roll-op|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[129/456 1379 s] D1|H-S-A|G1+J1@FR|T|diag-psa-soil|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[130/456 1387 s] D1|H-S-A|G1+J1@FR|T|diag-psa-soil|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[131/456 1419 s] D1|H-S-A|G1+J1@FL|M|flat|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[132/456 1427 s] D1|H-S-A|G1+J1@FL|M|flat|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[133/456 1440 s] D1|H-S-A|G1+J1@RL|M|flat|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[134/456 1443 s] D1|H-S-A|G1+J1@FL|M|fdown-psa|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[135/456 1448 s] D1|H-S-A|G1+J1@RL|M|flat|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[136/456 1450 s] D1|H-S-A|G1+J1@FL|M|fdown-psa|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[137/456 1470 s] D1|H-S-A|G1+J1@RL|M|fup-psa|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[138/456 1478 s] D1|H-S-A|G1+J1@RL|M|fup-psa|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[139/456 1504 s] D1|H-S-A|G1+J1@RL|M|roll-op|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[140/456 1513 s] D1|H-S-A|G1+J1@RL|M|roll-op|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[141/456 1518 s] D1|H-S-A|G1+J1@FR|M|diag-psa-soil|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[142/456 1523 s] D1|H-S-A|G1+J1@FR|M|diag-psa-soil|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[143/456 1525 s] D1|H-S-A|G1+J1@FL|B|flat|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[144/456 1527 s] D1|H-S-A|G1+J1@FL|B|flat|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[145/456 1554 s] D1|H-S-A|G1+J1@RL|B|flat|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[146/456 1564 s] D1|H-S-A|G1+J1@RL|B|flat|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[147/456 1583 s] D1|H-S-A|G1+J1@FL|B|fdown-psa|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[148/456 1592 s] D1|H-S-A|G1+J1@FL|B|fdown-psa|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[149/456 1606 s] D1|H-S-A|G1+J1@RL|B|fup-psa|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[150/456 1611 s] D1|H-S-A|G1+J1@RL|B|fup-psa|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[151/456 1614 s] D1|H-S-A|G1+J1@RL|B|roll-op|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[152/456 1617 s] D1|H-S-A|G1+J1@RL|B|roll-op|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[153/456 1638 s] D1|H-S-A|G1+J1@FR|B|diag-psa-soil|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[154/456 1649 s] D1|H-S-A|G1+J1@FR|B|diag-psa-soil|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[155/456 1679 s] D1|H-S-A-J2|G1+J2@FL|T|flat|K1|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[156/456 1689 s] D1|H-S-A-J2|G1+J2@FL|T|flat|K1|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[157/456 1773 s] D1|H-S-C|J1|T|flat|K1|c-mid@FL|VB|e0 ready hash same paths ['1'] d [-0.291222149918155, 0.0] err None
+[158/456 1779 s] D1|H-S-C|J1|T|flat|K1|c-mid@FL|VB|e0.002 ready hash same paths ['1'] d [-0.2795374601547579, 0.0] err None
+[159/456 1802 s] D1|H-S-C|J1|T|flat|K1|c-edge@FL|VB|e0 ready hash same paths ['1'] d [-0.291222149918155, 0.0] err None
+[160/456 1805 s] D1|H-S-C|J1|T|flat|K1|c-slow@FL|VB|e0 ready hash same paths ['1'] d [-0.291222149918155, 0.0] err None
+[161/456 1812 s] D1|H-S-C|J1|T|flat|K1|c-slow@FL|VB|e0.002 ready hash same paths ['1'] d [-0.2795374601547579, 0.0] err None
+[162/456 1817 s] D1|H-S-C|J1|T|flat|K1|c-edge@FL|VB|e0.002 ready hash same paths ['1'] d [-0.2795374601547579, 0.0] err None
+[163/456 1842 s] D1|H-S-C|J1|T|flat|K1|c-fast@FL|VB|e0 ready hash same paths ['1'] d [-0.291222149918155, 0.0] err None
+[164/456 1852 s] D1|H-S-C|J1|T|flat|K1|c-fast@FL|VB|e0.002 ready hash same paths ['1'] d [-0.2795374601547579, 0.0] err None
+[165/456 1947 s] D1|H-S-C|J1|T|flat|K1|c-mid@RL|VB|e0 ready hash same paths ['1'] d [-0.291222149918155, 0.0] err None
+[166/456 1955 s] D1|H-S-C|J1|T|flat|K1|c-mid@RL|VB|e0.002 ready hash same paths ['1'] d [-0.2795374601547579, 0.0] err None
+[167/456 1991 s] D1|H-S-C|J2|T|flat|K1|c-mid@FL|VB|e0 ready hash same paths ['1'] d [-0.230159015147946, 0.0] err None
+[168/456 1998 s] D1|H-S-C|J2|T|flat|K1|c-mid@FL|VB|e0.002 ready hash same paths ['1'] d [-0.2975956393026641, 0.0] err None
+[169/456 2024 s] D1|H-S-C|J2|T|flat|K1|c-slow@FL|VB|e0 ready hash same paths ['1'] d [-0.230159015147946, 0.0] err None
+[170/456 2029 s] D1|H-S-C|J2|T|flat|K1|c-slow@FL|VB|e0.002 ready hash same paths ['1'] d [-0.2975956393026641, 0.0] err None
+[171/456 2040 s] D1|H-S-C|J2|T|flat|K1|c-edge@FL|VB|e0 ready hash same paths ['1'] d [-0.230159015147946, 0.0] err None
+[172/456 2054 s] D1|H-S-C|J2|T|flat|K1|c-edge@FL|VB|e0.002 ready hash same paths ['1'] d [-0.2975956393026641, 0.0] err None
+[173/456 2144 s] D1|H-S-C|J2|T|flat|K1|c-fast@FL|VB|e0 ready hash same paths ['1'] d [-0.230159015147946, 0.0] err None
+[174/456 2152 s] D1|H-S-C|J2|T|flat|K1|c-fast@FL|VB|e0.002 ready hash same paths ['1'] d [-0.2975956393026641, 0.0] err None
+[175/456 2182 s] D1|H-S-C|J2|T|flat|K1|c-mid@RL|VB|e0 ready hash same paths ['1'] d [-0.230159015147946, 0.0] err None
+[176/456 2191 s] D1|H-S-C|J2|T|flat|K1|c-mid@RL|VB|e0.002 ready hash same paths ['1'] d [-0.2975956393026641, 0.0] err None
+[177/456 2218 s] D1|H-S-C|J1|M|flat|K1|c-mid@FL|VB|e0 ready hash same paths ['1'] d [-0.3898077338681111, 0.0] err None
+[178/456 2233 s] D1|H-S-C|J1|M|flat|K1|c-mid@FL|VB|e0.002 ready hash same paths ['1'] d [-0.37984285042987065, 0.0] err None
+[179/456 2243 s] D1|H-S-C|J1|M|flat|K1|c-slow@FL|VB|e0 ready hash same paths ['1'] d [-0.3898077338681111, 0.0] err None
+[180/456 2250 s] D1|H-S-C|J1|M|flat|K1|c-slow@FL|VB|e0.002 ready hash same paths ['1'] d [-0.37984285042987065, 0.0] err None
+[181/456 2315 s] D1|H-S-C|J1|M|flat|K1|c-edge@FL|VB|e0 ready hash same paths ['1'] d [-0.3898077338681111, 0.0] err None
+[182/456 2323 s] D1|H-S-C|J1|M|flat|K1|c-edge@FL|VB|e0.002 ready hash same paths ['1'] d [-0.37984285042987065, 0.0] err None
+[183/456 2345 s] D1|H-S-C|J1|M|flat|K1|c-fast@FL|VB|e0 ready hash same paths ['1'] d [-0.3898077338681111, 0.0] err None
+[184/456 2353 s] D1|H-S-C|J1|M|flat|K1|c-fast@FL|VB|e0.002 ready hash same paths ['1'] d [-0.37984285042987065, 0.0] err None
+[185/456 2391 s] D1|H-S-C|J1|M|flat|K1|c-mid@RL|VB|e0 ready hash same paths ['1'] d [-0.3898077338681111, 0.0] err None
+[186/456 2403 s] D1|H-S-C|J1|M|flat|K1|c-mid@RL|VB|e0.002 ready hash same paths ['1'] d [-0.37984285042987065, 0.0] err None
+[187/456 2440 s] D1|H-S-C|J2|M|flat|K1|c-slow@FL|VB|e0 ready hash same paths ['1'] d [-0.08395265876132152, 0.0] err None
+[188/456 2447 s] D1|H-S-C|J2|M|flat|K1|c-slow@FL|VB|e0.002 ready hash same paths ['1'] d [-0.09491988446966304, 0.0] err None
+[189/456 2475 s] D1|H-S-C|J2|M|flat|K1|c-mid@FL|VB|e0 ready hash same paths ['1'] d [-0.08395265876132152, 0.0] err None
+[190/456 2485 s] D1|H-S-C|J2|M|flat|K1|c-mid@FL|VB|e0.002 ready hash same paths ['1'] d [-0.09491988446966304, 0.0] err None
+[191/456 2504 s] D1|H-S-C|J2|M|flat|K1|c-edge@FL|VB|e0 ready hash same paths ['1'] d [-0.08395265876132152, 0.0] err None
+[192/456 2514 s] D1|H-S-C|J2|M|flat|K1|c-edge@FL|VB|e0.002 ready hash same paths ['1'] d [-0.09491988446966304, 0.0] err None
+[193/456 2549 s] D1|H-S-C|J2|M|flat|K1|c-fast@FL|VB|e0 ready hash same paths ['1'] d [-0.08395265876132152, 0.0] err None
+[194/456 2565 s] D1|H-S-C|J2|M|flat|K1|c-fast@FL|VB|e0.002 ready hash same paths ['1'] d [-0.09491988446966304, 0.0] err None
+[195/456 2596 s] D1|H-S-C|J2|M|flat|K1|c-mid@RL|VB|e0 ready hash same paths ['1'] d [-0.08395265876132152, 0.0] err None
+[196/456 2604 s] D1|H-S-C|J2|M|flat|K1|c-mid@RL|VB|e0.002 ready hash same paths ['1'] d [-0.09491988446966304, 0.0] err None
+[197/456 2662 s] D1|H-S-C|J1|B|flat|K1|c-mid@FL|VB|e0 ready hash same paths ['1'] d [-0.21376016844004697, 0.0] err None
+[198/456 2667 s] D1|H-S-C|J1|B|flat|K1|c-slow@FL|VB|e0 ready hash same paths ['1'] d [-0.21376016844004697, 0.0] err None
+[199/456 2673 s] D1|H-S-C|J1|B|flat|K1|c-mid@FL|VB|e0.002 ready hash same paths ['1'] d [-0.2191011412753796, 0.0] err None
+[200/456 2678 s] D1|H-S-C|J1|B|flat|K1|c-slow@FL|VB|e0.002 ready hash same paths ['1'] d [-0.2191011412753796, 0.0] err None
+[201/456 2711 s] D1|H-S-C|J1|B|flat|K1|c-edge@FL|VB|e0 ready hash same paths ['1'] d [-0.21376016844004697, 0.0] err None
+[202/456 2726 s] D1|H-S-C|J1|B|flat|K1|c-edge@FL|VB|e0.002 ready hash same paths ['1'] d [-0.2191011412753796, 0.0] err None
+[203/456 2752 s] D1|H-S-C|J1|B|flat|K1|c-fast@FL|VB|e0 ready hash same paths ['1'] d [-0.21376016844004697, 0.0] err None
+[204/456 2761 s] D1|H-S-C|J1|B|flat|K1|c-fast@FL|VB|e0.002 ready hash same paths ['1'] d [-0.2191011412753796, 0.0] err None
+[205/456 2826 s] D1|H-S-C|J1|B|flat|K1|c-mid@RL|VB|e0 ready hash same paths ['1'] d [-0.21376016844004697, 0.0] err None
+[206/456 2832 s] D1|H-S-C|J1|B|flat|K1|c-mid@RL|VB|e0.002 ready hash same paths ['1'] d [-0.2191011412753796, 0.0] err None
+[207/456 2854 s] D1|H-S-C|J2|B|flat|K1|c-slow@FL|VB|e0 ready hash same paths ['1'] d [-0.2991376973278531, 0.0] err None
+[208/456 2860 s] D1|H-S-C|J2|B|flat|K1|c-slow@FL|VB|e0.002 ready hash same paths ['1'] d [-0.3337303163953309, 0.0] err None
+[209/456 2874 s] D1|H-S-C|J2|B|flat|K1|c-mid@FL|VB|e0 ready hash same paths ['1'] d [-0.2991376973278531, 0.0] err None
+[210/456 2888 s] D1|H-S-C|J2|B|flat|K1|c-mid@FL|VB|e0.002 ready hash same paths ['1'] d [-0.3337303163953309, 0.0] err None
+[211/456 2917 s] D1|H-S-C|J2|B|flat|K1|c-edge@FL|VB|e0 ready hash same paths ['1'] d [-0.2991376973278531, 0.0] err None
+[212/456 2928 s] D1|H-S-C|J2|B|flat|K1|c-edge@FL|VB|e0.002 ready hash same paths ['1'] d [-0.3337303163953309, 0.0] err None
+[213/456 2993 s] D1|H-S-C|J2|B|flat|K1|c-fast@FL|VB|e0 ready hash same paths ['1'] d [-0.2991376973278531, 0.0] err None
+[214/456 3000 s] D1|H-S-C|J2|B|flat|K1|c-fast@FL|VB|e0.002 ready hash same paths ['1'] d [-0.3337303163953309, 0.0] err None
+[215/456 3014 s] D1|H-S-C|J2|B|flat|K1|c-mid@RL|VB|e0 ready hash same paths ['1'] d [-0.2991376973278531, 0.0] err None
+[216/456 3016 s] D1|H-S-C-g|J1|T|fdown-rec|K1|c-mid@FL|dsb_gated_off|VB|e0 ready hash same paths ['1'] d [-0.0508828053448207, 0.0] err None
+[217/456 3021 s] D1|H-S-C|J2|B|flat|K1|c-mid@RL|VB|e0.002 ready hash same paths ['1'] d [-0.3337303163953309, 0.0] err None
+[218/456 3031 s] D1|H-S-C-g|J1|T|fdown-rec|K1|c-mid@FL|dsb_gated_off|VB|e0.002 ready hash same paths ['1'] d [-0.2703261956104319, 0.0] err None
+[219/456 3070 s] D1|H-S-C-g|J1|T|diag-rec|K1|c-mid@FR|dsb_gated_off|VB|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[220/456 3083 s] D1|H-S-C-g|J1|T|diag-rec|K1|c-mid@FR|dsb_gated_off|VB|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[221/456 3143 s] D1|H-S-C-g|J1|M|fdown-rec|K1|c-mid@FL|dsb_gated_off|VB|e0 ready hash same paths ['1'] d [-0.0378519811435607, 0.0] err None
+[222/456 3149 s] D1|H-S-C-g|J1|M|diag-rec|K1|c-mid@FR|dsb_gated_off|VB|e0 ready hash same paths ['3', '3'] d [0.0, 0.0] err None
+[223/456 3151 s] D1|H-S-C-g|J1|M|fdown-rec|K1|c-mid@FL|dsb_gated_off|VB|e0.002 ready hash same paths ['1'] d [-0.055213523894218075, 0.0] err None
+[224/456 3152 s] D1|H-S-C-g|J1|M|diag-rec|K1|c-mid@FR|dsb_gated_off|VB|e0.002 ready hash same paths ['3', '3'] d [0.0, 0.0] err None
+[225/456 3170 s] D1|H-S-C-g|J1|B|fdown-rec|K1|c-mid@FL|dsb_gated_off|VB|e0 ready hash same paths ['1'] d [-0.7821748888049013, 0.01568185898226382] err None
+[226/456 3179 s] D1|H-R-A-J2|rigid+J2@FL|T|flat|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[227/456 3180 s] D1|H-S-C-g|J1|B|fdown-rec|K1|c-mid@FL|dsb_gated_off|VB|e0.002 ready hash same paths ['1'] d [-1.112564752770537, 0.0] err None
+[228/456 3181 s] D1|H-R-A-S1|rigid+S1@FL|T|flat|K1|V0|e0 ready hash same paths ['1'] d [-16.661113654902525, -3.5964048109432545] err None
+[229/456 3182 s] D1|H-R-A-S1|rigid+S1@FL|T|flat|K1|V0|e0.002 ready hash same paths ['1'] d [-18.144384540515148, -4.787590063009661] err None
+[230/456 3185 s] D1|H-R-A-J2|rigid+J2@FL|T|flat|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[231/456 3192 s] D1|H-S-0|G1|T|flat|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[232/456 3202 s] D1|H-S-0|G1|T|flat|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[233/456 3206 s] D1|H-S-0|G1|T|fdown-rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[234/456 3208 s] D1|H-S-0|G1|T|fdown-rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[235/456 3208 s] D1|H-S-0|G1|T|fup-rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[236/456 3212 s] D1|H-S-0|G1|T|fup-rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[237/456 3218 s] D1|H-S-0|G1|T|roll-rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[238/456 3220 s] D1|H-S-C-g|J1|B|diag-rec|K1|c-mid@FR|dsb_gated_off|VB|e0 ready hash same paths ['3', '1'] d [0.0, 0.0] err None
+[239/456 3228 s] D1|H-S-0|G1|T|roll-rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[240/456 3232 s] D1|H-S-0|G1|T|roll+rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[241/456 3233 s] D1|H-S-0|G1|T|roll+rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[242/456 3233 s] D1|H-S-C-g|J1|B|diag-rec|K1|c-mid@FR|dsb_gated_off|VB|e0.002 ready hash same paths ['3', '1'] d [0.0, 0.0] err None
+[243/456 3234 s] D1|H-S-0|G1|T|diag-rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[244/456 3239 s] D1|H-S-0|G1|T|diag-rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[245/456 3248 s] D1|H-S-0|J1|T|flat|K1|V0|e0 ready hash same paths ['1'] d [-0.25723528946164365, 0.0] err None
+[246/456 3251 s] D1|H-S-0|J1|T|flat|K1|V0|e0.002 ready hash same paths ['1'] d [-0.25954185967788646, 0.0] err None
+[247/456 3253 s] D1|H-S-0|J1|T|fup-rec|K1|V0|e0 fault hash same paths ['3'] d [0.0, 0.0] err None
+[248/456 3254 s] D1|H-S-0|J1|T|fup-rec|K1|V0|e0.002 fault hash same paths ['3'] d [0.0, 0.0] err None
+[249/456 3256 s] D1|H-S-0|J1|T|fdown-rec|K1|V0|e0 probe hash same paths ['1'] d [0.0, 0.11105272642440711] err None
+[250/456 3261 s] D1|H-S-0|J1|T|fdown-rec|K1|V0|e0.002 probe hash same paths ['1'] d [-0.25606576604958464, 0.0] err None
+[251/456 3268 s] D1|H-S-0|J1|T|roll-rec|K1|V0|e0 ready hash same paths ['3', '1'] d [0.0, 0.0] err None
+[252/456 3274 s] D1|H-S-0|J1|T|roll-rec|K1|V0|e0.002 ready hash same paths ['3', '1'] d [0.0, 0.0] err None
+[253/456 3277 s] D1|H-S-0|J1|T|roll+rec|K1|V0|e0 level hash same paths ['1'] d [0.0, 0.08853273394102135] err None
+[254/456 3281 s] D1|H-S-0|J1|T|roll+rec|K1|V0|e0.002 level hash same paths ['1'] d [-0.016997757927739165, 0.0] err None
+[255/456 3283 s] D1|H-S-0|J1|T|diag-rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[256/456 3284 s] D1|H-S-0|J1|T|diag-rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[257/456 3289 s] D1|H-S-0|J2|T|flat|K1|V0|e0 ready hash same paths ['1'] d [-0.33476976377186385, 0.0] err None
+[258/456 3294 s] D1|H-S-0|J2|T|flat|K1|V0|e0.002 ready hash same paths ['1'] d [-0.3501561676025611, 0.0] err None
+[259/456 3297 s] D1|H-S-0|J2|T|fup-rec|K1|V0|e0 fault hash same paths ['1'] d [-0.17143006021491658, 0.0] err None
+[260/456 3297 s] D1|H-S-0|J2|T|fdown-rec|K1|V0|e0 ready hash same paths ['1'] d [-0.07913527908465223, 0.0] err None
+[261/456 3301 s] D1|H-S-0|J2|T|fup-rec|K1|V0|e0.002 fault hash same paths ['1'] d [-0.2060949051065908, 0.0] err None
+[262/456 3303 s] D1|H-S-0|J2|T|fdown-rec|K1|V0|e0.002 ready hash same paths ['1'] d [-0.12944654233823516, 0.0] err None
+[263/456 3313 s] D1|H-S-0|J2|T|roll-rec|K1|V0|e0 probe hash same paths ['1', '1'] d [0.0, 0.0] err None
+[264/456 3314 s] D1|H-S-0|J2|T|roll-rec|K1|V0|e0.002 probe hash same paths ['1', '1'] d [0.0, 0.0] err None
+[265/456 3319 s] D1|H-S-0|J2|T|diag-rec|K1|V0|e0 fault hash same paths ['3', '1'] d [0.0, 0.0] err None
+[266/456 3320 s] D1|H-S-0|J2|T|diag-rec|K1|V0|e0.002 fault hash same paths ['3', '1'] d [0.0, 0.0] err None
+[267/456 3320 s] D1|H-S-0|J2|T|roll+rec|K1|V0|e0 ready hash same paths ['1', '1', '1'] d [0.0, 0.0] err None
+[268/456 3326 s] D1|H-S-0|J2|T|roll+rec|K1|V0|e0.002 ready hash same paths ['1', '1', '1'] d [0.0, 0.0] err None
+[269/456 3327 s] D1|H-S-0|G1|M|flat|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[270/456 3329 s] D1|H-S-0|G1|M|flat|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[271/456 3341 s] D1|H-S-0|G1|M|fdown-rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[272/456 3343 s] D1|H-S-0|G1|M|fdown-rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[273/456 3345 s] D1|H-S-0|G1|M|fup-rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[274/456 3346 s] D1|H-S-0|G1|M|roll-rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[275/456 3347 s] D1|H-S-0|G1|M|fup-rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[276/456 3351 s] D1|H-S-0|G1|M|roll+rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[277/456 3352 s] D1|H-S-0|G1|M|roll-rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[278/456 3354 s] D1|H-S-0|G1|M|roll+rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[279/456 3366 s] D1|H-S-0|G1|M|diag-rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[280/456 3369 s] D1|H-S-0|G1|M|diag-rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[281/456 3371 s] D1|H-S-0|J1|M|fup-rec|K1|V0|e0 fault hash same paths ['3'] d [0.0, 0.0] err None
+[282/456 3374 s] D1|H-S-0|J1|M|fup-rec|K1|V0|e0.002 fault hash same paths ['3'] d [0.0, 0.0] err None
+[283/456 3375 s] D1|H-S-0|J1|M|fdown-rec|K1|V0|e0 level hash same paths ['1'] d [-1.0870665955866055, 0.0] err None
+[284/456 3375 s] D1|H-S-0|J1|M|flat|K1|V0|e0 ready hash same paths ['1'] d [-0.31873157725699486, 0.0] err None
+[285/456 3376 s] D1|H-S-0|J1|M|flat|K1|V0|e0.002 ready hash same paths ['1'] d [-0.3023421847942326, 0.0] err None
+[286/456 3380 s] D1|H-S-0|J1|M|fdown-rec|K1|V0|e0.002 level hash same paths ['1'] d [-0.1156325112109946, 0.0] err None
+[287/456 3394 s] D1|H-S-0|J1|M|roll-rec|K1|V0|e0 probe hash same paths ['3'] d [0.0, 0.0] err None
+[288/456 3397 s] D1|H-S-0|J1|M|roll-rec|K1|V0|e0.002 probe hash same paths ['3'] d [0.0, 0.0] err None
+[289/456 3398 s] D1|H-S-0|J1|M|roll+rec|K1|V0|e0 ready hash same paths ['1', '1'] d [0.0, 0.23617412894336165] err None
+[290/456 3401 s] D1|H-S-0|J1|M|roll+rec|K1|V0|e0.002 ready hash same paths ['1', '1'] d [0.0, 0.2238617586221292] err None
+[291/456 3403 s] D1|H-S-0|J1|M|diag-rec|K1|V0|e0 level hash same paths ['3', '3'] d [0.0, 0.0] err None
+[292/456 3404 s] D1|H-S-0|J1|M|diag-rec|K1|V0|e0.002 level hash same paths ['3', '3'] d [0.0, 0.0] err None
+[293/456 3406 s] D1|H-S-0|J2|M|flat|K1|V0|e0 ready hash same paths ['1'] d [-0.2090403096387805, 0.0] err None
+[294/456 3410 s] D1|H-S-0|J2|M|flat|K1|V0|e0.002 ready hash same paths ['1'] d [-0.13787966938981489, 0.0] err None
+[295/456 3417 s] D1|H-S-0|J2|M|fup-rec|K1|V0|e0 fault hash same paths ['1'] d [-0.23423512570255878, 0.0] err None
+[296/456 3421 s] D1|H-S-0|J2|M|fup-rec|K1|V0|e0.002 fault hash same paths ['1'] d [-0.5432252387331249, 0.0] err None
+[297/456 3421 s] D1|H-S-0|J2|M|fdown-rec|K1|V0|e0 ready hash same paths ['1'] d [-0.10362850589243355, 0.0] err None
+[298/456 3426 s] D1|H-S-0|J2|M|fdown-rec|K1|V0|e0.002 ready hash same paths ['1'] d [0.0, 0.007390751553287833] err None
+[299/456 3431 s] D1|H-S-0|J2|M|roll-rec|K1|V0|e0 ready hash same paths ['1', '1'] d [0.0, 0.0] err None
+[300/456 3432 s] D1|H-S-0|J2|M|roll-rec|K1|V0|e0.002 ready hash same paths ['1', '1'] d [0.0, 0.0] err None
+[301/456 3434 s] D1|H-S-0|J2|M|roll+rec|K1|V0|e0 ready hash same paths ['1', '1', '1'] d [0.0, 0.0] err None
+[302/456 3436 s] D1|H-S-0|J2|M|diag-rec|K1|V0|e0 fault hash same paths ['3', '1'] d [0.0, 0.0] err None
+[303/456 3439 s] D1|H-S-0|J2|M|roll+rec|K1|V0|e0.002 ready hash same paths ['1', '1', '1'] d [0.0, 0.0] err None
+[304/456 3440 s] D1|H-S-0|J2|M|diag-rec|K1|V0|e0.002 fault hash same paths ['3', '1'] d [0.0, 0.0] err None
+[305/456 3444 s] D1|H-S-0|G1|B|flat|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[306/456 3448 s] D1|H-S-0|G1|B|flat|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[307/456 3457 s] D1|H-S-0|G1|B|fdown-rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[308/456 3459 s] D1|H-S-0|G1|B|fdown-rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[309/456 3460 s] D1|H-S-0|G1|B|fup-rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[310/456 3463 s] D1|H-S-0|G1|B|fup-rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[311/456 3464 s] D1|H-S-0|G1|B|roll-rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[312/456 3466 s] D1|H-S-0|G1|B|roll-rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[313/456 3468 s] D1|H-S-0|G1|B|roll+rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[314/456 3473 s] D1|H-S-0|G1|B|roll+rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[315/456 3482 s] D1|H-S-0|G1|B|diag-rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[316/456 3485 s] D1|H-S-0|G1|B|diag-rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[317/456 3490 s] D1|H-S-0|J1|B|flat|K1|V0|e0 ready hash same paths ['1'] d [-0.17687783666330004, 0.0] err None
+[318/456 3493 s] D1|H-S-0|J1|B|fdown-rec|K1|V0|e0 ready hash same paths ['1'] d [-0.8798888099265101, 0.00917989271798092] err None
+[319/456 3494 s] D1|H-S-0|J1|B|flat|K1|V0|e0.002 ready hash same paths ['1'] d [-0.23790399741205337, 0.0] err None
+[320/456 3496 s] D1|H-S-0|J1|B|fdown-rec|K1|V0|e0.002 ready hash same paths ['1'] d [-0.9185712474637925, 0.008326546046433236] err None
+[321/456 3500 s] D1|H-S-0|J1|B|fup-rec|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[322/456 3505 s] D1|H-S-0|J1|B|fup-rec|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[323/456 3509 s] D1|H-S-0|J1|B|roll-rec|K1|V0|e0 ready hash same paths ['1'] d [0.0, 0.0] err None
+[324/456 3512 s] D1|H-S-0|J1|B|roll-rec|K1|V0|e0.002 ready hash same paths ['1'] d [-0.188809429763917, 0.0] err None
+[325/456 3517 s] D1|H-S-0|J1|B|roll+rec|K1|V0|e0 ready hash same paths ['1', '1'] d [0.0, 0.5317602545308192] err None
+[326/456 3520 s] D1|H-S-0|J1|B|roll+rec|K1|V0|e0.002 ready hash same paths ['1', '1'] d [0.0, 0.10139821370772073] err None
+[327/456 3522 s] D1|H-S-0|J1|B|diag-rec|K1|V0|e0 probe hash same paths ['3', '1'] d [0.0, 0.0] err None
+[328/456 3524 s] D1|H-S-0|J1|B|diag-rec|K1|V0|e0.002 probe hash same paths ['3', '1'] d [0.0, 0.0] err None
+[329/456 3528 s] D1|H-S-0|J2|B|fdown-rec|K1|V0|e0 fault hash same paths ['1', '1'] d [0.0, 0.0] err None
+[330/456 3531 s] D1|H-S-0|J2|B|flat|K1|V0|e0 ready hash same paths ['1'] d [-0.12124110098495067, 0.0] err None
+[331/456 3532 s] D1|H-S-0|J2|B|fdown-rec|K1|V0|e0.002 fault hash same paths ['1', '1'] d [0.0, 0.0] err None
+[332/456 3535 s] D1|H-S-0|J2|B|fup-rec|K1|V0|e0 fault hash same paths ['1'] d [-0.10202594456387715, 0.0] err None
+[333/456 3537 s] D1|H-S-0|J2|B|flat|K1|V0|e0.002 ready hash same paths ['1'] d [-0.19956428240512636, 0.0] err None
+[334/456 3540 s] D1|H-S-0|J2|B|fup-rec|K1|V0|e0.002 fault hash same paths ['1'] d [-0.4636421221204945, 0.0] err None
+[335/456 3550 s] D1|H-S-0|J2|B|roll-rec|K1|V0|e0 ready hash same paths ['1'] d [0.0, 0.0] err None
+[336/456 3553 s] D1|H-S-0|J2|B|roll-rec|K1|V0|e0.002 ready hash same paths ['1'] d [0.0, 0.0] err None
+[337/456 3555 s] D1|H-S-0|J2|B|diag-rec|K1|V0|e0.002 fault hash same paths ['1', '1'] d [0.0, 0.0] err None
+[338/456 3556 s] D1|H-S-0|J2|B|roll+rec|K1|V0|e0 level hash same paths ['1'] d [0.0, 0.006530833224285826] err None
+[339/456 3560 s] D1|H-S-0|J2|B|diag-rec|K1|V0|e0 ready hash same paths ['1', '1'] d [0.0, 0.0] err None
+[340/456 3560 s] D1|H-S-0|J2|B|roll+rec|K1|V0|e0.002 level hash same paths ['1'] d [0.0, 0.004422379000057486] err None
+[341/456 3565 s] D1|H-S-1|S1|T|flat|K1|V0|e0 ready hash same paths ['1'] d [-0.639891949292648, -0.1299028900254573] err None
+[342/456 3568 s] D1|H-S-1|S1|T|flat|K1|V0|e0.002 ready hash same paths ['1'] d [-0.538471410439556, -0.10019344084877257] err None
+[343/456 3578 s] D1|H-S-1|S1|M|flat|K1|V0|e0 ready hash same paths ['1'] d [-0.7779168766708366, -0.1510064566681013] err None
+[344/456 3581 s] D1|H-S-1|S1|M|flat|K1|V0|e0.002 ready hash same paths ['1'] d [-0.6495244253758442, -0.1399912718746954] err None
+[345/456 3583 s] D1|H-S-1|S1|B|flat|K1|V0|e0 ready hash same paths ['1'] d [-0.9463961500362633, -0.17175047488171558] err None
+[346/456 3585 s] D1|H-S-1|S1|B|flat|K1|V0|e0.002 ready hash same paths ['1'] d [-0.7946281702385649, -0.15468723353140312] err None
+[347/456 3588 s] D1|H-S-A|G1+J1@FL|T|flat|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[348/456 3588 s] D1|H-S-A|G1+J1@FL|T|flat|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[349/456 3597 s] D1|H-S-A|G1+J1@RL|T|flat|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[350/456 3600 s] D1|H-S-A|G1+J1@RL|T|flat|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[351/456 3607 s] D1|H-S-A|G1+J1@FL|T|fdown-psa|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[352/456 3611 s] D1|H-S-A|G1+J1@FL|T|fdown-psa|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[353/456 3614 s] D1|H-S-A|G1+J1@RL|T|fup-psa|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[354/456 3617 s] D1|H-S-A|G1+J1@RL|T|fup-psa|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[355/456 3619 s] D1|H-S-A|G1+J1@RL|T|roll-op|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[356/456 3620 s] D1|H-S-A|G1+J1@RL|T|roll-op|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[357/456 3626 s] D1|H-S-A|G1+J1@FR|T|diag-psa-soil|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[358/456 3630 s] D1|H-S-A|G1+J1@FR|T|diag-psa-soil|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[359/456 3634 s] D1|H-S-A|G1+J1@FL|M|flat|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[360/456 3639 s] D1|H-S-A|G1+J1@FL|M|flat|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[361/456 3646 s] D1|H-S-A|G1+J1@RL|M|flat|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[362/456 3648 s] D1|H-S-A|G1+J1@FL|M|fdown-psa|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[363/456 3649 s] D1|H-S-A|G1+J1@RL|M|flat|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[364/456 3649 s] D1|H-S-A|G1+J1@FL|M|fdown-psa|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[365/456 3658 s] D1|H-S-A|G1+J1@RL|M|fup-psa|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[366/456 3663 s] D1|H-S-A|G1+J1@RL|M|fup-psa|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[367/456 3666 s] D1|H-S-A|G1+J1@RL|M|roll-op|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[368/456 3672 s] D1|H-S-A|G1+J1@RL|M|roll-op|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[369/456 3675 s] D1|H-S-A|G1+J1@FR|M|diag-psa-soil|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[370/456 3678 s] D1|H-S-A|G1+J1@FL|B|flat|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[371/456 3678 s] D1|H-S-A|G1+J1@FL|B|flat|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[372/456 3679 s] D1|H-S-A|G1+J1@FR|M|diag-psa-soil|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[373/456 3690 s] D1|H-S-A|G1+J1@RL|B|flat|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[374/456 3695 s] D1|H-S-A|G1+J1@FL|B|fdown-psa|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[375/456 3695 s] D1|H-S-A|G1+J1@RL|B|flat|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[376/456 3701 s] D1|H-S-A|G1+J1@FL|B|fdown-psa|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[377/456 3707 s] D1|H-S-A|G1+J1@RL|B|fup-psa|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[378/456 3710 s] D1|H-S-A|G1+J1@RL|B|roll-op|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[379/456 3710 s] D1|H-S-A|G1+J1@RL|B|fup-psa|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[380/456 3711 s] D1|H-S-A|G1+J1@RL|B|roll-op|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[381/456 3719 s] D1|H-S-A|G1+J1@FR|B|diag-psa-soil|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[382/456 3724 s] D1|H-S-A|G1+J1@FR|B|diag-psa-soil|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[383/456 3728 s] D1|H-S-A-J2|G1+J2@FL|T|flat|K1|V0|e0 ready hash same paths ['3'] d [0.0, 0.0] err None
+[384/456 3735 s] D1|H-S-A-J2|G1+J2@FL|T|flat|K1|V0|e0.002 ready hash same paths ['3'] d [0.0, 0.0] err None
+[385/456 3755 s] D1|H-S-C|J1|T|flat|K1|c-mid@FL|V0|e0 ready hash same paths ['1'] d [-0.25723528946164365, 0.0] err None
+[386/456 3757 s] D1|H-S-C|J1|T|flat|K1|c-mid@FL|V0|e0.002 ready hash same paths ['1'] d [-0.25954185967788646, 0.0] err None
+[387/456 3766 s] D1|H-S-C|J1|T|flat|K1|c-edge@FL|V0|e0 ready hash same paths ['1'] d [-0.25723528946164365, 0.0] err None
+[388/456 3769 s] D1|H-S-C|J1|T|flat|K1|c-slow@FL|V0|e0 ready hash same paths ['1'] d [-0.25723528946164365, 0.0] err None
+[389/456 3773 s] D1|H-S-C|J1|T|flat|K1|c-edge@FL|V0|e0.002 ready hash same paths ['1'] d [-0.25954185967788646, 0.0] err None
+[390/456 3773 s] D1|H-S-C|J1|T|flat|K1|c-fast@FL|V0|e0 ready hash same paths ['1'] d [-0.25723528946164365, 0.0] err None
+[391/456 3774 s] D1|H-S-C|J1|T|flat|K1|c-slow@FL|V0|e0.002 ready hash same paths ['1'] d [-0.25954185967788646, 0.0] err None
+[392/456 3781 s] D1|H-S-C|J1|T|flat|K1|c-fast@FL|V0|e0.002 ready hash same paths ['1'] d [-0.25954185967788646, 0.0] err None
+[393/456 3805 s] D1|H-S-C|J1|T|flat|K1|c-mid@RL|V0|e0 ready hash same paths ['1'] d [-0.25723528946164365, 0.0] err None
+[394/456 3809 s] D1|H-S-C|J1|T|flat|K1|c-mid@RL|V0|e0.002 ready hash same paths ['1'] d [-0.25954185967788646, 0.0] err None
+[395/456 3820 s] D1|H-S-C|J2|T|flat|K1|c-mid@FL|V0|e0 ready hash same paths ['1'] d [-0.33476976377186385, 0.0] err None
+[396/456 3821 s] D1|H-S-C|J2|T|flat|K1|c-mid@FL|V0|e0.002 ready hash same paths ['1'] d [-0.3501561676025611, 0.0] err None
+[397/456 3824 s] D1|H-S-C|J2|T|flat|K1|c-edge@FL|V0|e0 ready hash same paths ['1'] d [-0.33476976377186385, 0.0] err None
+[398/456 3829 s] D1|H-S-C|J2|T|flat|K1|c-slow@FL|V0|e0 ready hash same paths ['1'] d [-0.33476976377186385, 0.0] err None
+[399/456 3832 s] D1|H-S-C|J2|T|flat|K1|c-edge@FL|V0|e0.002 ready hash same paths ['1'] d [-0.3501561676025611, 0.0] err None
+[400/456 3833 s] D1|H-S-C|J2|T|flat|K1|c-slow@FL|V0|e0.002 ready hash same paths ['1'] d [-0.3501561676025611, 0.0] err None
+[401/456 3853 s] D1|H-S-C|J2|T|flat|K1|c-fast@FL|V0|e0 ready hash same paths ['1'] d [-0.33476976377186385, 0.0] err None
+[402/456 3857 s] D1|H-S-C|J2|T|flat|K1|c-fast@FL|V0|e0.002 ready hash same paths ['1'] d [-0.3501561676025611, 0.0] err None
+[403/456 3873 s] D1|H-S-C|J2|T|flat|K1|c-mid@RL|V0|e0 ready hash same paths ['1'] d [-0.33476976377186385, 0.0] err None
+[404/456 3875 s] D1|H-S-C|J2|T|flat|K1|c-mid@RL|V0|e0.002 ready hash same paths ['1'] d [-0.3501561676025611, 0.0] err None
+[405/456 3879 s] D1|H-S-C|J1|M|flat|K1|c-mid@FL|V0|e0 ready hash same paths ['1'] d [-0.31873157725699486, 0.0] err None
+[406/456 3881 s] D1|H-S-C|J1|M|flat|K1|c-mid@FL|V0|e0.002 ready hash same paths ['1'] d [-0.3023421847942326, 0.0] err None
+[407/456 3887 s] D1|H-S-C|J1|M|flat|K1|c-slow@FL|V0|e0 ready hash same paths ['1'] d [-0.31873157725699486, 0.0] err None
+[408/456 3893 s] D1|H-S-C|J1|M|flat|K1|c-slow@FL|V0|e0.002 ready hash same paths ['1'] d [-0.3023421847942326, 0.0] err None
+[409/456 3903 s] D1|H-S-C|J1|M|flat|K1|c-edge@FL|V0|e0 ready hash same paths ['1'] d [-0.31873157725699486, 0.0] err None
+[410/456 3908 s] D1|H-S-C|J1|M|flat|K1|c-edge@FL|V0|e0.002 ready hash same paths ['1'] d [-0.3023421847942326, 0.0] err None
+[411/456 3920 s] D1|H-S-C|J1|M|flat|K1|c-fast@FL|V0|e0 ready hash same paths ['1'] d [-0.31873157725699486, 0.0] err None
+[412/456 3924 s] D1|H-S-C|J1|M|flat|K1|c-fast@FL|V0|e0.002 ready hash same paths ['1'] d [-0.3023421847942326, 0.0] err None
+[413/456 3932 s] D1|H-S-C|J1|M|flat|K1|c-mid@RL|V0|e0 ready hash same paths ['1'] d [-0.31873157725699486, 0.0] err None
+[414/456 3935 s] D1|H-S-C|J1|M|flat|K1|c-mid@RL|V0|e0.002 ready hash same paths ['1'] d [-0.3023421847942326, 0.0] err None
+[415/456 3952 s] D1|H-S-C|J2|M|flat|K1|c-slow@FL|V0|e0 ready hash same paths ['1'] d [-0.2090403096387805, 0.0] err None
+[416/456 3955 s] D1|H-S-C|J2|M|flat|K1|c-mid@FL|V0|e0 ready hash same paths ['1'] d [-0.2090403096387805, 0.0] err None
+[417/456 3960 s] D1|H-S-C|J2|M|flat|K1|c-slow@FL|V0|e0.002 ready hash same paths ['1'] d [-0.13787966938981489, 0.0] err None
+[418/456 3961 s] D1|H-S-C|J2|M|flat|K1|c-mid@FL|V0|e0.002 ready hash same paths ['1'] d [-0.13787966938981489, 0.0] err None
+[419/456 3973 s] D1|H-S-C|J2|M|flat|K1|c-edge@FL|V0|e0 ready hash same paths ['1'] d [-0.2090403096387805, 0.0] err None
+[420/456 3978 s] D1|H-S-C|J2|M|flat|K1|c-edge@FL|V0|e0.002 ready hash same paths ['1'] d [-0.13787966938981489, 0.0] err None
+[421/456 3985 s] D1|H-S-C|J2|M|flat|K1|c-fast@FL|V0|e0 ready hash same paths ['1'] d [-0.2090403096387805, 0.0] err None
+[422/456 3988 s] D1|H-S-C|J2|M|flat|K1|c-fast@FL|V0|e0.002 ready hash same paths ['1'] d [-0.13787966938981489, 0.0] err None
+[423/456 4003 s] D1|H-S-C|J2|M|flat|K1|c-mid@RL|V0|e0 ready hash same paths ['1'] d [-0.2327451171574707, 0.0] err None
+[424/456 4006 s] D1|H-S-C|J2|M|flat|K1|c-mid@RL|V0|e0.002 ready hash same paths ['1'] d [-0.13787966938981489, 0.0] err None
+[425/456 4024 s] D1|H-S-C|J1|B|flat|K1|c-mid@FL|V0|e0 ready hash same paths ['1'] d [-0.17687783666330004, 0.0] err None
+[426/456 4031 s] D1|H-S-C|J1|B|flat|K1|c-slow@FL|V0|e0 ready hash same paths ['1'] d [-0.17687783666330004, 0.0] err None
+[427/456 4032 s] D1|H-S-C|J1|B|flat|K1|c-mid@FL|V0|e0.002 ready hash same paths ['1'] d [-0.23790399741205337, 0.0] err None
+[428/456 4034 s] D1|H-S-C|J1|B|flat|K1|c-slow@FL|V0|e0.002 ready hash same paths ['1'] d [-0.23790399741205337, 0.0] err None
+[429/456 4038 s] D1|H-S-C|J1|B|flat|K1|c-edge@FL|V0|e0 ready hash same paths ['1'] d [-0.17687783666330004, 0.0] err None
+[430/456 4043 s] D1|H-S-C|J1|B|flat|K1|c-edge@FL|V0|e0.002 ready hash same paths ['1'] d [-0.23790399741205337, 0.0] err None
+[431/456 4056 s] D1|H-S-C|J1|B|flat|K1|c-fast@FL|V0|e0 ready hash same paths ['1'] d [-0.17687783666330004, 0.0] err None
+[432/456 4061 s] D1|H-S-C|J1|B|flat|K1|c-fast@FL|V0|e0.002 ready hash same paths ['1'] d [-0.23790399741205337, 0.0] err None
+[433/456 4082 s] D1|H-S-C|J1|B|flat|K1|c-mid@RL|V0|e0 ready hash same paths ['1'] d [-0.17687783666330004, 0.0] err None
+[434/456 4090 s] D1|H-S-C|J1|B|flat|K1|c-mid@RL|V0|e0.002 ready hash same paths ['1'] d [-0.23790399741205337, 0.0] err None
+[435/456 4093 s] D1|H-S-C|J2|B|flat|K1|c-mid@FL|V0|e0 ready hash same paths ['1'] d [-0.12124110098495067, 0.0] err None
+[436/456 4099 s] D1|H-S-C|J2|B|flat|K1|c-mid@FL|V0|e0.002 ready hash same paths ['1'] d [-0.19956428240512636, 0.0] err None
+[437/456 4103 s] D1|H-S-C|J2|B|flat|K1|c-slow@FL|V0|e0 ready hash same paths ['1'] d [-0.12124110098495067, 0.0] err None
+[438/456 4107 s] D1|H-S-C|J2|B|flat|K1|c-slow@FL|V0|e0.002 ready hash same paths ['1'] d [-0.19956428240512636, 0.0] err None
+[439/456 4115 s] D1|H-S-C|J2|B|flat|K1|c-edge@FL|V0|e0 ready hash same paths ['1'] d [-0.12124110098495067, 0.0] err None
+[440/456 4121 s] D1|H-S-C|J2|B|flat|K1|c-edge@FL|V0|e0.002 ready hash same paths ['1'] d [-0.19956428240512636, 0.0] err None
+[441/456 4137 s] D1|H-S-C|J2|B|flat|K1|c-fast@FL|V0|e0 ready hash same paths ['1'] d [-0.12124110098495067, 0.0] err None
+[442/456 4147 s] D1|H-S-C|J2|B|flat|K1|c-fast@FL|V0|e0.002 ready hash same paths ['1'] d [-0.19956428240512636, 0.0] err None
+[443/456 4153 s] D1|H-S-C-g|J1|T|fdown-rec|K1|c-mid@FL|dsb_gated_off|V0|e0 ready hash same paths ['1'] d [0.0, 0.11105272642440711] err None
+[444/456 4153 s] D1|H-S-C|J2|B|flat|K1|c-mid@RL|V0|e0 ready hash same paths ['1'] d [-0.15414497284504947, 0.0] err None
+[445/456 4157 s] D1|H-S-C-g|J1|T|fdown-rec|K1|c-mid@FL|dsb_gated_off|V0|e0.002 ready hash same paths ['1'] d [-0.2560657570506303, 0.0] err None
+[446/456 4161 s] D1|H-S-C|J2|B|flat|K1|c-mid@RL|V0|e0.002 ready hash same paths ['1'] d [-0.22613771776799907, 0.0] err None
+[447/456 4175 s] D1|H-S-C-g|J1|T|diag-rec|K1|c-mid@FR|dsb_gated_off|V0|e0 probe hash same paths ['3'] d [0.0, 0.0] err None
+[448/456 4182 s] D1|H-S-C-g|J1|T|diag-rec|K1|c-mid@FR|dsb_gated_off|V0|e0.002 probe hash same paths ['3'] d [0.0, 0.0] err None
+[449/456 4195 s] D1|H-S-C-g|J1|M|fdown-rec|K1|c-mid@FL|dsb_gated_off|V0|e0.002 ready hash same paths ['1'] d [-0.1156325112109946, 0.0] err None
+[450/456 4196 s] D1|H-S-C-g|J1|M|fdown-rec|K1|c-mid@FL|dsb_gated_off|V0|e0 level hash same paths ['1'] d [-1.0870665955866055, 0.0] err None
+[451/456 4200 s] D1|H-S-C-g|J1|M|diag-rec|K1|c-mid@FR|dsb_gated_off|V0|e0 ready hash same paths ['3', '3'] d [0.0, 0.0] err None
+[452/456 4201 s] D1|H-S-C-g|J1|M|diag-rec|K1|c-mid@FR|dsb_gated_off|V0|e0.002 ready hash same paths ['3', '3'] d [0.0, 0.0] err None
+[453/456 4210 s] D1|H-S-C-g|J1|B|fdown-rec|K1|c-mid@FL|dsb_gated_off|V0|e0 ready hash same paths ['1'] d [-0.8798888099265101, 0.00917989271798092] err None
+[454/456 4215 s] D1|H-S-C-g|J1|B|fdown-rec|K1|c-mid@FL|dsb_gated_off|V0|e0.002 ready hash same paths ['1'] d [-0.9185712474637925, 0.008326546046433236] err None
+[455/456 4228 s] D1|H-S-C-g|J1|B|diag-rec|K1|c-mid@FR|dsb_gated_off|V0|e0 ready hash same paths ['3', '1'] d [0.0, 0.0] err None
+[456/456 4235 s] D1|H-S-C-g|J1|B|diag-rec|K1|c-mid@FR|dsb_gated_off|V0|e0.002 ready hash same paths ['3', '1'] d [0.0, 0.0] err None
+done {"lines": 456, "same": 456, "errors": 0, "mismatches": 0}

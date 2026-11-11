@@ -1,0 +1,86 @@
+{
+ "start": {
+  "time": "2026-11-11T10:35:43+09:00",
+  "root": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-ad8565b34cde410d8",
+  "head": "c6bb55bd1520c5cac0914f8632bd345a41f52ad6",
+  "status_porcelain": "",
+  "is_clean": true,
+  "code_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "c2_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
+  "c2_blob": "18c718767090cf68ce1d80d504ec2684af426fc1",
+  "tools_sha256": {
+   "hsh_run.py": "d9ff521f05b6ba75879edc74c27e6a51aee56bc30c7720a7ed6a5e324606cf5d",
+   "loc_anchor_shadow.py": "fd0f357a31e9f923c8fa7058325e805cf20177aa1b051f0540821db71d50112c"
+  },
+  "python_executable": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+  "python_version": "3.12.15 | packaged by conda-forge | (main, Oct 13 2026, 16:44:09) [MSC v.1944 64 bit (AMD64)]",
+  "argv": [
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-ad8565b34cde410d8\\04_scripts\\03_control\\k2\\loc_shadow\\hsh_run.py",
+   "--out",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\k2\\loc_shadow\\hsh\\hsh_shadow.jsonl",
+   "--workers",
+   "8",
+   "--mask",
+   "0x0FFF0000"
+  ],
+  "env": {
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "MKL_NUM_THREADS": "1",
+   "MKL_THREADING_LAYER": "TBB",
+   "NUMBA_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "OUTRIGGER_LOC_SHADOW": "1",
+   "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "affinity_mask": "0xfff0000",
+  "pid": 45280
+ },
+ "end": {
+  "time": "2026-11-11T11:46:19+09:00",
+  "root": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-ad8565b34cde410d8",
+  "head": "c6bb55bd1520c5cac0914f8632bd345a41f52ad6",
+  "status_porcelain": "",
+  "is_clean": true,
+  "code_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "c2_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
+  "c2_blob": "18c718767090cf68ce1d80d504ec2684af426fc1",
+  "tools_sha256": {
+   "hsh_run.py": "d9ff521f05b6ba75879edc74c27e6a51aee56bc30c7720a7ed6a5e324606cf5d",
+   "loc_anchor_shadow.py": "fd0f357a31e9f923c8fa7058325e805cf20177aa1b051f0540821db71d50112c"
+  },
+  "python_executable": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+  "python_version": "3.12.15 | packaged by conda-forge | (main, Oct 13 2026, 16:44:09) [MSC v.1944 64 bit (AMD64)]",
+  "argv": [
+   "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-ad8565b34cde410d8\\04_scripts\\03_control\\k2\\loc_shadow\\hsh_run.py",
+   "--out",
+   "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\k2\\loc_shadow\\hsh\\hsh_shadow.jsonl",
+   "--workers",
+   "8",
+   "--mask",
+   "0x0FFF0000"
+  ],
+  "env": {
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev",
+   "MKL_NUM_THREADS": "1",
+   "MKL_THREADING_LAYER": "TBB",
+   "NUMBA_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "OUTRIGGER_LOC_SHADOW": "1",
+   "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "affinity_mask": "0xfff0000",
+  "pid": 45280
+ },
+ "argv": [
+  "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-ad8565b34cde410d8\\04_scripts\\03_control\\k2\\loc_shadow\\hsh_run.py",
+  "--out",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\k2\\loc_shadow\\hsh\\hsh_shadow.jsonl",
+  "--workers",
+  "8",
+  "--mask",
+  "0x0FFF0000"
+ ],
+ "exit": 0
+}
