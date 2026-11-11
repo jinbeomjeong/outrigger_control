@@ -1554,7 +1554,8 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
               e_cases: list[str] | None = None, order: str = "given",
               order_cases: list[str] | None = None, rv6_k: float | None = None, rv6_dir: str | None = None,
               row_filter: dict[str, set[str]] | None = None, controller_check: bool = True,
-              resume: str | None = None, las_off: bool = False, allow_mixed_hull: bool = False) -> Path:
+              resume: str | None = None, las_off: bool = False, allow_mixed_hull: bool = False,
+              rerun_of: str | None = None) -> Path:
     """Run the batch ``name`` with ``parallel`` P-pool slots and ``parallel_e`` E-pool slots
     (:func:`schedule_cases`). Each case process gets ``OUTRIGGER_PLACEMENT`` of its pool. ``rv6_k``: X6-rb ratio of
     RV6; ``row_filter`` / ``only``: :func:`select_rows`; ``controller_check`` False drops ``--expect-controller``.
@@ -1651,6 +1652,8 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
             entry = {"case": c["case"], "argv": c["argv"], "rc": rc, "wall_s": wall, "est_s": c["est_s"], "pool": pool}
             entry.update({k: c[k] for k in ENTRY_META_KEYS if c.get(k) is not None})  # note: G6P rows (2026-10-28)
             entry.update(launch_env.get(c["case"], {}))  # criteria rev. 12a: the child env value actually set
+            if rerun_of is not None or c.get("p5k_id"):  # P5r4+K1 rules 10.1 / rev1: the key on every P5K row
+                entry["rerun_of"] = rerun_of
             if code_at_launch.get(c["case"]) is not None:  # RV6 / FINAL (2026-10-30)
                 entry["code_at_launch"] = code_at_launch[c["case"]]
                 entry["controller_check"] = bool(controller_check)
@@ -1897,7 +1900,8 @@ def main(argv) -> None:
         only = (a.only or []) + (read_only_file(a.only_file) or [])
         run_batch(a.batch, only=only or None, rv6_k=a.rv6_k, rv6_dir=a.rv6_dir,
                   row_filter=parse_row_filter(a.row_filter), controller_check=not a.no_controller_check,
-                  resume=a.resume, las_off=a.las_off, allow_mixed_hull=a.allow_mixed_hull, **schedule_args(a, argv))
+                  resume=a.resume, las_off=a.las_off, allow_mixed_hull=a.allow_mixed_hull, rerun_of=a.rerun_of,
+                  **schedule_args(a, argv))
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -1946,6 +1950,9 @@ def build_parser() -> argparse.ArgumentParser:
                         "stops when a finished row's batch.json hull_hook_requested ('pre-switch' when missing; "
                         "progress.log START line when the row has no entry) differs from this launch's request, "
                         "warns when its code_at_launch commit differs or nothing recorded its request")
+    r.add_argument("--rerun-of", default=None, metavar="BATCH_FOLDER",
+                   help="record only: batch.json cases[].rerun_of = this folder (a one-time rerun of failed rows in a "
+                        "new batch, P5r4+K1 rules 10.1); every V5-LAS-P5R4-K1 row gets the key (None without it)")
     r.add_argument(MIXED_HULL_ARG, dest="allow_mixed_hull", action="store_true",
                    help="--resume: continue despite a different hull hook request (recorded in batch.json "
                         "resume_check and progress.log RESUME_MIXED_HULL)")

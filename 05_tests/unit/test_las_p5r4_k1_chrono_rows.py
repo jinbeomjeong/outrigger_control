@@ -256,7 +256,21 @@ def test_loc_probe_paths_and_revocation(run_s9) -> None:
     assert a["bias_raw_m"] == [0.03, 0.01, -0.01, 0.0] and a["bias_applied_m"] == [0.03, 0.01, 0.0, 0.0]
     assert b["loc_anchor_applied"] is True and b["bias_applied_m"] == pytest.approx([-0.025, -0.015, 0.005, 0.015])
     assert a["events_at_loc"] == ["INFO_CRAWLER_LIFTOFF_CONFIRMED"] and c["events_at_loc"] == []
+    assert (a["bias_event"], b["bias_event"], c["bias_event"]) == (None, "INFO_LOC_CLEARANCE_ANCHOR:x", None)
+    assert a["bias_corner_raw_m"] == a["bias_raw_m"] and b["bias_corner_m"] == b["bias_applied_m"]
+    assert a["loc_anchor_bias_mm"] is None and c["loc_anchor_bias_mm"] is None
+    # corner order RR, RL, FR, FL -> FL, FR, RL, RR in mm (c2's own conversion)
+    assert b["loc_anchor_bias_mm"] == pytest.approx({"FL": 15.0, "FR": 5.0, "RL": -15.0, "RR": -25.0})
+    assert meta["first"] == {"index": 0, "path": 1, "t_L_s": 20.3, "t_P_s": 19.1, "n_L": 203, "n_P": 191}
+    assert meta["last"]["index"] == 2 and meta["last"]["t_L_s"] == 40.0
     json.dumps(meta)
+
+
+def test_rerun_of_on_every_p5k_entry(s9_batch) -> None:
+    src = Path(s9_batch.__file__).read_text(encoding="utf-8")
+    assert 'if rerun_of is not None or c.get("p5k_id"):' in src and 'entry["rerun_of"] = rerun_of' in src
+    a = s9_batch.main.__code__  # the CLI option exists
+    assert a is not None and '"--rerun-of"' in src
 
 
 def test_loc_probe_never_creates_the_soil_state(run_s9) -> None:

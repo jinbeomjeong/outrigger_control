@@ -394,7 +394,9 @@ RESULT_KEY_PATHS: tuple[str, ...] = (
     "hull_hook.mode", "hull_hook.requested", "hull_hook.fallback_reason", "hull_hook.dll_sha256",
     "code_state.git_at_start.head", "code_state.git_at_start.dirty", "code_state.files_at_start",
     "code_files_at_start.files", "code_files_at_start.head",
-    "loc_corrections.locs", "loc_corrections.settings",
+    "loc_corrections.locs", "loc_corrections.settings", "loc_corrections.first", "loc_corrections.last",
+    "c2_setup.k1_forced_block.requested", "controller_meta.soil.bias_corner_raw_m", "controller_meta.soil.bias_corner_m",
+    "controller_meta.soil.loc_anchor_bias_mm",
     "events", "phases", "t_loop_start_s", "mass_scale", "p3b.departure.departed")
 """Key paths the judge tools read (rules 5.2 / 6.3 / 9 and the 16.2 (b) list) + the LOC-correction record; a key must
 exist (its value may be None, e.g. no LOC in a 10 s G-S loop), except :data:`CONDITIONAL_KEY_PATHS`."""
@@ -409,7 +411,7 @@ judge tools must handle the no-departure row (e.g. a FAULT before the lift) them
 BATCH_TOP_KEYS = ("batch", "cases", "mixed_hull_mode", "failed")
 BATCH_ENTRY_KEYS = ("case", "argv", "rc", "pool", "planned_pool", "omp_wait_policy", "hull_hook_requested",
                     "hull_hook_effective", "p5k_id", "las_candidate", "pair_case", "start_env", "code_at_launch",
-                    "controller", "v5_setting")
+                    "controller", "v5_setting", "rerun_of")
 NPZ_ARRAYS = ("t_s", "issued_u_m_s")
 _MISSING = object()
 

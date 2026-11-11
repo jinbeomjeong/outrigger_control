@@ -4065,6 +4065,14 @@ def code_files_record(root: Path = ROOT, rels: tuple[str, ...] = LAS_CANDIDATE_C
             "basis": "worktree_sha256 = raw bytes of the file at the run start; head_blob_sha256 = git show HEAD:<path>"}
 
 
+def _corner_mm_leg_order(values_m: Any) -> list[float]:
+    """Crawler-corner values (``CRAWLER_CORNER_NAMES`` order) in mm, FL, FR, RL, RR: c2's own conversion (the one of
+    its ``controller_meta.soil.loc_anchor_bias_mm``)."""
+    from outrigger_sim.control.c2 import _corner_values_in_leg_order_mm  # noqa: PLC0415
+
+    return [float(v) for v in _corner_values_in_leg_order_mm(np.asarray(values_m, float))]
+
+
 class LocCorrectionProbe:
     """Record only (cad 2026-11-11, control-expert request for the P5r4+K1 rev1): every LOC of the run with the S-3
     corner-bias path of spec rev. 70 369.1 (``s6_control_spec.md``: ① ``c_min(t_P) >`` ``corner_bias_deadzone_m``:
@@ -4111,6 +4119,10 @@ class LocCorrectionProbe:
             "c_min_at_L_m": None if soil.clearance_at_liftoff_m is None else float(soil.clearance_at_liftoff_m),
             "bias_raw_m": None if raw is None else [float(v) for v in raw],
             "bias_applied_m": [float(v) for v in soil.corner_bias_m],
+            "bias_corner_raw_m": None if raw is None else [float(v) for v in raw],
+            "bias_corner_m": [float(v) for v in soil.corner_bias_m],
+            "loc_anchor_bias_mm": (dict(zip(("FL", "FR", "RL", "RR"), _corner_mm_leg_order(soil.corner_bias_m),
+                                            strict=True)) if soil.is_loc_anchor_applied else None),
             "loc_anchor_applied": bool(soil.is_loc_anchor_applied),
             "soil_mode_t_s": soil.soil_mode_start_s,
             "run_clearance_target_m": getattr(self.c2._state, "clearance_target_m", None),
@@ -4122,15 +4134,26 @@ class LocCorrectionProbe:
 
         s = self.c2.config.soil
         locs = [dict(e) for e in self.locs]
+        bias_events = ("INFO_CLEARANCE_BIAS", "INFO_LOC_CLEARANCE_ANCHOR")  # c2 SOIL_EVENT_CLEARANCE_BIAS / _LOC_ANCHOR
         for e in locs:
             e["events_at_loc"] = [n for t, n in (events or ()) if t == e["t_L_s"]]
+            e["bias_event"] = next((n for n in e["events_at_loc"] if n.split(":", 1)[0] in bias_events), None)
+
+        def _ends(e: dict[str, Any] | None) -> dict[str, Any] | None:
+            return None if e is None else {k: e[k] for k in ("index", "path", "t_L_s", "t_P_s", "n_L", "n_P")}
+
+        first, last = (locs[0], locs[-1]) if locs else (None, None)
         return {"rule": "s6_control_spec.md 369.1 / U-S9-C7: 1 = c_min(t_P) > corner_bias_deadzone_m (b = max(b_raw, 0))"
                         ", 2 = loc_anchor_applied (b = b_raw + loc_anchor_offset_m), 3 = otherwise (b = 0)",
                 "settings": {"corner_bias_deadzone_m": s.corner_bias_deadzone_m, "loc_anchor_enable": s.loc_anchor_enable,
                              "loc_anchor_deadzone_m": s.loc_anchor_deadzone_m,
                              "loc_anchor_offset_m": s.loc_anchor_offset_m},
                 "corner_order": list(CRAWLER_CORNER_NAMES), "time_base": "controller time (absolute Chrono time)",
-                "period_s": float(self.c2.config.period_s), "n_locs": len(locs), "locs": locs}
+                "period_s": float(self.c2.config.period_s), "n_locs": len(locs), "locs": locs,
+                "first": _ends(first), "last": _ends(last),
+                "bias_event_rule": "bias_event = the INFO_CLEARANCE_BIAS (path 1) / INFO_LOC_CLEARANCE_ANCHOR (path 2) "
+                                   "event at t_L (exact name before ':'); path 3 has none",
+                "leg_order_mm": ["FL", "FR", "RL", "RR"]}
 
 
 def level_c2_config_of_args(args: argparse.Namespace) -> tuple[Any, dict[str, Any]]:
