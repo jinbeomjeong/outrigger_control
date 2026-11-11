@@ -1,0 +1,449 @@
+{
+ "command": "judge-v6",
+ "exit": 1,
+ "bundle": "V-6",
+ "gate": {
+  "G-E": "fail"
+ },
+ "summary": {
+  "bundle": "V-6 K-2 rows",
+  "expected": 4,
+  "actual": 4,
+  "pass": 3,
+  "fail": 1,
+  "not_judgeable": 0
+ },
+ "sh": [
+  {
+   "bundle": "V-6",
+   "flags": [
+    {
+     "flag": "SH-2",
+     "bundle": "V-6",
+     "k2_median": 0.09309251158586558,
+     "off_median": 0.07374795788369724
+    }
+   ],
+   "missing": {
+    "SH-1": 0,
+    "SH-2": 0,
+    "SH-3": 0,
+    "SH-4": 0,
+    "SH-5": 0,
+    "SH-6": 0
+   },
+   "sh2_medians": [
+    0.09309251158586558,
+    0.07374795788369724
+   ],
+   "sh4_min_J1_difference_N": 230.36059967965411,
+   "ready_delay_s": {
+    "K2_L1_top_fdown3.5_Fs0": -0.10000000000331966,
+    "K2_L1_top_k2pp025_Fs0": -0.2000000000066393,
+    "K2_L2b_top_fdown3.5_Fs4": -0.10000000000331966,
+    "K2_L2b_top_k2pp025_Fs4": -0.2000000000066393
+   },
+   "l1_false_latches": 0
+  }
+ ],
+ "dhat": {
+  "bundle": "V-6",
+  "pairs": 4,
+  "quantiles_kN": {
+   "p0": -0.7705702084039949,
+   "p5": -0.6509251329887158,
+   "p50": 0.10468213505194703,
+   "p95": 23.339188972624676,
+   "p100": 27.425698677957392
+  },
+  "abs_ge_5kN": [
+   {
+    "key": "K2_L1_top_k2pp025_Fs0",
+    "dhat_k2_kN": 17.273813048232018,
+    "dhat_off_kN": -10.151885629725372,
+    "difference_kN": 27.425698677957392
+   }
+  ],
+  "missing": [],
+  "n_missing": 0
+ },
+ "rows": [
+  {
+   "id": "K2_L1_top_fdown3.5_Fs0_off",
+   "engine": "L1",
+   "arm": "off",
+   "k2_on": false,
+   "verdict": "fail",
+   "fail_items": [
+    "J9"
+   ],
+   "not_judgeable": [],
+   "J3": 0,
+   "J3_margin_N": 18678.517694711205,
+   "false_latch": [],
+   "cap": 0,
+   "t_ready_s": 83.5000000027719,
+   "has_h4": true,
+   "sh1": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "sh2": 0.25015606845792654,
+   "values": {
+    "J1_N": 18595.680261847017,
+    "J2_N": 18595.680261847017,
+    "J4_deg": 0.015520432456805577,
+    "t_ready_s": 83.5000000027719,
+    "J6_bar": 127.79954692084002,
+    "stroke_max_m": null
+   },
+   "dhat_N": 26.574225808022067,
+   "dhat_window_open_legs": [
+    "RL",
+    "RR"
+   ],
+   "dhat_window_stroke_mm": [
+    null,
+    null,
+    0.6374001095819648,
+    0.6374001095840742
+   ]
+  },
+  {
+   "id": "K2_L1_top_fdown3.5_Fs0_tcl",
+   "engine": "L1",
+   "arm": "tcl",
+   "k2_on": true,
+   "verdict": "fail",
+   "fail_items": [
+    "J9"
+   ],
+   "not_judgeable": [],
+   "J3": 0,
+   "J3_margin_N": 20147.97265767633,
+   "false_latch": [],
+   "cap": 0,
+   "t_ready_s": 83.40000000276858,
+   "has_h4": true,
+   "sh1": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sh2": 0.16948094236191966,
+   "values": {
+    "J1_N": 18775.772719621058,
+    "J2_N": 18775.772719621058,
+    "J4_deg": 0.016134883703958387,
+    "t_ready_s": 83.40000000276858,
+    "J6_bar": 127.82772544006484,
+    "stroke_max_m": null
+   },
+   "dhat_N": 53.63785350588781,
+   "dhat_window_open_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "dhat_window_stroke_mm": [
+    0.00044115784836318284,
+    0.00044115785219345227,
+    2.390790384185826,
+    2.390790384188546
+   ]
+  },
+  {
+   "id": "K2_L1_top_k2pp025_Fs0_off",
+   "engine": "L1",
+   "arm": "off",
+   "k2_on": false,
+   "verdict": "pass",
+   "fail_items": [],
+   "not_judgeable": [],
+   "J3": 0,
+   "J3_margin_N": 18099.170104099936,
+   "false_latch": [],
+   "cap": 0,
+   "t_ready_s": 77.80000000258268,
+   "has_h4": true,
+   "sh1": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "sh2": 0.13164236371182414,
+   "values": {
+    "J1_N": 18545.412119941404,
+    "J2_N": 18545.412119941404,
+    "J4_deg": 0.015232558528465598,
+    "t_ready_s": 77.80000000258268,
+    "J6_bar": 128.94548204339807,
+    "stroke_max_m": null
+   },
+   "dhat_N": -10151.885629725371,
+   "dhat_window_open_legs": [
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "dhat_window_stroke_mm": [
+    null,
+    0.009083006631993573,
+    0.6799230098440412,
+    0.09201757311821934
+   ]
+  },
+  {
+   "id": "K2_L1_top_k2pp025_Fs0_tcl",
+   "engine": "L1",
+   "arm": "tcl",
+   "k2_on": true,
+   "verdict": "pass",
+   "fail_items": [],
+   "not_judgeable": [],
+   "J3": 0,
+   "J3_margin_N": 22786.933943503394,
+   "false_latch": [],
+   "cap": 0,
+   "t_ready_s": 77.60000000257604,
+   "has_h4": true,
+   "sh1": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sh2": 0.12511377786566627,
+   "values": {
+    "J1_N": 21454.31767232475,
+    "J2_N": 21454.31767232475,
+    "J4_deg": 0.015194535983450354,
+    "t_ready_s": 77.60000000257604,
+    "J6_bar": 126.19259862276587,
+    "stroke_max_m": null
+   },
+   "dhat_N": 17273.81304823202,
+   "dhat_window_open_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "dhat_window_stroke_mm": [
+    0.0007757759770687933,
+    0.2753799884477881,
+    2.390790384597885,
+    0.25012969609666813
+   ]
+  },
+  {
+   "id": "K2_L2b_top_fdown3.5_Fs4_off",
+   "engine": "L2b",
+   "arm": "off",
+   "k2_on": false,
+   "verdict": "pass",
+   "fail_items": [],
+   "not_judgeable": [],
+   "J3": 0,
+   "J3_margin_N": 31494.620414928268,
+   "false_latch": [],
+   "cap": 0,
+   "t_ready_s": 77.50000000154688,
+   "has_h4": true,
+   "sh1": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "sh2": 0.015853552055570343,
+   "values": {
+    "J1_N": 29573.612892678204,
+    "J2_N": 29573.612892678204,
+    "J4_deg": 0.014757868616502317,
+    "t_ready_s": 77.50000000154688,
+    "J6_bar": 116.97830470959103,
+    "stroke_max_m": null
+   },
+   "dhat_N": -87.70840447432784,
+   "dhat_window_open_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "dhat_window_stroke_mm": [
+    -0.11429425185494058,
+    -0.11060759415543187,
+    0.2767480035083536,
+    0.2799066551567586
+   ]
+  },
+  {
+   "id": "K2_L2b_top_fdown3.5_Fs4_tcl",
+   "engine": "L2b",
+   "arm": "tcl",
+   "k2_on": true,
+   "verdict": "pass",
+   "fail_items": [],
+   "not_judgeable": [],
+   "J3": 0,
+   "J3_margin_N": 31494.019722903828,
+   "false_latch": [],
+   "cap": 0,
+   "t_ready_s": 77.40000000154356,
+   "has_h4": true,
+   "sh1": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sh2": 0.042865808323191534,
+   "values": {
+    "J1_N": 29587.251916942547,
+    "J2_N": 29587.251916942547,
+    "J4_deg": 0.014405617535292575,
+    "t_ready_s": 77.40000000154356,
+    "J6_bar": 116.7534551340906,
+    "stroke_max_m": null
+   },
+   "dhat_N": 94.59223793170047,
+   "dhat_window_open_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "dhat_window_stroke_mm": [
+    0.1948028965713111,
+    0.2552297214971633,
+    0.8134510126840411,
+    0.8685523968485209
+   ]
+  },
+  {
+   "id": "K2_L2b_top_k2pp025_Fs4_off",
+   "engine": "L2b",
+   "arm": "off",
+   "k2_on": false,
+   "verdict": "pass",
+   "fail_items": [],
+   "not_judgeable": [],
+   "J3": 0,
+   "J3_margin_N": 31751.5431200012,
+   "false_latch": [],
+   "cap": 0,
+   "t_ready_s": 77.90000000156016,
+   "has_h4": true,
+   "sh1": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "sh2": 0.012106566580365895,
+   "values": {
+    "J1_N": 30585.970556529384,
+    "J2_N": 30585.970556529384,
+    "J4_deg": 0.015357357993512887,
+    "t_ready_s": 77.90000000156016,
+    "J6_bar": 116.54834723704585,
+    "stroke_max_m": null
+   },
+   "dhat_N": 40.5389709526753,
+   "dhat_window_open_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "dhat_window_stroke_mm": [
+    -0.10256781460599163,
+    -0.10658365655474844,
+    0.2637091612583964,
+    0.2596501200165524
+   ]
+  },
+  {
+   "id": "K2_L2b_top_k2pp025_Fs4_tcl",
+   "engine": "L2b",
+   "arm": "tcl",
+   "k2_on": true,
+   "verdict": "pass",
+   "fail_items": [],
+   "not_judgeable": [],
+   "J3": 0,
+   "J3_margin_N": 31757.003841876664,
+   "false_latch": [],
+   "cap": 0,
+   "t_ready_s": 77.70000000155352,
+   "has_h4": true,
+   "sh1": [
+    0,
+    0,
+    0,
+    0
+   ],
+   "sh2": 0.061071245306064885,
+   "values": {
+    "J1_N": 30602.382608246862,
+    "J2_N": 30602.382608246862,
+    "J4_deg": 0.014756322114965189,
+    "t_ready_s": 77.70000000155352,
+    "J6_bar": 116.5624754928545,
+    "stroke_max_m": null
+   },
+   "dhat_N": -730.0312374513196,
+   "dhat_window_open_legs": [
+    "FL",
+    "FR",
+    "RL",
+    "RR"
+   ],
+   "dhat_window_stroke_mm": [
+    0.55413946183136,
+    0.08251953295496106,
+    0.8484668940592077,
+    0.4192322626152545
+   ]
+  }
+ ],
+ "problems": [],
+ "field_map": {
+  "row": [
+   "case_id",
+   "controller_tag",
+   "k1_order_gate",
+   "touch_creep_latch",
+   "engine",
+   "floor_true_deg",
+   "t_touch_s",
+   "t_lift_s",
+   "t_ready_s",
+   "J1_min_cyl_after_lift_N",
+   "J1_window_s",
+   "reanchor_intervals_s",
+   "J2_min_cyl_reanchor_N",
+   "J4_att_max_after_ready_deg",
+   "J6_max_moving_bar",
+   "J6_max_locked_bar",
+   "crawler_recontact_after_loc",
+   "events"
+  ],
+  "pads_npz": [
+   "t",
+   "N"
+  ],
+  "J3": "pads N <= 0 after t_touch_s",
+  "false latch": "rules 3.5 L2b",
+  "D_hat (rev1 4, record)": "k2.dhat_N, k2.dhat_window_open_legs, k2.dhat_window_stroke_mm",
+  "SH (rev2 3)": "SH-1 pads_npz N <= 0 after each leg's latch and before t_touch_s; SH-2 rate_npz body_omega[:, :2] over [t_touch_s - 0.3, t_touch_s), medians of 4 + 4 rows; SH-3 t_ready_s pairs; SH-4 min J1_min_cyl_after_lift_N per arm; SH-5 events INFO_TOUCH_CREEP_CAP + L1 false latches; SH-6 J1 / J2 (rows with reanchor_intervals_s) < F_D8 + 2 kN",
+  "E-5 / I-9 (rev2 4)": "moving_damping, pad_zeta_moving (L1 0.10, L2b None), valve_open_fraction_touch_to_lift (L1: 4 legs in [0, 1])"
+ }
+}

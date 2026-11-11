@@ -1,0 +1,1027 @@
+{
+ "command": "judge-v5",
+ "exit": 1,
+ "bundle": "V-5",
+ "gate": {
+  "G-D": "fail"
+ },
+ "bundles": {
+  "d8": {
+   "kind": "pass_to_fail",
+   "bundle": "d8",
+   "n_off": 576,
+   "n_tcl": 576,
+   "unpaired": [],
+   "pass_to_fail": [],
+   "relative_passed": true,
+   "record": {
+    "ready_mean_delta_s": -0.08072916666666669,
+    "min_force_worst_delta_kN": -6.909999999999997,
+    "pairs_ready": 576,
+    "pairs_force": 576
+   },
+   "relative_gates": false,
+   "absolute": {
+    "off": {
+     "passed": true,
+     "items": {
+      "rc": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "error_rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "c2_sha256": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "d8_error": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "d8_fails": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "d8_fault": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "d8_min_force": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "d8_attitude": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "d8_ready": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      }
+     },
+     "missing": {},
+     "record": {}
+    },
+    "tcl": {
+     "passed": true,
+     "items": {
+      "rc": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "error_rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "c2_sha256": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "d8_error": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "d8_fails": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "d8_fault": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "d8_min_force": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "d8_attitude": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "d8_ready": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      }
+     },
+     "missing": {},
+     "record": {}
+    }
+   },
+   "evidence": {
+    "off": [],
+    "tcl": []
+   },
+   "missing": {
+    "off": {},
+    "tcl": {}
+   },
+   "failed_items": [],
+   "passed": true,
+   "result_kind": "pass"
+  },
+  "g8_safe_stop": {
+   "kind": "g8",
+   "bundle": "g8_safe_stop",
+   "n_off": 83,
+   "n_tcl": 83,
+   "unpaired": [],
+   "failures": [
+    [
+     "off|L2|s10|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+     "ready lost"
+    ],
+    [
+     "off|L2|s10|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+     "new FAULT ['FAULT_LIFT_STROKE_LIMIT']"
+    ],
+    [
+     "off|L2|s10|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+     "status pass->fail"
+    ],
+    [
+     "off|L2|s16|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+     "ready lost"
+    ],
+    [
+     "off|L2|s16|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+     "new FAULT ['FAULT_LIFT_STROKE_LIMIT']"
+    ],
+    [
+     "off|L2|s16|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+     "status pass->fail"
+    ],
+    [
+     "off|L2|s6|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+     "ready lost"
+    ],
+    [
+     "off|L2|s6|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+     "new FAULT ['FAULT_LIFT_STROKE_LIMIT']"
+    ],
+    [
+     "off|L2|s6|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+     "status pass->fail"
+    ],
+    [
+     "off|L2|s8|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+     "ready lost"
+    ],
+    [
+     "off|L2|s8|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+     "new FAULT ['FAULT_LIFT_STROKE_LIMIT']"
+    ],
+    [
+     "off|L2|s8|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+     "status pass->fail"
+    ]
+   ],
+   "relative_passed": false,
+   "relative_gates": true,
+   "absolute": {
+    "off": {
+     "passed": true,
+     "items": {
+      "rc": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "error_rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "c2_sha256": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      }
+     },
+     "missing": {},
+     "record": {}
+    },
+    "tcl": {
+     "passed": true,
+     "items": {
+      "rc": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "error_rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "c2_sha256": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      }
+     },
+     "missing": {},
+     "record": {}
+    }
+   },
+   "evidence": {
+    "off": [],
+    "tcl": []
+   },
+   "missing": {
+    "off": {},
+    "tcl": {}
+   },
+   "failed_items": [],
+   "passed": false,
+   "result_kind": "fail"
+  },
+  "grid": {
+   "kind": "pass_to_fail",
+   "bundle": "grid",
+   "n_off": 768,
+   "n_tcl": 768,
+   "unpaired": [],
+   "pass_to_fail": [],
+   "relative_passed": true,
+   "relative_gates": true,
+   "absolute": {
+    "off": {
+     "passed": true,
+     "items": {
+      "rc": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "error_rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "c2_sha256": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "fault_periods": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      }
+     },
+     "missing": {},
+     "record": {}
+    },
+    "tcl": {
+     "passed": true,
+     "items": {
+      "rc": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "error_rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "c2_sha256": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "fault_periods": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      }
+     },
+     "missing": {},
+     "record": {}
+    }
+   },
+   "evidence": {
+    "off": [],
+    "tcl": []
+   },
+   "missing": {
+    "off": {},
+    "tcl": {}
+   },
+   "failed_items": [],
+   "passed": true,
+   "result_kind": "pass"
+  },
+  "noise_L2": {
+   "kind": "noise_cp",
+   "bundle": "noise_L2",
+   "n_off": 855,
+   "n_tcl": 855,
+   "unpaired": [],
+   "pass_to_fail": [
+    "r79_L1L2|cand=current#L2|s0|g6|80|g6r|rigid+J2@FL|top|Fs0",
+    "r79_L1L2|cand=current#L2|s1|g8|12|slope|edge|top|4.0|RL|raised|230.0",
+    "r79_L1L2|cand=current#L2|s4|g6|84|g6r|rigid+J2@FR|top|Fs0",
+    "r79_L1L2|cand=current#L2|s4|g8|12|slope|edge|top|4.0|RL|raised|230.0",
+    "r79_L1L2|cand=current#L2|s4|g8|27|slope|rpB|top|4.0|RL|raised|170.0"
+   ],
+   "relative_passed": false,
+   "relative_gates": false,
+   "absolute": {
+    "off": {
+     "passed": true,
+     "items": {
+      "rc": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "error_rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "c2_sha256": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "noise_cp_beta": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "noise_cp_bisection": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "r79_errors": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "r79_unmatched": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "reference_all_false_loc": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "sgs_settings": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      }
+     },
+     "missing": {},
+     "record": {
+      "failures": 8,
+      "n": 855,
+      "cp95_upper_beta": 0.01681912856388762,
+      "cp95_upper_bisection": 0.016819128563889646,
+      "r79_judgement": {
+       "unmatched": 0,
+       "errors": 0,
+       "reference_all_false_loc": 0,
+       "unmatched_keys": []
+      },
+      "settings": {
+       "results": 1026,
+       "preset_settings": true,
+       "preset_sgs_keys": [
+        "lift_stroke_guard.enable",
+        "lift_stroke_guard.soil_stop",
+        "lift_stroke_guard.soil_stop_scope"
+       ],
+       "missing": 0,
+       "rows_without_sgs_keys": 0,
+       "mismatch_sgs": 0,
+       "mismatch_all": 855,
+       "mismatch_excluding_level_keys": 0,
+       "differing_keys": {
+        "target.gyro_noise_std_rad_s": 855
+       }
+      }
+     }
+    },
+    "tcl": {
+     "passed": true,
+     "items": {
+      "rc": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "error_rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "c2_sha256": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "noise_cp_beta": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "noise_cp_bisection": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "r79_errors": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "r79_unmatched": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "reference_all_false_loc": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "sgs_settings": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      }
+     },
+     "missing": {},
+     "record": {
+      "failures": 5,
+      "n": 855,
+      "cp95_upper_beta": 0.012256339337941437,
+      "cp95_upper_bisection": 0.01225633933794136,
+      "r79_judgement": {
+       "unmatched": 0,
+       "errors": 0,
+       "reference_all_false_loc": 0,
+       "unmatched_keys": []
+      },
+      "settings": {
+       "results": 1026,
+       "preset_settings": true,
+       "preset_sgs_keys": [
+        "lift_stroke_guard.enable",
+        "lift_stroke_guard.soil_stop",
+        "lift_stroke_guard.soil_stop_scope"
+       ],
+       "missing": 0,
+       "rows_without_sgs_keys": 0,
+       "mismatch_sgs": 0,
+       "mismatch_all": 855,
+       "mismatch_excluding_level_keys": 0,
+       "differing_keys": {
+        "target.gyro_noise_std_rad_s": 855
+       }
+      }
+     }
+    }
+   },
+   "evidence": {
+    "off": [],
+    "tcl": []
+   },
+   "missing": {
+    "off": {},
+    "tcl": {}
+   },
+   "failed_items": [],
+   "passed": true,
+   "result_kind": "pass"
+  },
+  "ps7": {
+   "kind": "pass_to_fail",
+   "bundle": "ps7",
+   "n_off": 20,
+   "n_tcl": 20,
+   "unpaired": [],
+   "pass_to_fail": [],
+   "relative_passed": true,
+   "relative_gates": true,
+   "absolute": {
+    "off": {
+     "passed": true,
+     "items": {
+      "rc": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "error_rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "c2_sha256": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      }
+     },
+     "missing": {},
+     "record": {}
+    },
+    "tcl": {
+     "passed": true,
+     "items": {
+      "rc": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "error_rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "c2_sha256": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      }
+     },
+     "missing": {},
+     "record": {}
+    }
+   },
+   "evidence": {
+    "off": [],
+    "tcl": []
+   },
+   "missing": {
+    "off": {},
+    "tcl": {}
+   },
+   "failed_items": [],
+   "passed": true,
+   "result_kind": "pass"
+  },
+  "regression": {
+   "kind": "pass_to_fail",
+   "bundle": "regression",
+   "n_off": 93,
+   "n_tcl": 93,
+   "unpaired": [],
+   "pass_to_fail": [
+    "clip_A|A|J2|FL|Fs8|two|ready|SS|None|1"
+   ],
+   "relative_passed": false,
+   "relative_gates": true,
+   "absolute": {
+    "off": {
+     "passed": true,
+     "items": {
+      "rc": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "error_rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "c2_sha256": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "regression_verdict": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "r79_errors": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "regression_judged_keys": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "regression_record_keys": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      }
+     },
+     "missing": {},
+     "record": {
+      "r79_judgement": {
+       "unmatched": 1,
+       "errors": 0,
+       "reference_all_false_loc": 0,
+       "unmatched_keys": [
+        "cand=current#L2|s2|g6|55|ref|J1|bottom|Fs4"
+       ]
+      },
+      "regression_keys": {
+       "judged_n": 93,
+       "judged_sha256": "2900db889efc73070c3a8fbe557b1a4ad9ee3392afc099ba00be1d0549174ec9",
+       "record_n": 49,
+       "record_sha256": "d4f58334c6ca7c393c35072a798c09f4995d7fde274e0af6b21b99f977d503eb"
+      }
+     }
+    },
+    "tcl": {
+     "passed": true,
+     "items": {
+      "rc": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "error_rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "c2_sha256": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "regression_verdict": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "r79_errors": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "regression_judged_keys": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "regression_record_keys": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      }
+     },
+     "missing": {},
+     "record": {
+      "r79_judgement": {
+       "unmatched": 1,
+       "errors": 0,
+       "reference_all_false_loc": 0,
+       "unmatched_keys": [
+        "cand=current#L2|s2|g6|55|ref|J1|bottom|Fs4"
+       ]
+      },
+      "regression_keys": {
+       "judged_n": 93,
+       "judged_sha256": "2900db889efc73070c3a8fbe557b1a4ad9ee3392afc099ba00be1d0549174ec9",
+       "record_n": 49,
+       "record_sha256": "d4f58334c6ca7c393c35072a798c09f4995d7fde274e0af6b21b99f977d503eb"
+      }
+     }
+    }
+   },
+   "evidence": {
+    "off": [],
+    "tcl": []
+   },
+   "missing": {
+    "off": {},
+    "tcl": {}
+   },
+   "failed_items": [],
+   "passed": false,
+   "result_kind": "fail"
+  },
+  "soil": {
+   "kind": "pass_to_fail",
+   "bundle": "soil",
+   "n_off": 60,
+   "n_tcl": 60,
+   "unpaired": [],
+   "pass_to_fail": [],
+   "relative_passed": true,
+   "relative_gates": true,
+   "absolute": {
+    "off": {
+     "passed": true,
+     "items": {
+      "rc": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "error_rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "c2_sha256": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "fault_periods": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "soil_G1_J2_pass": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      }
+     },
+     "missing": {},
+     "record": {}
+    },
+    "tcl": {
+     "passed": false,
+     "items": {
+      "rc": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "error_rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "c2_sha256": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "rows": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "fault_periods": {
+       "ok": true,
+       "violations": 0,
+       "missing": 0,
+       "detail": []
+      },
+      "soil_G1_J2_pass": {
+       "ok": false,
+       "violations": 1,
+       "missing": 0,
+       "detail": [
+        "soil_A|A|J2|FL|Fs8|two|ready|SS|None|1"
+       ]
+      }
+     },
+     "missing": {},
+     "record": {}
+    }
+   },
+   "evidence": {
+    "off": [],
+    "tcl": []
+   },
+   "missing": {
+    "off": {},
+    "tcl": {}
+   },
+   "failed_items": [
+    "soil_G1_J2_pass"
+   ],
+   "passed": false,
+   "result_kind": "fail"
+  }
+ },
+ "failed": [
+  "g8_safe_stop",
+  "regression",
+  "soil"
+ ],
+ "missing": {
+  "d8": {
+   "off": {},
+   "tcl": {}
+  },
+  "g8_safe_stop": {
+   "off": {},
+   "tcl": {}
+  },
+  "grid": {
+   "off": {},
+   "tcl": {}
+  },
+  "noise_L2": {
+   "off": {},
+   "tcl": {}
+  },
+  "ps7": {
+   "off": {},
+   "tcl": {}
+  },
+  "regression": {
+   "off": {},
+   "tcl": {}
+  },
+  "soil": {
+   "off": {},
+   "tcl": {}
+  }
+ },
+ "problems": [],
+ "field_map": {
+  "V-5": "manifest v5.<bundle>: kind, off / tcl k2_v5_flatten files, key / status (/ ready, faults) dotted paths of the flat rows (rules 3.4, rev2 1)",
+  "absolute (rev2 1)": "K-2 arm: meta.steps[].sidecar.rc == 0, meta.sources[].error_rows == 0, steps[].provenance.c2_sha256 == C2_SHA256_RUN; grid / soil rows fault_periods; soil |G1| / |J2| pass; d8 rows error / fails / fault / min_true_cyl_force_kN / ss_true_att_deg_maxabs / t_ready_s; noise CP (beta, bisection), meta.r79_judgement unmatched / errors / reference_all_false_loc, meta.settings.mismatch_sgs (lift_stroke_guard.* keys, rev4 1 (b)); regression meta.regression_keys sha256, meta.r79_judgement errors (unmatched recorded, rev4 1 (c)); error = a non-empty error value (rev4 1 (a)); row counts V5_EXPECTED_ROWS",
+  "evidence (rev2 1)": "steps[].provenance combo / k2 / touch_creep_latch / controller_tag, G8 steps[].sidecar ACC_COMBO / ACC_K2, rows touch_creep_latch / controller_tag, steps[].events latch_rows (K-2 >= 1) / creep_rows (off 0)"
+ }
+}

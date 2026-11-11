@@ -1,0 +1,69 @@
+{
+ "tool": "k2_recount",
+ "version": "1.6",
+ "tool_sha256": "1951c5ea0c8957b2456ee54331188b44b6595e290e0ffc6470a0406d85639a4d",
+ "cmd": "selftest-v5-stored",
+ "j_items_via": {
+  "tool": "06_analysis/02_control/d8x/path2/d8x_recount.py",
+  "sha256_lf": "46010967729e190ab572775db9dd59b083a3856558c3f07a239bf601bed9d9d1"
+ },
+ "bundles": {
+  "grid": {
+   "n": 768,
+   "absolute_pass": true,
+   "judgeable": true,
+   "failure_counts": {},
+   "not_judgeable_counts": {},
+   "missing": {}
+  },
+  "soil": {
+   "n": 60,
+   "absolute_pass": true,
+   "judgeable": true,
+   "failure_counts": {},
+   "not_judgeable_counts": {},
+   "missing": {}
+  },
+  "d8": {
+   "n": 576,
+   "absolute_pass": true,
+   "judgeable": true,
+   "failure_counts": {},
+   "not_judgeable_counts": {},
+   "missing": {}
+  },
+  "noise_L2": {
+   "n": 855,
+   "absolute_pass": true,
+   "judgeable": true,
+   "failure_counts": {},
+   "not_judgeable_counts": {},
+   "missing": {}
+  },
+  "regression": {
+   "n": 93,
+   "absolute_pass": true,
+   "judgeable": true,
+   "failure_counts": {},
+   "not_judgeable_counts": {},
+   "missing": {}
+  },
+  "ps7": {
+   "n": 20,
+   "absolute_pass": true,
+   "judgeable": true,
+   "failure_counts": {},
+   "not_judgeable_counts": {},
+   "missing": {}
+  },
+  "g8_safe_stop": {
+   "n": 83,
+   "absolute_pass": true,
+   "judgeable": true,
+   "failure_counts": {},
+   "not_judgeable_counts": {},
+   "missing": {}
+  }
+ },
+ "ok": true
+}

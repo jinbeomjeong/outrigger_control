@@ -1,0 +1,152 @@
+{
+ "command": "rows",
+ "exit": 0,
+ "record_only": true,
+ "note": "record only, written after the results (2026-11-11)",
+ "batch": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\07_results\\S9\\batch_k2_v7_20261110_231758",
+ "out_dir": "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\k2\\judgement\\v7_rows",
+ "tool_sha256": "62a95a35e38e0e29b274e1e6c0dc915c164f008eba8c6cf69368bf89709af662",
+ "written": {
+  "K2V7_P3b_J1_B_top_Fs4_off": {
+   "k2_row.json": "c5e9eb3b8957a338ee2db05ef70be3b3ee3ff53ca3aab50fa3117a15cecd1f7f",
+   "k2_pads.npz": "b616019006a0c99c7920f093e3743f277741d13b32d87fd5f83f42c8f67464a2"
+  },
+  "K2V7_P3b_J1_B_top_Fs4_tcl": {
+   "k2_row.json": "4c35e062a860d5e93b5bcd3ac6285476082e867a89e3cc1a49200eb004659312",
+   "k2_pads.npz": "2ceab9defac5376e7c8212788766585922a54f8cfdb0a7bb3e6f154398e7b4a2"
+  },
+  "K2V7_P3b_J2_B_top_Fs4_off": {
+   "k2_row.json": "4624f3f593db29759bea8ea9854db292420bd72f1a6423ca5e2e4514bee71e62",
+   "k2_pads.npz": "0f691387e2dd99cf9a29c85732dee40708c7e07370c82d8541cdf80eed77f952"
+  },
+  "K2V7_P3b_J2_B_top_Fs4_tcl": {
+   "k2_row.json": "e10d8eb475286db94308f710760f29ac0126e6ff5e24ecd858be38ce39b62afa",
+   "k2_pads.npz": "895a4ff18f33c3e2639afefdfc021be4aa46b08366b40e90b300079f28b8353e"
+  }
+ },
+ "problems": [],
+ "pairs": [
+  {
+   "tcl": "K2V7_P3b_J1_B_top_Fs4_tcl",
+   "off": "K2V7_P3b_J1_B_top_Fs4_off",
+   "cap_events": 0,
+   "ready_delay_s": 12.200000000404998,
+   "report_to_user": true
+  },
+  {
+   "tcl": "K2V7_P3b_J2_B_top_Fs4_tcl",
+   "off": "K2V7_P3b_J2_B_top_Fs4_off",
+   "cap_events": 0,
+   "ready_delay_s": -1.2000000000398359,
+   "report_to_user": false
+  }
+ ],
+ "v7_record": {
+  "K2V7_P3b_J1_B_top_Fs4_off": {
+   "J3_pad_lift_samples": 0,
+   "J3_pad_normal_min_N": 38182.45949629658,
+   "t_touch_s": 23.599999999945,
+   "cap_events": 0,
+   "latch_events": 0,
+   "latch_last_t_s": null,
+   "latch_legs": {},
+   "t_ready_s": 74.20000000161052,
+   "t_loc_s": 32.00000000020964,
+   "J1_min_cyl_after_lift_N": 68096.68622555528
+  },
+  "K2V7_P3b_J1_B_top_Fs4_tcl": {
+   "J3_pad_lift_samples": 0,
+   "J3_pad_normal_min_N": 42961.477813926846,
+   "t_touch_s": 23.49999999994523,
+   "cap_events": 0,
+   "latch_events": 4,
+   "latch_last_t_s": 23.49999999994523,
+   "latch_legs": {
+    "FL": {
+     "latch_t_s": 23.399999999945464,
+     "reason": "load_window",
+     "creep_travel_m": 0.0015958659372737327,
+     "s_motor_m": 0.3471899117364804,
+     "pad_sinkage_geometric_m": 0.0005880514495508748
+    },
+    "FR": {
+     "latch_t_s": 23.399999999945464,
+     "reason": "load_window",
+     "creep_travel_m": 0.0018363060093574135,
+     "s_motor_m": 0.3472072030111312,
+     "pad_sinkage_geometric_m": 0.0005602284295449511
+    },
+    "RL": {
+     "latch_t_s": 23.49999999994523,
+     "reason": "load_window",
+     "creep_travel_m": 0.001850456953499724,
+     "s_motor_m": 0.3421581252797745,
+     "pad_sinkage_geometric_m": 0.002693358431457904
+    },
+    "RR": {
+     "latch_t_s": 23.49999999994523,
+     "reason": "load_window",
+     "creep_travel_m": 0.0017899646604511155,
+     "s_motor_m": 0.34215601980115007,
+     "pad_sinkage_geometric_m": 0.0026452690428822034
+    }
+   },
+   "t_ready_s": 86.40000000201552,
+   "t_loc_s": 31.90000000020632,
+   "J1_min_cyl_after_lift_N": 67939.35328223734
+  },
+  "K2V7_P3b_J2_B_top_Fs4_off": {
+   "J3_pad_lift_samples": 0,
+   "J3_pad_normal_min_N": 21249.47441348811,
+   "t_touch_s": 23.49999999994523,
+   "cap_events": 0,
+   "latch_events": 0,
+   "latch_last_t_s": null,
+   "latch_legs": {},
+   "t_ready_s": 81.50000000185285,
+   "t_loc_s": 37.10000000037894,
+   "J1_min_cyl_after_lift_N": 67769.45805227074
+  },
+  "K2V7_P3b_J2_B_top_Fs4_tcl": {
+   "J3_pad_lift_samples": 0,
+   "J3_pad_normal_min_N": 28846.142454928977,
+   "t_touch_s": 23.399999999945464,
+   "cap_events": 0,
+   "latch_events": 4,
+   "latch_last_t_s": 23.399999999945464,
+   "latch_legs": {
+    "FL": {
+     "latch_t_s": 23.299999999945697,
+     "reason": "load_window",
+     "creep_travel_m": 0.001959473955848501,
+     "s_motor_m": 0.3457655290591983,
+     "pad_sinkage_geometric_m": 0.001110560531745186
+    },
+    "FR": {
+     "latch_t_s": 23.299999999945697,
+     "reason": "load_window",
+     "creep_travel_m": 0.0018690246661641763,
+     "s_motor_m": 0.34576956524183267,
+     "pad_sinkage_geometric_m": 0.0010988918947358872
+    },
+    "RL": {
+     "latch_t_s": 23.399999999945464,
+     "reason": "load_window",
+     "creep_travel_m": 0.0018406293788348904,
+     "s_motor_m": 0.3418959631757144,
+     "pad_sinkage_geometric_m": 0.0010508538494431452
+    },
+    "RR": {
+     "latch_t_s": 23.399999999945464,
+     "reason": "load_window",
+     "creep_travel_m": 0.0015842265906118591,
+     "s_motor_m": 0.3418992719149621,
+     "pad_sinkage_geometric_m": 0.0010453823602865064
+    }
+   },
+   "t_ready_s": 80.30000000181302,
+   "t_loc_s": 37.10000000037894,
+   "J1_min_cyl_after_lift_N": 67706.0792453489
+  }
+ }
+}

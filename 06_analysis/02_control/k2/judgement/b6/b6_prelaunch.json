@@ -1,0 +1,27 @@
+{
+ "what": "K-2 V-5 B-6 split run (record only; does not change the V-5 pass count, G-D or the grade)",
+ "spec_sha256": "4cb59d4a39a4c28285fc83307bc8547fe7ff6cbe4e5972a1f1c57aea841a548f",
+ "checkout": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+ "head": "6a44ff81d25aea1fa162daf9b14c23b99beb9db0",
+ "clean": true,
+ "driver_blobs": {
+  "04_scripts/03_control/s9/s9_soil_event_screen.py": "b29d3145510d0f27a69b492f7f4684fbbe44b4ff",
+  "04_scripts/03_control/touch_phase/acceptance/acc_launch.py": "f058a5d1f94516c6caae84b2c3ab99f6d59dbe6e",
+  "06_analysis/02_control/touch_phase/acceptance/g8_safe_stop/g8trace.py": "d8bfe68e4350195951ec58a6a69bc24c04d293cc",
+  "04_scripts/03_control/k2/run_with_identity.py": "fab7664bd3ba16723e4202bf71dc7d87ab0cf7f0",
+  "03_src/outrigger_sim/control/c2.py": "18c718767090cf68ce1d80d504ec2684af426fc1"
+ },
+ "c2_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
+ "interpreter": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+ "mask": "0x0FFF0000",
+ "g8_jobs_sha256": "573a36e8661717c1518b51cdc0447e8e569763031988c01fa110effc6e5bd90c",
+ "g8_jobs_keys": [
+  "L2|s6|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "L2|s8|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "L2|s10|g8|29|slope|rpB|top|4.0|RL|raised|230.0",
+  "L2|s16|g8|29|slope|rpB|top|4.0|RL|raised|230.0"
+ ],
+ "expected_hashes": "spec 4.1",
+ "interpreter_version": "3.12.15 | packaged by conda-forge | (main, Oct 13 2026, 16:44:09) [MSC v.1944 64 bit (AMD64)]",
+ "interpreter_version_note": "added 2026-11-11 after the B-6 run by control-expert: sys.version of the same interpreter path (dynamics-dev, unchanged env); launcher report: 3.12.15, conda-forge, MSC v.1944"
+}

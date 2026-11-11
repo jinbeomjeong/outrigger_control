@@ -1,0 +1,39 @@
+{
+ "tool": "k2_recount",
+ "version": "1.6",
+ "tool_sha256": "1951c5ea0c8957b2456ee54331188b44b6595e290e0ffc6470a0406d85639a4d",
+ "cmd": "selftest-d8x",
+ "j_items_via": {
+  "tool": "06_analysis/02_control/d8x/path2/d8x_recount.py",
+  "sha256_lf": "46010967729e190ab572775db9dd59b083a3856558c3f07a239bf601bed9d9d1"
+ },
+ "inputs": {
+  "ra_off": "100985bfe00fa02e4c1c5c938ad9e08e83b441c00d666403dc60526fed3dcb10",
+  "ra_on": "e3c8c95ffd6a34afc10d119c27a0b29bf5a6d892ac6a4b8c78bd6edafd7f247a"
+ },
+ "E7_checked": true,
+ "off": {
+  "n": 910,
+  "fail": 68,
+  "not_judgeable": 0,
+  "expected_fail": 68,
+  "fail_items_only_J3": true,
+  "ok": true
+ },
+ "on": {
+  "n": 192,
+  "fail": 6,
+  "not_judgeable": 0,
+  "expected_fail": 6,
+  "fail_items_only_J3": true,
+  "ok": true
+ },
+ "total_fail": 74,
+ "d8x_crosscheck": {
+  "rows": 1102,
+  "n_differ": 0,
+  "differ": [],
+  "ok": true
+ },
+ "ok": true
+}

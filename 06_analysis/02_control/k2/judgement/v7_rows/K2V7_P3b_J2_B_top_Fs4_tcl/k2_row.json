@@ -1,0 +1,400 @@
+{
+ "case_id": "K2V7_P3b_J2_B_top_Fs4_tcl",
+ "engine": "SCM",
+ "controller_tag": "final_C4G2_LAS_K1_TCL",
+ "k1_order_gate": true,
+ "touch_creep_latch": true,
+ "touch_creep_requested": "on",
+ "floor_true_deg": [
+  0.0,
+  0.0
+ ],
+ "fs_kN": 4.0,
+ "moving_damping": false,
+ "pad_zeta_moving": null,
+ "t_touch_start_s": 4.799999999988813,
+ "t_touch_s": 23.399999999945464,
+ "t_crawler_off_s": 37.30000000038558,
+ "t_loc_s": 37.10000000037894,
+ "t_lift_s": 37.10000000037894,
+ "t_liftoff_final_s": 37.30000000038558,
+ "t_ready_s": 80.30000000181302,
+ "t_end_s": 120.00000000313092,
+ "J1_min_cyl_after_lift_N": 67706.0792453489,
+ "J1_leg": 3,
+ "J1_t_s": 75.0820000016398,
+ "J1_window_s": 82.90000000275198,
+ "reanchor_intervals_s": [],
+ "J2_min_cyl_reanchor_N": null,
+ "J3_pad_lift_samples": 0,
+ "J3_pad_normal_min_N": 28846.142454928977,
+ "J4_att_max_after_ready_deg": 0.05830010743229733,
+ "J6_max_moving_bar": 91.46345789734917,
+ "J6_max_locked_bar": 91.14348828372694,
+ "crawler_recontact_after_loc": 0,
+ "crawler_recontact_anchor": "p3b.P3-1_crawler.recontact_count (after the first departure, 0.01 W)",
+ "latch_window_true_N": {
+  "FL": {
+   "latch_t_s": 23.299999999945697,
+   "window": [
+    {
+     "t_s": 23.299999999945697,
+     "sample_t_s": 23.299999999945697,
+     "N": 50023.749764663655
+    },
+    {
+     "t_s": 23.199999999945696,
+     "sample_t_s": 23.19999999994593,
+     "N": 47401.11859456133
+    },
+    {
+     "t_s": 23.099999999945698,
+     "sample_t_s": 23.099999999946164,
+     "N": 34483.81306149864
+    },
+    {
+     "t_s": 22.999999999945697,
+     "sample_t_s": 22.999999999946397,
+     "N": 16543.000666718435
+    },
+    {
+     "t_s": 22.8999999999457,
+     "sample_t_s": 22.89999999994663,
+     "N": 14981.976613411685
+    }
+   ],
+   "false_latch": false
+  },
+  "FR": {
+   "latch_t_s": 23.299999999945697,
+   "window": [
+    {
+     "t_s": 23.299999999945697,
+     "sample_t_s": 23.299999999945697,
+     "N": 49894.79781825579
+    },
+    {
+     "t_s": 23.199999999945696,
+     "sample_t_s": 23.19999999994593,
+     "N": 47208.978896114386
+    },
+    {
+     "t_s": 23.099999999945698,
+     "sample_t_s": 23.099999999946164,
+     "N": 34161.70568309358
+    },
+    {
+     "t_s": 22.999999999945697,
+     "sample_t_s": 22.999999999946397,
+     "N": 16518.767022938948
+    },
+    {
+     "t_s": 22.8999999999457,
+     "sample_t_s": 22.89999999994663,
+     "N": 15198.583344655452
+    }
+   ],
+   "false_latch": false
+  },
+  "RL": {
+   "latch_t_s": 23.399999999945464,
+   "window": [
+    {
+     "t_s": 23.399999999945464,
+     "sample_t_s": 23.399999999945464,
+     "N": 28878.784183313863
+    },
+    {
+     "t_s": 23.299999999945463,
+     "sample_t_s": 23.299999999945697,
+     "N": 27428.04734522683
+    },
+    {
+     "t_s": 23.199999999945465,
+     "sample_t_s": 23.19999999994593,
+     "N": 26848.401653834317
+    },
+    {
+     "t_s": 23.099999999945464,
+     "sample_t_s": 23.099999999946164,
+     "N": 27468.367286116478
+    },
+    {
+     "t_s": 22.999999999945466,
+     "sample_t_s": 22.999999999946397,
+     "N": 20873.046229470096
+    }
+   ],
+   "false_latch": false
+  },
+  "RR": {
+   "latch_t_s": 23.399999999945464,
+   "window": [
+    {
+     "t_s": 23.399999999945464,
+     "sample_t_s": 23.399999999945464,
+     "N": 28846.142454928977
+    },
+    {
+     "t_s": 23.299999999945463,
+     "sample_t_s": 23.299999999945697,
+     "N": 27369.86565963672
+    },
+    {
+     "t_s": 23.199999999945465,
+     "sample_t_s": 23.19999999994593,
+     "N": 26771.02249692236
+    },
+    {
+     "t_s": 23.099999999945464,
+     "sample_t_s": 23.099999999946164,
+     "N": 27385.58252815088
+    },
+    {
+     "t_s": 22.999999999945466,
+     "sample_t_s": 22.999999999946397,
+     "N": 20832.117651157267
+    }
+   ],
+   "false_latch": false
+  }
+ },
+ "false_latch_legs": [],
+ "cap_events": 0,
+ "touch_creep_meta": {
+  "settings": {
+   "enable": true,
+   "creep_frac": 0.05,
+   "latch_window": 5,
+   "latch_mean_factor": 1.5,
+   "latch_min_factor": 1.0,
+   "cap_m": 0.015
+  },
+  "seen_strokes_m": [
+   0.3454113175721489,
+   0.3455546056640148,
+   0.3412533431499729,
+   0.3414851862970607
+  ],
+  "latches": [
+   {
+    "leg": "FL",
+    "t_s": 31.299999999940393,
+    "reason": "load_window",
+    "window_mean_N": 31959.089334421093,
+    "window_min_N": 14164.597984071102,
+    "creep_travel_m": 0.001959473955848501
+   },
+   {
+    "leg": "FR",
+    "t_s": 31.299999999940393,
+    "reason": "load_window",
+    "window_mean_N": 32170.24363108109,
+    "window_min_N": 14443.6106819711,
+    "creep_travel_m": 0.0018690246661641763
+   },
+   {
+    "leg": "RL",
+    "t_s": 31.39999999994016,
+    "reason": "load_window",
+    "window_mean_N": 24536.13014160189,
+    "window_min_N": 16016.209402256896,
+    "creep_travel_m": 0.0018406293788348904
+   },
+   {
+    "leg": "RR",
+    "t_s": 31.39999999994016,
+    "reason": "load_window",
+    "window_mean_N": 24308.796643266895,
+    "window_min_N": 16087.680635181896,
+    "creep_travel_m": 0.0015842265906118591
+   }
+  ]
+ },
+ "valve_open_fraction_touch_to_lift": null,
+ "valve_open_window_s": null,
+ "k2": {
+  "dhat_N": -395.91983434114445,
+  "dhat_window_open_legs": null,
+  "dhat_window_stroke_mm": null,
+  "dhat_window_s": null,
+  "valve_open_eps_m_s": null,
+  "dhat_source": "controller_meta.touch_twist_hold.twist_load_estimate_N",
+  "window_source": null,
+  "window_note": "no 1 ms valve / stroke recorder on SCM"
+ },
+ "events": [
+  [
+   4.2999999999899785,
+   "INFO_PRESSURE_ZERO_CALIBRATED:FL"
+  ],
+  [
+   4.2999999999899785,
+   "INFO_PRESSURE_ZERO_CALIBRATED:FR"
+  ],
+  [
+   4.2999999999899785,
+   "INFO_PRESSURE_ZERO_CALIBRATED:RL"
+  ],
+  [
+   4.2999999999899785,
+   "INFO_PRESSURE_ZERO_CALIBRATED:RR"
+  ],
+  [
+   23.299999999945697,
+   "INFO_TOUCH_CREEP_LATCH:FL"
+  ],
+  [
+   23.299999999945697,
+   "INFO_TOUCH_CREEP_LATCH:FR"
+  ],
+  [
+   23.399999999945464,
+   "INFO_TOUCH_CREEP_LATCH:RL"
+  ],
+  [
+   23.399999999945464,
+   "INFO_TOUCH_CREEP_LATCH:RR"
+  ],
+  [
+   23.399999999945464,
+   "floor_estimate_touch"
+  ],
+  [
+   25.099999999980582,
+   "soil_mode_start"
+  ],
+  [
+   37.10000000037894,
+   "crawler_liftoff_confirmed"
+  ],
+  [
+   37.10000000037894,
+   "INFO_CLEARANCE_BIAS:FL=71.8,FR=71.5,RL=90.1,RR=89.8"
+  ],
+  [
+   37.10000000037894,
+   "INFO_LOC_FLAT_SOIL_MARGIN:80"
+  ],
+  [
+   37.20000000038226,
+   "INFO_D1_IMU_MASS_SOURCE:yaml"
+  ],
+  [
+   37.4000000003889,
+   "INFO_LOC_REVOKED:2.6"
+  ],
+  [
+   37.50000000039222,
+   "soil_mode_start"
+  ],
+  [
+   38.10000000041214,
+   "INFO_DIFF_SINK_HOLD:FL,RL:5.8"
+  ],
+  [
+   38.500000000425416,
+   "crawler_liftoff_confirmed"
+  ],
+  [
+   38.500000000425416,
+   "INFO_CLEARANCE_BIAS:FL=81.6,FR=73.5,RL=106.9,RR=98.8"
+  ],
+  [
+   40.70000000049845,
+   "INFO_DIFF_SINK_RELEASE:settled"
+  ],
+  [
+   80.30000000181302,
+   "reanchor_skipped:theta_below_min"
+  ],
+  [
+   80.30000000181302,
+   "ready_heave_tail"
+  ],
+  [
+   80.60000000182298,
+   "INFO_D1_IMU_MASS_SOURCE:ready"
+  ]
+ ],
+ "p3b_departure_s": 35.04400000031069,
+ "t0_s": 7.999999999994694,
+ "v7_record": {
+  "J3_pad_lift_samples": 0,
+  "J3_pad_normal_min_N": 28846.142454928977,
+  "t_touch_s": 23.399999999945464,
+  "cap_events": 0,
+  "latch_events": 4,
+  "latch_last_t_s": 23.399999999945464,
+  "latch_legs": {
+   "FL": {
+    "latch_t_s": 23.299999999945697,
+    "reason": "load_window",
+    "creep_travel_m": 0.001959473955848501,
+    "s_motor_m": 0.3457655290591983,
+    "pad_sinkage_geometric_m": 0.001110560531745186
+   },
+   "FR": {
+    "latch_t_s": 23.299999999945697,
+    "reason": "load_window",
+    "creep_travel_m": 0.0018690246661641763,
+    "s_motor_m": 0.34576956524183267,
+    "pad_sinkage_geometric_m": 0.0010988918947358872
+   },
+   "RL": {
+    "latch_t_s": 23.399999999945464,
+    "reason": "load_window",
+    "creep_travel_m": 0.0018406293788348904,
+    "s_motor_m": 0.3418959631757144,
+    "pad_sinkage_geometric_m": 0.0010508538494431452
+   },
+   "RR": {
+    "latch_t_s": 23.399999999945464,
+    "reason": "load_window",
+    "creep_travel_m": 0.0015842265906118591,
+    "s_motor_m": 0.3418992719149621,
+    "pad_sinkage_geometric_m": 0.0010453823602865064
+   }
+  },
+  "t_ready_s": 80.30000000181302,
+  "t_loc_s": 37.10000000037894,
+  "J1_min_cyl_after_lift_N": 67706.0792453489
+ },
+ "record_only": true,
+ "note": "record only, written after the results (2026-11-11)",
+ "tool": "k2_v7_scm_rows",
+ "tool_sha256": "62a95a35e38e0e29b274e1e6c0dc915c164f008eba8c6cf69368bf89709af662",
+ "written": "2026-11-11T09:33:44+09:00",
+ "rules": "06_analysis/02_control/k2/k2_touch_creep_rules.md 3.6",
+ "input_sha256": {
+  "result.json": "5b87fe3dfceab100f781645106a0892a04aa22780f398543f541203656c60f3f",
+  "step_series.npz": "723e97ce26d6403f23c74118552e98d9702946360ebf14d7bd173cfd5c8cafe1",
+  "record/record.npz": "e1a052b010fe94961e36658a1d61598be4cf5b919e72b6787503fd6b8558bf03",
+  "record/meta.json": "fc76886cb7121fe0f37dd1856055078d8d5139c03c1e0ab70c1d5e7d0fca0f3d"
+ },
+ "batch_rc": 0,
+ "definition_differences": [
+  "time base: seconds from result.json t_loop_start_s (closed-loop start after the 8 s gravity settle); V-6 uses settings.start_t_s. Events, phases and the 1 ms series are shifted by the same t0 (t0_s in the row); touch_creep_meta is copied as the controller wrote it (absolute times, as in V-6).",
+  "J1 / J2: minimum of the 1 ms step_series.npz F_cyl_N samples (acting force, one sample per 1 ms = 10 physics steps of dt 1e-4 s); V-6 uses the per-physics-step interval minimum pads.npz F_cyl_min_interval. A minimum between two 1 ms samples is not seen (the V-7 value can be higher than the step minimum).",
+  "J3 and the latch window: SCM terrain normal force on each pad, step_series.npz scm_pad_normal_N (1 ms); V-6 uses the Chrono contact pad normal of pads.npz (1 ms). Same window (from t_touch_s), threshold (<= 0 N) and latch-window rule (k2_chrono_rows.latch_window_normals).",
+  "t_crawler_off_s / t_liftoff_final_s: record/record.npz F_crawler z > 0 at the 10 Hz control instants (first on -> off edge / last on sample + 1, the s6_control._times rule). On soil the SCM crawler normal can stay small and positive after the departure; the P3a-2 departure (normal < 0.01 W for 0.1 s) is given as p3b_departure_s for comparison.",
+  "J4: 1 ms step_series.npz roll_pitch_deg minus the controller target (controller_meta.target.target_rad) from the first READY; V-6 uses the record-rate body quaternion.",
+  "J6: record/record.npz F_cyl / head area (result meta.actuator.head_area_m2), moving = |u_applied| > 1e-6 m/s, at the 10 Hz record instants (the V-6 rule on the SCM record).",
+  "J10 crawler_recontact_after_loc: p3b P3-1_crawler.recontact_count (SCM rule: crawler normal >= 0.01 W after the first departure); V-6 uses s6_control.d8x_metrics after the LOC event.",
+  "controller_tag: c2_setup.expect_controller.name, used only when every check of that block is ok (the run refuses to start otherwise); the SCM result.json has no k2.controller_tag. k1_order_gate = c2_setup.k1_order_gate_effective, touch_creep_latch = c2_setup.touch_creep_effective, touch_creep_requested = c2_setup.touch_creep.",
+  "floor_true_deg: result.json args floor_roll / floor_pitch; fs_kN: args fs_kN. moving_damping False and pad_zeta_moving None (no moving pad damping on SCM), valve_open_fraction_touch_to_lift None (no pad_damping.npz).",
+  "k2 (D_hat): dhat_N = controller_meta.touch_twist_hold.twist_load_estimate_N; no 1 ms valve / stroke recorder on SCM, so the window fields are None (V-6 reads k2_valve.npz).",
+  "new V-7 keys (rules 3.6 'sinkage stroke at the latch' per leg): v7_record.latch_legs.<leg> gives the controller creep_travel_m at the latch (stroke travel after touch_seen, controller_meta.touch_creep_latch.latches) and the 1 ms s_motor_m and pad_sinkage_geometric_m at the last sample at or before the latch time; pad_sinkage_geometric_m sign as step_series (positive = pad bottom below the undisturbed soil surface, negative = above it)."
+ ],
+ "definitions": "k2_v7_scm_rows module docstring + definition_differences (V-6: k2_chrono_rows.k2_row)",
+ "time_base": "seconds from result.json t_loop_start_s (t0_s)",
+ "files": {
+  "pads": "k2_pads.npz"
+ },
+ "row": {
+  "name": "K2V7_P3b_J2_B_top_Fs4_tcl",
+  "engine": "SCM",
+  "source_case": "P3b_J2_B_top_Fs4",
+  "arm": "tcl"
+ }
+}

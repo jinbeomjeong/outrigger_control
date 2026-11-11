@@ -1,0 +1,26 @@
+{
+ "wt": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+ "git_head": "6a44ff81d25aea1fa162daf9b14c23b99beb9db0",
+ "combo": "preset",
+ "k2": "on",
+ "touch_creep_latch": true,
+ "controller_tag": "final_C4G2_LAS_K1_TCL",
+ "c2_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
+ "touch_twist_hold": true,
+ "vector_ramp": true,
+ "ramp_twist_tol_m_s": 0.0002,
+ "retrigger_samples": 1,
+ "threads": {
+  "MKL_THREADING_LAYER": "TBB",
+  "MKL_NUM_THREADS": "1",
+  "OMP_NUM_THREADS": "1",
+  "NUMBA_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1"
+ },
+ "script": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\04_scripts\\03_control\\s9\\s9_soil_event_screen.py",
+ "argv": [
+  "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\k2\\judgement\\b6\\tcl\\soil_b6.json",
+  "1"
+ ]
+}

@@ -1,0 +1,42 @@
+{
+ "tool": "run_with_identity",
+ "argv": [
+  "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+  "-I",
+  "-B",
+  "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run\\06_analysis\\02_control\\touch_phase\\acceptance\\g8_safe_stop\\g8trace.py",
+  "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\k2\\judgement\\b6\\g8_b6_jobs.json",
+  "C:\\workspace\\outrigger_control\\06_analysis\\02_control\\k2\\judgement\\b6\\off\\g8_b6.jsonl",
+  "--workers",
+  "4"
+ ],
+ "cwd": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+ "env": {
+  "ACC_COMBO": "off",
+  "ACC_K2": "off",
+  "ACC_WT": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\k2-run",
+  "MKL_NUM_THREADS": "1",
+  "MKL_THREADING_LAYER": "TBB",
+  "NUMBA_NUM_THREADS": "1",
+  "OMP_NUM_THREADS": "1",
+  "OPENBLAS_NUM_THREADS": "1"
+ },
+ "wrapper_python": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+ "affinity_mask": "0xfff0000",
+ "child_affinity_mask": "0xfff0000",
+ "start": "2026-11-11T09:09:51.661+09:00",
+ "end": "2026-11-11T09:10:59.685+09:00",
+ "pid": 30428,
+ "rc": 0,
+ "git_start": {
+  "head": "6a44ff81d25aea1fa162daf9b14c23b99beb9db0",
+  "status_porcelain": "",
+  "is_clean": true
+ },
+ "git_end": {
+  "head": "6a44ff81d25aea1fa162daf9b14c23b99beb9db0",
+  "status_porcelain": "",
+  "is_clean": true
+ }
+}

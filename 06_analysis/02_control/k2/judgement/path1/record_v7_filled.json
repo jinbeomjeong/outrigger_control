@@ -1,0 +1,40 @@
+{
+ "command": "record-v7",
+ "exit": 0,
+ "bundle": "V-7",
+ "record_only": true,
+ "rows": {
+  "K2V7_P3b_J1_B_top_Fs4_off": {
+   "controller_tag": "final_C4G2_LAS_K1",
+   "t_touch_s": 23.599999999945,
+   "t_ready_s": 74.20000000161052,
+   "J1_min_cyl_after_lift_N": 68096.68622555528,
+   "cap": 0,
+   "latches": 0
+  },
+  "K2V7_P3b_J1_B_top_Fs4_tcl": {
+   "controller_tag": "final_C4G2_LAS_K1_TCL",
+   "t_touch_s": 23.49999999994523,
+   "t_ready_s": 86.40000000201552,
+   "J1_min_cyl_after_lift_N": 67939.35328223734,
+   "cap": 0,
+   "latches": 4
+  },
+  "K2V7_P3b_J2_B_top_Fs4_off": {
+   "controller_tag": "final_C4G2_LAS_K1",
+   "t_touch_s": 23.49999999994523,
+   "t_ready_s": 81.50000000185285,
+   "J1_min_cyl_after_lift_N": 67769.45805227074,
+   "cap": 0,
+   "latches": 0
+  },
+  "K2V7_P3b_J2_B_top_Fs4_tcl": {
+   "controller_tag": "final_C4G2_LAS_K1_TCL",
+   "t_touch_s": 23.399999999945464,
+   "t_ready_s": 80.30000000181302,
+   "J1_min_cyl_after_lift_N": 67706.0792453489,
+   "cap": 0,
+   "latches": 4
+  }
+ }
+}
