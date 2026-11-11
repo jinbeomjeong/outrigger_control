@@ -296,6 +296,30 @@ def recount_row(res):
                   anchor_meta_agree=(((path in ("2", "1+2")) == (soil.get("loc_anchor_applied") is True))
                                      and (path == "3" or nonzero)),
                   missing=[k for k in ("t_P_s", "bias_corner_raw_m", "bias_corner_m") if k not in soil])
+    # cross-check (record only) against the run_S9 per-LOC record loc_corrections.locs[] (cad-expert ff07ac9)
+    lc = res.get("loc_corrections")
+    lc_locs = lc.get("locs") if isinstance(lc, dict) else None
+    if isinstance(lc_locs, list):
+        pset = sorted({str(e.get("path")) for e in lc_locs if isinstance(e, dict)})
+        lc_path = ("1+2" if {"1", "2"} <= set(pset) else ("1" if "1" in pset else ("2" if "2" in pset else "3")))
+        n_ps = [e.get("n_P") for e in lc_locs if isinstance(e, dict)]
+        anchor["loc_corrections"] = dict(
+            path=lc_path, n_locs=len(lc_locs), n_P_first=n_ps[0] if n_ps else None, n_P_last=n_ps[-1] if n_ps else None,
+            agree=dict(path=(lc_path == path), n_loc=(len(lc_locs) == len(loc_ev)),
+                       n_P_last=(not n_ps or n_ps[-1] == per(tp_last)),
+                       n_P_first=(tp_first is None or not n_ps or n_ps[0] == per(tp_first))))
+    else:
+        anchor["loc_corrections"] = None
+    # crawler departure (rules 10.1: a row that ends before the lift is judged, not missing)
+    dep = dig(res, "p3b.departure.departed", MISSING)
+    has_fa = has(res, "p3b.P3-3_leg_force.F_min_after_N")
+    has_ft = has(res, "p3b.P3-3_leg_force.F_min_transient_N")
+    if has_fa and has_ft:
+        f_state = "present"
+    elif (not has_fa) and (not has_ft) and dep is False:
+        f_state = "no_departure"
+    else:
+        f_state = "missing"
     return dict(
         decisions=table, has_decisions_key=has_dec, L1=L1, n_r4=len(r4),
         any_r4_applied=any(x["r4"] and x["applied"] for x in table),
@@ -310,7 +334,7 @@ def recount_row(res):
         late_loc=dict(reapproach=checks.get("P3-2_late_loc_reapproach"), revoked=checks.get("P3-2_late_loc_revoked")),
         window_short=checks.get("P3-4_window_short"),
         F_after_N=agg(fa, min), F_tr_N=agg(ft, min), s_max_m=agg(sm, max),
-        has_F=has(res, "p3b.P3-3_leg_force.F_min_after_N") and has(res, "p3b.P3-3_leg_force.F_min_transient_N"),
+        F_state=f_state, departed=None if dep is MISSING else dep,
         has_s=has(res, "p3b.P3-5_clearance_stroke.s_motor_max_m"),
         has_ready=has(res, "p3b.P3-6_ready.t_ready_after_loop_start_s"),
         t_ready=dig(res, "p3b.P3-6_ready.t_ready_after_loop_start_s"),
@@ -423,6 +447,24 @@ def recount(batch_dir, rules_path, rules_rev1_path, rem_batch_dir):
         c2s[pid] = rs.get("03_src/outrigger_sim/control/c2.py")
     uc = sorted({str(v) for v in c2s.values()})
     kadd("K-2", None, "single_c2_sha", len(uc) == 1 and uc[0] != "None", got=uc)
+    # rules 5.2 code files (run_S9 code_files_at_start: worktree_sha256 / head_blob_sha256 per file, head)
+    cfa = {pid: res_by[pid][1].get("code_files_at_start") for pid in present}
+    have = {pid: v for pid, v in cfa.items() if isinstance(v, dict)}
+    if have:
+        for pid in present:
+            if pid not in have:
+                kadd("K-2", pid, "code_files_at_start_present", False)
+                continue
+            gh = dig(res_by[pid][1], "code_state.git_at_start.head")
+            kadd("K-2", pid, "code_files_at_start.head_eq_git_at_start", have[pid].get("head") == gh,
+                 got=have[pid].get("head"), want=gh)
+        files = sorted({f for v in have.values() for f in (v.get("files") or {})})
+        for f in files:
+            for fld in ("worktree_sha256", "head_blob_sha256"):
+                vals = sorted({str(dig(v, "files", {}).get(f, {}).get(fld)) for v in have.values()})
+                kadd("K-2", f, f"{fld}_single_over_rows", len(vals) == 1 and vals[0] != "None", got=vals)
+    else:
+        kadd("K-2", None, "code_files_at_start_present", None, got="absent in every row")
     # ---- K-3 tag, K-4 gate / latch / forced, K-5 LAS-b settings, K-6 run conditions
     kadd("K-6", None, "batch_mixed_hull_mode_false", batch.get("mixed_hull_mode") is False, got=batch.get("mixed_hull_mode"))
     pool = {}
@@ -576,7 +618,7 @@ def recount(batch_dir, rules_path, rules_rev1_path, rem_batch_dir):
     obs_A = []
     for a, b in PAIRS:
         ra, rb = rows[a], rows[b]
-        p = dict(ref=a, cand=b, undecidable=[], violations={})
+        p = dict(ref=a, cand=b, undecidable=[], undecidable_by={}, violations={})
         if ra.get("status") != "PRESENT" or rb.get("status") != "PRESENT":
             p["undecidable"].append("row missing (rules 10.1)")
             pairs[f"{a}/{b}"] = p
@@ -607,16 +649,25 @@ def recount(batch_dir, rules_path, rules_rev1_path, rem_batch_dir):
         p["violations"]["CC-2"] = cc2
         p["LATE_LOC_P32"] = late_flag
         # CC-F
-        if not (ra["has_F"] and rb["has_F"]):
-            p["undecidable"].append("P3-3 force fields missing")
+        # F keys: "missing" (absent with departure true / departure key absent) -> CC-F, G-2'C undecidable;
+        # "no_departure" (absent, p3b.departure.departed false) -> judged, no value (rules 10.1: not missing)
+        p["F_state"] = [ra["F_state"], rb["F_state"]]
+        und_F = [f"{s}:P3-3 force keys missing" for s, r in (("ref", ra), ("cand", rb)) if r["F_state"] == "missing"]
+        for cname in ("CC-F", "G-2'C"):
+            if und_F:
+                p["undecidable_by"].setdefault(cname, []).extend(und_F)
         fr, fc = ra["F_after_N"], rb["F_after_N"]
-        p["CC-F"] = dict(in_scope=num(fr) and fr >= F_LINE_N, ref_N=fr, cand_N=fc)
-        p["violations"]["CC-F"] = (["cand below line"] if (p["CC-F"]["in_scope"] and not (num(fc) and fc >= F_LINE_N)) else [])
+        p["CC-F"] = dict(in_scope=num(fr) and fr >= F_LINE_N, ref_N=fr, cand_N=fc,
+                         ref_no_departure=ra["F_state"] == "no_departure", cand_no_departure=rb["F_state"] == "no_departure")
+        p["violations"]["CC-F"] = (["cand below line" if num(fc) else "cand no value (no departure)"]
+                                   if (p["CC-F"]["in_scope"] and not (num(fc) and fc >= F_LINE_N)) else [])
         # G-2'C on A pairs
         if a.startswith("A"):
             ok = num(fc) and fc >= G2P_N and num(rb["F_tr_N"]) and rb["F_tr_N"] >= G2P_N
-            p["G-2'C"] = dict(cand_after_N=fc, cand_transient_N=rb["F_tr_N"], ok=bool(ok))
-            p["violations"]["G-2'C"] = [] if ok else ["cand below 11414.589 N"]
+            p["G-2'C"] = dict(cand_after_N=fc, cand_transient_N=rb["F_tr_N"], ok=bool(ok),
+                              cand_no_departure=rb["F_state"] == "no_departure")
+            p["violations"]["G-2'C"] = [] if ok else (["cand below 11414.589 N"] if rb["F_state"] != "no_departure"
+                                                      else ["cand no value (no departure)"])
             p["record_A"] = dict(d_F_after_N=(fc - fr) if (num(fc) and num(fr)) else None,
                                  cand_minus_harness_b0_kN=(fc / 1000.0 - HARNESS_B0_A_KN) if num(fc) else None,
                                  ref_minus_harness_b0_kN=(fr / 1000.0 - HARNESS_B0_A_KN) if num(fr) else None)
@@ -627,7 +678,7 @@ def recount(batch_dir, rules_path, rules_rev1_path, rem_batch_dir):
                               observed=bool(started and num(ramp.get("periods_applied")) and ramp.get("periods_applied") >= 1)))
         # CC-S
         if not (ra["has_s"] and rb["has_s"]) or not (num(ra["s_max_m"]) and num(rb["s_max_m"])):
-            p["undecidable"].append("s_motor_max_m missing")
+            p["undecidable_by"].setdefault("CC-S", []).append("s_motor_max_m missing")
             p["CC-S"] = None
             p["violations"]["CC-S"] = []
         else:
@@ -679,7 +730,7 @@ def recount(batch_dir, rules_path, rules_rev1_path, rem_batch_dir):
 
     # ---- criteria statuses
     def crit_status(name, scope):
-        und = [k for k in scope if pairs[k]["undecidable"]]
+        und = [k for k in scope if pairs[k]["undecidable"] or pairs[k].get("undecidable_by", {}).get(name)]
         viol = {k: pairs[k]["violations"].get(name) for k in scope if pairs[k]["violations"].get(name)}
         return dict(status="undecidable" if und else ("fail" if viol else "pass"), violations=viol, undecidable=und)
 

@@ -349,7 +349,8 @@ def write_npz(path, t_end, scale=1.0):
 
 
 def cres(pid, start=None, ramp_applied=0, checks=None, F=12500.0, Ftr=12000.0, smax=0.62, t_ready=60.0,
-         final="ready", events=None, decisions=None, drop_I=None, soil_extra=None, late=False):
+         final="ready", events=None, decisions=None, drop_I=None, soil_extra=None, late=False,
+         departed=True, drop_F=False, loc_corr=None):
     spec = C.ROWS[pid]
     arm = spec["arm"]
     tag = C.TAG_V0 if spec["v5"] == "V0" else C.TAG_VB
@@ -362,7 +363,11 @@ def cres(pid, start=None, ramp_applied=0, checks=None, F=12500.0, Ftr=12000.0, s
     soil = dict(mode_starts=[], t_P_s=29.0, t_loc_s=30.0, bias_corner_raw_m=[0.0] * 4, bias_corner_m=[0.0] * 4,
                 loc_anchor_applied=False, corner_order=["a", "b", "c", "d"], restored_from=None)
     soil.update(soil_extra or {})
-    return dict(
+    leg = dict(F_min_after_N=[F, F + 1000, F + 2000, F + 3000], F_min_transient_N=[Ftr] * 4)
+    if drop_F:
+        leg = {}
+    out = dict(
+        loc_corrections=loc_corr,
         args=dict(FIXED_ARGS_COPY, duration=spec["duration"], mass_scale=spec["mass"], expect_controller=tag),
         num_threads_chrono=4,
         placement=dict(mode="pcore", omp_wait_policy="PASSIVE", affinity_ok=True, power_throttling_off_ok=True),
@@ -382,11 +387,13 @@ def cres(pid, start=None, ramp_applied=0, checks=None, F=12500.0, Ftr=12000.0, s
                                        settings=dict(C.B0 if arm == "ref" else C.P5R4))),
         events=events if events is not None else [dict(name="crawler_liftoff_confirmed", t_s=30.0)],
         phases=[dict(phase="level", t_s=10.0), dict(phase=final, t_s=60.0)],
-        p3b={"checks": ch, "P3-3_leg_force": dict(F_min_after_N=[F, F + 1000, F + 2000, F + 3000],
-                                                  F_min_transient_N=[Ftr] * 4),
+        p3b={"checks": ch, "P3-3_leg_force": leg, "departure": dict(departed=departed),
              "P3-5_clearance_stroke": dict(s_motor_max_m=[smax, smax - 0.01, smax - 0.02, smax - 0.03]),
              "P3-6_ready": dict(t_ready_after_loop_start_s=t_ready)},
     )
+    if loc_corr is None:
+        del out["loc_corrections"]
+    return out
 
 
 FIXED_ARGS_COPY = dict(C.FIXED_ARGS)
@@ -513,6 +520,40 @@ def test_chrono_ck1c_r4_lost(cworld):
                  cmd_scale={"C2": 1.0})
     assert out["k_checks"]["K-8"]["ok"] is True      # SKIPPED:order is not counted as an applied event
     assert out["criteria"]["CK-1C"]["violations"] == {"C1/C2": ["R4_LOST"]}
+
+
+def test_chrono_no_departure_is_judged_not_missing(cworld):
+    # cand A2 never departed: P3-3 force keys absent, p3b.departure.departed False -> judged (rules 10.1)
+    out = cworld({"A2": dict(departed=False, drop_F=True)})
+    p = out["pairs"]["A1/A2"]
+    assert p["F_state"] == ["present", "no_departure"]
+    assert out["criteria"]["G-2'C"]["status"] == "fail"
+    assert out["criteria"]["CC-F"]["violations"] == {"A1/A2": ["cand no value (no departure)"]}
+    assert out["grade_provisional"] == "fail"
+    # ref without departure: CC-F out of scope for that pair
+    out = cworld({"C1": dict(departed=False, drop_F=True)})
+    assert out["pairs"]["C1/C2"]["CC-F"]["in_scope"] is False
+    assert out["criteria"]["CC-F"]["status"] == "pass"
+
+
+def test_chrono_force_keys_missing_with_departure_undecidable(cworld):
+    out = cworld({"A4": dict(departed=True, drop_F=True)})
+    assert out["criteria"]["G-2'C"]["status"] == "undecidable"
+    assert out["criteria"]["CC-F"]["status"] == "undecidable"
+    assert out["criteria"]["CC-S"]["status"] == "pass"   # other criteria of the pair stay decidable
+    assert out["grade_provisional"] == "undecidable"
+
+
+def test_chrono_loc_corrections_cross_check(cworld):
+    ev = [dict(name="crawler_liftoff_confirmed", t_s=30.0), dict(name="INFO_CLEARANCE_BIAS:FL=3", t_s=30.0)]
+    lc = dict(locs=[dict(path=1, n_P=290, n_L=300, t_P_s=29.0, t_L_s=30.0)], n_locs=1)
+    out = cworld({"B1": dict(events=ev, soil_extra=dict(bias_corner_m=[0.003, 0, 0, 0]), loc_corr=lc)})
+    a = out["pairs"]["B1/B2"]["anchor"]["ref"]["loc_corrections"]
+    assert a["path"] == "1" and all(a["agree"].values())
+    lc_bad = dict(locs=[dict(path=3, n_P=290)], n_locs=1)
+    out = cworld({"B1": dict(events=ev, soil_extra=dict(bias_corner_m=[0.003, 0, 0, 0]), loc_corr=lc_bad)})
+    assert out["pairs"]["B1/B2"]["anchor"]["ref"]["loc_corrections"]["agree"]["path"] is False
+    assert out["grade_provisional"] == "pass"           # record only
 
 
 def test_chrono_anchor_flag(cworld):
