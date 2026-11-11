@@ -3930,12 +3930,217 @@ def level_controller_class(args: argparse.Namespace) -> tuple[type, dict[str, An
     return C2Controller, {"requested": "off", "class": _class_name(C2Controller), "module_sha256": None}
 
 
+LAS_CANDIDATE_OPTION = "--las-candidate"
+LAS_CANDIDATE_CHOICES = ("P0", "P5r4")
+LAS_CANDIDATE_OVERRIDES: dict[str, dict[str, Any]] = {
+    "P0": {},
+    "P5r4": {"light_leg_fraction_of_F_min": 4.5, "end_ramp_periods": 4},
+}
+"""``level --las-candidate {P0,P5r4}`` (LAS-b P5r4 + K1, ``las_p5r4_k1_rules.md`` sha256 ``5ee2bac0`` 2 / 11.2; cad
+2026-11-11): the ``liftoff_approach_slow`` fields the candidate replaces on the preset. ``P0`` replaces nothing (the
+adopted b0 preset, recorded only); ``P5r4`` = ``replace(las, light_leg_fraction_of_F_min=4.5, end_ramp_periods=4)``
+(``las_revA_targeted_rules.md`` 1.2 / 1.3: beta 4.5, n_min 0, N_r 4). Option absent: no attribute, the run is
+unchanged (bit for bit the ``P0`` config)."""
+LAS_B0_SETTINGS: dict[str, Any] = {
+    **{path.split(".", 1)[1]: want for path, want in _LAS_EXPECTATIONS},
+    "min_active_periods": 0, "end_ramp_periods": 0,
+}
+"""Every ``LiftoffApproachSlowSettings`` field of LAS-b b0 (:data:`_LAS_EXPECTATIONS` + ``n_min`` 0, ``N_r`` 0): the
+preset a candidate is applied to must be exactly this (with the K1 order gate on), and a candidate is exactly this
+with :data:`LAS_CANDIDATE_OVERRIDES` on top (a new field fails both checks, loudly)."""
+LAS_CANDIDATE_CODE_FILES = (
+    "04_scripts/02_chrono/run_S9.py", "04_scripts/02_chrono/s9_batch.py",
+    "04_scripts/02_chrono/las_p5r4_k1_chrono_rows.py", "03_src/outrigger_sim/control/c2.py",
+    "03_src/outrigger_sim/control/zero_calibration.py", "03_src/outrigger_sim/chrono/hull_hook.py",
+    "04_scripts/03_control/s9/late_loc_rule.py", "03_src/outrigger_sim/hydraulics/v5_options.py",
+    "03_src/outrigger_sim/chrono/rigid_base.py")
+"""Rules 5.2 code files a ``--las-candidate`` run records at its start (``code_files_at_start``: work-tree raw bytes
+SHA-256 and the SHA-256 of the ``HEAD`` blob, record only)."""
+
+
+def _las_candidate_exit(msg: str) -> None:
+    print(f"run_S9 level: {msg}", file=sys.stderr, flush=True)
+    raise SystemExit(2)
+
+
+def las_candidate_of_args(args: argparse.Namespace) -> str | None:
+    """The ``--las-candidate`` request (None without the option); exit 2 for a value outside
+    :data:`LAS_CANDIDATE_CHOICES` or with ``--las-off``, ``--k1-forced-block first`` or ``--k2 on`` (rules 2: the
+    candidate rows run the K1 preset only, one LAS-b override, no forced block and no K-2 ``_TCL`` latch)."""
+    v = getattr(args, "las_candidate", None)
+    if v is None:
+        return None
+    if v not in LAS_CANDIDATE_CHOICES:
+        _las_candidate_exit(f"{LAS_CANDIDATE_OPTION} must be one of {LAS_CANDIDATE_CHOICES}, got {v!r}")
+    if getattr(args, "las_off", False):
+        _las_candidate_exit(f"{LAS_CANDIDATE_OPTION} {v} with {LAS_OFF_OPTION}: a candidate is an override of the LAS-b "
+                            "preset, not of the LAS-off preset")
+    if getattr(args, "k1_forced_block", None) == "first":
+        _las_candidate_exit(f"{LAS_CANDIDATE_OPTION} {v} with {K1_FORCED_BLOCK_OPTION} first: the candidate rows run "
+                            "C2Controller")
+    if getattr(args, "k2", None) == "on":
+        _las_candidate_exit(f"{LAS_CANDIDATE_OPTION} {v} with --k2 on: the candidate rows run without the K-2 TOUCH "
+                            "creep latch")
+    return v
+
+
+def las_settings_diffs(settings: Any, want: dict[str, Any]) -> list[dict[str, Any]]:
+    """Differences of ``asdict(settings)`` against ``want`` (every field, both ways; floats to 1e-12, bools / ints
+    exactly); empty = the same."""
+    from dataclasses import asdict  # noqa: PLC0415
+
+    got = asdict(settings)
+    out = []
+    for key in sorted(set(got) | set(want)):
+        g, w = got.get(key, _MISSING), want.get(key, _MISSING)
+        if g is _MISSING or w is _MISSING:
+            same = False
+        elif isinstance(w, bool) or isinstance(g, bool):
+            same = g is w
+        else:
+            same = _expect_equal(g, w) and type(g) is type(w)
+        if not same:
+            out.append({"field": key, "want": "<absent>" if w is _MISSING else w,
+                        "got": "<absent>" if g is _MISSING else g})
+    return out
+
+
+def apply_las_candidate(config: Any, args: argparse.Namespace) -> tuple[Any, dict[str, Any] | None]:
+    """``--las-candidate`` on the run-time config (``run_level``: after the ``--expect-controller`` check, before the
+    controller class and the model build; rules 11.2): (1) the preset check, ``liftoff_approach_slow`` = b0
+    (:data:`LAS_B0_SETTINGS`) and the K1 order gate on; (2) the override (``P0``: none, the config object stays);
+    (3) the candidate check, every field = b0 + :data:`LAS_CANDIDATE_OVERRIDES`. Exit 2 when (1) or (3) fails.
+    Returns the config and the ``c2_setup.las_candidate`` record (None without the option: config unchanged)."""
+    from dataclasses import asdict, replace  # noqa: PLC0415
+
+    name = las_candidate_of_args(args)
+    if name is None:
+        return config, None
+    preset_diffs = las_settings_diffs(config.liftoff_approach_slow, LAS_B0_SETTINGS)
+    gate = config.slope_clearance_margin.flat_soil_margin_order_gate
+    if preset_diffs or gate is not True:
+        _las_candidate_exit(f"{LAS_CANDIDATE_OPTION} {name}: the preset is not LAS-b b0 with the K1 order gate on "
+                            f"(liftoff_approach_slow diffs {preset_diffs}, flat_soil_margin_order_gate {gate!r})")
+    override = dict(LAS_CANDIDATE_OVERRIDES[name])
+    if override:
+        config = replace(config, liftoff_approach_slow=replace(config.liftoff_approach_slow, **override))
+    want = {**LAS_B0_SETTINGS, **override}
+    cand_diffs = las_settings_diffs(config.liftoff_approach_slow, want)
+    if cand_diffs:
+        _las_candidate_exit(f"{LAS_CANDIDATE_OPTION} {name}: the candidate config differs: {cand_diffs}")
+    return config, {"requested": name, "override": override, "preset_check": {"ok": True, "order_gate": gate},
+                    "candidate_check": {"ok": True}, "settings": asdict(config.liftoff_approach_slow),
+                    "rules": "06_analysis/02_control/verif_matrix/las_p5r4_k1_rules.md (sha256 5ee2bac0) 2 / 11.2"}
+
+
+def check_built_las_candidate(controller: Any, record: dict[str, Any] | None) -> None:
+    """The built controller holds the candidate settings of ``record`` (exit 2 otherwise; nothing without the
+    option). Sets ``record["built_check"]``."""
+    if record is None:
+        return
+    diffs = las_settings_diffs(controller.config.liftoff_approach_slow, record["settings"])
+    if diffs:
+        _las_candidate_exit(f"{LAS_CANDIDATE_OPTION} {record['requested']}: the built controller differs: {diffs}")
+    record["built_check"] = {"ok": True}
+
+
+def code_files_record(root: Path = ROOT, rels: tuple[str, ...] = LAS_CANDIDATE_CODE_FILES,
+                      timeout_s: float = 20.0) -> dict[str, Any]:
+    """Per file: SHA-256 of the work-tree bytes (CRLF on this checkout) and of ``git show HEAD:<path>`` (the LF blob;
+    None when the file is not in HEAD), record only."""
+    import hashlib  # noqa: PLC0415
+    import subprocess  # noqa: PLC0415
+
+    kw: dict[str, Any] = {"cwd": str(root), "capture_output": True, "timeout": timeout_s, "stdin": subprocess.DEVNULL}
+    if os.name == "nt":
+        kw["creationflags"] = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+    files: dict[str, Any] = {}
+    for rel in rels:
+        p = root / rel
+        blob = subprocess.run(["git", "show", f"HEAD:{rel}"], check=False, **kw)
+        files[rel] = {"worktree_sha256": _file_sha256(p) if p.is_file() else None,
+                      "head_blob_sha256": hashlib.sha256(blob.stdout).hexdigest() if blob.returncode == 0 else None}
+    head = subprocess.run(["git", "rev-parse", "HEAD"], check=False, **kw)
+    return {"head": head.stdout.decode("ascii", "replace").strip() or None, "files": files,
+            "basis": "worktree_sha256 = raw bytes of the file at the run start; head_blob_sha256 = git show HEAD:<path>"}
+
+
+class LocCorrectionProbe:
+    """Record only (cad 2026-11-11, control-expert request for the P5r4+K1 rev1): every LOC of the run with the S-3
+    corner-bias path of spec rev. 70 369.1 (``s6_control_spec.md``: ① ``c_min(t_P) >`` ``corner_bias_deadzone_m``:
+    the positive bias ``max(b_raw, 0)``; ② the LOC anchor ``b_raw + loc_anchor_offset_m`` (``loc_anchor_applied``);
+    ③ otherwise ``b = 0``), ``t_P`` / ``t_L``, ``c_min(t_P)`` / ``c_min(t_L)``, the raw and the applied bias. Called
+    after every control update (``on_control``); reads ``controller._state.soil`` only (never creates it), so the
+    commands are unchanged. A later revocation (``liftoff_s`` back to None) is noted on the entry. Times are the
+    controller times (absolute Chrono time, the 8 s settle included)."""
+
+    PATH_NAMES = {1: "positive_bias", 2: "loc_anchor", 3: "zero"}
+
+    def __init__(self, controller: Any) -> None:
+        self.c2 = controller
+        self.locs: list[dict[str, Any]] = []
+        self._last_t_loc: float | None = None
+
+    def __call__(self, meas: Any, command: Any) -> None:  # noqa: ARG002 - on_control signature
+        soil = getattr(getattr(self.c2, "_state", None), "soil", None)
+        t_loc = None if soil is None else soil.liftoff_s
+        if t_loc is None:
+            if self._last_t_loc is not None and self.locs and self.locs[-1].get("revoked_seen_t_s") is None:
+                self.locs[-1]["revoked_seen_t_s"] = float(meas.t_s)
+            self._last_t_loc = None
+            return
+        if self._last_t_loc is not None and float(t_loc) == self._last_t_loc:
+            return
+        self._last_t_loc = float(t_loc)
+        settings = self.c2.config.soil
+        c_p = soil.clearance_at_plateau_start_m
+        if soil.is_loc_anchor_applied:
+            path = 2
+        elif c_p is not None and c_p > settings.corner_bias_deadzone_m:
+            path = 1
+        else:
+            path = 3
+        raw = soil.corner_bias_raw_m
+        period = float(self.c2.config.period_s)
+        t_p = soil.plateau_start_s
+        self.locs.append({
+            "index": len(self.locs), "path": path, "path_name": self.PATH_NAMES[path],
+            "t_L_s": float(t_loc), "t_P_s": None if t_p is None else float(t_p),
+            "n_L": round(float(t_loc) / period), "n_P": None if t_p is None else round(float(t_p) / period),
+            "c_min_at_P_m": None if c_p is None else float(c_p),
+            "c_min_at_L_m": None if soil.clearance_at_liftoff_m is None else float(soil.clearance_at_liftoff_m),
+            "bias_raw_m": None if raw is None else [float(v) for v in raw],
+            "bias_applied_m": [float(v) for v in soil.corner_bias_m],
+            "loc_anchor_applied": bool(soil.is_loc_anchor_applied),
+            "soil_mode_t_s": soil.soil_mode_start_s,
+            "run_clearance_target_m": getattr(self.c2._state, "clearance_target_m", None),
+            "seen_t_s": float(meas.t_s), "revoked_seen_t_s": None})
+
+    def meta(self, events: list[tuple[float, str]] | None = None) -> dict[str, Any]:
+        """The ``loc_corrections`` block; ``events`` (``(t_s, name)``) adds ``events_at_loc`` (names at ``t_L``)."""
+        from outrigger_sim.control.c2 import CRAWLER_CORNER_NAMES  # noqa: PLC0415
+
+        s = self.c2.config.soil
+        locs = [dict(e) for e in self.locs]
+        for e in locs:
+            e["events_at_loc"] = [n for t, n in (events or ()) if t == e["t_L_s"]]
+        return {"rule": "s6_control_spec.md 369.1 / U-S9-C7: 1 = c_min(t_P) > corner_bias_deadzone_m (b = max(b_raw, 0))"
+                        ", 2 = loc_anchor_applied (b = b_raw + loc_anchor_offset_m), 3 = otherwise (b = 0)",
+                "settings": {"corner_bias_deadzone_m": s.corner_bias_deadzone_m, "loc_anchor_enable": s.loc_anchor_enable,
+                             "loc_anchor_deadzone_m": s.loc_anchor_deadzone_m,
+                             "loc_anchor_offset_m": s.loc_anchor_offset_m},
+                "corner_order": list(CRAWLER_CORNER_NAMES), "time_base": "controller time (absolute Chrono time)",
+                "period_s": float(self.c2.config.period_s), "n_locs": len(locs), "locs": locs}
+
+
 def level_c2_config_of_args(args: argparse.Namespace) -> tuple[Any, dict[str, Any]]:
     """:func:`level_c2_config` of the ``level`` arguments; ``--las-off`` gives it the LAS-off preset and records it;
     an explicit ``--k1-order-gate off|on`` then sets the R4 order gate (LAS-b K1); the request and the effective gate
     are recorded on every run; ``--k1-forced-block`` is checked (``first`` without ``--k1-order-gate on``: exit 2; it
-    does not change the config)."""
+    does not change the config); ``--las-candidate`` misuse exits 2 here (the override itself is
+    :func:`apply_las_candidate`, after the ``--expect-controller`` check)."""
     k1_forced_block_of_args(args)
+    las_candidate_of_args(args)
     config, c2_meta = level_c2_config(args.allow_current_c2, las_off_config(args))
     if getattr(args, "las_off", False):
         c2_meta.update(preset=LAS_OFF_PRESET, las_off=True)
@@ -5898,6 +6103,11 @@ def run_level(args) -> Path:
             bad = [f"{r['path']}={r['got']!r} (want {r['want']!r})" for r in c2_meta["expect_controller"]["checks"]
                    if not r["ok"]]
             raise SystemExit(f"--expect-controller {expect}: the run-time C2 preset differs: {'; '.join(bad)}")
+    # LAS-b P5r4 + K1 (las_p5r4_k1_rules.md 11.2): preset check (b0 + gate) -> override -> candidate check, after the
+    # tag check above (its _LAS_EXPECTATIONS fix beta 3.5); absent = no record, config unchanged
+    config, las_candidate_record = apply_las_candidate(config, args)
+    if las_candidate_record is not None:
+        c2_meta["las_candidate"] = las_candidate_record
     # K1 re-measure F1 / F2 (las_k1_rules_adopt2.md 9.3): controller class before the model build (exit 2 on misuse);
     # default off = C2Controller (recorded on every run, rules 9.3)
     controller_cls, c2_meta["k1_forced_block"] = level_controller_class(args)
@@ -5981,6 +6191,8 @@ def run_level(args) -> Path:
     from outrigger_sim.control import touch_creep_option  # noqa: PLC0415
 
     touch_creep_option.check_built_touch_creep(touch_creep_option.touch_creep_request(args), c2.config)
+    check_built_las_candidate(c2, las_candidate_record)  # the built controller holds the candidate (exit 2 otherwise)
+    code_files_p5k = None if las_candidate_record is None else _record_or_error(code_files_record)
     if v5_options is not None:  # criteria P-4: the controller window is the one of the options
         from outrigger_sim.hydraulics.v5_options import check_lock_window_meta
 
@@ -5998,6 +6210,7 @@ def run_level(args) -> Path:
     r8_rows = MinimalR8Series(c2)  # (가): r8_series.npz probed_leg, same key / meaning as run_S6C
     gap_probe = CrawlerGapProbe(model)
     completion = CompletionProbe(c2)  # G6 / P-S8-29 record (read-only)
+    loc_probe = LocCorrectionProbe(c2)  # every LOC: S-3 bias path 1/2/3, t_P / t_L, raw / applied bias (read-only)
     # case GIFs (cad 2026-10-30): SCM node levels every --record-scm-nodes s; option absent (argparse SUPPRESS) = no
     # attribute, no terrain call, the run and result.json are unchanged
     scm_nodes = None
@@ -6010,6 +6223,7 @@ def run_level(args) -> Path:
 
         r8_rows(meas, command)
         completion(meas, command)
+        loc_probe(meas, command)
         row = model.s9_record()
         ph = str(getattr(c2, "phase", None))
         row["c2_phase"] = ph
@@ -6143,6 +6357,9 @@ def run_level(args) -> Path:
                                                           (ctl_meta.get("soil") or {}).get("W_ref_N"), ctx["F_min_N"])}),
                "step_series": {"file": "step_series.npz", "rate_s": STEP_SERIES_S,
                                            "keys": sorted(series), "rows": int(len(series["t_s"]))}}
+    summary["loc_corrections"] = _record_or_error(lambda: loc_probe.meta(events))  # record only (cad 2026-11-11)
+    if code_files_p5k is not None:  # --las-candidate rows only (las_p5r4_k1_rules.md 5.2 code files)
+        summary["code_files_at_start"] = code_files_p5k
     if scm_nodes_info is not None:  # case GIFs: key only with --record-scm-nodes
         summary["scm_nodes"] = scm_nodes_info
     if v5_meta is not None:  # the block only with a v5 option
@@ -6413,6 +6630,14 @@ def build_parser() -> argparse.ArgumentParser:
                          "with k1_forced_block.K1ForcedBlockC2Controller (the first R4 order-gate call blocks; needs "
                          "--k1-order-gate on, exit 2 otherwise), off (default) = C2Controller as before. Recorded as "
                          "c2_setup.k1_forced_block on every run")
+    lp.add_argument(LAS_CANDIDATE_OPTION, dest="las_candidate", choices=LAS_CANDIDATE_CHOICES,
+                    default=argparse.SUPPRESS,
+                    help="LAS-b candidate (las_p5r4_k1_rules.md 2 / 11.2): after --expect-controller check the preset "
+                         "is b0 with the K1 order gate on, then P0 = no override (record only) / P5r4 = "
+                         "light_leg_fraction_of_F_min 4.5 + end_ramp_periods 4, then check every LAS-b field (exit 2 "
+                         "otherwise; also with --las-off, --k1-forced-block first or --k2 on). Recorded as "
+                         "c2_setup.las_candidate and result.json code_files_at_start. Absent = no attribute, the run "
+                         "is unchanged")
     from outrigger_sim.control.touch_creep_option import add_touch_creep_argument  # noqa: PLC0415
 
     add_touch_creep_argument(lp)  # K-2: c2_setup.touch_creep / touch_creep_effective on every run

@@ -279,6 +279,9 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     # K-2 V-7 (cad 2026-11-10, k2_chrono_rows.py; k2_touch_creep_rules.md 3.6, record only): FINAL-REP J1 / J2 B top
     # F_s 4 x {--k2 off, on}, --k1-order-gate off, tags final_C4G2_LAS / final_C4G2_LAS_TCL
     out.update(_k2_module().k2_batches(sys.modules[__name__]))
+    # LAS-b P5r4 + K1 (cad 2026-11-11, las_p5r4_k1_chrono_rows.py; las_p5r4_k1_rules.md 4.3 / 16.2): V5-LAS-P5R4-K1
+    # (12 judge rows, --las-candidate P0 / P5r4 pairs on the _LAS_K1 tags) + V5-LAS-P5R4-K1-GS (the G-S dry run)
+    out.update(_p5k_module().p5k_batches(sys.modules[__name__]))
     return out
 
 
@@ -316,6 +319,15 @@ def _k2_module():
     finally:
         sys.path.remove(str(HERE))
     return k2_chrono_rows
+
+
+def _p5k_module():
+    sys.path.insert(0, str(HERE))
+    try:
+        import las_p5r4_k1_chrono_rows  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    return las_p5r4_k1_chrono_rows
 
 
 def _las_k1_module():
@@ -1409,6 +1421,8 @@ ENTRY_META_KEYS = ("note", "priority", "controller", "source_run", "pair_case", 
                    "las_candidate", "k1_candidate", "k1_order_gate",
                    "rem_key", "role", "k1_forced_block", "pair_set", "argv_base_case", "argv_diff_option",
                    "source_rows", "rem_mass_scale",
+                   "p5k_id", "p5k_stage", "p5k_gs", "p5k_family", "p5k_crawler", "p5k_mass_scale", "p5k_duration_s",
+                   "p5k_judge_duration_s", "p5k_rules",
                    "stored_result", "stored_pool", "hash_comparable", "stored_argv_check", "stage3_controller")
 """Row keys copied into the batch.json case entries (when present)."""
 
@@ -1752,6 +1766,9 @@ def check_sources(name: str, rows: list[dict]) -> dict:
         sys.path.remove(str(HERE))
     res = []
     for c in rows:
+        if c.get("p5k_id"):  # V5-LAS-P5R4-K1 / -GS: new rows, build check (las_p5r4_k1_chrono_rows.argv_check)
+            res.append(_p5k_module().argv_check(c, sys.modules[__name__]))
+            continue
         if c.get("las_family"):  # V5-LAS-CHRONO: new rows, build check of the argv (las_chrono_rows.argv_check)
             res.append(_las_module().argv_check(c, sys.modules[__name__]))
             continue
@@ -1777,6 +1794,9 @@ def check_sources(name: str, rows: list[dict]) -> dict:
         chk = r9.source_args_check(c["argv"][len(RUN):], ROOT / "07_results" / "S9" / c["source_run"])
         chk = expected_diff_check(chk, c.get("source_expected_diffs"))
         res.append({"case": c["case"], **chk})
+    p5k = _p5k_module()
+    if name in (p5k.P5K_BATCH, p5k.P5K_GS_BATCH):  # rules 4.3 / K-7: 12 rows, pairs differ in --las-candidate only
+        res.append(p5k.batch_check(rows))
     ok = not any(r["status"] == "differs" for r in res)
     if name == V5_STAGE3_BATCH:  # stage3_impl_spec.md 4: 34 rows, no duplicate name
         names = [c["case"] for c in rows]
