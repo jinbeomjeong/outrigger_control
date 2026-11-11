@@ -1,8 +1,9 @@
 """Path-2 independent recount, Chrono batch V5-LAS-P5R4-K1 of las_p5r4_k1_rules.md (+ rev1).
 
 Rules: las_p5r4_k1_rules.md (sha256 5ee2bac0...) 4.3 / 4.4 BT-C / 5.2 / 6.3 / 9 / 10 / 16, and the
-record-only addendum las_p5r4_k1_rules_rev1.md and the reading-rule addendum las_p5r4_k1_rules_rev2.md
-(RV2-1..RV2-14). Author: control-expert (path 2).
+record-only addendum las_p5r4_k1_rules_rev1.md, the reading-rule addendum las_p5r4_k1_rules_rev2.md
+(RV2-1..RV2-14) and las_p5r4_k1_rules_rev3.md (RV3-1 threshold tolerance 1e-9, RV3-6 time-window bounds in
+integer periods, RV3-5 identity). Author: control-expert (path 2).
 
 Independence contract (rules 10.2):
   * Reads only batch.json, <case>/result.json, <case>/controller_commands.npz of the batch, the two
@@ -34,6 +35,7 @@ TOOL_VERSION = "1"
 RULES_SHA = "5ee2bac0451f0ca00139a5a2d238c38d13a6b0f430efc5b44fe0e8b929c2f979"
 RULES_REV1_SHA = "f39846d6067a7bd409b4ac930d73ebde58a721728ec7d93703ff4627bf21e4b6"
 RULES_REV2_SHA = "e0a7d1e56b57df5336fc2fd40835624d93585fb224063f6c8068c2b1ba7b10fc"
+RULES_REV3_SHA = "5798dd320cdaad5e76b5b287c7496a84a23684f2b4e09557b07a71d95ede2a0b"
 DLL_SHA = "cec997d7a549788dab269b5e77cbad081796f58fd17d62c853d1164572c67e15"
 PERIOD_S = 0.1
 SCM_THREADS = 4
@@ -45,6 +47,7 @@ R_MAX_S = 5.0
 THIN_MARGIN_PERIODS = 12
 HARNESS_B0_A_KN = 11.377  # las_chrono_rows header, rules 6.4
 BTC_CUT_S = 128.0
+BTC_CUT_N = round(BTC_CUT_S / PERIOD_S)   # rev3 W-4: n(t_s) <= 1280
 TAG_VB = "final_C4G2_P3_LAS_K1"
 TAG_V0 = "final_C4G2_LAS_K1"
 REM_R7 = ("REM_J2_B_top_Fs4_VB_gateon", "ebf86d1d40af464e2e4e23d4ea79ad56721829e65d70cb4efb1d2cc072e4b559")
@@ -132,6 +135,36 @@ def num(x):
     return isinstance(x, (int, float)) and not isinstance(x, bool) and not (isinstance(x, float) and math.isnan(x))
 
 
+# ----------------------------------------------------------------------------- rev3 RV3-1 / RV3-6
+EPS_THR = 1e-9
+"""rev3 RV3-1: threshold-comparison tolerance (absolute, in the unit of the compared field)."""
+
+
+def t_ge(x, L):
+    """x >= L with RV3-1: x >= L - 1e-9."""
+    return x >= L - EPS_THR
+
+
+def t_gt(x, L):
+    """x > L with RV3-1: x > L + 1e-9."""
+    return x > L + EPS_THR
+
+
+def t_le(x, L):
+    """x <= L with RV3-1: x <= L + 1e-9."""
+    return x <= L + EPS_THR
+
+
+def t_lt(x, L):
+    """x < L with RV3-1: x < L - 1e-9."""
+    return x < L - EPS_THR
+
+
+def t_in(x, a, b):
+    """closed interval [a, b] with RV3-1: a - 1e-9 <= x <= b + 1e-9."""
+    return a - EPS_THR <= x <= b + EPS_THR
+
+
 def combine(statuses):
     best = None
     for s in statuses:
@@ -171,13 +204,15 @@ def strip_argv(argv, opts):
 
 
 def command_content_hash(npz_path, cut_s=None):
-    """sha256 over (name, dtype.str, shape, bytes) of t_s and issued_u_m_s (optionally t_s <= cut)."""
+    """sha256 over (name, dtype.str, shape, bytes) of t_s and issued_u_m_s (optionally n(t_s) <= n(cut), rev3 W-4)."""
     import numpy as np  # dynamics-dev; only used to read the npz arrays
     with np.load(npz_path, allow_pickle=False) as z:
         t = np.asarray(z["t_s"])
         u = np.asarray(z["issued_u_m_s"])
     if cut_s is not None:
-        m = t <= cut_s
+        # rev3 W-4: integer periods, Python builtin round per element
+        n_cut = round(cut_s / PERIOD_S)
+        m = np.array([round(float(x) / PERIOD_S) <= n_cut for x in t.ravel()], dtype=bool).reshape(t.shape)
         t, u = t[m], u[m]
     h = hashlib.sha256()
     n_rows = int(t.shape[0]) if t.ndim else 0
@@ -348,7 +383,7 @@ def recount_row(res):
 
 # ----------------------------------------------------------------------------- recount
 
-def recount(batch_dir, rules_path, rules_rev1_path, rules_rev2_path, rem_batch_dir):
+def recount(batch_dir, rules_path, rules_rev1_path, rules_rev2_path, rules_rev3_path, rem_batch_dir):
     files_read = {}
     K = {f"K-{i}": [] for i in range(10)}
 
@@ -356,7 +391,8 @@ def recount(batch_dir, rules_path, rules_rev1_path, rules_rev2_path, rem_batch_d
         K[k].append(dict(row=row, item=item, ok=ok, got=got, want=want))
 
     for path, want, label in ((rules_path, RULES_SHA, "rules"), (rules_rev1_path, RULES_REV1_SHA, "rules_rev1"),
-                              (rules_rev2_path, RULES_REV2_SHA, "rules_rev2")):
+                              (rules_rev2_path, RULES_REV2_SHA, "rules_rev2"),
+                              (rules_rev3_path, RULES_REV3_SHA, "rules_rev3")):
         got = sha256_file(path) if os.path.isfile(path) else None
         if got:
             files_read[os.path.abspath(path)] = got
@@ -660,13 +696,13 @@ def recount(batch_dir, rules_path, rules_rev1_path, rules_rev2_path, rem_batch_d
             if und_F:
                 p["undecidable_by"].setdefault(cname, []).extend(und_F)
         fr, fc = ra["F_after_N"], rb["F_after_N"]
-        p["CC-F"] = dict(in_scope=num(fr) and fr >= F_LINE_N, ref_N=fr, cand_N=fc,
+        p["CC-F"] = dict(in_scope=num(fr) and t_ge(fr, F_LINE_N), ref_N=fr, cand_N=fc,
                          ref_no_departure=ra["F_state"] == "no_departure", cand_no_departure=rb["F_state"] == "no_departure")
         p["violations"]["CC-F"] = (["cand below line" if num(fc) else "cand no value (no departure)"]
-                                   if (p["CC-F"]["in_scope"] and not (num(fc) and fc >= F_LINE_N)) else [])
+                                   if (p["CC-F"]["in_scope"] and not (num(fc) and t_ge(fc, F_LINE_N))) else [])
         # G-2'C on A pairs
         if a.startswith("A"):
-            ok = num(fc) and fc >= G2P_N and num(rb["F_tr_N"]) and rb["F_tr_N"] >= G2P_N
+            ok = num(fc) and t_ge(fc, G2P_N) and num(rb["F_tr_N"]) and t_ge(rb["F_tr_N"], G2P_N)
             p["G-2'C"] = dict(cand_after_N=fc, cand_transient_N=rb["F_tr_N"], ok=bool(ok),
                               cand_no_departure=rb["F_state"] == "no_departure")
             p["violations"]["G-2'C"] = [] if ok else (["cand below 11414.589 N"] if rb["F_state"] != "no_departure"
@@ -694,7 +730,7 @@ def recount(batch_dir, rules_path, rules_rev1_path, rules_rev2_path, rem_batch_d
         else:
             dlt = rb["s_max_m"] - ra["s_max_m"]
             p["CC-S"] = dict(ref_m=ra["s_max_m"], cand_m=rb["s_max_m"], delta_m=dlt)
-            p["violations"]["CC-S"] = ["delta > 0.001 m"] if dlt > CS_LIMIT_M else []
+            p["violations"]["CC-S"] = ["delta > 0.001 m"] if t_gt(dlt, CS_LIMIT_M) else []
         # CK-1C (B, C)
         lost = gained = False
         if a[0] in "BC":
@@ -761,7 +797,7 @@ def recount(batch_dir, rules_path, rules_rev1_path, rules_rev2_path, rem_batch_d
     elif not popv:
         st = "undecidable"
     else:
-        st = "pass" if (statistics.median(popv.values()) <= R_MEDIAN_S and max(popv.values()) <= R_MAX_S) else "fail"
+        st = "pass" if (t_le(statistics.median(popv.values()), R_MEDIAN_S) and t_le(max(popv.values()), R_MAX_S)) else "fail"
     crit["CC-R"] = dict(status=st, changed=changed, population=popv,
                         median_s=statistics.median(popv.values()) if popv else None,
                         max_s=max(popv.values()) if popv else None, undecidable=und_r)
@@ -799,7 +835,7 @@ def recount(batch_dir, rules_path, rules_rev1_path, rules_rev2_path, rem_batch_d
     return dict(
         tool=TOOL_NAME, tool_version=TOOL_VERSION, tool_sha256=sha256_file(os.path.abspath(__file__)),
         taken_utc=_dt.datetime.now(_dt.timezone.utc).isoformat(), rules_sha256=RULES_SHA,
-        rules_rev1_sha256=RULES_REV1_SHA, rules_rev2_sha256=RULES_REV2_SHA, grade_provisional=status, k10=None,
+        rules_rev1_sha256=RULES_REV1_SHA, rules_rev2_sha256=RULES_REV2_SHA, rules_rev3_sha256=RULES_REV3_SHA, grade_provisional=status, k10=None,
         stop_reasons=stop_r, undecidable_reasons=und_reasons, fail_reasons=fail_reasons,
         error_rows=error_rows, n_error_rows=len(error_rows), errors_total=len(error_rows),
         errors_left=sum(1 for r in rows.values() if r.get("status") == "MISSING"),
@@ -819,10 +855,11 @@ def main(argv=None):
     ap.add_argument("--rules", required=True)
     ap.add_argument("--rules-rev1", required=True)
     ap.add_argument("--rules-rev2", required=True)
+    ap.add_argument("--rules-rev3", required=True)
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     try:
-        res = recount(a.batch, a.rules, a.rules_rev1, a.rules_rev2, a.rem_batch)
+        res = recount(a.batch, a.rules, a.rules_rev1, a.rules_rev2, a.rules_rev3, a.rem_batch)
     except Exception:
         traceback.print_exc()
         print(json.dumps(dict(status="tool_error")))

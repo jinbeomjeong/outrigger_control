@@ -1,8 +1,9 @@
 """Path-2 independent recount, harness bundles of las_p5r4_k1_rules.md (+ rev1).
 
 Rules: 06_analysis/02_control/verif_matrix/las_p5r4_k1_rules.md (sha256 5ee2bac0...) and the
-record-only addendum las_p5r4_k1_rules_rev1.md and the reading-rule addendum las_p5r4_k1_rules_rev2.md
-(RV2-1..RV2-14). Author: control-expert (path 2).
+record-only addendum las_p5r4_k1_rules_rev1.md, the reading-rule addendum las_p5r4_k1_rules_rev2.md
+(RV2-1..RV2-14) and las_p5r4_k1_rules_rev3.md (RV3-1 threshold tolerance 1e-9, RV3-6 time-window bounds in
+integer periods, RV3-5 identity). Author: control-expert (path 2).
 
 Independence contract (rules 10.2):
   * Reads only the run jsonl files, the stored baseline jsonl files named in rules appendix A
@@ -38,11 +39,13 @@ TOOL_VERSION = "1"
 RULES_SHA = "5ee2bac0451f0ca00139a5a2d238c38d13a6b0f430efc5b44fe0e8b929c2f979"
 RULES_REV1_SHA = "f39846d6067a7bd409b4ac930d73ebde58a721728ec7d93703ff4627bf21e4b6"
 RULES_REV2_SHA = "e0a7d1e56b57df5336fc2fd40835624d93585fb224063f6c8068c2b1ba7b10fc"
+RULES_REV3_SHA = "5798dd320cdaad5e76b5b287c7496a84a23684f2b4e09557b07a71d95ede2a0b"
 K1_TOKEN_JOB_KEYS = {"k1", "k1_candidate", "k1_order_gate", "las_off"}   # rev2 RV2-14
 
 PERIOD_S = 0.1
 F_MIN_N = 9414.589
 F_LINE_N = 10414.589            # C-1 / C-F (F_min + 1 kN)
+F_LINE_KN = 10.414589           # rev3 T-15 FLAG band upper end (kN field)
 G1_KN = 10.400                  # G-1 / G-1H / G-1Q
 G2P_KN = 11.414589              # G-2' (F_min + 2 kN)
 CS_LIMIT_M = 0.001              # C-S
@@ -177,6 +180,36 @@ def has(d, path):
 
 def num(x):
     return isinstance(x, (int, float)) and not isinstance(x, bool) and not (isinstance(x, float) and math.isnan(x))
+
+
+# ----------------------------------------------------------------------------- rev3 RV3-1 / RV3-6
+EPS_THR = 1e-9
+"""rev3 RV3-1: threshold-comparison tolerance (absolute, in the unit of the compared field)."""
+
+
+def t_ge(x, L):
+    """x >= L with RV3-1: x >= L - 1e-9."""
+    return x >= L - EPS_THR
+
+
+def t_gt(x, L):
+    """x > L with RV3-1: x > L + 1e-9."""
+    return x > L + EPS_THR
+
+
+def t_le(x, L):
+    """x <= L with RV3-1: x <= L + 1e-9."""
+    return x <= L + EPS_THR
+
+
+def t_lt(x, L):
+    """x < L with RV3-1: x < L - 1e-9."""
+    return x < L - EPS_THR
+
+
+def t_in(x, a, b):
+    """closed interval [a, b] with RV3-1: a - 1e-9 <= x <= b + 1e-9."""
+    return a - EPS_THR <= x <= b + EPS_THR
 
 
 def combine(statuses):
@@ -498,14 +531,14 @@ def eval_pair(ref, cand, bundle):
     if kind == "d1":
         Fr, Fc = val(ref, "d1.F_judged_min_N"), val(cand, "d1.F_judged_min_N")
         # rev2 RV2-2: ref None -> out of scope (ref_none); cand None with ref in scope -> violation
-        if num(Fr) and Fr >= F_LINE_N:
-            out["cf"] = dict(in_scope=True, ref_N=Fr, cand_N=Fc, violation=not (num(Fc) and Fc >= F_LINE_N),
+        if num(Fr) and t_ge(Fr, F_LINE_N):
+            out["cf"] = dict(in_scope=True, ref_N=Fr, cand_N=Fc, violation=not (num(Fc) and t_ge(Fc, F_LINE_N)),
                              ref_none=False)
         else:
             out["cf"] = dict(in_scope=False, ref_N=Fr, cand_N=Fc, violation=False, ref_none=not num(Fr))
         sr, sc = val(ref, "d1.stroke_max_m"), val(cand, "d1.stroke_max_m")
         if num(sr) and num(sc):
-            out["cs"] = dict(ref_m=sr, cand_m=sc, delta_m=sc - sr, violation=(sc - sr) > CS_LIMIT_M, ref_none=False)
+            out["cs"] = dict(ref_m=sr, cand_m=sc, delta_m=sc - sr, violation=t_gt(sc - sr, CS_LIMIT_M), ref_none=False)
         elif not num(sc) and num(sr):
             out["cs"] = dict(ref_m=sr, cand_m=sc, delta_m=None, violation=True, ref_none=False)
         else:
@@ -644,15 +677,16 @@ def za_criteria(cand_lines, p5_pairs, sink_k):
         fails = []
         for (key, label), ln in items:
             frl, fj = val(ln, "diag.summary.F_RL_kN"), val(ln, "diag.summary.F_judged_min_kN")
-            ok = num(frl) and num(fj) and frl >= G1_KN and fj >= G1_KN
+            ok = num(frl) and num(fj) and t_ge(frl, G1_KN) and t_ge(fj, G1_KN)
             if not ok:
                 fails.append(dict(key=key, label=label, F_RL_kN=frl, F_judged_min_kN=fj))
-            ok2 = num(frl) and num(fj) and frl >= G2P_KN and fj >= G2P_KN
+            ok2 = num(frl) and num(fj) and t_ge(frl, G2P_KN) and t_ge(fj, G2P_KN)
             if not ok2:
                 g2p_fail.append(dict(key=key, label=label, F_RL_kN=frl, F_judged_min_kN=fj))
-            for v in (frl, fj):
-                if num(v) and G1_KN <= v < F_LINE_N / 1000.0:
-                    between.append(dict(key=key, label=label, value_kN=v))
+            for fname, v in (("F_RL_kN", frl), ("F_judged_min_kN", fj)):
+                # rev3 T-15: 10.400 <= v < 10.414589 kN, each value counted separately
+                if num(v) and t_ge(v, G1_KN) and t_lt(v, F_LINE_KN):
+                    between.append(dict(key=key, label=label, field=fname, value_kN=v))
         res["G1"][kind] = dict(n=len(items), violations=fails, ok=(fails == []))
     res["G2p"] = dict(n=sum(len(v) for v in sub.values()), violations=g2p_fail, ok=(g2p_fail == []))
     res["records"]["between_10p400_and_10p4146"] = between
@@ -674,7 +708,7 @@ def za_criteria(cand_lines, p5_pairs, sink_k):
         pa = val(ln, "las.ramp.periods_applied")
         rer = val(ln, "las.ramp.end_reason")
         p5 = p5_pairs.get((key, label.replace("P5r4-", "P5-", 1) if label else None))
-        if er in ("sum", "time") and num(sf) and sf < 1.0:
+        if er in ("sum", "time") and num(sf) and t_lt(sf, 1.0):
             ok = (rer in RAMP_END_REASONS and num(pa) and pa <= N_R and (rer != "done" or pa == N_R))
             if p5 is not None:
                 ok = ok and (ln.get("commands_sha256") != p5.get("commands_sha256"))
@@ -700,7 +734,7 @@ def za_criteria(cand_lines, p5_pairs, sink_k):
             if num(te):
                 for p in (val(ln, "diag.periods") or []):
                     t = p.get("t_s")
-                    if num(t) and t < te:
+                    if num(t) and per(t) < per(te):   # rev3 W-1
                         n = per(t)
                         if n not in per_p or per_p[n] != per_c.get(n):
                             bad2.append(n)
@@ -712,8 +746,9 @@ def za_criteria(cand_lines, p5_pairs, sink_k):
             rows_p = {r[0]: r for r in fw_p if isinstance(r, list) and r}
             bad4 = []
             if num(te):
+                L_end = te + 0.1   # rev3 T-19: float window end computed first
                 for r in fw_c:
-                    if isinstance(r, list) and r and r[0] in rows_p and num(r[0]) and r[0] < te + 0.1:
+                    if isinstance(r, list) and r and r[0] in rows_p and num(r[0]) and t_lt(r[0], L_end):
                         if r != rows_p[r[0]]:
                             bad4.append(r[0])
             ka["K-A4"].append(dict(row=rid, ok=(bad4 == [] and num(te)), got=bad4))
@@ -734,10 +769,14 @@ def za_criteria(cand_lines, p5_pairs, sink_k):
 
     g2 = {}
     for (st, cen), pts in sorted(cells.items(), key=lambda kv: str(kv[0])):
-        rg = [f for (j, f, _l, lab, _k) in pts if lab and "-LT-" in lab and num(j) and j <= 3]
-        rh = [f for (j, f, _l, lab, _k) in pts if lab and ("-LT-" in lab or "-LH-" in lab) and num(j) and j <= 3.5]
+        # grid-point selection j <= 3 / j <= 3.5 (not in the RV3-1.2 table; RV3-1.2 last sentence: same form)
+        rg = [f for (j, f, _l, lab, _k) in pts if lab and "-LT-" in lab and num(j) and t_le(j, 3)]
+        rh = [f for (j, f, _l, lab, _k) in pts if lab and ("-LT-" in lab or "-LH-" in lab) and num(j) and t_le(j, 3.5)]
         allp = [f for (j, f, _l, _lab, _k) in pts]
-        g2[f"{st}|{cen}"] = dict(R_c=rng(rg), R_union_c=rng(rh), range_16=rng(allp), n_points=len(pts))
+        rc, ruc = rng(rg), rng(rh)
+        g2[f"{st}|{cen}"] = dict(R_c=rc, R_union_c=ruc, range_16=rng(allp), n_points=len(pts),
+                                 G2_le_0p5=None if rc is None else t_le(rc, 0.500),
+                                 G2H_le_0p5=None if ruc is None else t_le(ruc, 0.500))
     res["records"]["G2_ranges"] = g2
     # Q-1..Q-5 (rev2 R2-3.1, rev3 RQ3-1) on the LQ lines
     q = dict(VB1=[], VB094=[], four=[], low=[], high=[], outside=[], late_min=[])
@@ -758,21 +797,21 @@ def za_criteria(cand_lines, p5_pairs, sink_k):
                 q["VB094"].append(rec)
             else:
                 q["four"].append(rec)
-                if num(frl) and 12.2 <= frl <= 13.5 and gap is not None and gap <= 0.05:
+                if num(frl) and t_in(frl, 12.2, 13.5) and gap is not None and t_le(gap, 0.05):
                     q["low"].append(rec)
-                elif num(frl) and 14.0 <= frl <= 16.0:
+                elif num(frl) and t_in(frl, 14.0, 16.0):
                     q["high"].append(rec)
                 else:
                     q["outside"].append(rec)
-            if gap is not None and gap > 0.05:
+            if gap is not None and t_gt(gap, 0.05):
                 q["late_min"].append(rec)
     qres = dict(
-        Q1=(all(num(r["F_RL_kN"]) and 14.13 <= r["F_RL_kN"] <= 14.17 for r in q["VB1"]) and
-            all(num(r["F_RL_kN"]) and 14.61 <= r["F_RL_kN"] <= 14.64 for r in q["VB094"])) if (q["VB1"] or q["VB094"]) else None,
+        Q1=(all(num(r["F_RL_kN"]) and t_in(r["F_RL_kN"], 14.13, 14.17) for r in q["VB1"]) and
+            all(num(r["F_RL_kN"]) and t_in(r["F_RL_kN"], 14.61, 14.64) for r in q["VB094"])) if (q["VB1"] or q["VB094"]) else None,
         Q2=(q["outside"] == []) if q["four"] else None,
         Q3=(6 <= len(q["low"]) <= 20) if q["four"] else None,
-        Q4=all(num(r["F_RL_kN"]) and r["F_RL_kN"] >= 14.0 for r in q["late_min"]) if lq_all else None,
-        Q5=((12.2 <= min(v for v in lq_all if num(v)) <= 12.7) and all(num(v) and v >= 12.0 for v in lq_all)) if any(num(v) for v in lq_all) else None,
+        Q4=all(num(r["F_RL_kN"]) and t_ge(r["F_RL_kN"], 14.0) for r in q["late_min"]) if lq_all else None,
+        Q5=(t_in(min(v for v in lq_all if num(v)), 12.2, 12.7) and all(num(v) and t_ge(v, 12.0) for v in lq_all)) if any(num(v) for v in lq_all) else None,
         detail=q)
     res["records"]["Q"] = qres
     # M-1..M-3 vs stored P5 (R-G + R-H 54 pairs)
@@ -792,9 +831,9 @@ def za_criteria(cand_lines, p5_pairs, sink_k):
                 m3.append(a - b)
     max_rc = max([v["R_c"] for v in g2.values() if num(v["R_c"])], default=None)
     res["records"]["M"] = dict(n_pairs=len(dF), M1_median_dF=(statistics.median(dF) if dF else None),
-                               M1=(statistics.median(dF) > 0) if dF else None,
-                               M2_max_R_c=max_rc, M2=(max_rc < M2_P5_MAX_RANGE_KN) if num(max_rc) else None,
-                               M3_dF=m3, M3=(sum(1 for x in m3 if x > 0) >= 4) if len(m3) == 6 else None)
+                               M1=t_gt(statistics.median(dF), 0.0) if dF else None,
+                               M2_max_R_c=max_rc, M2=t_lt(max_rc, M2_P5_MAX_RANGE_KN) if num(max_rc) else None,
+                               M3_dF=m3, M3=(sum(1 for x in m3 if t_gt(x, 0.0)) >= 4) if len(m3) == 6 else None)
     return res
 
 
@@ -837,7 +876,7 @@ def find_bundle_file(run_dir, bundle, explicit):
     return cands[0] if cands else None
 
 
-def recount(run_dir, v5_dir, rules_path, rules_rev1_path, rules_rev2_path, explicit=None, gs_dir=None):
+def recount(run_dir, v5_dir, rules_path, rules_rev1_path, rules_rev2_path, rules_rev3_path, explicit=None, gs_dir=None):
     explicit = explicit or {}
     files_read = {}
     K = {}
@@ -847,7 +886,8 @@ def recount(run_dir, v5_dir, rules_path, rules_rev1_path, rules_rev2_path, expli
 
     # ---- K-0 rules
     for path, want, label in ((rules_path, RULES_SHA, "rules"), (rules_rev1_path, RULES_REV1_SHA, "rules_rev1"),
-                              (rules_rev2_path, RULES_REV2_SHA, "rules_rev2")):
+                              (rules_rev2_path, RULES_REV2_SHA, "rules_rev2"),
+                              (rules_rev3_path, RULES_REV3_SHA, "rules_rev3")):
         got = sha256_file(path) if path and os.path.isfile(path) else None
         if got:
             files_read[os.path.abspath(path)] = got
@@ -1137,7 +1177,7 @@ def recount(run_dir, v5_dir, rules_path, rules_rev1_path, rules_rev2_path, expli
                     c1_und.append(k)
                     continue
                 Fc = p["record"]["F_judged_min_N"][1]
-                if not (num(Fc) and Fc >= F_LINE_N):
+                if not (num(Fc) and t_ge(Fc, F_LINE_N)):
                     c1[k] = Fc
             crit["C-1"] = dict(status="undecidable" if (c1_und or len(t1_keys) != 8) else ("fail" if c1 else "pass"),
                                violations=c1, keys=t1_keys, missing=c1_und)
@@ -1156,7 +1196,7 @@ def recount(run_dir, v5_dir, rules_path, rules_rev1_path, rules_rev2_path, expli
                 continue
             is_exc = False
             det = None
-            if dt > R1_MEDIAN_S:
+            if t_gt(dt, R1_MEDIAN_S):   # rev3 T-7
                 zx_candidates.append(dict(bundle=b, key=k, dt_s=dt))
                 det = c4_exception(groups[("cand", k)][0], zx_ref.get(k), groups[("ref", k)][0], dt)
                 is_exc = det["exception"]
@@ -1177,7 +1217,7 @@ def recount(run_dir, v5_dir, rules_path, rules_rev1_path, rules_rev2_path, expli
             r_note = "changed pairs exist but population empty"
         else:
             med, mx = statistics.median(pop.values()), max(pop.values())
-            r_status = "pass" if (med <= R1_MEDIAN_S and mx <= R2_MAX_S) else "fail"
+            r_status = "pass" if (t_le(med, R1_MEDIAN_S) and t_le(mx, R2_MAX_S)) else "fail"
             r_note = None
         vals = list(pop.values())
         crit["R-1/R-2"] = dict(status=r_status, judged=(b in ("Z-T", "Z-C")), note=r_note,
@@ -1185,7 +1225,7 @@ def recount(run_dir, v5_dir, rules_path, rules_rev1_path, rules_rev2_path, expli
                                exceptions=exc, exception_detail=exc_detail, changed_without_ready=sorted(no_ready),
                                median_s=statistics.median(vals) if vals else None, max_s=max(vals) if vals else None,
                                min_s=min(vals) if vals else None,
-                               S8_ask=(len(exc) > S8_MAX_EXCEPTIONS or any(v > S8_MAX_DT_S for v in exc.values())))
+                               S8_ask=(len(exc) > S8_MAX_EXCEPTIONS or any(t_gt(v, S8_MAX_DT_S) for v in exc.values())))
         if b == "Z-S":
             crit["R-1/R-2"]["status_record_only"] = crit["R-1/R-2"]["status"]
             crit["R-1/R-2"]["status"] = None
@@ -1286,7 +1326,7 @@ def recount(run_dir, v5_dir, rules_path, rules_rev1_path, rules_rev2_path, expli
                           for b in BUNDLES},
         zx_candidates=dict(keys=zx_candidates, n_unique_keys=len({c["key"] for c in zx_candidates}),
                            ask_more_than_10=len({c["key"] for c in zx_candidates}) > 10),
-        rules_rev2_sha256=RULES_REV2_SHA,
+        rules_rev2_sha256=RULES_REV2_SHA, rules_rev3_sha256=RULES_REV3_SHA,
         bundles={b: {kk: vv for kk, vv in bundles[b].items()} for b in bundles},
         lists=dict(Z_A_label_list_sha=za_label_sha, Z_C_out_of_sample_n=len(zc_out), Y_P_error_lines=yp_errors,
                    Z_C_ref_source_counts={s: sum(1 for v in zc_ref_src.values() if v == s) for s in set(zc_ref_src.values())}),
@@ -1315,14 +1355,14 @@ def c4_exception(cand, zx, ref_new, dt):
         return det
     E = lc - lr
     det.update(loss_cand_s=lc, loss_ref_s=lr, E_s=E, E_over_dt=E / dt)
-    if E < C4_RATIO * dt:
+    if not t_ge(E, C4_RATIO * dt):   # rev3 T-8 (threshold computed first)
         det["reason"] = "E < 0.8 dt"
         return det
     starts = dcc.get("clock_starts_s") or []
     resets = [r for r in (dcc.get("resets") or []) if isinstance(r, dict)]
     if starts:
         c1, cm = starts[0], starts[-1]
-        in_l = [r for r in resets if num(r.get("t_s")) and c1 <= r["t_s"] <= cm]
+        in_l = [r for r in resets if num(r.get("t_s")) and per(c1) <= per(r["t_s"]) <= per(cm)]   # rev3 W-3
     else:
         in_l = []
     te = val(cand, "las.ramp.end_t_s")
@@ -1352,6 +1392,7 @@ def main(argv=None):
     ap.add_argument("--rules", required=True)
     ap.add_argument("--rules-rev1", required=True)
     ap.add_argument("--rules-rev2", required=True)
+    ap.add_argument("--rules-rev3", required=True)
     ap.add_argument("--gs-dir", default=None)
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
@@ -1360,7 +1401,7 @@ def main(argv=None):
         for s in a.bundle:
             k, v = s.split("=", 1)
             explicit[k] = v
-        res = recount(a.run_dir, a.v5_dir, a.rules, a.rules_rev1, a.rules_rev2, explicit, a.gs_dir)
+        res = recount(a.run_dir, a.v5_dir, a.rules, a.rules_rev1, a.rules_rev2, a.rules_rev3, explicit, a.gs_dir)
     except Exception:
         traceback.print_exc()
         print(json.dumps(dict(status="tool_error")))
