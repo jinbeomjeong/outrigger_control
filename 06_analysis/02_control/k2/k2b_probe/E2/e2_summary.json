@@ -374,5 +374,37 @@
   "dt_s": 0.0002,
   "snapshot": "07_results/states_L1R/S6_crawler_top_flat",
   "snapshot_npz_sha256": "e28be7ba3b458f954e79a2408c4fd8fdb1a32128b511b59ecdf8759ab65d026c"
+ },
+ "beta_GPa": 1.0,
+ "harness_source": "k2_dyn_sensitivity.md 1.3 (linear model, beta 1.0)",
+ "beta_record": null,
+ "m2": {
+  "chrono_superposition": {
+   "S_RR_RL": -6.169978915546563,
+   "diag_pair_FRRL_on_RR": -7.232937674119533,
+   "diag_pair_FRRL_on_FL": -5.040474260454266,
+   "loss_per_received_kN": 0.20746026632279596,
+   "alpha_adj_rear_RR_from_RL": 0.5896400242515699,
+   "S_FL_RR": 5.747215621604291
+  },
+  "chrono_measured_diag_run": {
+   "diag_pair_FRRL_on_RR": -7.007407113767755,
+   "diag_pair_FRRL_on_FL": -5.161257730745933,
+   "loss_per_received_kN": 0.20509999171031784
+  },
+  "harness": {
+   "S_RR_RL": -4.63,
+   "diag_pair_FRRL_on_RR": -5.24,
+   "diag_pair_FRRL_on_FL": -5.16,
+   "loss_per_received_kN": 0.15380099794540653,
+   "alpha_adj_rear_RR_from_RL": 0.4363807728557964,
+   "S_FL_RR": 5.74
+  },
+  "dynamics_extrapolation": {
+   "C1_alpha_adj_rear": 0.59,
+   "C3_diag_pair_on_RR": -7.01,
+   "C4_diag_pair_on_FL": -5.16,
+   "C5_loss_per_received_kN": 0.205
+  }
  }
 }

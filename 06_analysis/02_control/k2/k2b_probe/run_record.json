@@ -35,5 +35,22 @@
   "use": "new bundles only; the old S6_crawler_top_fdown3.5 (npz 8f93d107...) stays for earlier results and reproductions",
   "not_installed": "S6_crawler_top_fdown3.5_k2bE4hc4 (npz 77cd7485...) kept only in E4/states as the comparison"
  },
- "wall_s": {"E2_each": "196-210 s for 29.5 s simulated", "E4_build_p8": 794.5, "E4_build_hc4": 768.9, "E4_check_10s": "66-67 s", "E4_check_20s": "111-113 s"}
+ "wall_s": {"E2_each": "196-210 s for 29.5 s simulated", "E4_build_p8": 794.5, "E4_build_hc4": 768.9, "E4_check_10s": "66-67 s", "E4_check_20s": "111-113 s"},
+ "E2_b16": {
+  "what": "E2 repeated at beta 1.6 GPa (user-approved addition 2026-11-11): evidence whether the harness option lock_stiffness='l1r' can be a judgement arm",
+  "git_head_at_start": "7636e0b00c09dfb30bb0417cb3c7b3c029f7fc09",
+  "script_sha256": {"e2_influence_step.py": "37988be53f928a769fee9c84f65608e71176f5fb6825142216f8f6db49b87722",
+                    "e2_summary.py": "e4c6ef2d426126f98210b0f3a79e724b95491dc2aa7c4e65630cb51fe691d56e",
+                    "e2_linear_check.py": "6b229eb558572a71c9cbd167e0f95445a3a0d23f68940be8ec8a26fef18f45ca"},
+  "beta_path": "run_S6C bundle-C plant path: pad kn from reference L1_beta_sensitivity_top/beta_1.6e+09/k_L1_N_m (FL/FR 3.86745e7, RL/RR 2.95229e7 N/m), actuator.oil_bulk_modulus_eff_Pa 1.6e9 (L1-R machine k_h / k_r recomputed; k_lock FL/FR 4.9624e7, RL/RR 3.9215e7 N/m), crawler bushing kt held at the beta 1.0 value (crawler_bushing_kt_scale 1.50128, C-R11), snapshot S6_crawler_top_flat re-tagged after the dyn rev. 37 5.24.3 legs-unloaded check (passed)",
+  "commands": {"run": "python -I 04_scripts/02_chrono/k2b_probe/e2_influence_step.py <case> --beta 1.6 --out 06_analysis/02_control/k2/k2b_probe/E2_b16",
+               "summary": "python -I 04_scripts/02_chrono/k2b_probe/e2_summary.py 06_analysis/02_control/k2/k2b_probe/E2_b16",
+               "linear": "python -I 04_scripts/02_chrono/k2b_probe/e2_linear_check.py E2_b16"},
+  "placement": {"mask": "0x0FFF0000", "concurrency": "2 waves (RR, RL, FR, diagFRRL / FL, common) while the HSH harness batch (python-expert, reservation r-20261111103548-4fdc69) used the same E-cores; no own reservation (481.8 s total, < 30 min)"},
+  "env": {"OMP_WAIT_POLICY": "PASSIVE", "OPENBLAS_NUM_THREADS": "1", "MKL_NUM_THREADS": "1", "chrono_threads": 1, "dt_s": 2e-4},
+  "time": "11:07:46-11:15:48 (+09:00)",
+  "wall_s_each": "224-253 s for 29.0 s simulated",
+  "warnings": "RuntimeWarning saturation stop time 0.002 s outside 10 dt .. 2 c_n / k_n (FL/FR 1.78 ms): the expected beta 1.6 warning of bundle C (verify.s6_bundle_c EXPECTED_SATURATION_WARNING)",
+  "base_identical": true
+ }
 }

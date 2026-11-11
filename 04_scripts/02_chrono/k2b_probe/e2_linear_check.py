@@ -7,7 +7,9 @@ Geometry from the restored ``S6_crawler_top_flat`` L1-R snapshot (pad sphere cen
 
 Variants: ``kn`` (all pads YAML ``kn_per_pad`` = series(k_oil, ...), the harness k_leg), ``mode`` (pads by their
 L1-R mode in the E2 base state: FLOOR -> kn, LOCK -> ``derivation.k_lock_N_m``; the stepped leg kn), ``lock``
-(all k_lock). Prints S per variant (kN/mm) and writes ``E2/e2_linear_check.json``.
+(all k_lock). Usage ``e2_linear_check.py [E2|E2_b16]`` (run folder under ``06_analysis/02_control/k2/k2b_probe``;
+the stiffnesses of the run beta come from its ``result.json`` ``beta`` record, the base modes and loaded spheres from
+its ``RR/result.json``). Prints S per variant (kN/mm) and writes ``<run folder>/e2_linear_check.json``.
 """
 
 from __future__ import annotations
@@ -65,25 +67,36 @@ def main() -> None:
     cr_world = np.array([[v.x, v.y, v.z] for v in (sup.TransformPointLocalToParent(ch.ChVector3d(*c))
                                                   for c in model.crawler_centres_local_m)])
     normals = np.asarray(model.crawler_normals(), float)
-    geom = ROOT / "06_analysis/02_control/k2/k2b_probe/E2_geom/RR/result.json"
-    if geom.exists():  # loaded spheres of the E2 base state (pads at ~22-28 kN), not of the unloaded-leg snapshot
+    probe_dir = ROOT / "06_analysis/02_control/k2/k2b_probe"
+    run_dir = probe_dir / (sys.argv[1] if len(sys.argv) > 1 else "E2")
+    geom = run_dir / "RR" / "result.json"
+    g = json.loads(geom.read_text(encoding="utf-8"))
+    if "base_crawler_normals_N" not in g:  # E2 (beta 1.0) ran before the field existed: its E2_geom twin
+        geom = probe_dir / "E2_geom" / "RR" / "result.json"
         g = json.loads(geom.read_text(encoding="utf-8"))
-        normals = np.asarray(g["base_crawler_normals_N"], float)
+    # loaded spheres of the base state (pads at ~22-28 kN), not of the unloaded-leg snapshot
+    normals = np.asarray(g["base_crawler_normals_N"], float)
     loaded = normals > 0
     xy_cr = cr_world[loaded, :2]
     k_cr = float(model.crawler_bushing_values.meta()["kn_sphere_N_m"])
-    kn = np.array([params.get("contact.rigid_floor.L1.kn_per_pad_N_m")[n] for n in LEGS])
-    klock = np.array([params.get("contact.rigid_floor.L1.derivation.k_lock_N_m")[n] for n in LEGS])
-    base_mode = np.array([4, 4, 3, 3])  # E2 base: FL, FR FLOOR; RL, RR LOCK (result.json base_l1r_mode)
+    rec = g.get("beta") or {}
+    if "pad_stiffness_head_only_N_m" in rec:  # run beta (L1-R machine values)
+        kn = np.asarray(rec["pad_stiffness_head_only_N_m"], float)
+        klock = np.asarray(rec["pad_stiffness_locked_N_m"], float)
+    else:
+        kn = np.array([params.get("contact.rigid_floor.L1.kn_per_pad_N_m")[n] for n in LEGS])
+        klock = np.array([params.get("contact.rigid_floor.L1.derivation.k_lock_N_m")[n] for n in LEGS])
+    base_mode = np.asarray(g["base_l1r_mode"], float)  # 3 LOCK, 4 FLOOR
     k_mode = np.where(base_mode == 3, klock, kn)
     variants = {"kn": [kn] * 4, "lock": [klock] * 4,
                 "mode": [np.where(np.arange(4) == j, kn[j], k_mode) for j in range(4)]}
-    e2 = json.loads((ROOT / "06_analysis/02_control/k2/k2b_probe/E2/e2_summary.json").read_text(encoding="utf-8"))
+    e2 = json.loads((run_dir / "e2_summary.json").read_text(encoding="utf-8"))
     S_chrono = np.asarray(e2["S_chrono_kN_per_mm"])
     out = {"geometry": {"pad_xy_world_m": xy_pad.tolist(), "crawler_loaded_xy_world_m": xy_cr.tolist(),
                         "crawler_loaded_count": int(loaded.sum()), "crawler_normal_sum_N": float(normals.sum()),
                         "cog_world_m": np.asarray(pr.cog_pos_m).tolist(), "kn_sphere_N_m": k_cr},
-           "kn_per_pad_N_m": kn.tolist(), "k_lock_N_m": klock.tolist(), "variants": {}}
+           "kn_per_pad_N_m": kn.tolist(), "k_lock_N_m": klock.tolist(), "base_l1r_mode": base_mode.tolist(),
+           "geometry_source": str(geom.relative_to(ROOT)).replace("\\", "/"), "variants": {}}
     np.set_printoptions(precision=2, suppress=True)
     for name, cols in variants.items():
         S = s_matrix(xy_pad, cols, xy_cr, k_cr)
@@ -91,7 +104,7 @@ def main() -> None:
         out["variants"][name] = {"S_kN_per_mm": S.tolist(), "minus_chrono": err.tolist(),
                                  "rms_minus_chrono": float(np.sqrt(np.mean(err**2)))}
         print(name, "\n", S, "\n minus chrono rms", np.sqrt(np.mean(err**2)))
-    (ROOT / "06_analysis/02_control/k2/k2b_probe/E2/e2_linear_check.json").write_text(
+    (run_dir / "e2_linear_check.json").write_text(
         json.dumps(out, indent=1), encoding="utf-8")
     print(json.dumps(out["geometry"], indent=0)[:1500])
 

@@ -17,6 +17,11 @@ the script records a hash of that state to prove it):
    brakes onto the soft limit), then 0; hold to 2.5 s after the step start; response = mean of the last 0.5 s.
    S[i, j] = (F_i(after) - F_i(base)) / (s_j(after) - s_j(base)) with s the motor position (leg extension).
 
+Beta (``--beta`` 0.69 / 1.6 GPa, default 1.0 = YAML): the bundle-C plant path of ``run_S6C.py`` (pad ``kn`` from the
+reference ``L1_beta_sensitivity_top/<beta>/k_L1_N_m``, ``actuator.oil_bulk_modulus_eff_Pa``; the L1-R machine
+recomputes ``k_h`` / ``k_r``; crawler bushing kt held at the beta 1.0 ``(kt/kn)_pad`` ratio, C-R11; the snapshot is
+re-tagged after the legs-unloaded check). beta 1.0 runs the unchanged E2 path.
+
 Cases: ``FL``, ``FR``, ``RL``, ``RR`` (single legs = the four columns of S), ``diagFRRL`` (FR + RL together, P3
 diagonal-pair check), ``common`` (all four, P3 common-mode check).
 
@@ -64,6 +69,17 @@ STEP_RAMP_S = 0.5
 STEP_TOTAL_S = 2.5
 AVG_S = 0.5
 PRELOAD_MAX_S = 60.0
+BETA_KEYS = {0.69: "beta_6.9e+08", 1.0: "beta_1.0e+09", 1.6: "beta_1.6e+09"}
+"""Keys of the reference block ``L1_beta_sensitivity_top`` (``run_S6C.BETA_KEYS``)."""
+KN_KEY = "contact.rigid_floor.L1.kn_per_pad_N_m"
+
+
+def kt_ratio(params) -> float:
+    """Mean pad kt / kn (``run_S6C._crawler_kt_ratio``): the crawler bushing kt follows it, so a beta run scales the
+    crawler kt back to the beta 1.0 value (C-R11, bundle C)."""
+    kn = params.get(KN_KEY)
+    kt = params.get("contact.rigid_floor.L1.kt_per_pad_N_m")
+    return sum(float(kt[k]) / float(kn[k]) for k in kn) / len(kn)
 
 
 def pin(mask: int) -> dict:
@@ -122,7 +138,7 @@ class Recorder:
         return {k: np.asarray(v) for k, v in self.rows.items()}
 
 
-def run(case: str, out: Path, mask: int) -> dict:
+def run(case: str, out: Path, mask: int, beta_GPa: float = 1.0) -> dict:
     from outrigger_sim.params import load_params
     from outrigger_sim.record import load_snapshot
 
@@ -130,9 +146,31 @@ def run(case: str, out: Path, mask: int) -> dict:
 
     placement = pin(mask)
     wall0 = time.perf_counter()
-    params = load_params(level="top")
-    model, _ = st.build_crawler_model(params, "flat", attach=False)
-    snap = load_snapshot(SNAPSHOT, params_sha256=params.sha256, directory=STATES)
+    base_params = load_params(level="top")
+    beta_rec = {"beta_GPa": beta_GPa, "overrides": None, "crawler_bushing_kt_scale": None, "snapshot_retag": None}
+    if beta_GPa == 1.0:  # the E2 (beta 1.0) path, unchanged
+        params = base_params
+        model, _ = st.build_crawler_model(params, "flat", attach=False)
+        snap = load_snapshot(SNAPSHOT, params_sha256=params.sha256, directory=STATES)
+    else:  # the bundle-C beta path of run_S6C (param_overrides / crawler_kt_scales, C-R11 crawler kt held)
+        from outrigger_sim.verify.reference import BETA_K_L1_N_M, load_references
+        from outrigger_sim.verify.s6_bundle_c import retag_snapshot
+
+        key = BETA_KEYS[beta_GPa]
+        kref = load_references().get(BETA_K_L1_N_M, beta=key)
+        over = {f"{KN_KEY}.{leg}": float(v) for leg, v in zip(LEGS, kref, strict=True)}
+        over["actuator.oil_bulk_modulus_eff_Pa"] = float(key.removeprefix("beta_"))
+        params = load_params(level="top", overrides=over)
+        kt_scale = kt_ratio(base_params) / kt_ratio(params)
+        model, _ = st.build_crawler_model(params, "flat", attach=False, crawler_bushing_kt_scale=kt_scale)
+        snap = load_snapshot(SNAPSHOT, params_sha256=base_params.sha256, directory=STATES)
+        snap, retag = retag_snapshot(snap, params.sha256, name=SNAPSHOT)
+        beta_rec.update(overrides=over, crawler_bushing_kt_scale=kt_scale, snapshot_retag=retag)
+    from outrigger_sim.chrono.rod_chamber_link import leg_params_from_params
+
+    lp, _ = leg_params_from_params(params)
+    beta_rec["pad_stiffness_head_only_N_m"] = [float(x.pad_stiffness_head_only_N_m) for x in lp]
+    beta_rec["pad_stiffness_locked_N_m"] = [float(x.pad_stiffness_locked_N_m) for x in lp]
     t0 = model.restore(snap)
     dt = model.dt_s
     every = max(1, round(1.0e-3 / dt))
@@ -239,6 +277,7 @@ def run(case: str, out: Path, mask: int) -> dict:
                      "placement": placement, "dt_s": dt,
                      "snapshot": f"07_results/states_L1R/{SNAPSHOT}",
                      "snapshot_npz_sha256": hashlib.sha256((STATES / f"{SNAPSHOT}.npz").read_bytes()).hexdigest()},
+        "beta": beta_rec,
         "settings": {"F_target_N": F_TARGET_N, "F_topup_N": F_TOPUP_N, "slow_m_s": SLOW_M_S,
                      "approach_m_s": v_max, "near_m": NEAR_M, "settle_s": SETTLE_S, "step_m": STEP_M,
                      "step_ramp_s": STEP_RAMP_S, "step_total_s": STEP_TOTAL_S, "avg_window_s": AVG_S,
@@ -270,8 +309,9 @@ def main() -> None:
     ap.add_argument("case", choices=sorted(CASES))
     ap.add_argument("--out", required=True, type=Path)
     ap.add_argument("--mask", default="0x0FFF0000")
+    ap.add_argument("--beta", type=float, default=1.0, choices=sorted(BETA_KEYS), help="GPa; 1.0 = YAML")
     a = ap.parse_args()
-    res = run(a.case, a.out / a.case, int(a.mask, 16))
+    res = run(a.case, a.out / a.case, int(a.mask, 16), a.beta)
     print(json.dumps({"case": res["case"], "dF_per_mm_kN": res["dF_per_mm_kN"], "wall_s": res["timing"]["wall_s"]}))
 
 
