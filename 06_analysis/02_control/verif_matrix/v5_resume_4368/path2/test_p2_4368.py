@@ -122,10 +122,41 @@ def test_classify_off_arm_las_none():
     assert r["class"] == "las_none_k1_block" and f.status() == "pass"
 
 
-def test_would_block_without_due_undecidable():
+def test_would_block_without_due_record_conflict():
+    # rev2 R2-1: line undecidable, bundle S-5
     f = p2.Findings()
     r = p2.classify_k1({"settings": {}}, og(dec(True, False)), 0, "rigid", "w", f)
-    assert r["class"] == "unclassified_would_block_without_due" and f.status() == "undecidable"
+    assert r["class"] == "record_conflict" and f.undecidable and {s["code"] for s in f.stops} == {"S-5"}
+    f = p2.Findings()
+    p2.classify_k1({"settings": {}}, og(dec(False, False, applied=True)), 0, "rigid", "w", f)
+    assert {s["code"] for s in f.stops} == {"S-5"}
+
+
+def test_grid_family_r2_7():
+    meta = {"spec": p2.GRID_SPEC_PRESCRIBED}
+    assert p2.family_grid({"event": "G4"}, meta) == "patch"
+    assert p2.family_grid({"event": "XX"}, meta) == "unresolved"
+    assert p2.family_grid({"event": "FS24"}, {"spec": "other"}) == "unresolved"
+
+
+def test_speed_ratios_r2_4(tmp_path):
+    t = np.round(np.arange(8.0, 36.0005, 0.001), 6)
+    vmax = 0.0209243016
+    cols = ["t"] + [f"u_{l}" for l in ("FL", "FR", "RL", "RR")] + [f"v_{l}" for l in ("FL", "FR", "RL", "RR")]
+    u = np.where(t > 8.0, vmax, 0.0)
+    rows = np.column_stack([t] + [u] * 4 + [0.9 * u] * 4)
+    np.savez(tmp_path / "flow_series.npz", rows=rows, columns=np.array(cols))
+    sm = np.column_stack([0.9 * vmax * (t - 8.0)] * 4)
+    np.savez(tmp_path / "series.npz", t_s=t, s_motor_m=sm)
+    rvu = p2.speed_ratio_vu(tmp_path, vmax)
+    assert all(abs(v - 0.9) < 1e-12 for v in rvu["per_leg"].values())
+    rv = p2.speed_ratio_v(tmp_path, vmax)
+    assert all(abs(v - 0.9) < 1e-9 for v in rv["per_leg"].values()) and rv["window_s"] == [10.0, 20.0]
+    assert p2.speed_ratio_vu(tmp_path / "none", vmax) is None
+
+
+def test_yaml_vmax():
+    assert abs(p2.yaml_vmax(REPO) - 0.020924) < 1e-5
 
 
 # ------------------------------------------------------------------ 4.2 settings
@@ -258,6 +289,17 @@ def test_series_recount(tmp_path):
     assert abs(rl["t_below_F_min_s"] - n * 0.001) < 1e-12
     assert abs(rl["t_below_F_min_plus_2kN_s"] - n * 0.001) < 1e-12
     assert r["legs"][0]["t_below_F_min_s"] == 0.0
+    assert r["max_t_below_F_min_s"] == rl["t_below_F_min_s"] and r["window_truncated_at_run_end"] is False
+
+
+def test_c2_fixed_rows_r2_8(tmp_path, capsys):
+    bd = tmp_path / "batch_V5-RESUME-K1-C2_20990101_000000"
+    bd.mkdir()
+    rows = [{"case": f"x{i}", "argv": [], "rc": 0, "criteria_id": "C-2", "d1_id": d}
+            for i, d in enumerate(["C2-03", "C2-07", "S-01"])]
+    (bd / "batch.json").write_text(json.dumps({"cases": rows}), "utf-8")
+    code, s = run_main(["chrono", "--batch", str(bd), "--check-counts"], capsys)
+    assert "S-15" in s["stop_codes"]
 
 
 def test_departure_needs_hold():

@@ -1,6 +1,6 @@
 # 436.8 경로 2 독립 재집계 도구 (`p2_4368.py`)
 
-- 규칙: 원판 `../../v5_resume_4368_rules.md`(sha256 `9019b405…`)와 rev1 `../../v5_resume_4368_rules_rev1.md`(sha256 `d9094fda…`). 둘이 다르면 rev1을 따른다. 도구는 실행할 때마다 두 파일의 sha256, `.sha256` 기록, LF·BOM 없음을 확인한다. 하나라도 어긋나면 **종료 2(S-1)**로 멈춘다. 부록 A 33개 파일도 같이 확인한다. 이때 `core.autocrlf` checkout이라 줄바꿈만 다른 경우(LF로 바꾼 sha가 기록과 같음)는 통과로 두고 `eol_only`에 남긴다.
+- 규칙: 원판 `../../v5_resume_4368_rules.md`(sha256 `9019b405…`), rev1 `../../v5_resume_4368_rules_rev1.md`(`d9094fda…`), rev2 `../../v5_resume_4368_rules_rev2.md`(`497e4614…`). 앞 판과 다르면 뒤 판을 따른다. 세 파일의 sha256과 `.sha256` 기록, LF·BOM 없음을 실행할 때마다 확인한다. 봉인 규칙 파일은 raw sha만 쓴다. 하나라도 어긋나면 **종료 2(S-1)**로 멈춘다. 부록 A 33개 파일도 확인한다. raw가 다르고 CRLF→LF로 바꾼 sha만 같으면 통과로 둔다(rev2 R2-9). 그 파일은 출력 `seals.eol_only_detail`에 raw·LF sha와 "CRLF 변환만 다름"을 적는다(판정서 공개용).
 - 작성자: dynamics-expert(경로 2, 사용자 결정 2026-11-13). 경로 1 도구와 그 출력은 보지 않았다(규칙 9.2). 읽은 것은 아래 "독립성 공개"에 있다.
 - 환경: `conda run -n dynamics-dev python -I -B p2_4368.py ...`. 표준 라이브러리와 numpy만 쓴다(npz 읽기). 프로젝트 모듈 가운데 import하는 것은 `v5_options.is_extend_start_tag` 하나다(규칙 4.1이 ③ 판별을 이 함수로만 하라고 정한다).
 - 공통 CLI: `--repo <루트>`(기본은 이 파일에서 다섯 단계 위), `--out <JSON>`. 종료 코드는 0(멈춤·실패·판정 불가 없음), 1(실패, 판정 불가, K-10 차이), 2(멈춤 S-*, 규칙 sha 불일치), 3(도구 오류)이다. stdout 마지막 줄은 JSON 요약이고 `tool_sha256`, `status`, `exit`, `out_sha256`, `stop_codes`를 담는다.
@@ -41,19 +41,21 @@
 | 줄 키 | run_v5: `job`에서 `mask`·`t4h_dir`를 뺀 정렬 JSON. 그 밖: `key` → `id` → `case`, `controller`가 있으면 `\|<controller>`. 격자 run: 부모 `key` + `\|runs[j]` | 입력 키 사실, RV1-5 |
 | K1 막힘 | `decisions` 항목에서 `would_block` ∧ `r4_due_without_gate` | 7.2 |
 | 미작동 | LAS-b `start_s`가 None(키가 없어도 None) ∧ 모든 `would_block` 거짓 | 7.2, 입력 키 사실 |
-| `would_block` 참 ∧ `r4_due` 거짓 | 어느 분류에도 들지 않음 → `판정 불가` | 7.2 문장에 없음(확인 필요 1) |
+| `would_block` 참 ∧ `r4_due` 거짓, 또는 `applied` 참 ∧ `r4_due` 거짓 | 기록 모순: 그 줄은 `판정 불가`, 묶음은 **S-5** | rev2 R2-1 |
 | `_SKIPPED:order` 수 | 줄 `events`(전체 목록일 때) → `event_names` 개수 → `resume_k1.event_counts.flat_soil_margin_skipped_order` 순. Chrono는 `events[]`, 없으면 `controller_events.json`. 이름 완전 일치 | 7.2, 7.3-3 |
 | 지면 계열 | `@`가 든 토큰(패치 `토양@다리`, 처방 침하 `c-mid@다리`) → 패치·처방. `rigid` 토큰 → 강체. 토양 이름(G1·G5·J1·J2·S1·S2)만 → 균일 연약. 그 밖 → 미분류. D-1은 `job.d1`의 `base`·`patch_leg`·`patch_soil`·`sink`를 먼저 본다. Chrono: L2b·L1-R → 강체, `rigid_base`·`soil_patch` → 패치, `soil`만 → 균일 | 7.2, RV1-6(경로 1 계열 표는 쓰지 않음) |
-| 미분류 + K1 막힘 | 균일과 같게 S-6 | RV1-6("나누지 못한 키는 균일 연약") |
+| 미분류 + K1 막힘 | 균일과 같게 S-6 | RV1-6, rev2 R2-7 |
+| 격자(r67·r69) run | 파일 `meta.spec` = `rev. 67 (G1 / G2 / G7 reduced screen)` ∧ run `event` ∈ {G4, RE1bF, FS24} → 패치·처방, 그 밖 → 미분류(균일로 다룸). 키 문자열은 쓰지 않는다 | rev2 R2-7 |
+| LAS-b `start_s` | 블록이 있고 키가 없거나 None → 시작 안 함. 블록이 없으면 판정 불가. C-4 끔 팔은 'LAS 없음' | rev2 R2-2 |
 | `applicable` 거짓 | IND·IND_LAS에서는 "해당 없음"으로 세고 분류·4.2 확인을 하지 않는다. 다른 종류 줄이면 S-3 | RV1-6 덧붙임 |
 | LAS-b 설정 9값 | `enable` True, `sum_on_fraction_W` 0.6, `light_leg_fraction_of_F_min` 3.5, `slow_mean_fraction` 0.16, `sum_off_fraction_W` 0.85, `off_periods` 5, `max_s` 1.5, `rho_on` 0.18, `require_soil_response` True(ABL은 False). 키 `min_active_periods`·`end_ramp_periods`가 있으면 0이어야 한다(P0) | 4.2, 명세 436 설정 표 |
-| L2b·L1-R 4.2 확인 | 결과에 `c2_setup`이 없으면 요청 = argv(`--k1-order-gate` 없음 = `preset`), 적용 = `order_gate.enabled` | 4.2 "같은 의미"(확인 필요 4) |
+| L2b·L1-R 4.2 확인 | 요청 = argv(`--k1-order-gate`가 없으면 `preset`, 있으면 S-3), 적용 = `controller_meta.slope_clearance_margin.order_gate.enabled`. `controller_meta`나 그 키가 없으면 판정 불가 + S-3 | rev2 R2-3 |
 | 이탈 시각 $t_d$ | `step_series.npz`의 `scm_crawler_normal_N` < 0.01 `p3b.weight_N`이 0.1 s 이상 이어지는 첫 구간의 첫 표본 | `p3b.departure.rule` 문자열(P3a-2) |
 | $F^{a}_{min}$ | $t \ge t_d$의 1 ms `F_cyl_N` 다리별 최소 | 2절 기호 표 |
-| $F<F_{min}$ 시간, $F<F_{min}$+2 kN 시간 | $[t_d, t_d + 8\,\mathrm{s}]$ 안에서 조건을 만족하는 표본 수 × $\Delta t$(중앙값). 비교 허용 $10^{-9}$ N(7.6) | P5r4 판정서 8.2 표("이탈 + 8 s 창"), RV1-7 |
-| O-C5 $m$·멈춤 | $R_c \le 1$일 때 경로 2 $m$(1 ms 재계산 최소) < $F_{min}$ → S-9, $< F_{min}$+2000 N → 여유 기록, 그 밖 기록. `result.json` 최소로 정한 등급도 함께 내고, 다르면 기록 | 7.4, RV1-7 |
+| $F<F_{min}$ 시간, $F<F_{min}$+2 kN 시간 | $t_D$ = `step_series.npz` `scm_crawler_normal_N` < 0.01 `p3b.weight_N`이 0.1 s 이상 이어지는 첫 구간의 첫 표본. 창 $[t_D, t_D + 8\,\mathrm{s}]$(실행이 먼저 끝나면 `window_truncated_at_run_end`) 안의 표본 수 × $\Delta t$. 다리별 값과 네 다리 최대를 낸다. $t_D$ 뒤 실행 끝까지의 전체 창 값은 기록만 한다. $t_D$가 정의되지 않으면 판정 불가. 저장 P5r4 A1·A3·A5에서 $t_d$·RL 최소·두 시간이 판정서 8.2 표와 같다(0/131, 195/362, 67/161 ms) | rev2 R2-5 |
+| O-C5 $m$·멈춤 | $R_c \le 1$일 때 경로 2 $m$(1 ms, $t \ge t_D$ 다리별 최소의 최소)으로 처리 칸을 낸다(멈춤 / 여유 기록 / 기록). `result.json` 최소로 정한 칸도 함께 낸다. 어느 쪽이든 $m < F_{min}$이면 S-9이다. 두 경로 칸이 다른지의 비교는 판정서에서 한다 | 7.4, rev2 R2-6 |
 | $R_c$ | 기록된 `crawler_attitude_deg`로 $\lvert\phi_c\rvert/4.4 + \lvert\theta_c\rvert/3.2$ 재계산. 기록값과 K-10 허용 밖이면 기록 | 2절, 9.1 C-8 |
-| 열린 루프 | `openloop_compare.py`의 `first_run`·`plane_fit`·`analyse`와 상수 `F_MIN`·`T_LIFT`·`PAD_XY`만 AST로 꺼내 실행한다(모듈 끝의 저장 행 실행은 하지 않음). 속도비는 `analyse`에 계산식이 없어 경로 2 가정으로 낸다: 창 양 끝의 `s_motor` 차 / 시간 / `flow_limit.circuit.max_speed_m_s`, 다리별·평균, 창 8.5 s < t ≤ 끝과 10~20 s 둘 | 5.3, 9.1(확인 필요 5) |
+| 열린 루프 | `openloop_compare.py`의 `first_run`·`plane_fit`·`analyse`와 상수만 AST로 꺼내 실행한다(모듈 끝의 저장 행 실행은 하지 않음). 속도비 두 가지: `r_vu` = 다리별로 `flow_series.npz` 1 ms 행 가운데 8.5 s < t ≤ 끝 ∧ u ≥ 0.1 v_max인 행의 v/u 중앙값(P-10 대조, V0는 해당 없음). `r_v` = 10 s ≤ t ≤ 20 s 구간 첫·끝 표본의 `s_motor` 차 / 시간 / v_max(P-11·P-11b 대조). v_max = YAML `actuator.max_speed_m_s`. 저장 J1 VB_prop `r_vu` 0.8947 × 4, J1 VB_FB `r_v` 0.8769로 판정서 값과 같다 | rev2 R2-4 |
 
 ## H-1·H-2: `p2_d1.py` (원 규칙 `d1_selection_rules.md` + rev1)
 
@@ -118,11 +120,11 @@ $t = '<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2\p2_4368.py
 & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B -m pytest -q -p no:cacheprovider --basetemp <scratch>\pt <repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2\test_p2_4368.py
 ```
 
-- 41개 시험, 합성 입력만 쓴다. 다루는 것: 문턱 비교와 K-10, $R_c$ 식, `C2Event` 해석, 줄 키, 지면 계열, 7.2 분류 9가지(S-5·S-6·S-3 포함), 결측 = 판정 불가, C-4 끔 팔 'LAS 없음', LAS-b 설정 검사, 하네스 끝에서 끝(통과, S-2, S-5 + S-6, IND 해당 없음 + S-3 토큰, S-15), 1 ms 재계산(이탈 지속 조건, 창 시간), Chrono 행(O-C5 S-9, S-10, 태그 S-2, 금지 인자 S-3 + 스레드 S-4, C-4 끔 팔), O-C5 $k$ 절차(첫 probe, 할선, 두 배 재실행, 할선 정의 불가), J_P 재사용과 거부, K-10 compare, 실제 규칙 sha.
+- 45개 시험, 합성 입력만 쓴다. 다루는 것: 문턱 비교와 K-10, $R_c$ 식, `C2Event` 해석, 줄 키, 지면 계열, 7.2 분류 9가지(S-5·S-6·S-3 포함), 결측 = 판정 불가, C-4 끔 팔 'LAS 없음', LAS-b 설정 검사, 하네스 끝에서 끝(통과, S-2, S-5 + S-6, IND 해당 없음 + S-3 토큰, S-15), 1 ms 재계산(이탈 지속 조건, 창 시간), Chrono 행(O-C5 S-9, S-10, 태그 S-2, 금지 인자 S-3 + 스레드 S-4, C-4 끔 팔), O-C5 $k$ 절차(첫 probe, 할선, 두 배 재실행, 할선 정의 불가), J_P 재사용과 거부, K-10 compare, 실제 규칙 sha.
 
 ## 독립성 공개 (규칙 9.2, 이 도구를 쓰려고 읽은 것)
 
-- 규칙: 원판, rev1, `las_p5r4_k1_judgement.md` 8.2절 표·1.1의 기호 정의(40행), 명세 `s6_control_spec.md` 436 설정 표(19458~19479행).
+- 규칙: 원판, rev1, rev2, `d1_selection_rules.md`·rev1, `u3_u6_rerun_rules.md`·rev1·rev2, `las_p5r4_k1_judgement.md` 8.2절 표·1.1의 기호 정의(40행), 명세 `s6_control_spec.md` 436 설정 표(19458~19479행).
 - 원 데이터(키 구조와 식별 필드): G-S 배치 `batch_V5-RESUME-K1-GS_20261113_010654`·`_012403`·`_020211`의 `batch.json`과 행 `result.json`·npz 키 이름(값은 판정에 쓰지 않음), 저장 P5r4 A1 `result.json`의 정의 문자열(`P3-3_leg_force.criterion`, `p3b.departure.rule`, `start_condition.rule`, `basis`), 저장 J_P 배치 `batch.json`과 `controller_events.json` 형식, `shadow_jp_b0.jsonl` 형식, 저장 `d1.jsonl`·`u3_slope_V0.json`·`noise_vb/r79_VB_L1L2L3.json`·`grid_vb/grid_r67_main.json`·`dg3/dg3_v4_on.json`의 컨테이너 구조와 키 이름.
 - 코드: `03_src/outrigger_sim/hydraulics/v5_options.py`(태그 상수와 `is_extend_start_tag`, 4.1이 지정), `06_analysis/03_hydraulic/coupled/v5/paper_runs/scripts/openloop_compare.py`(`analyse`, 9.1이 지정), 선례 `verif_matrix/p5k_path2/p5k_chrono_recount.py`의 머리 주석과 상수 이름(다른 판정의 경로 2, 436.8 경로 1 아님).
 - 보지 않은 것: `verif_matrix/scripts/resume4368_judge.py`, `04_scripts/04_hydraulic/coupled/u3_judge_k1.py`, `resume_k1_record.py`, `resume_k1_steps.py`, `verif_matrix/v5_resume_4368/gs_check_*.txt`·`chrono_rows_check.json`·`chrono_rows_manifest.json`(경로 1 또는 행 생성기 출력일 수 있어 열지 않음), 행 정의 모듈 `v5_resume_4368_chrono_rows.py`, 러너 코드.

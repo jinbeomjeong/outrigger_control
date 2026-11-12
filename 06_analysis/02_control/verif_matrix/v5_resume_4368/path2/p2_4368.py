@@ -1,7 +1,11 @@
 """Path-2 independent recount for the 436.8 v5 resume verification.
 
-Rules: ``v5_resume_4368_rules.md`` (sha256 9019b405...) and its addendum ``v5_resume_4368_rules_rev1.md``
-(sha256 d9094fda...; rev1 wins where they differ). Author: dynamics-expert (path 2, user decision
+Rules: ``v5_resume_4368_rules.md`` (sha256 9019b405...), addenda ``v5_resume_4368_rules_rev1.md``
+(sha256 d9094fda...) and ``v5_resume_4368_rules_rev2.md`` (sha256 497e4614...; the later sheet wins).
+rev2 R2-1..R2-9 are applied: would_block without due / applied without due = record conflict (line
+undecidable, S-5); absent start_s = not started; L2b / L1-R K1 record fields; open-loop r_vu / r_v;
+F<F_min window [t_D, t_D + 8 s]; S-9 on either path; grid family by meta.spec + run event; C-2 fixed rows;
+CRLF-only appendix-A difference passes and is disclosed. Author: dynamics-expert (path 2, user decision
 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
 ``resume_k1_record.py``, the judging part of ``resume_k1_steps.py``) and every path-1 output were not
@@ -49,6 +53,11 @@ RULES_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules.sha25
 REV1_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev1.md"
 REV1_SHA = "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7"
 REV1_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev1.sha256"
+REV2_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.md"
+REV2_SHA = "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199"
+REV2_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.sha256"
+GRID_SPEC_PRESCRIBED = "rev. 67 (G1 / G2 / G7 reduced screen)"   # rev2 R2-7
+GRID_EVENTS_PRESCRIBED = {"G4", "RE1bF", "FS24"}
 
 _V5 = "06_analysis/03_hydraulic/coupled/v5/"
 _VM = "06_analysis/02_control/verif_matrix/"
@@ -154,6 +163,7 @@ LAS_EXTRA_ZERO = ("min_active_periods", "end_ramp_periods")   # P5r4 extras: mus
 HARNESS_COUNTS = {"H-1": 868, "H-3": 2228, "H-4": 968, "H-5": 14, "H-6": 135, "H-7": 135,
                   "H-8": 3106, "H-9": 1676, "H-10": 440}
 HARNESS_FILE_COUNTS = {("H-4", "IND_LAS"): 242, ("H-4", "IND"): 242}
+C2_FIXED = {"C2-03", "C2-07", "S-01", "S-02"}   # rules 5.2 C-2 fixed rows (rev2 R2-8)
 CHRONO_COUNTS = {"C-1": (10, 10), "C-3": (2, 2), "C-4": (4, 4), "C-5": (35, 35), "C-6": (1, 1),
                  "C-7": (2, 2), "C-8a": (1, 1), "C-8b": (1, 1)}
 
@@ -381,7 +391,8 @@ class Findings:
 def check_seals(repo, appendix=True):
     """Rules + rev1 sha against the constants and the .sha256 files; appendix A sha."""
     out = {"rules": {}, "appendix_a": {}, "ok": True}
-    for rel, want, seal in ((RULES_REL, RULES_SHA, RULES_SEAL_REL), (REV1_REL, REV1_SHA, REV1_SEAL_REL)):
+    for rel, want, seal in ((RULES_REL, RULES_SHA, RULES_SEAL_REL), (REV1_REL, REV1_SHA, REV1_SEAL_REL),
+                            (REV2_REL, REV2_SHA, REV2_SEAL_REL)):   # sealed rules: raw sha only (R2-9)
         p = repo / rel
         got = sha256_file(p) if p.is_file() else None
         sp = repo / seal
@@ -403,9 +414,10 @@ def check_seals(repo, appendix=True):
                 # rules list the LF bytes. Accept an EOL-only difference and record it.
                 lf = hashlib.sha256(p.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
                 item["sha256_lf"] = lf
-                if lf == want:
+                if lf == want:          # rev2 R2-9: CRLF -> LF only; disclose raw and LF sha
                     item["ok"] = True
                     item["eol_only"] = True
+                    item["note"] = "CRLF 변환만 다름"
                     out.setdefault("eol_only", []).append(rel)
             out["appendix_a"][rel] = item
             out["ok"] &= item["ok"]
@@ -480,6 +492,8 @@ def classify_k1(las, order_gate, skipped_count, family, where, fnd, las_absent_o
                 wb_no_due += 1
         if wb and d.get("applied") is True:
             fnd.stop("S-5", where, f"decision {i}: applied and would_block both true")
+        if d.get("applied") is True and not due:
+            fnd.stop("S-5", where, f"decision {i}: applied without r4_due_without_gate (record conflict, R2-1)")
     res.update(blocked=blocked, would_block_any=wb_any, would_block_without_r4_due=wb_no_due,
                n_decisions=len(decisions))
     if skipped_count is None:
@@ -487,9 +501,10 @@ def classify_k1(las, order_gate, skipped_count, family, where, fnd, las_absent_o
     elif skipped_count != blocked:
         fnd.stop("S-5", where, f"_SKIPPED:order count {skipped_count} != blocked decisions {blocked}")
     if wb_no_due:
-        fnd.undec(where, f"{wb_no_due} decision(s) would_block without r4_due_without_gate: neither "
-                         "'unchanged' nor 'K1 block' (7.2 wording, confirm)")
-        res["class"] = "unclassified_would_block_without_due"
+        # rev2 R2-1: record conflict -> the line is undecidable and the bundle stops with S-5
+        fnd.undec(where, f"{wb_no_due} decision(s) would_block without r4_due_without_gate (record conflict)")
+        fnd.stop("S-5", where, "would_block without r4_due_without_gate (record conflict, R2-1)")
+        res["class"] = "record_conflict"
         return res
     prefix = "las_none_" if las_absent_ok else ""
     if blocked == 0 and not las_started:
@@ -537,7 +552,17 @@ def family_d1(job):
     return family_from_tokens([d1.get("key")])
 
 
-def family_harness(rec, fmt, parent=None):
+def family_grid(run, file_meta):
+    """rev2 R2-7: grid (r67 / r69) runs: meta.spec + run event only, never the key string."""
+    spec = file_meta.get("spec") if isinstance(file_meta, dict) else None
+    if spec == GRID_SPEC_PRESCRIBED and run.get("event") in GRID_EVENTS_PRESCRIBED:
+        return "patch"
+    return "unresolved"          # treated as uniform soft (S-6 on a K1 block)
+
+
+def family_harness(rec, fmt, parent=None, file_meta=None):
+    if fmt == "grid_json":
+        return family_grid(rec, file_meta or {})
     if fmt == "run_v5_jsonl":
         f = family_d1(rec.get("job"))
         if f is not None:
@@ -689,6 +714,7 @@ def cmd_harness(args, repo):
                 k = harness_key(rec, par, entry.get("stored_format", fmt), lab)
                 h, _ = first_path(rec, HASH_PATHS)
                 stored.setdefault(k, []).append(h)
+        file_meta = json.loads(path.read_text("utf-8")).get("meta", {}) if fmt == "grid_json" else None
         n_file = 0
         classes = {}
         hash_cmp = {"compared": 0, "equal": 0, "differ": [], "no_anchor": 0}
@@ -754,7 +780,7 @@ def cmd_harness(args, repo):
             las = rk.get("liftoff_approach_slow", MISSING)
             check_las_settings(las.get("settings") if isinstance(las, dict) else None, where, fnd,
                                abl=(kind == "ABL"))
-            fam = family_harness(rec, fmt, parent)
+            fam = family_harness(rec, fmt, parent, file_meta)
             b["families"][fam] = b["families"].get(fam, 0) + 1
             sk, sk_src = skipped_count_harness(rec, rk)
             ec = dig(rk, "event_counts.flat_soil_margin_skipped_order", None)
@@ -1016,8 +1042,11 @@ def series_force_recount(step_path, weight_n):
                      "F_min_late_N": float(F[late, i].min()) if np.any(late) else None,
                      "t_below_F_min_s": below * dt, "t_below_F_min_plus_2kN_s": below2 * dt,
                      "t_below_F_min_after_all_s": below_all * dt})
-    out.update(t_departure_s=td, dt_s=dt, window="[t_d, t_d + 8 s] for times; t >= t_d for F_min_after",
-               legs=legs)
+    truncated = bool(t[-1] < td + TRANSIENT_WINDOW_S - 1e-9)    # rev2 R2-5: run ends before the window end
+    out.update(t_departure_s=td, dt_s=dt, window="[t_D, t_D + 8 s] for times (R2-5); t >= t_D for F_min_after (R2-6)",
+               window_truncated_at_run_end=truncated, legs=legs,
+               max_t_below_F_min_s=max(lg["t_below_F_min_s"] for lg in legs),
+               max_t_below_F_min_plus_2kN_s=max(lg["t_below_F_min_plus_2kN_s"] for lg in legs))
     return out
 
 
@@ -1059,7 +1088,8 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
     cid = row.get("criteria_id") or dig(row, "r4368.criteria_id", None)
     where = f"{Path(batch_dir).name}:{case}"
     out = {"case": case, "criteria_id": cid, "engine": engine, "rc": row.get("rc"), "pool": row.get("pool"),
-           "planned_pool": row.get("planned_pool"), "role": dig(row, "r4368.role", None)}
+           "planned_pool": row.get("planned_pool"), "role": dig(row, "r4368.role", None),
+           "d1_id": row.get("d1_id") or dig(row, "r4368.d1_id", None)}
     head = dig(row, "code_at_launch.git.head", None)
     commits.setdefault(head, []).append(case)
     if dig(row, "code_at_launch.git.dirty", []) not in ([], None):
@@ -1162,7 +1192,9 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
             gate = "on" if argv_value(argv, "--k1-order-gate") == "on" else (
                 "preset" if not argv_has(argv, "--k1-order-gate") else argv_value(argv, "--k1-order-gate"))
             eff = dig(res, "controller_meta.slope_clearance_margin.order_gate.enabled", None)
-            fnd.note(where, "k1_order_gate request read from argv, effective from order_gate.enabled (L2b / L1-R)")
+            fnd.note(where, "k1_order_gate request read from argv, effective from order_gate.enabled (L2b / L1-R, R2-3)")
+            if not isinstance(res.get("controller_meta"), dict) or eff is None:
+                fnd.undec(where, "controller_meta / order_gate.enabled missing (R2-3, 9.3)")
         if gate != ("on" if off else "preset"):
             fnd.stop("S-3", where, f"k1_order_gate request = {gate!r}")
         if eff is not True:
@@ -1252,6 +1284,10 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
         else:
             rec = series_force_recount(step, w)
             out["series"] = rec
+            if rec.get("t_departure_s") is None:
+                fnd.note(where, "t_D undefined: F<F_min times are missing (R2-5)")
+                if cid in ("C-8a", "C-8b"):
+                    fnd.undec(where, "t_D undefined (R2-5)")
             stored_td = num(dig(res, "p3b.departure.t_departure_s", None))
             if rec.get("t_departure_s") is not None and stored_td is not None and not same_value(rec["t_departure_s"], stored_td):
                 fnd.note(where, f"departure path2 {rec['t_departure_s']} vs recorded {stored_td}")
@@ -1297,6 +1333,10 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
                     tier_rj = ("stop" if t_lt(oc["m_result_json_N"], F_MIN_N) else
                                "record_with_margin" if t_lt(oc["m_result_json_N"], F_MIN_N + G_BAND_N) else "record")
                     oc["tier_result_json"] = tier_rj
+                    # rev2 R2-6: either path below F_min -> S-9 until decided; the two-path comparison of
+                    # tiers (R2-6 2..4) is done in the judgement document, not here
+                    if tier_rj == "stop" and oc["tier"] != "stop":
+                        fnd.stop("S-9", where, "O-C5: result.json m < F_min (R2-6 5)")
                     if tier_rj != oc["tier"]:
                         fnd.note(where, f"O-C5 tier path2 {oc['tier']} vs result.json m {tier_rj}")
         out["oc5"] = oc
@@ -1331,6 +1371,16 @@ def cmd_chrono(args, repo):
             fnd.stop("S-15", "C-2", f"{per_cid.get('C-2', 0)} rows, H-2 output says {args.c2_expected}")
         if args.c2_psc is not None and args.c2_psc > 2:
             fnd.stop("S-15", "C-2", f"PS-c rows {args.c2_psc} > 2 (RV1-10 g)")
+        # rev2 R2-8: the four fixed C-2 rows exactly once each, + RV1-10 g ranges
+        c2 = [r for r in rows if r.get("criteria_id") == "C-2"]
+        fixed = [r for r in c2 if r.get("d1_id") in C2_FIXED]
+        psc = [r for r in c2 if r not in fixed and ("PSC" in str(r.get("d1_id")) or "D1PSC" in str(r.get("case")))]
+        extra = [r for r in c2 if r not in fixed and r not in psc]
+        ids = sorted(str(r.get("d1_id")) for r in fixed)
+        if ids != sorted(C2_FIXED):
+            fnd.stop("S-15", "C-2", f"fixed rows {ids}, rules say {sorted(C2_FIXED)} once each (R2-8)")
+        if not (0 <= len(extra) <= 4 and len(psc) <= 2 and 4 <= len(c2) <= 10):
+            fnd.stop("S-15", "C-2", f"baseline extra {len(extra)} (0..4), PS-c {len(psc)} (0..2), total {len(c2)} (4..10)")
     out_rows = [{k: v for k, v in r.items()} for r in rows]
     outside = [r["case"] for r in rows if r.get("outside_start_condition")]
     k1_table = {}
@@ -1487,26 +1537,55 @@ def load_analyse(script):
     return ns["analyse"], hashlib.sha256(src.encode("utf-8")).hexdigest()
 
 
-def speed_ratio_path2(run_dir, t0, t1):
-    """Mean stroke speed / max speed over t0 < t <= t1 (path-2 assumed definition, see README)."""
+def yaml_vmax(repo):
+    """YAML actuator.max_speed_m_s (rev2 R2-4)."""
+    text = (repo / "02_params" / "rexome33.yaml").read_text("utf-8")
+    try:
+        import yaml  # noqa: PLC0415
+        return float(yaml.safe_load(text)["actuator"]["max_speed_m_s"])
+    except Exception:  # noqa: BLE001 - fall back to the plain text block
+        m = re.search(r"(?ms)^actuator:\s*\n(.*?)(?=^\S)", text + "\nEND:\n")
+        v = re.search(r"^\s+max_speed_m_s:\s*([0-9.eE+-]+)", m.group(1), re.M) if m else None
+        return float(v.group(1)) if v else None
+
+
+def speed_ratio_vu(run_dir, vmax, t0=8.5):
+    """r_vu (R2-4): per leg median v/u of the flow_series 1 ms rows with t0 < t <= end and u >= 0.1 v_max."""
     import numpy as np  # noqa: PLC0415
-    res = json.loads((Path(run_dir) / "result.json").read_text("utf-8"))
+    p = Path(run_dir) / "flow_series.npz"
+    if not p.is_file() or vmax is None:
+        return None
+    z = np.load(p, allow_pickle=False)
+    cols = [str(c) for c in z["columns"]]
+    rows = z["rows"]
+    t = rows[:, cols.index("t")]
+    out = {}
+    for leg in ("FL", "FR", "RL", "RR"):
+        u, v = rows[:, cols.index(f"u_{leg}")], rows[:, cols.index(f"v_{leg}")]
+        m = (t > t0 + EPS_THR) & (u >= 0.1 * vmax - EPS_THR)
+        out[leg] = float(np.median(v[m] / u[m])) if np.any(m) else None
+    return {"per_leg": out, "window_s": [t0, float(t[-1])], "v_max_m_s": vmax, "rows_file": "flow_series.npz"}
+
+
+def speed_ratio_v(run_dir, vmax, t0=10.0, t1=20.0):
+    """r_v (R2-4): per leg (s_motor(last) - s_motor(first)) / (t_last - t_first) / v_max over t0 <= t <= t1."""
+    import numpy as np  # noqa: PLC0415
     z = np.load(Path(run_dir) / "series.npz", allow_pickle=False)
     t, sm = z["t_s"], z["s_motor_m"]
-    vmax = num(dig(res, "flow_limit.circuit.max_speed_m_s", None)) or num(dig(res, "meta.actuator.max_speed_m_s", None))
-    m = (t > t0 + 1e-9) & (t <= (t1 if t1 is not None else t[-1]) + 1e-9)
+    m = (t >= t0 - EPS_THR) & (t <= t1 + EPS_THR)
     if vmax is None or np.count_nonzero(m) < 2:
         return None
     idx = np.flatnonzero(m)
-    v = (sm[idx[-1]] - sm[idx[0]]) / (t[idx[-1]] - t[idx[0]])
-    return {"v_max_m_s": vmax, "per_leg": (v / vmax).tolist(), "mean": float(np.mean(v / vmax)),
-            "window_s": [float(t[idx[0]]), float(t[idx[-1]])]}
+    v = (sm[idx[-1]] - sm[idx[0]]) / (t[idx[-1]] - t[idx[0]]) / vmax
+    return {"per_leg": dict(zip(("FL", "FR", "RL", "RR"), map(float, v))), "window_s": [float(t[idx[0]]), float(t[idx[-1]])],
+            "v_max_m_s": vmax}
 
 
 def cmd_openloop(args, repo):
     fnd = Findings()
     script = Path(args.script) if args.script else repo / _V5 / "paper_runs/scripts/openloop_compare.py"
     analyse, ssha = load_analyse(script)
+    vmax = yaml_vmax(repo)
     runs = {}
     for spec in args.run:
         label, d = spec.split("=", 1)
@@ -1516,8 +1595,8 @@ def cmd_openloop(args, repo):
         except Exception as exc:  # noqa: BLE001
             fnd.undec(label, f"analyse failed: {exc!r}")
             continue
-        o["speed_ratio_path2_8p5_end"] = speed_ratio_path2(d, 8.5, None)
-        o["speed_ratio_path2_10_20"] = speed_ratio_path2(d, 10.0, 20.0)
+        o["r_vu"] = speed_ratio_vu(d, vmax)      # P-10 compares this (R2-4); None for V0 (no flow record)
+        o["r_v"] = speed_ratio_v(d, vmax)        # P-11 / P-11b compare this (R2-4)
         pre = [x for x in o.get("pre_liftoff_min_F_kN", []) if x is not None]
         o["spec_11047_flag"] = bool(pre) and any(t_lt(x * 1e3, F_MIN_N) for x in pre)
         p3a = o.get("stored_p3a_checks") or {}
@@ -1631,7 +1710,10 @@ def main(argv=None):
             report, status = {"seals": seals}, "pass"
         else:
             body, status = CMDS[args.cmd](args, repo)
-            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA}, **body}
+            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA,
+                                "eol_only": seals.get("eol_only", []),
+                                "eol_only_detail": {k: v for k, v in seals["appendix_a"].items() if v.get("eol_only")}},
+                      **body}
         report.update(tool=TOOL_NAME, version=TOOL_VERSION, tool_sha256=tool_sha, cmd=args.cmd,
                       argv=sys.argv[1:] if argv is None else list(argv),
                       created=_dt.datetime.now().astimezone().isoformat(timespec="seconds"), status=status)
