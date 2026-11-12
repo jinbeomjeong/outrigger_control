@@ -1614,8 +1614,20 @@ def _compact(record: dict, verdict: dict) -> dict:
             "events": events[:200], "wall_s": record["run"].get("wall_s")}
 
 
+SETTLE_V2_KEY = "settle_v2"
+"""``s9_settle_rejudge.SETTLE_V2_KEY``: the settle v2 record of a run (436.8 Q-U1 = A)."""
+
+
+def _settle_v2_record(result: dict) -> dict:
+    """``s9_settle_rejudge.safe_settle_v2_record`` of a finished run (reads the result only)."""
+    import s9_settle_rejudge
+
+    return s9_settle_rejudge.safe_settle_v2_record(result)
+
+
 def run_one(case: dict) -> dict:
-    """Worker entry: run one case on the patched s9 harness and judge it."""
+    """Worker entry: run one case on the patched s9 harness and judge it. The result carries the
+    settle v2 record (:data:`SETTLE_V2_KEY`), computed from the result after the run."""
     t0 = time.perf_counter()
     try:
         sl = _install_patches()
@@ -1634,6 +1646,7 @@ def run_one(case: dict) -> dict:
         if case.get("group") == H8_GROUP:  # spec 426.6 records (the other groups unchanged)
             result.update(touch=touch_record(record), pad_start_gap=out.get("pad_start_gap"),
                           sample="in" if case.get("start_gap") is None else "out")
+        result[SETTLE_V2_KEY] = _settle_v2_record(result)  # record only, after the run
     except Exception as exc:  # keep the batch going, record the failure
         return {"id": case["id"], "case": case, "error": repr(exc),
                 "tb": traceback.format_exc()[-3000:], "wall_s": time.perf_counter() - t0}

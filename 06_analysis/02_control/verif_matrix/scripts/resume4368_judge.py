@@ -14,6 +14,50 @@ Subcommands (each writes one JSON report with ``--out``; the last stdout line is
   overlap        11.1 option x stage table of steps files (harness) and Chrono batch rows
   gs             11.2 G-S key presence (prints present / missing only, never values)
 
+Rev1 (``v5_resume_4368_rules_rev1.md``, sealed d9094fda; every subcommand first checks the rev1
+file and its ``.sha256`` and stops with S-1 when either is missing or differs):
+  keyset         RV1-3: key set (and grid ``runs[]`` / meta) of a new H-6 .. H-9 grid output vs
+                 its appendix B source (S-15)
+  dg3-hash       RV1-3.2: H-6 vs H-8 VB ``base.commands_sha256`` per key (record)
+  anchor-map     RV1-5: P-1 / P-2 anchor lines by ``run_v5.job_key`` (S-7), H-1 hash pairs;
+                 its report is the ``k1-class --anchor-map`` input
+  import-check   RV1-9: no ``loc_anchor_shadow`` (or a runner that installs it) on the import
+                 path of the step runners, no ``OUTRIGGER_LOC_SHADOW`` in a step env
+  fmin-time      RV1-7: 7.4 ``F<F_min`` / ``F<F_min+2 kN`` times from ``step_series.npz``
+  stroke-exposure RV1-10 j: lines / rows with max stroke >= 678 / 684.8 mm (s_ref and piston)
+                 and with ``FAULT_STROKE_END`` (record; a missing coordinate is "기록 없음")
+  ``k1-class --family-table`` reads the RV1-6 table of ``resume_k1_family.py`` (a key it does
+  not place counts as uniform soft soil: a K1 block there is S-6).
+
+Rev2 (``v5_resume_4368_rules_rev2.md``, sealed 497e4614, also checked raw before every
+subcommand): R2-1 a ``would_block`` / ``applied`` decision without ``r4_due_without_gate`` is a
+record conflict (line 판정 불가, S-5); R2-2 a LAS-b block without ``start_s`` = not started, no
+block = 판정 불가; R2-3 L2b / L1-R results are read from ``controller_meta``; R2-5 ``fmin-time``
+finds t_D in ``step_series.npz``; R2-6 ``oc5`` gives the path 1 processing cell; R2-7 grid lines
+(``runs[]``) get their family from ``meta.spec`` + ``event``; R2-9 ``appendix-a`` compares the
+original appendix A raw, else CRLF -> LF normalised (disclosed).
+
+Rev3 (``v5_resume_4368_rules_rev3.md``, sealed dad8dfa6, checked raw too):
+  grid-v0-sample R3-E1: the 8-job V0 grid sample vs the stored V0 grid (V0 768 needed or not)
+  family-f-trigger / family-f  R3-E2: whether family F starts the 64 runs; rev5 5.2 R-1 .. R-4
+  ind-las        R3-B5: IND_LAS gate (``INFO_LIFTOFF_SLOW:``) and the IND hash
+  reagg-items    TABLE_REAGG rows (R3-A2, R3-G1, R3-E3)
+  dg3-hash reads the top-level r79 ``commands_sha256`` only (R3-E4, keys without ``cand=``,
+  R3-D1); appendix B files also pass after CRLF -> LF (R3-F4, disclosed); gs also requires the
+  command hash and the grid ``extend_bound_check`` (③ settings) and counts
+  ``head_only_declared``.
+
+Rev4 (``v5_resume_4368_rules_rev4.md``, sealed 7ea87a30, checked raw too): grid-v0-sample
+pairs every run of a sampled result by (event, offset) (R4-B4); gs requires the record-only
+fields F-1 .. F-6 of the R4-D table and checks the second table (``extend_bound_check.rule`` =
+the ext_moving rule with ``breach_reads``, r79 ``base.t_done_s`` = the first DONE of
+``base.phase_path``, ``gs --chrono``: PS-c ``soil_event_series.npz`` columns).
+
+Rev5 (``v5_resume_4368_rules_rev5.md``, sealed 452a8436, checked raw too): R5-A1 makes the
+``04_scripts/04_hydraulic/coupled/*_4368.py`` judges the harness path 1 (this tool keeps its
+subcommands; it only adds the rev5 seal check). Rev6 (``v5_resume_4368_rules_rev6.md``, sealed
+809e5639, checked raw too): seal check only here (R6-C items are in the ``*_4368.py`` judges).
+
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
 The tool reads only; it never runs a simulation. Tag judgements use
@@ -23,11 +67,14 @@ The tool reads only; it never runs a simulation. Tag judgements use
 from __future__ import annotations
 
 import argparse
+import ast
+import hashlib
 import json
 import math
 import re
 import sys
 import traceback
+from collections import Counter
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
@@ -42,6 +89,33 @@ from outrigger_sim.hydraulics.v5_options import is_extend_start_tag  # noqa: E40
 
 RULES_NAME = "v5_resume_4368_rules.md"
 RULES_SHA256 = "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524"
+RULES_DIR = HERE.parent
+RULES_REV1_NAME = "v5_resume_4368_rules_rev1.md"
+RULES_REV1_SHA256 = "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7"
+"""Rev1 (sealed 2026-11-13 01:49:34 +09:00): it overrides the original where they differ. Every
+subcommand checks the sealed file and its ``.sha256`` first (missing or other value = S-1)."""
+RULES_REV2_NAME = "v5_resume_4368_rules_rev2.md"
+RULES_REV2_SHA256 = "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199"
+"""Rev2 (sealed 2026-11-13 02:30:11 +09:00): overrides rev1 and the original where they differ."""
+RULES_REV3_NAME = "v5_resume_4368_rules_rev3.md"
+RULES_REV3_SHA256 = "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
+"""Rev3 (sealed 2026-11-13 03:13:21 +09:00): overrides rev2, rev1 and the original."""
+RULES_REV4_NAME = "v5_resume_4368_rules_rev4.md"
+RULES_REV4_SHA256 = "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b"
+"""Rev4 (sealed 2026-11-13 03:47:45 +09:00): overrides rev3 .. the original."""
+RULES_REV5_NAME = "v5_resume_4368_rules_rev5.md"
+RULES_REV5_SHA256 = "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca"
+"""Rev5 (sealed 2026-11-13 07:32:14 +09:00): overrides rev4 .. the original (R5-A1: the
+harness path 1 judges are the ``*_4368.py`` versions)."""
+RULES_REV6_NAME = "v5_resume_4368_rules_rev6.md"
+RULES_REV6_SHA256 = "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9"
+"""Rev6 (sealed 2026-11-13 07:49:42 +09:00): overrides rev5 .. the original (R6-C: F-9, K-0
+fields, U-S9-G6c branch)."""
+SEALED_REVISIONS = ((RULES_REV1_NAME, RULES_REV1_SHA256), (RULES_REV2_NAME, RULES_REV2_SHA256),
+                    (RULES_REV3_NAME, RULES_REV3_SHA256), (RULES_REV4_NAME, RULES_REV4_SHA256),
+                    (RULES_REV5_NAME, RULES_REV5_SHA256), (RULES_REV6_NAME, RULES_REV6_SHA256))
+"""The revisions every subcommand checks raw (R2-9: sealed rule files are ``-text``, no LF
+normalisation)."""
 RECORD_KEY = "resume_k1"
 """``04_scripts/04_hydraulic/coupled/resume_k1_record.RECORD_KEY``."""
 
@@ -150,6 +224,30 @@ def run_records(node: Any, trail: str = "") -> Iterator[tuple[str, dict]]:
     elif isinstance(node, list):
         for index, value in enumerate(node):
             yield from run_records(value, f"{trail}[{index}]")
+
+
+def _own_key(node: dict) -> str | None:
+    for name in ("key", "id", "case"):
+        if node.get(name) is not None:
+            return str(node[name])
+    return None
+
+
+def run_records_owned(node: Any, owner: str | None = None, trail: str = ""
+                      ) -> Iterator[tuple[str, dict, str | None]]:
+    """:func:`run_records` plus the key of the nearest dict above (or at) the record that names
+    itself: a grid branch run (``results[i].runs[j]``) has no key of its own and takes its job's."""
+    if isinstance(node, dict):
+        owner = _own_key(node) or owner
+        if _is_run_record(node):
+            yield trail, node, owner
+        for key, value in node.items():
+            if key in (RECORD_KEY, "v5", "job"):
+                continue
+            yield from run_records_owned(value, owner, f"{trail}.{key}" if trail else key)
+    elif isinstance(node, list):
+        for index, value in enumerate(node):
+            yield from run_records_owned(value, owner, f"{trail}[{index}]")
 
 
 def record_key(record: dict) -> str:
@@ -269,8 +367,39 @@ def chrono_argv_problems(argv: list[str], env: dict, *, is_c4_off: bool, is_scm:
     return problems
 
 
-def chrono_result_problems(result: dict, *, is_c4_off: bool) -> list[str]:
-    """Rules 4.2 record check of one Chrono ``result.json``."""
+ENGINE_RUNNERS = ("run_S8C.py", "run_S6C.py")
+"""L2b and L1-R runners: their results have no ``c2_setup`` (R2-3)."""
+
+
+def _is_engine_row(row: dict) -> bool:
+    return any(str(token).endswith(ENGINE_RUNNERS) for token in row.get("argv", []))
+
+
+def engine_result_problems(result: dict) -> list[str]:
+    """R2-3 record check of an L2b / L1-R ``result.json``: the K1 request is the argv (checked by
+    :func:`chrono_argv_problems`: no ``--k1-order-gate`` = preset), the applied gate
+    ``controller_meta.slope_clearance_margin.order_gate.enabled``; a missing key is 판정 불가."""
+    problems = []
+    checks = {
+        "controller_meta.slope_clearance_margin.order_gate.enabled": True,
+        "controller_meta.slope_clearance_margin.settings.flat_soil_margin_order_gate": True,
+        "expect_controller.ok": True,  # rev1 RV1-10 a: the row runs with --expect-controller
+    }
+    for dotted, want in checks.items():
+        present, got = get_path(result, dotted)
+        if not present:
+            problems.append(f"{dotted} missing (판정 불가, R2-3: review S-3)")
+        elif got != want:
+            problems.append(f"{dotted} {got!r} != {want!r}")
+    _, settings = get_path(result, "controller_meta.liftoff_approach_slow.settings")
+    return problems + _las_setting_problems(settings, expect_on=True)
+
+
+def chrono_result_problems(result: dict, *, is_c4_off: bool, is_engine: bool = False
+                           ) -> list[str]:
+    """Rules 4.2 record check of one Chrono ``result.json`` (L2b / L1-R rows: R2-3)."""
+    if is_engine:
+        return engine_result_problems(result)
     problems = []
     want_request = "on" if is_c4_off else "preset"
     checks = {
@@ -330,7 +459,8 @@ def record_check(args: argparse.Namespace) -> dict:
             )
             result_path = Path(batch_dir) / case / "result.json"
             if result_path.is_file():
-                problems += chrono_result_problems(read_json(result_path), is_c4_off=is_c4_off)
+                problems += chrono_result_problems(read_json(result_path), is_c4_off=is_c4_off,
+                                                   is_engine=_is_engine_row(row))
             else:
                 problems.append("result.json missing")
             chrono.append(
@@ -391,9 +521,12 @@ def classification_inputs(block: Any, las_off_flag: Any = None) -> tuple[dict | 
     if not isinstance(block, dict):
         return None, f"{RECORD_KEY} block missing"
     las_absent = las_absence_basis(block, las_off_flag)
-    present, start_s = get_path(block, "liftoff_approach_slow.start_s")
-    if not present and las_absent is None:
-        return None, "liftoff_approach_slow.start_s missing"
+    las_block = block.get("liftoff_approach_slow")
+    # R2-2: a LAS-b block (with settings) without start_s = LAS-b not started; no block = 판정 불가
+    # (the C-4 off arm needs no block, rev1 RV1-10 b)
+    if las_absent is None and not (isinstance(las_block, dict) and "settings" in las_block):
+        return None, "liftoff_approach_slow block missing (R2-2)"
+    start_s = las_block.get("start_s") if isinstance(las_block, dict) else None
     present, decisions = get_path(block, "slope_clearance_margin.order_gate.decisions")
     if not present or not isinstance(decisions, list):
         return None, "slope_clearance_margin.order_gate.decisions missing"
@@ -404,6 +537,21 @@ def classification_inputs(block: Any, las_off_flag: Any = None) -> tuple[dict | 
         if missing:
             return None, f"decisions[{index}] without {missing}"
     return {"start_s": start_s, "decisions": decisions, "las_absent": las_absent}, None
+
+
+def record_conflicts(decisions: list[dict]) -> list[str]:
+    """R2-1 record conflicts of ``decisions`` (``would_block`` and ``applied`` both require
+    ``r4_due_without_gate``; ``applied`` with ``would_block`` cannot hold with the gate on)."""
+    conflicts = []
+    for index, decision in enumerate(decisions):
+        due = decision["r4_due_without_gate"]
+        if decision["would_block"] and not due:
+            conflicts.append(f"decisions[{index}] would_block without r4_due_without_gate")
+        if decision["applied"] and not due:
+            conflicts.append(f"decisions[{index}] applied without r4_due_without_gate")
+        if decision["applied"] and decision["would_block"]:
+            conflicts.append(f"decisions[{index}] applied and would_block together")
+    return conflicts
 
 
 def _k1_state(decisions: list[dict], blocked: list[dict]) -> str:
@@ -436,7 +584,7 @@ def classify(inputs: dict) -> tuple[str, dict]:
         return CLASS_K1, facts
     return CLASS_UNDECIDABLE, {
         **facts,
-        "reason": "would_block without r4_due_without_gate (outside 7.2)",
+        "reason": "would_block without r4_due_without_gate (record conflict, R2-1: S-5)",
     }
 
 
@@ -458,18 +606,6 @@ def chrono_family(row: dict) -> str | None:
     return "uniform"
 
 
-def _anchor_hashes(paths: list[Path]) -> dict[str, str]:
-    """Key -> ``commands_sha256`` of the anchor files, the first file that has a key wins."""
-    out: dict[str, str] = {}
-    for path in paths:
-        for doc in read_records(path):
-            for _, record in run_records(doc):
-                sha = record.get("commands_sha256")
-                if sha is not None:
-                    out.setdefault(record_key(record), sha)
-    return out
-
-
 def _class_row(
     key: str,
     block: Any,
@@ -482,23 +618,23 @@ def _class_row(
     inputs, reason = classification_inputs(block, las_off_flag)
     if inputs is None:
         return {"key": key, "class": CLASS_UNDECIDABLE, "reason": reason, "stops": []}
+    conflicts = record_conflicts(inputs["decisions"])
+    if conflicts:  # R2-1: the line is 판정 불가, the bundle stops (S-5)
+        return {"key": key, "class": CLASS_UNDECIDABLE, "reason": "record conflict (R2-1)",
+                "conflicts": conflicts, "family": family,
+                "stops": [f"S-5 record conflict (R2-1): {c}" for c in conflicts]}
     klass, facts = classify(inputs)
     stops = []
-    if facts["applied_and_would_block"]:
-        stops.append("S-5 applied and would_block together")
-    if klass == CLASS_NO_LAS and facts["k1_state"] == K1_STATE_OUTSIDE:
-        stops.append("would_block without r4_due_without_gate (outside 7.2, 판정 불가)")
     is_blocked = klass in (CLASS_K1, CLASS_BOTH) or (
         klass == CLASS_NO_LAS and facts["k1_state"] == K1_STATE_BLOCKED)
     if is_blocked and skipped is not None and skipped != facts["blocked"]:
         stops.append(f"S-5 _SKIPPED:order events {skipped} != blocked decisions {facts['blocked']}")
     if is_blocked and skipped is None:
         stops.append("_SKIPPED:order event count unreadable (판정 불가)")
-    if is_blocked and family == "uniform":
+    if is_blocked and family in ("uniform", None):  # RV1-6: an unplaced key counts as uniform
         klass = CLASS_K1_UNIFORM if klass == CLASS_K1 else klass
-        stops.append("S-6 K1 block on a uniform soft-soil family")
-    elif is_blocked and family is None:
-        stops.append("S-6 family unresolved (rules 7.2 names the family, the record does not)")
+        stops.append("S-6 K1 block on a uniform soft-soil family" if family == "uniform" else
+                     "S-6 K1 block on a key the family table does not place (RV1-6: uniform)")
     hash_check = None
     if klass == CLASS_INACTIVE and key in anchors:
         hash_check = {"anchor": anchors[key], "run": sha, "same": sha == anchors[key]}
@@ -515,12 +651,87 @@ def _class_row(
     }
 
 
+FAMILY_TABLE_NAMES = {
+    "균일 연약": "uniform",
+    "패치·처방 침하": "patch_or_sink",
+    "강체": "rigid",
+    "해당 없음": "not_applicable",
+    "미분류": None,
+}
+"""``resume_k1_family.py`` families -> the names of :func:`_class_row` (미분류 = None = uniform)."""
+
+
+def read_family_table(path: Path) -> dict[str, str | None]:
+    """Key -> family of a ``resume_k1_family.py`` table (RV1-6)."""
+    table = read_json(path)
+    try:
+        return {str(row["key"]): FAMILY_TABLE_NAMES[row["family"]] for row in table["rows"]}
+    except KeyError as exc:
+        raise InputError(f"{path}: not a family table ({exc})") from exc
+
+
+def table_family(record: dict, owner: str | None, table: dict[str, str | None]
+                 ) -> tuple[str | None, str]:
+    """(family, the key it was found under) of a run; (None, "not in table") without a match."""
+    candidates = [record_key(record), _own_key(record), owner]
+    for key in candidates:
+        if key is not None and key in table:
+            return table[key], key
+    return None, "not in table"
+
+
+GRID_SPEC = "rev. 67 (G1 / G2 / G7 reduced screen)"
+GRID_FLOOR_EVENTS = ("G4", "RE1bF", "FS24")
+"""R2-7: a grid run is 패치·처방 침하 when the file's ``meta.spec`` is this and its ``event`` one of
+these; otherwise unplaced (= uniform, a K1 block is S-6)."""
+
+
+def is_grid_document(document: Any) -> bool:
+    results = document.get("results") if isinstance(document, dict) else None
+    return bool(results) and all(isinstance(row.get("runs"), list) for row in results)
+
+
+def grid_lines(document: dict) -> Iterator[tuple[dict, str | None, str | None]]:
+    """(run, job key, R2-7 family) of every ``results[].runs[]`` entry: the lines of a grid file
+    (the job-level record is the prefix run, no line of its own)."""
+    is_spec = (document.get("meta") or {}).get("spec") == GRID_SPEC
+    for row in document["results"]:
+        for run in row["runs"]:
+            family = "patch_or_sink" if is_spec and run.get("event") in GRID_FLOOR_EVENTS else None
+            yield run, _own_key(row), family
+
+
+def read_anchor_map(path: Path) -> dict[str, str]:
+    """Key -> anchor ``commands_sha256`` of an ``anchor-map`` report (RV1-5)."""
+    report = read_json(path)
+    if report.get("problems"):
+        raise InputError(f"{path}: anchor map with problems {report['problems'][:3]}")
+    return dict(report.get("anchors") or {})
+
+
+GRID_NOT_A_GRID = "<no grid>"
+
+
+def _k1_class_lines(document: Any) -> Iterator[tuple[dict, str | None, str | None]]:
+    """(run record, owner key, grid family or :data:`GRID_NOT_A_GRID`) of one document."""
+    if is_grid_document(document):
+        yield from grid_lines(document)
+        return
+    for _, record, owner in run_records_owned(document):
+        yield record, owner, GRID_NOT_A_GRID
+
+
 def k1_class(args: argparse.Namespace) -> dict:
-    anchors = _anchor_hashes([Path(p) for p in args.anchor or []])
+    anchors: dict[str, str] = {}
+    anchor_source = "none"
+    if args.anchor_map is not None:  # RV1-5: the selected anchors, one per key
+        anchors = read_anchor_map(Path(args.anchor_map))
+        anchor_source = f"anchor-map {args.anchor_map}"
+    table = None if args.family_table is None else read_family_table(Path(args.family_table))
     rows = []
     for path in args.harness or []:
         for doc in read_records(path):
-            for _, record in run_records(doc):
+            for record, owner, grid_family in _k1_class_lines(doc):
                 block = record_block(record)
                 if isinstance(block, dict) and block.get("applicable") is False:
                     rows.append(
@@ -532,11 +743,19 @@ def k1_class(args: argparse.Namespace) -> dict:
                     record.get("commands_sha256")
                     or get_path(record, "v5.logged_commands_sha256")[1]
                 )
+                if grid_family is not GRID_NOT_A_GRID:
+                    family, family_source = grid_family, "R2-7 (meta.spec + event)"
+                elif table is None:
+                    family, family_source = harness_family(record), "record (job.d1.group)"
+                else:
+                    family, family_source = table_family(record, owner, table)
                 rows.append(
                     {
                         "file": str(path),
+                        "owner": owner,
+                        "family_source": family_source,
                         **_class_row(
-                            record_key(record), block, harness_family(record), sha, skipped, anchors
+                            record_key(record), block, family, sha, skipped, anchors
                         ),
                     }
                 )
@@ -582,6 +801,9 @@ def k1_class(args: argparse.Namespace) -> dict:
         "counts": counts,
         "undecidable": counts.get(CLASS_UNDECIDABLE, 0),
         "anchors": len(anchors),
+        "anchor_source": anchor_source,
+        "family_table": None if args.family_table is None else {
+            "path": str(args.family_table), "sha256": file_sha256(Path(args.family_table))},
         "hash_checked": sum(row.get("hash_check") is not None for row in rows),
         "stops": stops,
         "rows": rows if args.all else [r for r in rows if r["class"] != CLASS_INACTIVE],
@@ -671,6 +893,11 @@ def is_less(value: float, limit: float) -> bool:
     return value < limit - COMPARE_EPS
 
 
+OC5_PROCESSING = {"stop_S9": "멈춤", "record_with_margin": "여유 기록", "record": "기록"}
+"""R2-6: the 7.4 processing cell of a path; the two paths' cells are compared outside this tool
+(different cells = 판정 불가, stop and ask)."""
+
+
 def oc5_class(m_N: float) -> str:
     """Rules 7.4 table: ``stop_S9`` / ``record_with_margin`` / ``record``."""
     if is_less(m_N, F_MIN_N):
@@ -708,9 +935,8 @@ def oc5(args: argparse.Namespace) -> dict:
         "result": str(args.result),
         "values": values,
         "missing": missing,
-        "time_below_note": "F<F_min / F<F_min+2 kN durations are not in result.json "
-        "(path 2 recomputes them from the run_S9 series files step_series.npz / r8_series.npz; the "
-        "rules text says series.npz, 9.1)",
+        "time_below_note": "F<F_min / F<F_min+2 kN durations are not in result.json: path 1 "
+        "computes them with the fmin-time subcommand from step_series.npz (rev1 RV1-7)",
     }
     r_c, forces = values["R_c_operating"], values["F_min_after_N"]
     if r_c is None or not isinstance(forces, list) or len(forces) != 4:
@@ -721,6 +947,8 @@ def oc5(args: argparse.Namespace) -> dict:
     klass = oc5_class(m_N)
     return {
         **out,
+        "path": "경로 1 (result.json p3b.P3-3_leg_force.F_min_after_N, R2-6)",
+        "processing": OC5_PROCESSING[klass],
         "m_N": m_N,
         "min_leg": ["FL", "FR", "RL", "RR"][forces.index(min(forces))],
         "margin_N": m_N - F_MIN_N,
@@ -742,6 +970,22 @@ def expected_harness_tag(setting: str | None, controller: str | None = None) -> 
     return TAG_P3 if setting.startswith(("VB", "LS")) else TAG_V0
 
 
+DG3_P3_ENV = "LAS_T3_DG3_P3"
+DG3_LAS_ENV = "LAS_T3_DG3_LAS"
+DG3_P3_OFF_BUNDLE = "H-7"
+"""RV1-3.2: ``LAS_T3_DG3_P3=off`` (VB without ③) only in H-7; ``LAS_T3_DG3_LAS=off`` nowhere."""
+
+
+def dg3_switch_problems(env: dict, bundle: str | None) -> list[str]:
+    """RV1-3.2 use of the ``las_t3_dg3.py`` switches in one step's env."""
+    problems = []
+    if env.get(DG3_P3_ENV) == "off" and bundle != DG3_P3_OFF_BUNDLE:
+        problems.append(f"env {DG3_P3_ENV}=off outside {DG3_P3_OFF_BUNDLE}")
+    if env.get(DG3_LAS_ENV) == "off":
+        problems.append(f"env {DG3_LAS_ENV}=off")
+    return problems
+
+
 def steps_overlap_rows(steps_doc: dict) -> list[dict]:
     """Rules 11.1 rows of a steps file (``resume_k1_steps.py``): bundle, step, env, forbidden hits."""
     rows = []
@@ -754,6 +998,7 @@ def steps_overlap_rows(steps_doc: dict) -> list[dict]:
         hits += ["pre_*_preset_runner.py"] if PRE_PRESET_RUNNER_PATTERN.search(cmd) else []
         hits += ["scratchpad script"] if "scratchpad" in cmd.lower() else []
         meta = step.get("resume_k1") or {}
+        hits += dg3_switch_problems(env, meta.get("bundle"))
         rows.append(
             {
                 "bundle": meta.get("bundle"),
@@ -764,6 +1009,8 @@ def steps_overlap_rows(steps_doc: dict) -> list[dict]:
                 "expected_tags": meta.get("expected_tags"),
                 "output": meta.get("output"),
                 "env": sorted(env),
+                "dg3_switches": {name: env[name] for name in sorted(env)
+                                 if name.startswith("LAS_T3_DG3_")},
                 "forbidden": hits,
             }
         )
@@ -818,8 +1065,7 @@ HARNESS_GS_KEYS = (
     f"{RECORD_KEY}.k1_order_gate_request",
     f"{RECORD_KEY}.k1_order_gate_effective",
     f"{RECORD_KEY}.slope_clearance_margin.settings.flat_soil_margin_order_gate",
-    f"{RECORD_KEY}.liftoff_approach_slow.settings",
-    f"{RECORD_KEY}.liftoff_approach_slow.start_s",
+    f"{RECORD_KEY}.liftoff_approach_slow.settings",  # R2-2: no start_s key = not started
     f"{RECORD_KEY}.slope_clearance_margin.order_gate.decisions",
     f"{RECORD_KEY}.event_counts.flat_soil_margin_skipped_order",
     "controller_tag",
@@ -827,6 +1073,44 @@ HARNESS_GS_KEYS = (
 """Rules 11.2: the 4.2 / 7.2 key paths a harness run must carry (the tag key is ``controller_tag`` on run_v5
 lines, ``v5.controller_tag`` on the screen records: either counts)."""
 TAG_KEY_ALTERNATIVES = ("controller_tag", "v5.controller_tag")
+
+
+SETTLE_V2_SUITES = ("slope", "h6", "x426b", "h9")
+"""U-3 fix-candidates suites run through ``s9_soil_slope.run_one`` (they carry ``settle_v2``)."""
+SETTLE_V2_KEYS = ("status",)
+SETTLE_V2_CHECKED_KEYS = (
+    "inputs.pen_inst_mm", "inputs.q_floor_inst_deg", "inputs.q_floor_mean_deg",
+    "inputs.d_attitude_deg", "inputs.pad_xy_m", "inputs.gap_target_mm",
+    "inputs.gap_target_source", "inputs.table_gap_target_mm", "inputs.residual_deg",
+    "inputs.attitude_error_deg",
+    "inputs.table_sha256", "result.pen_mean_mm", "result.pen_plus_gap_mm",
+    "result.attitude_tol_deg", "result.ok", "result.gate",
+)
+"""436.8 Q-U1 = A: the settle v2 keys a U-3 run must carry (``checked`` runs: all of them)."""
+
+
+def settle_v2_prefix(record: dict) -> str | None:
+    """Where a run keeps ``settle_v2``: U-3 slope-like records and ``s9_soil_slope`` results at
+    the top, D-1 steady lines (U-3 reuse) under ``u3``; None for runs without one."""
+    if record.get("suite") in SETTLE_V2_SUITES:
+        return "settle_v2"
+    if isinstance(record.get("case"), dict) and "settle" in record:
+        return "settle_v2"
+    if isinstance(record.get("u3"), dict):
+        return "u3.settle_v2"
+    return None
+
+
+def settle_v2_presence(record: dict) -> dict[str, bool]:
+    prefix = settle_v2_prefix(record)
+    if prefix is None:
+        return {}
+    presence = {f"{prefix}.{key}": get_path(record, f"{prefix}.{key}")[0]
+                for key in SETTLE_V2_KEYS}
+    if get_path(record, f"{prefix}.status")[1] == "checked":
+        presence.update({f"{prefix}.{key}": get_path(record, f"{prefix}.{key}")[0]
+                         for key in SETTLE_V2_CHECKED_KEYS})
+    return presence
 
 
 def gs_presence(record: dict) -> dict[str, bool]:
@@ -844,28 +1128,1005 @@ def gs_presence(record: dict) -> dict[str, bool]:
                 presence[dotted] = any(get_path(record, alt)[0] for alt in TAG_KEY_ALTERNATIVES)
         elif is_c2 or dotted == f"{RECORD_KEY}.applicable":
             presence[dotted] = get_path(view, dotted)[0]
+    presence.update(settle_v2_presence(record))  # Q-U1 = A
     return presence
+
+
+COMMAND_HASH_ALTERNATIVES = ("commands_sha256", "hash", "v5.logged_commands_sha256")
+"""Rev3 G-S: a harness run's command hash (run_v5 lines, grid runs, screen records). r79
+results (rev3 R3-E4) count with the top-level ``commands_sha256`` only."""
+HEAD_ONLY_KEYS = ("head_only_declared", "v5.head_only_declared")
+"""Rev3 R3-C8 / Q-S3: recorded, not required (a missing field is read by the revision 9 3.1
+configuration definition and that fact goes into the judgement)."""
+P3_SETTINGS = ("VB", "LS1", "LS2", "LS3", "LS4")
+
+
+def is_r79_record(record: dict) -> bool:
+    return "seed_index" in record and "harness" in record and "inner" in record
+
+
+def hash_presence(record: dict) -> dict[str, bool]:
+    """Rev3 G-S: the command hash of a run that names itself (grid runs do not, see :func:`gs`)."""
+    if not any(name in record for name in ("job", "key", "id", "case")):
+        return {}
+    if isinstance(record.get("runs"), list):  # a grid job record: its runs carry the hashes
+        return {}
+    if is_r79_record(record):
+        return {R79_HASH_KEY: get_path(record, R79_HASH_KEY)[0]}
+    return {"command hash": any(get_path(record, k)[0] for k in COMMAND_HASH_ALTERNATIVES)}
+
+
+def grid_run_presence(document: dict) -> tuple[int, dict[str, bool]]:
+    """(runs, key -> all present) of a grid file's ``runs[]``: ``commands_sha256`` and, on a
+    ③ setting (``meta.v5_setting`` VB / LS), ``hydraulics_record.extend_bound_check`` (rev3
+    Q-G3: J-P3 #1 / #2)."""
+    runs = [run for row in document["results"] for run in row["runs"]]
+    presence = {"runs[].commands_sha256": all("commands_sha256" in run for run in runs)}
+    if (document.get("meta") or {}).get("v5_setting") in P3_SETTINGS:
+        presence["runs[].hydraulics_record.extend_bound_check"] = all(
+            get_path(run, "hydraulics_record.extend_bound_check")[0] for run in runs)
+    return len(runs), presence
+
+
+SA4_CASES = ("S8",)
+"""Rev4 F-4: the v5 S8 family rows (``job.case``) carry ``values.sa4.lift_after_stop_ms``."""
+DONE_PHASE = "done"
+PHASE_PATH_TIME_TOL_S = 0.005
+"""``base.phase_path`` keeps the times rounded to 0.01 s."""
+
+
+def rev4_presence(record: dict) -> dict[str, bool]:
+    """Rev4 R4-D: F-1 .. F-4 on run_v5 lines and the meaning checks of its second table that a
+    single record answers (``extend_bound_check.rule`` / ``breach_reads``, r79 first DONE)."""
+    out: dict[str, bool] = {}
+    job = record.get("job")
+    if isinstance(job, dict) and isinstance(record.get("values"), dict):
+        out["F-1 values.times.t_check_start_s"] = get_path(
+            record, "values.times.t_check_start_s")[0]
+        if job.get("d1") is not None:
+            out["F-2 d1.demoted_items"] = get_path(record, "d1.demoted_items")[0]
+            if get_path(record, "d1.path")[1] == "g6":  # rev5 R5-D4 F-8 (g6 path lines)
+                out["F-8 d1.g6_preloc"] = get_path(record, "d1.g6_preloc.preloc_flag_ok")[0]
+        else:
+            out["F-3 values.case_floor_deg"] = get_path(record, "values.case_floor_deg")[0]
+        if job.get("case") in SA4_CASES:
+            out["F-4 values.sa4.lift_after_stop_ms"] = get_path(
+                record, "values.sa4.lift_after_stop_ms")[0]
+            # rev6 R6-D F-9 and the saturation field description (R6-C1 2)
+            out["F-9 values.sa4.F_min_after_stop_N"] = get_path(
+                record, "values.sa4.F_min_after_stop_N")[0]
+            out["values.pressure.saturation_rule = item 4 saturation stop"] = (
+                get_path(record, "values.pressure.saturation_rule")[1] == saturation_rule())
+    present, bound = get_path(record, "hydraulics_record.extend_bound_check")
+    if present and isinstance(bound, dict):
+        out["extend_bound_check.rule = ext_moving rule"] = bound.get("rule") == extend_bound_rule()
+        out["extend_bound_check.breach_reads"] = "breach_reads" in bound
+    if is_r79_record(record) and isinstance(record.get("base"), dict):
+        out["r79 base.t_done_s = first DONE of base.phase_path"] = is_first_done(record["base"])
+    return out
+
+
+def saturation_rule() -> str | None:
+    """``verdict_metrics.SATURATION_RULE`` (rev6 R6-C1 2 field description)."""
+    coupled = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+    if str(coupled) not in sys.path:
+        sys.path.append(str(coupled))
+    try:
+        from verdict_metrics import SATURATION_RULE
+    except ImportError:
+        return None
+    return SATURATION_RULE
+
+
+def extend_bound_rule() -> str | None:
+    """``extend_start_bound.EXTEND_BOUND_CHECK_RULE`` (the ext_moving definition of rev4 R4-A2)."""
+    try:
+        from outrigger_sim.control.extend_start_bound import EXTEND_BOUND_CHECK_RULE
+    except ImportError:
+        return None
+    return EXTEND_BOUND_CHECK_RULE
+
+
+def is_first_done(base: dict) -> bool:
+    """Rev4 R4-B2: ``base.t_done_s`` is the first DONE of ``base.phase_path`` (both absent is
+    true; a DONE time the cut path does not show cannot be confirmed: false)."""
+    t_done = base.get("t_done_s")
+    done_times = [float(entry[0]) for entry in base.get("phase_path") or []
+                  if isinstance(entry, (list, tuple)) and len(entry) == 2
+                  and str(entry[1]).lower().endswith(DONE_PHASE)]
+    if t_done is None:
+        return not done_times
+    return bool(done_times) and abs(done_times[0] - float(t_done)) <= PHASE_PATH_TIME_TOL_S
+
+
+SOIL_EVENT_SERIES = "soil_event_series.npz"
+SOIL_EVENT_COLUMN_PREFIXES = ("contact_", "Fcyl_", "gap_")
+
+
+def soil_event_series_presence(case_dir: Path) -> dict[str, bool]:
+    """Rev4 R4-D: a PS-c row's ``soil_event_series.npz`` has the pad contact normal, F_cyl and
+    gap columns of each leg (spec 426.3 E-1 .. E-6 inputs)."""
+    path = case_dir / SOIL_EVENT_SERIES
+    if not path.is_file():
+        return {}
+    import numpy as np
+
+    with np.load(path, allow_pickle=False) as series:
+        columns = [str(c) for c in series["columns"]] if "columns" in series.files else []
+        has_rows = "rows" in series.files
+    wanted = [f"{prefix}{leg}" for prefix in SOIL_EVENT_COLUMN_PREFIXES for leg in LEG_NAMES]
+    return {f"{SOIL_EVENT_SERIES} rows + {', '.join(SOIL_EVENT_COLUMN_PREFIXES)}*":
+            has_rows and all(name in columns for name in wanted)}
 
 
 def gs(args: argparse.Namespace) -> dict:
     files = []
     for path in args.harness:
-        runs = [record for doc in read_records(Path(path)) for _, record in run_records(doc)]
+        docs = read_records(Path(path))
+        runs = [record for doc in docs for _, record in run_records(doc)]
         if not runs:
             files.append({"file": str(path), "runs": 0, "missing": ["<no run record>"]})
             continue
-        missing = sorted(
-            {key for record in runs for key, ok in gs_presence(record).items() if not ok}
-        )
-        files.append({"file": str(path), "runs": len(runs), "missing": missing})
+        presence: dict[str, bool] = {}
+        for record in runs:
+            found_keys = {**gs_presence(record), **hash_presence(record), **rev4_presence(record)}
+            for key, ok in found_keys.items():
+                presence[key] = presence.get(key, True) and ok
+        grid_runs = 0
+        for doc in docs:
+            if is_grid_document(doc):
+                count, found = grid_run_presence(doc)
+                grid_runs += count
+                presence.update(found)
+        head_only = sum(any(get_path(r, k)[0] for k in HEAD_ONLY_KEYS) for r in runs)
+        files.append({"file": str(path), "runs": len(runs), "grid_runs": grid_runs,
+                      "missing": sorted(key for key, ok in presence.items() if not ok),
+                      "head_only_declared_present": f"{head_only}/{len(runs)}"})
+    for batch_dir in getattr(args, "chrono", None) or []:  # rev4: PS-c series columns
+        for case in _batch_rows(Path(batch_dir)):
+            found = soil_event_series_presence(Path(batch_dir) / case)
+            if found:
+                files.append({"file": str(Path(batch_dir) / case), "runs": 1,
+                              "missing": sorted(k for k, ok in found.items() if not ok)})
     bad = [f for f in files if f["missing"]]
     return {
         "rules": RULES_NAME,
-        "section": "11.2",
+        "section": "11.2 (+ rev3: command hash, extend_bound_check, head_only_declared, "
+                   "settle_v2; rev4 R4-D: F-1 .. F-6 and the meaning checks)",
         "files": files,
         "files_with_missing": len(bad),
         "exit_code": 1 if bad else 0,
     }
+
+
+# ------------------------------------------------------------------------------ rev1 RV1-3 keyset
+APPENDIX_B = {
+    "dg3/dg3_v4_on.json": "5f912ca0d25d6dfe0114e05bf8c7a083fa542ad3de71e76c472e44a1a351167d",
+    "dg3/off/dg3_off.json": "95b81f82d800ae3ccf0dd15e205f12ec4b8795a1dcb482e6e30ed41aa0cfd5ce",
+    "noise_vb/r79_VB_L1L2L3.json":
+        "d3c9bba1abd3c1fbc700a26527856e14f7754740192c55a404bc203ef8a763b9",
+    "noise_v0/r79_V0_L1L2L3.json":
+        "af6a7ae51abe4b9094db9b21cf49f8770861fb0ed91cb269effb6b2cab9b459a",
+    "seedext/r79_VB_seedext.json":
+        "6ddca3d5ce5dc6286c319de13d779bbb419df8fbee2bd13577d04b0f4c2d6f57",
+    "seedext/r79_V0_seedext.json":
+        "f2c01d65238cac50da57c26ca33541b9506ff50b14aee80d65f31e1378dabaa8",
+    "grid_vb/grid_r67_main.json":
+        "8ef4237dc7658559efa04ac07edc1641fe422cbb55e5fee902fbac94eac13ef7",
+    "grid_vb/grid_r67_top.json": "498aa41199b2e4ed3467573c061ab2d6a182ffcd10871fe9bc7420989e6e6412",
+    "grid_vb/grid_r69_bottom.json":
+        "ee84750be278a2c284bf1fe614155240c0a4c2b564762862276a007afc9609e9",
+    "grid_vb/grid_r69_top.json": "c132fd41f13b8033b25804fbc777408a5d1729f31348af34aadd7fd6dfaad325",
+    "d1.jsonl": "9039b36a1a9c4ba5ed63528bb7384773018d4c7377dccbf76b18fbcfda86707f",
+    "las/las_T1.jsonl": "3dee4f6b88e71654debd68b3ef5c5f1a9b01f1dba8fcd731d1355ec219d9a85b",
+    "las/las_T2.jsonl": "2fe6a54aafdc0c3ffbf1991907ee4e1af85761e1bef2e25bef07dd52ab199efb",
+    "las/k1/k1_YP.jsonl": "0d985d5624f0fbb0219ca50d1c839b7db639011d6c2ab14fa9d84cfd197fc2c3",
+    "soil_defer/s2d_SC.jsonl": "70e91ec1234d56a918af1b4fc053c3175f0f14ab41e2b5f334890f7dc6cb08aa",
+}
+"""Rev1 appendix B (files under ``06_analysis/03_hydraulic/coupled/v5/``): a file whose sha256 is
+not this value does not start its bundle (S-1 handling)."""
+GRID_META_FIELDS = ("offsets_s", "n_jobs", "candidate", "v5_setting")
+GRID_EVENT_KEYS = ("event", "offset_s")
+
+
+def file_sha256(path: Path) -> str:
+    try:
+        return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    except OSError as exc:
+        raise InputError(f"{path}: {exc}") from exc
+
+
+def appendix_b_problems(path: Path) -> tuple[str | None, list[str]]:
+    """(appendix B entry, problems) of a stored file: it must be one of :data:`APPENDIX_B` and
+    have that sha256."""
+    text = str(path).replace("\\", "/")
+    entry = next((name for name in APPENDIX_B if text.endswith("/v5/" + name)), None)
+    if entry is None:
+        return None, [f"{path} is no appendix B file"]
+    actual = file_sha256(path)
+    if actual == APPENDIX_B[entry]:
+        return entry, []
+    try:
+        normalised = lf_normalised_sha256(Path(path).read_bytes())
+    except OSError as exc:
+        raise InputError(f"{path}: {exc}") from exc
+    if normalised == APPENDIX_B[entry]:  # rev3 R3-F4: pass, disclosed by crlf_only_files()
+        CRLF_ONLY_FILES[entry] = {"raw_sha256": actual, "lf_normalised_sha256": normalised}
+        return entry, []
+    return entry, [f"{entry} sha256 {actual[:16]} != {APPENDIX_B[entry][:16]} (S-1)"]
+
+
+CRLF_ONLY_FILES: dict[str, dict] = {}
+"""Appendix B files of this process that matched only after CRLF -> LF (rev3 R3-F4); every
+report lists them under ``crlf_only`` ("CRLF 변환만 다름")."""
+
+
+def r79_result_keys(document: dict) -> list[str]:
+    return [str(row.get("key")) for row in document.get("results") or []]
+
+
+def grid_branch_ids(document: dict) -> set[tuple]:
+    """(job key, event, offset) of every ``runs[]`` entry of a grid file."""
+    return {(row.get("key"), *(run.get(name) for name in GRID_EVENT_KEYS))
+            for row in document.get("results") or [] for run in row.get("runs") or []}
+
+
+def set_difference_report(new: list, stored: list) -> dict:
+    new_set, stored_set = set(new), set(stored)
+    return {"new": len(new), "new_distinct": len(new_set), "stored": len(stored),
+            "missing_in_new": sorted(map(str, stored_set - new_set))[:20],
+            "extra_in_new": sorted(map(str, new_set - stored_set))[:20],
+            "same": new_set == stored_set and len(new) == len(new_set)}
+
+
+def keyset(args: argparse.Namespace) -> dict:
+    """RV1-3.1 / RV1-3.2: key set of a new H-6 .. H-9 grid output against its stored source
+    (S-15 when it differs); grid files also compare ``runs[]`` and the meta of RV1-3.2."""
+    entry, problems = appendix_b_problems(Path(args.stored))
+    stored, new = read_json(Path(args.stored)), read_json(Path(args.new))
+    out: dict[str, Any] = {"rules": RULES_REV1_NAME, "section": "RV1-3 (S-15)",
+                           "kind": args.kind, "stored": str(args.stored), "appendix_b": entry,
+                           "new": str(args.new)}
+    keys = set_difference_report(r79_result_keys(new), r79_result_keys(stored))
+    out["keys"] = keys
+    if not keys["same"]:
+        problems.append("job key set differs (S-15)")
+    if args.kind == "grid":
+        branches = set_difference_report(sorted(grid_branch_ids(new)),
+                                         sorted(grid_branch_ids(stored)))
+        runs = sum(len(row.get("runs") or []) for row in new.get("results") or [])
+        out["runs"] = {"new": runs, **{k: branches[k] for k in ("stored", "missing_in_new",
+                                                                  "extra_in_new", "same")}}
+        if not branches["same"] or runs != branches["stored"]:
+            problems.append("runs[] (key, event, offset) set differs (S-15)")
+        meta_new, meta_stored = new.get("meta") or {}, stored.get("meta") or {}
+        out["meta"] = {f: {"new": meta_new.get(f), "stored": meta_stored.get(f)}
+                       for f in GRID_META_FIELDS}
+        problems += [f"meta {f} differs" for f in GRID_META_FIELDS
+                     if meta_new.get(f) != meta_stored.get(f)]
+    errors = [row.get("key") for row in new.get("results") or [] if "error" in row]
+    out["error_rows"] = errors[:20]
+    out["n_error_rows"] = len(errors)
+    return {**out, "problems": problems, "exit_code": 1 if problems else 0}
+
+
+R79_HASH_KEY = "commands_sha256"
+"""Rev3 R3-E4: the one place an r79 result keeps its command hash (top level)."""
+R79_CANDIDATE_PREFIX = "cand=current#"
+SEEDEXT_NOISE_SEEDS = range(5)
+"""Rev1 RV1-3.2: seedext keys of seeds 0..4 are noise keys too (10 keys per setting)."""
+
+
+def r79_key(key: Any) -> str:
+    """Rev3 R3-D1: ``cand=current#<key>`` and ``<key>`` are the same key."""
+    text = str(key)
+    return text[len(R79_CANDIDATE_PREFIX):] if text.startswith(R79_CANDIDATE_PREFIX) else text
+
+
+def _r79_hashes(path: Path) -> dict[str, Any]:
+    return {r79_key(row.get("key")): row.get(R79_HASH_KEY)
+            for row in read_json(path).get("results") or []}
+
+
+def hash_pairs(first: dict[str, Any], second: dict[str, Any], keys) -> dict:
+    """Per key whether the two top-level hashes are the same (None: one is missing)."""
+    rows = []
+    for key in keys:
+        a, b = first.get(key), second.get(key)
+        rows.append({"key": key, "a": a, "b": b,
+                     "same": None if a is None or b is None else a == b})
+    return {"keys": len(rows), "same": sum(row["same"] is True for row in rows),
+            "differ": [row["key"] for row in rows if row["same"] is False],
+            "missing": [row["key"] for row in rows if row["same"] is None], "rows": rows}
+
+
+def _seed_index(key: str) -> int | None:
+    parts = key.split("|")
+    return int(parts[1][1:]) if len(parts) > 1 and parts[1].startswith("s") else None
+
+
+def dg3_hash(args: argparse.Namespace) -> dict:
+    """RV1-3.2 records with the rev3 R3-E4 hash (top-level ``commands_sha256`` only): H-6 vs
+    H-8 VB per dg3 key, and with ``--seedext`` / ``--noise`` the seedext seed 0..4 keys vs the
+    noise lines (per setting pair). A missing hash makes the record 기록 불완전, never a stop."""
+    h6 = _r79_hashes(Path(args.h6))
+    out: dict[str, Any] = {"rules": RULES_REV3_NAME, "section": "RV1-3.2 / R3-E4 (record)",
+                           "hash_field": R79_HASH_KEY}
+    if args.h8_vb is not None:
+        out["h6_vs_h8_vb"] = hash_pairs(h6, _r79_hashes(Path(args.h8_vb)), sorted(h6))
+    for seedext, noise in zip(args.seedext or [], args.noise or [], strict=True):
+        seed_hashes = _r79_hashes(Path(seedext))
+        keys = sorted(key for key in seed_hashes if _seed_index(key) in SEEDEXT_NOISE_SEEDS)
+        out.setdefault("seedext_vs_noise", []).append(
+            {"seedext": str(seedext), "noise": str(noise),
+             **hash_pairs(seed_hashes, _r79_hashes(Path(noise)), keys)})
+    blocks = [out.get("h6_vs_h8_vb"), *out.get("seedext_vs_noise", [])]
+    is_incomplete = any(block and block["missing"] for block in blocks)
+    return {**out, "record_state": "기록 불완전" if is_incomplete else "기록",
+            "note": "a difference is recorded and handed to python-expert; it is no stop",
+            "exit_code": 0}
+
+
+# --------------------------------------------------------------- rev3 R3-E1 / R3-E2 grid V0, F
+GRID_FILES = ("grid_r67_main", "grid_r67_top", "grid_r69_bottom", "grid_r69_top")
+FAMILY_F_KEYS = ("screen|top|0.0|ready|FR", "screen|top|0.0|ready|FL")
+FAMILY_F_EVENT = "FS24"
+FAMILY_F_GATES = ("Fmin_after_W", "U57_outside")
+FAMILY_F_M = 4
+FAMILY_F_M_SUM = 6
+FAMILY_F_RUNS = 64
+
+
+def _results_by_key(path: Path) -> dict[str, dict]:
+    return {row.get("key"): row for row in read_json(path).get("results") or []}
+
+
+def _run_hashes(result: dict | None) -> dict[tuple, Any]:
+    """(event, offset) -> ``commands_sha256`` of a grid result's runs."""
+    return {(run.get("event"), float(run.get("offset_s"))): run.get("commands_sha256")
+            for run in (result or {}).get("runs") or []}
+
+
+def sample_job_runs(stored: dict, sample: dict | None) -> dict:
+    """Rev4 R4-B4: one sample job = one stored result; every run is paired by (event, offset)
+    and must have the same hash."""
+    old, new = _run_hashes(stored), _run_hashes(sample)
+    missing = sum(1 for k in old if old[k] is None or new.get(k) is None) + len(set(new) - set(old))
+    differ = sum(1 for k in old if old[k] is not None and new.get(k) is not None
+                 and old[k] != new[k])
+    return {"runs": len(old), "differ": differ, "missing": missing}
+
+
+def grid_v0_sample(args: argparse.Namespace) -> dict:
+    """R3-E1 / R4-B4: the 8-job V0 sample (per stored file the first and the last result; every
+    run of the job, paired by (stem, key, event, offset)) against the stored V0 grid by
+    ``commands_sha256``; all same -> the stored V0 is the pair, otherwise V0 768 runs
+    (``resume_k1/h9_grid_v0/``)."""
+    rows, problems = [], []
+    for name in GRID_FILES:
+        stored_path = Path(args.stored_dir) / f"{name}.json"
+        stored = read_json(stored_path).get("results") or []
+        sample = _results_by_key(Path(args.sample_dir) / f"{name}.json")
+        for row in (stored[0], stored[-1]) if stored else ():
+            key = row.get("key")
+            compared = sample_job_runs(row, sample.get(key))
+            if compared["missing"]:
+                problems.append(f"{name} {key}: {compared['missing']} runs without a pair or hash")
+            rows.append({"file": name, "key": key, "stored_sha256_file": file_sha256(stored_path),
+                         **compared,
+                         "same": None if compared["missing"] else compared["differ"] == 0})
+    if len(rows) != 2 * len(GRID_FILES):
+        problems.append(f"{len(rows)} sample jobs, 8 expected")
+    is_all_same = not problems and all(row["same"] for row in rows)
+    return {"rules": RULES_REV3_NAME, "section": "R3-E1", "jobs": len(rows),
+            "same": sum(row["same"] is True for row in rows), "rows": rows,
+            "decision": ("stored V0 is the pair (저장(옛 V0 제어기), 표본 해시 같음)" if is_all_same
+                         else "run V0 768: steps_conditional_h9_grid_v0.json"),
+            "v0_768_required": not is_all_same, "problems": problems,
+            "exit_code": 1 if problems else 0}
+
+
+def _family_rows(grid_dir: Path) -> dict[tuple[str, float], list[dict]]:
+    """(key, offset) -> the FS24 runs of the family F keys in grid_r67_main / grid_r67_top."""
+    rows: dict[tuple[str, float], list[dict]] = {}
+    for name in ("grid_r67_main", "grid_r67_top"):
+        for key, result in _results_by_key(grid_dir / f"{name}.json").items():
+            if key not in FAMILY_F_KEYS:
+                continue
+            for run in result.get("runs") or []:
+                if run.get("event") == FAMILY_F_EVENT:
+                    rows.setdefault((key, float(run.get("offset_s"))), []).append(run)
+    return rows
+
+
+def _failed_gates(run: dict) -> set[str]:
+    return {name for name, ok in (run.get("gates") or {}).items() if ok is False}
+
+
+def family_f_trigger(args: argparse.Namespace) -> dict:
+    """R3-E2: a family F row (12 = 4 phases x 2 keys) with V0 pass and VB fail by
+    ``Fmin_after_W`` / ``U57_outside`` only starts the conditional 64 runs."""
+    vb, v0 = _family_rows(Path(args.vb_dir)), _family_rows(Path(args.v0_dir))
+    rows = []
+    for (key, offset), vb_runs in sorted(vb.items()):
+        v0_runs = v0.get((key, offset)) or []
+        is_v0_pass = bool(v0_runs) and all(run.get("pass") for run in v0_runs)
+        only_two = [bool(_failed_gates(run)) and _failed_gates(run) <= set(FAMILY_F_GATES)
+                    for run in vb_runs]
+        rows.append({"key": key, "offset_s": offset, "vb_runs": len(vb_runs),
+                     "v0_pass": is_v0_pass, "vb_fail_by_the_two_gates_only": any(only_two),
+                     "trigger": is_v0_pass and any(only_two)})
+    is_trigger = any(row["trigger"] for row in rows)
+    problems = [] if len(rows) == 8 else [f"{len(rows)} family F (key, phase) rows, 8 expected"]
+    return {"rules": RULES_REV3_NAME, "section": "R3-E2", "rows": rows,
+            "family_rows_with_duplicates": sum(row["vb_runs"] for row in rows),
+            "trigger": is_trigger,
+            "decision": "run steps_conditional_h9_family_f.json (64 runs)" if is_trigger
+            else "5.2 runs 해당 없음", "problems": problems,
+            "exit_code": 1 if problems else 0}
+
+
+def family_f(args: argparse.Namespace) -> dict:
+    """v5 criteria rev5 5.2 R-1 .. R-4 on ``h9_family_F.jsonl`` (64 lines)."""
+    lines = read_records(Path(args.lines))
+    by = {(line.get("setting"), line.get("key"), float(line.get("offset_s"))): line
+          for line in lines}
+    problems = [] if len(lines) == FAMILY_F_RUNS == len(by) else [
+        f"{len(lines)} lines ({len(by)} distinct), {FAMILY_F_RUNS} expected (S-15)"]
+
+    def fails(line: dict) -> bool:
+        return bool(_failed_gates(line) & set(FAMILY_F_GATES))
+
+    k = {(s, key): sum(fails(line) for (s2, key2, _), line in by.items() if (s2, key2) == (s, key))
+         for s in ("V0", "VB") for key in FAMILY_F_KEYS}
+    r1 = {key: k[("VB", key)] <= k[("V0", key)] + FAMILY_F_M for key in FAMILY_F_KEYS}
+    r2 = (sum(k[("VB", key)] for key in FAMILY_F_KEYS)
+          <= sum(k[("V0", key)] for key in FAMILY_F_KEYS) + FAMILY_F_M_SUM)
+    vb_lines = [line for (s, _, _), line in by.items() if s == "VB"]
+    r3_bad = [(line["key"], line["offset_s"]) for line in vb_lines
+              if (line.get("gates") or {}).get("fault0") is False
+              or line.get("final_phase") != "ready"]
+    r4_bad = []
+    for (s, key, offset), line in by.items():
+        if s != "VB":
+            continue
+        other = by.get(("V0", key, offset))
+        new = _failed_gates(line) - set(FAMILY_F_GATES)
+        old = set() if other is None else _failed_gates(other)
+        if new - old:
+            r4_bad.append({"key": key, "offset_s": offset, "gates": sorted(new - old)})
+    is_pass = all(r1.values()) and r2 and not r3_bad and not r4_bad and not problems
+    return {"rules": RULES_REV3_NAME, "section": "R3-E2 / rev5 5.2",
+            "k": {f"{s}|{key}": n for (s, key), n in k.items()},
+            "R-1": r1, "R-2": r2, "R-3_violations": r3_bad, "R-4_violations": r4_bad,
+            "m": FAMILY_F_M, "m_sum": FAMILY_F_M_SUM, "pass": is_pass,
+            "decision": "the 12 family F rows leave H-10 for the two gates" if is_pass
+            else "H-10: stop and ask", "problems": problems,
+            "exit_code": 0 if is_pass else 1}
+
+
+# --------------------------------------------------------------------- rev3 R3-B5 IND_LAS
+LAS_START_EVENT = "INFO_LIFTOFF_SLOW:"
+LAS_EVENTS_KEY = "liftoff_slow_events"
+"""``b5_baseline_compare`` record field (record only): the ``INFO_LIFTOFF_SLOW*`` event names."""
+
+
+def ind_las(args: argparse.Namespace) -> dict:
+    """R3-B5: IND_LAS cases without a LAS-b start event (``INFO_LIFTOFF_SLOW:``; the ``_END:``
+    name does not count) must have the IND ``commands_sha256`` of the same case."""
+    records = [r for path in args.harness for doc in read_records(Path(path))
+               for r in (doc.get("records") or doc.get("results") or [doc])]
+    ind = {r.get("case"): r for r in records if r.get("controller") == "IND"}
+    rows = []
+    for record in (r for r in records if r.get("controller") == "IND_LAS"):
+        names = record.get(LAS_EVENTS_KEY)
+        if not isinstance(names, list):
+            rows.append({"case": record.get("case"), "gate": "판독 불가"})
+            continue
+        started = any(str(name).startswith(LAS_START_EVENT) for name in names)
+        row = {"case": record.get("case"), "gate": "선" if started else "서지 않음"}
+        if not started:
+            other = ind.get(record.get("case"))
+            row["same_hash_as_ind"] = (None if other is None else
+                                       record.get("commands_sha256") == other.get(
+                                           "commands_sha256"))
+        rows.append(row)
+    unreadable = sum(row["gate"] == "판독 불가" for row in rows)
+    not_started = [row for row in rows if row["gate"] == "서지 않음"]
+    differ = [row["case"] for row in not_started if row.get("same_hash_as_ind") is False]
+    return {"rules": RULES_REV3_NAME, "section": "R3-B5", "cases": len(rows),
+            "gate_started": sum(row["gate"] == "선" for row in rows),
+            "gate_not_started": len(not_started),
+            "not_started_same_hash": sum(row.get("same_hash_as_ind") is True
+                                         for row in not_started),
+            "not_started_differ": differ, "gate_unreadable": unreadable,
+            "record_state": "기록 불완전" if unreadable else "기록",
+            "adapter_defect": bool(differ), "rows": rows,
+            "exit_code": 1 if differ else 0}
+
+
+# ------------------------------------------------------------------- rev3 TABLE_REAGG items
+REAGG_ITEMS = {
+    "H-1 / H-2 (R3-A2)": ["H-S P3", "H-S G6", "H-S E", "H-R 잠김 350 bar", "H-R G6"],
+    "C-5 (R3-G1)": ["T4-0", "T4", "T5", "J11 창", "J-P3", "D2"],
+    "PS-c (R3-G1)": ["E-1", "E-2", "E-3", "E-4", "E-6", "E-7"],
+    "H-6 / H-8 잡음 (R3-E3)": ["S-1", "S-2", "S-3", "S-4", "S-5", "S-6"],
+}
+"""Rev3: the items whose two paths are a re-aggregation of the recorded item results (not an
+independent recalculation); the judgement's TABLE_REAGG lists them (R3-G1, R3-E3)."""
+
+
+def reagg_items(args: argparse.Namespace) -> dict:
+    """The TABLE_REAGG rows (bundle, items, item count) for the judgement document."""
+    rows = [{"bundle": bundle, "items": items, "count": len(items)}
+            for bundle, items in REAGG_ITEMS.items()]
+    markdown = ["| 묶음 | 재집계 항목 | 수 |", "|---|---|---|"]
+    markdown += [f"| {row['bundle']} | {', '.join(row['items'])} | {row['count']} |"
+                 for row in rows]
+    return {"rules": RULES_REV3_NAME, "section": "R3-G1 / R3-E3 TABLE_REAGG", "rows": rows,
+            "markdown": "\n".join(markdown), "exit_code": 0}
+
+
+# --------------------------------------------------------------- rev2 R2-9 appendix A (S-1)
+APPENDIX_A_HEADING = "## 부록 A."
+APPENDIX_A_ROW = re.compile(r"^\| `([^`]+)`[^|]*\| `([0-9a-f]{64})` \|")
+
+
+def appendix_a_entries(rules_text: str) -> list[tuple[str, str]]:
+    """(repository path, sha256) of the original rules' appendix A table; ``…/name`` rows take the
+    folder of the row above."""
+    lines = rules_text.splitlines()
+    start = next((i for i, line in enumerate(lines) if line.startswith(APPENDIX_A_HEADING)), None)
+    if start is None:
+        raise InputError(f"{RULES_NAME}: no appendix A")
+    entries, folder = [], ""
+    for line in lines[start + 1:]:
+        if line.startswith("## "):
+            break
+        match = APPENDIX_A_ROW.match(line)
+        if match is None:
+            continue
+        path, sha256 = match.groups()
+        if path.startswith("…/"):
+            path = f"{folder}/{path[2:]}"
+        folder = path.rsplit("/", 1)[0]
+        entries.append((path, sha256))
+    return entries
+
+
+def lf_normalised_sha256(data: bytes) -> str:
+    return hashlib.sha256(data.replace(b"\r\n", b"\n")).hexdigest()
+
+
+def appendix_a(args: argparse.Namespace) -> dict:
+    """R2-9: appendix A files by raw sha256, else by the sha256 of the bytes with every CRLF made
+    LF (pass, disclosed as "CRLF 변환만 다름"); a file that differs also then is S-1."""
+    root = Path(args.root)
+    rules_text = (RULES_DIR / RULES_NAME).read_text(encoding="utf-8")
+    rows, problems = [], []
+    for relative, sha256 in appendix_a_entries(rules_text):
+        path = root / relative
+        if not path.is_file():
+            rows.append({"file": relative, "status": "missing"})
+            problems.append(f"S-1 {relative} missing")
+            continue
+        data = path.read_bytes()
+        raw = hashlib.sha256(data).hexdigest()
+        row = {"file": relative, "raw_sha256": raw, "expected": sha256}
+        if raw == sha256:
+            row["status"] = "raw same"
+        elif lf_normalised_sha256(data) == sha256:
+            row.update(status="CRLF 변환만 다름", lf_normalised_sha256=sha256)
+        else:
+            row.update(status="differs", lf_normalised_sha256=lf_normalised_sha256(data))
+            problems.append(f"S-1 {relative} differs (also after CRLF -> LF)")
+        rows.append(row)
+    return {"rules": RULES_REV2_NAME, "section": "R2-9 (8.2 S-1)", "files": len(rows),
+            "crlf_only": [row["file"] for row in rows if row["status"] == "CRLF 변환만 다름"],
+            "rows": rows, "problems": problems, "stop_S1": bool(problems),
+            "exit_code": 1 if problems else 0}
+
+
+# ------------------------------------------------------------------------- rev1 RV1-5 anchors
+ANCHOR_SELECTIONS = (
+    ("P-1 T-1", "las/las_T1.jsonl", 8),
+    ("P-1 T-2", "las/las_T2.jsonl", 184),
+    ("P-1 rest", "d1.jsonl", 216),
+    ("P-2 Y-Pa", "las/k1/k1_YP.jsonl", 165),
+    ("P-2 rest", "soil_defer/s2d_SC.jsonl", 291),
+)
+"""RV1-5 table: (prediction, anchor file under v5/, key count)."""
+UNPREDICTED_GROUP = "H-R-A-stop"
+"""RV1-5: the H-R-A-stop lines get no prediction."""
+
+
+def job_key_of(line: dict) -> str | None:
+    """``run_v5.job_key(line["job"])``: the ``job`` dict without ``mask`` / ``t4h_dir``."""
+    job = line.get("job")
+    if not isinstance(job, dict):
+        return None
+    return json.dumps({k: job[k] for k in sorted(job) if k not in ("mask", "t4h_dir")},
+                      sort_keys=True)
+
+
+def _anchor_lines(path: Path, name: str, taken: set[str]) -> list[dict]:
+    """The lines of one anchor file that RV1-5 picks (each without ``error``)."""
+    lines = [line for line in read_records(path) if "error" not in line]
+    if name in ("P-1 T-1", "P-1 T-2"):
+        return [line for line in lines if get_path(line, "las.candidate")[1] == "b0"]
+    if name == "P-2 Y-Pa":
+        return [line for line in lines if get_path(line, "k1.sub_bundle")[1] == "Y-Pa"
+                and get_path(line, "las.candidate")[1] == "P0"]
+    if name == "P-1 rest":
+        return [line for line in lines if get_path(line, "job.d1.group")[1] == "H-R-0"
+                and job_key_of(line) not in taken]
+    return [line for line in lines if job_key_of(line) not in taken]  # P-2 rest
+
+
+def anchor_selection(files: dict[str, Path]) -> dict:
+    """RV1-5 anchors: key -> (prediction, ``commands_sha256``), with the S-7 checks."""
+    anchors: dict[str, dict] = {}
+    problems, counts = [], {}
+    taken_p1: set[str] = set()
+    taken_p2: set[str] = set()
+    for name, entry, expected in ANCHOR_SELECTIONS:
+        path = files[entry]
+        _, sha_problems = appendix_b_problems(path)
+        problems += sha_problems
+        taken = taken_p1 if name.startswith("P-1") else taken_p2
+        picked = _anchor_lines(path, name, taken)
+        per_key = Counter(job_key_of(line) for line in picked)
+        repeated = [key for key, n in per_key.items() if n != 1]
+        if repeated:
+            problems.append(f"S-7 {name}: {len(repeated)} keys with more than one line")
+        if None in per_key:
+            problems.append(f"S-7 {name}: a picked line without job")
+        counts[name] = {"keys": len(per_key), "expected": expected}
+        if len(per_key) != expected:
+            problems.append(f"S-7 {name}: {len(per_key)} keys, RV1-5 table {expected}")
+        for line in picked:
+            key = job_key_of(line)
+            if key in anchors:
+                problems.append(f"S-7 key in two selections ({anchors[key]['prediction']}, {name})")
+            anchors[key] = {"prediction": name, "commands_sha256": line.get("commands_sha256")}
+        if name.startswith("P-1") and name != "P-1 rest":
+            taken_p1.update(per_key)
+        if name == "P-2 Y-Pa":
+            taken_p2.update(per_key)
+    return {"anchors": anchors, "counts": counts, "problems": problems}
+
+
+def anchor_map(args: argparse.Namespace) -> dict:
+    """RV1-5: pick the anchors, pair them with the H-1 lines by ``job_key`` (exactly one anchor
+    per predicted H-1 key, else S-7) and compare ``commands_sha256`` (record of P-1 / P-2)."""
+    files = {entry: Path(args.v5_dir) / entry for _, entry, _ in ANCHOR_SELECTIONS}
+    selection = anchor_selection(files)
+    anchors, problems = selection["anchors"], list(selection["problems"])
+    out: dict[str, Any] = {"rules": RULES_REV1_NAME, "section": "RV1-5",
+                           "counts": selection["counts"], "anchor_keys": len(anchors)}
+    if args.h1 is not None:
+        pairs, unpaired = [], []
+        for line in read_records(Path(args.h1)):
+            key = job_key_of(line)
+            if get_path(line, "job.d1.group")[1] == UNPREDICTED_GROUP:
+                continue
+            anchor = anchors.get(key)
+            if anchor is None:
+                unpaired.append(key)
+                continue
+            sha = line.get("commands_sha256")
+            pairs.append({"key": key, "prediction": anchor["prediction"],
+                          "anchor": anchor["commands_sha256"], "run": sha,
+                          "same": sha is not None and sha == anchor["commands_sha256"]})
+        if unpaired:
+            problems.append(f"S-7 {len(unpaired)} predicted H-1 keys without an anchor")
+        out["h1"] = {"paired": len(pairs), "unpaired": unpaired[:20],
+                     "same": sum(p["same"] for p in pairs),
+                     "differ": sum(not p["same"] for p in pairs),
+                     "pairs": pairs if args.all else [p for p in pairs if not p["same"]]}
+    out["anchors"] = {key: value["commands_sha256"] for key, value in anchors.items()}
+    return {**out, "problems": problems, "stop_S7": any("S-7" in p for p in problems),
+            "exit_code": 1 if problems else 0}
+
+
+# ------------------------------------------------------------------------ rev1 RV1-9 imports
+LOC_SHADOW_MODULE = "loc_anchor_shadow"
+LOC_SHADOW_INSTALLERS = ("hsh_run", "g8_shadow", "b1_harness")
+"""RV1-9: the runners that call ``loc_anchor_shadow.install()``."""
+SCRIPT_PATTERN = re.compile(r"[\w./\\:-]+\.py\b")
+SOURCE_DIRS = ("03_src", "04_scripts", "05_tests/unit")
+
+
+def module_index(root: Path) -> dict[str, list[Path]]:
+    """Module name -> files under :data:`SOURCE_DIRS`: plain script names (``r67_g1_screen``)
+    and dotted package names under ``03_src`` (``outrigger_sim.control.c2``)."""
+    index: dict[str, list[Path]] = {}
+    for folder in SOURCE_DIRS:
+        for path in (root / folder).rglob("*.py"):
+            index.setdefault(path.stem, []).append(path)
+            if folder == "03_src":
+                parts = path.relative_to(root / folder).with_suffix("").parts
+                dotted = ".".join(parts[:-1] if parts[-1] == "__init__" else parts)
+                index.setdefault(dotted, []).append(path)
+    return index
+
+
+def imported_names(path: Path) -> set[str]:
+    """Every module name a file imports anywhere (also inside functions) and the name string of
+    ``importlib.import_module("...")`` / ``spec_from_file_location("...", path)``; dotted names
+    also give their prefixes."""
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    except (OSError, SyntaxError, UnicodeDecodeError) as exc:
+        raise InputError(f"{path}: {exc}") from exc
+    names: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            names.update(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
+            names.add(node.module)
+            names.update(f"{node.module}.{alias.name}" for alias in node.names)
+        elif (isinstance(node, ast.Call)
+              and getattr(node.func, "attr", None) in ("import_module", "spec_from_file_location")
+              and node.args and isinstance(node.args[0], ast.Constant)):
+            names.add(str(node.args[0].value))
+    prefixes = {".".join(name.split(".")[:i]) for name in names
+                for i in range(1, name.count(".") + 1)}
+    return names | prefixes
+
+
+def import_closure(start: list[Path], index: dict[str, list[Path]]) -> dict[Path, set[str]]:
+    """File -> imported names for the files reachable from ``start`` (an over-approximation: a
+    plain name maps to every file of that name)."""
+    seen: dict[Path, set[str]] = {}
+    todo = list(start)
+    while todo:
+        path = todo.pop()
+        if path in seen:
+            continue
+        seen[path] = imported_names(path)
+        for name in seen[path]:
+            todo += [found for found in index.get(name, []) if found not in seen]
+    return seen
+
+
+def step_scripts(steps_doc: dict, root: Path) -> list[Path]:
+    """Repository ``.py`` files named in the step commands (the interpreter excluded)."""
+    scripts = []
+    for step in steps_doc.get("steps", []):
+        for token in SCRIPT_PATTERN.findall(str(step.get("cmd", ""))):
+            path = Path(token) if Path(token).is_absolute() else root / token
+            if path.is_file() and path not in scripts:
+                scripts.append(path)
+    return scripts
+
+
+def import_check(args: argparse.Namespace) -> dict:
+    """RV1-9: no 436.8 harness runner reaches ``loc_anchor_shadow`` (import) or a runner that
+    installs it, and no step env names ``OUTRIGGER_LOC_SHADOW``."""
+    root = Path(args.root)
+    index = module_index(root)
+    steps_doc = {"steps": [step for path in args.steps for step in read_json(Path(path))["steps"]]}
+    scripts = step_scripts(steps_doc, root)
+    closure = import_closure(scripts, index)
+    hits = sorted(str(path.relative_to(root)) for path in closure
+                  if path.stem == LOC_SHADOW_MODULE or path.stem in LOC_SHADOW_INSTALLERS)
+    env_hits = [step.get("id") for step in steps_doc["steps"]
+                if any(name in (step.get("env") or {}) for name in FORBIDDEN_ENV)]
+    problems = [f"{hit} is reachable from a 436.8 runner" for hit in hits]
+    problems += [f"step {step} env names {FORBIDDEN_ENV}" for step in env_hits]
+    return {"rules": RULES_REV1_NAME, "section": "RV1-9",
+            "runners": sorted(str(path.relative_to(root)) for path in scripts),
+            "closure_files": len(closure),
+            "closure": sorted(str(path.relative_to(root)) for path in closure),
+            "loc_shadow_hits": hits, "env_hits": env_hits, "problems": problems,
+            "method": "AST imports (module level and in functions, import_module / "
+                      "spec_from_file_location name strings), plain names matched to every file "
+                      "of that name",
+            "exit_code": 1 if problems else 0}
+
+
+# ------------------------------------------------------------------- rev1 RV1-7 F<F_min times
+FMIN_WINDOW_S = 8.0
+"""P5r4 judgement 8.2 table: departure .. departure + 8 s, 1 ms true F_cyl."""
+SERIES_FILE = "step_series.npz"
+LEG_NAMES = ("FL", "FR", "RL", "RR")
+
+
+def below_durations(t_s, force_N, t_start_s: float, limit_N: float,
+                    window_s: float = FMIN_WINDOW_S) -> dict:
+    """Per leg the time (and sample count) with ``F < limit`` (7.6: ``v < X - 1e-9``) in the
+    window ``t_start .. t_start + window_s``; the sample step is the median of ``diff(t)``."""
+    import numpy as np
+
+    t = np.asarray(t_s, dtype=float)
+    force = np.asarray(force_N, dtype=float)
+    window = (t >= t_start_s - COMPARE_EPS) & (t <= t_start_s + window_s + COMPARE_EPS)
+    step_s = float(np.median(np.diff(t))) if t.size > 1 else math.nan
+    below = window[:, None] & (force < limit_N - COMPARE_EPS)
+    counts = below.sum(axis=0)
+    return {"samples": [int(n) for n in counts], "ms": [round(float(n) * step_s * 1e3, 3)
+                                                        for n in counts],
+            "window_samples": int(window.sum()), "step_s": step_s}
+
+
+DEPARTURE_FRACTION_W = 0.01
+DEPARTURE_HOLD_S = 0.1
+CRAWLER_NORMAL_KEY = "scm_crawler_normal_N"
+"""R2-5: t_D = first sample of the first stretch with the 1 ms crawler true normal < 0.01 W for
+>= 0.1 s (W = ``p3b.weight_N``). ``step_series.npz`` ``scm_crawler_normal_N`` is the crawler
+support force along the plane normal (``run_S9`` ``sup_force_N @ normal``), taken as the sum of
+all crawler contact normals also on mixed terrain."""
+
+
+def departure_time(t_s, crawler_N, weight_N: float) -> float | None:
+    """R2-5 t_D (None when no stretch qualifies)."""
+    import numpy as np
+
+    t = np.asarray(t_s, dtype=float)
+    below = np.asarray(crawler_N, dtype=float) < DEPARTURE_FRACTION_W * weight_N
+    start = None
+    for index, is_below in enumerate(below):
+        if not is_below:
+            start = None
+            continue
+        start = index if start is None else start
+        if t[index] - t[start] >= DEPARTURE_HOLD_S - COMPARE_EPS:
+            return float(t[start])
+    return None
+
+
+def fmin_time(args: argparse.Namespace) -> dict:
+    """RV1-7 / R2-5: the 7.4 record values ``F<F_min`` and ``F<F_min+2 kN`` time of one C-8 row
+    in [t_D, t_D + 8 s] (and, record only, t_D .. run end)."""
+    import numpy as np
+
+    case = Path(args.case)
+    result = read_json(case / "result.json")
+    out: dict[str, Any] = {"rules": RULES_REV2_NAME, "section": "RV1-7 / R2-5 (7.4 record)",
+                           "case": str(case), "window_s": FMIN_WINDOW_S,
+                           "definition": "1 ms true F_cyl (step_series.npz F_cyl_N) in [t_D, t_D + "
+                                         "8 s]; t_D = crawler normal < 0.01 W for 0.1 s (R2-5)",
+                           "series_sha256": file_sha256(case / SERIES_FILE)}
+    present, weight_N = get_path(result, "p3b.weight_N")
+    if not present or not isinstance(weight_N, (int, float)):
+        return {**out, "status": "판정 불가 (p3b.weight_N missing)", "exit_code": 1}
+    try:
+        with np.load(case / SERIES_FILE, allow_pickle=False) as series:
+            t_s = np.asarray(series["t_s"], dtype=float)
+            force_N = np.asarray(series["F_cyl_N"], dtype=float)
+            crawler_N = np.asarray(series[CRAWLER_NORMAL_KEY], dtype=float)
+    except (OSError, KeyError, ValueError) as exc:
+        raise InputError(f"{case / SERIES_FILE}: {exc}") from exc
+    t_dep = departure_time(t_s, crawler_N, float(weight_N))
+    out["t_D_s"] = t_dep
+    out["p3b_departure_t_s"] = get_path(result, "p3b.departure.t_departure_s")[1]  # record only
+    if t_dep is None:
+        return {**out, "status": "판정 불가 (t_D not defined, R2-5)", "exit_code": 1}
+    run_end_s = float(t_s[-1])
+    out["window_complete"] = run_end_s >= t_dep + FMIN_WINDOW_S - COMPARE_EPS
+    out["run_end_s"] = run_end_s
+    results = {}
+    for name, limit in (("F_below_F_min", F_MIN_N), ("F_below_F_min_plus_2kN",
+                                                      F_MIN_N + OC5_GUARD_N)):
+        window = below_durations(t_s, force_N, t_dep, limit)
+        whole = below_durations(t_s, force_N, t_dep, limit, window_s=run_end_s - t_dep)
+        results[name] = {**window, "max_ms": max(window["ms"]),
+                         "to_run_end_record_only": {"ms": whole["ms"], "max_ms": max(whole["ms"])}}
+    return {**out, "legs": list(LEG_NAMES), **results, "status": "기록", "exit_code": 0}
+
+
+# ------------------------------------------------------------- rev1 RV1-10 j stroke exposure
+STROKE_LIMITS_MM = (678.0, 684.8)
+"""RV1-10 j record limits (``end_stop_cushion_model_review.md``): cushion reading 678 mm, gate
+684.8 mm. Comparison with the 7.6 allowance 1e-9 m."""
+STROKE_EPS_MM = COMPARE_EPS * 1e3
+S_REF_PATHS = (
+    ("d1.stroke_max_m", 1e3),
+    ("base.max_motor_stroke_mm", 1.0),
+    ("max_motor_stroke_mm", 1.0),
+    ("max_stroke_mm", 1.0),
+    ("p3b.P3-5_clearance_stroke.s_motor_max_m", 1e3),
+)
+"""(key path, factor to mm) of a run's maximum ``s_ref`` / ``stroke_m`` (oil-volume coordinate,
+harness ``max(plant.sref)``, Chrono L1 motor position); the first path present counts."""
+PISTON_PATHS = (("r79.max_true_stroke_mm", 1.0),)
+"""(key path, factor to mm) of a run's maximum piston stroke (``stroke_corrected_m``)."""
+EVENT_PATHS = ("events", "event_names", "warnings", "fault_events", "base.warnings",
+               "base.events_head", "r79.warn_fault")
+STROKE_END_COUNT_PATHS = ("r79.n_stroke_end_fault",)
+STROKE_END_EVENT = "FAULT_STROKE_END"
+
+
+def path_maximum_mm(record: dict, paths: tuple) -> tuple[float | None, str | None]:
+    """(maximum in mm, path) of the first present path with a numeric value or list."""
+    for dotted, factor in paths:
+        present, value = get_path(record, dotted)
+        if not present or value is None:
+            continue
+        values = value if isinstance(value, list) else [value]
+        numbers = [float(v) for v in values if isinstance(v, (int, float))
+                   and not isinstance(v, bool) and math.isfinite(v)]
+        if numbers:
+            return max(numbers) * factor, dotted
+    return None, None
+
+
+def _event_names(value: Any) -> Iterator[str]:
+    for item in value if isinstance(value, list) else []:
+        if isinstance(item, str):
+            yield item
+        elif isinstance(item, dict) and "name" in item:
+            yield str(item["name"])
+        elif isinstance(item, (list, tuple)):
+            yield from (str(part) for part in item if isinstance(part, str))
+
+
+def stroke_end_fault(record: dict) -> bool | None:
+    """True / False from the record's event lists or counters; None without any of them."""
+    found_source = False
+    for dotted in STROKE_END_COUNT_PATHS:
+        present, value = get_path(record, dotted)
+        if present and isinstance(value, int):
+            found_source = True
+            if value > 0:
+                return True
+    for dotted in EVENT_PATHS:
+        present, value = get_path(record, dotted)
+        if not present or not isinstance(value, list):
+            continue
+        found_source = True
+        if any(name.startswith(STROKE_END_EVENT) for name in _event_names(value)):
+            return True
+    return False if found_source else None
+
+
+def unit_records(document: Any) -> list[dict]:
+    """The lines / rows a bundle counts: grid ``results[].runs[]``, r79 / screen ``results[]`` or
+    ``records[]``, jsonl lines, or one ``result.json``."""
+    if isinstance(document, dict):
+        results = document.get("results") or document.get("records")
+        if isinstance(results, list):
+            if results and all(isinstance(row.get("runs"), list) for row in results):
+                return [run for row in results for run in row["runs"]]
+            return results
+        return [document]
+    return list(document)
+
+
+def exposure_counts(records: list[dict]) -> dict:
+    out: dict[str, Any] = {"lines": len(records)}
+    for coordinate, paths in (("s_ref", S_REF_PATHS), ("piston", PISTON_PATHS)):
+        values = [path_maximum_mm(record, paths) for record in records]
+        recorded = [value for value, _ in values if value is not None]
+        cell: dict[str, Any] = {"recorded": len(recorded),
+                                "no_record": len(records) - len(recorded),
+                                "paths": sorted({path for _, path in values if path})}
+        for limit in STROKE_LIMITS_MM:
+            cell[f"ge_{limit:g}_mm"] = sum(value >= limit - STROKE_EPS_MM for value in recorded)
+        if not recorded:
+            cell["note"] = "기록 없음"
+        out[coordinate] = cell
+    faults = [stroke_end_fault(record) for record in records]
+    out[STROKE_END_EVENT] = {"lines": sum(fault is True for fault in faults),
+                             "no_event_record": sum(fault is None for fault in faults)}
+    return out
+
+
+def stroke_exposure(args: argparse.Namespace) -> dict:
+    """RV1-10 j: per bundle the lines / rows with max stroke >= 678 mm and >= 684.8 mm (``s_ref``
+    and piston apart) and with ``FAULT_STROKE_END``; record only (no grade, no stop)."""
+    records = [record for path in args.harness or [] for doc in read_records(Path(path))
+               for record in unit_records(doc)]
+    for batch_dir in args.chrono or []:
+        for case in _batch_rows(Path(batch_dir)):
+            result_path = Path(batch_dir) / case / "result.json"
+            records.append(read_json(result_path) if result_path.is_file() else {})
+    return {"rules": RULES_REV1_NAME, "section": "RV1-10 j (record)", "bundle": args.bundle,
+            "limits_mm": list(STROKE_LIMITS_MM), **exposure_counts(records),
+            "s_ref_paths": [p for p, _ in S_REF_PATHS],
+            "piston_paths": [p for p, _ in PISTON_PATHS],
+            "exit_code": 0}
 
 
 # --------------------------------------------------------------------------------------------- main
@@ -873,7 +2134,8 @@ def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="command", required=True)
     for name, helptext in (("record-check", "4.2"), ("k1-class", "7.2")):
-        p = sub.add_parser(name, help=helptext)
+        # no abbreviations: the removed first-match ``--anchor`` must not mean ``--anchor-map``
+        p = sub.add_parser(name, help=helptext, allow_abbrev=False)
         p.add_argument("--harness", nargs="*", type=Path, help="harness jsonl / json outputs")
         p.add_argument(
             "--chrono", nargs="*", type=Path, help="Chrono batch folders (batch.json + <case>/)"
@@ -881,9 +2143,10 @@ def _parser() -> argparse.ArgumentParser:
         p.add_argument("--all", action="store_true", help="list every run, not only the findings")
         p.add_argument("--out", type=Path, required=True)
         if name == "k1-class":
-            p.add_argument(
-                "--anchor", nargs="*", type=Path, help="hash anchor files (first match wins)"
-            )
+            p.add_argument("--anchor-map", type=Path, default=None,
+                           help="anchor-map report (RV1-5 selection, the only anchor input)")
+            p.add_argument("--family-table", type=Path, default=None,
+                           help="resume_k1_family.py table (RV1-6; a key not in it = uniform)")
     p = sub.add_parser("jp-reuse", help="7.3")
     p.add_argument("--shadow", type=Path, required=True, help="v5/las/shadow_jp_b0.jsonl")
     p.add_argument(
@@ -901,7 +2164,61 @@ def _parser() -> argparse.ArgumentParser:
     )
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("gs", help="11.2 (key presence only)")
-    p.add_argument("--harness", nargs="+", type=Path, required=True)
+    p.add_argument("--harness", nargs="*", type=Path, default=[])
+    p.add_argument("--chrono", nargs="*", type=Path, default=[],
+                   help="Chrono batch folders: PS-c soil_event_series.npz columns (rev4)")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("keyset",
+                       help="rev1 RV1-3: new H-6 .. H-9 grid output vs stored keys (S-15)")
+    p.add_argument("--kind", required=True, choices=("r79", "grid"))
+    p.add_argument("--new", type=Path, required=True, help="new runner output (.json)")
+    p.add_argument("--stored", type=Path, required=True, help="appendix B file under v5/")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("dg3-hash", help="rev1 RV1-3.2: H-6 vs H-8 VB commands_sha256 (record)")
+    p.add_argument("--h6", type=Path, required=True)
+    p.add_argument("--h8-vb", type=Path, default=None)
+    p.add_argument("--seedext", nargs="*", type=Path, help="h8_seedext_{VB,V0}.json")
+    p.add_argument("--noise", nargs="*", type=Path, help="h8_noise_{VB,V0}.json, same order")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("grid-v0-sample", help="rev3 R3-E1: V0 grid 8-job sample vs stored V0")
+    p.add_argument("--sample-dir", type=Path, required=True, help="resume_k1/h9_grid_v0_sample")
+    p.add_argument("--stored-dir", type=Path, required=True,
+                   help="06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("family-f-trigger", help="rev3 R3-E2: does family F start the 64 runs")
+    p.add_argument("--vb-dir", type=Path, required=True, help="resume_k1/h9_grid")
+    p.add_argument("--v0-dir", type=Path, required=True, help="the V0 pair grid folder")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("family-f", help="rev3 R3-E2: rev5 5.2 R-1 .. R-4 on h9_family_F.jsonl")
+    p.add_argument("--lines", type=Path, required=True)
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("ind-las", help="rev3 R3-B5: IND_LAS gate and the IND hash")
+    p.add_argument("--harness", nargs="+", type=Path, required=True,
+                   help="U-6 outputs with the IND and IND_LAS records")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("reagg-items", help="rev3: TABLE_REAGG rows")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("anchor-map", help="rev1 RV1-5: P-1 / P-2 anchors by job_key (S-7)")
+    p.add_argument("--v5-dir", type=Path, required=True,
+                   help="06_analysis/03_hydraulic/coupled/v5 of the checkout with the anchors")
+    p.add_argument("--h1", type=Path, default=None, help="resume_k1/h1_d1.jsonl (after H-1)")
+    p.add_argument("--all", action="store_true", help="list every pair, not only differences")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("import-check", help="rev1 RV1-9: no loc_anchor_shadow on the runner path")
+    p.add_argument("--steps", nargs="+", type=Path, required=True)
+    p.add_argument("--root", type=Path, default=ROOT, help="checkout (git_at_start)")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("fmin-time", help="rev1 RV1-7: 7.4 F<F_min times of a C-8 row (record)")
+    p.add_argument("--case", type=Path, required=True,
+                   help="case folder (result.json, step_series.npz)")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("appendix-a", help="rev2 R2-9: original appendix A sha256 (S-1)")
+    p.add_argument("--root", type=Path, default=ROOT, help="checkout (git_at_start)")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("stroke-exposure", help="rev1 RV1-10 j: stroke exposure counts (record)")
+    p.add_argument("--bundle", required=True)
+    p.add_argument("--harness", nargs="*", type=Path)
+    p.add_argument("--chrono", nargs="*", type=Path)
     p.add_argument("--out", type=Path, required=True)
     return parser
 
@@ -913,21 +2230,82 @@ COMMANDS = {
     "oc5": oc5,
     "overlap": overlap,
     "gs": gs,
+    "keyset": keyset,
+    "dg3-hash": dg3_hash,
+    "anchor-map": anchor_map,
+    "import-check": import_check,
+    "fmin-time": fmin_time,
+    "appendix-a": appendix_a,
+    "grid-v0-sample": grid_v0_sample,
+    "family-f-trigger": family_f_trigger,
+    "family-f": family_f,
+    "ind-las": ind_las,
+    "reagg-items": reagg_items,
+    "stroke-exposure": stroke_exposure,
 }
+
+
+def revision_seal_problems(folder: Path, name: str, sha256: str) -> tuple[dict, list[str]]:
+    """One sealed revision: the file's raw sha256 and the first field of its ``.sha256`` must both
+    be ``sha256`` (rules 8.2 S-1; R2-9: sealed rule files are compared raw)."""
+    rules_path = folder / name
+    seal_path = rules_path.with_suffix(".sha256")
+    out: dict[str, Any] = {"expected_sha256": sha256}
+    problems = []
+    if seal_path.is_file():
+        fields = seal_path.read_text(encoding="utf-8").split()
+        out["seal_file_sha256"] = fields[0] if fields else None
+        if out["seal_file_sha256"] != sha256:
+            problems.append(
+                f"{seal_path.name} value {out['seal_file_sha256']!r} is not the sealed one")
+    else:
+        problems.append(f"{seal_path.name} missing")
+    if rules_path.is_file():
+        out["rules_file_sha256"] = hashlib.sha256(rules_path.read_bytes()).hexdigest()
+        if out["rules_file_sha256"] != sha256:
+            problems.append(
+                f"{rules_path.name} sha256 {out['rules_file_sha256'][:16]} is not the sealed one")
+    else:
+        problems.append(f"{rules_path.name} missing")
+    return out, problems
+
+
+def sealed_rules_check(rules_dir: Path | None = None) -> dict:
+    """Rev1 .. rev6 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
+    folder = RULES_DIR if rules_dir is None else Path(rules_dir)
+    revisions, problems = {}, []
+    for name, sha256 in SEALED_REVISIONS:
+        revisions[name], found = revision_seal_problems(folder, name, sha256)
+        problems += found
+    return {"revisions": revisions, "problems": problems, "stop_S1": bool(problems)}
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
-    try:
-        report = COMMANDS[args.command](args)
-    except InputError as exc:
-        print(json.dumps({"exit_code": 2, "error": str(exc)}, ensure_ascii=True))
-        return 2
-    except Exception as exc:  # report the failure in the contract form, keep the trace
-        print(traceback.format_exc(), file=sys.stderr)
-        print(json.dumps({"exit_code": 3, "error": repr(exc)}, ensure_ascii=True))
-        return 3
+    seal = sealed_rules_check()
+    if seal["stop_S1"]:  # no judgement under an unsealed or changed revision
+        report = {"rules": RULES_NAME, "section": "8.2 S-1 (rev1 / rev2 seal)",
+                  "rules_seal": seal, "exit_code": 1}
+    else:
+        try:
+            report = COMMANDS[args.command](args)
+        except InputError as exc:
+            print(json.dumps({"exit_code": 2, "error": str(exc)}, ensure_ascii=True))
+            return 2
+        except Exception as exc:  # report the failure in the contract form, keep the trace
+            print(traceback.format_exc(), file=sys.stderr)
+            print(json.dumps({"exit_code": 3, "error": repr(exc)}, ensure_ascii=True))
+            return 3
+        report["rules_seal"] = seal
+        if CRLF_ONLY_FILES:  # rev3 R3-F4 disclosure
+            report["appendix_b_crlf_only"] = {
+                name: {**values, "note": "CRLF 변환만 다름"}
+                for name, values in CRLF_ONLY_FILES.items()}
     report["rules_sha256"] = RULES_SHA256
+    report["rules_rev1_sha256"] = RULES_REV1_SHA256
+    report["rules_rev2_sha256"] = RULES_REV2_SHA256
+    report["rules_rev3_sha256"] = RULES_REV3_SHA256
+    report["rules_rev4_sha256"] = RULES_REV4_SHA256
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
         json.dumps(report, indent=1, ensure_ascii=False, default=str), encoding="utf-8"

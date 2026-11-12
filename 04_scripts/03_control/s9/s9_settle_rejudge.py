@@ -121,6 +121,91 @@ def corrected_check(result: dict, table_row: dict, pad_xy_m) -> dict | None:
             "q_floor_mean_deg": first["q_floor_mean_deg"], "version": CHECK_VERSION}
 
 
+SETTLE_V2_KEY = "settle_v2"
+"""Run-time record of the settle v2 check (436.8 user decision Q-U1 = A, 2026-11-13): written by
+``s9_soil_slope.run_one`` after the run, copied into the U-3 records by
+``s9_slope_fix_candidates.slope_record_fields``. Record only: it reads the stored settle data and
+the settle table, never the plant or the controller."""
+STATUS_CHECKED = "checked"
+STATUS_NO_CHECK = "no_table_check"
+STATUS_ERROR = "error"
+GAP_SOURCE_TABLE = "table"
+GAP_SOURCE_START_GAP = "start_gap"
+_TABLE_CACHE: dict[str, dict] = {}
+
+
+def _settle_table(table_path: Path) -> dict:
+    """The settle table with its sha256, read once per process."""
+    key = str(table_path)
+    if key not in _TABLE_CACHE:
+        table = json.loads(table_path.read_text(encoding="utf-8"))
+        _TABLE_CACHE[key] = {"table": table, "sha256": _sha256(table_path)}
+    return _TABLE_CACHE[key]
+
+
+def settle_v2_record(result: dict, table_path: Path = DEFAULT_TABLE) -> dict:
+    """Settle v2 inputs and result of one ``s9_soil_slope.run_one`` result (spec 398.3):
+    ``pen_mean_i = pen_inst_i + (y_i d_phi - x_i d_theta)``, ``|pen_mean + gap_target| <= 1 mm``,
+    attitude within ``max(0.005 deg, |table residual| + 0.002 deg)``. The gap targets are the
+    ones of the run's own check (a start-gap pad of H8 uses its start gap, spec 426.6).
+    A run without a table check gets ``status`` only; the input is left unchanged."""
+    case = result.get("case") or {}
+    settle = result.get("settle") or {}
+    first = settle.get("check_v1", settle.get("check"))
+    status = case.get("settle_table_status")
+    if status != "applied" or first is None:
+        return {"version": CHECK_VERSION, "status": STATUS_NO_CHECK,
+                "settle_table_status": status}
+    loaded = _settle_table(Path(table_path))
+    table_key = case["harness_settle_key"]
+    table_row = loaded["table"]["hook_harness"][table_key]
+    pad_xy = loaded["table"]["pad_xy_m"]
+    table_gap = [float(v) for v in case["settle_table"]["gap_target_mm"]]
+    gap_target = [float(v) for v in first.get("gap_target_mm", table_gap)]
+    q_inst, q_mean = settle["q_floor_deg"], first["q_floor_mean_deg"]
+    pen_mean = window_mean_penetration_mm(settle["pen_mm"], q_inst, q_mean, pad_xy)
+    gap_error = [p + g for p, g in zip(pen_mean, gap_target, strict=True)]
+    tolerances = attitude_tolerances_deg(table_row)
+    att_error = [float(v) for v in first["attitude_error_deg"]]
+    is_gap_ok = all(abs(e) <= GAP_TOL_MM for e in gap_error)
+    is_attitude_ok = all(abs(e) <= tol for e, tol in zip(att_error, tolerances, strict=True))
+    is_ok = is_gap_ok and is_attitude_ok
+    mass_scale = float(case.get("mass_scale", 1.0))
+    gate = ss._final_verdict(ss.VERDICT_PASS, {"ok": is_ok}, mass_scale)  # noqa: SLF001
+    inputs = {
+        "table": str(table_path), "table_sha256": loaded["sha256"], "table_key": table_key,
+        "pad_xy_m": pad_xy, "pen_inst_mm": [float(v) for v in settle["pen_mm"]],
+        "q_floor_inst_deg": [float(v) for v in q_inst],
+        "q_floor_mean_deg": [float(v) for v in q_mean],
+        "d_attitude_deg": [float(q_inst[0]) - float(q_mean[0]),
+                           float(q_inst[1]) - float(q_mean[1])],
+        "window_end_s": first.get("window_end_s"),
+        "gap_target_mm": gap_target,
+        "gap_target_source": GAP_SOURCE_START_GAP if "gap_target_mm" in first
+        else GAP_SOURCE_TABLE,
+        # 436.8 rules rev4 F-5: the table target of every pad (start-gap pads too)
+        "table_gap_target_mm": table_gap,
+        "residual_deg": [float(table_row.get(key, 0.0)) for key in RESIDUAL_KEYS],
+        "attitude_error_deg": att_error, "mass_scale": mass_scale,
+    }
+    outcome = {"pen_mean_mm": pen_mean, "pen_plus_gap_mm": gap_error, "gap_ok": is_gap_ok,
+               "attitude_tol_deg": tolerances, "attitude_ok": is_attitude_ok, "ok": is_ok,
+               "gate": "settle_check_fail" if gate == ss.VERDICT_SETTLE_CHECK_FAIL
+               else ("record_only" if mass_scale != 1.0 else "judged")}
+    return {"version": CHECK_VERSION, "status": STATUS_CHECKED, "inputs": inputs,
+            "result": outcome,
+            "tolerances": {"gap_mm": GAP_TOL_MM, "attitude_min_deg": ATTITUDE_TOL_MIN_DEG,
+                           "attitude_residual_margin_deg": ATTITUDE_RESIDUAL_MARGIN_DEG}}
+
+
+def safe_settle_v2_record(result: dict, table_path: Path = DEFAULT_TABLE) -> dict:
+    """:func:`settle_v2_record`, a failure recorded as ``status`` error (the run stays as it is)."""
+    try:
+        return settle_v2_record(result, table_path)
+    except (KeyError, TypeError, ValueError, OSError) as exc:
+        return {"version": CHECK_VERSION, "status": STATUS_ERROR, "error": repr(exc)}
+
+
 def rejudge_result(result: dict, rows: dict, pad_xy_m) -> dict:
     """Stored result with the corrected check and verdict (input left unchanged)."""
     if "error" in result or result["case"].get("settle_table_status") != "applied":

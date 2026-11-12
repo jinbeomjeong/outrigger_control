@@ -897,6 +897,7 @@ def run_job(key: str) -> dict:
     # ChunkProbe and the r72 recorders that wrap ``_lagged_step`` later in the job
     v5_options = _install_v5_setting()
     t4h_dir = _install_t4h_log()
+    _install_command_log()
     adapter = SensorAdapter(level, seed, rod_split_function(rod_model),
                             always_split=rod_model != "harness")
     run = ActiveRun(level, adapter)
@@ -927,6 +928,9 @@ def run_job(key: str) -> dict:
     out["r79"]["recontact_events"] = recontact_summary(base)
     out.update(_v5_record(v5_options, run, plant))
     out[RESUME_K1_KEY] = _resume_k1_record(run.ctrl)  # 436.8 rules 4.2 / 7.2, every setting
+    command_hash = _commands_sha256(run.ctrl)
+    if command_hash is not None:  # 436.8 rules rev3 R3-E4: the harness-line definition
+        out[COMMANDS_SHA256_KEY] = command_hash
     if t4h_dir is not None:
         out["t4h_file"] = write_t4h(t4h_dir, key, v5_options, run.ctrl, plant)
     if candidate not in (None, "current"):  # spec 424.5: the candidate's own record
@@ -978,6 +982,31 @@ def _install_t4h_log() -> Path | None:
 
     verdict_runs.install_logged_controller()
     return Path(folder)
+
+
+COMMANDS_SHA256_KEY = "commands_sha256"
+"""436.8 rules rev3 R3-E4: the top-level command hash of an r79 result, defined as the
+harness-line ``commands_sha256`` (``verdict_runs._command_digest`` over the 10 Hz commands of
+the record-only controller log)."""
+
+
+def _install_command_log() -> None:
+    """With ``R79_V5_SETTING``: the record-only controller log of the verdict runs (the same
+    log the T4h record uses; the commands are the same with or without it)."""
+    if not os.environ.get(V5_SETTING_ENV):
+        return
+    import verdict_runs
+
+    verdict_runs.install_logged_controller()
+
+
+def _commands_sha256(ctrl) -> str | None:
+    """R3-E4 hash of the run's commands (None without the log, e.g. no ``R79_V5_SETTING``)."""
+    if not getattr(ctrl, "period_log", None):
+        return None
+    import verdict_runs
+
+    return verdict_runs._command_digest(verdict_runs.period_arrays(ctrl)["command"])
 
 
 def t4h_file_name(key: str) -> str:

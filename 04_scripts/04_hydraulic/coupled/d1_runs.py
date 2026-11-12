@@ -357,7 +357,26 @@ def judgement(row: D1Row, harness: dict, values: dict, rows: np.ndarray, control
     else:
         verdict = VERDICT_PASS
     return {"verdict": verdict, "fail_items": fail_items, "F_judged_min_N": f_judged,
-            "att_judged_deg": att, "items": items}
+            "att_judged_deg": att, "items": items,
+            "demoted_items": demoted_items(items, fail_items)}
+
+
+def demoted_items(items: dict[str, bool], fail_items: list[str]) -> list[dict]:
+    """436.8 rules rev4 F-2 ``d1.demoted_items`` (record only): the false items this judgement
+    left out of ``fail_items``, each {item, rule, flag}. This judgement has no demotion step (a
+    harness-side demotion arrives as a true item with its FLAG), so the list is empty unless a
+    later demotion is added here."""
+    return [{"item": name, "rule": None, "flag": None} for name, ok in sorted(items.items())
+            if not ok and name not in fail_items]
+
+
+def g6_preloc_record(harness: dict) -> dict:
+    """436.8 rules rev5 F-8 ``d1.g6_preloc`` (record only, read from the finished r72 record):
+    ``preloc_flag_ok`` (every pre-LOC re-approach start leg's true minimum >= F_min up to LOC +
+    1 s, and no FAULT) and ``preloc_starts`` (leg, start time, true minimum kN) of spec 377."""
+    return {"preloc_flag_ok": harness.get("preloc_flag_ok"),
+            "preloc_starts": [dict(start) for start in harness.get("preloc_starts") or []],
+            "source": "r72_g6_screen record (spec 377, rev5 R5-D1)"}
 
 
 def stop_expectation(row: D1Row, values: dict, rows: np.ndarray, controller) -> dict | None:
@@ -419,6 +438,8 @@ def d1_record(row: D1Row, setting_name: str, eps: float, result: dict, plant, co
         "harness_class": result.get("harness_class")}
     if row.path == "steady" and "rows" in harness:
         record["u3"] = u3_record(harness)
+    if row.path == "g6":
+        record["g6_preloc"] = g6_preloc_record(harness)
     expectation = stop_expectation(row, values, rows, controller)
     if expectation is not None:
         record["expectation"] = expectation

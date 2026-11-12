@@ -25,7 +25,8 @@ verdict flips against the stored pre-R6 runs of ``r79_final_judgement_v3.json``.
 Usage (repo root, dynamics-dev python):
   python -I 04_scripts/03_control/s8/r79_L3L4_final.py <project_root> list [--levels L3,L4]
   python -I 04_scripts/03_control/s8/r79_L3L4_final.py <project_root> run <out_json> [--workers N]
-      [--levels L3,L4] [--keys "<plain key>;..."] [--affinity 0x...]
+      [--levels L3,L4] [--keys "<plain key>;..." | --keys-file <stored run json | key list>]
+      [--affinity 0x...]
     Results stream to ``<out_json>.partial.jsonl``; a re-start with the same out path skips
     the keys already there (resume). The final JSON is written when every job is done.
   python -I 04_scripts/03_control/s8/r79_L3L4_final.py <project_root> judge <out_json> <run_json> [<run_json> ...]
@@ -48,6 +49,7 @@ import re  # noqa: E402
 import subprocess  # noqa: E402
 import sys  # noqa: E402
 import time  # noqa: E402
+from collections import Counter  # noqa: E402
 from multiprocessing import Pool  # noqa: E402
 from pathlib import Path  # noqa: E402
 
@@ -173,15 +175,72 @@ def _read_partial(path: Path) -> dict[str, dict]:
     return done
 
 
+def read_keys_file(path: Path) -> list[str]:
+    """Run keys of a stored r79 run JSON (``results[].key``, in file order) or of a text file
+    (one key per line).
+
+    Raises:
+        SystemExit: A repeated key or no key.
+    """
+    text = Path(path).read_text(encoding="utf-8")
+    if Path(path).suffix == ".json":
+        keys = [str(row["key"]) for row in json.loads(text)["results"]]
+    else:
+        keys = [line.strip() for line in text.splitlines() if line.strip()]
+    repeated = sorted(key for key, count in Counter(keys).items() if count > 1)
+    if repeated:
+        raise SystemExit(f"{path}: repeated keys {repeated[:5]}")
+    if not keys:
+        raise SystemExit(f"{path}: no key")
+    return keys
+
+
+def keys_file_problems(keys: list[str], levels: list[str]) -> list[str]:
+    """Why keys of ``--keys-file`` are not jobs of this runner: the candidate must be
+    ``current`` and the case (level, harness, index, case key) a table-rule job of ``levels``;
+    the seed index may be any number >= 0 (436.8 rules rev1 RV1-3.2 seedext: seeds 0..24)."""
+    cases = {_case_without_seed(plain) for plain in plain_jobs(levels)}
+    problems = []
+    for key in keys:
+        candidate, plain = screen.split_candidate(key)
+        if candidate not in (None, CANDIDATE):
+            problems.append(f"{key}: candidate {candidate!r} is not {CANDIDATE!r}")
+            continue
+        try:
+            _, seed_index, _ = screen.parse_job_key(plain)
+        except (KeyError, ValueError) as exc:
+            problems.append(f"{key}: not an r79 key ({exc!r})")
+            continue
+        if seed_index < 0 or _case_without_seed(plain) not in cases:
+            problems.append(f"{key}: no table-rule case of levels {levels}")
+    return problems
+
+
+def _case_without_seed(plain: str) -> tuple[str, str, str, str]:
+    level, _, harness, index, inner = plain.split("|", 4)
+    return level, harness, index, inner
+
+
 def cmd_run(args) -> None:
     levels = args.levels.split(",")
     keys = [candidate_key(k) for k in plain_jobs(levels)]
+    if args.keys and args.keys_file:
+        raise SystemExit("--keys and --keys-file exclude each other")
     if args.keys:
         wanted = [k for k in args.keys.split(";") if k]  # ";": ref keys hold a comma
         unknown = [k for k in wanted if candidate_key(k) not in keys]
         if unknown:
             raise SystemExit(f"keys not in the job list: {unknown}")
         keys = [candidate_key(k) for k in wanted]
+    keys_file = None
+    if args.keys_file:  # 436.8 rules rev1 RV1-3.2: the stored key list as it is (seedext)
+        listed = read_keys_file(Path(args.keys_file))
+        problems = keys_file_problems(listed, levels)
+        if problems:
+            raise SystemExit(f"--keys-file keys are no jobs of this runner: {problems[:5]}")
+        keys = [candidate_key(screen.split_candidate(k)[1]) for k in listed]
+        keys_file = {"path": str(args.keys_file), "n_keys": len(keys),
+                     "sha256": hashlib.sha256(Path(args.keys_file).read_bytes()).hexdigest()}
     if args.affinity:
         os.environ["R79_AFFINITY"] = args.affinity
         screen.set_parent_placement()
@@ -223,6 +282,9 @@ def cmd_run(args) -> None:
             "git_head": _git_head(),
             "c2_py_sha256": hashlib.sha256(C2_SOURCE.read_bytes()).hexdigest(),
             "preset_settings": preset}
+    if keys_file is not None:  # a run without the option writes the former meta
+        meta["seeds"] = "keys file"
+        meta["keys_file"] = keys_file
     out_path.write_text(json.dumps({"meta": meta, "results": results}, indent=1, default=float),
                         encoding="utf-8")
     print("done", meta["wall_s_this_start"], "s ->", out_path, "errors", meta["n_errors"],
@@ -338,6 +400,10 @@ def main() -> None:
     p_run.add_argument("--workers", type=int, default=8)
     p_run.add_argument("--levels", default=",".join(DEFAULT_LEVELS))
     p_run.add_argument("--keys", default="")
+    p_run.add_argument("--keys-file", default="",
+                       help="run exactly the keys of a stored r79 run JSON (results[].key) or of "
+                            "a text file (one key per line), any seed index (436.8 rules rev1 "
+                            "RV1-3.2 seedext); each key runs through run_one unchanged")
     p_run.add_argument("--affinity", default="")
     p_judge = sub.add_parser("judge")
     p_judge.add_argument("out")

@@ -58,10 +58,12 @@
 06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev1.md -text
 06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev1.sha256 -text
 06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev1_seal_candidate_draft.md -text
+06_analysis/02_control/verif_matrix/v5_resume_4368/path2/*.py -text
 06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.md -text
 06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.sha256 -text
 06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2_seal_candidate_draft.md -text
 06_analysis/02_control/verif_matrix/las_p5r4_k1_judgement.md -text
+06_analysis/02_control/verif_matrix/v5_resume_4368/path2_chrono/** -text
 06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.md -text
 06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.sha256 -text
 06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3_seal_candidate_draft.md -text
@@ -74,3 +76,9 @@
 06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6.md -text
 06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6.sha256 -text
 06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6_seal_candidate_draft.md -text
+06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/* -text
+# 436.8 path 1 new judges (sha cited in judgement)
+04_scripts/02_chrono/chrono_rows_judge_4368* -text
+04_scripts/04_hydraulic/coupled/*_4368.py -text
+04_scripts/04_hydraulic/coupled/judge4368_common.py -text
+04_scripts/04_hydraulic/coupled/README_judges_4368.md -text
