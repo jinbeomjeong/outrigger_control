@@ -4,7 +4,8 @@ Rules: ``d1_selection_rules.md`` (sha256 51dea528...) + ``d1_selection_rules_rev
 436.8 rules (9019b405...) / rev1 (d9094fda...) that make them the H-1 / H-2 rules (436.8 5.1, 7.1). Author:
 dynamics-expert (path 2); 436.8 rev3 (dad8dfa6...) R3-A1 (G-3 exception = ASSUMED_BOUNDARY tag), R3-A2 (three
 layers: re-judge, re-aggregate d1.verdict, re-select), R3-A3 (READY origin and t_READY cross-check); rev4 (7ea87a30...) R4-C1 (origin from
-values.times.t_check_start_s, else by the harness definition) and R4-C3 (d1.demoted_items). Written from the rule sentences and the jsonl records only; the path-1 tools
+values.times.t_check_start_s, else by the harness definition) and R4-C3 (d1.demoted_items); rev5 R5-D1 / rev6 (809e5639...) R6-C3 (G6-7_preloc
+branches 377 / U-S9-G6c recomputed from d1.g6_preloc, absent = undecidable). Written from the rule sentences and the jsonl records only; the path-1 tools
 (run_v5 judgement block, d1_select.py, resume4368_judge.py) were not opened (436.8 9.2).
 
 What it does (rule section in brackets):
@@ -79,7 +80,9 @@ ASSUMED_BOUNDARY = "ASSUMED_BOUNDARY"   # rev3 R3-A1: the G-3 exception = rows c
 SLS_ALLOWED = {"H-R-A", "H-S-0", "H-S-1", "H-S-A"}   # 11: rows whose definition allows stroke_limited_stop
 ORIGIN_MAX_S = 0.1                      # rev3 R3-A3: the first phase (CHECK) starts within one period
 CHECK_START_PATH = "times.t_check_start_s"   # rev4 R4-C1 / F-1 (under values)
-DEMOTION_RULES = {"377", "424.11.2", "424.8.1", "419.8"}   # rev4 R4-C3
+DEMOTION_RULES = {"377", "424.11.2", "424.8.1", "419.8", "U-S9-G6c"}   # rev4 R4-C3 + rev6 R6-C3
+G67 = "G6-7_preloc"
+PRELOC_MIN_KEYS = ("true_min_N", "F_true_min_N", "min_true_N", "true_min_kN")   # F-8 start record
 
 
 # ----------------------------------------------------------------- run normalisation
@@ -175,6 +178,17 @@ def reaggregate(run):
     if {x["item"] for x in dl} != demoted:
         return {"status": "false items - fail_items != d1.demoted_items items", "items": sorted(demoted),
                 "demoted_items": sorted(x["item"] for x in dl)}
+    # rev5 R5-D1 / rev6 R6-C3: G6-7_preloc branches recomputed from d1.g6_preloc (F-8), G6-3 and FAULT
+    g6 = g6_branch(run)
+    if g6["status"] == "undecidable":
+        return {"status": f"G6-7 branch: {g6['why']}"}
+    if g6["status"] == "flag":
+        ent = [x for x in dl if x["item"] == G67]
+        if G67 in fails or len(ent) != 1 or str(ent[0]["rule"]) != g6["rule"] or ent[0]["flag"] != g6["flag"]:
+            return {"status": f"G6-7 should be FLAG {g6['flag']} ({g6['rule']}) in demoted_items, not a failure",
+                    "entries": ent}
+    elif g6["status"] == "fail" and G67 not in fails:
+        return {"status": "G6-7_preloc false with no FLAG branch but missing from fail_items"}
     cls = d.get("harness_class")
     if cls == "stroke_limited_stop" and run["group"] in SLS_ALLOWED:
         rebuilt = "allowed_stop"     # 3, 54: that termination on a row that allows it (fail items = record)
@@ -185,6 +199,43 @@ def reaggregate(run):
     if rebuilt != d.get("verdict"):
         return {"status": "rebuilt verdict differs", "rebuilt": rebuilt, "recorded": d.get("verdict")}
     return {"status": "same", "rebuilt": rebuilt, "demoted": sorted(demoted)}
+
+
+def g6_branch(run):
+    """rev6 R6-C3 three branches of a false G6-7_preloc: preloc_flag_ok true -> P3-8_demoted (377); false and
+    G6-3 true and no FAULT -> P3-8_preloc_loss (U-S9-G6c); absent -> undecidable. preloc_flag_ok is recomputed
+    from the start records (true minimum >= F_min) and FAULT 0 (R5-D1 4)."""
+    d = run["d1"]
+    items = d.get("items") or {}
+    if items.get(G67) is not False:
+        return {"status": "n/a"}
+    gp = d.get("g6_preloc")
+    if not isinstance(gp, dict) or not isinstance(gp.get("preloc_flag_ok"), bool):
+        return {"status": "undecidable", "why": "d1.g6_preloc.preloc_flag_ok missing (F-8, R6-C3 3)"}
+    fe = core.dig(run["values"], "events.fault_events", None)
+    if not isinstance(fe, list):
+        return {"status": "undecidable", "why": "values.events.fault_events missing"}
+    fault0 = len(fe) == 0
+    starts = gp.get("preloc_starts")
+    if not isinstance(starts, list):
+        return {"status": "undecidable", "why": "d1.g6_preloc.preloc_starts missing (377 recount)"}
+    mins = []
+    for s in starts:
+        v = next((core.num(s.get(k)) for k in PRELOC_MIN_KEYS if isinstance(s, dict) and core.num(s.get(k)) is not None), None)
+        if v is None:
+            return {"status": "undecidable", "why": "preloc start without a true minimum"}
+        mins.append(v * 1000.0 if isinstance(s, dict) and "true_min_kN" in s and "true_min_N" not in s else v)
+    ok = fault0 and all(core.t_ge(m, F_MIN) for m in mins)
+    if ok != gp["preloc_flag_ok"]:
+        return {"status": "undecidable", "why": f"preloc_flag_ok {gp['preloc_flag_ok']} vs recount {ok} (S-13)"}
+    if ok:
+        return {"status": "flag", "rule": "377", "flag": "P3-8_demoted"}
+    g63 = [v for k, v in items.items() if str(k).startswith("G6-3")]
+    if len(g63) != 1 or not isinstance(g63[0], bool):
+        return {"status": "undecidable", "why": "G6-3 item missing"}
+    if g63[0] and fault0:
+        return {"status": "flag", "rule": "U-S9-G6c", "flag": "P3-8_preloc_loss"}
+    return {"status": "fail"}
 
 
 def ready_check(run):

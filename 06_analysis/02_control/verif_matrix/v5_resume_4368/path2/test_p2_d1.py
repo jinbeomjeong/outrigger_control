@@ -193,3 +193,32 @@ def test_rev3_a3_ready_origin_and_crosscheck():
     assert "> 0.1 s" in d1.ready_check(r)["status"]
     r["values"]["times"]["t_check_start_s"] = 0.1
     assert d1.ready_check(r)["origin"] == "t_check_start_s"
+
+def g6run(flag_ok=True, mins=(12000.0,), g63=True, faults=(), fail=None, demoted=None):
+    r = run(group="H-R-A", base="rigid+J1@FR", verdict="fail" if fail else "pass")
+    r["values"] = {"times": {"t_first_ready_s": None}, "events": {"fault_events": list(faults)}}
+    r["d1"]["items"] = {"G6-7_preloc": False, "G6-3_Fmin": g63}
+    r["d1"]["fail_items"] = list(fail or [])
+    r["d1"]["demoted_items"] = list(demoted or [])
+    r["d1"]["g6_preloc"] = {"preloc_flag_ok": flag_ok, "preloc_starts": [{"leg": "RL", "t_s": 30.0, "true_min_N": m}
+                                                                          for m in mins]}
+    return r
+
+
+def test_rev6_g67_branches():
+    dem = [{"item": "G6-7_preloc", "rule": "377", "flag": "P3-8_demoted"}]
+    assert d1.reaggregate(g6run(demoted=dem))["status"] == "same"
+    # recount disagrees with the recorded preloc_flag_ok
+    assert "recount" in d1.reaggregate(g6run(mins=(9000.0,), demoted=dem))["status"]
+    loss = [{"item": "G6-7_preloc", "rule": "U-S9-G6c", "flag": "P3-8_preloc_loss"}]
+    assert d1.reaggregate(g6run(flag_ok=False, mins=(9000.0,), demoted=loss))["status"] == "same"
+    # branch 2 not met (G6-3 false): G6-7 stays a failure
+    r = g6run(flag_ok=False, mins=(9000.0,), g63=False, fail=["G6-7_preloc", "G6-3_Fmin"])
+    assert d1.reaggregate(r)["status"] == "same"
+    # a FLAG branch recorded as a failure is a difference
+    r = g6run(fail=["G6-7_preloc"])
+    assert d1.reaggregate(r)["status"].startswith("G6-7 should be FLAG")
+    # branch 3: preloc_flag_ok absent -> undecidable
+    r = g6run(demoted=dem)
+    r["d1"]["g6_preloc"].pop("preloc_flag_ok")
+    assert d1.reaggregate(r)["status"].startswith("G6-7 branch")
