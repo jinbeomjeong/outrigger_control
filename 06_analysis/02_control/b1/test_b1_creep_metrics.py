@@ -26,13 +26,14 @@ import b1_creep_metrics as bm  # noqa: E402
 ROOT = HERE.parents[2]
 YAML = ROOT / "02_params" / "rexome33.yaml"
 SOIL_SETS = ROOT / "02_params" / "scm_soil_sets.json"
+C2_FILE = ROOT / "03_src" / "outrigger_sim" / "control" / "c2.py"
 HALF = 0.5e-9
 TWO = 2e-9
 
 
 @pytest.fixture(scope="module")
 def geo() -> bm.Geometry:
-    return bm.read_geometry(YAML, SOIL_SETS)
+    return bm.read_geometry(YAML, SOIL_SETS, C2_FILE)
 
 
 # ------------------------------------------------------------------------- record builders
@@ -52,6 +53,7 @@ def make_record(*, n_count=40, s_max_leg=0, s_peak=0.60, n_peak=20, n_loc=10, n_
         rec.load = np.full((n_count, 4), 90_000.0)
         rec.att = np.zeros((n_count, 2))
         rec.c_hat = np.full(n_count, 0.05)
+        rec.c_hat_corner = np.full((n_count, 4), 0.05)
         rec.c_target = np.full(n_count, 0.05)
     return rec
 
@@ -305,7 +307,7 @@ def test_p_a_geometry_sign_and_clearance_lift(geo) -> None:
     rec.att[:, 1] = 0.01  # nose down 10 mrad: front legs extend
     rec.c_hat[:] = 0.03
     inputs = bm.predictor_inputs(rec, bm.Rows(rec.n), bm.run_timing(rec), geo)
-    preds = bm.predictions(inputs, None)
+    preds, _ = bm.predictions(inputs, None, geo)
     expected = rec.stroke[10, 0] + geo.pad_xy_m[0, 0] * 0.01 + (0.05 - 0.03)
     assert preds["P-A"][0] == pytest.approx(expected)
     assert preds["P-B"][0] is None  # constants NA
@@ -462,6 +464,118 @@ def test_d_f_cases() -> None:
     assert graded["grade"] == bm.NA and graded["row_count"] == 0  # E-3
     assert bm.grade_D_f({"C5": {"metrics": {"is_sgs": False}}}, statuses, {},
                         harness("sgs", "sgs"))["grade"] == "FUP-NA"
+    # Q-4 (a): one pair left (the other R4c30 or absent / invalid by V-4)
+    graded = bm.grade_D_f(chrono, statuses, {}, harness("r4", "sgs"))
+    assert graded["grade"] == "FUP-OUT" and "짝 1개" in graded["flags"]
+    graded = bm.grade_D_f(chrono, statuses, {}, harness(None, "ready"))
+    assert graded["grade"] == "FUP-IN" and "짝 1개" in graded["flags"]
+
+
+# ------------------------------------------------------------------------- P-G (R-3, Q-8)
+def test_crawler_corners_from_the_c2_source(geo) -> None:
+    corners = geo.crawler_corners_xy_m
+    assert corners.shape == (4, 2)
+    assert corners[0].tolist() == [-1.840, -1.366] and corners[3].tolist() == [1.844, 1.366]
+
+
+def test_plane_fit_reproduces_a_plane_exactly(geo) -> None:
+    a, b, c = 0.002, 0.003, -0.001
+    pads = a + b * geo.pad_xy_m[:, 1] - c * geo.pad_xy_m[:, 0]
+    corners = bm.plane_corner_values(geo.pad_xy_m, pads, geo.crawler_corners_xy_m)
+    expected = a + b * geo.crawler_corners_xy_m[:, 1] - c * geo.crawler_corners_xy_m[:, 0]
+    assert corners == pytest.approx(expected, abs=1e-15)
+
+
+def _p_g_inputs(geo, *, pitch=0.01, roll=0.0, corners=(0.03, 0.04, 0.05, 0.06), m_l=0.03):
+    rho = geo.crawler_corners_xy_m[:, 0] * pitch - geo.crawler_corners_xy_m[:, 1] * roll
+    ds = geo.pad_xy_m[:, 0] * pitch - geo.pad_xy_m[:, 1] * roll
+    return {"s_L": [0.40] * 4, "ds_geo": ds.tolist(), "c_hat_L_m": min(corners),
+            "c_hat_corner_L_m": list(corners), "rho": rho.tolist(),
+            "m_L": {"m_L_m": m_l}, "W_hat": [10_000.0] * 4, "F_pk": [80_000.0] * 4}
+
+
+def test_p_g_formula(geo) -> None:
+    constants = {"kappa_z_m_per_N": {bm.FRONT: 1e-6, bm.REAR: 2e-6},
+                 "C_type": {bm.FRONT: 1e-27, bm.REAR: 2e-27}, "delta_allow_m": 0.004}
+    inputs = _p_g_inputs(geo)
+    preds, terms = bm.predictions(inputs, constants, geo)
+    dz_hat = [constants["C_type"][bm.PAD_TYPE[i]] * bm.power_term(80_000.0, 10_000.0)
+              for i in range(4)]
+    z_hat = bm.plane_corner_values(geo.pad_xy_m, dz_hat, geo.crawler_corners_xy_m)
+    total = np.array(inputs["c_hat_corner_L_m"]) + np.array(inputs["rho"]) + z_hat
+    lift = max(0.05 + 0.03 - total.min(), 0.0)
+    for i in range(4):
+        assert preds["P-G"][i] == pytest.approx(0.40 + inputs["ds_geo"][i] + lift + dz_hat[i])
+        assert preds["P-D"][i] == pytest.approx(preds["P-A"][i] + dz_hat[i])
+    assert terms["k_star"] == int(np.argmin(total))
+    assert preds["P-C"][0] == pytest.approx(preds["P-B"][0] + 0.004)
+
+
+def test_p_g_clips_the_corner_lift_at_zero(geo) -> None:
+    constants = {"kappa_z_m_per_N": {}, "C_type": {bm.FRONT: 0.0, bm.REAR: 0.0}}
+    preds, terms = bm.predictions(_p_g_inputs(geo, pitch=0.0, corners=(0.2,) * 4), constants,
+                                  geo)
+    assert terms["lift_m"] == 0.0 and preds["P-G"][0] == pytest.approx(0.40)
+
+
+def test_p_g_na_without_c_type_or_corners(geo) -> None:
+    preds, terms = bm.predictions(_p_g_inputs(geo), {"C_type": {}}, geo)
+    assert preds["P-G"] == [None] * 4 and terms is None
+    inputs = _p_g_inputs(geo)
+    inputs["c_hat_corner_L_m"] = None
+    preds, _ = bm.predictions(inputs, {"C_type": {bm.FRONT: 1e-27, bm.REAR: 1e-27}}, geo)
+    assert preds["P-G"] == [None] * 4 and preds["P-D"][0] is not None
+
+
+@pytest.mark.parametrize(("value", "expected"), [(0.010 + HALF, "PRED-P-G"),
+                                                 (0.010 + TWO, "PRED-FAIL")])
+def test_t4_p_g_threshold_and_order(value, expected) -> None:
+    errors = {"P-A": 0.05, "P-B": 0.05, "P-D": 0.05, "P-G": value, "P-C": value + HALF}
+    assert bm.grade_D_d(_dd(errors), ["C1"])["grade"] == expected
+
+
+def test_tie_p_d_before_p_g_before_p_c() -> None:
+    errors = {"P-A": 0.05, "P-B": 0.05, "P-D": 0.004 + HALF, "P-G": 0.004, "P-C": 0.004}
+    assert bm.grade_D_d(_dd(errors), ["C1"])["grade"] == "PRED-P-D"
+    errors["P-D"] = 0.05
+    assert bm.grade_D_d(_dd(errors), ["C1"])["grade"] == "PRED-P-G"
+
+
+def test_p_a_limit_record_heave_and_epsilon(geo) -> None:
+    rec = make_record(n_peak=20, n_ready=30, n_loc=10)
+    rec.c_hat[30] = 0.0832
+    metrics = bm.run_metrics(rec, geo, None)
+    limit = metrics["p_a_limit"]
+    expected_h = (rec.stroke[20] - rec.stroke[10]) - (rec.sink[20] - rec.sink[10])
+    assert limit["h_max"]["legs_m"] == pytest.approx(expected_h.tolist())
+    assert limit["epsilon_m"] == pytest.approx(0.0832 - 0.05)
+
+
+# ------------------------------------------------------------------------- M-12 Chrono (Q-7)
+def test_chrono_anchor_reconstruction_centred_tilt(geo) -> None:
+    rec = make_record(n_count=60, n_loc=40, n_peak=50, n_ready=55)
+    rec.imu = {"t_s": np.arange(0, 6.0, 0.01), "tilt": np.zeros((600, 2))}
+    rec.imu["tilt"][(rec.imu["t_s"] > 3.4) & (rec.imu["t_s"] < 3.6), 1] = 0.002
+    rec.att[35, 1] = 0.002  # single sample at t_P: tilted; the centred mean is smaller
+    rec.c_hat_corner[:] = 0.03
+    rec.soil_meta = {"t_P_s": 3.5, "clearance_at_P_m": 0.03, "settle_attitude_rad": [0.0, 0.0],
+                     "settings": {"corner_bias_deadzone_m": 0.005, "loc_anchor_enable": False}}
+    metrics = bm.run_metrics(rec, geo, None)
+    shadow = bm.chrono_anchor_shadow(rec, metrics, geo)
+    loc = shadow["locs"][0]
+    assert loc["path"] == "1" and loc["window_half_s"] == pytest.approx(0.5)
+    window = (rec.imu["t_s"] >= 3.0 - 1e-6) & (rec.imu["t_s"] <= 4.0 + 1e-6)
+    centred = rec.imu["tilt"][window].mean(axis=0)
+    corners = geo.crawler_corners_xy_m
+
+    def bias(pitch):
+        rise = -corners[:, 0] * pitch
+        return np.maximum(0.03 - (rise - rise.min()), 0.0)
+
+    expected = float(np.min(0.03 + bias(0.002) - bias(centred[1])))
+    assert loc["c_hat_tL_shadow_mm"] == pytest.approx(expected * 1e3)
+    rec.imu = None
+    assert bm.chrono_anchor_shadow(rec, metrics, geo) is None
 
 
 # ------------------------------------------------------------------------- end to end
@@ -487,10 +601,18 @@ def _chrono_case(batch: Path, row_id: str, geo: bm.Geometry) -> None:
                scm_crawler_normal_N=np.zeros(len(t_1ms)))
     n = np.arange(n_count, dtype=np.int64)
     loads = np.tile(geo.static_loads_N[row.level] - 5_000.0, (n_count, 1))
+    z_10 = np.outer(n * 0.1 * 1e-4, np.ones(4)) + 0.05
+    grid = _grid_fields(geo, z_10)
+    imu_t = np.arange(0, n_count * 0.1, 0.01)
     _write_npz(folder / bm.CHRONO_B1_RECORD, n=n, load_read_N=loads,
-               att_filt_rad=np.zeros((n_count, 2)), c_hat_m=np.full(n_count, 0.06),
-               c_target_m=np.full(n_count, 0.05))
+               att_raw_rad=np.zeros((n_count, 2)), c_hat_m=np.full(n_count, 0.06),
+               c_hat_corner_m=np.full((n_count, 4), 0.06), c_target_m=np.full(n_count, 0.05),
+               imu_t_s=imu_t, imu_raw_tilt_rad=np.zeros((len(imu_t), 2)), **grid)
+    s9_rows = [{"t_s": k * 0.1, "pad_nodes": [
+        {name: float(grid[name][k, i]) for name in bm.PAD_NODES_FIELDS} for i in range(4)]}
+        for k in (0, 300, 800)]
     result = {
+        "s9_rows": s9_rows,
         "events": [{"t_s": 30.0, "name": bm.EV_LOC}],
         "p3b": {"P3-5_clearance_stroke": {"t_first_ready_s": 100.0},
                 "P3-2_loc": {"t_departure_s": 29.0}, "creep_stop": {"t_final_s": 110.0},
@@ -500,10 +622,25 @@ def _chrono_case(batch: Path, row_id: str, geo: bm.Geometry) -> None:
         "c2_setup": {"expect_controller": {"name": bm.CTRL_TAG_VB, "ok": True}},
         "num_threads_chrono": 4, "meta": {"scm": {"grid_m": 0.01}},
         "hull_hook": {"mode": "fast", "requested": "fast", "dll_sha256": bm.HULL_DLL_SHA},
-        "c2_soil": {"W_ref_N": geo.superstructure_mass_kg[row.level] * 9.80665},
+        "c2_soil": {"W_ref_N": geo.superstructure_mass_kg[row.level] * 9.80665,
+                    "t_P_s": 29.0, "clearance_at_P_m": 0.0, "settle_attitude_rad": [0.0, 0.0],
+                    "bias_corner_m": [0.0] * 4,
+                    "settings": {"corner_bias_deadzone_m": 0.005, "loc_anchor_enable": False}},
         "controller_meta": {"slope_clearance_margin": {"clearance_target_m": 0.05}},
         "final_phase": "ready"}
     (folder / "result.json").write_text(json.dumps(result), encoding="utf-8")
+
+
+def _grid_fields(geo: bm.Geometry, z: np.ndarray) -> dict[str, np.ndarray]:
+    """R-G1 arrays (n, 4) of full contact (``N_h = A / Delta^2``, ``b_hull = b_poly``: f = 1)."""
+    count = len(z)
+    area = np.tile(geo.pad_area_m2, (count, 1))
+    n_contact = np.rint(area / 1e-4)
+    law = n_contact * 1e-4 * (geo.kc / geo.pad_b_poly_m + geo.kphi) * z ** geo.n_soil
+    return {"n_inside": n_contact.copy(), "n_contact": n_contact,
+            "contact_hull_area_m2": n_contact * 1e-4,
+            "contact_hull_perimeter_m": 2.0 * n_contact * 1e-4 / geo.pad_b_poly_m,
+            "sinkage_geometric_m": z, "sigma_sum_area_N": law}
 
 
 def _harness_files(folder: Path, geo: bm.Geometry, run_ids: list[str]) -> Path:
@@ -519,7 +656,8 @@ def _harness_files(folder: Path, geo: bm.Geometry, run_ids: list[str]) -> Path:
                          t_s=n * 0.1, stroke_read_m=stroke,
                          sink_m=np.outer(n * 1e-5, np.ones(4)) + 0.05,
                          load_read_N=np.tile(geo.static_loads_N[level] - 5_000.0, (n_count, 1)),
-                         att_filt_rad=np.zeros((n_count, 2)), c_hat_m=np.full(n_count, 0.06),
+                         att_raw_rad=np.zeros((n_count, 2)), c_hat_m=np.full(n_count, 0.06),
+                         c_hat_corner_m=np.full((n_count, 4), 0.06),
                          c_target_m=np.full(n_count, 0.05))
         lines.append({"run_id": run_id, "group": group, "row_id": row_id, "setting": setting,
                       "eps": float(eps_text[1:]), "level": level, "error": None,
@@ -600,7 +738,30 @@ def test_e2e_identity_failure_makes_the_row_invalid(e2e) -> None:
     code, data = _judge(e2e, identity=path)
     assert code == bm.EXIT_OK and data["bundle"] == "PARTIAL"
     assert data["row_states"]["C3"]["status"] == "INVALID"
-    assert "PARTIAL (C3)" in data["grades"]["D-d"]["flags"]
+    for code_name in ("D-a", "D-b", "D-c", "D-d"):  # rules 3.2: every grade on R
+        assert "PARTIAL (C3)" in data["grades"][code_name]["flags"], code_name
+    assert "PARTIAL (C3)" not in data["grades"]["D-e"]["flags"]
+
+
+def test_e2e_grid_record_read_and_f_one(e2e) -> None:
+    _, data = _judge(e2e)
+    row = data["rows"]["C1"]
+    assert row["pad_nodes_check"]["consistent"] is True
+    assert row["pad_nodes_check"]["compared"] > 0
+    point = row["grid"]["points"]["max"][0]
+    assert point["state"] == "valid" and point["f"] == pytest.approx(1.0, abs=1e-9)
+    assert row["shadow"]["locs"][0]["diff_tL_mm"] == pytest.approx(0.0, abs=1e-9)
+
+
+def test_e2e_pad_nodes_mismatch_invalidates_the_grid_record(e2e) -> None:
+    path = e2e["batch"] / bm.CHRONO_ROWS["C1"].case / "result.json"
+    result = json.loads(path.read_text(encoding="utf-8"))
+    result["s9_rows"][1]["pad_nodes"][0]["n_contact"] += 1.0
+    path.write_text(json.dumps(result), encoding="utf-8")
+    _, data = _judge(e2e)
+    row = data["rows"]["C1"]
+    assert row["pad_nodes_check"]["consistent"] is False and row["grid"] is None
+    assert data["rows"]["C2"]["grid"] is not None
 
 
 def test_e2e_harness_tag_mismatch_is_refused(e2e) -> None:

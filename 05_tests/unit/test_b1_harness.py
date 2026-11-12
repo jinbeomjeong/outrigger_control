@@ -51,6 +51,9 @@ class _FakeController:
     def _clearance_target_m(self) -> float:
         return 0.08
 
+    def _period_raw_attitude_rad(self) -> tuple[float, float]:
+        return (0.003, -0.004)
+
 
 def test_period_record_wraps_once_and_keeps_the_command() -> None:
     cls = type("Fake", (_FakeController,), {})
@@ -64,8 +67,20 @@ def test_period_record_wraps_once_and_keeps_the_command() -> None:
     arrays = b1_record.period_record_arrays(controller)
     assert arrays["n"].tolist() == [1, 2, 3]
     assert arrays["c_hat_m"][0] == pytest.approx(0.02 - 0.001)
+    assert arrays["c_hat_corner_m"][0] == pytest.approx([0.049, 0.039, 0.029, 0.019])
     assert arrays["c_target_m"].tolist() == [0.08] * 3
+    assert arrays["att_raw_rad"][0].tolist() == [0.003, -0.004]  # rules 7.1 / R-C1
     assert arrays["load_read_N"].shape == (3, 4) and arrays["att_filt_rad"].shape == (3, 2)
+
+
+def test_period_record_has_the_r_c1_names() -> None:
+    cls = type("FakeNames", (_FakeController,), {})
+    b1_record.install_period_record(cls)
+    controller = cls()
+    controller.update(SimpleNamespace(t_s=0.1, stroke_m=np.zeros(4)))
+    arrays = b1_record.period_record_arrays(controller)
+    for name in ("n", "load_read_N", "att_raw_rad", "c_hat_m", "c_hat_corner_m", "c_target_m"):
+        assert name in arrays, name
 
 
 def test_subclass_of_a_recorded_class_records_once_per_period() -> None:

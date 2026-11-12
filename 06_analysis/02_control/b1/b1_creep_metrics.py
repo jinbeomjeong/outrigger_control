@@ -1,7 +1,6 @@
 """B1 creep basis (``V5-B1-CREEP``) path 1: metrics M-1 .. M-12, harness constants and grades.
 
-Rules: ``b1_creep_basis_rules_seal_candidate_draft.md`` (seal candidate, :data:`RULES_SHA256`;
-after the seal S-0 only the file name and the SHA-256 constant change). Path 2 is written
+Rules: ``b1_creep_rules.md`` (sealed 2026-11-12, :data:`RULES_SHA256`). Path 2 is written
 separately by control-expert from the rule text only (rules 9); this file is path 1.
 
 Subcommands::
@@ -13,20 +12,25 @@ Subcommands::
           --out <b1_metrics_path1.json> [--constants <b1_harness_constants.json>]
           [--p7-ref <s2d_SC.jsonl>]
         rules 3.1 row states, 3.2 bundle state, 3.3 grades D-a .. D-h, 5 metrics M-1 .. M-12,
-        7.2 m_L and the predictor candidates P-A / P-B / P-D / P-C, 4.4 threshold forms T-1 ..
-        T-14, 4.5 integer periods, 6 grid record (full 10 Hz or the fallback windows).
+        7.2 m_L and the predictor candidates P-A / P-B / P-D / P-G / P-C with the P-A limit
+        records, 4.4 threshold forms T-1 .. T-14, 4.5 integer periods, 6 grid record.
 
-Inputs (``b1-run-record/1``, the same arrays for both engines, periods aligned by
-``n = round(t / 0.1)``):
+Inputs (the R-C1 names of rules 6 for both engines, periods aligned by ``n = round(t / 0.1)``):
 
-* Harness: ``b1_harness.py`` lines and ``npz/<run id>.npz`` (``stroke_read_m``, ``sink_m``,
-  ``load_read_N``, ``att_filt_rad``, ``c_hat_m``, ``c_target_m``). Grid factor ``f = 1``.
+* Harness: ``b1_harness.py`` lines and ``npz/<run id>.npz`` (``b1-run-record/2``:
+  ``stroke_read_m``, ``sink_m`` and the R-C1 arrays ``n``, ``load_read_N``, ``att_raw_rad``,
+  ``c_hat_m``, ``c_hat_corner_m``, ``c_target_m``). Grid factor ``f = 1``.
 * Chrono row folder ``<batch>/<case>/``: ``result.json``, ``record/record.npz`` (``t``,
   ``meas.stroke``: the reading stroke), ``step_series.npz`` (``t_s``,
   ``pad_sinkage_geometric_m``, ``scm_pad_normal_N``, ``scm_crawler_normal_N``; 1 ms, looked up
-  by ``searchsorted(t, n 0.1 - 1e-9)``) and :data:`CHRONO_B1_RECORD` (the controller arrays
-  above plus the grid record R-G1 .. R-G4, key names :data:`CHRONO_GRID_KEYS`; set by the
-  Chrono runner, cad-expert). A missing field gives NA for what needs it, never INVALID.
+  by ``searchsorted(t, n 0.1 - 1e-9)``) and :data:`CHRONO_B1_RECORD` (rules 6: R-C1
+  :data:`CHRONO_RECORD_KEYS`, R-G1 :data:`CHRONO_GRID_KEYS`, R-G2 :data:`CHRONO_PAD_XY_KEYS`,
+  R-G4 :data:`CHRONO_IMU_KEYS`; R-G3 meta in ``result.json`` ``b1_grid_record.static``). The
+  R-G1 fields that ``result.json`` ``s9_rows[].pad_nodes`` also has must be equal there, else
+  the row's grid record is invalid. A missing field gives NA for what needs it, never INVALID
+  (a missing R-C1 makes the row's M-6 / D-d NA).
+* Crawler corners: ``CRAWLER_XY_BOX_M`` read as text from ``03_src/outrigger_sim/control/c2.py``
+  (no import), corner order of ``C2Geometry.from_params``.
 * Identity record (``--identity``): per row ``{"ok": bool, "reasons": [...]}`` of rules I-1 ..
   I-17 from prelaunch / postrun / audit, ``rc`` per row, and ``runner_log`` ``{errors_total,
   errors_left}`` (E-5). The tool adds the I-3 / I-4 / I-7 / I-11 checks it can read itself.
@@ -50,12 +54,12 @@ from pathlib import Path
 import numpy as np
 
 # ===================================================================================== constants
-RULES_FILE = "b1_creep_basis_rules_seal_candidate_draft.md"
-RULES_SHA256 = "fa142d525c9c8d318212c245b552cea47b0394ed97680900653bcda737ab5cf9"
-"""Seal candidate (not sealed). After S-0: the sealed file name and its SHA-256."""
+RULES_FILE = "b1_creep_rules.md"
+RULES_SHA256 = "6b99702ce26d6da28fbfe6473b622c7e51419241916cbc101f795828f498774e"
+"""Sealed rules (``b1_creep_rules.sha256``, master ``1ad3e5d``, 2026-11-12)."""
 SCHEMA_METRICS = "b1-creep-metrics/1"
 SCHEMA_CONSTANTS = "b1-harness-constants/1"
-RECORD_SCHEMA = "b1-run-record/1"
+RECORD_SCHEMA = "b1-run-record/2"
 PATH_NAME = "path 1"
 
 PERIOD_S = 0.1
@@ -132,18 +136,32 @@ NEED_ROWS = ("C1", "C2", "C4")
 C6_MASS_SCALE = 1.1
 HARNESS_PAIR_ROW = {"C1": "C1", "C2": "C2", "C3": "C3", "C4": "C4", "C5": "C5", "C6": "C6"}
 
-CHRONO_B1_RECORD = "b1_record.npz"
-CHRONO_RECORD_KEYS = ("n", "load_read_N", "att_filt_rad", "c_hat_m", "c_target_m")
+CHRONO_B1_RECORD = "record/b1_grid_record.npz"
+"""Rules 6: one file with R-G1 .. R-G4 and R-C1 (10 Hz arrays share ``n``)."""
+CHRONO_RECORD_KEYS = ("n", "load_read_N", "att_raw_rad", "c_hat_m", "c_hat_corner_m",
+                      "c_target_m")
+"""Rules 6 R-C1 (names fixed by the rules)."""
 CHRONO_GRID_KEYS = {
-    "n": "grid_n", "n_inside": "grid_n_inside", "n_contact": "grid_n_contact",
-    "hull_area": "grid_hull_area_m2", "hull_perimeter": "grid_hull_perimeter_m",
-    "z_geo": "grid_sinkage_geometric_m", "sigma_sum": "grid_sigma_sum_area_N",
+    "n_inside": "n_inside", "n_contact": "n_contact",
+    "hull_area": "contact_hull_area_m2", "hull_perimeter": "contact_hull_perimeter_m",
+    "z_geo": "sinkage_geometric_m", "sigma_sum": "sigma_sum_area_N",
 }
-"""R-G1 key names in :data:`CHRONO_B1_RECORD` (proposal; cad-expert fixes them before the sha
-of this tool is fixed)."""
-CHRONO_PAD_XY_KEYS = ("pad_xy_n", "pad_xy_m", "pad_yaw_rad")
-CHRONO_SHADOW_KEY = "loc_shadow"
-"""Optional M-12 entries of a Chrono row (same form as the harness shadow) in result.json."""
+"""R-G1 (n, 4) fields used here, ``node_stats_in_outline`` names (the prelaunch key list is the
+reference; a different name there changes this map before the sha is fixed)."""
+PAD_NODES_FIELDS = ("n_inside", "n_contact", "contact_hull_area_m2", "contact_hull_perimeter_m",
+                    "sinkage_geometric_m", "sigma_sum_area_N")
+"""R-G1 fields compared with ``s9_rows[].pad_nodes`` where both have them (rules 6)."""
+CHRONO_PAD_XY_KEYS = ("pad_xy_m", "pad_yaw_rad")
+"""R-G2 (n, 4, 2) and (n, 4) on the record ``n``."""
+CHRONO_IMU_KEYS = ("imu_t_s", "imu_raw_tilt_rad")
+"""R-G4 ``imu_*``: sample time (M,) and raw tilt roll, pitch (M, 2), 100 Hz."""
+GRID_STATIC_KEY = "b1_grid_record"
+"""R-G3: ``result.json[GRID_STATIC_KEY]["static"]`` (pad grid Delta under ``pad_grid_m`` or
+``grid_m``; else ``meta.scm.grid_m``)."""
+C2_SOURCE = Path("03_src") / "outrigger_sim" / "control" / "c2.py"
+ANCHOR_HALF_WINDOW_MAX_S = 0.5
+"""Rules 7.5 plan A: ``w = min(0.5 s, t_L - t_P)``."""
+WINDOW_TOL_S = 1e-6
 
 EV_LOC = "crawler_liftoff_confirmed"
 EV_REVOKE = "INFO_LOC_REVOKED"
@@ -184,7 +202,7 @@ class GridRecord:
 
 @dataclass
 class RunRecord:
-    """``b1-run-record/1`` of one run (module docstring); optional arrays are None."""
+    """``b1-run-record/2`` of one run (module docstring); optional arrays are None."""
 
     run_id: str
     source: str
@@ -196,22 +214,27 @@ class RunRecord:
     t_ready_s: float | None
     load: np.ndarray | None = None
     att: np.ndarray | None = None
+    """R-C1 ``att_raw_rad``: period-mean raw tilt (roll, pitch) [rad] (rules 7.1)."""
     c_hat: np.ndarray | None = None
+    c_hat_corner: np.ndarray | None = None
     c_target: np.ndarray | None = None
-    c_target_final_m: float | None = None
     t_departure_s: float | None = None
     t_creep_s: float | None = None
     final_phase: str | None = None
     grid: GridRecord | None = None
     pad_xy: dict | None = None
     loc_shadow: dict | None = None
+    imu: dict | None = None
+    """R-G4: ``{"t_s": (M,), "tilt": (M, 2)}`` (Chrono only)."""
+    soil_meta: dict | None = None
+    """Controller soil record of the last LOC (Chrono ``c2_soil`` + settings; M-12)."""
     crawler_clear: np.ndarray | None = None
     extra: dict = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
 class Geometry:
-    """YAML / soil-set quantities (read from the files, rules 9)."""
+    """YAML / soil-set / c2 source quantities (read from the files, rules 9)."""
 
     pad_xy_m: np.ndarray
     static_loads_N: dict[str, np.ndarray]
@@ -221,6 +244,9 @@ class Geometry:
     kphi: float
     n_soil: float
     superstructure_mass_kg: dict[str, float]
+    crawler_corners_xy_m: np.ndarray
+    """(4, 2) in ``C2Geometry.from_params`` order: (x_min, y_min), (x_min, y_max),
+    (x_max, y_min), (x_max, y_max) of ``CRAWLER_XY_BOX_M``."""
 
 
 # ===================================================================================== helpers
@@ -283,8 +309,9 @@ def series_at(t_s: np.ndarray, values: np.ndarray, n: int) -> np.ndarray | None:
 
 
 # ===================================================================================== inputs
-def read_geometry(yaml_path: Path, soil_sets_path: Path) -> Geometry:
-    """Pad xy, static leg loads per level, pad B area / b_poly (YAML) and the J2 set.
+def read_geometry(yaml_path: Path, soil_sets_path: Path, c2_path: Path) -> Geometry:
+    """Pad xy, static leg loads per level, pad B area / b_poly (YAML), the J2 set and the
+    crawler box corners (c2.py text).
 
     Raises:
         InputError: A block is missing or incomplete.
@@ -296,7 +323,25 @@ def read_geometry(yaml_path: Path, soil_sets_path: Path) -> Geometry:
     loads, masses = _yaml_static_loads(lines)
     return Geometry(pad_xy_m=_yaml_pad_xy(lines), static_loads_N=loads, pad_area_m2=area,
                     pad_b_poly_m=b_poly, kc=float(chrono["Kc"]), kphi=float(chrono["Kphi"]),
-                    n_soil=float(chrono["n"]), superstructure_mass_kg=masses)
+                    n_soil=float(chrono["n"]), superstructure_mass_kg=masses,
+                    crawler_corners_xy_m=crawler_corners_from_source(c2_path))
+
+
+def crawler_corners_from_source(c2_path: Path) -> np.ndarray:
+    """``CRAWLER_XY_BOX_M = ((x_min, x_max), (y_min, y_max))`` of c2.py as the four corners in
+    ``C2Geometry.from_params`` order (read as text, not imported).
+
+    Raises:
+        InputError: The constant is not found.
+    """
+    number = r"(-?[0-9.]+)"
+    pattern = (rf"^CRAWLER_XY_BOX_M\s*=\s*\(\(\s*{number}\s*,\s*{number}\s*\)\s*,\s*"
+               rf"\(\s*{number}\s*,\s*{number}\s*\)\s*\)")
+    match = re.search(pattern, c2_path.read_text(encoding="utf-8"), re.MULTILINE)
+    if match is None:
+        raise InputError(f"CRAWLER_XY_BOX_M not found in {c2_path}")
+    x_min, x_max, y_min, y_max = (float(v) for v in match.groups())
+    return np.array([[x_min, y_min], [x_min, y_max], [x_max, y_min], [x_max, y_max]])
 
 
 def _block_start(lines: list[str], header: str, start: int = 0) -> int:
@@ -435,14 +480,12 @@ def _harness_record(line: dict, folder: Path) -> RunRecord:
     with np.load(folder / line["npz"], allow_pickle=False) as data:
         arrays = {key: np.asarray(data[key]) for key in data.files}
     events = [(float(t), str(name)) for t, name in line.get("events") or []]
-    controller = line.get("controller") or {}
     return RunRecord(
         run_id=line["run_id"], source="harness", level=line["level"],
         n=arrays["n"].astype(np.int64), stroke=arrays["stroke_read_m"], sink=arrays["sink_m"],
         events=events, t_ready_s=line.get("t_first_ready_s"), load=arrays.get("load_read_N"),
-        att=arrays.get("att_filt_rad"), c_hat=arrays.get("c_hat_m"),
-        c_target=arrays.get("c_target_m"),
-        c_target_final_m=controller.get("clearance_target_final_m"),
+        att=arrays.get("att_raw_rad"), c_hat=arrays.get("c_hat_m"),
+        c_hat_corner=arrays.get("c_hat_corner_m"), c_target=arrays.get("c_target_m"),
         t_departure_s=line.get("t_departure_s"), final_phase=line.get("final_phase"),
         loc_shadow=line.get("loc_shadow"), crawler_clear=arrays.get("crawler_clear_true_m"),
         extra={"harness_class": line.get("harness_class"),
@@ -497,17 +540,19 @@ def _chrono_record(row_id: str, result: dict, record: dict, series: dict,
         if z is not None:
             sink[index] = z
     p3b = result.get("p3b") or {}
-    margin_meta = (result.get("controller_meta") or {}).get("slope_clearance_margin") or {}
+    controller_meta = result.get("controller_meta") or {}
+    margin_meta = controller_meta.get("slope_clearance_margin") or {}
+    soil_settings = ((controller_meta.get("soil") or {}).get("settings")
+                     or (result.get("c2_soil") or {}).get("settings") or {})
     rec = RunRecord(
         run_id=row_id, source="chrono", level=CHRONO_ROWS[row_id].level, n=n,
         stroke=np.asarray(record["meas.stroke"], dtype=float), sink=sink,
         events=[(float(e["t_s"]), str(e["name"])) for e in result.get("events") or []],
         t_ready_s=(p3b.get("P3-5_clearance_stroke") or {}).get("t_first_ready_s"),
-        c_target_final_m=margin_meta.get("clearance_target_m"),
         t_departure_s=(p3b.get("P3-2_loc") or {}).get("t_departure_s"),
         t_creep_s=(p3b.get("creep_stop") or {}).get("t_final_s"),
         final_phase=str(result.get("final_phase")) if result.get("final_phase") else None,
-        loc_shadow=result.get(CHRONO_SHADOW_KEY),
+        soil_meta={**(result.get("c2_soil") or {}), "settings": soil_settings},
         extra={"order_gate_decisions": len((margin_meta.get("order_gate") or {})
                                             .get("decisions") or [])})
     _attach_chrono_b1(rec, b1, result)
@@ -526,23 +571,72 @@ def _aligned(rec_n: np.ndarray, source_n: np.ndarray, values: np.ndarray) -> np.
 
 
 def _attach_chrono_b1(rec: RunRecord, b1: dict, result: dict) -> None:
+    """R-C1, R-G1 (if consistent with ``pad_nodes``), R-G2 and R-G4 of the row's npz."""
+    if "n" not in b1:
+        return
+    source_n = b1["n"].astype(np.int64)
     if all(key in b1 for key in CHRONO_RECORD_KEYS):
-        source_n = b1["n"].astype(np.int64)
         rec.load = _aligned(rec.n, source_n, b1["load_read_N"].astype(float))
-        rec.att = _aligned(rec.n, source_n, b1["att_filt_rad"].astype(float))
+        rec.att = _aligned(rec.n, source_n, b1["att_raw_rad"].astype(float))
         rec.c_hat = _aligned(rec.n, source_n, b1["c_hat_m"].astype(float))
+        rec.c_hat_corner = _aligned(rec.n, source_n, b1["c_hat_corner_m"].astype(float))
         rec.c_target = _aligned(rec.n, source_n, b1["c_target_m"].astype(float))
     if all(key in b1 for key in CHRONO_GRID_KEYS.values()):
-        grid_m = ((result.get("meta") or {}).get("scm") or {}).get("grid_m")
-        keys = CHRONO_GRID_KEYS
-        rec.grid = GridRecord(
-            n=b1[keys["n"]].astype(np.int64), n_contact=b1[keys["n_contact"]].astype(float),
-            hull_area=b1[keys["hull_area"]].astype(float),
-            hull_perimeter=b1[keys["hull_perimeter"]].astype(float),
-            z_geo=b1[keys["z_geo"]].astype(float), sigma_sum=b1[keys["sigma_sum"]].astype(float),
-            grid_m=float(grid_m) if grid_m is not None else math.nan)
+        mismatch = pad_nodes_mismatch(b1, result)
+        rec.extra["pad_nodes_check"] = mismatch
+        if mismatch["consistent"]:
+            keys = CHRONO_GRID_KEYS
+            rec.grid = GridRecord(
+                n=source_n, n_contact=b1[keys["n_contact"]].astype(float),
+                hull_area=b1[keys["hull_area"]].astype(float),
+                hull_perimeter=b1[keys["hull_perimeter"]].astype(float),
+                z_geo=b1[keys["z_geo"]].astype(float),
+                sigma_sum=b1[keys["sigma_sum"]].astype(float), grid_m=_grid_spacing(result))
     if all(key in b1 for key in CHRONO_PAD_XY_KEYS):
-        rec.pad_xy = {"n": b1["pad_xy_n"].astype(np.int64), "xy": b1["pad_xy_m"].astype(float)}
+        rec.pad_xy = {"n": source_n, "xy": b1["pad_xy_m"].astype(float)}
+    if all(key in b1 for key in CHRONO_IMU_KEYS):
+        rec.imu = {"t_s": b1["imu_t_s"].astype(float),
+                   "tilt": b1["imu_raw_tilt_rad"].astype(float).reshape(-1, 2)}
+
+
+def _grid_spacing(result: dict) -> float:
+    """Pad grid Delta: R-G3 static meta, else ``meta.scm.grid_m`` (NaN when absent)."""
+    static = (result.get(GRID_STATIC_KEY) or {}).get("static") or {}
+    for value in (static.get("pad_grid_m"), static.get("grid_m"),
+                  ((result.get("meta") or {}).get("scm") or {}).get("grid_m")):
+        if _finite(value):
+            return float(value)
+    return math.nan
+
+
+def _same_value(a, b) -> bool:
+    """Exact equality of a ``pad_nodes`` value and an npz value (None == NaN)."""
+    a_missing = a is None or (isinstance(a, float) and math.isnan(a))
+    b_missing = b is None or (isinstance(b, float) and math.isnan(b))
+    if a_missing or b_missing:
+        return a_missing and b_missing
+    return float(a) == float(b)
+
+
+def pad_nodes_mismatch(b1: dict, result: dict) -> dict:
+    """Rules 6: every R-G1 field also in ``s9_rows[].pad_nodes`` must be equal at the same
+    period (the row's grid record is invalid otherwise)."""
+    lookup = {int(v): i for i, v in enumerate(b1["n"].astype(np.int64))}
+    compared, differences = 0, []
+    for row in result.get("s9_rows") or []:
+        nodes = row.get("pad_nodes")
+        index = lookup.get(period_index(row["t_s"])) if nodes else None
+        if index is None:
+            continue
+        for leg, stats in enumerate(nodes[:4]):
+            for name in PAD_NODES_FIELDS:
+                if name not in stats or name not in b1:
+                    continue
+                compared += 1
+                if not _same_value(stats[name], float(b1[name][index, leg])):
+                    differences.append(f"n {period_index(row['t_s'])} {LEGS[leg]} {name}")
+    return {"compared": compared, "differences": differences[:20],
+            "difference_count": len(differences), "consistent": not differences}
 
 
 # ===================================================================================== timing
@@ -608,16 +702,14 @@ def margin_at_loc(rec: RunRecord, n_L: int | None) -> dict:
 
 
 def t14_check(rec: RunRecord, rows: Rows, n_L: int | None, c_star_run_m: float | None) -> dict:
-    """Rules T-14: event target against the controller state ``clearance_target_m``."""
+    """Rules T-14 / 7.2: event target against R-C1 ``c_target_m`` at ``n_L``. Without that
+    value the check is not made (the row's D-d is NA anyway: no R-C1)."""
     state = rows.at(rec.c_target, n_L)
-    source = "period record at n_L"
-    if state is None or not _finite(float(state)):
-        state, source = rec.c_target_final_m, "final controller meta"
-    if c_star_run_m is None or state is None:
-        return {"checked": False, "ok": True, "state_m": _num(state), "source": source}
+    if c_star_run_m is None or state is None or not math.isfinite(float(state)):
+        return {"checked": False, "ok": True, "state_m": None if state is None else _num(state)}
     difference = abs(c_star_run_m - float(state))
     return {"checked": True, "ok": difference - T14_M <= 0.0, "state_m": float(state),
-            "difference_m": difference, "source": source}
+            "difference_m": difference}
 
 
 # ===================================================================================== metrics
@@ -686,15 +778,18 @@ def predictor_inputs(rec: RunRecord, rows: Rows, tm: Timing, geo: Geometry) -> d
     s_L = rows.at(rec.stroke, tm.n_L)
     att = rows.at(rec.att, tm.n_L)
     c_hat = rows.at(rec.c_hat, tm.n_L)
+    corners = rows.at(rec.c_hat_corner, tm.n_L)
     load = rows.at(rec.load, tm.n_L)
     out["s_L"] = _legs(s_L)
     out["c_hat_L_m"] = None if c_hat is None else _num(c_hat)
+    out["c_hat_corner_L_m"] = None if corners is None else _legs(corners)
     if att is not None and np.all(np.isfinite(att)):
-        roll, pitch = float(att[0]), float(att[1])
+        roll, pitch = float(att[0]), float(att[1])  # R-C1 att_raw_rad (rules 7.1)
         ds = geo.pad_xy_m[:, 0] * pitch - geo.pad_xy_m[:, 1] * roll
-        out.update(att_L_rad=[roll, pitch], ds_geo=_legs(ds))
+        rho = geo.crawler_corners_xy_m[:, 0] * pitch - geo.crawler_corners_xy_m[:, 1] * roll
+        out.update(att_L_rad=[roll, pitch], ds_geo=_legs(ds), rho=_legs(rho))
     else:
-        out.update(att_L_rad=None, ds_geo=None)
+        out.update(att_L_rad=None, ds_geo=None, rho=None)
     if load is not None and np.all(np.isfinite(load)) and tm.n_L is not None:
         static = geo.static_loads_N[rec.level]
         before = np.asarray(rec.n) <= tm.n_L
@@ -713,31 +808,99 @@ def power_term(f_pk: float | None, w_hat: float | None) -> float | None:
     return (f_pk + max(w_hat, 0.0)) ** exponent - f_pk ** exponent
 
 
-def predictions(inputs: dict, constants: dict | None) -> dict[str, list[float | None]]:
-    """Rules 7.2: P-A, P-B, P-D, P-C per leg (None where an input or constant is NA)."""
+def plane_corner_values(pad_xy: np.ndarray, pad_values, corners_xy: np.ndarray) -> np.ndarray:
+    """Least-squares plane ``dz = a + b y - c x`` through the four pads (support-matrix form
+    ``[1, y, -x]``, rules 7.2), evaluated at the crawler corners (4,)."""
+    basis = np.column_stack([np.ones(len(pad_xy)), pad_xy[:, 1], -pad_xy[:, 0]])
+    coefficients, *_ = np.linalg.lstsq(basis, np.asarray(pad_values, dtype=float), rcond=None)
+    corner_basis = np.column_stack([np.ones(len(corners_xy)), corners_xy[:, 1],
+                                    -corners_xy[:, 0]])
+    return corner_basis @ coefficients
+
+
+def predicted_sinkage(inputs: dict, constants: dict | None) -> list[float | None]:
+    """P-D increment ``C_type(i) [(F_pk + max(W, 0))^(1/n_a) - F_pk^(1/n_a)]`` per leg."""
+    c_type = (constants or {}).get("C_type") or {}
+    w_hat, f_pk = inputs.get("W_hat"), inputs.get("F_pk")
+    out = []
+    for i in range(4):
+        c_i = c_type.get(PAD_TYPE[i])
+        term = power_term(None if f_pk is None else f_pk[i], None if w_hat is None else w_hat[i])
+        out.append(None if term is None or not _finite(c_i) else c_i * term)
+    return out
+
+
+def p_g_terms(inputs: dict, dz_hat: list[float | None], geo: Geometry) -> dict | None:
+    """P-G corner terms: ``Z_hat_k`` and the lift ``(c* + m_L - min_k(c_k + rho_k +
+    Z_hat_k))^+`` with its corner ``k*`` (None when an input is NA)."""
+    corners, rho, m_L = inputs.get("c_hat_corner_L_m"), inputs.get("rho"), inputs["m_L"]["m_L_m"]
+    if (corners is None or rho is None or m_L is None or any(v is None for v in dz_hat)
+            or any(v is None for v in corners)):
+        return None
+    z_hat = plane_corner_values(geo.pad_xy_m, dz_hat, geo.crawler_corners_xy_m)
+    total = np.asarray(corners, dtype=float) + np.asarray(rho, dtype=float) + z_hat
+    k_star = int(np.argmin(total))
+    return {"Z_hat": _legs(z_hat), "k_star": k_star, "rho_k_star": rho[k_star],
+            "Z_hat_k_star": float(z_hat[k_star]),
+            "lift_m": max(C_STAR_M + m_L - float(total[k_star]), 0.0)}
+
+
+def predictions(inputs: dict, constants: dict | None,
+                geo: Geometry) -> tuple[dict[str, list[float | None]], dict | None]:
+    """Rules 7.2: P-A, P-B, P-D, P-G, P-C per leg (None where an input or constant is NA)
+    and the P-G corner terms."""
     s_L, ds = inputs.get("s_L"), inputs.get("ds_geo")
     c_hat, m_L = inputs.get("c_hat_L_m"), inputs["m_L"]["m_L_m"]
     if s_L is None or ds is None or c_hat is None or m_L is None:
-        return {q: [None] * 4 for q in ("P-A", "P-B", "P-D", "P-C")}
+        return {q: [None] * 4 for q in PRED_ORDER}, None
     lift = max(C_STAR_M + m_L - c_hat, 0.0)
-    p_a = [None if s_L[i] is None or ds[i] is None else s_L[i] + ds[i] + lift for i in range(4)]
-    out = {"P-A": p_a}
+    base = [None if s_L[i] is None or ds[i] is None else s_L[i] + ds[i] for i in range(4)]
+    p_a = [None if b is None else b + lift for b in base]
     kappa = (constants or {}).get("kappa_z_m_per_N") or {}
-    c_type = (constants or {}).get("C_type") or {}
     delta_allow = (constants or {}).get("delta_allow_m")
-    w_hat, f_pk = inputs.get("W_hat"), inputs.get("F_pk")
-    p_b, p_d, p_c = [], [], []
+    w_hat = inputs.get("W_hat")
+    dz_hat = predicted_sinkage(inputs, constants)
+    g_terms = p_g_terms(inputs, dz_hat, geo)
+    p_b, p_d, p_g, p_c = [], [], [], []
     for i in range(4):
-        k_i, c_i = kappa.get(PAD_TYPE[i]), c_type.get(PAD_TYPE[i])
+        k_i = kappa.get(PAD_TYPE[i])
         w_i = None if w_hat is None else w_hat[i]
         pb = (None if p_a[i] is None or not _finite(k_i) or not _finite(w_i)
               else p_a[i] + k_i * max(w_i, 0.0))
-        term = power_term(None if f_pk is None else f_pk[i], w_i)
-        pd = None if p_a[i] is None or not _finite(c_i) or term is None else p_a[i] + c_i * term
         p_b.append(pb)
-        p_d.append(pd)
+        p_d.append(None if p_a[i] is None or dz_hat[i] is None else p_a[i] + dz_hat[i])
+        p_g.append(None if base[i] is None or g_terms is None
+                   else base[i] + g_terms["lift_m"] + dz_hat[i])
         p_c.append(None if pb is None or not _finite(delta_allow) else pb + delta_allow)
-    out.update({"P-B": p_b, "P-D": p_d, "P-C": p_c})
+    return {"P-A": p_a, "P-B": p_b, "P-D": p_d, "P-G": p_g, "P-C": p_c}, (
+        None if g_terms is None else {**g_terms, "dz_hat": dz_hat})
+
+
+def p_a_limit_record(rec: RunRecord, rows: Rows, tm: Timing, inputs: dict,
+                     g_terms: dict | None, geo: Geometry) -> dict:
+    """Rules 7.2 P-A limit (record only): observed heave ``h`` at t_max and t_e (four legs,
+    mean, spread = max - min), ``rho_k*``, ``Z_k*`` and ``Z_hat_k*``, ``epsilon``."""
+    out: dict = {"k_star": None if g_terms is None else g_terms["k_star"],
+                 "rho_k_star_m": None if g_terms is None else g_terms["rho_k_star"],
+                 "Z_hat_k_star_m": None if g_terms is None else g_terms["Z_hat_k_star"]}
+    s_L, ds, z_L = rows.at(rec.stroke, tm.n_L), inputs.get("ds_geo"), _z(rows, rec, tm.n_L)
+    for name, n in (("max", tm.n_max), ("e", tm.n_e)):
+        s_t, z_t = rows.at(rec.stroke, n), _z(rows, rec, n)
+        if any(v is None for v in (s_L, ds, z_L, s_t, z_t)):
+            out[f"h_{name}"] = None
+            out[f"Z_k_star_{name}_m"] = None
+            continue
+        dz = np.asarray(z_t) - np.asarray(z_L)
+        h = np.asarray(s_t) - np.asarray(s_L) - np.asarray(ds, dtype=float) - dz
+        out[f"h_{name}"] = {"legs_m": _legs(h), "mean_m": float(np.mean(h)),
+                            "spread_m": float(np.max(h) - np.min(h))}
+        z_k = plane_corner_values(geo.pad_xy_m, dz, geo.crawler_corners_xy_m)
+        out[f"Z_{name}_m"] = _legs(z_k)
+        out[f"Z_k_star_{name}_m"] = None if g_terms is None else float(z_k[g_terms["k_star"]])
+    c_hat_R = rows.at(rec.c_hat, tm.n_R)
+    m_L = inputs["m_L"]["m_L_m"]
+    out["epsilon_m"] = (None if c_hat_R is None or m_L is None or not math.isfinite(c_hat_R)
+                        else float(c_hat_R) - (C_STAR_M + m_L))
     return out
 
 
@@ -754,7 +917,7 @@ def run_metrics(rec: RunRecord, geo: Geometry, constants: dict | None,
     tm = run_timing(rec)
     sinks = sink_metrics(rec, rows, tm)
     inputs = predictor_inputs(rec, rows, tm, geo)
-    preds = predictions(inputs, constants)
+    preds, g_terms = predictions(inputs, constants, geo)
     errors = prediction_errors(tm.s_max, preds)
     s_R = rows.at(rec.stroke, tm.n_R)
     b_star = tm.b_star
@@ -770,8 +933,9 @@ def run_metrics(rec: RunRecord, geo: Geometry, constants: dict | None,
         "M-4": {"n_e": tm.n_e, "n_e_leg": tm.n_e_leg, "n_max_leg": tm.n_max_leg, **sinks},
         "M-5": {"delta_os": None if s_R is None else _legs(tm.s_max - np.asarray(s_R)),
                 "t_max_minus_t_L_s": None if tm.n_L is None else (tm.n_max - tm.n_L) * PERIOD_S},
-        "M-6": {"predictions": preds, "errors": errors,
+        "M-6": {"predictions": preds, "errors": errors, "p_g_terms": g_terms,
                 "lower_bound": tm.n_sgs is not None},  # rules 7.4: SGS s_max is a lower bound
+        "p_a_limit": p_a_limit_record(rec, rows, tm, inputs, g_terms, geo),
         "predictor_inputs": inputs,
         "M-7": crawler_metrics(rec, rows, tm),
         "M-8": rule_activity(rec),
@@ -1237,11 +1401,13 @@ def grade_D_c(chrono: dict, harness_metrics: dict, r_rows: list[str], geo: Geome
                   per_row=per_row, no_pair_rows=na_pair)
 
 
-PRED_ORDER = ("P-A", "P-B", "P-D", "P-C")
+PRED_ORDER = ("P-A", "P-B", "P-D", "P-G", "P-C")
+"""Rules 3.3 D-d tie order (simpler first)."""
 
 
 def grade_D_d(chrono: dict, r_rows: list[str]) -> dict:
-    """D-d: ``E_q`` over the rows with D-d inputs; ties to the simpler candidate."""
+    """D-d (Q-5 (a)): rows with a T-14 mismatch leave every candidate; a candidate with NA in
+    any remaining row has ``E_q`` NA (one row set for all); ties P-A, P-B, P-D, P-G, P-C."""
     rows = [r for r in r_rows if chrono[r]["metrics"]["predictor_inputs"]["t14"]["ok"]]
     excluded = {r: "T-14 mismatch" for r in r_rows if r not in rows}
     e_q: dict[str, float | str] = {}
@@ -1251,6 +1417,8 @@ def grade_D_d(chrono: dict, r_rows: list[str]) -> dict:
             abs(v) for v in values)
     known = [q for q in PRED_ORDER if e_q[q] != NA]
     flags = [f"행 제외 {r}: {why}" for r, why in excluded.items()]
+    if known and len(known) < len(PRED_ORDER):
+        flags.append("후보 축소: " + ", ".join(q for q in PRED_ORDER if q not in known))
     if any(chrono[r]["metrics"]["is_sgs"] for r in rows):
         flags.append("하한 포함")
     if not known:
@@ -1370,8 +1538,8 @@ def grade_D_h(harness: dict[str, HarnessRun], p7_path: Path | None) -> dict:
 def m12_records(runs: dict[str, HarnessRun], harness_metrics: dict, shadow_ok: bool,
                 chrono: dict, r_rows: list[str]) -> dict:
     """Rules 7.5 (record only). Harness: the shadow is kept only when the H-SH0 pairs have
-    equal command hashes. Chrono: entries of the same form in the row's result
-    (:data:`CHRONO_SHADOW_KEY`); without them the row's M-12 is NA (E-4)."""
+    equal command hashes. Chrono: :func:`chrono_anchor_shadow` (R-G4 reconstruction); a row
+    without its inputs has M-12 NA (E-4)."""
     harness: dict | str = NA
     if shadow_ok:
         harness = {run_id: _m12_run(run.line.get("loc_shadow"), harness_metrics[run_id])
@@ -1420,6 +1588,77 @@ def _m12_run(shadow: dict | None, metrics: dict) -> dict | str:
 
 def _mm(value) -> float | None:
     return None if value is None else float(value) / 1e3
+
+
+def _corner_bias(c_P: np.ndarray, tilt, settle, path: str, settings: dict,
+                 corners_xy: np.ndarray) -> np.ndarray:
+    """The controller's S-3 / anchor bias rule on a tilt (``_corner_bias_m`` and
+    ``_confirm_liftoff``): raw ``b_k = c_k(t_P) - (rho_k - min rho)``, ``rho_k = y_k d_phi -
+    x_k d_theta`` from the settle; path 2 raw + offset, path 1 ``max(raw, 0)``, path 3 zero."""
+    settle = tilt if settle is None else settle
+    d_roll, d_pitch = float(tilt[0]) - float(settle[0]), float(tilt[1]) - float(settle[1])
+    rise = corners_xy[:, 1] * d_roll - corners_xy[:, 0] * d_pitch
+    raw = c_P - (rise - rise.min())
+    if path == "2":
+        return raw + float(settings.get("loc_anchor_offset_m") or 0.0)
+    if path == "1":
+        return np.maximum(raw, 0.0)
+    return np.zeros(4)
+
+
+def chrono_anchor_shadow(rec: RunRecord, metrics: dict, geo: Geometry) -> dict | None:
+    """Rules 7.5 / Q-7 (a): plan A of the last LOC rebuilt from R-G4 and R-C1.
+
+    ``c_hat_A(t_L) = min_k(c_k(t_L) - b_k^A)``: ``c_k(t_L)`` = R-C1 ``c_hat_corner_m`` at
+    ``n_L`` plus the bias of the single-sample tilt (R-C1 ``att_raw_rad`` at ``n_P``),
+    ``b^A`` = the same rule on the mean R-G4 raw tilt over ``[t_P - w, t_P + w]``,
+    ``w = min(0.5 s, t_L - t_P)``. ``t_P``, ``c_min(t_P)``, the settle attitude and the dead
+    zones come from the row's controller soil record. Only the last LOC (the soil record
+    keeps one); None when an input is missing.
+    """
+    soil = rec.soil_meta or {}
+    n_L = metrics["M-1"]["n_L"]
+    if rec.imu is None or rec.c_hat_corner is None or rec.att is None or n_L is None:
+        return None
+    t_P = soil.get("t_P_s")
+    if not _finite(t_P):
+        return None
+    rows = Rows(rec.n)
+    n_P = period_index(t_P)
+    c_P, c_L = rows.at(rec.c_hat_corner, n_P), rows.at(rec.c_hat_corner, n_L)
+    single, c_hat_L = rows.at(rec.att, n_P), rows.at(rec.c_hat, n_L)
+    if any(v is None for v in (c_P, c_L, single, c_hat_L)):
+        return None
+    t_L = n_L * PERIOD_S
+    half = min(ANCHOR_HALF_WINDOW_MAX_S, t_L - float(t_P))
+    window = ((rec.imu["t_s"] >= t_P - half - WINDOW_TOL_S)
+              & (rec.imu["t_s"] <= t_P + half + WINDOW_TOL_S))
+    if not window.any():
+        return None
+    centred = rec.imu["tilt"][window].mean(axis=0)
+    settings = soil.get("settings") or {}
+    c_min = soil.get("clearance_at_P_m")
+    c_min = float(np.min(c_P)) if not _finite(c_min) else float(c_min)
+    if settings.get("loc_anchor_enable") and c_min < -float(settings["loc_anchor_deadzone_m"]):
+        path = "2"
+    elif c_min > float(settings.get("corner_bias_deadzone_m", math.inf)):
+        path = "1"
+    else:
+        path = "3"
+    settle = soil.get("settle_attitude_rad")
+    corners_xy = geo.crawler_corners_xy_m
+    bias_now = _corner_bias(np.asarray(c_P), single, settle, path, settings, corners_xy)
+    bias_a = _corner_bias(np.asarray(c_P), centred, settle, path, settings, corners_xy)
+    unbiased_L = np.asarray(c_L, dtype=float) + bias_now
+    c_hat_a = float(np.min(unbiased_L - bias_a))
+    stored = soil.get("bias_corner_m")
+    loc = {"path": path, "c_min_tP_mm": c_min * 1e3, "t_P_s": float(t_P), "t_L_s": t_L,
+           "c_hat_tL_current_mm": float(c_hat_L) * 1e3, "c_hat_tL_shadow_mm": c_hat_a * 1e3,
+           "diff_tL_mm": (float(c_hat_L) - c_hat_a) * 1e3, "window_half_s": half,
+           "window_samples": int(window.sum()),
+           "bias_rebuilt_minus_stored_m": None if stored is None else _legs(
+               bias_now - np.asarray(stored, dtype=float))}
+    return {"locs": [loc], "method": "R-G4 / R-C1 reconstruction (rules 7.5, Q-7 (a))"}
 
 
 # ===================================================================================== judge
@@ -1504,7 +1743,9 @@ def _chrono_entry(rec: RunRecord, facts: dict, metrics: dict, geo: Geometry) -> 
                       if name.startswith("P3-") and isinstance(block, dict)}
     metrics["M-4h"] = _pad_shift(rec, metrics)
     return {"metrics": metrics, "grid": grid, "b_star": b_star,
-            "b": LEGS.index(CHRONO_ROWS[rec.run_id].budget_leg), "shadow": rec.loc_shadow,
+            "b": LEGS.index(CHRONO_ROWS[rec.run_id].budget_leg),
+            "shadow": chrono_anchor_shadow(rec, metrics, geo),
+            "pad_nodes_check": rec.extra.get("pad_nodes_check"),
             "files_sha256": facts.get("sha256"), "b1_record_present": facts["b1_record_present"]}
 
 
@@ -1540,9 +1781,10 @@ def all_grades(chrono, statuses, harness, harness_metrics, geo, p7_path, bundle)
               "D-d": d_d, "D-e": grade_D_e(chrono, statuses, geo),
               "D-f": grade_D_f(chrono, statuses, harness, harness_metrics),
               "D-g": grade_D_g(chrono, statuses, d_d), "D-h": grade_D_h(harness, p7_path)}
-    if bundle == "PARTIAL":
+    if bundle == "PARTIAL":  # rules 3.2: C3 changes the grades on R, C6 changes D-g
         if statuses["C3"] != "VALID":
-            grades["D-d"]["flags"].append("PARTIAL (C3)")
+            for code in ("D-a", "D-b", "D-c", "D-d"):
+                grades[code]["flags"].append("PARTIAL (C3)")
         if statuses["C6"] != "VALID":
             grades["D-g"]["flags"].append("PARTIAL (C6)")
     return grades
@@ -1615,11 +1857,11 @@ def _write_json(path: Path, data: dict) -> str:
 
 
 # ===================================================================================== CLI
-def _default_paths(args) -> tuple[Path, Path]:
+def _default_paths(args) -> tuple[Path, Path, Path]:
     root = Path(__file__).resolve().parents[3]
     yaml_path = args.yaml or root / "02_params" / "rexome33.yaml"
     soil_path = args.soil_sets or root / "02_params" / "scm_soil_sets.json"
-    return yaml_path, soil_path
+    return yaml_path, soil_path, root / C2_SOURCE
 
 
 def _parse_args(argv: list[str] | None) -> argparse.Namespace:

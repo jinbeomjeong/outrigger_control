@@ -1,6 +1,6 @@
 """B1 rules I-17 (CR-1): R8 preset dump of ``HEAD_M`` against the base commit ``e67dae8``.
 
-Rules: ``b1_creep_basis_rules_seal_candidate_draft.md`` 1.2 CR-1 and 4.1 I-17 (seal candidate,
+Rules: ``b1_creep_rules.md`` 1.2 CR-1 and 4.1 I-17 (sealed 2026-11-12,
 :data:`RULES_SHA256`). The check: every field present in both dumps of
 ``C2Config().with_10hz_d1()`` has the same value; every field that is new since the base
 (present only at ``HEAD_M``) equals its class default at ``HEAD_M`` (``C2Config()``, i.e. off).
@@ -35,9 +35,9 @@ import tarfile
 import tempfile
 from pathlib import Path
 
-RULES_FILE = "b1_creep_basis_rules_seal_candidate_draft.md"
-RULES_SHA256 = "fa142d525c9c8d318212c245b552cea47b0394ed97680900653bcda737ab5cf9"
-"""Seal candidate (not sealed). After S-0: the sealed file name and its SHA-256."""
+RULES_FILE = "b1_creep_rules.md"
+RULES_SHA256 = "6b99702ce26d6da28fbfe6473b622c7e51419241916cbc101f795828f498774e"
+"""Sealed rules (``b1_creep_rules.sha256``, master ``1ad3e5d``, 2026-11-12)."""
 BASE_REV = "e67dae8"
 SCHEMA_DUMP = "b1-preset-dump/1"
 SCHEMA_DIFF = "b1-preset-dump-diff/1"

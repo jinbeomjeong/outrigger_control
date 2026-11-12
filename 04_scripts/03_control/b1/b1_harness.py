@@ -1,8 +1,7 @@
 """B1 creep basis (``V5-B1-CREEP``): the 32 harness runs of rules 2.2 with their run records.
 
-Rules: ``06_analysis/02_control/b1/b1_creep_basis_rules_seal_candidate_draft.md`` (seal
-candidate, :data:`RULES_SHA256`; after the seal S-0 the constant takes the sealed file's
-SHA-256 and the file name changes, nothing else).
+Rules: ``06_analysis/02_control/b1/b1_creep_rules.md`` (sealed 2026-11-12,
+:data:`RULES_SHA256`).
 
 Bundles (rules 2.2), all on the v5 reduced harness through ``run_v5.run_one`` of the D-1 soil
 row ``D1|H-S-0|J2|<T/M/B>|<slope>|K1`` (the preset as it is, no candidate wrapper):
@@ -21,10 +20,11 @@ the pad area), so its grid factor is ``f = 1`` (rules R-10); each line records t
 
 Output (``--out-dir``, default ``06_analysis/03_hydraulic/coupled/v5/b1``):
   ``b1_H.jsonl``   one line per run (appended; finished run ids are skipped)
-  ``npz/<run id>.npz``  run record ``b1-run-record/1``: ``n``, ``t_s``, ``phase``,
-                   ``stroke_read_m`` (N, 4), ``load_read_N`` (N, 4), ``att_filt_rad`` (N, 2),
-                   ``c_hat_m``, ``c_target_m``, ``sink_m`` (N, 4, pad element sinkage at the
-                   period instants), ``crawler_clear_true_m`` (rut clearance of the harness)
+  ``npz/<run id>.npz``  run record ``b1-run-record/2``: the R-C1 names of rules 6 (``n``,
+                   ``load_read_N`` (N, 4), ``att_raw_rad`` (N, 2), ``c_hat_m``,
+                   ``c_hat_corner_m`` (N, 4), ``c_target_m``), plus ``t_s``, ``phase``,
+                   ``stroke_read_m`` (N, 4), ``att_filt_rad`` (record), ``sink_m`` (N, 4, pad
+                   element sinkage at the period instants), ``crawler_clear_true_m``
   ``b1_H.jsonl.identity.json``  checkout, code and environment at the start and the end
 
 Usage (dynamics-dev python.exe, cwd = the checkout, PowerShell, ``OUTRIGGER_LOC_SHADOW=1``)::
@@ -65,11 +65,11 @@ for _folder in (HERE, SHADOW_DIR, COUPLED_DIR, ROOT / "03_src"):
     if str(_folder) not in sys.path:
         sys.path.insert(0, str(_folder))
 
-RULES_FILE = "b1_creep_basis_rules_seal_candidate_draft.md"
-RULES_SHA256 = "fa142d525c9c8d318212c245b552cea47b0394ed97680900653bcda737ab5cf9"
-"""Seal candidate (not sealed). After S-0: the sealed file name and its SHA-256."""
+RULES_FILE = "b1_creep_rules.md"
+RULES_SHA256 = "6b99702ce26d6da28fbfe6473b622c7e51419241916cbc101f795828f498774e"
+"""Sealed rules (``b1_creep_rules.sha256``, master ``1ad3e5d``, 2026-11-12)."""
 SCHEMA = "b1-harness-line/1"
-RECORD_SCHEMA = "b1-run-record/1"
+RECORD_SCHEMA = "b1-run-record/2"
 DEFAULT_OUT_DIR = ROOT / "06_analysis" / "03_hydraulic" / "coupled" / "v5" / "b1"
 JSONL_NAME = "b1_H.jsonl"
 NPZ_FOLDER = "npz"
@@ -222,7 +222,7 @@ def _soil_log_arrays(period_s: float) -> dict[int, tuple[np.ndarray, float | Non
 
 
 def run_record_arrays(controller) -> dict[str, np.ndarray]:
-    """``b1-run-record/1`` arrays of the finished run of this worker."""
+    """``b1-run-record/2`` arrays of the finished run of this worker."""
     import b1_record
 
     arrays = b1_record.period_record_arrays(controller)
