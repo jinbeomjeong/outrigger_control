@@ -56,6 +56,9 @@ REV1_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev1.s
 REV2_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.md"
 REV2_SHA = "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199"
 REV2_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.sha256"
+REV3_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.md"
+REV3_SHA = "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
+REV3_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.sha256"
 GRID_SPEC_PRESCRIBED = "rev. 67 (G1 / G2 / G7 reduced screen)"   # rev2 R2-7
 GRID_EVENTS_PRESCRIBED = {"G4", "RE1bF", "FS24"}
 
@@ -392,7 +395,7 @@ def check_seals(repo, appendix=True):
     """Rules + rev1 sha against the constants and the .sha256 files; appendix A sha."""
     out = {"rules": {}, "appendix_a": {}, "ok": True}
     for rel, want, seal in ((RULES_REL, RULES_SHA, RULES_SEAL_REL), (REV1_REL, REV1_SHA, REV1_SEAL_REL),
-                            (REV2_REL, REV2_SHA, REV2_SEAL_REL)):   # sealed rules: raw sha only (R2-9)
+                            (REV2_REL, REV2_SHA, REV2_SEAL_REL), (REV3_REL, REV3_SHA, REV3_SEAL_REL)):   # sealed rules: raw sha only (R2-9)
         p = repo / rel
         got = sha256_file(p) if p.is_file() else None
         sp = repo / seal
@@ -851,7 +854,12 @@ def cmd_anchors(args, repo):
         got = sha256_file(p) if p.is_file() else None
         shas[rel] = got
         if got != APPENDIX_B[rel]:
-            fnd.stop("S-1", rel, f"appendix B sha {got} != {APPENDIX_B[rel]}")
+            # rev3 R3-F4: CRLF -> LF normalisation also for the appendix-B data files (disclosed)
+            lf = hashlib.sha256(p.read_bytes().replace(b"\r\n", b"\n")).hexdigest() if p.is_file() else None
+            if lf == APPENDIX_B[rel]:
+                fnd.note(rel, {"raw_sha256": got, "lf_sha256": lf, "note": "CRLF 변환만 다름"})
+            else:
+                fnd.stop("S-1", rel, f"appendix B sha {got} != {APPENDIX_B[rel]}")
     if fnd.stops:
         return {"appendix_b": shas, **fnd.as_dict()}, "stop"
 
@@ -1710,7 +1718,7 @@ def main(argv=None):
             report, status = {"seals": seals}, "pass"
         else:
             body, status = CMDS[args.cmd](args, repo)
-            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA,
+            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA, "rev3_sha256": REV3_SHA,
                                 "eol_only": seals.get("eol_only", []),
                                 "eol_only_detail": {k: v for k, v in seals["appendix_a"].items() if v.get("eol_only")}},
                       **body}
