@@ -103,7 +103,8 @@ DEFAULT_KEYMAP: dict[str, Any] = {
     "step_leg_contact_N": "pad_contact_force_N",
     "step_crawler_N": "crawler_load_N",
     # b1_grid_record.npz: R-C1 (names fixed by the rules) and R-G1 / R-G3 / R-G4
-    "rc_n": "n",
+    "rc_n": "n_cycle",
+    "rc_computed": "computed",
     "rc_load": "load_read_N",
     "rc_att": "att_raw_rad",
     "rc_chat": "c_hat_m",
@@ -115,9 +116,10 @@ DEFAULT_KEYMAP: dict[str, Any] = {
     "g_sink": "sinkage_geometric_m",
     "g_sigma": "sigma_sum_area_N",
     "g_grid_m": "meta_grid_m",
-    "imu_t": "imu_t",
-    "imu_roll": "imu_roll_rad",
-    "imu_pitch": "imu_pitch_rad",
+    "res_grid_m": "b1_grid_record.static.grid_m",
+    "imu_t": "imu_t_s",
+    "imu_roll": "imu_raw_roll_rad",
+    "imu_pitch": "imu_raw_pitch_rad",
     # optional M-12 inputs (rules 7.5); absent -> NA
     "m12_corner_plane": "c_corner_plane_m",
     "m12_settle_att": "settle_att_rad",
@@ -506,6 +508,9 @@ def load_chrono_row(row_dir: Path, km: dict) -> tuple[RunSeries | None, dict, li
     grid = _npz(row_dir / km["grid_npz"])
     if grid is not None:
         _attach_grid(rs, grid, km)
+    g_res = fnum(jget(res, km["res_grid_m"])) if km.get("res_grid_m") else None
+    if g_res is not None:
+        rs.grid_m = g_res
     rs.events = _events(jget(res, km["res_events"]), km)
     rs.t_ready = fnum(jget(res, km["res_t_first_ready"]))
     rs.t_creep = fnum(jget(res, km["res_t_creep"]))
@@ -519,7 +524,11 @@ def load_chrono_row(row_dir: Path, km: dict) -> tuple[RunSeries | None, dict, li
 
 def _attach_grid(rs: RunSeries, grid: dict[str, np.ndarray], km: dict) -> None:
     if km["rc_n"] in grid:
-        rs.rc_index = _index(grid[km["rc_n"]])
+        n_arr = np.asarray(grid[km["rc_n"]]).astype(int)
+        keep = np.ones(len(n_arr), dtype=bool)
+        if km.get("rc_computed") and km["rc_computed"] in grid:
+            keep = np.asarray(grid[km["rc_computed"]]).astype(bool)
+        rs.rc_index = {int(v): k for k, v in enumerate(n_arr) if keep[k]}
         rs.grid_index = rs.rc_index
         for k in ("rc_load", "rc_att", "rc_chat", "rc_chat_corner", "rc_ctarget"):
             if km[k] in grid:

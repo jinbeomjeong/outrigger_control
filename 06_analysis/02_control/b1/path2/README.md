@@ -23,10 +23,14 @@ cmd /c "start /b /wait /affinity 0FFF0000 C:\ProgramData\miniforge3\Scripts\cond
 |---|---|---|
 | A-1 | M-4 `searchsorted(t, τ − 1e-9)` | 문자 그대로 왼쪽 searchsorted 인덱스(그 시각 이상 첫 표본). 1 ms 격자에 τ 표본이 있으면 "같은 시각 표본"이다 |
 | A-2 | V-2 실행 정체성 | 경로 2는 `result.json`으로 확인되는 I-3(태그·`expect_controller.ok`), I-4(스레드 4), I-7(훅 fast·DLL sha)만 본다. 나머지 I 항목은 prelaunch·감사 몫이다 |
-| A-3 | `c_hat_corner_m` 모서리 순서 | `c2.py` `CRAWLER_CORNER_NAMES` 순서(RR, RL, FR, FL)를 기본으로 둔다. prelaunch 키 목록이 다르면 keymap `corner_order`로 맞춘다 |
-| A-4 | Q-1 `PressureForces.nominal` | R-C1 `load_read_N`의 LOC 주기 값으로 읽는다(규칙 6절 "판독 하중"). 다르면 keymap으로 다른 키를 가리킨다 |
-| A-5 | M-12 Chrono 재구성 | R-G4 `imu_*` 외에 LOC별 $t_P$·경로(①②③)·정착 자세·행정 평면 모서리 틈 $c_k(t)$가 있어야 계산한다(keymap `m12_*`). 없으면 `NA`(규칙 7.5 허용) |
+| A-3 | `c_hat_corner_m` 모서리 순서 | `c2.py` `CRAWLER_CORNER_NAMES` 순서(RR, RL, FR, FL). cad-expert 기록 스키마(2026-11-12, 메인 세션 전달)가 이 순서로 확정했다 |
+| A-4 | Q-1 `PressureForces.nominal` | R-C1 `load_read_N`의 LOC 주기 값. 기록 스키마상 `load_read_N` = 제어기 `_state.last_forces.nominal`(같은 양) |
+| A-5 | M-12 Chrono 재구성 | R-G4 `imu_raw_*` 외에 LOC별 $t_P$·경로(①②③)·정착 자세·행정 평면 모서리 틈 $c_k(t)$와 작동 중 편향 $b_k$가 있어야 계산한다(keymap `m12_*`). 기록 스키마의 `result.json` `c2_soil`은 마지막 LOC만이고 $c_k(t)$·$b_k$가 없다(`c_hat_corner_m` = $c_k - b_k$라 $c_k$를 되돌릴 수 없다). 그래서 Chrono M-12는 `NA`다(규칙 7.5 허용) |
 | A-6 | 하네스 침하 | 하네스 npz의 10 Hz 패드 침하를 주기 값으로 쓴다(1 ms 계열 없음) |
 | A-7 | `t_max` 같은 최대 | 최대와 1×10⁻⁹ m 안의 가장 작은 주기. 다리별 $t_{\max,i}$도 같은 규칙 |
 | A-8 | D-b 하네스 값 | Q-2 (a): 짝 H-P VB e0 실행의, Chrono 행 $b^\ast$ 다리 $\delta^{os}$ |
 | A-9 | D-f 짝 제외 | H-M0 C5 짝 가운데 R4c30 사건이 있거나 유효하지 않은(Q-6) 줄은 뺀다 |
+| A-10 | R-C1 주기 번호와 유효 행 | 
+_cycle을 정수 주기로 쓰고 computed가 거짓인 행은 기록이 없는 것으로 본다. 
+(행 번호)·	_s는 쓰지 않는다 |
+| A-11 | 격자 간격 $\Delta$ | `result.json` `b1_grid_record.static`의 격자 값(keymap `res_grid_m`), 없으면 2.1 argv 값 0.01 m |

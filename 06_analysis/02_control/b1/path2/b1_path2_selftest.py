@@ -84,14 +84,15 @@ def make_chrono_row(root: Path, case: str, cfg: dict, prm: dict) -> None:
     sigma = nh * grid ** 2 * k_term * z10 ** prm["n"]
     imu_t = np.round(np.arange(0, len(n) * 10) * 0.01, 6)
     np.savez(d / "record" / "b1_grid_record.npz",
-             n=n, load_read_N=loads, att_raw_rad=np.tile([cfg["phi"], cfg["theta"]], (len(n), 1)),
+             n=np.arange(len(n)), n_cycle=n, t_s=t10, computed=np.array([cfg.get("computed_from", 0) <= k for k in n]),
+             load_read_N=loads, att_raw_rad=np.tile([cfg["phi"], cfg["theta"]], (len(n), 1)),
              c_hat_m=np.full(len(n), cfg["c_hat"]),
              c_hat_corner_m=np.tile([cfg["c_hat"]] * 4, (len(n), 1)),
              c_target_m=np.full(len(n), cfg["c_target"]),
              n_contact=np.tile(nh, (len(n), 1)), contact_hull_area_m2=np.tile(area, (len(n), 1)),
              contact_hull_perimeter_m=np.tile(perim, (len(n), 1)), sinkage_geometric_m=z10,
              sigma_sum_area_N=sigma, meta_grid_m=np.array([grid]),
-             imu_t=imu_t, imu_roll_rad=np.zeros(len(imu_t)), imu_pitch_rad=np.full(len(imu_t), cfg["theta"]))
+             imu_t_s=imu_t, imu_raw_roll_rad=np.zeros(len(imu_t)), imu_raw_pitch_rad=np.full(len(imu_t), cfg["theta"]))
     res = {"events": events_for(cfg), "p3b": {"t_first_ready_s": (None if cfg["sgs"] else cfg["n_ready"] * 0.1),
                                               "creep_stop": {"t_final_s": 100.0}, "t_departure_s": 30.0,
                                               "weight_N": 376600.0},
@@ -287,6 +288,9 @@ def yaml_text_checks(repo: Path, prm: dict) -> None:
     check("YAML top static FL", close(prm["static"]["top"]["FL"], 118099.1, 1e-9))
     check("soil J2", prm["kc"] == 16430.0 and prm["kphi"] == 1724690.0 and prm["n"] == 0.2)
     check("crawler corners", prm["corners"]["RR"] == (-1.84, -1.366) and prm["corners"]["FL"] == (1.844, 1.366))
+    c2 = (repo / "03_src" / "outrigger_sim" / "control" / "c2.py").read_text(encoding="utf-8")
+    check("corner order = CRAWLER_CORNER_NAMES", 'CRAWLER_CORNER_NAMES = ("RR", "RL", "FR", "FL")' in c2
+          and p2.DEFAULT_KEYMAP["corner_order"] == ["RR", "RL", "FR", "FL"])
 
 
 def e2e_checks(repo: Path, work: Path, prm: dict) -> None:
@@ -415,6 +419,11 @@ def variant_checks(repo: Path, work: Path, prm: dict) -> None:
     da, dc = out["grades"]["D-a"], out["grades"]["D-c"]
     check("D-a corr NA when records invalid", da["corr"] is None and "no grid record" in da["flags"])
     check("D-c substitute range used", dc["detail"]["C1"]["substitute"] is True)
+    # R-C1 rows with computed False are not records: LOC period not computed -> predictors NA -> D-d NA (Q-5)
+    batch, hj = build(work / "comp", prm, row_over={"C1": {"computed_from": 401}})
+    code, out = run_tool(repo, work / "comp", batch, hj)
+    check("computed False rows ignored", out["rows"]["C1"]["pred"]["e"]["P-A"] is None
+          and out["grades"]["D-d"]["grade"] == "NA" and out["grades"]["D-a"]["corr"] == "ZA-1")
     # T-14 mismatch on C2 -> excluded from D-d
     batch, hj = build(work / "t14", prm, row_over={"C2": {"c_target": 0.09}})
     code, out = run_tool(repo, work / "t14", batch, hj)
