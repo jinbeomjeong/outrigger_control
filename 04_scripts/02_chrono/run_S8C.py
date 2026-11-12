@@ -1788,6 +1788,11 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
         tag = controller_tag(v5_options, c2.config)
         if tag is not None:  # the built controller decides the LAS-b suffix (2026-11-08)
             v5_meta["controller_tag"] = tag
+    # 436.8 Q-2: every row records its run-time tag (V0 rows had none); the general --expect-controller check
+    # stops before the run (D8x / K-2 rows keep their own check above and in d8x_meta)
+    has_own_check = bcase.k2_row is not None or bcase.d8x_row is not None
+    run_ctrl = s6c.run_controller_record(c2.config, v5_options, None if has_own_check else expect_controller)
+    s6c.check_run_controller(case.case_id, run_ctrl)
     controller = c2
     forced = None
     if ev and ev["kind"] == "retract":
@@ -2083,6 +2088,7 @@ def job_l2b_s8(case: S8Case, case_dir: Path, *, duration_s: float | None = None,
         **({} if k2_block is None else {  # K-2 V-6 rows only (earlier results unchanged)
             "k2": k2_block, "touch_creep_requested": k2_block["touch_creep_requested"],
             "touch_creep_effective": k2_block["touch_creep_effective"]}),
+        **run_ctrl,  # 436.8 Q-2: controller_tag (+ expect_controller with the option)
         "h4": {"enabled": sc.h4, "outcome": None if reanchor is None else str(reanchor),
                "expected": expect, "direction": ctl_meta.get("reanchor_direction")},
         "c2": c2_meta,
@@ -3006,11 +3012,14 @@ def job_case(case, case_dir):
                 flow_kw["hydraulics"] = s["hydraulics"]
             if s.get("las_off"):
                 flow_kw["las_off"] = True
-            if s.get("expect_controller"):  # D8x batches only
+            if s.get("expect_controller"):  # D8x / K-2 batches and, since 436.8 Q-2, any batch with the option
                 flow_kw["expect_controller"] = s["expect_controller"]
             summary, run_meta = job_l2b_s8(c, d, duration_s=s.get("duration_s"), **flow_kw)
         else:
-            summary, run_meta = s6c.job_bundle_c(c.base, d, duration_s=s.get("duration_s"))
+            own_check = c.base.d8x_row is not None or c.base.k2_row is not None  # their L1 rows ran without it
+            summary, run_meta = s6c.job_bundle_c(c.base, d, duration_s=s.get("duration_s"),
+                                                 expect_controller=None if own_check
+                                                 else s.get("expect_controller"))
             summary["settings"]["s8"] = {**c.to_meta(), "crawler_contact": "l1r_flexible",
                                          "crawler_check_passed": None}
             summary["settings"]["s7c"] = {"engine": "L1R", "case_id": c.case_id}
@@ -3320,8 +3329,9 @@ def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, durati
               flow_limit: dict[str, Any] | None = None,
               hydraulics: dict[str, Any] | None = None, las_off: bool = False,
               d8x: dict[str, Any] | None = None, k2: dict[str, Any] | None = None,
-              batch_dir: Path | None = None):
-    """``d8x``: :func:`d8x_preflight` record (D8x sets only): ``batch_meta.json d8x`` and the expected controller
+              batch_dir: Path | None = None, expect_controller: str | None = None):
+    """``expect_controller`` (436.8 Q-2, other sets): passed to every case, ``batch_meta.json expect_controller``.
+    ``d8x``: :func:`d8x_preflight` record (D8x sets only): ``batch_meta.json d8x`` and the expected controller
     tag passed to every case. ``k2``: :func:`k2_preflight` record (K-2 V-6): ``batch_meta.json k2``, its expected
     tag passed to every case; rows of two arms in one batch are refused."""
     from outrigger_sim.batch import Case
@@ -3376,6 +3386,9 @@ def run_batch(cases: list[S8Case], *, tag: str, layout: str, check: bool, durati
         meta["k2"] = k2
         meta["identity_start"] = s6c.k2c.batch_identity("start")
         flow_settings["expect_controller"] = k2["expect_controller"]
+    if expect_controller is not None and d8x is None and k2 is None:  # key only with the option
+        meta["expect_controller"] = expect_controller
+        flow_settings["expect_controller"] = expect_controller
     (batch_dir / "batch_meta.json").write_text(json.dumps(s6c._plain(meta), indent=1), "utf-8")
     table = {c.case_id: c for c in cases}
     jobs = [Case(c.case_id, {"duration_s": duration_s if check else None, **flow_settings})
@@ -4259,8 +4272,9 @@ def main(argv):
                     help="--set d8x_w2 / d8x-plan: the F_s 8 floor V of D8x rules 5.2 (a row 1-6 floor; "
                          "d8x_judge.py select-v); a W floor needs --w too")
     ap.add_argument("--expect-controller", dest="expect_controller", default=None,
-                    help="run / check --set d8x_*: refuse unless the run-time preset tag is this one (D8x rules "
-                         "2.1 / I-5 expected_tag, e.g. final_C4G2_LAS_K1); recorded per row")
+                    help="run / check: refuse a row unless the run-time controller tag is this one (as run_S9 "
+                         "level; e.g. final_C4G2_P3_LAS_K1; D8x rules 2.1 / I-5 expected_tag on --set d8x_*); "
+                         "recorded per row (result.json expect_controller); default off")
     ap.add_argument("--rerun-from", dest="rerun_from", default=str(C36_SOURCE),
                     help="c36: source ML batch (bases / branch.pkl / plan, read only)")
     ap.add_argument("--affected", default=str(C36_AFFECTED),
@@ -4472,9 +4486,10 @@ def main(argv):
     is_d8x = args.case_set in st.D8X_SETS
     is_k2 = args.case_set == s6c.k2c.V6_SET
     s6c.k2c.refuse_outside(args, args.case_set)
-    if not is_d8x and (args.d8x_w or args.d8x_v or (args.expect_controller and not is_k2)):
-        raise SystemExit("--w / --v / --expect-controller only with --set d8x_w1 / d8x_w2 (--expect-controller "
-                         "also with --set k2_v6)")
+    if not is_d8x and (args.d8x_w or args.d8x_v):
+        raise SystemExit("--w / --v only with --set d8x_w1 / d8x_w2")
+    # 436.8 Q-2: --expect-controller on any other set (D8x / K-2 keep their preflight records)
+    general_expect = None if (is_d8x or is_k2) else args.expect_controller
     if is_k2 and (flow_limit is not None or hydraulics is not None or args.las_off):
         raise SystemExit("K-2 V-6 rows run the K24 plant and the run-time preset with the row's arm (rules 3.5): no "
                          "--flow-eta-v, v5 option or --las-off")
@@ -4542,13 +4557,13 @@ def main(argv):
     if args.action == "check":
         run_batch(cases, tag=tag, layout=args.workers, check=True,
                   duration_s=args.duration, flow_limit=flow_limit, hydraulics=hydraulics,
-                  las_off=args.las_off, d8x=d8x, k2=k2, batch_dir=k2_dir)
+                  las_off=args.las_off, d8x=d8x, k2=k2, batch_dir=k2_dir, expect_controller=general_expect)
         return
     if not args.approved:
         raise SystemExit("S8 main run needs the user's confirmation: add --approved")
     run_batch(cases, tag=tag, layout=args.workers, check=False, duration_s=0.0,
               flow_limit=flow_limit, hydraulics=hydraulics, las_off=args.las_off, d8x=d8x, k2=k2,
-              batch_dir=k2_dir)
+              batch_dir=k2_dir, expect_controller=general_expect)
 
 
 if __name__ == "__main__":

@@ -72,8 +72,10 @@ LAS_PAD, LAS_LEVEL, LAS_FS_KN = "B", "top", 4.0
 LAS_DURATION_S = 160.0
 """Closed loop after the 8 s settle (S9SL length; harness READY of the family 68.7 s, P3-6 slope limit 120 s)."""
 LAS_OFF_CONTROLLER = "final_C4G2_P3"
-LAS_ON_CONTROLLER = "final_C4G2_P3_LAS"
-"""python-expert tag (``s9_batch.V5_P3_LAS_CONTROLLER`` after the merge)."""
+LAS_ON_CONTROLLER = "final_C4G2_P3_LAS_K1"
+"""Tag of the on rows: the K1-switched preset (``s9_batch.V5_P3_LAS_K1_CONTROLLER``; 436.8 rules
+``v5_resume_4368_rules.md`` 3 A-4 / 4.1, since 2026-11-13; was ``final_C4G2_P3_LAS`` before the K1 switch). The off
+rows keep their definition (436.8 C-4 off arm ``--las-off --k1-order-gate on`` is cad-expert's row change, rules 16)."""
 PRE_LAS_RUNNER = ROOT / "05_tests" / "unit" / "pre_las_preset_runner.py"
 START_ENV = {"OMP_WAIT_POLICY": "PASSIVE"}
 K3_FACTOR = 3.0
@@ -141,7 +143,7 @@ def las_rows(sb: ModuleType) -> list[dict[str, Any]]:
     for variant, kn_scale in CRAWLER_VARIANTS:
         for las in ("off", "on"):
             c = base_case(r9)
-            ctrl = LAS_OFF_CONTROLLER if las == "off" else getattr(sb, "V5_P3_LAS_CONTROLLER", LAS_ON_CONTROLLER)
+            ctrl = LAS_OFF_CONTROLLER if las == "off" else getattr(sb, "V5_P3_LAS_K1_CONTROLLER", LAS_ON_CONTROLLER)
             c["controller"] = ctrl
             c["case"] = (f"LASC_{LAS_BASE}_{LAS_PATCH_SET}{LAS_PATCH_LEG}_{LAS_PAD}_{LAS_LEVEL}_Fs{LAS_FS_KN:g}"
                          f"_r{_tag(roll)}_p{_tag(pitch)}_{variant}_las{las}")
@@ -162,7 +164,7 @@ def las_rows(sb: ModuleType) -> list[dict[str, Any]]:
                           f"{ctrl}; crawler kn x{kn_scale:g}"
                           + ("" if las == "on" or not merged else "; pre_las_preset_runner"))}
             if not ready:
-                r["requires"] = "LAS-b 03_src merge (run_S9 CONTROLLER_EXPECTATIONS['final_C4G2_P3_LAS'])"
+                r["requires"] = f"LAS-b 03_src merge (run_S9 CONTROLLER_EXPECTATIONS['{LAS_ON_CONTROLLER}'])"
             rows.append(r)
     return rows
 

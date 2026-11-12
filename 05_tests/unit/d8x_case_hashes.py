@@ -41,6 +41,12 @@ K2_SETS = ("k2_v6", "k2_v7")
 """K-2 V-6 / V-7 rows, sets / batch and the floor ``k2pp025`` (cad 2026-11-10, ``k2_chrono_rows.py``) came after the
 baseline; left out the same way as the D8x entries."""
 K2_FLOORS = ("k2pp025",)
+LATER_BATCHES = ("V5-LAS-P5R4-K1", "V5-LAS-P5R4-K1-GS", "V5-B1-CREEP", "V5-B1-CREEP-WIN", "V5-B1-CREEP-GS")
+LATER_BATCH_PREFIXES = ("V5-RESUME-K1-",)
+"""``s9_batch`` batches added after the baseline, left out like the K-2 entries (cad 2026-11-13): LAS-b P5r4 + K1
+(``las_p5r4_k1_chrono_rows.py``, 2026-11-11, 24 rows), B1 creep basis (``b1_creep_chrono_rows.py``, 2026-11-12,
+14 rows; these 38 rows made the check fail on master 71baa2b) and the 436.8 resume batches
+(``v5_resume_4368_chrono_rows.py``)."""
 STORED_RESULT_ROW_KEYS = ("est_s", "stored_result", "stored_wall_s", "note")
 """``s9_batch`` row keys filled from the stored results in ``07_results/`` (git-ignored): a
 checkout with the results (main tree) and one without (worktree) give different values, so they
@@ -99,7 +105,7 @@ def current_hashes() -> dict[str, dict[str, str]]:
             continue
         out["floors"][name] = _sha([float(v) for v in value])
     for batch, rows in sb.batches().items():
-        if batch in K2_SETS:
+        if batch in K2_SETS or batch in LATER_BATCHES or batch.startswith(LATER_BATCH_PREFIXES):
             continue
         for i, row in enumerate(rows):
             key = f"{batch}#{i}:{row.get('case')}"

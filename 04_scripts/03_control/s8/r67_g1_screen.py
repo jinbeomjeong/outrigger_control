@@ -612,7 +612,23 @@ def v5_job_record(options, env_name: str = V5_SETTING_ENV) -> dict:
         return {}
     plant, ctrl = V5_JOB_RUN.get("plant"), V5_JOB_RUN.get("ctrl")
     t_lift_s, extra = (None, {}) if plant is None else _lift_and_lock_window(plant, ctrl)
+    if ctrl is not None:  # 436.8 rules 4.2 / 7.2: record only, after the run
+        extra[RESUME_K1_KEY] = resume_k1_block(ctrl)
     return {**v5_setting_record(options, env_name, t_lift_s), "t_lift_s": t_lift_s, **extra}
+
+
+RESUME_K1_KEY = "resume_k1"
+"""``resume_k1_record.RECORD_KEY`` (436.8 record block, coupled folder)."""
+
+
+def resume_k1_block(ctrl) -> dict:
+    """The 436.8 LAS-b / K1 record block of a run's controller (``resume_k1_record``)."""
+    coupled_dir = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+    if str(coupled_dir) not in sys.path:
+        sys.path.insert(0, str(coupled_dir))
+    import resume_k1_record
+
+    return resume_k1_record.controller_record(ctrl)
 
 
 def v5_branch_record(plant, ctrl) -> dict:
@@ -624,7 +640,7 @@ def v5_branch_record(plant, ctrl) -> dict:
     import harness_hydraulics
 
     t_lift_s, extra = _lift_and_lock_window(plant, ctrl)
-    out = {"t_lift_s": t_lift_s, **extra}
+    out = {"t_lift_s": t_lift_s, **extra, RESUME_K1_KEY: resume_k1_block(ctrl)}
     record = harness_hydraulics.plant_record(plant, t_lift_s)
     if record:
         out["hydraulics_record"] = record

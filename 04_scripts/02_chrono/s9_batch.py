@@ -285,7 +285,19 @@ def batches(rv6_k: float | None = None, rv6_dir: str | None = None) -> dict[str,
     # B1 creep basis (cad 2026-11-12, b1_creep_chrono_rows.py; rules b1_creep_basis seal candidate 2.1 / 2.3 / 6):
     # V5-B1-CREEP (6 rows, grid record full), V5-B1-CREEP-WIN (window fallback), V5-B1-CREEP-GS (C1 / C6 forms 10 s)
     out.update(_b1_module().b1_batches(sys.modules[__name__]))
+    # 436.8 v5 resume (cad 2026-11-13, v5_resume_4368_chrono_rows.py; rules v5_resume_4368_rules.md 9019b405 5.2 / 5.3 /
+    # 5.4 / 11.2): V5-RESUME-K1-{C1,C2,C3,C4,C5,C6C7,OC5PROBE,OC5,JP,GS} on the _LAS_K1 tags (former definitions kept)
+    out.update(_r4368_module().resume_batches(sys.modules[__name__], out))
     return out
+
+
+def _r4368_module():
+    sys.path.insert(0, str(HERE))
+    try:
+        import v5_resume_4368_chrono_rows  # noqa: PLC0415
+    finally:
+        sys.path.remove(str(HERE))
+    return v5_resume_4368_chrono_rows
 
 
 def _b1_module():
@@ -1436,7 +1448,8 @@ ENTRY_META_KEYS = ("note", "priority", "controller", "source_run", "pair_case", 
                    "source_rows", "rem_mass_scale",
                    "p5k_id", "p5k_stage", "p5k_gs", "p5k_family", "p5k_crawler", "p5k_mass_scale", "p5k_duration_s",
                    "p5k_judge_duration_s", "p5k_rules",
-                   "stored_result", "stored_pool", "hash_comparable", "stored_argv_check", "stage3_controller")
+                   "stored_result", "stored_pool", "hash_comparable", "stored_argv_check", "stage3_controller",
+                   "r4368")
 """Row keys copied into the batch.json case entries (when present)."""
 
 
@@ -1782,6 +1795,9 @@ def check_sources(name: str, rows: list[dict]) -> dict:
         sys.path.remove(str(HERE))
     res = []
     for c in rows:
+        if c.get("r4368"):  # 436.8 V5-RESUME-K1-*: build check (v5_resume_4368_chrono_rows.argv_check)
+            res.append(_r4368_module().argv_check(c, sys.modules[__name__]))
+            continue
         if c.get("p5k_id"):  # V5-LAS-P5R4-K1 / -GS: new rows, build check (las_p5r4_k1_chrono_rows.argv_check)
             res.append(_p5k_module().argv_check(c, sys.modules[__name__]))
             continue

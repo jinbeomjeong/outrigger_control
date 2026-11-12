@@ -192,6 +192,9 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None, *,
               "max_motor_stroke_reading_mm": limiter.max_stroke_reading_m * 1e3,
               "values": values, "events": [(round(t, 3), name) for t, name in events][:400],
               "review_record": review_record_of(controller)}
+    import resume_k1_record  # 436.8 rules 4.2 / 7.2: record only, after the run
+
+    result[resume_k1_record.RECORD_KEY] = resume_k1_record.controller_record(controller)
     stop_values = _soil_stop_values(plant, limiter, events)
     if stop_values is not None:  # v5 X-12, criteria 6: runs with a soil-guard stop only
         result["soil_stop_crawler"] = stop_values

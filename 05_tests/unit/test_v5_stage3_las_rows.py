@@ -43,7 +43,7 @@ def test_count_names(rows, all_batches) -> None:
 
 def test_controllers(rows) -> None:
     for r in rows:
-        want = sb.V5_P3_LAS_CONTROLLER if r["v5_setting"] in las3.VB_LS else sb.V5_LAS_CONTROLLER
+        want = sb.V5_P3_LAS_K1_CONTROLLER if r["v5_setting"] in las3.VB_LS else sb.V5_LAS_K1_CONTROLLER
         assert r["controller"] == want
         if not r.get("s8c"):
             assert _arg(r["argv"], "--expect-controller") == want
@@ -89,15 +89,18 @@ def test_stored_argv_check(rows) -> None:
 
 
 def test_other_batches_unchanged(all_batches) -> None:
-    orig = sb._stage3_las_module
+    orig, orig_r4368 = sb._stage3_las_module, sb._r4368_module
     try:
         sb._stage3_las_module = lambda: type("M", (), {"las_stage3_batches": staticmethod(lambda s, o: {})})
+        # the 436.8 batches (V5-RESUME-K1-*, cad 2026-11-13) are built from V5-STAGE3-LAS: left out of this comparison
+        sb._r4368_module = lambda: type("M", (), {"resume_batches": staticmethod(lambda s, o: {})})
         without = sb.batches()
     finally:
-        sb._stage3_las_module = orig
+        sb._stage3_las_module, sb._r4368_module = orig, orig_r4368
 
     def h(x):
         return hashlib.sha256(json.dumps(x, sort_keys=True, default=str).encode()).hexdigest()
 
-    assert set(all_batches) - set(without) == {las3.LAS_STAGE3_BATCH}
+    resume = {k for k in all_batches if k.startswith("V5-RESUME-K1-")}
+    assert set(all_batches) - set(without) - resume == {las3.LAS_STAGE3_BATCH}
     assert [k for k in without if h(without[k]) != h(all_batches[k])] == []

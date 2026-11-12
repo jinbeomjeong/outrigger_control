@@ -1281,6 +1281,33 @@ def controller_tag_of(config) -> str:
     return controller_tag(None, config) or "final_C4G2"
 
 
+def run_controller_record(config, options=None, expected: str | None = None) -> dict[str, Any]:
+    """The run-time controller tag of a built config (436.8 rules Q-2, the ``run_S9 level --expect-controller``
+    meaning for the L1-R and L2b runners): ``controller_tag`` = ``v5_options.controller_tag(options, config)``
+    (``final_C4G2_P3_LAS_K1`` with the ③ bound of ``options``, ``final_C4G2_LAS_K1`` for the switched preset), else
+    the runner tag ``final_C4G2``; with ``expected`` also ``expect_controller`` = ``{name, controller_tag, ok}``.
+    Record only: the config is not changed."""
+    from outrigger_sim.hydraulics.v5_options import controller_tag
+
+    tag = controller_tag(options, config) or "final_C4G2"
+    record: dict[str, Any] = {"controller_tag": tag}
+    if expected is not None:
+        record["expect_controller"] = {"name": expected, "controller_tag": tag, "ok": tag == expected}
+    return record
+
+
+def check_run_controller(case_id: str, record: dict[str, Any]) -> None:
+    """Stop before the run when ``--expect-controller`` names another tag than the built controller has.
+
+    Raises:
+        SystemExit: ``record["expect_controller"]["ok"]`` is false.
+    """
+    expect = record.get("expect_controller")
+    if expect is not None and not expect["ok"]:
+        raise SystemExit(f"{case_id}: controller tag {expect['controller_tag']} != --expect-controller "
+                         f"{expect['name']}")
+
+
 def controller_config(params, case: BundleCCase):
     """``C2Config().with_10hz_d1()`` + the scenario settings of ``s6_stage2._controller`` +
     the R8 variant."""
@@ -2104,6 +2131,11 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
         if expect_controller is not None and expect_controller != k2_block["controller_tag"]:
             raise SystemExit(f"{case.case_id}: controller tag {k2_block['controller_tag']} != "
                              f"--expect-controller {expect_controller}")
+    # 436.8 Q-2: every row records its run-time tag; the general --expect-controller check (D8x / K-2 rows keep
+    # their own check above and in d8x_meta)
+    has_own_check = case.k2_row is not None or case.d8x_row is not None
+    run_ctrl = run_controller_record(c2.config, None, None if has_own_check else expect_controller)
+    check_run_controller(case.case_id, run_ctrl)
     dhat_rec = k2c.DhatWindowRecorder(model) if case.k2_row is not None else None  # rev1 4, read only
     pad_damp = None
     if case.pad_zeta_moving is not None:  # K-2 V-6 L1-R: moving-leg pad dashpot (k2_dyn_spec.md 3)
@@ -2446,6 +2478,7 @@ def job_bundle_c(case: BundleCCase, case_dir: Path, *, duration_s: float | None 
         **({} if k2_block is None else {  # K-2 V-6 rows only (earlier results unchanged)
             "k2": k2_block, "touch_creep_requested": k2_block["touch_creep_requested"],
             "touch_creep_effective": k2_block["touch_creep_effective"]}),
+        **run_ctrl,  # 436.8 Q-2: controller_tag (+ expect_controller with the option)
         "ready_t_s": None if state["ready_t"] is None else state["ready_t"] - t0,
         "probe_intervals": probe_intervals,
         "first_probe_t_s": None if state["probe_t"] is None else state["probe_t"] - t0,
@@ -2750,7 +2783,8 @@ def build_d8x_snapshots(jobs: int, *, dry_run: bool = False):
 def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DURATION_S,
               case_set: str = "bundleC", run_tag: str | None = None,
               d8x: dict[str, Any] | None = None, k2: dict[str, Any] | None = None,
-              placement: str = "pcore", batch_dir: Path | None = None):
+              placement: str = "pcore", batch_dir: Path | None = None,
+              expect_controller: str | None = None):
     """``d8x``: the :func:`d8x_preflight` record (D8x sets only; written to ``batch_meta.json``
     and its ``expect_controller`` passed to every case). ``k2``: the K-2 V-6 record
     (``k2_chrono_rows.select_rows`` + :func:`k2_preflight`; ``batch_meta.json k2``, its ``expect_controller`` passed to
@@ -2797,6 +2831,9 @@ def run_batch(ids, jobs: int, *, check: bool, check_duration_s: float = CHECK_DU
         meta["k2"] = k2
         meta["identity_start"] = k2c.batch_identity("start")
         extra["expect_controller"] = k2["expect_controller"]
+    if expect_controller is not None and d8x is None and k2 is None:  # 436.8 Q-2, key only with the option
+        meta["expect_controller"] = expect_controller
+        extra["expect_controller"] = expect_controller
     if placement != "pcore":
         meta["placement"] = placement
     (batch_dir / "batch_meta.json").write_text(json.dumps(_plain(meta), indent=1), "utf-8")
@@ -2824,8 +2861,9 @@ def main(argv):
     ap.add_argument("action", choices=("list", "plan", "snaps", "snaps-pre", "snaps-crx", "snaps-d8x",
                                        "snaps-k2", "check", "run", "judge", "judge-ps7", "judge-g8"))
     ap.add_argument("--expect-controller", dest="expect_controller", default=None,
-                    help="run / check --set d8x_w1: refuse unless the run-time preset tag is this one "
-                         "(D8x rules 2.1 / I-5 expected_tag, e.g. final_C4G2_LAS_K1); recorded per row")
+                    help="run / check: refuse a row unless the run-time controller tag is this one (as run_S9 "
+                         "level; e.g. final_C4G2_LAS_K1; D8x rules 2.1 / I-5 expected_tag on --set d8x_w1); "
+                         "recorded per row (result.json expect_controller); default off")
     ap.add_argument("--dry-run", dest="dry_run", action="store_true",
                     help="snaps-d8x / snaps-k2: print the missing start states and the estimate only; run / check "
                          "--set k2_v6: print the rows, preflight, cost and batch folder (nothing runs)")
@@ -2902,8 +2940,8 @@ def main(argv):
         build_k2_snapshots(jobs, dry_run=args.dry_run, placement=args.placement)
         return
     k2c.refuse_outside(args, args.case_set)
-    if args.expect_controller is not None and args.case_set not in (*D8X_CASE_SETS, k2c.V6_SET):
-        raise SystemExit(f"--expect-controller only with --set d8x_w1 / {k2c.V6_SET}")
+    # 436.8 Q-2: every other set passes the tag to its rows (D8x / K-2 sets keep their preflight records)
+    general_expect = None if args.case_set in (*D8X_CASE_SETS, k2c.V6_SET) else args.expect_controller
     if args.action == "snaps-pre":  # C-S8-72: FLpre (spec rev. 67 345.3)
         build_preground_snapshot(args.leg, overwrite=args.overwrite, placement=args.placement)
         return
@@ -2961,7 +2999,8 @@ def main(argv):
     if args.action == "check":
         ids = args.only or set_ids
         run_batch(ids, jobs, check=True, check_duration_s=args.duration, case_set=args.case_set,
-                  run_tag=args.tag, d8x=d8x, k2=k2, placement=args.placement, batch_dir=k2_dir)
+                  run_tag=args.tag, d8x=d8x, k2=k2, placement=args.placement, batch_dir=k2_dir,
+                  expect_controller=general_expect)
         return
     if not args.approved:
         raise SystemExit("bundle C needs the user's approval: add --approved (spec 150; "
@@ -2973,7 +3012,8 @@ def main(argv):
                          "(spec rev. 69 363): add --allow-p28-cases")
     if args.case_set in G8_P28_SETS:
         ids = args.only or set_ids
-        run_batch(ids, jobs, check=False, case_set=args.case_set, run_tag=args.tag)
+        run_batch(ids, jobs, check=False, case_set=args.case_set, run_tag=args.tag,
+                  expect_controller=general_expect)
         return
     if args.case_set in ("rerun32", "rerun33", "rerun34", "rerun35"):
         ready = rerun34_readiness()
@@ -2990,7 +3030,7 @@ def main(argv):
         table = case_table()
         ids = args.only or [c for c in set_ids if args.with_c9 or not table[c].conditional]
     run_batch(ids, jobs, check=False, case_set=args.case_set, run_tag=args.tag, d8x=d8x, k2=k2,
-              placement=args.placement, batch_dir=k2_dir)
+              placement=args.placement, batch_dir=k2_dir, expect_controller=general_expect)
 
 
 if __name__ == "__main__":

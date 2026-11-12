@@ -436,7 +436,7 @@ def run_one(job: dict) -> dict:
                 "review_record": result.get("review_record"),
                 **{key: result[key] for key in ("overlap_found", "soil_stop_crawler",
                                                 "lock_window_alignment", "controller_tag",
-                                                "head_only_declared", "d1")
+                                                "head_only_declared", "d1", RESUME_K1_KEY)
                    if key in result},
                 **({} if t4h is None else {"t4h_file": t4h["path"].name})}
     except Exception as exc:  # the batch goes on; the line records the failure
@@ -487,9 +487,11 @@ def _done_keys(path: Path) -> set[str]:
 
 D8X_OUT_DIR = ROOT / "06_analysis" / "02_control" / "d8x" / "rc"
 """D8x R-c output folder (``d8x_rules.md`` 9.2 item 2): ``hrx_<k1>.jsonl``."""
+RESUME_K1_KEY = "resume_k1"
+"""``resume_k1_record.RECORD_KEY``: the 436.8 record block a line copies from the result."""
 
 
-def _parse_args() -> argparse.Namespace:
+def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("batch")
     parser.add_argument("--workers", type=int, default=8)
@@ -500,17 +502,62 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument("--k1", default=None, choices=("off", "on"),
                         help="with --group H-R-X: R4c30 order gate of this arm, required")
     parser.add_argument("--out", type=Path, default=None,
-                        help="with --group H-R-X: output jsonl (default d8x/rc/hrx_<k1>.jsonl)")
-    args = parser.parse_args()
-    if args.group is None and (args.k1 is not None or args.out is not None):
-        parser.error("--k1 and --out belong to --group H-R-X")
+                        help="output jsonl (default v5/<batch>.jsonl; with --group H-R-X "
+                             "d8x/rc/hrx_<k1>.jsonl); a run identity <stem>.identity.json is written "
+                             "next to it at the start and the end, the T4h records go to "
+                             "<stem>_t4h/ (436.8 rules 4.3)")
+    parser.add_argument("--settings", default=None,
+                        help="comma list: run only the jobs of these settings (e.g. VB,LS1,LS2,LS3,LS4)")
+    parser.add_argument("--one-per-setting", action="store_true",
+                        help="G-S dry run (436.8 rules 11.2): the first job of each setting only")
+    args = parser.parse_args(argv)
+    if args.group is None and args.k1 is not None:
+        parser.error("--k1 belongs to --group H-R-X")
     if args.group is not None and args.batch != D1_BATCH:
         parser.error("--group is a d1 option")
     if args.group is not None:
         if args.k1 is None:  # D8x rev3 2: the K1 request is explicit on every H-R-X run
             parser.error("--group H-R-X needs --k1 off|on (d8x_rules_rev3.md 2)")
         args.out = args.out or D8X_OUT_DIR / f"hrx_{args.k1}.jsonl"
+    if args.settings is not None:
+        names = [name for name in args.settings.split(",") if name]
+        unknown = sorted(set(names) - set(SETTINGS))
+        if not names or unknown:
+            parser.error(f"--settings needs setting names of {sorted(SETTINGS)}, got {unknown or names}")
+        args.settings = tuple(names)
     return args
+
+
+def select_settings(jobs: list[dict], settings: tuple[str, ...] | None) -> list[dict]:
+    """The jobs of ``settings`` (all jobs for None).
+
+    Raises:
+        SystemExit: No job of the batch has one of these settings.
+    """
+    if settings is None:
+        return jobs
+    picked = [job for job in jobs if job["setting"] in settings]
+    if not picked:
+        raise SystemExit(f"no job of the batch has a setting in {settings}")
+    return picked
+
+
+def first_job_per_setting(jobs: list[dict]) -> list[dict]:
+    """The first job of each setting, in batch order (the G-S dry run of 436.8 rules 11.2)."""
+    picked: dict[str, dict] = {}
+    for job in jobs:
+        picked.setdefault(job["setting"], job)
+    return list(picked.values())
+
+
+def output_paths(args: argparse.Namespace) -> tuple[Path, Path]:
+    """(output jsonl, T4h folder) of a run: the stored ``v5/<batch>.jsonl`` and ``v5/<batch>/t4h``
+    without ``--out``; with it ``<out>`` and ``<out folder>/<out stem>_t4h`` (a rerun under a new
+    name never writes into the stored T4h folder)."""
+    if args.out is None:
+        return OUT_DIR / f"{args.batch}.jsonl", OUT_DIR / args.batch / "t4h"
+    out = Path(args.out)
+    return out, out.with_name(f"{out.stem}_t4h")
 
 
 def _write_identity(path: Path, moment: str) -> None:
@@ -525,16 +572,20 @@ def _write_identity(path: Path, moment: str) -> None:
     sidecar.write_text(json.dumps(stored, indent=1), encoding="utf-8")
 
 
-def main() -> None:
-    args = _parse_args()
+def main(argv: list[str] | None = None) -> None:
+    args = _parse_args(argv)
     if args.group is not None:
         import d1_rows
 
         jobs = d1_rows.d8x_jobs(args.k1)
-        path = args.out
     else:
         jobs = batch_jobs(args.batch)
-        path = OUT_DIR / f"{args.batch}.jsonl"
+    jobs = select_settings(jobs, args.settings)
+    if args.one_per_setting:
+        if args.out is None:  # a G-S line must never land in a stored or 436.8 output file
+            raise SystemExit("--one-per-setting needs --out (a G-S folder)")
+        jobs = first_job_per_setting(jobs)
+    path, t4h_dir = output_paths(args)
     done = _done_keys(path)
     todo = [job for job in jobs if job_key(job) not in done]
     print(f"{args.batch}: {len(jobs)} runs, {len(todo)} to do", flush=True)
@@ -547,7 +598,7 @@ def main() -> None:
     mask = None if args.mask is None else int(args.mask, 16)
     for job in todo:
         job["mask"] = mask
-        job["t4h_dir"] = str(OUT_DIR / args.batch / "t4h")
+        job["t4h_dir"] = str(t4h_dir)
     import verdict_runs
 
     verdict_runs.warm_numba_cache()
@@ -555,10 +606,11 @@ def main() -> None:
         reference = write_overlap_reference()
         print(f"overlap t_a {reference['t_a_s']} s ({reference['basis']})", flush=True)
     path.parent.mkdir(parents=True, exist_ok=True)
-    if args.group is not None:
+    has_identity = args.group is not None or args.out is not None
+    if has_identity:
         _write_identity(path, "start")
     _run_pool(args, todo, path)
-    if args.group is not None:
+    if has_identity:
         _write_identity(path, "end")
 
 

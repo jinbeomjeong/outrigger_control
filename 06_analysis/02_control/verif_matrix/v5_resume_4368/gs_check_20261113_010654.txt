@@ -1,0 +1,48 @@
+{
+ "folder": "07_results/S9/batch_V5-RESUME-K1-GS_20261113_010654",
+ "batch": "V5-RESUME-K1-GS",
+ "n_cases": 2,
+ "n_key_paths": 75,
+ "cases": [
+  {
+   "case": "GS_R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lasoff",
+   "progress_end_rc0": true,
+   "batch_entry_missing": [],
+   "mixed_hull_mode_key": true,
+   "result_json": true,
+   "result_missing": [],
+   "conditional_absent": [
+    "p3b.P3-3_leg_force.F_min_after_N",
+    "p3b.P3-3_leg_force.F_min_transient_N",
+    "controller_meta.liftoff_approach_slow.start_s",
+    "controller_meta.liftoff_approach_slow.end_s",
+    "controller_meta.liftoff_approach_slow.end_reason",
+    "controller_meta.liftoff_approach_slow.active_periods",
+    "controller_meta.liftoff_approach_slow.ramp",
+    "controller_meta.liftoff_approach_slow.ramp.periods_applied"
+   ],
+   "controller_commands_npz": true,
+   "npz_arrays_ok": true,
+   "series_files_missing": [],
+   "ok": true
+  },
+  {
+   "case": "GS_OC5_mixed_rigid_J1FR_Kc3_VB_top_k1",
+   "progress_end_rc0": true,
+   "batch_entry_missing": [],
+   "mixed_hull_mode_key": true,
+   "result_json": true,
+   "result_missing": [],
+   "conditional_absent": [
+    "p3b.P3-3_leg_force.F_min_after_N",
+    "p3b.P3-3_leg_force.F_min_transient_N",
+    "c2_setup.las_off"
+   ],
+   "controller_commands_npz": true,
+   "npz_arrays_ok": true,
+   "series_files_missing": [],
+   "ok": true
+  }
+ ]
+}
+errors 0

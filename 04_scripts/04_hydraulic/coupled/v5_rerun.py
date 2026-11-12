@@ -64,6 +64,13 @@ INDUSTRY_NAMES = (TAG_IND, TAG_IND_LAS)
 """C8-skeleton controllers: no ③, no C2 lock window or preset check, J-P3 not applicable."""
 SETTING_TAGS_LAS = {"V0": TAG_V0_LAS, "VB": TAG_VB_LAS}
 """Rules rev2 1 #1 / #2: the U-3 (and D-1 reuse) tag of each setting."""
+TAG_V0_LAS_K1 = "final_C4G2_LAS_K1"
+TAG_VB_LAS_K1 = "final_C4G2_P3_LAS_K1"
+TAG_ABL_LAS_K1 = "ABL_LAS_K1"
+"""Tags since the K1 switch (436.8 rules ``v5_resume_4368_rules.md`` 7.1, the ``u3_u6_rerun_rules`` rev3
+part): V0, VB / U-6 C2 and ABL with LAS-b and the K1 order gate; IND and IND_LAS unchanged."""
+SETTING_TAGS_LAS_K1 = {"V0": TAG_V0_LAS_K1, "VB": TAG_VB_LAS_K1}
+"""436.8 rules 7.1 (rev3 part): the U-3 (and D-1 reuse) tag of each setting."""
 PRE_SWITCH_TAGS = (TAG_V0, TAG_VB, TAG_ABL)
 """Tags of runs before the LAS-b switch: rev2 1 #4 stops a bundle that has one (G-2)."""
 J_P3_NOT_APPLICABLE = "not_applicable"
@@ -71,6 +78,9 @@ RULES_PATH = ROOT / "06_analysis" / "02_control" / "verif_matrix" / "u3_u6_rerun
 OUT_DIR = ROOT / "06_analysis" / "02_control" / "v5_rerun"
 LAS_OUT_DIR = OUT_DIR / "las"
 """Rules rev2 1 #9: the LAS-tag outputs (the judge reads this folder only)."""
+LAS_K1_OUT_DIR = OUT_DIR / "las_k1"
+"""436.8 rules 4.3 / 7.1: the H-3 / H-4 outputs (``u3_*.json``, ``u6_*.json``), read by ``u3_judge_k1``. The
+436.8 run commands name their files here explicitly (``resume_k1_steps.py``); :func:`default_out_path` is unchanged."""
 PRE_SWITCH_OUT_DIR = OUT_DIR
 """Folder of the pre-switch outputs (e.g. ``u3_slope_V0.json``, untracked): rules rev2 1 #9 /
 #10 keep them unmoved and unchanged for the command-hash comparison, so
@@ -503,6 +513,9 @@ def run_record(plant, controller, *, harness_commands_sha256: str | None,
               "t_lift_s": t_lift_s,
               "rod_pressure_fallback_events": fallback_event_count(controller),
               LAS_EVENTS_KEY: las_events_of(controller)}
+    import resume_k1_record  # 436.8 rules 4.2 / 7.2: record only, after the run
+
+    record[resume_k1_record.RECORD_KEY] = resume_k1_record.controller_record(controller)
     if bound_check is not None:
         record["extend_bound_check"] = bound_check
     if hydraulics:

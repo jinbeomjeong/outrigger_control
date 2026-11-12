@@ -926,6 +926,7 @@ def run_job(key: str) -> dict:
     out.update(_run_summary(run, plant))
     out["r79"]["recontact_events"] = recontact_summary(base)
     out.update(_v5_record(v5_options, run, plant))
+    out[RESUME_K1_KEY] = _resume_k1_record(run.ctrl)  # 436.8 rules 4.2 / 7.2, every setting
     if t4h_dir is not None:
         out["t4h_file"] = write_t4h(t4h_dir, key, v5_options, run.ctrl, plant)
     if candidate not in (None, "current"):  # spec 424.5: the candidate's own record
@@ -1022,6 +1023,20 @@ def write_t4h(folder: Path, key: str, options, ctrl, plant) -> str:
                                   extra_arrays={"lower_reading_N": lower_reading_N,
                                                 "lower_estimate_N": lower_estimate_N})
     return name
+
+
+RESUME_K1_KEY = "resume_k1"
+"""``resume_k1_record.RECORD_KEY`` (436.8 record block, coupled folder)."""
+
+
+def _resume_k1_record(controller) -> dict:
+    """The 436.8 LAS-b / K1 record block of the run's controller (record only, after the run)."""
+    coupled_dir = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+    if str(coupled_dir) not in sys.path:
+        sys.path.insert(0, str(coupled_dir))
+    import resume_k1_record
+
+    return resume_k1_record.controller_record(controller)
 
 
 def _v5_record(options, run: ActiveRun, plant) -> dict:
