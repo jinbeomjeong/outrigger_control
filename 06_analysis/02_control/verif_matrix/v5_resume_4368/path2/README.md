@@ -196,6 +196,16 @@ rev3 절과 다른 곳은 아래가 맞다. 다섯 도구 모두 rev4 sha도 확
 | R4-C4 | `p2_t3k.py` | K-0 = `.identity.json`의 `start`·`end`: `head` 같음(+ `--git-at-start`), `is_clean` 또는 `status_porcelain`의 파일이 `--allowed-dirty` 안, `code_diff_sha256`·`tools_sha256`·`c2_sha256` start = end(c2는 `git show <git_at_start>:03_src/outrigger_sim/control/c2.py` sha와도), `start.env` 스레드 네 개 = 1·`MKL_THREADING_LAYER` = TBB, `OUTRIGGER_LOC_SHADOW` 없음. 세 출력 값이 다르면 H-T3-3, 필드가 없으면 판정 불가 |
 | R4-C5 | `p2_v5j.py` | J3 바닥 각 = F-3 `values.case_floor_deg`([roll, pitch]), D-1 줄은 `job.d1` 각. 없으면 경사 판별 "판정 불가", FLAG 한계 "미정"(기록, 등급 영향 없음) |
 
+## rev5·rev6 반영 (`rev5` sha256 `452a8436…`, `rev6` `809e5639…`)
+
+| 절 | 도구 | 반영 |
+|---|---|---|
+| R5-D1, R6-C3 | `p2_d1.py` | `G6-7_preloc` 거짓 줄: F-8 `d1.g6_preloc.preloc_starts`의 참 최소 ≥ F_min ∧ FAULT 0(`values.events.fault_events`)으로 `preloc_flag_ok`를 다시 계산해 기록과 대조(다르면 판정 불가). 참 → `demoted_items`에 (G6-7_preloc, 377, `P3-8_demoted`), 거짓 ∧ G6-3 참 ∧ FAULT 0 → (G6-7_preloc, `U-S9-G6c`, `P3-8_preloc_loss`), 그 밖 → G6-7은 `fail_items`에 있어야 함. `preloc_flag_ok`·시작 기록이 없으면 판정 불가. 시작 기록의 참 최소 키는 `true_min_N`(대체 `F_true_min_N`·`min_true_N`·`true_min_kN`, 확인 필요) |
+| R5-B3 | `p2_v5j.py` | LS 행의 J11 대체 다리 n_late > 0 = `L-e` 멈춤(VB는 H-7) |
+| R6-C2 | `p2_t3k.py` | K-0: `.identity.json` `start`·`end`의 `git.head`(같음, `--git-at-start`), `git.is_clean` / `git.status_porcelain`(`--allowed-dirty`), `threads` 다섯(넷 = 1, TBB), `rules_seals` 모두 ok. 제어기·도구 sha는 출력 줄·헤더 정체성(`git_head`·`c2_sha256`·도구 `sha256`·스레드·작업자·affinity, 최상위 또는 `identity` 블록)이 모든 줄에서 같고 세 출력이 서로 같아야 함. `OUTRIGGER_LOC_SHADOW`는 `--steps` 단계 파일에 그 이름이 없어야 함(없으면 판정 불가). R4-C4 대응은 이것으로 바뀜 |
+| 공통 | `p2_4368.py` | rev5·rev6 sha 확인 추가 |
+| 범위 밖 | – | R6-C1 SA-4(F-9), R5-C3 seedext 짝, R5-D3 F-4는 H-6~H-10 몫이라 이 도구들에 없음 |
+
 ## 하지 않는 것 (범위)
 
 - **원 규칙 등급의 재집계는 하지 않는다.** H-0 T-3K(`las_targeted_rules` 원판~rev5), H-1·H-2(D-1 선별 규칙), H-3·H-4(`u3_u6`), H-5(`u9`), H-6~H-10(v5 기준 + 개정 1~12b), C-1~C-5 판정 블록(D-1 규칙 11, 개정 12 2.2)의 통과·미달 재집계가 여기에 든다. 이 도구가 내는 묶음 상태는 436.8 문서가 새로 정한 층(4.1·4.2·6·7.2·7.4·9.3·S-15)의 상태다(`grade_scope`). 원 규칙 등급의 경로 2는 그 규칙들의 정의 문장을 읽고 따로 만들어야 한다.
