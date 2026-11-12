@@ -326,6 +326,7 @@ def test_rev1_and_rev2_seal_check(tmp_path, monkeypatch) -> None:
         judge.RULES_REV1_NAME,
         judge.RULES_REV2_NAME,
         judge.RULES_REV3_NAME,
+        judge.RULES_REV4_NAME,
     }
     assert judge.sealed_rules_check(tmp_path)["stop_S1"] is True
     for name, _ in judge.SEALED_REVISIONS:  # both sealed files copied, rev1 seal value wrong
@@ -1122,7 +1123,16 @@ def test_rev3_crlf_only_stored_source(tmp_path, monkeypatch) -> None:
 def test_rev3_grid_v0_sample(tmp_path) -> None:
     stored, sample = tmp_path / "stored", tmp_path / "sample"
     for name in judge.GRID_FILES:
-        rows = [{"key": f"{name}-{i}", "runs": [{"commands_sha256": f"h{i}"}]} for i in range(3)]
+        rows = [
+            {
+                "key": f"{name}-{i}",
+                "runs": [
+                    {"event": "G4", "offset_s": o, "commands_sha256": f"h{i}{o}"}
+                    for o in (0.0, 0.05)
+                ],
+            }
+            for i in range(3)
+        ]
         _write_json(stored / f"{name}.json", {"results": rows})
         _write_json(sample / f"{name}.json", {"results": [rows[0], rows[2]]})
     out = tmp_path / "s.json"
@@ -1139,7 +1149,7 @@ def test_rev3_grid_v0_sample(tmp_path) -> None:
     report = json.loads(out.read_text(encoding="utf-8"))
     assert report["jobs"] == 8 and report["v0_768_required"] is False
     doc = json.loads((sample / "grid_r69_top.json").read_text(encoding="utf-8"))
-    doc["results"][1]["runs"][0]["commands_sha256"] = "other"
+    doc["results"][1]["runs"][1]["commands_sha256"] = "other"  # R4-B4: a later run counts too
     _write_json(sample / "grid_r69_top.json", doc)
     assert judge.main(argv) == 0
     assert json.loads(out.read_text(encoding="utf-8"))["v0_768_required"] is True
@@ -1274,7 +1284,9 @@ def test_rev3_gs_hash_and_grid_fields(tmp_path) -> None:
     assert judge.main(["gs", "--harness", str(gpath), "--out", str(out)]) == 1
     missing = json.loads(out.read_text(encoding="utf-8"))["files"][0]["missing"]
     assert missing == ["runs[].hydraulics_record.extend_bound_check"]
-    run["hydraulics_record"] = {"extend_bound_check": {}}
+    run["hydraulics_record"] = {  # rev4: the ext_moving rule and breach_reads are checked too
+        "extend_bound_check": {"rule": judge.extend_bound_rule(), "breach_reads": [0, 0, 0, 0]}
+    }
     _write_json(gpath, grid)
     assert judge.main(["gs", "--harness", str(gpath), "--out", str(out)]) == 0
 
@@ -1322,3 +1334,132 @@ def test_rev3_r79_top_level_hash(tmp_path) -> None:
     out = json.loads(done.stdout.strip().splitlines()[-1])
     assert out["error"] is None and out["base_with"] == out["base_without"]
     assert out["top"] == out["base_with"] and out["top_without"] is None
+
+
+# --------------------------------------------------------------------------------- rev4 tests
+def _verdict_runs():
+    pytest.importorskip("numba", reason="verdict_runs imports the harness (dynamics-dev)")
+    return importlib.import_module("verdict_runs")
+
+
+def test_rev4_f1_check_start_and_f4_lift_after_stop() -> None:
+    vr = _verdict_runs()
+    np = pytest.importorskip("numpy")
+    phases = np.array(["idle", "check", "check", "touch"])
+    assert vr.check_start_time_s(np.array([0.0, 0.1, 0.2, 0.3]), phases) == 0.1
+    assert vr.check_start_time_s(np.array([0.0]), np.array(["idle"])) is None
+    from harness_flow import COLUMN, COLUMNS, TRUE_FORCE
+
+    t = np.round(np.arange(0.0, 2.0, 0.001), 6)
+    rows = np.zeros((t.size, len(COLUMNS)))
+    rows[:, COLUMN["t"]] = t
+    rows[:, TRUE_FORCE] = 1000.0
+    rows[(t >= 1.2) & (t < 1.25), TRUE_FORCE.start + 2] = -600.0  # RL lifted 50 ms (Wr 500 N)
+    rows[t < 1.0, TRUE_FORCE.start] = -600.0  # before the stop: not counted
+    found = vr.sa4_record(rows, 500.0, [(1.0, "FAULT_LIFT_STROKE_LIMIT:soil")])
+    assert found["t_stop_s"] == 1.0
+    assert found["lift_after_stop_ms"] == pytest.approx([0.0, 0.0, 50.0, 0.0])
+    assert vr.sa4_record(rows, 500.0, [])["lift_after_stop_ms"] is None
+
+
+def test_rev4_f2_demoted_items() -> None:
+    pytest.importorskip("numba", reason="d1_runs imports the harness (dynamics-dev)")
+    d1_runs = importlib.import_module("d1_runs")
+    items = {"a": True, "b": False, "c": False}
+    assert d1_runs.demoted_items(items, ["b", "c"]) == []
+    assert d1_runs.demoted_items(items, ["b"]) == [{"item": "c", "rule": None, "flag": None}]
+
+
+def test_rev4_f5_table_gap_target(tmp_path) -> None:
+    rejudge = _rejudge_module()
+    table = _settle_table_file(tmp_path)
+    found = rejudge.settle_v2_record(_settle_result(start_gap=True), table)
+    assert found["inputs"]["table_gap_target_mm"] == [30.0, 30.0, 30.0, 30.0]
+    assert found["inputs"]["gap_target_mm"][0] == 40.0
+
+
+def test_rev4_gs_fields(tmp_path) -> None:
+    block = record.controller_record(_Controller(blocked=False))
+    values = {
+        "times": {"t_check_start_s": 0.1},
+        "case_floor_deg": [0.0, 0.0],
+        "sa4": {"lift_after_stop_ms": None},
+    }
+    bound = {"rule": judge.extend_bound_rule(), "breach_reads": [0, 0, 0, 0]}
+    line = {
+        "job": {"case": "S8", "eps": 0.0, "setting": "VB"},
+        "commands_sha256": "h",
+        "controller_tag": judge.TAG_P3,
+        judge.RECORD_KEY: block,
+        "values": values,
+        "hydraulics_record": {"extend_bound_check": bound},
+    }
+    path = _jsonl(tmp_path / "h.jsonl", [line])
+    out = tmp_path / "g.json"
+    assert judge.main(["gs", "--harness", str(path), "--out", str(out)]) == 0
+    bad_line = {
+        **line,
+        "values": {k: v for k, v in values.items() if k != "sa4"},
+        "hydraulics_record": {"extend_bound_check": {**bound, "rule": "other"}},
+    }
+    _jsonl(path, [bad_line])
+    assert judge.main(["gs", "--harness", str(path), "--out", str(out)]) == 1
+    missing = json.loads(out.read_text(encoding="utf-8"))["files"][0]["missing"]
+    assert missing == [
+        "F-4 values.sa4.lift_after_stop_ms",
+        "extend_bound_check.rule = ext_moving rule",
+    ]
+    d1_line = {
+        "job": {"d1": {"group": "H-R-0"}, "setting": "VB", "eps": 0.0},
+        "values": {"times": {}},
+    }
+    assert judge.rev4_presence(d1_line) == {
+        "F-1 values.times.t_check_start_s": False,
+        "F-2 d1.demoted_items": False,
+    }
+
+
+def test_rev4_r79_first_done() -> None:
+    path = [[0.1, "check"], [40.0, "done"], [50.0, "level"], [60.0, "done"]]
+    base = {"t_done_s": 40.003, "phase_path": path}
+    assert judge.is_first_done(base) is True
+    assert judge.is_first_done({**base, "t_done_s": 60.0}) is False
+    assert judge.is_first_done({"t_done_s": None, "phase_path": [[0.1, "check"]]}) is True
+    assert judge.is_first_done({"t_done_s": 40.0, "phase_path": [[0.1, "check"]]}) is False
+
+
+def test_rev4_soil_event_series_columns(tmp_path) -> None:
+    np = pytest.importorskip("numpy")
+    case = tmp_path / "case"
+    case.mkdir()
+    columns = [
+        "t",
+        *(f"{p}{leg}" for p in ("contact_", "Fcyl_", "gap_") for leg in judge.LEG_NAMES),
+    ]
+    np.savez(
+        case / "soil_event_series.npz", rows=np.zeros((2, len(columns))), columns=np.array(columns)
+    )
+    assert list(judge.soil_event_series_presence(case).values()) == [True]
+    np.savez(case / "soil_event_series.npz", rows=np.zeros((2, 1)), columns=np.array(["t"]))
+    assert list(judge.soil_event_series_presence(case).values()) == [False]
+
+
+def test_rev4_family_f_line_fields(tmp_path) -> None:
+    collect = importlib.import_module("resume_k1_family_f")
+    doc = {
+        "meta": {"v5_setting": "VB"},
+        "results": [
+            {
+                "key": "k",
+                "controller_tag": judge.TAG_P3,
+                "runs": [
+                    {"event": "FS24", "offset_s": 0.0, "gates": {}},
+                    {"event": "G4", "offset_s": 0.0},
+                ],
+            }
+        ],
+    }
+    path = _write_json(tmp_path / "vb.json", doc)
+    lines = collect.family_lines(path, "VB", "FS24")
+    assert len(lines) == 1 and lines[0]["v5_setting"] == "VB"
+    assert lines[0]["controller_tag"] == judge.TAG_P3 and lines[0]["key"] == "k"

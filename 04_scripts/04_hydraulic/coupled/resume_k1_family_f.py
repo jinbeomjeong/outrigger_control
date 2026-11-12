@@ -28,6 +28,7 @@ def family_lines(path: Path, setting: str, event: str) -> list[dict]:
     data = path.read_bytes()
     document = json.loads(data.decode("utf-8"))
     sha256 = hashlib.sha256(data).hexdigest()
+    meta = document.get("meta") or {}
     lines = []
     for result in document.get("results") or []:
         for run in result.get("runs") or []:
@@ -37,6 +38,9 @@ def family_lines(path: Path, setting: str, event: str) -> list[dict]:
                 {
                     "setting": setting,
                     "key": result.get("key"),
+                    # rev4 R4-B5: the line carries the run's setting and controller tag
+                    "v5_setting": result.get("v5_setting", meta.get("v5_setting")),
+                    "controller_tag": run.get("controller_tag", result.get("controller_tag")),
                     **run,
                     "source": str(path),
                     "source_sha256": sha256,

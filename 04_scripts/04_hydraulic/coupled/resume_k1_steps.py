@@ -557,7 +557,7 @@ def grid_v0_sample_steps(root: str, workers: int, mask: str, data_root: Path) ->
         step = _grid_run_step(f"h9_v0_sample_{name}", name, out, GRID_V0_SETTING, root, workers,
                               mask, 0, keys=keys)
         step["resume_k1"].update(sample_of=f"{GRID_V0_STORED}/{name}.json", sample_keys=keys,
-                                 compared="first run of each key (R3-E1)")
+                                 compared="every run of each key by (event, offset) (R4-B4)")
         steps += identity_steps(step["id"], step, root)
     return steps
 

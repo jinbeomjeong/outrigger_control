@@ -357,7 +357,17 @@ def judgement(row: D1Row, harness: dict, values: dict, rows: np.ndarray, control
     else:
         verdict = VERDICT_PASS
     return {"verdict": verdict, "fail_items": fail_items, "F_judged_min_N": f_judged,
-            "att_judged_deg": att, "items": items}
+            "att_judged_deg": att, "items": items,
+            "demoted_items": demoted_items(items, fail_items)}
+
+
+def demoted_items(items: dict[str, bool], fail_items: list[str]) -> list[dict]:
+    """436.8 rules rev4 F-2 ``d1.demoted_items`` (record only): the false items this judgement
+    left out of ``fail_items``, each {item, rule, flag}. This judgement has no demotion step (a
+    harness-side demotion arrives as a true item with its FLAG), so the list is empty unless a
+    later demotion is added here."""
+    return [{"item": name, "rule": None, "flag": None} for name, ok in sorted(items.items())
+            if not ok and name not in fail_items]
 
 
 def stop_expectation(row: D1Row, values: dict, rows: np.ndarray, controller) -> dict | None:

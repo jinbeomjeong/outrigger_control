@@ -183,6 +183,8 @@ def settle_v2_record(result: dict, table_path: Path = DEFAULT_TABLE) -> dict:
         "gap_target_mm": gap_target,
         "gap_target_source": GAP_SOURCE_START_GAP if "gap_target_mm" in first
         else GAP_SOURCE_TABLE,
+        # 436.8 rules rev4 F-5: the table target of every pad (start-gap pads too)
+        "table_gap_target_mm": table_gap,
         "residual_deg": [float(table_row.get(key, 0.0)) for key in RESIDUAL_KEYS],
         "attitude_error_deg": att_error, "mass_scale": mass_scale,
     }

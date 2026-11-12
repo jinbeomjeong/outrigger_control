@@ -163,6 +163,40 @@ def _stored_events(controller) -> list[tuple[float, str]]:
             if not event.name.startswith(SKIPPED_EVENT_PREFIXES)]
 
 
+PHASE_CHECK = "check"
+SOIL_STOP_EVENT = "FAULT_LIFT_STROKE_LIMIT:soil"
+"""436.8 rules rev3 R3-E5 Q-S6 / rev4 R4-B1: the SA-4 stop event."""
+
+
+def check_start_time_s(period_t: np.ndarray, period_phase: np.ndarray) -> float | None:
+    """Rev4 F-1 ``values.times.t_check_start_s``: the first controller period in CHECK [s,
+    closed-loop time], rounded like ``verdict_metrics.period_phase_times``; None without one."""
+    hits = np.flatnonzero(np.asarray(period_phase).astype(str) == PHASE_CHECK)
+    return None if not hits.size else round(float(np.asarray(period_t, float)[hits[0]]), 3)
+
+
+def sa4_record(rows: np.ndarray, rod_weight_N, events: list[tuple[float, str]]) -> dict:
+    """Rev4 F-4 ``values.sa4``: per leg (FL, FR, RL, RR) the time [ms] with the pad contact force
+    (true F_cyl + rod weight, the harness definition of ``s9_soil_slope._lifted_legs``) <= 0 from
+    the soil-guard stop (first ``FAULT_LIFT_STROKE_LIMIT:soil``) to the run end; samples x the
+    1 ms row step. Without the stop both values are None."""
+    t_stop = next((t for t, name in events if name.startswith(SOIL_STOP_EVENT)), None)
+    out = {"t_stop_s": None if t_stop is None else round(float(t_stop), 3),
+           "lift_after_stop_ms": None,
+           "rule": "1 ms rows t >= t_stop with true F_cyl + rod weight <= 0 (rev3 R3-G10 Q-14)"}
+    if t_stop is None or rows.size == 0:
+        return out
+    from harness_flow import COLUMN, TRUE_FORCE
+
+    t = rows[:, COLUMN["t"]]
+    contact = rows[:, TRUE_FORCE] + np.broadcast_to(np.asarray(rod_weight_N, float), (4,))
+    after = t >= float(t_stop) - 1e-9
+    step_ms = float(np.median(np.diff(t))) * 1e3 if t.size > 1 else 1.0
+    lifted = (after[:, None] & (contact <= 0.0)).sum(axis=0)
+    out["lift_after_stop_ms"] = [round(float(n) * step_ms, 3) for n in lifted]
+    return out
+
+
 def _finish(plant, controller, extra: dict, t4h: dict | None = None, *,
             u9_metrics: bool = False) -> tuple[dict, dict]:
     """Result dict and the 10 Hz arrays saved with it; ``t4h`` = {"path", "meta"} also writes
@@ -187,6 +221,9 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None, *,
         rows = limiter.rows()
         values["U9"] = u9_values(rows, chunk_phases(rows, period["t"], period["phase"]), period,
                                  is_flow_on=limiter.setting.is_enabled)
+    # 436.8 rules rev4 R4-D (record only, after the run): F-1 and F-4
+    values["times"]["t_check_start_s"] = check_start_time_s(period["t"], period["phase"])
+    values["sa4"] = sa4_record(limiter.rows(), getattr(plant, "Wr", 0.0), events)
     result = {**extra, "commands_sha256": _command_digest(period["command"]),
               "final_phase": str(controller.phase),
               "max_motor_stroke_reading_mm": limiter.max_stroke_reading_m * 1e3,
@@ -391,6 +428,9 @@ def _run_steady(case: VerdictCase, decision: str | None, t4h: dict | None = None
     finished, series = _finish(captured["plant"], captured["ctrl"], extra, t4h,
                                u9_metrics=u9_metrics)
     finished["harness_commands_sha256"] = result["run"]["commands_sha256"]
+    # 436.8 rules rev4 F-3 (record only): the floor of the case the harness ran
+    finished["values"]["case_floor_deg"] = [float(payload["roll_deg"]), float(payload["pitch_deg"])]
+    finished["values"]["case_floor_source"] = "s9_soil_slope case roll_deg / pitch_deg"
     return finished, series
 
 
@@ -420,7 +460,9 @@ def _run_event(twin: EventTwin, contact: str | None = None, t4h: dict | None = N
         base_plant, base_controller = plant, controller
         r67.run_base(cl, c2, measurements, base_plant, base_controller)
         extra["event_skipped"] = "base run without the READY / LOC / DONE of the event time"
-        return _finish(base_plant, base_controller, extra, t4h, u9_metrics=u9_metrics)
+        finished, series = _finish(base_plant, base_controller, extra, t4h, u9_metrics=u9_metrics)
+        finished["values"].update(EVENT_CASE_FLOOR)  # 436.8 rules rev4 F-3, record only
+        return finished, series
     hasher = hashlib.sha256()
     is_absolute = twin.timing == FLOW_SATURATION_TIMING
     # absolute t_a: branch one control period early so that t_a + offset is exact (>= PRE_S
@@ -461,7 +503,14 @@ def _run_event(twin: EventTwin, contact: str | None = None, t4h: dict | None = N
             "flow_limit_on": limiter.setting.is_enabled, "t_a_s": target}
     finished, series = _finish(plant, controller, extra, t4h, u9_metrics=u9_metrics)
     finished["harness_commands_sha256"] = hasher.hexdigest()
+    finished["values"].update(EVENT_CASE_FLOOR)  # 436.8 rules rev4 F-3, record only
     return finished, series
+
+
+EVENT_CASE_FLOOR = {"case_floor_deg": [0.0, 0.0],
+                    "case_floor_source": "r67 event branch on the level rigid floor of the r51 "
+                                         "harness (make_base has no floor angle)"}
+"""Rev4 F-3 of an event case."""
 
 
 def _event_time(timeline: dict, twin: EventTwin) -> float | None:

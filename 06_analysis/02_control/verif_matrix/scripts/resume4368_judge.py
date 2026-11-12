@@ -47,6 +47,12 @@ Rev3 (``v5_resume_4368_rules_rev3.md``, sealed dad8dfa6, checked raw too):
   command hash and the grid ``extend_bound_check`` (③ settings) and counts
   ``head_only_declared``.
 
+Rev4 (``v5_resume_4368_rules_rev4.md``, sealed 7ea87a30, checked raw too): grid-v0-sample
+pairs every run of a sampled result by (event, offset) (R4-B4); gs requires the record-only
+fields F-1 .. F-6 of the R4-D table and checks the second table (``extend_bound_check.rule`` =
+the ext_moving rule with ``breach_reads``, r79 ``base.t_done_s`` = the first DONE of
+``base.phase_path``, ``gs --chrono``: PS-c ``soil_event_series.npz`` columns).
+
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
 The tool reads only; it never runs a simulation. Tag judgements use
@@ -89,8 +95,11 @@ RULES_REV2_SHA256 = "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664
 RULES_REV3_NAME = "v5_resume_4368_rules_rev3.md"
 RULES_REV3_SHA256 = "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
 """Rev3 (sealed 2026-11-13 03:13:21 +09:00): overrides rev2, rev1 and the original."""
+RULES_REV4_NAME = "v5_resume_4368_rules_rev4.md"
+RULES_REV4_SHA256 = "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b"
+"""Rev4 (sealed 2026-11-13 03:47:45 +09:00): overrides rev3 .. the original."""
 SEALED_REVISIONS = ((RULES_REV1_NAME, RULES_REV1_SHA256), (RULES_REV2_NAME, RULES_REV2_SHA256),
-                    (RULES_REV3_NAME, RULES_REV3_SHA256))
+                    (RULES_REV3_NAME, RULES_REV3_SHA256), (RULES_REV4_NAME, RULES_REV4_SHA256))
 """The revisions every subcommand checks raw (R2-9: sealed rule files are ``-text``, no LF
 normalisation)."""
 RECORD_KEY = "resume_k1"
@@ -1058,7 +1067,8 @@ SETTLE_V2_KEYS = ("status",)
 SETTLE_V2_CHECKED_KEYS = (
     "inputs.pen_inst_mm", "inputs.q_floor_inst_deg", "inputs.q_floor_mean_deg",
     "inputs.d_attitude_deg", "inputs.pad_xy_m", "inputs.gap_target_mm",
-    "inputs.gap_target_source", "inputs.residual_deg", "inputs.attitude_error_deg",
+    "inputs.gap_target_source", "inputs.table_gap_target_mm", "inputs.residual_deg",
+    "inputs.attitude_error_deg",
     "inputs.table_sha256", "result.pen_mean_mm", "result.pen_plus_gap_mm",
     "result.attitude_tol_deg", "result.ok", "result.gate",
 )
@@ -1144,6 +1154,78 @@ def grid_run_presence(document: dict) -> tuple[int, dict[str, bool]]:
     return len(runs), presence
 
 
+SA4_CASES = ("S8",)
+"""Rev4 F-4: the v5 S8 family rows (``job.case``) carry ``values.sa4.lift_after_stop_ms``."""
+DONE_PHASE = "done"
+PHASE_PATH_TIME_TOL_S = 0.005
+"""``base.phase_path`` keeps the times rounded to 0.01 s."""
+
+
+def rev4_presence(record: dict) -> dict[str, bool]:
+    """Rev4 R4-D: F-1 .. F-4 on run_v5 lines and the meaning checks of its second table that a
+    single record answers (``extend_bound_check.rule`` / ``breach_reads``, r79 first DONE)."""
+    out: dict[str, bool] = {}
+    job = record.get("job")
+    if isinstance(job, dict) and isinstance(record.get("values"), dict):
+        out["F-1 values.times.t_check_start_s"] = get_path(
+            record, "values.times.t_check_start_s")[0]
+        if job.get("d1") is not None:
+            out["F-2 d1.demoted_items"] = get_path(record, "d1.demoted_items")[0]
+        else:
+            out["F-3 values.case_floor_deg"] = get_path(record, "values.case_floor_deg")[0]
+        if job.get("case") in SA4_CASES:
+            out["F-4 values.sa4.lift_after_stop_ms"] = get_path(
+                record, "values.sa4.lift_after_stop_ms")[0]
+    present, bound = get_path(record, "hydraulics_record.extend_bound_check")
+    if present and isinstance(bound, dict):
+        out["extend_bound_check.rule = ext_moving rule"] = bound.get("rule") == extend_bound_rule()
+        out["extend_bound_check.breach_reads"] = "breach_reads" in bound
+    if is_r79_record(record) and isinstance(record.get("base"), dict):
+        out["r79 base.t_done_s = first DONE of base.phase_path"] = is_first_done(record["base"])
+    return out
+
+
+def extend_bound_rule() -> str | None:
+    """``extend_start_bound.EXTEND_BOUND_CHECK_RULE`` (the ext_moving definition of rev4 R4-A2)."""
+    try:
+        from outrigger_sim.control.extend_start_bound import EXTEND_BOUND_CHECK_RULE
+    except ImportError:
+        return None
+    return EXTEND_BOUND_CHECK_RULE
+
+
+def is_first_done(base: dict) -> bool:
+    """Rev4 R4-B2: ``base.t_done_s`` is the first DONE of ``base.phase_path`` (both absent is
+    true; a DONE time the cut path does not show cannot be confirmed: false)."""
+    t_done = base.get("t_done_s")
+    done_times = [float(entry[0]) for entry in base.get("phase_path") or []
+                  if isinstance(entry, (list, tuple)) and len(entry) == 2
+                  and str(entry[1]).lower().endswith(DONE_PHASE)]
+    if t_done is None:
+        return not done_times
+    return bool(done_times) and abs(done_times[0] - float(t_done)) <= PHASE_PATH_TIME_TOL_S
+
+
+SOIL_EVENT_SERIES = "soil_event_series.npz"
+SOIL_EVENT_COLUMN_PREFIXES = ("contact_", "Fcyl_", "gap_")
+
+
+def soil_event_series_presence(case_dir: Path) -> dict[str, bool]:
+    """Rev4 R4-D: a PS-c row's ``soil_event_series.npz`` has the pad contact normal, F_cyl and
+    gap columns of each leg (spec 426.3 E-1 .. E-6 inputs)."""
+    path = case_dir / SOIL_EVENT_SERIES
+    if not path.is_file():
+        return {}
+    import numpy as np
+
+    with np.load(path, allow_pickle=False) as series:
+        columns = [str(c) for c in series["columns"]] if "columns" in series.files else []
+        has_rows = "rows" in series.files
+    wanted = [f"{prefix}{leg}" for prefix in SOIL_EVENT_COLUMN_PREFIXES for leg in LEG_NAMES]
+    return {f"{SOIL_EVENT_SERIES} rows + {', '.join(SOIL_EVENT_COLUMN_PREFIXES)}*":
+            has_rows and all(name in columns for name in wanted)}
+
+
 def gs(args: argparse.Namespace) -> dict:
     files = []
     for path in args.harness:
@@ -1154,7 +1236,8 @@ def gs(args: argparse.Namespace) -> dict:
             continue
         presence: dict[str, bool] = {}
         for record in runs:
-            for key, ok in {**gs_presence(record), **hash_presence(record)}.items():
+            found_keys = {**gs_presence(record), **hash_presence(record), **rev4_presence(record)}
+            for key, ok in found_keys.items():
                 presence[key] = presence.get(key, True) and ok
         grid_runs = 0
         for doc in docs:
@@ -1166,10 +1249,17 @@ def gs(args: argparse.Namespace) -> dict:
         files.append({"file": str(path), "runs": len(runs), "grid_runs": grid_runs,
                       "missing": sorted(key for key, ok in presence.items() if not ok),
                       "head_only_declared_present": f"{head_only}/{len(runs)}"})
+    for batch_dir in getattr(args, "chrono", None) or []:  # rev4: PS-c series columns
+        for case in _batch_rows(Path(batch_dir)):
+            found = soil_event_series_presence(Path(batch_dir) / case)
+            if found:
+                files.append({"file": str(Path(batch_dir) / case), "runs": 1,
+                              "missing": sorted(k for k, ok in found.items() if not ok)})
     bad = [f for f in files if f["missing"]]
     return {
         "rules": RULES_NAME,
-        "section": "11.2 (+ rev3: command hash, extend_bound_check, head_only_declared, settle_v2)",
+        "section": "11.2 (+ rev3: command hash, extend_bound_check, head_only_declared, "
+                   "settle_v2; rev4 R4-D: F-1 .. F-6 and the meaning checks)",
         "files": files,
         "files_with_missing": len(bad),
         "exit_code": 1 if bad else 0,
@@ -1358,10 +1448,27 @@ def _results_by_key(path: Path) -> dict[str, dict]:
     return {row.get("key"): row for row in read_json(path).get("results") or []}
 
 
+def _run_hashes(result: dict | None) -> dict[tuple, Any]:
+    """(event, offset) -> ``commands_sha256`` of a grid result's runs."""
+    return {(run.get("event"), float(run.get("offset_s"))): run.get("commands_sha256")
+            for run in (result or {}).get("runs") or []}
+
+
+def sample_job_runs(stored: dict, sample: dict | None) -> dict:
+    """Rev4 R4-B4: one sample job = one stored result; every run is paired by (event, offset)
+    and must have the same hash."""
+    old, new = _run_hashes(stored), _run_hashes(sample)
+    missing = sum(1 for k in old if old[k] is None or new.get(k) is None) + len(set(new) - set(old))
+    differ = sum(1 for k in old if old[k] is not None and new.get(k) is not None
+                 and old[k] != new[k])
+    return {"runs": len(old), "differ": differ, "missing": missing}
+
+
 def grid_v0_sample(args: argparse.Namespace) -> dict:
-    """R3-E1: the 8-job V0 sample (per stored file the first and the last result, its first run)
-    against the stored V0 grid by ``commands_sha256``; all same -> the stored V0 is the pair,
-    otherwise V0 768 runs (``resume_k1/h9_grid_v0/``)."""
+    """R3-E1 / R4-B4: the 8-job V0 sample (per stored file the first and the last result; every
+    run of the job, paired by (stem, key, event, offset)) against the stored V0 grid by
+    ``commands_sha256``; all same -> the stored V0 is the pair, otherwise V0 768 runs
+    (``resume_k1/h9_grid_v0/``)."""
     rows, problems = [], []
     for name in GRID_FILES:
         stored_path = Path(args.stored_dir) / f"{name}.json"
@@ -1369,15 +1476,12 @@ def grid_v0_sample(args: argparse.Namespace) -> dict:
         sample = _results_by_key(Path(args.sample_dir) / f"{name}.json")
         for row in (stored[0], stored[-1]) if stored else ():
             key = row.get("key")
-            new = sample.get(key)
-            stored_sha = (row.get("runs") or [{}])[0].get("commands_sha256")
-            new_sha = None if new is None else (new.get("runs") or [{}])[0].get("commands_sha256")
-            if new_sha is None or stored_sha is None:
-                problems.append(f"{name} {key}: hash missing (sample or stored)")
+            compared = sample_job_runs(row, sample.get(key))
+            if compared["missing"]:
+                problems.append(f"{name} {key}: {compared['missing']} runs without a pair or hash")
             rows.append({"file": name, "key": key, "stored_sha256_file": file_sha256(stored_path),
-                         "stored": stored_sha, "sample": new_sha,
-                         "same": None if new_sha is None or stored_sha is None
-                         else new_sha == stored_sha})
+                         **compared,
+                         "same": None if compared["missing"] else compared["differ"] == 0})
     if len(rows) != 2 * len(GRID_FILES):
         problems.append(f"{len(rows)} sample jobs, 8 expected")
     is_all_same = not problems and all(row["same"] for row in rows)
@@ -2027,7 +2131,9 @@ def _parser() -> argparse.ArgumentParser:
     )
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("gs", help="11.2 (key presence only)")
-    p.add_argument("--harness", nargs="+", type=Path, required=True)
+    p.add_argument("--harness", nargs="*", type=Path, default=[])
+    p.add_argument("--chrono", nargs="*", type=Path, default=[],
+                   help="Chrono batch folders: PS-c soil_event_series.npz columns (rev4)")
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("keyset",
                        help="rev1 RV1-3: new H-6 .. H-9 grid output vs stored keys (S-15)")
@@ -2132,7 +2238,7 @@ def revision_seal_problems(folder: Path, name: str, sha256: str) -> tuple[dict, 
 
 
 def sealed_rules_check(rules_dir: Path | None = None) -> dict:
-    """Rev1, rev2 and rev3 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
+    """Rev1 .. rev4 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
     folder = RULES_DIR if rules_dir is None else Path(rules_dir)
     revisions, problems = {}, []
     for name, sha256 in SEALED_REVISIONS:
@@ -2166,6 +2272,7 @@ def main(argv: list[str] | None = None) -> int:
     report["rules_rev1_sha256"] = RULES_REV1_SHA256
     report["rules_rev2_sha256"] = RULES_REV2_SHA256
     report["rules_rev3_sha256"] = RULES_REV3_SHA256
+    report["rules_rev4_sha256"] = RULES_REV4_SHA256
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
         json.dumps(report, indent=1, ensure_ascii=False, default=str), encoding="utf-8"
