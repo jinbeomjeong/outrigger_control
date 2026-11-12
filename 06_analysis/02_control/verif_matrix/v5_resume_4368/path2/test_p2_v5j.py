@@ -233,3 +233,9 @@ def test_rev3_j3_floor_angle_and_jp3_config():
     ln.pop("head_only_declared")
     it, _ = vj.judge_pair(ln, steady("S2", setting="V0"), 14, IS_P3)
     assert it["J-P3"]["result"] == "no_rod_reading" and it["J-P3"]["declaration_source"] == "configuration"
+
+def test_rev5_ls_j11_is_l_e():
+    b = steady(setting="LS1", nlf=1)
+    b["controller_tag"] = core.TAG_VB
+    _, f = vj.judge_pair(b, steady(setting="V0"), 14, IS_P3)
+    assert "L-e" in f.as_dict()["stop_codes"] and "H-7" not in f.as_dict()["stop_codes"]

@@ -7,7 +7,7 @@ Rules: v5 criteria ``v5_criteria.md`` + revisions 1~12b (appendix A of the 436.8
 4.1 class are records (C2); J1 pass <-> stroke_limited_stop is a record except S8 (C3); spec-shortfall mark at
 F_min + 5 kN (C4); J3 slope by the row's floor angle (C5); J7 names without numeric segments (C6); J11 n_late
 None on a fallback line = undecidable (C7); J-P3 inputs by T4h, else configuration, never by inverting the
-declaration (C8); rev4 (7ea87a30...) R4-C5: floor angle from ``values.case_floor_deg`` (F-3).
+declaration (C8); rev4 (7ea87a30...) R4-C5: floor angle from ``values.case_floor_deg`` (F-3); rev5 (452a8436...) R5-B3: LS J11 fallback n_late > 0 = L-e.
 Author: dynamics-expert (path 2, second author of the 436.8 path 2). Path-1 tools and outputs were not opened
 (436.8 9.2); the J-item reading below is built from the rule sentences and the line field names only.
 
@@ -369,8 +369,9 @@ def judge_pair(line, v0, v0_nrev_max, is_p3, rod_reading=None):
         else:
             it["J11"] = {"result": "stop" if nlf else "pass", "n_late_fallback": nlf,
                          "n_late_by_leg": lwa.get("n_late_by_leg")}
-            if nlf:
-                fnd.stop("H-7", where, f"n_late_fallback {nlf}")
+            if nlf:   # rev5 R5-B3: on LS rows the same violation is L-e (v5 criteria 8), on VB rows H-7
+                code = "L-e" if str(core.dig(line, "job.setting", "")).startswith("LS") else "H-7"
+                fnd.stop(code, where, f"n_late_fallback {nlf}")
     res, why = jp3(line, is_p3, rod_reading)
     it["J-P3"] = {"result": res, "why": why, "rod_reading_source": "t4h" if rod_reading is not None else "configuration",
                   "declaration_source": head_only_declared(line)[1]}
