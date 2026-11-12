@@ -45,7 +45,6 @@ S_GUARD = 0.6828              # stroke guard [m]
 C_STAR = 0.05                 # clearance_target_m [m]
 N_A = 0.2                     # P-D assumed exponent (7.2)
 M_L_TOL = 5e-4                # T-14 [m]
-GRID_DEFAULT = 0.01           # pad SCM grid [m] (2.1)
 # 0.4 table, 0.01 m row: f - 1 range per pad type
 F_RANGE = {"rear": (1.0 - 0.013, 1.0 + 0.042), "front": (1.0 - 0.028, 1.0 + 0.050)}
 VALID_NH_BAND = (0.95, 1.05)  # C-4 (i)
@@ -103,8 +102,9 @@ DEFAULT_KEYMAP: dict[str, Any] = {
     "step_leg_contact_N": "pad_contact_force_N",
     "step_crawler_N": "crawler_load_N",
     # b1_grid_record.npz: R-C1 (names fixed by the rules) and R-G1 / R-G3 / R-G4
-    "rc_n": "n_cycle",
-    "rc_computed": "computed",
+    "rc_n": "n",
+    "g_n": "n_cycle",
+    "g_computed": "computed",
     "rc_load": "load_read_N",
     "rc_att": "att_raw_rad",
     "rc_chat": "c_hat_m",
@@ -115,8 +115,10 @@ DEFAULT_KEYMAP: dict[str, Any] = {
     "g_hull_perim": "contact_hull_perimeter_m",
     "g_sink": "sinkage_geometric_m",
     "g_sigma": "sigma_sum_area_N",
-    "g_grid_m": "meta_grid_m",
     "res_grid_m": "b1_grid_record.static.grid_m",
+    "res_grid_pads": "b1_grid_record.static.pads",
+    "res_grid_pad_leg": "leg",
+    "res_grid_pad_m": "grid_m",
     "imu_t": "imu_t_s",
     "imu_roll": "imu_raw_roll_rad",
     "imu_pitch": "imu_raw_pitch_rad",
@@ -426,7 +428,7 @@ class RunSeries:
         self.rc_index: dict[int, int] = {}
         self.grid: dict[str, np.ndarray] = {}
         self.grid_index: dict[int, int] = {}
-        self.grid_m: float = GRID_DEFAULT
+        self.grid_m: dict[str, float] | None = None   # per leg, from result.json static (no fallback)
         self.imu: tuple[np.ndarray, np.ndarray, np.ndarray] | None = None
         self.m12: dict[str, Any] = {}
         self.events: list[tuple[float, str]] = []
@@ -508,9 +510,8 @@ def load_chrono_row(row_dir: Path, km: dict) -> tuple[RunSeries | None, dict, li
     grid = _npz(row_dir / km["grid_npz"])
     if grid is not None:
         _attach_grid(rs, grid, km)
-    g_res = fnum(jget(res, km["res_grid_m"])) if km.get("res_grid_m") else None
-    if g_res is not None:
-        rs.grid_m = g_res
+    if grid is not None:
+        rs.grid_m = grid_spacing(res, km)
     rs.events = _events(jget(res, km["res_events"]), km)
     rs.t_ready = fnum(jget(res, km["res_t_first_ready"]))
     rs.t_creep = fnum(jget(res, km["res_t_creep"]))
@@ -522,22 +523,42 @@ def load_chrono_row(row_dir: Path, km: dict) -> tuple[RunSeries | None, dict, li
     return rs, res, []
 
 
+def grid_spacing(res: dict, km: dict) -> dict[str, float]:
+    """Pad SCM grid per leg: result.json static scalar, else static pads[i] per leg; none -> input error."""
+    scalar = fnum(jget(res, km["res_grid_m"]))
+    if scalar is not None:
+        return {leg: scalar for leg in LEGS}
+    pads = jget(res, km["res_grid_pads"])
+    out: dict[str, float] = {}
+    if isinstance(pads, list):
+        for i, pad in enumerate(pads):
+            if not isinstance(pad, dict):
+                continue
+            leg = pad.get(km["res_grid_pad_leg"]) or (LEGS[i] if i < len(LEGS) else None)
+            val = fnum(pad.get(km["res_grid_pad_m"]))
+            if leg in LEGS and val is not None:
+                out[leg] = val
+    if set(out) != set(LEGS):
+        raise InputError(f"grid spacing missing in result.json ({km['res_grid_m']} null and "
+                         f"{km['res_grid_pads']} incomplete: {sorted(out)})")
+    return out
+
+
 def _attach_grid(rs: RunSeries, grid: dict[str, np.ndarray], km: dict) -> None:
     if km["rc_n"] in grid:
-        n_arr = np.asarray(grid[km["rc_n"]]).astype(int)
-        keep = np.ones(len(n_arr), dtype=bool)
-        if km.get("rc_computed") and km["rc_computed"] in grid:
-            keep = np.asarray(grid[km["rc_computed"]]).astype(bool)
-        rs.rc_index = {int(v): k for k, v in enumerate(n_arr) if keep[k]}
-        rs.grid_index = rs.rc_index
+        rs.rc_index = _index(grid[km["rc_n"]])              # R-C1: every control period, no filter
+    if km["g_n"] in grid:
+        g_arr = np.asarray(grid[km["g_n"]]).astype(int)
+        keep = np.ones(len(g_arr), dtype=bool)
+        if km.get("g_computed") and km["g_computed"] in grid:
+            keep = np.asarray(grid[km["g_computed"]]).astype(bool)
+        rs.grid_index = {int(v): k for k, v in enumerate(g_arr) if keep[k]}
         for k in ("rc_load", "rc_att", "rc_chat", "rc_chat_corner", "rc_ctarget"):
             if km[k] in grid:
                 rs.rc[k] = np.asarray(grid[km[k]], dtype=float)
         for k in ("g_n_contact", "g_hull_area", "g_hull_perim", "g_sink", "g_sigma"):
             if km[k] in grid:
                 rs.grid[k] = np.asarray(grid[km[k]], dtype=float)
-    if km["g_grid_m"] in grid:
-        rs.grid_m = float(np.asarray(grid[km["g_grid_m"]]).ravel()[0])
     if all(km[k] in grid for k in ("imu_t", "imu_roll", "imu_pitch")):
         rs.imu = (np.asarray(grid[km["imu_t"]], dtype=float), np.asarray(grid[km["imu_roll"]], dtype=float),
                   np.asarray(grid[km["imu_pitch"]], dtype=float))
@@ -770,14 +791,15 @@ def grid_metrics(rs: RunSeries, m: dict, prm: dict) -> dict[str, Any]:
                 nh = float(rs.grid["g_n_contact"][j, k])
                 ha, hp = float(rs.grid["g_hull_area"][j, k]), float(rs.grid["g_hull_perim"][j, k])
                 zg, sg = float(rs.grid["g_sink"][j, k]), float(rs.grid["g_sigma"][j, k])
-                valid, ratio, r_sig = grid_validity(nh, rs.grid_m, ha, hp, sg, zg, prm["pad"][leg], prm)
-                f = grid_factor(nh, rs.grid_m, ha, hp, prm["pad"][leg], prm)
+                gsp = rs.grid_m[leg]
+                valid, ratio, r_sig = grid_validity(nh, gsp, ha, hp, sg, zg, prm["pad"][leg], prm)
+                f = grid_factor(nh, gsp, ha, hp, prm["pad"][leg], prm)
                 z = m["z"][name][leg] if m["z"].get(name) is not None else None
                 rec = {"N_h": nh, "b_hull": (2 * ha / hp if hp else None), "f": f, "valid": bool(valid and f),
                        "NhD2_over_A": ratio, "r_sigma": r_sig}
                 if f and z is not None:
                     rec.update({"z_over_f": z / f, "delta_grid": z * (1 - 1 / f),
-                                "dz_1n": z * rs.grid_m ** 2 / (prm["n"] * prm["pad"][leg]["A"])})
+                                "dz_1n": z * gsp ** 2 / (prm["n"] * prm["pad"][leg]["A"])})
             per[leg] = rec
         out[name] = per
     return out
@@ -1082,7 +1104,8 @@ def grade_all(rows: dict[str, dict], hrs: dict, consts: dict, prm: dict, km: dic
         else:
             continue
         signs_corr[r] = classify_dc(lo, hi)
-        dz1n = None if zt is None else zt * GRID_DEFAULT ** 2 / (prm["n"] * prm["pad"][b]["A"])
+        gsp = rows[r]["grid_m"][b] if rows[r].get("grid_m") else None
+        dz1n = None if (zt is None or gsp is None) else zt * gsp ** 2 / (prm["n"] * prm["pad"][b]["A"])
         detail[r] = {"delta_raw": delta, "corr_lo": lo, "corr_hi": hi, "substitute": sub, "dz_1n": dz1n,
                      "node_step_level": (dz1n is not None and not sub and abs(lo) <= dz1n)}
 
@@ -1301,7 +1324,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         if status == "VALID":
             m = run_metrics(rs, km, prm, level, bplan)
             entry["m"] = m
-            entry["gm"] = grid_metrics(rs, m, prm)
+            entry["grid_m"] = rs.grid_m
+            entry["gm"] = grid_metrics(rs, m, prm) if rs.grid_m is not None else {}
             entry["pred"] = predictors(m["loc_inputs"], m, prm, km, consts, m["b_star"])
             entry["pred_planned_leg"] = predictors(m["loc_inputs"], m, prm, km, consts, bplan)
             entry["h_rec"] = h_records(rs, m, prm, km)

@@ -84,7 +84,7 @@ def make_chrono_row(root: Path, case: str, cfg: dict, prm: dict) -> None:
     sigma = nh * grid ** 2 * k_term * z10 ** prm["n"]
     imu_t = np.round(np.arange(0, len(n) * 10) * 0.01, 6)
     np.savez(d / "record" / "b1_grid_record.npz",
-             n=np.arange(len(n)), n_cycle=n, t_s=t10, computed=np.array([cfg.get("computed_from", 0) <= k for k in n]),
+             n=n, n_cycle=n, t_s=t10, computed=np.array([cfg.get("computed_from", 0) <= k for k in n]),
              load_read_N=loads, att_raw_rad=np.tile([cfg["phi"], cfg["theta"]], (len(n), 1)),
              c_hat_m=np.full(len(n), cfg["c_hat"]),
              c_hat_corner_m=np.tile([cfg["c_hat"]] * 4, (len(n), 1)),
@@ -96,7 +96,8 @@ def make_chrono_row(root: Path, case: str, cfg: dict, prm: dict) -> None:
     res = {"events": events_for(cfg), "p3b": {"t_first_ready_s": (None if cfg["sgs"] else cfg["n_ready"] * 0.1),
                                               "creep_stop": {"t_final_s": 100.0}, "t_departure_s": 30.0,
                                               "weight_N": 376600.0},
-           "t_end_s": cfg["duration"], "controller_meta": {"controller_tag": cfg["tag"]},
+           "t_end_s": cfg["duration"], "b1_grid_record": {"static": cfg.get("grid_static", {"grid_m": 0.01})},
+           "controller_meta": {"controller_tag": cfg["tag"]},
            "c2_setup": {"expect_controller": {"ok": True}}, "num_threads_chrono": 4,
            "hull_hook": {"requested": "fast", "effective": "fast", "dll_sha256": p2.HULL_DLL_SHA}}
     (d / "result.json").write_text(json.dumps(res), encoding="utf-8")
@@ -422,8 +423,19 @@ def variant_checks(repo: Path, work: Path, prm: dict) -> None:
     # R-C1 rows with computed False are not records: LOC period not computed -> predictors NA -> D-d NA (Q-5)
     batch, hj = build(work / "comp", prm, row_over={"C1": {"computed_from": 401}})
     code, out = run_tool(repo, work / "comp", batch, hj)
-    check("computed False rows ignored", out["rows"]["C1"]["pred"]["e"]["P-A"] is None
-          and out["grades"]["D-d"]["grade"] == "NA" and out["grades"]["D-a"]["corr"] == "ZA-1")
+    check("computed filters grid rows only", out["rows"]["C1"]["pred"]["e"]["P-A"] is not None
+          and out["rows"]["C1"]["gm"]["L"]["FL"] is None and out["rows"]["C1"]["gm"]["e"]["FL"] is not None
+          and "C1" in out["grades"]["D-a"]["corr_na_rows"] and out["grades"]["D-d"]["grade"] == "PRED-P-A")
+    # grid spacing: scalar null -> per-pad values; both missing -> input error (exit 2)
+    pads = [{"leg": leg, "grid_m": 0.01} for leg in p2.LEGS]
+    batch, hj = build(work / "gpad", prm, row_over={r: {"grid_static": {"grid_m": None, "pads": pads}}
+                                                    for r in p2.CHRONO_ROWS})
+    code, out = run_tool(repo, work / "gpad", batch, hj)
+    check("per-pad grid spacing", code == 0 and out["rows"]["C1"]["grid_m"]["RL"] == 0.01
+          and out["rows"]["C1"]["gm"]["max"]["RL"]["valid"])
+    batch, hj = build(work / "gnone", prm, row_over={"C4": {"grid_static": {"grid_m": None}}})
+    code, out = run_tool(repo, work / "gnone", batch, hj)
+    check("missing grid spacing -> exit 2", code == 2)
     # T-14 mismatch on C2 -> excluded from D-d
     batch, hj = build(work / "t14", prm, row_over={"C2": {"c_target": 0.09}})
     code, out = run_tool(repo, work / "t14", batch, hj)

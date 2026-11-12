@@ -30,7 +30,5 @@ cmd /c "start /b /wait /affinity 0FFF0000 C:\ProgramData\miniforge3\Scripts\cond
 | A-7 | `t_max` 같은 최대 | 최대와 1×10⁻⁹ m 안의 가장 작은 주기. 다리별 $t_{\max,i}$도 같은 규칙 |
 | A-8 | D-b 하네스 값 | Q-2 (a): 짝 H-P VB e0 실행의, Chrono 행 $b^\ast$ 다리 $\delta^{os}$ |
 | A-9 | D-f 짝 제외 | H-M0 C5 짝 가운데 R4c30 사건이 있거나 유효하지 않은(Q-6) 줄은 뺀다 |
-| A-10 | R-C1 주기 번호와 유효 행 | 
-_cycle을 정수 주기로 쓰고 computed가 거짓인 행은 기록이 없는 것으로 본다. 
-(행 번호)·	_s는 쓰지 않는다 |
-| A-11 | 격자 간격 $\Delta$ | `result.json` `b1_grid_record.static`의 격자 값(keymap `res_grid_m`), 없으면 2.1 argv 값 0.01 m |
+| A-10 | 주기 색인 | R-C1 키(`n`, `load_read_N`, `att_raw_rad`, `c_hat_m`, `c_hat_corner_m`, `c_target_m`)는 `n`(모든 제어 주기)으로 색인하고 거르지 않는다(규칙 6절 "R-C1은 모든 제어 주기"). R-G1 격자 필드는 `n_cycle`로 색인하고 `computed`가 거짓인 행은 기록이 없는 것으로 본다. IMU는 `imu_t_s`. `t_s`는 쓰지 않는다 |
+| A-11 | 격자 간격 $\Delta$ | `result.json` `b1_grid_record.static.grid_m`(스칼라). null이면 `static.pads[i].grid_m`(다리별, `leg` 필드가 있으면 그것, 없으면 FL·FR·RL·RR 순서). 둘 다 없으면 입력 오류(종료 2). 0.01 m 폴백은 두지 않는다(토양별 격자가 다르다) |
