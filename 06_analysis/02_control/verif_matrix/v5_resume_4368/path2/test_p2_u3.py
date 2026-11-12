@@ -37,7 +37,7 @@ def settle_block(ok=True, gate="judged", pen=(-10.0, -10.0, -10.0, -10.0), gap=(
             "tolerances": {"gap_mm": 1.0, "attitude_floor_deg": 0.005, "attitude_add_deg": 0.002},
             "inputs": {"pen_inst_mm": pen, "pad_xy_m": [[1, 1], [1, -1], [-1, 1], [-1, -1]], "d_attitude_deg": [0.0, 0.0],
                        "gap_target_mm": list(gap), "residual_deg": 0.001, "attitude_error_deg": 0.004,
-                       "gap_target_source": "table"},
+                       "gap_target_source": "table", "table_gap_target_mm": list(gap)},
             "result": {"pen_mean_mm": pen, "pen_plus_gap_mm": plus, "gap_ok": [abs(x) <= 1.0 for x in plus],
                        "attitude_tol_deg": 0.005, "attitude_ok": True, "ok": ok}}
 
@@ -171,3 +171,18 @@ def test_rev3_ind_las_gate(tmp_path):
 def test_rev3_study_key_files_real():
     repo = HERE.parents[4]
     assert {s: len(u3.study_keys(repo, s)) for s in ("B", "C", "D")} == {"B": 84, "C": 34, "D": 33}
+
+
+def test_rev4_settle_table_target_and_tolerance():
+    b = settle_block()
+    b["inputs"]["table_gap_target_mm"] = [10.0, 10.0, 10.0, 11.0]
+    r = u3.settle_v2_recount(b)
+    assert r["status"] == "undecidable" and "gap_target_mm != table_gap_target_mm on a table pad" in r["issues"]
+    b = settle_block()
+    b["inputs"].pop("table_gap_target_mm")
+    assert "table_gap_target_mm missing (F-5)" in u3.settle_v2_recount(b)["issues"]
+    b = settle_block()
+    b["tolerances"]["gap_mm"] = 1.0 + 5e-10                       # within 1e-9
+    assert u3.settle_v2_recount(b)["status"] == "checked"
+    b["tolerances"]["gap_mm"] = 1.0 + 1e-6
+    assert u3.settle_v2_recount(b)["status"] == "tolerance_differs"

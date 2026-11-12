@@ -5,7 +5,8 @@ rules 7.1 "rev3 share" (tags V0 ``final_C4G2_LAS_K1``, VB C2 ``final_C4G2_P3_LAS
 IND ``IND``, IND_LAS ``IND_LAS``; D-1 reuse input ``resume_k1/h1_d1.jsonl``; folder ``v5_rerun/las_k1/``).
 Author: dynamics-expert (path 2). Updated to the 436.8 rev3 (dad8dfa6...) R3-B1~B7:
 settle v2 recount (B1 = A, B6, B7 start gap), studies B / C / D by input key files (B2), reuse fields reuse / d1_key
-(B3), C2 safe stop = official_verdict (B4), IND_LAS gate = INFO_LIFTOFF_SLOW: start events (B5). The path-1 tools (u3_judge, u3_judge_k1, resume4368_judge) and their
+(B3), C2 safe stop = official_verdict (B4), IND_LAS gate = INFO_LIFTOFF_SLOW: start events (B5); rev4 (7ea87a30...) R4-C2: deg -> rad, m -> mm,
+tolerances within 1e-9 (S-11), table pads gap_target_mm = settle_v2.inputs.table_gap_target_mm (F-5). The path-1 tools (u3_judge, u3_judge_k1, resume4368_judge) and their
 outputs were not opened (436.8 9.2).
 
 U-3 (rule section): G-1 run errors 0 and key counts (2: 1,114 keys x V0 / VB, per-suite counts where the
@@ -96,9 +97,10 @@ def settle_v2_recount(block, repo=None, table_target=False):
         return {"status": "error" if st == "error" else "undecidable", "why": f"status {st!r}", "gate": gate}
     issues = []
     tol = block.get("tolerances")
-    if isinstance(tol, dict):
-        vals = sorted(float(v) for v in tol.values() if core.num(v) is not None)
-        if vals != sorted([SETTLE_GAP_MM, SETTLE_ATT_FLOOR_DEG, SETTLE_ATT_ADD_DEG]):
+    if isinstance(tol, dict):   # rev4 R4-C2: the three values equal 398.3 within 1e-9 (else S-11)
+        vals = sorted(core.num(v) for v in tol.values() if core.num(v) is not None)
+        want = sorted([SETTLE_GAP_MM, SETTLE_ATT_FLOOR_DEG, SETTLE_ATT_ADD_DEG])
+        if len(vals) != 3 or any(abs(a - b) > core.EPS_THR for a, b in zip(vals, want)):
             return {"status": "tolerance_differs", "tolerances": tol, "gate": gate}
     pen, xy, dat = _get(block, "pen_inst_mm"), _get(block, "pad_xy_m"), _get(block, "d_attitude_deg")
     gap = _get(block, "table_gap_target_mm" if table_target else "gap_target_mm")
@@ -133,6 +135,14 @@ def settle_v2_recount(block, repo=None, table_target=False):
             p = repo / table
             if not p.is_file() or core.sha256_file(p) != tsha:
                 issues.append("table_sha256 does not match the settle table file")
+        # rev4 R4-C2: pads whose gap_target_source is the table use table_gap_target_mm (F-5)
+        src, tg = _get(block, "gap_target_source"), _get(block, "table_gap_target_mm")
+        srcs = src if isinstance(src, list) else [src] * len(gap)
+        if any(s == "table" for s in srcs):
+            if not isinstance(tg, list) or len(tg) != len(gap):
+                issues.append("table_gap_target_mm missing (F-5)")
+            elif any(s == "table" and not core.same_value(float(g), float(x)) for s, g, x in zip(srcs, gap, tg)):
+                issues.append("gap_target_mm != table_gap_target_mm on a table pad")
     return {"status": "checked" if not issues else "undecidable", "ok": ok, "issues": issues, "gate": gate,
             "pen_plus_gap_mm": plus, "attitude_tol_deg": att_tol}
 
