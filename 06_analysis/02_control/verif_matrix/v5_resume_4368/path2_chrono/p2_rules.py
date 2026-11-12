@@ -19,7 +19,9 @@ SEALED = [
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev1.md",
      "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7", "rules rev1"),
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.md",
-     "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199", "rules rev2 (wins)"),
+     "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199", "rules rev2"),
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.md",
+     "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557", "rules rev3 (wins)"),
     ("06_analysis/02_control/verif_matrix/d1_selection_rules.md",
      "51dea528e57fa0c4378cda110addb73da20339535e16189452af2d06b60736e9", "Appendix A: D-1 rules 11"),
     ("06_analysis/02_control/verif_matrix/d1_selection_rules_rev1.md",
@@ -50,6 +52,7 @@ RAW_ONLY = {  # rev2 R2-9 last-but-one bullet: sealed rule files are compared ra
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev1.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.md",
+    "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.md",
 }
 
 
@@ -115,11 +118,11 @@ MOVING_BAR = 180.0              # d1 11 "이동 <= 180 bar" (spec 3 item 4)
 LOCKED_BAR = 350.0              # d1 11 "잠김 <= 350 bar"
 READY_FLAT_S = 90.0             # d1 11 H-R "READY 평지 90 / 경사 120 s"
 READY_SLOPE_S = 120.0
-MOVING_U_EPS = 1e-6             # spec 426.3 E-4 "|u| > 1e-6 m/s" (moving sample)
+MOVING_U_EPS = CMP_TOL          # rev3 R3-G10 Q-13: moving = applied command != 0 (7.6 tolerance 1e-9 m/s)
 # spec 210.2 R40-2 (rigid NSC crawler hold)
 HOLD_WINDOW_S = 8.0             # "그 최소가 이륙 뒤 8 s 안"
 HOLD_SLOW_MEAN_S = 1.0          # R40-1 "느린 성분(1 s 중심 평균)"
-HOLD_SLOW_MIN_N = 14410.0       # R40-2 "느린 성분 최소가 14.41 kN 이상"
+HOLD_SLOW_MARGIN_N = 5000.0     # rev3 R3-G6: threshold = F_min + 5 kN (= 14,414.589 N)
 
 # spec 284 P3 / 284.1 / 423.3 / 419.8 / 424.8.1 / 433.6
 W_FRACTION = 0.01               # P3-2 "< 0.01 W", recontact ">= 0.01 W" (393)
@@ -140,7 +143,7 @@ P34_WINDOW_MIN_S = 5.0          # 284.1: "길이 >= 5 s"
 CLEARANCE_MIN_M = 0.025         # P3-5 ">= 25 mm"
 STROKE_END_M = 0.6848           # P3-5 "모터 행정 <= 0.6848 m"; d1 1 s_end
 G6_READY_S = 120.0              # spec 17475 "G6 Chrono 판정기(G6-1~G6-7, READY <= 120 s)"
-P38_DEMOTE_ALT_N = 14400.0      # spec 17279 "G6-7_preloc ... >= 14.4 kN ... 424.11.2와 같음" (vs 377 ">= F_min")
+# rev3 R3-G8: 377 demotion threshold = F_min (17279 "14.4 kN" not used)
 LOC_CYCLE_S = 0.1               # 419.8.1 "(t_LOC - 0.1 s, t_LOC]"
 
 # rev2 R2-5 / 7.4 (record windows)

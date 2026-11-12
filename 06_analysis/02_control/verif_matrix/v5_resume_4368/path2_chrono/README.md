@@ -1,8 +1,11 @@
-# 436.8 경로 2 — Chrono C-1~C-5 판정 블록 재계산 (+ C-8 m·시간 기록)
+# 436.8 경로 2 — Chrono C-1~C-8 (C-1~C-5 판정 블록 재계산·재집계, C-6·C-7·C-8 값)
 
 - 작성: control-expert(새 인스턴스, 2026-11-13). 이 작성자는 경로 1 도구를 만들거나 고친 적이 없다(아래 "독립성 공개").
-- 규칙: 원판 `v5_resume_4368_rules.md`(9019b405), rev1(d9094fda), rev2(497e4614, 우선). 9.1 표 C-1~C-5 행의 경로 2 = "`series.npz`·`r8_series` 재계산"(rev1 RV1-10 h: SCM `step_series.npz`·`r8_series.npz`, L2b·L1-R `r8_series.npz`·`s8_series.npz`).
-- 이 도구는 결과의 **판정 블록을 읽지 않는다**. 원 시계열·단계·사건·설정·argv에서 다시 계산한다. 예외는 규칙이 이름으로 지정한 두 키다: `p3b.weight_N`(rev2 R2-5의 W), `p3b_ext.start_condition.crawler_attitude_deg`(원판 9.1 C-8 "기록된 크롤러 자세에서 2절 식으로 재계산").
+- 규칙: 원판 `v5_resume_4368_rules.md`(9019b405), rev1(d9094fda), rev2(497e4614), rev3(dad8dfa6, 우선). 9.1 표 C-1~C-5 행의 경로 2 = "`series.npz`·`r8_series` 재계산". 입력 파일은 rev3 R3-G2(SCM `step_series.npz`·`r8_series.npz`, L2b `pads.npz`, L1-R `record/record.npz` + `pads.npz`). 담당 범위는 rev2 R2-0 + rev3 R3-G11(C-6·C-7·C-8 추가).
+- **세 층(rev3 R3-G1, 사용자 결정 Q-C1 = A)**: (1) 시계열로 정의가 닫히는 항목은 재계산, (2) 감시기·사건 판정 논리가 필요한 항목(C-5 T4-0·T4·T5·J11 창·J-P3·D2, PS-c E-1~E-4·E-6·E-7)은 `result.json`의 항목별 기록 결과를 **재집계**하고 등급 규칙(FLAG·멈춤·해당 없음)을 경로 2가 따로 적용, (3) 출력의 `bundle_result.TABLE_REAGG`(항목·행 수·출처 키·판정 수)와 `recalculated_judged_items`·`reaggregated_items`. **재집계 항목은 독립 재계산이 아니다**(판정서 한계 절에 rev3 R3-G1 문장을 그대로 적는다).
+- 이 도구는 결과의 **판정 값을 입력으로 쓰지 않는다**(재집계 층 제외). 규칙이 이름으로 지정한 입력 키 두 개만 읽는다: `p3b.weight_N`(rev2 R2-5의 W), `p3b_ext.start_condition.crawler_attitude_deg`(원판 9.1 C-8). rev3 R3-G13이 이를 위반 아님으로 정했다.
+- C-6·C-7은 `openloop_compare.py`의 `analyse`(함수·상수 정의만 `ast`로 꺼내 그대로 실행, 고정 실행 목록 드라이버는 실행 안 함)이고, 그 함수가 읽는 `p3a`의 저장 판정 복사 키(`stored_*`)는 출력에서 뺀다. 속도비 r_vu·r_v는 rev2 R2-4 식으로 따로 계산한다.
+- 행마다 읽은 원 파일 이름과 sha256을 `rows[].input_files_sha256`에 적는다(rev3 R3-G2).
 
 ## 1. 실행
 
@@ -17,6 +20,7 @@ $d = "<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2_chrono"
 & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B "$d\test_p2_synthetic.py" --tmp <빈 폴더>
 ```
 
+- `--bundle`은 `C-1`·`C-2`·`C-3`·`C-4`·`C-5`·`C-6C7`·`C-8`이다.
 - `judge`는 `batch.json`의 `cases[]` 가운데 `criteria_id`(최상위 또는 `r4368.criteria_id`)가 묶음과 같고 G-S가 아닌 행만 판정한다. SCM 행 폴더 = `batch.json` 폴더/`case`. L2b·L1-R 행 폴더 = `07_results/S8|S6/*<argv --tag>*/<argv --only>/`(정확히 1개가 아니면 종료 2, `--row-dir CASE=PATH`로 지정).
 - 종료: 0 = 묶음 `통과`·`기록 완료`, 1 = `미달`·`판정 불가`·`기록 불완전`·멈춤 있음, 2 = 입력·봉인 오류(S-1), 3 = 내부 오류. 마지막 줄 JSON에 `tool_sha256`(공통 4파일 + 묶음 모듈, 파일별 sha를 이름순 "이름 sha\n"로 이은 문자열의 sha256), `out_sha256`(출력 파일 바이트).
 - 봉인 대조(원판 8.2 S-1, rev2 R2-9): 원판·rev1·rev2는 raw sha만, 부록 A 파일(d1 규칙·rev1, v5 rev6·12·12a·12b, `las_p5r4_k1_judgement.md`)은 raw가 다르면 CRLF→LF 정규화 sha를 보고 같으면 통과 + "CRLF 변환만 다름" 공개. 명세·YAML sha는 기록만.
@@ -39,17 +43,19 @@ $d = "<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2_chrono"
 | v5 rev6 5 t_lift | `t_lift`, `t_lift_sus` | 단계가 idle·check·touch가 아니고 크롤러 ≤ 0인 첫 1 ms 표본, 1 ms 기록이 없으면 10 Hz 괄호(t_a + 1 ms) |
 | 424.8.1 최종 LOC | `loc_times` | 뒤에 `INFO_LOC_REVOKED`가 없는 마지막 `crawler_liftoff_confirmed` |
 | P3-1 + U-S9-G6d + 423.3 Q-G | `recontacts`, `classify_recontact`, `p3_1` | t_D 뒤 ≥ 0.01 W 구간을 사건으로. 최종 LOC 이전 시작: 지속 ≤ 0.5 s ∧ LOC 전 종료 ∧ 최대 ≤ 0.15 W → transient FLAG. LOC 뒤: 시작 ≤ LOC + 1.0 s ∧ 지속 ≤ 0.1 s ∧ 최대 ≤ 1.2 × 0.01 W → chatter FLAG. READY 뒤 시작·LOC 없음 → 엄격 실패. READY ~ +10 s 크롤러 최대 > 0 → 실패, 창이 안 차면 판정 불가 |
-| P3-2 + 419.8/419.8.1 + 424.8.1 | `p3_2`, `reapproach_intervals` | 최종 LOC 존재 ∧ 첫 DONE 전 ∧ (t_LOC − 0.1, t_LOC] 크롤러 최대 < 0.01 W ∧ t_LOC − t_D ≤ T_lim. T_lim = 0.010/(0.25 v_max) + 1.0 s(YAML v_max, 규칙 표기 2.9 s는 기록). 시간만 넘으면 419.8 다섯 조건(창 재시작 포함 재접근, 재접근 끝 기준 지연, 거짓 LOC 아님, P3-3·FAULT 0, 순서) 또는 424.8.1 다섯 조건이 모두 참일 때 FLAG |
+| P3-2 + 419.8/419.8.1 + 424.8.1 | `p3_2`, `reapproach_intervals` | 최종 LOC 존재 ∧ 첫 DONE 전 ∧ (t_LOC − 0.1, t_LOC] 크롤러 최대 < 0.01 W ∧ t_LOC − t_D ≤ T_lim. T_lim = 0.010/(0.25 v_max) + 1.0 s(YAML v_max, 규칙 표기 2.9 s는 기록). 시간만 넘으면 419.8 다섯 조건(창 재시작 포함 재접근, 재접근 끝 기준 지연, 거짓 LOC 아님, P3-3·FAULT 0, 순서) 또는 424.8.1 다섯 조건 + 조건 6(424.9: t_LOC_fin − t_off ≤ (1 + n_revoke) T_lim, rev3 R3-G12)이 모두 참일 때 FLAG. 취소된 LOC의 하중 중 확정은 기록만(R3-G10 Q-17) |
 | P3-3 | `p3_3`, `min_force_after` | [t_D, 끝] 다리별 1 ms 참 F_cyl 최소 ≥ F_min(YAML) |
-| P3-4 + 284.1 + 433.6 | `creep_stop_times`, `p3_4` | 1.0 s 후향 침하 속도(`pad_sinkage_geometric_m` 차분) \|v\| < 0.1 mm/s 네 패드가 끝까지 이어지는 마지막 구간 시작, 없으면 부호 판정 + `creep_vibration_suspect`. 창 = [max(그 시각, 마지막 READY 진입), 끝], 창 안 \|roll\|·\|pitch\| 최대 ≤ 0.2°. 창 < 5 s → `window_short`(판정 불가) |
+| P3-4 + 284.1 + 433.6, rev3 R3-G7·G9 | `creep_stop_times`, `p3_4` | 1.0 s 후향 침하 속도(`pad_sinkage_geometric_m` 차분) \|v\| < 0.1 mm/s 네 패드가 끝까지 이어지는 마지막 구간 시작, 없으면 부호 판정 + `creep_vibration_suspect`. 창 = [max(그 시각, 마지막 READY 진입), 끝], 창 안 \|roll\|·\|pitch\| 최대 ≤ 0.2°(장착 몫 더하지 않음). 창 < 5 s → `window_short` FLAG(항목 집계는 통과 아님 `item_tally`, 행 등급은 실패 아님) |
 | P3-5 | `p3_5` | 첫 READY ~ 끝 `s9_rows.rut_clearance_m` 최소 ≥ 25 mm, 실행 전체 `s_motor_m` 최대 ≤ 0.6848 m |
 | P3-6, d1 rev1 | `ready_item` | 첫 READY 진입 − 폐루프 시작 ≤ 한계 |
-| P3-8 + 377 | `p3_8` | min(첫 LOC, 토양 모드 시작) 전 `leg_reapproach_start`·`relevel_predicted`·`probe_aborted_low_load` 0. G6 행만 377 강등: 시작 다리 [시작, 첫 LOC + 1 s] 최소 ≥ F_min ∧ FAULT 0이면 FLAG |
+| P3-8 + 377 | `p3_8` | min(첫 LOC, 토양 모드 시작) 전 `leg_reapproach_start`·`relevel_predicted`·`probe_aborted_low_load` 0. G6 행만 377 강등: 시작 다리 [시작, 첫 LOC + 1 s] 최소 ≥ F_min(rev3 R3-G8) ∧ FAULT 0이면 FLAG |
 | P3-9 | `p3_9` | 기록: `leg_reapproach_deferred`마다 보류 다리 [보류, 다음 재접근 시작 + 0.3 s] 최소 |
 | G6-6 | `items_p3(g6=True)` | FAULT 0 ∧ READY ≤ 120 s |
 | 398.1 SL-1, 427.12.5 SA-4 | `items_p3`, `stop_classification` | `WARN_LIFT_STROKE_LIMITED` → FAULT 0·부상 0·P3-1·P3-3·P3-4 통과면 P3-5 완화. `FAULT_LIFT_STROKE_LIMIT:soil` → SA-4 조건 전부 ∧ 이탈 뒤 정지면 `stroke_limited_stop`(허용 행은 통과), 아니면 실패 |
-| 명세 3 항목 2·3·4, d1 11 D8·P | `d8_force`, `d8_end_attitude`, `pressure_item`, `ready_item` | t_lift 뒤 1 ms 최소(L2b·L1-R `F_cyl_min_interval`) ≥ F_min. 마지막 5 s(전부 READY) \|자세 − 목표\| 최대 + 0.02 ≤ 0.2°. 헤드 등가 F_cyl/A_p: 작용 명령 \|u\| > 10⁻⁶ 표본 ≤ 180 bar, 전 표본 ≤ 350 bar. READY 평지 90 / 경사 120 s. FAULT 0 |
-| 명세 210.2 R40-2 | `d8_force(rigid_nsc_hold=True)` | L2b 판정 행: 원값 최소 < F_min ∧ 그 시각이 t_lift + 8 s 안 ∧ 같은 8 s의 1 s 중심 이동평균 최소 ≥ 14.41 kN → `hold`(행은 판정 불가) |
+| 명세 3 항목 2·3·4, d1 11 D8·P | `d8_force`, `d8_end_attitude`, `pressure_item`, `ready_item` | t_lift 뒤 1 ms 최소(L2b·L1-R `F_cyl_min_interval`) ≥ F_min. 마지막 5 s(전부 READY) \|자세 − 목표\| 최대 + 0.02 ≤ 0.2°. 헤드 등가 F_cyl/A_p: 작용 명령 ≠ 0(\|u\| > 10⁻⁹, rev3 R3-G10 Q-13) 표본 ≤ 180 bar, 전 표본 ≤ 350 bar. READY 평지 90 / 경사 120 s. FAULT 0. 이륙 = rev6 t_lift(rev3 R3-G5) |
+| 명세 210.2 R40-2, rev3 R3-G6 | `d8_force(rigid_nsc_hold=True)` | L2b 판정 행: 원값 최소 < F_min ∧ 그 시각이 t_lift + 8 s 안 ∧ 같은 8 s의 1 s 중심 이동평균 최소 ≥ F_min + 5 kN(14,414.589 N) → `hold`(행은 판정 불가, 멈춤 "d1 8절 L1 짝으로 풀거나 묻기") |
+| rev3 R3-G1 재집계 | `reagg_item`, `reagg_table`, `items_c5`, `p2_b_c2._psc` | `result.json`에서 항목 이름(T4-0·T4·T5·J11·J-P3·D2·E-k와 별칭)인 키를 찾아 그 값(bool, 또는 `verdict`·`status`·`result`·`passed`·`ok`·`pass`)을 pass/fail/flag로 읽는다. 못 찾거나 못 읽으면 판정 불가. 등급 규칙: T4-0 실패 → 도구 결함 멈춤, T4·T5 실패 → H-7, J-P3는 `two_pressure.extend_start_rule` = `tracked_bound`(③ 켬) 행만, J11은 `fallback_lock_log`가 비면 `not_computed` 기록(rev3 R3-C7), 있으면 재집계하고 실패 → H-7 |
+| rev2 R2-4, 원판 5.3·9.1 | `p2_b_c67` | `analyse` 그대로 + r_vu·r_v. 명세 11047 FLAG = 이륙 전 최소 < F_min |
 | 원판 4.2·6, rev2 R2-3, rev1 RV1-10 a | `identity_scm`, `identity_l2b` | 기록 확인(어긋나면 판정 불가 + S-2/S-3/S-4 검토) |
 | 원판 7.2, rev2 R2-1·R2-2 | `k1_classification` | 기록 모순(`would_block`∧¬due, `applied`∧¬due, `applied`∧`would_block`) → S-5. `_SKIPPED:order` 수 ≠ 막힘 수 → S-5 |
 | v5 rev6 5 H-9 | `items_c5` | M2 켬(`v5_hydraulics.hydraulic_options.m2_law`) 행에서 `hydraulics_record.m2_clip_times_s` 중 t_lift 뒤 잘림 > 0 → H-9 멈춤 |
@@ -65,13 +71,15 @@ $d = "<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2_chrono"
 | C-2 | C2-03·07 L2b / S-01·02 SCM / 기준선 추가 / PS-c | D8·P / P3 + READY 120 s + `stroke_limited_stop` 허용 / 같은 계열 / E-5만 | 고정 4행 정확히 1번씩(rev2 R2-8), 추가 ≤ 4, PS-c ≤ 2, 합 4~10 |
 | C-3 | S-03·04 SCM | P3 + G6(P3-6 90 s는 기록) | 2행 |
 | C-4 | 4행 SCM 혼합 | D8 + G6 + P3-3 + R_c + 8 s 창 시간 + K1(끔 팔 'LAS 없음') | 기록 묶음 |
-| C-5 | 35행 | t_lift·H-9·잠금 전이·K1만. **T4-0·T4·T5·J11 창·J-P3·D2는 만들지 않았다** | 모든 행 판정 불가 |
-| C-8 | O-C5 2행 | 7.4 m·처리 칸·시간·R_c | 기록 묶음(배정 밖, rev2 R2-5·R2-6을 받아 더함) |
+| C-5 | 35행 | 재계산: t_lift·H-9(+ 잠금 전이·D2 대체 사건 수·K1 기록). 재집계: T4-0·T4·T5·J-P3·D2, J11 창(실제 대체 다리가 있을 때만) | H-9, K1, 재집계 항목, J11 창 |
+| C-6C7 (`--bundle C-6C7`) | C-6 1 + C-7a 1 + C-7b 1 | `analyse` 값, 명세 11047 FLAG, r_vu·r_v | 기록 묶음(rev3 R3-G11) |
+| C-8 | O-C5 2행 | 7.4 m·처리 칸·시간·R_c | 기록 묶음(rev3 R3-G11) |
 
 ## 4. 읽은 것 (원판 9.2, 1.2절 꼴)
 
-- 규칙: 원판 전체, rev1 전체, rev2 전체(코디네이터 통지 뒤, master `b33e686`), `d1_selection_rules.md` 1~64행·145~204행, `d1_selection_rules_rev1.md` 전체, `v5_criteria_rev6.md` 81~200행 + T4·T5·J11 줄 grep, `v5_criteria_rev12.md` 전체, `v5_criteria_rev12a.md` 60~105행, `v5_criteria_rev12b.md` 15~47행.
-- 명세 `00_docs/04_control/s6_control_spec.md`(sha `1924ae89…`): 300~345행(S6 항목 1~8), 11010~11075행(284·284.1), 14278~14300행(377), 14795~14812행·15138~15165행(423.3), 15340~15360행(424.8.1), 16940~16975행(419.8), 17246~17270행(426.3), 그리고 grep 결과 줄(D8, 180 bar, 마지막 5 s, 8 s 규칙 210.2, chatter, `window_short`·433.6, `stroke_limited_stop`, 427.12, 17279·17475 줄 등).
+- 규칙: 원판 전체, rev1 전체, rev2 전체(코디네이터 통지 뒤, master `b33e686`), rev3 1~32행·360~553행(R3-F·R3-G·결정 표, master `9ce2fdc`), `d1_selection_rules.md` 1~64행·145~204행, `d1_selection_rules_rev1.md` 전체, `v5_criteria_rev6.md` 81~200행 + T4·T5·J11 줄 grep, `v5_criteria_rev12.md` 전체, `v5_criteria_rev12a.md` 60~105행, `v5_criteria_rev12b.md` 15~47행.
+- 명세 `00_docs/04_control/s6_control_spec.md`(sha `1924ae89…`): 300~345행(S6 항목 1~8), 11010~11075행(284·284.1), 14278~14300행(377), 14795~14812행·15138~15165행(423.3), 15340~15360행(424.8.1), 16940~16975행(419.8), 17246~17270행(426.3), 15420~15435행(424.9 조건 6), 그리고 grep 결과 줄(D8, 180 bar, 마지막 5 s, 8 s 규칙 210.2, chatter, `window_short`·433.6, `stroke_limited_stop`, 427.12, 17279·17475 줄 등).
+- `06_analysis/03_hydraulic/coupled/v5/paper_runs/scripts/openloop_compare.py` 전체(R3-G11이 지정한 기존 분석 정의, 436.8 경로 1 도구 아님). G-S 열린 루프 행 `GS_P3a_G1_B_VB_prop_lift10`의 `flow_series.npz` 열 이름과 `series.npz` 배열 이름, `result.json` 키 이름 검색(T4·T5·J11·J-P3·D2 등, 값 없음).
 - YAML `02_params/rexome33.yaml`의 `head_area_m2`, `max_speed_m_s`, `F_min_cylinder_N` 줄.
 - 원 데이터(키 이름·형식 확인, G-S 배치만): `batch_V5-RESUME-K1-GS_20261113_010654`(두 행), `_012403`·`_020211`의 `batch.json`, `07_results/S8/r4368gs_D1C2_middle_fdown3.2_Fs4_20261113_020211/`, `07_results/S6/bundleC_d1c1_r4368gs_D1C1_top_flat_crx3_L1R_20261113_020211/`. 읽은 것: npz 배열 이름·모양, `result.json` 키 트리(값은 기록 필드만: `phases`, `events`, `settings`, `controller_tag`, `expect_controller`, `pad_record`, `runner`, `s9_rows[0]`, `start_condition` 키 이름, `mass_scale.judgement_weights`, `c2_setup.expect_controller`, `hydraulics_record.m2_*`, `v5_hydraulics.hydraulic_options`, `c2_soil`의 두 키, `args` 일부), `controller_events.json` 형식, 시각 기준(쿼터니언 ↔ `roll_pitch_deg` 차 3×10⁻¹²°, L2b·L1-R 단계·사건 시각 = `settings.start_t_s` 기준 상대). G-S 행으로 적재기·항목 함수가 키 결측 없이 도는지만 봤고 값·판정은 출력하지 않았다.
 - **보지 않은 것**: `resume4368_judge.py`, `u3_judge_k1.py`, `resume_k1_record.py`, `resume_k1_steps.py`, `gs_check_*.txt`, `chrono_rows_check.json`, `chrono_rows_manifest.json`, `run_S9.py`·`run_S8C.py`·`run_S6C.py`·p3b 판정 함수, `result.json`의 `p3b`(위 `weight_N` 1개 제외)·`p3b_ext`(위 1개 키와 `start_condition` 키 이름 제외)·`acceptance`·`h4`·`c2`·`stroke`·`s8_end` 값, `las_p5r4_k1_judgement.md` 본문(sha만), `03_src` 코드.
@@ -83,18 +91,31 @@ $d = "<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2_chrono"
 - `d1_selection_rules_interp.md`(부록 A 밖 해석 문서)의 11행 한 줄을 grep 출력으로 보았다("D8 잠김 ≤ 350 bar = 실행 전체 F_cyl/A_p 최대"). 이 도구의 350 bar 정의(전 표본)는 그 줄과 같다. 그 문서의 나머지는 열지 않았다.
 - rev1 머리 6행은 "경로 2는 dynamics-expert"라고 적었고, rev2 R2-0이 Chrono C-1~C-5를 새 control-expert 인스턴스로 다시 배정했다(사용자 결정 2026-11-13).
 
-## 5. 만들지 않은 것 (경로 2 판정 불가로 남음)
+## 5. 만들지 않은 것 · 재집계로 낮춘 것
 
-| 항목 | 이유 |
+| 항목 | 처리 |
 |---|---|
-| C-5 T4-0·T4·T5·J11 창·J-P3·D2·잠금 창 | 제어기 두 압력 감시기(`TwoPressureMonitor`)의 강제 대체 재생이 필요하다. 독립 재구현은 이번 범위에서 하지 않았다 |
-| C-5 짝 비교(VB↔V0, LS−VB, 시드), 재실행↔저장 비트 비교, 12a 플랜트 선행 | 기록 항목이고 "앞 판 규칙"의 짝 정의를 이 판들에서 찾지 못했다 |
-| PS-c E-1·E-2·E-3·E-4·E-6·E-7 | 처방 침하 사건 시각·창 W·부상 정의가 결과 기록 이름과 이어지지 않았다 |
-| S-01·02 "토양 사건 0.5 s 평균(v5 3.1 ⑦)" | v5 3.1 ⑦ 원문을 읽지 않았다 |
-| D8 LAS-b 설정 9값 대조 | 프리셋 값이 규칙 문장에 없다 |
-| 424.11.2 "조건 1~6"의 6번째 조건 | 원문 위치를 찾지 못했다(424.8.1의 다섯 조건만 구현) |
+| C-5 T4-0·T4·T5·J-P3·D2, J11 창 | 재집계(rev3 R3-G1). 감시기 독립 재구현(B안)은 하지 않았다 |
+| PS-c E-1~E-4·E-6·E-7 | 재집계(rev3 R3-G1). E-5만 재계산 |
+| C-5 짝 비교(VB↔V0, LS−VB, 시드), 재실행↔저장 비트 비교, 12a 플랜트 선행 | 만들지 않음(기록 항목, 판정 무관) |
+| S-01·02 "토양 사건 0.5 s 평균(v5 3.1 ⑦)" | 만들지 않음(원문 미독) |
+| D8 LAS-b 설정 9값 대조 | 만들지 않음(프리셋 값이 규칙 문장에 없음) |
+| R40-2 보류의 해제(d1 8절 L1 짝 대조) | 자동화하지 않음. 보류 행은 판정 불가 + 멈춤 문구 |
 
-## 6. 확인 필요 (rev3 후보)
+## 6. 확인 필요
+
+### 6.1 rev3 뒤 새로 생긴 것 (rev4 후보)
+
+| # | 곳 | 사실 | 묻는 것 |
+|---|---|---|---|
+| N-1 | C-5 재집계 입력 | G-S L2b 행 `result.json`의 키 이름 검색(T4·T5·J11·J-P3·D2·`lock_log`·`records` 등)에서 항목별 T4·T5·J-P3·D2 결과 키가 없었다(`controller_meta.two_pressure.fallback_lock_log`, `review_record.d2_violation_start_ratio`, `v5_hydraulics.records`만 있음). 본 행에도 없으면 C-5 재집계 항목은 모두 판정 불가다 | 재집계할 항목별 결과가 `result.json`의 어느 키에 쓰이는가(또는 어느 기록 파일인가). 정해지면 `REAGG_ALIASES`에 출처를 고정한다 |
+| N-2 | PS-c 재집계 입력 | E-k 키가 `result.json`에 있는지 확인하지 못했다(PS-c G-S 행 없음) | N-1과 같음 |
+| N-3 | C-6·C-7 `analyse` | G-S 열린 루프 행(10 s)에서는 이탈이 없어 `analyse`가 예외로 끝났다(그 함수의 `first_run`이 None). 본 행 길이에서는 나지 않을 것으로 본다 | 없음(기록) |
+| N-4 | C-6·C-7 `criteria_id` | G-S에는 `C-6`만 있다. C-7 행의 값(`C-7` / `C-7a` / `C-7b`)을 모두 받는다 | cad 행 생성기의 실제 값 |
+
+### 6.2 rev3 R3-G에서 정해진 앞 질문 (Q-1~Q-18, 기록)
+
+모두 rev3 R3-G1~G13·R3-G10 표대로 반영했다(Q-1 → G1 재집계, Q-2 → G2, Q-3 → G3 허용, Q-4 → G4, Q-5 → G5, Q-6 → G6 F_min + 5 kN, Q-7 → G7 FLAG, Q-8 → G8 F_min, Q-9 → G9, Q-10~Q-14·Q-17 → G10, Q-15 → G11, Q-16 → G12 조건 6, Q-18 → G13). 아래는 원 질문 표(기록)다.
 
 | # | 곳 | 이 도구의 읽기 | 묻는 것 |
 |---|---|---|---|

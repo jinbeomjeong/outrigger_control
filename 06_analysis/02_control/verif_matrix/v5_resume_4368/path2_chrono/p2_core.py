@@ -468,6 +468,15 @@ def p3_2(row: Row, t_D, locs, p33_pass, fault_any, params):
     cyc_max = float(row.cr[sel].max()) if sel.any() else None
     loaded_ok = cyc_max is not None and R.lt(cyc_max, thr)
     out.update(order_ok=order, loc_cycle_crawler_max_N=cyc_max, loaded_ok=loaded_ok)
+    # rev3 R3-G10 Q-17: revoked LOCs under load are recorded only
+    rev_loaded = []
+    for tl in locs["locs"]:
+        if tl == t_loc:
+            continue
+        s2 = (row.t_cr > tl - R.LOC_CYCLE_S + R.CMP_TOL) & (row.t_cr <= tl + R.CMP_TOL)
+        if s2.any() and not R.lt(float(row.cr[s2].max()), thr):
+            rev_loaded.append(tl)
+    out["revoked_loc_under_load_record_s"] = rev_loaded
     if t_D is None:
         out.update(verdict="indeterminate", reason="t_D undefined")
         return out
@@ -501,14 +510,16 @@ def p3_2(row: Row, t_D, locs, p33_pass, fault_any, params):
     late = {"c1_window_restart": c1, "t_reapproach_end_s": t_re_end,
             "c2_delay_ok": bool(c2 and c1 and t_re_end is not None), "c3_not_false_loc": loaded_ok,
             "c4_load_fault": c4, "c5_order": order}
+    # rev3 R3-G12: condition 6 (spec 424.9 decision 1): t_LOC_fin - t_off <= (1 + n_revoke) T_lim
+    c6 = R.le(t_loc - t_D, (1 + len(revs)) * T_lim)
     rev = {"c1_revoke": r1, "t_revoke_last_s": t_rev, "c2_delay_ok": bool(c2 and r1),
-           "c3": loaded_ok, "c4": c4, "c5": order}
+           "c3": loaded_ok, "c4": c4, "c5": order, "c6_total_delay_ok": c6, "n_revoke": len(revs)}
     out["late_loc_reapproach"] = late
     out["late_loc_revoked"] = rev
     flags = []
     if all([late["c1_window_restart"], late["c2_delay_ok"], loaded_ok, c4, order]):
         flags.append("P3-2_late_loc_reapproach")
-    if all([rev["c1_revoke"], rev["c2_delay_ok"], loaded_ok, c4, order]):
+    if all([rev["c1_revoke"], rev["c2_delay_ok"], loaded_ok, c4, order, c6]):
         flags.append("P3-2_late_loc_revoked")
     out["flags"] = flags
     out["verdict"] = "flag" if flags else "fail"
@@ -577,8 +588,9 @@ def p3_4(row: Row):
     out["absmax_within_0p2_record"] = within
     if not R.ge(length, R.P34_WINDOW_MIN_S):
         flags.append("window_short")
-        out.update(flags=flags, verdict="indeterminate",
-                   reason="window_short: FLAG, not counted as pass (433.6)")
+        # rev3 R3-G7: FLAG; item tally counts it as FLAG (not pass), row grade does not count it as fail
+        out.update(flags=flags, verdict="flag", item_tally="flag_not_pass",
+                   reason="window_short (433.6); value in absmax_within_0p2_record")
         return out
     out["flags"] = flags
     if not within:
@@ -655,7 +667,6 @@ def p3_8(row: Row, locs, params, fault_any, demote: bool):
         out["verdict"] = "fail"
         return out
     demoted = []
-    undecided = False
     for t, n in evs:
         if not n.startswith(R.EVENT_REAPPROACH_START):
             demoted.append({"event": n, "demoted": False, "reason": "not a reapproach"})
@@ -666,17 +677,10 @@ def p3_8(row: Row, locs, params, fault_any, demote: bool):
             continue
         m = min_force_after(row, t, locs["first"] + 1.0)
         mn = m["min_N"][R.LEGS.index(leg)] if m else None
-        a = mn is not None and R.ge(mn, params["F_min_N"]) and not fault_any
-        b = mn is not None and R.ge(mn, R.P38_DEMOTE_ALT_N) and not fault_any
-        if a != b:
-            undecided = True
-        demoted.append({"event": n, "leg_min_N": mn, "demoted_377_Fmin": a, "demoted_alt_14p4kN": b,
-                        "demoted": a})
+        a = mn is not None and R.ge(mn, params["F_min_N"]) and not fault_any  # rev3 R3-G8
+        demoted.append({"event": n, "leg_min_N": mn, "demoted": a})
     out["demotion"] = demoted
-    if undecided:
-        out["verdict"] = "indeterminate"
-        out["reason"] = "377 (>= F_min) and 17279 (>= 14.4 kN) demotion thresholds disagree"
-    elif all(d["demoted"] for d in demoted):
+    if all(d["demoted"] for d in demoted):
         out["verdict"] = "flag"
         out["flags"] = ["P3-8_demoted"]
     else:
@@ -750,8 +754,11 @@ def d8_force(row: Row, params, rigid_nsc_hold: bool):
         slow = np.stack([np.convolve(row.F_inst[:, j], k, mode="same") for j in range(4)], axis=1)
         smin = float(slow[sel].min()) if sel.any() else None
         out["hold_check"] = {"min_in_8s": in8, "slow_min_N": smin}
-        if in8 and smin is not None and R.ge(smin, R.HOLD_SLOW_MIN_N):
+        thr = params["F_min_N"] + R.HOLD_SLOW_MARGIN_N
+        out["hold_check"]["slow_threshold_N"] = thr
+        if in8 and smin is not None and R.ge(smin, thr):
             out["verdict"] = "hold"
+            out["stop"] = "R40-2 hold: resolve with the d1 rules 8 L1 pair (spec 7155) or ask (rev3 R3-G6)"
     return out
 
 
@@ -869,6 +876,88 @@ def k1_classification(row: Row, las_off: bool = False):
     else:
         out["cls"] = "inactive"
     return out
+
+
+# ----------------------------------------------------------------------------- re-aggregation
+# rev3 R3-G1 (Q-C1 = A): monitor / event-logic items are re-aggregated from the per-item record in
+# result.json; path 2 applies the grade rules itself. Not an independent recomputation (disclosed).
+REAGG_ALIASES = {
+    "T4-0": ("T4-0", "T4_0", "t4_0"), "T4": ("T4", "t4"), "T5": ("T5", "t5"),
+    "J11_window": ("J11", "j11"), "J-P3": ("J-P3", "J_P3", "jp3", "j_p3"), "D2": ("D2", "d2"),
+    **{f"E-{k}": (f"E-{k}", f"E{k}", f"E_{k}") for k in range(1, 8)},
+}
+PASS_WORDS = {"pass", "passed", "ok", "true", "통과", "일치", "match"}
+FAIL_WORDS = {"fail", "failed", "false", "실패", "불일치", "미달", "mismatch"}
+
+
+def _find_key(o, names, path="", depth=0):
+    if depth > 8 or not isinstance(o, dict):
+        return None
+    for k, v in o.items():
+        if k in names:
+            return f"{path}.{k}" if path else k, v
+    for k, v in o.items():
+        if isinstance(v, dict):
+            hit = _find_key(v, names, f"{path}.{k}" if path else k, depth + 1)
+            if hit:
+                return hit
+    return None
+
+
+def _verdict_of(v):
+    if isinstance(v, bool):
+        return "pass" if v else "fail"
+    if isinstance(v, str):
+        s = v.strip().lower()
+        if s.startswith("flag"):
+            return "flag"
+        if s in PASS_WORDS:
+            return "pass"
+        if s in FAIL_WORDS:
+            return "fail"
+        return None
+    if isinstance(v, dict):
+        for k in ("verdict", "status", "result", "passed", "ok", "pass"):
+            if k in v and v[k] is not None:
+                r = _verdict_of(v[k])
+                if r:
+                    return r
+    return None
+
+
+def reagg_item(row: Row, item: str) -> dict:
+    hit = _find_key(row.result, set(REAGG_ALIASES[item]))
+    out = {"layer": "re-aggregated (rev3 R3-G1)", "item": item}
+    if hit is None:
+        out.update(verdict="indeterminate", source=None, reason="per-item record not found in result.json")
+        return out
+    path, v = hit
+    vv = _verdict_of(v)
+    out.update(source=path, recorded_verdict=vv)
+    out["verdict"] = vv if vv in ("pass", "fail", "flag") else "indeterminate"
+    if out["verdict"] == "indeterminate":
+        out["reason"] = "recorded value not readable as pass / fail / flag"
+    return out
+
+
+def extend_start_on(row: Row):
+    tp = (row.result.get("controller_meta") or {}).get("two_pressure") or {}
+    rule = tp.get("extend_start_rule")
+    return None if rule is None else rule == "tracked_bound"
+
+
+def reagg_table(rows: list) -> list:
+    """TABLE_REAGG (rev3 R3-G1): per re-aggregated item, rows, sources and verdict counts."""
+    tab = {}
+    for r in rows:
+        for k, it in r["items"].items():
+            if isinstance(it, dict) and str(it.get("layer", "")).startswith("re-aggregated"):
+                e = tab.setdefault(k, {"item": k, "rows": 0, "sources": set(), "verdicts": {}})
+                e["rows"] += 1
+                if it.get("source"):
+                    e["sources"].add(it["source"])
+                e["verdicts"][it["verdict"]] = e["verdicts"].get(it["verdict"], 0) + 1
+    return [{**e, "sources": sorted(e["sources"])} for e in tab.values()]
 
 
 def row_status(items: dict, judged_keys) -> str:

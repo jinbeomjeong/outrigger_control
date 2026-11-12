@@ -25,7 +25,7 @@ import p2_core as C  # noqa: E402
 import p2_rules as R  # noqa: E402
 
 BUNDLE_MODULES = {"C-1": "p2_b_c1", "C-2": "p2_b_c2", "C-3": "p2_b_c3", "C-4": "p2_b_c4",
-                  "C-5": "p2_b_c5", "C-8": "p2_b_c8"}
+                  "C-5": "p2_b_c5", "C-6C7": "p2_b_c67", "C-8": "p2_b_c8"}
 COMMON_FILES = ("p2_chrono.py", "p2_rules.py", "p2_core.py", "p2_kinds.py")
 
 
@@ -38,6 +38,15 @@ def tool_sha(bundle_module: str | None):
     per = {f: file_sha(HERE / f) for f in files}
     joined = "".join(f"{f} {per[f]}\n" for f in sorted(per))
     return hashlib.sha256(joined.encode()).hexdigest(), per
+
+
+INPUT_FILES = ("result.json", "step_series.npz", "r8_series.npz", "s8_series.npz", "pads.npz",
+               "controller_events.json", "series.npz", "flow_series.npz", "record/record.npz")
+
+
+def input_shas(d: Path) -> dict:
+    """rev3 R3-G2: names and sha256 of the raw files read for the row."""
+    return {f: file_sha(d / f) for f in INPUT_FILES if (d / f).exists()}
 
 
 def find_repo(start: Path) -> Path:
@@ -87,7 +96,9 @@ def case_criteria(case: dict):
 
 
 def is_gs(case: dict) -> bool:
-    return (case.get("r4368") or {}).get("role") == "gs" or "GS" in str(case.get("rep_bundle") or "")
+    """G-S rows and R_c probes are not judged (rules 11.2, 5.4-2)."""
+    role = (case.get("r4368") or {}).get("role")
+    return role in ("gs", "probe") or "GS" in str(case.get("rep_bundle") or "")
 
 
 def judge(args) -> int:
@@ -116,13 +127,15 @@ def judge(args) -> int:
                 continue
             d = resolve_dir(case, bp.parent, results_root, overrides)
             eng = engine_of(case["argv"])
-            row = C.load_row(d, eng, case["argv"])
+            loader = getattr(mod, "load", None)
+            row = loader(d, eng, case["argv"]) if loader else C.load_row(d, eng, case["argv"])
             kind = mod.kind_of(case)
             items, keys, notes, record = mod.judge_row(row, case, kind, params)
             st = C.row_status(items, keys)
             if record:
                 st = "기록 완료" if st != "판정 불가" else "기록 불완전"
             rows.append({"case": case["case"], "batch": str(bp), "folder": str(d), "engine": eng,
+                         "input_files_sha256": input_shas(d),
                          "kind": kind, "criteria_id": case_criteria(case), "d1_id": case.get("d1_id"),
                          "pool": case.get("pool"), "rc": case.get("rc"),
                          "status": st, "judged_keys": keys, "items": items, "notes": notes})

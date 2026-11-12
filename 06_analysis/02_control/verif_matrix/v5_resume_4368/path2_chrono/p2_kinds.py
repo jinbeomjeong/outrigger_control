@@ -129,6 +129,8 @@ def items_p3(row, params, ready_limit_s, ready_judged, g6=False, allow_stop=True
     keys = ["P3-1", "P3-2", "P3-3", "P3-4", "P3-5", "P3-8", "FAULT0", "identity", "K1_class"]
     if ready_judged:
         keys.append("P3-6")
+    elif items["P3-6"].get("within") is False:
+        items["P3-6"]["flag"] = "P3-6_over_limit (record, rev3 R3-G4)"
     if g6:
         t_R = C.first_phase_time(row, "ready")
         rel = None if t_R is None else t_R - row.loop_start
@@ -193,8 +195,15 @@ def bundle_status(rows, expected_count=None, record_bundle=False, extra_stops=No
         status_note = "record rows incomplete"
     else:
         status_note = None
+    n_recalc = sum(1 for r in rows for k in r["judged_keys"]
+                   if not str((r["items"].get(k) or {}).get("layer", "")).startswith("re-aggregated"))
+    reagg = C.reagg_table(rows)
     return {"status": status, "stops": stops, "rows_judged": len(judged), "rows_record": len(recs),
-            "row_status": {r["case"]: r["status"] for r in rows}, "note": status_note}
+            "row_status": {r["case"]: r["status"] for r in rows}, "note": status_note,
+            "recalculated_judged_items": n_recalc,
+            "reaggregated_items": {"names": [e["item"] for e in reagg],
+                                   "count": sum(e["rows"] for e in reagg)},
+            "TABLE_REAGG": reagg}
 
 
 def items_c5(row, params):
@@ -233,11 +242,43 @@ def items_c5(row, params):
         items["J11_lock_transitions"] = {"clause": "rev6 6 (record: plant lock events)",
                                          "lock_on": (d == 1).sum(axis=0).tolist(),
                                          "lock_off": (d == -1).sum(axis=0).tolist(), "verdict": "record"}
-    for k in ("T4-0", "T4", "T5", "J11_window", "J-P3", "D2_lock_window"):
-        items[k] = {"clause": "v5 rev6 4 / 6, rev8 J-P3, rev12 2.2", "verdict": "indeterminate",
-                    "reason": "not implemented in path 2 (needs an independent two-pressure monitor replay)"}
+    # rev3 R3-G1 layer 2: re-aggregated monitor items, grade rules applied here
+    keys = ["H-9", "K1_class"]
+    for k in ("T4-0", "T4", "T5", "J-P3", "D2"):
+        it = C.reagg_item(row, k)
+        it["clause"] = "v5 rev6 4 (T4-0 / T4 / T5), rev8 J-P3, rev6 389 D2, rev12 2.2"
+        if k == "J-P3":
+            on = C.extend_start_on(row)
+            it["extend_start_on"] = on
+            if on is False:
+                it.update(verdict="na", reason="③ off row (two_pressure.extend_start_rule != tracked_bound)")
+            elif on is None:
+                it.update(verdict="indeterminate", reason="two_pressure.extend_start_rule missing")
+        if k == "T4-0" and it["verdict"] == "fail":
+            it["stop"] = "T4-0 fail: tool defect, not judged (rev6 4.2 / 4.6)"
+        if k in ("T4", "T5") and it["verdict"] == "fail":
+            it["stop"] = "H-7 (rev6 4.6)"
+        items[k] = it
+        keys.append(k)
+    # J11 window (rev6 6, rev3 R3-C7): no actual fallback leg -> not_computed record
+    tp = (row.result.get("controller_meta") or {}).get("two_pressure") or {}
+    log = tp.get("fallback_lock_log")
+    if log is None:
+        items["J11_window"] = {"layer": "re-aggregated (rev3 R3-G1)", "verdict": "indeterminate",
+                               "reason": "controller_meta.two_pressure.fallback_lock_log missing"}
+    elif len(log) == 0:
+        items["J11_window"] = {"layer": "record", "verdict": "record", "status": "not_computed",
+                               "clause": "rev3 R3-C7: no actual fallback leg"}
+    else:
+        it = C.reagg_item(row, "J11_window")
+        it["fallback_lock_log_entries"] = len(log)
+        items["J11_window"] = it
+        if it["verdict"] == "fail":
+            it["stop"] = "H-7 (rev6 6, n_late > 0)"
+    keys.append("J11_window")
+    items["D2_fallback_events"] = {"clause": "rev6 389 (record)", "verdict": "record",
+                                   "count": len(C.events_named(row, "WARN_ROD_PRESSURE_FALLBACK"))}
     items["K1_class"] = dict(C.k1_classification(row, las_off=False), verdict="record")
     if items["K1_class"].get("cls") == "indeterminate":
         items["K1_class"]["verdict"] = "indeterminate"
-    keys = ["H-9", "T4-0", "T4", "T5", "J11_window", "J-P3", "D2_lock_window", "K1_class"]
     return items, keys, list(row.notes)

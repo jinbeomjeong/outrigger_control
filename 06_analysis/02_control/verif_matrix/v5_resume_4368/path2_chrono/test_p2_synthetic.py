@@ -226,12 +226,22 @@ def t_scm(tmp):
     it7, _, _ = K.items_p3(scm_row(tmp, sp7, "revoke"), PARAMS, 120.0, True)
     check("final LOC = last non-revoked; 424.8.1 revoked-LOC flag", it7["P3-2"]["t_loc_final_s"] == 27.0
           and "P3-2_late_loc_revoked" in it7["P3-2"].get("flags", []), it7["P3-2"])
+    check("revoked LOC under load recorded only (Q-17)", it7["P3-2"]["revoked_loc_under_load_record_s"] == [],
+          it7["P3-2"]["revoked_loc_under_load_record_s"])
+    sp7b = copy.deepcopy(sp7)
+    sp7b["events"] = [(24.5, C.R.EVENT_LOC), (25.0, "INFO_LOC_REVOKED"), (30.5, C.R.EVENT_LOC)]
+    sp7b["phases"] = [(8.1, "check"), (12.0, "touch"), (20.0, "level"), (31.0, "done"), (32.0, "ready")]
+    it7b, _, _ = K.items_p3(scm_row(tmp, sp7b, "revoke6"), PARAMS, 120.0, True)
+    check("condition 6: delay 7.5 s > 2 T_lim -> revoked flag refused, P3-2 fail (rev3 R3-G12)",
+          it7b["P3-2"]["verdict"] == "fail" and it7b["P3-2"]["late_loc_revoked"]["c6_total_delay_ok"] is False,
+          it7b["P3-2"])
 
     sp8 = copy.deepcopy(sp)
     sp8["phases"] = sp["phases"][:-1] + [(57.0, "ready")]
     it8, k8, _ = K.items_p3(scm_row(tmp, sp8, "short"), PARAMS, 120.0, True)
-    check("P3-4 window < 5 s -> window_short, row 판정 불가", "window_short" in it8["P3-4"].get("flags", [])
-          and C.row_status(it8, k8) == "판정 불가", it8["P3-4"])
+    check("P3-4 window < 5 s -> window_short FLAG, row not failed (rev3 R3-G7)",
+          "window_short" in it8["P3-4"].get("flags", []) and it8["P3-4"]["verdict"] == "flag"
+          and C.row_status({"P3-4": it8["P3-4"]}, ["P3-4"]) == "통과", it8["P3-4"])
     sp9 = copy.deepcopy(sp)
     sp9["creep_until"] = 40.0
     it9, _, _ = K.items_p3(scm_row(tmp, sp9, "creep"), PARAMS, 120.0, True)
@@ -247,8 +257,13 @@ def t_scm(tmp):
     sp11["events"] = [(24.5, C.R.EVENT_LOC), (21.0, "leg_reapproach_start:FL"), (21.5, "leg_reapproach_contact:FL")]
     sp11["recontacts"] = []
     it11, _, _ = K.items_p3(scm_row(tmp, sp11, "p38"), PARAMS, 120.0, True, g6=True)
-    check("P3-8 pre-LOC reapproach with min >= 14.4 kN -> 377 demoted flag", it11["P3-8"]["verdict"] == "flag",
+    check("P3-8 pre-LOC reapproach with min >= F_min -> 377 demoted flag", it11["P3-8"]["verdict"] == "flag",
           it11["P3-8"])
+    sp11c = copy.deepcopy(sp11)
+    sp11c["dips"] = [(0, 21.2, 21.3, FMIN + 100.0)]
+    it11c, _, _ = K.items_p3(scm_row(tmp, sp11c, "p38c"), PARAMS, 120.0, True, g6=True)
+    check("377 threshold is F_min (F_min + 100 N demotes, rev3 R3-G8)", it11c["P3-8"]["verdict"] == "flag",
+          it11c["P3-8"])
     it11b, _, _ = K.items_p3(scm_row(tmp, sp11, "p38b"), PARAMS, 120.0, True, g6=False)
     check("P3-8 without G6 demotion -> fail", it11b["P3-8"]["verdict"] == "fail", it11b["P3-8"])
 
@@ -288,10 +303,29 @@ def t_scm(tmp):
     it17, _, _, _ = B8.judge_row(scm_row(tmp, sp17, "oc5b"), {}, "OC5", PARAMS)
     check("C-8 m < F_min -> S-9", it17["m_7_4"].get("stop") == "S-9", it17["m_7_4"])
 
-    # C-5 H-9
+    # C-5 H-9 + re-aggregation (rev3 R3-G1)
     hr = K.items_c5(row, PARAMS)[0]
-    check("C-5 H-9 clips before t_lift only -> pass; T4 not built -> indeterminate",
+    check("C-5 H-9 clips before t_lift only -> pass; T4 without record -> indeterminate",
           hr["H-9"]["verdict"] == "pass" and hr["T4"]["verdict"] == "indeterminate", hr["H-9"])
+    sp18 = copy.deepcopy(sp)
+    d18 = write_scm(tmp / "reagg", sp18)
+    res = json.loads((d18 / "result.json").read_text(encoding="utf-8"))
+    res["v5_stage3_items"] = {"T4-0": {"verdict": "pass"}, "T4": {"passed": False}, "T5": "pass",
+                              "J-P3": {"status": "FLAG_x"}, "D2": {"ok": True}}
+    res["controller_meta"]["two_pressure"] = {"extend_start_rule": "tracked_bound", "fallback_lock_log": []}
+    (d18 / "result.json").write_text(json.dumps(res), encoding="utf-8")
+    it18, k18, _ = K.items_c5(C.load_row(d18, "scm", ["run_S9.py"]), PARAMS)
+    check("re-aggregation reads per-item records and applies grade rules (T4 fail -> H-7 stop)",
+          it18["T4"]["verdict"] == "fail" and it18["T4"].get("stop") == "H-7 (rev6 4.6)"
+          and it18["T5"]["verdict"] == "pass" and it18["J-P3"]["verdict"] == "flag"
+          and it18["D2"]["verdict"] == "pass" and it18["T4"]["source"] == "v5_stage3_items.T4",
+          {k: it18[k].get("verdict") for k in ("T4-0", "T4", "T5", "J-P3", "D2")})
+    check("J11 with empty fallback_lock_log -> not_computed record (rev3 R3-C7)",
+          it18["J11_window"]["status"] == "not_computed" and it18["J11_window"]["verdict"] == "record",
+          it18["J11_window"])
+    tab = C.reagg_table([{"items": it18, "judged_keys": k18}])
+    check("TABLE_REAGG lists the re-aggregated items", sorted(e["item"] for e in tab) == ["D2", "J-P3", "T4", "T4-0", "T5"],
+          tab)
 
 
 def t_l2b(tmp):
@@ -322,6 +356,31 @@ def t_l2b(tmp):
     row6 = C.load_row(write_l2b(tmp / "l2b_k1"), "l2b", bad_argv)
     it6 = K.identity_l2b(row6, PARAMS)
     check("argv --k1-order-gate -> identity 판정 불가 (R2-3 / S-3)", it6["verdict"] == "indeterminate", it6)
+
+
+def t_c67(tmp):
+    if not (HERE / "p2_b_c67.py").exists():
+        print("SKIP C-6/C-7 tests (p2_b_c67.py not in this commit)")
+        return
+    import p2_b_c67 as B
+    d = tmp / "ol"
+    d.mkdir(exist_ok=True)
+    vmax = PARAMS["v_max_m_s"]
+    t = np.round(np.arange(8.0001, 30.0 + 1e-9, 0.001), 6)
+    cols = ["t"] + [f"u_{l}" for l in R.LEGS] + [f"v_{l}" for l in R.LEGS]
+    u = np.where(t[:, None] > 9.0, vmax, 0.01 * vmax) * np.ones((1, 4))
+    v = u * np.array([0.9, 0.8, 0.7, 0.6])[None, :]
+    np.savez(d / "flow_series.npz", rows=np.c_[t, u, v], columns=np.array(cols))
+    ts = np.round(np.arange(0.001, 30.0 + 1e-9, 0.001), 6)
+    sm = np.outer(ts, np.array([0.5, 0.6, 0.7, 0.8]) * vmax)
+    np.savez(d / "series.npz", t_s=ts, s_motor_m=sm)
+    sr = B.speed_ratios(d, vmax)
+    check("R2-4 r_vu = median v/u in window with u >= 0.1 v_max", np.allclose(sr["r_vu"], [0.9, 0.8, 0.7, 0.6]), sr["r_vu"])
+    check("R2-4 r_v = s_motor slope 10..20 s / v_max", np.allclose(sr["r_v"], [0.5, 0.6, 0.7, 0.8], rtol=1e-9), sr["r_v"])
+    an, sha = B.load_analyse()
+    check("openloop_compare.analyse loaded without running its driver", callable(an) and len(sha) == 64, sha)
+    check("C-6/C-7 kinds from names", [B.kind_of({"case": n}) for n in
+                                       ("P3a_G1_B_VB_prop", "P3a_G1_B_VB_FB", "P3a_G1_B_V0_FB")] == ["C-6", "C-7a", "C-7b"])
 
 
 def t_seal(tmp):
@@ -390,6 +449,7 @@ def main():
     t_classify()
     t_scm(tmp)
     t_l2b(tmp)
+    t_c67(tmp)
     t_seal(tmp)
     t_cli(tmp)
     n_fail = sum(1 for r in RESULTS if not r["ok"])
