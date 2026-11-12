@@ -209,41 +209,50 @@ def test_rev3_r0_v0_tag_empty_string_is_h_t3_3():
     assert "H-T3-3" in stop_codes(f)
 
 
-def ident(head="abc", c2="c", env=None, clean=True):
-    env = env or {"MKL_NUM_THREADS": "1", "OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1", "NUMBA_NUM_THREADS": "1",
-                  "MKL_THREADING_LAYER": "TBB"}
-    rec = {"head": head, "is_clean": clean, "status_porcelain": "", "code_diff_sha256": "d", "c2_sha256": c2,
-           "tools_sha256": "t", "env": env}
-    return {"start": dict(rec), "end": dict(rec)}
+def ident(head="abc", clean=True, threads=None, seals_ok=True):
+    th = threads or {"MKL_NUM_THREADS": "1", "OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1",
+                     "NUMBA_NUM_THREADS": "1", "MKL_THREADING_LAYER": "TBB"}
+    rec = {"python": "x", "threads": th, "affinity_mask": "0xff", "git": {"head": head, "is_clean": clean,
+           "status_porcelain": ""}, "rules_seals": {"v5_resume_4368_rules.md": {"ok": seals_ok}}}
+    return {"start": rec, "end": rec}
 
 
-def test_rev4_k0_identity(tmp_path):
+def outputs(tmp_path, idents, line_ids=None):
     paths = {}
     for n in ("R-0", "R-0K", "T-3K"):
         p = tmp_path / f"{n}.jsonl"
-        p.write_text("", "utf-8")
-        (tmp_path / f"{n}.jsonl.identity.json").write_text(json.dumps(ident()), "utf-8")
+        li = (line_ids or {}).get(n, {"git_head": "abc", "c2_sha256": "c", "tool_sha256": "t", "threads": 1})
+        p.write_text(json.dumps({"identity": li, "k": 1}) + "\n" + json.dumps({"identity": li, "k": 2}) + "\n", "utf-8")
+        (tmp_path / f"{n}.jsonl.identity.json").write_text(json.dumps(idents.get(n, ident())), "utf-8")
         paths[n] = str(p)
+    steps = tmp_path / "steps_h0.json"
+    steps.write_text(json.dumps({"env": {"MKL_THREADING_LAYER": "TBB"}}), "utf-8")
+    return paths, str(steps)
+
+
+def test_rev6_k0_identity(tmp_path):
+    paths, steps = outputs(tmp_path, {})
     fnd = core.Findings()
-    out = t3.identity_check(paths, fnd)
-    assert fnd.status() == "pass" and out["differing_keys"] == []
-    (tmp_path / "T-3K.jsonl.identity.json").write_text(json.dumps(ident(head="xyz")), "utf-8")
+    out = t3.identity_check(paths, fnd, steps=(steps,))
+    assert fnd.status() == "pass" and out["line_identity_same_across_outputs"]
     fnd = core.Findings()
-    t3.identity_check(paths, fnd)
-    assert "H-T3-3" in stop_codes(fnd)
-    bad = ident()
-    bad["start"]["env"]["OUTRIGGER_LOC_SHADOW"] = "1"
-    bad["start"]["env"]["OMP_NUM_THREADS"] = "4"
-    (tmp_path / "T-3K.jsonl.identity.json").write_text(json.dumps(bad), "utf-8")
-    fnd = core.Findings()
-    out = t3.identity_check(paths, fnd)
-    assert out["T-3K"]["checks"]["threads"] is False and out["T-3K"]["checks"]["loc_shadow_env"] is False
-    dirty = ident(clean=False)
-    dirty["start"]["status_porcelain"] = " M 06_analysis/x.md"
-    (tmp_path / "T-3K.jsonl.identity.json").write_text(json.dumps(dirty), "utf-8")
-    fnd = core.Findings()
-    t3.identity_check(paths, fnd)
+    t3.identity_check(paths, fnd)                       # no step files: env item undecidable
     assert fnd.status() == "undecidable"
+    paths, steps = outputs(tmp_path, {"T-3K": ident(head="xyz")}, )
     fnd = core.Findings()
-    t3.identity_check(paths, fnd, allowed_dirty=("06_analysis/x.md",))
-    assert fnd.status() == "pass"
+    t3.identity_check(paths, fnd, git_at_start="abc", steps=(steps,))
+    assert "H-T3-3" in stop_codes(fnd)
+    paths, steps = outputs(tmp_path, {"R-0": ident(seals_ok=False)})
+    fnd = core.Findings()
+    out = t3.identity_check(paths, fnd, steps=(steps,))
+    assert out["R-0"]["checks"]["rules_seals"] is False
+    paths, steps = outputs(tmp_path, {}, {"T-3K": {"git_head": "abc", "c2_sha256": "OTHER", "tool_sha256": "t"}})
+    fnd = core.Findings()
+    t3.identity_check(paths, fnd, steps=(steps,))
+    assert "H-T3-3" in stop_codes(fnd)
+    Path(steps).write_text(json.dumps({"env": {"OUTRIGGER_LOC_SHADOW": "1"}}), "utf-8")
+    paths, _ = outputs(tmp_path, {})
+    Path(steps).write_text(json.dumps({"env": {"OUTRIGGER_LOC_SHADOW": "1"}}), "utf-8")
+    fnd = core.Findings()
+    t3.identity_check(paths, fnd, steps=(steps,))
+    assert "H-T3-3" in stop_codes(fnd)

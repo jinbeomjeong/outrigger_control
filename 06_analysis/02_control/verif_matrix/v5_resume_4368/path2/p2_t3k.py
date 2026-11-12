@@ -3,7 +3,8 @@
 Rules: ``las_targeted_rules.md`` (00b48fd8...) and its addenda rev1, rev2, rev3 (+ key list rev3_keys), rev4,
 rev4a, rev4b, rev4c, rev5 (+ R-0K key list) - eleven sealed files (rev5 1 #5), read through the 436.8 rules
 (5.1 H-0 "rev5 그대로", S-14) and rev3 (dad8dfa6...) R3-D1 (dg3 key / folder from the record), R3-D2 (R-0 V0
-tag absent or null), R3-D3 (K-0 from .identity.json; H-T3-0 pre-run gate not two-path), R3-D4 (1e-9 tolerance); rev4 (7ea87a30...) R4-C4 (K-0 field table of .identity.json start / end). Author: dynamics-expert (path 2, second author). Path-1 tools (``las_judge``,
+tag absent or null), R3-D3 (K-0 from .identity.json; H-T3-0 pre-run gate not two-path), R3-D4 (1e-9 tolerance); rev4 (7ea87a30...) R4-C4 superseded by rev6 (809e5639...) R6-C2 (K-0 from run_identity git / threads / rules_seals and the
+outputs' own line identity). Author: dynamics-expert (path 2, second author). Path-1 tools (``las_judge``,
 ``las_h7``, ``las_t3*`` judging parts) and their outputs were not opened (436.8 9.2).
 
 Definitions used (rule sentences; the line fields are the stored ``v5/d1.jsonl`` names):
@@ -329,11 +330,13 @@ def dg3_hash(r):
 
 
 THREAD_ENV = ("MKL_NUM_THREADS", "OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "NUMBA_NUM_THREADS")
-C2_REL = "03_src/outrigger_sim/control/c2.py"
+LINE_IDENTITY_KEYS = ("git_head", "c2_sha256", "tool_sha256", "sha256", "threads", "workers", "affinity",
+                      "affinity_mask")   # rev3 K-0 line / header identity (R6-C2 table, controller / tool row)
+SHADOW_ENV = core.SHADOW_ENV
 
 
 def identity_of(path):
-    """rev4 R4-C4: the run's ``.identity.json`` with ``start`` and ``end`` records. (dict or None, file)."""
+    """The run's ``.identity.json`` (run_identity ``start`` / ``end`` records). (dict or None, file)."""
     p = Path(path)
     for c in (Path(str(p) + ".identity.json"), p.with_suffix(".identity.json")):
         if c.is_file():
@@ -341,74 +344,97 @@ def identity_of(path):
     return None, None
 
 
-def c2_sha_at(repo, commit):
-    """sha256 of c2.py at ``commit`` (git show, read only); None if git is not available."""
-    import subprocess   # noqa: PLC0415
-    try:
-        b = subprocess.run(["git", "-C", str(repo), "show", f"{commit}:{C2_REL}"], capture_output=True, check=True).stdout
-    except (OSError, subprocess.CalledProcessError):
-        return None
-    return hashlib.sha256(b).hexdigest()
+def line_identity(rec):
+    """rev3 K-0 identity of one output line / header (top level or an ``identity`` block)."""
+    src = rec.get("identity") if isinstance(rec.get("identity"), dict) else rec
+    return {k: src[k] for k in LINE_IDENTITY_KEYS if k in src}
 
 
-def identity_check(paths, fnd, repo=None, git_at_start=None, allowed_dirty=()):
-    """K-0 (rev3, rev5 2.2) with the rev4 R4-C4 field table; the three outputs must agree (else H-T3-3)."""
-    got, cmp = {}, {}
+def output_identity(path):
+    """(identity common to every line incl. a header, or None; problem or None) of one jsonl output."""
+    ids = [line_identity(r) for r in core.read_jsonl(path)]
+    ids = [x for x in ids if x]
+    if not ids:
+        return None, "no line / header identity fields"
+    first = json.dumps(ids[0], sort_keys=True, default=str)
+    if any(json.dumps(x, sort_keys=True, default=str) != first for x in ids[1:]):
+        return ids[0], "line identities differ inside the output"
+    return ids[0], None
+
+
+def identity_check(paths, fnd, repo=None, git_at_start=None, allowed_dirty=(), steps=()):
+    """K-0 with the rev6 R6-C2 table: .identity.json start / end git.head (= git_at_start), git.is_clean or
+    status_porcelain within the audit allowance, threads (four = 1, MKL_THREADING_LAYER = TBB), rules_seals
+    all ok; controller / tool sha from the outputs' own line / header identity (same in every line and in the
+    three outputs); OUTRIGGER_LOC_SHADOW by the RV1-9 method (step files given with --steps)."""
+    got, line_ids = {}, {}
     for name, p in paths.items():
-        ident, used = identity_of(p)
-        row = {"file": used, "checks": {}}
+        row = {"checks": {}}
         got[name] = row
-        if ident is None:
-            fnd.undec(f"K-0:{name}", "no .identity.json next to the output (R3-D3)")
-            continue
-        s, e = ident.get("start"), ident.get("end")
-        if not isinstance(s, dict) or not isinstance(e, dict):
-            fnd.undec(f"K-0:{name}", "identity without start / end records (R4-C4)")
-            continue
         ck = row["checks"]
 
-        def need(label, ok, why):
+        def need(label, ok, why=""):
             ck[label] = ok
             if ok is None:
-                fnd.undec(f"K-0:{name}", f"{label}: field missing (R4-C4)")
+                fnd.undec(f"K-0:{name}", f"{label}: source missing (R6-C2)")
             elif ok is False:
                 fnd.stop("H-T3-3", f"K-0:{name}", f"{label}: {why}")
 
-        h0, h1 = s.get("head"), e.get("head")
-        need("head", None if h0 is None or h1 is None else (h0 == h1 and (git_at_start is None or
-             str(h0).startswith(git_at_start) or str(git_at_start).startswith(str(h0)))), f"{h0} / {h1} / git_at_start {git_at_start}")
-        if s.get("is_clean") is True:
-            ck["tree"] = True
-        elif "status_porcelain" in s:
-            dirty = [ln[3:].strip() for ln in str(s.get("status_porcelain") or "").splitlines() if ln.strip()]
-            extra = [x for x in dirty if x not in allowed_dirty]
-            ck["tree"] = not extra
-            if extra:
-                fnd.undec(f"K-0:{name}", f"dirty files not in the pre-run audit allowance: {extra[:5]}")
+        ident, used = identity_of(p)
+        row["file"] = used
+        s = ident.get("start") if isinstance(ident, dict) else None
+        e = ident.get("end") if isinstance(ident, dict) else None
+        if not isinstance(s, dict) or not isinstance(e, dict):
+            need("identity_file", None)
         else:
-            need("tree", None, "")
-        for lab, key in (("code_diff", "code_diff_sha256"), ("tools", "tools_sha256")):
-            a, b = s.get(key), e.get(key)
-            need(lab, None if a is None or b is None else a == b, f"start {a} != end {b}")
-        a, b = s.get("c2_sha256"), e.get("c2_sha256")
-        want = c2_sha_at(repo, git_at_start) if (repo is not None and git_at_start) else None
-        need("c2", None if a is None or b is None else (a == b and (want is None or a == want)), f"{a} / {b} / at git_at_start {want}")
-        if want is None:
-            ck["c2_vs_git_at_start"] = "not checked (git_at_start not given)"
-        env = s.get("env") if isinstance(s.get("env"), dict) else None
-        if env is None:
-            need("threads", None, "")
+            h0, h1 = core.dig(s, "git.head", None), core.dig(e, "git.head", None)
+            need("head", None if h0 is None or h1 is None else (h0 == h1 and (git_at_start is None or
+                 str(h0).startswith(git_at_start) or str(git_at_start).startswith(str(h0)))),
+                 f"{h0} / {h1} / git_at_start {git_at_start}")
+            if git_at_start is None:
+                ck["head_vs_git_at_start"] = "not checked (--git-at-start not given)"
+            if core.dig(s, "git.is_clean", None) is True:
+                ck["tree"] = True
+            elif isinstance(core.dig(s, "git.status_porcelain", None), str):
+                dirty = [ln[3:].strip() for ln in s["git"]["status_porcelain"].splitlines() if ln.strip()]
+                extra = [x for x in dirty if x not in allowed_dirty]
+                ck["tree"] = not extra
+                if extra:
+                    fnd.undec(f"K-0:{name}", f"dirty files not in the pre-run audit allowance: {extra[:5]}")
+            else:
+                need("tree", None)
+            th = s.get("threads")
+            need("threads", None if not isinstance(th, dict) else
+                 (all(str(th.get(k)) == "1" for k in THREAD_ENV) and th.get("MKL_THREADING_LAYER") == "TBB"),
+                 {k: (th or {}).get(k) for k in THREAD_ENV + ("MKL_THREADING_LAYER",)})
+            seals = s.get("rules_seals")
+            if isinstance(seals, dict):
+                vals = list(seals.values())
+            else:
+                vals = seals if isinstance(seals, list) else None
+            need("rules_seals", None if not vals else all(
+                (v.get("ok") is True) if isinstance(v, dict) else (v is True) for v in vals), "a rules seal not ok")
+        lid, prob = output_identity(p)
+        if lid is None:
+            need("line_identity", None)
+        elif prob:
+            need("line_identity", False, prob)
         else:
-            need("threads", all(str(env.get(k)) == "1" for k in THREAD_ENV) and env.get("MKL_THREADING_LAYER") == "TBB",
-                 {k: env.get(k) for k in THREAD_ENV + ("MKL_THREADING_LAYER",)})
-            need("loc_shadow_env", not env.get("OUTRIGGER_LOC_SHADOW"), f"OUTRIGGER_LOC_SHADOW = {env.get('OUTRIGGER_LOC_SHADOW')!r}")
-            cmp[name] = {"head": h0, "code_diff": s.get("code_diff_sha256"), "c2": a, "tools": s.get("tools_sha256"),
-                         "env": {k: env.get(k) for k in THREAD_ENV + ("MKL_THREADING_LAYER",)}}
-    if len(cmp) >= 2:
-        diff = sorted(k for k in next(iter(cmp.values())) if len({json.dumps(v[k], sort_keys=True) for v in cmp.values()}) > 1)
-        got["differing_keys"] = diff
-        if diff:
-            fnd.stop("H-T3-3", "K-0", f"identity differs between R-0 / R-0K / T-3K: {diff}")
+            ck["line_identity"] = True
+            line_ids[name] = lid
+    if len(line_ids) >= 2:
+        vals = {json.dumps(v, sort_keys=True, default=str) for v in line_ids.values()}
+        got["line_identity_same_across_outputs"] = len(vals) == 1
+        if len(vals) > 1:
+            fnd.stop("H-T3-3", "K-0", "controller / tool line identity differs between R-0 / R-0K / T-3K")
+    if steps:
+        hit = [sp for sp in steps if SHADOW_ENV in Path(sp).read_text("utf-8")]
+        got["loc_shadow_env"] = {"step_files": list(steps), "files_with_name": hit}
+        if hit:
+            fnd.stop("H-T3-3", "K-0", f"{SHADOW_ENV} in step files {hit} (436.8 4.2)")
+    else:
+        got["loc_shadow_env"] = "판정 불가: step files not given (RV1-9 method)"
+        fnd.undec("K-0", f"{SHADOW_ENV}: step files not given (--steps, RV1-9)")
     return got
 
 
@@ -633,6 +659,7 @@ def main(argv=None):
     ap.add_argument("--d1", default=None, help="stored v5/d1.jsonl (rev4a 1 baseline check, G6-2_loc / FAULT)")
     ap.add_argument("--git-at-start", default=None, help="git_at_start commit for the K-0 head / c2.py check (R4-C4)")
     ap.add_argument("--allowed-dirty", action="append", default=[], help="file allowed dirty by the pre-run audit")
+    ap.add_argument("--steps", action="append", default=[], help="step file(s) steps_*.json for the RV1-9 env check")
     args = ap.parse_args(argv)
     repo = Path(args.repo) if args.repo else _HERE.parents[4]
     tool_sha = core.sha256_file(Path(__file__))
@@ -661,7 +688,7 @@ def main(argv=None):
             body, f = recount(repo, core.read_jsonl(args.r0), core.read_jsonl(args.r0k), core.read_jsonl(args.t3),
                               dg3(args.dg3_r0), dg3(args.dg3_t3), d1, is_p3)
             body["K-0"] = identity_check({"R-0": args.r0, "R-0K": args.r0k, "T-3K": args.t3}, f, repo,
-                                         args.git_at_start, tuple(args.allowed_dirty))
+                                         args.git_at_start, tuple(args.allowed_dirty), tuple(args.steps))
             body["H-T3-0_pre_run"] = "실행 전 관문: 두 경로 대상 아님(R3-D3). 실행 전 감사·경로 1 기록 경로를 판정서에 적는다"
             codes = sorted({s["code"] for s in f.stops}, key=lambda c: ORDER.index(c) if c in ORDER else 99)
             first = codes[0] if codes else None
