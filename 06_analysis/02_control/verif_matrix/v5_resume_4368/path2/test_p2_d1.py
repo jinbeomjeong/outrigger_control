@@ -18,12 +18,15 @@ def run(group="H-R-0", level="middle", slope="roll+op", setting="VB", eps=0.0, K
         Ffirst=50000.0, stroke=0.0, base="rigid", sink=None, holds=0, att=0.0, F_override=None):
     row = f"D1|{group}|{base}|{level}|{slope}|K{int(K)}|{(sink or {}).get('name')}@{(sink or {}).get('leg')}"
     return {"row": row, "group": group, "level": level, "slope": slope, "base": base, "K": K, "sink": sink,
-            "patch_leg": None, "tags": [], "setting": setting, "eps": eps, "values": {}, "final_phase": "ready",
-            "error": None, "T_lim_p2": 120.0, "missing": [],
+            "patch_leg": None, "tags": ["ASSUMED_BOUNDARY"] if (group == "H-S-0" and slope == "fup-rec") else [],
+            "setting": setting, "eps": eps, "values": {"times": {"t_first_ready_s": None}}, "final_phase": "ready",
+            "error": None, "T_lim_p2": 120.0, "missing": [], "raw": {"phases": [["check", 0.0]]},
             "d1": {"verdict": verdict, "F_judged_min_N": F_override if F_override is not None else F * (1 + m),
                    "F_first_level_min_N": Ffirst, "t_ready_s": None, "t_ready_limit_s": 120.0, "att_judged_deg": att,
                    "stroke_max_m": stroke, "dsb75_events": [{"name": "INFO_DIFF_SINK_HOLD"}] * holds, "j_p3": "pass",
-                   "fail_items": [], "key": row, "imu_R_c": 0.0}}
+                   "fail_items": ["P3-5"] if verdict == "fail" else [], "items": {"P3-5": verdict != "fail"},
+                   "harness_class": "stroke_limited_stop" if verdict == "allowed_stop" else None,
+                   "key": row, "imu_R_c": 0.0}}
 
 
 def s1_runs(mp, mm, gp=None, gm=None, fp=None, fm=None):
@@ -145,3 +148,43 @@ def test_g2_missing_fields(tmp_path):
     out, code = d1.recount([r], 0)
     assert code == 2 and "G-2" in out["stop_codes"]
     json.dumps(out, default=str)
+
+
+def test_rev3_a1_exception_by_tag():
+    r_vb = run(group="H-S-0", slope="fup-rec", verdict="fail", base="J1")
+    r_v0 = run(group="H-S-0", slope="fup-rec", setting="V0", base="J1")
+    r_vb["tags"] = []                       # tag absent: not the exception, G-3 stop
+    out, _ = d1.recount([r_vb, r_v0], 0)
+    assert any(s["code"] == "G-3" for s in out["stops"])
+    r_vb["tags"] = ["ASSUMED_BOUNDARY"]
+    out, _ = d1.recount([r_vb, r_v0], 0)
+    assert not any(s["code"] == "G-3" for s in out["stops"]) and out["gates"]["G-3"][0]["exception_fup_rec"]
+
+
+def test_rev3_a2_reaggregate():
+    r = run(group="H-S-0", base="J1", verdict="allowed_stop")
+    r["d1"]["fail_items"] = ["P3-5", "SL-1"]
+    r["d1"]["items"] = {"P3-5": False, "SL-1": False}
+    assert d1.reaggregate(r)["status"] == "same"
+    r = run(verdict="pass")
+    r["d1"]["items"] = {"P3-8": False}      # false item, no fail_items entry, no demotion record
+    assert d1.reaggregate(r)["status"].startswith("false item")
+    r["d1"]["P3-8_demoted"] = True
+    assert d1.reaggregate(r)["status"] == "same"
+    r = run(verdict="pass")
+    r["d1"]["fail_items"] = ["P3-5"]
+    assert d1.reaggregate(r)["status"] == "rebuilt verdict differs"
+
+
+def test_rev3_a3_ready_origin_and_crosscheck():
+    r = run()
+    r["values"] = {"times": {"t_first_ready_s": 50.0}}
+    r["d1"]["t_ready_s"] = 50.0
+    assert d1.ready_check(r)["status"] == "ok"
+    r["d1"]["t_ready_s"] = 50.1
+    assert d1.ready_check(r)["status"].startswith("d1.t_ready_s differs")
+    r["d1"]["t_ready_s"] = 50.0
+    r["raw"] = {"phases": [["check", 0.3]]}
+    assert "> 0.1 s" in d1.ready_check(r)["status"]
+    r["raw"] = {}
+    assert d1.ready_check(r)["status"].startswith("phase record missing")
