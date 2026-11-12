@@ -946,3 +946,43 @@ def test_input_error_exit_code(tmp_path) -> None:
     argv = ["constants", "--harness", str(tmp_path / "absent.jsonl"),
             "--out", str(tmp_path / "c.json")]
     assert bm.main(argv) == bm.EXIT_INPUT
+
+
+def test_d_h_uses_the_harness_d1_key_as_it_is(tmp_path, monkeypatch) -> None:
+    """Rules 1.1 P7_REF: the key is the line's ``d1.key`` (``<row key>|<setting>|e<eps>``),
+    matched to the harness ``d1_key`` as stored (no second setting / eps suffix)."""
+    key = "D1|H-S-0|J2|B|fdown-rec|K1|VB|e0"
+    p7 = tmp_path / "p7.jsonl"
+    lines = [{"s2d": {"candidate": "P0"}, "d1": {"key": key}, "commands_sha256": "abc"},
+             {"s2d": {"candidate": "P1"}, "d1": {"key": key}, "commands_sha256": "zzz"}]
+    p7.write_text("".join(json.dumps(x) + "\n" for x in lines), encoding="utf-8")
+    monkeypatch.setattr(bm, "P7_REF_SHA256", bm.sha256_file(p7))
+    run = bm.HarnessRun({"d1_key": key, "setting": "VB", "eps": 0.0,
+                         "commands_sha256": "abc"}, None)
+    graded = bm.grade_D_h({"H-P|C1|VB|e0": run}, p7)
+    assert graded["grade"] == "K-SAME" and graded["per_run"] == {"H-P|C1|VB|e0": "K-SAME"}
+    run.line["commands_sha256"] = "other"
+    assert bm.grade_D_h({"H-P|C1|VB|e0": run}, p7)["grade"] == "K-DIFF"
+
+
+def test_chrono_final_phase_from_the_phases_list() -> None:
+    """G-S result.json has no ``final_phase``: the last ``phases`` entry gives the V-1 end."""
+    result = {"phases": [{"t_s": 8.1, "phase": "check"}, {"t_s": 40.0, "phase": "fault"}]}
+    assert bm._chrono_final_phase(result) == "fault"
+    assert "fault" in bm.FAULT_PHASES
+    assert bm._chrono_final_phase({"final_phase": "ready", "phases": []}) == "ready"
+    assert bm._chrono_final_phase({}) is None
+
+
+def test_e2e_fault_end_before_duration_is_a_normal_end(e2e) -> None:
+    path = e2e["batch"] / bm.CHRONO_ROWS["C3"].case / "result.json"
+    result = json.loads(path.read_text(encoding="utf-8"))
+    result.pop("final_phase")
+    result["phases"] = [{"t_s": 8.1, "phase": "check"}, {"t_s": 150.0, "phase": "fault"}]
+    path.write_text(json.dumps(result), encoding="utf-8")
+    record = e2e["batch"] / bm.CHRONO_ROWS["C3"].case / "record" / "record.npz"
+    with np.load(record, allow_pickle=False) as data:
+        arrays = {k: data[k][:1500] for k in data.files}  # ends at 150 s < 160 s
+    np.savez(record, **arrays)
+    _, data = _judge(e2e)
+    assert data["row_states"]["C3"]["status"] == "VALID"
