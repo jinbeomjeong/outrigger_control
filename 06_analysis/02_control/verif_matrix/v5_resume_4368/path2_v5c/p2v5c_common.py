@@ -37,8 +37,10 @@ P2_FALLBACK = Path(r"C:\workspace\outrigger_control\.claude\worktrees\agent-a2e8
 # before: p2_v5j 559bd34f... (bf52c89), p2_4368 1294dc4e...
 # rev4 versions (dynamics-expert commits 6b4ebcc / dc54d25: rev4 seal, R4-C5 case_floor_deg in J3);
 # rev3 versions were p2_v5j ceb75ee9..., p2_4368 cf0b643c...
-P2_V5J_SHA = "a16751517bc64fb99e702ffeea21c9eb0dcd361b3b08f7a57e370afdb12b5146"
-P2_CORE_SHA = "71b870604aa4b0652ab306bb940dd34c2dc597cddf9a3e9bfcd77be5bf8cf9cc"
+# rev5 / rev6 versions (dynamics-expert commits 7b1e2e8 / d49068e; M-3: LS J11 n_late > 0 -> L-e);
+# rev4 versions were p2_v5j a1675151..., p2_4368 71b87060...
+P2_V5J_SHA = "5772624cb28e414ceeb38af3eb6d386a2e0a78857db8a5ea9a5d3cd2ec5f7d8b"
+P2_CORE_SHA = "dc631509b90296d842ec382c911f6a0abfd8944e170802386221eb2a1f315a27"
 
 EXIT = {"pass": 0, "fail": 1, "undecidable": 1, "stop": 2}
 
@@ -48,6 +50,8 @@ _VMR = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_"
 LATER_RULES = (   # sealed addenda checked here (raw sha, LF, no BOM, .sha256 record)
     (_VMR + "rev3.md", "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557", _VMR + "rev3.sha256"),
     (_VMR + "rev4.md", "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b", _VMR + "rev4.sha256"),
+    (_VMR + "rev5.md", "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca", _VMR + "rev5.sha256"),
+    (_VMR + "rev6.md", "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9", _VMR + "rev6.sha256"),
 )
 REV3_REL, REV3_SHA = LATER_RULES[0][0], LATER_RULES[0][1]
 
@@ -79,6 +83,17 @@ def git_commits_since(repo, base, head, rel):
     if out.returncode != 0:
         return None
     return [x for x in out.stdout.split() if x]
+
+
+def git_diff_stat(repo, base, head, rel):
+    """``git diff --stat base..head -- rel`` text (read-only); None if git fails."""
+    import subprocess  # noqa: PLC0415
+    try:
+        out = subprocess.run(["git", "-C", str(repo), "diff", "--stat", f"{base}..{head}", "--", rel],
+                             capture_output=True, text=True, timeout=60, stdin=subprocess.DEVNULL)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return out.stdout.strip() if out.returncode == 0 else None
 
 
 def git_head(repo):

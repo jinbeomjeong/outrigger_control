@@ -148,6 +148,7 @@ def f5_clause(ln, core):
 
 T_S = 0.1   # 436.8 2: compare times as n = round(t / T_s)
 LIFT_AFTER_STOP_PATH = "values.sa4.lift_after_stop_ms"   # rev4 R4-B1 (rev3 Q-S6 "정지 뒤 부상 0")
+AFTER_STOP_FMIN_PATH = "values.sa4.F_min_after_stop_N"   # rev6 R6-C1 / F-9
 
 
 def _events(ln):
@@ -173,16 +174,16 @@ def sa4_rest(ln, core):
     out["fault_stroke_end_0"] = None if ev is None else not any(n.startswith("FAULT_STROKE_END") for n in names)
     tr = core.dig(ln, "values.times.t_first_ready_s", core.MISSING)
     out["ready_0"] = None if tr is core.MISSING else tr is None
-    stop_t = core.num(core.dig(ln, "soil_stop_crawler.stop_t_s", None))
-    mn = core.num(core.dig(ln, "values.forces.after_liftoff.min_kN", None))
-    mt = core.num(core.dig(ln, "values.forces.after_liftoff.t_s", None))
-    fmin = core.F_MIN_N / 1000.0
-    if mn is not None and core.t_ge(mn, fmin):
-        out["after_stop_Fmin"] = True          # after-liftoff minimum covers the post-stop part
-    elif mn is not None and mt is not None and stop_t is not None and mt >= stop_t:
-        out["after_stop_Fmin"] = False
+    # rev6 R6-C1 1: F-9 values.sa4.F_min_after_stop_N (per leg, N); without it the after-liftoff
+    # minimum >= F_min is a sufficient condition, else undecidable
+    f9 = core.dig(ln, AFTER_STOP_FMIN_PATH, None)
+    if isinstance(f9, list) and len(f9) == 4 and all(core.num(x) is not None for x in f9):
+        out["after_stop_Fmin"] = core.t_ge(min(core.num(x) for x in f9), core.F_MIN_N)
+        out["after_stop_Fmin_source"] = "F-9"
     else:
-        out["after_stop_Fmin"] = None
+        mn = core.num(core.dig(ln, "values.forces.after_liftoff.min_kN", None))
+        out["after_stop_Fmin"] = True if (mn is not None and core.t_ge(mn, core.F_MIN_N / 1000.0)) else None
+        out["after_stop_Fmin_source"] = "after_liftoff (sufficient)"
     lv = core.dig(ln, LIFT_AFTER_STOP_PATH, None)   # rev4 R4-B1: per-leg ms (FL, FR, RL, RR)
     if isinstance(lv, list) and len(lv) == 4 and all(core.num(x) is not None for x in lv):
         out["lift_after_stop_0"] = all(core.num(x) == 0 for x in lv)
