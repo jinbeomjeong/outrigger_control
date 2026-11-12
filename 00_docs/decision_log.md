@@ -737,6 +737,15 @@
             - 판정 후 감사 `k2_post_audit.md`(차단 2)
             - 실행 전 감사 5회(`k2/prelaunch/k2_prerun_audit*.md`)
           - 다음 순서(사용자 결정): P5r4+K1(규칙 봉인 `las_p5r4_k1_rules.md` `5ee2bac0`) → B1 → 436.8(승인) → 이상적 센서 2단계
+        - **LAS-b P5r4+K1 재판정 `미달`, 채택 안 함·P0 유지(2026-11-12)**
+          - 규칙 원판 `5ee2bac0` + rev1 `f39846d6` + rev2 `e0a7d1e5` + rev3 `31ba01df`(문턱 1e-9 허용·시각 창 정수 주기, 첫 봉인 5798dd32는 머리 줄 오류로 무효) + rev4 `aff149c3`(Chrono 재실행 절차)
+          - 하네스(실행 HEAD `18b1425`, 1,468줄, 오류 0): 두 경로 `통과`
+          - Chrono 첫 배치 `20261111_162306`: 실행 중 다른 세션의 문서 2줄 수정으로 postrun K-1 stop(사용자 결정: 규칙대로 stop, 판정에 안 씀) → 문서 커밋 `7a469f7`·rev4 `8ea3aa1` 뒤 재실행 r2 `20261111_232832`(12/12 rc 0, postrun pass)
+          - Chrono 두 경로 `미달`: G-2′C A3/A4 −58 N·27 ms, CC-S B1/B2 +2.83 mm, CC-R 최대 +7.7 s. K-10 일치. 최종 `미달`
+          - 판정서 `06_analysis/02_control/verif_matrix/las_p5r4_k1_judgement.md`, 판정 후 감사 `las_p5r4_k1_post_audit.md`(차단 0), 실행 전 감사 1~4(`v5/las/p5r4k1/prelaunch/p5k_prelaunch_audit*.md`, 로컬)
+          - 곁 발견: P0+K1 Chrono A3·A5 RL < F_min(195/67 ms) — 준정적 4점 비틀림(LAS-b 끝 한 주기 원속도 복귀 + FR 연약 패치 침하), 실행 SL-2 R_c 1.035~1.076으로 운용 시작 조건 밖. 사용자 결정: **알려진 한계로 기록 + O-C5(A3 조건, 크롤러 R_c 0.95) 기록 행을 436.8에 넣음**
+          - 사용자 결정: LAS-b 재설계 **LAS-c(β 3.5 + C-A 가벼운 대각 우선 + C-B 감속 끝 평균 속도 변화율 제한)**, 설계·준비는 병행하고 판정·채택은 v5 뒤(`06_analysis/02_control/las_redesign/las_redesign_v1_draft.md`)
+          - 다음 규칙 반영: K 항목 None = stop(경로 2 K-4 키 이름 결함), 단계별 자리표시 관문, 실행 중 추적 파일 HEAD·dirty 점검
     - 볼록 껍질 패치 1·2단계(cpp-expert, worktree `cpp-hull-hook` b49d506, 미병합): **G-A 통과**(무작위·격자 400만 + 실제 SCM 패치 12,000에서 원본 conda 생성자와 비트 불일치 0; 호출당 시간 비 0.12~0.31), 가로채기 DLL `03_src/outrigger_sim/native/chrono_hull/`(vehicle IAT 4슬롯, 고정 DLL 해시 확인 뒤 설치, 환경 변수 `OUTRIGGER_HULL_HOOK=off|fast|shadow|dump`, 기본 꺼짐, C API v1), C++ SCM 3,000스텝 off/fast/shadow 상태 해시 동일·프로세스 약 1.22배. **사용자 결정(11-08): 진행 중 실행이 끝난 뒤(~17:00) 병합·옵트인 연동(설치 실패 시 중단, 카운터 기록) → G-B 그림자 3~4사례 → G-C 대표 판정 해시 → G-D 단독 속도까지 자동, 관문 실패 시 멈춤, 통과 시 채택(fast 기본 켬) 질문.**
     - 개정 10 봉인(`v5_criteria_rev10.md`, `bd65db24…`, 09:47:05). **개정 8 7.2·7.3 해시 대조 확정: 하네스 22행 통과(개정 9: pass 4·no_rod_reading 18·H-7 0), Chrono 2행 통과(개정 10 A·B·C 충족)** → 저장된 VB·LS 결과를 `final_C4G2_P3` 결과로 읽음.
   - 사용자 결정(11-08 00시): 3단계 판정에서 Dg-3 ③ revision 4 재실행이 필요하다고 판단되면 밤사이 자동 실행·판정(하네스 270). 검증 행렬 X-00(JOURNAL-AUGER J2 B 하단 재판정, 기록만) 밤사이 control-expert가 판정서 초안까지, 논문·명세 수정은 아침 질문.
