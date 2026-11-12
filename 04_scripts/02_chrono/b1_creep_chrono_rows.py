@@ -1,7 +1,7 @@
 """B1 creep basis (``V5-B1-CREEP``): Chrono SCM row definitions + build / field checks (no simulation; cad 2026-11-12).
 
-Rules ``06_analysis/02_control/b1/b1_creep_basis_rules_seal_candidate_draft.md`` (seal candidate, sha256
-``fa142d52...``; not sealed when this module was written) 1.1 / 1.4 / 2.1 / 2.3 / 6. Batches of ``s9_batch``:
+Rules ``06_analysis/02_control/b1/b1_creep_rules.md`` (sealed 2026-11-12, sha256
+``6b99702c...``, master 1ad3e5d) 1.1 / 1.4 / 2.1 / 2.3 / 6. Batches of ``s9_batch``:
 
 * ``V5-B1-CREEP``: the 6 rows of rules 2.1 (C1 .. C5 x1.0 160 s, C6 x1.1 180 s), grid record ``full`` (rules 6
   R-G1 "실행 전체 10 Hz");
@@ -41,9 +41,9 @@ ROOT = HERE.parents[1]
 B1_BATCH = "V5-B1-CREEP"
 B1_WIN_BATCH = "V5-B1-CREEP-WIN"
 B1_GS_BATCH = "V5-B1-CREEP-GS"
-B1_RULES = "06_analysis/02_control/b1/b1_creep_basis_rules_seal_candidate_draft.md"
-B1_RULES_SHA256 = "fa142d525c9c8d318212c245b552cea47b0394ed97680900653bcda737ab5cf9"
-B1_SOURCE = f"{B1_RULES} (sha256 {B1_RULES_SHA256[:8]}, seal candidate) 2.1 / 2.3 / 6; cad row definition 2026-11-12"
+B1_RULES = "06_analysis/02_control/b1/b1_creep_rules.md"
+B1_RULES_SHA256 = "6b99702ce26d6da28fbfe6473b622c7e51419241916cbc101f795828f498774e"
+B1_SOURCE = f"{B1_RULES} (sha256 {B1_RULES_SHA256[:8]}, sealed) 2.1 / 2.3 / 6; cad row definition 2026-11-12"
 CONTROLLER_VB = "final_C4G2_P3_LAS_K1"
 SOIL, PAD, FS_KN = "J2", "B", 4.0
 START_LIMIT = "record_only"
@@ -236,9 +236,15 @@ GRID_ARRAYS = ("n_cycle", "t_s", "computed", "n_inside", "n_contact", "n_sigma_n
                "contact_hull_perimeter_m", "sinkage_geometric_m", "sigma_sum_area_N", "sinkage_mean_contact_m",
                "pad_bottom_centre_world_m", "pad_bottom_centre_plane_xy_m", "pad_body_pos_world_m",
                "pad_yaw_plane_rad", "imu_n_cycle", "imu_t_s", "imu_raw_roll_rad", "imu_raw_pitch_rad",
-               "imu_specific_force_m_s2")
+               "imu_specific_force_m_s2",
+               # R-C1 (sealed rules 6, names fixed by the rules)
+               "n", "load_read_N", "att_raw_rad", "c_hat_m", "c_hat_corner_m", "c_target_m")
+GRID_RECORD_REL = "record/b1_grid_record.npz"
+R_C1_SHAPES = {"n": 1, "load_read_N": (4,), "att_raw_rad": (2,), "c_hat_m": 1, "c_hat_corner_m": (4,),
+               "c_target_m": 1}
+"""Sealed rules 6 R-C1 shapes: 1 = (n,), tuple = (n, *tuple)."""
 STEP_ARRAYS = ("t_s", "pad_sinkage_geometric_m")
-RECORD_FILES = ("result.json", "step_series.npz", "record/record.npz", "b1_grid_record.npz", "controller_commands.npz")
+RECORD_FILES = ("result.json", "step_series.npz", "record/record.npz", GRID_RECORD_REL, "controller_commands.npz")
 BATCH_TOP_KEYS = ("batch", "cases", "mixed_hull_mode", "failed")
 BATCH_ENTRY_KEYS = ("case", "argv", "rc", "pool", "planned_pool", "omp_wait_policy", "hull_hook_requested",
                     "hull_hook_effective", "start_env", "controller", "v5_setting", "criteria_id")
@@ -252,6 +258,38 @@ def _get(doc: Any, path: str) -> Any:
             return _MISSING
         node = node[part]
     return node
+
+
+def _grid_module() -> ModuleType:
+    src = str(ROOT / "03_src")
+    added = src not in sys.path
+    if added:
+        sys.path.insert(0, src)
+    try:
+        from outrigger_sim.chrono import b1_grid_record  # noqa: PLC0415
+    finally:
+        if added:
+            sys.path.remove(src)
+    return b1_grid_record
+
+
+def r_c1_shape_errors(z: Any) -> list[str]:
+    """R-C1 keys whose shape is not the sealed rules 6 shape (same n for all, = the R-G1 row count in full)."""
+    bad = []
+    if "n" not in z.files:
+        return ["n"]
+    n = int(z["n"].shape[0]) if z["n"].ndim == 1 else -1
+    for k, tail in R_C1_SHAPES.items():
+        if k not in z.files:
+            bad.append(k)
+            continue
+        want = (n,) if tail == 1 else (n, *tail)
+        if tuple(z[k].shape) != want:
+            bad.append(k)
+    if "n_cycle" in z.files and "computed" in z.files and bool(z["computed"].all()) \
+            and z["n_cycle"].tolist() != z["n"].tolist():
+        bad.append("n != n_cycle (full)")
+    return bad
 
 
 def field_check(folder: Path, batch_name: str | None = None) -> dict[str, Any]:
@@ -296,11 +334,19 @@ def field_check(folder: Path, batch_name: str | None = None) -> dict[str, Any]:
             c["num_threads_chrono_4"] = _get(doc, "num_threads_chrono") == 4
             c["b1_grid_record_error"] = "error" in (doc.get("b1_grid_record") or {})
         c["grid_arrays_missing"] = list(GRID_ARRAYS)
-        if (d / "b1_grid_record.npz").is_file():
-            with np.load(d / "b1_grid_record.npz", allow_pickle=False) as z:
+        gpath = d / GRID_RECORD_REL
+        if gpath.is_file():
+            with np.load(gpath, allow_pickle=False) as z:
                 c["grid_arrays_missing"] = [k for k in GRID_ARRAYS if k not in z.files]
                 c["grid_rows_nonempty"] = bool(z["n_cycle"].size > 0) if "n_cycle" in z.files else False
                 c["imu_rows_nonempty"] = bool(z["imu_t_s"].size > 0) if "imu_t_s" in z.files else False
+                c["r_c1_shape_bad"] = r_c1_shape_errors(z)
+            if (d / "result.json").is_file():
+                gr = _grid_module()
+                cons = gr.pad_nodes_consistency(gpath, doc)
+                c["pad_nodes_consistent"] = bool(cons["ok"])  # booleans / counts only, no value
+                c["pad_nodes_consistency_counts"] = {k: cons[k] for k in ("cycles", "values", "differ",
+                                                                           "cycles_missing_in_result")}
         c["step_arrays_missing"] = list(STEP_ARRAYS)
         if (d / "step_series.npz").is_file():
             with np.load(d / "step_series.npz", allow_pickle=False) as z:
@@ -310,7 +356,8 @@ def field_check(folder: Path, batch_name: str | None = None) -> dict[str, Any]:
                        and not c["result_missing"] and c.get("expect_controller_ok") and c.get("tag_equal")
                        and c.get("hull_hook_mode") == "fast" and c.get("num_threads_chrono_4")
                        and not c.get("b1_grid_record_error") and not c["grid_arrays_missing"]
-                       and c.get("grid_rows_nonempty") and c.get("imu_rows_nonempty") and not c["step_arrays_missing"])
+                       and c.get("grid_rows_nonempty") and c.get("imu_rows_nonempty") and not c["step_arrays_missing"]
+                       and c.get("r_c1_shape_bad") == [] and c.get("pad_nodes_consistent"))
         out["cases"].append(c)
     out["n_rows"], out["n_ok"] = len(rs), sum(1 for c in out["cases"] if c["ok"])
     out["ok"] = (not out["errors"] and out["batch_json"] and out["progress_log"] and not out["batch_top_missing"]

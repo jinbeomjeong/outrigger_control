@@ -1,7 +1,7 @@
 """B1 creep basis (cad 2026-11-12): ``run_S9 level --b1-grid-record {full,window}``
 (``03_src/outrigger_sim/chrono/b1_grid_record.py``) and the batches ``V5-B1-CREEP`` / ``V5-B1-CREEP-WIN`` /
 ``V5-B1-CREEP-GS`` (``04_scripts/02_chrono/b1_creep_chrono_rows.py``; rules
-``b1_creep_basis_rules_seal_candidate_draft.md`` sha256 ``fa142d52`` 1.4 / 2.1 / 2.3 / 6).
+``b1_creep_rules.md`` (sealed) sha256 ``6b99702c`` 1.4 / 2.1 / 2.3 / 6).
 
 No Chrono run: argv / config checks, the window rule and the recorder on stand-in model / controller objects.
 """
@@ -220,14 +220,37 @@ class _Model:
         return [dict(st) for _ in range(4)]
 
 
+class _Geom:
+    def clearance_corners_m(self, rod):  # corner k = 0.01 k + mean rod stroke
+        return np.array([0.01 * k + float(np.mean(rod)) for k in range(4)])
+
+
 class _Ctl:
-    def __init__(self):
+    """Stand-in with the controller members R-C1 reads (state after the update, pure methods)."""
+
+    def __init__(self, bias=None, soil_enable=True):
         self.events, self.phase = [], "C2Phase.LEVEL"
-        self._state = SimpleNamespace(period_raw_tilts=[])
+        soil = None if bias is None else SimpleNamespace(corner_bias_m=np.asarray(bias, float),
+                                                         has_corner_bias=bool(np.any(np.asarray(bias) != 0.0)))
+        self._state = SimpleNamespace(period_raw_tilts=[], last_forces=None, last_reading=None, soil=soil)
+        self.geometry = _Geom()
+        self.config = SimpleNamespace(soil=SimpleNamespace(enable=soil_enable))
+        self.soil_state_calls = 0
+
+    def _clearance_target_m(self):  # noqa: PLR6301
+        return 0.08
+
+    def _period_raw_attitude_rad(self):
+        tl = self._state.period_raw_tilts
+        return (float(np.mean([t.roll_rad for t in tl])), float(np.mean([t.pitch_rad for t in tl])))
+
+    def _soil_state(self):  # must not be called (it would create the soil state)
+        self.soil_state_calls += 1
+        raise AssertionError("_soil_state called")
 
 
-def _drive(gr, mode, n_end=800):
-    m, c = _Model(), _Ctl()
+def _drive(gr, mode, n_end=800, ctl=None):
+    m, c = _Model(), (_Ctl() if ctl is None else ctl)
     rec = gr.B1GridRecorder(m, c, mode)
     stroke = np.zeros(4)
     outs = {}
@@ -243,6 +266,9 @@ def _drive(gr, mode, n_end=800):
                                      for k in range(10)]
         if n == 400:  # an update without new IMU samples: kept list, no duplicate rows
             c._state.period_raw_tilts = list(c._state.period_raw_tilts)
+        if n >= 2:  # the first instant has no reading yet (R-C1 NaN)
+            c._state.last_forces = SimpleNamespace(nominal=np.array([1.0e5, 1.1e5, 0.9e5, 0.8e5]) + n)
+            c._state.last_reading = SimpleNamespace(rod_stroke_m=stroke + 0.3)
         meas = SimpleNamespace(t_s=t, stroke_m=stroke.copy(),
                                imu_specific_force_samples_m_s2=np.tile([0.0, 0.0, 9.81], (10, 1)))
         outs[n] = rec.pad_nodes(meas)
@@ -287,3 +313,82 @@ def test_recorder_bad_mode(gr):
 def test_field_check_missing_folder(b1, tmp_path):
     out = b1.field_check(tmp_path, GS)
     assert out["ok"] is False and out["n_ok"] == 0
+
+
+# ------------------------------------------------------------------------------------------------ R-C1 (sealed 6)
+R_C1 = {"n": (799,), "load_read_N": (799, 4), "att_raw_rad": (799, 2), "c_hat_m": (799,),
+        "c_hat_corner_m": (799, 4), "c_target_m": (799,)}
+"""Sealed rules 6 R-C1 names and shapes, written out here."""
+
+
+@pytest.mark.parametrize("bias", [None, [0.0, 0.0, 0.0, 0.0], [0.001, -0.002, 0.0, 0.003]])
+def test_r_c1_keys_values(gr, b1, tmp_path, bias):
+    ctl = _Ctl(bias=bias)
+    _, rec, _ = _drive(gr, "full", ctl=ctl)
+    meta = rec.save(tmp_path / "record" / gr.B1_GRID_RECORD_NAME)
+    assert meta["file"] == "record/b1_grid_record.npz" == gr.B1_GRID_RECORD_REL
+    assert ctl.soil_state_calls == 0
+    with np.load(tmp_path / "record" / gr.B1_GRID_RECORD_NAME) as z:
+        for k, shape in R_C1.items():
+            assert z[k].shape == shape, k
+            assert meta["key_shapes"][k] == list(shape)
+        assert z["n"].dtype == np.int64 and z["n"].tolist() == z["n_cycle"].tolist()
+        assert b1.r_c1_shape_errors(z) == []
+        # first instant: no reading -> NaN; target always the controller's
+        assert np.isnan(z["load_read_N"][0]).all() and np.isnan(z["c_hat_corner_m"][0]).all()
+        assert np.all(z["c_target_m"] == 0.08)
+        k = 299  # cycle n = 300
+        assert z["n"][k] == 300
+        assert np.array_equal(z["load_read_N"][k], np.array([1.0e5, 1.1e5, 0.9e5, 0.8e5]) + 300)
+        rod = np.full(4, 0.3 + 101 * 1e-4)  # 101 rises of 1e-4 by n = 300
+        corners = np.array([0.01 * j + float(np.mean(rod)) for j in range(4)])
+        if bias is not None:
+            corners = corners - np.asarray(bias)
+        assert np.allclose(z["c_hat_corner_m"][k], corners, atol=1e-12)
+        assert z["c_hat_m"][k] == pytest.approx(float(np.min(corners)))
+        assert np.allclose(z["att_raw_rad"][k], [1e-3, -2e-3])
+
+
+def test_r_c1_bias_ignored_when_soil_off(gr, tmp_path):
+    ctl = _Ctl(bias=[0.01, 0.01, 0.01, 0.01], soil_enable=False)
+    _, rec, _ = _drive(gr, "full", n_end=50, ctl=ctl)
+    rec.save(tmp_path / "x.npz")
+    with np.load(tmp_path / "x.npz") as z:
+        rod = 0.3
+        assert np.allclose(z["c_hat_corner_m"][10], [0.01 * j + rod for j in range(4)])
+
+
+def _fake_result(z_path, stats_fn):
+    with np.load(z_path) as z:
+        rows = [{"t_s": float(t), "pad_nodes": stats_fn()} for t in z["t_s"]]
+    return {"s9_rows": rows}
+
+
+def test_pad_nodes_consistency(gr, tmp_path):
+    m, rec, _ = _drive(gr, "full", n_end=60)
+    p = tmp_path / "g.npz"
+    rec.save(p)
+    res = _fake_result(p, m.pad_node_stats)
+    ok = gr.pad_nodes_consistency(p, res)
+    assert ok["ok"] and ok["cycles"] == 59 and ok["values"] == 59 * 4 * 6 and ok["differ"] == 0
+    res["s9_rows"][5]["pad_nodes"][2]["sigma_sum_area_N"] += 1e-9
+    bad = gr.pad_nodes_consistency(p, res)
+    assert not bad["ok"] and bad["differ"] == 1 and bad["first_differ"] == {"cycle": 6, "leg": 2,
+                                                                            "field": "sigma_sum_area_N"}
+    res["s9_rows"] = res["s9_rows"][:-1]
+    assert gr.pad_nodes_consistency(p, res)["cycles_missing_in_result"] == 1
+    # None in result.json (no hull) <-> NaN in the npz
+    m2 = _Model()
+    base = m2.pad_node_stats
+
+    def no_hull():
+        s = base()
+        for d in s:
+            d["contact_hull_area_m2"] = d["contact_hull_perimeter_m"] = None
+        return s
+    m2.pad_node_stats = no_hull
+    rec2 = gr.B1GridRecorder(m2, _Ctl(), "full")
+    for n in range(1, 5):
+        rec2.pad_nodes(SimpleNamespace(t_s=n * 0.1, stroke_m=np.zeros(4), imu_specific_force_samples_m_s2=None))
+    rec2.save(tmp_path / "h.npz")
+    assert gr.pad_nodes_consistency(tmp_path / "h.npz", _fake_result(tmp_path / "h.npz", no_hull))["ok"]

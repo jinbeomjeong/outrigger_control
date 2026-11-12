@@ -6397,9 +6397,9 @@ def run_level(args) -> Path:
     if scm_nodes_info is not None:  # case GIFs: key only with --record-scm-nodes
         summary["scm_nodes"] = scm_nodes_info
     if b1_grid is not None:  # B1 creep basis: key only with --b1-grid-record
-        from outrigger_sim.chrono.b1_grid_record import B1_GRID_RECORD_NAME  # noqa: PLC0415
+        from outrigger_sim.chrono.b1_grid_record import B1_GRID_RECORD_REL  # noqa: PLC0415
 
-        summary["b1_grid_record"] = {**_record_or_error(lambda: b1_grid.save(d / B1_GRID_RECORD_NAME)),
+        summary["b1_grid_record"] = {**_record_or_error(lambda: b1_grid.save(d / B1_GRID_RECORD_REL)),
                                      "loop_wall_s": loop_wall}
     if v5_meta is not None:  # the block only with a v5 option
         from outrigger_sim.chrono.v5_plant import plant_records
