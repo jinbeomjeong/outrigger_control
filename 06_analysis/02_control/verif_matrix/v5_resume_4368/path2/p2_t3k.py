@@ -2,7 +2,8 @@
 
 Rules: ``las_targeted_rules.md`` (00b48fd8...) and its addenda rev1, rev2, rev3 (+ key list rev3_keys), rev4,
 rev4a, rev4b, rev4c, rev5 (+ R-0K key list) - eleven sealed files (rev5 1 #5), read through the 436.8 rules
-(5.1 H-0 "rev5 그대로", S-14). Author: dynamics-expert (path 2, second author). Path-1 tools (``las_judge``,
+(5.1 H-0 "rev5 그대로", S-14) and rev3 (dad8dfa6...) R3-D1 (dg3 key / folder from the record), R3-D2 (R-0 V0
+tag absent or null), R3-D3 (K-0 from .identity.json; H-T3-0 pre-run gate not two-path), R3-D4 (1e-9 tolerance). Author: dynamics-expert (path 2, second author). Path-1 tools (``las_judge``,
 ``las_h7``, ``las_t3*`` judging parts) and their outputs were not opened (436.8 9.2).
 
 Definitions used (rule sentences; the line fields are the stored ``v5/d1.jsonl`` names):
@@ -267,8 +268,47 @@ def tag_ok(tag, bundle, setting, is_p3):
 
 
 # ----------------------------------------------------------------- dg3 lines
-def dg3_records(path, folder):
-    """(folder, key, rec) from a dg3 output: jsonl lines or a JSON with ``results[]`` / ``records[]``."""
+CAND_PREFIX = "cand=current#"
+EXT_RULE_PATHS = ("two_pressure.extend_start_rule", "controller_settings.two_pressure.extend_start_rule",
+                  "preset_settings.two_pressure.extend_start_rule", "resume_k1.two_pressure.extend_start_rule",
+                  "controller_meta.two_pressure.settings.extend_start_rule")
+
+
+def norm_dg3_key(k):
+    """rev3 R3-D1: keys with and without the ``cand=current#`` prefix are the same key."""
+    return k[len(CAND_PREFIX):] if isinstance(k, str) and k.startswith(CAND_PREFIX) else k
+
+
+def dig_dotted(d, path):
+    """Nested lookup that also accepts a dict key containing dots (e.g. ``preset_settings["two_pressure.x"]``)."""
+    if not isinstance(d, dict):
+        return core.MISSING
+    if path in d:
+        return d[path]
+    head, _, rest = path.partition(".")
+    while rest:
+        if head in d:
+            v = dig_dotted(d[head], rest)
+            if v is not core.MISSING:
+                return v
+        h2, _, rest = rest.partition(".")
+        head = f"{head}.{h2}"
+    return d.get(head, core.MISSING)
+
+
+def dg3_folder(rec):
+    """rev3 R3-D1: the folder from the recorded controller setting: tracked_bound -> v4_on, else off.
+    None if the setting is not recorded (S-11 / H-T3-3)."""
+    for p in EXT_RULE_PATHS:
+        v = dig_dotted(rec, p)
+        if isinstance(v, str):
+            return "v4_on" if v == "tracked_bound" else "off"
+    return None
+
+
+def dg3_records(path, folder=None):
+    """(folder, key, rec) from a dg3 output: jsonl lines or a JSON with ``results[]`` / ``records[]``.
+    The folder is read from the record (R3-D1); a folder given on the command line is only cross-checked."""
     p = Path(path)
     if p.suffix == ".jsonl":
         recs = core.read_jsonl(p)
@@ -276,15 +316,61 @@ def dg3_records(path, folder):
         data = json.loads(p.read_text("utf-8"))
         recs = data.get("results") or data.get("records") or []
     for r in recs:
-        k = r.get("key") or r.get("id")
-        if isinstance(r.get("cand"), str) and isinstance(k, str) and not k.startswith("cand="):
-            k = f"cand={r['cand']}#{k}"
-        yield folder, k, r
+        k = norm_dg3_key(r.get("key") or r.get("id"))
+        got = dg3_folder(r)
+        if folder is not None and got is not None and got != folder:
+            r = dict(r, _folder_conflict=f"recorded {got} vs given {folder}")
+        yield got, k, r
 
 
 def dg3_hash(r):
     v, _ = core.first_path(r, core.HASH_PATHS)
     return None if v is core.MISSING else v
+
+
+IDENTITY_KEYS = ("git", "commit", "head", "c2", "tool", "thread", "num_threads")
+IDENTITY_SKIP = ("time", "start", "end", "created", "wall", "pid", "host", "path", "out")
+
+
+def identity_of(path):
+    """rev3 R3-D3: K-0 identity from the run's own ``.identity.json`` (raw data, not a judging output).
+    Returns (flat identity dict or None, file used)."""
+    p = Path(path)
+    for c in (Path(str(p) + ".identity.json"), p.with_suffix(".identity.json")):
+        if c.is_file():
+            flat = {}
+
+            def walk(o, pre=""):
+                if isinstance(o, dict):
+                    for k, v in o.items():
+                        walk(v, f"{pre}.{k}" if pre else str(k))
+                else:
+                    low = pre.lower()
+                    if any(s in low for s in IDENTITY_KEYS) and not any(s in low.rsplit(".", 1)[-1] for s in IDENTITY_SKIP):
+                        flat[pre] = o
+            walk(json.loads(c.read_text("utf-8")))
+            return flat, str(c)
+    return None, None
+
+
+def identity_check(paths, fnd):
+    """K-0 (rev3, rev5 2.2): the header identities of R-0, R-0K and T-3K are the same."""
+    got = {}
+    for name, p in paths.items():
+        ident, used = identity_of(p)
+        got[name] = {"file": used, "identity": ident}
+        if ident is None:
+            fnd.undec(f"K-0:{name}", "no .identity.json next to the output (R3-D3)")
+    known = {n: g["identity"] for n, g in got.items() if g["identity"] is not None}
+    if len(known) >= 2:
+        keys = set.intersection(*(set(v) for v in known.values()))
+        diff = sorted(k for k in keys if len({json.dumps(v[k], sort_keys=True, default=str) for v in known.values()}) > 1)
+        got["differing_keys"] = diff
+        if diff:
+            fnd.stop("H-T3-3", "K-0", f"identity differs between the three files: {diff[:8]}")
+        if not keys:
+            fnd.undec("K-0", "no common identity field")
+    return got
 
 
 # ----------------------------------------------------------------- main recount
@@ -300,7 +386,7 @@ def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3
     for b in ("T-3a", "T-3c"):
         for e in keys[b]:
             kl[e["key"]] = dict(e, bundle=b)
-    t3b = {(e["folder"], e["key"]): e for e in keys["T-3b"]}
+    t3b = {(e["folder"], norm_dg3_key(e["key"])): e for e in keys["T-3b"]}
     g1_uniform = {k for k, e in kl.items() if e["bundle"] == "T-3a" and e.get("base") == "G1"}
     # rev4a 1: key-list baseline fields = d1.jsonl values (H-T3-3)
     d1_idx = {}
@@ -343,6 +429,12 @@ def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3
             idx[k] = ln
         return idx
 
+    # rev3 R3-D1: the dg3 folder must come from the record (and agree with a folder given on the CLI)
+    for f_, k_, r_ in list(dg3_r0) + list(dg3_t3):
+        if f_ is None:
+            fnd.stop("H-T3-3", f"dg3:{k_}", "two_pressure.extend_start_rule not recorded: folder unknown (R3-D1, S-11)")
+        if isinstance(r_, dict) and r_.get("_folder_conflict"):
+            fnd.stop("H-T3-3", f"dg3:{k_}", r_["_folder_conflict"])
     # ---- R-0 (rev3 K-2; 5 D-1 + 2 dg3)
     r0_idx = index(r0_lines, "R-0")
     r0_want = set(keys["R-0"]["d1"])
@@ -361,8 +453,8 @@ def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3
             fnd.stop("H-T3-3", f"R-0:{k}", why)
         if not same or act:
             fnd.stop("H-T3-1", f"R-0:{k}", f"K-2: hash same {same}, active {act}")
-    dg3_want = {tuple(x) for x in keys["R-0"]["dg3"]}
-    dg3_got = {(f, k): r for f, k, r in dg3_r0}
+    dg3_want = {(x[0], norm_dg3_key(x[1])) for x in keys["R-0"]["dg3"]}
+    dg3_got = {(f, norm_dg3_key(k)): r for f, k, r in dg3_r0}
     if set(dg3_got) != dg3_want:
         fnd.stop("H-T3-3", "R-0 dg3", f"dg3 key set {sorted(dg3_got)} != {sorted(dg3_want)}")
     for fk in sorted(dg3_want & set(dg3_got)):
@@ -465,7 +557,7 @@ def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3
             fnd.fail(f"T-3K:{k}", f"H-T3-6: {vio}")
             fnd.stop("H-T3-6", f"T-3K:{k}", f"K-6 {vio} (ask)")
     # T-3b dg3 (K-4 only)
-    dg3_t3 = {(f, k): r for f, k, r in dg3_t3}
+    dg3_t3 = {(f, norm_dg3_key(k)): r for f, k, r in dg3_t3}
     if set(dg3_t3) != set(t3b):
         fnd.stop("H-T3-3", "T-3b", f"dg3 key set {len(dg3_t3)} vs 4")
     t3b_rep = []
@@ -519,12 +611,16 @@ def main(argv=None):
             def dg3(items):
                 res = []
                 for a in items:
-                    f, p = a.split("=", 1)
+                    f, sep, p = a.partition("=")
+                    if not sep or f not in ("off", "v4_on"):
+                        f, p = None, a
                     res.extend(dg3_records(p, f))
                 return res
 
             body, f = recount(repo, core.read_jsonl(args.r0), core.read_jsonl(args.r0k), core.read_jsonl(args.t3),
                               dg3(args.dg3_r0), dg3(args.dg3_t3), d1, is_p3)
+            body["K-0"] = identity_check({"R-0": args.r0, "R-0K": args.r0k, "T-3K": args.t3}, f)
+            body["H-T3-0_pre_run"] = "실행 전 관문: 두 경로 대상 아님(R3-D3). 실행 전 감사·경로 1 기록 경로를 판정서에 적는다"
             codes = sorted({s["code"] for s in f.stops}, key=lambda c: ORDER.index(c) if c in ORDER else 99)
             first = codes[0] if codes else None
             code = EXIT_OF.get(first, 2) if first else (1 if (f.fails or f.undecidable) else 0)

@@ -178,3 +178,49 @@ def test_inactive_non_r0k_with_would_block_is_h_t3_5():
 def test_seals_real():
     ok, out = t3.check_las_seals(REPO)
     assert ok, {k: v for k, v in out.items() if not v["ok"]}
+
+
+def test_rev3_dg3_key_prefix_and_folder_from_record(tmp_path):
+    p = tmp_path / "dg3.jsonl"
+    recs = [{"key": "L3|s0|g6|48|ref|G1|top|Fs0", "commands_sha256": "a", "events": [],
+             "preset_settings": {"two_pressure.extend_start_rule": "constant"}},
+            {"key": "cand=current#L3|s2|ref|14|G1|B|0,0", "commands_sha256": "b", "events": [],
+             "controller_settings": {"two_pressure": {"extend_start_rule": "tracked_bound"}}},
+            {"key": "x", "commands_sha256": "c"}]
+    p.write_text("\n".join(json.dumps(r) for r in recs) + "\n", "utf-8")
+    got = [(f, k) for f, k, _ in t3.dg3_records(p)]
+    assert got == [("off", "L3|s0|g6|48|ref|G1|top|Fs0"), ("v4_on", "L3|s2|ref|14|G1|B|0,0"), (None, "x")]
+    conflict = [r for _, _, r in t3.dg3_records(p, "v4_on")][0]
+    assert conflict.get("_folder_conflict")
+
+
+def test_rev3_dg3_folder_missing_is_h_t3_3():
+    r0, r0k, t3l, d0, dt = all_inputs()
+    dt[0] = (None, dt[0][1], dt[0][2])
+    _, f = run(r0, r0k, t3l, d0, dt)
+    assert "H-T3-3" in stop_codes(f)
+
+
+def test_rev3_r0_v0_tag_empty_string_is_h_t3_3():
+    r0, *rest = all_inputs()
+    v0 = next(x for x in r0 if x["d1"]["key"].split("|")[-2] == "V0")
+    v0["controller_tag"] = ""
+    _, f = run(r0, *rest)
+    assert "H-T3-3" in stop_codes(f)
+
+
+def test_rev3_k0_identity(tmp_path):
+    paths = {}
+    for n in ("R-0", "R-0K", "T-3K"):
+        p = tmp_path / f"{n}.jsonl"
+        p.write_text("", "utf-8")
+        (tmp_path / f"{n}.jsonl.identity.json").write_text(json.dumps(
+            {"git_head": "abc", "c2_sha256": "c", "threads": {"OMP_NUM_THREADS": "1"}, "created": n}), "utf-8")
+        paths[n] = str(p)
+    fnd = core.Findings()
+    out = t3.identity_check(paths, fnd)
+    assert fnd.status() == "pass" and out["differing_keys"] == []
+    (tmp_path / "T-3K.jsonl.identity.json").write_text(json.dumps({"git_head": "xyz", "c2_sha256": "c"}), "utf-8")
+    fnd = core.Findings()
+    t3.identity_check(paths, fnd)
+    assert "H-T3-3" in stop_codes(fnd)
