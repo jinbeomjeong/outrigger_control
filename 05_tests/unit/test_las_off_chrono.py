@@ -149,14 +149,14 @@ def test_batch_las_off_summary_names_the_rows_without_it(s9_batch) -> None:
     assert "final_SGS_R4" in source and "NOT added to rows without a controller key" in source
 
 
-def test_d1_rows_expect_the_las_tags(s9_batch) -> None:
+def test_d1_rows_expect_the_las_k1_tags(s9_batch) -> None:
     rows = s9_batch.batches()["D1-CHRONO"]
     soil = [row for row in rows if "--expect-controller" in row["argv"]]
-    assert soil and all(row["controller"] == "final_C4G2_P3_LAS" for row in soil)
-    assert all(row["argv"][row["argv"].index("--expect-controller") + 1] == "final_C4G2_P3_LAS"
+    assert soil and all(row["controller"] == "final_C4G2_P3_LAS_K1" for row in soil)
+    assert all(row["argv"][row["argv"].index("--expect-controller") + 1] == "final_C4G2_P3_LAS_K1"
                for row in soil)
     rigid = [row for row in rows if row.get("engine") == "L2b_NSC"]
-    assert rigid and all(row["controller"] == "final_C4G2_P3_LAS" for row in rigid)
+    assert rigid and all(row["controller"] == "final_C4G2_P3_LAS_K1" for row in rigid)
 
 
 # ------------------------------------------------------------------------------- run_S8C

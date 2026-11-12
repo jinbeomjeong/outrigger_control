@@ -363,14 +363,36 @@ CLASS_K1_UNIFORM = "K1 막힘 — 균일 연약 지면 계열"
 CLASS_BOTH = "둘 다"
 CLASS_UNDECIDABLE = "판정 불가"
 CLASS_NOT_APPLICABLE = "해당 없음(C2 없음)"
+CLASS_NO_LAS = "LAS 없음"
+"""436.8 user decision Q-6 (2026-11-13): a run with LAS-b off (the C-4 off arm, ``--las-off``) has no
+``liftoff_approach_slow.start_s``; it is this class, not 판정 불가. ``k1_state`` keeps its K1 side and
+``las_absent_basis`` the keys the class came from (a rule reading the judgement discloses)."""
+K1_STATE_INACTIVE = "미작동"
+K1_STATE_BLOCKED = "K1 막힘"
+K1_STATE_OUTSIDE = "분류 밖"
+LAS_ENABLE_PATH = "liftoff_approach_slow.settings.enable"
 
 
-def classification_inputs(block: Any) -> tuple[dict | None, str | None]:
-    """(inputs, None) or (None, reason) of the 7.2 keys of a ``resume_k1`` block / Chrono ``controller_meta``."""
+def las_absence_basis(block: dict, las_off_flag: Any = None) -> dict[str, Any] | None:
+    """The keys that show LAS-b off (Q-6): ``args.las_off`` true (Chrono ``result.json``) and / or
+    ``liftoff_approach_slow.settings.enable`` false; None when neither holds."""
+    basis: dict[str, Any] = {}
+    if las_off_flag is True:
+        basis["args.las_off"] = True
+    present, enable = get_path(block, LAS_ENABLE_PATH)
+    if present and enable is False:
+        basis[LAS_ENABLE_PATH] = False
+    return basis or None
+
+
+def classification_inputs(block: Any, las_off_flag: Any = None) -> tuple[dict | None, str | None]:
+    """(inputs, None) or (None, reason) of the 7.2 keys of a ``resume_k1`` block / Chrono ``controller_meta``;
+    ``las_off_flag``: Chrono ``result.json`` ``args.las_off`` (Q-6)."""
     if not isinstance(block, dict):
         return None, f"{RECORD_KEY} block missing"
+    las_absent = las_absence_basis(block, las_off_flag)
     present, start_s = get_path(block, "liftoff_approach_slow.start_s")
-    if not present:
+    if not present and las_absent is None:
         return None, "liftoff_approach_slow.start_s missing"
     present, decisions = get_path(block, "slope_clearance_margin.order_gate.decisions")
     if not present or not isinstance(decisions, list):
@@ -381,7 +403,13 @@ def classification_inputs(block: Any) -> tuple[dict | None, str | None]:
         ]
         if missing:
             return None, f"decisions[{index}] without {missing}"
-    return {"start_s": start_s, "decisions": decisions}, None
+    return {"start_s": start_s, "decisions": decisions, "las_absent": las_absent}, None
+
+
+def _k1_state(decisions: list[dict], blocked: list[dict]) -> str:
+    if not any(d["would_block"] for d in decisions):
+        return K1_STATE_INACTIVE
+    return K1_STATE_BLOCKED if blocked else K1_STATE_OUTSIDE
 
 
 def classify(inputs: dict) -> tuple[str, dict]:
@@ -395,6 +423,9 @@ def classify(inputs: dict) -> tuple[str, dict]:
         "blocked": len(blocked),
         "applied_and_would_block": sum(bool(d["applied"] and d["would_block"]) for d in decisions),
     }
+    if inputs.get("las_absent") is not None:  # Q-6: LAS-b off, its K1 side kept apart
+        return CLASS_NO_LAS, {**facts, "las_absent_basis": inputs["las_absent"],
+                              "k1_state": _k1_state(decisions, blocked)}
     if not is_las_active and not any(d["would_block"] for d in decisions):
         return CLASS_INACTIVE, facts
     if is_las_active and blocked:
@@ -446,22 +477,27 @@ def _class_row(
     sha: str | None,
     skipped: int | None,
     anchors: dict[str, str],
+    las_off_flag: Any = None,
 ) -> dict:
-    inputs, reason = classification_inputs(block)
+    inputs, reason = classification_inputs(block, las_off_flag)
     if inputs is None:
         return {"key": key, "class": CLASS_UNDECIDABLE, "reason": reason, "stops": []}
     klass, facts = classify(inputs)
     stops = []
     if facts["applied_and_would_block"]:
         stops.append("S-5 applied and would_block together")
-    if klass in (CLASS_K1, CLASS_BOTH) and skipped is not None and skipped != facts["blocked"]:
+    if klass == CLASS_NO_LAS and facts["k1_state"] == K1_STATE_OUTSIDE:
+        stops.append("would_block without r4_due_without_gate (outside 7.2, 판정 불가)")
+    is_blocked = klass in (CLASS_K1, CLASS_BOTH) or (
+        klass == CLASS_NO_LAS and facts["k1_state"] == K1_STATE_BLOCKED)
+    if is_blocked and skipped is not None and skipped != facts["blocked"]:
         stops.append(f"S-5 _SKIPPED:order events {skipped} != blocked decisions {facts['blocked']}")
-    if klass in (CLASS_K1, CLASS_BOTH) and skipped is None:
+    if is_blocked and skipped is None:
         stops.append("_SKIPPED:order event count unreadable (판정 불가)")
-    if klass in (CLASS_K1, CLASS_BOTH) and family == "uniform":
+    if is_blocked and family == "uniform":
         klass = CLASS_K1_UNIFORM if klass == CLASS_K1 else klass
         stops.append("S-6 K1 block on a uniform soft-soil family")
-    elif klass in (CLASS_K1, CLASS_BOTH) and family is None:
+    elif is_blocked and family is None:
         stops.append("S-6 family unresolved (rules 7.2 names the family, the record does not)")
     hash_check = None
     if klass == CLASS_INACTIVE and key in anchors:
@@ -531,6 +567,7 @@ def k1_class(args: argparse.Namespace) -> dict:
                         None,
                         skipped,
                         anchors,
+                        las_off_flag=get_path(result, "args.las_off")[1],
                     ),
                 }
             )
@@ -672,7 +709,8 @@ def oc5(args: argparse.Namespace) -> dict:
         "values": values,
         "missing": missing,
         "time_below_note": "F<F_min / F<F_min+2 kN durations are not in result.json "
-        "(path 2 recomputes them from the 1 ms series, 9.1)",
+        "(path 2 recomputes them from the run_S9 series files step_series.npz / r8_series.npz; the "
+        "rules text says series.npz, 9.1)",
     }
     r_c, forces = values["R_c_operating"], values["F_min_after_N"]
     if r_c is None or not isinstance(forces, list) or len(forces) != 4:

@@ -235,6 +235,24 @@ def test_class_row_stops() -> None:
     )
 
 
+def test_las_off_arm_is_its_own_class() -> None:
+    """436.8 Q-6: a LAS-off run (no start_s) is 'LAS 없음' with its basis keys, not 판정 불가."""
+    controller = _Controller(decisions=[_decision(would_block=True, due=True)],
+                             events=["INFO_LOC_FLAT_SOIL_MARGIN_SKIPPED:order"])
+    del controller._meta["liftoff_approach_slow"]["start_s"]
+    controller._meta["liftoff_approach_slow"]["settings"]["enable"] = False
+    block = record.controller_record(controller)
+    row = judge._class_row("k", block, "patch_or_sink", None, 1, {})
+    assert row["class"] == judge.CLASS_NO_LAS and row["k1_state"] == judge.K1_STATE_BLOCKED
+    assert row["las_absent_basis"] == {judge.LAS_ENABLE_PATH: False} and row["stops"] == []
+    meta = {"liftoff_approach_slow": {"settings": {}},
+            "slope_clearance_margin": {"order_gate": {"decisions": []}}}
+    row = judge._class_row("c4off", meta, "patch_or_sink", None, 0, {}, las_off_flag=True)
+    assert row["class"] == judge.CLASS_NO_LAS and row["las_absent_basis"] == {"args.las_off": True}
+    assert row["k1_state"] == judge.K1_STATE_INACTIVE
+    assert judge._class_row("x", meta, None, None, 0, {})["class"] == judge.CLASS_UNDECIDABLE
+
+
 def test_inactive_hash_check() -> None:
     block = record.controller_record(_Controller())
     row = judge._class_row("k", block, "patch_or_sink", "a", 0, {"k": "b"})

@@ -201,12 +201,47 @@ def test_plan_document() -> None:
     json.dumps(s6._plain(doc))
 
 
+RETAGGED_4368_BATCHES = ("D1-CHRONO#", "D1-PSC#", "V5-STAGE3-LAS#", "V5-LAS-CHRONO#")
+"""436.8 rules ``v5_resume_4368_rules.md`` 3 A-4 (2026-11-13): these batches changed their expected tag to
+``_LAS_K1`` on purpose (argv ``--expect-controller`` value and the row ``controller``); their row hashes differ
+from the D8x baseline, every other row must not."""
+
+
 def test_earlier_rows_meta_argv_unchanged() -> None:
     base = json.loads(hashes.BASELINE.read_text(encoding="utf-8"))
     d = hashes.diff(base, hashes.current_hashes())
     for sec, res in d.items():
-        assert not res["missing"] and not res["changed"], (sec, res["missing"][:5], res["changed"][:5])
+        changed = res["changed"]
+        if sec == "s9_rows":
+            changed = [k for k in changed if not k.startswith(RETAGGED_4368_BATCHES)]
+        assert not res["missing"] and not changed, (sec, res["missing"][:5], changed[:5])
         assert not res["added"], (sec, res["added"][:5])  # D8x entries are filtered out by the helper
+
+
+def _untagged(value):
+    """A row with the 436.8 tags turned back into the LAS-b tags of the baseline."""
+    text = json.dumps(value, sort_keys=True, ensure_ascii=False, default=str)
+    return json.loads(text.replace("final_C4G2_P3_LAS_K1", "final_C4G2_P3_LAS")
+                      .replace("final_C4G2_LAS_K1", "final_C4G2_LAS"))
+
+
+def test_retagged_rows_differ_only_in_the_tag() -> None:
+    """436.8 A-4: with the tags turned back, the retagged rows hash as the baseline."""
+    base = json.loads(hashes.BASELINE.read_text(encoding="utf-8"))["s9_rows"]
+    _, _, _, sb = hashes._imports()
+    checked = 0
+    for batch, rows in sb.batches().items():
+        for i, row in enumerate(rows):
+            key = f"{batch}#{i}:{row.get('case')}"
+            if not key.startswith(RETAGGED_4368_BATCHES) or key not in base:
+                continue
+            old = _untagged(row)
+            definition = {k: v for k, v in old.items() if k not in hashes.STORED_RESULT_ROW_KEYS}
+            now = hashes._sha({"argv": hashes._sha(hashes._norm(old.get("argv"))),
+                               "row": hashes._sha(hashes._norm(definition))})
+            assert now == base[key], key
+            checked += 1
+    assert checked > 0
 
 
 @pytest.mark.skipif(not s6.d8x_mode_available(),
