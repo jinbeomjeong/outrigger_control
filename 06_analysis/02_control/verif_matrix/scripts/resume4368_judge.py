@@ -14,6 +14,21 @@ Subcommands (each writes one JSON report with ``--out``; the last stdout line is
   overlap        11.1 option x stage table of steps files (harness) and Chrono batch rows
   gs             11.2 G-S key presence (prints present / missing only, never values)
 
+Rev1 (``v5_resume_4368_rules_rev1.md``, sealed d9094fda; every subcommand first checks the rev1
+file and its ``.sha256`` and stops with S-1 when either is missing or differs):
+  keyset         RV1-3: key set (and grid ``runs[]`` / meta) of a new H-6 .. H-9 grid output vs
+                 its appendix B source (S-15)
+  dg3-hash       RV1-3.2: H-6 vs H-8 VB ``base.commands_sha256`` per key (record)
+  anchor-map     RV1-5: P-1 / P-2 anchor lines by ``run_v5.job_key`` (S-7), H-1 hash pairs;
+                 its report is the ``k1-class --anchor-map`` input
+  import-check   RV1-9: no ``loc_anchor_shadow`` (or a runner that installs it) on the import
+                 path of the step runners, no ``OUTRIGGER_LOC_SHADOW`` in a step env
+  fmin-time      RV1-7: 7.4 ``F<F_min`` / ``F<F_min+2 kN`` times from ``step_series.npz``
+  stroke-exposure RV1-10 j: lines / rows with max stroke >= 678 / 684.8 mm (s_ref and piston)
+                 and with ``FAULT_STROKE_END`` (record; a missing coordinate is "기록 없음")
+  ``k1-class --family-table`` reads the RV1-6 table of ``resume_k1_family.py`` (a key it does
+  not place counts as uniform soft soil: a K1 block there is S-6).
+
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
 The tool reads only; it never runs a simulation. Tag judgements use
@@ -23,11 +38,14 @@ The tool reads only; it never runs a simulation. Tag judgements use
 from __future__ import annotations
 
 import argparse
+import ast
+import hashlib
 import json
 import math
 import re
 import sys
 import traceback
+from collections import Counter
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
@@ -42,6 +60,11 @@ from outrigger_sim.hydraulics.v5_options import is_extend_start_tag  # noqa: E40
 
 RULES_NAME = "v5_resume_4368_rules.md"
 RULES_SHA256 = "9019b405b7a196f28a756e7ca91f443f6241a58bd8e1eee0361483066cb19524"
+RULES_DIR = HERE.parent
+RULES_REV1_NAME = "v5_resume_4368_rules_rev1.md"
+RULES_REV1_SHA256 = "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7"
+"""Rev1 (sealed 2026-11-13 01:49:34 +09:00): it overrides the original where they differ. Every
+subcommand checks the sealed file and its ``.sha256`` first (missing or other value = S-1)."""
 RECORD_KEY = "resume_k1"
 """``04_scripts/04_hydraulic/coupled/resume_k1_record.RECORD_KEY``."""
 
@@ -150,6 +173,30 @@ def run_records(node: Any, trail: str = "") -> Iterator[tuple[str, dict]]:
     elif isinstance(node, list):
         for index, value in enumerate(node):
             yield from run_records(value, f"{trail}[{index}]")
+
+
+def _own_key(node: dict) -> str | None:
+    for name in ("key", "id", "case"):
+        if node.get(name) is not None:
+            return str(node[name])
+    return None
+
+
+def run_records_owned(node: Any, owner: str | None = None, trail: str = ""
+                      ) -> Iterator[tuple[str, dict, str | None]]:
+    """:func:`run_records` plus the key of the nearest dict above (or at) the record that names
+    itself: a grid branch run (``results[i].runs[j]``) has no key of its own and takes its job's."""
+    if isinstance(node, dict):
+        owner = _own_key(node) or owner
+        if _is_run_record(node):
+            yield trail, node, owner
+        for key, value in node.items():
+            if key in (RECORD_KEY, "v5", "job"):
+                continue
+            yield from run_records_owned(value, owner, f"{trail}.{key}" if trail else key)
+    elif isinstance(node, list):
+        for index, value in enumerate(node):
+            yield from run_records_owned(value, owner, f"{trail}[{index}]")
 
 
 def record_key(record: dict) -> str:
@@ -494,11 +541,10 @@ def _class_row(
         stops.append(f"S-5 _SKIPPED:order events {skipped} != blocked decisions {facts['blocked']}")
     if is_blocked and skipped is None:
         stops.append("_SKIPPED:order event count unreadable (판정 불가)")
-    if is_blocked and family == "uniform":
+    if is_blocked and family in ("uniform", None):  # RV1-6: an unplaced key counts as uniform
         klass = CLASS_K1_UNIFORM if klass == CLASS_K1 else klass
-        stops.append("S-6 K1 block on a uniform soft-soil family")
-    elif is_blocked and family is None:
-        stops.append("S-6 family unresolved (rules 7.2 names the family, the record does not)")
+        stops.append("S-6 K1 block on a uniform soft-soil family" if family == "uniform" else
+                     "S-6 K1 block on a key the family table does not place (RV1-6: uniform)")
     hash_check = None
     if klass == CLASS_INACTIVE and key in anchors:
         hash_check = {"anchor": anchors[key], "run": sha, "same": sha == anchors[key]}
@@ -515,12 +561,54 @@ def _class_row(
     }
 
 
+FAMILY_TABLE_NAMES = {
+    "균일 연약": "uniform",
+    "패치·처방 침하": "patch_or_sink",
+    "강체": "rigid",
+    "해당 없음": "not_applicable",
+    "미분류": None,
+}
+"""``resume_k1_family.py`` families -> the names of :func:`_class_row` (미분류 = None = uniform)."""
+
+
+def read_family_table(path: Path) -> dict[str, str | None]:
+    """Key -> family of a ``resume_k1_family.py`` table (RV1-6)."""
+    table = read_json(path)
+    try:
+        return {str(row["key"]): FAMILY_TABLE_NAMES[row["family"]] for row in table["rows"]}
+    except KeyError as exc:
+        raise InputError(f"{path}: not a family table ({exc})") from exc
+
+
+def table_family(record: dict, owner: str | None, table: dict[str, str | None]
+                 ) -> tuple[str | None, str]:
+    """(family, the key it was found under) of a run; (None, "not in table") without a match."""
+    candidates = [record_key(record), _own_key(record), owner]
+    for key in candidates:
+        if key is not None and key in table:
+            return table[key], key
+    return None, "not in table"
+
+
+def read_anchor_map(path: Path) -> dict[str, str]:
+    """Key -> anchor ``commands_sha256`` of an ``anchor-map`` report (RV1-5)."""
+    report = read_json(path)
+    if report.get("problems"):
+        raise InputError(f"{path}: anchor map with problems {report['problems'][:3]}")
+    return dict(report.get("anchors") or {})
+
+
 def k1_class(args: argparse.Namespace) -> dict:
     anchors = _anchor_hashes([Path(p) for p in args.anchor or []])
+    anchor_source = "first match of --anchor files" if anchors else "none"
+    if args.anchor_map is not None:  # RV1-5: the selected anchors, one per key
+        anchors = read_anchor_map(Path(args.anchor_map))
+        anchor_source = f"anchor-map {args.anchor_map}"
+    table = None if args.family_table is None else read_family_table(Path(args.family_table))
     rows = []
     for path in args.harness or []:
         for doc in read_records(path):
-            for _, record in run_records(doc):
+            for _, record, owner in run_records_owned(doc):
                 block = record_block(record)
                 if isinstance(block, dict) and block.get("applicable") is False:
                     rows.append(
@@ -532,11 +620,17 @@ def k1_class(args: argparse.Namespace) -> dict:
                     record.get("commands_sha256")
                     or get_path(record, "v5.logged_commands_sha256")[1]
                 )
+                if table is None:
+                    family, family_source = harness_family(record), "record (job.d1.group)"
+                else:
+                    family, family_source = table_family(record, owner, table)
                 rows.append(
                     {
                         "file": str(path),
+                        "owner": owner,
+                        "family_source": family_source,
                         **_class_row(
-                            record_key(record), block, harness_family(record), sha, skipped, anchors
+                            record_key(record), block, family, sha, skipped, anchors
                         ),
                     }
                 )
@@ -582,6 +676,9 @@ def k1_class(args: argparse.Namespace) -> dict:
         "counts": counts,
         "undecidable": counts.get(CLASS_UNDECIDABLE, 0),
         "anchors": len(anchors),
+        "anchor_source": anchor_source,
+        "family_table": None if args.family_table is None else {
+            "path": str(args.family_table), "sha256": file_sha256(Path(args.family_table))},
         "hash_checked": sum(row.get("hash_check") is not None for row in rows),
         "stops": stops,
         "rows": rows if args.all else [r for r in rows if r["class"] != CLASS_INACTIVE],
@@ -708,9 +805,8 @@ def oc5(args: argparse.Namespace) -> dict:
         "result": str(args.result),
         "values": values,
         "missing": missing,
-        "time_below_note": "F<F_min / F<F_min+2 kN durations are not in result.json "
-        "(path 2 recomputes them from the run_S9 series files step_series.npz / r8_series.npz; the "
-        "rules text says series.npz, 9.1)",
+        "time_below_note": "F<F_min / F<F_min+2 kN durations are not in result.json: path 1 "
+        "computes them with the fmin-time subcommand from step_series.npz (rev1 RV1-7)",
     }
     r_c, forces = values["R_c_operating"], values["F_min_after_N"]
     if r_c is None or not isinstance(forces, list) or len(forces) != 4:
@@ -742,6 +838,22 @@ def expected_harness_tag(setting: str | None, controller: str | None = None) -> 
     return TAG_P3 if setting.startswith(("VB", "LS")) else TAG_V0
 
 
+DG3_P3_ENV = "LAS_T3_DG3_P3"
+DG3_LAS_ENV = "LAS_T3_DG3_LAS"
+DG3_P3_OFF_BUNDLE = "H-7"
+"""RV1-3.2: ``LAS_T3_DG3_P3=off`` (VB without ③) only in H-7; ``LAS_T3_DG3_LAS=off`` nowhere."""
+
+
+def dg3_switch_problems(env: dict, bundle: str | None) -> list[str]:
+    """RV1-3.2 use of the ``las_t3_dg3.py`` switches in one step's env."""
+    problems = []
+    if env.get(DG3_P3_ENV) == "off" and bundle != DG3_P3_OFF_BUNDLE:
+        problems.append(f"env {DG3_P3_ENV}=off outside {DG3_P3_OFF_BUNDLE}")
+    if env.get(DG3_LAS_ENV) == "off":
+        problems.append(f"env {DG3_LAS_ENV}=off")
+    return problems
+
+
 def steps_overlap_rows(steps_doc: dict) -> list[dict]:
     """Rules 11.1 rows of a steps file (``resume_k1_steps.py``): bundle, step, env, forbidden hits."""
     rows = []
@@ -754,6 +866,7 @@ def steps_overlap_rows(steps_doc: dict) -> list[dict]:
         hits += ["pre_*_preset_runner.py"] if PRE_PRESET_RUNNER_PATTERN.search(cmd) else []
         hits += ["scratchpad script"] if "scratchpad" in cmd.lower() else []
         meta = step.get("resume_k1") or {}
+        hits += dg3_switch_problems(env, meta.get("bundle"))
         rows.append(
             {
                 "bundle": meta.get("bundle"),
@@ -764,6 +877,8 @@ def steps_overlap_rows(steps_doc: dict) -> list[dict]:
                 "expected_tags": meta.get("expected_tags"),
                 "output": meta.get("output"),
                 "env": sorted(env),
+                "dg3_switches": {name: env[name] for name in sorted(env)
+                                 if name.startswith("LAS_T3_DG3_")},
                 "forbidden": hits,
             }
         )
@@ -868,6 +983,487 @@ def gs(args: argparse.Namespace) -> dict:
     }
 
 
+# ------------------------------------------------------------------------------ rev1 RV1-3 keyset
+APPENDIX_B = {
+    "dg3/dg3_v4_on.json": "5f912ca0d25d6dfe0114e05bf8c7a083fa542ad3de71e76c472e44a1a351167d",
+    "dg3/off/dg3_off.json": "95b81f82d800ae3ccf0dd15e205f12ec4b8795a1dcb482e6e30ed41aa0cfd5ce",
+    "noise_vb/r79_VB_L1L2L3.json":
+        "d3c9bba1abd3c1fbc700a26527856e14f7754740192c55a404bc203ef8a763b9",
+    "noise_v0/r79_V0_L1L2L3.json":
+        "af6a7ae51abe4b9094db9b21cf49f8770861fb0ed91cb269effb6b2cab9b459a",
+    "seedext/r79_VB_seedext.json":
+        "6ddca3d5ce5dc6286c319de13d779bbb419df8fbee2bd13577d04b0f4c2d6f57",
+    "seedext/r79_V0_seedext.json":
+        "f2c01d65238cac50da57c26ca33541b9506ff50b14aee80d65f31e1378dabaa8",
+    "grid_vb/grid_r67_main.json":
+        "8ef4237dc7658559efa04ac07edc1641fe422cbb55e5fee902fbac94eac13ef7",
+    "grid_vb/grid_r67_top.json": "498aa41199b2e4ed3467573c061ab2d6a182ffcd10871fe9bc7420989e6e6412",
+    "grid_vb/grid_r69_bottom.json":
+        "ee84750be278a2c284bf1fe614155240c0a4c2b564762862276a007afc9609e9",
+    "grid_vb/grid_r69_top.json": "c132fd41f13b8033b25804fbc777408a5d1729f31348af34aadd7fd6dfaad325",
+    "d1.jsonl": "9039b36a1a9c4ba5ed63528bb7384773018d4c7377dccbf76b18fbcfda86707f",
+    "las/las_T1.jsonl": "3dee4f6b88e71654debd68b3ef5c5f1a9b01f1dba8fcd731d1355ec219d9a85b",
+    "las/las_T2.jsonl": "2fe6a54aafdc0c3ffbf1991907ee4e1af85761e1bef2e25bef07dd52ab199efb",
+    "las/k1/k1_YP.jsonl": "0d985d5624f0fbb0219ca50d1c839b7db639011d6c2ab14fa9d84cfd197fc2c3",
+    "soil_defer/s2d_SC.jsonl": "70e91ec1234d56a918af1b4fc053c3175f0f14ab41e2b5f334890f7dc6cb08aa",
+}
+"""Rev1 appendix B (files under ``06_analysis/03_hydraulic/coupled/v5/``): a file whose sha256 is
+not this value does not start its bundle (S-1 handling)."""
+GRID_META_FIELDS = ("offsets_s", "n_jobs", "candidate", "v5_setting")
+GRID_EVENT_KEYS = ("event", "offset_s")
+
+
+def file_sha256(path: Path) -> str:
+    try:
+        return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    except OSError as exc:
+        raise InputError(f"{path}: {exc}") from exc
+
+
+def appendix_b_problems(path: Path) -> tuple[str | None, list[str]]:
+    """(appendix B entry, problems) of a stored file: it must be one of :data:`APPENDIX_B` and
+    have that sha256."""
+    text = str(path).replace("\\", "/")
+    entry = next((name for name in APPENDIX_B if text.endswith("/v5/" + name)), None)
+    if entry is None:
+        return None, [f"{path} is no appendix B file"]
+    actual = file_sha256(path)
+    if actual != APPENDIX_B[entry]:
+        return entry, [f"{entry} sha256 {actual[:16]} != {APPENDIX_B[entry][:16]} (S-1)"]
+    return entry, []
+
+
+def r79_result_keys(document: dict) -> list[str]:
+    return [str(row.get("key")) for row in document.get("results") or []]
+
+
+def grid_branch_ids(document: dict) -> set[tuple]:
+    """(job key, event, offset) of every ``runs[]`` entry of a grid file."""
+    return {(row.get("key"), *(run.get(name) for name in GRID_EVENT_KEYS))
+            for row in document.get("results") or [] for run in row.get("runs") or []}
+
+
+def set_difference_report(new: list, stored: list) -> dict:
+    new_set, stored_set = set(new), set(stored)
+    return {"new": len(new), "new_distinct": len(new_set), "stored": len(stored),
+            "missing_in_new": sorted(map(str, stored_set - new_set))[:20],
+            "extra_in_new": sorted(map(str, new_set - stored_set))[:20],
+            "same": new_set == stored_set and len(new) == len(new_set)}
+
+
+def keyset(args: argparse.Namespace) -> dict:
+    """RV1-3.1 / RV1-3.2: key set of a new H-6 .. H-9 grid output against its stored source
+    (S-15 when it differs); grid files also compare ``runs[]`` and the meta of RV1-3.2."""
+    entry, problems = appendix_b_problems(Path(args.stored))
+    stored, new = read_json(Path(args.stored)), read_json(Path(args.new))
+    out: dict[str, Any] = {"rules": RULES_REV1_NAME, "section": "RV1-3 (S-15)",
+                           "kind": args.kind, "stored": str(args.stored), "appendix_b": entry,
+                           "new": str(args.new)}
+    keys = set_difference_report(r79_result_keys(new), r79_result_keys(stored))
+    out["keys"] = keys
+    if not keys["same"]:
+        problems.append("job key set differs (S-15)")
+    if args.kind == "grid":
+        branches = set_difference_report(sorted(grid_branch_ids(new)),
+                                         sorted(grid_branch_ids(stored)))
+        runs = sum(len(row.get("runs") or []) for row in new.get("results") or [])
+        out["runs"] = {"new": runs, **{k: branches[k] for k in ("stored", "missing_in_new",
+                                                                  "extra_in_new", "same")}}
+        if not branches["same"] or runs != branches["stored"]:
+            problems.append("runs[] (key, event, offset) set differs (S-15)")
+        meta_new, meta_stored = new.get("meta") or {}, stored.get("meta") or {}
+        out["meta"] = {f: {"new": meta_new.get(f), "stored": meta_stored.get(f)}
+                       for f in GRID_META_FIELDS}
+        problems += [f"meta {f} differs" for f in GRID_META_FIELDS
+                     if meta_new.get(f) != meta_stored.get(f)]
+    errors = [row.get("key") for row in new.get("results") or [] if "error" in row]
+    out["error_rows"] = errors[:20]
+    out["n_error_rows"] = len(errors)
+    return {**out, "problems": problems, "exit_code": 1 if problems else 0}
+
+
+def dg3_hash(args: argparse.Namespace) -> dict:
+    """RV1-3.2 H-8 dg3 replacement: per H-6 key, whether the H-8 VB line of the same key has the
+    same ``base.commands_sha256`` (record; predicted same, never a stop)."""
+    h6 = {row.get("key"): row for row in read_json(Path(args.h6)).get("results") or []}
+    h8 = {row.get("key"): row for row in read_json(Path(args.h8_vb)).get("results") or []}
+    rows = []
+    for key, line in h6.items():
+        other = h8.get(key)
+        sha6 = get_path(line, "base.commands_sha256")[1]
+        sha8 = None if other is None else get_path(other, "base.commands_sha256")[1]
+        rows.append({"key": key, "h6": sha6, "h8_vb": sha8,
+                     "same": None if sha6 is None or sha8 is None else sha6 == sha8})
+    differing = [row["key"] for row in rows if row["same"] is False]
+    return {"rules": RULES_REV1_NAME, "section": "RV1-3.2 (record)", "keys": len(rows),
+            "same": sum(row["same"] is True for row in rows), "differ": len(differing),
+            "unreadable": sum(row["same"] is None for row in rows),
+            "differing_keys": differing, "rows": rows,
+            "note": "a difference is recorded and handed to python-expert; it is no stop",
+            "exit_code": 0}
+
+
+# ------------------------------------------------------------------------- rev1 RV1-5 anchors
+ANCHOR_SELECTIONS = (
+    ("P-1 T-1", "las/las_T1.jsonl", 8),
+    ("P-1 T-2", "las/las_T2.jsonl", 184),
+    ("P-1 rest", "d1.jsonl", 216),
+    ("P-2 Y-Pa", "las/k1/k1_YP.jsonl", 165),
+    ("P-2 rest", "soil_defer/s2d_SC.jsonl", 291),
+)
+"""RV1-5 table: (prediction, anchor file under v5/, key count)."""
+UNPREDICTED_GROUP = "H-R-A-stop"
+"""RV1-5: the H-R-A-stop lines get no prediction."""
+
+
+def job_key_of(line: dict) -> str | None:
+    """``run_v5.job_key(line["job"])``: the ``job`` dict without ``mask`` / ``t4h_dir``."""
+    job = line.get("job")
+    if not isinstance(job, dict):
+        return None
+    return json.dumps({k: job[k] for k in sorted(job) if k not in ("mask", "t4h_dir")},
+                      sort_keys=True)
+
+
+def _anchor_lines(path: Path, name: str, taken: set[str]) -> list[dict]:
+    """The lines of one anchor file that RV1-5 picks (each without ``error``)."""
+    lines = [line for line in read_records(path) if "error" not in line]
+    if name in ("P-1 T-1", "P-1 T-2"):
+        return [line for line in lines if get_path(line, "las.candidate")[1] == "b0"]
+    if name == "P-2 Y-Pa":
+        return [line for line in lines if get_path(line, "k1.sub_bundle")[1] == "Y-Pa"
+                and get_path(line, "las.candidate")[1] == "P0"]
+    if name == "P-1 rest":
+        return [line for line in lines if get_path(line, "job.d1.group")[1] == "H-R-0"
+                and job_key_of(line) not in taken]
+    return [line for line in lines if job_key_of(line) not in taken]  # P-2 rest
+
+
+def anchor_selection(files: dict[str, Path]) -> dict:
+    """RV1-5 anchors: key -> (prediction, ``commands_sha256``), with the S-7 checks."""
+    anchors: dict[str, dict] = {}
+    problems, counts = [], {}
+    taken_p1: set[str] = set()
+    taken_p2: set[str] = set()
+    for name, entry, expected in ANCHOR_SELECTIONS:
+        path = files[entry]
+        _, sha_problems = appendix_b_problems(path)
+        problems += sha_problems
+        taken = taken_p1 if name.startswith("P-1") else taken_p2
+        picked = _anchor_lines(path, name, taken)
+        per_key = Counter(job_key_of(line) for line in picked)
+        repeated = [key for key, n in per_key.items() if n != 1]
+        if repeated:
+            problems.append(f"S-7 {name}: {len(repeated)} keys with more than one line")
+        if None in per_key:
+            problems.append(f"S-7 {name}: a picked line without job")
+        counts[name] = {"keys": len(per_key), "expected": expected}
+        if len(per_key) != expected:
+            problems.append(f"S-7 {name}: {len(per_key)} keys, RV1-5 table {expected}")
+        for line in picked:
+            key = job_key_of(line)
+            if key in anchors:
+                problems.append(f"S-7 key in two selections ({anchors[key]['prediction']}, {name})")
+            anchors[key] = {"prediction": name, "commands_sha256": line.get("commands_sha256")}
+        if name.startswith("P-1") and name != "P-1 rest":
+            taken_p1.update(per_key)
+        if name == "P-2 Y-Pa":
+            taken_p2.update(per_key)
+    return {"anchors": anchors, "counts": counts, "problems": problems}
+
+
+def anchor_map(args: argparse.Namespace) -> dict:
+    """RV1-5: pick the anchors, pair them with the H-1 lines by ``job_key`` (exactly one anchor
+    per predicted H-1 key, else S-7) and compare ``commands_sha256`` (record of P-1 / P-2)."""
+    files = {entry: Path(args.v5_dir) / entry for _, entry, _ in ANCHOR_SELECTIONS}
+    selection = anchor_selection(files)
+    anchors, problems = selection["anchors"], list(selection["problems"])
+    out: dict[str, Any] = {"rules": RULES_REV1_NAME, "section": "RV1-5",
+                           "counts": selection["counts"], "anchor_keys": len(anchors)}
+    if args.h1 is not None:
+        pairs, unpaired = [], []
+        for line in read_records(Path(args.h1)):
+            key = job_key_of(line)
+            if get_path(line, "job.d1.group")[1] == UNPREDICTED_GROUP:
+                continue
+            anchor = anchors.get(key)
+            if anchor is None:
+                unpaired.append(key)
+                continue
+            sha = line.get("commands_sha256")
+            pairs.append({"key": key, "prediction": anchor["prediction"],
+                          "anchor": anchor["commands_sha256"], "run": sha,
+                          "same": sha is not None and sha == anchor["commands_sha256"]})
+        if unpaired:
+            problems.append(f"S-7 {len(unpaired)} predicted H-1 keys without an anchor")
+        out["h1"] = {"paired": len(pairs), "unpaired": unpaired[:20],
+                     "same": sum(p["same"] for p in pairs),
+                     "differ": sum(not p["same"] for p in pairs),
+                     "pairs": pairs if args.all else [p for p in pairs if not p["same"]]}
+    out["anchors"] = {key: value["commands_sha256"] for key, value in anchors.items()}
+    return {**out, "problems": problems, "stop_S7": any("S-7" in p for p in problems),
+            "exit_code": 1 if problems else 0}
+
+
+# ------------------------------------------------------------------------ rev1 RV1-9 imports
+LOC_SHADOW_MODULE = "loc_anchor_shadow"
+LOC_SHADOW_INSTALLERS = ("hsh_run", "g8_shadow", "b1_harness")
+"""RV1-9: the runners that call ``loc_anchor_shadow.install()``."""
+SCRIPT_PATTERN = re.compile(r"[\w./\\:-]+\.py\b")
+SOURCE_DIRS = ("03_src", "04_scripts", "05_tests/unit")
+
+
+def module_index(root: Path) -> dict[str, list[Path]]:
+    """Module name -> files under :data:`SOURCE_DIRS`: plain script names (``r67_g1_screen``)
+    and dotted package names under ``03_src`` (``outrigger_sim.control.c2``)."""
+    index: dict[str, list[Path]] = {}
+    for folder in SOURCE_DIRS:
+        for path in (root / folder).rglob("*.py"):
+            index.setdefault(path.stem, []).append(path)
+            if folder == "03_src":
+                parts = path.relative_to(root / folder).with_suffix("").parts
+                dotted = ".".join(parts[:-1] if parts[-1] == "__init__" else parts)
+                index.setdefault(dotted, []).append(path)
+    return index
+
+
+def imported_names(path: Path) -> set[str]:
+    """Every module name a file imports anywhere (also inside functions) and the name string of
+    ``importlib.import_module("...")`` / ``spec_from_file_location("...", path)``; dotted names
+    also give their prefixes."""
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    except (OSError, SyntaxError, UnicodeDecodeError) as exc:
+        raise InputError(f"{path}: {exc}") from exc
+    names: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            names.update(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
+            names.add(node.module)
+            names.update(f"{node.module}.{alias.name}" for alias in node.names)
+        elif (isinstance(node, ast.Call)
+              and getattr(node.func, "attr", None) in ("import_module", "spec_from_file_location")
+              and node.args and isinstance(node.args[0], ast.Constant)):
+            names.add(str(node.args[0].value))
+    prefixes = {".".join(name.split(".")[:i]) for name in names
+                for i in range(1, name.count(".") + 1)}
+    return names | prefixes
+
+
+def import_closure(start: list[Path], index: dict[str, list[Path]]) -> dict[Path, set[str]]:
+    """File -> imported names for the files reachable from ``start`` (an over-approximation: a
+    plain name maps to every file of that name)."""
+    seen: dict[Path, set[str]] = {}
+    todo = list(start)
+    while todo:
+        path = todo.pop()
+        if path in seen:
+            continue
+        seen[path] = imported_names(path)
+        for name in seen[path]:
+            todo += [found for found in index.get(name, []) if found not in seen]
+    return seen
+
+
+def step_scripts(steps_doc: dict, root: Path) -> list[Path]:
+    """Repository ``.py`` files named in the step commands (the interpreter excluded)."""
+    scripts = []
+    for step in steps_doc.get("steps", []):
+        for token in SCRIPT_PATTERN.findall(str(step.get("cmd", ""))):
+            path = Path(token) if Path(token).is_absolute() else root / token
+            if path.is_file() and path not in scripts:
+                scripts.append(path)
+    return scripts
+
+
+def import_check(args: argparse.Namespace) -> dict:
+    """RV1-9: no 436.8 harness runner reaches ``loc_anchor_shadow`` (import) or a runner that
+    installs it, and no step env names ``OUTRIGGER_LOC_SHADOW``."""
+    root = Path(args.root)
+    index = module_index(root)
+    steps_doc = {"steps": [step for path in args.steps for step in read_json(Path(path))["steps"]]}
+    scripts = step_scripts(steps_doc, root)
+    closure = import_closure(scripts, index)
+    hits = sorted(str(path.relative_to(root)) for path in closure
+                  if path.stem == LOC_SHADOW_MODULE or path.stem in LOC_SHADOW_INSTALLERS)
+    env_hits = [step.get("id") for step in steps_doc["steps"]
+                if any(name in (step.get("env") or {}) for name in FORBIDDEN_ENV)]
+    problems = [f"{hit} is reachable from a 436.8 runner" for hit in hits]
+    problems += [f"step {step} env names {FORBIDDEN_ENV}" for step in env_hits]
+    return {"rules": RULES_REV1_NAME, "section": "RV1-9",
+            "runners": sorted(str(path.relative_to(root)) for path in scripts),
+            "closure_files": len(closure),
+            "closure": sorted(str(path.relative_to(root)) for path in closure),
+            "loc_shadow_hits": hits, "env_hits": env_hits, "problems": problems,
+            "method": "AST imports (module level and in functions, import_module / "
+                      "spec_from_file_location name strings), plain names matched to every file "
+                      "of that name",
+            "exit_code": 1 if problems else 0}
+
+
+# ------------------------------------------------------------------- rev1 RV1-7 F<F_min times
+FMIN_WINDOW_S = 8.0
+"""P5r4 judgement 8.2 table: departure .. departure + 8 s, 1 ms true F_cyl."""
+SERIES_FILE = "step_series.npz"
+LEG_NAMES = ("FL", "FR", "RL", "RR")
+
+
+def below_durations(t_s, force_N, t_start_s: float, limit_N: float) -> dict:
+    """Per leg the time (and sample count) with ``F < limit`` (7.6: ``v < X - 1e-9``) in the
+    window ``t_start .. t_start + FMIN_WINDOW_S``; the sample step is the median of ``diff(t)``."""
+    import numpy as np
+
+    t = np.asarray(t_s, dtype=float)
+    force = np.asarray(force_N, dtype=float)
+    window = (t >= t_start_s - COMPARE_EPS) & (t <= t_start_s + FMIN_WINDOW_S + COMPARE_EPS)
+    step_s = float(np.median(np.diff(t))) if t.size > 1 else math.nan
+    below = window[:, None] & (force < limit_N - COMPARE_EPS)
+    counts = below.sum(axis=0)
+    return {"samples": [int(n) for n in counts], "ms": [round(float(n) * step_s * 1e3, 3)
+                                                        for n in counts],
+            "window_samples": int(window.sum()), "step_s": step_s}
+
+
+def fmin_time(args: argparse.Namespace) -> dict:
+    """RV1-7: the 7.4 record values ``F<F_min`` and ``F<F_min+2 kN`` time of one C-8 row."""
+    import numpy as np
+
+    case = Path(args.case)
+    result = read_json(case / "result.json")
+    present, t_dep = get_path(result, "p3b.departure.t_departure_s")
+    out: dict[str, Any] = {"rules": RULES_REV1_NAME, "section": "RV1-7 (7.4 record)",
+                           "case": str(case), "window_s": FMIN_WINDOW_S,
+                           "definition": "P5r4 judgement 8.2: 1 ms true F_cyl (step_series.npz "
+                                         "F_cyl_N), departure .. departure + 8 s",
+                           "series_sha256": file_sha256(case / SERIES_FILE)}
+    if not present or t_dep is None:
+        return {**out, "status": "판정 불가 (p3b.departure.t_departure_s missing)", "exit_code": 1}
+    try:
+        with np.load(case / SERIES_FILE, allow_pickle=False) as series:
+            t_s, force_N = np.asarray(series["t_s"]), np.asarray(series["F_cyl_N"])
+    except (OSError, KeyError, ValueError) as exc:
+        raise InputError(f"{case / SERIES_FILE}: {exc}") from exc
+    below_min = below_durations(t_s, force_N, float(t_dep), F_MIN_N)
+    below_guard = below_durations(t_s, force_N, float(t_dep), F_MIN_N + OC5_GUARD_N)
+    return {**out, "t_departure_s": t_dep, "legs": list(LEG_NAMES),
+            "F_below_F_min": below_min, "F_below_F_min_plus_2kN": below_guard,
+            "status": "기록", "exit_code": 0}
+
+
+# ------------------------------------------------------------- rev1 RV1-10 j stroke exposure
+STROKE_LIMITS_MM = (678.0, 684.8)
+"""RV1-10 j record limits (``end_stop_cushion_model_review.md``): cushion reading 678 mm, gate
+684.8 mm. Comparison with the 7.6 allowance 1e-9 m."""
+STROKE_EPS_MM = COMPARE_EPS * 1e3
+S_REF_PATHS = (
+    ("d1.stroke_max_m", 1e3),
+    ("base.max_motor_stroke_mm", 1.0),
+    ("max_motor_stroke_mm", 1.0),
+    ("max_stroke_mm", 1.0),
+    ("p3b.P3-5_clearance_stroke.s_motor_max_m", 1e3),
+)
+"""(key path, factor to mm) of a run's maximum ``s_ref`` / ``stroke_m`` (oil-volume coordinate,
+harness ``max(plant.sref)``, Chrono L1 motor position); the first path present counts."""
+PISTON_PATHS = (("r79.max_true_stroke_mm", 1.0),)
+"""(key path, factor to mm) of a run's maximum piston stroke (``stroke_corrected_m``)."""
+EVENT_PATHS = ("events", "event_names", "warnings", "fault_events", "base.warnings",
+               "base.events_head", "r79.warn_fault")
+STROKE_END_COUNT_PATHS = ("r79.n_stroke_end_fault",)
+STROKE_END_EVENT = "FAULT_STROKE_END"
+
+
+def path_maximum_mm(record: dict, paths: tuple) -> tuple[float | None, str | None]:
+    """(maximum in mm, path) of the first present path with a numeric value or list."""
+    for dotted, factor in paths:
+        present, value = get_path(record, dotted)
+        if not present or value is None:
+            continue
+        values = value if isinstance(value, list) else [value]
+        numbers = [float(v) for v in values if isinstance(v, (int, float))
+                   and not isinstance(v, bool) and math.isfinite(v)]
+        if numbers:
+            return max(numbers) * factor, dotted
+    return None, None
+
+
+def _event_names(value: Any) -> Iterator[str]:
+    for item in value if isinstance(value, list) else []:
+        if isinstance(item, str):
+            yield item
+        elif isinstance(item, dict) and "name" in item:
+            yield str(item["name"])
+        elif isinstance(item, (list, tuple)):
+            yield from (str(part) for part in item if isinstance(part, str))
+
+
+def stroke_end_fault(record: dict) -> bool | None:
+    """True / False from the record's event lists or counters; None without any of them."""
+    found_source = False
+    for dotted in STROKE_END_COUNT_PATHS:
+        present, value = get_path(record, dotted)
+        if present and isinstance(value, int):
+            found_source = True
+            if value > 0:
+                return True
+    for dotted in EVENT_PATHS:
+        present, value = get_path(record, dotted)
+        if not present or not isinstance(value, list):
+            continue
+        found_source = True
+        if any(name.startswith(STROKE_END_EVENT) for name in _event_names(value)):
+            return True
+    return False if found_source else None
+
+
+def unit_records(document: Any) -> list[dict]:
+    """The lines / rows a bundle counts: grid ``results[].runs[]``, r79 / screen ``results[]`` or
+    ``records[]``, jsonl lines, or one ``result.json``."""
+    if isinstance(document, dict):
+        results = document.get("results") or document.get("records")
+        if isinstance(results, list):
+            if results and all(isinstance(row.get("runs"), list) for row in results):
+                return [run for row in results for run in row["runs"]]
+            return results
+        return [document]
+    return list(document)
+
+
+def exposure_counts(records: list[dict]) -> dict:
+    out: dict[str, Any] = {"lines": len(records)}
+    for coordinate, paths in (("s_ref", S_REF_PATHS), ("piston", PISTON_PATHS)):
+        values = [path_maximum_mm(record, paths) for record in records]
+        recorded = [value for value, _ in values if value is not None]
+        cell: dict[str, Any] = {"recorded": len(recorded),
+                                "no_record": len(records) - len(recorded),
+                                "paths": sorted({path for _, path in values if path})}
+        for limit in STROKE_LIMITS_MM:
+            cell[f"ge_{limit:g}_mm"] = sum(value >= limit - STROKE_EPS_MM for value in recorded)
+        if not recorded:
+            cell["note"] = "기록 없음"
+        out[coordinate] = cell
+    faults = [stroke_end_fault(record) for record in records]
+    out[STROKE_END_EVENT] = {"lines": sum(fault is True for fault in faults),
+                             "no_event_record": sum(fault is None for fault in faults)}
+    return out
+
+
+def stroke_exposure(args: argparse.Namespace) -> dict:
+    """RV1-10 j: per bundle the lines / rows with max stroke >= 678 mm and >= 684.8 mm (``s_ref``
+    and piston apart) and with ``FAULT_STROKE_END``; record only (no grade, no stop)."""
+    records = [record for path in args.harness or [] for doc in read_records(Path(path))
+               for record in unit_records(doc)]
+    for batch_dir in args.chrono or []:
+        for case in _batch_rows(Path(batch_dir)):
+            result_path = Path(batch_dir) / case / "result.json"
+            records.append(read_json(result_path) if result_path.is_file() else {})
+    return {"rules": RULES_REV1_NAME, "section": "RV1-10 j (record)", "bundle": args.bundle,
+            "limits_mm": list(STROKE_LIMITS_MM), **exposure_counts(records),
+            "s_ref_paths": [p for p, _ in S_REF_PATHS],
+            "piston_paths": [p for p, _ in PISTON_PATHS],
+            "exit_code": 0}
+
+
 # --------------------------------------------------------------------------------------------- main
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -884,6 +1480,10 @@ def _parser() -> argparse.ArgumentParser:
             p.add_argument(
                 "--anchor", nargs="*", type=Path, help="hash anchor files (first match wins)"
             )
+            p.add_argument("--anchor-map", type=Path, default=None,
+                           help="anchor-map report (RV1-5 selection; replaces --anchor)")
+            p.add_argument("--family-table", type=Path, default=None,
+                           help="resume_k1_family.py table (RV1-6; a key not in it = uniform)")
     p = sub.add_parser("jp-reuse", help="7.3")
     p.add_argument("--shadow", type=Path, required=True, help="v5/las/shadow_jp_b0.jsonl")
     p.add_argument(
@@ -903,6 +1503,35 @@ def _parser() -> argparse.ArgumentParser:
     p = sub.add_parser("gs", help="11.2 (key presence only)")
     p.add_argument("--harness", nargs="+", type=Path, required=True)
     p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("keyset",
+                       help="rev1 RV1-3: new H-6 .. H-9 grid output vs stored keys (S-15)")
+    p.add_argument("--kind", required=True, choices=("r79", "grid"))
+    p.add_argument("--new", type=Path, required=True, help="new runner output (.json)")
+    p.add_argument("--stored", type=Path, required=True, help="appendix B file under v5/")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("dg3-hash", help="rev1 RV1-3.2: H-6 vs H-8 VB commands_sha256 (record)")
+    p.add_argument("--h6", type=Path, required=True)
+    p.add_argument("--h8-vb", type=Path, required=True)
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("anchor-map", help="rev1 RV1-5: P-1 / P-2 anchors by job_key (S-7)")
+    p.add_argument("--v5-dir", type=Path, required=True,
+                   help="06_analysis/03_hydraulic/coupled/v5 of the checkout with the anchors")
+    p.add_argument("--h1", type=Path, default=None, help="resume_k1/h1_d1.jsonl (after H-1)")
+    p.add_argument("--all", action="store_true", help="list every pair, not only differences")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("import-check", help="rev1 RV1-9: no loc_anchor_shadow on the runner path")
+    p.add_argument("--steps", nargs="+", type=Path, required=True)
+    p.add_argument("--root", type=Path, default=ROOT, help="checkout (git_at_start)")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("fmin-time", help="rev1 RV1-7: 7.4 F<F_min times of a C-8 row (record)")
+    p.add_argument("--case", type=Path, required=True,
+                   help="case folder (result.json, step_series.npz)")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("stroke-exposure", help="rev1 RV1-10 j: stroke exposure counts (record)")
+    p.add_argument("--bundle", required=True)
+    p.add_argument("--harness", nargs="*", type=Path)
+    p.add_argument("--chrono", nargs="*", type=Path)
+    p.add_argument("--out", type=Path, required=True)
     return parser
 
 
@@ -913,21 +1542,60 @@ COMMANDS = {
     "oc5": oc5,
     "overlap": overlap,
     "gs": gs,
+    "keyset": keyset,
+    "dg3-hash": dg3_hash,
+    "anchor-map": anchor_map,
+    "import-check": import_check,
+    "fmin-time": fmin_time,
+    "stroke-exposure": stroke_exposure,
 }
+
+
+def rev1_seal_check(rules_dir: Path | None = None) -> dict:
+    """Rev1 seal: the file's sha256 and the first field of its ``.sha256`` must both be
+    :data:`RULES_REV1_SHA256`; otherwise ``stop_S1`` (rules 8.2 S-1, rev1 line 3)."""
+    folder = RULES_DIR if rules_dir is None else Path(rules_dir)
+    rules_path = folder / RULES_REV1_NAME
+    seal_path = rules_path.with_suffix(".sha256")
+    out: dict[str, Any] = {"rules_rev1": RULES_REV1_NAME, "expected_sha256": RULES_REV1_SHA256}
+    problems = []
+    if seal_path.is_file():
+        fields = seal_path.read_text(encoding="utf-8").split()
+        out["seal_file_sha256"] = fields[0] if fields else None
+        if out["seal_file_sha256"] != RULES_REV1_SHA256:
+            problems.append(
+                f"{seal_path.name} value {out['seal_file_sha256']!r} is not the sealed one")
+    else:
+        problems.append(f"{seal_path.name} missing")
+    if rules_path.is_file():
+        out["rules_file_sha256"] = hashlib.sha256(rules_path.read_bytes()).hexdigest()
+        if out["rules_file_sha256"] != RULES_REV1_SHA256:
+            problems.append(
+                f"{rules_path.name} sha256 {out['rules_file_sha256'][:16]} is not the sealed one")
+    else:
+        problems.append(f"{rules_path.name} missing")
+    return {**out, "problems": problems, "stop_S1": bool(problems)}
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
-    try:
-        report = COMMANDS[args.command](args)
-    except InputError as exc:
-        print(json.dumps({"exit_code": 2, "error": str(exc)}, ensure_ascii=True))
-        return 2
-    except Exception as exc:  # report the failure in the contract form, keep the trace
-        print(traceback.format_exc(), file=sys.stderr)
-        print(json.dumps({"exit_code": 3, "error": repr(exc)}, ensure_ascii=True))
-        return 3
+    seal = rev1_seal_check()
+    if seal["stop_S1"]:  # no judgement under an unsealed or changed rev1
+        report = {"rules": RULES_NAME, "section": "8.2 S-1 (rev1 seal)", "rev1_seal": seal,
+                  "exit_code": 1}
+    else:
+        try:
+            report = COMMANDS[args.command](args)
+        except InputError as exc:
+            print(json.dumps({"exit_code": 2, "error": str(exc)}, ensure_ascii=True))
+            return 2
+        except Exception as exc:  # report the failure in the contract form, keep the trace
+            print(traceback.format_exc(), file=sys.stderr)
+            print(json.dumps({"exit_code": 3, "error": repr(exc)}, ensure_ascii=True))
+            return 3
+        report["rev1_seal"] = seal
     report["rules_sha256"] = RULES_SHA256
+    report["rules_rev1_sha256"] = RULES_REV1_SHA256
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
         json.dumps(report, indent=1, ensure_ascii=False, default=str), encoding="utf-8"

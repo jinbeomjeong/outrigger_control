@@ -26,6 +26,7 @@ harness patches stay in the process. Deterministic (no noise). Values only; the 
 
 Usage (dynamics-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/run_v5.py <batch> [--workers N] [--mask HEX] [--list]
+      [--out <jsonl>] [--settings A,B] [--one-per-setting] [--overlap-reference <t_a json>]
 """
 from __future__ import annotations
 
@@ -85,6 +86,10 @@ OVERLAP_TIMING = "flow_saturation"
 OVERLAP_REFERENCE_PATH = OUT_DIR / "overlap_t_a.json"
 """t_a of the VB reference run, written before the 12 runs and read by every worker (one
 absolute time for V0, V3 and VB)."""
+OVERLAP_REFERENCE_ENV = "RUN_V5_OVERLAP_REFERENCE"
+"""436.8 rules rev1 RV1-4: the t_a record of this run (``--overlap-reference``). The parent sets
+it before the pool, so the spawned workers read the same file; unset = the stored
+:data:`OVERLAP_REFERENCE_PATH`."""
 PRESSURE_ONLY_SETTINGS = ("V0", "V4", "V5")
 """Criteria 13.4 (⑥): V0, M1c VN x1, M1c BL x1; the combined pairs are the same rows of
 ``main``."""
@@ -325,15 +330,22 @@ def _case_of(job: dict):
     return case, decision
 
 
+def overlap_reference_path() -> Path:
+    """The t_a record of this process: :data:`OVERLAP_REFERENCE_ENV`, else the stored file."""
+    value = os.environ.get(OVERLAP_REFERENCE_ENV)
+    return Path(value) if value else OVERLAP_REFERENCE_PATH
+
+
 def overlap_reference() -> dict:
-    """The stored t_a record of the ``overlap`` batch.
+    """The t_a record of the ``overlap`` batch (:func:`overlap_reference_path`).
 
     Raises:
         RuntimeError: No reference yet, or it has no t_a.
     """
-    if not OVERLAP_REFERENCE_PATH.exists():
-        raise RuntimeError(f"no t_a reference {OVERLAP_REFERENCE_PATH} (run_v5 overlap writes it)")
-    reference = json.loads(OVERLAP_REFERENCE_PATH.read_text(encoding="utf-8"))
+    path = overlap_reference_path()
+    if not path.exists():
+        raise RuntimeError(f"no t_a reference {path} (run_v5 overlap writes it)")
+    reference = json.loads(path.read_text(encoding="utf-8"))
     if reference.get("t_a_s") is None:
         raise RuntimeError(f"t_a reference without a time: {reference.get('basis')}")
     return reference
@@ -354,8 +366,9 @@ def write_overlap_reference() -> dict:
     job = {"case": OVERLAP_CASE, "setting": OVERLAP_REFERENCE_SETTING}
     with get_context("spawn").Pool(1, maxtasksperchild=1) as pool:
         reference = pool.apply(run_overlap_reference, (job,))
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    OVERLAP_REFERENCE_PATH.write_text(json.dumps(reference, indent=1), encoding="utf-8")
+    path = overlap_reference_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(reference, indent=1), encoding="utf-8")
     return reference
 
 
@@ -510,7 +523,12 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
                         help="comma list: run only the jobs of these settings (e.g. VB,LS1,LS2,LS3,LS4)")
     parser.add_argument("--one-per-setting", action="store_true",
                         help="G-S dry run (436.8 rules 11.2): the first job of each setting only")
+    parser.add_argument("--overlap-reference", type=Path, default=None,
+                        help="overlap only: t_a record of this run (436.8 rules rev1 RV1-4); "
+                             "written by the VB reference run when missing, read by every "
+                             "worker; never the stored v5/overlap_t_a.json")
     args = parser.parse_args(argv)
+    _check_overlap_reference(parser, args)
     if args.group is None and args.k1 is not None:
         parser.error("--k1 belongs to --group H-R-X")
     if args.group is not None and args.batch != D1_BATCH:
@@ -526,6 +544,19 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
             parser.error(f"--settings needs setting names of {sorted(SETTINGS)}, got {unknown or names}")
         args.settings = tuple(names)
     return args
+
+
+def _check_overlap_reference(parser: argparse.ArgumentParser, args: argparse.Namespace) -> None:
+    """RV1-4: an ``overlap`` run under a new name needs its own t_a record, and that record is
+    never the stored one (a rerun would otherwise read the pre-③ t_a)."""
+    if args.overlap_reference is None:
+        if args.batch == "overlap" and args.out is not None:
+            parser.error("overlap with --out needs --overlap-reference (436.8 rules rev1 RV1-4)")
+        return
+    if args.batch != "overlap":
+        parser.error("--overlap-reference belongs to the overlap batch")
+    if args.overlap_reference.resolve() == OVERLAP_REFERENCE_PATH.resolve():
+        parser.error(f"--overlap-reference must not be the stored {OVERLAP_REFERENCE_PATH.name}")
 
 
 def select_settings(jobs: list[dict], settings: tuple[str, ...] | None) -> list[dict]:
@@ -599,12 +630,15 @@ def main(argv: list[str] | None = None) -> None:
     for job in todo:
         job["mask"] = mask
         job["t4h_dir"] = str(t4h_dir)
+    if args.overlap_reference is not None:  # before the pool: the spawned workers inherit it
+        os.environ[OVERLAP_REFERENCE_ENV] = str(args.overlap_reference.resolve())
     import verdict_runs
 
     verdict_runs.warm_numba_cache()
-    if args.batch == "overlap" and not OVERLAP_REFERENCE_PATH.exists():
+    if args.batch == "overlap" and not overlap_reference_path().exists():
         reference = write_overlap_reference()
-        print(f"overlap t_a {reference['t_a_s']} s ({reference['basis']})", flush=True)
+        print(f"overlap t_a {reference['t_a_s']} s ({reference['basis']}) -> "
+              f"{overlap_reference_path()}", flush=True)
     path.parent.mkdir(parents=True, exist_ok=True)
     has_identity = args.group is not None or args.out is not None
     if has_identity:

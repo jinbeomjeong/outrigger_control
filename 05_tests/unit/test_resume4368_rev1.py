@@ -1,0 +1,819 @@
+"""436.8 rules rev1 (``v5_resume_4368_rules_rev1.md``, sealed d9094fda) path 1 follow-up.
+
+H-10 440 and the main total, the H-6 .. H-9 grid steps from the stored key sources, the r79
+``--keys-file`` option, the run_v5 overlap reference path, the rev1 seal check and the judge
+subcommands keyset / dg3-hash / anchor-map / import-check / fmin-time / stroke-exposure, the
+family table in ``k1-class``. Synthetic inputs only; no harness or Chrono run.
+"""
+
+from __future__ import annotations
+
+import importlib
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[2]
+COUPLED = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+S8 = ROOT / "04_scripts" / "03_control" / "s8"
+SCRIPTS = ROOT / "06_analysis" / "02_control" / "verif_matrix" / "scripts"
+for _path in (COUPLED, SCRIPTS, ROOT / "03_src"):
+    if str(_path) not in sys.path:
+        sys.path.insert(0, str(_path))
+
+import resume4368_judge as judge  # noqa: E402
+import resume_k1_record as record  # noqa: E402
+import run_v5  # noqa: E402
+
+steps = importlib.import_module("resume_k1_steps")
+family = importlib.import_module("resume_k1_family")
+
+DG3_KEYS = [
+    "cand=current#L2|s0|g6|52|ref|J1|top|Fs0",
+    "cand=current#L3|s0|g6|5|g6|G1+J1@FR|top|Fs4",
+]
+NOISE_KEYS = [
+    "cand=current#L1|s0|g6|0|g6|G1+J1@FL|top|Fs0",
+    "cand=current#L2|s0|g6|1|g6|G1+J1@FL|top|Fs4",
+    "cand=current#L3|s0|g6|2|g6|G1+J1@FL|bottom|Fs0",
+]
+SEEDEXT_KEYS = [
+    "cand=current#L2|s0|g6|56|ref|J2|top|Fs0",
+    "cand=current#L2|s24|g6|56|ref|J2|top|Fs0",
+]
+
+
+def _sha(path: Path) -> str:
+    return judge.file_sha256(path)
+
+
+def _write_json(path: Path, document: dict) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(document), encoding="utf-8")
+    return path
+
+
+def _grid_document(name: str) -> dict:
+    offsets = [float(v) for v in steps.GRID_RUNS[name]["env"]["R67_OFFSETS"].split(",")]
+    results = [
+        {
+            "key": key,
+            "runs": [
+                {"event": event, "offset_s": offset}
+                for event in steps.GRID_EVENTS
+                for offset in offsets
+            ],
+        }
+        for key in steps.grid_expected_keys(name)
+    ]
+    return {"meta": steps.grid_expected_meta(name), "results": results}
+
+
+def _stored_sources(data_root: Path) -> dict:
+    """Synthetic appendix B files under ``data_root`` and STORED_SOURCES with their sha."""
+    documents = {
+        "dg3_v4_on": {"results": [{"key": k} for k in DG3_KEYS]},
+        "dg3_off": {"results": [{"key": k} for k in reversed(DG3_KEYS)]},
+        "noise_VB": {"results": [{"key": k} for k in NOISE_KEYS]},
+        "noise_V0": {"results": [{"key": k} for k in NOISE_KEYS]},
+        "seedext_VB": {"results": [{"key": k} for k in SEEDEXT_KEYS]},
+        "seedext_V0": {"results": [{"key": k} for k in SEEDEXT_KEYS]},
+        **{name: _grid_document(name) for name in steps.GRID_RUNS},
+    }
+    table = {}
+    for name, document in documents.items():
+        relative = steps.STORED_SOURCES[name][0]
+        path = _write_json(data_root / steps.V5 / relative, document)
+        table[name] = (relative, _sha(path))
+    return table
+
+
+def _build(data_root: Path, out: Path):
+    args = steps.argparse.Namespace(
+        root=r"C:\workspace\outrigger_control",
+        data_root=str(data_root),
+        workers=4,
+        mask="0x00FF0000",
+    )
+    return steps.write(out, steps.build(args))
+
+
+# --------------------------------------------------------------------------------- RV1-2 counts
+def test_h10_is_440_and_the_main_total(tmp_path) -> None:
+    report = _build(tmp_path, tmp_path / "steps")
+    counts = report["counts"]
+    assert steps.TABLE_LINES["H-10"] == 440
+    assert counts["H-10"]["derived"] == 440 and counts["H-10"]["differs_S15"] is False
+    assert counts["H-10"]["parts"]["jobs"] == {
+        "main": 388,
+        "u9_targeted": 28,
+        "item8": 12,
+        "overlap": 12,
+    }
+    doc = json.loads((tmp_path / "steps" / "steps_h2.json").read_text(encoding="utf-8"))
+    assert not [s for s in doc["steps"] if "p3_hash" in s["cmd"]]  # RV1-2: no p3_hash run
+    total = counts["main_total"]
+    # the 5.1 table values sum to 9,570; rev1 states 9,778 (reported as 확인 필요, S-15)
+    assert total["rules_value"] == 9778 and total["table_sum"] == 9570
+    assert total["table_sum_differs_S15"] is True
+
+
+def test_p3_hash_jobs_are_main_vb_jobs(tmp_path) -> None:
+    main_vb = [job for job in run_v5.batch_jobs("main") if job["setting"] == "VB"]
+    seen, lines = set(), []
+    for job in main_vb:  # the first VB job per case, as p3_hash_jobs picks them
+        if job["case"] not in seen:
+            seen.add(job["case"])
+            lines.append({"job": job})
+    stored = tmp_path / steps.V5 / "main.jsonl"
+    stored.parent.mkdir(parents=True)
+    stored.write_text("".join(json.dumps(line) + "\n" for line in lines), encoding="utf-8")
+    counts = steps.h10_counts(tmp_path)
+    assert counts["p3_hash_in_main_vb"] == "22/22" and counts["p3_hash_all_in_main_vb"] is True
+
+
+# ------------------------------------------------------------------------- RV1-3 steps / names
+def test_h6_to_h9_grid_steps_from_the_stored_sources(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(steps, "STORED_SOURCES", _stored_sources(tmp_path))
+    out = tmp_path / "steps"
+    report = _build(tmp_path, out)
+    assert report["blocked"] == {}
+    counts = report["counts"]
+    assert counts["H-6"]["derived"] == counts["H-7"]["derived"] == 2
+    assert counts["H-8"]["derived"] == 3 + 3 + 2 + 2
+    h6, h7 = (
+        json.loads((out / f"steps_bundle_{n}.json").read_text(encoding="utf-8"))["steps"]
+        for n in ("h6", "h7")
+    )
+    assert [s["id"] for s in h6] == [
+        "h6_dg3_v4on_identity_start",
+        "h6_dg3_v4on",
+        "h6_dg3_v4on_identity_end",
+    ]
+    run6, run7 = h6[1], h7[1]
+    assert steps.DG3 in run6["cmd"] and "--levels L2,L3" in run6["cmd"]
+    assert '--keys "L2|s0|g6|52|ref|J1|top|Fs0;L3|s0|g6|5|g6|G1+J1@FR|top|Fs4"' in run6["cmd"]
+    assert run6["env"]["LAS_T3_DG3_P3"] == "on" and run7["env"]["LAS_T3_DG3_P3"] == "off"
+    assert run6["env"]["R79_T4H_DIR"] == f"{steps.RESUME}/h6_dg3_v4on_t4h"
+    assert run7["resume_k1"]["output"] == f"{steps.RESUME}/h7_dg3_off.json"
+    assert run6["resume_k1"]["expected_tags"] == {"VB": judge.TAG_P3}
+    assert run7["resume_k1"]["expected_tags"] == {"VB": judge.TAG_V0}  # RV1-3.2: ③ off
+    h8 = json.loads((out / "steps_bundle_h8.json").read_text(encoding="utf-8"))["steps"]
+    runs = [s for s in h8 if "identity" not in s["id"]]
+    assert [s["resume_k1"]["output"].rsplit("/", 1)[1] for s in runs] == [
+        "h8_noise_VB.json",
+        "h8_noise_V0.json",
+        "h8_seedext_VB.json",
+        "h8_seedext_V0.json",
+    ]
+    assert "--keys" not in runs[0]["cmd"] and "--levels L1,L2,L3" in runs[0]["cmd"]
+    assert f"--keys-file {steps.V5}/seedext/r79_VB_seedext.json" in runs[2]["cmd"]
+    assert all("LAS_T3_DG3_P3" not in s.get("env", {}) for s in runs)
+    h9 = json.loads((out / "steps_bundle_h9.json").read_text(encoding="utf-8"))["steps"]
+    grid = [s for s in h9 if s["id"].startswith("h9_grid") and "identity" not in s["id"]]
+    assert [s["resume_k1"]["output"] for s in grid] == [
+        f"{steps.RESUME}/h9_grid/{name}.json" for name in steps.GRID_RUNS
+    ]
+    assert grid[2]["env"]["R67_FILTER"] == "|bottom|" and steps.R69 in grid[2]["cmd"]
+    assert all(s["env"]["R67_V5_SETTING"] == "VB" for s in grid)
+    assert counts["H-9"]["derived"] == 812 + 96 + 768
+    assert (
+        judge.main(
+            [
+                "overlap",
+                "--steps",
+                str(out / "steps_h2.json"),
+                "--out",
+                str(tmp_path / "overlap.json"),
+            ]
+        )
+        == 0
+    )
+
+
+def test_a_changed_stored_source_blocks_its_bundle(tmp_path, monkeypatch) -> None:
+    table = _stored_sources(tmp_path)
+    table["seedext_V0"] = (table["seedext_V0"][0], "0" * 64)
+    monkeypatch.setattr(steps, "STORED_SOURCES", table)
+    report = _build(tmp_path, tmp_path / "steps")
+    assert list(report["blocked"]) == ["H-8"] and "sha256" in report["blocked"]["H-8"]
+    assert report["counts"]["H-8"]["derived"] is None
+
+
+def test_grid_mirror_rebuilds_the_stored_grid_keys() -> None:
+    expected = {"grid_r67_main": 32, "grid_r67_top": 16, "grid_r69_bottom": 16, "grid_r69_top": 16}
+    assert {name: len(steps.grid_expected_keys(name)) for name in steps.GRID_RUNS} == expected
+    assert {name: steps.grid_expected_runs(name) for name in steps.GRID_RUNS} == dict.fromkeys(
+        steps.GRID_RUNS, 192
+    )
+    assert steps.grid_expected_keys("grid_r69_top")[0] == "screen|top|2.0|level|FL"
+
+
+def _run_python(code: str, tmp_path: Path) -> dict:
+    script = tmp_path / "probe.py"
+    script.write_text(code, encoding="utf-8")
+    env = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1", "MKL_THREADING_LAYER": "TBB"}
+    done = subprocess.run(
+        [sys.executable, "-I", "-B", str(script), str(ROOT)],
+        cwd=ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=600,
+    )
+    assert done.returncode == 0, done.stderr[-2000:]
+    return json.loads(done.stdout.strip().splitlines()[-1])
+
+
+def test_grid_mirror_is_the_r67_job_list(tmp_path) -> None:
+    pytest.importorskip("numba", reason="r67 / r51 import the harness (dynamics-dev)")
+    code = (
+        "import json, sys\n"
+        f"sys.path.insert(0, {str(S8)!r})\n"
+        "import r67_g1_screen as r67\n"
+        "out = {}\n"
+        "for fs in ((0.0, 8.0), (2.0, 4.0)):\n"
+        "    r67.FS_KN = fs\n"
+        "    out[str(fs)] = sorted(r67.all_jobs('screen'))\n"
+        "print(json.dumps(out))\n"
+    )
+    jobs = _run_python(code, tmp_path)
+    for name, spec in steps.GRID_RUNS.items():
+        substrings = spec["env"].get("R67_FILTER")
+        listed = jobs[str(tuple(spec["fs_kN"]))]
+        if substrings:
+            listed = [j for j in listed if any(p in j for p in substrings.split(","))]
+        assert sorted(steps.grid_expected_keys(name)) == listed, name
+
+
+# ------------------------------------------------------------------------ r79 --keys-file
+def test_r79_keys_file_option(tmp_path) -> None:
+    pytest.importorskip("numba", reason="r79 imports the harness (dynamics-dev)")
+    stored = _write_json(tmp_path / "seedext.json", {"results": [{"key": k} for k in SEEDEXT_KEYS]})
+    text = tmp_path / "keys.txt"
+    text.write_text("\n".join(SEEDEXT_KEYS) + "\n", encoding="utf-8")
+    repeated = tmp_path / "repeated.txt"
+    repeated.write_text(SEEDEXT_KEYS[0] + "\n" + SEEDEXT_KEYS[0] + "\n", encoding="utf-8")
+    code = (
+        "import json, sys\n"
+        f"sys.path.insert(0, {str(S8)!r})\n"
+        "from pathlib import Path\n"
+        "import r79_L3L4_final as f\n"
+        f"stored, text, rep = Path({str(stored)!r}), Path({str(text)!r}), Path({str(repeated)!r})\n"
+        "keys = f.read_keys_file(stored)\n"
+        "try:\n"
+        "    f.read_keys_file(rep)\n"
+        "    repeated = 'accepted'\n"
+        "except SystemExit as exc:\n"
+        "    repeated = str(exc)\n"
+        "plain = f.plain_jobs(['L2'])\n"
+        "bad = ['cand=K1on#' + plain[0], 'cand=current#L2|s3|g6|9999|ref|J2|top|Fs0',\n"
+        "       'cand=current#L3|s3|' + plain[0].split('|', 2)[2]]\n"
+        "print(json.dumps({'json': keys, 'text': f.read_keys_file(text), 'repeated': repeated,\n"
+        "                  'ok': f.keys_file_problems(keys, ['L2']),\n"
+        "                  'bad': f.keys_file_problems(bad, ['L2']),\n"
+        "                  'default_plain_has_s24': any('|s24|' in k for k in plain)}))\n"
+    )
+    out = _run_python(code, tmp_path)
+    assert out["json"] == SEEDEXT_KEYS == out["text"]
+    assert "repeated keys" in out["repeated"]
+    assert out["ok"] == [] and len(out["bad"]) == 3
+    assert out["default_plain_has_s24"] is False  # the default list keeps refusing seed 24
+
+
+# ------------------------------------------------------------------------ run_v5 RV1-4 option
+def test_run_v5_overlap_reference_option(tmp_path, monkeypatch) -> None:
+    reference = tmp_path / "h10_overlap_t_a.json"
+    args = run_v5._parse_args(
+        ["overlap", "--out", str(tmp_path / "h10.jsonl"), "--overlap-reference", str(reference)]
+    )
+    assert args.overlap_reference == reference
+    for argv in (
+        ["overlap", "--out", str(tmp_path / "h10.jsonl")],
+        ["main", "--overlap-reference", str(reference)],
+        ["overlap", "--overlap-reference", str(run_v5.OVERLAP_REFERENCE_PATH)],
+    ):
+        with pytest.raises(SystemExit):
+            run_v5._parse_args(argv)
+    monkeypatch.delenv(run_v5.OVERLAP_REFERENCE_ENV, raising=False)
+    assert run_v5.overlap_reference_path() == run_v5.OVERLAP_REFERENCE_PATH
+    monkeypatch.setenv(run_v5.OVERLAP_REFERENCE_ENV, str(reference))
+    assert run_v5.overlap_reference_path() == reference
+    with pytest.raises(RuntimeError, match="no t_a reference"):
+        run_v5.overlap_reference()
+    reference.write_text(json.dumps({"t_a_s": 31.5, "basis": "x"}), encoding="utf-8")
+    assert run_v5.overlap_reference()["t_a_s"] == 31.5
+
+
+def test_h10_overlap_step_uses_the_new_reference(tmp_path) -> None:
+    _build(tmp_path, tmp_path / "steps")
+    h10 = json.loads((tmp_path / "steps" / "steps_bundle_h10.json").read_text(encoding="utf-8"))
+    overlap = [s for s in h10["steps"] if s["id"] == "h10_overlap"][0]
+    assert f"--overlap-reference {steps.RESUME}/h10_overlap_t_a.json" in overlap["cmd"]
+    assert "overlap_t_a.json" not in overlap["cmd"].replace("h10_overlap_t_a.json", "")
+
+
+# ------------------------------------------------------------------------------ rev1 seal / S-1
+def test_rev1_seal_check(tmp_path, monkeypatch) -> None:
+    assert judge.rev1_seal_check()["problems"] == []
+    assert judge.rev1_seal_check(tmp_path)["stop_S1"] is True
+    (tmp_path / judge.RULES_REV1_NAME).write_bytes(
+        (judge.RULES_DIR / judge.RULES_REV1_NAME).read_bytes()
+    )
+    (tmp_path / "v5_resume_4368_rules_rev1.sha256").write_text("0" * 64 + "  x\n", encoding="utf-8")
+    seal = judge.rev1_seal_check(tmp_path)
+    assert seal["stop_S1"] is True and len(seal["problems"]) == 1
+    monkeypatch.setattr(judge, "RULES_DIR", tmp_path)
+    out = tmp_path / "gs.json"
+    assert judge.main(["gs", "--harness", str(out), "--out", str(out)]) == 1
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert report["rev1_seal"]["stop_S1"] is True and report["rules_sha256"] == judge.RULES_SHA256
+
+
+# --------------------------------------------------------------------------- keyset / dg3-hash
+def test_keyset_r79_and_grid(tmp_path, monkeypatch) -> None:
+    stored = _write_json(
+        tmp_path / "v5" / "dg3" / "dg3_v4_on.json", {"results": [{"key": k} for k in DG3_KEYS]}
+    )
+    grid = _write_json(
+        tmp_path / "v5" / "grid_vb" / "grid_r67_top.json", _grid_document("grid_r67_top")
+    )
+    monkeypatch.setattr(
+        judge,
+        "APPENDIX_B",
+        {"dg3/dg3_v4_on.json": _sha(stored), "grid_vb/grid_r67_top.json": _sha(grid)},
+    )
+    same = _write_json(tmp_path / "new.json", {"results": [{"key": k} for k in reversed(DG3_KEYS)]})
+    out = tmp_path / "k.json"
+    assert (
+        judge.main(
+            [
+                "keyset",
+                "--kind",
+                "r79",
+                "--new",
+                str(same),
+                "--stored",
+                str(stored),
+                "--out",
+                str(out),
+            ]
+        )
+        == 0
+    )
+    short = _write_json(tmp_path / "short.json", {"results": [{"key": DG3_KEYS[0]}]})
+    assert (
+        judge.main(
+            [
+                "keyset",
+                "--kind",
+                "r79",
+                "--new",
+                str(short),
+                "--stored",
+                str(stored),
+                "--out",
+                str(out),
+            ]
+        )
+        == 1
+    )
+    assert json.loads(out.read_text(encoding="utf-8"))["keys"]["missing_in_new"] == [DG3_KEYS[1]]
+    new_grid = _grid_document("grid_r67_top")
+    assert (
+        judge.main(
+            [
+                "keyset",
+                "--kind",
+                "grid",
+                "--new",
+                str(_write_json(tmp_path / "g.json", new_grid)),
+                "--stored",
+                str(grid),
+                "--out",
+                str(out),
+            ]
+        )
+        == 0
+    )
+    new_grid["results"][0]["runs"].pop()
+    new_grid["meta"]["offsets_s"] = "0,0.05"
+    assert (
+        judge.main(
+            [
+                "keyset",
+                "--kind",
+                "grid",
+                "--new",
+                str(_write_json(tmp_path / "g.json", new_grid)),
+                "--stored",
+                str(grid),
+                "--out",
+                str(out),
+            ]
+        )
+        == 1
+    )
+    problems = json.loads(out.read_text(encoding="utf-8"))["problems"]
+    assert any("runs[]" in p for p in problems) and "meta offsets_s differs" in problems
+    monkeypatch.setattr(judge, "APPENDIX_B", {"dg3/dg3_v4_on.json": "0" * 64})
+    assert (
+        judge.main(
+            [
+                "keyset",
+                "--kind",
+                "r79",
+                "--new",
+                str(same),
+                "--stored",
+                str(stored),
+                "--out",
+                str(out),
+            ]
+        )
+        == 1
+    )  # changed stored file (S-1)
+
+
+def test_dg3_hash_records_differences(tmp_path) -> None:
+    h6 = _write_json(
+        tmp_path / "h6.json",
+        {
+            "results": [
+                {"key": "a", "base": {"commands_sha256": "x"}},
+                {"key": "b", "base": {"commands_sha256": "y"}},
+            ]
+        },
+    )
+    h8 = _write_json(
+        tmp_path / "h8.json",
+        {
+            "results": [
+                {"key": "a", "base": {"commands_sha256": "x"}},
+                {"key": "b", "base": {"commands_sha256": "z"}},
+            ]
+        },
+    )
+    out = tmp_path / "d.json"
+    assert judge.main(["dg3-hash", "--h6", str(h6), "--h8-vb", str(h8), "--out", str(out)]) == 0
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert (report["same"], report["differ"], report["differing_keys"]) == (1, 1, ["b"])
+
+
+# ------------------------------------------------------------------------------ RV1-5 anchors
+def _job(group: str, case: str, setting: str = "VB") -> dict:
+    return {"d1": {"key": f"D1|{group}|{case}", "group": group}, "setting": setting, "eps": 0.0}
+
+
+def _jsonl(path: Path, lines: list[dict]) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("".join(json.dumps(line) + "\n" for line in lines), encoding="utf-8")
+    return path
+
+
+def _anchor_files(v5: Path) -> list[dict]:
+    """Small anchor files: T-1 1 key, T-2 2, d1 rest 1 (H-R-0), Y-Pa 1, s2d_SC rest 1."""
+    t1 = [
+        {"job": _job("H-R-A", "t1"), "las": {"candidate": "b0"}, "commands_sha256": "t1"},
+        {"job": _job("H-R-A", "t1"), "las": {"candidate": "P5r4"}, "commands_sha256": "no"},
+    ]
+    t2 = [
+        {"job": _job("H-R-0", "t2a"), "las": {"candidate": "b0"}, "commands_sha256": "t2a"},
+        {"job": _job("H-R-A", "t2b"), "las": {"candidate": "b0"}, "commands_sha256": "t2b"},
+        {"job": _job("H-R-0", "err"), "las": {"candidate": "b0"}, "error": "x"},
+    ]
+    d1 = [
+        {"job": _job("H-R-0", "t2a"), "commands_sha256": "old"},
+        {"job": _job("H-R-0", "rest"), "commands_sha256": "rest"},
+        {"job": _job("H-R-A-stop", "stop"), "commands_sha256": "stop"},
+    ]
+    ypa = [
+        {
+            "job": _job("H-S-0", "ypa"),
+            "k1": {"sub_bundle": "Y-Pa"},
+            "las": {"candidate": "P0"},
+            "commands_sha256": "ypa",
+        },
+        {
+            "job": _job("H-S-0", "ypb"),
+            "k1": {"sub_bundle": "Y-Pb"},
+            "las": {"candidate": "P0"},
+            "commands_sha256": "no",
+        },
+    ]
+    sc = [
+        {"job": _job("H-S-0", "ypa"), "commands_sha256": "old"},
+        {"job": _job("H-S-A", "sc"), "commands_sha256": "sc"},
+    ]
+    for entry, lines in (
+        ("las/las_T1.jsonl", t1),
+        ("las/las_T2.jsonl", t2),
+        ("d1.jsonl", d1),
+        ("las/k1/k1_YP.jsonl", ypa),
+        ("soil_defer/s2d_SC.jsonl", sc),
+    ):
+        _jsonl(v5 / entry, lines)
+    return d1
+
+
+def test_anchor_map_selection_and_pairs(tmp_path, monkeypatch) -> None:
+    v5 = tmp_path / "v5"
+    _anchor_files(v5)
+    monkeypatch.setattr(
+        judge, "APPENDIX_B", {e: _sha(v5 / e) for _, e, _ in judge.ANCHOR_SELECTIONS}
+    )
+    monkeypatch.setattr(
+        judge,
+        "ANCHOR_SELECTIONS",
+        tuple(
+            (name, entry, n)
+            for (name, entry, _), n in zip(judge.ANCHOR_SELECTIONS, (1, 2, 1, 1, 1), strict=True)
+        ),
+    )
+    keys = {
+        case: judge.job_key_of({"job": job})
+        for case, job in (
+            ("t1", _job("H-R-A", "t1")),
+            ("t2a", _job("H-R-0", "t2a")),
+            ("rest", _job("H-R-0", "rest")),
+            ("ypa", _job("H-S-0", "ypa")),
+            ("sc", _job("H-S-A", "sc")),
+        )
+    }
+    h1 = [
+        {"job": {**_job("H-R-A", "t1"), "mask": 3}, "commands_sha256": "t1"},
+        {"job": _job("H-R-0", "t2a"), "commands_sha256": "changed"},
+        {"job": _job("H-R-A-stop", "stop"), "commands_sha256": "stop"},
+    ]
+    out = tmp_path / "a.json"
+    assert (
+        judge.main(
+            [
+                "anchor-map",
+                "--v5-dir",
+                str(v5),
+                "--h1",
+                str(_jsonl(tmp_path / "h1.jsonl", h1)),
+                "--out",
+                str(out),
+            ]
+        )
+        == 0
+    )
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert report["anchors"][keys["t2a"]] == "t2a"  # T-2, not the old d1 line
+    assert report["anchors"][keys["ypa"]] == "ypa" and report["anchors"][keys["sc"]] == "sc"
+    assert report["h1"]["same"] == 1 and report["h1"]["differ"] == 1
+    _jsonl(
+        v5 / "las/las_T2.jsonl",
+        [
+            {"job": _job("H-R-0", "t2a"), "las": {"candidate": "b0"}, "commands_sha256": n}
+            for n in ("a", "b")
+        ],
+    )
+    monkeypatch.setattr(
+        judge, "APPENDIX_B", {e: _sha(v5 / e) for _, e, _ in judge.ANCHOR_SELECTIONS}
+    )
+    assert judge.main(["anchor-map", "--v5-dir", str(v5), "--out", str(out)]) == 1
+    assert json.loads(out.read_text(encoding="utf-8"))["stop_S7"] is True
+
+
+def test_job_key_of_is_run_v5_job_key() -> None:
+    job = {"case": "R12", "eps": 0.0, "setting": "VB", "mask": 7, "t4h_dir": "x"}
+    assert judge.job_key_of({"job": job}) == run_v5.job_key(job)
+
+
+# ----------------------------------------------------------------------------- RV1-9 imports
+def test_import_check(tmp_path) -> None:
+    root = tmp_path / "repo"
+    scripts = root / "04_scripts"
+    (root / "03_src").mkdir(parents=True)
+    (root / "05_tests" / "unit").mkdir(parents=True)
+    scripts.mkdir()
+    (scripts / "runner.py").write_text("import helper\n", encoding="utf-8")
+    (scripts / "helper.py").write_text("def f():\n    import os\n", encoding="utf-8")
+    (scripts / "loc_anchor_shadow.py").write_text("def install(): pass\n", encoding="utf-8")
+    steps_file = _write_json(
+        tmp_path / "steps.json",
+        {"steps": [{"id": "a", "cmd": "python -I -B 04_scripts/runner.py run", "env": {}}]},
+    )
+    out = tmp_path / "i.json"
+    assert (
+        judge.main(
+            ["import-check", "--steps", str(steps_file), "--root", str(root), "--out", str(out)]
+        )
+        == 0
+    )
+    (scripts / "helper.py").write_text("def f():\n    import loc_anchor_shadow\n", encoding="utf-8")
+    assert (
+        judge.main(
+            ["import-check", "--steps", str(steps_file), "--root", str(root), "--out", str(out)]
+        )
+        == 1
+    )
+    _write_json(
+        steps_file,
+        {
+            "steps": [
+                {
+                    "id": "a",
+                    "cmd": "python 04_scripts/runner.py",
+                    "env": {"OUTRIGGER_LOC_SHADOW": "1"},
+                }
+            ]
+        },
+    )
+    (scripts / "helper.py").write_text("", encoding="utf-8")
+    assert (
+        judge.main(
+            ["import-check", "--steps", str(steps_file), "--root", str(root), "--out", str(out)]
+        )
+        == 1
+    )
+    assert json.loads(out.read_text(encoding="utf-8"))["env_hits"] == ["a"]
+
+
+# ---------------------------------------------------------------------------- RV1-7 F<F_min
+def test_fmin_time(tmp_path) -> None:
+    np = pytest.importorskip("numpy")
+    case = tmp_path / "case"
+    case.mkdir()
+    t = np.round(np.arange(0.0, 20.0, 0.001), 6)
+    force = np.full((t.size, 4), 30_000.0)
+    force[(t >= 10.5) & (t < 10.6), 2] = judge.F_MIN_N - 1.0  # 100 ms below F_min, RL
+    force[(t >= 10.6) & (t < 10.65), 2] = judge.F_MIN_N + 1000.0  # 50 ms more below +2 kN
+    force[(t >= 19.0) & (t < 19.5), 0] = 0.0  # outside departure + 8 s
+    np.savez(case / "step_series.npz", t_s=t, F_cyl_N=force)
+    _write_json(case / "result.json", {"p3b": {"departure": {"t_departure_s": 10.0}}})
+    out = tmp_path / "f.json"
+    assert judge.main(["fmin-time", "--case", str(case), "--out", str(out)]) == 0
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert report["F_below_F_min"]["ms"] == pytest.approx([0.0, 0.0, 100.0, 0.0])
+    assert report["F_below_F_min_plus_2kN"]["ms"] == pytest.approx([0.0, 0.0, 150.0, 0.0])
+    _write_json(case / "result.json", {"p3b": {}})
+    assert judge.main(["fmin-time", "--case", str(case), "--out", str(out)]) == 1
+
+
+# ---------------------------------------------------------------------- RV1-10 j stroke counts
+def test_stroke_exposure_counts(tmp_path) -> None:
+    lines = [
+        {
+            "job": {"d1": {}},
+            "d1": {"stroke_max_m": 0.6790},
+            "events": [[1.0, "FAULT_STROKE_END:FL"]],
+        },
+        {"job": {"d1": {}}, "d1": {"stroke_max_m": 0.6848 - 1e-12}, "event_names": []},
+        {"job": {"case": "R1"}, "events": []},
+    ]
+    harness = _jsonl(tmp_path / "h.jsonl", lines)
+    r79 = _write_json(
+        tmp_path / "r79.json",
+        {
+            "results": [
+                {
+                    "key": "a",
+                    "base": {"max_motor_stroke_mm": 690.0},
+                    "r79": {"max_true_stroke_mm": 679.0, "n_stroke_end_fault": 0},
+                }
+            ]
+        },
+    )
+    out = tmp_path / "s.json"
+    assert (
+        judge.main(
+            [
+                "stroke-exposure",
+                "--bundle",
+                "X",
+                "--harness",
+                str(harness),
+                str(r79),
+                "--out",
+                str(out),
+            ]
+        )
+        == 0
+    )
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert report["lines"] == 4
+    assert report["s_ref"]["recorded"] == 3 and report["s_ref"]["no_record"] == 1
+    assert report["s_ref"]["ge_678_mm"] == 3 and report["s_ref"]["ge_684.8_mm"] == 2
+    assert report["piston"]["recorded"] == 1 and report["piston"]["ge_684.8_mm"] == 0
+    assert report["FAULT_STROKE_END"] == {"lines": 1, "no_event_record": 0}
+    grid = _write_json(
+        tmp_path / "g.json", {"results": [{"key": "k", "runs": [{"fault_events": []}]}]}
+    )
+    assert (
+        judge.main(["stroke-exposure", "--bundle", "G", "--harness", str(grid), "--out", str(out)])
+        == 0
+    )
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert report["lines"] == 1 and report["s_ref"]["note"] == "기록 없음"
+
+
+# ---------------------------------------------------------------------- RV1-6 family table
+def _blocked_block() -> dict:
+    return record.controller_record(_Controller(blocked=True))
+
+
+class _Controller:
+    """The K1-blocked controller meta of ``resume_k1_record.controller_record``."""
+
+    def __init__(self, blocked: bool) -> None:
+        decision = {
+            "t_loc_s": 10.0,
+            "would_block": blocked,
+            "r4_due_without_gate": blocked,
+            "applied": False,
+        }
+        self.events = [
+            type("E", (), {"t_s": 1.0, "name": "INFO_LOC_FLAT_SOIL_MARGIN_SKIPPED:order"})()
+        ]
+        self.config = type(
+            "C",
+            (),
+            {"slope_clearance_margin": type("M", (), {"flat_soil_margin_order_gate": True})()},
+        )()
+        self._meta = {
+            "liftoff_approach_slow": {"settings": dict(judge.LAS_PRESET), "start_s": None},
+            "slope_clearance_margin": {
+                "settings": {"flat_soil_margin_order_gate": True},
+                "order_gate": {"decisions": [decision]},
+            },
+        }
+
+    def meta(self) -> dict:
+        return self._meta
+
+
+def test_k1_class_with_the_family_table(tmp_path) -> None:
+    block = _blocked_block()
+    grid = {
+        "results": [
+            {
+                "key": "screen|top|0.0|level|FL",
+                judge.RECORD_KEY: block,
+                "runs": [{judge.RECORD_KEY: block, "event": "G4"}],
+            }
+        ]
+    }
+    harness = _write_json(tmp_path / "grid.json", grid)
+    table = _write_json(
+        tmp_path / "family.json",
+        {"rows": [{"key": "screen|top|0.0|level|FL", "family": family.FAMILY_PATCH_OR_SINK}]},
+    )
+    out = tmp_path / "k.json"
+    assert (
+        judge.main(
+            ["k1-class", "--harness", str(harness), "--family-table", str(table), "--out", str(out)]
+        )
+        == 0
+    )
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert report["counts"] == {judge.CLASS_K1: 2} and report["family_table"]["sha256"]
+    assert {row["family_source"] for row in report["rows"]} == {"screen|top|0.0|level|FL"}
+    _write_json(table, {"rows": [{"key": "other", "family": family.FAMILY_RIGID}]})
+    assert (
+        judge.main(
+            ["k1-class", "--harness", str(harness), "--family-table", str(table), "--out", str(out)]
+        )
+        == 1
+    )  # not in the table = uniform: S-6
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert report["counts"] == {judge.CLASS_K1_UNIFORM: 2}
+
+
+def test_family_of_and_run_v5_grounds() -> None:
+    assert family.family_of(family.Ground("rigid")) == family.FAMILY_RIGID
+    assert family.family_of(family.Ground("J1")) == family.FAMILY_UNIFORM
+    assert family.family_of(family.Ground("G1", "J1", "FR")) == family.FAMILY_PATCH_OR_SINK
+    assert family.family_of(family.Ground("rigid", sink="G4@RR")) == family.FAMILY_PATCH_OR_SINK
+    assert family.family_of(None) == family.FAMILY_UNRESOLVED
+    pytest.importorskip("numba", reason="verdict_cases / d1_rows import the harness (dynamics-dev)")
+    import d1_rows
+
+    jobs = {job["d1"]["group"]: job for job in d1_rows.jobs()}
+    expected = {
+        "H-R-0": family.FAMILY_RIGID,
+        "H-R-A": family.FAMILY_PATCH_OR_SINK,
+        "H-S-0": family.FAMILY_UNIFORM,
+        "H-S-C": family.FAMILY_PATCH_OR_SINK,
+    }
+    for group, want in expected.items():
+        assert family.family_of(family.run_v5_job_ground(jobs[group])) == want, group
+    by_case = {job["case"]: job for job in run_v5.batch_jobs("main")}
+    assert family.family_of(family.run_v5_job_ground(by_case["S1"])) == family.FAMILY_UNIFORM
+    assert family.family_of(family.run_v5_job_ground(by_case["R1"])) == family.FAMILY_RIGID
+    assert family.family_of(family.run_v5_job_ground(by_case["R12"])) == family.FAMILY_PATCH_OR_SINK
+
+
+def test_dg3_switch_use() -> None:
+    assert judge.dg3_switch_problems({"LAS_T3_DG3_P3": "off"}, "H-7") == []
+    assert judge.dg3_switch_problems({"LAS_T3_DG3_P3": "off"}, "H-6") == [
+        "env LAS_T3_DG3_P3=off outside H-7"
+    ]
+    assert judge.dg3_switch_problems({"LAS_T3_DG3_LAS": "off"}, "H-7") == ["env LAS_T3_DG3_LAS=off"]
