@@ -370,6 +370,15 @@ def demoted_items(items: dict[str, bool], fail_items: list[str]) -> list[dict]:
             if not ok and name not in fail_items]
 
 
+def g6_preloc_record(harness: dict) -> dict:
+    """436.8 rules rev5 F-8 ``d1.g6_preloc`` (record only, read from the finished r72 record):
+    ``preloc_flag_ok`` (every pre-LOC re-approach start leg's true minimum >= F_min up to LOC +
+    1 s, and no FAULT) and ``preloc_starts`` (leg, start time, true minimum kN) of spec 377."""
+    return {"preloc_flag_ok": harness.get("preloc_flag_ok"),
+            "preloc_starts": [dict(start) for start in harness.get("preloc_starts") or []],
+            "source": "r72_g6_screen record (spec 377, rev5 R5-D1)"}
+
+
 def stop_expectation(row: D1Row, values: dict, rows: np.ndarray, controller) -> dict | None:
     """H-R-A-stop (record): stroke-guard family end, moving <= 210 bar, every F_cyl / A_p <=
     350 bar and no F_min breach after the lift-off; ``met`` False = "기대 불일치"."""
@@ -429,6 +438,8 @@ def d1_record(row: D1Row, setting_name: str, eps: float, result: dict, plant, co
         "harness_class": result.get("harness_class")}
     if row.path == "steady" and "rows" in harness:
         record["u3"] = u3_record(harness)
+    if row.path == "g6":
+        record["g6_preloc"] = g6_preloc_record(harness)
     expectation = stop_expectation(row, values, rows, controller)
     if expectation is not None:
         record["expectation"] = expectation

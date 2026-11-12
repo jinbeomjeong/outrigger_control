@@ -165,6 +165,9 @@ def _stored_events(controller) -> list[tuple[float, str]]:
 
 PHASE_CHECK = "check"
 SOIL_STOP_EVENT = "FAULT_LIFT_STROKE_LIMIT:soil"
+SA4_RULE = ("kernel pad contact force acc[11:15] (= TRUE_FORCE + Wr, exact round trip; "
+            "rod-axis, leg dashpot included, clipped at 0) <= 0")
+"""Rev4 F-4 rule text (dynamics-expert check 2026-11-13: not an approximation, rev5 R5-D3)."""
 """436.8 rules rev3 R3-E5 Q-S6 / rev4 R4-B1: the SA-4 stop event."""
 
 
@@ -182,15 +185,18 @@ def sa4_record(rows: np.ndarray, rod_weight_N, events: list[tuple[float, str]]) 
     1 ms row step. Without the stop both values are None."""
     t_stop = next((t for t, name in events if name.startswith(SOIL_STOP_EVENT)), None)
     out = {"t_stop_s": None if t_stop is None else round(float(t_stop), 3),
-           "lift_after_stop_ms": None,
-           "rule": "1 ms rows t >= t_stop with true F_cyl + rod weight <= 0 (rev3 R3-G10 Q-14)"}
+           "lift_after_stop_ms": None, "rule": SA4_RULE}
     if t_stop is None or rows.size == 0:
         return out
     from harness_flow import COLUMN, TRUE_FORCE
 
     t = rows[:, COLUMN["t"]]
-    contact = rows[:, TRUE_FORCE] + np.broadcast_to(np.asarray(rod_weight_N, float), (4,))
     after = t >= float(t_stop) - 1e-9
+    true_force = rows[:, TRUE_FORCE]
+    if not np.isfinite(true_force[after]).all():
+        # a NaN would count as ground contact and lean the lift test to the unsafe side
+        raise ValueError("sa4_record: non-finite TRUE_FORCE at or after the soil-guard stop")
+    contact = true_force + np.broadcast_to(np.asarray(rod_weight_N, float), (4,))
     step_ms = float(np.median(np.diff(t))) * 1e3 if t.size > 1 else 1.0
     lifted = (after[:, None] & (contact <= 0.0)).sum(axis=0)
     out["lift_after_stop_ms"] = [round(float(n) * step_ms, 3) for n in lifted]
@@ -223,7 +229,8 @@ def _finish(plant, controller, extra: dict, t4h: dict | None = None, *,
                                  is_flow_on=limiter.setting.is_enabled)
     # 436.8 rules rev4 R4-D (record only, after the run): F-1 and F-4
     values["times"]["t_check_start_s"] = check_start_time_s(period["t"], period["phase"])
-    values["sa4"] = sa4_record(limiter.rows(), getattr(plant, "Wr", 0.0), events)
+    # no default: a plant without Wr would turn every unloaded pad into a false lift
+    values["sa4"] = sa4_record(limiter.rows(), plant.Wr, events)
     result = {**extra, "commands_sha256": _command_digest(period["command"]),
               "final_phase": str(controller.phase),
               "max_motor_stroke_reading_mm": limiter.max_stroke_reading_m * 1e3,

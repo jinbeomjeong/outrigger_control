@@ -1171,6 +1171,8 @@ def rev4_presence(record: dict) -> dict[str, bool]:
             record, "values.times.t_check_start_s")[0]
         if job.get("d1") is not None:
             out["F-2 d1.demoted_items"] = get_path(record, "d1.demoted_items")[0]
+            if get_path(record, "d1.path")[1] == "g6":  # rev5 R5-D4 F-8 (g6 path lines)
+                out["F-8 d1.g6_preloc"] = get_path(record, "d1.g6_preloc.preloc_flag_ok")[0]
         else:
             out["F-3 values.case_floor_deg"] = get_path(record, "values.case_floor_deg")[0]
         if job.get("case") in SA4_CASES:
