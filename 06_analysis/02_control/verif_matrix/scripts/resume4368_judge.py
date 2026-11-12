@@ -37,6 +37,16 @@ finds t_D in ``step_series.npz``; R2-6 ``oc5`` gives the path 1 processing cell;
 (``runs[]``) get their family from ``meta.spec`` + ``event``; R2-9 ``appendix-a`` compares the
 original appendix A raw, else CRLF -> LF normalised (disclosed).
 
+Rev3 (``v5_resume_4368_rules_rev3.md``, sealed dad8dfa6, checked raw too):
+  grid-v0-sample R3-E1: the 8-job V0 grid sample vs the stored V0 grid (V0 768 needed or not)
+  family-f-trigger / family-f  R3-E2: whether family F starts the 64 runs; rev5 5.2 R-1 .. R-4
+  ind-las        R3-B5: IND_LAS gate (``INFO_LIFTOFF_SLOW:``) and the IND hash
+  reagg-items    TABLE_REAGG rows (R3-A2, R3-G1, R3-E3)
+  dg3-hash reads the top-level r79 ``commands_sha256`` only (R3-E4, keys without ``cand=``,
+  R3-D1); appendix B files also pass after CRLF -> LF (R3-F4, disclosed); gs also requires the
+  command hash and the grid ``extend_bound_check`` (③ settings) and counts
+  ``head_only_declared``.
+
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
 The tool reads only; it never runs a simulation. Tag judgements use
@@ -76,7 +86,11 @@ subcommand checks the sealed file and its ``.sha256`` first (missing or other va
 RULES_REV2_NAME = "v5_resume_4368_rules_rev2.md"
 RULES_REV2_SHA256 = "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199"
 """Rev2 (sealed 2026-11-13 02:30:11 +09:00): overrides rev1 and the original where they differ."""
-SEALED_REVISIONS = ((RULES_REV1_NAME, RULES_REV1_SHA256), (RULES_REV2_NAME, RULES_REV2_SHA256))
+RULES_REV3_NAME = "v5_resume_4368_rules_rev3.md"
+RULES_REV3_SHA256 = "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
+"""Rev3 (sealed 2026-11-13 03:13:21 +09:00): overrides rev2, rev1 and the original."""
+SEALED_REVISIONS = ((RULES_REV1_NAME, RULES_REV1_SHA256), (RULES_REV2_NAME, RULES_REV2_SHA256),
+                    (RULES_REV3_NAME, RULES_REV3_SHA256))
 """The revisions every subcommand checks raw (R2-9: sealed rule files are ``-text``, no LF
 normalisation)."""
 RECORD_KEY = "resume_k1"
@@ -1094,21 +1108,68 @@ def gs_presence(record: dict) -> dict[str, bool]:
     return presence
 
 
+COMMAND_HASH_ALTERNATIVES = ("commands_sha256", "hash", "v5.logged_commands_sha256")
+"""Rev3 G-S: a harness run's command hash (run_v5 lines, grid runs, screen records). r79
+results (rev3 R3-E4) count with the top-level ``commands_sha256`` only."""
+HEAD_ONLY_KEYS = ("head_only_declared", "v5.head_only_declared")
+"""Rev3 R3-C8 / Q-S3: recorded, not required (a missing field is read by the revision 9 3.1
+configuration definition and that fact goes into the judgement)."""
+P3_SETTINGS = ("VB", "LS1", "LS2", "LS3", "LS4")
+
+
+def is_r79_record(record: dict) -> bool:
+    return "seed_index" in record and "harness" in record and "inner" in record
+
+
+def hash_presence(record: dict) -> dict[str, bool]:
+    """Rev3 G-S: the command hash of a run that names itself (grid runs do not, see :func:`gs`)."""
+    if not any(name in record for name in ("job", "key", "id", "case")):
+        return {}
+    if isinstance(record.get("runs"), list):  # a grid job record: its runs carry the hashes
+        return {}
+    if is_r79_record(record):
+        return {R79_HASH_KEY: get_path(record, R79_HASH_KEY)[0]}
+    return {"command hash": any(get_path(record, k)[0] for k in COMMAND_HASH_ALTERNATIVES)}
+
+
+def grid_run_presence(document: dict) -> tuple[int, dict[str, bool]]:
+    """(runs, key -> all present) of a grid file's ``runs[]``: ``commands_sha256`` and, on a
+    ③ setting (``meta.v5_setting`` VB / LS), ``hydraulics_record.extend_bound_check`` (rev3
+    Q-G3: J-P3 #1 / #2)."""
+    runs = [run for row in document["results"] for run in row["runs"]]
+    presence = {"runs[].commands_sha256": all("commands_sha256" in run for run in runs)}
+    if (document.get("meta") or {}).get("v5_setting") in P3_SETTINGS:
+        presence["runs[].hydraulics_record.extend_bound_check"] = all(
+            get_path(run, "hydraulics_record.extend_bound_check")[0] for run in runs)
+    return len(runs), presence
+
+
 def gs(args: argparse.Namespace) -> dict:
     files = []
     for path in args.harness:
-        runs = [record for doc in read_records(Path(path)) for _, record in run_records(doc)]
+        docs = read_records(Path(path))
+        runs = [record for doc in docs for _, record in run_records(doc)]
         if not runs:
             files.append({"file": str(path), "runs": 0, "missing": ["<no run record>"]})
             continue
-        missing = sorted(
-            {key for record in runs for key, ok in gs_presence(record).items() if not ok}
-        )
-        files.append({"file": str(path), "runs": len(runs), "missing": missing})
+        presence: dict[str, bool] = {}
+        for record in runs:
+            for key, ok in {**gs_presence(record), **hash_presence(record)}.items():
+                presence[key] = presence.get(key, True) and ok
+        grid_runs = 0
+        for doc in docs:
+            if is_grid_document(doc):
+                count, found = grid_run_presence(doc)
+                grid_runs += count
+                presence.update(found)
+        head_only = sum(any(get_path(r, k)[0] for k in HEAD_ONLY_KEYS) for r in runs)
+        files.append({"file": str(path), "runs": len(runs), "grid_runs": grid_runs,
+                      "missing": sorted(key for key, ok in presence.items() if not ok),
+                      "head_only_declared_present": f"{head_only}/{len(runs)}"})
     bad = [f for f in files if f["missing"]]
     return {
         "rules": RULES_NAME,
-        "section": "11.2",
+        "section": "11.2 (+ rev3: command hash, extend_bound_check, head_only_declared, settle_v2)",
         "files": files,
         "files_with_missing": len(bad),
         "exit_code": 1 if bad else 0,
@@ -1160,9 +1221,21 @@ def appendix_b_problems(path: Path) -> tuple[str | None, list[str]]:
     if entry is None:
         return None, [f"{path} is no appendix B file"]
     actual = file_sha256(path)
-    if actual != APPENDIX_B[entry]:
-        return entry, [f"{entry} sha256 {actual[:16]} != {APPENDIX_B[entry][:16]} (S-1)"]
-    return entry, []
+    if actual == APPENDIX_B[entry]:
+        return entry, []
+    try:
+        normalised = lf_normalised_sha256(Path(path).read_bytes())
+    except OSError as exc:
+        raise InputError(f"{path}: {exc}") from exc
+    if normalised == APPENDIX_B[entry]:  # rev3 R3-F4: pass, disclosed by crlf_only_files()
+        CRLF_ONLY_FILES[entry] = {"raw_sha256": actual, "lf_normalised_sha256": normalised}
+        return entry, []
+    return entry, [f"{entry} sha256 {actual[:16]} != {APPENDIX_B[entry][:16]} (S-1)"]
+
+
+CRLF_ONLY_FILES: dict[str, dict] = {}
+"""Appendix B files of this process that matched only after CRLF -> LF (rev3 R3-F4); every
+report lists them under ``crlf_only`` ("CRLF 변환만 다름")."""
 
 
 def r79_result_keys(document: dict) -> list[str]:
@@ -1214,25 +1287,247 @@ def keyset(args: argparse.Namespace) -> dict:
     return {**out, "problems": problems, "exit_code": 1 if problems else 0}
 
 
-def dg3_hash(args: argparse.Namespace) -> dict:
-    """RV1-3.2 H-8 dg3 replacement: per H-6 key, whether the H-8 VB line of the same key has the
-    same ``base.commands_sha256`` (record; predicted same, never a stop)."""
-    h6 = {row.get("key"): row for row in read_json(Path(args.h6)).get("results") or []}
-    h8 = {row.get("key"): row for row in read_json(Path(args.h8_vb)).get("results") or []}
+R79_HASH_KEY = "commands_sha256"
+"""Rev3 R3-E4: the one place an r79 result keeps its command hash (top level)."""
+R79_CANDIDATE_PREFIX = "cand=current#"
+SEEDEXT_NOISE_SEEDS = range(5)
+"""Rev1 RV1-3.2: seedext keys of seeds 0..4 are noise keys too (10 keys per setting)."""
+
+
+def r79_key(key: Any) -> str:
+    """Rev3 R3-D1: ``cand=current#<key>`` and ``<key>`` are the same key."""
+    text = str(key)
+    return text[len(R79_CANDIDATE_PREFIX):] if text.startswith(R79_CANDIDATE_PREFIX) else text
+
+
+def _r79_hashes(path: Path) -> dict[str, Any]:
+    return {r79_key(row.get("key")): row.get(R79_HASH_KEY)
+            for row in read_json(path).get("results") or []}
+
+
+def hash_pairs(first: dict[str, Any], second: dict[str, Any], keys) -> dict:
+    """Per key whether the two top-level hashes are the same (None: one is missing)."""
     rows = []
-    for key, line in h6.items():
-        other = h8.get(key)
-        sha6 = get_path(line, "base.commands_sha256")[1]
-        sha8 = None if other is None else get_path(other, "base.commands_sha256")[1]
-        rows.append({"key": key, "h6": sha6, "h8_vb": sha8,
-                     "same": None if sha6 is None or sha8 is None else sha6 == sha8})
-    differing = [row["key"] for row in rows if row["same"] is False]
-    return {"rules": RULES_REV1_NAME, "section": "RV1-3.2 (record)", "keys": len(rows),
-            "same": sum(row["same"] is True for row in rows), "differ": len(differing),
-            "unreadable": sum(row["same"] is None for row in rows),
-            "differing_keys": differing, "rows": rows,
+    for key in keys:
+        a, b = first.get(key), second.get(key)
+        rows.append({"key": key, "a": a, "b": b,
+                     "same": None if a is None or b is None else a == b})
+    return {"keys": len(rows), "same": sum(row["same"] is True for row in rows),
+            "differ": [row["key"] for row in rows if row["same"] is False],
+            "missing": [row["key"] for row in rows if row["same"] is None], "rows": rows}
+
+
+def _seed_index(key: str) -> int | None:
+    parts = key.split("|")
+    return int(parts[1][1:]) if len(parts) > 1 and parts[1].startswith("s") else None
+
+
+def dg3_hash(args: argparse.Namespace) -> dict:
+    """RV1-3.2 records with the rev3 R3-E4 hash (top-level ``commands_sha256`` only): H-6 vs
+    H-8 VB per dg3 key, and with ``--seedext`` / ``--noise`` the seedext seed 0..4 keys vs the
+    noise lines (per setting pair). A missing hash makes the record 기록 불완전, never a stop."""
+    h6 = _r79_hashes(Path(args.h6))
+    out: dict[str, Any] = {"rules": RULES_REV3_NAME, "section": "RV1-3.2 / R3-E4 (record)",
+                           "hash_field": R79_HASH_KEY}
+    if args.h8_vb is not None:
+        out["h6_vs_h8_vb"] = hash_pairs(h6, _r79_hashes(Path(args.h8_vb)), sorted(h6))
+    for seedext, noise in zip(args.seedext or [], args.noise or [], strict=True):
+        seed_hashes = _r79_hashes(Path(seedext))
+        keys = sorted(key for key in seed_hashes if _seed_index(key) in SEEDEXT_NOISE_SEEDS)
+        out.setdefault("seedext_vs_noise", []).append(
+            {"seedext": str(seedext), "noise": str(noise),
+             **hash_pairs(seed_hashes, _r79_hashes(Path(noise)), keys)})
+    blocks = [out.get("h6_vs_h8_vb"), *out.get("seedext_vs_noise", [])]
+    is_incomplete = any(block and block["missing"] for block in blocks)
+    return {**out, "record_state": "기록 불완전" if is_incomplete else "기록",
             "note": "a difference is recorded and handed to python-expert; it is no stop",
             "exit_code": 0}
+
+
+# --------------------------------------------------------------- rev3 R3-E1 / R3-E2 grid V0, F
+GRID_FILES = ("grid_r67_main", "grid_r67_top", "grid_r69_bottom", "grid_r69_top")
+FAMILY_F_KEYS = ("screen|top|0.0|ready|FR", "screen|top|0.0|ready|FL")
+FAMILY_F_EVENT = "FS24"
+FAMILY_F_GATES = ("Fmin_after_W", "U57_outside")
+FAMILY_F_M = 4
+FAMILY_F_M_SUM = 6
+FAMILY_F_RUNS = 64
+
+
+def _results_by_key(path: Path) -> dict[str, dict]:
+    return {row.get("key"): row for row in read_json(path).get("results") or []}
+
+
+def grid_v0_sample(args: argparse.Namespace) -> dict:
+    """R3-E1: the 8-job V0 sample (per stored file the first and the last result, its first run)
+    against the stored V0 grid by ``commands_sha256``; all same -> the stored V0 is the pair,
+    otherwise V0 768 runs (``resume_k1/h9_grid_v0/``)."""
+    rows, problems = [], []
+    for name in GRID_FILES:
+        stored_path = Path(args.stored_dir) / f"{name}.json"
+        stored = read_json(stored_path).get("results") or []
+        sample = _results_by_key(Path(args.sample_dir) / f"{name}.json")
+        for row in (stored[0], stored[-1]) if stored else ():
+            key = row.get("key")
+            new = sample.get(key)
+            stored_sha = (row.get("runs") or [{}])[0].get("commands_sha256")
+            new_sha = None if new is None else (new.get("runs") or [{}])[0].get("commands_sha256")
+            if new_sha is None or stored_sha is None:
+                problems.append(f"{name} {key}: hash missing (sample or stored)")
+            rows.append({"file": name, "key": key, "stored_sha256_file": file_sha256(stored_path),
+                         "stored": stored_sha, "sample": new_sha,
+                         "same": None if new_sha is None or stored_sha is None
+                         else new_sha == stored_sha})
+    if len(rows) != 2 * len(GRID_FILES):
+        problems.append(f"{len(rows)} sample jobs, 8 expected")
+    is_all_same = not problems and all(row["same"] for row in rows)
+    return {"rules": RULES_REV3_NAME, "section": "R3-E1", "jobs": len(rows),
+            "same": sum(row["same"] is True for row in rows), "rows": rows,
+            "decision": ("stored V0 is the pair (저장(옛 V0 제어기), 표본 해시 같음)" if is_all_same
+                         else "run V0 768: steps_conditional_h9_grid_v0.json"),
+            "v0_768_required": not is_all_same, "problems": problems,
+            "exit_code": 1 if problems else 0}
+
+
+def _family_rows(grid_dir: Path) -> dict[tuple[str, float], list[dict]]:
+    """(key, offset) -> the FS24 runs of the family F keys in grid_r67_main / grid_r67_top."""
+    rows: dict[tuple[str, float], list[dict]] = {}
+    for name in ("grid_r67_main", "grid_r67_top"):
+        for key, result in _results_by_key(grid_dir / f"{name}.json").items():
+            if key not in FAMILY_F_KEYS:
+                continue
+            for run in result.get("runs") or []:
+                if run.get("event") == FAMILY_F_EVENT:
+                    rows.setdefault((key, float(run.get("offset_s"))), []).append(run)
+    return rows
+
+
+def _failed_gates(run: dict) -> set[str]:
+    return {name for name, ok in (run.get("gates") or {}).items() if ok is False}
+
+
+def family_f_trigger(args: argparse.Namespace) -> dict:
+    """R3-E2: a family F row (12 = 4 phases x 2 keys) with V0 pass and VB fail by
+    ``Fmin_after_W`` / ``U57_outside`` only starts the conditional 64 runs."""
+    vb, v0 = _family_rows(Path(args.vb_dir)), _family_rows(Path(args.v0_dir))
+    rows = []
+    for (key, offset), vb_runs in sorted(vb.items()):
+        v0_runs = v0.get((key, offset)) or []
+        is_v0_pass = bool(v0_runs) and all(run.get("pass") for run in v0_runs)
+        only_two = [bool(_failed_gates(run)) and _failed_gates(run) <= set(FAMILY_F_GATES)
+                    for run in vb_runs]
+        rows.append({"key": key, "offset_s": offset, "vb_runs": len(vb_runs),
+                     "v0_pass": is_v0_pass, "vb_fail_by_the_two_gates_only": any(only_two),
+                     "trigger": is_v0_pass and any(only_two)})
+    is_trigger = any(row["trigger"] for row in rows)
+    problems = [] if len(rows) == 8 else [f"{len(rows)} family F (key, phase) rows, 8 expected"]
+    return {"rules": RULES_REV3_NAME, "section": "R3-E2", "rows": rows,
+            "family_rows_with_duplicates": sum(row["vb_runs"] for row in rows),
+            "trigger": is_trigger,
+            "decision": "run steps_conditional_h9_family_f.json (64 runs)" if is_trigger
+            else "5.2 runs 해당 없음", "problems": problems,
+            "exit_code": 1 if problems else 0}
+
+
+def family_f(args: argparse.Namespace) -> dict:
+    """v5 criteria rev5 5.2 R-1 .. R-4 on ``h9_family_F.jsonl`` (64 lines)."""
+    lines = read_records(Path(args.lines))
+    by = {(line.get("setting"), line.get("key"), float(line.get("offset_s"))): line
+          for line in lines}
+    problems = [] if len(lines) == FAMILY_F_RUNS == len(by) else [
+        f"{len(lines)} lines ({len(by)} distinct), {FAMILY_F_RUNS} expected (S-15)"]
+
+    def fails(line: dict) -> bool:
+        return bool(_failed_gates(line) & set(FAMILY_F_GATES))
+
+    k = {(s, key): sum(fails(line) for (s2, key2, _), line in by.items() if (s2, key2) == (s, key))
+         for s in ("V0", "VB") for key in FAMILY_F_KEYS}
+    r1 = {key: k[("VB", key)] <= k[("V0", key)] + FAMILY_F_M for key in FAMILY_F_KEYS}
+    r2 = (sum(k[("VB", key)] for key in FAMILY_F_KEYS)
+          <= sum(k[("V0", key)] for key in FAMILY_F_KEYS) + FAMILY_F_M_SUM)
+    vb_lines = [line for (s, _, _), line in by.items() if s == "VB"]
+    r3_bad = [(line["key"], line["offset_s"]) for line in vb_lines
+              if (line.get("gates") or {}).get("fault0") is False
+              or line.get("final_phase") != "ready"]
+    r4_bad = []
+    for (s, key, offset), line in by.items():
+        if s != "VB":
+            continue
+        other = by.get(("V0", key, offset))
+        new = _failed_gates(line) - set(FAMILY_F_GATES)
+        old = set() if other is None else _failed_gates(other)
+        if new - old:
+            r4_bad.append({"key": key, "offset_s": offset, "gates": sorted(new - old)})
+    is_pass = all(r1.values()) and r2 and not r3_bad and not r4_bad and not problems
+    return {"rules": RULES_REV3_NAME, "section": "R3-E2 / rev5 5.2",
+            "k": {f"{s}|{key}": n for (s, key), n in k.items()},
+            "R-1": r1, "R-2": r2, "R-3_violations": r3_bad, "R-4_violations": r4_bad,
+            "m": FAMILY_F_M, "m_sum": FAMILY_F_M_SUM, "pass": is_pass,
+            "decision": "the 12 family F rows leave H-10 for the two gates" if is_pass
+            else "H-10: stop and ask", "problems": problems,
+            "exit_code": 0 if is_pass else 1}
+
+
+# --------------------------------------------------------------------- rev3 R3-B5 IND_LAS
+LAS_START_EVENT = "INFO_LIFTOFF_SLOW:"
+LAS_EVENTS_KEY = "liftoff_slow_events"
+"""``b5_baseline_compare`` record field (record only): the ``INFO_LIFTOFF_SLOW*`` event names."""
+
+
+def ind_las(args: argparse.Namespace) -> dict:
+    """R3-B5: IND_LAS cases without a LAS-b start event (``INFO_LIFTOFF_SLOW:``; the ``_END:``
+    name does not count) must have the IND ``commands_sha256`` of the same case."""
+    records = [r for path in args.harness for doc in read_records(Path(path))
+               for r in (doc.get("records") or doc.get("results") or [doc])]
+    ind = {r.get("case"): r for r in records if r.get("controller") == "IND"}
+    rows = []
+    for record in (r for r in records if r.get("controller") == "IND_LAS"):
+        names = record.get(LAS_EVENTS_KEY)
+        if not isinstance(names, list):
+            rows.append({"case": record.get("case"), "gate": "판독 불가"})
+            continue
+        started = any(str(name).startswith(LAS_START_EVENT) for name in names)
+        row = {"case": record.get("case"), "gate": "선" if started else "서지 않음"}
+        if not started:
+            other = ind.get(record.get("case"))
+            row["same_hash_as_ind"] = (None if other is None else
+                                       record.get("commands_sha256") == other.get(
+                                           "commands_sha256"))
+        rows.append(row)
+    unreadable = sum(row["gate"] == "판독 불가" for row in rows)
+    not_started = [row for row in rows if row["gate"] == "서지 않음"]
+    differ = [row["case"] for row in not_started if row.get("same_hash_as_ind") is False]
+    return {"rules": RULES_REV3_NAME, "section": "R3-B5", "cases": len(rows),
+            "gate_started": sum(row["gate"] == "선" for row in rows),
+            "gate_not_started": len(not_started),
+            "not_started_same_hash": sum(row.get("same_hash_as_ind") is True
+                                         for row in not_started),
+            "not_started_differ": differ, "gate_unreadable": unreadable,
+            "record_state": "기록 불완전" if unreadable else "기록",
+            "adapter_defect": bool(differ), "rows": rows,
+            "exit_code": 1 if differ else 0}
+
+
+# ------------------------------------------------------------------- rev3 TABLE_REAGG items
+REAGG_ITEMS = {
+    "H-1 / H-2 (R3-A2)": ["H-S P3", "H-S G6", "H-S E", "H-R 잠김 350 bar", "H-R G6"],
+    "C-5 (R3-G1)": ["T4-0", "T4", "T5", "J11 창", "J-P3", "D2"],
+    "PS-c (R3-G1)": ["E-1", "E-2", "E-3", "E-4", "E-6", "E-7"],
+    "H-6 / H-8 잡음 (R3-E3)": ["S-1", "S-2", "S-3", "S-4", "S-5", "S-6"],
+}
+"""Rev3: the items whose two paths are a re-aggregation of the recorded item results (not an
+independent recalculation); the judgement's TABLE_REAGG lists them (R3-G1, R3-E3)."""
+
+
+def reagg_items(args: argparse.Namespace) -> dict:
+    """The TABLE_REAGG rows (bundle, items, item count) for the judgement document."""
+    rows = [{"bundle": bundle, "items": items, "count": len(items)}
+            for bundle, items in REAGG_ITEMS.items()]
+    markdown = ["| 묶음 | 재집계 항목 | 수 |", "|---|---|---|"]
+    markdown += [f"| {row['bundle']} | {', '.join(row['items'])} | {row['count']} |"
+                 for row in rows]
+    return {"rules": RULES_REV3_NAME, "section": "R3-G1 / R3-E3 TABLE_REAGG", "rows": rows,
+            "markdown": "\n".join(markdown), "exit_code": 0}
 
 
 # --------------------------------------------------------------- rev2 R2-9 appendix A (S-1)
@@ -1742,7 +2037,27 @@ def _parser() -> argparse.ArgumentParser:
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("dg3-hash", help="rev1 RV1-3.2: H-6 vs H-8 VB commands_sha256 (record)")
     p.add_argument("--h6", type=Path, required=True)
-    p.add_argument("--h8-vb", type=Path, required=True)
+    p.add_argument("--h8-vb", type=Path, default=None)
+    p.add_argument("--seedext", nargs="*", type=Path, help="h8_seedext_{VB,V0}.json")
+    p.add_argument("--noise", nargs="*", type=Path, help="h8_noise_{VB,V0}.json, same order")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("grid-v0-sample", help="rev3 R3-E1: V0 grid 8-job sample vs stored V0")
+    p.add_argument("--sample-dir", type=Path, required=True, help="resume_k1/h9_grid_v0_sample")
+    p.add_argument("--stored-dir", type=Path, required=True,
+                   help="06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("family-f-trigger", help="rev3 R3-E2: does family F start the 64 runs")
+    p.add_argument("--vb-dir", type=Path, required=True, help="resume_k1/h9_grid")
+    p.add_argument("--v0-dir", type=Path, required=True, help="the V0 pair grid folder")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("family-f", help="rev3 R3-E2: rev5 5.2 R-1 .. R-4 on h9_family_F.jsonl")
+    p.add_argument("--lines", type=Path, required=True)
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("ind-las", help="rev3 R3-B5: IND_LAS gate and the IND hash")
+    p.add_argument("--harness", nargs="+", type=Path, required=True,
+                   help="U-6 outputs with the IND and IND_LAS records")
+    p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("reagg-items", help="rev3: TABLE_REAGG rows")
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("anchor-map", help="rev1 RV1-5: P-1 / P-2 anchors by job_key (S-7)")
     p.add_argument("--v5-dir", type=Path, required=True,
@@ -1782,6 +2097,11 @@ COMMANDS = {
     "import-check": import_check,
     "fmin-time": fmin_time,
     "appendix-a": appendix_a,
+    "grid-v0-sample": grid_v0_sample,
+    "family-f-trigger": family_f_trigger,
+    "family-f": family_f,
+    "ind-las": ind_las,
+    "reagg-items": reagg_items,
     "stroke-exposure": stroke_exposure,
 }
 
@@ -1812,7 +2132,7 @@ def revision_seal_problems(folder: Path, name: str, sha256: str) -> tuple[dict, 
 
 
 def sealed_rules_check(rules_dir: Path | None = None) -> dict:
-    """Rev1 and rev2 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
+    """Rev1, rev2 and rev3 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
     folder = RULES_DIR if rules_dir is None else Path(rules_dir)
     revisions, problems = {}, []
     for name, sha256 in SEALED_REVISIONS:
@@ -1838,9 +2158,14 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps({"exit_code": 3, "error": repr(exc)}, ensure_ascii=True))
             return 3
         report["rules_seal"] = seal
+        if CRLF_ONLY_FILES:  # rev3 R3-F4 disclosure
+            report["appendix_b_crlf_only"] = {
+                name: {**values, "note": "CRLF 변환만 다름"}
+                for name, values in CRLF_ONLY_FILES.items()}
     report["rules_sha256"] = RULES_SHA256
     report["rules_rev1_sha256"] = RULES_REV1_SHA256
     report["rules_rev2_sha256"] = RULES_REV2_SHA256
+    report["rules_rev3_sha256"] = RULES_REV3_SHA256
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
         json.dumps(report, indent=1, ensure_ascii=False, default=str), encoding="utf-8"

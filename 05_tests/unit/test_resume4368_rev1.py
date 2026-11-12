@@ -89,6 +89,8 @@ def _stored_sources(data_root: Path) -> dict:
         relative = steps.STORED_SOURCES[name][0]
         path = _write_json(data_root / steps.V5 / relative, document)
         table[name] = (relative, _sha(path))
+    for name in steps.GRID_RUNS:  # the stored V0 grid of the R3-E1 sample
+        _write_json(data_root / steps.GRID_V0_STORED / f"{name}.json", _grid_document(name))
     return table
 
 
@@ -117,9 +119,9 @@ def test_h10_is_440_and_the_main_total(tmp_path) -> None:
     doc = json.loads((tmp_path / "steps" / "steps_h2.json").read_text(encoding="utf-8"))
     assert not [s for s in doc["steps"] if "p3_hash" in s["cmd"]]  # RV1-2: no p3_hash run
     total = counts["main_total"]
-    # the 5.1 table values sum to 9,570; rev1 states 9,778 (reported as 확인 필요, S-15)
-    assert total["rules_value"] == 9778 and total["table_sum"] == 9570
-    assert total["table_sum_differs_S15"] is True
+    # rev3 R3-F1: the sum is 9,570 and a record only (S-15 compares the bundle counts)
+    assert total["rules_value"] == 9570 == total["table_sum"]
+    assert total["differs_S15"] is None and "record_only" in total
 
 
 def test_p3_hash_jobs_are_main_vb_jobs(tmp_path) -> None:
@@ -323,6 +325,7 @@ def test_rev1_and_rev2_seal_check(tmp_path, monkeypatch) -> None:
     assert set(judge.sealed_rules_check()["revisions"]) == {
         judge.RULES_REV1_NAME,
         judge.RULES_REV2_NAME,
+        judge.RULES_REV3_NAME,
     }
     assert judge.sealed_rules_check(tmp_path)["stop_S1"] is True
     for name, _ in judge.SEALED_REVISIONS:  # both sealed files copied, rev1 seal value wrong
@@ -516,12 +519,17 @@ def test_keyset_r79_and_grid(tmp_path, monkeypatch) -> None:
 
 
 def test_dg3_hash_records_differences(tmp_path) -> None:
+    """R3-E4: the top-level commands_sha256 only; R3-D1: the cand= prefix is the same key."""
     h6 = _write_json(
         tmp_path / "h6.json",
         {
             "results": [
-                {"key": "a", "base": {"commands_sha256": "x"}},
-                {"key": "b", "base": {"commands_sha256": "y"}},
+                {"key": "cand=current#L2|s0|a", "commands_sha256": "x"},
+                {
+                    "key": "cand=current#L3|s0|b",
+                    "commands_sha256": "y",
+                    "base": {"commands_sha256": "z"},
+                },
             ]
         },
     )
@@ -529,15 +537,42 @@ def test_dg3_hash_records_differences(tmp_path) -> None:
         tmp_path / "h8.json",
         {
             "results": [
-                {"key": "a", "base": {"commands_sha256": "x"}},
-                {"key": "b", "base": {"commands_sha256": "z"}},
+                {"key": "L2|s0|a", "commands_sha256": "x"},
+                {"key": "cand=current#L3|s0|b", "commands_sha256": "z"},
             ]
         },
     )
+    seed = _write_json(
+        tmp_path / "seed.json",
+        {
+            "results": [
+                {"key": "cand=current#L2|s3|a", "commands_sha256": "p"},
+                {"key": "cand=current#L2|s7|a", "commands_sha256": "q"},
+            ]
+        },
+    )
+    noise = _write_json(tmp_path / "noise.json", {"results": [{"key": "L2|s3|a"}]})
     out = tmp_path / "d.json"
-    assert judge.main(["dg3-hash", "--h6", str(h6), "--h8-vb", str(h8), "--out", str(out)]) == 0
+    argv = [
+        "dg3-hash",
+        "--h6",
+        str(h6),
+        "--h8-vb",
+        str(h8),
+        "--seedext",
+        str(seed),
+        "--noise",
+        str(noise),
+        "--out",
+        str(out),
+    ]
+    assert judge.main(argv) == 0
     report = json.loads(out.read_text(encoding="utf-8"))
-    assert (report["same"], report["differ"], report["differing_keys"]) == (1, 1, ["b"])
+    pair = report["h6_vs_h8_vb"]
+    assert (pair["same"], pair["differ"]) == (1, ["L3|s0|b"])
+    seeds = report["seedext_vs_noise"][0]
+    assert seeds["keys"] == 1 and seeds["missing"] == ["L2|s3|a"]  # noise line without a hash
+    assert report["record_state"] == "기록 불완전"
 
 
 # ------------------------------------------------------------------------------ RV1-5 anchors
@@ -1024,3 +1059,266 @@ def test_settle_v2_record_keeps_the_command_hash(tmp_path) -> None:
 def test_k1_class_has_no_anchor_option(tmp_path) -> None:
     with pytest.raises(SystemExit):
         judge._parser().parse_args(["k1-class", "--anchor", "x", "--out", str(tmp_path / "o")])
+
+
+# --------------------------------------------------------------------------------- rev3 tests
+def _grid_runs(key: str, gates: dict, *, final: str = "ready") -> list[dict]:
+    return [
+        {
+            "event": "FS24",
+            "offset_s": o,
+            "gates": gates,
+            "pass": all(gates.values()),
+            "final_phase": final,
+            "commands_sha256": f"{key}|{o}",
+        }
+        for o in (0.0, 0.05)
+    ]
+
+
+def test_rev3_conditional_steps(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr(steps, "STORED_SOURCES", _stored_sources(tmp_path))
+    out = tmp_path / "steps"
+    report = _build(tmp_path, out)
+    assert report["blocked"] == {}
+    sample = json.loads((out / "steps_bundle_h9_v0_sample.json").read_text(encoding="utf-8"))
+    runs = [s for s in sample["steps"] if "identity" not in s["id"]]
+    assert len(runs) == 4 and all(s["env"]["R67_V5_SETTING"] == "V0" for s in runs)
+    first = steps.grid_expected_keys("grid_r67_main")
+    assert f'--keys "{first[0]},{first[-1]}"' in runs[0]["cmd"]
+    h2 = json.loads((out / "steps_h2.json").read_text(encoding="utf-8"))
+    assert any(s["id"] == runs[0]["id"] for s in h2["steps"])  # the sample always runs
+    v0 = json.loads((out / "steps_conditional_h9_grid_v0_768.json").read_text(encoding="utf-8"))
+    v0_runs = [s for s in v0["steps"] if "identity" not in s["id"]]
+    assert [s["resume_k1"]["output"] for s in v0_runs] == [
+        f"{steps.GRID_V0_DIR}/{name}.json" for name in steps.GRID_RUNS
+    ]
+    assert not any(s["id"].startswith("h9_v0_grid") for s in h2["steps"])  # conditional only
+    family = json.loads((out / "steps_conditional_h9_family_f.json").read_text(encoding="utf-8"))
+    run_f = family["steps"][1]
+    assert run_f["env"]["R67_OFFSETS"].split(",")[-1] == "0.09375"
+    assert len(run_f["env"]["R67_OFFSETS"].split(",")) == 16
+    assert family["steps"][-1]["resume_k1"]["output"] == steps.FAMILY_F_OUT
+    conditional = report["counts"]["conditional"]
+    assert conditional["H-9 grid V0 768"]["lines"] == 768
+    assert conditional["H-9 family F"]["lines"] == 64
+
+
+def test_rev3_crlf_only_stored_source(tmp_path, monkeypatch) -> None:
+    table = _stored_sources(tmp_path)
+    path = tmp_path / steps.V5 / table["seedext_VB"][0]
+    lf = path.read_bytes()
+    path.write_bytes(lf.replace(b"\n", b"\r\n") if b"\n" in lf else lf + b"\r\n")
+    table["seedext_VB"] = (table["seedext_VB"][0], judge.lf_normalised_sha256(path.read_bytes()))
+    monkeypatch.setattr(steps, "STORED_SOURCES", table)
+    monkeypatch.setattr(steps, "CRLF_ONLY_SOURCES", {})
+    report = _build(tmp_path, tmp_path / "steps")
+    assert "H-8" not in report["blocked"]
+    assert list(report["counts"]["appendix_b_crlf_only"]) == [
+        f"{steps.V5}/{table['seedext_VB'][0]}"
+    ]
+
+
+def test_rev3_grid_v0_sample(tmp_path) -> None:
+    stored, sample = tmp_path / "stored", tmp_path / "sample"
+    for name in judge.GRID_FILES:
+        rows = [{"key": f"{name}-{i}", "runs": [{"commands_sha256": f"h{i}"}]} for i in range(3)]
+        _write_json(stored / f"{name}.json", {"results": rows})
+        _write_json(sample / f"{name}.json", {"results": [rows[0], rows[2]]})
+    out = tmp_path / "s.json"
+    argv = [
+        "grid-v0-sample",
+        "--sample-dir",
+        str(sample),
+        "--stored-dir",
+        str(stored),
+        "--out",
+        str(out),
+    ]
+    assert judge.main(argv) == 0
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert report["jobs"] == 8 and report["v0_768_required"] is False
+    doc = json.loads((sample / "grid_r69_top.json").read_text(encoding="utf-8"))
+    doc["results"][1]["runs"][0]["commands_sha256"] = "other"
+    _write_json(sample / "grid_r69_top.json", doc)
+    assert judge.main(argv) == 0
+    assert json.loads(out.read_text(encoding="utf-8"))["v0_768_required"] is True
+
+
+def test_rev3_family_f_trigger_and_rules(tmp_path) -> None:
+    good = dict.fromkeys(("Fmin_after_W", "U57_outside", "fault0", "end_att"), True)
+    bad_two = {**good, "Fmin_after_W": False}
+    vb, v0 = tmp_path / "vb", tmp_path / "v0"
+    for folder, gates in ((vb, bad_two), (v0, good)):
+        for name in ("grid_r67_main", "grid_r67_top"):
+            offsets = (0.0, 0.05) if name == "grid_r67_main" else (0.025, 0.075)
+            rows = [
+                {
+                    "key": key,
+                    "runs": [
+                        {
+                            "event": "FS24",
+                            "offset_s": o,
+                            "gates": gates,
+                            "pass": all(gates.values()),
+                        }
+                        for o in offsets
+                    ],
+                }
+                for key in judge.FAMILY_F_KEYS
+            ]
+            _write_json(folder / f"{name}.json", {"results": rows})
+    out = tmp_path / "t.json"
+    assert (
+        judge.main(
+            ["family-f-trigger", "--vb-dir", str(vb), "--v0-dir", str(v0), "--out", str(out)]
+        )
+        == 0
+    )
+    assert json.loads(out.read_text(encoding="utf-8"))["trigger"] is True
+    lines = []
+    for setting in ("V0", "VB"):
+        for key in judge.FAMILY_F_KEYS:
+            for i in range(16):
+                gates = dict(good)
+                if setting == "VB" and i < 5:  # 5 VB failures per key vs V0 0: R-1 fails (> 4)
+                    gates["U57_outside"] = False
+                lines.append(
+                    {
+                        "setting": setting,
+                        "key": key,
+                        "offset_s": i * 0.00625,
+                        "gates": gates,
+                        "final_phase": "ready",
+                    }
+                )
+    path = _jsonl(tmp_path / "f.jsonl", lines)
+    assert judge.main(["family-f", "--lines", str(path), "--out", str(out)]) == 1
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert report["R-1"] == dict.fromkeys(judge.FAMILY_F_KEYS, False) and report["R-2"] is False
+    for line in lines:
+        if line["setting"] == "VB" and line["gates"]["U57_outside"] is False:
+            line["gates"]["U57_outside"] = line["offset_s"] > 0.01  # 2 failures per key
+    _jsonl(path, lines)
+    assert judge.main(["family-f", "--lines", str(path), "--out", str(out)]) == 0
+
+
+def test_rev3_ind_las_gate(tmp_path) -> None:
+    records = [
+        {"case": "a", "controller": "IND", "commands_sha256": "x"},
+        {
+            "case": "a",
+            "controller": "IND_LAS",
+            "commands_sha256": "x",
+            "liftoff_slow_events": ["INFO_LIFTOFF_SLOW_END:sum"],
+        },
+        {"case": "b", "controller": "IND", "commands_sha256": "y"},
+        {
+            "case": "b",
+            "controller": "IND_LAS",
+            "commands_sha256": "z",
+            "liftoff_slow_events": ["INFO_LIFTOFF_SLOW:RL"],
+        },
+        {"case": "c", "controller": "IND_LAS", "commands_sha256": "w"},
+    ]
+    path = _write_json(tmp_path / "u6.json", {"records": records})
+    out = tmp_path / "i.json"
+    assert judge.main(["ind-las", "--harness", str(path), "--out", str(out)]) == 0
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert (report["gate_started"], report["gate_not_started"], report["gate_unreadable"]) == (
+        1,
+        1,
+        1,
+    )
+    assert report["not_started_same_hash"] == 1 and report["record_state"] == "기록 불완전"
+
+
+def test_rev3_reagg_items(tmp_path) -> None:
+    out = tmp_path / "r.json"
+    assert judge.main(["reagg-items", "--out", str(out)]) == 0
+    rows = json.loads(out.read_text(encoding="utf-8"))["rows"]
+    assert {row["bundle"]: row["count"] for row in rows}["C-5 (R3-G1)"] == 6
+
+
+def test_rev3_gs_hash_and_grid_fields(tmp_path) -> None:
+    block = record.controller_record(_Controller(blocked=False))
+    r79 = {
+        "key": "cand=current#L2|s0|x",
+        "seed_index": 0,
+        "harness": "g6",
+        "inner": "x",
+        judge.RECORD_KEY: block,
+        "controller_tag": judge.TAG_V0,
+        "base": {"commands_sha256": "a"},
+    }
+    path = _write_json(tmp_path / "r79.json", {"results": [r79]})
+    out = tmp_path / "g.json"
+    assert judge.main(["gs", "--harness", str(path), "--out", str(out)]) == 1
+    assert "commands_sha256" in json.loads(out.read_text(encoding="utf-8"))["files"][0]["missing"]
+    r79["commands_sha256"] = "a"
+    _write_json(path, {"results": [r79]})
+    assert judge.main(["gs", "--harness", str(path), "--out", str(out)]) == 0
+    run = {judge.RECORD_KEY: block, "event": "G4", "commands_sha256": "h"}
+    grid = {
+        "meta": {"spec": judge.GRID_SPEC, "v5_setting": "VB"},
+        "results": [
+            {
+                "key": "screen|top|0.0|level|FL",
+                judge.RECORD_KEY: block,
+                "controller_tag": judge.TAG_P3,
+                "runs": [run],
+            }
+        ],
+    }
+    gpath = _write_json(tmp_path / "grid.json", grid)
+    assert judge.main(["gs", "--harness", str(gpath), "--out", str(out)]) == 1
+    missing = json.loads(out.read_text(encoding="utf-8"))["files"][0]["missing"]
+    assert missing == ["runs[].hydraulics_record.extend_bound_check"]
+    run["hydraulics_record"] = {"extend_bound_check": {}}
+    _write_json(gpath, grid)
+    assert judge.main(["gs", "--harness", str(gpath), "--out", str(out)]) == 0
+
+
+def test_rev3_appendix_b_crlf_pass(tmp_path, monkeypatch) -> None:
+    path = _write_json(tmp_path / "v5" / "dg3" / "dg3_v4_on.json", {"results": []})
+    lf_sha = _sha(path)
+    path.write_bytes(path.read_bytes() + b"\r\n")
+    monkeypatch.setattr(
+        judge, "APPENDIX_B", {"dg3/dg3_v4_on.json": judge.lf_normalised_sha256(path.read_bytes())}
+    )
+    monkeypatch.setattr(judge, "CRLF_ONLY_FILES", {})
+    entry, problems = judge.appendix_b_problems(path)
+    assert problems == [] and entry in judge.CRLF_ONLY_FILES
+    assert lf_sha != judge.CRLF_ONLY_FILES[entry]["raw_sha256"]
+
+
+def test_rev3_r79_top_level_hash(tmp_path) -> None:
+    """R3-E4: the top-level hash is the harness-line digest and the log keeps the commands
+    (one r79 key run twice, about 3 minutes)."""
+    pytest.importorskip("numba", reason="harness run (dynamics-dev)")
+    env = {
+        **os.environ,
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "MKL_THREADING_LAYER": "TBB",
+        "R79_V5_SETTING": "VB",
+        "R72_PATH": "per_leg",
+    }
+    done = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            str(ROOT / "05_tests" / "unit" / "r79_hash_runner.py"),
+            str(ROOT),
+            "cand=current#L2|s0|g6|52|ref|J1|top|Fs0",
+        ],
+        cwd=ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=1200,
+    )
+    assert done.returncode == 0, done.stderr[-2000:]
+    out = json.loads(done.stdout.strip().splitlines()[-1])
+    assert out["error"] is None and out["base_with"] == out["base_without"]
+    assert out["top"] == out["base_with"] and out["top_without"] is None

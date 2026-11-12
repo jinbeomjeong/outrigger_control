@@ -1131,6 +1131,9 @@ def metrics(out: dict, ctrl) -> dict:
         "commands_sha256": out.get("commands_sha256"),
         "warnings": sorted({name.split(":")[0] for _, name in events
                             if name.startswith(("WARN", "FAULT"))}),
+        # 436.8 rules rev3 R3-B5: the LAS-b events of the run (record only; IND_LAS gate)
+        "liftoff_slow_events": [name for _, name in events
+                                if name.startswith("INFO_LIFTOFF_SLOW")],
         "phase_path": out.get("phase_path", [])[:20],
         "sim_end_s": rows[-1][0] if rows else None,
     }

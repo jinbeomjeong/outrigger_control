@@ -439,7 +439,7 @@ def test_steps_counts_and_names(built) -> None:
             )
         )
     # rev1 RV1-3: steps exist; a data root without the stored key sources blocks these (S-1)
-    assert sorted(report["blocked"]) == ["H-6", "H-7", "H-8", "H-9 grid"]
+    assert sorted(report["blocked"]) == ["H-6", "H-7", "H-8", "H-9 V0 sample", "H-9 grid"]
 
 
 def test_steps_overlap_table_clean(built, tmp_path) -> None:

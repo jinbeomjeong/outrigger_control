@@ -64,8 +64,10 @@ TABLE_LINES = {
 """Rules 5.1 line counts with rev1 RV1-12 (H-4 = U-6 726 + IND_LAS record 242, H-9 = main 812 +
 pressure_only 96 + grid ``runs[]`` 768, H-10 = 440: the 22 p3_hash jobs are main VB jobs, RV1-2)."""
 MAIN_BUNDLES = ("H-1", "H-3", "H-4", "H-5", "H-6", "H-7", "H-8", "H-9", "H-10")
-MAIN_TOTAL_LINES = 9778
-"""RV1-2: the main bundles (without H-0 and the one-line H-2 calculation), 9,800 - 22."""
+MAIN_TOTAL_LINES = 9570
+"""Rev3 R3-F1: the main bundles (without H-0 and the one-line H-2 calculation) sum to 9,570
+(the 9,800 / 9,778 of the original / rev1 were addition errors). A record only: S-15 compares
+the bundle counts, never the sum."""
 TAGS_V0_VB = {"V0": "final_C4G2_LAS_K1", "VB": "final_C4G2_P3_LAS_K1"}
 U6_TAGS = {"C2": "final_C4G2_P3_LAS_K1", "ABL": "ABL_LAS_K1", "IND": "IND"}
 FIX_SUITES = (
@@ -323,8 +325,17 @@ def stored_source(data_root: Path, name: str) -> tuple[str, dict]:
         raise StoredSourceError(f"{V5}/{relative} missing")
     actual = file_sha256(path)
     if actual != sha256:
-        raise StoredSourceError(f"{V5}/{relative} sha256 {actual[:16]} != {sha256[:16]}")
+        normalised = hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+        if normalised != sha256:  # rev3 R3-F4: CRLF -> LF only is a pass, disclosed
+            raise StoredSourceError(f"{V5}/{relative} sha256 {actual[:16]} != {sha256[:16]}")
+        CRLF_ONLY_SOURCES[f"{V5}/{relative}"] = {"raw_sha256": actual,
+                                                 "lf_normalised_sha256": normalised,
+                                                 "note": "CRLF 변환만 다름"}
     return f"{V5}/{relative}", json.loads(path.read_text(encoding="utf-8"))
+
+
+CRLF_ONLY_SOURCES: dict[str, dict] = {}
+"""Stored key sources that matched appendix B only after CRLF -> LF (rev3 R3-F4)."""
 
 
 def stored_r79_keys(document: dict) -> list[str]:
@@ -491,6 +502,113 @@ def grid_steps(root: str, workers: int, mask: str, data_root: Path) -> list[dict
     return steps
 
 
+GRID_V0_STORED = "06_analysis/02_control/touch_phase/acceptance/c4g2_only/grid"
+"""v5 criteria 10: the stored V0 grid (``acceptance/c4g2_only/grid``, old V0 controller)."""
+GRID_V0_SETTING = "V0"
+GRID_V0_SAMPLE_DIR = f"{RESUME}/h9_grid_v0_sample"
+GRID_V0_DIR = f"{RESUME}/h9_grid_v0"
+FAMILY_F_KEYS = ("screen|top|0.0|ready|FR", "screen|top|0.0|ready|FL")
+FAMILY_F_EVENT = "FS24"
+FAMILY_F_PHASES = 16
+FAMILY_F_STEP_S = 0.00625
+FAMILY_F_OFFSETS = ",".join(f"{i * FAMILY_F_STEP_S:g}" for i in range(FAMILY_F_PHASES))
+"""v5 criteria rev5 5.2: phases 0, 0.00625, ..., 0.09375 s."""
+FAMILY_F_OUT = f"{RESUME}/h9_family_F.jsonl"
+FAMILY_F_COLLECT = "04_scripts/04_hydraulic/coupled/resume_k1_family_f.py"
+FAMILY_F_LINES = len(FAMILY_F_KEYS) * FAMILY_F_PHASES * 2
+
+
+def grid_v0_sample_keys(data_root: Path) -> dict[str, list[str]]:
+    """Rev3 R3-E1 (the original names no jobs): per stored V0 grid file the first and the last
+    result key in result order; the first run of each is compared (8 jobs, fixed before results).
+
+    Raises:
+        StoredSourceError: A stored V0 grid file is missing.
+    """
+    keys = {}
+    for name in GRID_RUNS:
+        path = Path(data_root) / GRID_V0_STORED / f"{name}.json"
+        if not path.is_file():
+            raise StoredSourceError(f"{GRID_V0_STORED}/{name}.json missing")
+        results = json.loads(path.read_text(encoding="utf-8"))["results"]
+        keys[name] = [results[0]["key"], results[-1]["key"]]
+    return keys
+
+
+def _grid_run_step(step_id: str, name: str, out: str, setting: str, root: str, workers: int,
+                   mask: str, lines: int, extra_env: dict | None = None,
+                   keys: list[str] | None = None) -> dict:
+    spec = GRID_RUNS[name]
+    env = {**THREAD_ENV, **spec["env"], **(extra_env or {}), "R67_V5_SETTING": setting,
+           "R67_AFFINITY": mask}
+    keys_arg = "" if keys is None else f' --keys "{",".join(keys)}"'
+    cmd = f"{DYNAMICS_PYTHON} {spec['script']} {root} {out} {workers}{keys_arg}"
+    tag = TAGS_V0_VB["VB" if setting == "VB" else "V0"]
+    meta = _meta("H-9", out, (setting,), {setting: tag}, lines)
+    meta["unset_env"] = ["R67_CANDIDATE", "R67_SLICE"]
+    return _step(step_id, cmd, root, meta, env)
+
+
+def grid_v0_sample_steps(root: str, workers: int, mask: str, data_root: Path) -> list[dict]:
+    """R3-E1 step 1: the 8-job V0 sample (always), outputs under ``h9_grid_v0_sample/``."""
+    steps = []
+    for name, keys in grid_v0_sample_keys(data_root).items():
+        out = f"{GRID_V0_SAMPLE_DIR}/{name}.json"
+        step = _grid_run_step(f"h9_v0_sample_{name}", name, out, GRID_V0_SETTING, root, workers,
+                              mask, 0, keys=keys)
+        step["resume_k1"].update(sample_of=f"{GRID_V0_STORED}/{name}.json", sample_keys=keys,
+                                 compared="first run of each key (R3-E1)")
+        steps += identity_steps(step["id"], step, root)
+    return steps
+
+
+def grid_v0_full_steps(root: str, workers: int, mask: str) -> list[dict]:
+    """R3-E1 step 3 (conditional: a sample hash differs): V0 768 under ``h9_grid_v0/``."""
+    steps = []
+    for name in GRID_RUNS:
+        out = f"{GRID_V0_DIR}/{name}.json"
+        step = _grid_run_step(f"h9_v0_{name}", name, out, GRID_V0_SETTING, root, workers, mask,
+                              grid_expected_runs(name))
+        step["resume_k1"]["condition"] = "grid-v0-sample: a sample hash differs (R3-E1)"
+        steps += identity_steps(step["id"], step, root)
+    return steps
+
+
+def family_f_steps(root: str, workers: int, mask: str) -> list[dict]:
+    """R3-E2 (conditional: a family F pass -> fail by Fmin_after_W / U57_outside only): the
+    rev5 5.2 runs, 2 keys x 16 phases x V0 / VB (r67 runs every event; the FS24 runs are the 64
+    lines), collected into ``h9_family_F.jsonl``."""
+    steps, outputs = [], []
+    for setting in (GRID_V0_SETTING, "VB"):
+        out = f"{RESUME}/h9_family_F_{setting}.json"
+        outputs.append(out)
+        step = _grid_run_step(f"h9_family_F_{setting}", "grid_r67_main", out, setting, root,
+                              workers, mask, 0, extra_env={"R67_OFFSETS": FAMILY_F_OFFSETS},
+                              keys=list(FAMILY_F_KEYS))
+        step["resume_k1"]["condition"] = "family-f-trigger: a family F pass -> fail (R3-E2)"
+        steps += identity_steps(step["id"], step, root)
+    cmd = (f"{PYTHON_DEV} {FAMILY_F_COLLECT} {outputs[0]} {outputs[1]} --event {FAMILY_F_EVENT} "
+           f"--out {FAMILY_F_OUT}")
+    meta = _meta("H-9", FAMILY_F_OUT, (GRID_V0_SETTING, "VB"), TAGS_V0_VB, FAMILY_F_LINES)
+    meta["condition"] = "family-f-trigger: a family F pass -> fail (R3-E2)"
+    steps.append(_step("h9_family_F_collect", cmd, root, meta))
+    return steps
+
+
+def conditional_counts() -> dict:
+    """R3-E1 / R3-E2: the conditional runs S-15 adds to H-9 when their condition holds."""
+    return {
+        "H-9 grid V0 sample": {"jobs_compared": 2 * len(GRID_RUNS), "condition": "always",
+                               "lines": 0, "note": "output h9_grid_v0_sample/, no H-9 line"},
+        "H-9 grid V0 768": {"lines": sum(grid_expected_runs(name) for name in GRID_RUNS),
+                            "condition": "grid-v0-sample: a sample hash differs"},
+        "H-9 family F": {"lines": FAMILY_F_LINES,
+                         "condition": "family-f-trigger: a pass -> fail by Fmin_after_W / "
+                                      "U57_outside only"},
+        "rule": "H-9 S-15 value = 1,676 + the lines of the conditional runs that ran (R3-E1/E2)",
+    }
+
+
 def stored_main_path(data_root: Path) -> Path:
     return data_root / V5 / "main.jsonl"
 
@@ -591,10 +709,20 @@ def build(args: argparse.Namespace) -> dict:
         blocked["H-9 grid"] = str(exc)
     bundles["H-9"] = h9
     bundles["H-10"] = h10_steps(root, w, m)
+    try:
+        bundles["H-9 V0 sample"] = grid_v0_sample_steps(root, w, m, data_root)
+    except StoredSourceError as exc:
+        blocked["H-9 V0 sample"] = str(exc)
+    counts = counts_report(bundles, d1_lines, main9, data_root, blocked)
+    counts["conditional"] = conditional_counts()
+    if CRLF_ONLY_SOURCES:
+        counts["appendix_b_crlf_only"] = dict(CRLF_ONLY_SOURCES)
     return {
         "bundles": bundles,
+        "conditional": {"H-9 grid V0 768": grid_v0_full_steps(root, w, m),
+                        "H-9 family F": family_f_steps(root, w, m)},
         "blocked": blocked,
-        "counts": counts_report(bundles, d1_lines, main9, data_root, blocked),
+        "counts": counts,
     }
 
 
@@ -666,7 +794,7 @@ def counts_report(bundles: dict, d1_lines: int | None, main9: int, data_root: Pa
 
 
 def main_total_report(counts: dict) -> dict:
-    """RV1-2 / S-15: the sum of the main bundles (table and derived) against 9,778."""
+    """Rev3 R3-F1: the sum of the main bundles (table and derived), a record (no S-15)."""
     table_sum = sum(TABLE_LINES[name] for name in MAIN_BUNDLES)
     values = [counts[name]["derived"] for name in MAIN_BUNDLES]
     derived_sum = None if any(value is None for value in values) else sum(values)
@@ -674,9 +802,14 @@ def main_total_report(counts: dict) -> dict:
         "rules_value": MAIN_TOTAL_LINES,
         "table_sum": table_sum,
         "derived": derived_sum,
-        "table_sum_differs_S15": table_sum != MAIN_TOTAL_LINES,
-        "differs_S15": None if derived_sum is None else derived_sum != MAIN_TOTAL_LINES,
+        "record_only": "R3-F1: S-15 compares the bundle counts only",
+        "differs_S15": None,
     }
+
+
+def _file_token(name: str) -> str:
+    """``H-9 V0 sample`` -> ``h9_v0_sample``."""
+    return name.replace("-", "").replace(" ", "_").lower()
 
 
 def write(out_dir: Path, built: dict) -> dict:
@@ -684,11 +817,13 @@ def write(out_dir: Path, built: dict) -> dict:
     files = {}
     harness = [step for name, steps in built["bundles"].items() if name != "H-0" for step in steps]
     for name, steps in built["bundles"].items():
-        path = (
-            out_dir / f"steps_bundle_{name.replace('-', '').lower()}.json"
-        )  # not steps_h2.json (all of H-1..)
+        path = out_dir / f"steps_bundle_{_file_token(name)}.json"  # not steps_h2.json (all)
         path.write_text(json.dumps({"steps": steps}, indent=1), encoding="utf-8")
         files[name] = str(path)
+    for name, steps in built.get("conditional", {}).items():  # R3-E1 / R3-E2, not in steps_h2
+        path = out_dir / f"steps_conditional_{_file_token(name)}.json"
+        path.write_text(json.dumps({"steps": steps}, indent=1), encoding="utf-8")
+        files[f"conditional {name}"] = str(path)
     (out_dir / "steps_h2.json").write_text(
         json.dumps({"steps": harness}, indent=1), encoding="utf-8"
     )
@@ -718,7 +853,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     report = write(args.out_dir, build(args))
     differs = [n for n, c in report["counts"].items()
-               if c["differs_S15"] or c.get("table_sum_differs_S15")]
+               if isinstance(c, dict) and c.get("differs_S15")]
     blocked = sorted(report["blocked"])
     print(json.dumps({"differs_S15": differs, "blocked": blocked, "steps_h2": report["steps_h2"]}))
     return 1 if differs or blocked else 0
