@@ -1,4 +1,4 @@
-"""436.8 path 1 judge of T-3K (H-0), new version (rules rev5 R5-A1; ``las_targeted_rules_rev5``).
+"""436.8 path 1 judge of T-3K (H-0), new version (rules rev5 R5-A1, rev6 R6-C2).
 
 The verdict code is ``las_t3_judge._judge_t3_rev5`` (K-0 .. K-7, H-T3-0 .. H-T3-6) with three
 definitions replaced (rev5 R5-A3):
@@ -6,12 +6,16 @@ definitions replaced (rev5 R5-A3):
   D-20  Dg-3 folder (off / v4_on) from the line's recorded ``two_pressure.extend_start_rule``
         (``tracked_bound`` = v4_on), not from the key-list entry (rev3 R3-D1). The key-list
         folder is still compared with the record (K-3) and listed in ``dg3_folders``.
-  D-21  K-0 identity from the ``.identity.json`` sidecars (rev4 R4-C4 table): ``head`` start =
-        end = ``git_at_start``; clean tree; code diff, ``c2.py`` and tool sha256 start = end
-        (c2 also = ``git_at_start``'s); thread variables 1 and ``MKL_THREADING_LAYER`` TBB;
-        no ``OUTRIGGER_LOC_SHADOW``; the R-0 / R-0K / T-3K values equal (else H-T3-3). A field
-        not in the sidecar is ``판정 불가`` unless G-S confirms a counterpart (listed as a
-        candidate, never accepted here).
+  D-21  K-0 identity, rev6 R6-C2 table (plan b: the actual ``d8x_record.run_identity`` fields
+        of the ``.identity.json`` ``start`` / ``end`` records): ``git.head`` start = end =
+        ``git_at_start``; ``git.is_clean`` (``status_porcelain`` as evidence); the five
+        ``threads`` (four = 1, ``MKL_THREADING_LAYER`` TBB); every ``rules_seals`` entry ``ok``;
+        ``affinity_mask`` start = end; head / threads / affinity equal over R-0, R-0K, T-3K (else
+        H-T3-3). Controller and tool sha256 come from the T-3K outputs' line / header
+        identities (``las_t3_judge._header_problems``: every line = its header, three headers
+        equal; else H-T3-3; ``c2_sha256`` vs ``git_at_start`` recorded).
+        ``OUTRIGGER_LOC_SHADOW`` by the rev1 RV1-9 ``resume4368_judge import-check`` report
+        (``--import-check``). A missing field or report is ``판정 불가``.
   D-22  K-6 READY +5.0 s and stroke +0.001 m are compared with the rules 7.6 allowance 1e-9
         (``(X, X + 1e-9]`` is not a violation, rev3 R3-D4).
 
@@ -19,7 +23,8 @@ Usage (dynamics-dev or python-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/las_t3_judge_4368.py --out <report.json>
       --r0 <R-0 jsonl> --r0k <R-0K jsonl> --t3 <T-3K jsonl> --baseline <v5/d1.jsonl>
       --identity <R-0 .identity.json> --identity <R-0K ...> --identity <T-3K ...>
-      --git-at-start <commit> [--keys <key list>] [--r0k-keys <R-0K key list>]
+      --git-at-start <commit> [--import-check <RV1-9 report>]
+      [--keys <key list>] [--r0k-keys <R-0K key list>]
       [--las-rules-dir <las_targeted rules dir>] [--rules-dir <verif_matrix>]
 Exit codes: 0 passed, 1 a stop / 판정 불가, 2 input error, 3 internal error.
 """
@@ -54,18 +59,17 @@ ONE_THREAD_VARIABLES = (
     "NUMBA_NUM_THREADS",
 )
 THREAD_LAYER = "TBB"
-FORBIDDEN_ENV = "OUTRIGGER_LOC_SHADOW"
-SIDECAR_FIELDS = {
-    "head": ("head", "git.head"),
-    "is_clean": ("is_clean", "git.is_clean"),
-    "status_porcelain": ("status_porcelain", "git.status_porcelain"),
-    "code_diff_sha256": ("code_diff_sha256",),
-    "c2_sha256": ("c2_sha256",),
-    "tools_sha256": ("tools_sha256",),
-    "env": ("env", "threads"),
-}
-"""Rev4 R4-C4 field -> the dotted names accepted in a sidecar record (the d8x ``run_identity``
-writes ``git.*`` and ``threads``; the same values, rev4 table)."""
+SIDECAR_FIELDS = (
+    "git.head",
+    "git.is_clean",
+    "git.status_porcelain",
+    "threads",
+    "affinity_mask",
+    "rules_seals",
+)
+"""Rev6 R6-C2: the ``d8x_record.run_identity`` fields K-0 reads from ``start`` and ``end``."""
+IMPORT_CHECK_SECTION = "RV1-9"
+"""``resume4368_judge import-check`` report section (rev6 R6-C2 forbidden-env row)."""
 
 
 # --------------------------------------------------------------------------------------- D-20
@@ -131,14 +135,6 @@ def _dotted(record: dict, dotted: str) -> tuple[bool, Any]:
     return True, node
 
 
-def sidecar_value(record: dict, field: str) -> tuple[str | None, Any]:
-    for name in SIDECAR_FIELDS[field]:
-        found, value = _dotted(record, name)
-        if found:
-            return name, value
-    return None, None
-
-
 def c2_sha256_at(commit: str) -> str | None:
     completed = subprocess.run(  # noqa: S603 (fixed git arguments, read only)
         ["git", "-C", str(ROOT), "show", f"{commit}:{C2_PATH}"], capture_output=True, check=False
@@ -153,57 +149,6 @@ def _moment(sidecar: dict, moment: str) -> dict | None:
     return records
 
 
-def identity_rows(sidecar: dict, git_at_start: str, c2_at_start: str | None) -> dict:
-    """Rev4 R4-C4 rows of one sidecar: ``pass`` / ``fail`` / ``판정 불가`` with the evidence."""
-    start, end = _moment(sidecar, "start"), _moment(sidecar, "end")
-    if start is None or end is None:
-        return {"state": "판정 불가", "rows": {}, "reason": "start or end record missing"}
-    rows = {}
-    values = {}
-    for field in SIDECAR_FIELDS:
-        names = (sidecar_value(start, field), sidecar_value(end, field))
-        values[field] = (names[0][1], names[1][1])
-        if names[0][0] is None:
-            rows[field] = {"state": "판정 불가", "reason": "field not in the sidecar"}
-    head = values["head"]
-    if "head" not in rows:
-        rows["head"] = _state(head[0] == head[1] and str(head[0]).startswith(git_at_start), head)
-    if "is_clean" not in rows:
-        rows["is_clean"] = _state(
-            values["is_clean"][0] is True,
-            values["status_porcelain"][0],
-            note="dirty files allowed only when the pre-run audit says so",
-        )
-    for field in ("code_diff_sha256", "tools_sha256"):
-        if field not in rows:
-            rows[field] = _state(values[field][0] == values[field][1], values[field])
-    if "c2_sha256" not in rows:
-        c2 = values["c2_sha256"]
-        rows["c2_sha256"] = _state(c2[0] == c2[1] == c2_at_start, [*c2, c2_at_start])
-    if "env" not in rows:
-        env = values["env"][0] or {}
-        is_ok = (
-            all(str(env.get(name)) == "1" for name in ONE_THREAD_VARIABLES)
-            and env.get("MKL_THREADING_LAYER") == THREAD_LAYER
-        )
-        rows["env"] = _state(is_ok, env)
-        rows["forbidden_env"] = (
-            {"state": "판정 불가", "reason": f"{FORBIDDEN_ENV} not recorded"}
-            if FORBIDDEN_ENV not in env
-            else _state(not env.get(FORBIDDEN_ENV), env.get(FORBIDDEN_ENV))
-        )
-    states = {row["state"] for row in rows.values()}
-    state = "fail" if "fail" in states else ("판정 불가" if "판정 불가" in states else "pass")
-    return {
-        "state": state,
-        "rows": rows,
-        "compared": {
-            k: values[k][0]
-            for k in ("head", "code_diff_sha256", "c2_sha256", "tools_sha256", "env")
-        },
-    }
-
-
 def _state(is_ok: bool, evidence: Any, note: str | None = None) -> dict:
     out = {"state": "pass" if is_ok else "fail", "evidence": evidence}
     if note:
@@ -211,30 +156,146 @@ def _state(is_ok: bool, evidence: Any, note: str | None = None) -> dict:
     return out
 
 
-def k0_identity(paths: list[Path], git_at_start: str, header_identities: dict) -> dict:
-    """D-21 over the three sidecars, with the output-header identities as G-S candidates."""
-    c2_at_start = c2_sha256_at(git_at_start)
-    sidecars = {
-        str(p): identity_rows(common.read_json(p), git_at_start, c2_at_start) for p in paths
-    }
-    compared = [s.get("compared") for s in sidecars.values() if s.get("compared")]
-    same = all(c == compared[0] for c in compared[1:]) if compared else False
-    states = [s["state"] for s in sidecars.values()]
-    state = (
-        "H-T3-3"
-        if not same
-        else "H-T3-0"
-        if "fail" in states
-        else "판정 불가"
-        if "판정 불가" in states
-        else "pass"
+def _missing(field: str) -> dict:
+    return {"state": common.NOT_JUDGEABLE, "reason": f"{field} not in the sidecar"}
+
+
+def identity_rows(sidecar: dict, git_at_start: str) -> dict:
+    """Rev6 R6-C2 sidecar rows of one ``.identity.json`` (``d8x_record.run_identity``)."""
+    start, end = _moment(sidecar, "start"), _moment(sidecar, "end")
+    if start is None or end is None:
+        return {"state": common.NOT_JUDGEABLE, "rows": {}, "reason": "start or end missing"}
+    values = {}
+    for field in SIDECAR_FIELDS:
+        found = (_dotted(start, field), _dotted(end, field))
+        values[field] = (found[0][1], found[1][1]) if found[0][0] and found[1][0] else None
+    rows: dict[str, dict] = {}
+    head = values["git.head"]
+    rows["head"] = (
+        _missing("git.head")
+        if head is None
+        else _state(head[0] == head[1] and str(head[0]).startswith(git_at_start), head)
     )
+    clean = values["git.is_clean"]
+    rows["work_tree"] = (
+        _missing("git.is_clean")
+        if clean is None
+        else _state(
+            clean[0] is True,
+            (values["git.status_porcelain"] or (None,))[0],
+            note="dirty files allowed only when the pre-run audit says so",
+        )
+    )
+    threads = values["threads"]
+    rows["threads"] = _missing("threads") if threads is None else _threads_row(threads[0])
+    seals = values["rules_seals"]
+    rows["rules_seals"] = (
+        _missing("rules_seals")
+        if seals is None
+        else _state(_seals_ok(seals[0]) and _seals_ok(seals[1]), _seal_names(seals[0]))
+    )
+    affinity = values["affinity_mask"]
+    rows["affinity_mask"] = (
+        _missing("affinity_mask")
+        if affinity is None
+        else _state(affinity[0] == affinity[1], affinity)
+    )
+    return {
+        "state": _worst(row["state"] for row in rows.values()),
+        "rows": rows,
+        "compared": {
+            "head": None if head is None else head[0],
+            "threads": None if threads is None else threads[0],
+            "affinity_mask": None if affinity is None else affinity[0],
+        },
+    }
+
+
+def _threads_row(threads: dict | None) -> dict:
+    threads = threads or {}
+    is_ok = (
+        all(str(threads.get(name)) == "1" for name in ONE_THREAD_VARIABLES)
+        and threads.get("MKL_THREADING_LAYER") == THREAD_LAYER
+    )
+    return _state(is_ok, threads)
+
+
+def _seals_ok(seals: Any) -> bool:
+    return (
+        isinstance(seals, dict)
+        and bool(seals)
+        and all(isinstance(entry, dict) and entry.get("ok") is True for entry in seals.values())
+    )
+
+
+def _seal_names(seals: Any) -> list[str] | None:
+    return sorted(seals) if isinstance(seals, dict) else None
+
+
+def _worst(states) -> str:
+    states = set(states)
+    if "fail" in states:
+        return "fail"
+    return common.NOT_JUDGEABLE if common.NOT_JUDGEABLE in states else "pass"
+
+
+def header_identity_row(paths: dict[str, Path], c2_at_start: str | None) -> dict:
+    """Rev6 R6-C2 "제어기·도구 sha": the T-3K output line / header identities
+    (``las_targeted_rules_rev3`` K-0 source: every line = its header, three headers equal)."""
+    headers, lines = {}, {}
+    for label, path in paths.items():
+        headers[label], lines[label] = base.read_jsonl(path)
+    problems = base._header_problems(headers, lines)  # noqa: SLF001 (the K-0 header check)
+    identities = {label: (h or {}).get("identity") for label, h in headers.items()}
+    c2_values = {label: (i or {}).get("c2_sha256") for label, i in identities.items()}
+    return {
+        **_state(not problems, problems),
+        "identities": identities,
+        "c2_sha256_vs_git_at_start": {
+            "git_at_start": c2_at_start,
+            "same": all(v == c2_at_start for v in c2_values.values()),
+        },
+    }
+
+
+def forbidden_env_row(import_check: Path | None) -> dict:
+    """Rev6 R6-C2 ``OUTRIGGER_LOC_SHADOW``: the rev1 RV1-9 ``resume4368_judge import-check``
+    report (step env and import closure); no report = ``판정 불가``."""
+    if import_check is None:
+        return {"state": common.NOT_JUDGEABLE, "reason": "no RV1-9 import-check report"}
+    report = common.read_json(import_check)
+    if report.get("section") != IMPORT_CHECK_SECTION or "problems" not in report:
+        return {"state": common.NOT_JUDGEABLE, "reason": f"{import_check} is no RV1-9 report"}
+    return _state(not report["problems"], report["problems"])
+
+
+def k0_identity(
+    sidecar_paths: list[Path],
+    git_at_start: str,
+    output_paths: dict[str, Path],
+    import_check: Path | None,
+) -> dict:
+    """D-21 (rev6 R6-C2 table) over the three sidecars and the three outputs."""
+    sidecars = {str(p): identity_rows(common.read_json(p), git_at_start) for p in sidecar_paths}
+    compared = [s.get("compared") for s in sidecars.values() if s.get("compared")]
+    same = len(compared) == len(sidecar_paths) and all(c == compared[0] for c in compared[1:])
+    header = header_identity_row(output_paths, c2_sha256_at(git_at_start))
+    forbidden = forbidden_env_row(import_check)
+    states = [s["state"] for s in sidecars.values()] + [header["state"], forbidden["state"]]
+    if not same or header["state"] == "fail":
+        state = "H-T3-3"
+    elif "fail" in states:
+        state = "H-T3-0"
+    elif common.NOT_JUDGEABLE in states:
+        state = common.NOT_JUDGEABLE
+    else:
+        state = "pass"
     return {
         "state": state,
         "sidecars": sidecars,
-        "three_outputs_same": same,
-        "c2_sha256_at_git_at_start": c2_at_start,
-        "gs_candidates_from_headers": header_identities,
+        "three_sidecars_same": same,
+        "controller_tool_sha_from_headers": header,
+        "forbidden_env_RV1_9": forbidden,
     }
 
 
@@ -256,20 +317,17 @@ def judge(args: argparse.Namespace) -> dict:
     except (OSError, KeyError, ValueError) as exc:
         raise common.InputError(repr(exc)) from exc
     entries = las_t3.bundle_entries(las_t3.load_key_list(keys_path))
-    headers = {
-        label: (base.read_jsonl(path)[0] or {}).get("identity")
-        for label, path in (("R-0", args.r0), ("R-0K", args.r0k), ("T-3", args.t3))
-    }
-    identity = k0_identity(list(args.identity), args.git_at_start, headers)
+    outputs = {"R-0": args.r0, "R-0K": args.r0k, "T-3": args.t3}
+    identity = k0_identity(list(args.identity), args.git_at_start, outputs, args.import_check)
     folders = dg3_folders(base.read_jsonl(args.t3)[1], entries)
     findings = [f"stop {stop}" for stop in result["stops"]]
     if identity["state"] != "pass":
-        findings.append(f"K-0 identity (R4-C4): {identity['state']}")
+        findings.append(f"K-0 identity (R6-C2): {identity['state']}")
     if any(not row["same"] for row in folders):
         findings.append("Dg-3 key-list folder differs from the recorded rule (K-3)")
     return {
         "t3_result": result,
-        "K-0_identity_R4C4": identity,
+        "K-0_identity_R6C2": identity,
         "dg3_folders": folders,
         "K-6_limits": limits,
         "findings": findings,
@@ -292,6 +350,12 @@ def parser() -> argparse.ArgumentParser:
         help=".identity.json of R-0, R-0K and T-3K (three times)",
     )
     out.add_argument("--git-at-start", required=True)
+    out.add_argument(
+        "--import-check",
+        type=Path,
+        default=None,
+        help="resume4368_judge import-check report (rev1 RV1-9; none = forbidden env 판정 불가)",
+    )
     out.add_argument("--keys", type=Path, default=None)
     out.add_argument("--r0k-keys", type=Path, default=None)
     out.add_argument("--las-rules-dir", type=Path, default=las_t3.RULES_DIR)

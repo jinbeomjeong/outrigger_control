@@ -11,8 +11,11 @@ Then it writes the re-graded lines and, with ``--select-out``, runs ``d1_select.
         "가정 경계 미성립" and the user question on the lift-off boundary (rev3 R3-A1).
   D-24  spec 377: a g6-path line with ``G6-7_preloc`` false and ``d1.g6_preloc.preloc_flag_ok``
         true has that item demoted to the FLAG ``P3-8_demoted`` (out of ``fail_items``, into
-        ``demoted_items`` with rule 377). A g6 line with ``G6-7_preloc`` false and no F-8 field is
-        ``판정 불가``. Other demotions already inside the harness values are not repeated.
+        ``demoted_items`` with rule 377). Rev6 R6-C3 (U-S9-G6c): ``preloc_flag_ok`` false with
+        ``G6-3_Fmin`` true and no FAULT (``final_phase``) is the FLAG ``P3-8_preloc_loss`` (rule
+        ``U-S9-G6c``, also in ``demoted_items``). A g6 line with ``G6-7_preloc`` false and no
+        ``preloc_flag_ok`` is ``판정 불가`` (``P3-8_unchecked`` is not used). Other demotions
+        already inside the harness values are not repeated.
   D-25  READY origin (rev4 R4-C1): ``values.times.t_check_start_s`` <= 0.1 s (+1e-9) when the
         F-1 field exists, else the harness definition (closed loop from t = 0, "정의에 의함");
         ``d1.t_ready_s`` must equal ``values.times.t_first_ready_s`` within 1e-9, else
@@ -53,6 +56,11 @@ TAG_ASSUMED_BOUNDARY = "ASSUMED_BOUNDARY"
 PRELOC_ITEM = "G6-7_preloc"
 DEMOTION_FLAG = "P3-8_demoted"
 DEMOTION_RULE = "377"
+PRELOC_LOSS_FLAG = "P3-8_preloc_loss"
+PRELOC_LOSS_RULE = "U-S9-G6c"
+G6_3_ITEM = "G6-3_Fmin"
+FAULT_PHASES = ("fault", "fault_reground")
+"""``r72_judge`` no-FAULT test: the final phase is not a FAULT phase."""
 READY_ORIGIN_LIMIT_S = 0.1
 DEFINITION_CHANGES = ("D-23", "D-24", "D-25")
 
@@ -64,11 +72,11 @@ def regrade(line: dict) -> dict:
     false_items = sorted(name for name, ok in items.items() if not ok)
     demoted, problems = [], []
     if d1.get("path") == "g6" and items.get(PRELOC_ITEM) is False:
-        preloc = d1.get("g6_preloc")
-        if preloc is None or preloc.get("preloc_flag_ok") is None:
-            problems.append("G6-7_preloc false without d1.g6_preloc (F-8)")
-        elif preloc["preloc_flag_ok"] is True:
-            demoted.append({"item": PRELOC_ITEM, "rule": DEMOTION_RULE, "flag": DEMOTION_FLAG})
+        demotion, problem = preloc_demotion(line, items)
+        if demotion is not None:
+            demoted.append(demotion)
+        if problem is not None:
+            problems.append(problem)
     fail_items = [name for name in false_items if name not in {d["item"] for d in demoted}]
     if d1.get("verdict") == VERDICT_ALLOWED_STOP:
         verdict = VERDICT_ALLOWED_STOP  # d1_runs: soil stop on a row that allows it
@@ -82,6 +90,27 @@ def regrade(line: dict) -> dict:
         "flags": [d["flag"] for d in demoted],
         "problems": problems,
     }
+
+
+def preloc_demotion(line: dict, items: dict) -> tuple[dict | None, str | None]:
+    """The G6-7 branches of ``r72_judge`` (rev5 R5-D1, rev6 R6-C3) for a false ``G6-7_preloc``.
+
+    Returns (demoted item or None, ``판정 불가`` reason or None): ``preloc_flag_ok`` true =
+    spec 377 ``P3-8_demoted``; false with G6-3 true and no FAULT (``final_phase``) = U-S9-G6c
+    ``P3-8_preloc_loss``; false otherwise = a failure; missing = ``판정 불가`` (the old
+    ``P3-8_unchecked`` tag is not used).
+    """
+    flag_ok = (line["d1"].get("g6_preloc") or {}).get("preloc_flag_ok")
+    if flag_ok is None:
+        return None, "G6-7_preloc false without d1.g6_preloc.preloc_flag_ok (F-8)"
+    if flag_ok is True:
+        return {"item": PRELOC_ITEM, "rule": DEMOTION_RULE, "flag": DEMOTION_FLAG}, None
+    g6_3, final_phase = items.get(G6_3_ITEM), line.get("final_phase")
+    if g6_3 is None or final_phase is None:
+        return None, f"U-S9-G6c inputs missing ({G6_3_ITEM} {g6_3}, final_phase {final_phase})"
+    if g6_3 and final_phase not in FAULT_PHASES:
+        return {"item": PRELOC_ITEM, "rule": PRELOC_LOSS_RULE, "flag": PRELOC_LOSS_FLAG}, None
+    return None, None
 
 
 def ready_origin_problems(line: dict) -> list[str]:

@@ -369,10 +369,7 @@ def sa4_items(row: dict) -> dict:
         and common.control_period_index(warn[0]) == common.control_period_index(fault[0]),
         "no_stroke_end": not any(n.startswith(STROKE_END_FAULT) for _, n in events),
         "no_ready": row["t_ready"] is None,
-        # after-liftoff minimum covers the after-stop span; below F_min it cannot decide
-        "F_after_stop_ge_Fmin": True
-        if common.is_at_least(None if after_lift is None else after_lift * 1e3, common.F_MIN_N)
-        else None,
+        "F_after_stop_ge_Fmin": f_after_stop_item(sa4, after_lift),
         "no_lift_after_stop": None if lifted is None else all(v == 0 for v in lifted),
         "moving_le_180bar": None
         if row["p_move"] is None
@@ -394,7 +391,23 @@ def sa4_items(row: dict) -> dict:
         "items": items,
         "state": state,
         "pad_force_definition": sa4.get("rule"),
+        "F_after_stop_basis": (
+            "F-9 F_min_after_stop_N"
+            if sa4.get("F_min_after_stop_N") is not None
+            else "이륙 뒤 최소(충분조건, F-9 없음)"
+        ),
     }
+
+
+def f_after_stop_item(sa4: dict, after_lift_kN: float | None) -> bool | None:
+    """Rev6 R6-C1 1: the F-9 per-leg minimum from the stop to the run end >= F_min on all four
+    legs; without F-9 the after-liftoff minimum is a sufficient condition (>= F_min: true,
+    else ``판정 불가`` = None)."""
+    per_leg = sa4.get("F_min_after_stop_N")
+    if per_leg is not None:
+        return all(common.is_at_least(v, common.F_MIN_N) for v in per_leg)
+    after_lift_N = None if after_lift_kN is None else after_lift_kN * 1e3
+    return True if common.is_at_least(after_lift_N, common.F_MIN_N) else None
 
 
 def fl_guard_period(row: dict) -> int | None | str:

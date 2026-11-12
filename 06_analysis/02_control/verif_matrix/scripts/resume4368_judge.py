@@ -53,6 +53,11 @@ fields F-1 .. F-6 of the R4-D table and checks the second table (``extend_bound_
 the ext_moving rule with ``breach_reads``, r79 ``base.t_done_s`` = the first DONE of
 ``base.phase_path``, ``gs --chrono``: PS-c ``soil_event_series.npz`` columns).
 
+Rev5 (``v5_resume_4368_rules_rev5.md``, sealed 452a8436, checked raw too): R5-A1 makes the
+``04_scripts/04_hydraulic/coupled/*_4368.py`` judges the harness path 1 (this tool keeps its
+subcommands; it only adds the rev5 seal check). Rev6 (``v5_resume_4368_rules_rev6.md``, sealed
+809e5639, checked raw too): seal check only here (R6-C items are in the ``*_4368.py`` judges).
+
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
 The tool reads only; it never runs a simulation. Tag judgements use
@@ -98,8 +103,17 @@ RULES_REV3_SHA256 = "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5e
 RULES_REV4_NAME = "v5_resume_4368_rules_rev4.md"
 RULES_REV4_SHA256 = "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b"
 """Rev4 (sealed 2026-11-13 03:47:45 +09:00): overrides rev3 .. the original."""
+RULES_REV5_NAME = "v5_resume_4368_rules_rev5.md"
+RULES_REV5_SHA256 = "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca"
+"""Rev5 (sealed 2026-11-13 07:32:14 +09:00): overrides rev4 .. the original (R5-A1: the
+harness path 1 judges are the ``*_4368.py`` versions)."""
+RULES_REV6_NAME = "v5_resume_4368_rules_rev6.md"
+RULES_REV6_SHA256 = "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9"
+"""Rev6 (sealed 2026-11-13 07:49:42 +09:00): overrides rev5 .. the original (R6-C: F-9, K-0
+fields, U-S9-G6c branch)."""
 SEALED_REVISIONS = ((RULES_REV1_NAME, RULES_REV1_SHA256), (RULES_REV2_NAME, RULES_REV2_SHA256),
-                    (RULES_REV3_NAME, RULES_REV3_SHA256), (RULES_REV4_NAME, RULES_REV4_SHA256))
+                    (RULES_REV3_NAME, RULES_REV3_SHA256), (RULES_REV4_NAME, RULES_REV4_SHA256),
+                    (RULES_REV5_NAME, RULES_REV5_SHA256), (RULES_REV6_NAME, RULES_REV6_SHA256))
 """The revisions every subcommand checks raw (R2-9: sealed rule files are ``-text``, no LF
 normalisation)."""
 RECORD_KEY = "resume_k1"
@@ -1178,6 +1192,11 @@ def rev4_presence(record: dict) -> dict[str, bool]:
         if job.get("case") in SA4_CASES:
             out["F-4 values.sa4.lift_after_stop_ms"] = get_path(
                 record, "values.sa4.lift_after_stop_ms")[0]
+            # rev6 R6-D F-9 and the saturation field description (R6-C1 2)
+            out["F-9 values.sa4.F_min_after_stop_N"] = get_path(
+                record, "values.sa4.F_min_after_stop_N")[0]
+            out["values.pressure.saturation_rule = item 4 saturation stop"] = (
+                get_path(record, "values.pressure.saturation_rule")[1] == saturation_rule())
     present, bound = get_path(record, "hydraulics_record.extend_bound_check")
     if present and isinstance(bound, dict):
         out["extend_bound_check.rule = ext_moving rule"] = bound.get("rule") == extend_bound_rule()
@@ -1185,6 +1204,18 @@ def rev4_presence(record: dict) -> dict[str, bool]:
     if is_r79_record(record) and isinstance(record.get("base"), dict):
         out["r79 base.t_done_s = first DONE of base.phase_path"] = is_first_done(record["base"])
     return out
+
+
+def saturation_rule() -> str | None:
+    """``verdict_metrics.SATURATION_RULE`` (rev6 R6-C1 2 field description)."""
+    coupled = ROOT / "04_scripts" / "04_hydraulic" / "coupled"
+    if str(coupled) not in sys.path:
+        sys.path.append(str(coupled))
+    try:
+        from verdict_metrics import SATURATION_RULE
+    except ImportError:
+        return None
+    return SATURATION_RULE
 
 
 def extend_bound_rule() -> str | None:
@@ -2240,7 +2271,7 @@ def revision_seal_problems(folder: Path, name: str, sha256: str) -> tuple[dict, 
 
 
 def sealed_rules_check(rules_dir: Path | None = None) -> dict:
-    """Rev1 .. rev4 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
+    """Rev1 .. rev6 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
     folder = RULES_DIR if rules_dir is None else Path(rules_dir)
     revisions, problems = {}, []
     for name, sha256 in SEALED_REVISIONS:

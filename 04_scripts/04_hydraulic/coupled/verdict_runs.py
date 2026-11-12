@@ -182,10 +182,12 @@ def sa4_record(rows: np.ndarray, rod_weight_N, events: list[tuple[float, str]]) 
     """Rev4 F-4 ``values.sa4``: per leg (FL, FR, RL, RR) the time [ms] with the pad contact force
     (true F_cyl + rod weight, the harness definition of ``s9_soil_slope._lifted_legs``) <= 0 from
     the soil-guard stop (first ``FAULT_LIFT_STROKE_LIMIT:soil``) to the run end; samples x the
-    1 ms row step. Without the stop both values are None."""
+    1 ms row step. Rev6 F-9 ``F_min_after_stop_N``: per leg the minimum 1 ms true F_cyl
+    (``TRUE_FORCE``) over the same rows [N]. Without the stop these values are None (record
+    only; the commands do not read it)."""
     t_stop = next((t for t, name in events if name.startswith(SOIL_STOP_EVENT)), None)
     out = {"t_stop_s": None if t_stop is None else round(float(t_stop), 3),
-           "lift_after_stop_ms": None, "rule": SA4_RULE}
+           "lift_after_stop_ms": None, "F_min_after_stop_N": None, "rule": SA4_RULE}
     if t_stop is None or rows.size == 0:
         return out
     from harness_flow import COLUMN, TRUE_FORCE
@@ -200,6 +202,8 @@ def sa4_record(rows: np.ndarray, rod_weight_N, events: list[tuple[float, str]]) 
     step_ms = float(np.median(np.diff(t))) * 1e3 if t.size > 1 else 1.0
     lifted = (after[:, None] & (contact <= 0.0)).sum(axis=0)
     out["lift_after_stop_ms"] = [round(float(n) * step_ms, 3) for n in lifted]
+    if after.any():
+        out["F_min_after_stop_N"] = [float(v) for v in true_force[after].min(axis=0)]
     return out
 
 

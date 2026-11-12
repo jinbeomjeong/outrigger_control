@@ -309,13 +309,25 @@ def probe_attitude_change_deg(rows: np.ndarray, phases: np.ndarray) -> float | N
     return _rounded(change, 5)
 
 
+SATURATION_RULE = (
+    "spec 320 item 4 (2) 'saturation stop 0 in a levelling run': number of (row, leg) samples "
+    "with the leg extending (row speed U > MOVING_SPEED_EPS_M_S) and the true pressure "
+    "TRUE_FORCE / A_p >= RELIEF_BAR (210 bar); a saturation stop needs an extending leg at the "
+    "relief pressure, so 0 samples = 0 saturation stops (436.8 rules rev6 R6-C1 2)"
+)
+"""Rev6 R6-C1 2: the field description of ``values.pressure.saturation_leg_chunks`` (G-S reads
+``values.pressure.saturation_rule``; record only)."""
+
+
 def pressure_values(rows: np.ndarray, head_area_m2: np.ndarray) -> dict:
-    """Item 4: largest moving pressure F_cyl / A_p and extending chunks at the relief pressure."""
+    """Item 4: largest moving pressure F_cyl / A_p and extending chunks at the relief pressure
+    (:data:`SATURATION_RULE`)."""
     pressure_bar = rows[:, TRUE_FORCE] / head_area_m2 / PA_PER_BAR
     moving = np.abs(rows[:, U]) > MOVING_SPEED_EPS_M_S
     extending = rows[:, U] > MOVING_SPEED_EPS_M_S
     return {"max_moving_bar": _rounded(pressure_bar[moving].max(), 3) if moving.any() else None,
-            "saturation_leg_chunks": int((extending & (pressure_bar >= RELIEF_BAR)).sum())}
+            "saturation_leg_chunks": int((extending & (pressure_bar >= RELIEF_BAR)).sum()),
+            "saturation_rule": SATURATION_RULE}
 
 
 def twist_values(rows: np.ndarray, phases: np.ndarray, lift_index: int | None,

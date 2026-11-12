@@ -18,6 +18,8 @@ for _path in (COUPLED, ROOT / "03_src"):
         sys.path.insert(0, str(_path))
 
 import d1_judge_4368 as d1j  # noqa: E402
+import h6_judge_4368 as h6j  # noqa: E402
+import h8_noise_judge_4368 as h8j  # noqa: E402
 import judge4368_common as common  # noqa: E402
 import judge_stage1_4368 as s1  # noqa: E402
 import las_t3_judge_4368 as t3j  # noqa: E402
@@ -42,8 +44,10 @@ def test_definition_change_numbers_cover_d01_to_d25():
         *u9j.DEFINITION_CHANGES,
         *t3j.DEFINITION_CHANGES,
         *d1j.DEFINITION_CHANGES,
+        *h6j.DEFINITION_CHANGES,
     }
-    assert used == set(common.DEFINITION_CHANGES) - {"D-19"}  # H-6 judge not yet written
+    assert used == set(common.DEFINITION_CHANGES)
+    assert h8j.DEFINITION_CHANGES == ()  # rev5 R5-A3 has no D item for H-8
 
 
 def test_allowance_comparisons():
@@ -268,6 +272,16 @@ def test_sa4_needs_every_record():
     assert s1.sa4_items({**row, "sa4": {}})["state"] == "판정 불가"
 
 
+def test_sa4_after_stop_minimum_uses_f9():
+    """Rev6 R6-C1 1: F-9 decides; without it the after-liftoff minimum is only sufficient."""
+    base = {"lift_after_stop_ms": [0, 0, 0, 0]}
+    assert s1.f_after_stop_item({**base, "F_min_after_stop_N": [1e4] * 4}, 5.0) is True
+    low = {**base, "F_min_after_stop_N": [1e4, 9000.0, 1e4, 1e4]}
+    assert s1.f_after_stop_item(low, 50.0) is False
+    assert s1.f_after_stop_item(base, 20.0) is True
+    assert s1.f_after_stop_item(base, 5.0) is None
+
+
 # ---------------------------------------------------------------------------------- U-9 H0
 def test_h0_uses_the_h10_main_vb_line():
     u9 = [
@@ -311,8 +325,26 @@ def test_377_demotion_and_missing_f8():
     line = _d1_line({"G6-7_preloc": False, "READY": True}, preloc=True)
     grade = d1j.regrade(line)
     assert grade["verdict"] == "pass" and grade["demoted_items"][0]["flag"] == "P3-8_demoted"
-    assert d1j.regrade(_d1_line({"G6-7_preloc": False}, preloc=False))["verdict"] == "fail"
+    line = _d1_line({"G6-7_preloc": False, "G6-3_Fmin": False}, preloc=False)
+    line["final_phase"] = "ready"
+    assert d1j.regrade(line)["verdict"] == "fail"
     assert d1j.regrade(_d1_line({"G6-7_preloc": False}))["problems"]
+
+
+def test_us9g6c_preloc_loss_branch():
+    """Rev6 R6-C3: preloc_flag_ok false, G6-3 true, no FAULT -> P3-8_preloc_loss FLAG."""
+    line = _d1_line({"G6-7_preloc": False, "G6-3_Fmin": True, "READY": True}, preloc=False)
+    line["final_phase"] = "ready"
+    grade = d1j.regrade(line)
+    assert grade["verdict"] == "pass" and grade["fail_items"] == []
+    assert grade["demoted_items"] == [
+        {"item": "G6-7_preloc", "rule": "U-S9-G6c", "flag": "P3-8_preloc_loss"}
+    ]
+    line["final_phase"] = "fault_reground"
+    assert d1j.regrade(line)["fail_items"] == ["G6-7_preloc"]
+    del line["final_phase"]
+    assert d1j.regrade(line)["problems"]  # missing input: 판정 불가, no P3-8_unchecked
+    assert all("unchecked" not in f for f in d1j.regrade(line)["flags"])
 
 
 def test_ready_origin_checks():
@@ -346,10 +378,34 @@ def test_identity_rows_on_a_d8x_style_sidecar():
             "MKL_THREADING_LAYER": "TBB",
         },
     }
-    found = t3j.identity_rows({"start": [record], "end": [record]}, "abc123", None)
+    found = t3j.identity_rows({"start": [record], "end": [record]}, "abc123")
     assert found["rows"]["head"]["state"] == "pass"
-    assert found["rows"]["c2_sha256"]["state"] == "판정 불가"
+    assert found["rows"]["rules_seals"]["state"] == "판정 불가"  # rev6 R6-C2: field missing
     assert found["state"] == "판정 불가"
+    record = {
+        **record,
+        "affinity_mask": "0xFF",
+        "rules_seals": {"original": {"ok": True}, "rev1": {"ok": True}},
+    }
+    found = t3j.identity_rows({"start": [record], "end": [record]}, "abc123")
+    assert found["state"] == "pass"
+    bad_seal = {**record, "rules_seals": {"original": {"ok": False}}}
+    found = t3j.identity_rows({"start": [record], "end": [bad_seal]}, "abc123")
+    assert found["rows"]["rules_seals"]["state"] == "fail" and found["state"] == "fail"
+    threads = {**record, "threads": {**record["threads"], "MKL_THREADING_LAYER": "INTEL"}}
+    found = t3j.identity_rows({"start": [threads], "end": [threads]}, "abc123")
+    assert found["rows"]["threads"]["state"] == "fail"
+
+
+def test_forbidden_env_row_reads_the_rv1_9_report(tmp_path):
+    assert t3j.forbidden_env_row(None)["state"] == "판정 불가"
+    report = tmp_path / "import_check.json"
+    report.write_text('{"section": "RV1-9", "problems": []}', encoding="utf-8")
+    assert t3j.forbidden_env_row(report)["state"] == "pass"
+    report.write_text('{"section": "RV1-9", "problems": ["x"]}', encoding="utf-8")
+    assert t3j.forbidden_env_row(report)["state"] == "fail"
+    report.write_text('{"section": "RV1-7", "problems": []}', encoding="utf-8")
+    assert t3j.forbidden_env_row(report)["state"] == "판정 불가"
 
 
 # --------------------------------------------------------------------- record-only runner code
@@ -360,8 +416,14 @@ def test_sa4_record_rejects_nan_after_the_stop():
     rows = np.zeros((100, len(COLUMNS)))
     rows[:, COLUMN["t"]] = np.arange(100) * 1e-3
     rows[:, TRUE_FORCE] = 1000.0
+    rows[60:, TRUE_FORCE.start + 2] = 800.0  # RL lower after the stop
+    rows[20, TRUE_FORCE.start + 1] = 10.0  # FR low before the stop: not part of F-9
+    before = rows.copy()
     found = vr.sa4_record(rows, 500.0, [(0.05, "FAULT_LIFT_STROKE_LIMIT:soil")])
     assert found["rule"] == vr.SA4_RULE and found["lift_after_stop_ms"] == [0.0] * 4
+    assert found["F_min_after_stop_N"] == [1000.0, 1000.0, 800.0, 1000.0]  # rev6 F-9
+    assert np.array_equal(rows, before)  # record only: the rows are not touched
+    assert vr.sa4_record(rows, 500.0, [])["F_min_after_stop_N"] is None
     rows[10, TRUE_FORCE.start] = np.nan  # before the stop: not checked
     vr.sa4_record(rows, 500.0, [(0.05, "FAULT_LIFT_STROKE_LIMIT:soil")])
     rows[80, TRUE_FORCE.start] = np.nan
@@ -377,8 +439,23 @@ def _function(path: Path, name: str) -> ast.FunctionDef:
 def test_command_hash_does_not_depend_on_the_record_fields():
     """The commands hash is taken from the period commands only; F-4 / F-8 are written into
     the finished result (record only), so they cannot change it."""
-    finish = ast.unparse(_function(COUPLED / "verdict_runs.py", "_finish"))
-    assert '_command_digest(period["command"])' in finish.replace("'", '"')
+    finish = ast.unparse(_function(COUPLED / "verdict_runs.py", "_finish")).replace("'", '"')
+    assert '_command_digest(period["command"])' in finish
+    # rev6 F-9 lives in sa4_record: it reads the finished rows and events only, never the
+    # period commands the hash is taken from (and it leaves the rows unchanged, test above)
+    assert 'values["sa4"] = sa4_record(limiter.rows(), plant.Wr, events)' in finish
+    assert "period" not in ast.unparse(_function(COUPLED / "verdict_runs.py", "sa4_record"))
+
+
+def test_saturation_field_carries_its_definition():
+    """Rev6 R6-C1 2: values.pressure.saturation_rule explains saturation_leg_chunks."""
+    import verdict_metrics as vm
+    from harness_flow import COLUMNS
+
+    rows = np.zeros((10, len(COLUMNS)))
+    found = vm.pressure_values(rows, np.full(4, 0.01))
+    assert found["saturation_leg_chunks"] == 0 and found["saturation_rule"] == vm.SATURATION_RULE
+    assert "210" in vm.SATURATION_RULE and vm.RELIEF_BAR == 210.0
     execute = ast.unparse(_function(COUPLED / "d1_runs.py", "execute"))
     assert execute.index("PATH_RUNNERS[") < execute.index("d1_record(")
 

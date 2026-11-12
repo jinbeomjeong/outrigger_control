@@ -327,6 +327,8 @@ def test_rev1_and_rev2_seal_check(tmp_path, monkeypatch) -> None:
         judge.RULES_REV2_NAME,
         judge.RULES_REV3_NAME,
         judge.RULES_REV4_NAME,
+        judge.RULES_REV5_NAME,
+        judge.RULES_REV6_NAME,
     }
     assert judge.sealed_rules_check(tmp_path)["stop_S1"] is True
     for name, _ in judge.SEALED_REVISIONS:  # both sealed files copied, rev1 seal value wrong
@@ -1383,7 +1385,8 @@ def test_rev4_gs_fields(tmp_path) -> None:
     values = {
         "times": {"t_check_start_s": 0.1},
         "case_floor_deg": [0.0, 0.0],
-        "sa4": {"lift_after_stop_ms": None},
+        "sa4": {"lift_after_stop_ms": None, "F_min_after_stop_N": None},
+        "pressure": {"saturation_leg_chunks": 0, "saturation_rule": judge.saturation_rule()},
     }
     bound = {"rule": judge.extend_bound_rule(), "breach_reads": [0, 0, 0, 0]}
     line = {
@@ -1407,8 +1410,13 @@ def test_rev4_gs_fields(tmp_path) -> None:
     missing = json.loads(out.read_text(encoding="utf-8"))["files"][0]["missing"]
     assert missing == [
         "F-4 values.sa4.lift_after_stop_ms",
+        "F-9 values.sa4.F_min_after_stop_N",
         "extend_bound_check.rule = ext_moving rule",
     ]
+    no_rule = {**line, "values": {**values, "pressure": {"saturation_leg_chunks": 0}}}
+    assert not judge.rev4_presence(no_rule)[
+        "values.pressure.saturation_rule = item 4 saturation stop"
+    ]  # rev6 R6-C1 2: the field description is checked at G-S
     d1_line = {
         "job": {"d1": {"group": "H-R-0"}, "setting": "VB", "eps": 0.0},
         "values": {"times": {}},
