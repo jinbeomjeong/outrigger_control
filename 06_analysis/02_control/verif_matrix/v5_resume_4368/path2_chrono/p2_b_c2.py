@@ -3,7 +3,7 @@
 - S-01, S-02 (SCM): P3, READY 120 s, stroke_limited_stop allowed.
 - baseline-failure extra rows: same item set as their family (D1C2_* -> D8.P, D1S_* -> P3 S-type).
 - D1-PSC rows: 426.3 E-1..E-7 + stroke <= 684.8 mm; path 2 recomputes E-5 (with stroke);
-  E-1..E-4 / E-6 / E-7 are re-aggregated from result.json (rev3 R3-G1, Q-C1 = A).
+  E-1..E-6 (rev4 b) and E-7 (rev4 c) are not built in this version -> PS-c row 판정 불가.
 """
 import p2_core as C
 import p2_kinds as K
@@ -55,11 +55,14 @@ def _psc(row, params):
     ok = (last == "ready" and m is not None and R.le(float(m.max()), R.ATT_LIMIT_DEG)
           and not items["E-5"]["fault"] and R.le(items["E-5"]["stroke_max_m"], R.STROKE_END_M))
     items["E-5"]["verdict"] = "pass" if ok else "fail"
-    # rev3 R3-G1 layer 2: re-aggregated from the per-item record in result.json
+    # rev4 R4-A2: E-1..E-6 recompute from soil_event_series.npz (option b), E-7 by running the
+    # study A judge function (option c). Not built in this tool version (PS-c rows are 0..2 and
+    # appear only if H-2 selects them); a PS-c row is 판정 불가 until built.
+    has = (row.folder / "soil_event_series.npz").exists()
     for k in ("E-1", "E-2", "E-3", "E-4", "E-6", "E-7"):
-        it = C.reagg_item(row, k)
-        it["clause"] = "426.3 (re-aggregated, FLAG counts as pass)"
-        items[k] = it
+        items[k] = {"clause": "426.3 / rev4 R4-A2", "verdict": "indeterminate",
+                    "soil_event_series_present": has,
+                    "reason": "PS-c E path 2 not built yet (rev4 b / c); build before judging a PS-c row"}
     keys = ["E-1", "E-2", "E-3", "E-4", "E-5", "E-6", "E-7"]
     return items, keys, list(row.notes), False
 
