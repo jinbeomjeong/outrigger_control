@@ -604,10 +604,16 @@ def _chrono_case(batch: Path, row_id: str, geo: bm.Geometry) -> None:
     z_10 = np.outer(n * 0.1 * 1e-4, np.ones(4)) + 0.05
     grid = _grid_fields(geo, z_10)
     imu_t = np.arange(0, n_count * 0.1, 0.01)
-    _write_npz(folder / bm.CHRONO_B1_RECORD, n=n, load_read_N=loads,
+    pad_xy = np.tile(geo.pad_xy_m, (n_count, 1, 1))
+    _write_npz(folder / bm.CHRONO_B1_RECORD, n=n, n_cycle=n.copy(), t_s=n * 0.1,
+               computed=np.ones(n_count, dtype=bool), load_read_N=loads,
                att_raw_rad=np.zeros((n_count, 2)), c_hat_m=np.full(n_count, 0.06),
                c_hat_corner_m=np.full((n_count, 4), 0.06), c_target_m=np.full(n_count, 0.05),
-               imu_t_s=imu_t, imu_raw_tilt_rad=np.zeros((len(imu_t), 2)), **grid)
+               pad_bottom_centre_plane_xy_m=pad_xy,
+               pad_yaw_plane_rad=np.full((n_count, 4), 0.3),
+               imu_n_cycle=(imu_t / 0.1).astype(np.int64), imu_t_s=imu_t,
+               imu_raw_roll_rad=np.zeros(len(imu_t)), imu_raw_pitch_rad=np.zeros(len(imu_t)),
+               imu_specific_force_m_s2=np.zeros((len(imu_t), 3)), **grid)
     s9_rows = [{"t_s": k * 0.1, "pad_nodes": [
         {name: float(grid[name][k, i]) for name in bm.PAD_NODES_FIELDS} for i in range(4)]}
         for k in (0, 300, 800)]
@@ -637,10 +643,12 @@ def _grid_fields(geo: bm.Geometry, z: np.ndarray) -> dict[str, np.ndarray]:
     area = np.tile(geo.pad_area_m2, (count, 1))
     n_contact = np.rint(area / 1e-4)
     law = n_contact * 1e-4 * (geo.kc / geo.pad_b_poly_m + geo.kphi) * z ** geo.n_soil
-    return {"n_inside": n_contact.copy(), "n_contact": n_contact,
+    return {"n_inside": n_contact.astype(np.int64), "n_contact": n_contact.astype(np.int64),
+            "n_sigma_negative": np.zeros((count, 4), dtype=np.int64),
             "contact_hull_area_m2": n_contact * 1e-4,
             "contact_hull_perimeter_m": 2.0 * n_contact * 1e-4 / geo.pad_b_poly_m,
-            "sinkage_geometric_m": z, "sigma_sum_area_N": law}
+            "sinkage_geometric_m": z, "sigma_sum_area_N": law,
+            "sinkage_mean_contact_m": z.copy()}
 
 
 def _harness_files(folder: Path, geo: bm.Geometry, run_ids: list[str]) -> Path:
@@ -751,6 +759,46 @@ def test_e2e_grid_record_read_and_f_one(e2e) -> None:
     point = row["grid"]["points"]["max"][0]
     assert point["state"] == "valid" and point["f"] == pytest.approx(1.0, abs=1e-9)
     assert row["shadow"]["locs"][0]["diff_tL_mm"] == pytest.approx(0.0, abs=1e-9)
+
+
+def test_e2e_cad_keys_m4h_and_imu(e2e) -> None:
+    _, data = _judge(e2e)
+    row = data["rows"]["C1"]
+    assert row["metrics"]["M-4h"]["xy_shift_m"] == [0.0] * 4
+    assert row["metrics"]["M-4h"]["yaw_change_rad"] == [0.0] * 4  # initial yaw 0.3 cancels
+    assert row["shadow"]["locs"][0]["window_samples"] > 0
+
+
+def _rewrite_npz(path: Path, **changes) -> None:
+    with np.load(path, allow_pickle=False) as data:
+        arrays = {key: data[key] for key in data.files}
+    for key, value in changes.items():
+        if value is None:
+            arrays.pop(key)
+        else:
+            arrays[key] = value
+    np.savez(path, **arrays)
+
+
+def test_e2e_not_computed_period_has_no_grid_record(e2e) -> None:
+    path = e2e["batch"] / bm.CHRONO_ROWS["C1"].case / bm.CHRONO_B1_RECORD
+    with np.load(path, allow_pickle=False) as data:
+        computed = data["computed"].copy()
+    computed[800] = False  # t_max of the synthetic rows
+    _rewrite_npz(path, computed=computed)
+    _, data = _judge(e2e)
+    assert data["rows"]["C1"]["grid"]["points"]["max"][0]["state"] == "no_record"
+    assert data["rows"]["C1"]["pad_nodes_check"]["consistent"] is True
+
+
+def test_e2e_missing_r_c1_makes_d_d_na_with_the_row_named(e2e) -> None:
+    path = e2e["batch"] / bm.CHRONO_ROWS["C2"].case / bm.CHRONO_B1_RECORD
+    _rewrite_npz(path, att_raw_rad=None)
+    _, data = _judge(e2e)
+    grade = data["grades"]["D-d"]
+    assert grade["grade"] == bm.NA
+    assert any(flag.startswith("R-C1 없음") and "C2" in flag for flag in grade["flags"])
+    assert data["row_states"]["C2"]["status"] == "VALID"  # rules 6: not INVALID
 
 
 def test_e2e_pad_nodes_mismatch_invalidates_the_grid_record(e2e) -> None:

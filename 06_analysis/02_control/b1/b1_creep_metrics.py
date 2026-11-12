@@ -146,15 +146,18 @@ CHRONO_GRID_KEYS = {
     "hull_area": "contact_hull_area_m2", "hull_perimeter": "contact_hull_perimeter_m",
     "z_geo": "sinkage_geometric_m", "sigma_sum": "sigma_sum_area_N",
 }
-"""R-G1 (n, 4) fields used here, ``node_stats_in_outline`` names (the prelaunch key list is the
-reference; a different name there changes this map before the sha is fixed)."""
-PAD_NODES_FIELDS = ("n_inside", "n_contact", "contact_hull_area_m2", "contact_hull_perimeter_m",
-                    "sinkage_geometric_m", "sigma_sum_area_N")
+"""R-G1 (n, 4) fields used here (cad-expert keys, commit a813066, ``node_stats_in_outline``
+names). Periods with ``computed`` False have no grid record."""
+GRID_COMPUTED_KEY = "computed"
+PAD_NODES_FIELDS = ("n_inside", "n_contact", "n_sigma_negative", "contact_hull_area_m2",
+                    "contact_hull_perimeter_m", "sinkage_geometric_m", "sigma_sum_area_N",
+                    "sinkage_mean_contact_m")
 """R-G1 fields compared with ``s9_rows[].pad_nodes`` where both have them (rules 6)."""
-CHRONO_PAD_XY_KEYS = ("pad_xy_m", "pad_yaw_rad")
-"""R-G2 (n, 4, 2) and (n, 4) on the record ``n``."""
-CHRONO_IMU_KEYS = ("imu_t_s", "imu_raw_tilt_rad")
-"""R-G4 ``imu_*``: sample time (M,) and raw tilt roll, pitch (M, 2), 100 Hz."""
+CHRONO_PAD_XY_KEYS = ("pad_bottom_centre_plane_xy_m", "pad_yaw_plane_rad")
+"""R-G2: pad bottom centre in SCM plane coordinates (n, 4, 2) and pad yaw in the plane (n, 4;
+holds the initial yaw, so only differences are used)."""
+CHRONO_IMU_KEYS = ("imu_t_s", "imu_raw_roll_rad", "imu_raw_pitch_rad")
+"""R-G4 ``imu_*`` (m,): sample time and raw tilt roll, pitch [rad], 100 Hz."""
 GRID_STATIC_KEY = "b1_grid_record"
 """R-G3: ``result.json[GRID_STATIC_KEY]["static"]`` (pad grid Delta under ``pad_grid_m`` or
 ``grid_m``; else ``meta.scm.grid_m``)."""
@@ -586,17 +589,21 @@ def _attach_chrono_b1(rec: RunRecord, b1: dict, result: dict) -> None:
         rec.extra["pad_nodes_check"] = mismatch
         if mismatch["consistent"]:
             keys = CHRONO_GRID_KEYS
+            computed = (np.asarray(b1[GRID_COMPUTED_KEY], dtype=bool) if GRID_COMPUTED_KEY in b1
+                        else np.ones(len(source_n), dtype=bool))
             rec.grid = GridRecord(
-                n=source_n, n_contact=b1[keys["n_contact"]].astype(float),
+                n=np.where(computed, source_n, -1), n_contact=b1[keys["n_contact"]].astype(float),
                 hull_area=b1[keys["hull_area"]].astype(float),
                 hull_perimeter=b1[keys["hull_perimeter"]].astype(float),
                 z_geo=b1[keys["z_geo"]].astype(float),
                 sigma_sum=b1[keys["sigma_sum"]].astype(float), grid_m=_grid_spacing(result))
     if all(key in b1 for key in CHRONO_PAD_XY_KEYS):
-        rec.pad_xy = {"n": source_n, "xy": b1["pad_xy_m"].astype(float)}
+        rec.pad_xy = {"n": source_n, "xy": b1["pad_bottom_centre_plane_xy_m"].astype(float),
+                      "yaw": b1["pad_yaw_plane_rad"].astype(float)}
     if all(key in b1 for key in CHRONO_IMU_KEYS):
         rec.imu = {"t_s": b1["imu_t_s"].astype(float),
-                   "tilt": b1["imu_raw_tilt_rad"].astype(float).reshape(-1, 2)}
+                   "tilt": np.column_stack([b1["imu_raw_roll_rad"].astype(float),
+                                            b1["imu_raw_pitch_rad"].astype(float)])}
 
 
 def _grid_spacing(result: dict) -> float:
@@ -621,7 +628,9 @@ def _same_value(a, b) -> bool:
 def pad_nodes_mismatch(b1: dict, result: dict) -> dict:
     """Rules 6: every R-G1 field also in ``s9_rows[].pad_nodes`` must be equal at the same
     period (the row's grid record is invalid otherwise)."""
-    lookup = {int(v): i for i, v in enumerate(b1["n"].astype(np.int64))}
+    computed = (np.asarray(b1[GRID_COMPUTED_KEY], dtype=bool) if GRID_COMPUTED_KEY in b1
+                else np.ones(len(b1["n"]), dtype=bool))
+    lookup = {int(v): i for i, v in enumerate(b1["n"].astype(np.int64)) if computed[i]}
     compared, differences = 0, []
     for row in result.get("s9_rows") or []:
         nodes = row.get("pad_nodes")
@@ -1405,6 +1414,12 @@ PRED_ORDER = ("P-A", "P-B", "P-D", "P-G", "P-C")
 """Rules 3.3 D-d tie order (simpler first)."""
 
 
+def _lacks_r_c1(inputs: dict) -> bool:
+    """The LOC-period R-C1 inputs (raw tilt, clearance estimate) are absent."""
+    return ("c_hat_L_m" in inputs and inputs["c_hat_L_m"] is None) or (
+        "att_L_rad" in inputs and inputs["att_L_rad"] is None)
+
+
 def grade_D_d(chrono: dict, r_rows: list[str]) -> dict:
     """D-d (Q-5 (a)): rows with a T-14 mismatch leave every candidate; a candidate with NA in
     any remaining row has ``E_q`` NA (one row set for all); ties P-A, P-B, P-D, P-G, P-C."""
@@ -1417,6 +1432,9 @@ def grade_D_d(chrono: dict, r_rows: list[str]) -> dict:
             abs(v) for v in values)
     known = [q for q in PRED_ORDER if e_q[q] != NA]
     flags = [f"행 제외 {r}: {why}" for r, why in excluded.items()]
+    no_record = [r for r in rows if _lacks_r_c1(chrono[r]["metrics"]["predictor_inputs"])]
+    if no_record:  # rules 6: the row's M-6 / D-d are NA; by Q-5 every E_q is then NA
+        flags.append("R-C1 없음(행 M-6·D-d NA): " + ", ".join(no_record))
     if known and len(known) < len(PRED_ORDER):
         flags.append("후보 축소: " + ", ".join(q for q in PRED_ORDER if q not in known))
     if any(chrono[r]["metrics"]["is_sgs"] for r in rows):
@@ -1760,16 +1778,21 @@ def _crawler_max_after(rec: RunRecord, facts: dict) -> float | None:
     return _num(values.max()) if values.size else None
 
 
-def _pad_shift(rec: RunRecord, metrics: dict) -> list[float | None] | str:
-    """M-4h: |pad xy (t_max) - pad xy (t_L)| per leg (record only)."""
+def _pad_shift(rec: RunRecord, metrics: dict) -> dict | str:
+    """M-4h (record only): |pad bottom centre xy (t_max) - xy (t_L)| in SCM plane coordinates
+    and the yaw change over the same window (R-G2 yaw holds the initial yaw: difference only)."""
     if rec.pad_xy is None:
         return NA
     rows = Rows(rec.pad_xy["n"])
-    xy_L = rows.at(rec.pad_xy["xy"], metrics["M-1"]["n_L"])
-    xy_max = rows.at(rec.pad_xy["xy"], metrics["M-1"]["n_max"])
+    n_L, n_max = metrics["M-1"]["n_L"], metrics["M-1"]["n_max"]
+    xy_L, xy_max = rows.at(rec.pad_xy["xy"], n_L), rows.at(rec.pad_xy["xy"], n_max)
+    yaw_L, yaw_max = rows.at(rec.pad_xy["yaw"], n_L), rows.at(rec.pad_xy["yaw"], n_max)
     if xy_L is None or xy_max is None:
         return NA
-    return [float(np.hypot(*(np.asarray(xy_max[i]) - np.asarray(xy_L[i])))) for i in range(4)]
+    shift = [float(np.hypot(*(np.asarray(xy_max[i]) - np.asarray(xy_L[i])))) for i in range(4)]
+    yaw = (None if yaw_L is None or yaw_max is None
+           else _legs(np.asarray(yaw_max) - np.asarray(yaw_L)))
+    return {"xy_shift_m": shift, "yaw_change_rad": yaw}
 
 
 def all_grades(chrono, statuses, harness, harness_metrics, geo, p7_path, bundle) -> dict:
