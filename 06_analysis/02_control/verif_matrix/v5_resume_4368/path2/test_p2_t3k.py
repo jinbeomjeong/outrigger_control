@@ -209,18 +209,41 @@ def test_rev3_r0_v0_tag_empty_string_is_h_t3_3():
     assert "H-T3-3" in stop_codes(f)
 
 
-def test_rev3_k0_identity(tmp_path):
+def ident(head="abc", c2="c", env=None, clean=True):
+    env = env or {"MKL_NUM_THREADS": "1", "OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1", "NUMBA_NUM_THREADS": "1",
+                  "MKL_THREADING_LAYER": "TBB"}
+    rec = {"head": head, "is_clean": clean, "status_porcelain": "", "code_diff_sha256": "d", "c2_sha256": c2,
+           "tools_sha256": "t", "env": env}
+    return {"start": dict(rec), "end": dict(rec)}
+
+
+def test_rev4_k0_identity(tmp_path):
     paths = {}
     for n in ("R-0", "R-0K", "T-3K"):
         p = tmp_path / f"{n}.jsonl"
         p.write_text("", "utf-8")
-        (tmp_path / f"{n}.jsonl.identity.json").write_text(json.dumps(
-            {"git_head": "abc", "c2_sha256": "c", "threads": {"OMP_NUM_THREADS": "1"}, "created": n}), "utf-8")
+        (tmp_path / f"{n}.jsonl.identity.json").write_text(json.dumps(ident()), "utf-8")
         paths[n] = str(p)
     fnd = core.Findings()
     out = t3.identity_check(paths, fnd)
     assert fnd.status() == "pass" and out["differing_keys"] == []
-    (tmp_path / "T-3K.jsonl.identity.json").write_text(json.dumps({"git_head": "xyz", "c2_sha256": "c"}), "utf-8")
+    (tmp_path / "T-3K.jsonl.identity.json").write_text(json.dumps(ident(head="xyz")), "utf-8")
     fnd = core.Findings()
     t3.identity_check(paths, fnd)
     assert "H-T3-3" in stop_codes(fnd)
+    bad = ident()
+    bad["start"]["env"]["OUTRIGGER_LOC_SHADOW"] = "1"
+    bad["start"]["env"]["OMP_NUM_THREADS"] = "4"
+    (tmp_path / "T-3K.jsonl.identity.json").write_text(json.dumps(bad), "utf-8")
+    fnd = core.Findings()
+    out = t3.identity_check(paths, fnd)
+    assert out["T-3K"]["checks"]["threads"] is False and out["T-3K"]["checks"]["loc_shadow_env"] is False
+    dirty = ident(clean=False)
+    dirty["start"]["status_porcelain"] = " M 06_analysis/x.md"
+    (tmp_path / "T-3K.jsonl.identity.json").write_text(json.dumps(dirty), "utf-8")
+    fnd = core.Findings()
+    t3.identity_check(paths, fnd)
+    assert fnd.status() == "undecidable"
+    fnd = core.Findings()
+    t3.identity_check(paths, fnd, allowed_dirty=("06_analysis/x.md",))
+    assert fnd.status() == "pass"
