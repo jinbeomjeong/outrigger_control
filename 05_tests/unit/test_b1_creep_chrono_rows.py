@@ -349,6 +349,24 @@ def test_r_c1_keys_values(gr, b1, tmp_path, bias):
         assert np.allclose(z["att_raw_rad"][k], [1e-3, -2e-3])
 
 
+def test_static_grid_scalar_and_key_index(gr, run_s9, tmp_path):
+    m = _Model()
+    m.pad_grid_by_leg_m = (run_s9.P3B_PAD_GRID_M["J2"],) * 4  # B1 rows: J2 pad grid
+    rec = gr.B1GridRecorder(m, _Ctl(), "full")
+    rec.pad_nodes(SimpleNamespace(t_s=0.1, stroke_m=np.zeros(4), imu_specific_force_samples_m_s2=None))
+    meta = rec.save(tmp_path / "s.npz")
+    assert meta["static"]["grid_m"] == 0.01
+    assert [p["grid_m"] for p in meta["static"]["pads"]] == [0.01] * 4
+    indexed = [k for v in meta["key_index"].values() for k in v["keys"]]
+    assert sorted(indexed) == meta["keys"] and len(indexed) == len(set(indexed))
+    assert meta["key_index"]["n"]["keys"] == ["n", "load_read_N", "att_raw_rad", "c_hat_m", "c_hat_corner_m",
+                                              "c_target_m"]
+    m.pad_grid_by_leg_m = (0.01, 0.01, 0.02, 0.01)  # mixed grids (e.g. a soil patch leg)
+    meta2 = gr.B1GridRecorder(m, _Ctl(), "full").static_meta()
+    assert meta2["grid_m"] is None and [p["grid_m"] for p in meta2["pads"]] == [0.01, 0.01, 0.02, 0.01]
+    json.dumps(meta)
+
+
 def test_r_c1_bias_ignored_when_soil_off(gr, tmp_path):
     ctl = _Ctl(bias=[0.01, 0.01, 0.01, 0.01], soil_enable=False)
     _, rec, _ = _drive(gr, "full", n_end=50, ctl=ctl)

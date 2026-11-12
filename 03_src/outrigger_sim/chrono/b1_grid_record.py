@@ -60,6 +60,23 @@ INT_FIELDS = ("n_inside", "n_contact", "n_sigma_negative")
 FLOAT_FIELDS = ("contact_hull_area_m2", "contact_hull_perimeter_m", "sinkage_geometric_m", "sigma_sum_area_N",
                 "sinkage_mean_contact_m")
 N_LEGS = 4
+R_C1_KEYS = ("n", "load_read_N", "att_raw_rad", "c_hat_m", "c_hat_corner_m", "c_target_m")
+GRID_ROW_KEYS = ("n_cycle", "t_s", "computed", "n_inside", "n_contact", "n_sigma_negative", "contact_hull_area_m2",
+                 "contact_hull_perimeter_m", "sinkage_geometric_m", "sigma_sum_area_N", "sinkage_mean_contact_m",
+                 "pad_bottom_centre_world_m", "pad_bottom_centre_plane_xy_m", "pad_body_pos_world_m",
+                 "pad_yaw_plane_rad")
+IMU_KEYS = ("imu_n_cycle", "imu_t_s", "imu_raw_roll_rad", "imu_raw_pitch_rad", "imu_specific_force_m_s2")
+KEY_INDEX = {
+    "n": {"keys": list(R_C1_KEYS),
+          "rule": "R-C1: axis 0 indexed by n = round(t / 0.1), every control instant (never window-filtered)"},
+    "n_cycle": {"keys": list(GRID_ROW_KEYS),
+                "rule": "R-G1 / R-G2: axis 0 indexed by n_cycle = round(t / 0.1); full = every control instant "
+                        "(then n_cycle == n), window = the stored rule-window cycles; computed False = no R-G1 value"},
+    "imu_n_cycle": {"keys": list(IMU_KEYS),
+                    "rule": "R-G4: axis 0 = one IMU sample (100 Hz); imu_n_cycle = the control cycle n that "
+                            "delivered it, imu_t_s = its sample time"},
+}
+"""npz index convention (meta ``key_index``)."""
 
 
 def cycle_of(t_s: float, period_s: float = CONTROL_PERIOD_S) -> int:
@@ -193,7 +210,10 @@ class B1GridRecorder:
                          "outline_area_m2": area, "outline_perimeter_m": per,
                          "b_poly_m": 2.0 * area / per if per > 0 else None,
                          "scm_terrain": m.pad_terrain_by_leg[i] is not None})
-        return {"plane_point_world_m": np.asarray(m.plane_point_world_m, float).tolist(),
+        grids = {p["grid_m"] for p in pads}
+        return {"grid_m": next(iter(grids)) if len(grids) == 1 else None,
+                "grid_m_rule": "the pad grid when all four pads share it (else null; per leg: pads[i].grid_m)",
+                "plane_point_world_m": np.asarray(m.plane_point_world_m, float).tolist(),
                 "plane_rot": np.asarray(m.plane_rot, float).tolist(), "pads": pads,
                 "grid_origin": "SCM node (i, j) at plane_point + plane_rot @ (i grid, j grid, 0) "
                                "(scm_model.node_stats_in_outline)"}
@@ -240,7 +260,7 @@ class B1GridRecorder:
                 "pad_node_stats_calls": self.stats_calls, "pad_node_stats_skipped": self.skipped,
                 "pad_node_stats_wall_s": self.stats_wall_s, "record_wall_s": self.record_wall_s,
                 "window_cycles": {"n_loc1": self.n_loc1, "n_up": self.n_up, "n_ready": self.n_ready},
-                "keys": sorted(arr), "r_c1_rows": kc,
+                "keys": sorted(arr), "r_c1_rows": kc, "key_index": KEY_INDEX,
                 "key_shapes": {name: [*v.shape] for name, v in sorted(arr.items())},
                 "key_dtypes": {name: str(v.dtype) for name, v in sorted(arr.items())}, "static": self.static_meta(),
                 "basis": ("R-G1 = S9Model.pad_node_stats() of the control instant (same call as s9_rows[].pad_nodes); "
