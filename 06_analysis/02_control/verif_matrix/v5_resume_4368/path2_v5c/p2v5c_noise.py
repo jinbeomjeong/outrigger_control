@@ -31,6 +31,10 @@ TOOL_NAME = "p2v5c_noise.py"
 TOOL_VERSION = "3"
 JUDGE_REL = "04_scripts/03_control/s8/r79_sensor_judge.py"
 SEAL_BASE = "f46b5ab"                                   # R4-A2 condition 1
+RELATED_MODULES = ("04_scripts/03_control/s9/late_loc_rule.py",          # imported by the judge
+                   "04_scripts/03_control/s8/r79_sensor_screen.py",       # R5-E examples
+                   "04_scripts/03_control/s9/s9_slope_fix_candidates.py",
+                   "04_scripts/03_control/s8/r79_L3L4_final.py")          # H-8 runner (cf88ea8, R5-E)
 LATE_LOC_OPTION = "--s4-late-loc"                       # v5 13.2 / R4-A2 table
 LEVEL_COUNTS = {"L1": 167, "L2": 835, "L3": 501}        # rev3 #1
 H6_COUNTS = {"L2": 1, "L3": 134}                        # rev8 #6
@@ -177,7 +181,13 @@ def line_grade(rec, row, core, fnd=None):
             return "undecidable", ["419.8 record missing"], cond
     mine_s4_fail = any(x.startswith("S-4") for x in fail)
     if s4["ok"] is False and not mine_s4_fail and "S4_late_loc" not in flags:
-        fail.append("S-4 (judge item false, no sub-item explains it)")
+        # rev5 R5-C2: an S-4 failure explained neither by 13.2 nor by the judge's existing S-4 FLAG tags
+        # (e.g. S4_baseline) is a fail; with such a tag it is that FLAG
+        tags = [t for t in (s4.get("flags") or []) if isinstance(t, str) and t.startswith("S4_")]
+        if tags:
+            flags.extend(tags)
+        else:
+            fail.append("S-4 unexplained (R5-C2)")
     if fail:
         return "fail", fail, cond
     return ("flag" if flags else "pass"), flags, cond
@@ -280,17 +290,6 @@ def seedext(name, se, noise, fnd):
             "record_status": "기록 불완전" if miss else "complete", "detail": chk}
 
 
-def seedext_with_l1(se_doc, noise_doc, out_path):
-    """Judge input for seedext (L2 only): the L1 runs of the same cases from the noise file + seedext runs."""
-    inners = {r.get("inner") for r in se_doc.get("results") or []}
-    l1 = [r for r in noise_doc.get("results") or [] if r.get("level") == "L1" and r.get("inner") in inners]
-    doc = {"meta": {**(se_doc.get("meta") or {}), "p2_note": "seedext runs + noise L1 runs (path-2 judge input)"},
-           "results": l1 + list(se_doc.get("results") or [])}
-    Path(out_path).parent.mkdir(parents=True, exist_ok=True)
-    Path(out_path).write_text(json.dumps(doc), encoding="utf-8", newline="\n")
-    return str(out_path), len(l1)
-
-
 def seedext_record(grades_vb, grades_v0):
     """rev6 9 record: k/25 per inner and setting, CP (two roots), Fisher one-sided (VB > V0)."""
     from scipy.stats import fisher_exact  # noqa: PLC0415
@@ -319,7 +318,11 @@ def cmd_noise(args, repo, v5j, core):
     head = args.git_at_start or cm.git_head(repo)
     commits = cm.git_commits_since(repo, SEAL_BASE, head, JUDGE_REL) if head else None
     jtool = {"path": JUDGE_REL, "sha256": cm.sha256_file(Path(repo) / JUDGE_REL), "git_at_start": head,
-             "commits_since_f46b5ab": commits}
+             "commits_since_f46b5ab": commits,
+             # rev5 R5-E: modules the judge imports / works with - record git diff --stat (judgement
+             # whether a change is record-only goes to the judgement document; not condition 1)
+             "related_modules_diff_stat": {m: (cm.git_diff_stat(repo, SEAL_BASE, head, m) if head else None)
+                                           for m in RELATED_MODULES}}
     if commits is None or commits:
         fnd.stop("S-11", "judge tool", f"git log {SEAL_BASE}..{head} -- {JUDGE_REL}: {commits}")
         return {"judge_tool": jtool, **fnd.as_dict(), "stop_codes": ["S-11"]}, "stop"
@@ -360,6 +363,8 @@ def cmd_noise(args, repo, v5j, core):
     l1_j = l1_gate_judge(jd_vb)
     l1_cmp = {k: l1_own[k] == l1_j[k] for k in ("false_loc", "unmatched", "errors", "setting_mismatch")
               if l1_j[k] is not None}
+    l1_no_ref = [k for k in ("false_loc", "unmatched", "errors", "setting_mismatch") if l1_j[k] is None]
+    # rev5 R5-C1: a count the judge does not output is "대조 대상 없음" (path-2 count is the value)
     if not all(l1_cmp.values()):
         fnd.undec("L1 gate", f"own vs judge counts differ {l1_cmp} (R4-B3: S-13)")
         fnd.stop("S-13", "L1 gate", "path-2 count differs from the judge count")
@@ -420,10 +425,10 @@ def cmd_noise(args, repo, v5j, core):
         se["VB"] = seedext("seedext_VB", sv, vb, fnd)
         se["V0"] = seedext("seedext_V0", s0, v0, fnd)
         gs = {}
-        for s, doc, recs, noise_doc in (("VB", sv_doc, sv, d_vb), ("V0", s0_doc, s0, d_v0)):
-            inp, n_l1 = seedext_with_l1(doc, noise_doc, judge_dir / f"seedext_{s}_with_L1.json")
-            pj, jrec[f"seedext_{s}"] = run_judge(repo, judge_dir, f"judge_seedext_{s}", [inp])
-            jrec[f"seedext_{s}"]["l1_runs_added"] = n_l1
+        # rev5 R5-C3: the judge gets the seedext file and the same-setting noise file (its L1 lines)
+        for s, recs, se_path, noise_path in (("VB", sv, args.seedext_vb, args.noise_vb),
+                                             ("V0", s0, args.seedext_v0, args.noise_v0)):
+            pj, jrec[f"seedext_{s}"] = run_judge(repo, judge_dir, f"judge_seedext_{s}", [se_path, noise_path])
             if jrec[f"seedext_{s}"]["returncode"] != 0:
                 fnd.stop("S-11", f"judge seedext {s}", jrec[f"seedext_{s}"]["stderr_tail"][-200:])
                 continue
@@ -445,7 +450,8 @@ def cmd_noise(args, repo, v5j, core):
                                                               ("seedext_v0", args.seedext_v0)) if p},
             "judge_tool": jtool, "judge_runs": jrec, "v5_options": mod,
             "recomputed": {"levels": {"VB": lv_vb, "V0": lv_v0, "H-6": lv_h6},
-                           "L1_gate": {"path2": l1_own, "judge": l1_j, "same": l1_cmp},
+                           "L1_gate": {"path2": l1_own, "judge": l1_j, "same": l1_cmp,
+                                       "대조 대상 없음": l1_no_ref},
                            "H-6_substitution": {"keys": len(sub),
                                                 "same_hash_as_H8_VB": sum(1 for s in sub if s["same_hash"]),
                                                 "hash_missing": sum(1 for s in sub if s["hash_missing"]),
