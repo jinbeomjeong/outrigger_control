@@ -184,6 +184,18 @@
 | R3-C1~C8 | `p2_v5j.py` | H-5 등급 = η_v 0.85 T1 + H0, 0.80 T1·T3·T4·분류는 기록(분류 C면 v5 종합 문장 전에 묻기). J1 pass ↔ `stroke_limited_stop`은 기록(S8 예외). 사양 미달 표시 F_min + 5 kN. J3 경사는 줄의 바닥 각(없으면 FLAG 한계 미정 기록). J7 이름 = 수치 구획을 뺀 나머지. J11 대체 다리 줄의 `n_late` None = 판정 불가. J-P3 로드 판독 = T4h, 없으면 구성(사건 경로 = 있음, steady 사례 = 없음, 그 밖 판정 불가), 선언 = 필드, 없으면 steady 사례 구성 |
 | R3-D1~D4 | `p2_t3k.py` | dg3 키는 `cand=current#` 유무 같은 키, 폴더는 기록된 `two_pressure.extend_start_rule`(`tracked_bound` = v4_on)로 정함, CLI 폴더와 다르면 H-T3-3. R-0 V0 태그는 키 없음·null만. K-0은 세 출력 옆 `.identity.json`의 커밋·도구·c2·스레드 필드 대조(다르면 H-T3-3, 없으면 판정 불가). H-T3-0 사전 검사는 두 경로 대상 아님. 비교 허용 1e-9 |
 
+## rev4 반영 (`v5_resume_4368_rules_rev4.md`, sha256 `7ea87a30…`, R4-C)
+
+rev3 절과 다른 곳은 아래가 맞다. 다섯 도구 모두 rev4 sha도 확인한다.
+
+| 절 | 도구 | 반영 |
+|---|---|---|
+| R4-C1 | `p2_d1.py` | 원점은 F-1 `values.times.t_check_start_s` ≤ 0.1 s(+1e-9). 필드가 없으면 "정의에 의함"(폐루프 시작 = 0, 첫 주기 T_s)으로 적고 판정 불가로 두지 않는다. `d1.t_ready_s` 대조는 그대로. 출력 `R3-A3.origin_basis`에 근거별 줄 수. 저장 `d1.jsonl`은 868줄 모두 정의에 의함, READY 판정 불가 0 |
+| R4-C3 | `p2_d1.py` | 강등은 F-2 `d1.demoted_items`(`item`·`rule` ∈ {377, 424.11.2, 424.8.1, 419.8}·`flag`)의 `item` 집합 = "거짓 항목 − `fail_items`". 다르거나 필드가 없으면 판정 불가(S-13). 이름 "demot" 추정은 지웠다. 저장 `d1.jsonl`(F-2 없음)은 868줄 모두 판정 불가가 기대값 |
+| R4-C2 | `p2_u3.py` | 단위 deg → rad, m → mm(앞 절 그대로). `tolerances` 세 값이 398.3과 1e-9 안에서 같지 않으면 S-11. 표 목표 패드는 `gap_target_mm` = F-5 `settle_v2.inputs.table_gap_target_mm`, 필드가 없으면 판정 불가. 연구 D의 표 목표 재계산도 이 필드 |
+| R4-C4 | `p2_t3k.py` | K-0 = `.identity.json`의 `start`·`end`: `head` 같음(+ `--git-at-start`), `is_clean` 또는 `status_porcelain`의 파일이 `--allowed-dirty` 안, `code_diff_sha256`·`tools_sha256`·`c2_sha256` start = end(c2는 `git show <git_at_start>:03_src/outrigger_sim/control/c2.py` sha와도), `start.env` 스레드 네 개 = 1·`MKL_THREADING_LAYER` = TBB, `OUTRIGGER_LOC_SHADOW` 없음. 세 출력 값이 다르면 H-T3-3, 필드가 없으면 판정 불가 |
+| R4-C5 | `p2_v5j.py` | J3 바닥 각 = F-3 `values.case_floor_deg`([roll, pitch]), D-1 줄은 `job.d1` 각. 없으면 경사 판별 "판정 불가", FLAG 한계 "미정"(기록, 등급 영향 없음) |
+
 ## 하지 않는 것 (범위)
 
 - **원 규칙 등급의 재집계는 하지 않는다.** H-0 T-3K(`las_targeted_rules` 원판~rev5), H-1·H-2(D-1 선별 규칙), H-3·H-4(`u3_u6`), H-5(`u9`), H-6~H-10(v5 기준 + 개정 1~12b), C-1~C-5 판정 블록(D-1 규칙 11, 개정 12 2.2)의 통과·미달 재집계가 여기에 든다. 이 도구가 내는 묶음 상태는 436.8 문서가 새로 정한 층(4.1·4.2·6·7.2·7.4·9.3·S-15)의 상태다(`grade_scope`). 원 규칙 등급의 경로 2는 그 규칙들의 정의 문장을 읽고 따로 만들어야 한다.
