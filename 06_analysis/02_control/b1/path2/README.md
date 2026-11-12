@@ -32,3 +32,4 @@ cmd /c "start /b /wait /affinity 0FFF0000 C:\ProgramData\miniforge3\Scripts\cond
 | A-9 | D-f 짝 제외 | H-M0 C5 짝 가운데 R4c30 사건이 있거나 유효하지 않은(Q-6) 줄은 뺀다 |
 | A-10 | 주기 색인 | R-C1 키(`n`, `load_read_N`, `att_raw_rad`, `c_hat_m`, `c_hat_corner_m`, `c_target_m`)는 `n`(모든 제어 주기)으로 색인하고 거르지 않는다(규칙 6절 "R-C1은 모든 제어 주기"). R-G1 격자 필드는 `n_cycle`로 색인하고 `computed`가 거짓인 행은 기록이 없는 것으로 본다. IMU는 `imu_t_s`. `t_s`는 쓰지 않는다 |
 | A-11 | 격자 간격 $\Delta$ | `result.json` `b1_grid_record.static.grid_m`(스칼라). null이면 `static.pads[i].grid_m`(다리별, `leg` 필드가 있으면 그것, 없으면 FL·FR·RL·RR 순서). 둘 다 없으면 입력 오류(종료 2). 0.01 m 폴백은 두지 않는다(토양별 격자가 다르다) |
+| A-12 | rev1(`b1_creep_rules_rev1.md` 9f72af5b) | 2·4·5절만 반영: $\hat W_i = r_i\sum_j F_j(n_L) - F_i(n_L)$, $\hat E_i = r_i\sum_j F_j(n_L)$(R-C1 `load_read_N`의 `n` = $n_L$ 행, $r_i$ = YAML 정적 하중 비), P-D·P-G 하중 항 $C[\max(\hat E, F^{pk})^5 - (F^{pk})^5]$, 7.3 적합 집합 $W_{fit}$ 1,000 N(T-15, 1e-6 N)과 감도 600·2,000 N, κ 비 `inf`, R1-4 기록. 1·6·7절 수치는 쓰지 않았다 |

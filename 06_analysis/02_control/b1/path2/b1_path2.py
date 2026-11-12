@@ -33,7 +33,12 @@ from typing import Any
 import numpy as np
 
 RULES_SHA256 = "6b99702ce26d6da28fbfe6473b622c7e51419241916cbc101f795828f498774e"
-TOOL_VERSION = "1.1"
+RULES_REV1_SHA256 = "9f72af5babc36a9164a79163a0c3fa8707a0b8dc71aa3bfe978ebdf33d0905cf"   # b1_creep_rules_rev1.md
+W_FIT = 1000.0                # rev1 R1-3 fit lower bound [N]
+W_FIT_SENS = (600.0, 2000.0)  # rev1 R1-3 sensitivity records [N]
+EPS_N = 1e-6                  # rev1 T-15 [N]
+SUM_RATIO_BAND = (1.00, 1.08) # rev1 R1-4 (x1.0 rows)
+TOOL_VERSION = "2.0-rev1"
 
 LEGS = ("FL", "FR", "RL", "RR")
 FRONT = ("FL", "FR")
@@ -412,11 +417,11 @@ def plane_fit_at(points_xy: list[tuple[float, float]], values: list[float],
     return [float(coef[0] + coef[1] * y - coef[2] * x) for x, y in query]
 
 
-def pd_increment(c_type: float, f_pk: float, w_hat: float) -> float | None:
-    """P-D sinkage increment C [(F_pk + max(W,0))^(1/n_a) - F_pk^(1/n_a)]."""
-    if c_type is None or f_pk is None or w_hat is None or f_pk < 0:
+def pd_increment(c_type: float, f_pk: float, e_hat: float) -> float | None:
+    """rev1 R1-2: dz = C [max(E_hat, F_pk)^5 - F_pk^5] (1/n_a = 5 exactly, N units, plain max)."""
+    if c_type is None or f_pk is None or e_hat is None or f_pk < 0:
         return None
-    return c_type * ((f_pk + max(w_hat, 0.0)) ** (1.0 / N_A) - f_pk ** (1.0 / N_A))
+    return c_type * (max(e_hat, f_pk) ** 5 - f_pk ** 5)
 
 
 # ----------------------------------------------------------------------------- run data (Chrono / harness)
@@ -750,14 +755,21 @@ def loc_inputs(rs: RunSeries, km: dict, prm: dict, level: str, n_L: int | None) 
         if ks:
             pk = rs.rc["rc_load"][ks].max(axis=0)
     static = prm["static"][level]
-    w_hat = {leg: static[leg] - float(load[k]) for k, leg in enumerate(LEGS)}       # Q-1 (a)
+    w_sum = sum(static[leg] for leg in LEGS)
+    f_sum = float(sum(float(load[k]) for k in range(4)))
+    ratio = {leg: static[leg] / w_sum for leg in LEGS}                               # rev1 R1-1 r_i
+    e_hat = {leg: ratio[leg] * f_sum for leg in LEGS}
+    w_hat = {leg: e_hat[leg] - float(load[k]) for k, leg in enumerate(LEGS)}
+    s_prev = rs.at(rs.stroke, n_L - 1)
+    speed = (None if s_prev is None else {leg: (float(s[k]) - float(s_prev[k])) / T_S for k, leg in enumerate(LEGS)})
     geo = {leg: prm["pad"][leg]["xy"][0] * theta - prm["pad"][leg]["xy"][1] * phi for leg in LEGS}
     rho = {c: prm["corners"][c][0] * theta - prm["corners"][c][1] * phi for c in km["corner_order"]}
     return {"s": {leg: float(s[k]) for k, leg in enumerate(LEGS)}, "phi": phi, "theta": theta,
             "c_hat": float(np.asarray(chat).ravel()[0]),
             "c_hat_corner": (None if corner is None else
                              {c: float(corner[k]) for k, c in enumerate(km["corner_order"])}),
-            "W_hat": w_hat, "F_pk": (None if pk is None else {leg: float(pk[k]) for k, leg in enumerate(LEGS)}),
+            "W_hat": w_hat, "E_hat": e_hat, "sum_ratio": f_sum / w_sum, "stroke_speed_nL": speed,
+            "F_pk": (None if pk is None else {leg: float(pk[k]) for k, leg in enumerate(LEGS)}),
             "ds_geo": geo, "rho": rho}
 
 
@@ -840,7 +852,7 @@ def predictors(li: dict | None, m: dict, prm: dict, km: dict, consts: dict, leg:
             out["P-C"] = out["P-B"] + dallow
     dzh = None
     if li["F_pk"] is not None and ctype is not None:
-        dzh = {lg: pd_increment(consts["C_type"].get(prm["pad"][lg]["type"]), li["F_pk"][lg], li["W_hat"][lg])
+        dzh = {lg: pd_increment(consts["C_type"].get(prm["pad"][lg]["type"]), li["F_pk"][lg], li["E_hat"][lg])
                for lg in LEGS}
         if dzh[leg] is not None:
             out["P-D"] = pa + dzh[leg]
@@ -998,46 +1010,104 @@ def pick(lines: list[dict], km: dict, group: str, row: str, variant: str | None,
     return out
 
 
-def harness_constants(hp: list[tuple[dict, RunSeries, dict]], prm: dict) -> dict[str, Any]:
-    """7.3 constants from H-P 20 runs (per-leg windows, C-2)."""
-    kappa: dict[str, list[float]] = {"front": [], "rear": []}
-    ctype: dict[str, list[float]] = {"front": [], "rear": []}
-    excluded = {"front": 0, "rear": 0}
+def _fit_constants(hp: list[tuple[dict, RunSeries, dict]], prm: dict, km: dict, w_fit: float) -> dict[str, Any]:
+    """rev1 R1-3 fit of kappa_z and C_type per pad type at the fit lower bound ``w_fit`` [N] (T-15)."""
+    best_k: dict[str, tuple[float, dict] | None] = {"front": None, "rear": None}
+    best_c: dict[str, tuple[float, dict] | None] = {"front": None, "rear": None}
+    n_fit_k = {"front": 0, "rear": 0}
+    n_out_k = {"front": 0, "rear": 0}
+    n_fit_c = {"front": 0, "rear": 0}
+    n_out_c = {"front": 0, "rear": 0}
+    fit_k_legs: dict[str, list] = {"front": [], "rear": []}
+    fit_c_legs: dict[str, list] = {"front": [], "rear": []}
     per_run: dict[str, list[float]] = {"front": [], "rear": []}
-    dos = []
-    used = []
-    for line, rs, m in hp:
+    for line, _rs, m in hp:
         li = m["loc_inputs"]
         if li is None or m["dz_post_leg"] is None:
             continue
-        used.append(line.get("_id"))
+        ident = {"line": line.get("_id"), "group": jget(line, km["h_group"]), "row": jget(line, km["h_row"]),
+                 "variant": jget(line, km["h_variant"]), "e": jget(line, km["h_e"])}
         run_k: dict[str, list[float]] = {"front": [], "rear": []}
         for leg in LEGS:
             dz = m["dz_post_leg"][leg]
             if dz is None:
                 continue
             t = prm["pad"][leg]["type"]
-            k = dz / max(li["W_hat"][leg], 1.0)
-            kappa[t].append(k)
-            run_k[t].append(k)
+            w = li["W_hat"][leg]
+            if w - w_fit >= -EPS_N:
+                n_fit_k[t] += 1
+                fit_k_legs[t].append({**ident, "leg": leg})
+                k = dz / w
+                run_k[t].append(k)
+                if best_k[t] is None or k > best_k[t][0]:
+                    best_k[t] = (k, {**ident, "leg": leg})
+            else:
+                n_out_k[t] += 1
             if li["F_pk"] is not None:
-                den = (li["F_pk"][leg] + max(li["W_hat"][leg], 0.0)) ** (1 / N_A) - li["F_pk"][leg] ** (1 / N_A)
-                if den > 0:
-                    ctype[t].append(dz / den)
+                e_hat, f_pk = li["E_hat"][leg], li["F_pk"][leg]
+                if e_hat - f_pk - w_fit >= -EPS_N:
+                    n_fit_c[t] += 1
+                    fit_c_legs[t].append({**ident, "leg": leg})
+                    c = dz / (e_hat ** 5 - f_pk ** 5)
+                    if best_c[t] is None or c > best_c[t][0]:
+                        best_c[t] = (c, {**ident, "leg": leg})
                 else:
-                    excluded[t] += 1
+                    n_out_c[t] += 1
         for t in ("front", "rear"):
             if run_k[t]:
                 per_run[t].append(max(run_k[t]))
+    ratio: dict[str, Any] = {}
+    for t, v in per_run.items():
+        if not v:
+            ratio[t] = None
+        elif min(v) <= 0:
+            ratio[t] = "inf"
+        else:
+            ratio[t] = max(v) / min(v)
+    return {"w_fit_N": w_fit,
+            "kappa": {t: (None if best_k[t] is None else best_k[t][0]) for t in best_k},
+            "kappa_argmax": {t: (None if best_k[t] is None else best_k[t][1]) for t in best_k},
+            "C_type": {t: (None if best_c[t] is None else best_c[t][0]) for t in best_c},
+            "C_type_argmax": {t: (None if best_c[t] is None else best_c[t][1]) for t in best_c},
+            "kappa_fit_legs": n_fit_k, "kappa_excluded_legs": n_out_k,
+            "C_type_fit_legs": n_fit_c, "C_type_excluded_legs": n_out_c,
+            "kappa_fit_list": fit_k_legs, "C_type_fit_list": fit_c_legs,
+            "kappa_ratio": ratio,
+            "kappa_nonlinear": {t: (r == "inf" or (r is not None and r > KAPPA_RATIO_FLAG)) for t, r in ratio.items()}}
+
+
+def harness_constants(hp: list[tuple[dict, RunSeries, dict]], prm: dict, km: dict | None = None) -> dict[str, Any]:
+    """7.3 constants from H-P 20 runs: rev1 R1-3 fit sets (W_fit 1 kN) + sensitivity records, delta_allow."""
+    km = km or DEFAULT_KEYMAP
+    main = _fit_constants(hp, prm, km, W_FIT)
+    sens = {f"{int(w)}": _fit_constants(hp, prm, km, w) for w in W_FIT_SENS}
+    dos, used = [], []
+    for line, _rs, m in hp:
+        if m["loc_inputs"] is None or m["dz_post_leg"] is None:
+            continue
+        used.append(line.get("_id"))
         if m["dos"] is not None:
             dos.append(m["dos"][m["b_star"]])
-    ratio = {t: (max(v) / min(v) if v and min(v) > 0 else None) for t, v in per_run.items()}
-    return {"kappa": {t: (max(v) if v else None) for t, v in kappa.items()},
-            "C_type": {t: (max(v) if v else None) for t, v in ctype.items()},
-            "C_type_excluded": excluded, "delta_allow": (max(dos) if dos else None),
-            "kappa_ratio": ratio, "kappa_nonlinear": {t: (r is not None and r > KAPPA_RATIO_FLAG)
-                                                      for t, r in ratio.items()},
-            "runs_used": used}
+    out = dict(main)
+    out.update({"delta_allow": (max(dos) if dos else None), "runs_used": used, "sensitivity": sens,
+                "rules_sha256": RULES_SHA256, "rules_rev1_sha256": RULES_REV1_SHA256})
+    return out
+
+
+def redistribution_record(m: dict, scale: float) -> dict[str, Any] | None:
+    """rev1 R1-4 per-row record: n_L, sum ratio, W_hat, E_hat - F_pk, stroke speed at n_L, deviation flag."""
+    li = m.get("loc_inputs")
+    if li is None:
+        return None
+    e_minus = None if li["F_pk"] is None else {leg: li["E_hat"][leg] - li["F_pk"][leg] for leg in LEGS}
+    speed = li["stroke_speed_nL"]
+    flag = False
+    if abs(scale - 1.0) < 1e-12 and not (SUM_RATIO_BAND[0] <= li["sum_ratio"] <= SUM_RATIO_BAND[1]):
+        flag = True
+    if speed is None or any(v <= 0.0 for v in speed.values()):
+        flag = True
+    return {"n_L": m["n_L"], "sum_ratio": li["sum_ratio"], "W_hat": li["W_hat"], "E_minus_Fpk": e_minus,
+            "stroke_speed_nL": speed, "redistribution_assumption_off": flag}
 
 
 # ----------------------------------------------------------------------------- grades
@@ -1338,7 +1408,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     # H-P 20 for constants
     hp = [(ln, h_ok[ln["_id"]][0], h_ok[ln["_id"]][1]) for r in R_SET
           for ln in pick(lines, km, "H-P", r, None, None) if ln["_id"] in h_ok]
-    consts = harness_constants(hp, prm)
+    consts = harness_constants(hp, prm, km)
     if args.constants_out:
         Path(args.constants_out).write_text(json.dumps(consts, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     # Chrono rows
@@ -1359,6 +1429,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             entry["pred"] = predictors(m["loc_inputs"], m, prm, km, consts, m["b_star"])
             entry["pred_planned_leg"] = predictors(m["loc_inputs"], m, prm, km, consts, bplan)
             entry["h_rec"] = h_records(rs, m, prm, km)
+            entry["R1_4"] = redistribution_record(m, _ms)
             entry["m12"] = m12_records(rs, m, prm, km)
             b = m["b_star"]
             hm_pairs = []
@@ -1396,6 +1467,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     grades = grade_all(rows, hrs, consts, prm, km, bundle, p7) if bundle != "UNDETERMINED" else {}
     safety_notes = {r: rows[r]["m"]["safety"] for r in rows if rows[r]["status"] == "VALID"
                     and rows[r]["m"]["safety"]["note"]}
+    harness_r14 = {}
+    for k, ln in enumerate(lines):
+        if k in h_ok and jget(ln, km["h_group"]) in ("H-P", "H-W", "H-M0"):
+            row = jget(ln, km["h_row"])
+            scale = CHRONO_ROWS[row][2] if row in CHRONO_ROWS else 1.0
+            harness_r14[k] = {"group": jget(ln, km["h_group"]), "row": row, "variant": jget(ln, km["h_variant"]),
+                              "e": jget(ln, km["h_e"]), "record": redistribution_record(h_ok[k][1], scale)}
     harness_m12 = {}
     if shadow_ok:
         for k, ln in enumerate(lines):
@@ -1403,9 +1481,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 harness_m12[k] = {"group": jget(ln, km["h_group"]), "row": jget(ln, km["h_row"]),
                                   "variant": jget(ln, km["h_variant"]), "e": jget(ln, km["h_e"]),
                                   "locs": harness_shadow_locs(ln, km)}
-    return {"tool": "b1_path2", "version": TOOL_VERSION, "rules_sha256": RULES_SHA256, "bundle": bundle,
+    return {"tool": "b1_path2", "version": TOOL_VERSION, "rules_sha256": RULES_SHA256,
+            "rules_rev1_sha256": RULES_REV1_SHA256, "bundle": bundle,
             "rows": rows, "harness_invalid": h_bad, "shadow_hash_ok": shadow_ok, "constants": consts,
-            "harness_m12": harness_m12,
+            "harness_m12": harness_m12, "harness_R1_4": harness_r14,
             "grades": grades, "safety_notes": safety_notes, "keymap": km}
 
 
