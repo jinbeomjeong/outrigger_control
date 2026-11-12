@@ -147,8 +147,7 @@ def f5_clause(ln, core):
 
 
 T_S = 0.1   # 436.8 2: compare times as n = round(t / T_s)
-LIFT_AFTER_STOP_PATHS = ("soil_stop_crawler.pad_lift_after_stop_ms", "soil_stop_crawler.lift_ms_after_stop",
-                         "values.lift_after_stop_ms")   # rev3 Q-S6 "정지 뒤 부상 0": record name not known yet
+LIFT_AFTER_STOP_PATH = "values.sa4.lift_after_stop_ms"   # rev4 R4-B1 (rev3 Q-S6 "정지 뒤 부상 0")
 
 
 def _events(ln):
@@ -184,13 +183,11 @@ def sa4_rest(ln, core):
         out["after_stop_Fmin"] = False
     else:
         out["after_stop_Fmin"] = None
-    lift = None
-    for p in LIFT_AFTER_STOP_PATHS:
-        v = core.num(core.dig(ln, p, None))
-        if v is not None:
-            lift = v == 0
-            break
-    out["lift_after_stop_0"] = lift
+    lv = core.dig(ln, LIFT_AFTER_STOP_PATH, None)   # rev4 R4-B1: per-leg ms (FL, FR, RL, RR)
+    if isinstance(lv, list) and len(lv) == 4 and all(core.num(x) is not None for x in lv):
+        out["lift_after_stop_0"] = all(core.num(x) == 0 for x in lv)
+    else:
+        out["lift_after_stop_0"] = None
     mp = core.num(core.dig(ln, "values.pressure.max_moving_bar", None))
     out["moving_le_180"] = None if mp is None else not core.t_gt(mp, 180.0)
     sat = core.dig(ln, "values.pressure.saturation_leg_chunks", None)

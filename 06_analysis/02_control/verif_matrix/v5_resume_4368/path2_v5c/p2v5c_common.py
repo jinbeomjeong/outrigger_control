@@ -35,25 +35,60 @@ P2_FALLBACK = Path(r"C:\workspace\outrigger_control\.claude\worktrees\agent-a2e8
                    r"\06_analysis\02_control\verif_matrix\v5_resume_4368\path2")
 # rev3 versions (R3-C1~C8 in p2_v5j, rev3 seal + R3-F4 in p2_4368), files of 2026-11-13 03:16 / 03:18;
 # before: p2_v5j 559bd34f... (bf52c89), p2_4368 1294dc4e...
-P2_V5J_SHA = "ceb75ee9a6081b73e158a7db42cc11c9cfb6f9ccb4bae480775128a2f6616eac"
-P2_CORE_SHA = "cf0b643c8293e8757b21e3627e9585319af1d2068b32dfd5a1b1612f6c5954de"
+# rev4 versions (dynamics-expert commits 6b4ebcc / dc54d25: rev4 seal, R4-C5 case_floor_deg in J3);
+# rev3 versions were p2_v5j ceb75ee9..., p2_4368 cf0b643c...
+P2_V5J_SHA = "a16751517bc64fb99e702ffeea21c9eb0dcd361b3b08f7a57e370afdb12b5146"
+P2_CORE_SHA = "71b870604aa4b0652ab306bb940dd34c2dc597cddf9a3e9bfcd77be5bf8cf9cc"
 
 EXIT = {"pass": 0, "fail": 1, "undecidable": 1, "stop": 2}
 
 # rev3 (sealed 2026-11-13 03:13:21 +09:00, master 9ce2fdc). p2_4368.check_seals covers the original,
 # rev1 and rev2; rev3 is checked here the same way (raw sha only, LF, no BOM, .sha256 record; R2-9 last line).
-REV3_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.md"
-REV3_SHA = "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
-REV3_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.sha256"
+_VMR = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_"
+LATER_RULES = (   # sealed addenda checked here (raw sha, LF, no BOM, .sha256 record)
+    (_VMR + "rev3.md", "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557", _VMR + "rev3.sha256"),
+    (_VMR + "rev4.md", "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b", _VMR + "rev4.sha256"),
+)
+REV3_REL, REV3_SHA = LATER_RULES[0][0], LATER_RULES[0][1]
+
+
+def _check_one(repo, rel, want, seal_rel):
+    p, sp = Path(repo) / rel, Path(repo) / seal_rel
+    got = sha256_file(p) if p.is_file() else None
+    words = sp.read_text("utf-8").split() if sp.is_file() else []
+    seal = words[0].lower() if words else None
+    raw = p.read_bytes() if p.is_file() else b""
+    ok = got == want and seal == want and not raw.startswith(b"\xef\xbb\xbf") and b"\r\n" not in raw
+    return {"path": rel, "sha256": got, "want": want, "seal_file_sha": seal, "ok": ok}
 
 
 def check_rev3(repo):
-    p, sp = Path(repo) / REV3_REL, Path(repo) / REV3_SEAL_REL
-    got = sha256_file(p) if p.is_file() else None
-    seal = sp.read_text("utf-8").split()[0].lower() if sp.is_file() and sp.read_text("utf-8").split() else None
-    raw = p.read_bytes() if p.is_file() else b""
-    ok = got == REV3_SHA and seal == REV3_SHA and not raw.startswith(b"\xef\xbb\xbf") and b"\r\n" not in raw
-    return {"path": REV3_REL, "sha256": got, "want": REV3_SHA, "seal_file_sha": seal, "ok": ok}
+    """rev3 and rev4 (the name is kept for the tests); ``ok`` = all sealed addenda match."""
+    items = [_check_one(repo, *r) for r in LATER_RULES]
+    return {"items": items, "ok": all(i["ok"] for i in items)}
+
+
+def git_commits_since(repo, base, head, rel):
+    """Commits touching ``rel`` in base..head (read-only git log); None if git fails."""
+    import subprocess  # noqa: PLC0415
+    try:
+        out = subprocess.run(["git", "-C", str(repo), "log", "--format=%H", f"{base}..{head}", "--", rel],
+                             capture_output=True, text=True, timeout=60, stdin=subprocess.DEVNULL)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if out.returncode != 0:
+        return None
+    return [x for x in out.stdout.split() if x]
+
+
+def git_head(repo):
+    import subprocess  # noqa: PLC0415
+    try:
+        out = subprocess.run(["git", "-C", str(repo), "rev-parse", "HEAD"], capture_output=True, text=True,
+                             timeout=60, stdin=subprocess.DEVNULL)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return out.stdout.strip() if out.returncode == 0 else None
 
 
 def sha256_file(path):
