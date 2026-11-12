@@ -569,18 +569,6 @@ def chrono_family(row: dict) -> str | None:
     return "uniform"
 
 
-def _anchor_hashes(paths: list[Path]) -> dict[str, str]:
-    """Key -> ``commands_sha256`` of the anchor files, the first file that has a key wins."""
-    out: dict[str, str] = {}
-    for path in paths:
-        for doc in read_records(path):
-            for _, record in run_records(doc):
-                sha = record.get("commands_sha256")
-                if sha is not None:
-                    out.setdefault(record_key(record), sha)
-    return out
-
-
 def _class_row(
     key: str,
     block: Any,
@@ -697,8 +685,8 @@ def _k1_class_lines(document: Any) -> Iterator[tuple[dict, str | None, str | Non
 
 
 def k1_class(args: argparse.Namespace) -> dict:
-    anchors = _anchor_hashes([Path(p) for p in args.anchor or []])
-    anchor_source = "first match of --anchor files" if anchors else "none"
+    anchors: dict[str, str] = {}
+    anchor_source = "none"
     if args.anchor_map is not None:  # RV1-5: the selected anchors, one per key
         anchors = read_anchor_map(Path(args.anchor_map))
         anchor_source = f"anchor-map {args.anchor_map}"
@@ -1050,6 +1038,43 @@ lines, ``v5.controller_tag`` on the screen records: either counts)."""
 TAG_KEY_ALTERNATIVES = ("controller_tag", "v5.controller_tag")
 
 
+SETTLE_V2_SUITES = ("slope", "h6", "x426b", "h9")
+"""U-3 fix-candidates suites run through ``s9_soil_slope.run_one`` (they carry ``settle_v2``)."""
+SETTLE_V2_KEYS = ("status",)
+SETTLE_V2_CHECKED_KEYS = (
+    "inputs.pen_inst_mm", "inputs.q_floor_inst_deg", "inputs.q_floor_mean_deg",
+    "inputs.d_attitude_deg", "inputs.pad_xy_m", "inputs.gap_target_mm",
+    "inputs.gap_target_source", "inputs.residual_deg", "inputs.attitude_error_deg",
+    "inputs.table_sha256", "result.pen_mean_mm", "result.pen_plus_gap_mm",
+    "result.attitude_tol_deg", "result.ok", "result.gate",
+)
+"""436.8 Q-U1 = A: the settle v2 keys a U-3 run must carry (``checked`` runs: all of them)."""
+
+
+def settle_v2_prefix(record: dict) -> str | None:
+    """Where a run keeps ``settle_v2``: U-3 slope-like records and ``s9_soil_slope`` results at
+    the top, D-1 steady lines (U-3 reuse) under ``u3``; None for runs without one."""
+    if record.get("suite") in SETTLE_V2_SUITES:
+        return "settle_v2"
+    if isinstance(record.get("case"), dict) and "settle" in record:
+        return "settle_v2"
+    if isinstance(record.get("u3"), dict):
+        return "u3.settle_v2"
+    return None
+
+
+def settle_v2_presence(record: dict) -> dict[str, bool]:
+    prefix = settle_v2_prefix(record)
+    if prefix is None:
+        return {}
+    presence = {f"{prefix}.{key}": get_path(record, f"{prefix}.{key}")[0]
+                for key in SETTLE_V2_KEYS}
+    if get_path(record, f"{prefix}.status")[1] == "checked":
+        presence.update({f"{prefix}.{key}": get_path(record, f"{prefix}.{key}")[0]
+                         for key in SETTLE_V2_CHECKED_KEYS})
+    return presence
+
+
 def gs_presence(record: dict) -> dict[str, bool]:
     """Key path -> present for one run record. A block of a controller without a C2 configuration
     (``applicable`` False, IND / IND_LAS) needs ``applicable`` only; a grid branch run (no own key)
@@ -1065,6 +1090,7 @@ def gs_presence(record: dict) -> dict[str, bool]:
                 presence[dotted] = any(get_path(record, alt)[0] for alt in TAG_KEY_ALTERNATIVES)
         elif is_c2 or dotted == f"{RECORD_KEY}.applicable":
             presence[dotted] = get_path(view, dotted)[0]
+    presence.update(settle_v2_presence(record))  # Q-U1 = A
     return presence
 
 
@@ -1676,7 +1702,8 @@ def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="command", required=True)
     for name, helptext in (("record-check", "4.2"), ("k1-class", "7.2")):
-        p = sub.add_parser(name, help=helptext)
+        # no abbreviations: the removed first-match ``--anchor`` must not mean ``--anchor-map``
+        p = sub.add_parser(name, help=helptext, allow_abbrev=False)
         p.add_argument("--harness", nargs="*", type=Path, help="harness jsonl / json outputs")
         p.add_argument(
             "--chrono", nargs="*", type=Path, help="Chrono batch folders (batch.json + <case>/)"
@@ -1684,11 +1711,8 @@ def _parser() -> argparse.ArgumentParser:
         p.add_argument("--all", action="store_true", help="list every run, not only the findings")
         p.add_argument("--out", type=Path, required=True)
         if name == "k1-class":
-            p.add_argument(
-                "--anchor", nargs="*", type=Path, help="hash anchor files (first match wins)"
-            )
             p.add_argument("--anchor-map", type=Path, default=None,
-                           help="anchor-map report (RV1-5 selection; replaces --anchor)")
+                           help="anchor-map report (RV1-5 selection, the only anchor input)")
             p.add_argument("--family-table", type=Path, default=None,
                            help="resume_k1_family.py table (RV1-6; a key not in it = uniform)")
     p = sub.add_parser("jp-reuse", help="7.3")

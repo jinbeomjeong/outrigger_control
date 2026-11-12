@@ -2673,7 +2673,9 @@ def slope_record_fields(result: dict) -> dict:
         "flags": list(rows["P3-1"].get("flag_names") or []) + _p32_flag_names(rows["P3-2"]),
         "late_loc_reapproach": rows["P3-2"].get("late_loc_reapproach"),
         "soil_stop": rows["SL-1"].get("soil_stop"),  # spec 427.9 (None without the stop)
-        "lifted_legs": list(rows["SL-1"]["lifted_legs"])}  # classify's SL-1 lift test (rejudge)
+        "lifted_legs": list(rows["SL-1"]["lifted_legs"]),  # classify's SL-1 lift test (rejudge)
+        # 436.8 Q-U1 = A: settle v2 inputs and result of the run (record only)
+        "settle_v2": result.get(slope.SETTLE_V2_KEY)}
 
 
 def _g6_record(key: str) -> dict:

@@ -885,3 +885,142 @@ def test_grid_lines_take_the_r2_7_family(tmp_path) -> None:
     _write_json(harness, grid)
     assert judge.main(argv) == 1
     assert json.loads(out.read_text(encoding="utf-8"))["counts"] == {judge.CLASS_K1_UNIFORM: 1}
+
+
+# ------------------------------------------------------------- Q-U1 = A: settle v2 record
+S9 = ROOT / "04_scripts" / "03_control" / "s9"
+
+
+def _settle_result(*, start_gap: bool = False, mass_scale: float = 1.0) -> dict:
+    check = {
+        "q_floor_mean_deg": [0.10, -0.20],
+        "attitude_error_deg": [0.001, -0.004],
+        "pen_plus_gap_mm": [0.0, 0.0, 0.0, 0.0],
+        "window_end_s": 5.0,
+    }
+    if start_gap:
+        check["gap_target_mm"] = [40.0, 30.0, 30.0, 30.0]
+    return {
+        "case": {
+            "settle_table_status": "applied",
+            "harness_settle_key": "J1|top|0|0",
+            "settle_table": {"gap_target_mm": [30.0, 30.0, 30.0, 30.0]},
+            "mass_scale": mass_scale,
+        },
+        "settle": {
+            "pen_mm": [-30.2, -29.9, -30.0, -30.1],
+            "q_floor_deg": [0.11, -0.21],
+            "check": check,
+        },
+    }
+
+
+def _settle_table_file(tmp_path: Path) -> Path:
+    table = {
+        "pad_xy_m": [[2.3, 1.3], [2.3, -1.3], [-2.6, 1.2], [-2.6, -1.2]],
+        "hook_harness": {"J1|top|0|0": {"residual_roll_deg": 0.004, "residual_pitch_deg": 0.0}},
+    }
+    return _write_json(tmp_path / "settle_table.json", table)
+
+
+def _rejudge_module():
+    if str(S9) not in sys.path:
+        sys.path.insert(0, str(S9))
+    pytest.importorskip("numba", reason="s9_soil_slope imports the harness (dynamics-dev)")
+    return importlib.import_module("s9_settle_rejudge")
+
+
+def test_settle_v2_record_inputs_and_result(tmp_path) -> None:
+    rejudge = _rejudge_module()
+    table = _settle_table_file(tmp_path)
+    result = _settle_result()
+    before = json.dumps(result, sort_keys=True)
+    record = rejudge.settle_v2_record(result, table)
+    assert json.dumps(result, sort_keys=True) == before  # record only: input unchanged
+    assert record["status"] == "checked" and record["inputs"]["gap_target_source"] == "table"
+    assert record["inputs"]["d_attitude_deg"] == pytest.approx([0.01, -0.01])
+    assert record["inputs"]["residual_deg"] == [0.004, 0.0]
+    assert record["result"]["attitude_tol_deg"] == pytest.approx([0.006, 0.005])
+    loaded = json.loads(table.read_text(encoding="utf-8"))
+    check = rejudge.corrected_check(
+        result, loaded["hook_harness"]["J1|top|0|0"], loaded["pad_xy_m"]
+    )
+    assert record["result"]["pen_plus_gap_mm"] == pytest.approx(check["pen_plus_gap_mm"])
+    assert record["result"]["ok"] == check["ok"] and record["result"]["gate"] in (
+        "judged",
+        "settle_check_fail",
+    )
+    gap = rejudge.settle_v2_record(_settle_result(start_gap=True), table)
+    assert gap["inputs"]["gap_target_source"] == "start_gap"
+    assert gap["inputs"]["gap_target_mm"][0] == 40.0 and gap["result"]["gap_ok"] is False
+    assert (
+        rejudge.settle_v2_record(_settle_result(start_gap=True, mass_scale=1.1), table)["result"][
+            "gate"
+        ]
+        == "record_only"
+    )
+    no_table = _settle_result()
+    no_table["case"]["settle_table_status"] = "rigid_reference"
+    assert rejudge.settle_v2_record(no_table, table) == {
+        "version": rejudge.CHECK_VERSION,
+        "status": "no_table_check",
+        "settle_table_status": "rigid_reference",
+    }
+    broken = _settle_result()
+    broken["case"]["harness_settle_key"] = "missing"
+    assert rejudge.safe_settle_v2_record(broken, table)["status"] == "error"
+
+
+def test_settle_v2_keys_in_gs(tmp_path) -> None:
+    record = {
+        "suite": "slope",
+        "id": "H1|J1|B|top|flat",
+        "v5": {judge.RECORD_KEY: record_block_of_gs(), "controller_tag": judge.TAG_V0},
+    }
+    assert judge.settle_v2_presence(record) == {"settle_v2.status": False}
+    record["settle_v2"] = {"status": "no_table_check"}
+    assert judge.settle_v2_presence(record) == {"settle_v2.status": True}
+    record["settle_v2"] = {"status": "checked", "inputs": {}, "result": {}}
+    missing = [k for k, ok in judge.settle_v2_presence(record).items() if not ok]
+    assert len(missing) == len(judge.SETTLE_V2_CHECKED_KEYS)
+    harness = _write_json(tmp_path / "u3.json", {"records": [record]})
+    out = tmp_path / "gs.json"
+    assert judge.main(["gs", "--harness", str(harness), "--out", str(out)]) == 1
+    d1_line = {"job": {"d1": {}}, "u3": {"settle_v2": {"status": "no_table_check"}}}
+    assert judge.settle_v2_presence(d1_line) == {"u3.settle_v2.status": True}
+    assert judge.settle_v2_presence({"suite": "g6", "id": "x"}) == {}
+
+
+def record_block_of_gs() -> dict:
+    return record.controller_record(_Controller(blocked=False))
+
+
+def test_settle_v2_record_keeps_the_command_hash(tmp_path) -> None:
+    """The record is computed after the run: the same case with and without it has the same
+    command hash (one harness case run twice, about 40 s)."""
+    pytest.importorskip("numba", reason="harness run (dynamics-dev)")
+    env = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1", "MKL_THREADING_LAYER": "TBB"}
+    done = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            str(ROOT / "05_tests" / "unit" / "settle_v2_hash_runner.py"),
+            str(ROOT),
+            "H1|G1|B|top|flat",
+        ],
+        cwd=ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=900,
+    )
+    assert done.returncode == 0, done.stderr[-2000:]
+    out = json.loads(done.stdout.strip().splitlines()[-1])
+    assert out["error"] is None and out["with"] == out["without"] and out["with"]
+    assert out["settle_v2"]["status"] == "checked" and out["record_fields_settle_v2"] is True
+
+
+def test_k1_class_has_no_anchor_option(tmp_path) -> None:
+    with pytest.raises(SystemExit):
+        judge._parser().parse_args(["k1-class", "--anchor", "x", "--out", str(tmp_path / "o")])
