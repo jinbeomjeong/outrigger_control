@@ -87,6 +87,7 @@
 - Chrono 함정: Hooke `gn`·`gt`는 유효 질량당 값이라 고정 바닥 바디 질량을 크게(예: 1e9 kg) 둔다. 부싱 감쇠는 입력의 2배로 작용하므로 ct/2를 넣는다. `GetPos()`는 참조라 저장할 때 복사한다. 훅 입력은 다음 스텝부터 반영된다(1스텝 지연 규약).
 - 패드는 팔각(정사각 + 모서리 모따기)이고 방향은 CAD 그대로이며, 로드와 **구면(스위블) 조인트**로 잇는다. 면적은 실험 변수다(U-PAD-1~6): 타입 B `dwg_rear250`(**기본**: 전방 330 0.1071 m², 후방 250 0.0607 m², 모따기 30 mm 가정) / 타입 A `cad330`(네 다리 0.1071 m²). 형상 원본은 YAML `pad_shapes`(기본 `default_type`), 대응표 `02_params/pad_variants.json`, 실행 인자 `--pad-variant`(`outrigger_sim.pad_variants`). L1·L2b 강체 지면은 면적을 쓰지 않아 결과가 같고, SCM(S9)에서만 차이가 난다. 후방 패드는 CAD보다 2 mm 올린 위치가 완전 수축(0 mm)이다.
 - 스트로크 센서는 실린더 내장형으로 가정한다: `stroke_true = s_motor − F_cyl/k_oil`.
+  - 제어기는 두 판독을 받는다: `stroke_m` = 기름 부피 좌표(L1 모터 위치 = L2b `s_ref`), `stroke_corrected_m` = 피스톤. 차이 F/k는 L2b·하네스(k_h(s)) 전방 약 6.5~7.6 mm @119~132 kN, L1(운전점 상수 k_oil) 전방 약 4.0 mm @119 kN이고, 후방은 가정 하중 기준이라 문서마다 범위가 다르다. 행정 끝·예산·증분 규칙과 크롤러 구역 래치(`stroke_m` − 압축 항)는 `stroke_m`, 코너 틈 ĉ·heave·LOC 틈·탐침은 `stroke_corrected_m`을 쓴다(`c2.py` R1). 실기에는 피스톤 판독만 있으므로 피스톤 원좌표 재설계는 v5 뒤 별건(사용자 결정 2026-11-13, `06_analysis/02_control/stroke_input_review.md`).
 - 센서 모델은 `03_src/outrigger_sim/sensors/`에 둔다. IMU 영점 오차는 센서 등급 잔차만 쓴다(교정 절차는 모델링하지 않음).
 - 실 마찰 F_s는 점성 감쇠에 섞지 않고 따로 모델링한다.
 - 강체 모터 + 콘크리트 접촉만(R1)은 하중 평가에 쓰지 않는다(하중 민감도 약 15배 과대).
