@@ -74,6 +74,10 @@ VB_TAG, V0_TAG = "final_C4G2_P3_LAS_K1", "final_C4G2_LAS_K1"
 OFF_VB_TAG = "final_C4G2_P3_K1"
 """Rules 4.1: VB / LS (③ on) and the other settings; C-4 off arm (VB) = ``--las-off --k1-order-gate on``."""
 OFF_ARM_ARGS = ("--las-off", "--k1-order-gate", "on")
+RUNNER_EXPECT_OPTION: dict[str, str | None] = {"L2b_NSC": None, "L1R": None}
+"""User decision Q-2 (2026-11-13): run_S8C / run_S6C get a controller-tag check option from python-expert. When its
+name is set here (main session, after that change), :func:`finish` appends ``[<option>, <tag>]`` to every L2b / L1-R
+row and :func:`argv_check` requires it; None = not yet available (the row carries the tag in ``controller`` only)."""
 START_ENV_SCM = {"OMP_WAIT_POLICY": "PASSIVE"}
 """Rules 6 start env of the SCM rows (no ``OUTRIGGER_HULL_HOOK``: rules 4.2, unset = fast)."""
 FORBIDDEN_TOKENS = ("--k1-order-gate", "--las-off", "--las-candidate", "--k1-forced-block", "--k2",
@@ -152,7 +156,11 @@ def _src_path() -> None:
 
 
 def results_root() -> Path:
-    """Folder holding ``07_results`` (a worktree has none: the main checkout above)."""
+    """Folder holding the stored results (``07_results/S9`` with :data:`P5K_STORED`): this checkout, else the main
+    checkout above a worktree (a worktree may have its own partial ``07_results``, e.g. G-S output)."""
+    for p in (ROOT, *ROOT.parents):
+        if (p / P5K_STORED).is_dir():
+            return p
     return _import("v5_stage3_las_rows").results_root()
 
 
@@ -242,6 +250,10 @@ def finish(row: dict[str, Any], *, batch: str, criteria_id: str, role: str, tag:
             if "--expect-controller" not in out["argv"]:
                 raise RuntimeError(f"{out['case']}: run_S9 level row without --expect-controller")
             out["argv"] = _set_value(out["argv"], "--expect-controller", tag)
+        opt = RUNNER_EXPECT_OPTION.get(engine)
+        if opt is not None:
+            out["argv"] = (_set_value(out["argv"], opt, tag) if opt in out["argv"]
+                           else list(out["argv"]) + [opt, tag])
         out["controller"] = tag
     lo, hi = EST_RANGE_S[est_kind]
     out.update(group=batch, rep_bundle=batch, criteria_id=criteria_id, est_s=hi,
@@ -514,9 +526,17 @@ def jp_rows(out: dict[str, list[dict]], sb: ModuleType) -> list[dict[str, Any]]:
     return rows
 
 
-def gs_rows(sb: ModuleType, c2: list[dict], c3: list[dict], c4: list[dict], c5: list[dict]) -> list[dict[str, Any]]:
+GS_L2B_OF = ("C-1", "D1C2_middle_fdown3.2_Fs4")
+GS_L1R_OF = ("C-1", "D1C1_top_flat_crx3")
+GS_OL_OF = "P3a_G1_B_VB_prop"
+"""User decision Q-3 (2026-11-13): engine representatives of the G-S (L2b, L1-R full length; open loop ``--lift-s``)."""
+
+
+def gs_rows(sb: ModuleType, c1: list[dict], c2: list[dict], c3: list[dict], c4: list[dict], c5: list[dict],
+            c6c7: list[dict]) -> list[dict[str, Any]]:
     """Rules 11.2: one row per Chrono option arm x stage of the run_S9 ``level`` batches, ``--duration`` 10 s, E pool
-    (``planned_pool`` ``ecore``). L2b / L1-R / open-loop rows have no ``--duration``: not in this batch (확인 필요)."""
+    (``planned_pool`` ``ecore``); plus (Q-3) one full-length L2b row and one L1-R row (P pool: their runners pin
+    themselves) and the C-6 open-loop row with ``--lift-s`` :data:`GS_OPENLOOP_LIFT_S` (E pool)."""
     picks: list[tuple[str, dict[str, Any]]] = []
     s_cand = next(r for r in c2 if r["r4368"]["engine"] == "SCM" and r["r4368"].get("select") == "s_slope")
     picks.append(("C-2-SCM", s_cand))
@@ -540,6 +560,23 @@ def gs_rows(sb: ModuleType, c2: list[dict], c3: list[dict], c4: list[dict], c5: 
                    note=f"{B_GS} {stage}: {r['case']} with --duration {GS_DURATION_S:g} (G-S, never judged)")
         g["planned_pool"] = "ecore"
         rows.append(g)
+    for stage, src, kind in ((f"{GS_L2B_OF[0]}-L2b", next(r for r in c1 if r["case"] == GS_L2B_OF[1]), "l2b"),
+                             (f"{GS_L1R_OF[0]}-L1R", next(r for r in c1 if r["case"] == GS_L1R_OF[1]), "l1r")):
+        # user decision Q-3 (2026-11-13): one full-length row per engine; only the runner --tag differs
+        argv = _set_value(src["argv"], "--tag", f"r4368gs_{src['case']}")
+        row = {**{k: v for k, v in src.items() if k != "r4368"}, "case": f"GS_{src['case']}", "argv": argv}
+        keep = {k: src["r4368"][k] for k in ("d1_id",) if k in src["r4368"]}
+        rows.append(finish(row, batch=B_GS, criteria_id=src["criteria_id"], role="gs", tag=src.get("controller"),
+                           est_kind=kind, extra={**keep, "gs_stage": stage, "gs_of": src["case"], "full_length": True},
+                           note=f"{B_GS} {stage}: {src['case']} full length, --tag r4368gs_{src['case']} (G-S, Q-3)"))
+    ol = next(r for r in c6c7 if r["case"] == GS_OL_OF)
+    row = {**{k: v for k, v in ol.items() if k != "r4368"}, "case": f"GS_{ol['case']}_lift{GS_OPENLOOP_LIFT_S:g}",
+           "argv": _set_value(ol["argv"], "--lift-s", f"{GS_OPENLOOP_LIFT_S:g}")}
+    g = finish(row, batch=B_GS, criteria_id=ol["criteria_id"], role="gs", tag=None, est_kind="gs",
+               extra={"gs_stage": "C-6-openloop", "gs_of": ol["case"]},
+               note=f"{B_GS} C-6 open loop: {ol['case']} with --lift-s {GS_OPENLOOP_LIFT_S:g} (G-S, Q-3)")
+    g["planned_pool"] = "ecore"
+    rows.append(g)
     for rid in OC5_ROWS:
         spec = OC5_ROWS[rid]
         tag = VB_TAG if spec["setting"] == "VB" else V0_TAG
@@ -562,7 +599,7 @@ def resume_batches(sb: ModuleType, out: dict[str, list[dict]]) -> dict[str, list
     res[B_C6C7] = c6c7_rows(sb, out)
     res[B_PROBE], res[B_OC5] = oc5_rows(sb, oc5_state())
     res[B_JP] = jp_rows(out, sb)
-    res[B_GS] = gs_rows(sb, res[B_C2], res[B_C3], res[B_C4], res[B_C5])
+    res[B_GS] = gs_rows(sb, res[B_C1], res[B_C2], res[B_C3], res[B_C4], res[B_C5], res[B_C6C7])
     for name, rows in res.items():
         names = [r["case"] for r in rows]
         dup = sorted({n for n in names if names.count(n) > 1})
@@ -693,15 +730,22 @@ def argv_check(r: dict[str, Any], sb: ModuleType) -> dict[str, Any]:
             diffs.append({"key": f"env:{key}", "want": "absent", "got": env[key]})
     if engine == "SCM" and env.get("OMP_WAIT_POLICY") != "PASSIVE":
         diffs.append({"key": "start_env.OMP_WAIT_POLICY", "want": "PASSIVE", "got": env.get("OMP_WAIT_POLICY")})
-    want_pool = "ecore" if r["r4368"]["role"] == "gs" else "pcore"
+    want_pool = "ecore" if r["r4368"]["role"] == "gs" and engine == "SCM" else "pcore"
     if r.get("planned_pool") != want_pool:
         diffs.append({"key": "planned_pool", "want": want_pool, "got": r.get("planned_pool")})
     info: dict[str, Any] = {}
+    if engine in RUNNER_EXPECT_OPTION:
+        opt = RUNNER_EXPECT_OPTION[engine]
+        if opt is None and "--expect-controller" in tail:
+            diffs.append({"key": "--expect-controller", "want": "absent (runner option not yet available, Q-2)",
+                          "got": "present"})
+        elif opt is not None and r["r4368"]["tag"] is not None and (opt not in tail
+                                                                    or tail[tail.index(opt) + 1] != r["controller"]):
+            diffs.append({"key": opt, "want": r["controller"], "got": tail[tail.index(opt) + 1] if opt in tail
+                          else "absent"})
     if engine == "SCM":
         info = _level_check(r, _import("run_S9"), diffs)
     elif engine == "L2b_NSC":
-        if "--expect-controller" in tail:
-            diffs.append({"key": "--expect-controller", "want": "absent (run_S8C normal sets)", "got": "present"})
         info = _s8c_check(r, sb, diffs)
     else:
         info = _s6c_check(r, diffs)
@@ -848,7 +892,16 @@ def cmd_manifest(out_path: str) -> int:
         doc["batches"][name] = {"rows": rows, "n": len(rows), "est_sum_s": [lo, hi],
                                 "list_sha256": hashlib.sha256("\n".join(f"{x['case']} {x['argv_sha256']}"
                                                                         for x in rows).encode()).hexdigest()}
+    checks = [argv_check(r, sb) for name in BATCHES for r in b[name] if r["r4368"]["engine"] != "SCM"]
+    a7 = a7_rows(b, checks)
+    a7["decision"] = ("A-7 해당 없음: fdown3.5 L1-R 스냅숏을 시작 상태로 쓰는 436.8 행 0행 (사용자 결정 Q-5, 2026-11-13)"
+                      if not a7["rows_using_fdown3p5"] else "A-7 적용: 위 행은 저장 행과 '조건 다름, 해시 비교 없음'")
+    doc["a7"] = a7
+    doc["probe_duration_s"] = {"value": PROBE_DURATION_S, "rule": "CHECK end = phase 'touch' start - loop start "
+                               "(stored A3 / A5: 4.8 s) + 2 s, ceil (user decision Q-7, 2026-11-13)"}
+    doc["k_rounding"] = "k rounded to 4 decimals, floors from the rounded k (user decision Q-1, 2026-11-13)"
     Path(out_path).write_text(json.dumps(doc, indent=1, default=str) + "\n", "utf-8")
+    print(a7["decision"])
     for name, v in doc["batches"].items():
         print(f"{name} rows {v['n']} est_sum_s {v['est_sum_s']} list_sha256 {v['list_sha256']}")
     print("errors 0")
