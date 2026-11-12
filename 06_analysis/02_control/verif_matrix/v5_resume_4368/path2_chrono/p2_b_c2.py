@@ -2,8 +2,8 @@
 - C2-03, C2-07 (L2b): D8.P judged (as C-1).
 - S-01, S-02 (SCM): P3, READY 120 s, stroke_limited_stop allowed.
 - baseline-failure extra rows: same item set as their family (D1C2_* -> D8.P, D1S_* -> P3 S-type).
-- D1-PSC rows: 426.3 E-1..E-7 + stroke <= 684.8 mm; path 2 builds E-3 / E-5 / stroke only,
-  E-1 / E-2 / E-4 / E-6 / E-7 need the event window W and pad lift definitions -> indeterminate.
+- D1-PSC rows: 426.3 E-1..E-7 + stroke <= 684.8 mm; path 2 recomputes E-5 (with stroke);
+  E-1..E-4 / E-6 / E-7 are re-aggregated from result.json (rev3 R3-G1, Q-C1 = A).
 """
 import p2_core as C
 import p2_kinds as K
@@ -55,9 +55,11 @@ def _psc(row, params):
     ok = (last == "ready" and m is not None and R.le(float(m.max()), R.ATT_LIMIT_DEG)
           and not items["E-5"]["fault"] and R.le(items["E-5"]["stroke_max_m"], R.STROKE_END_M))
     items["E-5"]["verdict"] = "pass" if ok else "fail"
+    # rev3 R3-G1 layer 2: re-aggregated from the per-item record in result.json
     for k in ("E-1", "E-2", "E-3", "E-4", "E-6", "E-7"):
-        items[k] = {"clause": "426.3", "verdict": "indeterminate",
-                    "reason": "event window W / event time / pad lift definition not built in path 2"}
+        it = C.reagg_item(row, k)
+        it["clause"] = "426.3 (re-aggregated, FLAG counts as pass)"
+        items[k] = it
     keys = ["E-1", "E-2", "E-3", "E-4", "E-5", "E-6", "E-7"]
     return items, keys, list(row.notes), False
 
