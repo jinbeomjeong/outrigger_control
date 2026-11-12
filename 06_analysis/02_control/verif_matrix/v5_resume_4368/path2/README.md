@@ -166,6 +166,24 @@
 - 동작 확인(판정 아님): T-3 결과가 아직 없어 봉인 키 목록으로 만든 합성 줄을 저장 `v5/d1.jsonl`과 함께 돌렸다. rev4a 1 대조 304키 차이 0, 멈춤 0.
 - 시험 `test_p2_t3k.py`(12개): 키 목록 수, 전부 통과, H-T3-1, H-T3-1K·1Q, 태그 `_LAS`만·LAS-b 값 H-T3-3, G1 작동 H-T3-4·미작동 해시 H-T3-5, K-6 통과·READY·행정·FAULT 위반, K-6a·b 집합·항목, dg3 작동·키 수, 오류 줄 H-T3-2, R-0K 밖 막힘 H-T3-5, 실제 봉인 11개 sha.
 
+## rev3 반영 (436.8 `v5_resume_4368_rules_rev3.md`, sha256 `dad8dfa6…`, 2026-11-13)
+
+다섯 도구 모두 rev3 sha를 원판·rev1·rev2와 함께 확인한다(`p2_4368.check_seals`). 앞 절의 정의와 다른 곳은 아래가 맞다.
+
+| 절 | 도구 | 반영 |
+|---|---|---|
+| R3-F1·F2·F3 | `p2_4368.py` | 이미 맞음: S-15는 묶음별 줄 수만, G1 단독 바탕 = 균일 계열, t_D 입력 `scm_crawler_normal_N` |
+| R3-F4 | `p2_4368.py anchors` | 부록 B 데이터 파일도 CRLF → LF 정규화 sha가 기록과 같으면 통과, 기록에 두 sha와 "CRLF 변환만 다름" |
+| R3-A1 | `p2_d1.py` | G-3 예외 = `job.d1.tags`에 `ASSUMED_BOUNDARY`가 있는 실행 전부(VB·V0, 모든 ε·오거). 예외 줄은 "가정 경계 미성립"으로 적고 사용자 질문. 태그와 (H-S-0, fup-rec)가 다른 행은 기록 |
+| R3-A2 | `p2_d1.py` | 세 층: ① H-R 다섯 항목 재판정(앞 절 교차 확인) ② `d1.items`·`fail_items`로 `d1.verdict` 재집계: 허용 행(H-R-A·H-S-0·H-S-1·H-S-A)의 `harness_class` = `stroke_limited_stop`이면 `allowed_stop`(실패 항목은 기록), 아니면 `fail_items`가 있으면 `fail`, 없으면 `pass`. 거짓 항목이 `fail_items`에 없으면 강등 기록(이름에 "demot")이 있어야 함 ③ 선별. ①·②가 기록과 다르면 그 줄은 판정 불가(S-13). 저장 `d1.jsonl` 868줄에 ②를 돌리면 차이 0 |
+| R3-A3 | `p2_d1.py` | t_READY = `values.times.t_first_ready_s`. 줄의 단계 기록에서 첫 단계 시작 ≤ 0.1 s여야 하고, `d1.t_ready_s`와 1e-9 안에서 같아야 함. 단계 기록이 없으면 판정 불가. 저장 `d1.jsonl`에는 단계 기록 필드가 없음(확인 필요 R3-A3) |
+| R3-B1·B6·B7 | `p2_u3.py` | 정착 v2 재계산(398.3: pen_mean = pen_inst + (y Δφ − x Δθ), Δ는 deg → rad, 좌표 m → mm, \|pen_mean + gap\| ≤ 1 mm, 자세 허용 max(0.005°, 잔차 + 0.002°)). 대상 slope·h6·h9·연구 B·D와 D-1 재사용 줄(`u3.settle_v2`). `result`와 K-10 대조, `tolerances`가 다르면 S-11, `table_sha256` 대조. `settle_check_fail`은 재계산 `ok` 거짓일 때만 실패, 아니면 판정 불가. `no_table_check`는 해당 없음으로 셈. 연구 D 시작 틈 패드는 `gap_target_source` = `start_gap` 목표, 표 목표로도 계산해 `ok`가 달라지는 줄 수를 기록 |
+| R3-B2 | `p2_u3.py` | 연구 B·C·D는 입력 키 파일(`s9/rev85/finB2_x426b.json` 84, `fin_x426_C.json` 패드 B 34, `fin_x426_D.json` 33)의 키 집합과 같은 출력 파일 하나로 셈 |
+| R3-B3 | `p2_u3.py` | 재사용 = 최상위 `reuse` = `"d1"`, `d1_key`가 H-1 줄의 `d1.key` 하나와 맞아야 함, `meta.v5.reuse_d1.<suite>.reused` 수와 같아야 함 |
+| R3-B5 | `p2_u3.py` | IND_LAS 관문 = 사건 이름이 `INFO_LIFTOFF_SLOW:`로 시작(`_END` 제외). 관문이 서지 않은 사례의 해시가 IND와 다르면 어댑터 결함, 사건 목록 없으면 "기록 불완전" |
+| R3-C1~C8 | `p2_v5j.py` | H-5 등급 = η_v 0.85 T1 + H0, 0.80 T1·T3·T4·분류는 기록(분류 C면 v5 종합 문장 전에 묻기). J1 pass ↔ `stroke_limited_stop`은 기록(S8 예외). 사양 미달 표시 F_min + 5 kN. J3 경사는 줄의 바닥 각(없으면 FLAG 한계 미정 기록). J7 이름 = 수치 구획을 뺀 나머지. J11 대체 다리 줄의 `n_late` None = 판정 불가. J-P3 로드 판독 = T4h, 없으면 구성(사건 경로 = 있음, steady 사례 = 없음, 그 밖 판정 불가), 선언 = 필드, 없으면 steady 사례 구성 |
+| R3-D1~D4 | `p2_t3k.py` | dg3 키는 `cand=current#` 유무 같은 키, 폴더는 기록된 `two_pressure.extend_start_rule`(`tracked_bound` = v4_on)로 정함, CLI 폴더와 다르면 H-T3-3. R-0 V0 태그는 키 없음·null만. K-0은 세 출력 옆 `.identity.json`의 커밋·도구·c2·스레드 필드 대조(다르면 H-T3-3, 없으면 판정 불가). H-T3-0 사전 검사는 두 경로 대상 아님. 비교 허용 1e-9 |
+
 ## 하지 않는 것 (범위)
 
 - **원 규칙 등급의 재집계는 하지 않는다.** H-0 T-3K(`las_targeted_rules` 원판~rev5), H-1·H-2(D-1 선별 규칙), H-3·H-4(`u3_u6`), H-5(`u9`), H-6~H-10(v5 기준 + 개정 1~12b), C-1~C-5 판정 블록(D-1 규칙 11, 개정 12 2.2)의 통과·미달 재집계가 여기에 든다. 이 도구가 내는 묶음 상태는 436.8 문서가 새로 정한 층(4.1·4.2·6·7.2·7.4·9.3·S-15)의 상태다(`grade_scope`). 원 규칙 등급의 경로 2는 그 규칙들의 정의 문장을 읽고 따로 만들어야 한다.
