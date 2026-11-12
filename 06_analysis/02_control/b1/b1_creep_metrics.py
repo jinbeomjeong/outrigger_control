@@ -1,15 +1,20 @@
 """B1 creep basis (``V5-B1-CREEP``) path 1: metrics M-1 .. M-12, harness constants and grades.
 
-Rules: ``b1_creep_rules.md`` (sealed 2026-11-12, :data:`RULES_SHA256`). Path 2 is written
-separately by control-expert from the rule text only (rules 9); this file is path 1.
+Rules: ``b1_creep_rules.md`` (sealed 2026-11-12, :data:`RULES_SHA256`) with
+``b1_creep_rules_rev1.md`` (:data:`RULES_REV1_SHA256`: R1-1 ``W_hat`` as the redistribution
+``r_i sum F_j(n_L) - F_i(n_L)``, R1-2 P-D / P-G end load ``max(E_hat, F_pk)``, R1-3 fit set
+``W_fit`` 1 kN with 0.6 / 2 kN records, R1-4 records, R1-5 T-15). Both texts are checked
+against their sealed SHA-256 when they sit beside this tool. Path 2 is written separately by
+control-expert from the rule text only (rules 9); this file is path 1.
 
 Subcommands::
 
-    constants --harness <b1_H.jsonl> --out <b1_harness_constants.json>
-        rules 7.3: kappa_z and C_type per pad type (per-leg windows t_e,i, C-2), the kappa
-        ratio per type (record, > 1.5 = "kappa nonlinear"), delta_allow, from the 20 H-P runs.
+    constants --harness <b1_H.jsonl> --out <b1_harness_constants_rev1.json>
+        rules 7.3 / rev1 R1-3: kappa_z and C_type per pad type (per-leg windows t_e,i), fit
+        counts and argmax, the kappa ratio, the W_fit sensitivity records, delta_allow and the
+        R1-4 records, from the 20 H-P runs.
     judge --chrono-batch <batch folder> --harness <b1_H.jsonl> --identity <identity.json>
-          --out <b1_metrics_path1.json> [--constants <b1_harness_constants.json>]
+          --out <b1_metrics_path1.json> [--constants <b1_harness_constants_rev1.json>]
           [--p7-ref <s2d_SC.jsonl>]
         rules 3.1 row states, 3.2 bundle state, 3.3 grades D-a .. D-h, 5 metrics M-1 .. M-12,
         7.2 m_L and the predictor candidates P-A / P-B / P-D / P-G / P-C with the P-A limit
@@ -59,6 +64,11 @@ import numpy as np
 # ===================================================================================== constants
 RULES_FILE = "b1_creep_rules.md"
 RULES_SHA256 = "6b99702ce26d6da28fbfe6473b622c7e51419241916cbc101f795828f498774e"
+RULES_REV1_FILE = "b1_creep_rules_rev1.md"
+RULES_REV1_SHA256 = "9f72af5babc36a9164a79163a0c3fa8707a0b8dc71aa3bfe978ebdf33d0905cf"
+"""Rev1 (sealed 2026-11-12): R1-1 W_hat redistribution, R1-2 P-D end load, R1-3 fit set
+W_fit, R1-4 records, R1-5 T-15. The original text holds everywhere else."""
+RULES_FILES = {RULES_FILE: RULES_SHA256, RULES_REV1_FILE: RULES_REV1_SHA256}
 """Sealed rules (``b1_creep_rules.sha256``, master ``1ad3e5d``, 2026-11-12)."""
 SCHEMA_METRICS = "b1-creep-metrics/1"
 SCHEMA_CONSTANTS = "b1-harness-constants/1"
@@ -78,8 +88,16 @@ C_STAR_M = 0.05
 """``thresholds.clearance_target_m`` (rules 0.1)."""
 N_A = 0.2
 """P-D assumed exponent (rules 7.2, J2 set n)."""
-KAPPA_W_FLOOR_N = 1.0
-"""Rules 7.3: ``kappa`` divides by ``max(W_hat, 1 N)``."""
+POWER = 5
+"""``1 / n_a`` exactly (rev1 5: ``x**5``)."""
+W_FIT_N = 1000.0
+"""Rev1 R1-3 fit floor (graded constants)."""
+W_FIT_SENSITIVITY_N = (600.0, 2000.0)
+"""Rev1 R1-3 sensitivity records (not graded)."""
+EPS_N = 1e-6
+"""Rev1 T-15 comparison tolerance [N]."""
+LOAD_SUM_BAND = (1.00, 1.08)
+"""Rev1 R1-4: x1.0 rows outside this load-sum ratio carry "재분배 가정 이탈"."""
 KAPPA_RATIO_FLAG = 1.5
 
 ZA_M = 0.003       # T-1
@@ -820,22 +838,33 @@ def predictor_inputs(rec: RunRecord, rows: Rows, tm: Timing, geo: Geometry) -> d
         out.update(att_L_rad=[roll, pitch], ds_geo=_legs(ds), rho=_legs(rho))
     else:
         out.update(att_L_rad=None, ds_geo=None, rho=None)
+    static = geo.static_loads_N[rec.level]
+    out["static_N"] = _legs(static)
     if load is not None and np.all(np.isfinite(load)) and tm.n_L is not None:
-        static = geo.static_loads_N[rec.level]
+        out.update(redistribution(np.asarray(load, dtype=float), static))
         before = np.asarray(rec.n) <= tm.n_L
-        f_pk = np.nanmax(np.asarray(rec.load)[before], axis=0)
-        out.update(W_hat=_legs(static - load), F_pk=_legs(f_pk), static_N=_legs(static))
+        out["F_pk"] = _legs(np.nanmax(np.asarray(rec.load)[before], axis=0))
     else:
-        out.update(W_hat=None, F_pk=None, static_N=_legs(geo.static_loads_N[rec.level]))
+        out.update(W_hat=None, E_hat=None, F_pk=None, load_sum_over_static=None)
     return out
 
 
-def power_term(f_pk: float | None, w_hat: float | None) -> float | None:
-    """``(F_pk + max(W, 0))^(1/n_a) - F_pk^(1/n_a)`` (None when F_pk <= 0 or NA)."""
-    if not _finite(f_pk) or not _finite(w_hat) or f_pk <= 0.0:
+def redistribution(load_L: np.ndarray, static: np.ndarray) -> dict:
+    """Rev1 R1-1: ``r_i = W_static,i / sum W_static``, ``E_hat_i = r_i sum_j F_j(n_L)``,
+    ``W_hat_i = E_hat_i - F_i(n_L)`` (redistribution, sums to 0)."""
+    ratio = static / static.sum()
+    total = float(load_L.sum())
+    e_hat = ratio * total
+    return {"W_hat": _legs(e_hat - load_L), "E_hat": _legs(e_hat),
+            "load_sum_over_static": total / float(static.sum())}
+
+
+def power_term(f_pk: float | None, e_hat: float | None) -> float | None:
+    """Rev1 R1-2: ``max(E_hat, F_pk)^(1/n_a) - F_pk^(1/n_a)`` with ``1/n_a = 5`` (``x**5``,
+    plain real ``max``); None when an input is NA."""
+    if not _finite(f_pk) or not _finite(e_hat):
         return None
-    exponent = 1.0 / N_A
-    return (f_pk + max(w_hat, 0.0)) ** exponent - f_pk ** exponent
+    return max(e_hat, f_pk) ** POWER - f_pk ** POWER
 
 
 def plane_corner_values(pad_xy: np.ndarray, pad_values, corners_xy: np.ndarray) -> np.ndarray:
@@ -849,13 +878,13 @@ def plane_corner_values(pad_xy: np.ndarray, pad_values, corners_xy: np.ndarray) 
 
 
 def predicted_sinkage(inputs: dict, constants: dict | None) -> list[float | None]:
-    """P-D increment ``C_type(i) [(F_pk + max(W, 0))^(1/n_a) - F_pk^(1/n_a)]`` per leg."""
+    """P-D increment ``C_type(i) [max(E_hat, F_pk)^(1/n_a) - F_pk^(1/n_a)]`` per leg (rev1)."""
     c_type = (constants or {}).get("C_type") or {}
-    w_hat, f_pk = inputs.get("W_hat"), inputs.get("F_pk")
+    e_hat, f_pk = inputs.get("E_hat"), inputs.get("F_pk")
     out = []
     for i in range(4):
         c_i = c_type.get(PAD_TYPE[i])
-        term = power_term(None if f_pk is None else f_pk[i], None if w_hat is None else w_hat[i])
+        term = power_term(None if f_pk is None else f_pk[i], None if e_hat is None else e_hat[i])
         out.append(None if term is None or not _finite(c_i) else c_i * term)
     return out
 
@@ -1213,53 +1242,90 @@ def _longest_run(mask: np.ndarray) -> int:
 
 # ===================================================================================== constants
 def harness_constants(runs: dict[str, HarnessRun], geo: Geometry) -> dict:
-    """Rules 7.3 from the 20 H-P runs (E-2: a constant with no leg is NA)."""
+    """Rules 7.3 with rev1 R1-3 from the 20 H-P runs: the graded constants at ``W_fit`` 1 kN,
+    the 0.6 / 2 kN sensitivity records, ``delta_allow`` (original) and the R1-4 records."""
     hp = sorted(run_id for run_id in runs if run_id.startswith("H-P|"))
-    kappa: dict[str, list] = {FRONT: [], REAR: []}
-    c_values: dict[str, list] = {FRONT: [], REAR: []}
-    per_run_kappa: dict[str, dict[str, float]] = {FRONT: {}, REAR: {}}
-    excluded = {"no_loc_runs": [], "c_type_nonpositive_denominator": 0, "na_legs": 0}
-    delta_os = []
+    legs, no_loc, delta_os = [], [], []
     for run_id in hp:
         metrics = run_metrics(runs[run_id].record, geo, None)
         if not metrics["has_loc"]:
-            excluded["no_loc_runs"].append(run_id)
+            no_loc.append(run_id)
             continue
-        _collect_leg_constants(run_id, metrics, kappa, c_values, per_run_kappa, excluded)
+        legs += _fit_legs(run_id, metrics)
         os_values = metrics["M-5"]["delta_os"]
         b_star = LEGS.index(metrics["M-2"]["b_star"])
         if os_values is not None and os_values[b_star] is not None:
             delta_os.append((run_id, os_values[b_star]))
+    graded = fit_constants(legs, W_FIT_N)
     return {
         "schema": SCHEMA_CONSTANTS, "rules_file": RULES_FILE, "rules_sha256": RULES_SHA256,
-        "path": PATH_NAME, "runs_used": hp, "excluded": excluded,
-        "kappa_z_m_per_N": {t: _max_or_na(v) for t, v in kappa.items()},
-        "C_type": {t: _max_or_na(v) for t, v in c_values.items()},
-        "n_a": N_A,
-        "kappa_ratio": {t: _ratio_record(per_run_kappa[t]) for t in (FRONT, REAR)},
+        "rules_rev1_file": RULES_REV1_FILE, "rules_rev1_sha256": RULES_REV1_SHA256,
+        "path": PATH_NAME, "runs_used": hp, "no_loc_runs": no_loc, "n_a": N_A,
+        "W_fit_N": W_FIT_N, "eps_N": EPS_N,
+        "kappa_z_m_per_N": graded["kappa_z_m_per_N"], "C_type": graded["C_type"],
+        "fit": graded["fit"], "kappa_ratio": graded["kappa_ratio"],
         "delta_allow_m": _max_or_na([v for _, v in delta_os]),
         "delta_allow_runs": [run_id for run_id, _ in delta_os],
+        "sensitivity": {f"{w:g}": fit_constants(legs, w) for w in W_FIT_SENSITIVITY_N},
+        "redistribution_records": _redistribution_records(runs, geo),
     }
 
 
-def _collect_leg_constants(run_id, metrics, kappa, c_values, per_run_kappa, excluded) -> None:
+def _fit_legs(run_id: str, metrics: dict) -> list[dict]:
+    """Per-leg fit inputs of one run: dz (per-leg window), W_hat, E_hat, F_pk."""
     dz = metrics["M-4"]["dz_post_leg_window"]
     inputs = metrics["predictor_inputs"]
-    w_hat, f_pk = inputs.get("W_hat"), inputs.get("F_pk")
+    out = []
     for i in range(4):
-        pad = PAD_TYPE[i]
-        if dz[i] is None or w_hat is None or w_hat[i] is None:
-            excluded["na_legs"] += 1
+        values = [None if inputs.get(k) is None else inputs[k][i]
+                  for k in ("W_hat", "E_hat", "F_pk")]
+        out.append({"run_id": run_id, "leg": LEGS[i], "pad": PAD_TYPE[i], "dz": dz[i],
+                    "W_hat": values[0], "E_hat": values[1], "F_pk": values[2]})
+    return out
+
+
+def fit_constants(legs: list[dict], w_fit_N: float) -> dict:
+    """Rev1 R1-3 at one fit floor: ``kappa_z = max dz / W_hat`` over legs with ``W_hat -
+    W_fit >= -eps_N``, ``C_type = max dz / [E_hat^5 - F_pk^5]`` over legs with ``E_hat -
+    F_pk - W_fit >= -eps_N`` (T-15), per pad type; counts, argmax and the kappa ratio."""
+    kappa_values: dict[str, list] = {FRONT: [], REAR: []}
+    c_values: dict[str, list] = {FRONT: [], REAR: []}
+    counts = {t: {"kappa_fit": 0, "kappa_excluded": 0, "c_fit": 0, "c_excluded": 0}
+              for t in (FRONT, REAR)}
+    for leg in legs:
+        pad = leg["pad"]
+        if leg["dz"] is None or not _finite(leg["W_hat"]):
+            counts[pad]["kappa_excluded"] += 1
+            counts[pad]["c_excluded"] += 1
             continue
-        k_value = dz[i] / max(w_hat[i], KAPPA_W_FLOOR_N)
-        kappa[pad].append((run_id, LEGS[i], k_value))
-        current = per_run_kappa[pad].get(run_id)
-        per_run_kappa[pad][run_id] = k_value if current is None else max(current, k_value)
-        term = power_term(None if f_pk is None else f_pk[i], w_hat[i])
-        if term is None or term <= 0.0:
-            excluded["c_type_nonpositive_denominator"] += 1
-            continue
-        c_values[pad].append((run_id, LEGS[i], dz[i] / term))
+        if leg["W_hat"] - w_fit_N >= -EPS_N:
+            kappa_values[pad].append((leg["run_id"], leg["leg"], leg["dz"] / leg["W_hat"]))
+            counts[pad]["kappa_fit"] += 1
+        else:
+            counts[pad]["kappa_excluded"] += 1
+        if (_finite(leg["E_hat"]) and _finite(leg["F_pk"])
+                and leg["E_hat"] - leg["F_pk"] - w_fit_N >= -EPS_N):
+            denominator = leg["E_hat"] ** POWER - leg["F_pk"] ** POWER
+            c_values[pad].append((leg["run_id"], leg["leg"], leg["dz"] / denominator))
+            counts[pad]["c_fit"] += 1
+        else:
+            counts[pad]["c_excluded"] += 1
+    return {"W_fit_N": w_fit_N,
+            "kappa_z_m_per_N": {t: _max_or_na(v) for t, v in kappa_values.items()},
+            "C_type": {t: _max_or_na(v) for t, v in c_values.items()},
+            "fit": {t: {**counts[t], "kappa_argmax": _argmax(kappa_values[t]),
+                        "c_argmax": _argmax(c_values[t]),
+                        "kappa_fit_legs": [f"{r}|{g}" for r, g, _ in kappa_values[t]],
+                        "c_fit_legs": [f"{r}|{g}" for r, g, _ in c_values[t]]}
+                    for t in (FRONT, REAR)},
+            "kappa_ratio": {t: _ratio_record(kappa_values[t]) for t in (FRONT, REAR)}}
+
+
+def _argmax(values: list) -> str | None:
+    if not values:
+        return None
+    run_id, leg, _ = max(values, key=lambda item: item[2])
+    return f"{run_id}|{leg}"
 
 
 def _max_or_na(values: list) -> float | str:
@@ -1268,12 +1334,54 @@ def _max_or_na(values: list) -> float | str:
     return max(numbers) if numbers else NA
 
 
-def _ratio_record(per_run: dict[str, float]) -> dict:
-    values = [v for v in per_run.values() if math.isfinite(v)]
-    if not values or min(values) <= 0.0:
+def _ratio_record(fitted: list) -> dict:
+    """Rev1 R1-3 kappa ratio: per run with at least one fitted leg, the run's largest
+    ``dz / W_hat``; max / min over the runs (``inf`` when min <= 0); flag > 1.5 or inf."""
+    per_run: dict[str, float] = {}
+    for run_id, _, value in fitted:
+        per_run[run_id] = value if run_id not in per_run else max(per_run[run_id], value)
+    if not per_run:
         return {"per_run": per_run, "ratio": NA, "kappa_nonlinear": None}
-    ratio = max(values) / min(values)
-    return {"per_run": per_run, "ratio": ratio, "kappa_nonlinear": ratio > KAPPA_RATIO_FLAG}
+    low, high = min(per_run.values()), max(per_run.values())
+    ratio = "inf" if low <= 0.0 else high / low
+    return {"per_run": per_run, "ratio": ratio,
+            "kappa_nonlinear": ratio == "inf" or ratio > KAPPA_RATIO_FLAG}
+
+
+def redistribution_record(rec: RunRecord, metrics: dict, is_unit_mass: bool) -> dict:
+    """Rev1 R1-4 (record only): n_L, load-sum ratio, W_hat, E_hat - F_pk, the reading stroke
+    rate at n_L and the "재분배 가정 이탈" flag."""
+    inputs = metrics["predictor_inputs"]
+    n_L = metrics["M-1"]["n_L"]
+    rows = Rows(rec.n)
+    s_now, s_before = rows.at(rec.stroke, n_L), rows.at(rec.stroke, None if n_L is None
+                                                         else n_L - 1)
+    rate = (None if s_now is None or s_before is None
+            else _legs((np.asarray(s_now) - np.asarray(s_before)) / PERIOD_S))
+    e_hat, f_pk = inputs.get("E_hat"), inputs.get("F_pk")
+    margin = (None if e_hat is None or f_pk is None
+              else [e - f for e, f in zip(e_hat, f_pk, strict=True)])
+    ratio = inputs.get("load_sum_over_static")
+    off = []
+    if is_unit_mass and ratio is not None and not LOAD_SUM_BAND[0] <= ratio <= LOAD_SUM_BAND[1]:
+        off.append("load sum ratio")
+    if rate is not None and any(v is None or v <= 0.0 for v in rate):
+        off.append("leg not extending at n_L")
+    return {"n_L": n_L, "load_sum_over_static": ratio, "W_hat": inputs.get("W_hat"),
+            "E_hat_minus_F_pk": margin, "stroke_rate_at_n_L_m_s": rate,
+            "flags": ["재분배 가정 이탈"] if off else [], "reasons": off}
+
+
+def _redistribution_records(runs: dict[str, HarnessRun], geo: Geometry) -> dict:
+    """R1-4 records of the harness H-P, H-W and H-M0 runs."""
+    out = {}
+    for run_id, run in sorted(runs.items()):
+        if not run_id.startswith(("H-P|", "H-W|", "H-M0|")):
+            continue
+        metrics = run_metrics(run.record, geo, None)
+        out[run_id] = redistribution_record(run.record, metrics,
+                                            is_unit_mass=not run_id.startswith("H-W|"))
+    return out
 
 
 def constants_for_prediction(constants: dict) -> dict:
@@ -1746,7 +1854,8 @@ def judge(batch: Path, harness_jsonl: Path, identity: dict, geo: Geometry,
     bundle = bundle_state(statuses, harness)
     pairs = shadow_pairs(harness)
     out = {"schema": SCHEMA_METRICS, "path": PATH_NAME, "rules_file": RULES_FILE,
-           "rules_sha256": RULES_SHA256, "tool_sha256": sha256_file(Path(__file__)),
+           "rules_sha256": RULES_SHA256, "rules_rev1_file": RULES_REV1_FILE,
+           "rules_rev1_sha256": RULES_REV1_SHA256, "tool_sha256": sha256_file(Path(__file__)),
            "batch_name": BATCH_NAME, "bundle": bundle, "blocked": blocked,
            "row_states": row_states, "harness_refused": refused, "shadow_pairs": pairs,
            "constants": constants, "safety_notes": {r: v for r, v in safety.items() if v},
@@ -1767,7 +1876,8 @@ def judge(batch: Path, harness_jsonl: Path, identity: dict, geo: Geometry,
 
 
 def _constants_core(constants: dict) -> str:
-    keys = ("kappa_z_m_per_N", "C_type", "delta_allow_m", "runs_used", "n_a")
+    keys = ("kappa_z_m_per_N", "C_type", "delta_allow_m", "runs_used", "n_a", "W_fit_N",
+            "rules_rev1_sha256")
     return json.dumps({k: constants.get(k) for k in keys}, sort_keys=True)
 
 
@@ -1782,6 +1892,7 @@ def _chrono_entry(rec: RunRecord, facts: dict, metrics: dict, geo: Geometry) -> 
     metrics["M-9"] = {name: (block or {}).get("within") for name, block in p3b.items()
                       if name.startswith("P3-") and isinstance(block, dict)}
     metrics["M-4h"] = _pad_shift(rec, metrics)
+    metrics["R1-4"] = redistribution_record(rec, metrics, is_unit_mass=rec.run_id != "C6")
     return {"metrics": metrics, "grid": grid, "b_star": b_star,
             "b": LEGS.index(CHRONO_ROWS[rec.run_id].budget_leg),
             "shadow": chrono_anchor_shadow(rec, metrics, geo),
@@ -1909,6 +2020,28 @@ def _default_paths(args) -> tuple[Path, Path, Path]:
     return yaml_path, soil_path, root / C2_SOURCE
 
 
+def check_rules_files(folder: Path) -> dict[str, str]:
+    """The sealed rule texts beside this tool against :data:`RULES_FILES` (S-1 / K-0 check).
+
+    Returns:
+        File name -> ``"match"`` or ``"absent"`` (a checkout without the texts).
+
+    Raises:
+        InputError: A text is present with another SHA-256 (LF bytes).
+    """
+    state = {}
+    for name, expected in RULES_FILES.items():
+        path = folder / name
+        if not path.is_file():
+            state[name] = "absent"
+            continue
+        actual = hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+        if actual != expected:
+            raise InputError(f"{name}: sha256 {actual} is not the sealed {expected}")
+        state[name] = "match"
+    return state
+
+
 def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     sub = parser.add_subparsers(dest="command", required=True)
@@ -1929,6 +2062,7 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
     try:
+        rules_state = check_rules_files(Path(__file__).resolve().parent)
         geo = read_geometry(*_default_paths(args))
         if args.command == "constants":
             harness, refused = load_harness(args.harness)
@@ -1947,6 +2081,7 @@ def main(argv: list[str] | None = None) -> int:
             summary = {"bundle": data["bundle"], "blocked": data["blocked"],
                        "grades": {k: v["grade"] for k, v in data["grades"].items()}}
             code = EXIT_FOUND if data["bundle"] == "UNDETERMINED" or data["blocked"] else EXIT_OK
+        data["rules_files_check"] = rules_state
     except (InputError, OSError, ValueError, KeyError) as exc:
         print(json.dumps({"status": "input_error", "error": f"{type(exc).__name__}: {exc}"[:500]}))
         return EXIT_INPUT

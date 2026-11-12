@@ -313,33 +313,97 @@ def test_p_a_geometry_sign_and_clearance_lift(geo) -> None:
     assert preds["P-B"][0] is None  # constants NA
 
 
-def test_p_d_power_term_and_nonpositive_peak(geo) -> None:
-    assert bm.power_term(1.0e5, 1.0e4) == pytest.approx(1.1e5 ** 5 - 1.0e5 ** 5)
-    assert bm.power_term(1.0e5, -5.0) == 0.0
-    assert bm.power_term(0.0, 1.0e4) is None
+def test_p_d_power_term_end_load_max(geo) -> None:
+    """Rev1 R1-2: ``max(E_hat, F_pk)^5 - F_pk^5``; zero at or below the past peak."""
+    assert bm.power_term(1.0e5, 1.1e5) == pytest.approx(1.1e5 ** 5 - 1.0e5 ** 5)
+    assert bm.power_term(1.0e5, 0.9e5) == 0.0
+    assert bm.power_term(1.0e5, 1.0e5) == 0.0
+    assert bm.power_term(None, 1.0e4) is None
+
+
+def test_r1_1_redistribution_sums_to_zero(geo) -> None:
+    static = geo.static_loads_N["top"]
+    load = static * 1.037 + np.array([500.0, -200.0, 100.0, -400.0])
+    out = bm.redistribution(load, static)
+    assert sum(out["W_hat"]) == pytest.approx(0.0, abs=1e-6)
+    ratio = static / static.sum()
+    assert out["E_hat"] == pytest.approx((ratio * load.sum()).tolist())
+    assert out["load_sum_over_static"] == pytest.approx(load.sum() / static.sum())
+    common = bm.redistribution(static * 1.05, static)  # a common factor is removed
+    assert max(abs(v) for v in common["W_hat"]) < 1e-6
+
+
+W_SET = np.array([3000.0, -1000.0, 1500.0, -3500.0])
+"""Target W_hat per leg (sums to 0): FL fits at 0.6 / 1 / 2 kN, RL at 0.6 / 1 kN only."""
 
 
 def _harness_runs(geo, kappas) -> dict:
+    static = geo.static_loads_N["bottom"]
+    ratio = static / static.sum()
     runs = {}
     for k, scale in enumerate(kappas):
         rec = make_record(level="bottom", sink_step=1e-4 * scale, run_id=f"H-P|C{k + 1}|VB|e0")
-        rec.load[:] = geo.static_loads_N["bottom"] - 10_000.0
+        rec.load[:] = ratio * static.sum() - W_SET  # constant loads: F_pk = F(n_L)
         runs[rec.run_id] = bm.HarnessRun({"run_id": rec.run_id}, rec)
     return runs
 
 
-def test_c2_constants_kappa_c_type_and_ratio_flag(geo) -> None:
+def test_r1_3_constants_fit_sets_values_and_ratio(geo) -> None:
     runs = _harness_runs(geo, [1.0, 1.4])
     constants = bm.harness_constants(runs, geo)
     dz = (30 - 10) * 1e-4 * 1.4  # per-leg window end = t_R (flat legs) for the scaled run
-    assert constants["kappa_z_m_per_N"][bm.REAR] == pytest.approx(dz / 10_000.0)
+    assert constants["kappa_z_m_per_N"][bm.FRONT] == pytest.approx(dz / 3000.0, rel=1e-9)
+    assert constants["kappa_z_m_per_N"][bm.REAR] == pytest.approx(dz / 1500.0, rel=1e-9)
+    fit = constants["fit"]
+    assert fit[bm.FRONT]["kappa_fit"] == 2 and fit[bm.FRONT]["kappa_excluded"] == 2
+    assert fit[bm.REAR]["kappa_argmax"] == "H-P|C2|VB|e0|RL"
+    static = geo.static_loads_N["bottom"]
+    e_fl = static[0] / static.sum() * float(np.sum(runs["H-P|C2|VB|e0"].record.load[10]))
+    f_fl = float(runs["H-P|C2|VB|e0"].record.load[10, 0])
+    assert constants["C_type"][bm.FRONT] == pytest.approx(dz / (e_fl ** 5 - f_fl ** 5), rel=1e-6)
+    assert constants["kappa_ratio"][bm.REAR]["ratio"] == pytest.approx(1.4)
     assert constants["kappa_ratio"][bm.REAR]["kappa_nonlinear"] is False
+    sens = constants["sensitivity"]
+    assert sens["2000"]["kappa_z_m_per_N"][bm.REAR] == bm.NA  # RL 1.5 kN < 2 kN
+    assert sens["2000"]["fit"][bm.FRONT]["kappa_fit"] == 2
+    assert sens["600"]["fit"][bm.REAR]["kappa_fit"] == 2
     runs = _harness_runs(geo, [1.0, 1.6])
     assert bm.harness_constants(runs, geo)["kappa_ratio"][bm.REAR]["kappa_nonlinear"] is True
-    # RR carries the smaller static load, so its power term is smaller and its C the largest
-    term = bm.power_term(geo.static_loads_N["bottom"][3] - 10_000.0, 10_000.0)
-    assert bm.harness_constants(runs, geo)["C_type"][bm.REAR] == pytest.approx(
-        (30 - 10) * 1e-4 * 1.6 / term)
+
+
+@pytest.mark.parametrize(("w_hat", "is_fitted"), [(1000.0 - 0.5e-6, True), (1000.0 - 2e-6, False),
+                                                  (1000.0, True)])
+def test_t15_fit_floor(w_hat, is_fitted) -> None:
+    leg = {"run_id": "H-P|C1|VB|e0", "leg": "FL", "pad": bm.FRONT, "dz": 0.001,
+           "W_hat": w_hat, "E_hat": 90_000.0 + w_hat, "F_pk": 90_000.0}
+    result = bm.fit_constants([leg], bm.W_FIT_N)
+    assert (result["fit"][bm.FRONT]["kappa_fit"] == 1) is is_fitted
+    assert (result["fit"][bm.FRONT]["c_fit"] == 1) is is_fitted
+
+
+def test_kappa_ratio_inf_when_a_run_value_is_not_positive() -> None:
+    record = bm._ratio_record([("a", "FL", 1e-6), ("b", "FL", 0.0)])
+    assert record["ratio"] == "inf" and record["kappa_nonlinear"] is True
+
+
+def test_r1_4_record_flags(geo) -> None:
+    rec = make_record(level="bottom")
+    rec.load[:] = geo.static_loads_N["bottom"] * 1.2  # load sum ratio 1.2 outside [1.00, 1.08]
+    metrics = bm.run_metrics(rec, geo, None)
+    record = bm.redistribution_record(rec, metrics, is_unit_mass=True)
+    assert record["load_sum_over_static"] == pytest.approx(1.2)
+    assert record["flags"] == ["재분배 가정 이탈"]
+    assert "leg not extending at n_L" in record["reasons"]  # flat legs: rate 0
+    assert bm.redistribution_record(rec, metrics, is_unit_mass=False)["reasons"] == [
+        "leg not extending at n_L"]
+
+
+def test_rules_files_checked_beside_the_tool(tmp_path) -> None:
+    assert bm.check_rules_files(HERE) == {bm.RULES_FILE: "match", bm.RULES_REV1_FILE: "match"}
+    (tmp_path / bm.RULES_REV1_FILE).write_text("other text\n", encoding="utf-8")
+    with pytest.raises(bm.InputError):
+        bm.check_rules_files(tmp_path)
+    assert bm.check_rules_files(tmp_path / "none")[bm.RULES_FILE] == "absent"
 
 
 def test_e2_constants_na_without_loc(geo) -> None:
@@ -347,7 +411,7 @@ def test_e2_constants_na_without_loc(geo) -> None:
     rec.events = []
     constants = bm.harness_constants({rec.run_id: bm.HarnessRun({}, rec)}, geo)
     assert constants["kappa_z_m_per_N"][bm.FRONT] == bm.NA
-    assert constants["excluded"]["no_loc_runs"] == [rec.run_id]
+    assert constants["no_loc_runs"] == [rec.run_id]
     clean = bm.constants_for_prediction(constants)
     assert clean["kappa_z_m_per_N"][bm.FRONT] is None
 
@@ -491,7 +555,8 @@ def _p_g_inputs(geo, *, pitch=0.01, roll=0.0, corners=(0.03, 0.04, 0.05, 0.06), 
     ds = geo.pad_xy_m[:, 0] * pitch - geo.pad_xy_m[:, 1] * roll
     return {"s_L": [0.40] * 4, "ds_geo": ds.tolist(), "c_hat_L_m": min(corners),
             "c_hat_corner_L_m": list(corners), "rho": rho.tolist(),
-            "m_L": {"m_L_m": m_l}, "W_hat": [10_000.0] * 4, "F_pk": [80_000.0] * 4}
+            "m_L": {"m_L_m": m_l}, "W_hat": [10_000.0] * 4, "E_hat": [90_000.0] * 4,
+            "F_pk": [80_000.0] * 4}
 
 
 def test_p_g_formula(geo) -> None:
@@ -499,8 +564,8 @@ def test_p_g_formula(geo) -> None:
                  "C_type": {bm.FRONT: 1e-27, bm.REAR: 2e-27}, "delta_allow_m": 0.004}
     inputs = _p_g_inputs(geo)
     preds, terms = bm.predictions(inputs, constants, geo)
-    dz_hat = [constants["C_type"][bm.PAD_TYPE[i]] * bm.power_term(80_000.0, 10_000.0)
-              for i in range(4)]
+    dz_hat = [constants["C_type"][bm.PAD_TYPE[i]] * (90_000.0 ** 5 - 80_000.0 ** 5)
+              for i in range(4)]  # rev1 R1-2: max(E_hat, F_pk)^5 - F_pk^5
     z_hat = bm.plane_corner_values(geo.pad_xy_m, dz_hat, geo.crawler_corners_xy_m)
     total = np.array(inputs["c_hat_corner_L_m"]) + np.array(inputs["rho"]) + z_hat
     lift = max(0.05 + 0.03 - total.min(), 0.0)
