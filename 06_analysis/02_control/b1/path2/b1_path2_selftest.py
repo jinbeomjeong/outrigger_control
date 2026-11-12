@@ -278,6 +278,17 @@ def m12_and_safety_checks(prm: dict) -> None:
     check("T-9 crawler re-touch at 0.01 W", out["crawler_retouch"] is True)
 
 
+def harness_shadow_checks() -> None:
+    km = dict(p2.DEFAULT_KEYMAP)
+    line = {"loc_shadow": {"locs": [{"path": "1", "t_P_s": 39.0, "t_L_s": 40.0, "c_min_tP_mm": 25.0,
+                                     "c_hat_tL_current_mm": 12.5, "c_hat_tL_shadow_mm": 10.0,
+                                     "short_window": False}]}}
+    locs = p2.harness_shadow_locs(line, km)
+    check("harness M-12 from shadow record", locs is not None and locs[0]["n_P"] == 390 and locs[0]["n_L"] == 400
+          and close(locs[0]["d"], 0.0025, 1e-12) and close(locs[0]["c_min_tP"], 0.025, 1e-12))
+    check("harness M-12 absent -> None", p2.harness_shadow_locs({}, km) is None)
+
+
 def yaml_text_checks(repo: Path, prm: dict) -> None:
     text = (repo / "02_params" / "rexome33.yaml").read_text(encoding="utf-8")
     check("YAML FL pad xy (text)", "pad_bottom_center_retracted_m: [2.2938, 1.3238," in text
@@ -459,6 +470,7 @@ def main() -> int:
     unit_checks(prm)
     yaml_text_checks(repo, prm)
     m12_and_safety_checks(prm)
+    harness_shadow_checks()
     e2e_checks(repo, work, prm)
     variant_checks(repo, work, prm)
     failed = [(n, i) for n, ok, i in CHECKS if not ok]

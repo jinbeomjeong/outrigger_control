@@ -33,7 +33,7 @@ from typing import Any
 import numpy as np
 
 RULES_SHA256 = "6b99702ce26d6da28fbfe6473b622c7e51419241916cbc101f795828f498774e"
-TOOL_VERSION = "1.0"
+TOOL_VERSION = "1.1"
 
 LEGS = ("FL", "FR", "RL", "RR")
 FRONT = ("FL", "FR")
@@ -154,6 +154,14 @@ DEFAULT_KEYMAP: dict[str, Any] = {
     "h_events": "events",
     "h_t_first_ready": "t_first_ready_s",
     "h_level": "b1.level",
+    "h_shadow_locs": "loc_shadow.locs",
+    "hs_path": "path",
+    "hs_t_P": "t_P_s",
+    "hs_t_L": "t_L_s",
+    "hs_c_min_tP_mm": "c_min_tP_mm",
+    "hs_now_mm": "c_hat_tL_current_mm",
+    "hs_shadow_mm": "c_hat_tL_shadow_mm",
+    "hs_short": "short_window",
     "hn_t": "t",
     "hn_stroke": "stroke",
     "hn_sink": "pad_sinkage_m",
@@ -941,6 +949,28 @@ def harness_lines(path: Path | None, km: dict) -> list[dict]:
     return out
 
 
+def harness_shadow_locs(line: dict, km: dict) -> list[dict] | None:
+    """M-12 harness records from the shadow record of the line (7.5): per LOC path, periods, c_hat now / plan A."""
+    locs = jget(line, km["h_shadow_locs"])
+    if not isinstance(locs, list):
+        return None
+    out = []
+    for j, loc in enumerate(locs):
+        if not isinstance(loc, dict):
+            continue
+        now_mm, a_mm = fnum(loc.get(km["hs_now_mm"])), fnum(loc.get(km["hs_shadow_mm"]))
+        t_p, t_l = fnum(loc.get(km["hs_t_P"])), fnum(loc.get(km["hs_t_L"]))
+        out.append({"loc": j, "path": (None if loc.get(km["hs_path"]) is None else str(loc.get(km["hs_path"]))),
+                    "n_P": (None if t_p is None else cyc(t_p)), "n_L": (None if t_l is None else cyc(t_l)),
+                    "c_min_tP": (None if fnum(loc.get(km["hs_c_min_tP_mm"])) is None
+                                 else fnum(loc.get(km["hs_c_min_tP_mm"])) / 1000.0),
+                    "c_hat_now": (None if now_mm is None else now_mm / 1000.0),
+                    "c_hat_A": (None if a_mm is None else a_mm / 1000.0),
+                    "d": (None if now_mm is None or a_mm is None else (now_mm - a_mm) / 1000.0),
+                    "short_window": loc.get(km["hs_short"])})
+    return out
+
+
 def harness_valid(line: dict, km: dict, base: Path) -> tuple[RunSeries | None, str | None]:
     """Q-6 (a): no error, tag equals 1.1, npz sha equals the line value (no end-time condition)."""
     if jget(line, km["h_error"]):
@@ -1366,8 +1396,16 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     grades = grade_all(rows, hrs, consts, prm, km, bundle, p7) if bundle != "UNDETERMINED" else {}
     safety_notes = {r: rows[r]["m"]["safety"] for r in rows if rows[r]["status"] == "VALID"
                     and rows[r]["m"]["safety"]["note"]}
+    harness_m12 = {}
+    if shadow_ok:
+        for k, ln in enumerate(lines):
+            if k in h_ok and bool(jget(ln, km["h_shadow"])):
+                harness_m12[k] = {"group": jget(ln, km["h_group"]), "row": jget(ln, km["h_row"]),
+                                  "variant": jget(ln, km["h_variant"]), "e": jget(ln, km["h_e"]),
+                                  "locs": harness_shadow_locs(ln, km)}
     return {"tool": "b1_path2", "version": TOOL_VERSION, "rules_sha256": RULES_SHA256, "bundle": bundle,
             "rows": rows, "harness_invalid": h_bad, "shadow_hash_ok": shadow_ok, "constants": consts,
+            "harness_m12": harness_m12,
             "grades": grades, "safety_notes": safety_notes, "keymap": km}
 
 
