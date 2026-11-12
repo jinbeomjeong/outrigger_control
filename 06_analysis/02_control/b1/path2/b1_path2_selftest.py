@@ -33,8 +33,8 @@ def close(a, b, tol=1e-12) -> bool:
 
 BASE = {
     "s_peak": 0.47, "n_peak": 700, "n_loc": 400, "n_ready": 800, "z_rate": 0.0002, "phi": 0.0, "theta": 0.01,
-    "c_hat": 0.07, "margin_mm": 80, "c_target": 0.08, "loads": {"FL": 108099.1, "FR": 106106.0, "RL": 62096.68,
-                                                                "RR": 60281.81},
+    "c_hat": 0.07, "margin_mm": 80, "c_target": 0.08, "loads": {"FL": 105000.0, "FR": 112000.0, "RL": 65000.0,
+                                                                "RR": 66000.0},
     "duration": 160.0, "events_extra": [], "tag": p2.CTRL_TAG_VB, "nh_scale": 1.0, "rc": 0, "sgs": False,
 }
 
@@ -214,8 +214,8 @@ def unit_checks(prm: dict) -> None:
     got = p2.plane_fit_at(pts, vals, [(1.8, 1.3), (-1.8, -1.3)])
     check("plane fit exact", close(got[0], 0.01 + 0.002 * 1.3 - 0.003 * 1.8, 1e-12)
           and close(got[1], 0.01 - 0.002 * 1.3 + 0.003 * 1.8, 1e-12))
-    check("P-D increment", close(p2.pd_increment(2e-27, 1e5, 1e4), 2e-27 * (1.1e5 ** 5 - 1e5 ** 5), 1e-15))
-    check("P-D negative W uses 0", close(p2.pd_increment(2e-27, 1e5, -5e3), 0.0, 1e-18))
+    check("P-D increment rev1 (E above F_pk)", close(p2.pd_increment(2e-27, 1e5, 1.1e5), 2e-27 * (1.1e5 ** 5 - 1e5 ** 5), 1e-15))
+    check("P-D E below F_pk gives 0", close(p2.pd_increment(2e-27, 1e5, 9.5e4), 0.0, 1e-18))
     rs = p2.RunSeries()
     rs.events = [(39.0, "INFO_LOC_FLAT_SOIL_MARGIN:80"), (40.0, "INFO_LOC_CLEARANCE_MARGIN:50"),
                  (41.0, "INFO_LOC_CLEARANCE_MARGIN:90")]
@@ -278,6 +278,35 @@ def m12_and_safety_checks(prm: dict) -> None:
     check("T-9 crawler re-touch at 0.01 W", out["crawler_retouch"] is True)
 
 
+def fit_boundary_checks(prm: dict) -> None:
+    """rev1 T-15 inclusion at W_fit within 1e-6 N and kappa ratio 'inf' when a run maximum is <= 0."""
+    def run(w_fl: float, dz_fl: float, ident: int) -> tuple[dict, None, dict]:
+        li = {"W_hat": {"FL": w_fl, "FR": -10.0, "RL": -10.0, "RR": -10.0},
+              "E_hat": {"FL": 2e5, "FR": 1.0, "RL": 1.0, "RR": 1.0},
+              "F_pk": {"FL": 2e5 - w_fl, "FR": 2.0, "RL": 2.0, "RR": 2.0}}
+        m = {"loc_inputs": li, "dz_post_leg": {"FL": dz_fl, "FR": 0.0, "RL": 0.0, "RR": 0.0},
+             "dos": None, "b_star": "FL"}
+        return {"_id": ident}, None, m
+    km = p2.DEFAULT_KEYMAP
+    c = p2._fit_constants([run(1000.0 - 0.5e-6, 0.004, 0), run(1000.0 - 2e-6, 0.004, 1)], prm, km, 1000.0)
+    check("T-15 inclusion boundary", c["kappa_fit_legs"]["front"] == 1 and c["C_type_fit_legs"]["front"] == 1,
+          json.dumps({k: c[k] for k in ("kappa_fit_legs", "C_type_fit_legs")}))
+    c2 = p2._fit_constants([run(1500.0, 0.004, 0), run(1500.0, -0.001, 1)], prm, km, 1000.0)
+    check("kappa ratio inf when a run max <= 0", c2["kappa_ratio"]["front"] == "inf"
+          and c2["kappa_nonlinear"]["front"] is True)
+
+
+def harness_shadow_checks() -> None:
+    km = dict(p2.DEFAULT_KEYMAP)
+    line = {"loc_shadow": {"locs": [{"path": "1", "t_P_s": 39.0, "t_L_s": 40.0, "c_min_tP_mm": 25.0,
+                                     "c_hat_tL_current_mm": 12.5, "c_hat_tL_shadow_mm": 10.0,
+                                     "short_window": False}]}}
+    locs = p2.harness_shadow_locs(line, km)
+    check("harness M-12 from shadow record", locs is not None and locs[0]["n_P"] == 390 and locs[0]["n_L"] == 400
+          and close(locs[0]["d"], 0.0025, 1e-12) and close(locs[0]["c_min_tP"], 0.025, 1e-12))
+    check("harness M-12 absent -> None", p2.harness_shadow_locs({}, km) is None)
+
+
 def yaml_text_checks(repo: Path, prm: dict) -> None:
     text = (repo / "02_params" / "rexome33.yaml").read_text(encoding="utf-8")
     check("YAML FL pad xy (text)", "pad_bottom_center_retracted_m: [2.2938, 1.3238," in text
@@ -324,19 +353,36 @@ def e2e_checks(repo: Path, work: Path, prm: dict) -> None:
     e = r1["pred"]["e"]
     check("P-A error", close(e["P-A"], ea, 1e-9), f"{e['P-A']} vs {ea}")
     c = out["constants"]
-    check("kappa front/rear", close(c["kappa"]["front"], 0.006 / 1e4, 1e-12) and close(c["kappa"]["rear"],
-                                                                                     0.006 / 1e4, 1e-12))
+    loads, static = BASE["loads"], prm["static"]["bottom"]
+    ws, fs = sum(static.values()), sum(loads.values())
+    e_hat = {leg: static[leg] / ws * fs for leg in p2.LEGS}
+    w_hat = {leg: e_hat[leg] - loads[leg] for leg in p2.LEGS}
+    check("rev1 W_hat redistribution", close(r1["R1_4"]["W_hat"]["FL"], w_hat["FL"], 1e-6)
+          and abs(sum(r1["R1_4"]["W_hat"].values())) < 1e-6, json.dumps(r1["R1_4"]["W_hat"]))
+    fit = {t: [leg for leg in p2.LEGS if prm["pad"][leg]["type"] == t and w_hat[leg] - 1000.0 >= -1e-6]
+           for t in ("front", "rear")}
+    kap = {t: max(0.006 / w_hat[leg] for leg in fit[t]) for t in fit}
+    check("kappa fit set W_fit 1 kN", close(c["kappa"]["front"], kap["front"], 1e-15) and close(c["kappa"]["rear"],
+                                                                                         kap["rear"], 1e-15)
+          and c["kappa_fit_legs"] == {"front": 20, "rear": 20} and c["kappa_excluded_legs"] == {"front": 20, "rear": 20},
+          json.dumps({k: c[k] for k in ("kappa", "kappa_fit_legs", "kappa_excluded_legs")}))
     check("delta_allow", close(c["delta_allow"], 1e-3, 1e-12))
     check("kappa ratio 1", close(c["kappa_ratio"]["front"], 1.0, 1e-12))
-    check("P-B error", close(e["P-B"], ea - 0.006, 1e-9))
-    check("P-C error", close(e["P-C"], ea - 0.006 - 1e-3, 1e-9))
-    loads, static = BASE["loads"], prm["static"]["bottom"]
-    den = {leg: static[leg] ** 5 - loads[leg] ** 5 for leg in p2.LEGS}
-    c_t = {"front": 0.006 / min(den["FL"], den["FR"]), "rear": 0.006 / min(den["RL"], den["RR"])}
+    sens = c["sensitivity"]
+    fit2 = [leg for leg in p2.LEGS if w_hat[leg] - 2000.0 >= -1e-6 and prm["pad"][leg]["type"] == "rear"]
+    check("W_fit sensitivity 600 / 2000 N", set(sens) == {"600", "2000"}
+          and (sens["2000"]["kappa"]["rear"] is None) == (not fit2))
+    check("P-B error", close(e["P-B"], ea - kap["front"] * max(w_hat["FL"], 0.0), 1e-9))
+    check("P-C error", close(e["P-C"], ea - kap["front"] * max(w_hat["FL"], 0.0) - 1e-3, 1e-9))
+    den = {leg: max(e_hat[leg], loads[leg]) ** 5 - loads[leg] ** 5 for leg in p2.LEGS}
+    c_t = {t: max(0.006 / (e_hat[leg] ** 5 - loads[leg] ** 5) for leg in fit[t]) for t in fit}
     dzh = {leg: c_t[prm["pad"][leg]["type"]] * den[leg] for leg in p2.LEGS}
-    check("C_type max per pad type", close(c["C_type"]["front"], c_t["front"], 1e-30)
+    check("C_type fit set (E - F_pk >= W_fit)", close(c["C_type"]["front"], c_t["front"], 1e-30)
           and close(c["C_type"]["rear"], c_t["rear"], 1e-30))
+    check("P-D zero when E <= F_pk", close(dzh["FR"], 0.0, 1e-18))
     check("P-D error", close(e["P-D"], ea - dzh["FL"], 1e-9), f"{e['P-D']} vs {ea - dzh['FL']}")
+    check("R1-4 record flags sum ratio", r1["R1_4"]["redistribution_assumption_off"] is True
+          and close(r1["R1_4"]["sum_ratio"], fs / ws, 1e-12))
     xy = [tuple(prm["pad"][leg]["xy"]) for leg in p2.LEGS]
     amat = np.array([[1.0, yy, -xx] for xx, yy in xy])
     coef = np.linalg.lstsq(amat, np.array([dzh[leg] for leg in p2.LEGS]), rcond=None)[0]
@@ -459,6 +505,8 @@ def main() -> int:
     unit_checks(prm)
     yaml_text_checks(repo, prm)
     m12_and_safety_checks(prm)
+    harness_shadow_checks()
+    fit_boundary_checks(prm)
     e2e_checks(repo, work, prm)
     variant_checks(repo, work, prm)
     failed = [(n, i) for n, ok, i in CHECKS if not ok]
