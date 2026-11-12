@@ -1,0 +1,15 @@
+# batch V5-B1-CREEP 6 cases, parallel P 4 / E 0, order given (explicit list first), started 2026-11-12T12:51:34
+# queue pcore: B1_J2_B_bottom_Fs4_VB_fdown B1_J2_B_middle_Fs4_VB_fdown B1_J2_B_bottom_Fs4_VB_diag B1_J2_B_top_Fs4_VB_fup B1_J2_B_bottom_Fs4_m1p1_VB_fdown B1_J2_B_top_Fs4_VB_fdown
+START B1_J2_B_bottom_Fs4_VB_fdown 2026-11-12T12:51:34 pid=37040 est_s=8500.0 pool=pcore OMP_WAIT_POLICY=PASSIVE hull_hook=fast
+START B1_J2_B_middle_Fs4_VB_fdown 2026-11-12T12:51:34 pid=104096 est_s=8500.0 pool=pcore OMP_WAIT_POLICY=PASSIVE hull_hook=fast
+START B1_J2_B_bottom_Fs4_VB_diag 2026-11-12T12:51:35 pid=73672 est_s=8500.0 pool=pcore OMP_WAIT_POLICY=PASSIVE hull_hook=fast
+START B1_J2_B_top_Fs4_VB_fup 2026-11-12T12:51:35 pid=22404 est_s=8500.0 pool=pcore OMP_WAIT_POLICY=PASSIVE hull_hook=fast
+END B1_J2_B_bottom_Fs4_VB_diag 2026-11-12T15:10:50 rc=0 wall_s=8356
+START B1_J2_B_bottom_Fs4_m1p1_VB_fdown 2026-11-12T15:10:51 pid=143228 est_s=9700.0 pool=pcore OMP_WAIT_POLICY=PASSIVE hull_hook=fast
+END B1_J2_B_bottom_Fs4_VB_fdown 2026-11-12T15:12:13 rc=0 wall_s=8438
+START B1_J2_B_top_Fs4_VB_fdown 2026-11-12T15:12:13 pid=25068 est_s=8500.0 pool=pcore OMP_WAIT_POLICY=PASSIVE hull_hook=fast
+END B1_J2_B_middle_Fs4_VB_fdown 2026-11-12T15:17:47 rc=0 wall_s=8772
+END B1_J2_B_top_Fs4_VB_fup 2026-11-12T15:19:53 rc=0 wall_s=8898
+END B1_J2_B_top_Fs4_VB_fdown 2026-11-12T17:03:02 rc=0 wall_s=6649
+END B1_J2_B_bottom_Fs4_m1p1_VB_fdown 2026-11-12T17:15:50 rc=0 wall_s=7499
+# batch V5-B1-CREEP finished 2026-11-12T17:15:50 failed=False

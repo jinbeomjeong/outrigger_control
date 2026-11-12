@@ -578,12 +578,25 @@ def _chrono_record(row_id: str, result: dict, record: dict, series: dict,
         t_ready_s=(p3b.get("P3-5_clearance_stroke") or {}).get("t_first_ready_s"),
         t_departure_s=(p3b.get("P3-2_loc") or {}).get("t_departure_s"),
         t_creep_s=(p3b.get("creep_stop") or {}).get("t_final_s"),
-        final_phase=str(result.get("final_phase")) if result.get("final_phase") else None,
+        final_phase=_chrono_final_phase(result),
         soil_meta={**(result.get("c2_soil") or {}), "settings": soil_settings},
         extra={"order_gate_decisions": len((margin_meta.get("order_gate") or {})
                                             .get("decisions") or [])})
     _attach_chrono_b1(rec, b1, result)
     return rec
+
+
+def _chrono_final_phase(result: dict) -> str | None:
+    """Last controller phase of a Chrono row (V-1 FAULT end): ``final_phase`` when present,
+    else the ``phase`` of the last ``phases`` entry (the level runner writes the phase changes
+    as ``[{"t_s", "phase"}, ...]`` and no ``final_phase`` key)."""
+    if result.get("final_phase"):
+        return str(result["final_phase"])
+    phases = result.get("phases")
+    if isinstance(phases, list) and phases and isinstance(phases[-1], dict):
+        phase = phases[-1].get("phase")
+        return None if phase is None else str(phase)
+    return None
 
 
 def _aligned(rec_n: np.ndarray, source_n: np.ndarray, values: np.ndarray) -> np.ndarray:
@@ -1672,7 +1685,7 @@ def grade_D_h(harness: dict[str, HarnessRun], p7_path: Path | None) -> dict:
     per_run = {}
     for run_id in hp:
         line = harness[run_id].line
-        key = f"{line['d1_key']}|{line['setting']}|e{float(line['eps']):g}"
+        key = line["d1_key"]  # already "<row key>|<setting>|e<eps>" (rules 1.1 P7_REF: d1.key)
         expected = reference.get(key)
         per_run[run_id] = ("K-NA" if expected is None else
                            "K-SAME" if expected == line["commands_sha256"] else "K-DIFF")

@@ -1,0 +1,88 @@
+{
+ "start": {
+  "time": "2026-11-12T11:25:56+09:00",
+  "root": "C:\\workspace\\outrigger_control",
+  "head": "7246c19a1aec6cfe9a6ba3b2f571a789fcf38912",
+  "status_porcelain": "",
+  "is_clean": true,
+  "code_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "c2_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
+  "c2_blob": "18c718767090cf68ce1d80d504ec2684af426fc1",
+  "tools_sha256": {
+   "b1_harness.py": "565b2317be385c3ece3203104d13ab3d4079652ca1fe4bf2fe548cb85765276d",
+   "b1_record.py": "9344e00f781bcb9765507bdd3577d91aa1363723e7b1c3acd6a90b9cd6ae8c4c"
+  },
+  "python_executable": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+  "python_version": "3.12.15 | packaged by conda-forge | (main, Oct 13 2026, 16:44:09) [MSC v.1944 64 bit (AMD64)]",
+  "argv": [
+   "04_scripts\\03_control\\b1\\b1_harness.py",
+   "--workers",
+   "8",
+   "--mask",
+   "0x00FF0000"
+  ],
+  "env": {
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3",
+   "MKL_NUM_THREADS": "1",
+   "MKL_THREADING_LAYER": "TBB",
+   "NUMBA_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "OUTRIGGER_LOC_SHADOW": "1"
+  },
+  "affinity_mask": "0xff0000",
+  "pid": 101900
+ },
+ "end": {
+  "time": "2026-11-12T11:30:17+09:00",
+  "root": "C:\\workspace\\outrigger_control",
+  "head": "7246c19a1aec6cfe9a6ba3b2f571a789fcf38912",
+  "status_porcelain": "",
+  "is_clean": true,
+  "code_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "c2_sha256": "f58ee42b0f10ea42ceac5768e6ed373a38ee5e14440d9fc831536700b45ba6b1",
+  "c2_blob": "18c718767090cf68ce1d80d504ec2684af426fc1",
+  "tools_sha256": {
+   "b1_harness.py": "565b2317be385c3ece3203104d13ab3d4079652ca1fe4bf2fe548cb85765276d",
+   "b1_record.py": "9344e00f781bcb9765507bdd3577d91aa1363723e7b1c3acd6a90b9cd6ae8c4c"
+  },
+  "python_executable": "C:\\ProgramData\\miniforge3\\envs\\dynamics-dev\\python.exe",
+  "python_version": "3.12.15 | packaged by conda-forge | (main, Oct 13 2026, 16:44:09) [MSC v.1944 64 bit (AMD64)]",
+  "argv": [
+   "04_scripts\\03_control\\b1\\b1_harness.py",
+   "--workers",
+   "8",
+   "--mask",
+   "0x00FF0000"
+  ],
+  "env": {
+   "CONDA_PREFIX": "C:\\ProgramData\\miniforge3",
+   "MKL_NUM_THREADS": "1",
+   "MKL_THREADING_LAYER": "TBB",
+   "NUMBA_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "OUTRIGGER_LOC_SHADOW": "1"
+  },
+  "affinity_mask": "0xff0000",
+  "pid": 101900
+ },
+ "argv": [
+  "04_scripts\\03_control\\b1\\b1_harness.py",
+  "--workers",
+  "8",
+  "--mask",
+  "0x00FF0000"
+ ],
+ "errors": 0,
+ "shadow_pairs": {
+  "pairs": {
+   "C1": "same",
+   "C2": "same",
+   "C4": "same",
+   "C5": "same"
+  },
+  "all_same": true
+ },
+ "exit": 0
+}
