@@ -61,13 +61,15 @@ def load(folder, engine, argv):
 
 
 def kind_of(case):
-    cid = str(case.get("criteria_id") or (case.get("r4368") or {}).get("criteria_id") or "")
+    """rev4 R4-A3: by row name (rules 5.3), not by criteria_id."""
     name = str(case.get("case") or "")
-    if cid == "C-6" or name.endswith("_prop"):
+    if "P3a_G1_B_VB_prop" in name:
         return "C-6"
-    if "_V0_" in name or name.endswith("V0_FB"):
+    if "P3a_G1_B_VB_FB" in name:
+        return "C-7a"
+    if "P3a_G1_B_V0_FB" in name:
         return "C-7b"
-    return "C-7a"
+    return "unknown"
 
 
 def speed_ratios(folder: Path, v_max: float) -> dict:
