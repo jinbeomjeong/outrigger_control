@@ -25,7 +25,10 @@ Inputs (the R-C1 names of rules 6 for both engines, periods aligned by ``n = rou
   ``pad_sinkage_geometric_m``, ``scm_pad_normal_N``, ``scm_crawler_normal_N``; 1 ms, looked up
   by ``searchsorted(t, n 0.1 - 1e-9)``) and :data:`CHRONO_B1_RECORD` (rules 6: R-C1
   :data:`CHRONO_RECORD_KEYS`, R-G1 :data:`CHRONO_GRID_KEYS`, R-G2 :data:`CHRONO_PAD_XY_KEYS`,
-  R-G4 :data:`CHRONO_IMU_KEYS`; R-G3 meta in ``result.json`` ``b1_grid_record.static``). The
+  R-G4 :data:`CHRONO_IMU_KEYS`; R-G3 meta in ``result.json`` ``b1_grid_record.static``).
+  Indexing: R-C1 arrays by ``n`` (every control period), ``computed`` / R-G1 / R-G2 by
+  ``n_cycle`` (length K, = ``n`` only in the full mode), R-G4 by ``imu_t_s``. The grid spacing
+  is ``static.grid_m``, else ``static.pads[i].grid_m``; neither is an input error. The
   R-G1 fields that ``result.json`` ``s9_rows[].pad_nodes`` also has must be equal there, else
   the row's grid record is invalid. A missing field gives NA for what needs it, never INVALID
   (a missing R-C1 makes the row's M-6 / D-d NA).
@@ -159,8 +162,10 @@ holds the initial yaw, so only differences are used)."""
 CHRONO_IMU_KEYS = ("imu_t_s", "imu_raw_roll_rad", "imu_raw_pitch_rad")
 """R-G4 ``imu_*`` (m,): sample time and raw tilt roll, pitch [rad], 100 Hz."""
 GRID_STATIC_KEY = "b1_grid_record"
-"""R-G3: ``result.json[GRID_STATIC_KEY]["static"]`` (pad grid Delta under ``pad_grid_m`` or
-``grid_m``; else ``meta.scm.grid_m``)."""
+"""R-G3: ``result.json[GRID_STATIC_KEY]["static"]``: pad grid Delta ``grid_m`` (scalar, null
+when the legs differ), else ``pads[i].grid_m``; neither = input error."""
+GRID_CYCLE_KEY = "n_cycle"
+"""Index of ``computed``, R-G1 and R-G2 (length K); R-C1 uses ``n`` (every period)."""
 C2_SOURCE = Path("03_src") / "outrigger_sim" / "control" / "c2.py"
 ANCHOR_HALF_WINDOW_MAX_S = 0.5
 """Rules 7.5 plan A: ``w = min(0.5 s, t_L - t_P)``."""
@@ -200,7 +205,8 @@ class GridRecord:
     hull_perimeter: np.ndarray
     z_geo: np.ndarray
     sigma_sum: np.ndarray
-    grid_m: float
+    grid_m: np.ndarray
+    """Pad grid Delta per leg (4,) [m] (R-G3)."""
 
 
 @dataclass
@@ -584,21 +590,22 @@ def _attach_chrono_b1(rec: RunRecord, b1: dict, result: dict) -> None:
         rec.c_hat = _aligned(rec.n, source_n, b1["c_hat_m"].astype(float))
         rec.c_hat_corner = _aligned(rec.n, source_n, b1["c_hat_corner_m"].astype(float))
         rec.c_target = _aligned(rec.n, source_n, b1["c_target_m"].astype(float))
-    if all(key in b1 for key in CHRONO_GRID_KEYS.values()):
+    grid_n = _grid_cycles(b1)
+    if grid_n is not None and all(key in b1 for key in CHRONO_GRID_KEYS.values()):
         mismatch = pad_nodes_mismatch(b1, result)
         rec.extra["pad_nodes_check"] = mismatch
         if mismatch["consistent"]:
             keys = CHRONO_GRID_KEYS
             computed = (np.asarray(b1[GRID_COMPUTED_KEY], dtype=bool) if GRID_COMPUTED_KEY in b1
-                        else np.ones(len(source_n), dtype=bool))
+                        else np.ones(len(grid_n), dtype=bool))
             rec.grid = GridRecord(
-                n=np.where(computed, source_n, -1), n_contact=b1[keys["n_contact"]].astype(float),
+                n=np.where(computed, grid_n, -1), n_contact=b1[keys["n_contact"]].astype(float),
                 hull_area=b1[keys["hull_area"]].astype(float),
                 hull_perimeter=b1[keys["hull_perimeter"]].astype(float),
                 z_geo=b1[keys["z_geo"]].astype(float),
-                sigma_sum=b1[keys["sigma_sum"]].astype(float), grid_m=_grid_spacing(result))
-    if all(key in b1 for key in CHRONO_PAD_XY_KEYS):
-        rec.pad_xy = {"n": source_n, "xy": b1["pad_bottom_centre_plane_xy_m"].astype(float),
+                sigma_sum=b1[keys["sigma_sum"]].astype(float), grid_m=grid_spacing(result))
+    if grid_n is not None and all(key in b1 for key in CHRONO_PAD_XY_KEYS):
+        rec.pad_xy = {"n": grid_n, "xy": b1["pad_bottom_centre_plane_xy_m"].astype(float),
                       "yaw": b1["pad_yaw_plane_rad"].astype(float)}
     if all(key in b1 for key in CHRONO_IMU_KEYS):
         rec.imu = {"t_s": b1["imu_t_s"].astype(float),
@@ -606,14 +613,27 @@ def _attach_chrono_b1(rec: RunRecord, b1: dict, result: dict) -> None:
                                             b1["imu_raw_pitch_rad"].astype(float)])}
 
 
-def _grid_spacing(result: dict) -> float:
-    """Pad grid Delta: R-G3 static meta, else ``meta.scm.grid_m`` (NaN when absent)."""
+def _grid_cycles(b1: dict) -> np.ndarray | None:
+    """Period index of the grid / pad arrays: ``n_cycle`` (length K; equal to ``n`` only in the
+    full mode). The R-C1 arrays are indexed by ``n`` (every control period)."""
+    return None if GRID_CYCLE_KEY not in b1 else np.asarray(b1[GRID_CYCLE_KEY], dtype=np.int64)
+
+
+def grid_spacing(result: dict) -> np.ndarray:
+    """Pad grid Delta per leg (4,): R-G3 ``static.grid_m`` (scalar), else ``static.pads[i]
+    .grid_m`` per leg.
+
+    Raises:
+        InputError: Neither is given (the grid factor needs Delta; no silent NaN).
+    """
     static = (result.get(GRID_STATIC_KEY) or {}).get("static") or {}
-    for value in (static.get("pad_grid_m"), static.get("grid_m"),
-                  ((result.get("meta") or {}).get("scm") or {}).get("grid_m")):
-        if _finite(value):
-            return float(value)
-    return math.nan
+    if _finite(static.get("grid_m")):
+        return np.full(4, float(static["grid_m"]))
+    pads = static.get("pads") or []
+    values = [(pad or {}).get("grid_m") for pad in pads[:4]] if len(pads) >= 4 else []
+    if len(values) == 4 and all(_finite(v) for v in values):
+        return np.asarray(values, dtype=float)
+    raise InputError(f"{GRID_STATIC_KEY}.static has no grid_m (scalar or per pad)")
 
 
 def _same_value(a, b) -> bool:
@@ -628,9 +648,10 @@ def _same_value(a, b) -> bool:
 def pad_nodes_mismatch(b1: dict, result: dict) -> dict:
     """Rules 6: every R-G1 field also in ``s9_rows[].pad_nodes`` must be equal at the same
     period (the row's grid record is invalid otherwise)."""
+    cycles = np.asarray(b1[GRID_CYCLE_KEY], dtype=np.int64)
     computed = (np.asarray(b1[GRID_COMPUTED_KEY], dtype=bool) if GRID_COMPUTED_KEY in b1
-                else np.ones(len(b1["n"]), dtype=bool))
-    lookup = {int(v): i for i, v in enumerate(b1["n"].astype(np.int64)) if computed[i]}
+                else np.ones(len(cycles), dtype=bool))
+    lookup = {int(v): i for i, v in enumerate(cycles) if computed[i]}
     compared, differences = 0, []
     for row in result.get("s9_rows") or []:
         nodes = row.get("pad_nodes")
@@ -1004,7 +1025,7 @@ def grid_point(rec: RunRecord, geo: Geometry, leg: int, n: int | None) -> dict:
         return {"state": "no_record"}
     k = int(hits[0])
     n_h = float(grid.n_contact[k, leg])
-    area, delta = float(geo.pad_area_m2[leg]), float(grid.grid_m)
+    area, delta = float(geo.pad_area_m2[leg]), float(grid.grid_m[leg])
     hull_a, hull_p = float(grid.hull_area[k, leg]), float(grid.hull_perimeter[k, leg])
     z_geo, sigma = float(grid.z_geo[k, leg]), float(grid.sigma_sum[k, leg])
     out = {"n": int(n), "N_h": n_h, "N_h_d2_over_A": n_h * delta * delta / area}
@@ -1030,7 +1051,7 @@ def grid_metrics(rec: RunRecord, metrics: dict, geo: Geometry) -> dict:
             "max": metrics["M-1"]["n_max"], "e": metrics["M-4"]["n_e"],
             "end": metrics["M-1"]["n_end"]}
     rows = Rows(rec.n)
-    delta = rec.grid.grid_m if rec.grid is not None else math.nan
+    delta = rec.grid.grid_m if rec.grid is not None else np.full(4, np.nan)
     points: dict = {}
     for name, n in tm_n.items():
         z = _z(rows, rec, n)
@@ -1040,11 +1061,12 @@ def grid_metrics(rec: RunRecord, metrics: dict, geo: Geometry) -> dict:
             if z is not None and point.get("state") == "valid":
                 point["z_over_f"] = float(z[i]) / point["f"]
                 point["delta_grid"] = float(z[i]) * (1.0 - 1.0 / point["f"])
-            if z is not None and math.isfinite(delta):
-                point["dz_1n"] = float(z[i]) * delta * delta / (geo.n_soil * geo.pad_area_m2[i])
+            if z is not None and math.isfinite(delta[i]):
+                point["dz_1n"] = (float(z[i]) * delta[i] * delta[i]
+                                  / (geo.n_soil * geo.pad_area_m2[i]))
             leg_points.append(point)
         points[name] = leg_points
-    return {"grid_m": _num(delta), "points": points,
+    return {"grid_m": _legs(delta), "points": points,
             "dz_post_corr": [_corr_increment(rows, rec, points, i, tm_n) for i in range(4)],
             "z_e_df_eL": [_df_record(rows, rec, points, i, tm_n["e"], "e") for i in range(4)],
             "z_max_df_maxL": [_df_record(rows, rec, points, i, tm_n["max"], "max")

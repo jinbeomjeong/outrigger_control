@@ -71,7 +71,7 @@ def grid_for(rec: bm.RunRecord, geo: bm.Geometry, n_contact: float, *, periods=N
     sigma = law / (1.0 - residual / geo.n_soil) if residual else law
     return bm.GridRecord(n=periods, n_contact=np.full((k, 4), float(n_contact)),
                          hull_area=area, hull_perimeter=perimeter, z_geo=z, sigma_sum=sigma,
-                         grid_m=delta)
+                         grid_m=np.full(4, delta))
 
 
 # ------------------------------------------------------------------------- 4.4 threshold forms
@@ -626,7 +626,8 @@ def _chrono_case(batch: Path, row_id: str, geo: bm.Geometry) -> None:
         "args": {"expect_controller": bm.CTRL_TAG_VB,
                  "mass_scale": bm.C6_MASS_SCALE if row_id == "C6" else 1.0},
         "c2_setup": {"expect_controller": {"name": bm.CTRL_TAG_VB, "ok": True}},
-        "num_threads_chrono": 4, "meta": {"scm": {"grid_m": 0.01}},
+        "num_threads_chrono": 4,
+        "b1_grid_record": {"file": bm.CHRONO_B1_RECORD, "static": {"grid_m": 0.01}},
         "hull_hook": {"mode": "fast", "requested": "fast", "dll_sha256": bm.HULL_DLL_SHA},
         "c2_soil": {"W_ref_N": geo.superstructure_mass_kg[row.level] * 9.80665,
                     "t_P_s": 29.0, "clearance_at_P_m": 0.0, "settle_attitude_rad": [0.0, 0.0],
@@ -789,6 +790,45 @@ def test_e2e_not_computed_period_has_no_grid_record(e2e) -> None:
     _, data = _judge(e2e)
     assert data["rows"]["C1"]["grid"]["points"]["max"][0]["state"] == "no_record"
     assert data["rows"]["C1"]["pad_nodes_check"]["consistent"] is True
+
+
+def test_e2e_window_mode_grid_indexed_by_n_cycle(e2e) -> None:
+    """K != kc: R-C1 on every period ``n``, grid / pad arrays only on ``n_cycle``."""
+    path = e2e["batch"] / bm.CHRONO_ROWS["C1"].case / bm.CHRONO_B1_RECORD
+    with np.load(path, allow_pickle=False) as data:
+        arrays = {key: data[key] for key in data.files}
+    keep = np.r_[0:10, 290:320, 795:806, 1595:1600]  # windows around LOC, t_max, the end
+    grid_keys = ["computed", "n_cycle", "pad_bottom_centre_plane_xy_m", "pad_yaw_plane_rad",
+                 *bm.CHRONO_GRID_KEYS.values(), "n_sigma_negative", "sinkage_mean_contact_m"]
+    for key in grid_keys:
+        arrays[key] = arrays[key][keep]
+    np.savez(path, **arrays)
+    code, data = _judge(e2e)
+    assert code == bm.EXIT_OK
+    row = data["rows"]["C1"]
+    assert row["pad_nodes_check"]["consistent"] is True
+    assert row["grid"]["points"]["max"][0]["state"] == "valid"  # n_max 800 in a window
+    assert row["grid"]["points"]["R"][0]["state"] == "no_record"  # n_R 1000 outside
+    assert row["metrics"]["predictor_inputs"]["c_hat_L_m"] == pytest.approx(0.06)  # R-C1 on n
+
+
+def _set_static(e2e, static: dict) -> None:
+    path = e2e["batch"] / bm.CHRONO_ROWS["C1"].case / "result.json"
+    result = json.loads(path.read_text(encoding="utf-8"))
+    result["b1_grid_record"]["static"] = static
+    path.write_text(json.dumps(result), encoding="utf-8")
+
+
+def test_e2e_grid_spacing_per_pad_when_scalar_is_null(e2e) -> None:
+    _set_static(e2e, {"grid_m": None, "pads": [{"grid_m": 0.01}] * 4})
+    code, data = _judge(e2e)
+    assert code == bm.EXIT_OK and data["rows"]["C1"]["grid"]["grid_m"] == [0.01] * 4
+
+
+def test_e2e_grid_spacing_absent_is_an_input_error(e2e) -> None:
+    _set_static(e2e, {"grid_m": None})
+    code, _ = _judge(e2e)
+    assert code == bm.EXIT_INPUT
 
 
 def test_e2e_missing_r_c1_makes_d_d_na_with_the_row_named(e2e) -> None:
