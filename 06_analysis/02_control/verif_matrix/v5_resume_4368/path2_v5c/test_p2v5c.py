@@ -284,47 +284,67 @@ class TestNoise(unittest.TestCase):
                 if s < 5:
                     noise[k] = {"commands_sha256": f"{k}h"}
         f = CORE.Findings()
-        out = nz.seedext("x", se, noise, CORE, f)
+        out = nz.seedext("x", se, noise, f)
         self.assertEqual(out["seed0_4_same"], 10)
         self.assertEqual(f.status(), "pass")
         noise["L2|s3|A"]["commands_sha256"] = "other"
         f = CORE.Findings()
-        nz.seedext("x", se, noise, CORE, f)
+        nz.seedext("x", se, noise, f)
         self.assertIn("H-15", f.as_dict()["stop_codes"])
         del noise["L2|s3|A"]["commands_sha256"]
         f = CORE.Findings()
-        out = nz.seedext("x", se, noise, CORE, f)
+        out = nz.seedext("x", se, noise, f)
         self.assertEqual(f.status(), "pass")              # R3-E4: missing hash = record incomplete
         self.assertEqual(out["record_status"], "기록 불완전")
 
-    def _rec(self, restart=True, w=0.005, mf=20.0, done=50.0, contact=44.0):
+    def _rec(self, restart=True, w=0.005, mf=20.0, done=50.0, contact=44.0, base=True):
         ev = [[40.0, "leg_reapproach_start:RL"], [contact, "leg_reapproach_contact:RL"], [46.0, "crawler_liftoff_confirmed"]]
         if restart:
             ev.append([40.5, "INFO_LOC_WINDOW_RESTART:RL"])
-        if done is not None:
-            ev.append([done, "first_done"])
-        return {"events": ev, "r79": {"t_off_s": 42.0, "t_loc_s": 46.0, "crawler_at_loc_over_W": w,
-                                      "min_true_F_after_off_kN": mf}}
+        rec = {"key": "k", "events": ev, "r79": {"t_off_s": 42.0, "t_loc_s": 46.0, "crawler_at_loc_over_W": w,
+                                                 "min_true_F_after_off_kN": mf}}
+        if base:   # R4-B2: first DONE = base.t_done_s, checked against base.phase_path
+            pp = [[10.0, "touch"], [30.0, "level"]] + ([[done, "done"]] if done is not None else [])
+            rec["base"] = {"t_done_s": done, "phase_path": pp, "t_loc_final_s": 46.0}
+        return rec
+
+    @staticmethod
+    def _row(**s4):
+        rows = {g: {"ok": True} for g in nz.GATES}
+        rows["S-4"] = {"ok": True, "fail_misfire_new": False, "miss": False, "recontact_new": False,
+                       "loc_minus_off_s": 1.0, **s4}
+        return {"key": "k", "rows": rows, "pass": rows["S-4"]["ok"]}
 
     def test_line_grade(self):
-        ok = {x: True for x in nz.GATES}
-        self.assertEqual(nz.line_grade("k", self._rec(), {"gates": ok}, CORE)[0], "pass")
-        s4 = dict(ok, **{"S-4": False})
-        g = nz.line_grade("k", self._rec(), {"gates": s4, "s4_reasons": ["time_clause"]}, CORE)
-        self.assertEqual(g[0], "flag")                     # 419.8 all true -> S4_late_loc
-        g = nz.line_grade("k", self._rec(restart=False), {"gates": s4, "s4_reasons": ["time_clause"]}, CORE)
-        self.assertEqual(g[0], "fail")
-        g = nz.line_grade("k", self._rec(mf=9.0), {"gates": s4, "s4_reasons": ["time_clause"]}, CORE)
-        self.assertEqual(g[0], "fail")
-        g = nz.line_grade("k", self._rec(done=None), {"gates": s4, "s4_reasons": ["time_clause"]}, CORE)
-        self.assertEqual(g[0], "undecidable")
-        g = nz.line_grade("k", self._rec(), {"gates": s4, "s4_reasons": ["recontact_chatter"]}, CORE)
-        self.assertEqual(g[0], "flag")
-        g = nz.line_grade("k", self._rec(), {"gates": s4, "s4_reasons": ["recontact_strict_new"]}, CORE)
-        self.assertEqual(g[0], "fail")
-        self.assertEqual(nz.line_grade("k", self._rec(), {"gates": s4}, CORE)[0], "fail")
-        self.assertEqual(nz.line_grade("k", self._rec(), {"gates": dict(ok, **{"S-5": False})}, CORE)[0], "fail")
-        self.assertEqual(nz.line_grade("k", self._rec(), None, CORE)[0], "undecidable")
+        self.assertEqual(nz.line_grade(self._rec(), self._row(), CORE)[0], "pass")
+        late = dict(ok=False, gate_fail=True, loc_minus_off_s=4.0)
+        self.assertEqual(nz.line_grade(self._rec(), self._row(**late), CORE)[0], "flag")       # 419.8 all true
+        self.assertEqual(nz.line_grade(self._rec(done=45.0), self._row(**late), CORE)[0], "fail")  # c5 false
+        self.assertEqual(nz.line_grade(self._rec(done=None), self._row(**late), CORE)[0], "flag")  # no DONE
+        self.assertEqual(nz.line_grade(self._rec(restart=False), self._row(**late), CORE)[0], "fail")
+        self.assertEqual(nz.line_grade(self._rec(mf=9.0), self._row(**late), CORE)[0], "fail")
+        self.assertEqual(nz.line_grade(self._rec(base=False), self._row(**late), CORE)[0], "undecidable")
+        self.assertEqual(nz.line_grade(self._rec(), self._row(ok=False, recontact_new=True), CORE)[0], "fail")
+        self.assertEqual(nz.line_grade(self._rec(), self._row(ok=False, fail_misfire_new=True), CORE)[0], "fail")
+        self.assertEqual(nz.line_grade(self._rec(), self._row(ok=False), CORE)[0], "fail")    # unexplained
+        r = self._row()
+        r["rows"]["S-5"]["ok"] = False
+        self.assertEqual(nz.line_grade(self._rec(), r, CORE)[0], "fail")
+        self.assertEqual(nz.line_grade(self._rec(), None, CORE)[0], "undecidable")
+
+    def test_phase_path_check(self):
+        rec = self._rec()
+        rec["base"]["t_done_s"] = 60.0           # not the first done of phase_path (50.0)
+        f = CORE.Findings()
+        nz.late_loc_conditions(rec, CORE, f)
+        self.assertIn("S-11", f.as_dict()["stop_codes"])
+
+    def test_l1_gate(self):
+        recs = {"a": {"level": "L1", "harness": "g6", "case_index": 1, "inner": "x", "v5_setting": "VB",
+                      "r79": {"crawler_at_loc_over_W": 0.02}},
+                "b": {"level": "L2", "harness": "g6", "case_index": 2, "inner": "y", "v5_setting": "V0"}}
+        g = nz.l1_gate({"n_errors": 1}, recs, "VB", CORE)
+        self.assertEqual((g["false_loc"], g["unmatched"], g["errors"], g["setting_mismatch"]), (1, 1, 1, 1))
 
 
 class TestRev3(unittest.TestCase):
@@ -339,7 +359,11 @@ class TestRev3(unittest.TestCase):
         r = s1.sa4_rest(ln, CORE)
         self.assertTrue(r["same_cycle_warn_fault_soil"])
         self.assertTrue(r["ready_0"] and r["fault_stroke_end_0"] and r["after_stop_Fmin"])
-        self.assertIsNone(r["lift_after_stop_0"])         # record name not known -> undecidable
+        self.assertIsNone(r["lift_after_stop_0"])         # R4-B1 field absent -> undecidable
+        ln["values"]["sa4"] = {"lift_after_stop_ms": [0, 0, 0, 0]}
+        self.assertTrue(s1.sa4_rest(ln, CORE)["lift_after_stop_0"])
+        ln["values"]["sa4"] = {"lift_after_stop_ms": [0, 3, 0, 0]}
+        self.assertFalse(s1.sa4_rest(ln, CORE)["lift_after_stop_0"])
         g = line("S7", "VB", events=[[30.04, "WARN_LIFT_STROKE_LIMITED:FL,RR"]])
         self.assertEqual(s1.fl_guard_cycle(g), 300)
         self.assertIsNone(s1.fl_guard_cycle(line("S7", "VB", events=[])))
