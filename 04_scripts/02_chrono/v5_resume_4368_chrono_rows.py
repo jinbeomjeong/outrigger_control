@@ -988,7 +988,18 @@ def gs_key_paths() -> tuple[tuple[str, ...], dict[str, str]]:
     cond = dict(p5k.CONDITIONAL_KEY_PATHS)
     cond["c2_setup.las_off"] = "<off arm>"
     keys.append("c2_setup.las_off")
+    for k in OFF_ARM_ABSENT_KEYS:
+        cond[k] = "<on arm>"
     return tuple(dict.fromkeys(keys)), cond
+
+
+OFF_ARM_ABSENT_KEYS = tuple(f"controller_meta.liftoff_approach_slow.{k}" for k in (
+    "start_s", "end_s", "end_reason", "active_periods", "ramp", "ramp.periods_applied"))
+"""G-S 2026-11-13 (C-4 off arm, ``--las-off``): run_S9 writes ``controller_meta.liftoff_approach_slow`` = only
+``settings`` (``enable`` False) with LAS-b off; these keys exist on the on-arm rows only."""
+SERIES_FILES = ("step_series.npz", "r8_series.npz")
+"""run_S9 ``level`` series files (rules 9.1 path 2 names ``series.npz`` / ``r8_series``; a level run writes
+``step_series.npz``, G-S 2026-11-13)."""
 
 
 GS_ENTRY_KEYS = ("case", "argv", "rc", "pool", "planned_pool", "omp_wait_policy", "hull_hook_requested",
@@ -1024,9 +1035,9 @@ def cmd_gs_check(folder: str) -> int:
             off_arm = (e.get("r4368") or {}).get("arm") == "off"
             missing = []
             for k in absent:
-                if k == "c2_setup.las_off" and not off_arm:
+                if (k == "c2_setup.las_off" and not off_arm) or (k in OFF_ARM_ABSENT_KEYS and off_arm):
                     conditional.append(k)
-                elif k in cond and k != "c2_setup.las_off" and _get(doc, cond[k]) is False:
+                elif k in cond and not cond[k].startswith("<") and _get(doc, cond[k]) is False:
                     conditional.append(k)
                 else:
                     missing.append(k)
@@ -1036,9 +1047,9 @@ def cmd_gs_check(folder: str) -> int:
         if npz.is_file():
             with np.load(npz, allow_pickle=False) as z:
                 c["npz_arrays_ok"] = all(k in z.files and z[k].size > 0 for k in ("t_s", "issued_u_m_s"))
-        c["series_npz"] = (f / e["case"] / "series.npz").is_file()
+        c["series_files_missing"] = [n for n in SERIES_FILES if not (f / e["case"] / n).is_file()]
         c["ok"] = (c["progress_end_rc0"] and not c["batch_entry_missing"] and c["result_json"] and not missing
-                   and c.get("npz_arrays_ok", False) and c["series_npz"])
+                   and c.get("npz_arrays_ok", False) and not c["series_files_missing"])
         cases.append(c)
     n_err = sum(1 for c in cases if not c["ok"]) + (0 if cases else 1)
     print(json.dumps({"folder": f.as_posix(), "batch": batch.get("batch"), "n_cases": len(cases),
