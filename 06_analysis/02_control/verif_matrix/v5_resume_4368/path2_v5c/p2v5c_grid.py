@@ -105,14 +105,14 @@ F_M, F_M_SUM = 4, 6                             # rev5 5.2 R-1 / R-2
 
 
 def sample_jobs(stored):
-    """rev3 R3-E1 (rule gives no job list): per file the first run of the first and of the last result."""
+    """rev3 R3-E1 + rev4 R4-B4: per file the first and the last ``results[]`` item; one job = one item,
+    all its runs (matched by stem, key, event, offset_s). Returns {job: {run_key: hash}}."""
     out = {}
     for stem, path in stored.items():
         res = json.loads(Path(path).read_text("utf-8")).get("results") or []
         for r in (res[:1] + res[-1:]) if res else []:
-            runs = r.get("runs") or []
-            if runs:
-                out[run_key(stem, r, runs[0])] = runs[0].get("commands_sha256")
+            out[f"{stem}|{r.get('key')}"] = {run_key(stem, r, run): run.get("commands_sha256")
+                                            for run in r.get("runs") or []}
     return out
 
 
@@ -129,8 +129,10 @@ def v0_pair(args, fnd):
             stem, path = x.split("=", 1)
             for r, run in runs_of(json.loads(Path(path).read_text("utf-8"))):
                 got[run_key(stem, r, run)] = run.get("commands_sha256")
-        cmp_ = [{"job": k, "stored": h, "sample": got.get(k), "same": isinstance(h, str) and got.get(k) == h}
-                for k, h in sorted(want.items())]
+        cmp_ = []
+        for job, runs in sorted(want.items()):
+            diff = [k for k, hh in runs.items() if not (isinstance(hh, str) and got.get(k) == hh)]
+            cmp_.append({"job": job, "runs": len(runs), "runs_differing": diff, "same": bool(runs) and not diff})
         rec["sample"] = {"jobs": len(cmp_), "same": sum(c["same"] for c in cmp_), "detail": cmp_}
         if len(cmp_) != 8:
             fnd.stop("S-15", "V0 sample", f"{len(cmp_)} sample jobs != 8")
@@ -154,24 +156,36 @@ def v0_pair(args, fnd):
 def family_f_rule(path, core, fnd):
     """rev5 5.2 R-1..R-4 on the 64 conditional runs (rev3 R3-E2)."""
     lines = core.read_jsonl(path)
-    runs = {}
-    for ln in lines:
+    runs, other_events = {}, 0
+    for ln in lines:   # rev4 R4-B5: one line = one runner run; only event FS24 is judged and counted
         run = ln.get("run") if isinstance(ln.get("run"), dict) else ln
         s = ln.get("setting") or ln.get("v5_setting") or (ln.get("job") or {}).get("setting")
         key = ln.get("key") or (ln.get("job") or {}).get("key")
         off = run.get("offset_s", ln.get("offset_s"))
-        if run.get("event", FAMILY_F_EVENT) != FAMILY_F_EVENT:
+        if (run.get("event") or ln.get("event")) != FAMILY_F_EVENT:
+            other_events += 1
             continue
         runs[(key, s, round(float(off), 6) if off is not None else None)] = run
-    out = {"lines": len(lines), "runs": len(runs)}
+    out = {"lines": len(lines), "runs": len(runs), "non_FS24_lines_excluded": other_events}
     if len(runs) != 2 * 2 * F_PHASES or {k[0] for k in runs} != FAMILY_F_KEYS or {k[1] for k in runs} != {"V0", "VB"}:
         fnd.stop("S-15", "family_F", f"runs {len(runs)} keys {sorted({str(k[0]) for k in runs})}")
         out["result"] = "undecidable"
         return out
     k = {}
     r3, r4 = [], []
-    for (key, s, off), run in runs.items():
+    used_recorded = 0
+
+    def gates_of(run):
+        nonlocal used_recorded
         g = gates_p2(run, core)
+        rec = run.get("gates") if isinstance(run.get("gates"), dict) else {}
+        if any(v is None for v in g.values()) and rec and all(isinstance(rec.get(x), bool) for x in g):
+            used_recorded += 1   # R4-B5 line holds the recorded gates; raw fields absent -> recorded gates
+            return {x: rec[x] for x in g}
+        return g
+
+    for (key, s, off), run in runs.items():
+        g = gates_of(run)
         if any(v is None for v in g.values()):
             fnd.undec(f"family_F|{key}|{s}|{off}", "gate field missing")
         bad = any(g.get(x) is False for x in FAMILY_F_GATES)
@@ -179,7 +193,7 @@ def family_f_rule(path, core, fnd):
         if s == "VB":
             if g.get("fault0") is not True or run.get("final_phase") != "ready":
                 r3.append([key, off])
-            v0g = gates_p2(runs.get((key, "V0", off), {}), core)
+            v0g = gates_of(runs.get((key, "V0", off), {}))
             others = [x for x, v in g.items() if x not in FAMILY_F_GATES and v is False and v0g.get(x) is not False]
             if others:
                 r4.append([key, off, others])
@@ -189,7 +203,7 @@ def family_f_rule(path, core, fnd):
     r2 = tv <= t0 + F_M_SUM
     ok = all(r1.values()) and r2 and not r3 and not r4
     out.update(k={f"{a}|{b}": v for (a, b), v in sorted(k.items())}, R1=r1, R2={"VB": tv, "V0": t0, "ok": r2},
-               R3=r3, R4=r4, result="pass" if ok else "fail")
+               R3=r3, R4=r4, recorded_gates_used=used_recorded, result="pass" if ok else "fail")
     return out
 
 
