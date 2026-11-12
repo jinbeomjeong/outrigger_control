@@ -7,7 +7,7 @@ Rules: v5 criteria ``v5_criteria.md`` + revisions 1~12b (appendix A of the 436.8
 4.1 class are records (C2); J1 pass <-> stroke_limited_stop is a record except S8 (C3); spec-shortfall mark at
 F_min + 5 kN (C4); J3 slope by the row's floor angle (C5); J7 names without numeric segments (C6); J11 n_late
 None on a fallback line = undecidable (C7); J-P3 inputs by T4h, else configuration, never by inverting the
-declaration (C8).
+declaration (C8); rev4 (7ea87a30...) R4-C5: floor angle from ``values.case_floor_deg`` (F-3).
 Author: dynamics-expert (path 2, second author of the 436.8 path 2). Path-1 tools and outputs were not opened
 (436.8 9.2); the J-item reading below is built from the rule sentences and the line field names only.
 
@@ -62,9 +62,8 @@ READY_FLAT_S, READY_SLOPE_S = 90.0, 120.0   # 7 (rigid R*, FLAG only)
 SOIL_READY_CASES = {"S1", "S2", "S3", "S4", "S5", "S7"}
 RIGID_EVENT_CASES = {"R12", "R14", "R15", "R16"}   # 3.1 / rev3 R3-C4 rigid events (G4 width grid = R12 twins)
 STEADY_CASES = {f"R{i}" for i in range(1, 12)} | {f"S{i}" for i in range(1, 9)}   # rev9 3.1 / rev3 R3-C8
-FLOOR_ANGLE_PATHS = (("job.floor_roll_deg", "job.floor_pitch_deg"), ("job.roll_deg", "job.pitch_deg"),
-                     ("job.d1.roll_deg", "job.d1.pitch_deg"), ("job.twin.roll_deg", "job.twin.pitch_deg"),
-                     ("values.floor.roll_deg", "values.floor.pitch_deg"))
+FLOOR_LIST_PATH = "values.case_floor_deg"            # rev4 R4-C5 / F-3: [roll, pitch] deg
+FLOOR_ANGLE_PATHS = (("job.d1.roll_deg", "job.d1.pitch_deg"),)   # D-1 lines (R4-C5)
 NREV_FACTOR, NREV_ADD = 2, 6            # 4 (assumption in the criteria)
 PAIR_DROP = ("setting", "eta_v", "u9_metrics", "mask", "t4h_dir")
 PHASE_KEYS = ("eps", "offset_s")
@@ -116,7 +115,11 @@ def _is_number(seg):
 
 
 def floor_slope(line):
-    """rev3 R3-C5: True if a row-definition floor angle is non-zero, False if both zero, None if not recorded."""
+    """rev3 R3-C5 / rev4 R4-C5: True if the case floor angle is non-zero, False if both zero, None if not
+    recorded (``values.case_floor_deg``, else the D-1 ``job.d1`` angles)."""
+    fl = core.dig(line, FLOOR_LIST_PATH, None)
+    if isinstance(fl, (list, tuple)) and len(fl) == 2 and all(core.num(x) is not None for x in fl):
+        return core.num(fl[0]) != 0.0 or core.num(fl[1]) != 0.0
     for pr, pp in FLOOR_ANGLE_PATHS:
         r, p = core.num(core.dig(line, pr, None)), core.num(core.dig(line, pp, None))
         if r is not None and p is not None:
@@ -283,7 +286,8 @@ def judge_pair(line, v0, v0_nrev_max, is_p3, rod_reading=None):
             fnd.fail(where, "J3: S8 reached READY")
     elif kind == "flag_unknown_floor":
         it["J3"] = {"result": "record", "t_ready_set": b["t_ready"],
-                    "why": "rigid row without a recorded floor angle: FLAG limit (90 / 120 s) not set (R3-C5)"}
+                    "slope": "판정 불가", "flag_limit": "미정",
+                    "why": "rigid row without values.case_floor_deg: FLAG limit (90 / 120 s) not set (R4-C5)"}
     elif lim is None:
         it["J3"] = {"result": "record", "t_ready_set": b["t_ready"], "why": "no READY limit for this case"}
     elif kind == "judged":

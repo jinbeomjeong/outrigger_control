@@ -218,11 +218,11 @@ def test_rev3_j7_numeric_segments_and_j11_fallback():
 def test_rev3_j3_floor_angle_and_jp3_config():
     b = steady("R5", setting="VB", ready=100.0)
     it, _ = vj.judge_pair(b, steady("R5", setting="V0"), 14, IS_P3)
-    assert it["J3"]["result"] == "record" and "floor angle" in it["J3"]["why"]
-    b["job"].update(roll_deg=0.0, pitch_deg=3.5)
+    assert it["J3"]["result"] == "record" and "case_floor_deg" in it["J3"]["why"]
+    b["values"]["case_floor_deg"] = [0.0, 3.5]
     it, _ = vj.judge_pair(b, steady("R5", setting="V0"), 14, IS_P3)
     assert it["J3"]["limit_s"] == 120.0 and it["J3"]["result"] == "record"
-    b["job"]["pitch_deg"] = 0.0
+    b["values"]["case_floor_deg"] = [0.0, 0.0]
     it, _ = vj.judge_pair(b, steady("R5", setting="V0"), 14, IS_P3)
     assert it["J3"]["result"] == "flag"
     ln = steady("X9", setting="VB")
