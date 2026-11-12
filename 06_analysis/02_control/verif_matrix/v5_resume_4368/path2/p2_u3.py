@@ -3,7 +3,9 @@
 Rules: ``u3_u6_rerun_rules.md`` (8de31882...) + rev1 (2c5e6921...) + rev2 (be1584a4...), read through the 436.8
 rules 7.1 "rev3 share" (tags V0 ``final_C4G2_LAS_K1``, VB C2 ``final_C4G2_P3_LAS_K1``, ABL ``ABL_LAS_K1``,
 IND ``IND``, IND_LAS ``IND_LAS``; D-1 reuse input ``resume_k1/h1_d1.jsonl``; folder ``v5_rerun/las_k1/``).
-Author: dynamics-expert (path 2). The path-1 tools (u3_judge, u3_judge_k1, resume4368_judge) and their
+Author: dynamics-expert (path 2). Updated to the 436.8 rev3 (dad8dfa6...) R3-B1~B7:
+settle v2 recount (B1 = A, B6, B7 start gap), studies B / C / D by input key files (B2), reuse fields reuse / d1_key
+(B3), C2 safe stop = official_verdict (B4), IND_LAS gate = INFO_LIFTOFF_SLOW: start events (B5). The path-1 tools (u3_judge, u3_judge_k1, resume4368_judge) and their
 outputs were not opened (436.8 9.2).
 
 U-3 (rule section): G-1 run errors 0 and key counts (2: 1,114 keys x V0 / VB, per-suite counts where the
@@ -26,6 +28,7 @@ import argparse
 import datetime as _dt
 import importlib.util
 import json
+import math
 import sys
 import traceback
 from pathlib import Path
@@ -51,6 +54,108 @@ TAG = {"V0": core.TAG_V0, "VB": core.TAG_VB, "C2": core.TAG_VB, "ABL": core.TAG_
 U6_CASES = 242                   # 3: wide 226 + main 16
 GRADES = ("pass", "flag", "safe_stop", "fail")
 META_FIELDS = ("v5_setting", "controller_tag", "definition_sha256", "code", "head_only_declared", "has_rod_reading")
+# rev3 R3-B2: studies B / C / D are counted by their input key files (pad B), not by suite names
+_S9 = "06_analysis/02_control/s9/rev85/"
+STUDY_FILES = {"B": (_S9 + "finB2_x426b.json", 84), "C": (_S9 + "fin_x426_C.json", 34), "D": (_S9 + "fin_x426_D.json", 33)}
+# rev3 R3-B6: settle v2 applies to slope (study 1), H6, H9, study B, study D and the D-1 reuse lines
+SETTLE_V2_SUITES = {"slope", "h6", "h9"}
+SETTLE_V2_STUDIES = {"B", "D"}
+SETTLE_GAP_MM, SETTLE_ATT_FLOOR_DEG, SETTLE_ATT_ADD_DEG = 1.0, 0.005, 0.002   # spec 398.3
+EV_LAS_START = "INFO_LIFTOFF_SLOW:"   # rev3 R3-B5 (the _END event does not count)
+
+
+def study_keys(repo, study):
+    """Pad-B key set of a study input file (rev3 R3-B2)."""
+    rel, _n = STUDY_FILES[study]
+    data = json.loads((repo / rel).read_text("utf-8"))
+    if study == "B":
+        return {r["id"] for r in data["records"] if r["id"].split("|")[2] == "B"}
+    if study == "C":
+        return {r["key"] for r in data["results"] if r.get("pad") == "B"}
+    return {r["id"] for r in data["results"] if core.dig(r, "case.pad", None) == "B"}
+
+
+def _get(block, name):
+    for p in (name, f"inputs.{name}", f"result.{name}"):
+        v = core.dig(block, p, core.MISSING)
+        if v is not core.MISSING:
+            return v
+    return core.MISSING
+
+
+def settle_v2_recount(block, repo=None, table_target=False):
+    """rev3 R3-B6 / B7: recompute settle v2 (spec 398.3) from ``inputs`` and compare with ``result``.
+    Returns dict(status=checked|no_table_check|error|missing|undecidable, ok, issues, gate)."""
+    if not isinstance(block, dict):
+        return {"status": "missing"}
+    st = block.get("status")
+    gate = block.get("gate")
+    if st == "no_table_check":
+        return {"status": "no_table_check", "gate": gate}
+    if st != "checked":
+        return {"status": "error" if st == "error" else "undecidable", "why": f"status {st!r}", "gate": gate}
+    issues = []
+    tol = block.get("tolerances")
+    if isinstance(tol, dict):
+        vals = sorted(float(v) for v in tol.values() if core.num(v) is not None)
+        if vals != sorted([SETTLE_GAP_MM, SETTLE_ATT_FLOOR_DEG, SETTLE_ATT_ADD_DEG]):
+            return {"status": "tolerance_differs", "tolerances": tol, "gate": gate}
+    pen, xy, dat = _get(block, "pen_inst_mm"), _get(block, "pad_xy_m"), _get(block, "d_attitude_deg")
+    gap = _get(block, "table_gap_target_mm" if table_target else "gap_target_mm")
+    res_deg, att_err = core.num(_get(block, "residual_deg")), core.num(_get(block, "attitude_error_deg"))
+    try:
+        dphi, dth = (math.radians(float(dat[0])), math.radians(float(dat[1])))
+        pen_mean = [float(p) + (float(c[1]) * dphi - float(c[0]) * dth) * 1000.0 for p, c in zip(pen, xy)]
+        plus = [m + float(g) for m, g in zip(pen_mean, gap)]
+    except (TypeError, ValueError, IndexError, KeyError):
+        return {"status": "undecidable", "why": "settle_v2 inputs unreadable", "gate": gate}
+    if res_deg is None or att_err is None or not (len(pen) == len(xy) == len(gap)):
+        return {"status": "undecidable", "why": "settle_v2 inputs incomplete", "gate": gate}
+    gap_ok = [abs(x) <= SETTLE_GAP_MM + core.EPS_THR for x in plus]
+    att_tol = max(SETTLE_ATT_FLOOR_DEG, res_deg + SETTLE_ATT_ADD_DEG)
+    att_ok = att_err <= att_tol + core.EPS_THR
+    ok = all(gap_ok) and att_ok
+    if not table_target:
+        res = block.get("result") if isinstance(block.get("result"), dict) else {}
+        for name, mine in (("pen_mean_mm", pen_mean), ("pen_plus_gap_mm", plus), ("gap_ok", gap_ok),
+                           ("attitude_tol_deg", att_tol), ("attitude_ok", att_ok), ("ok", ok)):
+            rv = res.get(name, core.MISSING)
+            if rv is core.MISSING:
+                issues.append(f"result.{name} missing")
+            elif isinstance(mine, list):
+                if not (isinstance(rv, list) and len(rv) == len(mine) and all(core.same_value(a, b) for a, b in zip(mine, rv))):
+                    issues.append(f"{name} differs")
+            elif not core.same_value(mine, rv):
+                issues.append(f"{name} differs")
+        # input provenance (table sha, table gap target)
+        table, tsha = _get(block, "table"), _get(block, "table_sha256")
+        if isinstance(table, str) and repo is not None:
+            p = repo / table
+            if not p.is_file() or core.sha256_file(p) != tsha:
+                issues.append("table_sha256 does not match the settle table file")
+    return {"status": "checked" if not issues else "undecidable", "ok": ok, "issues": issues, "gate": gate,
+            "pen_plus_gap_mm": plus, "attitude_tol_deg": att_tol}
+
+
+def settle_grade(rec, block, repo):
+    """(grade override or None, note). judged: ok false -> fail; settle_check_fail: recomputed ok must be false;
+    record_only / no_table_check: not graded; checks failing -> undecidable."""
+    r = settle_v2_recount(block, repo)
+    if r["status"] == "missing":
+        return "undecidable", "settle_v2 block missing (R3-B6)", r
+    if r["status"] == "no_table_check" or r.get("gate") == "record_only":
+        return None, r["status"], r
+    if r["status"] == "tolerance_differs":
+        return "stop", "settle_v2 tolerances differ from 398.3 (S-11)", r
+    if r["status"] != "checked":
+        return "undecidable", f"settle_v2 {r['status']}: {r.get('why') or r.get('issues')}", r
+    v = rec.get("verdict")
+    if v == "settle_check_fail" or r.get("gate") == "settle_check_fail":
+        return ("fail", "settle v2 fail confirmed", r) if r["ok"] is False else \
+               ("undecidable", "settle_check_fail recorded but recomputed ok (S-13)", r)
+    if r["ok"] is False:
+        return "undecidable", "recomputed settle v2 fails but the record does not (S-13)", r
+    return None, "settle v2 ok", r
 
 
 def records_of(path):
@@ -97,10 +202,12 @@ def att_max(x):
     return core.num(x)
 
 
-def recount_u3(files, h1_path, is_p3):
+def recount_u3(files, h1_path, is_p3, repo=None):
     fnd = core.Findings()
     sets = {"V0": {}, "VB": {}}
     per_file = []
+    file_ids, study_of, settle = [], {}, {"checked": 0, "no_table_check": 0, "undecidable": [], "fail_confirmed": 0,
+                                            "D_start_gap_lines": 0, "D_table_target_ok_differs": 0}
     for f in files:
         setting = f["setting"]
         n = 0
@@ -129,6 +236,7 @@ def recount_u3(files, h1_path, is_p3):
                 fnd.stop("G-2", where, f"v5_setting {v5.get('v5_setting')!r} in a {setting} file")
         if len(tags) > 1:
             fnd.stop("G-2", Path(f["path"]).name, f"{len(tags)} tags in one file {sorted(map(str, tags))}")
+        file_ids.append((setting, f["path"], {k for _s, k, _r, _d in records_of(f["path"])}))
         per_file.append({"path": f["path"], "sha256": core.sha256_file(f["path"]), "setting": setting, "records": n})
     # G-1 counts
     counts = {}
@@ -142,9 +250,15 @@ def recount_u3(files, h1_path, is_p3):
         for suite, want in U3_SUITES.items():
             if by.get(suite, 0) != want:
                 fnd.stop("G-1", f"{s}:{suite}", f"{by.get(suite, 0)} keys, rules say {want}")
-        other = sum(v for k, v in by.items() if k not in U3_SUITES)
-        if other != U3_OTHER:
-            fnd.stop("G-1", f"{s}:B+C+D", f"{other} keys in other suites {sorted(set(by) - set(U3_SUITES))}, rules say {U3_OTHER}")
+        if repo is None:
+            fnd.note(f"{s}:B+C+D", "repo not given: study key files not read (R3-B2)")
+        else:
+            for study, (rel, want) in STUDY_FILES.items():
+                ks = study_keys(repo, study)
+                hit = [pf for pf in file_ids if pf[0] == s and pf[2] == ks]
+                study_of.update({pf[1]: study for pf in hit})
+                if len(ks) != want or len(hit) != 1:
+                    fnd.stop("G-1", f"{s}:study {study}", f"{len(hit)} output file(s) with the {len(ks)}-key set of {rel} (want 1 file, {want} keys)")
     if set(sets["V0"]) != set(sets["VB"]):
         fnd.stop("G-1", "pairs", f"V0 / VB key sets differ ({len(set(sets['V0']) ^ set(sets['VB']))})")
     # G-4 / G-6 on every VB run selected by file setting
@@ -169,14 +283,50 @@ def recount_u3(files, h1_path, is_p3):
                                        f"rod {v5.get('has_rod_reading')!r}")
     if sel != len(sets["VB"]) or sel == 0:
         fnd.stop("G-4", "VB", f"selected {sel} VB runs (empty set or count mismatch)")
+    # rev3 R3-B6 / B7: settle v2 on the v2 suites and studies B / D, and on the D-1 reuse lines (u3.settle_v2)
+    def graded(key, rec, setting):
+        suite = sets[setting][key][0]
+        path = next((pf[1] for pf in file_ids if pf[0] == setting and key.split("|", 1)[1] in pf[2]
+                     and study_of.get(pf[1])), None)
+        study = study_of.get(path)
+        reuse = rec.get("reuse") == "d1"
+        if not (suite in SETTLE_V2_SUITES or study in SETTLE_V2_STUDIES or reuse):
+            return grade_u3(rec)
+        block = core.dig(rec, "u3.settle_v2", None) if reuse and not isinstance(rec.get("settle_v2"), dict) else rec.get("settle_v2")
+        ov, why, r = settle_grade(rec, block, repo)
+        if r.get("status") == "checked":
+            settle["checked"] += 1
+        elif r.get("status") == "no_table_check":
+            settle["no_table_check"] += 1
+        if study == "D" and isinstance(block, dict):
+            src = _get(block, "gap_target_source")
+            if src == "start_gap" or (isinstance(src, list) and "start_gap" in src):
+                settle["D_start_gap_lines"] += 1
+                rt = settle_v2_recount(block, repo, table_target=True)
+                if rt.get("status") == "checked" and r.get("ok") is not None and rt["ok"] != r["ok"]:
+                    settle["D_table_target_ok_differs"] += 1
+        if ov == "stop":
+            fnd.stop("S-11", f"{setting}:{key}", why)
+            return None, why
+        if ov == "undecidable":
+            settle["undecidable"].append({"key": key, "setting": setting, "why": why})
+            return None, why
+        if ov == "fail":
+            settle["fail_confirmed"] += 1
+            return "fail", None
+        g, w = grade_u3(rec)
+        if g is None and rec.get("verdict") == "settle_check_fail":
+            return None, "settle_check_fail without a confirming v2 record"
+        return g, w
+
     # 5.1 transitions
     table = {a: {b: 0 for b in GRADES + ("undecidable",)} for a in GRADES + ("undecidable",)}
     vb_unique, base_fail, improve, safe_moves, undec, diffs = [], [], [], [], [], {}
     sentence = {g: 0 for g in GRADES}
     for k in sorted(set(sets["V0"]) & set(sets["VB"])):
         r0, r1 = sets["V0"][k][1], sets["VB"][k][1]
-        g0, w0 = grade_u3(r0)
-        g1, w1 = grade_u3(r1)
+        g0, w0 = graded(k, r0, "V0")
+        g1, w1 = graded(k, r1, "VB")
         table[g0 or "undecidable"][g1 or "undecidable"] += 1
         if g1 is None:
             undec.append({"key": k, "why": w1})
@@ -202,36 +352,74 @@ def recount_u3(files, h1_path, is_p3):
     d1_index = {}
     if h1_path:
         for line in core.read_jsonl(h1_path):
-            d1_index.setdefault(core.dig(line, "job.d1.key", None), []).append(line)
+            d1_index.setdefault(core.dig(line, "d1.key", None), []).append(line)   # R3-B3: identifying field d1.key
+    reuse["identifying_field"] = "h1 line d1.key == record d1_key"
+    meta_reused = {}
+    for f in files:
+        data = json.loads(Path(f["path"]).read_text("utf-8"))
+        rd = core.dig(data, "meta.v5.reuse_d1", None)
+        if isinstance(rd, dict):
+            for suite, blk in rd.items():
+                n = len(blk.get("reused") or []) if isinstance(blk, dict) else None
+                meta_reused[(f["setting"], suite)] = meta_reused.get((f["setting"], suite), 0) + (n or 0)
+    rec_reused = {}
     for s in ("V0", "VB"):
         for k, (suite, rec) in sets[s].items():
-            if rec.get("reuse") != "d1" and v5_of(rec).get("reuse") != "d1":
+            if rec.get("reuse") != "d1":          # R3-B3: top-level reuse == "d1" only
                 continue
             reuse["n"] += 1
-            dkey = rec.get("reuse_key") or rec.get("d1_key") or v5_of(rec).get("reuse_d1_key")
-            cands = [x for x in d1_index.get(dkey, []) if x.get("job", {}).get("setting") == s
-                     and core.same_value(x.get("job", {}).get("eps"), 0.0)]
+            rec_reused[(s, suite)] = rec_reused.get((s, suite), 0) + 1
+            dkey = rec.get("d1_key")
+            cands = d1_index.get(dkey, [])
             if len(cands) != 1:
-                reuse["problems"].append({"key": k, "setting": s, "why": f"{len(cands)} D-1 eps-0 lines for {dkey!r}"})
+                reuse["problems"].append({"key": k, "setting": s, "why": f"{len(cands)} H-1 lines for {dkey!r}"})
                 continue
             reuse["checked"] += 1
             if cands[0].get("controller_tag") != v5_of(rec).get("controller_tag"):
                 reuse["problems"].append({"key": k, "setting": s, "why": "tag not carried from the D-1 line"})
             if cands[0].get("commands_sha256") != v5_of(rec).get("commands_sha256"):
                 reuse["problems"].append({"key": k, "setting": s, "why": "commands_sha256 differs from the D-1 line"})
+    for sk in sorted(set(meta_reused) | set(rec_reused)):
+        if meta_reused.get(sk, 0) != rec_reused.get(sk, 0):
+            reuse["problems"].append({"key": list(sk), "why": f"meta.v5.reuse_d1.reused {meta_reused.get(sk, 0)} != "
+                                                               f"records with reuse=d1 {rec_reused.get(sk, 0)}"})
+    for p in reuse["problems"]:
+        if "D-1 eps-0 lines" in p.get("why", "") or "lines for" in p.get("why", ""):
+            fnd.undec(f"reuse:{p.get('key')}", p["why"] + " (R3-B3: Q-1~Q-5 again)")
     if reuse["problems"]:
         fnd.fail("D-1 reuse", f"{len(reuse['problems'])} reuse problem(s)")
     out = {"files": per_file, "counts": counts, "transition": table, "vb_unique_fail": vb_unique,
            "baseline_fail": base_fail, "vb_improve": improve, "pass_safe_stop_moves": safe_moves,
            "undecidable": undec, "sentence_VB": sentence, "differences": diffs, "d1_reuse": reuse,
+           "settle_v2": {**settle, "no_table_check_note": "표 행이 없는 사례가 v1에서도 정착 점검 대상이 아니었다는 것은 가정(R3-B6)"},
+           "study_files": {k: v for k, v in study_of.items()},
            "G-3": "not recounted (needs option-free runs; path 1 record only)"}
     return out, fnd
+
+
+def event_names_of(rec):
+    """Event name list of a U-6 record (``events`` [[t, name]] / names, ``event_names`` dict, ``las_events``)."""
+    for p in ("events", "las_events", "v5.las_events"):
+        v = core.dig(rec, p, None)
+        if isinstance(v, list):
+            out = []
+            for e in v:
+                if isinstance(e, str):
+                    out.append(e)
+                elif isinstance(e, (list, tuple)) and len(e) == 2 and isinstance(e[1], str):
+                    out.append(e[1])
+                elif isinstance(e, dict) and isinstance(e.get("name"), str):
+                    out.append(e["name"])
+            return out
+    en = rec.get("event_names")
+    return list(en) if isinstance(en, dict) else None
 
 
 def recount_u6(files, is_p3):
     fnd = core.Findings()
     cols = {}
     hashes = {}
+    las_names = {}
     for f in files:
         for _suite, key, rec, data in records_of(f["path"]):
             ctrl = rec.get("controller") or f.get("controller")
@@ -260,6 +448,7 @@ def recount_u6(files, is_p3):
             elif is_p3 is not None and is_p3(tag) != (ctrl == "C2"):
                 fnd.stop("G-2", where, "③ only on C2")
             hashes[(key, ctrl)] = rec.get("commands_sha256") or core.dig(rec, "v5.commands_sha256", None)
+            las_names[(key, ctrl)] = event_names_of(rec)
     for ctrl in ("C2", "ABL", "IND", "IND_LAS"):
         n = len(cols.get(ctrl, {}).get("cases", ()))
         if n != U6_CASES:
@@ -267,12 +456,28 @@ def recount_u6(files, is_p3):
     if cols.get("IND_LAS") and cols.get("IND") and cols["IND_LAS"]["cases"] != cols["IND"]["cases"]:
         fnd.stop("G-1", "IND_LAS", "case set differs from IND (rev2 3)")
     same = sum(1 for (k, c), h in hashes.items() if c == "IND_LAS" and h and h == hashes.get((k, "IND")))
+    gate = {"gated": 0, "not_gated": 0, "not_gated_hash_same": 0, "not_gated_hash_differs": 0, "unreadable": 0}
+    for (k, c), nm in las_names.items():
+        if c != "IND_LAS":
+            continue
+        if nm is None:
+            gate["unreadable"] += 1
+        elif any(n.startswith(EV_LAS_START) for n in nm):
+            gate["gated"] += 1
+        else:
+            gate["not_gated"] += 1
+            if hashes.get((k, "IND_LAS")) and hashes.get((k, "IND_LAS")) == hashes.get((k, "IND")):
+                gate["not_gated_hash_same"] += 1
+            else:
+                gate["not_gated_hash_differs"] += 1
+    gate["IND_LAS_column"] = ("adapter defect: column not used, to python-expert" if gate["not_gated_hash_differs"]
+                              else "기록 불완전" if gate["unreadable"] else "ok")
     table = {c: {"cases": len(v["cases"]), "lite_pass": v["lite_pass"], "official": v["official"],
                  "crawler_liftoff_fail": v["crawler_liftoff_fail"],
                  "safe_stop": v["safe_stop"] if c == "C2" else None, "tags": sorted(map(str, v["tags"]))}
              for c, v in cols.items()}
     # IND_LAS failures are records, never a stop (rev2 3): only G-1 / G-2 apply to that column
-    return {"table": table, "IND_LAS_hash_equal_to_IND": same, "judged_runs": sum(
+    return {"table": table, "IND_LAS_hash_equal_to_IND": same, "IND_LAS_gate_R3-B5": gate, "judged_runs": sum(
         len(cols.get(c, {}).get("cases", ())) for c in ("C2", "ABL", "IND"))}, fnd
 
 
@@ -299,7 +504,7 @@ def main(argv=None):
             fnds = []
             if args.u3:
                 files = [{"setting": a.split("=", 1)[0], "path": a.split("=", 1)[1]} for a in args.u3]
-                body, f3 = recount_u3(files, args.h1, is_p3)
+                body, f3 = recount_u3(files, args.h1, is_p3, repo)
                 report["U-3"] = {**body, **f3.as_dict()}
                 fnds.append(f3)
             if args.u6:
