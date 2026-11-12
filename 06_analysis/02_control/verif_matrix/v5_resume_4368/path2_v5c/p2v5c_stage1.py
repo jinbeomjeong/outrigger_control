@@ -146,6 +146,69 @@ def f5_clause(ln, core):
             "max_before_1s_kN": sc.get("max_before_1s_kN"), "near_stop_pm0p1s_kN": sc.get("near_stop_pm0p1s_kN")}
 
 
+T_S = 0.1   # 436.8 2: compare times as n = round(t / T_s)
+LIFT_AFTER_STOP_PATHS = ("soil_stop_crawler.pad_lift_after_stop_ms", "soil_stop_crawler.lift_ms_after_stop",
+                         "values.lift_after_stop_ms")   # rev3 Q-S6 "정지 뒤 부상 0": record name not known yet
+
+
+def _events(ln):
+    ev = ln.get("events")
+    if not isinstance(ev, list):
+        return None
+    return [(float(e[0]), e[1]) for e in ev if isinstance(e, (list, tuple)) and len(e) == 2
+            and isinstance(e[1], str) and isinstance(e[0], (int, float))]
+
+
+def sa4_rest(ln, core):
+    """rev3 R3-E5 Q-S6: the SA-4 items other than the F-5 clause (True / False / None = no record)."""
+    ev = _events(ln)
+    out = {}
+    if ev is None:
+        out["same_cycle_warn_fault_soil"] = None
+    else:
+        w = {round(t / T_S) for t, n in ev if n.startswith("WARN_LIFT_STROKE_LIMITED:")}
+        f = {round(t / T_S) for t, n in ev if n.startswith("FAULT_LIFT_STROKE_LIMIT:soil")}
+        out["same_cycle_warn_fault_soil"] = bool(w & f)
+    names = [n for _, n in (ev or [])] + [s for s in (core.dig(ln, "values.events.fault_events", None) or [])
+                                          if isinstance(s, str)]
+    out["fault_stroke_end_0"] = None if ev is None else not any(n.startswith("FAULT_STROKE_END") for n in names)
+    tr = core.dig(ln, "values.times.t_first_ready_s", core.MISSING)
+    out["ready_0"] = None if tr is core.MISSING else tr is None
+    stop_t = core.num(core.dig(ln, "soil_stop_crawler.stop_t_s", None))
+    mn = core.num(core.dig(ln, "values.forces.after_liftoff.min_kN", None))
+    mt = core.num(core.dig(ln, "values.forces.after_liftoff.t_s", None))
+    fmin = core.F_MIN_N / 1000.0
+    if mn is not None and core.t_ge(mn, fmin):
+        out["after_stop_Fmin"] = True          # after-liftoff minimum covers the post-stop part
+    elif mn is not None and mt is not None and stop_t is not None and mt >= stop_t:
+        out["after_stop_Fmin"] = False
+    else:
+        out["after_stop_Fmin"] = None
+    lift = None
+    for p in LIFT_AFTER_STOP_PATHS:
+        v = core.num(core.dig(ln, p, None))
+        if v is not None:
+            lift = v == 0
+            break
+    out["lift_after_stop_0"] = lift
+    mp = core.num(core.dig(ln, "values.pressure.max_moving_bar", None))
+    out["moving_le_180"] = None if mp is None else not core.t_gt(mp, 180.0)
+    sat = core.dig(ln, "values.pressure.saturation_leg_chunks", None)
+    out["saturation_block_0"] = None if not isinstance(sat, int) else sat == 0
+    return out
+
+
+def fl_guard_cycle(ln):
+    """rev3 Q-S7: cycle of the first WARN_LIFT_STROKE_LIMITED: event whose leg list holds FL."""
+    ev = _events(ln)
+    if ev is None:
+        return "no_events"
+    for t, n in sorted(ev):
+        if n.startswith("WARN_LIFT_STROKE_LIMITED:") and "FL" in n.split(":", 1)[1].replace(",", " ").replace("+", " ").split():
+            return round(t / T_S)
+    return None
+
+
 def judge_all(v5j, core, lines, v0_idx, nrev, is_p3, t4h_root, where):
     """judge_pair for every line; returns {pair_key: (items, findings)}."""
     out = {}
@@ -192,13 +255,7 @@ def ls_conditions(judged, vb_lines, v5j, core, fnd):
                 rec["L-c"].append(pk)
             if items.get("J11", {}).get("result") == "stop":
                 rec["L-e"].append(pk)
-            vbl = vb.get(pk)
-            if vbl is not None:
-                a, b = v5j.j_values(vbl), v5j.j_values(_LINE_CACHE[(s, pk)])
-                dF = None if a["minF"] is None or b["minF"] is None else abs(b["minF"] - a["minF"])
-                dR = None if a["t_ready"] is None or b["t_ready"] is None else abs(b["t_ready"] - a["t_ready"])
-                if (dF is not None and core.t_ge(dF, LD_FORCE_KN)) or (dR is not None and core.t_ge(dR, LD_READY_S)):
-                    rec["L-d_large"].append([pk, dF, dR])
+        rec["L-d_large"] = ld_large(s, judged, vb, v5j, core)
         for c in ("L-a", "L-b", "L-c", "L-e"):
             for x in rec[c]:
                 fnd.stop("H-6", f"{s}:{c}", json.dumps(x, ensure_ascii=False)[:300])
@@ -207,6 +264,33 @@ def ls_conditions(judged, vb_lines, v5j, core, fnd):
 
 
 _LINE_CACHE = {}   # (setting, pair key) -> line, filled by cmd_stage1
+
+
+def ld_large(s, judged, vb, v5j, core):
+    """v5 8 L-d with rev3 Q-S9: per row (all phases) and metric (min force kN, first READY s),
+    E_r = median(LS) - median(VB), S_r = ptp(VB phases) (m1_criteria 5). '감도 큼' (record) when
+    |E_r| >= limit and the effect is distinguished (|E_r| > S_r and all pair differences share a sign)."""
+    rows = {}
+    for (st, pk), _ in judged.items():
+        if st != s or pk not in vb:
+            continue
+        a, b = v5j.j_values(vb[pk]), v5j.j_values(_LINE_CACHE[(s, pk)])
+        rk = v5j.row_key(vb[pk]["job"])
+        for m, lim in (("minF", LD_FORCE_KN), ("t_ready", LD_READY_S)):
+            if a[m] is not None and b[m] is not None:
+                rows.setdefault((rk, m, lim), []).append((a[m], b[m]))
+    out = []
+    for (rk, m, lim), pairs in rows.items():
+        base = [p[0] for p in pairs]
+        e = statistics.median(p[1] for p in pairs) - statistics.median(base)
+        sr = max(base) - min(base)
+        d = [p[1] - p[0] for p in pairs]
+        same_sign = all(x > 0 for x in d) or all(x < 0 for x in d)
+        distinguished = abs(e) > sr and same_sign
+        if core.t_ge(abs(e), lim) and distinguished:
+            out.append({"row": rk, "metric": m, "E_r": e, "S_r": sr, "phases": len(pairs),
+                        "weak": len(pairs) <= 2})
+    return out
 
 
 def l1_table(judged, fnd):
@@ -278,7 +362,9 @@ def item8_order(main_lines, item8_lines, core, fnd):
                 rel.append("reversed")
             else:
                 rel.append("undetermined")
-        res = "order_kept" if rel == ["kept", "kept"] else ("reversed" if "reversed" in rel else "undetermined")
+        # rev3 R3-E5 Q-S5: "reversed" only when fully reversed (m_top > m_mid > m_bottom, no overlap)
+        res = "order_kept" if rel == ["kept", "kept"] else ("reversed" if rel == ["reversed", "reversed"]
+                                                            else "undetermined")
         out[s] = {"rows": stats, "pairs": rel, "result": res}
     if out.get("VB", {}).get("result") == "reversed" and out.get("V0", {}).get("result") == "order_kept":
         out["grade"] = "fail"
@@ -377,7 +463,53 @@ def cmd_stage1(args, repo, v5j, core):
                     args.t4h_root, "h10")
     ov_idx = index_by_pair(v5j, v0_ov, "overlap V0", f10)
     jov = judge_all(v5j, core, [x for x in ov if setting(x) != "V0"], ov_idx, nrev, is_p3, args.t4h_root, "ov")
+    # S8 F-5 and the rest of SA-4 (v5 6, rev3 R3-E5 Q-S6) - decided first because an F-5 record
+    # line does not count its clause fail as a new fail
+    f5, f5_record = [], set()
+    for ln in main9 + main10:
+        if (ln.get("job") or {}).get("case") != "S8":
+            continue
+        s, pk = setting(ln), v5j.pair_key(ln["job"])
+        c = f5_clause(ln, core)
+        rest = sa4_rest(ln, core)
+        c.update(setting=s, job=ln["job"], sa4_rest=rest)
+        f5.append(c)
+        fx = f9 if s not in ("VB",) + LS_SETTINGS else f10
+        vals = list(rest.values())
+        if False in vals:
+            c["result"] = "fail (SA-4 rest)"
+            if fx is f10:
+                fx.fail(f"{s}|{pk}", f"SA-4 item false {[k for k, v in rest.items() if v is False]}")
+                if s == "VB":
+                    fx.stop("H-2", pk, "VB SA-4 fail")
+            else:
+                fx.note(f"{s}|{pk}", "SA-4 item false (no grade for this setting)")
+        elif None in vals:
+            c["result"] = "undecidable (SA-4 record missing)"
+            if fx is f10:
+                fx.undec(f"{s}|{pk}", f"SA-4 record missing {[k for k, v in rest.items() if v is None]}")
+        elif c["status"] == "clause_fail":
+            if s in FLOW_ON:
+                c["result"] = "F-5 record"
+                f5_record.add((s, pk))
+            elif s in FLOW_OFF:
+                c["result"] = "stop H-5"
+                fx.stop("H-5", s, "F-5 clause fail on a flow-off setting")
+        elif c["status"] == "missing":
+            c["result"] = "undecidable (clause record missing)"
+            if fx is f10:
+                fx.undec(f"{s}|{pk}", "soil_stop_crawler missing")
+        else:
+            c["result"] = "pass"
+        if s == "VB" and c.get("margin_kN_p2") is not None and core.t_lt(c["margin_kN_p2"], F5_MARGIN_STOP_KN):
+            f10.stop("H-5", "VB S8", f"clause margin {c['margin_kN_p2']} < {F5_MARGIN_STOP_KN}")
+        if s == "VB" and c.get("max_after_stop_kN") is not None and core.t_gt(c["max_after_stop_kN"], F5_MAX_AFTER_STOP_KN):
+            f10.stop("H-5", "VB S8", f"max after stop {c['max_after_stop_kN']} > {F5_MAX_AFTER_STOP_KN}")
     for (s, pk), (items, f) in j10.items():
+        if (s, pk) in f5_record:   # v5 6: flow-on clause-only fail = F-5 record, not a new fail
+            f.fails = [x for x in f.fails if not str(x.get("why", "")).startswith("J1")]
+            if items.get("J1", {}).get("result") == "fail":
+                items["J1"]["result"] = "F-5 record"
         merge(f10, f, f"{s}|")
         if s == "VB":
             bad = line_failed(items)
@@ -397,21 +529,6 @@ def cmd_stage1(args, repo, v5j, core):
     for (s, pk), (items, f) in jov.items():
         for st in f.stops:
             f10.stop(st["code"], f"overlap|{st['where']}"[:200], st["why"])
-    # S8 F-5 (v5 6)
-    f5 = []
-    for ln in main9 + main10:
-        if (ln.get("job") or {}).get("case") != "S8":
-            continue
-        c = f5_clause(ln, core)
-        s = setting(ln)
-        c.update(setting=s, job=ln["job"])
-        f5.append(c)
-        if c["status"] == "clause_fail" and s in FLOW_OFF:
-            (f9 if s != "VB" else f10).stop("H-5", s, "F-5 clause fail on a flow-off setting")
-        if s == "VB" and c.get("margin_kN_p2") is not None and core.t_lt(c["margin_kN_p2"], F5_MARGIN_STOP_KN):
-            f10.stop("H-5", "VB S8", f"clause margin {c['margin_kN_p2']} < {F5_MARGIN_STOP_KN}")
-        if s == "VB" and c.get("max_after_stop_kN") is not None and core.t_gt(c["max_after_stop_kN"], F5_MAX_AFTER_STOP_KN):
-            f10.stop("H-5", "VB S8", f"max after stop {c['max_after_stop_kN']} > {F5_MAX_AFTER_STOP_KN}")
     # H-3: R12 V0 pass count (main, 4 phases)
     r12 = {s: sum(1 for ln in (v0_main if s == "V0" else [x for x in main10 if setting(x) == "VB"])
                   if ln["job"].get("case") == "R12" and core.dig(ln, "event_output.pass", None) is True)
@@ -424,12 +541,16 @@ def cmd_stage1(args, repo, v5j, core):
         v0 = v0_idx.get(v5j.pair_key(ln["job"]))
         if v0 is None:
             continue
+        g0, g1 = fl_guard_cycle(v0), fl_guard_cycle(ln)
         rec = {"job": ln["job"], "class_v0": v0.get("harness_class"), "class_vb": ln.get("harness_class"),
-               "guard_active_s_v0": core.dig(v0, "values.guard_active_s", None),
-               "guard_active_s_vb": core.dig(ln, "values.guard_active_s", None)}
+               "fl_guard_cycle_v0": g0, "fl_guard_cycle_vb": g1}
         s7.append(rec)
         if rec["class_v0"] != rec["class_vb"]:
             f10.stop("H-8", "S7", f"class {rec['class_v0']} -> {rec['class_vb']}")
+        if g0 == "no_events" or g1 == "no_events":
+            f10.undec("S7", "events list missing (H-8 FL guard time, rev3 Q-S7)")
+        elif g0 != g1:
+            f10.stop("H-8", "S7", f"FL guard cycle {g0} -> {g1}")
     ls = ls_conditions(j10, [x for x in main10 if setting(x) == "VB"], v5j, core, f10)
     l1t = l1_table({**j9, **{k: v for k, v in j10.items() if k[0] == "VB"}}, f10)
     p67 = check_p6_p7(main9, v5j, f9)

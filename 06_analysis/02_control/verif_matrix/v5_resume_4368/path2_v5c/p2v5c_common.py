@@ -33,10 +33,27 @@ HERE = Path(__file__).resolve().parent
 REPO_DEFAULT = HERE.parents[4]
 P2_FALLBACK = Path(r"C:\workspace\outrigger_control\.claude\worktrees\agent-a2e81c57365f0d7bb"
                    r"\06_analysis\02_control\verif_matrix\v5_resume_4368\path2")
-P2_V5J_SHA = "559bd34f173e50791ccdd3b0af7be8bda44dcbb72acdd4c8ba7671c2a35a45ea"   # bf52c89
-P2_CORE_SHA = "1294dc4e1d3226eb8389f5112ad6ae7be6cc5551b81f6656f0c530f76a5fa753"
+# rev3 versions (R3-C1~C8 in p2_v5j, rev3 seal + R3-F4 in p2_4368), files of 2026-11-13 03:16 / 03:18;
+# before: p2_v5j 559bd34f... (bf52c89), p2_4368 1294dc4e...
+P2_V5J_SHA = "ceb75ee9a6081b73e158a7db42cc11c9cfb6f9ccb4bae480775128a2f6616eac"
+P2_CORE_SHA = "cf0b643c8293e8757b21e3627e9585319af1d2068b32dfd5a1b1612f6c5954de"
 
 EXIT = {"pass": 0, "fail": 1, "undecidable": 1, "stop": 2}
+
+# rev3 (sealed 2026-11-13 03:13:21 +09:00, master 9ce2fdc). p2_4368.check_seals covers the original,
+# rev1 and rev2; rev3 is checked here the same way (raw sha only, LF, no BOM, .sha256 record; R2-9 last line).
+REV3_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.md"
+REV3_SHA = "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
+REV3_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.sha256"
+
+
+def check_rev3(repo):
+    p, sp = Path(repo) / REV3_REL, Path(repo) / REV3_SEAL_REL
+    got = sha256_file(p) if p.is_file() else None
+    seal = sp.read_text("utf-8").split()[0].lower() if sp.is_file() and sp.read_text("utf-8").split() else None
+    raw = p.read_bytes() if p.is_file() else b""
+    ok = got == REV3_SHA and seal == REV3_SHA and not raw.startswith(b"\xef\xbb\xbf") and b"\r\n" not in raw
+    return {"path": REV3_REL, "sha256": got, "want": REV3_SHA, "seal_file_sha": seal, "ok": ok}
 
 
 def sha256_file(path):
@@ -114,13 +131,14 @@ def run_main(tool_name, version, tool_file, argv, build_parser, cmds):
         v5j = load_v5j(p2_dir)
         core = v5j.core
         seals = core.check_seals(repo)
-        if not seals["ok"]:
-            report, status = {"seals": seals, "imports": imp, "stop_codes": ["S-1"]}, "stop"
+        rev3 = check_rev3(repo)
+        if not seals["ok"] or not rev3["ok"]:
+            report, status = {"seals": seals, "rev3": rev3, "imports": imp, "stop_codes": ["S-1"]}, "stop"
         elif not imp["ok"] and not getattr(args, "allow_import_sha", False):
             report, status = {"imports": imp, "stop_codes": ["P2-SHA"]}, "stop"
         else:
             body, status = cmds[args.cmd](args, repo, v5j, core)
-            report = {"seals": {"ok": True, "eol_only": seals.get("eol_only", []),
+            report = {"seals": {"ok": True, "rev3": rev3, "eol_only": seals.get("eol_only", []),
                                 "eol_only_detail": {k: v for k, v in seals["appendix_a"].items()
                                                     if v.get("eol_only")}},
                       "imports": imp, **body}
