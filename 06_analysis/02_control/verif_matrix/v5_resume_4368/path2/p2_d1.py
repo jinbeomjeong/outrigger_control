@@ -3,7 +3,8 @@
 Rules: ``d1_selection_rules.md`` (sha256 51dea528...) + ``d1_selection_rules_rev1.md`` (eb730bdd...), with the
 436.8 rules (9019b405...) / rev1 (d9094fda...) that make them the H-1 / H-2 rules (436.8 5.1, 7.1). Author:
 dynamics-expert (path 2); 436.8 rev3 (dad8dfa6...) R3-A1 (G-3 exception = ASSUMED_BOUNDARY tag), R3-A2 (three
-layers: re-judge, re-aggregate d1.verdict, re-select), R3-A3 (READY origin and t_READY cross-check). Written from the rule sentences and the jsonl records only; the path-1 tools
+layers: re-judge, re-aggregate d1.verdict, re-select), R3-A3 (READY origin and t_READY cross-check); rev4 (7ea87a30...) R4-C1 (origin from
+values.times.t_check_start_s, else by the harness definition) and R4-C3 (d1.demoted_items). Written from the rule sentences and the jsonl records only; the path-1 tools
 (run_v5 judgement block, d1_select.py, resume4368_judge.py) were not opened (436.8 9.2).
 
 What it does (rule section in brackets):
@@ -77,8 +78,8 @@ R8_CELLS = [("top", "flat"), ("top", "diag-op"), ("bottom", "flat"), ("bottom", 
 ASSUMED_BOUNDARY = "ASSUMED_BOUNDARY"   # rev3 R3-A1: the G-3 exception = rows carrying this tag
 SLS_ALLOWED = {"H-R-A", "H-S-0", "H-S-1", "H-S-A"}   # 11: rows whose definition allows stroke_limited_stop
 ORIGIN_MAX_S = 0.1                      # rev3 R3-A3: the first phase (CHECK) starts within one period
-PHASE_START_PATHS = ("values.times.t_check_start_s", "values.phases", "phases", "values.phase_starts_s",
-                     "phase_starts_s")
+CHECK_START_PATH = "times.t_check_start_s"   # rev4 R4-C1 / F-1 (under values)
+DEMOTION_RULES = {"377", "424.11.2", "424.8.1", "419.8"}   # rev4 R4-C3
 
 
 # ----------------------------------------------------------------- run normalisation
@@ -163,9 +164,17 @@ def reaggregate(run):
         return {"status": "inputs missing"}
     false_items = {k for k, v in items.items() if v is False}
     demoted = false_items - set(fails)
-    demot_fields = [k for k in list(d) + list(items) if "demot" in str(k).lower()]
-    if demoted and not demot_fields:
-        return {"status": "false item without fail_items entry or demotion record", "items": sorted(demoted)}
+    # rev4 R4-C3: "false items - fail_items" must equal the item set of d1.demoted_items (F-2)
+    dl = d.get("demoted_items")
+    if not isinstance(dl, list):
+        return {"status": "d1.demoted_items missing (R4-C3, S-13)", "items": sorted(demoted)}
+    bad = [x for x in dl if not (isinstance(x, dict) and isinstance(x.get("item"), str) and isinstance(x.get("flag"), str)
+                                 and str(x.get("rule")) in DEMOTION_RULES)]
+    if bad:
+        return {"status": "d1.demoted_items entry without item / rule / flag", "entries": bad[:5]}
+    if {x["item"] for x in dl} != demoted:
+        return {"status": "false items - fail_items != d1.demoted_items items", "items": sorted(demoted),
+                "demoted_items": sorted(x["item"] for x in dl)}
     cls = d.get("harness_class")
     if cls == "stroke_limited_stop" and run["group"] in SLS_ALLOWED:
         rebuilt = "allowed_stop"     # 3, 54: that termination on a row that allows it (fail items = record)
@@ -178,42 +187,22 @@ def reaggregate(run):
     return {"status": "same", "rebuilt": rebuilt, "demoted": sorted(demoted)}
 
 
-def phase_start(rec):
-    """Earliest phase start time from the line's phase record (several accepted shapes); None if absent."""
-    for p in PHASE_START_PATHS:
-        v = core.dig(rec, p, None)
-        if isinstance(v, (int, float)) and not isinstance(v, bool):
-            return float(v)
-        starts = []
-        if isinstance(v, dict):
-            starts = [core.num(x) for x in v.values()]
-        elif isinstance(v, list):
-            for x in v:
-                if isinstance(x, (list, tuple)) and len(x) >= 2:
-                    starts.append(core.num(x[1]) if core.num(x[1]) is not None else core.num(x[0]))
-                elif isinstance(x, dict):
-                    starts.append(core.num(x.get("t_start_s", x.get("t_s"))))
-        starts = [s for s in starts if s is not None]
-        if starts:
-            return min(starts)
-    return None
-
-
 def ready_check(run):
     """rev3 R3-A3: t_READY = values.times.t_first_ready_s (closed-loop origin), origin = first phase start
     <= 0.1 s, and d1.t_ready_s equal within the 7.6 tolerance."""
     tr = core.dig(run["values"], "times.t_first_ready_s")
     if tr is core.MISSING:
         return {"status": "values.times.t_first_ready_s missing"}
-    t0 = phase_start(run["raw"])
+    t0 = core.num(core.dig(run["values"], CHECK_START_PATH, None))
+    origin = "t_check_start_s"
     if t0 is None:
-        return {"status": "phase record missing (origin not checkable)"}
-    if core.t_gt(t0, ORIGIN_MAX_S):
-        return {"status": f"first phase starts at {t0} s > 0.1 s"}
+        origin = "정의에 의함"   # rev4 R4-C1 2: harness closed loop starts at 0, first period T_s
+    elif core.t_gt(t0, ORIGIN_MAX_S):
+        return {"status": f"CHECK starts at {t0} s > 0.1 s"}
     dr = run["d1"].get("t_ready_s")
     if (tr is None) != (dr is None) or (tr is not None and abs(tr - dr) > core.EPS_THR):
         return {"status": "d1.t_ready_s differs from t_READY", "t_ready": tr, "d1_t_ready_s": dr}
-    return {"status": "ok"}
+    return {"status": "ok", "origin": origin}
 
 
 # ----------------------------------------------------------------- candidates and ranking (4.2, 4.3)
@@ -447,7 +436,7 @@ def recount(runs, errors):
     if tag_mismatch:
         fnd.note("R3-A1", f"ASSUMED_BOUNDARY tag vs H-S-0 fup-rec differ on {len(tag_mismatch)} row(s)")
     # rev3 R3-A2 layer 2 (re-aggregation of d1.verdict) and R3-A3 (READY origin, t_READY cross-check)
-    reagg, ready_x = [], []
+    reagg, ready_x, ready_origin = [], [], {}
     for r in runs:
         where = f"{r['row']}|{r['setting']}|{r['eps']}"
         ra = reaggregate(r)
@@ -455,6 +444,7 @@ def recount(runs, errors):
             reagg.append({"row": r["row"], "setting": r["setting"], "eps": r["eps"], **ra})
             fnd.undec(where, f"R3-A2 re-aggregation: {ra['status']} (S-13)")
         rx = ready_check(r)
+        ready_origin[rx.get("origin", "n/a")] = ready_origin.get(rx.get("origin", "n/a"), 0) + 1
         if rx["status"] != "ok":
             ready_x.append({"row": r["row"], "setting": r["setting"], "eps": r["eps"], **rx})
             fnd.undec(where, f"R3-A3 READY: {rx['status']}")
@@ -483,7 +473,7 @@ def recount(runs, errors):
                      "reaggregated_only": "d1.items / d1.fail_items (H-S P3, G6, E; H-R locked_350bar, G6)",
                      "n_rejudge_differences": len(cc), "n_reaggregation_differences": len(reagg),
                      "reaggregation_differences": reagg[:200]},
-           "R3-A3": {"n_ready_undecidable": len(ready_x), "examples": ready_x[:50]},
+           "R3-A3": {"n_ready_undecidable": len(ready_x), "origin_basis": ready_origin, "examples": ready_x[:50]},
            "R3-A1_tag_mismatch_rows": tag_mismatch[:50],
            "C2_selected_rows": {"S1_S2": c2_rows, "PS-c": s3r["rows"],
                                 "n_rows_selected": len(c2_rows) + len(s3r["rows"]),

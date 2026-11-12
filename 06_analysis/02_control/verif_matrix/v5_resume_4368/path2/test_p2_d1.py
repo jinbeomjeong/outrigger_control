@@ -25,7 +25,7 @@ def run(group="H-R-0", level="middle", slope="roll+op", setting="VB", eps=0.0, K
                    "F_first_level_min_N": Ffirst, "t_ready_s": None, "t_ready_limit_s": 120.0, "att_judged_deg": att,
                    "stroke_max_m": stroke, "dsb75_events": [{"name": "INFO_DIFF_SINK_HOLD"}] * holds, "j_p3": "pass",
                    "fail_items": ["P3-5"] if verdict == "fail" else [], "items": {"P3-5": verdict != "fail"},
-                   "harness_class": "stroke_limited_stop" if verdict == "allowed_stop" else None,
+                   "harness_class": "stroke_limited_stop" if verdict == "allowed_stop" else None, "demoted_items": [],
                    "key": row, "imu_R_c": 0.0}}
 
 
@@ -167,10 +167,14 @@ def test_rev3_a2_reaggregate():
     r["d1"]["items"] = {"P3-5": False, "SL-1": False}
     assert d1.reaggregate(r)["status"] == "same"
     r = run(verdict="pass")
-    r["d1"]["items"] = {"P3-8": False}      # false item, no fail_items entry, no demotion record
-    assert d1.reaggregate(r)["status"].startswith("false item")
-    r["d1"]["P3-8_demoted"] = True
+    r["d1"]["items"] = {"P3-8": False}      # false item, no fail_items entry, not in demoted_items
+    assert d1.reaggregate(r)["status"].startswith("false items - fail_items")
+    r["d1"]["demoted_items"] = [{"item": "P3-8", "rule": "377", "flag": "P3-8_demoted"}]
     assert d1.reaggregate(r)["status"] == "same"
+    r["d1"]["demoted_items"] = [{"item": "P3-8", "rule": "999", "flag": "x"}]
+    assert d1.reaggregate(r)["status"].startswith("d1.demoted_items entry")
+    r["d1"].pop("demoted_items")
+    assert d1.reaggregate(r)["status"].startswith("d1.demoted_items missing")
     r = run(verdict="pass")
     r["d1"]["fail_items"] = ["P3-5"]
     assert d1.reaggregate(r)["status"] == "rebuilt verdict differs"
@@ -184,7 +188,8 @@ def test_rev3_a3_ready_origin_and_crosscheck():
     r["d1"]["t_ready_s"] = 50.1
     assert d1.ready_check(r)["status"].startswith("d1.t_ready_s differs")
     r["d1"]["t_ready_s"] = 50.0
-    r["raw"] = {"phases": [["check", 0.3]]}
+    assert d1.ready_check(r)["origin"] == "정의에 의함"          # R4-C1 2: no F-1 field
+    r["values"]["times"]["t_check_start_s"] = 0.3
     assert "> 0.1 s" in d1.ready_check(r)["status"]
-    r["raw"] = {}
-    assert d1.ready_check(r)["status"].startswith("phase record missing")
+    r["values"]["times"]["t_check_start_s"] = 0.1
+    assert d1.ready_check(r)["origin"] == "t_check_start_s"
