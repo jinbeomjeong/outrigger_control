@@ -337,7 +337,7 @@ flowchart LR
    14. ✅ D8x 하네스 미달(J3, 11-10) → J3 대책 K-2 `_TCL` 검증 V-2~V-7(11-10~11). 결과는 **판정 불가, 채택 안 함**이고 **v5 제어기 = `final_C4G2_LAS_K1` 확정**(판정서 `06_analysis/02_control/k2/judgement/k2_judgement.md`, decision_log 4절 끝). ⏳ 다음 순서는 아래와 같고, 각 실행 시작은 알린 뒤 승인을 받는다.
        - LOC 앵커 단일 표본 검토
        - ✅ P5r4+K1 재판정(2026-11-12): 하네스 통과·Chrono 미달 → 최종 미달, P0 유지(판정서 `06_analysis/02_control/verif_matrix/las_p5r4_k1_judgement.md`). 후속: LAS-c 재설계는 v5 뒤 판정, P0+K1 A3·A5 F_min 하회는 알려진 한계 + 436.8 O-C5 기록 행
-       - B1
+       - ✅ B1 크리프 근거(2026-11-12~13): 두 경로 일치(ZA-2, OS-MAX, H-OPT, PRED-FAIL, B1-OPEN, FUP-OUT, W-NA, K-SAME), 판정서 `06_analysis/02_control/b1/b1_creep_basis_judgement.md`. 후속: 새 예측 형식 재등록(rev2 초안), J2 fup 운용 권고 분리
        - 436.8(승인됨, 차단 0이면 자동)
        - 이상적 센서 2단계
        - 이와 별도로 진행하는 것: K-2b 확인 실험 E1·E2, fdown3.5 스냅숏 재생성, 논문 v5 제어기 확정 반영
