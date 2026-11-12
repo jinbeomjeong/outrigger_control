@@ -59,6 +59,9 @@ REV2_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.s
 REV3_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.md"
 REV3_SHA = "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557"
 REV3_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.sha256"
+REV4_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev4.md"
+REV4_SHA = "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b"
+REV4_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev4.sha256"
 GRID_SPEC_PRESCRIBED = "rev. 67 (G1 / G2 / G7 reduced screen)"   # rev2 R2-7
 GRID_EVENTS_PRESCRIBED = {"G4", "RE1bF", "FS24"}
 
@@ -395,7 +398,8 @@ def check_seals(repo, appendix=True):
     """Rules + rev1 sha against the constants and the .sha256 files; appendix A sha."""
     out = {"rules": {}, "appendix_a": {}, "ok": True}
     for rel, want, seal in ((RULES_REL, RULES_SHA, RULES_SEAL_REL), (REV1_REL, REV1_SHA, REV1_SEAL_REL),
-                            (REV2_REL, REV2_SHA, REV2_SEAL_REL), (REV3_REL, REV3_SHA, REV3_SEAL_REL)):   # sealed rules: raw sha only (R2-9)
+                            (REV2_REL, REV2_SHA, REV2_SEAL_REL), (REV3_REL, REV3_SHA, REV3_SEAL_REL),
+                            (REV4_REL, REV4_SHA, REV4_SEAL_REL)):   # sealed rules: raw sha only (R2-9)
         p = repo / rel
         got = sha256_file(p) if p.is_file() else None
         sp = repo / seal
@@ -1718,7 +1722,7 @@ def main(argv=None):
             report, status = {"seals": seals}, "pass"
         else:
             body, status = CMDS[args.cmd](args, repo)
-            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA, "rev3_sha256": REV3_SHA,
+            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA, "rev3_sha256": REV3_SHA, "rev4_sha256": REV4_SHA,
                                 "eol_only": seals.get("eol_only", []),
                                 "eol_only_detail": {k: v for k, v in seals["appendix_a"].items() if v.get("eol_only")}},
                       **body}
