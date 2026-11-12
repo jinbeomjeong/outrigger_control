@@ -205,7 +205,7 @@ def _line(soil: str, *, eps: float = 0.0, setting: str = "VB", sha: str = "s",
         d1["u3"] = {"verdict": "pass", "passed": True, "failed_rows": [], "hash": "h",
                     "t_ready_s": 40.0, "flags": [], "warnings": []}
     return {"job": {"d1": row, "eps": eps, "setting": setting}, "commands_sha256": sha,
-            "controller_tag": "final_C4G2_P3_LAS" if setting == "VB" else "final_C4G2_LAS",
+            "controller_tag": "final_C4G2_P3_LAS_K1" if setting == "VB" else "final_C4G2_LAS_K1",
             "hydraulic_options": None if options is None else options.to_dict(), "d1": d1}
 
 
@@ -229,7 +229,7 @@ def test_reuse_after_an_equal_sample_hash(tmp_path) -> None:
     assert decision.reused_ids == {"H1|J1|B|top|flat"}
     record = u3_reuse.reused_record(plan, _jobs("J1")[0], decision)
     assert record["reuse"] == "d1" and record["d1_key"] == "D1|H-S-0|J1|T|flat|K1|VB|e0"
-    assert record["v5"]["controller_tag"] == "final_C4G2_P3_LAS"
+    assert record["v5"]["controller_tag"] == "final_C4G2_P3_LAS_K1"
     assert record["v5"]["extend_start"]["revision"] == 4
     assert record["verdict"] == "pass" and record["id"] == "H1|J1|B|top|flat"
 
@@ -400,13 +400,22 @@ def test_reuse_refuses_a_pre_switch_or_untagged_d1_line(tmp_path) -> None:
     assert "final_C4G2_P3" in plan.rejected["H1|J1|B|top|flat"]
 
 
+def test_reuse_refuses_a_las_line_without_the_k1_gate(tmp_path) -> None:
+    """436.8 rules 7.1: a ``_LAS`` D-1 line (K1 gate off, the planned ``d1_las.jsonl``) is not reused."""
+    las_only = _line("J1", sha="b")
+    las_only["controller_tag"] = "final_C4G2_P3_LAS"
+    plan = u3_reuse.plan(_write(tmp_path, [las_only]), "VB", _jobs("J1"), settle_hook="harness")
+    assert plan.lines == {}
+    assert "'final_C4G2_P3_LAS' != 'final_C4G2_P3_LAS_K1'" in plan.rejected["H1|J1|B|top|flat"]
+
+
 def test_reused_v0_record_keeps_the_las_tag_without_the_bound(tmp_path) -> None:
     path = _write(tmp_path, [_line("G1", sha="a", setting="V0"),
                              _line("J1", sha="b", setting="V0")])
     plan = u3_reuse.plan(path, "V0", _jobs("G1", "J1"), settle_hook="harness")
     decision = u3_reuse.decide(plan, {"H1|G1|B|top|flat": {"v5": {"logged_commands_sha256": "a"}}})
     record = u3_reuse.reused_record(plan, _jobs("J1")[0], decision)
-    assert record["v5"]["controller_tag"] == "final_C4G2_LAS"
+    assert record["v5"]["controller_tag"] == "final_C4G2_LAS_K1"
     assert "extend_start" not in record["v5"]
 
 

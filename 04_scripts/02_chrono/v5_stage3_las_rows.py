@@ -15,7 +15,8 @@ stage 3 Chrono row - VB, LS, soil VB and their V0 pairs - is re-run on the LAS-b
 Rules (main session C-1 .. C-5): plant / case / event / seed / ``--threads`` as the stored row; VB and LS = the current
 ``v5_vb_argv()`` / ``v5_rigid_argv()`` (the stored stage 3 VB / LS argv had no ``--extend-start-tracked``: the ③ start
 bound of criteria rev. 8 is the only accepted argument difference, :data:`ACCEPTED_NEW_ARGS`); run_S9 rows get
-``--expect-controller`` = ``V5_P3_LAS_CONTROLLER`` (VB / LS) or ``V5_LAS_CONTROLLER`` (V0, V0v, S6SEED, P-2, P-3);
+``--expect-controller`` = ``V5_P3_LAS_K1_CONTROLLER`` (VB / LS) or ``V5_LAS_K1_CONTROLLER`` (V0, V0v, S6SEED, P-2,
+P-3; the K1-switched preset, 436.8 rules ``v5_resume_4368_rules.md`` 3 A-4, since 2026-11-13);
 run_S8C rows only the row field ``controller`` (the run uses the switched preset). Row fields: ``stored_result``,
 ``pair_case`` (inside this batch), ``hash_comparable`` (stored pool P and same ``--threads``), ``est_pool_s`` (stored
 wall; an E-pool stored wall / 1.5 for P, ASSUMPTION), ``stored_argv_check`` (:func:`stored_argv_check`).
@@ -105,7 +106,9 @@ def _threads(argv: list[str] | None) -> str | None:
 
 
 def _las_controller(sb: ModuleType, setting: str) -> str:
-    return sb.V5_P3_LAS_CONTROLLER if setting in VB_LS else sb.V5_LAS_CONTROLLER
+    """The expected tag of a re-run row: the K1-switched preset (436.8 rules ``v5_resume_4368_rules.md`` 3 A-4 /
+    4.1: VB / LS ``final_C4G2_P3_LAS_K1``, the others ``final_C4G2_LAS_K1``)."""
+    return sb.V5_P3_LAS_K1_CONTROLLER if setting in VB_LS else sb.V5_LAS_K1_CONTROLLER
 
 
 def _retag(sb: ModuleType, row: dict) -> dict:

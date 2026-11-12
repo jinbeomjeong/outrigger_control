@@ -66,26 +66,20 @@ def test_merge_state(rows) -> None:
             assert r["controller"] == "final_C4G2_P3" and r["las_ready"]
             assert (str(las.PRE_LAS_RUNNER) in r["argv"]) is merged
         else:
-            assert r["controller"] == "final_C4G2_P3_LAS" and r["las_ready"] is merged
+            assert r["controller"] == "final_C4G2_P3_LAS_K1" and r["las_ready"] is merged
 
 
 def test_check_sources_ok(rows) -> None:
-    """Off rows (pre-LAS runner) pass; since the K1 switch (``las_k1_rules_adopt.md`` 9.2) the on rows' tag
-    ``final_C4G2_P3_LAS`` checks the order gate off, so the plain on rows are refused at that path only (a
-    reproduction runs through ``pre_k1_preset_runner.py``)."""
+    """Off rows (pre-LAS runner) and, since the 436.8 tag change (``v5_resume_4368_rules.md`` 3 A-4), the on rows
+    (``final_C4G2_P3_LAS_K1`` = the K1-switched preset) pass."""
     doc = sb.check_sources(las.LAS_BATCH, rows)
     for res in doc["rows"]:
         r = next(x for x in rows if x["case"] == res["case"])
         if not r["las_ready"]:
             assert res["status"] == "blocked_pre_merge"
-        elif r["las"] == "off":
-            assert res["status"] == "ok", res
         else:
-            assert res["status"] == "differs", res
-            (diff,) = res["diffs"]
-            assert [c["path"] for c in diff["row"]] == [
-                "slope_clearance_margin.flat_soil_margin_order_gate"]
-    assert doc["ok"] is all(r["las"] == "off" or not r["las_ready"] for r in rows)
+            assert res["status"] == "ok", res
+    assert doc["ok"] is True
 
 
 def test_case_env_start_env() -> None:

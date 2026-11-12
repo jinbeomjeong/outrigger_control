@@ -92,13 +92,14 @@ def _tag(v: float) -> str:
 
 
 def las_controller_of(sb: ModuleType, controller: str) -> str:
-    """The LAS-b tag of a v5 row tag (the D-1 rows run the switched preset, LAS-b on, spec 436.9): ``final_C4G2_P3``
-    -> ``sb.V5_P3_LAS_CONTROLLER``, ``final_C4G2`` -> ``sb.V5_LAS_CONTROLLER``.
+    """The run-time preset tag of a v5 row tag (the D-1 rows run the switched preset: LAS-b on, spec 436.9, and the
+    K1 order gate on, spec 437; 436.8 rules ``v5_resume_4368_rules.md`` 3 A-4 / 4.1): ``final_C4G2_P3``
+    -> ``sb.V5_P3_LAS_K1_CONTROLLER``, ``final_C4G2`` -> ``sb.V5_LAS_K1_CONTROLLER``.
 
     Raises:
-        ValueError: A tag without a LAS-b counterpart.
+        ValueError: A tag without a counterpart.
     """
-    tags = {sb.V5_P3_CONTROLLER: sb.V5_P3_LAS_CONTROLLER, sb.V5_STAGE3_CONTROLLER: sb.V5_LAS_CONTROLLER}
+    tags = {sb.V5_P3_CONTROLLER: sb.V5_P3_LAS_K1_CONTROLLER, sb.V5_STAGE3_CONTROLLER: sb.V5_LAS_K1_CONTROLLER}
     if controller not in tags:
         raise ValueError(f"no LAS-b tag for controller {controller!r}")
     return tags[controller]
@@ -153,15 +154,15 @@ def c1_rows(sb: ModuleType) -> list[dict[str, Any]]:
 def _soil_vb(sb: ModuleType, r9: ModuleType, c: dict[str, Any], rid: str, *, role: str, note: str,
              p3b_form: bool = False) -> dict[str, Any]:
     """A ``run_S9 level`` row of ``c`` on the run-time preset + ``sb.v5_vb_argv()``, checked as the VB controller
-    ``sb.V5_P3_LAS_CONTROLLER`` (``final_C4G2_P3_LAS``: criteria revision 8 3.1 ③ + LAS-b of the switched preset,
-    ``--expect-controller``). ``p3b_form``: estimate on the P3b form (a same-soil triple layout costs as the plain J1
-    run, not the G1-base G6 form)."""
+    ``sb.V5_P3_LAS_K1_CONTROLLER`` (``final_C4G2_P3_LAS_K1``: criteria revision 8 3.1 ③ + LAS-b + the K1 order gate
+    of the switched preset, ``--expect-controller``; 436.8 rules 4.1). ``p3b_form``: estimate on the P3b form (a
+    same-soil triple layout costs as the plain J1 run, not the G1-base G6 form)."""
     r = dict(c)
-    r["controller"] = sb.V5_P3_LAS_CONTROLLER
+    r["controller"] = sb.V5_P3_LAS_K1_CONTROLLER
     est = r9.final_est_pool_s({k: v for k, v in r.items() if k != "soil_patch"} if p3b_form else r)
     pools = {k: round(v * sb.V5_SOIL_VB_FACTOR, -2) for k, v in est.items()}
     return {"case": r["case"], "est_s": pools["pcore"], "est_pool_s": pools,
-            "argv": sb.RUN + r9.p3b_level_argv(r) + sb.v5_vb_argv(), "controller": sb.V5_P3_LAS_CONTROLLER,
+            "argv": sb.RUN + r9.p3b_level_argv(r) + sb.v5_vb_argv(), "controller": sb.V5_P3_LAS_K1_CONTROLLER,
             "group": D1_BATCH, "criteria_id": rid, "d1_id": rid, "d1_role": role, "v5_setting": "VB",
             "d1_source": D1_SOURCE, "planned_pool": "pcore", "note": note}
 

@@ -509,4 +509,9 @@ def execute(entry: dict, setting, hydraulics, *, setting_name: str,
     result.update(vr.plant_options_record(hydraulics, t_lift_s))
     result[vr.HEAD_ONLY_DECLARED_KEY] = row.path != "event"
     result["d1"] = d1_record(row, setting_name, eps, result, plant, controller, harness)
+    if k1 is not None:  # 436.8 record block: a D8x job requested the gate itself
+        import resume_k1_record
+
+        result[resume_k1_record.RECORD_KEY] = resume_k1_record.controller_record(controller,
+                                                                                 request=k1)
     return result, series

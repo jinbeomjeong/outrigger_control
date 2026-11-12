@@ -12,10 +12,11 @@ its D-1 run only if all of:
   Q-5  the reused record is the slope-suite record of the D-1 run (``d1.u3``, written by
        ``d1_runs.u3_record``) and is judged by the U-3 judge like any other record; a D-1
        line without that block is not reused.
-  Q-6  (rules rev2 1 #6, LAS-b switch) the D-1 line carries the LAS tag of the setting
-       (V0 ``final_C4G2_LAS``, VB ``final_C4G2_P3_LAS``): only ``v5/d1_las.jsonl`` lines are
-       reused; a line without a tag or with another tag is not. The reused record keeps the
-       line's tag.
+  Q-6  (rules rev2 1 #6, LAS-b switch; 436.8 rules ``v5_resume_4368_rules.md`` 7.1, the rev3
+       part, K1 switch) the D-1 line carries the tag of the setting (V0 ``final_C4G2_LAS_K1``,
+       VB ``final_C4G2_P3_LAS_K1``): only ``v5/resume_k1/h1_d1.jsonl`` lines are reused; a line
+       without a tag or with another tag (a ``_LAS`` line of the K1-off preset included) is
+       not. The reused record keeps the line's tag.
 A reused record carries ``reuse: "d1"`` and ``d1_key``.
 """
 
@@ -114,16 +115,17 @@ def _d1_line_for(lines: list[dict], row_key: str, setting: str) -> tuple[dict | 
 
 
 def _tag_problem(line: dict, setting: str) -> str:
-    """Rules rev2 1 #6: only a D-1 line with the LAS tag of the setting is reused
-    (``v5/d1_las.jsonl``; the pre-switch ``v5/d1.jsonl`` lines carry another tag or none)."""
+    """Rules rev2 1 #6 with 436.8 rules 7.1: only a D-1 line with the K1 tag of the setting is
+    reused (``v5/resume_k1/h1_d1.jsonl``; the stored ``v5/d1.jsonl`` lines carry another tag or
+    none)."""
     import v5_rerun
 
     tag = line.get("controller_tag")
-    expected = v5_rerun.SETTING_TAGS_LAS[setting]
+    expected = v5_rerun.SETTING_TAGS_LAS_K1[setting]
     if tag is None:
         return "Q-6: the D-1 line has no controller_tag (a run before the LAS-b switch)"
     if tag != expected:
-        return f"Q-6: D-1 controller_tag {tag!r} != {expected!r} (rules rev2 1 #6)"
+        return f"Q-6: D-1 controller_tag {tag!r} != {expected!r} (rules rev2 1 #6, 436.8 7.1)"
     return ""
 
 

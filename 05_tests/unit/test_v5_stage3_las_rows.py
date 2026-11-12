@@ -43,7 +43,7 @@ def test_count_names(rows, all_batches) -> None:
 
 def test_controllers(rows) -> None:
     for r in rows:
-        want = sb.V5_P3_LAS_CONTROLLER if r["v5_setting"] in las3.VB_LS else sb.V5_LAS_CONTROLLER
+        want = sb.V5_P3_LAS_K1_CONTROLLER if r["v5_setting"] in las3.VB_LS else sb.V5_LAS_K1_CONTROLLER
         assert r["controller"] == want
         if not r.get("s8c"):
             assert _arg(r["argv"], "--expect-controller") == want
