@@ -1,0 +1,250 @@
+"""Synthetic self tests for the path2_v5c tools (no project results are read).
+
+Run: conda run -n dynamics-dev python -I -B -m pytest -q -p no:cacheprovider <this file>
+  or conda run -n dynamics-dev python -I -B <this file>   (unittest)
+"""
+import copy
+import json
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import p2v5c_common as cm  # noqa: E402
+import p2v5c_grid as gr  # noqa: E402
+import p2v5c_noise as nz  # noqa: E402
+import p2v5c_stage1 as s1  # noqa: E402
+
+P2 = cm.find_p2_dir()
+V5J = cm.load_v5j(P2)
+CORE = V5J.core
+
+
+def fast_run(**kw):
+    r = {"event": "FS24", "offset_s": 0.0, "pair_union_s": 0.5, "pair_last_touch_s": 1.0,
+         "adj_lift_sum_W_s": 0.0, "adj_max_gap_W_mm": 0.0, "adj_lift_outside_W_s": 0.0,
+         "min_F_after_W_kN": {"FL": 20.0, "FR": 20.0, "RL": 20.0, "RR": 20.0}, "fault_periods": 0,
+         "fault_events": [], "final_phase": "ready", "att_end_deg": [0.01, -0.02], "twist": {"n_bundles": 0},
+         "pass": True, "resume_k1": {"controller_tag": "final_C4G2_P3_LAS_K1"},
+         "hydraulics_record": {"m2_clipped_steps_post_lift": [0, 0, 0, 0],
+                               "extend_bound_check": {"breach_reads": [0, 0, 0, 0]}},
+         "hydraulic_options": {"m2_law": "flow_limited_r5"},
+         "lock_window_alignment": {"n_late_fallback": 0}}
+    r.update(kw)
+    r["gates"] = {k: v for k, v in gr.gates_p2(r, CORE).items()}
+    return r
+
+
+class TestCP(unittest.TestCase):
+    def test_table(self):
+        self.assertEqual(cm.cp_max_fail(835), 16)    # rev3 table
+        self.assertEqual(cm.cp_max_fail(855), 17)
+        self.assertEqual(cm.cp_max_fail(501), 8)
+        for k, n in ((16, 835), (8, 501), (0, 25), (3, 25)):
+            self.assertAlmostEqual(cm.cp_upper_beta(k, n), cm.cp_upper_root(k, n), places=9)
+        self.assertAlmostEqual(cm.cp_upper_beta(16, 835), 0.02896, places=5)
+
+
+class TestImports(unittest.TestCase):
+    def test_pinned_sha(self):
+        rec = cm.import_record(P2)
+        self.assertTrue(rec["ok"], rec)
+
+
+class TestGridGates(unittest.TestCase):
+    def test_pass_and_thresholds(self):
+        self.assertTrue(gr.run_pass(gr.gates_p2(fast_run(), CORE)))
+        self.assertFalse(gr.gates_p2(fast_run(pair_union_s=1.8000001), CORE)["U832_pair_union"])
+        self.assertTrue(gr.gates_p2(fast_run(pair_union_s=1.8 + 5e-10), CORE)["U832_pair_union"])  # 7.6 tol
+        lo = {"FL": 9.4145, "FR": 20.0, "RL": 20.0, "RR": 20.0}
+        self.assertFalse(gr.gates_p2(fast_run(min_F_after_W_kN=lo), CORE)["Fmin_after_W"])
+        hi = dict(lo, FL=9.4146)
+        self.assertTrue(gr.gates_p2(fast_run(min_F_after_W_kN=hi), CORE)["Fmin_after_W"])
+        self.assertFalse(gr.gates_p2(fast_run(adj_lift_outside_W_s=0.001), CORE)["U57_outside"])
+        self.assertFalse(gr.gates_p2(fast_run(twist={"n_bundles": 2}), CORE)["recurrence"])
+        self.assertFalse(gr.gates_p2(fast_run(final_phase="fault"), CORE)["end_att"])
+
+    def test_slow_and_missing(self):
+        g4 = fast_run(event="G4", lifts={}, min_F_after_event_kN={"FL": 30.0, "FR": 30.0, "RL": 30.0, "RR": 30.0})
+        g = gr.gates_p2(g4, CORE)
+        self.assertTrue(gr.run_pass(g))
+        g4["lifts"] = {"RR": {"sum_s": 0.1}}
+        self.assertFalse(gr.gates_p2(g4, CORE)["no_lift"])
+        r = fast_run()
+        del r["pair_union_s"]
+        self.assertIsNone(gr.run_pass(gr.gates_p2(r, CORE)))
+
+
+def write_grid(folder, setting, mutate=None, n=192):
+    paths = {}
+    for stem in gr.STEMS:
+        results = []
+        for i in range(n // 6):
+            key = "screen|top|0.0|ready|FR" if i == 0 else f"screen|bottom|0.0|level|K{i}"
+            runs = [fast_run(offset_s=o) for o in (0.0, 0.05)] * 3
+            for j, ev in enumerate(("FS24", "FS24", "RE1bF", "RE1bF", "G4", "G4")):
+                runs[j] = copy.deepcopy(runs[j])
+                runs[j]["event"] = ev
+                if ev == "G4":
+                    runs[j].update(lifts={}, min_F_after_event_kN={"FL": 30.0, "FR": 30.0, "RL": 30.0, "RR": 30.0})
+            results.append({"key": key, "runs": runs})
+        if mutate:
+            mutate(stem, results)
+        p = Path(folder) / f"{setting}_{stem}.json"
+        p.write_text(json.dumps({"meta": {"spec": gr.FAMILY_F_EVENT and "rev. 67 (G1 / G2 / G7 reduced screen)",
+                                          "v5_setting": setting}, "results": results}), "utf-8")
+        paths[stem] = str(p)
+    return paths
+
+
+class Args:
+    def __init__(self, **kw):
+        self.__dict__.update(kw)
+
+
+REPO = cm.REPO_DEFAULT
+
+
+class TestGridCmd(unittest.TestCase):
+    def run_grid(self, mut_vb=None, mut_v0=None, n=192):
+        with tempfile.TemporaryDirectory() as td:
+            vb = write_grid(td, "VB", mut_vb, n)
+            v0 = write_grid(td, "V0", mut_v0, n)
+            a = Args(vb=[f"{k}={v}" for k, v in vb.items()], v0=[f"{k}={v}" for k, v in v0.items()])
+            return gr.cmd_grid(a, REPO, V5J, CORE)
+
+    def test_all_pass(self):
+        body, st = self.run_grid()
+        self.assertEqual(st, "pass", body["grid"]["stops"] + body["grid"]["undecidable"])
+
+    def test_transition_outside_family(self):
+        def m(stem, res):
+            if stem == "grid_r67_main":
+                res[1]["runs"][0]["pair_union_s"] = 2.5
+        body, st = self.run_grid(mut_vb=m)
+        self.assertEqual(st, "stop")
+        self.assertIn("H-10", body["stop_codes"])
+        self.assertEqual(len(body["grid"]["pass_to_fail_outside_F"]), 1)
+
+    def test_family_F_only(self):
+        def m(stem, res):
+            if stem == "grid_r67_top":
+                res[0]["runs"][0]["min_F_after_W_kN"] = {"FL": 5.0, "FR": 20.0, "RL": 20.0, "RR": 20.0}
+        body, st = self.run_grid(mut_vb=m)
+        self.assertEqual(st, "undecidable")
+        self.assertEqual(len(body["grid"]["family_F"]), 1)
+
+    def test_fault_and_count(self):
+        def m(stem, res):
+            res[2]["runs"][2]["fault_periods"] = 3
+        body, st = self.run_grid(mut_vb=m, mut_v0=m)
+        self.assertEqual(st, "fail")
+        body, st = self.run_grid(n=186)
+        self.assertIn("S-15", body["stop_codes"])
+
+    def test_jp3_breach(self):
+        def m(stem, res):
+            res[3]["runs"][1]["hydraulics_record"]["extend_bound_check"]["breach_reads"] = [0, 1, 0, 0]
+        body, st = self.run_grid(mut_vb=m)
+        self.assertIn("H-7", body["stop_codes"])
+
+
+def line(case, setting, eps=0.0, **kw):
+    ln = {"job": {"case": case, "eps": eps, "setting": setting}, "harness_class": "pass", "final_phase": "ready",
+          "t_event_s": None, "commands_sha256": f"{case}{setting}{eps}",
+          "values": {"forces": {"after_liftoff": {"min_kN": 50.0}}, "times": {"t_first_ready_s": 60.0},
+                     "attitude": {"max_abs_last_5s_deg": 0.01}, "pressure": {"max_moving_bar": 100.0}},
+          "command_stats": {"n_rev": 4}, "events": []}
+    ln.update(kw)
+    return ln
+
+
+class TestStage1Parts(unittest.TestCase):
+    def test_kind(self):
+        self.assertEqual(s1.kind_of(line("R6", "VB", 0.001)), "item8")
+        self.assertEqual(s1.kind_of(line("R6", "VB", 0.002)), "main")
+        self.assertEqual(s1.kind_of({"job": {"case": "R12", "setting": "VB", "timing": "x"}}), "overlap")
+        self.assertEqual(s1.kind_of({"job": {"case": "R12", "setting": "V0", "contact": "p"}}), "pressure_only")
+        self.assertEqual(s1.kind_of({"job": {"case": "S2", "setting": "VB", "u9_metrics": True}}), "u9")
+
+    def test_counts_stop(self):
+        f = CORE.Findings()
+        s1.split_lines([line("R1", "V0")], [line("R1", "VB")], f)
+        self.assertIn("S-15", f.as_dict()["stop_codes"])
+
+    def _item8(self, vb_vals):
+        main, it8 = [], []
+        base = {"R6": 20.0, "R8": 30.0, "R9": 40.0}
+        for s, vals in (("V0", base), ("VB", vb_vals)):
+            for c, v in vals.items():
+                for e in (0.0, 0.001, 0.002, 0.003):
+                    ln = line(c, s, e)
+                    ln["values"]["forces"]["after_liftoff"]["min_kN"] = v + e * 100
+                    (it8 if e in (0.001, 0.003) else main).append(ln)
+        f = CORE.Findings()
+        return s1.item8_order(main, it8, CORE, f), f
+
+    def test_item8(self):
+        out, f = self._item8({"R6": 20.0, "R8": 30.0, "R9": 40.0})
+        self.assertEqual(out["VB"]["result"], "order_kept")
+        self.assertEqual(out["grade"], "pass")
+        out, f = self._item8({"R6": 40.0, "R8": 30.0, "R9": 20.0})
+        self.assertEqual(out["grade"], "fail")
+        self.assertIn("H-11", f.as_dict()["stop_codes"])
+        out, f = self._item8({"R6": 30.0, "R8": 30.1, "R9": 40.0})
+        self.assertEqual(out["grade"], "flag")
+
+    def test_f5(self):
+        ln = line("S8", "VB", soil_stop_crawler={"at_stop_kN": 0.0, "threshold_kN": 3.801, "max_after_stop_kN": 3.9})
+        self.assertEqual(s1.f5_clause(ln, CORE)["status"], "clause_fail")
+        ln["soil_stop_crawler"]["max_after_stop_kN"] = None
+        self.assertEqual(s1.f5_clause(ln, CORE)["status"], "ok")
+
+    def test_p6_p7(self):
+        main = [line("R1", "V0", commands_sha256="a"), line("R1", "L1", commands_sha256="a")]
+        main += [line(f"C{i}", "L2", commands_sha256=f"h{i}") for i in range(8)]
+        main += [line(f"C{i}", "L1", commands_sha256=f"h{i}") for i in range(8)]
+        f = CORE.Findings()
+        out = s1.check_p6_p7(main, V5J, f)
+        self.assertEqual(out["P-6"]["differ"], 0)
+        self.assertNotIn("P-6", f.as_dict()["stop_codes"])
+        self.assertEqual(out["P-7"]["L1_equal_V0"], 1)
+        main[-1]["commands_sha256"] = "zz"
+        f = CORE.Findings()
+        s1.check_p6_p7(main, V5J, f)
+        self.assertIn("P-6", f.as_dict()["stop_codes"])
+
+    def test_m2_law(self):
+        f = CORE.Findings()
+        a = line("R1", "VB", hydraulic_options={"m2_law": "flow_limited_r4"})
+        b = line("R1", "V0", hydraulic_options={"m2_law": None})
+        out = s1.m2_law_check([a, b], CORE, f, "t")
+        self.assertEqual(out["bad"], 1)
+
+
+class TestNoise(unittest.TestCase):
+    def test_seedext(self):
+        se, noise = {}, {}
+        for inner in ("A", "B"):
+            for s in range(25):
+                k = f"L2|s{s}|{inner}"
+                se[k] = {"inner": inner, "seed_index": s, "commands_sha256": f"{k}h"}
+                if s < 5:
+                    noise[k] = {"commands_sha256": f"{k}h"}
+        f = CORE.Findings()
+        out = nz.seedext("x", se, noise, CORE, f)
+        self.assertEqual(out["seed0_4_same"], 10)
+        self.assertEqual(f.status(), "pass")
+        noise["L2|s3|A"]["commands_sha256"] = "other"
+        f = CORE.Findings()
+        nz.seedext("x", se, noise, CORE, f)
+        self.assertIn("H-15", f.as_dict()["stop_codes"])
+        del noise["L2|s3|A"]["commands_sha256"]
+        f = CORE.Findings()
+        nz.seedext("x", se, noise, CORE, f)
+        self.assertEqual(f.status(), "undecidable")
+
+
+if __name__ == "__main__":
+    unittest.main()
