@@ -1,9 +1,9 @@
 # 436.8 경로 2 — v5 기준 원 규칙 등급 재집계 (H-6·H-8·H-9·H-10)
 
-- 규칙: 436.8 원판 `../../v5_resume_4368_rules.md`(`9019b405…`), rev1(`d9094fda…`), rev2(`497e4614…`), rev3(`dad8dfa6…`), **rev4(`7ea87a30…`, 봉인 2026-11-13 03:47:45, master 136b455)**. 원 규칙은 원판 부록 A의 `v5_criteria.md` + 개정 1~12b다.
+- 규칙: 436.8 원판 `../../v5_resume_4368_rules.md`(`9019b405…`), rev1(`d9094fda…`), rev2(`497e4614…`), rev3(`dad8dfa6…`), rev4(`7ea87a30…`), **rev5(`452a8436…`, 커밋 31d543e), rev6(`809e5639…`, 커밋 d581df4)**. 원 규칙은 원판 부록 A의 `v5_criteria.md` + 개정 1~12b다.
   - 실행할 때마다 두 곳에서 확인한다.
     - `p2_4368.check_seals`: 원판~rev4, 부록 A, R2-9·R3-F4 CRLF 정규화.
-    - 이 폴더의 `check_rev3`: rev3·rev4의 raw sha, `.sha256` 기록, LF·BOM 없음.
+    - 이 폴더의 `check_rev3`: rev3~rev6의 raw sha, `.sha256` 기록, LF·BOM 없음.
   - 어긋나면 종료 2(S-1)다.
 - 작성자: terramechanics-expert(경로 2, 사용자 결정 2026-11-13). 경로 1 도구를 만들거나 고친 적이 없다. 읽은 것은 아래 "독립성 공개"에 적었다.
 - 환경: `conda run -n dynamics-dev python -I -B <도구> ...`. 쓰는 것은 표준 라이브러리, numpy, scipy, 그리고 git(`log`·`rev-parse` 조회만)이다.
@@ -19,20 +19,30 @@ J 항목(R3-C3~C8, R4-C5의 `values.case_floor_deg`로 정하는 J3 바닥 각)�
 - 찾는 순서: `--p2-dir` → `../path2` → dynamics-expert worktree `agent-a2e81c57365f0d7bb`.
 - sha가 다르면 종료 2(`P2-SHA`)다.
 
-| 파일 | 고정 sha256(rev4 판, 커밋 `6b4ebcc`·`dc54d25`) | 쓰는 것 |
+| 파일 | 고정 sha256(rev5·rev6 판, 커밋 `7b1e2e8`·`d49068e`) | 쓰는 것 |
 |---|---|---|
-| `p2_v5j.py` | `a16751517bc64fb99e702ffeea21c9eb0dcd361b3b08f7a57e370afdb12b5146` | `judge_pair`, `j_values`, `jp3`, `nrev_max_by_row`, `pair_key`, `row_key`, `rod_reading_from_t4h`, `tag_of`, `is_event` |
-| `p2_4368.py`(`p2_v5j.core`) | `71b870604aa4b0652ab306bb940dd34c2dc597cddf9a3e9bfcd77be5bf8cf9cc` | `check_seals`, `load_is_extend_start`, `Findings`, `t_ge/t_lt/t_gt`, `num`, `dig`, `read_jsonl`, `F_MIN_N` |
+| `p2_v5j.py` | `5772624cb28e414ceeb38af3eb6d386a2e0a78857db8a5ea9a5d3cd2ec5f7d8b` | `judge_pair`(M-3: LS J11 n_late > 0 → stop, 이 도구의 L-e로 이어짐), `j_values`, `jp3`, `nrev_max_by_row`, `pair_key`, `row_key`, `rod_reading_from_t4h`, `tag_of`, `is_event` |
+| `p2_4368.py`(`p2_v5j.core`) | `dc631509b90296d842ec382c911f6a0abfd8944e170802386221eb2a1f315a27` | `check_seals`, `load_is_extend_start`, `Findings`, `t_ge/t_lt/t_gt`, `num`, `dig`, `read_jsonl`, `F_MIN_N` |
 
-## 도구와 sha256 (rev4 판, 각 묶음 첫 결과 전 고정)
+## 도구와 sha256 (rev6 판, 각 묶음 첫 결과 전 고정)
 
 | 도구 | 묶음 | sha256 |
 |---|---|---|
-| `p2v5c_common.py` | 공통 | `5d9a01b7f7814e12454332352a96f254edd8299aa41e831c8887ee4ca7246106` |
-| `p2v5c_stage1.py stage1` | H-10, H-9(main·pressure_only) | `d0e5009b01783d1f27548f426614cf8fa1aa25640d68bdfdc164970edd22bd5c` |
-| `p2v5c_grid.py grid` | H-9(격자 768, V0 짝, 계열 𝓕) | `68d7359db7b2e580686ae98499629890cf613a04801c2644fe758a1a4d5d642b` |
-| `p2v5c_noise.py noise` | H-6, H-8 | `90fd3c316ed02586af2e7b0b06e333dfc13036cc337f05e144d638e7fc4a0b30` |
-| `test_p2v5c.py` | 자체 시험 23개 | `eddb575819a2df71233afe935c71b6925fae27c944c4e48cdabb08508ba71dea` |
+| `p2v5c_common.py` | 공통 | `511c03bf23171a22961917aa5ec898a566ea6584631a6338a9a0508184c1b70d` |
+| `p2v5c_stage1.py stage1` | H-10, H-9(main·pressure_only) | `e419475980ee217d4519e19c7fed7afaeb9a3cdfcb35224ebd81e46877b45562` |
+| `p2v5c_grid.py grid` | H-9(격자 768, V0 짝, 계열 𝓕) | `68d7359db7b2e580686ae98499629890cf613a04801c2644fe758a1a4d5d642b`(rev4 판과 같음) |
+| `p2v5c_noise.py noise` | H-6, H-8 | `8f15b56ef5f6cf8e7762032aaebbbde62a80655f8707c8a8801eed175fca8520` |
+| `test_p2v5c.py` | 자체 시험 23개 | `4244968efd346cf3eca81575b6ecc5ca37e41c02335fcbec5d4603fa65883694` |
+
+## rev5·rev6 반영
+
+| 규칙 | 반영 | 함수 |
+|---|---|---|
+| R5-C1 | 판정기 출력에 없는 L1 게이트 개수(지금 `settings_mismatch`)는 경로 2가 센 값이 판정 값이다. 출력에는 `"대조 대상 없음"`으로 적고 판정 불가로 두지 않는다 | `noise.cmd_noise` |
+| R5-C2 | 하위 항목으로도 13.2로도 설명되지 않는 S-4 실패는 실패다. 판정기 S-4 `flags`에 기존 FLAG 꼬리표(`S4_…`)가 있으면 그 FLAG로 둔다 | `noise.line_grade` |
+| R5-C3 | seedext 판정기 입력은 seedext 파일과 같은 설정의 `h8_noise_<설정>.json` 두 파일이다. 경로 2가 입력 파일을 따로 만들지 않는다 | `noise.cmd_noise` |
+| R5-E | 판정기 조건 1은 `r79_sensor_judge.py`만 본다. 판정기가 import하거나 같이 쓰는 모듈(`s9/late_loc_rule.py`, `s8/r79_sensor_screen.py`, `s9/s9_slope_fix_candidates.py`, 러너 `s8/r79_L3L4_final.py`)은 `git diff --stat f46b5ab..GIT_AT_START`를 `judge_tool.related_modules_diff_stat`에 기록한다. "기록 전용 변경"인지는 판정서에서 판단한다. `r79_L3L4_final.py`의 판정 함수는 쓰지 않는다 | `noise.cmd_noise` |
+| R6-C1 | SA-4 "정지 뒤 네 다리 ≥ F_min"은 F-9 `values.sa4.F_min_after_stop_N`의 네 다리 최소 ≥ 9,414.589 N으로 본다. F-9가 없으면 이륙 뒤 최소 ≥ F_min이 충분조건이고, 아니면 판정 불가다. "포화 차단 0"은 `values.pressure.saturation_leg_chunks` = 0이다(정의 확인은 G-S) | `stage1.sa4_rest` |
 
 ## 규칙 절 ↔ 함수
 
@@ -78,6 +88,10 @@ $c = 'C:\ProgramData\miniforge3\Scripts\conda.exe'
 | stage1 | 앞 판과 같다(SA-4 부상 필드가 없어 S8 판정 불가) |
 
 - 저장 기준선 seedext 값은 옛 제어기 결과의 동작 확인일 뿐 436.8 판정이 아니다.
+- rev6 판으로 다시 돌린 결과:
+  - 판정기 4회 모두 종료 0이다.
+  - R5-C3 입력으로 바꾼 뒤에도 seedext 재집계는 같다(`ref|J2|top|Fs0` VB 16/25 대 V0 1/25, slope 3/25 대 0/25).
+  - R5-E 기록: `r79_sensor_screen.py`는 `f46b5ab..HEAD` 사이 15줄 추가가 있다. 나머지 세 파일은 차이가 없다. `r79_L3L4_final.py`도 차이가 없다. rev5가 적은 `cf88ea8`이 이 브랜치의 조상이 아니기 때문이다(확인 필요 Q-R11).
 
 ## 확인 필요
 
@@ -85,7 +99,8 @@ $c = 'C:\ProgramData\miniforge3\Scripts\conda.exe'
 |---|---|---|
 | Q-R8 | 판정기 출력에 `settings_mismatch` 키가 없다(저장 기준선으로 확인). R4-B3 대조의 넷째 개수 | 키가 없으면 그 개수는 대조에서 빼고 `None`으로 적는다 |
 | Q-R9 | S-4 항목 `ok` 거짓을 하위 항목(`fail_misfire_new`, `miss`, `recontact_new`, 시간 조항)이 설명하지 못하는 줄 | 보수 쪽으로 실패로 두고 사유를 적는다 |
-| Q-R10 | seedext 판정기 입력을 경로 2가 만든다(seedext run + 잡음 파일의 같은 사례 L1 run). 원 규칙 3단계 판정이 쓴 입력 꼴과 같은지 | 이렇게 만든 입력 파일을 `--judge-dir`에 남겨 공개한다 |
+| Q-R10 | (rev5 R5-C3로 닫힘) seedext 판정기 입력 = seedext 파일 + 같은 설정 잡음 파일 | 시드 0~4는 잡음 L2 줄과 키가 같다. 판정기 출력에서는 같은 키의 마지막 줄(잡음 파일 쪽)을 읽는다. H-15가 두 줄의 해시가 같음을 확인한다 |
+| Q-R11 | R5-E는 `r79_L3L4_final.py`에 `f46b5ab` 뒤 커밋 `cf88ea8`이 있다고 적었다. `cf88ea8`은 있지만, 이 브랜치 HEAD(master d581df4 위)의 조상이 아니다(`git merge-base --is-ancestor` 거짓). 그래서 `f46b5ab..HEAD`에 그 파일의 차이가 없다. seedext `--keys-file` 옵션이 아직 master에 없을 수 있다 | 기록만 한다. 판정서에서 `GIT_AT_START`로 다시 센다 |
 
 ## 독립성 공개 (436.8 9.2)
 

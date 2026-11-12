@@ -326,7 +326,9 @@ class TestNoise(unittest.TestCase):
         self.assertEqual(nz.line_grade(self._rec(base=False), self._row(**late), CORE)[0], "undecidable")
         self.assertEqual(nz.line_grade(self._rec(), self._row(ok=False, recontact_new=True), CORE)[0], "fail")
         self.assertEqual(nz.line_grade(self._rec(), self._row(ok=False, fail_misfire_new=True), CORE)[0], "fail")
-        self.assertEqual(nz.line_grade(self._rec(), self._row(ok=False), CORE)[0], "fail")    # unexplained
+        self.assertEqual(nz.line_grade(self._rec(), self._row(ok=False), CORE)[0], "fail")    # unexplained (R5-C2)
+        g = nz.line_grade(self._rec(), self._row(ok=False, flags=["S4_baseline"]), CORE)
+        self.assertEqual((g[0], g[1]), ("flag", ["S4_baseline"]))                            # existing FLAG tag
         r = self._row()
         r["rows"]["S-5"]["ok"] = False
         self.assertEqual(nz.line_grade(self._rec(), r, CORE)[0], "fail")
@@ -364,6 +366,13 @@ class TestRev3(unittest.TestCase):
         self.assertTrue(s1.sa4_rest(ln, CORE)["lift_after_stop_0"])
         ln["values"]["sa4"] = {"lift_after_stop_ms": [0, 3, 0, 0]}
         self.assertFalse(s1.sa4_rest(ln, CORE)["lift_after_stop_0"])
+        ln["values"]["sa4"]["F_min_after_stop_N"] = [20000.0, 9414.0, 30000.0, 30000.0]   # rev6 F-9
+        r = s1.sa4_rest(ln, CORE)
+        self.assertFalse(r["after_stop_Fmin"])
+        self.assertEqual(r["after_stop_Fmin_source"], "F-9")
+        del ln["values"]["sa4"]["F_min_after_stop_N"]
+        ln["values"]["forces"]["after_liftoff"]["min_kN"] = 9.0      # below F_min, no F-9 -> undecidable
+        self.assertIsNone(s1.sa4_rest(ln, CORE)["after_stop_Fmin"])
         g = line("S7", "VB", events=[[30.04, "WARN_LIFT_STROKE_LIMITED:FL,RR"]])
         self.assertEqual(s1.fl_guard_cycle(g), 300)
         self.assertIsNone(s1.fl_guard_cycle(line("S7", "VB", events=[])))
