@@ -95,6 +95,52 @@
 - 다시 세지 않는 것: G-3(옵션 없는 경로 동일성)은 추가 실행이 필요해 이 도구 몫이 아니다.
 - 시험 `test_p2_u3.py`(6개).
 
+## v5 J 항목과 H-5: `p2_v5j.py` (v5 기준 원판 + 개정 1~12b, `u9_targeted_rules_rev1`)
+
+- 작성: dynamics-expert(경로 2 둘째 작성자, 2026-11-13). 앞 작성자의 `p2_4368.py` 공통 함수(봉인 확인, 문턱 비교, 태그 상수, `is_extend_start_tag` 적재)를 그대로 쓴다.
+- 실행: `p2_v5j.py --out x.json u9 --v0 <resume_k1/h5_u9_v0.jsonl> --vb <resume_k1/h10_reuse_rerun.jsonl> [--h0-ref <같은 파일>] [--stored-main <v5/main.jsonl>] [--stored-p3 <v5/p3_hash.jsonl>] [--t4h-root <h10 T4h 폴더>]`. 실행할 때마다 436.8 sha(원판·rev1·rev2·부록 A, R2-9 LF 정규화)와 `u9_targeted_rules_rev1.md` sha를 확인한다.
+- 종료 코드: 0 = 통과(분류 A·B), 1 = 분류 C(사용자 결정) 또는 판정 불가, 2 = 멈춤(H0, S-2 태그, S-15 키, H-7·H-9, J-P3 설정 결함) 또는 규칙 sha 불일치, 3 = 도구 오류.
+- `--vb` 파일에서 `job.setting` = VB ∧ `job.u9_metrics` 참인 줄만 U-9 VB로 고른다(η_v 0.85·0.80 각 14). H0 ①의 기준 줄은 `--h0-ref`(기본 `--vb`)에서 `u9_metrics`·`eta_v`가 없는 VB 줄 가운데 같은 (사례, ε)다. 436.8에서는 p3_hash를 따로 돌리지 않으므로(RV1-2) H-10의 main VB 줄이 그 기준이다(확인 필요 U9-a).
+
+### J 항목 읽기 (경로 2 정의, 줄 필드)
+
+| 항목 | 정상 행 | 사건 행(`t_event_s` 있음 또는 `event_output.pass`가 참·거짓) | 실패 |
+|---|---|---|---|
+| J1 | `harness_class` ∈ {pass, stroke_limited_stop}이면 통과 분류. 두 분류 사이 이동도 실패(봉인 6절 "분류가 `stroke_limited_stop`에서 벗어남") | `event_output.pass` | V0 통과, 설정 실패 |
+| J2 | `values.forces.after_liftoff.min_kN` ≥ $F_{min}$(9.414589 kN, 436.8 2절). 강체 R* < 14.415 kN은 `spec_shortfall` 기록 | 강체 사건(R12·R14·R15·R16) `event_output.after_window_force.min_1ms_kN` ≥ $F_{min}$. 그 밖 사건은 토양 빠른 사건으로 보고 `min_trailing_0p5s_kN` ≥ $F_{min}$ ∧ `lift_ms_after_window` = 0 | V0 통과, 설정 미달 |
+| J3 | S1~S5·S7 `values.times.t_first_ready_s` ≤ 100 s(판정), S8 READY 없음, 강체 R* 기록(R3 경사 120 s, 그 밖 평지 90 s 초과 FLAG) | 기록(복귀는 J5) | V0 안, 설정 초과·미도달 |
+| J4 | `final_phase` | 같음 | V0 `ready`, 설정 다름 |
+| J5 | 해당 없음 | `event_output.t_ready_back_s` ≤ 60 s | V0 만족, 설정 불만족 |
+| J6 | `values.attitude.max_abs_last_5s_deg` ≤ 0.2° | `max|event_output.att_end_deg|` ≤ 0.2° | V0 안, 설정 밖 |
+| J7 | `events`([t, 이름])와 값 목록의 FAULT_*·WARN_* 이름(숫자 접미사는 값으로 보고 뗌), `INFO_ROD_PRESSURE_FAULT_REASON:<다리>:<D>` 사유 | 같음 | 설정에 V0에 없던 이름·사유. 대체 시각 차는 기록 |
+| J8 | `command_stats.n_rev` ≥ 2 $n^{off,max}$ ∧ ≥ $n^{off,max}$ + 6, $n^{off,max}$ = 같은 행(작업에서 설정·ε·오프셋을 뺀 키) V0 줄의 최대 | 같음 | 리밋 사이클 의심 |
+| J9 | M2 켬(`hydraulic_options.m2_law`)이면 `hydraulics_record.m2_clipped_steps_post_lift` 합 > 0 → H-9 멈춤 | 같음 | – |
+| J10 | `values.pressure.max_moving_bar` ≤ 180 bar | `event_output.pressure.moving_outside_max_bar` ≤ 180 bar | V0 안, 설정 밖 |
+| J11 | `lock_window_alignment.n_late_fallback` > 0 → H-7. `{n_late: None, reason}`만 있으면 `not_computed`(기록) | 같음 | – |
+| J-P3 | ③ 켬(`is_extend_start_tag`)만. 개정 9 3.2 표. 로드 판독 유무는 `--t4h-root`의 T4h `rod_pressure_Pa` 유한값(개정 9 3.1), 없으면 `head_only_declared`의 반대로 가정 | 같음 | breach > 0 → H-7, 표 #2·#4·#5 → 설정 결함 멈춤 |
+
+- 판정 불가: 위 값이 없으면(9.3). J 항목의 "기준선 실패"(V0도 실패)는 실패로 세지 않고 `baseline_fail`로 적는다.
+
+### H-5 U-9 (`u9_targeted_rules_rev1` 4절·4.1절)
+
+| 규칙 | 경로 2 |
+|---|---|
+| 2절 키 | 14키 × {V0, VB 0.85, VB 0.80}. 키 집합이 다르거나 중복이면 S-15 |
+| 7.1 태그 읽기 | V0 `final_C4G2_LAS_K1`, VB `final_C4G2_P3_LAS_K1`. 다르면 S-2 |
+| H0 ① | VB 0.85 S2 ε 2e-3, S3·R3·S5 ε 0의 `commands_sha256` = 기준 VB 줄. 다르거나 기준이 없으면 멈춤 `U9-H0` |
+| H0 ② | 나머지 ε 키를 `--stored-main` VB 줄과 같은지 기록(`--stored-p3`도 기록) |
+| T1 | VB 0.85·VB 0.80 각각 V0 짝과 J1~J11 + J-P3 |
+| T2·T5 | 기록(`level_count_s`, `longest_ge3_s`, `longest_eq4_s`, E1 LEVEL `short_s`, E2 LEVEL 최소 r, E4, READY 차) |
+| T3a | VB 0.80 `ge3_runs` 모든 구간·축 `max_abs_delta_deg` ≤ 0.10° |
+| T3b | 모든 구간·축 \|`filtered_end_deg`\| ≤ \|`filtered_start_deg`\| + 0.05° |
+| T3c | `max_abs_after_liftoff_deg`(0.80) ≤ 같은 키 0.85 + 0.10° |
+| T4 | E5 `back_in_band_after_saturation_s` ≤ max(20 s, 0.85 값 + 5 s), 값 None은 실패, 키 없음은 판정 불가. `max_abs_integral_rad_s` ≥ `integral_limit_rad_s`면 FLAG 기록 |
+| 4.1 분류 | C: 포화 원인 실패(V0 J1 통과 ∧ 0.85 T1 통과 ∧ 0.80 T1 실패) 또는 T3a·T3b·T4 실패. T3c만이면 "C (T3c only)". 아니면 어느 키든 `longest_ge3_s` ≥ 0.5 s면 A, 모두 미만이면 B. D(0.85 T1 실패 또는 V0 J1 실패)는 따로 적고 분류는 나머지 키로 |
+| 436.8 등급 | A·B → 통과, C → 미달(사용자 결정), 결측 → 판정 불가, 멈춤 → 멈춤(확인 필요 U9-b) |
+
+- 동작 확인(판정 아님): 저장 `v5/u9_targeted.jsonl`(옛 태그 `final_C4G2`·`final_C4G2_P3`)의 V0 14줄을 scratchpad로 떼어 `--vb` 저장 파일, `--h0-ref v5/p3_hash.jsonl`, `--t4h-root v5/u9_targeted/t4h`로 돌렸다. 기대대로 태그 S-2 멈춤 42건만 나왔고(옛 태그), H0 ① 4키는 같음, 판정 불가 0이었다.
+- 시험 `test_p2_v5j.py`(12개, 합성 줄): J 항목 통과·실패, 문턱 허용 1e-9, 기준선 실패, J8 두 조건, H-9·H-7·J-P3 결함 멈춤, J11 사유 기록, 이름 접미사, U-9 분류 A·B·C·C(T3c)·D, H0·태그·키 수 멈춤, 결측 = 판정 불가, 실제 u9 규칙 sha.
+
 ## 하지 않는 것 (범위)
 
 - **원 규칙 등급의 재집계는 하지 않는다.** H-0 T-3K(`las_targeted_rules` 원판~rev5), H-1·H-2(D-1 선별 규칙), H-3·H-4(`u3_u6`), H-5(`u9`), H-6~H-10(v5 기준 + 개정 1~12b), C-1~C-5 판정 블록(D-1 규칙 11, 개정 12 2.2)의 통과·미달 재집계가 여기에 든다. 이 도구가 내는 묶음 상태는 436.8 문서가 새로 정한 층(4.1·4.2·6·7.2·7.4·9.3·S-15)의 상태다(`grade_scope`). 원 규칙 등급의 경로 2는 그 규칙들의 정의 문장을 읽고 따로 만들어야 한다.
