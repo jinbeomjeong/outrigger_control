@@ -107,12 +107,63 @@ REPO = cm.REPO_DEFAULT
 
 
 class TestGridCmd(unittest.TestCase):
-    def run_grid(self, mut_vb=None, mut_v0=None, n=192):
+    def run_grid(self, mut_vb=None, mut_v0=None, n=192, family_f=None):
         with tempfile.TemporaryDirectory() as td:
             vb = write_grid(td, "VB", mut_vb, n)
             v0 = write_grid(td, "V0", mut_v0, n)
-            a = Args(vb=[f"{k}={v}" for k, v in vb.items()], v0=[f"{k}={v}" for k, v in v0.items()])
+            ff = None
+            if family_f is not None:
+                ff = str(Path(td) / "ff.jsonl")
+                Path(ff).write_text("\n".join(json.dumps(x) for x in family_f) + "\n", "utf-8")
+            a = Args(vb=[f"{k}={v}" for k, v in vb.items()], v0_new=[f"{k}={v}" for k, v in v0.items()],
+                     v0_stored=None, v0_sample=None, family_f=ff)
             return gr.cmd_grid(a, REPO, V5J, CORE)
+
+    def test_v0_sample(self):
+        with tempfile.TemporaryDirectory() as td:
+            st = write_grid(td, "V0", None)
+            sm = write_grid(td, "S", None)
+            vb = write_grid(td, "VB", None)
+            for stem, p in sm.items():   # give every run a hash; same as stored
+                for q in (st[stem], p):
+                    d = json.loads(Path(q).read_text("utf-8"))
+                    for r in d["results"]:
+                        for i, run in enumerate(r["runs"]):
+                            run["commands_sha256"] = f"{r['key']}{i}"
+                    Path(q).write_text(json.dumps(d), "utf-8")
+            a = Args(vb=[f"{k}={v}" for k, v in vb.items()], v0_stored=[f"{k}={v}" for k, v in st.items()],
+                     v0_sample=[f"{k}={v}" for k, v in sm.items()], v0_new=None, family_f=None)
+            body, s = gr.cmd_grid(a, REPO, V5J, CORE)
+            self.assertEqual(body["v0_pair"]["sample"]["same"], 8)
+            self.assertTrue(body["v0_pair"]["pair"].startswith("stored"))
+            d = json.loads(Path(sm["grid_r69_top"]).read_text("utf-8"))
+            d["results"][0]["runs"][0]["commands_sha256"] = "changed"
+            Path(sm["grid_r69_top"]).write_text(json.dumps(d), "utf-8")
+            body, s = gr.cmd_grid(a, REPO, V5J, CORE)
+            self.assertEqual(body["v0_pair"]["sample"]["same"], 7)
+            self.assertEqual(s, "undecidable")
+
+    def _ff(self, vb_bad, v0_bad):
+        lines = []
+        for key in sorted(gr.FAMILY_F_KEYS):
+            for s, nbad in (("VB", vb_bad), ("V0", v0_bad)):
+                for i in range(16):
+                    run = fast_run(offset_s=i * 0.00625)
+                    if i < nbad:
+                        run["min_F_after_W_kN"] = {"FL": 5.0, "FR": 20.0, "RL": 20.0, "RR": 20.0}
+                    lines.append({"key": key, "setting": s, "run": run})
+        return lines
+
+    def test_family_F_rule(self):
+        def m(stem, res):
+            if stem == "grid_r67_top":
+                res[0]["runs"][0]["min_F_after_W_kN"] = {"FL": 5.0, "FR": 20.0, "RL": 20.0, "RR": 20.0}
+        body, st = self.run_grid(mut_vb=m, family_f=self._ff(4, 1))   # 4 <= 1 + 4, sum 8 <= 2 + 6
+        self.assertEqual(body["grid"]["family_F_rule"]["result"], "pass")
+        self.assertEqual(st, "pass")
+        body, st = self.run_grid(mut_vb=m, family_f=self._ff(6, 1))   # 6 > 5
+        self.assertEqual(body["grid"]["family_F_rule"]["result"], "fail")
+        self.assertIn("H-10", body["stop_codes"])
 
     def test_all_pass(self):
         body, st = self.run_grid()
@@ -242,8 +293,57 @@ class TestNoise(unittest.TestCase):
         self.assertIn("H-15", f.as_dict()["stop_codes"])
         del noise["L2|s3|A"]["commands_sha256"]
         f = CORE.Findings()
-        nz.seedext("x", se, noise, CORE, f)
-        self.assertEqual(f.status(), "undecidable")
+        out = nz.seedext("x", se, noise, CORE, f)
+        self.assertEqual(f.status(), "pass")              # R3-E4: missing hash = record incomplete
+        self.assertEqual(out["record_status"], "기록 불완전")
+
+    def _rec(self, restart=True, w=0.005, mf=20.0, done=50.0, contact=44.0):
+        ev = [[40.0, "leg_reapproach_start:RL"], [contact, "leg_reapproach_contact:RL"], [46.0, "crawler_liftoff_confirmed"]]
+        if restart:
+            ev.append([40.5, "INFO_LOC_WINDOW_RESTART:RL"])
+        if done is not None:
+            ev.append([done, "first_done"])
+        return {"events": ev, "r79": {"t_off_s": 42.0, "t_loc_s": 46.0, "crawler_at_loc_over_W": w,
+                                      "min_true_F_after_off_kN": mf}}
+
+    def test_line_grade(self):
+        ok = {x: True for x in nz.GATES}
+        self.assertEqual(nz.line_grade("k", self._rec(), {"gates": ok}, CORE)[0], "pass")
+        s4 = dict(ok, **{"S-4": False})
+        g = nz.line_grade("k", self._rec(), {"gates": s4, "s4_reasons": ["time_clause"]}, CORE)
+        self.assertEqual(g[0], "flag")                     # 419.8 all true -> S4_late_loc
+        g = nz.line_grade("k", self._rec(restart=False), {"gates": s4, "s4_reasons": ["time_clause"]}, CORE)
+        self.assertEqual(g[0], "fail")
+        g = nz.line_grade("k", self._rec(mf=9.0), {"gates": s4, "s4_reasons": ["time_clause"]}, CORE)
+        self.assertEqual(g[0], "fail")
+        g = nz.line_grade("k", self._rec(done=None), {"gates": s4, "s4_reasons": ["time_clause"]}, CORE)
+        self.assertEqual(g[0], "undecidable")
+        g = nz.line_grade("k", self._rec(), {"gates": s4, "s4_reasons": ["recontact_chatter"]}, CORE)
+        self.assertEqual(g[0], "flag")
+        g = nz.line_grade("k", self._rec(), {"gates": s4, "s4_reasons": ["recontact_strict_new"]}, CORE)
+        self.assertEqual(g[0], "fail")
+        self.assertEqual(nz.line_grade("k", self._rec(), {"gates": s4}, CORE)[0], "fail")
+        self.assertEqual(nz.line_grade("k", self._rec(), {"gates": dict(ok, **{"S-5": False})}, CORE)[0], "fail")
+        self.assertEqual(nz.line_grade("k", self._rec(), None, CORE)[0], "undecidable")
+
+
+class TestRev3(unittest.TestCase):
+    def test_rev3_seal(self):
+        self.assertTrue(cm.check_rev3(REPO)["ok"])
+
+    def test_sa4_and_guard(self):
+        ln = line("S8", "VB", events=[[39.9, "WARN_LIFT_STROKE_LIMITED:FR"], [39.9, "FAULT_LIFT_STROKE_LIMIT:soil:FR"]],
+                  soil_stop_crawler={"stop_t_s": 39.9})
+        ln["values"]["times"]["t_first_ready_s"] = None
+        ln["values"]["pressure"]["saturation_leg_chunks"] = 0
+        r = s1.sa4_rest(ln, CORE)
+        self.assertTrue(r["same_cycle_warn_fault_soil"])
+        self.assertTrue(r["ready_0"] and r["fault_stroke_end_0"] and r["after_stop_Fmin"])
+        self.assertIsNone(r["lift_after_stop_0"])         # record name not known -> undecidable
+        g = line("S7", "VB", events=[[30.04, "WARN_LIFT_STROKE_LIMITED:FL,RR"]])
+        self.assertEqual(s1.fl_guard_cycle(g), 300)
+        self.assertIsNone(s1.fl_guard_cycle(line("S7", "VB", events=[])))
+        self.assertEqual(s1.fl_guard_cycle({"job": {}}), "no_events")
 
 
 if __name__ == "__main__":
