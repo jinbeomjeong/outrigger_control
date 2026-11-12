@@ -116,11 +116,11 @@ def _settle_block() -> dict:
 
 
 # -------------------------------------------------------------------------------------- paths
-def _run_steady(row: D1Row) -> tuple[dict, dict, object, object, dict]:
+def _run_steady(row: D1Row, mass_scale: float = 1.0) -> tuple[dict, dict, object, object, dict]:
     import s9_soil_slope as slope
 
     case = slope.SlopeCase("D1", row.base, PAD, row.level, row.slope_name, row.roll_deg,
-                           row.pitch_deg)
+                           row.pitch_deg, mass_scale=float(mass_scale))
     case = slope.attach_settle_table([case], _settle_block())[0]
     if case.settle_table_status == "no_table_row":
         raise KeyError(f"settle table has no hook_harness row {case.harness_settle_key!r}")
@@ -466,7 +466,7 @@ def _d8x_record_module():
 
 # ---------------------------------------------------------------------------------- public API
 def execute(entry: dict, setting, hydraulics, *, setting_name: str,
-            eps: float, k1: str | None = None) -> tuple[dict, dict]:
+            eps: float, k1: str | None = None, mass_scale: float = 1.0) -> tuple[dict, dict]:
     """Run one D-1 row in this worker (patches stay for the rest of the process).
 
     Args:
@@ -478,23 +478,33 @@ def execute(entry: dict, setting, hydraulics, *, setting_name: str,
         k1: D8x H-R-X jobs only: ``on`` / ``off`` sets the R4c30 order gate explicitly in
             this worker (the preset has it on since the K1 switch, so ``off`` is installed too);
             None (every other row) keeps the preset as it is.
+        mass_scale: Plant superstructure mass / inertia factor of a steady row (spec 422.2,
+            ``s9_soil_closed_loop.scale_plant_mass``; the controller keeps the YAML mass).
+            1.0 (every d1 job) leaves the run bit for bit; B1 H-W runs 1.1 (B1 rules R-4).
 
     Returns:
         The result dict (``verdict_runs._finish`` keys, the plant options record,
         ``head_only_declared`` and ``d1``) and the 10 Hz series.
+
+    Raises:
+        ValueError: A D8x row without ``k1``, or ``mass_scale`` other than 1 on a row whose
+            path is not ``steady``.
     """
     import run_control_comparison as rcc
 
     row = D1Row.from_job(entry)
     if row.group == D8X_GROUP and k1 is None:  # D8x rev3 2: no silent preset fallback
         raise ValueError(f"{row.key}: a D8x H-R-X row needs k1 off|on")
+    if float(mass_scale) != 1.0 and row.path != "steady":
+        raise ValueError(f"{row.key}: mass_scale {mass_scale} needs a steady row, not {row.path}")
     vr.install_plant_options(setting, hydraulics)
     c2 = vr.install_logged_controller()
     if k1 is not None:
         record = _d8x_record_module()
         record.install_k1_order_gate(record.k1_arm_is_on(k1), c2.C2Controller)
     rcc.CRAWLER_K_SCALE = float(row.crawler_k_scale)
-    result, series, plant, controller, harness = PATH_RUNNERS[row.path](row)
+    path_options = {"mass_scale": float(mass_scale)} if row.path == "steady" else {}
+    result, series, plant, controller, harness = PATH_RUNNERS[row.path](row, **path_options)
     t_lift_s = ((result.get("values") or {}).get("forces") or {}).get("t_lift_s")
     result.update(vr.plant_options_record(hydraulics, t_lift_s))
     result[vr.HEAD_ONLY_DECLARED_KEY] = row.path != "event"

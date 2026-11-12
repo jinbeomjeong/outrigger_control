@@ -17,7 +17,8 @@ cost estimate; lines carry the ``d1`` record of ``d1_selection_rules.md`` 3), ``
 (U-9 targeted runs, ``u9_targeted_rules_rev1.md`` 2 / 3.2: 14 keys x V0, VB eta_v 0.85, VB eta_v
 0.80 = 42; lines carry ``values["U9"]``).
 A job may carry ``eta_v`` (pump volumetric efficiency of a flow-limited setting, default
-:data:`ETA_V`) and ``u9_metrics`` (add ``values["U9"]``); jobs without them are as before.
+:data:`ETA_V`) and ``u9_metrics`` (add ``values["U9"]``), and a ``d1`` job ``mass_scale`` (plant
+mass factor of a steady row, B1 H-W runs); jobs without them are as before.
 One JSON line per run in ``06_analysis/03_hydraulic/coupled/v5/<batch>.jsonl`` (appended; runs
 already in the file are skipped). Each run has its own spawned worker (``maxtasksperchild=1``): the
 harness patches stay in the process. Deterministic (no noise). Values only; the verdict is
@@ -402,9 +403,11 @@ def run_one(job: dict) -> dict:
             import d1_runs
 
             t4h = None
+            # mass_scale: B1 H-W jobs only (B1 rules R-4); a job without the key runs at 1.0
             result, series = d1_runs.execute(job["d1"], flow, options,
                                              setting_name=job["setting"],
-                                             eps=float(job.get("eps", 0.0)), k1=job.get("k1"))
+                                             eps=float(job.get("eps", 0.0)), k1=job.get("k1"),
+                                             mass_scale=float(job.get("mass_scale", 1.0)))
         else:
             case, decision = _case_of(job)
             t4h = _t4h_request(job, flow, options)
