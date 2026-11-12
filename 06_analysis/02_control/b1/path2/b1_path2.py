@@ -1,4 +1,4 @@
-"""B1 creep basis, path 2 recount (control-expert), independent of path 1.
+"""B1 creep basis, path 2 recount (control-expert), independent of path 1. Rules: original + rev1 (9f72af5b).
 
 Implements the sealed rules ``06_analysis/02_control/b1/b1_creep_rules.md`` (sha256
 ``6b99702ce26d6da28fbfe6473b622c7e51419241916cbc101f795828f498774e``) from their text only:
@@ -34,6 +34,10 @@ import numpy as np
 
 RULES_SHA256 = "6b99702ce26d6da28fbfe6473b622c7e51419241916cbc101f795828f498774e"
 RULES_REV1_SHA256 = "9f72af5babc36a9164a79163a0c3fa8707a0b8dc71aa3bfe978ebdf33d0905cf"   # b1_creep_rules_rev1.md
+RULES_FILES = {"06_analysis/02_control/b1/b1_creep_rules.md": RULES_SHA256,
+               "06_analysis/02_control/b1/b1_creep_rules_rev1.md": RULES_REV1_SHA256}
+P7_REF_SHA256 = "70e91ec1234d56a918af1b4fc053c3175f0f14ab41e2b5f334890f7dc6cb08aa"   # rules 1.1 P7_REF
+MASS_REL_TOL = 1e-9           # I-11 relative tolerance
 W_FIT = 1000.0                # rev1 R1-3 fit lower bound [N]
 W_FIT_SENS = (600.0, 2000.0)  # rev1 R1-3 sensitivity records [N]
 EPS_N = 1e-6                  # rev1 T-15 [N]
@@ -99,6 +103,14 @@ DEFAULT_KEYMAP: dict[str, Any] = {
     "res_hull_eff": "hull_hook.effective",
     "res_hull_sha": "hull_hook.dll_sha256",
     # record.npz (10 Hz)
+    "row_log": "{case}.log",
+    "res_s9_rows": "s9_rows",
+    "res_s9_t": "t_s",
+    "res_pad_nodes": "pad_nodes",
+    "res_ms_ctrl_W": "mass_scale.controller_weight_ref_N",
+    "res_ms_yaml_mass": "mass_scale.yaml_superstructure_mass_kg",
+    "res_ms_plant_mass": "mass_scale.plant_superstructure_mass_kg",
+    "res_ms_plant_W": "mass_scale.plant_superstructure_weight_N",
     "rec_t": "t",
     "rec_stroke": "meas.stroke",
     # step_series.npz (1 ms)
@@ -451,6 +463,7 @@ class RunSeries:
         self.weight: float | None = None
         self.t_end: float | None = None
         self.index: dict[int, int] = {}
+        self.pad_nodes_check: dict[str, Any] | None = None
 
     def at(self, arr: np.ndarray | None, n: int | None) -> np.ndarray | None:
         if arr is None or n is None or n not in self.index:
@@ -523,6 +536,9 @@ def load_chrono_row(row_dir: Path, km: dict) -> tuple[RunSeries | None, dict, li
     grid = _npz(row_dir / km["grid_npz"])
     if grid is not None:
         _attach_grid(rs, grid, km)
+        rs.pad_nodes_check = pad_nodes_check(rs, res, km)
+        if rs.pad_nodes_check["mismatch"]:
+            rs.grid_index = {}                       # rules 6: every grid record of the row is invalid
     if grid is not None:
         rs.grid_m = grid_spacing(res, km)
     rs.events = _events(jget(res, km["res_events"]), km)
@@ -1172,9 +1188,10 @@ def grade_all(rows: dict[str, dict], hrs: dict, consts: dict, prm: dict, km: dic
         b = m["b_star"]
         hv = [hm["dos"][b] for hm in hrs.get(("H-P", r, "VB-e0"), []) if hm["dos"] is not None]
         cv = m["dos"][b] if m["dos"] is not None else None
-        vals = [v for v in [cv] + hv if v is not None]
-        if cv is None:
+        if cv is None:                               # SGS row: delta_os NA, row left out of O (3.3 D-b)
             na_rows.append(r)
+            continue
+        vals = [v for v in [cv] + hv if v is not None]
         if vals:
             o_vals.append(max(vals))
     o = nmax(o_vals)
@@ -1335,8 +1352,92 @@ def load_p7(path: Path | None, km: dict) -> dict | None:
 
 # ----------------------------------------------------------------------------- row status
 
+def pad_nodes_check(rs: "RunSeries", res: dict, km: dict) -> dict[str, Any]:
+    """Rules 6: R-G1 fields present both in b1_grid_record.npz and result.json s9_rows[].pad_nodes must agree."""
+    fields = (("g_n_contact", "n_contact"), ("g_hull_area", "contact_hull_area_m2"),
+              ("g_hull_perim", "contact_hull_perimeter_m"), ("g_sink", "sinkage_geometric_m"),
+              ("g_sigma", "sigma_sum_area_N"))
+    s9 = jget(res, km["res_s9_rows"])
+    out: dict[str, Any] = {"compared_periods": 0, "mismatch": False, "first_mismatch": None}
+    if not isinstance(s9, list) or not rs.grid_index:
+        out["reason"] = "no s9_rows or no grid record"
+        return out
+    for row in s9:
+        t = fnum(row.get(km["res_s9_t"])) if isinstance(row, dict) else None
+        nodes = row.get(km["res_pad_nodes"]) if isinstance(row, dict) else None
+        if t is None or not isinstance(nodes, list) or len(nodes) != 4:
+            continue
+        n = cyc(t)
+        if n not in rs.grid_index:
+            continue
+        j = rs.grid_index[n]
+        out["compared_periods"] += 1
+        for gk, rk in fields:
+            if gk not in rs.grid:
+                continue
+            for k in range(4):
+                a = float(rs.grid[gk][j, k])
+                b = fnum(nodes[k].get(rk)) if isinstance(nodes[k], dict) else None
+                if b is None:
+                    continue
+                if abs(a - b) > 1e-12 * max(1.0, abs(a), abs(b)):
+                    out["mismatch"] = True
+                    out["first_mismatch"] = {"n": n, "field": rk, "leg": LEGS[k]}
+                    return out
+    return out
+
+
+def i11_check(res: dict, km: dict) -> list[str]:
+    """I-11 (C6): controller mass = YAML nominal, plant mass = nominal x 1.1 (result.json mass_scale).
+
+    Superstructure quantities: the controller weight reference W_ref vs YAML superstructure mass x g, with g taken
+    from the plant record itself (plant superstructure weight / mass), and plant / YAML superstructure mass."""
+    ctrl, m_yaml, m_plant, w_plant = (fnum(jget(res, km[k])) for k in
+                                      ("res_ms_ctrl_W", "res_ms_yaml_mass", "res_ms_plant_mass", "res_ms_plant_W"))
+    if None in (ctrl, m_yaml, m_plant, w_plant) or m_yaml <= 0 or m_plant <= 0:
+        return ["I-11 mass record missing"]
+    g_eff = w_plant / m_plant
+    bad = []
+    if abs(ctrl - m_yaml * g_eff) > MASS_REL_TOL * m_yaml * g_eff:
+        bad.append("I-11 controller mass not nominal")
+    if abs(m_plant / m_yaml - CHRONO_ROWS["C6"][2]) > MASS_REL_TOL:
+        bad.append("I-11 plant mass not nominal x 1.1")
+    return bad
+
+
+def load_identity(path: Path) -> dict[str, dict]:
+    """B1_identity.json rows C1..C6 with ok / rc / reasons; missing file or row is an input error."""
+    if not path.is_file():
+        raise InputError(f"identity file {path} missing")
+    data = json.loads(path.read_text(encoding="utf-8"))
+    rows = data.get("rows") if isinstance(data, dict) else None
+    if not isinstance(rows, dict):
+        raise InputError("identity file has no 'rows' object")
+    missing = [r for r in CHRONO_ROWS if not isinstance(rows.get(r), dict) or "ok" not in rows[r]]
+    if missing:
+        raise InputError(f"identity file rows missing: {missing}")
+    return {r: rows[r] for r in CHRONO_ROWS}
+
+
+def e5_scan(batch: Path, km: dict) -> dict[str, Any]:
+    """E-5 / I-12 for this batch: runner logs have no 'errors N' lines, so a row log with a Traceback blocks the
+    judgement; rc is checked through batch.json (V-1). A missing log is recorded only (that row is MISSING)."""
+    found: dict[str, str] = {}
+    no_log: list[str] = []
+    for rid, (case, *_r) in CHRONO_ROWS.items():
+        log = batch / km["row_log"].format(case=case)
+        if not log.is_file():
+            no_log.append(rid)                        # recorded; a row without output is MISSING by V-1
+            continue
+        text = log.read_text(encoding="utf-8", errors="replace")
+        if "Traceback (most recent call last)" in text:
+            found[rid] = "Traceback"
+    return {"blocked": bool(found), "rows": found, "no_log": no_log,
+            "rule": "rc (batch.json, V-1) + Traceback in <case>.log"}
+
+
 def row_status(rid: str, rs: RunSeries | None, res: dict, missing: list[str], rc: Any, km: dict,
-               hp_e0_ok: bool) -> tuple[str, list[str]]:
+               hp_e0_ok: bool, ident_in: dict | None = None) -> tuple[str, list[str]]:
     case, _, _, dur, _, _ = CHRONO_ROWS[rid]
     why: list[str] = []
     if rc is None or rc != 0 or rs is None or missing:
@@ -1357,6 +1458,10 @@ def row_status(rid: str, rs: RunSeries | None, res: dict, missing: list[str], rc
         ident.append("I-7 hull hook mode")
     if jget(res, km["res_hull_sha"]) != HULL_DLL_SHA:
         ident.append("I-7 dll sha")
+    if rid == "C6":
+        ident += i11_check(res, km)
+    if ident_in is not None and ident_in.get("ok") is not True:
+        ident.append("identity file: " + "; ".join(str(x) for x in (ident_in.get("reasons") or ["ok false"])))
     if ident:
         return "INVALID", ident
     if any(nm.startswith(km["ev_reject_prefix"]) for _, nm in rs.events):
@@ -1375,6 +1480,17 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     if args.keymap:
         km.update(json.loads(Path(args.keymap).read_text(encoding="utf-8")))
     repo = Path(args.repo)
+    for rel, want in RULES_FILES.items():
+        f = repo / rel
+        if not f.is_file() or sha256_file(f) != want:
+            raise InputError(f"rules file {rel} missing or sha256 differs from {want[:8]}")
+    identity = load_identity(Path(args.identity))
+    identity_meta = {"path": str(args.identity), "sha256": sha256_file(Path(args.identity))}
+    p7_sha = None
+    if args.p7_ref:
+        p7_sha = sha256_file(Path(args.p7_ref))
+        if p7_sha != P7_REF_SHA256:
+            raise InputError(f"P7_REF sha256 {p7_sha[:8]} differs from rules 1.1 {P7_REF_SHA256[:8]}")
     prm = load_params(repo)
     batch = Path(args.batch)
     bj_path = batch / km["batch_json"]
@@ -1382,6 +1498,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise InputError(f"{bj_path} missing")
     bj = json.loads(bj_path.read_text(encoding="utf-8"))
     rcs = {jget(c, km["batch_case_name"]): jget(c, km["batch_case_rc"]) for c in jget(bj, km["batch_cases"], [])}
+    e5 = e5_scan(batch, km)
+    e5_blocked = e5["blocked"]
     hbase = Path(args.harness_jsonl).parent if args.harness_jsonl else Path(".")
     lines = harness_lines(Path(args.harness_jsonl) if args.harness_jsonl else None, km)
     for k, ln in enumerate(lines):
@@ -1419,8 +1537,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         rs, res, missing = load_chrono_row(row_dir, km) if row_dir.is_dir() else (None, {}, ["row dir"])
         grp = "H-W" if rid == "C6" else "H-P"
         vb_e0 = [ln for ln in pick(lines, km, grp, rid, "VB", 0.0) if ln["_id"] in h_ok]
-        status, why = row_status(rid, rs, res, missing, rcs.get(case), km, bool(vb_e0))
-        entry: dict[str, Any] = {"id": rid, "case": case, "role": role, "status": status, "why": why}
+        status, why = row_status(rid, rs, res, missing, rcs.get(case), km, bool(vb_e0), identity[rid])
+        entry: dict[str, Any] = {"id": rid, "case": case, "role": role, "status": status, "why": why,
+                                 "identity_in": identity[rid],
+                                 "pad_nodes_check": (rs.pad_nodes_check if rs is not None else None)}
         if status == "VALID":
             m = run_metrics(rs, km, prm, level, bplan)
             entry["m"] = m
@@ -1459,12 +1579,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     core_ok = all(rows[r]["status"] == "VALID" for r in CORE)
     if not core_ok or not hp_vb_e0:
         bundle = "UNDETERMINED"
+    elif e5_blocked:
+        bundle = "BLOCKED_E5"
     elif all(rows[r]["status"] == "VALID" for r in CHRONO_ROWS):
         bundle = "COMPLETE"
     else:
         bundle = "PARTIAL"
     p7 = load_p7(Path(args.p7_ref) if args.p7_ref else None, km)
-    grades = grade_all(rows, hrs, consts, prm, km, bundle, p7) if bundle != "UNDETERMINED" else {}
+    grades = grade_all(rows, hrs, consts, prm, km, bundle, p7) if bundle in ("COMPLETE", "PARTIAL") else {}
     safety_notes = {r: rows[r]["m"]["safety"] for r in rows if rows[r]["status"] == "VALID"
                     and rows[r]["m"]["safety"]["note"]}
     harness_r14 = {}
@@ -1482,7 +1604,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                                   "variant": jget(ln, km["h_variant"]), "e": jget(ln, km["h_e"]),
                                   "locs": harness_shadow_locs(ln, km)}
     return {"tool": "b1_path2", "version": TOOL_VERSION, "rules_sha256": RULES_SHA256,
-            "rules_rev1_sha256": RULES_REV1_SHA256, "bundle": bundle,
+            "rules_rev1_sha256": RULES_REV1_SHA256, "bundle": bundle, "e5": e5, "identity_file": identity_meta,
+            "pad_nodes_check": {r: rows[r].get("pad_nodes_check") for r in rows}, "p7_ref_sha256": p7_sha,
             "rows": rows, "harness_invalid": h_bad, "shadow_hash_ok": shadow_ok, "constants": consts,
             "harness_m12": harness_m12, "harness_R1_4": harness_r14,
             "grades": grades, "safety_notes": safety_notes, "keymap": km}
@@ -1510,7 +1633,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--repo", required=True, help="checkout root (02_params, 03_src)")
     ap.add_argument("--batch", required=True, help="Chrono batch folder V5-B1-CREEP")
     ap.add_argument("--harness-jsonl", help="harness b1_H.jsonl (npz paths relative to its folder)")
-    ap.add_argument("--p7-ref", help="P7_REF s2d_SC.jsonl")
+    ap.add_argument("--p7-ref", help="P7_REF s2d_SC.jsonl (sha256 checked against rules 1.1)")
+    ap.add_argument("--identity", required=True, help="B1_identity.json (prelaunch 10.1): rows C1..C6 ok/rc/reasons")
     ap.add_argument("--keymap", help="JSON overriding DEFAULT_KEYMAP entries")
     ap.add_argument("--constants-out", help="write the path 2 harness constants here")
     ap.add_argument("--out", required=True, help="b1_metrics_path2.json")
@@ -1529,7 +1653,7 @@ def main(argv: list[str] | None = None) -> int:
                "grades": {k: v.get("grade") for k, v in result["grades"].items()},
                "out_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest()}
     print(json.dumps(summary))
-    return 1 if result["bundle"] == "UNDETERMINED" else 0
+    return 0 if result["bundle"] in ("COMPLETE", "PARTIAL") else 1
 
 
 if __name__ == "__main__":

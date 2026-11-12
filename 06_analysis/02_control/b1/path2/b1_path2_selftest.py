@@ -99,8 +99,21 @@ def make_chrono_row(root: Path, case: str, cfg: dict, prm: dict) -> None:
            "t_end_s": cfg["duration"], "b1_grid_record": {"static": cfg.get("grid_static", {"grid_m": 0.01})},
            "controller_meta": {"controller_tag": cfg["tag"]},
            "c2_setup": {"expect_controller": {"ok": True}}, "num_threads_chrono": 4,
-           "hull_hook": {"requested": "fast", "effective": "fast", "dll_sha256": p2.HULL_DLL_SHA}}
+           "hull_hook": {"requested": "fast", "effective": "fast", "dll_sha256": p2.HULL_DLL_SHA},
+           "mass_scale": {"controller_weight_ref_N": cfg.get("ctrl_W", 38400.8366 * 9.80665),
+                          "yaml_superstructure_mass_kg": 38400.8366,
+                          "plant_superstructure_mass_kg": 38400.8366 * cfg.get("plant_scale", cfg.get("mass_scale", 1.0)),
+                          "plant_superstructure_weight_N": 38400.8366 * 9.80665
+                          * cfg.get("plant_scale", cfg.get("mass_scale", 1.0))}}
+    if cfg.get("s9_pad_nodes"):
+        sel = range(0, len(n), 50)
+        res["s9_rows"] = [{"t_s": float(t10[k]), "pad_nodes": [
+            {"n_contact": float(nh[i]) + (cfg.get("pad_nodes_offset", 0.0) if k == 400 else 0.0),
+             "contact_hull_area_m2": float(area[i]), "contact_hull_perimeter_m": float(perim[i]),
+             "sinkage_geometric_m": float(z10[k, i]), "sigma_sum_area_N": float(sigma[k, i])}
+            for i in range(4)]} for k in sel]
     (d / "result.json").write_text(json.dumps(res), encoding="utf-8")
+    (root / f"{case}.log").write_text(cfg.get("log_text", "run ok\n"), encoding="utf-8")
 
 
 def make_harness(root: Path, lines: list[dict], name: str, row: str, group: str, variant: str, e: float,
@@ -125,7 +138,7 @@ HARNESS = {"s_peak": 0.468, "z_rate": 0.00015}
 
 
 def build(work: Path, prm: dict, row_over: dict | None = None, h_over: dict | None = None,
-          skip_rows: tuple = (), drop_lines=None) -> tuple[Path, Path]:
+          skip_rows: tuple = (), drop_lines=None, ident_drop: str | None = None) -> tuple[Path, Path]:
     if work.exists():
         shutil.rmtree(work)
     batch = work / "batch"
@@ -136,10 +149,17 @@ def build(work: Path, prm: dict, row_over: dict | None = None, h_over: dict | No
             continue
         cfg = copy.deepcopy(BASE)
         cfg["duration"] = p2.CHRONO_ROWS[rid][3]
+        cfg["mass_scale"] = p2.CHRONO_ROWS[rid][2]
         cfg.update((row_over or {}).get(rid, {}))
         make_chrono_row(batch, case, cfg, prm)
         cases.append({"case": case, "rc": cfg["rc"]})
     (batch / "batch.json").write_text(json.dumps({"cases": cases}), encoding="utf-8")
+    ident = {"rows": {rid: {"ok": (row_over or {}).get(rid, {}).get("ident_ok", True), "rc": 0,
+                            "reasons": ([] if (row_over or {}).get(rid, {}).get("ident_ok", True) else ["test"])}
+                      for rid in p2.CHRONO_ROWS}, "other": 1}
+    if ident_drop:
+        ident["rows"].pop(ident_drop)
+    (work / "identity.json").write_text(json.dumps(ident), encoding="utf-8")
     hdir = work / "harness"
     hdir.mkdir()
     lines: list[dict] = []
@@ -175,7 +195,8 @@ def build(work: Path, prm: dict, row_over: dict | None = None, h_over: dict | No
 
 def run_tool(repo: Path, work: Path, batch: Path, hj: Path, p7: Path | None = None) -> tuple[int, dict]:
     out = work / "out.json"
-    argv = ["--repo", str(repo), "--batch", str(batch), "--harness-jsonl", str(hj), "--out", str(out)]
+    argv = ["--repo", str(repo), "--batch", str(batch), "--harness-jsonl", str(hj), "--out", str(out),
+            "--identity", str(work / "identity.json")]
     if p7:
         argv += ["--p7-ref", str(p7)]
     code = p2.main(argv)
@@ -330,9 +351,14 @@ def e2e_checks(repo: Path, work: Path, prm: dict) -> None:
                               "commands_sha256": "cmd-C1-VB-0.0"}) + "\n" +
                   json.dumps({"s2d": {"candidate": "P1"}, "d1": {"key": "K|C2|VB|0.0"},
                               "commands_sha256": "zzz"}) + "\n", encoding="utf-8")
-    code, out = run_tool(repo, work / "base", batch, hj, p7)
+    code, out = run_tool(repo, work / "base", batch, hj)
+    code_p7, _ = run_tool(repo, work / "base", batch, hj, p7)
+    check("P7_REF sha mismatch -> exit 2", code_p7 == 2)
+    out2 = work / "base" / "out.json"
+    code, out = run_tool(repo, work / "base", batch, hj)
     check("e2e exit 0", code == 0, str(code))
     check("e2e bundle COMPLETE", out.get("bundle") == "COMPLETE")
+    check("C6 VALID with nominal controller mass", out["rows"]["C6"]["status"] == "VALID")
     r1 = out["rows"]["C1"]
     m = r1["m"]
     check("t_L / t_R / t_max / t_e periods", (m["n_L"], m["n_R"], m["n_max"], m["n_e"]) == (400, 800, 700, 800))
@@ -398,7 +424,12 @@ def e2e_checks(repo: Path, work: Path, prm: dict) -> None:
           and close(g["D-e"]["rows"]["C1"]["g_tilde"], gtil, 1e-9))
     check("D-f FUP-NA (no SGS)", g["D-f"]["grade"] == "FUP-NA")
     check("D-g W-OK", g["D-g"]["grade"] == "W-OK")
-    check("D-h K-SAME with NA keys", g["D-h"]["grade"] == "K-SAME" and g["D-h"]["same"] == ["K|C1|VB|0.0"])
+    p7map = p2.load_p7(p7, p2.DEFAULT_KEYMAP)
+    hl = [json.loads(x) for x in hj.read_text(encoding="utf-8").splitlines() if x.strip()]
+    hl = [x for x in hl if x["b1"]["group"] == "H-P"]
+    dh = p2.dh_grade(hl, p7map, p2.DEFAULT_KEYMAP)
+    check("D-h K-SAME with NA keys", dh["grade"] == "K-SAME" and dh["same"] == ["K|C1|VB|0.0"], json.dumps(dh))
+    check("D-h K-NA without P7_REF", g["D-h"]["grade"] == "K-NA")
     check("shadow hash ok", out["shadow_hash_ok"] is True)
     h = r1["h_rec"]
     check("eps = c_hat(t_R) - (c*+m_L)", close(h["eps"], 0.07 - 0.08, 1e-12))
@@ -482,6 +513,45 @@ def variant_checks(repo: Path, work: Path, prm: dict) -> None:
     batch, hj = build(work / "gnone", prm, row_over={"C4": {"grid_static": {"grid_m": None}}})
     code, out = run_tool(repo, work / "gnone", batch, hj)
     check("missing grid spacing -> exit 2", code == 2)
+    # identity input (prelaunch 10.1): row ok false -> INVALID; missing row -> exit 2
+    batch, hj = build(work / "idf", prm, row_over={"C3": {"ident_ok": False}})
+    code, out = run_tool(repo, work / "idf", batch, hj)
+    check("identity ok false -> INVALID, bundle PARTIAL", out["rows"]["C3"]["status"] == "INVALID"
+          and out["bundle"] == "PARTIAL" and code == 0)
+    batch, hj = build(work / "idm", prm, ident_drop="C5")
+    code, out = run_tool(repo, work / "idm", batch, hj)
+    check("identity row missing -> exit 2", code == 2)
+    # E-5: Traceback in a row log blocks the judgement
+    batch, hj = build(work / "e5", prm, row_over={"C4": {"log_text": "x\nTraceback (most recent call last):\n"}})
+    code, out = run_tool(repo, work / "e5", batch, hj)
+    check("E-5 Traceback -> BLOCKED_E5 exit 1", code == 1 and out["bundle"] == "BLOCKED_E5"
+          and out["e5"]["rows"] == {"C4": "Traceback"} and out["grades"] == {})
+    # I-11: C6 controller mass must be nominal, plant nominal x 1.1
+    batch, hj = build(work / "i11", prm, row_over={"C6": {"ctrl_W": 38400.8366 * 9.80665 * 1.1}})
+    code, out = run_tool(repo, work / "i11", batch, hj)
+    check("I-11 controller mass scaled -> C6 INVALID", out["rows"]["C6"]["status"] == "INVALID"
+          and "I-11 controller mass not nominal" in out["rows"]["C6"]["why"])
+    batch, hj = build(work / "i11b", prm, row_over={"C6": {"plant_scale": 1.0}})
+    code, out = run_tool(repo, work / "i11b", batch, hj)
+    check("I-11 plant not x1.1 -> C6 INVALID", out["rows"]["C6"]["status"] == "INVALID")
+    # rules 6: pad_nodes in s9_rows vs grid npz
+    batch, hj = build(work / "pn", prm, row_over={"C1": {"s9_pad_nodes": True}})
+    code, out = run_tool(repo, work / "pn", batch, hj)
+    pc = out["rows"]["C1"]["pad_nodes_check"]
+    check("pad_nodes agree -> grid kept", pc["mismatch"] is False and pc["compared_periods"] > 0
+          and out["rows"]["C1"]["gm"]["L"]["FL"] is not None)
+    batch, hj = build(work / "pn2", prm, row_over={"C1": {"s9_pad_nodes": True, "pad_nodes_offset": 1.0}})
+    code, out = run_tool(repo, work / "pn2", batch, hj)
+    pc = out["rows"]["C1"]["pad_nodes_check"]
+    check("pad_nodes differ -> all grid records of the row invalid", pc["mismatch"] is True
+          and all(out["rows"]["C1"]["gm"][k][leg] is None for k in ("L", "max", "e") for leg in p2.LEGS)
+          and "C1" in out["grades"]["D-a"]["corr_na_rows"])
+    # D-b: an SGS row (no Chrono delta_os) contributes nothing, its harness value is not used
+    batch, hj = build(work / "dbs", prm, row_over={"C5": {"sgs": True}},
+                      h_over={("H-P", "C5"): {"n_ready": 1000, "n_peak": 700, "s_peak": 0.48}})
+    code, out = run_tool(repo, work / "dbs", batch, hj)
+    check("D-b SGS row harness excluded", "C5" in out["grades"]["D-b"]["na_rows"]
+          and close(out["grades"]["D-b"]["O"], 1e-3, 1e-12), json.dumps(out["grades"]["D-b"]))
     # T-14 mismatch on C2 -> excluded from D-d
     batch, hj = build(work / "t14", prm, row_over={"C2": {"c_target": 0.09}})
     code, out = run_tool(repo, work / "t14", batch, hj)
