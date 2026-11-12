@@ -286,9 +286,6 @@ def t_scm(tmp):
     # C-8 treatment (7.4)
     if not (HERE / "p2_b_c8.py").exists():
         print("SKIP C-8 tests (p2_b_c8.py not in this commit)")
-        hr = K.items_c5(row, PARAMS)[0]
-        check("C-5 H-9 clips before t_lift only -> pass; T4 not built -> indeterminate",
-              hr["H-9"]["verdict"] == "pass" and hr["T4"]["verdict"] == "indeterminate", hr["H-9"])
         return
     import p2_b_c8 as B8
     sp16 = copy.deepcopy(sp)
@@ -303,29 +300,40 @@ def t_scm(tmp):
     it17, _, _, _ = B8.judge_row(scm_row(tmp, sp17, "oc5b"), {}, "OC5", PARAMS)
     check("C-8 m < F_min -> S-9", it17["m_7_4"].get("stop") == "S-9", it17["m_7_4"])
 
-    # C-5 H-9 + re-aggregation (rev3 R3-G1)
+    # C-5 (rev4 R4-A2)
     hr = K.items_c5(row, PARAMS)[0]
-    check("C-5 H-9 clips before t_lift only -> pass; T4 without record -> indeterminate",
-          hr["H-9"]["verdict"] == "pass" and hr["T4"]["verdict"] == "indeterminate", hr["H-9"])
+    check("C-5 H-9 clips before t_lift only -> pass; SCM T4 -> na",
+          hr["H-9"]["verdict"] == "pass" and hr["T4"]["verdict"] == "na", hr["H-9"])
     sp18 = copy.deepcopy(sp)
-    d18 = write_scm(tmp / "reagg", sp18)
+    d18 = write_scm(tmp / "c5rec", sp18)
     res = json.loads((d18 / "result.json").read_text(encoding="utf-8"))
-    res["v5_stage3_items"] = {"T4-0": {"verdict": "pass"}, "T4": {"passed": False}, "T5": "pass",
-                              "J-P3": {"status": "FLAG_x"}, "D2": {"ok": True}}
-    res["controller_meta"]["two_pressure"] = {"extend_start_rule": "tracked_bound", "fallback_lock_log": []}
+    res["controller_meta"]["two_pressure"] = {"extend_start_rule": "tracked_bound", "fallback_lock_log": [],
+                                              "review_record": {"d2_violation_start_ratio": [None] * 4}}
+    res["hydraulics_record"]["extend_bound_check"] = {"rule": "ext_moving", "breach_reads": [0, 0, 1, 0],
+                                                      "margin_used_reads": [0, 0, 0, 0]}
+    res["events"].append({"t_s": 30.0, "name": "WARN_ROD_PRESSURE_FALLBACK:RL:D2"})
     (d18 / "result.json").write_text(json.dumps(res), encoding="utf-8")
     it18, k18, _ = K.items_c5(C.load_row(d18, "scm", ["run_S9.py"]), PARAMS)
-    check("re-aggregation reads per-item records and applies grade rules (T4 fail -> H-7 stop)",
-          it18["T4"]["verdict"] == "fail" and it18["T4"].get("stop") == "H-7 (rev6 4.6)"
-          and it18["T5"]["verdict"] == "pass" and it18["J-P3"]["verdict"] == "flag"
-          and it18["D2"]["verdict"] == "pass" and it18["T4"]["source"] == "v5_stage3_items.T4",
-          {k: it18[k].get("verdict") for k in ("T4-0", "T4", "T5", "J-P3", "D2")})
+    check("J-P3 breach sum 1 -> fail + H-7 (rev8 3.2)", it18["J-P3"]["verdict"] == "fail"
+          and it18["J-P3"].get("stop") == "H-7 (rev8 3.2)", it18["J-P3"])
     check("J11 with empty fallback_lock_log -> not_computed record (rev3 R3-C7)",
           it18["J11_window"]["status"] == "not_computed" and it18["J11_window"]["verdict"] == "record",
           it18["J11_window"])
-    tab = C.reagg_table([{"items": it18, "judged_keys": k18}])
-    check("TABLE_REAGG lists the re-aggregated items", sorted(e["item"] for e in tab) == ["D2", "J-P3", "T4", "T4-0", "T5"],
-          tab)
+    check("D2 fallback events with reason D2 counted (record)", it18["D2"]["d2_fallback_events"] == 1, it18["D2"])
+    # T4 / T5 grades from a synthetic p2_t45 document
+    l2r = C.load_row(write_l2b(tmp / "l2b_t45"), "l2b", L2B_ARGV)
+    doc = {"tool_gate": {"ok": True}, "regression": {"ok": True},
+           "replay": {"criteria": "rev7", "out_sha256": "x",
+                      "rows": {"l2b_t45": {"settings_equal": True, "t4_0": True,
+                                           "T4": {"over_0p6kN": 0, "judged_samples": 10},
+                                           "T5": {"over_0p6kN": 2}}}}}
+    t = K.t45_items(l2r, doc)
+    check("t45 grades: T4-0 pass, T4 pass, T5 over 2 -> fail + H-7", t["T4-0"]["verdict"] == "pass"
+          and t["T4"]["verdict"] == "pass" and t["T5"]["verdict"] == "fail" and "H-7" in t["T5"]["stop"], t)
+    doc["regression"]["ok"] = False
+    t2 = K.t45_items(l2r, doc)
+    check("t45 regression failed -> S-11, 판정 불가", t2["T4"]["verdict"] == "indeterminate"
+          and "S-11" in t2["T4"]["stop"], t2["T4"])
 
 
 def t_l2b(tmp):
@@ -379,7 +387,7 @@ def t_c67(tmp):
     check("R2-4 r_v = s_motor slope 10..20 s / v_max", np.allclose(sr["r_v"], [0.5, 0.6, 0.7, 0.8], rtol=1e-9), sr["r_v"])
     an, sha = B.load_analyse()
     check("openloop_compare.analyse loaded without running its driver", callable(an) and len(sha) == 64, sha)
-    check("C-6/C-7 kinds from names", [B.kind_of({"case": n}) for n in
+    check("C-6/C-7 kinds from names (rev4 R4-A3)", [B.kind_of({"case": n, "criteria_id": "C-6"}) for n in
                                        ("P3a_G1_B_VB_prop", "P3a_G1_B_VB_FB", "P3a_G1_B_V0_FB")] == ["C-6", "C-7a", "C-7b"])
 
 

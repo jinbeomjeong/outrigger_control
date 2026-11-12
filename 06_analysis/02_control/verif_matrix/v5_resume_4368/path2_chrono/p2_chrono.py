@@ -26,7 +26,7 @@ import p2_rules as R  # noqa: E402
 
 BUNDLE_MODULES = {"C-1": "p2_b_c1", "C-2": "p2_b_c2", "C-3": "p2_b_c3", "C-4": "p2_b_c4",
                   "C-5": "p2_b_c5", "C-6C7": "p2_b_c67", "C-8": "p2_b_c8"}
-COMMON_FILES = ("p2_chrono.py", "p2_rules.py", "p2_core.py", "p2_kinds.py")
+COMMON_FILES = ("p2_chrono.py", "p2_rules.py", "p2_core.py", "p2_kinds.py", "p2_t45.py")
 
 
 def file_sha(p: Path) -> str:
@@ -115,6 +115,7 @@ def judge(args) -> int:
         print(json.dumps(summary))
         return 2
     mod = importlib.import_module(mod_name)
+    mod.AUX = dict(x.split("=", 1) for x in (args.aux or []))
     params = C.load_params(repo)
     results_root = Path(args.results_root) if args.results_root else repo / "07_results"
     overrides = dict(x.split("=", 1) for x in (args.row_dir or []))
@@ -166,6 +167,7 @@ def main(argv=None) -> int:
     j.add_argument("--batch", action="append", required=True)
     j.add_argument("--results-root")
     j.add_argument("--row-dir", action="append")
+    j.add_argument("--aux", action="append", help="NAME=PATH extra input for a bundle (C-5: t45=<t45_path2.json>)")
     j.add_argument("--out", required=True)
     j.add_argument("--repo")
     a = ap.parse_args(argv)

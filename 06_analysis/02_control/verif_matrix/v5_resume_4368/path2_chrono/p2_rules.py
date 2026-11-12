@@ -21,7 +21,17 @@ SEALED = [
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.md",
      "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199", "rules rev2"),
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.md",
-     "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557", "rules rev3 (wins)"),
+     "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557", "rules rev3"),
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev4.md",
+     "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b", "rules rev4 (wins)"),
+    ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev7.md",
+     "9ccde7a5a4128317ed832dd2f92cd2368280f18cefa6827f1b1731c6d4e9aab3", "Appendix A: v5 rev7 (T4 / T5 E, B1, tool regression)"),
+    ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev8.md",
+     "c6ec89f71c1d8de4c06000568c2e5978fd7f9fe58a53defea728f2f4886bb25f", "Appendix A: v5 rev8 (J-P3 3.2)"),
+    ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev9.md",
+     "3c50dda50ca6dca60177f26d91d86c009eeb4f9321f5ffd0c98ddc27cf62e981", "Appendix A: v5 rev9 (J-P3 table)"),
+    ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev2.md",
+     "e120474b8ebd721e6edc4fec8eef811ce810006b8c489e38cecbb7ae5caeed77", "Appendix A: v5 rev2 (J11 D-1)"),
     ("06_analysis/02_control/verif_matrix/d1_selection_rules.md",
      "51dea528e57fa0c4378cda110addb73da20339535e16189452af2d06b60736e9", "Appendix A: D-1 rules 11"),
     ("06_analysis/02_control/verif_matrix/d1_selection_rules_rev1.md",
@@ -53,6 +63,7 @@ RAW_ONLY = {  # rev2 R2-9 last-but-one bullet: sealed rule files are compared ra
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev1.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.md",
+    "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev4.md",
 }
 
 

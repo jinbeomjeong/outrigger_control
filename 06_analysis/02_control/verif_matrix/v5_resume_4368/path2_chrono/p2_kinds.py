@@ -206,10 +206,145 @@ def bundle_status(rows, expected_count=None, record_bundle=False, extra_stops=No
             "TABLE_REAGG": reagg}
 
 
-def items_c5(row, params):
-    """v5 rev12 2.2 judged items for C-5. Path 2 recomputes the series-only parts (rev6 5
-    t_lift / H-9, rev6 6 lock transitions as a record); T4 / T5 / J-P3 / D2 / lock-window items
-    need a re-implementation of the controller's two-pressure monitor and are not built."""
+def t45_items(row, t45):
+    """Grades of the path 2 chrono_t45_replay output (rev6 4.2-4.6, rev7 2-3), per row."""
+    out = {}
+    lay = "tool run by path 2 (rev4 R4-A2 c)"
+    if t45 is None:
+        for k in ("T4-0", "T4", "T5"):
+            out[k] = {"layer": lay, "verdict": "indeterminate",
+                      "reason": "no path 2 t45 report (run p2_t45.py, pass --aux t45=...)"}
+        return out
+    gate = t45.get("tool_gate") or {}
+    reg = t45.get("regression") or {}
+    rep = t45.get("replay") or {}
+    rr = (rep.get("rows") or {}).get(row.folder.name)
+    base = {"layer": lay, "tool_gate_ok": gate.get("ok"), "regression_ok": reg.get("ok"),
+            "replay_out_sha256": rep.get("out_sha256"), "criteria": rep.get("criteria")}
+    if not gate.get("ok") or not reg.get("ok") or rep.get("criteria") != "rev7":
+        for k in ("T4-0", "T4", "T5"):
+            out[k] = dict(base, verdict="indeterminate", stop="S-11 (rev4 R4-A2 conditions 1-2)")
+        return out
+    if rr is None:
+        for k in ("T4-0", "T4", "T5"):
+            out[k] = dict(base, verdict="indeterminate", reason="row not in the path 2 replay")
+        return out
+    if not rr.get("settings_equal"):
+        for k in ("T4-0", "T4", "T5"):
+            out[k] = dict(base, verdict="indeterminate", stop="monitor setting rebuild differs (rev6 4.1: no verdict)",
+                          setting_differences=rr.get("setting_differences"))
+        return out
+    t40 = bool(rr.get("t4_0"))
+    out["T4-0"] = dict(base, verdict="pass" if t40 else "fail",
+                       **({} if t40 else {"stop": "T4-0 fail: tool defect, not judged (rev6 4.2 / 4.6)"}))
+    for k in ("T4", "T5"):
+        blk = rr.get(k)
+        if not t40 or blk is None:
+            out[k] = dict(base, verdict="indeterminate", reason="T4-0 failed or block missing")
+            continue
+        over = int(blk.get("over_0p6kN", 0))
+        it = dict(base, over_0p6kN=over, judged_samples=blk.get("judged_samples"),
+                  e_excluded=blk.get("e_excluded"), guard_violations=blk.get("guard_violations"),
+                  sensor_model=blk.get("sensor_model"), raw_over_0p6kN=blk.get("raw_over_0p6kN"),
+                  verdict="pass" if over == 0 else "fail")
+        if over > 0:
+            it["stop"] = "H-7 (rev6 4.6, rev7 2 #5)"
+        out[k] = it
+    return out
+
+
+def jp3_item(row):
+    """rev8 3.2 + rev9 3.2 table: Chrono rows always have rod readings (rev9 3.2 #4 note)."""
+    on = C.extend_start_on(row)
+    out = {"clause": "rev8 3.2 / rev9 3.2 / rev4 R4-A2 b", "extend_start_on": on}
+    if on is None:
+        out.update(verdict="indeterminate", reason="controller_meta.two_pressure.extend_start_rule missing")
+        return out
+    if on is False:
+        out.update(verdict="na", reason="③ off row")
+        return out
+    ebc = (row.result.get("hydraulics_record") or {}).get("extend_bound_check")
+    if not ebc:
+        out.update(verdict="indeterminate", stop="setting defect (rev9 3.2 #2)")
+        return out
+    br = ebc.get("breach_reads")
+    out.update(rule=ebc.get("rule"), breach_reads=br, margin_used_reads=ebc.get("margin_used_reads"),
+               locked_breach_over_tol_reads=ebc.get("locked_breach_over_tol_reads"))
+    if br is None:
+        out.update(verdict="indeterminate", stop="setting defect (rev9 3.2 #2)")
+        return out
+    s = int(sum(br))
+    out["breach_sum"] = s
+    flags = []
+    if sum(ebc.get("margin_used_reads") or []) > 0:
+        flags.append("J-P3_margin_used")
+    if sum(ebc.get("locked_breach_over_tol_reads") or []) > 0:
+        flags.append("J-P3_locked_over_tol")
+    out["flags"] = flags
+    out["verdict"] = "pass" if s == 0 else "fail"
+    if s > 0:
+        out["stop"] = "H-7 (rev8 3.2)"
+    return out
+
+
+def j11_item(row, tp):
+    """rev6 6 + rev2 D-1 for the actual fallback legs (fallback_lock_log); no entry ->
+    not_computed record (rev3 R3-C7)."""
+    import numpy as np
+    log = tp.get("fallback_lock_log")
+    out = {"clause": "rev6 6, rev2 D-1, rev3 R3-C7, rev4 R4-A2 b"}
+    if log is None:
+        out.update(verdict="indeterminate", reason="fallback_lock_log missing")
+        return out
+    if len(log) == 0:
+        out.update(verdict="record", status="not_computed", reason="no actual fallback leg")
+        return out
+    if row.law_locked is None:
+        out.update(verdict="indeterminate", reason="pads.npz law_locked missing")
+        return out
+    T = float(np.median(np.diff(row.t10)))
+    acting = np.vstack([np.zeros((1, 4)), row.issued[:-1]])   # d = 1
+    zero = np.abs(acting) <= R.CMP_TOL
+    entries = []
+    n_late = [0, 0, 0, 0]
+    for e in log:
+        leg = e.get("leg") if isinstance(e, dict) else None
+        tw = None
+        if isinstance(e, dict):
+            for k in e:
+                if "window_end" in k and e[k] is not None:
+                    tw = float(e[k]) + (row.t_offset if row.engine != "scm" else 0.0)
+                    break
+        li = R.LEGS.index(leg) if leg in R.LEGS else (int(leg) if isinstance(leg, int) else None)
+        if li is None or tw is None:
+            entries.append({"entry": e, "status": "indeterminate", "reason": "leg or window_end field not found"})
+            continue
+        k = int(np.searchsorted(row.t10, tw - 1e-9))
+        nxt = [j for j in range(k, len(row.t10)) if not zero[j, li]]
+        t_last = (row.t10[nxt[0]] - T) if nxt else row.t_end
+        judged = tw - 1e-9 <= t_last
+        j1 = int(np.searchsorted(row.tF, tw + 1e-6))
+        j1 = min(j1, len(row.tF) - 1)
+        state = int(row.law_locked[j1, li])
+        late = judged and state not in (1, -1)
+        if late:
+            n_late[li] += 1
+        entries.append({"leg": R.LEGS[li], "t_window_end_s": tw, "t_last_s": float(t_last), "judged": judged,
+                        "law_locked_after": state, "late": late})
+    out.update(entries=entries, n_late=n_late)
+    if any(x.get("status") == "indeterminate" for x in entries):
+        out["verdict"] = "indeterminate"
+    elif sum(n_late) > 0:
+        out.update(verdict="fail", stop="H-7 (rev6 6: actual fallback leg n_late > 0)")
+    else:
+        out["verdict"] = "pass"
+    return out
+
+
+def items_c5(row, params, t45=None):
+    """v5 rev12 2.2 judged items for C-5 (rev4 R4-A2): recomputed t_lift / H-9, J-P3, J11 window
+    (actual fallback legs), D2 records; T4-0 / T4 / T5 from the path 2 run of chrono_t45_replay
+    (`t45` = the p2_t45.py document), graded here."""
     items = {}
     tl, basis = C.t_lift(row)
     items["t_lift"] = {"clause": "rev6 5", "t_lift_s": tl, "basis": basis,
@@ -242,42 +377,29 @@ def items_c5(row, params):
         items["J11_lock_transitions"] = {"clause": "rev6 6 (record: plant lock events)",
                                          "lock_on": (d == 1).sum(axis=0).tolist(),
                                          "lock_off": (d == -1).sum(axis=0).tolist(), "verdict": "record"}
-    # rev3 R3-G1 layer 2: re-aggregated monitor items, grade rules applied here
     keys = ["H-9", "K1_class"]
-    for k in ("T4-0", "T4", "T5", "J-P3", "D2"):
-        it = C.reagg_item(row, k)
-        it["clause"] = "v5 rev6 4 (T4-0 / T4 / T5), rev8 J-P3, rev6 389 D2, rev12 2.2"
-        if k == "J-P3":
-            on = C.extend_start_on(row)
-            it["extend_start_on"] = on
-            if on is False:
-                it.update(verdict="na", reason="③ off row (two_pressure.extend_start_rule != tracked_bound)")
-            elif on is None:
-                it.update(verdict="indeterminate", reason="two_pressure.extend_start_rule missing")
-        if k == "T4-0" and it["verdict"] == "fail":
-            it["stop"] = "T4-0 fail: tool defect, not judged (rev6 4.2 / 4.6)"
-        if k in ("T4", "T5") and it["verdict"] == "fail":
-            it["stop"] = "H-7 (rev6 4.6)"
-        items[k] = it
-        keys.append(k)
-    # J11 window (rev6 6, rev3 R3-C7): no actual fallback leg -> not_computed record
     tp = (row.result.get("controller_meta") or {}).get("two_pressure") or {}
-    log = tp.get("fallback_lock_log")
-    if log is None:
-        items["J11_window"] = {"layer": "re-aggregated (rev3 R3-G1)", "verdict": "indeterminate",
-                               "reason": "controller_meta.two_pressure.fallback_lock_log missing"}
-    elif len(log) == 0:
-        items["J11_window"] = {"layer": "record", "verdict": "record", "status": "not_computed",
-                               "clause": "rev3 R3-C7: no actual fallback leg"}
+    # --- T4-0 / T4 / T5: rev4 R4-A2 option c (path 2 ran chrono_t45_replay, p2_t45.py)
+    if row.engine == "l2b":
+        for k, it in t45_items(row, t45).items():
+            items[k] = it
+            keys.append(k)
     else:
-        it = C.reagg_item(row, "J11_window")
-        it["fallback_lock_log_entries"] = len(log)
-        items["J11_window"] = it
-        if it["verdict"] == "fail":
-            it["stop"] = "H-7 (rev6 6, n_late > 0)"
+        for k in ("T4-0", "T4", "T5"):
+            items[k] = {"verdict": "na", "reason": "T4 / T5 are defined on L2b records (rev6 4.1 pads.npz)"}
+    # --- J-P3: rev4 R4-A2 option b, rev8 3.2 + rev9 3.2 table (Chrono rows read both pressures)
+    items["J-P3"] = jp3_item(row)
+    keys.append("J-P3")
+    # --- J11 window: rev6 6 + rev2 D-1, actual fallback legs from fallback_lock_log (rev3 R3-C7)
+    items["J11_window"] = j11_item(row, tp)
     keys.append("J11_window")
-    items["D2_fallback_events"] = {"clause": "rev6 389 (record)", "verdict": "record",
-                                   "count": len(C.events_named(row, "WARN_ROD_PRESSURE_FALLBACK"))}
+    # --- D2: rev6 14.5 (389-390) record items
+    d2 = [n for _, n in C.events_named(row, "WARN_ROD_PRESSURE_FALLBACK") if "D2" in n.split(":")[2:]]
+    items["D2"] = {"clause": "rev4 R4-A2 b / rev6 389-390 (record)", "verdict": "record",
+                   "d2_fallback_events": len(d2), "d2_event_names": d2,
+                   "all_fallback_events": [n for _, n in C.events_named(row, "WARN_ROD_PRESSURE_FALLBACK")],
+                   "d2_violation_start_ratio": (tp.get("review_record") or {}).get("d2_violation_start_ratio"),
+                   "expected_zero": len(d2) == 0}
     items["K1_class"] = dict(C.k1_classification(row, las_off=False), verdict="record")
     if items["K1_class"].get("cls") == "indeterminate":
         items["K1_class"]["verdict"] = "indeterminate"
