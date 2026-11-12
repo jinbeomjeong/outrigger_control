@@ -1,15 +1,17 @@
 """436.8 path 2: v5-criteria grade recount of the H-9 grid part (768 VB runs, r67 / r69 screens).
 
-Inputs: ``resume_k1/h9_grid/grid_{r67_main,r67_top,r69_bottom,r69_top}.json`` (rev1 RV1-3.3) and the V0 grid
-files that form the pair (``--v0 <stem>=<file>``; which V0 is the 436.8 pair is open, see README Q-G1).
+Inputs: ``resume_k1/h9_grid/grid_{r67_main,r67_top,r69_bottom,r69_top}.json`` (rev1 RV1-3.3), the V0 pair
+of 436.8 rev3 R3-E1 (stored V0 + same-commit 8-job sample, or the new ``resume_k1/h9_grid_v0/``) and, when
+needed, ``resume_k1/h9_family_F.jsonl`` (R3-E2).
 
 Rules (rule -> function):
   spec 342.3 row gates (r67 screen, one row per event), recomputed from the run record fields
                                                            -> ``gates_p2`` (compared with the recorded gates)
+  rev3 R3-E1 V0 pair (8-job sample hash, else V0 768)      -> ``sample_jobs``, ``v0_pair``
   v5 10 grid row: pass -> fail 0 against V0, FAULT 0        -> ``cmd_grid``
-  rev5 #5 / 5.1: family F (keys screen|top|0.0|ready|FR/FL, event FS24) - only the gates Fmin_after_W
-      and U57_outside go to the 16-phase rule of rev5 5.2, which needs 32 VB + 32 V0 phase runs that are
-      not part of 436.8; reported separately (``family_F``), not decided here
+  rev5 #5 / 5.1 / 5.2 with rev3 R3-E2: family F (keys screen|top|0.0|ready|FR/FL, event FS24); a
+      transition made only by Fmin_after_W / U57_outside goes to R-1..R-4 on the 64 conditional runs
+      (pass: excluded from H-10, fail: H-10 stop)            -> ``family_f_rule``
   rev8 3.2 / rev9 3.2 J-P3 on every VB run (two-pressure event path: rod reading assumed)
                                                            -> ``p2_v5j.jp3`` (imported)
   rev2 2.1 / rev6 J9 (post-lift M2 clip) on every VB run   -> ``cmd_grid``
@@ -98,11 +100,104 @@ def run_key(stem, r, run):
     return f"{stem}|{r.get('key')}|{run.get('event')}|{run.get('offset_s')}"
 
 
+F_PHASES = 16                                   # rev5 5.2: 0, 0.00625, ..., 0.09375 s
+F_M, F_M_SUM = 4, 6                             # rev5 5.2 R-1 / R-2
+
+
+def sample_jobs(stored):
+    """rev3 R3-E1 (rule gives no job list): per file the first run of the first and of the last result."""
+    out = {}
+    for stem, path in stored.items():
+        res = json.loads(Path(path).read_text("utf-8")).get("results") or []
+        for r in (res[:1] + res[-1:]) if res else []:
+            runs = r.get("runs") or []
+            if runs:
+                out[run_key(stem, r, runs[0])] = runs[0].get("commands_sha256")
+    return out
+
+
+def v0_pair(args, fnd):
+    """rev3 R3-E1: stored V0 grid is the pair only if the same-commit 8-job sample hashes all match;
+    otherwise the new V0 768 (resume_k1/h9_grid_v0/) is the pair."""
+    stored = dict(x.split("=", 1) for x in (args.v0_stored or []))
+    new = dict(x.split("=", 1) for x in (args.v0_new or []))
+    rec = {"stored": stored, "new": new, "sample": None, "pair": None}
+    if stored and args.v0_sample:
+        want = sample_jobs(stored)
+        got = {}
+        for x in args.v0_sample:
+            stem, path = x.split("=", 1)
+            for r, run in runs_of(json.loads(Path(path).read_text("utf-8"))):
+                got[run_key(stem, r, run)] = run.get("commands_sha256")
+        cmp_ = [{"job": k, "stored": h, "sample": got.get(k), "same": isinstance(h, str) and got.get(k) == h}
+                for k, h in sorted(want.items())]
+        rec["sample"] = {"jobs": len(cmp_), "same": sum(c["same"] for c in cmp_), "detail": cmp_}
+        if len(cmp_) != 8:
+            fnd.stop("S-15", "V0 sample", f"{len(cmp_)} sample jobs != 8")
+    if new:
+        rec["pair"] = "new"
+        if set(new) != set(STEMS):
+            fnd.stop("S-15", "V0 new", f"stems {sorted(new)}")
+        if rec["sample"] and rec["sample"]["same"] == 8:
+            fnd.note("V0 pair", "sample hashes all equal but the new V0 768 was given: new V0 used (record)")
+        return new, rec
+    if rec["sample"] is None:
+        fnd.undec("V0 pair", "R3-E1: V0 8-job sample (and stored V0) not given")
+        return {}, rec
+    if rec["sample"]["same"] == 8:
+        rec["pair"] = "stored (old V0 controller, sample hashes equal)"
+        return stored, rec
+    fnd.undec("V0 pair", "R3-E1: sample hash differs -> V0 768 (resume_k1/h9_grid_v0/) required")
+    return {}, rec
+
+
+def family_f_rule(path, core, fnd):
+    """rev5 5.2 R-1..R-4 on the 64 conditional runs (rev3 R3-E2)."""
+    lines = core.read_jsonl(path)
+    runs = {}
+    for ln in lines:
+        run = ln.get("run") if isinstance(ln.get("run"), dict) else ln
+        s = ln.get("setting") or ln.get("v5_setting") or (ln.get("job") or {}).get("setting")
+        key = ln.get("key") or (ln.get("job") or {}).get("key")
+        off = run.get("offset_s", ln.get("offset_s"))
+        if run.get("event", FAMILY_F_EVENT) != FAMILY_F_EVENT:
+            continue
+        runs[(key, s, round(float(off), 6) if off is not None else None)] = run
+    out = {"lines": len(lines), "runs": len(runs)}
+    if len(runs) != 2 * 2 * F_PHASES or {k[0] for k in runs} != FAMILY_F_KEYS or {k[1] for k in runs} != {"V0", "VB"}:
+        fnd.stop("S-15", "family_F", f"runs {len(runs)} keys {sorted({str(k[0]) for k in runs})}")
+        out["result"] = "undecidable"
+        return out
+    k = {}
+    r3, r4 = [], []
+    for (key, s, off), run in runs.items():
+        g = gates_p2(run, core)
+        if any(v is None for v in g.values()):
+            fnd.undec(f"family_F|{key}|{s}|{off}", "gate field missing")
+        bad = any(g.get(x) is False for x in FAMILY_F_GATES)
+        k[(key, s)] = k.get((key, s), 0) + bad
+        if s == "VB":
+            if g.get("fault0") is not True or run.get("final_phase") != "ready":
+                r3.append([key, off])
+            v0g = gates_p2(runs.get((key, "V0", off), {}), core)
+            others = [x for x, v in g.items() if x not in FAMILY_F_GATES and v is False and v0g.get(x) is not False]
+            if others:
+                r4.append([key, off, others])
+    r1 = {key: k.get((key, "VB"), 0) <= k.get((key, "V0"), 0) + F_M for key in FAMILY_F_KEYS}
+    tv = sum(k.get((key, "VB"), 0) for key in FAMILY_F_KEYS)
+    t0 = sum(k.get((key, "V0"), 0) for key in FAMILY_F_KEYS)
+    r2 = tv <= t0 + F_M_SUM
+    ok = all(r1.values()) and r2 and not r3 and not r4
+    out.update(k={f"{a}|{b}": v for (a, b), v in sorted(k.items())}, R1=r1, R2={"VB": tv, "V0": t0, "ok": r2},
+               R3=r3, R4=r4, result="pass" if ok else "fail")
+    return out
+
+
 def cmd_grid(args, repo, v5j, core):
     is_p3, mod = core.load_is_extend_start(repo)
     fnd = core.Findings()
     vb_files = dict(x.split("=", 1) for x in args.vb)
-    v0_files = dict(x.split("=", 1) for x in (args.v0 or []))
+    v0_files, pair_rec = v0_pair(args, fnd)
     if set(vb_files) != set(STEMS):
         fnd.stop("S-15", "files", f"VB stems {sorted(vb_files)} != {list(STEMS)}")
     v0_runs, v0_meta = {}, {}
@@ -182,17 +277,24 @@ def cmd_grid(args, repo, v5j, core):
         out_files[stem] = {"path": path, "sha256": cm.sha256_file(path), "runs": n, "tags": tags,
                            "meta_spec": meta.get("spec"), "meta_script": meta.get("script"),
                            "v5_setting": meta.get("v5_setting")}
-    if not v0_files:
-        fnd.undec("pair", "no V0 grid given: pass -> fail cannot be counted (v5 10)")
-    if fam_F:
-        fnd.undec("family_F", f"{len(fam_F)} family-F transitions need the rev5 5.2 phase rule (not in 436.8)")
+    fam_rule = None
+    if fam_F:   # rev3 R3-E2 (Q-E2 = A): conditional 64 runs judged by rev5 5.2 R-1..R-4
+        if not args.family_f:
+            fnd.undec("family_F", f"{len(fam_F)} family-F transitions: resume_k1/h9_family_F.jsonl (64 runs) needed")
+        else:
+            fam_rule = family_f_rule(args.family_f, core, fnd)
+            fam_rule["input"] = [args.family_f, cm.sha256_file(args.family_f)]
+            if fam_rule["result"] == "fail":
+                fnd.stop("H-10", "family_F", "rev5 5.2 R-1..R-4 failed")
     if trans_nonF:
         fnd.stop("H-10", "grid", f"pass -> fail {len(trans_nonF)} (outside family F)")
-    body = {"inputs": {"vb": out_files, "v0": v0_meta}, "v5_options": mod,
+    body = {"inputs": {"vb": out_files, "v0": v0_meta}, "v5_options": mod, "v0_pair": pair_rec,
             "grid": {"runs": len(rows), "pass_p2": sum(1 for x in rows if x["pass_p2"] is True),
                      "fail_p2": sum(1 for x in rows if x["pass_p2"] is False),
                      "pass_to_fail_all": trans_all, "pass_to_fail_outside_F": trans_nonF,
-                     "family_F": fam_F, "fault_runs": fault_runs,
+                     "family_F": fam_F,
+                     "family_F_rule": fam_rule if fam_F else "not applicable (no family-F-only transition)",
+                     "fault_runs": fault_runs,
                      "recorded_gate_differences": gate_diff, **fnd.as_dict()},
             "per_run": rows}
     st = fnd.status()
@@ -208,7 +310,13 @@ def build_parser():
     sub = ap.add_subparsers(dest="cmd", required=True)
     g = sub.add_parser("grid")
     g.add_argument("--vb", action="append", required=True, help="<stem>=<resume_k1/h9_grid/<stem>.json>")
-    g.add_argument("--v0", action="append", default=None, help="<stem>=<V0 grid json> (pair, README Q-G1)")
+    g.add_argument("--v0-stored", action="append", default=None,
+                   help="<stem>=<stored V0 grid json> (acceptance/c4g2_only/grid, R3-E1)")
+    g.add_argument("--v0-sample", action="append", default=None,
+                   help="<stem>=<same-commit V0 8-job sample json> (R3-E1)")
+    g.add_argument("--v0-new", action="append", default=None,
+                   help="<stem>=<resume_k1/h9_grid_v0/<stem>.json> (R3-E1, when the sample differs)")
+    g.add_argument("--family-f", default=None, help="resume_k1/h9_family_F.jsonl (R3-E2, 64 runs)")
     return ap
 
 
