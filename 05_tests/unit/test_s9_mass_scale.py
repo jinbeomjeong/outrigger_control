@@ -78,7 +78,9 @@ def test_existing_batch_definitions_unchanged() -> None:
                                               # K-2 V-7 (2026-11-10): test_k2_chrono_runner.py
                                               "k2_v7",
                                               # LAS-b P5r4 + K1 (2026-11-11): test_las_p5r4_k1_chrono_rows.py
-                                              "V5-LAS-P5R4-K1", "V5-LAS-P5R4-K1-GS"}
+                                              "V5-LAS-P5R4-K1", "V5-LAS-P5R4-K1-GS",
+                                              # B1 creep basis (2026-11-12): test_b1_creep_chrono_rows.py
+                                              "V5-B1-CREEP", "V5-B1-CREEP-WIN", "V5-B1-CREEP-GS"}
     for name, want in BATCH_DEF_SHA256.items():
         rows = [{**r, "argv": _norm(s9_batch, r["argv"])} for r in b[name]]
         assert hashlib.sha256(json.dumps(rows, sort_keys=True).encode()).hexdigest() == want, name
