@@ -141,6 +141,31 @@
 - 동작 확인(판정 아님): 저장 `v5/u9_targeted.jsonl`(옛 태그 `final_C4G2`·`final_C4G2_P3`)의 V0 14줄을 scratchpad로 떼어 `--vb` 저장 파일, `--h0-ref v5/p3_hash.jsonl`, `--t4h-root v5/u9_targeted/t4h`로 돌렸다. 기대대로 태그 S-2 멈춤 42건만 나왔고(옛 태그), H0 ① 4키는 같음, 판정 불가 0이었다.
 - 시험 `test_p2_v5j.py`(12개, 합성 줄): J 항목 통과·실패, 문턱 허용 1e-9, 기준선 실패, J8 두 조건, H-9·H-7·J-P3 결함 멈춤, J11 사유 기록, 이름 접미사, U-9 분류 A·B·C·C(T3c)·D, H0·태그·키 수 멈춤, 결측 = 판정 불가, 실제 u9 규칙 sha.
 
+## H-0 T-3K: `p2_t3k.py` (`las_targeted_rules` 원판~rev5, 봉인 11개)
+
+- 작성: dynamics-expert(경로 2 둘째 작성자, 2026-11-13). 경로 1(`las_judge`, `las_h7`, `las_t3*` 판정 부분)과 그 출력은 보지 않았다.
+- 실행: `p2_t3k.py --out x.json --r0 <t3_k1/las_T3_R0.jsonl> --r0k <t3_k1/las_T3_R0K.jsonl> --t3 <t3_k1/las_T3.jsonl> --dg3-r0 off=<R-0 dg3 출력> --dg3-r0 v4_on=<…> --dg3-t3 off=<T-3b off 출력> --dg3-t3 v4_on=<…> --d1 <v5/d1.jsonl>`. 실행할 때마다 436.8 sha와 rev5 1 #5의 봉인 11개(원판, rev1~rev4c, rev3 키 목록, rev5, R-0K 키 목록 — R-0K 목록 sha는 `las_targeted_rules_rev5.sha256` 둘째 줄)를 확인한다. 어긋나면 종료 2(S-1·H-T3-0). R-0K 목록은 정렬 키 + LF의 sha256 `9399c492…`(rev5 2.3)도 다시 계산한다.
+- 종료 코드(rev3·rev5): 0 통과, 1 기준 실패(H-T3-1K, H-T3-5), 2 판정 없는 멈춤(H-T3-0·3·2·1·1Q·4·6) 또는 규칙 sha 불일치, 3 도구 오류. 멈춤은 rev5 4절 순서로 정렬해 `stop_order`에 적고 첫 멈춤으로 종료 코드를 정한다. 436.8 등급 `status_4368`이 `통과`가 아니면 S-14다.
+- dg3 출력 형식은 아직 없어서 jsonl 줄 또는 `results[]`·`records[]` JSON을 받는다. 키는 `key`(또는 `cand=` 접두가 없으면 `cand=<cand>#<key>`), 해시는 `commands_sha256`(`r79.commands_sha256` 포함), 사건은 `event_names` 또는 `events`. 폴더(off·v4_on)는 CLI `FOLDER=`로 준다(확인 필요 T3-a).
+
+| 규칙 | 경로 2 |
+|---|---|
+| "작동"(rev3 3) | 줄 사건에 `INFO_LIFTOFF_SLOW`(이름의 ':' 앞 부분이 정확히 같음, `_END` 제외)가 1개 이상. `event_names` 개수, 없으면 `events` |
+| `would_block_any`(rev5 2.1) | `resume_k1`(또는 `controller_meta`) `slope_clearance_margin.order_gate.decisions[*].would_block` 중 참이 있음. 없으면 결측 |
+| R-0 K-2(rev3) | D-1 5키 + dg3 2기록: 해시 = 기준(D-1은 `--d1` 줄, 없으면 키 목록), 태그 V0 없음·VB `final_C4G2_P3`, 작동 0. 실패 H-T3-1, 키·태그 H-T3-3 |
+| R-0K K-1K·K-2K(rev5 3.2) | 키 = R-0K 45, 태그 `final_C4G2_K1`/`_P3_K1`, LAS-b 끔, 관문 켬, 작동 0(H-T3-3). (ii) `would_block_any` 거짓 → 해시 = 저장, (iii) `r0_no_r4` 거짓·해시 같음(H-T3-1K). (iv) `uniform_r4` 막힘 → H-T3-1Q. `patch_r4`는 기록 |
+| T-3K K-1·K-3 | 키 = T-3a 228 + T-3c 76(+ T-3b 4), 태그 `final_C4G2_LAS_K1`/`_P3_LAS_K1`, `_LAS`만 또는 `_FB`면 H-T3-3. 설정: LAS-b 9값 = b0(프리셋), 관문 켬, `slope_clearance_margin.enable` 참, `flat_soil_margin_m` 0.03 |
+| $B(k)$(rev5 3.1) | R-0K 키는 R-0K 줄(해시·`d1` 블록), 그 밖은 `--d1` 저장 줄(없으면 rev3 키 목록, G6-2는 rev4a 1에 따라 키 목록 값을 쓰지 않음), dg3는 키 목록 `shadow_commands_sha256_all_folders` |
+| rev4a 1 대조 | `--d1`이 있으면 키 목록의 해시·verdict·fail_items·P3-2·READY·행정·FAULT 이름을 저장 줄과 대조, 다르면 H-T3-3 |
+| K-4 | T-3a 바탕 G1 72 + T-3b 4: 작동 → H-T3-4, 미작동·해시 다름 → H-T3-5(rev4a 3) |
+| K-5 | 미작동 줄 해시 = $B(k)$, R-0K 밖 미작동 줄은 `would_block_any` 거짓(G-c). 위반 H-T3-5 |
+| K-6a~e | 작동 줄: 기준 pass·allowed_stop → fail 금지, 기준 fail은 `fail_items` 포함 관계 / `P3-2`·`G6-2_loc` 기준 참 → 새 값 참(없음 = 위반, 기준에 항목 없으면 해당 없음) / FAULT 접두 이름 ⊆ 기준(`event_names` 없으면 위반) / READY 증가 ≤ 5 s(기준 수·새 None 위반, 둘 다 None 통과) / 행정 증가 ≤ 0.001 m(어느 쪽이든 None 위반). 위반 H-T3-6. 비교 허용은 436.8 7.6의 1e-9 |
+| K-7(rev3, rev5 3.4) | 작동 줄 기록: `would_block_any`, `applied` 수, 첫 결정 dP = n_P − n_S, 기준선 출처, 기준선 줄과 막힘 결정 집합이 다른지, LAS-b 블록 |
+| 하지 않는 것 | K-0 정체성(커밋·도구·c2.py sha·스레드는 줄 밖 `.identity.json`·헤더에 있음), H-T3-0의 작업 트리·래퍼·출력 파일 존재·dg3 T4h 메타 사전 확인(실행 전 관문) |
+
+- 동작 확인(판정 아님): T-3 결과가 아직 없어 봉인 키 목록으로 만든 합성 줄을 저장 `v5/d1.jsonl`과 함께 돌렸다. rev4a 1 대조 304키 차이 0, 멈춤 0.
+- 시험 `test_p2_t3k.py`(12개): 키 목록 수, 전부 통과, H-T3-1, H-T3-1K·1Q, 태그 `_LAS`만·LAS-b 값 H-T3-3, G1 작동 H-T3-4·미작동 해시 H-T3-5, K-6 통과·READY·행정·FAULT 위반, K-6a·b 집합·항목, dg3 작동·키 수, 오류 줄 H-T3-2, R-0K 밖 막힘 H-T3-5, 실제 봉인 11개 sha.
+
 ## 하지 않는 것 (범위)
 
 - **원 규칙 등급의 재집계는 하지 않는다.** H-0 T-3K(`las_targeted_rules` 원판~rev5), H-1·H-2(D-1 선별 규칙), H-3·H-4(`u3_u6`), H-5(`u9`), H-6~H-10(v5 기준 + 개정 1~12b), C-1~C-5 판정 블록(D-1 규칙 11, 개정 12 2.2)의 통과·미달 재집계가 여기에 든다. 이 도구가 내는 묶음 상태는 436.8 문서가 새로 정한 층(4.1·4.2·6·7.2·7.4·9.3·S-15)의 상태다(`grade_scope`). 원 규칙 등급의 경로 2는 그 규칙들의 정의 문장을 읽고 따로 만들어야 한다.
