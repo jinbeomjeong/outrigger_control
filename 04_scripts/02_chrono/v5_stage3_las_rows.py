@@ -49,7 +49,12 @@ EXPECTED_ROWS = 37
 
 
 def results_root() -> Path:
-    """Folder holding ``07_results`` (the worktree has none: then the main checkout two levels above)."""
+    """Folder holding the stored stage 3 results (``STORED_SOIL``): this checkout, else the main checkout above a
+    worktree (cad 2026-11-13: a worktree may hold a partial ``07_results`` of its own, e.g. G-S output); without
+    them the first folder with a ``07_results`` (former rule)."""
+    for p in (ROOT, *ROOT.parents):
+        if (p / STORED_SOIL).is_dir():
+            return p
     if (ROOT / "07_results").is_dir():
         return ROOT
     for p in ROOT.parents:

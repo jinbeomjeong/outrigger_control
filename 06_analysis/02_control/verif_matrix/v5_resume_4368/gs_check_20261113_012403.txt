@@ -1,0 +1,50 @@
+{
+ "folder": "07_results/S9/batch_V5-RESUME-K1-GS_20261113_012403",
+ "batch": "V5-RESUME-K1-GS",
+ "n_cases": 3,
+ "n_key_paths": 75,
+ "cases": [
+  {
+   "case": "GS_D1C1_top_flat_crx3",
+   "kind": "L1R",
+   "batch_entry_missing": [],
+   "progress_end_rc0": true,
+   "runner_outcome_ok": true,
+   "runner_batch_dir": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-a7addabbe8e298481\\07_results\\S6\\bundleC_d1c1_r4368gs_D1C1_top_flat_crx3_L1R_20261113_012404",
+   "argv_has_tag_option": false,
+   "tag_keys_not_required": "argv without the tag option (run before python-expert c17481d)",
+   "result_json": true,
+   "result_missing": [],
+   "files_missing": [],
+   "n_key_paths": 20,
+   "ok": true
+  },
+  {
+   "case": "GS_D1C2_middle_fdown3.2_Fs4",
+   "kind": "L2b_NSC",
+   "batch_entry_missing": [],
+   "progress_end_rc0": true,
+   "runner_outcome_ok": true,
+   "runner_batch_dir": "C:\\workspace\\outrigger_control\\.claude\\worktrees\\agent-a7addabbe8e298481\\07_results\\S8\\r4368gs_D1C2_middle_fdown3.2_Fs4_20261113_012404",
+   "argv_has_tag_option": false,
+   "tag_keys_not_required": "argv without the tag option (run before python-expert c17481d)",
+   "result_json": true,
+   "result_missing": [],
+   "files_missing": [],
+   "n_key_paths": 23,
+   "ok": true
+  },
+  {
+   "case": "GS_P3a_G1_B_VB_prop_lift10",
+   "kind": "openloop",
+   "batch_entry_missing": [],
+   "progress_end_rc0": true,
+   "result_json": true,
+   "result_missing": [],
+   "files_missing": [],
+   "n_key_paths": 19,
+   "ok": true
+  }
+ ]
+}
+errors 0

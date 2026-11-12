@@ -74,10 +74,13 @@ VB_TAG, V0_TAG = "final_C4G2_P3_LAS_K1", "final_C4G2_LAS_K1"
 OFF_VB_TAG = "final_C4G2_P3_K1"
 """Rules 4.1: VB / LS (③ on) and the other settings; C-4 off arm (VB) = ``--las-off --k1-order-gate on``."""
 OFF_ARM_ARGS = ("--las-off", "--k1-order-gate", "on")
-RUNNER_EXPECT_OPTION: dict[str, str | None] = {"L2b_NSC": None, "L1R": None}
+RUNNER_EXPECT_OPTION: dict[str, str | None] = {"L2b_NSC": "--expect-controller", "L1R": "--expect-controller"}
 """User decision Q-2 (2026-11-13): run_S8C / run_S6C get a controller-tag check option from python-expert. When its
 name is set here (main session, after that change), :func:`finish` appends ``[<option>, <tag>]`` to every L2b / L1-R
-row and :func:`argv_check` requires it; None = not yet available (the row carries the tag in ``controller`` only)."""
+row and :func:`argv_check` requires it; None = not yet available (the row carries the tag in ``controller`` only).
+Set 2026-11-13 to ``--expect-controller`` (python-expert c17481d on its own branch: run_S8C ``run|check`` and run_S6C
+``run`` refuse another tag before the closed loop, result.json ``controller_tag`` / ``expect_controller``). This
+branch's runners do not have it yet: launch only after that change is merged."""
 START_ENV_SCM = {"OMP_WAIT_POLICY": "PASSIVE"}
 """Rules 6 start env of the SCM rows (no ``OUTRIGGER_HULL_HOOK``: rules 4.2, unset = fast)."""
 FORBIDDEN_TOKENS = ("--k1-order-gate", "--las-off", "--las-candidate", "--k1-forced-block", "--k2",
@@ -661,7 +664,9 @@ def _s8c_check(r: dict[str, Any], sb: ModuleType, diffs: list[dict[str, Any]]) -
     s7 = _import("run_S7C")
     from outrigger_sim.params import load_params  # noqa: PLC0415
 
-    src = sb.v5_rigid_source_check(r, root=results_root())
+    opt = RUNNER_EXPECT_OPTION.get("L2b_NSC")
+    plain = {**r, "argv": _drop_option(r["argv"], opt) if opt else r["argv"]}  # the v5 parser has no tag option
+    src = sb.v5_rigid_source_check(plain, root=results_root())
     if src["status"] == "differs":
         diffs.extend({"key": f"v5_args:{d['key']}", "want": d["former"], "got": d["row"]} for d in src["diffs"])
     if _S8C_TABLE is None:
@@ -1055,6 +1060,79 @@ SERIES_FILES = ("step_series.npz", "r8_series.npz")
 ``step_series.npz``, G-S 2026-11-13)."""
 
 
+RIGID_KEY_PATHS = (
+    "controller_meta.liftoff_approach_slow.settings", "controller_meta.liftoff_approach_slow.start_s",
+    "controller_meta.liftoff_approach_slow.end_s", "controller_meta.liftoff_approach_slow.end_reason",
+    "controller_meta.liftoff_approach_slow.active_periods",
+    "controller_meta.slope_clearance_margin.settings.flat_soil_margin_order_gate",
+    "controller_meta.slope_clearance_margin.order_gate", "controller_meta.slope_clearance_margin.order_gate.decisions",
+    "controller_meta.soil", "controller_meta.loc_revoke", "phases", "ready_t_s", "events_count", "monitor",
+    "stroke.max_m", "runner.placement", "runner.sensor_seed", "runner.wall_s", "settings.controller_config",
+    "acceptance.crawler_attitude_deg")
+"""L2b / L1-R result.json keys the judge tools read (Q-3 G-S, 2026-11-13: 7.2 classes, 4.2 record, 6 identity)."""
+RIGID_EXPECT_KEYS = ("controller_tag", "expect_controller.ok", "expect_controller.name")
+"""python-expert c17481d record (top level): required when the row argv carries the tag option."""
+RIGID_FILES = {"L2b_NSC": ("controller_events.json", "r8_series.npz", "s8_series.npz", "case.json"),
+               "L1R": ("controller_events.json", "r8_series.npz", "case.json")}
+L2B_VB_KEYS = ("v5_hydraulics.controller_tag", "v5_hydraulics.hydraulic_options", "flow_limit.setting")
+OPENLOOP_KEY_PATHS = ("p3a.checks", "p3a.P3a-1_force_peak", "p3a.P3a-2_liftoff", "p3a.P3a-9_min_cylinder_force",
+                      "p3a.t_lift_start_s", "num_threads_chrono", "placement.mode", "placement.omp_wait_policy",
+                      "placement.power_throttling_off_ok", "placement.affinity_ok", "hull_hook.mode",
+                      "hull_hook.fallback_reason", "hull_hook.dll_sha256", "args.lift_s", "args.lift_speed_fraction",
+                      "args.flow_law", "v5_hydraulics.controller_options", "flow_limit.summary", "wall_s")
+OPENLOOP_FILES = ("series.npz", "flow_series.npz")
+
+
+def gs_kind(entry: dict[str, Any]) -> str:
+    rec = entry.get("r4368") or {}
+    if rec.get("engine") in ("L2b_NSC", "L1R"):
+        return rec["engine"]
+    tail = script_tail(entry.get("argv") or [])
+    return "openloop" if tail[:1] == ["machine"] else "level"
+
+
+def _gs_other(f: Path, e: dict[str, Any], kind: str) -> dict[str, Any]:
+    """Presence check of an L2b / L1-R (result in the runner's own folder, from the case log) or open-loop row."""
+    not_expected = {"openloop": ("controller", "code_at_launch"),
+                    "L1R": ("start_env", "v5_setting")}.get(kind, ("start_env",))  # L1-R: no v5 option (None)
+    c: dict[str, Any] = {"case": e["case"], "kind": kind, "batch_entry_missing": [k for k in GS_ENTRY_KEYS
+                                                                                   if k not in e
+                                                                                   and k not in not_expected]}
+    progress = (f / "progress.log").read_text("utf-8", errors="replace") if (f / "progress.log").is_file() else ""
+    c["progress_end_rc0"] = re.search(rf"^END {re.escape(e['case'])} \S+ rc=0\b", progress, re.M) is not None
+    if kind == "openloop":
+        case_dir, keys, files = f / e["case"], list(OPENLOOP_KEY_PATHS), OPENLOOP_FILES
+    else:
+        tail = script_tail(e.get("argv") or [])
+        cid = tail[tail.index("--only") + 1]
+        log = f / f"{e['case']}.log"
+        chk = _import("s9_batch").s8c_case_check(log.read_text("utf-8", errors="replace"), cid) if log.is_file() \
+            else {"ok": False, "result_json": None}
+        c["runner_outcome_ok"] = bool(chk.get("ok"))
+        c["runner_batch_dir"] = chk.get("batch_dir")
+        case_dir = Path(chk["result_json"]).parent if chk.get("result_json") else f / "<missing>"
+        keys, files = list(RIGID_KEY_PATHS), RIGID_FILES[kind]
+        if kind == "L2b_NSC" and e.get("v5_setting") in ("VB", "LS1", "LS4"):
+            keys += list(L2B_VB_KEYS)
+        opt = RUNNER_EXPECT_OPTION.get(kind)
+        c["argv_has_tag_option"] = bool(opt and opt in tail)
+        if c["argv_has_tag_option"]:
+            keys += list(RIGID_EXPECT_KEYS)
+        else:
+            c["tag_keys_not_required"] = "argv without the tag option (run before python-expert c17481d)"
+    res = case_dir / "result.json"
+    c["result_json"] = res.is_file()
+    c["result_missing"] = list(keys)
+    if res.is_file():
+        doc = json.loads(res.read_text("utf-8"))
+        c["result_missing"] = [k for k in keys if _get(doc, k) is _MISSING]
+    c["files_missing"] = [n for n in files if not (case_dir / n).is_file()]
+    c["n_key_paths"] = len(keys)
+    c["ok"] = (c["progress_end_rc0"] and not c["batch_entry_missing"] and c["result_json"] and not c["result_missing"]
+               and not c["files_missing"] and c.get("runner_outcome_ok", True))
+    return c
+
+
 GS_ENTRY_KEYS = ("case", "argv", "rc", "pool", "planned_pool", "omp_wait_policy", "hull_hook_requested",
                  "hull_hook_effective", "hull_hook_env", "start_env", "code_at_launch", "controller", "v5_setting",
                  "criteria_id", "r4368")
@@ -1076,6 +1154,10 @@ def cmd_gs_check(folder: str) -> int:
     keys, cond = gs_key_paths()
     cases = []
     for e in batch.get("cases", []):
+        kind = gs_kind(e)
+        if kind != "level":
+            cases.append(_gs_other(f, e, kind))
+            continue
         c: dict[str, Any] = {"case": e["case"], "progress_end_rc0": end_rc.get(e["case"]) == "0",
                              "batch_entry_missing": [k for k in GS_ENTRY_KEYS if k not in e],
                              "mixed_hull_mode_key": "mixed_hull_mode" in batch}
