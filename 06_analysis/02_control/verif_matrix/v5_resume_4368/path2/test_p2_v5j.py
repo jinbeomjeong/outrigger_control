@@ -98,8 +98,12 @@ def test_stops_j9_j11_jp3():
     assert "H-7" in f.as_dict()["stop_codes"]
     ln = steady(setting="VB", ebc={"breach_reads": [0, 2, 0, 0]})
     ln["head_only_declared"] = False
-    _, f = vj.judge_pair(ln, a, 14, IS_P3)
+    _, f = vj.judge_pair(ln, a, 14, IS_P3, rod_reading=True)   # T4h shows a rod reading
     assert "H-7" in f.as_dict()["stop_codes"]
+    ln = steady(setting="VB", ebc={"breach_reads": [0, 0, 0, 0]})
+    ln["head_only_declared"] = False                            # steady, no T4h: no rod reading by config, #4
+    _, f = vj.judge_pair(ln, a, 14, IS_P3)
+    assert "J-P3-defect" in f.as_dict()["stop_codes"]
     ln = steady(setting="VB", ebc={"breach_reads": [0, 0, 0, 0]})      # declared head-only but a record: #5
     _, f = vj.judge_pair(ln, a, 14, IS_P3)
     assert "J-P3-defect" in f.as_dict()["stop_codes"]
@@ -131,7 +135,7 @@ def test_u9_class_b_and_a():
 def test_u9_class_c_t3a_t4_and_cause_fail():
     v0, vb, ref = full_set({("S2", 0.001): {"u9": u9_block(delta=0.11)}})
     body, f = vj.recount_u9(v0, vb, ref, IS_P3)
-    assert body["classification"] == "C" and f.status() == "fail"
+    assert body["classification"] == "C" and f.status() == "pass" and body["ask_user_before_v5_sentence"]
     v0, vb, ref = full_set({("S2", 0.001): {"e5": {"integral_limit_rad_s": 0.02, "max_abs_integral_rad_s": 0.02,
                                                      "back_in_band_after_saturation_s": None}}})
     body, _ = vj.recount_u9(v0, vb, ref, IS_P3)
@@ -149,8 +153,9 @@ def test_u9_t3c_only_and_d_record():
     for x in vb:   # baseline 0.85 also fails J2 on one key -> D (recorded), not a cause fail
         if vj.u9_key(x["job"]) == ("S2", 0.0):
             x["values"]["forces"]["after_liftoff"]["min_kN"] = 5.0
-    body, _ = vj.recount_u9(v0, vb, ref, IS_P3)
+    body, f = vj.recount_u9(v0, vb, ref, IS_P3)
     assert body["class_flags"]["baseline_or_v0_fail"] == ["S2|eps 0.0"] and body["classification"] == "B"
+    assert f.status() == "fail"          # R3-C2: eta 0.85 T1 failure = 미달
 
 
 def test_u9_h0_stop_tag_stop_and_counts():
@@ -175,10 +180,56 @@ def test_u9_missing_value_is_undecidable():
             x["values"]["U9"].pop("ge3_runs")
             break
     body, f = vj.recount_u9(v0, bad, ref, IS_P3)
-    assert f.status() == "undecidable" and body["classification"] == "undecidable"
+    assert f.status() == "pass" and body["classification"] == "undecidable"   # eta 0.80 = record (R3-C2)
+    bad = copy.deepcopy(vb)
+    for x in bad:
+        if x["job"].get("eta_v") == 0.85:
+            x["values"]["attitude"].pop("max_abs_last_5s_deg")
+            break
+    _, f = vj.recount_u9(v0, bad, ref, IS_P3)
+    assert f.status() == "undecidable"
 
 
 def test_rules_sha_real():
     repo = HERE.parents[4]
     for rel, want in vj.U9_RULES.items():
         assert core.sha256_file(repo / rel) == want
+
+
+def test_rev3_j1_safe_stop_move_and_s8():
+    a, b = steady(setting="V0"), steady(setting="VB", cls="stroke_limited_stop")
+    it, f = vj.judge_pair(b, a, 14, IS_P3)
+    assert it["J1"]["result"] == "pass" and it["J1"]["safe_stop_move"] and f.status() == "pass"
+    a, b = steady("S8", setting="V0", cls="stroke_limited_stop", ready=None), steady("S8", setting="VB", ready=None)
+    it, f = vj.judge_pair(b, a, 14, IS_P3)
+    assert it["J1"]["result"] == "fail"
+
+
+def test_rev3_j7_numeric_segments_and_j11_fallback():
+    ln = steady(events=[(1.0, "FAULT_LIFT_STROKE_LIMIT:soil:FR"), (2.0, "WARN_X:3.5:FL")])
+    n, _, _ = vj.names_of(ln)
+    assert n == {"FAULT_LIFT_STROKE_LIMIT:soil:FR", "WARN_X:FL"}
+    b = steady(setting="VB", events=[(50.0, "WARN_ROD_PRESSURE_FALLBACK:FR")])
+    b["lock_window_alignment"] = {"n_late": None, "reason": "x"}
+    it, f = vj.judge_pair(b, steady(setting="V0", events=[(50.0, "WARN_ROD_PRESSURE_FALLBACK:FR")]), 14, IS_P3)
+    assert it["J11"]["result"] == "undecidable" and f.status() == "undecidable"
+
+
+def test_rev3_j3_floor_angle_and_jp3_config():
+    b = steady("R5", setting="VB", ready=100.0)
+    it, _ = vj.judge_pair(b, steady("R5", setting="V0"), 14, IS_P3)
+    assert it["J3"]["result"] == "record" and "floor angle" in it["J3"]["why"]
+    b["job"].update(roll_deg=0.0, pitch_deg=3.5)
+    it, _ = vj.judge_pair(b, steady("R5", setting="V0"), 14, IS_P3)
+    assert it["J3"]["limit_s"] == 120.0 and it["J3"]["result"] == "record"
+    b["job"]["pitch_deg"] = 0.0
+    it, _ = vj.judge_pair(b, steady("R5", setting="V0"), 14, IS_P3)
+    assert it["J3"]["result"] == "flag"
+    ln = steady("X9", setting="VB")
+    ln.pop("head_only_declared")
+    it, f = vj.judge_pair(ln, steady("X9", setting="V0"), 14, IS_P3)
+    assert it["J-P3"]["result"] == "undecidable"
+    ln = steady("S2", setting="VB")
+    ln.pop("head_only_declared")
+    it, _ = vj.judge_pair(ln, steady("S2", setting="V0"), 14, IS_P3)
+    assert it["J-P3"]["result"] == "no_rod_reading" and it["J-P3"]["declaration_source"] == "configuration"

@@ -2,7 +2,12 @@
 
 Rules: v5 criteria ``v5_criteria.md`` + revisions 1~12b (appendix A of the 436.8 rules), read through the
 436.8 rules (tags 4.1, 7.1). H-5: ``u9_targeted_rules_rev1.md`` (644005b7...) with the 436.8 7.1 tag reading
-(``final_C4G2`` -> ``final_C4G2_LAS_K1``, ``final_C4G2_P3`` -> ``final_C4G2_P3_LAS_K1``).
+(``final_C4G2`` -> ``final_C4G2_LAS_K1``, ``final_C4G2_P3`` -> ``final_C4G2_P3_LAS_K1``), and the 436.8 rev3
+(dad8dfa6...) R3-C1~C8: H0 reference = H-10 main VB line (C1); 436.8 grade = eta 0.85 T1 + H0, eta 0.80 and the
+4.1 class are records (C2); J1 pass <-> stroke_limited_stop is a record except S8 (C3); spec-shortfall mark at
+F_min + 5 kN (C4); J3 slope by the row's floor angle (C5); J7 names without numeric segments (C6); J11 n_late
+None on a fallback line = undecidable (C7); J-P3 inputs by T4h, else configuration, never by inverting the
+declaration (C8).
 Author: dynamics-expert (path 2, second author of the 436.8 path 2). Path-1 tools and outputs were not opened
 (436.8 9.2); the J-item reading below is built from the rule sentences and the line field names only.
 
@@ -48,15 +53,18 @@ _VM = "06_analysis/02_control/verif_matrix/"
 U9_RULES = {_VM + "u9_targeted_rules_rev1.md": "644005b706ba46cebba11b975ded474226cc4eab5030ee18e9f91dacd2d14587"}
 
 F_MIN_KN = core.F_MIN_N / 1000.0        # 436.8 2 (YAML 9,414.589 N); v5 criteria table writes 9.415 kN
-SPEC_RIGID_KN = 14.415                  # v5 3 J2: steady rigid rows under 14.415 kN = "사양 미달" (record)
+SPEC_RIGID_KN = (core.F_MIN_N + 5000.0) / 1000.0   # rev3 R3-C4: "14.415 kN" = F_min + 5 kN (record)
 ATT_LIMIT_DEG = 0.2                     # J6
 MOVING_BAR = 180.0                      # J10
 READY_BACK_S = 60.0                     # J5
 READY_SOIL_S = 100.0                    # 7 (S1~S5, S7)
 READY_FLAT_S, READY_SLOPE_S = 90.0, 120.0   # 7 (rigid R*, FLAG only)
 SOIL_READY_CASES = {"S1", "S2", "S3", "S4", "S5", "S7"}
-SLOPE_CASES = {"R3"}                    # u9 rules 1: R3 = rigid front-up 3.5 deg (assumption for other R*)
-RIGID_EVENT_CASES = {"R12", "R14", "R15", "R16"}   # 3.1 rigid events (G4 width grid, grid 768 also rigid)
+RIGID_EVENT_CASES = {"R12", "R14", "R15", "R16"}   # 3.1 / rev3 R3-C4 rigid events (G4 width grid = R12 twins)
+STEADY_CASES = {f"R{i}" for i in range(1, 12)} | {f"S{i}" for i in range(1, 9)}   # rev9 3.1 / rev3 R3-C8
+FLOOR_ANGLE_PATHS = (("job.floor_roll_deg", "job.floor_pitch_deg"), ("job.roll_deg", "job.pitch_deg"),
+                     ("job.d1.roll_deg", "job.d1.pitch_deg"), ("job.twin.roll_deg", "job.twin.pitch_deg"),
+                     ("values.floor.roll_deg", "values.floor.pitch_deg"))
 NREV_FACTOR, NREV_ADD = 2, 6            # 4 (assumption in the criteria)
 PAIR_DROP = ("setting", "eta_v", "u9_metrics", "mask", "t4h_dir")
 PHASE_KEYS = ("eps", "offset_s")
@@ -99,6 +107,23 @@ def tag_of(line):
     return None if v is core.MISSING else v
 
 
+def _is_number(seg):
+    try:
+        float(seg)
+        return True
+    except ValueError:
+        return False
+
+
+def floor_slope(line):
+    """rev3 R3-C5: True if a row-definition floor angle is non-zero, False if both zero, None if not recorded."""
+    for pr, pp in FLOOR_ANGLE_PATHS:
+        r, p = core.num(core.dig(line, pr, None)), core.num(core.dig(line, pp, None))
+        if r is not None and p is not None:
+            return r != 0.0 or p != 0.0
+    return None
+
+
 def names_of(line):
     """(FAULT/WARN name set, fallback reason set, fallback times) from ``events`` [[t, name], ...]
     plus the value lists (steady ``values.events``, event ``event_output``)."""
@@ -113,14 +138,10 @@ def names_of(line):
         if isinstance(v, list):
             raw.extend((None, s) for s in v if isinstance(s, str))
     for t, s in raw:
-        base, _, suffix = s.partition(":")
+        base = s.partition(":")[0]
         if base.startswith("FAULT_") or base.startswith("WARN_"):
-            # numeric suffixes (e.g. WARN_PROBE_STIFFNESS_OUT_OF_RANGE:3.626) are values, not names
-            try:
-                float(suffix)
-                s = base
-            except ValueError:
-                pass
+            # rev3 R3-C6: the name = the ':' segments without the numeric ones (leg / reason segments stay)
+            s = ":".join(seg for seg in s.split(":") if not _is_number(seg))
             names.add(s)
             if base == "WARN_ROD_PRESSURE_FALLBACK" and t is not None:
                 fb_times.setdefault(s, []).append(t)
@@ -167,25 +188,47 @@ def ok_j2(v, case):
     return None if v["minF"] is None else core.t_ge(v["minF"], F_MIN_KN)
 
 
-def ready_limit(case):
+def ready_limit(case, line=None):
+    """(limit, kind, slope). rev3 R3-C5: rigid R* FLAG limit 120 s if the row's floor angle is non-zero."""
     if case in SOIL_READY_CASES:
-        return READY_SOIL_S, "judged"
+        return READY_SOIL_S, "judged", None
     if isinstance(case, str) and case.startswith("R"):
-        return (READY_SLOPE_S if case in SLOPE_CASES else READY_FLAT_S), "flag"
-    return None, None
+        slope = floor_slope(line) if line is not None else None
+        if slope is None:
+            return None, "flag_unknown_floor", None
+        return (READY_SLOPE_S if slope else READY_FLAT_S), "flag", slope
+    return None, None, None
+
+
+def rod_reading_by_config(line):
+    """rev3 R3-C8 1: without a T4h record, the run configuration decides (event path = two pressures)."""
+    if is_event(line):
+        return True
+    if case_of(line) in STEADY_CASES:
+        return False
+    return None
+
+
+def head_only_declared(line):
+    """rev3 R3-C8 2: the line field, else the rev9 3.1 configuration (steady path cases)."""
+    v = line.get("head_only_declared")
+    if isinstance(v, bool):
+        return v, "field"
+    return (case_of(line) in STEADY_CASES and not is_event(line)), "configuration"
 
 
 def jp3(line, is_p3, rod_reading):
-    """rev9 3.2 table. rod_reading: True / False / None (unknown -> assumption from the declaration)."""
+    """rev9 3.2 table with the two inputs of rev3 R3-C8 (rod reading: T4h, else configuration; declaration:
+    field, else configuration; the declaration is never inverted into a rod-reading assumption)."""
     tag = tag_of(line)
     if is_p3 is None or not isinstance(tag, str) or not is_p3(tag):
         return "not_applicable_tag", None
     hr = line.get("hydraulics_record") if isinstance(line.get("hydraulics_record"), dict) else None
     ebc = hr.get("extend_bound_check", core.MISSING) if hr is not None else core.MISSING
-    declared = line.get("head_only_declared") is True
-    rod = rod_reading
+    declared, _src = head_only_declared(line)
+    rod = rod_reading if rod_reading is not None else rod_reading_by_config(line)
     if rod is None:
-        rod = not declared   # assumption (no T4h read): a declared head-only run has no rod reading
+        return "undecidable", "no T4h record and no configuration basis for the rod reading (R3-C8)"
     if rod:
         if not isinstance(ebc, dict):
             return "setting_defect", "#2 rod reading, extend_bound_check missing / null"
@@ -220,19 +263,27 @@ def judge_pair(line, v0, v0_nrev_max, is_p3, rod_reading=None):
 
     rel("J1", ok_j1(a), ok_j1(b), {"class_v0": a["ok1"], "class_set": b["ok1"]})
     if not b["event"] and a["ok1"] in OK_CLASSES and b["ok1"] in OK_CLASSES and a["ok1"] != b["ok1"]:
-        it["J1"]["result"] = "fail"   # 6: leaving the stroke_limited_stop class (or entering it) is a J1 fail
-        fnd.fail(where, f"J1: class {a['ok1']} -> {b['ok1']}")
+        # rev3 R3-C3: pass <-> stroke_limited_stop is a record, except the S8 row whose expected class is
+        # stroke_limited_stop (v5 criteria 6: leaving that class is a J1 fail)
+        if case == "S8" and a["ok1"] == "stroke_limited_stop":
+            it["J1"]["result"] = "fail"
+            fnd.fail(where, f"J1: S8 class {a['ok1']} -> {b['ok1']}")
+        else:
+            it["J1"]["safe_stop_move"] = f"{a['ok1']} -> {b['ok1']}"
     rel("J2", ok_j2(a, case), ok_j2(b, case), {"minF_v0_kN": a["minF"], "minF_set_kN": b["minF"]})
     if not b["event"] and isinstance(case, str) and case.startswith("R") and b["minF"] is not None \
             and core.t_lt(b["minF"], SPEC_RIGID_KN):
         it["J2"]["spec_shortfall"] = True        # "사양 미달" record
-    lim, kind = ready_limit(case)
+    lim, kind, slope = ready_limit(case, line)
     if b["event"]:
         it["J3"] = {"result": "record", "t_ready_v0": a["t_ready"], "t_ready_set": b["t_ready"]}
     elif case == "S8":
         it["J3"] = {"result": "pass" if b["t_ready"] is None else "fail", "rule": "S8 READY 0"}
         if b["t_ready"] is not None:
             fnd.fail(where, "J3: S8 reached READY")
+    elif kind == "flag_unknown_floor":
+        it["J3"] = {"result": "record", "t_ready_set": b["t_ready"],
+                    "why": "rigid row without a recorded floor angle: FLAG limit (90 / 120 s) not set (R3-C5)"}
     elif lim is None:
         it["J3"] = {"result": "record", "t_ready_set": b["t_ready"], "why": "no READY limit for this case"}
     elif kind == "judged":
@@ -241,7 +292,8 @@ def judge_pair(line, v0, v0_nrev_max, is_p3, rod_reading=None):
         rel("J3", ok0, ok1, {"limit_s": lim, "t_ready_v0": a["t_ready"], "t_ready_set": b["t_ready"]})
     else:
         flag = b["t_ready"] is not None and core.t_gt(b["t_ready"], lim)
-        it["J3"] = {"result": "flag" if flag else "record", "limit_s": lim, "t_ready_set": b["t_ready"]}
+        it["J3"] = {"result": "flag" if flag else "record", "limit_s": lim, "floor_slope": slope,
+                    "t_ready_set": b["t_ready"]}
     fp0, fp1 = a["final_phase"], b["final_phase"]
     if fp0 is None or fp1 is None:
         it["J4"] = {"result": "undecidable"}
@@ -292,7 +344,12 @@ def judge_pair(line, v0, v0_nrev_max, is_p3, rod_reading=None):
     okp = (lambda x: None if x is None else not core.t_gt(x, MOVING_BAR))
     rel("J10", okp(a["press"]), okp(b["press"]), {"v0_bar": a["press"], "set_bar": b["press"]})
     lwa = line.get("lock_window_alignment")
-    if not isinstance(lwa, dict):
+    has_fb = any(n.startswith("WARN_ROD_PRESSURE_FALLBACK") for n in n1)
+    if isinstance(lwa, dict) and lwa.get("n_late_fallback") is None and lwa.get("n_late") is None and has_fb:
+        # rev3 R3-C7: a fallback leg with n_late None -> the J11 stop condition cannot be checked
+        it["J11"] = {"result": "undecidable", "why": "fallback leg present, n_late None"}
+        fnd.undec(where, "J11: fallback leg present but n_late missing (R3-C7)")
+    elif not isinstance(lwa, dict):
         lc_on = isinstance(core.dig(line, "hydraulic_options.lock_closure", None), dict)
         it["J11"] = {"result": "undecidable" if lc_on else "not_applicable"}
         if lc_on:
@@ -311,8 +368,11 @@ def judge_pair(line, v0, v0_nrev_max, is_p3, rod_reading=None):
             if nlf:
                 fnd.stop("H-7", where, f"n_late_fallback {nlf}")
     res, why = jp3(line, is_p3, rod_reading)
-    it["J-P3"] = {"result": res, "why": why, "rod_reading_source": "t4h" if rod_reading is not None else "assumed"}
-    if res == "H-7":
+    it["J-P3"] = {"result": res, "why": why, "rod_reading_source": "t4h" if rod_reading is not None else "configuration",
+                  "declaration_source": head_only_declared(line)[1]}
+    if res == "undecidable":
+        fnd.undec(where, f"J-P3: {why}")
+    elif res == "H-7":
         fnd.stop("H-7", where, f"J-P3 {why}")
     elif res == "setting_defect":
         fnd.stop("J-P3-defect", where, why)
@@ -411,6 +471,7 @@ def recount_u9(v0_lines, vb_lines, h0_ref_lines, is_p3, stored_main=None, stored
     cls_flags = {"cause_fail": [], "baseline_or_v0_fail": [], "T3a": [], "T3b": [], "T3c": [], "T4": [],
                  "T4_flag_integral": []}
     longest_ge3 = []
+    rec080 = {"stops": [], "undecidable": []}
     for k in sorted(U9_KEYS):
         l0, lb, ll = v0.get(k), vb[ETA_BASE].get(k), vb[ETA_LOW].get(k)
         if l0 is None or lb is None or ll is None:
@@ -421,9 +482,13 @@ def recount_u9(v0_lines, vb_lines, h0_ref_lines, is_p3, stored_main=None, stored
         rl = rod_reading_from_t4h(ll, t4h_root)
         jb, fb = judge_pair(lb, l0, rmax, is_p3, rb)
         jl, fl = judge_pair(ll, l0, rmax, is_p3, rl)
-        for f in (fb, fl):
-            fnd.stops.extend(f.stops)
-            fnd.undecidable.extend(f.undecidable)
+        # rev3 R3-C2: the 436.8 grade = eta 0.85 VB vs V0 T1 (+ H0); eta 0.80 T1 / T3 / T4 / class = records
+        fnd.stops.extend(fb.stops)
+        fnd.undecidable.extend(fb.undecidable)
+        for s in fb.fails:
+            fnd.fail(s["where"], f"T1 eta 0.85: {s['why']}")
+        rec080["stops"].extend(fl.stops)
+        rec080["undecidable"].extend(fl.undecidable)
         t1b = "undecidable" if fb.undecidable else ("fail" if (fb.fails or fb.stops) else "pass")
         t1l = "undecidable" if fl.undecidable else ("fail" if (fl.fails or fl.stops) else "pass")
         v0_ok = ok_j1(j_values(l0))
@@ -468,7 +533,7 @@ def recount_u9(v0_lines, vb_lines, h0_ref_lines, is_p3, stored_main=None, stored
         t4_flag = integ is not None and ilim is not None and core.t_ge(integ, ilim)
         for nm, val in (("T3a", t3a), ("T3b", t3b), ("T3c", t3c), ("T4", t4)):
             if val is None:
-                fnd.undec(where, f"{nm}: value missing (9.3)")
+                rec080["undecidable"].append({"where": where, "why": f"{nm}: value missing (9.3)"})
             elif val is False:
                 cls_flags[nm].append(where)
         if t4_flag:
@@ -493,7 +558,7 @@ def recount_u9(v0_lines, vb_lines, h0_ref_lines, is_p3, stored_main=None, stored
         })
     # 4.1 classification
     any_ge = [x for x in longest_ge3 if x is not None]
-    if fnd.undecidable or fnd.stops or len(keys) != len(U9_KEYS):
+    if rec080["undecidable"] or len(keys) != len(U9_KEYS):
         cls = "undecidable"
     elif cls_flags["cause_fail"] or cls_flags["T3a"] or cls_flags["T3b"] or cls_flags["T4"]:
         cls = "C"
@@ -503,11 +568,12 @@ def recount_u9(v0_lines, vb_lines, h0_ref_lines, is_p3, stored_main=None, stored
         cls = "A"
     else:
         cls = "B"
-    if cls.startswith("C"):
-        fnd.fail("U-9", f"class {cls}: user decision (requirement or controller change)")
-    status = ("stop" if fnd.stops else "undecidable" if fnd.undecidable or cls == "undecidable"
-              else "fail" if cls.startswith("C") else "pass")
-    body = {"H0": h0, "keys": keys, "classification": cls, "class_flags": cls_flags,
+    ask = cls.startswith("C")
+    if ask:   # 4.1 "-> 사용자 결정": ask before writing the v5 summary sentence; the bundle grade stays
+        fnd.note("U-9", f"class {cls}: ask the user before the v5 summary sentence (R3-C2)")
+    status = fnd.status()
+    body = {"H0": h0, "keys": keys, "classification": cls, "classification_is_record": True,
+            "ask_user_before_v5_sentence": ask, "eta0p80_record_findings": rec080, "class_flags": cls_flags,
             "D_keys_recorded_separately": cls_flags["baseline_or_v0_fail"],
             "longest_ge3_s_max": max(any_ge) if any_ge else None,
             "status_4368": {"pass": "통과", "fail": "미달", "undecidable": "판정 불가", "stop": "멈춤"}[status],
