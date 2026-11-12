@@ -109,7 +109,9 @@ def test_record_block_keeps_a_missing_start_missing() -> None:
     del controller._meta["liftoff_approach_slow"]["start_s"]
     block = record.controller_record(controller)
     assert "start_s" not in block["liftoff_approach_slow"]
-    assert judge.classification_inputs(block)[1] == "liftoff_approach_slow.start_s missing"
+    # rev2 R2-2: a LAS-b block without start_s is "not started", not missing
+    inputs, reason = judge.classification_inputs(block)
+    assert reason is None and inputs["start_s"] is None
 
 
 def test_record_block_without_c2_config() -> None:
@@ -229,10 +231,8 @@ def test_class_row_stops() -> None:
     both = record.controller_record(
         _Controller(decisions=[_decision(would_block=True, due=True, applied=True)])
     )
-    assert (
-        "S-5 applied and would_block together"
-        in judge._class_row("k", both, None, None, 1, {})["stops"]
-    )
+    stops = judge._class_row("k", both, None, None, 1, {})["stops"]  # rev2 R2-1
+    assert "S-5 record conflict (R2-1): decisions[0] applied and would_block together" in stops
 
 
 def test_las_off_arm_is_its_own_class() -> None:
@@ -250,7 +250,10 @@ def test_las_off_arm_is_its_own_class() -> None:
     row = judge._class_row("c4off", meta, "patch_or_sink", None, 0, {}, las_off_flag=True)
     assert row["class"] == judge.CLASS_NO_LAS and row["las_absent_basis"] == {"args.las_off": True}
     assert row["k1_state"] == judge.K1_STATE_INACTIVE
-    assert judge._class_row("x", meta, None, None, 0, {})["class"] == judge.CLASS_UNDECIDABLE
+    # rev2 R2-2: a block without start_s = not started; no LAS-b block at all = 판정 불가
+    assert judge._class_row("x", meta, None, None, 0, {})["class"] == judge.CLASS_INACTIVE
+    no_block = {"slope_clearance_margin": meta["slope_clearance_margin"]}
+    assert judge._class_row("x", no_block, None, None, 0, {})["class"] == judge.CLASS_UNDECIDABLE
 
 
 def test_inactive_hash_check() -> None:

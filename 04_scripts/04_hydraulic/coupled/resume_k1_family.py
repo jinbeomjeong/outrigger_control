@@ -19,7 +19,9 @@ Ground sources per runner (each the runner's own case definition):
   U-3 D                  ``s9_soil_slope`` H8 case ``soil`` (a start gap is no soil patch)
   U-6                    ``b5_baseline_compare.case_spec`` (slope src soil, g6 src soil, floor-drop
                          ``event`` = prescribed sink on the rigid floor)
-  H-9 grid               ``r67_g1_screen`` screen job: floor event on the rigid r51 floor
+  H-9 grid               ``r67_g1_screen`` screen job: floor event on the rigid r51 floor (for
+                         the record; the judge classifies grid lines by rev2 R2-7, ``meta.spec``
+                         + the run's ``event``, not by this table)
 A key the table cannot place is written with family ``미분류``; the judge treats it as 균일 연약
 (RV1-6: a K1 block there is S-6). The table is the input of ``resume4368_judge.py k1-class
 --family-table``; its sha256 goes to ``<out>.sha256`` and must be recorded before the first main

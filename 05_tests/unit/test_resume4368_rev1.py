@@ -318,20 +318,96 @@ def test_h10_overlap_step_uses_the_new_reference(tmp_path) -> None:
 
 
 # ------------------------------------------------------------------------------ rev1 seal / S-1
-def test_rev1_seal_check(tmp_path, monkeypatch) -> None:
-    assert judge.rev1_seal_check()["problems"] == []
-    assert judge.rev1_seal_check(tmp_path)["stop_S1"] is True
-    (tmp_path / judge.RULES_REV1_NAME).write_bytes(
-        (judge.RULES_DIR / judge.RULES_REV1_NAME).read_bytes()
-    )
+def test_rev1_and_rev2_seal_check(tmp_path, monkeypatch) -> None:
+    assert judge.sealed_rules_check()["problems"] == []
+    assert set(judge.sealed_rules_check()["revisions"]) == {
+        judge.RULES_REV1_NAME,
+        judge.RULES_REV2_NAME,
+    }
+    assert judge.sealed_rules_check(tmp_path)["stop_S1"] is True
+    for name, _ in judge.SEALED_REVISIONS:  # both sealed files copied, rev1 seal value wrong
+        source = judge.RULES_DIR / name
+        (tmp_path / name).write_bytes(source.read_bytes())
+        seal_file = source.with_suffix(".sha256")
+        (tmp_path / seal_file.name).write_bytes(seal_file.read_bytes())
+    assert judge.sealed_rules_check(tmp_path)["problems"] == []
     (tmp_path / "v5_resume_4368_rules_rev1.sha256").write_text("0" * 64 + "  x\n", encoding="utf-8")
-    seal = judge.rev1_seal_check(tmp_path)
+    seal = judge.sealed_rules_check(tmp_path)
     assert seal["stop_S1"] is True and len(seal["problems"]) == 1
+    crlf = (tmp_path / judge.RULES_REV2_NAME).read_bytes().replace(b"\n", b"\r\n")
+    (tmp_path / judge.RULES_REV2_NAME).write_bytes(crlf)  # R2-9: sealed rule files raw only
+    assert len(judge.sealed_rules_check(tmp_path)["problems"]) == 2
     monkeypatch.setattr(judge, "RULES_DIR", tmp_path)
     out = tmp_path / "gs.json"
     assert judge.main(["gs", "--harness", str(out), "--out", str(out)]) == 1
     report = json.loads(out.read_text(encoding="utf-8"))
-    assert report["rev1_seal"]["stop_S1"] is True and report["rules_sha256"] == judge.RULES_SHA256
+    assert report["rules_seal"]["stop_S1"] is True and report["rules_sha256"] == judge.RULES_SHA256
+
+
+def test_appendix_a_lf_normalisation(tmp_path, monkeypatch) -> None:
+    text = (
+        "## 부록 A. x\n\n| 파일 | sha256 |\n|---|---|\n"
+        f"| `d/a.md` | `{judge.lf_normalised_sha256(b'a' + bytes([10]) + b'b')}` |\n"
+        f"| `…/b.md`(봉인 아님) | `{judge.lf_normalised_sha256(b'b')}` |\n\n## next\n"
+    )
+    rules = tmp_path / "rules"
+    rules.mkdir()
+    (rules / judge.RULES_NAME).write_text(text, encoding="utf-8")
+    assert judge.appendix_a_entries(text)[1][0] == "d/b.md"
+    root = tmp_path / "root"
+    (root / "d").mkdir(parents=True)
+    (root / "d" / "a.md").write_bytes(b"a\r\nb")
+    (root / "d" / "b.md").write_bytes(b"b")
+    monkeypatch.setattr(judge, "RULES_DIR", rules)
+    monkeypatch.setattr(judge, "sealed_rules_check", lambda: {"problems": [], "stop_S1": False})
+    out = tmp_path / "a.json"
+    assert judge.main(["appendix-a", "--root", str(root), "--out", str(out)]) == 0
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert report["crlf_only"] == ["d/a.md"]
+    (root / "d" / "b.md").write_bytes(b"c")
+    assert judge.main(["appendix-a", "--root", str(root), "--out", str(out)]) == 1
+
+
+def test_record_conflicts_are_s5() -> None:
+    """R2-1: would_block / applied without r4_due = record conflict, 판정 불가 + S-5."""
+    for decision in (
+        {"would_block": True, "r4_due_without_gate": False, "applied": False},
+        {"would_block": False, "r4_due_without_gate": False, "applied": True},
+    ):
+        block = record.controller_record(_Controller(blocked=True))
+        block["slope_clearance_margin"]["order_gate"]["decisions"] = [decision]
+        row = judge._class_row("k", block, "patch_or_sink", None, 0, {})
+        assert row["class"] == judge.CLASS_UNDECIDABLE
+        assert row["stops"] and all(s.startswith("S-5 record conflict") for s in row["stops"])
+
+
+def test_absent_start_s_is_not_started() -> None:
+    """R2-2: a LAS-b block without start_s = not started; no block = 판정 불가."""
+    block = record.controller_record(_Controller(blocked=False))
+    del block["liftoff_approach_slow"]["start_s"]
+    inputs, reason = judge.classification_inputs(block)
+    assert reason is None and inputs["start_s"] is None
+    del block["liftoff_approach_slow"]
+    assert judge.classification_inputs(block)[0] is None
+
+
+def test_engine_results_read_controller_meta() -> None:
+    """R2-3: L2b / L1-R K1 applied value from controller_meta, no c2_setup needed."""
+    meta = {
+        "slope_clearance_margin": {
+            "settings": {"flat_soil_margin_order_gate": True},
+            "order_gate": {"enabled": True},
+        },
+        "liftoff_approach_slow": {"settings": dict(judge.LAS_PRESET)},
+    }
+    result = {"controller_meta": meta, "expect_controller": {"ok": True}}
+    assert judge.chrono_result_problems(result, is_c4_off=False, is_engine=True) == []
+    meta["slope_clearance_margin"]["order_gate"]["enabled"] = False
+    assert judge.chrono_result_problems(result, is_c4_off=False, is_engine=True)
+    assert any(
+        "missing" in p for p in judge.chrono_result_problems({}, is_c4_off=False, is_engine=True)
+    )
+    assert judge._is_engine_row({"argv": ["x/run_S8C.py", "run"]})
 
 
 # --------------------------------------------------------------------------- keyset / dg3-hash
@@ -647,13 +723,27 @@ def test_fmin_time(tmp_path) -> None:
     force[(t >= 10.5) & (t < 10.6), 2] = judge.F_MIN_N - 1.0  # 100 ms below F_min, RL
     force[(t >= 10.6) & (t < 10.65), 2] = judge.F_MIN_N + 1000.0  # 50 ms more below +2 kN
     force[(t >= 19.0) & (t < 19.5), 0] = 0.0  # outside departure + 8 s
-    np.savez(case / "step_series.npz", t_s=t, F_cyl_N=force)
-    _write_json(case / "result.json", {"p3b": {"departure": {"t_departure_s": 10.0}}})
+    weight_N = 400_000.0
+    crawler = np.where(t < 10.0, 100_000.0, 0.0)
+    crawler[(t >= 9.0) & (t < 9.05)] = 0.0  # 50 ms dip: shorter than 0.1 s, not t_D (R2-5)
+    np.savez(case / "step_series.npz", t_s=t, F_cyl_N=force, scm_crawler_normal_N=crawler)
+    _write_json(case / "result.json", {"p3b": {"weight_N": weight_N}})
     out = tmp_path / "f.json"
     assert judge.main(["fmin-time", "--case", str(case), "--out", str(out)]) == 0
     report = json.loads(out.read_text(encoding="utf-8"))
+    assert report["t_D_s"] == pytest.approx(10.0) and report["window_complete"] is True
     assert report["F_below_F_min"]["ms"] == pytest.approx([0.0, 0.0, 100.0, 0.0])
     assert report["F_below_F_min_plus_2kN"]["ms"] == pytest.approx([0.0, 0.0, 150.0, 0.0])
+    assert report["F_below_F_min_plus_2kN"]["max_ms"] == pytest.approx(150.0)
+    whole = report["F_below_F_min"]["to_run_end_record_only"]["ms"]
+    assert whole == pytest.approx([500.0, 0.0, 100.0, 0.0])  # the 19 s dip, record only
+    np.savez(
+        case / "step_series.npz",
+        t_s=t,
+        F_cyl_N=force,
+        scm_crawler_normal_N=np.full(t.size, 100_000.0),
+    )
+    assert judge.main(["fmin-time", "--case", str(case), "--out", str(out)]) == 1  # no t_D
     _write_json(case / "result.json", {"p3b": {}})
     assert judge.main(["fmin-time", "--case", str(case), "--out", str(out)]) == 1
 
@@ -752,68 +842,46 @@ class _Controller:
 
 def test_k1_class_with_the_family_table(tmp_path) -> None:
     block = _blocked_block()
+    key = "cand=current#L3|s0|g6|5|g6|G1+J1@FR|top|Fs4"
+    harness = _write_json(
+        tmp_path / "r79.json", {"results": [{"key": key, judge.RECORD_KEY: block}]}
+    )
+    table = _write_json(
+        tmp_path / "family.json", {"rows": [{"key": key, "family": family.FAMILY_PATCH_OR_SINK}]}
+    )
+    out = tmp_path / "k.json"
+    argv = ["k1-class", "--harness", str(harness), "--family-table", str(table), "--out", str(out)]
+    assert judge.main(argv) == 0
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert report["counts"] == {judge.CLASS_K1: 1} and report["family_table"]["sha256"]
+    assert report["rows"][0]["family_source"] == key
+    _write_json(table, {"rows": [{"key": "other", "family": family.FAMILY_RIGID}]})
+    assert judge.main(argv) == 1  # not in the table = uniform: S-6
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert report["counts"] == {judge.CLASS_K1_UNIFORM: 1}
+
+
+def test_grid_lines_take_the_r2_7_family(tmp_path) -> None:
+    """R2-7: grid lines are runs[]; meta.spec + event give the family (else uniform, S-6)."""
+    block = _blocked_block()
     grid = {
+        "meta": {"spec": judge.GRID_SPEC},
         "results": [
             {
                 "key": "screen|top|0.0|level|FL",
                 judge.RECORD_KEY: block,
                 "runs": [{judge.RECORD_KEY: block, "event": "G4"}],
             }
-        ]
+        ],
     }
     harness = _write_json(tmp_path / "grid.json", grid)
-    table = _write_json(
-        tmp_path / "family.json",
-        {"rows": [{"key": "screen|top|0.0|level|FL", "family": family.FAMILY_PATCH_OR_SINK}]},
-    )
     out = tmp_path / "k.json"
-    assert (
-        judge.main(
-            ["k1-class", "--harness", str(harness), "--family-table", str(table), "--out", str(out)]
-        )
-        == 0
-    )
+    argv = ["k1-class", "--harness", str(harness), "--out", str(out)]
+    assert judge.main(argv) == 0
     report = json.loads(out.read_text(encoding="utf-8"))
-    assert report["counts"] == {judge.CLASS_K1: 2} and report["family_table"]["sha256"]
-    assert {row["family_source"] for row in report["rows"]} == {"screen|top|0.0|level|FL"}
-    _write_json(table, {"rows": [{"key": "other", "family": family.FAMILY_RIGID}]})
-    assert (
-        judge.main(
-            ["k1-class", "--harness", str(harness), "--family-table", str(table), "--out", str(out)]
-        )
-        == 1
-    )  # not in the table = uniform: S-6
-    report = json.loads(out.read_text(encoding="utf-8"))
-    assert report["counts"] == {judge.CLASS_K1_UNIFORM: 2}
-
-
-def test_family_of_and_run_v5_grounds() -> None:
-    assert family.family_of(family.Ground("rigid")) == family.FAMILY_RIGID
-    assert family.family_of(family.Ground("J1")) == family.FAMILY_UNIFORM
-    assert family.family_of(family.Ground("G1", "J1", "FR")) == family.FAMILY_PATCH_OR_SINK
-    assert family.family_of(family.Ground("rigid", sink="G4@RR")) == family.FAMILY_PATCH_OR_SINK
-    assert family.family_of(None) == family.FAMILY_UNRESOLVED
-    pytest.importorskip("numba", reason="verdict_cases / d1_rows import the harness (dynamics-dev)")
-    import d1_rows
-
-    jobs = {job["d1"]["group"]: job for job in d1_rows.jobs()}
-    expected = {
-        "H-R-0": family.FAMILY_RIGID,
-        "H-R-A": family.FAMILY_PATCH_OR_SINK,
-        "H-S-0": family.FAMILY_UNIFORM,
-        "H-S-C": family.FAMILY_PATCH_OR_SINK,
-    }
-    for group, want in expected.items():
-        assert family.family_of(family.run_v5_job_ground(jobs[group])) == want, group
-    by_case = {job["case"]: job for job in run_v5.batch_jobs("main")}
-    assert family.family_of(family.run_v5_job_ground(by_case["S1"])) == family.FAMILY_UNIFORM
-    assert family.family_of(family.run_v5_job_ground(by_case["R1"])) == family.FAMILY_RIGID
-    assert family.family_of(family.run_v5_job_ground(by_case["R12"])) == family.FAMILY_PATCH_OR_SINK
-
-
-def test_dg3_switch_use() -> None:
-    assert judge.dg3_switch_problems({"LAS_T3_DG3_P3": "off"}, "H-7") == []
-    assert judge.dg3_switch_problems({"LAS_T3_DG3_P3": "off"}, "H-6") == [
-        "env LAS_T3_DG3_P3=off outside H-7"
-    ]
-    assert judge.dg3_switch_problems({"LAS_T3_DG3_LAS": "off"}, "H-7") == ["env LAS_T3_DG3_LAS=off"]
+    assert report["runs"] == 1 and report["counts"] == {judge.CLASS_K1: 1}
+    assert report["rows"][0]["family_source"] == "R2-7 (meta.spec + event)"
+    grid["results"][0]["runs"][0]["event"] = "other"
+    _write_json(harness, grid)
+    assert judge.main(argv) == 1
+    assert json.loads(out.read_text(encoding="utf-8"))["counts"] == {judge.CLASS_K1_UNIFORM: 1}

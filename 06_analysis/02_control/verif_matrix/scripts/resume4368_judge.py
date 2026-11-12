@@ -29,6 +29,14 @@ file and its ``.sha256`` and stops with S-1 when either is missing or differs):
   ``k1-class --family-table`` reads the RV1-6 table of ``resume_k1_family.py`` (a key it does
   not place counts as uniform soft soil: a K1 block there is S-6).
 
+Rev2 (``v5_resume_4368_rules_rev2.md``, sealed 497e4614, also checked raw before every
+subcommand): R2-1 a ``would_block`` / ``applied`` decision without ``r4_due_without_gate`` is a
+record conflict (line 판정 불가, S-5); R2-2 a LAS-b block without ``start_s`` = not started, no
+block = 판정 불가; R2-3 L2b / L1-R results are read from ``controller_meta``; R2-5 ``fmin-time``
+finds t_D in ``step_series.npz``; R2-6 ``oc5`` gives the path 1 processing cell; R2-7 grid lines
+(``runs[]``) get their family from ``meta.spec`` + ``event``; R2-9 ``appendix-a`` compares the
+original appendix A raw, else CRLF -> LF normalised (disclosed).
+
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
 The tool reads only; it never runs a simulation. Tag judgements use
@@ -65,6 +73,12 @@ RULES_REV1_NAME = "v5_resume_4368_rules_rev1.md"
 RULES_REV1_SHA256 = "d9094fda104e25ac7eb7aea44d7c34d8215a839fc3771aa50b224d43082f02c7"
 """Rev1 (sealed 2026-11-13 01:49:34 +09:00): it overrides the original where they differ. Every
 subcommand checks the sealed file and its ``.sha256`` first (missing or other value = S-1)."""
+RULES_REV2_NAME = "v5_resume_4368_rules_rev2.md"
+RULES_REV2_SHA256 = "497e4614d6780c3201027b3946e3c21da05e2fefe9a3609436bc35ea664c3199"
+"""Rev2 (sealed 2026-11-13 02:30:11 +09:00): overrides rev1 and the original where they differ."""
+SEALED_REVISIONS = ((RULES_REV1_NAME, RULES_REV1_SHA256), (RULES_REV2_NAME, RULES_REV2_SHA256))
+"""The revisions every subcommand checks raw (R2-9: sealed rule files are ``-text``, no LF
+normalisation)."""
 RECORD_KEY = "resume_k1"
 """``04_scripts/04_hydraulic/coupled/resume_k1_record.RECORD_KEY``."""
 
@@ -316,8 +330,39 @@ def chrono_argv_problems(argv: list[str], env: dict, *, is_c4_off: bool, is_scm:
     return problems
 
 
-def chrono_result_problems(result: dict, *, is_c4_off: bool) -> list[str]:
-    """Rules 4.2 record check of one Chrono ``result.json``."""
+ENGINE_RUNNERS = ("run_S8C.py", "run_S6C.py")
+"""L2b and L1-R runners: their results have no ``c2_setup`` (R2-3)."""
+
+
+def _is_engine_row(row: dict) -> bool:
+    return any(str(token).endswith(ENGINE_RUNNERS) for token in row.get("argv", []))
+
+
+def engine_result_problems(result: dict) -> list[str]:
+    """R2-3 record check of an L2b / L1-R ``result.json``: the K1 request is the argv (checked by
+    :func:`chrono_argv_problems`: no ``--k1-order-gate`` = preset), the applied gate
+    ``controller_meta.slope_clearance_margin.order_gate.enabled``; a missing key is 판정 불가."""
+    problems = []
+    checks = {
+        "controller_meta.slope_clearance_margin.order_gate.enabled": True,
+        "controller_meta.slope_clearance_margin.settings.flat_soil_margin_order_gate": True,
+        "expect_controller.ok": True,  # rev1 RV1-10 a: the row runs with --expect-controller
+    }
+    for dotted, want in checks.items():
+        present, got = get_path(result, dotted)
+        if not present:
+            problems.append(f"{dotted} missing (판정 불가, R2-3: review S-3)")
+        elif got != want:
+            problems.append(f"{dotted} {got!r} != {want!r}")
+    _, settings = get_path(result, "controller_meta.liftoff_approach_slow.settings")
+    return problems + _las_setting_problems(settings, expect_on=True)
+
+
+def chrono_result_problems(result: dict, *, is_c4_off: bool, is_engine: bool = False
+                           ) -> list[str]:
+    """Rules 4.2 record check of one Chrono ``result.json`` (L2b / L1-R rows: R2-3)."""
+    if is_engine:
+        return engine_result_problems(result)
     problems = []
     want_request = "on" if is_c4_off else "preset"
     checks = {
@@ -377,7 +422,8 @@ def record_check(args: argparse.Namespace) -> dict:
             )
             result_path = Path(batch_dir) / case / "result.json"
             if result_path.is_file():
-                problems += chrono_result_problems(read_json(result_path), is_c4_off=is_c4_off)
+                problems += chrono_result_problems(read_json(result_path), is_c4_off=is_c4_off,
+                                                   is_engine=_is_engine_row(row))
             else:
                 problems.append("result.json missing")
             chrono.append(
@@ -438,9 +484,12 @@ def classification_inputs(block: Any, las_off_flag: Any = None) -> tuple[dict | 
     if not isinstance(block, dict):
         return None, f"{RECORD_KEY} block missing"
     las_absent = las_absence_basis(block, las_off_flag)
-    present, start_s = get_path(block, "liftoff_approach_slow.start_s")
-    if not present and las_absent is None:
-        return None, "liftoff_approach_slow.start_s missing"
+    las_block = block.get("liftoff_approach_slow")
+    # R2-2: a LAS-b block (with settings) without start_s = LAS-b not started; no block = 판정 불가
+    # (the C-4 off arm needs no block, rev1 RV1-10 b)
+    if las_absent is None and not (isinstance(las_block, dict) and "settings" in las_block):
+        return None, "liftoff_approach_slow block missing (R2-2)"
+    start_s = las_block.get("start_s") if isinstance(las_block, dict) else None
     present, decisions = get_path(block, "slope_clearance_margin.order_gate.decisions")
     if not present or not isinstance(decisions, list):
         return None, "slope_clearance_margin.order_gate.decisions missing"
@@ -451,6 +500,21 @@ def classification_inputs(block: Any, las_off_flag: Any = None) -> tuple[dict | 
         if missing:
             return None, f"decisions[{index}] without {missing}"
     return {"start_s": start_s, "decisions": decisions, "las_absent": las_absent}, None
+
+
+def record_conflicts(decisions: list[dict]) -> list[str]:
+    """R2-1 record conflicts of ``decisions`` (``would_block`` and ``applied`` both require
+    ``r4_due_without_gate``; ``applied`` with ``would_block`` cannot hold with the gate on)."""
+    conflicts = []
+    for index, decision in enumerate(decisions):
+        due = decision["r4_due_without_gate"]
+        if decision["would_block"] and not due:
+            conflicts.append(f"decisions[{index}] would_block without r4_due_without_gate")
+        if decision["applied"] and not due:
+            conflicts.append(f"decisions[{index}] applied without r4_due_without_gate")
+        if decision["applied"] and decision["would_block"]:
+            conflicts.append(f"decisions[{index}] applied and would_block together")
+    return conflicts
 
 
 def _k1_state(decisions: list[dict], blocked: list[dict]) -> str:
@@ -483,7 +547,7 @@ def classify(inputs: dict) -> tuple[str, dict]:
         return CLASS_K1, facts
     return CLASS_UNDECIDABLE, {
         **facts,
-        "reason": "would_block without r4_due_without_gate (outside 7.2)",
+        "reason": "would_block without r4_due_without_gate (record conflict, R2-1: S-5)",
     }
 
 
@@ -529,12 +593,13 @@ def _class_row(
     inputs, reason = classification_inputs(block, las_off_flag)
     if inputs is None:
         return {"key": key, "class": CLASS_UNDECIDABLE, "reason": reason, "stops": []}
+    conflicts = record_conflicts(inputs["decisions"])
+    if conflicts:  # R2-1: the line is 판정 불가, the bundle stops (S-5)
+        return {"key": key, "class": CLASS_UNDECIDABLE, "reason": "record conflict (R2-1)",
+                "conflicts": conflicts, "family": family,
+                "stops": [f"S-5 record conflict (R2-1): {c}" for c in conflicts]}
     klass, facts = classify(inputs)
     stops = []
-    if facts["applied_and_would_block"]:
-        stops.append("S-5 applied and would_block together")
-    if klass == CLASS_NO_LAS and facts["k1_state"] == K1_STATE_OUTSIDE:
-        stops.append("would_block without r4_due_without_gate (outside 7.2, 판정 불가)")
     is_blocked = klass in (CLASS_K1, CLASS_BOTH) or (
         klass == CLASS_NO_LAS and facts["k1_state"] == K1_STATE_BLOCKED)
     if is_blocked and skipped is not None and skipped != facts["blocked"]:
@@ -590,12 +655,45 @@ def table_family(record: dict, owner: str | None, table: dict[str, str | None]
     return None, "not in table"
 
 
+GRID_SPEC = "rev. 67 (G1 / G2 / G7 reduced screen)"
+GRID_FLOOR_EVENTS = ("G4", "RE1bF", "FS24")
+"""R2-7: a grid run is 패치·처방 침하 when the file's ``meta.spec`` is this and its ``event`` one of
+these; otherwise unplaced (= uniform, a K1 block is S-6)."""
+
+
+def is_grid_document(document: Any) -> bool:
+    results = document.get("results") if isinstance(document, dict) else None
+    return bool(results) and all(isinstance(row.get("runs"), list) for row in results)
+
+
+def grid_lines(document: dict) -> Iterator[tuple[dict, str | None, str | None]]:
+    """(run, job key, R2-7 family) of every ``results[].runs[]`` entry: the lines of a grid file
+    (the job-level record is the prefix run, no line of its own)."""
+    is_spec = (document.get("meta") or {}).get("spec") == GRID_SPEC
+    for row in document["results"]:
+        for run in row["runs"]:
+            family = "patch_or_sink" if is_spec and run.get("event") in GRID_FLOOR_EVENTS else None
+            yield run, _own_key(row), family
+
+
 def read_anchor_map(path: Path) -> dict[str, str]:
     """Key -> anchor ``commands_sha256`` of an ``anchor-map`` report (RV1-5)."""
     report = read_json(path)
     if report.get("problems"):
         raise InputError(f"{path}: anchor map with problems {report['problems'][:3]}")
     return dict(report.get("anchors") or {})
+
+
+GRID_NOT_A_GRID = "<no grid>"
+
+
+def _k1_class_lines(document: Any) -> Iterator[tuple[dict, str | None, str | None]]:
+    """(run record, owner key, grid family or :data:`GRID_NOT_A_GRID`) of one document."""
+    if is_grid_document(document):
+        yield from grid_lines(document)
+        return
+    for _, record, owner in run_records_owned(document):
+        yield record, owner, GRID_NOT_A_GRID
 
 
 def k1_class(args: argparse.Namespace) -> dict:
@@ -608,7 +706,7 @@ def k1_class(args: argparse.Namespace) -> dict:
     rows = []
     for path in args.harness or []:
         for doc in read_records(path):
-            for _, record, owner in run_records_owned(doc):
+            for record, owner, grid_family in _k1_class_lines(doc):
                 block = record_block(record)
                 if isinstance(block, dict) and block.get("applicable") is False:
                     rows.append(
@@ -620,7 +718,9 @@ def k1_class(args: argparse.Namespace) -> dict:
                     record.get("commands_sha256")
                     or get_path(record, "v5.logged_commands_sha256")[1]
                 )
-                if table is None:
+                if grid_family is not GRID_NOT_A_GRID:
+                    family, family_source = grid_family, "R2-7 (meta.spec + event)"
+                elif table is None:
                     family, family_source = harness_family(record), "record (job.d1.group)"
                 else:
                     family, family_source = table_family(record, owner, table)
@@ -768,6 +868,11 @@ def is_less(value: float, limit: float) -> bool:
     return value < limit - COMPARE_EPS
 
 
+OC5_PROCESSING = {"stop_S9": "멈춤", "record_with_margin": "여유 기록", "record": "기록"}
+"""R2-6: the 7.4 processing cell of a path; the two paths' cells are compared outside this tool
+(different cells = 판정 불가, stop and ask)."""
+
+
 def oc5_class(m_N: float) -> str:
     """Rules 7.4 table: ``stop_S9`` / ``record_with_margin`` / ``record``."""
     if is_less(m_N, F_MIN_N):
@@ -817,6 +922,8 @@ def oc5(args: argparse.Namespace) -> dict:
     klass = oc5_class(m_N)
     return {
         **out,
+        "path": "경로 1 (result.json p3b.P3-3_leg_force.F_min_after_N, R2-6)",
+        "processing": OC5_PROCESSING[klass],
         "m_N": m_N,
         "min_leg": ["FL", "FR", "RL", "RR"][forces.index(min(forces))],
         "margin_N": m_N - F_MIN_N,
@@ -933,8 +1040,7 @@ HARNESS_GS_KEYS = (
     f"{RECORD_KEY}.k1_order_gate_request",
     f"{RECORD_KEY}.k1_order_gate_effective",
     f"{RECORD_KEY}.slope_clearance_margin.settings.flat_soil_margin_order_gate",
-    f"{RECORD_KEY}.liftoff_approach_slow.settings",
-    f"{RECORD_KEY}.liftoff_approach_slow.start_s",
+    f"{RECORD_KEY}.liftoff_approach_slow.settings",  # R2-2: no start_s key = not started
     f"{RECORD_KEY}.slope_clearance_margin.order_gate.decisions",
     f"{RECORD_KEY}.event_counts.flat_soil_margin_skipped_order",
     "controller_tag",
@@ -1101,6 +1207,66 @@ def dg3_hash(args: argparse.Namespace) -> dict:
             "differing_keys": differing, "rows": rows,
             "note": "a difference is recorded and handed to python-expert; it is no stop",
             "exit_code": 0}
+
+
+# --------------------------------------------------------------- rev2 R2-9 appendix A (S-1)
+APPENDIX_A_HEADING = "## 부록 A."
+APPENDIX_A_ROW = re.compile(r"^\| `([^`]+)`[^|]*\| `([0-9a-f]{64})` \|")
+
+
+def appendix_a_entries(rules_text: str) -> list[tuple[str, str]]:
+    """(repository path, sha256) of the original rules' appendix A table; ``…/name`` rows take the
+    folder of the row above."""
+    lines = rules_text.splitlines()
+    start = next((i for i, line in enumerate(lines) if line.startswith(APPENDIX_A_HEADING)), None)
+    if start is None:
+        raise InputError(f"{RULES_NAME}: no appendix A")
+    entries, folder = [], ""
+    for line in lines[start + 1:]:
+        if line.startswith("## "):
+            break
+        match = APPENDIX_A_ROW.match(line)
+        if match is None:
+            continue
+        path, sha256 = match.groups()
+        if path.startswith("…/"):
+            path = f"{folder}/{path[2:]}"
+        folder = path.rsplit("/", 1)[0]
+        entries.append((path, sha256))
+    return entries
+
+
+def lf_normalised_sha256(data: bytes) -> str:
+    return hashlib.sha256(data.replace(b"\r\n", b"\n")).hexdigest()
+
+
+def appendix_a(args: argparse.Namespace) -> dict:
+    """R2-9: appendix A files by raw sha256, else by the sha256 of the bytes with every CRLF made
+    LF (pass, disclosed as "CRLF 변환만 다름"); a file that differs also then is S-1."""
+    root = Path(args.root)
+    rules_text = (RULES_DIR / RULES_NAME).read_text(encoding="utf-8")
+    rows, problems = [], []
+    for relative, sha256 in appendix_a_entries(rules_text):
+        path = root / relative
+        if not path.is_file():
+            rows.append({"file": relative, "status": "missing"})
+            problems.append(f"S-1 {relative} missing")
+            continue
+        data = path.read_bytes()
+        raw = hashlib.sha256(data).hexdigest()
+        row = {"file": relative, "raw_sha256": raw, "expected": sha256}
+        if raw == sha256:
+            row["status"] = "raw same"
+        elif lf_normalised_sha256(data) == sha256:
+            row.update(status="CRLF 변환만 다름", lf_normalised_sha256=sha256)
+        else:
+            row.update(status="differs", lf_normalised_sha256=lf_normalised_sha256(data))
+            problems.append(f"S-1 {relative} differs (also after CRLF -> LF)")
+        rows.append(row)
+    return {"rules": RULES_REV2_NAME, "section": "R2-9 (8.2 S-1)", "files": len(rows),
+            "crlf_only": [row["file"] for row in rows if row["status"] == "CRLF 변환만 다름"],
+            "rows": rows, "problems": problems, "stop_S1": bool(problems),
+            "exit_code": 1 if problems else 0}
 
 
 # ------------------------------------------------------------------------- rev1 RV1-5 anchors
@@ -1309,14 +1475,15 @@ SERIES_FILE = "step_series.npz"
 LEG_NAMES = ("FL", "FR", "RL", "RR")
 
 
-def below_durations(t_s, force_N, t_start_s: float, limit_N: float) -> dict:
+def below_durations(t_s, force_N, t_start_s: float, limit_N: float,
+                    window_s: float = FMIN_WINDOW_S) -> dict:
     """Per leg the time (and sample count) with ``F < limit`` (7.6: ``v < X - 1e-9``) in the
-    window ``t_start .. t_start + FMIN_WINDOW_S``; the sample step is the median of ``diff(t)``."""
+    window ``t_start .. t_start + window_s``; the sample step is the median of ``diff(t)``."""
     import numpy as np
 
     t = np.asarray(t_s, dtype=float)
     force = np.asarray(force_N, dtype=float)
-    window = (t >= t_start_s - COMPARE_EPS) & (t <= t_start_s + FMIN_WINDOW_S + COMPARE_EPS)
+    window = (t >= t_start_s - COMPARE_EPS) & (t <= t_start_s + window_s + COMPARE_EPS)
     step_s = float(np.median(np.diff(t))) if t.size > 1 else math.nan
     below = window[:, None] & (force < limit_N - COMPARE_EPS)
     counts = below.sum(axis=0)
@@ -1325,30 +1492,70 @@ def below_durations(t_s, force_N, t_start_s: float, limit_N: float) -> dict:
             "window_samples": int(window.sum()), "step_s": step_s}
 
 
+DEPARTURE_FRACTION_W = 0.01
+DEPARTURE_HOLD_S = 0.1
+CRAWLER_NORMAL_KEY = "scm_crawler_normal_N"
+"""R2-5: t_D = first sample of the first stretch with the 1 ms crawler true normal < 0.01 W for
+>= 0.1 s (W = ``p3b.weight_N``). ``step_series.npz`` ``scm_crawler_normal_N`` is the crawler
+support force along the plane normal (``run_S9`` ``sup_force_N @ normal``), taken as the sum of
+all crawler contact normals also on mixed terrain."""
+
+
+def departure_time(t_s, crawler_N, weight_N: float) -> float | None:
+    """R2-5 t_D (None when no stretch qualifies)."""
+    import numpy as np
+
+    t = np.asarray(t_s, dtype=float)
+    below = np.asarray(crawler_N, dtype=float) < DEPARTURE_FRACTION_W * weight_N
+    start = None
+    for index, is_below in enumerate(below):
+        if not is_below:
+            start = None
+            continue
+        start = index if start is None else start
+        if t[index] - t[start] >= DEPARTURE_HOLD_S - COMPARE_EPS:
+            return float(t[start])
+    return None
+
+
 def fmin_time(args: argparse.Namespace) -> dict:
-    """RV1-7: the 7.4 record values ``F<F_min`` and ``F<F_min+2 kN`` time of one C-8 row."""
+    """RV1-7 / R2-5: the 7.4 record values ``F<F_min`` and ``F<F_min+2 kN`` time of one C-8 row
+    in [t_D, t_D + 8 s] (and, record only, t_D .. run end)."""
     import numpy as np
 
     case = Path(args.case)
     result = read_json(case / "result.json")
-    present, t_dep = get_path(result, "p3b.departure.t_departure_s")
-    out: dict[str, Any] = {"rules": RULES_REV1_NAME, "section": "RV1-7 (7.4 record)",
+    out: dict[str, Any] = {"rules": RULES_REV2_NAME, "section": "RV1-7 / R2-5 (7.4 record)",
                            "case": str(case), "window_s": FMIN_WINDOW_S,
-                           "definition": "P5r4 judgement 8.2: 1 ms true F_cyl (step_series.npz "
-                                         "F_cyl_N), departure .. departure + 8 s",
+                           "definition": "1 ms true F_cyl (step_series.npz F_cyl_N) in [t_D, t_D + "
+                                         "8 s]; t_D = crawler normal < 0.01 W for 0.1 s (R2-5)",
                            "series_sha256": file_sha256(case / SERIES_FILE)}
-    if not present or t_dep is None:
-        return {**out, "status": "판정 불가 (p3b.departure.t_departure_s missing)", "exit_code": 1}
+    present, weight_N = get_path(result, "p3b.weight_N")
+    if not present or not isinstance(weight_N, (int, float)):
+        return {**out, "status": "판정 불가 (p3b.weight_N missing)", "exit_code": 1}
     try:
         with np.load(case / SERIES_FILE, allow_pickle=False) as series:
-            t_s, force_N = np.asarray(series["t_s"]), np.asarray(series["F_cyl_N"])
+            t_s = np.asarray(series["t_s"], dtype=float)
+            force_N = np.asarray(series["F_cyl_N"], dtype=float)
+            crawler_N = np.asarray(series[CRAWLER_NORMAL_KEY], dtype=float)
     except (OSError, KeyError, ValueError) as exc:
         raise InputError(f"{case / SERIES_FILE}: {exc}") from exc
-    below_min = below_durations(t_s, force_N, float(t_dep), F_MIN_N)
-    below_guard = below_durations(t_s, force_N, float(t_dep), F_MIN_N + OC5_GUARD_N)
-    return {**out, "t_departure_s": t_dep, "legs": list(LEG_NAMES),
-            "F_below_F_min": below_min, "F_below_F_min_plus_2kN": below_guard,
-            "status": "기록", "exit_code": 0}
+    t_dep = departure_time(t_s, crawler_N, float(weight_N))
+    out["t_D_s"] = t_dep
+    out["p3b_departure_t_s"] = get_path(result, "p3b.departure.t_departure_s")[1]  # record only
+    if t_dep is None:
+        return {**out, "status": "판정 불가 (t_D not defined, R2-5)", "exit_code": 1}
+    run_end_s = float(t_s[-1])
+    out["window_complete"] = run_end_s >= t_dep + FMIN_WINDOW_S - COMPARE_EPS
+    out["run_end_s"] = run_end_s
+    results = {}
+    for name, limit in (("F_below_F_min", F_MIN_N), ("F_below_F_min_plus_2kN",
+                                                      F_MIN_N + OC5_GUARD_N)):
+        window = below_durations(t_s, force_N, t_dep, limit)
+        whole = below_durations(t_s, force_N, t_dep, limit, window_s=run_end_s - t_dep)
+        results[name] = {**window, "max_ms": max(window["ms"]),
+                         "to_run_end_record_only": {"ms": whole["ms"], "max_ms": max(whole["ms"])}}
+    return {**out, "legs": list(LEG_NAMES), **results, "status": "기록", "exit_code": 0}
 
 
 # ------------------------------------------------------------- rev1 RV1-10 j stroke exposure
@@ -1527,6 +1734,9 @@ def _parser() -> argparse.ArgumentParser:
     p.add_argument("--case", type=Path, required=True,
                    help="case folder (result.json, step_series.npz)")
     p.add_argument("--out", type=Path, required=True)
+    p = sub.add_parser("appendix-a", help="rev2 R2-9: original appendix A sha256 (S-1)")
+    p.add_argument("--root", type=Path, default=ROOT, help="checkout (git_at_start)")
+    p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("stroke-exposure", help="rev1 RV1-10 j: stroke exposure counts (record)")
     p.add_argument("--bundle", required=True)
     p.add_argument("--harness", nargs="*", type=Path)
@@ -1547,42 +1757,52 @@ COMMANDS = {
     "anchor-map": anchor_map,
     "import-check": import_check,
     "fmin-time": fmin_time,
+    "appendix-a": appendix_a,
     "stroke-exposure": stroke_exposure,
 }
 
 
-def rev1_seal_check(rules_dir: Path | None = None) -> dict:
-    """Rev1 seal: the file's sha256 and the first field of its ``.sha256`` must both be
-    :data:`RULES_REV1_SHA256`; otherwise ``stop_S1`` (rules 8.2 S-1, rev1 line 3)."""
-    folder = RULES_DIR if rules_dir is None else Path(rules_dir)
-    rules_path = folder / RULES_REV1_NAME
+def revision_seal_problems(folder: Path, name: str, sha256: str) -> tuple[dict, list[str]]:
+    """One sealed revision: the file's raw sha256 and the first field of its ``.sha256`` must both
+    be ``sha256`` (rules 8.2 S-1; R2-9: sealed rule files are compared raw)."""
+    rules_path = folder / name
     seal_path = rules_path.with_suffix(".sha256")
-    out: dict[str, Any] = {"rules_rev1": RULES_REV1_NAME, "expected_sha256": RULES_REV1_SHA256}
+    out: dict[str, Any] = {"expected_sha256": sha256}
     problems = []
     if seal_path.is_file():
         fields = seal_path.read_text(encoding="utf-8").split()
         out["seal_file_sha256"] = fields[0] if fields else None
-        if out["seal_file_sha256"] != RULES_REV1_SHA256:
+        if out["seal_file_sha256"] != sha256:
             problems.append(
                 f"{seal_path.name} value {out['seal_file_sha256']!r} is not the sealed one")
     else:
         problems.append(f"{seal_path.name} missing")
     if rules_path.is_file():
         out["rules_file_sha256"] = hashlib.sha256(rules_path.read_bytes()).hexdigest()
-        if out["rules_file_sha256"] != RULES_REV1_SHA256:
+        if out["rules_file_sha256"] != sha256:
             problems.append(
                 f"{rules_path.name} sha256 {out['rules_file_sha256'][:16]} is not the sealed one")
     else:
         problems.append(f"{rules_path.name} missing")
-    return {**out, "problems": problems, "stop_S1": bool(problems)}
+    return out, problems
+
+
+def sealed_rules_check(rules_dir: Path | None = None) -> dict:
+    """Rev1 and rev2 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
+    folder = RULES_DIR if rules_dir is None else Path(rules_dir)
+    revisions, problems = {}, []
+    for name, sha256 in SEALED_REVISIONS:
+        revisions[name], found = revision_seal_problems(folder, name, sha256)
+        problems += found
+    return {"revisions": revisions, "problems": problems, "stop_S1": bool(problems)}
 
 
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
-    seal = rev1_seal_check()
-    if seal["stop_S1"]:  # no judgement under an unsealed or changed rev1
-        report = {"rules": RULES_NAME, "section": "8.2 S-1 (rev1 seal)", "rev1_seal": seal,
-                  "exit_code": 1}
+    seal = sealed_rules_check()
+    if seal["stop_S1"]:  # no judgement under an unsealed or changed revision
+        report = {"rules": RULES_NAME, "section": "8.2 S-1 (rev1 / rev2 seal)",
+                  "rules_seal": seal, "exit_code": 1}
     else:
         try:
             report = COMMANDS[args.command](args)
@@ -1593,9 +1813,10 @@ def main(argv: list[str] | None = None) -> int:
             print(traceback.format_exc(), file=sys.stderr)
             print(json.dumps({"exit_code": 3, "error": repr(exc)}, ensure_ascii=True))
             return 3
-        report["rev1_seal"] = seal
+        report["rules_seal"] = seal
     report["rules_sha256"] = RULES_SHA256
     report["rules_rev1_sha256"] = RULES_REV1_SHA256
+    report["rules_rev2_sha256"] = RULES_REV2_SHA256
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
         json.dumps(report, indent=1, ensure_ascii=False, default=str), encoding="utf-8"
