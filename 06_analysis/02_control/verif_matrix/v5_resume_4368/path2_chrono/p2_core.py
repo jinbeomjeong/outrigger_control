@@ -165,6 +165,11 @@ def load_row(folder: Path, engine: str, argv=None) -> Row:
         F_inst = np.asarray(pads["F_cyl"], float)
         if "F_cyl_min_interval" in pads.files:
             F = np.asarray(pads["F_cyl_min_interval"], float)
+            if "airborne" in pads.files and "F_cyl_mean_20ms" in pads.files:
+                # rev6 R6-B2: S8-A2 judged force (airborne samples use the 20 ms mean)
+                air = np.asarray(pads["airborne"], bool)
+                F = np.where(air, np.asarray(pads["F_cyl_mean_20ms"], float), F)
+                notes.append(f"S8-A2 airborne samples per leg: {air.sum(axis=0).astype(int).tolist()}")
         else:
             F = F_inst
             notes.append("F_cyl_min_interval absent: 1 ms sample used")
@@ -195,7 +200,8 @@ def load_row(folder: Path, engine: str, argv=None) -> Row:
         loop_start = offset
         phases = _phases(res.get("phases"), offset)
         ev_p = folder / "controller_events.json"
-        events = _events_from_json_list(json.loads(ev_p.read_text(encoding="utf-8")) if ev_p.exists() else [], offset)
+        # rev6 R6-1: controller_events.json is absolute Chrono time; phases are relative (+ start_t_s)
+        events = _events_from_json_list(json.loads(ev_p.read_text(encoding="utf-8")) if ev_p.exists() else [], 0.0)
         floor_label = str(st.get("floor"))
         flat = _floor_flat_from_label(floor_label)
         tg = st.get("target_deg") or [0.0, 0.0]
@@ -307,19 +313,25 @@ def t_departure(row: Row):
 
 def t_lift(row: Row):
     """rev6 5: first 1 ms sample with phase not idle/check/touch and crawler normal <= 0.
-    10 Hz fallback: last > 0 sample t_a, t_lift = t_a + 1 ms (basis bracket_10Hz)."""
+    10 Hz fallback (rev6 R6-B1, L1-R): the first 10 Hz record row t_b with that condition;
+    t_a (last > 0 row before it) is kept in `t_lift_bracket`."""
+    return t_lift_bracket(row)[:2]
+
+
+def t_lift_bracket(row: Row):
     if row.cr is None:
-        return None, None
+        return None, None, None
     ph = phase_at(row, row.t_cr)
     ok = ~np.isin(ph, list(R.TLIFT_SKIP_PHASES) + ["<before>"])
     le0 = np.array([R.le(x, 0.0) for x in row.cr])
     idx = np.where(ok & le0)[0]
     if idx.size == 0:
-        return None, row.cr_basis
+        return None, row.cr_basis, None
     i = int(idx[0])
     if row.cr_basis == "1ms":
-        return float(row.t_cr[i]), "1ms"
-    return (float(row.t_cr[i - 1]) + 0.001 if i > 0 else float(row.t_cr[i])), "bracket_10Hz"
+        return float(row.t_cr[i]), "1ms", None
+    t_a = float(row.t_cr[i - 1]) if i > 0 else None
+    return float(row.t_cr[i]), "bracket_10Hz", t_a
 
 
 def t_lift_sus(row: Row):
@@ -649,8 +661,9 @@ def soil_mode_time(row: Row):
     return min(cand) if cand else None
 
 
-def p3_8(row: Row, locs, params, fault_any, demote: bool):
-    out = {"clause": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion (G6 rows)"}
+def p3_8(row: Row, locs, params, fault_any, demote: bool, p33_pass=None):
+    out = {"clause": "spec 284 P3-8 (before soil mode / LOC) + 377 demotion and U-S9-G6c "
+                     "P3-8_preloc_loss (G6 rows, rev6 R6-C3); 377 window LOC = first LOC (rev6 R6-B3)"}
     t_soil = soil_mode_time(row)
     cands = [x for x in (locs["first"], t_soil) if x is not None]
     cut = min(cands) if cands else None
@@ -678,11 +691,27 @@ def p3_8(row: Row, locs, params, fault_any, demote: bool):
         m = min_force_after(row, t, locs["first"] + 1.0)
         mn = m["min_N"][R.LEGS.index(leg)] if m else None
         a = mn is not None and R.ge(mn, params["F_min_N"]) and not fault_any  # rev3 R3-G8
-        demoted.append({"event": n, "leg_min_N": mn, "demoted": a})
+        rec = {"event": n, "leg_min_N": mn, "preloc_flag_ok": a}
+        # rev6 R6-B3 record: would the final-LOC window give another 377 result?
+        if locs["final"] is not None and locs["final"] != locs["first"]:
+            m2 = min_force_after(row, t, locs["final"] + 1.0)
+            mn2 = m2["min_N"][R.LEGS.index(leg)] if m2 else None
+            rec["final_loc_window_preloc_ok_record"] = mn2 is not None and R.ge(mn2, params["F_min_N"]) and not fault_any
+        if a:
+            rec.update(demoted=True, flag="P3-8_demoted", rule="377")
+        elif p33_pass and not fault_any:
+            rec.update(demoted=True, flag="P3-8_preloc_loss", rule="U-S9-G6c")
+        elif p33_pass is None:
+            rec.update(demoted=None, reason="G6-3 (P3-3) result missing")
+        else:
+            rec["demoted"] = False
+        demoted.append(rec)
     out["demotion"] = demoted
-    if all(d["demoted"] for d in demoted):
+    if any(d.get("demoted") is None and "reason" in d and d["reason"].startswith("G6-3") for d in demoted):
+        out["verdict"] = "indeterminate"
+    elif all(d.get("demoted") for d in demoted):
         out["verdict"] = "flag"
-        out["flags"] = ["P3-8_demoted"]
+        out["flags"] = sorted({d["flag"] for d in demoted})
     else:
         out["verdict"] = "fail"
     return out
@@ -714,13 +743,19 @@ def leg_lift(row: Row, t0):
 
 
 def pressure_item(row: Row, params, t_window=None):
-    """Head-equivalent pressure F_cyl / A_p (spec J-5) in bar: moving samples (applied |u| > 1e-6)
-    <= 180 bar, all samples <= 350 bar (d1 11 D8.P)."""
+    """Head-equivalent pressure F_cyl / A_p (spec J-5) in bar on the control-period rows of
+    record/record.npz (rev6 R6-B5): moving = |u_applied| > 1e-9 (rev3 Q-13) <= 180 bar, all rows
+    <= 350 bar (d1 11 D8.P). Peaks between control instants are not seen (disclosed limit)."""
     A = np.array(params["head_area_m2"])
-    p_bar = row.F_inst / A[None, :] / 1e5
-    mov = applied_moving(row, row.tF)
+    rp = row.folder / "record" / "record.npz"
+    if not rp.exists():
+        return {"clause": "rev6 R6-B5", "verdict": "indeterminate", "reason": "record/record.npz missing"}
+    rec = np.load(rp)
+    tr = np.asarray(rec["t"], float)
+    p_bar = np.asarray(rec["F_cyl"], float) / A[None, :] / 1e5
+    mov = np.abs(np.asarray(rec["u_applied"], float)) > R.MOVING_U_EPS
     if t_window is not None:
-        sel = (row.tF >= t_window[0]) & (row.tF <= t_window[1])
+        sel = (tr >= t_window[0]) & (tr <= t_window[1])
         p_bar = p_bar[sel]
         mov = mov[sel]
     mmax = float(np.max(np.where(mov, p_bar, -np.inf))) if mov.any() else None
@@ -751,7 +786,8 @@ def d8_force(row: Row, params, rigid_nsc_hold: bool):
         dt = dt_of(row.tF)
         n = max(1, int(round(R.HOLD_SLOW_MEAN_S / dt)))
         k = np.ones(n) / n
-        slow = np.stack([np.convolve(row.F_inst[:, j], k, mode="same") for j in range(4)], axis=1)
+        # rev6 R6-B2: slow component = 1 s centred mean of the same judged force
+        slow = np.stack([np.convolve(row.F[:, j], k, mode="same") for j in range(4)], axis=1)
         smin = float(slow[sel].min()) if sel.any() else None
         out["hold_check"] = {"min_in_8s": in8, "slow_min_N": smin}
         thr = params["F_min_N"] + R.HOLD_SLOW_MARGIN_N
@@ -801,7 +837,7 @@ def stop_classification(row: Row, t_D, params):
     after = row.cr[row.t_cr >= t_stop]
     m = min_force_after(row, t_stop, None)
     other_faults = [n for n in fault_present(row, exclude_prefix=R.EVENT_STROKE_STOP)["fault_events"]]
-    lift = leg_lift(row, t_D)
+    lift = leg_lift(row, t_stop)   # rev6 R6-B9 / rev4 R4-B1: pad normal <= 0 from the stop to the end
     press = pressure_item(row, params)
     conds = {
         "ready_none": first_phase_time(row, "ready") is None,
@@ -942,7 +978,7 @@ def reagg_item(row: Row, item: str) -> dict:
 
 def extend_start_on(row: Row):
     tp = (row.result.get("controller_meta") or {}).get("two_pressure") or {}
-    rule = tp.get("extend_start_rule")
+    rule = (tp.get("settings") or {}).get("extend_start_rule", tp.get("extend_start_rule"))
     return None if rule is None else rule == "tracked_bound"
 
 

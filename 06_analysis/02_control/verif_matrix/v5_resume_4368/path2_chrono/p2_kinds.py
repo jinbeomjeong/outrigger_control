@@ -115,7 +115,8 @@ def items_p3(row, params, ready_limit_s, ready_judged, g6=False, allow_stop=True
         "P3-4": C.p3_4(row),
         "P3-5": C.p3_5(row),
         "P3-6": C.ready_item(row, ready_limit_s, f"P3-6 READY <= {ready_limit_s} s", judged=ready_judged),
-        "P3-8": C.p3_8(row, locs, params, fault["any"], demote=g6),
+        "P3-8": C.p3_8(row, locs, params, fault["any"], demote=g6,
+                       p33_pass=None if p33["verdict"] == "indeterminate" else p33["verdict"] == "pass"),
         "P3-9": C.p3_9(row, params),
         "FAULT0": _fault_item(row),
         "leg_lift_after_departure": dict(C.leg_lift(row, t_D) or {}, verdict="record",
@@ -258,7 +259,7 @@ def jp3_item(row):
     on = C.extend_start_on(row)
     out = {"clause": "rev8 3.2 / rev9 3.2 / rev4 R4-A2 b", "extend_start_on": on}
     if on is None:
-        out.update(verdict="indeterminate", reason="controller_meta.two_pressure.extend_start_rule missing")
+        out.update(verdict="indeterminate", reason="controller_meta.two_pressure.settings.extend_start_rule missing")
         return out
     if on is False:
         out.update(verdict="na", reason="③ off row")
@@ -290,52 +291,87 @@ def jp3_item(row):
 def j11_item(row, tp):
     """rev6 6 + rev2 D-1 for the actual fallback legs (fallback_lock_log); no entry ->
     not_computed record (rev3 R3-C7)."""
+    """rev6 6 + rev2 D-1 + rev5 R5-B1 / R5-B3 + rev6 R6-B7.
+    Zero-command stretches from the issued command record (r8_series `issued_u`): a stretch opens
+    at the first control instant t_s whose issued command is 0 after a non-zero one; its window
+    end t_w = t_s + tau_v ln(max(|u_last|, eps) / eps) + t_c + T with the run's
+    `two_pressure.settings` (lock_window_valve_tau_s, lock_window_eps_m_s,
+    lock_window_closing_delay_s; spec 10.4 2 as written in the monitor docstring). Logged stretches
+    are matched to `fallback_lock_log` (t_start_s, window_end_s) to 1e-12 s; a mismatch is S-11.
+    Judged / late: rev2 D-1 (t_last, plant lock state at t_w + 1e-6 s from pads.npz law_locked).
+    Actual fallback legs = log legs U WARN_ROD_PRESSURE_FALLBACK legs (R6-B7); n_late > 0 on such a
+    leg = H-7 (VB) / L-e (LS rows, R5-B3); other legs recorded."""
+    import math
     import numpy as np
     log = tp.get("fallback_lock_log")
-    out = {"clause": "rev6 6, rev2 D-1, rev3 R3-C7, rev4 R4-A2 b"}
+    st = tp.get("settings") or {}
+    out = {"clause": "rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev3 R3-C7"}
     if log is None:
         out.update(verdict="indeterminate", reason="fallback_lock_log missing")
         return out
-    if len(log) == 0:
-        out.update(verdict="record", status="not_computed", reason="no actual fallback leg")
+    ev_legs = {C.leg_of(n) for _, n in C.events_named(row, "WARN_ROD_PRESSURE_FALLBACK")} - {None}
+    log_legs = {e.get("leg") for e in log if isinstance(e, dict)}
+    if log_legs - ev_legs:
+        out.update(verdict="indeterminate", stop="S-11 (rev6 R6-B7: log leg without fallback event)",
+                   log_legs=sorted(log_legs), event_legs=sorted(ev_legs))
         return out
+    actual = sorted(log_legs | ev_legs)
+    out["actual_fallback_legs"] = actual
     if row.law_locked is None:
-        out.update(verdict="indeterminate", reason="pads.npz law_locked missing")
+        out.update(verdict="indeterminate" if actual else "record", reason="pads.npz law_locked missing")
         return out
-    T = float(np.median(np.diff(row.t10)))
-    acting = np.vstack([np.zeros((1, 4)), row.issued[:-1]])   # d = 1
-    zero = np.abs(acting) <= R.CMP_TOL
-    entries = []
+    try:
+        tau = float(st["lock_window_valve_tau_s"])
+        eps = float(st["lock_window_eps_m_s"])
+        t_c = float(st.get("lock_window_closing_delay_s") or 0.0)
+    except (KeyError, TypeError):
+        out.update(verdict="indeterminate" if actual else "record", reason="lock window settings missing")
+        return out
+    T = round(float(np.median(np.diff(row.t10))), 6)
+    u = row.issued
+    acting = np.vstack([np.zeros((1, 4)), u[:-1]])   # d = 1
+    zero_act = np.abs(acting) <= R.CMP_TOL
+    stretches = {leg: [] for leg in R.LEGS}
     n_late = [0, 0, 0, 0]
+    for li, leg in enumerate(R.LEGS):
+        for k in range(1, len(row.t10)):
+            if abs(u[k, li]) <= R.CMP_TOL and abs(u[k - 1, li]) > R.CMP_TOL:
+                t_s = float(row.t10[k])
+                t_w = t_s + tau * math.log(max(abs(u[k - 1, li]), eps) / eps) + t_c + T
+                nxt = [j for j in range(k + 1, len(row.t10)) if not zero_act[j, li]]
+                closed = bool(nxt)
+                t_last = (float(row.t10[nxt[0]]) - T) if closed else row.t_end
+                judged = t_w - 1e-9 <= t_last
+                j1 = min(int(np.searchsorted(row.tF, t_w + 1e-6)), len(row.tF) - 1)
+                state = int(row.law_locked[j1, li])
+                late = bool(judged and state not in (1, -1))
+                n_late[li] += int(late)
+                stretches[leg].append({"t_start_s": t_s, "t_window_end_s": t_w, "closed": closed,
+                                       "t_last_s": t_last, "judged": judged, "law_locked_after": state,
+                                       "late": late})
+    matches = []
     for e in log:
-        leg = e.get("leg") if isinstance(e, dict) else None
-        tw = None
-        if isinstance(e, dict):
-            for k in e:
-                if "window_end" in k and e[k] is not None:
-                    tw = float(e[k]) + (row.t_offset if row.engine != "scm" else 0.0)
-                    break
-        li = R.LEGS.index(leg) if leg in R.LEGS else (int(leg) if isinstance(leg, int) else None)
-        if li is None or tw is None:
-            entries.append({"entry": e, "status": "indeterminate", "reason": "leg or window_end field not found"})
+        leg = e.get("leg")
+        cand = [s for s in stretches.get(leg, []) if abs(s["t_start_s"] - float(e.get("t_start_s", math.nan))) < 0.5 * T]
+        if not cand:
+            matches.append({"leg": leg, "t_start_s": e.get("t_start_s"), "match": False, "reason": "no stretch"})
             continue
-        k = int(np.searchsorted(row.t10, tw - 1e-9))
-        nxt = [j for j in range(k, len(row.t10)) if not zero[j, li]]
-        t_last = (row.t10[nxt[0]] - T) if nxt else row.t_end
-        judged = tw - 1e-9 <= t_last
-        j1 = int(np.searchsorted(row.tF, tw + 1e-6))
-        j1 = min(j1, len(row.tF) - 1)
-        state = int(row.law_locked[j1, li])
-        late = judged and state not in (1, -1)
-        if late:
-            n_late[li] += 1
-        entries.append({"leg": R.LEGS[li], "t_window_end_s": tw, "t_last_s": float(t_last), "judged": judged,
-                        "law_locked_after": state, "late": late})
-    out.update(entries=entries, n_late=n_late)
-    if any(x.get("status") == "indeterminate" for x in entries):
-        out["verdict"] = "indeterminate"
-    elif sum(n_late) > 0:
-        out.update(verdict="fail", stop="H-7 (rev6 6: actual fallback leg n_late > 0)")
+        d = abs(cand[0]["t_window_end_s"] - float(e["window_end_s"]))
+        matches.append({"leg": leg, "t_start_s": e.get("t_start_s"), "window_end_s": e["window_end_s"],
+                        "recomputed_s": cand[0]["t_window_end_s"], "abs_diff_s": d, "match": d <= 1e-12})
+    out.update(n_late=n_late, log_matches=matches,
+               stretches={k: v for k, v in stretches.items() if k in actual})
+    if any(not m["match"] for m in matches):
+        out.update(verdict="indeterminate", stop="S-11 (window end vs fallback_lock_log > 1e-12 s, rev5 R5-B1)")
+        return out
+    if not actual:
+        out.update(verdict="record", status="no actual fallback leg (n_late of all legs recorded)")
+        return out
+    bad = [leg for leg in actual if n_late[R.LEGS.index(leg)] > 0]
+    is_ls = "_LS" in row.case or "LS1" in row.case or "LS4" in row.case
+    if bad:
+        out.update(verdict="fail", stop=("L-e (LS row, rev5 R5-B3)" if is_ls else "H-7 (rev6 6)"),
+                   late_fallback_legs=bad)
     else:
         out["verdict"] = "pass"
     return out
@@ -393,13 +429,20 @@ def items_c5(row, params, t45=None):
     # --- J11 window: rev6 6 + rev2 D-1, actual fallback legs from fallback_lock_log (rev3 R3-C7)
     items["J11_window"] = j11_item(row, tp)
     keys.append("J11_window")
-    # --- D2: rev6 14.5 (389-390) record items
-    d2 = [n for _, n in C.events_named(row, "WARN_ROD_PRESSURE_FALLBACK") if "D2" in n.split(":")[2:]]
-    items["D2"] = {"clause": "rev4 R4-A2 b / rev6 389-390 (record)", "verdict": "record",
-                   "d2_fallback_events": len(d2), "d2_event_names": d2,
-                   "all_fallback_events": [n for _, n in C.events_named(row, "WARN_ROD_PRESSURE_FALLBACK")],
+    # --- D2: rev5 R5-B2 (reason = third part of INFO_ROD_PRESSURE_FAULT_REASON:<leg>:<reason>)
+    reasons = {}
+    for _, n in C.events_named(row, "INFO_ROD_PRESSURE_FAULT_REASON"):
+        parts = n.split(":", 2)
+        if len(parts) == 3:
+            reasons.setdefault(parts[1], parts[2])
+    fb_legs = sorted({C.leg_of(n) for _, n in C.events_named(row, "WARN_ROD_PRESSURE_FALLBACK")} - {None})
+    d2_legs = sorted(l for l, r in reasons.items() if r.startswith("D2"))
+    items["D2"] = {"clause": "rev5 R5-B2 / rev6 389-390 (record)", "verdict": "record",
+                   "d2_fallback_legs": d2_legs, "d2_fallback_count": len(d2_legs),
+                   "fallback_legs": fb_legs, "reasons": reasons,
+                   "reason_unreadable_legs": [l for l in fb_legs if l not in reasons],
                    "d2_violation_start_ratio": (tp.get("review_record") or {}).get("d2_violation_start_ratio"),
-                   "expected_zero": len(d2) == 0}
+                   "expected_zero": len(d2_legs) == 0}
     items["K1_class"] = dict(C.k1_classification(row, las_off=False), verdict="record")
     if items["K1_class"].get("cls") == "indeterminate":
         items["K1_class"]["verdict"] = "indeterminate"

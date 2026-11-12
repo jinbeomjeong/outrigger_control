@@ -140,8 +140,10 @@ def write_l2b(folder: Path, liftoff=20.0, dip=None, moving_bar=None, end_att=0.0
     u[(t10 >= start + 39.9) & (t10 <= start + 40.5), 0] = 0.005
     np.savez(folder / "r8_series.npz", t=t10, issued_u=u, phase=np.array(ph))
     (folder / "record").mkdir(exist_ok=True)
+    k10 = np.clip(np.searchsorted(t, t10 - 1e-9), 0, n - 1)
+    u_app = np.vstack([np.zeros((1, 4)), u[:-1]])
     np.savez(folder / "record" / "record.npz", t=t10, body_quat_wxyz=np.tile([1.0, 0, 0, 0], (len(t10), 1)),
-             F_crawler=np.zeros((len(t10), 3)))
+             F_crawler=np.zeros((len(t10), 3)), F_cyl=Fi[k10], u_applied=u_app)
     res = {"case": folder.name, "settings": {"start_t_s": start, "floor": floor, "target_deg": [0.0, 0.0]},
            "phases": phases, "controller_tag": "final_C4G2_P3_LAS_K1",
            "expect_controller": {"name": "final_C4G2_P3_LAS_K1", "ok": True},
@@ -150,7 +152,7 @@ def write_l2b(folder: Path, liftoff=20.0, dip=None, moving_bar=None, end_att=0.0
                                                           "settings": {"flat_soil_margin_order_gate": True}}}}
     (folder / "result.json").write_text(json.dumps(res), encoding="utf-8")
     (folder / "controller_events.json").write_text(json.dumps(
-        ["C2Event(t_s=21.0, name='crawler_liftoff_confirmed')"]), encoding="utf-8")
+        ["C2Event(t_s=24.0, name='crawler_liftoff_confirmed')"]), encoding="utf-8")  # absolute (rev6 R6-1)
     return folder
 
 
@@ -264,6 +266,11 @@ def t_scm(tmp):
     it11c, _, _ = K.items_p3(scm_row(tmp, sp11c, "p38c"), PARAMS, 120.0, True, g6=True)
     check("377 threshold is F_min (F_min + 100 N demotes, rev3 R3-G8)", it11c["P3-8"]["verdict"] == "flag",
           it11c["P3-8"])
+    sp11d = copy.deepcopy(sp11)
+    sp11d["dips"] = [(0, 21.2, 21.3, FMIN - 500.0)]
+    it11d, _, _ = K.items_p3(scm_row(tmp, sp11d, "p38d"), PARAMS, 120.0, True, g6=True)
+    check("pre-LOC loss below F_min with P3-3 pass, FAULT 0 -> P3-8_preloc_loss FLAG (rev6 R6-C3)",
+          it11d["P3-8"]["verdict"] == "flag" and it11d["P3-8"]["flags"] == ["P3-8_preloc_loss"], it11d["P3-8"])
     it11b, _, _ = K.items_p3(scm_row(tmp, sp11, "p38b"), PARAMS, 120.0, True, g6=False)
     check("P3-8 without G6 demotion -> fail", it11b["P3-8"]["verdict"] == "fail", it11b["P3-8"])
 
@@ -311,15 +318,18 @@ def t_scm(tmp):
                                               "review_record": {"d2_violation_start_ratio": [None] * 4}}
     res["hydraulics_record"]["extend_bound_check"] = {"rule": "ext_moving", "breach_reads": [0, 0, 1, 0],
                                                       "margin_used_reads": [0, 0, 0, 0]}
-    res["events"].append({"t_s": 30.0, "name": "WARN_ROD_PRESSURE_FALLBACK:RL:D2"})
+    res["events"].append({"t_s": 30.0, "name": "WARN_ROD_PRESSURE_FALLBACK:RL"})
+    res["events"].append({"t_s": 30.0, "name": "INFO_ROD_PRESSURE_FAULT_REASON:RL:D2b_rate"})
+    res["events"].append({"t_s": 30.0, "name": "WARN_ROD_PRESSURE_FALLBACK:FR"})
     (d18 / "result.json").write_text(json.dumps(res), encoding="utf-8")
     it18, k18, _ = K.items_c5(C.load_row(d18, "scm", ["run_S9.py"]), PARAMS)
     check("J-P3 breach sum 1 -> fail + H-7 (rev8 3.2)", it18["J-P3"]["verdict"] == "fail"
           and it18["J-P3"].get("stop") == "H-7 (rev8 3.2)", it18["J-P3"])
-    check("J11 with empty fallback_lock_log -> not_computed record (rev3 R3-C7)",
-          it18["J11_window"]["status"] == "not_computed" and it18["J11_window"]["verdict"] == "record",
-          it18["J11_window"])
-    check("D2 fallback events with reason D2 counted (record)", it18["D2"]["d2_fallback_events"] == 1, it18["D2"])
+    check("J11 SCM row without law_locked, event-only fallback legs -> indeterminate (R6-B7)",
+          it18["J11_window"]["verdict"] == "indeterminate"
+          and it18["J11_window"]["actual_fallback_legs"] == ["FR", "RL"], it18["J11_window"])
+    check("D2 reason from INFO_ROD_PRESSURE_FAULT_REASON (rev5 R5-B2), FR reason unreadable",
+          it18["D2"]["d2_fallback_legs"] == ["RL"] and it18["D2"]["reason_unreadable_legs"] == ["FR"], it18["D2"])
     # T4 / T5 grades from a synthetic p2_t45 document
     l2r = C.load_row(write_l2b(tmp / "l2b_t45"), "l2b", L2B_ARGV)
     doc = {"tool_gate": {"ok": True}, "regression": {"ok": True},
@@ -339,7 +349,8 @@ def t_scm(tmp):
 def t_l2b(tmp):
     row = C.load_row(write_l2b(tmp / "l2b_base"), "l2b", L2B_ARGV)
     items, keys, _ = K.items_d8p(row, PARAMS, judged=True, hold=True)
-    check("L2b time base: events relative + start_t_s", abs(C.loc_times(row)["first"] - 24.0) < 1e-9,
+    check("L2b time base: events absolute, phases + start_t_s (rev6 R6-1)",
+          abs(C.loc_times(row)["first"] - 24.0) < 1e-9 and abs(C.first_phase_time(row, "ready") - 39.0) < 1e-9,
           C.loc_times(row))
     check("D8 t_lift = first crawler <= 0 outside check/touch", abs(items["D8_F_after_liftoff"]["t_lift_s"] - 23.0) < 1e-9,
           items["D8_F_after_liftoff"]["t_lift_s"])
@@ -360,6 +371,29 @@ def t_l2b(tmp):
     row5 = C.load_row(write_l2b(tmp / "l2b_att", end_att=0.19), "l2b", L2B_ARGV)
     it5, _, _ = K.items_d8p(row5, PARAMS, judged=True, hold=True)
     check("end attitude 0.19 + 0.02 > 0.2 -> fail", it5["D8_end_attitude"]["verdict"] == "fail", it5["D8_end_attitude"])
+    # J11 (rev6 6 + rev2 D-1 + rev5 R5-B1 / B3 + rev6 R6-B7)
+    import math
+    dj = write_l2b(tmp / "l2b_j11")
+    res = json.loads((dj / "result.json").read_text(encoding="utf-8"))
+    tw = 43.6 + 0.1 * math.log(0.005 / 1e-4) + 0.05 + 0.1
+    res["controller_meta"]["two_pressure"] = {
+        "settings": {"lock_window_valve_tau_s": 0.1, "lock_window_eps_m_s": 1e-4, "lock_window_closing_delay_s": 0.05},
+        "fallback_lock_log": [{"leg": "FL", "t_start_s": 43.6, "window_end_s": tw}]}
+    (dj / "result.json").write_text(json.dumps(res), encoding="utf-8")
+    ev = json.loads((dj / "controller_events.json").read_text(encoding="utf-8"))
+    ev.append("C2Event(t_s=43.0, name='WARN_ROD_PRESSURE_FALLBACK:FL')")
+    (dj / "controller_events.json").write_text(json.dumps(ev), encoding="utf-8")
+    rj = C.load_row(dj, "l2b", L2B_ARGV)
+    j = K.j11_item(rj, res["controller_meta"]["two_pressure"])
+    check("J11: window end recomputed = log to 1e-12, plant unlocked after t_w -> n_late 1, H-7",
+          j["log_matches"][0]["match"] and j["verdict"] == "fail" and j["stop"].startswith("H-7")
+          and j["n_late"][0] == 1, {k: j.get(k) for k in ("log_matches", "n_late", "verdict", "stop")})
+    rj.case = "E_G4_Fs8_LS1"
+    j2 = K.j11_item(rj, res["controller_meta"]["two_pressure"])
+    check("J11 LS row -> L-e stop (rev5 R5-B3)", j2["stop"].startswith("L-e"), j2.get("stop"))
+    res["controller_meta"]["two_pressure"]["fallback_lock_log"][0]["window_end_s"] = tw + 1e-6
+    j3 = K.j11_item(rj, res["controller_meta"]["two_pressure"])
+    check("J11 window end mismatch -> S-11", "S-11" in j3.get("stop", ""), j3.get("stop"))
     bad_argv = L2B_ARGV + ["--k1-order-gate", "on"]
     row6 = C.load_row(write_l2b(tmp / "l2b_k1"), "l2b", bad_argv)
     it6 = K.identity_l2b(row6, PARAMS)

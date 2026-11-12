@@ -23,7 +23,11 @@ SEALED = [
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.md",
      "dad8dfa68da7a988971f4d687706465289ec7dd95d09079c92215c64e5eae557", "rules rev3"),
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev4.md",
-     "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b", "rules rev4 (wins)"),
+     "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b", "rules rev4"),
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev5.md",
+     "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca", "rules rev5"),
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6.md",
+     "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9", "rules rev6 (wins)"),
     ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev7.md",
      "9ccde7a5a4128317ed832dd2f92cd2368280f18cefa6827f1b1731c6d4e9aab3", "Appendix A: v5 rev7 (T4 / T5 E, B1, tool regression)"),
     ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev8.md",
@@ -64,6 +68,8 @@ RAW_ONLY = {  # rev2 R2-9 last-but-one bullet: sealed rule files are compared ra
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev2.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev3.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev4.md",
+    "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev5.md",
+    "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6.md",
 }
 
 

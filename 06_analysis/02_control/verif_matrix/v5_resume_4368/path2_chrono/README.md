@@ -2,7 +2,8 @@
 
 - 작성: control-expert(새 인스턴스, 2026-11-13). 이 작성자는 경로 1 도구를 만들거나 고친 적이 없다(아래 "독립성 공개").
 - 규칙: 원판 `v5_resume_4368_rules.md`(9019b405), rev1(d9094fda), rev2(497e4614), rev3(dad8dfa6, 우선). 9.1 표 C-1~C-5 행의 경로 2 = "`series.npz`·`r8_series` 재계산". 입력 파일은 rev3 R3-G2(SCM `step_series.npz`·`r8_series.npz`, L2b `pads.npz`, L1-R `record/record.npz` + `pads.npz`). 담당 범위는 rev2 R2-0 + rev3 R3-G11(C-6·C-7·C-8 추가).
-- **rev4(7ea87a30, 우선) R4-A2 (사용자 결정 Q-R4-1 = C)**: C-5 J-P3(`hydraulics_record.extend_bound_check.breach_reads`)·J11 창(`pads.npz` `law_locked` + 명령 기록 + `fallback_lock_log`)·D2(사유 D2 대체 사건, `d2_violation_start_ratio`)는 **재계산** 층. C-5 T4-0·T4·T5는 경로 2가 `chrono_t45_replay`를 **직접 실행**(`p2_t45.py`: 도구 파일 f46b5ab 뒤 0커밋 확인, 개정 7 95행 회귀 18행 확인, 출력은 경로 2 폴더, 등급은 `p2_kinds.t45_items`가 따로 적용). PS-c E-1~E-6(재계산)·E-7(연구 A 판정 함수 실행)은 **아직 만들지 않았다**(PS-c 행이 생기면 그 행은 판정 불가). 한계 공개 문장은 rev4 R4-A2 문장을 판정서에 그대로 적는다.
+- **rev5(452a8436)·rev6(809e5639, 우선)**: 시각 원점(R6-1: L2b·L1-R `phases`만 상대 → + `start_t_s`, 사건·`fallback_lock_log`·npz는 절대), L1-R D8 t_lift = 첫 10 Hz 행 t_b(t_a 기록, R6-B1), L2b 판정 힘 = S8-A2(`F_cyl_min_interval`, 부상 표본은 `F_cyl_mean_20ms`; R40-2 느린 성분도 같은 힘, R6-B2), 377 창의 LOC = 첫 확정 LOC(최종 LOC로 했을 때 결과는 기록, R6-B3), t_D = 100표본(R6-B4), 이동 압력 = `record.npz` 10 Hz 행의 `u_applied`·`F_cyl`(R6-B5), 실제 대체 다리 = 로그 ∪ 대체 사건(로그에만 있으면 S-11, R6-B7), S-01·02 안전 정지 허용(R6-B8), SGS 부상 = 정지 뒤 패드 법선 ≤ 0(R6-B9), U-S9-G6c `P3-8_preloc_loss` 분기(R6-C3), J11 `fallback_lock_log`(`leg`·`t_start_s`·`window_end_s`, R5-B1)·LS 행 L-e(R5-B3), D2 사유 = `INFO_ROD_PRESSURE_FAULT_REASON:<다리>:<사유>`가 `D2`로 시작(R5-B2), PS-c 순서(R5-B4).
+- **rev4(7ea87a30) R4-A2 (사용자 결정 Q-R4-1 = C)**: C-5 J-P3(`hydraulics_record.extend_bound_check.breach_reads`)·J11 창(`pads.npz` `law_locked` + 명령 기록 + `fallback_lock_log`)·D2(사유 D2 대체 사건, `d2_violation_start_ratio`)는 **재계산** 층. C-5 T4-0·T4·T5는 경로 2가 `chrono_t45_replay`를 **직접 실행**(`p2_t45.py`: 도구 파일 f46b5ab 뒤 0커밋 확인, 개정 7 95행 회귀 18행 확인, 출력은 경로 2 폴더, 등급은 `p2_kinds.t45_items`가 따로 적용). PS-c E-1~E-6(재계산)·E-7(연구 A 판정 함수 실행)은 **아직 만들지 않았다**(PS-c 행이 생기면 그 행은 판정 불가). 한계 공개 문장은 rev4 R4-A2 문장을 판정서에 그대로 적는다.
 - (이전) **세 층(rev3 R3-G1, 사용자 결정 Q-C1 = A)**: (1) 시계열로 정의가 닫히는 항목은 재계산, (2) 감시기·사건 판정 논리가 필요한 항목(C-5 T4-0·T4·T5·J11 창·J-P3·D2, PS-c E-1~E-4·E-6·E-7)은 `result.json`의 항목별 기록 결과를 **재집계**하고 등급 규칙(FLAG·멈춤·해당 없음)을 경로 2가 따로 적용, (3) 출력의 `bundle_result.TABLE_REAGG`(항목·행 수·출처 키·판정 수)와 `recalculated_judged_items`·`reaggregated_items`. **재집계 항목은 독립 재계산이 아니다**(판정서 한계 절에 rev3 R3-G1 문장을 그대로 적는다).
 - 이 도구는 결과의 **판정 값을 입력으로 쓰지 않는다**(재집계 층 제외). 규칙이 이름으로 지정한 입력 키 두 개만 읽는다: `p3b.weight_N`(rev2 R2-5의 W), `p3b_ext.start_condition.crawler_attitude_deg`(원판 9.1 C-8). rev3 R3-G13이 이를 위반 아님으로 정했다.
 - C-6·C-7은 `openloop_compare.py`의 `analyse`(함수·상수 정의만 `ast`로 꺼내 그대로 실행, 고정 실행 목록 드라이버는 실행 안 함)이고, 그 함수가 읽는 `p3a`의 저장 판정 복사 키(`stored_*`)는 출력에서 뺀다. 속도비 r_vu·r_v는 rev2 R2-4 식으로 따로 계산한다.
@@ -81,6 +82,7 @@ $d = "<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2_chrono"
 
 - 규칙: 원판 전체, rev1 전체, rev2 전체(코디네이터 통지 뒤, master `b33e686`), rev3 1~32행·360~553행(R3-F·R3-G·결정 표, master `9ce2fdc`), `d1_selection_rules.md` 1~64행·145~204행, `d1_selection_rules_rev1.md` 전체, `v5_criteria_rev6.md` 81~200행 + T4·T5·J11 줄 grep, `v5_criteria_rev12.md` 전체, `v5_criteria_rev12a.md` 60~105행, `v5_criteria_rev12b.md` 15~47행.
 - 명세 `00_docs/04_control/s6_control_spec.md`(sha `1924ae89…`): 300~345행(S6 항목 1~8), 11010~11075행(284·284.1), 14278~14300행(377), 14795~14812행·15138~15165행(423.3), 15340~15360행(424.8.1), 16940~16975행(419.8), 17246~17270행(426.3), 15420~15435행(424.9 조건 6), 그리고 grep 결과 줄(D8, 180 bar, 마지막 5 s, 8 s 규칙 210.2, chatter, `window_short`·433.6, `stroke_limited_stop`, 427.12, 17279·17475 줄 등).
+- rev5 89~119행·140~156행, rev6 25~183행(master 병합 `825159f`). 제어기 코드 `03_src/outrigger_sim/control/two_pressure.py`의 `window_end_s` 대입부(2525~2562행, `_open_lock_stretch` 창 식). 제어기 코드이고 판정 도구가 아니다. G-S L2b 행 `controller_meta.two_pressure`와 `settings`·`extend_bound_check`의 키 이름(값 없음).
 - rev4 전체(master `136b455`), v5 rev7 1~130행, rev8 40~75행, rev9 45~67행, rev2 72행(D-1). `chrono_t45_replay.py`의 docstring(1~60행)·`summary`·`rev7_summary`·`report_of`·`parse_args`·`main`·`replay_case` 행 키(R4-A2가 실행을 지정한 도구, 436.8 경로 1 도구 아님). 회귀용 저장 3단계 L2b 18행 폴더 이름(`07_results/S8/v5s3_*`).
 - `06_analysis/03_hydraulic/coupled/v5/paper_runs/scripts/openloop_compare.py` 전체(R3-G11이 지정한 기존 분석 정의, 436.8 경로 1 도구 아님). G-S 열린 루프 행 `GS_P3a_G1_B_VB_prop_lift10`의 `flow_series.npz` 열 이름과 `series.npz` 배열 이름, `result.json` 키 이름 검색(T4·T5·J11·J-P3·D2 등, 값 없음).
 - YAML `02_params/rexome33.yaml`의 `head_area_m2`, `max_speed_m_s`, `F_min_cylinder_N` 줄.
@@ -107,7 +109,14 @@ $d = "<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2_chrono"
 
 ## 6. 확인 필요
 
-### 6.0 rev4 뒤 남은 것 (rev5 후보)
+### 6.00 rev6 뒤 남은 것 (rev7 후보)
+
+| # | 곳 | 이 도구의 읽기 | 묻는 것 |
+|---|---|---|---|
+| P-1 | J11 창 끝 재계산 | 다리별 발령 명령(`r8_series` `issued_u`)이 0이 아닌 값 뒤 처음 0인 제어 시각 t_s에서 구간이 열리고, u_last = 바로 앞 발령 명령, t_w = t_s + τ_v ln(max(\|u_last\|, ε)/ε) + t_c + T(`two_pressure.settings`의 `lock_window_valve_tau_s`·`lock_window_eps_m_s`·`lock_window_closing_delay_s`; 감시기 docstring의 10.4 ② 식). 로그 항목과 `t_start_s`(반 주기 안)로 짝짓고 `window_end_s`와 10⁻¹² s 대조, 어긋나면 S-11 | t_s·u_last의 기준(발령 명령인지 작용 명령인지)이 맞는가. 맞지 않으면 실제 대체 다리가 있는 첫 행에서 S-11로 드러난다 |
+| P-2 | PS-c | E-1~E-7 미구현(R5-B4 순서: PS-c 행이 정해지면 G-S 1행으로 열 확인 → 본 행 전 구현·sha 고정) | 없음(순서대로 진행) |
+
+### 6.0 rev4 뒤 남은 것 (rev5·rev6에서 정해짐: M-1 → R5-B1, M-2 → R5-B2, M-3 → R5-B3, M-4 → R5-B4)
 
 | # | 곳 | 이 도구의 읽기 | 묻는 것 |
 |---|---|---|---|
