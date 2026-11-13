@@ -15,10 +15,16 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py disclose [--out
 python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-dir <verif_matrix>]
 ```
 
-- `--batch`: `s9_batch` 배치 폴더(`batch.json`). SCM 행은 `<batch>/<case>/`에서 찾는다. L2b·L1-R 행은 argv의 `--tag`·`--only`와 배치 시각으로 `<results-root>/S8/<tag>_<stamp>/<only>`, `<results-root>/S6/*_<tag>_*_<stamp>/<only>`에서 찾는다. 행 번호(`S-03` 등)는 `batch.json`의 `d1_id`에서 읽는다.
+- `--batch`: `s9_batch` 배치 폴더(`batch.json`). SCM 행은 `<batch>/<case>/`에서 찾는다. 행 번호(`S-03` 등)는 `batch.json`의 `d1_id`에서 읽는다.
+- L2b·L1-R 행 폴더(v2, 2026-11-13. v1은 배치 시각과 같은 이름만 찾아 1 s 늦게 생긴 L1-R 폴더 `_082118`을 놓쳤다):
+  1. 행 로그 `<batch>/<case>.log`의 마지막 `batch wall ... -> <폴더>` 줄을 읽는다(`s9_batch.s8c_case_check`, gs-check와 같은 규칙). 행 = `<폴더>/<--only>`. 그 폴더에 `result.json`이 없으면 같은 경로를 `--results-root` 아래(`.../07_results/<나머지>` → `<results-root>/<나머지>`)에서 한 번 더 찾는다(지운 worktree에서 돈 뒤 결과를 옮긴 경우). 그래도 없으면 종료 2.
+  2. 로그에 그 줄이 없으면 `--tag`가 같은 러너 폴더(`S8/<tag>_*`, `S6/*_<tag>_*`) 가운데 이름 시각이 그 행의 `progress.log` START~END(없으면 배치 시각 ~ + `wall_s`) ± 2 s 안인 것을 쓴다. 정확히 하나일 때만 쓰고, 없거나 둘 이상이면 종료 2.
+  - 행마다 찾은 방법을 `rows[].row_dir`(`source` = `batch_folder` / `case_log` / `case_log_relocated` / `time_window`)에 적는다.
+- 열린 루프 행(C-6·C-7, `run_S9.py machine`, `series.npz` + `result.json` `p3a`)은 이 도구의 판정 대상이 아니다(원판 9.1: C-6·C-7 경로 1 = `result.json` `p3a`, 경로 2 = `openloop_compare.py` `analyse`. 원판 7.5·8.1: 기록 행. rev5 R5-A1: Chrono 경로 1 새 판 = C-1~C-5). 읽지 않고 `skipped_rows`(입력 sha256, 근거 규칙)에 적는다. 종료 코드에 영향 없음.
 - `--row`: 행 폴더를 직접 준다(배치 정보 없이). C-3 두 행은 이름으로 알아본다.
 - `--assume C-n=값`: 민감도 확인용이다. 출력에 `deviates_from_rev6`가 붙고, 그 출력은 경로 1 결과로 쓰지 않는다.
-- 엔진 구분: `step_series.npz`가 있으면 SCM(run_S9), `pads.npz`에 `crawler_normal_N`이 있으면 L2b, 없으면 L1-R이다.
+- 엔진 구분: `step_series.npz`가 있으면 SCM(run_S9), `pads.npz`에 `crawler_normal_N`이 있으면 L2b, 없으면 L1-R, `series.npz`와 `p3a`가 있으면 열린 루프(건너뜀)다. `batch.json` `criteria_id`가 C-6·C-7·C-7a·C-7b여도 건너뛴다.
+- 읽는 키: V0 행(SCM P3b_J2 시드 행, O-C5 Kc1 V0)과 L1-R 행에 없는 `extend_start_rule`·`extend_bound_check`·`v5_hydraulics.controller_tag`는 읽지 않는다(태그 확인은 이 도구 몫이 아니다).
 
 ## 2. 종료 코드와 출력
 
@@ -29,10 +35,11 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 | 2 | 입력 없음·잘못됨(행 폴더, `result.json`, 규칙 파일, YAML, `--assume` 값) |
 | 3 | 내부 오류(추적은 stderr) |
 
-- 마지막 줄은 JSON(`exit`, 행 수, `seals_ok`, `stops`, `origin_failed`, `deviates_from_rev6`, 행 등급)이다. 그 앞 줄은 `errors N`이다(`tools/verif/log_errors.py`).
+- 마지막 줄은 JSON(`exit`, 행 수, `seals_ok`, `stops`, `origin_failed`, `deviates_from_rev6`, 행 등급, `skipped`)이다. 그 앞 줄은 `errors N`이다(`tools/verif/log_errors.py`).
 - `--out` JSON 항목:
   - 정의와 공개: `definitions_C`, `d_numbers`, `params`(YAML sha256·F_min), `seals`, `disclosure`
-  - 행별: `rows[]`(`items`, `gates`, `grade`, `demoted_items`, `origin_check_R5_B1`, 입력 파일 sha256)
+  - 행별: `rows[]`(`items`, `gates`, `grade`, `demoted_items`, `origin_check_R5_B1`, `row_dir`, 입력 파일 sha256)
+  - 건너뛴 행: `skipped_rows[]`(`skipped` = `openloop_not_judged_here`, `rule`, 입력 sha256)
   - 묶음 요약: `stops`, `t_D_vs_runner_R6_B4`, `demoted_items`
 
 ## 3. 정의 (rev6)
@@ -77,13 +84,13 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 
 ## 5. 기존 판정 함수와의 차이 (요건 3, `disclose`)
 
-`git diff --no-index --numstat <기존> <새 판>`(2026-11-13, 새 판 sha256은 커밋 보고 참조). 기존 함수는 범위가 넓은 모듈이라 줄 수 차가 크다. 정의 차이는 3절 표와 rev6 R6-A 표가 원본이다.
+`git diff --no-index --numstat <기존> <새 판>`(v2, 2026-11-13, 새 판 sha256은 커밋 보고 참조). 기존 함수는 범위가 넓은 모듈이라 줄 수 차가 크다. 정의 차이는 3절 표와 rev6 R6-A 표가 원본이다. v2는 행 폴더 찾기와 열린 루프 건너뜀만 더했고 D 항목 정의는 v1과 같다.
 
 | 기존 | 대상 D | 추가 | 삭제 |
 |---|---|---|---|
-| `04_scripts/03_control/s8/r76_g6_chrono_judge.py` | D-26·27·28·34·35 | 938 | 430 |
-| `03_src/outrigger_sim/verify/s8_control.py` | D-31·39 | 910 | 7937 |
-| `03_src/outrigger_sim/verify/s6_control.py` | D-29·30·32 | 899 | 3073 |
+| `04_scripts/03_control/s8/r76_g6_chrono_judge.py` | D-26·27·28·34·35 | 1041 | 429 |
+| `03_src/outrigger_sim/verify/s8_control.py` | D-31·39 | 991 | 7914 |
+| `03_src/outrigger_sim/verify/s6_control.py` | D-29·30·32 | 1006 | 3076 |
 
 - 값은 새 판을 고치면 바뀐다. 판정서에는 실행 출력의 `disclosure` 블록 값을 적는다.
 
@@ -93,4 +100,4 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 
 ## 7. 시험
 
-`05_tests/unit/test_chrono_rows_judge_4368.py`: 합성 입력 22개와 G-S 실행 경로 1개(`07_results/S9/batch_V5-RESUME-K1-GS_20261113_020211`, 판정 아님, 없으면 건너뜀).
+`05_tests/unit/test_chrono_rows_judge_4368.py`: 시험 32개 = 합성 입력 30개(v2 행 폴더 찾기 7개·열린 루프 건너뜀 1개 포함)와 G-S 실행 경로 2개(`07_results/S9/batch_V5-RESUME-K1-GS_20261113_020211`, `..._082117`. 판정 아님, 없으면 건너뜀). 082117은 종료 0, L1-R 폴더 `_082118`을 행 로그에서 찾음, C-6 행 건너뜀을 확인한다.

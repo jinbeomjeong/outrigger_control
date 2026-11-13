@@ -363,3 +363,122 @@ def test_gs_batch_execution_path(mod, tmp_path):
         assert r["origin_check_R5_B1"]["ok"] is True
     l1r = next(r for r in doc["rows"] if r["engine"] == "L1R")
     assert l1r["items"]["D8_t_lift_basis"]["basis"] == "bracket_10Hz"
+
+
+# ------------------------------------------------------------------------------------------------- row folders (v2)
+def _rigid_batch(tmp_path: Path, *, log_line: bool, folder_stamps: list[str], script="run_S6C.py"):
+    """A batch with one run_S6C (or run_S8C) row whose runner folder(s) live under ``<results>/S6`` (``S8``)."""
+    results = tmp_path / "07_results"
+    batch = results / "S9" / "batch_X_20261113_082117"
+    batch.mkdir(parents=True)
+    tag, only, case = "r4368gs_D1C1_top_flat_crx3", "D1C1_top_flat_crx3", "GS_D1C1_top_flat_crx3"
+    dirs = []
+    for st in folder_stamps:
+        sub = (results / "S6" / f"bundleC_d1c1_{tag}_L1R_{st}") if script == "run_S6C.py" else \
+            (results / "S8" / f"{tag}_{st}")
+        (sub / only).mkdir(parents=True)
+        (sub / only / "result.json").write_text("{}", encoding="utf-8")
+        dirs.append(sub)
+    argv = ["python.exe", f"C:/x/04_scripts/02_chrono/{script}", "run", "--only", only, "--tag", tag]
+    (batch / "batch.json").write_text(json.dumps({"cases": [{"case": case, "argv": argv, "wall_s": 228.6,
+                                                             "criteria_id": "C-1"}]}), encoding="utf-8")
+    (batch / "progress.log").write_text(f"START {case} 2026-11-13T08:21:17 pid=1\n"
+                                        f"END {case} 2026-11-13T08:25:06 rc=0 wall_s=229\n", encoding="utf-8")
+    log = f"{only}: ok 226.6s\n"
+    if log_line:
+        log += f"batch wall 226.8 s, jobs 1 -> {dirs[0]}\n"
+    (batch / f"{case}.log").write_text(log, encoding="utf-8")
+    return batch, results, dirs, only
+
+
+def test_row_dir_from_case_log_one_second_late(mod, tmp_path):
+    batch, results, dirs, only = _rigid_batch(tmp_path, log_line=True, folder_stamps=["20261113_082118"])
+    rows = mod.batch_rows(batch, results)
+    assert rows[0][0] == dirs[0] / only
+    assert rows[0][1]["_row_dir"]["source"] == "case_log"
+
+
+def test_row_dir_log_rule_matches_s8c_case_check():
+    s9b = _import("s9_batch")
+    mod = _import("chrono_rows_judge_4368")
+    for text in ("a\nbatch wall 520.2 s -> C:\\r\\S8\\t_20261113_082117\n",
+                 "x: ok 1s\nbatch wall 226.8 s, jobs 1 -> C:\\r\\S6\\b_20261113_082118\nbatch wall 1 s -> D:\\z\n",
+                 "no line\n"):
+        assert mod.runner_log_dir(text) == s9b.s8c_case_check(text, "x")["batch_dir"]
+
+
+def test_row_dir_logged_folder_without_result_is_input_error(mod, tmp_path):
+    batch, results, dirs, only = _rigid_batch(tmp_path, log_line=True, folder_stamps=["20261113_082118"])
+    (dirs[0] / only / "result.json").unlink()
+    with pytest.raises(mod.InputError, match="case log names"):
+        mod.batch_rows(batch, results)
+
+
+def test_row_dir_logged_in_removed_worktree_is_relocated(mod, tmp_path):
+    batch, results, dirs, only = _rigid_batch(tmp_path, log_line=False, folder_stamps=["20261113_082118"])
+    gone = Path("C:/gone/worktree/07_results/S6") / dirs[0].name
+    log = batch / "GS_D1C1_top_flat_crx3.log"
+    log.write_text(log.read_text(encoding="utf-8") + f"batch wall 1 s -> {gone}\n", encoding="utf-8")
+    rows = mod.batch_rows(batch, results)
+    assert rows[0][0] == dirs[0] / only and rows[0][1]["_row_dir"]["source"] == "case_log_relocated"
+
+
+@pytest.mark.parametrize("script", ["run_S6C.py", "run_S8C.py"])
+def test_row_dir_time_window_fallback(mod, tmp_path, script):
+    batch, results, dirs, only = _rigid_batch(tmp_path, log_line=False, folder_stamps=["20261113_082118"],
+                                              script=script)
+    rows = mod.batch_rows(batch, results)
+    assert rows[0][0] == dirs[0] / only and rows[0][1]["_row_dir"]["source"] == "time_window"
+
+
+def test_row_dir_time_window_none_or_two_is_input_error(mod, tmp_path, capsys):
+    batch, results, _, _ = _rigid_batch(tmp_path / "a", log_line=False, folder_stamps=["20261113_090000"])
+    with pytest.raises(mod.InputError, match="0 runner folder"):
+        mod.batch_rows(batch, results)
+    batch, results, _, _ = _rigid_batch(tmp_path / "b", log_line=False,
+                                        folder_stamps=["20261113_082118", "20261113_082300"])
+    with pytest.raises(mod.InputError, match="2 runner folder"):
+        mod.batch_rows(batch, results)
+    code = mod.main(["judge", "--out", str(tmp_path / "o.json"), "--rules-dir", str(_rules_dir(mod)),
+                     "--params", str(PARAMS), "--batch", str(batch), "--results-root", str(results)])
+    assert code == 2 and json.loads(capsys.readouterr().out.strip().splitlines()[-1])["exit"] == 2
+
+
+# ------------------------------------------------------------------------------------------------- open-loop skip (v2)
+def _openloop_row(tmp_path: Path) -> Path:
+    d = tmp_path / "P3a_G1_B_VB_prop"
+    d.mkdir()
+    np.savez(d / "series.npz", t=np.arange(3.0))
+    np.savez(d / "flow_series.npz", t=np.arange(3.0))
+    (d / "result.json").write_text(json.dumps({"action": "machine", "p3a": {"checks": {}}}), encoding="utf-8")
+    return d
+
+
+def test_openloop_row_is_skipped_and_listed(mod, tmp_path, capsys):
+    d = _openloop_row(tmp_path)
+    scm = _write_scm_row(tmp_path, sgs=False)
+    code, doc = _judge(mod, tmp_path, [d, scm])
+    assert code == 0 and len(doc["rows"]) == 1
+    sk = doc["skipped_rows"]
+    assert [s["case"] for s in sk] == ["P3a_G1_B_VB_prop"] and sk[0]["skipped"] == "openloop_not_judged_here"
+    assert set(sk[0]["inputs"]) == {"series.npz", "flow_series.npz"} and "9.1" in sk[0]["rule"]
+    last = json.loads(capsys.readouterr().out.strip().splitlines()[-1])
+    assert last["skipped"] == {"P3a_G1_B_VB_prop": "openloop_not_judged_here"}
+
+
+GS_BATCH_2 = MAIN_CHECKOUT / "07_results" / "S9" / "batch_V5-RESUME-K1-GS_20261113_082117"
+
+
+@pytest.mark.skipif(not (GS_BATCH_2 / "batch.json").exists(), reason="G-S batch 082117 not present")
+def test_gs_batch_082117_execution_path(mod, tmp_path):
+    """Execution path only (G-S values are not judged): rc 0, the L1-R folder 1 s after the batch stamp comes from
+    the case log, the open-loop row is listed as skipped."""
+    out = tmp_path / "gs2.json"
+    code = mod.main(["judge", "--out", str(out), "--batch", str(GS_BATCH_2),
+                     "--results-root", str(MAIN_CHECKOUT / "07_results"), "--rules-dir", str(_rules_dir(mod)),
+                     "--params", str(PARAMS)])
+    doc = json.loads(out.read_text(encoding="utf-8"))
+    assert code == 0
+    assert [s["criteria_id"] for s in doc["skipped_rows"]] == ["C-6"]
+    l1r = next(r for r in doc["rows"] if r["engine"] == "L1R")
+    assert l1r["row_dir"]["source"] == "case_log" and l1r["dir"].endswith("_082118\\D1C1_top_flat_crx3")
