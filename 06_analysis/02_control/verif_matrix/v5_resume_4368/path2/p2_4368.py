@@ -21,6 +21,11 @@ mismatch = format error); R9-4 LS row = manifest ``rows[].v5_setting`` and S9 ``
 ``cases[].v5_setting`` equal and in LS1..LS4 (``--rows-manifest``; name tokens not used), LS row with a
 non-③ tag = S-2; R9-5 / R9-6 missing or malformed ``law_locked``: G-S = S-11 (every SCM level / L2b row),
 main run C-5 row = J11 not judgeable + stop (both engines), other rows recorded as "input missing".
+rev10 (62a0bd8d...): seal check; R10-1a full batch name (`batch.json` `batch` checked against the
+folder-name part, no key = folder name; mismatch / undeterminable / not a manifest batch = unknown);
+R10-1b unknown name, 0 or several manifest rows or `batch.json` cases for the case = LS not judgeable,
+not LS only with one row in each source and no value in both; missing / unreadable manifest = input
+error (S-11, exit 2, bundles not judged); R10-2 G-S: name and one row per source, else S-11.
 Author: dynamics-expert (path 2, user decision 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
 ``resume_k1_record.py``, the judging part of ``resume_k1_steps.py``) and every path-1 output were not
@@ -92,6 +97,9 @@ REV8_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev8.s
 REV9_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev9.md"
 REV9_SHA = "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d"
 REV9_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev9.sha256"
+REV10_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev10.md"
+REV10_SHA = "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29"
+REV10_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev10.sha256"
 EXT_RULE_DOTTED = "two_pressure.extend_start_rule"     # rev8 R8-1b: one key of controller_settings
 GRID_SPEC_PRESCRIBED = "rev. 67 (G1 / G2 / G7 reduced screen)"   # rev2 R2-7
 GRID_EVENTS_PRESCRIBED = {"G4", "RE1bF", "FS24"}
@@ -434,7 +442,8 @@ def check_seals(repo, appendix=True):
                             (REV5_REL, REV5_SHA, REV5_SEAL_REL), (REV6_REL, REV6_SHA, REV6_SEAL_REL),
                             (REV7_REL, REV7_SHA, REV7_SEAL_REL),
                             (REV8_REL, REV8_SHA, REV8_SEAL_REL),
-                            (REV9_REL, REV9_SHA, REV9_SEAL_REL)):   # sealed rules: raw sha only (R2-9, R9-8)
+                            (REV9_REL, REV9_SHA, REV9_SEAL_REL),
+                            (REV10_REL, REV10_SHA, REV10_SEAL_REL)):   # sealed rules: raw sha only (R2-9, R9-8, R10-3)
         p = repo / rel
         got = sha256_file(p) if p.is_file() else None
         sp = repo / seal
@@ -1125,37 +1134,86 @@ _BATCH_DIR_RE = re.compile(r"^batch_(.+)_\d{8}_\d{6}$")
 
 
 def bundle_of(batch_dir):
-    """``batch_V5-RESUME-K1-<bundle>_<stamp>`` -> ``V5-RESUME-K1-<bundle>`` (manifest ``batches`` key)."""
+    """Folder-name part of ``batch_<full batch name>_<YYYYmmdd_HHMMSS>`` (rev10 R10-1a), else None."""
     m = _BATCH_DIR_RE.match(Path(batch_dir).name)
     return m.group(1) if m else None
 
 
-def r94_ls_row(manifest, batch_dir, row):
-    """rev9 R9-4 LS reading of one Chrono row from manifest ``batches.<bundle>.rows[].v5_setting`` and the
-    S9 ``batch.json`` ``cases[].v5_setting`` of the same ``case``. Equal and in LS1..LS4 = ``ls``; equal and
-    another value, or both absent / None = ``not_ls``; one side only or different = ``undecidable`` (9.3).
-    The row name is not read."""
-    case = row.get("case")
-    b_val = row.get("v5_setting")
-    out = {"batch_v5_setting": b_val, "manifest_v5_setting": None, "manifest_row": False}
-    if manifest is None:
-        out["class"] = "not_checked"
-        return out
-    bundle = bundle_of(batch_dir)
-    rows = dig(manifest, f"batches.{bundle}.rows", None) if bundle else None
-    hits = [r for r in rows if isinstance(r, dict) and r.get("case") == case] if isinstance(rows, list) else []
-    out["manifest_bundle"] = bundle
-    if len(hits) > 1:
-        out.update({"class": "undecidable", "why": f"{len(hits)} manifest rows for the case"})
-        return out
-    m_val = hits[0].get("v5_setting") if hits else None
-    out.update(manifest_v5_setting=m_val, manifest_row=bool(hits))
-    if m_val is None and b_val is None:
-        out["class"] = "not_ls"
-    elif m_val is None or b_val is None or m_val != b_val:
-        out.update({"class": "undecidable", "why": "one value only or the two values differ"})
+ROWS_MANIFEST_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368/chrono_rows_manifest.json"
+# rev10 R10-1b / R10-2: per-row source cases of the LS reading (G-S counts these)
+R10_SOURCE_FAIL = ("batch_name_unknown", "manifest_rows_0", "manifest_rows_many", "batch_cases_0",
+                   "batch_cases_many")
+
+
+def load_rows_manifest(path):
+    """rev10 R10-1b: the manifest is a judging input. Missing, not JSON, or without ``batches`` -> (None,
+    reason): input error (exit 2), the Chrono bundle is not judged (S-11)."""
+    p = Path(path)
+    if not p.is_file():
+        return None, f"rows manifest absent: {p}"
+    try:
+        m = json.loads(p.read_text("utf-8"))
+    except (ValueError, UnicodeDecodeError) as exc:
+        return None, f"rows manifest not readable as JSON: {exc!r}"[:300]
+    if not isinstance(m, dict) or not isinstance(m.get("batches"), dict):
+        return None, "rows manifest has no 'batches' object"
+    return m, None
+
+
+def full_batch_name(batch, batch_dir, manifest):
+    """rev10 R10-1a: the full batch name (``V5-RESUME-K1-`` prefix included) = ``batch.json`` top-level
+    ``batch`` checked against the folder-name part; no key = folder-name part; a mismatch, nothing to
+    determine it with, or a name that is not a manifest ``batches`` key = unknown. Returns (name, why)."""
+    folder = bundle_of(batch_dir)
+    key = batch.get("batch", MISSING) if isinstance(batch, dict) else MISSING
+    if key is not MISSING:
+        if not isinstance(key, str) or key != folder:
+            return None, f"batch.json batch {key!r} != folder-name part {folder!r}"
+        name = key
+    elif folder is None:
+        return None, "no batch key and the folder name is not batch_<name>_<YYYYmmdd_HHMMSS>"
     else:
-        out["class"] = "ls" if m_val in LS_SETTINGS else "not_ls"
+        name = folder
+    if name not in manifest.get("batches", {}):
+        return None, f"{name!r} is not a manifest batch"
+    return name, None
+
+
+def r94_ls_row(manifest, batch_dir, batch, row):
+    """rev9 R9-4 with rev10 R10-1: LS reading of one Chrono row from manifest
+    ``batches.<full batch name>.rows[].v5_setting`` and ``batch.json`` ``cases[].v5_setting`` of the same
+    ``case``. Both sources need exactly one row for the case (else ``undecidable``: batch name unknown,
+    manifest rows 0 / several, batch.json cases 0 / several). With one row each: equal and in LS1..LS4 =
+    ``ls``; equal and another value, or the value absent / None in both rows = ``not_ls``; one value only
+    or different = ``undecidable``. The row name is not read. ``source_case`` holds the R10-1b case."""
+    case = row.get("case")
+    out = {"manifest_v5_setting": None, "batch_v5_setting": None, "source_ok": False}
+    name, why = full_batch_name(batch, batch_dir, manifest)
+    out["batch_name"] = name
+    if name is None:
+        out.update({"class": "undecidable", "source_case": "batch_name_unknown", "why": why})
+        return out
+    m_rows = manifest["batches"][name].get("rows") if isinstance(manifest["batches"][name], dict) else None
+    m_hits = [r for r in m_rows if isinstance(r, dict) and r.get("case") == case] if isinstance(m_rows, list) else []
+    b_cases = batch.get("cases") if isinstance(batch, dict) else None
+    b_hits = [r for r in b_cases if isinstance(r, dict) and r.get("case") == case] if isinstance(b_cases, list) else []
+    out.update(manifest_rows=len(m_hits), batch_cases=len(b_hits))
+    for n, label in ((len(m_hits), "manifest_rows"), (len(b_hits), "batch_cases")):
+        if n != 1:
+            sc = f"{label}_{'0' if n == 0 else 'many'}"
+            out.update({"class": "undecidable", "source_case": sc, "why": f"{n} {label.replace('_', ' ')} for the case"})
+            return out
+    out["source_ok"] = True
+    m_val, b_val = m_hits[0].get("v5_setting"), b_hits[0].get("v5_setting")
+    out.update(manifest_v5_setting=m_val, batch_v5_setting=b_val)
+    if m_val is None and b_val is None:
+        out.update({"class": "not_ls", "source_case": "both_values_absent"})
+    elif m_val is None or b_val is None:
+        out.update({"class": "undecidable", "source_case": "one_value_only", "why": "one value only"})
+    elif m_val != b_val:
+        out.update({"class": "undecidable", "source_case": "values_differ", "why": "the two values differ"})
+    else:
+        out.update({"class": "ls" if m_val in LS_SETTINGS else "not_ls", "source_case": "values_equal"})
     return out
 
 
@@ -1377,6 +1435,12 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits, manife
     out = {"case": case, "criteria_id": cid, "engine": engine, "rc": row.get("rc"), "pool": row.get("pool"),
            "planned_pool": row.get("planned_pool"), "role": dig(row, "r4368.role", None),
            "d1_id": row.get("d1_id") or dig(row, "r4368.d1_id", None)}
+    # rev9 R9-4 / rev10 R10-1: LS reading from the manifest row and the batch.json case (used for J11 on
+    # C-5 rows only; J11 is graded by the C-5 path 2, here it is recorded and an LS row must carry a ③ tag)
+    out["r94_ls"] = r94_ls_row(manifest, batch_dir, batch, row)
+    if gs_mode and not out["r94_ls"]["source_ok"]:
+        # rev10 R10-2: G-S checks the full batch name and exactly one case row in each source
+        fnd.stop("S-11", where, f"G-S R10-2: {out['r94_ls']['source_case']} ({out['r94_ls'].get('why')})")
     head = dig(row, "code_at_launch.git.head", None)
     commits.setdefault(head, []).append(case)
     if dig(row, "code_at_launch.git.dirty", []) not in ([], None):
@@ -1392,12 +1456,12 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits, manife
     out["result_sha256"] = sha256_file(rpath)
     want_tag, kind, off = expected_chrono_tag(row, res, argv)
     out["kind"] = kind
-    # rev9 R9-4: LS reading from the manifest row and the batch.json case (used for J11 on C-5 rows only;
-    # J11 is graded by the C-5 path 2, here it is recorded and an LS row must carry a ③ tag)
-    out["r94_ls"] = r94_ls_row(manifest, batch_dir, row) if kind != "openloop" else {"class": "not_applicable"}
+    if kind == "openloop":
+        out["r94_ls"]["class"] = "not_applicable"      # no controller: no LS reading (sources still checked)
     if cid == "C-5" and out["r94_ls"]["class"] == "undecidable":
-        fnd.note(where, f"R9-4: LS reading not judgeable ({out['r94_ls'].get('why')}): an actual fallback leg "
-                        "n_late > 0 on this row stops (H-7 / L-e); the judgement document writes 'LS 판별 불가'")
+        fnd.note(where, f"R9-4 / R10-1b: LS reading not judgeable ({out['r94_ls']['source_case']}: "
+                        f"{out['r94_ls'].get('why')}): an actual fallback leg n_late > 0 on this row stops "
+                        "(H-7 / L-e); the judgement document writes 'LS 판별 불가' and the case")
     # ---- G-S key presence (11.2, RV1-10 f): presence only, no values
     if gs_mode:
         keys = GS_KEYS_SCM + (() if off else GS_KEYS_LAS_ON) + tuple(k for k in GS_CONDITIONAL_R74
@@ -1709,9 +1773,13 @@ def cmd_chrono(args, repo):
     rows = []
     commits = {}
     per_cid = {}
-    manifest = None
-    if getattr(args, "rows_manifest", None):
-        manifest = json.loads(Path(args.rows_manifest).read_text("utf-8"))
+    mpath = Path(args.rows_manifest) if getattr(args, "rows_manifest", None) else repo / ROWS_MANIFEST_REL
+    manifest, merr = load_rows_manifest(mpath)
+    if manifest is None:
+        # rev10 R10-1b: input error, the Chrono bundles are not judged (S-11, exit 2)
+        fnd.stop("S-11", "rows manifest", f"R10-1b input error: {merr}")
+        return {"rows": [], "rows_manifest": str(mpath), "rows_manifest_error": merr,
+                "batches_not_judged": [str(b) for b in args.batch], **fnd.as_dict()}, fnd.status()
     for bd in args.batch:
         batch, cases = batch_rows(bd)
         gs_mode = args.gs or "-GS_" in Path(bd).name
@@ -1775,10 +1843,19 @@ def cmd_chrono(args, repo):
         r9_ll["outside_c5_input_missing"] += int(x.get("handling") == "input_missing_recorded")
     r91 = {"rows_checked": sum(1 for r in rows if "r91_expect_controller_ok" in r),
            "s2": sum(1 for r in rows if "r91_expect_controller_ok" in r and r["r91_expect_controller_ok"] is not True)}
-    r94 = {"rows_manifest": getattr(args, "rows_manifest", None), "classes": {}, "ls_rows": [],
-           "undecidable_rows": [], "c5_undecidable_rows": []}
+    r94 = {"rows_manifest": str(mpath), "rows_manifest_sha256": sha256_file(mpath), "classes": {},
+           "ls_rows": [], "undecidable_rows": [], "c5_undecidable_rows": [],
+           # rev10 R10-2: per-row source cases and the batch-name / one-row-per-source check
+           "source_cases": {}, "source_check": {"rows": 0, "ok": 0, "failed": 0}, "batch_names": {}}
     for r in rows:
-        cl = (r.get("r94_ls") or {}).get("class")
+        rl = r.get("r94_ls") or {}
+        if "source_case" in rl:
+            r94["source_cases"][rl["source_case"]] = r94["source_cases"].get(rl["source_case"], 0) + 1
+            r94["source_check"]["rows"] += 1
+            r94["source_check"]["ok" if rl.get("source_ok") else "failed"] += 1
+            bn = str(rl.get("batch_name"))
+            r94["batch_names"][bn] = r94["batch_names"].get(bn, 0) + 1
+        cl = rl.get("class")
         if cl:
             r94["classes"][cl] = r94["classes"].get(cl, 0) + 1
             if cl == "ls":
@@ -2081,7 +2158,8 @@ def build_parser():
     c.add_argument("--c2-expected", type=int, default=None)
     c.add_argument("--c2-psc", type=int, default=None)
     c.add_argument("--rows-manifest", default=None,
-                   help="chrono_rows_manifest.json for the rev9 R9-4 LS reading (omit: not checked, recorded)")
+                   help="chrono_rows_manifest.json for the rev9 R9-4 / rev10 R10-1 LS reading (default: "
+                        "<repo>/" + ROWS_MANIFEST_REL + "; missing or unreadable = input error, S-11)")
     o = sub.add_parser("oc5k")
     o.add_argument("--row", choices=sorted(OC5_K1), required=True)
     o.add_argument("--probe", action="append", required=True, help="probe result.json, in run order")
@@ -2117,7 +2195,7 @@ def main(argv=None):
             report, status = {"seals": seals}, "pass"
         else:
             body, status = CMDS[args.cmd](args, repo)
-            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA, "rev3_sha256": REV3_SHA, "rev4_sha256": REV4_SHA, "rev5_sha256": REV5_SHA, "rev6_sha256": REV6_SHA, "rev7_sha256": REV7_SHA, "rev8_sha256": REV8_SHA, "rev9_sha256": REV9_SHA,
+            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA, "rev3_sha256": REV3_SHA, "rev4_sha256": REV4_SHA, "rev5_sha256": REV5_SHA, "rev6_sha256": REV6_SHA, "rev7_sha256": REV7_SHA, "rev8_sha256": REV8_SHA, "rev9_sha256": REV9_SHA, "rev10_sha256": REV10_SHA,
                                 "eol_only": seals.get("eol_only", []),
                                 "eol_only_detail": {k: v for k, v in seals["appendix_a"].items() if v.get("eol_only")}},
                       **body}

@@ -19,6 +19,12 @@ REPO = HERE.parents[4]
 
 
 def run_main(argv, capsys):
+    argv = list(argv)
+    if "chrono" in argv and "--rows-manifest" not in argv and "--batch" in argv:
+        # synthetic batches carry their own rows manifest (rev10 R10-1: manifest = judging input)
+        man = Path(argv[argv.index("--batch") + 1]).parent / "rows_manifest.json"
+        if man.is_file():
+            argv += ["--rows-manifest", str(man)]
     code = p2.main(["--repo", str(REPO)] + argv)
     last = capsys.readouterr().out.strip().splitlines()[-1]
     return code, json.loads(last)
@@ -358,6 +364,21 @@ def scm_result(tag, rc_att, las_start=None, decisions=(), events=(), p3=None):
             "events": list(events)}
 
 
+def write_batch_json(bd, rows, batch_key=True, manifest=True):
+    """batch.json with the full batch name (rev10 R10-1a) and a rows manifest next to the batch folder."""
+    name = p2.bundle_of(bd)
+    b = {"mixed_hull_mode": False, "cases": rows}
+    if batch_key:
+        b["batch"] = name
+    (bd / "batch.json").write_text(json.dumps(b), "utf-8")
+    if manifest:
+        mp = bd.parent / "rows_manifest.json"
+        m = json.loads(mp.read_text("utf-8")) if mp.is_file() else {"batches": {}}
+        m["batches"].setdefault(name, {"rows": []})["rows"] += [{"case": r["case"], "v5_setting": r.get("v5_setting")}
+                                                             for r in rows]
+        mp.write_text(json.dumps(m), "utf-8")
+
+
 def make_batch(tmp_path, res, cid="C-8a", argv_extra=(), name="batch_V5-RESUME-K1-OC5_20990101_000000",
                law_locked="ok", est_argv=None, setting="VB"):
     bd = tmp_path / name
@@ -375,7 +396,7 @@ def make_batch(tmp_path, res, cid="C-8a", argv_extra=(), name="batch_V5-RESUME-K
            "v5_setting": setting, "start_env": {"OMP_WAIT_POLICY": "PASSIVE"}, "hull_hook_env": None,
            "hull_hook_requested": "fast", "hull_hook_effective": {"mode": "fast", "fallback_reason": None},
            "code_at_launch": {"git": {"head": "a" * 40, "dirty": []}}}
-    (bd / "batch.json").write_text(json.dumps({"batch": "X", "mixed_hull_mode": False, "cases": [row]}), "utf-8")
+    write_batch_json(bd, [row])
     return bd
 
 
@@ -860,7 +881,7 @@ def make_l2b_batch(tmp_path, res, cid="C-5", pads="ok", name="batch_V5-RESUME-K1
             "--extend-start-tracked"]
     row = {"case": case, "argv": argv, "rc": 0, "pool": "pcore", "planned_pool": "pcore", "criteria_id": cid,
            "v5_setting": setting, "code_at_launch": {"git": {"head": "b" * 40, "dirty": []}}}
-    (bd / "batch.json").write_text(json.dumps({"batch": "X", "mixed_hull_mode": False, "cases": [row]}), "utf-8")
+    write_batch_json(bd, [row])
     return bd
 
 
@@ -951,26 +972,129 @@ def _manifest(tmp_path, bundle, case, setting, extra_row=False):
     return p
 
 
+BD_C5 = "x/batch_V5-RESUME-K1-C5_20990101_000000"
+
+
+def _r94(m_rows, b_rows, case="c", batch_key="V5-RESUME-K1-C5", bd=BD_C5):
+    man = {"batches": {"V5-RESUME-K1-C5": {"rows": m_rows}}}
+    batch = {"cases": b_rows}
+    if batch_key is not None:
+        batch["batch"] = batch_key
+    return p2.r94_ls_row(man, bd, batch, {"case": case})
+
+
 def test_rev9_r94_ls_reading():
-    bd = "x/batch_V5-RESUME-K1-C5_20990101_000000"
-    assert p2.bundle_of(bd) == "V5-RESUME-K1-C5" and p2.bundle_of("x/other") is None
-    m = lambda s: {"batches": {"V5-RESUME-K1-C5": {"rows": [{"case": "c", "v5_setting": s}]}}}   # noqa: E731
-    assert p2.r94_ls_row(m("LS1"), bd, {"case": "c", "v5_setting": "LS1"})["class"] == "ls"
-    assert p2.r94_ls_row(m("LS4"), bd, {"case": "c", "v5_setting": "LS4"})["class"] == "ls"
-    assert p2.r94_ls_row(m("VB"), bd, {"case": "c", "v5_setting": "VB"})["class"] == "not_ls"
-    assert p2.r94_ls_row(m(None), bd, {"case": "c", "v5_setting": None})["class"] == "not_ls"
-    assert p2.r94_ls_row(m(None), bd, {"case": "c"})["class"] == "not_ls"              # L1-R style row
-    assert p2.r94_ls_row(m("LS1"), bd, {"case": "c", "v5_setting": "LS4"})["class"] == "undecidable"
-    assert p2.r94_ls_row(m("LS1"), bd, {"case": "c"})["class"] == "undecidable"         # one side only
-    assert p2.r94_ls_row(m("LS1"), bd, {"case": "other", "v5_setting": "LS1"})["class"] == "undecidable"
+    assert p2.bundle_of(BD_C5) == "V5-RESUME-K1-C5" and p2.bundle_of("x/other") is None
+    one = lambda s: [{"case": "c", "v5_setting": s}]   # noqa: E731
+    assert _r94(one("LS1"), one("LS1"))["class"] == "ls"
+    assert _r94(one("LS4"), one("LS4"))["class"] == "ls"
+    assert _r94(one("VB"), one("VB"))["class"] == "not_ls"
+    r = _r94(one(None), [{"case": "c"}])                                   # value absent in both rows
+    assert r["class"] == "not_ls" and r["source_case"] == "both_values_absent" and r["source_ok"]
+    assert _r94(one("LS1"), one("LS4"))["source_case"] == "values_differ"
+    assert _r94(one("LS1"), [{"case": "c"}])["source_case"] == "one_value_only"
     # the row name is not read: an "_LS1_" case with V0 on both sides is not an LS row
-    assert p2.r94_ls_row({"batches": {"V5-RESUME-K1-C5": {"rows": [{"case": "v5s3_LS1_x", "v5_setting": "V0"}]}}},
-                         bd, {"case": "v5s3_LS1_x", "v5_setting": "V0"})["class"] == "not_ls"
-    assert p2.r94_ls_row(None, bd, {"case": "c", "v5_setting": "LS1"})["class"] == "not_checked"
+    assert _r94([{"case": "v5s3_LS1_x", "v5_setting": "V0"}], [{"case": "v5s3_LS1_x", "v5_setting": "V0"}],
+                case="v5s3_LS1_x")["class"] == "not_ls"
     # exact LS1..LS4, LS on the off arm needs the ③ off-arm tag
     row = {"criteria_id": "C-4", "v5_setting": "LS1", "r4368": {"arm": "off"}}
     assert p2.expected_chrono_tag(row, {}, [])[0] == p2.TAG_C4OFF_VB
     assert p2.expected_chrono_tag({"criteria_id": "C-5", "v5_setting": "LS5"}, {}, [])[0] == p2.TAG_V0
+
+
+# ------------------------------------------------------------------ rev10 (62a0bd8d)
+def test_rev10_seal_listed_and_checked(tmp_path, capsys, monkeypatch):
+    seals = p2.check_seals(REPO, appendix=False)
+    assert p2.REV10_REL in seals["rules"] and seals["rules"][p2.REV10_REL]["ok"], seals["rules"].get(p2.REV10_REL)
+    assert p2.REV10_SHA == "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29"
+    item = seals["rules"][p2.REV10_REL]
+    assert item["sha256"] == item["seal_file_sha"] == p2.REV10_SHA
+    monkeypatch.setattr(p2, "REV10_SHA", "0" * 64)
+    code, s = run_main(["seal"], capsys)
+    assert code == 2 and s["stop_codes"] == ["S-1"]
+
+
+@pytest.mark.parametrize("batch_key, bd, case", [
+    ("V5-RESUME-K1-C4", BD_C5, "batch_name_unknown"),          # key differs from the folder-name part
+    (None, "x/batch_V5-RESUME-K1-C5_badstamp", "batch_name_unknown"),   # no key, folder not of the form
+    ("V5-RESUME-K1-C5", "x/batch_V5-RESUME-K1-C5_badstamp", "batch_name_unknown"),
+    (None, "x/batch_V5-RESUME-K1-ZZ_20990101_000000", "batch_name_unknown"),   # not a manifest batch
+    (None, BD_C5, "values_equal"),                              # no key: folder-name part
+    ("C5", BD_C5, "batch_name_unknown")])                       # short batch ID (original 4.3) is not the name
+def test_rev10_r101a_full_batch_name(batch_key, bd, case):
+    r = _r94([{"case": "c", "v5_setting": "LS1"}], [{"case": "c", "v5_setting": "LS1"}], batch_key=batch_key, bd=bd)
+    assert r["source_case"] == case, r
+    if case == "values_equal":
+        assert r["batch_name"] == "V5-RESUME-K1-C5" and r["class"] == "ls"
+    else:
+        assert r["class"] == "undecidable" and r["batch_name"] is None
+
+
+@pytest.mark.parametrize("m_rows, b_rows, case", [
+    ([], [{"case": "c"}], "manifest_rows_0"),                   # no manifest row is not "no value"
+    ([{"case": "c"}, {"case": "c"}], [{"case": "c"}], "manifest_rows_many"),
+    ([{"case": "c"}], [], "batch_cases_0"),
+    ([{"case": "c"}], [{"case": "c"}, {"case": "c"}], "batch_cases_many")])
+def test_rev10_r101b_row_counts_not_judgeable(m_rows, b_rows, case):
+    r = _r94(m_rows, b_rows)
+    assert r["class"] == "undecidable" and r["source_case"] == case and not r["source_ok"], r
+
+
+@pytest.mark.parametrize("variant", ["absent", "not_json", "no_batches"])
+def test_rev10_r101b_manifest_input_error(tmp_path, capsys, variant):
+    bd = make_batch(tmp_path, scm_result(p2.TAG_VB, [2.4, 1.8]), cid="C-5",
+                    name="batch_V5-RESUME-K1-C5_20990101_000000")
+    man = tmp_path / "bad_manifest.json"
+    if variant == "not_json":
+        man.write_text("{not json", "utf-8")
+    elif variant == "no_batches":
+        man.write_text(json.dumps({"rows": []}), "utf-8")
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--rows-manifest", str(man)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 2 and s["stop_codes"] == ["S-11"] and rep["rows"] == [], rep
+    assert rep["batches_not_judged"] == [str(bd)] and "R10-1b" in rep["stops"][0]["why"]
+
+
+def test_rev10_r102_gs_source_check(tmp_path, capsys):
+    res = gs_full_result()
+    bd = make_batch(tmp_path, res, name="batch_V5-RESUME-K1-GS_20990101_000000")
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0, rep["stops"]
+    r94 = rep["R9-4_ls_rows"]
+    assert r94["source_check"] == {"rows": 1, "ok": 1, "failed": 0}
+    assert r94["source_cases"] == {"values_equal": 1} and r94["batch_names"] == {"V5-RESUME-K1-GS": 1}
+    # batch key differing from the folder name -> G-S failure S-11 (R10-2)
+    b = json.loads((bd / "batch.json").read_text("utf-8"))
+    b["batch"] = "V5-RESUME-K1-C5"
+    (bd / "batch.json").write_text(json.dumps(b), "utf-8")
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 2 and s["stop_codes"] == ["S-11"] and any("R10-2" in x["why"] for x in rep["stops"])
+    assert rep["R9-4_ls_rows"]["source_cases"] == {"batch_name_unknown": 1}
+    # manifest without the case -> S-11 in G-S
+    b["batch"] = "V5-RESUME-K1-GS"
+    (bd / "batch.json").write_text(json.dumps(b), "utf-8")
+    mp = tmp_path / "rows_manifest.json"
+    mp.write_text(json.dumps({"batches": {"V5-RESUME-K1-GS": {"rows": []}}}), "utf-8")
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 2 and s["stop_codes"] == ["S-11"]
+    assert rep["R9-4_ls_rows"]["source_cases"] == {"manifest_rows_0": 1}
+
+
+def test_rev10_main_run_unknown_source_is_recorded_on_c5(tmp_path, capsys):
+    res = scm_result(p2.TAG_VB, [2.4, 1.8])
+    bd = make_batch(tmp_path, res, cid="C-5", name="batch_V5-RESUME-K1-C5_20990101_000000")
+    (tmp_path / "rows_manifest.json").write_text(json.dumps({"batches": {"V5-RESUME-K1-C5": {"rows": []}}}), "utf-8")
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0, (rep["stops"], rep["undecidable"])       # recorded: n_late is judged by the J11 path
+    assert rep["R9-4_ls_rows"]["c5_undecidable_rows"] == ["OC5_mixed_rigid_J1FR_Kc3_VB_top"]
+    assert any("manifest_rows_0" in r["what"] and "LS 판별 불가" in r["what"] for r in rep["records"])
 
 
 def test_rev9_r94_ls_row_tag_and_c5_undecidable(tmp_path, capsys):
