@@ -505,6 +505,16 @@ def identity_problems(ident, t3=None):
     return p
 
 
+def sidecar_records(v):
+    """``.identity.json`` ``start`` / ``end``: one dict (older files) or a non-empty list of dicts (the
+    runner's identity writer appends). Anything else (missing, empty, non-dict items) -> None."""
+    if isinstance(v, dict):
+        return [v]
+    if isinstance(v, list) and v and all(isinstance(x, dict) for x in v):
+        return list(v)
+    return None
+
+
 def identity_of(path):
     """The run's ``.identity.json`` (run_identity ``start`` / ``end`` records). (dict or None, file)."""
     p = Path(path)
@@ -573,38 +583,51 @@ def identity_check(paths, fnd, repo=None, git_at_start=None, allowed_dirty=(), s
 
         ident, used = identity_of(p)
         row["file"] = used
-        s = ident.get("start") if isinstance(ident, dict) else None
-        e = ident.get("end") if isinstance(ident, dict) else None
-        if not isinstance(s, dict) or not isinstance(e, dict):
+        # The runner's identity writer appends (start / end = list of records); older files hold one dict.
+        # R6-C2 conditions apply to every record (decision 19: tool fix, no new rev; path 1 reads the last
+        # record, disclosed in the judgement document): all start / end heads one value = git_at_start,
+        # tree / threads / rules_seals on every start record. Missing / empty / non-dict = source missing.
+        S = sidecar_records(ident.get("start") if isinstance(ident, dict) else None)
+        E = sidecar_records(ident.get("end") if isinstance(ident, dict) else None)
+        row["records"] = {"start": len(S) if S else 0, "end": len(E) if E else 0}
+        if not S or not E:
             need("identity_file", None)
         else:
-            h0, h1 = core.dig(s, "git.head", None), core.dig(e, "git.head", None)
-            need("head", None if h0 is None or h1 is None else (h0 == h1 and (git_at_start is None or
-                 str(h0).startswith(git_at_start) or str(git_at_start).startswith(str(h0)))),
-                 f"{h0} / {h1} / git_at_start {git_at_start}")
+            heads = [core.dig(x, "git.head", None) for x in S + E]
+            h0 = heads[0]
+            need("head", None if any(h is None for h in heads) else (len(set(heads)) == 1 and (
+                 git_at_start is None or str(h0).startswith(git_at_start) or str(git_at_start).startswith(str(h0)))),
+                 f"start {heads[:len(S)]} / end {heads[len(S):]} / git_at_start {git_at_start}")
             if git_at_start is None:
                 ck["head_vs_git_at_start"] = "not checked (--git-at-start not given)"
-            if core.dig(s, "git.is_clean", None) is True:
-                ck["tree"] = True
-            elif isinstance(core.dig(s, "git.status_porcelain", None), str):
-                dirty = [ln[3:].strip() for ln in s["git"]["status_porcelain"].splitlines() if ln.strip()]
-                extra = [x for x in dirty if x not in allowed_dirty]
-                ck["tree"] = not extra
-                if extra:
-                    fnd.undec(f"K-0:{name}", f"dirty files not in the pre-run audit allowance: {extra[:5]}")
-            else:
+            tree, extra_all = True, []
+            for s in S:
+                if core.dig(s, "git.is_clean", None) is True:
+                    continue
+                if isinstance(core.dig(s, "git.status_porcelain", None), str):
+                    dirty = [ln[3:].strip() for ln in s["git"]["status_porcelain"].splitlines() if ln.strip()]
+                    extra_all += [x for x in dirty if x not in allowed_dirty and x not in extra_all]
+                else:
+                    tree = None
+            if tree is None:
                 need("tree", None)
-            th = s.get("threads")
-            need("threads", None if not isinstance(th, dict) else
-                 (all(str(th.get(k)) == "1" for k in THREAD_ENV) and th.get("MKL_THREADING_LAYER") == "TBB"),
-                 {k: (th or {}).get(k) for k in THREAD_ENV + ("MKL_THREADING_LAYER",)})
-            seals = s.get("rules_seals")
-            if isinstance(seals, dict):
-                vals = list(seals.values())
             else:
-                vals = seals if isinstance(seals, list) else None
-            need("rules_seals", None if not vals else all(
-                (v.get("ok") is True) if isinstance(v, dict) else (v is True) for v in vals), "a rules seal not ok")
+                ck["tree"] = not extra_all
+                if extra_all:
+                    fnd.undec(f"K-0:{name}", f"dirty files not in the pre-run audit allowance: {extra_all[:5]}")
+            ths = [s.get("threads") for s in S]
+            need("threads", None if not all(isinstance(th, dict) for th in ths) else all(
+                 all(str(th.get(k)) == "1" for k in THREAD_ENV) and th.get("MKL_THREADING_LAYER") == "TBB"
+                 for th in ths),
+                 [{k: (th or {}).get(k) for k in THREAD_ENV + ("MKL_THREADING_LAYER",)} for th in ths])
+            vals_all = []
+            for s in S:
+                seals = s.get("rules_seals")
+                vals_all.append(list(seals.values()) if isinstance(seals, dict) else
+                                (seals if isinstance(seals, list) else None))
+            need("rules_seals", None if not all(vals_all) else all(
+                (v.get("ok") is True) if isinstance(v, dict) else (v is True) for vals in vals_all for v in vals),
+                "a rules seal not ok")
         lid, fmt, prob = output_identity(p)
         if fmt:
             ck["line_identity_format"] = False
