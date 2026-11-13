@@ -172,7 +172,7 @@ def test_absence_rules(mod):
     assert mod.absence_allowed("x", "<on arm>", {}, True)[0] and not mod.absence_allowed("x", "<on arm>", {}, False)[0]
 
 
-def _level_folder(tmp_path: Path, mod, departed, drop: list[str], arm: str = "on") -> Path:
+def _level_folder(tmp_path: Path, mod, departed, drop: list[str], arm: str = "on", law_locked=True) -> Path:
     np = pytest.importorskip("numpy")
     keys, _ = mod.gs_key_paths()
     doc: dict = {}
@@ -196,6 +196,10 @@ def _level_folder(tmp_path: Path, mod, departed, drop: list[str], arm: str = "on
     np.savez(f / case / "controller_commands.npz", t_s=np.arange(3.0), issued_u_m_s=np.zeros(3))
     for n in mod.SERIES_FILES:
         np.savez(f / case / n, t=np.arange(2.0))
+    if law_locked is True:  # the run_S9 record (Q-R8-1 = B)
+        law_locked = np.array([[-1, -1, -1, -1], [1, 0, 1, 1]], dtype=np.int8)
+    series = {"t_s": np.arange(2.0)} | ({} if law_locked is None else {"law_locked": law_locked})
+    np.savez(f / case / "step_series.npz", **series)
     entry = {k: "x" for k in mod.GS_ENTRY_KEYS}
     entry.update(case=case, argv=["python", "run_S9.py", "level"], r4368={"engine": "SCM", "arm": arm})
     (f / "batch.json").write_text(json.dumps({"batch": "T", "cases": [entry]}), "utf-8")
@@ -217,6 +221,25 @@ def test_gs_check_condition_true_but_absent_is_error(mod, tmp_path, capsys):
     off = _level_folder(tmp_path / "c", mod, False, ["c2_setup.las_off"], arm="off")  # off arm needs las_off
     assert mod.cmd_gs_check(str(off)) == 1
     capsys.readouterr()
+
+
+def test_gs_check_law_locked_series_key(mod, tmp_path, capsys):
+    """Q-R8-1 = B (2026-11-13): a level row without step_series.npz law_locked, or with a wrong form, is an error;
+    the manifest table (result.json keys) does not list it."""
+    np = pytest.importorskip("numpy")
+    assert mod.SERIES_KEYS == {"step_series.npz": ("t_s", "law_locked")}
+    assert not any("law_locked" in k for k in mod.gs_conditional_table()["keys"])
+    assert mod.cmd_gs_check(str(_level_folder(tmp_path / "a", mod, False, []))) == 0
+    capsys.readouterr()
+    assert mod.cmd_gs_check(str(_level_folder(tmp_path / "b", mod, False, [], law_locked=None))) == 1
+    c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
+    assert c["series_keys_missing"] == ["step_series.npz:law_locked"]
+    for bad in (np.zeros((2, 4), dtype=np.int64), np.zeros((2, 3), dtype=np.int8),
+                np.full((2, 4), 2, dtype=np.int8)):
+        assert mod.cmd_gs_check(str(_level_folder(tmp_path / f"c{bad.dtype}{bad.shape}{bad.max()}", mod, False, [],
+                                                  law_locked=bad))) == 1
+        c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
+        assert c["series_key_problems"] and not c["series_keys_missing"]
 
 
 def test_gs_check_manifest_table(mod, tmp_path, capsys):

@@ -329,3 +329,34 @@ def test_level_fs_override_step_series_and_settle_reference() -> None:
     assert s["scm_crawler_normal_N"][-1] > 0.0 and np.all(s["scm_pad_normal_N"] == 0.0)
     ref = run_s9.settle_reference(s)
     assert ref["rows"] == 20 and len(ref["track_normal_N"]) == 2 and len(ref["end_roll_pitch_deg"]) == 2
+
+
+def test_step_series_law_locked_is_the_l2b_pad_record_state(monkeypatch) -> None:
+    """Q-R8-1 = B (2026-11-13): StepSeries ``law_locked`` [N, 4] int8 on the t_s rows = the plant rod-side law
+    state of ``s8_plant_adapter.law_lock_state`` at the record step (the function of the L2b pads.npz record).
+    Bit identity of a closed loop with the record is checked by a Chrono run, not here."""
+    from outrigger_sim.chrono import l2b_pad_record_s8, s8_plant_adapter
+
+    run_s9 = _run_s9()
+    assert run_s9.LAW_LOCKED_KEY == "law_locked" and l2b_pad_record_s8.V5_FIELDS == ("law_locked",)
+    assert l2b_pad_record_s8.plant.law_lock_state is s8_plant_adapter.law_lock_state
+    ap = run_s9.build_parser()
+    a = ap.parse_args(["level", "--soil", "G1", "--grid", "0.04", "--fs-kN", "4"])
+    params, pv, soil = run_s9.load_inputs(a)
+    model = run_s9.build_machine(a, params, pv, soil)
+    rec = run_s9.StepSeries(model, 5, 1)  # capacity 16 grows to 32 (int8 kept by empty_like)
+    want = []
+    for k in range(100):
+        model.step()
+        if (k + 1) % 5 == 0:
+            want.append(s8_plant_adapter.law_lock_state(model.actuator))
+        rec(None)
+    s = rec.arrays()
+    ll = s["law_locked"]
+    assert ll.shape == (20, 4) and ll.dtype == np.int8 and ll.shape[0] == s["t_s"].shape[0]
+    assert np.array_equal(ll, np.asarray(want, dtype=np.int8))
+    assert set(np.unique(ll)) <= {-1, 0, 1}
+    # the record reads the adapter function itself (same meaning as pads.npz law_locked)
+    monkeypatch.setattr(s8_plant_adapter, "law_lock_state", lambda act: np.full(4, 7, dtype=np.int8))
+    rec.record()
+    assert np.all(rec.arrays()["law_locked"][-1] == 7)

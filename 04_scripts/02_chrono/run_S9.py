@@ -65,8 +65,8 @@ the lifted re-approach settings (``c2_lifted_reapproach``, P-S9-10 ``max_duratio
 result. ``--fs-kN`` sets the seal friction level of the plant (front legs; rear x 0.8333,
 ``actuator.seal_friction.level_N``; 0 = no override, the P3a plant). Records (spec 284 / 287 /
 301, dynamics 5.37.5 #2): ``step_series.npz`` (1 ms: crawler / pad SCM normals, track normals,
-F_cyl, s_motor, pad sinkage, roll / pitch), the 10 Hz ``s9_rows`` (SCM crawler patch force sum,
-pad node sinkage, rut clearance), and ``p3b`` (P3-1 ... P3-9 values, crawler departure by the
+F_cyl, s_motor, pad sinkage, roll / pitch, rod-side law lock state ``law_locked``), the 10 Hz ``s9_rows``
+(SCM crawler patch force sum, pad node sinkage, rut clearance), and ``p3b`` (P3-1 ... P3-9 values, crawler departure by the
 P3a-2 rule, creep stop, pre-lift-off minimum F_cyl, track utilisation with the 5 % rule, the
 W-61-1 ... 4 watch, the P3-4 judgement window of control D-3 and the re-approach limit FLAG of D-4).
 Sensors (control D-1): ``--pressure-grade`` (default WIKA A-10 ``normal``, CHECK zero calibration on)
@@ -3732,6 +3732,15 @@ IMU_SAMPLE_PERIOD_S = 0.01
 """R8 IMU sample period (10 ms; run_S6C.IMU_SAMPLE_PERIOD_S)."""
 STEP_SERIES_S = 1.0e-3
 """Closed-loop truth series rate: P3-3 '1 ms' F_cyl minimum, P3a-2 departure rule, creep stop."""
+LAW_LOCKED_KEY = "law_locked"
+LAW_LOCKED_RULE = (
+    "step_series.npz law_locked [N, 4] int8, legs FL FR RL RR, row i at t_s[i] (absolute Chrono time, 1 ms, the "
+    "physics step end after the actuator hook): s8_plant_adapter.law_lock_state(model.actuator) = rod-side law "
+    "lock state, 1 locked, 0 moving, -1 no armed law (LAW_LOCK_UNARMED); the same function and meaning as the L2b "
+    "pads.npz law_locked (l2b_pad_record_s8.V5_FIELDS). Record only (user decision 2026-11-13 Q-R8-1 = B, J11 "
+    "n_late input of the SCM rows, criteria rev. 6 6)")
+"""SCM ``level`` 1 ms lock-state record (:class:`StepSeries`): read-only, the plant and the controller are untouched
+(the command and result bits do not change)."""
 LEGS = ("FL", "FR", "RL", "RR")
 P3B_ATTITUDE_LIMIT_DEG = 0.2
 """P3-4 main judgement: steady end attitude +-0.2 deg (CLAUDE.md accuracy row, spec 284 rev. 61 suppl.)."""
@@ -4341,7 +4350,10 @@ class StepSeries:
     ``step_hook``; :meth:`record` also works alone). Forces along the SCM plane normal [N],
     F_cyl = L2b acting force (+ = extension push), sinkage + = pad bottom centre below the
     plane [m], roll / pitch of the superstructure [deg] (pitch > 0 nose down), z of the body
-    origin [m]; track utilisation = |anchor tangential| / Coulomb limit (raw, unmasked)."""
+    origin [m]; track utilisation = |anchor tangential| / Coulomb limit (raw, unmasked).
+
+    ``law_locked`` (record only, user decision 2026-11-13 Q-R8-1 = B): the rod-side law lock state per leg
+    (:data:`LAW_LOCKED_RULE`), the same function and meaning as the L2b ``pads.npz`` ``law_locked``."""
 
     def __init__(self, model: Any, every_steps: int, capacity: int) -> None:
         self.model = model
@@ -4354,7 +4366,7 @@ class StepSeries:
                      "track_utilisation": np.empty((cap, 2)), "scm_pad_normal_N": np.empty((cap, 4)),
                      "F_cyl_N": np.empty((cap, 4)), "s_motor_m": np.empty((cap, 4)),
                      "pad_sinkage_geometric_m": np.empty((cap, 4)), "roll_pitch_deg": np.empty((cap, 2)),
-                     "z_origin_m": np.empty(cap)}
+                     "z_origin_m": np.empty(cap), LAW_LOCKED_KEY: np.empty((cap, 4), dtype=np.int8)}
 
     def __call__(self, engine: Any = None) -> None:
         self._k += 1
@@ -4362,6 +4374,7 @@ class StepSeries:
             self.record()
 
     def record(self) -> None:
+        from outrigger_sim.chrono.s8_plant_adapter import law_lock_state  # noqa: PLC0415
         from outrigger_sim.frames import roll_pitch_from_quat
 
         m = self.model
@@ -4388,6 +4401,7 @@ class StepSeries:
         d["roll_pitch_deg"][i] = np.degrees(np.asarray(roll_pitch_from_quat(np.array([q.e0, q.e1, q.e2, q.e3])),
                                                        dtype=float))
         d["z_origin_m"][i] = float(m.superstructure.TransformPointLocalToParent(m.origin_in_cog_frame_ch).z)
+        d[LAW_LOCKED_KEY][i] = law_lock_state(m.actuator)  # read-only copy of the plant state (record only)
         self.n += 1
 
     def arrays(self) -> dict[str, np.ndarray]:
@@ -6390,7 +6404,8 @@ def run_level(args) -> Path:
                    "judgement_weights": judgement_weights(mass_scale, ctx["weight_N"],
                                                           (ctl_meta.get("soil") or {}).get("W_ref_N"), ctx["F_min_N"])}),
                "step_series": {"file": "step_series.npz", "rate_s": STEP_SERIES_S,
-                                           "keys": sorted(series), "rows": int(len(series["t_s"]))}}
+                                           "keys": sorted(series), "rows": int(len(series["t_s"])),
+                                           "law_locked_rule": LAW_LOCKED_RULE}}
     summary["loc_corrections"] = _record_or_error(lambda: loc_probe.meta(events))  # record only (cad 2026-11-11)
     if code_files_p5k is not None:  # --las-candidate rows only (las_p5r4_k1_rules.md 5.2 code files)
         summary["code_files_at_start"] = code_files_p5k
