@@ -96,9 +96,9 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 
 ## 6. 봉인 대조 (요건 4)
 
-원판·rev1~rev9의 md sha256을 도구 안 상수 `RULES_SEALS`와 각 `.sha256` 첫 토큰에 모두 대조한다. 하나라도 다르면 종료 1, 파일이 없으면 종료 2다. rev6 sha256 = `809e5639…`, rev7 = `e81f7d31…`, rev8 = `3ecafaaf…`, rev9는 도구 상수 `RULES_SEALS` 참조.
+원판·rev1~rev10의 md sha256을 도구 안 상수 `RULES_SEALS`와 각 `.sha256` 첫 토큰에 모두 대조한다. 하나라도 다르면 종료 1, 파일이 없으면 종료 2다. rev6 sha256 = `809e5639…`, rev7 = `e81f7d31…`, rev8 = `3ecafaaf…`, rev9 = `4cf7843c…`, rev10 = `62a0bd8d…`.
 
-## 7. rev8 반영 (v3, python-expert 2026-11-13)
+## 7. rev8~rev10 반영: J-P3 범위, J11 입력·범위, LS 판별 (v3, python-expert 2026-11-13)
 
 - **J-P3 적용 범위(R8-2, `j_p3_block`, 항목 `J-P3_R8-2`)**: 열린 루프가 아닌 모든 행에 적는다.
   - 행 태그 = `batch.json` argv의 `--expect-controller` 값(배치 정보가 없으면 SCM `result.json` `args.expect_controller`). 태그 확인(SCM `c2_setup.expect_controller.ok`, L2b·L1-R `expect_controller.ok`)이 거짓이거나 없으면 S-2(멈춤, rev9 R9-1. 그 전 v3는 J-P3 `not_judgeable`만).
@@ -113,6 +113,7 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
   - 감시기에 잠금 구간이 없으면(로드 판독 없음 등) 대체 다리가 있을 때 `not_judgeable`, 없을 때 `not_computed`(R3-C7).
   - 대상 행은 `criteria_id` = C-5다(rev9 R9-6). C-5 행(SCM·L2b 같음, rev9 R9-5: rev8 R8-3 4항과 rev3 R3-C7의 `not_computed` 처리를 대체)에서 `law_locked`가 없거나 형식이 틀리면 `not_judgeable` + 멈춤이다. 다른 기준 행은 늦은 대체 다리를 `late_recorded`로, 입력 결측·형식 오류를 `no_input`(입력 없음)으로 기록만 한다. `--row`(기준 모름)는 `not_judgeable`로 적되 멈추지 않는다.
   - G-S의 키 있음·형식 확인(S-11)은 `v5_resume_4368_chrono_rows.py gs-check`가 한다: level 행 `series_keys_missing`·`series_key_problems`·`law_locked_minus_one`, L2b 행 `pads_law_locked_missing`·`pads_law_locked_problems`, 닫힌 루프 행 `expect_controller_ok`(R9-1).
+- **LS 판별 입력 경계(rev10 R10-1, `batch_full_name`·`ls_setting`)**: 묶음은 전체 묶음 이름(`V5-RESUME-K1-` 접두어 포함)이다. S9 배치 `batch.json` 최상위 `batch` 값을 폴더 이름의 `batch_`~`_<YYYYmmdd_HHMMSS>` 부분과 대조해 쓰고, 키가 없으면 폴더 이름 부분을 쓴다. 다르거나 정할 수 없거나 manifest `batches` 키가 아니면 묶음 이름 불명이다. 묶음 이름 불명, manifest 같은 `case` 행 0개·여럿, `batch.json` `cases[]` 같은 `case` 0개·여럿은 LS 판별 불가(`ls_setting.boundary_case`)이고, 두 출처 모두 행이 하나씩 있고 둘 다 `v5_setting`이 없거나 None일 때만 LS 아님이다. manifest 파일이 없거나 JSON이 아니거나 `batches`가 없으면 입력 오류(종료 2, 묶음 판정 안 함, S-11). G-S 확인(R10-2, `ls_source_check`)은 gs-check가 행마다 하며 어긋난 행은 실패다(`--rows-manifest`, 기본 저장 manifest; 출력 `ls_sources_R10_2`). `rev8_counts`의 `R10-1b_cases`에 경우별 행 수를 적는다.
 - 묶음 요약 `rev8_counts`: J-P3 상태별 수(해당 없음 = `not_applicable`), S-2 행 수, J11 상태별 수, 판정 불가 C-5 행 수, rev9 R9-8 G-S 기록 항목(`R9-1_expect_failed`, `R9-2_form_problems_by_item`, `R9-2_key_missing`, `R9-3_minus_one`, `R9-4_ls_rows`·`R9-4_undecided`, `R9-6_no_input`). 마지막 줄 JSON에도 있다.
 - 2026-11-13 G-S `…_082117`(기록 추가 전)에 돌리면 C-5 SCM 행 셋이 J11 멈춤이다(R8-4가 예상한 결과). `7527fc3` 기록 행(3.6 s VB)은 J-P3 `pass`, J11 대체 다리 없음(`no_fallback_leg`)이다.
 

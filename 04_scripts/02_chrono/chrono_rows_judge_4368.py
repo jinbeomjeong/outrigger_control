@@ -23,7 +23,10 @@ rules rev6 R6-A D-26 .. D-39):
 * D-37 / D-38 (N-12 / N-13) :func:`p32_block` - strict LOC < first DONE, loaded = > 0.01 W, revoked-LOC normal.
 * R5-B1 / R6-B6 / R6-B7 / R6-1 :func:`origin_check` - time base, integer-period rounding, fallback legs.
 * t_D (R6-B4, 100 samples) :func:`departure`, with the runner difference recorded; P3-3 on the new t_D.
-* rules seals :func:`seal_check` (original, rev1 .. rev9).
+* rules seals :func:`seal_check` (original, rev1 .. rev10).
+* rev10 R10-1 :func:`batch_full_name` / :func:`ls_setting` - LS rows by the full batch name (``batch.json`` ``batch``
+  checked against the folder name, a manifest ``batches`` key) and exactly one row per source; a missing or unreadable
+  manifest is an input error (exit 2, S-11). R10-2 :func:`ls_source_check` (used by gs-check).
 * rev8 R8-2 :func:`j_p3_block` - J-P3 on the ③ rows only (③ by the row tag), extend_start_rule and the request
   records against the tag (S-2); R8-3 :func:`j11_block` - J11 (criteria revision 6 6) on the 1 ms law_locked of
   ``step_series.npz`` (SCM) / ``pads.npz`` (L2b), fallback legs by rev6 R6-B7, stop code by the manifest LS
@@ -86,6 +89,7 @@ RULES_SEALS = {
     "v5_resume_4368_rules_rev7.md": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
     "v5_resume_4368_rules_rev8.md": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
     "v5_resume_4368_rules_rev9.md": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
+    "v5_resume_4368_rules_rev10.md": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
 }
 """Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13); both the file and its ``.sha256`` must
 match (original 8.2 S-1)."""
@@ -1016,51 +1020,124 @@ def law_lock_state(row: dict[str, Any]) -> tuple[np.ndarray | None, np.ndarray |
     return np.asarray(arrays[time_key], float), np.asarray(arrays[LAW_LOCKED_KEY]), form
 
 
-def load_manifest(path: Path | None) -> dict[str, Any] | None:
-    """The Chrono rows manifest (None when no path is given or the file is absent; LS rows then stay undecided)."""
+LS_CASE_UNKNOWN_BATCH = "batch_name_unknown"
+LS_CASE_MANIFEST_ROWS = "manifest_rows_not_one"
+LS_CASE_BATCH_ENTRIES = "batch_json_entries_not_one"
+LS_CASE_BOTH_ABSENT = "both_sources_without_v5_setting"
+LS_BOUNDARY_CASES = (LS_CASE_UNKNOWN_BATCH, LS_CASE_MANIFEST_ROWS, LS_CASE_BATCH_ENTRIES, LS_CASE_BOTH_ABSENT)
+"""Rev10 R10-1b / R10-2 cases recorded per row (``ls_setting.boundary_case``)."""
+
+
+def load_manifest(path: Path | None) -> dict[str, Any]:
+    """The Chrono rows manifest (rev10 R10-1b: a missing file, a file that is not JSON or one without ``batches`` is
+    an input error: exit 2, the Chrono bundle is not judged, S-11).
+
+    Raises:
+        InputError: No path, no file, not JSON or no ``batches`` key.
+    """
     if path is None or not Path(path).is_file():
-        return None
-    return json.loads(Path(path).read_text(encoding="utf-8"))
+        raise InputError(f"chrono rows manifest missing: {path} (rev10 R10-1b, S-11)")
+    try:
+        doc = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise InputError(f"chrono rows manifest unreadable: {path}: {exc} (rev10 R10-1b, S-11)") from exc
+    if not isinstance(doc, dict) or not isinstance(doc.get("batches"), dict):
+        raise InputError(f"chrono rows manifest without batches: {path} (rev10 R10-1b, S-11)")
+    return doc
+
+
+def batch_full_name(folder: Path | str | None, batch_doc: dict[str, Any] | None,
+                    manifest: dict[str, Any]) -> dict[str, Any]:
+    """Rev10 R10-1a full batch name (with the ``V5-RESUME-K1-`` prefix): the ``batch.json`` top-level ``batch``
+    value, checked against the folder name part between ``batch_`` and ``_<YYYYmmdd_HHMMSS>``; no key = the folder
+    part. A key that differs from the folder part, no way to decide (no key, folder not of that form), or a name that
+    is not a manifest ``batches`` key = unknown (``name`` None)."""
+    match = _BATCH_ID_RE.match(Path(str(folder or "")).name)
+    folder_part = match.group(1) if match else None
+    doc = batch_doc or {}
+    has_key = "batch" in doc
+    out: dict[str, Any] = {"batch_value": doc.get("batch") if has_key else "<absent>", "folder_part": folder_part}
+    if has_key and doc.get("batch") != folder_part:
+        return {**out, "name": None, "reason": "batch.json batch value differs from the folder name part"}
+    name = doc["batch"] if has_key else folder_part
+    if name is None:
+        return {**out, "name": None, "reason": "no batch key and no batch_<name>_<stamp> folder name"}
+    if name not in manifest.get("batches", {}):
+        return {**out, "name": None, "reason": f"batch name {name!r} is not a manifest batches key"}
+    return {**out, "name": name}
 
 
 def ls_setting(meta: dict[str, Any] | None, manifest: dict[str, Any] | None) -> dict[str, Any]:
-    """Rev9 R9-4 (user decision 13): LS row = the manifest ``batches.<bundle>.rows[].v5_setting`` and the
-    ``batch.json`` ``cases[]`` row ``v5_setting`` (same ``case``, the S9 batch folder's ``batch.json``, never a runner
-    result folder's) are equal and one of LS1 .. LS4; equal and another value = not an LS row; absent or None on
-    both sides = not an LS row; on one side only or the two different = undecided (not judgeable). The row name is
-    not used.
+    """Rev9 R9-4 with the rev10 R10-1 boundaries (user decisions 13 and 16).
 
-    The manifest row is the same ``case`` in the bundle of the batch folder name (``batch_<bundle>_<stamp>``), else
-    the one row of that ``case`` over all bundles; none or several = undecided.
+    Sources: the manifest ``batches.<full batch name>.rows[]`` row of the ``case`` and the ``cases[]`` entry of the
+    same ``case`` in the S9 batch folder's ``batch.json`` (never a runner result folder's). The full batch name is
+    :func:`batch_full_name` (``meta["_batch_name"]``, set by :func:`batch_rows`). Undecided (not judgeable):
+    unknown batch name, zero or several manifest rows, zero or several ``batch.json`` entries
+    (``meta["_batch_case_count"]``), a ``v5_setting`` on one side only, or two different values. Equal LS1 .. LS4 =
+    LS row; equal other value = not LS; exactly one row in each source and both without (or None) ``v5_setting`` =
+    not LS. The row name is not used.
 
     Returns:
-        ``is_ls`` (True / False / None = undecided), ``v5_setting``, ``bundle``, ``basis`` or ``reason``.
+        ``is_ls`` (True / False / None = undecided), ``v5_setting``, ``bundle``, ``boundary_case`` (R10-1b),
+        ``basis`` or ``reason``.
     """
     meta = meta or {}
     case = meta.get("case")
     if manifest is None or case is None:
-        return {"is_ls": None, "reason": "no manifest or no batch case (row given without --batch?)"}
-    bundles = manifest.get("batches") or {}
-    match = _BATCH_ID_RE.match(Path(str(meta.get("_batch") or "")).name)
-    scope = {match.group(1): bundles[match.group(1)]} if match and match.group(1) in bundles else bundles
-    hits = [(name, r) for name, b in scope.items() for r in b.get("rows") or [] if r.get("case") == case]
+        return {"is_ls": None, "boundary_case": LS_CASE_UNKNOWN_BATCH,
+                "reason": "no manifest or no batch case (row given without --batch?)"}
+    naming = meta.get("_batch_name") or {"name": None, "reason": "no batch folder record"}
+    bundle = naming.get("name")
+    if bundle is None:
+        return {"is_ls": None, "boundary_case": LS_CASE_UNKNOWN_BATCH, "batch_name": naming,
+                "reason": f"batch name unknown: {naming.get('reason')} (rev10 R10-1a)"}
+    hits = [r for r in manifest["batches"][bundle].get("rows") or [] if r.get("case") == case]
     if len(hits) != 1:
-        return {"is_ls": None, "reason": f"{len(hits)} manifest rows of case {case!r} in {sorted(scope)[:3]}"}
-    bundle, entry = hits[0]
-    manifest_setting, batch_setting = entry.get("v5_setting"), meta.get("v5_setting")
-    out: dict[str, Any] = {"bundle": bundle, "v5_setting": manifest_setting, "batch_v5_setting": batch_setting}
-    if manifest_setting is None and batch_setting is None:  # absent or None on both sides: not LS (rev9 R9-4)
-        return {**out, "is_ls": False, "basis": f"manifest {bundle} and batch.json without v5_setting (not LS)"}
+        return {"is_ls": None, "bundle": bundle, "boundary_case": LS_CASE_MANIFEST_ROWS,
+                "reason": f"{len(hits)} manifest rows of case {case!r} in {bundle} (rev10 R10-1b)"}
+    entries = meta.get("_batch_case_count")
+    if entries != 1:
+        return {"is_ls": None, "bundle": bundle, "boundary_case": LS_CASE_BATCH_ENTRIES,
+                "reason": f"{entries} batch.json cases[] entries of case {case!r} (rev10 R10-1b)"}
+    manifest_setting, batch_setting = hits[0].get("v5_setting"), meta.get("v5_setting")
+    out: dict[str, Any] = {"bundle": bundle, "v5_setting": manifest_setting, "batch_v5_setting": batch_setting,
+                           "boundary_case": None}
+    if manifest_setting is None and batch_setting is None:  # one row in each source, both without a value
+        return {**out, "is_ls": False, "boundary_case": LS_CASE_BOTH_ABSENT,
+                "basis": f"manifest {bundle} and batch.json rows without v5_setting (not LS)"}
     if manifest_setting is None or batch_setting is None:
         side = "batch.json" if batch_setting is None else "manifest"
         return {**out, "is_ls": None, "reason": f"v5_setting on one side only ({side} row without v5_setting)"}
     if manifest_setting != batch_setting:
         return {**out, "is_ls": None, "reason": f"manifest v5_setting {manifest_setting!r} != batch.json "
                                                 f"{batch_setting!r}"}
-    setting = manifest_setting
-    is_ls = setting in LS_SETTINGS
-    return {**out, "is_ls": is_ls,
-            "basis": f"manifest {bundle} and batch.json v5_setting {setting!r}" + ("" if is_ls else " (not LS)")}
+    is_ls = manifest_setting in LS_SETTINGS
+    return {**out, "is_ls": is_ls, "basis": f"manifest {bundle} and batch.json v5_setting {manifest_setting!r}"
+                                            + ("" if is_ls else " (not LS)")}
+
+
+def ls_source_check(batch: Path, manifest: dict[str, Any]) -> dict[str, Any]:
+    """Rev10 R10-2 G-S check of one S9 batch folder: the full batch name is decided and every ``cases[]`` case is
+    exactly once in the manifest bundle and in ``batch.json``; counts per R10-1b case (a case is S-11 when any of
+    the first three applies). Shared with ``v5_resume_4368_chrono_rows.py gs-check``."""
+    doc = json.loads((Path(batch) / "batch.json").read_text(encoding="utf-8"))
+    naming = batch_full_name(batch, doc, manifest)
+    cases = [str(c.get("case")) for c in doc.get("cases") or []]
+    batch_count = Counter(cases)
+    rows = []
+    for case in dict.fromkeys(cases):
+        meta = {"case": case, "_batch_name": naming, "_batch_case_count": batch_count[case]}
+        entry = next((c for c in doc.get("cases") or [] if str(c.get("case")) == case), {})
+        if "v5_setting" in entry:
+            meta["v5_setting"] = entry["v5_setting"]
+        ls = ls_setting(meta, manifest)
+        failed = ls.get("boundary_case") in (LS_CASE_UNKNOWN_BATCH, LS_CASE_MANIFEST_ROWS, LS_CASE_BATCH_ENTRIES)
+        rows.append({"case": case, "boundary_case": ls.get("boundary_case"), "is_ls": ls.get("is_ls"),
+                     "s11": failed})
+    counts = Counter(r["boundary_case"] for r in rows if r["boundary_case"])
+    return {"batch_name": naming, "rows": rows, "counts": {k: counts.get(k, 0) for k in LS_BOUNDARY_CASES},
+            "s11_rows": sum(r["s11"] for r in rows)}
 
 
 def _late_open_event_only(record: dict[str, Any], event_only_legs: list[str]) -> int | None:
@@ -1189,7 +1266,9 @@ def rev8_counts(rows: list[dict[str, Any]]) -> dict[str, Any]:
             "R9-3_minus_one": dict(Counter(f.get("minus_one") for f in forms if f.get("minus_one") is not None)),
             "R9-4_ls_rows": sum(x.get("is_ls") is True for x in ls),
             "R9-4_undecided": sum(x.get("is_ls") is None for x in ls),
-            "R9-6_no_input": sum(x["status"] == J11_NO_INPUT for x in j11)}
+            "R9-6_no_input": sum(x["status"] == J11_NO_INPUT for x in j11),
+            # rev10 R10-2: rows per R10-1b case
+            "R10-1b_cases": {k: sum(x.get("boundary_case") == k for x in ls) for k in LS_BOUNDARY_CASES}}
 
 
 def rev8_stops(case: str, j_p3: dict[str, Any], j11: dict[str, Any]) -> list[dict[str, str]]:
@@ -1213,6 +1292,7 @@ def batch_rows(batch: Path, results_root: Path | None) -> list[tuple[Path, dict[
     root = results_root or batch.parents[1]
     progress = batch / "progress.log"
     progress_text = progress.read_text("utf-8", errors="replace") if progress.is_file() else ""
+    case_count = Counter(str(c.get("case")) for c in doc.get("cases") or [])  # rev10 R10-1b
     out = []
     for c in doc.get("cases") or []:
         name = str(c["case"])
@@ -1223,7 +1303,8 @@ def batch_rows(batch: Path, results_root: Path | None) -> list[tuple[Path, dict[
             d, located = _rigid_row_dir(name, argv, batch, root, progress_text, c)
         if d is None or not (d / "result.json").exists():
             raise InputError(f"row folder of {name} not found (batch {batch}, results root {root})")
-        out.append((d, {**c, "_row_dir": located, "_batch": str(batch)}))
+        out.append((d, {**c, "_row_dir": located, "_batch": str(batch), "_batch_doc": doc,
+                        "_batch_case_count": case_count[name]}))
     return out
 
 
@@ -1377,7 +1458,9 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
         raise InputError(f"rules files missing: {seals['missing']}")
     targets: list[tuple[Path, dict[str, Any] | None]] = []
     for b in args.batch or []:
-        targets += batch_rows(Path(b), Path(args.results_root) if args.results_root else None)
+        for d, meta in batch_rows(Path(b), Path(args.results_root) if args.results_root else None):
+            meta["_batch_name"] = batch_full_name(meta["_batch"], meta.pop("_batch_doc"), manifest)  # R10-1a
+            targets.append((d, meta))
     for r in args.row or []:
         targets.append((Path(r), None))
     if not targets:

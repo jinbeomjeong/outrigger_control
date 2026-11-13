@@ -172,6 +172,21 @@ def test_absence_rules(mod):
     assert mod.absence_allowed("x", "<on arm>", {}, True)[0] and not mod.absence_allowed("x", "<on arm>", {}, False)[0]
 
 
+TEST_BATCH = "V5-RESUME-K1-T"
+"""Full batch name of the synthetic level folders (rev10 R10-1a: batch.json batch = folder part = manifest key)."""
+
+
+@pytest.fixture(autouse=True)
+def _rows_manifest(request, tmp_path_factory, monkeypatch):
+    """Rev10 R10-2: gs-check reads a rows manifest; the synthetic folders' bundle holds case ``LV``."""
+    if "mod" not in request.fixturenames:
+        return
+    mod = request.getfixturevalue("mod")
+    path = tmp_path_factory.mktemp("rows") / "rows_manifest.json"
+    path.write_text(json.dumps({"batches": {TEST_BATCH: {"rows": [{"case": "LV"}]}}}), "utf-8")
+    monkeypatch.setattr(mod, "ROWS_MANIFEST_DEFAULT", path)
+
+
 def _level_folder(tmp_path: Path, mod, departed, drop: list[str], arm: str = "on", law_locked=True,
                   expect_ok=True, t_step_s: float = 1e-3) -> Path:
     np = pytest.importorskip("numpy")
@@ -192,7 +207,7 @@ def _level_folder(tmp_path: Path, mod, departed, drop: list[str], arm: str = "on
         for p in parts[:-1]:
             node = node[p]
         node.pop(parts[-1], None)
-    f = tmp_path / "batch"
+    f = tmp_path / f"batch_{TEST_BATCH}_20261113_000000"
     case = "LV"
     (f / case).mkdir(parents=True)
     (f / case / "result.json").write_text(json.dumps(doc), "utf-8")
@@ -205,7 +220,7 @@ def _level_folder(tmp_path: Path, mod, departed, drop: list[str], arm: str = "on
     np.savez(f / case / "step_series.npz", **series)
     entry = {k: "x" for k in mod.GS_ENTRY_KEYS}
     entry.update(case=case, argv=["python", "run_S9.py", "level"], r4368={"engine": "SCM", "arm": arm})
-    (f / "batch.json").write_text(json.dumps({"batch": "T", "cases": [entry]}), "utf-8")
+    (f / "batch.json").write_text(json.dumps({"batch": TEST_BATCH, "cases": [entry]}), "utf-8")
     (f / "progress.log").write_text(f"END {case} 2026-11-13T00:00:00 rc=0\n", "utf-8")
     return f
 
@@ -265,6 +280,53 @@ def test_gs_check_rev9_law_locked_form_and_expect_check(mod, tmp_path, capsys):
     assert mod.cmd_gs_check(str(_level_folder(tmp_path / "pre_arm", mod, False, []))) == 0
     c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
     assert c["law_locked_minus_one"] == "pre_arm_prefix"
+
+
+def _rewrite_batch(folder: Path, **changes) -> None:
+    doc = json.loads((folder / "batch.json").read_text("utf-8"))
+    doc.update(changes)
+    (folder / "batch.json").write_text(json.dumps(doc), "utf-8")
+
+
+def test_gs_check_rev10_ls_sources(mod, tmp_path, capsys):
+    """Rev10 R10-2: full batch name decided and the case exactly once per source, else the row fails (S-11)."""
+    assert mod.cmd_gs_check(str(_level_folder(tmp_path / "ok", mod, False, []))) == 0
+    out = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])
+    assert out["ls_sources_R10_2"]["batch_name"]["name"] == TEST_BATCH and out["cases"][0]["ls_sources_ok"]
+    assert out["ls_sources_R10_2"]["counts"]["both_sources_without_v5_setting"] == 0  # batch.json says "x"
+    other = _level_folder(tmp_path / "name", mod, False, [])
+    _rewrite_batch(other, batch="V5-RESUME-K1-C5")  # differs from the folder name part
+    assert mod.cmd_gs_check(str(other)) == 1
+    c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
+    assert (c["ls_boundary_case"], c["ls_sources_ok"]) == ("batch_name_unknown", False)
+    absent = _level_folder(tmp_path / "nokey", mod, False, [])
+    doc = json.loads((absent / "batch.json").read_text("utf-8"))
+    del doc["batch"]
+    (absent / "batch.json").write_text(json.dumps(doc), "utf-8")
+    assert mod.cmd_gs_check(str(absent)) == 0  # no batch key: the folder name part
+    capsys.readouterr()
+    twice = _level_folder(tmp_path / "twice", mod, False, [])
+    doc = json.loads((twice / "batch.json").read_text("utf-8"))
+    _rewrite_batch(twice, cases=doc["cases"] * 2)
+    assert mod.cmd_gs_check(str(twice)) == 1
+    out = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])
+    assert out["ls_sources_R10_2"]["counts"]["batch_json_entries_not_one"] == 1
+    missing_row = tmp_path / "rows_without_case.json"
+    missing_row.write_text(json.dumps({"batches": {TEST_BATCH: {"rows": []}}}), "utf-8")
+    assert mod.cmd_gs_check(str(_level_folder(tmp_path / "m0", mod, False, [])), None, str(missing_row)) == 1
+    c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
+    assert c["ls_boundary_case"] == "manifest_rows_not_one"
+
+
+def test_gs_check_rev10_missing_rows_manifest_is_an_input_error(mod, tmp_path, capsys):
+    folder = _level_folder(tmp_path / "a", mod, False, [])
+    assert mod.cmd_gs_check(str(folder), None, str(tmp_path / "none.json")) == 2
+    bad = tmp_path / "bad.json"
+    bad.write_text("{", "utf-8")
+    assert mod.cmd_gs_check(str(folder), None, str(bad)) == 2
+    bad.write_text(json.dumps({"rows": []}), "utf-8")
+    assert mod.cmd_gs_check(str(folder), None, str(bad)) == 2
+    capsys.readouterr()
 
 
 def test_gs_check_manifest_table(mod, tmp_path, capsys):

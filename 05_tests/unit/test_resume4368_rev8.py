@@ -458,7 +458,9 @@ def _manifest_meta(
         "argv": argv,
         "_batch": f"07_results/S9/batch_{bundle}_20261113_120000",
         "v5_setting": entry["v5_setting"] if batch_setting == "<manifest>" else batch_setting,
+        "_batch_case_count": 1,  # rev10 R10-1b: one batch.json cases[] entry of the case
     }
+    meta["_batch_name"] = chrono_judge.batch_full_name(meta["_batch"], {"batch": bundle}, MANIFEST)
     if batch_setting == "<absent>":
         del meta["v5_setting"]
     return meta
@@ -520,7 +522,7 @@ def test_ls_row_with_a_tag_that_is_not_p3_is_s2() -> None:
         **{
             k: v
             for k, v in _manifest_meta("E_G4_Fs8_LS1").items()
-            if k in ("case", "_batch", "v5_setting")
+            if k in ("case", "_batch", "v5_setting", "_batch_name", "_batch_case_count")
         },
     }
     out = chrono_judge.j_p3_block(_chrono_row(tag=TAG_V0, options_flag=None), meta, MANIFEST)
