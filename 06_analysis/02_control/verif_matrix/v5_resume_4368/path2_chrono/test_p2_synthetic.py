@@ -516,6 +516,14 @@ def t_rev11(tmp, sp):
     ci = K.commit_item("C-1", {"code_at_launch": CAL}, {}, GREF)
     check("R11-4 closed-loop row without code_state record -> code_at_launch only ('that record exists')",
           ci["verdict"] == "pass" and ci["code_state_compared"] is False, ci)
+    dirty = {"git": {"head": GREF, "clean": False, "dirty": ["03_src/x.py"], "paths": ["03_src"]}}
+    ci = K.commit_item("C-3", {"code_at_launch": dirty}, res_ok, GREF)
+    check("R12-2 Chrono dirty / clean false -> record only (pass, dirty_record true, paths kept)",
+          ci["verdict"] == "pass" and "stop" not in ci and ci["dirty_record"] is True
+          and ci["code_at_launch_paths"] == ["03_src"], ci)
+    ci = K.commit_item("C-6C7", {"code_at_launch": CAL}, {"code_state": {"git_at_start": {"head": "e" * 40}}}, GREF)
+    check("R12-4 open-loop row with a different result.json code_state -> record only (pass, same false)",
+          ci["verdict"] == "pass" and ci["open_loop_code_state_same_record"] is False, ci)
     ci = K.commit_item("C-1", {"code_at_launch": CAL}, res_ok, None)
     check("R11-4 no judgement git_at_start -> S-12 (cannot show the commit)", "stop" in ci, ci)
     try:
@@ -947,10 +955,8 @@ def t_seal(tmp):
           and {r["file"]: r["status"] for r in s10["sealed"]}[rel10] == "mismatch")
     p10.write_bytes(keep10md)
     rel11 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev11.md"
-    check("seal: rev11 listed, raw only, 9bac4524, only rev11 wins (rev11 R11-7)",
-          rel11 in R.RAW_ONLY and any(r == rel11 and w.startswith("9bac4524") and "wins" in role
-                                      for r, w, role in R.SEALED)
-          and [r for r, w, role in R.SEALED if "wins" in role] == [rel11])
+    check("seal: rev11 listed, raw only, 9bac4524 (rev11 R11-7)",
+          rel11 in R.RAW_ONLY and any(r == rel11 and w.startswith("9bac4524") for r, w, role in R.SEALED))
     check("seal: rev11 raw sha = code seal sha = .sha256 first token",
           {r["file"]: r["status"] for r in ok["sealed"]}[rel11] == "match"
           and R.sidecar_sha(repo / rel11) == next(w for r, w, _ in R.SEALED if r == rel11))
@@ -970,6 +976,29 @@ def t_seal(tmp):
     check("seal: rev11 CRLF copy -> S-1 (raw only)", not s11["ok"]
           and {r["file"]: r["status"] for r in s11["sealed"]}[rel11] == "mismatch")
     p11.write_bytes(keep11md)
+    rel12 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev12.md"
+    check("seal: rev12 listed, raw only, 78f1f99b, only rev12 wins (rev12 R12-6)",
+          rel12 in R.RAW_ONLY and any(r == rel12 and w.startswith("78f1f99b") and "wins" in role
+                                      for r, w, role in R.SEALED)
+          and [r for r, w, role in R.SEALED if "wins" in role] == [rel12])
+    check("seal: rev12 raw sha = code seal sha = .sha256 first token",
+          {r["file"]: r["status"] for r in ok["sealed"]}[rel12] == "match"
+          and R.sidecar_sha(repo / rel12) == next(w for r, w, _ in R.SEALED if r == rel12))
+    sc12 = repo / Path(rel12).with_suffix(".sha256")
+    keep12 = sc12.read_bytes()
+    sc12.write_text("b" * 64 + "  v5_resume_4368_rules_rev12.md\n", encoding="utf-8")
+    check("seal: rev12 .sha256 record differs -> S-1 (sidecar_mismatch)",
+          {r["file"]: r["status"] for r in R.seal_check(repo)["sealed"]}[rel12] == "sidecar_mismatch")
+    sc12.unlink()
+    check("seal: rev12 .sha256 record missing -> S-1",
+          {r["file"]: r["status"] for r in R.seal_check(repo)["sealed"]}[rel12] == "sidecar_missing")
+    sc12.write_bytes(keep12)
+    p12 = repo / rel12
+    keep12md = p12.read_bytes()
+    p12.write_bytes(keep12md + b"x")
+    check("seal: rev12 file changed -> S-1 (mismatch)",
+          {r["file"]: r["status"] for r in R.seal_check(repo)["sealed"]}[rel12] == "mismatch")
+    p12.write_bytes(keep12md)
     check("seal: rev9 raw sha = code seal sha = .sha256 first token",
           {r["file"]: r["status"] for r in ok["sealed"]}[rel9] == "match"
           and R.sidecar_sha(repo / rel9) == next(w for r, w, _ in R.SEALED if r == rel9))
@@ -1048,7 +1077,7 @@ def t_cli(tmp):
     # gs-load on the G-S row (read-only, no verdicts in the output)
     out4 = tmp / "gs_load.json"
     proc4 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "gs-load",
-                            "--batch", str(bdir / "batch.json"), "--out", str(out4),
+                            "--batch", str(bdir / "batch.json"), "--out", str(out4), "--git-at-start", GREF[:7],
                             "--row-dir", f"gs={bdir / 'rowA'}"], capture_output=True, text=True, encoding="utf-8")
     last4 = json.loads(proc4.stdout.strip().splitlines()[-1])
     txt4 = out4.read_text(encoding="utf-8") if out4.exists() else ""
@@ -1061,10 +1090,16 @@ def t_cli(tmp):
           gi.get("r9_1_s2_rows") == 0 and gi.get("r9_2_rows_per_item", {}).get("key") == 1
           and gi.get("rev9_seal") == "match" and gi.get("r9_6_input_absent_rows") == 1, gi)
     g11 = g4.get("rev11_gs_items") or {}
-    check("CLI gs-load rev11 items: no --git-at-start, G-S row without code_at_launch -> counted missing,"
-          " no grades written (R11-5), rev11 seal match",
-          g11.get("r11_4_code_at_launch_missing_rows") == 1 and g11.get("r11_5_grades_written") is False
-          and g11.get("rev11_seal") == "match" and g11.get("git_at_start") is None, g11)
+    check("CLI gs-load rev11 items: G-S row without code_at_launch -> S-12 counted, no grades written (R11-5),"
+          " rev11 seal match, git_at_start given",
+          g11.get("r11_4_code_at_launch_missing_rows") == 1 and g11.get("r11_4_s12_rows") == 1
+          and g11.get("r11_5_grades_written") is False
+          and g11.get("rev11_seal") == "match" and g11.get("git_at_start") == GREF[:7], g11)
+    proc4c = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "gs-load",
+                             "--batch", str(bdir / "batch.json"), "--out", str(tmp / "gs_load_nogit.json"),
+                             "--row-dir", f"gs={bdir / 'rowA'}"], capture_output=True, text=True, encoding="utf-8")
+    check("CLI gs-load without --git-at-start -> input error, exit 2 (rev12 R12-3)", proc4c.returncode == 2,
+          proc4c.stdout[-300:])
     g10 = g4.get("rev10_R10_2_gs_items") or {}
     check("CLI gs-load rev10 R10-2 items: unstamped folder without batch key -> batch name unknown, S-11 row 1,"
           " rev10 seal match",
@@ -1072,6 +1107,7 @@ def t_cli(tmp):
           and g10.get("rev10_seal") == "match", g10)
     proc4b = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "gs-load",
                              "--batch", str(bdir / "batch.json"), "--out", str(tmp / "gs_load_noman.json"),
+                             "--git-at-start", GREF[:7],
                              "--manifest", str(tmp / "no_manifest.json"), "--row-dir", f"gs={bdir / 'rowA'}"],
                             capture_output=True, text=True, encoding="utf-8")
     check("CLI gs-load without the manifest -> input error, exit 2 (R10-1b: G-S failure)",
@@ -1155,8 +1191,65 @@ def t_resolve(tmp):
         check("resolve: logged folder without the tag -> input error", True)
     (bdir / "D1C2_x.log").unlink()
     shutil.rmtree(root / "S8" / f"{tag}_20261113_010000")
+    try:
+        p2_chrono.resolve_dir(case, bdir, root, {})
+        check("R12-5: no row log, no progress.log, unstamped batch folder -> no window, input error", False)
+    except C.InputError as ex:
+        check("R12-5: no row log, no progress.log, unstamped batch folder -> no window, input error",
+              "window" in str(ex), ex)
+    (bdir / "progress.log").write_text(
+        "# batch X\nSTART D1C2_x 2026-11-13T01:59:59 pid=1 est_s=9999 pool=pcore\n"
+        "END D1C2_x 2026-11-13T02:05:00 rc=0 wall_s=301\n", encoding="utf-8")
     d3, how3 = p2_chrono.resolve_dir(case, bdir, root, {})
-    check("resolve: no row log, one tag folder -> tag_glob", how3 == "tag_glob" and d3 == want / only, (d3, how3))
+    check("R12-5: no row log, progress.log START..END +-2 s -> time_window, one folder",
+          how3 == "time_window" and d3 == want / only, (d3, how3))
+    sup = root / "S8" / f"x{tag}_20261113_020001" / only
+    sup.mkdir(parents=True, exist_ok=True)
+    (sup / "result.json").write_text("{}", encoding="utf-8")
+    d3b, _ = p2_chrono.resolve_dir(case, bdir, root, {})
+    check("R12-5: a tag containing <tag> (x<tag>_<stamp>) is not a candidate (exact name)", d3b == want / only, d3b)
+    dup = root / "S8" / f"{tag}_20261113_020400" / only
+    dup.mkdir(parents=True, exist_ok=True)
+    (dup / "result.json").write_text("{}", encoding="utf-8")
+    try:
+        p2_chrono.resolve_dir(case, bdir, root, {})
+        check("R12-5: two folders in the window -> input error", False)
+    except C.InputError:
+        check("R12-5: two folders in the window -> input error", True)
+    shutil.rmtree(dup.parent)
+    (bdir / "progress.log").write_text("START D1C2_x 2026-11-13T02:00:02\nEND D1C2_x 2026-11-13T02:05:00\n",
+                                       encoding="utf-8")
+    d3d, _ = p2_chrono.resolve_dir(case, bdir, root, {})
+    check("R12-5: folder stamp exactly 2 s before START is inside (pad +-2 s)", d3d == want / only, d3d)
+    (bdir / "progress.log").write_text("START D1C2_x 2026-11-13T02:00:04\nEND D1C2_x 2026-11-13T02:05:00\n",
+                                       encoding="utf-8")
+    try:
+        p2_chrono.resolve_dir(case, bdir, root, {})
+        check("R12-5: folder stamps 3-4 s before START -> 0 candidates, input error", False)
+    except C.InputError:
+        check("R12-5: folder stamps 3-4 s before START -> 0 candidates, input error", True)
+    (bdir / "progress.log").unlink()
+    sb = tmp / "batch_RES2_20261113_020000"
+    sb.mkdir(exist_ok=True)
+    try:
+        p2_chrono.resolve_dir(dict(case, est_s=600), sb, root, {})
+        check("R12-5: no START..END, stamped folder, est_s only (no wall_s) -> input error (est_s not used)", False)
+    except C.InputError:
+        check("R12-5: no START..END, stamped folder, est_s only (no wall_s) -> input error (est_s not used)", True)
+    d4, how4 = p2_chrono.resolve_dir(dict(case, wall_s=0.5), sb, root, {})
+    check("R12-5: batch folder stamp + wall_s +-2 s -> time_window", how4 == "time_window" and d4 == want / only,
+          (d4, how4))
+    # S6 (L1-R) names: <base>_<tag>_L1R_<stamp>; <tag>_check_L1R_ is not a candidate
+    t6, o6 = "r4368gs_D1C1_top", "D1C1_top"
+    for nm6 in (f"bundleC_d1c1_{t6}_L1R_20261113_020000", f"bundleC_d1c1_{t6}_check_L1R_20261113_020000",
+                f"bundleC_d1c1_{t6}x_L1R_20261113_020000"):
+        q = root / "S6" / nm6 / o6
+        q.mkdir(parents=True, exist_ok=True)
+        (q / "result.json").write_text("{}", encoding="utf-8")
+    c6 = {"case": "D1C1_top", "argv": ["run_S6C.py", "--only", o6, "--tag", t6], "wall_s": 10.0}
+    d6, how6 = p2_chrono.resolve_dir(c6, sb, root, {})
+    check("R12-5 S6: exact _<tag>_L1R_<stamp>, _check_L1R_ and <tag>x excluded -> one folder",
+          how6 == "time_window" and d6 == root / "S6" / f"bundleC_d1c1_{t6}_L1R_20261113_020000" / o6, (d6, how6))
     plc = p2_chrono.placement_record({"pool": "pcore", "planned_pool": "pcore", "placement_applied": {"mask": "0xFF"},
                                       "argv": []},
                                      {"placement": {"affinity_mask_process": "0xFF", "affinity_mask_ok": False}},

@@ -525,7 +525,9 @@ def commit_item(bundle: str, case: dict, res: dict, git_ref: str | None) -> dict
     """436.8 rev11 R11-4 (rules 6 commit column, user decision Q-R11-1 = B): every Chrono row, open loop
     included: `batch.json` `cases[].code_at_launch.git.head` = the judgement `git_at_start`; level, L2b
     and L1-R rows also `result.json` `code_state.git_at_start` (when that record exists). Missing
-    `code_at_launch` head or any difference -> S-12 (scope widened by R11-4 5)."""
+    `code_at_launch` head or any difference -> S-12 (scope widened by R11-4 5). rev12 R12-2: `clean` /
+    `dirty` / `paths` are records only. rev12 R12-4: an open-loop row's `code_state` is recorded with its
+    equality only. rev12 R12-3: the reference is required (no reference -> S-12 here; the CLI exits 2)."""
     cal = (case.get("code_at_launch") or {}).get("git") if isinstance(case.get("code_at_launch"), dict) else None
     head_launch = _head_of(cal)
     cs = (res.get("code_state") or {}) if isinstance(res, dict) else {}
@@ -535,8 +537,14 @@ def commit_item(bundle: str, case: dict, res: dict, git_ref: str | None) -> dict
            "code_at_launch_head": head_launch,
            "code_at_launch_clean": cal.get("clean") if isinstance(cal, dict) else None,
            "code_at_launch_dirty": cal.get("dirty") if isinstance(cal, dict) else None,
+           # rev12 R12-2: clean / dirty / paths are records only (no stop) on every Chrono row
+           "code_at_launch_paths": cal.get("paths") if isinstance(cal, dict) else None,
+           "dirty_record": (bool(cal.get("dirty")) or cal.get("clean") is False) if isinstance(cal, dict) else None,
            "code_state_head": head_state, "open_loop": open_loop,
            "code_state_compared": (not open_loop) and head_state is not None}
+    if open_loop and head_state is not None:
+        # rev12 R12-4: open-loop result.json code_state is recorded with its equality, never a stop
+        out["open_loop_code_state_same_record"] = git_ref is not None and _same_commit(head_state, git_ref)
     probs = []
     if git_ref is None:
         probs.append("judgement git_at_start not given")
