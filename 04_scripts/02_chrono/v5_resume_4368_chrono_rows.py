@@ -41,7 +41,12 @@ CLI (Chrono-dev, project root, no simulation)::
     python -I -X utf8 04_scripts/02_chrono/v5_resume_4368_chrono_rows.py c2-select <h2.json> --out only.json
     python -I -X utf8 04_scripts/02_chrono/v5_resume_4368_chrono_rows.py oc5-status
     python -I -X utf8 04_scripts/02_chrono/v5_resume_4368_chrono_rows.py oc5-read <probe or OC5 batch folder>
-    python -I -X utf8 04_scripts/02_chrono/v5_resume_4368_chrono_rows.py gs-check <G-S batch folder>
+    python -I -X utf8 04_scripts/02_chrono/v5_resume_4368_chrono_rows.py gs-check <batch folder> [--manifest m.json]
+
+``manifest`` also writes ``gs_conditional_absent`` (:func:`gs_conditional_table`, user decision 2026-11-13 (a)): the
+conditional result.json keys of the level rows with their conditions (``p3b.departure.departed`` / C-4 arm) and the
+level / off-arm rows of every batch. ``gs-check`` applies those rules to G-S and main-run folders: an absent key whose
+condition requires it is an error.
 
 Every command ends with a plain ``errors N`` line (``tools/verif/log_errors.py``); exit 0 ok, 1 a check failed or a
 stop, 2 an input is missing.
@@ -905,10 +910,13 @@ def cmd_manifest(out_path: str) -> int:
     doc["probe_duration_s"] = {"value": PROBE_DURATION_S, "rule": "CHECK end = phase 'touch' start - loop start "
                                "(stored A3 / A5: 4.8 s) + 2 s, ceil (user decision Q-7, 2026-11-13)"}
     doc["k_rounding"] = "k rounded to 4 decimals, floors from the rounded k (user decision Q-1, 2026-11-13)"
+    doc["gs_conditional_absent"] = gs_conditional_table(b)  # user decision 2026-11-13 (a): the table from code
     Path(out_path).write_text(json.dumps(doc, indent=1, default=str) + "\n", "utf-8")
     print(a7["decision"])
     for name, v in doc["batches"].items():
         print(f"{name} rows {v['n']} est_sum_s {v['est_sum_s']} list_sha256 {v['list_sha256']}")
+    print(f"gs_conditional_absent keys {len(doc['gs_conditional_absent']['keys'])} "
+          f"table_sha256 {doc['gs_conditional_absent']['table_sha256']}")
     print("errors 0")
     return 0
 
@@ -1133,13 +1141,95 @@ def _gs_other(f: Path, e: dict[str, Any], kind: str) -> dict[str, Any]:
     return c
 
 
+ON_ARM, OFF_ARM = "<on arm>", "<off arm>"
+
+
+def is_off_arm(entry: dict[str, Any]) -> bool:
+    """C-4 off arm (``--las-off --k1-order-gate on``): row / batch.json entry ``r4368.arm`` == ``off``."""
+    return (entry.get("r4368") or {}).get("arm") == "off"
+
+
+def conditional_rule(condition: str) -> dict[str, str]:
+    """Rule of one conditional key (the ``cond`` value of :func:`gs_key_paths`): when it may be absent and when it
+    is required. ``<on arm>`` / ``<off arm>`` = the C-4 arm of the row (:func:`is_off_arm`); any other value is a
+    result.json key path whose value ``False`` allows the absence (True, any other value or missing = required)."""
+    if condition == ON_ARM:
+        return {"condition": condition, "kind": "arm", "absent_allowed_when": "off arm (r4368.arm == 'off')",
+                "required_when": "on arm (r4368.arm != 'off')"}
+    if condition == OFF_ARM:
+        return {"condition": condition, "kind": "arm", "absent_allowed_when": "on arm (r4368.arm != 'off')",
+                "required_when": "off arm (r4368.arm == 'off')"}
+    return {"condition": condition, "kind": "result_key", "absent_allowed_when": f"result.json {condition} is False",
+            "required_when": f"result.json {condition} is not False (True, another value or missing)"}
+
+
+def absence_allowed(key: str, condition: str, doc: dict[str, Any], off_arm: bool) -> tuple[bool, Any]:
+    """(absence of ``key`` allowed, the condition value read) under :func:`conditional_rule`."""
+    if condition == ON_ARM:
+        return off_arm, "off arm" if off_arm else "on arm"
+    if condition == OFF_ARM:
+        return not off_arm, "off arm" if off_arm else "on arm"
+    v = _get(doc, condition)
+    return v is False, ("<missing>" if v is _MISSING else v)
+
+
+GS_COND_ROW_KIND = "level"
+"""Rows the conditional table applies to: run_S9 ``level`` rows (:func:`gs_kind`). L2b / L1-R / open-loop rows use
+fixed key lists (``RIGID_KEY_PATHS`` / ``OPENLOOP_KEY_PATHS``) without conditional keys."""
+
+
+def gs_conditional_table(b: dict[str, list[dict[str, Any]]] | None = None) -> dict[str, Any]:
+    """Manifest block ``gs_conditional_absent`` (deterministic, from code only): the conditional keys of
+    :func:`gs_key_paths` with :func:`conditional_rule`, the row kind they apply to and, with ``b`` (the 436.8
+    batches), the level rows of every batch and which of them are off-arm rows. ``table_sha256`` = sha256 of the
+    sorted ``keys`` JSON (the part gs-check compares)."""
+    keys, cond = gs_key_paths()
+    table = {k: conditional_rule(cond[k]) for k in sorted(cond)}
+    out: dict[str, Any] = {
+        "source": "v5_resume_4368_chrono_rows.gs_key_paths() cond (code); gs-check applies the same rules",
+        "rule": "a key of 'keys' absent from a row's result.json is conditional_absent only when its "
+                "absent_allowed_when holds; when required_when holds the absence is result_missing (error). Keys "
+                "outside 'keys' are always required.",
+        "row_kind": GS_COND_ROW_KIND, "n_key_paths": len(keys), "keys": table,
+        "table_sha256": hashlib.sha256(json.dumps(table, sort_keys=True).encode("utf-8")).hexdigest()}
+    if b is not None:
+        scope = {}
+        for name in BATCHES:
+            level = [r for r in b[name] if gs_kind(r) == GS_COND_ROW_KIND]
+            scope[name] = {"level_rows": [r["case"] for r in level],
+                           "off_arm_rows": [r["case"] for r in level if is_off_arm(r)]}
+        out["scope"] = scope
+    return out
+
+
 GS_ENTRY_KEYS = ("case", "argv", "rc", "pool", "planned_pool", "omp_wait_policy", "hull_hook_requested",
                  "hull_hook_effective", "hull_hook_env", "start_env", "code_at_launch", "controller", "v5_setting",
                  "criteria_id", "r4368")
 
 
-def cmd_gs_check(folder: str) -> int:
-    """Presence-only field check of a ``V5-RESUME-K1-GS`` folder (no values printed)."""
+def manifest_table_check(path: str | None) -> dict[str, Any] | None:
+    """``gs-check --manifest``: the stored manifest's ``gs_conditional_absent.keys`` against the code table
+    (:func:`gs_conditional_table`); None without the option."""
+    if path is None:
+        return None
+    p = Path(path)
+    if not p.is_file():
+        return {"manifest": p.as_posix(), "ok": False, "reason": "manifest file missing"}
+    stored = json.loads(p.read_text("utf-8")).get("gs_conditional_absent")
+    code = gs_conditional_table()
+    if not isinstance(stored, dict) or "keys" not in stored:
+        return {"manifest": p.as_posix(), "ok": False, "reason": "manifest has no gs_conditional_absent.keys"}
+    same = json.dumps(stored["keys"], sort_keys=True) == json.dumps(code["keys"], sort_keys=True)
+    return {"manifest": p.as_posix(), "ok": same, "table_sha256_code": code["table_sha256"],
+            "table_sha256_manifest": stored.get("table_sha256"),
+            "reason": None if same else "manifest table differs from the code table"}
+
+
+def cmd_gs_check(folder: str, manifest: str | None = None) -> int:
+    """Presence-only field check of a ``V5-RESUME-K1-*`` batch folder (G-S or a main run; no values printed).
+    Conditional keys follow the manifest ``gs_conditional_absent`` rules (:func:`gs_conditional_table`): an absent
+    key whose condition requires it is ``result_missing`` and listed in ``conditional_required_but_absent``.
+    ``manifest``: also check that the stored table equals the code table (a difference is an error)."""
     import numpy as np  # noqa: PLC0415
 
     f = Path(folder)
@@ -1163,20 +1253,25 @@ def cmd_gs_check(folder: str) -> int:
                              "mixed_hull_mode_key": "mixed_hull_mode" in batch}
         res = f / e["case"] / "result.json"
         c["result_json"] = res.is_file()
-        missing, conditional = list(keys), []
+        missing, conditional, required_absent = list(keys), [], []
         if res.is_file():
             doc = json.loads(res.read_text("utf-8"))
             absent = [k for k in keys if _get(doc, k) is _MISSING]
-            off_arm = (e.get("r4368") or {}).get("arm") == "off"
+            off_arm = is_off_arm(e)
             missing = []
-            for k in absent:
-                if (k == "c2_setup.las_off" and not off_arm) or (k in OFF_ARM_ABSENT_KEYS and off_arm):
-                    conditional.append(k)
-                elif k in cond and not cond[k].startswith("<") and _get(doc, cond[k]) is False:
+            for k in absent:  # manifest gs_conditional_absent rules (gs_conditional_table)
+                if k not in cond:
+                    missing.append(k)
+                    continue
+                ok, seen = absence_allowed(k, cond[k], doc, off_arm)
+                if ok:
                     conditional.append(k)
                 else:
                     missing.append(k)
+                    required_absent.append({"key": k, "condition": cond[k], "condition_value": seen})
         c["result_missing"], c["conditional_absent"] = missing, conditional
+        if required_absent:
+            c["conditional_required_but_absent"] = required_absent
         npz = f / e["case"] / "controller_commands.npz"
         c["controller_commands_npz"] = npz.is_file()
         if npz.is_file():
@@ -1186,9 +1281,11 @@ def cmd_gs_check(folder: str) -> int:
         c["ok"] = (c["progress_end_rc0"] and not c["batch_entry_missing"] and c["result_json"] and not missing
                    and c.get("npz_arrays_ok", False) and not c["series_files_missing"])
         cases.append(c)
-    n_err = sum(1 for c in cases if not c["ok"]) + (0 if cases else 1)
+    mt = manifest_table_check(manifest)
+    n_err = sum(1 for c in cases if not c["ok"]) + (0 if cases else 1) + (1 if mt is not None and not mt["ok"] else 0)
     print(json.dumps({"folder": f.as_posix(), "batch": batch.get("batch"), "n_cases": len(cases),
-                      "n_key_paths": len(keys), "cases": cases}, indent=1))
+                      "n_key_paths": len(keys), "conditional_table_sha256": gs_conditional_table()["table_sha256"],
+                      **({"manifest_table": mt} if mt is not None else {}), "cases": cases}, indent=1))
     print(f"errors {n_err}")
     return 0 if n_err == 0 else 1
 
@@ -1208,6 +1305,8 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("folder")
     g = sub.add_parser("gs-check")
     g.add_argument("folder")
+    g.add_argument("--manifest", default=None,
+                   help="stored chrono_rows_manifest.json: its gs_conditional_absent.keys must equal the code table")
     a = ap.parse_args(argv)
     if a.cmd == "check":
         return cmd_check(a.out)
@@ -1219,7 +1318,7 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_oc5_status()
     if a.cmd == "oc5-read":
         return cmd_oc5_read(a.folder)
-    return cmd_gs_check(a.folder)
+    return cmd_gs_check(a.folder, a.manifest)
 
 
 if __name__ == "__main__":
