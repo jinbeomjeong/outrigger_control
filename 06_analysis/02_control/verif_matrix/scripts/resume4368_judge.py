@@ -94,6 +94,11 @@ next to a convention folder, is an input error (exit 2, S-11); several hits or n
 R11-3 in ``dg3-hash --h7``: the H-6 / H-7 same-hash count and the ③ split (tag,
 ``hydraulic_options``, ``extend_start_rule``), record only.
 
+Rev12 (``v5_resume_4368_rules_rev12.md``, sealed 78f1f99b, checked raw too): R12-1 keeps the
+R11-2 lookup here; only a run without the ``t4h_file`` key is recomputed (R8-1), a present but
+unusable or unfound name is S-2. R12-1 in the J-P3 rod reading and R12-2 .. R12-5 are in the
+``*_4368.py`` judges, ``chrono_rows_judge_4368`` and ``v5_resume_4368_chrono_rows.py gs-check``.
+
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
 The tool reads only; it never runs a simulation. Tag judgements use
@@ -169,12 +174,16 @@ RULES_REV11_NAME = "v5_resume_4368_rules_rev11.md"
 RULES_REV11_SHA256 = "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f"
 """Rev11 (sealed, master 4312b8e): R11-1 record-check expectations by line kind, R11-2 T4h lookup
 in the runner convention folders; this seal is checked (R11-7)."""
+RULES_REV12_NAME = "v5_resume_4368_rules_rev12.md"
+RULES_REV12_SHA256 = "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140"
+"""Rev12 (sealed, master 61f066f): R12-1 T4h lookup for every T4h judgement (here already the
+R11-2 lookup); R12-2 .. R12-5 are in the Chrono tools; this seal is checked (R12-6)."""
 SEALED_REVISIONS = ((RULES_REV1_NAME, RULES_REV1_SHA256), (RULES_REV2_NAME, RULES_REV2_SHA256),
                     (RULES_REV3_NAME, RULES_REV3_SHA256), (RULES_REV4_NAME, RULES_REV4_SHA256),
                     (RULES_REV5_NAME, RULES_REV5_SHA256), (RULES_REV6_NAME, RULES_REV6_SHA256),
                     (RULES_REV7_NAME, RULES_REV7_SHA256), (RULES_REV8_NAME, RULES_REV8_SHA256),
                     (RULES_REV9_NAME, RULES_REV9_SHA256), (RULES_REV10_NAME, RULES_REV10_SHA256),
-                    (RULES_REV11_NAME, RULES_REV11_SHA256))
+                    (RULES_REV11_NAME, RULES_REV11_SHA256), (RULES_REV12_NAME, RULES_REV12_SHA256))
 """The revisions every subcommand checks raw (R2-9: sealed rule files are ``-text``, no LF
 normalisation)."""
 RECORD_KEY = "resume_k1"
@@ -1708,7 +1717,7 @@ def _tag_compare_record(record: dict, folders: list[Path]) -> dict:
     status ``match`` / ``S-2``. A listed T4h file that is not found is S-2, never recomputed
     (R8-1a)."""
     name = record.get(T4H_FILE_KEY)
-    if not name:
+    if T4H_FILE_KEY not in record:  # rev12 R12-1: only a line without the key is recomputed (R8-1)
         return _tag_recompute_record(record)
     top_tag = record.get("controller_tag")
     row: dict[str, Any] = {"key": record_key(record), "method": METHOD_T4H, "t4h_file": name,
@@ -1772,7 +1781,7 @@ def r79_tag_check(paths: list[Path], t4h_dirs: list[Path] | tuple[Path, ...] = (
         for document in read_records(Path(path)):
             records += tag_check_records(document)
         # the folders matter only for a file with T4h records (R11-2: "the result file's T4h")
-        has_t4h = any(record.get(T4H_FILE_KEY) for record in records)
+        has_t4h = any(T4H_FILE_KEY in record for record in records)
         folders = t4h_folders(Path(path), t4h_dirs) if has_t4h else []
         if has_t4h:
             searched[str(path)] = [str(folder) for folder in folders]
@@ -2867,7 +2876,7 @@ def revision_seal_problems(folder: Path, name: str, sha256: str) -> tuple[dict, 
 
 
 def sealed_rules_check(rules_dir: Path | None = None) -> dict:
-    """Rev1 .. rev11 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
+    """Rev1 .. rev12 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
     folder = RULES_DIR if rules_dir is None else Path(rules_dir)
     revisions, problems = {}, []
     for name, sha256 in SEALED_REVISIONS:
@@ -2907,6 +2916,7 @@ def main(argv: list[str] | None = None) -> int:
     report["rules_rev9_sha256"] = RULES_REV9_SHA256
     report["rules_rev10_sha256"] = RULES_REV10_SHA256
     report["rules_rev11_sha256"] = RULES_REV11_SHA256
+    report["rules_rev12_sha256"] = RULES_REV12_SHA256
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
         json.dumps(report, indent=1, ensure_ascii=False, default=str), encoding="utf-8"

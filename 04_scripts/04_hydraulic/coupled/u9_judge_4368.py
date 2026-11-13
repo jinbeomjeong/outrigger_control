@@ -13,7 +13,8 @@ main VB lines). The T3 / T4 / classification code is the one of ``u9_judge.py``;
 
 Usage (python-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/u9_judge_4368.py --out <report.json>
-      --v0 <h5_u9_v0.jsonl> --h10 <h10_reuse_rerun.jsonl> [--t4h-dir <dir> ...]
+      --v0 <h5_u9_v0.jsonl> --h10 <h10_reuse_rerun.jsonl>
+      [--t4h-dir <dir: one, only without the convention folders>]
       [--stored-p3-hash <v5/p3_hash.jsonl>] [--rules-dir <verif_matrix>]
 Exit codes: 0 judged, 1 H0 stop / T1 failure / 판정 불가, 2 input error, 3 internal error.
 """
@@ -161,10 +162,12 @@ def key_values(line: dict, row: dict) -> dict:
     }
 
 
-def per_key(u9_lines: list[dict], t4h_dirs: tuple[Path, ...]) -> list[dict]:
+def per_key(u9_lines: list[tuple[dict, tuple[Path, ...]]]) -> list[dict]:
+    """Per key the J items; each line comes with the T4h folders of its own result file
+    (rev12 R12-1)."""
     rows = {}
-    for line in u9_lines:
-        row = stage1.metrics(line, t4h_dirs)
+    for line, t4h_folders in u9_lines:
+        row = stage1.metrics(line, t4h_folders)
         row["setting"] = setting_of(line)
         rows[(line["job"]["case"], _eps(line), row["setting"])] = (row, line)
     v0_groups = defaultdict(list)
@@ -190,6 +193,18 @@ def per_key(u9_lines: list[dict], t4h_dirs: tuple[Path, ...]) -> list[dict]:
         entry["T1"] = {setting: _t1_state(entry[setting]["J"]) for setting in ("VB0.85", "VB0.8")}
         out.append(entry)
     return out
+
+
+def t4h_stops(keys: list[dict]) -> list[str]:
+    """Rev12 R12-1: the J-P3 S-2 items (a recorded T4h file found 0 or 2+ times) of every
+    setting; any one stops the bundle (not only the graded VB0.85)."""
+    stops = []
+    for entry in keys:
+        for setting in ("VB0.85", "VB0.8"):
+            for item in (entry.get(setting) or {}).get("J") or []:
+                if item["item"] == "J-P3" and str(item["detail"]).startswith("S-2"):
+                    stops.append(f"{entry['case']}|{entry['eps']}|{setting}: {item['detail']}")
+    return stops
 
 
 def _t1_state(items: list[dict]) -> str:
@@ -228,11 +243,16 @@ def classification(keys: list[dict]) -> dict:
 
 
 def judge(args: argparse.Namespace) -> dict:
-    t4h_dirs = tuple(Path(p) for p in args.t4h_dir or [])
+    extra_dirs = tuple(Path(p) for p in args.t4h_dir or [])
     v0_lines = common.read_jsonl(args.v0)
     h10_lines = common.read_jsonl(args.h10)
     u9_vb = [line for line in h10_lines if is_u9_line(line)]
     u9_lines = [line for line in [*v0_lines, *u9_vb] if "error" not in line]
+    # rev12 R12-1: each result file reads its own convention folders
+    v0_folders = tuple(common.t4h_folders(args.v0, v0_lines, extra_dirs))
+    h10_folders = tuple(common.t4h_folders(args.h10, u9_vb, extra_dirs))
+    with_folders = [(line, v0_folders) for line in v0_lines if "error" not in line]
+    with_folders += [(line, h10_folders) for line in u9_vb if "error" not in line]
     stored = None if args.stored_p3_hash is None else common.read_jsonl(args.stored_p3_hash)
     report: dict[str, Any] = {
         "inputs": {"v0": str(args.v0), "h10": str(args.h10)},
@@ -240,12 +260,15 @@ def judge(args: argparse.Namespace) -> dict:
         "errors": sum("error" in line for line in [*v0_lines, *u9_vb]),
     }
     report["H0"] = h0(u9_lines, h10_lines, stored)
-    report["keys"] = per_key(u9_lines, t4h_dirs)
+    report["inputs"]["t4h_folders_R12_1"] = {"v0": [str(p) for p in v0_folders],
+                                             "h10": [str(p) for p in h10_folders]}
+    report["keys"] = per_key(with_folders)
+    report["t4h_S2_R12_1"] = t4h_stops(report["keys"])
     report["classification_record"] = classification(report["keys"])
     t1 = [k["T1"]["VB0.85"] for k in report["keys"] if "T1" in k]
     report["grade"] = (
         "멈춤"
-        if report["H0"]["stop"] or "stop" in t1
+        if report["H0"]["stop"] or "stop" in t1 or report["t4h_S2_R12_1"]
         else "판정 불가"
         if "판정 불가" in t1 or any("missing_settings" in k for k in report["keys"])
         else "미달"
@@ -253,6 +276,8 @@ def judge(args: argparse.Namespace) -> dict:
         else "통과"
     )
     findings = [] if report["grade"] == "통과" else [f"H-5 grade {report['grade']}"]
+    if report["t4h_S2_R12_1"]:
+        findings.append(f"S-2 (rev12 R12-1): {len(report['t4h_S2_R12_1'])} J-P3 T4h lookups")
     if report["errors"]:
         findings.append(f"{report['errors']} error lines")
     if report["classification_record"]["ask_user"]:
@@ -266,7 +291,9 @@ def parser() -> argparse.ArgumentParser:
     common.add_common_arguments(out)
     out.add_argument("--v0", type=Path, required=True, help="resume_k1/h5_u9_v0.jsonl")
     out.add_argument("--h10", type=Path, required=True, help="resume_k1/h10_reuse_rerun.jsonl")
-    out.add_argument("--t4h-dir", action="append", help="folder of the T4h files (repeatable)")
+    out.add_argument("--t4h-dir", action="append",
+                     help="T4h folder only for inputs without <stem>_t4h/ or t4h/ (at most one; "
+                     "rev12 R12-1)")
     out.add_argument(
         "--stored-p3-hash", type=Path, default=None, help="stored v5/p3_hash.jsonl (record only)"
     )

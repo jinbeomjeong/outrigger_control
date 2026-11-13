@@ -263,11 +263,14 @@ def _r79(top_tag: str, t4h_file: str | None = T4H_NAME, *, is_extend_start: bool
     options = {"m2_law": "flow_limited_r5"}
     if is_extend_start:
         options["extend_start_tracked"] = True
-    return {"key": DG3_KEY, "seed_index": 0, "harness": "g8", "inner": 0,
-            "controller_tag": top_tag, "t4h_file": t4h_file,
-            "commands_sha256": COMMANDS_SHA256, "hydraulic_options": options,
-            "controller_settings": {"two_pressure.extend_start_rule":
-                                    "tracked_bound" if is_extend_start else "constant"}}
+    record = {"key": DG3_KEY, "seed_index": 0, "harness": "g8", "inner": 0,
+              "controller_tag": top_tag,
+              "commands_sha256": COMMANDS_SHA256, "hydraulic_options": options,
+              "controller_settings": {"two_pressure.extend_start_rule":
+                                      "tracked_bound" if is_extend_start else "constant"}}
+    if t4h_file is not None:  # r79 writes the key only with a T4h record
+        record["t4h_file"] = t4h_file
+    return record
 
 
 def _write_t4h(folder: Path, name: str, tag: str) -> None:

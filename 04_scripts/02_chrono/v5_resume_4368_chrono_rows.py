@@ -41,7 +41,7 @@ CLI (Chrono-dev, project root, no simulation)::
     python -I -X utf8 04_scripts/02_chrono/v5_resume_4368_chrono_rows.py c2-select <h2.json> --out only.json
     python -I -X utf8 04_scripts/02_chrono/v5_resume_4368_chrono_rows.py oc5-status
     python -I -X utf8 04_scripts/02_chrono/v5_resume_4368_chrono_rows.py oc5-read <probe or OC5 batch folder>
-    python -I -X utf8 04_scripts/02_chrono/v5_resume_4368_chrono_rows.py gs-check <batch folder> [--manifest m.json]
+    python -I -X utf8 04_scripts/02_chrono/v5_resume_4368_chrono_rows.py gs-check <batch folder> --git-at-start <final Y commit> [--manifest m.json]
 
 ``manifest`` also writes ``gs_conditional_absent`` (:func:`gs_conditional_table`, user decision 2026-11-13 (a)): the
 conditional result.json keys of the level rows with their conditions (``p3b.departure.departed`` / C-4 arm) and the
@@ -1132,10 +1132,21 @@ OPENLOOP_KEY_PATHS = ("p3a.checks", "p3a.P3a-1_force_peak", "p3a.P3a-2_liftoff",
                       "p3a.t_lift_start_s", "num_threads_chrono", "placement.mode", "placement.omp_wait_policy",
                       "placement.power_throttling_off_ok", "placement.affinity_ok", "hull_hook.mode",
                       "hull_hook.fallback_reason", "hull_hook.dll_sha256", "args.lift_s", "args.lift_speed_fraction",
-                      "args.flow_law", "v5_hydraulics.controller_options", "flow_limit.summary", "wall_s",
-                      "code_state.git_at_start.head")  # rev11 R11-4: run_S9 machine record (2026-11-13)
+                      "args.flow_law", "v5_hydraulics.controller_options", "flow_limit.summary", "wall_s")
+"""Rev12 R12-4: the open-loop ``result.json`` ``code_state.git_at_start`` (run_S9 machine, rev11 R11-4) is not a
+required key; :func:`gs_commit_identity` records it."""
 OPENLOOP_FILES = ("series.npz", "flow_series.npz")
 _GIT_HEAD_RE = re.compile(r"[0-9a-f]{40}")
+
+
+def gs_commit_identity(c: dict[str, Any], entry: dict[str, Any], result: dict[str, Any] | None, *,
+                       is_open_loop: bool, git_at_start: str) -> None:
+    """Rev12 R12-3: the rev11 R11-4 comparison in G-S (``chrono_rows_judge_4368.commit_identity_of``): S-12 fails
+    the row (``commit_identity_ok``); dirty and the open-loop ``code_state`` are recorded only (R12-2 / R12-4)."""
+    identity = _import("chrono_rows_judge_4368").commit_identity_of(entry, result, is_open_loop=is_open_loop,
+                                                                   git_at_start=git_at_start)
+    c["commit_identity_R11_4"] = identity
+    c["commit_identity_ok"] = identity["status"] != "S-12"
 
 
 def code_at_launch_head_check(entry: dict[str, Any]) -> dict[str, Any]:
@@ -1160,7 +1171,7 @@ def gs_kind(entry: dict[str, Any]) -> str:
     return "openloop" if tail[:1] == ["machine"] else "level"
 
 
-def _gs_other(f: Path, e: dict[str, Any], kind: str) -> dict[str, Any]:
+def _gs_other(f: Path, e: dict[str, Any], kind: str, git_at_start: str) -> dict[str, Any]:
     """Presence check of an L2b / L1-R (result in the runner's own folder, from the case log) or open-loop row."""
     # rev11 R11-4 (2026-11-13): open-loop rows need code_at_launch too (s9_batch records it for run_S9 machine)
     not_expected = {"openloop": ("controller",),
@@ -1197,11 +1208,13 @@ def _gs_other(f: Path, e: dict[str, Any], kind: str) -> dict[str, Any]:
     closed_loop = kind != "openloop"
     if closed_loop:
         c["expect_controller_ok"] = False  # rev9 R9-1: false or missing = S-2 (G-S S-11)
+    doc = None
     if res.is_file():
         doc = json.loads(res.read_text("utf-8"))
         c["result_missing"] = [k for k in keys if _get(doc, k) is _MISSING]
         if closed_loop:
             c["expect_controller_ok"] = expect_controller_ok(doc, "expect_controller.ok")
+    gs_commit_identity(c, e, doc, is_open_loop=not closed_loop, git_at_start=git_at_start)
     c["files_missing"] = [n for n in files if not (case_dir / n).is_file()]
     if kind == "L2b_NSC":  # rev9 R9-2 / R9-5: pads.npz law_locked form, as the SCM step_series
         pads = case_dir / "pads.npz"
@@ -1213,6 +1226,7 @@ def _gs_other(f: Path, e: dict[str, Any], kind: str) -> dict[str, Any]:
     c["n_key_paths"] = len(keys)
     c["ok"] = (c["progress_end_rc0"] and not c["batch_entry_missing"] and c["result_json"] and not c["result_missing"]
                and not c["files_missing"] and c.get("runner_outcome_ok", True) and c["code_at_launch_head_ok"]
+               and c["commit_identity_ok"]
                and c.get("expect_controller_ok", True) and not c.get("pads_law_locked_missing", False)
                and not c.get("pads_law_locked_problems"))
     return c
@@ -1307,19 +1321,23 @@ ROWS_MANIFEST_DEFAULT = ROOT / "06_analysis" / "02_control" / "verif_matrix" / "
 """Rev10 R10-2: the manifest whose ``batches.<full batch name>.rows[]`` the LS sources are checked against."""
 
 
-def cmd_gs_check(folder: str, manifest: str | None = None, rows_manifest: str | None = None) -> int:
+def cmd_gs_check(folder: str, manifest: str | None = None, rows_manifest: str | None = None,
+                 git_at_start: str | None = None) -> int:
     """Presence-only field check of a ``V5-RESUME-K1-*`` batch folder (G-S or a main run; no values printed).
     Conditional keys follow the manifest ``gs_conditional_absent`` rules (:func:`gs_conditional_table`): an absent
     key whose condition requires it is ``result_missing`` and listed in ``conditional_required_but_absent``.
     ``manifest``: also check that the stored table equals the code table (a difference is an error).
     ``rows_manifest`` (default :data:`ROWS_MANIFEST_DEFAULT`): rev10 R10-2, every row's full batch name is decided
     and its case is exactly once in that manifest bundle and in ``batch.json`` (else the row fails, S-11); a missing
-    or unreadable rows manifest is an input error (exit 2, G-S failure)."""
+    or unreadable rows manifest is an input error (exit 2, G-S failure).
+    ``git_at_start`` (rev12 R12-3, required): every row (open loop included) gets the rev11 R11-4 commit comparison
+    (:func:`gs_commit_identity`, S-12 fails the row); missing or malformed = input error (exit 2)."""
     import numpy as np  # noqa: PLC0415
 
     judge = _import("chrono_rows_judge_4368")
     try:
         rows_doc = judge.load_manifest(Path(rows_manifest) if rows_manifest else ROWS_MANIFEST_DEFAULT)
+        git_at_start = judge.parse_git_at_start("" if git_at_start is None else git_at_start)  # rev12 R12-3
     except judge.InputError as exc:
         print(f"gs-check: {exc}", file=sys.stderr)
         print("errors 1")
@@ -1339,7 +1357,7 @@ def cmd_gs_check(folder: str, manifest: str | None = None, rows_manifest: str | 
     for e in batch.get("cases", []):
         kind = gs_kind(e)
         if kind != "level":
-            cases.append(_gs_other(f, e, kind))
+            cases.append(_gs_other(f, e, kind, git_at_start))
             continue
         c: dict[str, Any] = {"case": e["case"], "progress_end_rc0": end_rc.get(e["case"]) == "0",
                              "batch_entry_missing": [k for k in GS_ENTRY_KEYS if k not in e],
@@ -1348,6 +1366,7 @@ def cmd_gs_check(folder: str, manifest: str | None = None, rows_manifest: str | 
         c["result_json"] = res.is_file()
         missing, conditional, required_absent = list(keys), [], []
         c["expect_controller_ok"] = False
+        doc = None
         if res.is_file():
             doc = json.loads(res.read_text("utf-8"))
             c["expect_controller_ok"] = expect_controller_ok(doc, "c2_setup.expect_controller.ok")
@@ -1365,6 +1384,7 @@ def cmd_gs_check(folder: str, manifest: str | None = None, rows_manifest: str | 
                     missing.append(k)
                     required_absent.append({"key": k, "condition": cond[k], "condition_value": seen})
         c["result_missing"], c["conditional_absent"] = missing, conditional
+        gs_commit_identity(c, e, doc, is_open_loop=False, git_at_start=git_at_start)
         if required_absent:
             c["conditional_required_but_absent"] = required_absent
         npz = f / e["case"] / "controller_commands.npz"
@@ -1377,7 +1397,7 @@ def cmd_gs_check(folder: str, manifest: str | None = None, rows_manifest: str | 
         c["ok"] = (c["progress_end_rc0"] and not c["batch_entry_missing"] and c["result_json"] and not missing
                    and c.get("npz_arrays_ok", False) and not c["series_files_missing"]
                    and not c["series_keys_missing"] and not c["series_key_problems"]
-                   and c["expect_controller_ok"] and c["code_at_launch_head_ok"])
+                   and c["expect_controller_ok"] and c["code_at_launch_head_ok"] and c["commit_identity_ok"])
         cases.append(c)
     ls_check = judge.ls_source_check(f, rows_doc)  # rev10 R10-2
     ls_rows = {r["case"]: r for r in ls_check["rows"]}
@@ -1390,6 +1410,10 @@ def cmd_gs_check(folder: str, manifest: str | None = None, rows_manifest: str | 
     print(json.dumps({"folder": f.as_posix(), "batch": batch.get("batch"), "n_cases": len(cases),
                       "n_key_paths": len(keys), "conditional_table_sha256": gs_conditional_table()["table_sha256"],
                       **({"manifest_table": mt} if mt is not None else {}),
+                      "commit_identity_R11_4": {"git_at_start": git_at_start,
+                                                "s12_rows": [c["case"] for c in cases if not c["commit_identity_ok"]],
+                                                "dirty_rows_recorded": [c["case"] for c in cases
+                                                                        if c["commit_identity_R11_4"].get("dirty")]},
                       "ls_sources_R10_2": {"batch_name": ls_check["batch_name"], "counts": ls_check["counts"],
                                            "s11_rows": ls_check["s11_rows"]},
                       "cases": cases}, indent=1))
@@ -1412,6 +1436,8 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("folder")
     g = sub.add_parser("gs-check")
     g.add_argument("folder")
+    g.add_argument("--git-at-start", required=True,
+                   help="the final Y commit (7 to 40 hex digits): rev11 R11-4 commit comparison, rev12 R12-3")
     g.add_argument("--manifest", default=None,
                    help="stored chrono_rows_manifest.json: its gs_conditional_absent.keys must equal the code table")
     g.add_argument("--rows-manifest", default=None,
@@ -1427,7 +1453,7 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_oc5_status()
     if a.cmd == "oc5-read":
         return cmd_oc5_read(a.folder)
-    return cmd_gs_check(a.folder, a.manifest, a.rows_manifest)
+    return cmd_gs_check(a.folder, a.manifest, a.rows_manifest, a.git_at_start)
 
 
 if __name__ == "__main__":

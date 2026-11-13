@@ -1,11 +1,11 @@
 # 436.8 경로 1 새 판 판정기 (`*_4368.py`)
 
-규칙: `v5_resume_4368_rules.md` 원판~rev11(`06_analysis/02_control/verif_matrix/`). rev5 R5-A1이 이 파일들을 하네스 묶음의 경로 1로 지정한다. 기존 판정기(`u3_judge_k1.py`, `judge_stage1_r5.py`, `u9_judge.py`, `las_t3_judge.py`·`las_h7.py`, `d1_runs.judgement`·`d1_select.py`)는 고치지 않았다. `u3_judge_k1.py`는 기록 전용 판이다(R5-A2).
+규칙: `v5_resume_4368_rules.md` 원판~rev12(`06_analysis/02_control/verif_matrix/`). rev5 R5-A1이 이 파일들을 하네스 묶음의 경로 1로 지정한다. 기존 판정기(`u3_judge_k1.py`, `judge_stage1_r5.py`, `u9_judge.py`, `las_t3_judge.py`·`las_h7.py`, `d1_runs.judgement`·`d1_select.py`)는 고치지 않았다. `u3_judge_k1.py`는 기록 전용 판이다(R5-A2).
 
 ## 공통 계약 (`judge4368_common.py`)
 
-- 판정 전에 원판·rev1~rev11과 각 `.sha256`을 원시 바이트로 대조한다. 하나라도 다르면 S-1(종료 1)이다. 규칙 폴더는 `--rules-dir`(기본 `verif_matrix`).
-- rev9·rev10의 Chrono 항목(R9-1~R9-6 태그 확인·`law_locked` 형식·LS 행·J11 범위, R10-1·R10-2 LS 판별 입력 경계)은 Chrono 도구(`04_scripts/02_chrono/chrono_rows_judge_4368.py`, `v5_resume_4368_chrono_rows.py gs-check`)에만 적용되고, 이 하네스 판정기들에는 적용되지 않는다(여기서는 봉인 대조만 한다). rev11의 R11-1(줄 종류별 기대 스위치)·R11-2(T4h 찾기)·R11-3(H-6·H-7 명령 해시 기록)은 `resume4368_judge`(`record-check`·`gs`·`dg3-hash --h7`)에만 적용되고, 이 판정기들은 rev11 봉인 대조만 한다. 이 판정기들의 J-P3 로드 판독 `--t4h-dir`는 R11-2의 태그 대조 범위 밖이라 바꾸지 않았다.
+- 판정 전에 원판·rev1~rev12와 각 `.sha256`을 원시 바이트로 대조한다. 하나라도 다르면 S-1(종료 1)이다. 규칙 폴더는 `--rules-dir`(기본 `verif_matrix`).
+- rev9·rev10의 Chrono 항목(R9-1~R9-6 태그 확인·`law_locked` 형식·LS 행·J11 범위, R10-1·R10-2 LS 판별 입력 경계)은 Chrono 도구(`04_scripts/02_chrono/chrono_rows_judge_4368.py`, `v5_resume_4368_chrono_rows.py gs-check`)에만 적용되고, 이 하네스 판정기들에는 적용되지 않는다(여기서는 봉인 대조만 한다). rev11의 R11-1(줄 종류별 기대 스위치)·R11-2(T4h 찾기)·R11-3(H-6·H-7 명령 해시 기록)은 `resume4368_judge`(`record-check`·`gs`·`dg3-hash --h7`)에만 적용되고, 이 판정기들은 rev11 봉인 대조만 한다. rev12 R12-1(Q-R12-1 = A)부터는 이 판정기들의 J-P3 로드 판독(`h6_judge_4368`·`judge_stage1_4368`·`u9_judge_4368`)도 R11-2대로 찾는다(`judge4368_common.t4h_folders`·`locate_t4h`): 결과 파일의 러너 관례 폴더(`<stem>_t4h/`, 결과 옆 `t4h/`)에서만, 관례 폴더가 없을 때만 `--t4h-dir` 1개, 2개 이상이거나 관례 폴더가 있는데 주면 입력 오류(종료 2, S-11). `job.t4h_dir`는 찾지 않는다. 줄이 `t4h_file`을 기록했는데 0개·2개 이상 잡히면 S-2(③ 줄의 J-P3 멈춤, 구성 규칙으로 대신하지 않음)이고, `t4h_file` 키가 없는 줄만 R3-C8 구성 규칙이다. 출력 `inputs.t4h_folders_R12_1`, U-9는 `t4h_S2_R12_1`.
 - 입력·출력 경로는 모두 인자다. 저장 결과 경로를 코드에 두지 않는다.
 - 보고서(`--out`)에 다음을 넣는다: 스크립트 sha256, 봉인 대조, R5-A3 정의 차이 항목(`definition_changes`), `git diff --no-index --numstat <기존> <새 판>` 요약(`diff_vs_existing`).
 - 종료 코드: 0 판정(발견 없음), 1 발견(멈춤·불일치·`판정 불가`), 2 입력 오류, 3 내부 오류. stdout 마지막 줄은 JSON 요약이다.
@@ -30,11 +30,11 @@
 ```
 python -I -B 04_scripts/04_hydraulic/coupled/d1_judge_4368.py --out <r.json> --h1 resume_k1/h1_d1.jsonl --regraded <h1_regraded.jsonl> --select-out <h2_select.json>
 python -I -B 04_scripts/04_hydraulic/coupled/u3_judge_4368.py --out <r.json> --u3-dir <U-3 출력 폴더> --v4-dir 06_analysis/02_control/s9 --h1-d1 resume_k1/h1_d1.jsonl --g3 <g3.json> [--k1-report <u3_judge_k1 보고서>]
-python -I -B 04_scripts/04_hydraulic/coupled/judge_stage1_4368.py --out <r.json> --h9 resume_k1/h9_stage1.jsonl --h10 resume_k1/h10_reuse_rerun.jsonl --t4h-dir <T4h 폴더> [--overlap-ref resume_k1/h10_overlap_t_a.json]
-python -I -B 04_scripts/04_hydraulic/coupled/u9_judge_4368.py --out <r.json> --v0 resume_k1/h5_u9_v0.jsonl --h10 resume_k1/h10_reuse_rerun.jsonl --t4h-dir <T4h 폴더> [--stored-p3-hash v5/p3_hash.jsonl]
+python -I -B 04_scripts/04_hydraulic/coupled/judge_stage1_4368.py --out <r.json> --h9 resume_k1/h9_stage1.jsonl --h10 resume_k1/h10_reuse_rerun.jsonl [--overlap-ref resume_k1/h10_overlap_t_a.json]
+python -I -B 04_scripts/04_hydraulic/coupled/u9_judge_4368.py --out <r.json> --v0 resume_k1/h5_u9_v0.jsonl --h10 resume_k1/h10_reuse_rerun.jsonl [--stored-p3-hash v5/p3_hash.jsonl]
 python -I -B 04_scripts/04_hydraulic/coupled/las_t3_judge_4368.py --out <r.json> --r0 <R-0> --r0k <R-0K> --t3 <T-3K> --baseline v5/d1.jsonl --identity <R-0.identity.json> --identity <R-0K...> --identity <T-3K...> --git-at-start <커밋> --import-check <resume4368_judge import-check 보고서>
 python -I -B 04_scripts/04_hydraulic/coupled/h8_noise_judge_4368.py --out <r.json> --noise-vb resume_k1/h8_noise_VB.json --noise-v0 resume_k1/h8_noise_V0.json --h6 resume_k1/h6_dg3_v4on.json --seedext-vb resume_k1/h8_seedext_VB.json --seedext-v0 resume_k1/h8_seedext_V0.json --judge-dir <판정기 출력 폴더> --run-judge
-python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <r.json> --h6 resume_k1/h6_dg3_v4on.json --l1-ref resume_k1/h8_noise_VB.json --judge <판정기 출력>/judge_h8_noise_VB.json --t4h-dir resume_k1/h6_dg3_v4on_t4h
+python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <r.json> --h6 resume_k1/h6_dg3_v4on.json --l1-ref resume_k1/h8_noise_VB.json --judge <판정기 출력>/judge_h8_noise_VB.json
 ```
 
 ## H-8 경로 1 집계 (`h8_noise_judge_4368.py`, R5-A1 표 H-8 행)
@@ -69,6 +69,6 @@ python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <r.json> --h
 ## 알려진 한계 (판정서에 적을 것)
 
 - `judge_stage1_4368` SA-4 "정지 뒤 네 다리 ≥ F_min"은 F-9로 판정한다(rev6 R6-C1). F-9가 없는 줄만 이륙 뒤 최소(`values.forces.after_liftoff.min_kN`)가 F_min 이상이면 충분 조건으로 참, 미만이면 `판정 불가`다. "포화 차단 0"은 `values.pressure.saturation_leg_chunks` = 0이다(정의는 위 rev6 절, G-S 확인).
-- J-P3 로드 판독은 줄의 T4h 파일(`t4h_file`, `--t4h-dir`)의 `rod_pressure_Pa`로 본다. T4h 파일이 없는 ③ 줄은 `판정 불가`다(하네스 main 줄에는 구성 근거 규칙이 없다).
+- J-P3 로드 판독은 줄의 T4h 파일(`t4h_file`, 결과 파일의 러너 관례 폴더, rev12 R12-1)의 `rod_pressure_Pa`로 본다. `t4h_file` 키가 없는 ③ 줄은 `판정 불가`다(하네스 main 줄에는 구성 근거 규칙이 없다). 기록한 파일이 0개·2개 이상 잡히면 S-2 멈춤이다(rev12 R12-1).
 - `las_t3_judge_4368` K-0: 실제 sidecar(`d8x_record.run_identity`)에는 `git.head`·`git.is_clean`·`git.status_porcelain`·`threads`만 있다. `code_diff_sha256`·`c2_sha256`·`tools_sha256`·`OUTRIGGER_LOC_SHADOW`는 없으므로 G-S에서 대응을 정하기 전에는 그 행이 `판정 불가`다. 출력 헤더의 `identity`는 후보로만 보고한다.
 - `u3_judge_4368` 이전 판 비교(V0 − v4)는 `u3_judge_k1`의 기록 방식 그대로이고 판정이 아니다.

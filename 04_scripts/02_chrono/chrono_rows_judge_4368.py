@@ -23,7 +23,7 @@ rules rev6 R6-A D-26 .. D-39):
 * D-37 / D-38 (N-12 / N-13) :func:`p32_block` - strict LOC < first DONE, loaded = > 0.01 W, revoked-LOC normal.
 * R5-B1 / R6-B6 / R6-B7 / R6-1 :func:`origin_check` - time base, integer-period rounding, fallback legs.
 * t_D (R6-B4, 100 samples) :func:`departure`, with the runner difference recorded; P3-3 on the new t_D.
-* rules seals :func:`seal_check` (original, rev1 .. rev11).
+* rules seals :func:`seal_check` (original, rev1 .. rev12).
 * rev10 R10-1 :func:`batch_full_name` / :func:`ls_setting` - LS rows by the full batch name (``batch.json`` ``batch``
   checked against the folder name, a manifest ``batches`` key) and exactly one row per source; a missing or unreadable
   manifest is an input error (exit 2, S-11). R10-2 :func:`ls_source_check` (used by gs-check).
@@ -94,6 +94,7 @@ RULES_SEALS = {
     "v5_resume_4368_rules_rev9.md": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
     "v5_resume_4368_rules_rev10.md": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
     "v5_resume_4368_rules_rev11.md": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
+    "v5_resume_4368_rules_rev12.md": "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
 }
 """Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13); both the file and its ``.sha256`` must
 match (original 8.2 S-1)."""
@@ -1338,7 +1339,8 @@ def _stamp_time(stamp: str) -> float:
 
 def _case_window(name: str, progress_text: str, batch: Path, entry: dict[str, Any]) -> tuple[float, float, str]:
     """(start, end, basis) epoch seconds of one case: progress.log ``START`` / ``END`` lines, else the batch stamp
-    .. stamp + ``wall_s`` (+ ``est_s`` when no wall)."""
+    .. stamp + ``wall_s``. Rev12 R12-5: ``est_s`` (a pre-run estimate) is never used; without ``wall_s`` the window
+    cannot be decided (InputError, exit 2, S-11)."""
     import datetime as _dt  # noqa: PLC0415
 
     def last(kind: str) -> float | None:
@@ -1352,8 +1354,38 @@ def _case_window(name: str, progress_text: str, batch: Path, entry: dict[str, An
     if m is None:
         raise InputError(f"{name}: no progress.log START / END and no stamp in batch folder name {batch.name}")
     t0 = _stamp_time(m.group(1))
-    span = float(entry.get("wall_s") or entry.get("est_s") or 0.0)
-    return t0, t0 + span, "batch stamp + wall_s"
+    wall_s = entry.get("wall_s")
+    if isinstance(wall_s, bool) or not isinstance(wall_s, (int, float)) or not math.isfinite(wall_s):
+        raise InputError(f"{name}: no progress.log START / END and no wall_s: the case window cannot be decided "
+                         "(est_s is not used; rev12 R12-5, S-11)")
+    return t0, t0 + float(wall_s), "batch stamp + wall_s"
+
+
+_S8_ROW_DIR_RE = r"^{tag}_(\d{{8}}_\d{{6}})$"
+_S6_ROW_DIR_RE = r"^.+_{tag}_L1R_(\d{{8}}_\d{{6}})$"
+"""Rev12 R12-5 exact runner folder names: ``07_results/S8/<tag>_<stamp>`` (run_S8C) and
+``07_results/S6/<base>_<tag>_L1R_<stamp>`` (run_S6C; the check form ``..._<tag>_check_L1R_<stamp>`` does not match)."""
+
+
+def runner_folder_candidates(script: str, tag: str, only: str, root: Path, window: tuple[float, float]
+                             ) -> list[Path]:
+    """Rev12 R12-5: ``<folder>/<only>`` of the runner folders directly below ``<root>/S8`` or ``<root>/S6`` whose
+    name matches the tag exactly, whose stamp lies in ``window`` +- :data:`ROW_DIR_SLACK_S` and that hold
+    ``<only>/result.json``."""
+    sub, pattern = ("S8", _S8_ROW_DIR_RE) if script == "run_S8C.py" else ("S6", _S6_ROW_DIR_RE)
+    name_re = re.compile(pattern.format(tag=re.escape(tag)))
+    base = root / sub
+    t_a, t_b = window
+    hits = []
+    for folder in sorted(base.iterdir()) if base.is_dir() else []:
+        m = name_re.match(folder.name)
+        if m is None or not folder.is_dir():
+            continue
+        if not t_a - ROW_DIR_SLACK_S <= _stamp_time(m.group(1)) <= t_b + ROW_DIR_SLACK_S:
+            continue
+        if (folder / only / "result.json").is_file():
+            hits.append(folder / only)
+    return hits
 
 
 def _rigid_row_dir(name: str, argv: list[str], batch: Path, root: Path, progress_text: str,
@@ -1362,8 +1394,10 @@ def _rigid_row_dir(name: str, argv: list[str], batch: Path, root: Path, progress
 
     1. The case log ``<batch>/<case>.log``: last ``batch wall ... -> <dir>`` line (:func:`runner_log_dir`), row =
        ``<dir>/<--only>``; a logged folder without ``result.json`` is an InputError (no fallback).
-    2. No such line: runner folders matching the ``--tag`` (any stamp) whose stamp lies in the case window
-       (:func:`_case_window` +- :data:`ROW_DIR_SLACK_S`); exactly one is used, none or several = InputError.
+    2. No such line (rev12 R12-5): runner folders whose name matches the ``--tag`` exactly
+       (:func:`runner_folder_candidates`), whose stamp lies in the case window
+       (:func:`_case_window` +- :data:`ROW_DIR_SLACK_S`) and that hold ``<--only>/result.json``; exactly one is
+       used, none, several or no window = InputError (exit 2, S-11).
 
     Returns (row folder or None when the argv has no ``--tag`` / ``--only``, record of how it was found)."""
     tag, only = _arg(argv, "--tag"), _arg(argv, "--only")
@@ -1387,17 +1421,12 @@ def _rigid_row_dir(name: str, argv: list[str], batch: Path, root: Path, progress
         raise InputError(f"{name}: case log names {logged} but {d / 'result.json'} is missing (also below the "
                          f"results root {root})")
     script = next((Path(a).name for a in argv if a.endswith(".py")), "")
-    pats = [f"S8/{tag}_*/{only}"] if script == "run_S8C.py" else [f"S6/*_{tag}_*/{only}", f"S6/*{tag}*/{only}"]
     t_a, t_b, basis = _case_window(name, progress_text, batch, entry)
-    hits = []
-    for pat in pats:
-        for h in sorted(root.glob(pat)):
-            m = _STAMP_RE.search(h.parent.name)
-            if m and t_a - ROW_DIR_SLACK_S <= _stamp_time(m.group(1)) <= t_b + ROW_DIR_SLACK_S and h not in hits:
-                hits.append(h)
+    hits = runner_folder_candidates(script, tag, only, root, (t_a, t_b))  # rev12 R12-5
     if len(hits) != 1:
         raise InputError(f"{name}: no '-> <folder>' line in {log.name} and {len(hits)} runner folder(s) of tag {tag} "
-                         f"in the case window ({basis} +- {ROW_DIR_SLACK_S:g} s): {[str(h) for h in hits]}")
+                         f"in the case window ({basis} +- {ROW_DIR_SLACK_S:g} s): {[str(h) for h in hits]} "
+                         "(rev12 R12-5, S-11)")
     return hits[0], {"source": "time_window", "window_basis": basis, "slack_s": ROW_DIR_SLACK_S,
                      "log": str(log) if log.is_file() else None}
 
@@ -1490,7 +1519,22 @@ def _head_problem(git: Any, git_at_start: str) -> tuple[str | None, str | None]:
 
 
 def commit_identity(meta: dict[str, Any] | None, row: dict[str, Any], git_at_start: str) -> dict[str, Any]:
-    """Rev11 R11-4 commit identity of one Chrono row (:data:`COMMIT_IDENTITY_RULE`)."""
+    """Rev11 R11-4 commit identity of one loaded Chrono row (:data:`COMMIT_IDENTITY_RULE`)."""
+    return commit_identity_of(meta, row["result"], is_open_loop=row["engine"] == "openloop",
+                              git_at_start=git_at_start)
+
+
+def commit_identity_of(entry: dict[str, Any] | None, result: dict[str, Any] | None, *, is_open_loop: bool,
+                       git_at_start: str) -> dict[str, Any]:
+    """Rev11 R11-4 with rev12 R12-2 / R12-4 for one row (also used by ``gs-check``, rev12 R12-3).
+
+    Args:
+        entry: The row's ``batch.json`` ``cases[]`` entry (None: a ``--row`` input without one).
+        result: The row's ``result.json`` (None: not found; the result side is then not recorded).
+        is_open_loop: ``run_S9.py machine`` row: its ``code_state`` is recorded only (R12-4).
+        git_at_start: The judgement's ``git_at_start`` (:func:`parse_git_at_start`).
+    """
+    meta, result = entry, result or {}
     out: dict[str, Any] = {"status": COMMIT_MATCH, "problems": []}
     if meta is None:
         out["status"] = COMMIT_NO_BATCH_ENTRY
@@ -1503,18 +1547,20 @@ def commit_identity(meta: dict[str, Any] | None, row: dict[str, Any], git_at_sta
         else:
             head, problem = _head_problem(git, git_at_start)
         out["batch_head"] = head
-        out["dirty"] = git.get("dirty") if isinstance(git, dict) else None  # record only (original 6)
+        # rev12 R12-2: clean / dirty / paths are recorded only, never a stop
+        out["dirty"] = git.get("dirty") if isinstance(git, dict) else None
         if problem is not None:
             out["problems"].append(f"batch.json {problem}")
-    present, result_git = _result_git_at_start(row["result"])
+    present, result_git = _result_git_at_start(result)
     if not present:
         out["result_head"] = COMMIT_NO_RESULT_RECORD
     else:
         result_head, problem = _head_problem(result_git, git_at_start)
         out["result_head"] = result_head
-        if problem is not None and row["engine"] != "openloop":
+        out["result_same_as_git_at_start"] = problem is None
+        if problem is not None and not is_open_loop:
             out["problems"].append(f"result.json code_state.git_at_start {problem}")
-        elif problem is not None:
+        elif problem is not None:  # rev12 R12-4: open-loop code_state recorded only
             out["result_problem_recorded"] = problem
     if out["problems"]:
         out["status"] = COMMIT_STOP

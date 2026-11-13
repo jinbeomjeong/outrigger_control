@@ -1,6 +1,6 @@
 """Shared parts of the 436.8 path 1 new judge versions (``*_4368.py``, rules rev5 R5-A1).
 
-Rules: ``v5_resume_4368_rules.md`` (sealed 9019b405) and its revisions rev1 .. rev11. Rev5 R5-A1
+Rules: ``v5_resume_4368_rules.md`` (sealed 9019b405) and its revisions rev1 .. rev12. Rev5 R5-A1
 makes the ``*_4368.py`` judges the path 1 of the harness bundles. Each new judge:
 
 1. implements the rev3 / rev4 definitions of its bundle,
@@ -76,10 +76,14 @@ SEALED_RULES = (
         "v5_resume_4368_rules_rev11.md",
         "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
     ),
+    (
+        "v5_resume_4368_rules_rev12.md",
+        "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140",
+    ),
 )
-"""The original and rev1 .. rev11, compared raw (rev2 R2-9: sealed rule files are ``-text``;
-rev7 R7-7 / rev8 R8-4 / rev9 R9-8 / rev10 R10-3 / rev11 R11-7: the path 1 tools check the
-rev7 .. rev11 seals)."""
+"""The original and rev1 .. rev12, compared raw (rev2 R2-9: sealed rule files are ``-text``;
+rev7 R7-7 / rev8 R8-4 / rev9 R9-8 / rev10 R10-3 / rev11 R11-7 / rev12 R12-6: the path 1 tools
+check the rev7 .. rev12 seals)."""
 
 F_MIN_N = 9414.589
 """Rules 2 / rev3 R3-C4: YAML ``control.F_min_cylinder_N`` (9.415 kN is its rounded display)."""
@@ -181,6 +185,66 @@ def read_jsonl(path: Path) -> list[dict]:
     except OSError as exc:
         raise InputError(f"{path}: {exc}") from exc
     return [json.loads(line) for line in text.splitlines() if line.strip()]
+
+
+T4H_FILE_KEY = "t4h_file"
+"""Run record key with the name of the run's T4h file (``run_v5``, ``r79_sensor_screen``)."""
+T4H_DIR_SUFFIX = "_t4h"
+"""``<result stem>_t4h/``: the T4h folder of ``run_v5`` / ``resume_k1_steps`` / r79 outputs."""
+T4H_SIBLING_DIR = "t4h"
+"""``t4h/`` next to the result file: the T4h folder of ``las_t3`` runs."""
+T4H_FOUND = "found"
+T4H_NO_RECORD = "no_t4h_file"
+T4H_STOP = "S-2"
+
+
+def t4h_folders(result_path: Path, records: list[dict],
+                extra_dirs: list[Path] | tuple[Path, ...] = ()) -> list[Path]:
+    """Rev11 R11-2 as widened by rev12 R12-1: the folders searched for the T4h files of one
+    result file (every judgement that reads a T4h).
+
+    The runner convention folders that exist (``<stem>_t4h/``, ``t4h/``); only when none
+    exists, the one given folder. A file without ``t4h_file`` records needs no folder.
+
+    Raises:
+        InputError: Two or more folders given, or one given for a result file with T4h records
+            that has a convention folder (exit 2, the bundle is not judged, S-11).
+    """
+    extra = [Path(d) for d in extra_dirs]
+    if len(extra) > 1:
+        raise InputError(f"{len(extra)} --t4h-dir folders given; at most one "
+                         "(rev11 R11-2 / rev12 R12-1, S-11)")
+    if not any(T4H_FILE_KEY in record for record in records):
+        return []
+    path = Path(result_path)
+    conventions = [path.with_name(f"{path.stem}{T4H_DIR_SUFFIX}"), path.parent / T4H_SIBLING_DIR]
+    existing = [folder for folder in conventions if folder.is_dir()]
+    if existing and extra:
+        raise InputError(f"--t4h-dir {extra[0]} given but {path} has the runner convention "
+                         f"folder {existing[0]} (rev11 R11-2 / rev12 R12-1, S-11)")
+    return existing or extra
+
+
+def locate_t4h(record: dict, folders: list[Path] | tuple[Path, ...]) -> dict:
+    """Rev12 R12-1 (Q-R12-1 = A): the T4h file of one run record.
+
+    Returns:
+        ``status`` ``no_t4h_file`` (no ``t4h_file`` key: the caller's configuration rule,
+        rev3 R3-C8), ``found`` (exactly one file, ``path``) or ``S-2`` (a recorded name found
+        0 or 2+ times, or not a usable name: never replaced by the configuration rule).
+    """
+    if T4H_FILE_KEY not in record:
+        return {"status": T4H_NO_RECORD, "path": None}
+    name = record[T4H_FILE_KEY]
+    if not isinstance(name, str) or not name:
+        return {"status": T4H_STOP, "path": None,
+                "reason": f"{T4H_FILE_KEY} {name!r} is not a file name (rev12 R12-1)"}
+    hits = [Path(folder) / name for folder in folders if (Path(folder) / name).is_file()]
+    if len(hits) != 1:
+        return {"status": T4H_STOP, "path": None, "hits": [str(hit) for hit in hits],
+                "reason": (f"{T4H_FILE_KEY} {name} found {len(hits)} times in "
+                           f"{[str(f) for f in folders]} (rev12 R12-1, Q-R12-1 = A)")}
+    return {"status": T4H_FOUND, "path": hits[0]}
 
 
 def file_sha256(path: Path) -> str:

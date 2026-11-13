@@ -22,7 +22,8 @@ recorded ``extend_start_rule`` has J-P3 ``판정 불가``.
 Usage (python-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <report.json>
       --h6 resume_k1/h6_dg3_v4on.json --l1-ref resume_k1/h8_noise_VB.json
-      --judge <judge output.json> [--run-judge] [--t4h-dir resume_k1/h6_dg3_v4on_t4h]
+      --judge <judge output.json> [--run-judge]
+      [--t4h-dir <dir: only without resume_k1/h6_dg3_v4on_t4h/>]
       [--rules-dir <verif_matrix>]
   ``--run-judge`` first writes ``--judge`` with ``r79_sensor_judge.py judge <judge> <h6>
   <L1 lines of --l1-ref> --s4-late-loc``; without it ``--judge`` must exist (the H-8 VB
@@ -69,19 +70,29 @@ def bound_check_of(run: dict) -> dict | None:
     return (run.get("hydraulics_record") or {}).get("extend_bound_check")
 
 
-def rod_reading(run: dict, t4h_dirs: tuple[Path, ...]) -> tuple[bool, str]:
-    """Rev3 R3-C8 1: T4h ``rod_pressure_Pa`` finite somewhere, else the configuration rule
-    (the r79 adapter reads head and rod pressure: "있음")."""
-    name = run.get("t4h_file")
-    for folder in t4h_dirs:
-        path = Path(folder) / str(name)
-        if name and path.is_file():
-            import numpy as np
+ROD_BASIS_T4H = "T4h rod_pressure_Pa"
+ROD_BASIS_CONFIGURATION = "구성 규칙(r79 두 압력 판독)"
 
-            with np.load(path, allow_pickle=False) as data:
-                if "rod_pressure_Pa" in data.files:
-                    return bool(np.isfinite(data["rod_pressure_Pa"]).any()), "T4h rod_pressure_Pa"
-    return True, "구성 규칙(r79 두 압력 판독)"
+
+def rod_reading(run: dict, t4h_folders: list[Path] | tuple[Path, ...]) -> tuple[bool | None, str]:
+    """Rev3 R3-C8 1 with rev12 R12-1: the line's own T4h ``rod_pressure_Pa`` finite somewhere.
+
+    A line without ``t4h_file`` uses the configuration rule (the r79 adapter reads head and rod
+    pressure: "있음"). A recorded ``t4h_file`` found 0 or 2+ times in ``t4h_folders`` is S-2:
+    ``(None, "S-2: ...")``, never the configuration rule (Q-R12-1 = A). A found file without
+    ``rod_pressure_Pa`` keeps the configuration rule (unchanged).
+    """
+    located = common.locate_t4h(run, t4h_folders)
+    if located["status"] == common.T4H_NO_RECORD:
+        return True, ROD_BASIS_CONFIGURATION
+    if located["status"] == common.T4H_STOP:
+        return None, f"S-2: {located['reason']}"
+    import numpy as np
+
+    with np.load(located["path"], allow_pickle=False) as data:
+        if "rod_pressure_Pa" in data.files:
+            return bool(np.isfinite(data["rod_pressure_Pa"]).any()), ROD_BASIS_T4H
+    return True, ROD_BASIS_CONFIGURATION
 
 
 def j_p3(run: dict, t4h_dirs: tuple[Path, ...]) -> dict:
@@ -106,6 +117,8 @@ def j_p3(run: dict, t4h_dirs: tuple[Path, ...]) -> dict:
                 "reason": f"③ line without {EXTEND_START_SETTING} (rev8 R8-2, original 9.3)"}
     bound = bound_check_of(run)
     has_reading, basis = rod_reading(run, t4h_dirs)
+    if has_reading is None:  # rev12 R12-1: the line's T4h cannot be decided
+        return {"case": J_P3_NOT_JUDGEABLE, "stop": common.T4H_STOP, "rod_reading_basis": basis}
     declared = run.get("head_only_declared")
     case = j_p3_run_case(bound, has_reading, bool(declared) if declared is not None else False)
     out = {
@@ -214,7 +227,8 @@ def judge(args: argparse.Namespace) -> dict:
         if run.get("level") == h8.LEVEL_REFERENCE and "error" not in run:
             references[h8.pair_key(run)].append(run)
     rows = {h8.plain_key(r["key"]): r for r in judge_report.get("runs") or []}
-    t4h_dirs = tuple(args.t4h_dir or ())
+    # rev12 R12-1: the H-6 file's own convention folders, one --t4h-dir only without them
+    t4h_dirs = tuple(common.t4h_folders(args.h6, h6_file["results"], args.t4h_dir or ()))
     lines = [judge_line(run, references, rows, t4h_dirs) for run in h6_file["results"]]
     status, findings = bundle_grade(lines)
     counts = Counter(line["level"] for line in lines)
@@ -239,6 +253,7 @@ def judge(args: argparse.Namespace) -> dict:
             "h6": {"path": str(args.h6), "sha256": common.file_sha256(args.h6)},
             "l1_ref": {"path": str(args.l1_ref), "sha256": common.file_sha256(args.l1_ref)},
             "judge": {"path": str(args.judge), "sha256": common.file_sha256(args.judge)},
+            "t4h_folders_R12_1": [str(folder) for folder in t4h_dirs],
         },
         "judge_run": judge_run,
         "existing_tool": "없음 (rev5 R5-A1 표: H-6 등급 코드 없음, diff 대상 없음)",
@@ -268,7 +283,9 @@ def parser() -> argparse.ArgumentParser:
     out.add_argument("--l1-ref", type=Path, required=True, help="resume_k1/h8_noise_VB.json")
     out.add_argument("--judge", type=Path, required=True, help="r79_sensor_judge output")
     out.add_argument("--run-judge", action="store_true", help="write --judge first")
-    out.add_argument("--t4h-dir", type=Path, action="append", help="T4h folder (repeatable)")
+    out.add_argument("--t4h-dir", type=Path, action="append",
+                     help="T4h folder only when the H-6 file has no <stem>_t4h/ or t4h/ "
+                     "(at most one; rev12 R12-1)")
     return out
 
 
