@@ -19,6 +19,16 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CHRONO_SCRIPTS = PROJECT_ROOT / "04_scripts" / "02_chrono"
 MAIN_CHECKOUT = Path(r"C:\workspace\outrigger_control")
 PARAMS = PROJECT_ROOT / "02_params" / "rexome33.yaml"
+GIT_AT_START = "4312b8e"
+"""A judgement git_at_start for synthetic --row inputs (they have no batch.json entry: no_batch_entry, rev11 R11-4)."""
+
+
+def _batch_head(batch: Path) -> str:
+    """The first recorded code_at_launch head of a stored batch (its rows share one commit)."""
+    doc = json.loads((batch / "batch.json").read_text(encoding="utf-8"))
+    return next(c["code_at_launch"]["git"]["head"] for c in doc["cases"] if c.get("code_at_launch"))
+
+
 F_MIN = 9414.58911
 W = 380_000.0
 
@@ -252,7 +262,7 @@ def _write_scm_row(d: Path, *, sgs: bool, name="D1S_G1_B_middle_Fs4_spJ1FL") -> 
 
 def _judge(mod, tmp_path, rows, extra=()):
     out = tmp_path / "out.json"
-    argv = ["judge", "--out", str(out), "--rules-dir", str(_rules_dir(mod)), "--params", str(PARAMS)]
+    argv = ["judge", "--git-at-start", GIT_AT_START, "--out", str(out), "--rules-dir", str(_rules_dir(mod)), "--params", str(PARAMS)]
     for r in rows:
         argv += ["--row", str(r)]
     code = mod.main(argv + list(extra))
@@ -324,7 +334,7 @@ def test_seals(mod, tmp_path):
 
 
 def test_missing_input_exit_2(mod, tmp_path, capsys):
-    code = mod.main(["judge", "--out", str(tmp_path / "o.json"), "--rules-dir", str(_rules_dir(mod)),
+    code = mod.main(["judge", "--git-at-start", GIT_AT_START, "--out", str(tmp_path / "o.json"), "--rules-dir", str(_rules_dir(mod)),
                      "--params", str(PARAMS), "--row", str(tmp_path / "nope")])
     assert code == 2
     assert json.loads(capsys.readouterr().out.strip().splitlines()[-1])["exit"] == 2
@@ -334,7 +344,7 @@ def test_assume_override_marks_deviation(mod, tmp_path):
     d = _write_scm_row(tmp_path, sgs=False)
     code, doc = _judge(mod, tmp_path, [d], ["--assume", "C-3=final"])
     assert doc["deviates_from_rev6"] == {"C-3": "final"}
-    assert mod.main(["judge", "--out", str(tmp_path / "x.json"), "--row", str(d), "--assume", "C-3=bogus"]) == 2
+    assert mod.main(["judge", "--git-at-start", GIT_AT_START, "--out", str(tmp_path / "x.json"), "--row", str(d), "--assume", "C-3=bogus"]) == 2
 
 
 def test_disclose_counts(mod):
@@ -356,7 +366,7 @@ GS_BATCH = MAIN_CHECKOUT / "07_results" / "S9" / "batch_V5-RESUME-K1-GS_20261113
 def test_gs_batch_execution_path(mod, tmp_path):
     """Execution path only (no judgement): both rows load, the origin check runs on stored data."""
     out = tmp_path / "gs.json"
-    code = mod.main(["judge", "--out", str(out), "--batch", str(GS_BATCH),
+    code = mod.main(["judge", "--git-at-start", _batch_head(GS_BATCH), "--out", str(out), "--batch", str(GS_BATCH),
                      "--results-root", str(MAIN_CHECKOUT / "07_results"), "--rules-dir", str(_rules_dir(mod)),
                      "--params", str(PARAMS)])
     doc = json.loads(out.read_text(encoding="utf-8"))
@@ -442,7 +452,7 @@ def test_row_dir_time_window_none_or_two_is_input_error(mod, tmp_path, capsys):
                                         folder_stamps=["20261113_082118", "20261113_082300"])
     with pytest.raises(mod.InputError, match="2 runner folder"):
         mod.batch_rows(batch, results)
-    code = mod.main(["judge", "--out", str(tmp_path / "o.json"), "--rules-dir", str(_rules_dir(mod)),
+    code = mod.main(["judge", "--git-at-start", GIT_AT_START, "--out", str(tmp_path / "o.json"), "--rules-dir", str(_rules_dir(mod)),
                      "--params", str(PARAMS), "--batch", str(batch), "--results-root", str(results)])
     assert code == 2 and json.loads(capsys.readouterr().out.strip().splitlines()[-1])["exit"] == 2
 
@@ -476,16 +486,20 @@ GS_BATCH_2 = MAIN_CHECKOUT / "07_results" / "S9" / "batch_V5-RESUME-K1-GS_202611
 def test_gs_batch_082117_execution_path(mod, tmp_path):
     """Execution path only (G-S values are not judged): the L1-R folder 1 s after the batch stamp comes from
     the case log, the open-loop row is listed as skipped. Rev8 R8-3 / R8-4: this batch predates the SCM
-    ``law_locked`` record, so its three C-5 SCM rows stop on J11 (rc 1) and nothing else stops."""
+    ``law_locked`` record, so its three C-5 SCM rows stop on J11 (rc 1). Rev11 R11-4: it also predates the
+    open-loop ``code_at_launch`` record, so the C-6 row is S-12; every other row has the batch commit."""
     out = tmp_path / "gs2.json"
-    code = mod.main(["judge", "--out", str(out), "--batch", str(GS_BATCH_2),
+    code = mod.main(["judge", "--git-at-start", _batch_head(GS_BATCH_2), "--out", str(out), "--batch", str(GS_BATCH_2),
                      "--results-root", str(MAIN_CHECKOUT / "07_results"), "--rules-dir", str(_rules_dir(mod)),
                      "--params", str(PARAMS)])
     doc = json.loads(out.read_text(encoding="utf-8"))
     assert code == 1
     c5_scm = sorted(r["case"] for r in doc["rows"] if r["criteria_id"] == "C-5" and r["engine"] == "SCM")
-    assert len(c5_scm) == 3 and sorted(s["case"] for s in doc["stops"]) == c5_scm
-    assert all(s["reason"].startswith("J11 not judgeable") for s in doc["stops"])
+    j11 = [s for s in doc["stops"] if s["reason"].startswith("J11 not judgeable")]
+    s12 = [s for s in doc["stops"] if s["reason"].startswith("S-12")]
+    assert len(c5_scm) == 3 and sorted(s["case"] for s in j11) == c5_scm
+    assert [s["case"] for s in s12] == ["GS_P3a_G1_B_VB_prop_lift10"] and len(doc["stops"]) == 4
+    assert doc["commit_identity_R11_4"]["s12_rows"] == ["GS_P3a_G1_B_VB_prop_lift10"]
     assert doc["rev8_counts"]["S-2_rows"] == 0
     assert [s["criteria_id"] for s in doc["skipped_rows"]] == ["C-6"]
     l1r = next(r for r in doc["rows"] if r["engine"] == "L1R")

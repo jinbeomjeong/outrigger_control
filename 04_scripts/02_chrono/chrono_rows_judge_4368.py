@@ -32,26 +32,29 @@ rules rev6 R6-A D-26 .. D-39):
   ``step_series.npz`` (SCM) / ``pads.npz`` (L2b), fallback legs by rev6 R6-B7, stop code by the manifest LS
   setting; an SCM C-5 row without a usable record
   stops (not judgeable).
+* rev11 R11-4 :func:`commit_identity` - every row (open loop included): `batch.json` `code_at_launch.git.head` =
+  ``--git-at-start`` (required), level / L2b / L1-R rows also `result.json` `code_state.git_at_start` where recorded;
+  missing, `git.error` or another commit = S-12 (a stop). R11-5 :func:`grade_counts` - grade counts, record only.
 
 C-1 .. C-9 follow rev6 R6-B1 .. R6-B9 (:data:`ASSUMPTIONS`); ``--assume C-n=value`` is for sensitivity looks only and
 marks the output ``deviates_from_rev6``.
 
 Scope: Chrono C-1 .. C-5 and the O-C5 record rows (``run_S9.py level``, run_S8C, run_S6C). Open-loop rows (C-6 / C-7,
 ``run_S9.py machine``) are not judged here (:data:`OPENLOOP_CRITERIA`): they are listed in ``skipped_rows`` and do not
-change the exit code. ``--batch``: a run_S8C / run_S6C row folder is taken from the case log's ``batch wall ... ->
-<dir>`` line, else from the one runner folder of its ``--tag`` stamped inside the case window (:func:`_rigid_row_dir`);
+change the exit code, except their rev11 R11-4 S-12 commit check. ``--batch``: a run_S8C / run_S6C row folder is
+taken from the case log's ``batch wall ... -> <dir>`` line, else from the one runner folder of its ``--tag`` stamped inside the case window (:func:`_rigid_row_dir`);
 every row records how it was found (``row_dir``).
 
 CLI (Chrono-dev, no simulation)::
 
-    python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py judge --out out.json \
+    python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py judge --git-at-start <commit> --out out.json \
         [--batch <07_results/S9/batch_...>] [--row <row dir>] [--results-root <07_results>] \
         [--rules-dir <verif_matrix>] [--params <rexome33.yaml>] [--assume C-n=value ...]
     python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py disclose [--out f.json]
     python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-dir <dir>]
 
 Exit codes: 0 done; 1 a check failed (seal mismatch, time-origin mismatch) or a row needs a stop (unresolved R40-2
-hold); 2 an input is missing or invalid; 3 internal error. The last stdout line is JSON; the line before it is
+hold, S-12); 2 an input is missing or invalid; 3 internal error. The last stdout line is JSON; the line before it is
 ``errors N``. Units: SI (s, N, m), pressure in bar where the key says so.
 """
 
@@ -1449,6 +1452,97 @@ def parse_assumptions(items: list[str]) -> dict[str, str]:
     return asm
 
 
+GIT_AT_START_RE = re.compile(r"[0-9a-f]{7,40}")
+"""The judgement's ``git_at_start`` (``--git-at-start``): 7 to 40 lower-case hex digits."""
+COMMIT_MATCH = "match"
+COMMIT_STOP = "S-12"
+COMMIT_NO_BATCH_ENTRY = "no_batch_entry"
+COMMIT_NO_RESULT_RECORD = "no_result_record"
+COMMIT_IDENTITY_RULE = (
+    "rev11 R11-4: every row's batch.json cases[].code_at_launch.git.head (open-loop rows included) = the judgement "
+    "git_at_start, else S-12 (record missing, git.error or another commit); level / L2b / L1-R rows also "
+    "result.json code_state.git_at_start.head where that record exists (present with an error or another "
+    "commit = S-12, absent = no_result_record, no stop); open-loop rows: the result.json head is recorded only; "
+    "git.dirty is recorded only (original 6: commit '+ dirty 여부'); --row inputs have no batch.json entry "
+    "(no_batch_entry, recorded, no stop, like the --row criteria)")
+
+
+def parse_git_at_start(value: str) -> str:
+    """The ``--git-at-start`` value, checked (an InputError = exit 2)."""
+    text = str(value).strip()
+    if GIT_AT_START_RE.fullmatch(text) is None:
+        raise InputError(f"--git-at-start {value!r}: 7 to 40 lower-case hex digits needed (rev11 R11-4)")
+    return text
+
+
+def _head_problem(git: Any, git_at_start: str) -> tuple[str | None, str | None]:
+    """(recorded head, problem) of one git record against ``git_at_start``; problem None = same commit."""
+    if not isinstance(git, dict):
+        return None, "git record missing"
+    if "error" in git:
+        return None, f"git.error {git['error']!r}"
+    head = git.get("head")
+    if not isinstance(head, str) or not head:
+        return None, "git.head missing"
+    if not head.startswith(git_at_start):
+        return head, f"git.head {head[:12]} is not git_at_start {git_at_start}"
+    return head, None
+
+
+def commit_identity(meta: dict[str, Any] | None, row: dict[str, Any], git_at_start: str) -> dict[str, Any]:
+    """Rev11 R11-4 commit identity of one Chrono row (:data:`COMMIT_IDENTITY_RULE`)."""
+    out: dict[str, Any] = {"status": COMMIT_MATCH, "problems": []}
+    if meta is None:
+        out["status"] = COMMIT_NO_BATCH_ENTRY
+        out["batch_head"] = None
+    else:
+        cal = meta.get("code_at_launch")
+        git = cal.get("git") if isinstance(cal, dict) else None
+        if "code_at_launch" not in meta:
+            head, problem = None, "batch.json code_at_launch missing"
+        else:
+            head, problem = _head_problem(git, git_at_start)
+        out["batch_head"] = head
+        out["dirty"] = git.get("dirty") if isinstance(git, dict) else None  # record only (original 6)
+        if problem is not None:
+            out["problems"].append(f"batch.json {problem}")
+    present, result_git = _result_git_at_start(row["result"])
+    if not present:
+        out["result_head"] = COMMIT_NO_RESULT_RECORD
+    else:
+        result_head, problem = _head_problem(result_git, git_at_start)
+        out["result_head"] = result_head
+        if problem is not None and row["engine"] != "openloop":
+            out["problems"].append(f"result.json code_state.git_at_start {problem}")
+        elif problem is not None:
+            out["result_problem_recorded"] = problem
+    if out["problems"]:
+        out["status"] = COMMIT_STOP
+    return out
+
+
+def _result_git_at_start(result: dict[str, Any]) -> tuple[bool, Any]:
+    """(present, value) of ``result.json`` ``code_state.git_at_start`` (``code_state`` itself may be an error)."""
+    code_state = result.get("code_state")
+    if not isinstance(code_state, dict):
+        return False, None
+    if "git_at_start" in code_state:
+        return True, code_state["git_at_start"]
+    if "error" in code_state:  # the whole code_state record failed: a record with an error
+        return True, code_state
+    return False, None
+
+
+def commit_identity_summary(entries: list[dict[str, Any]], git_at_start: str) -> dict[str, Any]:
+    """Counts of the rev11 R11-4 statuses and the S-12 rows."""
+    counts = Counter(str(e["commit_identity_R11_4"]["status"]) for e in entries)
+    dirty = [e["case"] for e in entries if e["commit_identity_R11_4"].get("dirty")]
+    return {"git_at_start": git_at_start, "rule": COMMIT_IDENTITY_RULE, "rows": len(entries),
+            "counts": dict(sorted(counts.items())),
+            "s12_rows": [e["case"] for e in entries if e["commit_identity_R11_4"]["status"] == COMMIT_STOP],
+            "dirty_rows_recorded": dirty}
+
+
 GRADE_COUNT_NOTE = ("rev11 R11-5: in G-S the row grades are not judged and are no stop; "
                     "the judgement records only these counts")
 
@@ -1461,6 +1555,7 @@ def grade_counts(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 def cmd_judge(args) -> tuple[int, dict[str, Any]]:
     asm = parse_assumptions(args.assume or [])
+    git_at_start = parse_git_at_start(args.git_at_start)
     params = load_params(Path(args.params))
     seals = seal_check(Path(args.rules_dir))
     manifest_path = Path(args.manifest) if getattr(args, "manifest", None) else None
@@ -1480,10 +1575,15 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
     for d, meta in targets:
         row = load_row(d)
         crit = (meta or {}).get("criteria_id")
+        identity = commit_identity(meta, row, git_at_start)  # rev11 R11-4, every row incl. open loop
+        if identity["status"] == COMMIT_STOP:
+            stops.append({"case": (meta or {}).get("case", row["name"]),
+                          "reason": f"S-12 commit identity (rev11 R11-4): {'; '.join(identity['problems'])}"})
         if row["engine"] == "openloop" or str(crit) in OPENLOOP_CRITERIA:
             skipped.append({"dir": str(d), "case": (meta or {}).get("case", row["name"]), "engine": row["engine"],
                             "criteria_id": crit, "inputs": row["files"], "row_dir": (meta or {}).get("_row_dir"),
                             "skipped": "openloop_not_judged_here", "rule": OPENLOOP_SKIP_RULE,
+                            "commit_identity_R11_4": identity,
                             "note": "C-6 / C-7 values: result.json p3a (path 1) and openloop_compare.py analyse "
                                     "(path 2); this tool reads neither"})
             continue
@@ -1497,7 +1597,8 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
         oc = origin_check(row)
         entry = {"dir": str(d), "case": (meta or {}).get("case", row["name"]), "engine": row["engine"], "row_id": rid,
                  "criteria_id": (meta or {}).get("criteria_id"), "t0_s": row["t0"], "inputs": row["files"],
-                 "row_dir": (meta or {}).get("_row_dir"), "origin_check_R5_B1": oc, **body}
+                 "row_dir": (meta or {}).get("_row_dir"), "origin_check_R5_B1": oc,
+                 "commit_identity_R11_4": identity, **body}
         if body["items"].get("C1_R40", {}).get("stop"):
             stops.append({"case": entry["case"], "reason": "R40-2 hold (not judgeable, ask)"})
         stops += rev8_stops(entry["case"], body["items"]["J-P3_R8-2"], body["items"]["J11_R8-3"])
@@ -1517,6 +1618,7 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
            "demoted_items": {r["case"]: r.get("demoted_items") for r in rows if r.get("demoted_items")},
            "rev8_counts": rev8_counts(rows),
            "grade_counts_R11_5": grade_counts(rows),
+           "commit_identity_R11_4": commit_identity_summary(rows + skipped, git_at_start),
            "ls_manifest": {"path": None if manifest_path is None else str(manifest_path),
                            "sha256": sha256_file(manifest_path) if manifest is not None else None}}
     code = 0 if seals["ok"] and not stops and not origin_bad else 1
@@ -1527,6 +1629,8 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
                "deviates_from_rev6": sorted(deviates), "rev8_counts": doc["rev8_counts"],
                "grades": {r["case"]: r.get("grade") for r in rows},
                "grade_counts_R11_5": doc["grade_counts_R11_5"],
+               "commit_identity_R11_4": {k: doc["commit_identity_R11_4"][k]
+                                         for k in ("git_at_start", "counts", "s12_rows")},
                "skipped": {s["case"]: s["skipped"] for s in skipped}, "out": str(args.out)}
     return code, summary
 
@@ -1546,6 +1650,8 @@ def build_parser() -> argparse.ArgumentParser:
     sub = ap.add_subparsers(dest="cmd", required=True)
     j = sub.add_parser("judge")
     j.add_argument("--out", required=True)
+    j.add_argument("--git-at-start", required=True,
+                   help="the judgement's git_at_start (7 to 40 hex digits; rev11 R11-4 S-12 check)")
     j.add_argument("--batch", action="append")
     j.add_argument("--row", action="append")
     j.add_argument("--results-root")

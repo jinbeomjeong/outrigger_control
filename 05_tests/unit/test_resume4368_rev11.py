@@ -378,3 +378,114 @@ def test_chrono_judge_counts_the_grades_for_the_record_only() -> None:
     block = chrono_judge.grade_counts(rows)
     assert block["counts"] == {"None": 1, "fail": 2, "pass": 1} and block["rows"] == 4
     assert "R11-5" in block["note"]
+
+
+# --------------------------------------------------------------- R11-4 commit identity (S-12)
+HEAD = "ba2da55efac55b37a2f5493ae403ede772f583c6"
+OTHER = "4312b8ec604bc9c755805c754ed19183a5c071ec"
+
+
+def _meta(git: dict | None = None, **extra) -> dict:
+    meta = {"case": "row", **extra}
+    if git is not None:
+        meta["code_at_launch"] = {"files": {}, "git": git}
+    return meta
+
+
+def _git(head: str = HEAD, dirty: list[str] | None = None) -> dict:
+    dirty = dirty or []
+    return {"head": head, "paths": ["03_src"], "dirty": dirty, "clean": not dirty,
+            "taken_utc": "2026-11-13T05:00:00+00:00"}
+
+
+def _row(engine: str, result: dict | None = None) -> dict:
+    return {"engine": engine, "name": "row", "result": result or {}}
+
+
+def _level_result(git: dict | None) -> dict:
+    return {"code_state": {"files_at_start": {}, "git_at_start": git}}
+
+
+@pytest.mark.parametrize("engine", ["SCM", "L2b", "L1R", "openloop"])
+def test_the_same_commit_matches(engine) -> None:
+    result = _level_result(_git()) if engine in ("SCM", "openloop") else {}
+    identity = chrono_judge.commit_identity(_meta(_git()), _row(engine, result), "ba2da55")
+    assert identity["status"] == "match" and identity["problems"] == []
+
+
+@pytest.mark.parametrize(
+    ("meta", "fragment"),
+    [
+        (_meta(), "code_at_launch missing"),  # the G-S ba2da55 open-loop row
+        (_meta({"error": "CalledProcessError: git"}), "git.error"),
+        (_meta(_git(OTHER)), "is not git_at_start"),
+        (_meta({"paths": []}), "git.head missing"),
+    ],
+)
+def test_batch_records_that_do_not_show_the_commit_are_s12(meta, fragment) -> None:
+    identity = chrono_judge.commit_identity(meta, _row("openloop"), "ba2da55")
+    assert identity["status"] == "S-12" and fragment in identity["problems"][0]
+
+
+def test_l2b_rows_without_a_result_record_are_not_stopped() -> None:
+    identity = chrono_judge.commit_identity(_meta(_git()), _row("L2b"), "ba2da55")
+    assert (identity["status"], identity["result_head"]) == ("match", "no_result_record")
+
+
+@pytest.mark.parametrize("git", [_git(OTHER), {"error": "TimeoutExpired: git"}])
+def test_a_level_result_record_of_another_commit_is_s12(git) -> None:
+    row = _row("SCM", _level_result(git))
+    identity = chrono_judge.commit_identity(_meta(_git()), row, "ba2da55")
+    assert identity["status"] == "S-12" and "result.json" in identity["problems"][0]
+
+
+def test_a_failed_code_state_record_is_s12_on_a_level_row() -> None:
+    row = _row("SCM", {"code_state": {"error": "OSError: x"}})
+    assert chrono_judge.commit_identity(_meta(_git()), row, "ba2da55")["status"] == "S-12"
+
+
+def test_an_open_loop_result_head_is_recorded_only() -> None:
+    row = _row("openloop", _level_result(_git(OTHER)))
+    identity = chrono_judge.commit_identity(_meta(_git()), row, "ba2da55")
+    assert identity["status"] == "match"
+    assert "is not git_at_start" in identity["result_problem_recorded"]
+
+
+def test_a_dirty_tree_is_recorded_only() -> None:
+    identity = chrono_judge.commit_identity(_meta(_git(dirty=[" M 03_src/x.py"])), _row("L1R"),
+                                            "ba2da55")
+    assert identity["status"] == "match" and identity["dirty"] == [" M 03_src/x.py"]
+
+
+def test_row_inputs_without_a_batch_entry_are_recorded() -> None:
+    identity = chrono_judge.commit_identity(None, _row("SCM", _level_result(_git())), "ba2da55")
+    assert (identity["status"], identity["batch_head"]) == ("no_batch_entry", None)
+
+
+@pytest.mark.parametrize("value", ["ba2da5", "BA2DA55", "ba2da55x", HEAD + "0"])
+def test_a_malformed_git_at_start_is_an_input_error(value) -> None:
+    with pytest.raises(chrono_judge.InputError, match="R11-4"):
+        chrono_judge.parse_git_at_start(value)
+
+
+def test_judge_needs_git_at_start(tmp_path: Path, capsys) -> None:
+    code = chrono_judge.main(["judge", "--out", str(tmp_path / "o.json"), "--row", str(tmp_path)])
+    assert code == 2 and json.loads(capsys.readouterr().out.strip().splitlines()[-1])["exit"] == 2
+
+
+GS_BA2DA55 = (Path(r"C:\workspace\outrigger_control\07_results\S9")
+              / "batch_V5-RESUME-K1-GS_20261113_130358")
+
+
+@pytest.mark.skipif(not (GS_BA2DA55 / "batch.json").is_file(),
+                    reason="G-S ba2da55 batch not present")
+def test_the_gs_ba2da55_batch_stops_only_on_the_open_loop_row(tmp_path: Path) -> None:
+    """Recorded before the runner change: the open-loop row has no code_at_launch (S-12); the 11
+    other rows carry ba2da55."""
+    out = tmp_path / "gs.json"
+    chrono_judge.main(["judge", "--git-at-start", "ba2da55", "--out", str(out),
+                       "--batch", str(GS_BA2DA55),
+                       "--results-root", str(GS_BA2DA55.parents[1])])
+    block = json.loads(out.read_text(encoding="utf-8"))["commit_identity_R11_4"]
+    assert block["s12_rows"] == ["GS_P3a_G1_B_VB_prop_lift10"]
+    assert block["counts"] == {"S-12": 1, "match": 11} and block["dirty_rows_recorded"] == []
