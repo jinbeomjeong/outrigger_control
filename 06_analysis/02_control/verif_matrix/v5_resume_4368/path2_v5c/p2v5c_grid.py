@@ -227,6 +227,13 @@ def cmd_grid(args, repo, v5j, core):
     out_files, rows = {}, []
     trans_all, trans_nonF, fault_runs, gate_diff = [], [], [], []
     fam_F = []
+    # rev11 R11-2 / rev12 R12-1: T4h search places of the VB grid files (input error = S-11, exit 2)
+    places, perr = v5j.t4h_places(list(vb_files.values()), getattr(args, "t4h_root", None))
+    if places is None:
+        body, st = cm.t4h_input_error(perr)
+        body["not_judged"] = ["H-9 grid"]
+        return body, st
+    t4h_log = {}
     for stem, path in vb_files.items():
         d = json.loads(Path(path).read_text("utf-8"))
         meta = d.get("meta") or {}
@@ -266,9 +273,13 @@ def cmd_grid(args, repo, v5j, core):
             if in_F:
                 row["family_F"] = True
             rows.append(row)
-            # J-P3 (rod reading assumed: two-pressure event path, rev9 3.2 #4)
-            res, why = v5j.jp3(run, is_p3, True)
-            if cm.jp3_tag_scope(fnd, k, res, "VB"):   # rev8 R8-2: not applicable + S-2
+            # J-P3 (configuration: two-pressure event path = rod reading, rev9 3.2 #4); rev12 R12-1: a
+            # recorded t4h_file is read first (found 0 or 2+ = S-2, J-P3 not judged)
+            rod, ok = cm.jp3_rod_input(fnd, k, run, places[str(path)], v5j, True, t4h_log)
+            res, why = v5j.jp3(run, is_p3, rod) if ok else ("t4h_unresolved", "R12-1 S-2")
+            if not ok:
+                pass
+            elif cm.jp3_tag_scope(fnd, k, res, "VB"):   # rev8 R8-2: not applicable + S-2
                 pass
             elif res == "H-7":
                 fnd.stop("H-7", k, f"J-P3 {why}")
@@ -303,6 +314,7 @@ def cmd_grid(args, repo, v5j, core):
     if trans_nonF:
         fnd.stop("H-10", "grid", f"pass -> fail {len(trans_nonF)} (outside family F)")
     body = {"inputs": {"vb": out_files, "v0": v0_meta}, "v5_options": mod, "v0_pair": pair_rec,
+            "R11-2_t4h": {"search_dirs": {k: [str(d) for d in v] for k, v in places.items()}, "lookup": t4h_log},
             "grid": {"runs": len(rows), "pass_p2": sum(1 for x in rows if x["pass_p2"] is True),
                      "fail_p2": sum(1 for x in rows if x["pass_p2"] is False),
                      "pass_to_fail_all": trans_all, "pass_to_fail_outside_F": trans_nonF,
@@ -331,6 +343,9 @@ def build_parser():
     g.add_argument("--v0-new", action="append", default=None,
                    help="<stem>=<resume_k1/h9_grid_v0/<stem>.json> (R3-E1, when the sample differs)")
     g.add_argument("--family-f", default=None, help="resume_k1/h9_family_F.jsonl (R3-E2, 64 runs)")
+    g.add_argument("--t4h-root", action="append", default=None,
+                   help="T4h folder (rev12 R12-1 / rev11 R11-2): only when no --vb file has a convention "
+                        "folder <stem>_t4h/ or t4h/, at most one")
     return ap
 
 

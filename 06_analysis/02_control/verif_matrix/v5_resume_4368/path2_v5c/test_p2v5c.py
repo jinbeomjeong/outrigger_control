@@ -210,6 +210,16 @@ class TestGridCmd(unittest.TestCase):
         self.assertIn("S-2", body["stop_codes"])
         self.assertFalse(any("J-P3" in u["why"] for u in body["grid"]["undecidable"]))
 
+    def test_r121_grid_t4h(self):
+        """rev12 R12-1: a VB grid run that recorded t4h_file with no T4h folder -> S-2 (J-P3 not judged)."""
+        def m(stem, res):
+            if stem == "grid_r67_main":
+                res[0]["runs"][0]["t4h_file"] = "x.npz"
+        body, st = self.run_grid(mut_vb=m)
+        self.assertEqual(st, "stop")
+        self.assertIn("S-2", body["stop_codes"])
+        self.assertEqual(body["R11-2_t4h"]["lookup"].get("not_found"), 1)
+
 
 def line(case, setting, eps=0.0, **kw):
     ln = {"job": {"case": case, "eps": eps, "setting": setting}, "harness_class": "pass", "final_phase": "ready",
@@ -458,29 +468,33 @@ class TestRev3(unittest.TestCase):
         self.assertTrue(r["ok"], r)
         self.assertEqual([i["path"].rsplit("_", 1)[1] for i in r["items"]],
                          ["rev3.md", "rev4.md", "rev5.md", "rev6.md", "rev7.md", "rev8.md", "rev9.md",
-                          "rev10.md", "rev11.md"])
-        rev7 = r["items"][-5]
+                          "rev10.md", "rev11.md", "rev12.md"])
+        rev7 = r["items"][-6]
         self.assertEqual(rev7["want"], "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502")
         self.assertEqual(rev7["seal_file_sha"], rev7["want"])
-        rev8 = r["items"][-4]
+        rev8 = r["items"][-5]
         self.assertEqual(rev8["want"], "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56")
         self.assertEqual(rev8["seal_file_sha"], rev8["want"])
         self.assertEqual(rev8["sha256"], rev8["want"])
-        rev9 = r["items"][-3]   # rev9 R9-8: file sha = code seal = .sha256 record
+        rev9 = r["items"][-4]   # rev9 R9-8: file sha = code seal = .sha256 record
         self.assertEqual(rev9["want"], "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d")
         self.assertEqual(rev9["seal_file_sha"], rev9["want"])
         self.assertEqual(rev9["sha256"], rev9["want"])
-        rev10 = r["items"][-2]   # rev10 R10-3: file sha = code seal = .sha256 record
+        rev10 = r["items"][-3]   # rev10 R10-3: file sha = code seal = .sha256 record
         self.assertEqual(rev10["want"], "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29")
         self.assertEqual(rev10["seal_file_sha"], rev10["want"])
         self.assertEqual(rev10["sha256"], rev10["want"])
-        rev11 = r["items"][-1]   # rev11 R11-7: file sha = code seal = .sha256 record
+        rev11 = r["items"][-2]   # rev11 R11-7: file sha = code seal = .sha256 record
         self.assertEqual(rev11["want"], "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f")
         self.assertEqual(rev11["seal_file_sha"], rev11["want"])
         self.assertEqual(rev11["sha256"], rev11["want"])
+        rev12 = r["items"][-1]   # rev12 R12-6: file sha = code seal = .sha256 record
+        self.assertEqual(rev12["want"], "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140")
+        self.assertEqual(rev12["seal_file_sha"], rev12["want"])
+        self.assertEqual(rev12["sha256"], rev12["want"])
 
     def test_rev7_seal_mismatch_stops(self):
-        """The last sealed file (rev11) differing from its seal is not ok (S-1 through run_main)."""
+        """The last sealed file (rev12) differing from its seal is not ok (S-1 through run_main)."""
         with tempfile.TemporaryDirectory() as td:
             for rel, _w, srel in cm.LATER_RULES:
                 for x in (rel, srel):
@@ -539,6 +553,53 @@ class TestRev3(unittest.TestCase):
         jp = nz.run_checks("H-6", {"k": r}, CORE, V5J, is_p3, True, f)
         self.assertEqual(jp.get("not_applicable_tag"), 1)
         self.assertIn("S-2", [s["code"] for s in f.stops])
+
+    def test_r121_jp3_rod_input(self):
+        """rev12 R12-1 (Q-R12-1 = A): no t4h_file key = configuration; recorded and found once = T4h reading;
+        recorded and found 0 / 2+ times or not a name = S-2 and J-P3 not judged (no configuration stand-in)."""
+        import numpy as np  # noqa: PLC0415
+        with tempfile.TemporaryDirectory() as td:
+            a, b = Path(td) / "a", Path(td) / "b"
+            a.mkdir()
+            b.mkdir()
+            f, log = CORE.Findings(), {}
+            self.assertEqual(cm.jp3_rod_input(f, "w", {}, [a], V5J, True, log), (True, True))
+            r = {"t4h_file": "k.npz"}
+            self.assertEqual(cm.jp3_rod_input(f, "w", r, [a], V5J, True, log), (None, False))   # 0 files
+            np.savez(a / "k.npz", rod_pressure_Pa=np.array([np.nan]))
+            self.assertEqual(cm.jp3_rod_input(f, "w", r, [a], V5J, True, log), (False, True))   # T4h: no rod
+            np.savez(b / "k.npz", rod_pressure_Pa=np.array([1.0]))
+            self.assertEqual(cm.jp3_rod_input(f, "w", r, [a, b], V5J, True, log), (None, False))   # 2 files
+            self.assertEqual(cm.jp3_rod_input(f, "w", {"t4h_file": None}, [a], V5J, True, log), (None, False))
+            self.assertEqual([s["code"] for s in f.stops], ["S-2"] * 3)
+            self.assertEqual(log, {"no_t4h_file": 1, "not_found": 1, "ok": 1, "several": 1, "unreadable_name": 1})
+            # noise run_checks: an H-6 run that recorded a T4h file not found -> S-2, J-P3 not judged
+            f = CORE.Findings()
+            rr = {"t4h_file": "missing.npz", "resume_k1": {"controller_tag": "final_C4G2_P3_LAS_K1"},
+                  "hydraulics_record": {"m2_clipped_steps_post_lift": [0, 0, 0, 0]},
+                  "hydraulic_options": {"m2_law": "flow_limited_r5"}}
+            is_p3, _ = CORE.load_is_extend_start(REPO)
+            jp = nz.run_checks("H-6", {"k": rr}, CORE, V5J, is_p3, True, f, [a], {})
+            self.assertEqual(jp, {"t4h_unresolved": 1})
+            self.assertEqual([s["code"] for s in f.stops], ["S-2"])
+            # stage1 strip: a judge_pair J-P3 result and its findings are dropped
+            f = CORE.Findings()
+            f.stop("J-P3-defect", "w", "x")
+            f.stop("H-7", "w", "J-P3 ext_moving breach_reads [1, 0, 0, 0]")
+            f.stop("H-7", "w", "n_late_fallback 1")
+            f.undec("w", "J-P3: no T4h record")
+            items = {"J-P3": {"result": "H-7"}}
+            cm.strip_jp3(items, f)
+            self.assertEqual(items["J-P3"]["result"], "t4h_unresolved")
+            self.assertEqual([s["why"] for s in f.stops], ["n_late_fallback 1"])
+            self.assertEqual(f.undecidable, [])
+
+    def test_r123_git_at_start_required(self):
+        """rev12 R12-3: noise needs --git-at-start (argparse error, exit 2)."""
+        with self.assertRaises(SystemExit) as cx:
+            nz.build_parser().parse_args(["noise", "--noise-vb", "a", "--noise-v0", "b", "--h6", "c",
+                                          "--judge-dir", "d"])
+        self.assertEqual(cx.exception.code, 2)
 
     def test_sa4_and_guard(self):
         ln = line("S8", "VB", events=[[39.9, "WARN_LIFT_STROKE_LIMITED:FR"], [39.9, "FAULT_LIFT_STROKE_LIMIT:soil:FR"]],
