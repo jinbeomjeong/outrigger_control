@@ -570,9 +570,10 @@ class TestRev3(unittest.TestCase):
             self.assertEqual(cm.jp3_rod_input(f, "w", r, [a], V5J, True, log), (False, True))   # T4h: no rod
             np.savez(b / "k.npz", rod_pressure_Pa=np.array([1.0]))
             self.assertEqual(cm.jp3_rod_input(f, "w", r, [a, b], V5J, True, log), (None, False))   # 2 files
-            self.assertEqual(cm.jp3_rod_input(f, "w", {"t4h_file": None}, [a], V5J, True, log), (None, False))
-            self.assertEqual([s["code"] for s in f.stops], ["S-2"] * 3)
-            self.assertEqual(log, {"no_t4h_file": 1, "not_found": 1, "ok": 1, "several": 1, "unreadable_name": 1})
+            for bad in (None, 3, ""):   # user decision 24: key present, value None / not a string / empty
+                self.assertEqual(cm.jp3_rod_input(f, "w", {"t4h_file": bad}, [a], V5J, True, log), (None, False))
+            self.assertEqual([s["code"] for s in f.stops], ["S-2"] * 5)
+            self.assertEqual(log, {"no_t4h_file": 1, "not_found": 1, "ok": 1, "several": 1, "bad_t4h_file": 3})
             # noise run_checks: an H-6 run that recorded a T4h file not found -> S-2, J-P3 not judged
             f = CORE.Findings()
             rr = {"t4h_file": "missing.npz", "resume_k1": {"controller_tag": "final_C4G2_P3_LAS_K1"},

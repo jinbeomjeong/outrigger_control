@@ -74,7 +74,9 @@ P2_FALLBACK = Path(r"C:\workspace\outrigger_control\.claude\worktrees\agent-a2e8
 # p2_v5j, R11-1 / R11-4 elsewhere); before: rev10 a9594dc p2_4368 6e297ea3..., p2_v5j 5772624c...
 # rev12 version of p2_4368 (dynamics-expert commit 6d41462: rev12 seal, R12-2..R12-5 Chrono rows);
 # before: rev11 582fa93 a8c625bf... (p2_v5j still e5d769b9...)
-P2_V5J_SHA = "e5d769b925a1d3047a8f1a42443894f761520950d8d1ec75c31499e9ae7dd3fe"
+# p2_v5j after user decision 24 (dynamics-expert commit e6971e5: rod_reading_lookup returns
+# bad_t4h_file for a t4h_file key with None / non-string / empty value); before: e5d769b9...
+P2_V5J_SHA = "69d0e747254cea35196101a9a2fc1b0e3c4e6a15ba1cb4511a4c8c41ca3e25db"
 P2_CORE_SHA = "a948d9a138557f6a649ffd9a5b37cd018201525cb6d8a51480d3e449a2f9ca81"
 
 EXIT = {"pass": 0, "fail": 1, "undecidable": 1, "stop": 2}
@@ -121,18 +123,16 @@ def jp3_rod_input(fnd, where, rec, dirs, v5j, config_rod, log):
     """rev12 R12-1 (Q-R12-1 = A) with rev11 R11-2 3: rod-reading input of J-P3 for one line / run.
 
     No ``t4h_file`` key -> ``(config_rod, True)`` (rev3 R3-C8 configuration). A recorded ``t4h_file`` must be
-    found exactly once in ``dirs`` (the R11-2 search folders); 0 or 2+ files (or a value that is not a file
-    name) -> S-2 on ``fnd`` and ``(None, False)``: that J-P3 is not judged and no configuration reading
+    found exactly once in ``dirs`` (the R11-2 search folders); 0 or 2+ files, or a None / non-string /
+    empty value (``bad_t4h_file``, user decision 24, decided in ``p2_v5j.rod_reading_lookup``) -> S-2 on
+    ``fnd`` and ``(None, False)``: that J-P3 is not judged and no configuration reading
     stands in. Found -> ``(reading, True)``; a found file without ``rod_pressure_Pa`` gives ``config_rod``
     (as ``p2_v5j`` does with reading None). ``log`` counts the lookup status."""
     if "t4h_file" not in rec:
         log["no_t4h_file"] = log.get("no_t4h_file", 0) + 1
         return config_rod, True
     dirs = list(dirs or [])
-    if not isinstance(rec.get("t4h_file"), str):
-        rod, st, hits = None, "unreadable_name", []
-    else:
-        rod, st, hits = v5j.rod_reading_lookup(rec, dirs)
+    rod, st, hits = v5j.rod_reading_lookup(rec, dirs)   # one definition inside path 2 (decision 24)
     log[st] = log.get(st, 0) + 1
     if st != "ok":
         fnd.stop("S-2", where, f"R12-1 / R11-2: T4h {rec.get('t4h_file')!r} {st} in {[str(d) for d in dirs]} {hits}")
