@@ -13,6 +13,7 @@ import p2_kinds as K
 CRITERIA = ("C-5",)
 EXPECTED_ROWS = 35
 AUX = {}
+CTX = {}   # set by p2_chrono per batch: {"mrows": manifest rows of the batch (rev9 R9-4)}
 _T45 = {}
 
 
@@ -28,7 +29,7 @@ def _t45():
 
 
 def judge_row(row, case, kind, params):
-    items, keys, notes = K.items_c5(row, params, _t45())
+    items, keys, notes = K.items_c5(row, params, _t45(), case=case, mrows=CTX.get("mrows"))
     return items, keys, notes, False
 
 
@@ -40,4 +41,8 @@ def bundle_status(rows):
     b["rev6_4_6_phrase"] = ("일치(등급 부분)" if (t40 and over == 0) else
                             ("불일치 (H-7)" if over > 0 else "판정 안 함 (T4-0 또는 입력)"))
     b["t45_report"] = AUX.get("t45")
+    ls = [r["items"].get("LS_class") or {} for r in rows]
+    b["rev9_R9_4_ls"] = {"ls_rows": sum(1 for x in ls if x.get("ls") is True),
+                         "not_ls_rows": sum(1 for x in ls if x.get("ls") is False),
+                         "not_judgeable_rows": sum(1 for x in ls if "ls" in x and x["ls"] is None)}
     return b

@@ -292,47 +292,157 @@ def t_rev8_j11(tmp, sp):
     check("rev6 6: -1 before the first armed sample = locked (pass; transitions FL off 1 / on 1)",
           j["verdict"] == "pass" and it["J11_lock_transitions"]["lock_off"] == [1, 0, 0, 0]
           and it["J11_lock_transitions"]["lock_on"] == [1, 0, 0, 0], (j.get("verdict"), it["J11_lock_transitions"]))
+    check("R9-3 before_first_arming pattern recorded, prefix 1999 samples",
+          row.law_locked_pattern["patterns"] == ["before_first_arming"]
+          and row.law_locked_pattern["unarmed_prefix_samples"] == int(np.sum(t < 10.0)), row.law_locked_pattern)
     aft = ok_ll.copy()
     aft[(t >= 50.0) & (t < 50.5), 2] = -1
-    _, j = variant("j11s_after", aft)
-    check("-1 after arming -> J11 판정 불가 + stop (no rule reading)",
-          j["verdict"] == "indeterminate" and j.get("stop", "").startswith("R8-3")
-          and j["unarmed_after_armed_samples"] == [0, 0, 500, 0], j)
-    for name, bad, word in (("j11s_i64", ok_ll.astype(np.int64), "dtype"),
-                            ("j11s_shape", ok_ll[:, :3].copy(), "shape"),
-                            ("j11s_rows", ok_ll[:-1].copy(), "rows"),
-                            ("j11s_val", np.where(ok_ll == 0, 2, ok_ll).astype(np.int8), "values")):
+    row, j = variant("j11s_after", aft)
+    check("R9-3 -1 after arming -> format error R9-2.6, J11 판정 불가 + stop R9-5",
+          row.law_locked is None and C.law_locked_codes(row.law_locked_problems) == ["R9-2.6"]
+          and row.law_locked_pattern["patterns"] == ["after_arming"]
+          and row.law_locked_pattern["after_arming_samples_per_leg"] == [0, 0, 500, 0]
+          and j["verdict"] == "indeterminate" and j.get("stop", "").startswith("R9-5"), (row.law_locked_problems, j))
+    whole = np.full((n, 4), -1, np.int8)
+    row, j = variant("j11s_whole", whole)
+    check("R9-3 whole run -1 -> format error (whole_run), J11 stop R9-5",
+          row.law_locked_pattern["patterns"] == ["whole_run"] and j.get("stop", "").startswith("R9-5")
+          and "R9-2.6" in j["law_locked_codes"], (row.law_locked_pattern, j.get("stop")))
+    mis = ok_ll.copy()
+    mis[t < 10.0, :] = -1
+    mis[(t >= 10.0) & (t < 10.5), 1] = -1   # FR leaves -1 0.5 s later than the others
+    row, j = variant("j11s_mis", mis)
+    check("R9-3 legs leave -1 at different samples -> format error (per_leg_mismatch), stop R9-5",
+          "per_leg_mismatch" in row.law_locked_pattern["patterns"] and j.get("stop", "").startswith("R9-5"),
+          row.law_locked_pattern)
+    pre1 = ok_ll.copy()
+    pre1[0, :] = -1
+    p1 = C.law_locked_pattern(pre1)
+    check("R9-3 one-sample -1 prefix on all legs -> before_first_arming (allowed)",
+          p1["ok"] and p1["patterns"] == ["before_first_arming"] and p1["first_armed_index_per_leg"] == [1, 1, 1, 1], p1)
+    for name, bad, code in (("j11s_i64", ok_ll.astype(np.int64), "R9-2.3"),
+                            ("j11s_shape", ok_ll[:, :3].copy(), "R9-2.2"),
+                            ("j11s_rows", ok_ll[:-1].copy(), "R9-2.2"),
+                            ("j11s_val", np.where(ok_ll == 0, 2, ok_ll).astype(np.int8), "R9-2.4")):
         row, j = variant(name, bad)
-        check(f"R8-3a malformed ({word}) -> law_locked unused, J11 판정 불가 + stop",
-              row.law_locked is None and any(word in p for p in row.law_locked_problems)
-              and j["verdict"] == "indeterminate" and j.get("stop", "").startswith("R8-3"), (row.law_locked_problems, j))
+        check(f"R9-2 malformed ({code}) -> law_locked unused, J11 판정 불가 + stop R9-5",
+              row.law_locked is None and code in C.law_locked_codes(row.law_locked_problems)
+              and j["verdict"] == "indeterminate" and j.get("stop", "").startswith("R9-5"), (row.law_locked_problems, j))
     tg = np.r_[np.round(np.arange(0.001, 1.0, 0.001), 6), 1.5]
-    check("R8-3a time axis not 1 ms -> malformed", any("1 ms" in p for p in
-                                                        C.law_locked_check(np.zeros((len(tg), 4), np.int8), tg)))
+    check("R9-2.5 time column not 1 ms -> malformed",
+          C.law_locked_codes(C.law_locked_check(np.zeros((len(tg), 4), np.int8), tg)) == ["R9-2.5"])
+    tj = np.round(np.arange(0.001, 1.0, 0.001), 9)
+    tj[500:] += 0.9e-6
+    check("R9-2.5 a 0.9 us jitter (within 1e-6 s procedure value) -> well formed",
+          C.law_locked_check(np.zeros((len(tj), 4), np.int8), tj) == [])
+    tj2 = tj.copy()
+    tj2[700:] += 1.2e-6
+    check("R9-2.5 a 1.2 us step (> 1e-6 s) -> malformed",
+          C.law_locked_codes(C.law_locked_check(np.zeros((len(tj2), 4), np.int8), tj2)) == ["R9-2.5"])
+    check("R9-2.1 time column absent -> malformed",
+          "R9-2.1" in C.law_locked_codes(C.law_locked_check(np.zeros((10, 4), np.int8), None)))
     row, j = variant("j11s_none", None)
-    check("R8-3 SCM law_locked missing (fallback leg present) -> 판정 불가 + stop",
+    check("R9-5 SCM law_locked missing (fallback leg present) -> 판정 불가 + stop",
           row.law_locked_source is None and j["verdict"] == "indeterminate" and "missing" in j["reason"]
-          and j.get("stop", "").startswith("R8-3"), j)
+          and j.get("stop", "").startswith("R9-5") and j["law_locked_codes"] == ["key"], j)
     d0 = _edit_result(tmp / "j11s_none", tmp / "j11s_none_nofb", lambda r: (
         r["controller_meta"]["two_pressure"].update(fallback_lock_log=[]),
         r.update(events=[e for e in r["events"] if "FALLBACK" not in e["name"]])))
     r0 = C.load_row(d0, "scm", SCM_VB_ARGV)
     j0 = K.j11_item(r0, r0.result["controller_meta"]["two_pressure"])
-    check("R8-3 (Q-R8-1 = B): SCM law_locked missing, no fallback leg -> still 판정 불가 + stop (not 'record')",
-          j0["verdict"] == "indeterminate" and j0.get("stop", "").startswith("R8-3"), j0)
-    # L2b: missing law_locked keeps rev6 R6-B7 (no actual fallback leg -> record)
+    check("R9-5: SCM law_locked missing, no fallback leg -> still 판정 불가 + stop (not 'record')",
+          j0["verdict"] == "indeterminate" and j0.get("stop", "").startswith("R9-5"), j0)
+    # L2b: rev9 R9-5 replaces rev8 R8-3 item 4 / rev3 R3-C7: missing = 판정 불가 + stop as SCM
     dl = write_l2b(tmp / "l2b_noll")
     _set_npz(dl / "pads.npz", law_locked=None)
     rl = C.load_row(dl, "l2b", L2B_ARGV)
     jl = K.j11_item(rl, {"fallback_lock_log": [], "settings": {}})
-    check("L2b pads.npz law_locked missing, no fallback leg -> record (rev6 R6-B7 kept)",
-          jl["verdict"] == "record" and "stop" not in jl, jl)
+    check("R9-5 L2b pads.npz law_locked missing, no fallback leg -> 판정 불가 + stop (was record under rev8)",
+          jl["verdict"] == "indeterminate" and jl.get("stop", "").startswith("R9-5") and "pads.npz" in jl["stop"], jl)
+    jr = K.j11_record_item(rl)
+    check("R9-6 outside C-5: same L2b row -> J11 record, input absent counted, no stop",
+          jr["verdict"] == "record" and "stop" not in jr and jr["input_absent"] is True
+          and str(jr["c5_stop_would_be_record"]).startswith("R9-5"), jr)
     dl2 = write_l2b(tmp / "l2b_ll64")
     _set_npz(dl2 / "pads.npz", law_locked=np.zeros((len(np.load(dl2 / "pads.npz")["t"]), 4), np.int64))
     rl2 = C.load_row(dl2, "l2b", L2B_ARGV)
     jl2 = K.j11_item(rl2, {"fallback_lock_log": [], "settings": {}})
-    check("L2b pads.npz law_locked malformed (int64) -> 판정 불가 + stop (R8-3a table)",
-          jl2["verdict"] == "indeterminate" and jl2.get("stop", "").startswith("R8-3"), jl2)
+    check("R9-5 L2b pads.npz law_locked malformed (int64) -> 판정 불가 + stop",
+          jl2["verdict"] == "indeterminate" and jl2.get("stop", "").startswith("R9-5"), jl2)
+    dl3 = write_l2b(tmp / "l2b_llaft")
+    ll3 = np.zeros((len(np.load(dl3 / "pads.npz")["t"]), 4), np.int8)
+    ll3[5000:5100, :] = -1
+    _set_npz(dl3 / "pads.npz", law_locked=ll3)
+    rl3 = C.load_row(dl3, "l2b", L2B_ARGV)
+    jl3 = K.j11_item(rl3, {"fallback_lock_log": [], "settings": {}})
+    check("R9-2 / R9-3 same format check on L2b: -1 after arming -> R9-2.6, stop R9-5",
+          jl3["law_locked_codes"] == ["R9-2.6"] and jl3.get("stop", "").startswith("R9-5"), jl3)
+    rok = C.load_row(write_l2b(tmp / "l2b_llok"), "l2b", L2B_ARGV)
+    jok = K.j11_record_item(rok)
+    check("R9-6 outside C-5, well-formed L2b law_locked -> record, input not absent",
+          jok["verdict"] == "record" and jok["input_absent"] is False, jok)
+
+
+def t_rev9(tmp, sp):
+    """436.8 rev9 R9-1 (expect check), R9-4 (LS rows by v5_setting), R9-7 (tag reading, check only)."""
+    d = write_scm(tmp / "r9_scm", copy.deepcopy(sp))
+    e = K.expect_item(C.load_row(d, "scm", SCM_VB_ARGV))
+    check("R9-1 SCM c2_setup.expect_controller.ok true -> pass, no stop", e["verdict"] == "pass" and "stop" not in e, e)
+    dko = _edit_result(d, tmp / "r9_scm_ko", lambda r: r["c2_setup"]["expect_controller"].update(ok=False))
+    e = K.expect_item(C.load_row(dko, "scm", SCM_VB_ARGV))
+    check("R9-1 ok false -> S-2 stop (G-S also S-11)", e.get("stop", "").startswith("S-2") and "S-11" in e["stop"], e)
+    dnk = _edit_result(d, tmp / "r9_scm_nokey", lambda r: r["c2_setup"].pop("expect_controller"))
+    e = K.expect_item(C.load_row(dnk, "scm", SCM_VB_ARGV))
+    check("R9-1 expect_controller key absent -> S-2 stop", e.get("stop", "").startswith("S-2") and "absent" in e["stop"], e)
+    dl = write_l2b(tmp / "r9_l2b")
+    res = json.loads((dl / "result.json").read_text(encoding="utf-8"))
+    res["expect_controller"].pop("ok")
+    (dl / "result.json").write_text(json.dumps(res), encoding="utf-8")
+    e = K.expect_item(C.load_row(dl, "l2b", L2B_ARGV))
+    check("R9-1 L2b expect_controller.ok absent -> S-2 stop (source expect_controller.ok)",
+          e.get("stop", "").startswith("S-2") and e["source"] == "expect_controller.ok", e)
+    items = {}
+    keys = []
+    p2_chrono.augment_items("C-3", C.load_row(dko, "scm", SCM_VB_ARGV), items, keys)
+    b = K.bundle_status([{"case": "x", "status": C.row_status(items, keys), "judged_keys": keys, "items": items}])
+    check("R9-1 in a bundle (C-3) -> bundle stop S-2, 판정 불가 (not only J-P3)",
+          b["status"] == "판정 불가" and any("S-2" in s for s in b["stops"]) and "J11_record" in items, b["stops"])
+    items6 = {}
+    p2_chrono.augment_items("C-6C7", C.load_row(dko, "scm", SCM_VB_ARGV), items6, [])
+    check("R9-1 not applied to open-loop C-6C7", items6 == {}, items6)
+    # R9-4
+    man = {"batches": {"V5-RESUME-K1-C5": {"rows": [
+        {"case": "A_LS1", "v5_setting": "LS1"}, {"case": "B", "v5_setting": "VB"}, {"case": "C", "v5_setting": "LS4"},
+        {"case": "D", "v5_setting": None}, {"case": "E_LS4", "v5_setting": "VB"}]}}}
+    mrows = K.manifest_rows(man, "V5-RESUME-K1-C5")
+    cls = {c["case"]: K.ls_classification(c, mrows)["ls"] for c in (
+        {"case": "A_LS1", "v5_setting": "LS1"}, {"case": "B", "v5_setting": "VB"}, {"case": "C", "v5_setting": "LS1"},
+        {"case": "D"}, {"case": "E_LS4", "v5_setting": "VB"}, {"case": "F", "v5_setting": "LS4"},
+        {"case": "B_nobatch"})}
+    check("R9-4 LS classes: both LS1 -> LS; both VB -> not; differ -> None; both None -> not; "
+          "name '_LS4' with VB -> not; batch only -> None; neither -> not",
+          cls == {"A_LS1": True, "B": False, "C": None, "D": False, "E_LS4": False, "F": None, "B_nobatch": False}, cls)
+    check("R9-4 manifest batch absent -> rows None", K.manifest_rows(man, "V5-RESUME-K1-C9") is None)
+    rv0 = C.load_row(d, "scm", SCM_V0_ARGV)
+    li = K.ls_item(rv0, {"case": "A_LS1", "v5_setting": "LS1"}, mrows)
+    check("R9-4 LS row with a non-③ tag -> S-2", li["ls"] is True and li.get("stop", "").startswith("S-2"), li)
+    li2 = K.ls_item(C.load_row(d, "scm", SCM_VB_ARGV), {"case": "A_LS1", "v5_setting": "LS1"}, mrows)
+    check("R9-4 LS row with a ③ tag -> record, no stop", li2["ls"] is True and "stop" not in li2
+          and li2["verdict"] == "record", li2)
+    it, _, _ = K.items_c5(C.load_row(d, "scm", SCM_VB_ARGV), PARAMS, case={"case": "C", "v5_setting": "LS1"},
+                          mrows=mrows)
+    check("R9-4 items_c5: LS_class present, mismatch -> 판정 불가, J11 ls None",
+          it["LS_class"]["ls"] is None and it["LS_class"]["verdict"] == "indeterminate"
+          and it["J11_window"]["ls"] is None, it["LS_class"])
+    check("batch id from batch.json 'batch' or folder name",
+          p2_chrono.batch_id_of({"batch": "V5-RESUME-K1-C5"}, Path("x/batch.json")) == "V5-RESUME-K1-C5"
+          and p2_chrono.batch_id_of({}, Path("batch_V5-RESUME-K1-GS_20261113_082117/batch.json")) == "V5-RESUME-K1-GS")
+    # R9-7 (check only): the ③ reading of the K1-only tags (rules 4.1 is_extend_start_tag)
+    check("R9-7 tags: final_C4G2_K1 not ③, final_C4G2_P3_K1 ③ (is_extend_start_tag)",
+          [C.is_extend_start_tag(x) for x in ("final_C4G2_K1", "final_C4G2_P3_K1")] == [False, True])
+    import p2_rules as RR
+    check("R9-2 / R9-4 constants: 1 ms +- 1e-6 s, LS1..LS4", RR.LAW_LOCK_DT_S == 1e-3 and RR.LAW_LOCK_DT_TOL_S == 1e-6
+          and RR.LS_SETTINGS == ("LS1", "LS2", "LS3", "LS4"))
 
 
 def t_rev8_record(rec_dir):
@@ -527,9 +637,9 @@ def t_scm(tmp):
     it18, k18, _ = K.items_c5(C.load_row(d18, "scm", SCM_VB_ARGV), PARAMS)
     check("J-P3 breach sum 1 -> fail + H-7 (rev8 3.2)", it18["J-P3"]["verdict"] == "fail"
           and it18["J-P3"].get("stop") == "H-7 (rev8 3.2)", it18["J-P3"])
-    check("J11 SCM row without step_series law_locked -> 판정 불가 + stop (436.8 rev8 R8-3)",
+    check("J11 SCM row without step_series law_locked -> 판정 불가 + stop (436.8 rev9 R9-5)",
           it18["J11_window"]["verdict"] == "indeterminate"
-          and it18["J11_window"].get("stop", "").startswith("R8-3"), it18["J11_window"])
+          and it18["J11_window"].get("stop", "").startswith("R9-5"), it18["J11_window"])
     check("D2 reason from INFO_ROD_PRESSURE_FAULT_REASON (rev5 R5-B2), FR reason unreadable",
           it18["D2"]["d2_fallback_legs"] == ["RL"] and it18["D2"]["reason_unreadable_legs"] == ["FR"], it18["D2"])
     t_rev8_jp3(tmp, sp, d18)
@@ -613,9 +723,15 @@ def t_l2b(tmp):
     check("J11: window end recomputed = log to 1e-12, plant unlocked after t_w -> n_late 1, H-7",
           j["log_matches"][0]["match"] and j["verdict"] == "fail" and j["stop"].startswith("H-7")
           and j["n_late"][0] == 1, {k: j.get(k) for k in ("log_matches", "n_late", "verdict", "stop")})
+    j2 = K.j11_item(rj, res["controller_meta"]["two_pressure"], ls=True)
+    check("J11 LS row (R9-4 ls True) -> L-e stop (rev5 R5-B3)", j2["stop"].startswith("L-e"), j2.get("stop"))
     rj.case = "E_G4_Fs8_LS1"
-    j2 = K.j11_item(rj, res["controller_meta"]["two_pressure"])
-    check("J11 LS row -> L-e stop (rev5 R5-B3)", j2["stop"].startswith("L-e"), j2.get("stop"))
+    j2b = K.j11_item(rj, res["controller_meta"]["two_pressure"], ls=False)
+    check("R9-4 name token not used: case '..._LS1' with ls False -> H-7", j2b["stop"].startswith("H-7"),
+          j2b.get("stop"))
+    j2c = K.j11_item(rj, res["controller_meta"]["two_pressure"], ls=None)
+    check("R9-4 LS not judgeable + n_late > 0 -> stop, text 'LS 판별 불가'", "LS 판별 불가" in j2c["stop"]
+          and j2c["verdict"] == "fail", j2c.get("stop"))
     res["controller_meta"]["two_pressure"]["fallback_lock_log"][0]["window_end_s"] = tw + 1e-6
     j3 = K.j11_item(rj, res["controller_meta"]["two_pressure"])
     check("J11 window end mismatch -> S-11", "S-11" in j3.get("stop", ""), j3.get("stop"))
@@ -676,9 +792,8 @@ def t_seal(tmp):
           and {r["file"]: r["status"] for r in s6["sealed"]}[rel7] == "sidecar_missing")
     sc7.write_bytes(keep)
     rel8 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev8.md"
-    check("seal: rev8 listed, raw only, 3ecafaaf, role wins (rev8 R8-4)",
-          rel8 in R.RAW_ONLY and any(r == rel8 and w.startswith("3ecafaaf") and "wins" in role
-                                     for r, w, role in R.SEALED))
+    check("seal: rev8 listed, raw only, 3ecafaaf (rev8 R8-4)",
+          rel8 in R.RAW_ONLY and any(r == rel8 and w.startswith("3ecafaaf") for r, w, role in R.SEALED))
     check("seal: rev8 raw sha = code seal sha = .sha256 first token",
           {r["file"]: r["status"] for r in ok["sealed"]}[rel8] == "match"
           and R.sidecar_sha(repo / rel8) == next(w for r, w, _ in R.SEALED if r == rel8))
@@ -700,6 +815,36 @@ def t_seal(tmp):
     check("seal: rev8 file changed (.sha256 intact) -> S-1 (mismatch)",
           not s8c["ok"] and {r["file"]: r["status"] for r in s8c["sealed"]}[rel8] == "mismatch")
     p8.write_bytes(keep_md)
+    rel9 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev9.md"
+    check("seal: rev9 listed, raw only, 4cf7843c, role wins; rev8 no longer wins (rev9 R9-8)",
+          rel9 in R.RAW_ONLY and any(r == rel9 and w.startswith("4cf7843c") and "wins" in role
+                                     for r, w, role in R.SEALED)
+          and not any(r == rel8 and "wins" in role for r, w, role in R.SEALED))
+    check("seal: rev9 raw sha = code seal sha = .sha256 first token",
+          {r["file"]: r["status"] for r in ok["sealed"]}[rel9] == "match"
+          and R.sidecar_sha(repo / rel9) == next(w for r, w, _ in R.SEALED if r == rel9))
+    sc9 = repo / Path(rel9).with_suffix(".sha256")
+    keep9 = sc9.read_bytes()
+    sc9.write_text("e" * 64 + "  v5_resume_4368_rules_rev9.md\n", encoding="utf-8")
+    s9 = R.seal_check(repo)
+    check("seal: rev9 .sha256 record differs -> S-1 (sidecar_mismatch)",
+          not s9["ok"] and {r["file"]: r["status"] for r in s9["sealed"]}[rel9] == "sidecar_mismatch")
+    sc9.unlink()
+    s9b = R.seal_check(repo)
+    check("seal: rev9 .sha256 record missing -> S-1",
+          not s9b["ok"] and {r["file"]: r["status"] for r in s9b["sealed"]}[rel9] == "sidecar_missing")
+    sc9.write_bytes(keep9)
+    p9 = repo / rel9
+    keep9md = p9.read_bytes()
+    p9.write_bytes(keep9md.replace(b"\n", b"\r\n"))
+    s9c = R.seal_check(repo)
+    check("seal: rev9 CRLF copy -> S-1 (raw only)",
+          not s9c["ok"] and {r["file"]: r["status"] for r in s9c["sealed"]}[rel9] == "mismatch")
+    p9.unlink()
+    s9d = R.seal_check(repo)
+    check("seal: rev9 file missing -> S-1", not s9d["ok"]
+          and {r["file"]: r["status"] for r in s9d["sealed"]}[rel9] == "missing")
+    p9.write_bytes(keep9md)
     check("seal: restored copies match again", R.seal_check(repo)["ok"])
     rel_a ="06_analysis/02_control/verif_matrix/d1_selection_rules.md"
     p = repo / rel_a
@@ -759,6 +904,54 @@ def t_cli(tmp):
     check("CLI gs-load: exit 0, 1 G-S row, no verdict / status keys in output",
           proc4.returncode == 0 and last4.get("rows") == 1 and '"verdict"' not in txt4
           and '"bundle_result"' not in txt4, proc4.stdout[-400:] + proc4.stderr[-400:])
+    g4 = json.loads(txt4) if txt4 else {}
+    gi = g4.get("rev9_R9_8_gs_items") or {}
+    check("CLI gs-load rev9 R9-8 items: S-2 0, law_locked key absent counted, rev9 seal match",
+          gi.get("r9_1_s2_rows") == 0 and gi.get("r9_2_rows_per_item", {}).get("key") == 1
+          and gi.get("rev9_seal") == "match" and gi.get("r9_6_input_absent_rows") == 1, gi)
+    # R9-1 in the CLI: one row with expect_controller.ok false -> bundle stop S-2, exit 1
+    bko = tmp / "batch_P2KO"
+    bko.mkdir(exist_ok=True)
+    write_scm(bko / "rowA", sp)
+    write_scm(bko / "rowB", sp)
+    rb = json.loads((bko / "rowB" / "result.json").read_text(encoding="utf-8"))
+    rb["c2_setup"]["expect_controller"]["ok"] = False
+    (bko / "rowB" / "result.json").write_text(json.dumps(rb), encoding="utf-8")
+    (bko / "batch.json").write_text(json.dumps({"cases": batch["cases"][:2]}), encoding="utf-8")
+    proc5 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-3",
+                            "--batch", str(bko / "batch.json"), "--out", str(tmp / "o5.json")],
+                           capture_output=True, text=True, encoding="utf-8")
+    last5 = json.loads(proc5.stdout.strip().splitlines()[-1])
+    check("CLI R9-1: expect_controller.ok false on one row -> S-2 stop, 판정 불가, exit 1",
+          proc5.returncode == 1 and last5.get("status") == "판정 불가"
+          and any("S-2" in s and "rowB" in s for s in last5.get("stops", [])), proc5.stdout[-500:])
+    # R9-4 in the CLI: C-5 rows, LS from the manifest + batch.json v5_setting
+    b5 = tmp / "batch_P2C5"
+    b5.mkdir(exist_ok=True)
+    write_scm(b5 / "X_LS1", sp)
+    write_scm(b5 / "Y", sp)
+    argv5 = ["python", "run_S9.py", "level", "--extend-start-tracked", "--expect-controller", "final_C4G2_P3_LAS_K1"]
+    (b5 / "batch.json").write_text(json.dumps({"batch": "P2C5", "cases": [
+        {"case": "X_LS1", "argv": argv5, "criteria_id": "C-5", "v5_setting": "LS1"},
+        {"case": "Y", "argv": argv5, "criteria_id": "C-5", "v5_setting": "VB"}]}), encoding="utf-8")
+    man_p = tmp / "manifest_p2c5.json"
+    man_p.write_text(json.dumps({"batches": {"P2C5": {"rows": [{"case": "X_LS1", "v5_setting": "LS1"},
+                                                                {"case": "Y", "v5_setting": "LS4"}]}}}),
+                     encoding="utf-8")
+    out6 = tmp / "o6.json"
+    proc6 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-5",
+                            "--batch", str(b5 / "batch.json"), "--manifest", str(man_p), "--out", str(out6)],
+                           capture_output=True, text=True, encoding="utf-8")
+    o6 = json.loads(out6.read_text(encoding="utf-8")) if out6.exists() else {}
+    ls6 = (o6.get("bundle_result") or {}).get("rev9_R9_4_ls")
+    check("CLI C-5 R9-4: LS1/LS1 -> LS, VB/LS4 -> 판정 불가; law_locked missing -> R9-5 stops; exit 1",
+          proc6.returncode == 1 and ls6 == {"ls_rows": 1, "not_ls_rows": 0, "not_judgeable_rows": 1}
+          and sum("R9-5" in s for s in (o6.get("bundle_result") or {}).get("stops", [])) == 2,
+          (proc6.returncode, ls6, proc6.stdout[-300:] + proc6.stderr[-300:]))
+    proc7 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-5",
+                            "--batch", str(b5 / "batch.json"), "--manifest", str(tmp / "no_manifest.json"),
+                            "--out", str(tmp / "o7.json")], capture_output=True, text=True, encoding="utf-8")
+    check("CLI C-5 without the manifest -> input error, exit 2", proc7.returncode == 2, proc7.stdout[-300:])
 
 
 def t_resolve(tmp):
@@ -815,6 +1008,7 @@ def main():
     t_classify()
     t_scm(tmp)
     t_rev8_j11(tmp, scm_spec())
+    t_rev9(tmp, scm_spec())
     t_rev8_record(a.lawlock_record)
     t_l2b(tmp)
     t_c67(tmp)
