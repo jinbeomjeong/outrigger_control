@@ -30,6 +30,10 @@ rev11 (9bac4524...): seal check; R11-4 ``chrono --git-at-start``: every row's (o
 ``batch.json`` ``cases[].code_at_launch.git.head`` and, where recorded, ``result.json``
 ``code_state.git_at_start`` head = the judgement git_at_start, absent or different = S-12 (also in G-S);
 R11-5 G-S rows get no grade from this tool. R11-1 / R11-2 are in ``p2_t3k.py`` / ``p2_v5j.py``.
+rev7 R7-5 (applied 2026-11-13 after rev11): the L2b / L1-R row folder is the last ``batch wall ... -> <folder>``
+line of ``<batch>/<case>.log`` (relocated under ``<repo>/07_results`` when that folder has no result.json),
+else the unique runner folder of the row's ``--tag`` whose stamp is in the row window (progress.log
+START~END, else batch stamp + wall_s) +-2 s; none or several = the row is not judged (S-11).
 Author: dynamics-expert (path 2, user decision 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
 ``resume_k1_record.py``, the judging part of ``resume_k1_steps.py``) and every path-1 output were not
@@ -1063,6 +1067,115 @@ def resolve_result(batch_dir, row, repo):
     return None
 
 
+# rev7 R7-5: L2b / L1-R row folder (case log, relocation, +-2 s window)
+R75_WINDOW_S = 2.0                         # R7-8: procedure value (folder stamp 1 s resolution)
+_WALL_RE = re.compile(r"batch wall .*->\s*(.+?)\s*$")
+_STAMP_RE = re.compile(r"_(\d{8}_\d{6})$")
+_PROG_RE = re.compile(r"^(START|END)\s+(\S+)\s+(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})")
+
+
+def runner_roots(repo):
+    """Result roots searched by the R7-5 time window (L1-R ``07_results/S6``, L2b ``07_results/S8``)."""
+    return [repo / "07_results" / "S6", repo / "07_results" / "S8"]
+
+
+def _row_result(folder, argv):
+    """result.json of a runner folder: ``<folder>/<--only>/result.json``, else ``<folder>/result.json``."""
+    only = argv_value(argv, "--only")
+    for q in ((folder / only / "result.json") if only else None, folder / "result.json"):
+        if q is not None and q.is_file():
+            return q
+    return None
+
+
+def _stamp_time(s):
+    try:
+        return _dt.datetime.strptime(s, "%Y%m%d_%H%M%S")
+    except ValueError:
+        return None
+
+
+def _row_window(batch_dir, row):
+    """R7-5: progress.log START~END of the case, else batch stamp + wall_s. (t0, t1, source) or None."""
+    case = row.get("case")
+    prog = Path(batch_dir) / "progress.log"
+    st = en = None
+    if prog.is_file():
+        for ln in prog.read_text("utf-8", errors="replace").splitlines():
+            m = _PROG_RE.match(ln.strip())
+            if m and m.group(2) == case:
+                t = _dt.datetime.fromisoformat(m.group(3))
+                if m.group(1) == "START":
+                    st = t
+                else:
+                    en = t
+    if st is not None and en is not None:
+        return st, en, "progress.log"
+    m = _STAMP_RE.search(Path(batch_dir).name)
+    t0 = _stamp_time(m.group(1)) if m else None
+    w = num(row.get("wall_s"))
+    if t0 is not None and w is not None:
+        return t0, t0 + _dt.timedelta(seconds=w), "batch stamp + wall_s"
+    return None
+
+
+def resolve_runner_row(batch_dir, row, repo, argv):
+    """rev7 R7-5 for an L2b / L1-R row. Returns (result.json or None, record). Methods: ``case_log``,
+    ``case_log_relocated``, ``time_window``; failure reasons are stops (the row is not judged)."""
+    case = row.get("case")
+    rec = {"method": None, "folder": None}
+    log = Path(batch_dir) / f"{case}.log"
+    target = None
+    if log.is_file():
+        for ln in log.read_text("utf-8", errors="replace").splitlines():
+            m = _WALL_RE.search(ln)
+            if m:
+                target = m.group(1)              # the last such line wins
+    if target is not None:
+        rec["case_log_target"] = target
+        folder = Path(target)
+        q = _row_result(folder, argv) if folder.is_dir() else None
+        if q is not None:
+            rec.update(method="case_log", folder=str(folder))
+            return q, rec
+        s = target.replace("\\", "/")
+        if "07_results/" in s:
+            folder = repo / "07_results" / s.split("07_results/", 1)[1]
+            q = _row_result(folder, argv) if folder.is_dir() else None
+            if q is not None:
+                rec.update(method="case_log_relocated", folder=str(folder))
+                return q, rec
+        rec["why"] = "R7-5: the case-log folder has no result.json (also not under the result root)"
+        return None, rec
+    win = _row_window(batch_dir, row)
+    if win is None:
+        rec["why"] = "R7-5: no case-log line and no row time window (progress.log / batch stamp + wall_s)"
+        return None, rec
+    t0, t1, src = win
+    rec["window"] = [t0.isoformat(), t1.isoformat(), src]
+    tag = argv_value(argv, "--tag")
+    lo, hi = t0 - _dt.timedelta(seconds=R75_WINDOW_S), t1 + _dt.timedelta(seconds=R75_WINDOW_S)
+    cands = []
+    for root in runner_roots(repo):
+        if not root.is_dir():
+            continue
+        for d in root.iterdir():
+            m = _STAMP_RE.search(d.name)
+            ts = _stamp_time(m.group(1)) if m else None
+            if not d.is_dir() or ts is None or not lo <= ts <= hi:
+                continue
+            if tag and tag not in d.name:
+                continue
+            if _row_result(d, argv) is not None:
+                cands.append(d)
+    rec["candidates"] = [str(d) for d in cands]
+    if len(cands) != 1:
+        rec["why"] = f"R7-5: {len(cands)} runner folders in the row time window +-{R75_WINDOW_S:g} s"
+        return None, rec
+    rec.update(method="time_window", folder=str(cands[0]))
+    return _row_result(cands[0], argv), rec
+
+
 def departure_index(t, crawler_n, weight_n):
     """First sample of the first run with crawler normal < 0.01 W lasting >= 0.1 s (P3a-2)."""
     import numpy as np  # noqa: PLC0415
@@ -1510,7 +1623,20 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits, manife
         fnd.stop("S-12", where, "dirty tree at launch")
     if row.get("rc") not in (0, None):
         fnd.undec(where, f"rc = {row.get('rc')} (run error, P-15)")
-    rpath = resolve_result(batch_dir, row, repo)
+    if engine in ("L2b", "L1-R"):
+        # rev7 R7-5: the row folder comes from the case log (relocated under the result root if needed),
+        # else the unique runner folder in the row time window +-2 s; otherwise the row is not judged (stop)
+        rpath, r75 = resolve_runner_row(batch_dir, row, repo, argv)
+        out["r75_folder"] = r75
+        s8 = dig(row, "s8c_check.result_json", None) or dig(row, "s6c_check.result_json", None)
+        if rpath is not None and isinstance(s8, str) and Path(s8).resolve() != Path(rpath).resolve():
+            fnd.note(where, f"R7-5: batch.json result_json {s8} differs from the case-log folder {rpath}")
+        if rpath is None:
+            out["result_json"] = None
+            fnd.stop("S-11", where, r75.get("why", "R7-5: row folder not found"))
+            return out
+    else:
+        rpath = resolve_result(batch_dir, row, repo)
     out["result_json"] = str(rpath) if rpath else None
     if rpath is None:
         fnd.undec(where, "result.json not found")
@@ -1938,6 +2064,9 @@ def cmd_chrono(args, repo):
             "R8-3_law_locked_check": law_locked_check, "R8-2_jp3_scope": jp3,
             "R9-2_law_locked_check": r9_ll, "R9-1_expect_controller": r91, "R9-4_ls_rows": r94,
             "R11-4_commit_identity": r114_summary(rows, getattr(args, "git_at_start", None)),
+            "R7-5_row_folders": {str((r.get("r75_folder") or {}).get("method")): [x["case"] for x in rows
+                                 if (x.get("r75_folder") or {}).get("method") == (r.get("r75_folder") or {}).get("method")
+                                 and "r75_folder" in x] for r in rows if "r75_folder" in r},
             "R11-5_gs_grades": "G-S 행 등급은 판정하지 않음(이 도구는 G-S 행에 등급을 내지 않는다)" if args.gs else None,
             "outside_start_condition_rows": outside, "k1_table": k1_table, "v5_options": mod_info,
             "grade_scope": "436.8 layer (4.1 / 4.2 / 6 / 7.2 / 7.4 / O-C5); original Chrono judgement blocks "

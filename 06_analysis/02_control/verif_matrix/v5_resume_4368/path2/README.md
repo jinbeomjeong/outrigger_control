@@ -223,7 +223,7 @@ rev3 절과 다른 곳은 아래가 맞다. 다섯 도구 모두 rev4 sha도 확
 
 ### 도구 sha256 (rev7 판, LF 바이트)
 
-- 이 표는 rev7 판 당시의 이력 값이다. **현재 값은 rev11 표**("rev11 반영" 절 "도구 sha256 (rev11 판)")에 있다.
+- 이 표는 rev7 판 당시의 이력 값이다. **현재 값은 "rev7 R7-5 반영" 절 표**("도구 sha256 (rev7 R7-5 반영 판)")에 있다.
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
@@ -259,7 +259,7 @@ rev3 절과 다른 곳은 아래가 맞다. 다섯 도구 모두 rev4 sha도 확
 
 ### 도구 sha256 (rev8 판, LF 바이트)
 
-- 이 표는 rev8 판 당시의 이력 값이다. **현재 값은 rev11 표**("rev11 반영" 절 "도구 sha256 (rev11 판)")에 있다.
+- 이 표는 rev8 판 당시의 이력 값이다. **현재 값은 "rev7 R7-5 반영" 절 표**("도구 sha256 (rev7 R7-5 반영 판)")에 있다.
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
@@ -297,7 +297,7 @@ rev3 절과 다른 곳은 아래가 맞다. 다섯 도구 모두 rev4 sha도 확
 
 ### 도구 sha256 (rev9 판, LF 바이트)
 
-- 이 표는 rev9 판 당시의 이력 값이다. **현재 값은 rev11 표**("rev11 반영" 절 "도구 sha256 (rev11 판)")에 있다.
+- 이 표는 rev9 판 당시의 이력 값이다. **현재 값은 "rev7 R7-5 반영" 절 표**("도구 sha256 (rev7 R7-5 반영 판)")에 있다.
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
@@ -332,7 +332,7 @@ rev9 절의 R9-4 행 가운데 아래와 다른 곳은 이 절이 맞다. 근거
 
 ### 도구 sha256 (rev10 판, LF 바이트)
 
-- 이 표는 rev10 판 당시의 이력 값이다. **현재 값은 rev11 표**("rev11 반영" 절 "도구 sha256 (rev11 판)")에 있다.
+- 이 표는 rev10 판 당시의 이력 값이다. **현재 값은 "rev7 R7-5 반영" 절 표**("도구 sha256 (rev7 R7-5 반영 판)")에 있다.
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
@@ -364,9 +364,11 @@ rev9 절의 R9-4 행 가운데 아래와 다른 곳은 이 절이 맞다. 근거
 | 바꾸지 않음 | – | R11-3(명령 해시의 뜻)은 정의 확인이고, 이 폴더는 H-6·H-7 해시를 ③ 구분에 쓰지 않는다(태그·`extend_start_rule`로 구분, rev8 R8-1b 그대로). R11-6(G-S 출력 보관)은 실행 절차라 도구 코드가 없다. `p2_4368.py harness`의 4.2 대조는 H-1~H-10 줄(프리셋 켬·켬)만 다루고 H-0 줄은 `p2_t3k.py` 몫이라 기대값을 바꾸지 않았다. `p2_d1.py`·`p2_u3.py`에는 T4h 찾기와 4.2 스위치 대조가 없다 |
 
 - 2026-11-13 G-S `…_130358`(`ba2da55`)에 `chrono --gs --git-at-start ba2da55`를 돌린 결과(참고, R11-7대로 인용하지 않음): 12행 가운데 11행 `code_at_launch` 일치, 열린 루프 1행(`GS_P3a_G1_B_VB_prop_lift10`) 기록 없음 → S-12(러너 기록 추가 전이라 예상된 결과). `code_state` 일치 9행, 없음 2행. `law_locked` SCM 9행·L2b 1행 통과, R10-2 출처 확인 12/12.
-- 같은 실행에서 L1-R 행 `GS_D1C1_top_flat_crx3`의 `result.json`을 찾지 못했다(판정 불가 1건). L1-R 결과 폴더의 시각(`…_130359`)이 배치 시각(`…_130358`)보다 1 s 늦어서, 경로 2의 결과 찾기(`07_results/S6/*<--tag>*<배치 시각>`)가 맞지 않는다. 이것은 rev11 항목이 아니라서 고치지 않았다. 같은 `--tag`가 여러 G-S 실행에 걸쳐 있으므로, 시각을 느슨하게 맞추는 식으로 고치면 다른 실행의 폴더를 잡을 수 있다(R11-2와 같은 위험). 러너가 행에 `s6c_check.result_json`을 남기는 것을 권고한다.
+- 같은 실행에서 L1-R 행 `GS_D1C1_top_flat_crx3`의 `result.json`을 찾지 못했다(판정 불가 1건). L1-R 결과 폴더의 시각(`…_130359`)이 배치 시각(`…_130358`)보다 1 s 늦었기 때문이다. 이 문제는 이미 봉인된 rev7 R7-5에 규칙이 있었는데 경로 2가 반영하지 않았던 것이다. 아래 "rev7 R7-5 반영" 절에서 고쳤다.
 
-### 도구 sha256 (rev11 판, LF 바이트, 현재 값)
+### 도구 sha256 (rev11 판, LF 바이트)
+
+- 이 표는 rev11 판(커밋 `582fa93`) 당시의 이력 값이다. **현재 값은 "rev7 R7-5 반영" 절 표**에 있다.
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
@@ -382,7 +384,39 @@ rev9 절의 R9-4 행 가운데 아래와 다른 곳은 이 절이 맞다. 근거
 | `test_p2_v5j.py` | `24d5141213a5daa01500809d0b5b62f373bc6c3a91c8c096cbb6f21d0c9f0ba7` | 바뀜(20개) |
 
 - 자체 시험은 다섯 파일 189개(앞 판 168개)다. 더한 것(21개): `test_p2_4368.py` 6개(rev11 봉인과 불일치 S-1, 열린 루프 `code_at_launch` 일치·없음·다름, 7자리 약칭·짧은 값·인자 없음, level 행 `code_state` 일치·다름·없음), `test_p2_t3k.py` 11개(줄 종류 수와 R-0 끔·끔 통과, R-0 기록이 끔이면 S-3 아님, 결함 8가지, 요청 기록만·G-S S-11), `test_p2_v5j.py` 4개(찾는 곳 규칙, 한 번·여럿·없음·다른 실행 폴더, 재집계 S-2, CLI 입력 오류 S-11). 합성 H-0 줄에 `t3.bundle`과 `k1_order_gate_request`를 넣었고, 시험의 `run_main`이 `chrono`에 배치 기록 head를 `--git-at-start`로 넘긴다.
-- `p2_4368.py`와 `p2_v5j.py`가 바뀌었으므로 `../path2_v5c/p2v5c_common.py`의 `P2_CORE_SHA`(`4643dd40…`)와 `P2_V5J_SHA`(`e5d769b9…`)를 고쳐야 한다(그 폴더 작성자 몫). `path2_v5c`가 단일 `--t4h-root`로 T4h를 읽는 부분(`p2v5c_stage1.judge_all`)도 R11-2 대상인지 그 폴더에서 판단해야 한다.
+- `p2_4368.py`와 `p2_v5j.py`가 바뀌었으므로 `../path2_v5c/p2v5c_common.py`의 `P2_CORE_SHA`(`4643dd40…`)와 `P2_V5J_SHA`(`e5d769b9…`)를 고쳐야 한다(그 폴더 작성자 몫). `path2_v5c`가 단일 `--t4h-root`로 T4h를 읽는 부분(`p2v5c_stage1.judge_all`)도 R11-2 대상인지 그 폴더에서 판단해야 한다. `P2_CORE_SHA`는 아래 R7-5 반영으로 다시 바뀌었다.
+
+## rev7 R7-5 반영 (L2b·L1-R 행 폴더, `v5_resume_4368_rules_rev7.md` 126·127행, 2026-11-13 rev11 판 뒤)
+
+rev7 R7-5는 경로 1 집계 v2의 행 폴더 찾기를 정한 봉인 문장이다. 경로 2는 그때까지 `07_results/S6|S8/*<--tag>*<배치 시각>`처럼 시각이 정확히 같은 폴더만 찾았다. 그래서 러너 폴더 시각이 1 s 늦으면 행을 찾지 못했다. 이번에 같은 문장대로 바꿨다. 근거는 rev7 문장과 러너 기록 꼴(행 로그의 `batch wall … -> <폴더>` 줄, `progress.log`의 `START`·`END` 줄)뿐이다. 경로 1 코드는 열지 않았다.
+
+| 항목 | 도구 | 반영 |
+|---|---|---|
+| 행 로그 | `p2_4368.py chrono`(`resolve_runner_row`) | L2b(`run_S8C.py`)·L1-R(`run_S6C.py`) 행 폴더 = `<배치>/<case>.log`의 **마지막** `batch wall … -> <폴더>` 줄의 폴더(`case_log`). `result.json`은 `<폴더>/<--only>/result.json`(없으면 `<폴더>/result.json`)이다 |
+| 옮겨 찾기 | 같음 | 그 폴더에 `result.json`이 없으면 `<repo>/07_results/` 아래 같은 상대 경로(`07_results/` 뒤 부분)를 한 번 더 본다(`case_log_relocated`). 그래도 없으면 행을 판정하지 않고 **S-11** |
+| 시각 창 | 같음 | 그 줄이 없으면 행 시각 창(`progress.log`의 그 case `START`~`END`, 없으면 배치 시각 + 행 `wall_s`) ±2 s 안에 시각이 든 러너 폴더(`07_results/S6`·`S8` 바로 아래, 이름 끝 `_<YYYYmmdd_HHMMSS>`, `result.json` 있음)를 찾는다. 하나뿐이면 그 폴더(`time_window`)를 쓰고, 없거나 둘 이상이면 판정하지 않고 **S-11** |
+| 후보 범위(경로 2 읽기) | 같음 | "그 행의 러너 폴더"를 그 행 argv `--tag` 값이 이름에 든 폴더로 좁힌다. 같은 시각에 시작한 다른 행(예: `…_130359`의 L1-R과 L2b)의 폴더를 후보로 세지 않으려는 것이다. 같은 `--tag`의 다른 G-S 실행 폴더는 시각 창 밖이라 후보에 들지 않는다 |
+| 기록 | 같음 | 행 `r75_folder`(`method`, `folder`, `case_log_target`, `window`, `candidates`, `why`), 출력 `R7-5_row_folders`(방법별 행). `batch.json`의 `s8c_check`·`s6c_check.result_json`이 찾은 폴더와 다르면 기록만 한다 |
+
+- 2026-11-13 G-S `…_130358`에 `chrono --gs --git-at-start ba2da55`를 다시 돌린 결과(참고, R11-7대로 인용하지 않음): L1-R `GS_D1C1_top_flat_crx3`와 L2b `GS_D1C2_middle_fdown3.2_Fs4`의 폴더를 모두 `case_log`로 찾았다(`…_130359`). 판정 불가는 0건이다. 남은 멈춤은 열린 루프 행 `code_at_launch` 없음(R11-4, S-12) 1건뿐이다. `code_state`는 일치 9행, 없음 3행(L1-R 결과가 이제 읽혀 1행 늘었다).
+- 자체 시험 194개(앞 절 189개). `test_p2_4368.py`에 5개를 더했다: 1 s 늦은 폴더를 행 로그로 찾음, 같은 tag의 다른 G-S 폴더와 혼동하지 않음, 결과 루트 아래로 옮겨 찾기, 로그 없음(시각 창 유일 후보 통과, 둘이면 S-11, 창 밖 제외, `progress.log` 우선), 로그 폴더에 결과 없음 S-11. 합성 L2b 배치는 이제 러너 폴더를 `<tmp>/07_results/S8/<tag>_<배치 시각 + 1 s>/<case>/`에 두고 행 로그로 가리킨다.
+
+### 도구 sha256 (rev7 R7-5 반영 판, LF 바이트, 현재 값)
+
+| 파일 | sha256 | 이 판에서 |
+|---|---|---|
+| `p2_4368.py` | `a8c625bf91184ec970a446a3997510ac2f8ce24df9d90b92b101b99b34a3fd43` | 바뀜 |
+| `p2_d1.py` | `6d18f6dbfa891ea8faf2eec45cb26c023a045aa0170b7cfac4b1c0aa28cde24d` | 그대로 |
+| `p2_t3k.py` | `f63cead31f6cde5dd23fe504370ec5c9f4101d7967c6eebc9aab3c08c642acf8` | 그대로 |
+| `p2_u3.py` | `408944c498da8736e343c2dbc2d816f6fdbe8a5ecd73a0a96689f06680bc5f28` | 그대로 |
+| `p2_v5j.py` | `e5d769b925a1d3047a8f1a42443894f761520950d8d1ec75c31499e9ae7dd3fe` | 그대로 |
+| `test_p2_4368.py` | `daedbfb12f13f7c38a39a566dc154ac9c412e04dea975b3db6984d60b2a63b75` | 바뀜(116개) |
+| `test_p2_d1.py` | `d1b61db2979ea1658eda4f515936e407a2d52666efeff9575c583dcecd0778ce` | 그대로(17개) |
+| `test_p2_t3k.py` | `585384fa8693ff70703782349de4f0590a63782de5e886f4be32407ef0b962bf` | 그대로(30개) |
+| `test_p2_u3.py` | `245c03ff2a731fb33606f992328660f46f669dbee41cac4e20dc58b01133bb99` | 그대로(11개) |
+| `test_p2_v5j.py` | `24d5141213a5daa01500809d0b5b62f373bc6c3a91c8c096cbb6f21d0c9f0ba7` | 그대로(20개) |
+
+- `../path2_v5c/p2v5c_common.py`: `P2_CORE_SHA` = `a8c625bf…`, `P2_V5J_SHA` = `e5d769b9…`로 맞춰야 한다(그 폴더 작성자 몫).
 
 ## 하지 않는 것 (범위)
 
@@ -410,7 +444,7 @@ $t = '<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2\p2_4368.py
 & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B -m pytest -q -p no:cacheprovider --basetemp <scratch>\pt <repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2\test_p2_4368.py
 ```
 
-- `test_p2_4368.py`는 111개(rev11 판, rev10 판 105개, rev9 판 89개, rev8 판 65개, 처음 판은 45개), 합성 입력만 쓴다(봉인 확인 시험은 저장소의 실제 규칙 파일을 읽는다). 합성 배치는 폴더 옆에 자기 `rows_manifest.json`을 두고, 시험의 `run_main`이 `chrono`에 `--rows-manifest`로 넘긴다. rev3~rev10에서 더한 시험은 각 판 절에 있다. 다루는 것: 문턱 비교와 K-10, $R_c$ 식, `C2Event` 해석, 줄 키, 지면 계열, 7.2 분류 9가지(S-5·S-6·S-3 포함), 결측 = 판정 불가, C-4 끔 팔 'LAS 없음', LAS-b 설정 검사, 하네스 끝에서 끝(통과, S-2, S-5 + S-6, IND 해당 없음 + S-3 토큰, S-15), 1 ms 재계산(이탈 지속 조건, 창 시간), Chrono 행(O-C5 S-9, S-10, 태그 S-2, 금지 인자 S-3 + 스레드 S-4, C-4 끔 팔), O-C5 $k$ 절차(첫 probe, 할선, 두 배 재실행, 할선 정의 불가), J_P 재사용과 거부, K-10 compare, 실제 규칙 sha.
+- `test_p2_4368.py`는 116개(rev7 R7-5 반영 판, rev11 판 111개, rev10 판 105개, rev9 판 89개, rev8 판 65개, 처음 판은 45개), 합성 입력만 쓴다(봉인 확인 시험은 저장소의 실제 규칙 파일을 읽는다). 합성 배치는 폴더 옆에 자기 `rows_manifest.json`을 두고, 시험의 `run_main`이 `chrono`에 `--rows-manifest`로 넘긴다. rev3~rev10에서 더한 시험은 각 판 절에 있다. 다루는 것: 문턱 비교와 K-10, $R_c$ 식, `C2Event` 해석, 줄 키, 지면 계열, 7.2 분류 9가지(S-5·S-6·S-3 포함), 결측 = 판정 불가, C-4 끔 팔 'LAS 없음', LAS-b 설정 검사, 하네스 끝에서 끝(통과, S-2, S-5 + S-6, IND 해당 없음 + S-3 토큰, S-15), 1 ms 재계산(이탈 지속 조건, 창 시간), Chrono 행(O-C5 S-9, S-10, 태그 S-2, 금지 인자 S-3 + 스레드 S-4, C-4 끔 팔), O-C5 $k$ 절차(첫 probe, 할선, 두 배 재실행, 할선 정의 불가), J_P 재사용과 거부, K-10 compare, 실제 규칙 sha.
 
 ## 독립성 공개 (규칙 9.2, 이 도구를 쓰려고 읽은 것)
 

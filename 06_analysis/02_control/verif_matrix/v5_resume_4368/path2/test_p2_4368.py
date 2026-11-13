@@ -873,24 +873,34 @@ def make_l2b_batch(tmp_path, res, cid="C-5", pads="ok", name="batch_V5-RESUME-K1
                    setting="VB"):
     bd = tmp_path / name
     case = "L2b_case_VB"
-    (bd / case).mkdir(parents=True)
-    (bd / case / "result.json").write_text(json.dumps(res), "utf-8")
-    (bd / case / "controller_events.json").write_text("[]", "utf-8")
+    bd.mkdir(parents=True)
+    tag = f"r4368gs_{case}"
+    run_folder = runner_folder(tmp_path, "S8", tag, "20990101_000001", case, res, pads)   # 1 s after the batch
+    (bd / f"{case}.log").write_text(f"x\nbatch wall 12.3 s -> {run_folder}\n", "utf-8")
+    argv = ["python.exe", "run_S8C.py", "--tag", tag, "--only", case, "--expect-controller",
+            res["expect_controller"]["controller_tag"], "--extend-start-tracked"]
+    row = {"case": case, "argv": argv, "rc": 0, "pool": "pcore", "planned_pool": "pcore", "criteria_id": cid,
+           "v5_setting": setting, "code_at_launch": {"git": {"head": "b" * 40, "dirty": []}}, "wall_s": 20.0}
+    write_batch_json(bd, [row])
+    return bd
+
+
+def runner_folder(tmp_path, sub, tag, stamp, case, res, pads="ok"):
+    """A synthetic L2b / L1-R runner folder ``<tmp>/07_results/<sub>/<tag>_<stamp>/<case>/``."""
+    d = tmp_path / "07_results" / sub / f"{tag}_{stamp}"
+    (d / case).mkdir(parents=True, exist_ok=True)
+    (d / case / "result.json").write_text(json.dumps(res), "utf-8")
+    (d / case / "controller_events.json").write_text("[]", "utf-8")
     a = _ll()
     t = np.round(np.arange(a.shape[0]) * 1e-3, 9)
     if pads == "ok":
-        np.savez(bd / case / "pads.npz", t=t, law_locked=a)
+        np.savez(d / case / "pads.npz", t=t, law_locked=a)
     elif pads == "nokey":
-        np.savez(bd / case / "pads.npz", t=t)
+        np.savez(d / case / "pads.npz", t=t)
     elif pads == "after":
         a[500, 1] = -1
-        np.savez(bd / case / "pads.npz", t=t, law_locked=a)
-    argv = ["python.exe", "run_S8C.py", "--expect-controller", res["expect_controller"]["controller_tag"],
-            "--extend-start-tracked"]
-    row = {"case": case, "argv": argv, "rc": 0, "pool": "pcore", "planned_pool": "pcore", "criteria_id": cid,
-           "v5_setting": setting, "code_at_launch": {"git": {"head": "b" * 40, "dirty": []}}}
-    write_batch_json(bd, [row])
-    return bd
+        np.savez(d / case / "pads.npz", t=t, law_locked=a)
+    return d
 
 
 @pytest.mark.parametrize("pads, stop", [("ok", False), ("nokey", True), ("nofile", True), ("after", True)])
@@ -1210,3 +1220,76 @@ def test_rev11_r114_level_row_code_state(tmp_path, capsys):
     code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
     rep = json.loads(out.read_text("utf-8"))
     assert code == 0 and rep["R11-4_commit_identity"]["code_state"] == {"absent": 1}
+
+
+# ------------------------------------------------------------------ rev7 R7-5 (L2b / L1-R row folder)
+def test_r75_case_log_finds_folder_one_second_late(tmp_path, capsys):
+    """The runner folder stamp is 1 s after the batch stamp: found through the case log, not the stamp."""
+    bd = make_l2b_batch(tmp_path, l2b_result())
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0, rep["stops"]
+    r75 = rep["rows"][0]["r75_folder"]
+    assert r75["method"] == "case_log" and r75["folder"].endswith("r4368gs_L2b_case_VB_20990101_000001")
+    assert rep["R7-5_row_folders"] == {"case_log": ["L2b_case_VB"]}
+
+
+def test_r75_same_tag_other_gs_folder_not_confused(tmp_path, capsys):
+    """Another G-S run with the same --tag (earlier stamp, different values): the case log decides."""
+    bd = make_l2b_batch(tmp_path, l2b_result())
+    other = l2b_result(ok=False)                   # would give S-2 / S-11 if it were read
+    runner_folder(tmp_path, "S8", "r4368gs_L2b_case_VB", "20990101_000000", "L2b_case_VB", other)
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0, rep["stops"]
+    assert rep["rows"][0]["r75_folder"]["folder"].endswith("_20990101_000001")
+
+
+def test_r75_relocated_under_result_root(tmp_path, capsys, monkeypatch):
+    bd = make_l2b_batch(tmp_path, l2b_result())
+    log = bd / "L2b_case_VB.log"
+    log.write_text("batch wall 1 s -> D:\\elsewhere\\07_results\\S8\\r4368gs_L2b_case_VB_20990101_000001\n", "utf-8")
+    p, r = p2.resolve_runner_row(bd, json.loads((bd / "batch.json").read_text("utf-8"))["cases"][0], tmp_path,
+                                 json.loads((bd / "batch.json").read_text("utf-8"))["cases"][0]["argv"])
+    assert p is not None and r["method"] == "case_log_relocated"
+
+
+def test_r75_no_log_several_candidates_stops(tmp_path, capsys, monkeypatch):
+    bd = make_l2b_batch(tmp_path, l2b_result())
+    (bd / "L2b_case_VB.log").unlink()
+    roots = [tmp_path / "07_results" / "S6", tmp_path / "07_results" / "S8"]
+    monkeypatch.setattr(p2, "runner_roots", lambda repo: roots)
+    out = tmp_path / "o.json"
+    # one candidate inside batch stamp + wall_s (+-2 s): time window
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0, rep["stops"]
+    assert rep["rows"][0]["r75_folder"]["method"] == "time_window"
+    # a second same-tag folder inside the window: not judged (S-11)
+    runner_folder(tmp_path, "S8", "r4368gs_L2b_case_VB", "20990101_000015", "L2b_case_VB", l2b_result())
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 2 and s["stop_codes"] == ["S-11"]
+    assert any("2 runner folders" in x["why"] for x in rep["stops"]) and rep["rows"][0]["result_json"] is None
+    # a folder outside the window (> wall_s + 2 s) is not a candidate
+    import shutil  # noqa: PLC0415
+    shutil.rmtree(tmp_path / "07_results" / "S8" / "r4368gs_L2b_case_VB_20990101_000015")
+    runner_folder(tmp_path, "S8", "r4368gs_L2b_case_VB", "20990101_000023", "L2b_case_VB", l2b_result())
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    assert code == 0, s
+    # progress.log START~END is used before the stamp + wall_s
+    (bd / "progress.log").write_text("START L2b_case_VB 2099-01-01T00:00:20 pid=1\n"
+                                     "END L2b_case_VB 2099-01-01T00:00:30 rc=0\n", "utf-8")
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0 and rep["rows"][0]["r75_folder"]["folder"].endswith("_20990101_000023")
+    assert rep["rows"][0]["r75_folder"]["window"][2] == "progress.log"
+
+
+def test_r75_case_log_folder_without_result_stops(tmp_path, capsys):
+    bd = make_l2b_batch(tmp_path, l2b_result())
+    (bd / "L2b_case_VB.log").write_text(f"batch wall 1 s -> {tmp_path / 'nowhere'}\n", "utf-8")
+    code, s = run_main(["chrono", "--batch", str(bd), "--gs"], capsys)
+    assert code == 2 and s["stop_codes"] == ["S-11"]
