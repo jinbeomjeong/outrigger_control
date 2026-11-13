@@ -396,6 +396,74 @@ def test_chrono_c4_off_arm(tmp_path, capsys):
     assert code == 0, rep["stops"]
 
 
+def gs_full_result(tag=None):
+    """An SCM level result.json with every path-2 G-S key of an on-arm row (synthetic)."""
+    res = scm_result(tag or p2.TAG_VB, [2.0, 1.5], las_start=None)
+    res["p3b"]["P3-3_leg_force"]["F_min_transient_N"] = [90000.0] * 4
+    res["controller_meta"]["liftoff_approach_slow"].update(end_s=None, end_reason=None, active_periods=0,
+                                                          ramp={"periods_applied": 0})
+    return res
+
+
+def test_rev7_r74_conditional_absence_table():
+    assert len(p2.GS_CONDITIONAL_R74) == 9
+    keys = tuple(p2.GS_CONDITIONAL_R74)
+    on, off = {"r4368": {"arm": "on"}}, {"r4368": {"arm": "off"}}
+    res = gs_full_result()
+    res["c2_setup"].pop("las_off", None)
+    pres, bad = p2.gs_presence(on, res, keys)
+    assert bad == [] and pres["c2_setup.las_off"] == "conditional_absent"
+    assert pres["controller_meta.liftoff_approach_slow.start_s"] == "present"     # null value = key present
+    # F_min keys: absence allowed only when p3b.departure.departed is False
+    r2 = copy.deepcopy(res)
+    del r2["p3b"]["P3-3_leg_force"]["F_min_after_N"]
+    pres, bad = p2.gs_presence(on, r2, keys)
+    assert pres["p3b.P3-3_leg_force.F_min_after_N"] == "result_missing"          # departed key absent
+    r2["p3b"]["departure"]["departed"] = True
+    assert p2.gs_presence(on, r2, keys)[0]["p3b.P3-3_leg_force.F_min_after_N"] == "result_missing"
+    r2["p3b"]["departure"]["departed"] = False
+    assert p2.gs_presence(on, r2, keys)[0]["p3b.P3-3_leg_force.F_min_after_N"] == "conditional_absent"
+    # LAS-b keys: required on the on arm, absence allowed on the off arm; las_off the other way round
+    r3 = copy.deepcopy(res)
+    r3["controller_meta"]["liftoff_approach_slow"] = {"settings": {"enable": False}}
+    pres, bad = p2.gs_presence(on, r3, keys)
+    assert set(bad) == set(p2.LAS_R74)
+    pres, bad = p2.gs_presence(off, r3, keys)
+    assert bad == ["c2_setup.las_off"] and all(pres[k] == "conditional_absent" for k in p2.LAS_R74)
+    r3["c2_setup"]["las_off"] = True
+    assert p2.gs_presence(off, r3, keys)[1] == []
+    # a row without r4368.arm counts as the on arm (arm != "off")
+    assert set(p2.gs_presence({}, r3, keys)[1]) == set(p2.LAS_R74)
+    # t_min_after_s is no longer a path-2 G-S key (not in the R7-4 table)
+    assert "p3b.P3-3_leg_force.t_min_after_s" not in p2.GS_KEYS_SCM
+
+
+def test_rev7_r74_gs_mode_end_to_end(tmp_path, capsys):
+    res = gs_full_result()
+    bd = make_batch(tmp_path, res, name="batch_V5-RESUME-K1-GS_20990101_000000")
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0, rep["stops"]
+    assert rep["rows"][0]["gs_conditional_absent"] == ["c2_setup.las_off"]
+    res["controller_meta"]["liftoff_approach_slow"].pop("ramp")
+    bd = make_batch(tmp_path / "b", res, name="batch_V5-RESUME-K1-GS_20990101_000001")
+    code, s = run_main(["chrono", "--batch", str(bd), "--gs"], capsys)
+    assert code == 2 and s["stop_codes"] == ["S-11"]
+
+
+def test_rev7_r76_mask_recorded(tmp_path, capsys):
+    res = scm_result(p2.TAG_VB, [2.4, 1.8])
+    res["placement"].update(affinity_mask_process="0xFF", affinity_mask_ok=False)
+    bd = make_batch(tmp_path, res)
+    out = tmp_path / "o.json"
+    run_main(["--out", str(out), "chrono", "--batch", str(bd)], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    ident = rep["rows"][0]["identity"]
+    assert ident["affinity_mask_process"] == "0xFF" and ident["affinity_mask_ok"] is False
+    assert any("affinity_mask_ok false" in r["what"] for r in rep["records"])
+
+
 # ------------------------------------------------------------------ O-C5 k procedure
 def probe(tmp_path, n, k, att, dur=7.0):
     p = tmp_path / f"probe{n}.json"
@@ -488,3 +556,9 @@ def test_compare(tmp_path, capsys):
 def test_seal_ok(capsys):
     code, s = run_main(["seal"], capsys)
     assert code == 0, s
+
+
+def test_rev7_seal_listed_and_checked():
+    seals = p2.check_seals(REPO, appendix=False)
+    assert p2.REV7_REL in seals["rules"] and seals["rules"][p2.REV7_REL]["ok"]
+    assert p2.REV7_SHA == "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"

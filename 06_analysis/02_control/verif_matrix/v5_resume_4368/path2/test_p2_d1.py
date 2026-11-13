@@ -194,31 +194,79 @@ def test_rev3_a3_ready_origin_and_crosscheck():
     r["values"]["times"]["t_check_start_s"] = 0.1
     assert d1.ready_check(r)["origin"] == "t_check_start_s"
 
-def g6run(flag_ok=True, mins=(12000.0,), g63=True, faults=(), fail=None, demoted=None):
+def g6run(flag_ok=True, mins=(12.0,), g63=True, faults=(), fail=None, demoted=None, final_phase="ready"):
+    """A g6-path line with the rev7 R7-3a F-8 record (true_min_kN in kN, 0.01 kN)."""
     r = run(group="H-R-A", base="rigid+J1@FR", verdict="fail" if fail else "pass")
     r["values"] = {"times": {"t_first_ready_s": None}, "events": {"fault_events": list(faults)}}
+    r["final_phase"] = final_phase
     r["d1"]["items"] = {"G6-7_preloc": False, "G6-3_Fmin": g63}
     r["d1"]["fail_items"] = list(fail or [])
     r["d1"]["demoted_items"] = list(demoted or [])
-    r["d1"]["g6_preloc"] = {"preloc_flag_ok": flag_ok, "preloc_starts": [{"leg": "RL", "t_s": 30.0, "true_min_N": m}
-                                                                          for m in mins]}
+    r["d1"]["g6_preloc"] = {"preloc_flag_ok": flag_ok, "source": d1.PRELOC_SOURCE,
+                            "preloc_starts": [{"leg": "RL", "t_s": 30.0 + i, "true_min_kN": m}
+                                              for i, m in enumerate(mins)]}
     return r
 
 
+DEM = [{"item": "G6-7_preloc", "rule": "377", "flag": "P3-8_demoted"}]
+LOSS = [{"item": "G6-7_preloc", "rule": "U-S9-G6c", "flag": "P3-8_preloc_loss"}]
+
+
 def test_rev6_g67_branches():
-    dem = [{"item": "G6-7_preloc", "rule": "377", "flag": "P3-8_demoted"}]
-    assert d1.reaggregate(g6run(demoted=dem))["status"] == "same"
+    assert d1.reaggregate(g6run(demoted=DEM))["status"] == "same"
     # recount disagrees with the recorded preloc_flag_ok
-    assert "recount" in d1.reaggregate(g6run(mins=(9000.0,), demoted=dem))["status"]
-    loss = [{"item": "G6-7_preloc", "rule": "U-S9-G6c", "flag": "P3-8_preloc_loss"}]
-    assert d1.reaggregate(g6run(flag_ok=False, mins=(9000.0,), demoted=loss))["status"] == "same"
+    assert "recount" in d1.reaggregate(g6run(mins=(9.0,), demoted=DEM))["status"]
+    assert d1.reaggregate(g6run(flag_ok=False, mins=(9.0,), demoted=LOSS))["status"] == "same"
     # branch 2 not met (G6-3 false): G6-7 stays a failure
-    r = g6run(flag_ok=False, mins=(9000.0,), g63=False, fail=["G6-7_preloc", "G6-3_Fmin"])
+    r = g6run(flag_ok=False, mins=(9.0,), g63=False, fail=["G6-7_preloc", "G6-3_Fmin"])
     assert d1.reaggregate(r)["status"] == "same"
     # a FLAG branch recorded as a failure is a difference
     r = g6run(fail=["G6-7_preloc"])
     assert d1.reaggregate(r)["status"].startswith("G6-7 should be FLAG")
-    # branch 3: preloc_flag_ok absent -> undecidable
-    r = g6run(demoted=dem)
-    r["d1"]["g6_preloc"].pop("preloc_flag_ok")
-    assert d1.reaggregate(r)["status"].startswith("G6-7 branch")
+    # branch 3: preloc_flag_ok null (no r72 key) -> undecidable
+    r = g6run(flag_ok=None, demoted=DEM)
+    ra = d1.reaggregate(r)
+    assert ra["status"].startswith("G6-7 branch") and not ra.get("s11")
+
+
+def test_rev7_r73a_units_rounding_and_flag_definition():
+    # kN unit: 9.42 kN >= 9.414589 kN; the recorded 0.01 kN value 9.41 is below F_min (rounded value compared)
+    assert d1.preloc_flag_recount(g6run(mins=(9.42,))["d1"]["g6_preloc"], "ready") is True
+    assert d1.preloc_flag_recount(g6run(mins=(9.41,))["d1"]["g6_preloc"], "ready") is False
+    # empty start list -> false; a null minimum -> false; final phase fault / fault_reground -> false
+    gp = g6run(mins=())["d1"]["g6_preloc"]
+    assert gp["preloc_starts"] == [] and d1.preloc_flag_recount(gp, "ready") is False
+    assert d1.preloc_flag_recount(g6run(mins=(12.0, None))["d1"]["g6_preloc"], "ready") is False
+    for ph in ("fault", "fault_reground"):
+        assert d1.preloc_flag_recount(g6run()["d1"]["g6_preloc"], ph) is False
+    assert d1.preloc_flag_recount(g6run()["d1"]["g6_preloc"], None) is None
+    # a fault final phase with a recorded true flag is a recount difference
+    assert "recount" in d1.reaggregate(g6run(demoted=DEM, final_phase="fault_reground"))["status"]
+    # empty starts recorded false + G6-3 true + no FAULT event -> U-S9-G6c branch
+    assert d1.reaggregate(g6run(flag_ok=False, mins=(), demoted=LOSS))["status"] == "same"
+    # 9.41 kN recorded false (rounded below F_min) -> branch 2
+    assert d1.reaggregate(g6run(flag_ok=False, mins=(9.41,), demoted=LOSS))["status"] == "same"
+
+
+def test_rev7_r73a_old_names_and_format_are_s11():
+    r = g6run(demoted=DEM)
+    r["d1"]["g6_preloc"]["preloc_starts"] = [{"leg": "RL", "t_s": 30.0, "true_min_N": 12000.0}]
+    ra = d1.reaggregate(r)
+    assert ra.get("s11") and "rev7 R7-3a" in ra["status"]
+    for mutate in (lambda g: g.update(source="other"),
+                   lambda g: g["preloc_starts"][0].update(true_min_kN=12.003),     # not 0.01 kN
+                   lambda g: g["preloc_starts"][0].update(t_s=30.004),             # not 0.01 s
+                   lambda g: g["preloc_starts"][0].update(leg="F1"),
+                   lambda g: g.pop("preloc_flag_ok"),
+                   lambda g: g.update(preloc_flag_ok="yes"),
+                   lambda g: g.update(preloc_starts=list(reversed(g["preloc_starts"])))):   # event order
+        r = g6run(mins=(12.0, 13.0), demoted=DEM)
+        mutate(r["d1"]["g6_preloc"])
+        assert d1.preloc_record_problems(r["d1"]["g6_preloc"]), mutate
+    # recount over a set of runs: S-11 stop, exit 2, also on a line whose G6-7 is true
+    ok = g6run(demoted=DEM)
+    bad = g6run()
+    bad["d1"]["items"]["G6-7_preloc"] = True
+    bad["d1"]["g6_preloc"]["preloc_starts"][0]["true_min_kN"] = 12000.0 + 0.004
+    out, code = d1.recount([ok, bad], 0)
+    assert code == 2 and "S-11" in out["stop_codes"] and out["R7-3a_g6_preloc_format"] == {"checked": 2, "differ": 1}

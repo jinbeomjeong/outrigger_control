@@ -5,7 +5,9 @@ Rules: ``v5_resume_4368_rules.md`` (sha256 9019b405...), addenda ``v5_resume_436
 rev2 R2-1..R2-9 are applied: would_block without due / applied without due = record conflict (line
 undecidable, S-5); absent start_s = not started; L2b / L1-R K1 record fields; open-loop r_vu / r_v;
 F<F_min window [t_D, t_D + 8 s]; S-9 on either path; grid family by meta.spec + run event; C-2 fixed rows;
-CRLF-only appendix-A difference passes and is disclosed. Author: dynamics-expert (path 2, user decision
+CRLF-only appendix-A difference passes and is disclosed. Later sealed addenda rev3..rev7 are checked
+with the same raw-sha rule; rev7 (e81f7d31...) R7-4 sets the G-S conditional-absence table of the SCM
+level rows (``GS_CONDITIONAL_R74``) and R7-6 the recorded pool mask (identity record only). Author: dynamics-expert (path 2, user decision
 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
 ``resume_k1_record.py``, the judging part of ``resume_k1_steps.py``) and every path-1 output were not
@@ -68,6 +70,9 @@ REV5_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev5.s
 REV6_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6.md"
 REV6_SHA = "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9"
 REV6_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6.sha256"
+REV7_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.md"
+REV7_SHA = "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"
+REV7_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.sha256"
 GRID_SPEC_PRESCRIBED = "rev. 67 (G1 / G2 / G7 reduced screen)"   # rev2 R2-7
 GRID_EVENTS_PRESCRIBED = {"G4", "RE1bF", "FS24"}
 
@@ -406,7 +411,8 @@ def check_seals(repo, appendix=True):
     for rel, want, seal in ((RULES_REL, RULES_SHA, RULES_SEAL_REL), (REV1_REL, REV1_SHA, REV1_SEAL_REL),
                             (REV2_REL, REV2_SHA, REV2_SEAL_REL), (REV3_REL, REV3_SHA, REV3_SEAL_REL),
                             (REV4_REL, REV4_SHA, REV4_SEAL_REL),
-                            (REV5_REL, REV5_SHA, REV5_SEAL_REL), (REV6_REL, REV6_SHA, REV6_SEAL_REL)):   # sealed rules: raw sha only (R2-9)
+                            (REV5_REL, REV5_SHA, REV5_SEAL_REL), (REV6_REL, REV6_SHA, REV6_SEAL_REL),
+                            (REV7_REL, REV7_SHA, REV7_SEAL_REL)):   # sealed rules: raw sha only (R2-9)
         p = repo / rel
         got = sha256_file(p) if p.is_file() else None
         sp = repo / seal
@@ -1093,11 +1099,45 @@ GS_KEYS_SCM = ("c2_setup.k1_order_gate", "c2_setup.k1_order_gate_effective",
                "args.floor_roll", "args.floor_pitch", "num_threads_chrono", "placement.omp_wait_policy",
                "hull_hook.requested", "hull_hook.mode", "hull_hook.fallback_reason", "events",
                "v5_hydraulics.controller_tag", "c2_setup.expect_controller.ok", "p3b.weight_N",
-               "p3b.P3-3_leg_force.F_min_after_N", "p3b.P3-3_leg_force.F_min_transient_N",
-               "p3b.P3-3_leg_force.t_min_after_s")
-GS_KEYS_LAS_ON = ("controller_meta.liftoff_approach_slow.settings", "controller_meta.liftoff_approach_slow.start_s")
-GS_CONDITIONAL = {"p3b.P3-3_leg_force.F_min_after_N", "p3b.P3-3_leg_force.F_min_transient_N",
-                  "p3b.P3-3_leg_force.t_min_after_s", "controller_meta.liftoff_approach_slow.start_s"}
+               "p3b.P3-3_leg_force.F_min_after_N", "p3b.P3-3_leg_force.F_min_transient_N")
+# rev7 R7-4: t_min_after_s left the path-2 list (not in the R7-4 table, never read by path 2; keeping it as
+# "always present" would stop rows that did not depart, keeping it conditional would invent a condition).
+GS_KEYS_LAS_ON = ("controller_meta.liftoff_approach_slow.settings",)   # path-2 key, not in the R7-4 table
+LAS_R74 = ("controller_meta.liftoff_approach_slow.start_s", "controller_meta.liftoff_approach_slow.end_s",
+           "controller_meta.liftoff_approach_slow.end_reason", "controller_meta.liftoff_approach_slow.active_periods",
+           "controller_meta.liftoff_approach_slow.ramp", "controller_meta.liftoff_approach_slow.ramp.periods_applied")
+# rev7 R7-4 table (9 keys): key -> absent allowed when (row, res) holds; required otherwise.
+GS_CONDITIONAL_R74 = {
+    "p3b.P3-3_leg_force.F_min_after_N": ("p3b.departure.departed is False",
+                                         lambda row, res: dig(res, "p3b.departure.departed", MISSING) is False),
+    "p3b.P3-3_leg_force.F_min_transient_N": ("p3b.departure.departed is False",
+                                             lambda row, res: dig(res, "p3b.departure.departed", MISSING) is False),
+    "c2_setup.las_off": ("on arm (r4368.arm != 'off')", lambda row, res: dig(row, "r4368.arm", None) != "off"),
+    **{k: ("off arm (r4368.arm == 'off')", lambda row, res: dig(row, "r4368.arm", None) == "off") for k in LAS_R74},
+}
+GS_CONDITIONAL = set(GS_CONDITIONAL_R74)   # kept name: the keys whose absence can be allowed
+NONE_IS_VALUE = ("hull_hook.fallback_reason",) + tuple(GS_CONDITIONAL_R74)
+
+
+def gs_presence(row, res, keys):
+    """11.2 key presence with rev7 R7-4: a table key is ``conditional_absent`` only when its absence
+    condition holds, else ``result_missing`` (S-11); a key outside the table is ``present`` or ``absent``
+    (S-11). A value None counts as present for the keys in NONE_IS_VALUE: R7-4 speaks of the key (an
+    existing key with null, e.g. a LAS-b start_s of a row where LAS-b did not start, rev2 R2-2, is
+    present); None fallback = no fallback. Other keys keep the earlier path-2 reading (None = absent)."""
+    pres, bad = {}, []
+    for k in keys:
+        v = dig(res, k)
+        here = v is not MISSING and (v is not None or k in NONE_IS_VALUE)
+        if here:
+            pres[k] = "present"
+        elif k in GS_CONDITIONAL_R74:
+            pres[k] = "conditional_absent" if GS_CONDITIONAL_R74[k][1](row, res) else "result_missing"
+        else:
+            pres[k] = "absent"
+        if pres[k] in ("absent", "result_missing"):
+            bad.append(k)
+    return pres, bad
 
 
 def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
@@ -1126,7 +1166,9 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
     out["kind"] = kind
     # ---- G-S key presence (11.2, RV1-10 f): presence only, no values
     if gs_mode:
-        keys = GS_KEYS_SCM + (() if off else GS_KEYS_LAS_ON) if engine == "SCM" else (
+        keys = GS_KEYS_SCM + (() if off else GS_KEYS_LAS_ON) + tuple(k for k in GS_CONDITIONAL_R74
+                                                                     if k not in GS_KEYS_SCM) \
+            if engine == "SCM" else (
             "controller_tag", "expect_controller.ok", "expect_controller.controller_tag",
             "controller_meta.slope_clearance_margin.settings.flat_soil_margin_order_gate",
             "controller_meta.slope_clearance_margin.order_gate.enabled",
@@ -1140,17 +1182,16 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
         if kind == "openloop":
             keys = ("v5_hydraulics.controller_options.applied", "p3a.checks", "num_threads_chrono",
                     "hull_hook.mode")
-        pres = {}
-        for k in keys:
-            v = dig(res, k)
-            pres[k] = "present" if v is not MISSING and (v is not None or k == "hull_hook.fallback_reason"
-                                                         or k.endswith("start_s")) else (
-                "conditional_absent" if k in GS_CONDITIONAL else "absent")
-            if pres[k] == "absent":
-                fnd.stop("S-11", where, f"G-S key absent: {k}")
-        if off:
-            pres["c2_setup.las_off"] = "present" if dig(res, "c2_setup.las_off") is not MISSING else "absent"
+        keys = tuple(dict.fromkeys(keys))
+        pres, bad = gs_presence(row, res, keys)
+        for k in bad:
+            fnd.stop("S-11", where, f"G-S key {pres[k]}: {k}" + (
+                f" (R7-4: absence allowed only when {GS_CONDITIONAL_R74[k][0]})" if k in GS_CONDITIONAL_R74 else ""))
+        arm = dig(row, "r4368.arm", None)
+        if engine == "SCM" and (arm == "off") != bool(off):
+            fnd.note(where, f"r4368.arm {arm!r} vs path-2 off arm {off} (R7-4 uses r4368.arm)")
         out["gs_keys"] = pres
+        out["gs_conditional_absent"] = sorted(k for k, v in pres.items() if v == "conditional_absent")
         return out
     # ---- tag (4.1, RV1-10 a)
     if kind == "openloop":
@@ -1265,8 +1306,16 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
                  "hull_requested_result": dig(res, "hull_hook.requested", None),
                  "hull_fallback_result": dig(res, "hull_hook.fallback_reason", None),
                  "power_throttling_off_ok": dig(res, "placement.power_throttling_off_ok", None),
-                 "affinity_logical_processors": dig(res, "placement.affinity_logical_processors", None)}
+                 "affinity_logical_processors": dig(res, "placement.affinity_logical_processors", None),
+                 # rev7 R7-6: the applied pool mask is recorded; a false affinity_mask_ok is written in the
+                 # judgement document (6 "affinity change"), it is not a stop
+                 "affinity_mask_process": dig(res, "placement.affinity_mask_process", None),
+                 "affinity_mask_ok": dig(res, "placement.affinity_mask_ok", None),
+                 "placement_applied_row": row.get("placement_applied")}
         out["identity"] = ident
+        if ident["affinity_mask_ok"] is False:
+            fnd.note(where, f"placement.affinity_mask_ok false (mask {ident['affinity_mask_process']!r}, R7-6: "
+                            "write in the judgement document)")
         if ident["num_threads_chrono"] != SCM_THREADS or argv_value(argv, "--threads") != str(SCM_THREADS):
             fnd.stop("S-4", where, f"threads {ident['num_threads_chrono']!r} / argv {argv_value(argv, '--threads')!r}")
         if ident["start_env_OMP"] != "PASSIVE" or ident["result_omp"] != "PASSIVE":
@@ -1729,7 +1778,7 @@ def main(argv=None):
             report, status = {"seals": seals}, "pass"
         else:
             body, status = CMDS[args.cmd](args, repo)
-            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA, "rev3_sha256": REV3_SHA, "rev4_sha256": REV4_SHA, "rev5_sha256": REV5_SHA, "rev6_sha256": REV6_SHA,
+            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA, "rev3_sha256": REV3_SHA, "rev4_sha256": REV4_SHA, "rev5_sha256": REV5_SHA, "rev6_sha256": REV6_SHA, "rev7_sha256": REV7_SHA,
                                 "eol_only": seals.get("eol_only", []),
                                 "eol_only_detail": {k: v for k, v in seals["appendix_a"].items() if v.get("eol_only")}},
                       **body}

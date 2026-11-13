@@ -24,8 +24,13 @@ The per-run grade used for ranking is the section-3 input ``d1.verdict`` (the ru
 that field). The cross-check reports every run where a recounted item contradicts it (two-path grade
 difference candidate, 436.8 S-13).
 
+rev7 (e81f7d31...) R7-3a: ``d1.g6_preloc`` is read with the names / units / formats of that table only
+(``preloc_starts[].true_min_kN`` in kN rounded to 0.01 kN, compared with F_min 9.414589 kN as recorded;
+``preloc_flag_ok`` recount = at least one start, every minimum not null and >= F_min, final_phase not
+fault / fault_reground); a record that differs from the table is S-11 (stop).
+
 Exit codes: 0 selection done, 1 a gate stop (G-1 / G-3 / G-4) or a cross-check difference, 2 missing input
-(G-2) or a rules sha mismatch, 3 tool error. Last stdout line: JSON summary with out_sha256.
+(G-2), an S-11 record difference (rev7 R7-3) or a rules sha mismatch, 3 tool error. Last stdout line: JSON summary with out_sha256.
 """
 from __future__ import annotations
 
@@ -82,7 +87,13 @@ ORIGIN_MAX_S = 0.1                      # rev3 R3-A3: the first phase (CHECK) st
 CHECK_START_PATH = "times.t_check_start_s"   # rev4 R4-C1 / F-1 (under values)
 DEMOTION_RULES = {"377", "424.11.2", "424.8.1", "419.8", "U-S9-G6c"}   # rev4 R4-C3 + rev6 R6-C3
 G67 = "G6-7_preloc"
-PRELOC_MIN_KEYS = ("true_min_N", "F_true_min_N", "min_true_N", "true_min_kN")   # F-8 start record
+# rev7 R7-3a: the F-8 record d1.g6_preloc (names, units and formats from that table only)
+F_MIN_KN = F_MIN / 1000.0          # 9.414589 kN; the comparison uses the recorded 0.01 kN values (R7-3a)
+PRELOC_SOURCE = "r72_g6_screen record (spec 377, rev5 R5-D1)"
+PRELOC_START_KEYS = ("t_s", "leg", "true_min_kN")
+PRELOC_LEGS = ("FL", "FR", "RL", "RR")
+FAULT_PHASES = ("fault", "fault_reground")
+ROUND_TOL = 1e-6                   # slack of the 0.01 s / 0.01 kN rounding check (float representation)
 
 
 # ----------------------------------------------------------------- run normalisation
@@ -180,6 +191,8 @@ def reaggregate(run):
                 "demoted_items": sorted(x["item"] for x in dl)}
     # rev5 R5-D1 / rev6 R6-C3: G6-7_preloc branches recomputed from d1.g6_preloc (F-8), G6-3 and FAULT
     g6 = g6_branch(run)
+    if g6["status"] == "s11":
+        return {"status": f"G6-7 branch: {g6['why']}", "s11": True}
     if g6["status"] == "undecidable":
         return {"status": f"G6-7 branch: {g6['why']}"}
     if g6["status"] == "flag":
@@ -201,6 +214,54 @@ def reaggregate(run):
     return {"status": "same", "rebuilt": rebuilt, "demoted": sorted(demoted)}
 
 
+def _rounded(v, step):
+    return abs(v / step - round(v / step)) <= ROUND_TOL
+
+
+def preloc_record_problems(gp):
+    """rev7 R7-3a: field names, types and rounding of ``d1.g6_preloc``. [] = the record matches the table
+    (a difference is S-11). Extra keys are not a difference."""
+    prob = []
+    if "preloc_flag_ok" not in gp or not (gp["preloc_flag_ok"] is None or isinstance(gp["preloc_flag_ok"], bool)):
+        prob.append("preloc_flag_ok: bool or null required")
+    if gp.get("source") != PRELOC_SOURCE:
+        prob.append(f"source {gp.get('source')!r}")
+    starts = gp.get("preloc_starts")
+    if not isinstance(starts, list):
+        return prob + ["preloc_starts: list required"]
+    last_t = None
+    for i, s in enumerate(starts):
+        if not isinstance(s, dict) or any(k not in s for k in PRELOC_START_KEYS):
+            prob.append(f"preloc_starts[{i}]: keys {PRELOC_START_KEYS} required (true_min_N etc. are not rev7 names)")
+            continue
+        t, leg, m = s["t_s"], s["leg"], s["true_min_kN"]
+        if isinstance(t, bool) or not isinstance(t, (int, float)) or not _rounded(float(t), 0.01):
+            prob.append(f"preloc_starts[{i}].t_s {t!r}: float rounded to 0.01 s")
+        elif last_t is not None and float(t) < last_t:
+            prob.append(f"preloc_starts[{i}].t_s {t!r}: not in event order")
+        else:
+            last_t = float(t)
+        if leg not in PRELOC_LEGS:
+            prob.append(f"preloc_starts[{i}].leg {leg!r}")
+        if m is not None and (isinstance(m, bool) or not isinstance(m, (int, float)) or not _rounded(float(m), 0.01)):
+            prob.append(f"preloc_starts[{i}].true_min_kN {m!r}: float [kN] rounded to 0.01 kN or null")
+    return prob
+
+
+def preloc_flag_recount(gp, final_phase):
+    """rev7 R7-3a ``preloc_flag_ok`` from the recorded values: at least one start, every ``true_min_kN``
+    not null and >= F_min (9.414589 kN, compared with the recorded 0.01 kN value, 7.6 tolerance in kN),
+    run ``final_phase`` not fault / fault_reground. None if final_phase is not recorded."""
+    if not isinstance(final_phase, str):
+        return None
+    starts = gp["preloc_starts"]
+    if not starts:
+        return False
+    if any(s["true_min_kN"] is None or not core.t_ge(float(s["true_min_kN"]), F_MIN_KN) for s in starts):
+        return False
+    return final_phase not in FAULT_PHASES
+
+
 def g6_branch(run):
     """rev6 R6-C3 three branches of a false G6-7_preloc: preloc_flag_ok true -> P3-8_demoted (377); false and
     G6-3 true and no FAULT -> P3-8_preloc_loss (U-S9-G6c); absent -> undecidable. preloc_flag_ok is recomputed
@@ -210,22 +271,20 @@ def g6_branch(run):
     if items.get(G67) is not False:
         return {"status": "n/a"}
     gp = d.get("g6_preloc")
-    if not isinstance(gp, dict) or not isinstance(gp.get("preloc_flag_ok"), bool):
-        return {"status": "undecidable", "why": "d1.g6_preloc.preloc_flag_ok missing (F-8, R6-C3 3)"}
+    if not isinstance(gp, dict):
+        return {"status": "undecidable", "why": "d1.g6_preloc missing (F-8, R6-C3 3)"}
+    prob = preloc_record_problems(gp)
+    if prob:
+        return {"status": "s11", "why": f"d1.g6_preloc differs from the rev7 R7-3a table: {prob[:3]}"}
+    if gp["preloc_flag_ok"] is None:
+        return {"status": "undecidable", "why": "d1.g6_preloc.preloc_flag_ok null (no r72 key; R6-C3 3)"}
     fe = core.dig(run["values"], "events.fault_events", None)
     if not isinstance(fe, list):
         return {"status": "undecidable", "why": "values.events.fault_events missing"}
     fault0 = len(fe) == 0
-    starts = gp.get("preloc_starts")
-    if not isinstance(starts, list):
-        return {"status": "undecidable", "why": "d1.g6_preloc.preloc_starts missing (377 recount)"}
-    mins = []
-    for s in starts:
-        v = next((core.num(s.get(k)) for k in PRELOC_MIN_KEYS if isinstance(s, dict) and core.num(s.get(k)) is not None), None)
-        if v is None:
-            return {"status": "undecidable", "why": "preloc start without a true minimum"}
-        mins.append(v * 1000.0 if isinstance(s, dict) and "true_min_kN" in s and "true_min_N" not in s else v)
-    ok = fault0 and all(core.t_ge(m, F_MIN) for m in mins)
+    ok = preloc_flag_recount(gp, run.get("final_phase"))
+    if ok is None:
+        return {"status": "undecidable", "why": "final_phase missing (R7-3a preloc_flag_ok recount)"}
     if ok != gp["preloc_flag_ok"]:
         return {"status": "undecidable", "why": f"preloc_flag_ok {gp['preloc_flag_ok']} vs recount {ok} (S-13)"}
     if ok:
@@ -488,10 +547,20 @@ def recount(runs, errors):
         fnd.note("R3-A1", f"ASSUMED_BOUNDARY tag vs H-S-0 fup-rec differ on {len(tag_mismatch)} row(s)")
     # rev3 R3-A2 layer 2 (re-aggregation of d1.verdict) and R3-A3 (READY origin, t_READY cross-check)
     reagg, ready_x, ready_origin = [], [], {}
+    preloc_fmt = {"checked": 0, "differ": 0}
     for r in runs:
         where = f"{r['row']}|{r['setting']}|{r['eps']}"
+        gp = r["d1"].get("g6_preloc")
+        if gp is not None:       # rev7 R7-3a on every line that carries the F-8 record (G-S check)
+            preloc_fmt["checked"] += 1
+            prob = preloc_record_problems(gp) if isinstance(gp, dict) else ["d1.g6_preloc: object required"]
+            if prob:
+                preloc_fmt["differ"] += 1
+                fnd.stop("S-11", where, f"d1.g6_preloc vs rev7 R7-3a table: {prob[:3]}")
         ra = reaggregate(r)
-        if ra["status"] != "same":
+        if ra.get("s11"):
+            reagg.append({"row": r["row"], "setting": r["setting"], "eps": r["eps"], **ra})
+        elif ra["status"] != "same":
             reagg.append({"row": r["row"], "setting": r["setting"], "eps": r["eps"], **ra})
             fnd.undec(where, f"R3-A2 re-aggregation: {ra['status']} (S-13)")
         rx = ready_check(r)
@@ -526,10 +595,13 @@ def recount(runs, errors):
                      "reaggregation_differences": reagg[:200]},
            "R3-A3": {"n_ready_undecidable": len(ready_x), "origin_basis": ready_origin, "examples": ready_x[:50]},
            "R3-A1_tag_mismatch_rows": tag_mismatch[:50],
+           "R7-3a_g6_preloc_format": preloc_fmt,
            "C2_selected_rows": {"S1_S2": c2_rows, "PS-c": s3r["rows"],
                                 "n_rows_selected": len(c2_rows) + len(s3r["rows"]),
                                 "n_psc_rows": len(s3r["rows"])},
            **fnd.as_dict()}
+    if any(s["code"] == "S-11" for s in fnd.stops):
+        return out, 2            # rev7 R7-3: record differs from the name table (S-11, a stop)
     gate_stop = any(s["code"] in ("G-1", "G-3", "G-4") for s in fnd.stops)
     return out, (1 if (gate_stop or fnd.fails or fnd.undecidable) else 0)
 

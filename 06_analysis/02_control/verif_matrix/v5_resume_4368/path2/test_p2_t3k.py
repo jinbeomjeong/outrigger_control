@@ -36,6 +36,7 @@ def line(key, bundle, h, verdict="pass", p32=True, g62=None, ready=50.0, stroke=
     if g62 is not None:
         items["G6-2_loc"] = g62
     return {"job": {}, "commands_sha256": h, "controller_tag": t3.TAGS[bundle][setting],
+            "t3": {"las": "on" if bundle == "T-3K" else "off", "gate": "off" if bundle == "R-0" else "on"},
             "event_names": dict(names or {}), "resume_k1": rk_block(bundle, wb),
             "d1": {"key": key, "verdict": verdict, "fail_items": [], "items": items, "t_ready_s": ready,
                    "stroke_max_m": stroke}}
@@ -217,12 +218,32 @@ def ident(head="abc", clean=True, threads=None, seals_ok=True):
     return {"start": rec, "end": rec}
 
 
-def outputs(tmp_path, idents, line_ids=None):
+def r73b_identity(**kw):
+    """A rev7 R7-3b identity block."""
+    li = {"git_head": "a" * 40, "sha256": {f: "b" * 64 for f in t3.IDENTITY_TOOL_FILES}, "c2_sha256": "c" * 64,
+          "threads": {"MKL_NUM_THREADS": "1", "OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1",
+                      "NUMBA_NUM_THREADS": "1", "MKL_THREADING_LAYER": "TBB"},
+          "workers": 8, "affinity": "0x00FF0000"}
+    li.update(kw)
+    return li
+
+
+def r73b_lines(li, line_li=None, header=True, mirror=None):
+    """Header + two lines: ``header.identity`` and per line ``t3.identity`` with its mirrors."""
+    line_li = line_li or li
+    t3b = {"las": "off", "gate": "off", "identity": line_li, "commit": line_li.get("git_head"),
+           "workers": line_li.get("workers"), "affinity_hex": line_li.get("affinity")}
+    t3b.update(mirror or {})
+    recs = ([{"header": {"identity": li}}] if header else []) + [{"t3": dict(t3b), "k": 1}, {"t3": dict(t3b), "k": 2}]
+    return "".join(json.dumps(r) + "\n" for r in recs)
+
+
+def outputs(tmp_path, idents, line_ids=None, text=None):
     paths = {}
     for n in ("R-0", "R-0K", "T-3K"):
         p = tmp_path / f"{n}.jsonl"
-        li = (line_ids or {}).get(n, {"git_head": "abc", "c2_sha256": "c", "tool_sha256": "t", "threads": 1})
-        p.write_text(json.dumps({"identity": li, "k": 1}) + "\n" + json.dumps({"identity": li, "k": 2}) + "\n", "utf-8")
+        li = (line_ids or {}).get(n, r73b_identity())
+        p.write_text((text or {}).get(n) or r73b_lines(li), "utf-8")
         (tmp_path / f"{n}.jsonl.identity.json").write_text(json.dumps(idents.get(n, ident())), "utf-8")
         paths[n] = str(p)
     steps = tmp_path / "steps_h0.json"
@@ -246,7 +267,7 @@ def test_rev6_k0_identity(tmp_path):
     fnd = core.Findings()
     out = t3.identity_check(paths, fnd, steps=(steps,))
     assert out["R-0"]["checks"]["rules_seals"] is False
-    paths, steps = outputs(tmp_path, {}, {"T-3K": {"git_head": "abc", "c2_sha256": "OTHER", "tool_sha256": "t"}})
+    paths, steps = outputs(tmp_path, {}, {"T-3K": r73b_identity(c2_sha256="d" * 64)})
     fnd = core.Findings()
     t3.identity_check(paths, fnd, steps=(steps,))
     assert "H-T3-3" in stop_codes(fnd)
@@ -256,3 +277,71 @@ def test_rev6_k0_identity(tmp_path):
     fnd = core.Findings()
     t3.identity_check(paths, fnd, steps=(steps,))
     assert "H-T3-3" in stop_codes(fnd)
+
+
+def test_rev7_r73b_identity_names_and_mirrors(tmp_path):
+    paths, steps = outputs(tmp_path, {})
+    fnd = core.Findings()
+    out = t3.identity_check(paths, fnd, steps=(steps,))
+    assert fnd.status() == "pass" and out["T-3K"]["checks"]["line_identity_format"] is True
+    bad_cases = {
+        "old names": r73b_lines({"git_head": "a" * 40, "c2_sha256": "c" * 64, "tool_sha256": "t" * 64,
+                                 "affinity_mask": "0xff", "threads": 1, "workers": 8}),
+        "sha256 not a dict of six": r73b_lines(r73b_identity(sha256="b" * 64)),
+        "threads keys": r73b_lines(r73b_identity(threads={"MKL_NUM_THREADS": "1"})),
+        "affinity_hex mirror": r73b_lines(r73b_identity(), mirror={"affinity_hex": "0xFF"}),
+        "commit mirror": r73b_lines(r73b_identity(), mirror={"commit": "e" * 40}),
+        "no header": r73b_lines(r73b_identity(), header=False),
+    }
+    for why, text in bad_cases.items():
+        paths, steps = outputs(tmp_path, {}, text={"T-3K": text})
+        fnd = core.Findings()
+        out = t3.identity_check(paths, fnd, steps=(steps,))
+        assert "S-11" in stop_codes(fnd), why
+        assert out["T-3K"]["checks"]["line_identity_format"] is False, why
+    # header measured by the parent vs a worker line that differs: R6-C2 "header and every line the same"
+    text = r73b_lines(r73b_identity(), line_li=r73b_identity(workers=4))
+    paths, steps = outputs(tmp_path, {}, text={"T-3K": text})
+    fnd = core.Findings()
+    t3.identity_check(paths, fnd, steps=(steps,))
+    assert "H-T3-3" in stop_codes(fnd) and "S-11" not in stop_codes(fnd)
+    # affinity null (no --affinity) is a valid record
+    li = r73b_identity(affinity=None)
+    paths, steps = outputs(tmp_path, {}, {n: li for n in ("R-0", "R-0K", "T-3K")})
+    fnd = core.Findings()
+    t3.identity_check(paths, fnd, steps=(steps,))
+    assert fnd.status() == "pass"
+
+
+def test_rev7_header_line_skipped_in_recount():
+    r0, r0k, t3l, d0, dt = all_inputs()
+    hdr = {"header": {"identity": r73b_identity()}}
+    _, f = run([hdr] + r0, [hdr] + r0k, [hdr] + t3l, d0, dt)
+    assert f.status() == "pass", f.as_dict()["stops"][:3]
+
+
+def test_rev7_r71c_all_off_reads_final_c4g2():
+    r0, *rest = all_inputs()
+    v0 = next(x for x in r0 if x["d1"]["key"].split("|")[-2] == "V0")
+    v0.pop("controller_tag")                       # no key at all
+    body, f = run(r0, *rest)
+    assert f.status() == "pass", f.as_dict()["stops"][:3]
+    row = next(x for x in body["R-0"] if x.get("key") == v0["d1"]["key"])
+    assert row["tag_read"] == "final_C4G2" and row["tag_read_source"] == "R7-1c all-off"
+    assert body["R7-1c_tag_reading"]["R-0"]["R7-1c all-off"] >= 1
+    # K-2 unchanged: a recorded "final_C4G2" on the R-0 V0 line is still H-T3-3 (R3-D2)
+    v0["controller_tag"] = "final_C4G2"
+    _, f = run(r0, *rest)
+    assert "H-T3-3" in stop_codes(f) and "S-11" not in stop_codes(f)
+    # no tag key and not all-off (gate on) -> a missing key, S-11
+    v0.pop("controller_tag")
+    v0["t3"]["gate"] = "on"
+    _, f = run(r0, *rest)
+    assert "S-11" in stop_codes(f)
+    # an R-0K line without its tag: S-11 (key missing) besides H-T3-3 (K-2K tag)
+    r0b, r0k, t3l, d0, dt = all_inputs()
+    r0k[0].pop("controller_tag")
+    _, f = run(r0b, r0k, t3l, d0, dt)
+    assert {"S-11", "H-T3-3"} <= stop_codes(f)
+    codes = sorted(stop_codes(f), key=lambda c: t3.ORDER.index(c) if c in t3.ORDER else 99)
+    assert codes[0] == "S-11" and t3.EXIT_OF["S-11"] == 2
