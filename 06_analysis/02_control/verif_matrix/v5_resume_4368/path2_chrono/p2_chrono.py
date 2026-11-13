@@ -5,7 +5,7 @@ Usage (dynamics-dev, activated):
   conda run -n dynamics-dev python -I -B p2_chrono.py judge --bundle C-1 --batch <batch.json> [--batch ...]
         --git-at-start <judgement git_at_start> [--results-root <repo>/07_results] [--row-dir CASE=PATH ...]
         [--manifest M] --out <out.json> [--repo R]
-  conda run -n dynamics-dev python -I -B p2_chrono.py gs-load --batch <G-S batch.json> [--git-at-start C] --out <out.json>
+  conda run -n dynamics-dev python -I -B p2_chrono.py gs-load --batch <G-S batch.json> --git-at-start <commit> --out <out.json>
         (read-only loader run on G-S rows: folders, input sha, absent inputs, exceptions; no judgement)
 
 Exit: 0 bundle 통과 / 기록 완료, 1 미달 / 판정 불가 / 기록 불완전 / stop, 2 input or seal error,
@@ -111,8 +111,9 @@ def resolve_dir(case: dict, batch_dir: Path, results_root: Path, overrides: dict
     SCM: `<batch folder>/<case>` (`batch_folder`). L2b / L1-R: the row log's last runner line
     (`case_log`; if that folder has no `<--only>/result.json`, the same relative path under the
     results root, `case_log_relocated`), cross-checked against the `--tag` folder search: the folder
-    name must contain `--tag`. Without a runner line: the `--tag` search must give exactly one
-    folder (`tag_glob`). Anything else is an input error (exit 2; `--row-dir CASE=PATH`, `row_dir`).
+    name must contain `--tag`. Without a runner line: rev12 R12-5 time window (`time_window`, exact
+    folder names, exactly one candidate). Anything else is an input error (exit 2; `--row-dir
+    CASE=PATH`, `row_dir`).
     """
     name = case["case"]
     if name in overrides:
@@ -134,12 +135,77 @@ def resolve_dir(case: dict, batch_dir: Path, results_root: Path, overrides: dict
             return rel / only, "case_log_relocated"
         raise C.InputError(f"{name}: row log runner folder {str(logged)!r} has no {only}/result.json"
                            f" (also not under {str(results_root)!r})")
-    hits = [d for d in (results_root / sub).glob(f"*{tag}*") if d.is_dir()] if tag else []
-    cands = [d / only for d in hits if (d / only / "result.json").exists()]
+    return time_window_folder(case, batch_dir, results_root, eng), "time_window"
+
+
+PROGRESS_RE = re.compile(r"^(START|END)\s+(\S+)\s+(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})\b")
+STAMP_FMT = "%Y%m%d_%H%M%S"
+WINDOW_PAD_S = 2.0   # rev12 R12-5 1 / rev7 R7-8: +- 2 s on both window ends (procedure value)
+
+
+def row_window(case: dict, batch_dir: Path):
+    """rev12 R12-5 1: the row's `progress.log` START..END (the last START of the case and the first END
+    after it); else the batch folder stamp .. stamp + `wall_s` (`est_s` not used). Returns
+    (t0, t1, how) with the +- 2 s pad applied, or None when the window cannot be determined."""
+    from datetime import datetime, timedelta
+    name = case["case"]
+    start = end = None
+    pl = batch_dir / "progress.log"
+    if pl.exists():
+        for line in pl.read_text(encoding="utf-8", errors="replace").splitlines():
+            m = PROGRESS_RE.match(line.strip())
+            if not m or m.group(2) != name:
+                continue
+            t = datetime.fromisoformat(m.group(3))
+            if m.group(1) == "START":
+                start, end = t, None
+            elif start is not None and end is None:
+                end = t
+    pad = timedelta(seconds=WINDOW_PAD_S)
+    if start is not None and end is not None:
+        return start - pad, end + pad, "progress.log START..END"
+    m = BATCH_DIR_RE.match(batch_dir.name)
+    wall = case.get("wall_s")
+    if m is None or wall is None:
+        return None
+    stamp = batch_dir.name[-15:]
+    t0 = datetime.strptime(stamp, STAMP_FMT)
+    return t0 - pad, t0 + timedelta(seconds=float(wall)) + pad, "batch folder stamp + wall_s"
+
+
+def time_window_folder(case: dict, batch_dir: Path, results_root: Path, eng: str) -> Path:
+    """rev12 R12-5 (rev7 R7-5 fallback when the row log has no `->` line). Candidates: `run_S8C.py` rows
+    `07_results/S8/<tag>_<YYYYmmdd_HHMMSS>` (exact name), `run_S6C.py` rows `07_results/S6/*` whose name
+    ends with `_<tag>_L1R_<YYYYmmdd_HHMMSS>` (the check form `_<tag>_check_L1R_` does not match), stamp in
+    the window, with `<--only>/result.json`. No window, 0 or 2+ candidates = input error (exit 2, S-11)."""
+    from datetime import datetime
+    name = case["case"]
+    tag = _arg(case["argv"], "--tag")
+    only = _arg(case["argv"], "--only") or name
+    if not tag:
+        raise C.InputError(f"{name}: no row log runner line and no --tag (rev12 R12-5, S-11)")
+    win = row_window(case, batch_dir)
+    if win is None:
+        raise C.InputError(f"{name}: no row log runner line and no window (no START..END, no wall_s;"
+                           " est_s not used; rev12 R12-5, S-11)")
+    t0, t1, how = win
+    if eng == "l2b":
+        sub, pat = "S8", re.compile(r"^" + re.escape(tag) + r"_(\d{8}_\d{6})$")
+    else:
+        sub, pat = "S6", re.compile(r"^.+_" + re.escape(tag) + r"_L1R_(\d{8}_\d{6})$")
+    cands = []
+    root = results_root / sub
+    for d in (root.iterdir() if root.is_dir() else []):
+        mm = pat.match(d.name) if d.is_dir() else None
+        if not mm:
+            continue
+        ts = datetime.strptime(mm.group(1), STAMP_FMT)
+        if t0 <= ts <= t1 and (d / only / "result.json").exists():
+            cands.append(d / only)
     if len(cands) != 1:
-        raise C.InputError(f"{name}: no runner line in the row log and {len(cands)} result folders for tag"
-                           f" {tag!r} / {only!r} (use --row-dir)")
-    return cands[0], "tag_glob"
+        raise C.InputError(f"{name}: no row log runner line and {len(cands)} folders for {sub}/{tag!r} in the"
+                           f" window {t0.isoformat()}..{t1.isoformat()} ({how}) (rev12 R12-5, S-11)")
+    return cands[0]
 
 
 def placement_record(case: dict, res: dict, batch: dict) -> dict:
@@ -236,7 +302,7 @@ def git_ref_arg(v, required: bool):
     """Judgement `git_at_start` (rev11 R11-4 2): 7..40 hex digits."""
     if v is None:
         if required:
-            raise C.InputError("--git-at-start missing (rev11 R11-4: the judgement git_at_start is the reference)")
+            raise C.InputError("--git-at-start missing (rev11 R11-4 / rev12 R12-3: the judgement git_at_start is the reference)")
         return None
     if not GIT_REF_RE.match(v):
         raise C.InputError(f"--git-at-start {v!r} is not 7..40 hex digits")
@@ -409,6 +475,8 @@ def _r11_record(it) -> dict | None:
     return {"git_at_start": it.get("git_at_start"), "code_at_launch_head": it.get("code_at_launch_head"),
             "code_at_launch_clean": it.get("code_at_launch_clean"), "code_state_head": it.get("code_state_head"),
             "code_state_compared": it.get("code_state_compared"), "open_loop": it.get("open_loop"),
+            "dirty_record": it.get("dirty_record"), "code_at_launch_paths": it.get("code_at_launch_paths"),
+            "open_loop_code_state_same_record": it.get("open_loop_code_state_same_record"),
             "problems": it.get("problems"),
             # without --git-at-start only a missing code_at_launch head can be counted
             "s12": ("stop" in it) if it.get("git_at_start") else it.get("code_at_launch_head") is None}
@@ -426,6 +494,8 @@ def _r11_summary(rows: list, seal: dict, git_ref) -> dict:
             "r11_4_open_loop_s12_rows": sum(1 for x in recs if x["open_loop"] and x["s12"]),
             "r11_4_code_at_launch_missing_rows": sum(1 for x in recs if x["code_at_launch_head"] is None),
             "r11_4_code_state_compared_rows": sum(1 for x in recs if x["code_state_compared"]),
+            "r12_2_dirty_record_rows": sum(1 for x in recs if x.get("dirty_record")),
+            "r12_4_open_loop_code_state_rows": sum(1 for x in recs if x.get("open_loop_code_state_same_record") is not None),
             "r11_5_grades_written": False,
             "rev11_seal": None if rev11 is None else rev11.get("status")}
 
@@ -500,8 +570,8 @@ def gs_load(args) -> int:
     results_root = Path(args.results_root) if args.results_root else repo / "07_results"
     overrides = dict(x.split("=", 1) for x in (args.row_dir or []))
     manifest, man_path, man_sha = load_manifest(args, repo, required=True)   # rev10 R10-1b / R10-2: G-S checks every Chrono row
-    git_ref = git_ref_arg(getattr(args, "git_at_start", None), required=False)
-    rows, n_err = [], 0
+    git_ref = git_ref_arg(getattr(args, "git_at_start", None), required=True)   # rev12 R12-3
+    rows, n_err, n_input_err = [], 0, 0
     for bp in args.batch:
         bp = Path(bp)
         b = json.loads(bp.read_text(encoding="utf-8"))
@@ -554,21 +624,27 @@ def gs_load(args) -> int:
                            folder_notes=plc["notes"], error=None)
             except Exception as e:  # noqa: BLE001
                 n_err += 1
+                if isinstance(e, C.InputError):
+                    n_input_err += 1   # e.g. rev12 R12-5 no / several row folders = input error (S-11)
                 ent["error"] = f"{type(e).__name__}: {e}"[:400]
+                ent["input_error"] = isinstance(e, C.InputError)
             rows.append(ent)
     out = {"tool": "p2_chrono.py gs-load (436.8 path 2, Chrono; read-only, no judgement)",
            "tool_sha256": tsha, "tool_files_sha256": per, "seal": seal,
            "manifest": {"path": man_path, "sha256": man_sha}, "rows": rows,
-           "n_rows": len(rows), "n_errors": n_err, "rev9_R9_8_gs_items": _r9_summary(rows, seal),
+           "n_rows": len(rows), "n_errors": n_err, "n_input_errors": n_input_err, "rev9_R9_8_gs_items": _r9_summary(rows, seal),
            "rev10_R10_2_gs_items": _r10_summary(rows, seal),
            "rev11_gs_items": _r11_summary(rows, seal, git_ref)}
     out_p = Path(args.out)
     out_p.parent.mkdir(parents=True, exist_ok=True)
     data = json.dumps(C.jsonable(out), ensure_ascii=False, indent=1).encode("utf-8")
     out_p.write_bytes(data)
-    summary.update(status="ok" if n_err == 0 and rows else "errors", rows=len(rows), errors=n_err,
+    summary.update(status="ok" if n_err == 0 and rows else ("input_error" if n_input_err else "errors"),
+                   rows=len(rows), errors=n_err, input_errors=n_input_err,
                    out=str(out_p), out_sha256=hashlib.sha256(data).hexdigest())
     print(json.dumps(summary, ensure_ascii=False))
+    if n_input_err:
+        return 2   # rev12 R12-3 / R12-5: input error, G-S check not done for those rows (S-11)
     return 0 if (n_err == 0 and rows) else 1
 
 
@@ -593,7 +669,7 @@ def main(argv=None) -> int:
     g.add_argument("--batch", action="append", required=True)
     g.add_argument("--results-root")
     g.add_argument("--row-dir", action="append")
-    g.add_argument("--git-at-start", help="judgement git_at_start commit (optional; rev11 R11-4 S-12 record)")
+    g.add_argument("--git-at-start", help="judgement git_at_start commit (7..40 hex, required, rev12 R12-3)")
     g.add_argument("--manifest", help="chrono_rows_manifest.json (default: repo v5_resume_4368/, rev9 R9-4)")
     g.add_argument("--out", required=True)
     g.add_argument("--repo")
