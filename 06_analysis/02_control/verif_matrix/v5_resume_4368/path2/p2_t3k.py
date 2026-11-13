@@ -13,6 +13,8 @@ record check of every R-0 / R-0K / T-3K D-1 line expects the switches of its lin
 ``t3.bundle`` / ``t3.las`` / ``t3.gate`` (R-0 LAS-b off / gate off, R-0K off / on, T-3K on / on; LAS-b off =
 ``settings.enable`` false only; gate request ``preset`` on T-3K, record only on R-0 / R-0K); missing or
 inconsistent kind fields, or a kind other than the input file = S-3 (``--gs``: S-11), value mismatch = S-3.
+Records with ``t3.kind`` = ``"dg3"`` inside the D-1 output files are not D-1 lines (rev5 2.5, key list R-0 =
+D-1 5 + dg3 2; the dg3 rows are read from the ``--dg3-*`` records) and are skipped in the D-1 index.
 Author: dynamics-expert (path 2, second author). Path-1 tools (``las_judge``,
 ``las_h7``, ``las_t3*`` judging parts) and their outputs were not opened (436.8 9.2).
 
@@ -702,12 +704,19 @@ def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3
             fnd.stop("H-T3-3", f"baseline {d['key']}", f"key list vs d1.jsonl: {d.get('field', d.get('why'))}")
     tag_tally = {}
     r111 = {}
-    out = {"baseline_check_rev4a": base_check, "R7-1c_tag_reading": tag_tally, "R11-1_record_check": r111}
+    skipped_dg3 = {}
+    out = {"baseline_check_rev4a": base_check, "R7-1c_tag_reading": tag_tally, "R11-1_record_check": r111,
+           "dg3_rows_in_d1_files_skipped": skipped_dg3}
 
     def index(lines, bundle):
         idx = {}
         for ln in lines:
             if is_header(ln):        # rev7 R7-3b: the header record carries no line body
+                continue
+            if core.dig(ln, "t3.kind", None) == "dg3":
+                # the runner writes the dg3 rows into the same jsonl; they are read from the --dg3-* r79.json
+                # records (rev5 2.5; key list R-0 = D-1 5 + dg3 2), not as D-1 lines (decision 19: tool fix)
+                skipped_dg3[bundle] = skipped_dg3.get(bundle, 0) + 1
                 continue
             k = d1_key(ln)
             if "error" in ln:
