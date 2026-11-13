@@ -1261,7 +1261,8 @@ def test_rev3_gs_hash_and_grid_fields(tmp_path) -> None:
         "inner": "x",
         judge.RECORD_KEY: block,
         "controller_tag": judge.TAG_V0,
-        "base": {"commands_sha256": "a"},
+        # the r79 base as written: a timeline (R4-B2 first DONE), no t_done_s / phase_path
+        "base": {"commands_sha256": "a", "timeline": [[0.1, "check"], [38.5, "done"]]},
     }
     path = _write_json(tmp_path / "r79.json", {"results": [r79]})
     out = tmp_path / "g.json"
@@ -1270,6 +1271,11 @@ def test_rev3_gs_hash_and_grid_fields(tmp_path) -> None:
     r79["commands_sha256"] = "a"
     _write_json(path, {"results": [r79]})
     assert judge.main(["gs", "--harness", str(path), "--out", str(out)]) == 0
+    # no timeline: the first DONE cannot be rebuilt (S-11), not a pass
+    _write_json(path, {"results": [{**r79, "base": {"commands_sha256": "a"}}]})
+    assert judge.main(["gs", "--harness", str(path), "--out", str(out)]) == 1
+    missing = json.loads(out.read_text(encoding="utf-8"))["files"][0]["missing"]
+    assert missing == [judge.FIRST_DONE_KEY]
     run = {judge.RECORD_KEY: block, "event": "G4", "commands_sha256": "h"}
     grid = {
         "meta": {"spec": judge.GRID_SPEC, "v5_setting": "VB"},
@@ -1427,13 +1433,73 @@ def test_rev4_gs_fields(tmp_path) -> None:
     }
 
 
-def test_rev4_r79_first_done() -> None:
+def test_rev4_r79_first_done_from_the_timeline() -> None:
+    """R4-B2 on the r79 base as written (G-S b1ddeae): ``timeline``, ``t_ready``,
+    ``final_phase``; no ``t_done_s`` / ``phase_path``."""
+    timeline = [[0.1, "check"], [10.1, "touch"], [30.1, "level"], [38.5, "done"],
+                [38.6, "probe"], [45.0, "level"], [48.0, "done"], [50.5, "ready"]]
+    base = {"timeline": timeline, "t_ready": 50.5, "final_phase": "ready"}
+    check = judge.first_done_check(base)
+    assert check == {"status": "pass", "t_first_done_s": 38.5, "source": "base.timeline",
+                     "reason": None}
+    # timeline missing or empty: S-11 (G-S missing field)
+    for missing in ({"t_ready": 50.5, "final_phase": "ready"}, {"timeline": []},
+                    {"timeline": None, "final_phase": "fault"}):
+        out = judge.first_done_check(missing)
+        assert out["status"] == "S-11" and out["t_first_done_s"] is None, missing
+    # timeline without DONE + a fault end: first DONE = None, normal (rev4 "DONE 없음")
+    before_done = [[0.1, "check"], [10.1, "touch"], [30.1, "level"]]
+    for phase in judge.FAULT_FINAL_PHASES:
+        faulted = judge.first_done_check({"timeline": [*before_done, [33.0, phase]],
+                                          "final_phase": phase})
+        assert faulted["status"] == "pass" and faulted["t_first_done_s"] is None, phase
+    # timeline without DONE, no fault end: S-11
+    for phase in ("level", "probe", "ready", None):
+        stuck = judge.first_done_check({"timeline": before_done, "final_phase": phase})
+        assert stuck["status"] == "S-11" and stuck["t_first_done_s"] is None, phase
+    record = {"seed_index": 1, "harness": "L3", "inner": 34, "key": "k", "base": base}
+    assert judge.rev4_presence(record)[judge.FIRST_DONE_KEY] is True
+    no_done = {**record, "base": {"timeline": before_done, "final_phase": "level"}}
+    assert judge.rev4_presence(no_done)[judge.FIRST_DONE_KEY] is False
+
+
+def test_rev4_r79_first_done_of_g6_ref_bases() -> None:
+    """g6 / ref r79 bases keep ``t_done_s`` + ``phase_path`` (no timeline): rev4 R4-B2 as
+    written, with the same DONE-less rule."""
     path = [[0.1, "check"], [40.0, "done"], [50.0, "level"], [60.0, "done"]]
-    base = {"t_done_s": 40.003, "phase_path": path}
-    assert judge.is_first_done(base) is True
-    assert judge.is_first_done({**base, "t_done_s": 60.0}) is False
-    assert judge.is_first_done({"t_done_s": None, "phase_path": [[0.1, "check"]]}) is True
-    assert judge.is_first_done({"t_done_s": 40.0, "phase_path": [[0.1, "check"]]}) is False
+    ok = judge.first_done_check({"t_done_s": 40.003, "phase_path": path, "final_phase": "ready"})
+    assert ok["status"] == "pass" and ok["t_first_done_s"] == 40.003
+    assert ok["source"] == "base.t_done_s"
+    relevel = judge.first_done_check({"t_done_s": 60.0, "phase_path": path})
+    assert relevel["status"] == "S-11" and relevel["t_first_done_s"] == 40.0
+    assert judge.first_done_check({"t_done_s": 40.0, "phase_path": [[0.1, "check"]]})[
+        "status"] == "S-11"
+    assert judge.first_done_check({"t_done_s": None, "phase_path": path})["status"] == "S-11"
+    no_done = [[0.1, "check"], [20.0, "level"]]
+    faulted = judge.first_done_check({"t_done_s": None, "phase_path": no_done,
+                                      "final_phase": "fault"})
+    assert faulted["status"] == "pass" and faulted["t_first_done_s"] is None
+    stuck = judge.first_done_check({"t_done_s": None, "phase_path": no_done,
+                                    "final_phase": "level"})
+    assert stuck["status"] == "S-11"
+
+
+def test_gs_reads_an_all_off_t3k_line_as_final_c4g2(tmp_path) -> None:
+    """User decision 2026-11-13: a T-3K line with ``t3.las`` / ``t3.gate`` = ``off`` and no
+    ``controller_tag`` reads as ``final_C4G2`` and is not a missing key."""
+    block = record.controller_record(_Controller(blocked=False))
+    line = {"job": {"setting": "V0"}, judge.RECORD_KEY: block,
+            "t3": {"bundle": "R-0", "las": "off", "gate": "off"}}
+    assert judge.read_controller_tag(line) == "final_C4G2"
+    assert judge.gs_presence(line)["controller_tag"] is True
+    for t3 in ({"las": "on", "gate": "off"}, {"las": "off", "gate": "on"}, {"las": "off"}):
+        other = {**line, "t3": {"bundle": "x", **t3}}
+        assert judge.read_controller_tag(other) is None, t3
+        assert judge.gs_presence(other)["controller_tag"] is False, t3
+    no_t3 = {k: v for k, v in line.items() if k != "t3"}
+    assert judge.gs_presence(no_t3)["controller_tag"] is False
+    tagged = {**line, "controller_tag": "final_C4G2_LAS_K1"}  # a written tag wins
+    assert judge.read_controller_tag(tagged) == "final_C4G2_LAS_K1"
 
 
 def test_rev4_soil_event_series_columns(tmp_path) -> None:

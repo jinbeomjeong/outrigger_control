@@ -635,23 +635,26 @@ def install_plant_options(setting: FlowSetting, hydraulics=None) -> None:
     install_flow_plant(setting)
 
 
-def plant_options_record(hydraulics=None, t_lift_s: float | None = None) -> dict:
+def plant_options_record(hydraulics=None, t_lift_s: float | None = None, *,
+                         config=None) -> dict:
     """After a run: the criteria P-4 window check and the v5 record (empty without options).
 
     ``t_lift_s`` = the first crawler lift-off of the run (``values.forces.t_lift_s``): the M2
     clipped steps are split before / after it (criteria rev. 2 2.1; None = all after).
 
-    The ``controller_tag`` follows the controller of the last :func:`_finish` of this process
-    (LAS-b switch 2026-11-08: ``final_C4G2_LAS`` / ``final_C4G2_P3_LAS``; K1 switch:
+    The ``controller_tag`` follows ``config``, the C2 config of the run's own controller (LAS-b
+    switch 2026-11-08: ``final_C4G2_LAS`` / ``final_C4G2_P3_LAS``; K1 switch:
     ``final_C4G2_LAS_K1`` / ``final_C4G2_P3_LAS_K1``; a run without options then gets only that
-    key).
+    key). The r67 / r79 screens do not go through :func:`_finish` and pass it; None = the
+    controller of the last :func:`_finish` of this process (the run_v5 / d1 runs).
 
     Raises:
         RuntimeError: The lock window of the built preset differs from the options.
     """
     from outrigger_sim.hydraulics.v5_options import controller_tag
 
-    config = _LAST_FINISHED_CONFIG[0]
+    if config is None:
+        config = _LAST_FINISHED_CONFIG[0]
     if hydraulics is None or not hydraulics.is_any_on:
         tag = controller_tag(None, config)
         return {} if tag is None else {"controller_tag": tag}

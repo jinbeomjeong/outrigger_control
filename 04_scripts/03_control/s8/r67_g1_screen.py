@@ -614,7 +614,9 @@ def v5_job_record(options, env_name: str = V5_SETTING_ENV) -> dict:
     t_lift_s, extra = (None, {}) if plant is None else _lift_and_lock_window(plant, ctrl)
     if ctrl is not None:  # 436.8 rules 4.2 / 7.2: record only, after the run
         extra[RESUME_K1_KEY] = resume_k1_block(ctrl)
-    return {**v5_setting_record(options, env_name, t_lift_s), "t_lift_s": t_lift_s, **extra}
+    config = getattr(ctrl, "config", None)
+    return {**v5_setting_record(options, env_name, t_lift_s, config=config),
+            "t_lift_s": t_lift_s, **extra}
 
 
 RESUME_K1_KEY = "resume_k1"
@@ -648,17 +650,20 @@ def v5_branch_record(plant, ctrl) -> dict:
 
 
 def v5_setting_record(options, env_name: str = V5_SETTING_ENV,
-                      t_lift_s: float | None = None) -> dict:
+                      t_lift_s: float | None = None, *, config=None) -> dict:
     """The result keys of a run with a v5 setting (empty without one).
 
     ``t_lift_s`` = the first crawler lift-off of the run: the M2 clipped steps are split before /
-    after it (``verdict_runs.plant_options_record``; None = all after)."""
+    after it (``verdict_runs.plant_options_record``; None = all after). ``config`` = the C2
+    config of the run's controller: its LAS-b / K1 switches name the ``controller_tag`` (the
+    screens do not go through ``verdict_runs._finish``, so without it the tag loses them)."""
     name = v5_setting_name(env_name)
     if name is None:
         return {}
     import verdict_runs
 
-    return {"v5_setting": name, **verdict_runs.plant_options_record(options, t_lift_s)}
+    return {"v5_setting": name,
+            **verdict_runs.plant_options_record(options, t_lift_s, config=config)}
 
 
 def split_keys_option(argv: list[str]) -> tuple[list[str], list[str] | None]:

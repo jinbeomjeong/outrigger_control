@@ -1081,7 +1081,9 @@ def _v5_record(options, run: ActiveRun, plant) -> dict:
 
     period = run.controller_period_arrays()
     t_lift_s = r67.first_lift_time_s(plant, period)
-    record = r67.v5_setting_record(options, V5_SETTING_ENV, t_lift_s)
+    # the run's own config names the LAS-b / K1 switches (the T4h meta uses the same)
+    record = r67.v5_setting_record(options, V5_SETTING_ENV, t_lift_s,
+                                   config=getattr(run.ctrl, "config", None))
     reasons = [(round(float(e.t_s), 3), e.name) for e in run.ctrl.events
                if e.name.startswith(ROD_FAULT_REASON_EVENT)]
     out = {**record, "t_lift_s": t_lift_s, "rod_fallback_reasons": reasons,
