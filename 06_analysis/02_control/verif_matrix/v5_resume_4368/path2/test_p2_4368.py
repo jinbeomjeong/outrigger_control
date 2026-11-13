@@ -25,6 +25,14 @@ def run_main(argv, capsys):
         man = Path(argv[argv.index("--batch") + 1]).parent / "rows_manifest.json"
         if man.is_file():
             argv += ["--rows-manifest", str(man)]
+    if "chrono" in argv and "--git-at-start" not in argv and "--batch" in argv:
+        # rev11 R11-4: synthetic rows are compared with the head their batch.json records
+        bj = Path(argv[argv.index("--batch") + 1]) / "batch.json"
+        if bj.is_file():
+            cases = json.loads(bj.read_text("utf-8")).get("cases") or [{}]
+            head = p2.dig(cases[0], "code_at_launch.git.head", None)
+            if isinstance(head, str):
+                argv += ["--git-at-start", head]
     code = p2.main(["--repo", str(REPO)] + argv)
     last = capsys.readouterr().out.strip().splitlines()[-1]
     return code, json.loads(last)
@@ -1124,3 +1132,81 @@ def test_rev9_r94_ls_row_tag_and_c5_undecidable(tmp_path, capsys):
     rep = json.loads(out.read_text("utf-8"))
     assert rep["R9-4_ls_rows"]["c5_undecidable_rows"] == [case]
     assert any("R9-4" in r["what"] and "LS 판별 불가" in r["what"] for r in rep["records"])
+
+
+# ------------------------------------------------------------------ rev11 (9bac4524)
+def test_rev11_seal_listed_and_checked(capsys, monkeypatch):
+    seals = p2.check_seals(REPO, appendix=False)
+    assert p2.REV11_REL in seals["rules"] and seals["rules"][p2.REV11_REL]["ok"], seals["rules"].get(p2.REV11_REL)
+    assert p2.REV11_SHA == "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f"
+    item = seals["rules"][p2.REV11_REL]
+    assert item["sha256"] == item["seal_file_sha"] == p2.REV11_SHA
+    monkeypatch.setattr(p2, "REV11_SHA", "0" * 64)
+    code, s = run_main(["seal"], capsys)
+    assert code == 2 and s["stop_codes"] == ["S-1"]
+
+
+def openloop_batch(tmp_path, cal=True, head="c" * 40):
+    bd = tmp_path / "batch_V5-RESUME-K1-GS_20990101_000000"
+    case = "GS_P3a_G1_B_VB_prop_lift10"
+    (bd / case).mkdir(parents=True)
+    res = {"v5_hydraulics": {"controller_options": {"applied": False}}, "p3a": {"checks": {}},
+           "num_threads_chrono": 4, "hull_hook": {"mode": "fast"}}
+    (bd / case / "result.json").write_text(json.dumps(res), "utf-8")
+    row = {"case": case, "argv": ["python.exe", "run_S9.py", "openloop"], "rc": 0, "criteria_id": "C-6",
+           "v5_setting": "VB", "pool": "pcore", "planned_pool": "pcore"}
+    if cal:
+        row["code_at_launch"] = {"git": {"head": head, "dirty": [], "clean": True}}
+    write_batch_json(bd, [row])
+    return bd
+
+
+@pytest.mark.parametrize("variant, want", [("ok", 0), ("absent", 2), ("differs", 2)])
+def test_rev11_r114_open_loop_launch_head(tmp_path, capsys, variant, want):
+    bd = openloop_batch(tmp_path, cal=variant != "absent")
+    out = tmp_path / "o.json"
+    gas = "c" * 40 if variant != "differs" else "d" * 40
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs", "--git-at-start", gas], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == want, rep["stops"]
+    if want:
+        assert s["stop_codes"] == ["S-12"] and any("R11-4" in x["why"] for x in rep["stops"])
+    st = {"ok": "ok", "absent": "launch_head_absent", "differs": "launch_head_differs"}[variant]
+    assert rep["R11-4_commit_identity"]["launch_head"] == {st: 1}
+    assert rep["R11-5_gs_grades"].startswith("G-S 행 등급은 판정하지 않음")
+
+
+def test_rev11_r114_abbreviated_commit_and_missing_argument(tmp_path, capsys):
+    bd = openloop_batch(tmp_path)
+    code, s = run_main(["chrono", "--batch", str(bd), "--gs", "--git-at-start", "ccccccc"], capsys)
+    assert code == 0, s
+    code, s = run_main(["chrono", "--batch", str(bd), "--gs", "--git-at-start", "cccc"], capsys)   # < 7 hex
+    assert code == 2 and s["stop_codes"] == ["S-12"]
+    out = tmp_path / "o.json"
+    p2.main(["--repo", str(REPO), "--out", str(out), "chrono", "--batch", str(bd), "--gs",
+             "--rows-manifest", str(tmp_path / "rows_manifest.json")])
+    capsys.readouterr()
+    rep = json.loads(out.read_text("utf-8"))
+    assert any("--git-at-start not given" in u["why"] for u in rep["undecidable"])
+
+
+def test_rev11_r114_level_row_code_state(tmp_path, capsys):
+    res = gs_full_result()
+    res["code_state"] = {"git_at_start": {"head": "a" * 40, "clean": True}}
+    bd = make_batch(tmp_path, res, name="batch_V5-RESUME-K1-GS_20990101_000000")
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0, rep["stops"]
+    assert rep["R11-4_commit_identity"]["code_state"] == {"ok": 1}
+    res["code_state"]["git_at_start"]["head"] = "e" * 40          # result.json commit differs from git_at_start
+    bd = make_batch(tmp_path / "b", res, name="batch_V5-RESUME-K1-GS_20990101_000000")
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 2 and s["stop_codes"] == ["S-12"]
+    assert rep["R11-4_commit_identity"]["code_state"] == {"differs": 1}
+    del res["code_state"]                                          # no record: launch head only
+    bd = make_batch(tmp_path / "c", res, name="batch_V5-RESUME-K1-GS_20990101_000000")
+    code, s = run_main(["--out", str(out), "chrono", "--batch", str(bd), "--gs"], capsys)
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 0 and rep["R11-4_commit_identity"]["code_state"] == {"absent": 1}

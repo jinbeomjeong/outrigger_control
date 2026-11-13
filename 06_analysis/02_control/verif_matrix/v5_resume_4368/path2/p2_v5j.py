@@ -8,6 +8,9 @@ Rules: v5 criteria ``v5_criteria.md`` + revisions 1~12b (appendix A of the 436.8
 F_min + 5 kN (C4); J3 slope by the row's floor angle (C5); J7 names without numeric segments (C6); J11 n_late
 None on a fallback line = undecidable (C7); J-P3 inputs by T4h, else configuration, never by inverting the
 declaration (C8); rev4 (7ea87a30...) R4-C5: floor angle from ``values.case_floor_deg`` (F-3); rev5 (452a8436...) R5-B3: LS J11 fallback n_late > 0 = L-e.
+436.8 rev11 (9bac4524...) R11-2 (``u9``): the T4h of a VB line is looked up only in the runner convention
+folders of its ``--vb`` file (``<stem>_t4h/``, ``t4h/``); one ``--t4h-root`` only when no convention folder
+exists (else, or two or more, input error S-11, exit 2); the recorded ``t4h_file`` found 0 or 2+ times = S-2.
 Author: dynamics-expert (path 2, second author of the 436.8 path 2). Path-1 tools and outputs were not opened
 (436.8 9.2); the J-item reading below is built from the rule sentences and the line field names only.
 
@@ -399,6 +402,49 @@ def rod_reading_from_t4h(line, t4h_root):
         return bool(np.isfinite(a).any())
 
 
+def _rod_reading_file(p):
+    import numpy as np   # noqa: PLC0415 (numpy only for npz)
+    with np.load(p, allow_pickle=False) as z:
+        if "rod_pressure_Pa" not in z.files:
+            return None
+        a = np.asarray(z["rod_pressure_Pa"], dtype=float)
+        return bool(np.isfinite(a).any())
+
+
+def t4h_convention_dirs(result_file):
+    """436.8 rev11 R11-2 1: the runner convention folders of one result file: ``<stem>_t4h/`` and ``t4h/``
+    next to it (only those that exist)."""
+    p = Path(result_file)
+    return [d for d in (p.with_name(p.stem + "_t4h"), p.parent / "t4h") if d.is_dir()]
+
+
+def t4h_places(result_files, given):
+    """rev11 R11-2 1 / 2: search folders per result file. Another folder only when no result file has a
+    convention folder, and at most one. Returns ({file: [dirs]}, None) or (None, input-error reason)."""
+    given = list(given or [])
+    if len(given) > 1:
+        return None, f"{len(given)} T4h folders given (R11-2 2: at most one)"
+    places = {str(f): t4h_convention_dirs(f) for f in result_files}
+    if given and any(places.values()):
+        return None, "a T4h folder given while a runner convention folder exists (R11-2 2)"
+    if given:
+        places = {k: [Path(given[0])] for k in places}
+    return places, None
+
+
+def rod_reading_lookup(line, dirs):
+    """rev11 R11-2 3: the recorded ``t4h_file`` must be found exactly once in ``dirs``.
+    (reading, status, hits): status ``no_t4h_file`` (line without the field: configuration, R3-C8),
+    ``ok``, ``not_found`` / ``several`` (S-2)."""
+    name = line.get("t4h_file")
+    if not isinstance(name, str):
+        return None, "no_t4h_file", []
+    hits = [d / name for d in dict.fromkeys(dirs) if (d / name).is_file()]
+    if len(hits) != 1:
+        return None, ("not_found" if not hits else "several"), [str(h) for h in hits]
+    return _rod_reading_file(hits[0]), "ok", [str(hits[0])]
+
+
 def nrev_max_by_row(v0_lines):
     out = {}
     for ln in v0_lines:
@@ -415,8 +461,21 @@ def u9_key(job):
     return (job.get("case"), round(float(job.get("eps", 0.0)), 6))
 
 
-def recount_u9(v0_lines, vb_lines, h0_ref_lines, is_p3, stored_main=None, stored_p3=None, t4h_root=None):
+def recount_u9(v0_lines, vb_lines, h0_ref_lines, is_p3, stored_main=None, stored_p3=None, t4h_root=None,
+               t4h_lookup=None):
+    """``t4h_lookup(line)`` -> (reading, status, hits) is the rev11 R11-2 search (main); without it the
+    single ``t4h_root`` folder of the earlier sheets is read (kept for library callers)."""
     fnd = core.Findings()
+    t4h_log = {"ok": 0, "no_t4h_file": 0, "not_found": 0, "several": 0}
+
+    def rod(ln, where):
+        if t4h_lookup is None:
+            return rod_reading_from_t4h(ln, t4h_root)
+        val, st, hits = t4h_lookup(ln)
+        t4h_log[st] += 1
+        if st in ("not_found", "several"):
+            fnd.stop("S-2", where, f"R11-2: T4h {ln.get('t4h_file')!r} {st} in the convention / given folder(s) {hits}")
+        return val
     v0 = {}
     for ln in v0_lines:
         k = u9_key(ln["job"])
@@ -483,8 +542,8 @@ def recount_u9(v0_lines, vb_lines, h0_ref_lines, is_p3, stored_main=None, stored
             continue
         where = f"{k[0]}|eps {k[1]}"
         rmax = nmax.get(row_key(l0["job"]))
-        rb = rod_reading_from_t4h(lb, t4h_root)
-        rl = rod_reading_from_t4h(ll, t4h_root)
+        rb = rod(lb, f"VB0.85 {where}")
+        rl = rod(ll, f"VB0.80 {where}")
         jb, fb = judge_pair(lb, l0, rmax, is_p3, rb)
         jl, fl = judge_pair(ll, l0, rmax, is_p3, rl)
         # rev3 R3-C2: the 436.8 grade = eta 0.85 VB vs V0 T1 (+ H0); eta 0.80 T1 / T3 / T4 / class = records
@@ -582,7 +641,8 @@ def recount_u9(v0_lines, vb_lines, h0_ref_lines, is_p3, stored_main=None, stored
             "D_keys_recorded_separately": cls_flags["baseline_or_v0_fail"],
             "longest_ge3_s_max": max(any_ge) if any_ge else None,
             "status_4368": {"pass": "통과", "fail": "미달", "undecidable": "판정 불가", "stop": "멈춤"}[status],
-            "counts": {"V0": len(v0), "VB0p85": len(vb[ETA_BASE]), "VB0p80": len(vb[ETA_LOW])}}
+            "counts": {"V0": len(v0), "VB0p85": len(vb[ETA_BASE]), "VB0p80": len(vb[ETA_LOW])},
+            "R11-2_t4h_lookup": t4h_log if t4h_lookup is not None else "single --t4h-root (library call)"}
     return body, fnd
 
 
@@ -607,7 +667,10 @@ def main(argv=None):
                    help="file(s) with the reference VB lines of H0 (1) (default: the --vb files)")
     u.add_argument("--stored-main", default=None, help="stored v5/main.jsonl (H0 (2) record)")
     u.add_argument("--stored-p3", default=None, help="stored v5/p3_hash.jsonl (record)")
-    u.add_argument("--t4h-root", default=None, help="T4h folder of the VB lines (rev9 3.1 rod reading)")
+    u.add_argument("--t4h-root", action="append", default=None,
+                   help="T4h folder of the VB lines (rev9 3.1 rod reading). 436.8 rev11 R11-2: the runner "
+                        "convention folders <vb stem>_t4h/ and t4h/ next to each --vb file are used; another "
+                        "folder only when none exists, at most one (else input error, S-11, exit 2)")
     args = ap.parse_args(argv)
     repo = Path(args.repo) if args.repo else _HERE.parents[4]
     tool_sha = core.sha256_file(Path(__file__))
@@ -621,18 +684,33 @@ def main(argv=None):
         else:
             is_p3, mod = core.load_is_extend_start(repo)
             report = {"u9_rules": rs, "v5_options": mod, "seals_eol_only": seals.get("eol_only", [])}
-            v0 = read_lines([args.v0])
-            vbl = [x for x in read_lines(args.vb)
-                   if (x.get("job") or {}).get("setting") == "VB" and (x.get("job") or {}).get("u9_metrics")]
-            ref = read_lines(args.h0_ref or args.vb)
-            sm = read_lines([args.stored_main]) if args.stored_main else None
-            sp = read_lines([args.stored_p3]) if args.stored_p3 else None
-            body, f = recount_u9(v0, vbl, ref, is_p3, sm, sp, args.t4h_root)
-            report["H-5"] = {**body, **f.as_dict(),
-                             "inputs": {"v0": [args.v0, core.sha256_file(args.v0)],
-                                        "vb": [[p, core.sha256_file(p)] for p in args.vb]}}
-            report["stop_codes"] = f.as_dict()["stop_codes"]
-            code = {"stop": 2, "undecidable": 1, "fail": 1, "pass": 0}[f.status()]
+            places, perr = t4h_places(args.vb, args.t4h_root)
+            report["R11-2_t4h_places"] = ({k: [str(d) for d in v] for k, v in places.items()} if places
+                                          else {"input_error": perr})
+            if places is None:
+                # rev11 R11-2 2: input error, the bundle is not judged (S-11, exit 2)
+                report["stop_codes"] = ["S-11"]
+                report["H-5"] = {"status_4368": "멈춤", "not_judged": True, "why": perr}
+                code = 2
+            else:
+                v0 = read_lines([args.v0])
+                src = {}
+                vbl = []
+                for p in args.vb:
+                    for x in core.read_jsonl(p):
+                        if (x.get("job") or {}).get("setting") == "VB" and (x.get("job") or {}).get("u9_metrics"):
+                            src[id(x)] = str(p)
+                            vbl.append(x)
+                ref = read_lines(args.h0_ref or args.vb)
+                sm = read_lines([args.stored_main]) if args.stored_main else None
+                sp = read_lines([args.stored_p3]) if args.stored_p3 else None
+                body, f = recount_u9(v0, vbl, ref, is_p3, sm, sp,
+                                     t4h_lookup=lambda ln: rod_reading_lookup(ln, places[src[id(ln)]]))
+                report["H-5"] = {**body, **f.as_dict(),
+                                 "inputs": {"v0": [args.v0, core.sha256_file(args.v0)],
+                                            "vb": [[p, core.sha256_file(p)] for p in args.vb]}}
+                report["stop_codes"] = f.as_dict()["stop_codes"]
+                code = {"stop": 2, "undecidable": 1, "fail": 1, "pass": 0}[f.status()]
         report.update(tool=TOOL_NAME, version=TOOL_VERSION, tool_sha256=tool_sha,
                       created=_dt.datetime.now().astimezone().isoformat(timespec="seconds"))
         text = json.dumps(report, indent=1, ensure_ascii=False, default=str)
