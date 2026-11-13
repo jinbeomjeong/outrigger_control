@@ -252,6 +252,24 @@ def _walk_missing(items: dict) -> list:
     return out
 
 
+def _jp3_scope(it):
+    """rev8 R8-2 / R8-4 G-S record: J-P3 scope only (tag reading, request records; no breach values)."""
+    if not isinstance(it, dict):
+        return None
+    stop = str(it.get("stop") or "")
+    if stop.startswith("S-2"):
+        scope = "S-2"
+    elif it.get("verdict") == "na":
+        scope = "not_applicable"
+    elif "9.3" in str(it.get("reason") or ""):
+        scope = "key_missing_9.3"
+    else:
+        scope = "applicable"
+    return {"scope": scope, "tag": it.get("tag"), "tag_established": it.get("tag_established"),
+            "extend_start_tag": it.get("extend_start_tag"), "request_compared": it.get("request_compared"),
+            "request_mismatch": it.get("request_mismatch"), "s2_reason": stop if scope == "S-2" else None}
+
+
 def gs_load(args) -> int:
     """Read-only loader run on G-S rows (rules 11.2): every G-S row is resolved, loaded and passed
     through its bundle's item functions; the output keeps folders, input sha256, absent-input
@@ -305,6 +323,12 @@ def gs_load(args) -> int:
                                               "affinity_mask_ok" in (res.get("placement") or {}),
                                               "batch.affinity_masks": "affinity_masks" in b,
                                               "case.placement_applied": "placement_applied" in case},
+                           law_locked_record=({"source": row.law_locked_source,
+                                               "present": row.law_locked_source is not None,
+                                               "well_formed": row.law_locked is not None,
+                                               "problems": list(row.law_locked_problems)}
+                                              if hasattr(row, "law_locked_problems") else None),
+                           jp3_scope=_jp3_scope(items.get("J-P3")),
                            folder_notes=plc["notes"], error=None)
             except Exception as e:  # noqa: BLE001
                 n_err += 1

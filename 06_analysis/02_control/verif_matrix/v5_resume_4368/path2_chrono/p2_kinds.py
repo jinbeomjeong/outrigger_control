@@ -292,27 +292,59 @@ def t45_items(row, t45):
 
 
 def jp3_item(row):
-    """rev8 3.2 + rev9 3.2 table: Chrono rows always have rod readings (rev9 3.2 #4 note)."""
-    on = C.extend_start_on(row)
+    """436.8 rev8 R8-2 (scope) + v5 rev8 3.2 / rev9 3.2 table (Chrono rows always have rod readings,
+    rev9 3.2 #4 note).
+
+    Scope: the ③ reading is the row's tag only (rules 4.1 `is_extend_start_tag`, rev3 R3-C8); the
+    tag is argv `--expect-controller` with a true expect check (rules 6, rev1 RV1-10 a). Not
+    established -> S-2. Request records (argv `--extend-start-tracked`; with a `v5_hydraulics` block
+    also `hydraulic_options.extend_start_tracked`, key absent = off; without the block argv only)
+    differ from the tag's ③ -> S-2. Tag ③ off -> na (a missing `extend_start_rule` is not counted).
+    Tag ③ on: `controller_meta.two_pressure.settings.extend_start_rule` missing -> 판정 불가 (9.3),
+    other than `tracked_bound` -> S-2. A tag ③-off row whose running rule is `tracked_bound` is the
+    same tag / controller difference and is also S-2 (rules 8.2 S-2; path 2 reading, README 6)."""
+    tg = C.row_tag(row)
     argv_on = "--extend-start-tracked" in row.argv
-    opts = ((row.result.get("v5_hydraulics") or {}).get("hydraulic_options") or {})
-    opt_on = opts.get("extend_start_tracked") is True
-    out = {"clause": "rev8 3.2 / rev9 3.2 / rev4 R4-A2 b", "extend_start_on": on,
-           "argv_extend_start_tracked": argv_on, "hydraulic_options_extend_start_tracked": opts.get("extend_start_tracked")}
-    if on is None:
-        if not argv_on and not opt_on:
-            # rev8 5: J-P3 is for VB / LS runs. A V0 run (③ not requested in argv nor in the recorded
-            # hydraulic options) carries no `extend_start_rule` key; not a 9.3 missing key (G-S 2026-11-13).
-            out.update(verdict="na", reason="③ off row (extend_start_rule key absent; argv and hydraulic_options off)")
+    v5h = row.result.get("v5_hydraulics")
+    has_v5h = isinstance(v5h, dict)
+    opt_raw = ((v5h.get("hydraulic_options") or {}).get("extend_start_tracked")) if has_v5h else None
+    opt_on = (opt_raw is True) if has_v5h else None
+    rule = C.extend_start_rule(row)
+    out = {"clause": "436.8 rev8 R8-2 / rules 4.1 / v5 rev8 3.2 / rev9 3.2 / rev4 R4-A2 b",
+           "tag": tg["tag"], "tag_established": tg["established"], "expect_ok": tg["expect_ok"],
+           "expect_name": tg["expect_name"], "argv_extend_start_tracked": argv_on,
+           "v5_hydraulics_block": has_v5h, "hydraulic_options_extend_start_tracked": opt_raw,
+           "extend_start_rule": rule}
+    if not tg["established"]:
+        out.update(verdict="indeterminate", stop="S-2 (rev8 R8-2: row tag not established: argv --expect-controller"
+                   " / expect check, rules 6, rev1 RV1-10 a)")
+        return out
+    on = C.is_extend_start_tag(tg["tag"])
+    out["extend_start_tag"] = on
+    out["request_compared"] = ["argv", "hydraulic_options"] if has_v5h else ["argv"]
+    diff = []
+    if argv_on != on:
+        diff.append("argv --extend-start-tracked")
+    if has_v5h and opt_on != on:
+        diff.append("v5_hydraulics.hydraulic_options.extend_start_tracked")
+    if diff:
+        out.update(verdict="indeterminate", request_mismatch=diff,
+                   stop="S-2 (rev8 R8-2: ③ request record vs tag: " + ", ".join(diff) + ")")
+        return out
+    if not on:
+        if rule == "tracked_bound":
+            out.update(verdict="indeterminate",
+                       stop="S-2 (rev8 R8-2 / rules 8.2: tag ③ off but extend_start_rule = tracked_bound)")
             return out
+        out.update(verdict="na", reason="tag ③ off (rev8 R8-2: not applicable; extend_start_rule key not required)")
+        return out
+    if rule is None:
         out.update(verdict="indeterminate", reason="controller_meta.two_pressure.settings.extend_start_rule missing"
-                   " on a ③-requested row")
+                   " on a tag ③ row (rules 9.3)")
         return out
-    if on != (argv_on or opt_on):
-        out.update(verdict="indeterminate", reason="extend_start_rule vs argv / hydraulic_options differ (S-3 review)")
-        return out
-    if on is False:
-        out.update(verdict="na", reason="③ off row")
+    if rule != "tracked_bound":
+        out.update(verdict="indeterminate",
+                   stop=f"S-2 (rev8 R8-2: tag ③ on but extend_start_rule = {rule!r})")
         return out
     ebc = (row.result.get("hydraulics_record") or {}).get("extend_bound_check")
     if not ebc:
@@ -348,14 +380,28 @@ def j11_item(row, tp):
     `two_pressure.settings` (lock_window_valve_tau_s, lock_window_eps_m_s,
     lock_window_closing_delay_s; spec 10.4 2 as written in the monitor docstring). Logged stretches
     are matched to `fallback_lock_log` (t_start_s, window_end_s) to 1e-12 s; a mismatch is S-11.
-    Judged / late: rev2 D-1 (t_last, plant lock state at t_w + 1e-6 s from pads.npz law_locked).
-    Actual fallback legs = log legs U WARN_ROD_PRESSURE_FALLBACK legs (R6-B7); n_late > 0 on such a
-    leg = H-7 (VB) / L-e (LS rows, R5-B3); other legs recorded."""
+    Judged / late: rev2 D-1 (t_last, plant lock state at t_w + 1e-6 s from `law_locked`: SCM
+    `step_series.npz` on `t_s`, L2b `pads.npz` on `t`, rev8 R8-3a; -1 before the leg's first armed
+    sample = locked, rev6 6). Actual fallback legs = log legs U WARN_ROD_PRESSURE_FALLBACK legs
+    (R6-B7); n_late > 0 on such a leg = H-7 (VB) / L-e (LS rows, R5-B3); other legs recorded.
+    rev8 R8-3: SCM `law_locked` missing or malformed, or any row with a malformed one -> 판정 불가 and
+    the bundle stops (G-S: S-11 by the path 1 gs-check); L2b missing keeps rev6 R6-B7 (판정 불가 only
+    with an actual fallback leg). -1 after the first armed sample has no rule reading -> 판정 불가 + stop."""
     import math
     import numpy as np
     log = tp.get("fallback_lock_log")
     st = tp.get("settings") or {}
-    out = {"clause": "rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev3 R3-C7"}
+    out = {"clause": "rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev3 R3-C7, rev8 R8-3 / R8-3a",
+           "law_locked_source": row.law_locked_source, "law_locked_problems": list(row.law_locked_problems)}
+    if row.law_locked_problems:
+        out.update(verdict="indeterminate", reason="law_locked malformed: " + "; ".join(row.law_locked_problems),
+                   stop="R8-3: law_locked malformed (main run: J11 판정 불가, bundle stops and asks; G-S: S-11)")
+        return out
+    if row.engine == "scm" and row.law_locked is None:
+        out.update(verdict="indeterminate", reason="step_series.npz law_locked missing (rev8 R8-3a)",
+                   stop="R8-3: SCM step_series.npz law_locked missing (main run: J11 판정 불가, bundle stops and"
+                        " asks; G-S: S-11)")
+        return out
     if log is None:
         out.update(verdict="indeterminate", reason="fallback_lock_log missing")
         return out
@@ -367,8 +413,14 @@ def j11_item(row, tp):
         return out
     actual = sorted(log_legs | ev_legs)
     out["actual_fallback_legs"] = actual
-    if row.law_locked is None:
+    if row.law_locked is None:   # L2b only here (SCM returned above)
         out.update(verdict="indeterminate" if actual else "record", reason="pads.npz law_locked missing")
+        return out
+    locked_view, unarmed_after = C.law_lock_view(row.law_locked)
+    out["unarmed_after_armed_samples"] = unarmed_after
+    if sum(unarmed_after) > 0:
+        out.update(verdict="indeterminate", reason="law_locked -1 after the first armed sample (no rule reading)",
+                   stop="R8-3: law_locked -1 after arming (reading not defined by rev6 6; J11 판정 불가, ask)")
         return out
     try:
         tau = float(st["lock_window_valve_tau_s"])
@@ -394,7 +446,7 @@ def j11_item(row, tp):
                 judged = t_w - 1e-9 <= t_last
                 j1 = min(int(np.searchsorted(row.tF, t_w + 1e-6)), len(row.tF) - 1)
                 state = int(row.law_locked[j1, li])
-                late = bool(judged and state not in (1, -1))
+                late = bool(judged and not locked_view[j1, li])
                 n_late[li] += int(late)
                 stretches[leg].append({"t_start_s": t_s, "t_window_end_s": t_w, "closed": closed,
                                        "t_last_s": t_last, "judged": judged, "law_locked_after": state,
@@ -457,12 +509,13 @@ def items_c5(row, params, t45=None):
             h9["stop"] = "H-9"
     items["H-9"] = h9
     if row.law_locked is not None:
-        ll = row.law_locked.astype(int)
-        lockv = (ll != 0).astype(int)   # rev6 6: -1 (before arming) is read as locked
-        d = __import__("numpy").diff(lockv, axis=0)
-        items["J11_lock_transitions"] = {"clause": "rev6 6 (record: plant lock events)",
+        lockb, after = C.law_lock_view(row.law_locked)   # rev6 6: -1 before first arming = locked
+        d = __import__("numpy").diff(lockb.astype(int), axis=0)
+        items["J11_lock_transitions"] = {"clause": "rev6 6 / rev8 R8-3 (record: plant lock events)",
+                                         "source": row.law_locked_source,
                                          "lock_on": (d == 1).sum(axis=0).tolist(),
-                                         "lock_off": (d == -1).sum(axis=0).tolist(), "verdict": "record"}
+                                         "lock_off": (d == -1).sum(axis=0).tolist(),
+                                         "unarmed_after_armed_samples": after, "verdict": "record"}
     keys = ["H-9", "K1_class"]
     tp = (row.result.get("controller_meta") or {}).get("two_pressure") or {}
     # --- T4-0 / T4 / T5: rev4 R4-A2 option c (path 2 ran chrono_t45_replay, p2_t45.py)
