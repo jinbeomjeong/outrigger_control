@@ -451,3 +451,38 @@ def test_rev11_r111_request_record_only_on_r0_and_r0k_and_gs_code():
     inp[0][0]["t3"].pop("las")                                   # kind input defect in G-S = S-11
     _, f = t3.recount(REPO, *inp, None, IS_P3, gs=True)
     assert "S-11" in stop_codes(f) and not any(s["code"] == "S-3" and "R11-1: t3" in s["why"] for s in f.stops)
+
+
+# ------------------------------------------------------------------ dg3 rows inside the D-1 files (decision 19)
+def _dg3_row(bundle, folder, key):
+    """A dg3 row as the runner writes it into the D-1 jsonl: t3.kind dg3, no d1 key."""
+    return {"t3": {"bundle": bundle, "kind": "dg3", "las": "off" if bundle == "R-0" else "on",
+                   "gate": "off" if bundle == "R-0" else "on"},
+            "job": {}, "r79_dir": f"{bundle}_{folder}_x", "commands_sha256": "f" * 64,
+            "controller_settings": {"slope_clearance_margin.enable": True}, "key": key}
+
+
+def test_dg3_rows_in_d1_files_are_not_d1_lines():
+    r0, r0k, t3l, d0, dt = all_inputs()
+    r0 = r0 + [_dg3_row("R-0", fo, k) for fo, k in KEYS["R-0"]["dg3"]]              # R-0 file: D-1 5 + dg3 2
+    t3l = t3l + [_dg3_row("T-3b", e["folder"], e["key"]) for e in KEYS["T-3b"]]     # T-3 file: + dg3 4
+    body, f = run(r0, r0k, t3l, d0, dt)
+    assert f.status() == "pass", f.as_dict()["stops"][:3]
+    assert body["dg3_rows_in_d1_files_skipped"] == {"R-0": 2, "T-3K": 4}
+    # a row without t3.kind dg3 and without a d1 key is still a D-1 key problem (H-T3-3)
+    bad = _dg3_row("R-0", "off", "x")
+    bad["t3"] = dict(bad["t3"], kind="d1")
+    _, f = run(r0 + [bad], r0k, t3l, d0, dt)
+    assert "H-T3-3" in stop_codes(f)
+
+
+def test_r4c30_enable_recorded_true_and_margin_passes():
+    """rev5 2.2 (57th line): slope_clearance_margin.enable True + flat_soil_margin_m 0.03 on the line passes;
+    the key absent or False, or another margin, is a config defect (H-T3-3). Read from the record field."""
+    rk = rk_block("T-3K")
+    assert rk["slope_clearance_margin"]["settings"]["enable"] is True
+    assert t3.config_check({"resume_k1": rk}, "T-3K") == []
+    for mut in (lambda s: s.pop("enable"), lambda s: s.update(enable=False), lambda s: s.update(flat_soil_margin_m=0.0)):
+        r2 = rk_block("T-3K")
+        mut(r2["slope_clearance_margin"]["settings"])
+        assert t3.config_check({"resume_k1": r2}, "T-3K") != []
