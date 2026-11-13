@@ -1,12 +1,13 @@
 """436.8 path 2: v5-criteria recount of the noise bundles H-6 (dg3 v4_on) and H-8 (noise VB / V0, seedext).
 
-Layers (436.8 rev3 R3-E3, rev4 R4-A2 option c, R4-B2/B3/B6):
+Layers (436.8 rev3 R3-E3, rev4 R4-A2 option c, R4-B3/B6, rev7 R7-2):
 
 * recomputed from the run records (``recomputed``): level counts and S1-front-excluded n (rev3 #1~#3,
   423.1), one-sided Clopper-Pearson upper bounds by two roots (v5 10, rev3), the four L1 gate counts
   (R4-B3), dg3 135-key substitution and hash record (rev8 #6, RV1-3.2, R3-E4 top-level hash), seedext
   seeds 0~4 hash (rev6 9, H-15), the time / load conditions of 419.8 for an S-4 time-clause failure
-  (first DONE = ``base.t_done_s`` checked against ``base.phase_path``, R4-B2), J-P3 / J9 / H-7.
+  (first DONE by the shape of ``base``: ``t_done_s`` + ``phase_path`` 5 ms or ``timeline``, DONE-less fault
+  end = None, rev7 R7-2 replacing R4-B2; condition 5 strict ``<``, rev3 Q-12), J-P3 / J9 / H-7.
 * item values from the rule-designated judge, run by this path itself (R4-A2 c):
   ``04_scripts/03_control/s8/r79_sensor_judge.py judge|judge-merged <out> ... --s4-late-loc``. The tool
   file must have 0 commits in ``f46b5ab..GIT_AT_START`` (condition 1, else S-11); its outputs go to
@@ -28,7 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import p2v5c_common as cm  # noqa: E402
 
 TOOL_NAME = "p2v5c_noise.py"
-TOOL_VERSION = "3"
+TOOL_VERSION = "4"
 JUDGE_REL = "04_scripts/03_control/s8/r79_sensor_judge.py"
 SEAL_BASE = "f46b5ab"                                   # R4-A2 condition 1
 RELATED_MODULES = ("04_scripts/03_control/s9/late_loc_rule.py",          # imported by the judge
@@ -132,23 +133,95 @@ def late_loc_conditions(rec, core, fnd=None):
     c3 = None if w is None else core.t_lt(w, FALSE_LOC_W)
     mf = core.num(r.get("min_true_F_after_off_kN"))
     c4 = None if mf is None else (core.t_ge(mf, core.F_MIN_N / 1000.0) and not fault_names(rec))
-    # R4-B2: first DONE = base.t_done_s (None = no DONE), checked against base.phase_path
-    if "t_done_s" not in base:
-        c5, pp_ok = None, None
+    # rev7 R7-2 (replaces R4-B2): first DONE by the shape of base; condition 5 strict (rev3 Q-12)
+    fd = first_done(base)
+    pp_ok = fd["phase_path_ok"]
+    if fd["ok"] is False:
+        c5 = None
+        if fnd is not None:
+            fnd.stop("S-11", str(rec.get("key")), f"first DONE (R7-2 {fd['shape']}): {fd['why']}")
     else:
-        td = core.num(base.get("t_done_s"))
-        pp = base.get("phase_path")
-        first = next((core.num(x[0]) for x in pp if isinstance(x, (list, tuple)) and len(x) == 2
-                      and x[1] == "done"), None) if isinstance(pp, list) else "missing"
-        pp_ok = None if first == "missing" else ((first is None and td is None) or
-                                                 (first is not None and td is not None and abs(first - td) <= 1e-6))
-        if pp_ok is False and fnd is not None:
-            fnd.stop("S-11", str(rec.get("key")), f"base.t_done_s {td} is not the first done of phase_path ({first})")
+        td = fd["t_done_s"]
         t_fin = core.num(base.get("t_loc_final_s"))
         t_fin = t_loc if t_fin is None else t_fin
-        c5 = td is None or t_fin < td
+        c5 = td is None or t_fin < td          # path 2 keeps the strict "<" (rev3 Q-12, rev7 R7-2 disclosure)
     return {"c1": c1, "c2": c2, "c3": c3, "c4": c4, "c5": c5, "t_off_s": t_off, "t_loc_s": t_loc,
-            "late_loc_s": t_loc - t_off, "phase_path_ok": pp_ok}
+            "late_loc_s": t_loc - t_off, "phase_path_ok": pp_ok, "first_done": fd}
+
+
+FIRST_DONE_TOL_S = 0.005                     # rev7 R7-2 (a) / R7-8: record match tolerance, not a threshold
+FAULT_END_PHASES = ("fault", "fault_reground")   # rev7 R7-2: DONE-less + fault end = None (normal)
+
+
+def _first_phase_time(seq, phase="done"):
+    """Time of the first ``[t, phase]`` item whose phase is ``phase``; None if absent."""
+    for x in seq:
+        if isinstance(x, (list, tuple)) and len(x) == 2 and isinstance(x[1], str) and x[1].lower() == phase:
+            try:
+                return float(x[0])
+            except (TypeError, ValueError):
+                continue
+    return None
+
+
+def first_done(base):
+    """rev7 R7-2: first DONE of an r79 record by the shape of ``base``.
+
+    (a) ``t_done_s`` key present (g6 / ref harness): ``t_done_s`` is the first DONE; it must equal the first
+        ``done`` of ``phase_path`` within 5 ms; ``t_done_s`` None with a ``done`` in ``phase_path`` -> S-11.
+    (b) no ``t_done_s`` key (g8 harness): first ``done`` of ``timeline`` (``[t_s, phase]``); timeline missing
+        or empty -> S-11.
+    no DONE in either shape: ``final_phase`` fault / fault_reground -> first DONE None (normal), else S-11.
+    Returns ``ok`` (False = S-11), ``t_done_s``, ``shape``, ``phase_path_ok`` and ``why``.
+    """
+    base = base if isinstance(base, dict) else {}
+    final = base.get("final_phase")
+    out = {"ok": True, "t_done_s": None, "shape": None, "phase_path_ok": None, "why": "",
+           "final_phase": final}
+
+    def no_done():
+        if isinstance(final, str) and final in FAULT_END_PHASES:
+            out["why"] = f"no DONE, final_phase {final} -> None"
+        else:
+            out["ok"], out["why"] = False, f"no DONE and final_phase {final!r} is not fault / fault_reground"
+        return out
+
+    if "t_done_s" in base:
+        out["shape"] = "t_done_s"
+        td_raw = base.get("t_done_s")
+        try:
+            td = None if td_raw is None else float(td_raw)
+        except (TypeError, ValueError):
+            out["ok"], out["why"] = False, f"t_done_s {td_raw!r} not a number"
+            return out
+        pp = base.get("phase_path")
+        if not isinstance(pp, list):
+            out["ok"], out["why"] = False, "phase_path missing (t_done_s cannot be checked)"
+            return out
+        first = _first_phase_time(pp)
+        if td is None:
+            if first is not None:
+                out["ok"], out["phase_path_ok"] = False, False
+                out["why"] = f"t_done_s None but phase_path has done at {first}"
+                return out
+            out["phase_path_ok"] = True
+            return no_done()
+        if first is None or abs(first - td) > FIRST_DONE_TOL_S + 1e-9:
+            out["ok"], out["phase_path_ok"] = False, False
+            out["why"] = f"t_done_s {td} is not the first done of phase_path ({first}) within 5 ms"
+            return out
+        out["phase_path_ok"], out["t_done_s"] = True, td
+        return out
+    out["shape"] = "timeline"
+    tl = base.get("timeline")
+    if not isinstance(tl, list) or not tl:
+        out["ok"], out["why"] = False, "timeline missing or empty"
+        return out
+    first = _first_phase_time(tl)
+    if first is None:
+        return no_done()
+    out["t_done_s"] = first
+    return out
 
 
 def line_grade(rec, row, core, fnd=None):

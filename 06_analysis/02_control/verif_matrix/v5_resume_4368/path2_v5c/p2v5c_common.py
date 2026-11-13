@@ -52,6 +52,7 @@ LATER_RULES = (   # sealed addenda checked here (raw sha, LF, no BOM, .sha256 re
     (_VMR + "rev4.md", "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b", _VMR + "rev4.sha256"),
     (_VMR + "rev5.md", "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca", _VMR + "rev5.sha256"),
     (_VMR + "rev6.md", "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9", _VMR + "rev6.sha256"),
+    (_VMR + "rev7.md", "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502", _VMR + "rev7.sha256"),
 )
 REV3_REL, REV3_SHA = LATER_RULES[0][0], LATER_RULES[0][1]
 
@@ -67,7 +68,7 @@ def _check_one(repo, rel, want, seal_rel):
 
 
 def check_rev3(repo):
-    """rev3 and rev4 (the name is kept for the tests); ``ok`` = all sealed addenda match."""
+    """rev3 ~ rev7 (the name is kept for the tests); ``ok`` = all sealed addenda match."""
     items = [_check_one(repo, *r) for r in LATER_RULES]
     return {"items": items, "ok": all(i["ok"] for i in items)}
 
