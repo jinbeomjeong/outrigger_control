@@ -223,7 +223,7 @@ rev3 절과 다른 곳은 아래가 맞다. 다섯 도구 모두 rev4 sha도 확
 
 ### 도구 sha256 (rev7 판, LF 바이트)
 
-- 이 표는 rev7 판 당시의 이력 값이다. **현재 값은 rev12 표**("rev12 반영" 절 "도구 sha256 (rev12 판)")에 있다.
+- 이 표는 rev7 판 당시의 이력 값이다. **현재 값은 "harness 격자 태그·--gs" 절 표**에 있다.
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
@@ -259,7 +259,7 @@ rev3 절과 다른 곳은 아래가 맞다. 다섯 도구 모두 rev4 sha도 확
 
 ### 도구 sha256 (rev8 판, LF 바이트)
 
-- 이 표는 rev8 판 당시의 이력 값이다. **현재 값은 rev12 표**("rev12 반영" 절 "도구 sha256 (rev12 판)")에 있다.
+- 이 표는 rev8 판 당시의 이력 값이다. **현재 값은 "harness 격자 태그·--gs" 절 표**에 있다.
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
@@ -297,7 +297,7 @@ rev3 절과 다른 곳은 아래가 맞다. 다섯 도구 모두 rev4 sha도 확
 
 ### 도구 sha256 (rev9 판, LF 바이트)
 
-- 이 표는 rev9 판 당시의 이력 값이다. **현재 값은 rev12 표**("rev12 반영" 절 "도구 sha256 (rev12 판)")에 있다.
+- 이 표는 rev9 판 당시의 이력 값이다. **현재 값은 "harness 격자 태그·--gs" 절 표**에 있다.
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
@@ -332,7 +332,7 @@ rev9 절의 R9-4 행 가운데 아래와 다른 곳은 이 절이 맞다. 근거
 
 ### 도구 sha256 (rev10 판, LF 바이트)
 
-- 이 표는 rev10 판 당시의 이력 값이다. **현재 값은 rev12 표**("rev12 반영" 절 "도구 sha256 (rev12 판)")에 있다.
+- 이 표는 rev10 판 당시의 이력 값이다. **현재 값은 "harness 격자 태그·--gs" 절 표**에 있다.
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
@@ -368,7 +368,7 @@ rev9 절의 R9-4 행 가운데 아래와 다른 곳은 이 절이 맞다. 근거
 
 ### 도구 sha256 (rev11 판, LF 바이트)
 
-- 이 표는 rev11 판(커밋 `582fa93`) 당시의 이력 값이다. **현재 값은 rev12 표**("rev12 반영" 절 "도구 sha256 (rev12 판)")에 있다.
+- 이 표는 rev11 판(커밋 `582fa93`) 당시의 이력 값이다. **현재 값은 "harness 격자 태그·--gs" 절 표**에 있다.
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
@@ -403,7 +403,7 @@ rev7 R7-5는 경로 1 집계 v2의 행 폴더 찾기를 정한 봉인 문장이�
 
 ### 도구 sha256 (rev7 R7-5 반영 판, LF 바이트)
 
-- 이 표는 R7-5 반영 판(커밋 `3eba3c5`) 당시의 이력 값이다. **현재 값은 rev12 표**("rev12 반영" 절 "도구 sha256 (rev12 판)")에 있다.
+- 이 표는 R7-5 반영 판(커밋 `3eba3c5`) 당시의 이력 값이다. **현재 값은 "harness 격자 태그·--gs" 절 표**에 있다.
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
@@ -440,8 +440,9 @@ rev7 R7-5는 경로 1 집계 v2의 행 폴더 찾기를 정한 봉인 문장이�
 - `p2_v5j.rod_reading_lookup`은 줄에 `t4h_file` **키가 없을 때만** `no_t4h_file`(R3-C8 구성 규칙)로 본다. 키가 있는데 값이 None이거나 문자열이 아니거나 빈 문자열이면 `bad_t4h_file`로 보고 **S-2**로 멈춘다. 구성 규칙으로 대신하지 않는다(rev12 R12-1 Q-R12-1 = A의 취지, 경로 1·`path2_v5c`와 같은 읽기). 앞 판은 이 경우를 `no_t4h_file`로 읽었다. 출력 `H-5.R11-2_t4h_lookup`에 `bad_t4h_file` 수가 있다.
 - 시험 `test_p2_v5j.py`에 1개를 더했다(키 없음 → 구성, None·숫자·빈 문자열 → S-2, 재집계 끝에서 끝). 다섯 파일 205개다.
 
-### 도구 sha256 (rev12 판, LF 바이트, 현재 값)
+### 도구 sha256 (rev12 판, LF 바이트)
 
+- 이 표는 rev12 + 결정 24 판(커밋 `e6971e5`) 당시의 이력 값이다. **현재 값은 "harness 격자 태그·--gs" 절 표**에 있다.
 - 결정 24 반영으로 `p2_v5j.py`·`test_p2_v5j.py`가 바뀌었다. 아래 표는 그 뒤의 값이다.
 
 | 파일 | sha256 | 이 판에서 |
@@ -458,7 +459,34 @@ rev7 R7-5는 경로 1 집계 v2의 행 폴더 찾기를 정한 봉인 문장이�
 | `test_p2_v5j.py` | `1380d01eb0c0f28bc13ff62c2b2276f225b679a2fb2ab895647b3415d9a67b2a` | 바뀜(결정 24, 21개) |
 
 - 자체 시험은 다섯 파일 204개다(앞 판 194개). `test_p2_4368.py`에 10개를 더했다. 더한 것은 rev12 봉인과 불일치 S-1, dirty 기록만, 열린 루프 `code_state` 기록만, 폴더 이름 정확 맞춤(L1-R `_check_L1R_` 제외, 부분 문자열·접두 없음, L2b 다른 tag), L1-R 시각 창 6가지(통과, 확인 실행 무시, 후보 둘, 없음, `est_s` 미사용, `wall_s` 없음)다. `--git-at-start` 없음·짧음 시험은 R12-3에 맞게 입력 오류로 고쳤다. C-2 고정 행 시험에도 이 인자를 준다.
-- `../path2_v5c/p2v5c_common.py`: `P2_CORE_SHA` = `a948d9a1…`, `P2_V5J_SHA` = `69d0e747…`로 맞춰야 한다(그 폴더 작성자 몫).
+- `../path2_v5c/p2v5c_common.py`: `P2_CORE_SHA` = `a948d9a1…`, `P2_V5J_SHA` = `69d0e747…`로 맞춰야 한다(그 폴더 작성자 몫). `P2_CORE_SHA`는 아래 절에서 다시 바뀌었다.
+
+## harness 격자 태그·--gs (최종 Y `bbacfd7` G-S 뒤, 사용자 결정 19: 새 rev 없이 도구만)
+
+| 항목 | 도구 | 반영 |
+|---|---|---|
+| 격자 run 태그 | `p2_4368.py harness` | `grid_json`의 run(`results[i].runs[j]`)에 `controller_tag`가 없으면 그 job 기록 `results[i]`의 `controller_tag`를 읽는다. rev8 R8-1이 격자 job 기록의 태그를 "top-level controller_tag"로 정했기 때문이다. run에 자기 태그가 있으면 그것을 쓴다. 둘 다 없으면 앞 판대로 S-11이다. 앞 판은 run만 읽어서 `bbacfd7` G-S의 격자 6줄에 S-11을 냈다 |
+| `harness --gs` | 같음 | G-S(원판 11.2)용이다. 묶음을 `GS-<묶음>`으로 적고, 규칙 5.1 줄 수 대조를 하지 않는다. 묶음 합(`HARNESS_COUNTS`)과 H-4 파일별 242줄이 여기에 든다(S-15 생략). manifest `expect_lines`와 줄 키 중복(S-15)은 그대로 본다. 목록 파일의 `kind`에 `"auto"`를 주면 run_v5 jsonl 한 파일 안의 여러 판을 줄마다 `job.setting`으로 읽는다. `VB`이면 VB, `LS1`~`LS4`이면 LS(둘 다 ③ 태그)이고, 그 밖의 설정(V0·V1~V8·V0v·L1·L2 …)은 V0(③ 아닌 태그)다. 설정이 없는 줄은 S-11이다. 나눈 입력 파일을 따로 만들 필요가 없다. 출력 묶음에 `auto_kinds`(줄 종류별 수)가 들어간다. `auto`를 `--gs` 없이 쓰거나 run_v5가 아닌 형식에 쓰면 도구 오류(종료 3)다 |
+
+- `bbacfd7` G-S 하네스 출력에 `harness --gs --manifest gs_harness_bbacfd7\p2h_manifest_gs_auto.json`을 돌린 결과(참고, 인용하지 않음): 종료 0, 멈춤 0. 격자 6줄은 부모 태그 `final_C4G2_P3_LAS_K1`로 통과했다. GS-H-9는 25줄(V0 14, VB 1, LS 4, 격자 6)이고, 다른 묶음도 모두 통과했다.
+
+### 도구 sha256 (harness 격자 태그·--gs 판, LF 바이트, 현재 값)
+
+| 파일 | sha256 | 이 판에서 |
+|---|---|---|
+| `p2_4368.py` | `424e12f98ba2441b6d51eef55d3ee5c2ae7be49e38413b34532c78ac53a22c67` | 바뀜 |
+| `p2_d1.py` | `6d18f6dbfa891ea8faf2eec45cb26c023a045aa0170b7cfac4b1c0aa28cde24d` | 그대로 |
+| `p2_t3k.py` | `f63cead31f6cde5dd23fe504370ec5c9f4101d7967c6eebc9aab3c08c642acf8` | 그대로 |
+| `p2_u3.py` | `408944c498da8736e343c2dbc2d816f6fdbe8a5ecd73a0a96689f06680bc5f28` | 그대로 |
+| `p2_v5j.py` | `69d0e747254cea35196101a9a2fc1b0e3c4e6a15ba1cb4511a4c8c41ca3e25db` | 그대로 |
+| `test_p2_4368.py` | `65c55a792ff93200f95db1c3b339b353c93c03438b5cf6e4b68397c6f192e62b` | 바뀜(129개) |
+| `test_p2_d1.py` | `d1b61db2979ea1658eda4f515936e407a2d52666efeff9575c583dcecd0778ce` | 그대로(17개) |
+| `test_p2_t3k.py` | `585384fa8693ff70703782349de4f0590a63782de5e886f4be32407ef0b962bf` | 그대로(30개) |
+| `test_p2_u3.py` | `245c03ff2a731fb33606f992328660f46f669dbee41cac4e20dc58b01133bb99` | 그대로(11개) |
+| `test_p2_v5j.py` | `1380d01eb0c0f28bc13ff62c2b2276f225b679a2fb2ab895647b3415d9a67b2a` | 그대로(21개) |
+
+- 자체 시험은 다섯 파일 208개(앞 판 205개)다. `test_p2_4368.py`에 3개를 더했다. 격자 부모 태그 시험은 부모 태그로 통과, 부모 태그가 틀리면 S-2, 둘 다 없으면 S-11, run 태그 우선을 본다. `--gs` 시험은 주 실행 S-15와 `--gs` 생략, 중복 키 S-15 유지를 본다. `auto` 시험은 판 섞임 6줄 분류, LS 줄 비③ 태그 S-2, 설정 없음 S-11, `--gs` 없는 `auto`는 종료 3인 것을 본다.
+- `../path2_v5c/p2v5c_common.py`: `P2_CORE_SHA` = `424e12f9…`, `P2_V5J_SHA` = `69d0e747…`로 맞춰야 한다(그 폴더 작성자 몫).
 
 ## 하지 않는 것 (범위)
 
@@ -471,6 +499,7 @@ rev7 R7-5는 경로 1 집계 v2의 행 폴더 찾기를 정한 봉인 문장이�
 $t = '<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2\p2_4368.py'
 & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B $t --out <out>\seal.json seal
 & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B $t --out <out>\h.json harness --manifest <out>\manifest.json
+& C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B $t --out <gs_harness_<커밋>>\p2h_harness_gs.json harness --gs --manifest <kind "auto"를 쓴 G-S 목록 파일>
 & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B $t --out <out>\a.json anchors --h1 <repo>\06_analysis\03_hydraulic\coupled\v5\resume_k1\h1_d1.jsonl
 & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B $t --out <out>\c.json chrono --batch <repo>\07_results\S9\batch_V5-RESUME-K1-C5_<stamp> --check-counts --rows-manifest <repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\chrono_rows_manifest.json --git-at-start <판정서 git_at_start>
 & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B $t --out <out>\gs.json chrono --batch <repo>\07_results\S9\batch_V5-RESUME-K1-GS_<stamp> --gs --rows-manifest <repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\chrono_rows_manifest.json --git-at-start <최종 Y 커밋>
@@ -486,7 +515,7 @@ $t = '<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2\p2_4368.py
 & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B -m pytest -q -p no:cacheprovider --basetemp <scratch>\pt <repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2\test_p2_4368.py
 ```
 
-- `test_p2_4368.py`는 126개(rev12 판, rev7 R7-5 반영 판 116개, rev11 판 111개, rev10 판 105개, rev9 판 89개, rev8 판 65개, 처음 판은 45개), 합성 입력만 쓴다(봉인 확인 시험은 저장소의 실제 규칙 파일을 읽는다). 합성 배치는 폴더 옆에 자기 `rows_manifest.json`을 두고, 시험의 `run_main`이 `chrono`에 `--rows-manifest`로 넘긴다. rev3~rev10에서 더한 시험은 각 판 절에 있다. 다루는 것: 문턱 비교와 K-10, $R_c$ 식, `C2Event` 해석, 줄 키, 지면 계열, 7.2 분류 9가지(S-5·S-6·S-3 포함), 결측 = 판정 불가, C-4 끔 팔 'LAS 없음', LAS-b 설정 검사, 하네스 끝에서 끝(통과, S-2, S-5 + S-6, IND 해당 없음 + S-3 토큰, S-15), 1 ms 재계산(이탈 지속 조건, 창 시간), Chrono 행(O-C5 S-9, S-10, 태그 S-2, 금지 인자 S-3 + 스레드 S-4, C-4 끔 팔), O-C5 $k$ 절차(첫 probe, 할선, 두 배 재실행, 할선 정의 불가), J_P 재사용과 거부, K-10 compare, 실제 규칙 sha.
+- `test_p2_4368.py`는 129개(harness 격자 태그·--gs 판, rev12 판 126개, rev7 R7-5 반영 판 116개, rev11 판 111개, rev10 판 105개, rev9 판 89개, rev8 판 65개, 처음 판은 45개), 합성 입력만 쓴다(봉인 확인 시험은 저장소의 실제 규칙 파일을 읽는다). 합성 배치는 폴더 옆에 자기 `rows_manifest.json`을 두고, 시험의 `run_main`이 `chrono`에 `--rows-manifest`로 넘긴다. rev3~rev10에서 더한 시험은 각 판 절에 있다. 다루는 것: 문턱 비교와 K-10, $R_c$ 식, `C2Event` 해석, 줄 키, 지면 계열, 7.2 분류 9가지(S-5·S-6·S-3 포함), 결측 = 판정 불가, C-4 끔 팔 'LAS 없음', LAS-b 설정 검사, 하네스 끝에서 끝(통과, S-2, S-5 + S-6, IND 해당 없음 + S-3 토큰, S-15), 1 ms 재계산(이탈 지속 조건, 창 시간), Chrono 행(O-C5 S-9, S-10, 태그 S-2, 금지 인자 S-3 + 스레드 S-4, C-4 끔 팔), O-C5 $k$ 절차(첫 probe, 할선, 두 배 재실행, 할선 정의 불가), J_P 재사용과 거부, K-10 compare, 실제 규칙 sha.
 
 ## 독립성 공개 (규칙 9.2, 이 도구를 쓰려고 읽은 것)
 

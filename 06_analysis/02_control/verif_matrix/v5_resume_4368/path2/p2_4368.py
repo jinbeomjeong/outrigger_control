@@ -40,6 +40,10 @@ R12-4 open-loop ``result.json`` ``code_state`` recorded only; R12-5 time-window 
 else batch stamp + ``wall_s`` (no ``est_s``) +-2 s, candidates exactly ``S8/<tag>_<stamp>`` (run_S8C) or
 ``S6/..._<tag>_L1R_<stamp>`` (run_S6C, ``_check_L1R_`` excluded) with ``<--only>/result.json``, 0 or 2+ =
 input error (S-11). R12-1 (T4h search for every T4h read) is in ``p2_v5j.py`` u9.
+``harness`` after the bbacfd7 G-S (user decision 19, no new rev): a grid run without ``controller_tag`` reads
+the tag of its job record ``results[i]`` (rev8 R8-1 "top-level controller_tag"); ``harness --gs`` reports
+bundles as ``GS-<bundle>``, skips the rules-5.1 line counts (S-15) and accepts manifest kind ``auto`` for
+run_v5 files mixing settings (VB -> VB, LS1..LS4 -> LS, other settings -> V0, no setting = S-11).
 Author: dynamics-expert (path 2, user decision 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
 ``resume_k1_record.py``, the judging part of ``resume_k1_steps.py``) and every path-1 output were not
@@ -759,6 +763,22 @@ def skipped_count_harness(rec, rk):
     return None, None
 
 
+GS_BUNDLE_PREFIX = "GS-"      # harness --gs: bundle names GS-H-n, rules-5.1 line counts (S-15) skipped
+KIND_AUTO = "auto"            # harness --gs: per-line kind from job.setting (run_v5_jsonl)
+_EXT_SETTINGS = ("VB",) + ("LS1", "LS2", "LS3", "LS4")
+
+
+def auto_kind(rec):
+    """--gs per-line kind of a run_v5 line: VB -> VB, LS1..LS4 -> LS (③ tag), any other setting -> V0
+    (non-③ tag, rules 4.1: V1..V8, V0v, L1, L2 ... read the V0 tag), no setting -> None."""
+    st = dig(rec, "job.setting", None)
+    if not isinstance(st, str) or not st:
+        return None
+    if st == "VB":
+        return "VB"
+    return "LS" if st in _EXT_SETTINGS else "V0"
+
+
 def cmd_harness(args, repo):
     manifest = json.loads(Path(args.manifest).read_text("utf-8"))
     is_p3, mod_info = load_is_extend_start(repo)
@@ -767,15 +787,24 @@ def cmd_harness(args, repo):
     bundles = {}
     for entry in manifest["files"]:
         bundle, kind, fmt = entry["bundle"], entry["kind"], entry["format"]
+        file_kind = kind
+        gs = bool(getattr(args, "gs", False))
+        if gs and not bundle.startswith(GS_BUNDLE_PREFIX):
+            bundle = GS_BUNDLE_PREFIX + bundle          # G-S: one-key subset, no rules-5.1 line counts
         path = Path(entry["path"])
         if not path.is_absolute():
             path = repo / path
         fnd = fnd_all.setdefault(bundle, Findings())
         b = bundles.setdefault(bundle, {"lines": 0, "classes": {}, "families": {}, "tags": {},
                                          "errors": 0, "missing": 0, "files": []})
-        want_tag = KIND_TAG.get(kind)
-        if want_tag is None:
-            raise ValueError(f"unknown kind {kind}")
+        if kind == KIND_AUTO:
+            if not gs or fmt != "run_v5_jsonl":
+                raise ValueError(f"kind {KIND_AUTO!r} needs --gs and format run_v5_jsonl ({path})")
+            want_tag = None
+        else:
+            want_tag = KIND_TAG.get(kind)
+            if want_tag is None:
+                raise ValueError(f"unknown kind {kind}")
         stored = {}
         if entry.get("stored"):
             sp = Path(entry["stored"])
@@ -810,8 +839,20 @@ def cmd_harness(args, repo):
             k0 = rec.get("key")
             if isinstance(k0, str) and k0.startswith("cand=") and not k0.startswith("cand=current#"):
                 fnd.stop("S-3", where, f"candidate token other than 'current' in key {k0.split('|')[0]}")
+            if file_kind == KIND_AUTO:
+                # --gs: a file mixing settings is read per line by job.setting (no split input files)
+                kind = auto_kind(rec)
+                if kind is None:
+                    fnd.stop("S-11", where, "--gs auto kind: job.setting missing")
+                    continue
+                want_tag = KIND_TAG[kind]
+                b.setdefault("auto_kinds", {})[kind] = b.setdefault("auto_kinds", {}).get(kind, 0) + 1
             # tag (4.1)
             tag, tag_path = first_path(rec, TAG_PATHS)
+            if tag is MISSING and fmt == "grid_json" and isinstance(parent, dict):
+                # rev8 R8-1: a grid run carries no tag; its job record (results[i]) has the top-level
+                # controller_tag of the run
+                tag, tag_path = first_path(parent, TAG_PATHS)
             b["tags"][str(tag if tag is not MISSING else None)] = b["tags"].get(
                 str(tag if tag is not MISSING else None), 0) + 1
             if tag is MISSING or tag is None:
@@ -886,7 +927,8 @@ def cmd_harness(args, repo):
                     else:
                         hash_cmp["differ"].append(key)
                         fnd.stop("S-5", where, "unchanged line: commands_sha256 differs from the stored line")
-        want_n = HARNESS_FILE_COUNTS.get((bundle, kind))
+        kind = file_kind
+        want_n = None if gs else HARNESS_FILE_COUNTS.get((bundle, kind))
         if want_n is not None and n_file != want_n:
             fnd.stop("S-15", f"{bundle}:{path.name}", f"{n_file} lines, rules say {want_n} for {kind}")
         if entry.get("expect_lines") is not None and n_file != int(entry["expect_lines"]):
@@ -899,7 +941,7 @@ def cmd_harness(args, repo):
                            "stored": entry.get("stored")})
         files_out.append(str(path))
     for bundle, b in bundles.items():
-        want = HARNESS_COUNTS.get(bundle)
+        want = None if bundle.startswith(GS_BUNDLE_PREFIX) else HARNESS_COUNTS.get(bundle)
         if want is not None and b["lines"] != want:
             fnd_all[bundle].stop("S-15", bundle, f"{b['lines']} lines, rules (rev1) say {want}")
         b.update(fnd_all[bundle].as_dict())
@@ -2382,6 +2424,9 @@ def build_parser():
     sub.add_parser("seal")
     h = sub.add_parser("harness")
     h.add_argument("--manifest", required=True)
+    h.add_argument("--gs", action="store_true",
+                   help="G-S (11.2): bundles reported as GS-<bundle>, rules-5.1 line counts (S-15) skipped; "
+                        "manifest kind 'auto' reads a run_v5 file mixing settings per line by job.setting")
     a = sub.add_parser("anchors")
     a.add_argument("--h1", default=None, help="h1_d1.jsonl (omit: anchor selection counts only)")
     a.add_argument("--v5-root", default=None)

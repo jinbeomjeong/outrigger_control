@@ -1384,3 +1384,84 @@ def test_rev12_r125_l1r_time_window(tmp_path, monkeypatch, folders, wall, est, o
         assert rec["method"] == "time_window" and rec["folder"].endswith("_L1R_20990101_000001")
     else:
         assert "R12-5" in rec["why"] or "time window" in rec["why"]
+
+
+# ------------------------------------------------------------------ harness grid tag / --gs (decision 19)
+def grid_file(path, parent_tag=p2.TAG_VB, run_tag=None, n=3):
+    runs = []
+    for j in range(n):
+        r = {"event": "G4", "commands_sha256": f"{j:064x}", "resume_k1": rk_block()}
+        if run_tag is not None:
+            r["controller_tag"] = run_tag
+        runs.append(r)
+    job = {"key": "screen|top|8.0|ready|FL", "runs": runs}
+    if parent_tag is not None:
+        job["controller_tag"] = parent_tag
+    path.write_text(json.dumps({"meta": {"spec": p2.GRID_SPEC_PRESCRIBED}, "results": [job]}), "utf-8")
+
+
+def _harness(tmp_path, capsys, files, gs=False):
+    man = tmp_path / "m.json"
+    man.write_text(json.dumps({"files": files}), "utf-8")
+    out = tmp_path / "o.json"
+    code, s = run_main(["--out", str(out), "harness", "--manifest", str(man)] + (["--gs"] if gs else []), capsys)
+    return code, s, json.loads(out.read_text("utf-8"))
+
+
+def test_harness_grid_run_reads_parent_tag(tmp_path, capsys):
+    f = tmp_path / "grid.json"
+    grid_file(f)
+    code, s, rep = _harness(tmp_path, capsys, [{"bundle": "G", "path": str(f), "format": "grid_json", "kind": "VB"}])
+    assert code == 0, rep["bundles"]["G"]["stops"]
+    assert rep["bundles"]["G"]["tags"] == {p2.TAG_VB: 3}
+    grid_file(f, parent_tag=p2.TAG_V0)                                  # parent tag wrong for the kind -> S-2
+    code, s, _ = _harness(tmp_path, capsys, [{"bundle": "G", "path": str(f), "format": "grid_json", "kind": "VB"}])
+    assert code == 2 and s["stop_codes"] == ["S-2"]
+    grid_file(f, parent_tag=None)                                       # neither run nor job tag -> S-11
+    code, s, _ = _harness(tmp_path, capsys, [{"bundle": "G", "path": str(f), "format": "grid_json", "kind": "VB"}])
+    assert code == 2 and s["stop_codes"] == ["S-11"]
+    grid_file(f, parent_tag=p2.TAG_V0, run_tag=p2.TAG_VB)               # a run's own tag wins over the job's
+    code, s, _ = _harness(tmp_path, capsys, [{"bundle": "G", "path": str(f), "format": "grid_json", "kind": "VB"}])
+    assert code == 0, s
+
+
+def test_harness_gs_skips_line_counts(tmp_path, capsys):
+    f = tmp_path / "h.jsonl"
+    write_jsonl(f, [d1_line(1, "H-R-0", "rigid", p2.TAG_V0)])
+    files = [{"bundle": "H-5", "path": str(f), "format": "run_v5_jsonl", "kind": "V0"}]
+    code, s, _ = _harness(tmp_path, capsys, files)
+    assert code == 2 and "S-15" in s["stop_codes"]                     # main run: rules 5.1 count
+    code, s, rep = _harness(tmp_path, capsys, files, gs=True)
+    assert code == 0, s
+    assert list(rep["bundles"]) == ["GS-H-5"] and rep["bundles"]["GS-H-5"]["lines"] == 1
+    # H-4 per-file counts (IND / IND_LAS 242) are skipped too; a duplicate key is still S-15
+    write_jsonl(f, [d1_line(1, "H-R-0", "rigid", p2.TAG_V0), d1_line(1, "H-R-0", "rigid", p2.TAG_V0)])
+    code, s, _ = _harness(tmp_path, capsys, files, gs=True)
+    assert code == 2 and s["stop_codes"] == ["S-15"]
+
+
+def test_harness_gs_auto_kind_splits_mixed_settings(tmp_path, capsys):
+    lines = []
+    for i, (st, tag) in enumerate((("V0", p2.TAG_V0), ("V3", p2.TAG_V0), ("L1", p2.TAG_V0), ("VB", p2.TAG_VB),
+                                   ("LS1", p2.TAG_VB), ("LS4", p2.TAG_VB))):
+        ln = d1_line(i, "H-R-0", "rigid", tag)
+        ln["job"]["setting"] = st
+        lines.append(ln)
+    f = tmp_path / "mixed.jsonl"
+    write_jsonl(f, lines)
+    files = [{"bundle": "H-9", "path": str(f), "format": "run_v5_jsonl", "kind": "auto"}]
+    code, s, rep = _harness(tmp_path, capsys, files, gs=True)
+    assert code == 0, rep["bundles"]["GS-H-9"]["stops"]
+    b = rep["bundles"]["GS-H-9"]
+    assert b["auto_kinds"] == {"V0": 3, "VB": 1, "LS": 2} and b["lines"] == 6
+    assert b["files"][0]["kind"] == "auto"
+    lines[4]["controller_tag"] = p2.TAG_V0                             # LS line with a non-③ tag -> S-2
+    lines[0]["job"].pop("setting")                                     # no setting -> S-11
+    write_jsonl(f, lines)
+    code, s, _ = _harness(tmp_path, capsys, files, gs=True)
+    assert code == 2 and set(s["stop_codes"]) == {"S-2", "S-11"}
+    # kind 'auto' without --gs (or on another format) is an input error (tool error, exit 3)
+    man = tmp_path / "m2.json"
+    man.write_text(json.dumps({"files": files}), "utf-8")
+    code, s = run_main(["harness", "--manifest", str(man)], capsys)
+    assert code == 3 and "auto" in s["error"]
