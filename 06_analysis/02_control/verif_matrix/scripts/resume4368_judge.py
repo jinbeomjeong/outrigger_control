@@ -77,6 +77,11 @@ Different, one side only or not computable = S-2; ``gs`` also reports a not comp
 S-11 (``stop_S11``). Rev8 R8-2 / R8-3 (Chrono J-P3 scope, SCM J11) are in
 ``04_scripts/02_chrono/chrono_rows_judge_4368.py``.
 
+Rev9 (``v5_resume_4368_rules_rev9.md``, sealed 4cf7843c, checked raw too): R9-7 tag rule (K1
+alone = ``final_C4G2_K1``, ③ + K1 = ``final_C4G2_P3_K1``; :func:`recompute_tag` already gives
+these); R9-1 in ``record-check``: a Chrono row whose ``expect_controller.ok`` is false or missing
+is S-2 (``expect_controller_failed_R9_1``). R9-2 .. R9-6 are in the Chrono judge and gs-check.
+
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
 The tool reads only; it never runs a simulation. Tag judgements use
@@ -139,10 +144,15 @@ RULES_REV8_SHA256 = "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed6
 """Rev8 (sealed 2026-11-13 10:47:09 +09:00): overrides rev7 .. the original (R8-1: runs without
 a T4h record recompute the tag from the recorded switches; R8-4: this seal is checked by the
 path 1 tools)."""
+RULES_REV9_NAME = "v5_resume_4368_rules_rev9.md"
+RULES_REV9_SHA256 = "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d"
+"""Rev9 (sealed, master e5a2c19): overrides rev8 .. the original (R9-7: K1 alone =
+``final_C4G2_K1``, ③ + K1 without LAS-b = ``final_C4G2_P3_K1``; R9-8: this seal is checked)."""
 SEALED_REVISIONS = ((RULES_REV1_NAME, RULES_REV1_SHA256), (RULES_REV2_NAME, RULES_REV2_SHA256),
                     (RULES_REV3_NAME, RULES_REV3_SHA256), (RULES_REV4_NAME, RULES_REV4_SHA256),
                     (RULES_REV5_NAME, RULES_REV5_SHA256), (RULES_REV6_NAME, RULES_REV6_SHA256),
-                    (RULES_REV7_NAME, RULES_REV7_SHA256), (RULES_REV8_NAME, RULES_REV8_SHA256))
+                    (RULES_REV7_NAME, RULES_REV7_SHA256), (RULES_REV8_NAME, RULES_REV8_SHA256),
+                    (RULES_REV9_NAME, RULES_REV9_SHA256))
 """The revisions every subcommand checks raw (R2-9: sealed rule files are ``-text``, no LF
 normalisation)."""
 RECORD_KEY = "resume_k1"
@@ -487,9 +497,12 @@ def record_check(args: argparse.Namespace) -> dict:
                 [str(t) for t in row.get("argv", [])], env, is_c4_off=is_c4_off, is_scm=is_scm
             )
             result_path = Path(batch_dir) / case / "result.json"
+            expect_ok = None
             if result_path.is_file():
-                problems += chrono_result_problems(read_json(result_path), is_c4_off=is_c4_off,
+                result = read_json(result_path)
+                problems += chrono_result_problems(result, is_c4_off=is_c4_off,
                                                    is_engine=_is_engine_row(row))
+                expect_ok = expect_check_ok(result, is_engine=_is_engine_row(row))
             else:
                 problems.append("result.json missing")
             chrono.append(
@@ -498,13 +511,17 @@ def record_check(args: argparse.Namespace) -> dict:
                     "case": case,
                     "c4_off_arm": is_c4_off,
                     "problems": problems,
+                    "expect_controller_ok_R9_1": expect_ok,
                 }
             )
     bad = sum(bool(r["problems"]) for r in harness + chrono)
     tag_check = r79_tag_check(args.harness or [], getattr(args, "t4h_dir", None) or ())
+    # rev9 R9-1: a Chrono row whose expect_controller check is false or missing stops the bundle
+    expect_failed = [r["case"] for r in chrono if r["expect_controller_ok_R9_1"] is not True]
     return {
+        "expect_controller_failed_R9_1": expect_failed,
         "rules": RULES_NAME,
-        "section": "4.2 (+ rev7 R7-1a / rev8 R8-1 tags)",
+        "section": "4.2 (+ rev7 R7-1a / rev8 R8-1 tags, rev9 R9-1 expect_controller)",
         "harness_runs": len(harness),
         "chrono_rows": len(chrono),
         "rows_with_problems": bad,
@@ -512,9 +529,16 @@ def record_check(args: argparse.Namespace) -> dict:
         "harness": [r for r in harness if r["problems"]] if not args.all else harness,
         "chrono": chrono,
         "r79_tag_check": tag_check,
-        "stop_S2": tag_check["stop_S2"],
-        "exit_code": 1 if bad or tag_check["stop_S2"] else 0,
+        "stop_S2": tag_check["stop_S2"] or bool(expect_failed),
+        "exit_code": 1 if bad or tag_check["stop_S2"] or expect_failed else 0,
     }
+
+
+def expect_check_ok(result: dict, *, is_engine: bool) -> bool:
+    """Rev9 R9-1: the row's controller-tag check (SCM ``c2_setup.expect_controller.ok``, L2b / L1-R
+    ``expect_controller.ok``) is true; false or a missing key is S-2."""
+    dotted = "expect_controller.ok" if is_engine else "c2_setup.expect_controller.ok"
+    return get_path(result, dotted)[1] is True
 
 
 # -------------------------------------------------------------------------------------------- 7.2
@@ -1426,9 +1450,11 @@ class TagNotComputable(Exception):
 
 
 def recompute_tag(is_extend_start: bool, is_las_on: bool, is_k1_on: bool) -> str | None:
-    """Rev8 R8-1c: ``final_C4G2_P3`` with ③, then ``_LAS``, then ``_K1`` (without ③ the base
-    of a suffix is ``final_C4G2``); None (no tag) when ③, LAS-b and K1 are all off. No ``_TCL``
-    (no TCL field is recorded and TCL is forbidden, original 4.2)."""
+    """Rev8 R8-1c as rewritten by rev9 R9-7: ``final_C4G2_P3`` with ③, then ``_LAS``, then
+    ``_K1`` at the end (without ③ the base of a suffix is ``final_C4G2``: K1 alone =
+    ``final_C4G2_K1``, ③ + K1 without LAS-b = ``final_C4G2_P3_K1``); None (no tag) when ③,
+    LAS-b and K1 are all off. No ``_TCL`` (no TCL field is recorded and TCL is forbidden,
+    original 4.2)."""
     tag = TAG_BASE_EXTEND_START if is_extend_start else None
     if is_las_on:
         tag = (tag or TAG_BASE_PLAIN) + TAG_SUFFIX_LAS
@@ -2627,7 +2653,7 @@ def revision_seal_problems(folder: Path, name: str, sha256: str) -> tuple[dict, 
 
 
 def sealed_rules_check(rules_dir: Path | None = None) -> dict:
-    """Rev1 .. rev8 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
+    """Rev1 .. rev9 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
     folder = RULES_DIR if rules_dir is None else Path(rules_dir)
     revisions, problems = {}, []
     for name, sha256 in SEALED_REVISIONS:
@@ -2664,6 +2690,7 @@ def main(argv: list[str] | None = None) -> int:
     report["rules_rev4_sha256"] = RULES_REV4_SHA256
     report["rules_rev7_sha256"] = RULES_REV7_SHA256
     report["rules_rev8_sha256"] = RULES_REV8_SHA256
+    report["rules_rev9_sha256"] = RULES_REV9_SHA256
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
         json.dumps(report, indent=1, ensure_ascii=False, default=str), encoding="utf-8"

@@ -1075,26 +1075,42 @@ of the SCM rows, as ``pads.npz`` ``law_locked`` of the L2b rows). Not in the man
 lack it (the 11-13 G-S batch)."""
 
 
+def law_locked_form_of(path: Path, time_key: str) -> dict[str, Any]:
+    """Rev9 R9-2 / R9-3 form of the ``law_locked`` record in one npz (SCM ``step_series.npz`` + ``t_s``, L2b
+    ``pads.npz`` + ``t``): ``chrono_rows_judge_4368.law_locked_form`` (one definition for gs-check and the judge).
+    Presence and form only, no values printed."""
+    import numpy as np  # noqa: PLC0415
+
+    with np.load(path, allow_pickle=False) as z:
+        arrays = {k: z[k] for k in (time_key, "law_locked") if k in z.files}
+    return _import("chrono_rows_judge_4368").law_locked_form(arrays, time_key)
+
+
 def series_key_check(case_dir: Path) -> dict[str, Any]:
-    """:data:`SERIES_KEYS` presence of one level case folder and the ``law_locked`` form ([len(t_s), 4] int8, values
-    in {-1, 0, 1}); presence and form only, no values printed."""
+    """:data:`SERIES_KEYS` presence of one level case folder and the ``law_locked`` form of rev9 R9-2 / R9-3 (time
+    column, [len(t_s), 4], int8, values in {-1, 0, 1}, 1 ms spacing within 1e-6 s, -1 only before the first arming
+    and left by all legs on one sample)."""
     import numpy as np  # noqa: PLC0415
 
     missing: list[str] = []
     problems: list[str] = []
+    minus_one = None
     for name, need in SERIES_KEYS.items():
         p = case_dir / name
         if not p.is_file():
             continue  # series_files_missing reports the file
         with np.load(p, allow_pickle=False) as z:
             missing += [f"{name}:{k}" for k in need if k not in z.files]
-            if "law_locked" in z.files and "t_s" in z.files:
-                ll, n = z["law_locked"], z["t_s"].shape[0]
-                if ll.shape != (n, 4) or ll.dtype != np.int8:
-                    problems.append(f"{name}:law_locked shape {ll.shape} dtype {ll.dtype} (want ({n}, 4) int8)")
-                elif ll.size and not np.isin(ll, (-1, 0, 1)).all():
-                    problems.append(f"{name}:law_locked values outside {{-1, 0, 1}}")
-    return {"series_keys_missing": missing, "series_key_problems": problems}
+        if not any(m.startswith(f"{name}:") for m in missing):
+            form = law_locked_form_of(p, "t_s")
+            problems += [f"{name}:law_locked {item}: {text}" for item, text in form["problems"].items()]
+            minus_one = form["minus_one"]
+    return {"series_keys_missing": missing, "series_key_problems": problems, "law_locked_minus_one": minus_one}
+
+
+def expect_controller_ok(doc: dict[str, Any], dotted: str) -> bool:
+    """Rev9 R9-1: the row's controller-tag check is true (false or missing = S-2, at G-S also S-11)."""
+    return _get(doc, dotted) is True
 
 
 RIGID_KEY_PATHS = (
@@ -1160,13 +1176,27 @@ def _gs_other(f: Path, e: dict[str, Any], kind: str) -> dict[str, Any]:
     res = case_dir / "result.json"
     c["result_json"] = res.is_file()
     c["result_missing"] = list(keys)
+    closed_loop = kind != "openloop"
+    if closed_loop:
+        c["expect_controller_ok"] = False  # rev9 R9-1: false or missing = S-2 (G-S S-11)
     if res.is_file():
         doc = json.loads(res.read_text("utf-8"))
         c["result_missing"] = [k for k in keys if _get(doc, k) is _MISSING]
+        if closed_loop:
+            c["expect_controller_ok"] = expect_controller_ok(doc, "expect_controller.ok")
     c["files_missing"] = [n for n in files if not (case_dir / n).is_file()]
+    if kind == "L2b_NSC":  # rev9 R9-2 / R9-5: pads.npz law_locked form, as the SCM step_series
+        pads = case_dir / "pads.npz"
+        form = law_locked_form_of(pads, "t") if pads.is_file() else {"key_missing": True, "problems": {},
+                                                                         "minus_one": None}
+        c["pads_law_locked_missing"] = bool(form["key_missing"])
+        c["pads_law_locked_problems"] = [f"pads.npz:law_locked {i}: {t}" for i, t in form["problems"].items()]
+        c["law_locked_minus_one"] = form["minus_one"]
     c["n_key_paths"] = len(keys)
     c["ok"] = (c["progress_end_rc0"] and not c["batch_entry_missing"] and c["result_json"] and not c["result_missing"]
-               and not c["files_missing"] and c.get("runner_outcome_ok", True))
+               and not c["files_missing"] and c.get("runner_outcome_ok", True)
+               and c.get("expect_controller_ok", True) and not c.get("pads_law_locked_missing", False)
+               and not c.get("pads_law_locked_problems"))
     return c
 
 
@@ -1283,8 +1313,10 @@ def cmd_gs_check(folder: str, manifest: str | None = None) -> int:
         res = f / e["case"] / "result.json"
         c["result_json"] = res.is_file()
         missing, conditional, required_absent = list(keys), [], []
+        c["expect_controller_ok"] = False
         if res.is_file():
             doc = json.loads(res.read_text("utf-8"))
+            c["expect_controller_ok"] = expect_controller_ok(doc, "c2_setup.expect_controller.ok")
             absent = [k for k in keys if _get(doc, k) is _MISSING]
             off_arm = is_off_arm(e)
             missing = []
@@ -1310,7 +1342,8 @@ def cmd_gs_check(folder: str, manifest: str | None = None) -> int:
         c.update(series_key_check(f / e["case"]))
         c["ok"] = (c["progress_end_rc0"] and not c["batch_entry_missing"] and c["result_json"] and not missing
                    and c.get("npz_arrays_ok", False) and not c["series_files_missing"]
-                   and not c["series_keys_missing"] and not c["series_key_problems"])
+                   and not c["series_keys_missing"] and not c["series_key_problems"]
+                   and c["expect_controller_ok"])
         cases.append(c)
     mt = manifest_table_check(manifest)
     n_err = sum(1 for c in cases if not c["ok"]) + (0 if cases else 1) + (1 if mt is not None and not mt["ok"] else 0)
