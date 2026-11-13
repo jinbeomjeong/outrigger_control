@@ -1,10 +1,11 @@
 # 436.8 경로 1 새 판 판정기 (`*_4368.py`)
 
-규칙: `v5_resume_4368_rules.md` 원판~rev6(`06_analysis/02_control/verif_matrix/`). rev5 R5-A1이 이 파일들을 하네스 묶음의 경로 1로 지정한다. 기존 판정기(`u3_judge_k1.py`, `judge_stage1_r5.py`, `u9_judge.py`, `las_t3_judge.py`·`las_h7.py`, `d1_runs.judgement`·`d1_select.py`)는 고치지 않았다. `u3_judge_k1.py`는 기록 전용 판이다(R5-A2).
+규칙: `v5_resume_4368_rules.md` 원판~rev10(`06_analysis/02_control/verif_matrix/`). rev5 R5-A1이 이 파일들을 하네스 묶음의 경로 1로 지정한다. 기존 판정기(`u3_judge_k1.py`, `judge_stage1_r5.py`, `u9_judge.py`, `las_t3_judge.py`·`las_h7.py`, `d1_runs.judgement`·`d1_select.py`)는 고치지 않았다. `u3_judge_k1.py`는 기록 전용 판이다(R5-A2).
 
 ## 공통 계약 (`judge4368_common.py`)
 
-- 판정 전에 원판·rev1~rev9와 각 `.sha256`을 원시 바이트로 대조한다. 하나라도 다르면 S-1(종료 1)이다. 규칙 폴더는 `--rules-dir`(기본 `verif_matrix`).
+- 판정 전에 원판·rev1~rev10과 각 `.sha256`을 원시 바이트로 대조한다. 하나라도 다르면 S-1(종료 1)이다. 규칙 폴더는 `--rules-dir`(기본 `verif_matrix`).
+- rev9·rev10의 Chrono 항목(R9-1~R9-6 태그 확인·`law_locked` 형식·LS 행·J11 범위, R10-1·R10-2 LS 판별 입력 경계)은 Chrono 도구(`04_scripts/02_chrono/chrono_rows_judge_4368.py`, `v5_resume_4368_chrono_rows.py gs-check`)에만 적용되고, 이 하네스 판정기들에는 적용되지 않는다(여기서는 봉인 대조만 한다).
 - 입력·출력 경로는 모두 인자다. 저장 결과 경로를 코드에 두지 않는다.
 - 보고서(`--out`)에 다음을 넣는다: 스크립트 sha256, 봉인 대조, R5-A3 정의 차이 항목(`definition_changes`), `git diff --no-index --numstat <기존> <새 판>` 요약(`diff_vs_existing`).
 - 종료 코드: 0 판정(발견 없음), 1 발견(멈춤·불일치·`판정 불가`), 2 입력 오류, 3 내부 오류. stdout 마지막 줄은 JSON 요약이다.

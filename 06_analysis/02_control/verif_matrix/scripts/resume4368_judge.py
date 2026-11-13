@@ -148,11 +148,15 @@ RULES_REV9_NAME = "v5_resume_4368_rules_rev9.md"
 RULES_REV9_SHA256 = "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d"
 """Rev9 (sealed, master e5a2c19): overrides rev8 .. the original (R9-7: K1 alone =
 ``final_C4G2_K1``, ③ + K1 without LAS-b = ``final_C4G2_P3_K1``; R9-8: this seal is checked)."""
+RULES_REV10_NAME = "v5_resume_4368_rules_rev10.md"
+RULES_REV10_SHA256 = "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29"
+"""Rev10 (sealed, master 8b4ad93): R9-4 LS input boundaries (Chrono tools only); this seal is checked
+(R10-3)."""
 SEALED_REVISIONS = ((RULES_REV1_NAME, RULES_REV1_SHA256), (RULES_REV2_NAME, RULES_REV2_SHA256),
                     (RULES_REV3_NAME, RULES_REV3_SHA256), (RULES_REV4_NAME, RULES_REV4_SHA256),
                     (RULES_REV5_NAME, RULES_REV5_SHA256), (RULES_REV6_NAME, RULES_REV6_SHA256),
                     (RULES_REV7_NAME, RULES_REV7_SHA256), (RULES_REV8_NAME, RULES_REV8_SHA256),
-                    (RULES_REV9_NAME, RULES_REV9_SHA256))
+                    (RULES_REV9_NAME, RULES_REV9_SHA256), (RULES_REV10_NAME, RULES_REV10_SHA256))
 """The revisions every subcommand checks raw (R2-9: sealed rule files are ``-text``, no LF
 normalisation)."""
 RECORD_KEY = "resume_k1"
@@ -2653,7 +2657,7 @@ def revision_seal_problems(folder: Path, name: str, sha256: str) -> tuple[dict, 
 
 
 def sealed_rules_check(rules_dir: Path | None = None) -> dict:
-    """Rev1 .. rev9 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
+    """Rev1 .. rev10 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
     folder = RULES_DIR if rules_dir is None else Path(rules_dir)
     revisions, problems = {}, []
     for name, sha256 in SEALED_REVISIONS:
@@ -2691,6 +2695,7 @@ def main(argv: list[str] | None = None) -> int:
     report["rules_rev7_sha256"] = RULES_REV7_SHA256
     report["rules_rev8_sha256"] = RULES_REV8_SHA256
     report["rules_rev9_sha256"] = RULES_REV9_SHA256
+    report["rules_rev10_sha256"] = RULES_REV10_SHA256
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
         json.dumps(report, indent=1, ensure_ascii=False, default=str), encoding="utf-8"

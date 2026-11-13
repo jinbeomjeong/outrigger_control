@@ -1284,12 +1284,28 @@ def manifest_table_check(path: str | None) -> dict[str, Any] | None:
             "reason": None if same else "manifest table differs from the code table"}
 
 
-def cmd_gs_check(folder: str, manifest: str | None = None) -> int:
+ROWS_MANIFEST_DEFAULT = ROOT / "06_analysis" / "02_control" / "verif_matrix" / "v5_resume_4368" / \
+    "chrono_rows_manifest.json"
+"""Rev10 R10-2: the manifest whose ``batches.<full batch name>.rows[]`` the LS sources are checked against."""
+
+
+def cmd_gs_check(folder: str, manifest: str | None = None, rows_manifest: str | None = None) -> int:
     """Presence-only field check of a ``V5-RESUME-K1-*`` batch folder (G-S or a main run; no values printed).
     Conditional keys follow the manifest ``gs_conditional_absent`` rules (:func:`gs_conditional_table`): an absent
     key whose condition requires it is ``result_missing`` and listed in ``conditional_required_but_absent``.
-    ``manifest``: also check that the stored table equals the code table (a difference is an error)."""
+    ``manifest``: also check that the stored table equals the code table (a difference is an error).
+    ``rows_manifest`` (default :data:`ROWS_MANIFEST_DEFAULT`): rev10 R10-2, every row's full batch name is decided
+    and its case is exactly once in that manifest bundle and in ``batch.json`` (else the row fails, S-11); a missing
+    or unreadable rows manifest is an input error (exit 2, G-S failure)."""
     import numpy as np  # noqa: PLC0415
+
+    judge = _import("chrono_rows_judge_4368")
+    try:
+        rows_doc = judge.load_manifest(Path(rows_manifest) if rows_manifest else ROWS_MANIFEST_DEFAULT)
+    except judge.InputError as exc:
+        print(f"gs-check: {exc}", file=sys.stderr)
+        print("errors 1")
+        return 2
 
     f = Path(folder)
     bpath, ppath = f / "batch.json", f / "progress.log"
@@ -1345,11 +1361,20 @@ def cmd_gs_check(folder: str, manifest: str | None = None) -> int:
                    and not c["series_keys_missing"] and not c["series_key_problems"]
                    and c["expect_controller_ok"])
         cases.append(c)
+    ls_check = judge.ls_source_check(f, rows_doc)  # rev10 R10-2
+    ls_rows = {r["case"]: r for r in ls_check["rows"]}
+    for c in cases:
+        row = ls_rows.get(c["case"], {"boundary_case": judge.LS_CASE_BATCH_ENTRIES, "s11": True})
+        c["ls_boundary_case"], c["ls_sources_ok"] = row["boundary_case"], not row["s11"]
+        c["ok"] = bool(c["ok"] and c["ls_sources_ok"])
     mt = manifest_table_check(manifest)
     n_err = sum(1 for c in cases if not c["ok"]) + (0 if cases else 1) + (1 if mt is not None and not mt["ok"] else 0)
     print(json.dumps({"folder": f.as_posix(), "batch": batch.get("batch"), "n_cases": len(cases),
                       "n_key_paths": len(keys), "conditional_table_sha256": gs_conditional_table()["table_sha256"],
-                      **({"manifest_table": mt} if mt is not None else {}), "cases": cases}, indent=1))
+                      **({"manifest_table": mt} if mt is not None else {}),
+                      "ls_sources_R10_2": {"batch_name": ls_check["batch_name"], "counts": ls_check["counts"],
+                                           "s11_rows": ls_check["s11_rows"]},
+                      "cases": cases}, indent=1))
     print(f"errors {n_err}")
     return 0 if n_err == 0 else 1
 
@@ -1371,6 +1396,8 @@ def main(argv: list[str] | None = None) -> int:
     g.add_argument("folder")
     g.add_argument("--manifest", default=None,
                    help="stored chrono_rows_manifest.json: its gs_conditional_absent.keys must equal the code table")
+    g.add_argument("--rows-manifest", default=None,
+                   help="manifest for the rev10 R10-2 LS source check (default: the stored chrono_rows_manifest.json)")
     a = ap.parse_args(argv)
     if a.cmd == "check":
         return cmd_check(a.out)
@@ -1382,7 +1409,7 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_oc5_status()
     if a.cmd == "oc5-read":
         return cmd_oc5_read(a.folder)
-    return cmd_gs_check(a.folder, a.manifest)
+    return cmd_gs_check(a.folder, a.manifest, a.rows_manifest)
 
 
 if __name__ == "__main__":
