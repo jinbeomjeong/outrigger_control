@@ -1132,8 +1132,24 @@ OPENLOOP_KEY_PATHS = ("p3a.checks", "p3a.P3a-1_force_peak", "p3a.P3a-2_liftoff",
                       "p3a.t_lift_start_s", "num_threads_chrono", "placement.mode", "placement.omp_wait_policy",
                       "placement.power_throttling_off_ok", "placement.affinity_ok", "hull_hook.mode",
                       "hull_hook.fallback_reason", "hull_hook.dll_sha256", "args.lift_s", "args.lift_speed_fraction",
-                      "args.flow_law", "v5_hydraulics.controller_options", "flow_limit.summary", "wall_s")
+                      "args.flow_law", "v5_hydraulics.controller_options", "flow_limit.summary", "wall_s",
+                      "code_state.git_at_start.head")  # rev11 R11-4: run_S9 machine record (2026-11-13)
 OPENLOOP_FILES = ("series.npz", "flow_series.npz")
+_GIT_HEAD_RE = re.compile(r"[0-9a-f]{40}")
+
+
+def code_at_launch_head_check(entry: dict[str, Any]) -> dict[str, Any]:
+    """Rev11 R11-4 (user decision Q-R11-1 = B): the batch.json entry's ``code_at_launch.git.head`` is a 40-hex commit
+    (no ``git.error``). Presence and form only; the comparison with the judgement's ``git_at_start`` is the judge's
+    (S-12)."""
+    cal = entry.get("code_at_launch")
+    git = cal.get("git") if isinstance(cal, dict) else None
+    head = git.get("head") if isinstance(git, dict) else None
+    ok = isinstance(head, str) and _GIT_HEAD_RE.fullmatch(head) is not None
+    reason = None if ok else ("no code_at_launch" if "code_at_launch" not in entry
+                              else "code_at_launch.git.error" if isinstance(git, dict) and "error" in git
+                              else "code_at_launch.git.head missing or not a 40-hex commit")
+    return {"code_at_launch_head_ok": ok, **({"code_at_launch_head_problem": reason} if reason else {})}
 
 
 def gs_kind(entry: dict[str, Any]) -> str:
@@ -1146,11 +1162,13 @@ def gs_kind(entry: dict[str, Any]) -> str:
 
 def _gs_other(f: Path, e: dict[str, Any], kind: str) -> dict[str, Any]:
     """Presence check of an L2b / L1-R (result in the runner's own folder, from the case log) or open-loop row."""
-    not_expected = {"openloop": ("controller", "code_at_launch"),
+    # rev11 R11-4 (2026-11-13): open-loop rows need code_at_launch too (s9_batch records it for run_S9 machine)
+    not_expected = {"openloop": ("controller",),
                     "L1R": ("start_env", "v5_setting")}.get(kind, ("start_env",))  # L1-R: no v5 option (None)
     c: dict[str, Any] = {"case": e["case"], "kind": kind, "batch_entry_missing": [k for k in GS_ENTRY_KEYS
                                                                                    if k not in e
                                                                                    and k not in not_expected]}
+    c.update(code_at_launch_head_check(e))
     progress = (f / "progress.log").read_text("utf-8", errors="replace") if (f / "progress.log").is_file() else ""
     c["progress_end_rc0"] = re.search(rf"^END {re.escape(e['case'])} \S+ rc=0\b", progress, re.M) is not None
     if kind == "openloop":
@@ -1194,7 +1212,7 @@ def _gs_other(f: Path, e: dict[str, Any], kind: str) -> dict[str, Any]:
         c["law_locked_minus_one"] = form["minus_one"]
     c["n_key_paths"] = len(keys)
     c["ok"] = (c["progress_end_rc0"] and not c["batch_entry_missing"] and c["result_json"] and not c["result_missing"]
-               and not c["files_missing"] and c.get("runner_outcome_ok", True)
+               and not c["files_missing"] and c.get("runner_outcome_ok", True) and c["code_at_launch_head_ok"]
                and c.get("expect_controller_ok", True) and not c.get("pads_law_locked_missing", False)
                and not c.get("pads_law_locked_problems"))
     return c
@@ -1325,7 +1343,7 @@ def cmd_gs_check(folder: str, manifest: str | None = None, rows_manifest: str | 
             continue
         c: dict[str, Any] = {"case": e["case"], "progress_end_rc0": end_rc.get(e["case"]) == "0",
                              "batch_entry_missing": [k for k in GS_ENTRY_KEYS if k not in e],
-                             "mixed_hull_mode_key": "mixed_hull_mode" in batch}
+                             "mixed_hull_mode_key": "mixed_hull_mode" in batch, **code_at_launch_head_check(e)}
         res = f / e["case"] / "result.json"
         c["result_json"] = res.is_file()
         missing, conditional, required_absent = list(keys), [], []
@@ -1359,7 +1377,7 @@ def cmd_gs_check(folder: str, manifest: str | None = None, rows_manifest: str | 
         c["ok"] = (c["progress_end_rc0"] and not c["batch_entry_missing"] and c["result_json"] and not missing
                    and c.get("npz_arrays_ok", False) and not c["series_files_missing"]
                    and not c["series_keys_missing"] and not c["series_key_problems"]
-                   and c["expect_controller_ok"])
+                   and c["expect_controller_ok"] and c["code_at_launch_head_ok"])
         cases.append(c)
     ls_check = judge.ls_source_check(f, rows_doc)  # rev10 R10-2
     ls_rows = {r["case"]: r for r in ls_check["rows"]}
