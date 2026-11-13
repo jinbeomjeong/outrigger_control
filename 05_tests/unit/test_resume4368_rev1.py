@@ -333,6 +333,7 @@ def test_rev1_and_rev2_seal_check(tmp_path, monkeypatch) -> None:
         judge.RULES_REV8_NAME,
         judge.RULES_REV9_NAME,
         judge.RULES_REV10_NAME,
+        judge.RULES_REV11_NAME,
     }
     assert judge.sealed_rules_check(tmp_path)["stop_S1"] is True
     for name, _ in judge.SEALED_REVISIONS:  # both sealed files copied, rev1 seal value wrong

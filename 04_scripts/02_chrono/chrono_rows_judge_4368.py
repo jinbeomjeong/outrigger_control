@@ -23,7 +23,7 @@ rules rev6 R6-A D-26 .. D-39):
 * D-37 / D-38 (N-12 / N-13) :func:`p32_block` - strict LOC < first DONE, loaded = > 0.01 W, revoked-LOC normal.
 * R5-B1 / R6-B6 / R6-B7 / R6-1 :func:`origin_check` - time base, integer-period rounding, fallback legs.
 * t_D (R6-B4, 100 samples) :func:`departure`, with the runner difference recorded; P3-3 on the new t_D.
-* rules seals :func:`seal_check` (original, rev1 .. rev10).
+* rules seals :func:`seal_check` (original, rev1 .. rev11).
 * rev10 R10-1 :func:`batch_full_name` / :func:`ls_setting` - LS rows by the full batch name (``batch.json`` ``batch``
   checked against the folder name, a manifest ``batches`` key) and exactly one row per source; a missing or unreadable
   manifest is an input error (exit 2, S-11). R10-2 :func:`ls_source_check` (used by gs-check).
@@ -90,6 +90,7 @@ RULES_SEALS = {
     "v5_resume_4368_rules_rev8.md": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
     "v5_resume_4368_rules_rev9.md": "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d",
     "v5_resume_4368_rules_rev10.md": "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29",
+    "v5_resume_4368_rules_rev11.md": "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f",
 }
 """Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13); both the file and its ``.sha256`` must
 match (original 8.2 S-1)."""
@@ -1448,6 +1449,16 @@ def parse_assumptions(items: list[str]) -> dict[str, str]:
     return asm
 
 
+GRADE_COUNT_NOTE = ("rev11 R11-5: in G-S the row grades are not judged and are no stop; "
+                    "the judgement records only these counts")
+
+
+def grade_counts(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Rev11 R11-5: the number of judged rows per grade (``None`` = a row without a grade)."""
+    counts = Counter(str(r.get("grade")) for r in rows)
+    return {"counts": dict(sorted(counts.items())), "rows": len(rows), "note": GRADE_COUNT_NOTE}
+
+
 def cmd_judge(args) -> tuple[int, dict[str, Any]]:
     asm = parse_assumptions(args.assume or [])
     params = load_params(Path(args.params))
@@ -1505,6 +1516,7 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
                                    "max_abs_diff_s": max(td_diff) if td_diff else None},
            "demoted_items": {r["case"]: r.get("demoted_items") for r in rows if r.get("demoted_items")},
            "rev8_counts": rev8_counts(rows),
+           "grade_counts_R11_5": grade_counts(rows),
            "ls_manifest": {"path": None if manifest_path is None else str(manifest_path),
                            "sha256": sha256_file(manifest_path) if manifest is not None else None}}
     code = 0 if seals["ok"] and not stops and not origin_bad else 1
@@ -1514,6 +1526,7 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
     summary = {"rows": len(rows), "seals_ok": seals["ok"], "stops": len(stops), "origin_failed": len(origin_bad),
                "deviates_from_rev6": sorted(deviates), "rev8_counts": doc["rev8_counts"],
                "grades": {r["case"]: r.get("grade") for r in rows},
+               "grade_counts_R11_5": doc["grade_counts_R11_5"],
                "skipped": {s["case"]: s["skipped"] for s in skipped}, "out": str(args.out)}
     return code, summary
 

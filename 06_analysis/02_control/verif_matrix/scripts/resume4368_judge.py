@@ -82,6 +82,18 @@ alone = ``final_C4G2_K1``, ③ + K1 = ``final_C4G2_P3_K1``; :func:`recompute_tag
 these); R9-1 in ``record-check``: a Chrono row whose ``expect_controller.ok`` is false or missing
 is S-2 (``expect_controller_failed_R9_1``). R9-2 .. R9-6 are in the Chrono judge and gs-check.
 
+Rev11 (``v5_resume_4368_rules_rev11.md``, sealed 9bac4524, checked raw too; rev10 is checked
+raw as well): R11-1 in ``record-check``: the 4.2 expectations are the switches of the line kind
+(:func:`harness_line_kind`; H-0 lines by ``t3.bundle`` / ``t3.las`` / ``t3.gate``: R-0 LAS-b off
+and gate off, R-0K off / on, T-3a/b/c on / on, other lines the preset; LAS-b off compares only
+``settings.enable`` = false; the R-0 / R-0K gate request is recorded only). Missing or
+inconsistent kind inputs are S-3, with ``--gs`` S-11. R11-2 in ``gs`` / ``record-check``: a
+run's T4h file is looked up only in the runner convention folders of its result file
+(``<stem>_t4h/``, ``t4h/``); one ``--t4h-dir`` only when neither exists; two or more, or one
+next to a convention folder, is an input error (exit 2, S-11); several hits or none = S-2.
+R11-3 in ``dg3-hash --h7``: the H-6 / H-7 same-hash count and the ③ split (tag,
+``hydraulic_options``, ``extend_start_rule``), record only.
+
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
 The tool reads only; it never runs a simulation. Tag judgements use
@@ -100,6 +112,7 @@ import sys
 import traceback
 from collections import Counter
 from collections.abc import Iterator
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -152,11 +165,16 @@ RULES_REV10_NAME = "v5_resume_4368_rules_rev10.md"
 RULES_REV10_SHA256 = "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29"
 """Rev10 (sealed, master 8b4ad93): R9-4 LS input boundaries (Chrono tools only); this seal is checked
 (R10-3)."""
+RULES_REV11_NAME = "v5_resume_4368_rules_rev11.md"
+RULES_REV11_SHA256 = "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f"
+"""Rev11 (sealed, master 4312b8e): R11-1 record-check expectations by line kind, R11-2 T4h lookup
+in the runner convention folders; this seal is checked (R11-7)."""
 SEALED_REVISIONS = ((RULES_REV1_NAME, RULES_REV1_SHA256), (RULES_REV2_NAME, RULES_REV2_SHA256),
                     (RULES_REV3_NAME, RULES_REV3_SHA256), (RULES_REV4_NAME, RULES_REV4_SHA256),
                     (RULES_REV5_NAME, RULES_REV5_SHA256), (RULES_REV6_NAME, RULES_REV6_SHA256),
                     (RULES_REV7_NAME, RULES_REV7_SHA256), (RULES_REV8_NAME, RULES_REV8_SHA256),
-                    (RULES_REV9_NAME, RULES_REV9_SHA256), (RULES_REV10_NAME, RULES_REV10_SHA256))
+                    (RULES_REV9_NAME, RULES_REV9_SHA256), (RULES_REV10_NAME, RULES_REV10_SHA256),
+                    (RULES_REV11_NAME, RULES_REV11_SHA256))
 """The revisions every subcommand checks raw (R2-9: sealed rule files are ``-text``, no LF
 normalisation)."""
 RECORD_KEY = "resume_k1"
@@ -326,8 +344,78 @@ def _token_hits(text: str, tokens: tuple[str, ...]) -> list[str]:
 
 # -------------------------------------------------------------------------------------- record
 # check
+@dataclass(frozen=True)
+class LineKind:
+    """Rev11 R11-1: the expected switches of one harness line kind (bundle / setting / arm).
+
+    Attributes:
+        name: The kind (``R-0``, ``R-0K``, ``T-3K``, ``preset``) or None for a defect.
+        is_las_on: Expected LAS-b ``settings.enable``.
+        is_gate_on: Expected K1 order gate (effective and ``flat_soil_margin_order_gate``).
+        is_request_checked: False when the gate request is only recorded (R-0 / R-0K: the
+            switches come from a preset patch, not from the request argument).
+        defect: Why the kind cannot be decided (the expectations are then unknown), else None.
+    """
+
+    name: str | None
+    is_las_on: bool = True
+    is_gate_on: bool = True
+    is_request_checked: bool = True
+    defect: str | None = None
+
+
+T3_FIELD = "t3"
+"""``las_t3.build_jobs`` writes ``bundle`` / ``las`` / ``gate`` under this key of every H-0 line."""
+T3_BUNDLE_R0 = "R-0"
+T3_BUNDLE_R0K = "R-0K"
+T3_BUNDLES_T3K = ("T-3a", "T-3b", "T-3c")
+T3_SWITCH_ON = "on"
+LINE_KIND_T3K = "T-3K"
+LINE_KIND_PRESET = "preset"
+T3_EXPECTED_SWITCHES = {
+    T3_BUNDLE_R0: ("off", "off"),
+    T3_BUNDLE_R0K: ("off", "on"),
+    **{bundle: ("on", "on") for bundle in T3_BUNDLES_T3K},
+}
+"""Rev11 R11-1 table: (``t3.las``, ``t3.gate``) each H-0 bundle must carry."""
+KIND_DEFECT_PREFIX = "line kind inputs"
+"""Problem text of an undecidable kind (R11-1: S-3 in a main run, S-11 in G-S)."""
+
+
+def harness_line_kind(record: dict) -> LineKind:
+    """Rev11 R11-1: the line kind of one harness run from ``t3.bundle`` / ``t3.las`` / ``t3.gate``.
+
+    A run without the ``t3`` key is not an H-0 line and expects the preset (LAS-b and gate on).
+    A ``t3`` value without one of the three fields, an unknown bundle or a (las, gate) pair that
+    is not the bundle's is a record defect: the expectations cannot be decided.
+    """
+    if T3_FIELD not in record:
+        return LineKind(LINE_KIND_PRESET)
+    t3 = record[T3_FIELD]
+    if not isinstance(t3, dict):
+        return LineKind(None, defect=f"{KIND_DEFECT_PREFIX}: {T3_FIELD} {t3!r} is not a dict")
+    missing = [name for name in ("bundle", "las", "gate") if t3.get(name) is None]
+    if missing:
+        fields = '/'.join(missing)
+        return LineKind(None, defect=f"{KIND_DEFECT_PREFIX}: {T3_FIELD}.{fields} missing")
+    bundle, pair = t3["bundle"], (t3["las"], t3["gate"])
+    if bundle not in T3_EXPECTED_SWITCHES:
+        return LineKind(None, defect=f"{KIND_DEFECT_PREFIX}: unknown {T3_FIELD}.bundle {bundle!r}")
+    if pair != T3_EXPECTED_SWITCHES[bundle]:
+        return LineKind(None, defect=(f"{KIND_DEFECT_PREFIX}: {T3_FIELD}.las / gate {pair} != "
+                                      f"{T3_EXPECTED_SWITCHES[bundle]} of bundle {bundle!r}"))
+    is_t3k = bundle in T3_BUNDLES_T3K
+    return LineKind(LINE_KIND_T3K if is_t3k else bundle,
+                    is_las_on=pair[0] == T3_SWITCH_ON, is_gate_on=pair[1] == T3_SWITCH_ON,
+                    is_request_checked=is_t3k)
+
+
 def harness_record_problems(record: dict) -> list[str]:
-    """Rules 4.2 record check of one harness run (the ``resume_k1`` block, the key tokens)."""
+    """Rules 4.2 record check of one harness run (the ``resume_k1`` block, the key tokens).
+
+    Rev11 R11-1: the expected switches are those of the run's line kind
+    (:func:`harness_line_kind`); an undecidable kind is one problem and nothing else is compared.
+    """
     problems = [
         f"forbidden token {token!r} in the run key"
         for token in _token_hits(record_key(record), FORBIDDEN_HARNESS_TOKENS)
@@ -337,15 +425,19 @@ def harness_record_problems(record: dict) -> list[str]:
         return [*problems, f"{RECORD_KEY} block missing"]
     if block.get("applicable") is False:
         return problems
-    expected = {"k1_order_gate_request": "preset", "k1_order_gate_effective": True}
-    for name, want in expected.items():
-        if block.get(name) != want:
-            problems.append(f"{name} {block.get(name)!r} != {want!r}")
+    kind = harness_line_kind(record)
+    if kind.defect is not None:
+        return [*problems, kind.defect]
+    if kind.is_request_checked and block.get("k1_order_gate_request") != "preset":
+        problems.append(f"k1_order_gate_request {block.get('k1_order_gate_request')!r} != 'preset'")
+    if block.get("k1_order_gate_effective") != kind.is_gate_on:
+        problems.append(f"k1_order_gate_effective {block.get('k1_order_gate_effective')!r} != "
+                        f"{kind.is_gate_on!r}")
     _, gate = get_path(block, "slope_clearance_margin.settings.flat_soil_margin_order_gate")
-    if gate is not True:
-        problems.append(f"flat_soil_margin_order_gate {gate!r} != True")
+    if gate is not kind.is_gate_on:
+        problems.append(f"flat_soil_margin_order_gate {gate!r} != {kind.is_gate_on!r}")
     _, settings = get_path(block, "liftoff_approach_slow.settings")
-    problems += _las_setting_problems(settings, expect_on=True)
+    problems += _las_setting_problems(settings, expect_on=kind.is_las_on)
     return problems
 
 
@@ -478,20 +570,34 @@ def _is_c4_off(row: dict) -> bool:
     return row.get("controller") in (TAG_C4_OFF_V0, TAG_C4_OFF_VB)
 
 
+def _harness_record_row(path: Path, where: str, record: dict) -> dict:
+    """One harness run of ``record-check`` with its rev11 R11-1 line kind."""
+    kind = harness_line_kind(record)
+    row = {
+        "file": str(path),
+        "where": where,
+        "key": record_key(record),
+        "line_kind": kind.name,
+        "kind_input_defect": kind.defect,
+        "problems": harness_record_problems(record),
+    }
+    if kind.defect is None and not kind.is_request_checked:  # R-0 / R-0K: record only
+        block = record_block(record)
+        row["gate_request_recorded"] = (block.get("k1_order_gate_request")
+                                        if isinstance(block, dict) else None)
+    return row
+
+
+def _is_kind_defect(problem: str) -> bool:
+    return problem.startswith(KIND_DEFECT_PREFIX)
+
+
 def record_check(args: argparse.Namespace) -> dict:
     harness = []
     for path in args.harness or []:
         for record_doc in read_records(path):
             for where, record in run_records(record_doc):
-                problems = harness_record_problems(record)
-                harness.append(
-                    {
-                        "file": str(path),
-                        "where": where,
-                        "key": record_key(record),
-                        "problems": problems,
-                    }
-                )
+                harness.append(_harness_record_row(path, where, record))
     chrono = []
     for batch_dir in args.chrono or []:
         for case, row in _batch_rows(Path(batch_dir)).items():
@@ -518,23 +624,37 @@ def record_check(args: argparse.Namespace) -> dict:
                     "expect_controller_ok_R9_1": expect_ok,
                 }
             )
-    bad = sum(bool(r["problems"]) for r in harness + chrono)
+    # rev11 R11-1: an undecidable line kind is S-3 in a main run and S-11 in G-S (--gs)
+    is_gs = bool(getattr(args, "gs", False))
+    kind_defects = sum(r["kind_input_defect"] is not None for r in harness)
+    bad = 0
+    for row in harness + chrono:
+        problems = row["problems"]
+        if is_gs:
+            problems = [p for p in problems if not _is_kind_defect(p)]
+        bad += bool(problems)
     tag_check = r79_tag_check(args.harness or [], getattr(args, "t4h_dir", None) or ())
     # rev9 R9-1: a Chrono row whose expect_controller check is false or missing stops the bundle
     expect_failed = [r["case"] for r in chrono if r["expect_controller_ok_R9_1"] is not True]
+    stop_s11 = is_gs and kind_defects > 0
     return {
         "expect_controller_failed_R9_1": expect_failed,
         "rules": RULES_NAME,
-        "section": "4.2 (+ rev7 R7-1a / rev8 R8-1 tags, rev9 R9-1 expect_controller)",
+        "section": ("4.2 (+ rev7 R7-1a / rev8 R8-1 tags, rev9 R9-1 expect_controller, rev11 R11-1 "
+                    "line kinds, rev11 R11-2 T4h lookup)"),
+        "mode": "G-S" if is_gs else "main",
         "harness_runs": len(harness),
+        "harness_line_kinds_R11_1": dict(Counter(str(r["line_kind"]) for r in harness)),
+        "kind_input_defects_R11_1": kind_defects,
         "chrono_rows": len(chrono),
         "rows_with_problems": bad,
         "stop_S3": bad > 0,
+        "stop_S11": stop_s11,
         "harness": [r for r in harness if r["problems"]] if not args.all else harness,
         "chrono": chrono,
         "r79_tag_check": tag_check,
         "stop_S2": tag_check["stop_S2"] or bool(expect_failed),
-        "exit_code": 1 if bad or tag_check["stop_S2"] or expect_failed else 0,
+        "exit_code": 1 if bad or stop_s11 or tag_check["stop_S2"] or expect_failed else 0,
     }
 
 
@@ -1537,12 +1657,33 @@ def _tag_recompute_record(record: dict) -> dict:
                                                  "tag recomputed from the recorded switches"}
 
 
-def t4h_folders(result_path: Path, extra_dirs: list[Path] | tuple[Path, ...] = ()) -> list[Path]:
-    """Folders searched for a run's T4h file, in order: the given ones, then the two runner
-    conventions next to the result file."""
+T4H_DIR_HELP = ("T4h folder for results without a runner convention folder (<stem>_t4h/, t4h/); "
+                "at most one, and only when neither exists (rev11 R11-2, else exit 2 / S-11)")
+
+
+def t4h_convention_folders(result_path: Path) -> list[Path]:
+    """The two runner convention folders of one result file (rev11 R11-2 1)."""
     path = Path(result_path)
-    return [*(Path(d) for d in extra_dirs), path.with_name(f"{path.stem}{T4H_DIR_SUFFIX}"),
-            path.parent / T4H_SIBLING_DIR]
+    return [path.with_name(f"{path.stem}{T4H_DIR_SUFFIX}"), path.parent / T4H_SIBLING_DIR]
+
+
+def t4h_folders(result_path: Path, extra_dirs: list[Path] | tuple[Path, ...] = ()) -> list[Path]:
+    """Rev11 R11-2: the folders searched for the T4h files of one result file.
+
+    The runner convention folders that exist; only when none exists, the one given folder.
+
+    Raises:
+        InputError: Two or more folders given, or one given while a convention folder exists
+            (exit 2, the bundle is not judged, original 8.2 S-11).
+    """
+    extra = [Path(d) for d in extra_dirs]
+    if len(extra) > 1:
+        raise InputError(f"{len(extra)} --t4h-dir folders given; at most one (rev11 R11-2, S-11)")
+    existing = [folder for folder in t4h_convention_folders(result_path) if folder.is_dir()]
+    if existing and extra:
+        raise InputError(f"--t4h-dir {extra[0]} given but {result_path} has the runner "
+                         f"convention folder {existing[0]} (rev11 R11-2, S-11)")
+    return existing or extra
 
 
 def t4h_meta_tag(path: Path) -> tuple[bool, str | None]:
@@ -1572,11 +1713,14 @@ def _tag_compare_record(record: dict, folders: list[Path]) -> dict:
     top_tag = record.get("controller_tag")
     row: dict[str, Any] = {"key": record_key(record), "method": METHOD_T4H, "t4h_file": name,
                            "top_tag": top_tag, "t4h_tag": None, "not_computable": False}
-    found = next((folder / str(name) for folder in folders if (folder / str(name)).is_file()),
-                 None)
-    if found is None:
+    hits = [folder / str(name) for folder in folders if (folder / str(name)).is_file()]
+    if not hits:
         return {**row, "status": TAG_STOP,
                 "reason": f"{T4H_FILE_KEY} not found in {[str(f) for f in folders]} (no meta tag)"}
+    if len(hits) > 1:  # rev11 R11-2 3: one file of the recorded name in the whole search
+        return {**row, "status": TAG_STOP, "t4h_paths": [str(hit) for hit in hits],
+                "reason": f"{T4H_FILE_KEY} found {len(hits)} times (rev11 R11-2)"}
+    found = hits[0]
     is_readable, t4h_tag = t4h_meta_tag(found)
     row.update(t4h_path=str(found), t4h_tag=t4h_tag)
     if not is_readable:
@@ -1605,20 +1749,35 @@ def r79_tag_check(paths: list[Path], t4h_dirs: list[Path] | tuple[Path, ...] = (
 
     Args:
         paths: Harness output files (r79 / grid ``.json``, ``.jsonl``); other runs are skipped.
-        t4h_dirs: Extra T4h folders searched before the runner conventions.
+        t4h_dirs: At most one T4h folder, used only for result files without a runner
+            convention folder (rev11 R11-2, :func:`t4h_folders`).
         with_values: Keep the tag values in the rows (``gs`` reports presence only, so False).
 
     Returns:
         Counts (``compared``, ``by_method``, ``mismatched`` with the not computable ones,
         ``not_computable``), the ``S-2`` rows, ``stop_S2`` (a mismatch anywhere) and
         ``stop_S11_not_computable`` (what G-S also counts as S-11).
+
+    Raises:
+        InputError: The R11-2 folder rule is broken (two or more folders, or a folder given for
+            a result file with T4h records that has a convention folder).
     """
+    if len(t4h_dirs) > 1:
+        raise InputError(f"{len(t4h_dirs)} --t4h-dir folders given; at most one "
+                         "(rev11 R11-2, S-11)")
     rows = []
+    searched: dict[str, list[str]] = {}
     for path in paths:
-        folders = t4h_folders(Path(path), t4h_dirs)
+        records = []
         for document in read_records(Path(path)):
-            for record in tag_check_records(document):
-                rows.append({"file": str(path), **_tag_compare_record(record, folders)})
+            records += tag_check_records(document)
+        # the folders matter only for a file with T4h records (R11-2: "the result file's T4h")
+        has_t4h = any(record.get(T4H_FILE_KEY) for record in records)
+        folders = t4h_folders(Path(path), t4h_dirs) if has_t4h else []
+        if has_t4h:
+            searched[str(path)] = [str(folder) for folder in folders]
+        for record in records:
+            rows.append({"file": str(path), **_tag_compare_record(record, folders)})
     mismatched = [r for r in rows if r["status"] == TAG_STOP]
     not_computable = sum(r["not_computable"] for r in rows)
     by_method = Counter(r["method"] for r in rows)
@@ -1629,7 +1788,8 @@ def r79_tag_check(paths: list[Path], t4h_dirs: list[Path] | tuple[Path, ...] = (
             "by_method": {METHOD_T4H: by_method[METHOD_T4H],
                           METHOD_RECOMPUTE: by_method[METHOD_RECOMPUTE]},
             "mismatched": len(mismatched), "not_computable": not_computable,
-            "rows": mismatched, "stop_S2": bool(mismatched),
+            "rows": mismatched, "t4h_folders_searched_R11_2": searched,
+            "stop_S2": bool(mismatched),
             "stop_S11_not_computable": bool(not_computable)}
 
 
@@ -1826,22 +1986,69 @@ def _seed_index(key: str) -> int | None:
     return int(parts[1][1:]) if len(parts) > 1 and parts[1].startswith("s") else None
 
 
+H6_H7_HASH_NOTE = ("rev11 R11-3: commands_sha256 hashes the command array bytes only (no "
+                   "controller settings); an equal H-6 / H-7 hash records that ③ did not change "
+                   "the commands (미작동), no stop. ③ on / off is told apart by tag, "
+                   "hydraulic_options and extend_start_rule (extend_start_split_R11_3)")
+
+
+def extend_start_marks(record: dict) -> dict:
+    """Rev11 R11-3 marks of ③ in one r79 result: (tag, ``hydraulic_options`` key, rule)."""
+    options = record.get(HYDRAULIC_OPTIONS_KEY)
+    settings = record.get("controller_settings")
+    return {
+        "controller_tag": record.get("controller_tag"),
+        "extend_start_tracked": (options.get(EXTEND_START_OPTION_KEY) is True
+                                 if isinstance(options, dict) else None),
+        "extend_start_rule": (settings.get(EXTEND_START_SETTING_KEY)
+                              if isinstance(settings, dict) else None),
+    }
+
+
+def _is_extend_start_split(on_marks: dict, off_marks: dict) -> bool:
+    """H-6 (③ on) and H-7 (③ off) of one key differ by all three R11-3 marks."""
+    return (on_marks["controller_tag"] == TAG_P3 and off_marks["controller_tag"] == TAG_V0
+            and on_marks["extend_start_tracked"] is True
+            and off_marks["extend_start_tracked"] is False
+            and on_marks["extend_start_rule"] == EXTEND_START_TRACKED_RULE
+            and off_marks["extend_start_rule"] not in (None, EXTEND_START_TRACKED_RULE))
+
+
+def h6_vs_h7(h6_path: Path, h7_path: Path) -> dict:
+    """Rev11 R11-3 record: per dg3 key the H-6 / H-7 hash pair and the ③ on / off split."""
+    h6_rows = {r79_key(row.get("key")): row for row in read_json(h6_path).get("results") or []}
+    h7_rows = {r79_key(row.get("key")): row for row in read_json(h7_path).get("results") or []}
+    keys = sorted(h6_rows)
+    pairs = hash_pairs({k: r.get(R79_HASH_KEY) for k, r in h6_rows.items()},
+                       {k: r.get(R79_HASH_KEY) for k, r in h7_rows.items()}, keys)
+    not_split = [key for key in keys if key not in h7_rows
+                 or not _is_extend_start_split(extend_start_marks(h6_rows[key]),
+                                               extend_start_marks(h7_rows[key]))]
+    return {**pairs, "same_hash_count_R11_3": pairs["same"],
+            "extend_start_split_R11_3": {"keys": len(keys), "split": len(keys) - len(not_split),
+                                         "not_split": not_split},
+            "note": H6_H7_HASH_NOTE}
+
+
 def dg3_hash(args: argparse.Namespace) -> dict:
     """RV1-3.2 records with the rev3 R3-E4 hash (top-level ``commands_sha256`` only): H-6 vs
-    H-8 VB per dg3 key, and with ``--seedext`` / ``--noise`` the seedext seed 0..4 keys vs the
-    noise lines (per setting pair). A missing hash makes the record 기록 불완전, never a stop."""
+    H-8 VB per dg3 key, with ``--h7`` the rev11 R11-3 H-6 vs H-7 record, and with
+    ``--seedext`` / ``--noise`` the seedext seed 0..4 keys vs the noise lines (per setting
+    pair). A missing hash makes the record 기록 불완전, never a stop."""
     h6 = _r79_hashes(Path(args.h6))
     out: dict[str, Any] = {"rules": RULES_REV3_NAME, "section": "RV1-3.2 / R3-E4 (record)",
                            "hash_field": R79_HASH_KEY}
     if args.h8_vb is not None:
         out["h6_vs_h8_vb"] = hash_pairs(h6, _r79_hashes(Path(args.h8_vb)), sorted(h6))
+    if getattr(args, "h7", None) is not None:
+        out["h6_vs_h7"] = h6_vs_h7(Path(args.h6), Path(args.h7))
     for seedext, noise in zip(args.seedext or [], args.noise or [], strict=True):
         seed_hashes = _r79_hashes(Path(seedext))
         keys = sorted(key for key in seed_hashes if _seed_index(key) in SEEDEXT_NOISE_SEEDS)
         out.setdefault("seedext_vs_noise", []).append(
             {"seedext": str(seedext), "noise": str(noise),
              **hash_pairs(seed_hashes, _r79_hashes(Path(noise)), keys)})
-    blocks = [out.get("h6_vs_h8_vb"), *out.get("seedext_vs_noise", [])]
+    blocks = [out.get("h6_vs_h8_vb"), out.get("h6_vs_h7"), *out.get("seedext_vs_noise", [])]
     is_incomplete = any(block and block["missing"] for block in blocks)
     return {**out, "record_state": "기록 불완전" if is_incomplete else "기록",
             "note": "a difference is recorded and handed to python-expert; it is no stop",
@@ -2525,7 +2732,9 @@ def _parser() -> argparse.ArgumentParser:
         p.add_argument("--out", type=Path, required=True)
         if name == "record-check":
             p.add_argument("--t4h-dir", type=Path, action="append", default=[],
-                           help="T4h folder searched first (repeatable; rev7 R7-1a)")
+                           help=T4H_DIR_HELP)
+            p.add_argument("--gs", action="store_true",
+                           help="G-S run: an undecidable line kind is S-11, not S-3 (rev11 R11-1)")
         if name == "k1-class":
             p.add_argument("--anchor-map", type=Path, default=None,
                            help="anchor-map report (RV1-5 selection, the only anchor input)")
@@ -2551,8 +2760,7 @@ def _parser() -> argparse.ArgumentParser:
     p.add_argument("--harness", nargs="*", type=Path, default=[])
     p.add_argument("--chrono", nargs="*", type=Path, default=[],
                    help="Chrono batch folders: PS-c soil_event_series.npz columns (rev4)")
-    p.add_argument("--t4h-dir", type=Path, action="append", default=[],
-                   help="T4h folder searched first (repeatable; rev7 R7-1a)")
+    p.add_argument("--t4h-dir", type=Path, action="append", default=[], help=T4H_DIR_HELP)
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("keyset",
                        help="rev1 RV1-3: new H-6 .. H-9 grid output vs stored keys (S-15)")
@@ -2563,6 +2771,8 @@ def _parser() -> argparse.ArgumentParser:
     p = sub.add_parser("dg3-hash", help="rev1 RV1-3.2: H-6 vs H-8 VB commands_sha256 (record)")
     p.add_argument("--h6", type=Path, required=True)
     p.add_argument("--h8-vb", type=Path, default=None)
+    p.add_argument("--h7", type=Path, default=None,
+                   help="H-7 (③ off) r79 result: rev11 R11-3 same-hash count and ③ split")
     p.add_argument("--seedext", nargs="*", type=Path, help="h8_seedext_{VB,V0}.json")
     p.add_argument("--noise", nargs="*", type=Path, help="h8_noise_{VB,V0}.json, same order")
     p.add_argument("--out", type=Path, required=True)
@@ -2657,7 +2867,7 @@ def revision_seal_problems(folder: Path, name: str, sha256: str) -> tuple[dict, 
 
 
 def sealed_rules_check(rules_dir: Path | None = None) -> dict:
-    """Rev1 .. rev10 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
+    """Rev1 .. rev11 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
     folder = RULES_DIR if rules_dir is None else Path(rules_dir)
     revisions, problems = {}, []
     for name, sha256 in SEALED_REVISIONS:
@@ -2696,6 +2906,7 @@ def main(argv: list[str] | None = None) -> int:
     report["rules_rev8_sha256"] = RULES_REV8_SHA256
     report["rules_rev9_sha256"] = RULES_REV9_SHA256
     report["rules_rev10_sha256"] = RULES_REV10_SHA256
+    report["rules_rev11_sha256"] = RULES_REV11_SHA256
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
         json.dumps(report, indent=1, ensure_ascii=False, default=str), encoding="utf-8"

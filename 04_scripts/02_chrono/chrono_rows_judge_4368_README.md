@@ -96,7 +96,7 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 
 ## 6. 봉인 대조 (요건 4)
 
-원판·rev1~rev10의 md sha256을 도구 안 상수 `RULES_SEALS`와 각 `.sha256` 첫 토큰에 모두 대조한다. 하나라도 다르면 종료 1, 파일이 없으면 종료 2다. rev6 sha256 = `809e5639…`, rev7 = `e81f7d31…`, rev8 = `3ecafaaf…`, rev9 = `4cf7843c…`, rev10 = `62a0bd8d…`.
+원판·rev1~rev11의 md sha256을 도구 안 상수 `RULES_SEALS`와 각 `.sha256` 첫 토큰에 모두 대조한다. 하나라도 다르면 종료 1, 파일이 없으면 종료 2다. rev6 sha256 = `809e5639…`, rev7 = `e81f7d31…`, rev8 = `3ecafaaf…`, rev9 = `4cf7843c…`, rev10 = `62a0bd8d…`, rev11 = `9bac4524…`. rev11 R11-5: `judge` 출력(문서와 마지막 줄 요약)에 `grade_counts_R11_5`(등급별 행 수, 기록 전용)를 더했다. G-S에서는 행 등급을 판정하지 않으며 멈춤 사유가 아니다. `--out`은 필수다(R11-6).
 
 ## 7. rev8~rev10 반영: J-P3 범위, J11 입력·범위, LS 판별 (v3, python-expert 2026-11-13)
 

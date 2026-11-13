@@ -143,12 +143,15 @@ def test_a_listed_t4h_file_that_is_not_found_is_s2(tmp_path: Path) -> None:
 
 
 def test_t4h_folder_conventions_and_option(tmp_path: Path) -> None:
-    """``<stem>_t4h/`` (resume_k1_steps) and ``t4h/`` (las_t3), and ``--t4h-dir`` first."""
+    """``<stem>_t4h/`` (resume_k1_steps) and ``t4h/`` (las_t3); since rev11 R11-2 a
+    ``--t4h-dir`` next to an existing convention folder is an input error (was: searched first,
+    see ``test_resume4368_rev11.py``)."""
     _write_t4h(tmp_path / "t4h", "a.npz", {"controller_tag": TAG_P3})
     result = _write_result(tmp_path / "result.json", [_r79_result("a", TAG_P3, "a.npz")])
     assert judge.r79_tag_check([result])["stop_S2"] is False
     _write_t4h(tmp_path / "elsewhere", "a.npz", {"controller_tag": TAG_V0})
-    assert judge.r79_tag_check([result], [tmp_path / "elsewhere"])["stop_S2"] is True
+    with pytest.raises(judge.InputError, match="R11-2"):
+        judge.r79_tag_check([result], [tmp_path / "elsewhere"])
 
 
 def test_runs_without_a_t4h_record_are_recomputed_since_rev8(tmp_path: Path) -> None:
