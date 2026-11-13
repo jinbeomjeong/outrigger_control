@@ -297,15 +297,19 @@ class TestNoise(unittest.TestCase):
         self.assertEqual(f.status(), "pass")              # R3-E4: missing hash = record incomplete
         self.assertEqual(out["record_status"], "기록 불완전")
 
-    def _rec(self, restart=True, w=0.005, mf=20.0, done=50.0, contact=44.0, base=True):
+    def _rec(self, restart=True, w=0.005, mf=20.0, done=50.0, contact=44.0, base=True, final="ready",
+             shape="t_done_s"):
         ev = [[40.0, "leg_reapproach_start:RL"], [contact, "leg_reapproach_contact:RL"], [46.0, "crawler_liftoff_confirmed"]]
         if restart:
             ev.append([40.5, "INFO_LOC_WINDOW_RESTART:RL"])
         rec = {"key": "k", "events": ev, "r79": {"t_off_s": 42.0, "t_loc_s": 46.0, "crawler_at_loc_over_W": w,
                                                  "min_true_F_after_off_kN": mf}}
-        if base:   # R4-B2: first DONE = base.t_done_s, checked against base.phase_path
+        if base:   # rev7 R7-2: (a) t_done_s + phase_path, (b) timeline (g8)
             pp = [[10.0, "touch"], [30.0, "level"]] + ([[done, "done"]] if done is not None else [])
-            rec["base"] = {"t_done_s": done, "phase_path": pp, "t_loc_final_s": 46.0}
+            if shape == "t_done_s":
+                rec["base"] = {"t_done_s": done, "phase_path": pp, "t_loc_final_s": 46.0, "final_phase": final}
+            else:
+                rec["base"] = {"timeline": pp, "t_loc_final_s": 46.0, "final_phase": final}
         return rec
 
     @staticmethod
@@ -320,7 +324,13 @@ class TestNoise(unittest.TestCase):
         late = dict(ok=False, gate_fail=True, loc_minus_off_s=4.0)
         self.assertEqual(nz.line_grade(self._rec(), self._row(**late), CORE)[0], "flag")       # 419.8 all true
         self.assertEqual(nz.line_grade(self._rec(done=45.0), self._row(**late), CORE)[0], "fail")  # c5 false
-        self.assertEqual(nz.line_grade(self._rec(done=None), self._row(**late), CORE)[0], "flag")  # no DONE
+        self.assertEqual(nz.line_grade(self._rec(done=None, final="fault"), self._row(**late), CORE)[0],
+                         "flag")                                    # no DONE + fault end = None (R7-2)
+        self.assertEqual(nz.line_grade(self._rec(done=None), self._row(**late), CORE)[0],
+                         "undecidable")                             # no DONE, not fault -> S-11 (R7-2)
+        self.assertEqual(nz.line_grade(self._rec(shape="timeline"), self._row(**late), CORE)[0], "flag")
+        self.assertEqual(nz.line_grade(self._rec(shape="timeline", done=45.0), self._row(**late), CORE)[0],
+                         "fail")                                    # timeline shape, c5 false
         self.assertEqual(nz.line_grade(self._rec(restart=False), self._row(**late), CORE)[0], "fail")
         self.assertEqual(nz.line_grade(self._rec(mf=9.0), self._row(**late), CORE)[0], "fail")
         self.assertEqual(nz.line_grade(self._rec(base=False), self._row(**late), CORE)[0], "undecidable")
@@ -341,6 +351,43 @@ class TestNoise(unittest.TestCase):
         nz.late_loc_conditions(rec, CORE, f)
         self.assertIn("S-11", f.as_dict()["stop_codes"])
 
+    def test_first_done_rev7(self):
+        """rev7 R7-2: first DONE by base shape; 5 ms match; DONE-less fault = None; strict '<' (Q-12)."""
+        fd = nz.first_done
+        pp = [[10.0, "touch"], [50.0, "done"], [60.0, "done"]]
+        r = fd({"t_done_s": 50.004, "phase_path": pp, "final_phase": "ready"})
+        self.assertTrue(r["ok"] and r["phase_path_ok"] and r["shape"] == "t_done_s")
+        self.assertAlmostEqual(r["t_done_s"], 50.004)
+        self.assertTrue(fd({"t_done_s": 50.005, "phase_path": pp})["ok"])           # 5 ms inclusive
+        self.assertFalse(fd({"t_done_s": 50.006, "phase_path": pp})["ok"])          # > 5 ms -> S-11
+        self.assertFalse(fd({"t_done_s": 50.1, "phase_path": pp})["ok"])            # one 0.1 s cycle apart
+        self.assertFalse(fd({"t_done_s": None, "phase_path": pp, "final_phase": "fault"})["ok"])  # None + done
+        self.assertFalse(fd({"t_done_s": 50.0, "final_phase": "ready"})["ok"])      # phase_path missing
+        for ph in ("fault", "fault_reground"):
+            r = fd({"t_done_s": None, "phase_path": [[10.0, "touch"]], "final_phase": ph})
+            self.assertTrue(r["ok"])
+            self.assertIsNone(r["t_done_s"])
+            r = fd({"timeline": [[10.0, "touch"], [12.0, ph]], "final_phase": ph})
+            self.assertTrue(r["ok"] and r["shape"] == "timeline")
+            self.assertIsNone(r["t_done_s"])
+        self.assertFalse(fd({"t_done_s": None, "phase_path": [], "final_phase": "ready"})["ok"])
+        self.assertFalse(fd({"timeline": [[10.0, "touch"]], "final_phase": "ready"})["ok"])
+        r = fd({"timeline": [[10.0, "touch"], [47.123, "done"], [70.0, "done"]], "final_phase": "ready"})
+        self.assertEqual((r["ok"], r["shape"], r["t_done_s"]), (True, "timeline", 47.123))
+        self.assertFalse(fd({"timeline": [], "final_phase": "ready"})["ok"])         # empty -> S-11
+        self.assertFalse(fd({"final_phase": "ready"})["ok"])                         # no timeline -> S-11
+        self.assertFalse(fd(None)["ok"])
+        # S-11 is raised through late_loc_conditions; condition 5 strict: final LOC == first DONE -> False
+        rec = self._rec(shape="timeline")
+        del rec["base"]["timeline"]
+        f = CORE.Findings()
+        self.assertIsNone(nz.late_loc_conditions(rec, CORE, f)["c5"])
+        self.assertIn("S-11", f.as_dict()["stop_codes"])
+        rec = self._rec(done=46.0)                                                   # t_loc_final 46.0
+        f = CORE.Findings()
+        self.assertFalse(nz.late_loc_conditions(rec, CORE, f)["c5"])
+        self.assertEqual(f.status(), "pass")
+
     def test_l1_gate(self):
         recs = {"a": {"level": "L1", "harness": "g6", "case_index": 1, "inner": "x", "v5_setting": "VB",
                       "r79": {"crawler_at_loc_over_W": 0.02}},
@@ -351,7 +398,30 @@ class TestNoise(unittest.TestCase):
 
 class TestRev3(unittest.TestCase):
     def test_rev3_seal(self):
-        self.assertTrue(cm.check_rev3(REPO)["ok"])
+        r = cm.check_rev3(REPO)
+        self.assertTrue(r["ok"], r)
+        self.assertEqual([i["path"].rsplit("_", 1)[1] for i in r["items"]],
+                         ["rev3.md", "rev4.md", "rev5.md", "rev6.md", "rev7.md"])
+        rev7 = r["items"][-1]
+        self.assertEqual(rev7["want"], "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502")
+        self.assertEqual(rev7["seal_file_sha"], rev7["want"])
+
+    def test_rev7_seal_mismatch_stops(self):
+        """A rev7 file differing from its seal is not ok (S-1 through run_main)."""
+        with tempfile.TemporaryDirectory() as td:
+            for rel, _w, srel in cm.LATER_RULES:
+                for x in (rel, srel):
+                    p = Path(td) / x
+                    p.parent.mkdir(parents=True, exist_ok=True)
+                    p.write_bytes((REPO / x).read_bytes())
+            p7 = Path(td) / cm.LATER_RULES[-1][0]
+            p7.write_bytes(p7.read_bytes() + b"x")
+            r = cm.check_rev3(td)
+            self.assertFalse(r["ok"])
+            self.assertEqual([i["ok"] for i in r["items"]], [True, True, True, True, False])
+            (Path(td) / cm.LATER_RULES[-1][2]).unlink()
+            p7.write_bytes((REPO / cm.LATER_RULES[-1][0]).read_bytes())
+            self.assertFalse(cm.check_rev3(td)["items"][-1]["ok"])     # .sha256 record missing
 
     def test_sa4_and_guard(self):
         ln = line("S8", "VB", events=[[39.9, "WARN_LIFT_STROKE_LIMITED:FR"], [39.9, "FAULT_LIFT_STROKE_LIMIT:soil:FR"]],

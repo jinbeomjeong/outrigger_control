@@ -1,17 +1,17 @@
 # 436.8 경로 2 — v5 기준 원 규칙 등급 재집계 (H-6·H-8·H-9·H-10)
 
-- 규칙: 436.8 원판 `../../v5_resume_4368_rules.md`(`9019b405…`), rev1(`d9094fda…`), rev2(`497e4614…`), rev3(`dad8dfa6…`), rev4(`7ea87a30…`), **rev5(`452a8436…`, 커밋 31d543e), rev6(`809e5639…`, 커밋 d581df4)**. 원 규칙은 원판 부록 A의 `v5_criteria.md` + 개정 1~12b다.
+- 규칙: 436.8 원판 `../../v5_resume_4368_rules.md`(`9019b405…`), rev1(`d9094fda…`), rev2(`497e4614…`), rev3(`dad8dfa6…`), rev4(`7ea87a30…`), rev5(`452a8436…`, 커밋 31d543e), rev6(`809e5639…`, 커밋 d581df4), **rev7(`e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502`, 커밋 292f9d2)**. 원 규칙은 원판 부록 A의 `v5_criteria.md` + 개정 1~12b다.
   - 실행할 때마다 두 곳에서 확인한다.
     - `p2_4368.check_seals`: 원판~rev4, 부록 A, R2-9·R3-F4 CRLF 정규화.
-    - 이 폴더의 `check_rev3`: rev3~rev6의 raw sha, `.sha256` 기록, LF·BOM 없음.
-  - 어긋나면 종료 2(S-1)다.
+    - 이 폴더의 `check_rev3`: rev3~rev7의 raw sha, `.sha256` 기록, LF·BOM 없음.
+  - 어긋나거나 `.sha256`이 없으면 종료 2(S-1)다(rev7 R7-7 봉인 확인).
 - 작성자: terramechanics-expert(경로 2, 사용자 결정 2026-11-13). 경로 1 도구를 만들거나 고친 적이 없다. 읽은 것은 아래 "독립성 공개"에 적었다.
 - 환경: `conda run -n dynamics-dev python -I -B <도구> ...`. 쓰는 것은 표준 라이브러리, numpy, scipy, 그리고 git(`log`·`rev-parse` 조회만)이다.
 - 공통 CLI:
   - 인자: `--repo`, `--out <JSON>`, `--p2-dir`, `--allow-import-sha`.
   - 종료 코드: 0(이상 없음), 1(실패 또는 판정 불가), 2(멈춤 H-*·S-*·P-*, 규칙 sha 불일치, import sha 불일치 `P2-SHA`), 3(도구 오류).
   - stdout 마지막 줄은 ASCII JSON(`tool_sha256`, `common_sha256`, `status`, `exit`, `out_sha256`, `stop_codes`)이다.
-- `.gitattributes`에서 이 폴더 전체를 `-text`로 둔다. 도구 sha는 LF 바이트 기준이다.
+- `.gitattributes`에서 이 폴더 전체를 `-text`로 둔다(82행 `path2_v5c/* -text`). 저장소 blob 바이트가 그대로 작업본이 되고, 도구 sha는 그 바이트 기준이다. 줄바꿈은 파일마다 다르다: `p2v5c_common.py`·`p2v5c_grid.py`·`p2v5c_stage1.py`는 CRLF, `p2v5c_noise.py`·`test_p2v5c.py`·이 README는 LF다. 고칠 때 각 파일의 줄바꿈을 그대로 둔다.
 
 ## import (복사하지 않음, 메인 세션 결정 2026-11-13)
 
@@ -24,15 +24,39 @@ J 항목(R3-C3~C8, R4-C5의 `values.case_floor_deg`로 정하는 J3 바닥 각)�
 | `p2_v5j.py` | `5772624cb28e414ceeb38af3eb6d386a2e0a78857db8a5ea9a5d3cd2ec5f7d8b` | `judge_pair`(M-3: LS J11 n_late > 0 → stop, 이 도구의 L-e로 이어짐), `j_values`, `jp3`, `nrev_max_by_row`, `pair_key`, `row_key`, `rod_reading_from_t4h`, `tag_of`, `is_event` |
 | `p2_4368.py`(`p2_v5j.core`) | `dc631509b90296d842ec382c911f6a0abfd8944e170802386221eb2a1f315a27` | `check_seals`, `load_is_extend_start`, `Findings`, `t_ge/t_lt/t_gt`, `num`, `dig`, `read_jsonl`, `F_MIN_N` |
 
-## 도구와 sha256 (rev6 판, 각 묶음 첫 결과 전 고정)
+## 도구와 sha256 (rev7 판, 각 묶음 첫 결과 전 고정)
 
-| 도구 | 묶음 | sha256 |
+| 도구 | 묶음 | sha256 | rev6 판 |
+|---|---|---|---|
+| `p2v5c_common.py` | 공통 | `26991205bc60807be8367bb90cbcaf3bf45efe49f7a0171a57255cb66da6367a` | `511c03bf…`(rev7 봉인 확인 추가) |
+| `p2v5c_stage1.py stage1` | H-10, H-9(main·pressure_only) | `e419475980ee217d4519e19c7fed7afaeb9a3cdfcb35224ebd81e46877b45562` | 같음 |
+| `p2v5c_grid.py grid` | H-9(격자 768, V0 짝, 계열 𝓕) | `68d7359db7b2e580686ae98499629890cf613a04801c2644fe758a1a4d5d642b` | 같음(rev4 판부터) |
+| `p2v5c_noise.py noise` | H-6, H-8 | `b58519d4e67bbcac34197c6e351f6097c1a4fd6cdc30b006251d11b775a03d0b` | `8f15b56e…`(R7-2 첫 DONE) |
+| `test_p2v5c.py` | 자체 시험 25개 | `5f12c61d1902a98ec9125d9f6d4bbbabd0069235ebecf1c8b9093cab2424de2e` | `4244968e…`(23개) |
+
+- `stage1`·`grid`는 파일이 바뀌지 않았지만 공통 모듈(`common_sha256`)이 바뀌었으므로 실행 기록의 `common_sha256`으로 rev7 판임을 가른다.
+
+## rev7 반영
+
+| 규칙 | 반영 | 함수 |
 |---|---|---|
-| `p2v5c_common.py` | 공통 | `511c03bf23171a22961917aa5ec898a566ea6584631a6338a9a0508184c1b70d` |
-| `p2v5c_stage1.py stage1` | H-10, H-9(main·pressure_only) | `e419475980ee217d4519e19c7fed7afaeb9a3cdfcb35224ebd81e46877b45562` |
-| `p2v5c_grid.py grid` | H-9(격자 768, V0 짝, 계열 𝓕) | `68d7359db7b2e580686ae98499629890cf613a04801c2644fe758a1a4d5d642b`(rev4 판과 같음) |
-| `p2v5c_noise.py noise` | H-6, H-8 | `8f15b56ef5f6cf8e7762032aaebbbde62a80655f8707c8a8801eed175fca8520` |
-| `test_p2v5c.py` | 자체 시험 23개 | `4244968efd346cf3eca81575b6ecc5ca37e41c02335fcbec5d4603fa65883694` |
+| R7-2 | rev4 R4-B2를 바꾼다. 첫 DONE은 `base` 모양으로 정한다. (가) `base.t_done_s` 키가 있으면 그 값이 첫 DONE이고 `base.phase_path`의 첫 `done` 시각과 5 ms(양 끝 포함) 안이어야 한다. `t_done_s` = None인데 `phase_path`에 `done`이 있거나, `phase_path`가 없으면 S-11. (나) 키가 없으면 `base.timeline`(`[t_s, phase]`)의 첫 `done`. `timeline`이 없거나 비었으면 S-11. DONE이 없으면 `base.final_phase`가 `fault`·`fault_reground`일 때만 첫 DONE = None(정상), 그 밖은 S-11. S-11이면 조건 5 = None(그 줄은 판정 불가)이고 멈춤 S-11을 적는다. 출력 `cond.first_done`에 모양(`t_done_s`·`timeline`)·사유를 남긴다 | `noise.first_done`, `noise.late_loc_conditions` |
+| R7-2 공개 | 419.8 조건 5는 rev3 Q-12대로 엄격 비교(최종 LOC < 첫 DONE)로 그대로 둔다. 경로 1(저장 419.8 기록, ≤ + 10⁻⁹ s)과는 LOC = 첫 DONE일 때만 다르고 원판 9.2 대조로 드러난다 | `noise.late_loc_conditions` |
+| R7-7 봉인 확인 | `LATER_RULES`에 rev7(`e81f7d31…`, `.sha256`)을 더했다. 파일 sha·`.sha256` 첫 낱말·LF·BOM 없음 중 하나라도 어긋나면 S-1 | `common.check_rev3`, `common.run_main` |
+
+- 적용 범위: R7-2는 경로 2가 419.8 조건 5를 다시 계산하는 줄(S-4 시간 조항 실패 줄)에만 쓴다. G-S의 모든 r79 줄 대조와 그 S-11 수는 R7-7대로 경로 1 G-S가 적는다.
+- `final_phase`는 `base.final_phase`(R7-2 원문)만 읽는다.
+
+### rev7에서 이 폴더가 바꿀 것이 없던 항목
+
+| 규칙 | 이유 |
+|---|---|
+| R7-1a 최상위 `controller_tag` ↔ T4h meta | 대조 주체가 경로 1 도구다(R7-1a "이 대조는 경로 1 도구가 한다"). 이 폴더는 태그를 J-P3 적용 여부(`p2_v5j.tag_of`, import)와 격자 파일별 태그 수 기록에만 쓴다 |
+| R7-1b `b1ddeae` G-S 태그 | 기록 지위 규정. 이 폴더는 G-S 출력을 읽지 않는다 |
+| R7-1c T-3K R-0 태그 `final_C4G2` | H-0(T-3K) 줄은 이 폴더 입력(H-6·H-8·H-9·H-10)이 아니다(경로 2 T-3K 도구 `../path2/p2_t3k.py` 몫) |
+| R7-3a F-8 `d1.g6_preloc`(`true_min_kN` kN·0.01 kN) | F-8(d1 줄)은 이 폴더 입력이 아니다(`../path2/p2_d1.py` 몫). 이 폴더는 `g6_preloc`·`true_min_kN`을 읽지 않는다 |
+| R7-3b T-3K 정체성(`identity.sha256` dict, `identity.affinity`, `t3.affinity_hex`) | 위와 같다(`p2_t3k.py` 몫) |
+| R7-4 Chrono 조건부 결측, R7-5 Chrono 경로 1 v2, R7-6 풀 마스크 | Chrono 행·SCM 배치 기록이다. 이 폴더는 하네스 묶음만 읽는다 |
 
 ## rev5·rev6 반영
 
@@ -61,7 +85,7 @@ J 항목(R3-C3~C8, R4-C5의 `values.case_floor_deg`로 정하는 J3 바닥 각)�
 | 개정 5 5.2, R3-E2, **R4-B5** | 𝓕 두 관문만의 통과→실패가 있으면 `h9_family_F.jsonl`의 `event` = FS24 64줄로 R-1~R-4를 판정한다. 다른 사건 줄은 빼고 수만 적는다. 원시 필드가 없으면 줄의 기록 `gates`를 쓰고 수를 적는다 | `grid.family_f_rule` |
 | **R4-A2 안 c** | 잡음 S-1~S-6과 L1 게이트의 항목 값은 경로 2가 `r79_sensor_judge.py judge`·`judge-merged … --s4-late-loc`를 직접 실행해 얻는다. 출력은 `--judge-dir`에 쓴다. 조건 1(`git log f46b5ab..GIT_AT_START -- r79_sensor_judge.py` 0커밋, 아니면 S-11)을 확인하고 도구 sha256을 적는다. 경로 1 출력은 읽지 않는다 | `noise.run_judge`, `cmd_noise` |
 | R3-E3 재집계, R4-A2 조건 4 | 판정기의 항목 행(`runs[].rows.S-1…S-6`)으로 줄 등급을 경로 2가 다시 만든다. S-1·S-2·S-3·S-5·S-6은 `ok`, S-4는 하위 항목(`fail_misfire_new`, `miss`, `recontact_new` 실패, `loc_minus_off_s` > T_lim이면 경로 2의 419.8 재계산)으로 본다. 판정기의 `pass`·표·결론은 쓰지 않고, 다른 줄 수만 적는다 | `noise.line_grade`, `noise.grade_set` |
-| **R4-B2** | 419.8 조건 5: 첫 DONE = `base.t_done_s`(None = DONE 없음), 최종 LOC = `base.t_loc_final_s`. `base.phase_path`의 첫 `done`과 다르면 S-11 | `noise.late_loc_conditions` |
+| R4-B2 → **rev7 R7-2** | 419.8 조건 5: 첫 DONE은 `base` 모양별(위 "rev7 반영"), 최종 LOC = `base.t_loc_final_s`(없으면 `r79.t_loc_s`). 조건 5 = DONE 없음 ∨ 최종 LOC < 첫 DONE(엄격, rev3 Q-12) | `noise.first_done`, `noise.late_loc_conditions` |
 | **R4-B3** | L1 게이트 네 개수를 실행 기록에서 센 값과 판정기 출력(`errors`, `unmatched`, `settings_mismatch`, `reference[].false_loc`)을 함께 적는다. 다르면 S-13(판정 불가) | `noise.l1_gate`, `noise.l1_gate_judge` |
 | v5 10 L2·L3, rev3 | S1 전방 제외, CP 두 근(> 3 %면 H-10), L3 기록(실패 수, CP, 대체 행 수, n_late) | `noise.cmd_noise` |
 | 개정 6 9 | seedext: 판정기 입력 = seedext + 잡음 파일의 같은 사례 L1(경로 2 폴더에 씀). k/25, CP, Fisher 단측, 문구 두 가지. 시드 0~4 해시(H-15) | `noise.seedext_with_l1`, `noise.seedext_record`, `noise.seedext` |
@@ -93,6 +117,8 @@ $c = 'C:\ProgramData\miniforge3\Scripts\conda.exe'
   - R5-C3 입력으로 바꾼 뒤에도 seedext 재집계는 같다(`ref|J2|top|Fs0` VB 16/25 대 V0 1/25, slope 3/25 대 0/25).
   - R5-E 기록: `r79_sensor_screen.py`는 `f46b5ab..HEAD` 사이 15줄 추가가 있다. 나머지 세 파일은 차이가 없다. `r79_L3L4_final.py`도 차이가 없다. rev5가 적은 `cf88ea8`이 이 브랜치의 조상이 아니기 때문이다(확인 필요 Q-R11).
 
+- rev7 판 확인(2026-11-13, 판정 아님): `noise.first_done`을 저장 r79 기록 5개(`noise_vb`·`noise_v0`의 L1L2L3, `seedext` VB·V0, `dg3_v4_on`)의 모든 `base` 3,241개에 적용했다. `t_done_s` 모양 2,251 + `timeline` 모양 990, S-11 0. DONE 없음 4개는 모두 `r79_V0_L1L2L3`의 fault 끝 줄(None)이다. rev7 R7-2 근거 사실(DONE 없음 4개 = `r79_V0_L1L2L3` fault)과 맞는다. 스크립트는 scratchpad에 두었고 저장하지 않는다.
+
 ## 확인 필요
 
 | # | 내용 | 처리 |
@@ -105,7 +131,8 @@ $c = 'C:\ProgramData\miniforge3\Scripts\conda.exe'
 ## 독립성 공개 (436.8 9.2)
 
 - 규칙:
-  - 436.8 원판·rev1·rev2 전체, rev3(머리·R3-1·C·E·F·G1·G10·9), rev4(머리·R4-0·A·B·9).
+  - 436.8 원판·rev1·rev2 전체, rev3(머리·R3-1·C·E·F·G1·G10·9), rev4(머리·R4-0·A·B·9), rev5·rev6(해당 절), rev7 전체(2026-11-13, R7-2·R7-7 반영, 다른 절은 해당 없음 확인).
+  - rev7 반영 때 경로 1 코드(`04_scripts/04_hydraulic/coupled/*_4368.py`, `judge4368_common.py`, `resume4368_judge.py`, `chrono_rows_judge_4368.py`, `README_judges_4368.md`)와 경로 1 출력은 열지 않았다. 기록 필드 이름·형식은 rev7 R7-2 원문만 근거로 썼다.
   - v5 기준 원판과 개정 1~11의 해당 절, `m1_criteria.md` 38~40행.
   - 명세 342.1~342.3, 405~407.1, 419.8·419.8.1, 423.1·423.4, 11025·11980행.
 - 원 규칙이 지정한 판정 도구 `r79_sensor_judge.py`(R4-A2 안 c, 경로 2가 실행):
