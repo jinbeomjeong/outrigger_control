@@ -27,6 +27,8 @@ import p2_kinds as K  # noqa: E402
 import p2_rules as R  # noqa: E402
 
 W = 380000.0
+GREF = "0123456789abcdef0123456789abcdef01234567"   # synthetic judgement git_at_start (rev11 R11-4)
+CAL = {"git": {"head": GREF, "clean": True, "dirty": []}}
 REPO = p2_chrono.find_repo(HERE)
 PARAMS = C.load_params(REPO)
 FMIN = PARAMS["F_min_N"]
@@ -86,7 +88,7 @@ def write_scm(folder: Path, sp: dict):
         "p3b": {"weight_N": W}, "mass_scale": {"judgement_weights": {"weight_N": W}},
         "s9_rows": [{"t_s": float(x), "rut_clearance_m": sp["rut"]} for x in t10],
         "c2_soil": {"soil_mode_t_s": None, "mode_starts": []},
-        "controller_meta": {"liftoff_approach_slow": {"settings": {}, "start_s": sp["las_start"]},
+        "controller_meta": {"liftoff_approach_slow": {"settings": {"enable": True}, "start_s": sp["las_start"]},
                             "slope_clearance_margin": {"order_gate": {"enabled": True, "decisions": sp["decisions"]},
                                                        "settings": {"flat_soil_margin_order_gate": True}}},
         "c2_setup": {"k1_order_gate": "preset", "k1_order_gate_effective": True, "expect_controller": {"ok": True}},
@@ -493,6 +495,61 @@ def t_rev9(tmp, sp):
           and RR.LS_SETTINGS == ("LS1", "LS2", "LS3", "LS4"))
 
 
+def t_rev11(tmp, sp):
+    """436.8 rev11 R11-4 (commit identity incl. open loop) and R11-1 (Chrono expected switches)."""
+    res_ok = {"code_state": {"git_at_start": {"head": GREF, "clean": True}}}
+    ci = K.commit_item("C-3", {"code_at_launch": CAL}, res_ok, GREF[:7])
+    check("R11-4 level row: code_at_launch head and code_state head = git_at_start (7-digit) -> pass",
+          ci["verdict"] == "pass" and "stop" not in ci and ci["code_state_compared"] is True, ci)
+    ci = K.commit_item("C-6C7", {"code_at_launch": CAL}, {}, GREF)
+    check("R11-4 open-loop row with code_at_launch = git_at_start -> pass (code_state not compared)",
+          ci["verdict"] == "pass" and ci["open_loop"] and ci["code_state_compared"] is False, ci)
+    ci = K.commit_item("C-6C7", {}, {}, GREF)
+    check("R11-4 open-loop row without code_at_launch -> S-12", ci.get("stop", "").startswith("S-12")
+          and "missing" in ci["stop"], ci)
+    other = {"git": {"head": "f" * 40, "clean": True}}
+    ci = K.commit_item("C-1", {"code_at_launch": other}, res_ok, GREF)
+    check("R11-4 code_at_launch head != git_at_start -> S-12", ci.get("stop", "").startswith("S-12"), ci)
+    ci = K.commit_item("C-5", {"code_at_launch": CAL}, {"code_state": {"git_at_start": {"head": "e" * 40}}}, GREF)
+    check("R11-4 level / L2b row: result.json code_state.git_at_start differs -> S-12",
+          ci.get("stop", "").startswith("S-12") and "code_state" in ci["stop"], ci)
+    ci = K.commit_item("C-1", {"code_at_launch": CAL}, {}, GREF)
+    check("R11-4 closed-loop row without code_state record -> code_at_launch only ('that record exists')",
+          ci["verdict"] == "pass" and ci["code_state_compared"] is False, ci)
+    ci = K.commit_item("C-1", {"code_at_launch": CAL}, res_ok, None)
+    check("R11-4 no judgement git_at_start -> S-12 (cannot show the commit)", "stop" in ci, ci)
+    try:
+        p2_chrono.git_ref_arg("xyz", required=True)
+        check("R11-4 --git-at-start not hex -> input error", False)
+    except C.InputError:
+        check("R11-4 --git-at-start not hex -> input error", True)
+    try:
+        p2_chrono.git_ref_arg(None, required=True)
+        check("R11-4 judge without --git-at-start -> input error", False)
+    except C.InputError:
+        check("R11-4 judge without --git-at-start -> input error", True)
+    d = write_scm(tmp / "r11_scm", copy.deepcopy(sp))
+    row = C.load_row(d, "scm", SCM_VB_ARGV)
+    items6, keys6 = {}, []
+    p2_chrono.augment_items("C-6C7", row, items6, keys6, {}, {}, GREF, commit=True)
+    check("R11-4 augment: open-loop bundle gets the commit item only (no R9-1 / J11)",
+          list(items6) == ["R11-4_commit"] and keys6 == ["R11-4_commit"]
+          and items6["R11-4_commit"].get("stop", "").startswith("S-12"), items6)
+    b = K.bundle_status([{"case": "ol", "status": C.row_status(items6, keys6), "judged_keys": keys6,
+                          "items": items6}], record_bundle=True)
+    check("R11-4 S-12 on an open-loop row -> record bundle stops (기록 불완전)",
+          b["status"] == "기록 불완전" and any("S-12" in x for x in b["stops"]), b["stops"])
+    # R11-1 Chrono rows: LAS-b enable by line kind
+    idn = K.identity_scm(row)
+    check("R11-1 Chrono row: LAS-b enable true expected -> identity pass", idn["verdict"] == "pass"
+          and idn["las_settings_enable_ok"], idn)
+    doff = _edit_result(d, tmp / "r11_scm_en", lambda r: r["controller_meta"]["liftoff_approach_slow"]
+                        ["settings"].update(enable=False))
+    idf = K.identity_scm(C.load_row(doff, "scm", SCM_VB_ARGV))
+    check("R11-1 on arm with LAS-b settings.enable false -> identity 판정 불가",
+          idf["verdict"] == "indeterminate" and "R11-1" in idf["reason"], idf)
+
+
 def t_rev8_record(rec_dir):
     """Short SCM record made by the runner at 7527fc3 (record only, not a path 1 output)."""
     if rec_dir is None:
@@ -705,6 +762,7 @@ def t_scm(tmp):
           and ido["r7_4_las_keys"]["absent_where_required"] == ["c2_setup.las_off"], ido)
     r20 = json.loads((d19 / "result.json").read_text(encoding="utf-8"))
     r20["c2_setup"]["las_off"] = True
+    r20["controller_meta"]["liftoff_approach_slow"]["settings"]["enable"] = False
     r20["c2_setup"]["k1_order_gate"] = "on"
     d20 = tmp / "c5off"
     shutil.copytree(d19, d20)
@@ -867,10 +925,8 @@ def t_seal(tmp):
     check("seal: rev9 listed, raw only, 4cf7843c (rev9 R9-8)",
           rel9 in R.RAW_ONLY and any(r == rel9 and w.startswith("4cf7843c") for r, w, role in R.SEALED))
     rel10 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev10.md"
-    check("seal: rev10 listed, raw only, 62a0bd8d, only rev10 wins (rev10 R10-3)",
-          rel10 in R.RAW_ONLY and any(r == rel10 and w.startswith("62a0bd8d") and "wins" in role
-                                      for r, w, role in R.SEALED)
-          and [r for r, w, role in R.SEALED if "wins" in role] == [rel10])
+    check("seal: rev10 listed, raw only, 62a0bd8d (rev10 R10-3)",
+          rel10 in R.RAW_ONLY and any(r == rel10 and w.startswith("62a0bd8d") for r, w, role in R.SEALED))
     check("seal: rev10 raw sha = code seal sha = .sha256 first token",
           {r["file"]: r["status"] for r in ok["sealed"]}[rel10] == "match"
           and R.sidecar_sha(repo / rel10) == next(w for r, w, _ in R.SEALED if r == rel10))
@@ -890,6 +946,30 @@ def t_seal(tmp):
     check("seal: rev10 file changed -> S-1 (mismatch)", not s10["ok"]
           and {r["file"]: r["status"] for r in s10["sealed"]}[rel10] == "mismatch")
     p10.write_bytes(keep10md)
+    rel11 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev11.md"
+    check("seal: rev11 listed, raw only, 9bac4524, only rev11 wins (rev11 R11-7)",
+          rel11 in R.RAW_ONLY and any(r == rel11 and w.startswith("9bac4524") and "wins" in role
+                                      for r, w, role in R.SEALED)
+          and [r for r, w, role in R.SEALED if "wins" in role] == [rel11])
+    check("seal: rev11 raw sha = code seal sha = .sha256 first token",
+          {r["file"]: r["status"] for r in ok["sealed"]}[rel11] == "match"
+          and R.sidecar_sha(repo / rel11) == next(w for r, w, _ in R.SEALED if r == rel11))
+    sc11 = repo / Path(rel11).with_suffix(".sha256")
+    keep11 = sc11.read_bytes()
+    sc11.write_text("c" * 64 + "  v5_resume_4368_rules_rev11.md\n", encoding="utf-8")
+    check("seal: rev11 .sha256 record differs -> S-1 (sidecar_mismatch)",
+          {r["file"]: r["status"] for r in R.seal_check(repo)["sealed"]}[rel11] == "sidecar_mismatch")
+    sc11.unlink()
+    check("seal: rev11 .sha256 record missing -> S-1",
+          {r["file"]: r["status"] for r in R.seal_check(repo)["sealed"]}[rel11] == "sidecar_missing")
+    sc11.write_bytes(keep11)
+    p11 = repo / rel11
+    keep11md = p11.read_bytes()
+    p11.write_bytes(keep11md.replace(b"\n", b"\r\n"))
+    s11 = R.seal_check(repo)
+    check("seal: rev11 CRLF copy -> S-1 (raw only)", not s11["ok"]
+          and {r["file"]: r["status"] for r in s11["sealed"]}[rel11] == "mismatch")
+    p11.write_bytes(keep11md)
     check("seal: rev9 raw sha = code seal sha = .sha256 first token",
           {r["file"]: r["status"] for r in ok["sealed"]}[rel9] == "match"
           and R.sidecar_sha(repo / rel9) == next(w for r, w, _ in R.SEALED if r == rel9))
@@ -941,12 +1021,13 @@ def t_cli(tmp):
     sp = scm_spec()
     write_scm(bdir / "rowA", sp)
     write_scm(bdir / "rowB", sp)
-    batch = {"cases": [{"case": "rowA", "argv": ["python", "run_S9.py", "level"], "criteria_id": "C-3"},
-                       {"case": "rowB", "argv": ["python", "run_S9.py", "level"], "criteria_id": "C-3"},
+    batch = {"cases": [{"case": "rowA", "argv": ["python", "run_S9.py", "level"], "criteria_id": "C-3", "code_at_launch": CAL},
+                       {"case": "rowB", "argv": ["python", "run_S9.py", "level"], "criteria_id": "C-3",
+                        "code_at_launch": CAL},
                        {"case": "gs", "argv": ["run_S9.py"], "criteria_id": "C-3", "r4368": {"role": "gs"}}]}
     (bdir / "batch.json").write_text(json.dumps(batch), encoding="utf-8")
     out = tmp / "out_c3.json"
-    proc = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-3",
+    proc = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-3", "--git-at-start", GREF[:7],
                            "--batch", str(bdir / "batch.json"), "--out", str(out)],
                           capture_output=True, text=True, encoding="utf-8")
     last = json.loads(proc.stdout.strip().splitlines()[-1])
@@ -954,13 +1035,13 @@ def t_cli(tmp):
     check("CLI C-3 synthetic: exit 0, 2 rows, 통과, out_sha256 = file sha",
           proc.returncode == 0 and last.get("rows") == 2 and last.get("status") == "통과"
           and last.get("out_sha256") == hashlib.sha256(out.read_bytes()).hexdigest(), proc.stdout[-500:] + proc.stderr[-500:])
-    proc2 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-1",
+    proc2 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-1", "--git-at-start", GREF[:7],
                             "--batch", str(bdir / "batch.json"), "--out", str(tmp / "o2.json"),
                             "--row-dir", "x=y"], capture_output=True, text=True, encoding="utf-8")
     last2 = json.loads(proc2.stdout.strip().splitlines()[-1])
     check("CLI C-1 on a batch with no C-1 rows -> S-15, exit 1", proc2.returncode == 1
           and any("S-15" in s for s in last2.get("stops", [])), proc2.stdout[-300:])
-    proc3 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-3",
+    proc3 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-3", "--git-at-start", GREF[:7],
                             "--batch", str(tmp / "missing.json"), "--out", str(tmp / "o3.json")],
                            capture_output=True, text=True, encoding="utf-8")
     check("CLI missing batch -> exit 3 or 2 (input)", proc3.returncode in (2, 3), proc3.returncode)
@@ -979,6 +1060,11 @@ def t_cli(tmp):
     check("CLI gs-load rev9 R9-8 items: S-2 0, law_locked key absent counted, rev9 seal match",
           gi.get("r9_1_s2_rows") == 0 and gi.get("r9_2_rows_per_item", {}).get("key") == 1
           and gi.get("rev9_seal") == "match" and gi.get("r9_6_input_absent_rows") == 1, gi)
+    g11 = g4.get("rev11_gs_items") or {}
+    check("CLI gs-load rev11 items: no --git-at-start, G-S row without code_at_launch -> counted missing,"
+          " no grades written (R11-5), rev11 seal match",
+          g11.get("r11_4_code_at_launch_missing_rows") == 1 and g11.get("r11_5_grades_written") is False
+          and g11.get("rev11_seal") == "match" and g11.get("git_at_start") is None, g11)
     g10 = g4.get("rev10_R10_2_gs_items") or {}
     check("CLI gs-load rev10 R10-2 items: unstamped folder without batch key -> batch name unknown, S-11 row 1,"
           " rev10 seal match",
@@ -999,7 +1085,7 @@ def t_cli(tmp):
     rb["c2_setup"]["expect_controller"]["ok"] = False
     (bko / "rowB" / "result.json").write_text(json.dumps(rb), encoding="utf-8")
     (bko / "batch.json").write_text(json.dumps({"cases": batch["cases"][:2]}), encoding="utf-8")
-    proc5 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-3",
+    proc5 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-3", "--git-at-start", GREF[:7],
                             "--batch", str(bko / "batch.json"), "--out", str(tmp / "o5.json")],
                            capture_output=True, text=True, encoding="utf-8")
     last5 = json.loads(proc5.stdout.strip().splitlines()[-1])
@@ -1013,14 +1099,15 @@ def t_cli(tmp):
     write_scm(b5 / "Y", sp)
     argv5 = ["python", "run_S9.py", "level", "--extend-start-tracked", "--expect-controller", "final_C4G2_P3_LAS_K1"]
     (b5 / "batch.json").write_text(json.dumps({"batch": "P2C5", "cases": [
-        {"case": "X_LS1", "argv": argv5, "criteria_id": "C-5", "v5_setting": "LS1"},
-        {"case": "Y", "argv": argv5, "criteria_id": "C-5", "v5_setting": "VB"}]}), encoding="utf-8")
+        {"case": "X_LS1", "argv": argv5, "criteria_id": "C-5", "v5_setting": "LS1", "code_at_launch": CAL},
+        {"case": "Y", "argv": argv5, "criteria_id": "C-5", "v5_setting": "VB", "code_at_launch": CAL}]}),
+        encoding="utf-8")
     man_p = tmp / "manifest_p2c5.json"
     man_p.write_text(json.dumps({"batches": {"P2C5": {"rows": [{"case": "X_LS1", "v5_setting": "LS1"},
                                                                 {"case": "Y", "v5_setting": "LS4"}]}}}),
                      encoding="utf-8")
     out6 = tmp / "o6.json"
-    proc6 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-5",
+    proc6 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-5", "--git-at-start", GREF[:7],
                             "--batch", str(b5 / "batch.json"), "--manifest", str(man_p), "--out", str(out6)],
                            capture_output=True, text=True, encoding="utf-8")
     o6 = json.loads(out6.read_text(encoding="utf-8")) if out6.exists() else {}
@@ -1029,7 +1116,7 @@ def t_cli(tmp):
           proc6.returncode == 1 and ls6 == {"ls_rows": 1, "not_ls_rows": 0, "not_judgeable_rows": 1}
           and sum("R9-5" in s for s in (o6.get("bundle_result") or {}).get("stops", [])) == 2,
           (proc6.returncode, ls6, proc6.stdout[-300:] + proc6.stderr[-300:]))
-    proc7 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-5",
+    proc7 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "judge", "--bundle", "C-5", "--git-at-start", GREF[:7],
                             "--batch", str(b5 / "batch.json"), "--manifest", str(tmp / "no_manifest.json"),
                             "--out", str(tmp / "o7.json")], capture_output=True, text=True, encoding="utf-8")
     check("CLI C-5 without the manifest -> input error, exit 2", proc7.returncode == 2, proc7.stdout[-300:])
@@ -1090,6 +1177,7 @@ def main():
     t_scm(tmp)
     t_rev8_j11(tmp, scm_spec())
     t_rev9(tmp, scm_spec())
+    t_rev11(tmp, scm_spec())
     t_rev8_record(a.lawlock_record)
     t_l2b(tmp)
     t_c67(tmp)

@@ -3,8 +3,9 @@
 Usage (dynamics-dev, activated):
   conda run -n dynamics-dev python -I -B p2_chrono.py seal [--repo R]
   conda run -n dynamics-dev python -I -B p2_chrono.py judge --bundle C-1 --batch <batch.json> [--batch ...]
-        [--results-root <repo>/07_results] [--row-dir CASE=PATH ...] [--manifest M] --out <out.json> [--repo R]
-  conda run -n dynamics-dev python -I -B p2_chrono.py gs-load --batch <G-S batch.json> --out <out.json>
+        --git-at-start <judgement git_at_start> [--results-root <repo>/07_results] [--row-dir CASE=PATH ...]
+        [--manifest M] --out <out.json> [--repo R]
+  conda run -n dynamics-dev python -I -B p2_chrono.py gs-load --batch <G-S batch.json> [--git-at-start C] --out <out.json>
         (read-only loader run on G-S rows: folders, input sha, absent inputs, exceptions; no judgement)
 
 Exit: 0 bundle 통과 / 기록 완료, 1 미달 / 판정 불가 / 기록 불완전 / stop, 2 input or seal error,
@@ -228,9 +229,28 @@ def load_manifest(args, repo: Path, required: bool):
     return man, str(p), hashlib.sha256(data).hexdigest()
 
 
-def augment_items(bundle: str, row, items: dict, keys: list):
-    """rev9 items common to the closed-loop Chrono bundles: R9-1 expect check (S-2 stop) for every
-    bundle but C-6C7 (open loop, no controller); R9-6 J11 record for every bundle but C-5 / C-6C7."""
+GIT_REF_RE = re.compile(r"^[0-9a-fA-F]{7,40}$")
+
+
+def git_ref_arg(v, required: bool):
+    """Judgement `git_at_start` (rev11 R11-4 2): 7..40 hex digits."""
+    if v is None:
+        if required:
+            raise C.InputError("--git-at-start missing (rev11 R11-4: the judgement git_at_start is the reference)")
+        return None
+    if not GIT_REF_RE.match(v):
+        raise C.InputError(f"--git-at-start {v!r} is not 7..40 hex digits")
+    return v.lower()
+
+
+def augment_items(bundle: str, row, items: dict, keys: list, case: dict | None = None,
+                  res: dict | None = None, git_ref: str | None = None, commit: bool = False):
+    """Items common to the Chrono bundles. rev11 R11-4 commit identity (S-12 stop) for every bundle,
+    open loop C-6C7 included (when `commit`); rev9 R9-1 expect check (S-2 stop) for every bundle but
+    C-6C7 (open loop, no controller); rev9 R9-6 J11 record for every bundle but C-5 / C-6C7."""
+    if commit:
+        items["R11-4_commit"] = K.commit_item(bundle, case or {}, res or {}, git_ref)
+        keys.append("R11-4_commit")
     if bundle == "C-6C7":
         return
     items["R9-1_expect_controller"] = K.expect_item(row)
@@ -275,6 +295,7 @@ def judge(args) -> int:
     results_root = Path(args.results_root) if args.results_root else repo / "07_results"
     overrides = dict(x.split("=", 1) for x in (args.row_dir or []))
     manifest, man_path, man_sha = load_manifest(args, repo, required=(args.bundle == "C-5"))
+    git_ref = git_ref_arg(args.git_at_start, required=True)
     rows = []
     for bp in args.batch:
         bp = Path(bp)
@@ -290,7 +311,7 @@ def judge(args) -> int:
             row = loader(d, eng, case["argv"]) if loader else C.load_row(d, eng, case["argv"])
             kind = mod.kind_of(case)
             items, keys, notes, record = mod.judge_row(row, case, kind, params)
-            augment_items(args.bundle, row, items, keys)
+            augment_items(args.bundle, row, items, keys, case, _result_of(d), git_ref, commit=True)
             st = C.row_status(items, keys)
             if record:
                 st = "기록 완료" if st != "판정 불가" else "기록 불완전"
@@ -381,6 +402,34 @@ def _r9_record(bundle, row, items) -> dict:
     return out
 
 
+def _r11_record(it) -> dict | None:
+    """rev11 R11-4 G-S record per row (heads and the S-12 class only, no verdict)."""
+    if not isinstance(it, dict):
+        return None
+    return {"git_at_start": it.get("git_at_start"), "code_at_launch_head": it.get("code_at_launch_head"),
+            "code_at_launch_clean": it.get("code_at_launch_clean"), "code_state_head": it.get("code_state_head"),
+            "code_state_compared": it.get("code_state_compared"), "open_loop": it.get("open_loop"),
+            "problems": it.get("problems"),
+            # without --git-at-start only a missing code_at_launch head can be counted
+            "s12": ("stop" in it) if it.get("git_at_start") else it.get("code_at_launch_head") is None}
+
+
+def _r11_summary(rows: list, seal: dict, git_ref) -> dict:
+    """rev11 G-S items: R11-4 S-12 rows (missing / different commit records, open loop counted apart),
+    R11-5 (path 2 gs-load writes no grades), rev11 seal check."""
+    recs = [r.get("r11_4") for r in rows if r.get("r11_4")]
+    rev11 = next((s for s in seal.get("sealed", []) if s["file"].endswith("v5_resume_4368_rules_rev11.md")), None)
+    return {"git_at_start": git_ref,
+            "r11_4_rows": len(recs),
+            "r11_4_s12_rows": sum(1 for x in recs if x["s12"]),
+            "r11_4_open_loop_rows": sum(1 for x in recs if x["open_loop"]),
+            "r11_4_open_loop_s12_rows": sum(1 for x in recs if x["open_loop"] and x["s12"]),
+            "r11_4_code_at_launch_missing_rows": sum(1 for x in recs if x["code_at_launch_head"] is None),
+            "r11_4_code_state_compared_rows": sum(1 for x in recs if x["code_state_compared"]),
+            "r11_5_grades_written": False,
+            "rev11_seal": None if rev11 is None else rev11.get("status")}
+
+
 def _r10_record(case: dict, bctx: dict) -> dict:
     """rev10 R10-2 G-S record per Chrono row (every G-S row, all bundles): full batch name, rows of the
     case in the manifest batch and in batch.json cases[], R10-1b labels; `s11` = any blocking label."""
@@ -451,6 +500,7 @@ def gs_load(args) -> int:
     results_root = Path(args.results_root) if args.results_root else repo / "07_results"
     overrides = dict(x.split("=", 1) for x in (args.row_dir or []))
     manifest, man_path, man_sha = load_manifest(args, repo, required=True)   # rev10 R10-1b / R10-2: G-S checks every Chrono row
+    git_ref = git_ref_arg(getattr(args, "git_at_start", None), required=False)
     rows, n_err = [], 0
     for bp in args.batch:
         bp = Path(bp)
@@ -473,7 +523,7 @@ def gs_load(args) -> int:
                 row = loader(d, eng, case["argv"]) if loader else C.load_row(d, eng, case["argv"])
                 kind = mod.kind_of(case)
                 items, keys, notes, record = mod.judge_row(row, case, kind, params)
-                augment_items(bundle, row, items, keys)
+                augment_items(bundle, row, items, keys, case, _result_of(d), git_ref, commit=True)
                 res = _result_of(d)
                 ident = items.get("identity") if isinstance(items.get("identity"), dict) else {}
                 plc = placement_record(case, res, b)
@@ -500,6 +550,7 @@ def gs_load(args) -> int:
                                               if hasattr(row, "law_locked_problems") else None),
                            jp3_scope=_jp3_scope(items.get("J-P3")),
                            r9=_r9_record(bundle, row, items),
+                           r11_4=_r11_record(items.get("R11-4_commit")),
                            folder_notes=plc["notes"], error=None)
             except Exception as e:  # noqa: BLE001
                 n_err += 1
@@ -509,7 +560,8 @@ def gs_load(args) -> int:
            "tool_sha256": tsha, "tool_files_sha256": per, "seal": seal,
            "manifest": {"path": man_path, "sha256": man_sha}, "rows": rows,
            "n_rows": len(rows), "n_errors": n_err, "rev9_R9_8_gs_items": _r9_summary(rows, seal),
-           "rev10_R10_2_gs_items": _r10_summary(rows, seal)}
+           "rev10_R10_2_gs_items": _r10_summary(rows, seal),
+           "rev11_gs_items": _r11_summary(rows, seal, git_ref)}
     out_p = Path(args.out)
     out_p.parent.mkdir(parents=True, exist_ok=True)
     data = json.dumps(C.jsonable(out), ensure_ascii=False, indent=1).encode("utf-8")
@@ -533,6 +585,7 @@ def main(argv=None) -> int:
     j.add_argument("--results-root")
     j.add_argument("--row-dir", action="append")
     j.add_argument("--aux", action="append", help="NAME=PATH extra input for a bundle (C-5: t45=<t45_path2.json>)")
+    j.add_argument("--git-at-start", help="judgement git_at_start commit (7..40 hex, required, rev11 R11-4)")
     j.add_argument("--manifest", help="chrono_rows_manifest.json (default: repo v5_resume_4368/, rev9 R9-4)")
     j.add_argument("--out", required=True)
     j.add_argument("--repo")
@@ -540,6 +593,7 @@ def main(argv=None) -> int:
     g.add_argument("--batch", action="append", required=True)
     g.add_argument("--results-root")
     g.add_argument("--row-dir", action="append")
+    g.add_argument("--git-at-start", help="judgement git_at_start commit (optional; rev11 R11-4 S-12 record)")
     g.add_argument("--manifest", help="chrono_rows_manifest.json (default: repo v5_resume_4368/, rev9 R9-4)")
     g.add_argument("--out", required=True)
     g.add_argument("--repo")
