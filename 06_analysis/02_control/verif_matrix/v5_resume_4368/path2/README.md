@@ -239,7 +239,7 @@ rev3 절과 다른 곳은 아래가 맞다. 다섯 도구 모두 rev4 sha도 확
 | `test_p2_v5j.py` | `d52ca6adb89f77f6bd952bf6ff03f966f9cd7d0a05486af7e044ee700fb0a418` | 그대로(16개) |
 
 - 자체 시험은 다섯 파일 112개(앞 판 103개)다. pytest 개수는 매개변수화한 시험을 하나씩 센다.
-- `p2_4368.py`가 바뀌었으므로 이 파일을 sha로 import하는 `../path2_v5c/p2v5c_common.py`(`P2_CORE_SHA` `dc631509…`)는 새 sha로 고칠 때까지 `P2-SHA`(종료 2)로 멈춘다. 그 폴더는 이 도구 작성자 소유가 아니라 고치지 않았다.
+- `p2_4368.py`가 바뀌었으므로 이 파일을 sha로 import하는 `../path2_v5c/p2v5c_common.py`(`P2_CORE_SHA` `dc631509…`)는 새 sha로 고칠 때까지 `P2-SHA`(종료 2)로 멈춘다. 그 폴더는 이 도구 작성자 소유가 아니라 고치지 않았다. (이력: 현재 값은 rev10 절의 도구 sha 표와 `path2_v5c`의 `P2_CORE_SHA`가 맞다)
 
 ## rev8 반영 (`v5_resume_4368_rules_rev8.md`, sha256 `3ecafaaf…`, 2026-11-13)
 
@@ -275,7 +275,7 @@ rev3 절과 다른 곳은 아래가 맞다. 다섯 도구 모두 rev4 sha도 확
 | `test_p2_v5j.py` | `d52ca6adb89f77f6bd952bf6ff03f966f9cd7d0a05486af7e044ee700fb0a418` | 그대로(16개) |
 
 - 자체 시험은 다섯 파일 128개(앞 판 112개)다. 더한 것: rev8 봉인 확인과 불일치 S-1, `law_locked` 형식 6가지·정상·1 ms 간격, G-S 모드 3가지, 본 실행 C-5 판정 불가, R8-2 J-P3 범위·요청 기록 대조, `v5_hydraulics` 없는 SCM 행, R8-1b 점 키.
-- `p2_4368.py`가 바뀌었으므로 `../path2_v5c/p2v5c_common.py`의 `P2_CORE_SHA`를 `bebed9f1…`로 고쳐야 한다(R8-4, 그 폴더 작성자 몫). `p2_v5j.py`는 바뀌지 않았다.
+- `p2_4368.py`가 바뀌었으므로 `../path2_v5c/p2v5c_common.py`의 `P2_CORE_SHA`를 `bebed9f1…`로 고쳐야 한다(R8-4, 그 폴더 작성자 몫). `p2_v5j.py`는 바뀌지 않았다. (이력: 현재 값은 rev10 절의 도구 sha 표와 `path2_v5c`의 `P2_CORE_SHA`가 맞다)
 
 ## rev9 반영 (`v5_resume_4368_rules_rev9.md`, sha256 `4cf7843c…`, 2026-11-13)
 

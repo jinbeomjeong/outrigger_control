@@ -154,7 +154,7 @@ $d = "<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2_chrono"
 | rev8 절 | 이유 |
 |---|---|
 | R8-1 (T4h 없는 r79·격자 태그 재계산 대조) | 하네스 r79·격자 기록의 최상위 `controller_tag` 대조이고 R8-1d가 "대조는 경로 1 도구가 한다"고 정했다. Chrono 행 태그는 그대로 argv `--expect-controller`와 확인 `ok`(R8-2도 같은 읽기)로 본다 |
-| R8-4 순서 중 `path2_v5c`의 `P2_CORE_SHA` | 그 값은 `path2/p2_4368.py`(dynamics-expert 경로 2) 파일 sha다. 위치는 최종 Y 후보 `y4368`의 `path2_v5c/p2v5c_common.py` 56·57행(`P2_V5J_SHA`·`P2_CORE_SHA`)이고, rev9판에서 `P2_CORE_SHA`가 `7d764a80…`로 갱신됐다(2026-11-13 grep 확인). 이 README의 앞 판은 "14·43행"이라고 적었는데, 14행은 docstring의 두 이름 언급이고 43행은 갱신 전 판(이 브랜치·master는 아직 42·43행)의 위치라 최종 Y 기준으로는 틀렸다. 이 도구의 파일이 아니므로 이 작성자가 바꿀 것은 없다. 갱신은 `path2`·`path2_v5c` 작성자 몫이다 |
+| R8-4 순서 중 `path2_v5c`의 `P2_CORE_SHA` | 그 값은 `path2/p2_4368.py`(dynamics-expert 경로 2) 파일 sha다. 위치는 최종 Y 후보 `y4368`의 `path2_v5c/p2v5c_common.py`의 상수 `P2_V5J_SHA`·`P2_CORE_SHA`이고(줄 번호는 개정마다 바뀌므로 이름으로 적는다), 현재 값은 rev10판 `6e297ea3…`다. 이 README의 앞 판은 "14·43행"이라고 적었는데, 14행은 docstring의 두 이름 언급이고 43행은 갱신 전 판(이 브랜치·master는 아직 42·43행)의 위치라 최종 Y 기준으로는 틀렸다. 이 도구의 파일이 아니므로 이 작성자가 바꿀 것은 없다. 갱신은 `path2`·`path2_v5c` 작성자 몫이다 |
 | R8-4 `git_at_start`·G-S 재실행 | 메인 세션 절차. 이 도구는 Y에서 `gs-load`로 `law_locked_record`·`jp3_scope`를 내는 것까지다 |
 | 숫자 문턱·등급 | rev8은 새 숫자를 쓰지 않는다(머리 10행). R8-3a "1 ms"의 형식 허용 10⁻⁶ s는 판정 문턱이 아닌 도구 읽기다(6절 R-4) |
 | L2b J11 키 없음 | R8-3 정의 4 "L2b 행은 … rev6 R6-B7 그대로". 결측 시 멈춤 문장은 SCM 절에만 있어 L2b는 그대로 두었다(rev9 R9-5가 대체: 지금은 SCM과 같이 판정 불가 + 멈춤) |
