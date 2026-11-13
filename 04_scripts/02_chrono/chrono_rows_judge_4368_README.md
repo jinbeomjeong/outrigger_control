@@ -24,14 +24,14 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 - `--row`: 행 폴더를 직접 준다(배치 정보 없이). C-3 두 행은 이름으로 알아본다.
 - `--assume C-n=값`: 민감도 확인용이다. 출력에 `deviates_from_rev6`가 붙고, 그 출력은 경로 1 결과로 쓰지 않는다.
 - 엔진 구분: `step_series.npz`가 있으면 SCM(run_S9), `pads.npz`에 `crawler_normal_N`이 있으면 L2b, 없으면 L1-R, `series.npz`와 `p3a`가 있으면 열린 루프(건너뜀)다. `batch.json` `criteria_id`가 C-6·C-7·C-7a·C-7b여도 건너뛴다.
-- 읽는 키: V0 행(SCM P3b_J2 시드 행, O-C5 Kc1 V0)과 L1-R 행에 없는 `extend_start_rule`·`extend_bound_check`·`v5_hydraulics.controller_tag`는 읽지 않는다(태그 확인은 이 도구 몫이 아니다).
+- 읽는 키: V0 행(SCM P3b_J2 시드 행, O-C5 Kc1 V0)과 L1-R 행에 없는 `extend_start_rule`·`extend_bound_check`·`v5_hydraulics.controller_tag`는 읽지 않는다. rev8 R8-2(아래 7절)부터 ③ 판별은 행 태그(`--expect-controller`)로 하므로, ③이 아닌 행에서는 이 키들이 없어도 결측으로 세지 않는다.
 
 ## 2. 종료 코드와 출력
 
 | 코드 | 뜻 |
 |---|---|
 | 0 | 끝남, 멈춤 없음 |
-| 1 | 확인 실패(봉인 불일치, 시각 원점·S-11 문제) 또는 멈춤(R40-2 보류 미해제) |
+| 1 | 확인 실패(봉인 불일치, 시각 원점·S-11 문제) 또는 멈춤(R40-2 보류 미해제, rev8 S-2·J-P3 H-7·J11 멈춤, 7절) |
 | 2 | 입력 없음·잘못됨(행 폴더, `result.json`, 규칙 파일, YAML, `--assume` 값) |
 | 3 | 내부 오류(추적은 stderr) |
 
@@ -78,7 +78,7 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 
 ## 4. 한계 (판정서 공개용)
 
-- 열린 잠금 구간의 J11 창 끝·n_late(R6-B7)는 C-5 J11 재집계 몫이다. 이 판은 대체 다리 집합과 열린 구간 다리만 낸다.
+- 열린 잠금 구간의 J11 창 끝·n_late(R6-B7)는 v3부터 `J11_R8-3` 항목이 계산한다(7절). 사건에만 있는 다리의 늦은 열린 구간은 `lock_window_alignment`의 `late` 목록(최대 50행)에서 센다. 목록이 잘려 셀 수 없으면 판정 불가다.
 - D-32 사건 행(J-5·U58 창)은 판정 불가로 둔다. 제어 주기 사이의 압력 첨두는 보이지 않는다(R6-B5 한계).
 - R40-2 보류 해제(7155행, L1 짝 자릿수 비교)는 값만 내고 사람이 판정한다(멈춤, 종료 1).
 
@@ -96,7 +96,24 @@ python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py seals [--rules-
 
 ## 6. 봉인 대조 (요건 4)
 
-원판·rev1~rev6의 md sha256을 도구 안 상수 `RULES_SEALS`와 각 `.sha256` 첫 토큰에 모두 대조한다. 하나라도 다르면 종료 1, 파일이 없으면 종료 2다. rev6 sha256 = `809e5639…`.
+원판·rev1~rev8의 md sha256을 도구 안 상수 `RULES_SEALS`와 각 `.sha256` 첫 토큰에 모두 대조한다. 하나라도 다르면 종료 1, 파일이 없으면 종료 2다. rev6 sha256 = `809e5639…`, rev7 = `e81f7d31…`, rev8 = `3ecafaaf…`.
+
+## 7. rev8 반영 (v3, python-expert 2026-11-13)
+
+- **J-P3 적용 범위(R8-2, `j_p3_block`, 항목 `J-P3_R8-2`)**: 열린 루프가 아닌 모든 행에 적는다.
+  - 행 태그 = `batch.json` argv의 `--expect-controller` 값(배치 정보가 없으면 SCM `result.json` `args.expect_controller`). 태그 확인(SCM `c2_setup.expect_controller.ok`, L2b·L1-R `expect_controller.ok`)이 참이 아니면 J-P3 `not_judgeable`.
+  - ③ 판별은 `v5_options.is_extend_start_tag(태그)`뿐이다. ③이 아니면 `not_applicable`(해당 없음).
+  - ③ 행: `controller_meta.two_pressure.settings.extend_start_rule`이 없으면 `not_judgeable`(원판 9.3), `tracked_bound`가 아니면 S-2. 같으면 개정 9 3.2 표(`extend_start_bound.j_p3_run_case`, 로드 판독 = `two_pressure.has_rod_sensor`, 헤드 전용 선언 없음)로 `hydraulics_record.extend_bound_check` `breach_reads` 합 0 = `pass`, ≥ 1 = H-7(멈춤), 기록 결함 = `setting_defect`(멈춤).
+  - 요청 기록 대조: argv의 `--extend-start-tracked` 유무(배치 정보가 없으면 SCM `args.extend_start_tracked`)와 `v5_hydraulics.hydraulic_options.extend_start_tracked`(키 없음 = 끔, 블록이 없으면 대조하지 않음)가 태그의 ③ 판별과 다르면 S-2(멈춤).
+- **J11(R8-3, `j11_block`, 항목 `J11_R8-3`)**: 개정 6 6절.
+  - 잠금 상태: SCM `step_series.npz` `law_locked`(시간축 `t_s`), L2b `pads.npz` `law_locked`(시간축 `t`). [N, 4] int8, 값 {−1, 0, 1}이 아니면 형식 오류. −1은 잠김으로 본다(`chrono_lock_window.lock_events_from_law_state`).
+  - 창 끝: `r8_series.npz` `t`·`issued_u`로 `lock_window_alignment.lock_window_alignment`(규칙 함수, 고치지 않음)가 다시 계산하고, 감시기 `fallback_lock_log`·`fallback_lock_current`와 10⁻¹² s로 대조한다(어긋나면 S-11, 멈춤).
+  - 대체 다리 = `fallback_lock_log` 다리 ∪ `WARN_ROD_PRESSURE_FALLBACK` 다리(R6-B7). 대체 다리 n_late = 로그·현재 구간과 맞은 늦은 구간 + 사건에만 있는 다리의 늦은 열린 구간. > 0이면 H-7(행 이름에 LS 설정이 있으면 L-e), 멈춤. 모든 다리 n_late·unjudged는 기록이다.
+  - 감시기에 잠금 구간이 없으면(로드 판독 없음 등) 대체 다리가 있을 때 `not_judgeable`, 없을 때 `not_computed`(R3-C7).
+  - 대상 행은 `criteria_id` = C-5다. C-5 행에서 잠금 상태 기록이 없거나 형식이 틀리면 `not_judgeable` + 멈춤(본 실행에서 묶음을 멈추고 묻는다). 다른 기준 행은 기록만 하고, 입력이 없으면 `not_applicable`이다. `--row`(기준 모름)는 `not_judgeable`로 적되 멈추지 않는다.
+  - G-S의 키 있음·형식 확인(S-11)은 `v5_resume_4368_chrono_rows.py gs-check`(`series_keys_missing`·`series_key_problems`)가 한다.
+- 묶음 요약 `rev8_counts`: J-P3 상태별 수(해당 없음 = `not_applicable`), R8-2 S-2 행 수, J11 상태별 수, 판정 불가 C-5 행 수. 마지막 줄 JSON에도 있다.
+- 2026-11-13 G-S `…_082117`(기록 추가 전)에 돌리면 C-5 SCM 행 셋이 J11 멈춤이다(R8-4가 예상한 결과). `7527fc3` 기록 행(3.6 s VB)은 J-P3 `pass`, J11 대체 다리 없음(`no_fallback_leg`)이다.
 
 ## 7. 시험
 

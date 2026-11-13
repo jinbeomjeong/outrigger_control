@@ -330,6 +330,7 @@ def test_rev1_and_rev2_seal_check(tmp_path, monkeypatch) -> None:
         judge.RULES_REV5_NAME,
         judge.RULES_REV6_NAME,
         judge.RULES_REV7_NAME,
+        judge.RULES_REV8_NAME,
     }
     assert judge.sealed_rules_check(tmp_path)["stop_S1"] is True
     for name, _ in judge.SEALED_REVISIONS:  # both sealed files copied, rev1 seal value wrong
@@ -1262,6 +1263,7 @@ def test_rev3_gs_hash_and_grid_fields(tmp_path) -> None:
         "inner": "x",
         judge.RECORD_KEY: block,
         "controller_tag": judge.TAG_V0,
+        "hydraulic_options": {},  # rev8 R8-1 recompute: ③ off (+ LAS-b, K1 of the block = V0)
         # the r79 base as written: a timeline (R4-B2 first DONE), no t_done_s / phase_path
         "base": {"commands_sha256": "a", "timeline": [[0.1, "check"], [38.5, "done"]]},
     }
@@ -1285,6 +1287,7 @@ def test_rev3_gs_hash_and_grid_fields(tmp_path) -> None:
                 "key": "screen|top|0.0|level|FL",
                 judge.RECORD_KEY: block,
                 "controller_tag": judge.TAG_P3,
+                "hydraulic_options": {"extend_start_tracked": True},  # rev8 R8-1 recompute: ③
                 "runs": [run],
             }
         ],

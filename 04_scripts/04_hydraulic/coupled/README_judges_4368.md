@@ -56,6 +56,7 @@ python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <r.json> --h
 3. 줄에 `판정 불가`가 있으면 묶음은 `판정 불가`다(원판 8.1 우선순위 판정 불가 > 미달 > 통과).
 4. L3 134 실패 수는 기록이다. L2 1줄은 H-8 L2 집계에 들어간다(`h8_noise_judge_4368`이 대체해 센다).
 - J-P3 로드 판독은 T4h `rod_pressure_Pa`로 보고, T4h가 없으면 구성 규칙(r79는 두 압력 판독 = 있음)으로 본다(R3-C8). 선언은 줄의 `head_only_declared`(r79는 거짓)다.
+- rev8 R8-2: ③ 판별은 줄의 `controller_tag`(`v5_options.is_extend_start_tag`)로만 한다. 태그가 ③이 아닌 줄은 J-P3가 없고(`not_applicable`) 묶음 S-2다(H-6 줄은 ③ 줄). ③ 줄에 `controller_settings["two_pressure.extend_start_rule"]`이 없으면 J-P3 `판정 불가`, `tracked_bound`가 아니면 기존대로 S-2다.
 
 ## rev6 반영 (R6-C1~C3)
 

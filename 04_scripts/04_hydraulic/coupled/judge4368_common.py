@@ -1,6 +1,6 @@
 """Shared parts of the 436.8 path 1 new judge versions (``*_4368.py``, rules rev5 R5-A1).
 
-Rules: ``v5_resume_4368_rules.md`` (sealed 9019b405) and its revisions rev1 .. rev7. Rev5 R5-A1
+Rules: ``v5_resume_4368_rules.md`` (sealed 9019b405) and its revisions rev1 .. rev8. Rev5 R5-A1
 makes the ``*_4368.py`` judges the path 1 of the harness bundles. Each new judge:
 
 1. implements the rev3 / rev4 definitions of its bundle,
@@ -60,9 +60,13 @@ SEALED_RULES = (
         "v5_resume_4368_rules_rev7.md",
         "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
     ),
+    (
+        "v5_resume_4368_rules_rev8.md",
+        "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
+    ),
 )
-"""The original and rev1 .. rev7, compared raw (rev2 R2-9: sealed rule files are ``-text``;
-rev7 R7-7: the path 1 tools check the rev7 seal)."""
+"""The original and rev1 .. rev8, compared raw (rev2 R2-9: sealed rule files are ``-text``;
+rev7 R7-7 / rev8 R8-4: the path 1 tools check the rev7 and rev8 seals)."""
 
 F_MIN_N = 9414.589
 """Rules 2 / rev3 R3-C4: YAML ``control.F_min_cylinder_N`` (9.415 kN is its rounded display)."""

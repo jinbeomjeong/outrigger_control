@@ -65,9 +65,17 @@ Rev7 (``v5_resume_4368_rules_rev7.md``, sealed e81f7d31, checked raw too): R7-1a
 ``record-check``: the top-level ``controller_tag`` of every r79 result (H-6 .. H-8) and grid job
 record (H-9) against the ``controller_tag`` of the T4h meta of the same run (``t4h_file`` in
 ``--t4h-dir``, ``<result stem>_t4h/`` or ``t4h/`` next to the result). Different, or a tag on
-one side only (a listed T4h file that is not found counts as no meta tag) = S-2. A run without
-``t4h_file`` (grid job records, r79 runs without ``R79_T4H_DIR``) is counted as not compared:
-rev7 gives the comparison for runs with a T4h record only.
+one side only (a listed T4h file that is not found counts as no meta tag) = S-2.
+
+Rev8 (``v5_resume_4368_rules_rev8.md``, sealed 3ecafaaf, checked raw too): R8-1 replaces the
+"not compared" runs of rev7. A run without ``t4h_file`` (grid job records, r79 runs without
+``R79_T4H_DIR``) gets its tag recomputed from the recorded switches by the sealed rule
+(:func:`recompute_tag`: ``hydraulic_options.extend_start_tracked``, ``resume_k1.applicable``,
+LAS-b ``enable``, K1 ``flat_soil_margin_order_gate``; the dg3 ``extend_start_rule`` and every
+grid run's switches are cross-checked) and compared with the top-level ``controller_tag``.
+Different, one side only or not computable = S-2; ``gs`` also reports a not computable tag as
+S-11 (``stop_S11``). Rev8 R8-2 / R8-3 (Chrono J-P3 scope, SCM J11) are in
+``04_scripts/02_chrono/chrono_rows_judge_4368.py``.
 
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
@@ -126,10 +134,15 @@ RULES_REV7_NAME = "v5_resume_4368_rules_rev7.md"
 RULES_REV7_SHA256 = "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"
 """Rev7 (sealed 2026-11-13 09:56:53 +09:00): overrides rev6 .. the original (R7-1a: r79 / grid
 top-level tag = T4h meta tag, else S-2; R7-7: this seal is checked by the path 1 tools)."""
+RULES_REV8_NAME = "v5_resume_4368_rules_rev8.md"
+RULES_REV8_SHA256 = "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56"
+"""Rev8 (sealed 2026-11-13 10:47:09 +09:00): overrides rev7 .. the original (R8-1: runs without
+a T4h record recompute the tag from the recorded switches; R8-4: this seal is checked by the
+path 1 tools)."""
 SEALED_REVISIONS = ((RULES_REV1_NAME, RULES_REV1_SHA256), (RULES_REV2_NAME, RULES_REV2_SHA256),
                     (RULES_REV3_NAME, RULES_REV3_SHA256), (RULES_REV4_NAME, RULES_REV4_SHA256),
                     (RULES_REV5_NAME, RULES_REV5_SHA256), (RULES_REV6_NAME, RULES_REV6_SHA256),
-                    (RULES_REV7_NAME, RULES_REV7_SHA256))
+                    (RULES_REV7_NAME, RULES_REV7_SHA256), (RULES_REV8_NAME, RULES_REV8_SHA256))
 """The revisions every subcommand checks raw (R2-9: sealed rule files are ``-text``, no LF
 normalisation)."""
 RECORD_KEY = "resume_k1"
@@ -491,7 +504,7 @@ def record_check(args: argparse.Namespace) -> dict:
     tag_check = r79_tag_check(args.harness or [], getattr(args, "t4h_dir", None) or ())
     return {
         "rules": RULES_NAME,
-        "section": "4.2 (+ rev7 R7-1a tags)",
+        "section": "4.2 (+ rev7 R7-1a / rev8 R8-1 tags)",
         "harness_runs": len(harness),
         "chrono_rows": len(chrono),
         "rows_with_problems": bad,
@@ -1384,9 +1397,114 @@ T4H_SIBLING_DIR = "t4h"
 """``t4h/`` next to the result: the T4h folder of ``las_t3`` Dg-3 runs."""
 TAG_MATCH = "match"
 TAG_STOP = "S-2"
-TAG_NOT_COMPARED = "no T4h record"
-TAG_CHECK_RULE = ("rev7 R7-1a: r79 (H-6 .. H-8) / grid (H-9) top-level controller_tag = T4h "
-                  "meta controller_tag of the same run; different or one side only = S-2")
+METHOD_T4H = "t4h_meta"
+"""Rev7 R7-1a: a run with ``t4h_file`` compares with its T4h meta tag."""
+METHOD_RECOMPUTE = "recompute"
+"""Rev8 R8-1: a run without ``t4h_file`` compares with the tag recomputed from its switches."""
+TAG_CHECK_RULE = ("rev7 R7-1a / rev8 R8-1: r79 (H-6 .. H-8) / grid (H-9) top-level controller_tag "
+                  "= T4h meta controller_tag (runs with t4h_file) or the tag recomputed from the "
+                  "recorded switches (runs without); different, one side only or not computable = "
+                  "S-2 (G-S: not computable also S-11)")
+
+# rev8 R8-1b inputs and R8-1c tag rules (sealed text; the same results as
+# ``v5_options.controller_tag``, but written from the rule, not imported)
+TAG_BASE_EXTEND_START = "final_C4G2_P3"
+TAG_BASE_PLAIN = "final_C4G2"
+TAG_SUFFIX_LAS = "_LAS"
+TAG_SUFFIX_K1 = "_K1"
+HYDRAULIC_OPTIONS_KEY = "hydraulic_options"
+EXTEND_START_OPTION_KEY = "extend_start_tracked"
+EXTEND_START_SETTING_KEY = "two_pressure.extend_start_rule"
+"""One dotted key of ``controller_settings`` (dg3 records only)."""
+EXTEND_START_TRACKED_RULE = "tracked_bound"
+LAS_ENABLE_PATH = "liftoff_approach_slow.settings.enable"
+K1_GATE_PATH = "slope_clearance_margin.settings.flat_soil_margin_order_gate"
+
+
+class TagNotComputable(Exception):
+    """Rev8 R8-1b "재계산 불가": a switch the tag rule needs is not recorded (S-2, G-S S-11)."""
+
+
+def recompute_tag(is_extend_start: bool, is_las_on: bool, is_k1_on: bool) -> str | None:
+    """Rev8 R8-1c: ``final_C4G2_P3`` with ③, then ``_LAS``, then ``_K1`` (without ③ the base
+    of a suffix is ``final_C4G2``); None (no tag) when ③, LAS-b and K1 are all off. No ``_TCL``
+    (no TCL field is recorded and TCL is forbidden, original 4.2)."""
+    tag = TAG_BASE_EXTEND_START if is_extend_start else None
+    if is_las_on:
+        tag = (tag or TAG_BASE_PLAIN) + TAG_SUFFIX_LAS
+    if is_k1_on:
+        tag = (tag or TAG_BASE_PLAIN) + TAG_SUFFIX_K1
+    return tag
+
+
+def _switch_pair(block: Any, where: str, *, need_applicable: bool) -> tuple[bool, bool]:
+    """(LAS-b enable, K1 order gate) of one ``resume_k1`` block (R8-1b)."""
+    if not isinstance(block, dict):
+        raise TagNotComputable(f"{where}{RECORD_KEY} block missing")
+    if need_applicable and block.get("applicable") is not True:
+        raise TagNotComputable(f"{where}{RECORD_KEY}.applicable {block.get('applicable')!r}")
+    values = []
+    for dotted in (LAS_ENABLE_PATH, K1_GATE_PATH):
+        present, value = get_path(block, dotted)
+        if not present or not isinstance(value, bool):
+            raise TagNotComputable(f"{where}{RECORD_KEY}.{dotted} missing or not a bool")
+        values.append(value)
+    return values[0], values[1]
+
+
+def _extend_start_switch(record: dict) -> bool:
+    """R8-1b ③: ``hydraulic_options.extend_start_tracked`` true = on; the block without the key
+    = off (``HydraulicOptions.to_dict`` keeps the key only when on)."""
+    options = record.get(HYDRAULIC_OPTIONS_KEY)
+    if not isinstance(options, dict):
+        raise TagNotComputable(f"{HYDRAULIC_OPTIONS_KEY} block missing")
+    return options.get(EXTEND_START_OPTION_KEY) is True
+
+
+def recorded_switch_problems(record: dict, is_extend_start: bool, switches: tuple[bool, bool]
+                             ) -> list[str]:
+    """R8-1b cross checks that are S-2 on their own: the dg3 ``extend_start_rule`` against ③
+    and every grid run's LAS-b / K1 values against its job record."""
+    problems = []
+    settings = record.get("controller_settings")
+    if isinstance(settings, dict) and EXTEND_START_SETTING_KEY in settings:
+        rule = settings[EXTEND_START_SETTING_KEY]
+        if (rule == EXTEND_START_TRACKED_RULE) != is_extend_start:
+            problems.append(f"controller_settings {EXTEND_START_SETTING_KEY} {rule!r} but "
+                            f"{EXTEND_START_OPTION_KEY} {is_extend_start}")
+    for index, run in enumerate(record.get("runs") or []):
+        where = f"runs[{index}]."
+        run_switches = _switch_pair(run.get(RECORD_KEY) if isinstance(run, dict) else None,
+                                    where, need_applicable=False)
+        if run_switches != switches:
+            problems.append(f"{where}{RECORD_KEY} LAS-b / K1 {run_switches} != job {switches}")
+    return problems
+
+
+def _tag_recompute_record(record: dict) -> dict:
+    """Rev8 R8-1 for one r79 result or grid job record without ``t4h_file``."""
+    top_tag = record.get("controller_tag")
+    row: dict[str, Any] = {"key": record_key(record), "method": METHOD_RECOMPUTE,
+                           "t4h_file": None, "top_tag": top_tag, "recomputed_tag": None,
+                           "not_computable": False}
+    try:
+        is_extend_start = _extend_start_switch(record)
+        switches = _switch_pair(record.get(RECORD_KEY), "", need_applicable=True)
+        problems = recorded_switch_problems(record, is_extend_start, switches)
+    except TagNotComputable as exc:
+        return {**row, "status": TAG_STOP, "not_computable": True,
+                "reason": f"tag not computable: {exc}"}
+    recomputed = recompute_tag(is_extend_start, *switches)
+    row["recomputed_tag"] = recomputed
+    if problems:
+        return {**row, "status": TAG_STOP, "reason": "; ".join(problems)}
+    if top_tag == recomputed:
+        return {**row, "status": TAG_MATCH, "reason": None}
+    if top_tag is None or recomputed is None:
+        side = "recomputed tag" if top_tag is None else "top level"
+        return {**row, "status": TAG_STOP, "reason": f"controller_tag on the {side} only"}
+    return {**row, "status": TAG_STOP, "reason": "top-level controller_tag differs from the "
+                                                 "tag recomputed from the recorded switches"}
 
 
 def t4h_folders(result_path: Path, extra_dirs: list[Path] | tuple[Path, ...] = ()) -> list[Path]:
@@ -1415,13 +1533,15 @@ def t4h_meta_tag(path: Path) -> tuple[bool, str | None]:
 
 
 def _tag_compare_record(record: dict, folders: list[Path]) -> dict:
-    """R7-1a for one r79 result or grid job record: status ``match`` / ``S-2`` / not compared."""
-    top_tag = record.get("controller_tag")
+    """R7-1a (with ``t4h_file``) or R8-1 (without) for one r79 result or grid job record:
+    status ``match`` / ``S-2``. A listed T4h file that is not found is S-2, never recomputed
+    (R8-1a)."""
     name = record.get(T4H_FILE_KEY)
-    row: dict[str, Any] = {"key": record_key(record), "t4h_file": name,
-                           "top_tag": top_tag, "t4h_tag": None}
     if not name:
-        return {**row, "status": TAG_NOT_COMPARED, "reason": None}
+        return _tag_recompute_record(record)
+    top_tag = record.get("controller_tag")
+    row: dict[str, Any] = {"key": record_key(record), "method": METHOD_T4H, "t4h_file": name,
+                           "top_tag": top_tag, "t4h_tag": None, "not_computable": False}
     found = next((folder / str(name) for folder in folders if (folder / str(name)).is_file()),
                  None)
     if found is None:
@@ -1451,7 +1571,7 @@ def tag_check_records(document: Any) -> list[dict]:
 
 def r79_tag_check(paths: list[Path], t4h_dirs: list[Path] | tuple[Path, ...] = (),
                   *, with_values: bool = True) -> dict:
-    """Rev7 R7-1a over harness outputs.
+    """Rev7 R7-1a and rev8 R8-1 over harness outputs (every run is compared, R8-1d).
 
     Args:
         paths: Harness output files (r79 / grid ``.json``, ``.jsonl``); other runs are skipped.
@@ -1459,8 +1579,9 @@ def r79_tag_check(paths: list[Path], t4h_dirs: list[Path] | tuple[Path, ...] = (
         with_values: Keep the tag values in the rows (``gs`` reports presence only, so False).
 
     Returns:
-        Counts (``compared``, ``mismatched``, ``not_compared``), the ``S-2`` rows, the not
-        compared runs per file and ``stop_S2`` (a mismatch anywhere).
+        Counts (``compared``, ``by_method``, ``mismatched`` with the not computable ones,
+        ``not_computable``), the ``S-2`` rows, ``stop_S2`` (a mismatch anywhere) and
+        ``stop_S11_not_computable`` (what G-S also counts as S-11).
     """
     rows = []
     for path in paths:
@@ -1469,14 +1590,17 @@ def r79_tag_check(paths: list[Path], t4h_dirs: list[Path] | tuple[Path, ...] = (
             for record in tag_check_records(document):
                 rows.append({"file": str(path), **_tag_compare_record(record, folders)})
     mismatched = [r for r in rows if r["status"] == TAG_STOP]
-    not_compared = Counter(r["file"] for r in rows if r["status"] == TAG_NOT_COMPARED)
+    not_computable = sum(r["not_computable"] for r in rows)
+    by_method = Counter(r["method"] for r in rows)
     if not with_values:
-        hidden = ("top_tag", "t4h_tag")
+        hidden = ("top_tag", "t4h_tag", "recomputed_tag")
         mismatched = [{k: v for k, v in r.items() if k not in hidden} for r in mismatched]
-    return {"rule": TAG_CHECK_RULE, "compared": len(rows) - sum(not_compared.values()),
-            "mismatched": len(mismatched), "not_compared": sum(not_compared.values()),
-            "not_compared_by_file": dict(not_compared), "rows": mismatched,
-            "stop_S2": bool(mismatched)}
+    return {"rule": TAG_CHECK_RULE, "compared": len(rows),
+            "by_method": {METHOD_T4H: by_method[METHOD_T4H],
+                          METHOD_RECOMPUTE: by_method[METHOD_RECOMPUTE]},
+            "mismatched": len(mismatched), "not_computable": not_computable,
+            "rows": mismatched, "stop_S2": bool(mismatched),
+            "stop_S11_not_computable": bool(not_computable)}
 
 
 def gs(args: argparse.Namespace) -> dict:
@@ -1514,11 +1638,14 @@ def gs(args: argparse.Namespace) -> dict:
     return {
         "rules": RULES_NAME,
         "section": "11.2 (+ rev3: command hash, extend_bound_check, head_only_declared, "
-                   "settle_v2; rev4 R4-D: F-1 .. F-6 and the meaning checks; rev7 R7-1a tags)",
+                   "settle_v2; rev4 R4-D: F-1 .. F-6 and the meaning checks; rev7 R7-1a / rev8 "
+                   "R8-1 tags)",
         "files": files,
         "files_with_missing": len(bad),
         "r79_tag_check": tag_check,
         "stop_S2": tag_check["stop_S2"],
+        # rev8 R8-1d: a tag that cannot be recomputed is also a G-S key failure (S-11)
+        "stop_S11": bool(bad) or tag_check["stop_S11_not_computable"],
         "exit_code": 1 if bad or tag_check["stop_S2"] else 0,
     }
 
@@ -2500,7 +2627,7 @@ def revision_seal_problems(folder: Path, name: str, sha256: str) -> tuple[dict, 
 
 
 def sealed_rules_check(rules_dir: Path | None = None) -> dict:
-    """Rev1 .. rev7 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
+    """Rev1 .. rev8 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
     folder = RULES_DIR if rules_dir is None else Path(rules_dir)
     revisions, problems = {}, []
     for name, sha256 in SEALED_REVISIONS:
@@ -2536,6 +2663,7 @@ def main(argv: list[str] | None = None) -> int:
     report["rules_rev3_sha256"] = RULES_REV3_SHA256
     report["rules_rev4_sha256"] = RULES_REV4_SHA256
     report["rules_rev7_sha256"] = RULES_REV7_SHA256
+    report["rules_rev8_sha256"] = RULES_REV8_SHA256
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
         json.dumps(report, indent=1, ensure_ascii=False, default=str), encoding="utf-8"

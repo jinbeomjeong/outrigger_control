@@ -23,7 +23,11 @@ rules rev6 R6-A D-26 .. D-39):
 * D-37 / D-38 (N-12 / N-13) :func:`p32_block` - strict LOC < first DONE, loaded = > 0.01 W, revoked-LOC normal.
 * R5-B1 / R6-B6 / R6-B7 / R6-1 :func:`origin_check` - time base, integer-period rounding, fallback legs.
 * t_D (R6-B4, 100 samples) :func:`departure`, with the runner difference recorded; P3-3 on the new t_D.
-* rules seals :func:`seal_check` (original, rev1 .. rev6).
+* rules seals :func:`seal_check` (original, rev1 .. rev8).
+* rev8 R8-2 :func:`j_p3_block` - J-P3 on the ③ rows only (③ by the row tag), extend_start_rule and the request
+  records against the tag (S-2); R8-3 :func:`j11_block` - J11 (criteria revision 6 6) on the 1 ms law_locked of
+  ``step_series.npz`` (SCM) / ``pads.npz`` (L2b), fallback legs by rev6 R6-B7; a C-5 row without a usable record
+  stops (not judgeable).
 
 C-1 .. C-9 follow rev6 R6-B1 .. R6-B9 (:data:`ASSUMPTIONS`); ``--assume C-n=value`` is for sensitivity looks only and
 marks the output ``deviates_from_rev6``.
@@ -57,6 +61,7 @@ import re
 import subprocess
 import sys
 import traceback
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -64,7 +69,8 @@ import numpy as np
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
-TOOL_VERSION = "chrono_rows_judge_4368 v2 (cad-expert 2026-11-13: row folder from the case log, open-loop rows skipped)"
+TOOL_VERSION = ("chrono_rows_judge_4368 v3 (cad-expert 2026-11-13: row folder from the case log, open-loop rows "
+                "skipped; python-expert 2026-11-13: rev8 R8-2 J-P3 scope, R8-3 J11 on law_locked)")
 
 # --- rules and seals (rev5 R5-A1 requirement 4) -----------------------------------------------------------------
 RULES_DIR_DEFAULT = ROOT / "06_analysis" / "02_control" / "verif_matrix"
@@ -77,6 +83,7 @@ RULES_SEALS = {
     "v5_resume_4368_rules_rev5.md": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
     "v5_resume_4368_rules_rev6.md": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
     "v5_resume_4368_rules_rev7.md": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
+    "v5_resume_4368_rules_rev8.md": "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56",
 }
 """Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13); both the file and its ``.sha256`` must
 match (original 8.2 S-1)."""
@@ -671,8 +678,8 @@ def origin_check(row: dict[str, Any]) -> dict[str, Any]:
         out["fallback"] = {"log_entries": len(log), "log_legs": log_legs, "event_legs": warn_legs,
                            "fallback_legs_R6_B7": sorted(set(log_legs) | set(warn_legs)),
                            "open_stretch_legs": [lg for lg in warn_legs if lg not in log_legs],
-                           "open_stretch_note": "J11 window end / n_late of open stretches = the C-5 J11 recount "
-                                                "(revision 6 6), not computed here",
+                           "open_stretch_note": "J11 window end / n_late of open stretches: item J11_R8-3 (criteria "
+                                                "revision 6 6, rev8 R8-3)",
                            "t_start_not_on_r8_rows": off}
         bad = [lg for lg in log_legs if lg not in warn_legs]
         if bad:
@@ -803,6 +810,238 @@ def judge_rigid(row: dict[str, Any], params: dict[str, Any], asm: dict[str, str]
                                                                        "reason": str(lift_basis)},
              "moving_pressure_D-32": mp}
     return {"items": items, "grade": None, "grade_note": "N items re-computed; D8 row grade is the bundle judge's"}
+
+
+# =============================================================================================== rev8 R8-2 / R8-3
+EXPECT_OPTION = "--expect-controller"
+EXTEND_START_OPTION = "--extend-start-tracked"
+TRACKED_BOUND_RULE = "tracked_bound"
+"""``controller_meta.two_pressure.settings.extend_start_rule`` of a ③ row (rev8 R8-2)."""
+J_P3_NOT_APPLICABLE = "not_applicable"
+J_P3_NOT_JUDGEABLE = "not_judgeable"
+STOP_TAG_MISMATCH = "S-2"
+LAW_LOCKED_KEY = "law_locked"
+LAW_LOCKED_VALUES = (-1, 0, 1)
+"""Rev8 R8-3a: 1 locked, 0 moving (tail), -1 no armed law (read as locked, criteria revision 6 6)."""
+LAW_LOCK_SOURCES = {"SCM": ("step_series.npz", "series", "t_s"), "L2b": ("pads.npz", "pads", "t")}
+"""Rev8 R8-3a name table: engine -> (file, row key of the loaded npz, time axis key)."""
+J11_CRITERIA = ("C-5",)
+"""Rows whose J11 is judged (rev8 R8-3 "SCM C-5 행", rev4 R4-A1 C-5 J11); other rows record it when they can."""
+J11_NOT_APPLICABLE = "not_applicable"
+LS_SETTING_PATTERN = re.compile(r"(^|[^A-Za-z0-9])LS\d($|[^A-Za-z0-9])")
+"""An LS setting row: its fallback-leg n_late > 0 is L-e, else H-7 (rev5 R5-B3)."""
+
+
+def _coupled_imports() -> None:
+    """Put ``03_src`` and the coupled-hydraulics scripts on the path (lazy: the module itself
+    imports no project code)."""
+    for path in (ROOT / "03_src", ROOT / "04_scripts" / "04_hydraulic" / "coupled"):
+        if str(path) not in sys.path:
+            sys.path.append(str(path))
+
+
+def row_tag(row: dict[str, Any], meta: dict[str, Any] | None) -> dict[str, Any]:
+    """Rev8 R8-2 / original 6 / rev1 RV1-10 a: the row tag is the ``--expect-controller`` value (batch argv, else the
+    SCM ``args.expect_controller``); its check (``c2_setup.expect_controller.ok``, L2b / L1-R ``expect_controller.ok``)
+    must be true."""
+    res = row["result"]
+    argv = [str(a) for a in (meta or {}).get("argv") or []]
+    tag, source = _arg(argv, EXPECT_OPTION), "batch argv"
+    if tag is None:
+        tag, source = (res.get("args") or {}).get("expect_controller"), "result.json args"
+    check = (res.get("c2_setup") or {}).get("expect_controller") if row["engine"] == "SCM" else \
+        res.get("expect_controller")
+    return {"tag": tag, "source": source if tag is not None else None,
+            "expect_check_ok": isinstance(check, dict) and check.get("ok") is True,
+            "expect_check_name": check.get("name") if isinstance(check, dict) else None}
+
+
+def extend_start_request(row: dict[str, Any], meta: dict[str, Any] | None) -> dict[str, Any]:
+    """Rev8 R8-2 request records: the argv ``--extend-start-tracked`` (batch argv, else the SCM ``args`` key) and
+    ``v5_hydraulics.hydraulic_options.extend_start_tracked`` (key absent = off; no block = not compared)."""
+    res = row["result"]
+    argv = [str(a) for a in (meta or {}).get("argv") or []]
+    if argv:
+        flag, flag_source = EXTEND_START_OPTION in argv, "batch argv"
+    elif isinstance(res.get("args"), dict):
+        flag, flag_source = res["args"].get("extend_start_tracked") is True, "result.json args"
+    else:
+        flag, flag_source = None, None
+    v5 = res.get("v5_hydraulics")
+    options = v5.get("hydraulic_options") if isinstance(v5, dict) else None
+    recorded = None if not isinstance(options, dict) else options.get("extend_start_tracked") is True
+    return {"argv_flag": flag, "argv_source": flag_source, "hydraulic_options": recorded,
+            "v5_hydraulics_block": isinstance(v5, dict)}
+
+
+def j_p3_block(row: dict[str, Any], meta: dict[str, Any] | None) -> dict[str, Any]:
+    """Rev8 R8-2: J-P3 applies to the ③ rows only, ③ by the row tag (``v5_options.is_extend_start_tag``). A ③ row
+    needs ``extend_start_rule`` = ``tracked_bound`` (missing = not judgeable, another value = S-2); then criteria
+    revision 8 3.2 / revision 9 3.2 on ``hydraulics_record.extend_bound_check`` (rev4 R4-A2). A request record that
+    differs from the tag's ③ reading is S-2 (``stop``)."""
+    _coupled_imports()
+    from outrigger_sim.control.extend_start_bound import J_P3_JUDGED, j_p3_run_case  # noqa: PLC0415
+    from outrigger_sim.hydraulics.v5_options import is_extend_start_tag  # noqa: PLC0415
+
+    res = row["result"]
+    tag = row_tag(row, meta)
+    request = extend_start_request(row, meta)
+    out: dict[str, Any] = {"rule": "rev8 R8-2", "tag": tag, "request": request, "s2": []}
+    if not tag["expect_check_ok"]:
+        out.update(is_extend_start=None, status=J_P3_NOT_JUDGEABLE,
+                   reason="no --expect-controller tag with a true expect_controller check")
+        return out
+    is_p3 = is_extend_start_tag(tag["tag"])
+    out["is_extend_start"] = is_p3
+    if tag["expect_check_name"] not in (None, tag["tag"]):
+        out["s2"].append(f"expect_controller check of {tag['expect_check_name']!r}, argv tag {tag['tag']!r}")
+    for name in ("argv_flag", "hydraulic_options"):
+        if request[name] is not None and request[name] != is_p3:
+            out["s2"].append(f"{name} extend_start_tracked {request[name]} but tag {tag['tag']!r} reads ③ {is_p3}")
+    if not is_p3:
+        out["status"] = J_P3_NOT_APPLICABLE
+        return out
+    two_pressure = (res.get("controller_meta") or {}).get("two_pressure") or {}
+    rule = (two_pressure.get("settings") or {}).get("extend_start_rule")
+    out["extend_start_rule"] = rule
+    if rule is None:
+        out.update(status=J_P3_NOT_JUDGEABLE, reason="③ row without controller_meta.two_pressure.settings."
+                                                      "extend_start_rule (original 9.3)")
+        return out
+    if rule != TRACKED_BOUND_RULE:
+        out["s2"].append(f"③ tag {tag['tag']!r} but extend_start_rule {rule!r}")
+        out["status"] = STOP_TAG_MISMATCH
+        return out
+    bound = (res.get("hydraulics_record") or {}).get("extend_bound_check")
+    case = j_p3_run_case(bound, two_pressure.get("has_rod_sensor") is True, False)
+    out["case"] = case
+    if case != J_P3_JUDGED:
+        out.update(status="setting_defect", stop="setting_defect")
+        return out
+    breaches = int(sum((bound or {}).get("breach_reads") or []))
+    out.update(breach_reads=breaches, status="H-7" if breaches else "pass", stop="H-7" if breaches else None)
+    return out
+
+
+def law_lock_state(row: dict[str, Any]) -> tuple[np.ndarray | None, np.ndarray | None, list[str]]:
+    """Rev8 R8-3a: (time axis, ``law_locked``, form problems) of an SCM / L2b row; an empty problem list = usable."""
+    source = LAW_LOCK_SOURCES.get(row["engine"])
+    if source is None:
+        return None, None, [f"engine {row['engine']} has no law_locked record (R8-3a)"]
+    file_name, row_key, time_key = source
+    arrays = row.get(row_key) or {}
+    if LAW_LOCKED_KEY not in arrays or time_key not in arrays:
+        return None, None, [f"{file_name}: {LAW_LOCKED_KEY} or {time_key} missing"]
+    t, state = np.asarray(arrays[time_key], float), np.asarray(arrays[LAW_LOCKED_KEY])
+    problems = []
+    if state.shape != (t.shape[0], len(LEGS)) or state.dtype != np.int8:
+        problems.append(f"{file_name}: {LAW_LOCKED_KEY} shape {state.shape} dtype {state.dtype} "
+                        f"(want ({t.shape[0]}, {len(LEGS)}) int8)")
+    elif not np.isin(state, LAW_LOCKED_VALUES).all():
+        problems.append(f"{file_name}: {LAW_LOCKED_KEY} values outside {set(LAW_LOCKED_VALUES)}")
+    return t, state, problems
+
+
+def _j11_stop_name(row: dict[str, Any], meta: dict[str, Any] | None) -> str:
+    text = " ".join(str(x) for x in ((meta or {}).get("case"), row["name"], (meta or {}).get("v5_setting")) if x)
+    return "L-e" if LS_SETTING_PATTERN.search(text) else "H-7"
+
+
+def _late_open_event_only(record: dict[str, Any], event_only_legs: list[str]) -> int | None:
+    """Late open stretches (run end) of the legs with a fallback event but no log entry (rev6 R6-B7), from the
+    ``late`` rows; None when the row list was cut and such a leg has more late stretches than listed."""
+    late = record.get("late") or []
+    count = sum(1 for r in late if r["leg"] in event_only_legs and not r["fallback"] and r["t_close_s"] is None)
+    listed = Counter(r["leg"] for r in late)
+    if any((record.get("n_late_by_leg") or {}).get(leg, 0) > listed.get(leg, 0) for leg in event_only_legs):
+        return None
+    return count
+
+
+def j11_block(row: dict[str, Any], meta: dict[str, Any] | None) -> dict[str, Any]:
+    """Rev8 R8-3 / criteria revision 6 6: plant lock events = 1 ms ``law_locked`` transitions (-1 read as locked),
+    window ends rebuilt from ``r8_series.npz`` ``issued_u`` (``lock_window_alignment``, unchanged rule), fallback
+    legs = ``fallback_lock_log`` legs U ``WARN_ROD_PRESSURE_FALLBACK`` legs (rev6 R6-B7). Fallback-leg n_late > 0 =
+    H-7 (LS rows L-e); every leg's n_late is recorded; a missing or malformed record = not judgeable (``stop`` on
+    a J11 row: the bundle stops and asks)."""
+    crit = (meta or {}).get("criteria_id")
+    is_j11_row = str(crit) in J11_CRITERIA
+    out: dict[str, Any] = {"rule": "rev8 R8-3, criteria revision 6 6, rev6 R6-B7", "criteria_id": crit,
+                           "j11_row": is_j11_row if crit is not None else None}
+    t_lock, state, problems = law_lock_state(row)
+    r8 = row.get("r8") or {}
+    if not problems and ("t" not in r8 or "issued_u" not in r8):
+        problems = ["r8_series.npz t / issued_u missing"]
+    if problems:
+        # a row of another criterion keeps J11 as a record only: without its inputs it is not applicable
+        status = J_P3_NOT_JUDGEABLE if is_j11_row or crit is None else J11_NOT_APPLICABLE
+        out.update(status=status, problems=problems, stop=is_j11_row)
+        return out
+    _coupled_imports()
+    from chrono_lock_window import lock_events_from_law_state  # noqa: PLC0415
+    from lock_window_alignment import (  # noqa: PLC0415
+        LockWindowMismatchError,
+        lock_window_alignment,
+    )
+
+    controller = row["result"].get("controller_meta") or {}
+    monitor = controller.get("two_pressure") or {}
+    t_r8 = np.asarray(r8["t"], float)
+    try:
+        record = lock_window_alignment(t_r8, np.asarray(r8["issued_u"], float),
+                                       lock_events_from_law_state(t_lock, state), monitor,
+                                       float(controller.get("period_s", CONTROL_PERIOD_S)), row["events"],
+                                       float(t_r8[-1]))
+    except LockWindowMismatchError as exc:
+        out.update(status=J_P3_NOT_JUDGEABLE, problems=[f"S-11: fallback_lock_log vs rebuilt windows: {exc}"],
+                   stop=True)
+        return out
+    log_legs = sorted({str(e["leg"]) for e in monitor.get("fallback_lock_log") or []})
+    event_legs = sorted({event_kind_leg(n)[1] for _, n in row["events"] if event_kind_leg(n)[0] == FALLBACK_EVENT})
+    legs = sorted(set(log_legs) | set(event_legs))
+    out.update(lock_source=f"{LAW_LOCK_SOURCES[row['engine']][0]} {LAW_LOCKED_KEY} (1 ms, -1 read as locked)",
+               fallback_legs_R6_B7=legs, record=record)
+    if "n_late_by_leg" not in record:
+        # monitor without lock stretches (no rod reading, head_only, fixed ratio): rev3 R3-C7
+        out.update(status=J_P3_NOT_JUDGEABLE if legs else "not_computed", reason=record.get("reason"),
+                   stop=False)
+        return out
+    event_only = [lg for lg in event_legs if lg not in log_legs]
+    extra = _late_open_event_only(record, event_only)
+    if extra is None:
+        out.update(status=J_P3_NOT_JUDGEABLE, problems=["late row list cut: event-only open stretches not counted"],
+                   stop=is_j11_row)
+        return out
+    late = int(record.get("n_late_fallback") or 0) + extra
+    out.update(n_late_fallback_R6_B7=late, n_late_by_leg=record["n_late_by_leg"],
+               unjudged_by_leg=record.get("unjudged_by_leg"), event_only_legs=event_only)
+    if late:
+        name = _j11_stop_name(row, meta)
+        out.update(status=name, stop=True, stop_name=name)
+    else:
+        out.update(status="pass" if legs else "no_fallback_leg", stop=False)
+    return out
+
+
+def rev8_counts(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Rev8 R8-4 G-S record: J-P3 statuses (``not_applicable`` = 해당 없음), R8-2 S-2 rows and J11 statuses."""
+    j_p3 = [r["items"]["J-P3_R8-2"] for r in rows]
+    j11 = [r["items"]["J11_R8-3"] for r in rows]
+    return {"J-P3": dict(Counter(x["status"] for x in j_p3)), "S-2_rows": sum(bool(x["s2"]) for x in j_p3),
+            "J11": dict(Counter(x["status"] for x in j11)),
+            "J11_rows_not_judgeable": sum(x["status"] == J_P3_NOT_JUDGEABLE and bool(x.get("j11_row")) for x in j11)}
+
+
+def rev8_stops(case: str, j_p3: dict[str, Any], j11: dict[str, Any]) -> list[dict[str, str]]:
+    """Bundle stops of one row from the rev8 items: S-2 (tag vs ③ request / rule), J-P3 H-7 / setting defect, J11
+    fallback-leg n_late > 0 (H-7 / L-e) and a J11 row whose lock-state record is missing or malformed."""
+    stops = [{"case": case, "reason": f"S-2 (rev8 R8-2): {text}"} for text in j_p3["s2"]]
+    if j_p3.get("stop"):
+        stops.append({"case": case, "reason": f"J-P3 {j_p3['stop']} (rev8 R8-2)"})
+    if j11.get("stop"):
+        detail = j11.get("stop_name") or f"not judgeable: {j11.get('problems')}"
+        stops.append({"case": case, "reason": f"J11 {detail} (rev8 R8-3)"})
+    return stops
 
 
 # =============================================================================================== batch / CLI
@@ -997,31 +1236,36 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
             body = judge_scm(row, rid, params, asm)
         else:
             body = judge_rigid(row, params, asm)
+        body["items"]["J-P3_R8-2"] = j_p3_block(row, meta)
+        body["items"]["J11_R8-3"] = j11_block(row, meta)
         oc = origin_check(row)
         entry = {"dir": str(d), "case": (meta or {}).get("case", row["name"]), "engine": row["engine"], "row_id": rid,
                  "criteria_id": (meta or {}).get("criteria_id"), "t0_s": row["t0"], "inputs": row["files"],
                  "row_dir": (meta or {}).get("_row_dir"), "origin_check_R5_B1": oc, **body}
         if body["items"].get("C1_R40", {}).get("stop"):
             stops.append({"case": entry["case"], "reason": "R40-2 hold (not judgeable, ask)"})
+        stops += rev8_stops(entry["case"], body["items"]["J-P3_R8-2"], body["items"]["J11_R8-3"])
         if oc["ok"] is False:
             origin_bad.append(entry["case"])
         rows.append(entry)
     tds = [r["items"]["departure_t_D"] for r in rows if r["engine"] == "SCM"]
     td_diff = [abs(x["diff_from_runner_s"]) for x in tds if x.get("diff_from_runner_s") is not None]
     deviates = {k: v for k, v in asm.items() if ASSUMPTIONS[k] != v}
-    doc = {"tool": TOOL_VERSION, "rules": "v5_resume_4368_rules.md + rev1 .. rev6 (rev5 R5-A1, rev6 R6-A / R6-B)",
+    doc = {"tool": TOOL_VERSION,
+           "rules": "v5_resume_4368_rules.md + rev1 .. rev8 (rev5 R5-A1, rev6 R6-A / R6-B, rev8 R8-2 / R8-3)",
            "definitions_C": asm, "deviates_from_rev6": deviates or None, "d_numbers": D_NUMBERS,
            "params": params, "seals": seals, "disclosure": disclose(), "rows": rows, "stops": stops,
            "origin_failed": origin_bad, "skipped_rows": skipped,
            "t_D_vs_runner_R6_B4": {"scm_rows": len(tds), "rows_differing": sum(1 for x in tds if x["differs_from_runner"]),
                                    "max_abs_diff_s": max(td_diff) if td_diff else None},
-           "demoted_items": {r["case"]: r.get("demoted_items") for r in rows if r.get("demoted_items")}}
+           "demoted_items": {r["case"]: r.get("demoted_items") for r in rows if r.get("demoted_items")},
+           "rev8_counts": rev8_counts(rows)}
     code = 0 if seals["ok"] and not stops and not origin_bad else 1
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(doc, indent=1, ensure_ascii=False, default=_json_default) + "\n",
                               encoding="utf-8", newline="\n")
     summary = {"rows": len(rows), "seals_ok": seals["ok"], "stops": len(stops), "origin_failed": len(origin_bad),
-               "deviates_from_rev6": sorted(deviates),
+               "deviates_from_rev6": sorted(deviates), "rev8_counts": doc["rev8_counts"],
                "grades": {r["case"]: r.get("grade") for r in rows},
                "skipped": {s["case"]: s["skipped"] for s in skipped}, "out": str(args.out)}
     return code, summary
