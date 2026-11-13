@@ -121,6 +121,33 @@ def test_record_block_without_c2_config() -> None:
     assert record.controller_record(Ind())["applicable"] is False
 
 
+@pytest.mark.parametrize("is_enabled", [True, False])
+def test_record_block_keeps_the_r4c30_enable(is_enabled: bool) -> None:
+    # las_targeted_rules_rev5 2.2: every line shows slope_clearance_margin.enable (z4371)
+    controller = _Controller()
+    controller._meta["slope_clearance_margin"]["settings"]["enable"] = is_enabled
+    settings = record.controller_record(controller)["slope_clearance_margin"]["settings"]
+    assert settings == {
+        "enable": is_enabled,
+        "flat_soil_margin_order_gate": True,
+        "flat_soil_margin_m": 0.03,
+    }
+
+
+def test_record_block_enable_is_none_when_the_meta_lacks_it() -> None:
+    settings = record.controller_record(_Controller())["slope_clearance_margin"]["settings"]
+    assert "enable" in settings and settings["enable"] is None
+
+
+def test_c2_margin_meta_settings_have_enable() -> None:
+    # the block reads meta()["slope_clearance_margin"]["settings"] = asdict(config block)
+    c2 = pytest.importorskip("outrigger_sim.control.c2")
+    from dataclasses import asdict
+
+    preset = c2.C2Config().with_10hz_d1().slope_clearance_margin
+    assert asdict(preset)["enable"] is True
+
+
 def test_record_key_constants_match() -> None:
     assert record.RECORD_KEY == judge.RECORD_KEY == run_v5.RESUME_K1_KEY
 

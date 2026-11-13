@@ -16,7 +16,8 @@ Block (``RECORD_KEY``):
   liftoff_approach_slow            ``settings`` (the 9 values of run_S9 ``_LAS_EXPECTATIONS``), ``start_s``,
                                    ``end_s``, ``end_reason`` (controller meta; absent when the meta
                                    lacks them)
-  slope_clearance_margin           ``settings.flat_soil_margin_order_gate``, ``settings.flat_soil_margin_m``,
+  slope_clearance_margin           ``settings.enable``, ``settings.flat_soil_margin_order_gate``,
+                                   ``settings.flat_soil_margin_m``,
                                    ``order_gate`` (``enabled``, ``decisions``: controller meta as it
                                    is)
   event_counts                     over all controller events (the stored event lists drop some names):
@@ -105,6 +106,8 @@ def controller_record(controller: Any, *, request: str = REQUEST_PRESET) -> dict
             },
             "slope_clearance_margin": {
                 "settings": {
+                    # las_targeted_rules_rev5 2.2: every line shows R4c30 is on (z4371)
+                    "enable": margin_settings.get("enable"),
                     "flat_soil_margin_order_gate": margin_settings.get(
                         "flat_soil_margin_order_gate"
                     ),
