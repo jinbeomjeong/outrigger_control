@@ -4,7 +4,11 @@ Rules: ``las_targeted_rules.md`` (00b48fd8...) and its addenda rev1, rev2, rev3 
 rev4a, rev4b, rev4c, rev5 (+ R-0K key list) - eleven sealed files (rev5 1 #5), read through the 436.8 rules
 (5.1 H-0 "rev5 그대로", S-14) and rev3 (dad8dfa6...) R3-D1 (dg3 key / folder from the record), R3-D2 (R-0 V0
 tag absent or null), R3-D3 (K-0 from .identity.json; H-T3-0 pre-run gate not two-path), R3-D4 (1e-9 tolerance); rev4 (7ea87a30...) R4-C4 superseded by rev6 (809e5639...) R6-C2 (K-0 from run_identity git / threads / rules_seals and the
-outputs' own line identity). Author: dynamics-expert (path 2, second author). Path-1 tools (``las_judge``,
+outputs' own line identity); rev7 (e81f7d31...) R7-3b (line identity names: header ``header.identity``, lines
+``t3.identity`` with ``git_head`` / ``sha256`` (six tool files) / ``c2_sha256`` / ``threads`` / ``workers`` /
+``affinity`` and the mirrors ``t3.commit`` / ``t3.workers`` / ``t3.affinity_hex``; a format difference is S-11)
+and R7-1c (a line with ``t3.las`` = ``t3.gate`` = ``"off"`` and no tag key reads ``final_C4G2`` for key presence
+and version only; K-2 / H-T3-3 keep the recorded key, R3-D2). Author: dynamics-expert (path 2, second author). Path-1 tools (``las_judge``,
 ``las_h7``, ``las_t3*`` judging parts) and their outputs were not opened (436.8 9.2).
 
 Definitions used (rule sentences; the line fields are the stored ``v5/d1.jsonl`` names):
@@ -16,9 +20,10 @@ Definitions used (rule sentences; the line fields are the stored ``v5/d1.jsonl``
   K-6a~e      rev3 3 table with rev4a 1-2 (``G6-2_loc``; item absent in the baseline = not applicable;
               baseline true + new None = violation)
 
-Stops (rev5 4 order): H-T3-0 -> H-T3-3 -> H-T3-2 -> H-T3-1 -> H-T3-1K -> H-T3-1Q -> H-T3-4 -> H-T3-5 -> H-T3-6.
+Stops (rev5 4 order, S-11 of rev7 after H-T3-0): H-T3-0 -> S-11 -> H-T3-3 -> H-T3-2 -> H-T3-1 -> H-T3-1K ->
+H-T3-1Q -> H-T3-4 -> H-T3-5 -> H-T3-6.
 Exit codes (rev3 / rev5): 0 pass, 1 a criteria fail (H-T3-1K, H-T3-5, H-T3-6 class), 2 a stop without
-judgement (H-T3-0, H-T3-1, H-T3-1Q, H-T3-2, H-T3-3, H-T3-4) or a rules sha mismatch, 3 tool error.
+judgement (H-T3-0, S-11, H-T3-1, H-T3-1Q, H-T3-2, H-T3-3, H-T3-4) or a rules sha mismatch, 3 tool error.
 """
 from __future__ import annotations
 
@@ -103,8 +108,30 @@ def check_las_seals(repo):
 
 # ----------------------------------------------------------------- line access
 def line_tag(ln):
+    """The recorded tag (None if the key is absent or null). K-2 / H-T3-3 use this value (rev3 R3-D2)."""
     v, _ = core.first_path(ln, core.TAG_PATHS)
     return None if v is core.MISSING else v
+
+
+ALL_OFF_TAG = "final_C4G2"    # rev7 R7-1c: LAS-b and K1 gate off preset
+
+
+def read_tag(ln):
+    """rev7 R7-1c reading for key presence and version (4.1) only: the recorded tag if there is one, else
+    ``final_C4G2`` on a line with ``t3.las`` = ``t3.gate`` = ``"off"`` (not a missing key), else None
+    (missing key, S-11). (tag, source)."""
+    t = line_tag(ln)
+    if t is not None:
+        return t, "record"
+    if core.dig(ln, "t3.las", None) == "off" and core.dig(ln, "t3.gate", None) == "off":
+        return ALL_OFF_TAG, "R7-1c all-off"
+    return None, "missing"
+
+
+# version each bundle line must read as (4.1 one version per bundle; R-0 V0 by R7-1c)
+VERSION_READ = {"R-0": {"V0": ALL_OFF_TAG, "VB": "final_C4G2_P3"},
+                "R-0K": {"V0": "final_C4G2_K1", "VB": "final_C4G2_P3_K1"},
+                "T-3K": {"V0": "final_C4G2_LAS_K1", "VB": "final_C4G2_P3_LAS_K1"}}
 
 
 def event_names(ln):
@@ -255,6 +282,19 @@ def config_check(ln, bundle):
     return bad
 
 
+def tag_presence(ln, bundle, setting, fnd, where, tally):
+    """rev7 R7-1c key presence and version reading of one line. A missing key on a line that is not all-off
+    is S-11. The read version is compared with VERSION_READ (a mismatch there is already an H-T3-3 of
+    ``tag_ok`` on the recorded value, so only recorded here)."""
+    t, src = read_tag(ln)
+    tally[src] = tally.get(src, 0) + 1
+    if t is None:
+        fnd.stop("S-11", where, "controller_tag missing on a line that is not t3.las = t3.gate = off (R7-1c)")
+    elif t != VERSION_READ[bundle][setting]:
+        tally.setdefault("version_differs", []).append(where)
+    return t, src
+
+
 def tag_ok(tag, bundle, setting, is_p3):
     want = TAGS[bundle][setting]
     if isinstance(tag, str) and "_FB" in tag:
@@ -330,9 +370,52 @@ def dg3_hash(r):
 
 
 THREAD_ENV = ("MKL_NUM_THREADS", "OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "NUMBA_NUM_THREADS")
-LINE_IDENTITY_KEYS = ("git_head", "c2_sha256", "tool_sha256", "sha256", "threads", "workers", "affinity",
-                      "affinity_mask")   # rev3 K-0 line / header identity (R6-C2 table, controller / tool row)
+# rev7 R7-3b: line / header identity of las_T3_*.jsonl (first line ``header``, then ``t3`` per line)
+LINE_IDENTITY_KEYS = ("git_head", "sha256", "c2_sha256", "threads", "workers", "affinity")
+IDENTITY_TOOL_FILES = ("las_t3.py", "las_t3_dg3.py", "las_h7.py", "las_judge.py", "las_targeted.py",
+                       "las_t3_presets.py")
+IDENTITY_THREAD_KEYS = THREAD_ENV + ("MKL_THREADING_LAYER",)
 SHADOW_ENV = core.SHADOW_ENV
+_HEX = set("0123456789abcdef")
+
+
+def _is_hex(v, n):
+    return isinstance(v, str) and len(v) == n and set(v) <= _HEX
+
+
+def is_header(rec):
+    """rev7 R7-3b: the first line of a las_T3 output is the ``header`` record (no line body)."""
+    return isinstance(rec.get("header"), dict) and not isinstance(rec.get("t3"), dict) and "d1" not in rec
+
+
+def identity_problems(ident, t3=None):
+    """rev7 R7-3b formats of one ``identity`` block (+ the ``t3`` mirror fields of a line). [] = matches."""
+    p = []
+    if not isinstance(ident, dict):
+        return ["identity block missing"]
+    if not _is_hex(ident.get("git_head"), 40):
+        p.append("git_head: 40 hex")
+    sh = ident.get("sha256")
+    if not (isinstance(sh, dict) and set(sh) == set(IDENTITY_TOOL_FILES) and all(_is_hex(v, 64) for v in sh.values())):
+        p.append(f"sha256: dict of the six files {IDENTITY_TOOL_FILES} -> 64 hex")
+    if not _is_hex(ident.get("c2_sha256"), 64):
+        p.append("c2_sha256: 64 hex")
+    th = ident.get("threads")
+    if not (isinstance(th, dict) and set(th) == set(IDENTITY_THREAD_KEYS)
+            and all(v is None or isinstance(v, str) for v in th.values())):
+        p.append(f"threads: dict {IDENTITY_THREAD_KEYS} -> str or null")
+    if isinstance(ident.get("workers"), bool) or not isinstance(ident.get("workers"), int):
+        p.append("workers: int")
+    if "affinity" not in ident or not (ident["affinity"] is None or isinstance(ident["affinity"], str)):
+        p.append("affinity: str or null")
+    if t3 is not None:
+        if t3.get("commit") != ident.get("git_head"):
+            p.append("t3.commit != identity.git_head")
+        if t3.get("workers") != ident.get("workers") or isinstance(t3.get("workers"), bool):
+            p.append("t3.workers != identity.workers")
+        if "affinity_hex" not in t3 or t3.get("affinity_hex") != ident.get("affinity"):
+            p.append("t3.affinity_hex != identity.affinity")
+    return p
 
 
 def identity_of(path):
@@ -345,21 +428,42 @@ def identity_of(path):
 
 
 def line_identity(rec):
-    """rev3 K-0 identity of one output line / header (top level or an ``identity`` block)."""
-    src = rec.get("identity") if isinstance(rec.get("identity"), dict) else rec
-    return {k: src[k] for k in LINE_IDENTITY_KEYS if k in src}
+    """rev7 R7-3b identity of one record: ``header.identity`` for the header, ``t3.identity`` for a line.
+    (identity dict of LINE_IDENTITY_KEYS or None, format problems)."""
+    if is_header(rec):
+        ident, t3 = rec["header"].get("identity"), None
+    elif isinstance(rec.get("t3"), dict):
+        ident, t3 = rec["t3"].get("identity"), rec["t3"]
+    else:
+        return None, ["no header.identity / t3.identity"]
+    prob = identity_problems(ident, t3)
+    if not isinstance(ident, dict):
+        return None, prob
+    return {k: ident.get(k) for k in LINE_IDENTITY_KEYS}, prob
 
 
 def output_identity(path):
-    """(identity common to every line incl. a header, or None; problem or None) of one jsonl output."""
-    ids = [line_identity(r) for r in core.read_jsonl(path)]
-    ids = [x for x in ids if x]
+    """(identity common to the header and every line, or None; S-11 format problems; H-T3-3 problem or None)
+    of one jsonl output (rev6 R6-C2 condition read through the rev7 R7-3b names)."""
+    recs = core.read_jsonl(path)
+    fmt = []
+    if not recs or not is_header(recs[0]):
+        fmt.append("first line is not the header record (R7-3b)")
+    ids = []
+    for i, r in enumerate(recs):
+        if i > 0 and is_header(r):
+            fmt.append(f"line {i + 1}: a second header record")
+        lid, prob = line_identity(r)
+        if prob:
+            fmt.append(f"line {i + 1}: {prob[:3]}")
+        if lid is not None:
+            ids.append(lid)
     if not ids:
-        return None, "no line / header identity fields"
+        return None, fmt, None
     first = json.dumps(ids[0], sort_keys=True, default=str)
     if any(json.dumps(x, sort_keys=True, default=str) != first for x in ids[1:]):
-        return ids[0], "line identities differ inside the output"
-    return ids[0], None
+        return ids[0], fmt, "header / line identities differ inside the output"
+    return ids[0], fmt, None
 
 
 def identity_check(paths, fnd, repo=None, git_at_start=None, allowed_dirty=(), steps=()):
@@ -414,7 +518,13 @@ def identity_check(paths, fnd, repo=None, git_at_start=None, allowed_dirty=(), s
                 vals = seals if isinstance(seals, list) else None
             need("rules_seals", None if not vals else all(
                 (v.get("ok") is True) if isinstance(v, dict) else (v is True) for v in vals), "a rules seal not ok")
-        lid, prob = output_identity(p)
+        lid, fmt, prob = output_identity(p)
+        if fmt:
+            ck["line_identity_format"] = False
+            row["line_identity_format_problems"] = fmt[:20]
+            fnd.stop("S-11", f"K-0:{name}", f"line / header identity differs from the rev7 R7-3b table: {fmt[:3]}")
+        else:
+            ck["line_identity_format"] = True
         if lid is None:
             need("line_identity", None)
         elif prob:
@@ -480,11 +590,14 @@ def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3
                 base_check["differ"].append({"key": k, "field": "fault_names"})
         for d in base_check["differ"]:
             fnd.stop("H-T3-3", f"baseline {d['key']}", f"key list vs d1.jsonl: {d.get('field', d.get('why'))}")
-    out = {"baseline_check_rev4a": base_check}
+    tag_tally = {}
+    out = {"baseline_check_rev4a": base_check, "R7-1c_tag_reading": tag_tally}
 
     def index(lines, bundle):
         idx = {}
         for ln in lines:
+            if is_header(ln):        # rev7 R7-3b: the header record carries no line body
+                continue
             k = d1_key(ln)
             if "error" in ln:
                 fnd.stop("H-T3-2", f"{bundle}:{k}", "error line left (after the one retry)")
@@ -510,10 +623,12 @@ def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3
         ln, setting = r0_idx[k], k.split("|")[-2]
         base = baseline_of_line(d1_idx[k]) if k in d1_idx else None
         bh = base["commands_sha256"] if base else (kl.get(k) or {}).get("commands_sha256") or r0k.get(k, {}).get("stored_commands_sha256")
+        tr, tsrc = tag_presence(ln, "R-0", setting, fnd, f"R-0:{k}", tag_tally.setdefault("R-0", {}))
         ok_t, why = tag_ok(line_tag(ln), "R-0", setting, is_p3)
         act = is_active(ln)
         same = ln.get("commands_sha256") == bh
-        r0_rep.append({"key": k, "hash_same": same, "tag_ok": ok_t, "active": act})
+        r0_rep.append({"key": k, "hash_same": same, "tag_ok": ok_t, "active": act, "tag_read": tr,
+                       "tag_read_source": tsrc})
         if not ok_t:
             fnd.stop("H-T3-3", f"R-0:{k}", why)
         if not same or act:
@@ -540,6 +655,7 @@ def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3
         fnd.stop("H-T3-3", "R-0K", f"K-1K key set differs ({len(r0k_idx)} vs 45)")
     for k in sorted(set(r0k) & set(r0k_idx)):
         ln, e = r0k_idx[k], r0k[k]
+        tag_presence(ln, "R-0K", e["setting"], fnd, f"R-0K:{k}", tag_tally.setdefault("R-0K", {}))
         ok_t, why = tag_ok(line_tag(ln), "R-0K", e["setting"], is_p3)
         act, wb = is_active(ln), would_block_any(ln)
         cfg = config_check(ln, "R-0K")
@@ -569,6 +685,7 @@ def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3
     for k in sorted(set(kl) & set(t3_idx)):
         ln, e = t3_idx[k], kl[k]
         rep[e["bundle"]] += 1
+        tag_presence(ln, "T-3K", e["setting"], fnd, f"T-3K:{k}", tag_tally.setdefault("T-3K", {}))
         ok_t, why = tag_ok(line_tag(ln), "T-3K", e["setting"], is_p3)
         cfg = config_check(ln, "T-3K")
         if not ok_t or cfg:
@@ -642,8 +759,9 @@ def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3
     return out, fnd
 
 
-ORDER = ["H-T3-0", "H-T3-3", "H-T3-2", "H-T3-1", "H-T3-1K", "H-T3-1Q", "H-T3-4", "H-T3-5", "H-T3-6"]
-EXIT_OF = {"H-T3-0": 2, "H-T3-3": 2, "H-T3-2": 2, "H-T3-1": 2, "H-T3-1K": 1, "H-T3-1Q": 2, "H-T3-4": 2,
+# S-11 (rev7 R7-1c missing tag key, R7-3b identity format) is a record defect: listed right after H-T3-0
+ORDER = ["H-T3-0", "S-11", "H-T3-3", "H-T3-2", "H-T3-1", "H-T3-1K", "H-T3-1Q", "H-T3-4", "H-T3-5", "H-T3-6"]
+EXIT_OF = {"H-T3-0": 2, "S-11": 2, "H-T3-3": 2, "H-T3-2": 2, "H-T3-1": 2, "H-T3-1K": 1, "H-T3-1Q": 2, "H-T3-4": 2,
            "H-T3-5": 1, "H-T3-6": 2}
 
 

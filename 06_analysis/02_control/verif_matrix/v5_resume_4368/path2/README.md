@@ -206,6 +206,39 @@ rev3 절과 다른 곳은 아래가 맞다. 다섯 도구 모두 rev4 sha도 확
 | 공통 | `p2_4368.py` | rev5·rev6 sha 확인 추가 |
 | 범위 밖 | – | R6-C1 SA-4(F-9), R5-C3 seedext 짝, R5-D3 F-4는 H-6~H-10 몫이라 이 도구들에 없음 |
 
+## rev7 반영 (`v5_resume_4368_rules_rev7.md`, sha256 `e81f7d31…`, 2026-11-13)
+
+앞 절과 다른 곳은 아래가 맞다. 기록 필드 이름·단위·형식은 rev7 R7-3 대응표만 근거로 쓴다(경로 1 코드·출력은 열지 않았다).
+
+| 절 | 도구 | 반영 |
+|---|---|---|
+| R7-7 봉인 확인 | `p2_4368.py`(`check_seals`, 다섯 도구 공통) | rev7 raw sha·`.sha256` 첫 값·LF·BOM 없음을 원판~rev6과 같이 확인. 출력 `seals.rev7_sha256` |
+| R7-3a F-8 | `p2_d1.py` | `d1.g6_preloc`을 표의 이름으로만 읽는다: `preloc_flag_ok`(bool 또는 null), `preloc_starts[]`의 `t_s`(0.01 s)·`leg`(FL·FR·RL·RR)·`true_min_kN`(kN, 0.01 kN, null 가능, 사건 순서), `source` 고정 문자열. 예전 대체 이름(`true_min_N`·`F_true_min_N`·`min_true_N`)은 읽지 않는다. 표와 다르면 **S-11 멈춤(종료 2)**이고, F-8 기록이 있는 모든 줄(G6-7 참인 줄 포함)에서 본다(출력 `R7-3a_g6_preloc_format`). `preloc_flag_ok` 재계산 = 시작 ≥ 1개 ∧ 모든 `true_min_kN` ≠ null ∧ 기록값(0.01 kN) ≥ 9.414589 kN(허용 1e-9 kN) ∧ 실행 `final_phase` ∉ {fault, fault_reground}. 시작이 없으면 거짓. null(r72 키 없음)은 판정 불가(R6-C3 3). 분기 2의 "FAULT 없음"은 앞 판대로 `values.events.fault_events` = 0 |
+| R7-3b T-3K 정체성 | `p2_t3k.py` | 첫 줄 `header.identity`, 다음 줄부터 `t3.identity`(`git_head` 40자리, `sha256` = 파일 6개 → 64자리, `c2_sha256` 64자리, `threads` 키 5개 → 문자열 또는 null, `workers` int, `affinity` 문자열 또는 null)와 `t3.commit`·`t3.workers`·`t3.affinity_hex`가 같은 값인지 본다. 형식·이름이 다르거나 첫 줄이 헤더가 아니면 **S-11**. 예전 이름(`tool_sha256`, `affinity_mask`, 최상위 `identity`)은 읽지 않는다. 헤더와 모든 줄, 세 출력의 같음(R6-C2)은 그대로 H-T3-3. 재집계에서는 헤더 줄을 건너뛴다 |
+| R7-1c R-0 태그 | `p2_t3k.py` | 키 있음·판 확인용 읽기(`read_tag`): 기록 태그가 있으면 그 값, 없거나 null이고 `t3.las` = `t3.gate` = `"off"`면 `final_C4G2`(출력 `R7-1c_tag_reading`, 줄마다 `tag_read`·`tag_read_source`). 그 밖에 태그가 없으면 **S-11**. K-2(R-0 V0 기대 "없음")와 H-T3-3은 바꾸지 않았다(R3-D2대로 기록 키로 대조, 키에 `final_C4G2`가 있으면 H-T3-3) |
+| 멈춤 순서 | `p2_t3k.py` | S-11을 H-T3-0 다음에 둔다(종료 2) |
+| R7-4 Chrono 조건부 결측 | `p2_4368.py chrono --gs` | SCM level 행 키 있음 확인에 rev7 표 9개(`GS_CONDITIONAL_R74`)를 쓴다. 결측 허용 조건이 성립할 때만 `conditional_absent`, 아니면 `result_missing`(S-11). `p3b.P3-3_leg_force.F_min_after_N`·`F_min_transient_N`은 `p3b.departure.departed`가 False일 때만, `c2_setup.las_off`는 켬 팔(`r4368.arm` ≠ `"off"`), LAS-b 6개(`start_s`·`end_s`·`end_reason`·`active_periods`·`ramp`·`ramp.periods_applied`)는 끔 팔에서만 허용. 표의 키는 값이 null이어도 있음으로 센다. 표에 없는 `p3b.P3-3_leg_force.t_min_after_s`는 경로 2 키 목록에서 뺐다(경로 2가 읽지 않는 키이고, 언제나 필수로 두면 이탈 없는 행을 멈추고, 조건을 붙이면 규칙에 없는 조건을 만든다). 이 표는 rev7 본문에서 옮겼고 manifest(`chrono_rows_manifest.json`)는 열지 않았다. 그래서 `table_sha256` `eef5129f…`는 다시 계산하지 않는다 |
+| R7-6 풀 마스크 | `p2_4368.py chrono` | SCM 행 `identity`에 `placement.affinity_mask_process`·`affinity_mask_ok`와 행 `placement_applied`를 기록한다. `affinity_mask_ok` 거짓은 `records`에 남긴다(판정서 기재, 멈춤 아님) |
+| 해당 없음 | – | R7-2 첫 DONE: H-0~H-5 도구는 첫 DONE이나 419.8 조건 5를 다시 계산하지 않는다(`p2_u3.py`는 기록된 `late_loc_reapproach.is_flag`만 읽음). R7-1a·R7-1b(r79·격자 최상위 태그 대조)와 R7-5(경로 1 집계 v2)는 경로 1 도구 몫이다. `p2_4368.py harness`의 태그 읽기는 이미 최상위 `controller_tag`를 먼저 본다 |
+
+### 도구 sha256 (rev7 판, LF 바이트)
+
+| 파일 | sha256 | 이 판에서 |
+|---|---|---|
+| `p2_4368.py` | `e033ca4ba988252ba2181a3ca398c725ebe19ff84fed3dbd1b60cb7301026a0a` | 바뀜 |
+| `p2_d1.py` | `6d18f6dbfa891ea8faf2eec45cb26c023a045aa0170b7cfac4b1c0aa28cde24d` | 바뀜 |
+| `p2_t3k.py` | `f4a84aba0beb07fe2de09fa6edd803406baefee73fdd90f8957a9dd258a6777a` | 바뀜 |
+| `p2_u3.py` | `408944c498da8736e343c2dbc2d816f6fdbe8a5ecd73a0a96689f06680bc5f28` | 그대로(rev7 봉인 확인은 `p2_4368.check_seals`로) |
+| `p2_v5j.py` | `5772624cb28e414ceeb38af3eb6d386a2e0a78857db8a5ea9a5d3cd2ec5f7d8b` | 그대로(같음) |
+| `test_p2_4368.py` | `0b6899df8b25f5a105bf0f0c25b336077c62abb4960dfee972e6eaa05f9bfa3f` | 바뀜(49개) |
+| `test_p2_d1.py` | `d1b61db2979ea1658eda4f515936e407a2d52666efeff9575c583dcecd0778ce` | 바뀜(17개) |
+| `test_p2_t3k.py` | `c3696fb7cfc1bc240f71b14b5c06e7b5b2a18f3cdf7b3c3a6f47f5ea57b933be` | 바뀜(19개) |
+| `test_p2_u3.py` | `245c03ff2a731fb33606f992328660f46f669dbee41cac4e20dc58b01133bb99` | 그대로(11개) |
+| `test_p2_v5j.py` | `d52ca6adb89f77f6bd952bf6ff03f966f9cd7d0a05486af7e044ee700fb0a418` | 그대로(16개) |
+
+- 자체 시험은 다섯 파일 112개(앞 판 103개)다. pytest 개수는 매개변수화한 시험을 하나씩 센다.
+- `p2_4368.py`가 바뀌었으므로 이 파일을 sha로 import하는 `../path2_v5c/p2v5c_common.py`(`P2_CORE_SHA` `dc631509…`)는 새 sha로 고칠 때까지 `P2-SHA`(종료 2)로 멈춘다. 그 폴더는 이 도구 작성자 소유가 아니라 고치지 않았다.
+
 ## 하지 않는 것 (범위)
 
 - **원 규칙 등급의 재집계는 하지 않는다.** H-0 T-3K(`las_targeted_rules` 원판~rev5), H-1·H-2(D-1 선별 규칙), H-3·H-4(`u3_u6`), H-5(`u9`), H-6~H-10(v5 기준 + 개정 1~12b), C-1~C-5 판정 블록(D-1 규칙 11, 개정 12 2.2)의 통과·미달 재집계가 여기에 든다. 이 도구가 내는 묶음 상태는 436.8 문서가 새로 정한 층(4.1·4.2·6·7.2·7.4·9.3·S-15)의 상태다(`grade_scope`). 원 규칙 등급의 경로 2는 그 규칙들의 정의 문장을 읽고 따로 만들어야 한다.
