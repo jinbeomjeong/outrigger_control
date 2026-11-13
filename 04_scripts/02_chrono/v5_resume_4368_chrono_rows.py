@@ -46,7 +46,8 @@ CLI (Chrono-dev, project root, no simulation)::
 ``manifest`` also writes ``gs_conditional_absent`` (:func:`gs_conditional_table`, user decision 2026-11-13 (a)): the
 conditional result.json keys of the level rows with their conditions (``p3b.departure.departed`` / C-4 arm) and the
 level / off-arm rows of every batch. ``gs-check`` applies those rules to G-S and main-run folders: an absent key whose
-condition requires it is an error.
+condition requires it is an error. Level rows must also carry the npz keys of :data:`SERIES_KEYS` (``step_series.npz``
+``law_locked``, J11 input, user decision 2026-11-13 Q-R8-1 = B).
 
 Every command ends with a plain ``errors N`` line (``tools/verif/log_errors.py``); exit 0 ok, 1 a check failed or a
 stop, 2 an input is missing.
@@ -1066,6 +1067,34 @@ OFF_ARM_ABSENT_KEYS = tuple(f"controller_meta.liftoff_approach_slow.{k}" for k i
 SERIES_FILES = ("step_series.npz", "r8_series.npz")
 """run_S9 ``level`` series files (rules 9.1 path 2 names ``series.npz`` / ``r8_series``; a level run writes
 ``step_series.npz``, G-S 2026-11-13)."""
+SERIES_KEYS = {"step_series.npz": ("t_s", "law_locked")}
+"""npz keys a level row must carry (gs-check ``series_keys_missing``). ``law_locked`` = 1 ms rod-side law lock state
+[N, 4] int8 on the ``t_s`` rows (``run_S9.LAW_LOCKED_RULE``, user decision 2026-11-13 Q-R8-1 = B: the J11 n_late input
+of the SCM rows, as ``pads.npz`` ``law_locked`` of the L2b rows). Not in the manifest table (result.json keys only):
+``gs_conditional_absent.table_sha256`` and ``list_sha256`` do not change. Level folders written before that change
+lack it (the 11-13 G-S batch)."""
+
+
+def series_key_check(case_dir: Path) -> dict[str, Any]:
+    """:data:`SERIES_KEYS` presence of one level case folder and the ``law_locked`` form ([len(t_s), 4] int8, values
+    in {-1, 0, 1}); presence and form only, no values printed."""
+    import numpy as np  # noqa: PLC0415
+
+    missing: list[str] = []
+    problems: list[str] = []
+    for name, need in SERIES_KEYS.items():
+        p = case_dir / name
+        if not p.is_file():
+            continue  # series_files_missing reports the file
+        with np.load(p, allow_pickle=False) as z:
+            missing += [f"{name}:{k}" for k in need if k not in z.files]
+            if "law_locked" in z.files and "t_s" in z.files:
+                ll, n = z["law_locked"], z["t_s"].shape[0]
+                if ll.shape != (n, 4) or ll.dtype != np.int8:
+                    problems.append(f"{name}:law_locked shape {ll.shape} dtype {ll.dtype} (want ({n}, 4) int8)")
+                elif ll.size and not np.isin(ll, (-1, 0, 1)).all():
+                    problems.append(f"{name}:law_locked values outside {{-1, 0, 1}}")
+    return {"series_keys_missing": missing, "series_key_problems": problems}
 
 
 RIGID_KEY_PATHS = (
@@ -1278,8 +1307,10 @@ def cmd_gs_check(folder: str, manifest: str | None = None) -> int:
             with np.load(npz, allow_pickle=False) as z:
                 c["npz_arrays_ok"] = all(k in z.files and z[k].size > 0 for k in ("t_s", "issued_u_m_s"))
         c["series_files_missing"] = [n for n in SERIES_FILES if not (f / e["case"] / n).is_file()]
+        c.update(series_key_check(f / e["case"]))
         c["ok"] = (c["progress_end_rc0"] and not c["batch_entry_missing"] and c["result_json"] and not missing
-                   and c.get("npz_arrays_ok", False) and not c["series_files_missing"])
+                   and c.get("npz_arrays_ok", False) and not c["series_files_missing"]
+                   and not c["series_keys_missing"] and not c["series_key_problems"])
         cases.append(c)
     mt = manifest_table_check(manifest)
     n_err = sum(1 for c in cases if not c["ok"]) + (0 if cases else 1) + (1 if mt is not None and not mt["ok"] else 0)
