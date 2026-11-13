@@ -471,14 +471,19 @@ GS_BATCH_2 = MAIN_CHECKOUT / "07_results" / "S9" / "batch_V5-RESUME-K1-GS_202611
 
 @pytest.mark.skipif(not (GS_BATCH_2 / "batch.json").exists(), reason="G-S batch 082117 not present")
 def test_gs_batch_082117_execution_path(mod, tmp_path):
-    """Execution path only (G-S values are not judged): rc 0, the L1-R folder 1 s after the batch stamp comes from
-    the case log, the open-loop row is listed as skipped."""
+    """Execution path only (G-S values are not judged): the L1-R folder 1 s after the batch stamp comes from
+    the case log, the open-loop row is listed as skipped. Rev8 R8-3 / R8-4: this batch predates the SCM
+    ``law_locked`` record, so its three C-5 SCM rows stop on J11 (rc 1) and nothing else stops."""
     out = tmp_path / "gs2.json"
     code = mod.main(["judge", "--out", str(out), "--batch", str(GS_BATCH_2),
                      "--results-root", str(MAIN_CHECKOUT / "07_results"), "--rules-dir", str(_rules_dir(mod)),
                      "--params", str(PARAMS)])
     doc = json.loads(out.read_text(encoding="utf-8"))
-    assert code == 0
+    assert code == 1
+    c5_scm = sorted(r["case"] for r in doc["rows"] if r["criteria_id"] == "C-5" and r["engine"] == "SCM")
+    assert len(c5_scm) == 3 and sorted(s["case"] for s in doc["stops"]) == c5_scm
+    assert all(s["reason"].startswith("J11 not judgeable") for s in doc["stops"])
+    assert doc["rev8_counts"]["S-2_rows"] == 0
     assert [s["criteria_id"] for s in doc["skipped_rows"]] == ["C-6"]
     l1r = next(r for r in doc["rows"] if r["engine"] == "L1R")
     assert l1r["row_dir"]["source"] == "case_log" and l1r["dir"].endswith("_082118\\D1C1_top_flat_crx3")

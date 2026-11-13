@@ -4,7 +4,8 @@ R7-7: the seal lists of ``resume4368_judge``, ``judge4368_common`` and
 ``chrono_rows_judge_4368`` carry rev7, and each tool stops (S-1) when the rev7 file or its
 ``.sha256`` is missing or differs. R7-1a: ``gs`` / ``record-check`` compare the top-level
 ``controller_tag`` of r79 / grid results with the T4h meta tag of the same run (S-2 when they
-differ or only one side has a tag). Synthetic inputs only; no harness or Chrono run.
+differ or only one side has a tag). Synthetic inputs only; no harness or Chrono run. Rev8 R8-1
+replaces the rev7 "not compared" runs (see ``test_resume4368_rev8.py``).
 """
 
 from __future__ import annotations
@@ -150,16 +151,18 @@ def test_t4h_folder_conventions_and_option(tmp_path: Path) -> None:
     assert judge.r79_tag_check([result], [tmp_path / "elsewhere"])["stop_S2"] is True
 
 
-def test_runs_without_a_t4h_record_are_not_compared(tmp_path: Path) -> None:
-    """Grid job records and r79 runs without ``R79_T4H_DIR`` (rev7 gives no comparison)."""
+def test_runs_without_a_t4h_record_are_recomputed_since_rev8(tmp_path: Path) -> None:
+    """Grid job records and r79 runs without ``R79_T4H_DIR``: rev7 left them not compared,
+    rev8 R8-1 recomputes their tag (without recorded switches here: not computable = S-2;
+    the recompute itself is tested in ``test_resume4368_rev8.py``)."""
     grid = {"meta": {}, "results": [{"key": "g", "controller_tag": TAG_BEFORE_FIX,
                                      "runs": [{"event": "FS24"}]}]}
     grid_path = tmp_path / "grid.json"
     grid_path.write_text(json.dumps(grid), encoding="utf-8")
     r79 = _write_result(tmp_path / "seedext.json", [_r79_result("s", TAG_BEFORE_FIX, None)])
     check = judge.r79_tag_check([grid_path, r79])
-    assert (check["compared"], check["not_compared"], check["stop_S2"]) == (0, 2, False)
-    assert check["not_compared_by_file"] == {str(grid_path): 1, str(r79): 1}
+    assert (check["compared"], check["by_method"]["recompute"], check["stop_S2"]) == (2, 2, True)
+    assert check["not_computable"] == 2 and "not_compared" not in check
 
 
 def _run_cli(argv: list[str], monkeypatch) -> tuple[int, dict]:

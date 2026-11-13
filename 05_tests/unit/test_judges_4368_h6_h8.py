@@ -178,6 +178,7 @@ def _h6_run(**changes):
     run = _run(
         key="L3|s0|g6|1|ref|J1|top|Fs0",
         level="L3",
+        controller_tag="final_C4G2_P3_LAS_K1",
         controller_settings={"two_pressure.extend_start_rule": "tracked_bound"},
         extend_bound_check={"breach_reads": [0, 0, 0, 0]},
         head_only_declared=False,
@@ -225,3 +226,14 @@ def test_h6_new_fault_is_below_and_missing_keys_not_judgeable():
     assert missing["problems"] and late_none["problems"]
     # 판정 불가 beats 미달 (original rules 8.1)
     assert h6j.bundle_grade([line, missing])[0] == "판정 불가"
+
+
+def test_h6_j_p3_reads_the_extend_start_from_the_tag_rev8():
+    """Rev8 R8-2: a line whose tag is not ③ has no J-P3; a ③ line without the recorded
+    extend_start_rule is 판정 불가 for J-P3."""
+    not_p3 = _h6_line(_h6_run(controller_tag="final_C4G2_LAS_K1",
+                              extend_bound_check={"breach_reads": [0, 1, 0, 0]}))
+    assert not_p3["j_p3"]["case"] == "not_applicable" and not_p3["stops"] == []
+    no_rule = _h6_line(_h6_run(controller_settings={}))
+    assert no_rule["j_p3"]["case"] == "not_judgeable" and no_rule["stops"] == []
+    assert h6j.bundle_grade([no_rule])[0] == "판정 불가"

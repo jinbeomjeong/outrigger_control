@@ -15,7 +15,9 @@ in this order:
   4. the L3 134 failures (judge gates, re-aggregated by ``h8_noise_judge_4368.grade_line``) are
      recorded; the L2 line goes into the H-8 L2 count (``h8_noise_judge_4368`` replaces it).
 A line whose recorded ``two_pressure.extend_start_rule`` is not ``tracked_bound`` is not an H-6
-line (rev1 RV1-3: tag ``final_C4G2_P3_LAS_K1``): a finding (S-2).
+line (rev1 RV1-3: tag ``final_C4G2_P3_LAS_K1``): a finding (S-2). Rev8 R8-2: J-P3 reads ③ from the
+line's ``controller_tag`` (a tag that is not ③ = no J-P3 and S-2), and a ③ line without the
+recorded ``extend_start_rule`` has J-P3 ``판정 불가``.
 
 Usage (python-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/h6_judge_4368.py --out <report.json>
@@ -51,6 +53,8 @@ TRACKED_BOUND = "tracked_bound"
 EXPECTED_LINES = {"L2": 1, "L3": 134}
 """Original rules 5.1 H-6 / rev1 RV1-3: 135 lines (L3 134 + L2 1)."""
 DEFINITION_CHANGES = ("D-19",)
+J_P3_NOT_APPLICABLE = "not_applicable"
+J_P3_NOT_JUDGEABLE = "not_judgeable"
 
 GRADE_STOP = "멈춤"
 GRADE_FAIL = "미달"
@@ -81,13 +85,25 @@ def rod_reading(run: dict, t4h_dirs: tuple[Path, ...]) -> tuple[bool, str]:
 
 
 def j_p3(run: dict, t4h_dirs: tuple[Path, ...]) -> dict:
-    """Criteria revision 9 3.2 table row of one ③ line."""
+    """Criteria revision 9 3.2 table row of one ③ line.
+
+    Rev8 R8-2: ③ is read from the line's ``controller_tag`` only; a line whose tag is not ③
+    has no J-P3 (``not_applicable``, an S-2 finding of the bundle: H-6 lines are ③ lines), and
+    a ③ line without the recorded ``extend_start_rule`` is ``판정 불가`` (``missing``).
+    """
     from outrigger_sim.control.extend_start_bound import (
         J_P3_JUDGED,
         J_P3_NO_ROD_READING,
         j_p3_run_case,
     )
+    from outrigger_sim.hydraulics.v5_options import is_extend_start_tag
 
+    if not is_extend_start_tag(run.get("controller_tag")):
+        return {"case": J_P3_NOT_APPLICABLE, "stop": None,
+                "reason": f"controller_tag {run.get('controller_tag')!r} is not ③ (rev8 R8-2)"}
+    if (run.get("controller_settings") or {}).get(EXTEND_START_SETTING) is None:
+        return {"case": J_P3_NOT_JUDGEABLE, "stop": None, "missing": True,
+                "reason": f"③ line without {EXTEND_START_SETTING} (rev8 R8-2, original 9.3)"}
     bound = bound_check_of(run)
     has_reading, basis = rod_reading(run, t4h_dirs)
     declared = run.get("head_only_declared")
@@ -144,6 +160,8 @@ def judge_line(run: dict, references: dict, judge_rows: dict, t4h_dirs) -> dict:
     out["extend_start_rule"] = rule
     out["j_p3"], out["j9"], out["j11"] = j_p3(run, t4h_dirs), j9(run), j11(run)
     out["stops"] = [x["stop"] for x in (out["j_p3"], out["j9"], out["j11"]) if x.get("stop")]
+    if out["j_p3"].get("missing"):
+        out["problems"].append(out["j_p3"]["reason"])
     if out["j9"].get("missing"):
         out["problems"].append("no m2_clipped_steps_post_lift")
     if out["j11"].get("missing"):
@@ -207,6 +225,11 @@ def judge(args: argparse.Namespace) -> dict:
     ]
     if not_p3:
         findings.append(f"S-2: lines without {TRACKED_BOUND}: {not_p3[:5]}")
+    not_p3_tag = [
+        line["key"] for line in lines if line.get("j_p3", {}).get("case") == J_P3_NOT_APPLICABLE
+    ]
+    if not_p3_tag:  # rev8 R8-2: ③ by the tag; an H-6 line is a ③ line (rev1 RV1-3)
+        findings.append(f"S-2: lines whose controller_tag is not ③: {not_p3_tag[:5]}")
     if judge_run is not None and judge_run["exit_code"] != 0:
         findings.append(f"judge run exit {judge_run['exit_code']}")
     l3 = [line for line in lines if line["level"] == "L3"]
@@ -231,7 +254,7 @@ def judge(args: argparse.Namespace) -> dict:
         "judge_s6_differs": [x["key"] for x in lines if x.get("judge_s6_same") is False],
         "j_p3_cases": dict(Counter(x["j_p3"]["case"] for x in lines if "j_p3" in x)),
         "rod_reading_basis": dict(
-            Counter(x["j_p3"]["rod_reading_basis"] for x in lines if "j_p3" in x)
+            Counter(x["j_p3"].get("rod_reading_basis") for x in lines if "j_p3" in x)
         ),
         "line_details": lines,
         "findings": findings,
