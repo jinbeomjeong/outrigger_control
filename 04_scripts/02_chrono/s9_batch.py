@@ -1586,6 +1586,21 @@ def launch_code_state(root: Path = ROOT) -> dict:
     return out
 
 
+def is_open_loop_machine(argv: list[str]) -> bool:
+    """``argv`` runs ``run_S9.py machine`` (open-loop rows: P3a, C-6 / C-7 of 436.8, G6-0a, settle rows)."""
+    for i, tok in enumerate(argv[:-1]):
+        if Path(str(tok)).name == "run_S9.py":
+            return argv[i + 1] == "machine"
+    return False
+
+
+def records_code_at_launch(c: dict) -> bool:
+    """Rows whose batch.json entry gets ``code_at_launch`` (:func:`launch_code_state`): controller rows and FINAL-R
+    (RV6 / FINAL 2026-10-30) and, from 2026-11-13 (436.8 rev11 R11-4, user decision Q-R11-1 = B), the open-loop
+    ``run_S9.py machine`` rows (record only: argv, command hash and outputs unchanged)."""
+    return bool(c.get("controller")) or c.get("group") == "FINAL-R" or is_open_loop_machine(list(c.get("argv") or []))
+
+
 def strip_controller_check(argv: list[str]) -> list[str]:
     """``argv`` without ``--expect-controller <name>`` (``run --no-controller-check``)."""
     out, skip = [], False
@@ -1776,8 +1791,7 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
                                               else ["--case", c["case"], "--out-root", str(folder)])
                 if not controller_check:
                     argv = strip_controller_check(argv)
-                code_at_launch[c["case"]] = launch_code_state() if c.get("controller") or c.get("group") == "FINAL-R" \
-                    else None
+                code_at_launch[c["case"]] = launch_code_state() if records_code_at_launch(c) else None
                 logf = (folder / f"{c['case']}.log").open("w", encoding="utf-8")
                 child_env = _case_env(pool, c.get("start_env"), c.get("run_env"), masks)
                 launch_env[c["case"]] = {**launch_env_record(child_env), **mask_env_record(child_env, pool)}
@@ -1806,7 +1820,8 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
                 entry["rerun_of"] = rerun_of
             if code_at_launch.get(c["case"]) is not None:  # RV6 / FINAL (2026-10-30)
                 entry["code_at_launch"] = code_at_launch[c["case"]]
-                entry["controller_check"] = bool(controller_check)
+                if c.get("controller") or c.get("group") == "FINAL-R":  # open-loop rows: no controller to check
+                    entry["controller_check"] = bool(controller_check)
             note = ""
             if c.get("s8c") and rc == 0:  # run_S8C returns 0 even when its case failed: read the outcome
                 chk = s8c_case_check((folder / f"{c['case']}.log").read_text("utf-8", errors="replace"),

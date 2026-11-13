@@ -148,6 +148,8 @@ def test_judge_exits_2_without_a_manifest(tmp_path: Path, capsys) -> None:
     code = chrono_judge.main(
         [
             "judge",
+            "--git-at-start",
+            "4312b8e",
             "--out",
             str(tmp_path / "o.json"),
             "--row",
