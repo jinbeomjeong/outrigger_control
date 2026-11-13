@@ -55,6 +55,8 @@ equilibrium, max s_motor, loaded pad tilt, first-touch SCM rise, minimum cylinde
 attitude, rut clearance, track utilisation; dynamics 5.36.5) and the series keys ``pad_tilt_deg``,
 ``rut_clearance_m``, ``track_utilisation``, ``node_sinkage_mean_contact_m`` (0.1 s);
 ``--abort-on-limit`` exits 3 after writing when a force limit or the stroke end margin is exceeded.
+``machine`` also records ``code_state.git_at_start`` (:func:`git_state` at the run start, the ``level`` form; 436.8
+rev11 R11-4, 2026-11-13, record only).
 
 ``level`` (P3b, control spec 284) needs ``--approved`` (the user confirms the main runs). The
 controller is the R8 preset ``C2Config().with_10hz_d1()``, which has the soil response on since
@@ -2985,6 +2987,9 @@ def run_machine(args) -> Path:
     from outrigger_sim.frames import roll_pitch_from_quat
 
     placement = place()
+    # 436.8 rev11 R11-4 (2026-11-13): commit + tree status at the start, as ``level`` (record only; no controller
+    # files: the open-loop run imports no controller)
+    git_files = _record_or_error(git_state)
     params, pv, soil = load_inputs(args)
     # v5 open-loop lift (paper v5 2.8, cad 2026-11-08): the plant options of the v5 setting right after the build (as
     # ``level``); every option absent = no attribute, None here, the run and result.json unchanged
@@ -3132,6 +3137,7 @@ def run_machine(args) -> Path:
     if flow is not None:  # flow_series.npz and the block only with --flow-eta-v
         summary["flow_limit"] = {**flow.meta(), "series": flow.save(d / FLOW_SERIES_NAME),
                                  "summary": flow.summary([t_settle_steps * dt], ("lift",))}
+    summary["code_state"] = {"git_at_start": git_files}
     add_hull_hook_record(summary)
     (d / "result.json").write_text(json.dumps(_plain(summary), indent=1, ensure_ascii=False), "utf-8")
     print(json.dumps(_plain({k: summary[k] for k in ("end", "first_step", "start_rise", "settle_last_1s",

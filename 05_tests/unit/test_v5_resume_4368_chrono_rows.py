@@ -187,6 +187,12 @@ def _rows_manifest(request, tmp_path_factory, monkeypatch):
     monkeypatch.setattr(mod, "ROWS_MANIFEST_DEFAULT", path)
 
 
+CODE_AT_LAUNCH = {"files": {"03_src/outrigger_sim/control/c2.py": "0" * 64},
+                  "git": {"head": "4312b8e" + "0" * 33, "paths": ["03_src/outrigger_sim/control"], "dirty": [],
+                          "clean": True, "taken_utc": "2026-11-13T00:00:00+09:00"}}
+"""s9_batch ``launch_code_state`` form (rev11 R11-4: gs-check needs a 40-hex ``code_at_launch.git.head``)."""
+
+
 def _level_folder(tmp_path: Path, mod, departed, drop: list[str], arm: str = "on", law_locked=True,
                   expect_ok=True, t_step_s: float = 1e-3) -> Path:
     np = pytest.importorskip("numpy")
@@ -219,7 +225,8 @@ def _level_folder(tmp_path: Path, mod, departed, drop: list[str], arm: str = "on
     series = {"t_s": np.arange(2.0) * t_step_s} | ({} if law_locked is None else {"law_locked": law_locked})
     np.savez(f / case / "step_series.npz", **series)
     entry = {k: "x" for k in mod.GS_ENTRY_KEYS}
-    entry.update(case=case, argv=["python", "run_S9.py", "level"], r4368={"engine": "SCM", "arm": arm})
+    entry.update(case=case, argv=["python", "run_S9.py", "level"], r4368={"engine": "SCM", "arm": arm},
+                 code_at_launch=CODE_AT_LAUNCH)
     (f / "batch.json").write_text(json.dumps({"batch": TEST_BATCH, "cases": [entry]}), "utf-8")
     (f / "progress.log").write_text(f"END {case} 2026-11-13T00:00:00 rc=0\n", "utf-8")
     return f
@@ -280,6 +287,67 @@ def test_gs_check_rev9_law_locked_form_and_expect_check(mod, tmp_path, capsys):
     assert mod.cmd_gs_check(str(_level_folder(tmp_path / "pre_arm", mod, False, []))) == 0
     c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
     assert c["law_locked_minus_one"] == "pre_arm_prefix"
+
+
+def _openloop_folder(tmp_path: Path, mod, entry_changes: dict | None = None, drop_head: bool = False) -> Path:
+    """Synthetic G-S folder with one open-loop ``run_S9.py machine`` row (case ``LV``, the rows-manifest case)."""
+    np = pytest.importorskip("numpy")
+    doc: dict = {}
+    for k in sorted(mod.OPENLOOP_KEY_PATHS, key=lambda s: -s.count(".")):
+        node = doc
+        parts = k.split(".")
+        for p in parts[:-1]:
+            node = node.setdefault(p, {})
+        node.setdefault(parts[-1], 1)
+    if drop_head:
+        doc["code_state"]["git_at_start"].pop("head")
+    f = tmp_path / f"batch_{TEST_BATCH}_20261113_000000"
+    (f / "LV").mkdir(parents=True)
+    (f / "LV" / "result.json").write_text(json.dumps(doc), "utf-8")
+    for n in mod.OPENLOOP_FILES:
+        np.savez(f / "LV" / n, t=np.arange(2.0))
+    entry = {k: "x" for k in mod.GS_ENTRY_KEYS if k != "controller"}
+    entry.update(case="LV", argv=["python", "run_S9.py", "machine", "--lift-s", "10"],
+                 r4368={"engine": "SCM"}, code_at_launch=CODE_AT_LAUNCH)
+    for k, v in (entry_changes or {}).items():
+        if v is None:
+            entry.pop(k, None)
+        else:
+            entry[k] = v
+    (f / "batch.json").write_text(json.dumps({"batch": TEST_BATCH, "cases": [entry]}), "utf-8")
+    (f / "progress.log").write_text("END LV 2026-11-13T00:00:00 rc=0\n", "utf-8")
+    return f
+
+
+def test_gs_check_rev11_open_loop_code_at_launch(mod, tmp_path, capsys):
+    """Rev11 R11-4 (Q-R11-1 = B): an open-loop row needs batch.json code_at_launch with a 40-hex git.head and
+    result.json code_state.git_at_start.head; a missing or malformed record fails the row (S-12 at the judge)."""
+    assert "code_state.git_at_start.head" in mod.OPENLOOP_KEY_PATHS
+    assert mod.cmd_gs_check(str(_openloop_folder(tmp_path / "ok", mod))) == 0
+    c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
+    assert c["kind"] == "openloop" and c["code_at_launch_head_ok"] and not c["batch_entry_missing"]
+    bad = {"none": {"code_at_launch": None},
+           "error": {"code_at_launch": {"files": {}, "git": {"error": "CalledProcessError: x"}}},
+           "short": {"code_at_launch": {"files": {}, "git": {**CODE_AT_LAUNCH["git"], "head": "4312b8e"}}}}
+    for name, change in bad.items():
+        assert mod.cmd_gs_check(str(_openloop_folder(tmp_path / name, mod, change))) == 1, name
+        c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
+        assert not c["code_at_launch_head_ok"] and c["code_at_launch_head_problem"], name
+        assert (c["batch_entry_missing"] == ["code_at_launch"]) == (name == "none"), name
+    assert mod.cmd_gs_check(str(_openloop_folder(tmp_path / "nohead", mod, drop_head=True))) == 1
+    c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
+    assert c["result_missing"] == ["code_state.git_at_start.head"] and c["code_at_launch_head_ok"]
+
+
+def test_gs_check_rev11_level_head_form(mod, tmp_path, capsys):
+    """Rev11 R11-4 item 4: level rows also need a 40-hex code_at_launch.git.head (presence was already required)."""
+    f = _level_folder(tmp_path / "a", mod, False, [])
+    assert mod.cmd_gs_check(str(f)) == 0
+    assert json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]["code_at_launch_head_ok"]
+    _rewrite_batch(f, cases=[{**json.loads((f / "batch.json").read_text("utf-8"))["cases"][0], "code_at_launch": "x"}])
+    assert mod.cmd_gs_check(str(f)) == 1
+    c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
+    assert not c["code_at_launch_head_ok"] and not c["batch_entry_missing"]
 
 
 def _rewrite_batch(folder: Path, **changes) -> None:
