@@ -283,6 +283,55 @@ def test_rev6_k0_identity(tmp_path):
     assert "H-T3-3" in stop_codes(fnd)
 
 
+def _sidecar_list(*heads, **kw):
+    """The runner identity writer's form: start / end = lists of records (one per moment call)."""
+    recs = [ident(head=h, **kw)["start"] for h in heads]
+    return {"start": recs, "end": [dict(r) for r in recs]}
+
+
+@pytest.mark.parametrize("form, want", [
+    ("dict", "pass"),                                 # older one-dict form
+    ("list1", "pass"),                                # resume_k1_identity: one start / one end
+    ("list2_same", "pass"),                           # two appended records, same head
+    ("list2_diff", "H-T3-3"),                         # two appended records, heads differ
+    ("list_empty", "undecidable"),                    # empty list = source missing
+])
+def test_k0_sidecar_list_forms(tmp_path, form, want):
+    side = {"dict": ident(), "list1": _sidecar_list("abc"), "list2_same": _sidecar_list("abc", "abc"),
+            "list2_diff": _sidecar_list("abc", "xyz"), "list_empty": {"start": [], "end": []}}[form]
+    paths, steps = outputs(tmp_path, {"T-3K": side})
+    fnd = core.Findings()
+    out = t3.identity_check(paths, fnd, git_at_start="abc", steps=(steps,))
+    if want == "pass":
+        assert fnd.status() == "pass", (fnd.stops, fnd.undecidable)
+        assert out["T-3K"]["checks"]["head"] is True and out["T-3K"]["checks"]["threads"] is True
+        n = {"dict": 1, "list1": 1, "list2_same": 2}[form]
+        assert out["T-3K"]["records"] == {"start": n, "end": n}
+    elif want == "H-T3-3":
+        assert "H-T3-3" in stop_codes(fnd) and out["T-3K"]["checks"]["head"] is False
+    else:
+        assert out["T-3K"]["checks"]["identity_file"] is None
+        assert any("identity_file: source missing" in u["why"] for u in fnd.undecidable)
+
+
+def test_k0_sidecar_list_every_start_record_checked(tmp_path):
+    """A second (appended) start record that is dirty / has wrong threads / a failed seal is not hidden."""
+    side = _sidecar_list("abc", "abc")
+    side["start"][1]["git"] = {"head": "abc", "is_clean": False, "status_porcelain": " M 03_src/x.py\n"}
+    paths, steps = outputs(tmp_path, {"R-0": side})
+    fnd = core.Findings()
+    out = t3.identity_check(paths, fnd, git_at_start="abc", steps=(steps,))
+    assert out["R-0"]["checks"]["tree"] is False and fnd.status() == "undecidable"
+    side = _sidecar_list("abc", "abc")
+    side["start"][1]["threads"] = dict(side["start"][1]["threads"], OMP_NUM_THREADS="8")
+    side["start"][1]["rules_seals"] = {"v5_resume_4368_rules.md": {"ok": False}}
+    paths, steps = outputs(tmp_path, {"R-0": side})
+    fnd = core.Findings()
+    out = t3.identity_check(paths, fnd, git_at_start="abc", steps=(steps,))
+    assert out["R-0"]["checks"]["threads"] is False and out["R-0"]["checks"]["rules_seals"] is False
+    assert t3.sidecar_records([{"a": 1}, 3]) is None and t3.sidecar_records({"a": 1}) == [{"a": 1}]
+
+
 def test_rev7_r73b_identity_names_and_mirrors(tmp_path):
     paths, steps = outputs(tmp_path, {})
     fnd = core.Findings()
