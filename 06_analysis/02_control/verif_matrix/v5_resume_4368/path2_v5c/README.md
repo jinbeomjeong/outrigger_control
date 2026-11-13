@@ -1,17 +1,17 @@
 # 436.8 경로 2 — v5 기준 원 규칙 등급 재집계 (H-6·H-8·H-9·H-10)
 
-- 규칙: 436.8 원판 `../../v5_resume_4368_rules.md`(`9019b405…`), rev1(`d9094fda…`), rev2(`497e4614…`), rev3(`dad8dfa6…`), rev4(`7ea87a30…`), rev5(`452a8436…`, 커밋 31d543e), rev6(`809e5639…`, 커밋 d581df4), rev7(`e81f7d31…`, 커밋 292f9d2), rev8(`3ecafaaf…`, 봉인 파일 커밋 27c76f3), **rev9(`4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d`, 봉인 파일 커밋 e5a2c19, 규칙 머리의 봉인 커밋 27c76f3)**. 원 규칙은 원판 부록 A의 `v5_criteria.md` + 개정 1~12b다.
+- 규칙: 436.8 원판 `../../v5_resume_4368_rules.md`(`9019b405…`), rev1(`d9094fda…`), rev2(`497e4614…`), rev3(`dad8dfa6…`), rev4(`7ea87a30…`), rev5(`452a8436…`, 커밋 31d543e), rev6(`809e5639…`, 커밋 d581df4), rev7(`e81f7d31…`, 커밋 292f9d2), rev8(`3ecafaaf…`, 봉인 파일 커밋 27c76f3), rev9(`4cf7843c…`, 봉인 파일 커밋 e5a2c19), **rev10(`62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29`, 봉인 파일 커밋 8b4ad93, 규칙 머리의 봉인 커밋 e5a2c19)**. 원 규칙은 원판 부록 A의 `v5_criteria.md` + 개정 1~12b다.
   - 실행할 때마다 두 곳에서 확인한다.
-    - `p2_4368.check_seals`: 원판~rev9(rev8은 fd9bb68 판부터, rev9는 b0d6382 판부터), 부록 A, R2-9·R3-F4 CRLF 정규화.
-    - 이 폴더의 `check_rev3`: rev3~rev9의 raw sha가 코드 봉인 값과 `.sha256` 기록 첫 값 둘 다와 같은지, LF·BOM 없음.
-  - 어긋나거나 `.sha256`이 없으면 종료 2(S-1)다(rev7 R7-7, rev8 R8-4, rev9 R9-8 봉인 확인).
+    - `p2_4368.check_seals`: 원판~rev10(rev8은 fd9bb68 판부터, rev9는 b0d6382 판부터, rev10은 a9594dc 판부터), 부록 A, R2-9·R3-F4 CRLF 정규화.
+    - 이 폴더의 `check_rev3`: rev3~rev10의 raw sha가 코드 봉인 값과 `.sha256` 기록 첫 값 둘 다와 같은지, LF·BOM 없음.
+  - 어긋나거나 `.sha256`이 없으면 종료 2(S-1)다(rev7 R7-7, rev8 R8-4, rev9 R9-8, rev10 R10-3 봉인 확인).
 - 작성자: terramechanics-expert(경로 2, 사용자 결정 2026-11-13). 경로 1 도구를 만들거나 고친 적이 없다. 읽은 것은 아래 "독립성 공개"에 적었다.
 - 환경: `conda run -n dynamics-dev python -I -B <도구> ...`. 쓰는 것은 표준 라이브러리, numpy, scipy, 그리고 git(`log`·`rev-parse` 조회만)이다.
 - 공통 CLI:
   - 인자: `--repo`, `--out <JSON>`, `--p2-dir`, `--allow-import-sha`.
   - 종료 코드: 0(이상 없음), 1(실패 또는 판정 불가), 2(멈춤 H-*·S-*·P-*, 규칙 sha 불일치, import sha 불일치 `P2-SHA`), 3(도구 오류).
   - stdout 마지막 줄은 ASCII JSON(`tool_sha256`, `common_sha256`, `status`, `exit`, `out_sha256`, `stop_codes`)이다.
-- `.gitattributes`에서 이 폴더 전체를 `-text`로 둔다(82행 `path2_v5c/* -text`). 저장소 blob 바이트가 그대로 작업본이 되고, 도구 sha는 그 바이트 기준이다. 줄바꿈은 파일마다 다르다: `p2v5c_common.py`·`p2v5c_grid.py`·`p2v5c_stage1.py`는 CRLF, `p2v5c_noise.py`·`test_p2v5c.py`·이 README는 LF다. 고칠 때 각 파일의 줄바꿈을 그대로 둔다.
+- `.gitattributes`에서 이 폴더 전체를 `-text`로 둔다(패턴 `06_analysis/02_control/verif_matrix/v5_resume_4368/path2_v5c/* -text`. 줄 번호는 다른 줄이 더해지면 바뀌므로 적지 않는다). 저장소 blob 바이트가 그대로 작업본이 되고, 도구 sha는 그 바이트 기준이다. 줄바꿈은 파일마다 다르다: `p2v5c_common.py`·`p2v5c_grid.py`·`p2v5c_stage1.py`는 CRLF, `p2v5c_noise.py`·`test_p2v5c.py`·이 README는 LF다. 고칠 때 각 파일의 줄바꿈을 그대로 둔다.
 
 ## import (복사하지 않음, 메인 세션 결정 2026-11-13)
 
@@ -21,22 +21,37 @@ J 항목(R3-C3~C8, R4-C5의 `values.case_floor_deg`로 정하는 J3 바닥 각)�
 
 | 파일 | 고정 sha256 | 판 | 쓰는 것 |
 |---|---|---|---|
-| `p2_v5j.py` | `5772624cb28e414ceeb38af3eb6d386a2e0a78857db8a5ea9a5d3cd2ec5f7d8b` | rev5·rev6 판(커밋 `d49068e`), rev7·rev8·rev9에서 바뀌지 않음 | `judge_pair`(M-3: LS J11 n_late > 0 → stop, 이 도구의 L-e로 이어짐), `j_values`, `jp3`, `nrev_max_by_row`, `pair_key`, `row_key`, `rod_reading_from_t4h`, `tag_of`, `is_event` |
-| `p2_4368.py`(`p2_v5j.core`) | `7d764a80f43db9431f303bb3d0049c2548788c5928a8cf555b1fa86cc9e44322` | rev9 판(dynamics-expert 커밋 `b0d6382`, 이 브랜치에 `y4368-p2h` 병합 `bc557ba`로 들어옴). 앞 판: rev8 `fd9bb68` `bebed9f1…`, rev7 `69b563f` `e033ca4b…`, `d49068e` `dc631509…` | `check_seals`, `load_is_extend_start`, `Findings`, `t_ge/t_lt/t_gt`, `num`, `dig`, `read_jsonl`, `F_MIN_N` |
+| `p2_v5j.py` | `5772624cb28e414ceeb38af3eb6d386a2e0a78857db8a5ea9a5d3cd2ec5f7d8b` | rev5·rev6 판(커밋 `d49068e`), rev7~rev10에서 바뀌지 않음 | `judge_pair`(M-3: LS J11 n_late > 0 → stop, 이 도구의 L-e로 이어짐), `j_values`, `jp3`, `nrev_max_by_row`, `pair_key`, `row_key`, `rod_reading_from_t4h`, `tag_of`, `is_event` |
+| `p2_4368.py`(`p2_v5j.core`) | `6e297ea371ad8559d656c7c2d4508d4120c72989424baa4aedcaf2f8f7a7bfa0` | rev10 판(dynamics-expert 커밋 `a9594dc`, 이 브랜치에 `y4368-p2h` 병합 `4821aec`로 들어옴). 앞 판: rev9 `b0d6382` `7d764a80…`, rev8 `fd9bb68` `bebed9f1…`, rev7 `69b563f` `e033ca4b…`, `d49068e` `dc631509…` | `check_seals`, `load_is_extend_start`, `Findings`, `t_ge/t_lt/t_gt`, `num`, `dig`, `read_jsonl`, `F_MIN_N` |
 
 - 이 폴더의 rev7 판(c6a1b47)은 고정값 `dc631509…`였고, 이 브랜치에 dynamics-expert rev7 판(`69b563f`, `e033ca4b…`)이 병합된 뒤로는 맞지 않았다(`--allow-import-sha` 없이 실행하면 `P2-SHA` 멈춤). rev8 판에서 `bebed9f1…`로 맞췄다. 그 사이에 436.8 본 결과를 낸 적은 없다(R8-0).
 
-## 도구와 sha256 (rev9 판, 각 묶음 첫 결과 전 고정)
+## 도구와 sha256 (rev10 판, 각 묶음 첫 결과 전 고정)
 
-| 도구 | 묶음 | sha256 | rev8 판 |
+| 도구 | 묶음 | sha256 | rev9 판 |
 |---|---|---|---|
-| `p2v5c_common.py` | 공통 | `41f91daa3b822bf72a71b19d7f24b2e82318b6b68628181111e9190060ea2133` | `561c53d4…`(rev9 봉인 확인, `P2_CORE_SHA` `7d764a80…`, 머리 docstring) |
+| `p2v5c_common.py` | 공통 | `e299fd56411205d099c5fbde673729c12e059296cd94af63e1c1ddfc3f442844` | `41f91daa…`(rev10 봉인 확인, `P2_CORE_SHA` `6e297ea3…`, 머리 docstring). rev8 판 `561c53d4…` |
 | `p2v5c_stage1.py stage1` | H-10, H-9(main·pressure_only) | `53c1ab19ef8328eb04eddbb7becf74b50862fa5d8caf895bf6dfa400d041bd92` | 같음(바뀌지 않음) |
 | `p2v5c_grid.py grid` | H-9(격자 768, V0 짝, 계열 𝓕) | `4100dbdc91d9824e9a79f0f3cf7994648e88efaf85451617e94cbf6835cf653b` | 같음(바뀌지 않음) |
 | `p2v5c_noise.py noise` | H-6, H-8 | `4e4e174fee3b2ff657ef2f4b4f3db2d4b38146cb7a0f0089742713ed691f40e2` | 같음(바뀌지 않음) |
-| `test_p2v5c.py` | 자체 시험 28개 | `d9bd15416f4a4bee1e73a3fedf638c1b2d3fe214335a372d8a882cda54c88a3b` | `e584b37c…`(27개) |
+| `test_p2v5c.py` | 자체 시험 28개 | `335d6e5dfa128e2bb142900a78ad4b84d143eced7ba80ff5b64fc0931fce3367` | `d9bd1541…`(28개, rev10 봉인 단언 추가). rev8 판 `e584b37c…`(27개) |
 
-- 실행 기록의 `common_sha256`으로 rev9 판임을 가른다. `tool_sha256`(stage1·grid·noise)은 rev8 판과 같다.
+- 실행 기록의 `common_sha256`으로 rev10 판임을 가른다. `tool_sha256`(stage1·grid·noise)은 rev8 판부터 같다.
+
+## rev10 반영
+
+| 규칙 | 반영 | 함수 |
+|---|---|---|
+| R10-3 봉인 확인 | `LATER_RULES`에 rev10(`62a0bd8d…`, `.sha256`)을 더했다. 파일 sha가 코드의 봉인 값·`.sha256` 첫 값 둘 다와 같고 LF·BOM 없음이어야 한다. 아니면 S-1(종료 2) | `common.check_rev3`, `common.run_main` |
+| R10-3 `P2_CORE_SHA` | `../path2/p2_4368.py` 고정값을 rev10 판 `6e297ea3…`로 바꿨다(병합 뒤 실제 sha와 같음 확인). `P2_V5J_SHA`(`5772624c…`)는 실제 sha와 같아 그대로다 | `common.import_record` |
+
+### rev10에서 이 폴더가 바꿀 것이 없던 항목
+
+| 규칙 | 이유 |
+|---|---|
+| R10-1a 전체 묶음 이름, R10-1b 경우별 처리(manifest·`batch.json` 행 수, manifest 파일 없음 = 입력 오류) | R9-4 LS 판별(Chrono 행, C-5 J11)의 입력 경계다. 이 폴더는 S9 배치 `batch.json`·`chrono_rows_manifest.json`을 읽지 않는다. 하네스 줄의 LS는 구조 필드 `job.setting`으로 가른다(rev9 반영 절) |
+| R10-2 G-S 확인 항목 | Chrono 행마다의 묶음 이름·manifest 확인이다. 이 폴더는 G-S 출력을 만들거나 읽지 않는다 |
+| R10-3 순서·`git_at_start` | 메인 세션이 정하는 순서다. 이 폴더 `noise`는 `--git-at-start`를 받는 그대로다 |
 
 ## rev9 반영
 
@@ -176,6 +191,7 @@ $c = 'C:\ProgramData\miniforge3\Scripts\conda.exe'
   - rev7 반영 때 경로 1 코드(`04_scripts/04_hydraulic/coupled/*_4368.py`, `judge4368_common.py`, `resume4368_judge.py`, `chrono_rows_judge_4368.py`, `README_judges_4368.md`)와 경로 1 출력은 열지 않았다. 기록 필드 이름·형식은 rev7 R7-2 원문만 근거로 썼다.
   - rev8 전체(2026-11-13, R8-2·R8-4 반영, R8-1·R8-3은 해당 없음 확인). 반영 때 경로 1 코드·출력은 열지 않았다. 같은 경로 2의 `fd9bb68` 커밋 메시지와 `p2_4368.py` 차이(`check_seals`·`r82_extend_start`·`law_locked_format` 부분)를 읽었다. ③ 판별 근거는 R8-2 원문이다.
   - rev9 전체(2026-11-13, R9-8 봉인 확인·`P2_CORE_SHA` 반영, R9-7 확인 시험 추가, R9-1~R9-6은 해당 없음 확인). 반영 때 경로 1 코드·출력은 열지 않았다. 같은 경로 2의 `b0d6382` 커밋 메시지와 `p2_4368.py`에서 rev9 머리 docstring·LS 처리 줄(grep)만 읽었다. `chrono_rows_manifest.json`은 열지 않았다.
+  - rev10 전체(2026-11-13, R10-3 봉인 확인·`P2_CORE_SHA` 반영, R10-1·R10-2는 해당 없음 확인). 경로 1 코드·출력과 `chrono_rows_manifest.json`은 열지 않았다. 같은 경로 2의 `a9594dc`는 커밋 제목과 `p2_4368.py` sha만 확인했다.
   - v5 기준 원판과 개정 1~11의 해당 절, `m1_criteria.md` 38~40행.
   - 명세 342.1~342.3, 405~407.1, 419.8·419.8.1, 423.1·423.4, 11025·11980행.
 - 원 규칙이 지정한 판정 도구 `r79_sensor_judge.py`(R4-A2 안 c, 경로 2가 실행):
