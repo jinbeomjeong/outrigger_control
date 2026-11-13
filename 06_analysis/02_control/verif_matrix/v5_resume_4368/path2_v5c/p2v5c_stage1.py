@@ -220,8 +220,8 @@ def judge_all(v5j, core, lines, v0_idx, nrev, is_p3, t4h_root, where):
             continue
         rod = v5j.rod_reading_from_t4h(ln, t4h_root) if t4h_root else None
         items, f = v5j.judge_pair(ln, v0, nrev.get(v5j.row_key(ln["job"])), is_p3, rod)
-        if setting(ln) in ("VB",) + LS_SETTINGS and items.get("J-P3", {}).get("result") == "not_applicable_tag":
-            f.undec(where, f"J-P3 not applied on {setting(ln)} line (tag not ③ on): {pk}")
+        if setting(ln) in ("VB",) + LS_SETTINGS:   # rev8 R8-2: non-3 tag = J-P3 not applicable + S-2
+            cm.jp3_tag_scope(f, f"{where}|{pk}", items.get("J-P3", {}).get("result"), setting(ln))
         out[(setting(ln), pk)] = (items, f)
     return out
 

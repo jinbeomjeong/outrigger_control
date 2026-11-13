@@ -287,8 +287,8 @@ def run_checks(name, recs, core, v5j, is_p3, vb, fnd):
         if vb:
             res, why = v5j.jp3(r, is_p3, True)   # R3-C8: two-pressure screen = rod reading
             jp[res] = jp.get(res, 0) + 1
-            if res == "not_applicable_tag":
-                fnd.undec(where, "J-P3 not applied (tag not ③ on)")
+            if cm.jp3_tag_scope(fnd, where, res, "VB"):   # rev8 R8-2: not applicable + S-2
+                pass
             elif res == "H-7":
                 fnd.stop("H-7", where, f"J-P3 {why}")
             elif res == "setting_defect":

@@ -10,6 +10,10 @@ opened (436.8 rules 9.2). This module does not copy the path-2 common module; it
 * ``p2_4368.py`` through ``p2_v5j.core`` (seal check S-1 / R2-9, thresholds 7.6, K-10 ``same_value``,
   ``Findings``, ``load_is_extend_start``).
 
+rev8 (3ecafaaf...): ``jp3_tag_scope`` - J-P3 applies to extend-start (3) rows only, decided by the row
+tag (R8-2, rev3 R3-C8, original 4.1); a VB / LS line whose tag is not 3 on has J-P3 not applicable
+(not counted as missing) and is an S-2 stop (tag differs from the 3-on tag of the setting).
+
 Both files are located with ``--p2-dir`` (default: ``../path2`` next to this folder, else the
 dynamics-expert worktree). Their sha256 values are checked against ``P2_V5J_SHA`` / ``P2_CORE_SHA``;
 a difference is a stop (exit 2, code ``P2-SHA``) because the J-item definition would have moved.
@@ -39,8 +43,10 @@ P2_FALLBACK = Path(r"C:\workspace\outrigger_control\.claude\worktrees\agent-a2e8
 # rev3 versions were p2_v5j ceb75ee9..., p2_4368 cf0b643c...
 # rev5 / rev6 versions (dynamics-expert commits 7b1e2e8 / d49068e; M-3: LS J11 n_late > 0 -> L-e);
 # rev4 versions were p2_v5j a1675151..., p2_4368 71b87060...
+# rev8 version of p2_4368 (dynamics-expert commit fd9bb68: rev8 seal, R8-2 / R8-3 Chrono rows, R8-1b
+# dotted key); before: d49068e dc631509..., rev7 69b563f e033ca4b... (p2_v5j unchanged since d49068e)
 P2_V5J_SHA = "5772624cb28e414ceeb38af3eb6d386a2e0a78857db8a5ea9a5d3cd2ec5f7d8b"
-P2_CORE_SHA = "dc631509b90296d842ec382c911f6a0abfd8944e170802386221eb2a1f315a27"
+P2_CORE_SHA = "bebed9f1663ce17a0ea24c72de67080b335109dfb83d735971fe68cff4ed9d31"
 
 EXIT = {"pass": 0, "fail": 1, "undecidable": 1, "stop": 2}
 
@@ -53,6 +59,7 @@ LATER_RULES = (   # sealed addenda checked here (raw sha, LF, no BOM, .sha256 re
     (_VMR + "rev5.md", "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca", _VMR + "rev5.sha256"),
     (_VMR + "rev6.md", "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9", _VMR + "rev6.sha256"),
     (_VMR + "rev7.md", "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502", _VMR + "rev7.sha256"),
+    (_VMR + "rev8.md", "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56", _VMR + "rev8.sha256"),
 )
 REV3_REL, REV3_SHA = LATER_RULES[0][0], LATER_RULES[0][1]
 
@@ -67,8 +74,19 @@ def _check_one(repo, rel, want, seal_rel):
     return {"path": rel, "sha256": got, "want": want, "seal_file_sha": seal, "ok": ok}
 
 
+def jp3_tag_scope(fnd, where, res, setting_name):
+    """rev8 R8-2 on a line of a 3-on setting (VB, LS). ``res`` is the ``p2_v5j.jp3`` result. A non-3 tag
+    (or no tag) means J-P3 not applicable - not a missing item - and the line runs another controller
+    than its setting: S-2 (original 4.1 / 8.2). Returns True when the S-2 was raised."""
+    if res != "not_applicable_tag":
+        return False
+    fnd.stop("S-2", where, f"R8-2: {setting_name} line tag not 3 on (J-P3 not applicable, tag != setting)")
+    return True
+
+
 def check_rev3(repo):
-    """rev3 ~ rev7 (the name is kept for the tests); ``ok`` = all sealed addenda match."""
+    """rev3 ~ rev8 (the name is kept for the tests); ``ok`` = all sealed addenda match (rev8 R8-4:
+    file sha = code seal sha = ``.sha256`` record, else S-1)."""
     items = [_check_one(repo, *r) for r in LATER_RULES]
     return {"items": items, "ok": all(i["ok"] for i in items)}
 
