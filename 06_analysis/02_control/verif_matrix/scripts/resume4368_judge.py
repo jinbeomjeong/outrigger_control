@@ -61,6 +61,14 @@ Rev5 (``v5_resume_4368_rules_rev5.md``, sealed 452a8436, checked raw too): R5-A1
 subcommands; it only adds the rev5 seal check). Rev6 (``v5_resume_4368_rules_rev6.md``, sealed
 809e5639, checked raw too): seal check only here (R6-C items are in the ``*_4368.py`` judges).
 
+Rev7 (``v5_resume_4368_rules_rev7.md``, sealed e81f7d31, checked raw too): R7-1a in ``gs`` and
+``record-check``: the top-level ``controller_tag`` of every r79 result (H-6 .. H-8) and grid job
+record (H-9) against the ``controller_tag`` of the T4h meta of the same run (``t4h_file`` in
+``--t4h-dir``, ``<result stem>_t4h/`` or ``t4h/`` next to the result). Different, or a tag on
+one side only (a listed T4h file that is not found counts as no meta tag) = S-2. A run without
+``t4h_file`` (grid job records, r79 runs without ``R79_T4H_DIR``) is counted as not compared:
+rev7 gives the comparison for runs with a T4h record only.
+
 Exit codes: 0 no finding, 1 a finding (stop condition, mismatch, missing key), 2 input error, 3
 internal error.
 The tool reads only; it never runs a simulation. Tag judgements use
@@ -114,9 +122,14 @@ RULES_REV6_NAME = "v5_resume_4368_rules_rev6.md"
 RULES_REV6_SHA256 = "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9"
 """Rev6 (sealed 2026-11-13 07:49:42 +09:00): overrides rev5 .. the original (R6-C: F-9, K-0
 fields, U-S9-G6c branch)."""
+RULES_REV7_NAME = "v5_resume_4368_rules_rev7.md"
+RULES_REV7_SHA256 = "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502"
+"""Rev7 (sealed 2026-11-13 09:56:53 +09:00): overrides rev6 .. the original (R7-1a: r79 / grid
+top-level tag = T4h meta tag, else S-2; R7-7: this seal is checked by the path 1 tools)."""
 SEALED_REVISIONS = ((RULES_REV1_NAME, RULES_REV1_SHA256), (RULES_REV2_NAME, RULES_REV2_SHA256),
                     (RULES_REV3_NAME, RULES_REV3_SHA256), (RULES_REV4_NAME, RULES_REV4_SHA256),
-                    (RULES_REV5_NAME, RULES_REV5_SHA256), (RULES_REV6_NAME, RULES_REV6_SHA256))
+                    (RULES_REV5_NAME, RULES_REV5_SHA256), (RULES_REV6_NAME, RULES_REV6_SHA256),
+                    (RULES_REV7_NAME, RULES_REV7_SHA256))
 """The revisions every subcommand checks raw (R2-9: sealed rule files are ``-text``, no LF
 normalisation)."""
 RECORD_KEY = "resume_k1"
@@ -475,16 +488,19 @@ def record_check(args: argparse.Namespace) -> dict:
                 }
             )
     bad = sum(bool(r["problems"]) for r in harness + chrono)
+    tag_check = r79_tag_check(args.harness or [], getattr(args, "t4h_dir", None) or ())
     return {
         "rules": RULES_NAME,
-        "section": "4.2",
+        "section": "4.2 (+ rev7 R7-1a tags)",
         "harness_runs": len(harness),
         "chrono_rows": len(chrono),
         "rows_with_problems": bad,
         "stop_S3": bad > 0,
         "harness": [r for r in harness if r["problems"]] if not args.all else harness,
         "chrono": chrono,
-        "exit_code": 1 if bad else 0,
+        "r79_tag_check": tag_check,
+        "stop_S2": tag_check["stop_S2"],
+        "exit_code": 1 if bad or tag_check["stop_S2"] else 0,
     }
 
 
@@ -1357,6 +1373,112 @@ def soil_event_series_presence(case_dir: Path) -> dict[str, bool]:
             has_rows and all(name in columns for name in wanted)}
 
 
+# ------------------------------------------------------------------------- rev7 R7-1a tag check
+T4H_FILE_KEY = "t4h_file"
+"""r79 result key with the T4h record's file name (``r79_sensor_screen.write_t4h``)."""
+T4H_META_KEY = "meta_json"
+"""T4h npz entry with the run meta as a JSON string (it holds ``controller_tag``)."""
+T4H_DIR_SUFFIX = "_t4h"
+"""``<result stem>_t4h/``: the T4h folder of ``resume_k1_steps`` and ``run_v5`` outputs."""
+T4H_SIBLING_DIR = "t4h"
+"""``t4h/`` next to the result: the T4h folder of ``las_t3`` Dg-3 runs."""
+TAG_MATCH = "match"
+TAG_STOP = "S-2"
+TAG_NOT_COMPARED = "no T4h record"
+TAG_CHECK_RULE = ("rev7 R7-1a: r79 (H-6 .. H-8) / grid (H-9) top-level controller_tag = T4h "
+                  "meta controller_tag of the same run; different or one side only = S-2")
+
+
+def t4h_folders(result_path: Path, extra_dirs: list[Path] | tuple[Path, ...] = ()) -> list[Path]:
+    """Folders searched for a run's T4h file, in order: the given ones, then the two runner
+    conventions next to the result file."""
+    path = Path(result_path)
+    return [*(Path(d) for d in extra_dirs), path.with_name(f"{path.stem}{T4H_DIR_SUFFIX}"),
+            path.parent / T4H_SIBLING_DIR]
+
+
+def t4h_meta_tag(path: Path) -> tuple[bool, str | None]:
+    """(meta readable, ``controller_tag`` of the meta) of one T4h npz (never loads pickles)."""
+    import numpy as np
+
+    try:
+        with np.load(path, allow_pickle=False) as data:
+            if T4H_META_KEY not in data.files:
+                return False, None
+            meta = json.loads(str(data[T4H_META_KEY].item()))
+    except (OSError, ValueError) as exc:  # json.JSONDecodeError is a ValueError
+        print(f"T4h meta of {path} unreadable: {exc}", file=sys.stderr)
+        return False, None
+    if not isinstance(meta, dict):
+        return False, None
+    return True, meta.get("controller_tag")
+
+
+def _tag_compare_record(record: dict, folders: list[Path]) -> dict:
+    """R7-1a for one r79 result or grid job record: status ``match`` / ``S-2`` / not compared."""
+    top_tag = record.get("controller_tag")
+    name = record.get(T4H_FILE_KEY)
+    row: dict[str, Any] = {"key": record_key(record), "t4h_file": name,
+                           "top_tag": top_tag, "t4h_tag": None}
+    if not name:
+        return {**row, "status": TAG_NOT_COMPARED, "reason": None}
+    found = next((folder / str(name) for folder in folders if (folder / str(name)).is_file()),
+                 None)
+    if found is None:
+        return {**row, "status": TAG_STOP,
+                "reason": f"{T4H_FILE_KEY} not found in {[str(f) for f in folders]} (no meta tag)"}
+    is_readable, t4h_tag = t4h_meta_tag(found)
+    row.update(t4h_path=str(found), t4h_tag=t4h_tag)
+    if not is_readable:
+        return {**row, "status": TAG_STOP, "reason": f"T4h {T4H_META_KEY} missing or unreadable"}
+    if top_tag == t4h_tag:
+        return {**row, "status": TAG_MATCH, "reason": None}
+    if top_tag is None or t4h_tag is None:
+        side = "T4h meta" if top_tag is None else "top level"
+        return {**row, "status": TAG_STOP, "reason": f"controller_tag on the {side} only"}
+    return {**row, "status": TAG_STOP, "reason": "top-level controller_tag differs from T4h meta"}
+
+
+def tag_check_records(document: Any) -> list[dict]:
+    """The R7-1a records of one document: r79 results and the job records of a grid file."""
+    results = document.get("results") if isinstance(document, dict) else None
+    if not isinstance(results, list):
+        return [document] if isinstance(document, dict) and is_r79_record(document) else []
+    if is_grid_document(document):
+        return [row for row in results if isinstance(row, dict)]
+    return [row for row in results if isinstance(row, dict) and is_r79_record(row)]
+
+
+def r79_tag_check(paths: list[Path], t4h_dirs: list[Path] | tuple[Path, ...] = (),
+                  *, with_values: bool = True) -> dict:
+    """Rev7 R7-1a over harness outputs.
+
+    Args:
+        paths: Harness output files (r79 / grid ``.json``, ``.jsonl``); other runs are skipped.
+        t4h_dirs: Extra T4h folders searched before the runner conventions.
+        with_values: Keep the tag values in the rows (``gs`` reports presence only, so False).
+
+    Returns:
+        Counts (``compared``, ``mismatched``, ``not_compared``), the ``S-2`` rows, the not
+        compared runs per file and ``stop_S2`` (a mismatch anywhere).
+    """
+    rows = []
+    for path in paths:
+        folders = t4h_folders(Path(path), t4h_dirs)
+        for document in read_records(Path(path)):
+            for record in tag_check_records(document):
+                rows.append({"file": str(path), **_tag_compare_record(record, folders)})
+    mismatched = [r for r in rows if r["status"] == TAG_STOP]
+    not_compared = Counter(r["file"] for r in rows if r["status"] == TAG_NOT_COMPARED)
+    if not with_values:
+        hidden = ("top_tag", "t4h_tag")
+        mismatched = [{k: v for k, v in r.items() if k not in hidden} for r in mismatched]
+    return {"rule": TAG_CHECK_RULE, "compared": len(rows) - sum(not_compared.values()),
+            "mismatched": len(mismatched), "not_compared": sum(not_compared.values()),
+            "not_compared_by_file": dict(not_compared), "rows": mismatched,
+            "stop_S2": bool(mismatched)}
+
+
 def gs(args: argparse.Namespace) -> dict:
     files = []
     for path in args.harness:
@@ -1387,13 +1509,17 @@ def gs(args: argparse.Namespace) -> dict:
                 files.append({"file": str(Path(batch_dir) / case), "runs": 1,
                               "missing": sorted(k for k, ok in found.items() if not ok)})
     bad = [f for f in files if f["missing"]]
+    tag_check = r79_tag_check(args.harness, getattr(args, "t4h_dir", None) or (),
+                              with_values=False)
     return {
         "rules": RULES_NAME,
         "section": "11.2 (+ rev3: command hash, extend_bound_check, head_only_declared, "
-                   "settle_v2; rev4 R4-D: F-1 .. F-6 and the meaning checks)",
+                   "settle_v2; rev4 R4-D: F-1 .. F-6 and the meaning checks; rev7 R7-1a tags)",
         "files": files,
         "files_with_missing": len(bad),
-        "exit_code": 1 if bad else 0,
+        "r79_tag_check": tag_check,
+        "stop_S2": tag_check["stop_S2"],
+        "exit_code": 1 if bad or tag_check["stop_S2"] else 0,
     }
 
 
@@ -2240,6 +2366,9 @@ def _parser() -> argparse.ArgumentParser:
         )
         p.add_argument("--all", action="store_true", help="list every run, not only the findings")
         p.add_argument("--out", type=Path, required=True)
+        if name == "record-check":
+            p.add_argument("--t4h-dir", type=Path, action="append", default=[],
+                           help="T4h folder searched first (repeatable; rev7 R7-1a)")
         if name == "k1-class":
             p.add_argument("--anchor-map", type=Path, default=None,
                            help="anchor-map report (RV1-5 selection, the only anchor input)")
@@ -2265,6 +2394,8 @@ def _parser() -> argparse.ArgumentParser:
     p.add_argument("--harness", nargs="*", type=Path, default=[])
     p.add_argument("--chrono", nargs="*", type=Path, default=[],
                    help="Chrono batch folders: PS-c soil_event_series.npz columns (rev4)")
+    p.add_argument("--t4h-dir", type=Path, action="append", default=[],
+                   help="T4h folder searched first (repeatable; rev7 R7-1a)")
     p.add_argument("--out", type=Path, required=True)
     p = sub.add_parser("keyset",
                        help="rev1 RV1-3: new H-6 .. H-9 grid output vs stored keys (S-15)")
@@ -2369,7 +2500,7 @@ def revision_seal_problems(folder: Path, name: str, sha256: str) -> tuple[dict, 
 
 
 def sealed_rules_check(rules_dir: Path | None = None) -> dict:
-    """Rev1 .. rev6 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
+    """Rev1 .. rev7 seals (:data:`SEALED_REVISIONS`); any problem is ``stop_S1``."""
     folder = RULES_DIR if rules_dir is None else Path(rules_dir)
     revisions, problems = {}, []
     for name, sha256 in SEALED_REVISIONS:
@@ -2404,6 +2535,7 @@ def main(argv: list[str] | None = None) -> int:
     report["rules_rev2_sha256"] = RULES_REV2_SHA256
     report["rules_rev3_sha256"] = RULES_REV3_SHA256
     report["rules_rev4_sha256"] = RULES_REV4_SHA256
+    report["rules_rev7_sha256"] = RULES_REV7_SHA256
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(
         json.dumps(report, indent=1, ensure_ascii=False, default=str), encoding="utf-8"

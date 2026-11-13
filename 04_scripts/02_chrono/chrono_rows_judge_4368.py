@@ -76,6 +76,7 @@ RULES_SEALS = {
     "v5_resume_4368_rules_rev4.md": "7ea87a30b08a00263c597d42d3450dc56f68952e8d3205604cb2c5bab5dce14b",
     "v5_resume_4368_rules_rev5.md": "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca",
     "v5_resume_4368_rules_rev6.md": "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9",
+    "v5_resume_4368_rules_rev7.md": "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502",
 }
 """Sealed sha256 of each rules file (the ``.sha256`` files of 2026-11-13); both the file and its ``.sha256`` must
 match (original 8.2 S-1)."""
