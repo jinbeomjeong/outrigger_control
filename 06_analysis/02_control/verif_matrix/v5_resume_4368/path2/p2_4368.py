@@ -21,11 +21,19 @@ mismatch = format error); R9-4 LS row = manifest ``rows[].v5_setting`` and S9 ``
 ``cases[].v5_setting`` equal and in LS1..LS4 (``--rows-manifest``; name tokens not used), LS row with a
 non-③ tag = S-2; R9-5 / R9-6 missing or malformed ``law_locked``: G-S = S-11 (every SCM level / L2b row),
 main run C-5 row = J11 not judgeable + stop (both engines), other rows recorded as "input missing".
-rev10 (62a0bd8d...): seal check; R10-1a full batch name (`batch.json` `batch` checked against the
+rev10 (62a0bd8d...): seal check; R10-1a full batch name (``batch.json`` ``batch`` checked against the
 folder-name part, no key = folder name; mismatch / undeterminable / not a manifest batch = unknown);
-R10-1b unknown name, 0 or several manifest rows or `batch.json` cases for the case = LS not judgeable,
+R10-1b unknown name, 0 or several manifest rows or ``batch.json`` cases for the case = LS not judgeable,
 not LS only with one row in each source and no value in both; missing / unreadable manifest = input
 error (S-11, exit 2, bundles not judged); R10-2 G-S: name and one row per source, else S-11.
+rev11 (9bac4524...): seal check; R11-4 ``chrono --git-at-start``: every row's (open loop included)
+``batch.json`` ``cases[].code_at_launch.git.head`` and, where recorded, ``result.json``
+``code_state.git_at_start`` head = the judgement git_at_start, absent or different = S-12 (also in G-S);
+R11-5 G-S rows get no grade from this tool. R11-1 / R11-2 are in ``p2_t3k.py`` / ``p2_v5j.py``.
+rev7 R7-5 (applied 2026-11-13 after rev11): the L2b / L1-R row folder is the last ``batch wall ... -> <folder>``
+line of ``<batch>/<case>.log`` (relocated under ``<repo>/07_results`` when that folder has no result.json),
+else the unique runner folder of the row's ``--tag`` whose stamp is in the row window (progress.log
+START~END, else batch stamp + wall_s) +-2 s; none or several = the row is not judged (S-11).
 Author: dynamics-expert (path 2, user decision 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
 ``resume_k1_record.py``, the judging part of ``resume_k1_steps.py``) and every path-1 output were not
@@ -100,6 +108,9 @@ REV9_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev9.s
 REV10_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev10.md"
 REV10_SHA = "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29"
 REV10_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev10.sha256"
+REV11_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev11.md"
+REV11_SHA = "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f"
+REV11_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev11.sha256"
 EXT_RULE_DOTTED = "two_pressure.extend_start_rule"     # rev8 R8-1b: one key of controller_settings
 GRID_SPEC_PRESCRIBED = "rev. 67 (G1 / G2 / G7 reduced screen)"   # rev2 R2-7
 GRID_EVENTS_PRESCRIBED = {"G4", "RE1bF", "FS24"}
@@ -443,7 +454,8 @@ def check_seals(repo, appendix=True):
                             (REV7_REL, REV7_SHA, REV7_SEAL_REL),
                             (REV8_REL, REV8_SHA, REV8_SEAL_REL),
                             (REV9_REL, REV9_SHA, REV9_SEAL_REL),
-                            (REV10_REL, REV10_SHA, REV10_SEAL_REL)):   # sealed rules: raw sha only (R2-9, R9-8, R10-3)
+                            (REV10_REL, REV10_SHA, REV10_SEAL_REL),
+                            (REV11_REL, REV11_SHA, REV11_SEAL_REL)):   # sealed rules: raw sha only (R2-9, R9-8, R10-3, R11-7)
         p = repo / rel
         got = sha256_file(p) if p.is_file() else None
         sp = repo / seal
@@ -1055,6 +1067,115 @@ def resolve_result(batch_dir, row, repo):
     return None
 
 
+# rev7 R7-5: L2b / L1-R row folder (case log, relocation, +-2 s window)
+R75_WINDOW_S = 2.0                         # R7-8: procedure value (folder stamp 1 s resolution)
+_WALL_RE = re.compile(r"batch wall .*->\s*(.+?)\s*$")
+_STAMP_RE = re.compile(r"_(\d{8}_\d{6})$")
+_PROG_RE = re.compile(r"^(START|END)\s+(\S+)\s+(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})")
+
+
+def runner_roots(repo):
+    """Result roots searched by the R7-5 time window (L1-R ``07_results/S6``, L2b ``07_results/S8``)."""
+    return [repo / "07_results" / "S6", repo / "07_results" / "S8"]
+
+
+def _row_result(folder, argv):
+    """result.json of a runner folder: ``<folder>/<--only>/result.json``, else ``<folder>/result.json``."""
+    only = argv_value(argv, "--only")
+    for q in ((folder / only / "result.json") if only else None, folder / "result.json"):
+        if q is not None and q.is_file():
+            return q
+    return None
+
+
+def _stamp_time(s):
+    try:
+        return _dt.datetime.strptime(s, "%Y%m%d_%H%M%S")
+    except ValueError:
+        return None
+
+
+def _row_window(batch_dir, row):
+    """R7-5: progress.log START~END of the case, else batch stamp + wall_s. (t0, t1, source) or None."""
+    case = row.get("case")
+    prog = Path(batch_dir) / "progress.log"
+    st = en = None
+    if prog.is_file():
+        for ln in prog.read_text("utf-8", errors="replace").splitlines():
+            m = _PROG_RE.match(ln.strip())
+            if m and m.group(2) == case:
+                t = _dt.datetime.fromisoformat(m.group(3))
+                if m.group(1) == "START":
+                    st = t
+                else:
+                    en = t
+    if st is not None and en is not None:
+        return st, en, "progress.log"
+    m = _STAMP_RE.search(Path(batch_dir).name)
+    t0 = _stamp_time(m.group(1)) if m else None
+    w = num(row.get("wall_s"))
+    if t0 is not None and w is not None:
+        return t0, t0 + _dt.timedelta(seconds=w), "batch stamp + wall_s"
+    return None
+
+
+def resolve_runner_row(batch_dir, row, repo, argv):
+    """rev7 R7-5 for an L2b / L1-R row. Returns (result.json or None, record). Methods: ``case_log``,
+    ``case_log_relocated``, ``time_window``; failure reasons are stops (the row is not judged)."""
+    case = row.get("case")
+    rec = {"method": None, "folder": None}
+    log = Path(batch_dir) / f"{case}.log"
+    target = None
+    if log.is_file():
+        for ln in log.read_text("utf-8", errors="replace").splitlines():
+            m = _WALL_RE.search(ln)
+            if m:
+                target = m.group(1)              # the last such line wins
+    if target is not None:
+        rec["case_log_target"] = target
+        folder = Path(target)
+        q = _row_result(folder, argv) if folder.is_dir() else None
+        if q is not None:
+            rec.update(method="case_log", folder=str(folder))
+            return q, rec
+        s = target.replace("\\", "/")
+        if "07_results/" in s:
+            folder = repo / "07_results" / s.split("07_results/", 1)[1]
+            q = _row_result(folder, argv) if folder.is_dir() else None
+            if q is not None:
+                rec.update(method="case_log_relocated", folder=str(folder))
+                return q, rec
+        rec["why"] = "R7-5: the case-log folder has no result.json (also not under the result root)"
+        return None, rec
+    win = _row_window(batch_dir, row)
+    if win is None:
+        rec["why"] = "R7-5: no case-log line and no row time window (progress.log / batch stamp + wall_s)"
+        return None, rec
+    t0, t1, src = win
+    rec["window"] = [t0.isoformat(), t1.isoformat(), src]
+    tag = argv_value(argv, "--tag")
+    lo, hi = t0 - _dt.timedelta(seconds=R75_WINDOW_S), t1 + _dt.timedelta(seconds=R75_WINDOW_S)
+    cands = []
+    for root in runner_roots(repo):
+        if not root.is_dir():
+            continue
+        for d in root.iterdir():
+            m = _STAMP_RE.search(d.name)
+            ts = _stamp_time(m.group(1)) if m else None
+            if not d.is_dir() or ts is None or not lo <= ts <= hi:
+                continue
+            if tag and tag not in d.name:
+                continue
+            if _row_result(d, argv) is not None:
+                cands.append(d)
+    rec["candidates"] = [str(d) for d in cands]
+    if len(cands) != 1:
+        rec["why"] = f"R7-5: {len(cands)} runner folders in the row time window +-{R75_WINDOW_S:g} s"
+        return None, rec
+    rec.update(method="time_window", folder=str(cands[0]))
+    return _row_result(cands[0], argv), rec
+
+
 def departure_index(t, crawler_n, weight_n):
     """First sample of the first run with crawler normal < 0.01 W lasting >= 0.1 s (P3a-2)."""
     import numpy as np  # noqa: PLC0415
@@ -1426,7 +1547,59 @@ def gs_presence(row, res, keys):
     return pres, bad
 
 
-def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits, manifest=None):
+def same_commit(recorded, want):
+    """Full 40-hex head against the judgement's git_at_start (full or an abbreviation of >= 7 hex)."""
+    if not isinstance(recorded, str) or not isinstance(want, str) or len(want) < 7:
+        return False
+    return recorded.lower().startswith(want.lower())
+
+
+def r114_launch_head(row, git_at_start, where, fnd):
+    """rev11 R11-4 3 / 5: ``batch.json`` ``cases[].code_at_launch.git.head`` vs git_at_start."""
+    rec = dig(row, "code_at_launch.git.head", None)
+    out = {"git_at_start": git_at_start, "code_at_launch_head": rec}
+    if git_at_start is None:
+        out["status"] = "not_checked"
+        fnd.undec(where, "R11-4: --git-at-start not given (commit identity not checked)")
+    elif not isinstance(rec, str):
+        out["status"] = "launch_head_absent"
+        fnd.stop("S-12", where, "R11-4: batch.json cases[].code_at_launch.git.head absent")
+    elif not same_commit(rec, git_at_start):
+        out["status"] = "launch_head_differs"
+        fnd.stop("S-12", where, f"R11-4: code_at_launch.git.head {rec[:12]} != git_at_start {git_at_start}")
+    else:
+        out["status"] = "ok"
+    return out
+
+
+def r114_result_head(res, out114, where, fnd):
+    """rev11 R11-4 4: level / L2b / L1-R rows are also checked against ``result.json``
+    ``code_state.git_at_start`` (head) where that record exists."""
+    v = dig(res, "code_state.git_at_start", MISSING)
+    head = v.get("head") if isinstance(v, dict) else (v if isinstance(v, str) else None)
+    out114["code_state_head"] = head if v is not MISSING else None
+    if v is MISSING or out114.get("git_at_start") is None:
+        out114["code_state"] = "absent" if v is MISSING else "not_checked"
+        return
+    if not same_commit(head, out114["git_at_start"]):
+        out114["code_state"] = "differs"
+        fnd.stop("S-12", where, f"R11-4: result.json code_state.git_at_start head {str(head)[:12]} != "
+                                f"git_at_start {out114['git_at_start']}")
+    else:
+        out114["code_state"] = "ok"
+
+
+def r114_summary(rows, git_at_start):
+    s = {"git_at_start": git_at_start, "launch_head": {}, "code_state": {}}
+    for r in rows:
+        x = r.get("r114") or {}
+        for k, d in (("status", s["launch_head"]), ("code_state", s["code_state"])):
+            if k in x:
+                d[x[k]] = d.get(x[k], 0) + 1
+    return s
+
+
+def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits, manifest=None, git_at_start=None):
     case = row.get("case")
     argv = [str(a) for a in row.get("argv", [])]
     engine = engine_of(argv)
@@ -1443,17 +1616,34 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits, manife
         fnd.stop("S-11", where, f"G-S R10-2: {out['r94_ls']['source_case']} ({out['r94_ls'].get('why')})")
     head = dig(row, "code_at_launch.git.head", None)
     commits.setdefault(head, []).append(case)
+    # rev11 R11-4: every Chrono row (open loop included) carries code_at_launch.git.head = the judgement's
+    # git_at_start; absent or different = S-12 (scope widened by R11-4 5)
+    out["r114"] = r114_launch_head(row, git_at_start, where, fnd)
     if dig(row, "code_at_launch.git.dirty", []) not in ([], None):
         fnd.stop("S-12", where, "dirty tree at launch")
     if row.get("rc") not in (0, None):
         fnd.undec(where, f"rc = {row.get('rc')} (run error, P-15)")
-    rpath = resolve_result(batch_dir, row, repo)
+    if engine in ("L2b", "L1-R"):
+        # rev7 R7-5: the row folder comes from the case log (relocated under the result root if needed),
+        # else the unique runner folder in the row time window +-2 s; otherwise the row is not judged (stop)
+        rpath, r75 = resolve_runner_row(batch_dir, row, repo, argv)
+        out["r75_folder"] = r75
+        s8 = dig(row, "s8c_check.result_json", None) or dig(row, "s6c_check.result_json", None)
+        if rpath is not None and isinstance(s8, str) and Path(s8).resolve() != Path(rpath).resolve():
+            fnd.note(where, f"R7-5: batch.json result_json {s8} differs from the case-log folder {rpath}")
+        if rpath is None:
+            out["result_json"] = None
+            fnd.stop("S-11", where, r75.get("why", "R7-5: row folder not found"))
+            return out
+    else:
+        rpath = resolve_result(batch_dir, row, repo)
     out["result_json"] = str(rpath) if rpath else None
     if rpath is None:
         fnd.undec(where, "result.json not found")
         return out
     res = json.loads(rpath.read_text("utf-8"))
     out["result_sha256"] = sha256_file(rpath)
+    r114_result_head(res, out["r114"], where, fnd)
     want_tag, kind, off = expected_chrono_tag(row, res, argv)
     out["kind"] = kind
     if kind == "openloop":
@@ -1786,7 +1976,8 @@ def cmd_chrono(args, repo):
         if batch.get("mixed_hull_mode") is True or "MIXED_HULL_MODE" in json.dumps(batch.get("warnings", "")):
             fnd.stop("S-4", Path(bd).name, "MIXED_HULL_MODE")
         for row in cases:
-            r = chrono_row(bd, batch, row, repo, is_p3, gs_mode, fnd, commits, manifest)
+            r = chrono_row(bd, batch, row, repo, is_p3, gs_mode, fnd, commits, manifest,
+                           getattr(args, "git_at_start", None))
             rows.append(r)
             if not gs_mode and dig(row, "r4368.role", None) not in ("probe",):
                 per_cid[r["criteria_id"]] = per_cid.get(r["criteria_id"], 0) + 1
@@ -1872,6 +2063,11 @@ def cmd_chrono(args, repo):
     return {"rows": out_rows, "rows_per_criteria_id": per_cid, "launch_commits": {str(k): v for k, v in commits.items()},
             "R8-3_law_locked_check": law_locked_check, "R8-2_jp3_scope": jp3,
             "R9-2_law_locked_check": r9_ll, "R9-1_expect_controller": r91, "R9-4_ls_rows": r94,
+            "R11-4_commit_identity": r114_summary(rows, getattr(args, "git_at_start", None)),
+            "R7-5_row_folders": {str((r.get("r75_folder") or {}).get("method")): [x["case"] for x in rows
+                                 if (x.get("r75_folder") or {}).get("method") == (r.get("r75_folder") or {}).get("method")
+                                 and "r75_folder" in x] for r in rows if "r75_folder" in r},
+            "R11-5_gs_grades": "G-S 행 등급은 판정하지 않음(이 도구는 G-S 행에 등급을 내지 않는다)" if args.gs else None,
             "outside_start_condition_rows": outside, "k1_table": k1_table, "v5_options": mod_info,
             "grade_scope": "436.8 layer (4.1 / 4.2 / 6 / 7.2 / 7.4 / O-C5); original Chrono judgement blocks "
                            "(D-1 rules 11, rev12 2.2) not recounted", **fnd.as_dict()}, fnd.status()
@@ -2160,6 +2356,9 @@ def build_parser():
     c.add_argument("--rows-manifest", default=None,
                    help="chrono_rows_manifest.json for the rev9 R9-4 / rev10 R10-1 LS reading (default: "
                         "<repo>/" + ROWS_MANIFEST_REL + "; missing or unreadable = input error, S-11)")
+    c.add_argument("--git-at-start", default=None,
+                   help="judgement git_at_start (rev11 R11-4: every row's code_at_launch.git.head and, where "
+                        "recorded, result.json code_state.git_at_start; absent or different = S-12)")
     o = sub.add_parser("oc5k")
     o.add_argument("--row", choices=sorted(OC5_K1), required=True)
     o.add_argument("--probe", action="append", required=True, help="probe result.json, in run order")
@@ -2195,7 +2394,7 @@ def main(argv=None):
             report, status = {"seals": seals}, "pass"
         else:
             body, status = CMDS[args.cmd](args, repo)
-            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA, "rev3_sha256": REV3_SHA, "rev4_sha256": REV4_SHA, "rev5_sha256": REV5_SHA, "rev6_sha256": REV6_SHA, "rev7_sha256": REV7_SHA, "rev8_sha256": REV8_SHA, "rev9_sha256": REV9_SHA, "rev10_sha256": REV10_SHA,
+            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA, "rev3_sha256": REV3_SHA, "rev4_sha256": REV4_SHA, "rev5_sha256": REV5_SHA, "rev6_sha256": REV6_SHA, "rev7_sha256": REV7_SHA, "rev8_sha256": REV8_SHA, "rev9_sha256": REV9_SHA, "rev10_sha256": REV10_SHA, "rev11_sha256": REV11_SHA,
                                 "eol_only": seals.get("eol_only", []),
                                 "eol_only_detail": {k: v for k, v in seals["appendix_a"].items() if v.get("eol_only")}},
                       **body}

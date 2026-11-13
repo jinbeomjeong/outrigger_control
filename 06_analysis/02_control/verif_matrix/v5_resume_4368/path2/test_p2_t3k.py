@@ -7,6 +7,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location("p2_t3k", HERE / "p2_t3k.py")
 t3 = importlib.util.module_from_spec(spec)
@@ -21,14 +23,14 @@ R0K = json.loads((REPO / t3.R0K_KEYS_REL).read_text("utf-8"))["R-0K"]
 
 def rk_block(bundle, wb=False):
     las = {"settings": dict(t3.LAS_B0)} if bundle == "T-3K" else {"settings": {"enable": False}}
-    return {"liftoff_approach_slow": las, "k1_order_gate_effective": bundle != "R-0",
+    return {"liftoff_approach_slow": las, "k1_order_gate_effective": bundle != "R-0", "k1_order_gate_request": "preset",
             "slope_clearance_margin": {"settings": {"enable": True, "flat_soil_margin_m": 0.03,
                                                     "flat_soil_margin_order_gate": bundle != "R-0"},
                                        "order_gate": {"decisions": [{"would_block": wb, "applied": False,
                                                                      "n_P": 10, "n_S": 12}] if wb else []}}}
 
 
-def line(key, bundle, h, verdict="pass", p32=True, g62=None, ready=50.0, stroke=0.4, names=None, wb=False):
+def line(key, bundle, h, verdict="pass", p32=True, g62=None, ready=50.0, stroke=0.4, names=None, wb=False, sub=None):
     setting = key.split("|")[-2]
     items = {}
     if p32 is not None:
@@ -36,7 +38,7 @@ def line(key, bundle, h, verdict="pass", p32=True, g62=None, ready=50.0, stroke=
     if g62 is not None:
         items["G6-2_loc"] = g62
     return {"job": {}, "commands_sha256": h, "controller_tag": t3.TAGS[bundle][setting],
-            "t3": {"las": "on" if bundle == "T-3K" else "off", "gate": "off" if bundle == "R-0" else "on"},
+            "t3": {"bundle": sub or bundle, "las": "on" if bundle == "T-3K" else "off", "gate": "off" if bundle == "R-0" else "on"},
             "event_names": dict(names or {}), "resume_k1": rk_block(bundle, wb),
             "d1": {"key": key, "verdict": verdict, "fail_items": [], "items": items, "t_ready_s": ready,
                    "stroke_max_m": stroke}}
@@ -51,6 +53,7 @@ def kl_line(e, bundle, **kw):
 
 def all_inputs():
     kl = {e["key"]: e for b in ("T-3a", "T-3c") for e in KEYS[b]}
+    sub = {e["key"]: b for b in ("T-3a", "T-3c") for e in KEYS[b]}
     r0k = {e["key"]: e for e in R0K}
     r0 = []
     for k in KEYS["R-0"]["d1"]:
@@ -62,9 +65,10 @@ def all_inputs():
     for k, e in kl.items():
         if k in r0k:
             b = next(x for x in r0kl if x["d1"]["key"] == k)
-            t3l.append(dict(copy.deepcopy(b), controller_tag=t3.TAGS["T-3K"][e["setting"]], resume_k1=rk_block("T-3K")))
+            t3l.append(dict(copy.deepcopy(b), controller_tag=t3.TAGS["T-3K"][e["setting"]], resume_k1=rk_block("T-3K"),
+                            t3={"bundle": sub[k], "las": "on", "gate": "on"}))
         else:
-            t3l.append(kl_line(e, "T-3K"))
+            t3l.append(kl_line(e, "T-3K", sub=sub[k]))
     hd = lambda e: {"commands_sha256": e["shadow_commands_sha256_all_folders"][0], "events": []}  # noqa: E731
     d0 = [(f, k, hd(next(x for x in KEYS["T-3b"] if (x["folder"], x["key"]) == (f, k)))) for f, k in KEYS["R-0"]["dg3"]]
     dt = [(e["folder"], e["key"], hd(e)) for e in KEYS["T-3b"]]
@@ -345,3 +349,56 @@ def test_rev7_r71c_all_off_reads_final_c4g2():
     assert {"S-11", "H-T3-3"} <= stop_codes(f)
     codes = sorted(stop_codes(f), key=lambda c: t3.ORDER.index(c) if c in t3.ORDER else 99)
     assert codes[0] == "S-11" and t3.EXIT_OF["S-11"] == 2
+
+
+# ------------------------------------------------------------------ 436.8 rev11 R11-1
+def test_rev11_r111_kinds_and_all_off_r0_passes():
+    body, f = run(*all_inputs())
+    assert f.status() == "pass", f.as_dict()["stops"][:3]
+    r = body["R11-1_record_check"]
+    assert r["R-0"]["kinds"] == {"R-0": 5} and r["R-0K"]["kinds"] == {"R-0K": 45}
+    assert r["T-3K"]["kinds"]["T-3K"] == 304 and "kind_defect" not in r["T-3K"]
+    assert r["R-0"]["gate_request_recorded"] == {"R-0": {"preset": 5}}
+    assert t3.line_kind({"t3": {"bundle": "R-0", "las": "off", "gate": "off"}}) == ("R-0", None)
+    assert t3.line_kind({"t3": {"bundle": "T-3b", "las": "on", "gate": "on"}}) == ("T-3K", None)
+
+
+def test_rev11_r111_r0_line_with_gate_off_record_is_not_s3():
+    """The R-0 line records gate off / LAS-b off (path 1 read 'on' and gave S-3): no S-3 here."""
+    r0, *rest = all_inputs()
+    assert r0[0]["resume_k1"]["k1_order_gate_effective"] is False
+    assert r0[0]["resume_k1"]["liftoff_approach_slow"]["settings"] == {"enable": False}
+    _, f = run(r0, *rest)
+    assert "S-3" not in stop_codes(f)
+
+
+@pytest.mark.parametrize("bundle_idx, mutate, want", [
+    (0, lambda ln: ln["t3"].pop("bundle"), "S-3"),                                    # kind field missing
+    (0, lambda ln: ln["t3"].update(gate="on"), "S-3"),                                # R-0 with gate on
+    (1, lambda ln: ln["t3"].update(bundle="R-0"), "S-3"),                             # R-0 kind in the R-0K file
+    (2, lambda ln: ln["t3"].update(bundle="T-3c" if ln["t3"]["bundle"] == "T-3a" else "T-3a"), "S-3"),
+    (0, lambda ln: ln["resume_k1"].update(k1_order_gate_effective=True), "S-3"),      # R-0 gate effective on
+    (0, lambda ln: ln["resume_k1"]["slope_clearance_margin"]["settings"].pop("flat_soil_margin_order_gate"), "S-3"),
+    (1, lambda ln: ln["resume_k1"]["liftoff_approach_slow"]["settings"].update(enable=True), "S-3"),
+    (2, lambda ln: ln["resume_k1"].update(k1_order_gate_request="on"), "S-3"),        # T-3K request = preset
+])
+def test_rev11_r111_defects(bundle_idx, mutate, want):
+    inp = list(all_inputs())
+    mutate(inp[bundle_idx][0])
+    _, f = run(*inp)
+    assert want in stop_codes(f), f.as_dict()["stops"][:3]
+    assert t3.ORDER.index("S-3") == 2 and t3.EXIT_OF["S-3"] == 2
+
+
+def test_rev11_r111_request_record_only_on_r0_and_r0k_and_gs_code():
+    inp = list(all_inputs())
+    inp[0][0]["resume_k1"]["k1_order_gate_request"] = "on"       # R-0 / R-0K request: record only
+    inp[1][0]["resume_k1"]["k1_order_gate_request"] = None
+    body, f = run(*inp)
+    assert "S-3" not in stop_codes(f)
+    rr = body["R11-1_record_check"]
+    assert rr["R-0"]["gate_request_recorded"]["R-0"] == {"on": 1, "preset": 4}
+    assert rr["R-0K"]["gate_request_recorded"]["R-0K"]["None"] == 1
+    inp[0][0]["t3"].pop("las")                                   # kind input defect in G-S = S-11
+    _, f = t3.recount(REPO, *inp, None, IS_P3, gs=True)
+    assert "S-11" in stop_codes(f) and not any(s["code"] == "S-3" and "R11-1: t3" in s["why"] for s in f.stops)

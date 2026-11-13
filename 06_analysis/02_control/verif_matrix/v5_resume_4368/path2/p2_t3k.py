@@ -8,7 +8,12 @@ outputs' own line identity); rev7 (e81f7d31...) R7-3b (line identity names: head
 ``t3.identity`` with ``git_head`` / ``sha256`` (six tool files) / ``c2_sha256`` / ``threads`` / ``workers`` /
 ``affinity`` and the mirrors ``t3.commit`` / ``t3.workers`` / ``t3.affinity_hex``; a format difference is S-11)
 and R7-1c (a line with ``t3.las`` = ``t3.gate`` = ``"off"`` and no tag key reads ``final_C4G2`` for key presence
-and version only; K-2 / H-T3-3 keep the recorded key, R3-D2). Author: dynamics-expert (path 2, second author). Path-1 tools (``las_judge``,
+and version only; K-2 / H-T3-3 keep the recorded key, R3-D2). 436.8 rev11 (9bac4524...) R11-1: the original 4.2
+record check of every R-0 / R-0K / T-3K D-1 line expects the switches of its line kind, read from
+``t3.bundle`` / ``t3.las`` / ``t3.gate`` (R-0 LAS-b off / gate off, R-0K off / on, T-3K on / on; LAS-b off =
+``settings.enable`` false only; gate request ``preset`` on T-3K, record only on R-0 / R-0K); missing or
+inconsistent kind fields, or a kind other than the input file = S-3 (``--gs``: S-11), value mismatch = S-3.
+Author: dynamics-expert (path 2, second author). Path-1 tools (``las_judge``,
 ``las_h7``, ``las_t3*`` judging parts) and their outputs were not opened (436.8 9.2).
 
 Definitions used (rule sentences; the line fields are the stored ``v5/d1.jsonl`` names):
@@ -23,7 +28,7 @@ Definitions used (rule sentences; the line fields are the stored ``v5/d1.jsonl``
 Stops (rev5 4 order, S-11 of rev7 after H-T3-0): H-T3-0 -> S-11 -> H-T3-3 -> H-T3-2 -> H-T3-1 -> H-T3-1K ->
 H-T3-1Q -> H-T3-4 -> H-T3-5 -> H-T3-6.
 Exit codes (rev3 / rev5): 0 pass, 1 a criteria fail (H-T3-1K, H-T3-5, H-T3-6 class), 2 a stop without
-judgement (H-T3-0, S-11, H-T3-1, H-T3-1Q, H-T3-2, H-T3-3, H-T3-4) or a rules sha mismatch, 3 tool error.
+judgement (H-T3-0, S-11, S-3 (rev11 R11-1), H-T3-1, H-T3-1Q, H-T3-2, H-T3-3, H-T3-4) or a rules sha mismatch, 3 tool error.
 """
 from __future__ import annotations
 
@@ -280,6 +285,88 @@ def config_check(ln, bundle):
     if s.get("flat_soil_margin_order_gate") is not gate_on and "flat_soil_margin_order_gate" in s:
         bad.append(f"flat_soil_margin_order_gate {s.get('flat_soil_margin_order_gate')!r}")
     return bad
+
+
+# rev11 R11-1: line kind by t3.bundle / t3.las / t3.gate (las_targeted_rules_rev5 2.2 R-0 / R-0K / T-3K rows)
+T3_KIND = {"R-0": ("R-0", "off", "off"), "R-0K": ("R-0K", "off", "on"),
+           "T-3a": ("T-3K", "on", "on"), "T-3b": ("T-3K", "on", "on"), "T-3c": ("T-3K", "on", "on")}
+
+
+def line_kind(ln):
+    """rev11 R11-1: (kind, None) or (None, why) when t3.bundle / t3.las / t3.gate are missing or their
+    pair does not match the table (a record defect: S-3, G-S S-11)."""
+    b, la, g = (core.dig(ln, f"t3.{k}", None) for k in ("bundle", "las", "gate"))
+    if b is None or la is None or g is None:
+        return None, f"t3.bundle / t3.las / t3.gate missing ({b!r}, {la!r}, {g!r})"
+    e = T3_KIND.get(b)
+    if e is None or (la, g) != e[1:]:
+        return None, f"t3.bundle {b!r} with t3.las {la!r} / t3.gate {g!r} is not a rev5 2.2 line kind"
+    return e[0], None
+
+
+def r111_record_check(ln, kind):
+    """rev11 R11-1: original 4.2 record check with the switches of the line kind. LAS-b on (T-3K): the nine
+    preset values; off (R-0, R-0K): ``settings.enable`` = false only. Gate on (R-0K, T-3K) / off (R-0):
+    ``k1_order_gate_effective`` and ``slope_clearance_margin.settings.flat_soil_margin_order_gate`` both
+    true / both false. Gate request: ``preset`` on T-3K, record only on R-0 / R-0K. Returns (bad, request)."""
+    rk = ln.get("resume_k1") if isinstance(ln.get("resume_k1"), dict) else None
+    if rk is None:
+        return ["resume_k1 block missing (4.2 record check not possible)"], None
+    bad = []
+    las = rk.get("liftoff_approach_slow")
+    st = las.get("settings") if isinstance(las, dict) else None
+    if kind == "T-3K":
+        if not isinstance(st, dict):
+            bad.append("LAS-b settings missing (LAS-b on expected)")
+        else:
+            for k, want in core.LAS_PRESET.items():
+                v = st.get(k, core.MISSING)
+                if v is core.MISSING or not core.same_value(v, want) or isinstance(v, bool) != isinstance(want, bool):
+                    bad.append(f"LAS-b {k} {None if v is core.MISSING else v!r} != preset {want!r}")
+            for k in core.LAS_EXTRA_ZERO:
+                if k in st and not core.same_value(st[k], 0):
+                    bad.append(f"LAS-b {k} {st[k]!r} (P0 preset: 0)")
+    elif not isinstance(st, dict) or st.get("enable") is not False:
+        bad.append(f"LAS-b settings.enable {(st or {}).get('enable') if isinstance(st, dict) else None!r} (false expected)")
+    gate_on = kind != "R-0"
+    if rk.get("k1_order_gate_effective") is not gate_on:
+        bad.append(f"k1_order_gate_effective {rk.get('k1_order_gate_effective')!r} (want {gate_on})")
+    scm = rk.get("slope_clearance_margin") if isinstance(rk.get("slope_clearance_margin"), dict) else {}
+    s = scm.get("settings") if isinstance(scm.get("settings"), dict) else scm
+    if s.get("flat_soil_margin_order_gate") is not gate_on:
+        bad.append(f"flat_soil_margin_order_gate {s.get('flat_soil_margin_order_gate')!r} (want {gate_on})")
+    req = rk.get("k1_order_gate_request")
+    if kind == "T-3K" and req != "preset":
+        bad.append(f"k1_order_gate_request {req!r} (preset expected)")
+    return bad, req
+
+
+def r111_line(ln, file_bundle, where, fnd, gs, tally, key_bundle=None):
+    """rev11 R11-1 on one H-0 line of the ``file_bundle`` input (R-0 / R-0K / T-3K file). Kind defects
+    (missing / inconsistent t3 fields, kind other than the file, T-3K sub-bundle other than the key list)
+    are S-3 (G-S: S-11); 4.2 value mismatches are S-3."""
+    kind, why = line_kind(ln)
+    code = "S-11" if gs else "S-3"
+    if kind is None:
+        tally["kind_defect"] = tally.get("kind_defect", 0) + 1
+        fnd.stop(code, where, f"R11-1: {why}")
+        return
+    if kind != file_bundle:
+        tally["kind_defect"] = tally.get("kind_defect", 0) + 1
+        fnd.stop(code, where, f"R11-1: line kind {kind} in the {file_bundle} input")
+        return
+    if key_bundle is not None and core.dig(ln, "t3.bundle", None) != key_bundle:
+        tally["kind_defect"] = tally.get("kind_defect", 0) + 1
+        fnd.stop(code, where, f"R11-1: t3.bundle {core.dig(ln, 't3.bundle', None)!r} != key list {key_bundle!r}")
+        return
+    tally.setdefault("kinds", {})[kind] = tally.setdefault("kinds", {}).get(kind, 0) + 1
+    bad, req = r111_record_check(ln, kind)
+    if kind in ("R-0", "R-0K"):
+        rr = tally.setdefault("gate_request_recorded", {}).setdefault(kind, {})
+        rr[str(req)] = rr.get(str(req), 0) + 1
+    if bad:
+        tally["record_mismatch"] = tally.get("record_mismatch", 0) + 1
+        fnd.stop("S-3", where, f"R11-1 4.2 record check ({kind}): {'; '.join(bad)}")
 
 
 def tag_presence(ln, bundle, setting, fnd, where, tally):
@@ -549,7 +636,7 @@ def identity_check(paths, fnd, repo=None, git_at_start=None, allowed_dirty=(), s
 
 
 # ----------------------------------------------------------------- main recount
-def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3):
+def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3, gs=False):
     fnd = core.Findings()
     keys = json.loads((repo / REV3_KEYS_REL).read_text("utf-8"))
     r0k_list = json.loads((repo / R0K_KEYS_REL).read_text("utf-8"))
@@ -591,7 +678,8 @@ def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3
         for d in base_check["differ"]:
             fnd.stop("H-T3-3", f"baseline {d['key']}", f"key list vs d1.jsonl: {d.get('field', d.get('why'))}")
     tag_tally = {}
-    out = {"baseline_check_rev4a": base_check, "R7-1c_tag_reading": tag_tally}
+    r111 = {}
+    out = {"baseline_check_rev4a": base_check, "R7-1c_tag_reading": tag_tally, "R11-1_record_check": r111}
 
     def index(lines, bundle):
         idx = {}
@@ -624,6 +712,7 @@ def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3
         base = baseline_of_line(d1_idx[k]) if k in d1_idx else None
         bh = base["commands_sha256"] if base else (kl.get(k) or {}).get("commands_sha256") or r0k.get(k, {}).get("stored_commands_sha256")
         tr, tsrc = tag_presence(ln, "R-0", setting, fnd, f"R-0:{k}", tag_tally.setdefault("R-0", {}))
+        r111_line(ln, "R-0", f"R-0:{k}", fnd, gs, r111.setdefault("R-0", {}))
         ok_t, why = tag_ok(line_tag(ln), "R-0", setting, is_p3)
         act = is_active(ln)
         same = ln.get("commands_sha256") == bh
@@ -656,6 +745,7 @@ def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3
     for k in sorted(set(r0k) & set(r0k_idx)):
         ln, e = r0k_idx[k], r0k[k]
         tag_presence(ln, "R-0K", e["setting"], fnd, f"R-0K:{k}", tag_tally.setdefault("R-0K", {}))
+        r111_line(ln, "R-0K", f"R-0K:{k}", fnd, gs, r111.setdefault("R-0K", {}))
         ok_t, why = tag_ok(line_tag(ln), "R-0K", e["setting"], is_p3)
         act, wb = is_active(ln), would_block_any(ln)
         cfg = config_check(ln, "R-0K")
@@ -686,6 +776,7 @@ def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3
         ln, e = t3_idx[k], kl[k]
         rep[e["bundle"]] += 1
         tag_presence(ln, "T-3K", e["setting"], fnd, f"T-3K:{k}", tag_tally.setdefault("T-3K", {}))
+        r111_line(ln, "T-3K", f"T-3K:{k}", fnd, gs, r111.setdefault("T-3K", {}), key_bundle=e["bundle"])
         ok_t, why = tag_ok(line_tag(ln), "T-3K", e["setting"], is_p3)
         cfg = config_check(ln, "T-3K")
         if not ok_t or cfg:
@@ -760,8 +851,8 @@ def recount(repo, r0_lines, r0k_lines, t3_lines, dg3_r0, dg3_t3, d1_lines, is_p3
 
 
 # S-11 (rev7 R7-1c missing tag key, R7-3b identity format) is a record defect: listed right after H-T3-0
-ORDER = ["H-T3-0", "S-11", "H-T3-3", "H-T3-2", "H-T3-1", "H-T3-1K", "H-T3-1Q", "H-T3-4", "H-T3-5", "H-T3-6"]
-EXIT_OF = {"H-T3-0": 2, "S-11": 2, "H-T3-3": 2, "H-T3-2": 2, "H-T3-1": 2, "H-T3-1K": 1, "H-T3-1Q": 2, "H-T3-4": 2,
+ORDER = ["H-T3-0", "S-11", "S-3", "H-T3-3", "H-T3-2", "H-T3-1", "H-T3-1K", "H-T3-1Q", "H-T3-4", "H-T3-5", "H-T3-6"]
+EXIT_OF = {"H-T3-0": 2, "S-11": 2, "S-3": 2, "H-T3-3": 2, "H-T3-2": 2, "H-T3-1": 2, "H-T3-1K": 1, "H-T3-1Q": 2, "H-T3-4": 2,
            "H-T3-5": 1, "H-T3-6": 2}
 
 
@@ -778,6 +869,7 @@ def main(argv=None):
     ap.add_argument("--git-at-start", default=None, help="git_at_start commit for the K-0 head / c2.py check (R4-C4)")
     ap.add_argument("--allowed-dirty", action="append", default=[], help="file allowed dirty by the pre-run audit")
     ap.add_argument("--steps", action="append", default=[], help="step file(s) steps_*.json for the RV1-9 env check")
+    ap.add_argument("--gs", action="store_true", help="G-S run (11.2): R11-1 line-kind input defects are S-11, not S-3")
     args = ap.parse_args(argv)
     repo = Path(args.repo) if args.repo else _HERE.parents[4]
     tool_sha = core.sha256_file(Path(__file__))
@@ -804,7 +896,7 @@ def main(argv=None):
                 return res
 
             body, f = recount(repo, core.read_jsonl(args.r0), core.read_jsonl(args.r0k), core.read_jsonl(args.t3),
-                              dg3(args.dg3_r0), dg3(args.dg3_t3), d1, is_p3)
+                              dg3(args.dg3_r0), dg3(args.dg3_t3), d1, is_p3, gs=args.gs)
             body["K-0"] = identity_check({"R-0": args.r0, "R-0K": args.r0k, "T-3K": args.t3}, f, repo,
                                          args.git_at_start, tuple(args.allowed_dirty), tuple(args.steps))
             body["H-T3-0_pre_run"] = "실행 전 관문: 두 경로 대상 아님(R3-D3). 실행 전 감사·경로 1 기록 경로를 판정서에 적는다"

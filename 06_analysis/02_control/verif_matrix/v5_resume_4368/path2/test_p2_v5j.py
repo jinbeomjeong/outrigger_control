@@ -239,3 +239,74 @@ def test_rev5_ls_j11_is_l_e():
     b["controller_tag"] = core.TAG_VB
     _, f = vj.judge_pair(b, steady(setting="V0"), 14, IS_P3)
     assert "L-e" in f.as_dict()["stop_codes"] and "H-7" not in f.as_dict()["stop_codes"]
+
+
+# ------------------------------------------------------------------ 436.8 rev11 R11-2 (T4h lookup)
+def _npz(path, finite=True):
+    import numpy as np  # noqa: PLC0415
+    path.parent.mkdir(parents=True, exist_ok=True)
+    np.savez(path, rod_pressure_Pa=np.array([1e5 if finite else np.nan]))
+
+
+def test_rev11_r112_places(tmp_path):
+    vb = tmp_path / "h10_reuse_rerun.jsonl"
+    vb.write_text("", "utf-8")
+    places, err = vj.t4h_places([vb], None)
+    assert err is None and places == {str(vb): []}
+    (tmp_path / "h10_reuse_rerun_t4h").mkdir()
+    (tmp_path / "t4h").mkdir()
+    places, err = vj.t4h_places([vb], None)
+    assert [d.name for d in places[str(vb)]] == ["h10_reuse_rerun_t4h", "t4h"]
+    _, err = vj.t4h_places([vb], [str(tmp_path / "other")])              # convention exists + another folder
+    assert err and "convention" in err
+    other = tmp_path / "x" / "h.jsonl"
+    other.parent.mkdir()
+    other.write_text("", "utf-8")
+    places, err = vj.t4h_places([other], [str(tmp_path / "given")])      # no convention folder: one allowed
+    assert err is None and places[str(other)] == [tmp_path / "given"]
+    _, err = vj.t4h_places([other], ["a", "b"])                           # two folders: input error
+    assert err and "at most one" in err
+
+
+def test_rev11_r112_lookup_once_several_none(tmp_path):
+    a, b = tmp_path / "run_t4h", tmp_path / "t4h"
+    _npz(a / "k1.npz")
+    assert vj.rod_reading_lookup({"t4h_file": "k1.npz"}, [a, b])[:2] == (True, "ok")
+    _npz(b / "k1.npz")
+    assert vj.rod_reading_lookup({"t4h_file": "k1.npz"}, [a, b])[1] == "several"
+    assert vj.rod_reading_lookup({"t4h_file": "k2.npz"}, [a, b])[1] == "not_found"
+    assert vj.rod_reading_lookup({}, [a])[1] == "no_t4h_file"
+    # another run's folder with the same file name is not searched (H-7 picking H-6's file, R11-2)
+    other = tmp_path / "h6_run_t4h"
+    _npz(other / "k3.npz")
+    assert vj.rod_reading_lookup({"t4h_file": "k3.npz"}, [a, b])[1] == "not_found"
+
+
+def test_rev11_r112_recount_stops_s2(tmp_path):
+    v0, vb, ref = full_set()
+    d = tmp_path / "t4h"
+    for x in vb:
+        x["t4h_file"] = f"{vj.u9_key(x['job'])[0]}_{x['job']['eps']}_{x['job']['eta_v']}.npz"
+        _npz(d / x["t4h_file"], finite=False)
+    body, f = vj.recount_u9(v0, vb, ref, IS_P3, t4h_lookup=lambda ln: vj.rod_reading_lookup(ln, [d]))
+    assert f.status() == "pass", f.as_dict()["stops"][:2]
+    assert body["R11-2_t4h_lookup"]["ok"] == 28
+    (d / vb[0]["t4h_file"]).unlink()
+    _, f = vj.recount_u9(v0, vb, ref, IS_P3, t4h_lookup=lambda ln: vj.rod_reading_lookup(ln, [d]))
+    assert "S-2" in f.as_dict()["stop_codes"] and any("R11-2" in s["why"] for s in f.stops)
+
+
+def test_rev11_r112_cli_input_error(tmp_path, capsys):
+    import json  # noqa: PLC0415
+    vb = tmp_path / "vb.jsonl"
+    vb.write_text("", "utf-8")
+    (tmp_path / "vb_t4h").mkdir()
+    v0 = tmp_path / "v0.jsonl"
+    v0.write_text("", "utf-8")
+    out = tmp_path / "o.json"
+    code = vj.main(["--repo", str(HERE.parents[4]), "--out", str(out), "u9", "--v0", str(v0), "--vb", str(vb),
+                    "--t4h-root", str(tmp_path / "elsewhere")])
+    rep = json.loads(out.read_text("utf-8"))
+    assert code == 2 and rep["stop_codes"] == ["S-11"] and rep["H-5"]["not_judged"] is True
+    assert "input_error" in rep["R11-2_t4h_places"]
+    capsys.readouterr()
