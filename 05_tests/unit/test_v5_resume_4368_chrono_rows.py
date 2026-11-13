@@ -172,7 +172,8 @@ def test_absence_rules(mod):
     assert mod.absence_allowed("x", "<on arm>", {}, True)[0] and not mod.absence_allowed("x", "<on arm>", {}, False)[0]
 
 
-def _level_folder(tmp_path: Path, mod, departed, drop: list[str], arm: str = "on", law_locked=True) -> Path:
+def _level_folder(tmp_path: Path, mod, departed, drop: list[str], arm: str = "on", law_locked=True,
+                  expect_ok=True, t_step_s: float = 1e-3) -> Path:
     np = pytest.importorskip("numpy")
     keys, _ = mod.gs_key_paths()
     doc: dict = {}
@@ -183,6 +184,8 @@ def _level_folder(tmp_path: Path, mod, departed, drop: list[str], arm: str = "on
             node = node.setdefault(p, {})
         node.setdefault(parts[-1], 1)
     doc.setdefault("p3b", {})["departure"] = {"departed": departed}
+    if expect_ok is not None:  # rev9 R9-1: the controller-tag check of the row
+        doc.setdefault("c2_setup", {})["expect_controller"] = {"name": "x", "ok": expect_ok}
     for k in drop:
         parts = k.split(".")
         node = doc
@@ -198,7 +201,7 @@ def _level_folder(tmp_path: Path, mod, departed, drop: list[str], arm: str = "on
         np.savez(f / case / n, t=np.arange(2.0))
     if law_locked is True:  # the run_S9 record (Q-R8-1 = B)
         law_locked = np.array([[-1, -1, -1, -1], [1, 0, 1, 1]], dtype=np.int8)
-    series = {"t_s": np.arange(2.0)} | ({} if law_locked is None else {"law_locked": law_locked})
+    series = {"t_s": np.arange(2.0) * t_step_s} | ({} if law_locked is None else {"law_locked": law_locked})
     np.savez(f / case / "step_series.npz", **series)
     entry = {k: "x" for k in mod.GS_ENTRY_KEYS}
     entry.update(case=case, argv=["python", "run_S9.py", "level"], r4368={"engine": "SCM", "arm": arm})
@@ -240,6 +243,28 @@ def test_gs_check_law_locked_series_key(mod, tmp_path, capsys):
                                                   law_locked=bad))) == 1
         c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
         assert c["series_key_problems"] and not c["series_keys_missing"]
+
+
+def test_gs_check_rev9_law_locked_form_and_expect_check(mod, tmp_path, capsys):
+    """Rev9 R9-1 (expect_controller.ok false or missing), R9-2 (1 ms spacing) and R9-3 (-1 patterns) at G-S."""
+    np = pytest.importorskip("numpy")
+    cases = {
+        "spacing": {"t_step_s": 1.0},
+        "after_arm": {"law_locked": np.array([[1, 0, 1, 1], [-1, -1, -1, -1]], dtype=np.int8)},
+        "whole_run": {"law_locked": np.full((2, 4), -1, dtype=np.int8)},
+        "leg_mismatch": {"law_locked": np.array([[-1, 0, -1, -1], [1, 0, 1, 1]], dtype=np.int8)},
+    }
+    for name, kwargs in cases.items():
+        assert mod.cmd_gs_check(str(_level_folder(tmp_path / name, mod, False, [], **kwargs))) == 1, name
+        c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
+        assert c["series_key_problems"] and not c["series_keys_missing"], name
+    for name, ok in (("expect_false", False), ("expect_missing", None)):
+        assert mod.cmd_gs_check(str(_level_folder(tmp_path / name, mod, False, [], expect_ok=ok))) == 1
+        c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
+        assert c["expect_controller_ok"] is False and not c["series_key_problems"]
+    assert mod.cmd_gs_check(str(_level_folder(tmp_path / "pre_arm", mod, False, []))) == 0
+    c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
+    assert c["law_locked_minus_one"] == "pre_arm_prefix"
 
 
 def test_gs_check_manifest_table(mod, tmp_path, capsys):

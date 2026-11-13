@@ -242,7 +242,10 @@ def _write_scm_row(d: Path, *, sgs: bool, name="D1S_G1_B_middle_Fs4_spJ1FL") -> 
            "checks": {"P3-4_verdict": "pass"}}
     res = {"p3b": p3b, "phases": [{"t_s": a, "phase": b} for a, b in phases],
            "events": [{"t_s": a, "name": b} for a, b in events],
-           "controller_meta": {"two_pressure": {"fallback_lock_log": []}}}
+           "controller_meta": {"two_pressure": {"fallback_lock_log": []}},
+           # rev9 R9-1: a closed-loop row carries a true controller-tag check (V0 tag: no J-P3)
+           "args": {"expect_controller": "final_C4G2_LAS_K1"},
+           "c2_setup": {"expect_controller": {"name": "final_C4G2_LAS_K1", "ok": True}}}
     (d / "result.json").write_text(json.dumps(res), encoding="utf-8")
     return d
 
