@@ -13,7 +13,7 @@ import p2_kinds as K
 CRITERIA = ("C-5",)
 EXPECTED_ROWS = 35
 AUX = {}
-CTX = {}   # set by p2_chrono per batch: {"mrows": manifest rows of the batch (rev9 R9-4)}
+CTX = {}   # set by p2_chrono per batch: K.ls_input_case context (rev9 R9-4 / rev10 R10-1)
 _T45 = {}
 
 
@@ -29,7 +29,7 @@ def _t45():
 
 
 def judge_row(row, case, kind, params):
-    items, keys, notes = K.items_c5(row, params, _t45(), case=case, mrows=CTX.get("mrows"))
+    items, keys, notes = K.items_c5(row, params, _t45(), case=case, ctx=CTX)
     return items, keys, notes, False
 
 

@@ -167,24 +167,65 @@ def placement_record(case: dict, res: dict, batch: dict) -> dict:
 BATCH_DIR_RE = re.compile(r"^batch_(.+?)_\d{8}_\d{6}$")
 
 
-def batch_id_of(b: dict, bp: Path):
-    """S9 batch id (`batch.json` `batch`, else the folder name `batch_<id>_<stamp>`): the manifest
-    `batches.<id>` key (rev9 R9-4)."""
-    if b.get("batch"):
-        return str(b["batch"])
+def batch_name_of(b: dict, bp: Path, manifest: dict | None = None):
+    """rev10 R10-1a full batch name (with the `V5-RESUME-K1-` prefix). Returns (name or None, reason).
+
+    `batch.json` `batch` value, checked against the folder name part between `batch_` and
+    `_<YYYYmmdd_HHMMSS>`. No key -> the folder part. Key and folder part differ, the key is present but
+    the folder name is not of that form (no comparison possible: path 2 reading), neither can be
+    determined, or the name is not a manifest `batches` key -> None ("묶음 이름 불명")."""
     m = BATCH_DIR_RE.match(bp.parent.name)
-    return m.group(1) if m else None
+    folder = m.group(1) if m else None
+    if "batch" in b:
+        key = b.get("batch")
+        if folder is None:
+            return None, (f"batch key {key!r} but folder name {bp.parent.name!r} is not batch_<name>_<stamp>"
+                          " (cannot be checked)")
+        if key != folder:
+            return None, f"batch key {key!r} != folder name part {folder!r}"
+        name, how = str(key), "batch key = folder name"
+    elif folder is not None:
+        name, how = folder, "folder name (no batch key)"
+    else:
+        return None, f"no batch key and folder name {bp.parent.name!r} is not batch_<name>_<stamp>"
+    if manifest is not None and name not in (manifest.get("batches") or {}):
+        return None, f"{name!r} is not a manifest batches key"
+    return name, how
+
+
+def batch_id_of(b: dict, bp: Path):
+    """Full batch name without the manifest check (record use only)."""
+    return batch_name_of(b, bp, None)[0]
+
+
+def batch_ctx(b: dict, bp: Path, manifest: dict | None) -> dict:
+    """K.ls_input_case context of one S9 batch (rev10 R10-1)."""
+    name, why = batch_name_of(b, bp, manifest)
+    return {"batch_name": name, "batch_name_reason": why, "mrows": K.manifest_rows(manifest, name),
+            "bcount": K.batch_case_counts(b)}
 
 
 def load_manifest(args, repo: Path, required: bool):
-    """`v5_resume_4368/chrono_rows_manifest.json` (shared row list, not a path 1 output, rev9 R9-4)."""
+    """`v5_resume_4368/chrono_rows_manifest.json` (shared row list, not a path 1 output, rev9 R9-4).
+    rev10 R10-1b: missing, not readable as JSON or without `batches` = input error (exit 2, S-11) when
+    `required`."""
     p = Path(args.manifest) if getattr(args, "manifest", None) else repo / R.MANIFEST_REL
     if not p.exists():
         if required:
-            raise C.InputError(f"manifest {p} missing (rev9 R9-4 LS reading of C-5 rows)")
+            raise C.InputError(f"manifest {p} missing (rev10 R10-1b: input error, S-11)")
         return None, str(p), None
     data = p.read_bytes()
-    return json.loads(data.decode("utf-8")), str(p), hashlib.sha256(data).hexdigest()
+    try:
+        man = json.loads(data.decode("utf-8"))
+    except (UnicodeDecodeError, ValueError) as e:
+        if required:
+            raise C.InputError(f"manifest {p} not readable as JSON (rev10 R10-1b, S-11): {e}")
+        return None, str(p), hashlib.sha256(data).hexdigest()
+    if not isinstance(man, dict) or not isinstance(man.get("batches"), dict):
+        if required:
+            raise C.InputError(f"manifest {p} has no batches object (rev10 R10-1b, S-11)")
+        return None, str(p), hashlib.sha256(data).hexdigest()
+    return man, str(p), hashlib.sha256(data).hexdigest()
 
 
 def augment_items(bundle: str, row, items: dict, keys: list):
@@ -239,7 +280,7 @@ def judge(args) -> int:
         bp = Path(bp)
         b = json.loads(bp.read_text(encoding="utf-8"))
         if hasattr(mod, "CTX"):
-            mod.CTX = {"mrows": K.manifest_rows(manifest, batch_id_of(b, bp)), "batch_id": batch_id_of(b, bp)}
+            mod.CTX = batch_ctx(b, bp, manifest)
         for case in b.get("cases", []):
             if case_criteria(case) not in mod.CRITERIA or is_gs(case):
                 continue
@@ -340,6 +381,29 @@ def _r9_record(bundle, row, items) -> dict:
     return out
 
 
+def _r10_record(case: dict, bctx: dict) -> dict:
+    """rev10 R10-2 G-S record per Chrono row (every G-S row, all bundles): full batch name, rows of the
+    case in the manifest batch and in batch.json cases[], R10-1b labels; `s11` = any blocking label."""
+    ls = K.ls_classification(case, bctx)
+    inp = ls["input"]
+    labels = list(inp["blocking"]) + ([inp["value_case"]] if inp.get("value_case") else [])
+    return {"batch_name": inp["batch_name"], "batch_name_reason": inp["batch_name_reason"],
+            "manifest_rows": inp["manifest_rows"], "batch_cases": inp["batch_cases"], "labels": labels,
+            "s11": bool(inp["blocking"])}
+
+
+def _r10_summary(rows: list, seal: dict) -> dict:
+    """rev10 R10-2 G-S items: rows per R10-1b case, G-S failure rows (S-11), rev10 seal check."""
+    counts = {k: 0 for k in K.LS_INPUT_CASES}
+    for r in rows:
+        for lab in (r.get("r10") or {}).get("labels") or []:
+            counts[lab] = counts.get(lab, 0) + 1
+    rev10 = next((s for s in seal.get("sealed", []) if s["file"].endswith("v5_resume_4368_rules_rev10.md")), None)
+    return {"r10_1b_rows_per_case": counts,
+            "r10_2_s11_rows": sum(1 for r in rows if (r.get("r10") or {}).get("s11")),
+            "rows": len(rows), "rev10_seal": None if rev10 is None else rev10.get("status")}
+
+
 def _r9_summary(rows: list, seal: dict) -> dict:
     """rev9 R9-8 G-S items: R9-1 S-2 count, R9-2 mismatches per item, R9-3 pattern counts, R9-4 LS rows and
     not-judgeable rows, rev9 seal check."""
@@ -386,19 +450,19 @@ def gs_load(args) -> int:
     params = C.load_params(repo)
     results_root = Path(args.results_root) if args.results_root else repo / "07_results"
     overrides = dict(x.split("=", 1) for x in (args.row_dir or []))
-    manifest, man_path, man_sha = load_manifest(args, repo, required=False)
+    manifest, man_path, man_sha = load_manifest(args, repo, required=True)   # rev10 R10-1b / R10-2: G-S checks every Chrono row
     rows, n_err = [], 0
     for bp in args.batch:
         bp = Path(bp)
         b = json.loads(bp.read_text(encoding="utf-8"))
-        mrows = K.manifest_rows(manifest, batch_id_of(b, bp))
-        mods["C-5"].CTX = {"mrows": mrows, "batch_id": batch_id_of(b, bp)}
+        bctx = batch_ctx(b, bp, manifest)
+        mods["C-5"].CTX = bctx
         for case in b.get("cases", []):
             if not is_gs(case):
                 continue
             crit = case_criteria(case)
             bundle = next((k for k, m in mods.items() if crit in m.CRITERIA), None)
-            ent = {"case": case["case"], "criteria_id": crit, "bundle": bundle}
+            ent = {"case": case["case"], "criteria_id": crit, "bundle": bundle, "r10": _r10_record(case, bctx)}
             try:
                 if bundle is None:
                     raise C.InputError(f"criteria_id {crit!r} not in any bundle")
@@ -444,7 +508,8 @@ def gs_load(args) -> int:
     out = {"tool": "p2_chrono.py gs-load (436.8 path 2, Chrono; read-only, no judgement)",
            "tool_sha256": tsha, "tool_files_sha256": per, "seal": seal,
            "manifest": {"path": man_path, "sha256": man_sha}, "rows": rows,
-           "n_rows": len(rows), "n_errors": n_err, "rev9_R9_8_gs_items": _r9_summary(rows, seal)}
+           "n_rows": len(rows), "n_errors": n_err, "rev9_R9_8_gs_items": _r9_summary(rows, seal),
+           "rev10_R10_2_gs_items": _r10_summary(rows, seal)}
     out_p = Path(args.out)
     out_p.parent.mkdir(parents=True, exist_ok=True)
     data = json.dumps(C.jsonable(out), ensure_ascii=False, indent=1).encode("utf-8")

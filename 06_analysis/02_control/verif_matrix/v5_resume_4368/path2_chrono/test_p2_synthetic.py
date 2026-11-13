@@ -410,33 +410,81 @@ def t_rev9(tmp, sp):
     items6 = {}
     p2_chrono.augment_items("C-6C7", C.load_row(dko, "scm", SCM_VB_ARGV), items6, [])
     check("R9-1 not applied to open-loop C-6C7", items6 == {}, items6)
-    # R9-4
-    man = {"batches": {"V5-RESUME-K1-C5": {"rows": [
+    # R9-4 + rev10 R10-1 (input boundary)
+    BN = "V5-RESUME-K1-C5"
+    man = {"batches": {BN: {"rows": [
         {"case": "A_LS1", "v5_setting": "LS1"}, {"case": "B", "v5_setting": "VB"}, {"case": "C", "v5_setting": "LS4"},
-        {"case": "D", "v5_setting": None}, {"case": "E_LS4", "v5_setting": "VB"}]}}}
-    mrows = K.manifest_rows(man, "V5-RESUME-K1-C5")
-    cls = {c["case"]: K.ls_classification(c, mrows)["ls"] for c in (
-        {"case": "A_LS1", "v5_setting": "LS1"}, {"case": "B", "v5_setting": "VB"}, {"case": "C", "v5_setting": "LS1"},
-        {"case": "D"}, {"case": "E_LS4", "v5_setting": "VB"}, {"case": "F", "v5_setting": "LS4"},
-        {"case": "B_nobatch"})}
-    check("R9-4 LS classes: both LS1 -> LS; both VB -> not; differ -> None; both None -> not; "
-          "name '_LS4' with VB -> not; batch only -> None; neither -> not",
-          cls == {"A_LS1": True, "B": False, "C": None, "D": False, "E_LS4": False, "F": None, "B_nobatch": False}, cls)
+        {"case": "D", "v5_setting": None}, {"case": "E_LS4", "v5_setting": "VB"}, {"case": "F", "v5_setting": None},
+        {"case": "G"}, {"case": "DUP", "v5_setting": "VB"}, {"case": "DUP", "v5_setting": "VB"},
+        {"case": "BDUP", "v5_setting": "VB"}]}}}
+    bcases = [{"case": "A_LS1", "v5_setting": "LS1"}, {"case": "B", "v5_setting": "VB"},
+              {"case": "C", "v5_setting": "LS1"}, {"case": "D"}, {"case": "E_LS4", "v5_setting": "VB"},
+              {"case": "F", "v5_setting": "LS4"}, {"case": "G", "v5_setting": None}, {"case": "DUP", "v5_setting": "VB"},
+              {"case": "NOMAN"}, {"case": "BDUP", "v5_setting": "VB"}, {"case": "BDUP", "v5_setting": "VB"}]
+    bjson = {"batch": BN, "cases": bcases}
+    bpath = Path(f"batch_{BN}_20261113_120000/batch.json")
+    ctx = p2_chrono.batch_ctx(bjson, bpath, man)
+    cls = {c["case"]: K.ls_classification(c, ctx)["ls"] for c in bcases}
+    check("R9-4 / R10-1b LS classes: both LS1 -> LS; both VB -> not; differ -> None; both value None (one row "
+          "each) -> not; name '_LS4' with VB -> not; batch value only -> None; manifest key absent + batch None -> "
+          "not; manifest 2 rows -> None; manifest 0 rows (batch value absent) -> None (was 'not' in rev9 reading);"
+          " batch.json 2 entries -> None",
+          cls == {"A_LS1": True, "B": False, "C": None, "D": False, "E_LS4": False, "F": None, "G": False,
+                  "DUP": None, "NOMAN": None, "BDUP": None}, cls)
+    labs = {c["case"]: K.ls_classification(c, ctx)["input"]["blocking"] for c in bcases}
+    check("R10-1b labels: manifest_rows_many, manifest_rows_0, batch_cases_many",
+          labs["DUP"] == ["manifest_rows_many"] and labs["NOMAN"] == ["manifest_rows_0"]
+          and labs["BDUP"] == ["batch_cases_many"] and labs["B"] == [], labs)
+    c0 = K.ls_classification({"case": "B", "v5_setting": "VB"}, p2_chrono.batch_ctx({"batch": BN, "cases": []},
+                                                                                    bpath, man))
+    check("R10-1b batch.json has 0 entries for the case -> None (batch_cases_0)",
+          c0["ls"] is None and c0["input"]["blocking"] == ["batch_cases_0"], c0)
     check("R9-4 manifest batch absent -> rows None", K.manifest_rows(man, "V5-RESUME-K1-C9") is None)
+    # R10-1a full batch name
+    nm = {k: p2_chrono.batch_name_of(bj, Path(f), man)[0] for k, bj, f in (
+        ("key=folder", {"batch": BN}, f"batch_{BN}_20261113_120000/batch.json"),
+        ("no key", {}, f"batch_{BN}_20261113_120000/batch.json"),
+        ("key!=folder", {"batch": BN}, "batch_V5-RESUME-K1-GS_20261113_120000/batch.json"),
+        ("key, folder not stamped", {"batch": BN}, "x/batch.json"),
+        ("neither", {}, "x/batch.json"),
+        ("short ID", {"batch": "C5"}, "batch_C5_20261113_120000/batch.json"),
+        ("not in manifest", {}, "batch_V5-RESUME-K1-C9_20261113_120000/batch.json"))}
+    check("R10-1a full batch name: key = folder -> name; no key -> folder; differ / unstamped folder / neither / "
+          "short ID / not a manifest key -> unknown",
+          nm == {"key=folder": BN, "no key": BN, "key!=folder": None, "key, folder not stamped": None,
+                 "neither": None, "short ID": None, "not in manifest": None}, nm)
+    cu = K.ls_classification({"case": "D"}, p2_chrono.batch_ctx({"batch": BN, "cases": [{"case": "D"}]},
+                                                                Path("batch_V5-RESUME-K1-GS_20261113_1/batch.json"),
+                                                                man))
+    check("R10-1b batch name unknown + both values absent -> None (not 'not LS')",
+          cu["ls"] is None and "batch_name_unknown" in cu["input"]["blocking"], cu)
     rv0 = C.load_row(d, "scm", SCM_V0_ARGV)
-    li = K.ls_item(rv0, {"case": "A_LS1", "v5_setting": "LS1"}, mrows)
+    li = K.ls_item(rv0, {"case": "A_LS1", "v5_setting": "LS1"}, ctx)
     check("R9-4 LS row with a non-③ tag -> S-2", li["ls"] is True and li.get("stop", "").startswith("S-2"), li)
-    li2 = K.ls_item(C.load_row(d, "scm", SCM_VB_ARGV), {"case": "A_LS1", "v5_setting": "LS1"}, mrows)
+    li2 = K.ls_item(C.load_row(d, "scm", SCM_VB_ARGV), {"case": "A_LS1", "v5_setting": "LS1"}, ctx)
     check("R9-4 LS row with a ③ tag -> record, no stop", li2["ls"] is True and "stop" not in li2
           and li2["verdict"] == "record", li2)
     it, _, _ = K.items_c5(C.load_row(d, "scm", SCM_VB_ARGV), PARAMS, case={"case": "C", "v5_setting": "LS1"},
-                          mrows=mrows)
+                          ctx=ctx)
     check("R9-4 items_c5: LS_class present, mismatch -> 판정 불가, J11 ls None",
           it["LS_class"]["ls"] is None and it["LS_class"]["verdict"] == "indeterminate"
           and it["J11_window"]["ls"] is None, it["LS_class"])
-    check("batch id from batch.json 'batch' or folder name",
-          p2_chrono.batch_id_of({"batch": "V5-RESUME-K1-C5"}, Path("x/batch.json")) == "V5-RESUME-K1-C5"
+    check("batch id from batch.json 'batch' (checked against the folder) or folder name",
+          p2_chrono.batch_id_of({"batch": BN}, bpath) == BN
           and p2_chrono.batch_id_of({}, Path("batch_V5-RESUME-K1-GS_20261113_082117/batch.json")) == "V5-RESUME-K1-GS")
+    # R10-1b manifest file: missing / not JSON / no batches -> input error (exit 2)
+    class _A:
+        manifest = None
+    for nmx, content in (("absent", None), ("notjson", "{not json"), ("nobatches", json.dumps({"rules": {}}))):
+        a = _A()
+        a.manifest = str(tmp / f"man_{nmx}.json")
+        if content is not None:
+            Path(a.manifest).write_text(content, encoding="utf-8")
+        try:
+            p2_chrono.load_manifest(a, REPO, required=True)
+            check(f"R10-1b manifest {nmx} -> input error", False)
+        except C.InputError as ex:
+            check(f"R10-1b manifest {nmx} -> input error", "R10-1b" in str(ex), ex)
     # R9-7 (check only): the ③ reading of the K1-only tags (rules 4.1 is_extend_start_tag)
     check("R9-7 tags: final_C4G2_K1 not ③, final_C4G2_P3_K1 ③ (is_extend_start_tag)",
           [C.is_extend_start_tag(x) for x in ("final_C4G2_K1", "final_C4G2_P3_K1")] == [False, True])
@@ -816,10 +864,32 @@ def t_seal(tmp):
           not s8c["ok"] and {r["file"]: r["status"] for r in s8c["sealed"]}[rel8] == "mismatch")
     p8.write_bytes(keep_md)
     rel9 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev9.md"
-    check("seal: rev9 listed, raw only, 4cf7843c, role wins; rev8 no longer wins (rev9 R9-8)",
-          rel9 in R.RAW_ONLY and any(r == rel9 and w.startswith("4cf7843c") and "wins" in role
-                                     for r, w, role in R.SEALED)
-          and not any(r == rel8 and "wins" in role for r, w, role in R.SEALED))
+    check("seal: rev9 listed, raw only, 4cf7843c (rev9 R9-8)",
+          rel9 in R.RAW_ONLY and any(r == rel9 and w.startswith("4cf7843c") for r, w, role in R.SEALED))
+    rel10 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev10.md"
+    check("seal: rev10 listed, raw only, 62a0bd8d, only rev10 wins (rev10 R10-3)",
+          rel10 in R.RAW_ONLY and any(r == rel10 and w.startswith("62a0bd8d") and "wins" in role
+                                      for r, w, role in R.SEALED)
+          and [r for r, w, role in R.SEALED if "wins" in role] == [rel10])
+    check("seal: rev10 raw sha = code seal sha = .sha256 first token",
+          {r["file"]: r["status"] for r in ok["sealed"]}[rel10] == "match"
+          and R.sidecar_sha(repo / rel10) == next(w for r, w, _ in R.SEALED if r == rel10))
+    sc10 = repo / Path(rel10).with_suffix(".sha256")
+    keep10 = sc10.read_bytes()
+    sc10.write_text("d" * 64 + "  v5_resume_4368_rules_rev10.md\n", encoding="utf-8")
+    check("seal: rev10 .sha256 record differs -> S-1 (sidecar_mismatch)",
+          {r["file"]: r["status"] for r in R.seal_check(repo)["sealed"]}[rel10] == "sidecar_mismatch")
+    sc10.unlink()
+    check("seal: rev10 .sha256 record missing -> S-1",
+          {r["file"]: r["status"] for r in R.seal_check(repo)["sealed"]}[rel10] == "sidecar_missing")
+    sc10.write_bytes(keep10)
+    p10 = repo / rel10
+    keep10md = p10.read_bytes()
+    p10.write_bytes(keep10md + b" ")
+    s10 = R.seal_check(repo)
+    check("seal: rev10 file changed -> S-1 (mismatch)", not s10["ok"]
+          and {r["file"]: r["status"] for r in s10["sealed"]}[rel10] == "mismatch")
+    p10.write_bytes(keep10md)
     check("seal: rev9 raw sha = code seal sha = .sha256 first token",
           {r["file"]: r["status"] for r in ok["sealed"]}[rel9] == "match"
           and R.sidecar_sha(repo / rel9) == next(w for r, w, _ in R.SEALED if r == rel9))
@@ -909,6 +979,17 @@ def t_cli(tmp):
     check("CLI gs-load rev9 R9-8 items: S-2 0, law_locked key absent counted, rev9 seal match",
           gi.get("r9_1_s2_rows") == 0 and gi.get("r9_2_rows_per_item", {}).get("key") == 1
           and gi.get("rev9_seal") == "match" and gi.get("r9_6_input_absent_rows") == 1, gi)
+    g10 = g4.get("rev10_R10_2_gs_items") or {}
+    check("CLI gs-load rev10 R10-2 items: unstamped folder without batch key -> batch name unknown, S-11 row 1,"
+          " rev10 seal match",
+          g10.get("r10_1b_rows_per_case", {}).get("batch_name_unknown") == 1 and g10.get("r10_2_s11_rows") == 1
+          and g10.get("rev10_seal") == "match", g10)
+    proc4b = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "gs-load",
+                             "--batch", str(bdir / "batch.json"), "--out", str(tmp / "gs_load_noman.json"),
+                             "--manifest", str(tmp / "no_manifest.json"), "--row-dir", f"gs={bdir / 'rowA'}"],
+                            capture_output=True, text=True, encoding="utf-8")
+    check("CLI gs-load without the manifest -> input error, exit 2 (R10-1b: G-S failure)",
+          proc4b.returncode == 2, proc4b.stdout[-300:])
     # R9-1 in the CLI: one row with expect_controller.ok false -> bundle stop S-2, exit 1
     bko = tmp / "batch_P2KO"
     bko.mkdir(exist_ok=True)
@@ -926,7 +1007,7 @@ def t_cli(tmp):
           proc5.returncode == 1 and last5.get("status") == "판정 불가"
           and any("S-2" in s and "rowB" in s for s in last5.get("stops", [])), proc5.stdout[-500:])
     # R9-4 in the CLI: C-5 rows, LS from the manifest + batch.json v5_setting
-    b5 = tmp / "batch_P2C5"
+    b5 = tmp / "batch_P2C5_20261113_120000"
     b5.mkdir(exist_ok=True)
     write_scm(b5 / "X_LS1", sp)
     write_scm(b5 / "Y", sp)
