@@ -3,7 +3,7 @@
 Usage (dynamics-dev, activated):
   conda run -n dynamics-dev python -I -B p2_chrono.py seal [--repo R]
   conda run -n dynamics-dev python -I -B p2_chrono.py judge --bundle C-1 --batch <batch.json> [--batch ...]
-        [--results-root <repo>/07_results] [--row-dir CASE=PATH ...] --out <out.json> [--repo R]
+        [--results-root <repo>/07_results] [--row-dir CASE=PATH ...] [--manifest M] --out <out.json> [--repo R]
   conda run -n dynamics-dev python -I -B p2_chrono.py gs-load --batch <G-S batch.json> --out <out.json>
         (read-only loader run on G-S rows: folders, input sha, absent inputs, exceptions; no judgement)
 
@@ -25,6 +25,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))  # -I drops the script folder from sys.path
 
 import p2_core as C  # noqa: E402
+import p2_kinds as K  # noqa: E402
 import p2_rules as R  # noqa: E402
 
 BUNDLE_MODULES = {"C-1": "p2_b_c1", "C-2": "p2_b_c2", "C-3": "p2_b_c3", "C-4": "p2_b_c4",
@@ -163,6 +164,47 @@ def placement_record(case: dict, res: dict, batch: dict) -> dict:
     return out
 
 
+BATCH_DIR_RE = re.compile(r"^batch_(.+?)_\d{8}_\d{6}$")
+
+
+def batch_id_of(b: dict, bp: Path):
+    """S9 batch id (`batch.json` `batch`, else the folder name `batch_<id>_<stamp>`): the manifest
+    `batches.<id>` key (rev9 R9-4)."""
+    if b.get("batch"):
+        return str(b["batch"])
+    m = BATCH_DIR_RE.match(bp.parent.name)
+    return m.group(1) if m else None
+
+
+def load_manifest(args, repo: Path, required: bool):
+    """`v5_resume_4368/chrono_rows_manifest.json` (shared row list, not a path 1 output, rev9 R9-4)."""
+    p = Path(args.manifest) if getattr(args, "manifest", None) else repo / R.MANIFEST_REL
+    if not p.exists():
+        if required:
+            raise C.InputError(f"manifest {p} missing (rev9 R9-4 LS reading of C-5 rows)")
+        return None, str(p), None
+    data = p.read_bytes()
+    return json.loads(data.decode("utf-8")), str(p), hashlib.sha256(data).hexdigest()
+
+
+def augment_items(bundle: str, row, items: dict, keys: list):
+    """rev9 items common to the closed-loop Chrono bundles: R9-1 expect check (S-2 stop) for every
+    bundle but C-6C7 (open loop, no controller); R9-6 J11 record for every bundle but C-5 / C-6C7."""
+    if bundle == "C-6C7":
+        return
+    items["R9-1_expect_controller"] = K.expect_item(row)
+    keys.append("R9-1_expect_controller")
+    if bundle != "C-5":
+        items["J11_record"] = K.j11_record_item(row)
+
+
+def r9_6_summary(rows: list) -> dict:
+    recs = [r["items"].get("J11_record") for r in rows if isinstance(r["items"].get("J11_record"), dict)]
+    return {"clause": "rev9 R9-6 (J11 outside C-5: record only, input absent counted)", "rows": len(recs),
+            "input_absent_rows": sum(1 for x in recs if x.get("input_absent")),
+            "n_late_positive_on_actual_leg_rows": sum(1 for x in recs if x.get("late_fallback_legs"))}
+
+
 def case_criteria(case: dict):
     return case.get("criteria_id") or (case.get("r4368") or {}).get("criteria_id")
 
@@ -191,10 +233,13 @@ def judge(args) -> int:
     params = C.load_params(repo)
     results_root = Path(args.results_root) if args.results_root else repo / "07_results"
     overrides = dict(x.split("=", 1) for x in (args.row_dir or []))
+    manifest, man_path, man_sha = load_manifest(args, repo, required=(args.bundle == "C-5"))
     rows = []
     for bp in args.batch:
         bp = Path(bp)
         b = json.loads(bp.read_text(encoding="utf-8"))
+        if hasattr(mod, "CTX"):
+            mod.CTX = {"mrows": K.manifest_rows(manifest, batch_id_of(b, bp)), "batch_id": batch_id_of(b, bp)}
         for case in b.get("cases", []):
             if case_criteria(case) not in mod.CRITERIA or is_gs(case):
                 continue
@@ -204,6 +249,7 @@ def judge(args) -> int:
             row = loader(d, eng, case["argv"]) if loader else C.load_row(d, eng, case["argv"])
             kind = mod.kind_of(case)
             items, keys, notes, record = mod.judge_row(row, case, kind, params)
+            augment_items(args.bundle, row, items, keys)
             st = C.row_status(items, keys)
             if record:
                 st = "기록 완료" if st != "판정 불가" else "기록 불완전"
@@ -215,9 +261,11 @@ def judge(args) -> int:
                          "status": st, "judged_keys": keys, "items": items,
                          "notes": list(notes) + plc["notes"]})
     bundle = mod.bundle_status(rows)
+    if args.bundle not in ("C-5", "C-6C7"):
+        bundle["rev9_R9_6_j11_record"] = r9_6_summary(rows)
     out = {"tool": "p2_chrono.py (436.8 path 2, Chrono)", "bundle": args.bundle,
            "tool_sha256": tsha, "tool_files_sha256": per, "seal": seal, "params": params,
-           "rows": rows, "bundle_result": bundle}
+           "manifest": {"path": man_path, "sha256": man_sha}, "rows": rows, "bundle_result": bundle}
     out_p = Path(args.out)
     out_p.parent.mkdir(parents=True, exist_ok=True)
     data = json.dumps(C.jsonable(out), ensure_ascii=False, indent=1).encode("utf-8")
@@ -270,6 +318,55 @@ def _jp3_scope(it):
             "request_mismatch": it.get("request_mismatch"), "s2_reason": stop if scope == "S-2" else None}
 
 
+def _r9_record(bundle, row, items) -> dict:
+    """rev9 R9-8 G-S record per row (classes and counts only, no item values / verdicts):
+    R9-1 expect check (S-2, G-S also S-11), R9-2 / R9-3 law_locked codes and -1 pattern, R9-5 class
+    (C-5 rows: absent / malformed = S-11 at G-S; other rows: input absent record, R9-6), R9-4 LS class."""
+    ex = items.get("R9-1_expect_controller")
+    out = {"r9_1": None if ex is None else {"expect_ok": ex.get("expect_ok"), "source": ex.get("source"),
+                                            "s2": "stop" in ex}}
+    if hasattr(row, "law_locked_problems"):
+        present = row.law_locked_source is not None
+        bad = (not present) or bool(row.law_locked_problems)
+        if bundle == "C-5":
+            r95 = "S-11 (R9-5: law_locked absent or malformed on a C-5 row)" if bad else "ok"
+        else:
+            r95 = "input absent (R9-6 record; 11.2 key check unchanged)" if bad else "ok"
+        out["r9_5"] = r95
+    ls = items.get("LS_class")
+    if isinstance(ls, dict):
+        out["r9_4"] = {"ls": ls.get("ls"), "manifest_v5_setting": ls.get("manifest_v5_setting"),
+                       "batch_v5_setting": ls.get("batch_v5_setting"), "s2": "stop" in ls}
+    return out
+
+
+def _r9_summary(rows: list, seal: dict) -> dict:
+    """rev9 R9-8 G-S items: R9-1 S-2 count, R9-2 mismatches per item, R9-3 pattern counts, R9-4 LS rows and
+    not-judgeable rows, rev9 seal check."""
+    ok_rows = [r for r in rows if not r.get("error")]
+    item_counts = {k: 0 for k in R.LAW_LOCK_ITEMS}
+    pat_counts = {}
+    for r in ok_rows:
+        ll = r.get("law_locked_record") or {}
+        for c in ll.get("codes") or []:
+            item_counts[c] = item_counts.get(c, 0) + 1
+        for p in ll.get("pattern") or []:
+            pat_counts[p] = pat_counts.get(p, 0) + 1
+    r94 = [(r.get("r9") or {}).get("r9_4") for r in ok_rows]
+    r94 = [x for x in r94 if x]
+    rev9 = next((s for s in seal.get("sealed", []) if s["file"].endswith("v5_resume_4368_rules_rev9.md")), None)
+    return {"r9_1_s2_rows": sum(1 for r in ok_rows if ((r.get("r9") or {}).get("r9_1") or {}).get("s2")),
+            "r9_2_rows_per_item": item_counts,
+            "r9_3_pattern_rows": pat_counts,
+            "r9_4_ls_rows": sum(1 for x in r94 if x["ls"] is True),
+            "r9_4_not_judgeable_rows": sum(1 for x in r94 if x["ls"] is None),
+            "r9_4_ls_non_extend_tag_s2_rows": sum(1 for x in r94 if x["s2"]),
+            "r9_5_c5_s11_rows": sum(1 for r in ok_rows if str((r.get("r9") or {}).get("r9_5", "")).startswith("S-11")),
+            "r9_6_input_absent_rows": sum(1 for r in ok_rows
+                                          if str((r.get("r9") or {}).get("r9_5", "")).startswith("input absent")),
+            "rev9_seal": None if rev9 is None else rev9.get("status")}
+
+
 def gs_load(args) -> int:
     """Read-only loader run on G-S rows (rules 11.2): every G-S row is resolved, loaded and passed
     through its bundle's item functions; the output keeps folders, input sha256, absent-input
@@ -289,10 +386,13 @@ def gs_load(args) -> int:
     params = C.load_params(repo)
     results_root = Path(args.results_root) if args.results_root else repo / "07_results"
     overrides = dict(x.split("=", 1) for x in (args.row_dir or []))
+    manifest, man_path, man_sha = load_manifest(args, repo, required=False)
     rows, n_err = [], 0
     for bp in args.batch:
         bp = Path(bp)
         b = json.loads(bp.read_text(encoding="utf-8"))
+        mrows = K.manifest_rows(manifest, batch_id_of(b, bp))
+        mods["C-5"].CTX = {"mrows": mrows, "batch_id": batch_id_of(b, bp)}
         for case in b.get("cases", []):
             if not is_gs(case):
                 continue
@@ -309,6 +409,7 @@ def gs_load(args) -> int:
                 row = loader(d, eng, case["argv"]) if loader else C.load_row(d, eng, case["argv"])
                 kind = mod.kind_of(case)
                 items, keys, notes, record = mod.judge_row(row, case, kind, params)
+                augment_items(bundle, row, items, keys)
                 res = _result_of(d)
                 ident = items.get("identity") if isinstance(items.get("identity"), dict) else {}
                 plc = placement_record(case, res, b)
@@ -326,17 +427,24 @@ def gs_load(args) -> int:
                            law_locked_record=({"source": row.law_locked_source,
                                                "present": row.law_locked_source is not None,
                                                "well_formed": row.law_locked is not None,
-                                               "problems": list(row.law_locked_problems)}
+                                               "problems": list(row.law_locked_problems),
+                                               "codes": (C.law_locked_codes(row.law_locked_problems)
+                                                         if row.law_locked_source is not None else ["key"]),
+                                               "pattern": (row.law_locked_pattern or {}).get("patterns"),
+                                               "unarmed_prefix_samples":
+                                                   (row.law_locked_pattern or {}).get("unarmed_prefix_samples")}
                                               if hasattr(row, "law_locked_problems") else None),
                            jp3_scope=_jp3_scope(items.get("J-P3")),
+                           r9=_r9_record(bundle, row, items),
                            folder_notes=plc["notes"], error=None)
             except Exception as e:  # noqa: BLE001
                 n_err += 1
                 ent["error"] = f"{type(e).__name__}: {e}"[:400]
             rows.append(ent)
     out = {"tool": "p2_chrono.py gs-load (436.8 path 2, Chrono; read-only, no judgement)",
-           "tool_sha256": tsha, "tool_files_sha256": per, "seal": seal, "rows": rows,
-           "n_rows": len(rows), "n_errors": n_err}
+           "tool_sha256": tsha, "tool_files_sha256": per, "seal": seal,
+           "manifest": {"path": man_path, "sha256": man_sha}, "rows": rows,
+           "n_rows": len(rows), "n_errors": n_err, "rev9_R9_8_gs_items": _r9_summary(rows, seal)}
     out_p = Path(args.out)
     out_p.parent.mkdir(parents=True, exist_ok=True)
     data = json.dumps(C.jsonable(out), ensure_ascii=False, indent=1).encode("utf-8")
@@ -360,12 +468,14 @@ def main(argv=None) -> int:
     j.add_argument("--results-root")
     j.add_argument("--row-dir", action="append")
     j.add_argument("--aux", action="append", help="NAME=PATH extra input for a bundle (C-5: t45=<t45_path2.json>)")
+    j.add_argument("--manifest", help="chrono_rows_manifest.json (default: repo v5_resume_4368/, rev9 R9-4)")
     j.add_argument("--out", required=True)
     j.add_argument("--repo")
     g = sub.add_parser("gs-load", help="read-only loader run on G-S rows (no judgement)")
     g.add_argument("--batch", action="append", required=True)
     g.add_argument("--results-root")
     g.add_argument("--row-dir", action="append")
+    g.add_argument("--manifest", help="chrono_rows_manifest.json (default: repo v5_resume_4368/, rev9 R9-4)")
     g.add_argument("--out", required=True)
     g.add_argument("--repo")
     a = ap.parse_args(argv)

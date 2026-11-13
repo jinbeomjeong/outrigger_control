@@ -370,10 +370,8 @@ def jp3_item(row):
     return out
 
 
-def j11_item(row, tp):
-    """rev6 6 + rev2 D-1 for the actual fallback legs (fallback_lock_log); no entry ->
-    not_computed record (rev3 R3-C7)."""
-    """rev6 6 + rev2 D-1 + rev5 R5-B1 / R5-B3 + rev6 R6-B7.
+def j11_item(row, tp, ls=None):
+    """rev6 6 + rev2 D-1 + rev5 R5-B1 / R5-B3 + rev6 R6-B7, with rev9 R9-2..R9-5 (C-5 rows).
     Zero-command stretches from the issued command record (r8_series `issued_u`): a stretch opens
     at the first control instant t_s whose issued command is 0 after a non-zero one; its window
     end t_w = t_s + tau_v ln(max(|u_last|, eps) / eps) + t_c + T with the run's
@@ -383,24 +381,32 @@ def j11_item(row, tp):
     Judged / late: rev2 D-1 (t_last, plant lock state at t_w + 1e-6 s from `law_locked`: SCM
     `step_series.npz` on `t_s`, L2b `pads.npz` on `t`, rev8 R8-3a; -1 before the leg's first armed
     sample = locked, rev6 6). Actual fallback legs = log legs U WARN_ROD_PRESSURE_FALLBACK legs
-    (R6-B7); n_late > 0 on such a leg = H-7 (VB) / L-e (LS rows, R5-B3); other legs recorded.
-    rev8 R8-3: SCM `law_locked` missing or malformed, or any row with a malformed one -> 판정 불가 and
-    the bundle stops (G-S: S-11 by the path 1 gs-check); L2b missing keeps rev6 R6-B7 (판정 불가 only
-    with an actual fallback leg). -1 after the first armed sample has no rule reading -> 판정 불가 + stop."""
+    (R6-B7); n_late > 0 on such a leg = H-7 / L-e (LS rows, R5-B3); other legs recorded.
+    `ls` = rev9 R9-4 classification (True / False / None = 판정 불가; with n_late > 0 the row stops
+    either way and the stop text says "LS 판별 불가").
+    rev9 R9-5 (SCM and L2b alike): `law_locked` absent or failing any R9-2 item (time column, [N, 4],
+    int8, {-1, 0, 1}, 1 ms +- 1e-6 s, R9-3 -1 pattern) -> 판정 불가 + stop (G-S: S-11)."""
     import math
     import numpy as np
     log = tp.get("fallback_lock_log")
     st = tp.get("settings") or {}
-    out = {"clause": "rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev3 R3-C7, rev8 R8-3 / R8-3a",
-           "law_locked_source": row.law_locked_source, "law_locked_problems": list(row.law_locked_problems)}
+    out = {"clause": "rev6 6, rev2 D-1, rev5 R5-B1 / B3, rev6 R6-B7, rev8 R8-3 / R8-3a, rev9 R9-2 / R9-3 / R9-4"
+                     " / R9-5",
+           "law_locked_source": row.law_locked_source, "law_locked_problems": list(row.law_locked_problems),
+           "law_locked_codes": C.law_locked_codes(row.law_locked_problems),
+           "law_locked_pattern": (row.law_locked_pattern or {}).get("patterns"), "ls": ls}
+    # rev9 R9-5 (both engines alike, replaces rev8 R8-3 item 4 and rev3 R3-C7 for law_locked):
+    # key absent or any R9-2 item (incl. the R9-3 -1 pattern) failing -> 판정 불가 + stop
     if row.law_locked_problems:
         out.update(verdict="indeterminate", reason="law_locked malformed: " + "; ".join(row.law_locked_problems),
-                   stop="R8-3: law_locked malformed (main run: J11 판정 불가, bundle stops and asks; G-S: S-11)")
+                   stop="R9-5: law_locked malformed (main run: J11 판정 불가, bundle stops and asks; G-S: S-11)")
         return out
-    if row.engine == "scm" and row.law_locked is None:
-        out.update(verdict="indeterminate", reason="step_series.npz law_locked missing (rev8 R8-3a)",
-                   stop="R8-3: SCM step_series.npz law_locked missing (main run: J11 판정 불가, bundle stops and"
-                        " asks; G-S: S-11)")
+    if row.law_locked is None:
+        src = "step_series.npz" if row.engine == "scm" else "pads.npz"
+        out["law_locked_codes"] = ["key"]
+        out.update(verdict="indeterminate", reason=f"{src} law_locked missing (rev9 R9-5)",
+                   stop=f"R9-5: {src} law_locked missing (main run: J11 판정 불가, bundle stops and asks;"
+                        " G-S: S-11)")
         return out
     if log is None:
         out.update(verdict="indeterminate", reason="fallback_lock_log missing")
@@ -413,15 +419,8 @@ def j11_item(row, tp):
         return out
     actual = sorted(log_legs | ev_legs)
     out["actual_fallback_legs"] = actual
-    if row.law_locked is None:   # L2b only here (SCM returned above)
-        out.update(verdict="indeterminate" if actual else "record", reason="pads.npz law_locked missing")
-        return out
     locked_view, unarmed_after = C.law_lock_view(row.law_locked)
     out["unarmed_after_armed_samples"] = unarmed_after
-    if sum(unarmed_after) > 0:
-        out.update(verdict="indeterminate", reason="law_locked -1 after the first armed sample (no rule reading)",
-                   stop="R8-3: law_locked -1 after arming (reading not defined by rev6 6; J11 판정 불가, ask)")
-        return out
     try:
         tau = float(st["lock_window_valve_tau_s"])
         eps = float(st["lock_window_eps_m_s"])
@@ -470,19 +469,104 @@ def j11_item(row, tp):
         out.update(verdict="record", status="no actual fallback leg (n_late of all legs recorded)")
         return out
     bad = [leg for leg in actual if n_late[R.LEGS.index(leg)] > 0]
-    is_ls = "_LS" in row.case or "LS1" in row.case or "LS4" in row.case
+    # rev9 R9-4: LS from the manifest + batch.json v5_setting (ls_classification), never from the name
     if bad:
-        out.update(verdict="fail", stop=("L-e (LS row, rev5 R5-B3)" if is_ls else "H-7 (rev6 6)"),
-                   late_fallback_legs=bad)
+        if ls is True:
+            stop = "L-e (LS row, rev5 R5-B3 / rev9 R9-4)"
+        elif ls is False:
+            stop = "H-7 (rev6 6)"
+        else:
+            stop = "H-7 / L-e (LS 판별 불가, rev9 R9-4: stop either way)"
+        out.update(verdict="fail", stop=stop, late_fallback_legs=bad)
     else:
         out["verdict"] = "pass"
     return out
 
 
-def items_c5(row, params, t45=None):
+def j11_record_item(row):
+    """rev9 R9-6: J11 outside C-5 = record only (n_late, actual fallback legs); `law_locked` absent or
+    malformed is recorded as 'input absent' and counted, never a stop. Same computation as C-5."""
+    tp = (row.result.get("controller_meta") or {}).get("two_pressure") or {}
+    j = j11_item(row, tp, ls=None)
+    out = {k: v for k, v in j.items() if k not in ("verdict", "stop")}
+    out["clause"] = "rev9 R9-6 (C-5 outside: J11 record only) / " + j["clause"]
+    out["computed_verdict_record"] = j.get("verdict")
+    out["c5_stop_would_be_record"] = j.get("stop")
+    out["input_absent"] = bool(row.law_locked is None)
+    out["verdict"] = "record"
+    return out
+
+
+def expect_item(row):
+    """rev9 R9-1: Chrono row (`run_S9.py level`, `run_S8C.py`, `run_S6C.py`) with
+    `c2_setup.expect_controller.ok` (SCM) / `expect_controller.ok` (L2b / L1-R) false or absent
+    -> the bundle stops with S-2 (G-S: also S-11). Open-loop C-6 / C-7 rows are not called."""
+    tg = C.row_tag(row)
+    ok = tg["expect_ok"] is True
+    src = "c2_setup.expect_controller.ok" if row.engine == "scm" else "expect_controller.ok"
+    out = {"clause": "436.8 rev9 R9-1 (rules 6 tag column, 8.2 S-2)", "source": src,
+           "expect_ok": tg["expect_ok"], "tag_argv": tg["tag"], "expect_name": tg["expect_name"],
+           "verdict": "pass" if ok else "indeterminate"}
+    if not ok:
+        out["stop"] = (f"S-2 (rev9 R9-1: {src} "
+                       + ("absent" if tg["expect_ok"] is None else repr(tg["expect_ok"]))
+                       + "; G-S: also S-11)")
+    return out
+
+
+def manifest_rows(manifest: dict | None, batch_id: str | None) -> dict | None:
+    """`batches.<batch id>.rows[]` of chrono_rows_manifest.json keyed by case (None if the manifest or
+    the batch is absent)."""
+    if not manifest or not batch_id:
+        return None
+    b = (manifest.get("batches") or {}).get(batch_id)
+    if not isinstance(b, dict):
+        return None
+    return {str(r.get("case")): r for r in b.get("rows") or [] if isinstance(r, dict)}
+
+
+def ls_classification(case: dict, mrows: dict | None) -> dict:
+    """rev9 R9-4 (user decision 13): LS row = v5 setting LS1..LS4 in both the manifest row
+    (`batches.<batch>.rows[].v5_setting`) and the S9 batch.json case (`cases[].v5_setting`) of the same
+    case. Both absent / None -> not LS; equal -> LS iff in LS1..LS4; one only or different -> None
+    (판정 불가). The case name is not used."""
+    name = str(case.get("case"))
+    mrow = (mrows or {}).get(name)
+    mv = None if mrow is None else mrow.get("v5_setting")
+    bv = case.get("v5_setting")
+    out = {"clause": "436.8 rev9 R9-4", "case": name, "manifest_v5_setting": mv, "batch_v5_setting": bv,
+           "manifest_row_found": mrow is not None}
+    if mv is None and bv is None:
+        out.update(ls=False, reason="both absent / None: not an LS row")
+    elif mv is None or bv is None:
+        out.update(ls=None, reason="only one of manifest / batch.json has v5_setting (판정 불가)")
+    elif mv != bv:
+        out.update(ls=None, reason=f"manifest {mv!r} != batch.json {bv!r} (판정 불가)")
+    else:
+        out["ls"] = mv in R.LS_SETTINGS
+    return out
+
+
+def ls_item(row, case, mrows):
+    """R9-4 record item for C-5 rows; an LS row whose tag is not ③ -> S-2."""
+    it = dict(ls_classification(case, mrows), verdict="record")
+    if it["ls"] is None:
+        it["verdict"] = "indeterminate"
+    elif it["ls"]:
+        tg = C.row_tag(row)
+        on = C.is_extend_start_tag(tg["tag"]) if tg["tag"] else False
+        it["tag"] = tg["tag"]
+        it["extend_start_tag"] = on
+        if not on:
+            it.update(verdict="indeterminate", stop="S-2 (rev9 R9-4: LS row with a non-③ tag, rules 4.1)")
+    return it
+
+
+def items_c5(row, params, t45=None, case=None, mrows=None):
     """v5 rev12 2.2 judged items for C-5 (rev4 R4-A2): recomputed t_lift / H-9, J-P3, J11 window
     (actual fallback legs), D2 records; T4-0 / T4 / T5 from the path 2 run of chrono_t45_replay
-    (`t45` = the p2_t45.py document), graded here."""
+    (`t45` = the p2_t45.py document), graded here. `case` = the batch.json case and `mrows` = the
+    manifest rows of its batch (rev9 R9-4 LS reading; without `case` the LS reading is None)."""
     items = {}
     tl, basis = C.t_lift(row)
     items["t_lift"] = {"clause": "rev6 5", "t_lift_s": tl, "basis": basis,
@@ -511,7 +595,7 @@ def items_c5(row, params, t45=None):
     if row.law_locked is not None:
         lockb, after = C.law_lock_view(row.law_locked)   # rev6 6: -1 before first arming = locked
         d = __import__("numpy").diff(lockb.astype(int), axis=0)
-        items["J11_lock_transitions"] = {"clause": "rev6 6 / rev8 R8-3 (record: plant lock events)",
+        items["J11_lock_transitions"] = {"clause": "rev6 6 / rev8 R8-3 / rev9 R9-3 (record: plant lock events)",
                                          "source": row.law_locked_source,
                                          "lock_on": (d == 1).sum(axis=0).tolist(),
                                          "lock_off": (d == -1).sum(axis=0).tolist(),
@@ -530,7 +614,11 @@ def items_c5(row, params, t45=None):
     items["J-P3"] = jp3_item(row)
     keys.append("J-P3")
     # --- J11 window: rev6 6 + rev2 D-1, actual fallback legs from fallback_lock_log (rev3 R3-C7)
-    items["J11_window"] = j11_item(row, tp)
+    ls = None
+    if case is not None:
+        items["LS_class"] = ls_item(row, case, mrows)
+        ls = items["LS_class"]["ls"]
+    items["J11_window"] = j11_item(row, tp, ls=ls)
     keys.append("J11_window")
     # --- D2: rev5 R5-B2 (reason = third part of INFO_ROD_PRESSURE_FAULT_REASON:<leg>:<reason>)
     reasons = {}

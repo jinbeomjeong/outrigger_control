@@ -60,7 +60,7 @@ class Row:
     pad_n: np.ndarray | None         # (k,4) pad normal [N]
     t_sink: np.ndarray | None
     sink: np.ndarray | None          # (k,4) pad sinkage [m] (SCM)
-    law_locked: np.ndarray | None    # (n,4) int8 on tF (SCM step_series / L2b pads, rev8 R8-3a); None if absent or malformed
+    law_locked: np.ndarray | None    # (n,4) int8 on tF (SCM step_series / L2b pads, rev8 R8-3a, rev9 R9-2); None if absent or malformed
     t10: np.ndarray                  # 10 Hz control instants
     issued: np.ndarray               # (p,4) issued command [m/s]
     phases: list                     # [(t_abs, name)]
@@ -74,48 +74,98 @@ class Row:
     argv: list = field(default_factory=list)
     notes: list = field(default_factory=list)
     law_locked_source: str | None = None          # "step_series.npz law_locked" / "pads.npz law_locked"
-    law_locked_problems: list = field(default_factory=list)   # R8-3a format problems (non-empty = malformed)
+    law_locked_problems: list = field(default_factory=list)   # rev9 R9-2 format problems (non-empty = malformed)
+    law_locked_pattern: dict | None = None        # rev9 R9-3 -1 pattern (None if the key is absent)
+
+
+def law_locked_pattern(arr) -> dict:
+    """rev9 R9-3 -1 pattern of a [N, 4] `law_locked`.
+
+    allowed: `none` (no -1) or `before_first_arming` (-1 from the first sample, all four legs leave
+    -1 at the same sample, no -1 afterwards; read as locked, rev6 6). Format errors (R9-5):
+    `after_arming` (-1 after any leg showed 0 or 1), `whole_run` (every sample of every leg -1),
+    `per_leg_mismatch` (legs leave -1 at different samples)."""
+    a = np.asarray(arr)
+    out = {"patterns": [], "first_armed_index_per_leg": None, "unarmed_prefix_samples": 0,
+           "after_arming_samples_per_leg": None, "ok": False}
+    if a.ndim != 2 or a.shape[1] != 4 or a.shape[0] == 0:
+        out["patterns"] = ["not_evaluated"]
+        return out
+    neg = a == -1
+    if not neg.any():
+        out.update(patterns=["none"], first_armed_index_per_leg=[0, 0, 0, 0],
+                   after_arming_samples_per_leg=[0, 0, 0, 0], ok=True)
+        return out
+    if neg.all():
+        out.update(patterns=["whole_run"], unarmed_prefix_samples=int(a.shape[0]))
+        return out
+    armed = ~neg
+    first = [int(np.argmax(armed[:, j])) if armed[:, j].any() else None for j in range(4)]
+    k_any = min(f for f in first if f is not None)   # first sample where any leg is armed
+    after = (neg & (np.arange(a.shape[0])[:, None] >= k_any)).sum(axis=0).astype(int).tolist()
+    pats = []
+    if len(set(first)) != 1:
+        pats.append("per_leg_mismatch")
+    if sum(after) > 0:
+        pats.append("after_arming")
+    if not pats:
+        pats = ["before_first_arming"] if k_any > 0 else ["none"]
+    out.update(patterns=pats, first_armed_index_per_leg=first, unarmed_prefix_samples=int(k_any),
+               after_arming_samples_per_leg=after, ok=pats in (["none"], ["before_first_arming"]))
+    return out
 
 
 def law_locked_check(arr, t) -> list:
-    """rev8 R8-3a format of `law_locked`: [N, 4] int8 on the same file's 1 ms time axis, values in
-    {1, 0, -1}. Returns the list of problems (empty = well formed)."""
+    """rev9 R9-2 format check of `law_locked` (both engines alike). `t` is the same file's time
+    column (None = absent). Returns problems as strings starting with the item code
+    (`R9-2.1` .. `R9-2.6`, R.LAW_LOCK_ITEMS); empty = well formed. Item 6 is the R9-3 -1 pattern."""
     probs = []
     arr = np.asarray(arr)
-    t = np.asarray(t, float)
+    if t is None:
+        probs.append("R9-2.1: time column absent")
+    else:
+        t = np.asarray(t, float)
     if arr.ndim != 2 or arr.shape[1] != 4:
-        probs.append(f"shape {list(arr.shape)} != [N, 4]")
-    elif arr.shape[0] != len(t):
-        probs.append(f"rows {arr.shape[0]} != time axis rows {len(t)}")
+        probs.append(f"R9-2.2: shape {list(arr.shape)} != [N, 4]")
+    elif t is not None and arr.shape[0] != len(t):
+        probs.append(f"R9-2.2: rows {arr.shape[0]} != time column rows {len(t)}")
     if arr.dtype != np.int8:
-        probs.append(f"dtype {arr.dtype} != int8")
+        probs.append(f"R9-2.3: dtype {arr.dtype} != int8")
     if arr.size:
         bad = sorted(set(np.unique(arr).tolist()) - set(R.LAW_LOCK_VALUES))
         if bad:
-            probs.append(f"values {bad[:5]} outside {list(R.LAW_LOCK_VALUES)}")
-    if len(t) > 1:
+            probs.append(f"R9-2.4: values {bad[:5]} outside {list(R.LAW_LOCK_VALUES)}")
+    if t is not None and len(t) > 1:
         d = np.diff(t)
-        if not np.all(d > 0):
-            probs.append("time axis not increasing")
-        else:
-            dev = float(np.max(np.abs(d - R.LAW_LOCK_DT_S)))
-            if dev > R.LAW_LOCK_DT_TOL_S:
-                probs.append(f"time step not 1 ms (max |dt - 1 ms| = {dev:.3e} s)")
+        dev = np.abs(d - R.LAW_LOCK_DT_S)
+        n_bad = int(np.sum(~(dev <= R.LAW_LOCK_DT_TOL_S)))
+        if n_bad:
+            probs.append(f"R9-2.5: {n_bad} steps with |dt - 1 ms| > 1e-6 s (max {float(np.nanmax(dev)):.3e} s)")
+    pat = law_locked_pattern(arr)
+    if not pat["ok"] and pat["patterns"] != ["not_evaluated"]:
+        probs.append("R9-2.6: -1 pattern " + "+".join(pat["patterns"]) + " (R9-3)")
     return probs
 
 
+def law_locked_codes(problems) -> list:
+    """Item codes (R.LAW_LOCK_ITEMS) of a problem list."""
+    return sorted({p.split(":", 1)[0] for p in problems})
+
+
 def _law_locked_from(npz, tkey, src):
+    """Returns (array or None, problems, pattern). Key absent -> (None, [], None)."""
     if "law_locked" not in npz.files:
-        return None, []
+        return None, [], None
     arr = np.asarray(npz["law_locked"])
-    probs = law_locked_check(arr, npz[tkey])
-    return (None if probs else arr), probs
+    t = npz[tkey] if tkey in npz.files else None
+    probs = law_locked_check(arr, t)
+    return (None if probs else arr), probs, law_locked_pattern(arr)
 
 
 def law_lock_view(ll: np.ndarray):
-    """rev6 6 reading of the plant lock state: 1 = locked, 0 = moving, -1 before the leg's first
-    armed sample = locked. Returns (locked bool (n,4), samples per leg with -1 after the first armed
-    sample: reading not defined by the rules)."""
+    """rev6 6 / rev9 R9-3 reading of the plant lock state: 1 = locked, 0 = moving, -1 before the
+    first arming = locked (only well-formed arrays reach here, so no -1 after arming). Returns
+    (locked bool (n,4), samples per leg with -1 after the leg's first armed sample, always 0 here)."""
     ll = np.asarray(ll).astype(int)
     armed = ll != -1
     seen = np.maximum.accumulate(armed, axis=0)
@@ -242,7 +292,7 @@ def load_row(folder: Path, engine: str, argv=None) -> Row:
         sink = np.asarray(z["pad_sinkage_geometric_m"], float)
         t_sink = tF
         # rev8 R8-3 / R8-3a: SCM J11 plant lock state = step_series.npz law_locked on t_s (1 ms)
-        law_locked, ll_probs = _law_locked_from(z, "t_s", "step_series.npz")
+        law_locked, ll_probs, ll_pat = _law_locked_from(z, "t_s", "step_series.npz")
         ll_src = "step_series.npz law_locked" if "law_locked" in z.files else None
         offset = 0.0
         loop_start = float(res["t_loop_start_s"])
@@ -298,7 +348,7 @@ def load_row(folder: Path, engine: str, argv=None) -> Row:
         sink = None
         t_sink = None
         # rev8 R8-3a (rev4 R4-A2, rev6 R6-B7): L2b plant lock state = pads.npz law_locked on t (1 ms)
-        law_locked, ll_probs = _law_locked_from(pads, "t", "pads.npz")
+        law_locked, ll_probs, ll_pat = _law_locked_from(pads, "t", "pads.npz")
         ll_src = "pads.npz law_locked" if "law_locked" in pads.files else None
         st = res.get("settings", {})
         offset = float(st["start_t_s"])
@@ -326,7 +376,7 @@ def load_row(folder: Path, engine: str, argv=None) -> Row:
                t_sink=t_sink, sink=sink, law_locked=law_locked, t10=t10, issued=issued, phases=phases,
                events=events, floor_label=floor_label, flat=flat, target_deg=target, weight_N=weight,
                rut=rut, result=res, argv=list(argv or []), notes=notes,
-               law_locked_source=ll_src, law_locked_problems=ll_probs)
+               law_locked_source=ll_src, law_locked_problems=ll_probs, law_locked_pattern=ll_pat)
 
 
 # ----------------------------------------------------------------------------- helpers
