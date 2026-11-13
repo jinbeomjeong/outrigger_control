@@ -33,7 +33,9 @@ SEALED = [
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev8.md",
      "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56", "rules rev8"),
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev9.md",
-     "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d", "rules rev9 (wins)"),
+     "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d", "rules rev9"),
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev10.md",
+     "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29", "rules rev10 (wins)"),
     ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev7.md",
      "9ccde7a5a4128317ed832dd2f92cd2368280f18cefa6827f1b1731c6d4e9aab3", "Appendix A: v5 rev7 (T4 / T5 E, B1, tool regression)"),
     ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev8.md",
@@ -81,6 +83,7 @@ RAW_ONLY = {  # rev2 R2-9 last-but-one bullet: sealed rule files are compared ra
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev8.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev9.md",
+    "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev10.md",
 }
 
 
@@ -94,9 +97,9 @@ def sidecar_sha(p: Path):
 
 
 def seal_check(repo: Path) -> dict:
-    """Seal check (rules 8.2 S-1, rev2 R2-9, rev7 R7-7, rev8 R8-4, rev9 R9-8). Raw sha must match; for
+    """Seal check (rules 8.2 S-1, rev2 R2-9, rev7 R7-7, rev8 R8-4, rev9 R9-8, rev10 R10-3). Raw sha must match; for
     Appendix A files, if only CRLF differs and the LF-normalised sha matches, pass and disclose
-    ("CRLF 변환만 다름"). The 436.8 rule files (original, rev1..rev9) are compared raw only, and
+    ("CRLF 변환만 다름"). The 436.8 rule files (original, rev1..rev10) are compared raw only, and
     their code seal sha must also equal the first token of the sibling `.sha256` record (R7-7, R8-4,
     R9-8)."""
     rows = []

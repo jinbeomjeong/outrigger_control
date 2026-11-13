@@ -514,30 +514,80 @@ def expect_item(row):
     return out
 
 
-def manifest_rows(manifest: dict | None, batch_id: str | None) -> dict | None:
-    """`batches.<batch id>.rows[]` of chrono_rows_manifest.json keyed by case (None if the manifest or
-    the batch is absent)."""
-    if not manifest or not batch_id:
+def manifest_rows(manifest: dict | None, batch_name: str | None) -> dict | None:
+    """`batches.<full batch name>.rows[]` of chrono_rows_manifest.json grouped by case: {case: [rows]}
+    (lists keep duplicates, rev10 R10-1b). None if the manifest, the name or the batch is absent."""
+    if not manifest or not batch_name:
         return None
-    b = (manifest.get("batches") or {}).get(batch_id)
+    b = (manifest.get("batches") or {}).get(batch_name)
     if not isinstance(b, dict):
         return None
-    return {str(r.get("case")): r for r in b.get("rows") or [] if isinstance(r, dict)}
+    out = {}
+    for r in b.get("rows") or []:
+        if isinstance(r, dict):
+            out.setdefault(str(r.get("case")), []).append(r)
+    return out
 
 
-def ls_classification(case: dict, mrows: dict | None) -> dict:
-    """rev9 R9-4 (user decision 13): LS row = v5 setting LS1..LS4 in both the manifest row
-    (`batches.<batch>.rows[].v5_setting`) and the S9 batch.json case (`cases[].v5_setting`) of the same
-    case. Both absent / None -> not LS; equal -> LS iff in LS1..LS4; one only or different -> None
-    (판정 불가). The case name is not used."""
+def batch_case_counts(batch: dict) -> dict:
+    """{case: number of `batch.json` `cases[]` entries with that case} (rev10 R10-1b)."""
+    out = {}
+    for c in batch.get("cases") or []:
+        if isinstance(c, dict):
+            out[str(c.get("case"))] = out.get(str(c.get("case")), 0) + 1
+    return out
+
+
+# rev10 R10-1b case labels (G-S counts, R10-2)
+LS_INPUT_CASES = ("batch_name_unknown", "manifest_rows_0", "manifest_rows_many", "batch_cases_0",
+                  "batch_cases_many", "both_value_absent")
+
+
+def ls_input_case(case: dict, ctx: dict | None) -> dict:
+    """rev10 R10-1a / R10-1b input boundary of the LS reading for one row. `ctx` = {"batch_name": full
+    name or None, "batch_name_reason", "mrows": manifest_rows(...), "bcount": batch_case_counts(...)}.
+    Returns the counts and the list of boundary labels that make the reading not judgeable
+    (`blocking`, empty = both sources have exactly one row)."""
+    ctx = ctx or {}
     name = str(case.get("case"))
-    mrow = (mrows or {}).get(name)
+    bname = ctx.get("batch_name")
+    rows = (ctx.get("mrows") or {}).get(name, []) if bname else []
+    n_m = len(rows) if bname else None
+    n_b = (ctx.get("bcount") or {}).get(name, 0)
+    blocking = []
+    if not bname:
+        blocking.append("batch_name_unknown")
+    elif n_m == 0:
+        blocking.append("manifest_rows_0")
+    elif n_m > 1:
+        blocking.append("manifest_rows_many")
+    if n_b == 0:
+        blocking.append("batch_cases_0")
+    elif n_b > 1:
+        blocking.append("batch_cases_many")
+    return {"batch_name": bname, "batch_name_reason": ctx.get("batch_name_reason"), "manifest_rows": n_m,
+            "batch_cases": n_b, "blocking": blocking, "manifest_row": rows[0] if len(rows) == 1 else None}
+
+
+def ls_classification(case: dict, ctx: dict | None) -> dict:
+    """rev9 R9-4 (user decision 13) with the rev10 R10-1 input boundary (user decision 16): LS row =
+    v5 setting LS1..LS4 in both the manifest row (`batches.<full batch name>.rows[].v5_setting`) and the
+    S9 batch.json case (`cases[].v5_setting`) of the same case. Unknown batch name, 0 or several
+    manifest rows, 0 or several batch.json entries -> None (판정 불가). Not LS only when both sources
+    have exactly one row and both values are absent / None. Equal -> LS iff in LS1..LS4; one value
+    only or different -> None. The case name is not used."""
+    name = str(case.get("case"))
+    inp = ls_input_case(case, ctx)
+    mrow = inp.pop("manifest_row")
     mv = None if mrow is None else mrow.get("v5_setting")
     bv = case.get("v5_setting")
-    out = {"clause": "436.8 rev9 R9-4", "case": name, "manifest_v5_setting": mv, "batch_v5_setting": bv,
-           "manifest_row_found": mrow is not None}
-    if mv is None and bv is None:
-        out.update(ls=False, reason="both absent / None: not an LS row")
+    out = {"clause": "436.8 rev9 R9-4 + rev10 R10-1", "case": name, "manifest_v5_setting": mv,
+           "batch_v5_setting": bv, "manifest_row_found": mrow is not None, "input": inp}
+    if inp["blocking"]:
+        out.update(ls=None, reason="rev10 R10-1b: " + ", ".join(inp["blocking"]) + " (판정 불가)")
+    elif mv is None and bv is None:
+        out.update(ls=False, reason="both sources one row, value absent / None: not an LS row")
+        out["input"]["value_case"] = "both_value_absent"
     elif mv is None or bv is None:
         out.update(ls=None, reason="only one of manifest / batch.json has v5_setting (판정 불가)")
     elif mv != bv:
@@ -547,9 +597,9 @@ def ls_classification(case: dict, mrows: dict | None) -> dict:
     return out
 
 
-def ls_item(row, case, mrows):
-    """R9-4 record item for C-5 rows; an LS row whose tag is not ③ -> S-2."""
-    it = dict(ls_classification(case, mrows), verdict="record")
+def ls_item(row, case, ctx):
+    """R9-4 / R10-1 record item for C-5 rows; an LS row whose tag is not ③ -> S-2."""
+    it = dict(ls_classification(case, ctx), verdict="record")
     if it["ls"] is None:
         it["verdict"] = "indeterminate"
     elif it["ls"]:
@@ -562,11 +612,11 @@ def ls_item(row, case, mrows):
     return it
 
 
-def items_c5(row, params, t45=None, case=None, mrows=None):
+def items_c5(row, params, t45=None, case=None, ctx=None):
     """v5 rev12 2.2 judged items for C-5 (rev4 R4-A2): recomputed t_lift / H-9, J-P3, J11 window
     (actual fallback legs), D2 records; T4-0 / T4 / T5 from the path 2 run of chrono_t45_replay
-    (`t45` = the p2_t45.py document), graded here. `case` = the batch.json case and `mrows` = the
-    manifest rows of its batch (rev9 R9-4 LS reading; without `case` the LS reading is None)."""
+    (`t45` = the p2_t45.py document), graded here. `case` = the batch.json case and `ctx` = the
+    batch context of `ls_input_case` (rev9 R9-4 / rev10 R10-1 LS reading; without `case` it is None)."""
     items = {}
     tl, basis = C.t_lift(row)
     items["t_lift"] = {"clause": "rev6 5", "t_lift_s": tl, "basis": basis,
@@ -616,7 +666,7 @@ def items_c5(row, params, t45=None, case=None, mrows=None):
     # --- J11 window: rev6 6 + rev2 D-1, actual fallback legs from fallback_lock_log (rev3 R3-C7)
     ls = None
     if case is not None:
-        items["LS_class"] = ls_item(row, case, mrows)
+        items["LS_class"] = ls_item(row, case, ctx)
         ls = items["LS_class"]["ls"]
     items["J11_window"] = j11_item(row, tp, ls=ls)
     keys.append("J11_window")
