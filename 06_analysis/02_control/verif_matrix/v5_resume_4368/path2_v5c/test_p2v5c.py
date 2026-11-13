@@ -411,17 +411,21 @@ class TestRev3(unittest.TestCase):
         r = cm.check_rev3(REPO)
         self.assertTrue(r["ok"], r)
         self.assertEqual([i["path"].rsplit("_", 1)[1] for i in r["items"]],
-                         ["rev3.md", "rev4.md", "rev5.md", "rev6.md", "rev7.md", "rev8.md"])
-        rev7 = r["items"][-2]
+                         ["rev3.md", "rev4.md", "rev5.md", "rev6.md", "rev7.md", "rev8.md", "rev9.md"])
+        rev7 = r["items"][-3]
         self.assertEqual(rev7["want"], "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502")
         self.assertEqual(rev7["seal_file_sha"], rev7["want"])
-        rev8 = r["items"][-1]
+        rev8 = r["items"][-2]
         self.assertEqual(rev8["want"], "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56")
         self.assertEqual(rev8["seal_file_sha"], rev8["want"])
         self.assertEqual(rev8["sha256"], rev8["want"])
+        rev9 = r["items"][-1]   # rev9 R9-8: file sha = code seal = .sha256 record
+        self.assertEqual(rev9["want"], "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d")
+        self.assertEqual(rev9["seal_file_sha"], rev9["want"])
+        self.assertEqual(rev9["sha256"], rev9["want"])
 
     def test_rev7_seal_mismatch_stops(self):
-        """A rev8 (last) file differing from its seal is not ok (S-1 through run_main)."""
+        """The last sealed file (rev9) differing from its seal is not ok (S-1 through run_main)."""
         with tempfile.TemporaryDirectory() as td:
             for rel, _w, srel in cm.LATER_RULES:
                 for x in (rel, srel):
@@ -466,6 +470,20 @@ class TestRev3(unittest.TestCase):
         f = CORE.Findings()
         nz.run_checks("noise_V0", {"k": r}, CORE, V5J, is_p3, False, f)
         self.assertNotIn("S-2", [s["code"] for s in f.stops])
+
+    def test_r97_k1_only_tags(self):
+        """rev9 R9-7: LAS-b off + K1 on tags. final_C4G2_K1 (3 off) is not 3 on -> on a VB line J-P3 not
+        applicable + S-2; final_C4G2_P3_K1 (3 on) is 3 on (tag decided by the base-tag function only)."""
+        is_p3, _ = CORE.load_is_extend_start(REPO)
+        self.assertFalse(is_p3("final_C4G2_K1"))
+        self.assertTrue(is_p3("final_C4G2_P3_K1"))
+        f = CORE.Findings()
+        r = {"resume_k1": {"controller_tag": "final_C4G2_K1"},
+             "hydraulics_record": {"m2_clipped_steps_post_lift": [0, 0, 0, 0]},
+             "hydraulic_options": {"m2_law": "flow_limited_r5"}}
+        jp = nz.run_checks("H-6", {"k": r}, CORE, V5J, is_p3, True, f)
+        self.assertEqual(jp.get("not_applicable_tag"), 1)
+        self.assertIn("S-2", [s["code"] for s in f.stops])
 
     def test_sa4_and_guard(self):
         ln = line("S8", "VB", events=[[39.9, "WARN_LIFT_STROKE_LIMITED:FR"], [39.9, "FAULT_LIFT_STROKE_LIMIT:soil:FR"]],

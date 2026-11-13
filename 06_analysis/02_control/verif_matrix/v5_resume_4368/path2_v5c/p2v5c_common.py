@@ -14,6 +14,12 @@ rev8 (3ecafaaf...): ``jp3_tag_scope`` - J-P3 applies to extend-start (3) rows on
 tag (R8-2, rev3 R3-C8, original 4.1); a VB / LS line whose tag is not 3 on has J-P3 not applicable
 (not counted as missing) and is an S-2 stop (tag differs from the 3-on tag of the setting).
 
+rev9 (4cf7843c...): seal check (R9-8: file sha = code seal = ``.sha256`` record, else S-1). R9-1
+(``expect_controller.ok``), R9-2 / R9-3 / R9-5 / R9-6 (``law_locked``) and R9-4 (LS reading by manifest and
+``batch.json`` ``v5_setting``) are Chrono-row items; this folder reads harness lines only, where the LS
+setting is the structured ``job.setting`` field (never a case-name token). R9-7 tag naming is not
+computed here: 3 on is decided by ``p2_v5j.tag_of`` + ``is_extend_start_tag`` (``final_C4G2_K1`` = not 3).
+
 Both files are located with ``--p2-dir`` (default: ``../path2`` next to this folder, else the
 dynamics-expert worktree). Their sha256 values are checked against ``P2_V5J_SHA`` / ``P2_CORE_SHA``;
 a difference is a stop (exit 2, code ``P2-SHA``) because the J-item definition would have moved.
@@ -45,8 +51,10 @@ P2_FALLBACK = Path(r"C:\workspace\outrigger_control\.claude\worktrees\agent-a2e8
 # rev4 versions were p2_v5j a1675151..., p2_4368 71b87060...
 # rev8 version of p2_4368 (dynamics-expert commit fd9bb68: rev8 seal, R8-2 / R8-3 Chrono rows, R8-1b
 # dotted key); before: d49068e dc631509..., rev7 69b563f e033ca4b... (p2_v5j unchanged since d49068e)
+# rev9 version of p2_4368 (dynamics-expert commit b0d6382: rev9 seal, R9-1..R9-6 Chrono rows, R9-4 LS by
+# manifest); before: rev8 fd9bb68 bebed9f1... (p2_v5j still 5772624c...)
 P2_V5J_SHA = "5772624cb28e414ceeb38af3eb6d386a2e0a78857db8a5ea9a5d3cd2ec5f7d8b"
-P2_CORE_SHA = "bebed9f1663ce17a0ea24c72de67080b335109dfb83d735971fe68cff4ed9d31"
+P2_CORE_SHA = "7d764a80f43db9431f303bb3d0049c2548788c5928a8cf555b1fa86cc9e44322"
 
 EXIT = {"pass": 0, "fail": 1, "undecidable": 1, "stop": 2}
 
@@ -60,6 +68,7 @@ LATER_RULES = (   # sealed addenda checked here (raw sha, LF, no BOM, .sha256 re
     (_VMR + "rev6.md", "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9", _VMR + "rev6.sha256"),
     (_VMR + "rev7.md", "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502", _VMR + "rev7.sha256"),
     (_VMR + "rev8.md", "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56", _VMR + "rev8.sha256"),
+    (_VMR + "rev9.md", "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d", _VMR + "rev9.sha256"),
 )
 REV3_REL, REV3_SHA = LATER_RULES[0][0], LATER_RULES[0][1]
 
@@ -85,7 +94,7 @@ def jp3_tag_scope(fnd, where, res, setting_name):
 
 
 def check_rev3(repo):
-    """rev3 ~ rev8 (the name is kept for the tests); ``ok`` = all sealed addenda match (rev8 R8-4:
+    """rev3 ~ rev9 (the name is kept for the tests); ``ok`` = all sealed addenda match (rev8 R8-4, rev9 R9-8:
     file sha = code seal sha = ``.sha256`` record, else S-1)."""
     items = [_check_one(repo, *r) for r in LATER_RULES]
     return {"items": items, "ok": all(i["ok"] for i in items)}
