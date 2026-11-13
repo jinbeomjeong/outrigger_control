@@ -29,7 +29,9 @@ SEALED = [
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6.md",
      "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9", "rules rev6"),
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.md",
-     "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502", "rules rev7 (wins)"),
+     "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502", "rules rev7"),
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev8.md",
+     "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56", "rules rev8 (wins)"),
     ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev7.md",
      "9ccde7a5a4128317ed832dd2f92cd2368280f18cefa6827f1b1731c6d4e9aab3", "Appendix A: v5 rev7 (T4 / T5 E, B1, tool regression)"),
     ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev8.md",
@@ -57,6 +59,8 @@ SEALED = [
 RECORDED = [
     "00_docs/04_control/s6_control_spec.md",
     "02_params/rexome33.yaml",
+    # rules 4.1: the ③ reading of a tag is `v5_options.is_extend_start_tag` only (rev8 R8-2)
+    "03_src/outrigger_sim/hydraulics/v5_options.py",
 ]
 
 
@@ -73,6 +77,7 @@ RAW_ONLY = {  # rev2 R2-9 last-but-one bullet: sealed rule files are compared ra
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev5.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.md",
+    "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev8.md",
 }
 
 
@@ -86,10 +91,10 @@ def sidecar_sha(p: Path):
 
 
 def seal_check(repo: Path) -> dict:
-    """Seal check (rules 8.2 S-1, rev2 R2-9, rev7 R7-7). Raw sha must match; for Appendix A files,
-    if only CRLF differs and the LF-normalised sha matches, pass and disclose
-    ("CRLF 변환만 다름"). The 436.8 rule files (original, rev1..rev7) are compared raw only, and
-    their raw sha must also equal the first token of the sibling `.sha256` record (R7-7)."""
+    """Seal check (rules 8.2 S-1, rev2 R2-9, rev7 R7-7, rev8 R8-4). Raw sha must match; for Appendix A
+    files, if only CRLF differs and the LF-normalised sha matches, pass and disclose
+    ("CRLF 변환만 다름"). The 436.8 rule files (original, rev1..rev8) are compared raw only, and
+    their code seal sha must also equal the first token of the sibling `.sha256` record (R7-7, R8-4)."""
     rows = []
     ok = True
     for rel, want, role in SEALED:
@@ -197,6 +202,12 @@ RC_THETA_DEG = 3.2
 
 # rev6 5 / 6 (C-5)
 TLIFT_SKIP_PHASES = ("idle", "check", "touch")
+# rev8 R8-3a name table (J11 plant lock state): SCM `step_series.npz` `law_locked` on `t_s`,
+# L2b `pads.npz` `law_locked` on `t`; [N, 4] int8, legs FL FR RL RR, 1 ms, values 1 / 0 / -1.
+LAW_LOCK_FILES = {"scm": ("step_series.npz", "t_s"), "l2b": ("pads.npz", "t")}
+LAW_LOCK_VALUES = (-1, 0, 1)    # R8-3a: 1 locked, 0 moving, -1 unarmed (rev6 6: before first arming = locked)
+LAW_LOCK_DT_S = 1e-3            # R8-3a "1 ms"
+LAW_LOCK_DT_TOL_S = 1e-6        # tool reading of "1 ms" (format check only, not a judgement threshold)
 
 EVENT_LOC = "crawler_liftoff_confirmed"
 EVENT_LOC_REVOKED = "INFO_LOC_REVOKED"

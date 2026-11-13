@@ -60,7 +60,7 @@ class Row:
     pad_n: np.ndarray | None         # (k,4) pad normal [N]
     t_sink: np.ndarray | None
     sink: np.ndarray | None          # (k,4) pad sinkage [m] (SCM)
-    law_locked: np.ndarray | None    # (n,4) on tF (L2b)
+    law_locked: np.ndarray | None    # (n,4) int8 on tF (SCM step_series / L2b pads, rev8 R8-3a); None if absent or malformed
     t10: np.ndarray                  # 10 Hz control instants
     issued: np.ndarray               # (p,4) issued command [m/s]
     phases: list                     # [(t_abs, name)]
@@ -73,6 +73,107 @@ class Row:
     result: dict = field(repr=False, default_factory=dict)
     argv: list = field(default_factory=list)
     notes: list = field(default_factory=list)
+    law_locked_source: str | None = None          # "step_series.npz law_locked" / "pads.npz law_locked"
+    law_locked_problems: list = field(default_factory=list)   # R8-3a format problems (non-empty = malformed)
+
+
+def law_locked_check(arr, t) -> list:
+    """rev8 R8-3a format of `law_locked`: [N, 4] int8 on the same file's 1 ms time axis, values in
+    {1, 0, -1}. Returns the list of problems (empty = well formed)."""
+    probs = []
+    arr = np.asarray(arr)
+    t = np.asarray(t, float)
+    if arr.ndim != 2 or arr.shape[1] != 4:
+        probs.append(f"shape {list(arr.shape)} != [N, 4]")
+    elif arr.shape[0] != len(t):
+        probs.append(f"rows {arr.shape[0]} != time axis rows {len(t)}")
+    if arr.dtype != np.int8:
+        probs.append(f"dtype {arr.dtype} != int8")
+    if arr.size:
+        bad = sorted(set(np.unique(arr).tolist()) - set(R.LAW_LOCK_VALUES))
+        if bad:
+            probs.append(f"values {bad[:5]} outside {list(R.LAW_LOCK_VALUES)}")
+    if len(t) > 1:
+        d = np.diff(t)
+        if not np.all(d > 0):
+            probs.append("time axis not increasing")
+        else:
+            dev = float(np.max(np.abs(d - R.LAW_LOCK_DT_S)))
+            if dev > R.LAW_LOCK_DT_TOL_S:
+                probs.append(f"time step not 1 ms (max |dt - 1 ms| = {dev:.3e} s)")
+    return probs
+
+
+def _law_locked_from(npz, tkey, src):
+    if "law_locked" not in npz.files:
+        return None, []
+    arr = np.asarray(npz["law_locked"])
+    probs = law_locked_check(arr, npz[tkey])
+    return (None if probs else arr), probs
+
+
+def law_lock_view(ll: np.ndarray):
+    """rev6 6 reading of the plant lock state: 1 = locked, 0 = moving, -1 before the leg's first
+    armed sample = locked. Returns (locked bool (n,4), samples per leg with -1 after the first armed
+    sample: reading not defined by the rules)."""
+    ll = np.asarray(ll).astype(int)
+    armed = ll != -1
+    seen = np.maximum.accumulate(armed, axis=0)
+    locked = (ll == 1) | (~seen)
+    after = ((ll == -1) & seen).sum(axis=0).astype(int).tolist()
+    return locked, after
+
+
+# ----------------------------------------------------------------------------- tag (rules 4.1 / 6)
+_V5O = {}
+
+
+def _repo_of_tool() -> Path:
+    here = Path(__file__).resolve().parent
+    for p in [here] + list(here.parents):
+        if (p / R.REPO_MARKER).exists():
+            return p
+    raise InputError("repository root not found (v5_options)")
+
+
+def v5_options():
+    """`03_src/outrigger_sim/hydraulics/v5_options.py` of this checkout (rules 4.1: the ③ reading
+    of a tag is `is_extend_start_tag` only; the module is controller option code, not a path 1 tool)."""
+    if "mod" not in _V5O:
+        import importlib
+        import sys
+        src = _repo_of_tool() / "03_src"
+        if str(src) not in sys.path:
+            sys.path.insert(0, str(src))
+        mod = importlib.import_module("outrigger_sim.hydraulics.v5_options")
+        f = Path(mod.__file__).resolve()
+        if src.resolve() not in f.parents:
+            raise InputError(f"v5_options imported from {f}, not from {src}")
+        _V5O["mod"] = mod
+    return _V5O["mod"]
+
+
+def is_extend_start_tag(tag) -> bool:
+    return bool(v5_options().is_extend_start_tag(tag))
+
+
+def row_tag(row) -> dict:
+    """Rules 4.1 / 6 / rev1 RV1-10 a: a Chrono row's tag is the argv `--expect-controller` value and
+    the run's expect check must be true (SCM `c2_setup.expect_controller`, L2b / L1-R
+    `expect_controller`). A recorded `name` different from the argv value also leaves the tag
+    unestablished."""
+    argv = row.argv
+    tag = None
+    if "--expect-controller" in argv:
+        i = argv.index("--expect-controller")
+        tag = argv[i + 1] if i + 1 < len(argv) else None
+    if row.engine == "scm":
+        ec = (row.result.get("c2_setup") or {}).get("expect_controller") or {}
+    else:
+        ec = row.result.get("expect_controller") or {}
+    name = ec.get("name")
+    est = tag is not None and ec.get("ok") is True and (name is None or name == tag)
+    return {"tag": tag, "expect_ok": ec.get("ok"), "expect_name": name, "established": est}
 
 
 def _quat_rp(q):
@@ -140,7 +241,9 @@ def load_row(folder: Path, engine: str, argv=None) -> Row:
         t_pad = tF
         sink = np.asarray(z["pad_sinkage_geometric_m"], float)
         t_sink = tF
-        law_locked = None
+        # rev8 R8-3 / R8-3a: SCM J11 plant lock state = step_series.npz law_locked on t_s (1 ms)
+        law_locked, ll_probs = _law_locked_from(z, "t_s", "step_series.npz")
+        ll_src = "step_series.npz law_locked" if "law_locked" in z.files else None
         offset = 0.0
         loop_start = float(res["t_loop_start_s"])
         phases = _phases(res.get("phases"), offset)
@@ -194,7 +297,9 @@ def load_row(folder: Path, engine: str, argv=None) -> Row:
         t_pad = tF if pad_n is not None else None
         sink = None
         t_sink = None
-        law_locked = np.asarray(pads["law_locked"]) if "law_locked" in pads.files else None
+        # rev8 R8-3a (rev4 R4-A2, rev6 R6-B7): L2b plant lock state = pads.npz law_locked on t (1 ms)
+        law_locked, ll_probs = _law_locked_from(pads, "t", "pads.npz")
+        ll_src = "pads.npz law_locked" if "law_locked" in pads.files else None
         st = res.get("settings", {})
         offset = float(st["start_t_s"])
         loop_start = offset
@@ -220,7 +325,8 @@ def load_row(folder: Path, engine: str, argv=None) -> Row:
                t_att=t_att, att=att, t_cr=t_cr, cr=cr, cr_basis=cr_basis, t_pad=t_pad, pad_n=pad_n,
                t_sink=t_sink, sink=sink, law_locked=law_locked, t10=t10, issued=issued, phases=phases,
                events=events, floor_label=floor_label, flat=flat, target_deg=target, weight_N=weight,
-               rut=rut, result=res, argv=list(argv or []), notes=notes)
+               rut=rut, result=res, argv=list(argv or []), notes=notes,
+               law_locked_source=ll_src, law_locked_problems=ll_probs)
 
 
 # ----------------------------------------------------------------------------- helpers
@@ -976,10 +1082,11 @@ def reagg_item(row: Row, item: str) -> dict:
     return out
 
 
-def extend_start_on(row: Row):
+def extend_start_rule(row: Row):
+    """rev8 R8-2: the running controller's ③ rule = `controller_meta.two_pressure.settings.extend_start_rule`
+    (None when the key is absent)."""
     tp = (row.result.get("controller_meta") or {}).get("two_pressure") or {}
-    rule = (tp.get("settings") or {}).get("extend_start_rule", tp.get("extend_start_rule"))
-    return None if rule is None else rule == "tracked_bound"
+    return (tp.get("settings") or {}).get("extend_start_rule")
 
 
 def reagg_table(rows: list) -> list:

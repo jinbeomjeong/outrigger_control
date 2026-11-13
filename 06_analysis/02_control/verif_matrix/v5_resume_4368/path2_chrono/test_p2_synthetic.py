@@ -157,6 +157,206 @@ def write_l2b(folder: Path, liftoff=20.0, dip=None, moving_bar=None, end_att=0.0
 
 
 L2B_ARGV = ["run_S8C.py", "run", "--tag", "x", "--expect-controller", "final_C4G2_P3_LAS_K1"]
+SCM_VB_ARGV = ["run_S9.py", "level", "--extend-start-tracked", "--expect-controller", "final_C4G2_P3_LAS_K1"]
+SCM_V0_ARGV = ["run_S9.py", "level", "--expect-controller", "final_C4G2_LAS_K1"]
+
+
+def _edit_result(src: Path, dst: Path, fn):
+    """Copy a synthetic row folder and edit its result.json with fn(res)."""
+    if dst.exists():
+        shutil.rmtree(dst)
+    shutil.copytree(src, dst)
+    res = json.loads((dst / "result.json").read_text(encoding="utf-8"))
+    fn(res)
+    (dst / "result.json").write_text(json.dumps(res), encoding="utf-8")
+    return dst
+
+
+def _set_npz(path: Path, **arrays):
+    """Rewrite an npz with keys replaced / added (None = drop the key)."""
+    z = dict(np.load(path))
+    for k, v in arrays.items():
+        if v is None:
+            z.pop(k, None)
+        else:
+            z[k] = v
+    np.savez(path, **z)
+
+
+def t_rev8_jp3(tmp, sp, d18):
+    """436.8 rev8 R8-2: J-P3 scope by the tag (rules 4.1 is_extend_start_tag), request record checks."""
+    d_v0 = write_scm(tmp / "jp3_v0", copy.deepcopy(sp))
+    j = K.jp3_item(C.load_row(d_v0, "scm", SCM_V0_ARGV))
+    check("R8-2 V0 tag, no extend_start_rule key, argv / options off -> na (not counted as missing)",
+          j["verdict"] == "na" and j["extend_start_tag"] is False and "stop" not in j, j)
+    d_nob = _edit_result(d_v0, tmp / "jp3_v0_noblock", lambda r: r.pop("v5_hydraulics"))
+    j = K.jp3_item(C.load_row(d_nob, "scm", SCM_V0_ARGV))
+    check("R8-2 no v5_hydraulics block -> argv only compared, na",
+          j["verdict"] == "na" and j["request_compared"] == ["argv"], j)
+    j = K.jp3_item(C.load_row(d_v0, "scm", SCM_V0_ARGV + ["--extend-start-tracked"]))
+    check("R8-2 V0 tag but argv --extend-start-tracked -> S-2",
+          j["verdict"] == "indeterminate" and j.get("stop", "").startswith("S-2")
+          and j["request_mismatch"] == ["argv --extend-start-tracked"], j)
+    d_v0o = _edit_result(d_v0, tmp / "jp3_v0_opt",
+                         lambda r: r["v5_hydraulics"]["hydraulic_options"].update(extend_start_tracked=True))
+    j = K.jp3_item(C.load_row(d_v0o, "scm", SCM_V0_ARGV))
+    check("R8-2 V0 tag but hydraulic_options.extend_start_tracked true -> S-2",
+          j.get("stop", "").startswith("S-2")
+          and j["request_mismatch"] == ["v5_hydraulics.hydraulic_options.extend_start_tracked"], j)
+    j = K.jp3_item(C.load_row(d_v0o, "scm", SCM_VB_ARGV))
+    check("R8-2 ③ tag, requests on, extend_start_rule key absent -> 판정 불가 (9.3), no stop",
+          j["verdict"] == "indeterminate" and "stop" not in j and "9.3" in j["reason"], j)
+    d_const = _edit_result(d18, tmp / "jp3_const",
+                           lambda r: r["controller_meta"]["two_pressure"]["settings"].update(extend_start_rule="constant"))
+    j = K.jp3_item(C.load_row(d_const, "scm", SCM_VB_ARGV))
+    check("R8-2 ③ tag but extend_start_rule constant -> S-2",
+          j["verdict"] == "indeterminate" and j.get("stop", "").startswith("S-2"), j)
+    d_v0tb = _edit_result(d18, tmp / "jp3_v0tb",
+                          lambda r: r["v5_hydraulics"]["hydraulic_options"].pop("extend_start_tracked"))
+    j = K.jp3_item(C.load_row(d_v0tb, "scm", SCM_V0_ARGV))
+    check("R8-2 V0 tag, requests off, but extend_start_rule tracked_bound -> S-2 (tag vs controller)",
+          j.get("stop", "").startswith("S-2") and "tracked_bound" in j["stop"], j)
+    j = K.jp3_item(C.load_row(d18, "scm", ["run_S9.py", "level", "--extend-start-tracked"]))
+    check("R8-2 no argv --expect-controller -> tag not established, S-2",
+          j["tag_established"] is False and j.get("stop", "").startswith("S-2"), j)
+    d_nm = _edit_result(d18, tmp / "jp3_name",
+                        lambda r: r["c2_setup"]["expect_controller"].update(name="final_C4G2_LAS_K1"))
+    j = K.jp3_item(C.load_row(d_nm, "scm", SCM_VB_ARGV))
+    check("R8-2 expect_controller.name != argv tag -> S-2", j.get("stop", "").startswith("S-2"), j)
+    d_ko = _edit_result(d18, tmp / "jp3_ko", lambda r: r["c2_setup"]["expect_controller"].update(ok=False))
+    j = K.jp3_item(C.load_row(d_ko, "scm", SCM_VB_ARGV))
+    check("R8-2 expect check false -> S-2", j.get("stop", "").startswith("S-2"), j)
+    argv_k1 = ["run_S9.py", "level", "--extend-start-tracked", "--expect-controller", "final_C4G2_P3_K1"]
+    j = K.jp3_item(C.load_row(d18, "scm", argv_k1))
+    check("R8-2 ③ by is_extend_start_tag whatever the suffixes (final_C4G2_P3_K1) -> judged (breach fail)",
+          j["extend_start_tag"] is True and j["verdict"] == "fail", j)
+    d_vbnb = _edit_result(d18, tmp / "jp3_vb_noblock", lambda r: r.pop("v5_hydraulics"))
+    j = K.jp3_item(C.load_row(d_vbnb, "scm", SCM_VB_ARGV))
+    check("R8-2 ③ tag, no v5_hydraulics block, argv on -> argv only, judged",
+          j["request_compared"] == ["argv"] and j["verdict"] == "fail", j)
+    check("rules 4.1 reading: is_extend_start_tag from v5_options of this checkout",
+          [C.is_extend_start_tag(x) for x in ("final_C4G2_P3_LAS_K1", "final_C4G2_LAS_K1", "ABL_LAS_K1", None)]
+          == [True, False, False, False]
+          and Path(C.v5_options().__file__).resolve().is_relative_to((REPO / "03_src").resolve()),
+          C.v5_options().__file__)
+
+
+def t_rev8_j11(tmp, sp):
+    """436.8 rev8 R8-3 / R8-3a: SCM J11 on step_series.npz law_locked (rev6 6, R6-B7, rev2 D-1)."""
+    import math
+    base = write_scm(tmp / "j11s", copy.deepcopy(sp))
+    t10 = np.load(base / "r8_series.npz")["t"]
+    ph = np.load(base / "r8_series.npz")["phase"]
+    u = np.zeros((len(t10), 4))
+    u[(t10 >= 39.9 - 1e-9) & (t10 <= 40.5 + 1e-9), 0] = 0.005
+    np.savez(base / "r8_series.npz", t=t10, issued_u=u, phase=ph)
+    tw = 40.6 + 0.1 * math.log(0.005 / 1e-4) + 0.05 + 0.1
+
+    def tp_of(r):
+        r["controller_meta"]["two_pressure"] = {
+            "settings": {"lock_window_valve_tau_s": 0.1, "lock_window_eps_m_s": 1e-4,
+                         "lock_window_closing_delay_s": 0.05, "extend_start_rule": "tracked_bound"},
+            "fallback_lock_log": [{"leg": "FL", "t_start_s": 40.6, "window_end_s": tw}]}
+        r["events"].append({"t_s": 40.0, "name": "WARN_ROD_PRESSURE_FALLBACK:FL"})
+    _edit_result(base, tmp / "j11s_t", tp_of)
+    base = tmp / "j11s_t"
+    t = np.load(base / "step_series.npz")["t_s"]
+    n = len(t)
+
+    def variant(name, ll):
+        d = tmp / name
+        if d.exists():
+            shutil.rmtree(d)
+        shutil.copytree(base, d)
+        _set_npz(d / "step_series.npz", law_locked=ll)
+        row = C.load_row(d, "scm", SCM_VB_ARGV)
+        return row, K.j11_item(row, row.result["controller_meta"]["two_pressure"])
+
+    ok_ll = np.ones((n, 4), dtype=np.int8)
+    ok_ll[(t >= 39.9) & (t < 40.75), 0] = 0
+    row, j = variant("j11s_locked", ok_ll)
+    check("R8-3 SCM law_locked read from step_series.npz on t_s, well formed",
+          row.law_locked is not None and row.law_locked_problems == []
+          and row.law_locked_source == "step_series.npz law_locked", row.law_locked_problems)
+    check("R8-3 SCM fallback leg FL locked before t_w -> window end = log, n_late 0, pass",
+          j["verdict"] == "pass" and j["n_late"] == [0, 0, 0, 0] and j["log_matches"][0]["match"], j)
+    late_ll = np.ones((n, 4), dtype=np.int8)
+    late_ll[(t >= 39.9) & (t < 42.0), 0] = 0
+    _, j = variant("j11s_late", late_ll)
+    check("R8-3 SCM fallback leg still moving after t_w -> n_late 1, H-7",
+          j["verdict"] == "fail" and j["n_late"][0] == 1 and j["stop"].startswith("H-7"), j)
+    pre = ok_ll.copy()
+    pre[t < 10.0, :] = -1
+    row, j = variant("j11s_pre", pre)
+    it, _, _ = K.items_c5(row, PARAMS)
+    check("rev6 6: -1 before the first armed sample = locked (pass; transitions FL off 1 / on 1)",
+          j["verdict"] == "pass" and it["J11_lock_transitions"]["lock_off"] == [1, 0, 0, 0]
+          and it["J11_lock_transitions"]["lock_on"] == [1, 0, 0, 0], (j.get("verdict"), it["J11_lock_transitions"]))
+    aft = ok_ll.copy()
+    aft[(t >= 50.0) & (t < 50.5), 2] = -1
+    _, j = variant("j11s_after", aft)
+    check("-1 after arming -> J11 판정 불가 + stop (no rule reading)",
+          j["verdict"] == "indeterminate" and j.get("stop", "").startswith("R8-3")
+          and j["unarmed_after_armed_samples"] == [0, 0, 500, 0], j)
+    for name, bad, word in (("j11s_i64", ok_ll.astype(np.int64), "dtype"),
+                            ("j11s_shape", ok_ll[:, :3].copy(), "shape"),
+                            ("j11s_rows", ok_ll[:-1].copy(), "rows"),
+                            ("j11s_val", np.where(ok_ll == 0, 2, ok_ll).astype(np.int8), "values")):
+        row, j = variant(name, bad)
+        check(f"R8-3a malformed ({word}) -> law_locked unused, J11 판정 불가 + stop",
+              row.law_locked is None and any(word in p for p in row.law_locked_problems)
+              and j["verdict"] == "indeterminate" and j.get("stop", "").startswith("R8-3"), (row.law_locked_problems, j))
+    tg = np.r_[np.round(np.arange(0.001, 1.0, 0.001), 6), 1.5]
+    check("R8-3a time axis not 1 ms -> malformed", any("1 ms" in p for p in
+                                                        C.law_locked_check(np.zeros((len(tg), 4), np.int8), tg)))
+    row, j = variant("j11s_none", None)
+    check("R8-3 SCM law_locked missing (fallback leg present) -> 판정 불가 + stop",
+          row.law_locked_source is None and j["verdict"] == "indeterminate" and "missing" in j["reason"]
+          and j.get("stop", "").startswith("R8-3"), j)
+    d0 = _edit_result(tmp / "j11s_none", tmp / "j11s_none_nofb", lambda r: (
+        r["controller_meta"]["two_pressure"].update(fallback_lock_log=[]),
+        r.update(events=[e for e in r["events"] if "FALLBACK" not in e["name"]])))
+    r0 = C.load_row(d0, "scm", SCM_VB_ARGV)
+    j0 = K.j11_item(r0, r0.result["controller_meta"]["two_pressure"])
+    check("R8-3 (Q-R8-1 = B): SCM law_locked missing, no fallback leg -> still 판정 불가 + stop (not 'record')",
+          j0["verdict"] == "indeterminate" and j0.get("stop", "").startswith("R8-3"), j0)
+    # L2b: missing law_locked keeps rev6 R6-B7 (no actual fallback leg -> record)
+    dl = write_l2b(tmp / "l2b_noll")
+    _set_npz(dl / "pads.npz", law_locked=None)
+    rl = C.load_row(dl, "l2b", L2B_ARGV)
+    jl = K.j11_item(rl, {"fallback_lock_log": [], "settings": {}})
+    check("L2b pads.npz law_locked missing, no fallback leg -> record (rev6 R6-B7 kept)",
+          jl["verdict"] == "record" and "stop" not in jl, jl)
+    dl2 = write_l2b(tmp / "l2b_ll64")
+    _set_npz(dl2 / "pads.npz", law_locked=np.zeros((len(np.load(dl2 / "pads.npz")["t"]), 4), np.int64))
+    rl2 = C.load_row(dl2, "l2b", L2B_ARGV)
+    jl2 = K.j11_item(rl2, {"fallback_lock_log": [], "settings": {}})
+    check("L2b pads.npz law_locked malformed (int64) -> 판정 불가 + stop (R8-3a table)",
+          jl2["verdict"] == "indeterminate" and jl2.get("stop", "").startswith("R8-3"), jl2)
+
+
+def t_rev8_record(rec_dir):
+    """Short SCM record made by the runner at 7527fc3 (record only, not a path 1 output)."""
+    if rec_dir is None:
+        print("SKIP 7527fc3 SCM record tests (no --lawlock-record)")
+        return
+    d = Path(rec_dir)
+    row = C.load_row(d, "scm", SCM_VB_ARGV)
+    check("7527fc3 record: step_series.npz law_locked [N, 4] int8 on t_s, well formed",
+          row.law_locked is not None and row.law_locked.shape == (len(row.tF), 4) and row.law_locked_problems == [],
+          row.law_locked_problems)
+    it, _, _ = K.items_c5(row, PARAMS)
+    j = it["J11_window"]
+    check("7527fc3 record: J11 computed (no actual fallback leg -> record, n_late of 4 legs)",
+          j["verdict"] == "record" and len(j.get("n_late", [])) == 4, j)
+    tr = it["J11_lock_transitions"]
+    check("7527fc3 record: lock transitions per leg off 2 / on 2, no -1 after arming",
+          tr["lock_off"] == [2, 2, 2, 2] and tr["lock_on"] == [2, 2, 2, 2]
+          and tr["unarmed_after_armed_samples"] == [0, 0, 0, 0], tr)
+    jp = it["J-P3"]
+    check("7527fc3 record: J-P3 tag ③ established, request records agree (no S-2)",
+          jp["tag_established"] is True and jp["extend_start_tag"] is True
+          and "S-2" not in str(jp.get("stop", "")) and jp["extend_start_rule"] == "tracked_bound", jp)
 
 
 # ------------------------------------------------------------------ tests
@@ -314,32 +514,26 @@ def t_scm(tmp):
     sp18 = copy.deepcopy(sp)
     d18 = write_scm(tmp / "c5rec", sp18)
     res = json.loads((d18 / "result.json").read_text(encoding="utf-8"))
-    res["controller_meta"]["two_pressure"] = {"extend_start_rule": "tracked_bound", "fallback_lock_log": [],
+    res["controller_meta"]["two_pressure"] = {"settings": {"extend_start_rule": "tracked_bound"},
+                                              "fallback_lock_log": [],
                                               "review_record": {"d2_violation_start_ratio": [None] * 4}}
+    res["v5_hydraulics"]["hydraulic_options"]["extend_start_tracked"] = True
     res["hydraulics_record"]["extend_bound_check"] = {"rule": "ext_moving", "breach_reads": [0, 0, 1, 0],
                                                       "margin_used_reads": [0, 0, 0, 0]}
     res["events"].append({"t_s": 30.0, "name": "WARN_ROD_PRESSURE_FALLBACK:RL"})
     res["events"].append({"t_s": 30.0, "name": "INFO_ROD_PRESSURE_FAULT_REASON:RL:D2b_rate"})
     res["events"].append({"t_s": 30.0, "name": "WARN_ROD_PRESSURE_FALLBACK:FR"})
     (d18 / "result.json").write_text(json.dumps(res), encoding="utf-8")
-    it18, k18, _ = K.items_c5(C.load_row(d18, "scm", ["run_S9.py", "--extend-start-tracked"]), PARAMS)
+    it18, k18, _ = K.items_c5(C.load_row(d18, "scm", SCM_VB_ARGV), PARAMS)
     check("J-P3 breach sum 1 -> fail + H-7 (rev8 3.2)", it18["J-P3"]["verdict"] == "fail"
           and it18["J-P3"].get("stop") == "H-7 (rev8 3.2)", it18["J-P3"])
-    check("J11 SCM row without law_locked, event-only fallback legs -> indeterminate (R6-B7)",
+    check("J11 SCM row without step_series law_locked -> 판정 불가 + stop (436.8 rev8 R8-3)",
           it18["J11_window"]["verdict"] == "indeterminate"
-          and it18["J11_window"]["actual_fallback_legs"] == ["FR", "RL"], it18["J11_window"])
+          and it18["J11_window"].get("stop", "").startswith("R8-3"), it18["J11_window"])
     check("D2 reason from INFO_ROD_PRESSURE_FAULT_REASON (rev5 R5-B2), FR reason unreadable",
           it18["D2"]["d2_fallback_legs"] == ["RL"] and it18["D2"]["reason_unreadable_legs"] == ["FR"], it18["D2"])
-    # J-P3 on V0 rows (no extend_start_rule key, ③ not requested) and on a ③-requested row without the key
+    t_rev8_jp3(tmp, sp, d18)
     d19 = write_scm(tmp / "c5v0", copy.deepcopy(sp))
-    jv0 = K.jp3_item(C.load_row(d19, "scm", ["run_S9.py", "level"]))
-    check("J-P3 V0 row without extend_start_rule key -> na (rev8 5 VB / LS only)", jv0["verdict"] == "na", jv0)
-    jvb = K.jp3_item(C.load_row(d19, "scm", ["run_S9.py", "level", "--extend-start-tracked"]))
-    check("J-P3 ③-requested row without extend_start_rule key -> 판정 불가 (9.3)",
-          jvb["verdict"] == "indeterminate", jvb)
-    j18b = K.jp3_item(C.load_row(d18, "scm", ["run_S9.py"]))
-    check("J-P3 tracked_bound recorded but ③ not in argv / options -> 판정 불가 (S-3 review)",
-          j18b["verdict"] == "indeterminate" and "differ" in j18b["reason"], j18b)
     # identity_scm + rev7 R7-4 (las_off key by arm)
     idn = K.identity_scm(C.load_row(d19, "scm", ["run_S9.py", "level"]))
     check("R7-4 on arm, c2_setup.las_off absent -> read as on, identity pass",
@@ -481,7 +675,33 @@ def t_seal(tmp):
     check("seal: rev7 .sha256 record missing -> S-1", not s6["ok"]
           and {r["file"]: r["status"] for r in s6["sealed"]}[rel7] == "sidecar_missing")
     sc7.write_bytes(keep)
-    rel_a = "06_analysis/02_control/verif_matrix/d1_selection_rules.md"
+    rel8 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev8.md"
+    check("seal: rev8 listed, raw only, 3ecafaaf, role wins (rev8 R8-4)",
+          rel8 in R.RAW_ONLY and any(r == rel8 and w.startswith("3ecafaaf") and "wins" in role
+                                     for r, w, role in R.SEALED))
+    check("seal: rev8 raw sha = code seal sha = .sha256 first token",
+          {r["file"]: r["status"] for r in ok["sealed"]}[rel8] == "match"
+          and R.sidecar_sha(repo / rel8) == next(w for r, w, _ in R.SEALED if r == rel8))
+    sc8 = repo / Path(rel8).with_suffix(".sha256")
+    keep8 = sc8.read_bytes()
+    sc8.write_text("f" * 64 + "  v5_resume_4368_rules_rev8.md\n", encoding="utf-8")
+    s8 = R.seal_check(repo)
+    check("seal: rev8 .sha256 record differs -> S-1 (sidecar_mismatch)",
+          not s8["ok"] and {r["file"]: r["status"] for r in s8["sealed"]}[rel8] == "sidecar_mismatch")
+    sc8.unlink()
+    s8b = R.seal_check(repo)
+    check("seal: rev8 .sha256 record missing -> S-1",
+          not s8b["ok"] and {r["file"]: r["status"] for r in s8b["sealed"]}[rel8] == "sidecar_missing")
+    sc8.write_bytes(keep8)
+    p8 = repo / rel8
+    keep_md = p8.read_bytes()
+    p8.write_bytes(keep_md + b"\n")
+    s8c = R.seal_check(repo)
+    check("seal: rev8 file changed (.sha256 intact) -> S-1 (mismatch)",
+          not s8c["ok"] and {r["file"]: r["status"] for r in s8c["sealed"]}[rel8] == "mismatch")
+    p8.write_bytes(keep_md)
+    check("seal: restored copies match again", R.seal_check(repo)["ok"])
+    rel_a ="06_analysis/02_control/verif_matrix/d1_selection_rules.md"
     p = repo / rel_a
     p.write_bytes(p.read_bytes().replace(b"\n", b"\r\n"))
     s2 = R.seal_check(repo)
@@ -588,11 +808,14 @@ def t_resolve(tmp):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tmp")
+    ap.add_argument("--lawlock-record", help="SCM row folder recorded by the runner at 7527fc3 (optional)")
     a = ap.parse_args()
     tmp = Path(a.tmp) if a.tmp else Path(tempfile.mkdtemp(prefix="p2chrono_"))
     tmp.mkdir(parents=True, exist_ok=True)
     t_classify()
     t_scm(tmp)
+    t_rev8_j11(tmp, scm_spec())
+    t_rev8_record(a.lawlock_record)
     t_l2b(tmp)
     t_c67(tmp)
     t_seal(tmp)
