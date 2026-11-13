@@ -280,14 +280,21 @@ def grade_set(recs, jruns, core, fnd):
 
 
 # ----------------------------------------------------------------- checks
-def run_checks(name, recs, core, v5j, is_p3, vb, fnd):
+def run_checks(name, recs, core, v5j, is_p3, vb, fnd, t4h_dirs=None, t4h_log=None):
+    """``t4h_dirs``: rev11 R11-2 search folders of this input file (rev12 R12-1: a recorded ``t4h_file``
+    is read from them, found 0 or 2+ = S-2 and J-P3 not judged; no key = configuration, R3-C8)."""
     jp = {}
     for k, r in recs.items():
         where = f"{name}|{k}"
         if vb:
-            res, why = v5j.jp3(r, is_p3, True)   # R3-C8: two-pressure screen = rod reading
+            # R3-C8 configuration: two-pressure screen = rod reading (True); rev12 R12-1 T4h first
+            rod, ok = cm.jp3_rod_input(fnd, where, r, t4h_dirs, v5j, True,
+                                       t4h_log if t4h_log is not None else {})
+            res, why = v5j.jp3(r, is_p3, rod) if ok else ("t4h_unresolved", "R12-1 S-2")
             jp[res] = jp.get(res, 0) + 1
-            if cm.jp3_tag_scope(fnd, where, res, "VB"):   # rev8 R8-2: not applicable + S-2
+            if not ok:
+                pass
+            elif cm.jp3_tag_scope(fnd, where, res, "VB"):   # rev8 R8-2: not applicable + S-2
                 pass
             elif res == "H-7":
                 fnd.stop("H-7", where, f"J-P3 {why}")
@@ -388,7 +395,7 @@ def cmd_noise(args, repo, v5j, core):
     fnd = core.Findings()
     judge_dir = Path(args.judge_dir)
     # R4-A2 condition 1: judge tool unchanged since the 436.8 seal
-    head = args.git_at_start or cm.git_head(repo)
+    head = args.git_at_start   # rev12 R12-3: required (argparse), no HEAD default
     commits = cm.git_commits_since(repo, SEAL_BASE, head, JUDGE_REL) if head else None
     jtool = {"path": JUDGE_REL, "sha256": cm.sha256_file(Path(repo) / JUDGE_REL), "git_at_start": head,
              "commits_since_f46b5ab": commits,
@@ -399,6 +406,14 @@ def cmd_noise(args, repo, v5j, core):
     if commits is None or commits:
         fnd.stop("S-11", "judge tool", f"git log {SEAL_BASE}..{head} -- {JUDGE_REL}: {commits}")
         return {"judge_tool": jtool, **fnd.as_dict(), "stop_codes": ["S-11"]}, "stop"
+    # rev11 R11-2 / rev12 R12-1: T4h search places of the J-P3 input files (input error = S-11, exit 2)
+    jp3_files = [args.noise_vb, args.h6] + ([args.seedext_vb] if args.seedext_vb and args.seedext_v0 else [])
+    places, perr = v5j.t4h_places(jp3_files, args.t4h_root)
+    if places is None:
+        body, st = cm.t4h_input_error(perr)
+        body.update(judge_tool=jtool, not_judged=["H-6", "H-8"])
+        return body, st
+    t4h_log = {}
     d_vb, vb = load(args.noise_vb)
     d_v0, v0 = load(args.noise_v0)
     d_h6, h6 = load(args.h6)
@@ -413,8 +428,8 @@ def cmd_noise(args, repo, v5j, core):
         fnd.stop("S-15", "H-6", f"{len(set(h6) - set(vb))} dg3 keys not in the noise VB keys")
     sub = [{"key": k, "same_hash": h(r) is not None and h(r) == h(vb.get(k, {})),
             "hash_missing": h(r) is None or h(vb.get(k, {})) is None} for k, r in h6.items()]
-    jp = {"noise_VB": run_checks("noise_VB", vb, core, v5j, is_p3, True, fnd),
-          "H-6": run_checks("H-6", h6, core, v5j, is_p3, True, fnd)}
+    jp = {"noise_VB": run_checks("noise_VB", vb, core, v5j, is_p3, True, fnd, places[str(args.noise_vb)], t4h_log),
+          "H-6": run_checks("H-6", h6, core, v5j, is_p3, True, fnd, places[str(args.h6)], t4h_log)}
     run_checks("noise_V0", v0, core, v5j, is_p3, False, fnd)
     # judge runs (own outputs): VB with the dg3 keys merged (rev8 #6), V0 as is
     jrec = {}
@@ -493,7 +508,8 @@ def cmd_noise(args, repo, v5j, core):
     if args.seedext_vb and args.seedext_v0:
         sv_doc, sv = load(args.seedext_vb)
         s0_doc, s0 = load(args.seedext_v0)
-        jp["seedext_VB"] = run_checks("seedext_VB", sv, core, v5j, is_p3, True, fnd)
+        jp["seedext_VB"] = run_checks("seedext_VB", sv, core, v5j, is_p3, True, fnd,
+                                      places[str(args.seedext_vb)], t4h_log)
         run_checks("seedext_V0", s0, core, v5j, is_p3, False, fnd)
         se["VB"] = seedext("seedext_VB", sv, vb, fnd)
         se["V0"] = seedext("seedext_V0", s0, v0, fnd)
@@ -522,6 +538,7 @@ def cmd_noise(args, repo, v5j, core):
                                                               ("seedext_vb", args.seedext_vb),
                                                               ("seedext_v0", args.seedext_v0)) if p},
             "judge_tool": jtool, "judge_runs": jrec, "v5_options": mod,
+            "R11-2_t4h": {"search_dirs": {k: [str(d) for d in v] for k, v in places.items()}, "lookup": t4h_log},
             "recomputed": {"levels": {"VB": lv_vb, "V0": lv_v0, "H-6": lv_h6},
                            "L1_gate": {"path2": l1_own, "judge": l1_j, "same": l1_cmp,
                                        "대조 대상 없음": l1_no_ref},
@@ -558,7 +575,11 @@ def build_parser():
     n.add_argument("--seedext-vb", default=None, help="resume_k1/h8_seedext_VB.json")
     n.add_argument("--seedext-v0", default=None, help="resume_k1/h8_seedext_V0.json")
     n.add_argument("--judge-dir", required=True, help="this path's folder for the r79 judge outputs (R4-A2 c 3)")
-    n.add_argument("--git-at-start", default=None, help="GIT_AT_START of 436.8 (default: repo HEAD)")
+    n.add_argument("--git-at-start", required=True,
+                   help="GIT_AT_START of 436.8 (required, rev12 R12-3: the base of R4-A2 condition 1)")
+    n.add_argument("--t4h-root", action="append", default=None,
+                   help="T4h folder (rev12 R12-1 / rev11 R11-2): only when none of the J-P3 input files "
+                        "(noise VB, H-6, seedext VB) has a convention folder <stem>_t4h/ or t4h/, at most one")
     return ap
 
 

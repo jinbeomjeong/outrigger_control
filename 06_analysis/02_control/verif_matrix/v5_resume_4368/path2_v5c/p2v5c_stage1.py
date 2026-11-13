@@ -9,6 +9,8 @@ up only in the runner convention folders of ``--h10`` (``<stem>_t4h/``, ``t4h/``
 ``--t4h-root`` only when neither exists (given anyway, or two or more = input error: S-11, exit 2, the
 bundles are not judged); a recorded ``t4h_file`` found 0 or 2+ times = S-2. A line without ``t4h_file``
 keeps the configuration reading (rev3 R3-C8). Search: ``p2_v5j.t4h_places`` / ``rod_reading_lookup``.
+436.8 rev12 R12-1 (Q-R12-1 = A): on such an S-2 line the J-P3 is not judged (``common.strip_jp3``): the
+configuration reading does not stand in; a ``t4h_file`` value that is not a file name is also S-2.
 
 Rules applied (v5 criteria original + revisions 1~12b read through the 436.8 rules; rule -> function):
   v5 3 J1~J11, rev2 2.1 (J9 post-lift), rev8 3.2 / rev9 3 (J-P3)  -> ``p2_v5j.judge_pair`` (imported)
@@ -225,14 +227,15 @@ def judge_all(v5j, core, lines, v0_idx, nrev, is_p3, t4h_dirs, where, t4h_log=No
             f.undec(where, f"no V0 partner for {pk}")
             out[(setting(ln), pk)] = ({}, f)
             continue
-        rod, st, hits = (None, None, [])
-        if t4h_dirs is not None:
-            rod, st, hits = v5j.rod_reading_lookup(ln, t4h_dirs)
-            if t4h_log is not None:
-                t4h_log[st] = t4h_log.get(st, 0) + 1
+        f_t4h, rod, ok = core.Findings(), None, True
+        if t4h_dirs is not None:   # rev11 R11-2 3 / rev12 R12-1: recorded t4h_file found 0 or 2+ = S-2
+            rod, ok = cm.jp3_rod_input(f_t4h, f"{where}|{pk}", ln, t4h_dirs, v5j, None,
+                                       t4h_log if t4h_log is not None else {})
         items, f = v5j.judge_pair(ln, v0, nrev.get(v5j.row_key(ln["job"])), is_p3, rod)
-        if st in ("not_found", "several"):   # rev11 R11-2 3 (rev8 R8-1a): S-2
-            f.stop("S-2", f"{where}|{pk}", f"R11-2: T4h {ln.get('t4h_file')!r} {st} in {[str(d) for d in t4h_dirs]} {hits}")
+        if not ok:
+            cm.strip_jp3(items, f)
+        for s in f_t4h.stops:
+            f.stop(s["code"], s["where"], s["why"])
         if setting(ln) in ("VB",) + LS_SETTINGS:   # rev8 R8-2: non-3 tag = J-P3 not applicable + S-2
             cm.jp3_tag_scope(f, f"{where}|{pk}", items.get("J-P3", {}).get("result"), setting(ln))
         out[(setting(ln), pk)] = (items, f)
@@ -450,9 +453,10 @@ def cmd_stage1(args, repo, v5j, core):
     # rev11 R11-2 1 / 2: search folders of the --h10 file (input error = S-11, bundles not judged)
     places, perr = v5j.t4h_places([args.h10], args.t4h_root)
     if places is None:
-        return {"inputs": {"h9": args.h9, "h10": args.h10, "t4h_root": args.t4h_root},
-                "R11-2_t4h_places": {"input_error": perr}, "not_judged": ["H-10", "H-9_stage1"],
-                "grades_436_8": {"H-10": "멈춤", "H-9_stage1": "멈춤"}, "stop_codes": ["S-11"]}, "stop"
+        body, st = cm.t4h_input_error(perr)
+        body.update(inputs={"h9": args.h9, "h10": args.h10, "t4h_root": args.t4h_root},
+                    not_judged=["H-10", "H-9_stage1"], grades_436_8={"H-10": "멈춤", "H-9_stage1": "멈춤"})
+        return body, st
     t4h_dirs = places[str(args.h10)]
     t4h_log = {}
     h9 = core.read_jsonl(args.h9)

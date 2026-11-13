@@ -29,6 +29,12 @@ here that reads T4h) through the imported ``p2_v5j.t4h_places`` / ``rod_reading_
 record-check expectations), R11-3 (meaning of ``commands_sha256``), R11-4 (open-loop commit identity),
 R11-5 / R11-6 (G-S) do not apply to the harness lines read here.
 
+rev12 (78f1f99b...): seal check (R12-6). R12-1 (Q-R12-1 = A): the R11-2 search applies to every J-P3 rod
+reading here (stage1 H-10 lines, noise noise_VB / H-6 / seedext_VB runs, grid VB runs): a recorded
+``t4h_file`` found 0 or 2+ times = S-2 and that J-P3 is not judged; only a line without the key uses the
+configuration (``jp3_rod_input``). R12-3: ``noise --git-at-start`` is required. R12-2 / R12-4 / R12-5
+(Chrono rows) do not apply.
+
 Both files are located with ``--p2-dir`` (default: ``../path2`` next to this folder, else the
 dynamics-expert worktree). Their sha256 values are checked against ``P2_V5J_SHA`` / ``P2_CORE_SHA``;
 a difference is a stop (exit 2, code ``P2-SHA``) because the J-item definition would have moved.
@@ -66,8 +72,10 @@ P2_FALLBACK = Path(r"C:\workspace\outrigger_control\.claude\worktrees\agent-a2e8
 # before: rev9 b0d6382 7d764a80... (p2_v5j still 5772624c...)
 # rev11 versions (dynamics-expert commits 582fa93 / 3eba3c5: rev11 seal, R11-2 T4h convention folders in
 # p2_v5j, R11-1 / R11-4 elsewhere); before: rev10 a9594dc p2_4368 6e297ea3..., p2_v5j 5772624c...
+# rev12 version of p2_4368 (dynamics-expert commit 6d41462: rev12 seal, R12-2..R12-5 Chrono rows);
+# before: rev11 582fa93 a8c625bf... (p2_v5j still e5d769b9...)
 P2_V5J_SHA = "e5d769b925a1d3047a8f1a42443894f761520950d8d1ec75c31499e9ae7dd3fe"
-P2_CORE_SHA = "a8c625bf91184ec970a446a3997510ac2f8ce24df9d90b92b101b99b34a3fd43"
+P2_CORE_SHA = "a948d9a138557f6a649ffd9a5b37cd018201525cb6d8a51480d3e449a2f9ca81"
 
 EXIT = {"pass": 0, "fail": 1, "undecidable": 1, "stop": 2}
 
@@ -84,6 +92,7 @@ LATER_RULES = (   # sealed addenda checked here (raw sha, LF, no BOM, .sha256 re
     (_VMR + "rev9.md", "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d", _VMR + "rev9.sha256"),
     (_VMR + "rev10.md", "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29", _VMR + "rev10.sha256"),
     (_VMR + "rev11.md", "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f", _VMR + "rev11.sha256"),
+    (_VMR + "rev12.md", "78f1f99b1bb27473d6e3317c58af195cc3b477829ca1439f390aeeaf32565140", _VMR + "rev12.sha256"),
 )
 REV3_REL, REV3_SHA = LATER_RULES[0][0], LATER_RULES[0][1]
 
@@ -108,8 +117,44 @@ def jp3_tag_scope(fnd, where, res, setting_name):
     return True
 
 
+def jp3_rod_input(fnd, where, rec, dirs, v5j, config_rod, log):
+    """rev12 R12-1 (Q-R12-1 = A) with rev11 R11-2 3: rod-reading input of J-P3 for one line / run.
+
+    No ``t4h_file`` key -> ``(config_rod, True)`` (rev3 R3-C8 configuration). A recorded ``t4h_file`` must be
+    found exactly once in ``dirs`` (the R11-2 search folders); 0 or 2+ files (or a value that is not a file
+    name) -> S-2 on ``fnd`` and ``(None, False)``: that J-P3 is not judged and no configuration reading
+    stands in. Found -> ``(reading, True)``; a found file without ``rod_pressure_Pa`` gives ``config_rod``
+    (as ``p2_v5j`` does with reading None). ``log`` counts the lookup status."""
+    if "t4h_file" not in rec:
+        log["no_t4h_file"] = log.get("no_t4h_file", 0) + 1
+        return config_rod, True
+    dirs = list(dirs or [])
+    if not isinstance(rec.get("t4h_file"), str):
+        rod, st, hits = None, "unreadable_name", []
+    else:
+        rod, st, hits = v5j.rod_reading_lookup(rec, dirs)
+    log[st] = log.get(st, 0) + 1
+    if st != "ok":
+        fnd.stop("S-2", where, f"R12-1 / R11-2: T4h {rec.get('t4h_file')!r} {st} in {[str(d) for d in dirs]} {hits}")
+        return None, False
+    return (config_rod if rod is None else rod), True
+
+
+def strip_jp3(items, f):
+    """Drop the J-P3 result and its findings from a ``p2_v5j.judge_pair`` result when R12-1 stopped the
+    line's J-P3 (the configuration reading judge_pair fell back to must not stand in)."""
+    items["J-P3"] = {"result": "t4h_unresolved", "why": "R12-1: recorded T4h not found exactly once (S-2)"}
+    f.stops = [s for s in f.stops if s["code"] != "J-P3-defect" and not str(s["why"]).startswith("J-P3")]
+    f.undecidable = [u for u in f.undecidable if not str(u["why"]).startswith("J-P3")]
+
+
+def t4h_input_error(perr):
+    """rev11 R11-2 2: input error of the T4h search places -> S-11, exit 2, the bundles are not judged."""
+    return {"R11-2_t4h_places": {"input_error": perr}, "not_judged": True, "stop_codes": ["S-11"]}, "stop"
+
+
 def check_rev3(repo):
-    """rev3 ~ rev11 (the name is kept for the tests); ``ok`` = all sealed addenda match (rev8 R8-4 .. rev11 R11-7:
+    """rev3 ~ rev12 (the name is kept for the tests); ``ok`` = all sealed addenda match (rev8 R8-4 .. rev12 R12-6:
     file sha = code seal sha = ``.sha256`` record, else S-1)."""
     items = [_check_one(repo, *r) for r in LATER_RULES]
     return {"items": items, "ok": all(i["ok"] for i in items)}
