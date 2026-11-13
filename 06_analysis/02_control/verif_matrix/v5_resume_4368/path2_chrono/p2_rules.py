@@ -27,7 +27,9 @@ SEALED = [
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev5.md",
      "452a8436c547e4da8d78205556cbb37633842d42cb98c18849cb883d827b3aca", "rules rev5"),
     ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6.md",
-     "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9", "rules rev6 (wins)"),
+     "809e563971ea451aba7c9d0787c660bdcab1c495af39c513c8f158e09b4fe6c9", "rules rev6"),
+    ("06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.md",
+     "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502", "rules rev7 (wins)"),
     ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev7.md",
      "9ccde7a5a4128317ed832dd2f92cd2368280f18cefa6827f1b1731c6d4e9aab3", "Appendix A: v5 rev7 (T4 / T5 E, B1, tool regression)"),
     ("06_analysis/03_hydraulic/coupled/v5/v5_criteria_rev8.md",
@@ -70,13 +72,24 @@ RAW_ONLY = {  # rev2 R2-9 last-but-one bullet: sealed rule files are compared ra
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev4.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev5.md",
     "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev6.md",
+    "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.md",
 }
 
 
+def sidecar_sha(p: Path):
+    """First token of the sibling `.sha256` record (rev7 R7-7: seal sha and `.sha256` record both)."""
+    sc = p.with_suffix(".sha256")
+    if not sc.exists():
+        return None
+    tok = sc.read_text(encoding="utf-8", errors="replace").split()
+    return tok[0].lower() if tok else None
+
+
 def seal_check(repo: Path) -> dict:
-    """Seal check (rules 8.2 S-1, rev2 R2-9). Raw sha must match; for Appendix A files,
+    """Seal check (rules 8.2 S-1, rev2 R2-9, rev7 R7-7). Raw sha must match; for Appendix A files,
     if only CRLF differs and the LF-normalised sha matches, pass and disclose
-    ("CRLF 변환만 다름"). The three 436.8 rule files are compared raw only."""
+    ("CRLF 변환만 다름"). The 436.8 rule files (original, rev1..rev7) are compared raw only, and
+    their raw sha must also equal the first token of the sibling `.sha256` record (R7-7)."""
     rows = []
     ok = True
     for rel, want, role in SEALED:
@@ -87,6 +100,18 @@ def seal_check(repo: Path) -> dict:
             continue
         raw = p.read_bytes()
         got = sha256_bytes(raw)
+        if rel in RAW_ONLY:
+            rec = sidecar_sha(p)
+            if rec is None:
+                rows.append({"file": rel, "role": role, "status": "sidecar_missing", "sha256": got,
+                             "expected": want})
+                ok = False
+                continue
+            if rec != want:
+                rows.append({"file": rel, "role": role, "status": "sidecar_mismatch", "sha256": got,
+                             "expected": want, "sidecar_sha256": rec})
+                ok = False
+                continue
         if got == want:
             rows.append({"file": rel, "role": role, "status": "match", "sha256": got})
             continue

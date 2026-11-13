@@ -322,7 +322,7 @@ def t_scm(tmp):
     res["events"].append({"t_s": 30.0, "name": "INFO_ROD_PRESSURE_FAULT_REASON:RL:D2b_rate"})
     res["events"].append({"t_s": 30.0, "name": "WARN_ROD_PRESSURE_FALLBACK:FR"})
     (d18 / "result.json").write_text(json.dumps(res), encoding="utf-8")
-    it18, k18, _ = K.items_c5(C.load_row(d18, "scm", ["run_S9.py"]), PARAMS)
+    it18, k18, _ = K.items_c5(C.load_row(d18, "scm", ["run_S9.py", "--extend-start-tracked"]), PARAMS)
     check("J-P3 breach sum 1 -> fail + H-7 (rev8 3.2)", it18["J-P3"]["verdict"] == "fail"
           and it18["J-P3"].get("stop") == "H-7 (rev8 3.2)", it18["J-P3"])
     check("J11 SCM row without law_locked, event-only fallback legs -> indeterminate (R6-B7)",
@@ -330,6 +330,37 @@ def t_scm(tmp):
           and it18["J11_window"]["actual_fallback_legs"] == ["FR", "RL"], it18["J11_window"])
     check("D2 reason from INFO_ROD_PRESSURE_FAULT_REASON (rev5 R5-B2), FR reason unreadable",
           it18["D2"]["d2_fallback_legs"] == ["RL"] and it18["D2"]["reason_unreadable_legs"] == ["FR"], it18["D2"])
+    # J-P3 on V0 rows (no extend_start_rule key, ③ not requested) and on a ③-requested row without the key
+    d19 = write_scm(tmp / "c5v0", copy.deepcopy(sp))
+    jv0 = K.jp3_item(C.load_row(d19, "scm", ["run_S9.py", "level"]))
+    check("J-P3 V0 row without extend_start_rule key -> na (rev8 5 VB / LS only)", jv0["verdict"] == "na", jv0)
+    jvb = K.jp3_item(C.load_row(d19, "scm", ["run_S9.py", "level", "--extend-start-tracked"]))
+    check("J-P3 ③-requested row without extend_start_rule key -> 판정 불가 (9.3)",
+          jvb["verdict"] == "indeterminate", jvb)
+    j18b = K.jp3_item(C.load_row(d18, "scm", ["run_S9.py"]))
+    check("J-P3 tracked_bound recorded but ③ not in argv / options -> 판정 불가 (S-3 review)",
+          j18b["verdict"] == "indeterminate" and "differ" in j18b["reason"], j18b)
+    # identity_scm + rev7 R7-4 (las_off key by arm)
+    idn = K.identity_scm(C.load_row(d19, "scm", ["run_S9.py", "level"]))
+    check("R7-4 on arm, c2_setup.las_off absent -> read as on, identity pass",
+          idn["verdict"] == "pass" and idn["las_off_consistent"] and idn["c2_setup_las_off"] is None, idn)
+    check("R7-4 record: on arm LAS end_s / ramp absent -> listed as absent where required (record only)",
+          "controller_meta.liftoff_approach_slow.end_s" in idn["r7_4_las_keys"]["absent_where_required"]
+          and "c2_setup.las_off" not in idn["r7_4_las_keys"]["absent_where_required"], idn["r7_4_las_keys"])
+    ido = K.identity_scm(C.load_row(d19, "scm", ["run_S9.py", "level", "--las-off", "--k1-order-gate", "on"]))
+    check("R7-4 off arm (argv --las-off), c2_setup.las_off absent -> identity 판정 불가",
+          ido["verdict"] == "indeterminate" and not ido["las_off_consistent"]
+          and ido["r7_4_las_keys"]["absent_where_required"] == ["c2_setup.las_off"], ido)
+    r20 = json.loads((d19 / "result.json").read_text(encoding="utf-8"))
+    r20["c2_setup"]["las_off"] = True
+    r20["c2_setup"]["k1_order_gate"] = "on"
+    d20 = tmp / "c5off"
+    shutil.copytree(d19, d20)
+    (d20 / "result.json").write_text(json.dumps(r20), encoding="utf-8")
+    idf = K.identity_scm(C.load_row(d20, "scm", ["run_S9.py", "level", "--las-off", "--k1-order-gate", "on"]))
+    check("R7-4 off arm with c2_setup.las_off true -> identity pass", idf["verdict"] == "pass", idf)
+    idx = K.identity_scm(C.load_row(d20, "scm", ["run_S9.py", "level"]))
+    check("c2_setup.las_off true but argv on arm -> identity 판정 불가", idx["verdict"] == "indeterminate", idx)
     # T4 / T5 grades from a synthetic p2_t45 document
     l2r = C.load_row(write_l2b(tmp / "l2b_t45"), "l2b", L2B_ARGV)
     doc = {"tool_gate": {"ok": True}, "regression": {"ok": True},
@@ -430,8 +461,26 @@ def t_seal(tmp):
     for rel, _, _ in R.SEALED:
         (repo / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(REPO / rel, repo / rel)
+        if rel in R.RAW_ONLY:
+            sc = Path(rel).with_suffix(".sha256")
+            shutil.copyfile(REPO / sc, repo / sc)
     ok = R.seal_check(repo)
     check("seal: copies match", ok["ok"], [r["status"] for r in ok["sealed"]])
+    rel7 = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.md"
+    check("seal: rev7 listed, raw only, e81f7d31 (rev7 R7-7)",
+          rel7 in R.RAW_ONLY and any(r == rel7 and w.startswith("e81f7d31") for r, w, _ in R.SEALED))
+    sc7 = repo / Path(rel7).with_suffix(".sha256")
+    keep = sc7.read_bytes()
+    sc7.write_text("0" * 64 + "  v5_resume_4368_rules_rev7.md\n", encoding="utf-8")
+    s5 = R.seal_check(repo)
+    st5 = {r["file"]: r["status"] for r in s5["sealed"]}
+    check("seal: rev7 .sha256 record differs -> S-1 (sidecar_mismatch)", not s5["ok"] and st5[rel7] == "sidecar_mismatch",
+          st5[rel7])
+    sc7.unlink()
+    s6 = R.seal_check(repo)
+    check("seal: rev7 .sha256 record missing -> S-1", not s6["ok"]
+          and {r["file"]: r["status"] for r in s6["sealed"]}[rel7] == "sidecar_missing")
+    sc7.write_bytes(keep)
     rel_a = "06_analysis/02_control/verif_matrix/d1_selection_rules.md"
     p = repo / rel_a
     p.write_bytes(p.read_bytes().replace(b"\n", b"\r\n"))
@@ -480,6 +529,60 @@ def t_cli(tmp):
                             "--batch", str(tmp / "missing.json"), "--out", str(tmp / "o3.json")],
                            capture_output=True, text=True, encoding="utf-8")
     check("CLI missing batch -> exit 3 or 2 (input)", proc3.returncode in (2, 3), proc3.returncode)
+    # gs-load on the G-S row (read-only, no verdicts in the output)
+    out4 = tmp / "gs_load.json"
+    proc4 = subprocess.run([sys.executable, "-I", "-B", str(HERE / "p2_chrono.py"), "gs-load",
+                            "--batch", str(bdir / "batch.json"), "--out", str(out4),
+                            "--row-dir", f"gs={bdir / 'rowA'}"], capture_output=True, text=True, encoding="utf-8")
+    last4 = json.loads(proc4.stdout.strip().splitlines()[-1])
+    txt4 = out4.read_text(encoding="utf-8") if out4.exists() else ""
+    check("CLI gs-load: exit 0, 1 G-S row, no verdict / status keys in output",
+          proc4.returncode == 0 and last4.get("rows") == 1 and '"verdict"' not in txt4
+          and '"bundle_result"' not in txt4, proc4.stdout[-400:] + proc4.stderr[-400:])
+
+
+def t_resolve(tmp):
+    """Row folders (path 2's own reading of the run records; rev7 R7-5 is the path 1 sentence)."""
+    root = tmp / "res"
+    bdir = tmp / "batch_RES"
+    bdir.mkdir(parents=True, exist_ok=True)
+    tag, only = "r4368_D1C2_x", "D1C2_x"
+    for stamp in ("20261113_010000", "20261113_020000"):
+        d = root / "S8" / f"{tag}_{stamp}" / only
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "result.json").write_text("{}", encoding="utf-8")
+    case = {"case": "D1C2_x", "argv": ["run_S8C.py", "run", "--only", only, "--tag", tag]}
+    try:
+        p2_chrono.resolve_dir(case, bdir, root, {})
+        check("resolve: no row log, two tag folders -> input error", False)
+    except C.InputError:
+        check("resolve: no row log, two tag folders -> input error", True)
+    want = root / "S8" / f"{tag}_20261113_020000"
+    (bdir / "D1C2_x.log").write_text(f"D1C2_x: ok 1.0s\nbatch wall 1.1 s -> {want}\n", encoding="utf-8")
+    d, how = p2_chrono.resolve_dir(case, bdir, root, {})
+    check("resolve: row log runner line -> case_log", how == "case_log" and d == want / only, (d, how))
+    moved = tmp / "elsewhere" / "07_results" / "S8" / f"{tag}_20261113_020000"
+    (bdir / "D1C2_x.log").write_text(f"batch wall 1.1 s -> {moved}\n", encoding="utf-8")
+    d2, how2 = p2_chrono.resolve_dir(case, bdir, root, {})
+    check("resolve: logged folder moved -> same relative path under results root (case_log_relocated)",
+          how2 == "case_log_relocated" and d2 == want / only, (d2, how2))
+    (bdir / "D1C2_x.log").write_text(f"batch wall 1.1 s -> {root / 'S8' / 'other_20261113'}\n", encoding="utf-8")
+    try:
+        p2_chrono.resolve_dir(case, bdir, root, {})
+        check("resolve: logged folder without the tag -> input error", False)
+    except C.InputError:
+        check("resolve: logged folder without the tag -> input error", True)
+    (bdir / "D1C2_x.log").unlink()
+    shutil.rmtree(root / "S8" / f"{tag}_20261113_010000")
+    d3, how3 = p2_chrono.resolve_dir(case, bdir, root, {})
+    check("resolve: no row log, one tag folder -> tag_glob", how3 == "tag_glob" and d3 == want / only, (d3, how3))
+    plc = p2_chrono.placement_record({"pool": "pcore", "planned_pool": "pcore", "placement_applied": {"mask": "0xFF"},
+                                      "argv": []},
+                                     {"placement": {"affinity_mask_process": "0xFF", "affinity_mask_ok": False}},
+                                     {"affinity_masks": {"pcore": "0xFF"}})
+    check("R7-6 placement record: mask keys copied, affinity_mask_ok false -> note",
+          plc["affinity_mask_process"] == "0xFF" and plc["batch_affinity_masks"] == {"pcore": "0xFF"}
+          and any("affinity_mask_ok" in n for n in plc["notes"]), plc)
 
 
 def main():
@@ -494,6 +597,7 @@ def main():
     t_c67(tmp)
     t_seal(tmp)
     t_cli(tmp)
+    t_resolve(tmp)
     n_fail = sum(1 for r in RESULTS if not r["ok"])
     tool_sha, per = p2_chrono.tool_sha(None)
     print(json.dumps({"tool": "test_p2_synthetic.py", "tests": len(RESULTS), "failed": n_fail,

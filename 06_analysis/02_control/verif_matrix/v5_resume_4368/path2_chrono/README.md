@@ -2,7 +2,8 @@
 
 - 작성: control-expert(새 인스턴스, 2026-11-13). 이 작성자는 경로 1 도구를 만들거나 고친 적이 없다(아래 "독립성 공개").
 - 규칙: 원판 `v5_resume_4368_rules.md`(9019b405), rev1(d9094fda), rev2(497e4614), rev3(dad8dfa6, 우선). 9.1 표 C-1~C-5 행의 경로 2 = "`series.npz`·`r8_series` 재계산". 입력 파일은 rev3 R3-G2(SCM `step_series.npz`·`r8_series.npz`, L2b `pads.npz`, L1-R `record/record.npz` + `pads.npz`). 담당 범위는 rev2 R2-0 + rev3 R3-G11(C-6·C-7·C-8 추가).
-- **rev5(452a8436)·rev6(809e5639, 우선)**: 시각 원점(R6-1: L2b·L1-R `phases`만 상대 → + `start_t_s`, 사건·`fallback_lock_log`·npz는 절대), L1-R D8 t_lift = 첫 10 Hz 행 t_b(t_a 기록, R6-B1), L2b 판정 힘 = S8-A2(`F_cyl_min_interval`, 부상 표본은 `F_cyl_mean_20ms`; R40-2 느린 성분도 같은 힘, R6-B2), 377 창의 LOC = 첫 확정 LOC(최종 LOC로 했을 때 결과는 기록, R6-B3), t_D = 100표본(R6-B4), 이동 압력 = `record.npz` 10 Hz 행의 `u_applied`·`F_cyl`(R6-B5), 실제 대체 다리 = 로그 ∪ 대체 사건(로그에만 있으면 S-11, R6-B7), S-01·02 안전 정지 허용(R6-B8), SGS 부상 = 정지 뒤 패드 법선 ≤ 0(R6-B9), U-S9-G6c `P3-8_preloc_loss` 분기(R6-C3), J11 `fallback_lock_log`(`leg`·`t_start_s`·`window_end_s`, R5-B1)·LS 행 L-e(R5-B3), D2 사유 = `INFO_ROD_PRESSURE_FAULT_REASON:<다리>:<사유>`가 `D2`로 시작(R5-B2), PS-c 순서(R5-B4).
+- **rev7(e81f7d31, 우선, 2026-11-13 반영)**: 봉인 확인에 rev7을 넣고, 436.8 규칙 파일(원판·rev1~rev7)은 raw sha가 코드의 봉인 sha와 같은 폴더 `.sha256` 첫 토막 둘 다와 같아야 통과한다(R7-7, 없거나 다르면 S-1). R7-4: 판정의 키 결측 처리는 원판 9.3·rev2 R2-2 그대로이고, 켬 팔에서 없어도 되는 `c2_setup.las_off`는 끔이 아닌 것으로 읽는다(끔 팔 = argv `--las-off`, 기록과 다르거나 끔 팔에서 키가 없으면 identity 판정 불가). 팔별 키 있음은 `identity.r7_4_las_keys`에 기록만 한다(키 있음 확인은 경로 1 `gs-check --manifest`). R7-5: L2b·L1-R 행 폴더는 행 로그 `<batch>/<case>.log`의 마지막 `batch wall … -> <폴더>` 줄을 먼저 쓰고(태그 대조), `rows[].folder_method`에 방법을 적는다. C-6·C-7 경로 2는 이 도구(`--bundle C-6C7`, rev3 R3-G11). R7-6: `rows[].placement_record`에 풀·마스크 기록. R7-1·R7-2·R7-3은 하네스·경로 1 몫이라 바꾸지 않았다(5.1절). G-S에서 드러난 J-P3 V0 행 처리도 고쳤다(2절 표).
+- **rev5(452a8436)·rev6(809e5639)**: 시각 원점(R6-1: L2b·L1-R `phases`만 상대 → + `start_t_s`, 사건·`fallback_lock_log`·npz는 절대), L1-R D8 t_lift = 첫 10 Hz 행 t_b(t_a 기록, R6-B1), L2b 판정 힘 = S8-A2(`F_cyl_min_interval`, 부상 표본은 `F_cyl_mean_20ms`; R40-2 느린 성분도 같은 힘, R6-B2), 377 창의 LOC = 첫 확정 LOC(최종 LOC로 했을 때 결과는 기록, R6-B3), t_D = 100표본(R6-B4), 이동 압력 = `record.npz` 10 Hz 행의 `u_applied`·`F_cyl`(R6-B5), 실제 대체 다리 = 로그 ∪ 대체 사건(로그에만 있으면 S-11, R6-B7), S-01·02 안전 정지 허용(R6-B8), SGS 부상 = 정지 뒤 패드 법선 ≤ 0(R6-B9), U-S9-G6c `P3-8_preloc_loss` 분기(R6-C3), J11 `fallback_lock_log`(`leg`·`t_start_s`·`window_end_s`, R5-B1)·LS 행 L-e(R5-B3), D2 사유 = `INFO_ROD_PRESSURE_FAULT_REASON:<다리>:<사유>`가 `D2`로 시작(R5-B2), PS-c 순서(R5-B4).
 - **rev4(7ea87a30) R4-A2 (사용자 결정 Q-R4-1 = C)**: C-5 J-P3(`hydraulics_record.extend_bound_check.breach_reads`)·J11 창(`pads.npz` `law_locked` + 명령 기록 + `fallback_lock_log`)·D2(사유 D2 대체 사건, `d2_violation_start_ratio`)는 **재계산** 층. C-5 T4-0·T4·T5는 경로 2가 `chrono_t45_replay`를 **직접 실행**(`p2_t45.py`: 도구 파일 f46b5ab 뒤 0커밋 확인, 개정 7 95행 회귀 18행 확인, 출력은 경로 2 폴더, 등급은 `p2_kinds.t45_items`가 따로 적용). PS-c E-1~E-6(재계산)·E-7(연구 A 판정 함수 실행)은 **아직 만들지 않았다**(PS-c 행이 생기면 그 행은 판정 불가). 한계 공개 문장은 rev4 R4-A2 문장을 판정서에 그대로 적는다.
 - (이전) **세 층(rev3 R3-G1, 사용자 결정 Q-C1 = A)**: (1) 시계열로 정의가 닫히는 항목은 재계산, (2) 감시기·사건 판정 논리가 필요한 항목(C-5 T4-0·T4·T5·J11 창·J-P3·D2, PS-c E-1~E-4·E-6·E-7)은 `result.json`의 항목별 기록 결과를 **재집계**하고 등급 규칙(FLAG·멈춤·해당 없음)을 경로 2가 따로 적용, (3) 출력의 `bundle_result.TABLE_REAGG`(항목·행 수·출처 키·판정 수)와 `recalculated_judged_items`·`reaggregated_items`. **재집계 항목은 독립 재계산이 아니다**(판정서 한계 절에 rev3 R3-G1 문장을 그대로 적는다).
 - 이 도구는 결과의 **판정 값을 입력으로 쓰지 않는다**(재집계 층 제외). 규칙이 이름으로 지정한 입력 키 두 개만 읽는다: `p3b.weight_N`(rev2 R2-5의 W), `p3b_ext.start_condition.crawler_attitude_deg`(원판 9.1 C-8). rev3 R3-G13이 이를 위반 아님으로 정했다.
@@ -23,10 +24,17 @@ $d = "<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2_chrono"
 ```
 
 - `--bundle`은 `C-1`·`C-2`·`C-3`·`C-4`·`C-5`·`C-6C7`·`C-8`이다.
+- `gs-load --batch <G-S batch.json> --out <출력> [--results-root R] [--row-dir CASE=PATH]`: G-S 행(`r4368.role` = `gs`)마다 폴더를 찾고 적재해 그 묶음의 항목 함수를 돌린다. 출력은 폴더·찾은 방법·입력 sha·입력이 없어 판정 불가·기록이 된 항목 이름과 사유·예외·R7-4 팔별 키·R7-6 키 있음뿐이다(값·verdict·묶음 상태 없음, 판정 아님). 종료 0 = 모든 행이 예외 없이 돌았음, 1 = 예외 행 있음 또는 G-S 행 0, 2 = 봉인 오류.
 - C-5는 먼저 `p2_t45.py <repo(git_at_start checkout)> <07_results> <경로 2 출력 폴더> <C-5 L2b 행 폴더 ...>`로 도구 관문·회귀·재생을 돌리고(종료 0 = 관문·회귀 통과), 그 `t45_path2.json`을 `judge --bundle C-5 ... --aux t45=<경로>`로 넘긴다.
-- `judge`는 `batch.json`의 `cases[]` 가운데 `criteria_id`(최상위 또는 `r4368.criteria_id`)가 묶음과 같고 G-S가 아닌 행만 판정한다. SCM 행 폴더 = `batch.json` 폴더/`case`. L2b·L1-R 행 폴더 = `07_results/S8|S6/*<argv --tag>*/<argv --only>/`(정확히 1개가 아니면 종료 2, `--row-dir CASE=PATH`로 지정).
+- `judge`는 `batch.json`의 `cases[]` 가운데 `criteria_id`(최상위 또는 `r4368.criteria_id`)가 묶음과 같고 G-S가 아닌 행만 판정한다. 행 폴더(`rows[].folder_method`):
+  - SCM: `batch.json` 폴더/`case`(`batch_folder`).
+  - L2b·L1-R: 행 로그 `<batch>/<case>.log`의 마지막 `batch wall … -> <러너 폴더>` 줄의 `<러너 폴더>/<argv --only>/`(`case_log`). 러너 폴더 이름에 argv `--tag`가 없으면 종료 2. 그 폴더에 `result.json`이 없으면 결과 루트 아래 같은 상대 경로(`07_results` 뒤, `case_log_relocated`), 그래도 없으면 종료 2.
+  - 그 줄이 없으면 `07_results/S8|S6/*<argv --tag>*/<argv --only>/`가 정확히 1개일 때만(`tag_glob`), 아니면 종료 2.
+  - `--row-dir CASE=PATH`(`row_dir`)가 모두에 앞선다.
+  - 경로 1(R7-5)의 시각 창 방법은 쓰지 않는다. 같은 태그로 G-S를 여러 번 돌린 결과 루트에서는 `tag_glob`가 여러 폴더를 찾으므로(2026-11-13 G-S 배치에서 확인) 행 로그를 먼저 쓴다. 행 로그는 실행 기록이고 경로 1 출력이 아니다.
+- 도구 sha(rev7 반영판, 2026-11-13): 공통 4파일 + `p2_t45.py`(`seal`·`gs-load`) `cfd1e16c782f6f4d836a122afa10f949d71525a68edbb1bcda4d467bffb55616`(이전 `3fe56f22…`). 묶음별 `tool_sha256`: C-1 `996f0f17…`, C-2 `b59d1507…`, C-3 `089f13e4…`, C-4 `b3ee7443…`, C-5 `8869591c…`, C-6C7 `e9396092…`, C-8 `1af69dd1…`. 파일별: `p2_chrono.py` `2ab15812…`, `p2_rules.py` `2bc551d6…`, `p2_core.py` `b3725bfc…`(변경 없음), `p2_kinds.py` `267caa6b…`, `p2_t45.py` `b56275ba…`(변경 없음). 자체 시험 83/83(이전 65/65). README는 도구 sha에 들지 않는다.
 - 종료: 0 = 묶음 `통과`·`기록 완료`, 1 = `미달`·`판정 불가`·`기록 불완전`·멈춤 있음, 2 = 입력·봉인 오류(S-1), 3 = 내부 오류. 마지막 줄 JSON에 `tool_sha256`(공통 4파일 + 묶음 모듈, 파일별 sha를 이름순 "이름 sha\n"로 이은 문자열의 sha256), `out_sha256`(출력 파일 바이트).
-- 봉인 대조(원판 8.2 S-1, rev2 R2-9): 원판·rev1·rev2는 raw sha만, 부록 A 파일(d1 규칙·rev1, v5 rev6·12·12a·12b, `las_p5r4_k1_judgement.md`)은 raw가 다르면 CRLF→LF 정규화 sha를 보고 같으면 통과 + "CRLF 변환만 다름" 공개. 명세·YAML sha는 기록만.
+- 봉인 대조(원판 8.2 S-1, rev2 R2-9, rev7 R7-7): 436.8 규칙 원판·rev1~rev7은 raw sha만 보고, 그 sha가 코드의 봉인 sha와 같은 폴더 `.sha256` 첫 토막 둘 다와 같아야 한다(`sidecar_missing`·`sidecar_mismatch`·`mismatch`는 S-1). 부록 A 파일(d1 규칙·rev1, v5 rev6·12·12a·12b, `las_p5r4_k1_judgement.md`)은 raw가 다르면 CRLF→LF 정규화 sha를 보고 같으면 통과 + "CRLF 변환만 다름" 공개. 명세·YAML sha는 기록만.
 
 ## 2. 파일과 규칙 절 ↔ 함수
 
@@ -60,6 +68,9 @@ $d = "<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2_chrono"
 | rev3 R3-G1 재집계 | `reagg_item`, `reagg_table`, `items_c5`, `p2_b_c2._psc` | `result.json`에서 항목 이름(T4-0·T4·T5·J11·J-P3·D2·E-k와 별칭)인 키를 찾아 그 값(bool, 또는 `verdict`·`status`·`result`·`passed`·`ok`·`pass`)을 pass/fail/flag로 읽는다. 못 찾거나 못 읽으면 판정 불가. 등급 규칙: T4-0 실패 → 도구 결함 멈춤, T4·T5 실패 → H-7, J-P3는 `two_pressure.extend_start_rule` = `tracked_bound`(③ 켬) 행만, J11은 `fallback_lock_log`가 비면 `not_computed` 기록(rev3 R3-C7), 있으면 재집계하고 실패 → H-7 |
 | rev2 R2-4, 원판 5.3·9.1 | `p2_b_c67` | `analyse` 그대로 + r_vu·r_v. 명세 11047 FLAG = 이륙 전 최소 < F_min |
 | 원판 4.2·6, rev2 R2-3, rev1 RV1-10 a | `identity_scm`, `identity_l2b` | 기록 확인(어긋나면 판정 불가 + S-2/S-3/S-4 검토) |
+| rev7 R7-4, rev2 R2-2, 원판 9.3 | `identity_scm`, `r7_4_las_presence` | 끔 팔 = argv `--las-off`. `c2_setup.las_off`는 켬 팔에서 없어도 끔 아님으로 읽고(결측 아님), 끔 팔에서 없거나 기록이 argv와 다르면 identity 판정 불가. R7-4 표의 팔별 키(`c2_setup.las_off`, `liftoff_approach_slow.start_s`·`end_s`·`end_reason`·`active_periods`·`ramp`·`ramp.periods_applied`) 있음과 표의 조건은 기록만(`absent_where_required`). 판정의 `start_s` 없음은 R2-2대로 LAS-b 시작 안 함. `p3b.P3-3_leg_force` 두 키는 경로 2가 읽지 않는다(P3-3은 1 ms 시계열로 다시 계산) |
+| rev8 5·3.2, rev9 3.2 (J-P3 적용 범위) | `jp3_item` | ③ 상태 = `two_pressure.settings.extend_start_rule`(= `tracked_bound`면 켬). 키가 없고 argv `--extend-start-tracked`도 `v5_hydraulics.hydraulic_options.extend_start_tracked`도 켬이 아니면 V0 행 → 해당 없음(rev8 5 "VB·LS 모든 실행"). 키가 없는데 ③를 요청한 행은 판정 불가(9.3), 키 값과 argv·옵션이 다르면 판정 불가(S-3 검토). G-S(2026-11-13)에서 V0 SCM 행에 키가 없는 것을 보고 고쳤다(그 전에는 V0 행도 판정 불가) |
+| rev7 R7-6, 원판 6 풀 | `p2_chrono.placement_record` | 행마다 `placement_record`: 배치 행 `pool`·`planned_pool`·`placement_applied`, result.json `placement.affinity_mask_process`·`affinity_mask_ok`·`power_throttling_off_ok`, batch.json `affinity_masks`, `r4368.arm`. 기록만(등급에 넣지 않음). `affinity_mask_ok` 거짓, `pool` ≠ `planned_pool`, `r4368.arm`과 argv `--las-off` 불일치는 `notes`에 적는다 |
 | 원판 7.2, rev2 R2-1·R2-2 | `k1_classification` | 기록 모순(`would_block`∧¬due, `applied`∧¬due, `applied`∧`would_block`) → S-5. `_SKIPPED:order` 수 ≠ 막힘 수 → S-5 |
 | v5 rev6 5 H-9 | `items_c5` | M2 켬(`v5_hydraulics.hydraulic_options.m2_law`) 행에서 `hydraulics_record.m2_clip_times_s` 중 t_lift 뒤 잘림 > 0 → H-9 멈춤 |
 | v5 rev6 6 (기록) | `items_c5` | `law_locked` 0↔1 전이 수(−1은 잠김으로 읽음) |
@@ -87,6 +98,7 @@ $d = "<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2_chrono"
 - `06_analysis/03_hydraulic/coupled/v5/paper_runs/scripts/openloop_compare.py` 전체(R3-G11이 지정한 기존 분석 정의, 436.8 경로 1 도구 아님). G-S 열린 루프 행 `GS_P3a_G1_B_VB_prop_lift10`의 `flow_series.npz` 열 이름과 `series.npz` 배열 이름, `result.json` 키 이름 검색(T4·T5·J11·J-P3·D2 등, 값 없음).
 - YAML `02_params/rexome33.yaml`의 `head_area_m2`, `max_speed_m_s`, `F_min_cylinder_N` 줄.
 - 원 데이터(키 이름·형식 확인, G-S 배치만): `batch_V5-RESUME-K1-GS_20261113_010654`(두 행), `_012403`·`_020211`의 `batch.json`, `07_results/S8/r4368gs_D1C2_middle_fdown3.2_Fs4_20261113_020211/`, `07_results/S6/bundleC_d1c1_r4368gs_D1C1_top_flat_crx3_L1R_20261113_020211/`. 읽은 것: npz 배열 이름·모양, `result.json` 키 트리(값은 기록 필드만: `phases`, `events`, `settings`, `controller_tag`, `expect_controller`, `pad_record`, `runner`, `s9_rows[0]`, `start_condition` 키 이름, `mass_scale.judgement_weights`, `c2_setup.expect_controller`, `hydraulics_record.m2_*`, `v5_hydraulics.hydraulic_options`, `c2_soil`의 두 키, `args` 일부), `controller_events.json` 형식, 시각 기준(쿼터니언 ↔ `roll_pitch_deg` 차 3×10⁻¹²°, L2b·L1-R 단계·사건 시각 = `settings.start_t_s` 기준 상대). G-S 행으로 적재기·항목 함수가 키 결측 없이 도는지만 봤고 값·판정은 출력하지 않았다.
+- rev7 반영(2026-11-13, worktree `292f9d2`): rev7 전체와 `.sha256`, 원판·rev1~rev6 `.sha256` 첫 토막, rev2 R2-2 표(30~44행), 원판 6절 표·9.3, v5 rev8 42·59행 줄과 rev9 1~65행 grep 줄(J-P3 적용 범위). G-S 배치 `07_results/S9/batch_V5-RESUME-K1-GS_20261113_082117`: `batch.json`(키 이름, `cases[]`의 `case`·`criteria_id`·`r4368`·`pool`·`placement_applied`·`argv`), 행 로그 `GS_D1C1_*.log`·`GS_D1C2_*.log` 본문(러너 폴더 줄), L2b·L1-R 러너 폴더 목록, SCM C-5 G-S 세 행의 `controller_meta.two_pressure` 키 이름·`settings` 키 이름과 `v5_hydraulics.hydraulic_options` 값. `gs-load` 출력(값·verdict 없음)만 보았다.
 - **보지 않은 것**: `resume4368_judge.py`, `u3_judge_k1.py`, `resume_k1_record.py`, `resume_k1_steps.py`, `gs_check_*.txt`, `chrono_rows_check.json`, `chrono_rows_manifest.json`, `run_S9.py`·`run_S8C.py`·`run_S6C.py`·p3b 판정 함수, `result.json`의 `p3b`(위 `weight_N` 1개 제외)·`p3b_ext`(위 1개 키와 `start_condition` 키 이름 제외)·`acceptance`·`h4`·`c2`·`stroke`·`s8_end` 값, `las_p5r4_k1_judgement.md` 본문(sha만), `03_src` 코드.
 
 ### 독립성 공개
@@ -107,9 +119,33 @@ $d = "<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2_chrono"
 | D8 LAS-b 설정 9값 대조 | 만들지 않음(프리셋 값이 규칙 문장에 없음) |
 | R40-2 보류의 해제(d1 8절 L1 짝 대조) | 자동화하지 않음. 보류 행은 판정 불가 + 멈춤 문구 |
 
+### 5.1 rev7에서 바꾸지 않은 것
+
+| rev7 절 | 이유 |
+|---|---|
+| R7-1a·R7-1b (r79·격자 최상위 태그) | 하네스 r79·격자 기록이고 대조는 경로 1 도구가 한다고 정했다. Chrono 행 태그는 그대로 `--expect-controller`·`expect_controller.ok`(L2b·L1-R)와 `v5_hydraulics.controller_tag`(SCM)로 본다 |
+| R7-1c (T-3K R-0 태그 키) | 하네스 T-3K 줄. Chrono 경로 2와 무관 |
+| R7-2 (첫 DONE) | r79 하네스 `base` 기록 모양의 규칙. Chrono 첫 DONE은 `phases`(L2b·L1-R은 + `start_t_s`, rev6 R6-1)의 첫 `done`이고, 419.8 조건 5는 이미 엄격 비교(최종 LOC < 첫 DONE − 10⁻⁹, rev3 Q-12, `p3_2`)다. DONE 없음은 조건 참(Q-12) |
+| R7-3 (이름 대응표) | 하네스 `d1.g6_preloc`·T-3K 정체성. Chrono 377 창은 rev6 R6-B3(첫 확정 LOC + 1 s) 그대로 |
+| R7-5 경로 1 v2 시각 창 | 경로 1 방법. 경로 2는 행 로그 → 태그 검색 순서를 따로 정했다(1절) |
+| R7-8 숫자 | ±2 s는 경로 1 절차 값이라 쓰지 않는다. 5 ms는 R7-2 하네스 대조 |
+
+### 5.2 G-S 적재 확인 (판정 아님, 2026-11-13)
+
+- 배치 `07_results/S9/batch_V5-RESUME-K1-GS_20261113_082117`, `gs-load` 종료 0, 12행 예외 0. L2b·L1-R 두 행은 `case_log`로 찾았다(같은 태그 G-S 폴더가 여럿이라 `tag_glob`였으면 종료 2였다).
+- 입력이 없어 판정 불가·기록이 된 항목은 10 s G-S 길이 때문(READY·LOC·이륙 없음: P3-1·P3-2·P3-4·P3-5·D8 F·H-9)과 SCM C-5 행의 `pads.npz law_locked` 없음(J11 창은 실제 대체 다리가 없으면 기록, 있으면 판정 불가, rev6 R6-B7 그대로)이다. V0 SCM 행의 J-P3는 이번 수정으로 해당 없음이다.
+- 이 배치는 마스크 기록 도입(`e860578`) 전 실행이라 `placement.affinity_mask_*`·`affinity_masks`·`placement_applied`가 없다. `placement_record`는 None으로 적는다.
+
 ## 6. 확인 필요
 
-### 6.00 rev6 뒤 남은 것 (rev7 후보)
+### 6.00 rev6 뒤 남은 것 (rev7은 P-1·P-2를 다루지 않았다, rev8 후보)
+
+| # | 곳 | 이 도구의 읽기 | 묻는 것 |
+|---|---|---|---|
+| P-3 | J-P3 V0 행 | `extend_start_rule` 키가 없고 argv·`hydraulic_options`가 ③ 끔이면 해당 없음(2절 표) | rev8 5 "VB·LS 모든 실행"을 이렇게 읽어도 되는가. 경로 1의 V0 행 J-P3 처리와 다르면 원판 9.2 대조에서 드러난다 |
+| P-4 | SCM C-5 J11 창 | SCM 행에는 `pads.npz` `law_locked`가 없어 실제 대체 다리가 있으면 판정 불가(rev6 R6-B7) | SCM 행의 잠김 기록 원본(있다면 파일·열 이름) |
+
+(아래는 rev6 뒤 표 그대로)
 
 | # | 곳 | 이 도구의 읽기 | 묻는 것 |
 |---|---|---|---|

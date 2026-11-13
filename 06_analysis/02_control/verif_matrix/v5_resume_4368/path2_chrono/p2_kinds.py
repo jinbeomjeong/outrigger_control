@@ -48,7 +48,15 @@ def identity_scm(row, expect_tag=None):
     cs = res.get("c2_setup") or {}
     cm = res.get("controller_meta") or {}
     scm = cm.get("slope_clearance_margin") or {}
-    las_off = bool(cs.get("las_off"))
+    # rev7 R7-4: `c2_setup.las_off` may be absent in the on arm (read as False, not a 9.3 missing key)
+    # and is required in the off arm. The arm is the argv `--las-off` (rev2 R2-2 "C-4 끔 팔(--las-off)").
+    las_off_argv = "--las-off" in row.argv
+    las_off_rec = cs.get("las_off") if "las_off" in cs else None
+    las_off = bool(las_off_rec) if las_off_rec is not None else False
+    las_consistent = (las_off_rec is None and not las_off_argv) or (
+        las_off_rec is not None and bool(las_off_rec) == las_off_argv)
+    out.update(argv_las_off=las_off_argv, c2_setup_las_off=las_off_rec, las_off_consistent=las_consistent,
+               r7_4_las_keys=r7_4_las_presence(res, las_off_argv))
     out.update(k1_order_gate=cs.get("k1_order_gate"), k1_order_gate_effective=cs.get("k1_order_gate_effective"),
                flat_soil_margin_order_gate=(scm.get("settings") or {}).get("flat_soil_margin_order_gate"),
                las_off=las_off, num_threads_chrono=res.get("num_threads_chrono"),
@@ -62,11 +70,40 @@ def identity_scm(row, expect_tag=None):
           and out["flat_soil_margin_order_gate"] is True and out["num_threads_chrono"] == 4
           and out["omp_wait_policy"] == "PASSIVE" and out["hull_hook_mode"] == "fast"
           and out["hull_hook_fallback"] is None and out["expect_ok"] is True
-          and (expect_tag is None or out["controller_tag"] == expect_tag))
+          and (expect_tag is None or out["controller_tag"] == expect_tag) and las_consistent)
     out["verdict"] = "pass" if ok else "indeterminate"
     if not ok:
         out["reason"] = "4.2 / 6 record check failed: S-2 / S-3 / S-4 review"
+        if not las_consistent:
+            out["reason"] += ("; argv --las-off vs c2_setup.las_off differ or the off-arm key is absent"
+                              " (rev7 R7-4 required in the off arm, 9.3)")
     return out
+
+
+# rev7 R7-4 table rows that depend on the arm (the two `p3b.P3-3_leg_force` keys are a path 1
+# judgement block and are not read by path 2, README).
+R7_4_LAS_KEYS = ("start_s", "end_s", "end_reason", "active_periods", "ramp")
+
+
+def r7_4_las_presence(res: dict, off_arm: bool) -> dict:
+    """Record only: presence of the R7-4 arm-dependent keys and the table condition for this arm.
+    Key presence is the G-S check of path 1 (`gs-check --manifest`, rules 11.2); judgement keeps
+    rules 9.3 and rev2 R2-2 (start_s absent with the block present = LAS-b not started)."""
+    cs = res.get("c2_setup") or {}
+    las = ((res.get("controller_meta") or {}).get("liftoff_approach_slow"))
+    keys = {"c2_setup.las_off": "las_off" in cs}
+    for k in R7_4_LAS_KEYS:
+        keys[f"controller_meta.liftoff_approach_slow.{k}"] = isinstance(las, dict) and k in las
+    ramp = las.get("ramp") if isinstance(las, dict) else None
+    keys["controller_meta.liftoff_approach_slow.ramp.periods_applied"] = (
+        isinstance(ramp, dict) and "periods_applied" in ramp)
+    cond = {"c2_setup.las_off": "required" if off_arm else "absent_allowed"}
+    for k in keys:
+        if k != "c2_setup.las_off":
+            cond[k] = "absent_allowed" if off_arm else "required"
+    absent_required = sorted(k for k in keys if not keys[k] and cond[k] == "required")
+    return {"clause": "rev7 R7-4 (record; key presence = path 1 G-S check)", "arm": "off" if off_arm else "on",
+            "present": keys, "condition": cond, "absent_where_required": absent_required}
 
 
 def items_d8p(row, params, judged=True, hold=True):
@@ -257,9 +294,22 @@ def t45_items(row, t45):
 def jp3_item(row):
     """rev8 3.2 + rev9 3.2 table: Chrono rows always have rod readings (rev9 3.2 #4 note)."""
     on = C.extend_start_on(row)
-    out = {"clause": "rev8 3.2 / rev9 3.2 / rev4 R4-A2 b", "extend_start_on": on}
+    argv_on = "--extend-start-tracked" in row.argv
+    opts = ((row.result.get("v5_hydraulics") or {}).get("hydraulic_options") or {})
+    opt_on = opts.get("extend_start_tracked") is True
+    out = {"clause": "rev8 3.2 / rev9 3.2 / rev4 R4-A2 b", "extend_start_on": on,
+           "argv_extend_start_tracked": argv_on, "hydraulic_options_extend_start_tracked": opts.get("extend_start_tracked")}
     if on is None:
-        out.update(verdict="indeterminate", reason="controller_meta.two_pressure.settings.extend_start_rule missing")
+        if not argv_on and not opt_on:
+            # rev8 5: J-P3 is for VB / LS runs. A V0 run (③ not requested in argv nor in the recorded
+            # hydraulic options) carries no `extend_start_rule` key; not a 9.3 missing key (G-S 2026-11-13).
+            out.update(verdict="na", reason="③ off row (extend_start_rule key absent; argv and hydraulic_options off)")
+            return out
+        out.update(verdict="indeterminate", reason="controller_meta.two_pressure.settings.extend_start_rule missing"
+                   " on a ③-requested row")
+        return out
+    if on != (argv_on or opt_on):
+        out.update(verdict="indeterminate", reason="extend_start_rule vs argv / hydraulic_options differ (S-3 review)")
         return out
     if on is False:
         out.update(verdict="na", reason="③ off row")
