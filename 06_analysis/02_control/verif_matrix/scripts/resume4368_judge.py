@@ -50,10 +50,11 @@ Rev3 (``v5_resume_4368_rules_rev3.md``, sealed dad8dfa6, checked raw too):
 Rev4 (``v5_resume_4368_rules_rev4.md``, sealed 7ea87a30, checked raw too): grid-v0-sample
 pairs every run of a sampled result by (event, offset) (R4-B4); gs requires the record-only
 fields F-1 .. F-6 of the R4-D table and checks the second table (``extend_bound_check.rule`` =
-the ext_moving rule with ``breach_reads``, r79 first DONE = the first DONE entry of
-``base.timeline`` (R4-B2 as the record is written: the r79 base has no ``t_done_s`` /
-``phase_path``; no timeline or no DONE = S-11, rev7 proposal), ``gs --chrono``: PS-c
-``soil_event_series.npz`` columns).
+the ext_moving rule with ``breach_reads``, r79 first DONE: g6 / ref bases ``t_done_s`` = the
+first DONE of ``phase_path``, g8 bases (no ``t_done_s``) the first DONE of ``timeline``, no
+timeline = S-11, no DONE = None only with a fault ``final_phase`` (else S-11), user decisions
+2026-11-13 / rev7 proposal; ``gs --chrono``: PS-c ``soil_event_series.npz`` columns). A T-3K
+line with ``t3.las`` and ``t3.gate`` off reads as ``final_C4G2`` without a tag key.
 
 Rev5 (``v5_resume_4368_rules_rev5.md``, sealed 452a8436, checked raw too): R5-A1 makes the
 ``04_scripts/04_hydraulic/coupled/*_4368.py`` judges the harness path 1 (this tool keeps its
@@ -1075,6 +1076,29 @@ HARNESS_GS_KEYS = (
 """Rules 11.2: the 4.2 / 7.2 key paths a harness run must carry (the tag key is ``controller_tag`` on run_v5
 lines, ``v5.controller_tag`` on the screen records: either counts)."""
 TAG_KEY_ALTERNATIVES = ("controller_tag", "v5.controller_tag")
+T3_SWITCH_OFF = "off"
+T3_ALL_OFF_TAG = "final_C4G2"
+"""User decision 2026-11-13 (rev7 proposal R7-1 c): a T-3K line with ``t3.las`` = ``off`` and
+``t3.gate`` = ``off`` (R-0: LAS-b and the K1 gate off, the pre-LAS preset) carries no
+``controller_tag`` by the record rule (key only with ③ or a switch on); it reads as this tag
+and is not a missing key."""
+
+
+def is_t3_all_off_line(record: dict) -> bool:
+    """A T-3K line run with LAS-b and the K1 gate off (``t3.las`` and ``t3.gate`` = ``off``)."""
+    t3 = record.get("t3")
+    return (isinstance(t3, dict) and t3.get("las") == T3_SWITCH_OFF
+            and t3.get("gate") == T3_SWITCH_OFF)
+
+
+def read_controller_tag(record: dict) -> str | None:
+    """The run's controller tag: the first tag key present, else ``final_C4G2`` for an all-off
+    T-3K line, else None."""
+    for dotted in TAG_KEY_ALTERNATIVES:
+        present, value = get_path(record, dotted)
+        if present:
+            return value
+    return T3_ALL_OFF_TAG if is_t3_all_off_line(record) else None
 
 
 SETTLE_V2_SUITES = ("slope", "h6", "x426b", "h9")
@@ -1127,7 +1151,8 @@ def gs_presence(record: dict) -> dict[str, bool]:
     for dotted in HARNESS_GS_KEYS:
         if dotted == "controller_tag":
             if names_itself and is_c2:
-                presence[dotted] = any(get_path(record, alt)[0] for alt in TAG_KEY_ALTERNATIVES)
+                has_tag_key = any(get_path(record, alt)[0] for alt in TAG_KEY_ALTERNATIVES)
+                presence[dotted] = has_tag_key or is_t3_all_off_line(record)
         elif is_c2 or dotted == f"{RECORD_KEY}.applicable":
             presence[dotted] = get_path(view, dotted)[0]
     presence.update(settle_v2_presence(record))  # Q-U1 = A
@@ -1177,11 +1202,14 @@ PHASE_PATH_TIME_TOL_S = 0.005
 """``base.timeline`` keeps the times rounded to 1 ms (``r67_g1_screen.run_base``), the cut
 ``phase_path`` of older records to 0.01 s: 5 ms accepts both and still parts two 0.1 s
 controller periods."""
-FIRST_DONE_KEY = "r79 R4-B2 first DONE = first DONE of base.timeline"
-"""G-S key of the R4-B2 check (rev7 proposal: the r79 base has ``timeline``, not ``t_done_s`` /
-``phase_path``; a missing timeline or DONE stops with S-11)."""
+FIRST_DONE_KEY = "r79 R4-B2 first DONE (base.timeline or base.t_done_s / phase_path)"
+"""G-S key of the R4-B2 check (:func:`first_done_check`)."""
 FIRST_DONE_OK = "pass"
 FIRST_DONE_STOP = "S-11"
+FAULT_FINAL_PHASES = ("fault", "fault_reground")
+"""``C2Phase.FAULT`` / ``FAULT_REGROUND`` values, the fault ends of a run. Stored r79 bases
+(v5 folder and G-S b1ddeae, 2026-11-13) end in ``ready``, ``probe``, ``level`` or ``fault``;
+the 4 DONE-less runs among them all end in ``fault``."""
 
 
 def rev4_presence(record: dict) -> dict[str, bool]:
@@ -1237,8 +1265,8 @@ def extend_bound_rule() -> str | None:
 
 
 def timeline_first_done_s(timeline) -> float | None:
-    """Time [s] of the first DONE entry of an r79 ``base.timeline`` (``[[t_s, phase], ...]``,
-    one entry per phase change); None without one."""
+    """Time [s] of the first DONE entry of a ``[[t_s, phase], ...]`` phase list (r79
+    ``base.timeline`` or ``base.phase_path``); None without one."""
     for entry in timeline or []:
         if not isinstance(entry, (list, tuple)) or len(entry) != 2:
             continue
@@ -1247,32 +1275,66 @@ def timeline_first_done_s(timeline) -> float | None:
     return None
 
 
+def _first_done_result(status: str, t_first_done: float | None, source: str,
+                       reason: str | None = None) -> dict:
+    return {"status": status, "t_first_done_s": t_first_done, "source": source,
+            "reason": reason}
+
+
+def _done_less_result(base: dict, source: str) -> dict:
+    """A run whose phase list has no DONE: first DONE = None (rev4 R4-B2 "DONE 없음") when it
+    ended in a fault, else S-11 (user decision 2026-11-13)."""
+    final_phase = base.get("final_phase")
+    if final_phase in FAULT_FINAL_PHASES:
+        return _first_done_result(FIRST_DONE_OK, None, source)
+    return _first_done_result(FIRST_DONE_STOP, None, source,
+                              f"no DONE in {source}, final_phase {final_phase!r} is no fault")
+
+
+def _first_done_from_timeline(base: dict) -> dict:
+    timeline = base.get("timeline")
+    if not isinstance(timeline, list) or not timeline:
+        return _first_done_result(FIRST_DONE_STOP, None, "base.timeline",
+                                  "base.timeline missing or empty")
+    t_first_done = timeline_first_done_s(timeline)
+    if t_first_done is None:
+        return _done_less_result(base, "base.timeline")
+    return _first_done_result(FIRST_DONE_OK, t_first_done, "base.timeline")
+
+
+def _first_done_from_t_done(base: dict) -> dict:
+    """g6 / ref shape: ``t_done_s`` (the DONE time the judge reads) against ``phase_path``."""
+    t_done = base["t_done_s"]
+    path_first_done = timeline_first_done_s(base.get("phase_path"))
+    if t_done is None:
+        if path_first_done is not None:
+            return _first_done_result(FIRST_DONE_STOP, path_first_done, "base.t_done_s",
+                                      "base.t_done_s None but base.phase_path has a DONE")
+        return _done_less_result(base, "base.t_done_s / base.phase_path")
+    if path_first_done is None or abs(path_first_done - float(t_done)) > PHASE_PATH_TIME_TOL_S:
+        return _first_done_result(FIRST_DONE_STOP, path_first_done, "base.t_done_s",
+                                  f"base.t_done_s {t_done} is not the first DONE of "
+                                  f"base.phase_path ({path_first_done})")
+    return _first_done_result(FIRST_DONE_OK, float(t_done), "base.t_done_s")
+
+
 def first_done_check(base: dict) -> dict:
     """Rev4 R4-B2 on the r79 record as written: the first DONE time of the run.
 
-    The r79 ``base`` keeps ``timeline`` (each phase change), ``t_ready`` and ``final_phase``; it
-    has no ``t_done_s`` or ``phase_path`` (G-S b1ddeae), so the first DONE is rebuilt as the
-    first DONE entry of ``timeline``. When the record also has ``t_done_s`` (the DONE time a
-    judge would read), it must be that time. No timeline, or no DONE in it, is not a pass but
-    a stop (S-11: a G-S failure, rules 8.2; the DONE time is missing, 9.3).
+    Two record shapes (stored v5 r79 results, 2026-11-13): g6 / ref runs keep ``t_done_s`` and
+    ``phase_path`` (rev4 R4-B2 as written: ``t_done_s`` must be the first DONE of the path);
+    g8 runs keep ``timeline`` (each phase change) and no ``t_done_s``, so their first DONE is
+    the first DONE entry of ``timeline`` (a missing or empty timeline: S-11, a G-S failure).
+    A run without a DONE has first DONE None and passes only when ``final_phase`` is a fault
+    (:data:`FAULT_FINAL_PHASES`); otherwise S-11 (user decision 2026-11-13).
 
     Returns:
-        ``status`` (``pass`` or ``S-11``), ``t_first_done_s`` (None when missing) and
-        ``reason`` (None on a pass).
+        ``status`` (``pass`` or ``S-11``), ``t_first_done_s`` (None: no DONE or missing),
+        ``source`` (the field read) and ``reason`` (None on a pass).
     """
-    timeline = base.get("timeline")
-    if not isinstance(timeline, list) or not timeline:
-        return {"status": FIRST_DONE_STOP, "t_first_done_s": None,
-                "reason": "base.timeline missing or empty"}
-    t_first_done = timeline_first_done_s(timeline)
-    if t_first_done is None:
-        return {"status": FIRST_DONE_STOP, "t_first_done_s": None,
-                "reason": "no DONE entry in base.timeline"}
-    t_done_used = base.get("t_done_s")
-    if t_done_used is not None and abs(float(t_done_used) - t_first_done) > PHASE_PATH_TIME_TOL_S:
-        return {"status": FIRST_DONE_STOP, "t_first_done_s": t_first_done,
-                "reason": f"base.t_done_s {t_done_used} is not the first DONE {t_first_done}"}
-    return {"status": FIRST_DONE_OK, "t_first_done_s": t_first_done, "reason": None}
+    if "t_done_s" in base:
+        return _first_done_from_t_done(base)
+    return _first_done_from_timeline(base)
 
 
 SOIL_EVENT_SERIES = "soil_event_series.npz"
