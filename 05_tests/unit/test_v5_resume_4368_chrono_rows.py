@@ -191,6 +191,13 @@ CODE_AT_LAUNCH = {"files": {"03_src/outrigger_sim/control/c2.py": "0" * 64},
                   "git": {"head": "4312b8e" + "0" * 33, "paths": ["03_src/outrigger_sim/control"], "dirty": [],
                           "clean": True, "taken_utc": "2026-11-13T00:00:00+09:00"}}
 """s9_batch ``launch_code_state`` form (rev11 R11-4: gs-check needs a 40-hex ``code_at_launch.git.head``)."""
+GIT_AT_START = "4312b8e"
+"""The G-S ``--git-at-start`` of the synthetic folders (rev12 R12-3; :data:`CODE_AT_LAUNCH` head starts with it)."""
+
+
+def _gs(mod, folder: str, manifest=None, rows_manifest=None, git_at_start: str | None = GIT_AT_START) -> int:
+    """``cmd_gs_check`` with the rev12 R12-3 ``git_at_start``."""
+    return mod.cmd_gs_check(folder, manifest, rows_manifest, git_at_start)
 
 
 def _level_folder(tmp_path: Path, mod, departed, drop: list[str], arm: str = "on", law_locked=True,
@@ -205,6 +212,8 @@ def _level_folder(tmp_path: Path, mod, departed, drop: list[str], arm: str = "on
             node = node.setdefault(p, {})
         node.setdefault(parts[-1], 1)
     doc.setdefault("p3b", {})["departure"] = {"departed": departed}
+    # run_S9 level record of the commit (rev11 R11-4 / rev12 R12-3: compared with git_at_start)
+    doc.setdefault("code_state", {})["git_at_start"] = dict(CODE_AT_LAUNCH["git"])
     if expect_ok is not None:  # rev9 R9-1: the controller-tag check of the row
         doc.setdefault("c2_setup", {})["expect_controller"] = {"name": "x", "ok": expect_ok}
     for k in drop:
@@ -235,16 +244,16 @@ def _level_folder(tmp_path: Path, mod, departed, drop: list[str], arm: str = "on
 def test_gs_check_condition_true_but_absent_is_error(mod, tmp_path, capsys):
     dep = ["p3b.P3-3_leg_force.F_min_after_N", "c2_setup.las_off"]
     ok = _level_folder(tmp_path / "a", mod, False, dep)
-    assert mod.cmd_gs_check(str(ok)) == 0
+    assert _gs(mod, str(ok)) == 0
     out = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])
     assert out["cases"][0]["conditional_absent"] == dep
     bad = _level_folder(tmp_path / "b", mod, True, dep)  # departed: F_min_after_N is required
-    assert mod.cmd_gs_check(str(bad)) == 1
+    assert _gs(mod, str(bad)) == 1
     c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
     assert c["result_missing"] == ["p3b.P3-3_leg_force.F_min_after_N"]
     assert c["conditional_required_but_absent"][0]["condition_value"] is True
     off = _level_folder(tmp_path / "c", mod, False, ["c2_setup.las_off"], arm="off")  # off arm needs las_off
-    assert mod.cmd_gs_check(str(off)) == 1
+    assert _gs(mod, str(off)) == 1
     capsys.readouterr()
 
 
@@ -254,14 +263,14 @@ def test_gs_check_law_locked_series_key(mod, tmp_path, capsys):
     np = pytest.importorskip("numpy")
     assert mod.SERIES_KEYS == {"step_series.npz": ("t_s", "law_locked")}
     assert not any("law_locked" in k for k in mod.gs_conditional_table()["keys"])
-    assert mod.cmd_gs_check(str(_level_folder(tmp_path / "a", mod, False, []))) == 0
+    assert _gs(mod, str(_level_folder(tmp_path / "a", mod, False, []))) == 0
     capsys.readouterr()
-    assert mod.cmd_gs_check(str(_level_folder(tmp_path / "b", mod, False, [], law_locked=None))) == 1
+    assert _gs(mod, str(_level_folder(tmp_path / "b", mod, False, [], law_locked=None))) == 1
     c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
     assert c["series_keys_missing"] == ["step_series.npz:law_locked"]
     for bad in (np.zeros((2, 4), dtype=np.int64), np.zeros((2, 3), dtype=np.int8),
                 np.full((2, 4), 2, dtype=np.int8)):
-        assert mod.cmd_gs_check(str(_level_folder(tmp_path / f"c{bad.dtype}{bad.shape}{bad.max()}", mod, False, [],
+        assert _gs(mod, str(_level_folder(tmp_path / f"c{bad.dtype}{bad.shape}{bad.max()}", mod, False, [],
                                                   law_locked=bad))) == 1
         c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
         assert c["series_key_problems"] and not c["series_keys_missing"]
@@ -277,14 +286,14 @@ def test_gs_check_rev9_law_locked_form_and_expect_check(mod, tmp_path, capsys):
         "leg_mismatch": {"law_locked": np.array([[-1, 0, -1, -1], [1, 0, 1, 1]], dtype=np.int8)},
     }
     for name, kwargs in cases.items():
-        assert mod.cmd_gs_check(str(_level_folder(tmp_path / name, mod, False, [], **kwargs))) == 1, name
+        assert _gs(mod, str(_level_folder(tmp_path / name, mod, False, [], **kwargs))) == 1, name
         c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
         assert c["series_key_problems"] and not c["series_keys_missing"], name
     for name, ok in (("expect_false", False), ("expect_missing", None)):
-        assert mod.cmd_gs_check(str(_level_folder(tmp_path / name, mod, False, [], expect_ok=ok))) == 1
+        assert _gs(mod, str(_level_folder(tmp_path / name, mod, False, [], expect_ok=ok))) == 1
         c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
         assert c["expect_controller_ok"] is False and not c["series_key_problems"]
-    assert mod.cmd_gs_check(str(_level_folder(tmp_path / "pre_arm", mod, False, []))) == 0
+    assert _gs(mod, str(_level_folder(tmp_path / "pre_arm", mod, False, []))) == 0
     c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
     assert c["law_locked_minus_one"] == "pre_arm_prefix"
 
@@ -299,6 +308,7 @@ def _openloop_folder(tmp_path: Path, mod, entry_changes: dict | None = None, dro
         for p in parts[:-1]:
             node = node.setdefault(p, {})
         node.setdefault(parts[-1], 1)
+    doc["code_state"] = {"git_at_start": dict(CODE_AT_LAUNCH["git"])}  # run_S9 machine record (rev11 R11-4)
     if drop_head:
         doc["code_state"]["git_at_start"].pop("head")
     f = tmp_path / f"batch_{TEST_BATCH}_20261113_000000"
@@ -320,32 +330,56 @@ def _openloop_folder(tmp_path: Path, mod, entry_changes: dict | None = None, dro
 
 
 def test_gs_check_rev11_open_loop_code_at_launch(mod, tmp_path, capsys):
-    """Rev11 R11-4 (Q-R11-1 = B): an open-loop row needs batch.json code_at_launch with a 40-hex git.head and
-    result.json code_state.git_at_start.head; a missing or malformed record fails the row (S-12 at the judge)."""
-    assert "code_state.git_at_start.head" in mod.OPENLOOP_KEY_PATHS
-    assert mod.cmd_gs_check(str(_openloop_folder(tmp_path / "ok", mod))) == 0
+    """Rev11 R11-4 (Q-R11-1 = B): an open-loop row needs batch.json code_at_launch with a 40-hex git.head; a missing
+    or malformed record fails the row. Rev12 R12-4: its result.json code_state is recorded only (not a key)."""
+    assert "code_state.git_at_start.head" not in mod.OPENLOOP_KEY_PATHS
+    assert _gs(mod, str(_openloop_folder(tmp_path / "ok", mod))) == 0
     c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
     assert c["kind"] == "openloop" and c["code_at_launch_head_ok"] and not c["batch_entry_missing"]
     bad = {"none": {"code_at_launch": None},
            "error": {"code_at_launch": {"files": {}, "git": {"error": "CalledProcessError: x"}}},
            "short": {"code_at_launch": {"files": {}, "git": {**CODE_AT_LAUNCH["git"], "head": "4312b8e"}}}}
     for name, change in bad.items():
-        assert mod.cmd_gs_check(str(_openloop_folder(tmp_path / name, mod, change))) == 1, name
+        assert _gs(mod, str(_openloop_folder(tmp_path / name, mod, change))) == 1, name
         c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
         assert not c["code_at_launch_head_ok"] and c["code_at_launch_head_problem"], name
         assert (c["batch_entry_missing"] == ["code_at_launch"]) == (name == "none"), name
-    assert mod.cmd_gs_check(str(_openloop_folder(tmp_path / "nohead", mod, drop_head=True))) == 1
+    assert _gs(mod, str(_openloop_folder(tmp_path / "nohead", mod, drop_head=True))) == 0
     c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
-    assert c["result_missing"] == ["code_state.git_at_start.head"] and c["code_at_launch_head_ok"]
+    assert c["result_missing"] == [] and c["commit_identity_ok"]  # rev12 R12-4: recorded only
+    assert c["commit_identity_R11_4"]["result_same_as_git_at_start"] is False
+
+
+def test_gs_check_rev12_git_at_start(mod, tmp_path, capsys):
+    """Rev12 R12-3: gs-check needs --git-at-start and compares every row's code_at_launch.git.head (S-12 fails the
+    row); dirty is recorded only (R12-2)."""
+    folder = str(_openloop_folder(tmp_path / "ol", mod))
+    assert _gs(mod, folder, git_at_start=None) == 2
+    assert _gs(mod, folder, git_at_start="XYZ") == 2
+    capsys.readouterr()
+    assert _gs(mod, folder, git_at_start="ba2da55") == 1
+    out = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])
+    assert out["commit_identity_R11_4"]["s12_rows"] == ["LV"]
+    level = _level_folder(tmp_path / "lv", mod, False, [])
+    assert _gs(mod, str(level), git_at_start="ba2da55") == 1
+    capsys.readouterr()
+    dirty = {"code_at_launch": {"files": {}, "git": {**CODE_AT_LAUNCH["git"], "dirty": [" M x.py"],
+                                                     "clean": False}}}
+    assert _gs(mod, str(_openloop_folder(tmp_path / "d", mod, dirty))) == 0
+    out = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])
+    assert out["commit_identity_R11_4"]["dirty_rows_recorded"] == ["LV"]
+    with pytest.raises(SystemExit) as exc:
+        mod.main(["gs-check", folder])
+    assert exc.value.code == 2
 
 
 def test_gs_check_rev11_level_head_form(mod, tmp_path, capsys):
     """Rev11 R11-4 item 4: level rows also need a 40-hex code_at_launch.git.head (presence was already required)."""
     f = _level_folder(tmp_path / "a", mod, False, [])
-    assert mod.cmd_gs_check(str(f)) == 0
+    assert _gs(mod, str(f)) == 0
     assert json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]["code_at_launch_head_ok"]
     _rewrite_batch(f, cases=[{**json.loads((f / "batch.json").read_text("utf-8"))["cases"][0], "code_at_launch": "x"}])
-    assert mod.cmd_gs_check(str(f)) == 1
+    assert _gs(mod, str(f)) == 1
     c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
     assert not c["code_at_launch_head_ok"] and not c["batch_entry_missing"]
 
@@ -358,42 +392,42 @@ def _rewrite_batch(folder: Path, **changes) -> None:
 
 def test_gs_check_rev10_ls_sources(mod, tmp_path, capsys):
     """Rev10 R10-2: full batch name decided and the case exactly once per source, else the row fails (S-11)."""
-    assert mod.cmd_gs_check(str(_level_folder(tmp_path / "ok", mod, False, []))) == 0
+    assert _gs(mod, str(_level_folder(tmp_path / "ok", mod, False, []))) == 0
     out = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])
     assert out["ls_sources_R10_2"]["batch_name"]["name"] == TEST_BATCH and out["cases"][0]["ls_sources_ok"]
     assert out["ls_sources_R10_2"]["counts"]["both_sources_without_v5_setting"] == 0  # batch.json says "x"
     other = _level_folder(tmp_path / "name", mod, False, [])
     _rewrite_batch(other, batch="V5-RESUME-K1-C5")  # differs from the folder name part
-    assert mod.cmd_gs_check(str(other)) == 1
+    assert _gs(mod, str(other)) == 1
     c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
     assert (c["ls_boundary_case"], c["ls_sources_ok"]) == ("batch_name_unknown", False)
     absent = _level_folder(tmp_path / "nokey", mod, False, [])
     doc = json.loads((absent / "batch.json").read_text("utf-8"))
     del doc["batch"]
     (absent / "batch.json").write_text(json.dumps(doc), "utf-8")
-    assert mod.cmd_gs_check(str(absent)) == 0  # no batch key: the folder name part
+    assert _gs(mod, str(absent)) == 0  # no batch key: the folder name part
     capsys.readouterr()
     twice = _level_folder(tmp_path / "twice", mod, False, [])
     doc = json.loads((twice / "batch.json").read_text("utf-8"))
     _rewrite_batch(twice, cases=doc["cases"] * 2)
-    assert mod.cmd_gs_check(str(twice)) == 1
+    assert _gs(mod, str(twice)) == 1
     out = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])
     assert out["ls_sources_R10_2"]["counts"]["batch_json_entries_not_one"] == 1
     missing_row = tmp_path / "rows_without_case.json"
     missing_row.write_text(json.dumps({"batches": {TEST_BATCH: {"rows": []}}}), "utf-8")
-    assert mod.cmd_gs_check(str(_level_folder(tmp_path / "m0", mod, False, [])), None, str(missing_row)) == 1
+    assert _gs(mod, str(_level_folder(tmp_path / "m0", mod, False, [])), None, str(missing_row)) == 1
     c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
     assert c["ls_boundary_case"] == "manifest_rows_not_one"
 
 
 def test_gs_check_rev10_missing_rows_manifest_is_an_input_error(mod, tmp_path, capsys):
     folder = _level_folder(tmp_path / "a", mod, False, [])
-    assert mod.cmd_gs_check(str(folder), None, str(tmp_path / "none.json")) == 2
+    assert _gs(mod, str(folder), None, str(tmp_path / "none.json")) == 2
     bad = tmp_path / "bad.json"
     bad.write_text("{", "utf-8")
-    assert mod.cmd_gs_check(str(folder), None, str(bad)) == 2
+    assert _gs(mod, str(folder), None, str(bad)) == 2
     bad.write_text(json.dumps({"rows": []}), "utf-8")
-    assert mod.cmd_gs_check(str(folder), None, str(bad)) == 2
+    assert _gs(mod, str(folder), None, str(bad)) == 2
     capsys.readouterr()
 
 
@@ -401,12 +435,12 @@ def test_gs_check_manifest_table(mod, tmp_path, capsys):
     f = _level_folder(tmp_path, mod, False, [])
     m = tmp_path / "m.json"
     m.write_text(json.dumps({"gs_conditional_absent": mod.gs_conditional_table()}), "utf-8")
-    assert mod.cmd_gs_check(str(f), str(m)) == 0
+    assert _gs(mod, str(f), str(m)) == 0
     doc = json.loads(m.read_text("utf-8"))
     doc["gs_conditional_absent"]["keys"].pop("c2_setup.las_off")
     m.write_text(json.dumps(doc), "utf-8")
-    assert mod.cmd_gs_check(str(f), str(m)) == 1
-    assert mod.cmd_gs_check(str(f), str(tmp_path / "none.json")) == 1
+    assert _gs(mod, str(f), str(m)) == 1
+    assert _gs(mod, str(f), str(tmp_path / "none.json")) == 1
     capsys.readouterr()
 
 

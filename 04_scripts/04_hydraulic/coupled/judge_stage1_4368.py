@@ -34,7 +34,8 @@ Harness grades use ``harness_class`` (Q-S1); S8 J6 is not applicable without REA
 
 Usage (python-dev, project root):
   python -I -B 04_scripts/04_hydraulic/coupled/judge_stage1_4368.py --out <report.json>
-      --h9 <h9_stage1.jsonl> --h10 <h10_reuse_rerun.jsonl> [--t4h-dir <dir> ...]
+      --h9 <h9_stage1.jsonl> --h10 <h10_reuse_rerun.jsonl>
+      [--t4h-dir <dir: one, only without the convention folders>]
       [--overlap-ref <h10_overlap_t_a.json>] [--rules-dir <verif_matrix>]
 Exit codes: 0 judged, 1 a stop / VB J failure / 판정 불가, 2 input error, 3 internal error.
 """
@@ -163,6 +164,7 @@ def metrics(record: dict, t4h_dirs: tuple[Path, ...]) -> dict:
         head_only_declared=record.get("head_only_declared"),
         bound_check=(record.get("hydraulics_record") or {}).get("extend_bound_check"),
         rod_reading=rod_reading(record, t4h_dirs),
+        t4h_lookup=t4h_lookup(record, t4h_dirs),
         F_after_W_min_kN=(
             min(event_output["min_F_after_W_kN"].values())
             if event_output.get("min_F_after_W_kN")
@@ -172,24 +174,25 @@ def metrics(record: dict, t4h_dirs: tuple[Path, ...]) -> dict:
     return out
 
 
-def rod_reading(record: dict, t4h_dirs: tuple[Path, ...]) -> bool | None:
-    """R3-C8 1: a finite ``rod_pressure_Pa`` in the line's T4h file; None = no T4h file found."""
-    name = record.get("t4h_file")
-    if not name:
-        return None
-    for folder in (
-        *t4h_dirs,
-        *((Path(record["job"]["t4h_dir"]),) if record["job"].get("t4h_dir") else ()),
-    ):
-        path = Path(folder) / name
-        if path.is_file():
-            import numpy as np
+def t4h_lookup(record: dict, t4h_folders: tuple[Path, ...]) -> dict:
+    """Rev12 R12-1: the line's own T4h file in ``t4h_folders`` (the result file's runner
+    convention folders, :func:`judge4368_common.t4h_folders`; ``job.t4h_dir`` is not searched)."""
+    return common.locate_t4h(record, t4h_folders)
 
-            with np.load(path, allow_pickle=False) as data:
-                if "rod_pressure_Pa" not in data.files:
-                    return None
-                return bool(np.isfinite(data["rod_pressure_Pa"]).any())
-    return None
+
+def rod_reading(record: dict, t4h_folders: tuple[Path, ...]) -> bool | None:
+    """R3-C8 1: a finite ``rod_pressure_Pa`` in the line's T4h file; None = no T4h reading
+    (no ``t4h_file`` key, the recorded file not found exactly once, or no such array). The
+    S-2 of a recorded file found 0 or 2+ times is :func:`t4h_lookup` (rev12 R12-1)."""
+    located = t4h_lookup(record, t4h_folders)
+    if located["status"] != common.T4H_FOUND:
+        return None
+    import numpy as np
+
+    with np.load(located["path"], allow_pickle=False) as data:
+        if "rod_pressure_Pa" not in data.files:
+            return None
+        return bool(np.isfinite(data["rod_pressure_Pa"]).any())
 
 
 # ------------------------------------------------------------------------------------ J items
@@ -318,6 +321,9 @@ def j_p3_item(on: dict) -> list[dict]:
 
     if not is_extend_start_tag(on["controller_tag"]):
         return []
+    lookup = on.get("t4h_lookup") or {}
+    if lookup.get("status") == common.T4H_STOP:  # rev12 R12-1 (Q-R12-1 = A): no configuration rule
+        return [_item("J-P3", "stop", f"S-2: {lookup['reason']}")]
     if on["rod_reading"] is None:
         return [
             _item("J-P3", "not_judgeable", "no T4h rod reading record and no configuration rule")
@@ -588,20 +594,28 @@ def p7(rows_by: dict[str, list[dict]]) -> dict:
 
 def judge(args: argparse.Namespace) -> dict:
     index = batch_index()
-    t4h_dirs = tuple(Path(p) for p in args.t4h_dir or [])
+    extra_dirs = tuple(Path(p) for p in args.t4h_dir or [])
     lines = {"H-9": common.read_jsonl(args.h9), "H-10": common.read_jsonl(args.h10)}
+    # rev12 R12-1: each result file reads its own convention folders (one --t4h-dir only
+    # without them)
+    folders = {name: tuple(common.t4h_folders(path, lines[name], extra_dirs))
+               for name, path in (("H-9", args.h9), ("H-10", args.h10))}
     errors = {name: [r["job"] for r in rs if "error" in r] for name, rs in lines.items()}
     batches = {
         name: split_batches([r for r in rs if "error" not in r], index)
         for name, rs in lines.items()
     }
-    main_rows = [metrics(r, t4h_dirs) for name in lines for r in batches[name].get("main", [])]
+    main_rows = []
+    for name in lines:
+        main_rows += [metrics(r, folders[name]) for r in batches[name].get("main", [])]
+    t4h_dirs = folders["H-10"]  # item8 and overlap are H-10 lines
     rows_by = _by_setting(main_rows)
     report: dict[str, Any] = {
         "inputs": {
             "h9": str(args.h9),
             "h10": str(args.h10),
-            "t4h_dirs": [str(p) for p in t4h_dirs],
+            "t4h_dirs": [str(p) for p in extra_dirs],
+            "t4h_folders_R12_1": {name: [str(p) for p in f] for name, f in folders.items()},
         },
         "S-15_counts": {
             name: {
@@ -703,7 +717,9 @@ def parser() -> argparse.ArgumentParser:
     common.add_common_arguments(out)
     out.add_argument("--h9", type=Path, required=True, help="resume_k1/h9_stage1.jsonl")
     out.add_argument("--h10", type=Path, required=True, help="resume_k1/h10_reuse_rerun.jsonl")
-    out.add_argument("--t4h-dir", action="append", help="folder of the T4h files (repeatable)")
+    out.add_argument("--t4h-dir", action="append",
+                     help="T4h folder only for inputs without <stem>_t4h/ or t4h/ (at most one; "
+                     "rev12 R12-1)")
     out.add_argument("--overlap-ref", type=Path, default=None, help="h10_overlap_t_a.json (record)")
     return out
 
