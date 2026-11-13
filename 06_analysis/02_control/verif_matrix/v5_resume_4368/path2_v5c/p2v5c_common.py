@@ -24,6 +24,11 @@ rev10 (62a0bd8d...): seal check only (R10-3). R10-1 / R10-2 (input boundaries of
 Chrono rows: full batch name, manifest / ``batch.json`` row counts, manifest file) do not apply to the
 harness lines read here.
 
+rev11 (9bac4524...): seal check (R11-7). R11-2 (T4h lookup) is applied in ``p2v5c_stage1`` (the only tool
+here that reads T4h) through the imported ``p2_v5j.t4h_places`` / ``rod_reading_lookup``. R11-1 (4.2
+record-check expectations), R11-3 (meaning of ``commands_sha256``), R11-4 (open-loop commit identity),
+R11-5 / R11-6 (G-S) do not apply to the harness lines read here.
+
 Both files are located with ``--p2-dir`` (default: ``../path2`` next to this folder, else the
 dynamics-expert worktree). Their sha256 values are checked against ``P2_V5J_SHA`` / ``P2_CORE_SHA``;
 a difference is a stop (exit 2, code ``P2-SHA``) because the J-item definition would have moved.
@@ -59,8 +64,10 @@ P2_FALLBACK = Path(r"C:\workspace\outrigger_control\.claude\worktrees\agent-a2e8
 # manifest); before: rev8 fd9bb68 bebed9f1... (p2_v5j still 5772624c...)
 # rev10 version of p2_4368 (dynamics-expert commit a9594dc: rev10 seal, R10-1 / R10-2 Chrono LS input);
 # before: rev9 b0d6382 7d764a80... (p2_v5j still 5772624c...)
-P2_V5J_SHA = "5772624cb28e414ceeb38af3eb6d386a2e0a78857db8a5ea9a5d3cd2ec5f7d8b"
-P2_CORE_SHA = "6e297ea371ad8559d656c7c2d4508d4120c72989424baa4aedcaf2f8f7a7bfa0"
+# rev11 versions (dynamics-expert commits 582fa93 / 3eba3c5: rev11 seal, R11-2 T4h convention folders in
+# p2_v5j, R11-1 / R11-4 elsewhere); before: rev10 a9594dc p2_4368 6e297ea3..., p2_v5j 5772624c...
+P2_V5J_SHA = "e5d769b925a1d3047a8f1a42443894f761520950d8d1ec75c31499e9ae7dd3fe"
+P2_CORE_SHA = "a8c625bf91184ec970a446a3997510ac2f8ce24df9d90b92b101b99b34a3fd43"
 
 EXIT = {"pass": 0, "fail": 1, "undecidable": 1, "stop": 2}
 
@@ -76,6 +83,7 @@ LATER_RULES = (   # sealed addenda checked here (raw sha, LF, no BOM, .sha256 re
     (_VMR + "rev8.md", "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56", _VMR + "rev8.sha256"),
     (_VMR + "rev9.md", "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d", _VMR + "rev9.sha256"),
     (_VMR + "rev10.md", "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29", _VMR + "rev10.sha256"),
+    (_VMR + "rev11.md", "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f", _VMR + "rev11.sha256"),
 )
 REV3_REL, REV3_SHA = LATER_RULES[0][0], LATER_RULES[0][1]
 
@@ -101,7 +109,7 @@ def jp3_tag_scope(fnd, where, res, setting_name):
 
 
 def check_rev3(repo):
-    """rev3 ~ rev10 (the name is kept for the tests); ``ok`` = all sealed addenda match (rev8 R8-4 .. rev10 R10-3:
+    """rev3 ~ rev11 (the name is kept for the tests); ``ok`` = all sealed addenda match (rev8 R8-4 .. rev11 R11-7:
     file sha = code seal sha = ``.sha256`` record, else S-1)."""
     items = [_check_one(repo, *r) for r in LATER_RULES]
     return {"items": items, "ok": all(i["ok"] for i in items)}
@@ -170,7 +178,8 @@ def import_record(p2_dir):
     return {"p2_dir": str(p2_dir), "p2_v5j_sha256": v5j_sha, "p2_4368_sha256": core_sha,
             "ok": v5j_sha == P2_V5J_SHA and core_sha == P2_CORE_SHA,
             "used": ["p2_v5j.judge_pair", "p2_v5j.j_values", "p2_v5j.jp3", "p2_v5j.nrev_max_by_row",
-                     "p2_v5j.pair_key", "p2_v5j.row_key", "p2_v5j.rod_reading_from_t4h", "p2_v5j.tag_of",
+                     "p2_v5j.pair_key", "p2_v5j.row_key", "p2_v5j.t4h_places", "p2_v5j.rod_reading_lookup",
+                     "p2_v5j.tag_of",
                      "p2_v5j.is_event", "core.check_seals", "core.load_is_extend_start", "core.Findings",
                      "core.t_ge/t_lt/t_gt", "core.num", "core.dig", "core.read_jsonl", "core.F_MIN_N"]}
 

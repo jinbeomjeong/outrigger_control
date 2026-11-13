@@ -4,6 +4,11 @@ Inputs (436.8 rules 4.3, rev1 RV1-2 / RV1-3.3 / RV1-4): ``resume_k1/h10_reuse_re
 main VB 100 + LS1~LS4 288, U-9 VB 28, item8 VB 6 + V0 6, overlap VB 4 + V0 4 + V3 4) and
 ``resume_k1/h9_stage1.jsonl`` (908 lines: main V0~V8 / L1 / L2 812 + pressure_only 96), optionally the
 T4h folder of the VB / LS lines (rev9 3.1 rod reading) and ``h10_overlap_t_a.json`` (RV1-4, record).
+436.8 rev11 R11-2: the T4h of an H-10 line (main, item8, overlap; all from the ``--h10`` file) is looked
+up only in the runner convention folders of ``--h10`` (``<stem>_t4h/``, ``t4h/`` next to it); one
+``--t4h-root`` only when neither exists (given anyway, or two or more = input error: S-11, exit 2, the
+bundles are not judged); a recorded ``t4h_file`` found 0 or 2+ times = S-2. A line without ``t4h_file``
+keeps the configuration reading (rev3 R3-C8). Search: ``p2_v5j.t4h_places`` / ``rod_reading_lookup``.
 
 Rules applied (v5 criteria original + revisions 1~12b read through the 436.8 rules; rule -> function):
   v5 3 J1~J11, rev2 2.1 (J9 post-lift), rev8 3.2 / rev9 3 (J-P3)  -> ``p2_v5j.judge_pair`` (imported)
@@ -207,8 +212,10 @@ def fl_guard_cycle(ln):
     return None
 
 
-def judge_all(v5j, core, lines, v0_idx, nrev, is_p3, t4h_root, where):
-    """judge_pair for every line; returns {pair_key: (items, findings)}."""
+def judge_all(v5j, core, lines, v0_idx, nrev, is_p3, t4h_dirs, where, t4h_log=None):
+    """judge_pair for every line; returns {pair_key: (items, findings)}. ``t4h_dirs`` = the rev11 R11-2
+    search folders of the result file (None: no T4h reading, configuration only); ``t4h_log`` counts the
+    lookup status (``ok``, ``no_t4h_file``, ``not_found``, ``several``)."""
     out = {}
     for ln in lines:
         pk = v5j.pair_key(ln["job"])
@@ -218,8 +225,14 @@ def judge_all(v5j, core, lines, v0_idx, nrev, is_p3, t4h_root, where):
             f.undec(where, f"no V0 partner for {pk}")
             out[(setting(ln), pk)] = ({}, f)
             continue
-        rod = v5j.rod_reading_from_t4h(ln, t4h_root) if t4h_root else None
+        rod, st, hits = (None, None, [])
+        if t4h_dirs is not None:
+            rod, st, hits = v5j.rod_reading_lookup(ln, t4h_dirs)
+            if t4h_log is not None:
+                t4h_log[st] = t4h_log.get(st, 0) + 1
         items, f = v5j.judge_pair(ln, v0, nrev.get(v5j.row_key(ln["job"])), is_p3, rod)
+        if st in ("not_found", "several"):   # rev11 R11-2 3 (rev8 R8-1a): S-2
+            f.stop("S-2", f"{where}|{pk}", f"R11-2: T4h {ln.get('t4h_file')!r} {st} in {[str(d) for d in t4h_dirs]} {hits}")
         if setting(ln) in ("VB",) + LS_SETTINGS:   # rev8 R8-2: non-3 tag = J-P3 not applicable + S-2
             cm.jp3_tag_scope(f, f"{where}|{pk}", items.get("J-P3", {}).get("result"), setting(ln))
         out[(setting(ln), pk)] = (items, f)
@@ -434,6 +447,14 @@ def merge(fnd, f, prefix=""):
 
 
 def cmd_stage1(args, repo, v5j, core):
+    # rev11 R11-2 1 / 2: search folders of the --h10 file (input error = S-11, bundles not judged)
+    places, perr = v5j.t4h_places([args.h10], args.t4h_root)
+    if places is None:
+        return {"inputs": {"h9": args.h9, "h10": args.h10, "t4h_root": args.t4h_root},
+                "R11-2_t4h_places": {"input_error": perr}, "not_judged": ["H-10", "H-9_stage1"],
+                "grades_436_8": {"H-10": "멈춤", "H-9_stage1": "멈춤"}, "stop_codes": ["S-11"]}, "stop"
+    t4h_dirs = places[str(args.h10)]
+    t4h_log = {}
     h9 = core.read_jsonl(args.h9)
     h10 = core.read_jsonl(args.h10)
     is_p3, mod = core.load_is_extend_start(repo)
@@ -458,9 +479,10 @@ def cmd_stage1(args, repo, v5j, core):
             f9.stop("H-7", v5j.pair_key(ln["job"]), f"V0 n_late_fallback {nlf}")
     j9 = judge_all(v5j, core, [x for x in main9 if setting(x) != "V0"], v0_idx, nrev, is_p3, None, "h9")
     j10 = judge_all(v5j, core, main10 + [x for x in it8 if setting(x) != "V0"], v0_idx, nrev, is_p3,
-                    args.t4h_root, "h10")
+                    t4h_dirs, "h10", t4h_log)
     ov_idx = index_by_pair(v5j, v0_ov, "overlap V0", f10)
-    jov = judge_all(v5j, core, [x for x in ov if setting(x) != "V0"], ov_idx, nrev, is_p3, args.t4h_root, "ov")
+    jov = judge_all(v5j, core, [x for x in ov if setting(x) != "V0"], ov_idx, nrev, is_p3, t4h_dirs, "ov",
+                    t4h_log)
     # S8 F-5 and the rest of SA-4 (v5 6, rev3 R3-E5 Q-S6) - decided first because an F-5 record
     # line does not count its clause fail as a new fail
     f5, f5_record = [], set()
@@ -562,6 +584,7 @@ def cmd_stage1(args, repo, v5j, core):
     body = {
         "inputs": {"h9": [args.h9, cm.sha256_file(args.h9)], "h10": [args.h10, cm.sha256_file(args.h10)],
                    "t4h_root": args.t4h_root, "overlap_ta": args.overlap_ta},
+        "R11-2_t4h": {"search_dirs": [str(d) for d in t4h_dirs], "lookup": t4h_log},
         "v5_options": mod, "counts": counts,
         "H-10": {"VB_and_LS": summarize(j10, {"VB"} | set(LS_SETTINGS)), "LS_conditions": ls,
                  "R12_event_passes": r12, "S7": s7, "item8_13_1": i8, "overlap_13_3": ovr,
@@ -589,7 +612,10 @@ def build_parser():
     s = sub.add_parser("stage1")
     s.add_argument("--h9", required=True, help="resume_k1/h9_stage1.jsonl")
     s.add_argument("--h10", required=True, help="resume_k1/h10_reuse_rerun.jsonl")
-    s.add_argument("--t4h-root", default=None, help="T4h folder of the H-10 VB / LS lines (rev9 3.1)")
+    s.add_argument("--t4h-root", action="append", default=None,
+                   help="T4h folder of the H-10 lines (rev9 3.1). 436.8 rev11 R11-2: the convention folders "
+                        "<h10 stem>_t4h/ and t4h/ next to --h10 are used; another folder only when none "
+                        "exists, at most one (else input error, S-11, exit 2)")
     s.add_argument("--overlap-ta", default=None, help="resume_k1/h10_overlap_t_a.json (record)")
     return ap
 

@@ -229,6 +229,52 @@ class TestStage1Parts(unittest.TestCase):
         self.assertEqual(s1.kind_of({"job": {"case": "R12", "setting": "V0", "contact": "p"}}), "pressure_only")
         self.assertEqual(s1.kind_of({"job": {"case": "S2", "setting": "VB", "u9_metrics": True}}), "u9")
 
+    def test_r112_t4h_lookup(self):
+        """rev11 R11-2: convention folders of --h10 only; another folder only without them, at most one
+        (else S-11, not judged); recorded t4h_file found 0 or 2+ times = S-2; found once = no R11-2 stop."""
+        import argparse  # noqa: PLC0415
+        import numpy as np  # noqa: PLC0415
+        with tempfile.TemporaryDirectory() as td:
+            h10 = Path(td) / "h10_reuse_rerun.jsonl"
+            other = Path(td) / "other"
+            other.mkdir()
+            ns = argparse.Namespace(h9=str(Path(td) / "h9.jsonl"), h10=str(h10), overlap_ta=None)
+            ns.t4h_root = [str(other), str(other) + "2"]               # two folders given
+            body, st = s1.cmd_stage1(ns, REPO, V5J, CORE)
+            self.assertEqual((st, body["stop_codes"]), ("stop", ["S-11"]))
+            conv = Path(td) / "h10_reuse_rerun_t4h"
+            conv.mkdir()
+            ns.t4h_root = [str(other)]                                 # given while a convention folder exists
+            body, st = s1.cmd_stage1(ns, REPO, V5J, CORE)
+            self.assertEqual((st, body["stop_codes"]), ("stop", ["S-11"]))
+            self.assertIn("input_error", body["R11-2_t4h_places"])
+            places, perr = V5J.t4h_places([str(h10)], None)
+            self.assertIsNone(perr)
+            dirs = places[str(h10)]
+            self.assertEqual(dirs, [conv])
+            ln = line("R1", "VB", t4h_file="R1_VB.npz")
+            v0 = line("R1", "V0")
+            pk = V5J.pair_key(v0["job"])
+
+            def r112(d):
+                log = {}
+                out = s1.judge_all(V5J, CORE, [ln], {pk: v0}, {}, None, d, "h10", log)
+                f = out[("VB", pk)][1]
+                return [s for s in f.stops if "R11-2" in s["why"]], log
+            st2, log = r112(dirs)                                       # not found
+            self.assertEqual(([s["code"] for s in st2], log), (["S-2"], {"not_found": 1}))
+            np.savez(conv / "R1_VB.npz", rod_pressure_Pa=np.array([1.0e5]))
+            st2, log = r112(dirs)                                       # found once
+            self.assertEqual((st2, log), ([], {"ok": 1}))
+            (Path(td) / "t4h").mkdir()
+            np.savez(Path(td) / "t4h" / "R1_VB.npz", rod_pressure_Pa=np.array([1.0e5]))
+            places, _ = V5J.t4h_places([str(h10)], None)
+            st2, log = r112(places[str(h10)])                           # found in both convention folders
+            self.assertEqual(([s["code"] for s in st2], log), (["S-2"], {"several": 1}))
+            ln.pop("t4h_file")
+            st2, log = r112(places[str(h10)])                           # no t4h_file: configuration (R3-C8)
+            self.assertEqual((st2, log), ([], {"no_t4h_file": 1}))
+
     def test_counts_stop(self):
         f = CORE.Findings()
         s1.split_lines([line("R1", "V0")], [line("R1", "VB")], f)
@@ -412,25 +458,29 @@ class TestRev3(unittest.TestCase):
         self.assertTrue(r["ok"], r)
         self.assertEqual([i["path"].rsplit("_", 1)[1] for i in r["items"]],
                          ["rev3.md", "rev4.md", "rev5.md", "rev6.md", "rev7.md", "rev8.md", "rev9.md",
-                          "rev10.md"])
-        rev7 = r["items"][-4]
+                          "rev10.md", "rev11.md"])
+        rev7 = r["items"][-5]
         self.assertEqual(rev7["want"], "e81f7d31779b0d69a140c9d90aa4684f3c9299e84aec6af06b13d48d58631502")
         self.assertEqual(rev7["seal_file_sha"], rev7["want"])
-        rev8 = r["items"][-3]
+        rev8 = r["items"][-4]
         self.assertEqual(rev8["want"], "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56")
         self.assertEqual(rev8["seal_file_sha"], rev8["want"])
         self.assertEqual(rev8["sha256"], rev8["want"])
-        rev9 = r["items"][-2]   # rev9 R9-8: file sha = code seal = .sha256 record
+        rev9 = r["items"][-3]   # rev9 R9-8: file sha = code seal = .sha256 record
         self.assertEqual(rev9["want"], "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d")
         self.assertEqual(rev9["seal_file_sha"], rev9["want"])
         self.assertEqual(rev9["sha256"], rev9["want"])
-        rev10 = r["items"][-1]   # rev10 R10-3: file sha = code seal = .sha256 record
+        rev10 = r["items"][-2]   # rev10 R10-3: file sha = code seal = .sha256 record
         self.assertEqual(rev10["want"], "62a0bd8dd6644f78bf37d052e884061d8c14e1cc96e2babc72a6ac0618f12c29")
         self.assertEqual(rev10["seal_file_sha"], rev10["want"])
         self.assertEqual(rev10["sha256"], rev10["want"])
+        rev11 = r["items"][-1]   # rev11 R11-7: file sha = code seal = .sha256 record
+        self.assertEqual(rev11["want"], "9bac452470faf74f921aa7474b3dabad781dac1ba6c3493aff998e69e430617f")
+        self.assertEqual(rev11["seal_file_sha"], rev11["want"])
+        self.assertEqual(rev11["sha256"], rev11["want"])
 
     def test_rev7_seal_mismatch_stops(self):
-        """The last sealed file (rev10) differing from its seal is not ok (S-1 through run_main)."""
+        """The last sealed file (rev11) differing from its seal is not ok (S-1 through run_main)."""
         with tempfile.TemporaryDirectory() as td:
             for rel, _w, srel in cm.LATER_RULES:
                 for x in (rel, srel):
