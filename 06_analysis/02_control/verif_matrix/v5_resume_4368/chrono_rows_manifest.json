@@ -5314,5 +5314,162 @@
   },
   "rule": "CHECK end = phase 'touch' start - loop start (stored A3 / A5: 4.8 s) + 2 s, ceil (user decision Q-7, 2026-11-13)"
  },
- "k_rounding": "k rounded to 4 decimals, floors from the rounded k (user decision Q-1, 2026-11-13)"
+ "k_rounding": "k rounded to 4 decimals, floors from the rounded k (user decision Q-1, 2026-11-13)",
+ "gs_conditional_absent": {
+  "source": "v5_resume_4368_chrono_rows.gs_key_paths() cond (code); gs-check applies the same rules",
+  "rule": "a key of 'keys' absent from a row's result.json is conditional_absent only when its absent_allowed_when holds; when required_when holds the absence is result_missing (error). Keys outside 'keys' are always required.",
+  "row_kind": "level",
+  "n_key_paths": 75,
+  "keys": {
+   "c2_setup.las_off": {
+    "condition": "<off arm>",
+    "kind": "arm",
+    "absent_allowed_when": "on arm (r4368.arm != 'off')",
+    "required_when": "off arm (r4368.arm == 'off')"
+   },
+   "controller_meta.liftoff_approach_slow.active_periods": {
+    "condition": "<on arm>",
+    "kind": "arm",
+    "absent_allowed_when": "off arm (r4368.arm == 'off')",
+    "required_when": "on arm (r4368.arm != 'off')"
+   },
+   "controller_meta.liftoff_approach_slow.end_reason": {
+    "condition": "<on arm>",
+    "kind": "arm",
+    "absent_allowed_when": "off arm (r4368.arm == 'off')",
+    "required_when": "on arm (r4368.arm != 'off')"
+   },
+   "controller_meta.liftoff_approach_slow.end_s": {
+    "condition": "<on arm>",
+    "kind": "arm",
+    "absent_allowed_when": "off arm (r4368.arm == 'off')",
+    "required_when": "on arm (r4368.arm != 'off')"
+   },
+   "controller_meta.liftoff_approach_slow.ramp": {
+    "condition": "<on arm>",
+    "kind": "arm",
+    "absent_allowed_when": "off arm (r4368.arm == 'off')",
+    "required_when": "on arm (r4368.arm != 'off')"
+   },
+   "controller_meta.liftoff_approach_slow.ramp.periods_applied": {
+    "condition": "<on arm>",
+    "kind": "arm",
+    "absent_allowed_when": "off arm (r4368.arm == 'off')",
+    "required_when": "on arm (r4368.arm != 'off')"
+   },
+   "controller_meta.liftoff_approach_slow.start_s": {
+    "condition": "<on arm>",
+    "kind": "arm",
+    "absent_allowed_when": "off arm (r4368.arm == 'off')",
+    "required_when": "on arm (r4368.arm != 'off')"
+   },
+   "p3b.P3-3_leg_force.F_min_after_N": {
+    "condition": "p3b.departure.departed",
+    "kind": "result_key",
+    "absent_allowed_when": "result.json p3b.departure.departed is False",
+    "required_when": "result.json p3b.departure.departed is not False (True, another value or missing)"
+   },
+   "p3b.P3-3_leg_force.F_min_transient_N": {
+    "condition": "p3b.departure.departed",
+    "kind": "result_key",
+    "absent_allowed_when": "result.json p3b.departure.departed is False",
+    "required_when": "result.json p3b.departure.departed is not False (True, another value or missing)"
+   }
+  },
+  "table_sha256": "eef5129f43114877a005950ddd30eca8216d4d08a3196a2d1e82e5dc3363c9aa",
+  "scope": {
+   "V5-RESUME-K1-C1": {
+    "level_rows": [],
+    "off_arm_rows": []
+   },
+   "V5-RESUME-K1-C2": {
+    "level_rows": [
+     "D1S_J1_B_middle_Fs4_r1p925_p1p4",
+     "D1S_J1_B_middle_Fs4_rm2p64_p0",
+     "D1S_J1_B_middle_Fs4_r0_pm2p8",
+     "D1S_J1_B_bottom_Fs4_r1p925_p1p4",
+     "D1S_J1_B_bottom_Fs4_rm2p64_p0",
+     "D1S_J1_B_bottom_Fs4_r0_pm2p8",
+     "D1PSC_J1_B_top_Fs4_spFLJ1_base",
+     "D1PSC_J1_B_top_Fs4_FL_cslow",
+     "D1PSC_J1_B_top_Fs4_FL_cmid",
+     "D1PSC_J1_B_top_Fs4_FL_cedge",
+     "D1PSC_J1_B_top_Fs4_FL_cfast",
+     "D1PSC_J1_B_top_Fs4_spRLJ1_base",
+     "D1PSC_J1_B_top_Fs4_RL_cmid"
+    ],
+    "off_arm_rows": []
+   },
+   "V5-RESUME-K1-C3": {
+    "level_rows": [
+     "D1S_G1_B_middle_Fs4_spJ1FL",
+     "D1S_G1_B_bottom_Fs4_spJ1FL"
+    ],
+    "off_arm_rows": []
+   },
+   "V5-RESUME-K1-C4": {
+    "level_rows": [
+     "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lason",
+     "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lasoff",
+     "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lason",
+     "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lasoff"
+    ],
+    "off_arm_rows": [
+     "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc1_VB_lasoff",
+     "R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lasoff"
+    ]
+   },
+   "V5-RESUME-K1-C5": {
+    "level_rows": [
+     "P3b_J2_B_top_Fs4_m1p1_t180_seed20261026",
+     "P3b_J2_B_top_Fs4_m1p1_t180_seed20261027",
+     "P3b_J2_B_top_Fs4_m1p1_t180_seed20261028",
+     "P3b_J2_B_top_Fs4_m1p1_t180_seed20261029",
+     "P3b_J2_B_top_Fs4_m1p1_t180_seed20261026_flow",
+     "P3b_J1_B_top_Fs4",
+     "P3b_J2_B_top_Fs4_m1p1_t180",
+     "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0",
+     "P3b_J1_B_top_Fs4_v0v",
+     "P3b_J2_B_top_Fs4_m1p1_t180_v0v",
+     "S9SL_X6rpsa_J1_B_top_Fs4_r3p85_p0_v0v"
+    ],
+    "off_arm_rows": []
+   },
+   "V5-RESUME-K1-C6C7": {
+    "level_rows": [],
+    "off_arm_rows": []
+   },
+   "V5-RESUME-K1-OC5PROBE": {
+    "level_rows": [
+     "OC5P_Kc3_VB_n1_k0p9179",
+     "OC5P_Kc1_V0_n1_k0p8829"
+    ],
+    "off_arm_rows": []
+   },
+   "V5-RESUME-K1-OC5": {
+    "level_rows": [],
+    "off_arm_rows": []
+   },
+   "V5-RESUME-K1-JP": {
+    "level_rows": [],
+    "off_arm_rows": []
+   },
+   "V5-RESUME-K1-GS": {
+    "level_rows": [
+     "GS_D1S_J1_B_middle_Fs4_r1p925_p1p4",
+     "GS_D1S_G1_B_middle_Fs4_spJ1FL",
+     "GS_R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lason",
+     "GS_R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lasoff",
+     "GS_P3b_J2_B_top_Fs4_m1p1_t180_seed20261026",
+     "GS_P3b_J1_B_top_Fs4",
+     "GS_P3b_J1_B_top_Fs4_v0v",
+     "GS_OC5_mixed_rigid_J1FR_Kc3_VB_top_k1",
+     "GS_OC5_mixed_rigid_J1FR_Kc1_V0_top_k1"
+    ],
+    "off_arm_rows": [
+     "GS_R4368C4_rigidJ1FR_B_top_Fs4_r2p3351_p1p5017_Kc3_VB_lasoff"
+    ]
+   }
+  }
+ }
 }

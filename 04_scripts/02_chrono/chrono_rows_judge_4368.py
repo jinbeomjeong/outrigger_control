@@ -28,6 +28,12 @@ rules rev6 R6-A D-26 .. D-39):
 C-1 .. C-9 follow rev6 R6-B1 .. R6-B9 (:data:`ASSUMPTIONS`); ``--assume C-n=value`` is for sensitivity looks only and
 marks the output ``deviates_from_rev6``.
 
+Scope: Chrono C-1 .. C-5 and the O-C5 record rows (``run_S9.py level``, run_S8C, run_S6C). Open-loop rows (C-6 / C-7,
+``run_S9.py machine``) are not judged here (:data:`OPENLOOP_CRITERIA`): they are listed in ``skipped_rows`` and do not
+change the exit code. ``--batch``: a run_S8C / run_S6C row folder is taken from the case log's ``batch wall ... ->
+<dir>`` line, else from the one runner folder of its ``--tag`` stamped inside the case window (:func:`_rigid_row_dir`);
+every row records how it was found (``row_dir``).
+
 CLI (Chrono-dev, no simulation)::
 
     python -I -X utf8 04_scripts/02_chrono/chrono_rows_judge_4368.py judge --out out.json \
@@ -58,7 +64,7 @@ import numpy as np
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
-TOOL_VERSION = "chrono_rows_judge_4368 v1 (cad-expert 2026-11-13)"
+TOOL_VERSION = "chrono_rows_judge_4368 v2 (cad-expert 2026-11-13: row folder from the case log, open-loop rows skipped)"
 
 # --- rules and seals (rev5 R5-A1 requirement 4) -----------------------------------------------------------------
 RULES_DIR_DEFAULT = ROOT / "06_analysis" / "02_control" / "verif_matrix"
@@ -118,6 +124,14 @@ G6_ROW_NAMES = {"S-03": "D1S_G1_B_middle_Fs4_spJ1FL", "S-04": "D1S_G1_B_bottom_F
 """Row id -> case name of the C-3 rows (G6 gates) when the batch entry has no ``d1_id``; every other row id comes
 from the batch entry ``d1_id`` (``d1_chrono_rows``)."""
 G6_IDS = ("S-03", "S-04")
+OPENLOOP_CRITERIA = ("C-6", "C-7", "C-7a", "C-7b")
+"""Open-loop rows (rules original 5.2 / 5.3, rev4 R4-A3 names C-7a / C-7b): not judged by this tool. Original 9.1
+gives C-6 / C-7 path 1 = ``result.json`` ``p3a`` and path 2 = ``openloop_compare.py`` ``analyse`` (``series.npz``),
+original 7.5 / 8.1 make them record rows (no grade), rev5 R5-A1 (last bullet) scopes the Chrono path 1 aggregation
+new version to C-1 .. C-5. Such rows are listed in ``skipped_rows`` (exit code unaffected)."""
+OPENLOOP_FILES = ("series.npz", "flow_series.npz")
+OPENLOOP_SKIP_RULE = ("rules original 9.1 (C-6 / C-7 path 1 = result.json p3a, path 2 = openloop_compare.py analyse), "
+                      "7.5 / 8.1 (record rows, no grade), rev5 R5-A1 (Chrono path 1 new version = C-1 .. C-5)")
 LEGS = ("FL", "FR", "RL", "RR")
 G = 9.80665
 _EVENT_RE = re.compile(r"t_s=([-0-9.eE+]+), name='([^']*)'")
@@ -305,6 +319,13 @@ def load_row(d: Path) -> dict[str, Any]:
         phases = [(tp + t0, p) for tp, p in raw]
         ev = d / "controller_events.json"
         events = parse_events_json(ev) if ev.exists() else []
+    elif "p3a" in res and (d / "series.npz").exists():
+        # run_S9 ``machine`` open-loop row (C-6 / C-7): outside this tool (see :func:`openloop_skip`); recorded only
+        for name in OPENLOOP_FILES:
+            if (d / name).exists():
+                row["files"][name] = {"sha256": sha256_file(d / name)}
+        row["engine"] = "openloop"
+        return row
     else:
         raise InputError(f"no step_series.npz / pads.npz in {d}")
     rec = d / "record" / "record.npz"
@@ -789,18 +810,20 @@ def batch_rows(batch: Path, results_root: Path | None) -> list[tuple[Path, dict[
     if not bj.exists():
         raise InputError(f"batch.json missing: {batch}")
     doc = json.loads(bj.read_text(encoding="utf-8"))
-    stamp = "_".join(batch.name.split("_")[-2:])
     root = results_root or batch.parents[1]
+    progress = batch / "progress.log"
+    progress_text = progress.read_text("utf-8", errors="replace") if progress.is_file() else ""
     out = []
     for c in doc.get("cases") or []:
         name = str(c["case"])
         argv = [str(a) for a in c.get("argv") or []]
         d = batch / name
+        located: dict[str, Any] = {"source": "batch_folder"}
         if not (d / "result.json").exists():
-            d = _rigid_row_dir(argv, root, stamp)
+            d, located = _rigid_row_dir(name, argv, batch, root, progress_text, c)
         if d is None or not (d / "result.json").exists():
             raise InputError(f"row folder of {name} not found (batch {batch}, results root {root})")
-        out.append((d, c))
+        out.append((d, {**c, "_row_dir": located}))
     return out
 
 
@@ -808,18 +831,90 @@ def _arg(argv: list[str], opt: str) -> str | None:
     return argv[argv.index(opt) + 1] if opt in argv and argv.index(opt) + 1 < len(argv) else None
 
 
-def _rigid_row_dir(argv: list[str], root: Path, stamp: str) -> Path | None:
+ROW_DIR_SLACK_S = 2.0
+"""Fallback search (no ``-> <folder>`` line in the case log): a runner folder stamp is accepted within the case's
+progress.log START .. END (else batch stamp .. batch stamp + ``wall_s``) widened by this many seconds (the stamp has
+1 s resolution and the runner takes it after its own start-up)."""
+_STAMP_RE = re.compile(r"_(\d{8}_\d{6})$")
+
+
+def runner_log_dir(log_text: str) -> str | None:
+    """Folder of the last ``batch wall ... -> <dir>`` line of a run_S8C / run_S6C case log (same rule as
+    ``s9_batch.s8c_case_check``, which gs-check uses; re-written here so this tool imports no runner module)."""
+    return next((ln.split("->", 1)[1].strip() for ln in reversed(log_text.splitlines())
+                 if ln.startswith("batch wall") and "->" in ln), None)
+
+
+def _stamp_time(stamp: str) -> float:
+    import datetime as _dt  # noqa: PLC0415
+
+    return _dt.datetime.strptime(stamp, "%Y%m%d_%H%M%S").timestamp()
+
+
+def _case_window(name: str, progress_text: str, batch: Path, entry: dict[str, Any]) -> tuple[float, float, str]:
+    """(start, end, basis) epoch seconds of one case: progress.log ``START`` / ``END`` lines, else the batch stamp
+    .. stamp + ``wall_s`` (+ ``est_s`` when no wall)."""
+    import datetime as _dt  # noqa: PLC0415
+
+    def last(kind: str) -> float | None:
+        m = [x for x in re.finditer(rf"^{kind} {re.escape(name)} (\S+)", progress_text, re.M)]
+        return _dt.datetime.fromisoformat(m[-1].group(1)).timestamp() if m else None
+
+    a, b = last("START"), last("END")
+    if a is not None and b is not None:
+        return a, b, "progress.log START / END"
+    m = _STAMP_RE.search(batch.name)
+    if m is None:
+        raise InputError(f"{name}: no progress.log START / END and no stamp in batch folder name {batch.name}")
+    t0 = _stamp_time(m.group(1))
+    span = float(entry.get("wall_s") or entry.get("est_s") or 0.0)
+    return t0, t0 + span, "batch stamp + wall_s"
+
+
+def _rigid_row_dir(name: str, argv: list[str], batch: Path, root: Path, progress_text: str,
+                   entry: dict[str, Any]) -> tuple[Path | None, dict[str, Any]]:
+    """Row folder of a run_S8C / run_S6C row (the runner writes its own batch folder).
+
+    1. The case log ``<batch>/<case>.log``: last ``batch wall ... -> <dir>`` line (:func:`runner_log_dir`), row =
+       ``<dir>/<--only>``; a logged folder without ``result.json`` is an InputError (no fallback).
+    2. No such line: runner folders matching the ``--tag`` (any stamp) whose stamp lies in the case window
+       (:func:`_case_window` +- :data:`ROW_DIR_SLACK_S`); exactly one is used, none or several = InputError.
+
+    Returns (row folder or None when the argv has no ``--tag`` / ``--only``, record of how it was found)."""
     tag, only = _arg(argv, "--tag"), _arg(argv, "--only")
     if tag is None or only is None:
-        return None
+        return None, {"source": None, "reason": "argv has no --tag / --only"}
+    log = batch / f"{name}.log"
+    logged = runner_log_dir(log.read_text("utf-8", errors="replace")) if log.is_file() else None
+    if logged is not None:
+        p = Path(logged)
+        d = (p if p.is_absolute() else root.parent / p) / only
+        if (d / "result.json").exists():
+            return d, {"source": "case_log", "log": str(log), "logged_dir": logged}
+        # the run wrote into another checkout (a removed worktree) and its results were moved: the same path below
+        # the results root (``.../07_results/<rest>`` -> ``<results root>/<rest>``)
+        parts = [x.lower() for x in p.parts]
+        if root.name.lower() in parts:
+            moved = root.joinpath(*p.parts[len(parts) - parts[::-1].index(root.name.lower()):]) / only
+            if (moved / "result.json").exists():
+                return moved, {"source": "case_log_relocated", "log": str(log), "logged_dir": logged,
+                               "results_root": str(root)}
+        raise InputError(f"{name}: case log names {logged} but {d / 'result.json'} is missing (also below the "
+                         f"results root {root})")
     script = next((Path(a).name for a in argv if a.endswith(".py")), "")
-    pats = [f"S8/{tag}_{stamp}/{only}"] if script == "run_S8C.py" else [f"S6/*_{tag}_*_{stamp}/{only}",
-                                                                         f"S6/*{tag}*{stamp}/{only}"]
-    for p in pats:
-        hits = sorted(root.glob(p))
-        if hits:
-            return hits[0]
-    return None
+    pats = [f"S8/{tag}_*/{only}"] if script == "run_S8C.py" else [f"S6/*_{tag}_*/{only}", f"S6/*{tag}*/{only}"]
+    t_a, t_b, basis = _case_window(name, progress_text, batch, entry)
+    hits = []
+    for pat in pats:
+        for h in sorted(root.glob(pat)):
+            m = _STAMP_RE.search(h.parent.name)
+            if m and t_a - ROW_DIR_SLACK_S <= _stamp_time(m.group(1)) <= t_b + ROW_DIR_SLACK_S and h not in hits:
+                hits.append(h)
+    if len(hits) != 1:
+        raise InputError(f"{name}: no '-> <folder>' line in {log.name} and {len(hits)} runner folder(s) of tag {tag} "
+                         f"in the case window ({basis} +- {ROW_DIR_SLACK_S:g} s): {[str(h) for h in hits]}")
+    return hits[0], {"source": "time_window", "window_basis": basis, "slack_s": ROW_DIR_SLACK_S,
+                     "log": str(log) if log.is_file() else None}
 
 
 def seal_check(rules_dir: Path) -> dict[str, Any]:
@@ -885,9 +980,17 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
         targets.append((Path(r), None))
     if not targets:
         raise InputError("no --batch / --row given")
-    rows, stops, origin_bad = [], [], []
+    rows, stops, origin_bad, skipped = [], [], [], []
     for d, meta in targets:
         row = load_row(d)
+        crit = (meta or {}).get("criteria_id")
+        if row["engine"] == "openloop" or str(crit) in OPENLOOP_CRITERIA:
+            skipped.append({"dir": str(d), "case": (meta or {}).get("case", row["name"]), "engine": row["engine"],
+                            "criteria_id": crit, "inputs": row["files"], "row_dir": (meta or {}).get("_row_dir"),
+                            "skipped": "openloop_not_judged_here", "rule": OPENLOOP_SKIP_RULE,
+                            "note": "C-6 / C-7 values: result.json p3a (path 1) and openloop_compare.py analyse "
+                                    "(path 2); this tool reads neither"})
+            continue
         rid = row_id_of(row, meta)
         if row["engine"] == "SCM":
             body = judge_scm(row, rid, params, asm)
@@ -896,7 +999,7 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
         oc = origin_check(row)
         entry = {"dir": str(d), "case": (meta or {}).get("case", row["name"]), "engine": row["engine"], "row_id": rid,
                  "criteria_id": (meta or {}).get("criteria_id"), "t0_s": row["t0"], "inputs": row["files"],
-                 "origin_check_R5_B1": oc, **body}
+                 "row_dir": (meta or {}).get("_row_dir"), "origin_check_R5_B1": oc, **body}
         if body["items"].get("C1_R40", {}).get("stop"):
             stops.append({"case": entry["case"], "reason": "R40-2 hold (not judgeable, ask)"})
         if oc["ok"] is False:
@@ -908,7 +1011,7 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
     doc = {"tool": TOOL_VERSION, "rules": "v5_resume_4368_rules.md + rev1 .. rev6 (rev5 R5-A1, rev6 R6-A / R6-B)",
            "definitions_C": asm, "deviates_from_rev6": deviates or None, "d_numbers": D_NUMBERS,
            "params": params, "seals": seals, "disclosure": disclose(), "rows": rows, "stops": stops,
-           "origin_failed": origin_bad,
+           "origin_failed": origin_bad, "skipped_rows": skipped,
            "t_D_vs_runner_R6_B4": {"scm_rows": len(tds), "rows_differing": sum(1 for x in tds if x["differs_from_runner"]),
                                    "max_abs_diff_s": max(td_diff) if td_diff else None},
            "demoted_items": {r["case"]: r.get("demoted_items") for r in rows if r.get("demoted_items")}}
@@ -918,7 +1021,8 @@ def cmd_judge(args) -> tuple[int, dict[str, Any]]:
                               encoding="utf-8", newline="\n")
     summary = {"rows": len(rows), "seals_ok": seals["ok"], "stops": len(stops), "origin_failed": len(origin_bad),
                "deviates_from_rev6": sorted(deviates),
-               "grades": {r["case"]: r.get("grade") for r in rows}, "out": str(args.out)}
+               "grades": {r["case"]: r.get("grade") for r in rows},
+               "skipped": {s["case"]: s["skipped"] for s in skipped}, "out": str(args.out)}
     return code, summary
 
 

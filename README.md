@@ -84,7 +84,7 @@ PY -I -X utf8 -u 04_scripts/02_chrono/s9_batch.py run <묶음> --only <사례> .
 ```
 
 - 묶음: `E_dual`, `P1_V0p`, `P1_V16`, `P1_L`, `P2`, `P2prime`, `P3a`, `P3b`, `P3-10`, `G6`, `G6_opt`, `G6P`, `p3b_aug`, `S9SL`, `MS1`, `D424`, `D424R`.
-- 풀: `--parallel`(= `--parallel-p`) P코어 칸, `--parallel-e` E코어 칸, `--e-cases`(공백 또는 쉼표 구분)·`--order given|lpt`·`--order-cases`. 사례 프로세스는 `OUTRIGGER_PLACEMENT`로 스스로 코어를 고정한다.
+- 풀: `--parallel`(= `--parallel-p`) P코어 칸, `--parallel-e` E코어 칸, `--e-cases`(공백 또는 쉼표 구분)·`--order given|lpt`·`--order-cases`. 사례 프로세스는 `OUTRIGGER_PLACEMENT`로 스스로 코어를 고정한다. `--p-mask`·`--e-mask`(2026-11-13)는 풀 안 마스크를 환경 변수 `OUTRIGGER_PCORE_MASK`·`OUTRIGGER_ECORE_MASK`로만 넘긴다(argv·명령 해시 불변). 적용값은 result.json `placement.affinity_mask_process`, batch.json `affinity_masks`·`placement_applied`, `--resume` 때 `resume_check.mask_changes`에 남는다.
 - `run_S9.py level` 추가 인자(2026-10-28): `--twist-relax preset|off`(P-S8-29 반사실), `--start-limit preset|verification|verification_map|record_only`(시작·목표 경사 한계), `--floor-roll`·`--floor-pitch`(deg), `--note`. 새 기록 `p3b_ext.reanchor`·`start_condition`·`crawler_gap`, `settle_slope`.
 - 출력 `07_results/S9/batch_<묶음>_<시각>/`(`progress.log` 즉시 기록, `batch.json`은 정상 종료 때만). 한 사례가 실패하면 남은 사례는 SKIP이다.
 - **이어 돌리기 기능은 없다**(끝난 사례를 건너뛰지 않음). 배치가 죽으면 `progress.log`의 `END ... rc=0` + `result.json`으로 끝난 사례를 확인하고 남은 사례를 `--only`로 다시 띄운다. 몇 시간짜리 배치는 터미널 종료에 같이 죽지 않게 WMI(`Invoke-CimMethod Win32_Process Create`)로 분리해 띄운다. 절차·명령은 [chrono_build_plan.md](00_docs/03_chrono/chrono_build_plan.md) S9 절 "재시작·분리 실행"에 있다.

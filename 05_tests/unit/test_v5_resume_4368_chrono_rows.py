@@ -143,3 +143,105 @@ def test_c4_and_c8_diffs(mod, batches):
     probe = next(r for r in b[mod.B_PROBE] if r["r4368"]["oc5_row"] == "C-8a")
     main = mod.oc5_argv(sb, "C-8a", probe["k"])
     assert mod.option_diff(probe["argv"], main) == ["--duration"]
+
+
+# ------------------------------------------------------------------------- gs_conditional_absent (user decision (a))
+COND_KEYS = {
+    "p3b.P3-3_leg_force.F_min_after_N": "p3b.departure.departed",
+    "p3b.P3-3_leg_force.F_min_transient_N": "p3b.departure.departed",
+    "c2_setup.las_off": "<off arm>",
+    **{f"controller_meta.liftoff_approach_slow.{k}": "<on arm>"
+       for k in ("start_s", "end_s", "end_reason", "active_periods", "ramp", "ramp.periods_applied")}}
+
+
+def test_conditional_table_from_code_is_deterministic(mod):
+    t1, t2 = mod.gs_conditional_table(), mod.gs_conditional_table()
+    assert json.dumps(t1, sort_keys=True) == json.dumps(t2, sort_keys=True)
+    assert {k: v["condition"] for k, v in t1["keys"].items()} == COND_KEYS
+    assert list(t1["keys"]) == sorted(t1["keys"]) and t1["row_kind"] == "level"
+    assert t1["keys"]["c2_setup.las_off"]["required_when"].startswith("off arm")
+
+
+def test_absence_rules(mod):
+    dep = "p3b.P3-3_leg_force.F_min_after_N"
+    assert mod.absence_allowed(dep, "p3b.departure.departed", {"p3b": {"departure": {"departed": False}}}, False)[0]
+    for doc in ({"p3b": {"departure": {"departed": True}}}, {"p3b": {}}):  # condition true or missing: required
+        assert not mod.absence_allowed(dep, "p3b.departure.departed", doc, False)[0]
+    assert mod.absence_allowed("c2_setup.las_off", "<off arm>", {}, False)[0]
+    assert not mod.absence_allowed("c2_setup.las_off", "<off arm>", {}, True)[0]
+    assert mod.absence_allowed("x", "<on arm>", {}, True)[0] and not mod.absence_allowed("x", "<on arm>", {}, False)[0]
+
+
+def _level_folder(tmp_path: Path, mod, departed, drop: list[str], arm: str = "on") -> Path:
+    np = pytest.importorskip("numpy")
+    keys, _ = mod.gs_key_paths()
+    doc: dict = {}
+    for k in sorted(keys, key=lambda s: -s.count(".")):  # deeper paths first: a prefix key stays a dict
+        node = doc
+        parts = k.split(".")
+        for p in parts[:-1]:
+            node = node.setdefault(p, {})
+        node.setdefault(parts[-1], 1)
+    doc.setdefault("p3b", {})["departure"] = {"departed": departed}
+    for k in drop:
+        parts = k.split(".")
+        node = doc
+        for p in parts[:-1]:
+            node = node[p]
+        node.pop(parts[-1], None)
+    f = tmp_path / "batch"
+    case = "LV"
+    (f / case).mkdir(parents=True)
+    (f / case / "result.json").write_text(json.dumps(doc), "utf-8")
+    np.savez(f / case / "controller_commands.npz", t_s=np.arange(3.0), issued_u_m_s=np.zeros(3))
+    for n in mod.SERIES_FILES:
+        np.savez(f / case / n, t=np.arange(2.0))
+    entry = {k: "x" for k in mod.GS_ENTRY_KEYS}
+    entry.update(case=case, argv=["python", "run_S9.py", "level"], r4368={"engine": "SCM", "arm": arm})
+    (f / "batch.json").write_text(json.dumps({"batch": "T", "cases": [entry]}), "utf-8")
+    (f / "progress.log").write_text(f"END {case} 2026-11-13T00:00:00 rc=0\n", "utf-8")
+    return f
+
+
+def test_gs_check_condition_true_but_absent_is_error(mod, tmp_path, capsys):
+    dep = ["p3b.P3-3_leg_force.F_min_after_N", "c2_setup.las_off"]
+    ok = _level_folder(tmp_path / "a", mod, False, dep)
+    assert mod.cmd_gs_check(str(ok)) == 0
+    out = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])
+    assert out["cases"][0]["conditional_absent"] == dep
+    bad = _level_folder(tmp_path / "b", mod, True, dep)  # departed: F_min_after_N is required
+    assert mod.cmd_gs_check(str(bad)) == 1
+    c = json.loads(capsys.readouterr().out.rsplit("errors", 1)[0])["cases"][0]
+    assert c["result_missing"] == ["p3b.P3-3_leg_force.F_min_after_N"]
+    assert c["conditional_required_but_absent"][0]["condition_value"] is True
+    off = _level_folder(tmp_path / "c", mod, False, ["c2_setup.las_off"], arm="off")  # off arm needs las_off
+    assert mod.cmd_gs_check(str(off)) == 1
+    capsys.readouterr()
+
+
+def test_gs_check_manifest_table(mod, tmp_path, capsys):
+    f = _level_folder(tmp_path, mod, False, [])
+    m = tmp_path / "m.json"
+    m.write_text(json.dumps({"gs_conditional_absent": mod.gs_conditional_table()}), "utf-8")
+    assert mod.cmd_gs_check(str(f), str(m)) == 0
+    doc = json.loads(m.read_text("utf-8"))
+    doc["gs_conditional_absent"]["keys"].pop("c2_setup.las_off")
+    m.write_text(json.dumps(doc), "utf-8")
+    assert mod.cmd_gs_check(str(f), str(m)) == 1
+    assert mod.cmd_gs_check(str(f), str(tmp_path / "none.json")) == 1
+    capsys.readouterr()
+
+
+STORED_MANIFEST = PROJECT_ROOT / "06_analysis" / "02_control" / "verif_matrix" / "v5_resume_4368" / \
+    "chrono_rows_manifest.json"
+
+
+@pytest.mark.skipif(not STORED_MANIFEST.is_file(), reason="stored manifest absent")
+def test_stored_manifest_table_and_scope(mod, batches):
+    _, b = batches
+    doc = json.loads(STORED_MANIFEST.read_text("utf-8"))
+    assert json.dumps(doc["gs_conditional_absent"], sort_keys=True) == json.dumps(mod.gs_conditional_table(b),
+                                                                                   sort_keys=True)
+    scope = doc["gs_conditional_absent"]["scope"]
+    assert sorted(scope[mod.B_C4]["off_arm_rows"]) == sorted(r["case"] for r in b[mod.B_C4] if mod.is_off_arm(r))
+    assert scope[mod.B_C1]["level_rows"] == [] and len(scope[mod.B_C5]["level_rows"]) == 11

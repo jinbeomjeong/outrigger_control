@@ -131,7 +131,13 @@ def place_process(mode: str) -> dict:
     switched off for this process (SetProcessInformation ProcessPowerThrottling, state 0), so
     the scheduler does not move a window-less background process to the E-cores. Only this
     process is changed; no system setting.
+
+    ``OUTRIGGER_PCORE_MASK`` / ``OUTRIGGER_ECORE_MASK`` (``outrigger_sim.hostcpu.MASK_ENV``,
+    2026-11-13): an optional mask inside the pool; used and recorded (mask read back from the
+    OS) as in ``hostcpu.place_process``. Unset = former behaviour and record.
     """
+    from outrigger_sim.hostcpu import mask_hex, pool_mask_override, process_affinity_mask  # noqa: PLC0415
+
     info: dict = {"mode": mode}
     sets = cpu_sets()
     info["efficiency_classes"] = sorted({s["efficiency_class"] for s in sets})
@@ -146,6 +152,9 @@ def place_process(mode: str) -> dict:
     classes = info["efficiency_classes"]
     want = classes[-1] if mode == "pcore" else classes[0]
     logical = [s["logical"] for s in sets if s["efficiency_class"] == want and s["group"] == 0]
+    override, raw = pool_mask_override(mode, logical)
+    if override is not None:
+        logical = [lp for lp in logical if override >> lp & 1]
     mask = 0
     for lp in logical:
         mask |= 1 << lp
@@ -153,6 +162,11 @@ def place_process(mode: str) -> dict:
     k32.SetProcessAffinityMask.restype = wintypes.BOOL
     info["affinity_ok"] = bool(k32.SetProcessAffinityMask(hproc, mask))
     info["affinity_logical_processors"] = logical
+    if override is not None:
+        got = process_affinity_mask()
+        info.update(affinity_mask_env=raw, affinity_mask_requested=mask_hex(override),
+                    affinity_mask_process=None if got is None else mask_hex(got),
+                    affinity_mask_ok=got == override)
 
     class PowerThrottlingState(ctypes.Structure):
         _fields_ = [("Version", wintypes.ULONG), ("ControlMask", wintypes.ULONG),

@@ -46,7 +46,10 @@ Pools (2026-10-26): ``--parallel`` (= ``--parallel-p``) P-pool slots, ``--parall
 each case process gets ``OUTRIGGER_PLACEMENT`` = ``pcore`` / ``ecore`` (``run_S9.place``). Cases go to
 the E pool only when named (``--e-cases`` or the ``--schedule`` JSON); ``--order given|lpt`` and
 ``--order-cases`` set the queue order. ``s8c`` rows stay on the P pool. ``--e-cases`` / ``--order-cases``
-take names separated by spaces or commas (2026-10-30).
+take names separated by spaces or commas (2026-10-30). ``--p-mask`` / ``--e-mask`` (2026-11-13) narrow a
+pool to a mask inside it (env ``OUTRIGGER_PCORE_MASK`` / ``OUTRIGGER_ECORE_MASK``, read by
+``hostcpu.place_process``); record only (argv unchanged), the applied mask read back from the process is in
+``result.json placement`` and ``batch.json`` (:func:`run_batch`).
 
 ``s8c`` rows run ``run_S8C.py run --only <case>`` unchanged (no ``--case`` / ``--out-root``): the
 S8 runner writes ``07_results/S8/<tag>_<stamp>/`` and prints it at the end of ``<case>.log``.
@@ -1285,13 +1288,62 @@ def next_runnable(queue: list[dict], finished_ok: set[str]) -> int | None:
     return None
 
 
+MASK_ENV = {"pcore": "OUTRIGGER_PCORE_MASK", "ecore": "OUTRIGGER_ECORE_MASK"}
+"""Pool affinity masks of ``run --p-mask / --e-mask`` (same names as ``outrigger_sim.hostcpu.MASK_ENV``, which
+``place_process`` reads in every case process: run_S9 rows and the processes run_S8C / run_S6C place themselves).
+Record only for the results: not in any argv, so the row argv / command hashes do not change."""
+
+
+def _hostcpu_module():
+    """``outrigger_sim.hostcpu`` (stdlib-only module) imported from this checkout's ``03_src``."""
+    src = str(HERE.parents[1] / "03_src")
+    added = src not in sys.path
+    if added:
+        sys.path.insert(0, src)
+    try:
+        from outrigger_sim import hostcpu  # noqa: PLC0415
+    finally:
+        if added:
+            sys.path.remove(src)
+    return hostcpu
+
+
+def pool_masks(p_mask: str | None, e_mask: str | None) -> dict[str, str] | None:
+    """``{"pcore": hex, "ecore": hex}`` of the given masks (only the given pools), checked against this PC's pools
+    (``hostcpu.pool_logical``; no check off Windows); None when neither is given.
+
+    Raises:
+        SystemExit: A mask is not a positive integer or has bits outside its pool.
+    """
+    if p_mask is None and e_mask is None:
+        return None
+    hc = _hostcpu_module()
+    sets = hc.cpu_sets()
+    out = {}
+    for pool, raw in (("pcore", p_mask), ("ecore", e_mask)):
+        if raw is None:
+            continue
+        try:
+            mask = hc.parse_mask(raw)
+            if sets:
+                hc.pool_mask_override(pool, hc.pool_logical(pool, sets), {MASK_ENV[pool]: raw})
+        except ValueError as e:
+            raise SystemExit(f"--{pool[0]}-mask {raw}: {e}") from e
+        out[pool] = hc.mask_hex(mask)
+    return out
+
+
 def _case_env(pool: str, start_env: dict[str, str] | None = None,
-              run_env: dict[str, str] | None = None) -> dict[str, str]:
+              run_env: dict[str, str] | None = None, masks: dict[str, str] | None = None) -> dict[str, str]:
     """Child env: this process's env, ``OUTRIGGER_PLACEMENT`` = ``pool`` and the row's env keys, set before the
     process starts. Two row keys carry the same meaning (both branches named it on their own): ``start_env``
-    (V5-LAS-CHRONO / V5-STAGE3-LAS) and ``run_env`` (V5-OPENLOOP-R); ``start_env`` is applied last."""
+    (V5-LAS-CHRONO / V5-STAGE3-LAS) and ``run_env`` (V5-OPENLOOP-R); ``start_env`` is applied last. ``masks``
+    (:func:`pool_masks`): :data:`MASK_ENV` of every given pool (also the other pool's, for processes a runner places
+    there itself)."""
     env = dict(os.environ)
     env[PLACEMENT_ENV] = pool
+    for p, m in (masks or {}).items():
+        env[MASK_ENV[p]] = m
     # SCM OpenMP threads sleep between regions (user decision 2026-11-08, run_S9.OMP_WAIT_POLICY_DEFAULT); an
     # explicit value in the batch environment or the row's run_env / start_env wins
     env.setdefault("OMP_WAIT_POLICY", "PASSIVE")
@@ -1312,6 +1364,44 @@ def _hull_hook_module():
         if added:
             sys.path.remove(src)
     return hull_hook
+
+
+def mask_env_record(child_env: dict[str, str], pool: str) -> dict:
+    """batch.json keys of the pool masks in a child env: ``affinity_mask_requested`` (this row's pool, None = whole
+    pool) and ``affinity_mask_env`` (every :data:`MASK_ENV` set); empty when the child env has none (former
+    record)."""
+    env = {k: child_env[k] for k in MASK_ENV.values() if child_env.get(k)}
+    if not env:
+        return {}
+    return {"affinity_mask_requested": child_env.get(MASK_ENV[pool]) or None, "affinity_mask_env": env}
+
+
+def placement_applied(folder: Path, entry: dict) -> dict | None:
+    """Placement the case process recorded (``result.json`` ``placement`` or ``runner.placement``): mode, the mask
+    read back from the OS (``affinity_mask_process``, ``affinity_mask_ok``) and ``affinity_logical_processors``. The
+    result is ``<folder>/<case>/result.json`` or, for run_S8C / run_S6C rows, the one named by the case log
+    (:func:`s8c_case_check`). None when no result / placement record."""
+    paths = [folder / entry["case"] / "result.json"]
+    argv = [str(a) for a in entry.get("argv") or []]
+    log = folder / f"{entry['case']}.log"
+    if "--only" in argv and log.is_file():
+        chk = s8c_case_check(log.read_text("utf-8", errors="replace"), argv[argv.index("--only") + 1])
+        if chk.get("result_json"):
+            paths.append(Path(chk["result_json"]))
+    for p in paths:
+        if not p.is_file():
+            continue
+        try:
+            doc = json.loads(p.read_text("utf-8"))
+        except (OSError, json.JSONDecodeError) as e:
+            return {"result_json": p.as_posix(), "error": f"{type(e).__name__}: {e}"}
+        pl = doc.get("placement") if isinstance(doc.get("placement"), dict) else (doc.get("runner") or {}).get(
+            "placement")
+        if isinstance(pl, dict):
+            return {"result_json": p.as_posix(), **{k: pl.get(k) for k in (
+                "mode", "affinity_mask_requested", "affinity_mask_process", "affinity_mask_ok",
+                "affinity_logical_processors")}}
+    return None
 
 
 def launch_env_record(child_env: dict[str, str]) -> dict[str, str | None]:
@@ -1381,6 +1471,22 @@ def former_hull_request(case: str, former: dict[str, dict], progress_text: str =
     return tokens[-1].split("=", 1)[1] if tokens else PRE_SWITCH_HULL_REQUEST
 
 
+def resume_mask_changes(kept: list[dict], former: dict[str, dict], masks: dict[str, str] | None) -> list[dict]:
+    """``--resume`` (record only, no stop): kept rows whose earlier ``affinity_mask_requested`` (None = whole pool /
+    not recorded) differs from what this launch would request for the same pool (``pool`` of the earlier entry;
+    rows without an entry are not compared). The affinity mask changes neither argv nor any command hash."""
+    out = []
+    for row in kept:
+        entry = former.get(row["case"])
+        if entry is None or entry.get("pool") not in MASK_ENV:
+            continue
+        before = entry.get("affinity_mask_requested")
+        now = (masks or {}).get(entry["pool"])
+        if before != now:
+            out.append({"case": row["case"], "pool": entry["pool"], "before": before, "now": now})
+    return out
+
+
 def resume_launch_check(kept: list[dict], former: dict[str, dict], allow_mixed_hull: bool,
                         progress_text: str = "", root: Path | None = None) -> dict:
     """``--resume`` check of the rows kept from the earlier launch (``kept``; ``former`` = their batch.json entries,
@@ -1428,6 +1534,11 @@ def log_resume_check(progress: Path, check: dict) -> None:
         _log(progress, line)
     for c in check["head_changes"]:
         line = f"WARN_RESUME_HEAD {c['case']} code_at_launch.git.head {c['before'][:12]} != now {c['now'][:12]}"
+        print(line)
+        _log(progress, line)
+    for c in check.get("mask_changes") or ():
+        line = (f"WARN_RESUME_AFFINITY_MASK {c['case']} pool {c['pool']} mask {c['before'] or 'whole-pool'} earlier, "
+                f"{c['now'] or 'whole-pool'} now (record only)")
         print(line)
         _log(progress, line)
 
@@ -1581,7 +1692,7 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
               order_cases: list[str] | None = None, rv6_k: float | None = None, rv6_dir: str | None = None,
               row_filter: dict[str, set[str]] | None = None, controller_check: bool = True,
               resume: str | None = None, las_off: bool = False, allow_mixed_hull: bool = False,
-              rerun_of: str | None = None) -> Path:
+              rerun_of: str | None = None, p_mask: str | None = None, e_mask: str | None = None) -> Path:
     """Run the batch ``name`` with ``parallel`` P-pool slots and ``parallel_e`` E-pool slots
     (:func:`schedule_cases`). Each case process gets ``OUTRIGGER_PLACEMENT`` of its pool. ``rv6_k``: X6-rb ratio of
     RV6; ``row_filter`` / ``only``: :func:`select_rows`; ``controller_check`` False drops ``--expect-controller``.
@@ -1589,7 +1700,13 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
     beginning in the same folder (a case has no mid-run checkpoint) and ``batch.json`` is rewritten; the kept rows
     pass :func:`resume_launch_check` first (``allow_mixed_hull``: continue despite a different hull request).
     ``las_off``: :func:`with_las_off` on every launched row. At the end every row gets ``hull_hook_effective``
-    (:func:`hull_hook_effective`) and SCM rows with different effective modes log ``MIXED_HULL_MODE``."""
+    (:func:`hull_hook_effective`) and SCM rows with different effective modes log ``MIXED_HULL_MODE``.
+    ``p_mask`` / ``e_mask`` (2026-11-13): affinity masks inside the P / E pool (:func:`pool_masks`, :data:`MASK_ENV`
+    in every child env; record only, argv unchanged); batch.json then has ``affinity_masks`` and every row
+    ``affinity_mask_requested`` / ``affinity_mask_env`` and ``placement_applied`` (:func:`placement_applied`). With
+    ``--resume`` a different mask is recorded (``resume_check.mask_changes``, ``WARN_RESUME_AFFINITY_MASK``), not a
+    stop. Without them every record is as before."""
+    masks = pool_masks(p_mask, e_mask)
     rv6 = {k: v for k, v in (("rv6_k", rv6_k), ("rv6_dir", rv6_dir)) if v is not None}
     cases = select_rows((batches(**rv6) if rv6 else batches())[name], only, row_filter)
     if not cases:
@@ -1610,6 +1727,9 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
         earlier_progress = folder / "progress.log"
         progress_text = earlier_progress.read_text("utf-8", errors="replace") if earlier_progress.is_file() else ""
         resume_check = resume_launch_check(finished, former, allow_mixed_hull, progress_text)
+        mask_changes = resume_mask_changes(finished, former, masks)
+        if masks is not None or mask_changes:
+            resume_check["mask_changes"] = mask_changes
     done_names = {c["case"] for c in finished}
     cases = [c for c in cases if c["case"] not in done_names]
     if las_off:  # before the launch: a row whose runner lacks the option stops the batch here
@@ -1624,6 +1744,8 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
     _log(progress, f"# batch {name} {len(cases)} cases, parallel P {slots['pcore']} / E {slots['ecore']}, order {order}"
                    f"{' (explicit list first)' if order_cases else ''}, started "
                    f"{_dt.datetime.now().isoformat(timespec='seconds')}")
+    if masks is not None:
+        _log(progress, "# affinity masks " + " ".join(f"{p}={m}" for p, m in masks.items()))
     for c in finished:
         _log(progress, f"RESUME_SKIP {c['case']} (finished in an earlier launch)")
     if resume_check is not None:
@@ -1657,14 +1779,16 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
                 code_at_launch[c["case"]] = launch_code_state() if c.get("controller") or c.get("group") == "FINAL-R" \
                     else None
                 logf = (folder / f"{c['case']}.log").open("w", encoding="utf-8")
-                child_env = _case_env(pool, c.get("start_env"), c.get("run_env"))
-                launch_env[c["case"]] = launch_env_record(child_env)
+                child_env = _case_env(pool, c.get("start_env"), c.get("run_env"), masks)
+                launch_env[c["case"]] = {**launch_env_record(child_env), **mask_env_record(child_env, pool)}
                 p = subprocess.Popen(argv, cwd=str(ROOT), stdout=logf, stderr=subprocess.STDOUT,
                                      stdin=subprocess.DEVNULL, env=child_env)
                 _log(progress, f"START {c['case']} {_dt.datetime.now().isoformat(timespec='seconds')} pid={p.pid} "
                                f"est_s={c['est_s']} pool={pool} "
                                f"OMP_WAIT_POLICY={launch_env[c['case']]['omp_wait_policy']} "
-                               f"hull_hook={launch_env[c['case']]['hull_hook_requested']}")
+                               f"hull_hook={launch_env[c['case']]['hull_hook_requested']}"
+                               + (f" mask={launch_env[c['case']].get('affinity_mask_requested') or 'whole-pool'}"
+                                  if "affinity_mask_env" in launch_env[c["case"]] else ""))
                 running.append((c, p, time.perf_counter(), logf, pool))
         time.sleep(2.0)
         for item in list(running):
@@ -1710,6 +1834,8 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
                 queues[pool] = []
     for entry in done:
         entry["hull_hook_effective"] = hull_hook_effective(folder, entry["case"])
+        if "affinity_mask_env" in entry and entry.get("pool") in MASK_ENV:  # rows launched now with a mask env
+            entry["placement_applied"] = placement_applied(folder, entry)
     hull_modes = hull_modes_by_case(done)
     if len(hull_modes) > 1:
         _log(progress, "MIXED_HULL_MODE " + "; ".join(f"{mode}: {' '.join(names)}"
@@ -1720,6 +1846,7 @@ def run_batch(name: str, parallel: int = 2, only: list[str] | None = None, *, pa
               **({"row_filter": {k: sorted(v) for k, v in row_filter.items()}} if row_filter else {}),
               **({} if controller_check else {"controller_check": False}),
               **({"resume_check": resume_check} if resume_check is not None else {}),
+              **({"affinity_masks": masks} if masks is not None else {}),
               "mixed_hull_mode": len(hull_modes) > 1,
               "cases": done, "failed": failed,
               "wall_serial_s": sum(d["wall_s"] for d in done), "est_serial_s": sum(d["est_s"] for d in done)}
@@ -1930,7 +2057,7 @@ def main(argv) -> None:
         run_batch(a.batch, only=only or None, rv6_k=a.rv6_k, rv6_dir=a.rv6_dir,
                   row_filter=parse_row_filter(a.row_filter), controller_check=not a.no_controller_check,
                   resume=a.resume, las_off=a.las_off, allow_mixed_hull=a.allow_mixed_hull, rerun_of=a.rerun_of,
-                  **schedule_args(a, argv))
+                  p_mask=a.p_mask, e_mask=a.e_mask, **schedule_args(a, argv))
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -1966,6 +2093,12 @@ def build_parser() -> argparse.ArgumentParser:
                    help="P-pool slots (OUTRIGGER_PLACEMENT=pcore); --parallel keeps its former meaning")
     r.add_argument("--parallel-e", type=int, default=0, help="E-pool slots (OUTRIGGER_PLACEMENT=ecore)")
     r.add_argument("--e-cases", nargs="*", default=None, help="cases sent to the E pool (others: P pool)")
+    r.add_argument("--p-mask", default=None, metavar="MASK",
+                   help="affinity mask inside the P pool, e.g. 0x000000FF (env OUTRIGGER_PCORE_MASK of every case "
+                        "process, hostcpu.place_process); bits outside the pool stop the batch. Record only: argv and "
+                        "command hashes unchanged; batch.json affinity_masks / placement_applied. Default: whole pool")
+    r.add_argument("--e-mask", default=None, metavar="MASK",
+                   help="affinity mask inside the E pool, e.g. 0x00FF0000 (env OUTRIGGER_ECORE_MASK), as --p-mask")
     r.add_argument("--order", choices=ORDERS, default="given",
                    help="queue order: batch definition order or LPT (longest est_s first)")
     r.add_argument("--order-cases", nargs="*", default=None, help="explicit order (listed cases first)")
