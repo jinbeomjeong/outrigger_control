@@ -12,8 +12,16 @@ level rows (``GS_CONDITIONAL_R74``) and R7-6 the recorded pool mask (identity re
 rows (G-S: S-11; main run: recorded, a C-5 row without it is undecidable); R8-2 ③ request record
 (argv ``--extend-start-tracked``, ``v5_hydraulics.hydraulic_options.extend_start_tracked``) and
 ``controller_meta.two_pressure.settings.extend_start_rule`` against the tag ③ (S-2), J-P3 scope recorded;
-R8-1b dotted ``controller_settings`` key read as one key. Author: dynamics-expert (path 2, user decision
-2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
+R8-1b dotted ``controller_settings`` key read as one key. rev9 (4cf7843c...): seal check; R9-1
+``expect_controller.ok`` false or absent on a Chrono controller row = S-2, in G-S also S-11; R9-2 / R9-3
+``law_locked`` format on SCM level rows (``step_series.npz``, ``t_s``) and L2b rows (``pads.npz``, ``t``) the
+same way: time column, [N, 4], int8, values in {-1, 0, 1}, 1 ms spacing within 1e-6 s, -1 only before the
+first arming with the four legs leaving -1 at the same sample (after-arming -1, whole-run -1, per-leg exit
+mismatch = format error); R9-4 LS row = manifest ``rows[].v5_setting`` and S9 ``batch.json``
+``cases[].v5_setting`` equal and in LS1..LS4 (``--rows-manifest``; name tokens not used), LS row with a
+non-③ tag = S-2; R9-5 / R9-6 missing or malformed ``law_locked``: G-S = S-11 (every SCM level / L2b row),
+main run C-5 row = J11 not judgeable + stop (both engines), other rows recorded as "input missing".
+Author: dynamics-expert (path 2, user decision 2026-11-13). Written from the rule sentences, the appendix-A original rules they cite and the input key
 facts handed over with the task. The path-1 tools (``resume4368_judge.py``, ``u3_judge_k1.py``,
 ``resume_k1_record.py``, the judging part of ``resume_k1_steps.py``) and every path-1 output were not
 opened (rules 9.2).
@@ -81,6 +89,9 @@ REV7_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev7.s
 REV8_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev8.md"
 REV8_SHA = "3ecafaaf33d84bb6f34a8cef5401771832a4999e4930f3644caff56eed640e56"
 REV8_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev8.sha256"
+REV9_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev9.md"
+REV9_SHA = "4cf7843ce469df511d7b99c7236f0b245afae9fb4ba5ad903e1c2da823a59a6d"
+REV9_SEAL_REL = "06_analysis/02_control/verif_matrix/v5_resume_4368_rules_rev9.sha256"
 EXT_RULE_DOTTED = "two_pressure.extend_start_rule"     # rev8 R8-1b: one key of controller_settings
 GRID_SPEC_PRESCRIBED = "rev. 67 (G1 / G2 / G7 reduced screen)"   # rev2 R2-7
 GRID_EVENTS_PRESCRIBED = {"G4", "RE1bF", "FS24"}
@@ -422,7 +433,8 @@ def check_seals(repo, appendix=True):
                             (REV4_REL, REV4_SHA, REV4_SEAL_REL),
                             (REV5_REL, REV5_SHA, REV5_SEAL_REL), (REV6_REL, REV6_SHA, REV6_SEAL_REL),
                             (REV7_REL, REV7_SHA, REV7_SEAL_REL),
-                            (REV8_REL, REV8_SHA, REV8_SEAL_REL)):   # sealed rules: raw sha only (R2-9)
+                            (REV8_REL, REV8_SHA, REV8_SEAL_REL),
+                            (REV9_REL, REV9_SHA, REV9_SEAL_REL)):   # sealed rules: raw sha only (R2-9, R9-8)
         p = repo / rel
         got = sha256_file(p) if p.is_file() else None
         sp = repo / seal
@@ -1099,11 +1111,52 @@ def expected_chrono_tag(row, res, argv):
     off = arm == "off" or argv_has(argv, "--las-off")
     if cid in ("C-6", "C-7"):
         return None, "openloop", off
+    # rev9 R9-4: LS = v5 setting LS1..LS4 exactly (original 4.1 "VB / LS1~LS4 (③ on)"); an LS row needs a ③ tag
+    ext = setting == "VB" or setting in LS_SETTINGS
     if off:
-        return (TAG_C4OFF_VB if setting == "VB" else TAG_C4OFF_V0), "C4OFF_" + ("VB" if setting == "VB" else "V0"), True
-    if setting in ("VB",) or (isinstance(setting, str) and setting.startswith("LS")):
+        return (TAG_C4OFF_VB if ext else TAG_C4OFF_V0), "C4OFF_" + ("VB" if ext else "V0"), True
+    if ext:
         return TAG_VB, "VB", False
     return TAG_V0, "V0", False
+
+
+LS_SETTINGS = ("LS1", "LS2", "LS3", "LS4")     # rev9 R9-4 (original 4.1 table, v5 criteria LS1~LS4)
+_BATCH_DIR_RE = re.compile(r"^batch_(.+)_\d{8}_\d{6}$")
+
+
+def bundle_of(batch_dir):
+    """``batch_V5-RESUME-K1-<bundle>_<stamp>`` -> ``V5-RESUME-K1-<bundle>`` (manifest ``batches`` key)."""
+    m = _BATCH_DIR_RE.match(Path(batch_dir).name)
+    return m.group(1) if m else None
+
+
+def r94_ls_row(manifest, batch_dir, row):
+    """rev9 R9-4 LS reading of one Chrono row from manifest ``batches.<bundle>.rows[].v5_setting`` and the
+    S9 ``batch.json`` ``cases[].v5_setting`` of the same ``case``. Equal and in LS1..LS4 = ``ls``; equal and
+    another value, or both absent / None = ``not_ls``; one side only or different = ``undecidable`` (9.3).
+    The row name is not read."""
+    case = row.get("case")
+    b_val = row.get("v5_setting")
+    out = {"batch_v5_setting": b_val, "manifest_v5_setting": None, "manifest_row": False}
+    if manifest is None:
+        out["class"] = "not_checked"
+        return out
+    bundle = bundle_of(batch_dir)
+    rows = dig(manifest, f"batches.{bundle}.rows", None) if bundle else None
+    hits = [r for r in rows if isinstance(r, dict) and r.get("case") == case] if isinstance(rows, list) else []
+    out["manifest_bundle"] = bundle
+    if len(hits) > 1:
+        out.update({"class": "undecidable", "why": f"{len(hits)} manifest rows for the case"})
+        return out
+    m_val = hits[0].get("v5_setting") if hits else None
+    out.update(manifest_v5_setting=m_val, manifest_row=bool(hits))
+    if m_val is None and b_val is None:
+        out["class"] = "not_ls"
+    elif m_val is None or b_val is None or m_val != b_val:
+        out.update({"class": "undecidable", "why": "one value only or the two values differ"})
+    else:
+        out["class"] = "ls" if m_val in LS_SETTINGS else "not_ls"
+    return out
 
 
 GS_KEYS_SCM = ("c2_setup.k1_order_gate", "c2_setup.k1_order_gate_effective",
@@ -1142,15 +1195,53 @@ LAW_LOCKED_DT_S = 1e-3
 LAW_LOCKED_DT_TOL_S = 1e-6     # path-2 tolerance on the 1 ms spacing (float sums of the Chrono step)
 
 
-def law_locked_format(step_path):
-    """rev8 R8-3 / R8-3a: presence and format of ``step_series.npz`` ``law_locked``. Returns a dict with
-    ``present`` (key in the file), ``ok`` and ``problems`` (empty when the table is met). Values are not
-    judged here (J11 is graded by the C-5 path 2); per-leg 0->1 / 1->0 counts are recorded."""
+# rev9 R9-2: the same check on both R8-3a keys (engine -> file, time column of the same file)
+LAW_LOCKED_FILES = {"SCM": ("step_series.npz", "t_s"), "L2b": ("pads.npz", "t")}
+LEGS = ("FL", "FR", "RL", "RR")
+
+
+def minus1_pattern(a):
+    """rev9 R9-3 on a [N, 4] array with values in {-1, 0, 1}. Returns (patterns, problems, first_armed):
+    ``none`` (no -1), ``pre_arming`` (-1 from the start, all four legs leave -1 at the same sample, no -1
+    afterwards: locked, revision 6 section 6), else format errors ``whole_run`` (every sample and leg -1),
+    ``after_arming`` (a -1 after a 0 or 1 on that leg), ``leg_mismatch`` (legs leave -1 at different
+    samples, a leg never leaving included)."""
     import numpy as np  # noqa: PLC0415
-    out = {"file": "step_series.npz", "present": False, "ok": False, "problems": []}
-    p = Path(step_path)
+    neg = a == -1
+    if not neg.any():
+        return ["none"], [], 0
+    if neg.all():
+        return ["whole_run"], ["R9-3: -1 over the whole run (no arming: no plant lock event for J11)"], None
+    first = []
+    for i in range(a.shape[1]):
+        idx = np.flatnonzero(~neg[:, i])
+        first.append(int(idx[0]) if idx.size else None)
+    pats, prob = [], []
+    after = [LEGS[i] for i in range(a.shape[1]) if first[i] is not None and neg[first[i]:, i].any()]
+    if after:
+        pats.append("after_arming")
+        prob.append(f"R9-3: -1 after the first arming on {after}")
+    if len(set(first)) > 1:
+        pats.append("leg_mismatch")
+        prob.append(f"R9-3: legs leave -1 at different samples {dict(zip(LEGS, first, strict=True))}")
+    if not pats:
+        pats.append("pre_arming")
+        return pats, prob, first[0]
+    return pats, prob, None
+
+
+def law_locked_format(path, time_key="t_s"):
+    """rev8 R8-3 / R8-3a with rev9 R9-2 / R9-3: presence and format of ``law_locked`` in ``path``
+    (SCM ``step_series.npz`` with ``t_s``, L2b ``pads.npz`` with ``t``). Returns a dict with ``present``
+    (key in the file), ``ok``, ``problems`` and ``failed_items`` (R9-2 items 1..6 that are not met; empty when
+    the format is right) and ``minus1_patterns`` (R9-3). Values are not judged here (J11 is graded by the
+    C-5 path 2); per-leg 0->1 / 1->0 counts are recorded (-1 before the first arming counts as locked)."""
+    import numpy as np  # noqa: PLC0415
+    p = Path(path)
+    out = {"file": p.name, "time_key": time_key, "present": False, "ok": False, "problems": [],
+           "failed_items": []}
     if not p.is_file():
-        out["problems"].append("step_series.npz absent")
+        out["problems"].append(f"{p.name} absent")
         return out
     z = np.load(p, allow_pickle=False)
     if LAW_LOCKED_KEY not in z.files:
@@ -1158,32 +1249,63 @@ def law_locked_format(step_path):
         return out
     out["present"] = True
     a = z[LAW_LOCKED_KEY]
-    prob = out["problems"]
-    if a.dtype != np.int8:
-        prob.append(f"dtype {a.dtype} (int8 required)")
-    if a.ndim != 2 or a.shape[1] != 4:
-        prob.append(f"shape {tuple(a.shape)} ([N, 4] required)")
-    out["shape"] = list(a.shape)
-    if a.size and not np.isin(a, LAW_LOCKED_VALUES).all():
-        prob.append(f"values {sorted(set(np.unique(a).tolist()) - set(LAW_LOCKED_VALUES))} outside {{-1, 0, 1}}")
-    if "t_s" not in z.files:
-        prob.append("t_s absent (time axis of law_locked)")
+    prob, items = out["problems"], out["failed_items"]
+
+    def bad(item, why):
+        prob.append(why)
+        if item not in items:
+            items.append(item)
+
+    t = None
+    if time_key not in z.files:                                     # R9-2 item 1
+        bad("1_time_column", f"{time_key} absent (time axis of law_locked)")
     else:
-        t = np.asarray(z["t_s"], float)
-        if t.ndim != 1 or t.size != (a.shape[0] if a.ndim >= 1 else -1):
-            prob.append(f"t_s rows {t.size} != law_locked rows {a.shape[0] if a.ndim >= 1 else None}")
-        elif t.size > 1:
-            dt = np.diff(t)
-            bad = np.abs(dt - LAW_LOCKED_DT_S) > LAW_LOCKED_DT_TOL_S
-            if bad.any():
-                prob.append(f"t_s spacing not 1 ms at {int(bad.sum())} steps (first {float(dt[bad][0])!r} s)")
-    if not prob and a.ndim == 2 and a.shape[0] > 1:
+        t = np.asarray(z[time_key], float)
+        if t.ndim != 1:
+            bad("1_time_column", f"{time_key} shape {tuple(t.shape)} (1-D time column required)")
+            t = None
+    out["shape"] = list(a.shape)
+    if a.ndim != 2 or a.shape[1] != 4:                              # R9-2 item 2
+        bad("2_shape", f"shape {tuple(a.shape)} ([N, 4] required)")
+    elif t is not None and t.size != a.shape[0]:
+        bad("2_shape", f"{time_key} rows {t.size} != law_locked rows {a.shape[0]}")
+    if a.dtype != np.int8:                                          # R9-2 item 3
+        bad("3_dtype", f"dtype {a.dtype} (int8 required)")
+    values_ok = not (a.size and not np.isin(a, LAW_LOCKED_VALUES).all())
+    if not values_ok:                                               # R9-2 item 4
+        bad("4_values", f"values {sorted(set(np.unique(a).tolist()) - set(LAW_LOCKED_VALUES))} outside {{-1, 0, 1}}")
+    if t is not None and t.size > 1:                                # R9-2 item 5
+        dt = np.diff(t)
+        off = np.abs(dt - LAW_LOCKED_DT_S) > LAW_LOCKED_DT_TOL_S
+        out["max_abs_dt_error_s"] = float(np.max(np.abs(dt - LAW_LOCKED_DT_S)))
+        if off.any():
+            bad("5_spacing", f"{time_key} spacing not 1 ms at {int(off.sum())} steps (first {float(dt[off][0])!r} s)")
+    if a.ndim == 2 and a.shape[1] == 4 and a.shape[0] > 0 and values_ok:   # R9-2 item 6 / R9-3
+        pats, mprob, first = minus1_pattern(a)
+        out["minus1_patterns"] = pats
+        if "pre_arming" in pats:
+            out["pre_arming_samples"] = first
+        for why in mprob:
+            bad("6_minus1", why)
+    if not prob and a.shape[0] > 1:
         lk = a != 0             # revision 6 section 6: -1 (before the first arming) counts as locked
         out["transitions_per_leg"] = {leg: {"to_locked": int(np.count_nonzero(~lk[:-1, i] & lk[1:, i])),
                                             "to_unlocked": int(np.count_nonzero(lk[:-1, i] & ~lk[1:, i]))}
-                                      for i, leg in enumerate(("FL", "FR", "RL", "RR"))}
+                                      for i, leg in enumerate(LEGS)}
     out["ok"] = not prob
     return out
+
+
+def law_locked_target(argv, engine, kind):
+    """(file name, time key) of the R8-3a law_locked record of a row, None when the row has none (L1-R,
+    open loop, SCM rows other than ``run_S9.py level``)."""
+    if kind == "openloop":
+        return None
+    if engine == "SCM" and "level" in argv:
+        return LAW_LOCKED_FILES["SCM"]
+    if engine == "L2b":
+        return LAW_LOCKED_FILES["L2b"]
+    return None
 
 
 def r82_extend_start(res, argv, tag, is_p3, where, fnd):
@@ -1225,10 +1347,6 @@ def r82_extend_start(res, argv, tag, is_p3, where, fnd):
     return rec
 
 
-def is_scm_level(argv, engine, kind):
-    return engine == "SCM" and kind != "openloop" and "level" in argv
-
-
 def gs_presence(row, res, keys):
     """11.2 key presence with rev7 R7-4: a table key is ``conditional_absent`` only when its absence
     condition holds, else ``result_missing`` (S-11); a key outside the table is ``present`` or ``absent``
@@ -1250,7 +1368,7 @@ def gs_presence(row, res, keys):
     return pres, bad
 
 
-def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
+def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits, manifest=None):
     case = row.get("case")
     argv = [str(a) for a in row.get("argv", [])]
     engine = engine_of(argv)
@@ -1274,6 +1392,12 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
     out["result_sha256"] = sha256_file(rpath)
     want_tag, kind, off = expected_chrono_tag(row, res, argv)
     out["kind"] = kind
+    # rev9 R9-4: LS reading from the manifest row and the batch.json case (used for J11 on C-5 rows only;
+    # J11 is graded by the C-5 path 2, here it is recorded and an LS row must carry a ③ tag)
+    out["r94_ls"] = r94_ls_row(manifest, batch_dir, row) if kind != "openloop" else {"class": "not_applicable"}
+    if cid == "C-5" and out["r94_ls"]["class"] == "undecidable":
+        fnd.note(where, f"R9-4: LS reading not judgeable ({out['r94_ls'].get('why')}): an actual fallback leg "
+                        "n_late > 0 on this row stops (H-7 / L-e); the judgement document writes 'LS 판별 불가'")
     # ---- G-S key presence (11.2, RV1-10 f): presence only, no values
     if gs_mode:
         keys = GS_KEYS_SCM + (() if off else GS_KEYS_LAS_ON) + tuple(k for k in GS_CONDITIONAL_R74
@@ -1307,12 +1431,23 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
             fnd.note(where, f"r4368.arm {arm!r} vs path-2 off arm {off} (R7-4 uses r4368.arm)")
         out["gs_keys"] = pres
         out["gs_conditional_absent"] = sorted(k for k, v in pres.items() if v == "conditional_absent")
-        if is_scm_level(argv, engine, kind):
-            # rev8 R8-3: the 1 ms law_locked record is a G-S key (11.2); absent or malformed = S-11
-            ll = law_locked_format(Path(rpath).parent / "step_series.npz")
+        if kind != "openloop":
+            # rev9 R9-1: expect_controller.ok false or absent = S-2, and in G-S also S-11 (11.2 failure)
+            ok_flag, ok_path = first_path(res, ("expect_controller.ok", "c2_setup.expect_controller.ok"))
+            out["r91_expect_controller_ok"] = None if ok_flag is MISSING else ok_flag
+            if ok_flag is not True:
+                why = f"R9-1: expect_controller.ok = {'absent' if ok_flag is MISSING else repr(ok_flag)}"
+                fnd.stop("S-2", where, why)
+                fnd.stop("S-11", where, why + " (G-S failure, 11.2)")
+        tgt = law_locked_target(argv, engine, kind)
+        if tgt is not None:
+            # rev8 R8-3 / rev9 R9-2, R9-5, R9-6: the 1 ms law_locked record is a G-S key (11.2) of every
+            # SCM level and L2b row, whatever the row kind; absent or malformed = S-11
+            ll = law_locked_format(Path(rpath).parent / tgt[0], tgt[1])
+            ll["engine"] = engine
             out["gs_law_locked"] = ll
             if not ll["ok"]:
-                fnd.stop("S-11", where, f"G-S law_locked (R8-3a): {'; '.join(ll['problems'])}")
+                fnd.stop("S-11", where, f"G-S law_locked (R9-2 / R9-5, {engine} {tgt[0]}): {'; '.join(ll['problems'])}")
         return out
     # ---- tag (4.1, RV1-10 a)
     if kind == "openloop":
@@ -1340,12 +1475,18 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
                 fnd.stop("S-2", where, f"recorded tag missing (expected {want_tag!r})")
         elif rec_tag != want_tag:
             fnd.stop("S-2", where, f"recorded tag {rec_tag!r} != {want_tag!r}")
-        if ok_flag is not True or name != want_tag:
+        out["r91_expect_controller_ok"] = None if ok_flag is MISSING else ok_flag
+        if ok_flag is not True:
+            # rev9 R9-1: the bundle stops (S-2); J-P3 alone is not set to not judgeable
+            fnd.stop("S-2", where, f"R9-1: expect_controller.ok = {'absent' if ok_flag is MISSING else repr(ok_flag)}")
+        if name != want_tag:
             fnd.stop("S-2", where, f"expect_controller ok={ok_flag!r} name={name!r}")
         if is_p3 is not None and tag is not MISSING and isinstance(tag, str):
             p3_want = kind in ("VB", "C4OFF_VB")
             if is_p3(tag) != p3_want:
                 fnd.stop("S-2", where, f"is_extend_start_tag({tag}) = {is_p3(tag)}")
+            if out["r94_ls"]["class"] == "ls" and not is_p3(tag):
+                fnd.stop("S-2", where, f"R9-4: LS row (v5_setting {out['r94_ls']['batch_v5_setting']}) with a non-③ tag {tag!r}")
         out["jp3_scope"] = r82_extend_start(res, argv, tag, is_p3, where, fnd)
     # ---- forbidden argv / env (4.2)
     for opt in CHRONO_FORBIDDEN_ARGV:
@@ -1497,16 +1638,24 @@ def chrono_row(batch_dir, batch, row, repo, is_p3, gs_mode, fnd, commits):
                 diffs = [i for i in range(4) if not same_value(rec["legs"][i]["F_min_after_N"], fa_rec[i])]
                 if diffs:
                     fnd.note(where, f"F_min_after path2 vs recorded differ on legs {diffs}")
-    # ---- rev8 R8-3: law_locked record of the SCM level rows (J11 input; J11 itself is the C-5 path 2's)
-    if is_scm_level(argv, engine, kind):
-        ll = law_locked_format(step)
+    # ---- rev8 R8-3 / rev9 R9-2, R9-5, R9-6: law_locked record of the SCM level and L2b rows (J11 input;
+    # J11 itself is the C-5 path 2's). C-5 rows of both engines: not judgeable + stop and ask; other rows:
+    # "input missing", recorded and counted (no stop).
+    tgt = law_locked_target(argv, engine, kind)
+    if tgt is not None:
+        ll = law_locked_format(Path(rpath).parent / tgt[0], tgt[1])
+        ll["engine"] = engine
         out["law_locked"] = ll
         if not ll["ok"]:
             if cid == "C-5":
-                fnd.undec(where, f"R8-3: law_locked {'; '.join(ll['problems'])} -> J11 not judgeable (9.3); "
-                                 "the fallback-leg n_late > 0 stop cannot be checked: stop the bundle and ask")
+                ll["handling"] = "c5_not_judgeable_stop"
+                fnd.undec(where, f"R9-5: law_locked ({engine} {tgt[0]}) {'; '.join(ll['problems'])} -> J11 not "
+                                 "judgeable (9.3); the fallback-leg n_late > 0 stop (H-7 / L-e) cannot be "
+                                 "checked: stop the bundle and ask")
             else:
-                fnd.note(where, f"R8-3: law_locked {'; '.join(ll['problems'])} (row outside C-5, recorded)")
+                ll["handling"] = "input_missing_recorded"
+                fnd.note(where, f"R9-6: law_locked ({engine} {tgt[0]}) {'; '.join(ll['problems'])} (row outside "
+                                "C-5: J11 input missing, recorded)")
     # ---- O-C5 (7.4, S-9, S-10)
     if cid in ("C-8a", "C-8b"):
         oc = {"k_from_argv": None}
@@ -1560,13 +1709,16 @@ def cmd_chrono(args, repo):
     rows = []
     commits = {}
     per_cid = {}
+    manifest = None
+    if getattr(args, "rows_manifest", None):
+        manifest = json.loads(Path(args.rows_manifest).read_text("utf-8"))
     for bd in args.batch:
         batch, cases = batch_rows(bd)
         gs_mode = args.gs or "-GS_" in Path(bd).name
         if batch.get("mixed_hull_mode") is True or "MIXED_HULL_MODE" in json.dumps(batch.get("warnings", "")):
             fnd.stop("S-4", Path(bd).name, "MIXED_HULL_MODE")
         for row in cases:
-            r = chrono_row(bd, batch, row, repo, is_p3, gs_mode, fnd, commits)
+            r = chrono_row(bd, batch, row, repo, is_p3, gs_mode, fnd, commits, manifest)
             rows.append(r)
             if not gs_mode and dig(row, "r4368.role", None) not in ("probe",):
                 per_cid[r["criteria_id"]] = per_cid.get(r["criteria_id"], 0) + 1
@@ -1605,6 +1757,36 @@ def cmd_chrono(args, repo):
     law_locked_check = {"rows": len(ll_rows),
                         "missing": sum(1 for x in ll_rows if not x["present"]),
                         "problems": sum(1 for x in ll_rows if x["present"] and not x["ok"])}
+    # rev9 R9-8 G-S record items: R9-2 per item, R9-3 per -1 pattern, per engine; R9-6 outside-C-5 inputs
+    r9_ll = {"rows": len(ll_rows), "by_engine": {}, "missing": 0, "failed_items": {}, "minus1_patterns": {},
+             "c5_not_judgeable": 0, "outside_c5_input_missing": 0,
+             "max_abs_dt_error_s": max((x["max_abs_dt_error_s"] for x in ll_rows if "max_abs_dt_error_s" in x),
+                                       default=None)}
+    for x in ll_rows:
+        e = r9_ll["by_engine"].setdefault(x.get("engine", "?"), {"rows": 0, "ok": 0, "missing": 0, "malformed": 0})
+        e["rows"] += 1
+        e["ok" if x["ok"] else ("missing" if not x["present"] else "malformed")] += 1
+        r9_ll["missing"] += int(not x["present"])
+        for it in x.get("failed_items", []):
+            r9_ll["failed_items"][it] = r9_ll["failed_items"].get(it, 0) + 1
+        for pt in x.get("minus1_patterns", []):
+            r9_ll["minus1_patterns"][pt] = r9_ll["minus1_patterns"].get(pt, 0) + 1
+        r9_ll["c5_not_judgeable"] += int(x.get("handling") == "c5_not_judgeable_stop")
+        r9_ll["outside_c5_input_missing"] += int(x.get("handling") == "input_missing_recorded")
+    r91 = {"rows_checked": sum(1 for r in rows if "r91_expect_controller_ok" in r),
+           "s2": sum(1 for r in rows if "r91_expect_controller_ok" in r and r["r91_expect_controller_ok"] is not True)}
+    r94 = {"rows_manifest": getattr(args, "rows_manifest", None), "classes": {}, "ls_rows": [],
+           "undecidable_rows": [], "c5_undecidable_rows": []}
+    for r in rows:
+        cl = (r.get("r94_ls") or {}).get("class")
+        if cl:
+            r94["classes"][cl] = r94["classes"].get(cl, 0) + 1
+            if cl == "ls":
+                r94["ls_rows"].append(r["case"])
+            elif cl == "undecidable":
+                r94["undecidable_rows"].append(r["case"])
+                if r.get("criteria_id") == "C-5":
+                    r94["c5_undecidable_rows"].append(r["case"])
     jp3 = {}
     for r in rows:
         st = (r.get("jp3_scope") or {}).get("status")
@@ -1612,6 +1794,7 @@ def cmd_chrono(args, repo):
             jp3[st] = jp3.get(st, 0) + 1
     return {"rows": out_rows, "rows_per_criteria_id": per_cid, "launch_commits": {str(k): v for k, v in commits.items()},
             "R8-3_law_locked_check": law_locked_check, "R8-2_jp3_scope": jp3,
+            "R9-2_law_locked_check": r9_ll, "R9-1_expect_controller": r91, "R9-4_ls_rows": r94,
             "outside_start_condition_rows": outside, "k1_table": k1_table, "v5_options": mod_info,
             "grade_scope": "436.8 layer (4.1 / 4.2 / 6 / 7.2 / 7.4 / O-C5); original Chrono judgement blocks "
                            "(D-1 rules 11, rev12 2.2) not recounted", **fnd.as_dict()}, fnd.status()
@@ -1897,6 +2080,8 @@ def build_parser():
     c.add_argument("--check-counts", action="store_true")
     c.add_argument("--c2-expected", type=int, default=None)
     c.add_argument("--c2-psc", type=int, default=None)
+    c.add_argument("--rows-manifest", default=None,
+                   help="chrono_rows_manifest.json for the rev9 R9-4 LS reading (omit: not checked, recorded)")
     o = sub.add_parser("oc5k")
     o.add_argument("--row", choices=sorted(OC5_K1), required=True)
     o.add_argument("--probe", action="append", required=True, help="probe result.json, in run order")
@@ -1932,7 +2117,7 @@ def main(argv=None):
             report, status = {"seals": seals}, "pass"
         else:
             body, status = CMDS[args.cmd](args, repo)
-            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA, "rev3_sha256": REV3_SHA, "rev4_sha256": REV4_SHA, "rev5_sha256": REV5_SHA, "rev6_sha256": REV6_SHA, "rev7_sha256": REV7_SHA, "rev8_sha256": REV8_SHA,
+            report = {"seals": {"ok": True, "rules_sha256": RULES_SHA, "rev1_sha256": REV1_SHA, "rev2_sha256": REV2_SHA, "rev3_sha256": REV3_SHA, "rev4_sha256": REV4_SHA, "rev5_sha256": REV5_SHA, "rev6_sha256": REV6_SHA, "rev7_sha256": REV7_SHA, "rev8_sha256": REV8_SHA, "rev9_sha256": REV9_SHA,
                                 "eol_only": seals.get("eol_only", []),
                                 "eol_only_detail": {k: v for k, v in seals["appendix_a"].items() if v.get("eol_only")}},
                       **body}

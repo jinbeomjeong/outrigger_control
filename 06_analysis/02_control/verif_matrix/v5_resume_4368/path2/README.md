@@ -273,6 +273,42 @@ rev3 절과 다른 곳은 아래가 맞다. 다섯 도구 모두 rev4 sha도 확
 - 자체 시험은 다섯 파일 128개(앞 판 112개)다. 더한 것: rev8 봉인 확인과 불일치 S-1, `law_locked` 형식 6가지·정상·1 ms 간격, G-S 모드 3가지, 본 실행 C-5 판정 불가, R8-2 J-P3 범위·요청 기록 대조, `v5_hydraulics` 없는 SCM 행, R8-1b 점 키.
 - `p2_4368.py`가 바뀌었으므로 `../path2_v5c/p2v5c_common.py`의 `P2_CORE_SHA`를 `bebed9f1…`로 고쳐야 한다(R8-4, 그 폴더 작성자 몫). `p2_v5j.py`는 바뀌지 않았다.
 
+## rev9 반영 (`v5_resume_4368_rules_rev9.md`, sha256 `4cf7843c…`, 2026-11-13)
+
+앞 절과 다른 곳은 아래가 맞다. 근거는 원판~rev9 문장뿐이다(경로 1 코드·출력은 열지 않았다). rev9 R9-4가 판별 입력으로 정한 `chrono_rows_manifest.json`은 이 판에서 도구 입력으로 읽는다(아래 독립성 공개).
+
+| rev9 | 도구 | 반영 |
+|---|---|---|
+| R9-8 봉인 확인 | `p2_4368.py`(`check_seals`, 다섯 도구 공통) | rev9 raw sha가 코드의 봉인 sha와 `.sha256` 첫 값 둘 다와 같고 LF·BOM 없음일 때만 통과(아니면 S-1, 종료 2). `.sha256`이 없어도 S-1. 출력 `seals.rev9_sha256` |
+| R9-1 태그 확인 | `p2_4368.py chrono` | Chrono 제어기 행(SCM·L2b·L1-R, 열린 루프 제외)의 `expect_controller.ok`(L2b·L1-R) 또는 `c2_setup.expect_controller.ok`(SCM)가 참이 아니거나 키가 없으면 **S-2**. `--gs`에서는 **S-2와 S-11**을 함께 낸다(앞 판 G-S는 키 있음만 봐서 값 거짓을 놓쳤다). 본 실행은 앞 판대로 S-2이고, J-P3만 판정 불가로 두고 계속하지 않는다. 행 `r91_expect_controller_ok`, 출력 `R9-1_expect_controller`(본 행 수, S-2 수) |
+| R9-2 형식 검사 | `p2_4368.py chrono`(`law_locked_format`) | 두 엔진 같게: SCM `run_S9.py level` 행 `<행>/step_series.npz`(시간 열 `t_s`), L2b `run_S8C.py` 행 `<행>/pads.npz`(시간 열 `t`). 항목 1 시간 열 있음(1차원), 2 [N, 4]이고 N = 시간 열 길이, 3 int8, 4 값 ⊂ {−1, 0, 1}, 5 인접 간격 \|Δt − 1 ms\| ≤ 10⁻⁶ s(절차 값), 6 −1 꼴(R9-3). 행 `failed_items`(`1_time_column`~`6_minus1`), `max_abs_dt_error_s`. 앞 판은 L2b `pads.npz`를 보지 않았다(C-5 J11 계산 쪽 몫으로 뒀음). rev9 R9-2 "두 엔진에 같게 쓴다"와 R9-5로 이 도구도 본다 |
+| R9-3 −1 꼴 | `p2_4368.py`(`minus1_pattern`) | `none`(−1 없음), `pre_arming`(처음부터 이어지는 −1이고 네 다리가 같은 표본에서 함께 벗어남, 그 뒤 −1 없음 → 잠김, 통과), 형식 오류 `whole_run`(모든 표본·다리 −1), `after_arming`(그 다리에 0 또는 1이 나온 뒤의 −1, 네 다리가 함께 −1로 돌아가는 경우 포함), `leg_mismatch`(다리마다 벗어나는 표본이 다름, 끝까지 −1인 다리 포함). 행 `minus1_patterns`, `pre_arming_samples`. 다리별 0→1·1→0 수(−1 = 잠김)는 형식이 맞을 때만 기록 |
+| R9-5 결측·형식 오류 | `p2_4368.py chrono` | `--gs`: SCM level·L2b 행 모두 키 없음·형식 오류 = **S-11**(행 종류 무관, R9-6 "G-S 키 확인은 그대로"). 본 실행 C-5 행(두 엔진): **판정 불가**(J11 판정 불가 → 대체 다리 $n_{late}$ > 0 멈춤을 확인할 수 없어 묶음을 멈추고 묻는다, 종료 1). 행 `law_locked.handling` = `c5_not_judgeable_stop` |
+| R9-6 J11 범위 | `p2_4368.py chrono` | C-5 밖 행(C-1~C-4, C-8, J_P)의 결측·형식 오류는 멈춤·판정 불가가 아니라 "입력 없음" 기록(`handling` = `input_missing_recorded`)과 수. J11 값 자체는 이 도구가 계산하지 않는다 |
+| R9-4 LS 행 | `p2_4368.py chrono --rows-manifest <chrono_rows_manifest.json>` | 행마다 manifest `batches.<묶음>.rows[]`(묶음 = 배치 폴더 `batch_<묶음>_<날짜>_<시각>`, 같은 `case`)의 `v5_setting`과 `batch.json` `cases[].v5_setting`을 맞춰 본다. 같고 LS1~LS4 = `ls`, 같고 다른 값 또는 둘 다 없음·None = `not_ls`, 한쪽만·다름·manifest 행 둘 이상 = `undecidable`. 행 이름은 읽지 않는다. `ls`인데 태그가 ③ 켬이 아니면 **S-2**. C-5 행의 `undecidable`은 기록("LS 판별 불가", 그 행에서 대체 다리 $n_{late}$ > 0이면 멈춤 — J11 계산 쪽에서 판정). 옵션을 주지 않으면 `not_checked`로 기록. 출력 `R9-4_ls_rows`(분류별 수, LS 행, 판별 불가 행, C-5 판별 불가 행). 기대 태그 계산(`expected_chrono_tag`)도 LS를 LS1~LS4 정확 일치로 바꿨고, LS 끔 팔은 ③ 끔 팔 태그(`final_C4G2_P3_K1`)를 기대한다(앞 판은 `startswith("LS")`, 끔 팔에서는 VB만 ③으로 봤다) |
+| R9-8 G-S 기록 | `p2_4368.py chrono --gs` | 출력 `R9-2_law_locked_check`: 행 수, 엔진별(행·통과·결측·형식 오류), 결측 수, 항목별 어긋난 수, −1 꼴별 수, C-5 판정 불가 수, C-5 밖 입력 없음 수, 최대 간격 오차. 앞 판 `R8-3_law_locked_check`(행·`missing`·`problems`)도 그대로 낸다(이제 L2b 행 포함) |
+| 바꾸지 않음 | – | R9-7(K1 단독 태그·규칙 5)은 R8-1 재계산 대조에 쓰이는데, 그 대조는 R8-1d·R8-4대로 경로 1 도구 몫이라 이 폴더에 해당 코드가 없다. 하네스 태그 상수 `TAG_C4OFF_V0` = `final_C4G2_K1`, `TAG_C4OFF_VB` = `final_C4G2_P3_K1`은 R9-7과 이미 같다. `p2_v5j.py`의 J11(L-e/H-7)은 하네스 줄 `job.setting`으로 가르는 하네스 J 항목이다. R9-4는 Chrono 행의 정의이고 행 이름 토큰도 쓰지 않으므로 바꾸지 않았다. C-5 Chrono 행의 J11 계산(`../path2_chrono/p2_kinds.py`의 `"_LS" in row.case` 판별과 −1 읽기)은 이 폴더 밖이라 고치지 않았다(그 폴더 작성자 몫). `p2_d1.py`·`p2_t3k.py`·`p2_u3.py`에 rev9가 요구하는 것은 없다(봉인 확인은 공통 함수로 들어감) |
+
+- 2026-11-13 G-S `…_082117`에 이 판을 돌린 결과(참고, 11.2 충족에 쓰지 않음, R9-8): 12행. SCM level 9행 모두 `law_locked key absent`로 S-11(rev8 R8-4가 예상한 결과). L2b 1행(`GS_D1C2_middle_fdown3.2_Fs4`)은 `pads.npz` 통과(−1 없음, 최대 간격 오차 3.32×10⁻¹⁴ s — rev9 R9-2에 적힌 값과 같음). R9-1 S-2 0/11, R9-4 `not_ls` 11·해당 없음(열린 루프) 1. `…_094502`는 `batch.json`이 없어(중단 실행) 읽지 못했다.
+
+### 도구 sha256 (rev9 판, LF 바이트)
+
+| 파일 | sha256 | 이 판에서 |
+|---|---|---|
+| `p2_4368.py` | `7d764a80f43db9431f303bb3d0049c2548788c5928a8cf555b1fa86cc9e44322` | 바뀜 |
+| `p2_d1.py` | `6d18f6dbfa891ea8faf2eec45cb26c023a045aa0170b7cfac4b1c0aa28cde24d` | 그대로 |
+| `p2_t3k.py` | `f4a84aba0beb07fe2de09fa6edd803406baefee73fdd90f8957a9dd258a6777a` | 그대로 |
+| `p2_u3.py` | `408944c498da8736e343c2dbc2d816f6fdbe8a5ecd73a0a96689f06680bc5f28` | 그대로 |
+| `p2_v5j.py` | `5772624cb28e414ceeb38af3eb6d386a2e0a78857db8a5ea9a5d3cd2ec5f7d8b` | 그대로 |
+| `test_p2_4368.py` | `8fff08a6af3d7174331f01bdaa65bc51b84b660fb7582316a0d6577d935b2024` | 바뀜(89개) |
+| `test_p2_d1.py` | `d1b61db2979ea1658eda4f515936e407a2d52666efeff9575c583dcecd0778ce` | 그대로(17개) |
+| `test_p2_t3k.py` | `c3696fb7cfc1bc240f71b14b5c06e7b5b2a18f3cdf7b3c3a6f47f5ea57b933be` | 그대로(19개) |
+| `test_p2_u3.py` | `245c03ff2a731fb33606f992328660f46f669dbee41cac4e20dc58b01133bb99` | 그대로(11개) |
+| `test_p2_v5j.py` | `d52ca6adb89f77f6bd952bf6ff03f966f9cd7d0a05486af7e044ee700fb0a418` | 그대로(16개) |
+
+- 자체 시험은 다섯 파일 152개(앞 판 128개)다. 더한 것(24개): rev9 봉인 확인과 불일치·`.sha256` 없음 S-1, −1 꼴 8가지(없음·무장 전·무장 뒤·전 구간·다리별 어긋남·끝까지 −1인 다리·네 다리 함께 다시 −1·두 오류 겹침), L2b `pads.npz` 시간 열 `t`·항목별 오류·10⁻⁶ s 경계, G-S L2b 4가지(통과·키 없음·파일 없음·무장 뒤 −1), G-S `expect_controller.ok` 거짓·없음 × SCM·L2b(S-2 + S-11), 본 실행 ok 거짓 S-2, 본 실행 L2b C-5 판정 불가·C-1 기록, SCM C-5 밖 기록, R9-4 판별 표·이름 토큰 미사용·LS 끔 팔 태그, LS 행 비③ 태그 S-2와 C-5 판별 불가 기록.
+- `p2_4368.py`가 바뀌었으므로 `../path2_v5c/p2v5c_common.py`의 `P2_CORE_SHA`를 위 새 sha로 고쳐야 한다(그 폴더 작성자 몫, 고칠 때까지 `P2-SHA` 종료 2). `p2_v5j.py`는 바뀌지 않았다.
+
 ## 하지 않는 것 (범위)
 
 - **원 규칙 등급의 재집계는 하지 않는다.** H-0 T-3K(`las_targeted_rules` 원판~rev5), H-1·H-2(D-1 선별 규칙), H-3·H-4(`u3_u6`), H-5(`u9`), H-6~H-10(v5 기준 + 개정 1~12b), C-1~C-5 판정 블록(D-1 규칙 11, 개정 12 2.2)의 통과·미달 재집계가 여기에 든다. 이 도구가 내는 묶음 상태는 436.8 문서가 새로 정한 층(4.1·4.2·6·7.2·7.4·9.3·S-15)의 상태다(`grade_scope`). 원 규칙 등급의 경로 2는 그 규칙들의 정의 문장을 읽고 따로 만들어야 한다.
@@ -285,7 +321,8 @@ $t = '<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2\p2_4368.py
 & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B $t --out <out>\seal.json seal
 & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B $t --out <out>\h.json harness --manifest <out>\manifest.json
 & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B $t --out <out>\a.json anchors --h1 <repo>\06_analysis\03_hydraulic\coupled\v5\resume_k1\h1_d1.jsonl
-& C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B $t --out <out>\c.json chrono --batch <repo>\07_results\S9\batch_V5-RESUME-K1-C5_<stamp> --check-counts
+& C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B $t --out <out>\c.json chrono --batch <repo>\07_results\S9\batch_V5-RESUME-K1-C5_<stamp> --check-counts --rows-manifest <repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\chrono_rows_manifest.json
+& C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B $t --out <out>\gs.json chrono --batch <repo>\07_results\S9\batch_V5-RESUME-K1-GS_<stamp> --gs --rows-manifest <repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\chrono_rows_manifest.json
 & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B $t --out <out>\jp.json jp --shadow <repo>\06_analysis\03_hydraulic\coupled\v5\las\shadow_jp_b0.jsonl --batch <repo>\07_results\S9\batch_V5-JP-VB_20261108_115631 --batch <repo>\07_results\S9\batch_V5-JP-V0_20261108_131212
 ```
 
@@ -298,11 +335,12 @@ $t = '<repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2\p2_4368.py
 & C:\ProgramData\miniforge3\Scripts\conda.exe run -n dynamics-dev python -I -B -m pytest -q -p no:cacheprovider --basetemp <scratch>\pt <repo>\06_analysis\02_control\verif_matrix\v5_resume_4368\path2\test_p2_4368.py
 ```
 
-- `test_p2_4368.py`는 65개(rev8 판, 처음 판은 45개), 합성 입력만 쓴다(봉인 확인 시험은 저장소의 실제 규칙 파일을 읽는다). rev3~rev8에서 더한 시험은 각 판 절에 있다. 다루는 것: 문턱 비교와 K-10, $R_c$ 식, `C2Event` 해석, 줄 키, 지면 계열, 7.2 분류 9가지(S-5·S-6·S-3 포함), 결측 = 판정 불가, C-4 끔 팔 'LAS 없음', LAS-b 설정 검사, 하네스 끝에서 끝(통과, S-2, S-5 + S-6, IND 해당 없음 + S-3 토큰, S-15), 1 ms 재계산(이탈 지속 조건, 창 시간), Chrono 행(O-C5 S-9, S-10, 태그 S-2, 금지 인자 S-3 + 스레드 S-4, C-4 끔 팔), O-C5 $k$ 절차(첫 probe, 할선, 두 배 재실행, 할선 정의 불가), J_P 재사용과 거부, K-10 compare, 실제 규칙 sha.
+- `test_p2_4368.py`는 89개(rev9 판, rev8 판 65개, 처음 판은 45개), 합성 입력만 쓴다(봉인 확인 시험은 저장소의 실제 규칙 파일을 읽는다). rev3~rev9에서 더한 시험은 각 판 절에 있다. 다루는 것: 문턱 비교와 K-10, $R_c$ 식, `C2Event` 해석, 줄 키, 지면 계열, 7.2 분류 9가지(S-5·S-6·S-3 포함), 결측 = 판정 불가, C-4 끔 팔 'LAS 없음', LAS-b 설정 검사, 하네스 끝에서 끝(통과, S-2, S-5 + S-6, IND 해당 없음 + S-3 토큰, S-15), 1 ms 재계산(이탈 지속 조건, 창 시간), Chrono 행(O-C5 S-9, S-10, 태그 S-2, 금지 인자 S-3 + 스레드 S-4, C-4 끔 팔), O-C5 $k$ 절차(첫 probe, 할선, 두 배 재실행, 할선 정의 불가), J_P 재사용과 거부, K-10 compare, 실제 규칙 sha.
 
 ## 독립성 공개 (규칙 9.2, 이 도구를 쓰려고 읽은 것)
 
 - 규칙: 원판, rev1, rev2, `d1_selection_rules.md`·rev1, `u3_u6_rerun_rules.md`·rev1·rev2, `las_p5r4_k1_judgement.md` 8.2절 표·1.1의 기호 정의(40행), 명세 `s6_control_spec.md` 436 설정 표(19458~19479행).
 - 원 데이터(키 구조와 식별 필드): G-S 배치 `batch_V5-RESUME-K1-GS_20261113_010654`·`_012403`·`_020211`의 `batch.json`과 행 `result.json`·npz 키 이름(값은 판정에 쓰지 않음), 저장 P5r4 A1 `result.json`의 정의 문자열(`P3-3_leg_force.criterion`, `p3b.departure.rule`, `start_condition.rule`, `basis`), 저장 J_P 배치 `batch.json`과 `controller_events.json` 형식, `shadow_jp_b0.jsonl` 형식, 저장 `d1.jsonl`·`u3_slope_V0.json`·`noise_vb/r79_VB_L1L2L3.json`·`grid_vb/grid_r67_main.json`·`dg3/dg3_v4_on.json`의 컨테이너 구조와 키 이름.
 - 코드: `03_src/outrigger_sim/hydraulics/v5_options.py`(태그 상수와 `is_extend_start_tag`, 4.1이 지정), `06_analysis/03_hydraulic/coupled/v5/paper_runs/scripts/openloop_compare.py`(`analyse`, 9.1이 지정), 선례 `verif_matrix/p5k_path2/p5k_chrono_recount.py`의 머리 주석과 상수 이름(다른 판정의 경로 2, 436.8 경로 1 아님).
-- 보지 않은 것: `verif_matrix/scripts/resume4368_judge.py`, `04_scripts/04_hydraulic/coupled/u3_judge_k1.py`, `resume_k1_record.py`, `resume_k1_steps.py`, `verif_matrix/v5_resume_4368/gs_check_*.txt`·`chrono_rows_check.json`·`chrono_rows_manifest.json`(경로 1 또는 행 생성기 출력일 수 있어 열지 않음), 행 정의 모듈 `v5_resume_4368_chrono_rows.py`, 러너 코드.
+- 보지 않은 것: `verif_matrix/scripts/resume4368_judge.py`, `04_scripts/04_hydraulic/coupled/u3_judge_k1.py`, `resume_k1_record.py`, `resume_k1_steps.py`, `verif_matrix/v5_resume_4368/gs_check_*.txt`·`chrono_rows_check.json`(경로 1 또는 행 생성기 출력일 수 있어 열지 않음), 행 정의 모듈 `v5_resume_4368_chrono_rows.py`, 러너 코드.
+- rev9 판에서 더 읽은 것: `v5_resume_4368_rules_rev9.md`. `chrono_rows_manifest.json`은 rev8 판까지 열지 않았다. rev9 R9-4가 LS 판별의 입력으로 정했으므로(두 경로 공통 입력) 이 판에서 도구 입력으로 쓴다. 작성 중에 사람이 본 것은 키 구조뿐이다: 최상위 키, `batches`의 묶음 이름, 묶음의 키(`rows` 등), 행 키 이름, `v5_setting` 값 집합(`LS1`·`LS4`·`None`·`S6SEED`·`V0`·`V0v`·`VB`). 행별 값은 보지 않았다. 참고 실행(G-S `…_082117`)의 행 결과는 판정에 쓰지 않는다.
