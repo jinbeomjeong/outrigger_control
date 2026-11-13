@@ -210,6 +210,29 @@ class TestGridCmd(unittest.TestCase):
         self.assertIn("S-2", body["stop_codes"])
         self.assertFalse(any("J-P3" in u["why"] for u in body["grid"]["undecidable"]))
 
+    def test_r81_grid_tag_from_job(self):
+        """rev8 R8-1 (user decision 19): a grid run without a tag reads the tag of its job record results[i];
+        the run tag wins; neither -> J-P3 not applicable + S-2 (R8-2)."""
+        def m(stem, res):
+            for r in res:
+                r["controller_tag"] = "final_C4G2_P3_LAS_K1"
+                for run in r["runs"]:
+                    run.pop("resume_k1", None)
+        body, st = self.run_grid(mut_vb=m)
+        self.assertNotIn("S-2", body["stop_codes"])
+        self.assertEqual(body["inputs"]["vb"]["grid_r67_main"]["tags"], {"final_C4G2_P3_LAS_K1": 192})
+
+        def m2(stem, res):
+            m(stem, res)
+            if stem == "grid_r67_main":
+                res[0]["runs"][0]["controller_tag"] = "final_C4G2_LAS_K1"   # run tag wins (not 3)
+                res[1]["runs"][0]["controller_tag"] = "final_C4G2_P3_LAS_K1"
+                res[1].pop("controller_tag")
+                res[2].pop("controller_tag")                                # neither for res[2] runs
+        body, st = self.run_grid(mut_vb=m2)
+        s2 = [s for s in body["grid"]["stops"] if s["code"] == "S-2"]
+        self.assertEqual(len(s2), 1 + 5 + 6)   # res[0] run 0; res[1] runs 1..5; res[2] all six
+
     def test_r121_grid_t4h(self):
         """rev12 R12-1: a VB grid run that recorded t4h_file with no T4h folder -> S-2 (J-P3 not judged)."""
         def m(stem, res):

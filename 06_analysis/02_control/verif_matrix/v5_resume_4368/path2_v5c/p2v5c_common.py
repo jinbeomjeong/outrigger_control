@@ -76,8 +76,10 @@ P2_FALLBACK = Path(r"C:\workspace\outrigger_control\.claude\worktrees\agent-a2e8
 # before: rev11 582fa93 a8c625bf... (p2_v5j still e5d769b9...)
 # p2_v5j after user decision 24 (dynamics-expert commit e6971e5: rod_reading_lookup returns
 # bad_t4h_file for a t4h_file key with None / non-string / empty value); before: e5d769b9...
+# p2_4368 after user decision 19 (dynamics-expert commit c969b57: grid run tag from its job record,
+# harness --gs); before: rev12 6d41462 a948d9a1...
 P2_V5J_SHA = "69d0e747254cea35196101a9a2fc1b0e3c4e6a15ba1cb4511a4c8c41ca3e25db"
-P2_CORE_SHA = "a948d9a138557f6a649ffd9a5b37cd018201525cb6d8a51480d3e449a2f9ca81"
+P2_CORE_SHA = "424e12f98ba2441b6d51eef55d3ee5c2ae7be49e38413b34532c78ac53a22c67"
 
 EXIT = {"pass": 0, "fail": 1, "undecidable": 1, "stop": 2}
 

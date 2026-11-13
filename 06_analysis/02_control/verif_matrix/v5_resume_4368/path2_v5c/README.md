@@ -22,21 +22,29 @@ J 항목(R3-C3~C8, R4-C5의 `values.case_floor_deg`로 정하는 J3 바닥 각)�
 | 파일 | 고정 sha256 | 판 | 쓰는 것 |
 |---|---|---|---|
 | `p2_v5j.py` | `69d0e747254cea35196101a9a2fc1b0e3c4e6a15ba1cb4511a4c8c41ca3e25db` | 사용자 결정 24 판(dynamics-expert 커밋 `e6971e5`, 병합 `66dfe09`). `rod_reading_lookup`이 `t4h_file` 키의 값이 None·문자열 아님·빈 값이면 `bad_t4h_file`(S-2)을 낸다. 앞 판: rev11 `582fa93` `e5d769b9…`(R11-2 `t4h_convention_dirs`·`t4h_places`·`rod_reading_lookup` 추가, rev12에서 바뀌지 않음), rev5·rev6 `d49068e` `5772624c…`(rev7~rev10에서 바뀌지 않음) | `judge_pair`(M-3: LS J11 n_late > 0 → stop, 이 도구의 L-e로 이어짐), `j_values`, `jp3`, `nrev_max_by_row`, `pair_key`, `row_key`, `t4h_places`, `rod_reading_lookup`(rev11 R11-2), `tag_of`, `is_event`. `rod_reading_from_t4h`는 rev11 판부터 이 폴더가 쓰지 않는다 |
-| `p2_4368.py`(`p2_v5j.core`) | `a948d9a138557f6a649ffd9a5b37cd018201525cb6d8a51480d3e449a2f9ca81` | rev12 판(dynamics-expert 커밋 `6d41462`, 병합 `7d29460`). 앞 판: rev11 `582fa93` `a8c625bf…`, rev10 `a9594dc` `6e297ea3…`, rev9 `b0d6382` `7d764a80…`, rev8 `fd9bb68` `bebed9f1…`, rev7 `69b563f` `e033ca4b…`, `d49068e` `dc631509…` | `check_seals`, `load_is_extend_start`, `Findings`, `t_ge/t_lt/t_gt`, `num`, `dig`, `read_jsonl`, `F_MIN_N` |
+| `p2_4368.py`(`p2_v5j.core`) | `424e12f98ba2441b6d51eef55d3ee5c2ae7be49e38413b34532c78ac53a22c67` | 사용자 결정 19 판(dynamics-expert 커밋 `c969b57`: harness 격자 run 태그를 job 기록에서 읽음, `harness --gs`. 이 브랜치에 `z4369-p2h` 병합 `52f27f7`로 들어옴). 이 폴더가 쓰는 함수는 바뀌지 않았다. 앞 판: rev12 `6d41462` `a948d9a1…`, rev11 `582fa93` `a8c625bf…`, rev10 `a9594dc` `6e297ea3…`, rev9 `b0d6382` `7d764a80…`, rev8 `fd9bb68` `bebed9f1…`, rev7 `69b563f` `e033ca4b…`, `d49068e` `dc631509…` | `check_seals`, `load_is_extend_start`, `Findings`, `t_ge/t_lt/t_gt`, `num`, `dig`, `read_jsonl`, `F_MIN_N` |
 
 - 이 폴더의 rev7 판(c6a1b47)은 고정값 `dc631509…`였고, 이 브랜치에 dynamics-expert rev7 판(`69b563f`, `e033ca4b…`)이 병합된 뒤로는 맞지 않았다(`--allow-import-sha` 없이 실행하면 `P2-SHA` 멈춤). rev8 판에서 `bebed9f1…`로 맞췄다. 그 사이에 436.8 본 결과를 낸 적은 없다(R8-0).
 
-## 도구와 sha256 (rev12 판 + 사용자 결정 24, 각 묶음 첫 결과 전 고정)
+## 도구와 sha256 (rev12 판 + 사용자 결정 24·19, 각 묶음 첫 결과 전 고정)
 
 | 도구 | 묶음 | sha256 | rev11 판 |
 |---|---|---|---|
-| `p2v5c_common.py` | 공통 | `1ae2d2c2ec9f3961a731aad1508f716504489dc7caf7f105dc74a789bb192a0b` | `122c2054…`(rev12 봉인 확인, `P2_CORE_SHA` `a948d9a1…`, `jp3_rod_input`·`strip_jp3`·`t4h_input_error` 추가). 결정 24 반영 전 rev12 판 `04793dbe…`(`P2_V5J_SHA` `e5d769b9…`, 이름 아닌 값을 자체 판단 `unreadable_name`으로 셈) |
+| `p2v5c_common.py` | 공통 | `84d9c10b1b9426a6e9b83a53306f82f83bc5f665bc3f5065c4a92a4b4d0ff00b` | 결정 19 반영(`P2_CORE_SHA` `424e12f9…`). 그 전 결정 24 판 `1ae2d2c2…`. rev11 판 `122c2054…`(rev12 봉인 확인, `P2_CORE_SHA` `a948d9a1…`, `jp3_rod_input`·`strip_jp3`·`t4h_input_error` 추가). 결정 24 반영 전 rev12 판 `04793dbe…`(`P2_V5J_SHA` `e5d769b9…`, 이름 아닌 값을 자체 판단 `unreadable_name`으로 셈) |
 | `p2v5c_stage1.py stage1` | H-10, H-9(main·pressure_only) | `c50495d255213d604efee8768ca74b6a5d8fe8ab2dece172c6b881897d15a42f` | `55e70931…`(R12-1: S-2 줄의 J-P3 판정 안 함, 이름 아닌 `t4h_file` 값도 S-2) |
-| `p2v5c_grid.py grid` | H-9(격자 768, V0 짝, 계열 𝓕) | `c2a749310afe6254f4d0e07c9c46d560e495b393e8dad610a658154a87295f9b` | `4100dbdc…`(R12-1 T4h 찾기, `--t4h-root`) |
+| `p2v5c_grid.py grid` | H-9(격자 768, V0 짝, 계열 𝓕) | `762100a56ab09e10ef24a42a1caa626b79ebe266fadd95cbd1c7d608f7cabeb1` | 결정 19 반영(`run_tag_view`: run 태그가 없으면 job 기록 `results[i]` 태그). 그 전 rev12 판 `c2a74931…`(R12-1 T4h 찾기, `--t4h-root`). rev11 판 `4100dbdc…` |
 | `p2v5c_noise.py noise` | H-6, H-8 | `11ee8d1562b515eb27493fadbb049ec50f9c5a42f8dc65d93e7c80b1196ee519` | `4e4e174f…`(R12-1 T4h 찾기, `--t4h-root`, R12-3 `--git-at-start` 필수) |
-| `test_p2v5c.py` | 자체 시험 32개 | `9613d61299a87070885522e5a73bc04e0cad93b273842891391cf955e285a0ab` | `7a6ca870…`(29개). 더한 것: rev12 봉인 단언, `test_r121_grid_t4h`, `test_r121_jp3_rod_input`(결정 24: None·숫자·빈 문자열 = `bad_t4h_file` S-2), `test_r123_git_at_start_required`. 결정 24 반영 전 `5fe467cf…` |
+| `test_p2v5c.py` | 자체 시험 33개 | `677f4ac32d43dcee6010888fbbe03574c8bbc6bc63cac58a4b14a178cce7c28e` | `7a6ca870…`(29개). 더한 것: rev12 봉인 단언, `test_r121_grid_t4h`, `test_r121_jp3_rod_input`(결정 24: None·숫자·빈 문자열 = `bad_t4h_file` S-2), `test_r123_git_at_start_required`, `test_r81_grid_tag_from_job`(결정 19). 그 전 `9613d612…`(32개), `5fe467cf…` |
 
-- 실행 기록의 `common_sha256`과 세 도구의 `tool_sha256`으로 rev12 판임을 가른다. 네 파일 모두 rev11 판과 다르다.
+- 실행 기록의 `common_sha256`과 세 도구의 `tool_sha256`으로 판을 가른다. 네 파일 모두 rev11 판과 다르다.
+
+## 사용자 결정 19 반영 (격자 run 태그, dynamics-expert `c969b57`과 같은 읽기)
+
+| 항목 | 반영 | 함수 |
+|---|---|---|
+| `P2_CORE_SHA` | `424e12f9…`(병합 `52f27f7` 뒤 실제 sha와 같음 확인). `P2_V5J_SHA`(`69d0e747…`)는 그대로 | `common.import_record` |
+| 격자 run 태그 | G-S `gs_harness_bbacfd7/h9_grid_r67_main.json`의 구조를 확인했다(키 위치만, 판정 값 아님). `results[i]` 1개 모두에 `controller_tag`가 있고, run 6개에는 태그가 없었다. rev8 판 이후 grid는 run의 태그만 읽었다. 그래서 본 실행 격자에서 VB run 전부가 "③ 아님 → J-P3 해당 없음 + S-2"로 잘못 멈출 결함이 있었다. 합성 시험 `fast_run`에는 run 태그가 있어 드러나지 않았다. 이제 run 태그가 있으면 그것을 쓰고, 없으면 job 기록 `results[i]`의 태그를 쓴다(rev8 R8-1 "최상위 `controller_tag`"). 둘 다 없으면 앞 판대로 J-P3 해당 없음 + S-2다(R8-2). 출력 `inputs.vb.<stem>.tags`와 V0 `tags`도 같은 읽기다 | `grid.run_tag_view`, `grid.cmd_grid` |
+| noise·stage1 | r79 기록과 run_v5 줄은 줄 자체에 태그가 있다(합성 시험·앞 판 확인). 바꾸지 않았다 | – |
 
 ## rev12 반영
 
@@ -231,6 +239,7 @@ $c = 'C:\ProgramData\miniforge3\Scripts\conda.exe'
   - rev7 반영 때 경로 1 코드(`04_scripts/04_hydraulic/coupled/*_4368.py`, `judge4368_common.py`, `resume4368_judge.py`, `chrono_rows_judge_4368.py`, `README_judges_4368.md`)와 경로 1 출력은 열지 않았다. 기록 필드 이름·형식은 rev7 R7-2 원문만 근거로 썼다.
   - rev8 전체(2026-11-13, R8-2·R8-4 반영, R8-1·R8-3은 해당 없음 확인). 반영 때 경로 1 코드·출력은 열지 않았다. 같은 경로 2의 `fd9bb68` 커밋 메시지와 `p2_4368.py` 차이(`check_seals`·`r82_extend_start`·`law_locked_format` 부분)를 읽었다. ③ 판별 근거는 R8-2 원문이다.
   - rev9 전체(2026-11-13, R9-8 봉인 확인·`P2_CORE_SHA` 반영, R9-7 확인 시험 추가, R9-1~R9-6은 해당 없음 확인). 반영 때 경로 1 코드·출력은 열지 않았다. 같은 경로 2의 `b0d6382` 커밋 메시지와 `p2_4368.py`에서 rev9 머리 docstring·LS 처리 줄(grep)만 읽었다. `chrono_rows_manifest.json`은 열지 않았다.
+  - 사용자 결정 19 반영(2026-11-13): 같은 경로 2의 `c969b57` 커밋 메시지와 `p2_4368.py` 차이를 읽었다. 또 G-S 하네스 출력 `gs_harness_bbacfd7/h9_grid_r67_main.json`의 태그 위치(`results[i]`·run의 키 유무 수)를 셌다. 이 파일은 러너 출력이고 경로 1 판정 출력이 아니다. 경로 1 코드·출력은 열지 않았다.
   - rev12 전체(2026-11-13, R12-6 봉인 확인·import 고정값, R12-1 세 도구 T4h 입력, R12-3 noise 인자 반영, R12-2·R12-4·R12-5는 해당 없음 확인). 경로 1 코드·출력은 열지 않았다. 같은 경로 2에서는 `6d41462` 커밋 제목, 파일 sha, `p2_v5j.judge_pair`의 J-P3 부분(`strip_jp3`가 지울 발견의 꼴)만 확인했다. 러너 `r79_sensor_screen.py`는 `t4h_file`을 쓰는 줄(925~1014행)만 읽었다(기록 필드 확인, 판정 함수 아님).
   - rev11 전체(2026-11-13, R11-7 봉인 확인·import 고정값, R11-2 stage1 T4h 찾기 반영, R11-1·R11-3~R11-6은 해당 없음 확인). 경로 1 코드·출력은 열지 않았다. 같은 경로 2의 `582fa93`은 커밋 제목, `p2_v5j.py` 차이(R11-2 함수 세 개와 `u9` 호출부), 파일 sha만 읽었다.
   - rev10 전체(2026-11-13, R10-3 봉인 확인·`P2_CORE_SHA` 반영, R10-1·R10-2는 해당 없음 확인). 경로 1 코드·출력과 `chrono_rows_manifest.json`은 열지 않았다. 같은 경로 2의 `a9594dc`는 커밋 제목과 `p2_4368.py` sha만 확인했다.
