@@ -296,6 +296,25 @@ def test_rev11_r112_recount_stops_s2(tmp_path):
     assert "S-2" in f.as_dict()["stop_codes"] and any("R11-2" in s["why"] for s in f.stops)
 
 
+def test_decision24_t4h_file_value_defects(tmp_path):
+    """Key absent -> configuration; key present with None / a number / "" -> record defect S-2."""
+    d = tmp_path / "t4h"
+    _npz(d / "k.npz")
+    assert vj.rod_reading_lookup({}, [d])[1] == "no_t4h_file"
+    for bad in (None, 3, ""):
+        assert vj.rod_reading_lookup({"t4h_file": bad}, [d])[1] == "bad_t4h_file", bad
+    v0, vb, ref = full_set()
+    lk = lambda ln: vj.rod_reading_lookup(ln, [d])   # noqa: E731
+    body, f = vj.recount_u9(v0, vb, ref, IS_P3, t4h_lookup=lk)               # no key on any line
+    assert f.status() == "pass" and body["R11-2_t4h_lookup"]["no_t4h_file"] == 28
+    for bad in (None, 3, ""):
+        v0, vb, ref = full_set()
+        vb[0]["t4h_file"] = bad
+        body, f = vj.recount_u9(v0, vb, ref, IS_P3, t4h_lookup=lk)
+        assert "S-2" in f.as_dict()["stop_codes"], bad
+        assert body["R11-2_t4h_lookup"]["bad_t4h_file"] == 1
+
+
 def test_rev11_r112_cli_input_error(tmp_path, capsys):
     import json  # noqa: PLC0415
     vb = tmp_path / "vb.jsonl"

@@ -435,7 +435,14 @@ rev7 R7-5는 경로 1 집계 v2의 행 폴더 찾기를 정한 봉인 문장이�
 
 - 2026-11-13 G-S `…_130358`에 `chrono --gs --git-at-start ba2da55`를 돌린 결과(참고, R12-6대로 인용하지 않음): 판정 불가 0. L1-R·L2b 행은 `case_log`. 멈춤은 열린 루프 행 `code_at_launch` 없음(S-12) 1건으로 앞 판과 같다. `--git-at-start`를 빼면 S-11(종료 2, 행 0)이다.
 
+### 사용자 결정 24 (2026-11-13, 최종 Y 감사): `t4h_file` 값 결함 = S-2
+
+- `p2_v5j.rod_reading_lookup`은 줄에 `t4h_file` **키가 없을 때만** `no_t4h_file`(R3-C8 구성 규칙)로 본다. 키가 있는데 값이 None이거나 문자열이 아니거나 빈 문자열이면 `bad_t4h_file`로 보고 **S-2**로 멈춘다. 구성 규칙으로 대신하지 않는다(rev12 R12-1 Q-R12-1 = A의 취지, 경로 1·`path2_v5c`와 같은 읽기). 앞 판은 이 경우를 `no_t4h_file`로 읽었다. 출력 `H-5.R11-2_t4h_lookup`에 `bad_t4h_file` 수가 있다.
+- 시험 `test_p2_v5j.py`에 1개를 더했다(키 없음 → 구성, None·숫자·빈 문자열 → S-2, 재집계 끝에서 끝). 다섯 파일 205개다.
+
 ### 도구 sha256 (rev12 판, LF 바이트, 현재 값)
+
+- 결정 24 반영으로 `p2_v5j.py`·`test_p2_v5j.py`가 바뀌었다. 아래 표는 그 뒤의 값이다.
 
 | 파일 | sha256 | 이 판에서 |
 |---|---|---|
@@ -443,15 +450,15 @@ rev7 R7-5는 경로 1 집계 v2의 행 폴더 찾기를 정한 봉인 문장이�
 | `p2_d1.py` | `6d18f6dbfa891ea8faf2eec45cb26c023a045aa0170b7cfac4b1c0aa28cde24d` | 그대로 |
 | `p2_t3k.py` | `f63cead31f6cde5dd23fe504370ec5c9f4101d7967c6eebc9aab3c08c642acf8` | 그대로 |
 | `p2_u3.py` | `408944c498da8736e343c2dbc2d816f6fdbe8a5ecd73a0a96689f06680bc5f28` | 그대로 |
-| `p2_v5j.py` | `e5d769b925a1d3047a8f1a42443894f761520950d8d1ec75c31499e9ae7dd3fe` | 그대로 |
+| `p2_v5j.py` | `69d0e747254cea35196101a9a2fc1b0e3c4e6a15ba1cb4511a4c8c41ca3e25db` | 바뀜(결정 24) |
 | `test_p2_4368.py` | `aa7bacde28111bfbf9e02bab05997a63e23a64b7f1b388069c639cc7b31d2158` | 바뀜(126개) |
 | `test_p2_d1.py` | `d1b61db2979ea1658eda4f515936e407a2d52666efeff9575c583dcecd0778ce` | 그대로(17개) |
 | `test_p2_t3k.py` | `585384fa8693ff70703782349de4f0590a63782de5e886f4be32407ef0b962bf` | 그대로(30개) |
 | `test_p2_u3.py` | `245c03ff2a731fb33606f992328660f46f669dbee41cac4e20dc58b01133bb99` | 그대로(11개) |
-| `test_p2_v5j.py` | `24d5141213a5daa01500809d0b5b62f373bc6c3a91c8c096cbb6f21d0c9f0ba7` | 그대로(20개) |
+| `test_p2_v5j.py` | `1380d01eb0c0f28bc13ff62c2b2276f225b679a2fb2ab895647b3415d9a67b2a` | 바뀜(결정 24, 21개) |
 
 - 자체 시험은 다섯 파일 204개다(앞 판 194개). `test_p2_4368.py`에 10개를 더했다. 더한 것은 rev12 봉인과 불일치 S-1, dirty 기록만, 열린 루프 `code_state` 기록만, 폴더 이름 정확 맞춤(L1-R `_check_L1R_` 제외, 부분 문자열·접두 없음, L2b 다른 tag), L1-R 시각 창 6가지(통과, 확인 실행 무시, 후보 둘, 없음, `est_s` 미사용, `wall_s` 없음)다. `--git-at-start` 없음·짧음 시험은 R12-3에 맞게 입력 오류로 고쳤다. C-2 고정 행 시험에도 이 인자를 준다.
-- `../path2_v5c/p2v5c_common.py`: `P2_CORE_SHA` = `a948d9a1…`, `P2_V5J_SHA` = `e5d769b9…`로 맞춰야 한다(그 폴더 작성자 몫).
+- `../path2_v5c/p2v5c_common.py`: `P2_CORE_SHA` = `a948d9a1…`, `P2_V5J_SHA` = `69d0e747…`로 맞춰야 한다(그 폴더 작성자 몫).
 
 ## 하지 않는 것 (범위)
 

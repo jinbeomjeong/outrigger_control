@@ -435,10 +435,15 @@ def t4h_places(result_files, given):
 def rod_reading_lookup(line, dirs):
     """rev11 R11-2 3: the recorded ``t4h_file`` must be found exactly once in ``dirs``.
     (reading, status, hits): status ``no_t4h_file`` (line without the field: configuration, R3-C8),
-    ``ok``, ``not_found`` / ``several`` (S-2)."""
-    name = line.get("t4h_file")
-    if not isinstance(name, str):
+    ``ok``, ``not_found`` / ``several`` / ``bad_t4h_file`` (key present, value None / not a string / empty;
+    user decision 24) (S-2)."""
+    if "t4h_file" not in line:
         return None, "no_t4h_file", []
+    name = line["t4h_file"]
+    if not isinstance(name, str) or not name:
+        # user decision 24 (2026-11-13, rev12 R12-1 Q-R12-1 = A): a t4h_file key with None / non-string /
+        # empty value is a record defect (S-2), not "no T4h record"; only an absent key -> configuration
+        return None, "bad_t4h_file", [repr(name)]
     hits = [d / name for d in dict.fromkeys(dirs) if (d / name).is_file()]
     if len(hits) != 1:
         return None, ("not_found" if not hits else "several"), [str(h) for h in hits]
@@ -466,14 +471,14 @@ def recount_u9(v0_lines, vb_lines, h0_ref_lines, is_p3, stored_main=None, stored
     """``t4h_lookup(line)`` -> (reading, status, hits) is the rev11 R11-2 search (main); without it the
     single ``t4h_root`` folder of the earlier sheets is read (kept for library callers)."""
     fnd = core.Findings()
-    t4h_log = {"ok": 0, "no_t4h_file": 0, "not_found": 0, "several": 0}
+    t4h_log = {"ok": 0, "no_t4h_file": 0, "not_found": 0, "several": 0, "bad_t4h_file": 0}
 
     def rod(ln, where):
         if t4h_lookup is None:
             return rod_reading_from_t4h(ln, t4h_root)
         val, st, hits = t4h_lookup(ln)
         t4h_log[st] += 1
-        if st in ("not_found", "several"):
+        if st in ("not_found", "several", "bad_t4h_file"):
             fnd.stop("S-2", where, f"R11-2: T4h {ln.get('t4h_file')!r} {st} in the convention / given folder(s) {hits}")
         return val
     v0 = {}
