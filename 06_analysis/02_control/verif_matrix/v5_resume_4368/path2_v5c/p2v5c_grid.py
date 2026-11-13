@@ -96,6 +96,16 @@ def runs_of(doc):
             yield r, run
 
 
+def run_tag_view(v5j, r, run):
+    """rev8 R8-1 ("top-level controller_tag", user decision 19): a grid run carries no tag; its job record
+    ``results[i]`` holds the run's controller tag. The run's own tag wins; the run is not changed (a shallow
+    copy gets ``controller_tag``). Neither = no tag (J-P3 not applicable + S-2 on a VB run, R8-2)."""
+    if v5j.tag_of(run) is not None:
+        return run
+    t = v5j.tag_of(r)
+    return run if t is None else {**run, "controller_tag": t}
+
+
 def run_key(stem, r, run):
     return f"{stem}|{r.get('key')}|{run.get('event')}|{run.get('offset_s')}"
 
@@ -219,7 +229,7 @@ def cmd_grid(args, repo, v5j, core):
         d = json.loads(Path(path).read_text("utf-8"))
         v0_meta[stem] = {"path": path, "sha256": cm.sha256_file(path),
                          "v5_setting": (d.get("meta") or {}).get("v5_setting"),
-                         "tags": sorted({str(v5j.tag_of(run)) for _, run in runs_of(d)})}
+                         "tags": sorted({str(v5j.tag_of(run_tag_view(v5j, r, run))) for r, run in runs_of(d)})}
         for r, run in runs_of(d):
             g = gates_p2(run, core)
             v0_runs[run_key(stem, r, run)] = {"pass_p2": run_pass(g), "pass_rec": run.get("pass"),
@@ -253,7 +263,8 @@ def cmd_grid(args, repo, v5j, core):
             if g.get("fault0") is False:
                 fault_runs.append(k)
                 fnd.fail(k, "FAULT in a VB grid run (v5 10: FAULT 0)")
-            t = str(v5j.tag_of(run))
+            run_t = run_tag_view(v5j, r, run)   # rev8 R8-1: tag from the job record when the run has none
+            t = str(v5j.tag_of(run_t))
             tags[t] = tags.get(t, 0) + 1
             v0 = v0_runs.get(k)
             row = {"run": k, "pass_p2": p, "v0_pass_p2": None if v0 is None else v0["pass_p2"]}
@@ -276,7 +287,7 @@ def cmd_grid(args, repo, v5j, core):
             # J-P3 (configuration: two-pressure event path = rod reading, rev9 3.2 #4); rev12 R12-1: a
             # recorded t4h_file is read first (found 0 or 2+ = S-2, J-P3 not judged)
             rod, ok = cm.jp3_rod_input(fnd, k, run, places[str(path)], v5j, True, t4h_log)
-            res, why = v5j.jp3(run, is_p3, rod) if ok else ("t4h_unresolved", "R12-1 S-2")
+            res, why = v5j.jp3(run_t, is_p3, rod) if ok else ("t4h_unresolved", "R12-1 S-2")
             if not ok:
                 pass
             elif cm.jp3_tag_scope(fnd, k, res, "VB"):   # rev8 R8-2: not applicable + S-2
